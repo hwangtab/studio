@@ -257,9 +257,9 @@
       "schemaTitle": "Studio NOL 服务价格"
     },
     "hero": {
-      "title": "合理价格，透明服务",
-      "subtitleLine1": "提供项目录音室运营所需核心服务的固定价格。",
-      "subtitleLine2": "无隐藏费用，帮助音乐人规划预算。",
+      "title": "录音每小时 ₩100,000 · 练习室每月 ₩360,000 · 婚礼献唱 ₩350,000",
+      "subtitleLine1": "均为实际单价（不含增值税），需额外收费的情况已全部列于下方。",
+      "subtitleLine2": "下方表格可一次查看全部服务单价。",
       "alt": "Studio NOL 价格",
       "ctaKakao": "通过KakaoTalk获取免费报价"
     },
@@ -290,16 +290,16 @@
       "subtitle": "先看常见的价格与预约问题。",
       "items": [
         {
-          "q": "价格如何计算？",
-          "a": "{{vatNotice}} 下面的价目表可查看各项服务的单价。"
+          "q": "录音费用是多少？",
+          "a": "人声录音 1 首歌套餐（3 小时）为 {{vocalPackage}}，按小时录音为每小时 {{recordingHourly}}（最少 2 小时）。{{vatNotice}}"
         },
         {
-          "q": "会有额外费用吗？",
-          "a": "{{mixingNotice}}"
+          "q": "混音和母带费用是多少？",
+          "a": "混音按音轨数为每首 {{mixingFrom}}~{{mixingTo}}（含 2 次修改），单曲母带为 {{masteringSingle}}。{{mixingNotice}}"
         },
         {
-          "q": "如何预约/咨询？",
-          "a": "可通过 KakaoTalk 咨询或联系页面提交。"
+          "q": "如何预约或索取报价？",
+          "a": "KakaoTalk 开放聊天最快，也可致电 {{phone}} 或通过咨询页面联系。报价免费。"
         }
       ]
     },
@@ -870,7 +870,7 @@
         "title": "在考虑声乐录音或婚礼献唱吗？",
         "descriptionLine1": "声乐录音 25万韩元（3小时·1首） · 婚礼献唱完整套餐 35万韩元。",
         "descriptionLine2": "专属工程师协助编导、选录、混音全程。",
-        "primaryText": "查看价格",
+        "primaryText": "查看录音服务",
         "secondaryText": "咨询",
         "visualText": "声乐录音"
       },
@@ -895,8 +895,8 @@
         "title": "想让您的音乐专业地完成吗？",
         "descriptionLine1": "从混音、母带到专辑发行。",
         "descriptionLine2": "专业工程师将您的歌曲完成为唱片级音源。",
-        "primaryText": "音源制作咨询",
-        "secondaryText": "查看费用",
+        "primaryText": "查看混音·母带",
+        "secondaryText": "制作咨询",
         "visualText": "音源完成"
       }
     },

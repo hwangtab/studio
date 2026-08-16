@@ -15,6 +15,9 @@ import {
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
+import { PRACTICE_ROOM_REGION_LPS } from '../../data/practiceRoomRegionLPs';
+import { sortStoriesForLlms } from '../../lib/llmsPriority';
+import { CURATED_GUIDES } from './llms';
 
 // 가격은 data/pricing.ts SSOT 상수 보간 — 리터럴 하드코딩 금지(llms.ts와 동일 규칙).
 const krw = formatPriceAmount;
@@ -113,6 +116,16 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
     }
   }
 
+  // 방출 순서는 발행일 역순이 아니라 "AI가 실제로 인용한 순 → 큐레이션 → 지역 LP →
+  // 나머지(발행일 역순)"다. ko 단독으로 765KB(≈19만 토큰)라 클라이언트가 앞에서부터
+  // 자르는데, ko 스토리의 95%가 2026-04 한 달에 백필돼 있어 발행일 정렬이 사실상
+  // 무작위였고 인용 실적이 검증된 글들이 전부 잘리는 꼬리에 있었다.
+  // getAllStories의 정렬(사이트 UI용 발행일 역순)은 건드리지 않고 여기서만 재배열한다.
+  const priorityInput = {
+    curatedSlugs: CURATED_GUIDES.flatMap((group) => group.items.map((item) => item.slug)),
+    regionSlugs: PRACTICE_ROOM_REGION_LPS.map((lp) => lp.slug),
+  };
+
   const localesToEmit = requestedLocale ? [requestedLocale] : locales;
   for (const locale of localesToEmit) {
     // Only emit stories that render as indexable for this locale. Fallback,
@@ -121,16 +134,17 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
       getStoryAvailableLocales(story.slug).includes(locale)
     );
     if (stories.length === 0) continue;
+    const ordered = sortStoriesForLlms(stories, priorityInput);
     body += `\n## Stories — ${HEADER_LABELS[locale]} (${locale}) · ${stories.length} entries\n\n`;
-    for (const story of stories) {
+    body += 'Ordered by citation value for AI assistants (most-cited guides first), not by date.\n\n';
+    for (const story of ordered) {
       body += formatStoryLine(siteUrl, locale, story) + '\n';
     }
   }
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
-  // llms-full.txt는 AI 크롤러 안내용 메타 파일이라 SERP 색인 대상 아님.
-  res.setHeader('X-Robots-Tag', 'noindex');
+  // noindex를 붙이지 않는 이유는 pages/api/llms.ts의 같은 위치 주석 참조.
   const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB — Vercel 6MB 응답 한도 버퍼
   if (body.length > MAX_BODY_SIZE) {
     console.warn(`[llms-full] body size ${body.length} exceeds limit, truncating`);

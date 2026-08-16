@@ -285,9 +285,9 @@
       "schemaTitle": "Studio NOL Service Pricing"
     },
     "hero": {
-      "title": "Affordable Price, Transparent Service",
-      "subtitleLine1": "We offer fixed pricing for key services needed for project studios.",
-      "subtitleLine2": "No hidden fees, helping musicians plan their budget effectively.",
+      "title": "Recording ₩100,000/hr · Practice Room ₩360,000/mo · Wedding Song ₩350,000",
+      "subtitleLine1": "Actual rates, VAT excluded. Every case where an extra fee applies is listed below.",
+      "subtitleLine2": "The table right below shows every service rate at a glance.",
       "alt": "Studio NOL Pricing",
       "ctaKakao": "Get a Free Quote on KakaoTalk"
     },
@@ -318,16 +318,16 @@
       "subtitle": "Check the most common pricing and booking questions first.",
       "items": [
         {
-          "q": "How are prices determined?",
-          "a": "{{vatNotice}} Check the price table below for each service."
+          "q": "How much does recording cost?",
+          "a": "A one-song vocal package (3 hours) is {{vocalPackage}}; hourly recording is {{recordingHourly}} per hour with a 2-hour minimum. {{vatNotice}}"
         },
         {
-          "q": "Are there extra fees?",
-          "a": "{{mixingNotice}}"
+          "q": "How much do mixing and mastering cost?",
+          "a": "Mixing runs {{mixingFrom}}–{{mixingTo}} per song by track count, with two revisions included. Single mastering is {{masteringSingle}}. {{mixingNotice}}"
         },
         {
-          "q": "How do I book or inquire?",
-          "a": "You can contact us via KakaoTalk or the inquiry page."
+          "q": "How do I book or request a quote?",
+          "a": "The KakaoTalk open chat is fastest. You can also call {{phone}} or use the contact page. Quotes are free."
         }
       ]
     },
@@ -893,7 +893,7 @@
         "title": "Considering vocal recording or a wedding song?",
         "descriptionLine1": "Vocal session ₩250,000 (3 hours, 1 song) · Wedding-song package ₩350,000.",
         "descriptionLine2": "A dedicated engineer guides directing, take selection, and mixing.",
-        "primaryText": "View Pricing",
+        "primaryText": "View Recording Service",
         "secondaryText": "Inquiry",
         "visualText": "Vocal Recording"
       },
@@ -918,8 +918,8 @@
         "title": "Want to finish your music professionally?",
         "descriptionLine1": "From mixing and mastering to album release.",
         "descriptionLine2": "Pro engineers turn your tracks into release-ready records.",
-        "primaryText": "Production Consultation",
-        "secondaryText": "View Costs",
+        "primaryText": "Mixing & Mastering",
+        "secondaryText": "Production Consultation",
         "visualText": "Track Finalization"
       }
     },

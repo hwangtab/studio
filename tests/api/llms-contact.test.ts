@@ -64,18 +64,29 @@ describe('LLM contact metadata', () => {
   });
 });
 
-// public/llms.txt(정적) → /api/llms 동적 단일화 시 이식한 큐레이션 상록 가이드 13종.
+// public/llms.txt(정적) → /api/llms 동적 단일화 시 이식한 큐레이션 상록 가이드.
 // 날짜순 Recent Stories에서 밀려나도 항상 인용 가능해야 하는 핵심 자산이므로
 // slug 실존과 출력 포함을 함께 고정한다.
 describe('curated evergreen guides', () => {
   const curatedSlugs = CURATED_GUIDES.flatMap((group) => group.items.map((item) => item.slug));
 
-  it('lists 13 curated slugs, all present in the ko story catalog', () => {
-    expect(curatedSlugs).toHaveLength(13);
+  it('lists 16 curated slugs, all present in the ko story catalog', () => {
+    expect(curatedSlugs).toHaveLength(16);
+    // 같은 슬러그가 두 섹션에 들어가면 llms.txt에 중복 링크가 나간다.
+    expect(new Set(curatedSlugs).size).toBe(curatedSlugs.length);
 
     const koSlugs = new Set(getAllStories('ko').map((story) => story.slug));
     const missing = curatedSlugs.filter((slug) => !koSlugs.has(slug));
     expect(missing).toEqual([]);
+  });
+
+  // GA4(docs/ga4-raw/llm_referrers.csv)가 AI 유입 실적을 확인해 준 글은 큐레이션에서
+  // 빠지면 안 된다 — Recent Stories는 발행일 역순 50편이라 2026-04 백필분인 이 글들을
+  // 담지 못하고, 결과적으로 ChatGPT가 이미 인용 중인 문서가 llms.txt 어디에도 없게 된다.
+  it('includes the guides that AI assistants actually cite', () => {
+    for (const slug of ['distribution1', 'mr-guide1', 'recording-price1', 'voiceactor1']) {
+      expect(curatedSlugs).toContain(slug);
+    }
   });
 
   it('renders every curated guide link and the award credential in llms.txt', () => {

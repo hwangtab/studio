@@ -250,9 +250,19 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         />
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* 이 4장 중 카카오만 계측돼 있어서 전화·이메일·지도 클릭이 통째로 유실됐다.
+              about은 로컬 고객이 "누가 하는 곳인가"를 확인하고 전화하는 전형적 경로라,
+              "전화 리드 90일 6건"이라는 수치 자체가 과소집계였다(2026-08-09 감사). */}
           <BaseCard
             className="p-6 text-center cursor-pointer"
             href={`tel:${siteConfig.contact.phone}`}
+            onClick={() =>
+              trackLeadEvent('lead_click_phone', {
+                locale,
+                component: 'AboutPage',
+                cta_id: 'about_phone',
+              })
+            }
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
@@ -266,6 +276,13 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           <BaseCard
             className="p-6 text-center cursor-pointer"
             href={`mailto:${siteConfig.contact.email}`}
+            onClick={() =>
+              trackLeadEvent('lead_click_email', {
+                locale,
+                component: 'AboutPage',
+                cta_id: 'about_email',
+              })
+            }
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
@@ -303,6 +320,13 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
             href={siteConfig.contact.naverMapUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_naver_map', {
+                locale,
+                component: 'AboutPage',
+                cta_id: 'about_naver_map',
+              })
+            }
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">

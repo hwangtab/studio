@@ -146,12 +146,17 @@ const nextConfig = {
 
   async headers() {
     return [
-      // API 라우트 크롤링 차단 (단, llms.txt rewrite 대상은 제외).
+      // API 라우트 크롤링 차단.
+      // headers()는 rewrite '이전'의 요청 경로로 매칭되므로 /llms.txt·/llms-full-ko.txt로
+      // 들어온 요청은 여기 걸리지 않고, 직접 접근한 /api/llms만 noindex를 받는다.
+      // (예전에는 negative lookahead로 llms를 제외하고 핸들러가 직접 noindex를 붙였는데,
+      //  그러면 rewrite 경로인 /llms.txt에도 noindex가 나가 AI 색인 파일 자신이 비색인이
+      //  되는 자기모순이었다. 아래 llms 핸들러의 setHeader 제거와 한 쌍이다.)
       // CSP는 middleware.ts가 페이지 응답에만 적용 — API는 JSON/text 반환이라 불필요.
       // middleware matcher가 /api/* 를 명시적으로 제외하므로 이 블록에 CSP를 추가해도
       // middleware CSP와 충돌 없음. 현재는 HTML 반환 없으므로 미설정.
       {
-        source: '/api/:path((?!llms$|llms-full$).*)',
+        source: '/api/:path*',
         headers: [
           { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
         ],
@@ -173,6 +178,16 @@ const nextConfig = {
       },
       {
         source: '/llms(-full)?.txt',
+        headers: [
+          { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
+          { key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=86400' },
+        ],
+      },
+      // locale-scoped 변종은 위 패턴이 잡지 못한다(/llms-full-ko.txt 등). 핸들러가 같은
+      // 헤더를 직접 세팅하므로 실피해는 없지만, config가 실제와 어긋나 있으면 나중에
+      // 핸들러 쪽을 정리할 때 조용히 깨진다.
+      {
+        source: '/llms-full-:locale(ko|en|zh).txt',
         headers: [
           { key: 'Content-Type', value: 'text/plain; charset=utf-8' },
           { key: 'Cache-Control', value: 'public, max-age=3600, stale-while-revalidate=86400' },

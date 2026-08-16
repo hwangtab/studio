@@ -257,9 +257,9 @@
       "schemaTitle": "Studio NOL xizmat narxlari"
     },
     "hero": {
-      "title": "Hamyonbop narx, shaffof xizmat",
-      "subtitleLine1": "Loyiha studiyalari uchun zarur asosiy xizmatlarga qat'iy narx taklif qilamiz.",
-      "subtitleLine2": "Yashirin to'lovlarsiz, musiqachilarga byudjet rejalashda yordam beramiz.",
+      "title": "Yozuv ₩100,000/soat · Mashq xonasi ₩360,000/oy · To'y qo'shig'i ₩350,000",
+      "subtitleLine1": "Haqiqiy narxlar, QQS alohida. Qo'shimcha to'lov qo'llaniladigan barcha holatlar quyida ko'rsatilgan.",
+      "subtitleLine2": "Quyidagi jadvalda barcha xizmat narxlari bir joyda.",
       "alt": "Studio NOL narxlari",
       "ctaKakao": "KakaoTalk orqali bepul narx oling"
     },
@@ -290,16 +290,16 @@
       "subtitle": "Narx va bron haqida eng ko‘p so‘raladigan savollar.",
       "items": [
         {
-          "q": "Narxlar qanday belgilanadi?",
-          "a": "{{vatNotice}} Quyidagi jadvalda har bir xizmat narxini ko‘rishingiz mumkin."
+          "q": "Yozib olish qancha turadi?",
+          "a": "Bitta qo'shiq uchun vokal paketi (3 soat) — {{vocalPackage}}; soatlik yozuv — soatiga {{recordingHourly}}, eng kami 2 soat. {{vatNotice}}"
         },
         {
-          "q": "Qo‘shimcha to‘lovlar bormi?",
-          "a": "{{mixingNotice}}"
+          "q": "Miks va mastering qancha turadi?",
+          "a": "Miks trek soniga qarab har bir qo'shiq uchun {{mixingFrom}}~{{mixingTo}}, ikki marta tuzatish kiradi. Singl mastering — {{masteringSingle}}. {{mixingNotice}}"
         },
         {
-          "q": "Qanday bron qilaman yoki so‘rayman?",
-          "a": "KakaoTalk orqali yoki aloqa sahifasi orqali murojaat qiling."
+          "q": "Qanday band qilaman yoki narx so'rayman?",
+          "a": "KakaoTalk ochiq chati eng tez. {{phone}} raqamiga qo'ng'iroq qilish yoki aloqa sahifasidan foydalanish ham mumkin. Narx taklifi bepul."
         }
       ]
     },
@@ -870,7 +870,7 @@
         "title": "Vokal yozish yoki to'y qo'shig'ini o'ylayapsizmi?",
         "descriptionLine1": "Vokal sessiyasi ₩250,000 (3 soat, 1 qo'shiq) · To'y qo'shig'i to'liq paketi ₩350,000.",
         "descriptionLine2": "Mas'ul muhandis rejissyorlik, take tanlash va miks bo'yicha hamkorlik qiladi.",
-        "primaryText": "Xizmat narxlarini ko'rish",
+        "primaryText": "Yozib olish xizmatini ko'rish",
         "secondaryText": "So'rov",
         "visualText": "Vokal yozish"
       },
@@ -895,8 +895,8 @@
         "title": "Treklaringizni professional yakunlashni xohlaysizmi?",
         "descriptionLine1": "Miks va masteringdan albom chiqarishgacha.",
         "descriptionLine2": "Professional muhandislar treklaringizni nashrga tayyor mahsulotga aylantiradi.",
-        "primaryText": "Prodakshn bo'yicha so'rov",
-        "secondaryText": "Narxlarni ko'rish",
+        "primaryText": "Miks va mastering",
+        "secondaryText": "Prodakshn bo'yicha so'rov",
         "visualText": "Trek yakunlash"
       }
     },

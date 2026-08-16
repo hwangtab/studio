@@ -273,6 +273,17 @@ export const CURATED_GUIDES: {
       { slug: 'songstructure1', title: '송폼·곡 구조', desc: '프리코러스·브릿지·코러스 역할' },
       { slug: 'producer1', title: '음악 프로듀서 되는 방법', desc: 'DAW 입문부터 포트폴리오까지' },
       { slug: 'practice-room-startup1', title: '연습실 창업 가이드', desc: '비용·인허가·수익 구조 (2026)' },
+      // 아래 2편은 GA4상 AI 유입 상위인데 큐레이션에서 빠져 있었다. 'Recent Stories'는
+      // 발행일 역순 50편이라 이들(2026-04 백필분)은 목록에도 못 들어가, 결과적으로
+      // ChatGPT가 이미 인용 중인 글이 llms.txt 어디에도 없는 상태였다.
+      { slug: 'mr-guide1', title: 'MR(반주) 구하기·준비 가이드', desc: '녹음 전 MR 확보 경로·키 조정·저작권 확인' },
+      { slug: 'recording-price1', title: '녹음·믹싱·마스터링 비용', desc: '국내 시세와 스튜디오 놀 실단가 비교' },
+    ],
+  },
+  {
+    section: '음악 가이드 — 성우·내레이션',
+    items: [
+      { slug: 'voiceactor1', title: '성우 되는 법·성우 녹음', desc: '공채 준비, 데모 제작, 섭외·외주 프로세스' },
     ],
   },
 ];
@@ -370,9 +381,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
-  // llms.txt는 AI 크롤러 안내용 메타 파일이라 SERP 색인 대상이 아님. 직접 접근(/api/llms)
-  // 시 200 응답이 그대로 색인되는 것을 방지.
-  res.setHeader('X-Robots-Tag', 'noindex');
+  // X-Robots-Tag: noindex를 여기서 붙이지 않는다. 핸들러가 세팅하면 rewrite 경로인
+  // /llms.txt에도 함께 나가서, AI 크롤러 안내용으로 만든 파일이 정작 Google 색인에서
+  // 빠지는 자기모순이 된다(AI Overviews·Gemini 그라운딩은 Search 색인 경유).
+  // 직접 접근(/api/llms)의 색인 차단은 next.config.mjs headers()의 '/api/:path*' 규칙이
+  // 담당한다 — headers()는 rewrite 이전 경로로 매칭되므로 두 경로가 정확히 갈린다.
   const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB — Vercel 6MB 응답 한도 버퍼
   if (body.length > MAX_BODY_SIZE) {
     console.warn(`[llms] body size ${body.length} exceeds limit, truncating`);

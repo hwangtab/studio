@@ -257,9 +257,9 @@
       "schemaTitle": "Precios de los Servicios de Studio NOL"
     },
     "hero": {
-      "title": "Precio accesible, servicio transparente",
-      "subtitleLine1": "Ofrecemos precios fijos para los servicios clave de un estudio de proyectos.",
-      "subtitleLine2": "Sin costos ocultos, ayudamos a planificar el presupuesto.",
+      "title": "Grabación ₩100,000/h · Sala de ensayo ₩360,000/mes · Boda ₩350,000",
+      "subtitleLine1": "Tarifas reales, IVA no incluido. Abajo se detalla cada caso con coste adicional.",
+      "subtitleLine2": "La tabla de abajo muestra todas las tarifas de un vistazo.",
       "alt": "Precios de Studio NOL",
       "ctaKakao": "Cotización gratis por KakaoTalk"
     },
@@ -290,16 +290,16 @@
       "subtitle": "Resuelve primero las dudas más comunes de precios y reservas.",
       "items": [
         {
-          "q": "¿Cómo se determinan los precios?",
-          "a": "{{vatNotice}} Consulta la tabla de precios para cada servicio."
+          "q": "¿Cuánto cuesta grabar?",
+          "a": "El paquete vocal de una canción (3 horas) cuesta {{vocalPackage}}; la grabación por horas son {{recordingHourly}} por hora, con un mínimo de 2 horas. {{vatNotice}}"
         },
         {
-          "q": "¿Hay cargos adicionales?",
-          "a": "{{mixingNotice}}"
+          "q": "¿Cuánto cuestan la mezcla y la masterización?",
+          "a": "La mezcla va de {{mixingFrom}} a {{mixingTo}} por canción según el número de pistas, con dos revisiones incluidas. La masterización de un sencillo cuesta {{masteringSingle}}. {{mixingNotice}}"
         },
         {
-          "q": "¿Cómo reservo o consulto?",
-          "a": "Puedes contactarnos por KakaoTalk o desde la página de contacto."
+          "q": "¿Cómo reservo o pido presupuesto?",
+          "a": "El chat abierto de KakaoTalk es lo más rápido. También puedes llamar al {{phone}} o usar la página de contacto. El presupuesto es gratuito."
         }
       ]
     },
@@ -870,7 +870,7 @@
         "title": "¿Considerando grabación vocal o canción de boda?",
         "descriptionLine1": "Sesión vocal ₩250,000 (3 h, 1 canción) · Paquete completo canción de boda ₩350,000.",
         "descriptionLine2": "Un ingeniero dedicado dirige, selecciona tomas y mezcla.",
-        "primaryText": "Ver Precios",
+        "primaryText": "Ver Servicio de Grabación",
         "secondaryText": "Consulta",
         "visualText": "Grabación vocal"
       },
@@ -895,8 +895,8 @@
         "title": "¿Quieres dar el toque profesional final a tu música?",
         "descriptionLine1": "Desde la mezcla y masterización hasta el lanzamiento del álbum.",
         "descriptionLine2": "Ingenieros profesionales convierten tus pistas en grabaciones listas para lanzar.",
-        "primaryText": "Consulta de Producción",
-        "secondaryText": "Ver Costos",
+        "primaryText": "Mezcla y Masterización",
+        "secondaryText": "Consulta de Producción",
         "visualText": "Finalización de pista"
       }
     },

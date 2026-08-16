@@ -7,7 +7,17 @@ import { trackLeadEvent } from '../../utils/analytics';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
-import { getPricingData } from '../../data/pricing';
+import {
+  formatPriceLabel,
+  getPricingData,
+  MASTERING_SINGLE_PRICE,
+  MIXING_LEVEL1_PRICE,
+  MIXING_LEVEL3_PRICE,
+  PRACTICE_ROOM_MONTHLY_PRICE,
+  RECORDING_HOURLY_PRICE,
+  VOCAL_PACKAGE_PRICE,
+  WEDDING_PACKAGE_PRICE,
+} from '../../data/pricing';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
@@ -51,20 +61,43 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   const siteUrl = siteConfig.url;
   const kakaoUrl = siteConfig.contact.kakaoUrl;
 
+  // 카피는 번역 파일에, 숫자는 data/pricing.ts SSOT에 남긴다(리터럴 하드코딩 금지).
+  const priceLabels = React.useMemo(() => ({
+    recordingHourly: formatPriceLabel(RECORDING_HOURLY_PRICE, locale),
+    vocalPackage: formatPriceLabel(VOCAL_PACKAGE_PRICE, locale),
+    practiceRoom: formatPriceLabel(PRACTICE_ROOM_MONTHLY_PRICE, locale),
+    wedding: formatPriceLabel(WEDDING_PACKAGE_PRICE, locale),
+    mixingFrom: formatPriceLabel(MIXING_LEVEL1_PRICE, locale),
+    mixingTo: formatPriceLabel(MIXING_LEVEL3_PRICE, locale),
+    masteringSingle: formatPriceLabel(MASTERING_SINGLE_PRICE, locale),
+  }), [locale]);
+
+  // 이 배열은 화면의 QuickAnswers 섹션이자 SEO faqItems(=FAQPage JSON-LD)의 원본이다.
+  // 예전 답변은 "아래 가격표에서 확인할 수 있습니다" 같은 안내문이라 그대로 스키마에
+  // 실려 나갔고, LLM이 통째로 인용해도 답이 안 나왔다. 답변마다 실제 수치를 넣는다.
   const pricingQuickAnswers = React.useMemo(() => ([
     {
       question: t('pricing.quickAnswers.items.0.q'),
-      answer: t('pricing.quickAnswers.items.0.a', { vatNotice: VAT_NOTICE }),
+      answer: t('pricing.quickAnswers.items.0.a', {
+        vatNotice: VAT_NOTICE,
+        vocalPackage: priceLabels.vocalPackage,
+        recordingHourly: priceLabels.recordingHourly,
+      }),
     },
     {
       question: t('pricing.quickAnswers.items.1.q'),
-      answer: t('pricing.quickAnswers.items.1.a', { mixingNotice: t('pricing.mixing.noticeBody') }),
+      answer: t('pricing.quickAnswers.items.1.a', {
+        mixingNotice: t('pricing.mixing.noticeBody'),
+        mixingFrom: priceLabels.mixingFrom,
+        mixingTo: priceLabels.mixingTo,
+        masteringSingle: priceLabels.masteringSingle,
+      }),
     },
     {
       question: t('pricing.quickAnswers.items.2.q'),
-      answer: t('pricing.quickAnswers.items.2.a'),
+      answer: t('pricing.quickAnswers.items.2.a', { phone: siteConfig.contact.phone }),
     },
-  ]), [t, VAT_NOTICE]);
+  ]), [t, VAT_NOTICE, priceLabels, siteConfig.contact.phone]);
 
   // 상단 즉답 가격 요약표 행 — 전부 가격 SSOT(pricingData)에서 끌어온다(하드코딩 0).
   // AI 검색(ChatGPT 등)·외부 유입이 above-the-fold에서 전체 단가를 즉시 스캔하도록 —
@@ -119,6 +152,16 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       <ImageHero
         locale={locale}
         priority
+        // H1에 실단가를 넣는다. 이전 H1은 "합리적인 가격, 투명한 서비스"로 숫자가 하나도
+        // 없었는데 <title>은 "연습실 월 36만원·녹음 10만원…"을 약속했다. 가격을 확인하러
+        // 온 유입(ChatGPT 경유 이탈 85.7%·체류 13초)이 첫 화면에서 숫자를 못 보고 즉시
+        // 되돌아가던 구조 — 약속과 도착지를 일치시킨다.
+        //
+        // 여기만 i18n 보간이 아니라 common.json 리터럴을 쓴다. hero h1은 LCP 요소이고
+        // scripts/generate-hero-font.mjs가 i18n '템플릿 문자열'을 스캔해 woff2 subset을
+        // 만들기 때문에, {{보간}}을 쓰면 실제 렌더링되는 숫자 글자가 subset에서 빠져
+        // 폴백 폰트로 떨어진다. 상수와의 정합은 data/pricing.test.ts가 강제한다
+        // (releaseProject.tiers.*.range와 동일한 기존 패턴).
         title={t('pricing.hero.title')}
         subtitle={
           <>
@@ -129,7 +172,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         }
         backgroundImage="/images/hardware2.webp"
         imageAlt={t('pricing.hero.alt')}
-        minHeight="min-h-[60vh]"
+        // 60vh → 40vh: 아래 요약표를 모바일 첫 화면 안으로 끌어올린다.
+        minHeight="min-h-[40vh]"
         overlayGradient="from-black/40 via-transparent to-black/20"
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },

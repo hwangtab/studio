@@ -35,6 +35,20 @@ export const RELEASE_ALBUM_FROM_PRICE = 4000000; // 8곡 기준
 /** 350000 → "350,000". 서버·클라이언트 동일 결과를 보장하려 로케일을 명시 고정. */
 export const formatPriceAmount = (value: number): string => value.toLocaleString('en-US');
 
+/**
+ * 헤드라인·FAQ 본문에 인라인으로 박는 짧은 가격 표기.
+ * ko는 '36만원'(검색 쿼리·SERP title과 같은 표기), 그 외 로케일은 '₩360,000'.
+ * 만원 단위로 떨어지지 않는 값은 ko에서도 숫자 표기로 폴백한다.
+ *
+ * 이 헬퍼가 필요한 이유: 가격을 카피에 넣으려면 지금까지 JSON 문자열에 리터럴로
+ * 박는 수밖에 없었고(예: pricing.seo.title), 그게 이 파일이 막으려는 드리프트다.
+ * i18n interpolation 값으로 넘기면 카피는 번역 파일에, 숫자는 SSOT에 남는다.
+ */
+export const formatPriceLabel = (value: number, locale: Locale): string => {
+  if (locale === 'ko' && value % 10000 === 0) return `${value / 10000}만원`;
+  return `₩${formatPriceAmount(value)}`;
+};
+
 // Helper for translations
 const t = (locale: Locale, dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string }) => {
   return dict[locale] || dict['en'] || dict['ko'];

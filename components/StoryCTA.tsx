@@ -45,7 +45,12 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     {t('stories.cta.recording.descriptionLine2')}
                 </>
             ),
-            primaryLink: getLink('/pricing'),
+            // 목적지는 /pricing이 아니라 녹음 서비스 LP다. 상업 쿼리에서 LP의 CTR은
+            // 스토리의 2.85배(5.73% vs 2.01%)인데, /recording 신설 후에도 1,700+편의
+            // CTA가 전부 /pricing·/contact로만 가서 LP가 내부링크를 한 건도 못 받고
+            // 있었다(2026-08-09 감사). /pricing은 전 서비스 가격표라 녹음 의도와
+            // 정확히 맞지도 않는다.
+            primaryLink: getLink('/recording'),
             primaryText: t('stories.cta.recording.primaryText'),
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.recording.secondaryText'),
@@ -132,9 +137,12 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
                     {t('stories.cta.production.descriptionLine2')}
                 </>
             ),
-            primaryLink: getLink('/contact'),
+            // production 스토리 367편이 전부 /contact(일반 문의함)로 수렴하던 것을
+            // 믹싱·마스터링 LP로 돌린다. "믹싱 의뢰"·"마스터링 의뢰" 쿼리는 노출이
+            // 문자 그대로 0인데, 그 의도를 가진 독자가 가장 많이 읽는 면이 이 CTA다.
+            primaryLink: getLink('/mixing-mastering'),
             primaryText: t('stories.cta.production.primaryText'),
-            secondaryLink: getLink('/pricing'),
+            secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.production.secondaryText'),
             visualText: t('stories.cta.production.visualText'),
             visualGradient: 'from-blue-500 to-indigo-400',

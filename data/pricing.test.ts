@@ -105,4 +105,30 @@ describe('가격 SSOT 정합', () => {
     expect(tiers.ep.range).toContain(manwon(RELEASE_EP_FROM_PRICE));
     expect(tiers.album.range).toContain(manwon(RELEASE_ALBUM_FROM_PRICE));
   });
+
+  // /pricing의 h1은 SERP <title>이 약속한 단가를 그대로 받아야 한다(약속-도착지 일치).
+  // 이 카피만 i18n 보간 대신 리터럴인 이유는 pages/[locale]/pricing.tsx의 주석 참조 —
+  // hero h1은 LCP 폰트 subset 생성기가 스캔하는 대상이라 보간을 쓸 수 없다.
+  // 그래서 드리프트는 이 테스트가 막는다.
+  it('pricing hero h1(ko common.json)이 핵심 단가의 만원 표기를 포함한다', () => {
+    const heroTitle = (
+      koCommon as unknown as { pricing: { hero: { title: string } } }
+    ).pricing.hero.title;
+    const manwon = (n: number) => `${n / 10000}만원`;
+    expect(heroTitle).toContain(manwon(RECORDING_HOURLY_PRICE));
+    expect(heroTitle).toContain(manwon(PRACTICE_ROOM_MONTHLY_PRICE));
+    expect(heroTitle).toContain(manwon(WEDDING_PACKAGE_PRICE));
+  });
+
+  // h1이 <title>과 어긋나면 "가격 보러 왔는데 숫자가 없다"는 이탈이 재발한다.
+  it('pricing seo.title과 hero.title이 같은 단가를 말한다', () => {
+    const pricing = (
+      koCommon as unknown as { pricing: { hero: { title: string }; seo: { title: string } } }
+    ).pricing;
+    const manwon = (n: number) => `${n / 10000}만원`;
+    for (const price of [RECORDING_HOURLY_PRICE, PRACTICE_ROOM_MONTHLY_PRICE, WEDDING_PACKAGE_PRICE]) {
+      expect(pricing.seo.title).toContain(manwon(price));
+      expect(pricing.hero.title).toContain(manwon(price));
+    }
+  });
 });

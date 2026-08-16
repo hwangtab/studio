@@ -257,9 +257,9 @@
       "schemaTitle": "Bảng giá dịch vụ Studio NOL"
     },
     "hero": {
-      "title": "Giá hợp lý, dịch vụ minh bạch",
-      "subtitleLine1": "Chúng tôi cung cấp mức giá cố định cho các dịch vụ chính.",
-      "subtitleLine2": "Không có phí ẩn, giúp nghệ sĩ lên kế hoạch ngân sách hiệu quả.",
+      "title": "Thu âm ₩100,000/giờ · Phòng tập ₩360,000/tháng · Đám cưới ₩350,000",
+      "subtitleLine1": "Giá thực tế, chưa gồm VAT. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
+      "subtitleLine2": "Bảng ngay bên dưới hiển thị toàn bộ đơn giá dịch vụ.",
       "alt": "Bảng giá Studio NOL",
       "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk"
     },
@@ -290,16 +290,16 @@
       "subtitle": "Xem nhanh các câu hỏi thường gặp về giá và đặt lịch.",
       "items": [
         {
-          "q": "Giá được tính như thế nào?",
-          "a": "{{vatNotice}} Xem bảng giá dưới đây cho từng dịch vụ."
+          "q": "Chi phí thu âm là bao nhiêu?",
+          "a": "Gói thu âm giọng hát 1 bài (3 giờ) là {{vocalPackage}}; thu âm theo giờ là {{recordingHourly}}/giờ, tối thiểu 2 giờ. {{vatNotice}}"
         },
         {
-          "q": "Có phí phát sinh không?",
-          "a": "{{mixingNotice}}"
+          "q": "Chi phí mixing và mastering là bao nhiêu?",
+          "a": "Mixing từ {{mixingFrom}} đến {{mixingTo}} mỗi bài tùy số track, bao gồm 2 lần chỉnh sửa. Mastering đơn là {{masteringSingle}}. {{mixingNotice}}"
         },
         {
-          "q": "Đặt lịch/ tư vấn như thế nào?",
-          "a": "Liên hệ qua KakaoTalk hoặc trang liên hệ."
+          "q": "Đặt lịch hoặc xin báo giá thế nào?",
+          "a": "KakaoTalk open chat là nhanh nhất. Bạn cũng có thể gọi {{phone}} hoặc dùng trang liên hệ. Báo giá miễn phí."
         }
       ]
     },
@@ -870,7 +870,7 @@
         "title": "Đang cân nhắc thu âm vocal hoặc bài hát đám cưới?",
         "descriptionLine1": "Buổi thu vocal ₩250,000 (3 giờ, 1 bài) · Trọn gói bài hát đám cưới ₩350,000.",
         "descriptionLine2": "Kỹ sư chuyên trách hướng dẫn, chọn take và mix.",
-        "primaryText": "Xem giá dịch vụ",
+        "primaryText": "Xem dịch vụ thu âm",
         "secondaryText": "Liên hệ",
         "visualText": "Thu âm vocal"
       },
@@ -895,8 +895,8 @@
         "title": "Bạn muốn hoàn thiện bản thu một cách chuyên nghiệp?",
         "descriptionLine1": "Từ mix, mastering đến phát hành album.",
         "descriptionLine2": "Kỹ sư chuyên nghiệp biến bản nhạc của bạn thành sản phẩm sẵn sàng phát hành.",
-        "primaryText": "Tư vấn sản xuất",
-        "secondaryText": "Xem chi phí",
+        "primaryText": "Mixing & Mastering",
+        "secondaryText": "Tư vấn sản xuất",
         "visualText": "Hoàn thiện bản thu"
       }
     },
