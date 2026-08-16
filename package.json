@@ -44,6 +44,7 @@
     "lint": "eslint pages components lib data utils middleware.ts next.config.mjs --ext .js,.jsx,.ts,.tsx",
     "type-check": "tsc --noEmit",
     "generate:manifests": "node scripts/generate-portfolio-meta.js && node scripts/generate-story-catalog.js",
+    "generate:page-lastmod": "node scripts/generate-page-lastmod.mjs",
     "prebuild": "node scripts/optimizeImages.js && npm run generate:manifests && node scripts/generate-hero-font.mjs && node scripts/generate-body-font.mjs",
     "postbuild": "rm -f public/sitemap*.xml public/robots.txt && next-sitemap && node scripts/normalize-sitemap-hreflang.js",
     "test": "jest",

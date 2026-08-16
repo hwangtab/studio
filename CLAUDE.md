@@ -43,7 +43,35 @@ node scripts/optimizeImages.js # Manually run image optimization
 # 수동 재실행:
 node scripts/generate-hero-font.mjs
 node scripts/generate-hero-font.mjs --check  # 네트워크 없이 subset 커버리지 검증
+
+# 사이트맵 lastmod
+# prebuild에 넣지 않는다 — Vercel·GitHub Actions는 얕은 클론이라 빌드 중 git 이력이 없다.
+# pages/[locale]/ 에 라우트를 추가하면 pageRouteMap(lib/sitemap/routes.js) 등록 후
+# 아래를 로컬에서 실행하고 lib/sitemap/pageLastmod.json을 함께 commit할 것.
+# 빠뜨리면 routes.test.js의 'lastmod 커버리지'가 CI에서 잡아낸다.
+npm run generate:page-lastmod
+node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검증
 ```
+
+### lastmod 정책 (사이트맵 freshness)
+
+`<lastmod>`는 **절대 파일 mtime에서 오면 안 된다.** git은 mtime을 보존하지 않고 Vercel은
+얕은 클론이라, mtime을 쓰면 배포할 때마다 전체 URL이 같은 순간을 "방금 수정됨"으로 주장한다.
+Google은 lastmod을 "consistently and verifiably accurate"할 때만 사용하므로 신호가 통째로 폐기된다.
+
+| 대상 | 소스 | 생성 |
+|---|---|---|
+| 스토리 1,000+편 | frontmatter `lastmod` → `date` | `scripts/backfill-story-lastmod.mjs` |
+| 정적 페이지 22 라우트 | `lib/sitemap/pageLastmod.json` | `scripts/generate-page-lastmod.mjs` |
+| 카테고리 허브 | 소속 스토리 lastmod의 최댓값 | 자동 |
+
+두 경로 모두 mtime은 **항목이 없을 때의 폴백**으로만 남아 있다. 로컬에서는 파일마다 mtime이
+달라 이 버그가 드러나지 않으므로, 검증은 반드시 프로덕션 사이트맵으로 할 것.
+
+알려진 한계: 페이지 카피만 `public/locales/*/common.json`에서 고치면 날짜가 오르지 않는다.
+common.json은 전 페이지 공유 파일이라 반영하면 카피 한 줄에 모든 페이지가 갱신 처리되어
+원래 문제로 돌아간다. 과소보고는 안전한 방향이라 의도적으로 감수한다 — 크게 개편했다면
+`pageLastmod.json`의 해당 날짜를 손으로 올려도 된다.
 
 ## Architecture & Data Flow
 
