@@ -30,6 +30,9 @@ export const getOperatorPressCoverage = () =>
     publisher: { '@type': 'Organization', name: article.publisher },
   }));
 
+/** 운영자 Person entity의 canonical @id — locale 독립(다국어 alternate가 한 entity로 묶인다). */
+export const getOperatorPersonId = (siteUrl: string): string => `${siteUrl}/#person-hwang`;
+
 /**
  * Person.award — 수상 이력을 "2017 한국대중음악상 선정위원 특별상 〈젠트리피케이션〉" 형태 문자열로.
  * article·releaseProject 스키마도 같은 목록을 쓸 수 있도록 여기가 단일 변환 지점이다.
@@ -40,14 +43,23 @@ export const getOperatorAwards = (): string[] =>
   );
 
 /**
- * Person 프로필 스키마 — /[locale]/author 페이지의 mainEntity.
- * generateArticleSchema·generateReleaseProjectSchema와 동일한 @id(#person-hwang)를 사용해
- * 사이트 전체에서 황경하를 단일 entity로 인식시킨다 (GEO/E-E-A-T 핵심).
+ * 운영자 Person entity(#person-hwang)의 canonical 노드 — @context 없는 @graph용 조각.
+ *
+ * 소비처가 둘이다:
+ *   1) generateDefaultSchema — 전 페이지 @graph에 심어 Organization.founder가 가리킬 실체를 만든다.
+ *      이게 없으면 /pricing·/recording 같은 커머셜 페이지에 Person entity가 아예 없어서,
+ *      정작 "연신내 녹음실" 류 쿼리가 도달하는 면에 수상 이력과 얼굴이 하나도 실리지
+ *      않는다(스토리와 /author에만 있었다).
+ *   2) generatePersonProfileSchema — /author 페이지의 mainEntity. description만 더 얹는다.
+ *
+ * 두 노드가 같은 @graph에 동시에 존재해도 안전하다. JSON-LD는 같은 @id를 같은 노드로 병합하고,
+ * 여기서 나온 두 결과는 값이 충돌하지 않는다(같은 빌더 산출물이라 url·jobTitle·award·image가 동일).
+ * 충돌이 문제가 되는 건 값이 다를 때다 — 그게 예전 contact.tsx의 #organization 사고였다.
  */
-export const generatePersonProfileSchema = (
+export const buildOperatorPersonNode = (
   siteUrl: string,
   locale: Locale,
-  description: string
+  options: { description?: string } = {}
 ) => {
   const config = getSiteConfig(locale);
   const organizationId = `${siteUrl}/#organization`;
@@ -59,12 +71,11 @@ export const generatePersonProfileSchema = (
   const awards = getOperatorAwards();
 
   return {
-    '@context': 'https://schema.org',
     '@type': 'Person',
-    '@id': `${siteUrl}/#person-hwang`,
+    '@id': getOperatorPersonId(siteUrl),
     name: studioOperator.name,
     jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
-    description,
+    ...(options.description && { description: options.description }),
     url: getOperatorProfileUrl(siteUrl, locale),
     // Person.image — 검색·AI 엔진이 entity에 얼굴을 연결하는 신호. 절대 URL이어야 한다.
     // /author 히어로 아바타와 같은 사진(siteConfig.studioOperator.portrait 단일 소스).
@@ -82,3 +93,17 @@ export const generatePersonProfileSchema = (
     worksFor: { '@type': 'Organization', '@id': organizationId, name: config.name },
   };
 };
+
+/**
+ * Person 프로필 스키마 — /[locale]/author 페이지의 mainEntity.
+ * generateArticleSchema·generateReleaseProjectSchema와 동일한 @id(#person-hwang)를 사용해
+ * 사이트 전체에서 황경하를 단일 entity로 인식시킨다 (GEO/E-E-A-T 핵심).
+ */
+export const generatePersonProfileSchema = (
+  siteUrl: string,
+  locale: Locale,
+  description: string
+) => ({
+  '@context': 'https://schema.org',
+  ...buildOperatorPersonNode(siteUrl, locale, { description }),
+});

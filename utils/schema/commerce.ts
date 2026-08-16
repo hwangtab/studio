@@ -75,12 +75,11 @@ export const generatePracticeRoomMonthlyRentSchema = (
     name: copy.name,
     serviceType: copy.serviceType,
     description: copy.description,
-    provider: {
-      '@type': 'LocalBusiness',
-      '@id': `${config.url}/#studio`,
-      name: config.name,
-      url: config.url,
-    },
+    // @id 참조만 남긴다. @type을 다시 붙이면 business.ts가 EntertainmentBusiness 단일
+    // 타입으로 통합해 둔 #studio를 LocalBusiness로 재타이핑해, 그 파일이 피하려던
+    // "Google 검사기가 두 entity로 중복 카운트" 상태를 되돌린다.
+    // 같은 @graph에 #studio 전체 노드가 항상 실리므로 name·url은 여기서 반복할 필요가 없다.
+    provider: { '@id': `${config.url}/#studio` },
     // 21개 dedicated 지역 LP가 커버하는 service area를 명시. Google이 LocalBusiness
     // service area를 정밀히 인식해 '연신내 음악연습실' 등 long-tail 지역 검색에서
     // 부스트. 행정구역(City/AdministrativeArea) + 동·역 단위 Place 혼합.
@@ -138,11 +137,8 @@ export const generatePracticeRoomMonthlyRentSchema = (
       priceValidUntil: priceValidUntil.toISOString().split('T')[0],
       url: pageUrl,
       eligibleRegion: { '@type': 'Country', name: 'KR' },
-      seller: {
-        '@type': 'LocalBusiness',
-        '@id': `${config.url}/#studio`,
-        name: config.name,
-      },
+      // provider와 같은 이유로 참조만 (위 주석 참고).
+      seller: { '@id': `${config.url}/#studio` },
     },
   };
 };

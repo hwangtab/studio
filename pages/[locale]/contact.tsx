@@ -59,35 +59,18 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
   const noticeList = t('contact.notice.list', { returnObjects: true });
   const resolvedNoticeList = Array.isArray(noticeList) ? noticeList : null;
 
-  const contactPageSchema = React.useMemo(() => ({
-    '@context': 'https://schema.org',
-    '@type': 'LocalBusiness',
-    '@id': `${siteConfig.url}/#organization`,
-    name: siteConfig.name,
-    url: `${siteConfig.url}/${locale}/contact`,
-    telephone: `+82-${siteConfig.contact.phone.replace(/^0/, '')}`,
-    email: siteConfig.contact.email,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: locale === 'ko' ? '은평구' : 'Eunpyeong-gu',
-      addressRegion: locale === 'ko' ? '서울특별시' : 'Seoul',
-      postalCode: '03424',
-      addressCountry: 'KR',
-    },
-    geo: {
-      '@type': 'GeoCoordinates',
-      latitude: 37.614353,
-      longitude: 126.925887,
-    },
-    contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer service',
-      telephone: `+82-${siteConfig.contact.phone.replace(/^0/, '')}`,
-      email: siteConfig.contact.email,
-      url: `${siteConfig.url}/${locale}/contact`,
-      availableLanguage: ['Korean', 'English'],
-    },
-  }), [siteConfig, locale]);
+  // 이 페이지는 별도 LocalBusiness 노드를 내지 않는다.
+  //
+  // 예전에는 '@type': 'LocalBusiness' + '@id': '…/#organization' 노드를 여기서 냈는데,
+  // 그 @id는 generateDefaultSchema의 Organization 노드가 이미 쓰고 있었다. JSON-LD는 같은
+  // @id를 같은 노드로 병합하므로 사이트 최상위 Organization이 LocalBusiness로도 이중 타이핑되고,
+  // url이 ["…co.kr", "…co.kr/ko/contact"] 배열이 되어 조직 entity의 canonical URL이 모호해졌다.
+  // (AI 엔진의 entity resolution이 "Studio NOL"을 contact 페이지에 묶을 수 있는 상태였다.)
+  //
+  // 정보 손실은 없다 — 실제 LocalBusiness entity는 #studio이고, 전 페이지에 실리는 그 노드가
+  // telephone·email·address·geo·contactPoint·openingHours를 모두 갖고 있다.
+  // 오히려 여기 있던 address에는 streetAddress가 빠져 있어 #studio보다 불완전했다.
+  // 연락 관련 페이지 의미는 SEO의 webPageType="ContactPage"가 담당한다.
 
   return (
     <>
@@ -108,7 +91,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         canonical={`/${locale}/contact`}
         faqItems={contactFaqData}
         webPageType="ContactPage"
-        schema={contactPageSchema}
       />
       <ImageHero
         {...{

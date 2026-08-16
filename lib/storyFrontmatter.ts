@@ -24,8 +24,19 @@ export const normalizeStoryHowTo = (raw: unknown): StoryHowTo | undefined => {
     name?: unknown;
     description?: unknown;
     totalTime?: unknown;
+    tools?: unknown;
     steps?: unknown;
   };
+  // 문자열 하나만 적어도 받아준다 — frontmatter 작성 실수를 조용히 버리지 않게.
+  const rawTools = Array.isArray(candidate.tools)
+    ? candidate.tools
+    : typeof candidate.tools === 'string'
+      ? [candidate.tools]
+      : [];
+  const tools = rawTools
+    .filter((tool): tool is string => typeof tool === 'string')
+    .map((tool) => tool.trim())
+    .filter((tool) => tool.length > 0);
   const rawSteps = Array.isArray(candidate.steps) ? candidate.steps : [];
   const steps = rawSteps
     .filter((step): step is { name: unknown; text: unknown; image?: unknown } =>
@@ -43,6 +54,7 @@ export const normalizeStoryHowTo = (raw: unknown): StoryHowTo | undefined => {
     ...(typeof candidate.name === 'string' && { name: candidate.name }),
     ...(typeof candidate.description === 'string' && { description: candidate.description }),
     ...(typeof candidate.totalTime === 'string' && { totalTime: candidate.totalTime }),
+    ...(tools.length > 0 && { tools }),
     steps,
   };
 };

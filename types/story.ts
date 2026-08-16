@@ -26,6 +26,12 @@ export interface StoryHowTo {
   description?: string;
   /** ISO 8601 duration (예: "PT30M"). schema.org HowTo.totalTime 호환. */
   totalTime?: string;
+  /**
+   * 이 절차에 실제로 필요한 도구 이름들 — schema.org HowTo.tool.
+   * 선택 항목이고, 확실할 때만 적는다. 예전에 전 글에 '전문 녹음 장비'가 일괄
+   * 하드코딩돼 유통·발성 훈련 글에도 붙던 사실 오류가 있었다(utils/schema/basics.ts 주석 참고).
+   */
+  tools?: string[];
   /** 단계 목록 — schema.org HowToStep로 매핑된다. */
   steps: StoryHowToStep[];
 }

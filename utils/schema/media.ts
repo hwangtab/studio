@@ -98,6 +98,20 @@ export const generateMusicRecordingSchema = (
   };
 };
 
+/**
+ * ⚠️ 의도적으로 호출부가 없다. "완성된 생성기를 안 쓰고 있다"는 지적이 반복돼 여기 남긴다.
+ *
+ * VideoObject는 **그 영상이 해당 페이지에서 실제로 재생될 때만** 발행해야 한다
+ * (Google 동영상 구조화 데이터 요건: 페이지의 주요 콘텐츠로 embed/재생 가능해야 함).
+ * 2026-08 기준 사이트 현황:
+ *   - /cover-video 는 커버영상 '패키지'를 파는 서비스 LP다. 영상 자산이 하나도 없다
+ *     (iframe·mp4·유튜브 URL 전부 0건). 여기 붙이면 없는 영상을 주장하는 날조 마크업이 된다.
+ *   - /portfolio 의 유튜브 링크 18건은 embed가 아니라 외부 '듣기' 아웃바운드 링크이고
+ *     (프리렌더 iframe 0건), 대부분 아티스트·레이블 채널 소유라 우리가 마크업할 대상이 아니다.
+ *
+ * 배선 조건: 자체 제작 커버영상을 페이지에 embed하고 thumbnailUrl·uploadDate·duration을
+ * 확보했을 때. 그전까지는 호출하지 말 것.
+ */
 export interface VideoInput {
   name: string;
   description: string;
@@ -184,8 +198,19 @@ export const generateAudioObjectSchema = (
     '@context': 'https://schema.org',
     '@type': 'MusicRecording',
     name: track.name,
-    url: track.contentUrl.startsWith('http') ? track.contentUrl : `${siteUrl}${track.contentUrl}`,
-    encodingFormat: track.encodingFormat || 'audio/mpeg',
+    // 음원 파일은 MusicRecording 자신이 아니라 audio(AudioObject) 노드로 낸다.
+    // 예전에는 url에 mp3 경로를, MusicRecording에 encodingFormat을 직접 붙였는데
+    // encodingFormat은 MediaObject의 속성이라 MusicRecording에서는 무효였고,
+    // url이 mp3를 가리켜 '녹음물' 엔티티와 '파일'이 한 노드로 뭉개졌다.
+    // 이 트랙들은 우리 도메인(/audio/*.mp3)에서 실제로 재생되므로 마크업 근거가 있다
+    // (재생 불가한 자산에 미디어 스키마를 붙이면 안 되는 이유는 위 VideoInput 주석 참고).
+    audio: {
+      '@type': 'AudioObject',
+      name: track.name,
+      contentUrl: track.contentUrl.startsWith('http') ? track.contentUrl : `${siteUrl}${track.contentUrl}`,
+      encodingFormat: track.encodingFormat || 'audio/mpeg',
+      ...(track.duration && { duration: track.duration }),
+    },
     ...(track.description && { description: track.description }),
     ...(track.genre && { genre: track.genre }),
     ...(track.artist && {

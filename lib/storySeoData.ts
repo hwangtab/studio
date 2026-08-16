@@ -72,7 +72,9 @@ export const buildStoryExtraSchemas = ({
       story.howTo.description || story.summary,
       story.howTo.steps,
       story.howTo.totalTime,
-      locale
+      locale,
+      // frontmatter howTo.tools에 적힌 경우에만 발행. 없으면 tool을 아예 생략한다.
+      story.howTo.tools
     ));
   }
 

@@ -1,7 +1,5 @@
-import { ReviewItem } from '../../types/data';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
-import { getReviews } from '../../data/reviews';
 import {
   MIXING_LEVEL1_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
@@ -9,9 +7,9 @@ import {
   RECORDING_HOURLY_PRICE,
   VOCAL_PACKAGE_PRICE,
 } from '../../data/pricing';
+import { buildOperatorPersonNode, getOperatorPersonId } from './person';
 import {
   getOfferPriceValidUntil,
-  getSchemaLanguage,
   MIXING_OFFER_NAMES,
   OFFER_CATALOG_NAMES,
   PRACTICE_OFFER_NAMES,
@@ -26,15 +24,23 @@ export const generateDefaultSchema = (
   options: { includeReviews?: boolean } = {}
 ) => {
   const config = getSiteConfig(locale);
-  const schemaLanguage = getSchemaLanguage(locale);
 
-  // aggregateRating/review는 "그 페이지가 실제로 비즈니스에 관한 페이지"일 때만 붙인다.
-  // 블로그 스토리·가이드·카테고리 목록처럼 주제가 스튜디오 자체가 아닌 페이지에
-  // 별점 마크업을 실으면 Google의 self-serving review 정책 위반 소지가 있어
-  // 수동 조치 리스크가 된다. 그래서 호출부(SEO.tsx)가 includeReviews로 제어한다.
-  // aggregateRating 수치 자체는 비즈니스 전체 기준이므로 정식 전체 리뷰셋에서 산출.
-  const { includeReviews = true } = options;
-  const reviewItems: ReviewItem[] = includeReviews ? getReviews(locale) : [];
+  // aggregateRating/review 마크업은 발행하지 않는다 (2026-08 결정).
+  //
+  // Google은 자사 사이트가 자기 사업체에 대해 수집·호스팅한 리뷰를 self-serving으로 규정해
+  // LocalBusiness·Organization 리뷰 리치결과 대상에서 제외한다. 즉 실을 때 얻는 것은 없고
+  // 구조화 데이터 수동조치 리스크만 남는다. 실제로 이 사이트는 자체 후기 4건(전원 5점,
+  // 저자 마스킹)으로 만든 5.0/5를 51개 페이지 — 스튜디오가 주제도 아닌 포트폴리오 상세
+  // 30여 개 포함 — 에 내보내고 있었다. 네이버는 애초에 JSON-LD 리뷰를 소비하지 않으므로
+  // 이 마크업의 국내 이득도 0이다.
+  //
+  // 눈에 보이는 후기 섹션(components/ui/ReviewSection)은 그대로 둔다 — 사람이 읽는 사회적
+  // 증거는 유지하고 검색엔진용 별점 주장만 내리는 것이다.
+  //
+  // 되살릴 조건: 네이버 플레이스·구글 비즈니스 프로필에 제3자 리뷰가 쌓이면, 자사 집계가
+  // 아니라 그 외부 출처를 #studio의 sameAs로 가리키는 형태로 다시 설계할 것.
+  // includeReviews 옵션은 호출부(SEO.tsx includeBusinessReviews)와의 계약이라 시그니처만 보존한다.
+  void options;
 
   const localeContactUrl = `${siteUrl}/${locale}/contact`;
   const socialLinks = Object.values(socialProfiles).filter(url => url && url.trim() !== '');
@@ -42,6 +48,7 @@ export const generateDefaultSchema = (
 
   const organizationId = `${siteUrl}/#organization`;
   const studioId = `${siteUrl}/#studio`;
+  const personId = getOperatorPersonId(siteUrl);
 
   const offerCatalogName = OFFER_CATALOG_NAMES[locale];
   const recordingOfferName = RECORDING_OFFER_NAMES[locale];
@@ -97,6 +104,10 @@ export const generateDefaultSchema = (
         },
         sameAs: sameAsLinks,
         foundingDate: '2024-01-01',
+        // 조직 ↔ 운영자 연결. 이 한 줄이 /pricing·/recording 같은 커머셜 페이지에서
+        // "이 스튜디오를 누가 운영하는가"를 AI 엔진이 따라갈 수 있게 만든다
+        // (실체는 아래 @graph의 #person-hwang 노드).
+        founder: { '@id': personId },
         numberOfEmployees: { '@type': 'QuantitativeValue', value: 5 },
         description: config.description,
         slogan: 'Realizing artists\' musical vision through sound',
@@ -194,36 +205,12 @@ export const generateDefaultSchema = (
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
 
-        ...(reviewItems && reviewItems.length > 0 && {
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: (reviewItems.reduce((sum, item) => sum + item.rating, 0) / reviewItems.length).toFixed(1),
-            reviewCount: reviewItems.length,
-            bestRating: 5,
-            worstRating: 1
-          },
-          review: reviewItems.slice(0, 10).map((item) => ({
-            '@type': 'Review',
-            author: {
-              '@type': 'Person',
-              name: item.author,
-            },
-            reviewRating: {
-              '@type': 'Rating',
-              ratingValue: item.rating,
-              bestRating: 5,
-              worstRating: 1,
-            },
-            reviewBody: item.content,
-            inLanguage: schemaLanguage,
-            ...(item.datePublished && { datePublished: item.datePublished }),
-          })),
-        }),
-
-
         parentOrganization: {
           '@id': organizationId,
         },
+        // #studio에도 founder를 둔다. 로컬 결과·AI 답변이 Organization이 아니라 이
+        // LocalBusiness 노드만 읽고 지나가는 경우가 많아, 여기 없으면 운영자 연결이 끊긴다.
+        founder: { '@id': personId },
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: offerCatalogName,
@@ -347,6 +334,12 @@ export const generateDefaultSchema = (
           },
         ],
       },
+      // 운영자 Person entity 실체. 위 두 노드의 founder 참조가 가리키는 대상이며,
+      // 2017 한국대중음악상 수상(award) + 제3자 보도(subjectOf)를 함께 실어 커머셜
+      // 페이지에서도 E-E-A-T 근거가 검증 가능하게 한다.
+      // /author는 여기에 description을 더한 같은 @id 노드를 추가로 낸다 — 값이 충돌하지
+      // 않는 병합이라 안전하다(utils/schema/person.ts buildOperatorPersonNode 주석 참고).
+      buildOperatorPersonNode(siteUrl, locale),
     ],
   };
 };
