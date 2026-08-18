@@ -6,6 +6,24 @@
 // 모든 리포트는 기본적으로 봇 트래픽을 제외한다 (BOT_EXCLUSION 참조).
 // 제외된 분량은 docs/ga4-raw/bot-excluded.csv에 별도 기록된다.
 //
+// ⚠️ 출력 CSV를 읽을 때 반드시 알아야 할 두 가지 (2026-08-18, 실제 오독 2회 후 기록):
+//
+// 1. **landing.csv와 events.csv는 귀속 기준이 다르다.**
+//    - landing.csv의 `sessions`는 **세션이 착지한 랜딩 페이지** 기준.
+//    - events.csv의 리드(lead_click_kakao 등)는 **클릭이 실제로 일어난 page_path** 기준.
+//    두 파일을 나눠서 "그룹별 전환율"을 만들면 트래픽 품질 비교가 아니라 귀속 산출물이 나온다.
+//    스토리에 착지해 /ko/practice-room으로 이동한 뒤 전환한 세션은 전부 practice-room 공으로
+//    잡히고 스토리에서는 차감된다 — 그리고 그 동선은 f549323537·9546332e18로 **의도적으로 배선한
+//    것**이다. "/stories/ 0.55% vs /ko/practice-room 6.79% vs /ko/pricing 23.3%"를 근거로
+//    "스토리 트래픽이 나쁘다"고 결론내면 설계대로 작동한 결과를 결함으로 오독하는 것이다.
+//    페이지별 전환 품질을 정말 보려면 GA4에서 경로 탐색(path exploration)을 따로 봐야 한다.
+//
+// 2. **출력에 날짜 차원이 없다 — 90일 누적 스냅샷이다.**
+//    최근 작업의 효과를 보려면 이 CSV를 그대로 비교하면 안 된다. 90일 창에는 작업 이전 기간이
+//    대부분 섞여 있어, 이미 고친 문제가 미해결로 보인다(실제로 2026-08-04에 고친 폼 오류를
+//    8/14에 "현재 문제"로 오진했다). 반드시 커밋 이력과 대조하고, 필요하면 기간을 좁혀 직접
+//    질의할 것. GSC 쪽 같은 함정은 scripts/ctr-verdict.mjs와 docs/ctr-surgery-log.md 참조.
+//
 // 필수 환경변수:
 //   GA4_PROPERTY_ID          GA4 Admin → Property Settings의 숫자 ID
 //   GA4_OAUTH_REFRESH_TOKEN  (최초 1회: node --env-file=.env.local scripts/ga4-oauth-setup.mjs)
