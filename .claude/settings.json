@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Read(docs/gsc-raw/**)",
+            "command": "STAMP=\"${CLAUDE_PROJECT_DIR:-.}/.git/seo-preflight-stamp\"; if [ -z \"$(find \"$STAMP\" -mmin -360 2>/dev/null)\" ]; then printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"⚠ SEO 데이터 판독 전 확인: docs/gsc-raw·ga4-raw는 90일 누적 스냅샷이고, 최근 6시간 내 seo-preflight 실행 기록이 없다. 해석 전에 node scripts/seo-preflight.mjs 를 먼저 실행하라(최근 커밋·열린 실험·308 관측창·판독 함정). 이 확인 없이 해석해서 이 저장소에서 오진이 4회 났다. 규칙: CLAUDE.md의 SEO·GA4·GSC 분석 규칙 절.\"}}'; fi",
+            "statusMessage": "SEO 프리플라이트 스탬프 확인"
+          },
+          {
+            "type": "command",
+            "if": "Read(docs/ga4-raw/**)",
+            "command": "STAMP=\"${CLAUDE_PROJECT_DIR:-.}/.git/seo-preflight-stamp\"; if [ -z \"$(find \"$STAMP\" -mmin -360 2>/dev/null)\" ]; then printf '%s' '{\"hookSpecificOutput\":{\"hookEventName\":\"PostToolUse\",\"additionalContext\":\"⚠ SEO 데이터 판독 전 확인: docs/gsc-raw·ga4-raw는 90일 누적 스냅샷이고, 최근 6시간 내 seo-preflight 실행 기록이 없다. 해석 전에 node scripts/seo-preflight.mjs 를 먼저 실행하라(최근 커밋·열린 실험·308 관측창·판독 함정). 이 확인 없이 해석해서 이 저장소에서 오진이 4회 났다. 규칙: CLAUDE.md의 SEO·GA4·GSC 분석 규칙 절.\"}}'; fi",
+            "statusMessage": "SEO 프리플라이트 스탬프 확인"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -169,3 +169,11 @@ const traps = [
 for (const [k, v] of traps) console.log(`  • ${k} — ${v}`);
 
 console.log('\n════ 프리플라이트 끝. 이제 데이터를 열어라.');
+
+// 실행 스탬프 — .claude/settings.json의 PostToolUse 훅이 이 파일의 신선도(6시간)를 보고
+// gsc-raw/ga4-raw를 읽을 때 프리플라이트 미실행 경고를 낼지 결정한다. .git/ 안이라 커밋 안 됨.
+try {
+  fs.writeFileSync(path.join(ROOT, '.git/seo-preflight-stamp'), `${TODAY}\n`);
+} catch {
+  // .git이 없는 환경(워크트리 아님 등)이면 스탬프 없이 진행 — 훅이 매번 경고할 뿐 동작엔 지장 없다.
+}
