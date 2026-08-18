@@ -1,40 +1,42 @@
 device,country,sessions,bounce_rate
-"desktop","South Korea",8720,0.181
-"mobile","South Korea",7574,0.215
-"tablet","South Korea",291,0.227
-"desktop","China",171,0.696
-"desktop","United States",99,0.232
-"mobile","United States",96,0.177
-"desktop","Japan",76,0.211
-"mobile","Japan",65,0.231
-"desktop","Canada",29,0.138
-"mobile","Canada",22,0.091
-"mobile","Australia",16,0.125
+"desktop","South Korea",8939,0.184
+"mobile","South Korea",7887,0.227
+"tablet","South Korea",296,0.230
+"desktop","China",174,0.707
+"desktop","United States",97,0.258
+"mobile","United States",90,0.178
+"desktop","Japan",74,0.189
+"mobile","Japan",69,0.217
+"desktop","Canada",29,0.172
+"mobile","Canada",24,0.083
+"desktop","Australia",16,0.375
 "mobile","Vietnam",16,0.188
-"desktop","Singapore",15,0.133
-"desktop","Australia",14,0.357
-"mobile","China",14,0.571
-"mobile","Thailand",12,0.333
+"mobile","Australia",15,0.133
+"desktop","Singapore",14,0.143
+"mobile","China",13,0.538
+"mobile","Thailand",11,0.364
+"mobile","New Zealand",8,0.250
 "desktop","New Zealand",7,0.286
-"mobile","New Zealand",7,0.143
 "desktop","France",6,0.000
 "desktop","Spain",6,0.000
 "desktop","Thailand",6,0.000
 "desktop","Vietnam",6,0.333
+"mobile","Indonesia",6,0.500
 "desktop","Brazil",5,0.000
 "desktop","India",5,0.200
+"desktop","Indonesia",5,0.200
 "desktop","Malaysia",5,0.200
 "desktop","Philippines",5,0.200
 "desktop","Taiwan",5,0.200
 "mobile","Hong Kong",5,0.400
-"mobile","Indonesia",5,0.400
 "desktop","Hong Kong",4,0.000
-"desktop","Indonesia",4,0.000
 "desktop","Namibia",4,0.000
 "desktop","Russia",4,0.000
 "desktop","United Kingdom",4,0.000
 "tablet","United States",4,0.500
 "desktop","(not set)",3,0.000
+"mobile","Brazil",3,0.333
+"mobile","Philippines",3,0.000
 "mobile","Singapore",3,0.000
 "mobile","Taiwan",3,0.000
 "desktop","Azerbaijan",2,1.000
@@ -43,9 +45,7 @@ device,country,sessions,bounce_rate
 "desktop","Mexico",2,0.500
 "desktop","Nigeria",2,0.500
 "desktop","Pakistan",2,0.000
-"desktop","Qatar",2,0.000
 "desktop","Venezuela",2,0.500
-"mobile","Brazil",2,0.500
 "mobile","Macao",2,0.000
 "mobile","Mexico",2,1.000
 "mobile","Panama",2,0.000
