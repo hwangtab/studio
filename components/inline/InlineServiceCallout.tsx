@@ -51,7 +51,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
 const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[]; softNote?: string }> = {
   lesson: {
     title: '1:1 음악 레슨',
-    description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 보컬·믹싱·마스터링 멘토링.',
+    description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 작곡·미디·믹싱 프로듀싱 멘토링.',
     features: [
       '월 35만원 정액제 (주 1회 60분)',
       '본인 곡 기준 1:1 진행',
