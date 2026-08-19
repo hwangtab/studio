@@ -107,32 +107,67 @@ if (!fs.existsSync(logPath)) {
 H(3, '관측창 — 최근 통합/리다이렉트 (효과 측정 진행 중)');
 
 const RM = 'lib/regionRedirectMap.json';
-const rmDate = git(['log', '-1', '--format=%ad', '--date=short', '--', RM]);
-const rmCommit = git(['log', '-1', '--format=%h', '--', RM]);
-if (rmDate) {
-  // 쉼표만 바뀐 줄(마지막 항목 뒤에 ','가 붙는 경우)은 신규 등재가 아니다.
-  // +/- 양쪽에 모두 나타난 키는 제외해야 실제 추가분만 남는다.
-  const diff = git(['show', rmCommit, '--', RM]).split('\n');
-  const keysOf = (sign) => new Set(
-    diff.filter((l) => l.startsWith(sign) && !l.startsWith(`${sign}${sign}`) && l.includes('":'))
-      .map((l) => l.slice(1).trim().replace(/^"/, '').split('"')[0])
-  );
-  const removed = keysOf('-');
-  const added = [...keysOf('+')].filter((k) => !removed.has(k));
-  const age = daysBetween(rmDate, TODAY);
-  console.log(`  regionRedirectMap 마지막 변경: ${rmDate} (${rmCommit}, ${age}일 경과)`);
-  if (added.length) {
-    console.log(`  이때 308 등재된 슬러그 ${added.length}건: ${added.join(', ')}`);
-    // Google이 308을 처리하고 순위가 재배치되기까지 통상 2~4주.
-    if (age < 28) {
-      warn(`아직 ${28 - age}일 남았다 — Google 미처리 구간이다. 승자 페이지의 순위 변화를`);
-      warn('지금 판정하지 말고, 그 페이지들의 본문·H2도 수정하지 마라(효과가 교락된다).');
-    } else {
-      console.log('  → 28일 경과. 이제 승자 페이지 순위 변화를 판정해도 된다.');
+// Google이 308을 처리하고 순위가 재배치되기까지 통상 2~4주.
+const WINDOW_DAYS = 28;
+
+// 창 안의 **모든** 커밋을 훑는다. 예전에는 `git log -1`로 마지막 커밋 하나만 봐서,
+// 같은 날 등재된 다른 커밋이 통째로 누락됐다. 2026-08-19에 실제로 두 건을 놓쳤다
+// — 8/14 같은 날 8edb2dfbf1(voice-acting-rate1 → voice-actor-hiring-quote-cost)과
+// 1e26671388이 함께 있었는데 뒤엣것만 보고됐다.
+const windowStart = new Date(`${TODAY}T00:00:00Z`);
+windowStart.setUTCDate(windowStart.getUTCDate() - WINDOW_DAYS);
+const since = windowStart.toISOString().slice(0, 10);
+
+// 시각을 자정으로 못 박는다. git은 맨 날짜(`--since=2026-08-14`)를 "그날의 현재 시각"으로
+// 해석해서, 같은 스크립트가 아침에 돌 때와 저녁에 돌 때 창 경계가 하루씩 달라졌다.
+const rmLog = git(['log', `--since=${since}T00:00:00`, '--format=%h %ad', '--date=short', '--', RM]);
+const rmCommits = rmLog ? rmLog.split('\n').map((l) => l.trim().split(/\s+/)) : [];
+
+// diff 한 줄에서 "출발": "승자" 쌍을 뽑는다. 승자(목적지)를 같이 봐야 하는 이유는
+// 수정을 피해야 할 페이지가 출발이 아니라 **승자**이기 때문이다. 출발은 308로
+// 넘어가 아무도 안 고치지만, 승자의 본문·H2를 건드리면 통합 효과가 교락된다.
+const pairsOf = (diff, sign) => {
+  const out = new Map();
+  for (const line of diff) {
+    if (!line.startsWith(sign) || line.startsWith(`${sign}${sign}`)) continue;
+    const m = line.slice(1).match(/^\s*"([^"]+)"\s*:\s*"([^"]+)"/);
+    if (m) out.set(m[1], m[2]);
+  }
+  return out;
+};
+
+if (!rmCommits.length) {
+  const lastDate = git(['log', '-1', '--format=%ad', '--date=short', '--', RM]);
+  console.log(lastDate
+    ? `  최근 ${WINDOW_DAYS}일 내 308 등재 없음 (마지막 변경 ${lastDate} — 관측창 종료)`
+    : '  (regionRedirectMap 변경 이력 없음)');
+} else {
+  const winners = new Map(); // 승자 → 남은 일수 최댓값 (가장 늦게 등재된 건 기준)
+  for (const [hash, date] of rmCommits) {
+    const diff = git(['show', hash, '--', RM]).split('\n');
+    const removed = pairsOf(diff, '-');
+    // 쉼표만 바뀐 줄(마지막 항목 뒤 ',')은 신규 등재가 아니다. 값까지 같으면 제외.
+    const added = [...pairsOf(diff, '+')].filter(([k, v]) => removed.get(k) !== v);
+    const age = daysBetween(date, TODAY);
+    const left = WINDOW_DAYS - age;
+    if (!added.length) continue;
+    console.log(`  ${date}  ${hash}  ${added.length}건 등재 (${age}일 경과${left > 0 ? `, ${left}일 남음` : ', 창 종료'})`);
+    for (const [from, to] of added) {
+      console.log(`      ${from}  →  ${to}`);
+      if (left > 0 && (winners.get(to) ?? -Infinity) < left) winners.set(to, left);
     }
   }
-} else {
-  console.log('  (regionRedirectMap 변경 이력 없음)');
+  if (winners.size) {
+    console.log('');
+    console.log(`  🔒 수정 금지 — 관측 중인 승자 페이지 ${winners.size}건 (본문·H2·타이틀 전부):`);
+    for (const [slug, left] of [...winners].sort((a, b) => b[1] - a[1])) {
+      console.log(`      ${slug.padEnd(34)} ${left}일 남음`);
+    }
+    warn('Google 미처리 구간이다. 승자 페이지의 순위 변화를 지금 판정하지 말고,');
+    warn('본문·H2도 수정하지 마라 — 통합 효과와 교락돼 둘 다 판정 불가가 된다.');
+  } else {
+    console.log('  → 창 안의 등재가 모두 28일을 넘겼다. 이제 승자 페이지 순위를 판정해도 된다.');
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────
