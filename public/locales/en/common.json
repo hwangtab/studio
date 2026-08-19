@@ -1543,6 +1543,43 @@
     "package": {
       "title": "Voice Acting & Narration Pricing"
     },
+    "hiring": {
+      "title": "Voice Actor Casting — Process & Quote",
+      "subtitle": "You don't need to bring a voice actor. Send us the script and its intended use, and we handle casting through delivery.",
+      "processTitle": "How casting works",
+      "steps": [
+        {
+          "title": "Send the script and its use",
+          "description": "Include the script length and usage scope (YouTube, ads, corporate PR) so we can quote faster."
+        },
+        {
+          "title": "We send candidate voice samples",
+          "description": "We shortlist professional voice actors and freelance voice talent matching your project and budget, and send samples first."
+        },
+        {
+          "title": "Confirm the actor, then schedule",
+          "description": "Once you pick, we confirm the actor and arrange the session date and directing method."
+        },
+        {
+          "title": "Record and deliver files",
+          "description": "We record on the U87AI, apply noise removal and tone correction, then hand over the files."
+        }
+      ],
+      "quoteTitle": "A quote has two parts",
+      "quoteItems": [
+        "Studio time — ₩100,000/hour (excl. VAT), 2-hour minimum booking",
+        "Casting fee — quoted separately, based on the actor's tier, script length, and usage scope",
+        "Long-form work such as audiobooks: Day Lock, 6 hours, ₩500,000"
+      ],
+      "quoteNote": "If you bring your own voice actor, you only pay for studio time — ₩200,000 for the 2-hour minimum (excl. VAT). Send the script and intended use and the casting quote is free.",
+      "deliveryTitle": "Delivery specs",
+      "deliveryItems": [
+        "WAV 24bit/48kHz or MP3 320kbps",
+        "Remote video or voice directing supported",
+        "The booth is optimized for one performer — multiple voices are recorded sequentially, then mixed",
+        "Tell us at consultation if you need a special format"
+      ]
+    },
     "process": {
       "title": "How It Works",
       "subtitle": "4 steps to professional voice recording",

@@ -1515,6 +1515,43 @@
     "package": {
       "title": "Ovoz aktyorligi va naratsiya narxlari"
     },
+    "hiring": {
+      "title": "Ovoz aktyorini tanlash xizmati — jarayon va narx",
+      "subtitle": "Ovoz aktyoringiz bo'lmasa ham bo'ladi. Ssenariy va foydalanish maqsadini yuboring, tanlovdan topshirishgacha biz bajaramiz.",
+      "processTitle": "Tanlov qanday o'tadi",
+      "steps": [
+        {
+          "title": "Ssenariy va maqsadni yuboring",
+          "description": "Ssenariy hajmi va foydalanish doirasini (YouTube, reklama, korporativ PR) ham yuborsangiz, narx tezroq hisoblanadi."
+        },
+        {
+          "title": "Nomzodlarning ovoz namunalarini yuboramiz",
+          "description": "Loyiha va byudjetga mos professional ovoz aktyorlari va frilanser ovoz iste'dodlarini tanlab, avval namunalarni yuboramiz."
+        },
+        {
+          "title": "Aktyor tasdiqlangach jadval tuzamiz",
+          "description": "Siz tanlagan aktyorni tasdiqlab, yozuv sanasi va rejissyorlik usulini kelishamiz."
+        },
+        {
+          "title": "Yozib, fayllarni topshiramiz",
+          "description": "U87AI bilan yozib, shovqinni tozalash va ton tuzatishdan so'ng fayllarni topshiramiz."
+        }
+      ],
+      "quoteTitle": "Narx ikki qismdan iborat",
+      "quoteItems": [
+        "Studiya haqi — soatiga 100 000 KRW (QQS alohida), eng kami 2 soat bron",
+        "Tanlov haqi — alohida hisoblanadi. Aktyor darajasi, ssenariy hajmi va foydalanish doirasiga bog'liq.",
+        "Audiokitob kabi uzun ishlar: Day Lock 6 soat, 500 000 KRW"
+      ],
+      "quoteNote": "O'z aktyoringizni olib kelsangiz, faqat studiya haqini to'laysiz — eng kam 2 soat uchun 200 000 KRW (QQS alohida). Ssenariy va maqsadni yuborsangiz, tanlov narxi bepul hisoblanadi.",
+      "deliveryTitle": "Topshirish spetsifikatsiyasi",
+      "deliveryItems": [
+        "WAV 24bit/48kHz yoki MP3 320kbps",
+        "Masofadan video yoki ovozli rejissyorlik mumkin",
+        "Kabina bir kishiga moslashtirilgan — bir necha ovoz navbat bilan yozilib, keyin mikslanadi",
+        "Maxsus format kerak bo'lsa, maslahat paytida ayting"
+      ]
+    },
     "process": {
       "title": "Qanday ishlaydi",
       "subtitle": "Professional ovoz yozish uchun 4 qadam",

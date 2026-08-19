@@ -1515,6 +1515,43 @@
     "package": {
       "title": "Giá Thu Âm Lồng Tiếng & Narration"
     },
+    "hiring": {
+      "title": "Casting voice talent — quy trình và báo giá",
+      "subtitle": "Bạn không cần tự tìm voice talent. Chỉ cần gửi kịch bản và mục đích sử dụng, chúng tôi lo từ casting đến bàn giao.",
+      "processTitle": "Quy trình casting",
+      "steps": [
+        {
+          "title": "Gửi kịch bản và mục đích sử dụng",
+          "description": "Kèm theo độ dài kịch bản và phạm vi sử dụng (YouTube, quảng cáo, PR doanh nghiệp) để báo giá nhanh hơn."
+        },
+        {
+          "title": "Chúng tôi gửi mẫu giọng ứng viên",
+          "description": "Chúng tôi chọn lọc voice talent chuyên nghiệp và freelance phù hợp dự án cùng ngân sách, gửi mẫu giọng trước."
+        },
+        {
+          "title": "Chốt giọng rồi sắp lịch",
+          "description": "Sau khi bạn chọn, chúng tôi chốt voice talent và thống nhất lịch thu cùng cách chỉ đạo."
+        },
+        {
+          "title": "Thu âm và bàn giao file",
+          "description": "Thu bằng U87AI, khử noise và chỉnh tone rồi bàn giao file."
+        }
+      ],
+      "quoteTitle": "Báo giá gồm hai phần",
+      "quoteItems": [
+        "Phí phòng thu — 100.000 KRW/giờ (chưa VAT), đặt tối thiểu 2 giờ",
+        "Phí casting — báo riêng, tùy hạng voice talent, độ dài kịch bản và phạm vi sử dụng",
+        "Dự án dài như audiobook: Day Lock 6 giờ, 500.000 KRW"
+      ],
+      "quoteNote": "Nếu bạn tự dẫn voice talent, bạn chỉ trả phí phòng thu — 200.000 KRW cho mức tối thiểu 2 giờ (chưa VAT). Gửi kịch bản và mục đích sử dụng, báo giá casting là miễn phí.",
+      "deliveryTitle": "Thông số bàn giao",
+      "deliveryItems": [
+        "WAV 24bit/48kHz hoặc MP3 320kbps",
+        "Hỗ trợ chỉ đạo từ xa qua video hoặc thoại",
+        "Phòng thu tối ưu cho một người — nhiều giọng sẽ thu lần lượt rồi mix",
+        "Báo trước khi tư vấn nếu bạn cần định dạng đặc biệt"
+      ]
+    },
     "process": {
       "title": "Quy Trình",
       "subtitle": "4 bước hoàn thành phiên thu âm chuyên nghiệp",

@@ -1515,6 +1515,43 @@
     "package": {
       "title": "Precios de Locución y Narración"
     },
+    "hiring": {
+      "title": "Casting de locutores — proceso y presupuesto",
+      "subtitle": "No necesitas traer un locutor. Envíanos el guion y su uso previsto: nos encargamos desde el casting hasta la entrega.",
+      "processTitle": "Cómo funciona el casting",
+      "steps": [
+        {
+          "title": "Envía el guion y su uso",
+          "description": "Incluye la extensión del guion y el ámbito de uso (YouTube, anuncios, comunicación corporativa) para agilizar el presupuesto."
+        },
+        {
+          "title": "Te enviamos muestras de voz",
+          "description": "Preseleccionamos locutores profesionales y talento freelance acordes al proyecto y al presupuesto, y enviamos muestras primero."
+        },
+        {
+          "title": "Confirmas al locutor y agendamos",
+          "description": "Una vez elegido, confirmamos al locutor y coordinamos la fecha de sesión y el método de dirección."
+        },
+        {
+          "title": "Grabamos y entregamos archivos",
+          "description": "Grabamos con el U87AI, aplicamos reducción de ruido y corrección de tono, y entregamos los archivos."
+        }
+      ],
+      "quoteTitle": "El presupuesto tiene dos partes",
+      "quoteItems": [
+        "Uso del estudio — ₩100,000/hora (IVA no incluido), reserva mínima de 2 horas",
+        "Honorario de casting — se presupuesta aparte, según el nivel del locutor, la extensión del guion y el ámbito de uso",
+        "Trabajos largos como audiolibros: Day Lock, 6 horas, ₩500,000"
+      ],
+      "quoteNote": "Si traes tu propio locutor, solo pagas el uso del estudio: ₩200,000 por el mínimo de 2 horas (IVA no incluido). Envía el guion y su uso y el presupuesto de casting es gratuito.",
+      "deliveryTitle": "Especificaciones de entrega",
+      "deliveryItems": [
+        "WAV 24bit/48kHz o MP3 320kbps",
+        "Dirección remota por vídeo o voz disponible",
+        "La cabina está optimizada para una persona: varias voces se graban por turnos y luego se mezclan",
+        "Indícanos en la consulta si necesitas un formato especial"
+      ]
+    },
     "process": {
       "title": "Cómo Funciona",
       "subtitle": "4 pasos para una grabación de voz profesional",

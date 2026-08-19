@@ -291,6 +291,71 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         )}
       </Section>
 
+      {/* 성우 섭외 대행 — 프로세스·견적·납품 스펙.
+          '성우 녹음 섭외 견적/외주/업체/프리랜서' 쿼리가 노출은 나는데 클릭 0이었다
+          (2026-08-19 GSC 실측, 견적 쿼리는 pos 30). 답은 FAQ 아코디언 안에만 있어서
+          훑어보는 독자에게 안 보였다. 이 페이지는 28일 노출 190 수준이라 타이틀 실험은
+          판정 불가(로그 하한 500)이므로, 타이틀·메타는 두고 본문만 강화한다. */}
+      <Section id="voice-acting-hiring" variant="default">
+        <SectionHeading
+          icon={Users}
+          title={t('voiceActing.hiring.title')}
+          subtitle={t('voiceActing.hiring.subtitle')}
+          className="mb-12"
+        />
+        <div className="max-w-5xl mx-auto grid lg:grid-cols-2 gap-8">
+          <div>
+            <h3 className="typo-card-subtitle mb-5">{t('voiceActing.hiring.processTitle')}</h3>
+            <ol className="space-y-4">
+              {([0, 1, 2, 3] as const).map((i) => (
+                <li key={i} className="flex gap-4">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                    {i + 1}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="typo-card-subtitle text-base mb-1">
+                      {t(`voiceActing.hiring.steps.${i}.title`)}
+                    </p>
+                    <p className="typo-card-body text-sm">
+                      {t(`voiceActing.hiring.steps.${i}.description`)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="space-y-6">
+            <BaseCard variant="glass" className="p-6">
+              <h3 className="typo-card-subtitle mb-4">{t('voiceActing.hiring.quoteTitle')}</h3>
+              <ul className="space-y-3 mb-4">
+                {([0, 1, 2] as const).map((i) => (
+                  <li key={i} className="flex gap-3 typo-card-body text-sm">
+                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-primary" aria-hidden="true" />
+                    <span className="min-w-0">{t(`voiceActing.hiring.quoteItems.${i}`)}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="typo-card-body text-sm border-t border-gray-200 dark:border-gray-700 pt-4">
+                {t('voiceActing.hiring.quoteNote')}
+              </p>
+            </BaseCard>
+
+            <BaseCard variant="glass" className="p-6">
+              <h3 className="typo-card-subtitle mb-4">{t('voiceActing.hiring.deliveryTitle')}</h3>
+              <ul className="space-y-3">
+                {([0, 1, 2, 3] as const).map((i) => (
+                  <li key={i} className="flex gap-3 typo-card-body text-sm">
+                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-primary" aria-hidden="true" />
+                    <span className="min-w-0">{t(`voiceActing.hiring.deliveryItems.${i}`)}</span>
+                  </li>
+                ))}
+              </ul>
+            </BaseCard>
+          </div>
+        </div>
+      </Section>
+
       {/* 진행 절차 */}
       <Section variant="default">
         <m.div {...PROCESS_ANIMATION}>
