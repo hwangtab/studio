@@ -174,7 +174,7 @@ function checkFile(filePath) {
   }
 
   // Rule 4b: cta enum 검증 (옵션 — 명시 시에만 유효성 검사)
-  const VALID_CTA = ['recording', 'lesson', 'practice', 'production'];
+  const VALID_CTA = require('../lib/storyCtaTypes.json');
   if (fm.cta !== undefined && !VALID_CTA.includes(fm.cta)) {
     violations.push(`cta 값 잘못됨: '${fm.cta}' (유효값: ${VALID_CTA.join(', ')})`);
   }

@@ -1,5 +1,8 @@
 /** @jest-environment node */
 
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
 import {
   extractAutoExpandBlock,
   computeThinContentStatus,
@@ -154,15 +157,18 @@ describe('getStoryDetail — dateModified는 frontmatter lastmod에서만 온다
     expect(detail.modifiedDate).toBe(new Date('2026-07-25').toISOString());
   });
 
-  it('어느 글도 dateModified가 오늘(빌드 시각)로 찍히지 않는다', async () => {
-    // mtime 회귀의 직접 증상 — git이 mtime을 보존하지 않으므로 mtime을 쓰면
-    // 배포일에 전 글이 여기서 걸린다. 발행일·개정일이 모두 과거인 표본으로 확인한다.
-    const today = new Date().toISOString().slice(0, 10);
+  it('dateModified가 frontmatter lastmod과 정확히 일치한다 (mtime 유출 없음)', async () => {
+    // mtime 회귀의 직접 증상은 "dateModified가 빌드 시각으로 찍히는 것"이다. 예전엔
+    // 그걸 '오늘 날짜인가'로 검사했는데, 그러면 표본 글을 오늘 정당하게 개정한 날
+    // 테스트가 깨진다(2026-08-19 즉답 수술 때 실제 발생). 날짜 값이 아니라 출처를
+    // 검사하도록 바꾼다 — mtime이 유출되면 frontmatter 값과 어긋나 전 표본이 걸린다.
     const samples = ['distribution1', 'seoul1', 'mixing-complete-guide', 'recording-price1'];
 
     for (const slug of samples) {
+      const raw = readFileSync(join(process.cwd(), 'content', 'stories', `${slug}.md`), 'utf8');
+      const lastmod = raw.match(/^lastmod:\s*(\S+)/m)?.[1];
       const detail = await getStoryDetail(slug, 'ko');
-      expect(`${slug}:${detail.modifiedDate?.slice(0, 10)}`).not.toBe(`${slug}:${today}`);
+      expect(`${slug}:${detail.modifiedDate?.slice(0, 10)}`).toBe(`${slug}:${lastmod}`);
     }
   });
 

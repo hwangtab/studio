@@ -1,3 +1,5 @@
+import storyCtaTypes from '../lib/storyCtaTypes.json';
+
 import type { Locale } from '../lib/i18n';
 
 /**
@@ -54,15 +56,22 @@ export interface StoryInlineFallback {
  * 스토리 본문 끝 CTA 카드 종류. 슬러그·카테고리 기반 자동 매칭이 기본이고,
  * frontmatter `cta:` 필드로 글 단위 명시적 override가 가능하다.
  */
-export type StoryCTAOverride = 'recording' | 'lesson' | 'practice' | 'production' | 'release';
+export type StoryCTAOverride = typeof STORY_CTA_OVERRIDES[number];
 
-export const STORY_CTA_OVERRIDES: readonly StoryCTAOverride[] = [
+/**
+ * 값 단일 소스는 lib/storyCtaTypes.json — TS(이 파일)와 CommonJS
+ * (scripts/content-quality-check.js)가 같은 배열을 참조한다. 예전에는 스크립트가
+ * 값을 하드코딩해서, CTA 종류를 늘렸을 때 콘텐츠 게이트만 옛 목록으로 남아
+ * 정상 글을 위반으로 잡았다(2026-08-19 release 추가 시 실제 발생).
+ * JSON은 string[]로 해석되므로 리터럴 튜플로 좁힌다 — storyCategories.ts와 동일 패턴.
+ */
+export const STORY_CTA_OVERRIDES = storyCtaTypes as unknown as readonly [
   'recording',
   'lesson',
   'practice',
   'production',
   'release',
-] as const;
+];
 
 export interface StoryFrontmatter {
   title: string;
