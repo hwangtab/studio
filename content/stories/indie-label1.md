@@ -4,6 +4,7 @@ date: 2026-04-07
 lastmod: 2026-07-17
 author: 스튜디오 놀
 category: 음악 비즈니스
+cta: release
 tags:
   - 인디 레이블
   - 자체 발매

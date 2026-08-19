@@ -4,6 +4,7 @@ date: 2026-04-06
 lastmod: 2026-07-26
 author: 황경하
 category: 음악 비즈니스
+cta: release
 tags:
   - 커버 곡 저작권
   - 유튜브 커버 저작권

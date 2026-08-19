@@ -877,8 +877,8 @@
       "lesson": {
         "mobileMenu": "Menu di động",
         "title": "Bạn cần khóa học âm nhạc 1-1?",
-        "descriptionLine1": "Thanh nhạc, nhạc cụ, MIDI, sáng tác — lớp cá nhân hóa với ₩350,000/tháng.",
-        "descriptionLine2": "Phát triển kỹ năng từng bước cùng giảng viên chuyên nghiệp.",
+        "descriptionLine1": "MIDI, sáng tác, mixing, mastering — lớp sản xuất âm nhạc 1-1 với ₩350,000/tháng.",
+        "descriptionLine2": "Phát triển kỹ năng từng bước cùng nhà sản xuất đang hoạt động.",
         "primaryText": "Xem giáo trình",
         "secondaryText": "Đăng ký tư vấn",
         "visualText": "Lớp 1-1"
@@ -898,6 +898,14 @@
         "primaryText": "Mixing & Mastering",
         "secondaryText": "Tư vấn sản xuất",
         "visualText": "Hoàn thiện bản thu"
+      },
+      "release": {
+        "title": "Bạn muốn phát hành âm nhạc của mình?",
+        "descriptionLine1": "Từ lên kế hoạch, thu âm, mixing đến phát hành và truyền thông — dự án phát hành indie cùng nhà sản xuất 15 năm kinh nghiệm.",
+        "descriptionLine2": "Bắt đầu với buổi tư vấn miễn phí cho single, EP hoặc album.",
+        "primaryText": "Xem dự án phát hành",
+        "secondaryText": "Đăng ký tư vấn",
+        "visualText": "Dự án phát hành"
       }
     },
     "detail": {

@@ -871,8 +871,8 @@
       },
       "lesson": {
         "title": "1:1 음악 레슨이 필요하신가요?",
-        "descriptionLine1": "발성·악기·미디·작곡 — 1:1 맞춤형 레슨, 월 35만원 정액.",
-        "descriptionLine2": "전문 강사와 기초부터 단계적으로 실력을 쌓으세요.",
+        "descriptionLine1": "미디·작곡·믹싱·마스터링 — 1:1 프로듀싱 레슨, 월 35만원 정액.",
+        "descriptionLine2": "현직 프로듀서와 기초부터 단계적으로 실력을 쌓으세요.",
         "primaryText": "레슨 커리큘럼 보기",
         "secondaryText": "상담 신청하기",
         "visualText": "1:1 음악 레슨",
@@ -893,6 +893,14 @@
         "primaryText": "믹싱·마스터링 보기",
         "secondaryText": "제작 상담하기",
         "visualText": "음원 완성"
+      },
+      "release": {
+        "title": "만든 곡, 발매까지 함께할 사람이 필요하신가요?",
+        "descriptionLine1": "기획·녹음·믹싱부터 유통, 매체 PR까지 — 15년차 프로듀서와 함께하는 인디 발매 프로젝트.",
+        "descriptionLine2": "싱글·EP·정규 규모별 무료 상담으로 시작하세요.",
+        "primaryText": "발매 프로젝트 보기",
+        "secondaryText": "상담 신청하기",
+        "visualText": "발매 프로젝트"
       }
     },
     "detail": {

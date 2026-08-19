@@ -4,6 +4,7 @@ date: 2026-04-06
 lastmod: 2026-07-19
 author: 황경하
 category: 음악 제작
+cta: lesson
 tags:
   - 음악 프로듀서 되는 방법
   - 음악 제작

@@ -876,8 +876,8 @@
       },
       "lesson": {
         "title": "1:1 musiqa darslari kerakmi?",
-        "descriptionLine1": "Vokal, asbob, MIDI, kompozitsiya — shaxsiy darslar oyiga ₩350,000.",
-        "descriptionLine2": "Professional ustoz bilan bosqichma-bosqich mahorat oshiring.",
+        "descriptionLine1": "MIDI, kompozitsiya, miksing, mastering — 1:1 prodyuserlik darslari oyiga ₩350,000.",
+        "descriptionLine2": "Faoliyatdagi prodyuser bilan bosqichma-bosqich mahorat oshiring.",
         "primaryText": "O'quv dasturini ko'rish",
         "secondaryText": "Maslahat so'rash",
         "visualText": "1:1 darslar",
@@ -898,6 +898,14 @@
         "primaryText": "Miks va mastering",
         "secondaryText": "Prodakshn bo'yicha so'rov",
         "visualText": "Trek yakunlash"
+      },
+      "release": {
+        "title": "Musiqangizni reliz qilmoqchimisiz?",
+        "descriptionLine1": "Rejalashtirish, yozib olish va mikslashdan tortib distribyutsiya va matbuotgacha — 15 yillik tajribaga ega prodyuser bilan indie reliz loyihasi.",
+        "descriptionLine2": "Singl, EP yoki albom uchun bepul maslahatdan boshlang.",
+        "primaryText": "Reliz loyihasini ko'rish",
+        "secondaryText": "Maslahat so'rash",
+        "visualText": "Reliz loyihasi"
       }
     },
     "detail": {

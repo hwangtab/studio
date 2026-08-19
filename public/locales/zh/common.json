@@ -877,8 +877,8 @@
       "lesson": {
         "mobileMenu": "移动菜单",
         "title": "需要1对1音乐课程吗？",
-        "descriptionLine1": "发声、乐器、MIDI、作曲 — 个性化课程，月费35万韩元定额。",
-        "descriptionLine2": "在专业讲师指导下从基础开始逐步提升。",
+        "descriptionLine1": "MIDI、作曲、混音、母带 — 1对1制作课程，月费35万韩元定额。",
+        "descriptionLine2": "在现职制作人指导下从基础开始逐步提升。",
         "primaryText": "查看课程大纲",
         "secondaryText": "申请咨询",
         "visualText": "1对1课程"
@@ -898,6 +898,14 @@
         "primaryText": "查看混音·母带",
         "secondaryText": "制作咨询",
         "visualText": "音源完成"
+      },
+      "release": {
+        "title": "准备发行你的音乐吗？",
+        "descriptionLine1": "从企划、录音、混音到发行与媒体宣传 — 与15年经验制作人共同进行的独立发行项目。",
+        "descriptionLine2": "单曲、EP、正规专辑均可免费咨询。",
+        "primaryText": "查看发行项目",
+        "secondaryText": "申请咨询",
+        "visualText": "发行项目"
       }
     },
     "detail": {

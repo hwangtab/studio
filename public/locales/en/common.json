@@ -900,8 +900,8 @@
       "lesson": {
         "mobileMenu": "Mobile Menu",
         "title": "Need 1-on-1 music lessons?",
-        "descriptionLine1": "Vocal, instrument, MIDI, composition — personalized lessons at ₩350,000/month.",
-        "descriptionLine2": "Build your skills step by step with a professional instructor.",
+        "descriptionLine1": "MIDI, composition, mixing, mastering — 1-on-1 production lessons at ₩350,000/month.",
+        "descriptionLine2": "Build your skills step by step with a working producer.",
         "primaryText": "View Curriculum",
         "secondaryText": "Request Consultation",
         "visualText": "1-on-1 Lessons"
@@ -921,6 +921,14 @@
         "primaryText": "Mixing & Mastering",
         "secondaryText": "Production Consultation",
         "visualText": "Track Finalization"
+      },
+      "release": {
+        "title": "Ready to release your music?",
+        "descriptionLine1": "From planning, recording, and mixing to distribution and press — an indie release project with a producer of 15 years.",
+        "descriptionLine2": "Start with a free consultation for singles, EPs, or full albums.",
+        "primaryText": "View Release Project",
+        "secondaryText": "Request Consultation",
+        "visualText": "Release Project"
       }
     },
     "detail": {

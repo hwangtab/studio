@@ -877,8 +877,8 @@
       "lesson": {
         "mobileMenu": "Menú móvil",
         "title": "¿Necesitas clases de música 1 a 1?",
-        "descriptionLine1": "Voz, instrumento, MIDI, composición — clases personalizadas por ₩350,000/mes.",
-        "descriptionLine2": "Desarrolla tus habilidades paso a paso con un instructor profesional.",
+        "descriptionLine1": "MIDI, composición, mezcla, masterización — clases de producción 1 a 1 por ₩350,000/mes.",
+        "descriptionLine2": "Desarrolla tus habilidades paso a paso con un productor en activo.",
         "primaryText": "Ver Currículo",
         "secondaryText": "Solicitar Consulta",
         "visualText": "Clases 1 a 1"
@@ -898,6 +898,14 @@
         "primaryText": "Mezcla y Masterización",
         "secondaryText": "Consulta de Producción",
         "visualText": "Finalización de pista"
+      },
+      "release": {
+        "title": "¿Listo para lanzar tu música?",
+        "descriptionLine1": "De la planificación, grabación y mezcla a la distribución y prensa — un proyecto de lanzamiento indie con un productor de 15 años de experiencia.",
+        "descriptionLine2": "Empieza con una consulta gratuita para singles, EP o álbumes.",
+        "primaryText": "Ver Proyecto de Lanzamiento",
+        "secondaryText": "Solicitar Consulta",
+        "visualText": "Proyecto de Lanzamiento"
       }
     },
     "detail": {

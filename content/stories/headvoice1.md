@@ -4,6 +4,7 @@ date: 2026-04-06
 lastmod: 2026-07-26
 author: 황경하
 category: 보컬 가이드
+cta: recording
 tags:
   - 두성
   - 헤드 보이스
@@ -35,7 +36,7 @@ faq:
       고음 음역이 확장되고, 같은 고음을 낼 때 성대에 가하는 부담이 줄어듭니다. 또한 믹스 보이스 발달의 기반이 되어 중간 음역에서 더
       자연스럽고 풍성한 소리를 낼 수 있게 됩니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 howTo:
   name: "두성(헤드 보이스) 찾기 4단계 훈련 절차"
   description: "머리 쪽 공명을 의식하고 허밍 슬라이딩으로 두성을 찾아 음량을 강화하고 흉성과 연결해 믹스 보이스의 기초를 만드는 발성 훈련 절차입니다."

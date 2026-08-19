@@ -2,14 +2,14 @@ import React, { useRef } from 'react';
 import Link from 'next/link';
 import { m, useInView } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock } from '@/lib/lucide-icons';
+import { ArrowRight, Music, Mic2, Settings, BookOpen, GraduationCap, Lightbulb, MapPin, Speaker, Clock, Disc, Send, Globe } from '@/lib/lucide-icons';
 import { createInViewEnterAnimation } from '../utils/animationUtils';
 import { trackMicroEvent } from '../utils/analytics';
 
 
 import type { Locale } from '../lib/i18n';
 
-export type CTAType = 'recording' | 'lesson' | 'practice' | 'production';
+export type CTAType = 'recording' | 'lesson' | 'practice' | 'production' | 'release';
 
 interface StoryCTAProps {
     type?: CTAType;
@@ -146,6 +146,40 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryText: t('stories.cta.production.secondaryText'),
             visualText: t('stories.cta.production.visualText'),
             visualGradient: 'from-blue-500 to-indigo-400',
+        },
+        release: {
+            gradient: 'from-rose-900 to-purple-900',
+            accentColor: 'text-rose-200',
+            accentBg: 'bg-rose-200',
+            buttonBg: 'bg-white text-rose-900 hover:bg-rose-50',
+            secondaryButtonBg: 'bg-rose-800/50 text-white hover:bg-rose-800/70 border-rose-500/30',
+            icons: (
+                <>
+                    <Disc size={20} />
+                    <span className="w-1 h-1 bg-rose-200 rounded-full" />
+                    <Send size={20} />
+                    <span className="w-1 h-1 bg-rose-200 rounded-full" />
+                    <Globe size={20} />
+                </>
+            ),
+            title: t('stories.cta.release.title'),
+            description: (
+                <>
+                    {t('stories.cta.release.descriptionLine1')}<br className="hidden md:block" />
+                    {t('stories.cta.release.descriptionLine2')}
+                </>
+            ),
+            // 발매·유통·수익 의도 독자용. 음악 비즈니스 글의 production 폴백은
+            // /mixing-mastering로 가는데, "발매 대행" 의도와 맞는 상업 면은
+            // /release-project다(2026-08-19 P2-4 오퍼 재매칭). 카테고리 폴백은
+            // 건드리지 않고 frontmatter `cta: release` 명시 편에서만 쓴다 —
+            // 처치군을 좁혀야 리드 효과를 기간지정으로 판정할 수 있다.
+            primaryLink: getLink('/release-project'),
+            primaryText: t('stories.cta.release.primaryText'),
+            secondaryLink: getLink('/contact'),
+            secondaryText: t('stories.cta.release.secondaryText'),
+            visualText: t('stories.cta.release.visualText'),
+            visualGradient: 'from-rose-500 to-purple-400',
         }
     };
 

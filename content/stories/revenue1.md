@@ -4,6 +4,7 @@ date: 2026-04-06
 lastmod: 2026-07-19
 author: 황경하
 category: 음악 비즈니스
+cta: release
 tags:
   - 스트리밍 수익
   - 멜론 수익

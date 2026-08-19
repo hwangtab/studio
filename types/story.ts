@@ -54,13 +54,14 @@ export interface StoryInlineFallback {
  * 스토리 본문 끝 CTA 카드 종류. 슬러그·카테고리 기반 자동 매칭이 기본이고,
  * frontmatter `cta:` 필드로 글 단위 명시적 override가 가능하다.
  */
-export type StoryCTAOverride = 'recording' | 'lesson' | 'practice' | 'production';
+export type StoryCTAOverride = 'recording' | 'lesson' | 'practice' | 'production' | 'release';
 
 export const STORY_CTA_OVERRIDES: readonly StoryCTAOverride[] = [
   'recording',
   'lesson',
   'practice',
   'production',
+  'release',
 ] as const;
 
 export interface StoryFrontmatter {

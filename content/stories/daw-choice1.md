@@ -4,6 +4,7 @@ date: 2026-04-08
 lastmod: 2026-07-19
 author: 황경하
 category: 녹음 가이드
+cta: practice
 tags: ["큐베이스 레슨", "로직 프로 레슨", "에이블톤 레슨", "DAW 선택", "DAW 비교", "음악 제작 소프트웨어", "큐베이스 vs 로직"]
 thumbnail: "/images/recording12.webp"
 summary: >-
