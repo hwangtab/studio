@@ -456,3 +456,50 @@ export const deleteContract = async (contractId: string): Promise<boolean> => {
 
   return true;
 };
+
+/**
+ * 서명 직전에 고객이 채운 정보로 계약 본문을 다시 만든다.
+ *
+ * 생년월일과 주소는 운영자가 아니라 당사자가 적는다. 발송 시점의 본문에는 그 두 칸이 비어
+ * 있고, 서명하는 자리에서 채운 값으로 본문을 완성한 뒤 그 최종본에 서명이 붙는다.
+ *
+ * "발송 후 본문 불변" 원칙과 어긋나 보이지만 다르다. 그 원칙은 운영자가 고객 몰래 내용을
+ * 바꾸는 것을 막으려는 것이고, 여기서 채워지는 것은 당사자가 자기 화면에서 직접 입력해
+ * 눈으로 확인한 자기 정보다. 서명 대상 문서가 확정되는 시점도 그대로 서명 순간이다.
+ *
+ * 계약일도 이때 확정한다. 초안을 만든 날이 아니라 실제로 서명한 날이 계약일이다.
+ */
+export const buildSignedContractContent = (
+  contract: Contract,
+  details: { customerBirthdate: string; customerAddress: string },
+  signedAt: Date,
+): string => {
+  let specialTerms: string[] | undefined;
+  if (contract.specialTerms) {
+    try {
+      const parsed = JSON.parse(contract.specialTerms);
+      if (Array.isArray(parsed)) {
+        specialTerms = parsed.filter((term): term is string => typeof term === 'string');
+      }
+    } catch {
+      // 읽을 수 없는 특약은 없는 것으로 둔다 — 본문에 깨진 값을 넣느니 비우는 편이 낫다.
+      console.error(`[contracts/service] Unreadable specialTerms on ${contract.id}`);
+    }
+  }
+
+  return buildContractContent({
+    customerName: contract.customerName,
+    customerBirthdate: details.customerBirthdate,
+    customerPhone: contract.customerPhone,
+    customerAddress: details.customerAddress,
+    roomNumber: contract.roomNumber,
+    roomArea: contract.roomArea ?? undefined,
+    startDate: contract.startDate.toISOString(),
+    endDate: contract.endDate.toISOString(),
+    monthlyRent: contract.monthlyRent,
+    depositAmount: contract.depositAmount,
+    paymentDay: contract.paymentDay,
+    contractDate: signedAt.toISOString(),
+    specialTerms,
+  });
+};

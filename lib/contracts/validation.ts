@@ -279,3 +279,82 @@ export const validateCreateContractPayload = (
     },
   };
 };
+
+/** 서명할 때 고객이 직접 채우는 항목. */
+export interface SignerDetails {
+  customerBirthdate: string;
+  customerAddress: string;
+}
+
+export type SignerDetailsResult =
+  | { ok: true; data: SignerDetails }
+  | { ok: false; errors: ValidationError[] };
+
+/**
+ * 서명자가 입력한 자기 정보를 검증한다.
+ *
+ * 생년월일과 주소는 운영자가 알 수 없는 값이다. 계약을 잡는 과정에서 이름·연락처·이메일은
+ * 오가지만 생년월일을 물어보는 일은 없고, 물어봐서 대신 적으면 오타가 나도 확인할 방법이
+ * 없다. 계약 당사자를 특정하는 정보이므로 본인이 적고 본인이 확인한 뒤 서명하는 것이 맞다.
+ *
+ * 둘 다 필수다. 생년월일은 동명이인을 가르는 유일한 항목이고, 주소는 계약서 제10조(원상회복·
+ * 물품 회수 통지)와 제9조(해지 통지)가 전제하는 연락 수단이다.
+ */
+export const validateSignerDetails = (payload: Record<string, unknown>): SignerDetailsResult => {
+  const errors: ValidationError[] = [];
+  const push = (field: string, message: string) => errors.push({ field, message });
+
+  const read = (field: string, maxLength: number): string | undefined => {
+    const value = payload[field];
+    if (typeof value !== 'string' || value.trim() === '') {
+      push(field, '필수 항목입니다.');
+      return undefined;
+    }
+    const trimmed = value.trim();
+    if (trimmed.length > maxLength) {
+      push(field, `${maxLength}자 이내로 입력해 주세요.`);
+      return undefined;
+    }
+    if (CONTROL_CHARS.test(trimmed)) {
+      push(field, '줄바꿈이나 보이지 않는 문자는 사용할 수 없습니다.');
+      return undefined;
+    }
+    return trimmed;
+  };
+
+  const customerBirthdate = read('customerBirthdate', 20);
+  const customerAddress = read('customerAddress', MAX_ADDRESS_LENGTH);
+
+  if (customerBirthdate) {
+    /*
+     * 구분자까지 못박는다. validator.isDate는 format을 줘도 1990/01/02를 통과시키는데,
+     * 그 값은 계약서에 그대로 인쇄되고 new Date()가 로컬 시간대로 읽어 하루가 어긋날 수도
+     * 있다. 화면의 <input type="date">가 내보내는 형식만 받는다.
+     */
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(customerBirthdate) ||
+        !validator.isDate(customerBirthdate, { format: 'YYYY-MM-DD' })) {
+      push('customerBirthdate', 'YYYY-MM-DD 형식으로 입력해 주세요. (예: 1990-01-02)');
+    } else {
+      const birth = new Date(`${customerBirthdate}T00:00:00.000Z`);
+      const now = new Date();
+
+      if (birth.getTime() > now.getTime()) {
+        push('customerBirthdate', '미래 날짜는 입력할 수 없습니다.');
+      } else {
+        // 계약 당사자는 성년이어야 한다(민법상 미성년자 계약은 취소될 수 있다).
+        const age = (now.getTime() - birth.getTime()) / (365.2425 * 24 * 60 * 60 * 1000);
+        if (age < 19) {
+          push('customerBirthdate', '만 19세 미만은 온라인으로 계약할 수 없습니다. 운영자에게 문의해 주세요.');
+        } else if (age > 120) {
+          push('customerBirthdate', '생년월일을 다시 확인해 주세요.');
+        }
+      }
+    }
+  }
+
+  if (errors.length > 0 || !customerBirthdate || !customerAddress) {
+    return { ok: false, errors };
+  }
+
+  return { ok: true, data: { customerBirthdate, customerAddress } };
+};

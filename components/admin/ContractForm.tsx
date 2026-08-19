@@ -209,21 +209,6 @@ export default function ContractForm({
             />
           </Field>
 
-          <Field
-            label="생년월일"
-            htmlFor="customerBirthdate"
-            error={errorMap.customerBirthdate}
-            hint="예: 1990-01-01"
-          >
-            <input
-              id="customerBirthdate"
-              type="date"
-              className={INPUT_CLASS}
-              value={values.customerBirthdate}
-              onChange={(e) => set('customerBirthdate', e.target.value)}
-            />
-          </Field>
-
           <Field label="이메일" htmlFor="customerEmail" error={errorMap.customerEmail} required
             hint="이 주소로 서명 링크가 발송됩니다.">
             <input
@@ -247,16 +232,20 @@ export default function ContractForm({
             />
           </Field>
 
+          {/*
+            생년월일과 주소는 받지 않는다.
+
+            운영자가 알 수 없는 값이다 — 계약을 잡는 과정에서 이름·연락처·이메일은 오가지만
+            생년월일을 물어보는 일은 없고, 대신 적으면 오타가 나도 확인할 방법이 없다.
+            계약 당사자를 특정하는 정보라 본인이 적고 본인이 확인한 뒤 서명하는 것이 맞다.
+          */}
           <div className="md:col-span-2">
-            <Field label="주소" htmlFor="customerAddress" error={errorMap.customerAddress}>
-              <input
-                id="customerAddress"
-                className={INPUT_CLASS}
-                value={values.customerAddress}
-                onChange={(e) => set('customerAddress', e.target.value)}
-                autoComplete="off"
-              />
-            </Field>
+            <p className="text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-lg p-3 leading-relaxed">
+              <strong className="text-blue-900">생년월일과 주소는 고객이 직접 입력합니다.</strong>
+              <br />
+              서명 화면에서 본인이 채우고 확인한 뒤 서명하며, 그 값으로 계약서가 완성됩니다.
+              연락처는 본인 확인(뒤 4자리 대조)에 쓰이므로 운영자가 정확히 적어야 합니다.
+            </p>
           </div>
         </div>
       </section>

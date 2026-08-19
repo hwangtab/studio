@@ -109,6 +109,20 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    * 계약 화면은 서명 하나만 하러 오는 곳이라 다른 데로 새게 할 이유도 없다.
    */
   const isContractPage = router.pathname.startsWith('/[locale]/contracts/');
+  /**
+   * 관리자 화면도 사이트 껍데기를 두르지 않는다.
+   *
+   * 로그인 화면에 릴리스·녹음 메뉴와 언어 전환기가 붙어 있을 이유가 없고, 푸터의 사업자
+   * 정보·SNS 링크도 마찬가지다. 목록·상세는 이미 자기 헤더(보라색 바 + 로그아웃)를 갖고 있다.
+   *
+   * 세로 길이 문제도 여기서 온다 — 관리자 화면은 min-h-screen인데 고정 헤더 자리로 pt-20이
+   * 더해져, 화면보다 80px + 푸터 높이만큼 길어져 있었다. 로그인 카드가 화면 정중앙이 아니라
+   * 40px쯤 아래로 밀려 보이던 것이 그 때문이다.
+   */
+  const isAdminPage = router.pathname.startsWith('/admin');
+
+  /** 한 가지 일만 하러 온 화면 — 사이트 헤더·푸터·플로팅 버튼을 두르지 않는다. */
+  const isBareLayout = isContractPage || isAdminPage;
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const skipLabel = t('actions.skipToContent');
 
@@ -132,7 +146,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         브랜드는 계약 화면이 자기 상단에 직접 밝힌다 — 피싱과 구별되어야 하는 화면이라
         "어디서 온 문서인가"는 남아 있어야 한다.
       */}
-      {!isContractPage && (
+      {!isBareLayout && (
         <Header
           ref={headerRef}
           locale={locale}
@@ -152,15 +166,15 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         id="main-content"
         tabIndex={-1}
         className={`page-main flex-grow outline-none ${
-          isHome || hasHero || isContractPage ? 'pt-0' : 'pt-20'
+          isHome || hasHero || isBareLayout ? 'pt-0' : 'pt-20'
         }`}
       >
         {children}
       </main>
 
-      <Footer locale={locale} />
-      {!isStoryDetail && !isContractPage && <KakaoFab locale={locale} />}
-      {!isContractPage && <ScrollToTop locale={locale} />}
+      {!isBareLayout && <Footer locale={locale} />}
+      {!isStoryDetail && !isBareLayout && <KakaoFab locale={locale} />}
+      {!isBareLayout && <ScrollToTop locale={locale} />}
     </div>
   );
 };

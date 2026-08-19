@@ -85,7 +85,10 @@ const runSign = async () => {
       signatureData: 'data:image/png;base64,AAAA',
       ipAddress: '203.0.113.9',
       userAgent: 'jest',
-      contentHash: 'v2:test',
+      contentHash: 'v3:test',
+      customerBirthdate: '1990-01-02',
+      customerAddress: '서울시 은평구 대조동',
+      content: '# 서명 시점에 완성된 계약 본문',
     }),
   );
 
@@ -124,7 +127,11 @@ describe('서명 확정 트랜잭션', () => {
     expect(state.signature?.status).toBe('signed');
     expect(state.signature?.ipAddress).toBe('203.0.113.9');
     expect(state.clause?.agreedAt).not.toBeNull();
-    expect(state.contract?.contentHash).toBe('v2:test');
+    expect(state.contract?.contentHash).toBe('v3:test');
+    // 서명자가 채운 정보와 그것으로 완성한 본문이 함께 확정된다.
+    expect(state.contract?.customerBirthdate).toBe('1990-01-02');
+    expect(state.contract?.customerAddress).toBe('서울시 은평구 대조동');
+    expect(state.contract?.content).toBe('# 서명 시점에 완성된 계약 본문');
   });
 
   /**

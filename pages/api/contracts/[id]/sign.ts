@@ -9,7 +9,9 @@ import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts
 import { buildFingerprintInput, computeContractFingerprint } from '../../../../lib/contracts/integrity';
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
 import { buildSignStatements } from '../../../../lib/contracts/sign-transaction';
+import { buildSignedContractContent } from '../../../../lib/contracts/service';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
+import { validateSignerDetails } from '../../../../lib/contracts/validation';
 
 /**
  * 응답 뒤에 이어지는 후처리(PDF 생성·메일 발송)까지 이 함수의 실행 시간 안에서 끝나야
@@ -38,6 +40,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     string,
     unknown
   >;
+
+  /**
+   * 생년월일·주소는 당사자가 이 화면에서 직접 채운다.
+   *
+   * 운영자는 그 값을 알 수 없다. 계약을 잡는 과정에서 이름·연락처·이메일은 오가지만
+   * 생년월일을 물어보는 일은 없고, 대신 적으면 오타가 나도 확인할 방법이 없다.
+   * 계약 당사자를 특정하는 정보라 본인이 적고 본인이 확인한 뒤 서명하는 것이 맞다.
+   */
+  const signerDetails = validateSignerDetails(req.body as Record<string, unknown>);
+  if (!signerDetails.ok) {
+    return res.status(400).json({
+      ok: false,
+      message: '입력하신 정보를 확인해 주세요.',
+      errors: signerDetails.errors,
+    });
+  }
 
   if (typeof token !== 'string' || token.trim() === '') {
     return res.status(400).json({ ok: false, message: '서명 토큰이 없습니다.' });
@@ -151,9 +169,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .json({ ok: false, message: '이미 서명이 처리된 계약입니다.', status: 'signed' });
     }
 
+    /**
+     * 고객이 채운 정보로 계약 본문을 완성한다. 서명이 붙는 대상은 이 최종본이다.
+     * 계약일도 여기서 확정된다 — 초안을 만든 날이 아니라 실제로 서명한 날이다.
+     */
+    const signedContent = buildSignedContractContent(
+      contract,
+      signerDetails.data,
+      now,
+    );
+
     // 서명 시점 문서의 지문. 나중에 다시 계산해 대조하면 사후 변조를 탐지할 수 있다.
     const contentHash = computeContractFingerprint(
-      buildFingerprintInput(contract, {
+      buildFingerprintInput({ ...contract, ...signerDetails.data, content: signedContent }, {
         attachments: contract.contractAttachments,
         clauses: contract.contractClauses,
         signatureData,
@@ -183,6 +211,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ipAddress,
         userAgent,
         contentHash,
+        customerBirthdate: signerDetails.data.customerBirthdate,
+        customerAddress: signerDetails.data.customerAddress,
+        content: signedContent,
       }),
     );
 

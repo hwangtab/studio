@@ -166,6 +166,9 @@ export default function ContractSignPage({
   const pointCountRef = useRef(0);
 
   const [hasSigned, setHasSigned] = useState(false);
+  const [customerBirthdate, setCustomerBirthdate] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
+  const [detailErrors, setDetailErrors] = useState<Record<string, string>>({});
   const [identityDigits, setIdentityDigits] = useState('');
   const [identityConfirmed, setIdentityConfirmed] = useState(false);
   const [agreements, setAgreements] = useState<Record<string, boolean>>({});
@@ -179,6 +182,7 @@ export default function ContractSignPage({
     attachments.every((attachment) => agreements[attachment.id]);
 
   const identityReady = identityDigits.length === IDENTITY_DIGITS && identityConfirmed;
+  const detailsReady = customerBirthdate !== '' && customerAddress.trim() !== '';
 
   /**
    * 캔버스 해상도를 화면에 보이는 크기에 맞춘다.
@@ -300,6 +304,10 @@ export default function ContractSignPage({
 
   const handleSubmit = async () => {
     if (!contract) return;
+    if (!detailsReady) {
+      setSubmitError('생년월일과 주소를 입력해 주세요. 계약서에 그대로 기재됩니다.');
+      return;
+    }
     if (!allAgreed) {
       setSubmitError('모든 동의 항목을 확인해 주세요.');
       return;
@@ -333,6 +341,8 @@ export default function ContractSignPage({
           agreements: [...clauses.map((c) => c.id), ...attachments.map((a) => a.id)],
           identityDigits,
           identityConfirmed,
+          customerBirthdate,
+          customerAddress: customerAddress.trim(),
         }),
       });
 
@@ -354,8 +364,20 @@ export default function ContractSignPage({
       }
 
       if (!response.ok || !result.ok) {
+        // 항목별 오류는 해당 입력칸 아래에 붙인다 — 어디를 고쳐야 하는지 바로 보여야 한다.
+        if (Array.isArray(result.errors)) {
+          const map: Record<string, string> = {};
+          for (const item of result.errors) {
+            if (item && typeof item.field === 'string' && typeof item.message === 'string') {
+              map[item.field] = item.message;
+            }
+          }
+          setDetailErrors(map);
+        }
         throw new Error(result.message || '서명 제출에 실패했습니다.');
       }
+
+      setDetailErrors({});
 
       await router.push(
         `/${locale}/contracts/${contract.id}/complete?token=${encodeURIComponent(token)}`,
@@ -489,6 +511,66 @@ export default function ContractSignPage({
                 </div>
               )}
 
+              {/*
+                당사자만 아는 정보는 당사자가 적는다.
+
+                운영자는 생년월일·주소를 알 수 없다. 대신 적으면 오타가 나도 확인할 방법이
+                없고, 계약 당사자를 특정하는 정보라 잘못 적히면 문서 자체가 흔들린다.
+                여기서 채운 값으로 위 계약서가 완성된 뒤 그 최종본에 서명이 붙는다.
+              */}
+              <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">이용자 정보</h2>
+                <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
+                  아래 두 항목은 계약서에 그대로 기재됩니다. 정확히 입력해 주세요.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label
+                      htmlFor="customerBirthdate"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-1"
+                    >
+                      생년월일 <span className="text-red-600 dark:text-red-600">*</span>
+                    </label>
+                    <input
+                      id="customerBirthdate"
+                      type="date"
+                      value={customerBirthdate}
+                      onChange={(e) => setCustomerBirthdate(e.target.value)}
+                      max={new Date().toISOString().slice(0, 10)}
+                      className="w-full rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [color-scheme:light]"
+                    />
+                    {detailErrors.customerBirthdate && (
+                      <p className="mt-1 text-xs text-red-600 dark:text-red-600">
+                        {detailErrors.customerBirthdate}
+                      </p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="customerAddress"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-1"
+                    >
+                      주소 <span className="text-red-600 dark:text-red-600">*</span>
+                    </label>
+                    <input
+                      id="customerAddress"
+                      value={customerAddress}
+                      onChange={(e) => setCustomerAddress(e.target.value)}
+                      placeholder="예: 서울시 은평구 대조동 00-0"
+                      autoComplete="street-address"
+                      className="w-full rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                    />
+                    {detailErrors.customerAddress && (
+                      <p className="mt-1 text-xs text-red-600 dark:text-red-600">
+                        {detailErrors.customerAddress}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
 
@@ -616,18 +698,20 @@ export default function ContractSignPage({
                 <Button
                   size="lg"
                   fullWidth
-                  disabled={submitting || !allAgreed || !identityReady || !hasSigned}
+                  disabled={submitting || !detailsReady || !allAgreed || !identityReady || !hasSigned}
                   onClick={handleSubmit}
                 >
                   {submitting ? '처리 중...' : '계약서 서명 완료'}
                 </Button>
-                {!submitting && (!allAgreed || !identityReady || !hasSigned) && (
+                {!submitting && (!detailsReady || !allAgreed || !identityReady || !hasSigned) && (
                   <p className="mt-3 text-center text-sm text-gray-500 dark:text-gray-500">
-                    {!allAgreed
-                      ? '모든 동의 항목에 체크해 주세요.'
-                      : !identityReady
-                        ? '본인 확인을 완료해 주세요.'
-                        : '서명을 입력해 주세요.'}
+                    {!detailsReady
+                      ? '생년월일과 주소를 입력해 주세요.'
+                      : !allAgreed
+                        ? '모든 동의 항목에 체크해 주세요.'
+                        : !identityReady
+                          ? '본인 확인을 완료해 주세요.'
+                          : '서명을 입력해 주세요.'}
                   </p>
                 )}
               </div>

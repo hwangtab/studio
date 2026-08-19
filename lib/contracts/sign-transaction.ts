@@ -14,6 +14,10 @@ export interface SignStatementInput {
   ipAddress: string | null;
   userAgent: string;
   contentHash: string;
+  /** 서명자가 채운 자기 정보와, 그것으로 완성한 계약 본문. */
+  customerBirthdate: string;
+  customerAddress: string;
+  content: string;
 }
 
 /**
@@ -33,7 +37,18 @@ export interface SignStatementInput {
  * 반환 순서: [서명행, 조항, 첨부, 계약]
  */
 export const buildSignStatements = (db: Database, input: SignStatementInput) => {
-  const { contractId, signatureId, now, signatureData, ipAddress, userAgent, contentHash } = input;
+  const {
+    contractId,
+    signatureId,
+    now,
+    signatureData,
+    ipAddress,
+    userAgent,
+    contentHash,
+    customerBirthdate,
+    customerAddress,
+    content,
+  } = input;
 
   const contractAwaitingSignature = exists(
     db
@@ -91,6 +106,10 @@ export const buildSignStatements = (db: Database, input: SignStatementInput) => 
         rulesAgreedAt: now,
         identityVerifiedAt: now,
         contentHash,
+        // 서명자가 채운 값과 그것으로 완성한 본문. 지문은 이 본문으로 계산한 것이다.
+        customerBirthdate,
+        customerAddress,
+        content,
         updatedAt: now,
       })
       .where(and(eq(contracts.id, contractId), eq(contracts.status, 'sent'))),

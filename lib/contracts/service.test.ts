@@ -22,7 +22,12 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { createContract, findRoomConflict, terminateContract } from './service';
+import {
+  buildSignedContractContent,
+  createContract,
+  findRoomConflict,
+  terminateContract,
+} from './service';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -251,5 +256,74 @@ describe('계약 생성', () => {
 
     expect(a.signToken).not.toBe(b.signToken);
     expect(a.id).not.toBe(b.id);
+  });
+});
+
+/**
+ * 생년월일·주소는 운영자가 알 수 없어 당사자가 서명 화면에서 채운다. 그 값으로 계약 본문이
+ * 완성된 뒤 그 최종본에 서명이 붙는다 — 지문도 이 본문으로 계산된다.
+ */
+describe('서명 시점 본문 완성', () => {
+  const base = {
+    title: '홍길동님 음악연습실 이용계약',
+    customerName: '홍길동',
+    customerEmail: 'a@studionol.co.kr',
+    customerPhone: '010-1234-5678',
+    roomNumber: '302',
+    startDate: '2026-09-01',
+    endDate: '2027-03-01',
+    monthlyRent: 300000,
+    depositAmount: 300000,
+    paymentDay: 1,
+  };
+
+  const details = { customerBirthdate: '1990-01-02', customerAddress: '서울시 은평구 대조동' };
+
+  it('발송 시점 본문에는 생년월일·주소 칸이 비어 있다', async () => {
+    const contract = await createContract(base);
+
+    expect(contract.content).not.toContain('1990-01-02');
+    expect(contract.content).not.toContain('서울시 은평구 대조동');
+    // 자리표시자가 남아 있으면 안 된다 — 빈 칸으로 치환돼야 한다.
+    expect(contract.content).not.toMatch(/\{\{\w+\}\}/);
+  });
+
+  it('고객이 채운 값이 본문에 들어간다', async () => {
+    const contract = await createContract(base);
+    const signed = buildSignedContractContent(contract, details, new Date('2026-08-20T05:00:00Z'));
+
+    expect(signed).toContain('1990-01-02');
+    expect(signed).toContain('서울시 은평구 대조동');
+    expect(signed).not.toMatch(/\{\{\w+\}\}/);
+  });
+
+  /** 계약일은 초안을 만든 날이 아니라 실제로 서명한 날이다. */
+  it('계약일이 서명일로 확정된다', async () => {
+    const contract = await createContract(base);
+    const signed = buildSignedContractContent(contract, details, new Date('2026-08-20T05:00:00Z'));
+
+    expect(signed).toContain('2026년 8월 20일');
+  });
+
+  it('나머지 조건은 발송 시점 그대로다', async () => {
+    const contract = await createContract({ ...base, specialTerms: ['주차 1대 제공'] });
+    const signed = buildSignedContractContent(contract, details, new Date());
+
+    expect(signed).toContain('302');
+    expect(signed).toContain('300,000');
+    expect(signed).toContain('주차 1대 제공');
+  });
+
+  it('입력값의 표 구분자가 계약서 구조를 깨뜨리지 않는다', async () => {
+    const contract = await createContract(base);
+    const signed = buildSignedContractContent(
+      contract,
+      { ...details, customerAddress: '서울시 | 보증금 면제 확정' },
+      new Date(),
+    );
+
+    const row = signed.split('\n').find((line) => line.includes('보증금 면제 확정')) ?? '';
+    expect(row).toContain('\\|');
+    expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
   });
 });
