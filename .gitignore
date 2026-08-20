@@ -31,7 +31,6 @@ public/images/**/*.avif
 
 # build caches / debug artifacts
 tsconfig.tsbuildinfo
-.playwright-mcp/
 reports/
 table-check.png
 
@@ -52,3 +51,17 @@ lib/story-catalog.json
 
 # 스킬 작업 스크래치(humanize·newsart 산출물)
 _workspace/
+
+# 대외비 — 이 저장소는 PUBLIC이다. 아래는 로컬에만 둔다.
+#   사업자서류  인감·통장사본·사업자등록증·전대동의서
+#   contracts   인감 이미지와 data URI(날인용)
+#   레슨        수강생 실명
+#   soundtherapy 클라이언트 계약·견적, 저작권을 양도한 납품 대본, 영업 리서치
+docs/사업자서류/
+docs/contracts/
+docs/레슨/
+docs/soundtherapy/
+
+# 타인 저작물 스캔본(『방구석 뮤지션 자립 매뉴얼』) — 배포 권리 없음
+docs/musician_manual/img*.pdf
+docs/musician_manual/img*.md
