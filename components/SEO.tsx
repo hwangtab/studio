@@ -83,7 +83,7 @@ const SEO = ({
   canonical,
   disableUrlMetaAndAlternates = false,
   disableAlternates = false,
-  ogImage = '/images/og-default.jpg',
+  ogImage = '/images/og-default.webp',
   ogImageAlt,
   ogImageWidth,
   ogImageHeight,
@@ -175,10 +175,9 @@ const SEO = ({
 
   const absoluteOgImage = toAbsoluteUrl(ogImage);
 
-  // og-default.jpg는 1200x630으로 고정 생성. 페이지가 width/height를 명시하지 않았을 때
+  // og-default.webp는 1200x630으로 고정 생성. 페이지가 width/height를 명시하지 않았을 때
   // 소셜 크롤러가 aspect를 재협상하지 않도록 기본값을 자동 주입.
-  // OG 이미지는 반드시 JPEG/PNG — 카카오톡 스크랩 서버는 WebP를 렌더하지 못한다.
-  const isDefaultOgImage = ogImage === '/images/og-default.jpg';
+  const isDefaultOgImage = ogImage === '/images/og-default.webp';
   const effectiveOgImageWidth = ogImageWidth ?? (isDefaultOgImage ? 1200 : undefined);
   const effectiveOgImageHeight = ogImageHeight ?? (isDefaultOgImage ? 630 : undefined);
 

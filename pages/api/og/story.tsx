@@ -28,12 +28,10 @@ async function checkOgRateLimit(ip: string): Promise<boolean> {
 }
 
 export default async function handler(req: NextRequest) {
-  // HEAD도 허용한다 — 일부 SNS 스크랩 서버(카카오 등)는 og:image를 가져오기 전
-  // HEAD로 존재·타입을 먼저 확인하고, 405를 받으면 썸네일을 포기한다.
-  if (req.method !== 'GET' && req.method !== 'HEAD') {
+  if (req.method !== 'GET') {
     return new Response('Method Not Allowed', {
       status: 405,
-      headers: { Allow: 'GET, HEAD' },
+      headers: { Allow: 'GET' },
     });
   }
 
@@ -231,7 +229,7 @@ export default async function handler(req: NextRequest) {
     console.error('OG image generation error:', error);
     return new Response(null, {
       status: 302,
-      headers: { Location: '/images/og-default.jpg' },
+      headers: { Location: '/images/og-default.webp' },
     });
   }
 }
