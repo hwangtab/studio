@@ -26,7 +26,7 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "펀딩 지원", en: "Funding Support", zh: "众筹支持", es: "Soporte de Fondos", vi: "Hỗ trợ gọi vốn", th: "สนับสนุนการระดมทุน", uz: "Moliyalashtirish bo‘yicha yordam" }),
       description: t(locale, {
-        ko: "크라우드 펀딩을 통한 예산 마련 컨설팅을 제공합니다.",
+        ko: "크라우드 펀딩으로 제작비를 마련하는 방법을 함께 잡습니다.",
         en: "Consulting for budget raising through crowdfunding.",
         zh: "提供通过众筹筹集预算的咨询。",
         es: "Consultoría para la recaudación de fondos a través de crowdfunding.",
@@ -39,20 +39,20 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "레코딩", en: "Recording", zh: "录音", es: "Grabación", vi: "Thu âm", th: "บันทึกเสียง", uz: "Yozuv" }),
       description: t(locale, {
-        ko: "프리미엄 아날로그 장비를 활용한 고품질 녹음 서비스를 제공합니다.",
-        en: "High-quality recording services using premium analog equipment.",
-        zh: "利用高级模拟设备提供高品质录音服务。",
-        es: "Servicios de grabación de alta calidad con equipos analógicos premium.",
-        vi: "Dịch vụ thu âm chất lượng cao với thiết bị analog cao cấp.",
-        th: "บริการบันทึกเสียงคุณภาพสูงด้วยอุปกรณ์อนาล็อกระดับพรีเมียม",
-        uz: "Premium analog uskunalar yordamida yuqori sifatli yozuv xizmatlari."
+        ko: "Neumann·SSL 등 아날로그 장비로 녹음합니다.",
+        en: "Recorded on analog equipment such as Neumann and SSL.",
+        zh: "使用 Neumann、SSL 等模拟设备录音。",
+        es: "Grabación con equipos analógicos como Neumann y SSL.",
+        vi: "Thu âm bằng thiết bị analog như Neumann và SSL.",
+        th: "บันทึกเสียงด้วยอุปกรณ์อนาล็อก เช่น Neumann และ SSL",
+        uz: "Neumann, SSL kabi analog uskunalarda yozib olamiz."
       }),
       icon: 'Headphones'
     },
     {
       title: t(locale, { ko: "믹싱/마스터링", en: "Mixing/Mastering", zh: "混音/母带", es: "Mezcla/Masterización", vi: "Mixing/Mastering", th: "มิกซ์/มาสเตอริ่ง", uz: "Miks/Mastering" }),
       description: t(locale, {
-        ko: "따뜻하고 입체적인 사운드를 구현하여 음악에 생명을 불어넣습니다.",
+        ko: "따뜻하고 입체적인 사운드로 곡을 마무리합니다.",
         en: "Breathing life into music with warm, three-dimensional sound.",
         zh: "实现温暖且立体的声音，为音乐注入生命。",
         es: "Dando vida a la música con un sonido cálido y tridimensional.",
@@ -78,7 +78,7 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "유통", en: "Distribution", zh: "发行", es: "Distribución", vi: "Phân phối", th: "จัดจำหน่าย", uz: "Tarqatish" }),
       description: t(locale, {
-        ko: "온라인/오프라인 음원 및 음반 유통 서비스를 제공합니다.",
+        ko: "국내외 음원 플랫폼과 오프라인 음반 유통을 진행합니다.",
         en: "Online/offline music and album distribution services.",
         zh: "提供线上/线下音源及唱片发行服务。",
         es: "Servicios de distribución de música y álbumes online/offline.",
@@ -146,20 +146,20 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "시간과 비용 효율성", en: "Time & Cost Efficiency", zh: "时间和成本效率", es: "Eficiencia de Tiempo y Costos", vi: "Hiệu quả thời gian & chi phí", th: "ประสิทธิภาพด้านเวลาและค่าใช้จ่าย", uz: "Vaqt va xarajat samaradorligi" }),
       description: t(locale, {
-        ko: "통합 프로세스를 통해 시간과 비용의 효율성을 극대화합니다.",
-        en: "Maximizing time and cost efficiency through an integrated process.",
-        zh: "通过整合流程，最大限度地提高时间和成本效率。",
-        es: "Maximizando la eficiencia de tiempo y costos a través de un proceso integrado.",
-        vi: "Tối ưu thời gian và chi phí thông qua quy trình tích hợp.",
-        th: "เพิ่มประสิทธิภาพเวลาและค่าใช้จ่ายด้วยกระบวนการแบบบูรณาการ",
-        uz: "Integratsiyalashgan jarayon orqali vaqt va xarajat samaradorligini maksimal darajada oshiramiz."
+        ko: "여러 곳에 나눠 맡길 때보다 오가는 시간과 총비용이 줄어듭니다.",
+        en: "Fewer handoffs than splitting the work across vendors — less time, lower total cost.",
+        zh: "比分散委托多家更省往返时间与总成本。",
+        es: "Menos idas y vueltas que repartir el trabajo entre varios proveedores: menos tiempo y menor costo total.",
+        vi: "Ít qua lại hơn so với chia việc cho nhiều nơi — tiết kiệm thời gian và tổng chi phí.",
+        th: "ไม่ต้องวิ่งไปมาหลายเจ้า ประหยัดทั้งเวลาและค่าใช้จ่ายรวม",
+        uz: "Ishni bir necha joyga bo‘lib berishdan ko‘ra kam vaqt va umumiy xarajat ketadi."
       }),
       icon: 'Clock'
     },
     {
       title: t(locale, { ko: "창작 집중 환경", en: "Focus on Creation", zh: "专注于创作的环境", es: "Enfoque en la Creación", vi: "Môi trường tập trung sáng tạo", th: "สภาพแวดล้อมเพื่อโฟกัสการสร้างสรรค์", uz: "Ijodga e’tibor muhiti" }),
       description: t(locale, {
-        ko: "뮤지션은 창작에만 집중할 수 있는 환경을 제공합니다.",
+        ko: "뮤지션이 창작에만 집중할 수 있게 나머지를 맡습니다.",
         en: "Providing an environment where musicians can focus solely on creation.",
         zh: "提供音乐人只专注于创作的环境。",
         es: "Proporcionando un entorno donde los músicos pueden centrarse solo en la creación.",
@@ -175,13 +175,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "앨범 기획부터 유통까지", en: "From Planning to Distribution", zh: "从专辑策划到发行", es: "De la Planificación a la Distribución", vi: "Từ lên kế hoạch đến phân phối", th: "จากวางแผนถึงจัดจำหน่าย", uz: "Rejalashtirishdan tarqatishgacha" }),
       description: t(locale, {
-        ko: "모든 음악 제작 과정을 한 곳에서 처리하여 효율성을 극대화합니다.",
-        en: "Maximizing efficiency by handling the entire music production process in one place.",
-        zh: "在一处处理所有音乐制作过程，最大限度地提高效率。",
-        es: "Maximizando la eficiencia manejando todo el proceso de producción musical en un solo lugar.",
-        vi: "Xử lý toàn bộ quy trình sản xuất âm nhạc tại một nơi để tối ưu hiệu quả.",
-        th: "จัดการกระบวนการผลิตเพลงทั้งหมดในที่เดียวเพื่อเพิ่มประสิทธิภาพสูงสุด",
-        uz: "Butun musiqa ishlab chiqarish jarayonini bir joyda boshqarib, samaradorlikni oshiramiz."
+        ko: "기획·녹음·믹싱·유통을 한 곳에서 끊김 없이 이어서 진행합니다.",
+        en: "Planning, recording, mixing, and distribution run back to back in one place.",
+        zh: "策划、录音、混音到发行，在同一处连贯进行。",
+        es: "Planificación, grabación, mezcla y distribución, todo seguido en un mismo lugar.",
+        vi: "Lên kế hoạch, thu âm, mix và phát hành diễn ra liền mạch tại một nơi.",
+        th: "วางแผน บันทึกเสียง มิกซ์ และจัดจำหน่าย ดำเนินต่อเนื่องในที่เดียว",
+        uz: "Rejalash, yozib olish, miks va tarqatish — hammasi bir joyda ketma-ket."
       }),
       icon: 'Music'
     },
