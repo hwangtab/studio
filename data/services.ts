@@ -201,13 +201,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "전문가 연계 시스템", en: "Expert Network System", zh: "专家连接系统", es: "Red de Expertos", vi: "Mạng lưới chuyên gia", th: "เครือข่ายผู้เชี่ยวชาญ", uz: "Mutaxassislar tarmog‘i" }),
       description: t(locale, {
-        ko: "각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다.",
-        en: "Collaborating with top experts in each field to guarantee the best results.",
-        zh: "与各领域最优秀的专家合作，保证最佳结果。",
-        es: "Colaborando con los mejores expertos en cada campo para garantizar los mejores resultados.",
-        vi: "Hợp tác với các chuyên gia hàng đầu để đảm bảo kết quả tốt nhất.",
-        th: "ร่วมงานกับผู้เชี่ยวชาญชั้นนำในแต่ละด้านเพื่อรับประกันผลลัพธ์ที่ดีที่สุด",
-        uz: "Har sohadagi yetakchi mutaxassislar bilan hamkorlik qilib, eng yaxshi natijani kafolatlaymiz."
+        ko: "세션 연주자부터 엔지니어·디자이너까지, 15년간 함께 일해온 뛰어난 전문가들과 연결해 드립니다.",
+        en: "From session players to engineers and designers — we connect you with the outstanding people we have worked with over 15 years.",
+        zh: "从乐手到录音工程师、设计师，为您对接15年来一起工作的优秀专业人士。",
+        es: "Desde músicos de sesión hasta ingenieros y diseñadores: te conectamos con los grandes profesionales con los que llevamos 15 años trabajando.",
+        vi: "Từ nhạc công session đến kỹ sư âm thanh và designer — kết nối bạn với những chuyên gia xuất sắc đã cùng làm việc suốt 15 năm.",
+        th: "ตั้งแต่นักดนตรีเซสชันไปจนถึงวิศวกรเสียงและนักออกแบบ เราเชื่อมคุณกับมืออาชีพชั้นดีที่ร่วมงานกันมา 15 ปี",
+        uz: "Sessiya musiqachilaridan tortib ovoz muhandislari va dizaynerlargacha — 15 yil davomida birga ishlagan zo‘r mutaxassislar bilan bog‘laymiz."
       }),
       icon: 'Users'
     }
