@@ -65,13 +65,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "디자인", en: "Design", zh: "设计", es: "Diseño", vi: "Thiết kế", th: "ออกแบบ", uz: "Dizayn" }),
       description: t(locale, {
-        ko: "앨범 아트워크·자켓은 외주 디자이너를 연결합니다. 비용은 별도입니다.",
-        en: "For album artwork and sleeves we connect you with outside designers; cost is separate.",
-        zh: "专辑封面与封套，为您对接外部设计师，费用另计。",
-        es: "Para el arte y la portada del álbum te conectamos con diseñadores externos; el costo es aparte.",
-        vi: "Với artwork và bìa album, chúng tôi kết nối bạn với designer bên ngoài; chi phí tính riêng.",
-        th: "งานอาร์ตเวิร์กและปกอัลบั้ม เราแนะนำนักออกแบบภายนอกให้ โดยคิดค่าใช้จ่ายแยก",
-        uz: "Albom dizayni va muqova uchun tashqi dizaynerlar bilan bog‘laymiz — xarajati alohida."
+        ko: "앨범 아트워크·자켓은 외주 디자이너를 연결해 드립니다.",
+        en: "For album artwork and sleeves we connect you with outside designers.",
+        zh: "专辑封面与封套，为您对接外部设计师。",
+        es: "Para el arte y la portada del álbum te conectamos con diseñadores externos.",
+        vi: "Với artwork và bìa album, chúng tôi kết nối bạn với designer bên ngoài.",
+        th: "งานอาร์ตเวิร์กและปกอัลบั้ม เราแนะนำนักออกแบบภายนอกให้",
+        uz: "Albom dizayni va muqova uchun tashqi dizaynerlar bilan bog‘laymiz."
       }),
       icon: 'Palette'
     },
@@ -201,13 +201,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "전문가 연계 시스템", en: "Expert Network System", zh: "专家连接系统", es: "Red de Expertos", vi: "Mạng lưới chuyên gia", th: "เครือข่ายผู้เชี่ยวชาญ", uz: "Mutaxassislar tarmog‘i" }),
       description: t(locale, {
-        ko: "곡에 필요한 세션 연주자와 각 분야 전문가를 직접 연결합니다.",
-        en: "We connect you directly with the session players and specialists your track needs.",
-        zh: "为您的作品直接对接所需的乐手与各领域专家。",
-        es: "Conectamos directamente con los músicos de sesión y especialistas que tu canción necesita.",
-        vi: "Kết nối trực tiếp với nhạc công session và chuyên gia mà bản thu của bạn cần.",
-        th: "เชื่อมต่อคุณกับนักดนตรีเซสชันและผู้เชี่ยวชาญที่เพลงของคุณต้องการโดยตรง",
-        uz: "Qo‘shig‘ingizga kerak bo‘lgan sessiya musiqachilari va mutaxassislar bilan bevosita bog‘laymiz."
+        ko: "각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다.",
+        en: "Collaborating with top experts in each field to guarantee the best results.",
+        zh: "与各领域最优秀的专家合作，保证最佳结果。",
+        es: "Colaborando con los mejores expertos en cada campo para garantizar los mejores resultados.",
+        vi: "Hợp tác với các chuyên gia hàng đầu để đảm bảo kết quả tốt nhất.",
+        th: "ร่วมงานกับผู้เชี่ยวชาญชั้นนำในแต่ละด้านเพื่อรับประกันผลลัพธ์ที่ดีที่สุด",
+        uz: "Har sohadagi yetakchi mutaxassislar bilan hamkorlik qilib, eng yaxshi natijani kafolatlaymiz."
       }),
       icon: 'Users'
     }
