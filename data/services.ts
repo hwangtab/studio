@@ -120,13 +120,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "소통 오류 최소화", en: "Minimized Miscommunication", zh: "最大限度减少沟通误误", es: "Minimización de Errores", vi: "Giảm thiểu sai sót giao tiếp", th: "ลดความคลาดเคลื่อนในการสื่อสาร", uz: "Muloqot xatolarini kamaytirish" }),
       description: t(locale, {
-        ko: "각 단계별 소통 오류를 최소화하여 원활한 제작 과정을 보장합니다.",
-        en: "Ensuring a smooth production process by minimizing communication errors at each step.",
-        zh: "最大限度地减少各阶段的沟通错误，保障顺畅的制作过程。",
-        es: "Asegurando un proceso de producción fluido minimizando errores de comunicación.",
-        vi: "Giảm lỗi giao tiếp ở mỗi giai đoạn để đảm bảo quy trình suôn sẻ.",
-        th: "ลดข้อผิดพลาดในการสื่อสารแต่ละขั้นเพื่อให้กระบวนการราบรื่น",
-        uz: "Har bosqichdagi muloqot xatolarini minimallashtirib, jarayonni silliq qiladi."
+        ko: "각 단계마다 무엇을 하고 있는지 공유해 오해가 쌓이지 않게 합니다.",
+        en: "We share what is happening at each step so misunderstandings do not pile up.",
+        zh: "在每个阶段同步进展，避免误解累积。",
+        es: "Compartimos lo que ocurre en cada etapa para que no se acumulen malentendidos.",
+        vi: "Chia sẻ tiến độ ở từng giai đoạn để hiểu lầm không tích tụ.",
+        th: "แจ้งความคืบหน้าในแต่ละขั้นตอน เพื่อไม่ให้ความเข้าใจผิดสะสม",
+        uz: "Har bosqichda nima bo‘layotganini bo‘lishamiz — tushunmovchilik to‘planmaydi."
       }),
       icon: 'Users'
     },
@@ -188,26 +188,26 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "뮤지션의 비전 실현", en: "Realizing Musician's Vision", zh: "实现音乐人的愿景", es: "Realizando la Visión del Músico", vi: "Hiện thực hóa tầm nhìn nghệ sĩ", th: "ทำให้วิสัยทัศน์ของศิลปินเป็นจริง", uz: "Musiqachi tasavvurini ro‘yobga chiqarish" }),
       description: t(locale, {
-        ko: "뮤지션의 음악적 비전을 최우선으로 존중하는 프로덕션 철학을 가지고 있습니다.",
-        en: "Our production philosophy prioritizes respecting the musician's musical vision.",
-        zh: "拥有优先尊重音乐人音乐愿景的制作理念。",
-        es: "Nuestra filosofía de producción prioriza el respeto por la visión musical del músico.",
-        vi: "Triết lý sản xuất của chúng tôi ưu tiên tôn trọng tầm nhìn âm nhạc của nghệ sĩ.",
-        th: "ปรัชญาการผลิตของเราให้ความสำคัญกับวิสัยทัศน์ทางดนตรีของศิลปินเป็นอันดับแรก",
-        uz: "Ishlab chiqarish falsafamiz musiqachining musiqiy tasavvurini birinchi o‘ringa qo‘yadi."
+        ko: "곡의 방향은 아티스트가 정하고, 저희는 그 결정을 소리로 옮깁니다.",
+        en: "The artist decides where the song goes; we turn that decision into sound.",
+        zh: "作品的方向由音乐人决定，我们负责把这个决定变成声音。",
+        es: "El artista decide la dirección de la canción; nosotros la convertimos en sonido.",
+        vi: "Nghệ sĩ quyết định hướng đi của bài hát, chúng tôi biến quyết định đó thành âm thanh.",
+        th: "ศิลปินเป็นผู้กำหนดทิศทางของเพลง เราทำหน้าที่เปลี่ยนการตัดสินใจนั้นให้เป็นเสียง",
+        uz: "Qo‘shiq yo‘nalishini musiqachi belgilaydi, biz esa bu qarorni ovozga aylantiramiz."
       }),
       icon: 'Lightbulb'
     },
     {
       title: t(locale, { ko: "전문가 연계 시스템", en: "Expert Network System", zh: "专家连接系统", es: "Red de Expertos", vi: "Mạng lưới chuyên gia", th: "เครือข่ายผู้เชี่ยวชาญ", uz: "Mutaxassislar tarmog‘i" }),
       description: t(locale, {
-        ko: "각 분야 최고의 전문가들과 협업하여 최상의 결과물을 보장합니다.",
-        en: "Collaborating with top experts in each field to guarantee the best results.",
-        zh: "与各领域最优秀的专家合作，保证最佳结果。",
-        es: "Colaborando con los mejores expertos en cada campo para garantizar los mejores resultados.",
-        vi: "Hợp tác với các chuyên gia hàng đầu để đảm bảo kết quả tốt nhất.",
-        th: "ร่วมงานกับผู้เชี่ยวชาญชั้นนำในแต่ละด้านเพื่อรับประกันผลลัพธ์ที่ดีที่สุด",
-        uz: "Har sohadagi yetakchi mutaxassislar bilan hamkorlik qilib, eng yaxshi natijani kafolatlaymiz."
+        ko: "곡에 필요한 세션 연주자와 각 분야 전문가를 직접 연결합니다.",
+        en: "We connect you directly with the session players and specialists your track needs.",
+        zh: "为您的作品直接对接所需的乐手与各领域专家。",
+        es: "Conectamos directamente con los músicos de sesión y especialistas que tu canción necesita.",
+        vi: "Kết nối trực tiếp với nhạc công session và chuyên gia mà bản thu của bạn cần.",
+        th: "เชื่อมต่อคุณกับนักดนตรีเซสชันและผู้เชี่ยวชาญที่เพลงของคุณต้องการโดยตรง",
+        uz: "Qo‘shig‘ingizga kerak bo‘lgan sessiya musiqachilari va mutaxassislar bilan bevosita bog‘laymiz."
       }),
       icon: 'Users'
     }
