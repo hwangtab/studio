@@ -273,13 +273,13 @@
     },
     "mixing": {
       "title": "Mezcla",
-      "subtitle": "Precio justo según el número de pistas. Analógico y digital juntos, al servicio de la canción.",
+      "subtitle": "Precio justo según el número de pistas. Outboard analógico Tegeler y SSL junto a lo digital, para el mejor sonido posible.",
       "noticeTitle": "Ajuste/edición vocal",
       "noticeBody": "La afinación vocal profesional y corrección de tiempo tiene un costo adicional de ₩150,000 por canción."
     },
     "mastering": {
       "title": "Masterización",
-      "subtitle": "El pulido final. Cuidamos que el balance se sostenga en auriculares, en el coche o en altavoces."
+      "subtitle": "La etapa que remata el disco. Ajustado a objetivos de plataforma como -14 LUFS de Spotify, para que el balance se sostenga en auriculares, en el coche o en altavoces."
     },
     "additional": {
       "title": "Servicios adicionales",
@@ -802,7 +802,7 @@
     },
     "hero": {
       "title": "Nuestro equipo",
-      "subtitle": "Hacemos realidad tu visión musical con instalaciones, equipo y experiencia de primer nivel.",
+      "subtitle": "Neumann, SSL, Vintech: equipo de primer nivel, operado en persona por un ingeniero con 15 años de experiencia.",
       "alt": "Equipo de Studio NOL"
     },
     "intro": {
@@ -811,7 +811,7 @@
       "subtitle": "Studio NOL nació para apoyar la imaginación y creatividad de los músicos.",
       "quote": "\"Más que un espacio de grabación, es donde artistas e ingenieros respiran juntos para crear en colaboración.\"",
       "paragraphs": [
-        "Nos dedicamos a hacer realidad tu visión musical con instalaciones y equipo de primera, y experiencia profesional.",
+        "Neumann U87AI, SSL Fusion, Vintech X73i. El equipo es de primer nivel, pero al final el sonido lo hacen las personas: un ingeniero con 15 años lo lleva de principio a fin.",
         "El valor que persigue Studio NOL es centrarse en la esencia de la música más allá de la perfección técnica.",
         "Desde grabación, mezcla y masterización hasta lanzamiento y promoción, seremos un socio confiable."
       ]

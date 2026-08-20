@@ -273,13 +273,13 @@
     },
     "mixing": {
       "title": "Mixing",
-      "subtitle": "Giá công bằng theo số track. Kết hợp analog và digital, làm đúng chất bài hát.",
+      "subtitle": "Giá công bằng theo số track. Outboard analog Tegeler và SSL kết hợp digital, cho âm thanh tốt nhất.",
       "noticeTitle": "Chỉnh giọng/Biên tập vocal",
       "noticeBody": "Dịch vụ chỉnh giọng và timing chuyên nghiệp có thêm 150.000 KRW/bài."
     },
     "mastering": {
       "title": "Mastering",
-      "subtitle": "Bước hoàn thiện cuối. Giữ cho thế cân bằng không vỡ khi nghe bằng tai nghe, trong xe hay trên loa."
+      "subtitle": "Bước khép lại bản thu. Căn theo chuẩn nền tảng như -14 LUFS của Spotify, giữ thế cân bằng khi nghe bằng tai nghe, trong xe hay trên loa."
     },
     "additional": {
       "title": "Dịch vụ bổ sung",
@@ -802,7 +802,7 @@
     },
     "hero": {
       "title": "Thiết bị của chúng tôi",
-      "subtitle": "Hiện thực hóa tầm nhìn âm nhạc bằng cơ sở vật chất, thiết bị và chuyên môn hàng đầu.",
+      "subtitle": "Neumann, SSL, Vintech — thiết bị hàng đầu, do kỹ sư 15 năm kinh nghiệm trực tiếp vận hành.",
       "alt": "Thiết bị Studio NOL"
     },
     "intro": {
@@ -811,7 +811,7 @@
       "subtitle": "Studio NOL được sinh ra để hỗ trợ trí tưởng tượng tự do và hoạt động sáng tạo của nhạc sĩ.",
       "quote": "\"Không chỉ là không gian thu âm, mà là nơi nghệ sĩ và kỹ sư cùng hít thở để tạo nên cộng tác sáng tạo.\"",
       "paragraphs": [
-        "Chúng tôi nỗ lực hiện thực hóa tầm nhìn âm nhạc của bạn dựa trên cơ sở vật chất và thiết bị hàng đầu cùng know‑how chuyên gia.",
+        "Neumann U87AI, SSL Fusion, Vintech X73i. Thiết bị thuộc hàng đầu, nhưng âm thanh rốt cuộc do con người tạo ra — kỹ sư 15 năm kinh nghiệm trực tiếp làm từ đầu đến cuối.",
         "Giá trị Studio NOL hướng tới là tập trung vào bản chất của âm nhạc, vượt lên sự hoàn hảo kỹ thuật.",
         "Từ thu âm, mixing, mastering đến phát hành và quảng bá. Chúng tôi sẽ là đối tác đáng tin cậy để tiếng nói của bạn vang xa."
       ]

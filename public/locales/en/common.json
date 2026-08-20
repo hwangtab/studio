@@ -301,13 +301,13 @@
     },
     "mixing": {
       "title": "Mixing",
-      "subtitle": "Fair pricing based on track count. Analog and digital together, shaped to fit the song.",
+      "subtitle": "Fair pricing based on track count. Tegeler and SSL analog outboard alongside digital, for the best possible sound.",
       "noticeTitle": "Vocal Tuning/Editing",
       "noticeBody": "Professional vocal tuning and timing correction is available for an additional ₩150,000 per song."
     },
     "mastering": {
       "title": "Mastering",
-      "subtitle": "The final polish. We make sure the balance holds up on earbuds, in a car, or on speakers."
+      "subtitle": "The stage that finishes the record. Matched to platform targets like Spotify's -14 LUFS, so the balance holds up on earbuds, in a car, or on speakers."
     },
     "additional": {
       "title": "Additional Services",
@@ -830,7 +830,7 @@
     },
     "hero": {
       "title": "Our Equipment",
-      "subtitle": "Turning your musical vision into reality with top-tier facilities, equipment, and expertise.",
+      "subtitle": "Neumann, SSL, Vintech — top-tier gear, run hands-on by an engineer with 15 years behind the desk.",
       "alt": "Studio NOL Equipment"
     },
     "intro": {
@@ -839,7 +839,7 @@
       "subtitle": "Studio NOL is a space born to support the free imagination and creative activities of musicians.",
       "quote": "\"More than just a recording space, it's where artists and engineers breathe together to achieve creative collaboration.\"",
       "paragraphs": [
-        "We are dedicated to making your musical vision a reality based on top facilities, equipment, and expert know-how.",
+        "Neumann U87AI, SSL Fusion, Vintech X73i. The gear is top-tier, but sound is made by people in the end — an engineer with 15 years of experience runs every step in person.",
         "The value Studio NOL pursues is focusing on the essence of music itself, beyond technical perfection.",
         "From recording, mixing, mastering to album release and promotion. We will be a reliable partner so musicians can share their voices with the world."
       ]

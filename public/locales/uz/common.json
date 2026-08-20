@@ -273,13 +273,13 @@
     },
     "mixing": {
       "title": "Miks",
-      "subtitle": "Trek soniga asoslangan adolatli narx. Analog va raqamlini birga ishlatib, qo‘shiqqa mos ovoz topamiz.",
+      "subtitle": "Trek soniga asoslangan adolatli narx. Tegeler va SSL analog uskunalari raqamli bilan birga — eng yaxshi ovoz uchun.",
       "noticeTitle": "Vokal tuning/editing",
       "noticeBody": "Professional vokal tuning va timing tuzatish har bir qo'shiq uchun qo'shimcha 150,000 KRW."
     },
     "mastering": {
       "title": "Mastering",
-      "subtitle": "Yakuniy jilo bosqichi. Balans quloqchinda ham, mashinada ham, karnayda ham buzilmasligiga qaraymiz."
+      "subtitle": "Yozuvni yakunlaydigan bosqich. Spotify -14 LUFS kabi platforma me'yorlariga moslab, balans quloqchinda ham, mashinada ham, karnayda ham buzilmaydi."
     },
     "additional": {
       "title": "Qo'shimcha xizmatlar",
@@ -802,7 +802,7 @@
     },
     "hero": {
       "title": "Bizning uskunalar",
-      "subtitle": "Top darajadagi inshootlar, uskunalar va tajriba bilan musiqiy tasavvuringizni ro'yobga chiqaramiz.",
+      "subtitle": "Neumann, SSL, Vintech — top darajadagi uskunalarni 15 yillik tajribali muhandis o‘zi boshqaradi.",
       "alt": "Studio NOL uskunalari"
     },
     "intro": {
@@ -811,7 +811,7 @@
       "subtitle": "Studio NOL - musiqachilarning erkin tasavvuri va ijodiy faoliyatini qo'llab-quvvatlash uchun yaratilgan makon.",
       "quote": "\"Oddiy yozuv joyidan ko'ra ko'proq, bu yerda artistlar va muhandislar birgalikda nafas olib, ijodiy hamkorlikka erishadi.\"",
       "paragraphs": [
-        "Eng yuqori darajadagi inshootlar, uskunalar va ekspert know-how asosida musiqiy tasavvuringizni ro'yobga chiqarishga bag'ishlanganmiz.",
+        "Neumann U87AI, SSL Fusion, Vintech X73i. Uskunalar eng yuqori darajada, ammo ovozni oxir-oqibat odam yaratadi — 15 yillik tajribali muhandis boshidan oxirigacha o‘zi olib boradi.",
         "Studio NOL uchun muhim narsa - texnik mukammallikdan tashqari, musiqaning o'z mohiyatiga e'tibor.",
         "Yozuv, miks, masteringdan albom relizi va promo'ga qadar. Musiqachilar o'z ovozini dunyoga yetkazishi uchun ishonchli hamkormiz."
       ]

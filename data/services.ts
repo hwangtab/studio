@@ -52,13 +52,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "믹싱/마스터링", en: "Mixing/Mastering", zh: "混音/母带", es: "Mezcla/Masterización", vi: "Mixing/Mastering", th: "มิกซ์/มาสเตอริ่ง", uz: "Miks/Mastering" }),
       description: t(locale, {
-        ko: "따뜻하고 입체적인 사운드로 곡을 마무리합니다.",
-        en: "Breathing life into music with warm, three-dimensional sound.",
-        zh: "实现温暖且立体的声音，为音乐注入生命。",
-        es: "Dando vida a la música con un sonido cálido y tridimensional.",
-        vi: "Thổi sự sống vào âm nhạc bằng âm thanh ấm áp và có chiều sâu.",
-        th: "เติมชีวิตให้เพลงด้วยซาวด์อบอุ่นและมีมิติ",
-        uz: "Iliq va uch o‘lchamli tovush bilan musiqaga hayot bag‘ishlaymiz."
+        ko: "Tegeler·SSL 아날로그 아웃보드로 따뜻하고 입체적인 사운드를 만들어 음악에 생명을 불어넣습니다.",
+        en: "Tegeler and SSL analog outboard gear brings warm, three-dimensional sound — and breathes life into the music.",
+        zh: "用 Tegeler、SSL 模拟外置设备实现温暖且立体的声音，为音乐注入生命。",
+        es: "Con equipos analógicos externos Tegeler y SSL logramos un sonido cálido y tridimensional que da vida a la música.",
+        vi: "Thiết bị analog outboard Tegeler và SSL mang lại âm thanh ấm áp, có chiều sâu và thổi sự sống vào âm nhạc.",
+        th: "อุปกรณ์อนาล็อกภายนอก Tegeler และ SSL สร้างซาวด์อบอุ่นมีมิติ และเติมชีวิตให้เพลง",
+        uz: "Tegeler va SSL analog uskunalari iliq, hajmli tovush beradi va musiqaga hayot bag‘ishlaydi."
       }),
       icon: 'Music'
     },
