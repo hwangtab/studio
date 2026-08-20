@@ -27,7 +27,9 @@ yarn-error.log*
 .next
 public/images/**/*.webp
 public/images/**/*.avif
-!public/images/og-*.webp
+# OG 이미지는 JPEG만 커밋한다 — 카카오톡 스크랩 서버가 WebP를 렌더하지 못해
+# 썸네일이 통째로 사라진다(2026-05, 2026-08 두 번 재발). public/images/og-*.jpg는
+# 상단 webp/avif 무시 규칙에 걸리지 않으므로 별도 예외가 필요 없다.
 
 # build caches / debug artifacts
 tsconfig.tsbuildinfo

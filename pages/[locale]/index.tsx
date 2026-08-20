@@ -68,7 +68,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         title={seo.title}
         description={seo.description}
         keywords={seo.keywords}
-        ogImage="/images/og-studio2.webp"
+        ogImage="/images/og-studio2.jpg"
         ogImageAlt={heroContent.imageAlt}
         ogImageWidth={1200}
         ogImageHeight={630}

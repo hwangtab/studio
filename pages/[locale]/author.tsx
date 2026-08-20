@@ -43,7 +43,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
         title={profile.seo.title}
         description={profile.seo.description}
         keywords={profile.seo.keywords}
-        ogImage="/images/og-recording15.webp"
+        ogImage="/images/og-recording15.jpg"
         ogImageAlt={profile.heroAlt}
         ogImageWidth={1200}
         ogImageHeight={630}

@@ -91,7 +91,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         keywords={t('releaseProject.seo.keywords')}
         canonical={`/${locale}/release-project`}
         // 이미지 사이트맵(pageImageMap)과 동일 대표 이미지로 소셜 카드·이미지 검색 신호 일치.
-        ogImage="/images/og-recording15.webp"
+        ogImage="/images/og-recording15.jpg"
         ogImageAlt={t('releaseProject.hero.imageAlt')}
         ogImageWidth={1200}
         ogImageHeight={630}

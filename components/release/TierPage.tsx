@@ -102,7 +102,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         canonical={`/${locale}/release-project/${tier}`}
         // 이미지 사이트맵(next-sitemap pageImageMap)과 동일 대표 이미지 — og-default
         // 폴백이면 소셜 카드가 범용 이미지로 약화되고 두 신호가 서로 어긋난다.
-        ogImage="/images/og-recording15.webp"
+        ogImage="/images/og-recording15.jpg"
         ogImageAlt={t('releaseProject.hero.imageAlt')}
         ogImageWidth={1200}
         ogImageHeight={630}
