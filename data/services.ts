@@ -65,39 +65,39 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "디자인", en: "Design", zh: "设计", es: "Diseño", vi: "Thiết kế", th: "ออกแบบ", uz: "Dizayn" }),
       description: t(locale, {
-        ko: "앨범 아트워크, 자켓, 프로모션 이미지 제작을 지원합니다.",
-        en: "Support for album artwork, jackets, and promotional image creation.",
-        zh: "支持专辑封面、封套、宣传图片的制作。",
-        es: "Soporte para arte de álbum, portadas e imágenes promocionales.",
-        vi: "Hỗ trợ thiết kế artwork album, bìa và hình ảnh quảng bá.",
-        th: "สนับสนุนงานอาร์ตเวิร์กอัลบั้ม ปก และภาพโปรโมชัน",
-        uz: "Albom artworki, buklet va promo tasvirlarini ishlab chiqishda yordam beramiz."
+        ko: "앨범 아트워크·자켓은 외주 디자이너를 연결합니다. 비용은 별도입니다.",
+        en: "For album artwork and sleeves we connect you with outside designers; cost is separate.",
+        zh: "专辑封面与封套，为您对接外部设计师，费用另计。",
+        es: "Para el arte y la portada del álbum te conectamos con diseñadores externos; el costo es aparte.",
+        vi: "Với artwork và bìa album, chúng tôi kết nối bạn với designer bên ngoài; chi phí tính riêng.",
+        th: "งานอาร์ตเวิร์กและปกอัลบั้ม เราแนะนำนักออกแบบภายนอกให้ โดยคิดค่าใช้จ่ายแยก",
+        uz: "Albom dizayni va muqova uchun tashqi dizaynerlar bilan bog‘laymiz — xarajati alohida."
       }),
       icon: 'Palette'
     },
     {
       title: t(locale, { ko: "유통", en: "Distribution", zh: "发行", es: "Distribución", vi: "Phân phối", th: "จัดจำหน่าย", uz: "Tarqatish" }),
       description: t(locale, {
-        ko: "국내외 음원 플랫폼과 오프라인 음반 유통을 진행합니다.",
-        en: "Online/offline music and album distribution services.",
-        zh: "提供线上/线下音源及唱片发行服务。",
-        es: "Servicios de distribución de música y álbumes online/offline.",
-        vi: "Cung cấp dịch vụ phân phối nhạc và album online/offline.",
-        th: "บริการจัดจำหน่ายเพลงและอัลบั้มทั้งออนไลน์/ออฟไลน์",
-        uz: "Onlayn/offlayn musiqa va albom tarqatish xizmatlari."
+        ko: "멜론·스포티파이·애플뮤직 등 국내외 음원 플랫폼에 유통 등록을 진행합니다.",
+        en: "We register your release with Melon, Spotify, Apple Music, and other platforms at home and abroad.",
+        zh: "在 Melon、Spotify、Apple Music 等国内外音乐平台完成发行登记。",
+        es: "Registramos tu lanzamiento en Melon, Spotify, Apple Music y otras plataformas.",
+        vi: "Đăng ký phát hành trên Melon, Spotify, Apple Music và các nền tảng trong, ngoài nước.",
+        th: "ลงทะเบียนจัดจำหน่ายบน Melon, Spotify, Apple Music และแพลตฟอร์มทั้งในและต่างประเทศ",
+        uz: "Melon, Spotify, Apple Music kabi ichki va xorijiy platformalarda tarqatishni ro‘yxatdan o‘tkazamiz."
       }),
       icon: 'Globe'
     },
     {
       title: t(locale, { ko: "홍보/마케팅", en: "PR/Marketing", zh: "宣传/营销", es: "RP/Marketing", vi: "PR/Marketing", th: "ประชาสัมพันธ์/การตลาด", uz: "PR/Marketing" }),
       description: t(locale, {
-        ko: "SNS 활용, 언론 배포, 온오프라인 홍보 지원으로 음악을 알립니다.",
-        en: "Promoting music via SNS, press releases, and on/offline support.",
-        zh: "利用SNS、媒体发布、线上线下宣传支持来推广音乐。",
-        es: "Promoción vía redes sociales, comunicados de prensa y soporte on/offline.",
-        vi: "Quảng bá qua SNS, phát hành thông cáo báo chí và hỗ trợ online/offline.",
-        th: "โปรโมตผ่านโซเชียล มีเดีย, ข่าวประชาสัมพันธ์ และการสนับสนุนออนไลน์/ออฟไลน์",
-        uz: "SNS, press-reliz va onlayn/offlayn qo‘llov orqali musiqani targ‘ib qilamiz."
+        ko: "보도자료를 쓰고 음악 매체·평론가에게 배포합니다.",
+        en: "We write the press release and send it to music press and critics.",
+        zh: "撰写新闻稿并发送给音乐媒体与乐评人。",
+        es: "Redactamos la nota de prensa y la enviamos a medios y críticos musicales.",
+        vi: "Viết thông cáo báo chí và gửi tới báo chí, nhà phê bình âm nhạc.",
+        th: "เขียนข่าวประชาสัมพันธ์และส่งให้สื่อและนักวิจารณ์ดนตรี",
+        uz: "Press-relizni yozamiz va musiqa nashrlari hamda tanqidchilarga yuboramiz."
       }),
       icon: 'Megaphone'
     },

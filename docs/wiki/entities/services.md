@@ -4,7 +4,7 @@ type: entity
 sources:
   - ../studio-nol-complete-guide.md
   - ../naver-place-optimization.md
-updated: 2026-06-25
+updated: 2026-08-20
 related:
   - "[[concepts/pricing-offers]]"
   - "[[concepts/keyword-clusters]]"
@@ -108,6 +108,8 @@ related:
 - 기본 홍보 패키지 (보도자료 + 미디어 배포): 300,000원
 - EPK 웹사이트 제작: 500,000원
 - 유튜브/방송 촬영 대관: 100,000원/시간
+- 라이브 공연 기획·운영 지원: 가격 미정 (2026-08-20 본인 확인. `data/services.ts`의 음반 제작
+  8단계 중 '공연 기획' 카드가 이 서비스다. 정본 미등재 상태로 사이트에만 노출돼 있어 등재)
 
 ---
 
