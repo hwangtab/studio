@@ -8,6 +8,8 @@ import SessionChecklist from './story/SessionChecklist';
 import { isInlineDirectiveName, MAX_AUTHOR_BOXES } from '../lib/inlineDirectives';
 import { isAllowedLinkHref } from './markdown/safeLinks';
 import { autoLinkKeywords } from './markdown/autoLinks';
+import { linkPhoneNumbers } from './markdown/phoneLinks';
+import { trackLeadEvent } from '../utils/analytics';
 import { splitContentByShortcodes, type ContentSegment } from './markdown/contentSegments';
 import { toHeadingId } from './markdown/headings';
 import { MarkdownImage } from './markdown/MarkdownImage';
@@ -307,6 +309,30 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
           return <span className="text-gray-500">{children}</span>;
         }
 
+        // tel:·mailto:는 라우팅 대상이 아니다. 예전에는 isExternal(http/https) 판정에만
+        // 걸려 NextLink로 넘어갔는데, next/link에 route가 아닌 스킴을 주면 prefetch·클라이언트
+        // 라우팅 경로를 타 모바일 다이얼러 호출이 불안정해진다. 여기서 평문 앵커로 끊는다.
+        // 전화는 로컬 서비스업의 1순위 전환 행동이라 lead_click_phone도 함께 발화시킨다.
+        if (href?.startsWith('tel:') || href?.startsWith('mailto:')) {
+          const isPhone = href.startsWith('tel:');
+          return (
+            <a
+              href={href}
+              className="text-primary hover:underline underline-offset-4"
+              onClick={() =>
+                trackLeadEvent(isPhone ? 'lead_click_phone' : 'lead_click_email', {
+                  locale: currentLocale,
+                  component: 'StoryBody',
+                  cta_id: isPhone ? 'story_body_phone' : 'story_body_email',
+                })
+              }
+              {...props}
+            >
+              {children}
+            </a>
+          );
+        }
+
         // If it's an internal link starting with / and not already having a locale
         let finalHref = href;
         const isExternal = href?.startsWith('http://') || href?.startsWith('https://');
@@ -337,7 +363,12 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
     [localeAwareOverrides]
   );
 
-  const processedContent = React.useMemo(() => autoLinkKeywords(content, currentSlug, currentLocale), [content, currentSlug, currentLocale]);
+  // 전화번호 링크화는 autoLink '뒤에' 돌린다 — 순서가 바뀌면 autoLink가 방금 만든
+  // [텍스트](/stories/...) 안쪽을 전화 링크가 다시 건드릴 여지가 생긴다.
+  const processedContent = React.useMemo(
+    () => linkPhoneNumbers(autoLinkKeywords(content, currentSlug, currentLocale)),
+    [content, currentSlug, currentLocale]
+  );
   const segments = React.useMemo(() => splitContentByShortcodes(processedContent), [processedContent]);
 
   const inlineBoxCountRef = React.useRef(0);

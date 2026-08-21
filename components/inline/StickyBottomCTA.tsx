@@ -1,9 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, MessageCircle, X } from '@/lib/lucide-icons';
+import { ArrowRight, MessageCircle, Phone, X } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
+import { CANONICAL_FACTS } from '../../lib/factTokens';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 
@@ -31,6 +32,19 @@ const isDismissedNow = (): boolean => {
 const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
+
+  // 전화는 로컬 서비스업의 1순위 전환 행동인데, 스토리 상세에서 상시 노출되는 진입점이
+  // 카카오뿐이었다. 40~60대 로컬 고객(연습실 월세 문의층)은 오픈채팅보다 전화를 쓴다.
+  // href를 국제표기(+82)로 두면 국내·해외 어디서 눌러도 정상 연결된다.
+  const telHref = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
+
+  const trackPhoneClick = React.useCallback(() => {
+    trackLeadEvent('lead_click_phone', {
+      locale,
+      component: 'StickyBottomCTA',
+      cta_id: 'sticky_bottom_phone',
+    });
+  }, [locale]);
 
   const trackKakaoClick = React.useCallback(() => {
     trackLeadEvent('lead_click_kakao', {
@@ -107,6 +121,14 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       >
         {t('nav.pricing')}
       </Link>
+      <a
+        href={telHref}
+        onClick={trackPhoneClick}
+        className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-500/20 touch-manipulation"
+        aria-label={t('stories.sticky.phone', { defaultValue: '전화 문의' })}
+      >
+        <Phone size={20} aria-hidden="true" />
+      </a>
       <a
         href={siteConfig.contact.kakaoUrl}
         target="_blank"

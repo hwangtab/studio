@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { m } from 'framer-motion';
 import { Plus, Minus, HelpCircle } from '@/lib/lucide-icons';
 import SectionHeading from './SectionHeading';
+import PhoneAwareText from './PhoneAwareText';
 import { Section, SectionVariant } from './Section';
 
 import { createInViewEnterAnimation, TRANSITION_STANDARD } from '../../utils/animationUtils';
@@ -81,13 +82,13 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 aria-hidden={activeIndex !== index}
                             >
                                 <div className="px-6 pb-6 pt-6 text-gray-600 dark:text-gray-400 text-lg leading-relaxed border-t border-gray-100 dark:border-gray-750">
-                                    {item.answer}
+                                    <PhoneAwareText text={item.answer} source="faq" />
                                 </div>
                             </m.div>
                             {/* SSR-visible answer for crawlers (visually hidden when JS loads) */}
                             <noscript>
                                 <div className="px-6 pb-6 pt-2 text-gray-600 dark:text-gray-400 text-lg leading-relaxed">
-                                    {item.answer}
+                                    <PhoneAwareText text={item.answer} source="faq" />
                                 </div>
                             </noscript>
                         </m.div>
