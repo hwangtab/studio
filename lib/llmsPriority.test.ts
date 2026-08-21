@@ -56,3 +56,36 @@ describe('sortStoriesForLlms', () => {
     expect(new Set(AI_CITED_SLUGS).size).toBe(AI_CITED_SLUGS.length);
   });
 });
+
+describe('AI_CITED_SLUGS 데이터 무결성', () => {
+  // 이 목록은 llms 색인 파일의 최상단을 결정한다. 리다이렉트 출발지가 섞이면
+  // 죽은 URL을 AI에게 "대표 문서"라고 내미는 꼴이 된다.
+  // 실제로 한 번 헛디뎠다: next.config를 슬러그로만 grep하면 destination 줄까지 걸려
+  // 생존자인 songstructure1이 리다이렉트로 오판된다. 판정은 source만 봐야 한다.
+  const redirectSources = (): Set<string> => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const regionMap = require('./regionRedirectMap.json') as Record<string, string>;
+    const sources = new Set(Object.keys(regionMap));
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = require('node:fs') as typeof import('node:fs');
+    const cfg = fs.readFileSync('next.config.mjs', 'utf8');
+    for (const m of cfg.matchAll(/source:\s*'[^']*?\/stories\/([a-z0-9-]+)'/g)) {
+      sources.add(m[1]);
+    }
+    return sources;
+  };
+
+  it('리다이렉트 출발지를 포함하지 않는다', () => {
+    const sources = redirectSources();
+    expect(AI_CITED_SLUGS.filter((slug) => sources.has(slug))).toEqual([]);
+  });
+
+  it('전부 실재하는 ko 스토리다', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const fs = require('node:fs') as typeof import('node:fs');
+    const missing = AI_CITED_SLUGS.filter(
+      (slug) => !fs.existsSync(`content/stories/${slug}.md`)
+    );
+    expect(missing).toEqual([]);
+  });
+});
