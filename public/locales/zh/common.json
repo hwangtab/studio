@@ -226,12 +226,12 @@
     },
     "hours": {
       "weekdaysLabel": "周一-周五",
-      "weekdaysTime": "10:00 - 24:00",
+      "weekdaysTime": "24小时营业",
       "satLabel": "周六",
-      "satTime": "10:00 - 24:00",
+      "satTime": "24小时营业",
       "sunLabel": "周日",
       "closed": "休息",
-      "sunTime": "10:00 - 24:00"
+      "sunTime": "24小时营业"
     },
     "notice": {
       "title": "咨询前须知",

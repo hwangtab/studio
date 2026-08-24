@@ -226,12 +226,12 @@
     },
     "hours": {
       "weekdaysLabel": "จันทร์ - ศุกร์",
-      "weekdaysTime": "10:00 - 24:00",
+      "weekdaysTime": "เปิด 24 ชั่วโมง",
       "satLabel": "เสาร์",
-      "satTime": "10:00 - 24:00",
+      "satTime": "เปิด 24 ชั่วโมง",
       "sunLabel": "อาทิตย์",
       "closed": "ปิด",
-      "sunTime": "10:00 - 24:00"
+      "sunTime": "เปิด 24 ชั่วโมง"
     },
     "notice": {
       "title": "ก่อนสอบถาม",

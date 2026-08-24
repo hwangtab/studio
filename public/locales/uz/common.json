@@ -226,12 +226,12 @@
     },
     "hours": {
       "weekdaysLabel": "Dush - Jum",
-      "weekdaysTime": "10:00 - 24:00",
+      "weekdaysTime": "24 soat ochiq",
       "satLabel": "Shanba",
-      "satTime": "10:00 - 24:00",
+      "satTime": "24 soat ochiq",
       "sunLabel": "Yakshanba",
       "closed": "Yopiq",
-      "sunTime": "10:00 - 24:00"
+      "sunTime": "24 soat ochiq"
     },
     "notice": {
       "title": "So'rovdan oldin",

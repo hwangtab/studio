@@ -226,12 +226,12 @@
     },
     "hours": {
       "weekdaysLabel": "Thứ 2 - Thứ 6",
-      "weekdaysTime": "10:00 - 24:00",
+      "weekdaysTime": "Mở cửa 24 giờ",
       "satLabel": "Thứ 7",
-      "satTime": "10:00 - 24:00",
+      "satTime": "Mở cửa 24 giờ",
       "sunLabel": "Chủ nhật",
       "closed": "Nghỉ",
-      "sunTime": "10:00 - 24:00"
+      "sunTime": "Mở cửa 24 giờ"
     },
     "notice": {
       "title": "Trước khi liên hệ",

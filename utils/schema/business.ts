@@ -18,22 +18,6 @@ import {
   VOCAL_PACKAGE_OFFER_NAMES,
 } from './shared';
 
-/**
- * 연습실 월세 입주자의 이용 가능 시간 — 도어록 코드로 24시간 출입한다.
- *
- * 스튜디오 자체의 openingHoursSpecification(10:00–23:59, 방문·응대 시간)과 다르다.
- * "24시간 무인 운영"은 연습실 상품의 성질이지 스튜디오 영업시간이 아니므로, LocalBusiness가
- * 아니라 이 Service에 hoursAvailable로 붙인다 — 콘텐츠(스토리·practice-room 카피)가 내내
- * 강조하는 사실이라 기계가 읽을 자리도 있어야 하지만, 영업시간 자리에 쓰면 녹음 문의자에게
- * 거짓말이 된다.
- */
-const PRACTICE_HOURS_AVAILABLE = {
-  '@type': 'OpeningHoursSpecification',
-  dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-  opens: '00:00',
-  closes: '23:59',
-} as const;
-
 export const generateDefaultSchema = (
   siteUrl: string,
   locale: Locale = 'ko',
@@ -179,13 +163,14 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
-        // 스튜디오 방문·응대 시간. public/locales/*/common.json의 contact.hours.*가 화면에
-        // 표시하는 "10:00 - 24:00"과 같은 값이어야 한다 — 구글은 구조화 데이터가 페이지에
-        // 보이는 내용을 반영하도록 요구하므로, 여기만 24시간으로 바꾸면 정책 위반이 된다.
+        // 연중무휴 24시간 운영 — 연습실은 도어록 출입, 녹음도 24시간 예약을 받는다.
+        // public/locales/*/common.json의 contact.hours.*가 화면에 표시하는 값과 같아야 한다
+        // (구글은 구조화 데이터가 페이지에 보이는 내용을 반영하도록 요구한다). 한쪽만 고치지 말 것.
         //
-        // 연습실 월세 입주자는 도어록으로 24시간 출입하지만 그건 이 노드가 아니라 연습실
-        // Service의 hoursAvailable로 낸다(아래 PRACTICE_HOURS_AVAILABLE). 영업시간을 통째로
-        // 24시간으로 올리면 녹음·상담 방문자의 기대치가 어긋난다.
+        // 2026-08-24에 이 값을 10:00–23:59로 좁혔다가 되돌렸다. "영업시간=직원 응대 시간"으로
+        // 읽은 것이 오독이었다 — 무인 운영 업종에서 이 필드는 이용 가능 시간을 뜻하고,
+        // 네이버 지역검색은 목록 카드에 이 값을 그대로 노출한다(경쟁 연습실이 전부 "24시간
+        // 영업"이라, 좁히는 순간 목록 단계에서 탈락한다). 좁히려면 그 노출 손실부터 계산할 것.
         //
         // Schema.org spec상 24:00 표기는 일부 validator가 경고로 처리하므로 23:59가 가장
         // 안전한 자정 표기. 평일·주말이 같은 값이라 단일 entry로 통합.
@@ -193,7 +178,7 @@ export const generateDefaultSchema = (
           {
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            opens: '10:00',
+            opens: '00:00',
             closes: '23:59',
           },
         ],
@@ -305,7 +290,6 @@ export const generateDefaultSchema = (
               itemOffered: {
                 '@type': 'Service',
                 name: practiceOfferName,
-                hoursAvailable: PRACTICE_HOURS_AVAILABLE,
                 provider: {
                   '@type': 'Organization',
                   '@id': organizationId,
@@ -358,11 +342,7 @@ export const generateDefaultSchema = (
             priceValidUntil,
             url: `${siteUrl}/${locale}/practice-room`,
             availability: 'https://schema.org/InStock',
-            itemOffered: {
-              '@type': 'Service',
-              name: practiceOfferName,
-              hoursAvailable: PRACTICE_HOURS_AVAILABLE,
-            },
+            itemOffered: { '@type': 'Service', name: practiceOfferName },
           },
         ],
       },
