@@ -266,7 +266,7 @@ atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 �
 
 | 패키지 | 경로 | 왜 안 올렸나 |
 |---|---|---|
-| `sharp` <0.35.0 | 직접 + next + @vercel/og | libvips CVE 4건. 0.35는 semver major라 `scripts/optimizeImages.js` 회귀 검증 필요 |
+| `sharp` <0.35.0 | next 내부 + @vercel/og 내부 | 직접 의존은 0.35.3으로 올림(2026-08-24, libvips CVE 4건 해소 — `scripts/optimizeImages.js` 회귀 검증: WebP 표본 8개 파일 크기 델타 0.0%, 해상도·`imageMetadata.json` 불변). next(`^0.34.3` 고정, 15.5.x 라인 유지 중)와 `@vercel/og@0.11.1`이 각자 옛 sharp를 물고 있어 audit엔 여전히 뜬다 — 둘 다 major 업 없인 못 바꾼다(`@vercel/og@1.0.1`은 sharp를 아예 뺐지만 별도 업그레이드 필요, 이번 범위 밖). next 경유는 이미지 최적화 API 라우트에서만, @vercel/og 경유는 OG 이미지 생성에서만 타서 우리 직접 파이프라인과 무관 |
 | `postcss` 8.4.31 | next 내부 번들 | 우리 직접 의존은 8.5.26으로 올림. next 번들본은 major 업 없이는 못 바꾼다. 빌드타임 CSS만 처리하고 입력이 우리 소스라 실위험 낮음 |
 | `js-yaml` 3.x | gray-matter | frontmatter 파싱. 입력이 우리 저장소의 .md라 외부 입력 없음 |
 | `ip-address` | puppeteer-core → socks-proxy-agent | 계약 PDF 렌더용. 프록시 경로를 쓰지 않음 |
