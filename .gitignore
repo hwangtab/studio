@@ -32,16 +32,19 @@ public/images/**/*.avif
 # build caches / debug artifacts
 tsconfig.tsbuildinfo
 reports/
-table-check.png
+build_output.log
+raw_refs.txt
+problematic_refs.txt
 
-# 작업 중 생성된 스크린샷 / 분석 문서
-booking-cta-v2.png
-cta-after-fix.png
-lesson-cta-after.png
-lesson-cta-v2.png
+# 작업 중 루트에 생성되는 스크린샷 / 분석 산출물 (루트 한정 — public/·content/ 자산은 제외)
+/*.png
 docs/PROJECT_ANALYSIS.md
 lib/portfolio-meta.json
 lib/story-catalog.json
+
+# 도구 잔재 / 원본 제작 소스 (프로젝트 코드가 아님)
+.gemini-clipboard/
+naver-cards/
 
 # git worktrees (design renewal etc.)
 .worktrees/
