@@ -1,5 +1,5 @@
 import { del } from '@vercel/blob';
-import { and, eq, inArray, isNull, lt } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, lt, or } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { contracts, signatures } from '../../db/schema';
@@ -48,7 +48,37 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
     .from(contracts)
     .where(
       and(
-        lt(contracts.endDate, boundary),
+        /**
+         * 보관 기간은 "이용이 끝난 날"로부터 센다. 계약서 제12조 ④의 "계약 종료 후 3년"이다.
+         *
+         * 종료일(endDate)만 보면 안 되는 이유: 제3조의 자동 갱신 때문에 종료일이 지나도
+         * 계약이 살아 있을 수 있다. 실제로 이 저장소는 호실 점유를 endDate가 아니라
+         * terminatedAt으로 판정한다(service.ts findRoomConflict, db/schema.ts 주석).
+         * 개인정보 파기만 endDate를 쓰면 "실제 종료 3개월 만에 파기"(=12조 위반)가 된다.
+         *
+         * 그래서 기산점을 COALESCE(terminatedAt, endDate)로 맞춘다 — 종료 처리된 계약은
+         * 실제 종료일부터, 그렇지 않은 계약은 계약상 종료일부터. SQL COALESCE로 감싸면
+         * drizzle이 좌변 타입을 몰라 boundary(Date)를 unix timestamp로 변환하지 못하므로,
+         * 타입이 있는 컬럼을 각각 직접 비교해 같은 논리를 편다.
+         */
+        or(
+          and(isNotNull(contracts.terminatedAt), lt(contracts.terminatedAt, boundary)),
+          and(isNull(contracts.terminatedAt), lt(contracts.endDate, boundary)),
+        ),
+        /**
+         * 종결된 계약만 파기한다 — signed는 제외한다.
+         *
+         * draft는 아직 계약이 아니고 sent는 서명 대기라 애초에 대상이 아니다. 여기서 signed도
+         * 뺀 것이 이번 수정의 핵심이다: 서명됐는데 종료 처리가 없는 계약은 자동 갱신(제3조)으로
+         * 계약상 종료일이 몇 년 전이어도 지금 이용 중일 수 있다. 이용이 실제로 끝나면 상태가
+         * terminated로 바뀌므로(status.ts 전이도), 파기 대상은 terminated·expired·cancelled면
+         * 충분하다. signed를 그대로 두면 파기가 아니라 종료 처리를 요구하는 배너가 뜬다
+         * (needsTermination). 파기해 버리면 이용료 청구도 제13조가 전제하는 통지도 불가능해진다.
+         */
+        inArray(
+          contracts.status,
+          ['expired', 'cancelled', 'terminated'] satisfies ContractStatus[],
+        ),
         /**
          * 기록을 만든 지도 그만큼 지났어야 한다.
          *
@@ -57,15 +87,6 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
          * 계약서에 적힌 날짜가 아니다.
          */
         lt(contracts.createdAt, boundary),
-        /**
-         * 종결된 계약만 파기한다. draft는 아직 계약이 아니라 작성 중인 문서이고, sent는
-         * 서명을 기다리는 중이다 — 진행 중인 건의 이름과 연락처를 지우면 그 계약을 더는
-         * 이어갈 수 없다.
-         */
-        inArray(
-          contracts.status,
-          ['signed', 'expired', 'cancelled', 'terminated'] satisfies ContractStatus[],
-        ),
         isNull(contracts.purgedAt),
       ),
     );
@@ -92,6 +113,11 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
             customerPhone: PURGED_MARK,
             customerAddress: null,
             content: PURGED_MARK,
+            // 관리자가 자유 서술하는 칸이라 이름·연락처 조각이 들어갈 수 있다(title과 같은 이유).
+            // 종료 사유는 감사 기록으로 필요하니 통째로 null이 아니라 파기 표식으로 대체한다.
+            terminationReason: PURGED_MARK,
+            // 스키마에만 있고 현재 쓰이지 않지만, 자유 입력 칸이라 방어적으로 함께 비운다.
+            description: null,
             pdfUrl: null,
             purgedAt: now,
             updatedAt: now,

@@ -305,6 +305,20 @@ describe('서명 시점 본문 완성', () => {
     expect(signed).toContain('2026년 8월 20일');
   });
 
+  /**
+   * 계약일은 KST 기준이다. 2026-08-31T16:00:00Z는 KST로 9월 1일 오전 1시다.
+   * template.ts가 timeZone 없이 formatDate를 쓰던 시절엔 서버(UTC)에서 "8월 31일"로
+   * 찍혀 같은 PDF의 서명 일시(KST "9월 1일")와 하루 어긋났고, 그 본문이 contentHash에
+   * 박혀 사후 수정도 불가능했다. format.ts로 통일한 지금은 어느 머신에서 돌려도 9월 1일이다.
+   */
+  it('새벽 서명(KST)도 계약일이 하루 앞당겨지지 않는다', async () => {
+    const contract = await createContract(base);
+    const signed = buildSignedContractContent(contract, details, new Date('2026-08-31T16:00:00Z'));
+
+    expect(signed).toContain('2026년 9월 1일');
+    expect(signed).not.toContain('8월 31일');
+  });
+
   it('나머지 조건은 발송 시점 그대로다', async () => {
     const contract = await createContract({ ...base, specialTerms: ['주차 1대 제공'] });
     const signed = buildSignedContractContent(contract, details, new Date());

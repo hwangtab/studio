@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
+import { formatCurrency, formatDate } from './format';
 import { escapeTableCell } from './html-escape';
 
 export interface ContractTemplateData {
@@ -19,17 +20,11 @@ export interface ContractTemplateData {
   specialTerms?: string[];
 }
 
-const formatCurrency = (amount: number): string =>
-  new Intl.NumberFormat('ko-KR').format(amount);
-
-const formatDate = (date: string | Date): string => {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('ko-KR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
+// 날짜·금액 표기는 lib/contracts/format.ts 한 곳에서만 만든다.
+// 예전에는 여기에 formatDate를 따로 두면서 timeZone을 지정하지 않아, 서버(UTC)에서
+// 계약일이 하루 앞당겨 인쇄됐다(밤 12~9시 KST 서명 시 계약일과 서명 일시가 하루 어긋남).
+// contractDate는 startDate/endDate와 달리 '순간'이라 이 차이가 그대로 드러났다.
+// format.ts는 Asia/Seoul을 못박고 그 사고 경위를 파일 주석에 남겨 뒀다.
 
 export const buildContractContent = (data: ContractTemplateData): string => {
   const templatePath = path.join(
