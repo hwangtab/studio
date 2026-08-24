@@ -1,11 +1,11 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Music, Users, ListChecks, ArrowRight, CheckCircle2 } from '@/lib/lucide-icons';
+import { Mic2, Music, Users, ListChecks, CheckCircle2 } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
@@ -357,32 +357,13 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         subtitle={t('recording.relatedStoriesSubtitle', { defaultValue: '녹음실 예약 전 알아두면 좋은 실전 가이드 — 가격·준비·홈녹음 비교까지.' })}
       />
 
-      {/* 관련 서비스 바로가기 */}
-      <Section variant="alternate" className="py-10">
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/studio-info`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-      </Section>
+      <ServiceQuickLinksSection
+        links={[
+          { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
+          { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'secondary' },
+          { href: `/${locale}/voice-acting`, label: t('nav.voiceActing'), color: 'accent' },
+        ]}
+      />
 
       <Section variant="default" className="py-16">
         <ContactCTA

@@ -1,11 +1,11 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, ArrowRight, CalendarDays, Clock, CalendarRange, Wallet } from '@/lib/lucide-icons';
+import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, CalendarDays, Clock, CalendarRange, Wallet } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
+import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
 import ImageHero from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
@@ -397,40 +397,15 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                 </div>
             </Section>
 
-            {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
-                무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-            <Section variant="default" className="py-10">
-                <div className="flex flex-wrap justify-center gap-4">
-                    <Link
-                        href={`/${locale}/practice-room`}
-                        prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-                    >
-                        {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-                    </Link>
-                    <Link
-                        href={`/${locale}/stories`}
-                        prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
-                    >
-                        {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
-                    </Link>
-                    <Link
-                        href={`/${locale}/pricing`}
-                        prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
-                    >
-                        {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-                    </Link>
-                    <Link
-                        href={`/${locale}/contact`}
-                        prefetch={false}
-                        className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-                    >
-                        {t('nav.contact')} <ArrowRight size={16} aria-hidden="true" />
-                    </Link>
-                </div>
-            </Section>
+            <ServiceQuickLinksSection
+              variant="default"
+              links={[
+                { href: `/${locale}/practice-room`, label: t('nav.practiceRoom'), color: 'primary' },
+                { href: `/${locale}/stories`, label: t('nav.stories'), color: 'secondary' },
+                { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'accent' },
+                { href: `/${locale}/contact`, label: t('nav.contact'), color: 'primary' },
+              ]}
+            />
 
             {/* 월 35만원 6개월 과정을 사회적 증거 없이 팔던 문제 해소 — 다른 서비스
                 페이지와 동일하게 후기 섹션을 노출해 신뢰→행동 전환 고리를 만든다. */}

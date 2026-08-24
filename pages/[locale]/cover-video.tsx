@@ -1,11 +1,11 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Video, Users, ListChecks, ArrowRight, CheckCircle2 } from '@/lib/lucide-icons';
+import { Video, Users, ListChecks, CheckCircle2 } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
+import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
@@ -359,32 +359,13 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
         subtitle={t('coverVideo.relatedStoriesSubtitle', { defaultValue: '유튜브·SNS용 커버 영상을 기획부터 촬영·편집까지 준비할 수 있는 실전 가이드.' })}
       />
 
-      {/* 관련 서비스 바로가기 */}
-      <Section variant="alternate" className="py-10">
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/studio-info`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
-          >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-        </div>
-      </Section>
+      <ServiceQuickLinksSection
+        links={[
+          { href: `/${locale}/pricing`, label: t('nav.pricing'), color: 'primary' },
+          { href: `/${locale}/studio-info`, label: t('nav.equipment'), color: 'secondary' },
+          { href: `/${locale}/wedding-song`, label: t('nav.weddingSong'), color: 'accent' },
+        ]}
+      />
 
       <Section variant="default" className="py-16">
         <ContactCTA
