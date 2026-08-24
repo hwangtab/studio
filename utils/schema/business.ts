@@ -18,6 +18,22 @@ import {
   VOCAL_PACKAGE_OFFER_NAMES,
 } from './shared';
 
+/**
+ * 연습실 월세 입주자의 이용 가능 시간 — 도어록 코드로 24시간 출입한다.
+ *
+ * 스튜디오 자체의 openingHoursSpecification(10:00–23:59, 방문·응대 시간)과 다르다.
+ * "24시간 무인 운영"은 연습실 상품의 성질이지 스튜디오 영업시간이 아니므로, LocalBusiness가
+ * 아니라 이 Service에 hoursAvailable로 붙인다 — 콘텐츠(스토리·practice-room 카피)가 내내
+ * 강조하는 사실이라 기계가 읽을 자리도 있어야 하지만, 영업시간 자리에 쓰면 녹음 문의자에게
+ * 거짓말이 된다.
+ */
+const PRACTICE_HOURS_AVAILABLE = {
+  '@type': 'OpeningHoursSpecification',
+  dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  opens: '00:00',
+  closes: '23:59',
+} as const;
+
 export const generateDefaultSchema = (
   siteUrl: string,
   locale: Locale = 'ko',
@@ -163,15 +179,21 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
-        // 연중무휴 24시간 운영. 네이버 플레이스·구글 비즈니스 프로필 양쪽 등록값과 일치시킨다
-        // (2026-08-24: 코드만 10:00–23:59로 어긋나 있어 세 곳 중 여기만 틀렸던 것을 바로잡음).
-        // Schema.org spec상 24:00 표기는 일부 validator가 경고로 처리하므로 23:59가 가장 안전한
-        // 자정 표기. 음악 스튜디오 특성상 야간 녹음·연습 수요를 반영해 단일 entry로 통합.
+        // 스튜디오 방문·응대 시간. public/locales/*/common.json의 contact.hours.*가 화면에
+        // 표시하는 "10:00 - 24:00"과 같은 값이어야 한다 — 구글은 구조화 데이터가 페이지에
+        // 보이는 내용을 반영하도록 요구하므로, 여기만 24시간으로 바꾸면 정책 위반이 된다.
+        //
+        // 연습실 월세 입주자는 도어록으로 24시간 출입하지만 그건 이 노드가 아니라 연습실
+        // Service의 hoursAvailable로 낸다(아래 PRACTICE_HOURS_AVAILABLE). 영업시간을 통째로
+        // 24시간으로 올리면 녹음·상담 방문자의 기대치가 어긋난다.
+        //
+        // Schema.org spec상 24:00 표기는 일부 validator가 경고로 처리하므로 23:59가 가장
+        // 안전한 자정 표기. 평일·주말이 같은 값이라 단일 entry로 통합.
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            opens: '00:00',
+            opens: '10:00',
             closes: '23:59',
           },
         ],
@@ -283,6 +305,7 @@ export const generateDefaultSchema = (
               itemOffered: {
                 '@type': 'Service',
                 name: practiceOfferName,
+                hoursAvailable: PRACTICE_HOURS_AVAILABLE,
                 provider: {
                   '@type': 'Organization',
                   '@id': organizationId,
@@ -335,7 +358,11 @@ export const generateDefaultSchema = (
             priceValidUntil,
             url: `${siteUrl}/${locale}/practice-room`,
             availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: practiceOfferName },
+            itemOffered: {
+              '@type': 'Service',
+              name: practiceOfferName,
+              hoursAvailable: PRACTICE_HOURS_AVAILABLE,
+            },
           },
         ],
       },
