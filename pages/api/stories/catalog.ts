@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getAllStories, isBrowsableStoryForLocale } from '../../../lib/stories';
+import { getStoryListing } from '../../../lib/stories';
 import { locales, defaultLocale, type Locale } from '../../../lib/i18n';
 import { STORY_CATEGORY_KEYS, type StoryCategoryKey } from '../../../lib/storyCategories';
 import type { StoryCardData } from '../../../types/story';
@@ -26,7 +26,7 @@ const resolvePageSize = (value: unknown): number => {
   return Math.min(MAX_PAGE_SIZE, Math.max(1, Math.floor(parsed)));
 };
 
-const toStoryCardData = (story: ReturnType<typeof getAllStories>[number]): StoryCardData => ({
+const toStoryCardData = (story: ReturnType<typeof getStoryListing>[number]): StoryCardData => ({
   slug: story.slug,
   id: story.id,
   title: story.title,
@@ -53,9 +53,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  const allStories = getAllStories(locale).filter((story) =>
-    isBrowsableStoryForLocale(story, locale)
-  );
+  const allStories = getStoryListing(locale).filter((story) => story.browsable);
   const stories = category === 'all'
     ? allStories
     : allStories.filter((story) => story.categoryKey === category);

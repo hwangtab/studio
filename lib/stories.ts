@@ -32,7 +32,6 @@ export {
   computeThinContentStatus,
   extractAutoExpandBlock,
   SHORTCODE_CHAR_ESTIMATES,
-  SHORTCODE_DEFAULT_CHAR_ESTIMATE,
   THIN_CONTENT_THRESHOLD,
 } from './storyContentPolicy';
 
@@ -210,7 +209,6 @@ const normalizeDate = (value: string | Date | undefined): string => {
 // 페이지(client bundle)에서도 안전하게 import 가능. 여기선 server-only 사용처를
 // 위해 re-export한다.
 export {
-  STORY_CATEGORY_KEYS,
   type StoryCategoryKey,
   normalizeStoryCategoryKey,
 } from './storyCategories';
@@ -486,16 +484,105 @@ export const isBrowsableStoryForLocale = (
   return isListableStory(story) && getStoryAvailableLocales(story.slug).includes(targetLocale);
 };
 
+// 빌드타임 산출물(lib/storyListing/*.json — scripts/generate-story-listing.js) 백드
+// 경량 목록. getAllStories와 달리 요청 경로에서 fs.readFileSync/gray-matter를 전혀
+// 돌지 않는다 — 카테고리 필터·페이지네이션(catalog.ts)과 관련글 계산(getRelatedStories)
+// 콜드 스타트가 1,000+ .md 런타임 파싱에 묶이던 문제의 해법.
+//
+// 산출물은 mapStoryFrontmatter와 동일한 필드를 담되 browsable(=isListableStory &&
+// getStoryAvailableLocales 게이트)을 빌드타임에 미리 계산해 붙인다 — 런타임에서는
+// 그 boolean만 필터링하면 되므로 getStoryAvailableLocales의 fs 게이트를 재실행하지
+// 않는다. 정확성은 lib/stories.test.ts의 getRelatedStories 테스트(실제 콘텐츠 대조)와
+// scripts/generate-story-listing.js --check(CI)가 보증한다.
+interface StoryListingEntry {
+  slug: string;
+  title: string;
+  date: string;
+  categoryKey: string;
+  tags: string[];
+  summary: string;
+  thumbnail: string | null;
+  thumbnailDerived: boolean;
+  images: string[];
+  browsable: boolean;
+  author?: string;
+  cta?: Story['cta'];
+}
+
+type StoryListingRow = Story & { browsable: boolean };
+
+/**
+ * 로케일별 산출물을 그때그때 읽는다.
+ *
+ * 최상위 import로 두면 lib/stories를 건드리는 모든 라우트가 7개 로케일 전부를
+ * 파싱한다 — 상세 본문만 필요한 페이지도 예외가 아니다. 로케일당 한 파일로 나눠
+ * 두고 여기서 지연 로드하면, 요청 하나가 여는 것은 자기 로케일 하나뿐이다.
+ *
+ * require 경로에 템플릿을 쓰면 webpack이 디렉토리 전체를 컨텍스트로 묶어 번들에
+ * 넣지만, 실제 파싱은 호출된 로케일 하나에만 일어난다 — 우리가 줄이려는 것은
+ * 번들 크기가 아니라 요청당 파싱 비용이다.
+ */
+const loadStoryListingFile = (locale: Locale): StoryListingEntry[] => {
+  try {
+    // ESM import는 모듈 로드 시점에 전부 파싱한다 — 지연 로드가 목적이라 require를 쓴다.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    return require(`./storyListing/${locale}.json`) as StoryListingEntry[];
+  } catch {
+    // 산출물이 없으면 빈 목록 — 빌드는 prebuild가 만들고 CI가 --check로 지킨다.
+    console.error(`[stories] lib/storyListing/${locale}.json을 읽지 못했다.`);
+    return [];
+  }
+};
+
+const storyListingCache = new Map<Locale, StoryListingRow[]>();
+
+const toStoryListingRow = (entry: StoryListingEntry, locale: Locale): StoryListingRow => ({
+  id: entry.slug,
+  slug: entry.slug,
+  title: entry.title,
+  date: entry.date,
+  createdAt: entry.date,
+  author: entry.author || '스튜디오 놀',
+  category: getStoryCategoryLabel(entry.categoryKey, locale),
+  categoryKey: entry.categoryKey,
+  tags: entry.tags,
+  summary: entry.summary,
+  thumbnail: entry.thumbnail,
+  thumbnailDerived: entry.thumbnailDerived,
+  images: entry.images,
+  browsable: entry.browsable,
+  ...(entry.cta ? { cta: entry.cta } : {}),
+});
+
+/**
+ * getAllStories의 경량 대체 — 목록/관련글 계산 전용. content 필드는 담지 않는다
+ * (상세 렌더는 지금처럼 getStoryDetail이 개별 .md를 읽는다).
+ * 반환 항목의 `browsable`은 isBrowsableStoryForLocale과 동일 판정을 빌드타임에
+ * 미리 계산한 값이다.
+ */
+export const getStoryListing = (locale: string = defaultLocale): StoryListingRow[] => {
+  const normalizedLocale = (locale as Locale) || defaultLocale;
+  if (enableCache) {
+    const cached = storyListingCache.get(normalizedLocale);
+    if (cached) return cached;
+  }
+
+  const raw = loadStoryListingFile(normalizedLocale);
+  const rows = raw.map((entry) => toStoryListingRow(entry, normalizedLocale));
+
+  if (enableCache) {
+    storyListingCache.set(normalizedLocale, rows);
+  }
+  return rows;
+};
+
 export const getRelatedStories = (locale: string, slug: string, limit = 6): Story[] => {
   const targetLocale = locales.includes(locale as Locale) ? (locale as Locale) : defaultLocale;
-  const all = getAllStories(targetLocale);
+  const all = getStoryListing(targetLocale);
   const current = all.find((item) => item.slug === slug);
   // Related 카드가 noindex/thin 페이지로 새면 indexable 페이지의 내부 링크 품질이
   // 떨어진다. Listing 정책과 sitemap/hreflang의 indexable locale 정책을 함께 적용한다.
-  const candidates = all.filter((item) =>
-    item.slug !== slug
-    && isBrowsableStoryForLocale(item, targetLocale),
-  );
+  const candidates = all.filter((item) => item.slug !== slug && item.browsable);
 
   return rankRelatedStories(current, candidates, limit);
 };
