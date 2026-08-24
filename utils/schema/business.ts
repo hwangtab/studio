@@ -44,7 +44,15 @@ export const generateDefaultSchema = (
 
   const localeContactUrl = `${siteUrl}/${locale}/contact`;
   const socialLinks = Object.values(socialProfiles).filter(url => url && url.trim() !== '');
-  const sameAsLinks = [config.contact.kakaoUrl, config.contact.naverMapUrl, ...socialLinks].filter(url => typeof url === 'string' && url.trim() !== '');
+  // sameAs는 "이 엔티티의 다른 표현"만 넣는다. 좌표 링크(maps.google.com/?q=위경도)는 지도 위
+  // 한 지점일 뿐 어떤 사업체도 식별하지 않으므로 여기 넣지 않는다 — 그건 hasMap의 몫이다.
+  // 네이버는 단축 URL이 아니라 플레이스 ID가 박힌 정본을, 구글은 GBP CID를 쓴다.
+  const sameAsLinks = [
+    config.contact.kakaoUrl,
+    config.contact.naverPlaceUrl,
+    config.contact.googleBusinessUrl,
+    ...socialLinks,
+  ].filter(url => typeof url === 'string' && url.trim() !== '');
 
   const organizationId = `${siteUrl}/#organization`;
   const studioId = `${siteUrl}/#studio`;
@@ -155,14 +163,15 @@ export const generateDefaultSchema = (
         },
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
         email: config.contact.email,
-        // 월~일 매일 10:00–23:59 운영. Schema.org spec상 24:00 표기는 일부 validator가
-        // 경고로 처리하므로 23:59가 가장 안전한 자정 표기. 음악 스튜디오 특성상 야간
-        // 녹음·연습 수요를 반영해 평일·주말 단일 entry로 통합.
+        // 연중무휴 24시간 운영. 네이버 플레이스·구글 비즈니스 프로필 양쪽 등록값과 일치시킨다
+        // (2026-08-24: 코드만 10:00–23:59로 어긋나 있어 세 곳 중 여기만 틀렸던 것을 바로잡음).
+        // Schema.org spec상 24:00 표기는 일부 validator가 경고로 처리하므로 23:59가 가장 안전한
+        // 자정 표기. 음악 스튜디오 특성상 야간 녹음·연습 수요를 반영해 단일 entry로 통합.
         openingHoursSpecification: [
           {
             '@type': 'OpeningHoursSpecification',
             dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-            opens: '10:00',
+            opens: '00:00',
             closes: '23:59',
           },
         ],
@@ -195,13 +204,9 @@ export const generateDefaultSchema = (
           config.contact.naverMapUrl,
           'https://maps.google.com/?q=37.614353,126.925887',
         ].filter((url): url is string => Boolean(url && url.trim())),
-        sameAs: [
-          config.contact.naverMapUrl,
-          config.contact.kakaoUrl,
-          'https://maps.google.com/?q=37.614353,126.925887',
-          socialProfiles.instagram,
-          socialProfiles.threads,
-        ].filter((url): url is string => Boolean(url && url.trim())),
+        // Organization(#organization)과 같은 목록을 쓴다 — 두 노드는 같은 실체를 가리키므로
+        // sameAs가 갈리면 엔티티 해석이 흔들린다. 좌표 링크는 위 sameAsLinks 주석 참조.
+        sameAs: sameAsLinks,
         paymentAccepted: 'Cash, Credit Card, Bank Transfer, KakaoPay',
         currenciesAccepted: 'KRW',
 

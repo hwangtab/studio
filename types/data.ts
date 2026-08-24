@@ -51,7 +51,12 @@ export interface ContactInfo {
   email: string;
   address: string;
   kakaoUrl: string;
+  /** 사람이 클릭하는 지도 링크. 단축 URL이라 모바일 네이버앱 딥링크가 잘 붙는다. */
   naverMapUrl: string;
+  /** 기계가 읽는 네이버 플레이스 정본 URL — JSON-LD sameAs 전용. naverMapUrl과 용도가 다르다. */
+  naverPlaceUrl: string;
+  /** 구글 비즈니스 프로필 CID URL — JSON-LD sameAs 전용. */
+  googleBusinessUrl: string;
 }
 
 export interface SiteConfig {

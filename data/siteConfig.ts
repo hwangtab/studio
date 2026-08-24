@@ -161,7 +161,21 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
         uz: 'Seul sh., Eunpyeong-gu, Daejo-dong 84-3, 3-qavat'
       }),
       kakaoUrl: 'https://open.kakao.com/me/nol',
+      // 사람이 클릭하는 링크(Footer·about·ContactInfoCard). 단축 URL이라 네이버앱 딥링크가 붙는다.
       naverMapUrl: 'https://naver.me/5gFZhS3X',
+      // 기계가 읽는 정본. 위 단축 URL이 307로 가리키는 실제 목적지(2026-08-24 리다이렉트 추적 확인).
+      // sameAs에 단축 URL을 넣으면 크롤러가 리다이렉트를 따라가야 값을 알고, 단축 링크는 폐기될 수
+      // 있다. 플레이스 ID 1527843821이 영구 식별자이므로 엔티티 신호는 이쪽으로 낸다.
+      naverPlaceUrl: 'https://map.naver.com/p/entry/place/1527843821',
+      // 구글 비즈니스 프로필 CID URL (2026-08-24 브라우저로 상호·주소·전화 직접 대조 확인).
+      //
+      // 주의 — 같은 사업장의 GBP가 2개 존재한다:
+      //   CID 17692560696856302422 = "스튜디오 놀 불광점" (활성, 우리가 관리하는 쪽)  ← 여기
+      //   CID 5451462716481993990  = "스튜디오 놀" (폐업함·게시 중지, 소유권 없음)
+      // 주소·전화가 완전히 동일한 중복 리스팅이며, 하필 정확한 상호를 가진 쪽이 폐업 표시다.
+      // 중복 신고로 정리되기 전까지 검색·LLM이 "폐업"을 집을 위험이 남아 있다.
+      // 정리 완료 후에도 이 CID(활성)는 그대로 유지된다.
+      googleBusinessUrl: 'https://www.google.com/maps?cid=17692560696856302422',
     },
     vatNotice: t(locale, {
       ko: '* 모든 가격은 VAT 별도입니다.',
