@@ -3,6 +3,7 @@ title: 작곡·미디 레슨 비용 얼마나 하나 — 2026 실제 시세와 �
 date: 2026-07-28
 author: 황경하
 category: 음악 비즈니스
+thumbnail: /images/room2.webp
 tags:
   - 작곡 레슨 비용
   - 미디 레슨 가격

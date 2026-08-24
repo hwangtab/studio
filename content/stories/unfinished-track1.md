@@ -3,6 +3,7 @@ title: 곡을 못 끝내는 이유 — 8마디에서 멈추는 사람들의 공�
 date: 2026-07-28
 author: 황경하
 category: 음악 제작
+thumbnail: /images/recording4.webp
 tags:
   - 작곡 완성
   - 미완성 곡

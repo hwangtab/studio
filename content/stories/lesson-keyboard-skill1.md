@@ -3,6 +3,7 @@ title: 건반 못 쳐도 미디 레슨 받을 수 있나 — 프로듀싱 레슨
 date: 2026-07-28
 author: 황경하
 category: 음악 제작
+thumbnail: /images/recording16.webp
 tags:
   - 미디 레슨
   - 작곡 레슨

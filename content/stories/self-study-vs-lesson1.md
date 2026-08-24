@@ -3,6 +3,7 @@ title: 작곡 독학과 레슨, 무엇이 갈리나 — 혼자 해도 되는 구
 date: 2026-07-28
 author: 황경하
 category: 음악 제작
+thumbnail: /images/lesson1.webp
 tags:
   - 작곡 독학
   - 미디 독학
