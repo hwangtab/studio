@@ -21,7 +21,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
 import {
-  checkDownloadIdentityAttempt,
+  getDownloadIdentityVerdict,
+  recordDownloadIdentityFailure,
+  resetDownloadIdentityAttempts,
   checkDownloadRateLimit,
 } from '../../../../lib/contracts/admin-rate-limit';
 import { IDENTITY_DIGITS, verifyIdentityDigits } from '../../../../lib/contracts/identity';
@@ -81,16 +83,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     /**
      * 서명 때와 같은 기준으로 당사자인지 확인한다.
      *
-     * 대조보다 시도 제한을 먼저 건다 — 제한을 뒤에 두면 틀린 입력이 카운트되지 않아
-     * 대입을 못 막는다. 서명용 카운터와는 분리돼 있어(checkDownloadIdentityAttempt)
-     * 여기서 소진돼도 서명이 잠기지 않는다.
+     * 먼저 잠김 여부만 읽어(카운터를 올리지 않는다) 이미 상한을 넘긴 요청을 무거운
+     * 대조·렌더 전에 끊는다. 카운터는 뒷자리가 실제로 틀렸을 때만 올린다 — 빈 요청·형식
+     * 오류로는 올리지 않아, 링크를 얻은 제3자가 아무것도 안 맞히고 당사자를 잠그지 못한다.
      */
-    const attemptVerdict = await checkDownloadIdentityAttempt(contract.id);
+    const attemptVerdict = await getDownloadIdentityVerdict(contract.id);
     if (attemptVerdict === 'locked') {
       return res.status(429).json({
         ok: false,
         message:
-          '본인 확인에 너무 여러 번 실패했습니다. 운영자에게 문의해 주세요. (010-4255-7893)',
+          '본인 확인에 너무 여러 번 실패했습니다. 잠시 후 다시 시도하거나 운영자에게 문의해 주세요. (010-4255-7893)',
       });
     }
     if (attemptVerdict === 'throttled') {
@@ -105,12 +107,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       contract.customerPhone,
     );
     if (!identity.ok) {
+      // 형식이 맞는데 값이 틀린 경우(mismatch)만 대입 시도로 계수한다.
+      // 빈 입력·자릿수 오류(malformed)는 세지 않는다 — 세면 빈 요청으로 잠글 수 있다.
+      if (identity.reason === 'mismatch') {
+        await recordDownloadIdentityFailure(contract.id);
+      }
       const message =
         identity.reason === 'unverifiable'
           ? '계약서의 연락처가 올바르지 않아 본인 확인을 할 수 없습니다. 운영자에게 문의해 주세요.'
           : `계약서에 등록된 연락처 뒤 ${IDENTITY_DIGITS}자리를 정확히 입력해 주세요.`;
       return res.status(400).json({ ok: false, message });
     }
+
+    // 확인에 성공했으니 창 카운터를 비운다 — 정상 이용이 예산을 갉아먹지 않게.
+    await resetDownloadIdentityAttempts(contract.id);
 
     // PDF 생성은 Chromium을 띄우는 무거운 작업이라, 토큰을 아는 쪽이 반복 요청하면 부담이 된다.
     const allowed = await checkDownloadRateLimit(contract.id);

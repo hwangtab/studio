@@ -71,16 +71,6 @@ const checkInMemory = (
   return existing.count <= limit;
 };
 
-/**
- * 관리자 로그인 시도 제한. 허용이면 true.
- *
- * 카운터를 Turso에 두어 서버리스 인스턴스 사이에서 공유한다. 프로세스 메모리에 두면
- * 인스턴스마다 카운터가 갈려 제한이 사실상 무력해진다.
- *
- * DB에 닿지 못하면 인스턴스 로컬 메모리로 폴백한다. 제한이 느슨해지긴 하지만,
- * 카운터를 셀 수 없다는 이유로 정당한 로그인까지 막지는 않는다(비밀번호라는 방어선이
- * 여전히 남아 있다).
- */
 const bumpCounter = async (
   key: string,
   windowSeconds: number,
@@ -98,36 +88,76 @@ const bumpCounter = async (
   return row?.count ?? 1;
 };
 
-export const checkAdminLoginRateLimit = async (req: NextApiRequest): Promise<boolean> => {
+/**
+ * 관리자 로그인 시도 제한.
+ *
+ * ## 왜 "확인→(실패 시)기록" 두 단계인가
+ *
+ * 예전에는 비밀번호를 대조하기 전에 subject·global 카운터를 무조건 올리고, global이 상한을
+ * 넘으면 거부했다. 그러면 비밀번호를 모르는 공격자가 아무 요청이나 101번 보내는 것만으로
+ * global을 채워, **정확한 비밀번호를 가진 운영자까지 한 시간 봉쇄**할 수 있었다. 전역 상한이
+ * 정당한 사용을 지키려던 것이 공격 상황에서 정확히 그 반대가 됐다.
+ *
+ * 그래서 전역 상한은 **비밀번호가 틀렸을 때만** 오른다(recordAdminLoginFailure). 라우트는
+ *   1) isAdminLoginThrottled(req)로 이 IP가 이미 한도를 넘겼는지만 읽고(전역은 안 본다),
+ *   2) 비밀번호를 대조해서
+ *   3) 맞으면 resetAdminLoginRateLimit로 subject·global을 모두 지운다,
+ *   4) 틀리면 recordAdminLoginFailure로 둘 다 올린다.
+ * 이 순서라서 **올바른 비밀번호는 전역 상한과 무관하게 항상 통과**한다 — 운영자는 공격
+ * 중에도 잠기지 않는다. IP 회전 공격은 각 IP가 subject 창에 막히고, 그래도 새는 시도는
+ * 전역 실패 카운터가 세어 상한을 넘긴 뒤의 오답에 429를 준다.
+ *
+ * 카운터는 Turso에 두어 인스턴스 간 공유하고, DB 장애 시에만 인스턴스 로컬로 폴백한다.
+ */
+
+/** 이 IP(subject)가 이미 창 한도를 넘겼는지 읽기만 한다 — 카운터를 올리지 않는다. */
+export const isAdminLoginThrottled = async (req: NextApiRequest): Promise<boolean> => {
   const key = getSubjectKey(req);
   const nowSeconds = Math.floor(Date.now() / 1000);
 
   try {
-    // 만료된 창을 먼저 지운다. 이후의 삽입은 항상 새 창을 여는 셈이 되고,
-    // 행이 무한정 쌓이지도 않는다(로그인 시도 자체가 드물어 비용은 무시할 수준).
-    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+    const [row] = await getDb()
+      .select({ count: rateLimits.count, expiresAt: rateLimits.expiresAt })
+      .from(rateLimits)
+      .where(eq(rateLimits.key, key));
 
-    // 둘 다 센다 — 주체별 창을 통과해도 전역 상한에 걸리면 거부한다.
-    // 전역을 먼저 올리지 않는 이유는 없다. 순서와 무관하게 둘 다 증가해야 한다.
-    const subjectCount = await bumpCounter(key, WINDOW_SECONDS, nowSeconds);
+    if (!row || row.expiresAt <= nowSeconds) return false;
+    return row.count >= LIMIT;
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Throttle check unavailable, allowing:', error);
+    // 셀 수 없다는 이유로 정당한 로그인을 막지 않는다(비밀번호가 방어선으로 남는다).
+    return false;
+  }
+};
+
+/**
+ * 비밀번호가 틀렸을 때만 부른다. subject·global 카운터를 올리고, 전역 상한 초과 여부를 반환한다.
+ * 반환된 globalExceeded가 true면 라우트는 오답에 401 대신 429를 준다(회전 공격 신호).
+ */
+export const recordAdminLoginFailure = async (
+  req: NextApiRequest,
+): Promise<{ globalExceeded: boolean }> => {
+  const key = getSubjectKey(req);
+  const nowSeconds = Math.floor(Date.now() / 1000);
+
+  try {
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+    await bumpCounter(key, WINDOW_SECONDS, nowSeconds);
     const globalCount = await bumpCounter(GLOBAL_KEY, GLOBAL_WINDOW_SECONDS, nowSeconds);
 
     if (globalCount > GLOBAL_LIMIT) {
       console.error(
-        `[admin-rate-limit] 전역 상한 초과 (${globalCount}/${GLOBAL_LIMIT}, ` +
+        `[admin-rate-limit] 전역 실패 상한 초과 (${globalCount}/${GLOBAL_LIMIT}, ` +
           `${GLOBAL_WINDOW_SECONDS / 60}분 창). IP 회전 대입일 수 있다.`,
       );
-      return false;
+      return { globalExceeded: true };
     }
-
-    return subjectCount <= LIMIT;
+    return { globalExceeded: false };
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Falling back to in-memory counter:', error);
-    // 폴백에서도 전역 상한을 함께 본다. 인스턴스 로컬이라 완전하진 않지만,
-    // DB 장애를 노려 제한을 통째로 우회하는 경로를 좁힌다.
-    const subjectOk = checkInMemory(key, nowSeconds);
+    checkInMemory(key, nowSeconds);
     const globalOk = checkInMemory(GLOBAL_KEY, nowSeconds, GLOBAL_LIMIT, GLOBAL_WINDOW_SECONDS);
-    return subjectOk && globalOk;
+    return { globalExceeded: !globalOk };
   }
 };
 
@@ -242,54 +272,108 @@ export const checkDownloadRateLimit = async (contractId: string): Promise<boolea
  * 관리자가 재발송해야 풀리는 영구 잠금이라, 다운로드 시도가 서명 예산을 갉아먹으면
  * 정작 서명해야 할 때 잠겨 있게 된다.
  *
- * 여기서는 영구 잠금을 두지 않는다. 서명과 달리 다운로드는 이미 끝난 계약을 다시
- * 받는 행위라, 링크를 얻은 제3자가 아무 숫자나 넣어 당사자를 영구히 막아 버리는
- * 쪽이 더 현실적인 피해다. 대신 창 제한에 더해 긴 창의 누적 상한을 둬서,
- * 네 자리 1만 조합을 시간만 들이면 훑는 경로를 닫는다.
+ * ## 카운트는 "실제로 틀린 뒷자리"에만 한다 (핵심)
  *
- * 누적 100회는 조합의 1%다. 자기 연락처 뒷자리를 100번 틀리는 당사자는 없다.
+ * 예전에는 대조 전에 무조건 카운터를 올렸다. 그러면 링크를 얻은 제3자가 빈 본문으로
+ * 101번만 찔러도 당사자가 잠긴다 — 뒷자리를 하나도 안 맞혀도 된다. 이건 이 함수가
+ * 막으려던 것("제3자가 아무 숫자나 넣어 당사자를 막는다")을 오히려 열어 준 꼴이었다.
+ *
+ * 그래서 확인(getDownloadIdentityVerdict, 읽기 전용)과 기록(recordDownloadIdentityFailure,
+ * 증가)을 나눈다. 라우트는 먼저 잠김 여부만 읽고, 뒷자리가 실제로 틀렸을 때만(malformed·
+ * 빈 요청은 제외) 실패를 기록한다. 이제 상한에 도달하려면 형식이 맞는 네 자리 오답을
+ * 실제로 그 횟수만큼 넣어야 한다 = 진짜 대입이다.
+ *
+ * 누적 창은 24시간으로 짧게 잡아 자동으로 풀리게 한다(예전 30일은 사실상 영구였다).
+ * 그래도 안 풀리면 재발송이 해제 수단이다(resetIdentityAttempts가 이 키도 지운다).
  */
 const DOWNLOAD_IDENTITY_LIMIT = 10;
 const DOWNLOAD_IDENTITY_WINDOW_SECONDS = 15 * 60;
 const DOWNLOAD_IDENTITY_TOTAL_LIMIT = 100;
-const DOWNLOAD_IDENTITY_TOTAL_WINDOW_SECONDS = 30 * 24 * 60 * 60;
+const DOWNLOAD_IDENTITY_TOTAL_WINDOW_SECONDS = 24 * 60 * 60;
 
-export const checkDownloadIdentityAttempt = async (
+const downloadIdentityWindowKey = (contractId: string) => `download_identity:${contractId}`;
+const downloadIdentityTotalKey = (contractId: string) => `download_identity_total:${contractId}`;
+
+/**
+ * 지금 잠겨 있는지 읽기만 한다 — 카운터를 올리지 않는다.
+ *
+ * 라우트는 대조 전에 이걸 먼저 불러 이미 상한을 넘긴 요청을 무거운 대조·렌더 전에 끊는다.
+ */
+export const getDownloadIdentityVerdict = async (
   contractId: string,
 ): Promise<IdentityAttemptVerdict> => {
   const nowSeconds = Math.floor(Date.now() / 1000);
 
   try {
-    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+    const rows = await getDb()
+      .select({ key: rateLimits.key, count: rateLimits.count, expiresAt: rateLimits.expiresAt })
+      .from(rateLimits)
+      .where(
+        inArray(rateLimits.key, [
+          downloadIdentityWindowKey(contractId),
+          downloadIdentityTotalKey(contractId),
+        ]),
+      );
 
-    const [windowRows, totalRows] = await getDb().batch([
+    const live = (key: string) => {
+      const row = rows.find((r) => r.key === key);
+      return row && row.expiresAt > nowSeconds ? row.count : 0;
+    };
+
+    if (live(downloadIdentityTotalKey(contractId)) >= DOWNLOAD_IDENTITY_TOTAL_LIMIT) return 'locked';
+    if (live(downloadIdentityWindowKey(contractId)) >= DOWNLOAD_IDENTITY_LIMIT) return 'throttled';
+    return 'ok';
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Download identity verdict unavailable:', error);
+    // 셀 수 없다는 이유로 당사자의 재발급을 막지는 않는다. 뒷자리 대조는 그대로 남는다.
+    return 'ok';
+  }
+};
+
+/**
+ * 뒷자리를 실제로 틀렸을 때만 부른다. 두 카운터를 올린다.
+ */
+export const recordDownloadIdentityFailure = async (contractId: string): Promise<void> => {
+  const nowSeconds = Math.floor(Date.now() / 1000);
+
+  try {
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+    await getDb().batch([
       getDb()
         .insert(rateLimits)
         .values({
-          key: `download_identity:${contractId}`,
+          key: downloadIdentityWindowKey(contractId),
           count: 1,
           expiresAt: nowSeconds + DOWNLOAD_IDENTITY_WINDOW_SECONDS,
         })
-        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
-        .returning(),
+        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } }),
       getDb()
         .insert(rateLimits)
         .values({
-          key: `download_identity_total:${contractId}`,
+          key: downloadIdentityTotalKey(contractId),
           count: 1,
           expiresAt: nowSeconds + DOWNLOAD_IDENTITY_TOTAL_WINDOW_SECONDS,
         })
-        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
-        .returning(),
+        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } }),
     ]);
-
-    if ((totalRows[0]?.count ?? 1) > DOWNLOAD_IDENTITY_TOTAL_LIMIT) return 'locked';
-    if ((windowRows[0]?.count ?? 1) > DOWNLOAD_IDENTITY_LIMIT) return 'throttled';
-    return 'ok';
   } catch (error: unknown) {
-    console.error('[admin-rate-limit] Download identity limit unavailable:', error);
-    // 셀 수 없다는 이유로 당사자의 재발급을 막지는 않는다. 뒷자리 대조는 그대로 남는다.
-    return 'ok';
+    console.error('[admin-rate-limit] Failed to record download identity failure:', error);
+  }
+};
+
+/** 다운로드 본인 확인 성공 시 창 카운터를 지운다 — 정상 이용이 예산을 갉아먹지 않게. */
+export const resetDownloadIdentityAttempts = async (contractId: string): Promise<void> => {
+  try {
+    await getDb()
+      .delete(rateLimits)
+      .where(
+        inArray(rateLimits.key, [
+          downloadIdentityWindowKey(contractId),
+          downloadIdentityTotalKey(contractId),
+        ]),
+      );
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Failed to reset download identity attempts:', error);
   }
 };
 
@@ -305,7 +389,14 @@ export const resetIdentityAttempts = async (contractId: string): Promise<void> =
     await getDb()
       .delete(rateLimits)
       .where(
-        inArray(rateLimits.key, [identityWindowKey(contractId), identityTotalKey(contractId)]),
+        inArray(rateLimits.key, [
+          identityWindowKey(contractId),
+          identityTotalKey(contractId),
+          // 다운로드 본인확인 카운터도 함께 푼다. 재발송은 이 계약을 다시 신뢰한다는
+          // 운영자의 행위이므로, 다운로드가 잠겨 있었다면 그 해제 수단이기도 하다.
+          downloadIdentityWindowKey(contractId),
+          downloadIdentityTotalKey(contractId),
+        ]),
       );
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Failed to reset identity attempts:', error);
@@ -313,18 +404,23 @@ export const resetIdentityAttempts = async (contractId: string): Promise<void> =
 };
 
 /**
- * 로그인에 성공하면 카운터를 지운다.
+ * 로그인에 성공하면 카운터를 지운다 — subject와 GLOBAL_KEY 둘 다.
  *
- * 지우지 않으면 실패가 쌓인 창 안에서는 정상 로그인도 한도를 채워 나가, 비밀번호를
- * 아는 관리자가 자기 시스템에서 잠긴다. 공유 IP(NAT)에서는 남이 흘린 실패까지 얹히므로
- * 더 쉽게 발생한다. 성공은 "이 주체는 공격자가 아니다"라는 증거이므로 창을 닫아 준다.
+ * subject를 지우는 이유: 실패가 쌓인 창 안에서 정상 로그인도 한도를 채워 나가면 비밀번호를
+ * 아는 관리자가 자기 시스템에서 잠긴다. 공유 IP(NAT)에서는 남이 흘린 실패까지 얹힌다.
+ *
+ * GLOBAL_KEY도 지우는 이유: 성공은 "지금 로그인한 사람이 진짜 관리자"라는 증거다. 진짜
+ * 관리자가 들어온 이상 그 시점까지의 전역 실패 누적을 붙들고 있을 이유가 없다 — 그대로
+ * 두면 성공 직후의 정당한 재로그인이 남은 전역 카운트에 걸린다. (예전엔 이 리셋이 없어
+ * 전역 상한이 영구 봉쇄로 굳었다.)
  */
 export const resetAdminLoginRateLimit = async (req: NextApiRequest): Promise<void> => {
   const key = getSubjectKey(req);
   memoryStore.delete(key);
+  memoryStore.delete(GLOBAL_KEY);
 
   try {
-    await getDb().delete(rateLimits).where(eq(rateLimits.key, key));
+    await getDb().delete(rateLimits).where(inArray(rateLimits.key, [key, GLOBAL_KEY]));
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Failed to reset counter after login:', error);
   }

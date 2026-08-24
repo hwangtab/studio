@@ -11,7 +11,8 @@
  */
 
 jest.mock('../../../lib/contracts/admin-rate-limit', () => ({
-  checkAdminLoginRateLimit: jest.fn(),
+  isAdminLoginThrottled: jest.fn(),
+  recordAdminLoginFailure: jest.fn(),
   resetAdminLoginRateLimit: jest.fn(),
 }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({
@@ -23,7 +24,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { loginAdminSession, logoutAdminSession } from '../../../lib/contracts/admin-auth';
 import {
-  checkAdminLoginRateLimit,
+  isAdminLoginThrottled,
+  recordAdminLoginFailure,
   resetAdminLoginRateLimit,
 } from '../../../lib/contracts/admin-rate-limit';
 import handler from '../../../pages/api/admin/auth';
@@ -44,7 +46,8 @@ const run = async (method: string) => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (checkAdminLoginRateLimit as jest.Mock).mockResolvedValue(true);
+  (isAdminLoginThrottled as jest.Mock).mockResolvedValue(false);
+  (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: false });
   (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true });
   (logoutAdminSession as jest.Mock).mockResolvedValue(undefined);
 });
@@ -72,30 +75,48 @@ describe('POST — 로그인', () => {
   });
 
   /**
-   * 순서가 핵심이다. 비밀번호 검사를 먼저 하면 실패한 시도가 계수되지 않아
-   * 무차별 대입을 못 막는다.
+   * 이 IP가 이미 창 한도를 넘겼으면 비밀번호를 대조하기 전에 막는다 — 단일 IP 대입 차단.
    */
-  it('비밀번호를 대조하기 전에 시도 제한을 먼저 본다', async () => {
-    (checkAdminLoginRateLimit as jest.Mock).mockResolvedValue(false);
+  it('이 IP가 스로틀되면 비밀번호를 대조하지 않고 429', async () => {
+    (isAdminLoginThrottled as jest.Mock).mockResolvedValue(true);
     const res = await run('POST');
 
     expect(res.status).toHaveBeenCalledWith(429);
     expect(loginAdminSession).not.toHaveBeenCalled();
+    expect(recordAdminLoginFailure).not.toHaveBeenCalled();
   });
 
   /**
-   * 성공 시 누적을 지우지 않으면, 정상 로그인만으로 한도가 차서
-   * 비밀번호를 아는 관리자가 자기 시스템에서 잠긴다.
+   * H2 회귀: 전역 상한은 비밀번호 대조 뒤에만 본다. 올바른 비밀번호는 전역 상한과
+   * 무관하게 통과해야 한다 — 공격자가 운영자를 봉쇄하지 못하게 하는 핵심 성질이다.
+   */
+  it('올바른 비밀번호는 실패로 계수하지 않고, 전역 상한과 무관하게 통과한다', async () => {
+    const res = await run('POST');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(recordAdminLoginFailure).not.toHaveBeenCalled();
+  });
+
+  /**
+   * 성공 시 subject·global을 모두 지운다. 안 지우면 전역 상한이 영구 봉쇄로 굳는다(H2).
    */
   it('성공하면 누적을 지운다', async () => {
     await run('POST');
     expect(resetAdminLoginRateLimit).toHaveBeenCalled();
   });
 
-  it('실패했을 때는 누적을 지우지 않는다', async () => {
+  it('틀렸을 때만 실패로 계수한다', async () => {
     (loginAdminSession as jest.Mock).mockResolvedValue({ ok: false });
     await run('POST');
+    expect(recordAdminLoginFailure).toHaveBeenCalled();
     expect(resetAdminLoginRateLimit).not.toHaveBeenCalled();
+  });
+
+  /** 오답이 전역 상한을 넘기면(IP 회전 신호) 401 대신 429. */
+  it('오답이 전역 상한을 넘기면 429', async () => {
+    (loginAdminSession as jest.Mock).mockResolvedValue({ ok: false });
+    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: true });
+    const res = await run('POST');
+    expect(res.status).toHaveBeenCalledWith(429);
   });
 });
 
@@ -108,7 +129,7 @@ describe('DELETE — 로그아웃', () => {
 
   it('로그아웃에는 시도 제한을 걸지 않는다', async () => {
     await run('DELETE');
-    expect(checkAdminLoginRateLimit).not.toHaveBeenCalled();
+    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
   });
 });
 
