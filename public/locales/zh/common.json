@@ -12,6 +12,7 @@
     "recording": "录音",
     "mixingMastering": "混音·母带",
     "mobileMenu": "移动菜单",
+    "mainLabel": "主导航",
     "groups": {
       "production": "录音制作",
       "release": "音源发行",
@@ -67,6 +68,8 @@
     "openMenu": "打开菜单",
     "closeMenu": "关闭菜单",
     "kakaoExternal": "KakaoTalk 咨询 (在新窗口中打开)",
+    "kakaoFab": "KakaoTalk 咨询",
+    "callFab": "电话咨询",
     "skipToContent": "跳到主要内容",
     "scrollToTop": "返回顶部"
   },
@@ -1042,6 +1045,7 @@
     "goToImage": "跳转到第 {{number}} 张图片"
   },
   "pagination": {
+    "label": "分页导航",
     "previousPage": "上一页",
     "nextPage": "下一页"
   },

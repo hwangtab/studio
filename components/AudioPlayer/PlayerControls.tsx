@@ -27,7 +27,7 @@ const PlayerControls = ({
                 whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
                 whileTap={TAP_SCALE}
                 onClick={onPrevTrack}
-                className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="text-gray-500 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 aria-label={t('audioPlayer.prevTrack')}
             >
                 <SkipBack size={24} strokeWidth={2} aria-hidden="true" />
@@ -55,7 +55,7 @@ const PlayerControls = ({
                 whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
                 whileTap={TAP_SCALE}
                 onClick={onNextTrack}
-                className="text-gray-400 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="text-gray-500 hover:text-gray-900 dark:text-white/60 dark:hover:text-white transition-colors duration-300 p-2 min-h-[44px] min-w-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 aria-label={t('audioPlayer.nextTrack')}
             >
                 <SkipForward size={24} strokeWidth={2} aria-hidden="true" />

@@ -12,6 +12,7 @@
     "recording": "Yozuv",
     "mixingMastering": "Miks va mastering",
     "mobileMenu": "Mobil menyu",
+    "mainLabel": "Asosiy navigatsiya",
     "groups": {
       "production": "Yozuv",
       "release": "Chiqarish",
@@ -67,6 +68,8 @@
     "openMenu": "Menyuni ochish",
     "closeMenu": "Menyuni yopish",
     "kakaoExternal": "KakaoTalk orqali so‘rov (yangi oynada ochiladi)",
+    "kakaoFab": "KakaoTalk orqali so'rov",
+    "callFab": "Telefon orqali so'rov",
     "skipToContent": "Asosiy mazmunga o'tish",
     "scrollToTop": "Tepaga qaytish"
   },
@@ -1042,6 +1045,7 @@
     "goToImage": "{{number}}-rasmga o'tish"
   },
   "pagination": {
+    "label": "Sahifalash",
     "previousPage": "Oldingi sahifa",
     "nextPage": "Keyingi sahifa"
   },

@@ -12,6 +12,7 @@
     "recording": "บันทึกเสียง",
     "mixingMastering": "มิกซ์ & มาสเตอร์",
     "mobileMenu": "เมนูมือถือ",
+    "mainLabel": "เมนูนำทางหลัก",
     "groups": {
       "production": "บันทึกเสียง",
       "release": "ปล่อยเพลง",
@@ -67,6 +68,8 @@
     "openMenu": "เปิดเมนู",
     "closeMenu": "ปิดเมนู",
     "kakaoExternal": "สอบถามทาง KakaoTalk (เปิดในหน้าต่างใหม่)",
+    "kakaoFab": "สอบถามทาง KakaoTalk",
+    "callFab": "สอบถามทางโทรศัพท์",
     "skipToContent": "ข้ามไปที่เนื้อหาหลัก",
     "scrollToTop": "เลื่อนขึ้นด้านบน"
   },
@@ -1046,6 +1049,7 @@
     "goToImage": "ไปที่รูปภาพ {{number}}"
   },
   "pagination": {
+    "label": "การแบ่งหน้า",
     "previousPage": "หน้าก่อนหน้า",
     "nextPage": "หน้าถัดไป"
   },

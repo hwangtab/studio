@@ -14,16 +14,18 @@ interface FAQItem {
 
 interface FAQSectionProps {
     items: FAQItem[];
-    title?: string;
-    subtitle?: string;
+    // 기본값 없이 필수 prop으로 강제(코드리뷰 후속) — 한국어 리터럴 기본값이 있으면
+    // 새 페이지에서 prop을 빠뜨려도 타입 에러 없이 비-ko 방문자에게 한국어가 샌다.
+    title: string;
+    subtitle: string;
     className?: string;
     variant?: SectionVariant;
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({
     items,
-    title = "자주 묻는 질문",
-    subtitle = "스튜디오 이용에 대해 궁금한 점들을 모았습니다.",
+    title,
+    subtitle,
     className,
     variant = "alternate"
 }) => {

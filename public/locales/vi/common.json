@@ -12,6 +12,7 @@
     "recording": "Thu âm",
     "mixingMastering": "Mixing & Mastering",
     "mobileMenu": "Menu di động",
+    "mainLabel": "Điều hướng chính",
     "groups": {
       "production": "Thu âm",
       "release": "Phát hành",
@@ -67,6 +68,8 @@
     "openMenu": "Mở menu",
     "closeMenu": "Đóng menu",
     "kakaoExternal": "Tư vấn qua KakaoTalk (mở trong cửa sổ mới)",
+    "kakaoFab": "Tư vấn qua KakaoTalk",
+    "callFab": "Tư vấn qua điện thoại",
     "skipToContent": "Nhảy đến nội dung",
     "scrollToTop": "Cuộn lên đầu"
   },
@@ -1042,6 +1045,7 @@
     "goToImage": "Đến hình {{number}}"
   },
   "pagination": {
+    "label": "Phân trang",
     "previousPage": "Trang trước",
     "nextPage": "Trang tiếp theo"
   },

@@ -137,6 +137,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
               isTransparent={isTransparent}
               currentPath={currentPath}
               onNavigate={handleNavigate}
+              locale={locale}
             />
           </div>
 

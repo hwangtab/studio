@@ -1,6 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
+import { useTranslation } from 'react-i18next';
 import { DropdownMenu } from './DropdownMenu';
+import { defaultLocale, type Locale } from '../../lib/i18n';
 
 interface NavLinkItem {
   kind: 'link';
@@ -23,6 +25,7 @@ interface DesktopNavProps {
   isTransparent: boolean;
   currentPath: string;
   onNavigate: () => void;
+  locale?: Locale;
 }
 
 // 1탭 링크의 시각 스펙은 DropdownMenu 트리거 버튼과 같다 — 같은 줄에 섞여 있으므로
@@ -42,9 +45,11 @@ export const DesktopNav = ({
   isTransparent,
   currentPath,
   onNavigate,
+  locale = defaultLocale,
 }: DesktopNavProps) => {
+  const { t } = useTranslation('common', { lng: locale });
   return (
-    <nav aria-label="Main navigation" className="hidden lg:flex items-center gap-x-0.5 xl:gap-x-1">
+    <nav aria-label={t('nav.mainLabel')} className="hidden lg:flex items-center gap-x-0.5 xl:gap-x-1">
       {items.map((item) => (
         item.kind === 'link' ? (
           <Link

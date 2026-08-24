@@ -54,7 +54,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
     };
 
     return (
-        <nav className={`flex justify-center items-center space-x-2 ${className}`} aria-label="Pagination" onKeyDown={handleNavKeyDown}>
+        <nav className={`flex justify-center items-center space-x-2 ${className}`} aria-label={t('pagination.label')} onKeyDown={handleNavKeyDown}>
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}

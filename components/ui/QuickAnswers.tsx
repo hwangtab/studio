@@ -11,16 +11,18 @@ interface QuickAnswerItem {
 
 interface QuickAnswersProps {
   items: QuickAnswerItem[];
-  title?: string;
-  subtitle?: string;
+  // 기본값 없이 필수 prop으로 강제(코드리뷰 후속) — 한국어 리터럴 기본값이 있으면
+  // 새 페이지에서 prop을 빠뜨려도 타입 에러 없이 비-ko 방문자에게 한국어가 샌다.
+  title: string;
+  subtitle: string;
   variant?: SectionVariant;
   className?: string;
 }
 
 const QuickAnswers = ({
   items,
-  title = '빠른 답변',
-  subtitle = '자주 묻는 질문을 한눈에 확인하세요.',
+  title,
+  subtitle,
   variant = 'default',
   className,
 }: QuickAnswersProps) => {

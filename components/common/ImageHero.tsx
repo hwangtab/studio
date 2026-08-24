@@ -102,7 +102,7 @@ const ImageHero = ({
               swap 거의 즉시. 글리프 미포함 글자는 fallback chain(--font-pretendard →
               시스템 한글)으로 자동 swap. */}
           <h1
-            className={`font-hero text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
+            className={`font-hero text-5xl font-bold md:text-7xl lg:text-8xl text-white mb-8 drop-shadow-lg ${textBreakClass} leading-tight tracking-normal ${textAlign === 'center' ? 'max-w-5xl mx-auto' : 'max-w-3xl'}`}
             style={{ letterSpacing: '0' }}
           >
             {title}
@@ -110,10 +110,13 @@ const ImageHero = ({
 
           {/* subtitle은 단순 텍스트뿐 아니라 JSX(div 포함)도 받기 때문에 <p> 대신 <div>를 사용.
               <p> 내부에 <div>가 들어가면 HTML 스펙 위반으로 브라우저가 자동 교정 →
-              React 하이드레이션 HTML 불일치(#418) 유발 (stories/[id] 등에서 재현). */}
+              React 하이드레이션 HTML 불일치(#418) 유발 (stories/[id] 등에서 재현).
+              drop-shadow-lg: 컴포넌트 기본값으로 이동(코드리뷰 후속) — 오버레이가
+              from-black/20 via-black/10 to-transparent로 얕아서 호출부의 drop-shadow
+              부착 여부에 따라 AA 대비가 갈리던 문제를 컴포넌트 레벨에서 항상 보장. */}
           {subtitle && (
             <div
-              className={`text-xl md:text-3xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 whitespace-pre-line ${textBreakClass} ${textAlign === 'center' ? 'mx-auto' : ''}`}
+              className={`text-xl md:text-3xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 whitespace-pre-line drop-shadow-lg ${textBreakClass} ${textAlign === 'center' ? 'mx-auto' : ''}`}
             >
               {subtitle}
             </div>
@@ -134,7 +137,7 @@ const ImageHero = ({
           <div className="container mx-auto px-4">
             <Breadcrumb
               items={breadcrumbItems}
-              className="py-2 text-white/70 [&_span]:text-white [&_a]:text-white/70 [&_a:hover]:text-white [&_svg]:text-white/50"
+              className="py-2 text-white/70 drop-shadow [&_span]:text-white [&_a]:text-white/70 [&_a:hover]:text-white [&_svg]:text-white/50"
             />
           </div>
         </div>

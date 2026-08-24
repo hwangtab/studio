@@ -32,9 +32,11 @@ const KakaoFab = ({ locale }: KakaoFabProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
-  const label = locale === 'ko' ? '카톡 문의' : t('actions.kakao', { defaultValue: 'KakaoTalk' });
+  // FAB 전용 키(actions.kakaoFab/actions.callFab). actions.kakao는 다른 곳에서
+  // '카카오톡' 자체를 지칭하는 값이라 재사용하면 단일 소스가 깨진다(코드리뷰 후속).
+  const label = t('actions.kakaoFab');
 
-  const phoneLabel = locale === 'ko' ? '전화 문의' : t('actions.call', { defaultValue: 'Call' });
+  const phoneLabel = t('actions.callFab');
   // 국제표기(+82)로 두면 국내·해외 어디서 눌러도 정상 연결된다.
   const telHref = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
 

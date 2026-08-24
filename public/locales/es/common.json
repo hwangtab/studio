@@ -12,6 +12,7 @@
     "recording": "Grabación",
     "mixingMastering": "Mezcla y Masterización",
     "mobileMenu": "Menú móvil",
+    "mainLabel": "Navegación principal",
     "groups": {
       "production": "Grabación",
       "release": "Lanzamiento",
@@ -67,6 +68,8 @@
     "openMenu": "Abrir menú",
     "closeMenu": "Cerrar menú",
     "kakaoExternal": "Consulta por KakaoTalk (abre en una nueva ventana)",
+    "kakaoFab": "Consulta por KakaoTalk",
+    "callFab": "Consulta telefónica",
     "skipToContent": "Saltar al contenido",
     "scrollToTop": "Volver arriba"
   },
@@ -1042,6 +1045,7 @@
     "goToImage": "Ir a la imagen {{number}}"
   },
   "pagination": {
+    "label": "Paginación",
     "previousPage": "Página anterior",
     "nextPage": "Página siguiente"
   },

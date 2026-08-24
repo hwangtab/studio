@@ -12,6 +12,7 @@
     "recording": "녹음",
     "mixingMastering": "믹싱·마스터링",
     "mobileMenu": "모바일 메뉴",
+    "mainLabel": "메인 내비게이션",
     "groups": {
       "production": "녹음·제작",
       "release": "음원 발매",
@@ -67,6 +68,8 @@
     "openMenu": "메뉴 열기",
     "closeMenu": "메뉴 닫기",
     "kakaoExternal": "카카오톡 문의 (새 창)",
+    "kakaoFab": "카톡 문의",
+    "callFab": "전화 문의",
     "skipToContent": "본문 바로가기",
     "scrollToTop": "맨 위로"
   },
@@ -1042,6 +1045,7 @@
     "goToImage": "{{number}}번 이미지로 이동"
   },
   "pagination": {
+    "label": "페이지네이션",
     "previousPage": "이전 페이지",
     "nextPage": "다음 페이지"
   },
