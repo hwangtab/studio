@@ -225,6 +225,7 @@
       "transportDetail": "5 min walk from Bulgwang Stn (Line 6) Exit 7, or Yeonsinnae Stn (Line 3) Exit 4"
     },
     "hours": {
+      "everydayLabel": "Every day",
       "weekdaysLabel": "Mon - Fri",
       "weekdaysTime": "Open 24 hours",
       "satLabel": "Sat",

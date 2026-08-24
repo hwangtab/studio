@@ -36,11 +36,12 @@ const t = (key: string) => {
     'contact.info.transport': '대중교통',
     'contact.info.transportDetail': '연신내역 도보 5분',
     'contact.hours.weekdaysLabel': '평일',
-    'contact.hours.weekdaysTime': '10:00-23:59',
+    'contact.hours.everydayLabel': '매일',
+    'contact.hours.weekdaysTime': '24시간 영업',
     'contact.hours.satLabel': '토요일',
-    'contact.hours.satTime': '10:00-23:59',
+    'contact.hours.satTime': '24시간 영업',
     'contact.hours.sunLabel': '일요일',
-    'contact.hours.sunTime': '10:00-23:59',
+    'contact.hours.sunTime': '24시간 영업',
     'contact.directions.title': '오시는 길',
     'contact.directions.description': '연신내역에서 도보로 이동하세요.',
     'actions.kakao': '카카오톡',
@@ -86,5 +87,31 @@ describe('ContactInfoCard', () => {
     render(<ContactInfoCard locale="zh" siteConfig={siteConfig} t={t} />);
 
     expect(screen.getByTitle('위치')).toHaveAttribute('src', expect.stringContaining('hl=zh-CN'));
+  });
+
+  // 연중무휴 24시간이라 요일 셋이 같은 문구를 갖는다. 그대로 세 줄을 내면 같은 말이
+  // 반복되므로 한 줄로 접는다. 요일별로 갈리면 다시 세 줄이어야 한다.
+  it('collapses opening hours into one row when every day shares the same value', () => {
+    render(<ContactInfoCard locale="ko" siteConfig={siteConfig} t={t} />);
+
+    expect(screen.getByText('매일')).toBeInTheDocument();
+    expect(screen.getAllByText('24시간 영업')).toHaveLength(1);
+    expect(screen.queryByText('평일')).not.toBeInTheDocument();
+  });
+
+  it('keeps one row per day group when the hours differ', () => {
+    const perDay = (key: string) => {
+      const overrides: Record<string, string> = {
+        'contact.hours.weekdaysTime': '10:00 - 24:00',
+        'contact.hours.satTime': '12:00 - 22:00',
+        'contact.hours.sunTime': '휴무',
+      };
+      return overrides[key] ?? t(key);
+    };
+    render(<ContactInfoCard locale="ko" siteConfig={siteConfig} t={perDay} />);
+
+    expect(screen.getByText('평일')).toBeInTheDocument();
+    expect(screen.getByText('12:00 - 22:00')).toBeInTheDocument();
+    expect(screen.queryByText('매일')).not.toBeInTheDocument();
   });
 });

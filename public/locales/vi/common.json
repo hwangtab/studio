@@ -225,6 +225,7 @@
       "transportDetail": "Đi bộ 5 phút từ ga Bulgwang (Line 6) cửa số 7 hoặc ga Yeonsinnae (Line 3) cửa số 4"
     },
     "hours": {
+      "everydayLabel": "Hằng ngày",
       "weekdaysLabel": "Thứ 2 - Thứ 6",
       "weekdaysTime": "Mở cửa 24 giờ",
       "satLabel": "Thứ 7",

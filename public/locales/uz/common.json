@@ -225,6 +225,7 @@
       "transportDetail": "Bulgwang (6-liniya) 7-chiqish yoki Yeonsinnae (3-liniya) 4-chiqishdan 5 daqiqa piyoda"
     },
     "hours": {
+      "everydayLabel": "Har kuni",
       "weekdaysLabel": "Dush - Jum",
       "weekdaysTime": "24 soat ochiq",
       "satLabel": "Shanba",

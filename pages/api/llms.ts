@@ -58,9 +58,9 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Geo: 37.614353, 126.925887
 - Phone: ${CANONICAL_FACTS.phoneIntl} (domestic: ${CANONICAL_FACTS.phone})
 - Email: hello@studionol.co.kr
-- Business Hours: Daily 10:00 AM – Midnight (Mon–Sun, including weekends and holidays)
+- Business Hours: Open 24 hours, 7 days a week (including weekends and holidays). Practice-room residents enter with their own door-lock code; recording sessions can also be booked overnight.
 - Preferred Contact: KakaoTalk (https://open.kakao.com/me/nol), Phone (${CANONICAL_FACTS.phoneIntl}), Email (hello@studionol.co.kr)
-- Naver Map: https://naver.me/5gFZhS3X
+- Naver Map: https://map.naver.com/p/entry/place/1527843821
 - Supported Languages: Korean, English, Chinese (Simplified), Spanish, Vietnamese, Thai, Uzbek
 
 ## Directions (Public Transit)

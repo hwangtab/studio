@@ -225,6 +225,7 @@
       "transportDetail": "A 5 min a pie desde Bulgwang (Línea 6) Salida 7 o Yeonsinnae (Línea 3) Salida 4"
     },
     "hours": {
+      "everydayLabel": "Todos los días",
       "weekdaysLabel": "Lun - Vie",
       "weekdaysTime": "Abierto 24 horas",
       "satLabel": "Sáb",

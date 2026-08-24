@@ -34,7 +34,18 @@ const ContactInfoCard = ({
   t,
   motionProps,
   directionsMotionProps,
-}: ContactInfoCardProps) => (
+}: ContactInfoCardProps) => {
+  // 요일 묶음이 서로 다른 시간을 가질 때만 여러 줄로 낸다. 값이 전부 같으면 한 줄로 접는다.
+  const rawHours = [
+    { label: t('contact.hours.weekdaysLabel'), time: t('contact.hours.weekdaysTime') },
+    { label: t('contact.hours.satLabel'), time: t('contact.hours.satTime') },
+    { label: t('contact.hours.sunLabel'), time: t('contact.hours.sunTime') },
+  ];
+  const hoursRows = new Set(rawHours.map((row) => row.time)).size === 1
+    ? [rawHours[0]]
+    : rawHours;
+
+  return (
   <m.div
     {...motionProps}
     className="glass-card p-8 rounded-2xl order-2 lg:order-1"
@@ -134,19 +145,23 @@ const ContactInfoCard = ({
 
       <div className="mt-8">
         <h3 className="typo-card-title mb-4">{t('contact.info.hours')}</h3>
+        {/* 요일별 값이 전부 같으면 한 줄로 낸다 — 현재 연중무휴 24시간이라 셋 다 같은
+            문구이고, 그대로 세 줄을 내면 같은 말이 반복돼 오히려 읽기 나쁘다. 요일별로
+            갈리는 날이 오면 아래 분기가 자동으로 세 줄로 돌아간다. */}
         <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.weekdaysLabel')}</span>
-            <span className="dark:text-gray-300">{t('contact.hours.weekdaysTime')}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.satLabel')}</span>
-            <span className="dark:text-gray-300">{t('contact.hours.satTime')}</span>
-          </div>
-          <div className="flex justify-between items-center">
-            <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.sunLabel')}</span>
-            <span className="dark:text-gray-300">{t('contact.hours.sunTime')}</span>
-          </div>
+          {hoursRows.length === 1 ? (
+            <div className="flex justify-between items-center">
+              <span className="dark:text-gray-300 typo-card-body">{t('contact.hours.everydayLabel')}</span>
+              <span className="dark:text-gray-300">{hoursRows[0].time}</span>
+            </div>
+          ) : (
+            hoursRows.map((row) => (
+              <div key={row.label} className="flex justify-between items-center">
+                <span className="dark:text-gray-300 typo-card-body">{row.label}</span>
+                <span className="dark:text-gray-300">{row.time}</span>
+              </div>
+            ))
+          )}
         </div>
         <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-md">
           <p className="typo-card-body text-blue-800 dark:text-blue-300">
@@ -159,6 +174,7 @@ const ContactInfoCard = ({
       </div>
     </div>
   </m.div>
-);
+  );
+};
 
 export default ContactInfoCard;

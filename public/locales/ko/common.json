@@ -225,6 +225,7 @@
       "transportDetail": "지하철 6호선 불광역 7번 출구·3호선 연신내역 4번 출구에서 각각 도보 5분"
     },
     "hours": {
+      "everydayLabel": "매일",
       "weekdaysLabel": "월 - 금",
       "weekdaysTime": "24시간 영업",
       "satLabel": "토",

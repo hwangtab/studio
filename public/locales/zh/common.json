@@ -225,6 +225,7 @@
       "transportDetail": "地铁 6 号线佛光站 7 号出口 / 3 号线延新内站 4 号出口，步行 5 分钟"
     },
     "hours": {
+      "everydayLabel": "每天",
       "weekdaysLabel": "周一-周五",
       "weekdaysTime": "24小时营业",
       "satLabel": "周六",

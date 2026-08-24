@@ -225,6 +225,7 @@
       "transportDetail": "เดิน 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7 หรือสถานี Yeonsinnae (สาย 3) ทางออก 4"
     },
     "hours": {
+      "everydayLabel": "ทุกวัน",
       "weekdaysLabel": "จันทร์ - ศุกร์",
       "weekdaysTime": "เปิด 24 ชั่วโมง",
       "satLabel": "เสาร์",
