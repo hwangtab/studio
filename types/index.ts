@@ -9,7 +9,7 @@ export interface BaseProps {
   children?: React.ReactNode;
 }
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
     hasHero?: boolean;
 };
 

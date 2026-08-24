@@ -5,7 +5,7 @@ This file provides guidance for development in the **Studio NOL** repository.
 ## Project Overview
 
 Studio NOL is a multi-language music studio website built with:
-- **Framework**: Next.js 15.5.12 (Pages Router)
+- **Framework**: Next.js 15.5.23 (Pages Router)
 - **Runtime**: React 19.2.4
 - **Styling**: Tailwind CSS with custom design system
 - **Animation**: Framer Motion
@@ -15,7 +15,7 @@ Studio NOL is a multi-language music studio website built with:
 
 ## Key Technologies
 
-- **Frontend**: Next.js 15.5.12, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
+- **Frontend**: Next.js 15.5.23, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
 - **i18n**: i18next with language detection and locale-based routing
 - **Form**: Serverless contact form via Next.js API Routes and Resend
 - **Imaging**: Sharp-based image optimization (WebP/AVIF)
@@ -248,6 +248,29 @@ node scripts/seo-preflight.mjs        # 최근 커밋·열린 실험·관측창�
 | `optimizePackageImports` | **활성** (7개 라이브러리) | `lucide-react`, `framer-motion` 등 barrel import tree-shaking |
 | `optimizeCss` (critters) | **비활성** | PSI 모바일 점수 85→38 급락, TBT 260→7,130ms. Next.js 15 + React 19 + Pages Router 조합에서 불안정 |
 | `nextScriptWorkers` (Partytown) | **비활성** | TBT 260→1,990ms 회귀 확인 |
+
+## 의존성 버전 고정 정책
+
+`next`·`react`·`react-dom`은 **캐럿 없이 정확한 버전으로 고정**한다. 특정 버그를 피하려는
+것이 아니라, 세 패키지가 함께 움직여야 하기 때문이다(`f2accd09f2` Next 15 + React 19
+atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 패치 상승은 정책 위반이
+아니다** — 실제로 `701233f0ac`에서 15.5.12 → 15.5.18로 올린 전례가 있다.
+
+- 패치 상승(15.5.x → 15.5.y): 보안 권고가 있으면 올린다. 검증은
+  `type-check` → `lint` → `test` → `build` → `middleware.test.ts` 순.
+  **미들웨어에 `NextURL.pathname` setter 버그 워크어라운드가 있으므로**
+  (`middleware.ts:207`, `701233f0ac`) 업그레이드 후 반드시 `middleware.test.ts`를 확인할 것.
+- minor·major 상승: PSI 실측 없이 올리지 않는다(`optimizeCss`·Partytown 회귀 이력 참조).
+
+`npm audit`에 남아 있는 항목과 남겨둔 이유:
+
+| 패키지 | 경로 | 왜 안 올렸나 |
+|---|---|---|
+| `sharp` <0.35.0 | 직접 + next + @vercel/og | libvips CVE 4건. 0.35는 semver major라 `scripts/optimizeImages.js` 회귀 검증 필요 |
+| `postcss` 8.4.31 | next 내부 번들 | 우리 직접 의존은 8.5.26으로 올림. next 번들본은 major 업 없이는 못 바꾼다. 빌드타임 CSS만 처리하고 입력이 우리 소스라 실위험 낮음 |
+| `js-yaml` 3.x | gray-matter | frontmatter 파싱. 입력이 우리 저장소의 .md라 외부 입력 없음 |
+| `ip-address` | puppeteer-core → socks-proxy-agent | 계약 PDF 렌더용. 프록시 경로를 쓰지 않음 |
+| `undici` 6.27 | @vercel/blob | 업스트림이 올려야 함 |
 
 ## Deployment Notes
 
