@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
+import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 
 /**
@@ -37,6 +38,9 @@ interface CompletePageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (context) => {
+  // 계약 본문은 개인정보다. 공유 캐시 지시자를 먼저 걷어낸다(page-cache.ts 주석 참조).
+  denyContractPageCaching(context.res);
+
   const { locale, id } = context.params as { locale: string; id: string };
   const { token } = context.query;
 
@@ -101,6 +105,11 @@ export default function ContractCompletePage({
 }: CompletePageProps) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
+  /**
+   * 서명본에는 성명·생년월일·주소·서명 이미지가 들어 있다. 서명할 때 요구한 뒷자리를
+   * 받을 때도 요구한다 — 안 그러면 링크를 전달받은 사람이 그대로 내려받을 수 있다.
+   */
+  const [identityDigits, setIdentityDigits] = useState('');
 
   /**
    * 링크로 바로 이동하지 않고 받아서 저장한다.
@@ -114,7 +123,11 @@ export default function ContractCompletePage({
     setDownloadError(null);
 
     try {
-      const response = await fetch(downloadUrl);
+      const response = await fetch(downloadUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identityDigits }),
+      });
 
       if (!response.ok) {
         const message = await response
@@ -204,12 +217,41 @@ export default function ContractCompletePage({
             </p>
           ) : (
             <>
-              <Button size="lg" fullWidth disabled={downloading} onClick={handleDownload}>
+              <label
+                htmlFor="download-identity-digits"
+                className="block text-left text-sm text-gray-600 dark:text-gray-600 mb-2"
+              >
+                본인 확인을 위해 계약서에 등록된 연락처 뒤 4자리를 입력해 주세요.
+              </label>
+              <input
+                id="download-identity-digits"
+                type="text"
+                inputMode="numeric"
+                autoComplete="off"
+                maxLength={4}
+                value={identityDigits}
+                onChange={(event) => setIdentityDigits(event.target.value.replace(/\D/g, ''))}
+                placeholder="0000"
+                aria-describedby={downloadError ? 'download-identity-error' : undefined}
+                aria-invalid={downloadError ? true : undefined}
+                className="w-full mb-4 rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white px-4 py-3 text-center text-lg tracking-[0.5em] text-gray-900 dark:text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+              />
+
+              <Button
+                size="lg"
+                fullWidth
+                disabled={downloading || identityDigits.length !== 4}
+                onClick={handleDownload}
+              >
                 {downloading ? '준비 중…' : '계약서 PDF 내려받기'}
               </Button>
 
               {downloadError && (
-                <p className="mt-3 text-sm text-red-700 dark:text-red-700 bg-red-50 dark:bg-red-50 rounded-xl p-3 leading-relaxed">
+                <p
+                  id="download-identity-error"
+                  role="alert"
+                  className="mt-3 text-sm text-red-700 dark:text-red-700 bg-red-50 dark:bg-red-50 rounded-xl p-3 leading-relaxed"
+                >
                   {downloadError}
                   <br />
                   계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.

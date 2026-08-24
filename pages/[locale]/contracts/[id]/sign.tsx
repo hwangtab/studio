@@ -20,6 +20,7 @@ import {
   maskIdentityDigits,
   maskIdentityDigitsInContent,
 } from '../../../../lib/contracts/identity';
+import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
@@ -45,6 +46,9 @@ interface SignPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<SignPageProps> = async (context) => {
+  // 계약 본문은 개인정보다. 공유 캐시 지시자를 먼저 걷어낸다(page-cache.ts 주석 참조).
+  denyContractPageCaching(context.res);
+
   const { locale, id } = context.params as { locale: string; id: string };
   const { token } = context.query;
 

@@ -30,8 +30,15 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
       (signature: Signature) => signature.signerRole === 'customer' && signature.status === 'signed',
     ) ?? null;
 
-  // 첨부가 유실되거나 열리지 않는 경우가 있어 메일에도 다시 받는 링크를 넣는다.
-  const downloadUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr'}/api/contracts/${contract.id}/download?token=${encodeURIComponent(contract.signToken)}`;
+  /**
+   * 첨부가 유실되거나 열리지 않는 경우가 있어 메일에도 다시 받는 링크를 넣는다.
+   *
+   * API 라우트가 아니라 완료 페이지를 가리킨다. 다운로드는 연락처 뒷자리를 요구하도록
+   * 바뀌었고(pages/api/contracts/[id]/download.ts 주석 참조), 그 입력을 받는 화면이
+   * 완료 페이지다. 이 링크는 고객 메일함에 몇 년씩 남으므로, 누르면 곧바로 무엇을
+   * 해야 하는지 보이는 쪽으로 보낸다.
+   */
+  const downloadUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr'}/ko/contracts/${contract.id}/complete?token=${encodeURIComponent(contract.signToken)}`;
 
   let pdfBuffer: Buffer | undefined;
 

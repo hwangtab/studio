@@ -70,16 +70,56 @@ const mockFound = (contract: Contract | undefined) => {
   });
 };
 
+/** setHeader 호출을 들여다보기 위한 최소 res 스텁. */
+const makeRes = () => ({ setHeader: jest.fn() });
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const run = (query: Record<string, unknown> = { token: TOKEN }): Promise<any> =>
+const run = (
+  query: Record<string, unknown> = { token: TOKEN },
+  res: { setHeader: jest.Mock } = makeRes(),
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (getServerSideProps as any)({ params: { locale: 'ko', id: 'c1' }, query });
+): Promise<any> =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (getServerSideProps as any)({ params: { locale: 'ko', id: 'c1' }, query, res });
 
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('서명 완료 페이지 props', () => {
+  /**
+   * next.config.mjs의 로케일 캐시 규칙이 `/ko/contracts/...`까지 매칭해
+   * `public, s-maxage=3600`을 붙인다. 그대로 두면 계약 본문이 공유 캐시에 남는다.
+   * 조회 전에 걷어내야 notFound로 빠지는 경로까지 덮인다.
+   */
+  describe('공유 캐시 차단', () => {
+    it('계약을 조회하기 전에 no-store를 세운다', async () => {
+      mockFound(contractFixture());
+      const res = makeRes();
+      await run({ token: TOKEN }, res);
+
+      expect(res.setHeader).toHaveBeenCalledWith(
+        'Cache-Control',
+        expect.stringContaining('no-store'),
+      );
+      expect(res.setHeader).toHaveBeenCalledWith(
+        'Cache-Control',
+        expect.stringContaining('private'),
+      );
+    });
+
+    it('토큰이 없어 404로 빠지는 경로에서도 세운다', async () => {
+      mockFound(contractFixture());
+      const res = makeRes();
+      await run({}, res);
+
+      expect(res.setHeader).toHaveBeenCalledWith(
+        'Cache-Control',
+        expect.stringContaining('no-store'),
+      );
+    });
+  });
+
   it('토큰이 없으면 계약을 조회조차 하지 않는다', async () => {
     mockFound(contractFixture());
     await expect(run({})).resolves.toEqual({ notFound: true });
