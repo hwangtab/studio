@@ -41,15 +41,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '잘못된 계약 ID입니다.' });
   }
 
-  const contract = await getDb().query.contracts
-    .findFirst({
+  /**
+   * 조회 실패와 "없음"을 구분한다.
+   *
+   * 예전에는 쿼리 오류를 catch해 null로 뭉갰고, 그러면 Turso 타임아웃 같은 장애가
+   * 관리자 화면에 "계약을 찾을 수 없습니다"로 나왔다. 계약이 사라진 줄 알고 다시
+   * 만들거나 고객에게 잘못 안내할 수 있는 오분류다. 같은 상황을 [id]/pdf.ts는
+   * 이미 500으로 처리하고 있어 두 라우트가 서로 달랐다.
+   */
+  let contract;
+  try {
+    contract = await getDb().query.contracts.findFirst({
       where: (contractsTable, { eq }) => eq(contractsTable.id, id),
       with: { signatures: true, contractClauses: true, contractAttachments: true },
-    })
-    .catch((error: unknown) => {
-      console.error('[API/contracts/[id]] Query failed:', error);
-      return null;
     });
+  } catch (error: unknown) {
+    console.error('[API/contracts/[id]] Query failed:', error);
+    return res.status(500).json({ ok: false, message: '계약을 불러오지 못했습니다.' });
+  }
 
   if (!contract) {
     return res.status(404).json({ ok: false, message: '계약을 찾을 수 없습니다.' });
