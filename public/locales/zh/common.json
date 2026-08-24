@@ -13,10 +13,14 @@
     "mixingMastering": "混音·母带",
     "mobileMenu": "移动菜单",
     "groups": {
-      "recording": "录音/混音",
-      "practice": "练习/课程",
-      "explore": "了解更多",
-      "release": "音乐发行"
+      "production": "录音制作",
+      "release": "音源发行",
+      "guide": "指南",
+      "studio": "工作室"
+    },
+    "short": {
+      "practiceRoom": "练习室",
+      "pricing": "价格"
     },
     "weddingSong": "婚礼祝歌录音",
     "voiceActing": "配音录音",
@@ -32,10 +36,15 @@
     "contact": "联系方式",
     "privacy": "隐私政策",
     "tagline": "实现艺术家愿景的音乐制作工作室",
-    "linksTitle": "快速链接",
     "contactTitle": "联系方式",
     "emailLabel": "邮箱",
-    "phoneLabel": "电话"
+    "phoneLabel": "电话",
+    "sections": {
+      "services": "服务",
+      "release": "音源发行",
+      "content": "阅读",
+      "studio": "工作室"
+    }
   },
   "seo": {
     "geoPlacename": "首尔特别市恩平区"

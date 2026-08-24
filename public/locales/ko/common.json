@@ -13,10 +13,14 @@
     "mixingMastering": "믹싱·마스터링",
     "mobileMenu": "모바일 메뉴",
     "groups": {
-      "recording": "녹음/믹싱",
-      "practice": "연습/레슨",
-      "explore": "알아보기",
-      "release": "음원 발매"
+      "production": "녹음·제작",
+      "release": "음원 발매",
+      "guide": "가이드",
+      "studio": "스튜디오"
+    },
+    "short": {
+      "practiceRoom": "음악연습실",
+      "pricing": "가격"
     },
     "weddingSong": "축가 녹음",
     "voiceActing": "성우 녹음",
@@ -32,10 +36,15 @@
     "contact": "연락처",
     "privacy": "개인정보 처리방침",
     "tagline": "아티스트의 비전을 실현하는 음악 제작 스튜디오",
-    "linksTitle": "바로가기",
     "contactTitle": "연락처",
     "emailLabel": "문의",
-    "phoneLabel": "전화"
+    "phoneLabel": "전화",
+    "sections": {
+      "services": "서비스",
+      "release": "음원 발매",
+      "content": "읽을거리",
+      "studio": "스튜디오"
+    }
   },
   "seo": {
     "geoPlacename": "서울특별시 은평구"

@@ -13,10 +13,14 @@
     "mixingMastering": "Mezcla y Masterización",
     "mobileMenu": "Menú móvil",
     "groups": {
-      "recording": "Grabación",
-      "practice": "Práctica",
-      "explore": "Explorar",
-      "release": "Lanzamiento Musical"
+      "production": "Grabación",
+      "release": "Lanzamiento",
+      "guide": "Guías",
+      "studio": "Estudio"
+    },
+    "short": {
+      "practiceRoom": "Sala",
+      "pricing": "Precios"
     },
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
@@ -32,10 +36,15 @@
     "contact": "Contacto",
     "privacy": "Política de Privacidad",
     "tagline": "Estudio de producción musical que realiza la visión del artista",
-    "linksTitle": "Enlaces",
     "contactTitle": "Contacto",
     "emailLabel": "Email",
-    "phoneLabel": "Teléfono"
+    "phoneLabel": "Teléfono",
+    "sections": {
+      "services": "Servicios",
+      "release": "Lanzamiento Musical",
+      "content": "Lecturas",
+      "studio": "Estudio"
+    }
   },
   "seo": {
     "geoPlacename": "Eunpyeong-gu, Seúl"

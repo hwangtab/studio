@@ -13,10 +13,14 @@
     "mixingMastering": "Mixing & Mastering",
     "mobileMenu": "Mobile Menu",
     "groups": {
-      "recording": "Recording",
-      "practice": "Practice",
-      "explore": "Explore",
-      "release": "Music Release"
+      "production": "Recording",
+      "release": "Release",
+      "guide": "Guides",
+      "studio": "Studio"
+    },
+    "short": {
+      "practiceRoom": "Practice",
+      "pricing": "Pricing"
     },
     "weddingSong": "Wedding Song",
     "voiceActing": "Voice Acting",
@@ -32,10 +36,15 @@
     "contact": "Contact",
     "privacy": "Privacy Policy",
     "tagline": "Music production studio realizing artist's vision",
-    "linksTitle": "Links",
     "contactTitle": "Contact",
     "emailLabel": "Email",
-    "phoneLabel": "Phone"
+    "phoneLabel": "Phone",
+    "sections": {
+      "services": "Services",
+      "release": "Music Release",
+      "content": "Guides & Stories",
+      "studio": "Studio"
+    }
   },
   "seo": {
     "geoPlacename": "Eunpyeong-gu, Seoul"

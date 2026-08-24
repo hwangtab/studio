@@ -13,10 +13,14 @@
     "mixingMastering": "Miks va mastering",
     "mobileMenu": "Mobil menyu",
     "groups": {
-      "recording": "Yozuv",
-      "practice": "Mashg'ulot",
-      "explore": "Batafsil",
-      "release": "Musiqa chiqarish"
+      "production": "Yozuv",
+      "release": "Chiqarish",
+      "guide": "Qo'llanma",
+      "studio": "Studiya"
+    },
+    "short": {
+      "practiceRoom": "Mashg'ulot",
+      "pricing": "Narxlar"
     },
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
@@ -32,10 +36,15 @@
     "contact": "Aloqa",
     "privacy": "Maxfiylik siyosati",
     "tagline": "Artist visionini ro'yobga chiqaruvchi musiqa prodakshn studiyasi",
-    "linksTitle": "Havolalar",
     "contactTitle": "Aloqa",
     "emailLabel": "Email",
-    "phoneLabel": "Telefon"
+    "phoneLabel": "Telefon",
+    "sections": {
+      "services": "Xizmatlar",
+      "release": "Musiqa chiqarish",
+      "content": "O'qish uchun",
+      "studio": "Studiya"
+    }
   },
   "seo": {
     "geoPlacename": "Eunpyeong-gu, Seul"

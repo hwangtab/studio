@@ -24,7 +24,29 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const currentPath = router.asPath.split('?')[0].split('#')[0];
   const siteConfig = getSiteConfig(locale);
 
+  // 메뉴 순서는 성과 데이터에 맞춘다(2026-08-24 IA 감사).
+  // 최다 유입·전환 페이지인 음악연습실(GSC 449클릭·리드 51)과 전 상품 공통인 가격은
+  // 드롭다운 밖 1탭 링크로 둔다. 나머지는 라벨과 내용이 일치하는 4개 그룹.
+  // 이전 구조의 '녹음/믹싱' 그룹에는 소개·가격·장비가 섞여 있어, 연습실 요금을 찾는
+  // 사람이 '녹음/믹싱'을 열어야 했다.
+  const directLinks = useMemo(() => [
+    { id: 'practice-room', label: t('nav.short.practiceRoom'), href: `/${locale}/practice-room` },
+    { id: 'pricing', label: t('nav.short.pricing'), href: `/${locale}/pricing` },
+  ], [locale, t]);
+
   const navGroups = useMemo(() => [
+    {
+      id: 'production',
+      label: t('nav.groups.production'),
+      items: [
+        { label: t('nav.recording'), href: `/${locale}/recording` },
+        { label: t('nav.mixingMastering'), href: `/${locale}/mixing-mastering` },
+        { label: t('nav.voiceActing'), href: `/${locale}/voice-acting` },
+        { label: t('nav.weddingSong'), href: `/${locale}/wedding-song` },
+        { label: t('nav.coverVideo'), href: `/${locale}/cover-video` },
+        { label: t('nav.lesson'), href: `/${locale}/lesson` },
+      ]
+    },
     {
       id: 'release',
       label: t('nav.groups.release'),
@@ -36,44 +58,39 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       ]
     },
     {
-      id: 'recording',
-      label: t('nav.groups.recording'),
+      id: 'guide',
+      label: t('nav.groups.guide'),
       items: [
-        { label: t('nav.recording'), href: `/${locale}/recording` },
-        { label: t('nav.mixingMastering'), href: `/${locale}/mixing-mastering` },
-        { label: t('nav.about'), href: `/${locale}/about` },
-        { label: t('nav.pricing'), href: `/${locale}/pricing` },
-        { label: t('nav.equipment'), href: `/${locale}/studio-info` },
-        { label: t('nav.weddingSong'), href: `/${locale}/wedding-song` },
-        { label: t('nav.voiceActing'), href: `/${locale}/voice-acting` },
-        { label: t('nav.coverVideo'), href: `/${locale}/cover-video` },
-      ]
-    },
-    {
-      id: 'practice',
-      label: t('nav.groups.practice'),
-      items: [
-        { label: t('nav.practiceRoom'), href: `/${locale}/practice-room` },
-        { label: t('nav.lesson'), href: `/${locale}/lesson` },
-      ]
-    },
-    {
-      id: 'explore',
-      label: t('nav.groups.explore'),
-      items: [
-        { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
         { label: t('nav.stories'), href: `/${locale}/stories` },
+        { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
+      ]
+    },
+    {
+      id: 'studio',
+      label: t('nav.groups.studio'),
+      items: [
+        { label: t('nav.about'), href: `/${locale}/about` },
+        { label: t('nav.equipment'), href: `/${locale}/studio-info` },
         { label: t('nav.contact'), href: `/${locale}/contact` },
       ]
     }
   ], [locale, t]);
 
+  // 데스크톱 헤더의 좌→우 배치 순서. 1탭 링크와 드롭다운이 섞이므로 한 배열로 표현한다.
+  const desktopNavItems = useMemo(() => [
+    { kind: 'link' as const, ...directLinks[0] },
+    ...navGroups.map((group) => ({ kind: 'group' as const, ...group })),
+    { kind: 'link' as const, ...directLinks[1] },
+  ], [directLinks, navGroups]);
+
   // 모바일 메뉴 최상단 고정 노출 퀵링크. 4개 그룹 아코디언이 모두 접힌 채 시작하므로
-  // 고객 최다 의도(가격 확인·방문/전화·작업물 확인)를 그룹 밖 1탭 경로로 승격한다.
+  // 고객 최다 의도를 그룹 밖 1탭 경로로 승격한다. 포트폴리오는 90일 검색 클릭 0·리드 0이라
+  // 이 자리에서 내리고(가이드 그룹으로 이동), 최다 유입인 음악연습실을 올렸다.
+  // 연습실·가격은 데스크톱에서도 1탭이므로 두 뷰포트의 우선순위가 일치한다.
   const quickLinks = useMemo(() => [
+    { label: t('nav.practiceRoom'), href: `/${locale}/practice-room` },
     { label: t('nav.pricing'), href: `/${locale}/pricing` },
     { label: t('nav.contact'), href: `/${locale}/contact` },
-    { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
   ], [locale, t]);
 
   const handleNavigate = useCallback(() => {
@@ -92,8 +109,11 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     // SectionAnchorNav sticky top-16 · 본문 scroll-mt 오프셋과 그대로 맞물린다.
     <header ref={ref} className="fixed w-full z-50">
       <div className="max-w-7xl mx-auto lg:px-6 lg:pt-2">
+        {/* 열 구성이 [auto_1fr_auto]인 이유: 이전 [1fr_auto_1fr]은 nav가 넓어지면
+            양쪽 1fr을 0px까지 압축해 로고를 통째로 지웠다(uz·vi 로케일 1024px에서 실측).
+            로고와 우측 액션은 콘텐츠 폭을 보장하고, 남는 공간을 nav가 갖게 한다. */}
         <div
-          className={`grid h-16 lg:h-14 grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 sm:px-6 lg:px-4 rounded-none lg:rounded-full transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
+          className={`grid h-16 lg:h-14 grid-cols-[auto_1fr_auto] items-center gap-4 px-4 sm:px-6 lg:px-4 rounded-none lg:rounded-full transition-[background-color,box-shadow,border-color] duration-300 transform-gpu ${!isTransparent
             // 데스크톱 pill 그림자: shadow-[...var(--glass-shadow)]는 Tailwind이
             // '섀도 색상'으로 오판해 box-shadow를 안 내보낸다(감사에서 확인). arbitrary
             // *property* 문법 [box-shadow:...]로 raw 선언을 직접 출력해 우회한다.
@@ -113,7 +133,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
 
           <div className="justify-self-center">
             <DesktopNav
-              navGroups={navGroups}
+              items={desktopNavItems}
               isTransparent={isTransparent}
               currentPath={currentPath}
               onNavigate={handleNavigate}

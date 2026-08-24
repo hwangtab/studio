@@ -13,10 +13,14 @@
     "mixingMastering": "มิกซ์ & มาสเตอร์",
     "mobileMenu": "เมนูมือถือ",
     "groups": {
-      "recording": "บันทึกเสียง",
-      "practice": "ฝึกซ้อม",
-      "explore": "สำรวจ",
-      "release": "ปล่อยเพลง"
+      "production": "บันทึกเสียง",
+      "release": "ปล่อยเพลง",
+      "guide": "คู่มือ",
+      "studio": "สตูดิโอ"
+    },
+    "short": {
+      "practiceRoom": "ห้องซ้อม",
+      "pricing": "ราคา"
     },
     "weddingSong": "บันทึกเพลงอวยพร",
     "voiceActing": "บันทึกเสียงพากย์",
@@ -32,10 +36,15 @@
     "contact": "ติดต่อ",
     "privacy": "นโยบายความเป็นส่วนตัว",
     "tagline": "สตูดิโอผลิตเพลงที่ทำให้วิสัยทัศน์ของศิลปินเป็นจริง",
-    "linksTitle": "ลิงก์",
     "contactTitle": "ติดต่อ",
     "emailLabel": "อีเมล",
-    "phoneLabel": "โทรศัพท์"
+    "phoneLabel": "โทรศัพท์",
+    "sections": {
+      "services": "บริการ",
+      "release": "ปล่อยเพลง",
+      "content": "บทความ",
+      "studio": "สตูดิโอ"
+    }
   },
   "seo": {
     "geoPlacename": "เขตอึนพยอง โซล"

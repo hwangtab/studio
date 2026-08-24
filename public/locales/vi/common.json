@@ -13,10 +13,14 @@
     "mixingMastering": "Mixing & Mastering",
     "mobileMenu": "Menu di động",
     "groups": {
-      "recording": "Thu âm",
-      "practice": "Luyện tập",
-      "explore": "Khám phá",
-      "release": "Phát hành âm nhạc"
+      "production": "Thu âm",
+      "release": "Phát hành",
+      "guide": "Hướng dẫn",
+      "studio": "Studio"
+    },
+    "short": {
+      "practiceRoom": "Phòng tập",
+      "pricing": "Giá"
     },
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
@@ -32,10 +36,15 @@
     "contact": "Liên hệ",
     "privacy": "Chính sách bảo mật",
     "tagline": "Studio sản xuất âm nhạc hiện thực hóa tầm nhìn của nghệ sĩ",
-    "linksTitle": "Liên kết",
     "contactTitle": "Liên hệ",
     "emailLabel": "Email",
-    "phoneLabel": "Điện thoại"
+    "phoneLabel": "Điện thoại",
+    "sections": {
+      "services": "Dịch vụ",
+      "release": "Phát hành nhạc",
+      "content": "Bài viết",
+      "studio": "Studio"
+    }
   },
   "seo": {
     "geoPlacename": "Eunpyeong-gu, Seoul"

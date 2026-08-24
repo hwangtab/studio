@@ -21,6 +21,19 @@ const FooterLink = ({ href, children }: { href: string; children: React.ReactNod
   </li>
 );
 
+// 푸터 열 제목. 예전 푸터는 라벨 없는 2열 목록에 14개 링크를 늘어놓아 스캔이 안 됐고,
+// 헤더에서 원하는 걸 못 찾은 사람을 받아주는 두 번째 그물 역할을 못 했다(2026-08-24 IA 감사).
+const SectionHeading = ({ children }: { children: React.ReactNode }) => (
+  <>
+    <h3 className="typo-footer-heading mb-4">{children}</h3>
+    <div className="h-px w-full bg-white/25 mb-4" />
+  </>
+);
+
+const SubHeading = ({ children }: { children: React.ReactNode }) => (
+  <h4 className="typo-footer-meta uppercase tracking-wider text-white/60 mt-6 mb-2">{children}</h4>
+);
+
 export const Footer = ({ locale }: FooterProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
@@ -29,7 +42,7 @@ export const Footer = ({ locale }: FooterProps) => {
   return (
     <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
           <div className="flex flex-col">
             <h3 className="typo-footer-heading mb-4">
               {siteConfig.name}
@@ -53,34 +66,49 @@ export const Footer = ({ locale }: FooterProps) => {
           </div>
 
           <div className="flex flex-col">
-            <h3 className="typo-footer-heading mb-4">{t('footer.linksTitle')}</h3>
-            <div className="h-px w-full bg-white/25 mb-4" />
-            <ul className="grid grid-cols-2 gap-x-4">
-              <FooterLink href={`/${locale}`}>{t('nav.home')}</FooterLink>
+            <SectionHeading>{t('footer.sections.services')}</SectionHeading>
+            <ul className="flex flex-col">
+              <FooterLink href={`/${locale}/practice-room`}>{t('nav.practiceRoom')}</FooterLink>
               <FooterLink href={`/${locale}/recording`}>{t('nav.recording')}</FooterLink>
               <FooterLink href={`/${locale}/mixing-mastering`}>{t('nav.mixingMastering')}</FooterLink>
-              <FooterLink href={`/${locale}/about`}>{t('nav.about')}</FooterLink>
-              <FooterLink href={`/${locale}/portfolio`}>{t('nav.portfolio')}</FooterLink>
-              <FooterLink href={`/${locale}/stories`}>{t('nav.stories')}</FooterLink>
-              <FooterLink href={`/${locale}/pricing`}>{t('nav.pricing')}</FooterLink>
-              <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
-              <FooterLink href={`/${locale}/practice-room`}>{t('nav.practiceRoom')}</FooterLink>
-              <FooterLink href={`/${locale}/studio-info`}>{t('nav.equipment')}</FooterLink>
-              <FooterLink href={`/${locale}/wedding-song`}>{t('nav.weddingSong')}</FooterLink>
               <FooterLink href={`/${locale}/voice-acting`}>{t('nav.voiceActing')}</FooterLink>
+              <FooterLink href={`/${locale}/wedding-song`}>{t('nav.weddingSong')}</FooterLink>
               <FooterLink href={`/${locale}/cover-video`}>{t('nav.coverVideo')}</FooterLink>
-              {/* 발매 프로젝트 — nav.releaseProject는 하위메뉴 맥락 라벨('Overview')이라
-                  비-ko 푸터에선 맥락을 잃는다. 홈 pill과 동일하게 ko 전용 노출. */}
-              {locale === 'ko' && (
-                <FooterLink href={`/${locale}/release-project`}>{t('nav.releaseProject')}</FooterLink>
-              )}
+              <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
+            </ul>
+            {/* 발매 프로젝트 — nav.releaseProject 등은 하위메뉴 맥락 라벨('Overview')이라
+                비-ko 푸터에선 맥락을 잃는다. 홈 pill과 동일하게 ko 전용 노출. */}
+            {locale === 'ko' && (
+              <>
+                <SubHeading>{t('footer.sections.release')}</SubHeading>
+                <ul className="flex flex-col">
+                  <FooterLink href={`/${locale}/release-project`}>{t('nav.releaseProject')}</FooterLink>
+                  <FooterLink href={`/${locale}/release-project/single`}>{t('nav.releaseSingle')}</FooterLink>
+                  <FooterLink href={`/${locale}/release-project/ep`}>{t('nav.releaseEp')}</FooterLink>
+                  <FooterLink href={`/${locale}/release-project/album`}>{t('nav.releaseAlbum')}</FooterLink>
+                </ul>
+              </>
+            )}
+          </div>
+
+          <div className="flex flex-col">
+            <SectionHeading>{t('footer.sections.studio')}</SectionHeading>
+            <ul className="flex flex-col">
+              <FooterLink href={`/${locale}`}>{t('nav.home')}</FooterLink>
+              <FooterLink href={`/${locale}/about`}>{t('nav.about')}</FooterLink>
+              <FooterLink href={`/${locale}/studio-info`}>{t('nav.equipment')}</FooterLink>
+              <FooterLink href={`/${locale}/pricing`}>{t('nav.pricing')}</FooterLink>
               <FooterLink href={`/${locale}/contact`}>{t('nav.contact')}</FooterLink>
+            </ul>
+            <SubHeading>{t('footer.sections.content')}</SubHeading>
+            <ul className="flex flex-col">
+              <FooterLink href={`/${locale}/stories`}>{t('nav.stories')}</FooterLink>
+              <FooterLink href={`/${locale}/portfolio`}>{t('nav.portfolio')}</FooterLink>
             </ul>
           </div>
 
           <address className="flex flex-col not-italic">
-            <h3 className="typo-footer-heading mb-4">{t('footer.contactTitle')}</h3>
-            <div className="h-px w-full bg-white/25 mb-4" />
+            <SectionHeading>{t('footer.contactTitle')}</SectionHeading>
             <a
               href={siteConfig.contact.naverMapUrl}
               target="_blank"
