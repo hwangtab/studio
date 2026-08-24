@@ -68,3 +68,16 @@ docs/musician_manual/img*.md
 
 # 인감 등 저장소에 들어가면 안 되는 자산
 .secrets/
+
+# 인감·날인이 들어간 문서는 저장소에 두지 않는다.
+# 한번 공개된 도장 이미지는 회수할 수 없다(git 이력·복제본·크롤러).
+# 계약서 PDF의 날인은 CONTRACT_SEAL_BASE64 환경변수에서 읽는다(lib/contracts/pdf-html.ts).
+docs/연습실계약/
+docs/contracts/
+**/*seal*.png
+**/*seal*.jpg
+**/*seal*.jpeg
+**/*seal*.webp
+**/*seal*.txt
+**/*인감*
+**/*직인*
