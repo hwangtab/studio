@@ -36,10 +36,8 @@ export const FADE_IN_UP = {
 // 그림자까지 원하면 whileHover={{ ...CARD_HOVER, ...SHADOW_HOVER }}.
 export const CARD_HOVER = { y: -4, transition: TRANSITION_STANDARD };
 
-// 아래 3개는 값만 있는 하위호환 export(기존 소비처 유지). 표준 리듬을 붙이려면
+// 아래는 값만 있는 하위호환 export(기존 소비처 유지). 표준 리듬을 붙이려면
 // TRANSITION_STANDARD를 함께 spread: whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
-export const HOVER_Y = { y: -4 };
-
 export const HOVER_SCALE = { scale: 1.05 };
 
 export const TAP_SCALE = { scale: 0.95 };
@@ -47,8 +45,6 @@ export const TAP_SCALE = { scale: 0.95 };
 export const SHADOW_HOVER = {
   boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
 };
-
-export const VIEWPORT_ONCE = { once: true };
 
 export const PAGE_TITLE_ANIMATION = {
   initial: false as const,

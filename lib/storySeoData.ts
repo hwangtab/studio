@@ -37,9 +37,37 @@ export const getStoryWordCount = (
   return plainText.split(/\s+/).filter(Boolean).length;
 };
 
-export const buildStoryMetaDescription = (content: string | null | undefined): string => (
-  stripMarkdown(content || '').substring(0, 160)
-);
+const META_DESCRIPTION_MAX_LENGTH = 160;
+const META_DESCRIPTION_ELLIPSIS = '…';
+// 문장부호(., !, ?, 다., 요.) 우선 → 공백 → 하드 절단, 순서로 자연스러운 경계를 찾는다.
+// 최종 길이(말줄임표 포함)는 항상 META_DESCRIPTION_MAX_LENGTH를 넘지 않는다.
+const SENTENCE_BOUNDARY_RE = /[.!?](?=\s|$)|다\.|요\./g;
+
+export const buildStoryMetaDescription = (content: string | null | undefined): string => {
+  const plainText = stripMarkdown(content || '');
+
+  if (plainText.length <= META_DESCRIPTION_MAX_LENGTH) return plainText;
+
+  const limit = META_DESCRIPTION_MAX_LENGTH - META_DESCRIPTION_ELLIPSIS.length;
+  const truncated = plainText.substring(0, limit);
+
+  let lastSentenceEnd = -1;
+  let match: RegExpExecArray | null;
+  SENTENCE_BOUNDARY_RE.lastIndex = 0;
+  while ((match = SENTENCE_BOUNDARY_RE.exec(truncated)) !== null) {
+    lastSentenceEnd = match.index + match[0].length;
+  }
+  if (lastSentenceEnd > 0) {
+    return `${truncated.substring(0, lastSentenceEnd)}${META_DESCRIPTION_ELLIPSIS}`;
+  }
+
+  const lastSpace = truncated.lastIndexOf(' ');
+  if (lastSpace > 0) {
+    return `${truncated.substring(0, lastSpace)}${META_DESCRIPTION_ELLIPSIS}`;
+  }
+
+  return `${truncated}${META_DESCRIPTION_ELLIPSIS}`;
+};
 
 export const buildStoryDynamicOgImage = ({
   title,

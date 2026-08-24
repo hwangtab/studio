@@ -349,32 +349,6 @@ export const getFaqData = (locale: Locale) => {
 };
 
 // Page-specific FAQ filters for SEO rich snippets
-export const getPricingFaqData = (locale: Locale) => {
-  const allFaq = getFaqData(locale);
-  const pricingKeywords = [
-    // Korean
-    '요금', '가격', '비용', '얼마',
-    // English
-    'fee', 'price', 'cost', 'how much',
-    // Chinese
-    '费用', '价格', '多少',
-    // Spanish
-    'precio', 'cuesta', 'cuánto',
-    // Vietnamese
-    'giá', 'phí', 'bao nhiêu',
-    // Thai
-    'ราคา', 'ค่า', 'เท่าไหร่',
-    // Uzbek
-    'narx', 'qancha'
-  ];
-  return allFaq.filter(faq =>
-    pricingKeywords.some(keyword =>
-      faq.question.toLowerCase().includes(keyword.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(keyword.toLowerCase())
-    )
-  );
-};
-
 export const getStudioFaqData = (locale: Locale) => {
   const allFaq = getFaqData(locale);
   const studioKeywords = [
@@ -395,58 +369,6 @@ export const getStudioFaqData = (locale: Locale) => {
   ];
   return allFaq.filter(faq =>
     studioKeywords.some(keyword =>
-      faq.question.toLowerCase().includes(keyword.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(keyword.toLowerCase())
-    )
-  );
-};
-
-export const getPracticeRoomFaqData = (locale: Locale) => {
-  const allFaq = getFaqData(locale);
-  const practiceKeywords = [
-    // Korean
-    '연습실', '입주', '방음',
-    // English
-    'practice', 'residency', 'soundproof',
-    // Chinese
-    '练习室', '入驻', '隔音',
-    // Spanish
-    'práctica', 'residencia', 'insonoriza',
-    // Vietnamese
-    'phòng tập', 'cư trú', 'cách âm',
-    // Thai
-    'ห้องซ้อม', 'กันเสียง',
-    // Uzbek
-    'mashg\'ulot', 'rezident', 'ovoz izolyatsiya'
-  ];
-  return allFaq.filter(faq =>
-    practiceKeywords.some(keyword =>
-      faq.question.toLowerCase().includes(keyword.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(keyword.toLowerCase())
-    )
-  );
-};
-
-export const getDistributionFaqData = (locale: Locale) => {
-  const allFaq = getFaqData(locale);
-  const distributionKeywords = [
-    // Korean
-    '유통', '배포', '멜론', '지니', '유튜브 뮤직', '애플뮤직',
-    // English
-    'distribution', 'distribute',
-    // Chinese
-    '发行',
-    // Spanish
-    'distribución',
-    // Vietnamese
-    'phát hành',
-    // Thai
-    'จัดจำหน่าย',
-    // Uzbek
-    'tarqatish'
-  ];
-  return allFaq.filter(faq =>
-    distributionKeywords.some(keyword =>
       faq.question.toLowerCase().includes(keyword.toLowerCase()) ||
       faq.answer.toLowerCase().includes(keyword.toLowerCase())
     )

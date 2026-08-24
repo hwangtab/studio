@@ -76,9 +76,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         webPageType="WebPage"
         canonical={`/${locale}`}
         faqItems={faqData}
-        breadcrumbs={[
-          { name: t('nav.home'), path: `/${locale}` },
-        ]}
       />
 
       <ImageHero

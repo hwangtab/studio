@@ -30,4 +30,22 @@ describe('parseContactResponseBody', () => {
 
     expect(body).toEqual({});
   });
+
+  it('logs the parse failure instead of swallowing it silently', async () => {
+    const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const parseError = new Error('Unexpected token < in JSON');
+
+    await parseContactResponseBody({
+      json: async () => {
+        throw parseError;
+      },
+    } as unknown as Response);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      expect.stringContaining('[contactSubmitPolicy]'),
+      parseError
+    );
+
+    consoleErrorSpy.mockRestore();
+  });
 });

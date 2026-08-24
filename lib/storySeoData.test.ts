@@ -24,9 +24,45 @@ describe('storySeoData', () => {
     });
   });
 
-  it('builds a markdown-stripped meta description with the existing 160-character cap', () => {
-    expect(buildStoryMetaDescription('# Hello **wide** world')).toBe('Hello wide world');
-    expect(buildStoryMetaDescription('a'.repeat(170))).toHaveLength(160);
+  describe('buildStoryMetaDescription', () => {
+    it('returns markdown-stripped text unchanged when it is under the 160-character cap', () => {
+      expect(buildStoryMetaDescription('# Hello **wide** world')).toBe('Hello wide world');
+    });
+
+    it('truncates at the last sentence boundary within the limit and appends an ellipsis', () => {
+      const sentence = '이 문장은 충분히 깁니다. '.repeat(1) + '두 번째 문장도 이어집니다.';
+      const content = sentence.repeat(6);
+      const result = buildStoryMetaDescription(content);
+
+      expect(result.length).toBeLessThanOrEqual(160);
+      expect(result.endsWith('…')).toBe(true);
+      expect(result).toBe(`${result.slice(0, -1)}…`);
+      // 말줄임표 앞은 문장부호로 끝나야 한다(하드 절단이 아니라 경계에서 잘렸다는 증거).
+      expect(/[.!?]…$/.test(result) || /(다|요)\.…$/.test(result)).toBe(true);
+    });
+
+    it('falls back to the last space boundary when no sentence punctuation is found', () => {
+      const words = Array.from({ length: 40 }, (_, i) => `word${i}`).join(' ');
+      const result = buildStoryMetaDescription(words);
+
+      expect(result.length).toBeLessThanOrEqual(160);
+      expect(result.endsWith('…')).toBe(true);
+      expect(result.slice(0, -1).endsWith(' ')).toBe(false);
+    });
+
+    it('hard-truncates and appends an ellipsis when there is no space or sentence boundary', () => {
+      const result = buildStoryMetaDescription('a'.repeat(170));
+
+      expect(result).toHaveLength(160);
+      expect(result.endsWith('…')).toBe(true);
+      expect(result).toBe(`${'a'.repeat(159)}…`);
+    });
+
+    it('handles empty/whitespace-only content without throwing', () => {
+      expect(buildStoryMetaDescription('   ')).toBe('');
+      expect(buildStoryMetaDescription(null)).toBe('');
+      expect(buildStoryMetaDescription(undefined)).toBe('');
+    });
   });
 
   it('builds an encoded dynamic OG image URL for social scrapers', () => {
