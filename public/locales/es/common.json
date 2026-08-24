@@ -281,6 +281,11 @@
       "title": "Masterización",
       "subtitle": "La etapa que remata el disco. Ajustado a objetivos de plataforma como -14 LUFS de Spotify, para que el balance se sostenga en auriculares, en el coche o en altavoces."
     },
+    "practiceRoom": {
+      "title": "Residencia en Sala de Práctica",
+      "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
+      "detailLink": "Ver instalaciones y beneficios para residentes"
+    },
     "additional": {
       "title": "Servicios adicionales",
       "subtitle": "Soporte integral para músicos, desde la planificación hasta la promoción"
@@ -296,6 +301,10 @@
         {
           "q": "¿Cuánto cuestan la mezcla y la masterización?",
           "a": "La mezcla va de {{mixingFrom}} a {{mixingTo}} por canción según el número de pistas, con dos revisiones incluidas. La masterización de un sencillo cuesta {{masteringSingle}}. {{mixingNotice}}"
+        },
+        {
+          "q": "¿Cuánto cuesta la sala de práctica?",
+          "a": "Cuesta {{practiceRoom}} al mes sin depósito (mantenimiento incluido, IVA aparte). Tiene acceso 24/7 y puede pernoctar, y con contrato de un año el primer mes es 50% más barato. No ofrecemos alquiler por horas ni a corto plazo."
         },
         {
           "q": "¿Cómo reservo o pido presupuesto?",

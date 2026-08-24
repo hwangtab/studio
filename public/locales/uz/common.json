@@ -281,6 +281,11 @@
       "title": "Mastering",
       "subtitle": "Yozuvni yakunlaydigan bosqich. Spotify -14 LUFS kabi platforma me'yorlariga moslab, balans quloqchinda ham, mashinada ham, karnayda ham buzilmaydi."
     },
+    "practiceRoom": {
+      "title": "Mashg'ulot xonasiga oylik joylashuv",
+      "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
+      "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish"
+    },
     "additional": {
       "title": "Qo'shimcha xizmatlar",
       "subtitle": "Rejalashtirishdan reklamagacha musiqachilar uchun all-in-one qo'llab-quvvatlash"
@@ -296,6 +301,10 @@
         {
           "q": "Miks va mastering qancha turadi?",
           "a": "Miks trek soniga qarab har bir qo'shiq uchun {{mixingFrom}}~{{mixingTo}}, ikki marta tuzatish kiradi. Singl mastering — {{masteringSingle}}. {{mixingNotice}}"
+        },
+        {
+          "q": "Musiqa mashg'ulot xonasi qancha turadi?",
+          "a": "Oyiga {{practiceRoom}}, depozitsiz (xizmat haqi kiritilgan, QQS alohida). 24/7 foydalanasiz va tunab qolishingiz mumkin, bir yillik shartnomada birinchi oy 50% chegirma. Soatbay yoki qisqa muddatli ijara yo'q."
         },
         {
           "q": "Qanday band qilaman yoki narx so'rayman?",

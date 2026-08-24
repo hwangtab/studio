@@ -29,6 +29,8 @@ export interface PricingSchemaData {
   recordingOffers: PricingSchemaOffer[];
   mixingOffers: PricingSchemaOffer[];
   masteringOffers: PricingSchemaOffer[];
+  /** 연습실 입주는 다른 상품군이라 뒤늦게 합류했다 — 없는 호출부를 깨뜨리지 않게 optional. */
+  practiceRoomOffers?: PricingSchemaOffer[];
   additionalServices: PricingSchemaAdditionalService[];
 }
 
@@ -60,6 +62,7 @@ export const normalizePricingSchemaOffers = (pricingData: PricingSchemaData): Pr
   ...pricingData.recordingOffers,
   ...pricingData.mixingOffers,
   ...pricingData.masteringOffers,
+  ...(pricingData.practiceRoomOffers ?? []),
   ...pricingData.additionalServices.map((service) => ({
     id: service.id,
     title: service.title,
@@ -155,6 +158,9 @@ export const buildPricingPageSchema = ({
           buildPricingCatalogSchema(t('pricing.recording.title'), pricingData.recordingOffers, context),
           buildPricingCatalogSchema(t('pricing.mixing.title'), pricingData.mixingOffers, context),
           buildPricingCatalogSchema(t('pricing.mastering.title'), pricingData.masteringOffers, context),
+          ...(pricingData.practiceRoomOffers?.length
+            ? [buildPricingCatalogSchema(t('pricing.practiceRoom.title'), pricingData.practiceRoomOffers, context)]
+            : []),
           buildPricingCatalogSchema(
             t('pricing.additional.title'),
             normalizePricingSchemaOffers({

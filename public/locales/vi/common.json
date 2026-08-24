@@ -281,6 +281,11 @@
       "title": "Mastering",
       "subtitle": "Bước khép lại bản thu. Căn theo chuẩn nền tảng như -14 LUFS của Spotify, giữ thế cân bằng khi nghe bằng tai nghe, trong xe hay trên loa."
     },
+    "practiceRoom": {
+      "title": "Thuê phòng tập theo tháng",
+      "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
+      "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân"
+    },
     "additional": {
       "title": "Dịch vụ bổ sung",
       "subtitle": "Hỗ trợ trọn gói cho nghệ sĩ từ kế hoạch đến quảng bá"
@@ -296,6 +301,10 @@
         {
           "q": "Chi phí mixing và mastering là bao nhiêu?",
           "a": "Mixing từ {{mixingFrom}} đến {{mixingTo}} mỗi bài tùy số track, bao gồm 2 lần chỉnh sửa. Mastering đơn là {{masteringSingle}}. {{mixingNotice}}"
+        },
+        {
+          "q": "Phòng tập nhạc giá bao nhiêu?",
+          "a": "Giá {{practiceRoom}} mỗi tháng, không đặt cọc (đã gồm phí quản lý, chưa gồm VAT). Bạn dùng được 24/7 và có thể ở lại qua đêm; ký hợp đồng một năm được giảm 50% tháng đầu. Chúng tôi không cho thuê theo giờ hay ngắn hạn."
         },
         {
           "q": "Đặt lịch hoặc xin báo giá thế nào?",

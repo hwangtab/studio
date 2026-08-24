@@ -40,6 +40,7 @@ const collectOffers = (locale: (typeof LOCALES)[number]) => {
     ...d.mixingOffers,
     ...d.masteringOffers,
     ...d.specialPackages,
+    ...d.practiceRoomOffers,
     ...d.additionalServices,
   ];
 };
@@ -69,6 +70,7 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('package-voiceover')).toBe(VOICEOVER_HOURLY_PRICE);
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);
+    expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
 
     const d = getPricingData('ko');
     expect(d.lessonMonthlyPrice).toBe(LESSON_MONTHLY_PRICE);

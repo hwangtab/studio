@@ -309,6 +309,11 @@
       "title": "Mastering",
       "subtitle": "The stage that finishes the record. Matched to platform targets like Spotify's -14 LUFS, so the balance holds up on earbuds, in a car, or on speakers."
     },
+    "practiceRoom": {
+      "title": "Practice Room Residency",
+      "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
+      "detailLink": "See practice room facilities and resident perks"
+    },
     "additional": {
       "title": "Additional Services",
       "subtitle": "All-in-one support for musicians, from planning to promotion"
@@ -324,6 +329,10 @@
         {
           "q": "How much do mixing and mastering cost?",
           "a": "Mixing runs {{mixingFrom}}–{{mixingTo}} per song by track count, with two revisions included. Single mastering is {{masteringSingle}}. {{mixingNotice}}"
+        },
+        {
+          "q": "How much does the practice room cost?",
+          "a": "It is {{practiceRoom}} per month with no deposit (maintenance included, VAT excluded). You get 24/7 access and can stay overnight, and a one-year contract takes 50% off the first month. We do not offer hourly or short-term rentals."
         },
         {
           "q": "How do I book or request a quote?",

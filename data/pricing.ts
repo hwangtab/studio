@@ -453,6 +453,49 @@ export const getPricingData = (locale: Locale) => {
     },
   ];
 
+  // 연습실 입주는 '녹음/믹싱'과 다른 상품군이라 오랫동안 이 가격표에 없었는데,
+  // /pricing의 <title>·h1은 "연습실 월 36만원"을 선두에 약속하고 있었다. 약속만 하고
+  // 도착지에 단가가 없으면 그 유입은 되돌아간다 — 요약표·상세 카드·JSON-LD에 실는다.
+  // 시설·혜택 정본은 /practice-room이며 여기는 단가와 계약 조건만 다룬다.
+  const practiceRoomOffers = [
+    {
+      id: 'practice-room-monthly',
+      title: t(locale, {
+        ko: '음악연습실 월세 입주 (24시간·보증금 0원)',
+        en: 'Music Practice Room Monthly Residency (24/7, no deposit)',
+        zh: '音乐练习室月租入住（24小时·免押金）',
+        es: 'Sala de Práctica Musical por Mes (24h, sin depósito)',
+        vi: 'Thuê phòng tập nhạc theo tháng (24/7, không đặt cọc)',
+        th: 'ห้องซ้อมดนตรีรายเดือน (24 ชม. ไม่มีเงินมัดจำ)',
+        uz: "Musiqa mashg'ulot xonasi oylik ijara (24/7, depozitsiz)"
+      }),
+      priceDisplay: t(locale, {
+        ko: `${formatPriceAmount(PRACTICE_ROOM_MONTHLY_PRICE)}원`,
+        en: `\u20a9${formatPriceAmount(PRACTICE_ROOM_MONTHLY_PRICE)}`,
+      }),
+      priceValue: PRACTICE_ROOM_MONTHLY_PRICE,
+      unit: t(locale, { ko: '/ 월', en: '/ month', zh: '/ 月', es: '/ mes', vi: '/ tháng', th: '/ เดือน', uz: '/ oy' }),
+      description: t(locale, {
+        ko: '연신내·불광역 도보 5분, STC 60+ 방음 음악연습실 월 단위 입주입니다. 보증금 없이 월 정액만 냅니다.',
+        en: 'Monthly residency in an STC 60+ soundproof practice room, 5 minutes from Yeonsinnae and Bulgwang stations. No deposit — just the flat monthly rate.',
+        zh: '连新内·佛光站步行5分钟，STC 60+隔音音乐练习室按月入住。无押金，仅需月定额。',
+        es: 'Residencia mensual en una sala de práctica con aislamiento STC 60+, a 5 minutos de las estaciones Yeonsinnae y Bulgwang. Sin depósito: solo la tarifa mensual.',
+        vi: 'Thuê theo tháng phòng tập cách âm STC 60+, cách ga Yeonsinnae và Bulgwang 5 phút đi bộ. Không đặt cọc, chỉ trả phí tháng.',
+        th: 'เช่ารายเดือนห้องซ้อมกันเสียง STC 60+ ห่างจากสถานียอนชินแนและพุลกวัง 5 นาที ไม่มีเงินมัดจำ จ่ายเฉพาะค่าเช่ารายเดือน',
+        uz: "Yeonsinnae va Bulgwang bekatlaridan 5 daqiqa masofadagi STC 60+ shovqin izolyatsiyali mashg'ulot xonasiga oylik ijara. Depozit yo'q — faqat oylik to'lov."
+      }),
+      features: tArray(locale, {
+        ko: ['24시간 이용 · 숙식 가능(독립 샤워실)', '보증금 0원 · 관리비 포함 · 월 단위 계약', '1년 계약 시 첫 달 50% 할인', '입주자 녹음 할인 등 8가지 부가 혜택'],
+        en: ['24/7 access, stay overnight (private shower)', 'No deposit, maintenance included, month-to-month', '50% off the first month on a 1-year contract', '8 resident perks including recording discounts'],
+        zh: ['24小时使用·可食宿（独立淋浴间）', '免押金·含管理费·按月签约', '签约1年首月5折', '含录音折扣等8项入住福利'],
+        es: ['Acceso 24/7, se puede pernoctar (ducha privada)', 'Sin depósito, mantenimiento incluido, mes a mes', '50% de descuento el primer mes con contrato anual', '8 beneficios para residentes, incluidos descuentos de grabación'],
+        vi: ['Sử dụng 24/7, có thể ở lại (phòng tắm riêng)', 'Không đặt cọc, đã gồm phí quản lý, hợp đồng theo tháng', 'Giảm 50% tháng đầu khi ký hợp đồng 1 năm', '8 ưu đãi cho cư dân, gồm giảm giá thu âm'],
+        th: ['ใช้ได้ 24 ชม. พักค้างได้ (ห้องอาบน้ำส่วนตัว)', 'ไม่มีเงินมัดจำ รวมค่าส่วนกลาง สัญญารายเดือน', 'ลด 50% เดือนแรกเมื่อทำสัญญา 1 ปี', 'สิทธิพิเศษผู้เช่า 8 อย่าง รวมส่วนลดค่าอัดเสียง'],
+        uz: ["24/7 foydalanish, tunab qolish mumkin (alohida dush)", "Depozitsiz, xizmat haqi kiritilgan, oylik shartnoma", "1 yillik shartnomada birinchi oy 50% chegirma", "Yozuv chegirmasi kabi 8 ta rezident imtiyozi"]
+      }),
+    },
+  ];
+
   return {
     VAT_NOTICE: vatNotice,
     recordingOffers,
@@ -460,6 +503,7 @@ export const getPricingData = (locale: Locale) => {
     masteringOffers,
     additionalServices,
     specialPackages,
+    practiceRoomOffers,
     // 통합 가격표에는 아직 카드로 렌더하지 않지만, 교차판매·스키마 참조를 위해
     // 매출 라인 가격을 데이터로 노출한다(SSOT).
     lessonMonthlyPrice: LESSON_MONTHLY_PRICE,

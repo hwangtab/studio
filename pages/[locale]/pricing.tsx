@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, MessageCircle } from '@/lib/lucide-icons';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, MessageCircle, Building } from '@/lib/lucide-icons';
 import { trackLeadEvent } from '../../utils/analytics';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
@@ -54,7 +54,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     mixingOffers,
     masteringOffers,
     additionalServices,
-    specialPackages
+    specialPackages,
+    practiceRoomOffers
   } = pricingData;
 
   const siteConfig = getSiteConfig(locale);
@@ -95,7 +96,11 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     },
     {
       question: t('pricing.quickAnswers.items.2.q'),
-      answer: t('pricing.quickAnswers.items.2.a', { phone: siteConfig.contact.phone }),
+      answer: t('pricing.quickAnswers.items.2.a', { practiceRoom: priceLabels.practiceRoom }),
+    },
+    {
+      question: t('pricing.quickAnswers.items.3.q'),
+      answer: t('pricing.quickAnswers.items.3.a', { phone: siteConfig.contact.phone }),
     },
   ]), [t, VAT_NOTICE, priceLabels, siteConfig.contact.phone]);
 
@@ -103,8 +108,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   // AI 검색(ChatGPT 등)·외부 유입이 above-the-fold에서 전체 단가를 즉시 스캔하도록 —
   // 상세 카드는 아래 섹션에 그대로 있고, 이 표는 이탈 방지·AI 인용용 압축 뷰다.
   const summaryRows = React.useMemo(
-    () => [...recordingOffers, ...mixingOffers, ...masteringOffers, ...specialPackages],
-    [recordingOffers, mixingOffers, masteringOffers, specialPackages]
+    () => [...recordingOffers, ...mixingOffers, ...masteringOffers, ...specialPackages, ...practiceRoomOffers],
+    [recordingOffers, mixingOffers, masteringOffers, specialPackages, practiceRoomOffers]
   );
 
   // 긴 가격 페이지(특수패키지→녹음→믹싱→마스터링→부가서비스)를 바로 점프하는 앵커 목차.
@@ -113,6 +118,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     { id: 'recording', label: t('pricing.recording.title') },
     { id: 'mixing', label: t('pricing.mixing.title') },
     { id: 'mastering', label: t('pricing.mastering.title') },
+    { id: 'practice-room', label: t('pricing.practiceRoom.title') },
     { id: 'support-services', label: t('pricing.additional.title') },
   ], [t]);
 
@@ -390,8 +396,49 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         </div>
       </Section>
 
+      {/* 음악연습실 입주 — <title>·h1이 선두로 약속한 단가의 도착지.
+          시설·혜택 정본은 /practice-room이고 여기서는 계약 조건만 다룬 뒤 넘긴다. */}
+      <Section id="practice-room" variant="alternate" className="scroll-mt-32">
+        <SectionHeading
+          icon={Building}
+          title={t('pricing.practiceRoom.title')}
+          subtitle={t('pricing.practiceRoom.subtitle')}
+        />
+        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+          {VAT_NOTICE}
+        </p>
+        <div className="max-w-md mx-auto" role="list">
+          {practiceRoomOffers.map((offer) => (
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                delay={0.1}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+                trackingComponent="PricingPracticeRoom"
+                locale={locale}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 text-center">
+          <Link
+            href={`/${locale}/practice-room`}
+            prefetch={false}
+            className="inline-flex items-center gap-2 typo-card-body font-semibold text-primary hover:underline"
+          >
+            {t('pricing.practiceRoom.detailLink')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+      </Section>
+
       {/* Additional Services Section */}
-      <Section id="support-services" variant="alternate" className="scroll-mt-32">
+      <Section id="support-services" variant="default" className="scroll-mt-32">
         <SectionHeading
           icon={PlusCircle}
           title={t('pricing.additional.title')}
@@ -421,7 +468,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         </div>
       </Section>
 
-      <ReviewSection variant="default" locale={locale} />
+      <ReviewSection variant="alternate" locale={locale} />
 
       <HubLinkCallout
         hubSlug="home-recording-survival"
