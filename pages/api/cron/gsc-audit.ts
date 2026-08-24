@@ -10,13 +10,15 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { put, list } from '@vercel/blob';
+import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { sendEmail } from '../../../lib/email/resend';
+import { isCronAuthorized } from '../../../lib/cron/auth';
 import { runAudit, type AuditSnapshot } from '../../../lib/seo/gscAudit';
 import { diffAudits, formatDiffReport } from '../../../lib/seo/gscDiff';
 
 const BLOB_LATEST_PATH = 'gsc/latest.json';
 const BLOB_HISTORY_PREFIX = 'gsc/history/'; // gsc/history/2026-05-13.json
-const EMAIL_TO = 'hwangtab@gmail.com';
+const EMAIL_TO = OPERATOR_EMAIL;
 
 async function loadLatestSnapshot(): Promise<AuditSnapshot | null> {
   // private store: list로 blob URL 확보, BLOB_READ_WRITE_TOKEN으로 fetch 인증
@@ -52,12 +54,6 @@ async function saveSnapshot(snapshot: AuditSnapshot): Promise<void> {
   });
 }
 
-function isAuthorized(req: NextApiRequest): boolean {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  const header = req.headers.authorization;
-  return header === `Bearer ${secret}`;
-}
 
 function getOAuthCreds() {
   const clientId = process.env.GSC_OAUTH_CLIENT_ID;
@@ -86,7 +82,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Allow', 'GET, POST');
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
-  if (!isAuthorized(req)) {
+  if (!isCronAuthorized(req, 'cron/gsc-audit')) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 

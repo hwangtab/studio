@@ -8,24 +8,15 @@
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
+import { isCronAuthorized } from '../../../lib/cron/auth';
 import { purgeExpiredPersonalData, RETENTION_YEARS } from '../../../lib/contracts/retention';
 import { sendEmail } from '../../../lib/email/resend';
-
-const OPERATOR_EMAIL = process.env.CONTRACT_OPERATOR_EMAIL || 'hwangtab@gmail.com';
-
-const isAuthorized = (req: NextApiRequest): boolean => {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) {
-    console.error('[cron/purge-contracts] CRON_SECRET is not set.');
-    return false;
-  }
-  return req.headers.authorization === `Bearer ${secret}`;
-};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
 
-  if (!isAuthorized(req)) {
+  if (!isCronAuthorized(req, 'cron/purge-contracts')) {
     return res.status(401).json({ ok: false, message: 'Unauthorized' });
   }
 

@@ -60,15 +60,21 @@ const getFirstValidIP = (value: string | string[] | undefined): string | null =>
   return null;
 };
 
+/**
+ * 요청을 보낸 쪽의 IP.
+ *
+ * `x-real-ip`·`x-forwarded-for`는 쓰지 않는다. 두 헤더는 누구나 요청에 직접 넣을 수
+ * 있어서, 값을 그대로 믿으면 헤더만 바꿔 가며 제한을 무한히 피할 수 있다.
+ * Vercel 프록시가 `x-vercel-forwarded-for`를 항상 덮어쓰므로 프로덕션에서 이 폴백들이
+ * 쓰일 일도 사실상 없었지만, 계약 쪽(lib/contracts/client-ip.ts)은 같은 이유로 이미
+ * `x-vercel-forwarded-for`만 신뢰하고 있었다. 두 모듈의 판정 기준을 맞춘다.
+ *
+ * IP를 못 얻으면 아래의 요청 지문으로 폴백한다 — 없는 것보다 낫고, 위조 헤더를
+ * 믿는 것보다는 훨씬 낫다.
+ */
 const getClientIP = (req: NextApiRequest): string => {
   const vercelIP = getFirstValidIP(req.headers['x-vercel-forwarded-for']);
   if (vercelIP) return vercelIP;
-
-  const realIP = getFirstValidIP(req.headers['x-real-ip']);
-  if (realIP) return realIP;
-
-  const forwardedIP = getFirstValidIP(req.headers['x-forwarded-for']);
-  if (forwardedIP) return forwardedIP;
 
   const socketIP = normalizeIP(req.socket.remoteAddress || '');
   return socketIP || UNKNOWN_IP_KEY;

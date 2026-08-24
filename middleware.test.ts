@@ -231,6 +231,69 @@ describe('middleware matcher — 정적 파일 제외', () => {
   });
 });
 
+/**
+ * /admin/* 은 로케일 프리픽스를 받으면 안 되지만 보안 헤더는 받아야 한다.
+ *
+ * 예전에는 matcher의 negative lookahead에서 admin을 빼서 프리픽스를 막았는데,
+ * 그러면 미들웨어가 아예 안 돌아 CSP·Permissions-Policy까지 함께 빠졌다.
+ * next.config.mjs의 전역 헤더 블록에는 CSP가 없어서 관리자 화면만 무방비였다.
+ * 이제 matcher에는 포함시키고 핸들러 초입에서 조기 반환한다 — 두 성질을 동시에
+ * 만족해야 하므로 둘 다 검사한다.
+ */
+describe('middleware /admin — 프리픽스 없이 보안 헤더만', () => {
+  const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
+
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+    }));
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+  });
+
+  const matches = (pathname: string) => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires, global-require
+    const { config } = jest.requireActual('./middleware') as typeof import('./middleware');
+    const source = (config.matcher as string[])[0].replace(/^\//, '');
+    return new RegExp(`^/${source}$`).test(pathname);
+  };
+
+  it('matcher에 포함된다 (미들웨어가 돌아야 헤더가 붙는다)', () => {
+    expect(matches('/admin')).toBe(true);
+    expect(matches('/admin/contracts')).toBe(true);
+    expect(matches('/admin/contracts/abc/edit')).toBe(true);
+  });
+
+  it('CSP와 Permissions-Policy를 받는다', () => {
+    const response = middleware(
+      new NextRequest('https://www.studionol.co.kr/admin/contracts', {
+        headers: { 'accept-language': 'ko' },
+      }),
+    );
+
+    expect(response.headers.get('Content-Security-Policy')).toContain("default-src 'self'");
+    expect(response.headers.get('Content-Security-Policy')).toContain("object-src 'none'");
+    expect(response.headers.get('Permissions-Policy')).toContain('camera=()');
+    expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
+  });
+
+  it('로케일 프리픽스로 리다이렉트하지 않는다', () => {
+    const response = middleware(
+      new NextRequest('https://www.studionol.co.kr/admin/contracts', {
+        headers: { 'accept-language': 'en-US,en;q=0.9' },
+      }),
+    );
+
+    // 307/308이면 /en/admin/... 으로 끌려간 것이다.
+    expect(response.status).toBe(200);
+    expect(response.headers.get('location')).toBeNull();
+  });
+});
+
 describe('middleware bracket path rejection (non-production)', () => {
   const originalEnv = process.env;
   let middleware: MiddlewareModule['middleware'];

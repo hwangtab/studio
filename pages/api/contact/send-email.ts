@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { buildContactEmailBody, buildContactEmailHtml } from '../../../lib/contact/emailContent';
 import { isAllowedContactRequestOrigin } from '../../../lib/contact/origin';
 import {
@@ -10,7 +11,7 @@ import {
 import { checkContactRateLimit, CONTACT_RATE_LIMIT_ERROR } from '../../../lib/contact/rateLimit';
 import { sendEmail } from '../../../lib/email/resend';
 
-const CONTACT_TO = 'hwangtab@gmail.com';
+const CONTACT_TO = OPERATOR_EMAIL;
 const SUCCESS_RESPONSE = { success: true, message: 'Message sent successfully' };
 
 const getRequestPayload = (req: NextApiRequest, res: NextApiResponse): Record<string, unknown> | null => {

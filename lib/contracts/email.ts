@@ -1,3 +1,4 @@
+import { OPERATOR_EMAIL } from '../operatorContact';
 import { sendEmail } from '../email/resend';
 import type { Contract } from '../../db/schema';
 import { buildContractEmailHtml, strong, type ContractEmailRow } from './email-template';
@@ -6,7 +7,6 @@ import { escapeHtml } from './html-escape';
 import { IDENTITY_DIGITS } from './identity';
 import { SIGN_TOKEN_TTL_DAYS } from './status';
 
-const OPERATOR_EMAIL = process.env.CONTRACT_OPERATOR_EMAIL || 'hwangtab@gmail.com';
 
 
 const period = (contract: Contract): string =>

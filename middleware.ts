@@ -130,6 +130,22 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    /**
+     * /admin/* 은 로케일 프리픽스 없이 운영자 페이지로 직접 매핑된다.
+     *
+     * 예전에는 matcher의 negative lookahead에서 admin을 빼는 방식으로 프리픽스를
+     * 막았는데, 그러면 미들웨어 자체가 안 돌아 CSP·Permissions-Policy도 함께
+     * 사라졌다. next.config.mjs의 전역 헤더 블록에는 CSP가 없으므로(주석이
+     * "미들웨어가 더 완성된 정책을 적용한다"고 전제한다) 관리자 화면만 무방비였다.
+     *
+     * 관리자 화면은 계약 본문을 markdown-to-jsx로 렌더하고 세션 쿠키를 들고 있어
+     * 두 번째 방어선이 가장 필요한 자리다. 여기서 조기 반환해 프리픽스는 붙이지
+     * 않으면서 헤더는 받게 한다.
+     */
+    if (pathname === '/admin' || pathname.startsWith('/admin/')) {
+        return setSecurityHeaders(NextResponse.next());
+    }
+
     // 라우트 패턴 문자열이 URL로 요청된 것(`/[locale]/contact` 등). 여기서 끊지 않으면
     // 아래 locale 협상이 프리픽스를 붙여 `/en/[locale]/contact`를 만들어내고, 그 404
     // 페이지가 GA4 page_view를 쏴 분석을 오염시킨다(90일간 12건 관측). 404 페이지의
@@ -234,13 +250,14 @@ export const config = {
     matcher: [
         // icons / browserconfig.xml 추가: /icons/icon-192.png이 로케일 미들웨어에 걸려
         // /ko/icons/icon-192.png로 307 → 404가 발생하던 PWA/Apple touch icon 요청 수정.
-        // /admin/*은 locale 자동 프리픽스 없이 운영자 페이지로 직접 매핑되도록 제외.
+        // /admin/*은 matcher에 포함시키되 핸들러 초입에서 조기 반환한다 — 로케일
+        // 프리픽스는 붙이지 않으면서 CSP·Permissions-Policy는 받게 하기 위함(위 참조).
         //
         // [0-9a-f]{8,128}\.txt — IndexNow 키 파일(public/{KEY}.txt). 이게 없으면 로케일
         // 프리픽스가 붙어 /ko/{KEY}.txt로 307되고, 검색엔진이 키를 못 읽어 소유 검증에
         // 실패한다(2026-07-28 네이버 403으로 발견 — 그동안 제출이 무효였다).
         // 키 값은 scripts/indexnow-submit.mjs의 KEY 상수. 프로토콜상 8~128자 hex라
         // 길이 범위로 잡아 키를 교체해도 계속 통과한다.
-        '/((?!api|_next|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full.*\\.txt|[0-9a-f]{8,128}\\.txt|locales|images|icons|logo.*|audio|styles|scripts|fonts|admin).*)',
+        '/((?!api|_next|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full.*\\.txt|[0-9a-f]{8,128}\\.txt|locales|images|icons|logo.*|audio|styles|scripts|fonts).*)',
     ],
 };

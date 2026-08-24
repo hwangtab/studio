@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { includesAlias, parseEmailAddress, verifySvixSignature } from '../../../lib/email/inboundWebhook';
 
 /**
@@ -16,7 +17,7 @@ import { includesAlias, parseEmailAddress, verifySvixSignature } from '../../../
 
 const RESEND_API_BASE = 'https://api.resend.com';
 const INBOUND_ALIAS = 'hello@studionol.co.kr';
-const FORWARD_TO = 'hwangtab@gmail.com';
+const FORWARD_TO = OPERATOR_EMAIL;
 /** Resend 발송 요청 한도(40MB)를 넘지 않도록 첨부 합계를 제한한다 */
 const MAX_TOTAL_ATTACHMENT_BYTES = 30 * 1024 * 1024;
 
