@@ -65,3 +65,6 @@ docs/soundtherapy/
 # 타인 저작물 스캔본(『방구석 뮤지션 자립 매뉴얼』) — 배포 권리 없음
 docs/musician_manual/img*.pdf
 docs/musician_manual/img*.md
+
+# 인감 등 저장소에 들어가면 안 되는 자산
+.secrets/

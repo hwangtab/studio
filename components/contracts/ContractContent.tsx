@@ -9,8 +9,8 @@ interface ContractContentProps {
 
 /**
  * 계약 본문(마크다운)을 화면에 렌더링한다. 서명 페이지와 관리자 상세가 같은 모습을 쓰도록
- * 한곳에 모았다. 계약서 서명란의 `<span class="seal">`은 운영자 날인 자리라 이미지를 채운다
- * (PDF는 lib/contracts/pdf.ts가 같은 이미지를 base64로 인라인한다).
+ * 한곳에 모았다. 계약서 서명란의 날인 자리는 화면에서 빈 칸 표시로 남기고, 실제 도장은
+ * 발급되는 PDF에만 찍는다(lib/contracts/pdf-html.ts의 buildSealCss).
  *
  * ## 색을 직접 못박는 이유
  *
@@ -143,15 +143,29 @@ export default function ContractContent({ content, size = 'base' }: ContractCont
           margin: 1.15rem 0;
         }
 
+        /*
+         * 화면에는 운영자 날인을 싣지 않는다.
+         *
+         * 도장 이미지를 화면에 띄우려면 웹에서 받을 수 있는 경로에 두어야 하는데, 그러면
+         * 누구나 내려받아 다른 문서에 붙일 수 있다. 한번 나간 인감은 회수할 방법이 없다.
+         * 날인은 발급되는 PDF에만 찍는다(pdf-html.ts의 buildSealCss가 환경변수에서 읽는다).
+         *
+         * 자리는 남겨 둔다 — 서명란의 칸이 비어 보이지 않아야 하고, 계약서 본문의
+         * 날인 마크업은 PDF와 화면이 같은 것을 쓴다.
+         */
         .contract-body .seal {
           display: inline-block;
-          width: 56px;
-          height: 56px;
-          background-image: url('/images/contract-seal.png');
-          background-size: contain;
-          background-position: center;
-          background-repeat: no-repeat;
+          min-width: 56px;
+          padding: 4px 10px;
+          border: 1px dashed #d4d4d4;
+          border-radius: 6px;
+          color: #9ca3af;
+          font-size: 11px;
+          text-align: center;
           vertical-align: middle;
+        }
+        .contract-body .seal::after {
+          content: '발급 시 날인';
         }
 
         /*

@@ -47,19 +47,46 @@ export const buildFontFaceCss = (): string => {
 };
 
 /**
- * 운영자(갑) 날인. 계약서 템플릿의 서명란에 `<span class="seal">` 자리가 있으며,
- * 채우지 않으면 갑의 날인이 빈 칸인 채로 발행된다.
+ * 운영자(갑) 날인. 계약서 템플릿 서명란의 `<span class="seal">` 자리를 채운다.
+ * 값이 없으면 그 자리가 빈 칸으로 발행된다.
+ *
+ * 이미지는 환경변수에서 읽는다.
+ *
+ * 도장 이미지는 저장소에 두면 안 된다. public/ 아래 있으면 사이트에서 그대로 받아갈 수 있고,
+ * 저장소가 공개면 raw 경로로도 열린다. 한번 나간 인감은 회수할 방법이 없다 — 파일을 지워도
+ * git 이력과 이미 복제된 사본에 남는다.
+ *
+ * 환경변수에 두면 저장소·이력 어디에도 남지 않고, 나중에 도장을 새로 파도 값 한 줄만 바꾸면
+ * 된다(코드·배포 무관). Blob에 두는 방법도 있지만 PDF를 만들 때마다 네트워크 왕복이 붙어,
+ * 가뜩이나 Chromium을 띄우는 경로를 더 느리게 만든다.
+ *
+ * 값이 없으면 날인 없이 발행한다 — 도장이 없다고 계약서 생성을 막을 이유는 없고, 서명과
+ * 문서 지문이 이미 문서의 진정성을 뒷받침한다. 다만 눈에 띄도록 로그를 남긴다.
  */
-const SEAL_PATH = path.join(process.cwd(), 'public', 'images', 'contract-seal.png');
-
 let cachedSealCss: string | null = null;
 
 export const buildSealCss = (): string => {
   if (cachedSealCss !== null) return cachedSealCss;
 
-  try {
-    const base64 = readFileSync(SEAL_PATH).toString('base64');
-    cachedSealCss = `
+  const base64 = (process.env.CONTRACT_SEAL_BASE64 ?? '').replace(/\s/g, '');
+
+  if (!base64) {
+    console.error(
+      '[contracts/pdf] CONTRACT_SEAL_BASE64가 없어 날인 없이 발행합니다. ' +
+        '값을 등록하면 이후 발행분부터 도장이 찍힙니다.',
+    );
+    cachedSealCss = '';
+    return cachedSealCss;
+  }
+
+  // 값이 잘못 들어오면 계약서에 깨진 이미지가 찍힌다. 형태를 먼저 본다.
+  if (!/^[A-Za-z0-9+/]+={0,2}$/.test(base64) || base64.length % 4 !== 0) {
+    console.error('[contracts/pdf] CONTRACT_SEAL_BASE64 형식이 올바르지 않습니다 — 날인을 생략합니다.');
+    cachedSealCss = '';
+    return cachedSealCss;
+  }
+
+  cachedSealCss = `
     .seal {
       display: inline-block;
       width: 62px;
@@ -70,10 +97,6 @@ export const buildSealCss = (): string => {
       background-repeat: no-repeat;
       vertical-align: middle;
     }`;
-  } catch (error: unknown) {
-    console.error('[contracts/pdf] Failed to embed operator seal:', error);
-    cachedSealCss = '';
-  }
 
   return cachedSealCss;
 };
