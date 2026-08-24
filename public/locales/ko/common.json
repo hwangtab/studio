@@ -48,7 +48,9 @@
     }
   },
   "seo": {
-    "geoPlacename": "서울특별시 은평구"
+    "geoPlacename": "서울특별시 은평구",
+    "twitterAuthorLabel": "작성자",
+    "twitterCategoryLabel": "카테고리"
   },
   "actions": {
     "responseAssurance": "보통 24시간 이내 답변 · 당일 예약도 가능합니다",
@@ -1042,7 +1044,8 @@
   "gallery": {
     "previous": "이전 이미지",
     "next": "다음 이미지",
-    "goToImage": "{{number}}번 이미지로 이동"
+    "goToImage": "{{number}}번 이미지로 이동",
+    "position": "이미지 {{current}} / {{total}}"
   },
   "pagination": {
     "label": "페이지네이션",

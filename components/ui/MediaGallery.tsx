@@ -99,6 +99,16 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
         </button>
       )}
 
+      {/*
+        스크린리더에 현재 슬라이드를 알린다.
+        화살표·dot 버튼에는 각각 aria-label이 있어 조작은 되지만, 넘긴 뒤 몇 번째에
+        있는지 알 방법이 dot을 하나씩 짚어보는 것뿐이었다. activeIndex는 이미
+        계산돼 있으므로 알리기만 하면 된다. polite — 스크롤 중 계속 끼어들지 않는다.
+      */}
+      <p className="sr-only" aria-live="polite" role="status">
+        {t('gallery.position', { current: activeIndex + 1, total: images.length })}
+      </p>
+
       {/* Scrollable Container */}
       <div
         ref={scrollRef}

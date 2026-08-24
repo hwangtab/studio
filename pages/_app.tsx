@@ -90,12 +90,30 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     return () => observer.disconnect();
   }, []);
 
+  /**
+   * 예전에 등록된 서비스워커를 걷어낸다.
+   *
+   * 이 사이트는 PWA가 아니다. 과거에 등록된 워커가 남아 있으면 낡은 응답을 캐시에서
+   * 돌려줘 배포가 반영되지 않는다. 한 번 해제하면 다시 등록될 일이 없으므로
+   * 세션당 한 번만 확인한다 — 하드 로드마다 레지스트리를 조회할 이유가 없다.
+   *
+   * sessionStorage를 못 쓰는 환경(사파리 프라이빗 등)에서는 그냥 매번 조회한다.
+   * 해제 자체는 몇 번을 해도 안전하다.
+   */
   useEffect(() => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.getRegistrations().then((registrations) => {
-        registrations.forEach((r) => r.unregister());
-      });
+    if (!('serviceWorker' in navigator)) return;
+
+    const FLAG = 'sw-unregistered';
+    try {
+      if (window.sessionStorage.getItem(FLAG)) return;
+      window.sessionStorage.setItem(FLAG, '1');
+    } catch {
+      // 저장소 접근이 막힌 환경 — 플래그 없이 진행한다.
     }
+
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      registrations.forEach((r) => r.unregister());
+    });
   }, []);
 
   // 폰트 지연 로딩 useEffect 제거: 사이트 전반을 next/font/local의 Pretendard Variable로

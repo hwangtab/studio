@@ -48,7 +48,9 @@
     }
   },
   "seo": {
-    "geoPlacename": "Eunpyeong-gu, Seoul"
+    "geoPlacename": "Eunpyeong-gu, Seoul",
+    "twitterAuthorLabel": "Written by",
+    "twitterCategoryLabel": "Category"
   },
   "actions": {
     "responseAssurance": "Usually replies within 24 hours · Same-day booking available",
@@ -1070,7 +1072,8 @@
   "gallery": {
     "previous": "Previous images",
     "next": "Next images",
-    "goToImage": "Go to image {{number}}"
+    "goToImage": "Go to image {{number}}",
+    "position": "Image {{current}} of {{total}}"
   },
   "pagination": {
     "label": "Pagination",

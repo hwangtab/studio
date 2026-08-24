@@ -48,7 +48,9 @@
     }
   },
   "seo": {
-    "geoPlacename": "Eunpyeong-gu, Seúl"
+    "geoPlacename": "Eunpyeong-gu, Seúl",
+    "twitterAuthorLabel": "Escrito por",
+    "twitterCategoryLabel": "Categoría"
   },
   "actions": {
     "responseAssurance": "Normalmente respondemos en 24 h · Reserva el mismo día",
@@ -1042,7 +1044,8 @@
   "gallery": {
     "previous": "Imágenes anteriores",
     "next": "Imágenes siguientes",
-    "goToImage": "Ir a la imagen {{number}}"
+    "goToImage": "Ir a la imagen {{number}}",
+    "position": "Imagen {{current}} de {{total}}"
   },
   "pagination": {
     "label": "Paginación",

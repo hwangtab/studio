@@ -435,13 +435,13 @@ const SEO = ({
         <meta name="twitter:creator" content={effectiveArticleAuthor} />
       )}
       {ogType === 'article' && (
-        <meta name="twitter:label1" content={currentLocale === 'ko' ? '작성자' : 'Written by'} />
+        <meta name="twitter:label1" content={t('seo.twitterAuthorLabel')} />
       )}
       {ogType === 'article' && (
         <meta name="twitter:data1" content={effectiveArticleAuthor} />
       )}
       {ogType === 'article' && articleSection && (
-        <meta name="twitter:label2" content={currentLocale === 'ko' ? '카테고리' : 'Category'} />
+        <meta name="twitter:label2" content={t('seo.twitterCategoryLabel')} />
       )}
       {ogType === 'article' && articleSection && (
         <meta name="twitter:data2" content={articleSection} />

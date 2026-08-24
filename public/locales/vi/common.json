@@ -48,7 +48,9 @@
     }
   },
   "seo": {
-    "geoPlacename": "Eunpyeong-gu, Seoul"
+    "geoPlacename": "Eunpyeong-gu, Seoul",
+    "twitterAuthorLabel": "Người viết",
+    "twitterCategoryLabel": "Chuyên mục"
   },
   "actions": {
     "responseAssurance": "Thường phản hồi trong 24 giờ · Có thể đặt lịch trong ngày",
@@ -1042,7 +1044,8 @@
   "gallery": {
     "previous": "Hình trước",
     "next": "Hình tiếp theo",
-    "goToImage": "Đến hình {{number}}"
+    "goToImage": "Đến hình {{number}}",
+    "position": "Ảnh {{current}} trên {{total}}"
   },
   "pagination": {
     "label": "Phân trang",

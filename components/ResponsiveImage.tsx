@@ -39,12 +39,18 @@ const ResponsiveImage = React.memo(({
   quality,
   ...rest
 }: ResponsiveImageProps) => {
-  const [error, setError] = React.useState(false);
   const normalizedSrc = React.useMemo(() => normalizeSrc(src), [src]);
 
-  React.useEffect(() => {
-    setError(false);
-  }, [normalizedSrc]);
+  /**
+   * 실패한 src 자체를 들고 있는다.
+   *
+   * 예전에는 boolean 하나를 두고 src가 바뀔 때마다 useEffect로 되돌렸다. 그러면
+   * 이미지가 많은 화면(스토리 카드 그리드 등)에서 인스턴스마다 effect가 큐잉되고,
+   * 무엇보다 "새 src로 한 번 렌더된 뒤에야 초기화되는" 한 프레임이 생긴다.
+   * 실패한 주소를 저장해 두면 현재 src와 비교만 하면 되므로 effect가 필요 없다.
+   */
+  const [failedSrc, setFailedSrc] = React.useState<string | null>(null);
+  const error = failedSrc !== null && failedSrc === normalizedSrc;
 
   if (!normalizedSrc) return null;
 
@@ -67,7 +73,7 @@ const ResponsiveImage = React.memo(({
             fill
             loading={loading}
             quality={quality}
-            onError={() => setError(true)}
+            onError={() => setFailedSrc(normalizedSrc)}
             {...rest}
           />
         </div>
@@ -87,7 +93,7 @@ const ResponsiveImage = React.memo(({
         height={height || 300}
         loading={loading}
         quality={quality}
-        onError={() => setError(true)}
+        onError={() => setFailedSrc(normalizedSrc)}
         {...rest}
       />
     </div>

@@ -48,7 +48,9 @@
     }
   },
   "seo": {
-    "geoPlacename": "Eunpyeong-gu, Seul"
+    "geoPlacename": "Eunpyeong-gu, Seul",
+    "twitterAuthorLabel": "Muallif",
+    "twitterCategoryLabel": "Turkum"
   },
   "actions": {
     "responseAssurance": "Odatda 24 soat ichida javob · Shu kunning o'zida band qilish mumkin",
@@ -1042,7 +1044,8 @@
   "gallery": {
     "previous": "Oldingi rasmlar",
     "next": "Keyingi rasmlar",
-    "goToImage": "{{number}}-rasmga o'tish"
+    "goToImage": "{{number}}-rasmga o'tish",
+    "position": "{{total}} tasvirdan {{current}}-si"
   },
   "pagination": {
     "label": "Sahifalash",

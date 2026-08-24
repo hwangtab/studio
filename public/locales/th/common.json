@@ -48,7 +48,9 @@
     }
   },
   "seo": {
-    "geoPlacename": "เขตอึนพยอง โซล"
+    "geoPlacename": "เขตอึนพยอง โซล",
+    "twitterAuthorLabel": "เขียนโดย",
+    "twitterCategoryLabel": "หมวดหมู่"
   },
   "actions": {
     "responseAssurance": "มักตอบกลับภายใน 24 ชม. · จองได้ในวันเดียวกัน",
@@ -1046,7 +1048,8 @@
   "gallery": {
     "previous": "รูปภาพก่อนหน้า",
     "next": "รูปภาพถัดไป",
-    "goToImage": "ไปที่รูปภาพ {{number}}"
+    "goToImage": "ไปที่รูปภาพ {{number}}",
+    "position": "รูปภาพ {{current}} จาก {{total}}"
   },
   "pagination": {
     "label": "การแบ่งหน้า",
