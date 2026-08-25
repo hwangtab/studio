@@ -49,24 +49,30 @@ export interface BusyRange { start: Date; end: Date }
 
 /** 실패는 throw — 호출부는 해당 시간대를 예약 불가로 처리한다(fail-closed, 스펙 §6). */
 export const fetchBusyRanges = async (timeMin: Date, timeMax: Date): Promise<BusyRange[]> => {
+  const id = calendarId();
   const token = await getAccessToken();
   const res = await fetch(`${CAL_API}/freeBusy`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), items: [{ id: calendarId() }] }),
+    body: JSON.stringify({ timeMin: timeMin.toISOString(), timeMax: timeMax.toISOString(), items: [{ id }] }),
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   if (!res.ok) throw new Error(`freeBusy 조회 실패: ${res.status}`);
   const json = await res.json();
-  const busy: Array<{ start: string; end: string }> = json.calendars?.[calendarId()]?.busy ?? [];
+  const entry = json.calendars?.[id];
+  if (!entry || (Array.isArray(entry.errors) && entry.errors.length > 0) || !Array.isArray(entry.busy)) {
+    throw new Error(`freeBusy 캘린더 응답 오류: ${JSON.stringify(entry?.errors ?? 'no entry')}`);
+  }
+  const busy: Array<{ start: string; end: string }> = entry.busy;
   return busy.map((b) => ({ start: new Date(b.start), end: new Date(b.end) }));
 };
 
 export const createBookingEvent = async (input: {
   summary: string; description: string; start: Date; end: Date;
 }): Promise<string> => {
+  const id = calendarId();
   const token = await getAccessToken();
-  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(calendarId())}/events`, {
+  const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -82,9 +88,10 @@ export const createBookingEvent = async (input: {
 };
 
 export const deleteBookingEvent = async (eventId: string): Promise<void> => {
+  const id = calendarId();
   const token = await getAccessToken();
   const res = await fetch(
-    `${CAL_API}/calendars/${encodeURIComponent(calendarId())}/events/${encodeURIComponent(eventId)}`,
+    `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,
     { method: 'DELETE', headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) },
   );
   if (!res.ok && res.status !== 404 && res.status !== 410) throw new Error(`캘린더 이벤트 삭제 실패: ${res.status}`);
