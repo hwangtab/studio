@@ -10,10 +10,9 @@ import { getProduct } from './products';
 import { generateManageToken, generateOrderNo } from './token';
 import type { CreateBookingPayload } from './validation';
 
-export const PENDING_HOLD_SECONDS = 900;
+export { rangesOverlap } from './overlap';
 
-export const rangesOverlap = (aStart: Date, aEnd: Date, bStart: Date, bEnd: Date): boolean =>
-  aStart < bEnd && bStart < aEnd;
+export const PENDING_HOLD_SECONDS = 900;
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 

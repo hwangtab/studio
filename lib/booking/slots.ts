@@ -1,5 +1,5 @@
 import { kstDateTime } from './kst';
-import { rangesOverlap } from './service';
+import { rangesOverlap } from './overlap';
 
 export const OPEN_HOUR = 10;
 export const CLOSE_HOUR = 22;
