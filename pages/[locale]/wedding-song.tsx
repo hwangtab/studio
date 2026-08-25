@@ -9,6 +9,7 @@ import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinks
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
+import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
@@ -273,7 +274,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
             ))}
           </div>
         </m.div>
-        <div className="mt-10 text-center">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <a
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
@@ -289,6 +290,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
           >
             {t('weddingSong.cta.inquiry')}
           </a>
+          <BookingEntryButton service="wedding-song" locale={locale} />
         </div>
       </Section>
 

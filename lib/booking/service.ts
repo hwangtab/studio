@@ -1,0 +1,119 @@
+import { randomUUID } from 'node:crypto';
+
+import { sql } from 'drizzle-orm';
+
+import { getDb } from '../../db/client';
+import { orders, type Booking, type Order, type Payment } from '../../db/schema';
+import { computeAmounts } from './amounts';
+import { kstDateTime } from './kst';
+import { getProduct } from './products';
+import { generateManageToken, generateOrderNo } from './token';
+import type { CreateBookingPayload } from './validation';
+
+export { rangesOverlap } from './overlap';
+
+export const PENDING_HOLD_SECONDS = 900;
+
+const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
+
+export const createBookingOrder = async (
+  payload: CreateBookingPayload,
+  now: Date,
+): Promise<
+  | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string }
+  | { ok: false; code: 'slot_taken' }
+> => {
+  const db = getDb();
+  const product = getProduct(payload.productId)!; // validation이 보장
+  const hours = payload.hours!;
+  const amounts = computeAmounts(product, hours);
+  const startAt = kstDateTime(payload.date, payload.startHour);
+  const endAt = kstDateTime(payload.date, payload.startHour + hours);
+  const orderNo = generateOrderNo(now);
+  const manageToken = generateManageToken();
+
+  // 자가 선점 해제: BookingWizard의 "← 정보 수정"(step 4 → 3)으로 되돌아가 같은 슬롯을
+  // 재제출하면, 직전 제출로 만든 자신의 pending 주문·예약이 PENDING_HOLD_SECONDS(900초)
+  // 동안 아래 겹침 검사에 "이미 점유"로 잡힌다 — 고객이 자기 자신에게 15분간 막히고
+  // "다른 예약이 먼저 잡혔습니다"라는 오해성 409를 본다. 새 주문을 만들기 전에 같은
+  // 고객(email+phone 일치)의 기존 pending을 먼저 만료시켜 이를 막는다.
+  //
+  // 순서 주의: bookings를 먼저 cancelled로 바꾼다. orders를 먼저 expired로 바꾸면
+  // 아래 IN 서브쿼리(status='pending'인 orders)가 비어 그 bookings가 갱신되지 않는다.
+  //
+  // 안전성: 여기서 해제되는 주문을 다른 탭이 그 사이 결제 중이었더라도, confirm()은
+  // order.status !== 'pending'에서 토스 승인 호출 전에 멈추므로(confirm.ts) 과금은
+  // 일어나지 않는다 — PENDING_HOLD_SECONDS 자연 만료(expireStaleOrders)와 같은 성질이다.
+  await db.run(sql`
+    UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+    WHERE status = 'pending' AND order_id IN (
+      SELECT id FROM orders
+      WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+    )
+  `);
+  await db.run(sql`
+    UPDATE orders SET status = 'expired', updated_at = unixepoch()
+    WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+  `);
+
+  const [order] = await db
+    .insert(orders)
+    .values({
+      orderNo, type: 'session',
+      customerName: payload.customerName, customerPhone: payload.customerPhone,
+      customerEmail: payload.customerEmail,
+      itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount,
+      manageToken,
+    })
+    .returning({ id: orders.id });
+
+  // 겹침 검사 + INSERT를 한 문장으로 — 동시 요청은 한쪽만 rowsAffected 1.
+  const bookingId = randomUUID().replace(/-/g, '');
+  const result = await db.run(sql`
+    INSERT INTO bookings (id, order_id, product_id, service_type, start_at, end_at, duration_hours, status, customer_note)
+    SELECT ${bookingId}, ${order.id}, ${product.id}, ${product.service},
+           ${toEpoch(startAt)}, ${toEpoch(endAt)}, ${hours}, 'pending', ${payload.customerNote ?? null}
+    WHERE NOT EXISTS (
+      SELECT 1 FROM bookings b
+      WHERE b.start_at < ${toEpoch(endAt)} AND b.end_at > ${toEpoch(startAt)}
+        AND (b.status = 'confirmed'
+             OR (b.status = 'pending' AND b.created_at > unixepoch() - ${PENDING_HOLD_SECONDS}))
+    )
+    AND NOT EXISTS (
+      SELECT 1 FROM availability_blocks ab
+      WHERE ab.start_at < ${toEpoch(endAt)} AND ab.end_at > ${toEpoch(startAt)}
+    )
+  `);
+
+  if (Number(result.rowsAffected) === 0) {
+    await db.run(sql`UPDATE orders SET status = 'failed' WHERE id = ${order.id} AND status = 'pending'`);
+    return { ok: false, code: 'slot_taken' };
+  }
+  return { ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount, bookingId };
+};
+
+export const findOrderByOrderNo = async (
+  orderNo: string,
+): Promise<(Order & { bookings: Booking[]; payments: Payment[] }) | undefined> =>
+  getDb().query.orders.findFirst({
+    where: (t, { eq }) => eq(t.orderNo, orderNo),
+    with: { bookings: true, payments: true },
+  });
+
+/**
+ * 결제가 오지 않은 선점을 정리한다. 슬롯 조회·관리자 목록에서 lazy 호출
+ * (expireOverdueContracts 패턴). 두 UPDATE는 원자성이 필요 없다 — 겹침 검사가
+ * 어차피 900초 지난 pending을 무시하므로, 이 정리는 표시용 상태 정합일 뿐이다.
+ */
+export const expireStaleOrders = async (now: Date): Promise<void> => {
+  const db = getDb();
+  const cutoff = toEpoch(now) - PENDING_HOLD_SECONDS;
+  await db.run(sql`
+    UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+    WHERE status = 'pending' AND created_at < ${cutoff}
+  `);
+  await db.run(sql`
+    UPDATE orders SET status = 'expired', updated_at = unixepoch()
+    WHERE status = 'pending' AND created_at < ${cutoff}
+  `);
+};

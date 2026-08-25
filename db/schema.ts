@@ -201,6 +201,128 @@ export const contractAttachmentsRelations = relations(contractAttachments, ({ on
   }),
 }));
 
+// ─── 예약·결제 (Phase 1: 세션 예약) ───────────────────────────────────────────
+
+export const orderStatusEnum = [
+  'pending', // 주문 생성, 결제 대기 (15분 슬롯 선점)
+  'paid',
+  'partially_refunded',
+  'refunded',
+  'failed', // 승인 실패
+  'expired', // 15분 내 미결제
+] as const;
+export const orderTypeEnum = ['session', 'mixing', 'subscription'] as const;
+export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
+export const refundStatusEnum = ['done', 'failed'] as const;
+export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
+
+export const orders = sqliteTable('orders', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  /** 토스 orderId로 그대로 쓰는 외부 노출 주문번호 (SNB-YYYYMMDD-XXXXXX). */
+  orderNo: text('order_no').notNull().unique(),
+  type: text('type', { enum: orderTypeEnum }).notNull().default('session'),
+  customerName: text('customer_name').notNull(),
+  customerPhone: text('customer_phone').notNull(),
+  customerEmail: text('customer_email').notNull(),
+  /** 상품가(VAT 별도) + VAT = 합계. 서버가 pricing SSOT에서 계산해 저장한다. */
+  itemAmount: integer('item_amount').notNull(),
+  vatAmount: integer('vat_amount').notNull(),
+  totalAmount: integer('total_amount').notNull(),
+  status: text('status', { enum: orderStatusEnum }).notNull().default('pending'),
+  /** 예약 확인·셀프 취소 링크 토큰 (계정 없는 게스트의 인증 수단 — contracts signToken 패턴). */
+  manageToken: text('manage_token').notNull().unique(),
+  /** 마지막 알림 발송 실패 사유. 성공 시 비움 (contracts notificationError 패턴). */
+  notificationError: text('notification_error'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const payments = sqliteTable('payments', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  orderId: text('order_id').notNull().references(() => orders.id),
+  /** 토스 paymentKey. unique가 이중 승인 기록을 DB 층에서 차단한다. */
+  paymentKey: text('payment_key').notNull().unique(),
+  method: text('method'),
+  approvedAt: integer('approved_at', { mode: 'timestamp' }),
+  receiptUrl: text('receipt_url'),
+  /** 토스 응답 원본 JSON — 분쟁·대사(reconciliation) 근거. */
+  rawResponse: text('raw_response'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const refunds = sqliteTable('refunds', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  paymentId: text('payment_id').notNull().references(() => payments.id),
+  amount: integer('amount').notNull(),
+  reason: text('reason').notNull(),
+  requestedBy: text('requested_by', { enum: refundRequesterEnum }).notNull(),
+  tossTransactionKey: text('toss_transaction_key'),
+  status: text('status', { enum: refundStatusEnum }).notNull().default('done'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const bookings = sqliteTable('bookings', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  orderId: text('order_id').notNull().references(() => orders.id),
+  /** lib/booking/products.ts SESSION_PRODUCTS의 id. */
+  productId: text('product_id').notNull(),
+  /** 서비스 그룹 (recording | voice-acting | wedding-song | cover-video). */
+  serviceType: text('service_type').notNull(),
+  startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
+  endAt: integer('end_at', { mode: 'timestamp' }).notNull(),
+  durationHours: integer('duration_hours').notNull(),
+  status: text('status', { enum: bookingStatusEnum }).notNull().default('pending'),
+  /** 확정 시 생성한 구글 캘린더 이벤트 id. 취소 시 삭제에 쓴다. */
+  gcalEventId: text('gcal_event_id'),
+  /** 캘린더 이벤트 생성/삭제 실패 사유 — 결제는 성공했으므로 실패를 삼키되 기록한다. */
+  gcalError: text('gcal_error'),
+  customerNote: text('customer_note'),
+  cancelledAt: integer('cancelled_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const availabilityBlocks = sqliteTable('availability_blocks', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
+  endAt: integer('end_at', { mode: 'timestamp' }).notNull(),
+  memo: text('memo'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+/**
+ * 토스 웹훅 멱등 기록. eventKey가 PK라 같은 이벤트의 두 번째 INSERT는 실패하고,
+ * 그 실패가 "이미 처리했다"는 신호다 (처리보다 기록을 먼저 한다).
+ */
+export const webhookEvents = sqliteTable('webhook_events', {
+  eventKey: text('event_key').primaryKey(),
+  payload: text('payload').notNull(),
+  processedAt: integer('processed_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const ordersRelations = relations(orders, ({ many }) => ({
+  payments: many(payments),
+  bookings: many(bookings),
+}));
+export const paymentsRelations = relations(payments, ({ one, many }) => ({
+  order: one(orders, { fields: [payments.orderId], references: [orders.id] }),
+  refunds: many(refunds),
+}));
+export const refundsRelations = relations(refunds, ({ one }) => ({
+  payment: one(payments, { fields: [refunds.paymentId], references: [payments.id] }),
+}));
+export const bookingsRelations = relations(bookings, ({ one }) => ({
+  order: one(orders, { fields: [bookings.orderId], references: [orders.id] }),
+}));
+
+export type Order = typeof orders.$inferSelect;
+export type NewOrder = typeof orders.$inferInsert;
+export type Payment = typeof payments.$inferSelect;
+export type Refund = typeof refunds.$inferSelect;
+export type Booking = typeof bookings.$inferSelect;
+export type NewBooking = typeof bookings.$inferInsert;
+export type AvailabilityBlock = typeof availabilityBlocks.$inferSelect;
+
 /**
  * 요청 제한 카운터. 서버리스는 인스턴스가 여러 개라 프로세스 메모리로는 제한이 새기
  * 때문에, 이미 붙어 있는 Turso를 공유 저장소로 쓴다(관리자 로그인은 빈도가 매우 낮아

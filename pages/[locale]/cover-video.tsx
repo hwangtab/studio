@@ -9,6 +9,7 @@ import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinks
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
+import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
@@ -316,7 +317,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
             ))}
           </div>
         </m.div>
-        <div className="mt-10 text-center">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
           <a
             href={siteConfig.contact.kakaoUrl}
             target="_blank"
@@ -332,6 +333,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
           >
             {t('coverVideo.cta.inquiry')}
           </a>
+          <BookingEntryButton service="cover-video" locale={locale} />
         </div>
       </Section>
 
