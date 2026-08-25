@@ -48,6 +48,13 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
   ]);
 };
 
+/** unique 위반(PK 충돌 = 이미 처리한 이벤트)인지, 그 외 DB 장애인지를 가른다. */
+const isUniqueViolation = (error: unknown): boolean => {
+  const message = error instanceof Error ? error.message : String(error);
+  const code = error && typeof error === 'object' && 'code' in error ? String((error as { code: unknown }).code) : '';
+  return /unique|sqlite_constraint/i.test(message) || /unique|sqlite_constraint/i.test(code);
+};
+
 export const processTossWebhook = async (payload: unknown): Promise<{ status: number }> => {
   const body = payload as { data?: { paymentKey?: unknown; status?: unknown } } | null;
   const paymentKey = body?.data?.paymentKey;
@@ -57,10 +64,17 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
 
   // 처리보다 기록을 먼저 — PK 충돌이 "이미 처리했다"는 신호다.
   const db = getDb();
+  const eventKey = `${paymentKey}:${status}`;
   try {
-    await db.insert(webhookEvents).values({ eventKey: `${paymentKey}:${status}`, payload: JSON.stringify(payload) });
-  } catch {
-    return { status: 200 }; // 중복 이벤트
+    await db.insert(webhookEvents).values({ eventKey, payload: JSON.stringify(payload) });
+  } catch (error) {
+    if (isUniqueViolation(error)) return { status: 200 }; // 중복 이벤트
+    // unique 위반이 아니면 진짜 DB 장애 — 여기서 200을 주면 토스가 재시도를 멈추고 이벤트가
+    // 영구히 유실된다. 500으로 재시도를 유도한다: 어차피 같은 DB라 이번 요청에서 후속 처리
+    // (재조회·확정·동기화)도 불가능한 상태고, DB가 복구된 뒤 재시도가 오면 INSERT가 성공해
+    // 정상 경로로 들어간다 — 멱등성은 그대로 유지된다.
+    console.error('[booking-webhook] 멱등 기록 실패 — 재시도 유도', { eventKey, error });
+    return { status: 500 };
   }
 
   // 페이로드는 신뢰하지 않는다 — 토스에 재조회한 상태만 쓴다 (스펙 §5).

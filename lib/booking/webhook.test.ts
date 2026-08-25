@@ -87,6 +87,23 @@ describe('processTossWebhook', () => {
     expect(fetchPayment).toHaveBeenCalledTimes(1); // 여전히 1회 — 두 번째는 재조회도 안 갔다
   });
 
+  it('webhookEvents INSERT가 unique 위반이 아닌 DB 장애로 실패하면 500을 반환한다 (토스 재시도 유도)', async () => {
+    // insert() 자체의 반환값을 이번 한 번만 바꿔치기 — 아직 첫 호출 전이라 기존 값의 values
+    // mock을 mock.results로 찾아 갈 수 없다(그 방식은 이미 한 번 호출된 뒤에만 쓸 수 있다).
+    mockDb().insert.mockReturnValueOnce({
+      values: jest.fn().mockImplementationOnce(() => {
+        throw new Error('SQLITE_IOERR: disk I/O error');
+      }),
+    });
+    const result = await processTossWebhook(donePayload);
+    expect(result).toEqual({ status: 500 });
+    expect(fetchPayment).not.toHaveBeenCalled();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      '[booking-webhook] 멱등 기록 실패 — 재시도 유도',
+      expect.objectContaining({ eventKey: 'pk1:DONE' }),
+    );
+  });
+
   it('형식이 어긋난 payload는 200을 반환하고 토스를 부르지 않는다', async () => {
     const malformed = { data: { paymentKey: 123, status: 'DONE' } }; // paymentKey가 문자열이 아님
     const result = await processTossWebhook(malformed);
