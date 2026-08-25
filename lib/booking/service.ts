@@ -32,6 +32,30 @@ export const createBookingOrder = async (
   const orderNo = generateOrderNo(now);
   const manageToken = generateManageToken();
 
+  // 자가 선점 해제: BookingWizard의 "← 정보 수정"(step 4 → 3)으로 되돌아가 같은 슬롯을
+  // 재제출하면, 직전 제출로 만든 자신의 pending 주문·예약이 PENDING_HOLD_SECONDS(900초)
+  // 동안 아래 겹침 검사에 "이미 점유"로 잡힌다 — 고객이 자기 자신에게 15분간 막히고
+  // "다른 예약이 먼저 잡혔습니다"라는 오해성 409를 본다. 새 주문을 만들기 전에 같은
+  // 고객(email+phone 일치)의 기존 pending을 먼저 만료시켜 이를 막는다.
+  //
+  // 순서 주의: bookings를 먼저 cancelled로 바꾼다. orders를 먼저 expired로 바꾸면
+  // 아래 IN 서브쿼리(status='pending'인 orders)가 비어 그 bookings가 갱신되지 않는다.
+  //
+  // 안전성: 여기서 해제되는 주문을 다른 탭이 그 사이 결제 중이었더라도, confirm()은
+  // order.status !== 'pending'에서 토스 승인 호출 전에 멈추므로(confirm.ts) 과금은
+  // 일어나지 않는다 — PENDING_HOLD_SECONDS 자연 만료(expireStaleOrders)와 같은 성질이다.
+  await db.run(sql`
+    UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+    WHERE status = 'pending' AND order_id IN (
+      SELECT id FROM orders
+      WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+    )
+  `);
+  await db.run(sql`
+    UPDATE orders SET status = 'expired', updated_at = unixepoch()
+    WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+  `);
+
   const [order] = await db
     .insert(orders)
     .values({
