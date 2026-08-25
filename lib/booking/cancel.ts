@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, orders, refunds } from '../../db/schema';
@@ -40,11 +40,31 @@ export const cancelBookingWithRefund = async (input: {
   if (input.requestedBy === 'customer' && booking.startAt.getTime() <= input.now.getTime())
     return { ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가합니다.' };
 
+  // 관리자 임의 환불액은 0원(당일 취소와 동형의 유효한 액션) 이상 총액 이하의 정수만 허용한다.
+  if (
+    input.requestedBy === 'admin' &&
+    typeof input.overrideAmount === 'number' &&
+    (!Number.isInteger(input.overrideAmount) || input.overrideAmount < 0 || input.overrideAmount > order.totalAmount)
+  )
+    return { ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' };
+
   const refundAmount = input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
     ? input.overrideAmount
     : computeRefund(order.totalAmount, booking.startAt, input.now).refundAmount;
 
   const db = getDb();
+
+  // 원자적 선점 — 돈이 나가기 전에 이 요청만 이 예약을 쥔다. 동시 셀프 취소 2건이 둘 다 위
+  // 상태 검사를 통과해도(읽기 시점엔 둘 다 confirmed), UPDATE...WHERE status='confirmed'는
+  // 하나만 rowsAffected 1을 받는다. 진 쪽은 토스를 아예 부르지 않는다 — 이렇게 하지 않으면
+  // 50% 환불 구간에서 두 요청 모두 검사를 통과해 토스가 둘 다 승인해 버려(합이 잔액과 같음)
+  // 이중 환불로 이어진다.
+  const claim = await db.run(
+    sql`UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'confirmed'`,
+  );
+  if (Number(claim.rowsAffected) === 0)
+    return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약입니다.' };
+
   let tossTransactionKey: string | null = null;
 
   if (refundAmount > 0) {
@@ -54,6 +74,17 @@ export const cancelBookingWithRefund = async (input: {
       cancelAmount: refundAmount,
     });
     if (!toss.ok) {
+      // 토스가 거절했으니 선점을 되돌린다 — 안 그러면 환불 한 푼 없이 예약만 취소된 채 남는다.
+      try {
+        await db.run(
+          sql`UPDATE bookings SET status = 'confirmed', cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'cancelled'`,
+        );
+      } catch (revertError) {
+        console.error('[booking-cancel] 선점 revert 실패 — 수동 복구 필요', {
+          orderNo: order.orderNo,
+          error: revertError,
+        });
+      }
       // 실패도 이력이다 — 관리자가 재시도할 근거를 남긴다.
       await db.insert(refunds).values({
         paymentId: payment.id, amount: refundAmount, reason: input.reason,
@@ -78,14 +109,12 @@ export const cancelBookingWithRefund = async (input: {
     : refundAmount > 0 ? 'partially_refunded' : order.status;
 
   try {
+    // bookings는 이미 위 선점에서 cancelled로 넘어갔다 — 여기선 refunds 기록과 orders 상태 전이만 한다.
     await db.batch([
       db.insert(refunds).values({
         paymentId: payment.id, amount: refundAmount, reason: input.reason,
         requestedBy: input.requestedBy, tossTransactionKey, status: 'done',
       }),
-      db.update(bookings)
-        .set({ status: 'cancelled', cancelledAt: input.now, updatedAt: input.now })
-        .where(and(eq(bookings.id, booking.id), eq(bookings.status, 'confirmed'))),
       db.update(orders)
         .set({ status: nextOrderStatus, updatedAt: input.now })
         .where(eq(orders.id, order.id)),

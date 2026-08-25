@@ -3,15 +3,17 @@ jest.mock('./toss', () => ({ cancelPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ deleteBookingEvent: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('./email', () => ({ sendBookingCancelledEmails: jest.fn().mockResolvedValue(null) }));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 (confirm.test.ts와 동일 이유
-// — cancel.ts도 한 실행 안에서 getDb()를 여러 번 부르므로 batch·insert·후처리 update가 같은 참조를 봐야 한다).
+// — cancel.ts도 한 실행 안에서 getDb()를 여러 번 부르므로 claim(run)·batch·insert·후처리 update가 같은
+// 참조를 봐야 한다). run 기본값은 rowsAffected:1 — "선점 성공"이 기본 경로다.
 jest.mock('../../db/client', () => {
+  const run = jest.fn().mockResolvedValue({ rowsAffected: 1 });
   const batch = jest.fn().mockResolvedValue([]);
   const insertValues = jest.fn().mockReturnValue({});
   const insert = jest.fn().mockReturnValue({ values: insertValues });
   const updateWhere = jest.fn().mockReturnValue({});
   const updateSet = jest.fn().mockReturnValue({ where: updateWhere });
   const update = jest.fn().mockReturnValue({ set: updateSet });
-  const db = { batch, insert, update };
+  const db = { run, batch, insert, update };
   return { getDb: () => db };
 });
 
@@ -23,6 +25,7 @@ import { sendBookingCancelledEmails } from './email';
 import { getDb } from '../../db/client';
 
 type MockDb = {
+  run: jest.Mock;
   batch: jest.Mock;
   insert: jest.Mock;
   update: jest.Mock;
@@ -109,11 +112,12 @@ describe('cancelBookingWithRefund', () => {
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 취소', now: NOW });
     expect(r).toEqual({ ok: true, refundAmount: 0 });
     expect(cancelPayment).not.toHaveBeenCalled();
+    expect(mockDb().run).toHaveBeenCalledTimes(1); // 선점 UPDATE 1회 — revert 없음(토스를 부르지 않았으니)
     expect(mockDb().batch).toHaveBeenCalled();
     const refundInsert = insertValuesCallsOf(mockDb()).find((c) => c.status === 'done');
     expect(refundInsert).toMatchObject({ amount: 0, status: 'done' });
     // 환불액 0원이면 orders.status는 그대로 유지된다.
-    const orderStatusUpdate = setCallsOf(mockDb()).find((c) => 'status' in c && !('cancelledAt' in c));
+    const orderStatusUpdate = setCallsOf(mockDb()).find((c) => 'status' in c);
     expect(orderStatusUpdate).toMatchObject({ status: 'paid' });
   });
 
@@ -124,9 +128,8 @@ describe('cancelBookingWithRefund', () => {
     expect(r).toEqual({ ok: true, refundAmount: 275000 });
     expect(cancelPayment).toHaveBeenCalledWith({ paymentKey: 'pk', cancelReason: '고객 셀프 취소', cancelAmount: 275000 });
     const db = mockDb();
-    const bookingCancel = setCallsOf(db).find((c) => 'cancelledAt' in c);
-    expect(bookingCancel).toMatchObject({ status: 'cancelled' });
-    const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c && !('cancelledAt' in c));
+    expect(db.run).toHaveBeenCalledTimes(1); // 선점 UPDATE만 — 토스 성공했으니 revert 없음
+    const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
     expect(orderStatusUpdate).toMatchObject({ status: 'refunded' });
     const refundInsert = insertValuesCallsOf(db).find((c) => c.status === 'done');
     expect(refundInsert).toMatchObject({ amount: 275000, status: 'done', tossTransactionKey: 'ck1' });
@@ -142,18 +145,55 @@ describe('cancelBookingWithRefund', () => {
     });
     expect(r).toEqual({ ok: true, refundAmount: 50000 });
     expect(cancelPayment).toHaveBeenCalledWith({ paymentKey: 'pk', cancelReason: '관리자 임의 환불', cancelAmount: 50000 });
-    const orderStatusUpdate = setCallsOf(mockDb()).find((c) => 'status' in c && !('cancelledAt' in c));
+    const orderStatusUpdate = setCallsOf(mockDb()).find((c) => 'status' in c);
     expect(orderStatusUpdate).toMatchObject({ status: 'partially_refunded' });
   });
 
-  it('토스 취소가 실패하면 refunds에 failed로 기록하고 toss_failed를 반환한다', async () => {
+  it.each([
+    ['총액을 초과하면', 275001],
+    ['음수면', -1],
+  ])('관리자 overrideAmount가 %s invalid_state로 거부하고 아무 것도 건드리지 않는다', async (_label, overrideAmount) => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    const r = await cancelBookingWithRefund({
+      orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount, now: NOW,
+    });
+    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect(mockDb().run).not.toHaveBeenCalled(); // 선점보다 먼저 걸러진다
+    expect(mockDb().batch).not.toHaveBeenCalled();
+  });
+
+  it('관리자 overrideAmount 0원은 유효한 액션 — 토스 미호출로 취소가 진행된다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+      order({ bookings: [{ id: 'b1', status: 'confirmed', startAt: SAME_DAY_LATER, endAt: SAME_DAY_LATER, durationHours: 3, serviceType: 'recording', customerNote: null, gcalEventId: null }] }),
+    );
+    const r = await cancelBookingWithRefund({
+      orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 0, now: NOW,
+    });
+    expect(r).toEqual({ ok: true, refundAmount: 0 });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect(mockDb().batch).toHaveBeenCalled();
+  });
+
+  it('동시 선점 실패(claim rowsAffected 0)면 invalid_state를 반환하고 토스를 부르지 않는다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    mockDb().run.mockResolvedValueOnce({ rowsAffected: 0 });
+    const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+    expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약입니다.' });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect(mockDb().batch).not.toHaveBeenCalled();
+  });
+
+  it('토스 취소가 실패하면 선점을 되돌리고(revert) refunds에 failed로 기록한 뒤 toss_failed를 반환한다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (cancelPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'REJECT_CARD', message: '취소 불가 결제' });
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
     expect(r).toEqual({ ok: false, code: 'toss_failed', message: '취소 불가 결제' });
-    const failedRefund = insertValuesCallsOf(mockDb()).find((c) => c.status === 'failed');
+    const db = mockDb();
+    expect(db.run).toHaveBeenCalledTimes(2); // ① 선점 claim ② 실패 후 revert
+    const failedRefund = insertValuesCallsOf(db).find((c) => c.status === 'failed');
     expect(failedRefund).toMatchObject({ amount: 275000, status: 'failed' });
-    expect(mockDb().batch).not.toHaveBeenCalled();
+    expect(db.batch).not.toHaveBeenCalled();
   });
 
   it('CONFIG_ERROR/NETWORK_ERROR는 고객 노출 메시지를 일반 문구로 치환하고 원문은 로그에만 남긴다', async () => {
