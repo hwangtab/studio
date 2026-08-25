@@ -29,4 +29,10 @@ describe('validateCreateBookingPayload', () => {
   it('60일 밖 날짜 거부', () => {
     expect(validateCreateBookingPayload({ ...base, date: '2026-12-25' }, now).ok).toBe(false);
   });
+  it('개장 전 시작 시각 거부', () => {
+    expect(validateCreateBookingPayload({ ...base, startHour: 9 }, now).ok).toBe(false);
+  });
+  it('폐장을 넘는 시작 시각 거부', () => {
+    expect(validateCreateBookingPayload({ ...base, startHour: 20 }, now).ok).toBe(false);
+  });
 });

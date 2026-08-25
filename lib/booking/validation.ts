@@ -2,6 +2,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import { daysUntilKst, kstDateTime } from './kst';
 import { getProduct, resolveHours } from './products';
+import { CLOSE_HOUR, OPEN_HOUR } from './slots';
 
 export const MIN_LEAD_HOURS = 24;
 export const MAX_BOOK_DAYS = 60;
@@ -35,6 +36,8 @@ export const validateCreateBookingPayload = (body: unknown, now: Date): Result =
 
   if (typeof b.date !== 'string' || !DATE_RE.test(b.date)) return { ok: false, message: '날짜가 올바르지 않습니다.' };
   if (typeof b.startHour !== 'number' || !Number.isInteger(b.startHour)) return { ok: false, message: '시작 시간이 올바르지 않습니다.' };
+  if (b.startHour < OPEN_HOUR || b.startHour + hours > CLOSE_HOUR)
+    return { ok: false, message: '예약 가능 시간대가 아닙니다.' };
 
   const startAt = kstDateTime(b.date, b.startHour);
   if (Number.isNaN(startAt.getTime())) return { ok: false, message: '날짜가 올바르지 않습니다.' };
