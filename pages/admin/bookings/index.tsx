@@ -43,7 +43,8 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
     const allOrders = await getDb().query.orders.findMany({
       orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
       limit: LIST_LIMIT + 1,
-      with: { bookings: true },
+      // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
+      with: { bookings: true, payments: true },
     });
 
     const allBlocks = await getDb().query.availabilityBlocks.findMany({
@@ -138,6 +139,9 @@ export default function AdminBookingsPage({
   }, [bookings]);
 
   const mailFailed = useMemo(() => bookings.filter((b) => b.notificationError), [bookings]);
+
+  // 결제 기록과 주문 상태가 어긋난 건 — 돈이 걸린 문제라 알림 실패보다 위에 둔다(스펙 §10).
+  const mismatched = useMemo(() => bookings.filter((b) => b.mismatch), [bookings]);
 
   const refresh = async () => {
     await router.replace(router.asPath, undefined, { scroll: false });
@@ -238,6 +242,17 @@ export default function AdminBookingsPage({
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
               )}
 
+              {mismatched.length > 0 && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+                  <strong>결제 기록과 주문 상태가 어긋난 주문이 {mismatched.length}건 있습니다</strong>{' '}
+                  (
+                  {mismatched
+                    .map((b) => `${b.orderNo}${b.latestPaymentKeyPrefix ? ` · ${b.latestPaymentKeyPrefix}…` : ''}`)
+                    .join(', ')}
+                  ). 토스 콘솔에서 실제 결제·취소 상태를 확인한 뒤 처리해 주세요.
+                </div>
+              )}
+
               {mailFailed.length > 0 && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-900 rounded-lg text-sm">
                   <strong>알림 발송에 실패한 예약이 {mailFailed.length}건 있습니다</strong> (
@@ -320,6 +335,13 @@ export default function AdminBookingsPage({
                           <div className="mt-1 text-xs text-gray-500">
                             {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
                           </div>
+                          {booking.mismatch && (
+                            <div className="mt-1">
+                              <span className="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                                미정합
+                              </span>
+                            </div>
+                          )}
                           {booking.notificationError && (
                             <div className="mt-1 text-xs text-amber-700 font-medium">알림 실패</div>
                           )}

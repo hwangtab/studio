@@ -185,6 +185,20 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
             <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
           )}
 
+          {/* 결제 기록과 주문 상태의 불일치는 돈이 걸린 문제라 맨 위에 둔다(스펙 §10). */}
+          {booking.mismatch && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+              <strong className="block mb-1">결제 기록과 주문 상태 불일치 — 토스 콘솔 확인 필요</strong>
+              주문 상태는 “{ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}”인데 결제
+              기록은 {booking.paymentCount}건입니다
+              {booking.latestPaymentKeyPrefix && ` (최신 결제 ${booking.latestPaymentKeyPrefix}…)`}.
+              <span className="block mt-2 text-red-700">
+                토스 콘솔에서 실제 승인·취소 상태를 확인한 뒤, 필요하면 환불 또는 수동 정정을 진행해
+                주세요.
+              </span>
+            </div>
+          )}
+
           {/* gcalError·notificationError는 결제·환불은 정상 처리됐지만 후속 처리(캘린더 등록,
               메일 발송)만 실패한 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 그대로 보여준다. */}
           {booking.notificationError && (

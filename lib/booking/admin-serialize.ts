@@ -24,8 +24,28 @@ export interface AdminBookingListItem {
   bookingStatus: Booking['status'] | null;
   notificationError: string | null;
   gcalError: string | null;
+  /** 이 주문에 기록된 결제 건수. 0인데 주문이 paid거나, 있는데 주문이 미결제면 미정합이다. */
+  paymentCount: number;
+  /**
+   * 최신 결제의 paymentKey 앞 8자.
+   *
+   * 토스 콘솔에서 같은 결제를 찾는 데 이만큼이면 충분하다. 전체 키는 취소 API의 인자라
+   * 화면·목록 응답에 통째로 싣지 않는다(manageToken 제외 원칙과 같은 이유).
+   */
+  latestPaymentKeyPrefix: string | null;
+  /**
+   * 주문 상태와 결제 기록이 어긋난 건 (스펙 §10 미정합 주문 목록).
+   *
+   * 두 방향을 잡는다. (1) 주문은 미결제(pending·failed·expired)인데 payments 행이 있다 —
+   * 돈은 들어왔는데 확정 기록이 실패했거나 승인 뒤 상태 전이가 끊긴 경우. (2) 예약은
+   * confirmed인데 주문이 failed — 예약만 살아 있고 결제는 실패로 남은 경우.
+   * 어느 쪽이든 관리자가 토스 콘솔과 대조해야 한다.
+   */
+  mismatch: boolean;
   createdAt: string;
 }
+
+const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 'failed', 'expired']);
 
 /**
  * 예약 한 건(주문+세션)을 관리자 화면용으로 편다.
@@ -39,10 +59,13 @@ export interface AdminBookingListItem {
  * NOT EXISTS 겹침 검사에 걸리면 order만 남고 booking은 생기지 않는다).
  */
 export const serializeBookingForAdmin = (
-  order: Order & { bookings: Booking[] },
+  order: Order & { bookings: Booking[]; payments: Payment[] },
 ): AdminBookingListItem => {
   const booking = order.bookings[0];
   const product = booking ? getProduct(booking.productId) : undefined;
+  const latestPayment = order.payments
+    .slice()
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
 
   return {
     id: order.id,
@@ -64,6 +87,11 @@ export const serializeBookingForAdmin = (
     bookingStatus: booking?.status ?? null,
     notificationError: order.notificationError,
     gcalError: booking?.gcalError ?? null,
+    paymentCount: order.payments.length,
+    latestPaymentKeyPrefix: latestPayment ? latestPayment.paymentKey.slice(0, 8) : null,
+    mismatch:
+      (UNPAID_ORDER_STATUSES.has(order.status) && order.payments.length > 0) ||
+      (booking?.status === 'confirmed' && order.status === 'failed'),
     createdAt: order.createdAt.toISOString(),
   };
 };

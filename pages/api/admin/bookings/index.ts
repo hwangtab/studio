@@ -24,7 +24,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const allOrders = await getDb().query.orders.findMany({
         orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
         limit: LIST_LIMIT,
-        with: { bookings: true },
+        // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
+        with: { bookings: true, payments: true },
       });
 
       return res.status(200).json({
