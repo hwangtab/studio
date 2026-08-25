@@ -3,15 +3,17 @@ jest.mock('./toss', () => ({ fetchPayment: jest.fn() }));
 jest.mock('./confirm', () => ({ confirmBookingPayment: jest.fn() }));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 (confirm.test.ts·
 // cancel.test.ts와 동일 이유 — webhook.ts도 한 실행 안에서 getDb()를 여러 번 부른다:
-// webhookEvents insert → (분기에 따라) refunds insert·bookings/orders update가 담긴 batch).
+// webhookEvents insert → (CANCELED 분기라면) booking 선점 run → refunds insert·orders update가
+// 담긴 batch). run 기본값은 rowsAffected:1 — "선점 성공"이 기본 경로다(cancel.test.ts와 동일).
 jest.mock('../../db/client', () => {
   const batch = jest.fn().mockResolvedValue([]);
+  const run = jest.fn().mockResolvedValue({ rowsAffected: 1 });
   const insertValues = jest.fn().mockReturnValue({});
   const insert = jest.fn().mockReturnValue({ values: insertValues });
   const updateWhere = jest.fn().mockReturnValue({});
   const updateSet = jest.fn().mockReturnValue({ where: updateWhere });
   const update = jest.fn().mockReturnValue({ set: updateSet });
-  const db = { batch, insert, update };
+  const db = { batch, run, insert, update };
   return { getDb: () => db };
 });
 
@@ -23,6 +25,7 @@ import { getDb } from '../../db/client';
 
 type MockDb = {
   batch: jest.Mock;
+  run: jest.Mock;
   insert: jest.Mock;
   update: jest.Mock;
 };
@@ -138,10 +141,11 @@ describe('processTossWebhook', () => {
 
     expect(result).toEqual({ status: 200 }); // 라우트 관점에선 정상 종료 — 관리자 화면에서 발견
     expect(consoleErrorSpy).toHaveBeenCalled();
+    expect(mockDb().run).not.toHaveBeenCalled(); // 선점(claim)까지 가지 않고 그 전에 스킵됨
     expect(mockDb().batch).not.toHaveBeenCalled(); // refunds insert·상태 전이 모두 스킵됨
   });
 
-  it('CANCELED 동기화는 booking을 cancelled로, order를 refunded로 전이한다 (취소 API는 다시 부르지 않는다)', async () => {
+  it('CANCELED 동기화는 booking 선점(claim) 후 refunds insert + orders를 refunded로 전이한다 (취소 API는 다시 부르지 않는다)', async () => {
     const cancelledTossResult = {
       ok: true,
       payment: {
@@ -157,13 +161,57 @@ describe('processTossWebhook', () => {
 
     expect(result).toEqual({ status: 200 });
     const db = mockDb();
-    expect(db.batch).toHaveBeenCalled();
+    expect(db.run).toHaveBeenCalledTimes(1); // booking 선점 UPDATE(cancel.ts와 동일 패턴)
+    expect(db.batch).toHaveBeenCalled(); // batch는 refunds insert + orders update 2문장만
     const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '토스 외부 취소 동기화');
     expect(refundInsert).toMatchObject({ paymentId: 'p1', amount: 275000, requestedBy: 'webhook', status: 'done' });
-    const bookingUpdate = setCallsOf(db).find((c) => c.status === 'cancelled');
-    expect(bookingUpdate).toBeDefined();
     const orderUpdate = setCallsOf(db).find((c) => c.status === 'refunded');
     expect(orderUpdate).toBeDefined();
+  });
+
+  it('booking 선점(claim)이 실패(rowsAffected 0)하면 — 다른 이벤트가 이미 동기화 — batch를 실행하지 않는다', async () => {
+    // paymentKey:status가 멱등 키라 PARTIAL_CANCELED와 CANCELED 두 이벤트가 동시에 통과해
+    // 여기 도달할 수 있다. 먼저 온 이벤트가 booking을 이미 cancelled로 바꿨다면, 나중 이벤트의
+    // claim UPDATE...WHERE status='confirmed'는 rowsAffected 0을 받는다 — refunds 중복
+    // INSERT를 막아야 한다.
+    const cancelledTossResult = {
+      ok: true,
+      payment: {
+        paymentKey: 'pk1', orderId: 'SNB-1', status: 'CANCELED', totalAmount: 275000,
+        cancels: [{ transactionKey: 'ck1', cancelAmount: 275000 }],
+      },
+    };
+    (fetchPayment as jest.Mock).mockResolvedValue(cancelledTossResult);
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    const db = mockDb();
+    db.run.mockResolvedValueOnce({ rowsAffected: 0 });
+
+    const cancelledPayload = { data: { paymentKey: 'pk1', status: 'CANCELED' } };
+    const result = await processTossWebhook(cancelledPayload);
+
+    expect(result).toEqual({ status: 200 }); // 웹훅 관점에선 정상 종료 — 이미 처리된 것뿐
+    expect(db.run).toHaveBeenCalledTimes(1); // claim 시도는 했다
+    expect(db.batch).not.toHaveBeenCalled(); // 졌으니 refunds insert·orders update 모두 스킵
+  });
+
+  it('재조회 응답에 cancels가 없어 cancelled 합계가 0이면 orders 상태를 그대로 유지한다 (partially_refunded로 오기록하지 않는다)', async () => {
+    const cancelledTossResult = {
+      ok: true,
+      payment: { paymentKey: 'pk1', orderId: 'SNB-1', status: 'CANCELED', totalAmount: 275000 }, // cancels 필드 자체가 없음
+    };
+    (fetchPayment as jest.Mock).mockResolvedValue(cancelledTossResult);
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid' }));
+
+    const cancelledPayload = { data: { paymentKey: 'pk1', status: 'CANCELED' } };
+    const result = await processTossWebhook(cancelledPayload);
+
+    expect(result).toEqual({ status: 200 });
+    const db = mockDb();
+    expect(db.batch).toHaveBeenCalled();
+    const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '토스 외부 취소 동기화');
+    expect(refundInsert).toMatchObject({ amount: 0 });
+    const orderUpdate = setCallsOf(db).find((c) => 'status' in c);
+    expect(orderUpdate).toMatchObject({ status: 'paid' }); // 기존 상태(paid) 유지 — partially_refunded 아님
   });
 
   it('재조회(fetchPayment) 네트워크 실패는 500을 반환한다 (토스가 재시도하도록)', async () => {

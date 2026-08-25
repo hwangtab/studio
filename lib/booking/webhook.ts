@@ -1,7 +1,7 @@
-import { and, eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, orders, refunds, webhookEvents } from '../../db/schema';
+import { orders, refunds, webhookEvents } from '../../db/schema';
 import { confirmBookingPayment } from './confirm';
 import { findOrderByOrderNo } from './service';
 import { fetchPayment, type TossPayment } from './toss';
@@ -30,6 +30,16 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
     paymentRow = order.payments[0];
   }
 
+  // 원자적 선점 — cancel.ts의 claim 패턴을 그대로 미러링한다. paymentKey:status가 멱등 키라
+  // PARTIAL_CANCELED와 CANCELED는 서로 다른 이벤트로 취급되어 둘 다 webhookEvents INSERT를
+  // 통과할 수 있다. 두 이벤트가 동시에 여기 도달하면 위 읽기 시점엔 둘 다 booking을
+  // confirmed로 보지만, UPDATE...WHERE status='confirmed'는 하나만 rowsAffected 1을 받는다
+  // — 진 쪽은 refunds를 중복 INSERT하지 않고 조용히 물러난다(다른 이벤트가 이미 동기화했다).
+  const claim = await db.run(
+    sql`UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'confirmed'`,
+  );
+  if (Number(claim.rowsAffected) === 0) return;
+
   const cancelled = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
   const now = new Date();
   await db.batch([
@@ -39,11 +49,9 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
       tossTransactionKey: payment.cancels?.[payment.cancels.length - 1]?.transactionKey ?? null,
       status: 'done',
     }),
-    db.update(bookings)
-      .set({ status: 'cancelled', cancelledAt: now, updatedAt: now })
-      .where(and(eq(bookings.id, booking.id), eq(bookings.status, 'confirmed'))),
     db.update(orders)
-      .set({ status: cancelled >= order.totalAmount ? 'refunded' : 'partially_refunded', updatedAt: now })
+      // cancelled가 0이면(재조회 응답에 cancels 부재) 부분환불로 오기록하지 않고 기존 상태를 유지한다.
+      .set({ status: cancelled >= order.totalAmount ? 'refunded' : cancelled > 0 ? 'partially_refunded' : order.status, updatedAt: now })
       .where(eq(orders.id, order.id)),
   ]);
 };
