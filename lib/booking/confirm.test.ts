@@ -139,6 +139,21 @@ describe('confirmBookingPayment', () => {
     expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
   });
 
+  it('batch도 멱등 판정 조회도 둘 다 실패하면 throw 대신 recording_failed로 떨어진다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    const db = mockDb();
+    db.batch.mockRejectedValueOnce(new Error('DB 커넥션 끊김'));
+    db.query.payments.findFirst.mockRejectedValueOnce(new Error('같은 커넥션도 죽음'));
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toEqual({
+      ok: false,
+      code: 'recording_failed',
+      message: '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.',
+    });
+    expect(consoleErrorSpy).toHaveBeenCalled();
+  });
+
   it('gcal 실패 시 bookings.gcalError 기록이 호출되고 승인 결과는 성공으로 유지된다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);

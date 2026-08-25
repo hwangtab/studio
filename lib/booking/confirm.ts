@@ -78,9 +78,20 @@ export const confirmBookingPayment = async (input: {
   } catch (error) {
     // 토스 승인은 이미 끝났다 — 이 실패가 "동시 확정에서 다른 쪽이 이겼다"(멱등, paymentKey
     // unique 위반)인지 "진짜 DB 장애"인지는 payments에 이 paymentKey가 이미 있는지로 가른다.
-    const existing = await db.query.payments.findFirst({
-      where: (t, { eq }) => eq(t.paymentKey, toss.payment.paymentKey),
-    });
+    let existing: unknown;
+    try {
+      existing = await db.query.payments.findFirst({
+        where: (t, { eq }) => eq(t.paymentKey, toss.payment.paymentKey),
+      });
+    } catch (lookupError) {
+      // 멱등 판정 조회 자체가 실패 — batch와 같은 연결이 죽었을 공산이 크다(rethrow 금지).
+      // "판정 불가"로 간주해 무기록 500 대신 아래 recording_failed 경로로 떨어뜨린다.
+      console.error('[booking-confirm] 멱등 판정 조회 실패', {
+        orderNo: order.orderNo,
+        paymentKey: toss.payment.paymentKey,
+        error: lookupError,
+      });
+    }
     if (existing) return { ok: true, orderNo: order.orderNo };
     console.error('[booking-confirm] 결제 승인됨, DB 기록 실패 — 웹훅 복구 대기', {
       orderNo: order.orderNo,
