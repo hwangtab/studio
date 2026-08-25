@@ -74,7 +74,9 @@ Studio NOL은 토스페이먼츠와 가맹 계약을 맺고 온라인 예약·�
 → 통과 시 `pending`으로 INSERT. 겹침 검사와 INSERT 사이에 다른 요청이 끼지
 못하게 트랜잭션으로 묶는다(전자계약 `lib/contracts/conflict.ts`,
 `sign-transaction.ts`와 같은 패턴). `pending`은 15분간 슬롯을 점유하고,
-기존 크론(`pages/api/cron/`)에 만료 처리 작업을 추가해 해제한다.
+만료는 크론이 아니라 **lazy 방식**으로 처리한다 — 겹침 검사가 15분 지난
+pending을 점유로 치지 않고, 슬롯 조회·관리자 목록이 열릴 때 상태를 정리한다
+(`expireOverdueContracts`와 같은 패턴, Vercel 크론 빈도 제약 회피).
 
 ## 5. 결제 흐름 (토스 결제위젯 v2)
 
@@ -147,7 +149,9 @@ confirmed/pending 예약 − 수동 블록. 슬롯 단위는 1시간, 상품별 
 - 시간제 상품은 시간 수 선택 → 금액·슬롯 길이 동시 계산
 - 금액 표기는 항상 분해: "상품가 250,000 + VAT 25,000 = 275,000원".
   숫자는 `data/pricing.ts` 상수 + `formatPriceAmount`만 사용(리터럴 금지)
-- 예약 페이지는 사이트맵 `pageRouteMap` 등록 + `pageLastmod` 생성 절차 준수
+- 예약 퍼널(`/ko/booking/*`)은 전자계약과 같은 트랜잭셔널 페이지로 취급:
+  **noindex + 사이트맵 제외 + robots disallow**. 색인 진입은 기존 서비스 LP가
+  담당하므로 `pageRouteMap`/`pageLastmod` 절차는 해당 없음
 - 디자인은 기존 디자인 시스템(BaseCard glass variant 등) 관례를 따르되,
   결제위젯 영역은 토스 위젯 스타일 그대로 둔다
 
@@ -176,7 +180,8 @@ confirmed/pending 예약 − 수동 블록. 슬롯 단위는 1시간, 상품별 
 - 승인 성공 후 DB 기록 실패: 토스 결제는 성공했는데 우리 상태가 pending인
   상황 — 웹훅 재조회 경로가 복구한다. 웹훅도 실패하면 관리자 화면의
   "미정합 주문" 목록에 노출
-- 슬롯 선점 후 결제 이탈: 15분 후 크론이 `orders`→expired, `bookings` 해제
+- 슬롯 선점 후 결제 이탈: 15분 경과 시 겹침 검사에서 즉시 무시되고,
+  다음 슬롯 조회·관리자 목록 접근 때 `orders`→expired로 정리(lazy)
 - FreeBusy 조회 실패: fail-closed (§6)
 - 환불 API 실패: `refunds.status`로 실패 기록, 관리자 재시도
 
