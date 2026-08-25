@@ -53,8 +53,9 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
         }
     };
 
+    // gap-1(모바일): 페이지 버튼 5개 + 화살표 2개가 360px 뷰포트에서 12px 넘치던 것 해소
     return (
-        <nav className={`flex justify-center items-center space-x-2 ${className}`} aria-label={t('pagination.label')} onKeyDown={handleNavKeyDown}>
+        <nav className={`flex justify-center items-center gap-1 sm:gap-2 ${className}`} aria-label={t('pagination.label')} onKeyDown={handleNavKeyDown}>
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
@@ -74,7 +75,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange, className = '', loc
                 <button
                     key={page}
                     onClick={() => onPageChange(page)}
-                    className={`flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md text-sm font-medium transition-colors
+                    className={`flex items-center justify-center min-h-[44px] px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors
             ${currentPage === page
                             ? 'bg-primary text-white pointer-events-none'
                             : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'

@@ -116,7 +116,9 @@ const ImageHero = ({
               부착 여부에 따라 AA 대비가 갈리던 문제를 컴포넌트 레벨에서 항상 보장. */}
           {subtitle && (
             <div
-              className={`text-xl md:text-3xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 whitespace-pre-line drop-shadow-lg ${textBreakClass} ${textAlign === 'center' ? 'mx-auto' : ''}`}
+              // [text-wrap:balance]: 부제가 컨테이너 폭에서 여러 줄로 감길 때 마지막 줄에
+              // 한두 어절만 남는 고아 줄을 방지. 강제 개행(\n·block span) 세그먼트별로 적용된다.
+              className={`text-xl md:text-3xl text-gray-200 mb-10 max-w-2xl leading-relaxed opacity-90 whitespace-pre-line [text-wrap:balance] drop-shadow-lg ${textBreakClass} ${textAlign === 'center' ? 'mx-auto' : ''}`}
             >
               {subtitle}
             </div>

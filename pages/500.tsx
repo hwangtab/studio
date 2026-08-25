@@ -56,9 +56,8 @@ const ServerErrorPage: NextPage = () => {
         {...pageContentMotionProps}
       >
         <>
-          {t('serverError.messageLine1')}
-          <br className="hidden sm:block" />
-          {t('serverError.messageLine2')}
+          <span className="block">{t('serverError.messageLine1')}</span>
+          <span className="block">{t('serverError.messageLine2')}</span>
         </>
       </m.p>
 

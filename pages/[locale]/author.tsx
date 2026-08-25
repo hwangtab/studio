@@ -261,8 +261,8 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
           locale={locale}
           title={
             <>
-              {profile.cta.titleLine1}<br />
-              <span className="text-primary">{profile.cta.titleHighlight}</span>
+              <span className="block">{profile.cta.titleLine1}</span>
+              <span className="block text-primary">{profile.cta.titleHighlight}</span>
             </>
           }
           subtitle={profile.cta.subtitle}

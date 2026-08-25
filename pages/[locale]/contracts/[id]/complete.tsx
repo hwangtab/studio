@@ -177,11 +177,14 @@ export default function ContractCompletePage({
           <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
             {/* 파기된 계약은 이름 자리에 "(개인정보 파기됨)"이 들어 있다. 그대로 부르면
                 기계가 사람 이름을 잘못 읽은 것처럼 보인다. */}
-            {purged ? '계약서 서명이 완료된 계약입니다.' : `${contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.`}
-            <br />
+            <span className="block">
+              {purged ? '계약서 서명이 완료된 계약입니다.' : `${contract.customerName}님, 계약서 서명이 정상적으로 완료되었습니다.`}
+            </span>
             {/* 메일은 이 화면을 그린 뒤에 발송되므로 "보냈다"고 단정할 수 없다. 아래에
                 내려받기 버튼과 전화번호가 있으니, 오지 않았을 때 할 일을 함께 적는다. */}
-            {purged ? '보관 기간이 지나 개인정보를 파기했습니다.' : '서명본 PDF를 첨부한 확인 메일도 함께 보내 드립니다.'}
+            <span className="block">
+              {purged ? '보관 기간이 지나 개인정보를 파기했습니다.' : '서명본 PDF를 첨부한 확인 메일도 함께 보내 드립니다.'}
+            </span>
           </p>
 
           <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
@@ -211,9 +214,8 @@ export default function ContractCompletePage({
               왜 받을 수 없는지 알린다. */}
           {purged ? (
             <p className="text-sm text-gray-600 dark:text-gray-600 bg-gray-50 dark:bg-gray-50 rounded-xl p-4 mb-6 leading-relaxed">
-              보관 기간(3년)이 지나 계약 원본과 개인정보를 파기했습니다.
-              <br />
-              문의는 010-4255-7893으로 연락해 주세요.
+              <span className="block">보관 기간(3년)이 지나 계약 원본과 개인정보를 파기했습니다.</span>
+              <span className="block">문의는 010-4255-7893으로 연락해 주세요.</span>
             </p>
           ) : (
             <>
@@ -252,9 +254,8 @@ export default function ContractCompletePage({
                   role="alert"
                   className="mt-3 text-sm text-red-700 dark:text-red-700 bg-red-50 dark:bg-red-50 rounded-xl p-3 leading-relaxed"
                 >
-                  {downloadError}
-                  <br />
-                  계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.
+                  <span className="block">{downloadError}</span>
+                  <span className="block">계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.</span>
                 </p>
               )}
 

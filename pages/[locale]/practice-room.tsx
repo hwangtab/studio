@@ -137,11 +137,9 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         title={t('practiceRoom.hero.title')}
         subtitle={
           <>
-            {t('practiceRoom.hero.subtitleLine1')}
-            <br />
-            {t('practiceRoom.hero.subtitleLine2')}
-            <br />
-            {t('practiceRoom.hero.subtitleLine3')}
+            <span className="block">{t('practiceRoom.hero.subtitleLine1')}</span>
+            <span className="block">{t('practiceRoom.hero.subtitleLine2')}</span>
+            <span className="block">{t('practiceRoom.hero.subtitleLine3')}</span>
           </>
         }
         backgroundImage="/images/room5.webp"
@@ -424,14 +422,14 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           locale={locale}
           title={
             <>
-              {t('practiceRoom.cta.titleLine1')}<br />
-              <span className="text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
+              <span className="block">{t('practiceRoom.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('practiceRoom.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('practiceRoom.cta.subtitleLine2')}
+              <span className="block">{t('practiceRoom.cta.subtitleLine1')}</span>
+              <span className="block">{t('practiceRoom.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/room8.webp"

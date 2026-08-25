@@ -57,9 +57,8 @@ const NotFoundPage: NextPage = () => {
         {...pageContentMotionProps}
       >
         <>
-          {t('notFound.messageLine1')}
-          <br className="hidden sm:block" />
-          {t('notFound.messageLine2')}
+          <span className="block">{t('notFound.messageLine1')}</span>
+          <span className="block">{t('notFound.messageLine2')}</span>
         </>
       </m.p>
 

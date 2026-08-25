@@ -154,7 +154,9 @@ export const BenefitCard = ({
                     href={calendarLinkUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary underline hover:text-primary-dark"
+                    /* URL은 공백이 없어 keep-all에서 끊길 자리가 없다 — 좁은 카드(3~4열
+                       그리드)에서 카드 밖으로 넘치던 것을 break-all로 허용 */
+                    className="text-primary underline hover:text-primary-dark break-all"
                   >
                     {calendarLinkLabel}
                   </a>

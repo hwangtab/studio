@@ -157,9 +157,8 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
         title={t('coverVideo.hero.title')}
         subtitle={
           <>
-            {t('coverVideo.hero.subtitleLine1')}
-            <br />
-            {t('coverVideo.hero.subtitleLine2')}
+            <span className="block">{t('coverVideo.hero.subtitleLine1')}</span>
+            <span className="block">{t('coverVideo.hero.subtitleLine2')}</span>
           </>
         }
         backgroundImage="/images/recording1.webp"
@@ -372,14 +371,14 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
           locale={locale}
           title={
             <>
-              {t('coverVideo.cta.titleLine1')}<br />
-              <span className="text-primary">{t('coverVideo.cta.titleHighlight')}</span>
+              <span className="block">{t('coverVideo.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('coverVideo.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('coverVideo.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('coverVideo.cta.subtitleLine2')}
+              <span className="block">{t('coverVideo.cta.subtitleLine1')}</span>
+              <span className="block">{t('coverVideo.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/recording2.webp"

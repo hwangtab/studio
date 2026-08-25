@@ -41,8 +41,8 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             title: t('stories.cta.recording.title'),
             description: (
                 <>
-                    {t('stories.cta.recording.descriptionLine1')}<br className="hidden md:block" />
-                    {t('stories.cta.recording.descriptionLine2')}
+                    <span className="block">{t('stories.cta.recording.descriptionLine1')}</span>
+                    <span className="block">{t('stories.cta.recording.descriptionLine2')}</span>
                 </>
             ),
             // 목적지는 /pricing이 아니라 녹음 서비스 LP다. 상업 쿼리에서 LP의 CTR은
@@ -75,8 +75,8 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             title: t('stories.cta.lesson.title'),
             description: (
                 <>
-                    {t('stories.cta.lesson.descriptionLine1')}<br className="hidden md:block" />
-                    {t('stories.cta.lesson.descriptionLine2')}
+                    <span className="block">{t('stories.cta.lesson.descriptionLine1')}</span>
+                    <span className="block">{t('stories.cta.lesson.descriptionLine2')}</span>
                 </>
             ),
             primaryLink: getLink('/lesson'),
@@ -104,8 +104,8 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             title: t('stories.cta.practice.title'),
             description: (
                 <>
-                    {t('stories.cta.practice.descriptionLine1')}<br className="hidden md:block" />
-                    {t('stories.cta.practice.descriptionLine2')}
+                    <span className="block">{t('stories.cta.practice.descriptionLine1')}</span>
+                    <span className="block">{t('stories.cta.practice.descriptionLine2')}</span>
                 </>
             ),
             primaryLink: getLink('/practice-room'),
@@ -133,8 +133,8 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             title: t('stories.cta.production.title'),
             description: (
                 <>
-                    {t('stories.cta.production.descriptionLine1')}<br className="hidden md:block" />
-                    {t('stories.cta.production.descriptionLine2')}
+                    <span className="block">{t('stories.cta.production.descriptionLine1')}</span>
+                    <span className="block">{t('stories.cta.production.descriptionLine2')}</span>
                 </>
             ),
             // production 스토리 367편이 전부 /contact(일반 문의함)로 수렴하던 것을
@@ -165,8 +165,8 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             title: t('stories.cta.release.title'),
             description: (
                 <>
-                    {t('stories.cta.release.descriptionLine1')}<br className="hidden md:block" />
-                    {t('stories.cta.release.descriptionLine2')}
+                    <span className="block">{t('stories.cta.release.descriptionLine1')}</span>
+                    <span className="block">{t('stories.cta.release.descriptionLine2')}</span>
                 </>
             ),
             // 발매·유통·수익 의도 독자용. 음악 비즈니스 글의 production 폴백은

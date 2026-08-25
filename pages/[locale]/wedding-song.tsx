@@ -130,9 +130,8 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         title={t('weddingSong.hero.title')}
         subtitle={
           <>
-            {t('weddingSong.hero.subtitleLine1')}
-            <br />
-            {t('weddingSong.hero.subtitleLine2')}
+            <span className="block">{t('weddingSong.hero.subtitleLine1')}</span>
+            <span className="block">{t('weddingSong.hero.subtitleLine2')}</span>
           </>
         }
         backgroundImage="/images/recording3.webp"
@@ -330,14 +329,14 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
           locale={locale}
           title={
             <>
-              {t('weddingSong.cta.titleLine1')}<br />
-              <span className="text-primary">{t('weddingSong.cta.titleHighlight')}</span>
+              <span className="block">{t('weddingSong.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('weddingSong.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('weddingSong.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('weddingSong.cta.subtitleLine2')}
+              <span className="block">{t('weddingSong.cta.subtitleLine1')}</span>
+              <span className="block">{t('weddingSong.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/recording3.webp"

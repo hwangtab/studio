@@ -159,9 +159,8 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         title={t('voiceActing.hero.title')}
         subtitle={
           <>
-            {t('voiceActing.hero.subtitleLine1')}
-            <br />
-            {t('voiceActing.hero.subtitleLine2')}
+            <span className="block">{t('voiceActing.hero.subtitleLine1')}</span>
+            <span className="block">{t('voiceActing.hero.subtitleLine2')}</span>
           </>
         }
         backgroundImage="/images/hardware3.webp"
@@ -440,14 +439,14 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
           locale={locale}
           title={
             <>
-              {t('voiceActing.cta.titleLine1')}<br />
-              <span className="text-primary">{t('voiceActing.cta.titleHighlight')}</span>
+              <span className="block">{t('voiceActing.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('voiceActing.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('voiceActing.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('voiceActing.cta.subtitleLine2')}
+              <span className="block">{t('voiceActing.cta.subtitleLine1')}</span>
+              <span className="block">{t('voiceActing.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/hardware3.webp"

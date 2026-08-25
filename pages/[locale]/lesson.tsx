@@ -119,10 +119,8 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                 title={t('lesson.hero.title')}
                 subtitle={
                     <>
-                        <span className="break-keep">{t('lesson.hero.subtitleLine1')}</span>
-                        <br />
-                        <span className="break-keep">{t('lesson.hero.subtitleLine2')}</span>
-                        <br />
+                        <span className="block break-keep">{t('lesson.hero.subtitleLine1')}</span>
+                        <span className="block break-keep">{t('lesson.hero.subtitleLine2')}</span>
                         <span className="inline-block mt-3 px-4 py-1.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/25 text-base md:text-lg font-semibold break-keep">
                             {t('lesson.hero.subtitleLine3')}
                         </span>
@@ -188,14 +186,15 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     icon={GraduationCap}
                     title={
                         <>
-                            {t('lesson.intro.titleLine1')}<br />
-                            <span className="text-primary">{t('lesson.intro.titleHighlight')}</span>
+                            <span className="block">{t('lesson.intro.titleLine1')}</span>
+                            <span className="block text-primary">{t('lesson.intro.titleHighlight')}</span>
                         </>
                     }
                     subtitle={
                         <>
-                            {t('lesson.intro.subtitleLine1')} <br className="hidden md:block" />
-                            {t('lesson.intro.subtitleLine2')} <br className="hidden md:block" />
+                            {/* 세 조각이 이어지는 한 단락이라 강제 개행 없이 자연 줄바꿈에 맡긴다.
+                                고정 <br>은 조각이 먼저 감기는 폭에서 계단식 줄바꿈을 만들었다. */}
+                            {t('lesson.intro.subtitleLine1')} {t('lesson.intro.subtitleLine2')}{' '}
                             <strong>{t('lesson.intro.subtitleLine3')}</strong>
                         </>
                     }
@@ -431,14 +430,14 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     locale={locale}
                     title={
                         <>
-                            {t('lesson.cta.titleLine1')}<br />
-                            <span className="text-primary">{t('lesson.cta.titleHighlight')}</span>
+                            <span className="block">{t('lesson.cta.titleLine1')}</span>
+                            <span className="block text-primary">{t('lesson.cta.titleHighlight')}</span>
                         </>
                     }
                     subtitle={
                         <>
-                            {t('lesson.cta.subtitleLine1')}<br className="hidden md:block" />
-                            {t('lesson.cta.subtitleLine2')}
+                            <span className="block">{t('lesson.cta.subtitleLine1')}</span>
+                            <span className="block">{t('lesson.cta.subtitleLine2')}</span>
                         </>
                     }
                     imageSrc="/images/lesson1.webp"

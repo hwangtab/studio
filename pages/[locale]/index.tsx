@@ -92,7 +92,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             )}
           </>
         }
-        subtitle={heroContent.subtitle}
+        subtitle={
+          // \n 강제 개행이 있으면 브라우저가 text-wrap: balance를 포기해, 좁은 화면에서
+          // 마지막 행이 감길 때 "시작하세요." 같은 고아 줄이 생긴다. 행별 block span으로
+          // 나눠 각 행 안에서 balance가 동작하게 한다.
+          heroContent.subtitle.split('\n').map((line) => (
+            <span key={line} className="block">{line}</span>
+          ))
+        }
         backgroundImage={heroContent.backgroundImage}
         imageAlt={heroContent.imageAlt}
         minHeight="min-h-[100svh]"
@@ -349,14 +356,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           locale={locale}
           title={
             <>
-              {t('home.cta.titleLine1')}<br />
-              <span className="text-primary">{t('home.cta.titleHighlight')}</span>
+              <span className="block">{t('home.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('home.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('home.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('home.cta.subtitleLine2')}
+              <span className="block">{t('home.cta.subtitleLine1')}</span>
+              <span className="block">{t('home.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/hardware5.webp"

@@ -155,9 +155,8 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         title={t('recording.hero.title')}
         subtitle={
           <>
-            {t('recording.hero.subtitleLine1')}
-            <br />
-            {t('recording.hero.subtitleLine2')}
+            <span className="block">{t('recording.hero.subtitleLine1')}</span>
+            <span className="block">{t('recording.hero.subtitleLine2')}</span>
           </>
         }
         backgroundImage="/images/recording1.webp"
@@ -370,14 +369,14 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
           locale={locale}
           title={
             <>
-              {t('recording.cta.titleLine1')}<br />
-              <span className="text-primary">{t('recording.cta.titleHighlight')}</span>
+              <span className="block">{t('recording.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('recording.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('recording.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('recording.cta.subtitleLine2')}
+              <span className="block">{t('recording.cta.subtitleLine1')}</span>
+              <span className="block">{t('recording.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/recording1.webp"

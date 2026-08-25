@@ -189,9 +189,8 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         title={t('mixingMastering.hero.title')}
         subtitle={
           <>
-            {t('mixingMastering.hero.subtitleLine1')}
-            <br />
-            {t('mixingMastering.hero.subtitleLine2')}
+            <span className="block">{t('mixingMastering.hero.subtitleLine1')}</span>
+            <span className="block">{t('mixingMastering.hero.subtitleLine2')}</span>
           </>
         }
         backgroundImage="/images/console.webp"
@@ -528,14 +527,14 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           locale={locale}
           title={
             <>
-              {t('mixingMastering.cta.titleLine1')}<br />
-              <span className="text-primary">{t('mixingMastering.cta.titleHighlight')}</span>
+              <span className="block">{t('mixingMastering.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('mixingMastering.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('mixingMastering.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('mixingMastering.cta.subtitleLine2')}
+              <span className="block">{t('mixingMastering.cta.subtitleLine1')}</span>
+              <span className="block">{t('mixingMastering.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/console.webp"

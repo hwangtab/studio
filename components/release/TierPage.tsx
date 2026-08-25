@@ -387,8 +387,8 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           locale={locale}
           title={
             <>
-              {t('releaseProject.cta.titleLine1')}<br />
-              <span className="text-primary">{t('releaseProject.cta.titleHighlight')}</span>
+              <span className="block">{t('releaseProject.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('releaseProject.cta.titleHighlight')}</span>
             </>
           }
           subtitle={t('releaseProject.cta.subtitle')}

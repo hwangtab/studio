@@ -100,9 +100,8 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           title: siteConfig.name,
           subtitle: (
             <>
-              {t('about.subtitle')}
-              <br />
-              {t('about.description')}
+              <span className="block">{t('about.subtitle')}</span>
+              <span className="block">{t('about.description')}</span>
             </>
           ),
           backgroundImage: "/images/recording15.webp",
@@ -389,14 +388,14 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           locale={locale}
           title={
             <>
-              {t('about.cta.titleLine1')}<br />
-              <span className="text-primary">{t('about.cta.titleHighlight')}</span>
+              <span className="block">{t('about.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('about.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('about.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('about.cta.subtitleLine2')}
+              <span className="block">{t('about.cta.subtitleLine1')}</span>
+              <span className="block">{t('about.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/hardware3.webp"

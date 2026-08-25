@@ -167,7 +167,8 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
                 </p>
                 <p className="typo-card-body leading-loose">
                   {t('studioInfo.intro.paragraphs.0')}
-                  <br className="mb-2" />
+                </p>
+                <p className="typo-card-body leading-loose">
                   {t('studioInfo.intro.paragraphs.1')}
                 </p>
                 <p className="typo-card-body leading-loose">
@@ -281,14 +282,14 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
           locale={locale}
           title={
             <>
-              {t('studioInfo.cta.titleLine1')}<br />
-              <span className="text-primary">{t('studioInfo.cta.titleHighlight')}</span>
+              <span className="block">{t('studioInfo.cta.titleLine1')}</span>
+              <span className="block text-primary">{t('studioInfo.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
             <>
-              {t('studioInfo.cta.subtitleLine1')}<br className="hidden md:block" />
-              {t('studioInfo.cta.subtitleLine2')}
+              <span className="block">{t('studioInfo.cta.subtitleLine1')}</span>
+              <span className="block">{t('studioInfo.cta.subtitleLine2')}</span>
             </>
           }
           imageSrc="/images/studio2.webp"

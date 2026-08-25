@@ -171,9 +171,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         title={t('pricing.hero.title')}
         subtitle={
           <>
-            {t('pricing.hero.subtitleLine1')}
-            <br />
-            {t('pricing.hero.subtitleLine2')}
+            <span className="block">{t('pricing.hero.subtitleLine1')}</span>
+            <span className="block">{t('pricing.hero.subtitleLine2')}</span>
           </>
         }
         backgroundImage="/images/hardware2.webp"
