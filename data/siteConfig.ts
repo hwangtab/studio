@@ -188,6 +188,8 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
     }),
     // 통신판매업 신고번호. 신고 완료 후 값 기입 — 빈 문자열인 동안 소비처(Footer 등)는 렌더하지 않는다.
     mailOrderSalesNumber: '',
+    // 사업자등록번호 (전자상거래 표시 의무 — 약관·푸터 표기)
+    businessRegistrationNumber: '753-74-00653',
   };
 };
 

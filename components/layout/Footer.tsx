@@ -73,12 +73,13 @@ export const Footer = ({ locale }: FooterProps) => {
                 </Link>
               )}
             </div>
-            {/* 사업자 정보 — 통신판매업 신고 완료 후에만 표기(신고번호 미보유 시 렌더 생략). */}
-            {siteConfig.mailOrderSalesNumber && (
-              <p className="mt-2 text-xs text-gray-200/60 leading-relaxed">
-                통신판매업신고: {siteConfig.mailOrderSalesNumber}
-              </p>
-            )}
+            {/* 사업자 정보 — 통신판매업 신고번호는 신고 완료 후에만 표기. */}
+            <p className="mt-2 text-xs text-gray-200/60 leading-relaxed">
+              사업자등록번호: {siteConfig.businessRegistrationNumber}
+              {siteConfig.mailOrderSalesNumber && (
+                <> · 통신판매업신고: {siteConfig.mailOrderSalesNumber}</>
+              )}
+            </p>
           </div>
 
           <div className="flex flex-col">

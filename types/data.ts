@@ -68,6 +68,7 @@ export interface SiteConfig {
   vatNotice: string;
   /** 통신판매업 신고번호. 신고 완료 전에는 빈 문자열 — 소비처는 값이 있을 때만 표기한다. */
   mailOrderSalesNumber: string;
+  businessRegistrationNumber: string;
 }
 
 export interface SEODefaults {

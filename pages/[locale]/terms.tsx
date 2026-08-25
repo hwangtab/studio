@@ -103,6 +103,10 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
                   <dt className="font-semibold shrink-0">이메일</dt>
                   <dd>{siteConfig.contact.email}</dd>
                 </div>
+                <div className="flex gap-2">
+                  <dt className="font-semibold shrink-0">사업자등록번호</dt>
+                  <dd>{siteConfig.businessRegistrationNumber}</dd>
+                </div>
                 {siteConfig.mailOrderSalesNumber && (
                   <div className="flex gap-2">
                     <dt className="font-semibold shrink-0">통신판매업신고</dt>

@@ -16,6 +16,7 @@ const siteConfig: SiteConfig = {
   description: '연신내 녹음실',
   vatNotice: '',
   mailOrderSalesNumber: '',
+  businessRegistrationNumber: '753-74-00653',
   contact: {
     address: '서울특별시 은평구 대조동 84-3',
     phone: '010-4255-7893',
