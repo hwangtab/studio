@@ -57,12 +57,28 @@ export const Footer = ({ locale }: FooterProps) => {
             <p className="typo-footer-meta" suppressHydrationWarning>
               {currentYear} {siteConfig.name}. {t('footer.rights')}
             </p>
-            <Link
-              href={`/${locale}/privacy-policy`}
-              className="mt-2 inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
-            >
-              {t('footer.privacy')}
-            </Link>
+            <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+              <Link
+                href={`/${locale}/privacy-policy`}
+                className="inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+              >
+                {t('footer.privacy')}
+              </Link>
+              {locale === 'ko' && (
+                <Link
+                  href="/ko/terms"
+                  className="inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+                >
+                  이용약관
+                </Link>
+              )}
+            </div>
+            {/* 사업자 정보 — 통신판매업 신고 완료 후에만 표기(신고번호 미보유 시 렌더 생략). */}
+            {siteConfig.mailOrderSalesNumber && (
+              <p className="mt-2 text-xs text-gray-200/60 leading-relaxed">
+                통신판매업신고: {siteConfig.mailOrderSalesNumber}
+              </p>
+            )}
           </div>
 
           <div className="flex flex-col">

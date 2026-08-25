@@ -90,7 +90,8 @@ module.exports = {
   changefreq: 'weekly',
   priority: 0.7,
   // /admin·계약 서명 경로는 운영자·당사자 전용이라 색인 대상이 아니다(각 페이지에도 noindex).
-  exclude: ['/api/*', '/404', '/500', '/', '/*/privacy-policy', '/admin', '/admin/*', '/*/contracts/*'],
+  // /booking·/terms도 동일 — 예약 퍼널·약관 고지는 검색 노출 대상이 아니다.
+  exclude: ['/api/*', '/404', '/500', '/', '/*/privacy-policy', '/admin', '/admin/*', '/*/contracts/*', '/*/booking/*', '/*/terms'],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
     // 따라서 명명된 봇 그룹에 allow:'/'만 두면 그 봇들은 /api/ disallow를 잃는다
@@ -103,7 +104,8 @@ module.exports = {
       const RULES = {
         allow: ['/', '/api/rss', '/api/og/'],
         // /admin·계약 서명 링크는 크롤 대상이 아니다(전자계약 운영·당사자 전용).
-        disallow: ['/api/', '/admin', '/ko/contracts/', '/en/contracts/'],
+        // /ko/booking/은 예약 퍼널(결제 진행 중 상태 등)이라 크롤 대상이 아니다.
+        disallow: ['/api/', '/admin', '/ko/contracts/', '/en/contracts/', '/ko/booking/'],
       };
       const NAMED_BOTS = [
         // Google (Google-Extended는 SGE/Gemini 학습용 분리 신호 — 정책 가시성 목적 명시)
