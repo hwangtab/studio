@@ -15,6 +15,9 @@ export default function TossPaymentWidget({ orderNo, amount, orderName, customer
   const widgetsRef = useRef<Awaited<ReturnType<Awaited<ReturnType<typeof loadTossPayments>>['widgets']>> | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // 위젯 로드 실패 시 "다시 시도"가 이 값을 증가시켜 아래 effect를 재실행한다
+  // (amount는 안 바뀌므로 그것만으로는 재시도 트리거가 안 된다).
+  const [retryKey, setRetryKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -35,7 +38,7 @@ export default function TossPaymentWidget({ orderNo, amount, orderName, customer
       }
     })();
     return () => { cancelled = true; };
-  }, [amount]);
+  }, [amount, retryKey]);
 
   const pay = async () => {
     const origin = window.location.origin;
@@ -53,7 +56,22 @@ export default function TossPaymentWidget({ orderNo, amount, orderName, customer
     }
   };
 
-  if (error) return <p className="text-red-600">{error}</p>;
+  const retry = () => {
+    setError(null);
+    setReady(false);
+    setRetryKey((k) => k + 1);
+  };
+
+  if (error) {
+    return (
+      <div>
+        <p role="alert" className="text-red-600">{error}</p>
+        <Button type="button" variant="outline" onClick={retry} className="mt-3">
+          다시 시도
+        </Button>
+      </div>
+    );
+  }
   return (
     <div>
       <div id="toss-payment-methods" />

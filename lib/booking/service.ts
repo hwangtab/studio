@@ -19,7 +19,10 @@ const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 export const createBookingOrder = async (
   payload: CreateBookingPayload,
   now: Date,
-): Promise<{ ok: true; orderNo: string; totalAmount: number; bookingId: string } | { ok: false; code: 'slot_taken' }> => {
+): Promise<
+  | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string }
+  | { ok: false; code: 'slot_taken' }
+> => {
   const db = getDb();
   const product = getProduct(payload.productId)!; // validation이 보장
   const hours = payload.hours!;
@@ -62,7 +65,7 @@ export const createBookingOrder = async (
     await db.run(sql`UPDATE orders SET status = 'failed' WHERE id = ${order.id} AND status = 'pending'`);
     return { ok: false, code: 'slot_taken' };
   }
-  return { ok: true, orderNo, totalAmount: amounts.totalAmount, bookingId };
+  return { ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount, bookingId };
 };
 
 export const findOrderByOrderNo = async (

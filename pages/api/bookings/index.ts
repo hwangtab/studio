@@ -19,5 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const result = await createBookingOrder(validated.value, now);
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.' });
-  return res.status(201).json({ ok: true, orderNo: result.orderNo, totalAmount: result.totalAmount });
+  return res.status(201).json({
+    ok: true,
+    orderNo: result.orderNo,
+    itemAmount: result.itemAmount,
+    vatAmount: result.vatAmount,
+    totalAmount: result.totalAmount,
+  });
 }

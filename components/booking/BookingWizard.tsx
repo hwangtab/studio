@@ -4,7 +4,7 @@ import Link from 'next/link';
 import PriceBreakdown from './PriceBreakdown';
 import TossPaymentWidget from './TossPaymentWidget';
 import { Button } from '../ui/Button';
-import { computeAmounts } from '../../lib/booking/amounts';
+import { computeAmounts, type OrderAmounts } from '../../lib/booking/amounts';
 import { kstDateString } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
 import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
@@ -44,6 +44,8 @@ interface SlotsResponse {
 interface CreateBookingResponse {
   ok: boolean;
   orderNo?: string;
+  itemAmount?: number;
+  vatAmount?: number;
   totalAmount?: number;
   code?: string;
   message?: string;
@@ -125,7 +127,10 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
     setSlotsError(null);
   };
 
-  const fetchSlots = useCallback(async () => {
+  // AbortController로 응답 역전을 막는다 — 날짜를 빠르게 바꾸면 먼저 보낸 요청이
+  // 나중에 도착해 최신 선택을 덮어쓸 수 있다(느린 응답이 빠른 응답을 역전). 새 요청을
+  // 시작하기 전 이전 요청을 abort하고, AbortError는 상태를 건드리지 않고 무시한다.
+  const fetchSlots = useCallback(async (signal: AbortSignal) => {
     if (!date) return;
     setSlotsLoading(true);
     setSlotsError(null);
@@ -135,7 +140,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
         hours: String(effectiveHours),
         date,
       });
-      const res = await fetch(`/api/bookings/slots?${params.toString()}`);
+      const res = await fetch(`/api/bookings/slots?${params.toString()}`, { signal });
       if (res.status === 503) {
         setSlots([]);
         setSlotsError('일시적으로 예약 현황을 불러올 수 없습니다.');
@@ -148,18 +153,21 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
         return;
       }
       setSlots(data.slots ?? []);
-    } catch {
+    } catch (e) {
+      if (e instanceof Error && e.name === 'AbortError') return; // 최신 요청에 밀려난 이전 요청 — 무시
       setSlots([]);
       setSlotsError('일시적으로 예약 현황을 불러올 수 없습니다.');
     } finally {
-      setSlotsLoading(false);
+      if (!signal.aborted) setSlotsLoading(false);
     }
   }, [date, selectedProduct.id, effectiveHours]);
 
   // step이 2로 (재)진입할 때마다 재조회한다 — 409로 되돌아온 경우도 이 경로로 재조회된다.
   useEffect(() => {
     if (step !== 2 || !date) return;
-    void fetchSlots();
+    const controller = new AbortController();
+    void fetchSlots(controller.signal);
+    return () => controller.abort();
   }, [step, date, fetchSlots]);
 
   const slotButtonClass = (slot: DaySlot) => {
@@ -181,9 +189,10 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Step 4: 결제
-  const [orderNo, setOrderNo] = useState<string | null>(null);
-  const [totalAmount, setTotalAmount] = useState<number | null>(null);
+  // Step 4: 결제 — 표시 금액은 서버가 POST 응답으로 돌려준 값(SSOT)만 쓴다.
+  // step 1의 amounts(클라이언트 재계산)는 진행 중 미리보기용일 뿐, 실제 청구액과
+  // 드리프트가 생길 수 있어(예: 서버 반올림 규칙 변경) 결제 단계엔 쓰지 않는다.
+  const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; amounts: OrderAmounts } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -218,9 +227,18 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
       });
       const data: CreateBookingResponse = await res.json();
 
-      if (res.status === 201 && data.ok && data.orderNo && typeof data.totalAmount === 'number') {
-        setOrderNo(data.orderNo);
-        setTotalAmount(data.totalAmount);
+      if (
+        res.status === 201 &&
+        data.ok &&
+        data.orderNo &&
+        typeof data.itemAmount === 'number' &&
+        typeof data.vatAmount === 'number' &&
+        typeof data.totalAmount === 'number'
+      ) {
+        setConfirmedOrder({
+          orderNo: data.orderNo,
+          amounts: { itemAmount: data.itemAmount, vatAmount: data.vatAmount, totalAmount: data.totalAmount },
+        });
         setStep(4);
         return;
       }
@@ -509,23 +527,29 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
         </section>
       )}
 
-      {step === 4 && orderNo && totalAmount !== null && selectedStartHour !== null && (
+      {step === 4 && confirmedOrder && selectedStartHour !== null && (
         <section aria-labelledby="booking-step4-heading">
           <h2 id="booking-step4-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
             4. 결제
           </h2>
 
           <div className="mb-4">
-            <PriceBreakdown amounts={amounts} />
+            <PriceBreakdown amounts={confirmedOrder.amounts} />
           </div>
 
           <TossPaymentWidget
-            orderNo={orderNo}
-            amount={totalAmount}
+            orderNo={confirmedOrder.orderNo}
+            amount={confirmedOrder.amounts.totalAmount}
             orderName={formatOrderName(selectedProduct.nameKo, date, selectedStartHour)}
             customerName={customerName}
             customerEmail={customerEmail}
           />
+
+          <div className="mt-4">
+            <Button type="button" variant="outline" onClick={() => setStep(3)}>
+              ← 정보 수정
+            </Button>
+          </div>
         </section>
       )}
     </main>
