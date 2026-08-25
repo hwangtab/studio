@@ -120,8 +120,10 @@ export const cancelBookingWithRefund = async (input: {
         .where(eq(orders.id, order.id)),
     ]);
   } catch (error) {
-    // 토스 취소는 이미 끝났다 — 웹훅 CANCELED 이벤트가 상태를 복구하므로 여기서는 삼키되 기록한다
-    // (confirm.ts의 recording_failed와 동일 원칙 — 다만 여기선 멱등 판정을 위한 재조회가 필요 없다).
+    // 토스 취소는 이미 끝났다 — 여기서는 삼키되 기록한다(confirm.ts의 recording_failed와 동일 원칙).
+    // 복구는 토스가 보내는 CANCELED 웹훅이 맡는다: 그 시점엔 booking이 이미 cancelled라
+    // 선점할 게 없으므로, webhook.ts의 대사 보정(reconcileRefunds)이 토스 취소 합계와 우리
+    // refunds 합계의 차액을 refunds에 채워 넣고 orders 상태를 맞춘다.
     console.error('[booking-cancel] 환불 완료, DB 기록 실패', {
       orderNo: order.orderNo,
       refundAmount,

@@ -5,7 +5,7 @@ import { bookings, orders, payments } from '../../db/schema';
 import { sendBookingConfirmedEmails } from './email';
 import { createBookingEvent } from './gcal';
 import { findOrderByOrderNo } from './service';
-import { confirmPayment } from './toss';
+import { confirmPayment, fetchPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
 
 export type ConfirmOutcome =
@@ -15,6 +15,9 @@ export type ConfirmOutcome =
       code: 'not_found' | 'amount_mismatch' | 'invalid_state' | 'toss_rejected' | 'recording_failed';
       message: string;
     };
+
+/** 토스가 "이미 승인된 결제"에 재승인을 요청받았을 때 돌려주는 코드. 실패가 아니라 지연 신호다. */
+const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
 
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const RECORDING_FAILED_MESSAGE =
@@ -37,9 +40,42 @@ export const confirmBookingPayment = async (input: {
   if (input.amount !== order.totalAmount)
     return { ok: false, code: 'amount_mismatch', message: '결제 금액이 주문과 일치하지 않습니다.' };
 
+  const db = getDb();
   const toss = await confirmPayment({ paymentKey: input.paymentKey, orderId: order.orderNo, amount: input.amount });
-  if (!toss.ok) {
-    const db = getDb();
+
+  let approved: TossPayment;
+  if (toss.ok) {
+    approved = toss.payment;
+  } else if (toss.code === ALREADY_PROCESSED_CODE) {
+    // 토스는 이미 승인된 결제의 재승인을 거절한다 — 그런데 이 상황은 "실패"가 아니라 "우리 DB만
+    // 뒤처졌다"는 신호다. 웹훅 DONE 복구(승인은 됐는데 기록이 실패한 주문)와 success 페이지
+    // 이중 새로고침이 정확히 여기로 온다. 여기서 failed를 찍으면 돈이 들어온 주문을 실패로
+    // 확정해 버리므로(그 뒤 웹훅 재도착도 invalid_state에 막힌다) 절대 마킹하지 않고,
+    // 토스에 재조회해 실제 승인 사실을 확인한 뒤 정상 승인과 같은 경로로 기록한다.
+    const refetched = await fetchPayment(input.paymentKey);
+    if (!refetched.ok) {
+      console.error('[booking-confirm] 이미 처리된 결제의 재조회 실패 — 상태 판정 보류', {
+        orderNo: order.orderNo,
+        paymentKey: input.paymentKey,
+        code: refetched.code,
+        message: refetched.message,
+      });
+      return { ok: false, code: 'toss_rejected', message: GENERIC_TOSS_ERROR_MESSAGE };
+    }
+    // 페이로드가 아니라 재조회 결과만 믿는다 — 주문번호·금액·상태 셋 다 우리 주문과 맞아야 한다.
+    const payment = refetched.payment;
+    if (payment.status !== 'DONE' || payment.orderId !== order.orderNo || payment.totalAmount !== order.totalAmount) {
+      console.error('[booking-confirm] 이미 처리된 결제의 재조회 검증 불일치 — 기록하지 않는다', {
+        orderNo: order.orderNo,
+        paymentKey: input.paymentKey,
+        status: payment.status,
+        orderId: payment.orderId,
+        totalAmount: payment.totalAmount,
+      });
+      return { ok: false, code: 'toss_rejected', message: GENERIC_TOSS_ERROR_MESSAGE };
+    }
+    approved = payment;
+  } else {
     await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
     // CONFIG_ERROR·NETWORK_ERROR는 우리 쪽 설정·네트워크 문제라 원문을 그대로 보이면
     // 내부 구성(비밀키 누락 등)이 새어나간다 — 고객에겐 일반 문구, 원문은 서버 로그에만.
@@ -54,7 +90,6 @@ export const confirmBookingPayment = async (input: {
     return { ok: false, code: 'toss_rejected', message: isInternalError ? GENERIC_TOSS_ERROR_MESSAGE : toss.message };
   }
 
-  const db = getDb();
   const booking = order.bookings[0];
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
@@ -62,11 +97,11 @@ export const confirmBookingPayment = async (input: {
     await db.batch([
       db.insert(payments).values({
         orderId: order.id,
-        paymentKey: toss.payment.paymentKey,
-        method: toss.payment.method ?? null,
-        approvedAt: toss.payment.approvedAt ? new Date(toss.payment.approvedAt) : null,
-        receiptUrl: toss.payment.receipt?.url ?? null,
-        rawResponse: JSON.stringify(toss.payment),
+        paymentKey: approved.paymentKey,
+        method: approved.method ?? null,
+        approvedAt: approved.approvedAt ? new Date(approved.approvedAt) : null,
+        receiptUrl: approved.receipt?.url ?? null,
+        rawResponse: JSON.stringify(approved),
       }),
       db.update(orders)
         .set({ status: 'paid', updatedAt: new Date() })
@@ -81,21 +116,21 @@ export const confirmBookingPayment = async (input: {
     let existing: unknown;
     try {
       existing = await db.query.payments.findFirst({
-        where: (t, { eq }) => eq(t.paymentKey, toss.payment.paymentKey),
+        where: (t, { eq }) => eq(t.paymentKey, approved.paymentKey),
       });
     } catch (lookupError) {
       // 멱등 판정 조회 자체가 실패 — batch와 같은 연결이 죽었을 공산이 크다(rethrow 금지).
       // "판정 불가"로 간주해 무기록 500 대신 아래 recording_failed 경로로 떨어뜨린다.
       console.error('[booking-confirm] 멱등 판정 조회 실패', {
         orderNo: order.orderNo,
-        paymentKey: toss.payment.paymentKey,
+        paymentKey: approved.paymentKey,
         error: lookupError,
       });
     }
     if (existing) return { ok: true, orderNo: order.orderNo };
     console.error('[booking-confirm] 결제 승인됨, DB 기록 실패 — 웹훅 복구 대기', {
       orderNo: order.orderNo,
-      paymentKey: toss.payment.paymentKey,
+      paymentKey: approved.paymentKey,
       error,
     });
     return { ok: false, code: 'recording_failed', message: RECORDING_FAILED_MESSAGE };

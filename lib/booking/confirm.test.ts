@@ -1,5 +1,5 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
-jest.mock('./toss', () => ({ confirmPayment: jest.fn() }));
+jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
 jest.mock('./email', () => ({ sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null) }));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 —
@@ -20,7 +20,7 @@ jest.mock('../../db/client', () => {
 
 import { confirmBookingPayment } from './confirm';
 import { findOrderByOrderNo } from './service';
-import { confirmPayment } from './toss';
+import { confirmPayment, fetchPayment } from './toss';
 import { createBookingEvent } from './gcal';
 import { sendBookingConfirmedEmails } from './email';
 import { getDb } from '../../db/client';
@@ -39,6 +39,12 @@ const mockDb = () => getDb() as unknown as MockDb;
 const setCallsOf = (db: MockDb): object[] =>
   db.update.mock.results.length
     ? (db.update.mock.results[0].value.set as jest.Mock).mock.calls.map((c: unknown[]) => c[0] as object)
+    : [];
+
+/** db.insert(...).values(...) 호출 인자 전체 — insert 체인도 테이블과 무관하게 같은 values mock을 공유한다. */
+const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
+  db.insert.mock.results.length
+    ? (db.insert.mock.results[0].value.values as jest.Mock).mock.calls.map((c: unknown[]) => c[0] as Record<string, unknown>)
     : [];
 
 const order = (over: object = {}) => ({
@@ -112,6 +118,56 @@ describe('confirmBookingPayment', () => {
       ok: false, code: 'toss_rejected',
       message: '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
     });
+  });
+
+  // ALREADY_PROCESSED_PAYMENT는 "실패"가 아니라 "우리 DB만 뒤처졌다"는 신호다. 웹훅 DONE 복구와
+  // success 페이지 이중 새로고침이 여기로 온다 — failed로 마킹하면 돈이 들어온 주문이 실패로 확정된다.
+  const alreadyProcessed = { ok: false, code: 'ALREADY_PROCESSED_PAYMENT', message: '이미 처리된 결제 입니다.' };
+
+  it('ALREADY_PROCESSED_PAYMENT면 재조회로 승인을 확인하고 정상 확정 경로로 기록한다 (failed 마킹 금지)', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(alreadyProcessed);
+    (fetchPayment as jest.Mock).mockResolvedValue({
+      ok: true,
+      payment: { paymentKey: 'pk', orderId: 'SNB-1', status: 'DONE', totalAmount: 275000, method: '카드' },
+    });
+    const db = mockDb();
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(db.batch).toHaveBeenCalled(); // 정상 승인과 같은 batch 경로
+    expect(db.run).not.toHaveBeenCalled(); // orders를 failed로 마킹하는 db.run이 없다
+    // rawResponse는 재조회한 payment로 남는다.
+    const paymentInsert = insertValuesCallsOf(db).find((c) => 'paymentKey' in c);
+    expect(paymentInsert).toMatchObject({ paymentKey: 'pk', method: '카드' });
+  });
+
+  it('ALREADY_PROCESSED_PAYMENT인데 재조회 금액이 다르면 기록도 failed 마킹도 하지 않는다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(alreadyProcessed);
+    (fetchPayment as jest.Mock).mockResolvedValue({
+      ok: true,
+      payment: { paymentKey: 'pk', orderId: 'SNB-1', status: 'DONE', totalAmount: 100000 },
+    });
+    const db = mockDb();
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toEqual({
+      ok: false, code: 'toss_rejected',
+      message: '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+    });
+    expect(db.batch).not.toHaveBeenCalled();
+    expect(db.run).not.toHaveBeenCalled(); // 재시도 여지를 남긴다 — pending 그대로
+    expect(consoleErrorSpy).toHaveBeenCalled();
+  });
+
+  it('ALREADY_PROCESSED_PAYMENT인데 재조회 자체가 실패하면 판정을 보류한다 (failed 마킹 금지)', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(alreadyProcessed);
+    (fetchPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'fetch failed' });
+    const db = mockDb();
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+    expect(db.batch).not.toHaveBeenCalled();
+    expect(db.run).not.toHaveBeenCalled();
   });
 
   it('토스 승인 후 DB 기록이 실패하고 payments에도 없으면 recording_failed', async () => {
