@@ -58,13 +58,16 @@ function buildContentSecurityPolicy(): string {
     // - base-uri 'self': <base> 태그 주입 통한 상대경로 redirect 차단
     return [
         "default-src 'self'",
-        "script-src 'self' https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com",
+        // 토스페이먼츠 결제위젯 v2: SDK 스크립트는 js.tosspayments.com에서, 위젯
+        // UI·결제창은 *.tosspayments.com iframe에서, 승인 전 이벤트·로그 수집은
+        // api/event 서브도메인으로 나간다. 간편결제 앱 연동은 pay.toss.im 프레임.
+        "script-src 'self' https://js.tosspayments.com https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com",
         "script-src-attr 'none'",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' data: https://fonts.gstatic.com",
-        "frame-src 'self' https://www.google.com https://www.google.co.kr",
-        "connect-src 'self' https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
+        "frame-src 'self' https://*.tosspayments.com https://toss.im https://*.toss.im https://www.google.com https://www.google.co.kr",
+        "connect-src 'self' https://*.tosspayments.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
         "form-action 'self'",
@@ -86,7 +89,9 @@ function setSecurityHeaders(response: NextResponse): NextResponse {
     // orientation 등 새 기능에서 센서가 필요하면 명시적으로 풀어주는 형태로 변경.
     response.headers.set(
         'Permissions-Policy',
-        'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+        // payment는 토스 결제위젯(애플페이 등 PaymentRequest API)을 위해 self와
+        // 토스 SDK origin에만 허용. 나머지는 사용처가 없어 전부 차단 유지.
+        'camera=(), microphone=(), geolocation=(), payment=(self "https://js.tosspayments.com"), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
     );
     return response;
 }
