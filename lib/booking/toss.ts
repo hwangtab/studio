@@ -23,10 +23,20 @@ const authHeader = (): string => {
 };
 
 const request = async (path: string, init?: { method?: string; body?: unknown }): Promise<TossResult> => {
+  let auth: string;
+  try {
+    auth = authHeader();
+  } catch (error) {
+    return {
+      ok: false,
+      code: 'CONFIG_ERROR',
+      message: error instanceof Error ? error.message : 'TOSS_SECRET_KEY가 설정되지 않았습니다.',
+    };
+  }
   try {
     const res = await fetch(`${TOSS_API}${path}`, {
       method: init?.method ?? 'GET',
-      headers: { Authorization: authHeader(), 'Content-Type': 'application/json' },
+      headers: { Authorization: auth, 'Content-Type': 'application/json' },
       body: init?.body === undefined ? undefined : JSON.stringify(init.body),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
