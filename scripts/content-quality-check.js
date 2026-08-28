@@ -126,7 +126,8 @@ function checkFile(filePath) {
   const warnings = [];
 
   // Rule 1: Word count (shortcode rendered content counts as bonus words)
-  const SHORTCODE_WORD_ESTIMATES = { 'online-fallback': 25, 'session-checklist': 60 };
+  // 렌더 실측 기준(session-checklist = 51단어). lib/storyContentPolicy.ts의 글자수 추정과 짝이다.
+  const SHORTCODE_WORD_ESTIMATES = { 'online-fallback': 25, 'session-checklist': 51 };
   const shortcodeBonus = [...body.matchAll(/%%([a-z-]+)%%/g)]
     .reduce((sum, m) => sum + (SHORTCODE_WORD_ESTIMATES[m[1]] ?? 15), 0);
   const effectiveWordCount = wordCount + shortcodeBonus;

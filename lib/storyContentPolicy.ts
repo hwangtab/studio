@@ -32,9 +32,12 @@ export const extractAutoExpandBlock = (source: string): { stripped: string; bloc
  * @param slug 광역 허브 게이트 적용을 위한 슬러그
  */
 export const THIN_CONTENT_THRESHOLD = 1500;
+// 숏코드가 렌더하는 실제 텍스트 분량(공백 제외). thin 판정에 직접 들어가므로
+// 컴포넌트 문구를 고치면 여기도 같이 맞춰야 한다 — 추정이 실제보다 크면 thin 페이지가
+// 색인 대상으로 잘못 분류된다. session-checklist는 실측 160자(컴포넌트 항목 7개 + 소제목 2개).
 export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
   'online-fallback': 120,
-  'session-checklist': 420,
+  'session-checklist': 160,
 };
 export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 
