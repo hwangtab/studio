@@ -77,6 +77,7 @@ describe('fact token integrity', () => {
   const BLOCK_SHORTCODE_NAMES = new Set<string>([
     'online-fallback',
     'session-checklist',
+    'studio-more',
     ...INLINE_DIRECTIVE_NAMES,
   ]);
   const factTokenNames = Object.keys(FACT_TOKENS).map((t) => t.replace(/^%%|%%$/g, ''));

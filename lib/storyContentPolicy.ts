@@ -38,6 +38,7 @@ export const THIN_CONTENT_THRESHOLD = 1500;
 export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
   'online-fallback': 120,
   'session-checklist': 160,
+  'studio-more': 204,
 };
 export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 
