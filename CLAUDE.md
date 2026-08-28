@@ -57,7 +57,30 @@ node scripts/generate-hero-font.mjs --check  # 네트워크 없이 subset 커버
 # 빠뜨리면 routes.test.js의 'lastmod 커버리지'가 CI에서 잡아낸다.
 npm run generate:page-lastmod
 node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검증
+
+# 섹션 단위 중복 검사 (CI)
+npm run check:dup-sections
+node scripts/check-duplicate-sections.mjs --update  # 기준선 갱신
 ```
+
+### 중복 콘텐츠 게이트가 두 겹인 이유
+
+`scan-near-duplicates.mjs`는 **문서 전체** Jaccard 0.45로 본다. 2,400자 글에서 380자
+섹션이 겹치는 정도는 이 임계에 닿지 않아, 워드카운트 패딩 스크립트(`scripts/archive/`의
+`fix-topic-wordcount.js` 계열)가 심은 동일 섹션이 수백 편에 쌓이는 동안 한 번도 안 걸렸다.
+2026-08-28에 290편에서 12.1만자를 걷어냈고, 재발 방지로 `check-duplicate-sections.mjs`를
+CI에 넣었다 — 섹션 해시가 파일 간 같으면 잡는다.
+
+기준선(`content/duplicate-sections.baseline.json`) **대비**로 판정한다. 절대 임계면 아직
+정리 안 된 기존 중복 때문에 CI가 계속 빨갛다. 새 그룹이 생기거나 기존 그룹이 커지면 실패,
+줄어드는 건 항상 통과. 의도한 증가라면 `--update` 후 이유를 커밋에 남길 것.
+
+**같은 안내를 여러 글에 넣어야 하면 복붙 대신 숏코드 컴포넌트를 쓴다**
+(`%%session-checklist%%`·`%%studio-more%%`). 새 숏코드를 만들면 세 곳을 함께 고쳐야 한다 —
+`MarkdownRenderer` 배선, `lib/storyContentPolicy.ts`의 글자수 추정, `content/factGuards.test.ts`
+화이트리스트. 추정치는 **컴포넌트가 실제 렌더하는 분량 실측값**으로 넣을 것: 이 값이 thin
+판정에 직접 들어가서, 과대 계상하면 thin 페이지가 색인 대상으로 잘못 분류된다(실제로
+session-checklist가 실측 160자인데 420으로 잡혀 있었다).
 
 ### lastmod 정책 (사이트맵 freshness)
 

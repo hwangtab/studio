@@ -36,6 +36,9 @@ jobs:
       - name: Content quality check
         run: npm run content-check:ci
 
+      - name: Duplicate section check
+        run: npm run check:dup-sections
+
       - name: Test
         run: npm test -- --coverage --passWithNoTests
 

@@ -1,0 +1,757 @@
+{
+  "note": "섹션 단위 중복 기준선. scripts/check-duplicate-sections.mjs --update 로 갱신한다.",
+  "minChars": 80,
+  "minFiles": 2,
+  "groups": {
+    "7e54044f7b91": {
+      "title": "전라 지역 아티스트와 서울 스튜디오 방문",
+      "chars": 267,
+      "count": 20
+    },
+    "549d2ed8bf4e": {
+      "title": "4주 집중 연습 플랜",
+      "chars": 240,
+      "count": 21
+    },
+    "349ecd9b5dba": {
+      "title": "보컬 테크닉에서 자주 하는 실수",
+      "chars": 144,
+      "count": 30
+    },
+    "c3f8ae34908b": {
+      "title": "보컬 테크닉 훈련 추천 곡",
+      "chars": 143,
+      "count": 30
+    },
+    "8bbabc7615c5": {
+      "title": "수도권에서 스튜디오 당일 방문 가이드",
+      "chars": 279,
+      "count": 15
+    },
+    "727d277de74c": {
+      "title": "보컬 집중 연습 루틴",
+      "chars": 164,
+      "count": 25
+    },
+    "b68eea1ba1e8": {
+      "title": "강원 지역 아티스트와 서울 방문 가이드",
+      "chars": 306,
+      "count": 13
+    },
+    "28c4b00e36a9": {
+      "title": "방문 전 세션 준비 가이드",
+      "chars": 246,
+      "count": 16
+    },
+    "0e02071cb9cf": {
+      "title": "기타 집중 연습 루틴",
+      "chars": 155,
+      "count": 25
+    },
+    "775a3cba6760": {
+      "title": "연습 중 자주 하는 실수",
+      "chars": 194,
+      "count": 18
+    },
+    "ce1384dfccc0": {
+      "title": "온라인 의뢰 서비스",
+      "chars": 115,
+      "count": 30
+    },
+    "4e3d1ac64a0b": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 94,
+      "count": 35
+    },
+    "7923dfdf55c9": {
+      "title": "드럼 테크닉 훈련 추천 루디먼트",
+      "chars": 147,
+      "count": 22
+    },
+    "5bd4cd5434dc": {
+      "title": "피아노 집중 연습 루틴",
+      "chars": 153,
+      "count": 20
+    },
+    "8efaf1af3e65": {
+      "title": "드럼 테크닉에서 자주 하는 실수",
+      "chars": 137,
+      "count": 22
+    },
+    "5aba11f02fda": {
+      "title": "스튜디오 놀 서비스",
+      "chars": 142,
+      "count": 21
+    },
+    "d432685085f7": {
+      "title": "효율적인 연습 원칙",
+      "chars": 162,
+      "count": 18
+    },
+    "393682745a99": {
+      "title": "테크닉 향상을 위한 에튀드 추천",
+      "chars": 160,
+      "count": 16
+    },
+    "1b5116edb358": {
+      "title": "보컬 테크닉 자가 진단",
+      "chars": 85,
+      "count": 30
+    },
+    "1c7cb27fa36f": {
+      "title": "드럼 테크닉 자가 진단",
+      "chars": 107,
+      "count": 21
+    },
+    "e0ca690b9cd3": {
+      "title": "클래식 피아노 집중 연습 루틴",
+      "chars": 147,
+      "count": 15
+    },
+    "1e1f50733090": {
+      "title": "테크닉 연습에서 자주 하는 실수",
+      "chars": 129,
+      "count": 16
+    },
+    "b5b96fdcdb32": {
+      "title": "베이스 집중 연습 루틴",
+      "chars": 153,
+      "count": 13
+    },
+    "c0eb942d39a3": {
+      "title": "입주 조건",
+      "chars": 115,
+      "count": 16
+    },
+    "74128a9254dd": {
+      "title": "드럼 테크닉 집중 연습 루틴",
+      "chars": 162,
+      "count": 11
+    },
+    "f0f2cb40cef6": {
+      "title": "코드 마스터를 위한 연습 곡 추천",
+      "chars": 181,
+      "count": 9
+    },
+    "d3015e4bfba8": {
+      "title": "핑거피킹 난이도별 추천 곡",
+      "chars": 176,
+      "count": 9
+    },
+    "360eb0cfef8f": {
+      "title": "기타 코드 연습에서 자주 하는 실수",
+      "chars": 174,
+      "count": 9
+    },
+    "e49c512546c4": {
+      "title": "코드 훈련 집중 연습 루틴",
+      "chars": 171,
+      "count": 9
+    },
+    "f22bd9e20574": {
+      "title": "연습 자가 진단",
+      "chars": 83,
+      "count": 18
+    },
+    "2b443833f2a5": {
+      "title": "스타일 보컬 집중 연습 루틴",
+      "chars": 159,
+      "count": 9
+    },
+    "3f841e87b79d": {
+      "title": "기타 솔로 난이도별 추천 연습 트랙",
+      "chars": 203,
+      "count": 7
+    },
+    "0a613a84f55f": {
+      "title": "집중 연습 루틴",
+      "chars": 138,
+      "count": 10
+    },
+    "632ab2e1c751": {
+      "title": "드럼 집중 연습 루틴",
+      "chars": 151,
+      "count": 9
+    },
+    "56530e306ad1": {
+      "title": "스튜디오 놀을 선택하는 이유",
+      "chars": 194,
+      "count": 7
+    },
+    "e93f2fc3d1a9": {
+      "title": "2. 가격 경쟁력",
+      "chars": 338,
+      "count": 4
+    },
+    "252c52698b08": {
+      "title": "테크닉 연습 자가 진단",
+      "chars": 84,
+      "count": 16
+    },
+    "967851309b86": {
+      "title": "권역별 안내",
+      "chars": 101,
+      "count": 13
+    },
+    "365f117e5df8": {
+      "title": "그루브 드럼 집중 연습 루틴",
+      "chars": 164,
+      "count": 8
+    },
+    "f286d78ba6c4": {
+      "title": "재즈 연주에서 자주 하는 실수",
+      "chars": 145,
+      "count": 9
+    },
+    "22215942317a": {
+      "title": "재즈 피아노 집중 연습 루틴",
+      "chars": 163,
+      "count": 8
+    },
+    "576dfdf9590f": {
+      "title": "스튜디오 놀 서비스 요약",
+      "chars": 161,
+      "count": 8
+    },
+    "f4cc2e76df1b": {
+      "title": "핑거피킹에서 자주 하는 실수",
+      "chars": 143,
+      "count": 9
+    },
+    "3e96d78778b7": {
+      "title": "재즈 학습 필수 스탠다드",
+      "chars": 138,
+      "count": 9
+    },
+    "8517fb5b5b74": {
+      "title": "보컬 테크닉 정밀 훈련 루틴",
+      "chars": 156,
+      "count": 7
+    },
+    "7fd48045abd3": {
+      "title": "보컬 호흡 집중 훈련 루틴",
+      "chars": 172,
+      "count": 6
+    },
+    "e50b837e6c17": {
+      "title": "그루브 훈련을 위한 추천 트랙",
+      "chars": 163,
+      "count": 6
+    },
+    "f1c079322ffe": {
+      "title": "K-POP 장르별 보컬 훈련 추천 곡",
+      "chars": 161,
+      "count": 6
+    },
+    "45085f54ba48": {
+      "title": "기타 솔로에서 자주 하는 실수",
+      "chars": 134,
+      "count": 7
+    },
+    "de4d07a8ee35": {
+      "title": "스튜디오 놀 서비스 요약",
+      "chars": 131,
+      "count": 7
+    },
+    "efd4d504a7e1": {
+      "title": "스피드 테크닉 집중 연습 루틴",
+      "chars": 183,
+      "count": 5
+    },
+    "5d9459b0666e": {
+      "title": "재즈 드럼 학습 추천 레코딩",
+      "chars": 177,
+      "count": 5
+    },
+    "2151efbf3e89": {
+      "title": "핑거피킹 자가 진단",
+      "chars": 97,
+      "count": 9
+    },
+    "9016d6ae5d89": {
+      "title": "드럼 그루브에서 자주 하는 실수",
+      "chars": 141,
+      "count": 6
+    },
+    "28ba52f97412": {
+      "title": "핑거스타일 집중 연습 루틴",
+      "chars": 169,
+      "count": 5
+    },
+    "89d94d82835e": {
+      "title": "스튜디오 놀 서비스",
+      "chars": 137,
+      "count": 6
+    },
+    "a2199ca4e732": {
+      "title": "K-POP 보컬에서 자주 하는 실수",
+      "chars": 137,
+      "count": 6
+    },
+    "5a587ae64600": {
+      "title": "스튜디오 놀 소개",
+      "chars": 91,
+      "count": 9
+    },
+    "6cc97828be0c": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 91,
+      "count": 9
+    },
+    "a2c93f6cea03": {
+      "title": "베이스 테크닉 집중 연습 루틴",
+      "chars": 161,
+      "count": 5
+    },
+    "6512f98b9e01": {
+      "title": "재즈 즉흥 자가 진단",
+      "chars": 89,
+      "count": 9
+    },
+    "d4bf69bb08f9": {
+      "title": "재즈·라틴 드럼 집중 연습 루틴",
+      "chars": 159,
+      "count": 5
+    },
+    "35e87a7b4842": {
+      "title": "주요 장비",
+      "chars": 111,
+      "count": 7
+    },
+    "eead56b84f63": {
+      "title": "개인 음악연습실",
+      "chars": 129,
+      "count": 6
+    },
+    "288086694313": {
+      "title": "기타 코드 자가 진단",
+      "chars": 85,
+      "count": 9
+    },
+    "c7e48ef58d4c": {
+      "title": "이용 방법",
+      "chars": 152,
+      "count": 5
+    },
+    "9f085fdfda47": {
+      "title": "믹스 보이스 훈련을 위한 추천 곡",
+      "chars": 150,
+      "count": 5
+    },
+    "d577b1b67576": {
+      "title": "서비스 및 요금",
+      "chars": 123,
+      "count": 6
+    },
+    "7bf7aa975eaf": {
+      "title": "베이스 그루브 학습 추천 트랙",
+      "chars": 182,
+      "count": 4
+    },
+    "5d847c7dceb5": {
+      "title": "재즈 피아노에서 자주 하는 실수",
+      "chars": 180,
+      "count": 4
+    },
+    "26539da449c5": {
+      "title": "재즈 피아노 난이도별 추천 곡",
+      "chars": 177,
+      "count": 4
+    },
+    "57d503934d73": {
+      "title": "월세 입주 프로그램",
+      "chars": 115,
+      "count": 6
+    },
+    "fff0942f2fb7": {
+      "title": "믹스 보이스에서 자주 하는 실수",
+      "chars": 138,
+      "count": 5
+    },
+    "1f28ccd8e551": {
+      "title": "성구 전환 집중 훈련 루틴",
+      "chars": 166,
+      "count": 4
+    },
+    "5461a4e36755": {
+      "title": "기타 솔로 자가 진단",
+      "chars": 93,
+      "count": 7
+    },
+    "69b8b723ae67": {
+      "title": "블루스 기타 학습 추천 트랙",
+      "chars": 162,
+      "count": 4
+    },
+    "cc57fa55f788": {
+      "title": "재즈 드럼에서 자주 하는 실수",
+      "chars": 129,
+      "count": 5
+    },
+    "628eda6298d4": {
+      "title": "호흡 훈련을 위한 추천 곡",
+      "chars": 161,
+      "count": 4
+    },
+    "c1c3d3288c64": {
+      "title": "베이스 그루브 집중 연습 루틴",
+      "chars": 160,
+      "count": 4
+    },
+    "7495bd7651b1": {
+      "title": "리드 기타 표현력 연습 루틴",
+      "chars": 158,
+      "count": 4
+    },
+    "6603cf249c6e": {
+      "title": "집중 연습 루틴",
+      "chars": 153,
+      "count": 4
+    },
+    "1fc12029ee6d": {
+      "title": "블루스 기타에서 자주 하는 실수",
+      "chars": 143,
+      "count": 4
+    },
+    "7c381996da26": {
+      "title": "드럼 그루브 자가 진단",
+      "chars": 95,
+      "count": 6
+    },
+    "82da0692cd09": {
+      "title": "연습 중 자주 하는 실수",
+      "chars": 187,
+      "count": 3
+    },
+    "b4ffd65bdce6": {
+      "title": "뮤지컬 보컬 훈련 추천 넘버",
+      "chars": 140,
+      "count": 4
+    },
+    "e90ceef7193d": {
+      "title": "수도권에서 스튜디오 당일 방문 가이드",
+      "chars": 275,
+      "count": 2
+    },
+    "b92c0e47ec40": {
+      "title": "스튜디오 놀 서비스 요약",
+      "chars": 182,
+      "count": 3
+    },
+    "1b4cdac92d7e": {
+      "title": "방문 전 세션 준비 가이드",
+      "chars": 90,
+      "count": 6
+    },
+    "8baeff7aabc3": {
+      "title": "베이스 그루브에서 자주 하는 실수",
+      "chars": 135,
+      "count": 4
+    },
+    "31447d7c0ad1": {
+      "title": "방문 당일 체크리스트",
+      "chars": 179,
+      "count": 3
+    },
+    "6c9546baffc3": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 107,
+      "count": 5
+    },
+    "a212a05ac9a9": {
+      "title": "4주 보컬 집중 연습 플랜",
+      "chars": 261,
+      "count": 2
+    },
+    "c34e41629ac0": {
+      "title": "슬랩 베이스 학습 추천 트랙",
+      "chars": 173,
+      "count": 3
+    },
+    "7d219a2fa9f8": {
+      "title": "뮤지컬 보컬에서 자주 하는 실수",
+      "chars": 126,
+      "count": 4
+    },
+    "41c051fa47ad": {
+      "title": "K-POP 보컬 자가 진단",
+      "chars": 83,
+      "count": 6
+    },
+    "8e6a17da2c95": {
+      "title": "발라드·팝 피아노 집중 연습 루틴",
+      "chars": 166,
+      "count": 3
+    },
+    "74887f2f0d78": {
+      "title": "4. 방음 수준",
+      "chars": 82,
+      "count": 6
+    },
+    "9c47580d957b": {
+      "title": "온라인 의뢰 서비스",
+      "chars": 122,
+      "count": 4
+    },
+    "e0230a65db38": {
+      "title": "보컬 호흡에서 자주 하는 실수",
+      "chars": 121,
+      "count": 4
+    },
+    "05a7a9b2de7e": {
+      "title": "효율적인 연습 원칙",
+      "chars": 159,
+      "count": 3
+    },
+    "b181dc9f8dc2": {
+      "title": "연습 중 자주 하는 실수",
+      "chars": 234,
+      "count": 2
+    },
+    "1a0b142e3772": {
+      "title": "재즈 피아노 자가 진단",
+      "chars": 115,
+      "count": 4
+    },
+    "36b9494325e7": {
+      "title": "KTX에서 세션 준비하기",
+      "chars": 228,
+      "count": 2
+    },
+    "003321ede2a9": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 91,
+      "count": 5
+    },
+    "9623006cb5cc": {
+      "title": "믹스 보이스 자가 진단",
+      "chars": 90,
+      "count": 5
+    },
+    "e042f08a41d9": {
+      "title": "스튜디오 놀 서비스",
+      "chars": 145,
+      "count": 3
+    },
+    "d4ea39954c81": {
+      "title": "재즈 드럼 자가 진단",
+      "chars": 83,
+      "count": 5
+    },
+    "934a5b75e677": {
+      "title": "베이스 그루브 자가 진단",
+      "chars": 100,
+      "count": 4
+    },
+    "4721cc4e6cbd": {
+      "title": "예약 방법",
+      "chars": 99,
+      "count": 4
+    },
+    "9c6a0201959e": {
+      "title": "슬랩 베이스에서 자주 하는 실수",
+      "chars": 131,
+      "count": 3
+    },
+    "001e6ac44fde": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 97,
+      "count": 4
+    },
+    "17eadd83c0f0": {
+      "title": "스튜디오 놀을 선택하는 이유",
+      "chars": 193,
+      "count": 2
+    },
+    "90a180ad0cae": {
+      "title": "발라드 피아노에서 자주 하는 실수",
+      "chars": 191,
+      "count": 2
+    },
+    "c88f76cc0af2": {
+      "title": "발라드 피아노 난이도별 추천 연습곡",
+      "chars": 188,
+      "count": 2
+    },
+    "02884c59bc0c": {
+      "title": "스튜디오 놀을 선택하는 이유",
+      "chars": 185,
+      "count": 2
+    },
+    "b07b589a6a2b": {
+      "title": "색소폰 난이도별 추천 곡",
+      "chars": 183,
+      "count": 2
+    },
+    "2dcf233fd5ea": {
+      "title": "지역 음악인의 서울 스튜디오 활용",
+      "chars": 179,
+      "count": 2
+    },
+    "2b00956ae421": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 88,
+      "count": 4
+    },
+    "69767641f3d2": {
+      "title": "뮤지컬 보컬 자가 진단",
+      "chars": 87,
+      "count": 4
+    },
+    "e556758f6413": {
+      "title": "워킹 베이스 집중 연습 루틴",
+      "chars": 168,
+      "count": 2
+    },
+    "a1f5cca0fe36": {
+      "title": "블루스 기타 자가 진단",
+      "chars": 84,
+      "count": 4
+    },
+    "61aa555bcc3d": {
+      "title": "방문 당일 체크리스트",
+      "chars": 165,
+      "count": 2
+    },
+    "e37610881932": {
+      "title": "팝 피아노 난이도별 추천 연습곡",
+      "chars": 165,
+      "count": 2
+    },
+    "ed7c71e6ace7": {
+      "title": "효율적인 연습 원칙",
+      "chars": 159,
+      "count": 2
+    },
+    "a9218496eb2a": {
+      "title": "권역별 안내",
+      "chars": 104,
+      "count": 3
+    },
+    "defd6cce6621": {
+      "title": "창원 음악 씬과 서울 스튜디오",
+      "chars": 151,
+      "count": 2
+    },
+    "e85832ad2fd0": {
+      "title": "스튜디오 놀 서비스",
+      "chars": 149,
+      "count": 2
+    },
+    "57f8f9c35c10": {
+      "title": "색소폰에서 자주 하는 실수",
+      "chars": 145,
+      "count": 2
+    },
+    "c71a37501bcd": {
+      "title": "워킹 베이스에서 자주 하는 실수",
+      "chars": 144,
+      "count": 2
+    },
+    "15ea20b86263": {
+      "title": "강 음악 씬과 서울 스튜디오",
+      "chars": 141,
+      "count": 2
+    },
+    "72cd83edb1cb": {
+      "title": "슬랩 베이스 자가 진단",
+      "chars": 94,
+      "count": 3
+    },
+    "ce24015752d1": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 94,
+      "count": 3
+    },
+    "e39e0fd7b429": {
+      "title": "벨팅 학습 추천 곡",
+      "chars": 138,
+      "count": 2
+    },
+    "44ca99aa0fa0": {
+      "title": "팝 피아노에서 자주 하는 실수",
+      "chars": 136,
+      "count": 2
+    },
+    "5574a630deea": {
+      "title": "워킹 베이스 학습 추천 스탠다드",
+      "chars": 135,
+      "count": 2
+    },
+    "0b9b03d1d34d": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 89,
+      "count": 3
+    },
+    "946a17da43ed": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 88,
+      "count": 3
+    },
+    "b8ab259e43f2": {
+      "title": "김제 음악 씬과 서울 스튜디오",
+      "chars": 131,
+      "count": 2
+    },
+    "b8e3d0492b95": {
+      "title": "벨팅에서 자주 하는 실수",
+      "chars": 128,
+      "count": 2
+    },
+    "21f99e64a771": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 84,
+      "count": 3
+    },
+    "bc720a520979": {
+      "title": "발라드 연습 자가 진단",
+      "chars": 113,
+      "count": 2
+    },
+    "90c277d79d23": {
+      "title": "워킹 베이스 자가 진단",
+      "chars": 105,
+      "count": 2
+    },
+    "1d6470e545e1": {
+      "title": "함께 보면 좋은 가이드",
+      "chars": 102,
+      "count": 2
+    },
+    "def96c31487b": {
+      "title": "스튜디오 놀 소개",
+      "chars": 101,
+      "count": 2
+    },
+    "fdba6d496140": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 97,
+      "count": 2
+    },
+    "5d0a95b19cd3": {
+      "title": "색소폰 자가 진단",
+      "chars": 96,
+      "count": 2
+    },
+    "37f6c26bd05b": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 95,
+      "count": 2
+    },
+    "dd824ff7f26d": {
+      "title": "연습실에서 더 효과적으로",
+      "chars": 89,
+      "count": 2
+    },
+    "a2280357d979": {
+      "title": "팝 피아노 자가 진단",
+      "chars": 85,
+      "count": 2
+    },
+    "727830e6cc58": {
+      "title": "연습 자가 진단",
+      "chars": 80,
+      "count": 2
+    }
+  }
+}
