@@ -42,6 +42,9 @@ const CANON = {
   lessonMonthly: constOf('LESSON_MONTHLY_PRICE'),
   practiceMonthly: constOf('PRACTICE_ROOM_MONTHLY_PRICE'),
   recordingHourly: constOf('RECORDING_HOURLY_PRICE'),
+  mixMin: constOf('MIXING_LEVEL1_PRICE'),
+  mixMax: constOf('MIXING_LEVEL3_PRICE'),
+  masteringSingle: constOf('MASTERING_SINGLE_PRICE'),
 };
 
 const localeSrc = read(LOCALE);
@@ -82,10 +85,15 @@ for (const f of files) {
     //    유통 플랫폼 심사(“검토 및 승인 1~5 영업일”) 같은 제3자 일정은 대상이 아니다.
     // 마스터링만 따로 의뢰하는 경우의 납기는 정본에 정의돼 있지 않다 — 비교 대상이 없으므로
     // "믹싱"이 함께 걸린 줄(=완성본 납품)만 본다.
-    const ourDelivery = /믹싱/.test(line)
-      && /(납품|완성|돌려드|드립니다|받아|의뢰)/.test(line)
-      && !/(유통|플랫폼|검토 및 승인|심사|발매일)/.test(line);
+    //    한 줄에 여러 조건이 섞여 있을 수 있어 절 단위로 본다
+    //    ("보컬 녹음만 진행하는 경우 1~2일, 믹싱·마스터링까지 포함하면 3~7영업일" —
+    //     앞 절은 녹음만 하는 경우라 믹싱 납기 정본과 비교할 대상이 아니다).
+    for (const clause of line.split(/[,.]/)) {
+    const ourDelivery = /믹싱/.test(clause)
+      && /(납품|완성|돌려드|드립니다|받아|의뢰|진행됩니다|걸립니다|소요|입니다)/.test(clause)
+      && !/(유통|플랫폼|검토 및 승인|심사|발매일|휴지|간격|텀을|쉬었)/.test(clause);
     if (ourDelivery) {
+      const line = clause;
       const isWedding = weddingDoc || /축가|웨딩|결혼식/.test(line);
       const [lo0, hi0] = isWedding ? CANON.weddingTurnaround : CANON.turnaround;
       const label = isWedding ? '축가 납기' : '납기';
@@ -96,6 +104,7 @@ for (const f of files) {
           add(f, `${label} ${lo}~${hi} (정본 ${lo0}~${hi0})`, line);
         }
       }
+    }
     }
 
     // 2) 수정 횟수 — 같은 줄에 무엇이 걸려 있는지로 기대값을 정한다.
@@ -128,9 +137,39 @@ for (const f of files) {
         }
       }
     }
+
+    // 3) 마스터링 번들 주장 — 마스터링은 별도 항목이다(pricing.ts MASTERING_SINGLE_PRICE).
+    //    믹싱 가격을 말하면서 "마스터링 포함"이라고 하면 공짜로 약속하는 셈이다.
+    //    축가처럼 실제 패키지 상품은 제외한다(WEDDING 패키지는 믹싱·마스터링을 함께 판다).
+    //    가격을 말하는 줄로 좁힌다. 맨 "원"만 보면 "지원"·"원격"에 걸려 오탐이 쏟아진다.
+    const hasPriceToken = /\d+\s*만\s*원|₩\s?\d|\d{1,3},\d{3}|가격|견적/.test(line);
+    //    시세 일반론("~가 일반적입니다")과 지원사업·공모 안내는 우리 가격 주장이 아니다.
+    //    일반 시세 서술이 아니라 우리 가격을 말하는 줄만 본다(규칙 4와 같은 기준).
+    const namesUs = /스튜디오 놀|Studio NOL|저희|당사/.test(line);
+    if (namesUs && /믹싱/.test(line) && /마스터링/.test(line) && /포함/.test(line) && hasPriceToken
+      && !/(패키지|올인원|축가|웨딩|수정)/.test(line)
+      && !/(시세|평균|일반적|업계|타 스튜디오)/.test(line)
+      && !/(지원|공모|재단|진흥원|예술위)/.test(line)
+      && !/포함 ?여부/.test(line)   // "포함 여부에 따라 달라집니다" = 별도 옵션이라는 뜻
+      && !/별도/.test(line)) {
+      add(f, '믹싱 가격에 마스터링이 포함된다고 읽힌다 (마스터링은 별도 항목)', line);
+    }
+
+    // 4) 믹싱 가격대 — 정본은 트랙 수 tier로 20만~50만원이다.
+    //    우리 서비스를 말하는 줄만 본다. 시세 비교표나 모니터 스피커 가격표에도
+    //    "믹싱"과 금액이 함께 나오므로, 스튜디오를 지목하지 않은 줄은 대상이 아니다.
+    const ourService = /스튜디오 놀|Studio NOL|저희|의뢰/.test(line);
+    if (ourService && /믹싱/.test(line) && !/(시세|평균|일반적|타 스튜디오|업계)/.test(line)) {
+      for (const m of line.matchAll(/(\d+)~(\d+)\s*만\s*원/g)) {
+        const lo = Number(m[1]) * 10000, hi = Number(m[2]) * 10000;
+        if (hi === CANON.mixMax && lo !== CANON.mixMin) {
+          add(f, `믹싱 가격 ${m[0]} (정본 ${CANON.mixMin / 10000}~${CANON.mixMax / 10000}만원)`, line);
+        }
+      }
+    }
   }
 
-  // 3) 대표 가격 — 레슨 월·연습실 월·녹음 시간당
+  // 4) 대표 가격 — 레슨 월·연습실 월·녹음 시간당
   const priceChecks = [
     { re: /레슨[^.\n]{0,20}?월\s*(\d+)만\s*원/g, canon: CANON.lessonMonthly, label: '레슨 월정액' },
     { re: /(?:연습실|입주)[^.\n]{0,25}?월\s*(\d+)만\s*원/g, canon: CANON.practiceMonthly, label: '연습실 월정액' },
