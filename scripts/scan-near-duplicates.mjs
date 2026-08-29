@@ -16,8 +16,13 @@
 //      지역 비허브 여부(lib/stories.ts isListableStory와 동일: category 'region' && 비허브),
 //      GSC 성과(docs/gsc-audit-output.csv) → canonical 권고(impressions > clicks > content_len)
 //
-// 사용: node scripts/scan-near-duplicates.mjs
-// 산출: docs/near-duplicate-scan-2026-07.csv, docs/near-duplicate-scan-2026-07.md
+// 사용: node scripts/scan-near-duplicates.mjs [--month YYYY-MM]
+// 산출: docs/near-duplicate-scan-<YYYY-MM>.csv / .md (기본값은 실행 시점의 달)
+//
+// 출력 파일을 실행 월로 나누는 이유: 예전엔 2026-07 파일에 하드코딩돼 있어서, 스캔을
+// 돌릴 때마다 비교 기준이 되는 과거 스냅샷을 덮어썼다. 개선 효과를 측정하려면 이전 회차가
+// 남아 있어야 한다(2026-07 81건 → 2026-08 31건처럼). 같은 달에 여러 번 돌리면 그 달
+// 파일만 갱신되므로, 회차를 따로 남기고 싶으면 --month로 이름을 지정한다.
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -31,8 +36,16 @@ const STORIES_DIR = path.join(ROOT, 'content/stories');
 const REDIRECT_MAP_PATH = path.join(ROOT, 'lib/regionRedirectMap.json');
 const REGION_HUBS_PATH = path.join(ROOT, 'lib/regionHubSlugs.json');
 const GSC_CSV_PATH = path.join(ROOT, 'docs/gsc-audit-output.csv');
-const OUT_CSV = path.join(ROOT, 'docs/near-duplicate-scan-2026-07.csv');
-const OUT_MD = path.join(ROOT, 'docs/near-duplicate-scan-2026-07.md');
+const monthArg = process.argv.find((a) => a.startsWith('--month='))?.split('=')[1]
+  ?? (process.argv.includes('--month') ? process.argv[process.argv.indexOf('--month') + 1] : null);
+if (monthArg && !/^\d{4}-\d{2}$/.test(monthArg)) {
+  console.error(`--month 형식은 YYYY-MM 이어야 한다 (받은 값: ${monthArg})`);
+  process.exit(1);
+}
+const SCAN_MONTH = monthArg ?? new Date().toISOString().slice(0, 7);
+const OUT_BASENAME = `near-duplicate-scan-${SCAN_MONTH}`;
+const OUT_CSV = path.join(ROOT, `docs/${OUT_BASENAME}.csv`);
+const OUT_MD = path.join(ROOT, `docs/${OUT_BASENAME}.md`);
 
 const SHINGLE_K = 5; // 문자 5-gram
 const REPORT_THRESHOLD = 0.45; // CSV 등재 하한 (본문 Jaccard)
@@ -40,7 +53,17 @@ const SKETCH_K = 128; // bottom-k 스케치 크기 (MinHash 128 perm 등가 정�
 const SKETCH_EST_MIN = 0.25; // 스케치 추정 J 통과 하한 — 0.45 대비 σ≈0.044의 ≈4.5σ 여유
 // lib/storyContentPolicy.ts와 동기 (thin-content 판정 재현용)
 const THIN_CONTENT_THRESHOLD = 1500;
-const SHORTCODE_CHAR_ESTIMATES = { 'online-fallback': 120, 'session-checklist': 420 };
+// 값은 lib/storyContentPolicy.ts의 SHORTCODE_CHAR_ESTIMATES와 같아야 한다(.ts라 import 불가라 미러링).
+// 숏코드를 추가하거나 컴포넌트 문구를 고치면 여기도 같이 고칠 것 — 어긋나면 이 스캔의
+// 색인 가능성 판정이 실제와 달라진다(session-checklist가 420으로 남아 있던 적이 있다).
+const SHORTCODE_CHAR_ESTIMATES = {
+  'online-fallback': 120,
+  'session-checklist': 160,
+  'studio-more': 204,
+  'studio-services': 135,
+  'online-request': 113,
+  'practice-room-terms': 117,
+};
 const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 const AUTO_EXPAND_BLOCK_REGEX = /<!--\s*AUTO-EXPAND-V1\s*-->[\s\S]*?<!--\s*\/AUTO-EXPAND-V1\s*-->/g;
 // sanity check 대상: [기처리 페어(결과에 없어야 정상), 미해결 cover 페어(잡혀야 정상)]
@@ -630,11 +653,11 @@ function main() {
     .join('\n');
 
   const coverMax = coverPairs[0] ?? null;
-  const md = `# 스토리 근접중복 전수 스캔 — 2026-07
+  const md = `# 스토리 근접중복 전수 스캔 — ${SCAN_MONTH}
 
 > **분석 전용 산출물.** 이 스캔은 콘텐츠 파일·리다이렉트 맵을 일절 수정하지 않았다.
 > 배경·정책: [p1-followups-2026-07.md](p1-followups-2026-07.md) §1-5 (통합 시 GSC 강자를 canonical로, 약자를 308).
-> 전체 페어 데이터(지역·noindex 포함 ${pairs.length}건): [near-duplicate-scan-2026-07.csv](near-duplicate-scan-2026-07.csv)
+> 전체 페어 데이터(지역·noindex 포함 ${pairs.length}건): [${OUT_BASENAME}.csv](${OUT_BASENAME}.csv)
 
 ## 방법론
 
