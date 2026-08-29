@@ -6,6 +6,8 @@ import { locales, type Locale } from '../lib/i18n';
 import OnlineFallback from './story/OnlineFallback';
 import SessionChecklist from './story/SessionChecklist';
 import StudioMore from './story/StudioMore';
+import StudioServices from './story/StudioServices';
+import OnlineRequest from './story/OnlineRequest';
 import { isInlineDirectiveName, MAX_AUTHOR_BOXES } from '../lib/inlineDirectives';
 import { isAllowedLinkHref } from './markdown/safeLinks';
 import { autoLinkKeywords } from './markdown/autoLinks';
@@ -379,6 +381,8 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       if (segment.name === 'online-fallback') return <OnlineFallback key={index} locale={currentLocale} />;
       if (segment.name === 'session-checklist') return <SessionChecklist key={index} locale={currentLocale} />;
       if (segment.name === 'studio-more') return <StudioMore key={index} locale={currentLocale} />;
+      if (segment.name === 'studio-services') return <StudioServices key={index} locale={currentLocale} />;
+      if (segment.name === 'online-request') return <OnlineRequest key={index} locale={currentLocale} />;
 
       // 4종 inline directive — max 2 enforce (초과는 silent drop)
       if (isInlineDirectiveName(segment.name)) {

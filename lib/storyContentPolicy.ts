@@ -39,6 +39,8 @@ export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
   'online-fallback': 120,
   'session-checklist': 160,
   'studio-more': 204,
+  'studio-services': 135,
+  'online-request': 113,
 };
 export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 
