@@ -39,6 +39,9 @@ jobs:
       - name: Duplicate section check
         run: npm run check:dup-sections
 
+      - name: Fact consistency check
+        run: npm run check:facts
+
       - name: Test
         run: npm test -- --coverage --passWithNoTests
 

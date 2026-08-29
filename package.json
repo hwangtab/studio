@@ -52,6 +52,7 @@
     "db:studio": "node --env-file=.env.local node_modules/.bin/drizzle-kit studio",
     "content-check": "node scripts/content-quality-check.js --korean",
     "check:dup-sections": "node scripts/check-duplicate-sections.mjs",
+    "check:facts": "node scripts/check-fact-consistency.mjs",
     "content-check:ci": "node scripts/content-quality-check.js --korean --ci",
     "audit:thin": "node scripts/audit-thin-content.js --summary",
     "audit:thin:ci": "node scripts/audit-thin-content.js --fail"
