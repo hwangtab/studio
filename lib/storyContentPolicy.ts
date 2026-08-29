@@ -41,6 +41,7 @@ export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
   'studio-more': 204,
   'studio-services': 135,
   'online-request': 113,
+  'practice-room-terms': 117,
 };
 export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;
 
