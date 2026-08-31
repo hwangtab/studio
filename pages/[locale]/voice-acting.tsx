@@ -26,7 +26,7 @@ const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCall
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData } from '../../data/pricing';
+import { getPricingData, VOICEOVER_HOURLY_PRICE } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -108,7 +108,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
       description: t('voiceActing.seo.description'),
       serviceType: locale === 'ko' ? '성우 녹음' : 'Voice Acting & Narration Recording',
       offerName: voiceoverPackage?.title ?? (locale === 'ko' ? '성우/나레이션 녹음' : 'Voiceover & Narration'),
-      offerPrice: 100000,
+      offerPrice: VOICEOVER_HOURLY_PRICE,
     }),
     [t, siteConfig, locale, pageUrl, voiceoverPackage]
   );

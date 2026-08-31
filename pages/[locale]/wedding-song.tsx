@@ -24,7 +24,7 @@ const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCall
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData } from '../../data/pricing';
+import { getPricingData, WEDDING_PACKAGE_PRICE } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -81,7 +81,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
       description: t('weddingSong.seo.description'),
       serviceType: locale === 'ko' ? '축가 녹음' : 'Wedding Song Recording',
       offerName: weddingPackage?.title ?? (locale === 'ko' ? '축가 완성 패키지' : 'Wedding Song Package'),
-      offerPrice: 350000,
+      offerPrice: WEDDING_PACKAGE_PRICE,
     }),
     [t, siteConfig, locale, pageUrl, weddingPackage]
   );

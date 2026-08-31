@@ -26,7 +26,7 @@ const HubLinkCallout = dynamic(() => import('../../components/guides/HubLinkCall
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData } from '../../data/pricing';
+import { COVER_VIDEO_PACKAGE_PRICE, getPricingData } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -106,7 +106,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
       description: t('coverVideo.seo.description'),
       serviceType: locale === 'ko' ? '커버 영상 촬영' : 'Cover Video Production',
       offerName: coverVideoPackage?.title ?? (locale === 'ko' ? '커버 영상 촬영 올인원 패키지' : 'Cover Video All-in-One Package'),
-      offerPrice: 350000,
+      offerPrice: COVER_VIDEO_PACKAGE_PRICE,
     }),
     [t, siteConfig, locale, pageUrl, coverVideoPackage]
   );
