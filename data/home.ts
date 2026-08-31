@@ -107,7 +107,7 @@ const homeData = {
         },
         {
           heading: "세션 전에 확정되는 투명한 가격",
-          body: "보컬 녹음 1곡 25만원, 시간당 10만원, 싱글 마스터링 10만원. 숨은 비용 없이 카카오톡으로 무료 견적을 먼저 확인하고 시작합니다."
+          body: "보컬 녹음 1곡 25만원, 시간당 10만원, 싱글 마스터링 10만원, 1곡 통합 50만원. 숨은 비용 없이 카카오톡으로 무료 견적을 먼저 확인하고 시작합니다."
         },
         {
           heading: "녹음·연습실·발매까지 한 곳에서",
@@ -217,7 +217,7 @@ const homeData = {
       items: [
         {
           heading: "English booking & transparent workflow",
-          body: "Booking, quotes, mix notes, and revisions are all handled in English, and our remote mixing & mastering runs entirely in English — send your tracks from anywhere. Whether you are an exchange student, K-pop trainee, or expat artist, the process stays clear from first message to final delivery. Transparent pricing, no hidden fees — quotes confirmed before the session begins."
+          body: "Booking, quotes, mix notes, and revisions are all handled in English, and our remote mixing & mastering runs entirely in English — send your tracks from anywhere. Whether you are an exchange student, K-pop trainee, or expat artist, the process stays clear from first message to final delivery. Transparent pricing, no hidden fees — quotes confirmed before the session begins. 1-song bundle (recording + mixing + mastering) starts at ₩500,000."
         },
         {
           heading: "Recording for Artists Aiming at the Korean Market",
@@ -313,7 +313,7 @@ const homeData = {
       items: [
         {
           heading: "远程混音与母带处理",
-          body: "无需来首尔。将干声和伴奏的 WAV 文件发送给我们，收到文件后 3 至 7 个工作日内交付成品。沟通以英语进行。"
+          body: "无需来首尔。将干声和伴奏的 WAV 文件发送给我们，收到文件后 3 至 7 个工作日内交付成品。沟通以英语进行。单曲套餐（录音+混音+母带）₩500,000 起。"
         },
         {
           heading: "在韩音乐人专属服务方案",
@@ -409,7 +409,7 @@ const homeData = {
       items: [
         {
           heading: "FAQ para artistas latinos en Seúl",
-          body: "¿Cómo obtener visa de artista? ¿Dónde encontrar músicos coreanos para colaborar? Nuestro equipo te guía en todo el proceso: desde la visa C-4 hasta el registro en Korean Music Copyright Association (KOMCA)."
+          body: "¿Cómo obtener visa de artista? ¿Dónde encontrar músicos coreanos para colaborar? Nuestro equipo te guía en todo el proceso: desde la visa C-4 hasta el registro en Korean Music Copyright Association (KOMCA). Paquete Single (grabación + mezcla + masterización) desde ₩500,000."
         },
         {
           heading: "Producción musical para K-pop y Latin Pop",
@@ -505,7 +505,7 @@ const homeData = {
       items: [
         {
           heading: "Hướng dẫn visa nghệ sĩ & KOMCA",
-          body: "Làm thế nào để xin visa C-4 (nghệ sĩ)? Đăng ký quyền tác giả âm nhạc tại Korean Music Copyright Association (KOMCA) ra sao? Chúng tôi đồng hành bạn từ khâu xin visa đến khi hoàn tất đăng ký quyền tác giả."
+          body: "Làm thế nào để xin visa C-4 (nghệ sĩ)? Đăng ký quyền tác giả âm nhạc tại Korean Music Copyright Association (KOMCA) ra sao? Chúng tôi đồng hành bạn từ khâu xin visa đến khi hoàn tất đăng ký quyền tác giả. Gói 1 bài (thu âm + mixing + mastering) từ ₩500,000."
         },
         {
           heading: "Đào tạo thanh nhạc phong cách K-pop",
@@ -601,7 +601,7 @@ const homeData = {
       items: [
         {
           heading: "คำแนะนำวีซ่าศิลปิน & KOMCA",
-          body: "วิธีขอวีซ่า C-4 (ศิลปิน) ทำอย่างไร? ลงทะเบียนลิขสิทธิ์เพลงที่ Korean Music Copyright Association (KOMCA) อย่างไร? ทีมงานของเราพร้อมช่วยเหลือคุณตั้งแต่ขั้นตอนขอวีซ่าจนถึงการจดทะเบียนลิขสิทธิ์เสร็จสมบูรณ์"
+          body: "วิธีขอวีซ่า C-4 (ศิลปิน) ทำอย่างไร? ลงทะเบียนลิขสิทธิ์เพลงที่ Korean Music Copyright Association (KOMCA) อย่างไร? ทีมงานของเราพร้อมช่วยเหลือคุณตั้งแต่ขั้นตอนขอวีซ่าจนถึงการจดทะเบียนลิขสิทธิ์เสร็จสมบูรณ์ แพ็กเกจเพลงเดี่ยว (อัด+มิกซ์+มาสเตอร์) เริ่มต้น ₩500,000"
         },
         {
           heading: "การผลิตเพลงสไตล์ K-pop",
@@ -697,7 +697,7 @@ const homeData = {
       items: [
         {
           heading: "Oʻzbek va ingliz tillarida muloqot",
-          body: "Studiomizda oʻzbek va ingliz tillarida muloqot qilish mumkin. Koreya musiqa bozori bilan tanish muhandislarimiz loyihaning har bir bosqichida sizni yoʻnaltiradi — yozuvdan miks va masteringgacha tilga bogʻliq tushunmovchiliklarsiz."
+          body: "Studiomizda oʻzbek va ingliz tillarida muloqot qilish mumkin. Koreya musiqa bozori bilan tanish muhandislarimiz loyihaning har bir bosqichida sizni yoʻnaltiradi — yozuvdan miks va masteringgacha tilga bogʻliq tushunmovchiliklarsiz. 1 ta qoʻshiq toʻliq paketi (yozuv + miks + mastering) ₩500,000 dan boshlanadi."
         },
         {
           heading: "K-pop treningi va C-4 sanʼatkor vizasi yoʻnalishi",

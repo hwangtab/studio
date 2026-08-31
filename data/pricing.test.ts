@@ -24,6 +24,7 @@ import {
   RELEASE_EP_FROM_PRICE,
   RELEASE_SINGLE_FROM_PRICE,
   RENTAL_HOURLY_PRICE,
+  SINGLE_BUNDLE_PRICE,
   VOCAL_PACKAGE_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
@@ -67,6 +68,7 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('mastering-single')).toBe(MASTERING_SINGLE_PRICE);
     expect(byId.get('mastering-package')).toBe(MASTERING_PACKAGE_PRICE);
     expect(byId.get('package-wedding')).toBe(WEDDING_PACKAGE_PRICE);
+    expect(byId.get('package-single-bundle')).toBe(SINGLE_BUNDLE_PRICE);
     expect(byId.get('package-voiceover')).toBe(VOICEOVER_HOURLY_PRICE);
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);

@@ -12,6 +12,7 @@ import {
   MIXING_LEVEL3_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
   RECORDING_HOURLY_PRICE,
+  SINGLE_BUNDLE_PRICE,
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
@@ -84,6 +85,7 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
   - Practice Room Monthly Residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)}/mo (₩0 deposit, 50% off first month for 1-year contracts)
   - Vocal Recording 1프로 (1-song package, 3 hrs): ${krw(VOCAL_PACKAGE_PRICE)}
   - Hourly Recording (voice acting / instrument / corrections): ${krw(RECORDING_HOURLY_PRICE)}/hr (min 2 hrs)
+  - 1-Song Bundle (recording + Level 1 mixing + single mastering): ${krw(SINGLE_BUNDLE_PRICE)} (~9% off line-item total)
   - Wedding Song Complete Package: ${krw(WEDDING_PACKAGE_PRICE)} (2hr recording + tuning + mixing & mastering)
   - Day Lock (6-hour package): ${krw(DAY_LOCK_PRICE)}
   - 1:1 Music Lesson: ${krw(LESSON_MONTHLY_PRICE)}/month flat (4 sessions, 60 min each)

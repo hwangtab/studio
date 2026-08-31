@@ -3,10 +3,12 @@ import type { Locale } from '../lib/i18n';
 // ─────────────────────────────────────────────────────────────────────────────
 // 가격 단일 소스(SSOT).
 // 소비처: 이 파일의 오퍼 priceValue · utils/schema/business.ts(JSON-LD Offer) ·
-// pages/api/llms.ts(AI 인덱스) · lesson.tsx 등 페이지. 같은 값이 여러 파일에
-// 리터럴로 흩어져 있다가 한쪽만 고쳐 어긋나는 드리프트를 구조적으로 차단한다.
+// pages/api/llms.ts(AI 인덱스) · pages/[locale]/pricing.tsx(가격 페이지) ·
+// data/home.ts(홈 USP) · lesson.tsx 등 페이지. 같은 값이 여러 파일에 리터럴로
+// 흩어져 있다가 한쪽만 고쳐 어긋나는 드리프트를 구조적으로 차단한다.
 // data/pricing.test.ts가 표시문자열↔값·스키마↔상수 정합을 CI에서 강제한다.
 // 주의: 350,000은 서로 다른 세 상품(레슨 월정액·축가 패키지·음반 기획 오퍼)의
+// 우연한 동일값, 500,000은 서로 다른 두 상품(1곡 통합 패키지·발매 싱글 시작가)의
 // 우연한 동일값 — 반드시 상품별 상수를 쓸 것(일괄 치환 금지).
 // ─────────────────────────────────────────────────────────────────────────────
 export const RECORDING_HOURLY_PRICE = 100000;
@@ -31,6 +33,12 @@ export const PRODUCTION_OFFER_PRICE = 350000;
 export const RELEASE_SINGLE_FROM_PRICE = 500000;
 export const RELEASE_EP_FROM_PRICE = 1500000; // 3-5곡
 export const RELEASE_ALBUM_FROM_PRICE = 4000000; // 8곡 기준
+/**
+ * 1곡 통합 싱글 패키지 — VOCAL_PACKAGE_PRICE(250,000) + MIXING_LEVEL1_PRICE(200,000)
+ * + MASTERING_SINGLE_PRICE(100,000) = 550,000의 9.1% 할인. 우연히 RELEASE_SINGLE_FROM_PRICE와
+ * 동일값이지만 의미가 다르다 (서비스 묶음 단품 vs 발매 프로젝트 티어 시작가). 상품별 상수 필수.
+ */
+export const SINGLE_BUNDLE_PRICE = 500000;
 
 /** 350000 → "350,000". 서버·클라이언트 동일 결과를 보장하려 로케일을 명시 고정. */
 export const formatPriceAmount = (value: number): string => value.toLocaleString('en-US');
@@ -349,6 +357,39 @@ export const getPricingData = (locale: Locale) => {
   ];
 
   const specialPackages = [
+    {
+      id: 'package-single-bundle',
+      title: t(locale, {
+        ko: '1곡 통합 싱글 패키지 (녹음+믹싱+마스터링)',
+        en: 'Single Song Bundle (Recording + Mixing + Mastering)',
+        zh: '单曲套餐（录音+混音+母带）',
+        es: 'Paquete Single Completo (Grabación+mezcla+masterización)',
+        vi: 'Gói 1 bài hoàn chỉnh (Thu âm + Mixing + Mastering)',
+        th: 'เพลงเดี่ยวแพ็กเกจครบ (อัด+มิกซ์+มาสเตอร์)',
+        uz: "1 ta qo\'shiq to\'liq paket (Yozuv+Miks+Mastering)"
+      }),
+      priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
+      priceValue: SINGLE_BUNDLE_PRICE,
+      unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
+      description: t(locale, {
+        ko: '보컬 1곡 녹음 + Level 1 믹싱 + 싱글 마스터링을 한 번에 묶은 패키지입니다. 개별 합계 55만원 대비 9.1% 할인.',
+        en: 'All-in-one bundle: vocal recording + Level 1 mixing + single mastering. ~9% off the line-item total.',
+        zh: '一站式套餐：人声录音 + Level 1 混音 + 单曲母带。比单项合计便宜约 9%。',
+        es: 'Paquete todo-en-uno: grabación vocal + mezcla Level 1 + masterización de sencillo. ~9% de descuento sobre la suma de los ítems.',
+        vi: 'Gói trọn gói: thu âm vocal + mixing Level 1 + mastering single. Giảm ~9% so với tổng các mục riêng lẻ.',
+        th: 'แพ็กเกจครบ: อัดเสียงร้อง + มิกซ์ Level 1 + มาสเตอร์ซิงเกิล ลด ~9% จากราคารวมรายชิ้น',
+        uz: "To'liq paket: vokal yozuv + Level 1 miks + single mastering. Alohida narxlar yig'indisidan ~9% chegirma."
+      }),
+      features: tArray(locale, {
+        ko: ['보컬 녹음 1프로 (3시간, 전담 엔지니어)', 'Level 1 믹싱 (10트랙 이하, 수정 2회)', '싱글 마스터링 (수정 1회)', '개별 합계 대비 약 9% 할인'],
+        en: ['Vocal Recording 1 Song (3h, dedicated engineer)', 'Level 1 Mixing (≤10 tracks, 2 revisions)', 'Single Mastering (1 revision)', '~9% off line-item total'],
+        zh: ['人声录音1首（3小时，专属工程师）', 'Level 1 混音（≤10轨，含2次修改）', '单曲母带（含1次修改）', '比单项合计便宜约9%'],
+        es: ['Grabación vocal 1 canción (3h, ingeniero dedicado)', 'Mezcla Level 1 (≤10 pistas, 2 revisiones)', 'Masterización de sencillo (1 revisión)', '~9% de descuento sobre los ítems'],
+        vi: ['Thu âm vocal 1 bài (3h, kỹ sư chuyên trách)', 'Mixing Level 1 (≤10 track, 2 lần chỉnh sửa)', 'Mastering single (1 lần chỉnh sửa)', 'Giảm ~9% so với tổng các mục'],
+        th: ['อัดเสียงร้อง 1 เพลง (3 ชม. วิศวกรประจำ)', 'มิกซ์ Level 1 (≤10 แทร็ก แก้ไข 2 ครั้ง)', 'มาสเตอร์ซิงเกิล (แก้ไข 1 ครั้ง)', 'ลด ~9% จากรายการรวม'],
+        uz: ['Vokal yozuv 1 qo\'shiq (3 soat, maxsus muhandis)', 'Level 1 miks (≤10 track, 2 tahrir)', 'Single mastering (1 tahrir)', 'Alohida narxlardan ~9% chegirma']
+      }),
+    },
     {
       id: 'package-wedding',
       title: t(locale, { ko: '축가/이벤트 녹음 (전담 엔지니어 진행)', en: 'Event & Wedding Recording', zh: '婚礼/活动录音', es: 'Grabación de Bodas y Eventos', vi: 'Thu âm sự kiện & nhạc cưới', th: 'บันทึกเสียงงานอีเวนต์/งานแต่ง', uz: 'Tadbir/to"y yozuvi' }),
