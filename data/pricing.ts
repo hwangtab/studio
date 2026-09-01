@@ -82,6 +82,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: "recording-pro",
       title: t(locale, { ko: "보컬 녹음 1프로", en: "Vocal Recording (1 Song)", zh: "人声录音 (1首)", es: "Grabación Vocal (1 Canción)", vi: "Thu âm vocal (1 bài)", th: "อัดเสียงร้อง (1 เพลง)", uz: "Vokal yozuvi (1 qo\'shiq)" }),
+      subtitle: t(locale, { ko: "전담 엔지니어, 3시간 기준", en: "Dedicated engineer, 3-hour session", zh: "专属工程师, 3小时基准", es: "Ingeniero dedicado, sesión de 3 horas", vi: "Kỹ sư chuyên trách, buổi 3 giờ", th: "วิศวกรประจำ, เซสชัน 3 ชั่วโมง", uz: "Maxsus muhandis, 3 soatlik seans" }),
       priceDisplay: t(locale, { ko: "250,000원", en: "₩250,000", zh: "₩250,000", es: "₩250,000", vi: "₩250,000", th: "₩250,000", uz: "₩250,000" }),
       priceValue: 250000,
       unit: t(locale, { ko: "/ 1프로", en: "/ song", zh: "/ 首", es: "/ canción", vi: "/ bài", th: "/ เพลง", uz: "/ qo\'shiq" }),
@@ -108,6 +109,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: "recording-hourly",
       title: t(locale, { ko: "시간당 레코딩", en: "Hourly Recording", zh: "小时录音", es: "Grabación por Hora", vi: "Thu âm theo giờ", th: "บันทึกเสียงรายชั่วโมง", uz: "Soatlik yozuv" }),
+      subtitle: t(locale, { ko: "최소 2시간부터, 성우·악기 보정", en: "From 2 hours, voiceover & overdubs", zh: "最少2小时, 配音·补录", es: "Desde 2 horas, locución y sobredoblaje", vi: "Từ 2 giờ, voiceover & overdub", th: "ตั้งแต่ 2 ชม. พากย์ & overdub", uz: "2 soatdan, voiceover va overdub" }),
       priceDisplay: t(locale, { ko: "100,000원", en: "₩100,000", zh: "₩100,000", es: "₩100,000", vi: "₩100,000", th: "₩100,000", uz: "₩100,000" }),
       priceValue: 100000,
       unit: t(locale, { ko: "/ 시간", en: "/ hour", zh: "/ 小时", es: "/ hora", vi: "/ giờ", th: "/ ชั่วโมง", uz: "/ soat" }),
@@ -133,6 +135,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: "recording-daylock",
       title: t(locale, { ko: '6시간 패키지 (Day Lock)', en: '6-Hour Package (Day Lock)', zh: '6小时套餐 (Day Lock)', es: 'Paquete de 6 Horas', vi: 'Gói 6 giờ (Day Lock)', th: 'แพ็กเกจ 6 ชั่วโมง (Day Lock)', uz: '6 soatlik paket (Day Lock)' }),
+      subtitle: t(locale, { ko: '장시간 작업용, 약 17% 할인', en: 'Long sessions, ~17% off', zh: '长时间工作, 约17%折扣', es: 'Sesiones largas, ~17% de descuento', vi: 'Buổi dài, giảm ~17%', th: 'เซสชันยาว, ลด ~17%', uz: 'Uzoq seanslar, ~17% chegirma' }),
       priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
       priceValue: 500000,
       unit: t(locale, { ko: '/ 일', en: '/ day', zh: '/ 天', es: '/ día', vi: '/ ngày', th: '/ วัน', uz: '/ kun' }),
@@ -162,6 +165,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'mixing-level1',
       title: 'Level 1',
+      subtitle: t(locale, { ko: '10트랙 이하 · 보컬+MR/소편성', en: '≤10 tracks · vocal + MR / small ensemble', zh: '10轨以下 · 人声+MR/小编制', es: '≤10 pistas · vocal + MR / conjunto pequeño', vi: '≤10 track · vocal + MR / dàn nhỏ', th: '≤10 แทร็ก · ร้อง + MR / วงเล็ก', uz: '≤10 trek · vokal + MR / kichik ansambl' }),
       priceDisplay: t(locale, { ko: '200,000원', en: '₩200,000', zh: '₩200,000', es: '₩200,000', vi: '₩200,000', th: '₩200,000', uz: '₩200,000' }),
       priceValue: 200000,
       unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -187,6 +191,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'mixing-level2',
       title: 'Level 2',
+      subtitle: t(locale, { ko: '11~30트랙 · 일반 밴드/팝', en: '11–30 tracks · band / pop arrangement', zh: '11–30轨 · 一般乐队/流行', es: '11–30 pistas · banda / pop', vi: '11–30 track · band / pop', th: '11–30 แทร็ก · วง / ป๊อป', uz: '11–30 trek · band / pop' }),
       priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
       priceValue: 350000,
       unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -213,6 +218,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'mixing-level3',
       title: 'Level 3',
+      subtitle: t(locale, { ko: '31트랙↑ · 대편성/복잡한 일렉트로닉', en: '31+ tracks · large ensemble / complex electronic', zh: '31轨以上 · 大编制/复杂电子', es: '31+ pistas · gran ensemble / electrónica compleja', vi: '31+ track · dàn lớn / electronic phức tạp', th: '31+ แทร็ก · วงใหญ่ / อิเล็กทรอนิกส์ซับซ้อน', uz: '31+ trek · katta ansambl / murakkab elektronika' }),
       priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
       priceValue: 500000,
       unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -241,6 +247,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'mastering-single',
       title: t(locale, { ko: '싱글 마스터링', en: 'Single Mastering', zh: '单曲母带处理', es: 'Masterización de Sencillo', vi: 'Mastering single', th: 'มาสเตอริ่งซิงเกิล', uz: 'Single mastering' }),
+      subtitle: t(locale, { ko: '1곡 디지털 발매용', en: '1 song, digital release', zh: '1首, 数字发行', es: '1 canción, lanzamiento digital', vi: '1 bài, phát hành kỹ thuật số', th: '1 เพลง, การเผยแพร่ดิจิทัล', uz: '1 qo\'shiq, raqamli chiqarish' }),
       priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),
       priceValue: 100000,
       unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -267,6 +274,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'mastering-package',
       title: t(locale, { ko: 'EP · 정규 마스터링', en: 'EP · Album Mastering', zh: 'EP·专辑母带处理', es: 'Masterización de EP · Álbum', vi: 'Mastering EP · album', th: 'มาสเตอริ่ง EP · อัลบั้ม', uz: 'EP · albom masteringi' }),
+      subtitle: t(locale, { ko: '4곡↑ 일괄 의뢰 시 곡당', en: '4+ tracks, per-song rate', zh: '4首以上, 每首单价', es: '4+ canciones, tarifa por canción', vi: '4+ bài, đơn giá mỗi bài', th: '4+ เพลง, ราคาต่อเพลง', uz: '4+ trek, har bir trek narxi' }),
       priceDisplay: t(locale, { ko: '80,000원', en: '₩80,000', zh: '₩80,000', es: '₩80,000', vi: '₩80,000', th: '₩80,000', uz: '₩80,000' }),
       priceValue: MASTERING_PACKAGE_PRICE,
       unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -368,6 +376,15 @@ export const getPricingData = (locale: Locale) => {
         th: 'เพลงเดี่ยวแพ็กเกจครบ (อัด+มิกซ์+มาสเตอร์)',
         uz: "1 ta qo\'shiq to\'liq paket (Yozuv+Miks+Mastering)"
       }),
+      subtitle: t(locale, {
+        ko: '녹음+믹싱+마스터링 한 번에 (~9% 할인)',
+        en: 'Recording + mixing + mastering, ~9% off',
+        zh: '录音+混音+母带, 约9%折扣',
+        es: 'Grabación + mezcla + masterización, ~9% de descuento',
+        vi: 'Thu âm + mixing + mastering, giảm ~9%',
+        th: 'อัด + มิกซ์ + มาสเตอร์, ลด ~9%',
+        uz: "Yozuv + miks + mastering, ~9% chegirma"
+      }),
       priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
       priceValue: SINGLE_BUNDLE_PRICE,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -393,6 +410,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'package-wedding',
       title: t(locale, { ko: '축가/이벤트 녹음 (전담 엔지니어 진행)', en: 'Event & Wedding Recording', zh: '婚礼/活动录音', es: 'Grabación de Bodas y Eventos', vi: 'Thu âm sự kiện & nhạc cưới', th: 'บันทึกเสียงงานอีเวนต์/งานแต่ง', uz: 'Tadbir/to"y yozuvi' }),
+      subtitle: t(locale, { ko: '올인원, 당일 보정본 가능', en: 'All-in-one, same-day draft available', zh: '一站式, 当天可出初步修音版', es: 'Todo en uno, versión preliminar el mismo día', vi: 'Trọn gói, bản chỉnh sơ bộ trong ngày', th: 'ครบวงจร, ไฟล์ปรับเบื้องต้นภายในวัน', uz: "To'liq, shu kuni dastlabki versiya" }),
       priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
       priceValue: 350000,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -419,6 +437,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'package-voiceover',
       title: t(locale, { ko: '성우/나레이션 녹음', en: 'Voiceover & Narration', zh: '配音/旁白录音', es: 'Locución y Narración', vi: 'Voiceover & Narration', th: 'อัดเสียงพากย์/บรรยาย', uz: 'Voiceover/Narratsiya yozuvi' }),
+      subtitle: t(locale, { ko: 'U87Ai, 유튜브·광고', en: 'U87Ai, YouTube & commercials', zh: 'U87Ai, YouTube·广告', es: 'U87Ai, YouTube y comerciales', vi: 'U87Ai, YouTube & quảng cáo', th: 'U87Ai, YouTube & โฆษณา', uz: 'U87Ai, YouTube va reklama' }),
       priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),
       priceValue: 100000,
       unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
@@ -444,6 +463,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'package-cover-video',
       title: t(locale, { ko: '커버 영상 촬영 올인원 패키지', en: 'Cover Video All-in-One Package', zh: '翻唱视频一站式套餐', es: 'Paquete Todo en Uno para Video Cover', vi: 'Gói Trọn Gói Quay Video Cover', th: 'แพ็กเกจ Cover Video ครบวงจร', uz: 'Cover Video All-in-One paketi' }),
+      subtitle: t(locale, { ko: '촬영+작업 3시간, 4K MP4', en: 'Filming + session 3h, 4K MP4', zh: '拍摄+制作 3小时, 4K MP4', es: 'Filmación + sesión 3h, video 4K MP4', vi: 'Quay + làm việc 3 giờ, 4K MP4', th: 'ถ่าย + งาน 3 ชม., วิดีโอ 4K MP4', uz: 'Suratga olish + ish 3 soat, 4K MP4 video' }),
       priceDisplay: t(locale, { ko: '350,000원', en: '₩350,000', zh: '₩350,000', es: '₩350,000', vi: '₩350,000', th: '₩350,000', uz: '₩350,000' }),
       priceValue: 350000,
       unit: t(locale, { ko: '/ 1곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: '/ qo\'shiq' }),
@@ -470,6 +490,7 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'package-rental',
       title: t(locale, { ko: '유튜브/방송 촬영 대관', en: 'Studio Rental for Filming', zh: 'YouTube/广播拍摄租赁', es: 'Alquiler de Estudio para Filmación', vi: 'Thuê studio quay phim', th: 'เช่าสตูดิโอถ่ายทำ', uz: 'Suratga olish uchun studiya ijarasi' }),
+      subtitle: t(locale, { ko: '조명 무료, 메인 부스 사용', en: 'Free lighting, main booth access', zh: '灯光免费, 主录音棚', es: 'Iluminación gratis, cabina principal', vi: 'Đèn miễn phí, booth chính', th: 'ไฟฟรี, บูธหลัก', uz: 'Bepul yorug\'lik, asosiy booth' }),
       priceDisplay: t(locale, { ko: '100,000원', en: '₩100,000', zh: '₩100,000', es: '₩100,000', vi: '₩100,000', th: '₩100,000', uz: '₩100,000' }),
       priceValue: 100000,
       unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
@@ -509,6 +530,15 @@ export const getPricingData = (locale: Locale) => {
         vi: 'Thuê phòng tập nhạc theo tháng (24/7, không đặt cọc)',
         th: 'ห้องซ้อมดนตรีรายเดือน (24 ชม. ไม่มีเงินมัดจำ)',
         uz: "Musiqa mashg'ulot xonasi oylik ijara (24/7, depozitsiz)"
+      }),
+      subtitle: t(locale, {
+        ko: 'STC 60+ 방음, 24시간·숙식 가능',
+        en: 'STC 60+ soundproof, 24/7, stay overnight',
+        zh: 'STC 60+ 隔音, 24小时·可食宿',
+        es: 'STC 60+ insonorizado, 24/7, pernocta',
+        vi: 'STC 60+ cách âm, 24/7, ở lại qua đêm',
+        th: 'STC 60+ กันเสียง, 24/7, พักค้างได้',
+        uz: "STC 60+ shovqin izolyatsiya, 24/7, tunab qolish"
       }),
       priceDisplay: t(locale, {
         ko: `${formatPriceAmount(PRACTICE_ROOM_MONTHLY_PRICE)}원`,

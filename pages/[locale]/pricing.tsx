@@ -104,12 +104,20 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     },
   ]), [t, VAT_NOTICE, priceLabels, siteConfig.contact.phone]);
 
-  // 상단 즉답 가격 요약표 행 — 전부 가격 SSOT(pricingData)에서 끌어온다(하드코딩 0).
+  // 상단 즉답 가격 요약표 — 전부 가격 SSOT(pricingData)에서 끌어온다(하드코딩 0).
   // AI 검색(ChatGPT 등)·외부 유입이 above-the-fold에서 전체 단가를 즉시 스캔하도록 —
   // 상세 카드는 아래 섹션에 그대로 있고, 이 표는 이탈 방지·AI 인용용 압축 뷰다.
-  const summaryRows = React.useMemo(
-    () => [...recordingOffers, ...mixingOffers, ...masteringOffers, ...specialPackages, ...practiceRoomOffers],
-    [recordingOffers, mixingOffers, masteringOffers, specialPackages, practiceRoomOffers]
+  // 카테고리 그룹 헤더 + 오퍼별 부제(subtitle)를 넣어 "Level 1"처럼 의미 없는 라벨이
+  // 단독으로 노출되지 않게 한다.
+  const summaryGroups = React.useMemo(
+    () => [
+      { id: 'special', title: t('pricing.special.title'), offers: specialPackages },
+      { id: 'recording', title: t('pricing.recording.title'), offers: recordingOffers },
+      { id: 'mixing', title: t('pricing.mixing.title'), offers: mixingOffers },
+      { id: 'mastering', title: t('pricing.mastering.title'), offers: masteringOffers },
+      { id: 'practice-room', title: t('pricing.practiceRoom.title'), offers: practiceRoomOffers },
+    ],
+    [t, specialPackages, recordingOffers, mixingOffers, masteringOffers, practiceRoomOffers]
   );
 
   // 긴 가격 페이지(특수패키지→녹음→믹싱→마스터링→부가서비스)를 바로 점프하는 앵커 목차.
@@ -229,14 +237,32 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
               </tr>
             </thead>
             <tbody>
-              {summaryRows.map((offer) => (
-                <tr key={offer.id} className="border-b border-gray-100 dark:border-gray-800">
-                  <th scope="row" className="py-3 pr-4 typo-card-body font-normal">{offer.title}</th>
-                  <td className="py-3 pl-4 text-right whitespace-nowrap">
-                    <span className="font-bold text-primary dark:text-primary-light">{offer.priceDisplay}</span>{' '}
-                    <span className="typo-card-meta">{offer.unit}</span>
-                  </td>
-                </tr>
+              {summaryGroups.map((group) => (
+                <React.Fragment key={group.id}>
+                  <tr>
+                    <th
+                      scope="rowgroup"
+                      colSpan={2}
+                      className="pt-6 pb-2 typo-card-subtitle font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                    >
+                      {group.title}
+                    </th>
+                  </tr>
+                  {group.offers.map((offer) => (
+                    <tr key={offer.id} className="border-b border-gray-100 dark:border-gray-800">
+                      <th scope="row" className="py-3 pr-4 font-normal align-top">
+                        <div className="typo-card-body font-medium text-gray-900 dark:text-gray-100">{offer.title}</div>
+                        {offer.subtitle && (
+                          <div className="typo-card-meta text-gray-500 dark:text-gray-400 mt-0.5">{offer.subtitle}</div>
+                        )}
+                      </th>
+                      <td className="py-3 pl-4 text-right whitespace-nowrap align-top">
+                        <span className="font-bold text-primary dark:text-primary-light">{offer.priceDisplay}</span>{' '}
+                        <span className="typo-card-meta">{offer.unit}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </React.Fragment>
               ))}
             </tbody>
           </table>
