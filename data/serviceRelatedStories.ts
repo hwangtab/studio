@@ -20,7 +20,7 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'vocal-recording-guide1',
     'demo-recording1',
     'home-vs-studio1',
-    'selfrecord1',
+    'solo-album1',
   ],
   'release-project': [
     'release-timeline1',

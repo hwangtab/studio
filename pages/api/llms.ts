@@ -89,9 +89,9 @@ Full list with photos: ${siteUrl}/ko/studio-info
 - **Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
 - **Vocal Recording 1프로 (1-song package)**: ${krw(VOCAL_PACKAGE_PRICE)} KRW (3 hours, dedicated engineer included)
 - **Hourly Recording (voice acting / instrument / vocal corrections)**: ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours)
-- **1-Song Bundle (recording + mixing + mastering)**: ${krw(SINGLE_BUNDLE_PRICE)} KRW (1-song vocal recording + mixing (≤10 tracks) + single mastering; ~9% off the line-item total)
-- **EP Bundle (4 songs)**: ${krw(EP_BUNDLE_PRICE)} KRW (₩450,000/song — vocal recording + mixing (≤10 tracks) + EP mastering per song; ~15% off the line-item total). Other track counts quoted at the per-song rate.
-- **Album Bundle (8 songs)**: ${krw(ALBUM_BUNDLE_PRICE)} KRW (₩425,000/song — same per-song scope; ~20% off the line-item total). Production only; distribution and press are part of the Album Release Project below.
+- **1-Song Bundle (planning → release)**: ${krw(SINGLE_BUNDLE_PRICE)} KRW (concept planning + 1-song vocal recording + mixing (≤10 tracks) + single mastering + digital distribution to Melon/Spotify/Apple Music/YouTube Music + release press kit sent to music journalists and critics; ~9% below the production line-item total)
+- **EP Bundle (4 songs)**: ${krw(EP_BUNDLE_PRICE)} KRW (₩450,000/song — album planning & tracklist curation, vocal recording + mixing (≤10 tracks) + EP mastering per song, digital distribution, release press kit sent to journalists and critics; ~15% below the production line-item total). Other track counts quoted at the per-song rate.
+- **Album Bundle (8 songs)**: ${krw(ALBUM_BUNDLE_PRICE)} KRW (₩425,000/song — A&R consulting & tracklist sequencing, same per-song production scope, digital distribution, release press kit; ~20% below the production line-item total).
 - **Wedding Song Complete Package**: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2hr recording + vocal tuning + mixing & mastering)
 - **Day Lock (6-hour package)**: ${krw(DAY_LOCK_PRICE)} KRW (~17% discount vs hourly)
 - **Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K MP4 & WAV/MP3 delivery)
@@ -213,7 +213,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 music lessons, voice-over recording, wedding song packages.
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
-- Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). 1-song bundle (recording + mixing (≤10 tracks) + single mastering): ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% off line-item total); EP bundle 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15% off); album bundle 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20% off). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
+- Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). All-in-one bundles cover planning, recording, mixing, mastering, digital distribution and release PR: 1 song ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% below production line-item total); EP 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15%); album 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20%). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
 - Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated.
 - Wedding song complete package: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
@@ -226,7 +226,7 @@ const CHINESE_QUICK_FACTS = (siteUrl: string) => `
 Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。本工作室对中文使用者通过 KakaoTalk 提供中文沟通支持。
 
 - 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐课程、配音录音、婚礼献唱套餐。
-- 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，1 首歌人声套餐（3 小时含专属工程师）₩${krw(VOCAL_PACKAGE_PRICE)}；1 首歌集成套餐（录音+混音+母带）₩${krw(SINGLE_BUNDLE_PRICE)}，比单项合计便宜约 9%；EP 套餐 4 首 ₩${krw(EP_BUNDLE_PRICE)}（约 15% 折扣）；专辑套餐 8 首 ₩${krw(ALBUM_BUNDLE_PRICE)}（约 20% 折扣）。
+- 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，1 首歌人声套餐（3 小时含专属工程师）₩${krw(VOCAL_PACKAGE_PRICE)}；一站式套餐包含策划、录音、混音、母带、数字发行登记与发行宣传：1 首 ₩${krw(SINGLE_BUNDLE_PRICE)}（较制作单项合计便宜约 9%）；EP 4 首 ₩${krw(EP_BUNDLE_PRICE)}（约 15%）；专辑 8 首 ₩${krw(ALBUM_BUNDLE_PRICE)}（约 20%）。
 - 混音／母带：每首歌 ₩${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}，按音轨数分级，含 2 次修改。
 - 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
 - 婚礼献唱套餐：₩${krw(WEDDING_PACKAGE_PRICE)}（2 小时录音 + 人声调音 + 混音及母带），新手友好。

@@ -1,7 +1,7 @@
 ---
 title: AI 음악 제작 완전 가이드 — AI 작곡·AI 보컬·AI 믹싱 활용법과 한계
 date: 2026-04-07
-lastmod: 2026-07-19
+lastmod: 2026-09-01
 author: 스튜디오 놀
 category: 음악 제작
 tags:
@@ -12,6 +12,7 @@ tags:
   - Suno AI
   - 음악 AI 활용
   - AI 음악 제작
+  - Udio AI
 thumbnail: /images/recording2.webp
 summary: >-
   AI 음악 제작 완전 가이드입니다. AI 음악 생성 도구 비교·AI를 활용한 작곡 워크플로우·AI 보컬 도구·AI 마스터링 서비스·AI 음악과…
