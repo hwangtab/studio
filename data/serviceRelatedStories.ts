@@ -29,6 +29,8 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'streaming-revenue1',
     'music-copyright1',
     'global-release1',
+    // 발매 홍보(보도자료·기자·평론가·해외 매체 피칭)를 정면으로 다루는 유일한 글.
+    'music-pr1',
   ],
   'wedding-song': [
     'wedding-song-guide1',

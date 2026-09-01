@@ -29,6 +29,7 @@ const StudioMore: React.FC<StudioMoreProps> = ({ locale = 'ko' }) => {
     { href: p('/stories/mixing-complete-guide'), label: '믹싱 완전 가이드', note: '강좌 전체 로드맵' },
     { href: p('/lesson'), label: '1:1 프로듀싱 레슨', note: 'MIDI·작곡·믹싱·마스터링' },
     { href: p('/practice-room'), label: '음악연습실', note: '보컬·기타·피아노·드럼 개별 방' },
+    { href: p('/release-project'), label: '발매 프로젝트', note: '기획·유통·홍보까지 동행' },
     { href: p('/pricing'), label: '요금·이용 안내', note: '녹음·믹싱·마스터링 플랜' },
     { href: p('/contact'), label: '찾아오는 길·문의', note: '카카오톡 상담' },
   ];

@@ -1,5 +1,6 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
+import { getOperatorPersonId } from './person';
 import { ITEM_LIST_NAMES } from './shared';
 
 export interface MusicRecordingInput {
@@ -64,11 +65,22 @@ export const generateMusicRecordingSchema = (
       '@type': 'MusicComposition',
       name: item.title,
     },
-    producer: {
-      '@type': 'Organization',
-      name: config.name,
-      url: siteUrl,
-    },
+    // 스튜디오(법인격)와 운영자(사람) 둘 다 producer로 낸다. Person은 전 사이트가
+    // 공유하는 canonical @id(#person-hwang)를 재사용해, 수상·언론 보도가 붙어 있는
+    // 그 노드에 발매작이 연결되게 한다 — 그래야 "황경하가 만든 앨범"이 하나의
+    // 엔티티 그래프로 읽힌다. credits.engineer 문자열(역할 표기)은 contributor에 그대로 남는다.
+    producer: [
+      {
+        '@type': 'Organization' as const,
+        name: config.name,
+        url: siteUrl,
+      },
+      {
+        '@type': 'Person' as const,
+        '@id': getOperatorPersonId(siteUrl),
+        name: studioOperator.name,
+      },
+    ],
     ...(item.image && { image: item.image }),
     ...(item.url && { url: item.url }),
     ...(item.url && {

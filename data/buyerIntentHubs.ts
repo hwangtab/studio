@@ -10,6 +10,15 @@
  */
 
 import type { ServiceKey } from './serviceRelatedStories';
+import {
+  ALBUM_BUNDLE_PRICE,
+  EP_BUNDLE_PRICE,
+  RELEASE_ALBUM_FROM_PRICE,
+  RELEASE_EP_FROM_PRICE,
+  RELEASE_SINGLE_FROM_PRICE,
+  SINGLE_BUNDLE_PRICE,
+  formatPriceLabel,
+} from './pricing';
 
 export type BuyerIntentHubSlug =
   | 'wedding-song-singing'
@@ -511,20 +520,26 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
       'royalty1',
       'solo-album1',
       'revenue1',
+      // 발매 홍보(보도자료·기자·평론가·해외 매체 피칭)를 정면으로 다루는 유일한 글.
+      'music-pr1',
     ],
-    // 발매 프로젝트는 규모별 맞춤 견적이라 data/pricing.ts에 고정 entry가 없어
-    // hub 전용 fallback 카드로 티어 구조를 안내한다.
+    // 발매 프로젝트는 규모별 맞춤 견적이라 단일 오퍼로 못 묶는다 — hub 전용
+    // fallback 카드로 티어 구조를 안내한다. 다만 숫자는 반드시 SSOT 상수에서
+    // 끌어온다: 예전엔 문자열에 박아 두어 티어 하한이 바뀌어도 여기만 옛값
+    // (EP 150만·정규 400만)으로 남아 있었고, common.json만 보는 pricing.test.ts는
+    // 이 파일을 못 잡는다.
     pricingPackageId: '',
     pricingFallback: {
       id: 'release-project',
       title: '발매 프로젝트 (프로듀서 동행)',
-      priceDisplay: '싱글 50만원~',
+      priceDisplay: `싱글 ${formatPriceLabel(RELEASE_SINGLE_FROM_PRICE, 'ko')}~`,
       unit: '/ 규모별 견적',
       description:
         '기획부터 녹음·세션·믹싱·유통, 매체·평론에 닿는 일까지 15년차 프로듀서 황경하가 함께하는 인디 발매 프로젝트입니다. 첫 상담은 무료로 진행됩니다.',
       recommended: true,
       features: [
-        '싱글 약 50만원~ · EP 약 150만원~ (3-5곡) · 정규 약 400만원~ (8곡 기준)',
+        `싱글 약 ${formatPriceLabel(RELEASE_SINGLE_FROM_PRICE, 'ko')}~ · EP 약 ${formatPriceLabel(RELEASE_EP_FROM_PRICE, 'ko')}~ (3-5곡) · 정규 약 ${formatPriceLabel(RELEASE_ALBUM_FROM_PRICE, 'ko')}~ (8곡 기준)`,
+        `고정 구성 통합 패키지는 1곡 ${formatPriceLabel(SINGLE_BUNDLE_PRICE, 'ko')} · EP 4곡 ${formatPriceLabel(EP_BUNDLE_PRICE, 'ko')} · 정규 8곡 ${formatPriceLabel(ALBUM_BUNDLE_PRICE, 'ko')}`,
         '기획·녹음·믹싱·마스터링 + 세션 연결·편곡·유통',
         '발매 후 매체·평론 접점까지 동행',
         '무료 발매 상담(30분 기획 상담)으로 시작',
