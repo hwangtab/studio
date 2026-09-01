@@ -8,8 +8,11 @@ import type { Locale } from '../lib/i18n';
 // 흩어져 있다가 한쪽만 고쳐 어긋나는 드리프트를 구조적으로 차단한다.
 // data/pricing.test.ts가 표시문자열↔값·스키마↔상수 정합을 CI에서 강제한다.
 // 주의: 350,000은 서로 다른 세 상품(레슨 월정액·축가 패키지·음반 기획 오퍼)의
-// 우연한 동일값, 500,000은 서로 다른 두 상품(1곡 통합 패키지·발매 싱글 시작가)의
-// 우연한 동일값 — 반드시 상품별 상수를 쓸 것(일괄 치환 금지).
+// 우연한 동일값, 500,000은 서로 다른 세 상품(1곡 통합 패키지·6시간 Day Lock·발매 싱글
+// 시작가)의 우연한 동일값 — 반드시 상품별 상수를 쓸 것(일괄 치환 금지).
+// 통합 번들(SINGLE/EP/ALBUM_BUNDLE_PRICE)과 발매 티어(RELEASE_*_FROM_PRICE)는
+// 이름이 비슷해도 다른 상품이다: 번들은 녹음·믹싱·마스터링만 묶은 제작 서비스,
+// 발매 티어는 기획·유통 등록·보도자료까지 포함한 풀서비스 시작가다.
 // ─────────────────────────────────────────────────────────────────────────────
 export const RECORDING_HOURLY_PRICE = 100000;
 export const VOCAL_PACKAGE_PRICE = 250000; // 보컬 녹음 1프로(1곡·3시간)
@@ -39,6 +42,17 @@ export const RELEASE_ALBUM_FROM_PRICE = 4000000; // 8곡 기준
  * 동일값이지만 의미가 다르다 (서비스 묶음 단품 vs 발매 프로젝트 티어 시작가). 상품별 상수 필수.
  */
 export const SINGLE_BUNDLE_PRICE = 500000;
+/**
+ * EP 통합 패키지(4곡 기준) — 곡당 line-item 530,000(VOCAL_PACKAGE_PRICE +
+ * MIXING_LEVEL1_PRICE + MASTERING_PACKAGE_PRICE) × 4 = 2,120,000의 약 15% 할인.
+ * 곡당 450,000으로, 발매 EP 티어의 곡당 단가(약 500,000) 아래에 둔다.
+ */
+export const EP_BUNDLE_PRICE = 1800000;
+/**
+ * 정규 통합 패키지(8곡 기준) — 곡당 530,000 × 8 = 4,240,000의 약 20% 할인.
+ * 곡당 425,000. 싱글 9% → EP 15% → 정규 20%로 곡수에 따라 할인이 커지는 사다리다.
+ */
+export const ALBUM_BUNDLE_PRICE = 3400000;
 
 /** 350000 → "350,000". 서버·클라이언트 동일 결과를 보장하려 로케일을 명시 고정. */
 export const formatPriceAmount = (value: number): string => value.toLocaleString('en-US');
@@ -405,6 +419,90 @@ export const getPricingData = (locale: Locale) => {
         vi: ['Thu âm vocal 1 bài (3h, kỹ sư chuyên trách)', 'Mixing Level 1 (≤10 track, 2 lần chỉnh sửa)', 'Mastering single (1 lần chỉnh sửa)', 'Giảm ~9% so với tổng các mục'],
         th: ['อัดเสียงร้อง 1 เพลง (3 ชม. วิศวกรประจำ)', 'มิกซ์ Level 1 (≤10 แทร็ก แก้ไข 2 ครั้ง)', 'มาสเตอร์ซิงเกิล (แก้ไข 1 ครั้ง)', 'ลด ~9% จากรายการรวม'],
         uz: ['Vokal yozuv 1 qo\'shiq (3 soat, maxsus muhandis)', 'Level 1 miks (≤10 track, 2 tahrir)', 'Single mastering (1 tahrir)', 'Alohida narxlardan ~9% chegirma']
+      }),
+    },
+    {
+      id: 'package-ep-bundle',
+      title: t(locale, {
+        ko: 'EP 통합 패키지 (4곡 기준)',
+        en: 'EP Bundle (4 Songs)',
+        zh: 'EP 套餐（4首）',
+        es: 'Paquete EP (4 Canciones)',
+        vi: 'Gói EP (4 bài)',
+        th: 'แพ็กเกจ EP (4 เพลง)',
+        uz: "EP paketi (4 ta qo\'shiq)"
+      }),
+      subtitle: t(locale, {
+        ko: '곡당 45만원 · 녹음+믹싱+마스터링 (~15% 할인)',
+        en: '₩450,000 per song · recording + mixing + mastering, ~15% off',
+        zh: '每首 ₩450,000 · 录音+混音+母带, 约15%折扣',
+        es: '₩450.000 por canción · grabación + mezcla + masterización, ~15% de descuento',
+        vi: '₩450.000/bài · thu âm + mixing + mastering, giảm ~15%',
+        th: '₩450,000 ต่อเพลง · อัด + มิกซ์ + มาสเตอร์, ลด ~15%',
+        uz: "Har bir qo\'shiq ₩450,000 · yozuv + miks + mastering, ~15% chegirma"
+      }),
+      priceDisplay: t(locale, { ko: '1,800,000원', en: '₩1,800,000', zh: '₩1,800,000', es: '₩1,800,000', vi: '₩1,800,000', th: '₩1,800,000', uz: '₩1,800,000' }),
+      priceValue: EP_BUNDLE_PRICE,
+      unit: t(locale, { ko: '/ 4곡', en: '/ 4 songs', zh: '/ 4首', es: '/ 4 canciones', vi: '/ 4 bài', th: '/ 4 เพลง', uz: "/ 4 qo\'shiq" }),
+      description: t(locale, {
+        ko: '4곡을 한 번에 제작하는 EP 패키지입니다. 곡당 45만원으로, 개별 합계 212만원 대비 약 15% 할인입니다. 곡수가 다르면 곡당 단가로 견적합니다. 유통 등록·보도자료까지 필요하시면 발매 프로젝트를 보세요.',
+        en: 'Produce four songs together. ₩450,000 per song — about 15% off the ₩2,120,000 line-item total. Different track counts are quoted at the per-song rate. If you also need distribution and press outreach, see the Release Project.',
+        zh: '一次制作 4 首的 EP 套餐。每首 ₩450,000，比单项合计 ₩2,120,000 便宜约 15%。曲目数不同时按每首单价报价。如需发行登记与宣传，请参考发行项目。',
+        es: 'Produce cuatro canciones a la vez. ₩450.000 por canción, unos 15% menos que la suma de ítems (₩2.120.000). Otras cantidades se cotizan a la tarifa por canción. Si también necesita distribución y prensa, vea el Proyecto de Lanzamiento.',
+        vi: 'Sản xuất 4 bài cùng lúc. ₩450.000/bài, giảm khoảng 15% so với tổng ₩2.120.000. Số bài khác được báo giá theo đơn giá mỗi bài. Nếu cần cả phát hành và PR, xem Dự án Phát hành.',
+        th: 'ทำ 4 เพลงพร้อมกัน ₩450,000 ต่อเพลง ถูกกว่าราคารวมรายชิ้น ₩2,120,000 ประมาณ 15% จำนวนเพลงอื่นคิดราคาต่อเพลง หากต้องการจัดจำหน่ายและ PR ดู Release Project',
+        uz: "To\'rtta qo\'shiqni birga ishlab chiqarish. Har bir qo\'shiq ₩450,000 — alohida narxlar yig\'indisi ₩2,120,000 dan ~15% arzon. Boshqa qo\'shiq soni har bir qo\'shiq narxi bo\'yicha hisoblanadi. Tarqatish va PR ham kerak bo\'lsa, Release Project sahifasiga qarang."
+      }),
+      features: tArray(locale, {
+        ko: ['보컬 녹음 1프로 × 4곡 (곡당 3시간, 전담 엔지니어)', 'Level 1 믹싱 × 4곡 (10트랙 이하, 곡당 수정 2회)', 'EP 마스터링 × 4곡 (앨범 톤·라우드니스 통일)', '개별 합계 212만원 대비 약 15% 할인', 'Level 2·3 편성은 믹싱 차액 별도'],
+        en: ['Vocal Recording 1 Song × 4 (3h each, dedicated engineer)', 'Level 1 Mixing × 4 (≤10 tracks, 2 revisions each)', 'EP Mastering × 4 (album-wide tone & loudness)', '~15% off the ₩2,120,000 line-item total', 'Level 2/3 arrangements billed at the mixing difference'],
+        zh: ['人声录音1首 × 4（各 3 小时，专属工程师）', 'Level 1 混音 × 4（≤10轨，各含2次修改）', 'EP 母带 × 4（全专辑音色·响度统一）', '比单项合计 ₩2,120,000 便宜约 15%', 'Level 2/3 编制按混音差额另计'],
+        es: ['Grabación vocal 1 canción × 4 (3h cada una, ingeniero dedicado)', 'Mezcla Level 1 × 4 (≤10 pistas, 2 revisiones cada una)', 'Masterización EP × 4 (tono y loudness unificados)', '~15% de descuento sobre ₩2.120.000', 'Arreglos Level 2/3 se facturan por la diferencia de mezcla'],
+        vi: ['Thu âm vocal 1 bài × 4 (3h mỗi bài, kỹ sư chuyên trách)', 'Mixing Level 1 × 4 (≤10 track, 2 lần chỉnh sửa mỗi bài)', 'Mastering EP × 4 (đồng nhất tone & loudness)', 'Giảm ~15% so với tổng ₩2.120.000', 'Phối khí Level 2/3 tính thêm phần chênh mixing'],
+        th: ['อัดเสียงร้อง 1 เพลง × 4 (เพลงละ 3 ชม. วิศวกรประจำ)', 'มิกซ์ Level 1 × 4 (≤10 แทร็ก แก้ไขเพลงละ 2 ครั้ง)', 'มาสเตอริ่ง EP × 4 (โทนและความดังทั้งอัลบั้ม)', 'ลด ~15% จาก ₩2,120,000', 'การเรียบเรียง Level 2/3 คิดส่วนต่างค่ามิกซ์'],
+        uz: ["Vokal yozuv 1 qo\'shiq × 4 (har biri 3 soat, maxsus muhandis)", 'Level 1 miks × 4 (≤10 track, har biriga 2 tahrir)', 'EP mastering × 4 (albom bo\'yicha ton va balandlik)', "₩2,120,000 dan ~15% chegirma", 'Level 2/3 aranjirovka miks farqi bo\'yicha hisoblanadi']
+      }),
+    },
+    {
+      id: 'package-album-bundle',
+      title: t(locale, {
+        ko: '정규 통합 패키지 (8곡 기준)',
+        en: 'Album Bundle (8 Songs)',
+        zh: '专辑套餐（8首）',
+        es: 'Paquete de Álbum (8 Canciones)',
+        vi: 'Gói Album (8 bài)',
+        th: 'แพ็กเกจอัลบั้ม (8 เพลง)',
+        uz: "Albom paketi (8 ta qo\'shiq)"
+      }),
+      subtitle: t(locale, {
+        ko: '곡당 42.5만원 · 녹음+믹싱+마스터링 (~20% 할인)',
+        en: '₩425,000 per song · recording + mixing + mastering, ~20% off',
+        zh: '每首 ₩425,000 · 录音+混音+母带, 约20%折扣',
+        es: '₩425.000 por canción · grabación + mezcla + masterización, ~20% de descuento',
+        vi: '₩425.000/bài · thu âm + mixing + mastering, giảm ~20%',
+        th: '₩425,000 ต่อเพลง · อัด + มิกซ์ + มาสเตอร์, ลด ~20%',
+        uz: "Har bir qo\'shiq ₩425,000 · yozuv + miks + mastering, ~20% chegirma"
+      }),
+      priceDisplay: t(locale, { ko: '3,400,000원', en: '₩3,400,000', zh: '₩3,400,000', es: '₩3,400,000', vi: '₩3,400,000', th: '₩3,400,000', uz: '₩3,400,000' }),
+      priceValue: ALBUM_BUNDLE_PRICE,
+      unit: t(locale, { ko: '/ 8곡', en: '/ 8 songs', zh: '/ 8首', es: '/ 8 canciones', vi: '/ 8 bài', th: '/ 8 เพลง', uz: "/ 8 qo\'shiq" }),
+      description: t(locale, {
+        ko: '정규 앨범 분량을 한 번에 제작하는 패키지입니다. 곡당 42만 5천원으로, 개별 합계 424만원 대비 약 20% 할인입니다. 곡수가 다르면 곡당 단가로 견적합니다. 유통 등록·보도자료까지 필요하시면 발매 프로젝트를 보세요.',
+        en: 'Produce a full album at once. ₩425,000 per song — about 20% off the ₩4,240,000 line-item total. Different track counts are quoted at the per-song rate. If you also need distribution and press outreach, see the Release Project.',
+        zh: '一次完成整张专辑。每首 ₩425,000，比单项合计 ₩4,240,000 便宜约 20%。曲目数不同时按每首单价报价。如需发行登记与宣传，请参考发行项目。',
+        es: 'Produce un álbum completo de una vez. ₩425.000 por canción, unos 20% menos que la suma de ítems (₩4.240.000). Otras cantidades se cotizan a la tarifa por canción. Si también necesita distribución y prensa, vea el Proyecto de Lanzamiento.',
+        vi: 'Sản xuất trọn album cùng lúc. ₩425.000/bài, giảm khoảng 20% so với tổng ₩4.240.000. Số bài khác được báo giá theo đơn giá mỗi bài. Nếu cần cả phát hành và PR, xem Dự án Phát hành.',
+        th: 'ทำอัลบั้มเต็มในคราวเดียว ₩425,000 ต่อเพลง ถูกกว่าราคารวมรายชิ้น ₩4,240,000 ประมาณ 20% จำนวนเพลงอื่นคิดราคาต่อเพลง หากต้องการจัดจำหน่ายและ PR ดู Release Project',
+        uz: "To\'liq albomni bir vaqtda ishlab chiqarish. Har bir qo\'shiq ₩425,000 — alohida narxlar yig\'indisi ₩4,240,000 dan ~20% arzon. Boshqa qo\'shiq soni har bir qo\'shiq narxi bo\'yicha hisoblanadi. Tarqatish va PR ham kerak bo\'lsa, Release Project sahifasiga qarang."
+      }),
+      features: tArray(locale, {
+        ko: ['보컬 녹음 1프로 × 8곡 (곡당 3시간, 전담 엔지니어)', 'Level 1 믹싱 × 8곡 (10트랙 이하, 곡당 수정 2회)', '정규 마스터링 × 8곡 (앨범 톤·라우드니스 통일)', '개별 합계 424만원 대비 약 20% 할인', 'Level 2·3 편성은 믹싱 차액 별도'],
+        en: ['Vocal Recording 1 Song × 8 (3h each, dedicated engineer)', 'Level 1 Mixing × 8 (≤10 tracks, 2 revisions each)', 'Album Mastering × 8 (album-wide tone & loudness)', '~20% off the ₩4,240,000 line-item total', 'Level 2/3 arrangements billed at the mixing difference'],
+        zh: ['人声录音1首 × 8（各 3 小时，专属工程师）', 'Level 1 混音 × 8（≤10轨，各含2次修改）', '专辑母带 × 8（全专辑音色·响度统一）', '比单项合计 ₩4,240,000 便宜约 20%', 'Level 2/3 编制按混音差额另计'],
+        es: ['Grabación vocal 1 canción × 8 (3h cada una, ingeniero dedicado)', 'Mezcla Level 1 × 8 (≤10 pistas, 2 revisiones cada una)', 'Masterización de álbum × 8 (tono y loudness unificados)', '~20% de descuento sobre ₩4.240.000', 'Arreglos Level 2/3 se facturan por la diferencia de mezcla'],
+        vi: ['Thu âm vocal 1 bài × 8 (3h mỗi bài, kỹ sư chuyên trách)', 'Mixing Level 1 × 8 (≤10 track, 2 lần chỉnh sửa mỗi bài)', 'Mastering album × 8 (đồng nhất tone & loudness)', 'Giảm ~20% so với tổng ₩4.240.000', 'Phối khí Level 2/3 tính thêm phần chênh mixing'],
+        th: ['อัดเสียงร้อง 1 เพลง × 8 (เพลงละ 3 ชม. วิศวกรประจำ)', 'มิกซ์ Level 1 × 8 (≤10 แทร็ก แก้ไขเพลงละ 2 ครั้ง)', 'มาสเตอริ่งอัลบั้ม × 8 (โทนและความดังทั้งอัลบั้ม)', 'ลด ~20% จาก ₩4,240,000', 'การเรียบเรียง Level 2/3 คิดส่วนต่างค่ามิกซ์'],
+        uz: ["Vokal yozuv 1 qo\'shiq × 8 (har biri 3 soat, maxsus muhandis)", 'Level 1 miks × 8 (≤10 track, har biriga 2 tahrir)', "Albom mastering × 8 (albom bo\'yicha ton va balandlik)", "₩4,240,000 dan ~20% chegirma", 'Level 2/3 aranjirovka miks farqi bo\'yicha hisoblanadi']
       }),
     },
     {
