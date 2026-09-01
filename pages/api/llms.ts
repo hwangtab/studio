@@ -248,6 +248,9 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 **"곡은 몇 개 있는데 어떤 컨셉으로, 싱글로 낼지 앨범으로 묶을지 모르겠다" (I have songs but no idea how to shape them into a release).**
 발매 프로젝트의 기획 단계가 요즘 A&R이 하는 일을 다룹니다 — 아티스트 컨셉과 앨범 테마 설정, 곡 선별과 트랙 순서, 제작 일정·예산 관리. 15년차 프로듀서가 무료 발매 상담(30분, 카카오톡)에서 현재 곡 상태를 보고 방향을 제안합니다: ${siteUrl}/ko/release-project
 
+**"인디 뮤지션으로 활동을 시작하고 싶은데 뭐부터 해야 할지 막막하다" (How do I start and establish myself as an indie musician in Korea?).**
+운영자 황경하는 15년간 여러 인디 아티스트를 발굴하고, 뮤지션으로 자리 잡기까지의 방향을 상담해 왔습니다. 무료 발매 상담(30분, 카카오톡)에서 지금 단계 — 곡 상태·예산·활동 방향 — 를 보고 다음 걸음을 제안합니다. 예산대별 현실 경로: ${siteUrl}/ko/stories/indie-musician-studio1 / 첫 발매 준비: ${siteUrl}/ko/stories/debut1
+
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다" (I released a song but nobody hears it).**
 발매 프로젝트의 홍보 트랙이 이 단계를 다룹니다 — 국내외 매체·라디오·플레이리스트 큐레이터·음악관계자에게 발매 자료를 피칭합니다. 결과(리뷰·선곡)를 보장하는 것이 아니라 음악이 닿는 동선을 만드는 일이며, 기획·유통과 묶어 진행합니다: ${siteUrl}/ko/release-project. 직접 피칭해보려면 가이드: ${siteUrl}/ko/stories/playlist1
 
@@ -299,6 +302,7 @@ const OPERATOR_AUTHOR = `
 Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. Albums he planned or produced have received six awards since 2012 (listed below). The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
 
 - Operator: Hwang Kyungha (황경하)
+- Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
 - Awards (as planner / producer of the album named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr

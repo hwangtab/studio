@@ -68,12 +68,12 @@ export const getAuthorProfile = (locale: Locale) => ({
   },
   // Person JSON-LD description — 한 문장 자기소개.
   schemaDescription: t(locale, {
-    ko: '여러 인디 아티스트와 함께한 15년차 음반 기획자·프로듀서. 서울 연신내 스튜디오 놀 운영 — 기획·보컬 디렉팅·녹음·믹싱·유통, 국내외 매체·라디오·플레이리스트 PR 동행.',
-    en: 'Record planner & producer with 15 years alongside Korean indie artists. Runs Studio NOL in Seoul — planning, vocal direction, recording, mixing, distribution, and release PR to Korean and international media, radio and playlist curators.',
+    ko: '여러 인디 아티스트를 발굴하고 함께한 15년차 음반 기획자·프로듀서. 서울 연신내 스튜디오 놀 운영 — 기획·보컬 디렉팅·녹음·믹싱·유통, 국내외 매체·라디오·플레이리스트 PR 동행.',
+    en: 'Record planner & producer with 15 years discovering and developing Korean indie artists. Runs Studio NOL in Seoul — planning, vocal direction, recording, mixing, distribution, and release PR to Korean and international media, radio and playlist curators.',
   }),
   intro: [
     t(locale, {
-      ko: '인디 싱어송라이터와 밴드의 발매를 15년째 함께해 왔습니다. 곡을 다듬어 멜론·스포티파이에 올리고, 세션 연주자를 연결하고, 음악 매체와 평론에 닿게 하는 일까지 — 한 곡이 인디씬에 자리 잡는 데 필요한 단계들을 처음부터 끝까지 다룹니다.',
+      ko: '인디 싱어송라이터와 밴드의 발매를 15년째 함께해 왔습니다. 곡을 다듬어 멜론·스포티파이에 올리고, 세션 연주자를 연결하고, 음악 매체와 평론에 닿게 하는 일까지 — 한 곡이 인디씬에 자리 잡는 데 필요한 단계들을 처음부터 끝까지 다룹니다. 그 과정에서 여러 아티스트를 발굴했고, 뮤지션으로 자리 잡기까지의 방향 상담도 함께해 왔습니다.',
       en: 'For 15 years I have released music together with indie singer-songwriters and bands — shaping songs, getting them on Melon and Spotify, connecting session players, and reaching music press and critics.',
     }),
     t(locale, {
