@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { getSiteConfig } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
 import { Phone, Mail, MapPin } from '@/lib/lucide-icons';
 import { trackLeadEvent } from '../../utils/analytics';
@@ -73,9 +73,12 @@ export const Footer = ({ locale }: FooterProps) => {
                 </Link>
               )}
             </div>
-            {/* 사업자 정보 — 통신판매업 신고번호는 신고 완료 후에만 표기. */}
+            {/* 사업자 정보 — 통신판매업 신고번호는 신고 완료 후에만 표기.
+                대표자명은 전자상거래법 제10조의 표시의무이자, 본인확인 대행사 심사에서
+                가장 흔한 반려 사유다. 상호·주소·전화·사업자등록번호는 이미 있었는데
+                대표자명만 빠져 있었다(2026-09-01). */}
             <p className="mt-2 text-xs text-gray-200/60 leading-relaxed">
-              사업자등록번호: {siteConfig.businessRegistrationNumber}
+              대표: {studioOperator.name} · 사업자등록번호: {siteConfig.businessRegistrationNumber}
               {siteConfig.mailOrderSalesNumber && (
                 <> · 통신판매업신고: {siteConfig.mailOrderSalesNumber}</>
               )}
