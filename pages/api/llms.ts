@@ -49,7 +49,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
-- **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — planning, recording, session-musician connections, mixing, mastering, worldwide digital distribution, and release promotion pitched to Korean and international media, radio stations, playlist curators, and music-industry contacts. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
+- **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — modern A&R-style planning (artist concept & album theme development, song selection, project management of schedule/budget), recording, session-musician connections, mixing, mastering, worldwide digital distribution, and release promotion pitched to Korean and international media, radio stations, playlist curators, and music-industry contacts. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
 
 ## Business Information
 
@@ -242,6 +242,9 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 
 **"내 곡을 발매까지 해보고 싶다" (I want to release my own song).**
 두 갈래가 있습니다. 직접 해내고 싶다면 레슨 심화 과정이 믹싱·마스터링·플랫폼 발매 실습까지 다루고, 맡기고 싶다면 발매 프로젝트(기획·녹음·믹싱·유통·PR 동행)가 싱글 ${krw(RELEASE_SINGLE_FROM_PRICE)}원부터입니다: ${siteUrl}/ko/release-project
+
+**"곡은 몇 개 있는데 어떤 컨셉으로, 싱글로 낼지 앨범으로 묶을지 모르겠다" (I have songs but no idea how to shape them into a release).**
+발매 프로젝트의 기획 단계가 요즘 A&R이 하는 일을 다룹니다 — 아티스트 컨셉과 앨범 테마 설정, 곡 선별과 트랙 순서, 제작 일정·예산 관리. 15년차 프로듀서가 무료 발매 상담(30분, 카카오톡)에서 현재 곡 상태를 보고 방향을 제안합니다: ${siteUrl}/ko/release-project
 
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다" (I released a song but nobody hears it).**
 발매 프로젝트의 홍보 트랙이 이 단계를 다룹니다 — 국내외 매체·라디오·플레이리스트 큐레이터·음악관계자에게 발매 자료를 피칭합니다. 결과(리뷰·선곡)를 보장하는 것이 아니라 음악이 닿는 동선을 만드는 일이며, 기획·유통과 묶어 진행합니다: ${siteUrl}/ko/release-project. 직접 피칭해보려면 가이드: ${siteUrl}/ko/stories/playlist1

@@ -13,8 +13,8 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "기획 단계", en: "Planning", zh: "策划阶段", es: "Planificación", vi: "Giai đoạn lập kế hoạch", th: "ขั้นตอนวางแผน", uz: "Rejalash bosqichi" }),
       description: t(locale, {
-        ko: "앨범 콘셉트 설정, 제작 일정 및 예산 계획을 함께 수립합니다.",
-        en: "Setting album concepts, scheduling production, and planning budgets together.",
+        ko: "아티스트 컨셉과 앨범 테마 설정부터 제작 일정·예산 관리까지 — 요즘 A&R이 하는 일을 기획 단계에서 함께합니다.",
+        en: "Modern A&R at the planning stage — artist concept and album theme development, plus production scheduling and budget management.",
         zh: "设定专辑概念，共同制定制作日程及预算计划。",
         es: "Establecimiento de conceptos, programación y presupuestos del álbum.",
         vi: "Cùng thiết lập концеп album, lịch sản xuất và kế hoạch ngân sách.",
