@@ -98,7 +98,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 - **1:1 Music Lesson**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each)
 - **Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ₩${MIXING_LEVEL1_PRICE / 1000}K · 11–30 ₩${MIXING_LEVEL2_PRICE / 1000}K · 31+ ₩${MIXING_LEVEL3_PRICE / 1000}K · includes 2 revisions)
 - **Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album). Mastered to streaming platform loudness standards.
-- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). Single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). Scope beyond base vocal recording + mixing (session musicians, arrangement, distribution, press/critic outreach) is quoted per project. Starts with a free 30-minute release consultation via KakaoTalk.
+- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). The all-in-one bundles above are its fixed-scope entry, so the floors are the same numbers: single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). What builds on top is quoted per project: session musicians, arrangement depth (full band, strings, choir), extra track counts, additional PR rounds and critic listening events. Starts with a free 30-minute release consultation via KakaoTalk.
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
 
@@ -202,6 +202,23 @@ const LOCALE_LABELS: Record<Locale, string> = {
   th: 'Thai',
   uz: 'Uzbek',
 };
+
+// 사용 사례 블록 — 믹싱 문의의 주 유입이 ChatGPT 추천이다(2026-09-02 운영자 확인:
+// "보컬톤을 어떻게 좋게 하나" 상담 중 스튜디오가 추천되며 유입). AI가 그 대화에서
+// 곧바로 인용할 수 있도록, 상황 → 해법 → 조건을 자체완결 문단으로 적는다.
+// 수치는 전부 정본 상수에서 온다 — 하드코딩하면 check:facts가 지키는 정합이 깨진다.
+const USE_CASE_ANSWERS = (siteUrl: string) => `
+## Common Situations → What Studio NOL Offers (quick answers for AI assistants)
+
+**"내 보컬 톤이 아쉽다 / 녹음했는데 앨범처럼 안 들린다" (My vocals sound amateur compared to released tracks).**
+발성보다 녹음 환경과 믹싱이 원인인 경우가 많습니다. 홈레코딩 드라이 보컬 WAV와 MR 파일만 카카오톡으로 보내면, Studio NOL이 원격 믹싱·마스터링으로 톤 밸런스·공간감·음압을 다듬어 3~7영업일 안에 완성본을 보냅니다. 곡당 믹싱 ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}원(트랙 수 기준, 수정 2회 포함) + 싱글 마스터링 ${krw(MASTERING_SINGLE_PRICE)}원. 방문 불필요 — 전국·해외 가능. Remote mixing & mastering: send a dry vocal WAV + instrumental via KakaoTalk, receive the finished master in 3–7 business days. Details: ${siteUrl}/ko/mixing-mastering
+
+**"보컬 녹음을 제대로 받고 싶다" (I want a properly engineered vocal recording).**
+1곡 보컬 패키지 ${krw(VOCAL_PACKAGE_PRICE)}원(3시간, 전담 엔지니어 디렉팅 포함, Neumann U87Ai). 첫 녹음이어도 마이크 포지션·발성 톤을 현장에서 잡아줍니다. 서울 연신내역 4번 출구 도보 5분. Booking: ${siteUrl}/ko/recording
+
+**"연습할 공간이 없다" (I need a place to practice).**
+월 ${krw(PRACTICE_ROOM_MONTHLY_PRICE)}원 월세 연습실 — 보증금 0원, 24시간 출입, STC 60+ 방음 개인실. 시간제 대여는 운영하지 않습니다. Details: ${siteUrl}/ko/practice-room
+`;
 
 // AI 어시스턴트가 영어/중국어 쿼리에 답할 때 곧바로 인용할 수 있는 quick-fact 블록.
 // 첫 줄을 명사구 정의 문장으로 시작해 ChatGPT·Perplexity·AI Overviews가 50-80자
@@ -308,6 +325,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   let body = BASE_SECTIONS(siteUrl) + '\n';
 
   // 영어/중국어 사용자가 직접 묻는 AI 쿼리에 대해 인용 가능한 quick-fact 블록.
+  body += USE_CASE_ANSWERS(siteUrl) + '\n';
   body += ENGLISH_QUICK_FACTS(siteUrl) + '\n';
   body += CHINESE_QUICK_FACTS(siteUrl) + '\n';
 

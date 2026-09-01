@@ -1986,7 +1986,7 @@
       "ep": {
         "label": "EP发行",
         "duration": "约3-6个月",
-        "range": "EP 约 ₩150万起 (3-5首)",
+        "range": "EP 约 ₩180万起 (3-5首)",
         "note": "根据歌曲准备状态调整",
         "detail": {
           "heroTitlePrefix": "你的音乐身份，",
@@ -2085,14 +2085,14 @@
             "SNS 广告预算"
           ],
           "priceSectionTitle": "价格范围",
-          "priceRange": "EP 约 ₩150万起 (3-5首)",
-          "priceRationale": "3-5首人声录音·混音·音色统一通常单价。比起外包 5-7 家分别报价，能节省时间和总成本。",
+          "priceRange": "EP 约 ₩180万起 (3-5首)",
+          "priceRationale": "以 4 首一站式套餐（策划·录音·混音·母带·发行·新闻稿）为下限。策划、发行与新闻稿属于与曲目数无关的固定成本，因此 3 首的 EP 也从同一下限起算；乐手编制、编曲深度与 PR 轮次在此之上加算。",
           "priceNote": "免费咨询后按单价表定制报价。",
           "priceFactorsTitle": "价格由以下变量决定",
           "priceFactors": [
             {
               "label": "收录曲目数",
-              "detail": "3首基准 → 4首 +₩50万 / 5首 +₩100万"
+              "detail": "3-4首基准 → 5首 +₩50万"
             },
             {
               "label": "会话规模",
@@ -2135,7 +2135,7 @@
       "album": {
         "label": "正规专辑发行",
         "duration": "约6-12个月",
-        "range": "正规专辑基准 约 ₩400万起",
+        "range": "正规专辑基准 约 ₩340万起",
         "note": "8首歌基准, 按范围调整",
         "detail": {
           "heroTitlePrefix": "在独立音乐圈",
@@ -2236,7 +2236,7 @@
             "大规模会话增加（另行报价）"
           ],
           "priceSectionTitle": "价格范围",
-          "priceRange": "正规专辑基准 约 ₩400万起",
+          "priceRange": "正规专辑基准 约 ₩340万起",
           "priceRationale": "8首基准 人声录音·混音·母带通常单价。A&R·乐评 PR·资助申请陪同——由一位制作人、一份报价完成。",
           "priceNote": "根据 session 编制·曲数·编曲范围而定。免费咨询后基于价目表定制报价。",
           "priceFactorsTitle": "价格由以下变量决定",

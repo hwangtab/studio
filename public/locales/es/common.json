@@ -1986,7 +1986,7 @@
       "ep": {
         "label": "Lanzamiento de EP",
         "duration": "~3-6 meses",
-        "range": "EP desde ~₩1.5M (3-5 temas)",
+        "range": "EP desde ~₩1.8M (3-5 temas)",
         "note": "Se ajusta según el estado de las canciones",
         "detail": {
           "heroTitlePrefix": "Tu identidad musical,",
@@ -2085,14 +2085,14 @@
             "Presupuesto de publicidad en redes sociales"
           ],
           "priceSectionTitle": "Rango de precio",
-          "priceRange": "EP desde ~₩1.5M (3-5 temas)",
-          "priceRationale": "Tarifa estándar para 3-5 temas (grabación vocal, mezcla, coherencia de tono). Ahorra tiempo y costo total frente a buscar 5-7 proveedores por separado.",
+          "priceRange": "EP desde ~₩1.8M (3-5 temas)",
+          "priceRationale": "El paquete todo-en-uno de 4 temas (planificación, grabación, mezcla, masterización, distribución, prensa) marca el mínimo. La planificación, la distribución y la prensa son costos fijos que no escalan con el número de temas, así que un EP de 3 temas parte del mismo mínimo; la formación de sesión, la profundidad del arreglo y las rondas de PR se suman encima.",
           "priceNote": "Cotización personalizada tras consulta gratuita.",
           "priceFactorsTitle": "Variables que determinan el precio",
           "priceFactors": [
             {
               "label": "Número de pistas",
-              "detail": "3 pistas de base → 4 pistas +₩500K / 5 pistas +₩1M"
+              "detail": "3-4 pistas de base → 5 pistas +₩500K"
             },
             {
               "label": "Escala de sesión",
@@ -2135,7 +2135,7 @@
       "album": {
         "label": "Lanzamiento de Álbum",
         "duration": "~6-12 meses",
-        "range": "Desde aprox. ₩4M",
+        "range": "Desde aprox. ₩3.4M",
         "note": "Base de 8 pistas, ajustado por alcance",
         "detail": {
           "heroTitlePrefix": "Dejando tu huella",
@@ -2236,7 +2236,7 @@
             "Adiciones grandes de sesión (cotización aparte)"
           ],
           "priceSectionTitle": "Rango de precio",
-          "priceRange": "Desde aprox. ₩4M",
+          "priceRange": "Desde aprox. ₩3.4M",
           "priceRationale": "Tarifa estándar para 8 pistas (grabación vocal, mezcla, masterización). A&R, PR con críticos, guía de subvenciones — todo de un solo productor, una sola cotización.",
           "priceNote": "Varía según sesión, número de pistas y arreglo. Presupuesto personalizado tras consulta gratuita.",
           "priceFactorsTitle": "Variables que determinan el precio",

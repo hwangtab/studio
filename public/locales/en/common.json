@@ -2014,7 +2014,7 @@
       "ep": {
         "label": "EP Release",
         "duration": "~3-6 months",
-        "range": "EP from ~₩1.5M (3-5 tracks)",
+        "range": "EP from ~₩1.8M (3-5 tracks)",
         "note": "Adjusted by song readiness",
         "detail": {
           "heroTitlePrefix": "Your musical identity,",
@@ -2113,14 +2113,14 @@
             "SNS advertising budget"
           ],
           "priceSectionTitle": "Price Range",
-          "priceRange": "EP from ~₩1.5M (3-5 tracks)",
-          "priceRationale": "Standard rate for 3-5 tracks (vocal recording, mixing, tone-matching). Saves time and total cost vs sourcing 5-7 separate vendors.",
+          "priceRange": "EP from ~₩1.8M (3-5 tracks)",
+          "priceRationale": "The 4-track all-in-one package (planning, recording, mixing, mastering, distribution, press) sets the floor. Planning, distribution and press are fixed costs that do not scale with track count, so a 3-track EP starts at the same floor; session lineup, arrangement depth and extra PR rounds build on top.",
           "priceNote": "Custom quote after free consultation.",
           "priceFactorsTitle": "What drives the price",
           "priceFactors": [
             {
               "label": "Track count",
-              "detail": "3 tracks baseline → 4 tracks +₩500K / 5 tracks +₩1M"
+              "detail": "3-4 tracks baseline → 5 tracks +₩500K"
             },
             {
               "label": "Session scale",
@@ -2163,7 +2163,7 @@
       "album": {
         "label": "Full Album Release",
         "duration": "~6-12 months",
-        "range": "From approx. ₩4M",
+        "range": "From approx. ₩3.4M",
         "note": "8-track baseline, adjusted by scope",
         "detail": {
           "heroTitlePrefix": "Making your name",
@@ -2264,7 +2264,7 @@
             "Large session additions (separate quote)"
           ],
           "priceSectionTitle": "Price Range",
-          "priceRange": "From approx. ₩4M",
+          "priceRange": "From approx. ₩3.4M",
           "priceRationale": "Standard rate for 8 tracks (vocal recording, mixing, mastering). A&R, critics PR, grant guidance — all from one producer, one quote.",
           "priceNote": "Varies by session lineup, track count, and arrangement scope. Custom quote after free consultation.",
           "priceFactorsTitle": "What drives the price",

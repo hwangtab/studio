@@ -1986,7 +1986,7 @@
       "ep": {
         "label": "Phát hành EP",
         "duration": "~3-6 tháng",
-        "range": "EP từ ~₩1.5M (3-5 bài)",
+        "range": "EP từ ~₩1.8M (3-5 bài)",
         "note": "Điều chỉnh theo độ sẵn sàng của bài",
         "detail": {
           "heroTitlePrefix": "Bản sắc âm nhạc của bạn,",
@@ -2085,14 +2085,14 @@
             "Ngân sách quảng cáo mạng xã hội"
           ],
           "priceSectionTitle": "Khoảng giá",
-          "priceRange": "EP từ ~₩1.5M (3-5 bài)",
-          "priceRationale": "Mức tiêu chuẩn cho 3-5 bài (thu âm vocal, mix, đồng nhất âm sắc). Tiết kiệm thời gian và tổng chi phí so với phải tìm 5-7 nhà cung cấp riêng lẻ.",
+          "priceRange": "EP từ ~₩1.8M (3-5 bài)",
+          "priceRationale": "Gói trọn gói 4 bài (lên kế hoạch, thu âm, mix, master, phát hành, thông cáo) là mức sàn. Lên kế hoạch, phát hành và thông cáo là chi phí cố định không đổi theo số bài, nên EP 3 bài cũng bắt đầu từ mức sàn này; đội session, độ sâu phối khí và số vòng PR cộng thêm phía trên.",
           "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "priceFactorsTitle": "Giá được quyết định bởi các yếu tố sau",
           "priceFactors": [
             {
               "label": "Số bài trong EP",
-              "detail": "3 bài cơ bản → 4 bài +₩500K / 5 bài +₩1M"
+              "detail": "3-4 bài cơ bản → 5 bài +₩500K"
             },
             {
               "label": "Quy mô session",
@@ -2135,7 +2135,7 @@
       "album": {
         "label": "Phát hành Album Đầy đủ",
         "duration": "~6-12 tháng",
-        "range": "Từ khoảng ₩4M",
+        "range": "Từ khoảng ₩3.4M",
         "note": "Mốc 8 bài, điều chỉnh theo phạm vi",
         "detail": {
           "heroTitlePrefix": "Khắc tên bạn",
@@ -2236,7 +2236,7 @@
             "Bổ sung session lớn (báo giá riêng)"
           ],
           "priceSectionTitle": "Khoảng giá",
-          "priceRange": "Từ khoảng ₩4M",
+          "priceRange": "Từ khoảng ₩3.4M",
           "priceRationale": "Mức tiêu chuẩn cho 8 bài (thu âm vocal, mix, master). A&R, PR với nhà phê bình, hướng dẫn xin tài trợ — tất cả từ một nhà sản xuất, một báo giá.",
           "priceNote": "Tùy theo session, số bài và phạm vi arrangement. Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "priceFactorsTitle": "Giá được quyết định bởi các yếu tố sau",

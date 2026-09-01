@@ -8,11 +8,12 @@ import type { Locale } from '../lib/i18n';
 // 흩어져 있다가 한쪽만 고쳐 어긋나는 드리프트를 구조적으로 차단한다.
 // data/pricing.test.ts가 표시문자열↔값·스키마↔상수 정합을 CI에서 강제한다.
 // 주의: 350,000은 서로 다른 세 상품(레슨 월정액·축가 패키지·음반 기획 오퍼)의
-// 우연한 동일값, 500,000은 서로 다른 세 상품(1곡 통합 패키지·6시간 Day Lock·발매 싱글
-// 시작가)의 우연한 동일값 — 반드시 상품별 상수를 쓸 것(일괄 치환 금지).
-// 통합 번들(SINGLE/EP/ALBUM_BUNDLE_PRICE)과 발매 티어(RELEASE_*_FROM_PRICE)는
-// 이름이 비슷해도 다른 상품이다: 번들은 녹음·믹싱·마스터링만 묶은 제작 서비스,
-// 발매 티어는 기획·유통 등록·보도자료까지 포함한 풀서비스 시작가다.
+// 우연한 동일값, 500,000은 6시간 Day Lock과도 우연히 겹친다 — 반드시 상품별 상수를
+// 쓸 것(일괄 치환 금지).
+// 반면 통합 번들(SINGLE/EP/ALBUM_BUNDLE_PRICE)과 발매 티어 하한(RELEASE_*_FROM_PRICE)이
+// 같은 값인 것은 우연이 아니라 의도다: 번들은 발매 프로젝트의 고정 구성 엔트리이고,
+// 발매 티어는 거기서 세션 편성·편곡 확장·PR 라운드를 올려 견적하는 같은 상품군이다.
+// 한쪽을 바꾸면 다른 쪽도 함께 움직여야 한다 (data/pricing.test.ts가 강제).
 // ─────────────────────────────────────────────────────────────────────────────
 export const RECORDING_HOURLY_PRICE = 100000;
 export const VOCAL_PACKAGE_PRICE = 250000; // 보컬 녹음 1프로(1곡·3시간)
@@ -33,24 +34,30 @@ export const PRACTICE_ROOM_MONTHLY_PRICE = 360000;
 export const PRODUCTION_OFFER_PRICE = 350000;
 // 발매 프로젝트 티어 시작가 — 한국어 카피 SSOT는 common.json releaseProject.tiers.*.range
 // ("약 50만원~" 등)이며, data/pricing.test.ts가 아래 상수와 만원 표기 정합을 강제한다.
-export const RELEASE_SINGLE_FROM_PRICE = 500000;
-export const RELEASE_EP_FROM_PRICE = 1500000; // 3-5곡
-export const RELEASE_ALBUM_FROM_PRICE = 4000000; // 8곡 기준
+// 각 티어의 하한은 아래 통합 번들(고정 구성 정찰가)과 같은 값이다 — 번들이 발매
+// 프로젝트의 최소 구성이고, 세션 편성·편곡 확장·PR 라운드는 그 위로 견적된다.
+export const RELEASE_SINGLE_FROM_PRICE = 500000; // = SINGLE_BUNDLE_PRICE (1곡)
+export const RELEASE_EP_FROM_PRICE = 1800000; // = EP_BUNDLE_PRICE (4곡 기준 하한, 상품은 3-5곡)
+export const RELEASE_ALBUM_FROM_PRICE = 3400000; // = ALBUM_BUNDLE_PRICE (8곡 기준)
 /**
- * 1곡 통합 싱글 패키지 — VOCAL_PACKAGE_PRICE(250,000) + MIXING_LEVEL1_PRICE(200,000)
- * + MASTERING_SINGLE_PRICE(100,000) = 550,000의 9.1% 할인. 우연히 RELEASE_SINGLE_FROM_PRICE와
- * 동일값이지만 의미가 다르다 (서비스 묶음 단품 vs 발매 프로젝트 티어 시작가). 상품별 상수 필수.
+ * 1곡 통합 싱글 패키지 — 제작 단가 VOCAL_PACKAGE_PRICE(250,000) + MIXING_LEVEL1_PRICE(200,000)
+ * + MASTERING_SINGLE_PRICE(100,000) = 550,000의 9.1% 할인이며, 그 위에 기획·유통 등록·
+ * 보도자료가 얹힌다. RELEASE_SINGLE_FROM_PRICE와 같은 값인 것은 의도다 — 이 번들이
+ * 발매 싱글의 고정 구성 엔트리다.
  */
 export const SINGLE_BUNDLE_PRICE = 500000;
 /**
- * EP 통합 패키지(4곡 기준) — 곡당 line-item 530,000(VOCAL_PACKAGE_PRICE +
- * MIXING_LEVEL1_PRICE + MASTERING_PACKAGE_PRICE) × 4 = 2,120,000의 약 15% 할인.
- * 곡당 450,000으로, 발매 EP 티어의 곡당 단가(약 500,000) 아래에 둔다.
+ * EP 통합 패키지(4곡 기준) — 곡당 제작 단가 530,000(VOCAL_PACKAGE_PRICE +
+ * MIXING_LEVEL1_PRICE + MASTERING_PACKAGE_PRICE) × 4 = 2,120,000의 약 15% 할인이며,
+ * 그 위에 앨범 기획·유통 등록·보도자료가 얹힌다. 곡당 450,000.
+ * RELEASE_EP_FROM_PRICE와 같은 값 — 발매 EP의 고정 구성 엔트리다.
  */
 export const EP_BUNDLE_PRICE = 1800000;
 /**
- * 정규 통합 패키지(8곡 기준) — 곡당 530,000 × 8 = 4,240,000의 약 20% 할인.
- * 곡당 425,000. 싱글 9% → EP 15% → 정규 20%로 곡수에 따라 할인이 커지는 사다리다.
+ * 정규 통합 패키지(8곡 기준) — 곡당 제작 단가 530,000 × 8 = 4,240,000의 약 20% 할인이며,
+ * 그 위에 A&R 컨설팅·유통 등록·보도자료가 얹힌다. 곡당 425,000.
+ * 싱글 9% → EP 15% → 정규 20%로 곡수에 따라 할인이 커지는 사다리다.
+ * RELEASE_ALBUM_FROM_PRICE와 같은 값 — 발매 정규의 고정 구성 엔트리다.
  */
 export const ALBUM_BUNDLE_PRICE = 3400000;
 

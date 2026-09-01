@@ -1986,7 +1986,7 @@
       "ep": {
         "label": "EP Chiqarish",
         "duration": "~3-6 oy",
-        "range": "EP ~₩1.5M dan (3-5 trek)",
+        "range": "EP ~₩1.8M dan (3-5 trek)",
         "note": "Qo'shiqlar tayyorligiga qarab moslanadi",
         "detail": {
           "heroTitlePrefix": "Musiqa o'zligingiz,",
@@ -2085,14 +2085,14 @@
             "SMM reklama byudjeti"
           ],
           "priceSectionTitle": "Narx oralig'i",
-          "priceRange": "EP ~₩1.5M dan (3-5 trek)",
-          "priceRationale": "3-5 trek uchun standart stavka (vokal yozuv, miks, ohang moslashuvi). 5-7 ta alohida ta'minotchidan narx olishdan ko'ra vaqt va umumiy xarajatni tejaydi.",
+          "priceRange": "EP ~₩1.8M dan (3-5 trek)",
+          "priceRationale": "4 treklik to'liq paket (reja, yozuv, miks, mastering, tarqatish, press-reliz) quyi chegara. Reja, tarqatish va press-reliz trek soniga bog'liq bo'lmagan qat'iy xarajatlar, shuning uchun 3 treklik EP ham shu chegaradan boshlanadi; sessiya tarkibi, aranjirovka chuqurligi va PR raundlari uning ustiga qo'shiladi.",
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
           "priceFactorsTitle": "Narxni belgilovchi omillar",
           "priceFactors": [
             {
               "label": "Treklar soni",
-              "detail": "3 trek asos → 4 trek +₩500K / 5 trek +₩1M"
+              "detail": "3-4 trek asos → 5 trek +₩500K"
             },
             {
               "label": "Sessiya hajmi",
@@ -2135,7 +2135,7 @@
       "album": {
         "label": "To'liq Albom Chiqarish",
         "duration": "~6-12 oy",
-        "range": "Taxminan ₩4M dan",
+        "range": "Taxminan ₩3.4M dan",
         "note": "8 trek asosida, hajmga qarab moslanadi",
         "detail": {
           "heroTitlePrefix": "Indie sahnasida",
@@ -2236,7 +2236,7 @@
             "Katta sessiya qo'shimchalari (alohida taklif)"
           ],
           "priceSectionTitle": "Narx oralig'i",
-          "priceRange": "Taxminan ₩4M dan",
+          "priceRange": "Taxminan ₩3.4M dan",
           "priceRationale": "8 trek uchun standart stavka (vokal yozuv, miks, mastering). A&R, tanqidchilar PR, grant maslahati — barchasi bitta prodyuserdan, bitta narxdan.",
           "priceNote": "Sessiya tarkibi, treklar soni va aranjirovkaga qarab o‘zgaradi. Bepul konsultatsiyadan keyin moslashtirilgan taklif.",
           "priceFactorsTitle": "Narxni belgilovchi omillar",
