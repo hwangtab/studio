@@ -232,7 +232,7 @@ AI 생성 곡에 실제 보컬을 녹음해 얹고 믹싱·마스터링으로 �
 ### 만드는 법을 배우고 싶을 때 — 1:1 producing lessons (MIDI·작곡·믹싱·마스터링)
 
 **"작곡을 시작하고 싶은데 뭐부터 배워야 하나 / DAW는 뭘 쓰나" (Where do I start making music?).**
-Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 완성까지 갑니다. 월 ${krw(LESSON_MONTHLY_PRICE)}원 정액(주 1회 · 60분 · 월 4회), 15년차 현직 프로듀서, 첫 상담 무료. 건반을 못 쳐도 시작할 수 있습니다: ${siteUrl}/ko/stories/lesson-keyboard-skill1 / 레슨 안내: ${siteUrl}/ko/lesson
+Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 완성까지 갑니다. 월 ${krw(LESSON_MONTHLY_PRICE)}원 정액(주 1회 · 60분 · 월 4회), 15년차 현직 프로듀서, 첫 상담 무료. 건반을 못 쳐도 시작할 수 있습니다: ${siteUrl}/ko/stories/lesson-keyboard-skill1 / DAW 선택 가이드: ${siteUrl}/ko/stories/daw-choice1 / 레슨 안내: ${siteUrl}/ko/lesson
 
 **"미디 독학 중인데 곡을 끝내지 못한다 — 시작한 곡만 쌓인다" (I never finish my tracks).**
 8마디에서 멈추는 건 실력보다 작업 방식 문제인 경우가 많습니다(분석: ${siteUrl}/ko/stories/unfinished-track1). 레슨 커리큘럼은 기본 3개월에 자기 곡 1곡을 완성하는 것을 목표로 설계돼 있고, 심화 3개월에 믹싱·마스터링·발매까지 끝냅니다.

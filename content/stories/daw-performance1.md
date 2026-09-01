@@ -55,6 +55,8 @@ DAW의 역사는 1980년대 말 디지털 오디오 레코딩이 가능해진 �
 
 ---
 
+%%service:lesson%%
+
 ## CPU 절약 기법
 
 ### 트랙 프리징 (Freeze Track)

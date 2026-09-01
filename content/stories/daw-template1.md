@@ -69,6 +69,8 @@ DAW 템플릿의 개념은 1990년대 Digidesign(현 Avid)의 Pro Tools가 세�
 
 ---
 
+%%service:lesson%%
+
 ## 세션 기본 설정
 
 ### Sample Rate & Bit Depth

@@ -70,6 +70,8 @@ inlineFallback:
 
 ---
 
+%%service:lesson%%
+
 ## 장르별 코드 진행
 
 ### K-POP / 팝

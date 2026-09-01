@@ -55,6 +55,8 @@ DAW의 역사는 1977년 New England Digital의 Synclavier와 1979년 Fairlight 
 
 ---
 
+%%service:lesson%%
+
 ## 목적별 DAW 추천
 
 ### 보컬 녹음 중심

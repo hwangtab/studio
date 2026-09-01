@@ -63,6 +63,8 @@ inlineFallback:
 
 ---
 
+%%service:lesson%%
+
 ## 악기별 역할과 주파수 대역
 
 ### 밴드 악기 공간 배분

@@ -55,6 +55,8 @@ inlineFallback:
 
 ---
 
+%%service:lesson%%
+
 ## 기억에 남는 훅 만들기
 
 ### 훅 작성 원칙

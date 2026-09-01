@@ -54,6 +54,8 @@ inlineFallback:
 
 ---
 
+%%service:lesson%%
+
 ## 자주 쓰이는 코드 진행 패턴
 
 ### 팝·발라드 (장조)

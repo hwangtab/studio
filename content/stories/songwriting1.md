@@ -77,6 +77,8 @@ inlineFallback:
 
 ---
 
+%%service:lesson%%
+
 ## 작곡 접근 방법 3가지
 
 | 방법 | 과정 | 장점 |

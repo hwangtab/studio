@@ -66,6 +66,8 @@ MIDI 작곡의 가능성은 1987년 Casio CZ-1000과 Yamaha DX7의 보급으로 
 
 ---
 
+%%service:lesson%%
+
 ## MIDI 드럼 프로그래밍
 
 ### MIDI 드럼 패턴 기초
