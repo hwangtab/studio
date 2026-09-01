@@ -1201,6 +1201,10 @@
         {
           "q": "Địa điểm ở đâu và đặt lịch thế nào?",
           "a": "Đi bộ 5 phút từ ga Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seoul). Chúng tôi làm việc theo lịch hẹn: nhắn kênh KakaoTalk kèm ngày và số bài, chúng tôi xác nhận sau khi trao đổi ngắn."
+        },
+        {
+          "q": "Thu âm xong thì tôi phải tự lo phát hành và quảng bá à?",
+          "a": "Không. Sau khâu lên kế hoạch, thu âm, mix và master, chúng tôi tiếp tục đăng ký phát hành trên Melon, Spotify, Apple Music, YouTube Music và làm PR phát hành — viết thông cáo rồi gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh và người tuyển chọn playlist quốc tế. Bạn có thể chỉ đặt thu âm, hoặc đi cùng chúng tôi tới tận lúc phát hành."
         }
       ]
     },
@@ -1257,7 +1261,7 @@
         },
         {
           "title": "Giao file & bước tiếp theo",
-          "description": "Chúng tôi giao bản thu, và có thể tiếp tục sang mix và master nếu bạn cần."
+          "description": "Chúng tôi giao bản thu, và có thể tiếp tục sang mix, master, phát hành và PR nếu bạn cần."
         }
       ]
     },
@@ -1330,6 +1334,10 @@
         {
           "q": "Tôi có cần đến trực tiếp phòng thu không?",
           "a": "Không. Dù bạn thu âm ở đâu, chỉ cần gửi file. Nhận qua KakaoTalk hoặc link Google Drive/WeTransfer, bản hoàn thiện cũng giao theo cách tương tự."
+        },
+        {
+          "q": "Sau mastering, các bạn có nhận cả phát hành và quảng bá không?",
+          "a": "Có. Chúng tôi dùng bản master hoàn chỉnh để đăng ký phát hành trên Melon, Spotify, Apple Music, YouTube Music, rồi viết thông cáo và gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh và người tuyển chọn playlist quốc tế. Chỉ đặt mix và master cũng được — bước phát hành là tùy chọn."
         }
       ]
     },
@@ -1346,7 +1354,7 @@
         },
         {
           "title": "Người sắp phát hành",
-          "description": "Master theo đúng chuẩn loudness của nền tảng bạn sắp phát hành — Melon, Spotify, Apple Music và hơn thế."
+          "description": "Master theo đúng chuẩn loudness của nền tảng bạn sắp phát hành — Melon, Spotify, Apple Music và hơn thế. Bạn cũng có thể đi tiếp sau bản master với phần đăng ký phát hành và PR."
         },
         {
           "title": "Người ở tỉnh xa hoặc nước ngoài",

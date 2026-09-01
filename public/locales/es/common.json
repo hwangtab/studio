@@ -1201,6 +1201,10 @@
         {
           "q": "¿Dónde están y cómo reservo?",
           "a": "A 5 minutos a pie de la estación Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seúl). Trabajamos solo con cita: escríbenos por nuestro canal de KakaoTalk con tu fecha y número de canciones y confirmamos tras una breve charla."
+        },
+        {
+          "q": "¿Tengo que gestionar la distribución y el lanzamiento por mi cuenta después de grabar?",
+          "a": "No. La planificación, la grabación, la mezcla y la masterización continúan hacia la distribución en Melon, Spotify, Apple Music y YouTube Music, y hacia la promoción del lanzamiento: una nota de prensa dirigida a periodistas y críticos musicales coreanos, y a medios, radios y curadores de playlists internacionales. Puedes contratar solo la grabación o llegar con nosotros hasta el lanzamiento."
         }
       ]
     },
@@ -1257,7 +1261,7 @@
         },
         {
           "title": "Entrega de archivos y siguientes pasos",
-          "description": "Entregamos tu grabación y podemos continuar con mezcla y masterización si lo necesitas."
+          "description": "Entregamos tu grabación y podemos continuar con mezcla, masterización, distribución y promoción de lanzamiento si lo necesitas."
         }
       ]
     },
@@ -1330,6 +1334,10 @@
         {
           "q": "¿Tengo que ir al estudio en persona?",
           "a": "No. Sin importar dónde hayas grabado, solo envíanos tus archivos. Los recibimos por KakaoTalk o un enlace de Google Drive/WeTransfer, y entregamos el resultado de la misma forma."
+        },
+        {
+          "q": "¿Pueden encargarse de la distribución y el lanzamiento después de la masterización?",
+          "a": "Sí. Registramos el máster terminado para su distribución en Melon, Spotify, Apple Music y YouTube Music, y luego redactamos una nota de prensa dirigida a periodistas y críticos musicales coreanos, y a medios, radios y curadores de playlists internacionales. También puedes contratar solo mezcla y masterización: el paso de lanzamiento es opcional."
         }
       ]
     },
@@ -1346,7 +1354,7 @@
         },
         {
           "title": "Estás por lanzar tu música",
-          "description": "Masterizamos según el estándar de sonoridad de la plataforma donde vayas a lanzar — Melon, Spotify, Apple Music y más."
+          "description": "Masterizamos según el estándar de sonoridad de la plataforma donde vayas a lanzar — Melon, Spotify, Apple Music y más. También puedes seguir más allá del máster con la distribución y la promoción del lanzamiento."
         },
         {
           "title": "Estás fuera de Seúl o en el extranjero",

@@ -1201,6 +1201,10 @@
         {
           "q": "Manzil qayerda va qanday bron qilaman?",
           "a": "Yeonsinnae bekatidan 5 daqiqa piyoda (Daejo-dong, Eunpyeong-gu, Seul). Biz faqat oldindan kelishuv asosida ishlaymiz: KakaoTalk kanalimizga sana va qo'shiqlar sonini yozing, qisqa suhbatdan so'ng tasdiqlaymiz."
+        },
+        {
+          "q": "Yozuvdan keyin tarqatish va PRni o'zim hal qilishim kerakmi?",
+          "a": "Yo'q. Reja, yozuv, miks va masteringdan so'ng Melon, Spotify, Apple Music va YouTube Music'da tarqatishni ro'yxatdan o'tkazamiz hamda chiqarish PRini olib boramiz — press-reliz yozib, Koreya musiqa jurnalistlari va tanqidchilariga, shuningdek xalqaro nashrlar, radiolar va pleylist kuratorlariga yuboramiz. Faqat yozuvga buyurtma berishingiz yoki chiqarishgacha birga borishingiz mumkin."
         }
       ]
     },
@@ -1257,7 +1261,7 @@
         },
         {
           "title": "Fayl topshirish & keyingi qadamlar",
-          "description": "Yozuvingizni topshiramiz va kerak bo'lsa miks va masteringgacha davom ettiramiz."
+          "description": "Yozuvingizni topshiramiz va kerak bo'lsa miks, mastering, tarqatish va chiqarish PRigacha davom ettiramiz."
         }
       ]
     },
@@ -1330,6 +1334,10 @@
         {
           "q": "Studiyaga shaxsan borishim kerakmi?",
           "a": "Yo'q. Qayerda yozgan bo'lsangiz ham, shunchaki faylni yuboring. KakaoTalk yoki Google Drive/WeTransfer havolasi orqali qabul qilamiz, tayyor natijani ham xuddi shu tarzda topshiramiz."
+        },
+        {
+          "q": "Masteringdan keyin tarqatish va PRni ham olasizmi?",
+          "a": "Ha. Tayyor masterni Melon, Spotify, Apple Music va YouTube Music'da tarqatish uchun ro'yxatdan o'tkazamiz, so'ng press-reliz yozib Koreya musiqa jurnalistlari va tanqidchilariga, xalqaro nashrlar, radiolar va pleylist kuratorlariga yuboramiz. Faqat miks va mastering ham mumkin — chiqarish bosqichi ixtiyoriy."
         }
       ]
     },
@@ -1346,7 +1354,7 @@
         },
         {
           "title": "Chiqarishga tayyorlanayotganlar",
-          "description": "Chiqarish rejalashtirilgan platforma (Melon, Spotify, Apple Music va boshqalar) balandlik standartiga mos mastering qilamiz."
+          "description": "Chiqarish rejalashtirilgan platforma (Melon, Spotify, Apple Music va boshqalar) balandlik standartiga mos mastering qilamiz. Masterdan keyin tarqatish va chiqarish PRini ham bizga topshirishingiz mumkin."
         },
         {
           "title": "Boshqa shahar yoki chet eldagilar",

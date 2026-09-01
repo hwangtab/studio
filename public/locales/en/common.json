@@ -1229,6 +1229,10 @@
         {
           "q": "Where are you, and how do I book?",
           "a": "A 5-minute walk from Yeonsinnae Station (Daejo-dong, Eunpyeong-gu, Seoul). We work by appointment only — message our KakaoTalk channel with your date and number of songs and we'll confirm after a short chat."
+        },
+        {
+          "q": "Do I have to arrange distribution and release on my own after recording?",
+          "a": "No. Planning, recording, mixing and mastering continue into distribution on Melon, Spotify, Apple Music and YouTube Music, and into release promotion — a written press kit pitched to Korean music journalists and critics as well as international media, radio and playlist curators. You can book recording alone, or go all the way to release with us."
         }
       ]
     },
@@ -1285,7 +1289,7 @@
         },
         {
           "title": "File delivery & next steps",
-          "description": "We deliver your recording, and can continue into mixing and mastering if you need it."
+          "description": "We deliver your recording, and can continue into mixing, mastering, distribution and release promotion if you need it."
         }
       ]
     },
@@ -1358,6 +1362,10 @@
         {
           "q": "Do I need to visit the studio in person?",
           "a": "No. Wherever you recorded, just send us your files. We receive them via KakaoTalk or a Google Drive/WeTransfer link, and deliver the finished track the same way."
+        },
+        {
+          "q": "Can you handle distribution and release after mastering?",
+          "a": "Yes. We register the finished master for distribution on Melon, Spotify, Apple Music and YouTube Music, then write a press kit and pitch it to Korean music journalists and critics as well as international media, radio and playlist curators. Mixing and mastering alone is fine too — the release step is optional."
         }
       ]
     },
@@ -1374,7 +1382,7 @@
         },
         {
           "title": "You're preparing for release",
-          "description": "We master to the loudness spec of whichever platform you're releasing on — Melon, Spotify, Apple Music, and more."
+          "description": "We master to the loudness spec of whichever platform you're releasing on — Melon, Spotify, Apple Music, and more. You can also continue past the master into distribution and release promotion with us."
         },
         {
           "title": "You're outside Seoul or abroad",
