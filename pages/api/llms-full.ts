@@ -70,7 +70,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 Source site: ${siteUrl}
 Purpose: Comprehensive, machine-readable index of Studio NOL content for AI search engines (ChatGPT, Perplexity, Claude, Gemini) and LLM crawlers.
-Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Services: recording, mixing, mastering, practice room residency, music lessons, album production, wedding song & voice acting recording.
+Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Services: recording, mixing, mastering, practice room residency, 1:1 producing lessons (MIDI/composition/mixing — no vocal or instrument lessons), album release production with worldwide distribution and PR, wedding song & voice acting recording.
 
 - Primary sitemap: ${siteUrl}/sitemap.xml
 - Short version: ${siteUrl}/llms.txt
