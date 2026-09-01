@@ -68,8 +68,8 @@ export const getAuthorProfile = (locale: Locale) => ({
   },
   // Person JSON-LD description — 한 문장 자기소개.
   schemaDescription: t(locale, {
-    ko: '여러 인디 아티스트와 함께한 15년차 음반 기획자·프로듀서. 서울 연신내 스튜디오 놀 운영 — 기획·보컬 디렉팅·녹음·믹싱·유통·평론 PR 동행.',
-    en: 'Record planner & producer with 15 years alongside Korean indie artists. Runs Studio NOL in Seoul — planning, vocal direction, recording, mixing, distribution, and press PR.',
+    ko: '여러 인디 아티스트와 함께한 15년차 음반 기획자·프로듀서. 서울 연신내 스튜디오 놀 운영 — 기획·보컬 디렉팅·녹음·믹싱·유통, 국내외 매체·라디오·플레이리스트 PR 동행.',
+    en: 'Record planner & producer with 15 years alongside Korean indie artists. Runs Studio NOL in Seoul — planning, vocal direction, recording, mixing, distribution, and release PR to Korean and international media, radio and playlist curators.',
   }),
   intro: [
     t(locale, {
