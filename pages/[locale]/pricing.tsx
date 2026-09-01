@@ -237,13 +237,19 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
               </tr>
             </thead>
             <tbody>
-              {summaryGroups.map((group) => (
+              {summaryGroups.map((group, groupIndex) => (
                 <React.Fragment key={group.id}>
                   <tr>
+                    {/* 그룹 헤더는 항목(16px·500)보다 확실히 위여야 스크롤 중 위치를 잃지 않는다.
+                        uppercase·tracking-wide는 한글에 각각 무효·역효과라 쓰지 않는다.
+                        그룹 경계선은 직전 그룹 마지막 행의 border-b가 이미 그으므로
+                        여백(pt-10)만 준다 — border-t를 더하면 선이 겹쳐 두 줄로 보인다. */}
                     <th
                       scope="rowgroup"
                       colSpan={2}
-                      className="pt-6 pb-2 typo-card-subtitle font-semibold uppercase tracking-wide text-gray-700 dark:text-gray-300"
+                      className={`typo-card-title pb-3 text-gray-900 dark:text-white ${
+                        groupIndex === 0 ? 'pt-5' : 'pt-10'
+                      }`}
                     >
                       {group.title}
                     </th>
