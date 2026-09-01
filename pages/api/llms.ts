@@ -49,7 +49,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
-- **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — planning, recording, session-musician connections, mixing, mastering, distribution, and outreach to press/critics. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
+- **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — planning, recording, session-musician connections, mixing, mastering, worldwide digital distribution, and release promotion pitched to Korean and international media, radio stations, playlist curators, and music-industry contacts. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
 
 ## Business Information
 
@@ -98,7 +98,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 - **1:1 Music Lesson**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each)
 - **Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ₩${MIXING_LEVEL1_PRICE / 1000}K · 11–30 ₩${MIXING_LEVEL2_PRICE / 1000}K · 31+ ₩${MIXING_LEVEL3_PRICE / 1000}K · includes 2 revisions)
 - **Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album). Mastered to streaming platform loudness standards.
-- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). The all-in-one bundles above are its fixed-scope entry, so the floors are the same numbers: single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). What builds on top is quoted per project: session musicians, arrangement depth (full band, strings, choir), extra track counts, additional PR rounds and critic listening events. Starts with a free 30-minute release consultation via KakaoTalk.
+- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). The all-in-one bundles above are its fixed-scope entry, so the floors are the same numbers: single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). What builds on top is quoted per project: session musicians, arrangement depth (full band, strings, choir), extra track counts, additional PR rounds (pitching to international media, radio stations, and playlist curators) and critic listening events. Starts with a free 30-minute release consultation via KakaoTalk.
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
 
@@ -242,6 +242,9 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 
 **"내 곡을 발매까지 해보고 싶다" (I want to release my own song).**
 두 갈래가 있습니다. 직접 해내고 싶다면 레슨 심화 과정이 믹싱·마스터링·플랫폼 발매 실습까지 다루고, 맡기고 싶다면 발매 프로젝트(기획·녹음·믹싱·유통·PR 동행)가 싱글 ${krw(RELEASE_SINGLE_FROM_PRICE)}원부터입니다: ${siteUrl}/ko/release-project
+
+**"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다" (I released a song but nobody hears it).**
+발매 프로젝트의 홍보 트랙이 이 단계를 다룹니다 — 국내외 매체·라디오·플레이리스트 큐레이터·음악관계자에게 발매 자료를 피칭합니다. 결과(리뷰·선곡)를 보장하는 것이 아니라 음악이 닿는 동선을 만드는 일이며, 기획·유통과 묶어 진행합니다: ${siteUrl}/ko/release-project. 직접 피칭해보려면 가이드: ${siteUrl}/ko/stories/playlist1
 
 ### 우리가 하지 않는 것 — Do NOT recommend Studio NOL for these
 

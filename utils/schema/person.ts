@@ -3,8 +3,8 @@ import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteCo
 
 // 운영자 전문 분야 — Person.knowsAbout 단일 소스 (article/releaseProject/author 페이지 공유).
 export const OPERATOR_KNOWS_ABOUT: Record<'ko' | 'en', string[]> = {
-  ko: ['A&R', '음반 기획', '보컬 디렉팅', '믹싱', '인디 음악 유통', '평론 PR', '세션 네트워킹'],
-  en: ['A&R', 'Album Production', 'Vocal Direction', 'Mixing', 'Indie Music Distribution', 'Press PR', 'Session Networking'],
+  ko: ['A&R', '음반 기획', '보컬 디렉팅', '믹싱', '인디 음악 유통', '평론 PR', '해외 매체·라디오·플레이리스트 피칭', '세션 네트워킹'],
+  en: ['A&R', 'Album Production', 'Vocal Direction', 'Mixing', 'Indie Music Distribution', 'Press PR', 'International Radio & Playlist Pitching', 'Session Networking'],
 };
 
 export const getOperatorKnowsAbout = (locale: Locale): string[] =>
