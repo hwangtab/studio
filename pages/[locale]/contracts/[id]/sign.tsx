@@ -20,10 +20,12 @@ import {
   maskIdentityDigits,
   maskIdentityDigitsInContent,
 } from '../../../../lib/contracts/identity';
+import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
+import { recordContractView } from '../../../../lib/contracts/view-log';
 
 /** 점 하나만 찍고 제출하는 것을 막기 위한 최소 획 점 개수. */
 const MIN_STROKE_POINTS = 12;
@@ -103,6 +105,14 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
         },
       };
     }
+
+    /**
+     * 여기까지 왔으면 서명 대기 중인 계약을 실제로 연 것이다. 그 사실을 남긴다.
+     *
+     * 상태 판정 뒤에 두는 이유: 만료·취소·이미 서명된 계약의 접속까지 세면 "몇 번 열어
+     * 봤는가"가 흐려진다. 기록에 실패해도 계약서는 그대로 보여준다(view-log.ts 주석).
+     */
+    await recordContractView(contract.id, token, getClientIp(context.req));
 
     const { contractClauses, contractAttachments, ...rest } = contract;
 

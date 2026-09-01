@@ -3,6 +3,7 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import AuditTrail from '../../../../components/contracts/AuditTrail';
 import ContractContent from '../../../../components/contracts/ContractContent';
 import {
   copyToClipboard,
@@ -26,6 +27,7 @@ import {
 import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/contracts/format';
 import { getStatusLabel, isActionAllowed, needsTermination } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
+import { buildAuditTrail, serializeAuditTrail, type SerializedAuditTrail } from '../../../../lib/contracts/audit-trail';
 
 interface AdminContractDetailPageProps {
   contract: AdminSerializedContract;
@@ -34,6 +36,7 @@ interface AdminContractDetailPageProps {
   attachments: SerializedAttachment[];
   /** 계약에 붙은 이용수칙 사본. 첨부 목록은 제목만 보여 주므로 본문은 따로 싣는다. */
   rulesContent: string;
+  auditTrail: SerializedAuditTrail;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -70,6 +73,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       clauses: contract.contractClauses.map(serializeClause),
       attachments: contract.contractAttachments.map(serializeAttachment),
       rulesContent: resolveRulesContent(contract.contractAttachments),
+      auditTrail: serializeAuditTrail(buildAuditTrail(contract)),
     },
   };
 };
@@ -98,6 +102,7 @@ export default function AdminContractDetailPage({
   clauses,
   attachments,
   rulesContent,
+  auditTrail,
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -359,18 +364,14 @@ export default function AdminContractDetailPage({
                         <span className="text-gray-400">기록 없음</span>
                       )}
                     </p>
-                    {contract.contentHash && (
-                      <p className="break-all">
-                        문서 지문:{' '}
-                        <span className="font-mono text-xs">{contract.contentHash}</span>
-                      </p>
-                    )}
                   </div>
                 </div>
               ) : (
                 <p className="text-gray-500 text-sm">아직 서명하지 않았습니다.</p>
               )}
             </div>
+
+            <AuditTrail trail={auditTrail} />
 
             <div className="p-6 md:p-8 border-b border-gray-200">
               <h2 className="text-lg font-bold text-gray-900 mb-4">계약서 본문</h2>

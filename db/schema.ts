@@ -60,6 +60,27 @@ export const contracts = sqliteTable('contracts', {
   signedAt: integer('signed_at', { mode: 'timestamp' }),
 
   /**
+   * 서명 링크가 처음·마지막으로 열린 시각과 횟수, 그리고 처음 연 접속의 IP.
+   *
+   * 감사추적의 빈칸이었다. 발송(sentAt)과 서명(signedAt)은 남는데 그 사이 "받아서 열어 봤다"가
+   * 없어, 서명을 부인당했을 때 사슬이 한 칸 끊긴다. Obi v. Exeter Health(D.N.H. 2019)에서
+   * 법원이 위조 주장을 기각한 근거가 바로 이 열람 기록이었고, Moton v. Maplebear(S.D.N.Y.)는
+   * "수령·열람·실행"을 잇는 타임스탬프 추적을 진정성립 입증에 충분하다고 봤다.
+   *
+   * 지문(integrity.ts)에는 넣지 않는다. 지문은 "서명된 문서"를 덮는 것이고 열람은 문서가 아니라
+   * 그 주변 정황이다. 계약서 PDF에도 인쇄하지 않는다 — 감사추적은 계약서와 별개 문서로 내는 것이
+   * 업계 관행이고(DocuSign Certificate of Completion), 인쇄하면 지문 버전을 올려야 해서
+   * 이미 서명된 계약의 대조가 전부 어긋난다. 관리자 감사추적 화면에서 본다.
+   *
+   * 한계: 일부 메일 보안 스캐너가 링크를 미리 열어 본다. 그런 접속도 열람으로 기록되므로,
+   * 이 값은 "당사자가 열었다"가 아니라 "이 링크가 이 시각에 이 IP에서 열렸다"로만 읽어야 한다.
+   */
+  firstViewedAt: integer('first_viewed_at', { mode: 'timestamp' }),
+  lastViewedAt: integer('last_viewed_at', { mode: 'timestamp' }),
+  viewCount: integer('view_count').notNull().default(0),
+  firstViewedIp: text('first_viewed_ip'),
+
+  /**
    * 서명자가 계약서에 적힌 연락처 뒷자리를 맞춘 시각.
    *
    * 링크를 받은 사람이 계약 당사자인지 확인할 근거다. 완전한 본인인증은 아니지만,

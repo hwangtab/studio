@@ -118,6 +118,9 @@ export const purgeExpiredPersonalData = async (now: Date = new Date()): Promise<
             terminationReason: PURGED_MARK,
             // 스키마에만 있고 현재 쓰이지 않지만, 자유 입력 칸이라 방어적으로 함께 비운다.
             description: null,
+            // 열람 기록의 IP도 개인정보다. 시각·횟수는 개인을 식별하지 않아 남긴다 —
+            // "이 계약이 언제 몇 번 열렸는가"는 파기 후에도 운영 기록으로 쓸 수 있다.
+            firstViewedIp: null,
             pdfUrl: null,
             purgedAt: now,
             updatedAt: now,

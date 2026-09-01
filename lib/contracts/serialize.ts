@@ -42,6 +42,8 @@ export const serializeContract = (contract: Contract, now: Date = new Date()): S
     purgedAt: iso(contract.purgedAt),
     identityVerifiedAt: iso(contract.identityVerifiedAt),
     signTokenUsedAt: iso(contract.signTokenUsedAt),
+    firstViewedAt: iso(contract.firstViewedAt),
+    lastViewedAt: iso(contract.lastViewedAt),
     createdAt: contract.createdAt.toISOString(),
     updatedAt: contract.updatedAt.toISOString(),
   };

@@ -1,4 +1,12 @@
-import type { NextApiRequest } from 'next';
+/**
+ * API 라우트와 getServerSideProps 양쪽에서 쓴다. NextApiRequest로 좁혀 두면 페이지의
+ * context.req(IncomingMessage)를 못 받는데, 여기서 보는 것은 헤더와 소켓뿐이라
+ * 그 둘만 요구한다.
+ */
+export interface IpBearingRequest {
+  headers: Record<string, string | string[] | undefined>;
+  socket: { remoteAddress?: string | undefined };
+}
 
 /**
  * 요청을 보낸 쪽의 IP.
@@ -14,7 +22,7 @@ import type { NextApiRequest } from 'next';
  *
  * 어느 쪽으로도 얻지 못하면 null이다. 모르는 것을 아는 척 기록하는 것보다 비워 두는 편이 낫다.
  */
-export const getClientIp = (req: NextApiRequest): string | null => {
+export const getClientIp = (req: IpBearingRequest): string | null => {
   const header = req.headers['x-vercel-forwarded-for'];
   const forwarded = Array.isArray(header) ? header[0] : header;
 

@@ -57,6 +57,13 @@
       "when": 1787628123014,
       "tag": "0007_melted_hercules",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1788246118091,
+      "tag": "0008_unknown_silver_centurion",
+      "breakpoints": true
     }
   ]
 }
