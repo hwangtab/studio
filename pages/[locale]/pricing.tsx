@@ -107,8 +107,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   // 상단 즉답 가격 요약표 — 전부 가격 SSOT(pricingData)에서 끌어온다(하드코딩 0).
   // AI 검색(ChatGPT 등)·외부 유입이 above-the-fold에서 전체 단가를 즉시 스캔하도록 —
   // 상세 카드는 아래 섹션에 그대로 있고, 이 표는 이탈 방지·AI 인용용 압축 뷰다.
-  // 카테고리 그룹 헤더 + 오퍼별 부제(subtitle)를 넣어 "Level 1"처럼 의미 없는 라벨이
-  // 단독으로 노출되지 않게 한다.
+  // 카테고리 그룹 헤더 + 오퍼별 부제(subtitle)를 넣어 상품명만으로 뭘 사는지
+  // 알 수 있게 한다.
   const summaryGroups = React.useMemo(
     () => [
       { id: 'special', title: t('pricing.special.title'), offers: specialPackages },

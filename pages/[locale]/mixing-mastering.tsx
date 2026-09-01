@@ -135,7 +135,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
       name: t('mixingMastering.seo.title'),
       description: t('mixingMastering.seo.description'),
       serviceType: locale === 'ko' ? '믹싱 · 마스터링' : 'Mixing & Mastering',
-      offerName: locale === 'ko' ? '믹싱 Level 1' : 'Mixing Level 1',
+      offerName: locale === 'ko' ? '믹싱 (10트랙 이하)' : 'Mixing (up to 10 tracks)',
       offerPrice: MIXING_LEVEL1_PRICE,
       pricingHash: 'mixing',
     }),
