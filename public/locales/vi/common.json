@@ -147,7 +147,8 @@
       "tagline": "Nhà sản xuất album, A&R và kỹ sư ghi âm với 15 năm kinh nghiệm",
       "title": "Nhà sản xuất và kỹ sư Hwang Gyeongha",
       "body": "Buổi thu âm đầu tiên có thể khiến ai cũng thấy bối rối. Trong 15 năm làm album với các nghệ sĩ indie, tôi đồng hành từ giai đoạn lên kế hoạch: cùng nghệ sĩ xác định hướng đi của album, rồi phụ trách thu và định hướng vocal, mixing, mastering cho đến phát hành trong một quy trình liền mạch. Khi một người theo sát đến cuối, ý tưởng chủ đạo lẫn màu âm và cân bằng đều được giữ nhất quán.",
-      "portfolioCta": "Xem tác phẩm tiêu biểu"
+      "portfolioCta": "Xem tác phẩm tiêu biểu",
+      "releaseCta": "Xem Dự án Phát hành"
     }
   },
   "portfolio": {
@@ -341,7 +342,8 @@
     },
     "images": {
       "packageAlt": "Phiên thu âm vocal tại booth Studio NOL"
-    }
+    },
+    "releaseLink": "Dự án Phát hành"
   },
   "lesson": {
     "mobileMenu": "Menu di động",

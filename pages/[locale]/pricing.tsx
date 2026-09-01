@@ -519,6 +519,17 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="alternate" className="py-10">
         <div className="flex flex-wrap justify-center gap-4">
+          {/* 발매 프로젝트를 맨 앞에 — 통합 패키지가 기획·유통·홍보까지 포함하므로
+              그 다음 행선지이고, 바로 아래 CTA가 부르는 페이지이기도 하다.
+              라벨에 nav.releaseProject를 쓰지 않는다: ko만 '음원 발매 개요'이고
+              나머지 로케일은 드롭다운 하위 라벨인 'Overview'라 단독으로 뜻이 안 통한다. */}
+          <Link
+            href={`/${locale}/release-project`}
+            prefetch={false}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+          >
+            {t('pricing.releaseLink')} <ArrowRight size={16} aria-hidden="true" />
+          </Link>
           <Link
             href={`/${locale}/studio-info`}
             prefetch={false}

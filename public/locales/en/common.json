@@ -147,7 +147,8 @@
       "tagline": "15-year record planner, producer, and recording engineer",
       "title": "Producer and engineer Hwang Gyeongha",
       "body": "A first recording session can feel overwhelming. For 15 years I have made records with indie artists from the planning stage on — setting the album's direction together, then handling vocal recording and direction, mixing, mastering, and release in one continuous process. When one person carries the project through, the concept stays as consistent as the tone and balance.",
-      "portfolioCta": "View featured work"
+      "portfolioCta": "View featured work",
+      "releaseCta": "See the Release Project"
     }
   },
   "portfolio": {
@@ -369,7 +370,8 @@
     },
     "images": {
       "packageAlt": "Vocalist recording session in Studio NOL booth"
-    }
+    },
+    "releaseLink": "Release Project"
   },
   "lesson": {
     "mobileMenu": "Mobile Menu",

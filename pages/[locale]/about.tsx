@@ -132,13 +132,24 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
               <p className="typo-card-body text-gray-600 dark:text-gray-300 leading-relaxed mb-6">
                 {t('about.producer.body')}
               </p>
-              <Link
-                href={`/${locale}/portfolio`}
-                prefetch={false}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
-              >
-                {t('about.producer.portfolioCta')} <ArrowRight size={16} aria-hidden="true" />
-              </Link>
+              {/* 카피가 "기획 단계부터 발매까지 한 손에서"라고 말하므로 그 발매를
+                  보여줄 곳이 있어야 한다 — 포트폴리오(결과물)와 발매 프로젝트(과정) 둘 다 건다. */}
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href={`/${locale}/portfolio`}
+                  prefetch={false}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
+                >
+                  {t('about.producer.portfolioCta')} <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+                <Link
+                  href={`/${locale}/release-project`}
+                  prefetch={false}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
+                >
+                  {t('about.producer.releaseCta')} <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              </div>
             </BaseCard>
           </div>
         </Section>
