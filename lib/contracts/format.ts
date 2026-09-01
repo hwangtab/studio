@@ -75,18 +75,37 @@ export const formatCompactDate = (value: DateLike, fallback = '-'): string => {
   return `${year}.${month}.${day}`;
 };
 
-/** 2026년 9월 1일 오후 03:30 */
+/**
+ * 2026년 9월 1일 오후 03:30
+ *
+ * 오전·오후를 로케일 데이터에서 가져오지 않고 직접 만든다.
+ *
+ * toLocaleString에 맡겼더니 Vercel 런타임에서 "2026년 9월 1일 PM 03:19"가 나왔다 — 날짜는
+ * 한국어인데 오전/오후만 영어인 상태다. 그쪽 ICU에 한국어 dayPeriod가 없어서인데, 같은
+ * 함수가 브라우저에서는 "오후 03:19"를 내므로 관리자 화면 한 장에 두 표기가 섞였다.
+ * 계약서 PDF의 서명 일시도 서버에서 만들어지니 같은 증상이었다.
+ *
+ * 시각은 이 문서가 증명하려는 것의 핵심이라, 어디서 렌더하든 한 글자도 달라지면 안 된다.
+ * 24시간제로 숫자만 받아 오전/오후와 12시간 표기를 손으로 계산하면 로케일 데이터가
+ * 무엇이든 결과가 같다. 날짜 부분은 formatDate를 그대로 쓴다 — 월 표기는 양쪽에서
+ * 정상이었고, 표기 규칙을 한 군데에 두려는 이 파일의 원칙과도 맞는다.
+ */
 export const formatDateTime = (value: DateLike, fallback = '-'): string => {
   const date = toDate(value);
   if (!date) return fallback;
-  return date.toLocaleString(LOCALE, {
-    timeZone: TIME_ZONE,
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+
+  const { hour, minute } = partsOf(date, {
     hour: '2-digit',
     minute: '2-digit',
+    hourCycle: 'h23',
   });
+
+  const hour24 = Number(hour);
+  const period = hour24 < 12 ? '오전' : '오후';
+  // 0시는 오전 12시, 12시는 오후 12시다. 나머지는 12로 나눈 나머지.
+  const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
+
+  return `${formatDate(date)} ${period} ${String(hour12).padStart(2, '0')}:${minute}`;
 };
 
 export const formatCurrency = (amount: number): string =>
