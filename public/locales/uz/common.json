@@ -153,7 +153,7 @@
   },
   "portfolio": {
     "title": "Portfel",
-    "subtitle": "Studio NOLda ishlangan turli loyihalar bilan tanishing. Har bir ishni bosib, batafsil ko'ring.",
+    "subtitle": "Studio NOL'da tayyorlangan singllar, albomlar va reklama musiqasi. Ko'p ishlar yozuv, miks va mastering bilan tugamagan — reja, tarqatish va chiqarish PRi ham kirgan. Asarni ochib, kreditlar va biz bajargan qismni ko'ring.",
     "sampleTracks": "Namunaviy treklar",
     "projects": "Loyihalar",
     "noProjects": "Tanlangan kategoriyada loyihalar topilmadi.",
@@ -182,7 +182,7 @@
     "seo": {
       "keywords": "yozuv namunalari, mixingdan oldin va keyin, mastering namunalari, studio portfolio, musiqa prodakshn sifati, yozuv natijalari, Studio NOL",
       "title": "Yozuv va Miks Portfolio | Studio NOL",
-      "description": "Studio NOL Yeonsinnae ning yozuv, miks va mastering loyihalarini ko'ring. Turli janrlarda oldin-keyin namunalarini tinglang va professional sifatni his qiling."
+      "description": "Studio NOL portfoliosi — rejadan yozuv, miks va masteringgacha, so'ng tarqatish va chiqarish PRigacha. Albom, singl va reklama musiqasi kreditlari, bajarilgan ishlar va oldin/keyin namunalari."
     }
   },
   "contact": {
@@ -352,7 +352,7 @@
       "keywords": "musiqa prodakshn konsultatsiyasi, miks fikr-mulohaza, MIDI mentoring, musiqa prodakshn coaching, qisqa muddatli MIDI darslari, Cubase, Logic Pro"
     },
     "hero": {
-      "title": "All-in-One prodakshn masterklass",
+      "title": "1:1 prodyuserlik darslari — All-in-One masterklass",
       "subtitleLine1": "Boshingizdagi g‘oyadan chiqarishga tayyor trekkacha.",
       "subtitleLine2": "MIDI va bastakorlikdan yozuv, miks va masteringgacha — 15 yillik prodyuser bilan yakkama-yakka.",
       "subtitleLine3": "Haftada 1 marta · seansi 60 daqiqa · oyiga 4 seans · ₩350,000 belgilangan narx",

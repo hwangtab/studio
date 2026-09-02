@@ -153,7 +153,7 @@
   },
   "portfolio": {
     "title": "Danh mục",
-    "subtitle": "Giới thiệu các dự án đã thực hiện tại Studio NOL. Nhấp để xem chi tiết.",
+    "subtitle": "Single, album và nhạc quảng cáo thực hiện tại Studio NOL. Nhiều dự án đi xa hơn thu âm, mix và master — tới cả lên kế hoạch, phát hành và PR. Mở một tác phẩm để xem credit và phần chúng tôi đảm nhiệm.",
     "sampleTracks": "Track mẫu",
     "projects": "Dự án",
     "noProjects": "Không có dự án trong danh mục đã chọn.",
@@ -182,7 +182,7 @@
     "seo": {
       "keywords": "mẫu thu âm, trước và sau mixing, ví dụ mastering, portfolio studio, chất lượng sản xuất âm nhạc, kết quả thu âm, Studio NOL",
       "title": "Portfolio Thu Âm & Mixing | Studio NOL",
-      "description": "Xem các dự án thu âm, mixing, mastering của Studio NOL tại Yeonsinnae, Seoul. Nghe thử kết quả và so sánh trước-sau của nhiều thể loại âm nhạc."
+      "description": "Portfolio Studio NOL — từ lên kế hoạch, thu âm, mix, master đến phát hành và PR. Credit, phạm vi công việc và mẫu trước/sau của album, single và nhạc quảng cáo."
     }
   },
   "contact": {
@@ -353,7 +353,7 @@
       "keywords": "tư vấn sản xuất âm nhạc, phản hồi mixing, mentoring MIDI, coaching sản xuất âm nhạc, lớp MIDI ngắn hạn, Cubase, Logic Pro"
     },
     "hero": {
-      "title": "Masterclass sản xuất trọn gói",
+      "title": "Lớp sản xuất âm nhạc 1:1 — Masterclass trọn gói",
       "subtitleLine1": "Từ ý tưởng trong đầu đến bản nhạc sẵn sàng phát hành.",
       "subtitleLine2": "Từ MIDI, sáng tác đến thu âm, mix và master — kèm 1:1 với nhà sản xuất 15 năm kinh nghiệm.",
       "subtitleLine3": "1 buổi/tuần · 60 phút/buổi · 4 buổi/tháng · ₩350.000 định mức",
