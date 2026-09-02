@@ -74,6 +74,7 @@ export const buildOperatorPersonNode = (
     '@type': 'Person',
     '@id': getOperatorPersonId(siteUrl),
     name: studioOperator.name,
+    alternateName: studioOperator.alternateName,
     jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
     ...(options.description && { description: options.description }),
     url: getOperatorProfileUrl(siteUrl, locale),

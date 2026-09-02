@@ -48,6 +48,9 @@ export const getOperatorProfileUrlById = (id: OperatorProfileId): string =>
 // 강하게 활용하므로 Organization name이 아닌 실제 운영자 이름을 명시해야 cite 받음.
 export const studioOperator = {
   name: '황경하',
+  // 비-ko 페이지 본문·크레딧은 로마자 표기라, 별칭이 없으면 AI 엔진이 "Hwang Kyungha"와
+  // "황경하"를 별개 인물로 볼 수 있다. 표기 정본은 Kyungha(authorProfile·llms.txt 동일).
+  alternateName: 'Hwang Kyungha',
   sameAs: operatorProfiles.map((profile) => profile.url),
   // 운영자 인물 사진(정사각, 원형 크롭 전제) — 홈 신뢰 스트립·/author 히어로·Person JSON-LD의
   // image가 함께 쓴다. 사진을 교체하면 치수도 여기서 같이 바뀌도록 src와 한자리에 둔다.
