@@ -58,7 +58,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: '1:1 음악 레슨',
+        title: '1:1 프로듀싱 레슨',
         description: '현직 프로듀서의 1:1 실전 레슨. MIDI 작곡·믹싱·발매 컨설팅까지 — 음원 발매를 목표로 하는 분께 최적화된 커리큘럼.',
         link: '/lesson',
         icon: 'GraduationCap',
@@ -186,7 +186,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: '1:1 Music Lessons',
+        title: '1:1 Producing Lessons',
         description: '1:1 lessons with working producers — MIDI composition, mixing, and release consulting. A practical curriculum optimized for artists aiming to release music.',
         link: '/lesson',
         icon: 'GraduationCap',

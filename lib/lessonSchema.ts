@@ -23,7 +23,7 @@ export const buildLessonServiceSchema = ({
   name: title,
   description,
   inLanguage: getSchemaLanguage(locale),
-  serviceType: locale === 'ko' ? '음악 레슨' : 'Music Lesson',
+  serviceType: locale === 'ko' ? '프로듀싱 레슨' : 'Producing Lesson',
   areaServed: [
     { '@type': 'AdministrativeArea', name: locale === 'ko' ? '서울특별시' : 'Seoul' },
     { '@type': 'AdministrativeArea', name: locale === 'ko' ? '은평구' : 'Eunpyeong-gu' },

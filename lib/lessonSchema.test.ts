@@ -17,7 +17,7 @@ describe('buildLessonServiceSchema', () => {
       name: '음악 레슨',
       description: '음악 제작 레슨',
       inLanguage: 'ko-KR',
-      serviceType: '음악 레슨',
+      serviceType: '프로듀싱 레슨',
       areaServed: [
         { '@type': 'AdministrativeArea', name: '서울특별시' },
         { '@type': 'AdministrativeArea', name: '은평구' },
@@ -42,7 +42,7 @@ describe('buildLessonServiceSchema', () => {
 
     expect(schema).toMatchObject({
       inLanguage: 'en-US',
-      serviceType: 'Music Lesson',
+      serviceType: 'Producing Lesson',
       areaServed: [
         { '@type': 'AdministrativeArea', name: 'Seoul' },
         { '@type': 'AdministrativeArea', name: 'Eunpyeong-gu' },
