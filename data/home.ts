@@ -47,7 +47,7 @@ const homeData = {
       },
       {
         title: '음원 발매 & 유통',
-        description: '멜론·스포티파이·애플뮤직 등 국내외 주요 스트리밍 플랫폼에 발매. 발매 시기와 순서를 같이 정하고, 등록까지 한 번에 진행합니다.',
+        description: '멜론·스포티파이·애플뮤직 등 국내외 주요 스트리밍 플랫폼에 발매. 발매 시기와 순서까지 상의해서 정하고, 등록까지 한 번에 진행합니다.',
         link: '/pricing',
         icon: 'Upload',
       },
@@ -445,7 +445,7 @@ const homeData = {
     homeServices: [
       {
         title: 'Dự án Phát hành',
-        description: 'Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành — dự án được lên kế hoạch cùng bạn, dẫn dắt bởi Producer Hwang Gyeongha. Tư vấn miễn phí, báo giá riêng.',
+        description: 'Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành — dự án được lên kế hoạch cùng bạn, dẫn dắt bởi Producer Hwang Kyungha. Tư vấn miễn phí, báo giá riêng.',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -541,7 +541,7 @@ const homeData = {
     homeServices: [
       {
         title: 'โปรเจกต์ปล่อยเพลง',
-        description: 'ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย — วางแผนร่วมกับคุณและนำโดย Producer Hwang Gyeongha ปรึกษาฟรี ราคาสำหรับคุณโดยเฉพาะ',
+        description: 'ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย — วางแผนร่วมกับคุณและนำโดย Producer Hwang Kyungha ปรึกษาฟรี ราคาสำหรับคุณโดยเฉพาะ',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -637,7 +637,7 @@ const homeData = {
     homeServices: [
       {
         title: 'Chiqarish loyihasi',
-        description: "Rejalashdan yozuv, musiqachilar, miks va tarqatishgacha — reja siz bilan birga tuziladi, loyihani Producer Hwang Gyeongha boshqaradi. Bepul maslahat, shaxsiy narx taklifi.",
+        description: "Rejalashdan yozuv, musiqachilar, miks va tarqatishgacha — reja siz bilan birga tuziladi, loyihani Producer Hwang Kyungha boshqaradi. Bepul maslahat, shaxsiy narx taklifi.",
         link: '/release-project',
         icon: 'Disc',
       },

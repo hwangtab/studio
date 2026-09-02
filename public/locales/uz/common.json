@@ -145,7 +145,7 @@
     "howToDescription": "Professional studiyada musiqa ishlab chiqarish bo'yicha to'liq qo'llanma.",
     "producer": {
       "tagline": "15 yillik tajribaga ega albom prodyuseri, A&R va yozuv muhandisi",
-      "title": "Prodyuser va muhandis Hwang Gyeongha",
+      "title": "Prodyuser va muhandis Hwang Kyungha",
       "body": "Birinchi yozuv sessiyasi ko‘pchilik uchun murakkab tuyuladi. 15 yil davomida indie artistlar bilan albomlarni rejalash bosqichidan boshlab birga tayyorlab keldim: avval artist bilan albom yo‘nalishini belgilaymiz, so‘ng vokal yozuvi va yo‘naltirish, miks, mastering hamda relizgacha bo‘lgan bosqichlarni bitta uzluksiz jarayonda olib boraman. Loyiha boshidan oxirigacha bir qo‘lda bo‘lsa, konsepsiya ham, ton va balans ham izchil qoladi.",
       "portfolioCta": "Asosiy ishlarni ko‘rish",
       "releaseCta": "Chiqarish loyihasini ko'rish"
@@ -1796,21 +1796,21 @@
   "releaseProject": {
     "seo": {
       "title": "Chiqarish loyihasi · Indie musiqa ishlab chiqarish | Studio NOL",
-      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan birga indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
+      "description": "Rejalashtirish, yozish, sessiya musiqachilari, mikslash, tarqatish va OAV va tanqidga yetishdan — ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Kyungha bilan birga indie chiqarish loyihasi. Singl, EP yoki to‘liq albom hajmi bo‘yicha bepul maslahat.",
       "keywords": "chiqarish loyihasi, indie musiqa, musiqa ishlab chiqarish, Studio NOL",
       "single": {
         "title": "Singl chiqarish loyihasi | Studio NOL",
-        "description": "Birinchi singldan oxirigacha yoningizdamiz. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan rejalashtirish, yozuv, tarqatish va PR.",
+        "description": "Birinchi singldan oxirigacha yoningizdamiz. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Kyungha bilan rejalashtirish, yozuv, tarqatish va PR.",
         "keywords": "singl chiqarish, indie musiqa, Studio NOL, musiqa produceri"
       },
       "ep": {
         "title": "EP chiqarish loyihasi | Studio NOL",
-        "description": "3–5 ta qo‘shiq bilan musiqa o‘zligingizni e’lon qiling. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan EP chiqarish loyihasi. Birinchi singldan boshlab ikki bosqichli media PR.",
+        "description": "3–5 ta qo‘shiq bilan musiqa o‘zligingizni e’lon qiling. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Kyungha bilan EP chiqarish loyihasi. Birinchi singldan boshlab ikki bosqichli media PR.",
         "keywords": "EP chiqarish, mini albom, indie musiqa, Studio NOL"
       },
       "album": {
         "title": "To'liq albom chiqarish loyihasi | Studio NOL",
-        "description": "Indie sahnasida ismingizni o‘yib yozadigan to‘liq albom. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Gyeongha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
+        "description": "Indie sahnasida ismingizni o‘yib yozadigan to‘liq albom. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Kyungha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
         "keywords": "albom chiqarish, indie musiqa, musiqa produceri, Studio NOL"
       }
     },
@@ -1824,7 +1824,7 @@
       "imageAlt": "Studio NOL Chiqarish Loyihasi"
     },
     "producer": {
-      "sectionTitle": "Prodyuser Hwang Gyeongha",
+      "sectionTitle": "Prodyuser Hwang Kyungha",
       "tagline": "15 yillik tajribali musiqa prodyuseri va A&R",
       "bodyParagraph1": "Men indie singer-songwriterlar va guruhlar bilan birga ularning reliz jarayonida ishlayman. Qo‘shiqni jilolab, Spotify va Apple Music’ga joylash, sessiya musiqachilarini ulash, OAV va tanqidga yetkazish — qo‘shiq indie sahnada o‘z o‘rnini topishi uchun bu bosqichlarning barchasi bir-biriga zich bog‘lanishi kerak.",
       "bodyParagraph2": "Muvaffaqiyatli relizni yolg‘iz amalga oshirish qiyin. Shu sababli mening vazifam — yo‘lning oxirigacha siz bilan birga yuradigan hamroh bo‘lishdir.",
@@ -2359,7 +2359,7 @@
         },
         {
           "title": "Vokal Yozish · Rejissura",
-          "desc": "Studio NOL ichki yozuv xonasida yoziladi. Hwang Gyeongha eng yaxshi ijroni chiqarish uchun rejissura qiladi."
+          "desc": "Studio NOL ichki yozuv xonasida yoziladi. Hwang Kyungha eng yaxshi ijroni chiqarish uchun rejissura qiladi."
         },
         {
           "title": "Sessiya · Arrajman",

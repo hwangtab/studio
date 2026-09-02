@@ -387,7 +387,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             },
             "productionNotes": {
                 "ko": "「별을 보러 간 사람」은 싱어송라이터 김인이 2025년 1월에 발표한 디지털 싱글이다. 동명의 싱글 앨범에 한 곡으로 수록되어 멜론 등 주요 음원 플랫폼을 통해 공개됐다.\n\nStudio NOL은 이 곡의 기획·편곡·레코딩·믹싱과 발매 홍보까지 전 과정을 담당했다. 황경하가 엔지니어링을 맡아 보컬 트래킹부터 믹싱까지 진행했으며, 작품은 Studio NOL 공식 포트폴리오에 'kim-in-star-person' 항목으로 등재되어 있다.",
-                "en": "\"Star Person\" (별을 보러 간 사람) is a digital single by Korean singer-songwriter Kim In, released in January 2025. It appears as a single-track release on the same-titled single album, distributed via major Korean streaming platforms including Melon.\n\nStudio NOL handled the full production cycle — planning, arrangement, recording, mixing, and release promotion. Engineer Hwang Gyeongha (Studio NOL) led the sessions from vocal tracking through mix, and the project is documented in Studio NOL's official portfolio under the entry \"kim-in-star-person.\""
+                "en": "\"Star Person\" (별을 보러 간 사람) is a digital single by Korean singer-songwriter Kim In, released in January 2025. It appears as a single-track release on the same-titled single album, distributed via major Korean streaming platforms including Melon.\n\nStudio NOL handled the full production cycle — planning, arrangement, recording, mixing, and release promotion. Engineer Hwang Kyungha (Studio NOL) led the sessions from vocal tracking through mix, and the project is documented in Studio NOL's official portfolio under the entry \"kim-in-star-person.\""
             }
         },
         {
