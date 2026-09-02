@@ -282,7 +282,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: '1对1音乐课程',
+        title: '1对1音乐制作课',
         description: '现役制作人提供1对1实战课程。从 MIDI 作曲、混音到发行咨询 — 为以音源发行为目标的音乐人量身定制的课程。',
         link: '/lesson',
         icon: 'GraduationCap',
@@ -378,7 +378,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: 'Clases de Música 1:1',
+        title: 'Lecciones de producción 1:1',
         description: 'Clases 1:1 con productores en activo — composición MIDI, mezcla y consultoría de lanzamiento. Currículo práctico optimizado para artistas que buscan publicar música.',
         link: '/lesson',
         icon: 'GraduationCap',
@@ -474,7 +474,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: 'Lớp học âm nhạc 1:1',
+        title: 'Lớp sản xuất âm nhạc 1:1',
         description: 'Lớp học 1:1 với nhà sản xuất chuyên nghiệp — soạn MIDI, mixing và tư vấn phát hành. Chương trình tối ưu cho nghệ sĩ muốn phát hành nhạc.',
         link: '/lesson',
         icon: 'GraduationCap',
@@ -570,7 +570,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: 'คอร์สเรียนดนตรี 1:1',
+        title: 'เรียนโปรดักชันดนตรี 1:1',
         description: 'คอร์สเรียน 1:1 กับโปรดิวเซอร์มืออาชีพ — แต่งเพลงด้วย MIDI, มิกซ์เสียง และคำปรึกษาด้านการปล่อยเพลง หลักสูตรเหมาะสำหรับศิลปินที่ตั้งเป้าปล่อยเพลง',
         link: '/lesson',
         icon: 'GraduationCap',
@@ -666,7 +666,7 @@ const homeData = {
         icon: 'Globe',
       },
       {
-        title: '1:1 musiqa darslari',
+        title: '1:1 prodyuserlik darslari',
         description: "Faol prodyuserlar bilan 1:1 amaliy darslar — MIDI bastalash, miks va chiqarish bo'yicha maslahatgacha. Musiqa chiqarmoqchi bo'lganlar uchun moslashtirilgan dastur.",
         link: '/lesson',
         icon: 'GraduationCap',

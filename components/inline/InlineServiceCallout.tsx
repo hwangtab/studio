@@ -50,7 +50,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
 // 저마찰 진입로를 명시한다(새 무료 서비스 약속이 아니라 기존 무료 상담의 프레이밍).
 const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[]; softNote?: string }> = {
   lesson: {
-    title: '1:1 음악 레슨',
+    title: '1:1 프로듀싱 레슨',
     description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 작곡·미디·믹싱 프로듀싱 멘토링.',
     features: [
       '월 35만원 정액제 (주 1회 60분)',

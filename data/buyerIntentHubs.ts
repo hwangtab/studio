@@ -372,7 +372,7 @@ export const buyerIntentHubs: Record<BuyerIntentHubSlug, BuyerIntentHub> = {
     pricingPackageId: '',
     pricingFallback: {
       id: 'lesson-monthly',
-      title: '1:1 음악 레슨 (월 정액제)',
+      title: '1:1 프로듀싱 레슨 (월 정액제)',
       priceDisplay: '350,000원',
       unit: '/ 월',
       description:
