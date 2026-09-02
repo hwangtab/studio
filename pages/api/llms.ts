@@ -303,6 +303,7 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music produ
 
 - Operator: Hwang Kyungha (황경하)
 - Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
+- Working style: plans production, release, and promotion together with the musician, from the musician's side — direction, budget, and schedule are decided with the artist, not handed down as a fixed package
 - Awards (as planner / producer of the album named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr

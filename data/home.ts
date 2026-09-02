@@ -29,7 +29,7 @@ const homeData = {
     homeServices: [
       {
         title: '발매 프로젝트',
-        description: '기획·녹음·세션·믹싱·유통·홍보까지 — 프로듀서가 끝까지 책임지는 인디 발매 프로듀싱. 무료 상담 후 맞춤 견적.',
+        description: '기획·녹음·세션·믹싱·유통·홍보까지 — 방향 잡기부터 프로듀서가 같이 고민하고 끝까지 책임지는 인디 발매 프로듀싱. 무료 상담 후 맞춤 견적.',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -47,13 +47,13 @@ const homeData = {
       },
       {
         title: '음원 발매 & 유통',
-        description: '멜론·스포티파이·애플뮤직 등 국내외 주요 스트리밍 플랫폼에 발매. 기획부터 발매·등록까지 한 번에 지원합니다.',
+        description: '멜론·스포티파이·애플뮤직 등 국내외 주요 스트리밍 플랫폼에 발매. 발매 시기와 순서를 같이 정하고, 등록까지 한 번에 진행합니다.',
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: '홍보 & 마케팅',
-        description: '언론에 효과적으로 홍보하고, 쇼케이스를 풍부하게 지원함으로써 당신 음악의 매력을 더욱 널리 알립니다.',
+        description: '어떤 매체와 플레이리스트에 닿아야 할지 뮤지션과 같이 정하고, 국내외 기자·라디오·큐레이터에게 피칭합니다. 쇼케이스 준비도 함께합니다.',
         link: '/portfolio',
         icon: 'Globe',
       },
@@ -157,7 +157,7 @@ const homeData = {
     homeServices: [
       {
         title: 'Release Project',
-        description: 'From planning to recording, sessions, mixing, and distribution — a release project led by Producer Hwang Gyeongha. Free consultation, custom quote.',
+        description: 'From planning to recording, sessions, mixing, and distribution — a release project planned together with you and led by producer Hwang Kyungha. Free consultation, custom quote.',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -175,13 +175,13 @@ const homeData = {
       },
       {
         title: 'Release & Distribution',
-        description: 'Release on Spotify, Apple Music, Melon, Genie and more — we handle planning, distribution, and registration in one place.',
+        description: 'Release on Spotify, Apple Music, Melon, Genie and more — we plan the timing and rollout with you, then handle distribution and registration in one place.',
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: 'PR & Marketing',
-        description: 'We promote your music effectively to the media and support showcases to spread your charm.',
+        description: 'We decide together which media and playlists your music should reach, then pitch it to journalists, radio and curators in Korea and abroad. Showcase support included.',
         link: '/portfolio',
         icon: 'Globe',
       },
@@ -271,13 +271,13 @@ const homeData = {
       },
       {
         title: '音源发行 & 分发',
-        description: '发行至 Spotify、Apple Music、Melon、Genie 等主要流媒体平台。从策划到发行与登记一站式支持。',
+        description: '发行至 Spotify、Apple Music、Melon、Genie 等主要流媒体平台。发行时间与顺序和你一起决定，登记也一站式完成。',
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: '宣传 & 营销',
-        description: '通过媒体有效宣传，并丰富支持展示会，更广泛地传播您音乐的魅力。',
+        description: '和你一起决定音乐该触达哪些媒体与歌单，再向国内外记者、电台与策展人推介。showcase 的准备也一同进行。',
         link: '/portfolio',
         icon: 'Globe',
       },
@@ -349,7 +349,7 @@ const homeData = {
     homeServices: [
       {
         title: 'Proyecto de Lanzamiento',
-        description: 'Desde la planificación hasta la grabación, sesiones, mezcla y distribución — un proyecto de lanzamiento liderado por el productor Hwang Gyeongha. Consulta gratuita, presupuesto personalizado.',
+        description: 'Desde la planificación hasta la grabación, sesiones, mezcla y distribución — un proyecto de lanzamiento que planificamos contigo, liderado por el productor Hwang Kyungha. Consulta gratuita, presupuesto a medida.',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -367,13 +367,13 @@ const homeData = {
       },
       {
         title: 'Lanzamiento y Distribución',
-        description: 'Distribuimos en Spotify, Apple Music, Melon, Genie y más — gestionamos la planificación, la distribución y el registro en un solo lugar.',
+        description: 'Distribuimos en Spotify, Apple Music, Melon, Genie y más — decidimos contigo el momento y el orden del lanzamiento, y gestionamos la distribución y el registro en un solo lugar.',
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: 'RP y Marketing',
-        description: 'Promocionamos tu música eficazmente en los medios y apoyamos showcases para difundir tu encanto.',
+        description: 'Decidimos contigo a qué medios y playlists debe llegar tu música, y la presentamos a periodistas, radios y curadores de Corea y del extranjero. Incluye apoyo para showcases.',
         link: '/portfolio',
         icon: 'Globe',
       },
@@ -445,7 +445,7 @@ const homeData = {
     homeServices: [
       {
         title: 'Dự án Phát hành',
-        description: 'Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành — dự án phát hành do Producer Hwang Gyeongha dẫn dắt. Tư vấn miễn phí, báo giá tùy chỉnh.',
+        description: 'Từ lập kế hoạch, thu âm, kết nối nhạc công, mix đến phát hành — dự án được lên kế hoạch cùng bạn, dẫn dắt bởi Producer Hwang Gyeongha. Tư vấn miễn phí, báo giá riêng.',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -463,13 +463,13 @@ const homeData = {
       },
       {
         title: 'Phát hành & Phân phối',
-        description: 'Phát hành lên Spotify, Apple Music, Melon, Genie và nhiều nền tảng khác — hỗ trợ trọn gói từ lên kế hoạch, phân phối đến đăng ký.',
+        description: 'Phát hành lên Spotify, Apple Music, Melon, Genie và nhiều nền tảng khác — cùng bạn quyết định thời điểm và lộ trình, lo trọn từ phân phối đến đăng ký.',
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: 'PR & Marketing',
-        description: 'Quảng bá hiệu quả trên truyền thông và hỗ trợ showcase để lan tỏa sức hút âm nhạc của bạn.',
+        description: 'Cùng bạn chọn những media và playlist cần chạm tới, rồi pitch tới nhà báo, đài radio và curator trong và ngoài nước. Hỗ trợ cả chuẩn bị showcase.',
         link: '/portfolio',
         icon: 'Globe',
       },
@@ -541,7 +541,7 @@ const homeData = {
     homeServices: [
       {
         title: 'โปรเจกต์ปล่อยเพลง',
-        description: 'ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย — โปรเจกต์ปล่อยเพลงที่นำโดย Producer Hwang Gyeongha ปรึกษาฟรี ราคาสำหรับคุณโดยเฉพาะ',
+        description: 'ตั้งแต่วางแผน บันทึกเสียง หานักดนตรี มิกซ์ จัดจำหน่าย — วางแผนร่วมกับคุณและนำโดย Producer Hwang Gyeongha ปรึกษาฟรี ราคาสำหรับคุณโดยเฉพาะ',
         link: '/release-project',
         icon: 'Disc',
       },
@@ -559,13 +559,13 @@ const homeData = {
       },
       {
         title: 'ปล่อยเพลง & จัดจำหน่าย',
-        description: 'ปล่อยเพลงบน Spotify, Apple Music, Melon, Genie และอีกมาก ครอบคลุมตั้งแต่วางแผน จัดจำหน่าย ไปจนถึงการขึ้นทะเบียน ครบจบในที่เดียว',
+        description: 'ปล่อยเพลงบน Spotify, Apple Music, Melon, Genie และอีกมาก — ตัดสินใจจังหวะและลำดับการปล่อยเพลงร่วมกับคุณ ดูแลจัดจำหน่ายถึงการขึ้นทะเบียนครบจบในที่เดียว',
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: 'ประชาสัมพันธ์ & การตลาด',
-        description: 'โปรโมตผ่านสื่ออย่างมีประสิทธิภาพและสนับสนุนโชว์เคสเพื่อกระจายเสน่ห์ของเพลงคุณ',
+        description: 'ตัดสินใจร่วมกับคุณว่าเพลงควรไปถึงสื่อและเพลย์ลิสต์ไหน แล้วพิตช์ให้นักข่าว วิทยุ และคิวเรเตอร์ทั้งในและต่างประเทศ พร้อมช่วยเตรียมโชว์เคส',
         link: '/portfolio',
         icon: 'Globe',
       },
@@ -637,7 +637,7 @@ const homeData = {
     homeServices: [
       {
         title: 'Chiqarish loyihasi',
-        description: "Rejalashdan yozuv, musiqachilar, miks va tarqatishgacha — Producer Hwang Gyeongha boshchiligidagi chiqarish loyihasi. Bepul maslahat, maxsus narx.",
+        description: "Rejalashdan yozuv, musiqachilar, miks va tarqatishgacha — reja siz bilan birga tuziladi, loyihani Producer Hwang Gyeongha boshqaradi. Bepul maslahat, shaxsiy narx taklifi.",
         link: '/release-project',
         icon: 'Disc',
       },
@@ -655,13 +655,13 @@ const homeData = {
       },
       {
         title: 'Chiqarish & Tarqatish',
-        description: "Spotify, Apple Music, Melon, Genie kabi yetakchi platformalarda chiqaramiz — rejalashdan tarqatish va ro'yxatdan o'tkazishgacha bir joyda qo'llab-quvvatlaymiz.",
+        description: "Spotify, Apple Music, Melon, Genie kabi platformalarda chiqaramiz — chiqarish vaqti va tartibini siz bilan birga belgilaymiz, tarqatishdan ro'yxatdan o'tkazishgacha bir joyda.",
         link: '/pricing',
         icon: 'Upload',
       },
       {
         title: 'PR & Marketing',
-        description: "OAV orqali samarali targ'ibot va showcase qo'llovi bilan musiqangiz jozibasini keng yoyamiz.",
+        description: "Musiqangiz qaysi OAV va pleylistlarga yetishi kerakligini siz bilan birga hal qilamiz, so'ng mahalliy va xalqaro jurnalistlar, radio va kuratorlarga taqdim etamiz. Showcase tayyorlashda ham yordam beramiz.",
         link: '/portfolio',
         icon: 'Globe',
       },
