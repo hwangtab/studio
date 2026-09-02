@@ -197,6 +197,66 @@ describe('가격 SSOT 정합', () => {
     expect(offenders).toEqual([]);
   });
 
+
+  /**
+   * 릴리즈 티어 하한을 7개 로케일 전부에서 본다.
+   *
+   * 위의 "릴리즈 티어 카피" 테스트는 ko common.json만 보므로, 비-ko 로케일 카피에
+   * 박힌 가격은 아무도 검사하지 않는 상태였다. 로케일마다 표기가 다르지만
+   * (ko "180만원~" · en "₩1.8M" · zh "₩180万起") 숫자로 파싱해 비교하면
+   * 표기 형식과 무관하게 값만 강제할 수 있다.
+   *
+   * 넓은 규칙("모든 금액은 상수여야 한다")은 쓰지 않는다 — common.json에는
+   * 증분(정규 "12곡 +400만원")·환산(레슨 "회당 87,500원")·시장 시세가 정상적으로
+   * 섞여 있어서 오탐이 100건 넘게 난다. 실제 사고는 "상수가 바뀌었는데 카피가
+   * 안 따라온 것"이므로, 상수를 그대로 말해야 하는 키만 지정해서 본다.
+   */
+  it('릴리즈 티어 하한이 7개 로케일 카피와 일치한다 (표기 형식 무관)', () => {
+    // ₩1.8M · ₩180万 · ₩1,800,000 · 1,800,000원 · 180만원 을 모두 원 단위로 읽는다.
+    const AMOUNT = /₩\s*(\d+(?:\.\d+)?)\s*([MK万])|₩\s*(\d[\d,]{2,})|(\d[\d,]{2,})\s*원|(\d+)\s*만원/g;
+    const parseAmounts = (text: string): number[] => {
+      const out: number[] = [];
+      for (const m of text.matchAll(AMOUNT)) {
+        if (m[1]) {
+          const unit = { M: 1_000_000, K: 1_000, 万: 10_000 }[m[2] as 'M' | 'K' | '万'];
+          out.push(Math.round(Number(m[1]) * unit));
+        } else if (m[3]) out.push(Number(m[3].replace(/,/g, '')));
+        else if (m[4]) out.push(Number(m[4].replace(/,/g, '')));
+        else if (m[5]) out.push(Number(m[5]) * 10_000);
+      }
+      return out;
+    };
+
+    const expected: Record<'single' | 'ep' | 'album', number> = {
+      single: RELEASE_SINGLE_FROM_PRICE,
+      ep: RELEASE_EP_FROM_PRICE,
+      album: RELEASE_ALBUM_FROM_PRICE,
+    };
+
+    const misses: string[] = [];
+    for (const locale of LOCALES) {
+      const common = JSON.parse(
+        fs.readFileSync(path.join(__dirname, '..', 'public', 'locales', locale, 'common.json'), 'utf8')
+      ) as {
+        releaseProject: {
+          tiers: Record<string, { range: string; detail: { priceRange: string } }>;
+        };
+      };
+      for (const tier of ['single', 'ep', 'album'] as const) {
+        const node = common.releaseProject.tiers[tier];
+        for (const [field, text] of [
+          ['range', node.range],
+          ['detail.priceRange', node.detail.priceRange],
+        ] as const) {
+          if (!parseAmounts(text).includes(expected[tier])) {
+            misses.push(`${locale}/${tier}.${field}: "${text}" (기대 ${expected[tier]})`);
+          }
+        }
+      }
+    }
+    expect(misses).toEqual([]);
+  });
+
   // h1이 <title>과 어긋나면 "가격 보러 왔는데 숫자가 없다"는 이탈이 재발한다.
   it('pricing seo.title과 hero.title이 같은 단가를 말한다', () => {
     const pricing = (
