@@ -32,6 +32,9 @@ import {
   WEDDING_PACKAGE_PRICE,
 } from './pricing';
 import { generateDefaultSchema } from '../utils/schema/business';
+import fs from 'fs';
+import path from 'path';
+
 import koCommon from '../public/locales/ko/common.json';
 
 const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
@@ -126,6 +129,72 @@ describe('가격 SSOT 정합', () => {
     expect(heroTitle).toContain(manwon(RECORDING_HOURLY_PRICE));
     expect(heroTitle).toContain(manwon(PRACTICE_ROOM_MONTHLY_PRICE));
     expect(heroTitle).toContain(manwon(WEDDING_PACKAGE_PRICE));
+  });
+
+
+  /**
+   * data/*.ts에 만원 리터럴로 박힌 가격이 SSOT 상수를 벗어나지 않는지 본다.
+   *
+   * 왜 필요한가: 위 테스트들은 public/locales/ko/common.json만 본다. 그래서
+   * data/buyerIntentHubs.ts의 발매 허브 카드에 "EP 약 150만원~ · 정규 약 400만원~"이
+   * 문자열로 박혀 있다가 티어 하한이 180만·340만으로 바뀌어도 아무도 못 잡았다
+   * (2026-09-02에 손으로 발견). 상수가 움직였는데 카피가 안 따라오는 것 —
+   * 이게 이 저장소에서 실제로 나는 드리프트 형태다.
+   *
+   * 규칙: data/*.ts(가격 SSOT 본체와 테스트는 제외)에 나오는 "N만원"은
+   *   (a) 현재 SSOT 상수 중 하나이거나
+   *   (b) 우리 상품이 아닌 외부 시세여서 EXTERNAL_MARKET_AMOUNTS에 등재됐거나
+   * 둘 중 하나여야 한다. 새 가격을 카피에 넣을 땐 formatPriceLabel로 상수에서
+   * 끌어오는 게 원칙이고, 리터럴이 꼭 필요하면 여기서 걸린다.
+   *
+   * 대상에서 뺀 것: docs/wiki는 log.md·decisions/가 과거 수치를 그대로 남기는
+   * 이력 문서라 현재값 강제가 맞지 않는다. common.json은 위 테스트들이 맡는다.
+   */
+  it('data/*.ts의 만원 리터럴이 SSOT 상수를 벗어나지 않는다', () => {
+    // 우리 상품이 아닌 외부 시세 — 상수와 무관하므로 상수가 바뀌어도 따라가면 안 된다.
+    const EXTERNAL_MARKET_AMOUNTS = new Set([
+      300000, // 오디오 인터페이스 입문가 "20~30만원" 상단
+      30000, // 유통 대행사(DistroKid) 연 정액 "3만원대"
+    ]);
+    const ssot = new Set<number>([
+      RECORDING_HOURLY_PRICE,
+      VOCAL_PACKAGE_PRICE,
+      DAY_LOCK_PRICE,
+      MIXING_LEVEL1_PRICE,
+      MIXING_LEVEL2_PRICE,
+      MIXING_LEVEL3_PRICE,
+      MASTERING_SINGLE_PRICE,
+      MASTERING_PACKAGE_PRICE,
+      WEDDING_PACKAGE_PRICE,
+      VOICEOVER_HOURLY_PRICE,
+      COVER_VIDEO_PACKAGE_PRICE,
+      RENTAL_HOURLY_PRICE,
+      LESSON_MONTHLY_PRICE,
+      PRACTICE_ROOM_MONTHLY_PRICE,
+      PRODUCTION_OFFER_PRICE,
+      RELEASE_SINGLE_FROM_PRICE,
+      RELEASE_EP_FROM_PRICE,
+      RELEASE_ALBUM_FROM_PRICE,
+      SINGLE_BUNDLE_PRICE,
+      EP_BUNDLE_PRICE,
+      ALBUM_BUNDLE_PRICE,
+    ]);
+
+    const dataDir = path.join(__dirname);
+    const files = fs
+      .readdirSync(dataDir)
+      .filter((f) => f.endsWith('.ts') && f !== 'pricing.ts' && !f.includes('.test.'));
+
+    const offenders: string[] = [];
+    for (const file of files) {
+      const text = fs.readFileSync(path.join(dataDir, file), 'utf8');
+      for (const m of text.matchAll(/(\d[\d,]*)\s*만원/g)) {
+        const won = Number(m[1].replace(/,/g, '')) * 10000;
+        if (ssot.has(won) || EXTERNAL_MARKET_AMOUNTS.has(won)) continue;
+        offenders.push(`${file}: "${m[0]}"`);
+      }
+    }
+    expect(offenders).toEqual([]);
   });
 
   // h1이 <title>과 어긋나면 "가격 보러 왔는데 숫자가 없다"는 이탈이 재발한다.
