@@ -343,6 +343,12 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
               </m.div>
             ))}
           </div>
+          {/* 방문 세션 안내 — 대면 응대는 한국어만 운영하므로 ko 한정 */}
+          {locale === 'ko' && (
+            <p className="typo-card-body text-center text-gray-600 dark:text-gray-400 mt-8 max-w-2xl mx-auto">
+              {t('mixingMastering.process.visitNote')}
+            </p>
+          )}
         </m.div>
       </Section>
 
