@@ -1,6 +1,8 @@
 import React from 'react';
 import NextLink from 'next/link';
+import { getSiteConfig } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface OnlineRequestProps {
   locale?: Locale;
@@ -18,6 +20,7 @@ interface OnlineRequestProps {
  * 함께 맞출 것(thin 판정에 직접 들어간다).
  */
 const OnlineRequest: React.FC<OnlineRequestProps> = ({ locale = 'ko' }) => {
+  const siteConfig = getSiteConfig(locale);
   const rows: { label: string; body: React.ReactNode }[] = [
     { label: '보내실 것', body: '드라이 보컬 WAV와 MR 파일. 카카오톡으로 받습니다' },
     { label: '작업', body: '엔지니어가 믹싱·마스터링을 마쳐 완성 파일로 납품합니다' },
@@ -49,6 +52,23 @@ const OnlineRequest: React.FC<OnlineRequestProps> = ({ locale = 'ko' }) => {
           </div>
         ))}
       </dl>
+      <div className="px-6 pb-5">
+        <a
+          href={siteConfig.contact.kakaoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() =>
+            trackLeadEvent('lead_click_kakao', {
+              locale,
+              component: 'OnlineRequest',
+              cta_id: 'online_request_kakao',
+            })
+          }
+          className="inline-flex items-center justify-center rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
+        >
+          카카오톡으로 파일 보내기
+        </a>
+      </div>
     </div>
   );
 };

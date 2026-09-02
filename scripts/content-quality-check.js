@@ -129,7 +129,7 @@ function checkFile(filePath) {
   // 렌더 실측 기준(session-checklist = 51단어). lib/storyContentPolicy.ts의 글자수 추정과 짝이다.
   const SHORTCODE_WORD_ESTIMATES = {
     'online-fallback': 25, 'session-checklist': 51, 'studio-more': 62,
-    'studio-services': 42, 'online-request': 36, 'practice-room-terms': 45,
+    'studio-services': 42, 'online-request': 39, 'practice-room-terms': 45,
   };
   const shortcodeBonus = [...body.matchAll(/%%([a-z-]+)%%/g)]
     .reduce((sum, m) => sum + (SHORTCODE_WORD_ESTIMATES[m[1]] ?? 15), 0);
