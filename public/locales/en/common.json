@@ -1101,7 +1101,7 @@
       "items": [
         {
           "q": "Is it okay if I'm not a great singer?",
-          "a": "Absolutely. Our engineer provides vocal direction and pitch/timing correction to create a natural, heartfelt result."
+          "a": "Absolutely. Our engineer works through the song with you line by line, then polishes it naturally with pitch and timing correction."
         },
         {
           "q": "How much does it cost?",
@@ -1162,7 +1162,7 @@
       "items": [
         {
           "q": "Can I record even if I'm not a singer?",
-          "a": "Yes, absolutely. Many of our clients are non-singers. Vocal direction and tuning will make your recording sound natural and heartfelt."
+          "a": "Yes, absolutely. Many of our clients are non-singers. The engineer works through it with you line by line, and pitch/timing correction makes the result natural and moving."
         },
         {
           "q": "Do I need to bring the backing track (MR)?",
@@ -1277,7 +1277,7 @@
       "steps": [
         {
           "title": "Consult & book",
-          "description": "Tell us the number of songs, the mood and your schedule via KakaoTalk. Sharing a guide or backing track ahead helps."
+          "description": "Tell us the number of songs, the mood and your schedule via KakaoTalk — we shape the direction together before you come in. Sharing a guide or backing track in advance makes it more accurate."
         },
         {
           "title": "Recording session",
@@ -1409,7 +1409,7 @@
         },
         {
           "title": "Send your files",
-          "description": "Send the dry vocal and backing track via KakaoTalk or a Google Drive/WeTransfer link. A reference track for the sound you want helps us find the direction."
+          "description": "Send the dry vocal and backing track via KakaoTalk or a Google Drive/WeTransfer link. Include a reference track of the sound you want, and we align the direction together against it."
         },
         {
           "title": "Mixing & mastering",
@@ -1534,7 +1534,7 @@
       "items": [
         {
           "q": "What types of recording is this suitable for?",
-          "a": "YouTube narration, audiobooks, commercials, podcasts, dubbing — any voiceover work is welcome."
+          "a": "YouTube narration, audiobooks, commercials, podcasts, dubbing — we settle on the right tone for your script and purpose together, then record."
         },
         {
           "q": "How much does it cost?",

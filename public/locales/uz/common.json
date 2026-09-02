@@ -1073,7 +1073,7 @@
       "items": [
         {
           "q": "Yaxshi kuylaya olmasam ham bo'ladimi?",
-          "a": "Albatta. Muhandisimiz ovoz yo'naltirish va ohang/ritm tuzatish orqali tabiiy va ta'sirchan natija yaratadi."
+          "a": "Albatta. Muhandis siz bilan birga qo'shiqni satrma-satr ishlab chiqadi, so'ng ohang va ritm tuzatish bilan tabiiy sayqallaydi."
         },
         {
           "q": "Narxi qancha?",
@@ -1134,7 +1134,7 @@
       "items": [
         {
           "q": "Umuman kuylaya olmasam ham bo'ladimi?",
-          "a": "Ha, albatta. Ko'plab mijozlarimiz professional qo'shiqchilar emas. Ovoz yo'naltirish va tuzatish yozuvingizni tabiiy qiladi."
+          "a": "Ha, albatta. Ko'plab mijozlarimiz professional qo'shiqchilar emas. Muhandis siz bilan satrma-satr ishlaydi, ovoz tuzatish esa natijani tabiiy va ta'sirchan qiladi."
         },
         {
           "q": "Jo'rnavoz (MR) faylni o'zim olib kelishim kerakmi?",
@@ -1249,7 +1249,7 @@
       "steps": [
         {
           "title": "Maslahat & bron",
-          "description": "Qo'shiqlar soni, kayfiyat va jadvalingizni KakaoTalk orqali ayting. Oldindan guide yoki minus track ulashsangiz aniqroq bo'ladi."
+          "description": "Qo'shiqlar soni, kayfiyat va jadvalingizni KakaoTalk orqali ayting — sessiyadan oldin yo'nalishni birga aniqlaymiz. Oldindan guide yoki minus track ulashsangiz, aniqroq bo'ladi."
         },
         {
           "title": "Yozuv seansi",
@@ -1381,7 +1381,7 @@
         },
         {
           "title": "Faylni yuborish",
-          "description": "Quruq vokal va minus trackni KakaoTalk yoki Google Drive/WeTransfer havolasi orqali yuboring. Xohlagan sound uchun referens trek qo'shsangiz, yo'nalishni topish osonlashadi."
+          "description": "Quruq vokal va minus trackni KakaoTalk yoki Google Drive/WeTransfer havolasi orqali yuboring. Xohlagan sounddagi reference track yuborsangiz, yo'nalishni shunga qarab birga moslaymiz."
         },
         {
           "title": "Miks·mastering ishi",
@@ -1506,7 +1506,7 @@
       "items": [
         {
           "q": "Qanday yozuvlar uchun mos?",
-          "a": "YouTube naratsiyasi, audio kitoblar, reklamalar, podcastlar, dublyaj — har qanday voiceover ishi uchun qulay muhit."
+          "a": "YouTube naratsiyasi, audio kitoblar, reklamalar, podcastlar, dublyaj — skript va maqsadga mos ohangni birga kelishib olamiz, so'ng yozamiz."
         },
         {
           "q": "Narxi qancha?",

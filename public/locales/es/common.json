@@ -1073,7 +1073,7 @@
       "items": [
         {
           "q": "¿Puedo grabar aunque no cante bien?",
-          "a": "Por supuesto. Nuestro ingeniero guía tu voz y corrige afinación y ritmo para un resultado natural y emotivo."
+          "a": "Por supuesto. Nuestro ingeniero trabaja la canción contigo frase a frase, y luego la pule con corrección de afinación y ritmo."
         },
         {
           "q": "¿Cuánto cuesta?",
@@ -1134,7 +1134,7 @@
       "items": [
         {
           "q": "¿Puedo grabar aunque no sepa cantar?",
-          "a": "Sí, muchos clientes no son cantantes profesionales. La dirección y corrección vocal harán que tu grabación suene natural."
+          "a": "Sí, muchos clientes no son cantantes profesionales. El ingeniero la trabaja contigo frase a frase, y la corrección vocal hace que el resultado sea natural y emotivo."
         },
         {
           "q": "¿Necesito traer la pista de acompañamiento (MR)?",
@@ -1249,7 +1249,7 @@
       "steps": [
         {
           "title": "Consulta y reserva",
-          "description": "Cuéntanos el número de canciones, el ambiente y tu horario por KakaoTalk. Compartir una guía o pista base de antemano ayuda."
+          "description": "Cuéntanos el número de canciones, el ambiente y tu horario por KakaoTalk — definimos juntos la dirección antes de la sesión. Compartir una guía o pista base por adelantado lo hace más preciso."
         },
         {
           "title": "Sesión de grabación",
@@ -1381,7 +1381,7 @@
         },
         {
           "title": "Envío de archivos",
-          "description": "Envía la voz seca y la pista base por KakaoTalk o un enlace de Google Drive/WeTransfer. Una pista de referencia del sonido que buscas ayuda a definir la dirección."
+          "description": "Envía la voz seca y la pista base por KakaoTalk o un enlace de Google Drive/WeTransfer. Incluye una pista de referencia del sonido que buscas y alineamos juntos la dirección."
         },
         {
           "title": "Trabajo de mezcla y masterización",
@@ -1506,7 +1506,7 @@
       "items": [
         {
           "q": "¿Para qué tipos de grabación es adecuado?",
-          "a": "Narración para YouTube, audiolibros, publicidad, podcasts, doblaje — cualquier trabajo de voice-over es bienvenido."
+          "a": "Narración para YouTube, audiolibros, publicidad, podcasts, doblaje — definimos juntos el tono adecuado para tu guion y su uso, y luego grabamos."
         },
         {
           "q": "¿Cuánto cuesta?",
