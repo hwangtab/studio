@@ -153,7 +153,7 @@
   },
   "portfolio": {
     "title": "Portfolio",
-    "subtitle": "Introduction to various projects worked on at Studio NOL. Click each work to see more details.",
+    "subtitle": "Singles, albums and commercial music made at Studio NOL. Many of these went beyond recording, mixing and mastering into planning, distribution and release promotion — open a work to see its credits and exactly which parts we handled.",
     "sampleTracks": "Sample Tracks",
     "projects": "Projects",
     "noProjects": "No projects found in the selected category.",
@@ -181,7 +181,7 @@
     "heroAlt": "Studio NOL Portfolio",
     "seo": {
       "title": "Studio NOL Portfolio — Korean Music Recording & Mixing Work",
-      "description": "Studio NOL portfolio in Seoul: recording, mixing and mastering examples in K-pop, indie and singer-songwriter projects, with before-and-after samples.",
+      "description": "Studio NOL portfolio — from planning, recording, mixing and mastering through distribution and release promotion. Credits, services provided and before/after samples for albums, singles and commercial music.",
       "keywords": "Korean music portfolio, Studio NOL work, recording samples, before and after mixing, mastering examples, Seoul recording studio portfolio, K-pop mixing examples"
     }
   },
