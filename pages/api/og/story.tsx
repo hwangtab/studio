@@ -75,14 +75,32 @@ export default async function handler(req: NextRequest) {
     // next/font 빌드 산출물(_next/static/media)은 edge runtime에서 접근 불가, 외부 폰트
     // 서버 의존 시 장애로 OG 생성 실패 → SNS 크롤러 메타 전달 깨짐 위험이라 자체 호스팅.
     const origin = new URL(req.url).origin;
-    const fontController = new AbortController();
-    const fontTimeout = setTimeout(() => fontController.abort(), 5000);
-    const fontRes = await fetch(`${origin}/fonts/Pretendard-Bold.otf`, {
-      signal: fontController.signal,
-    });
-    clearTimeout(fontTimeout);
-    if (!fontRes.ok) throw new Error(`Font fetch failed: HTTP ${fontRes.status}`);
-    const fontData = await fontRes.arrayBuffer();
+    const fetchFont = async (path: string): Promise<ArrayBuffer> => {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 5000);
+      try {
+        const res = await fetch(`${origin}${path}`, { signal: controller.signal });
+        if (!res.ok) throw new Error(`Font fetch failed: HTTP ${res.status} (${path})`);
+        return await res.arrayBuffer();
+      } finally {
+        clearTimeout(timeout);
+      }
+    };
+
+    const fontData = await fetchFont('/fonts/Pretendard-Bold.otf');
+
+    // 태국어(U+0E00–0E7F) 폴백 — Pretendard는 태국 문자를 사실상 커버하지 않아
+    // th 로케일 스토리 제목이 satori 렌더에 실패하면 catch에서 og-default로 빠졌다.
+    // Noto Sans Thai Bold(OFL)를 같은 방식(public/fonts self-host)으로 추가 등록한다.
+    // satori는 등록된 폰트 중 글리프를 커버하는 쪽을 자동 선택하므로 Pretendard를
+    // 대체하지 않고 배열에 추가만 한다. 폴백 폰트 자체 조달 실패는 견제 대상 —
+    // 못 받아도 Pretendard만으로 기존 동작(한글/라틴)은 유지되게 한다.
+    let thaiFontData: ArrayBuffer | null = null;
+    try {
+      thaiFontData = await fetchFont('/fonts/NotoSansThai-Bold.ttf');
+    } catch (thaiFontError) {
+      console.error('Thai fallback font fetch failed (continuing without it):', thaiFontError);
+    }
 
     return new ImageResponse(
       (
@@ -93,7 +111,7 @@ export default async function handler(req: NextRequest) {
             display: 'flex',
             flexDirection: 'column',
             background: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)',
-            fontFamily: '"Pretendard"',
+            fontFamily: '"Pretendard", "Noto Sans Thai"',
             position: 'relative',
           }}
         >
@@ -219,6 +237,16 @@ export default async function handler(req: NextRequest) {
             style: 'normal',
             weight: 700,
           },
+          ...(thaiFontData
+            ? [
+                {
+                  name: 'Noto Sans Thai',
+                  data: thaiFontData,
+                  style: 'normal' as const,
+                  weight: 700 as const,
+                },
+              ]
+            : []),
         ],
         headers: {
           'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
@@ -229,7 +257,10 @@ export default async function handler(req: NextRequest) {
     console.error('OG image generation error:', error);
     return new Response(null, {
       status: 302,
-      headers: { Location: '/images/og-default.webp' },
+      headers: {
+        Location: '/images/og-default.webp',
+        'Cache-Control': 'public, max-age=300',
+      },
     });
   }
 }
