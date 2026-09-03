@@ -6,11 +6,54 @@ export interface ExtractedHeading {
   level: number;
 }
 
+// 실제 렌더 경로(마크다운 파서)는 텍스트 노드의 HTML 엔티티를 디코드한 뒤
+// MarkdownRenderer가 그 결과 텍스트로 toHeadingId를 계산한다. 여기서는 raw 마크다운
+// 문자열을 그대로 다루므로, 같은 결과를 얻으려면 동일한 엔티티 디코드를 직접 적용해야
+// 한다(디코더가 다르면 &amp; 같은 엔티티가 있는 헤딩에서 TOC id와 실제 id가 어긋난다).
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+  mdash: '—',
+  ndash: '–',
+  hellip: '…',
+  copy: '©',
+  reg: '®',
+  trade: '™',
+  ldquo: '“',
+  rdquo: '”',
+  lsquo: '‘',
+  rsquo: '’',
+};
+
+const decodeHtmlEntities = (raw: string): string =>
+  raw.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity: string) => {
+    if (entity[0] === '#') {
+      const codePoint =
+        entity[1] === 'x' || entity[1] === 'X'
+          ? parseInt(entity.slice(2), 16)
+          : parseInt(entity.slice(1), 10);
+      if (Number.isNaN(codePoint)) return match;
+      try {
+        return String.fromCodePoint(codePoint);
+      } catch {
+        return match;
+      }
+    }
+    const lower = entity.toLowerCase();
+    return Object.prototype.hasOwnProperty.call(NAMED_ENTITIES, lower)
+      ? NAMED_ENTITIES[lower]
+      : match;
+  });
+
 // 헤딩 텍스트에서 인라인 마크다운 마커를 제거해 렌더된 텍스트와 동일한 slug를 얻는다.
 // (MarkdownRenderer는 렌더된 children 텍스트로 id를 만들므로 여기서도 표시 텍스트를 복원해야
 //  앵커 id가 일치한다.)
 const stripInlineMarkdown = (raw: string): string =>
-  raw
+  decodeHtmlEntities(raw)
     .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1') // 이미지 → alt
     .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1') // 링크 → 텍스트
     .replace(/`([^`]+)`/g, '$1') // 인라인 코드

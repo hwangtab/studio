@@ -20,4 +20,11 @@ describe('isAllowedLinkHref', () => {
     expect(isAllowedLinkHref('vbscript:msgbox(1)')).toBe(false);
     expect(isAllowedLinkHref('//example.com')).toBe(false);
   });
+
+  it('blocks backslash open-redirect bypasses', () => {
+    expect(isAllowedLinkHref('\\\\evil.com')).toBe(false);
+    expect(isAllowedLinkHref('/\\evil.com')).toBe(false);
+    expect(isAllowedLinkHref('https:\\\\evil.com')).toBe(false);
+    expect(isAllowedLinkHref('\\evil.com/path')).toBe(false);
+  });
 });

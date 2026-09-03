@@ -16,6 +16,13 @@ describe('splitContentByShortcodes', () => {
     ]);
   });
 
+  it('recognizes a shortcode at the very start of content with no leading newline', () => {
+    expect(splitContentByShortcodes('%%online-fallback%%\n본문 내용')).toEqual([
+      { type: 'shortcode', name: 'online-fallback' },
+      { type: 'markdown', value: '\n본문 내용' },
+    ]);
+  });
+
   it('leaves inline shortcode-looking text as markdown', () => {
     expect(splitContentByShortcodes('Before %%price:recording%% after')).toEqual([
       { type: 'markdown', value: 'Before %%price:recording%% after' },
