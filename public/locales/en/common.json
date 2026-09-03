@@ -1011,7 +1011,13 @@
       "priceDetail": "View Full Pricing",
       "reviewLabel": "Client Reviews",
       "serviceBodyDefault": "Learn more about related services.",
-      "serviceDetail": "View Service Details"
+      "serviceDetail": "View Service Details",
+      "serviceLabel": {
+        "funding": "Crowdfunding Design"
+      },
+      "serviceBody": {
+        "funding": "Album crowdfunding campaigns planned and built end to end on Tumblbug and similar platforms."
+      }
     },
     "sticky": {
       "label": "Quick Inquiry Bar",

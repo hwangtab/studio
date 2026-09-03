@@ -1,13 +1,13 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Disc, GraduationCap, Heart, Mic, SlidersHorizontal, Speaker, Sparkles } from '@/lib/lucide-icons';
+import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Mic, SlidersHorizontal, Speaker, Sparkles } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
-type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release';
+type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding';
 
 interface InlineServiceCalloutProps {
   type: string;
@@ -22,6 +22,8 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   mixing: '/mixing-mastering',
   practice: '/practice-room',
   release: '/release-project',
+  // 펀딩 설계 대행은 단독 페이지가 없고 요금 페이지의 부가 서비스 섹션에 있다.
+  funding: '/pricing#support-services',
 };
 
 const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
@@ -32,6 +34,7 @@ const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
   mixing: SlidersHorizontal,
   practice: Speaker,
   release: Sparkles,
+  funding: HandCoins,
 };
 
 const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
@@ -42,6 +45,7 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   mixing: 'nav.mixingMastering',
   practice: 'nav.practiceRoom',
   release: 'nav.releaseProject',
+  funding: 'stories.inline.serviceLabel.funding',
 };
 
 // 한국어 풍부 콘텐츠. 다른 locale은 fallback (제목만 + generic body, features 없음).
@@ -122,10 +126,21 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     ],
     softNote: '혼자 발매를 준비하다 막막하면, 계약 전에 예산·일정부터 편하게 물어보세요. 첫 상담 30분은 무료입니다.',
   },
+  funding: {
+    title: '크라우드펀딩 설계 대행',
+    description: '텀블벅 페이지를 기획부터 구축까지 맡습니다. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행해온 방식 그대로.',
+    features: [
+      '40만원 + 성공 수수료 10% (후불)',
+      '스토리텔링·리워드 구성·페이지 제작',
+      '목표액 산정과 제작 예산 역산',
+      '발매 제작을 맡기지 않아도 의뢰 가능',
+    ],
+    softNote: '펀딩을 열지 말지부터 고민 중이어도 괜찮습니다. 목표액이 현실적인지 같이 따져보는 것부터 시작해요.',
+  },
 };
 
 const isServiceType = (v: string): v is ServiceType =>
-  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'mixing' || v === 'practice' || v === 'release';
+  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'mixing' || v === 'practice' || v === 'release' || v === 'funding';
 
 /**
  * 본문 안 서비스 강조 박스. %%service:<type>%% short-code로 트리거.

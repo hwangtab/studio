@@ -983,7 +983,13 @@
       "priceDetail": "가격표 전체 보기",
       "reviewLabel": "입주자·고객 후기",
       "serviceBodyDefault": "연관 서비스 자세히 알아보기.",
-      "serviceDetail": "서비스 자세히 보기"
+      "serviceDetail": "서비스 자세히 보기",
+      "serviceLabel": {
+        "funding": "크라우드펀딩 설계"
+      },
+      "serviceBody": {
+        "funding": "텀블벅 등 음반 크라우드펀딩을 기획부터 페이지 구축까지 대행합니다."
+      }
     },
     "sticky": {
       "label": "고정 문의 바",

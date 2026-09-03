@@ -983,7 +983,13 @@
       "priceDetail": "查看完整价格表",
       "reviewLabel": "入驻者·客户评价",
       "serviceBodyDefault": "了解更多相关服务详情。",
-      "serviceDetail": "查看服务详情"
+      "serviceDetail": "查看服务详情",
+      "serviceLabel": {
+        "funding": "众筹设计"
+      },
+      "serviceBody": {
+        "funding": "Tumblbug 等唱片众筹，从企划到页面搭建全程代理。"
+      }
     },
     "sticky": {
       "label": "固定咨询栏",
