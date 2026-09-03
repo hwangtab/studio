@@ -141,7 +141,8 @@ describe('가격 SSOT 정합', () => {
    * (2026-09-02에 손으로 발견). 상수가 움직였는데 카피가 안 따라오는 것 —
    * 이게 이 저장소에서 실제로 나는 드리프트 형태다.
    *
-   * 규칙: data/*.ts(가격 SSOT 본체와 테스트는 제외)에 나오는 "N만원"은
+   * 규칙: data/ 아래 모든 .ts(가격 SSOT 본체와 테스트는 제외)에 나오는
+   * "250,000원"·"25만원"은
    *   (a) 현재 SSOT 상수 중 하나이거나
    *   (b) 우리 상품이 아닌 외부 시세여서 EXTERNAL_MARKET_AMOUNTS에 등재됐거나
    * 둘 중 하나여야 한다. 새 가격을 카피에 넣을 땐 formatPriceLabel로 상수에서
@@ -150,11 +151,13 @@ describe('가격 SSOT 정합', () => {
    * 대상에서 뺀 것: docs/wiki는 log.md·decisions/가 과거 수치를 그대로 남기는
    * 이력 문서라 현재값 강제가 맞지 않는다. common.json은 위 테스트들이 맡는다.
    */
-  it('data/*.ts의 만원 리터럴이 SSOT 상수를 벗어나지 않는다', () => {
-    // 우리 상품이 아닌 외부 시세 — 상수와 무관하므로 상수가 바뀌어도 따라가면 안 된다.
-    const EXTERNAL_MARKET_AMOUNTS = new Set([
-      300000, // 오디오 인터페이스 입문가 "20~30만원" 상단
-      30000, // 유통 대행사(DistroKid) 연 정액 "3만원대"
+  it('data/**/*.ts의 가격 리터럴이 SSOT 상수를 벗어나지 않는다', () => {
+    // 우리 상품이 아니어서 상수가 바뀌어도 따라가면 안 되는 금액.
+    const NON_SSOT_AMOUNTS = new Map<number, string>([
+      [300000, '오디오 인터페이스 입문가 "20~30만원"의 상단 (외부 시세)'],
+      [30000, '유통 대행사(DistroKid) 연 정액 "3만원대" (외부 시세)'],
+      [87500, '레슨 월정액 350,000원을 월 4회로 나눈 회당 환산값'],
+      [4200, '언론 기사 제목 "천 번을 들어줘야 4200원" 인용'],
     ]);
     const ssot = new Set<number>([
       RECORDING_HOURLY_PRICE,
@@ -180,18 +183,28 @@ describe('가격 SSOT 정합', () => {
       ALBUM_BUNDLE_PRICE,
     ]);
 
-    const dataDir = path.join(__dirname);
-    const files = fs
-      .readdirSync(dataDir)
-      .filter((f) => f.endsWith('.ts') && f !== 'pricing.ts' && !f.includes('.test.'));
+    // data/ 아래 전체를 훑는다 — data/portfolio/처럼 하위 디렉터리에 가격이
+    // 들어와도 놓치지 않으려면 재귀여야 한다.
+    const walk = (dir: string): string[] =>
+      fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
+        const full = path.join(dir, e.name);
+        if (e.isDirectory()) return walk(full);
+        if (!e.name.endsWith('.ts') || e.name.includes('.test.')) return [];
+        if (full === path.join(__dirname, 'pricing.ts')) return []; // SSOT 본체
+        return [full];
+      });
+
+    // "250,000원"과 "25만원" 둘 다 본다. 실제 카피는 두 형식이 섞여 있고,
+    // 만원 표기만 보던 첫 버전은 faq.ts의 원 단위 단가를 통째로 놓쳤다.
+    const AMOUNT = /(\d[\d,]{2,})\s*원|(\d+)\s*만원/g;
 
     const offenders: string[] = [];
-    for (const file of files) {
-      const text = fs.readFileSync(path.join(dataDir, file), 'utf8');
-      for (const m of text.matchAll(/(\d[\d,]*)\s*만원/g)) {
-        const won = Number(m[1].replace(/,/g, '')) * 10000;
-        if (ssot.has(won) || EXTERNAL_MARKET_AMOUNTS.has(won)) continue;
-        offenders.push(`${file}: "${m[0]}"`);
+    for (const file of walk(__dirname)) {
+      const text = fs.readFileSync(file, 'utf8');
+      for (const m of text.matchAll(AMOUNT)) {
+        const won = m[1] ? Number(m[1].replace(/,/g, '')) : Number(m[2]) * 10_000;
+        if (ssot.has(won) || NON_SSOT_AMOUNTS.has(won)) continue;
+        offenders.push(`${path.relative(__dirname, file)}: "${m[0]}"`);
       }
     }
     expect(offenders).toEqual([]);
