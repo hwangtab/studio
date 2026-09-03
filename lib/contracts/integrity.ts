@@ -25,7 +25,11 @@ import type { Contract, ContractAttachment, ContractClause } from '../../db/sche
  * 그대로였다. v2로 만들어진 지문은 v3로 재계산하면 당연히 어긋난다 — 형식이 다르기 때문이며
  * 변조가 아니다.
  */
-const FINGERPRINT_VERSION = 'v3';
+// v4(2026-08-25): customerBirthdate·roomArea 추가. 두 값은 관리자 화면이 컬럼에서 직접
+// 출력하는데(admin/contracts/[id]/index.tsx) 지문이 덮지 않아, 본문과 컬럼이 어긋난 상태를
+// 탐지하지 못했다. 특히 생년월일은 동명이인을 가르는 유일한 항목이다(validation.ts).
+// v3 지문은 재계산 시 어긋나는 것이 정상이다(아래 규약).
+const FINGERPRINT_VERSION = 'v4';
 
 /** 지문 안에 들어가는 첨부 정보. type이 바뀌면 어떤 문서가 첨부됐는지가 달라진다. */
 export interface FingerprintAttachment {
@@ -61,7 +65,9 @@ export interface ContractFingerprintInput {
   customerEmail: string;
   customerPhone: string;
   customerAddress: string | null;
+  customerBirthdate: string | null;
   roomNumber: string;
+  roomArea: string | null;
   startDate: Date;
   endDate: Date;
   monthlyRent: number;
@@ -113,7 +119,9 @@ const buildCanonicalForm = (input: ContractFingerprintInput): string =>
     sized('customerEmail', input.customerEmail),
     sized('customerPhone', input.customerPhone),
     sized('customerAddress', input.customerAddress),
+    sized('customerBirthdate', input.customerBirthdate),
     sized('roomNumber', input.roomNumber),
+    sized('roomArea', input.roomArea),
     `startDate:${toSeconds(input.startDate)}`,
     `endDate:${toSeconds(input.endDate)}`,
     `monthlyRent:${input.monthlyRent}`,
@@ -169,7 +177,9 @@ export const buildFingerprintInput = (
   customerEmail: contract.customerEmail,
   customerPhone: contract.customerPhone,
   customerAddress: contract.customerAddress,
+  customerBirthdate: contract.customerBirthdate,
   roomNumber: contract.roomNumber,
+  roomArea: contract.roomArea,
   startDate: contract.startDate,
   endDate: contract.endDate,
   monthlyRent: contract.monthlyRent,

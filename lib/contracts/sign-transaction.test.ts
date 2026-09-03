@@ -76,12 +76,13 @@ const seed = async (status: 'sent' | 'cancelled' | 'signed') => {
   });
 };
 
-const runSign = async () => {
+const runSign = async (opts: { signToken?: string; now?: Date } = {}) => {
   const [signatureResult, , , contractResult] = await db.batch(
     buildSignStatements(db, {
       contractId: 'c1',
       signatureId: 's1',
-      now: new Date(),
+      signToken: opts.signToken ?? 'tok_test',
+      now: opts.now ?? new Date(),
       signatureData: 'data:image/png;base64,AAAA',
       ipAddress: '203.0.113.9',
       userAgent: 'jest',
@@ -162,6 +163,45 @@ describe('서명 확정 트랜잭션', () => {
     expect(second.rejected).toBe(true);
     expect(after.signature?.signedAt?.getTime()).toBe(first.signature?.signedAt?.getTime());
     expect(after.contract?.signedAt?.getTime()).toBe(first.contract?.signedAt?.getTime());
+  });
+
+  /**
+   * #13: 재발송으로 토큰이 회전되면 옛 토큰 서명은 커밋되면 안 된다.
+   * 고객이 옛 링크(T1)로 제출하는 사이 관리자가 재발송해 계약 토큰이 T2가 된 상황.
+   */
+  it('토큰이 회전된 뒤 옛 토큰으로는 서명이 커밋되지 않는다', async () => {
+    await seed('sent');
+    // 관리자 재발송이 토큰을 T2로 바꿨다.
+    await db.update(contracts).set({ signToken: 'tok_T2' }).where(eq(contracts.id, 'c1'));
+
+    // 고객은 옛 토큰 T1(=tok_test)으로 제출.
+    const result = await runSign({ signToken: 'tok_test' });
+    const state = await readState();
+
+    expect(result.rejected).toBe(true);
+    expect(state.signature?.status).toBe('pending');
+    expect(state.clause?.agreedAt).toBeNull();
+    expect(state.contract?.status).toBe('sent');
+  });
+
+  it('새 토큰으로는 정상 서명된다', async () => {
+    await seed('sent');
+    await db.update(contracts).set({ signToken: 'tok_T2' }).where(eq(contracts.id, 'c1'));
+
+    const result = await runSign({ signToken: 'tok_T2' });
+    expect(result.rejected).toBe(false);
+    expect((await readState()).contract?.status).toBe('signed');
+  });
+
+  /** 만료된 링크로는 서명이 커밋되지 않는다(만료 직전 경합 포함). */
+  it('만료된 계약에는 서명이 커밋되지 않는다', async () => {
+    await seed('sent');
+    const past = new Date('2020-01-01T00:00:00Z');
+    await db.update(contracts).set({ expiresAt: past }).where(eq(contracts.id, 'c1'));
+
+    const result = await runSign({ now: new Date() });
+    expect(result.rejected).toBe(true);
+    expect((await readState()).contract?.status).toBe('sent');
   });
 
   it('동의 시각은 최초 서명 때만 남는다', async () => {

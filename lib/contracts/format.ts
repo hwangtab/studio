@@ -110,3 +110,22 @@ export const formatDateTime = (value: DateLike, fallback = '-'): string => {
 
 export const formatCurrency = (amount: number): string =>
   new Intl.NumberFormat(LOCALE).format(amount);
+
+/**
+ * KST 달력 날짜를 YYYYMMDD 정수로. 같은 날인지, 어느 날이 뒤인지 비교하는 용도.
+ *
+ * 계약 종료일은 UTC 자정으로 저장되지만 그것이 가리키는 것은 KST 달력의 하루다
+ * (2026-09-30T00:00:00Z = KST 9/30). 서버는 UTC로 돌므로 getDate() 같은 로컬 게터로
+ * 날짜를 뽑으면 종료일 당일 오전(KST)에 하루 어긋난 판정이 난다. KST 파트로 뽑아 비교한다.
+ * 값이 없으면 null.
+ */
+export const kstDateKey = (value: DateLike): number | null => {
+  const date = toDate(value);
+  if (!date) return null;
+  const { year, month, day } = partsOf(date, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  return Number(`${year}${month}${day}`);
+};

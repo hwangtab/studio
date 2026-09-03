@@ -7,6 +7,7 @@ import {
   getEffectiveStatus,
   getStatusLabel,
   isActionAllowed,
+  needsTermination,
   type ContractStatus,
 } from './status';
 
@@ -98,6 +99,51 @@ describe('서명 링크 만료 판정', () => {
 
   it('만료 시각과 정확히 같은 순간은 만료로 처리한다', () => {
     expect(getEffectiveStatus(contract('sent', new Date(now)), now)).toBe('expired');
+  });
+});
+
+describe('needsTermination — 종료일 당일은 이용 기간', () => {
+  // endDate는 UTC 자정(=KST 달력 날짜)으로 저장된다. 2026-09-30 = KST 9/30.
+  const endDate = new Date('2026-09-30T00:00:00.000Z');
+  const signed = (over: Partial<{ endDate: Date; terminatedAt: Date | null }> = {}) => ({
+    status: 'signed' as ContractStatus,
+    endDate,
+    terminatedAt: null,
+    ...over,
+  });
+
+  it('종료일 당일 오전(KST)에는 아직 종료 처리가 필요 없다', () => {
+    // KST 9/30 09:01 = 2026-09-30T00:01Z. 마지막 날 오전.
+    expect(needsTermination(signed(), new Date('2026-09-30T00:01:00.000Z'))).toBe(false);
+  });
+
+  it('종료일 당일 밤(KST)에도 아직 이용 기간이다', () => {
+    // KST 9/30 23:59 = 2026-09-30T14:59Z.
+    expect(needsTermination(signed(), new Date('2026-09-30T14:59:00.000Z'))).toBe(false);
+  });
+
+  it('다음 날 0시(KST)를 넘기면 종료 처리가 필요하다', () => {
+    // KST 10/1 00:00 = 2026-09-30T15:00Z.
+    expect(needsTermination(signed(), new Date('2026-09-30T15:00:00.000Z'))).toBe(true);
+  });
+
+  it('며칠 지났으면 당연히 필요하다', () => {
+    expect(needsTermination(signed(), new Date('2026-10-05T00:00:00.000Z'))).toBe(true);
+  });
+
+  it('종료 처리된 계약은 대상이 아니다', () => {
+    expect(
+      needsTermination(signed({ terminatedAt: new Date('2026-10-02T00:00:00Z') }), new Date('2026-10-05T00:00:00Z')),
+    ).toBe(false);
+  });
+
+  it('서명 전 계약은 대상이 아니다', () => {
+    expect(
+      needsTermination(
+        { status: 'sent', endDate, terminatedAt: null },
+        new Date('2026-10-05T00:00:00Z'),
+      ),
+    ).toBe(false);
   });
 });
 

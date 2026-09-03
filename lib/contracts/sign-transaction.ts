@@ -1,4 +1,4 @@
-import { and, eq, exists, isNull, sql } from 'drizzle-orm';
+import { and, eq, exists, gt, isNull, or, sql } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/libsql';
 
 import * as schema from '../../db/schema';
@@ -9,6 +9,8 @@ type Database = ReturnType<typeof drizzle<typeof schema>>;
 export interface SignStatementInput {
   contractId: string;
   signatureId: string;
+  /** 이 서명이 사용한 토큰. 재발송으로 회전됐거나 만료됐으면 커밋되면 안 된다. */
+  signToken: string;
   now: Date;
   signatureData: string;
   ipAddress: string | null;
@@ -40,6 +42,7 @@ export const buildSignStatements = (db: Database, input: SignStatementInput) => 
   const {
     contractId,
     signatureId,
+    signToken,
     now,
     signatureData,
     ipAddress,
@@ -50,11 +53,24 @@ export const buildSignStatements = (db: Database, input: SignStatementInput) => 
     content,
   } = input;
 
+  /**
+   * "이 계약이, 이 토큰으로, 아직 서명 대기이며, 만료되지 않았다"는 불변식.
+   *
+   * status='sent'만 보면 안 되는 이유(#13): 재발송(markContractSent)은 status는 sent →
+   * sent로 두면서 signToken을 새로 발급하고 expiresAt을 갱신한다. 고객이 옛 링크(T1)로
+   * 폼을 채우는 사이 관리자가 재발송해 토큰이 T2가 돼도, 토큰 조건이 없으면 T1 서명이
+   * 그대로 커밋된다 — "재발송하면 기존 링크는 즉시 무효" 약속이 그 창에서 거짓이 되고,
+   * 계약에 저장된 토큰(T2)과 실제 서명에 쓰인 토큰(T1)이 어긋난다. 만료 직전 경합도 같다.
+   * 4개 문장이 전부 이 조건에 걸려야 한다(위 주석의 불변식).
+   */
+  const stillSignable = and(
+    eq(contracts.status, 'sent'),
+    eq(contracts.signToken, signToken),
+    or(isNull(contracts.expiresAt), gt(contracts.expiresAt, now)),
+  );
+
   const contractAwaitingSignature = exists(
-    db
-      .select({ ok: sql`1` })
-      .from(contracts)
-      .where(and(eq(contracts.id, contractId), eq(contracts.status, 'sent'))),
+    db.select({ ok: sql`1` }).from(contracts).where(and(eq(contracts.id, contractId), stillSignable)),
   );
 
   return [
@@ -112,6 +128,6 @@ export const buildSignStatements = (db: Database, input: SignStatementInput) => 
         content,
         updatedAt: now,
       })
-      .where(and(eq(contracts.id, contractId), eq(contracts.status, 'sent'))),
+      .where(and(eq(contracts.id, contractId), stillSignable)),
   ] as const;
 };

@@ -230,7 +230,23 @@ export const checkIdentityAttempt = async (contractId: string): Promise<Identity
     return 'ok';
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Identity attempt limit unavailable:', error);
-    // 셀 수 없다는 이유로 정당한 서명을 막지는 않는다. 뒷자리 대조 자체는 그대로 남는다.
+    // DB에 못 닿아도 인스턴스 로컬로라도 센다. 예전엔 무조건 'ok'라, Turso 장애(또는
+    // 공격자가 유발 가능한 커넥션 고갈) 중에는 네 자리 1만 조합을 아무 제한 없이 훑을 수
+    // 있었다. 인스턴스별로 갈려 완전하진 않지만 무제한보다는 낫다. 로그인 폴백과 같은 방침.
+    const windowOk = checkInMemory(
+      identityWindowKey(contractId),
+      nowSeconds,
+      IDENTITY_LIMIT,
+      IDENTITY_WINDOW_SECONDS,
+    );
+    const totalOk = checkInMemory(
+      identityTotalKey(contractId),
+      nowSeconds,
+      IDENTITY_TOTAL_LIMIT,
+      IDENTITY_TOTAL_WINDOW_SECONDS,
+    );
+    if (!totalOk) return 'locked';
+    if (!windowOk) return 'throttled';
     return 'ok';
   }
 };

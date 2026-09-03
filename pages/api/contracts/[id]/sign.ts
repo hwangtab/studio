@@ -206,6 +206,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       buildSignStatements(getDb(), {
         contractId: contract.id,
         signatureId: pendingSignature.id,
+        signToken: token,
         now,
         signatureData,
         ipAddress,

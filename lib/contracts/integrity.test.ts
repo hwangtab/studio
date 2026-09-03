@@ -14,7 +14,9 @@ const base = (): ContractFingerprintInput => ({
   customerEmail: 'a@studionol.co.kr',
   customerPhone: '010-1234-5678',
   customerAddress: '서울시 은평구 대조동',
+  customerBirthdate: '1990-01-02',
   roomNumber: 'A',
+  roomArea: '3m × 2m',
   paymentDay: 1,
   startDate: new Date('2026-09-01T00:00:00.000Z'),
   endDate: new Date('2026-12-01T00:00:00.000Z'),
@@ -45,6 +47,8 @@ describe('문서 무결성 지문', () => {
     ['서명 이미지', { signatureData: 'data:image/png;base64,BBBB' }],
     ['서명 시각', { signedAt: new Date('2026-07-30T05:00:01.000Z') }],
     ['계약 식별자', { contractId: 'contract-2' }],
+    ['생년월일', { customerBirthdate: '1991-05-05' }],
+    ['호실 면적', { roomArea: '4m × 3m' }],
   ])('%s가 바뀌면 지문이 달라진다', (_label, patch) => {
     const original = computeContractFingerprint(base());
     const changed = computeContractFingerprint({ ...base(), ...patch });

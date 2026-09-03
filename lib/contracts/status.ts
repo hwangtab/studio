@@ -1,4 +1,5 @@
 import type { Contract } from '../../db/schema';
+import { kstDateKey } from './format';
 
 export type ContractStatus = Contract['status'];
 
@@ -69,10 +70,23 @@ export const needsTermination = (
     terminatedAt: Date | string | null;
   },
   now: Date | string = new Date(),
-): boolean =>
-  contract.status === 'signed' &&
-  contract.terminatedAt === null &&
-  new Date(contract.endDate).getTime() < new Date(now).getTime();
+): boolean => {
+  if (contract.status !== 'signed' || contract.terminatedAt !== null) return false;
+
+  /**
+   * 종료일 당일은 아직 이용 기간이다 — 종료 처리는 그 날이 지나야 필요하다.
+   *
+   * endDate는 UTC 자정(=KST 달력 날짜)으로 저장되므로 2026-09-30은 KST 9/30 09:00이다.
+   * getTime() 단순 비교로는 KST 9/30 09:01(아직 마지막 날 오전)에 이미 "종료 처리 필요"가
+   * 떠서, 그때 종료하면 terminatedAt이 마지막 날 오전으로 찍히고 그 호실로 하루 겹친 새
+   * 계약을 만들 수 있게 된다. service.ts의 호실 충돌 검사는 종료일 당일을 포함(gte)으로
+   * 보므로, 이 판정도 KST 달력 날짜로 맞춘다 — now의 KST 날짜가 종료일보다 엄밀히 뒤일 때만 참.
+   */
+  const endKey = kstDateKey(contract.endDate);
+  const nowKey = kstDateKey(now);
+  if (endKey === null || nowKey === null) return false;
+  return nowKey > endKey;
+};
 
 export const getStatusLabel = (status: ContractStatus): string => STATUS_LABEL[status] ?? status;
 
