@@ -64,7 +64,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const start = (currentPage - 1) * pageSize;
   const pageStories = stories.slice(start, start + pageSize).map(toStoryCardData);
 
-  res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=3600');
+  // 목록 산출물 로드 실패(getStoryListing이 빈 배열 폴백) 등으로 결과가 0건이면,
+  // 정상적으로 0건인 카테고리(존재하지 않음)와 구분할 수 없어 캐시 헤더를 아예
+  // 붙이지 않는다 — 30분 CDN 캐시에 빈 목록이 박히면 산출물이 복구된 뒤에도
+  // 스테일 기간 동안 빈 화면이 나간다. 정상 목록은 기존과 동일하게 캐시한다.
+  if (totalItems === 0) {
+    res.setHeader('Cache-Control', 'no-store');
+  } else {
+    res.setHeader('Cache-Control', 'public, s-maxage=1800, stale-while-revalidate=3600');
+  }
   res.status(200).json({
     stories: pageStories,
     page: currentPage,

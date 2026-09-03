@@ -6,11 +6,13 @@ interface ProgressBarProps {
     progress: number;
     progressBarRef: React.MutableRefObject<HTMLInputElement | null>;
     onChangeRange: () => void;
+    onSeekStart?: () => void;
+    onSeekEnd?: () => void;
     formatTime: (time: number) => string;
     ariaLabel?: string;
 }
 
-const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChangeRange, formatTime, ariaLabel = 'Playback progress' }: ProgressBarProps) => {
+const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChangeRange, onSeekStart, onSeekEnd, formatTime, ariaLabel = 'Playback progress' }: ProgressBarProps) => {
     return (
         <div className="w-full">
             <div className="relative h-1.5 w-full bg-gray-200 dark:bg-white/10 rounded-full group cursor-pointer mb-2">
@@ -18,6 +20,9 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                     type="range"
                     ref={progressBarRef}
                     onChange={onChangeRange}
+                    onPointerDown={onSeekStart}
+                    onPointerUp={onSeekEnd}
+                    onPointerCancel={onSeekEnd}
                     max={duration || 0}
                     aria-label={ariaLabel}
                     // 스크린리더가 생 초 단위 값("127") 대신 사람이 읽는 시간("2:07")을 읽도록.

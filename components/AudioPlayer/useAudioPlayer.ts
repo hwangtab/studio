@@ -13,6 +13,12 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
     const isMounted = useRef(true);
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const progressBarRef = useRef<HTMLInputElement>(null);
+    // 사용자가 시크바를 드래그하는 동안(pointerdown~pointerup) true. timeupdate가 이
+    // 구간에 progressBarRef.value를 실제 재생 위치로 되돌려 쓰면 드래그와 다투므로,
+    // 드래그 중에는 아래 setAudioTime의 슬라이더 갱신을 건너뛴다(React state가 아니라
+    // ref인 이유: 값이 바뀔 때마다 리렌더가 필요 없고, timeupdate 콜백이 매번 최신
+    // 값을 동기적으로 읽어야 한다).
+    const isSeekingRef = useRef(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -68,7 +74,10 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         const setAudioTime = () => {
             if (isEffectMounted && isMounted.current) {
                 setCurrentTime(audio.currentTime);
-                if (progressBarRef.current) {
+                // 드래그 중에는 슬라이더 값을 재생 위치로 되돌려 쓰지 않는다 — 그러지
+                // 않으면 timeupdate(수백ms 주기)가 사용자가 끌고 있는 값을 실제 재생
+                // 위치로 매번 덮어써 드래그가 튕기는 것처럼 보인다.
+                if (progressBarRef.current && !isSeekingRef.current) {
                     progressBarRef.current.value = String(audio.currentTime);
                 }
             }
@@ -147,6 +156,20 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         }
     };
 
+    // ProgressBar의 pointerdown/mousedown~pointerup/mouseup(또는 touch 등가물)에 배선.
+    // 드래그 구간 동안 timeupdate의 슬라이더 갱신을 억제한다(위 setAudioTime 참고).
+    const startSeeking = () => {
+        isSeekingRef.current = true;
+    };
+
+    const endSeeking = () => {
+        isSeekingRef.current = false;
+        // 드래그를 놓은 시점에 슬라이더가 실제 재생 위치와 어긋나 있지 않도록 즉시 동기화.
+        if (progressBarRef.current && audioRef.current) {
+            progressBarRef.current.value = String(audioRef.current.currentTime);
+        }
+    };
+
     const playPause = () => {
         setIsPlaying((prev) => !prev);
     };
@@ -201,6 +224,8 @@ export const useAudioPlayer = (tracks: readonly AudioTrack[]) => {
         nextTrack,
         prevTrack,
         changeRange,
+        startSeeking,
+        endSeeking,
         changeVolume,
         toggleMute,
         formatTime,

@@ -41,7 +41,11 @@ const META_DESCRIPTION_MAX_LENGTH = 160;
 const META_DESCRIPTION_ELLIPSIS = '…';
 // 문장부호(., !, ?, 다., 요.) 우선 → 공백 → 하드 절단, 순서로 자연스러운 경계를 찾는다.
 // 최종 길이(말줄임표 포함)는 항상 META_DESCRIPTION_MAX_LENGTH를 넘지 않는다.
-const SENTENCE_BOUNDARY_RE = /[.!?](?=\s|$)|다\.|요\./g;
+// 숫자 뒤 마침표("1. ", "2. ")는 마크다운 번호목록 표기이지 문장 종결이 아니다 —
+// (?<![0-9])로 배제한다. 대안(경계가 limit 절반보다 앞이면 공백 폴백)은 번호목록이
+// 아닌 정상 짧은 문장 뒤 truncate까지 함께 공백 폴백으로 밀어내 과도하게 짧아질
+// 수 있어 채택하지 않았다 — 원인(숫자 뒤 마침표)을 직접 배제하는 쪽이 부작용이 적다.
+const SENTENCE_BOUNDARY_RE = /(?<![0-9])[.!?](?=\s|$)|다\.|요\./g;
 
 export const buildStoryMetaDescription = (content: string | null | undefined): string => {
   const plainText = stripMarkdown(content || '');

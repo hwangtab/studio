@@ -526,7 +526,15 @@ const loadStoryListingFile = (locale: Locale): StoryListingEntry[] => {
   try {
     // ESM import는 모듈 로드 시점에 전부 파싱한다 — 지연 로드가 목적이라 require를 쓴다.
     // eslint-disable-next-line @typescript-eslint/no-require-imports
-    return require(`./storyListing/${locale}.json`) as StoryListingEntry[];
+    const loaded = require(`./storyListing/${locale}.json`) as unknown;
+    // 산출물이 손상되거나(빈 객체 등) 배열이 아니면, 호출부 raw.map이 TypeError로
+    // 죽는 대신 여기서 빈 배열로 정규화한다 — getStoryListing이 항상 배열을 반환하는
+    // 계약을 지킨다.
+    if (!Array.isArray(loaded)) {
+      console.error(`[stories] lib/storyListing/${locale}.json이 배열이 아니다.`);
+      return [];
+    }
+    return loaded as StoryListingEntry[];
   } catch {
     // 산출물이 없으면 빈 목록 — 빌드는 prebuild가 만들고 CI가 --check로 지킨다.
     console.error(`[stories] lib/storyListing/${locale}.json을 읽지 못했다.`);
@@ -561,7 +569,11 @@ const toStoryListingRow = (entry: StoryListingEntry, locale: Locale): StoryListi
  * 미리 계산한 값이다.
  */
 export const getStoryListing = (locale: string = defaultLocale): StoryListingRow[] => {
-  const normalizedLocale = (locale as Locale) || defaultLocale;
+  // 기존엔 falsy(빈 문자열/undefined)만 defaultLocale로 폴백해, 비지원 로케일 문자열
+  // (오타·타 API의 임의 값 등)이 그대로 require(`./storyListing/${locale}.json`) 경로에
+  // 들어가 매번 존재하지 않는 파일을 찾다 캐치되는 낭비 + 경고 로그가 났다. 지원 로케일
+  // 목록으로 명시 검증한다.
+  const normalizedLocale = locales.includes(locale as Locale) ? (locale as Locale) : defaultLocale;
   if (enableCache) {
     const cached = storyListingCache.get(normalizedLocale);
     if (cached) return cached;

@@ -41,6 +41,20 @@ describe('storySeoData', () => {
       expect(/[.!?]…$/.test(result) || /(다|요)\.…$/.test(result)).toBe(true);
     });
 
+    it('does not treat a numbered-list marker like "1." as a sentence boundary', () => {
+      const content = '부산에서 출발해 연신내 스튜디오까지 이동하는 경로는 다음과 같습니다. '
+        + '1. 부산역에서 KTX를 타고 서울역으로 이동합니다. '
+        + '2. 서울역에서 3호선으로 환승해 연신내역까지 갑니다. '
+        + '3. 연신내역 2번 출구로 나오면 도보 5분 거리에 스튜디오가 있습니다. '
+        + '전체 소요 시간은 약 세 시간에서 네 시간 정도입니다.';
+      const result = buildStoryMetaDescription(content);
+
+      expect(result.length).toBeLessThanOrEqual(160);
+      expect(result.endsWith('…')).toBe(true);
+      // 잘린 지점이 "1." 처럼 번호 직후가 아니라 실제 문장 종결이어야 한다.
+      expect(/\d\.…$/.test(result)).toBe(false);
+    });
+
     it('falls back to the last space boundary when no sentence punctuation is found', () => {
       const words = Array.from({ length: 40 }, (_, i) => `word${i}`).join(' ');
       const result = buildStoryMetaDescription(words);

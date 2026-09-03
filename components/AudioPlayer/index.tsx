@@ -34,6 +34,8 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
         prevTrack,
         selectTrack,
         changeRange,
+        startSeeking,
+        endSeeking,
         changeVolume,
         toggleMute,
         formatTime,
@@ -81,6 +83,8 @@ const AudioPlayer = ({ tracks, locale = defaultLocale }: AudioPlayerProps) => {
                             progress={progress}
                             progressBarRef={progressBarRef}
                             onChangeRange={changeRange}
+                            onSeekStart={startSeeking}
+                            onSeekEnd={endSeeking}
                             formatTime={formatTime}
                             ariaLabel={t('audioPlayer.playbackProgress')}
                         />

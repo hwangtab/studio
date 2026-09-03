@@ -106,8 +106,19 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
     }
   };
 
+  // getStaticProps가 이미 1페이지(initialStories)·totalPages를 내려주므로, 최초
+  // 마운트에서 currentPage가 1이면 재요청이 불필요하다 — 대다수 방문(1페이지)이
+  // fetch+로딩 플리커 없이 SSG 데이터를 그대로 쓴다. 이후 페이지 전환·필터 변경으로
+  // currentPage가 바뀌면(이 ref가 false가 된 뒤) 정상적으로 API를 호출한다.
+  const isInitialPageOneRef = useRef(true);
+
   useEffect(() => {
     if (!router.isReady) return;
+
+    if (isInitialPageOneRef.current) {
+      isInitialPageOneRef.current = false;
+      if (currentPage === 1) return;
+    }
 
     const controller = new AbortController();
     const loadStories = async () => {
