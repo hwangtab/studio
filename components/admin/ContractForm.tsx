@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
 import type { ValidationError } from '../../lib/contracts/validation';
@@ -130,6 +130,20 @@ export default function ContractForm({
   const [values, setValues] = useState<ContractFormValues>(initialValues);
 
   /**
+   * 특약사항 각 행에 붙이는 안정적 로컬 id. 서버로 보내는 형식(string[])은 그대로 두고,
+   * 렌더링 key만 index 대신 이 id를 쓴다 — 중간 행을 삭제해도 React가 남은 행의 DOM을
+   * 잘못 재사용해 입력 중이던 값이 다른 항목 것으로 보이는 문제를 막는다.
+   */
+  const makeTermId = () =>
+    typeof crypto !== 'undefined' && 'randomUUID' in crypto
+      ? crypto.randomUUID()
+      : `term-${Math.random().toString(36).slice(2)}-${Date.now()}`;
+
+  const [specialTermIds, setSpecialTermIds] = useState<string[]>(() =>
+    initialValues.specialTerms.map(() => makeTermId()),
+  );
+
+  /**
    * 작성 중인 내용을 실수로 날리지 않게 한다.
    *
    * 계약 폼은 14개 항목이라 다 채우는 데 몇 분이 걸린다. 그 상태에서 뒤로 가기나 탭 닫기를
@@ -140,6 +154,29 @@ export default function ContractForm({
     () => JSON.stringify(values) !== JSON.stringify(initialValues),
     [values, initialValues],
   );
+
+  /**
+   * initialValues가 바뀌면 폼을 다시 채운다.
+   *
+   * `/admin/contracts/new?from=A` → `?from=B`처럼 쿼리만 바뀌는 이동은 Pages Router에서
+   * 컴포넌트를 remount하지 않고 getServerSideProps만 다시 돌린다(pages/_app.tsx의 remount
+   * key가 쿼리스트링을 뺀 경로 기준이라). 그 결과 이 폼은 A의 initialValues로 만든 useState를
+   * 그대로 들고 있는데 부모가 내려주는 initialValues prop만 B로 바뀐다 — "B님 계약을
+   * 복제했습니다" 배너 아래 A의 이름·연락처·금액이 남아, 다른 고객 정보로 계약이 생성될 수
+   * 있었다. 호출부(new.tsx)에서 key를 바꿔 remount를 강제하는 쪽이 더 안전하지만 이 작업의
+   * 수정 범위가 이 파일로 한정돼 있어, 대신 initialValues 참조가 바뀔 때 values를 다시
+   * 동기화한다. 이 페이지에서 initialValues가 바뀌는 경로는 실제로 새 서버 렌더(새 ?from=
+   * 이동)뿐이라 "편집 중이던 값을 덮어쓴다"는 부작용은 실질적으로 발생하지 않는다 — 그
+   * 이동이 일어난 시점엔 아직 이 폼에 아무것도 입력하지 않은 새 화면이기 때문이다.
+   */
+  const initialValuesRef = useRef(initialValues);
+  useEffect(() => {
+    if (initialValuesRef.current === initialValues) return;
+    initialValuesRef.current = initialValues;
+    setValues(initialValues);
+    setSpecialTermIds(initialValues.specialTerms.map(() => makeTermId()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialValues]);
 
   useEffect(() => {
     if (!isDirty || submitting) return;
@@ -179,6 +216,27 @@ export default function ContractForm({
   const handleMonthlyRentChange = (raw: string) => {
     const digitsOnly = raw.replace(/[^0-9]/g, '');
     setValues((prev) => ({ ...prev, monthlyRent: digitsOnly, depositAmount: digitsOnly }));
+  };
+
+  const addSpecialTerm = () => {
+    setValues((prev) => ({ ...prev, specialTerms: [...prev.specialTerms, ''] }));
+    setSpecialTermIds((prev) => [...prev, makeTermId()]);
+  };
+
+  const updateSpecialTerm = (index: number, value: string) => {
+    setValues((prev) => {
+      const next = [...prev.specialTerms];
+      next[index] = value;
+      return { ...prev, specialTerms: next };
+    });
+  };
+
+  const removeSpecialTerm = (index: number) => {
+    setValues((prev) => ({
+      ...prev,
+      specialTerms: prev.specialTerms.filter((_, i) => i !== index),
+    }));
+    setSpecialTermIds((prev) => prev.filter((_, i) => i !== index));
   };
 
   const applyTerm = (months: number) => {
@@ -368,7 +426,7 @@ export default function ContractForm({
             type="button"
             size="sm"
             variant="outline"
-            onClick={() => set('specialTerms', [...values.specialTerms, ''])}
+            onClick={addSpecialTerm}
           >
             추가
           </Button>
@@ -379,25 +437,16 @@ export default function ContractForm({
         ) : (
           <div className="space-y-2">
             {values.specialTerms.map((term, index) => (
-              <div key={index} className="flex gap-2">
+              <div key={specialTermIds[index] ?? index} className="flex gap-2">
                 <input
                   className={INPUT_CLASS}
                   value={term}
                   placeholder={`특약 ${index + 1}`}
-                  onChange={(e) => {
-                    const next = [...values.specialTerms];
-                    next[index] = e.target.value;
-                    set('specialTerms', next);
-                  }}
+                  onChange={(e) => updateSpecialTerm(index, e.target.value)}
                 />
                 <button
                   type="button"
-                  onClick={() =>
-                    set(
-                      'specialTerms',
-                      values.specialTerms.filter((_, i) => i !== index),
-                    )
-                  }
+                  onClick={() => removeSpecialTerm(index)}
                   className="shrink-0 px-3 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50"
                 >
                   삭제
