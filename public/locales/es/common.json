@@ -870,11 +870,11 @@
       "title": "Guías de Grabación, Mezcla y Producción Vocal | Studio NOL",
       "description": "1,500+ guías prácticas de grabación vocal, mezcla, masterización, EQ y producción K-pop por ingenieros de Studio NOL en Seúl.",
       "keywords": "historias de Studio NOL, reseñas de producción, historias de producción musical",
-      "fallbackKeywords": "Studio NOL, estudio de grabación, producción musical, clases de canto, mezcla masterización, sala de ensayo"
+      "fallbackKeywords": "Studio NOL, estudio de grabación, producción musical, clases de producción musical, mezcla masterización, sala de ensayo"
     },
     "hero": {
       "title": "Historias",
-      "subtitle": "Reseñas de grabación, mezcla, masterización, clases vocales y sala de ensayo con consejos reales de producción musical.",
+      "subtitle": "Reseñas de grabación, mezcla, masterización, clases de producción musical y sala de ensayo con consejos reales de producción musical.",
       "alt": "Historias de Studio NOL"
     },
     "filters": {
@@ -983,7 +983,13 @@
       "priceDetail": "Ver lista de precios completa",
       "reviewLabel": "Reseñas de clientes y residentes",
       "serviceBodyDefault": "Descubra más sobre los servicios relacionados.",
-      "serviceDetail": "Ver detalles del servicio"
+      "serviceDetail": "Ver detalles del servicio",
+      "serviceLabel": {
+        "funding": "Diseño de crowdfunding"
+      },
+      "serviceBody": {
+        "funding": "Campañas de crowdfunding de álbumes planificadas y construidas de principio a fin."
+      }
     },
     "sticky": {
       "label": "Barra de contacto fija",

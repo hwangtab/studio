@@ -155,18 +155,42 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     id: 'non-english-staff-claim',
     description:
       '중국어·스페인어·베트남어·태국어 상주 인력/서면 자료 없음 — 영어 응대 외 다국어 지원 단정 금지',
+    // 2026-08-24: recording-in-seoul-for-chinese-musicians.zh.md에 "약 중문 어시스턴트
+    // 배정"(约一位中文助理)이 살아 있었다 — 상주 인력 명사(中文工作人员)만 잡던 패턴이
+    // '어시스턴트/전담/동행' 계열을 빠뜨렸다. 인력 배정을 뜻하는 표현을 함께 막는다.
     pattern:
-      /中文工作人员|中文服务|中文版本|中文发票|中文设备|Estudio\s+en\s+Español|Studio\s+bằng\s+Tiếng\s+Việt|สตูดิโอภาษาไทย|hóa\s+đơn[^\n]{0,20}tiếng\s+Việt/i,
-    allow: /않|없|미제공|\bnot?\b|不提供/i,
+      /中文工作人员|中文服务|中文版本|中文发票|中文设备|中文助理|专属中文|中文客服|中文陪同|中文翻译人员|Estudio\s+en\s+Español|Studio\s+bằng\s+Tiếng\s+Việt|สตูดิโอภาษาไทย|hóa\s+đơn[^\n]{0,20}tiếng\s+Việt/i,
+    // "실시간 번역 도구로 중국어 메시지를 처리한다"는 정상(실제 제공 방식)이다.
+    // 막는 건 사람(工作人员·助理)을 붙여 준다는 단정뿐이므로 번역 도구 표현은 면제.
+    allow: /않|없|미제공|\bnot?\b|不提供|翻译工具|翻译软件|机器翻译/i,
   },
   {
+    // 2026-08-24: 같은 zh 스토리에 "工作人员英语沟通顺畅"(직원 영어 소통 유창)이 있었다.
+    // 기존 패턴은 "엔지니어"라는 직무 명사에 한정돼, 일반 직원의 영어 유창 주장을 놓쳤다.
     id: 'english-engineer-claim',
     description:
-      '영어 전담·상주 엔지니어 없음 — 영어 제공은 예약 응대 + 원격 믹싱뿐 (wiki 서비스 범위 가드)',
+      '영어 전담·상주 엔지니어/직원 없음 — 영어 제공은 예약 응대 + 원격 믹싱뿐 (wiki 서비스 범위 가드)',
     pattern:
-      /영어\s?(?:전담\s?|상주\s?)?엔지니어|영어[가는\s]{0,3}(?:가능|능통)[한\s]{0,2}엔지니어|english[-\s]speaking\s+(?:sound\s+|audio\s+)?engineer/i,
-    allow: /없|않|아니|\bnot?\b/i,
+      /영어\s?(?:전담\s?|상주\s?)?엔지니어|영어[가는\s]{0,3}(?:가능|능통)[한\s]{0,2}엔지니어|english[-\s]speaking\s+(?:sound\s+|audio\s+)?engineer|(?:员工|职员|工作人员)[^\n]{0,10}英语(?:流利|沟通顺畅|能力|很好)|(?:staff|team)[^\n]{0,20}fluent\s+in\s+English|fluent\s+English[-\s]speaking\s+staff/i,
+    allow: /없|않|아니|\bnot?\b|翻译工具|翻译软件/i,
     allowWindow: 2,
+  },
+  {
+    // 2026-08-24: es/vi/th/uz의 stories.hero.subtitle·fallbackKeywords가 "프로듀싱 레슨"을
+    // "보컬 레슨"으로 오역해 있었다(clases vocales / học thanh nhạc / เรียนร้องเพลง /
+    // vokal darslari). 기존 보컬레슨 룰은 한국어 전용이거나 "우리 커리큘럼" 1인칭 마커를
+    // 함께 요구해서, 이런 '마커 없는 단순 카테고리 라벨'을 구조적으로 놓쳤다. 마커 없이 잡는다.
+    id: 'vocal-lesson-label-multilang',
+    description:
+      '보컬·노래 레슨 미운영 — 비한국어 카테고리 라벨로도 광고 금지 (프로듀싱 레슨만 운영)',
+    pattern:
+      /clases?\s+(?:vocales?|de\s+canto)|học\s+thanh\s+nhạc|(?:เรียน|สอน)ร้องเพลง|vokal\s+darslar/i,
+    // 세션 중 엔지니어의 보컬 디렉팅(정당한 기존 서비스)은 전 로케일에 일관 존재한다.
+    // "디렉팅/가이던스" 계열은 레슨이 아니므로 면제한다(vi weddingSong "Hướng dẫn thanh nhạc" 등).
+    // 부정문("노래는 안 가르친다, 외부 선생을 찾아라")과 보컬 디렉팅은 정당하다.
+    // 태국어는 공백이 없어 부정어(ไม่สอน·ไม่ให้)와 '외부 선생'(ครู...แยก) 표현을 함께 면제한다.
+    allow:
+      /않|없|미운영|미제공|외부|\bnot?\b|no\s+ofrecemos|no\s+damos|không\s+cung\s+cấp|không\s+dạy|ไม่ให้บริการ|ไม่สอน|ไม่ได้สอน|ครู[^\n]{0,10}แยก|o'qitmaymiz|dirección\s+vocal|hướng\s+dẫn\s+(?:giọng\s+hát|thanh\s+nhạc)|การกำกับเสียงร้อง|ovoz\s+yo'naltirish/i,
   },
   {
     id: 'english-chinese-lesson-fabrication',

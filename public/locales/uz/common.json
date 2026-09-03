@@ -870,11 +870,11 @@
       "title": "Yozuv, Miks va Vokal Prodakshn Qo'llanmalari | Studio NOL",
       "description": "Vokal yozuv, miks, mastering, EQ va K-pop prodakshn bo'yicha 1,500+ amaliy qo'llanma — Studio NOL muhandislaridan.",
       "keywords": "Studio NOL hikoyalari, prodakshn sharhlari, musiqa prodakshn hikoyalari",
-      "fallbackKeywords": "Studio NOL, yozuv studiyasi, musiqa prodakshn, vokal darslari, miks mastering, mashg'ulot xonasi"
+      "fallbackKeywords": "Studio NOL, yozuv studiyasi, musiqa prodakshn, prodyuserlik darslari, miks mastering, mashg'ulot xonasi"
     },
     "hero": {
       "title": "Hikoyalar",
-      "subtitle": "Yozib olish, miksing, mastering, vokal darslari va mashq xonasi sharhlari — real tajribalar va musiqa tavsiyalari.",
+      "subtitle": "Yozib olish, miksing, mastering, prodyuserlik darslari va mashq xonasi sharhlari — real tajribalar va musiqa tavsiyalari.",
       "alt": "Studio NOL hikoyalari"
     },
     "filters": {
@@ -983,7 +983,13 @@
       "priceDetail": "To'liq narx jadvalini ko'rish",
       "reviewLabel": "Ijarachilar va mijozlar sharhlari",
       "serviceBodyDefault": "Tegishli xizmat haqida batafsil ma'lumot oling.",
-      "serviceDetail": "Xizmat haqida batafsil"
+      "serviceDetail": "Xizmat haqida batafsil",
+      "serviceLabel": {
+        "funding": "Crowdfunding dizayni"
+      },
+      "serviceBody": {
+        "funding": "Tumblbug va shunga o'xshash platformalarda albom crowdfunding kampaniyasi — rejadan sahifa qurilishigacha."
+      }
     },
     "sticky": {
       "label": "Doimiy so'rov paneli",

@@ -870,11 +870,11 @@
       "title": "Hướng Dẫn Thu Âm, Mixing & Sản Xuất Vocal | Studio NOL",
       "description": "1,500+ bài hướng dẫn thực chiến về thu âm vocal, mixing, mastering, EQ và sản xuất K-pop từ kỹ sư Studio NOL tại Seoul.",
       "keywords": "stories Studio NOL, review sản xuất, câu chuyện sản xuất âm nhạc",
-      "fallbackKeywords": "Studio NOL, phòng thu âm, sản xuất âm nhạc, học thanh nhạc, mixing mastering, phòng tập nhạc"
+      "fallbackKeywords": "Studio NOL, phòng thu âm, sản xuất âm nhạc, lớp sản xuất âm nhạc, mixing mastering, phòng tập nhạc"
     },
     "hero": {
       "title": "Câu chuyện",
-      "subtitle": "Tổng hợp trải nghiệm thu âm, mixing, mastering, học thanh nhạc và phòng tập nhạc cùng mẹo sản xuất âm nhạc.",
+      "subtitle": "Tổng hợp trải nghiệm thu âm, mixing, mastering, lớp sản xuất âm nhạc và phòng tập nhạc cùng mẹo sản xuất âm nhạc.",
       "alt": "Stories Studio NOL"
     },
     "filters": {
@@ -983,7 +983,13 @@
       "priceDetail": "Xem toàn bộ bảng giá",
       "reviewLabel": "Đánh giá từ khách hàng",
       "serviceBodyDefault": "Tìm hiểu thêm về dịch vụ liên quan.",
-      "serviceDetail": "Xem chi tiết dịch vụ"
+      "serviceDetail": "Xem chi tiết dịch vụ",
+      "serviceLabel": {
+        "funding": "Thiết kế gây quỹ"
+      },
+      "serviceBody": {
+        "funding": "Chiến dịch gây quỹ album trên Tumblbug và các nền tảng tương tự, trọn gói từ kế hoạch đến dựng trang."
+      }
     },
     "sticky": {
       "label": "Thanh liên hệ cố định",
