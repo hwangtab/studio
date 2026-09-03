@@ -86,9 +86,10 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as ConsultationStep[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as ProducerStat[];
 
-  const discographyItems = portfolioItems
-    .filter((i) => i.featured)
-    .slice(0, 12);
+  // portfolioItems는 getTierPortfolioItems가 이미 이 티어에 맞게 골라 정렬·상한(12)까지
+  // 적용한 목록이다. 여기서 다시 featured로 거르지 않는다 — 그러면 티어 폴백으로 채운
+  // 항목이 다시 떨어져 나가 빈 섹션이 된다(예전 재필터가 그 버그였다).
+  const discographyItems = portfolioItems;
   const otherTiers = ALL_TIERS.filter((t) => t !== tier);
   const reviewsToShow = getReviews(locale).filter((r) => REVIEW_IDS_FOR_RELEASE_PROJECT.includes(r.id));
 
