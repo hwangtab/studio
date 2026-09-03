@@ -68,7 +68,7 @@ inlineFallback:
 
 ---
 
-%%service:recording%%
+%%vocal-mix-bridge%%
 
 ## 혼자 음역대 확인하는 방법
 

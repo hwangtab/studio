@@ -47,8 +47,6 @@ inlineFallback:
 
 ---
 
-%%service:practice%%
-
 ## 발성 레지스터 비교
 
 | 레지스터 | 특징 | 주로 쓰이는 음역 |
@@ -59,6 +57,8 @@ inlineFallback:
 | 팔세토 | 두성보다 얇고 가성에 가까움 | 최고음 구간 |
 
 ---
+
+%%vocal-mix-bridge%%
 
 ## 패시지오(Passaggio) 위치
 
