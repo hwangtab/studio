@@ -2,6 +2,7 @@
 
 import {
   computeContractFingerprint,
+  computeFingerprintHexForVersion,
   formatFingerprintForDisplay,
   verifyContractFingerprint,
   type ContractFingerprintInput,
@@ -36,8 +37,9 @@ describe('문서 무결성 지문', () => {
     expect(computeContractFingerprint(base())).toBe(computeContractFingerprint(base()));
   });
 
-  it('SHA-256 형태(64자 16진수)를 낸다', () => {
-    expect(computeContractFingerprint(base())).toMatch(/^[0-9a-f]{64}$/);
+  /** 저장·인쇄되는 값은 버전이 접두사로 박힌 `v4:<sha256 hex>`다 — 형식 변경과 변조를 구분하기 위해. */
+  it('버전 접두사 + SHA-256(64자 16진수) 형태를 낸다', () => {
+    expect(computeContractFingerprint(base())).toMatch(/^v4:[0-9a-f]{64}$/);
   });
 
   // 아래 항목이 하나라도 바뀌면 "그때 서명한 그 문서"가 아니다.
@@ -91,7 +93,7 @@ describe('문서 무결성 지문', () => {
 
     // DB에 저장·조회하면 밀리초가 사라진 Date가 돌아온다
     const roundTripped = new Date(Math.floor(signedAt.getTime() / 1000) * 1000);
-    expect(verifyContractFingerprint(stored, { ...base(), signedAt: roundTripped }).ok).toBe(true);
+    expect(verifyContractFingerprint(stored, { ...base(), signedAt: roundTripped }).status).toBe('match');
   });
 
   /**
@@ -152,27 +154,76 @@ describe('문서 무결성 지문', () => {
   });
 
   describe('대조', () => {
-    it('보관된 지문과 맞으면 통과한다', () => {
+    it('보관된 지문과 맞으면 match', () => {
       const stored = computeContractFingerprint(base());
-      expect(verifyContractFingerprint(stored, base()).ok).toBe(true);
+      const verdict = verifyContractFingerprint(stored, base());
+      expect(verdict.status).toBe('match');
+      if (verdict.status === 'match') expect(verdict.version).toBe('v4');
     });
 
-    it('본문이 바뀌었으면 불일치를 알린다', () => {
+    it('본문이 바뀌었으면 mismatch — 변조 의심', () => {
       const stored = computeContractFingerprint(base());
-      const result = verifyContractFingerprint(stored, { ...base(), content: '변조된 본문' });
+      const verdict = verifyContractFingerprint(stored, { ...base(), content: '변조된 본문' });
 
-      expect(result.ok).toBe(false);
-      expect(result.expected).toBe(stored);
-      expect(result.actual).not.toBe(stored);
+      expect(verdict.status).toBe('mismatch');
+      if (verdict.status === 'mismatch') {
+        expect(verdict.expected).toBe(stored);
+        expect(verdict.actual).not.toBe(stored);
+        expect(verdict.actual).toMatch(/^v4:[0-9a-f]{64}$/);
+      }
     });
 
-    it('지문이 없는 과거 계약은 불일치로 본다', () => {
-      expect(verifyContractFingerprint(null, base()).ok).toBe(false);
+    /**
+     * 불일치와 "검증 불가"는 다르다. 지문이 없거나 형식을 모르는 계약은 변조 의심으로
+     * 올리면 안 된다 — 사유를 붙여 따로 답한다.
+     */
+    it('지문이 없으면 unverifiable/none', () => {
+      const verdict = verifyContractFingerprint(null, base());
+      expect(verdict).toEqual({ status: 'unverifiable', reason: 'none', stored: null });
+    });
+
+    /**
+     * 접두사 없는 옛 지문은 v3로 가정해 재계산한다 — 실 DB에 그 형식의 서명 계약이 있다.
+     * 맞으면 확실히 그 문서다. 안 맞으면 v2일 수도 있어 변조로 단정하지 않는다.
+     */
+    it('접두사 없는 v3 지문이 v3 재계산과 맞으면 match(legacy)', () => {
+      const bareV3 = computeFingerprintHexForVersion('v3', base());
+      const verdict = verifyContractFingerprint(bareV3, base());
+      expect(verdict).toEqual({ status: 'match', version: 'v3', fingerprint: bareV3, legacy: true });
+    });
+
+    it('접두사 없는 지문이 v3 재계산과도 안 맞으면 unverifiable/unversioned — 변조로 단정하지 않는다', () => {
+      const bare = 'a'.repeat(64);
+      const verdict = verifyContractFingerprint(bare, base());
+      expect(verdict).toEqual({ status: 'unverifiable', reason: 'unversioned', stored: bare });
+    });
+
+    it('v3 형식은 v4에서 추가된 두 필드를 덮지 않는다 (git 24d50cf49d^ 재현)', () => {
+      const a = computeFingerprintHexForVersion('v3', base());
+      const b = computeFingerprintHexForVersion('v3', { ...base(), customerBirthdate: '2000-12-31', roomArea: '9m × 9m' });
+      expect(a).toBe(b);
+      // 반면 v4는 그 둘을 덮는다
+      expect(computeFingerprintHexForVersion('v4', base())).not.toBe(
+        computeFingerprintHexForVersion('v4', { ...base(), customerBirthdate: '2000-12-31' }),
+      );
+    });
+
+    it('모르는 버전은 unverifiable/unknown-version — 변조로 오판하지 않는다', () => {
+      const future = `v99:${'b'.repeat(64)}`;
+      const verdict = verifyContractFingerprint(future, base());
+      expect(verdict).toEqual({ status: 'unverifiable', reason: 'unknown-version', stored: future });
+    });
+
+    it('지문 형식이 아니면 unverifiable/malformed', () => {
+      const verdict = verifyContractFingerprint('not-a-hash', base());
+      expect(verdict).toEqual({ status: 'unverifiable', reason: 'malformed', stored: 'not-a-hash' });
     });
   });
 
-  it('눈으로 대조할 짧은 표기를 만든다', () => {
-    const display = formatFingerprintForDisplay('abcdef1234567890'.repeat(4));
-    expect(display).toBe('ABCD-EF12');
+  it('눈으로 대조할 짧은 표기는 버전을 떼고 hex 앞 8자다', () => {
+    const hex = 'abcdef1234567890'.repeat(4);
+    expect(formatFingerprintForDisplay(`v4:${hex}`)).toBe('ABCD-EF12');
+    // 접두사 없는 값도 같은 표기
+    expect(formatFingerprintForDisplay(hex)).toBe('ABCD-EF12');
   });
 });

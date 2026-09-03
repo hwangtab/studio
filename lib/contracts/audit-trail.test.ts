@@ -2,7 +2,11 @@
 
 import type { Contract, ContractAttachment, ContractClause, Signature } from '../../db/schema';
 import { buildAuditTrail } from './audit-trail';
-import { buildFingerprintInput, computeContractFingerprint } from './integrity';
+import {
+  buildFingerprintInput,
+  computeContractFingerprint,
+  computeFingerprintHexForVersion,
+} from './integrity';
 
 const SIGNED_AT = new Date('2026-09-01T05:00:00.000Z');
 const SENT_AT = new Date('2026-08-30T01:00:00.000Z');
@@ -144,6 +148,63 @@ describe('지문 대조', () => {
   it('지문 없이 서명된 옛 계약은 missing으로 구분한다', () => {
     const trail = buildAuditTrail(load({ contentHash: null }));
     expect(trail.fingerprint.kind).toBe('missing');
+  });
+
+  /**
+   * 형식 차이는 변조가 아니다. 예전엔 현재 버전으로 계산해 `===`로만 비교해서, 버전이
+   * 다른 지문이 전부 "서명 당시 문서와 다릅니다"(mismatch)로 떴다 — 규정대로 형식을 바꾼
+   * 일이 변조 사고로 보였다.
+   */
+  it('버전 접두사 없는 맨 hex(v4 이전)는 mismatch가 아니라 unverifiable/unversioned', () => {
+    const trail = buildAuditTrail(load({ contentHash: 'a'.repeat(64) }));
+
+    expect(trail.fingerprint.kind).toBe('unverifiable');
+    if (trail.fingerprint.kind === 'unverifiable') {
+      expect(trail.fingerprint.reason).toBe('unversioned');
+      expect(trail.fingerprint.stored).toBe('a'.repeat(64));
+    }
+  });
+
+  it('모르는 버전의 지문은 unverifiable/unknown-version', () => {
+    const trail = buildAuditTrail(load({ contentHash: `v99:${'b'.repeat(64)}` }));
+
+    expect(trail.fingerprint.kind).toBe('unverifiable');
+    if (trail.fingerprint.kind === 'unverifiable') {
+      expect(trail.fingerprint.reason).toBe('unknown-version');
+    }
+  });
+
+  it('저장된 지문은 버전이 접두사로 박혀 있다', () => {
+    expect(validHash({ ...baseContract })).toMatch(/^v4:[0-9a-f]{64}$/);
+  });
+
+  /**
+   * 실 DB에 접두사 없는 v3 형식으로 서명된 계약이 있다(2026-08-25 확인). 그 지문은 v3로
+   * 재계산하면 맞아야 하고, 화면은 "옛 형식이지만 대조됨"이라고 말해야 한다.
+   */
+  it('접두사 없는 v3 지문은 v3로 재계산해 match(legacyVersion=v3)로 본다', () => {
+    const contract = { ...baseContract };
+    const bareV3 = computeFingerprintHexForVersion(
+      'v3',
+      buildFingerprintInput(contract, {
+        attachments,
+        clauses,
+        signatureData: signature.signatureData ?? '',
+        signer: {
+          name: signature.signerName,
+          email: signature.signerEmail,
+          ipAddress: signature.ipAddress,
+        },
+        signedAt: SIGNED_AT,
+        identityVerifiedAt: contract.identityVerifiedAt,
+      }),
+    );
+    const trail = buildAuditTrail(load({ contentHash: bareV3 }));
+
+    expect(trail.fingerprint.kind).toBe('match');
+    if (trail.fingerprint.kind === 'match') {
+      expect(trail.fingerprint.legacyVersion).toBe('v3');
+    }
   });
 });
 

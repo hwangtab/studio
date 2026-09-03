@@ -38,7 +38,8 @@
       "files": [
         "scripts/**/*.js",
         "scripts/**/*.mjs",
-        "scripts/**/*.cjs"
+        "scripts/**/*.cjs",
+        "scripts/**/*.ts"
       ],
       "rules": {
         "@typescript-eslint/no-require-imports": "off",

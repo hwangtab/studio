@@ -2,8 +2,8 @@ import type { Contract, ContractAttachment, ContractClause, Signature } from '..
 import { formatDateTime } from './format';
 import {
   buildFingerprintInput,
-  computeContractFingerprint,
   formatFingerprintForDisplay,
+  verifyContractFingerprint,
 } from './integrity';
 
 /**
@@ -24,7 +24,21 @@ export type FingerprintVerdict =
   | { kind: 'missing' }
   /** 개인정보를 파기해 본문·서명 이미지가 지워졌다. 대조하면 반드시 어긋난다 — 변조가 아니다. */
   | { kind: 'purged'; stored: string; storedShort: string }
-  | { kind: 'match'; stored: string; storedShort: string }
+  /**
+   * 지문은 있는데 그 형식으로는 재계산할 수 없다 — 변조가 아니라 "모른다"다.
+   * unversioned: v4 이전에 저장된 맨 hex라 어느 형식으로 만든 것인지 알 수 없다.
+   * unknown-version: 이 코드가 모르는 버전(미래 버전으로 만든 값, 또는 레지스트리에서 지워진 버전).
+   * malformed: 지문 형식 자체가 아니다.
+   * 이 셋을 mismatch로 띄우면 형식 차이를 변조 사고로 오인하게 된다(integrity.ts 주석).
+   */
+  | {
+      kind: 'unverifiable';
+      reason: 'unversioned' | 'unknown-version' | 'malformed';
+      stored: string;
+      storedShort: string;
+    }
+  /** legacyVersion: 접두사 없는 옛 지문을 그 버전으로 재계산해 맞았다 — 형식만 옛것이지 대조는 확실하다. */
+  | { kind: 'match'; stored: string; storedShort: string; legacyVersion?: string }
   | { kind: 'mismatch'; stored: string; storedShort: string; actual: string; actualShort: string };
 
 export interface AuditEvent {
@@ -75,7 +89,13 @@ const verifyFingerprint = (contract: LoadedContract): FingerprintVerdict => {
    */
   if (contract.purgedAt) return { kind: 'purged', stored, storedShort };
 
-  const actual = computeContractFingerprint(
+  /**
+   * 재계산은 integrity.ts에 맡긴다. 저장된 지문의 버전 접두사를 읽어 **그 버전의** canonical
+   * builder로 다시 계산하므로, 형식이 바뀐 뒤에도 옛 계약이 제 형식대로 대조된다. 예전엔
+   * 여기서 현재 버전으로 계산해 `===`로만 비교해서, 버전이 다른 지문이 전부 "변조"로 떴다.
+   */
+  const check = verifyContractFingerprint(
+    stored,
     buildFingerprintInput(contract, {
       attachments: contract.contractAttachments,
       clauses: contract.contractClauses,
@@ -90,15 +110,31 @@ const verifyFingerprint = (contract: LoadedContract): FingerprintVerdict => {
     }),
   );
 
-  if (actual === stored) return { kind: 'match', stored, storedShort };
-
-  return {
-    kind: 'mismatch',
-    stored,
-    storedShort,
-    actual,
-    actualShort: formatFingerprintForDisplay(actual),
-  };
+  switch (check.status) {
+    case 'match':
+      return {
+        kind: 'match',
+        stored,
+        storedShort,
+        ...(check.legacy ? { legacyVersion: check.version } : {}),
+      };
+    case 'mismatch':
+      return {
+        kind: 'mismatch',
+        stored,
+        storedShort,
+        actual: check.actual,
+        actualShort: formatFingerprintForDisplay(check.actual),
+      };
+    case 'unverifiable':
+      // 'none'은 위의 !contract.contentHash 가드가 먼저 걸러 여기 오지 않는다.
+      return {
+        kind: 'unverifiable',
+        reason: check.reason === 'none' ? 'malformed' : check.reason,
+        stored,
+        storedShort,
+      };
+  }
 };
 
 export const buildAuditTrail = (contract: LoadedContract): AuditTrail => {

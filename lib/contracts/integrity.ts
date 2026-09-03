@@ -28,8 +28,19 @@ import type { Contract, ContractAttachment, ContractClause } from '../../db/sche
 // v4(2026-08-25): customerBirthdate·roomArea 추가. 두 값은 관리자 화면이 컬럼에서 직접
 // 출력하는데(admin/contracts/[id]/index.tsx) 지문이 덮지 않아, 본문과 컬럼이 어긋난 상태를
 // 탐지하지 못했다. 특히 생년월일은 동명이인을 가르는 유일한 항목이다(validation.ts).
-// v3 지문은 재계산 시 어긋나는 것이 정상이다(아래 규약).
-const FINGERPRINT_VERSION = 'v4';
+//
+// v4부터 저장값에 버전을 접두사로 박는다(`v4:<sha256 hex>`). 그 전까지는 맨 hex만 저장해서,
+// 저장된 지문만 보고는 어느 형식으로 만든 것인지 알 수 없었다 — 형식이 바뀐 뒤 재계산하면
+// 불일치가 나는데 그것이 형식 차이인지 변조인지 구분할 수 없다는 뜻이다. 접두사가 있으면
+// 그 버전의 canonical builder로 재계산해 대조하고, 모르는 버전은 "검증 불가"로 답한다.
+// (이 전환은 실계약이 0건일 때 이뤄져 마이그레이션이 없다.)
+// v3(접두사 없이 저장되던 시절의 형식)는 실계약 1건이 그 형식으로 서명돼 있어 레지스트리에
+// 남긴다(2026-08-25 실 DB 확인). 접두사 없는 지문은 v3로 재계산해 맞으면 대조 성공으로,
+// 안 맞으면 "검증 불가"로 답한다 — v2일 수도 있어 불일치(변조)로 단정할 수 없기 때문이다.
+export type FingerprintVersion = 'v3' | 'v4';
+const FINGERPRINT_VERSION: FingerprintVersion = 'v4';
+/** 접두사 없는 옛 지문을 재계산할 때 가정하는 버전. 실계약이 존재하는 마지막 무접두사 형식. */
+const LEGACY_UNVERSIONED_VERSION: FingerprintVersion = 'v3';
 
 /** 지문 안에 들어가는 첨부 정보. type이 바뀌면 어떤 문서가 첨부됐는지가 달라진다. */
 export interface FingerprintAttachment {
@@ -110,18 +121,23 @@ const sized = (label: string, value: string | null): string => {
  * 문자열이 될 수 있어(예: 본문 끝과 첨부 시작이 붙는 경우) 지문이 충돌한다. 사용자가 값을
  * 넣을 수 있는 자리는 길이까지 앞에 박아 개행을 섞어도 구조를 흉내낼 수 없게 한다.
  */
-const buildCanonicalForm = (input: ContractFingerprintInput): string =>
+const buildCanonicalForm = (
+  input: ContractFingerprintInput,
+  version: FingerprintVersion = FINGERPRINT_VERSION,
+): string =>
   [
-    `fingerprint:${FINGERPRINT_VERSION}`,
+    `fingerprint:${version}`,
     `contract:${input.contractId}`,
     sized('title', input.title),
     sized('customerName', input.customerName),
     sized('customerEmail', input.customerEmail),
     sized('customerPhone', input.customerPhone),
     sized('customerAddress', input.customerAddress),
-    sized('customerBirthdate', input.customerBirthdate),
+    // v4에서 추가된 두 줄. v3 형식을 재현할 때는 빼야 그때의 지문이 나온다
+    // (git 24d50cf49d^ 의 buildCanonicalForm과 문자 단위로 같아야 한다).
+    ...(version === 'v4' ? [sized('customerBirthdate', input.customerBirthdate)] : []),
     sized('roomNumber', input.roomNumber),
-    sized('roomArea', input.roomArea),
+    ...(version === 'v4' ? [sized('roomArea', input.roomArea)] : []),
     `startDate:${toSeconds(input.startDate)}`,
     `endDate:${toSeconds(input.endDate)}`,
     `monthlyRent:${input.monthlyRent}`,
@@ -147,8 +163,46 @@ const buildCanonicalForm = (input: ContractFingerprintInput): string =>
     sized('signature', input.signatureData),
   ].join('\n');
 
+/**
+ * 버전별 canonical builder. 새 형식을 도입하면 여기에 항목을 **추가**하고 옛 것은 남긴다 —
+ * 옛 버전으로 서명된 계약을 그 버전 그대로 재계산해 대조하기 위해서다. 항목을 지우는 순간
+ * 그 버전의 계약은 전부 "검증 불가"가 된다.
+ */
+const CANONICAL_BUILDERS: Record<FingerprintVersion, (input: ContractFingerprintInput) => string> = {
+  v3: (input) => buildCanonicalForm(input, 'v3'),
+  v4: (input) => buildCanonicalForm(input, 'v4'),
+};
+
+const isKnownVersion = (value: string): value is FingerprintVersion => value in CANONICAL_BUILDERS;
+
+const sha256 = (canonical: string): string =>
+  createHash('sha256').update(canonical, 'utf8').digest('hex');
+
+/** 특정 버전 형식의 hex(접두사 없음). 옛 지문 재계산과 테스트에 쓴다. */
+export const computeFingerprintHexForVersion = (
+  version: FingerprintVersion,
+  input: ContractFingerprintInput,
+): string => sha256(CANONICAL_BUILDERS[version](input));
+
+/** 저장·인쇄되는 값. `v4:<sha256 hex>` — 버전이 값의 일부다. */
 export const computeContractFingerprint = (input: ContractFingerprintInput): string =>
-  createHash('sha256').update(buildCanonicalForm(input), 'utf8').digest('hex');
+  `${FINGERPRINT_VERSION}:${computeFingerprintHexForVersion(FINGERPRINT_VERSION, input)}`;
+
+export interface ParsedFingerprint {
+  version: string;
+  hex: string;
+}
+
+/**
+ * 저장된 지문을 버전과 hex로 나눈다. 접두사가 없는 값(v4 이전에 저장된 맨 hex — 실계약은
+ * 없지만 형식상 가능)은 version을 빈 문자열로 돌려주고, 아예 지문이 아닌 값은 null.
+ */
+export const parseFingerprint = (stored: string | null | undefined): ParsedFingerprint | null => {
+  if (!stored) return null;
+  const match = /^(?:(v\d+):)?([0-9a-f]{64})$/i.exec(stored.trim());
+  if (!match) return null;
+  return { version: match[1] ?? '', hex: match[2].toLowerCase() };
+};
 
 /**
  * 계약 레코드에서 지문 입력을 만든다.
@@ -201,15 +255,68 @@ export const buildFingerprintInput = (
   identityVerifiedAt: options.identityVerifiedAt,
 });
 
-/** 보관된 지문과 다시 계산한 지문을 대조한다. */
+/**
+ * 대조 결과. "불일치"를 곧바로 "변조"라고 말하지 않기 위해 갈래를 나눈다.
+ *
+ * - match: 저장 지문 = 그 버전으로 재계산한 지문. 문서가 서명 당시 그대로다.
+ * - mismatch: 같은 버전으로 재계산했는데 다르다. **변조 의심** — 즉시 확인 대상.
+ * - unverifiable: 대조 자체를 할 수 없다. 사유를 함께 준다.
+ *     none            지문이 저장되지 않았다(서명 전이거나 옛 데이터)
+ *     malformed       지문 형식이 아니다
+ *     unversioned     v4 이전의 맨 hex — 어느 형식인지 알 수 없어 재계산 불가
+ *     unknown-version 이 코드가 모르는 버전(미래 버전 코드로 만든 값, 또는 레지스트리에서 지워진 버전)
+ *
+ * "파기됨"은 여기서 다루지 않는다 — 파기 여부는 DB의 purgedAt이 말해 주므로 DB를 아는
+ * 쪽(verifyStoredContract)이 재계산 전에 걸러낸다.
+ */
+export type FingerprintCheck =
+  /** legacy: 접두사 없는 옛 지문을 v3로 가정해 재계산했더니 맞았다(SHA-256 우연 일치는 불가능). */
+  | { status: 'match'; version: FingerprintVersion; fingerprint: string; legacy?: true }
+  | { status: 'mismatch'; version: FingerprintVersion; expected: string; actual: string }
+  | {
+      status: 'unverifiable';
+      reason: 'none' | 'malformed' | 'unversioned' | 'unknown-version';
+      stored: string | null;
+    };
+
+/** 보관된 지문과, 그 지문의 버전으로 다시 계산한 지문을 대조한다. */
 export const verifyContractFingerprint = (
   stored: string | null,
   input: ContractFingerprintInput,
-): { ok: boolean; expected: string | null; actual: string } => {
-  const actual = computeContractFingerprint(input);
-  return { ok: stored === actual, expected: stored, actual };
+): FingerprintCheck => {
+  if (!stored) return { status: 'unverifiable', reason: 'none', stored: null };
+
+  const parsed = parseFingerprint(stored);
+  if (!parsed) return { status: 'unverifiable', reason: 'malformed', stored };
+
+  if (!parsed.version) {
+    // 접두사 없는 옛 지문. 실계약이 있는 마지막 무접두사 형식(v3)으로 재계산해 본다.
+    // 맞으면 확실히 그 문서다(해시 우연 일치 불가). 안 맞으면 v2였을 수도, 변조일 수도
+    // 있어 어느 쪽이라고 말할 수 없다 — mismatch가 아니라 unverifiable로 답한다.
+    const legacyHex = computeFingerprintHexForVersion(LEGACY_UNVERSIONED_VERSION, input);
+    if (legacyHex === parsed.hex) {
+      return { status: 'match', version: LEGACY_UNVERSIONED_VERSION, fingerprint: stored, legacy: true };
+    }
+    return { status: 'unverifiable', reason: 'unversioned', stored };
+  }
+
+  if (!isKnownVersion(parsed.version)) {
+    return { status: 'unverifiable', reason: 'unknown-version', stored };
+  }
+
+  const version = parsed.version;
+  const actualHex = sha256(CANONICAL_BUILDERS[version](input));
+  if (actualHex === parsed.hex) {
+    return { status: 'match', version, fingerprint: stored };
+  }
+  return { status: 'mismatch', version, expected: stored, actual: `${version}:${actualHex}` };
 };
 
-/** 화면·PDF에 싣기 위한 짧은 표기. 전체 64자는 눈으로 대조하기 어렵다. */
-export const formatFingerprintForDisplay = (hash: string): string =>
-  hash.slice(0, 8).toUpperCase().match(/.{1,4}/g)?.join('-') ?? hash.slice(0, 8).toUpperCase();
+/**
+ * 화면·PDF에 싣기 위한 짧은 표기. 전체 64자는 눈으로 대조하기 어렵다.
+ * 버전 접두사는 떼고 hex 앞 8자만 — `A1B2-C3D4`.
+ */
+export const formatFingerprintForDisplay = (fingerprint: string): string => {
+  const hex = parseFingerprint(fingerprint)?.hex ?? fingerprint;
+  return hex.slice(0, 8).toUpperCase().match(/.{1,4}/g)?.join('-') ?? hex.slice(0, 8).toUpperCase();
+};

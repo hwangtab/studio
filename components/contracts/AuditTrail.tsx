@@ -17,8 +17,17 @@ const FINGERPRINT_TONE = {
   mismatch: 'bg-red-50 border-red-200 text-red-900',
   purged: 'bg-gray-50 border-gray-200 text-gray-700',
   missing: 'bg-yellow-50 border-yellow-200 text-yellow-900',
+  unverifiable: 'bg-yellow-50 border-yellow-200 text-yellow-900',
   unsigned: 'bg-gray-50 border-gray-200 text-gray-600',
 } as const;
+
+const UNVERIFIABLE_REASON: Record<'unversioned' | 'unknown-version' | 'malformed', string> = {
+  unversioned:
+    '버전 표기 없이 저장된 옛 형식의 지문이라 어느 방식으로 계산했는지 알 수 없습니다.',
+  'unknown-version':
+    '이 시스템이 모르는 버전의 지문입니다. 더 새로운 버전으로 만들었거나, 옛 버전 계산 규칙이 제거됐습니다.',
+  malformed: '저장된 값이 지문 형식이 아닙니다.',
+};
 
 const Fingerprint = ({ verdict }: { verdict: SerializedAuditTrail['fingerprint'] }) => {
   const tone = FINGERPRINT_TONE[verdict.kind];
@@ -34,6 +43,19 @@ const Fingerprint = ({ verdict }: { verdict: SerializedAuditTrail['fingerprint']
           <strong>지문이 남아 있지 않습니다.</strong> 문서 지문을 도입하기 전에 서명된
           계약입니다. 사후 변조를 이 방법으로는 확인할 수 없습니다.
         </p>
+      )}
+
+      {verdict.kind === 'unverifiable' && (
+        <>
+          <p>
+            <strong>이 지문은 다시 계산해 대조할 수 없습니다.</strong>{' '}
+            {UNVERIFIABLE_REASON[verdict.reason]} 변조 감지가 아니라 검증 불가입니다 — 서명
+            당시 지문이 아래에 남아 있으니 PDF 사본의 값과 눈으로 대조할 수는 있습니다.
+          </p>
+          <p className="mt-2 font-mono text-xs break-all">
+            보관된 지문 {verdict.storedShort} · {verdict.stored}
+          </p>
+        </>
       )}
 
       {verdict.kind === 'purged' && (
@@ -55,6 +77,12 @@ const Fingerprint = ({ verdict }: { verdict: SerializedAuditTrail['fingerprint']
           <p className="mt-2 font-mono text-xs break-all">
             SHA-256 {verdict.storedShort} · {verdict.stored}
           </p>
+          {verdict.legacyVersion && (
+            <p className="mt-2 text-xs">
+              버전 표기 없이 저장된 옛 형식({verdict.legacyVersion})의 지문을 그 형식 그대로
+              다시 계산해 대조했습니다. 형식만 옛것이고 대조 결과는 확실합니다.
+            </p>
+          )}
         </>
       )}
 
