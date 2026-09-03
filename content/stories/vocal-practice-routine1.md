@@ -32,7 +32,7 @@ faq:
       혼자서도 충분히 향상됩니다. 단, 잘못된 발성 습관이 굳어질 수 있으므로 3~6개월마다 보컬 코치에게 진단을 받는 것이 좋습니다.
       녹음 세션을 통해 현재 실력을 객관적으로 확인하는 것도 좋습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 연습 루틴 완전 가이드 — 스튜디오 놀](/images/service4.webp)
 

@@ -33,7 +33,7 @@ faq:
       맞습니다. 리프·런은 감정의 정점이나 강조 부분에 절제하여 사용할 때 가장 효과적입니다. 모든 구간에 남발하면 오히려 감동이 줄어들고
       노래가 산만해집니다. '덜 넣는 것이 더 강하다'는 원칙이 적용됩니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 애지리티 완전 가이드 — 스튜디오 놀](/images/album1.webp)
 

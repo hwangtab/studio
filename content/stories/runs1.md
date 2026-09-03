@@ -33,7 +33,7 @@ faq:
       기초 런 패턴을 안정적으로 소화하는 데 3~6개월, 즉흥적으로 상황에 맞게 활용하는 수준까지는 1~2년 이상의 꾸준한 훈련이
       필요합니다. 청음 능력(음정 인식)과 함께 병행 훈련이 효과적입니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 런·애드립 완전 가이드 — 스튜디오 놀](/images/album2.webp)
 

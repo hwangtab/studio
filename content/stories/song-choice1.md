@@ -33,7 +33,7 @@ faq:
       목적에 따라 다릅니다. 포트폴리오·SNS 배포 목적이라면 잘 알려진 커버곡, 음원 발매·아티스트 브랜딩 목적이라면 자작곡이
       유리합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![노래 선곡 완전 가이드 — 스튜디오 놀](/images/service5.webp)
 

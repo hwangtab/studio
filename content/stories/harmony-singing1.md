@@ -34,6 +34,7 @@ faq:
       리버브를 더해 뒤로 물러나는 느낌을 주세요.
 inlineFallback:
   price: recording-pro
+cta: recording
 ---
 ![하모니 노래 완전 가이드 — 스튜디오 놀](/images/room3.webp)
 

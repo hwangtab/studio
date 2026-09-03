@@ -33,7 +33,7 @@ faq:
       올바른 방법으로 꾸준히 연습하면 6개월 후 본인도 놀라는 변화를 체감할 수 있습니다. 음정 안정성, 음역 확장, 발성의 효율 개선이
       가장 먼저 느껴지는 변화입니다. 다만 '얼마나' 향상되는지는 현재 수준, 연습 시간, 코치 질에 따라 크게 다릅니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 실력 향상 로드맵 — 스튜디오 놀](/images/lesson1.webp)
 

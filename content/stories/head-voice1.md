@@ -35,6 +35,7 @@ faq:
       효과적입니다. 성대 근육이 발달하면 두성에서도 지지감이 강해집니다.
 inlineFallback:
   price: lesson-monthly
+cta: recording
 ---
 ![두성·헤드보이스 완전 가이드 — 스튜디오 놀](/images/room8.webp)
 

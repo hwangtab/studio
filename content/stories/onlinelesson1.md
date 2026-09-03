@@ -33,7 +33,7 @@ faq:
       온라인 레슨으로 발성 훈련을 하고, 주기적으로 전문 스튜디오에서 녹음하면 학습 성과를 객관적으로 확인할 수 있습니다. 실력 향상이
       녹음 결과물에 반영되기 때문에 동기부여 효과도 있습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![온라인 보컬 레슨 vs 오프라인 레슨 비교 — 스튜디오 놀](/images/hardware8.webp)
 

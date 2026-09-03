@@ -32,8 +32,9 @@ faq:
     a: >-
       Studio NOL은 보컬 레슨을 운영하지 않습니다. 보컬 트레이닝은 외부 보컬 학원·코치를 이용하세요. 단, 현직 프로듀서의 1:1
       작곡·MIDI·믹싱·마스터링·음원발매 레슨(프로듀싱 레슨, 월 35만원 정액)은 Studio NOL에서 제공합니다.
+cta: recording
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 레슨 선택 가이드 — 스튜디오 놀](/images/album2.webp)
 

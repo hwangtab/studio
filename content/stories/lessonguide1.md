@@ -31,8 +31,9 @@ faq:
     a: >-
       개인 레슨 기준 회당 5만~15만원이 일반적입니다. 경력과 교육 배경에 따라 차이가 있습니다. 음대 출신 전문 보컬 코치는 회당
       10만원 이상인 경우가 많습니다. 스튜디오 놀은 보컬 레슨을 운영하지 않으며, 현직 프로듀서 1:1 작곡·믹싱 레슨(월 35만 정액) 요금은 카카오톡으로 문의하시면 안내드립니다.
+cta: recording
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 레슨 선택 가이드 — 스튜디오 놀](/images/recording6.webp)
 

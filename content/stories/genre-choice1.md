@@ -33,7 +33,7 @@ faq:
       가능하지만 시간이 걸립니다. 대부분의 가수들도 2~3개 장르에 특화되어 있습니다. 한 장르를 확실히 마스터한 후 인접 장르로 확장하는
       것이 효과적입니다. 팝을 잘 부른다면 R&B나 재즈로 확장이 자연스럽습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![음악 장르 선택 가이드 — 스튜디오 놀](/images/service4.webp)
 

@@ -34,6 +34,7 @@ faq:
       바로 부를 수 있는 초견 능력도 향상됩니다.
 inlineFallback:
   price: lesson-monthly
+cta: recording
 ---
 ![음감 훈련(Ear Training) 완전 가이드 — 스튜디오 놀](/images/recording11.webp)
 

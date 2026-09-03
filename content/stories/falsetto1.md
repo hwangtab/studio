@@ -36,8 +36,9 @@ faq:
     a: >-
       올바른 가성·두성 발성은 목에 무리를 주지 않습니다. 오히려 성대에 부담이 적은 발성 영역입니다. 하지만 억지로 고음 가성을 짜내거나
       과도하게 목을 조이면 성대 피로가 옵니다. 자연스럽게 목에서 힘이 빠진 상태가 올바른 가성입니다.
+cta: recording
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 howTo:
   name: "가성·두성 발성 3단계 훈련 절차"
   description: "'후~' 발음으로 가성을 찾고 허밍으로 두성으로 발전시켜 진성-가성 전환을 매끄럽게 만드는 발성 훈련 절차입니다."

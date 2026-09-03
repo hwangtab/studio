@@ -32,7 +32,7 @@ faq:
       좋아하는 곡 1~2곡을 정하고, 그 곡을 매일 불러보는 것에서 시작하세요. 처음부터 어려운 목표를 설정하지 말고 즐기는 것이
       우선입니다. 어느 정도 익숙해지면 보컬 레슨이나 스튜디오 녹음 경험을 추가해 동기를 유지하세요.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![취미로 노래 배우기 — 스튜디오 놀](/images/room8.webp)
 

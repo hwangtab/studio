@@ -33,7 +33,7 @@ faq:
       아닙니다. 애드립은 적을수록 강조가 됩니다. 클라이맥스나 마지막 구절에서만 사용하면 더 큰 임팩트가 생깁니다. 전체적으로 과도하게
       사용하면 가사 전달이 어렵고 피로감을 줍니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![애드립·런 완전 가이드 — 스튜디오 놀](/images/studio5.webp)
 

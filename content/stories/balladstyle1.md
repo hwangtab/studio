@@ -33,7 +33,7 @@ faq:
       발라드의 고음은 억지로 지르지 않고 '열어서' 내는 것이 좋습니다. 후두를 낮추고 공명을 확보한 후 자연스럽게 믹스 보이스로 접근하면
       발라드 고음 특유의 풍성하면서도 감성적인 표현이 나옵니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![발라드 창법 완전 가이드 — 스튜디오 놀](/images/service2.webp)
 

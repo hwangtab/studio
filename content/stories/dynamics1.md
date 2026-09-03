@@ -33,7 +33,7 @@ faq:
       녹음 시 마이크와의 거리를 조절하거나(가까이 = 크게, 멀리 = 작게) 본인 발성 세기를 조절합니다. 전문 스튜디오에서는 엔지니어가
       실시간으로 레벨을 확인하며 다이나믹이 적절한 범위에 있는지 안내해줍니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 다이나믹 컨트롤 — 스튜디오 놀](/images/recording4.webp)
 

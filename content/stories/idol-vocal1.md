@@ -33,7 +33,7 @@ faq:
       K팝 프로덕션 특성상 드라이한 보컬이 필요합니다. 스튜디오에서 보컬을 드라이하게 녹음하고, 프로덕션 단계에서 이펙트를 입히는 방식이
       표준입니다. 딕션(한국어 발음 명확성)도 매우 중요합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![아이돌·K팝 보컬 완전 가이드 — 스튜디오 놀](/images/service4.webp)
 

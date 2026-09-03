@@ -33,7 +33,7 @@ faq:
       첫 1~2 테이크가 가장 생동감 있는 경우가 많습니다. 지나치게 반복하면 즉흥성이 사라집니다. 여러 테이크를 녹음하되, 가장 에너지가
       살아있는 순간을 선택하세요. 즉흥에서는 '완벽함'보다 '생동감'이 더 중요합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 즉흥 연주(임프로바이제이션) 완전 가이드 — 스튜디오 놀](/images/recording7.webp)
 

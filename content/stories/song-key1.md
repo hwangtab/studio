@@ -33,7 +33,7 @@ faq:
       피아노 또는 스마트폰 피아노 앱을 사용해 낮은 음부터 점점 올라가면서 내기 어려운 음을 찾으세요. 실용음악에서는 무리 없이 지속할 수
       있는 음을 '실용 최고음'으로 봅니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 howTo:
   name: "노래 키 찾기 4단계 절차"
   description: "스마트폰 피아노 앱으로 실용 최고음을 측정하고 노래방·녹음에서 최적 키를 설정하는 절차입니다."

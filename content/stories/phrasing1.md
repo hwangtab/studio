@@ -33,7 +33,7 @@ faq:
       스튜디오 녹음 시 엔지니어와 함께 테이크를 여러 번 시도하며 프레이징을 조정할 수 있습니다. 또한 볼륨 자동화(automation)와
       편집을 통해 믹싱 단계에서도 일부 프레이징을 보완할 수 있습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 프레이징 완전 가이드 — 스튜디오 놀](/images/lesson1.webp)
 

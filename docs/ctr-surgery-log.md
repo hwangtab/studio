@@ -167,6 +167,21 @@ belting·falsetto·vibrato·breath·posture…)이 하단 CTA도 레슨으로 �
 posture1 등)의 하단 CTA를 바꾸므로 10/1 판정 뒤에 정책 수준에서 손본다.** 세 편은 여전히 T/C
 밖이며 이번 되돌림으로 실험 오염은 없다.
 
+**전수 확인 결과 (2026-09-03).** 빌드 HTML 실측으로 레슨 가격 상자가 뜨는 ko 스토리는 149편,
+그중 **보컬 카테고리 76편이 전부 frontmatter `inlineFallback.price: lesson-monthly` 때문**이다
+(카테고리 기본값은 이미 `vocal: 'recording-pro'`로 올바름 — lib/storyAutoFallback.ts). 나머지
+73편(음악 제작 45·강좌 19 등)은 프로듀싱 레슨이 맞는 주제라 정상. 실험·잠금 밖 **41편은
+이 커밋에서 교정**(price → recording-pro, 하단 CTA 레슨이던 11편은 cta: recording).
+
+**10/1(및 chest-voice1·highnote1은 9/11·9/24) 이후 처리할 보류 38편** — 실험·잠금 안이라
+지금 손대면 판정이 흐려진다. 같은 교정을 그대로 적용하면 된다:
+`audition-vocal1`, `belting1`, `breath-support1`, `breathing1`, `chest-voice1`, `diaphragm1`, `eartraining1`, `highnote1`, `hiphop-vocal1`, `karaoke-practice1`, `kpop-trainee1`, `low-note1`, `mixedvoice1`, `placement1`, `posture1`, `practice-schedule1`, `resonance1`, `singapp1`, `singswell1`, `sungak1`, `transpose1`, `twang1`, `vibrato1`, `vocal-classification1`, `vocal-emotion1`, `vocal-fry1`, `vocal-lesson1`, `vocal-phrasing1`, `vocal-posture1`, `vocal-range-extension1`, `vocal-range1`, `vocal-vibrato1`, `vocal-warmup1`, `vocal1`, `vocalcoach1`, `vocalfeedback1`, `voice-type1`, `volume1`.
+그중 하단 CTA도 레슨인 것: `belting1`, `breath-support1`, `breathing1`, `chest-voice1`, `eartraining1`, `kpop-trainee1`, `mixedvoice1`, `posture1`, `vibrato1`, `vocal-lesson1`, `vocal-posture1`, `vocal-range-extension1`, `vocal-range1`, `vocal-vibrato1`, `vocal-warmup1`.
+보류분 가운데 **`vocal-lesson1`·`vocalcoach1`은 주제 자체가 보컬 레슨**이라 가장 먼저.
+그 다음 `LESSON_SLUG_PATTERN`에서 보컬 발성 항목(head-voice·chest-voice·mix(ed)-voice·
+vocal-range·belting·falsetto·vibrato·breath·warmup·posture·articulation·pitch-train·ear-train·
+harmony-sing)을 걷어내 정책 수준에서 재발을 막는다.
+
 ## 실험 결과 판정 (2026-08-14)
 
 > 리뷰일이 지났거나 오늘 도래한 3편(copyright-cover1·songstructure1·falsetto1)을 확정 판정하고,
