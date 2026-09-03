@@ -228,6 +228,18 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=43200' },
         ],
       },
+      // 계약 페이지 캐시 방어 이중화 — GSSP의 denyContractPageCaching(코드)이 유일한
+      // 방어선이었는데, Vercel 프록시가 아래 로케일 캐시 규칙을 함수 헤더보다 먼저
+      // 적용하면(next.config headers는 첫 매칭이 우선) 계약 열람 페이지가 s-maxage=3600
+      // 으로 공유 캐시에 얹힐 수 있다(미검증 리스크). 이 규칙을 로케일 캐시 규칙보다
+      // 앞에 둬 계약 경로만 먼저 매칭시킨다. denyContractPageCaching 호출은 그대로 둘 것
+      // — 코드+설정 이중 방어가 목적이라 어느 한쪽만으로 충분하다고 판단해 제거하지 말 것.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/contracts/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/:path*',
         headers: [

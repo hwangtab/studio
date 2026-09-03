@@ -143,6 +143,29 @@ describe('llms.txt spec compliance (llmstxt.org)', () => {
   });
 });
 
+// RSS도 llms.txt와 같은 이유로 HEAD를 받아야 한다 — 같은 저장소 안에서 GET 전용과
+// GET+HEAD 정책이 갈리면 수집기 입장에서 일관성이 없다. GET만 허용하던 405를 회귀
+// 방지로 고정.
+describe('rss.xml HEAD support', () => {
+  it('answers HEAD with 200 so feed readers/crawlers can probe it', () => {
+    const { res, getStatus, getHeader } = createResponse();
+
+    rssHandler(createRequest({}, 'HEAD'), res);
+
+    expect(getStatus()).toBe(200);
+    expect(getHeader('content-type')).toBe('application/rss+xml; charset=utf-8');
+  });
+
+  it('still rejects unsafe methods with 405', () => {
+    const { res, getStatus, getHeader } = createResponse();
+
+    rssHandler(createRequest({}, 'POST'), res);
+
+    expect(getStatus()).toBe(405);
+    expect(getHeader('allow')).toBe('GET, HEAD');
+  });
+});
+
 describe('external content index policy', () => {
   it('omits Korean stories with explicit noindex from llms-full.txt', () => {
     const { res, getBody } = createResponse();

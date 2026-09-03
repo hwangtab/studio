@@ -171,6 +171,17 @@ export function middleware(request: NextRequest) {
     let workingPathname = hasTrailingSlash ? pathname.replace(/\/+$/, '') : pathname;
     if (hasTrailingSlash) shouldRedirect = true;
 
+    // 대소문자 정규화 — 전 라우트·스토리 slug가 소문자이므로(확인됨), 대문자가 섞인
+    // 요청은 소문자로 308한다. 없으면 /Pricing/ → 트레일링 슬래시 제거 후 /ko/Pricing로
+    // single 308이 되는데, 리눅스(Vercel) 파일시스템은 케이스 센서티브라 그 목적지가
+    // 404다(맥 로컬 개발은 케이스 무시라 재현되지 않음). /KO/pricing도 동일 이유로
+    // /ko/KO/pricing이 되는 이중 프리픽스 버그를 낳는다. 여기서 미리 소문자화해
+    // 아래 locale 비교·프리픽스 재구성이 항상 소문자 기준으로만 동작하게 한다.
+    if (workingPathname !== workingPathname.toLowerCase()) {
+        workingPathname = workingPathname.toLowerCase();
+        shouldRedirect = true;
+    }
+
     if (
         shouldEnforceCanonicalHost &&
         canonicalSiteUrl &&

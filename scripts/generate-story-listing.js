@@ -312,7 +312,10 @@ function buildListing() {
       entries.push(entry);
     }
 
-    entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    // 날짜 desc, 동률은 slug asc로 타이브레이크. readdirSync는 정렬을 보장하지 않고
+    // 맥(APFS)·CI(ext4)의 순서가 달라, 타이브레이크 없이는 같은 날짜인 두 파일의
+    // 순서가 플랫폼마다 달라져 내용이 같은데도 --check가 stale로 오탐할 수 있다.
+    entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime() || a.slug.localeCompare(b.slug));
     locales[locale] = entries;
   }
 

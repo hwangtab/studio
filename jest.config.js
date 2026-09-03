@@ -33,11 +33,15 @@ const customJestConfig = {
     '!**/*.d.ts',
     '!**/__tests__/**',
   ],
+  // 2026-09-03 실측: lines 52.84 / branches 40.32 / functions 42.71 / statements 54.42.
+  // 종전 값(18/11/15)은 실측의 1/3 수준이라 회귀 방지 게이트로 기능하지 않았다.
+  // 실측보다 7~8pt 낮게 잡아 정상 변동에는 통과하되 큰 폭 하락은 CI가 잡도록 함.
   coverageThreshold: {
     global: {
-      lines: 18,
-      branches: 11,
-      functions: 15,
+      lines: 45,
+      branches: 33,
+      functions: 35,
+      statements: 47,
     },
   },
 };

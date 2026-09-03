@@ -32,8 +32,10 @@ const cdata = (str: string): string => {
 };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    res.setHeader('Allow', 'GET');
+  // HEAD 허용 — pages/api/llms.ts와 동일 이유: 수집기/감사 도구가 존재 확인에
+  // HEAD를 먼저 쓴다. GET만 허용하면 405가 나가 "가져올 수 없음"으로 오판된다.
+  if (req.method !== 'GET' && req.method !== 'HEAD') {
+    res.setHeader('Allow', 'GET, HEAD');
     return res.status(405).end('Method Not Allowed');
   }
   const localeParam = (req.query.locale as string) || 'ko';
