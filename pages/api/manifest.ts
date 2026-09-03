@@ -63,11 +63,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         icons: [{ src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' }],
       },
     ],
+    // any와 maskable을 다른 파일로 나눈다. maskable은 안드로이드 마스크(원형·스퀴클)가
+    // 가장자리를 잘라내므로 세이프존(중앙 ~80%) 안에 마크를 둔 별도 파일이어야 한다.
+    // 같은 파일을 양쪽에 쓰면 홈 화면 아이콘에서 마크가 잘린다.
     icons: [
       { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-      { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
       { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-      { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+      { src: '/icons/icon-192-maskable.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+      { src: '/icons/icon-512-maskable.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
     ],
   };
 
