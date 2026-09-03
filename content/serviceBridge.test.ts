@@ -15,8 +15,10 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   // vocal/business/production 카테고리라 SERVICE_BY_CATEGORY 자동 fallback 대상이
   // 아니었음 → 정보성 트래픽을 녹음 의뢰(/pricing)로 잇는 명시 브릿지 추가.
   'falsetto1.md': '%%service:recording%%',
-  // 2026-09-03 보컬→믹싱 진단형 브릿지로 교체(2차 후보 선반영, docs/ctr-surgery-log.md).
-  'headvoice1.md': '%%vocal-mix-bridge%%',
+  // 2026-09-03 믹싱 브릿지로 바꿨다가 되돌림 — 발성 기술 글은 녹음(객관적 확인)으로 이어진다.
+  'headvoice1.md': '%%service:recording%%',
+  // 매일 반복하는 패시지오 훈련 글 → 방음 개인실. 하단 CTA는 frontmatter로 recording.
+  'mixvoice1.md': '%%service:practice%%',
   'practice-room-vocal-diction1.md': '%%service:recording%%',
   'session-musician1.md': '%%service:recording%%',
   'songstructure1.md': '%%service:recording%%',
@@ -25,7 +27,7 @@ const EXPECTED_SERVICE_BRIDGES: Record<string, string> = {
   'single-release1.md': '%%service:release%%',
   // 녹음/발성 주제라 연습실(practice)보다 녹음 의뢰(recording) 전환 적합도가 높아 재타깃.
   'highnote1.md': '%%service:recording%%',
-  'vocalrange1.md': '%%vocal-mix-bridge%%',
+  'vocalrange1.md': '%%service:recording%%',
   // 2026-07-26 레슨 매출 강화: 고트래픽 믹싱 튜토리얼(학습 의도)을 '녹음'에서 '믹싱 레슨'으로
   // 재타깃 — 정원 유한한 연습실·의도 미스매치 녹음 대신 확장 가능한 레슨(월정액) 라인으로.
   'eq1.md': '%%service:lesson%%',

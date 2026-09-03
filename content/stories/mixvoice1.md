@@ -32,8 +32,8 @@ faq:
     a: >-
       개인마다 다르지만 올바른 방법으로 꾸준히 훈련하면 3~6개월 사이에 패시지오 구간에서 의미 있는 변화가 나타납니다. 전문 보컬 코치의
       지도를 병행하면 기간을 단축할 수 있습니다.
-inlineFallback:
-  price: lesson-monthly
+cta: recording
+inlineFallback: {}
 ---
 ![믹스 보이스 완전 가이드 — 스튜디오 놀](/images/album3.webp)
 
@@ -57,8 +57,6 @@ inlineFallback:
 | 팔세토 | 두성보다 얇고 가성에 가까움 | 최고음 구간 |
 
 ---
-
-%%vocal-mix-bridge%%
 
 ## 패시지오(Passaggio) 위치
 
@@ -93,6 +91,10 @@ inlineFallback:
 - 모음에 따라 믹스 진입 난이도가 다름
 
 ---
+
+이 슬라이딩은 소리를 내야 늘고, 하루 15분씩 몇 달을 가야 합니다. 집에서 소리 크기 때문에 매번 눈치를 본다면 연습 자체가 끊깁니다 — 방음된 개인실이 루틴을 지켜줍니다.
+
+%%service:practice%%
 
 ## 흔한 실수와 교정
 

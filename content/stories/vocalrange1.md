@@ -31,8 +31,8 @@ faq:
     a: >-
       곡의 키(Key)를 조정하는 방법이 있습니다. 반음 단위로 올리거나 내려서 편안한 음역에서 부를 수 있게 합니다. MR을 구입하거나
       제작할 때 키 조정을 요청하거나, DAW에서 MR의 피치를 변환해 녹음에 사용합니다.
-inlineFallback:
-  price: lesson-monthly
+cta: recording
+inlineFallback: {}
 ---
 ![보컬 음역대 확인 — 스튜디오 놀](/images/recording11.webp)
 
@@ -68,8 +68,6 @@ inlineFallback:
 
 ---
 
-%%vocal-mix-bridge%%
-
 ## 혼자 음역대 확인하는 방법
 
 ### 준비물
@@ -96,6 +94,10 @@ inlineFallback:
 - 이 범위 안에서 노래를 선택하는 것이 좋습니다
 
 ---
+
+앱으로 재는 값은 컨디션에 따라 반음쯤 흔들립니다. 정확히 알고 싶거나 녹음할 곡의 키까지 같이 정하고 싶다면 녹음 세션 시작 전에 엔지니어와 함께 재는 방법이 있습니다 — 아래 세션 절차에서 매번 하는 순서입니다.
+
+%%service:recording%%
 
 ## 음역대별 추천 장르
 

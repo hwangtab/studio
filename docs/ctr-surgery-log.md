@@ -151,13 +151,21 @@ thin 추정치 동기화.
 **교란 주의.** 대조군에 `singapp1`(210클릭)이 들어가 클릭 합계가 비대칭이다. 판정은 절대
 리드 수가 아니라 **페이지별 리드/클릭 비율**로 할 것.
 
-**2차 후보 선반영 (2026-09-03, 판정 전 결정).** 상위 3편 `headvoice1`(9,622imp)·`mixvoice1`
-(5,371imp)·`vocalrange1`(9,782imp)의 기존 오퍼(녹음·연습실 콜아웃, `57a73c740f`·`e8bb90bfc2`)를
-판정을 기다리지 않고 브릿지로 교체했다 — 사용자 결정. 세 편은 T/C 어느 군에도 없으므로
-실험 자체는 오염되지 않지만, **cta_id `vocal_mix_bridge_kakao`를 통째로 합산하면 이 세 편이
-처치 신호를 부풀린다.** 10/1 판정은 반드시 처치군 28편의 페이지 단위로만 집계하고 이 세 편은
-별도 행으로 본다. 교체 전 이 세 편의 녹음·연습실 리드가 얼마였는지는 GA4에서 cta_id
-`inline_service_recording_kakao`·`inline_service_practice_kakao` × 페이지로 되짚을 수 있다.
+**2차 후보 선반영 → 같은 날 되돌림 (2026-09-03).** 상위 3편 `headvoice1`·`mixvoice1`·`vocalrange1`의
+기존 오퍼를 브릿지로 바꿨다가, 글을 읽고 되돌렸다. 세 편은 "녹음했는데 이상하다"가 아니라
+**발성 기술을 익히는 단계**의 글이라(유입어: 두성 내는법·믹스보이스 내는법·음역대 측정) 믹싱
+브릿지가 동문서답이었다. 글이 이끄는 쪽으로 배치: headvoice1·vocalrange1 → 녹음(객관적 확인·
+음역 측정, 두 글의 마치며가 이미 녹음을 가리킴), mixvoice1 → 연습실(매일 반복하는 패시지오
+훈련) + 하단 CTA 녹음. 오퍼 앞에 연결 문장을 넣어 카드가 본문에서 이어지게 했다.
+
+이 과정에서 더 큰 결함을 발견했다 — `mixvoice1`·`vocalrange1`은 frontmatter
+`inlineFallback.price: lesson-monthly`로 본문에 **"1:1 프로듀싱 레슨 350,000원/월(MIDI 작곡·편곡)"
+가격 상자**가 뜨고, `storyCtaPolicy`의 `LESSON_SLUG_PATTERN`(head-voice·mix-voice·vocal-range·
+belting·falsetto·vibrato·breath·posture…)이 하단 CTA도 레슨으로 보낸다. 보컬 기술 독자에게 미디
+레슨을 권하는 것으로, 보컬 레슨 미운영 원칙의 한국어판 오독이다. 세 편은 frontmatter로 고쳤고
+(`cta: recording`, `inlineFallback: {}`), **패턴 자체는 실험 페이지(breathing1·belting1·vibrato1·
+posture1 등)의 하단 CTA를 바꾸므로 10/1 판정 뒤에 정책 수준에서 손본다.** 세 편은 여전히 T/C
+밖이며 이번 되돌림으로 실험 오염은 없다.
 
 ## 실험 결과 판정 (2026-08-14)
 
