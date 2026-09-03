@@ -70,6 +70,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 장르별 프레이징 스타일
 
 ### 장르별 접근

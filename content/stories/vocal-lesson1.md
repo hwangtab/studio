@@ -82,6 +82,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 좋은 보컬 코치 선택 기준
 
 ### 코치 선택 체크리스트

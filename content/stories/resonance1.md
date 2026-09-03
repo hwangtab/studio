@@ -57,6 +57,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 공명 찾는 기초 훈련
 
 **흉강 공명**

@@ -81,6 +81,8 @@ inlineFallback: {}
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 무대 발성 기법
 
 ### 공연용 보컬 테크닉

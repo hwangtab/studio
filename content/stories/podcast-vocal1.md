@@ -69,6 +69,8 @@ Focusrite Scarlett Solo/2i2가 팟캐스트 시작 단계의 표준입니다. �
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 녹음 환경 세팅
 
 ### 최적 녹음 공간 만들기

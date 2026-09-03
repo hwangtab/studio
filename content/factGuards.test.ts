@@ -81,6 +81,7 @@ describe('fact token integrity', () => {
     'studio-services',
     'online-request',
     'practice-room-terms',
+    'vocal-mix-bridge',
     ...INLINE_DIRECTIVE_NAMES,
   ]);
   const factTokenNames = Object.keys(FACT_TOKENS).map((t) => t.replace(/^%%|%%$/g, ''));

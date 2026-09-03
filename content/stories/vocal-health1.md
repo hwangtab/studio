@@ -54,6 +54,8 @@ inlineFallback: {}
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 성대를 해치는 습관
 
 ### 피해야 할 습관

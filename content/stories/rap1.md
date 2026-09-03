@@ -57,6 +57,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 단계별 랩 연습법
 
 - **Step 1**: 따라 하기 (1~4주)

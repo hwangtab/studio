@@ -74,6 +74,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 프레이즈 호흡 배치
 
 ### 호흡 포인트 분석

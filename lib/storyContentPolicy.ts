@@ -42,6 +42,7 @@ export const SHORTCODE_CHAR_ESTIMATES: Record<string, number> = {
   'studio-more': 223,
   'studio-services': 135,
   'online-request': 124,
+  'vocal-mix-bridge': 224,
   'practice-room-terms': 117,
 };
 export const SHORTCODE_DEFAULT_CHAR_ESTIMATE = 80;

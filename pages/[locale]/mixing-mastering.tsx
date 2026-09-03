@@ -31,6 +31,7 @@ const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
+const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -493,6 +494,10 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         subtitle={t('mixingMastering.faq.subtitle')}
         variant="default"
       />
+
+      {/* 다른 서비스 페이지 전부에 있던 후기 섹션이 여기만 빠져 있었다 — 원격 의뢰는
+          신뢰가 결정 요인이라 사회적 증거를 FAQ와 관련글 사이에 둔다. */}
+      <ReviewSection variant="alternate" locale={locale} />
 
       <RelatedStoriesSection
         stories={relatedStories}

@@ -59,6 +59,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 발성 포지션의 차이
 
 **클래식 발성**

@@ -57,6 +57,8 @@ inlineFallback: {}
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 성대에 좋은 음식·음료
 
 | 음식/음료 | 이유 | 섭취 방법 |

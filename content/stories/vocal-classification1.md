@@ -72,6 +72,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 남성 보컬 분류
 
 ### 남성 보컬 3가지 타입

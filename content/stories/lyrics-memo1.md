@@ -64,6 +64,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 가사 암기 방법별 효과 비교
 
 | 방법 | 기억 효율 | 추천 여부 |

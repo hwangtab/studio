@@ -57,6 +57,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 효과적인 노래방 연습 방법
 
 ### 1. 구절 반복 연습

@@ -56,6 +56,8 @@ inlineFallback: {}
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 즉각적인 회복법 (세션·공연 직후)
 
 ### 세션·공연 직후 30분

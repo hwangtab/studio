@@ -79,6 +79,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 워밍업 핵심 기법
 
 ### 립 트릴 (Lip Trill)

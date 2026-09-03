@@ -66,6 +66,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 마이크 앞에서의 랩 자세
 
 ### 랩 녹음 자세

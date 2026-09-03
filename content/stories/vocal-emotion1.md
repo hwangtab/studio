@@ -56,6 +56,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 가사 분석과 감정 준비
 
 ### Step 1: 가사 낭독

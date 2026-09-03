@@ -115,6 +115,42 @@ voice-acting 선례대로 **노출·순위**로 판정한다. 특히 "미디 레
 **관측 창은 2026-09-02 보강 배포 시점부터**로 정의하며 리뷰일 10/1은 유지한다. 판정 시
 `cta_id`별 분해가 가능해졌다 — 처치군 리드 중 이 버튼 경유가 얼마인지도 함께 볼 것.
 
+## 전환 실험 — 보컬 가이드 진단형 믹싱 브릿지 (2026-09-03)
+
+> 믹싱 인라인 오퍼 실험(위 절)과 **페이지가 겹치지 않는** 별도 실험이다. 두 실험은 cta_id로
+> 분리 판정한다 — 이쪽은 `vocal_mix_bridge_kakao`.
+
+**가설.** 믹싱 문의의 주 유입은 LLM이 보컬톤 상담 중 스튜디오를 추천하는 경로다. 그때
+인용되는 코퍼스는 믹싱 가이드가 아니라 **보컬 카테고리 140편**(90일 1,836클릭·102,539노출)인데,
+여기엔 믹싱 오퍼가 0편, 서비스 링크가 4편뿐이었다. 발성법을 읽는 독자에게 "믹싱 의뢰"는
+동문서답이므로, 상품이 아니라 증상("연습할 땐 괜찮은데 녹음하면 이상하다")에서 출발해
+원인 진단(파일 일부 전송)을 제안하는 **진단형 브릿지**가 문의를 만든다.
+
+**처치.** `%%vocal-mix-bridge%%`(components/story/VocalMixBridge) — 3번째 H2 앞(H2≤2면 본문
+55% 지점). 카카오 버튼 `lead_click_kakao`(cta_id `vocal_mix_bridge_kakao`) + 믹싱 페이지
+텍스트 링크 `micro_click_service`(cta_id `vocal_mix_bridge_detail`). 실측 224자/67단어로
+thin 추정치 동기화.
+
+**설계.** 적격 55편(category 보컬 + 90일 노출 200+ + 기존 오퍼 없음 + 잠금·믹싱 T/C 제외)을
+노출 내림차순 교대 배정.
+
+| 군 | 편수 | 90일 클릭 | 90일 노출 |
+|---|---|---|---|
+| 처치(브릿지 삽입) | 28 | 535 | 28,893 |
+| 대조(무변경) | 27 | 671 | 27,063 |
+
+- 처치군: `transpose1`, `practice-room-vocal-soul1`, `vocal-classification1`, `hiphop-vocal1`, `breathing1`, `lyrics-memo1`, `kpop-trainee1`, `practice-room-vocal-power1`, `vocal-nutrition1`, `belting1`, `karaoke-practice1`, `vocalfood1`, `rap-recording1`, `vocal-emotion1`, `vocal-warmup1`, `rap1`, `vocal-lesson1`, `voicecare1`, `resonance1`, `vocal-health1`, `voice-actor-demo1`, `sungak1`, `vocal-phrasing1`, `vocal-fatigue1`, `stage-vocal1`, `podcast-vocal1`, `trot-vocal1`, `vibrato1`
+- 대조군: `singapp1`, `practice-room-vocal-falsetto-technique1`, `practice-schedule1`, `twang1`, `volume1`, `low-note1`, `breath-support1`, `placement1`, `vocal-range1`, `voice-type1`, `vocal-vibrato1`, `vocal-posture1`, `singswell1`, `practice-room-vocal-classical1`, `vocal-range-extension1`, `posture1`, `vocal-fry1`, `vocalfeedback1`, `diction1`, `live-performance1`, `vocal1`, `mixedvoice1`, `eartraining1`, `hip-hop-vocal1`, `diaphragm1`, `audition-vocal1`, `vocalcoach1`
+
+**판정.** 리뷰일 **2026-10-01**(4주, 믹싱 실험과 같은 날). 지표는 GA4 `lead_click_kakao` —
+처치군은 cta_id `vocal_mix_bridge_kakao` 경유를 분해해 보고, 페이지 단위 리드 발생률을
+대조군과 비교한다. 순위·노출을 움직이는 처치가 아니므로 CTR로 보지 않는다.
+상위 3편(headvoice1·mixvoice1·vocalrange1)은 기존 오퍼 보유로 제외됐다 — 이 실험이 이기면
+그 페이지들의 기존 오퍼를 브릿지형으로 바꾸는 것이 2차 후보다.
+
+**교란 주의.** 대조군에 `singapp1`(210클릭)이 들어가 클릭 합계가 비대칭이다. 판정은 절대
+리드 수가 아니라 **페이지별 리드/클릭 비율**로 할 것.
+
 ## 실험 결과 판정 (2026-08-14)
 
 > 리뷰일이 지났거나 오늘 도래한 3편(copyright-cover1·songstructure1·falsetto1)을 확정 판정하고,

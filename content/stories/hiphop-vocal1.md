@@ -69,6 +69,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 플로우 훈련법
 
 ### 플로우 개발 단계별 연습

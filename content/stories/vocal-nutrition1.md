@@ -72,6 +72,8 @@ inlineFallback: {}
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 피해야 할 식품
 
 ### 보컬 건강에 해로운 음식

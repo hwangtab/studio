@@ -66,6 +66,8 @@ inlineFallback: {}
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 성대 건강에 좋은 것 vs 나쁜 것
 
 | 좋은 것 | 나쁜 것 |

@@ -57,6 +57,8 @@ inlineFallback:
 
 ---
 
+%%vocal-mix-bridge%%
+
 ## 꺾기 연습 방법
 
 ### 꺾기 기본 패턴
