@@ -32,6 +32,11 @@ export const LESSON_MONTHLY_PRICE = 350000;
 export const PRACTICE_ROOM_MONTHLY_PRICE = 360000;
 /** schema.org '음반 기획(Album Production)' 오퍼 앵커 — 별개 오퍼(레슨·축가와 값만 동일). */
 export const PRODUCTION_OFFER_PRICE = 350000;
+
+// 크라우드펀딩 설계 대행 — 발매 프로젝트와 별개로도 의뢰받는 독립 상품이라
+// llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
+export const FUNDING_DESIGN_PRICE = 400000;
+export const FUNDING_SUCCESS_FEE_PERCENT = 10;
 // 발매 프로젝트 티어 시작가 — 한국어 카피 SSOT는 common.json releaseProject.tiers.*.range
 // ("약 50만원~" 등)이며, data/pricing.test.ts가 아래 상수와 만원 표기 정합을 강제한다.
 // 각 티어의 하한은 아래 통합 번들(고정 구성 정찰가)과 같은 값이다 — 번들이 발매
@@ -341,10 +346,10 @@ export const getPricingData = (locale: Locale) => {
       id: 'service-funding',
       title: t(locale, { ko: '펀딩 설계 대행', en: 'Crowdfunding Design', zh: '众筹设计代理', es: 'Diseño de Crowdfunding', vi: 'Thiết kế crowdfunding', th: 'ออกแบบคราวด์ฟันดิง', uz: 'Crowdfunding dizayni' }),
       priceDisplay: t(locale, { ko: '400,000원', en: '₩400,000', zh: '₩400,000', es: '₩400,000', vi: '₩400,000', th: '₩400,000', uz: '₩400,000' }),
-      priceValue: 400000,
+      priceValue: FUNDING_DESIGN_PRICE,
       description: t(locale, {
-        ko: '텀블벅 등 크라우드 펀딩 페이지 기획, 스토리텔링, 리워드 설계',
-        en: 'Planning and storytelling for crowdfunding projects (Tumblbug, etc.).',
+        ko: '텀블벅 등 크라우드 펀딩 페이지를 기획부터 구축까지 — 스토리텔링·리워드 설계·페이지 제작. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행한 경험으로 함께 준비합니다',
+        en: 'Crowdfunding campaigns planned and built end to end (Tumblbug and others) — storytelling, reward design, and page production. Based on dozens of album funding projects totalling roughly ₩300 million.',
         zh: 'Tumblbug等众筹页面策划、故事讲述、回报设计',
         es: 'Planificación y narración para proyectos de crowdfunding.',
         vi: 'Lập kế hoạch trang crowdfunding (Tumblbug, v.v.), storytelling và thiết kế reward.',

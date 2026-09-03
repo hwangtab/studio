@@ -2177,8 +2177,8 @@
               "desc": "Camino con críticos refinado a lo largo de más de 70 lanzamientos — incluyendo a Kang Ho-jung y Samgakjeonpasa. Organizamos una sesión de escucha previa al lanzamiento para críticos, solo posible con un álbum completo. El reconocimiento a través de reseñas es el objetivo."
             },
             {
-              "title": "Apoyo con becas y financiamiento",
-              "desc": "Tenemos experiencia con programas de becas artísticas y crowdfunding. Pensamos juntos la estructura del presupuesto."
+              "title": "Conseguir el presupuesto — crowdfunding y subvenciones",
+              "desc": "Hemos planificado y gestionado decenas de campañas de crowdfunding de álbumes (unos ₩300M recaudados en total). Construimos tu página de Tumblbug de principio a fin, o definimos contigo la dirección de una solicitud de subvención."
             }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
@@ -2235,7 +2235,7 @@
             "Redacción del comunicado de prensa",
             "Comunicado de prensa a periodistas y críticos",
             "Sesión de escucha previa al lanzamiento para críticos (cuando sea posible)",
-            "Guía de solicitud de becas artísticas / financiamiento",
+            "Diseño de crowdfunding y apoyo en solicitudes",
             "Entrega del archivo master (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Se gestiona por separado",
@@ -2280,7 +2280,7 @@
             },
             {
               "question": "¿Pueden ayudar con becas artísticas o crowdfunding?",
-              "answer": "Tenemos experiencia con esto. Podemos discutir becas de consejos de artes, fondos artísticos regionales y direcciones de crowdfunding en la consulta. Los resultados, sin embargo, no pueden garantizarse."
+              "answer": "Sí. En crowdfunding nos encargamos de todo — planificación de la página, narrativa, diseño de recompensas y la construcción misma — igual que en las decenas de campañas de álbumes que sumaron unos ₩300M. Para las subvenciones del consejo de artes y regionales definimos contigo la dirección de la solicitud. Eso sí, el resultado de una subvención no se puede garantizar."
             },
             {
               "question": "¿Pueden surgir costos adicionales más allá de la tarifa base?",
@@ -2346,7 +2346,7 @@
         "Músicos de sesión · Red de arreglos",
         "Distribución digital (Melon · Spotify · Apple Music etc.)",
         "Notas de prensa para críticos y medios, gestión de reseñas",
-        "Consultoría de crowdfunding y subvenciones artísticas"
+        "Planificación y construcción de crowdfunding · apoyo con subvenciones"
       ],
       "footNote": "Grabación vocal, mezcla y masterización son servicios in-house. Las sesiones instrumentales se gestionan a través de nuestra red."
     },

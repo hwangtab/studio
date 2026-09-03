@@ -2177,8 +2177,8 @@
               "desc": "70+ chiqarishda — jumladan Kang Ho-jung va Samgakjeonpasa bilan — sayqallangan tanqidchilar yo'li. Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasini tashkillashtirаmiz, faqat to'liq albom bilan mumkin. Sharhlar orqali tan olinish maqsad."
             },
             {
-              "title": "Grantlar va moliyalashtirish qo'llab-quvvatlash",
-              "desc": "San'at grantlari dasturlari va crowdfunding tajribamiz bor. Byudjet tuzilmasini birga o'ylaymiz."
+              "title": "Byudjetni jamlash — crowdfunding va grantlar",
+              "desc": "Biz o'nlab albom crowdfunding kampaniyalarini rejalashtirib, olib borganmiz (jami taxminan ₩300 mln). Tumblbug sahifasini rejadan qurilishigacha to'liq oling yoki grant arizasi yo'nalishini birga aniqlaymiz."
             }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
@@ -2235,7 +2235,7 @@
             "Press-reliz yozish",
             "Jurnalistlar va tanqidchilarga press-reliz yuborish",
             "Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasi (imkon bo'lganda)",
-            "San'at granti / moliyalashtirish ariza qo'llanmasi",
+            "Crowdfunding dizayni va grant arizasida hamrohlik",
             "Master fayl topshirish (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Alohida hal qilinadi",
@@ -2280,7 +2280,7 @@
             },
             {
               "question": "San'at grantlari yoki crowdfunding borasida yordam bera olasizlarmi?",
-              "answer": "Bu borada tajribamiz bor. Maslahatda san'at kengashi grantlari, mintaqaviy san'at mablag'lari va crowdfunding yo'nalishlari haqida gaplashamiz. Lekin natijalar kafolatlanmaydi."
+              "answer": "Ha. Crowdfundingda kampaniyani to'liq olib boramiz — sahifa rejasi, storytelling, reward tuzilmasi va sahifaning o'zini qurish — jami ₩300 mln atrofidagi o'nlab albom kampaniyalarida qilganimizdek. San'at kengashi va mintaqaviy grantlarda ariza yo'nalishini birga aniqlaymiz. Ammo grant natijasini kafolatlab bo'lmaydi."
             },
             {
               "question": "Asosiy narxdan tashqari qo‘shimcha xarajatlar bo‘lishi mumkinmi?",
@@ -2346,7 +2346,7 @@
         "Sessiya musiqachilarini jalb etish · Arrajman tarmog'i",
         "Raqamli tarqatish (Melon · Spotify · Apple Music va boshqalar)",
         "Tanqidchilar va media uchun press-reliz, sharh so'rash",
-        "Jamoa moliyalashtirish va san'at grantlari bo'yicha maslahat"
+        "Crowdfunding rejasi va sahifa qurilishi · san'at grantlari bo'yicha hamrohlik"
       ],
       "footNote": "Vokal yozish, mikslash va mastering ichki taqdim etiladi. Asboblar sessiyalari tarmoq orqali amalga oshiriladi."
     },

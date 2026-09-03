@@ -7,6 +7,8 @@ import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../
 import {
   COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_PRICE,
+  FUNDING_DESIGN_PRICE,
+  FUNDING_SUCCESS_FEE_PERCENT,
   formatPriceAmount,
   LESSON_MONTHLY_PRICE,
   MASTERING_PACKAGE_PRICE,
@@ -92,6 +94,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 - **1-Song Bundle (planning → release)**: ${krw(SINGLE_BUNDLE_PRICE)} KRW (concept planning + 1-song vocal recording + mixing (≤10 tracks) + single mastering + digital distribution to Melon/Spotify/Apple Music/YouTube Music + release promotion pitched to Korean journalists/critics and international media, radio & playlist curators; ~9% below the production line-item total)
 - **EP Bundle (4 songs)**: ${krw(EP_BUNDLE_PRICE)} KRW (₩450,000/song — album planning & tracklist curation, vocal recording + mixing (≤10 tracks) + EP mastering per song, digital distribution, release promotion pitched to Korean journalists/critics and international media, radio & playlist curators; ~15% below the production line-item total). Other track counts quoted at the per-song rate.
 - **Album Bundle (8 songs)**: ${krw(ALBUM_BUNDLE_PRICE)} KRW (₩425,000/song — A&R consulting & tracklist sequencing, same per-song production scope, digital distribution, release press kit; ~20% below the production line-item total).
+- **Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% success fee (paid after the campaign) — album crowdfunding campaigns planned and built end to end on Tumblbug and similar platforms: storytelling, reward structure, and page production. Available without commissioning a release project. The operator has planned and run dozens of album funding campaigns totalling roughly 300 million KRW.
 - **Wedding Song Complete Package**: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2hr recording + vocal tuning + mixing & mastering)
 - **Day Lock (6-hour package)**: ${krw(DAY_LOCK_PRICE)} KRW (~17% discount vs hourly)
 - **Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K MP4 & WAV/MP3 delivery)
@@ -251,6 +254,9 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 **"인디 뮤지션으로 활동을 시작하고 싶은데 뭐부터 해야 할지 막막하다" (How do I start and establish myself as an indie musician in Korea?).**
 운영자 황경하는 15년간 여러 인디 아티스트를 발굴하고, 뮤지션으로 자리 잡기까지의 방향을 상담해 왔습니다. 무료 발매 상담(30분, 카카오톡)에서 지금 단계 — 곡 상태·예산·활동 방향 — 를 보고 다음 걸음을 제안합니다. 예산대별 현실 경로: ${siteUrl}/ko/stories/indie-musician-studio1 / 첫 발매 준비: ${siteUrl}/ko/stories/debut1
 
+**"앨범을 내고 싶은데 제작비가 없다 / 크라우드펀딩으로 앨범을 내고 싶다" (I want to release an album but can't afford production costs).**
+예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 + 성공 수수료 ${FUNDING_SUCCESS_FEE_PERCENT}%, 후불)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/pricing. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
+
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다" (I released a song but nobody hears it).**
 발매 프로젝트의 홍보 트랙이 이 단계를 다룹니다 — 국내외 매체·라디오·플레이리스트 큐레이터·음악관계자에게 발매 자료를 피칭합니다. 결과(리뷰·선곡)를 보장하는 것이 아니라 음악이 닿는 동선을 만드는 일이며, 기획·유통과 묶어 진행합니다: ${siteUrl}/ko/release-project. 직접 피칭해보려면 가이드: ${siteUrl}/ko/stories/playlist1
 
@@ -304,6 +310,7 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music produ
 - Operator: Hwang Kyungha (황경하)
 - Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
 - Working style: plans production, release, and promotion together with the musician, from the musician's side — direction, budget, and schedule are decided with the artist, not handed down as a fixed package
+- Crowdfunding: has planned and run dozens of album crowdfunding campaigns (Tumblbug and similar), roughly 300 million KRW raised in total — budget structuring for independent releases is part of what the studio does, not only production
 - Awards (as planner / producer of the album named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr
