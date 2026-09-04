@@ -71,11 +71,18 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
       url: siteConfig.url,
     },
     url: `${siteConfig.url}/${locale}/studio-info`,
+    // 24시간 무인 운영. utils/schema/business.ts의 openingHoursSpecification(00:00–23:59)과
+    // 반드시 같은 값이어야 한다 — 한 사이트가 LocalBusiness와 Service에서 서로 다른 시간을
+    // 발행하면 구조화 데이터가 자기모순이 되고, 화면 표시값(common.json contact.hours의
+    // "24시간 영업")과도 어긋나 "구조화 데이터는 보이는 내용을 반영한다"는 요건을 깬다.
+    //
+    // 2026-08 영업시간 24시간 전환(2c0c3085e1→814d24b40b→061a5cf9d0→96ce1779b7) 네 커밋이
+    // 모두 이 파일을 열지 않아 10:00이 남아 있었다. 세 번째 사본이라 grep 범위에서 빠졌다.
     hoursAvailable: [
       {
         '@type': 'OpeningHoursSpecification',
         dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-        opens: '10:00',
+        opens: '00:00',
         closes: '23:59',
       },
     ],

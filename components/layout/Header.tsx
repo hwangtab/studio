@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -23,6 +23,24 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const { t } = useTranslation('common', { lng: locale });
   const currentPath = router.asPath.split('?')[0].split('#')[0];
   const siteConfig = getSiteConfig(locale);
+
+  /**
+   * 라우트가 바뀌면 모바일 메뉴를 닫는다.
+   *
+   * Header는 Layout 안에 있어 페이지 전환으로 remount되지 않는다(_app.tsx의 remount key는
+   * 안쪽 Component에만 걸린다). 그래서 메뉴를 연 채 **브라우저 뒤로가기**처럼 링크 클릭이
+   * 아닌 경로로 이동하면 isMenuOpen이 true로 남았다. MobileNav는 iOS 성능 때문에 항상
+   * mount된 채 CSS로만 토글하는 구조라 새 페이지 위에 이전 메뉴가 그대로 떠 있고,
+   * useFocusTrapDialog가 포커스를 그 안에 계속 가둬 **키보드·스크린리더 사용자는 새
+   * 페이지를 조작할 수 없게 된다**. 시각적 잔존보다 이쪽이 심각하다.
+   *
+   * 닫는 경로가 X 버튼·메뉴 내 링크·Esc뿐이었으므로 라우트 이벤트를 추가한다.
+   */
+  useEffect(() => {
+    const closeMenu = () => setIsMenuOpen(false);
+    router.events.on('routeChangeStart', closeMenu);
+    return () => router.events.off('routeChangeStart', closeMenu);
+  }, [router.events]);
 
   // 메뉴 순서는 성과 데이터에 맞춘다(2026-08-24 IA 감사).
   // 최다 유입·전환 페이지인 음악연습실(GSC 449클릭·리드 51)과 전 상품 공통인 가격은

@@ -32,6 +32,13 @@ export const DropdownMenu = ({
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     const menuId = React.useId();
 
+    // 경로가 바뀌면 닫는다. Header가 페이지 전환으로 remount되지 않아, 뒤로가기처럼
+    // 링크 클릭이 아닌 이동에서는 열린 상태가 그대로 남는다(MobileNav와 같은 원인).
+    // 여기는 포커스 트랩이 없고 absolute 배치라 피해는 작지만, 새 페이지에 이전 메뉴가
+    // 떠 있는 것은 마찬가지다.
+    useEffect(() => {
+        setIsOpen(false);
+    }, [currentPath]);
 
     const handleMouseEnter = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
