@@ -530,7 +530,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "description": t(locale, { ko: "편곡, 레코딩, 믹싱, 마스터링, 홍보", en: "Arrangement, Recording, Mixing, Mastering, Promotion", vi: "Hòa âm/Arr., Thu âm, Mixing, Mastering, PR/Quảng bá", th: "เรียบเรียง, บันทึกเสียง, มิกซ์, มาสเตอริ่ง, ประชาสัมพันธ์", uz: "Aranjim, Yozuv, Miks, Mastering, Targ‘ibot" }),
             "image": "https://cdn.imweb.me/thumbnail/20221109/0132edb19f0bf.jpg",
             "link": "https://music.bugs.co.kr/album/30859733?wl_ref=M_contents_01_04",
-            "category": "album",
+            "category": "ep",
             "services": [
                 getService(services.arrangement),
                 getService(services.recording),
