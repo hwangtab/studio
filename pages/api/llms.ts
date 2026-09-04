@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
@@ -462,10 +463,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // 빠지는 자기모순이 된다(AI Overviews·Gemini 그라운딩은 Search 색인 경유).
   // 직접 접근(/api/llms)의 색인 차단은 next.config.mjs headers()의 '/api/:path*' 규칙이
   // 담당한다 — headers()는 rewrite 이전 경로로 매칭되므로 두 경로가 정확히 갈린다.
-  const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB — Vercel 6MB 응답 한도 버퍼
-  if (body.length > MAX_BODY_SIZE) {
-    console.warn(`[llms] body size ${body.length} exceeds limit, truncating`);
-    body = body.slice(0, MAX_BODY_SIZE) + '\n... (truncated)';
+  // 바이트 기준 + 줄 경계 절단(lib/llms/truncate.ts 주석 참조).
+  const truncated = truncateToByteLimit(body);
+  if (truncated.truncatedFromBytes !== null) {
+    console.warn(`[llms] body ${truncated.truncatedFromBytes} bytes exceeds limit, truncated`);
+    body = truncated.body;
   }
   res.status(200).send(body);
 }

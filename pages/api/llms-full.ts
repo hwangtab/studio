@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getPortfolioItems } from '../../data/portfolio';
@@ -151,10 +152,11 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'public, max-age=3600, stale-while-revalidate=86400');
   // noindex를 붙이지 않는 이유는 pages/api/llms.ts의 같은 위치 주석 참조.
-  const MAX_BODY_SIZE = 5 * 1024 * 1024; // 5MB — Vercel 6MB 응답 한도 버퍼
-  if (body.length > MAX_BODY_SIZE) {
-    console.warn(`[llms-full] body size ${body.length} exceeds limit, truncating`);
-    body = body.slice(0, MAX_BODY_SIZE) + '\n... (truncated)';
+  // 바이트 기준 + 줄 경계 절단(lib/llms/truncate.ts 주석 참조).
+  const truncated = truncateToByteLimit(body);
+  if (truncated.truncatedFromBytes !== null) {
+    console.warn(`[llms-full] body ${truncated.truncatedFromBytes} bytes exceeds limit, truncated`);
+    body = truncated.body;
   }
   res.status(200).send(body);
 }

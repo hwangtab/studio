@@ -105,7 +105,9 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
         있는지 알 방법이 dot을 하나씩 짚어보는 것뿐이었다. activeIndex는 이미
         계산돼 있으므로 알리기만 하면 된다. polite — 스크롤 중 계속 끼어들지 않는다.
       */}
-      <p className="sr-only" aria-live="polite" role="status">
+      {/* role="status"는 이미 polite live region을 함의한다. aria-live를 함께 주면
+          NVDA/JAWS 일부 조합에서 같은 변화를 두 번 읽는다. 하나만 남긴다. */}
+      <p className="sr-only" role="status">
         {t('gallery.position', { current: activeIndex + 1, total: images.length })}
       </p>
 

@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
+import { IDENTITY_DIGITS } from '../../../../lib/contracts/identity';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 
@@ -223,14 +224,14 @@ export default function ContractCompletePage({
                 htmlFor="download-identity-digits"
                 className="block text-left text-sm text-gray-600 dark:text-gray-600 mb-2"
               >
-                본인 확인을 위해 계약서에 등록된 연락처 뒤 4자리를 입력해 주세요.
+                본인 확인을 위해 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
               </label>
               <input
                 id="download-identity-digits"
                 type="text"
                 inputMode="numeric"
                 autoComplete="off"
-                maxLength={4}
+                maxLength={IDENTITY_DIGITS}
                 value={identityDigits}
                 onChange={(event) => setIdentityDigits(event.target.value.replace(/\D/g, ''))}
                 placeholder="0000"
@@ -242,7 +243,7 @@ export default function ContractCompletePage({
               <Button
                 size="lg"
                 fullWidth
-                disabled={downloading || identityDigits.length !== 4}
+                disabled={downloading || identityDigits.length !== IDENTITY_DIGITS}
                 onClick={handleDownload}
               >
                 {downloading ? '준비 중…' : '계약서 PDF 내려받기'}

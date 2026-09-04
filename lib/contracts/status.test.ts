@@ -1,5 +1,6 @@
 /** @jest-environment node */
 
+import { contractStatusEnum } from '../../db/schema';
 import {
   SIGN_TOKEN_TTL_DAYS,
   checkAction,
@@ -148,10 +149,18 @@ describe('needsTermination — 종료일 당일은 이용 기간', () => {
 });
 
 describe('상태 라벨', () => {
+  /**
+   * 상태 목록을 손으로 나열하면 새 상태를 추가할 때 여기를 빠뜨린다 — 실제로 terminated가
+   * 추가됐을 때 이 테스트가 그것을 돌지 않아 "모든 상태에 라벨이 있다"가 거짓이 됐다.
+   * 스키마의 enum을 그대로 순회해 앞으로는 CI가 잡게 한다.
+   */
   it('모든 상태에 한국어 라벨이 있다', () => {
-    const statuses: ContractStatus[] = ['draft', 'sent', 'signed', 'cancelled', 'expired'];
-    for (const status of statuses) {
+    for (const status of contractStatusEnum) {
       expect(getStatusLabel(status)).toMatch(/[가-힣]/);
     }
+  });
+
+  it('스키마 enum과 라벨 대상이 어긋나지 않는다', () => {
+    expect(contractStatusEnum).toContain('terminated');
   });
 });

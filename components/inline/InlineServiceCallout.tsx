@@ -157,15 +157,14 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
   const path = SERVICE_PATHS[type];
   const categoryLabel = t(SERVICE_LABEL_KEYS[type]);
   const koContent = KO_CONTENT[type];
-  const isKo = locale === 'ko';
 
-  const title = isKo ? koContent.title : categoryLabel;
-  const description = isKo
-    ? koContent.description
-    : t(`stories.inline.serviceBody.${type}`, {
-        defaultValue: t('stories.inline.serviceBodyDefault', { defaultValue: '연관 서비스 자세히 알아보기.' }),
-      });
-  const features = isKo ? koContent.features : [];
+  // ko 전용 컴포넌트다 — MarkdownRenderer가 비-ko 로케일에서 inline directive 자체를
+  // 렌더하지 않는다(MarkdownRenderer.tsx:395, Phase 1 spec 9). 예전엔 `isKo ? ko : t(...)`
+  // 분기가 있었지만 비-ko 경로가 도달 불가라, 그 분기가 쓰던 stories.inline.serviceBody.*
+  // 번역 키도 함께 죽어 있었다. locale은 t()·경로 조립에 여전히 필요해 prop으로 남긴다.
+  const title = koContent.title;
+  const description = koContent.description;
+  const features = koContent.features;
 
   return (
     <aside
@@ -210,7 +209,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
         </ul>
       )}
 
-      {isKo && koContent.softNote && (
+      {koContent.softNote && (
         <p className="text-sm text-secondary dark:text-secondary-light mb-4 font-medium">
           💬 {koContent.softNote}
         </p>

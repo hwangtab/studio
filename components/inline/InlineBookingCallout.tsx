@@ -30,8 +30,11 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
   const headline = message?.trim()
     || t('stories.inline.bookingDefault', { defaultValue: '바로 상담·예약하고 싶으시다면' });
   const categoryLabel = t('stories.inline.bookingLabel', { defaultValue: '카카오톡 상담' });
-  const isKo = locale === 'ko';
-  const tips = isKo ? KO_TIPS : [];
+  // ko 전용 컴포넌트다 — MarkdownRenderer가 비-ko 로케일에서 inline directive 자체를
+  // 렌더하지 않는다(MarkdownRenderer.tsx:395, Phase 1 spec 9). 예전엔 여기 `isKo ? ... : []`
+  // 분기가 있었지만 비-ko 경로가 도달 불가라 죽은 코드였고, 컴포넌트만 보면 다국어를
+  // 지원하는 것처럼 오독됐다. locale은 t()·siteConfig 조회에 여전히 필요해 prop으로 남긴다.
+  const tips = KO_TIPS;
 
   return (
     <aside

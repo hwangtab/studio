@@ -106,14 +106,27 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     const FLAG = 'sw-unregistered';
     try {
       if (window.sessionStorage.getItem(FLAG)) return;
-      window.sessionStorage.setItem(FLAG, '1');
     } catch {
-      // 저장소 접근이 막힌 환경 — 플래그 없이 진행한다.
+      // 저장소 접근이 막힌 환경(사파리 프라이빗 등) — 플래그 없이 매번 시도한다.
+      // 해제 자체는 몇 번을 해도 안전하다.
     }
 
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      registrations.forEach((r) => r.unregister());
-    });
+    // 플래그는 **성공한 뒤에** 세운다. 먼저 세우면 getRegistrations()가 실패했을 때
+    // 그 세션 내내 재시도가 없어, 낡은 워커가 남은 채로 배포가 반영되지 않는다.
+    navigator.serviceWorker
+      .getRegistrations()
+      .then((registrations) => {
+        registrations.forEach((r) => r.unregister());
+        try {
+          window.sessionStorage.setItem(FLAG, '1');
+        } catch {
+          // 위와 같은 이유. 플래그를 못 남겨도 동작에는 문제가 없다.
+        }
+      })
+      .catch(() => {
+        // 권한·보안 컨텍스트 문제로 조회가 거부될 수 있다. 조용히 넘어가되
+        // unhandled rejection은 남기지 않는다.
+      });
   }, []);
 
   // 폰트 지연 로딩 useEffect 제거: 사이트 전반을 next/font/local의 Pretendard Variable로
