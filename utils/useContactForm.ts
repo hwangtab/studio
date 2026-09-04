@@ -275,7 +275,10 @@ export const useContactForm = ({ locale, t }: UseContactFormParams): UseContactF
           return;
         }
 
-        setSubmitMessage(result.message || t('contact.form.error'));
+        // 서버 메시지를 화면에 띄우지 않는다. API가 돌려주는 문구는 영어 고정이라
+        // 로케일을 무시하고, 내부 사정("Server configuration error")이 그대로 새어 나간다.
+        // 필드 단위 오류는 위에서 code로 번역해 처리한다.
+        setSubmitMessage(t('contact.form.error'));
         setIsSubmitSuccess(false);
         setCanRetrySubmit(response.status >= 500);
         trackSubmitEvent('lead_submit_error', {

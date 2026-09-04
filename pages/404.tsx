@@ -95,7 +95,15 @@ const NotFoundPage: NextPage = () => {
             { href: `/${locale}/practice-room`, label: t('nav.practiceRoom') },
             { href: `/${locale}/portfolio`, label: t('nav.portfolio') },
             { href: `/${locale}/stories`, label: t('nav.stories') },
-            { href: `/${locale}/guides/home-recording-survival`, label: t('notFound.popularGuide', { defaultValue: '홈레코딩 생존 가이드' }) },
+            // buyer-intent 허브는 ko에서만 SSG된다(fallback: false). 로케일 가드 없이
+            // 걸면 막다른 길에서 벗어나려는 클릭이 또 404로 돌아온다 — autoLinks·
+            // 스토리 본문은 이미 같은 가드를 쓴다.
+            ...(locale === defaultLocale
+              ? [{
+                  href: `/${locale}/guides/home-recording-survival`,
+                  label: t('notFound.popularGuide', { defaultValue: '홈레코딩 생존 가이드' }),
+                }]
+              : []),
           ].map((item) => (
             <Link
               key={item.href}
