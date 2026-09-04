@@ -4,8 +4,8 @@
  * 발매 프로젝트 티어 디스코그래피 선택.
  *
  * 예전엔 세 티어(single·ep·album) 페이지가 featured 전체를 그대로 보여줘, 정규앨범
- * 문의자가 싱글 위주 목록을 봤다. 이제 티어에 맞는 카테고리를 앞세운다. 데이터에
- * category:'ep'가 없어 EP는 폴백(앨범→싱글)으로 채운다.
+ * 문의자가 싱글 위주 목록을 봤다. 이제 티어에 맞는 카테고리를 앞세우고, 부족하면
+ * 인접 카테고리로 12칸을 채운다(빈 섹션 방지).
  */
 import { getTierPortfolioItems } from './portfolio';
 
@@ -23,10 +23,15 @@ describe('getTierPortfolioItems', () => {
     expect(['album', 'compilation']).toContain(items[1].category);
   });
 
-  it('ep 티어는 데이터에 ep가 없어 앨범을 먼저 채운다', () => {
+  /** 자이 <Golden Hour>·엉아들 <Self-titled>이 EP로 분류돼 있다(2026-09-04 운영자 확인). */
+  it('ep 티어는 EP를 맨 앞에 세우고 부족분을 앨범으로 채운다', () => {
     const items = getTierPortfolioItems('ko', 'ep');
-    expect(items.length).toBeGreaterThan(0);
-    expect(items[0].category).toBe('album');
+    expect(items[0].category).toBe('ep');
+    // EP가 12건에 못 미치므로 앨범이 뒤를 잇는다 — 싱글보다 앞이어야 한다.
+    const firstAlbum = items.findIndex((i) => i.category === 'album');
+    const firstSingle = items.findIndex((i) => i.category === 'single');
+    expect(firstAlbum).toBeGreaterThan(-1);
+    expect(firstAlbum).toBeLessThan(firstSingle);
   });
 
   it('12건을 넘지 않고, 중복 없이 채운다', () => {

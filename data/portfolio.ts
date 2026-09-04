@@ -51,20 +51,18 @@ export type ReleaseTier = 'single' | 'ep' | 'album';
 /**
  * 티어별 디스코그래피에 어떤 카테고리를 증빙으로 쓸지.
  *
- * 데이터(data/portfolio/items.ts)에는 single·album·compilation·commercial만 있고 ep는 없다.
- * 그래서 세 티어 페이지가 모두 featured 전체(싱글 섞임)를 그대로 보여줬다 — 정규앨범 문의자가
- * 싱글 위주 목록을 보는 상태였다. 티어에 맞는 카테고리를 앞세우되, 데이터가 부족한 티어는
- * 인접 카테고리로 채운다.
+ * 예전엔 세 티어 페이지가 모두 featured 전체(싱글 섞임)를 그대로 보여줬다 — 정규앨범
+ * 문의자가 싱글 위주 목록을 보는 상태였다. 티어에 맞는 카테고리를 앞세우되, 해당 카테고리가
+ * 12칸을 못 채우면 인접 카테고리로 채워 빈 섹션을 만들지 않는다.
  *
  * - single: 싱글만.
- * - album: 정규앨범 + 컴필레이션(둘 다 정규 분량의 완결 앨범 작업이다).
- * - ep: 데이터에 ep가 없으므로 앨범을 먼저(EP는 미니앨범이라 앨범 작업에 가깝다), 그다음 싱글.
- *       items.ts에 category:'ep'가 생기면 여기 맨 앞에 'ep'를 추가하면 자동으로 우선 노출된다.
+ * - album: 정규앨범 + 컴필레이션. 운영자 확인(2026-09-04) — 컴필레이션도 정규로 본다.
+ * - ep: EP를 먼저, 부족분은 앨범(EP는 미니앨범이라 앨범 작업에 가깝다) → 싱글 순.
  */
 const TIER_CATEGORIES: Record<ReleaseTier, PortfolioItem['category'][]> = {
   single: ['single'],
   album: ['album', 'compilation'],
-  ep: ['album', 'single'],
+  ep: ['ep', 'album', 'single'],
 };
 
 const DISCOGRAPHY_LIMIT = 12;

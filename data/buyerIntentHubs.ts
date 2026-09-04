@@ -92,7 +92,7 @@ export interface BuyerIntentHub {
    * 관련 portfolio 노출 카테고리 — 'all' | PortfolioItem.category 값.
    * 'all'은 featured 우선으로 셔플.
    */
-  portfolioCategory: 'all' | 'single' | 'album' | 'compilation' | 'commercial';
+  portfolioCategory: 'all' | 'single' | 'ep' | 'album' | 'compilation' | 'commercial';
   /** 본 hub와 가장 가까운 service LP — primary CTA 대상 */
   primaryServiceLink: ServiceKey | 'practice-room' | 'release-project' | 'contact';
   /** 보조 service LP — secondary CTA */

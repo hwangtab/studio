@@ -147,7 +147,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "description": t(locale, { ko: "기획, 레코딩, 믹싱, 홍보", en: "Planning, Recording, Mixing, Promotion", vi: "Lên kế hoạch, Thu âm, Mixing, PR/Quảng bá", th: "วางแผน, บันทึกเสียง, มิกซ์, ประชาสัมพันธ์", uz: "Rejalash, Yozuv, Miks, Targ‘ibot" }),
             "image": "https://image.bugsm.co.kr/album/images/1000/373556/37355636.jpg",
             "link": "https://soundcloud.com/user-292846120/sets/jai-golden-hour/s-BPI7SsQ1rfb?si=cf71793aa6574753902aefae1c68631f&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing",
-            "category": "album",
+            "category": "ep",
             "services": [
                 getService(services.planning),
                 getService(services.recording),
@@ -779,7 +779,7 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
             "description": t(locale, { ko: "기획, 편곡, 레코딩, 믹싱, 홍보", en: "Planning, Arrangement, Recording, Mixing, Promotion", vi: "Lên kế hoạch, Hòa âm/Arr., Thu âm, Mixing, PR/Quảng bá", th: "วางแผน, เรียบเรียง, บันทึกเสียง, มิกซ์, ประชาสัมพันธ์", uz: "Rejalash, Aranjim, Yozuv, Miks, Targ‘ibot" }),
             "image": "https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5Ijoic3RvcnkvNDRhY2E0MWItYzI0Zi00MTZmLWIyNzktNjMxZDZjZDA3MDAyLzA5Y2YzNjhjLThjZTgtNDYxMS1iZTQ4LTcwNzUyZjFiMTE2MS5qcGciLCJlZGl0cyI6eyJyZXNpemUiOnsid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlLCJ3aWR0aCI6IjEyNDAifX19",
             "link": "https://www.youtube.com/playlist?list=PLlm8-iwS-7gOY8-pmL0Xz25_Hzl2FM-U7",
-            "category": "album",
+            "category": "ep",
             "services": [
                 getService(services.planning),
                 getService(services.arrangement),

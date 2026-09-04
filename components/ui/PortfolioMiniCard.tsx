@@ -13,6 +13,7 @@ interface PortfolioMiniCardProps {
 
 const CATEGORY_BADGE: Record<string, string> = {
   album: 'bg-pink-50 text-pink-700 dark:bg-pink-500/20 dark:text-pink-300',
+  ep: 'bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-500/20 dark:text-fuchsia-300',
   single: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300',
   compilation: 'bg-violet-50 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300',
   commercial: 'bg-orange-50 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300',
