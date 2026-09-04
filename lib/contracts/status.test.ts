@@ -41,6 +41,25 @@ describe('계약 상태 전이 규칙', () => {
     expect(isActionAllowed('draft', 'resend')).toBe(false);
   });
 
+  /**
+   * 서명 완료 메일 재발송은 resend와 별개 액션이다.
+   *
+   * resend는 서명 링크를 새로 보내며 토큰을 회전시킨다 — 이미 서명된 계약에 그걸 하면
+   * 확정 문서의 접근 토큰이 바뀌어 고객 메일함의 링크가 죽는다. 그래서 signed에는
+   * resend를 막아 뒀는데, 그 결과 완료 메일이 실패했을 때 관리자에게 아무 수단이
+   * 없었다(화면은 "재발송하라"고 안내했지만 그 버튼이 렌더되지 않았다).
+   */
+  it('서명 완료 계약은 완료 메일만 다시 보낼 수 있다 (서명 링크 재발송은 여전히 금지)', () => {
+    expect(isActionAllowed('signed', 'resend-signed')).toBe(true);
+    expect(isActionAllowed('signed', 'resend')).toBe(false);
+  });
+
+  it('완료 메일 재발송은 서명 전 상태에는 열리지 않는다', () => {
+    for (const status of ['draft', 'sent', 'expired', 'cancelled'] as ContractStatus[]) {
+      expect(isActionAllowed(status, 'resend-signed')).toBe(false);
+    }
+  });
+
   it('서명은 발송 상태에서만 가능하다', () => {
     expect(isActionAllowed('sent', 'sign')).toBe(true);
     expect(isActionAllowed('draft', 'sign')).toBe(false);

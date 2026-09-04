@@ -2,6 +2,7 @@ import { createHash } from 'crypto';
 import type { NextApiRequest } from 'next';
 import validator from 'validator';
 
+import { consumeRateLimit } from '../booking/rate-limit';
 import { getRedisRestConfig, incrWithExpire } from '../rate-limit/redisRest';
 
 const LIMIT = 5;
@@ -144,13 +145,40 @@ const checkRateLimitInMemory = (subject: RateLimitSubject): void => {
   memoryRateLimitStore.set(key, { count: nextCount, expiresAt: existing.expiresAt });
 };
 
+/**
+ * 공유 카운터를 쓸 수 있는가 — Turso 접속 정보가 있으면 그렇다.
+ *
+ * getDb()는 값이 없으면 예외를 던지므로, 부르기 전에 여기서 먼저 본다.
+ */
+const isDurableStoreConfigured = (): boolean =>
+  Boolean(process.env.TURSO_DATABASE_URL && process.env.TURSO_AUTH_TOKEN);
+
+/**
+ * 문의 제출 횟수 제한.
+ *
+ * 저장소는 세 단계다 — Redis REST(설정돼 있으면) → Turso → 프로세스 메모리.
+ *
+ * 가운데 Turso 단계가 실제로 일하는 자리다. 프로덕션에는 KV_REST_API_* 가 없어서
+ * (2026-09-04 전 환경 확인) 그동안 곧장 메모리 폴백으로 떨어졌는데, 서버리스는
+ * 인스턴스가 여러 개라 "15분에 5회"가 사실상 "인스턴스마다 15분에 5회"로 새고 있었다.
+ * 카운터를 이미 붙어 있는 Turso에 두면 인스턴스 사이에서 공유된다.
+ *
+ * consumeRateLimit은 rate_limits 테이블에 원자적 UPSERT를 하는 범용 카운터로,
+ * 관리자 로그인·예약 생성·웹훅이 같은 것을 쓴다. lib/booking/ 아래에 있지만 예약
+ * 전용이 아니다(그 파일의 '범용 요청 제한 카운터' 주석 참조).
+ *
+ * DB를 못 읽으면 통과시킨다(consumeRateLimit이 그렇게 만들어져 있다). 셀 수 없다는
+ * 이유로 정당한 문의를 막지 않는다는 뜻이고, 관리자·예약 쪽 판단과 같다. 문의는
+ * 검증된 유일한 전환 경로라 놓치는 쪽의 손실이 더 크다. 봇은 허니팟과 시간 트랩이
+ * 따로 거른다.
+ */
 export const checkContactRateLimit = async (req: NextApiRequest): Promise<void> => {
   const subject = getRateLimitSubject(req);
+  const key = `rate_limit_contact:${subject.key}`;
   const redisConfig = getRedisRestConfig();
 
   if (redisConfig) {
     try {
-      const key = `rate_limit_contact:${subject.key}`;
       const count = await incrWithExpire({ key, windowSeconds: subject.windowSeconds, config: redisConfig });
 
       if (count > subject.limit) {
@@ -165,9 +193,16 @@ export const checkContactRateLimit = async (req: NextApiRequest): Promise<void> 
     }
   }
 
+  if (isDurableStoreConfigured()) {
+    if (!await consumeRateLimit(key, subject.limit, subject.windowSeconds)) {
+      throw new Error(CONTACT_RATE_LIMIT_ERROR.exceeded);
+    }
+    return;
+  }
+
   if (!hasLoggedMemoryFallback) {
     const env = process.env.NODE_ENV === 'production' ? 'prod' : 'dev';
-    console.warn(`[Rate Limit] Redis REST not configured (${env}). Using in-memory limiter fallback. Set KV_REST_API_URL and KV_REST_API_TOKEN.`);
+    console.warn(`[Rate Limit] No shared store configured (${env}). Using in-memory limiter fallback — 서버리스에서는 인스턴스마다 따로 센다. TURSO_DATABASE_URL/TURSO_AUTH_TOKEN 또는 KV_REST_API_URL/KV_REST_API_TOKEN을 설정할 것.`);
     hasLoggedMemoryFallback = true;
   }
 

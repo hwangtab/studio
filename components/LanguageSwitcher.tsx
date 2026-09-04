@@ -113,6 +113,11 @@ export const LanguageSwitcher = ({
         <button
           type="button"
           onClick={() => setIsOpen((prev) => !prev)}
+          // 아래 dropdown 변형과 같은 disclosure 계약. 이쪽만 빠져 있어서 모바일
+          // 화면 낭독기 사용자는 이 버튼이 무언가를 펼친다는 사실을 알 수 없었다.
+          // aria-controls는 두지 않는다 — 패널이 닫히면 언마운트돼 참조가 끊긴다
+          // (dropdown 변형도 같은 이유로 aria-expanded만 쓴다).
+          aria-expanded={isOpen}
           className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           <div className="flex items-center gap-2">
@@ -136,6 +141,12 @@ export const LanguageSwitcher = ({
                     key={locale}
                     href={getPathForLocale(locale)}
                     hrefLang={locale}
+                    // prefetch={false}: 메뉴를 열면 현재 페이지의 나머지 6개 로케일이
+                    // 한꺼번에 viewport에 들어와 SSG JSON을 동시에 끌어온다. 대부분의
+                    // 방문자는 언어를 바꾸지 않고, 번역이 없는 스토리는 이 prefetch가
+                    // noindex 폴백 페이지의 온디맨드 생성까지 유발한다.
+                    // hover/focus prefetch는 유지된다(StoryCard·StoryCTA와 같은 판단).
+                    prefetch={false}
                     onClick={() => setIsOpen(false)}
                     className={`
                       flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
@@ -220,6 +231,7 @@ export const LanguageSwitcher = ({
                   ref={(el) => { localeItemRefs.current[idx] = el; }}
                   href={getPathForLocale(locale)}
                   hrefLang={locale}
+                  prefetch={false}
                   onClick={() => setIsOpen(false)}
                   onKeyDown={(e) => {
                     if (e.key === 'ArrowDown') {

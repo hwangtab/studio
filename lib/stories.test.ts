@@ -1,6 +1,6 @@
 /** @jest-environment node */
 
-import { readFileSync } from 'fs';
+import { existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 
 import {
@@ -125,6 +125,28 @@ describe('getStoryPaths', () => {
     expect(paths).not.toContainEqual({
       params: { locale: 'ko', id: 'korean-practice-room-booking-english' },
     });
+  });
+
+  // 번역이 없는 로케일은 ko 본문을 noindex 폴백으로 보여줄 뿐이라 사이트맵에도 없다.
+  // 그걸 빌드타임에 미리 만들면 색인 대상이 아닌 페이지 수천 장이 매 빌드마다 생긴다.
+  // 목록에서 빠진 조합은 fallback: 'blocking'이 첫 요청에 만든다.
+  it('only pre-renders locale/slug pairs whose own source file exists', () => {
+    const storiesDir = join(process.cwd(), 'content/stories');
+    const missing = getStoryPaths().filter(({ params }) => {
+      const file = params.locale === 'ko'
+        ? `${params.id}.md`
+        : `${params.id}.${params.locale}.md`;
+      return !existsSync(join(storiesDir, file));
+    });
+
+    expect(missing).toEqual([]);
+  });
+
+  it('does not return the slug x locale cross product', () => {
+    const paths = getStoryPaths();
+    const slugCount = new Set(paths.map((entry) => entry.params.id)).size;
+
+    expect(paths.length).toBeLessThan(slugCount * 7);
   });
 });
 

@@ -22,7 +22,7 @@ import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { checkAction, getEffectiveStatus, type ContractAction } from '../../../lib/contracts/status';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
 
-const MUTABLE_ACTIONS = ['send', 'resend', 'cancel', 'update', 'terminate'] as const;
+const MUTABLE_ACTIONS = ['send', 'resend', 'resend-signed', 'cancel', 'update', 'terminate'] as const;
 type MutableAction = (typeof MUTABLE_ACTIONS)[number];
 
 const isMutableAction = (value: unknown): value is MutableAction =>
@@ -122,6 +122,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         return res.status(200).json({ ok: true, contract: serializeContractForAdmin(updated) });
+      }
+
+      if (action === 'resend-signed') {
+        /**
+         * 서명 완료 메일·PDF 재발송. 상태도 토큰도 건드리지 않는다 — 확정된 문서의
+         * 접근 경로가 바뀌면 고객 메일함에 남은 기존 링크가 죽는다.
+         *
+         * finalizeSignedContract를 그대로 다시 부른다. PDF 생성·업로드부터 다시 하므로
+         * "메일은 나갔는데 PDF가 없다" 같은 부분 실패도 함께 복구되고, 결과는 다시
+         * notificationError에 기록돼 성공 여부가 화면에 드러난다.
+         */
+        // 동적 import — finalize는 PDF 생성을 위해 puppeteer/chromium 체인을 끌어온다.
+        // 최상위에서 부르면 이 라우트의 모든 요청이 그 무게를 지고(콜드스타트), 테스트
+        // 러너도 ESM 파싱에서 막힌다. 실제로 재발송할 때만 불러온다.
+        const { finalizeSignedContract } = await import('../../../lib/contracts/finalize');
+        waitUntil(finalizeSignedContract(id));
+        return res.status(200).json({
+          ok: true,
+          contract: serializeContractForAdmin(contract),
+          message: '완료 메일을 다시 보내는 중입니다. 잠시 후 새로고침해 결과를 확인해 주세요.',
+        });
       }
 
       if (action === 'terminate') {

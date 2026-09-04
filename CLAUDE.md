@@ -221,6 +221,28 @@ common.json은 전 페이지 공유 파일이라 반영하면 카피 한 줄에 
 원래 문제로 돌아간다. 과소보고는 안전한 방향이라 의도적으로 감수한다 — 크게 개편했다면
 `pageLastmod.json`의 해당 날짜를 손으로 올려도 된다.
 
+### 스토리 프리렌더는 번역이 있는 로케일만 (빌드 곱집합 금지)
+
+`getStoryPaths`(`lib/stories.ts`)는 **원문 파일이 있는 (슬러그, 로케일) 조합만** 반환한다.
+번역이 없는 로케일은 ko 본문을 대신 보여주는 폴백이고, 그 렌더는 robots를
+`noindex, follow`로 내리고 canonical을 원본 로케일로 돌린다. 사이트맵도
+`getIndexableStoryLocales`로 같은 조합만 싣는다 — 즉 폴백 페이지는 어떤 색인 경로에도
+없다. 예전엔 슬러그 × 7 로케일을 전부 반환해서, 매 빌드마다 색인 대상이 아닌 페이지를
+6,000장 넘게 만들고 있었다(12,355장 → 1,276장, 2026-09-04).
+
+**`fallback: 'blocking'`은 목록에 **없는** 경로만 지연시킨다.** 목록에 넣은 경로는
+`fallback` 설정과 무관하게 빌드 때 전부 만들어진다 — 흔한 오해라 여기 적어 둔다.
+목록에서 뺀 조합은 첫 요청에 생성돼 ISR로 캐시된다(실측 첫 요청 90ms, 이후 4ms).
+
+`lib/stories.test.ts`가 두 가지를 막는다: 원문 없는 조합이 목록에 들어오는 것, 그리고
+곱집합으로 되돌아가는 것. 번역을 새로 추가하면 자동으로 프리렌더 대상이 되므로
+손댈 것이 없다.
+
+관련 규칙: **로케일 전환 링크에는 `prefetch={false}`를 유지할 것**
+(`components/LanguageSwitcher.tsx`). 메뉴를 열면 현재 페이지의 나머지 6개 로케일이
+동시에 viewport에 들어와, 폴백 페이지의 온디맨드 생성을 무더기로 유발한다.
+`StoryCard`·`StoryCTA`와 같은 판단이며 hover/focus prefetch는 유지된다.
+
 ## Architecture & Data Flow
 
 ### Image Optimization System

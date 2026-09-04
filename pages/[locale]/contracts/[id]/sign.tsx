@@ -1,3 +1,4 @@
+import ContractNotice from '../../../../components/contracts/ContractNotice';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
@@ -152,17 +153,6 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
   }
 };
 
-const Notice = ({ title, description }: { title: string; description: string }) => (
-  <div className="min-h-screen bg-gray-50 dark:bg-gray-50 flex items-center justify-center px-4">
-    <div className="bg-white dark:bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
-      <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-3">{title}</h1>
-      <p className="text-gray-600 dark:text-gray-600 leading-relaxed">{description}</p>
-      <p className="text-sm text-gray-400 dark:text-gray-400 mt-6">
-        문의: 스튜디오 놀 010-4255-7893
-      </p>
-    </div>
-  </div>
-);
 
 export default function ContractSignPage({
   locale,
@@ -421,7 +411,7 @@ export default function ContractSignPage({
           <title>서명 링크 만료 | Studio NOL</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <Notice
+        <ContractNotice
           title="서명 링크가 만료되었습니다"
           description="보안을 위해 서명 링크는 일정 기간이 지나면 사용할 수 없습니다. 운영자에게 재발송을 요청해 주세요."
         />
@@ -436,7 +426,7 @@ export default function ContractSignPage({
           <title>사용할 수 없는 링크 | Studio NOL</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <Notice
+        <ContractNotice
           title="이 서명 링크는 더 이상 사용할 수 없습니다"
           description="계약서를 다시 보내 드렸다면 가장 최근에 받으신 메일의 링크를 열어 주세요. 최근 메일이 없다면 운영자에게 재발송을 요청해 주세요."
         />
@@ -451,7 +441,7 @@ export default function ContractSignPage({
           <title>취소된 계약 | Studio NOL</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <Notice
+        <ContractNotice
           title="취소된 계약입니다"
           description="이 계약은 운영자가 취소했습니다. 내용이 맞지 않는다면 스튜디오로 문의해 주세요."
         />
@@ -469,7 +459,7 @@ export default function ContractSignPage({
           <title>{title} | Studio NOL</title>
           <meta name="robots" content="noindex, nofollow" />
         </Head>
-        <Notice
+        <ContractNotice
           title={title}
           description={error || '잘못된 링크입니다. 메일에 포함된 링크를 다시 확인해 주세요.'}
         />

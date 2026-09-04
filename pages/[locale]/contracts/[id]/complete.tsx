@@ -3,6 +3,7 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
+import ContractNotice from '../../../../components/contracts/ContractNotice';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
@@ -31,11 +32,20 @@ interface CompleteViewContract {
 
 interface CompletePageProps {
   locale: string;
-  contract: CompleteViewContract;
+  /** 안내 화면만 띄우는 경우 null. */
+  contract: CompleteViewContract | null;
   /** 계약서를 다시 받는 주소. 토큰이 실려 있어 본인만 접근할 수 있다. */
   downloadUrl: string;
   /** 보관 기간이 지나 개인정보가 파기된 계약 — 내려받을 원본이 없다. */
   purged: boolean;
+  /**
+   * 문서를 보여줄 수 없는 사유. 사이트 공용 404 대신 계약 맥락의 안내를 띄운다 —
+   * 여기 오는 사람은 대부분 계약 당사자이고, 링크가 죽은 것과 서버가 흔들린 것은
+   * 할 일이 다르다(sign.tsx가 이미 같은 규칙을 쓴다).
+   */
+  unavailable?: 'not-found' | 'error';
+  /** 이용이 종료된 계약. 서명본은 그대로 남으므로 화면은 보여주되 사실을 밝힌다. */
+  terminated?: boolean;
 }
 
 export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (context) => {
@@ -45,9 +55,11 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
   const { locale, id } = context.params as { locale: string; id: string };
   const { token } = context.query;
 
+  const empty = { locale, contract: null, downloadUrl: '', purged: false };
+
   // 토큰을 필수로 요구한다. 없으면 계약 ID만 알아도 이용자의 개인정보를 볼 수 있게 된다.
   if (!id || typeof token !== 'string' || token.trim() === '') {
-    return { notFound: true };
+    return { props: { ...empty, unavailable: 'not-found' as const } };
   }
 
   try {
@@ -56,7 +68,9 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
     });
 
     if (!contract) {
-      return { notFound: true };
+      // 토큰 불일치와 부재를 같은 화면으로 묶는 건 의도다 — 어느 쪽인지 알려주면
+      // 계약 ID의 존재 여부가 새어 나간다.
+      return { props: { ...empty, unavailable: 'not-found' as const } };
     }
 
     /**
@@ -67,7 +81,16 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
      * 아직 서명하지 않았다면 아무것도 만들지 않고 서명 페이지로 보낸다.
      * (반대 방향은 sign.tsx가 담당한다 — 서명이 끝났으면 이 페이지로 보낸다.)
      */
-    if (getEffectiveStatus(contract) !== 'signed') {
+    const status = getEffectiveStatus(contract);
+
+    /**
+     * 이용이 종료된 계약. 서명본은 법적 보존 대상이라 그대로 남으므로 이 화면을 보여준다.
+     *
+     * 예전엔 signed가 아니라는 이유로 서명 페이지로 되돌렸는데, sign.tsx의 상태 분기에
+     * terminated가 없어 **이미 서명을 마친 고객에게 빈 서명 패드**가 떴다. 고객 메일의
+     * 영구 링크가 이 페이지를 가리키므로 여기서 끝내야 한다.
+     */
+    if (status !== 'signed' && status !== 'terminated') {
       return {
         redirect: {
           destination: `/${locale}/contracts/${id}/sign?token=${encodeURIComponent(token)}`,
@@ -89,11 +112,13 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
         },
         downloadUrl: `/api/contracts/${contract.id}/download?token=${encodeURIComponent(token)}`,
         purged: contract.purgedAt !== null,
+        ...(status === 'terminated' ? { terminated: true } : {}),
       },
     };
   } catch (error: unknown) {
     console.error('[contracts/[id]/complete] Failed to load contract:', error);
-    return { notFound: true };
+    // DB 장애다 — "찾을 수 없다"고 말하면 안 된다. 서명은 이미 접수됐을 수 있다.
+    return { props: { ...empty, unavailable: 'error' as const } };
   }
 };
 
@@ -103,6 +128,8 @@ export default function ContractCompletePage({
   contract,
   downloadUrl,
   purged,
+  unavailable,
+  terminated,
 }: CompletePageProps) {
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState<string | null>(null);
@@ -119,6 +146,29 @@ export default function ContractCompletePage({
    * {"ok":false,...} 한 줄이 적힌 흰 화면으로 넘어간다. 이 링크는 메일함에 영구히 남아
    * 몇 년 뒤에도 눌리는데, 그때 고객이 보는 것이 그 화면이어서는 안 된다.
    */
+  if (unavailable || !contract) {
+    // 장애로 못 읽은 것과 링크가 죽은 것은 고객이 할 일이 다르다. 제목부터 구분한다.
+    const isError = unavailable === 'error';
+    return (
+      <>
+        <Head>
+          <title>
+            {isError ? '계약서를 여는 중 문제가 생겼습니다' : '계약서를 찾을 수 없습니다'} | Studio NOL
+          </title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <ContractNotice
+          title={isError ? '계약서를 여는 중 문제가 생겼습니다' : '계약서를 찾을 수 없습니다'}
+          description={
+            isError
+              ? '잠시 후 다시 시도해 주세요. 서명은 이미 접수되었을 수 있으니, 계속 같은 화면이 나오면 아래 번호로 알려 주세요.'
+              : '링크가 만료되었거나 주소가 잘못되었습니다. 메일에 포함된 링크를 다시 확인해 주세요.'
+          }
+        />
+      </>
+    );
+  }
+
   const handleDownload = async () => {
     setDownloading(true);
     setDownloadError(null);
@@ -187,6 +237,15 @@ export default function ContractCompletePage({
               {purged ? '보관 기간이 지나 개인정보를 파기했습니다.' : '서명본 PDF를 첨부한 확인 메일도 함께 보내 드립니다.'}
             </span>
           </p>
+
+          {/* 종료된 계약도 서명본은 법적 보존 대상이라 이 화면을 그대로 보여준다. 다만
+              진행 중인 계약처럼 읽히면 안 되므로 사실을 밝힌다. */}
+          {terminated && (
+            <p className="mb-8 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-200 dark:bg-gray-50 dark:text-gray-700">
+              이 계약은 <strong>이용이 종료</strong>되었습니다. 서명본은 그대로 보관되며 아래에서
+              내려받을 수 있습니다.
+            </p>
+          )}
 
           <div className="bg-gray-50 dark:bg-gray-50 rounded-xl p-6 text-left mb-8">
             <dl className="grid grid-cols-2 gap-y-3 gap-x-4 text-sm">
