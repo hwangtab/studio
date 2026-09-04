@@ -63,7 +63,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  if (isHoneypotSubmission(payload.company) || isTooFast(payload._formLoadTime)) {
+  // 봇에게는 실패를 알리지 않는다 — 성공으로 응답하고 발송만 건너뛴다.
+  // 다만 **로그는 남긴다**: 이 분기가 침묵하는 바람에, 정상 문의가 여기서 버려져도
+  // 아무도 알 수 없었다(시계 스큐 사고). 오탐이 늘면 로그로 먼저 드러나야 한다.
+  const honeypotTripped = isHoneypotSubmission(payload.company);
+  const tooFast = isTooFast(payload._formFillMs);
+  if (honeypotTripped || tooFast) {
+    console.warn(
+      `[contact] 봇 트랩으로 발송 생략 (honeypot=${honeypotTripped}, tooFast=${tooFast}, fillMs=${String(payload._formFillMs)})`,
+    );
     return res.status(200).json(SUCCESS_RESPONSE);
   }
 

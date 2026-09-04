@@ -45,9 +45,23 @@ const toSafeOptionalString = (value: unknown, maxLength = 255): string | undefin
 export const isHoneypotSubmission = (company: unknown): boolean =>
   typeof company === 'string' && company.trim().length > 0;
 
-export const isTooFast = (formLoadTime: unknown): boolean => {
-  if (typeof formLoadTime !== 'number' || !Number.isFinite(formLoadTime)) return false;
-  return Date.now() - formLoadTime < MIN_FILL_MS;
+/**
+ * 봇 시간 트랩 — 폼을 채운 **경과 시간**(클라이언트가 계산)으로 판정한다.
+ *
+ * 예전엔 클라이언트의 절대 시각(`_formLoadTime`)을 받아 `Date.now()(서버) - 그 값`을
+ * 뺐다. 두 시계가 다른 기계라 **방문자 PC 시계가 3초만 빨라도** 정상 제출이 봇으로
+ * 찍혔고, 호출부가 그 경우 200 성공을 돌려주므로(봇에게 실패를 알리지 않으려는 설계)
+ * 문의가 화면상 "전송 완료"인 채로 조용히 사라졌다. NTP 미동기는 흔하고, 그 사람은
+ * 몇 번을 다시 보내도 영원히 같은 결과를 받는다.
+ *
+ * 경과 시간은 한 시계 안에서만 빼므로 스큐가 소거된다. 봇 차단력은 그대로다 —
+ * 값을 위조하려면 어차피 스크립트를 고쳐야 하고, 그건 절대 시각도 마찬가지였다.
+ */
+export const isTooFast = (formFillMs: unknown): boolean => {
+  if (typeof formFillMs !== 'number' || !Number.isFinite(formFillMs)) return false;
+  // 음수는 조작이거나 계산 오류다. 정상 사용자를 버리지 않도록 통과시킨다(honeypot이 남아 있다).
+  if (formFillMs < 0) return false;
+  return formFillMs < MIN_FILL_MS;
 };
 
 export const validateAndSanitizeContactPayload = (
