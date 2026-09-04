@@ -120,14 +120,72 @@ describe('서명 완료 페이지 props', () => {
     });
   });
 
-  it('토큰이 없으면 계약을 조회조차 하지 않는다', async () => {
-    mockFound(contractFixture());
-    await expect(run({})).resolves.toEqual({ notFound: true });
+  /**
+   * 사이트 공용 404를 띄우지 않는다.
+   *
+   * 여기 오는 사람은 대부분 계약 당사자다 — 메일에 몇 년 남아 있던 링크를 이제 눌렀거나,
+   * 하필 DB가 흔들렸을 뿐이다. 마케팅 톤의 "페이지를 찾을 수 없습니다"를 보면 서명이
+   * 접수됐는지, PDF는 어디서 받는지, 어디로 연락하는지 알 길이 없다. 서명 페이지는
+   * 같은 상황을 이미 안내 화면으로 처리하는데 이 페이지만 맨 404로 떨어뜨리고 있었다.
+   */
+  describe('문서를 보여줄 수 없을 때', () => {
+    it('토큰이 없으면 계약을 조회조차 하지 않고 안내 화면을 준다', async () => {
+      mockFound(contractFixture());
+      const r = await run({});
+      expect(r.props.unavailable).toBe('not-found');
+      expect(r.props.contract).toBeNull();
+      expect(r).not.toHaveProperty('notFound');
+    });
+
+    it('없는 계약·토큰 불일치는 같은 안내로 묶는다 (계약 존재 여부를 흘리지 않는다)', async () => {
+      mockFound(undefined);
+      const r = await run();
+      expect(r.props.unavailable).toBe('not-found');
+      expect(r.props.contract).toBeNull();
+    });
+
+    it('DB 장애는 "찾을 수 없다"가 아니라 오류로 구분해 알린다', async () => {
+      (getDb as jest.Mock).mockReturnValue({
+        query: { contracts: { findFirst: jest.fn().mockRejectedValue(new Error('turso down')) } },
+      });
+      const r = await run();
+      // 서명은 이미 접수됐을 수 있다 — 고객이 할 일이 다르므로 사유를 나눈다.
+      expect(r.props.unavailable).toBe('error');
+    });
+
+    it('어느 경우에도 계약 정보를 props에 싣지 않는다', async () => {
+      mockFound(undefined);
+      const r = await run();
+      expect(JSON.stringify(r.props)).not.toContain('홍길동');
+      expect(JSON.stringify(r.props)).not.toContain(PHONE);
+    });
   });
 
-  it('없는 계약이면 404', async () => {
-    mockFound(undefined);
-    await expect(run()).resolves.toEqual({ notFound: true });
+  /**
+   * 이용이 종료된 계약. 서명본은 법적 보존 대상이라 남는데, 예전엔 signed가 아니라는
+   * 이유로 서명 페이지로 되돌렸고 sign.tsx의 상태 분기에 terminated가 없어 **이미 서명을
+   * 마친 고객에게 빈 서명 패드**가 떴다. 고객 메일의 영구 링크가 이 페이지를 가리킨다.
+   */
+  describe('이용이 종료된 계약', () => {
+    it('서명 페이지로 되돌리지 않고 완료 화면을 보여준다', async () => {
+      mockFound(contractFixture({ status: 'terminated' }));
+      const r = await run();
+      expect(r).not.toHaveProperty('redirect');
+      expect(r.props.terminated).toBe(true);
+      expect(r.props.contract).not.toBeNull();
+    });
+
+    it('서명본을 내려받을 경로는 그대로 준다', async () => {
+      mockFound(contractFixture({ status: 'terminated' }));
+      const r = await run();
+      expect(r.props.downloadUrl).toContain('/api/contracts/c1/download');
+    });
+
+    it('종료되지 않은 계약에는 terminated를 붙이지 않는다', async () => {
+      mockFound(contractFixture());
+      const r = await run();
+      expect(r.props).not.toHaveProperty('terminated');
+    });
   });
 
   describe('서명이 끝난 계약', () => {

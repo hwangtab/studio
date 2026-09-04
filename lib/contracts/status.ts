@@ -18,6 +18,7 @@ export type ContractStatus = Contract['status'];
 export type ContractAction =
   | 'send'
   | 'resend'
+  | 'resend-signed'
   | 'cancel'
   | 'update'
   | 'delete'
@@ -27,6 +28,16 @@ export type ContractAction =
 const ALLOWED_STATUSES: Record<ContractAction, readonly ContractStatus[]> = {
   send: ['draft'],
   resend: ['sent', 'expired', 'cancelled'],
+  /**
+   * 서명 완료 메일·PDF 재발송. resend와 나눈 이유는 목적이 다르기 때문이다 —
+   * resend는 서명 링크를 새로 보내며 토큰을 회전시키는데, 이미 서명된 계약에 그걸
+   * 하면 확정된 문서의 접근 토큰이 바뀐다. 이쪽은 상태·토큰을 건드리지 않고
+   * 완료 알림만 다시 만든다(PDF 생성 실패도 함께 복구된다).
+   *
+   * 없던 시절엔 서명 완료 메일이 실패해도 관리자에게 손이 없었다. 화면은 "재발송하거나
+   * 서명 링크를 전달하라"고 안내했지만 signed 상태에는 두 버튼이 다 렌더되지 않았다.
+   */
+  'resend-signed': ['signed'],
   cancel: ['draft', 'sent', 'expired'],
   // 서명 대상 문서의 무결성을 위해 발송 후에는 본문을 고칠 수 없다.
   // 내용을 바꿔야 하면 취소하고 새 계약을 만든다.
@@ -39,6 +50,7 @@ const ALLOWED_STATUSES: Record<ContractAction, readonly ContractStatus[]> = {
 const ACTION_LABEL: Record<ContractAction, string> = {
   send: '발송',
   resend: '재발송',
+  'resend-signed': '완료 메일 재발송',
   cancel: '취소',
   update: '수정',
   delete: '삭제',

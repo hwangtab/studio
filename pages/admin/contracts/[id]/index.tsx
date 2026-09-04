@@ -191,8 +191,12 @@ export default function AdminContractDetailPage({
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
               <strong className="block mb-1">알림 처리에 문제가 있었습니다</strong>
               {contract.notificationError}
+              {/* 안내는 화면에 실제로 있는 버튼만 가리켜야 한다. signed 상태에는 '재발송'도
+                  '서명 링크 복사'도 렌더되지 않는데 그걸 누르라고 적혀 있었다. */}
               <span className="block mt-2 text-amber-700">
-                고객이 메일을 받지 못했을 수 있습니다. 재발송하거나 서명 링크를 직접 전달해 주세요.
+                {contract.status === 'signed'
+                  ? '고객이 서명 완료 메일을 받지 못했을 수 있습니다. 아래 "완료 메일 재발송"을 눌러 주세요.'
+                  : '고객이 메일을 받지 못했을 수 있습니다. 재발송하거나 서명 링크를 직접 전달해 주세요.'}
               </span>
             </div>
           )}
@@ -427,6 +431,21 @@ export default function AdminContractDetailPage({
                   }
                 >
                   재발송
+                </Button>
+              )}
+
+              {isActionAllowed(contract.status, 'resend-signed') && !contract.purgedAt && (
+                <Button
+                  variant="outline"
+                  disabled={busy}
+                  onClick={() =>
+                    run(
+                      () => mutateContract(contract.id, 'resend-signed'),
+                      '서명 완료 메일과 PDF를 고객에게 다시 보냅니다. 계약 내용과 서명 링크는 그대로입니다. 계속할까요?',
+                    )
+                  }
+                >
+                  완료 메일 재발송
                 </Button>
               )}
 

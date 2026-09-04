@@ -47,7 +47,7 @@ export const downloadContractPdf = async (
   }
 };
 
-export type ContractMutation = 'send' | 'resend' | 'cancel' | 'terminate';
+export type ContractMutation = 'send' | 'resend' | 'resend-signed' | 'cancel' | 'terminate';
 
 export const mutateContract = async (
   contractId: string,
