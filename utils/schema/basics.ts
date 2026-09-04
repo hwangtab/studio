@@ -117,7 +117,11 @@ export const generateWebPageSchema = (
   articleId?: string,
   hasBreadcrumb?: boolean,
   primaryImageUrl?: string,
-  webPageType?: string
+  webPageType?: string,
+  // 정적 페이지 lastmod 정본(lib/pageLastmod.ts)에서 온 ISO 문자열. 값이 없으면(정본에
+  // 항목이 없거나 article 페이지라 Article.dateModified가 이미 담당) 필드를 아예 생략한다 —
+  // CLAUDE.md "lastmod 정책": 가짜 날짜를 만들어 채우지 않는다.
+  dateModified?: string
 ) => {
   const schemaLanguage = getSchemaLanguage(locale);
 
@@ -139,6 +143,7 @@ export const generateWebPageSchema = (
     }),
     ...(hasBreadcrumb && { breadcrumb: { '@id': `${canonicalUrl}#breadcrumb` } }),
     ...(articleId && { mainEntity: { '@id': articleId } }),
+    ...(dateModified && { dateModified }),
   };
 };
 

@@ -42,6 +42,30 @@ describe('buildStudioServiceSchema', () => {
     });
   });
 
+  it('sets offers.priceValidUntil to a YYYY-MM-DD date roughly 12 months out', () => {
+    const schema = buildStudioServiceSchema({
+      locale: 'ko',
+      siteName: '스튜디오 놀',
+      siteUrl: 'https://studionol.co.kr',
+      pageUrl: 'https://studionol.co.kr/ko/recording',
+      name: '녹음',
+      description: '녹음 서비스',
+      serviceType: '녹음',
+      offerName: '녹음 패키지',
+      offerPrice: 250000,
+    });
+
+    const offers = schema.offers as { priceValidUntil?: string };
+    expect(offers.priceValidUntil).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+
+    const validUntil = new Date(offers.priceValidUntil as string);
+    const expected = new Date();
+    expected.setMonth(expected.getMonth() + 12);
+    // 테스트 실행 시각과 빌드 경계가 며칠 어긋나도 통과하도록 근사 비교(±5일).
+    const diffDays = Math.abs(validUntil.getTime() - expected.getTime()) / (1000 * 60 * 60 * 24);
+    expect(diffDays).toBeLessThan(5);
+  });
+
   it('uses English local area labels for non-Korean locale pages', () => {
     const schema = buildStudioServiceSchema({
       locale: 'en',

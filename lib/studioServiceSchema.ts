@@ -1,5 +1,6 @@
 import type { Locale } from './i18n';
 import { getSchemaLanguage } from '../utils/schema';
+import { getOfferPriceValidUntil } from '../utils/schema/shared';
 
 interface BuildStudioServiceSchemaOptions {
   locale: Locale;
@@ -63,6 +64,9 @@ export const buildStudioServiceSchema = ({
     name: offerName,
     priceCurrency: 'KRW',
     price: offerPrice,
+    // 다른 Offer(lesson·practice-room·pricing)는 전부 getOfferPriceValidUntil()을 쓰는데
+    // 이 Service Offer만 빠져 있었다. 없으면 Google이 가격을 만료 처리한다.
+    priceValidUntil: getOfferPriceValidUntil(),
     availability: 'https://schema.org/InStock',
     url: `${siteUrl}/${locale}/pricing#${pricingHash}`,
   },

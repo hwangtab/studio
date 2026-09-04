@@ -14,6 +14,7 @@ import {
 } from '../utils/schema';
 import { defaultLocale, hreflangByLocale, ogLocaleByLocale, type Locale } from '../lib/i18n-config';
 import { getSeoDefaults, getSiteConfig, socialProfiles, studioOperator } from '../data/siteConfig';
+import { getRouteLastmod } from '../lib/pageLastmod';
 import { resolveSeoPathState, resolveSeoUrlState } from './seo/metadataUrls';
 import { buildFinalSchemaData, collectSchemaItems, serializeJsonLd } from './seo/schemaData';
 
@@ -203,6 +204,17 @@ const SEO = ({
     [siteUrl, currentLocale]
   );
 
+  // WebPage.dateModified는 정적 페이지 lastmod 정본(lib/pageLastmod.ts)에서만 읽는다 —
+  // 항목이 없으면 undefined로 두어 필드를 아예 생략한다(가짜 날짜 금지). article 페이지는
+  // Article.dateModified가 이미 이 값을 담당하므로 WebPage에는 중복·충돌을 피해 넣지 않는다.
+  const pageDateModified = React.useMemo(
+    () =>
+      ogType === 'article'
+        ? undefined
+        : getRouteLastmod(pathState.pathWithoutLocale) ?? undefined,
+    [ogType, pathState.pathWithoutLocale]
+  );
+
   const webPageSchema = React.useMemo(
     () =>
       includeSchema
@@ -215,10 +227,11 @@ const SEO = ({
           ogType === 'article' ? `${normalizedCanonical}#article` : webPageMainEntityId,
           Boolean(breadcrumbs && breadcrumbs.length > 0),
           absoluteOgImage || undefined,
-          webPageType
+          webPageType,
+          pageDateModified
         )
         : null,
-    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage, webPageType, webPageMainEntityId]
+    [includeSchema, resolvedTitle, resolvedDescription, siteUrl, normalizedCanonical, currentLocale, ogType, breadcrumbs, absoluteOgImage, webPageType, webPageMainEntityId, pageDateModified]
   );
 
   const articleSchema = React.useMemo(

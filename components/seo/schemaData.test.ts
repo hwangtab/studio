@@ -1,4 +1,5 @@
 import { buildFinalSchemaData, collectSchemaItems, serializeJsonLd } from './schemaData';
+import { generateWebPageSchema } from '../../utils/schema/basics';
 
 describe('collectSchemaItems', () => {
   it('flattens arrays and @graph objects while ignoring empty inputs', () => {
@@ -58,6 +59,40 @@ describe('buildFinalSchemaData', () => {
         { '@type': 'FAQPage' },
       ],
     });
+  });
+});
+
+describe('generateWebPageSchema dateModified', () => {
+  const args = [
+    'Recording',
+    'Recording description',
+    'https://studionol.co.kr',
+    'https://studionol.co.kr/ko/recording',
+    'ko' as const,
+    undefined,
+    false,
+    undefined,
+    'ItemPage',
+  ] as const;
+
+  it('includes dateModified when a value is passed', () => {
+    const schema = generateWebPageSchema(...args, '2026-09-01T23:52:58.000Z');
+    expect(schema.dateModified).toBe('2026-09-01T23:52:58.000Z');
+  });
+
+  it('omits dateModified entirely when no value is passed (no fake date)', () => {
+    const schema = generateWebPageSchema(...args);
+    expect(schema).not.toHaveProperty('dateModified');
+  });
+
+  it('survives collectSchemaItems/buildFinalSchemaData unchanged', () => {
+    const webPage = generateWebPageSchema(...args, '2026-09-01T23:52:58.000Z');
+    const result = buildFinalSchemaData({
+      includeSchema: true,
+      schemaItems: collectSchemaItems([webPage]),
+    });
+
+    expect(result).toMatchObject({ dateModified: '2026-09-01T23:52:58.000Z' });
   });
 });
 
