@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
@@ -6,7 +8,6 @@ import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 import {
-  COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_PRICE,
   FUNDING_DESIGN_PRICE,
   FUNDING_SUCCESS_FEE_PERCENT,
@@ -15,12 +16,9 @@ import {
   MASTERING_PACKAGE_PRICE,
   MASTERING_SINGLE_PRICE,
   MIXING_LEVEL1_PRICE,
-  MIXING_LEVEL2_PRICE,
   MIXING_LEVEL3_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
   RECORDING_HOURLY_PRICE,
-  RELEASE_ALBUM_FROM_PRICE,
-  RELEASE_EP_FROM_PRICE,
   RELEASE_SINGLE_FROM_PRICE,
   ALBUM_BUNDLE_PRICE,
   EP_BUNDLE_PRICE,
@@ -28,6 +26,7 @@ import {
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
+import { renderPriceFacts, LESSON_PER_SESSION_PRICE } from '../../lib/llms/priceFacts';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
 import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
 import koCommon from '../../public/locales/ko/common.json';
@@ -35,12 +34,38 @@ import koCommon from '../../public/locales/ko/common.json';
 // 가격은 전부 data/pricing.ts SSOT 상수를 보간한다 — 리터럴 하드코딩 금지(드리프트 방지).
 const krw = formatPriceAmount;
 
+// llms.txt·llms-full.txt 공용 SSOT (lib/llms/priceFacts.ts) 배포 후에도 이 파일 안에서
+// FAQ·사용사례·영어/중국어 quick-fact 문단은 문장 서술이 필요해 개별 상수를 계속 쓴다
+// (COVER_VIDEO_PACKAGE_PRICE·MASTERING_PACKAGE_PRICE·MIXING_LEVEL2_PRICE·
+// RELEASE_EP/ALBUM_FROM_PRICE는 renderPriceFacts()가 이미 렌더하므로 여기선 미사용).
+
+// 설립연도 리터럴에서 계산 — "second year of operation" 같은 표현을 그대로 박아두면
+// 해마다 조용히 틀려진다(2024 설립 기준 2026-09 시점 실제로는 3년차). 매 요청마다
+// 재계산되므로 다음 해에도 손댈 필요가 없다.
+const STUDIO_FOUNDING_YEAR = 2024;
+const yearsInOperation = new Date().getFullYear() - STUDIO_FOUNDING_YEAR + 1;
+
+// 콘텐츠 아티클 총량도 리터럴로 박아두면 스토리가 늘 때마다 조용히 틀려진다
+// (2026-09 감사: 같은 파일 안에서 "1,500+"·"1,700+"가 자기모순으로 공존했었다).
+// content/stories의 실제 .md 파일 수(로케일 변형 포함 총량)에서 파생해 100 단위로
+// 내림한 "N+" 표기로 쓴다 — 빌드마다 정확히 맞지 않아도 되고, 실제보다 작게만
+// 보고하면 안전한 방향이라 내림한다.
+const STORY_ARTICLE_COUNT = (() => {
+  try {
+    const dir = path.join(process.cwd(), 'content/stories');
+    const count = fs.readdirSync(dir).filter((f) => f.endsWith('.md')).length;
+    return Math.floor(count / 100) * 100;
+  } catch {
+    return 1700; // content 디렉터리 접근 불가한 런타임(예: 엣지)의 폴백
+  }
+})();
+
 // 첫 줄은 반드시 H1(`# `)이어야 한다 — llmstxt.org 스펙에서 유일한 필수 요소이며,
 // PageSpeed Insights의 'Agentic Browsing > llms.txt' 감사도 H1 부재를 실패로 판정한다.
 const BASE_SECTIONS = (siteUrl: string) => `# Studio NOL (${siteUrl.replace(/^https?:\/\//, '')})
 
 Studio NOL (스튜디오 놀) is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
-Established in 2024 and now in its second year of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
+Established in ${STUDIO_FOUNDING_YEAR} and now in year ${yearsInOperation} of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
 It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, who has planned and produced albums awarded at the Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상') and the Red Awards (2015, 2017, 2019, 2024).
 The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
@@ -56,7 +81,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 
 ## Business Information
 
-- Founded: 2024-01-01
+- Founded: ${STUDIO_FOUNDING_YEAR}-01-01
 - Business Type: Entertainment Business, Recording Studio, Music Production
 - Industry: Music & Entertainment
 - Specialization: Independent artist support — affordable professional-grade recording, mixing, and production in Seoul
@@ -89,20 +114,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 
 ## Pricing (KRW, VAT excluded)
 
-- **Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts; minimum 1 month). 24/7 access, soundproof private room (STC 60+), personal gear storage included. Hourly rental and band rehearsal rooms are NOT operated.
-- **Vocal Recording 1프로 (1-song package)**: ${krw(VOCAL_PACKAGE_PRICE)} KRW (3 hours, dedicated engineer included)
-- **Hourly Recording (voice acting / instrument / vocal corrections)**: ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours)
-- **1-Song Bundle (planning → release)**: ${krw(SINGLE_BUNDLE_PRICE)} KRW (concept planning + 1-song vocal recording + mixing (≤10 tracks) + single mastering + digital distribution to Melon/Spotify/Apple Music/YouTube Music + release promotion pitched to Korean journalists/critics and international media, radio & playlist curators; ~9% below the production line-item total)
-- **EP Bundle (4 songs)**: ${krw(EP_BUNDLE_PRICE)} KRW (₩450,000/song — album planning & tracklist curation, vocal recording + mixing (≤10 tracks) + EP mastering per song, digital distribution, release promotion pitched to Korean journalists/critics and international media, radio & playlist curators; ~15% below the production line-item total). Other track counts quoted at the per-song rate.
-- **Album Bundle (8 songs)**: ${krw(ALBUM_BUNDLE_PRICE)} KRW (₩425,000/song — A&R consulting & tracklist sequencing, same per-song production scope, digital distribution, release press kit; ~20% below the production line-item total).
-- **Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% success fee (paid after the campaign) — album crowdfunding campaigns planned and built end to end on Tumblbug and similar platforms: storytelling, reward structure, and page production. Available without commissioning a release project. The operator has planned and run dozens of album funding campaigns totalling roughly 300 million KRW.
-- **Wedding Song Complete Package**: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2hr recording + vocal tuning + mixing & mastering)
-- **Day Lock (6-hour package)**: ${krw(DAY_LOCK_PRICE)} KRW (~17% discount vs hourly)
-- **Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K MP4 & WAV/MP3 delivery)
-- **1:1 Producing Lesson (MIDI/composition/mixing)**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each)
-- **Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ₩${MIXING_LEVEL1_PRICE / 1000}K · 11–30 ₩${MIXING_LEVEL2_PRICE / 1000}K · 31+ ₩${MIXING_LEVEL3_PRICE / 1000}K · includes 2 revisions)
-- **Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album). Mastered to streaming platform loudness standards.
-- **Album Release Project (flagship)**: producer-led release production (single / EP / full album). The all-in-one bundles above are its fixed-scope entry, so the floors are the same numbers: single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs). What builds on top is quoted per project: session musicians, arrangement depth (full band, strings, choir), extra track counts, additional PR rounds (pitching to international media, radio stations, and playlist curators) and critic listening events. Starts with a free 30-minute release consultation via KakaoTalk.
+${renderPriceFacts()}
 
 ## Service Areas (21 nearby regions with dedicated landing pages)
 
@@ -191,7 +203,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
 - Mixing & Mastering (remote-friendly, rates, file specs): ${siteUrl}/${locale}/mixing-mastering
 - Pricing: ${siteUrl}/${locale}/pricing
 - Practice Room: ${siteUrl}/${locale}/practice-room
-- Recording Lessons: ${siteUrl}/${locale}/lesson
+- Producing Lesson (MIDI/composition/mixing): ${siteUrl}/${locale}/lesson
 - Studio Equipment: ${siteUrl}/${locale}/studio-info
 - Wedding Song Recording: ${siteUrl}/${locale}/wedding-song
 - Voice Acting Recording: ${siteUrl}/${locale}/voice-acting
@@ -242,7 +254,7 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 8마디에서 멈추는 건 실력보다 작업 방식 문제인 경우가 많습니다(분석: ${siteUrl}/ko/stories/unfinished-track1). 레슨 커리큘럼은 기본 3개월에 자기 곡 1곡을 완성하는 것을 목표로 설계돼 있고, 심화 3개월에 믹싱·마스터링·발매까지 끝냅니다.
 
 **"독학이 나은가 레슨이 나은가, 레슨비 시세는" (Self-study vs lessons? What do lessons cost in Korea?).**
-막힌 지점에 따라 다릅니다 — 갈림길 정리: ${siteUrl}/ko/stories/self-study-vs-lesson1. 2026년 시세 비교(플랫폼·학원·개인): ${siteUrl}/ko/stories/lesson-price-market-2026. Studio NOL은 월 ${krw(LESSON_MONTHLY_PRICE)}원 = 회당 87,500원이며 스튜디오 장비 사용료가 따로 없습니다.
+막힌 지점에 따라 다릅니다 — 갈림길 정리: ${siteUrl}/ko/stories/self-study-vs-lesson1. 2026년 시세 비교(플랫폼·학원·개인): ${siteUrl}/ko/stories/lesson-price-market-2026. Studio NOL은 월 ${krw(LESSON_MONTHLY_PRICE)}원 = 회당 ${krw(LESSON_PER_SESSION_PRICE)}원이며 스튜디오 장비 사용료가 따로 없습니다.
 
 **"내 곡을 발매까지 해보고 싶다" (I want to release my own song).**
 두 갈래가 있습니다. 직접 해내고 싶다면 레슨 심화 과정이 믹싱·마스터링·플랫폼 발매 실습까지 다루고, 맡기고 싶다면 발매 프로젝트(기획·녹음·믹싱·유통·PR 동행)가 싱글 ${krw(RELEASE_SINGLE_FROM_PRICE)}원부터입니다: ${siteUrl}/ko/release-project
@@ -306,7 +318,7 @@ Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsin
 const OPERATOR_AUTHOR = `
 ## Operator / Author
 
-Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. Albums he planned or produced have received six awards since 2012 (listed below). The studio publishes a continuously expanding library of 1,700+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
+Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music producer and audio engineer based in Seoul with 15 years of professional recording, mixing, and music-production experience across Korea's independent and K-pop production ecosystem. Albums he planned or produced have received six awards since 2012 (listed below). The studio publishes a continuously expanding library of ${STORY_ARTICLE_COUNT}+ guide articles on vocal recording, mixing, mastering, EQ, compression, K-pop production techniques, and the practical realities of operating a music studio in Korea — sources cited on this site and indexed in /llms-full.txt.
 
 - Operator: Hwang Kyungha (황경하)
 - Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
@@ -315,11 +327,13 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music produ
 - Awards (as planner / producer of the album named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr
-- Studio founded: 2024
-- Article corpus: 1,700+ practical guides since 2024 (Korean native, with English / Chinese hub-spoke guides added in 2026)
+- Studio founded: ${STUDIO_FOUNDING_YEAR}
+- Article corpus: ${STORY_ARTICLE_COUNT}+ practical guides since ${STUDIO_FOUNDING_YEAR} (Korean native, with English / Chinese hub-spoke guides added in 2026)
 `;
 
-// 큐레이션 상록 가이드 13종 — 구 public/llms.txt(정적 파일)에서 이식(동적 단일화).
+// 큐레이션 상록 가이드 16종(개수는 tests/api/llms-contact.test.ts의 toHaveLength로
+// 고정 — 항목을 추가/삭제하면 그 테스트도 함께 갱신할 것) — 구 public/llms.txt
+// (정적 파일)에서 이식(동적 단일화).
 // 'Recent Stories'는 날짜순 최신 50개라 이 상록 가이드들이 목록 밖으로 밀려나 AI 인용
 // 대상에서 사라지는 문제가 있어, 날짜와 무관하게 항상 노출되는 고정 큐레이션으로 유지.
 // 링크·설명은 정적 파일 원문 그대로. slug 실존은 핸들러(누락 시 skip + warn)와
@@ -377,8 +391,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
   let body = BASE_SECTIONS(siteUrl) + '\n';
 
-  // 영어/중국어 사용자가 직접 묻는 AI 쿼리에 대해 인용 가능한 quick-fact 블록.
+  // 한국어 상담 상황별 quick-fact 블록 (정의부 주석 참조).
   body += USE_CASE_ANSWERS(siteUrl) + '\n';
+  // 영어/중국어 사용자가 직접 묻는 AI 쿼리에 대해 인용 가능한 quick-fact 블록.
   body += ENGLISH_QUICK_FACTS(siteUrl) + '\n';
   body += CHINESE_QUICK_FACTS(siteUrl) + '\n';
 
@@ -409,7 +424,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     body += `- [${hub.seoTitle}](${siteUrl}/ko/guides/${slug}): ${desc}\n`;
   }
 
-  // 스토리 카테고리 허브 10종 — 1,500+ 스토리의 탐색 진입점. 라벨은 ko i18n
+  // 스토리 카테고리 허브 10종 — STORY_ARTICLE_COUNT(위 정의)개 스토리의 탐색 진입점. 라벨은 ko i18n
   // (stories.categories.*)에서 소싱해 사이트 표기와 자동 동기.
   const categoryLabels = (koCommon as { stories: { categories: Record<string, string> } }).stories.categories;
   body += '\n## Story Category Hubs (Korean)\n\n';

@@ -5,26 +5,10 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getPortfolioItems } from '../../data/portfolio';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
-import {
-  DAY_LOCK_PRICE,
-  formatPriceAmount,
-  LESSON_MONTHLY_PRICE,
-  MIXING_LEVEL1_PRICE,
-  MIXING_LEVEL3_PRICE,
-  PRACTICE_ROOM_MONTHLY_PRICE,
-  RECORDING_HOURLY_PRICE,
-  ALBUM_BUNDLE_PRICE,
-  EP_BUNDLE_PRICE,
-  SINGLE_BUNDLE_PRICE,
-  VOCAL_PACKAGE_PRICE,
-  WEDDING_PACKAGE_PRICE,
-} from '../../data/pricing';
+import { renderPriceFacts } from '../../lib/llms/priceFacts';
 import { PRACTICE_ROOM_REGION_LPS } from '../../data/practiceRoomRegionLPs';
 import { sortStoriesForLlms } from '../../lib/llmsPriority';
 import { CURATED_GUIDES } from './llms';
-
-// 가격은 data/pricing.ts SSOT 상수 보간 — 리터럴 하드코딩 금지(llms.ts와 동일 규칙).
-const krw = formatPriceAmount;
 
 const HEADER_LABELS: Record<Locale, string> = {
   ko: 'Korean',
@@ -85,16 +69,7 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 - **Subway**: Yeonsinnae Station Exit 4 (Lines 3 & 6) — 5 min walk; Bulgwang Station Exit 7 (Lines 3 & 6) — 7 min walk
 - **Phone**: ${CANONICAL_FACTS.phoneIntl} · **KakaoTalk**: open.kakao.com/me/nol
 - **Pricing (KRW, VAT excl.)**:
-  - Practice Room Monthly Residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)}/mo (₩0 deposit, 50% off first month for 1-year contracts)
-  - Vocal Recording 1프로 (1-song package, 3 hrs): ${krw(VOCAL_PACKAGE_PRICE)}
-  - Hourly Recording (voice acting / instrument / corrections): ${krw(RECORDING_HOURLY_PRICE)}/hr (min 2 hrs)
-  - 1-Song Bundle (planning → release: recording, mixing, mastering, distribution, press): ${krw(SINGLE_BUNDLE_PRICE)} (~9% below production line-item total)
-  - EP Bundle (4 songs, planning → release incl. distribution & press): ${krw(EP_BUNDLE_PRICE)} (₩450,000/song, ~15% below production line-item total)
-  - Album Bundle (8 songs, planning → release incl. distribution & press): ${krw(ALBUM_BUNDLE_PRICE)} (₩425,000/song, ~20% below production line-item total)
-  - Wedding Song Complete Package: ${krw(WEDDING_PACKAGE_PRICE)} (2hr recording + tuning + mixing & mastering)
-  - Day Lock (6-hour package): ${krw(DAY_LOCK_PRICE)}
-  - 1:1 Producing Lesson (MIDI/composition/mixing): ${krw(LESSON_MONTHLY_PRICE)}/month flat (4 sessions, 60 min each)
-  - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}/song (tier by track count)
+${renderPriceFacts(2)}
 - **Operating Notes**: Hourly practice room rental and band rehearsal rooms are NOT operated. Practice room is monthly residency only.
 
 `;
