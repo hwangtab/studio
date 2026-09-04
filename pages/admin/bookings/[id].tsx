@@ -139,6 +139,28 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
   const handleResend = () => run(() => resendBookingNotification(booking.id));
 
+  // components/admin/bookingActions.ts에 넣지 않고 여기 인라인으로 둔다 — 이번 작업의
+  // 수정 허용 파일 목록에 그 파일이 없고(다른 에이전트가 동시에 만지는 파일들과 분리해
+  // 두기 위한 경계), resendBookingNotification과 같은 fetch 패턴이라 그대로 옮겨 왔다.
+  const handleRetryGcal = () =>
+    run(async (): Promise<BookingActionResult> => {
+      try {
+        const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ action: 'retry-gcal' }),
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result?.ok) {
+          return { ok: false, message: result?.message || '캘린더 재시도에 실패했습니다.' };
+        }
+        return { ok: true };
+      } catch {
+        return { ok: false, message: '네트워크 오류가 발생했습니다.' };
+      }
+    });
+
   const handleRefund = async (e: React.FormEvent) => {
     e.preventDefault();
     setRefundError(null);
@@ -164,6 +186,9 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
   const canChangeStatus = booking.bookingStatus === 'confirmed';
   const canResend = booking.bookingStatus !== null && booking.bookingStatus !== 'pending';
+  // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
+  // (pages/api/admin/bookings/[id].ts retry-gcal).
+  const canRetryGcal = booking.bookingStatus !== null && booking.bookingStatus !== 'cancelled';
 
   return (
     <>
@@ -216,6 +241,21 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
               <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
               {booking.gcalError}
+              <span className="block mt-2 text-amber-700">
+                운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
+                비어 있으면 다른 일정이 겹칠 수 있습니다. 아래 “캘린더 재시도”를 눌러 다시
+                등록해 주세요.
+              </span>
+              {canRetryGcal && (
+                <Button
+                  variant="secondary"
+                  disabled={busy}
+                  onClick={handleRetryGcal}
+                  className="mt-3"
+                >
+                  캘린더 재시도
+                </Button>
+              )}
             </div>
           )}
 

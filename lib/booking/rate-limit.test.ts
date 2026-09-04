@@ -14,7 +14,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
-import { rateLimits } from '../../db/schema';
+import { rateLimits, webhookEvents } from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
@@ -47,6 +47,7 @@ beforeAll(async () => {
 
 beforeEach(async () => {
   await client.execute('DELETE FROM rate_limits');
+  await client.execute('DELETE FROM webhook_events');
 });
 
 afterAll(() => {
@@ -91,5 +92,34 @@ describe('consumeRateLimit', () => {
     await consumeRateLimit(KEY, 1, 3600);
     expect(await consumeRateLimit(KEY, 1, 3600)).toBe(false);
     expect(await consumeRateLimit('booking_create:ip:9.9.9.9', 1, 3600)).toBe(true);
+  });
+});
+
+describe('consumeRateLimit — webhook_events lazy cleanup', () => {
+  const WEBHOOK_KEY = 'webhook:ip:9.9.9.9';
+  const NINETY_ONE_DAYS_AGO = new Date(Date.now() - 91 * 24 * 60 * 60 * 1000);
+  const ONE_DAY_AGO = new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+  it('webhook: 키로 호출하면 90일 지난 webhook_events 행을 지운다', async () => {
+    await mockDb.insert(webhookEvents).values([
+      { eventKey: 'old:DONE', payload: '{}', processedAt: NINETY_ONE_DAYS_AGO },
+      { eventKey: 'recent:DONE', payload: '{}', processedAt: ONE_DAY_AGO },
+    ]);
+
+    await consumeRateLimit(WEBHOOK_KEY, 120, 3600);
+
+    const rows = await mockDb.query.webhookEvents.findMany();
+    expect(rows.map((r) => r.eventKey)).toEqual(['recent:DONE']);
+  });
+
+  it('webhook: 접두사가 아닌 키는 webhook_events를 건드리지 않는다', async () => {
+    await mockDb
+      .insert(webhookEvents)
+      .values({ eventKey: 'old:DONE', payload: '{}', processedAt: NINETY_ONE_DAYS_AGO });
+
+    await consumeRateLimit(KEY, 3, 3600);
+
+    const rows = await mockDb.query.webhookEvents.findMany();
+    expect(rows.map((r) => r.eventKey)).toEqual(['old:DONE']);
   });
 });

@@ -6,6 +6,8 @@ import { bookings, orders } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
+import { createBookingEvent, deleteBookingEvent } from '../../../../lib/booking/gcal';
+import { kstDateString } from '../../../../lib/booking/kst';
 
 const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
 type StatusTransition = (typeof STATUS_TRANSITIONS)[number];
@@ -173,6 +175,72 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } catch (error: unknown) {
         console.error('[API/admin/bookings/[id]] Resend notification failed:', error);
         return res.status(500).json({ ok: false, message: '알림 재발송에 실패했습니다.' });
+      }
+    }
+
+    if (body.action === 'retry-gcal') {
+      if (!booking) {
+        return res.status(409).json({ ok: false, message: '재시도할 예약이 없습니다.' });
+      }
+      if (booking.status === 'cancelled') {
+        return res
+          .status(409)
+          .json({ ok: false, message: '취소된 예약은 캘린더에 등록할 필요가 없습니다.' });
+      }
+
+      // 운영자는 구글 캘린더에 직접 일정을 넣지 않는다 — 이 자동 등록이 유일한 경로다.
+      // 그래서 기존 gcalEventId가 있는 채로 재시도하면 캘린더에 같은 예약이 두 개 생긴다
+      // (createBookingEvent는 검색 없이 무조건 새 이벤트를 만든다). 멱등하게 만들기 위해
+      // "새 이벤트를 먼저 만들고 나서 옛 이벤트를 지우는" 순서로 처리한다 — 반대 순서(먼저
+      // 지우고 나중에 만들기)라면 생성이 실패했을 때 캘린더에 이 예약이 통째로 사라진
+      // 상태가 되고, 그건 이 기능이 막으려는 정확히 그 사고다. 이 순서면 최악의 경우도
+      // "잠깐 중복 이벤트가 남는 것"에 그친다(그마저도 아래에서 정리 시도).
+      const previousEventId = booking.gcalEventId;
+
+      try {
+        const eventId = await createBookingEvent({
+          summary: `[예약] ${booking.serviceType} — ${order.customerName}`,
+          description: [
+            `상품: ${booking.productId} (${booking.durationHours}시간)`,
+            `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
+            `주문번호: ${order.orderNo}`,
+            `요청사항: ${booking.customerNote ?? '없음'}`,
+          ].join('\n'),
+          start: booking.startAt,
+          end: booking.endAt,
+        });
+
+        await getDb()
+          .update(bookings)
+          .set({ gcalEventId: eventId, gcalError: null })
+          .where(eq(bookings.id, booking.id));
+
+        if (previousEventId) {
+          try {
+            await deleteBookingEvent(previousEventId);
+          } catch (cleanupError: unknown) {
+            // 새 이벤트는 이미 정상 생성·기록됐다 — 옛 이벤트 삭제 실패는 중복 하나가
+            // 남는 수준이라 재시도 자체를 실패로 되돌리지 않는다. 로그만 남긴다.
+            console.error('[API/admin/bookings/[id]] 기존 캘린더 이벤트 삭제 실패(신규 이벤트는 정상 등록됨):', {
+              bookingId: booking.id,
+              previousEventId,
+              error: cleanupError,
+            });
+          }
+        }
+
+        return res.status(200).json({ ok: true, gcalEventId: eventId });
+      } catch (error: unknown) {
+        const detail = error instanceof Error ? error.message : String(error);
+        try {
+          await getDb()
+            .update(bookings)
+            .set({ gcalError: `retry(${kstDateString(new Date())}): ${detail}` })
+            .where(eq(bookings.id, booking.id));
+        } catch (writeError: unknown) {
+          console.error('[API/admin/bookings/[id]] gcalError 기록 실패:', writeError);
+        }
+        return res.status(500).json({ ok: false, message: '캘린더 재시도에 실패했습니다.' });
       }
     }
 
