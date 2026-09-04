@@ -9,7 +9,7 @@ import { kstDateString } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
 import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
-import { MAX_BOOK_DAYS } from '../../lib/booking/validation';
+import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
 
 interface BookingWizardProps {
   service: string;
@@ -56,6 +56,14 @@ const formatOrderName = (nameKo: string, date: string, startHour: number): strin
   const [, monthStr, dayStr] = date.split('-');
   const hh = String(startHour).padStart(2, '0');
   return `${nameKo} (${Number(monthStr)}/${Number(dayStr)} ${hh}:00)`;
+};
+
+/** 남은 선점 시간을 "12분 3초"로. 1분 미만이면 초만 보여 촉박함이 드러나게 한다. */
+const formatHoldLeft = (ms: number): string => {
+  const total = Math.ceil(ms / 1000);
+  const m = Math.floor(total / 60);
+  const sec = total % 60;
+  return m > 0 ? `${m}분 ${sec}초` : `${sec}초`;
 };
 
 export default function BookingWizard({ service, products }: BookingWizardProps) {
@@ -193,6 +201,18 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   // step 1의 amounts(클라이언트 재계산)는 진행 중 미리보기용일 뿐, 실제 청구액과
   // 드리프트가 생길 수 있어(예: 서버 반올림 규칙 변경) 결제 단계엔 쓰지 않는다.
   const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; amounts: OrderAmounts } | null>(null);
+  /**
+   * 선점이 풀리는 시각(클라이언트 기준 epoch ms).
+   *
+   * 주문을 만들면 서버가 그 슬롯을 PENDING_HOLD_SECONDS 동안만 잡아 둔다. 고객이 결제창을
+   * 오래 열어두면 토스 인증까지 마친 뒤 confirm에서 거부당하고, 카드에는 승인 대기만 남은
+   * 채 이유를 알 수 없었다 — 화면에 타이머도 문구도 없었기 때문이다.
+   *
+   * 주문 생성 직후 클라이언트 시계로 기한을 잡고 같은 시계로 남은 시간을 센다. 두 값이
+   * 한 시계에서 나오므로 기기 시계가 어긋나 있어도 카운트다운은 정확하다.
+   */
+  const [holdExpiresAt, setHoldExpiresAt] = useState<number | null>(null);
+  const [holdRemainingMs, setHoldRemainingMs] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -239,6 +259,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
           orderNo: data.orderNo,
           amounts: { itemAmount: data.itemAmount, vatAmount: data.vatAmount, totalAmount: data.totalAmount },
         });
+        setHoldExpiresAt(Date.now() + PENDING_HOLD_SECONDS * 1000);
         setStep(4);
         return;
       }
@@ -258,6 +279,18 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
       setSubmitting(false);
     }
   };
+
+  // 선점 카운트다운. 4단계에 있을 때만 돌리고, 0에 닿으면 멈춘다.
+  useEffect(() => {
+    if (step !== 4 || holdExpiresAt === null) {
+      setHoldRemainingMs(null);
+      return;
+    }
+    const tick = () => setHoldRemainingMs(Math.max(0, holdExpiresAt - Date.now()));
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [step, holdExpiresAt]);
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
@@ -533,6 +566,31 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
             4. 결제
           </h2>
 
+          {holdRemainingMs !== null && (
+            holdRemainingMs > 0 ? (
+              <p
+                className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
+                role="status"
+              >
+                이 시간대를 <strong>{formatHoldLeft(holdRemainingMs)}</strong> 동안 잡아 두었습니다.
+                시간이 지나면 다른 분이 예약할 수 있어 결제가 취소될 수 있습니다.
+              </p>
+            ) : (
+              <div
+                className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200"
+                role="alert"
+              >
+                <strong>선점 시간이 지났습니다.</strong> 지금 결제하면 이미 다른 예약이 잡혀
+                취소될 수 있습니다. 시간대를 다시 선택해 주세요.
+                <span className="mt-2 block">
+                  <Button type="button" variant="outline" onClick={() => { setConfirmedOrder(null); setHoldExpiresAt(null); setStep(2); }}>
+                    시간대 다시 선택
+                  </Button>
+                </span>
+              </div>
+            )
+          )}
+
           <div className="mb-4">
             <PriceBreakdown amounts={confirmedOrder.amounts} />
           </div>
@@ -543,6 +601,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
             orderName={formatOrderName(selectedProduct.nameKo, date, selectedStartHour)}
             customerName={customerName}
             customerEmail={customerEmail}
+            service={service}
           />
 
           <div className="mt-4">

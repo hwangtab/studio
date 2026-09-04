@@ -7,6 +7,16 @@ import { CLOSE_HOUR, OPEN_HOUR } from './slots';
 export const MIN_LEAD_HOURS = 24;
 export const MAX_BOOK_DAYS = 60;
 
+/**
+ * 주문 생성 후 슬롯을 잡아 두는 시간(초). 이 시간이 지나면 다른 고객이 같은 슬롯을
+ * 가져갈 수 있고, confirm이 뒤늦은 결제를 거부한다.
+ *
+ * service.ts가 아니라 여기 두는 이유: 예약 위저드가 카운트다운을 띄우려면 이 값을
+ * 클라이언트에서도 읽어야 하는데, service.ts는 db 클라이언트를 물고 있어 번들에
+ * 들어갈 수 없다. 값을 양쪽에 베껴 두면 조용히 어긋난다.
+ */
+export const PENDING_HOLD_SECONDS = 900;
+
 export interface CreateBookingPayload {
   productId: string;
   hours?: number;

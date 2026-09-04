@@ -8,9 +8,13 @@ interface SuccessProps {
   outcome: 'confirmed' | 'error';
   message?: string;
   orderNo?: string;
+  /** 예약 확인·취소 링크. 메일이 실패해도 고객이 여기서 바로 받을 수 있어야 한다. */
+  manageUrl?: string;
+  /** 확인 메일이 실제로 나갔는지. undefined면 이번 호출이 보낸 게 아니다(새로고침 등). */
+  emailSent?: boolean;
 }
 
-export default function BookingSuccessPage({ outcome, message, orderNo }: SuccessProps) {
+export default function BookingSuccessPage({ outcome, message, orderNo, manageUrl, emailSent }: SuccessProps) {
   return (
     <>
       <Head>
@@ -22,8 +26,28 @@ export default function BookingSuccessPage({ outcome, message, orderNo }: Succes
           <>
             <h1 className="text-2xl font-bold">예약이 확정되었습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">
-              주문번호 {orderNo}. 예약 확인 메일을 보내드렸습니다 — 메일의 링크에서 예약을 확인·취소할 수 있습니다.
+              주문번호 {orderNo}.
+              {emailSent === false
+                ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
+                : ' 예약 확인 메일을 보내드렸습니다.'}
             </p>
+            {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
+                실패하면 고객이 예약을 스스로 취소할 방법이 아예 없었다. */}
+            {manageUrl && (
+              <p className="mt-4">
+                <Link
+                  href={manageUrl}
+                  className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark"
+                >
+                  예약 확인·취소 페이지 열기
+                </Link>
+              </p>
+            )}
+            {manageUrl && (
+              <p className="mt-3 break-all text-xs text-gray-500">
+                이 주소를 저장해 두세요: {manageUrl}
+              </p>
+            )}
           </>
         ) : (
           <>
@@ -47,5 +71,12 @@ export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ que
 
   const result = await confirmBookingPayment({ orderNo: orderId, paymentKey, amount: Number(amount) });
   if (!result.ok) return { props: { outcome: 'error', message: result.message } };
-  return { props: { outcome: 'confirmed', orderNo: result.orderNo } };
+  return {
+    props: {
+      outcome: 'confirmed',
+      orderNo: result.orderNo,
+      manageUrl: `/ko/booking/manage/${result.orderNo}?token=${result.manageToken}`,
+      ...(result.emailSent === undefined ? {} : { emailSent: result.emailSent }),
+    },
+  };
 };

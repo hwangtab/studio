@@ -89,7 +89,7 @@ describe('confirmBookingPayment', () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
   });
 
   it('토스가 거절하면 orders를 failed로 마킹하고 토스 메시지를 그대로 전달한다', async () => {
@@ -136,7 +136,7 @@ describe('confirmBookingPayment', () => {
     });
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
     expect(db.batch).toHaveBeenCalled(); // 정상 승인과 같은 batch 경로
     expect(db.run).not.toHaveBeenCalled(); // orders를 failed로 마킹하는 db.run이 없다
     // rawResponse는 재조회한 payment로 남는다.
@@ -206,14 +206,14 @@ describe('confirmBookingPayment', () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ createdAt: new Date(Date.now() - 899 * 1000) }));
       (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-      expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
       expect(confirmPayment).toHaveBeenCalled();
     });
 
     it('이미 paid인 주문은 만료 검사보다 먼저 멱등 성공으로 답한다 (뒤늦은 새로고침이 깨지지 않는다)', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', createdAt: new Date(Date.now() - 86400 * 1000) }));
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-      expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't' });
     });
   });
 
@@ -239,7 +239,7 @@ describe('confirmBookingPayment', () => {
     db.batch.mockRejectedValueOnce(new Error('UNIQUE constraint failed: payments.payment_key'));
     db.query.payments.findFirst.mockResolvedValueOnce({ id: 'p1', paymentKey: 'pk' });
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't' });
   });
 
   it('batch도 멱등 판정 조회도 둘 다 실패하면 throw 대신 recording_failed로 떨어진다', async () => {
@@ -263,7 +263,7 @@ describe('confirmBookingPayment', () => {
     (createBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('캘린더 이벤트 생성 실패: 500'));
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
     const gcalErrorCall = setCallsOf(db).find((c) => 'gcalError' in c);
     expect(gcalErrorCall).toBeDefined();
     expect((gcalErrorCall as { gcalError: string }).gcalError).toContain('캘린더 이벤트 생성 실패: 500');
@@ -275,7 +275,7 @@ describe('confirmBookingPayment', () => {
     (sendBookingConfirmedEmails as jest.Mock).mockResolvedValueOnce('customer:TIMEOUT');
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: false });
     const notificationErrorCall = setCallsOf(db).find((c) => 'notificationError' in c);
     expect(notificationErrorCall).toBeDefined();
     expect((notificationErrorCall as { notificationError: string }).notificationError).toBe('customer:TIMEOUT');
@@ -285,7 +285,7 @@ describe('confirmBookingPayment', () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ bookings: [] }));
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't' });
     expect(createBookingEvent).not.toHaveBeenCalled();
     expect(sendBookingConfirmedEmails).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(

@@ -140,6 +140,13 @@ export default function AdminBookingsPage({
 
   const mailFailed = useMemo(() => bookings.filter((b) => b.notificationError), [bookings]);
 
+  /**
+   * 구글 캘린더 등록에 실패한 예약. 결제·확정은 정상이라 목록에서는 완전히 정상으로
+   * 보이는데, 정작 운영자 캘린더에는 그 시간이 비어 있다. 그 상태로 전화 예약을 받으면
+   * 오프라인 이중예약이 난다 — 알림 실패보다 위에 둔다(고객이 이미 돈을 냈고 온다).
+   */
+  const gcalFailed = useMemo(() => bookings.filter((b) => b.gcalError), [bookings]);
+
   // 결제 기록과 주문 상태가 어긋난 건 — 돈이 걸린 문제라 알림 실패보다 위에 둔다(스펙 §10).
   const mismatched = useMemo(() => bookings.filter((b) => b.mismatch), [bookings]);
 
@@ -250,6 +257,16 @@ export default function AdminBookingsPage({
                     .map((b) => `${b.orderNo}${b.latestPaymentKeyPrefix ? ` · ${b.latestPaymentKeyPrefix}…` : ''}`)
                     .join(', ')}
                   ). 토스 콘솔에서 실제 결제·취소 상태를 확인한 뒤 처리해 주세요.
+                </div>
+              )}
+
+              {gcalFailed.length > 0 && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+                  <strong>구글 캘린더에 등록되지 않은 예약이 {gcalFailed.length}건 있습니다</strong> (
+                  {gcalFailed.map((b) => `${b.orderNo} · ${b.customerName}`).join(', ')}). 결제는
+                  정상이지만 캘린더에는 이 시간이 비어 있습니다 — 그대로 두면 같은 시간에 전화
+                  예약을 받아 겹칠 수 있습니다. 상세 화면에서 재시도하거나 캘린더에 직접
+                  넣어 주세요.
                 </div>
               )}
 

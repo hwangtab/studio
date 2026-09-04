@@ -117,7 +117,11 @@ describe('confirmBookingPayment — 선점 만료 주문의 확정 (H-2)', () =>
       payment: { paymentKey: 'pk-b', orderId: b.orderNo, status: 'DONE', totalAmount: b.totalAmount },
     });
     const bConfirm = await confirmBookingPayment({ orderNo: b.orderNo, paymentKey: 'pk-b', amount: b.totalAmount });
-    expect(bConfirm).toEqual({ ok: true, orderNo: b.orderNo });
+    // manageToken은 실제 DB가 만든 값이라 고정할 수 없다. 반환된다는 사실만 단언한다 —
+    // 이 토큰이 없으면 메일이 실패했을 때 고객이 예약을 취소할 방법이 사라진다.
+    expect(bConfirm).toEqual(
+      expect.objectContaining({ ok: true, orderNo: b.orderNo, manageToken: expect.any(String) }),
+    );
     expect(await confirmedBookingCount()).toBe(1);
 
     // ④ A가 결제창으로 돌아와 결제를 완료한다. A의 order는 아직 'pending'이라
@@ -139,7 +143,11 @@ describe('confirmBookingPayment — 선점 만료 주문의 확정 (H-2)', () =>
       payment: { paymentKey: 'pk-a', orderId: a.orderNo, status: 'DONE', totalAmount: a.totalAmount },
     });
     const result = await confirmBookingPayment({ orderNo: a.orderNo, paymentKey: 'pk-a', amount: a.totalAmount });
-    expect(result).toEqual({ ok: true, orderNo: a.orderNo });
+    // manageToken은 실제 DB가 만든 값이라 고정할 수 없다. 반환된다는 사실만 단언한다 —
+    // 이 토큰이 없으면 메일이 실패했을 때 고객이 예약을 취소할 방법이 사라진다.
+    expect(result).toEqual(
+      expect.objectContaining({ ok: true, orderNo: a.orderNo, manageToken: expect.any(String) }),
+    );
     expect(await confirmedBookingCount()).toBe(1);
   });
 });

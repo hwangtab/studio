@@ -9,7 +9,21 @@ import { confirmPayment, fetchPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
 
 export type ConfirmOutcome =
-  | { ok: true; orderNo: string }
+  | {
+      ok: true;
+      orderNo: string;
+      /**
+       * 예약 확인·취소에 필요한 토큰. 예전엔 이 값이 **확인 메일에만** 실려서, 메일 발송이
+       * 실패하면 고객이 스스로 취소할 방법이 사라졌다(화면은 "보내드렸습니다"라고 단언했다).
+       * 완료 화면이 관리 링크를 직접 띄울 수 있도록 함께 돌려준다.
+       */
+      manageToken: string;
+      /**
+       * 확인 메일이 실제로 나갔는가. false면 완료 화면이 "메일을 보냈다"고 말하지 않는다.
+       * 멱등 재생 경로(새로고침·웹훅 중복)에서는 이번 호출이 보낸 게 아니므로 undefined.
+       */
+      emailSent?: boolean;
+    }
   | {
       ok: false;
       code: 'not_found' | 'amount_mismatch' | 'invalid_state' | 'toss_rejected' | 'recording_failed';
@@ -33,7 +47,7 @@ export const confirmBookingPayment = async (input: {
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
 
   // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 이미 확정이면 성공으로 답한다.
-  if (order.status === 'paid') return { ok: true, orderNo: order.orderNo };
+  if (order.status === 'paid') return { ok: true, orderNo: order.orderNo, manageToken: order.manageToken };
   if (order.status !== 'pending')
     return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
 
@@ -145,7 +159,7 @@ export const confirmBookingPayment = async (input: {
         error: lookupError,
       });
     }
-    if (existing) return { ok: true, orderNo: order.orderNo };
+    if (existing) return { ok: true, orderNo: order.orderNo, manageToken: order.manageToken };
     console.error('[booking-confirm] 결제 승인됨, DB 기록 실패 — 웹훅 복구 대기', {
       orderNo: order.orderNo,
       paymentKey: approved.paymentKey,
@@ -155,6 +169,7 @@ export const confirmBookingPayment = async (input: {
   }
 
   // 후처리 — 결제는 이미 성공했으므로 실패를 삼키되 반드시 기록한다 (스펙 §10).
+  let emailSent: boolean | undefined;
   if (booking) {
     try {
       const eventId = await createBookingEvent({
@@ -186,6 +201,7 @@ export const confirmBookingPayment = async (input: {
     }
 
     const notifyError = await sendBookingConfirmedEmails({ ...order, status: 'paid' }, booking);
+    emailSent = !notifyError;
     try {
       await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));
     } catch (error) {
@@ -200,5 +216,5 @@ export const confirmBookingPayment = async (input: {
     console.error('[booking-confirm] bookings 없는 주문 — 후처리 생략', { orderNo: order.orderNo });
   }
 
-  return { ok: true, orderNo: order.orderNo };
+  return { ok: true, orderNo: order.orderNo, manageToken: order.manageToken, emailSent };
 };
