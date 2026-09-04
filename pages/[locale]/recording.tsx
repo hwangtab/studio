@@ -182,6 +182,8 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
             component="RecordingHero"
             ctaId="recording_hero_kakao"
             label={t('recording.cta.inquiry')}
+            /* 비-ko는 목적지가 /contact 폼이다 — 이 라벨은 KakaoTalk을 명시하므로 쓸 수 없다. */
+            contactLabel={t('actions.contact')}
             phone={siteConfig.contact.phone}
             phoneCtaId="recording_hero_phone"
           />
@@ -358,21 +360,16 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
           </div>
         </m.div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a
-            href={siteConfig.contact.kakaoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackLeadEvent('lead_click_kakao', {
-                locale,
-                component: 'RecordingPage',
-                cta_id: 'recording_process_kakao',
-              })
-            }
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-kakao text-kakao-ink font-bold text-lg hover:bg-kakao-dark transition-colors duration-200"
-          >
-            {t('recording.cta.inquiry')}
-          </a>
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="RecordingPage"
+            ctaId="recording_process_kakao"
+            label={t('recording.cta.inquiry')}
+            // 비-ko는 목적지가 /contact 폼이라 KakaoTalk을 명시한 이 라벨을 쓸 수 없다.
+            contactLabel={t('actions.contact')}
+            surface="onSurface"
+          />
           <BookingEntryButton service="recording" locale={locale} />
         </div>
       </Section>

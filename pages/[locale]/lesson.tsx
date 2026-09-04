@@ -28,7 +28,8 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import { LESSON_MONTHLY_PRICE, formatPriceAmount } from '../../data/pricing';
 import { buildLessonServiceSchema } from '../../lib/lessonSchema';
-import { trackLeadEvent } from '../../utils/analytics';
+import Link from 'next/link';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import type { StoryCardData } from '../../types/story';
 import { createInViewEnterAnimation } from '../../utils/animationUtils';
 import { createTranslatedQaItems } from '../../utils/translatedList';
@@ -288,21 +289,14 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                 </div>
 
                 <div className="mt-12 text-center">
-                    <a
-                        href={siteConfig.contact.kakaoUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() =>
-                            trackLeadEvent('lead_click_kakao', {
-                                locale,
-                                component: 'LessonPage',
-                                cta_id: 'lesson_curriculum_kakao',
-                            })
-                        }
-                        className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-kakao text-kakao-ink font-bold text-lg hover:bg-kakao-dark transition-colors duration-200"
-                    >
-                        {t('lesson.pricing.cta')}
-                    </a>
+                    <HeroKakaoCta
+                      locale={locale}
+                      kakaoUrl={siteConfig.contact.kakaoUrl}
+                      component="LessonPage"
+                      ctaId="lesson_curriculum_kakao"
+                      label={t('lesson.pricing.cta')}
+                      surface="onSurface"
+                    />
                 </div>
             </Section>
 
@@ -376,21 +370,40 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                     <span className="break-keep">{t('lesson.format.items.2.label')}: <strong>{t('lesson.format.items.2.value')}</strong></span>
                                 </li>
                             </ul>
-                            <a
-                                href={siteConfig.contact.kakaoUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() =>
-                                    trackLeadEvent('lead_click_kakao', {
-                                        locale,
-                                        component: 'LessonPage',
-                                        cta_id: 'lesson_pricing_kakao',
-                                    })
-                                }
-                                className="block w-full text-center bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 rounded-xl transition-colors duration-300"
-                            >
-                                {t('lesson.pricing.cta')}
-                            </a>
+                            {/* 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko는 /contact 폼으로
+                                보내고 옐로도 쓰지 않는다(노란 버튼 = 카카오톡 규칙). */}
+                            {locale === 'ko' ? (
+                                <a
+                                    href={siteConfig.contact.kakaoUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={() =>
+                                        trackLeadEvent('lead_click_kakao', {
+                                            locale,
+                                            component: 'LessonPage',
+                                            cta_id: 'lesson_pricing_kakao',
+                                        })
+                                    }
+                                    className="block w-full text-center bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 rounded-xl transition-colors duration-300"
+                                >
+                                    {t('lesson.pricing.cta')}
+                                </a>
+                            ) : (
+                                <Link
+                                    href={`/${locale}/contact`}
+                                    prefetch={false}
+                                    onClick={() =>
+                                        trackMicroEvent('micro_click_contact', {
+                                            locale,
+                                            component: 'LessonPage',
+                                            cta_id: 'lesson_pricing_contact',
+                                        })
+                                    }
+                                    className="block w-full text-center bg-primary hover:bg-primary-dark text-white font-bold py-4 rounded-xl transition-colors duration-300"
+                                >
+                                    {t('lesson.pricing.cta')}
+                                </Link>
+                            )}
                         </div>
                     </m.div>
                 </div>

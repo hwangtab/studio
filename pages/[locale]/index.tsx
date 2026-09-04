@@ -112,21 +112,41 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             {/* 1차 CTA — 검증된 전환 채널(카카오톡) 직링크. GA4 90일 실질 전환은
                 카카오 클릭이 전부였고 폼은 전환 0이라, 마찰 큰 폼(/contact) 대신
                 카카오 오픈채팅으로 직접 연결. */}
-            <a
-              href={kakaoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() =>
-                trackLeadEvent('lead_click_kakao', {
-                  locale,
-                  component: 'HomeHero',
-                  cta_id: 'hero_primary_kakao',
-                })
-              }
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-kakao text-kakao-ink font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-kakao-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
-            >
-              {heroContent.cta.reserve}
-            </a>
+            {/* 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko 방문자가 여기로 가면 한국어
+                채팅방(앱이 없으면 설치 유도)에 떨어지므로 /contact 폼으로 가른다.
+                옐로도 함께 내린다 — 노란 버튼 = 카카오톡 규칙은 양방향이다. */}
+            {locale === 'ko' ? (
+              <a
+                href={kakaoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() =>
+                  trackLeadEvent('lead_click_kakao', {
+                    locale,
+                    component: 'HomeHero',
+                    cta_id: 'hero_primary_kakao',
+                  })
+                }
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-kakao text-kakao-ink font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-kakao-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+              >
+                {heroContent.cta.reserve}
+              </a>
+            ) : (
+              <Link
+                href={getLink('/contact')}
+                prefetch={false}
+                onClick={() =>
+                  trackMicroEvent('micro_click_contact', {
+                    locale,
+                    component: 'HomeHero',
+                    cta_id: 'hero_primary_contact',
+                  })
+                }
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+              >
+                {heroContent.cta.reserve}
+              </Link>
+            )}
             {/* 2차 CTA — ko는 플래그십(/release-project), 비-ko는 포트폴리오.
                 발매 허브로 갈 때만 micro_click_service를 발화한다(포트폴리오는
                 서비스 페이지가 아니라 이벤트 의미를 오염시키지 않기 위해 미발화).

@@ -318,21 +318,14 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
           </div>
         </m.div>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <a
-            href={siteConfig.contact.kakaoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackLeadEvent('lead_click_kakao', {
-                locale,
-                component: 'CoverVideoPage',
-                cta_id: 'cover_video_process_kakao',
-              })
-            }
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-kakao text-kakao-ink font-bold text-lg hover:bg-kakao-dark transition-colors duration-200"
-          >
-            {t('coverVideo.cta.inquiry')}
-          </a>
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="CoverVideoPage"
+            ctaId="cover_video_process_kakao"
+            label={t('coverVideo.cta.inquiry')}
+            surface="onSurface"
+          />
           <BookingEntryButton service="cover-video" locale={locale} />
         </div>
       </Section>

@@ -217,6 +217,8 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             component="MixingMasteringHero"
             ctaId="mixing_hero_kakao"
             label={t('mixingMastering.cta.inquiry')}
+            /* 비-ko는 목적지가 /contact 폼이다 — 이 라벨은 KakaoTalk을 명시하므로 쓸 수 없다. */
+            contactLabel={t('actions.contact')}
             phone={siteConfig.contact.phone}
             phoneCtaId="mixing_hero_phone"
           />

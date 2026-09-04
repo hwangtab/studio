@@ -2,8 +2,8 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, MessageCircle, Building } from '@/lib/lucide-icons';
-import { trackLeadEvent } from '../../utils/analytics';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building } from '@/lib/lucide-icons';
+import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -60,7 +60,11 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
   const siteConfig = getSiteConfig(locale);
   const siteUrl = siteConfig.url;
-  const kakaoUrl = siteConfig.contact.kakaoUrl;
+  // 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko 방문자는 /contact 폼으로 보낸다 —
+  // PricingCard가 ctaHref에 'kakao'가 있는지로 옐로와 lead_click_kakao를 가르므로,
+  // 이 한 줄이 가격 카드 6장의 목적지·배색·계측을 함께 맞춘다.
+  const kakaoUrl =
+    locale === 'ko' ? siteConfig.contact.kakaoUrl : `/${locale}/contact`;
 
   // 카피는 번역 파일에, 숫자는 data/pricing.ts SSOT에 남긴다(리터럴 하드코딩 금지).
   const priceLabels = React.useMemo(() => ({
@@ -196,22 +200,15 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           // AI 검색(ChatGPT 등)·외부 유입이 가격 페이지에 바로 착지하는 비중이 큰데
           // 기존엔 above-the-fold 행동 버튼이 없어 이탈이 높았음. 검증된 전환 채널인
           // 카카오톡 직링크를 히어로에 노출해 즉시 견적 문의로 연결.
-          <a
-            href={kakaoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackLeadEvent('lead_click_kakao', {
-                locale,
-                component: 'PricingHero',
-                cta_id: 'pricing_hero_kakao',
-              })
-            }
-            className="inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-kakao text-kakao-ink font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-kakao-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
-          >
-            <MessageCircle className="w-5 h-5" aria-hidden="true" />
-            {t('pricing.hero.ctaKakao', { defaultValue: '카톡으로 무료 견적 받기' })}
-          </a>
+          <HeroKakaoCta
+            locale={locale}
+            kakaoUrl={siteConfig.contact.kakaoUrl}
+            component="PricingHero"
+            ctaId="pricing_hero_kakao"
+            label={t('pricing.hero.ctaKakao', { defaultValue: '카톡으로 무료 견적 받기' })}
+            /* 비-ko는 목적지가 /contact 폼이라 "카톡" 라벨을 쓸 수 없다. */
+            contactLabel={t('actions.contact')}
+          />
         }
       />
 

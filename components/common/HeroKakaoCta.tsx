@@ -1,6 +1,7 @@
 import React from 'react';
-import { MessageCircle, Phone } from '@/lib/lucide-icons';
-import { trackLeadEvent } from '../../utils/analytics';
+import Link from 'next/link';
+import { MessageCircle, Mail, Phone } from '@/lib/lucide-icons';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import type { Locale } from '../../lib/i18n';
 
 interface HeroKakaoCtaProps {
@@ -11,6 +12,11 @@ interface HeroKakaoCtaProps {
   /** GA4 cta_id — 페이지·위치 단위로 고유하게. */
   ctaId: string;
   label: string;
+  /**
+   * 비-ko에서 쓸 라벨. 목적지가 카카오 오픈채팅이 아니라 /contact 폼이므로 라벨도 달라야
+   * 한다. 미지정 시 `label`을 그대로 쓴다.
+   */
+  contactLabel?: string;
   /**
    * 선택: 2차 전화 CTA. 지정하면 카카오(1차) 옆에 tel: 링크를 노출한다.
    * 네이버·지역검색으로 유입되는 로컬 고객(전화 선호층)의 리드를 포착하기 위한 것 —
@@ -36,9 +42,13 @@ interface HeroKakaoCtaProps {
  * 직링크를 히어로에 노출하고 `lead_click_kakao`를 발화한다.
  * (pricing/release 히어로 CTA와 동일한 시각·계측 패턴을 단일 컴포넌트로 통일.)
  */
-const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneCtaId, surface = 'onImage' }: HeroKakaoCtaProps) => {
+const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel, phone, phoneCtaId, surface = 'onImage' }: HeroKakaoCtaProps) => {
   const onImage = surface === 'onImage';
-  const kakaoButton = (
+  // 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko 방문자를 여기로 보내면 한국어 채팅방
+  // (앱이 없으면 설치 유도)에 떨어지므로, ContactCTA·ReleaseHeroCtas·HeaderActions와
+  // 똑같이 /contact 폼으로 가른다. 옐로도 쓰지 않는다 — 노란 버튼 = 카카오톡 규칙.
+  const isKorean = locale === 'ko';
+  const primaryButton = isKorean ? (
     <a
       href={kakaoUrl}
       target="_blank"
@@ -59,13 +69,33 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, phone, phoneC
       <MessageCircle className="w-5 h-5" aria-hidden="true" />
       {label}
     </a>
+  ) : (
+    <Link
+      href={`/${locale}/contact`}
+      prefetch={false}
+      onClick={() =>
+        trackMicroEvent('micro_click_contact', {
+          locale,
+          component,
+          cta_id: `${ctaId}_contact`,
+        })
+      }
+      className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] font-bold text-base sm:text-lg py-4 px-10 rounded-full bg-primary text-white hover:bg-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+        onImage
+          ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
+          : 'focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
+      }`}
+    >
+      <Mail className="w-5 h-5" aria-hidden="true" />
+      {contactLabel ?? label}
+    </Link>
   );
 
-  if (!phone) return kakaoButton;
+  if (!phone) return primaryButton;
 
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3">
-      {kakaoButton}
+      {primaryButton}
       {/* 2차 전화 CTA. 히어로 오버레이 위 흰 글씨 가독성을 위해 glass 토큰이 아닌
           고정 반투명 bg-white/15 + text-white를 쓴다(CLAUDE.md 히어로 CTA 규칙). */}
       <a

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Check } from '@/lib/lucide-icons';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import BaseCard from './BaseCard';
 
 interface PricingCardProps {
@@ -57,6 +57,16 @@ const PricingCard = ({
                 locale,
                 component: trackingComponent,
                 cta_id: `${trackingComponent.toLowerCase()}_${id}_kakao`,
+            });
+            return;
+        }
+        // 목적지가 카카오가 아니면(비-ko는 /contact 폼) 리드가 아니라 미세 전환으로 센다.
+        // 이걸 빼면 비-ko 클릭이 통째로 미집계된다.
+        if (!isKakaoCta && trackingComponent) {
+            trackMicroEvent('micro_click_contact', {
+                locale,
+                component: trackingComponent,
+                cta_id: `${trackingComponent.toLowerCase()}_${id}_contact`,
             });
             return;
         }
