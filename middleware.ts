@@ -77,9 +77,14 @@ function buildContentSecurityPolicy(): string {
     ].join('; ');
 }
 
+// 정책 내용이 요청에 전혀 의존하지 않으므로 모듈 로드 때 한 번만 만든다.
+// 이 미들웨어는 사실상 모든 페이지 요청에서 도는 가장 뜨거운 경로라,
+// 요청마다 배열을 만들고 join하던 비용을 그대로 두면 TTFB에 계속 얹힌다.
+const contentSecurityPolicy = isCspEnabled ? buildContentSecurityPolicy() : null;
+
 function setSecurityHeaders(response: NextResponse): NextResponse {
-    if (isCspEnabled) {
-        response.headers.set('Content-Security-Policy', buildContentSecurityPolicy());
+    if (contentSecurityPolicy) {
+        response.headers.set('Content-Security-Policy', contentSecurityPolicy);
     }
     response.headers.set('X-Content-Type-Options', 'nosniff');
     response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
@@ -243,6 +248,11 @@ export function middleware(request: NextRequest) {
         const response = NextResponse.redirect(destUrl, redirectStatus);
         if (shouldVaryByLanguage) {
             response.headers.set('Vary', 'Accept-Language');
+            // Vary만으로는 부족하다 — Accept-Language를 캐시 키에 넣지 않는 중간 프록시가
+            // 한 사용자의 언어 redirect를 다른 언어 사용자에게 돌려줄 수 있다. 307이라
+            // 영구 오염은 아니지만, 저장 자체를 막아 두는 편이 확실하다. 목적지 locale
+            // 페이지는 next.config.mjs의 s-maxage 규칙으로 그대로 캐시된다.
+            response.headers.set('Cache-Control', 'private, no-store');
         }
         if (isBot) {
             response.cookies.set('__bt', '1', { maxAge: 3600, sameSite: 'lax', path: '/', httpOnly: false });

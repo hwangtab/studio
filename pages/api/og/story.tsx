@@ -12,6 +12,37 @@ const OG_RATE_WINDOW = 60; // seconds
 // slug 형식 검증 — 알파벳·숫자·하이픈·한글만 허용 (임의 파라미터 DoS 방지)
 const VALID_SLUG_RE = /^[\wㄱ-힝-]{1,120}$/;
 
+// 폰트는 배포마다 고정된 정적 파일인데도 예전에는 요청마다 자기 origin으로 다시 받아왔다.
+// edge isolate는 인접 요청 사이에 재사용되므로, 한 번 받은 버퍼를 모듈 스코프에 남겨 두면
+// CDN 캐시 미스 경로에서 왕복(최대 5초 타임아웃 × 2회)이 통째로 사라진다.
+// 실패한 시도는 캐시하지 않는다 — 일시 장애가 isolate 수명 내내 굳으면 OG 생성이
+// 계속 기본 이미지로 빠지기 때문에, reject된 promise는 지워 다음 요청이 다시 시도한다.
+const fontCache = new Map<string, Promise<ArrayBuffer>>();
+
+function fetchFont(origin: string, assetPath: string): Promise<ArrayBuffer> {
+  const url = `${origin}${assetPath}`;
+  const cached = fontCache.get(url);
+  if (cached) return cached;
+
+  const pending = (async () => {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    try {
+      const res = await fetch(url, { signal: controller.signal });
+      if (!res.ok) throw new Error(`Font fetch failed: HTTP ${res.status} (${assetPath})`);
+      return await res.arrayBuffer();
+    } finally {
+      clearTimeout(timeout);
+    }
+  })();
+
+  fontCache.set(url, pending);
+  pending.catch(() => {
+    if (fontCache.get(url) === pending) fontCache.delete(url);
+  });
+  return pending;
+}
+
 async function checkOgRateLimit(ip: string): Promise<boolean> {
   const redisConfig = getRedisRestConfig();
   if (!redisConfig) return true;
@@ -75,19 +106,7 @@ export default async function handler(req: NextRequest) {
     // next/font 빌드 산출물(_next/static/media)은 edge runtime에서 접근 불가, 외부 폰트
     // 서버 의존 시 장애로 OG 생성 실패 → SNS 크롤러 메타 전달 깨짐 위험이라 자체 호스팅.
     const origin = new URL(req.url).origin;
-    const fetchFont = async (path: string): Promise<ArrayBuffer> => {
-      const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 5000);
-      try {
-        const res = await fetch(`${origin}${path}`, { signal: controller.signal });
-        if (!res.ok) throw new Error(`Font fetch failed: HTTP ${res.status} (${path})`);
-        return await res.arrayBuffer();
-      } finally {
-        clearTimeout(timeout);
-      }
-    };
-
-    const fontData = await fetchFont('/fonts/Pretendard-Bold.otf');
+    const fontData = await fetchFont(origin, '/fonts/Pretendard-Bold.otf');
 
     // 태국어(U+0E00–0E7F) 폴백 — Pretendard는 태국 문자를 사실상 커버하지 않아
     // th 로케일 스토리 제목이 satori 렌더에 실패하면 catch에서 og-default로 빠졌다.
@@ -97,7 +116,7 @@ export default async function handler(req: NextRequest) {
     // 못 받아도 Pretendard만으로 기존 동작(한글/라틴)은 유지되게 한다.
     let thaiFontData: ArrayBuffer | null = null;
     try {
-      thaiFontData = await fetchFont('/fonts/NotoSansThai-Bold.ttf');
+      thaiFontData = await fetchFont(origin, '/fonts/NotoSansThai-Bold.ttf');
     } catch (thaiFontError) {
       console.error('Thai fallback font fetch failed (continuing without it):', thaiFontError);
     }
