@@ -1249,6 +1249,11 @@
       "title": "Tarifas del estudio de grabación",
       "subtitle": "Elige una de tres opciones según tu carga de trabajo."
     },
+    "priceTable": {
+      "title": "Precios de Grabación",
+      "serviceCol": "Servicio",
+      "priceCol": "Precio"
+    },
     "process": {
       "title": "Cómo funciona una sesión",
       "subtitle": "Grabación vocal profesional en cuatro pasos",
@@ -1376,6 +1381,11 @@
     "mastering": {
       "title": "Precios de masterización",
       "subtitle": "¿Ya tienes la mezcla lista? También puedes encargar solo la masterización."
+    },
+    "priceTable": {
+      "title": "Precios de Mezcla y Masterización",
+      "serviceCol": "Servicio",
+      "priceCol": "Precio"
     },
     "process": {
       "title": "Así funciona un encargo remoto",

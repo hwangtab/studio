@@ -1249,6 +1249,11 @@
       "title": "录音室租赁价格",
       "subtitle": "根据所需工作量在三种方案中选择。"
     },
+    "priceTable": {
+      "title": "录音服务价格表",
+      "serviceCol": "服务",
+      "priceCol": "价格"
+    },
     "process": {
       "title": "录音进行流程",
       "subtitle": "四个步骤完成专业人声录音",
@@ -1376,6 +1381,11 @@
     "mastering": {
       "title": "母带处理价格",
       "subtitle": "如果已有混音成品，也可以只委托母带处理。"
+    },
+    "priceTable": {
+      "title": "混音·母带价格表",
+      "serviceCol": "服务",
+      "priceCol": "价格"
     },
     "process": {
       "title": "远程委托这样进行",

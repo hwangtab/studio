@@ -14,6 +14,7 @@ import {
   Award,
   ArrowRight,
   CheckCircle2,
+  Info,
 } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
@@ -25,6 +26,8 @@ import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import ServicePriceTable from '../../components/service/ServicePriceTable';
+import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
 // Below-fold 컴포넌트 code-splitting
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
@@ -97,6 +100,11 @@ const PROCESS_ANIMATION = createFadeInAnimation();
 const ENV_ANIMATION = createInViewEnterAnimation({ axis: 'y' });
 const ENV_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: -50 });
 const ENV_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50 });
+
+// 사이트맵과 같은 소스(lib/sitemap/pageLastmod.json) — 로케일과 무관한 빌드 타임 상수라
+// 컴포넌트 밖에서 한 번만 계산한다. 항목이 없으면 null(가짜 날짜 금지, lib/pageLastmod.ts 참조).
+const MIXING_MASTERING_LASTMOD_ISO = getRouteLastmod('/mixing-mastering');
+const MIXING_MASTERING_LASTMOD_DISPLAY = formatLastmodDate(MIXING_MASTERING_LASTMOD_ISO);
 
 const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
   locale,
@@ -314,6 +322,47 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         <p className="mt-6 text-center typo-card-body text-sm text-gray-500 dark:text-gray-400">
           {pricingData.VAT_NOTICE}
         </p>
+
+        {/* 위 믹싱·마스터링 카드와 같은 데이터를 시맨틱 <table>로 한 번 더 —
+            AI 검색·스크린리더 추출성용. pricing.tsx 요약표와 같은 시각 언어.
+            믹싱 상품명은 트랙 수 그대로(mixingOffers.title) — Level 표기 없음. */}
+        <div className="mt-10">
+          <SectionHeading
+            icon={Info}
+            title={t('mixingMastering.priceTable.title')}
+            as="h3"
+            className="mb-6"
+          />
+          <ServicePriceTable
+            caption={t('mixingMastering.priceTable.title')}
+            serviceColLabel={t('mixingMastering.priceTable.serviceCol')}
+            priceColLabel={t('mixingMastering.priceTable.priceCol')}
+            groups={[
+              {
+                id: 'mixing',
+                title: t('mixingMastering.mixing.title'),
+                rows: mixingOffers.map((offer) => ({
+                  id: offer.id,
+                  label: offer.title,
+                  subLabel: offer.subtitle,
+                  price: offer.priceDisplay,
+                  unit: offer.unit,
+                })),
+              },
+              {
+                id: 'mastering',
+                title: t('mixingMastering.mastering.title'),
+                rows: masteringOffers.map((offer) => ({
+                  id: offer.id,
+                  label: offer.title,
+                  subLabel: offer.subtitle,
+                  price: offer.priceDisplay,
+                  unit: offer.unit,
+                })),
+              },
+            ]}
+          />
+        </div>
       </Section>
 
       {/* 원격 의뢰 절차 — HowTo 스키마와 동일 데이터 */}
@@ -494,6 +543,14 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         subtitle={t('mixingMastering.faq.subtitle')}
         variant="default"
       />
+
+      {/* 가시적 최종 수정일 — lib/pageLastmod.ts(사이트맵과 동일 소스). 항목 없으면 렌더 안 함. */}
+      {MIXING_MASTERING_LASTMOD_DISPLAY && (
+        <p className="py-4 text-center typo-card-meta text-sm text-gray-500 dark:text-gray-400">
+          {t('stories.detail.lastUpdated')}{' '}
+          <time dateTime={MIXING_MASTERING_LASTMOD_ISO ?? undefined}>{MIXING_MASTERING_LASTMOD_DISPLAY}</time>
+        </p>
+      )}
 
       {/* 다른 서비스 페이지 전부에 있던 후기 섹션이 여기만 빠져 있었다 — 원격 의뢰는
           신뢰가 결정 요인이라 사회적 증거를 FAQ와 관련글 사이에 둔다. */}

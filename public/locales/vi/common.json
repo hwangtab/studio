@@ -1249,6 +1249,11 @@
       "title": "Bảng giá phòng thu",
       "subtitle": "Chọn một trong ba tùy chọn phù hợp với khối lượng công việc của bạn."
     },
+    "priceTable": {
+      "title": "Bảng giá thu âm",
+      "serviceCol": "Dịch vụ",
+      "priceCol": "Giá"
+    },
     "process": {
       "title": "Quy trình một buổi thu",
       "subtitle": "Thu âm vocal chuyên nghiệp qua bốn bước",
@@ -1376,6 +1381,11 @@
     "mastering": {
       "title": "Bảng giá mastering",
       "subtitle": "Nếu đã có bản mix, bạn cũng có thể chỉ đặt riêng mastering."
+    },
+    "priceTable": {
+      "title": "Bảng giá mixing & mastering",
+      "serviceCol": "Dịch vụ",
+      "priceCol": "Giá"
     },
     "process": {
       "title": "Quy trình đặt từ xa diễn ra thế nào",

@@ -1188,7 +1188,7 @@
     },
     "hero": {
       "title": "녹음실 대여 — 연신내 보컬 녹음 스튜디오",
-      "subtitleLine1": "Neumann U87AI·Vintech X73i, 전담 엔지니어가 직접",
+      "subtitleLine1": "보컬 1곡 25만원(3시간) · 시간당 10만원 — Neumann U87AI·Vintech X73i, 전담 엔지니어가 직접",
       "subtitleLine2": "데모부터 앨범까지, 제대로 된 한 곡을 녹음하세요",
       "alt": "스튜디오 놀 녹음실 보컬 녹음 세션"
     },
@@ -1248,6 +1248,11 @@
     "package": {
       "title": "녹음실 대여 가격",
       "subtitle": "필요한 작업량에 맞춰 3가지 중에서 선택하세요."
+    },
+    "priceTable": {
+      "title": "녹음 서비스 가격표",
+      "serviceCol": "서비스",
+      "priceCol": "가격"
     },
     "process": {
       "title": "녹음 진행 절차",
@@ -1376,6 +1381,11 @@
     "mastering": {
       "title": "마스터링 가격",
       "subtitle": "믹스가 이미 있다면 마스터링만 따로 맡기셔도 됩니다."
+    },
+    "priceTable": {
+      "title": "믹싱·마스터링 가격표",
+      "serviceCol": "서비스",
+      "priceCol": "가격"
     },
     "process": {
       "title": "원격 의뢰, 이렇게 진행합니다",

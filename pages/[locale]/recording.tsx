@@ -2,10 +2,11 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { m } from 'framer-motion';
-import { Mic2, Music, Users, ListChecks, CheckCircle2 } from '@/lib/lucide-icons';
+import { Mic2, Music, Users, ListChecks, CheckCircle2, Info } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
+import ServicePriceTable from '../../components/service/ServicePriceTable';
 import SEO from '../../components/SEO';
 import ImageHero from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
@@ -15,6 +16,7 @@ import type { LucideIcon } from '@/lib/lucide-icons';
 import BaseCard from '../../components/ui/BaseCard';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -68,6 +70,11 @@ const ENV_ANIMATION = createInViewEnterAnimation({ axis: 'y' });
 const ENV_IMAGE_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: -50 });
 const ENV_TEXT_ANIMATION = createInViewEnterAnimation({ axis: 'x', distance: 50 });
 const PROCESS_ANIMATION = createFadeInAnimation();
+
+// 사이트맵과 같은 소스(lib/sitemap/pageLastmod.json) — 로케일과 무관한 빌드 타임 상수라
+// 컴포넌트 밖에서 한 번만 계산한다. 항목이 없으면 null(가짜 날짜 금지, lib/pageLastmod.ts 참조).
+const RECORDING_LASTMOD_ISO = getRouteLastmod('/recording');
+const RECORDING_LASTMOD_DISPLAY = formatLastmodDate(RECORDING_LASTMOD_ISO);
 
 const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, relatedStories }) => {
   const { t } = useTranslation('common', { lng: locale });
@@ -291,6 +298,34 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         <p className="mt-6 text-center typo-card-body text-sm text-gray-500 dark:text-gray-400">
           {pricingData.VAT_NOTICE}
         </p>
+
+        {/* 위 카드와 같은 데이터(recordingOffers)를 시맨틱 <table>로 한 번 더 —
+            AI 검색·스크린리더 추출성용. pricing.tsx 요약표와 같은 시각 언어. */}
+        <div className="mt-10">
+          <SectionHeading
+            icon={Info}
+            title={t('recording.priceTable.title')}
+            as="h3"
+            className="mb-6"
+          />
+          <ServicePriceTable
+            caption={t('recording.priceTable.title')}
+            serviceColLabel={t('recording.priceTable.serviceCol')}
+            priceColLabel={t('recording.priceTable.priceCol')}
+            groups={[
+              {
+                id: 'recording',
+                rows: recordingOffers.map((offer) => ({
+                  id: offer.id,
+                  label: offer.title,
+                  subLabel: offer.subtitle,
+                  price: offer.priceDisplay,
+                  unit: offer.unit,
+                })),
+              },
+            ]}
+          />
+        </div>
       </Section>
 
       {/* 진행 절차 */}
@@ -348,6 +383,14 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         subtitle={t('recording.faq.subtitle')}
         variant="alternate"
       />
+
+      {/* 가시적 최종 수정일 — lib/pageLastmod.ts(사이트맵과 동일 소스). 항목 없으면 렌더 안 함. */}
+      {RECORDING_LASTMOD_DISPLAY && (
+        <p className="py-4 text-center typo-card-meta text-sm text-gray-500 dark:text-gray-400">
+          {t('stories.detail.lastUpdated')}{' '}
+          <time dateTime={RECORDING_LASTMOD_ISO ?? undefined}>{RECORDING_LASTMOD_DISPLAY}</time>
+        </p>
+      )}
 
       <ReviewSection variant="default" locale={locale} />
 

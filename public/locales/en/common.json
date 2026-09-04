@@ -1277,6 +1277,11 @@
       "title": "Recording Studio Rates",
       "subtitle": "Pick one of three options to match your workload."
     },
+    "priceTable": {
+      "title": "Recording Pricing",
+      "serviceCol": "Service",
+      "priceCol": "Price"
+    },
     "process": {
       "title": "How a Session Works",
       "subtitle": "Professional vocal recording in four steps",
@@ -1404,6 +1409,11 @@
     "mastering": {
       "title": "Mastering Pricing",
       "subtitle": "Already have a mix? You can commission mastering on its own."
+    },
+    "priceTable": {
+      "title": "Mixing & Mastering Pricing",
+      "serviceCol": "Service",
+      "priceCol": "Price"
     },
     "process": {
       "title": "How a Remote Commission Works",

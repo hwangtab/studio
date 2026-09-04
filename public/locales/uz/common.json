@@ -1249,6 +1249,11 @@
       "title": "Yozuv studiyasi narxlari",
       "subtitle": "Ish hajmingizga mos uchta variantdan birini tanlang."
     },
+    "priceTable": {
+      "title": "Yozuv xizmati narxlari",
+      "serviceCol": "Xizmat",
+      "priceCol": "Narx"
+    },
     "process": {
       "title": "Seans qanday o'tadi",
       "subtitle": "To'rt bosqichda professional vokal yozuvi",
@@ -1376,6 +1381,11 @@
     "mastering": {
       "title": "Mastering narxlari",
       "subtitle": "Miks tayyor bo'lsa, faqat masteringni alohida ham buyurtma qilishingiz mumkin."
+    },
+    "priceTable": {
+      "title": "Miks va mastering narxlari",
+      "serviceCol": "Xizmat",
+      "priceCol": "Narx"
     },
     "process": {
       "title": "Masofaviy buyurtma shunday ketadi",
