@@ -49,3 +49,44 @@ jobs:
         run: npm run build
         env:
           NEXT_PUBLIC_SITE_URL: https://studionol.co.kr
+
+  indexnow:
+    name: IndexNow (changed URLs only)
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    # 전량 반복 제출은 스팸성이라 금지(scripts/indexnow-submit.mjs 헤더 참고) — 이 job은
+    # push된 커밋에서 바뀐 파일만 URL로 매핑해 제출한다(scripts/indexnow-changed.mjs).
+    # IndexNow 제출 실패가 배포 파이프라인을 막아선 안 되므로 continue-on-error.
+    continue-on-error: true
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # git diff로 이번 push의 변경 파일을 찾으려면 이력이 필요하다(얕은 클론이면 base
+          # 커밋이 없어 diff가 실패한다).
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Skip when there is no previous commit (first push / force-push)
+        id: gate
+        env:
+          BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          if [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Submit changed URLs to IndexNow
+        if: steps.gate.outputs.skip == 'false'
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: node scripts/indexnow-changed.mjs --base "$BASE_SHA" --head "$HEAD_SHA"

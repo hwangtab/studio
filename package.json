@@ -56,7 +56,8 @@
     "check:cta-routing": "npx tsx scripts/cta-routing-baseline.ts",
     "content-check:ci": "node scripts/content-quality-check.js --korean --ci",
     "audit:thin": "node scripts/audit-thin-content.js --summary",
-    "audit:thin:ci": "node scripts/audit-thin-content.js --fail"
+    "audit:thin:ci": "node scripts/audit-thin-content.js --fail",
+    "indexnow:changed": "node scripts/indexnow-changed.mjs"
   },
   "browserslist": {
     "production": [

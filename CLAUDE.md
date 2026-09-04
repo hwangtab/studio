@@ -68,6 +68,9 @@ npm run check:facts
 # 스토리 라우팅 기준선 (CI) — 하단 CTA·가격 카드 판정이 바뀐 글을 잡는다
 npm run check:cta-routing
 npx tsx scripts/cta-routing-baseline.ts --update   # 의도한 변경이면 기준선 갱신
+
+# IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
+npm run indexnow:changed -- --dry-run
 ```
 
 ### 서비스 수치는 정본에서만 온다
