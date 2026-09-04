@@ -165,7 +165,11 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       <main
         id="main-content"
         tabIndex={-1}
-        className={`page-main flex-grow outline-none ${
+        // 본문 바로가기 링크의 도착 지점. outline-none만 두면 건너뛰기가 동작했는지
+        // 키보드 사용자에게 보이지 않는다. ring-inset은 전폭 요소 바깥으로 링이
+        // 삐져나와 가로 스크롤을 만드는 것을 막는다. focus-visible이라 마우스로
+        // 본문을 클릭했을 때(tabIndex=-1 요소는 클릭으로도 focus가 간다)는 뜨지 않는다.
+        className={`page-main flex-grow outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 ${
           isHome || hasHero || isBareLayout ? 'pt-0' : 'pt-20'
         }`}
       >
