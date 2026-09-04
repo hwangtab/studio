@@ -1,4 +1,5 @@
-jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
+// PENDING_HOLD_SECONDS도 함께 노출한다 — confirm.ts가 선점 만료를 스스로 판정할 때 쓴다.
+jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn(), PENDING_HOLD_SECONDS: 900 }));
 jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
 jest.mock('./email', () => ({ sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null) }));
@@ -49,6 +50,8 @@ const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
 
 const order = (over: object = {}) => ({
   id: 'o1', orderNo: 'SNB-1', status: 'pending', totalAmount: 275000,
+  // 선점 만료 판정의 기준 — 기본값은 "방금 만든 주문"이라 만료 검사에 걸리지 않는다.
+  createdAt: new Date(),
   customerName: '김보컬', customerPhone: '010-1234-5678', customerEmail: 'a@b.c',
   manageToken: 't', bookings: [{ id: 'b1', status: 'pending', startAt: new Date(), endAt: new Date(), durationHours: 3, serviceType: 'recording', customerNote: null }],
   payments: [], ...over,
@@ -168,6 +171,50 @@ describe('confirmBookingPayment', () => {
     expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
     expect(db.batch).not.toHaveBeenCalled();
     expect(db.run).not.toHaveBeenCalled();
+  });
+
+  // H-2 회귀: 결제창을 900초 넘게 방치한 pending 주문. expireStaleOrders는 슬롯 조회·관리자
+  // 목록에서만 lazy 호출되므로 status는 아직 'pending'이고, 그 사이 겹침 검사(900초 지난
+  // pending은 무시)를 통과한 다른 고객이 같은 슬롯을 확정했을 수 있다. 여기서 승인을 부르면
+  // 같은 슬롯에 confirmed 예약 2건이 생긴다 — 승인 전이므로 거부는 과금 없이 끝난다.
+  describe('선점 만료(PENDING_HOLD_SECONDS) 주문', () => {
+    const staleOrder = () => order({ createdAt: new Date(Date.now() - 901 * 1000) });
+
+    it('900초가 지난 pending 주문은 토스 승인을 부르지 않고 invalid_state로 거부한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(staleOrder());
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toEqual({
+        ok: false, code: 'invalid_state',
+        message: '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.',
+      });
+      expect(confirmPayment).not.toHaveBeenCalled(); // 돈이 움직이기 전에 멈춘다
+      expect(mockDb().batch).not.toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[booking-confirm] 선점 만료 주문의 승인 요청 — 토스를 부르지 않고 거부',
+        expect.objectContaining({ orderNo: 'SNB-1' }),
+      );
+    });
+
+    it('웹훅이 만료 주문을 들고 와도 영구 실패(invalid_state)라 재시도 루프를 만들지 않는다', async () => {
+      // webhook.ts의 isTransientConfirmFailure가 invalid_state를 영구 실패로 보고 200으로 끝낸다.
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(staleOrder());
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    });
+
+    it('900초 이내면 평소대로 승인한다 (경계 회귀 — 정상 결제를 막지 않는다)', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ createdAt: new Date(Date.now() - 899 * 1000) }));
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+      expect(confirmPayment).toHaveBeenCalled();
+    });
+
+    it('이미 paid인 주문은 만료 검사보다 먼저 멱등 성공으로 답한다 (뒤늦은 새로고침이 깨지지 않는다)', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', createdAt: new Date(Date.now() - 86400 * 1000) }));
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1' });
+    });
   });
 
   it('토스 승인 후 DB 기록이 실패하고 payments에도 없으면 recording_failed', async () => {

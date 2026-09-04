@@ -161,35 +161,42 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
   // 형식이 어긋난 요청은 재시도해도 소용없다 — 200으로 종료.
   if (typeof paymentKey !== 'string' || typeof status !== 'string') return { status: 200 };
 
+  // 페이로드는 신뢰하지 않는다 — 토스에 재조회한 상태만 쓴다 (스펙 §5). 멱등 키를 만들기
+  // 전에 재조회한다: 이 엔드포인트는 무인증이고 고객은 success URL에서 자기 paymentKey를
+  // 안다. 키를 payload의 status로 만들면 승인 확정 전에 {paymentKey, status:'DONE'}을 위조
+  // POST해 `pk:DONE` 키를 선점할 수 있고(그 요청은 재조회 상태가 IN_PROGRESS라 아무 처리 없이
+  // 200), 뒤이어 온 진짜 DONE 웹훅이 unique 위반으로 "중복"으로 스킵된다 — success SSR까지
+  // 실패했다면 승인된 결제가 payments·confirmed booking 없이 만료된다. 재조회 상태로 키를
+  // 만들면 위조가 선점할 키 자체가 없다(위조 요청은 `pk:IN_PROGRESS`를 쓴다).
+  // 대가는 키 검사 전에 토스 API를 부르는 것 — 남용은 라우트의 IP당 120회/시간이 막는다.
+  const result = await fetchPayment(paymentKey);
+  if (!result.ok) {
+    // 일시 실패 — 아직 아무 키도 남기지 않았으므로 회수할 것도 없다. 500으로 재시도를 유도한다.
+    console.error('[booking-webhook] 결제 재조회 실패 — 재시도 유도', {
+      paymentKey,
+      code: result.code,
+      message: result.message,
+    });
+    return { status: 500 };
+  }
+
+  const payment = result.payment;
+
   // 처리보다 기록을 먼저 — PK 충돌이 "이미 처리했다"는 신호다.
   const db = getDb();
-  const eventKey = `${paymentKey}:${status}`;
+  const eventKey = `${paymentKey}:${payment.status}`;
   try {
     await db.insert(webhookEvents).values({ eventKey, payload: JSON.stringify(payload) });
   } catch (error) {
     if (isUniqueViolation(error)) return { status: 200 }; // 중복 이벤트
     // unique 위반이 아니면 진짜 DB 장애 — 여기서 200을 주면 토스가 재시도를 멈추고 이벤트가
     // 영구히 유실된다. 500으로 재시도를 유도한다: 어차피 같은 DB라 이번 요청에서 후속 처리
-    // (재조회·확정·동기화)도 불가능한 상태고, DB가 복구된 뒤 재시도가 오면 INSERT가 성공해
+    // (확정·동기화)도 불가능한 상태고, DB가 복구된 뒤 재시도가 오면 INSERT가 성공해
     // 정상 경로로 들어간다 — 멱등성은 그대로 유지된다.
     console.error('[booking-webhook] 멱등 기록 실패 — 재시도 유도', { eventKey, error });
     return { status: 500 };
   }
 
-  // 페이로드는 신뢰하지 않는다 — 토스에 재조회한 상태만 쓴다 (스펙 §5).
-  const result = await fetchPayment(paymentKey);
-  if (!result.ok) {
-    // 일시 실패 — 키를 회수해 다음 재시도가 처음부터 다시 오게 한다.
-    console.error('[booking-webhook] 결제 재조회 실패 — 멱등 키 회수 후 재시도 유도', {
-      eventKey,
-      code: result.code,
-      message: result.message,
-    });
-    await releaseEventKey(eventKey);
-    return { status: 500 };
-  }
-
-  const payment = result.payment;
   try {
     if (payment.status === 'DONE') {
       // 승인 경로(success SSR)가 죽었을 때의 복구 — 금액은 토스 재조회값으로 검증된다.

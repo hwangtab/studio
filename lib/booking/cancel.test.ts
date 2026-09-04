@@ -50,6 +50,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const NOW = new Date('2026-08-20T00:00:00Z');
 const SAME_DAY_LATER = new Date(NOW.getTime() + 3 * 60 * 60 * 1000); // 같은 KST 날짜, 몇 시간 뒤
 const THREE_DAYS_LATER = new Date(NOW.getTime() + 3 * DAY_MS);
+const ONE_DAY_LATER = new Date(NOW.getTime() + DAY_MS); // 50% 환불 티어(1~2일 전)
 const BEFORE_NOW = new Date(NOW.getTime() - 60 * 60 * 1000); // 이미 지난 시각
 
 const order = (over: Record<string, unknown> = {}) => ({
@@ -126,7 +127,10 @@ describe('cancelBookingWithRefund', () => {
     (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
     expect(r).toEqual({ ok: true, refundAmount: 275000 });
-    expect(cancelPayment).toHaveBeenCalledWith({ paymentKey: 'pk', cancelReason: '고객 셀프 취소', cancelAmount: 275000 });
+    expect(cancelPayment).toHaveBeenCalledWith({
+      paymentKey: 'pk', cancelReason: '고객 셀프 취소', cancelAmount: 275000,
+      idempotencyKey: 'refund:SNB-1:275000', // 재시도가 최초 취소를 replay하도록 (주문번호, 환불액)으로 결정적
+    });
     const db = mockDb();
     expect(db.run).toHaveBeenCalledTimes(1); // 선점 UPDATE만 — 토스 성공했으니 revert 없음
     const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
@@ -144,7 +148,10 @@ describe('cancelBookingWithRefund', () => {
       orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 50000, now: NOW,
     });
     expect(r).toEqual({ ok: true, refundAmount: 50000 });
-    expect(cancelPayment).toHaveBeenCalledWith({ paymentKey: 'pk', cancelReason: '관리자 임의 환불', cancelAmount: 50000 });
+    expect(cancelPayment).toHaveBeenCalledWith({
+      paymentKey: 'pk', cancelReason: '관리자 임의 환불', cancelAmount: 50000,
+      idempotencyKey: 'refund:SNB-1:50000',
+    });
     const orderStatusUpdate = setCallsOf(mockDb()).find((c) => 'status' in c);
     expect(orderStatusUpdate).toMatchObject({ status: 'partially_refunded' });
   });
@@ -220,6 +227,52 @@ describe('cancelBookingWithRefund', () => {
       message: '환불은 완료되었으나 처리 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.',
     });
     expect(consoleErrorSpy).toHaveBeenCalled();
+  });
+
+  // H-1 회귀: 토스 취소 타임아웃(NETWORK_ERROR)은 "요청이 안 닿았다"와 "토스는 취소했는데
+  // 응답만 늦었다"를 구분하지 못한다. 후자에서 revert가 예약을 confirmed로 되돌리면 고객이
+  // 다시 취소를 눌러 같은 금액이 한 번 더 나갈 수 있다(275,000원 50% 티어에서 137,500원 초과
+  // 지급 — 잔액이 남아 있어 토스가 두 번째 취소도 승인한다). 두 요청의 멱등키가 같아야
+  // 토스가 최초 취소를 replay해 실제 환불이 한 번만 일어난다.
+  describe('부분환불 티어의 취소 재시도 (H-1)', () => {
+    const partialOrder = () =>
+      order({
+        bookings: [{
+          id: 'b1', status: 'confirmed', startAt: ONE_DAY_LATER, endAt: ONE_DAY_LATER,
+          durationHours: 3, serviceType: 'recording', customerNote: null, gcalEventId: null,
+        }],
+      });
+
+    it('타임아웃 후 고객이 다시 취소해도 두 요청이 같은 멱등키를 쓴다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(partialOrder());
+      // ① 토스는 실제로 취소했지만 12초 타임아웃으로 NETWORK_ERROR가 돌아온 상황.
+      (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: false, code: 'NETWORK_ERROR', message: 'The operation was aborted due to timeout' });
+      const first = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+      expect(first).toMatchObject({ ok: false, code: 'toss_failed' });
+
+      // ② 예약이 confirmed로 revert됐으므로 고객이 다시 취소를 누른다 — 같은 50% 금액.
+      (cancelPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true, payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'ck1', cancelAmount: 137500 }] },
+      });
+      const second = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+      expect(second).toEqual({ ok: true, refundAmount: 137500 });
+
+      const calls = (cancelPayment as jest.Mock).mock.calls.map((c) => c[0]);
+      expect(calls).toHaveLength(2);
+      expect(calls[0].cancelAmount).toBe(137500);
+      expect(calls[0].idempotencyKey).toBe('refund:SNB-1:137500');
+      // 두 번째 요청의 키가 같아야 토스가 최초 취소를 replay한다 — 다르면 137,500원이 또 나간다.
+      expect(calls[1].idempotencyKey).toBe(calls[0].idempotencyKey);
+    });
+
+    it('관리자 overrideAmount 취소도 (주문번호, 환불액)로 결정적인 멱등키를 쓴다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(partialOrder());
+      (cancelPayment as jest.Mock).mockResolvedValue({
+        ok: true, payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'ck1', cancelAmount: 50000 }] },
+      });
+      await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 50000, now: NOW });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ idempotencyKey: 'refund:SNB-1:50000' }));
+    });
   });
 
   it('gcal 삭제 실패 시 gcalError 기록이 호출되고 취소 결과는 성공으로 유지된다', async () => {

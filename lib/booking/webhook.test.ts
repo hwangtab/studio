@@ -78,14 +78,14 @@ afterEach(() => {
 });
 
 describe('processTossWebhook', () => {
-  it('같은 eventKey가 두 번 도착하면 두 번째는 fetchPayment를 부르지 않는다 (멱등)', async () => {
+  it('같은 eventKey가 두 번 도착하면 두 번째는 처리하지 않는다 (멱등)', async () => {
     (fetchPayment as jest.Mock).mockResolvedValue(doneTossResult);
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmBookingPayment as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'SNB-1' });
 
     const first = await processTossWebhook(donePayload);
     expect(first).toEqual({ status: 200 });
-    expect(fetchPayment).toHaveBeenCalledTimes(1);
+    expect(confirmBookingPayment).toHaveBeenCalledTimes(1);
 
     // 두 번째 도착 — webhookEvents INSERT가 unique 위반으로 실패한다.
     mockDb().insert.mock.results[0].value.values.mockImplementationOnce(() => {
@@ -93,10 +93,13 @@ describe('processTossWebhook', () => {
     });
     const second = await processTossWebhook(donePayload);
     expect(second).toEqual({ status: 200 });
-    expect(fetchPayment).toHaveBeenCalledTimes(1); // 여전히 1회 — 두 번째는 재조회도 안 갔다
+    // 멱등 키를 재조회한 실제 status로 만들기 때문에(M-1) 재조회는 키 검사보다 먼저 일어난다
+    // — 늘어나는 건 토스 조회 1회뿐이고, 실제 처리는 여전히 한 번만 돈다.
+    expect(confirmBookingPayment).toHaveBeenCalledTimes(1);
   });
 
   it('webhookEvents INSERT가 unique 위반이 아닌 DB 장애로 실패하면 500을 반환한다 (토스 재시도 유도)', async () => {
+    (fetchPayment as jest.Mock).mockResolvedValue(doneTossResult);
     // insert() 자체의 반환값을 이번 한 번만 바꿔치기 — 아직 첫 호출 전이라 기존 값의 values
     // mock을 mock.results로 찾아 갈 수 없다(그 방식은 이미 한 번 호출된 뒤에만 쓸 수 있다).
     mockDb().insert.mockReturnValueOnce({
@@ -106,9 +109,10 @@ describe('processTossWebhook', () => {
     });
     const result = await processTossWebhook(donePayload);
     expect(result).toEqual({ status: 500 });
-    expect(fetchPayment).not.toHaveBeenCalled();
+    expect(confirmBookingPayment).not.toHaveBeenCalled(); // 기록에 실패했으면 처리로 넘어가지 않는다
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       '[booking-webhook] 멱등 기록 실패 — 재시도 유도',
+      // 키는 payload가 아니라 재조회한 status로 만든다 (M-1).
       expect.objectContaining({ eventKey: 'pk1:DONE' }),
     );
   });
@@ -295,16 +299,17 @@ describe('processTossWebhook', () => {
     expect(orderUpdate).toMatchObject({ status: 'paid' }); // 기존 상태(paid) 유지 — partially_refunded 아님
   });
 
-  it('재조회(fetchPayment) 네트워크 실패는 멱등 키를 회수하고 500을 반환한다 (토스가 재시도하도록)', async () => {
+  it('재조회(fetchPayment) 네트워크 실패는 키를 남기지 않고 500을 반환한다 (토스가 재시도하도록)', async () => {
     (fetchPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'fetch failed' });
     const result = await processTossWebhook(donePayload);
     expect(result).toEqual({ status: 500 });
     expect(confirmBookingPayment).not.toHaveBeenCalled();
-    // 키를 남겨두면 다음 재시도가 "이미 처리한 이벤트"로 오인돼 200으로 흘러간다.
-    expect(mockDb().delete).toHaveBeenCalled();
+    // 재조회가 키 생성보다 앞이므로(M-1) 남긴 키가 없다 — INSERT도 회수(DELETE)도 일어나지 않는다.
+    expect(mockDb().insert).not.toHaveBeenCalled();
+    expect(mockDb().delete).not.toHaveBeenCalled();
   });
 
-  it('키를 회수했으므로 같은 이벤트가 재도착하면 처음부터 다시 처리된다', async () => {
+  it('재조회 실패로 아무 키도 안 남았으므로 같은 이벤트가 재도착하면 처음부터 다시 처리된다', async () => {
     (fetchPayment as jest.Mock)
       .mockResolvedValueOnce({ ok: false, code: 'NETWORK_ERROR', message: 'fetch failed' })
       .mockResolvedValueOnce(doneTossResult);
@@ -312,13 +317,51 @@ describe('processTossWebhook', () => {
 
     const first = await processTossWebhook(donePayload);
     expect(first).toEqual({ status: 500 });
-    expect(mockDb().delete).toHaveBeenCalled();
 
-    // 키가 지워진 상태 = 두 번째 INSERT가 성공한다(mock 기본값). 재조회부터 다시 탄다.
     const second = await processTossWebhook(donePayload);
     expect(second).toEqual({ status: 200 });
     expect(fetchPayment).toHaveBeenCalledTimes(2);
     expect(confirmBookingPayment).toHaveBeenCalledTimes(1);
+  });
+
+  // M-1 회귀: 이 엔드포인트는 무인증이고 고객은 success URL에서 자기 paymentKey를 안다.
+  // 멱등 키를 payload의 status로 만들면 승인 전에 {paymentKey, status:'DONE'}을 위조 POST해
+  // `pk1:DONE`을 선점할 수 있고, 뒤이어 온 진짜 DONE 웹훅이 "중복"으로 스킵된다 — success SSR
+  // 까지 실패했다면 승인된 결제가 payments·confirmed booking 없이 만료된다.
+  describe('위조 payload의 멱등 키 선점 (M-1)', () => {
+    it('status를 DONE으로 위조해도 키는 재조회한 실제 status로 만들어진다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValue({
+        ok: true,
+        payment: { paymentKey: 'pk1', orderId: 'SNB-1', status: 'IN_PROGRESS', totalAmount: 275000 },
+      });
+      const result = await processTossWebhook({ data: { paymentKey: 'pk1', status: 'DONE' } });
+
+      expect(result).toEqual({ status: 200 });
+      expect(confirmBookingPayment).not.toHaveBeenCalled(); // 실제 상태가 DONE이 아니므로 처리 없음
+      const eventInsert = insertValuesCallsOf(mockDb()).find((c) => 'eventKey' in c);
+      expect(eventInsert).toMatchObject({ eventKey: 'pk1:IN_PROGRESS' }); // 'pk1:DONE'이면 안 된다
+    });
+
+    it('위조 요청 뒤에 온 진짜 DONE 웹훅이 중복으로 스킵되지 않고 확정을 수행한다', async () => {
+      // ① 위조: payload는 DONE인데 실제 상태는 IN_PROGRESS.
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: { paymentKey: 'pk1', orderId: 'SNB-1', status: 'IN_PROGRESS', totalAmount: 275000 },
+      });
+      await processTossWebhook({ data: { paymentKey: 'pk1', status: 'DONE' } });
+      expect(confirmBookingPayment).not.toHaveBeenCalled();
+
+      // ② 진짜 웹훅: 실제 상태 DONE. 위조가 남긴 키는 'pk1:IN_PROGRESS'라 'pk1:DONE' INSERT가
+      //    성공한다(mock 기본값 = 충돌 없음) — 확정이 정상적으로 수행된다.
+      (fetchPayment as jest.Mock).mockResolvedValueOnce(doneTossResult);
+      (confirmBookingPayment as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'SNB-1' });
+      const real = await processTossWebhook(donePayload);
+
+      expect(real).toEqual({ status: 200 });
+      expect(confirmBookingPayment).toHaveBeenCalledWith({ orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 });
+      const eventKeys = insertValuesCallsOf(mockDb()).filter((c) => 'eventKey' in c).map((c) => c.eventKey);
+      expect(eventKeys).toEqual(['pk1:IN_PROGRESS', 'pk1:DONE']);
+    });
   });
 
   it('DONE 확정이 recording_failed면 멱등 키를 회수하고 500을 반환한다 (승인됐는데 기록만 실패 — 재시도해야 복구된다)', async () => {

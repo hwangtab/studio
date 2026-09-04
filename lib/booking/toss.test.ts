@@ -48,6 +48,30 @@ describe('cancelPayment', () => {
     expect(init.method).toBe('POST');
     expect(JSON.parse(init.body)).toEqual({ cancelReason: '고객 요청', cancelAmount: 275000 });
   });
+
+  // 회귀: 이 헤더가 빠지면 취소 타임아웃(NETWORK_ERROR) 뒤의 재시도가 토스에서 별개의
+  // 취소로 처리돼 부분환불 티어에서 정책 초과 환불이 나간다(cancel.ts refundIdempotencyKey).
+  it('idempotencyKey를 주면 Idempotency-Key 헤더로 그대로 보낸다', async () => {
+    process.env.TOSS_SECRET_KEY = 'test_sk_abc';
+    const mock = jest.fn().mockResolvedValue({ ok: true, json: async () => okPayment });
+    global.fetch = mock as unknown as typeof fetch;
+    await cancelPayment({
+      paymentKey: 'pk', cancelReason: '고객 요청', cancelAmount: 137500,
+      idempotencyKey: 'refund:SNB-1:137500',
+    });
+    const [, init] = mock.mock.calls[0];
+    expect(init.headers['Idempotency-Key']).toBe('refund:SNB-1:137500');
+    expect(String('refund:SNB-1:137500').length).toBeLessThanOrEqual(300); // 토스 규격 상한
+  });
+
+  it('idempotencyKey가 없으면 헤더를 붙이지 않는다', async () => {
+    process.env.TOSS_SECRET_KEY = 'test_sk_abc';
+    const mock = jest.fn().mockResolvedValue({ ok: true, json: async () => okPayment });
+    global.fetch = mock as unknown as typeof fetch;
+    await cancelPayment({ paymentKey: 'pk', cancelReason: '고객 요청', cancelAmount: 1 });
+    const [, init] = mock.mock.calls[0];
+    expect(init.headers['Idempotency-Key']).toBeUndefined();
+  });
 });
 
 describe('fetchPayment', () => {

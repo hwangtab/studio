@@ -4,7 +4,7 @@ import { getDb } from '../../db/client';
 import { bookings, orders, payments } from '../../db/schema';
 import { sendBookingConfirmedEmails } from './email';
 import { createBookingEvent } from './gcal';
-import { findOrderByOrderNo } from './service';
+import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { confirmPayment, fetchPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
 
@@ -20,6 +20,7 @@ export type ConfirmOutcome =
 const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
 
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';
 const RECORDING_FAILED_MESSAGE =
   '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
 
@@ -39,6 +40,23 @@ export const confirmBookingPayment = async (input: {
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다(위변조 차단).
   if (input.amount !== order.totalAmount)
     return { ok: false, code: 'amount_mismatch', message: '결제 금액이 주문과 일치하지 않습니다.' };
+
+  // 선점 만료를 confirm이 스스로 적용한다 — expireStaleOrders는 슬롯 조회·관리자 목록에서만
+  // lazy 호출되므로, 결제창을 900초 넘게 방치한 주문이 status='pending'인 채로 남아 있을 수
+  // 있다. 그 사이 createBookingOrder의 겹침 검사는 900초 지난 pending을 무시하므로 다른 고객이
+  // 같은 슬롯을 예약·결제·확정할 수 있다. 만료 확인 없이 여기서 승인을 부르면 같은 시간대에
+  // confirmed 예약 2건이 생긴다 — 아직 승인 전이라 이 시점의 거부는 과금 없이 끝난다
+  // (토스 결제는 confirm API 호출로 확정되고, 미승인 건은 그대로 만료된다).
+  if (
+    order.createdAt instanceof Date &&
+    Date.now() - order.createdAt.getTime() > PENDING_HOLD_SECONDS * 1000
+  ) {
+    console.error('[booking-confirm] 선점 만료 주문의 승인 요청 — 토스를 부르지 않고 거부', {
+      orderNo: order.orderNo,
+      createdAt: order.createdAt.toISOString(),
+    });
+    return { ok: false, code: 'invalid_state', message: EXPIRED_MESSAGE };
+  }
 
   const db = getDb();
   const toss = await confirmPayment({ paymentKey: input.paymentKey, orderId: order.orderNo, amount: input.amount });

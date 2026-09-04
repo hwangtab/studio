@@ -22,7 +22,10 @@ const authHeader = (): string => {
   return `Basic ${Buffer.from(`${secret}:`).toString('base64')}`;
 };
 
-const request = async (path: string, init?: { method?: string; body?: unknown }): Promise<TossResult> => {
+const request = async (
+  path: string,
+  init?: { method?: string; body?: unknown; idempotencyKey?: string },
+): Promise<TossResult> => {
   let auth: string;
   try {
     auth = authHeader();
@@ -36,7 +39,14 @@ const request = async (path: string, init?: { method?: string; body?: unknown })
   try {
     const res = await fetch(`${TOSS_API}${path}`, {
       method: init?.method ?? 'GET',
-      headers: { Authorization: auth, 'Content-Type': 'application/json' },
+      headers: {
+        Authorization: auth,
+        'Content-Type': 'application/json',
+        // 토스는 모든 POST API에서 Idempotency-Key 헤더를 받는다(최대 300자, 첫 요청일로부터
+        // 15일 유효). 키 + API 키 + 요청 주소 + HTTP 메서드가 같으면 최초 응답을 재사용한다.
+        // https://docs.tosspayments.com/reference/using-api/authorization
+        ...(init?.idempotencyKey ? { 'Idempotency-Key': init.idempotencyKey } : {}),
+      },
       body: init?.body === undefined ? undefined : JSON.stringify(init.body),
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
     });
@@ -53,10 +63,23 @@ const request = async (path: string, init?: { method?: string; body?: unknown })
 export const confirmPayment = (input: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult> =>
   request('/payments/confirm', { method: 'POST', body: input });
 
-export const cancelPayment = (input: { paymentKey: string; cancelReason: string; cancelAmount: number }): Promise<TossResult> =>
+/**
+ * 결제를 취소(환불)한다.
+ *
+ * idempotencyKey는 반드시 넘길 것 — 응답만 늦은 타임아웃(NETWORK_ERROR)과 진짜 실패를
+ * 호출자가 구분할 수 없기 때문이다. 같은 키로 다시 오면 토스가 최초 취소의 응답을 재사용해
+ * 돈이 두 번 나가지 않는다(cancel.ts의 refundIdempotencyKey 참조).
+ */
+export const cancelPayment = (input: {
+  paymentKey: string;
+  cancelReason: string;
+  cancelAmount: number;
+  idempotencyKey?: string;
+}): Promise<TossResult> =>
   request(`/payments/${encodeURIComponent(input.paymentKey)}/cancel`, {
     method: 'POST',
     body: { cancelReason: input.cancelReason, cancelAmount: input.cancelAmount },
+    idempotencyKey: input.idempotencyKey,
   });
 
 export const fetchPayment = (paymentKey: string): Promise<TossResult> =>

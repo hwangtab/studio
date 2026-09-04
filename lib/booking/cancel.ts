@@ -17,6 +17,21 @@ export type CancelOutcome =
     };
 
 const GENERIC_TOSS_ERROR_MESSAGE = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
+/**
+ * 토스 취소 요청의 멱등키.
+ *
+ * (주문번호, 환불액)으로 결정적이어야 한다 — 타임아웃 후 고객·관리자가 다시 취소를 눌러도
+ * 같은 키가 만들어져야 토스가 최초 취소를 replay하기 때문이다. 랜덤 UUID를 쓰면 이 보호가
+ * 통째로 사라진다. 토스 규격: 최대 300자, 첫 요청일로부터 15일 유효
+ * (https://docs.tosspayments.com/reference/using-api/authorization).
+ *
+ * 알려진 한계: 관리자가 "같은 주문에 같은 금액"을 15일 안에 두 번 나눠 환불하려는 경우
+ * 두 번째가 replay된다. 부분환불 두 번을 같은 금액으로 쪼개 넣는 운영은 없고, 있다 해도
+ * 이중 환불 사고보다 훨씬 가벼운 실패 방향이라 감수한다.
+ */
+const refundIdempotencyKey = (orderNo: string, refundAmount: number): string =>
+  `refund:${orderNo}:${refundAmount}`;
+
 const RECORDING_FAILED_MESSAGE =
   '환불은 완료되었으나 처리 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.';
 
@@ -72,9 +87,17 @@ export const cancelBookingWithRefund = async (input: {
       paymentKey: payment.paymentKey,
       cancelReason: input.reason,
       cancelAmount: refundAmount,
+      // 재시도가 돈을 두 번 내보내지 못하게 하는 유일한 장치. cancelPayment의 NETWORK_ERROR는
+      // "요청이 안 닿았다"와 "토스는 취소했는데 12초 타임아웃으로 응답만 못 받았다"를 구분하지
+      // 못한다 — 후자에서 아래 revert가 예약을 confirmed로 되돌리면 고객이 다시 취소를 눌렀을 때
+      // computeRefund가 같은 부분환불액을 또 계산하고, 잔액이 남아 있어 토스가 두 번째 취소도
+      // 승인한다(50% 티어 275,000원 건에서 137,500원 초과 지급). 키가 (orderNo, 환불액)로
+      // 결정적이라 그 재시도가 최초 취소의 응답을 그대로 재사용해 실제 취소는 한 번만 일어난다.
+      idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
     });
     if (!toss.ok) {
       // 토스가 거절했으니 선점을 되돌린다 — 안 그러면 환불 한 푼 없이 예약만 취소된 채 남는다.
+      // 멱등키 덕에 이 되돌림이 이중 환불로 이어지지 않는다(재시도는 같은 키로 replay된다).
       try {
         await db.run(
           sql`UPDATE bookings SET status = 'confirmed', cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'cancelled'`,
