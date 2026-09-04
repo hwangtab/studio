@@ -151,4 +151,4 @@ inlineFallback:
 
 본인의 저음 음역 한계를 정확히 알면 편곡과 키 선택이 훨씬 쉬워집니다. 스마트폰 피아노 앱에서 한 음씩 내려가면서 음정 이탈 없이 안정적으로 유지할 수 있는 가장 낮은 음을 확인하고 기록해두세요. 이 음을 기준으로 키를 선택하면 억지로 낮추지 않고도 저음의 풍부함을 살린 보컬 퍼포먼스를 만들 수 있습니다.
 
-[흉성 완전 가이드](/stories/chest-voice1) | [고음 발성 완전 가이드](/stories/high-note1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [보컬 음역대 완전 가이드](/stories/vocal-range1)
+[흉성 완전 가이드](/stories/chest-voice1) | [고음 발성 완전 가이드](/stories/highnote1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [보컬 음역대 완전 가이드](/stories/vocal-range1)

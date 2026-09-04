@@ -149,4 +149,4 @@ inlineFallback: {}
 
 ---
 
-[보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 음식·음료 완전 가이드](/stories/vocal-food1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1)
+[보컬 건강 관리 완전 가이드](/stories/vocal-health1) | [보컬 음식·음료 완전 가이드](/stories/vocalfood1) | [보컬 워밍업 완전 가이드](/stories/vocal-warmup1) | [보컬 지구력·스태미나 완전 가이드](/stories/vocal-endurance1)

@@ -202,6 +202,6 @@ G7alt: G-B-D♭-F-A♭ (또는 다양한 조합)
 
 ---
 
-연습실 예약 및 문의: - [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/practice-room-bass-jazz-bass1)
+연습실 예약 및 문의: - [베이스 재즈 베이스·스윙 그루브 음악연습실](/stories/practice-room-bass1)
 
 [기타 연습 시리즈 더보기](/stories/practice-room-guitar-chord-melody1) | [재즈 기타 코드 멜로디 완전 가이드](/stories/practice-room-guitar-jazz-voicing1)

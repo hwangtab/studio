@@ -221,4 +221,4 @@ E4-D4-C#4-C4-B3
 
 ---
 
-[기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)
+[기타 팜 뮤팅·헤비 리듬 기타 — 완전 가이드](/stories/practice-room-guitar-palm-muting1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [기타 앰비언트·텍스처 기타·이펙터 활용 — 완전 가이드](/stories/practice-room-guitar-ambient-textures1) | [아치탑 기타·재즈 기타 톤·할로우 바디 세팅 — 완전 가이드](/stories/practice-room-guitar-archtop1)

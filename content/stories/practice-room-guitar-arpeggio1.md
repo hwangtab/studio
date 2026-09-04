@@ -95,4 +95,4 @@ faq:
 
 ---
 
-[기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerpicking1) | [블루스 스케일·펜타토닉 기타 연습 — 블루스 기타 솔로 완성 가이드](/stories/practice-room-guitar-blues-scale1)
+[기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1) | [코드 멜로디·솔로 기타 편곡 연습 — 솔로 기타 완성 가이드](/stories/practice-room-chord-melody1) | [클래식 기타 연습 — 나일론 기타 테크닉 완성 가이드](/stories/practice-room-classical-guitar1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerstyle1) | [블루스 스케일·펜타토닉 기타 연습 — 블루스 기타 솔로 완성 가이드](/stories/practice-room-guitar-blues-scale1)

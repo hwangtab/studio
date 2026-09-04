@@ -217,4 +217,4 @@ Albert Moeller가 개발한 기법으로, **스틱의 관성과 채찍 동작**�
 
 드럼은 신체 전체를 사용하는 악기이므로 몸의 긴장을 풀고 자연스러운 스트로크를 만드는 것이 중요합니다. 손목과 팔꿈치의 리바운드를 잘 활용하면 빠른 연주에서도 힘을 아낄 수 있습니다. 하이햇 오픈·클로즈 타이밍을 정밀하게 조절하면 장르 특유의 그루브를 구현하기 훨씬 수월해집니다. 킥 드럼 발 페달 조절은 꾸준한 발 훈련이 필요하며, 독립적인 발 연습 루틴을 별도로 설정하면 효과적입니다.
 
-[드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [드럼 발 테크닉·더블 베이스 페달 — 완전 가이드](/stories/practice-room-drum-foot-technique1) | [드럼 보사노바·재즈 브러시 보사 — 완전 가이드](/stories/practice-room-drum-jazz-brushwork-bossa1) | [드럼 오프비트·엇박 리듬 훈련 — 드럼 엇박 완성 가이드](/stories/practice-room-drum-offbeat1)
+[드럼 브러시 고급 주법·재즈 발라드 연주 — 완전 가이드](/stories/practice-room-drum-brushwork-advanced1) | [드럼 보사노바·재즈 브러시 보사 — 완전 가이드](/stories/practice-room-drum-jazz-brushwork-bossa1) | [드럼 오프비트·엇박 리듬 훈련 — 드럼 엇박 완성 가이드](/stories/practice-room-drum-offbeat1)

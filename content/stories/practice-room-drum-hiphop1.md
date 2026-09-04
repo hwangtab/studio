@@ -107,4 +107,4 @@ faq:
 
 ---
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 컨트리·블루그래스 비트 — 드럼 컨트리 완성 가이드](/stories/practice-room-drum-country1) | [드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 컨트리·블루그래스 비트 — 드럼 컨트리 완성 가이드](/stories/practice-room-drum-country1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1)

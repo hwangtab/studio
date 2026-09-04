@@ -94,4 +94,4 @@ faq:
 
 ---
 
-[카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1) | [드럼 루디먼트·스틱 컨트롤 연습 — 드럼 기초 완성 가이드](/stories/practice-room-drum-rudiment1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1)
+[카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [카혼 연주 훈련법 — 바스·스네어·플라멩코 리듬 기초부터](/stories/practice-room-drum-cajon1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1)

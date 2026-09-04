@@ -173,7 +173,7 @@ E 줄 12프렛 하모닉 + A 줄 12프렛 하모닉 동시 발음
 
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
-- [베이스 핑거스타일 고급 기법 음악연습실](/stories/practice-room-bass-fingerstyle1)
+- [베이스 핑거스타일 고급 기법 음악연습실](/stories/practice-room-bass1)
 - [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1)
 - [베이스 재즈 워킹 베이스라인 음악연습실](/stories/practice-room-bass-jazz1)
 - [베이스 연습실 완벽 가이드](/stories/practice-room-bass1)

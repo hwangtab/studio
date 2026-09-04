@@ -273,4 +273,4 @@ Motown 베이스 (James Jamerson 레거시)
 
 손을 푸는 용도로는 슬랩도 함께 만져두면 좋습니다. 네오소울에서 슬랩을 거의 쓰지 않는다는 건 앞에서 말한 대로지만, 엄지로 치는 썸핑과 검지로 당기는 풀링을 분리해 익힌 뒤 결합하는 훈련은 오른손 전체의 탄성을 키워줍니다. 그 탄성이 결국 핑거스타일의 미묘한 세기 조절로 돌아옵니다. 연습 시간은 짧은 블록으로 나누는 편이 효율적입니다. 25분 집중하고 5분 쉬는 방식은 피로를 줄여주고, 같은 패시지가 지루해질 때는 리듬이나 다이나믹을 살짝 바꿔 변형해보면 집중이 다시 붙습니다. 레잉 백처럼 미세한 감각을 다루는 날일수록 귀가 피로하지 않은 상태를 유지하는 게 중요합니다. 연습실에 직접 찾아가 앉는 행위 자체가 연습 모드로 전환하는 신호가 되어주기도 합니다.
 
-[베이스 힙합·로우엔드 그루브·네오소울 — 완전 가이드](/stories/practice-room-bass-hip-hop1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)
+[베이스 힙합·로우엔드 그루브·네오소울 — 완전 가이드](/stories/practice-room-bass1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1)

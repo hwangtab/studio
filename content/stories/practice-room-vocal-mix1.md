@@ -121,4 +121,4 @@ faq:
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal-mix-voice1) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 믹스 보이스·중간 음역 연결 — 완전 가이드](/stories/practice-room-vocal1) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1)

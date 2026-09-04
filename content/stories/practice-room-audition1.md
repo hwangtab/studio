@@ -125,4 +125,4 @@ faq:
 
 ---
 
-[보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal-audition1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리](/stories/practice-room-soundproof1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1)
+[보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [방음 연습실 선택 가이드 — STC 등급·방음 vs 흡음 차이 완벽 정리](/stories/practice-room-soundproof1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1)

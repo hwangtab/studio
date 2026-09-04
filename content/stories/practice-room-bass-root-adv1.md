@@ -117,4 +117,4 @@ G/B, C/E 같은 표기를 만나면 대부분 루트를 치고 넘어가지만, 
 
 ---
 
-[베이스 코드·코드 주법 — 베이스 코드 완성 가이드](/stories/practice-room-bass-chord1) | [베이스 루트·5도 패턴·기초 라인 — 베이스 기초 라인 완성 가이드](/stories/practice-room-bass-root-fifth1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1)
+[베이스 코드·코드 주법 — 베이스 코드 완성 가이드](/stories/practice-room-bass1) | [베이스 루트·5도 패턴·기초 라인 — 베이스 기초 라인 완성 가이드](/stories/practice-room-bass-root-fifth1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [기타 코드·코드 전환 연습 — 코드 자동화 완성 가이드](/stories/practice-room-guitar-chord1)

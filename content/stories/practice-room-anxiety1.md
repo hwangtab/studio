@@ -98,4 +98,4 @@ faq:
 
 ---
 
-[집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal-stage-fright1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1)
+[집중 연습 — 몰입 연습 환경과 슬럼프 극복 가이드](/stories/practice-room-concentration1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1)

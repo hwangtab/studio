@@ -115,4 +115,4 @@ BPM을 올리면 그럴듯해 보이지만, 사실은 음량 편차와 타이밍
 
 ---
 
-[베이스 슬랩·팝핑 고급 테크닉 — 슬랩 베이스 완성 가이드](/stories/practice-room-bass-slap-adv1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass-technique1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [옥타브 주법·그루브 완전 가이드](/stories/practice-room-bass-octave1)
+[베이스 슬랩·팝핑 고급 테크닉 — 슬랩 베이스 완성 가이드](/stories/practice-room-bass1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass1) | [옥타브 주법·그루브 완전 가이드](/stories/practice-room-bass-octave1)

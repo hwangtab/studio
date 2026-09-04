@@ -193,7 +193,7 @@ howTo:
 
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
-- [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal-breath-control1)
+- [보컬 호흡 조절·서스테인 음악연습실](/stories/practice-room-vocal1)
 - [보컬 음정 훈련·인터벌 이어링 음악연습실](/stories/practice-room-vocal-pitch-training1)
 - [보컬 록 스타일·파워보이스 음악연습실](/stories/practice-room-vocal-rock1)
 
@@ -203,6 +203,6 @@ howTo:
 
 순서에는 이유가 있어요. 립 트릴(입술 털기)로 시작하는 건 성대에 부담이 가장 적으면서 호흡과 발성을 동시에 깨우기 때문이고, 그다음 허밍으로 공명을 켜고, 마지막에 모음 스케일로 음역을 조금씩 넓히는 겁니다. 갑자기 스케일부터 지르지 말고 이 계단을 밟으세요. 부드러운 것에서 강한 것으로, 좁은 음역에서 넓은 음역으로.
 
-마지막으로 매일 같은 시간에 하세요. 몸은 반복되는 리듬을 기억하거든요. 정해진 시간에 워밍업하는 습관이 붙으면, 그 자체로 목이 노래할 준비를 갖춥니다. 호흡을 함께 깨우는 방법은 [호흡 컨트롤](/stories/practice-room-vocal-breath-control1)을 참고하세요.
+마지막으로 매일 같은 시간에 하세요. 몸은 반복되는 리듬을 기억하거든요. 정해진 시간에 워밍업하는 습관이 붙으면, 그 자체로 목이 노래할 준비를 갖춥니다. 호흡을 함께 깨우는 방법은 [호흡 컨트롤](/stories/practice-room-vocal1)을 참고하세요.
 
 ---

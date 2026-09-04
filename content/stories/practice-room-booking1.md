@@ -436,4 +436,4 @@ faq:
 
 ---
 
-[연습실 대여 방법 — 예약부터 이용까지 단계별 가이드](/stories/practice-room-rental1) | [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [방음 합주실 서울 가이드 — 은평구 연신내 24시간 합주실](/stories/soundproof-rehearsal-seoul1) | [밴드 녹음 가이드 — 합주실 녹음부터 믹싱까지](/stories/band-recording-guide1) | [연습실 월세 계약 전 확인 — 입주 계약 완벽 가이드](/stories/practice-room-contract1)
+[연습실 대여 방법 — 예약부터 이용까지 단계별 가이드](/stories/practice-room-rental1) | [연습실 처음 이용 가이드 — 예약부터 퇴실까지 완벽 설명](/stories/practice-room-first1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [방음 합주실 서울 가이드 — 은평구 연신내 24시간 합주실](/stories/soundproof-rehearsal-seoul1) | [밴드 녹음 가이드 — 합주실 녹음부터 믹싱까지](/stories/band-recording-guide1) | [연습실 월세 계약 전 확인 — 입주 계약 완벽 가이드](/stories/practice-room-contract1)

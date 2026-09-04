@@ -116,8 +116,8 @@ faq:
 
 화음이 어디에 얹히는지 이해하려면 코드 톤을 알아야 해요. 하모니는 그때그때 나오는 코드의 구성음(루트·3·5·7도) 위에서 만들어지니까, 지금 어떤 코드가 울리고 있는지를 인식하면 어떤 음을 넣어야 어울리는지가 보입니다.
 
-혼자서 하모니를 연습하는 가장 좋은 방법은 다중 트랙 녹음이에요. DAW에 내 메인 보컬을 녹음해 두고 그 위에 화음을 겹쳐 부르면, 내가 만든 화음이 실제로 어떻게 어울리는지 귀로 확인하며 감각을 빠르게 키울 수 있습니다. 여러 성부를 함께 맞추는 훈련은 [보컬 코러스·하모니 훈련](/stories/practice-room-vocal-harmony1)에서 이어집니다.
+혼자서 하모니를 연습하는 가장 좋은 방법은 다중 트랙 녹음이에요. DAW에 내 메인 보컬을 녹음해 두고 그 위에 화음을 겹쳐 부르면, 내가 만든 화음이 실제로 어떻게 어울리는지 귀로 확인하며 감각을 빠르게 키울 수 있습니다. 여러 성부를 함께 맞추는 훈련은 [보컬 코러스·하모니 훈련](/stories/practice-room-vocal1)에서 이어집니다.
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 코러스·하모니 훈련 — 보컬 하모니 완성 가이드](/stories/practice-room-vocal-harmony1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 코러스·하모니 훈련 — 보컬 하모니 완성 가이드](/stories/practice-room-vocal1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1)

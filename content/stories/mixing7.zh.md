@@ -116,4 +116,3 @@ Studio NOL 位于首尔恩平区，距连新内（Yeonsinnae）站步行 5 分�
 * 想加入社群？关注我们每周一发布的 Bulgwang Mixing Club 名额公告。
 
 对课程内容有疑问或想预约课程，可通过 KakaoTalk 频道 “连新内 Studio NOL” 联系，或发短信至 %%phone%%。每一集课程都会在开头的 summary 里标明重点；如果你是第一次接触混音，建议从 [第 1 部](/stories/mixing1) 顺序阅读，每集学完一个概念、回到 DAW 动手试一次，再看下一集——这是我们最推荐的节奏。
-

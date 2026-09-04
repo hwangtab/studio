@@ -174,8 +174,8 @@ A줄: S . . S P . S .
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [베이스 고스트노트·뮤트라인 음악연습실](/stories/practice-room-bass-ghost-notes1)
-- [베이스 핑거스타일 고급 기법 음악연습실](/stories/practice-room-bass-fingerstyle1)
-- [베이스 펑크·그루브 음악연습실](/stories/practice-room-bass-funk1)
+- [베이스 핑거스타일 고급 기법 음악연습실](/stories/practice-room-bass1)
+- [베이스 펑크·그루브 음악연습실](/stories/practice-room-bass1)
 
 ## 녹음 부스에 앉히면 슬랩과 팝의 음량 차이가 제일 먼저 드러납니다
 

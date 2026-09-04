@@ -104,4 +104,4 @@ R&B·소울 곡에서 본 멜로디에 한 옥타브 위 애드립을 즉흥으�
 
 ---
 
-[믹스 보이스·팔세토 — 고음 발성 기법 완전 정복](/stories/practice-room-mix-voice1) | [보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드](/stories/practice-room-vocal-rasp1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [오페라·성악 연습 — 클래식 성악 발성 완성 가이드](/stories/practice-room-opera1) | [보컬 연습실 완전 활용법](/stories/practice-room-vocal1)
+[믹스 보이스·팔세토 — 고음 발성 기법 완전 정복](/stories/practice-room-mix-voice1) | [보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드](/stories/practice-room-vocal-rasp1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1) | [기타 코드 고급·확장 코드 연주 — 기타 확장 코드 완성 가이드](/stories/practice-room-guitar-chord-adv1) | [오페라·성악 연습 — 클래식 성악 발성 완성 가이드](/stories/practice-room-opera1) | [보컬 연습실 완전 활용법](/stories/practice-room-vocal1)

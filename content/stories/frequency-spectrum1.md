@@ -140,4 +140,4 @@ Neumann U87Ai로 녹음한 보컬은 2~5kHz 프레즌스 대역이 풍부합니�
 
 주파수 스펙트럼을 이해하면 EQ 작업이 훨씬 직관적이 됩니다. 각 악기에게 고유한 주파수 공간을 할당하는 것이 명확하고 투명한 믹스의 핵심입니다. SPAN(무료 스펙트럼 분석기) 같은 도구로 작업 중인 믹스의 주파수 분포를 시각화하면 귀의 판단을 수치로 확인할 수 있습니다. 직접 정리하기 어려운 마스킹 문제는 [믹싱·마스터링 서비스](/mixing-mastering)에 맡겨 해결하는 방법도 있습니다.
 
-[보컬 EQ 완전 가이드](/stories/eq1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [오디오 위상 정렬 완전 가이드](/stories/phase1) | [보컬 컴프레서 완전 가이드](/stories/compressor1)
+[보컬 EQ 완전 가이드](/stories/eq1) | [믹싱 체인 완전 가이드](/stories/mixing-chain1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [오디오 위상 정렬 완전 가이드](/stories/phase1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1)

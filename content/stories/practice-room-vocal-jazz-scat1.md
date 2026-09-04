@@ -226,6 +226,6 @@ C - Eb - F - Gb - G - Bb - C
 
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
-- [보컬 팔세토·헤드보이스 음악연습실](/stories/practice-room-vocal-falsetto1)
-- [보컬 R&B 그루브 음악연습실](/stories/practice-room-vocal-rnb1)
+- [보컬 팔세토·헤드보이스 음악연습실](/stories/practice-room-vocal1)
+- [보컬 R&B 그루브 음악연습실](/stories/practice-room-vocal1)
 - [보컬 클래식 성악 음악연습실](/stories/practice-room-vocal-classical1)

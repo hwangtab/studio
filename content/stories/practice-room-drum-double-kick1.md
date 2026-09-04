@@ -250,4 +250,4 @@ BPM 90: 쉬어가기 후 도전
 
 ---
 
-[드럼 발 테크닉·더블 베이스 페달 — 완전 가이드](/stories/practice-room-drum-foot-technique1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 메탈·블래스트 비트·더블 킥 메탈 — 완전 가이드](/stories/practice-room-drum-metal-blast-beat1) | [데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 — 완전 가이드](/stories/practice-room-drum-metal-death1) | [드럼 스틱 컨트롤·모엘러 기법·속도 훈련 — 완전 가이드](/stories/practice-room-drum-stick-control1)
+[데스메탈 드럼·블라스트비트·더블 베이스·익스트림 테크닉 — 완전 가이드](/stories/practice-room-drum-metal-death1)

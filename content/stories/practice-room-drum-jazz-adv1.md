@@ -103,7 +103,7 @@ faq:
 
 물론 그 바탕에는 4-way 독립성이 있어야 합니다. 라이드·하이햇 페달·스네어·킥이 각자 다른 패턴을 동시에 굴리는 능력이 자동화돼야, 머리가 어휘를 고르는 데 집중할 수 있거든요.
 
-그러니 고급으로 가는 길은 매일 콤핑 패턴을 하나씩 몸에 새기고, 그것을 실전에서 즉흥으로 꺼내 쓰는 반복이에요. 사지 독립의 기본은 [재즈 코디네이션](/stories/practice-room-drum-jazz-coordination1)에서 이어집니다.
+그러니 고급으로 가는 길은 매일 콤핑 패턴을 하나씩 몸에 새기고, 그것을 실전에서 즉흥으로 꺼내 쓰는 반복이에요. 사지 독립의 기본은 재즈 코디네이션에서 이어집니다.
 
 **3. 4-bar 솔로 — 즉흥 액센트 결합**
 
@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1)
+[재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1)

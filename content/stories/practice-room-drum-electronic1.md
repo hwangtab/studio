@@ -92,8 +92,8 @@ faq:
 
 세팅으로 이 간극을 좁힐 수 있습니다. 메쉬 헤드의 텐션을 평소 치는 어쿠스틱 스네어와 비슷한 강도로 맞춰 두면, 두 환경을 오갈 때 손이 덜 헷갈려요.
 
-전자 드럼만의 장점도 적극 활용하세요. 키트 프리셋을 바꿔 가며 같은 패턴을 록·재즈·일렉트로닉 음색으로 쳐 보면, 음색에 따라 어떻게 다르게 쳐야 하는지 다이내믹 감각이 넓어집니다. 반동을 다루는 손의 기본기는 [드럼 손 테크닉](/stories/practice-room-drum-hand-technique1)에서 이어집니다.
+전자 드럼만의 장점도 적극 활용하세요. 키트 프리셋을 바꿔 가며 같은 패턴을 록·재즈·일렉트로닉 음색으로 쳐 보면, 음색에 따라 어떻게 다르게 쳐야 하는지 다이내믹 감각이 넓어집니다. 반동을 다루는 손의 기본기는 드럼 손 테크닉에서 이어집니다.
 
 ---
 
-[드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1) | [드럼 루디먼트·스틱 컨트롤 연습 — 드럼 기초 완성 가이드](/stories/practice-room-drum-rudiment1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1)
+[카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [전자 피아노·디지털 피아노 연습 — 터치·표현력 완성 가이드](/stories/practice-room-digital-piano1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1)

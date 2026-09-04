@@ -68,4 +68,3 @@ Studio NOL — Seulning shimoli-gʻarbida, Yeonsinnae bekatidan 5 daqiqa piyoda 
 * [Yeonsinnae mashq xonalari katalogi](/practice-room)
 
 Uchrashuvlar haqida savollar bo‘yicha Studio NOL Yeonsinnae ning KakaoTalk ochiq kanalidan foydalaning yoki %%phone%% raqamiga SMS yuboring. Dushanba e’lonlari haftaning ro‘yxatini yopadi, joylar tez to‘ladi.
-

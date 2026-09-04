@@ -99,8 +99,8 @@ faq:
 
 손이 자유로워지고 나면 그제야 재즈의 진짜 예술이 시작돼요. 바로 콤핑입니다. 자동으로 돌아가는 스윙 위에서, 왼손 스네어와 오른발 킥으로 솔리스트의 연주에 즉흥적으로 대꾸하는 거죠. 재즈 드럼은 박자를 지키는 게 아니라 대화하는 악기예요.
 
-처음엔 즉흥이 막막하니, 자주 쓰는 콤핑 패턴 몇 개를 미리 손에 익혀 "어휘"로 준비해 두세요. 반동을 이용하는 손의 자유로움은 [드럼 손 테크닉](/stories/practice-room-drum-hand-technique1)에서 이어집니다.
+처음엔 즉흥이 막막하니, 자주 쓰는 콤핑 패턴 몇 개를 미리 손에 익혀 "어휘"로 준비해 두세요. 반동을 이용하는 손의 자유로움은 드럼 손 테크닉에서 이어집니다.
 
 ---
 
-[재즈 드럼 고급·스윙 필 심화 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-adv1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1)
+[재즈 드럼 고급·스윙 필 심화 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-adv1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1)

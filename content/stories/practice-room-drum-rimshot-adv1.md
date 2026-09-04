@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[드럼 림샷·고스트노트 테크닉 — 림샷·고스트노트 완성 가이드](/stories/practice-room-drum-rimshot1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 필인·트랜지션 고급 훈련 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill-adv1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1)
+[드럼 림샷·고스트노트 테크닉 — 림샷·고스트노트 완성 가이드](/stories/practice-room-drum-rimshot1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1)

@@ -140,4 +140,4 @@ inlineFallback:
 
 ---
 
-[목소리 유형(보이스 타입) 완전 가이드](/stories/voice-type1) | [음감 훈련(Ear Training) 완전 가이드](/stories/ear-training1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 포트폴리오 만들기](/stories/portfolio1)
+[목소리 유형(보이스 타입) 완전 가이드](/stories/voice-type1) | [음감 훈련(Ear Training) 완전 가이드](/stories/eartraining1) | [보컬 워밍업 완전 가이드](/stories/warmup1) | [보컬 호흡법 완전 가이드](/stories/breathing1) | [보컬 포트폴리오 만들기](/stories/portfolio1)

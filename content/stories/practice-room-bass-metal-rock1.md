@@ -237,4 +237,4 @@ G2 - G2 - G2 - G2 (단순 반복)
 
 ---
 
-[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass-prog-metal1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [베이스 5현 기타 완전 가이드](/stories/practice-room-bass-5string1)
+[프로그레시브 메탈 베이스·Tool·Primus·변박 베이스 라인 — 완전 가이드](/stories/practice-room-bass1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 펑크 그루브·원 드롭 베이스라인 — 완전 가이드](/stories/practice-room-bass-funk-groove1) | [베이스 5현 기타 완전 가이드](/stories/practice-room-bass-5string1)

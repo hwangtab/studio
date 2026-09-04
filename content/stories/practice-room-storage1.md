@@ -122,4 +122,4 @@ faq:
 
 ---
 
-[연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [녹음 가능한 — 연습실 내 셀프 녹음 완벽 가이드](/stories/practice-room-recording1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1)
+[연습실 월세 계약 전 꼭 확인할 것 — 입주 계약 완벽 가이드](/stories/practice-room-contract1) | [녹음 가능한 — 연습실 내 셀프 녹음 완벽 가이드](/stories/practice-room-recording1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1) | [베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1)

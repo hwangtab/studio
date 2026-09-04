@@ -177,4 +177,4 @@ howTo:
 
 ---
 
-[믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [컴프레서 완전 가이드](/stories/compress1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [샘플레이트·비트뎁스 선택법 — 녹음 설정](/stories/sample-rate1) | [스템 파일 준비·그룹 믹싱 가이드](/stories/stem-mixing1)
+[믹싱 체인 완전 가이드](/stories/mixing-chain1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [마스터링 완전 가이드](/stories/mastering1) | [컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [트랜지언트 쉐이퍼 완전 가이드](/stories/transient1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1) | [샘플레이트·비트뎁스 선택법 — 녹음 설정](/stories/sample-rate1) | [스템 파일 준비·그룹 믹싱 가이드](/stories/stem-mixing1)

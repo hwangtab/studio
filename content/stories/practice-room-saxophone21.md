@@ -93,4 +93,4 @@ faq:
 
 ---
 
-[핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [피아노 고급 테크닉·연주 기법 종합 — 피아노 테크닉 완성 가이드](/stories/practice-room-piano-technique-adv1) | [피아노 스케일·아르페지오 테크닉 — 피아노 기초 테크닉 완성 가이드](/stories/practice-room-piano-technique21) | [베이스 슬랩·팝핑 고급 테크닉 — 슬랩 베이스 완성 가이드](/stories/practice-room-bass-slap-adv1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass-technique1)
+[핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [피아노 고급 테크닉·연주 기법 종합 — 피아노 테크닉 완성 가이드](/stories/practice-room-piano-technique-adv1) | [피아노 스케일·아르페지오 테크닉 — 피아노 기초 테크닉 완성 가이드](/stories/practice-room-piano-technique21) | [베이스 슬랩·팝핑 고급 테크닉 — 슬랩 베이스 완성 가이드](/stories/practice-room-bass1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass1)

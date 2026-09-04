@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[비브라토·음정 안정화 연습 — 보컬·현악기 비브라토 가이드](/stories/practice-room-vibrato1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 피치·음정 교정 훈련 — 보컬 음정 완성 가이드](/stories/practice-room-vocal-pitch1)
+[비브라토·음정 안정화 연습 — 보컬·현악기 비브라토 가이드](/stories/practice-room-vibrato1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 피치·음정 교정 훈련 — 보컬 음정 완성 가이드](/stories/practice-room-vocal1)

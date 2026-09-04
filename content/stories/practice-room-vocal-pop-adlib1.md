@@ -295,4 +295,4 @@ C-E-G-C-E (코드 톤 위아래)
 
 ---
 
-[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1)

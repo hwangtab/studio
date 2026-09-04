@@ -201,4 +201,4 @@ MR은 보컬을 뺀 완성된 2-mix 반주, 스템은 각 악기 트랙(드럼·
 
 ---
 
-[녹음실 처음 방문 가이드](/stories/guide1) | [마스터링이란?](/stories/mastering1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [녹음실 선택 기준·비교 가이드](/stories/studio-compare1)
+[녹음실 처음 방문 가이드](/stories/guide1) | [마스터링이란?](/stories/mastering1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [녹음실 선택 기준·비교 가이드](/stories/studio-compare1)

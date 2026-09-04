@@ -60,4 +60,3 @@ Studio NOL là studio thu âm - mix boutique nằm cách ga Yeonsinnae 5 phút �
 * [Danh mục phòng tập Yeonsinnae](/practice-room)
 
 Để hỏi về các buổi gặp, hãy dùng kênh chat mở KakaoTalk của Studio NOL Yeonsinnae, hoặc nhắn tin SMS đến %%phone%% để xác nhận chỗ. Thông báo thứ Hai khóa danh sách của tuần và các suất trống rất nhanh hết.
-

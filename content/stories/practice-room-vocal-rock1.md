@@ -162,7 +162,7 @@ faq:
 
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
-- [보컬 팝 발성 음악연습실](/stories/practice-room-vocal-pop1)
+- [보컬 팝 발성 음악연습실](/stories/practice-room-vocal1)
 - [보컬 클래식 성악 음악연습실](/stories/practice-room-vocal-classical1)
 - [보컬 뮤지컬 넘버·브로드웨이 스타일 음악연습실](/stories/practice-room-vocal-musical1)
 

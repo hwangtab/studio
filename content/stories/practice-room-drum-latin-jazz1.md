@@ -206,7 +206,7 @@ faq:
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [드럼 아프로비트 리듬 음악연습실](/stories/practice-room-drum-afrobeat1)
-- [드럼 브러시워크 음악연습실](/stories/practice-room-drum-brushwork1)
+- 드럼 브러시워크 음악연습실
 - [드럼 컨트리 리듬 음악연습실](/stories/practice-room-drum-country1)
 
 ## 라틴 재즈는 클라베와 스윙, 두 언어를 동시에 말하는 겁니다

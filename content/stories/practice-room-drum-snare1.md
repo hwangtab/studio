@@ -105,4 +105,4 @@ howTo:
 
 ---
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 킥·베이스 드럼 테크닉 — 킥 드럼 완성 가이드](/stories/practice-room-drum-kick1) | [드럼 림샷·크로스스틱 고급 훈련 — 드럼 림샷 완성 가이드](/stories/practice-room-drum-rimshot-adv1) | [드럼 림샷·고스트노트 테크닉 — 림샷·고스트노트 완성 가이드](/stories/practice-room-drum-rimshot1) | [드럼 스네어 튜닝·드럼 헤드 세팅 — 스네어 튜닝 완성 가이드](/stories/practice-room-drum-snare-tuning1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 림샷·크로스스틱 고급 훈련 — 드럼 림샷 완성 가이드](/stories/practice-room-drum-rimshot-adv1) | [드럼 림샷·고스트노트 테크닉 — 림샷·고스트노트 완성 가이드](/stories/practice-room-drum-rimshot1) | [드럼 스네어 튜닝·드럼 헤드 세팅 — 스네어 튜닝 완성 가이드](/stories/practice-room-drum-snare-tuning1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1)

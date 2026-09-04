@@ -99,4 +99,4 @@ faq:
 
 ---
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 연습실 완벽 가이드](/stories/practice-room-drum1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 연습실 완벽 가이드](/stories/practice-room-drum1)

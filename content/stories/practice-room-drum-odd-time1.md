@@ -196,7 +196,7 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 
 시작은 5/4와 7/8이에요. 변박 곡에서 가장 자주 나오는 두 박자라, 여기가 편해지면 대부분의 변박에 대응할 수 있습니다.
 
-순서가 중요해요. 바로 드럼으로 치지 말고, 먼저 정한 그룹핑을 손뼉으로 쳐서 몸에 새기세요. "3+2"를 손뼉으로 편하게 칠 수 있게 된 다음에 드럼으로 옮기면 헷갈리지 않습니다. 메트로놈은 각 덩어리의 첫 박(강박)을 표시하게 해 두면 좋고요. 폴리리듬과 변박을 아우르는 감각은 [퓨전 드럼](/stories/practice-room-drum-fusion1)에서 이어집니다.
+순서가 중요해요. 바로 드럼으로 치지 말고, 먼저 정한 그룹핑을 손뼉으로 쳐서 몸에 새기세요. "3+2"를 손뼉으로 편하게 칠 수 있게 된 다음에 드럼으로 옮기면 헷갈리지 않습니다. 메트로놈은 각 덩어리의 첫 박(강박)을 표시하게 해 두면 좋고요. 폴리리듬과 변박을 아우르는 감각은 퓨전 드럼에서 이어집니다.
 
 5/4 변박은 메트로놈을 5박마다 강박 표시로 설정하면 위치 일관성이 잡힙니다.
 
@@ -204,4 +204,4 @@ Dave Brubeck의 "Take Five"는 3+2 패턴의 5/4박자입니다.
 
 *관련 아티클:*
 
-[드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 스피드 트레이닝·빠른 싱글 스트로크 — 완전 가이드](/stories/practice-room-drum-speed-training1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1)
+[드럼 스피드 트레이닝·빠른 싱글 스트로크 — 완전 가이드](/stories/practice-room-drum-speed-training1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1)

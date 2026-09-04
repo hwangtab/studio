@@ -120,4 +120,4 @@ faq:
 
 ---
 
-[보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath-adv1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 호흡 발음·자음 명료도 훈련 — 보컬 딕션 완성 가이드](/stories/practice-room-vocal-consonant1)
+[보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 호흡 발음·자음 명료도 훈련 — 보컬 딕션 완성 가이드](/stories/practice-room-vocal-consonant1)

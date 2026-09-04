@@ -166,4 +166,4 @@ Split(밴드별 압축)과 Wideband(전체 압축) 방식의 선택은 음색 �
 
 플러그인만으로 해결되지 않는 특정 음절은 볼륨 자동화를 병행하는 것이 효과적입니다. Ableton Live나 Logic Pro의 클립 오토메이션으로 시빌런스가 심한 음절의 클립 게인을 -1~-2dB 낮추면, 디에서 설정을 극단적으로 강하게 걸지 않아도 자연스럽게 처리할 수 있습니다. 두 방법을 조합하면 딕션 손상 없이 시빌런스를 완전히 제어할 수 있습니다.
 
-[보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [디에서 완전 가이드](/stories/deesser1)
+[보컬 신호 체인 완전 가이드](/stories/vocal-chain1) | [보컬 EQ 완전 가이드](/stories/eq-guide1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [성우 보이스 레코딩 완전 가이드](/stories/voice-acting1) | [팝 보컬 녹음 완전 가이드](/stories/pop-vocal1) | [디에서 완전 가이드](/stories/deesser1)

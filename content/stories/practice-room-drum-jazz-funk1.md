@@ -262,4 +262,4 @@ John Bonham이 Purdie Shuffle 활용
 
 ---
 
-[드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [퓨전 드럼·Weather Report·Vinnie Colaiuta·복잡한 그루브 — 완전 가이드](/stories/practice-room-drum-fusion1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [힙합·로파이 드럼·붐뱁·드럼머신 그루브 — 완전 가이드](/stories/practice-room-drum-hip-hop-lofi1)
+[드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1)

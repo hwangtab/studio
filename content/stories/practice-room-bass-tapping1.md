@@ -209,4 +209,4 @@ C 메이저 코드 태핑:
 
 *관련 아티클:*
 
-[베이스 스트링 뮤팅·노이즈 컨트롤 — 완전 가이드](/stories/practice-room-bass-string-muting1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 핑거스타일 테크닉·터치 향상 — 완전 가이드](/stories/practice-room-bass-fingerstyle-technique1)
+[베이스 스트링 뮤팅·노이즈 컨트롤 — 완전 가이드](/stories/practice-room-bass-string-muting1) | [베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [베이스 핑거스타일 테크닉·터치 향상 — 완전 가이드](/stories/practice-room-bass-fingerstyle-technique1)

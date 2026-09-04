@@ -133,4 +133,4 @@ Mix 20~40% = 패럴렐 효과와 동일
 
 ---
 
-[사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [새추레이션 완전 가이드](/stories/saturation1) | [컴프레서 완전 가이드](/stories/compress1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [LA-2A 클래식 컴프레서 가이드](/stories/la2a1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1)
+[사이드체인 컴프레션 완전 가이드](/stories/sidechain1) | [새추레이션 완전 가이드](/stories/saturation1) | [컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [게인 스테이징 완전 가이드](/stories/gain-staging1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [LA-2A 클래식 컴프레서 가이드](/stories/la2a1) | [드럼 믹싱 완전 가이드](/stories/drum-mixing1)

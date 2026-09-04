@@ -138,4 +138,4 @@ faq:
 
 ---
 
-[기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 5현 저음 확장 완전 가이드](/stories/practice-room-bass-5string1) | [베이스 옥타브 주법·그루브 완성 가이드](/stories/practice-room-bass-octave1) | [베이스 하모닉스·플래절렛 마스터 가이드](/stories/practice-room-bass-harmonics1)
+[기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [피아노 연습실 완벽 가이드 — 24시간 개인 피아노 연습 공간 선택법](/stories/practice-room-piano1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 5현 저음 확장 완전 가이드](/stories/practice-room-bass-5string1) | [베이스 옥타브 주법·그루브 완성 가이드](/stories/practice-room-bass-octave1) | [베이스 하모닉스·플래절렛 마스터 가이드](/stories/practice-room-bass-harmonics1)

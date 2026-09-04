@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[베이스 워킹베이스·재즈 라인 — 워킹베이스 완성 가이드](/stories/practice-room-bass-walking1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass-funk1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1)
+[베이스 워킹베이스·재즈 라인 — 워킹베이스 완성 가이드](/stories/practice-room-bass1) | [일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1)

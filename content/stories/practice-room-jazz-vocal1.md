@@ -103,4 +103,4 @@ faq:
 
 ---
 
-[보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 — 완전 가이드](/stories/practice-room-vocal-scatting1) | [재즈 피아노 즉흥 솔로·임프로비제이션 — 재즈 피아노 즉흥 완성 가이드](/stories/practice-room-piano-jazz-improv1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1)
+[보컬 스캣 싱잉·재즈 즉흥·멜로디 즉흥 — 완전 가이드](/stories/practice-room-vocal-scatting1) | [재즈 피아노 즉흥 솔로·임프로비제이션 — 재즈 피아노 즉흥 완성 가이드](/stories/practice-room-piano-jazz-improv1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal1)

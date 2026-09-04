@@ -167,8 +167,8 @@ faq:
 
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
-- [드럼 브러시워크 재즈 음악연습실](/stories/practice-room-drum-brushwork1)
-- [드럼 재즈 독립성·사지 조율 음악연습실](/stories/practice-room-drum-jazz-coordination1)
+- 드럼 브러시워크 재즈 음악연습실
+- 드럼 재즈 독립성·사지 조율 음악연습실
 - [드럼 폴리리듬·크로스리듬 음악연습실](/stories/practice-room-drum-polyrhythm1)
 
 ## 서클이 흔들리는 건 손이 아니라 귀에서 시작합니다

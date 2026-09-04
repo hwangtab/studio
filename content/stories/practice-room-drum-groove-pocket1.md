@@ -194,4 +194,4 @@ summary: >-
 
 ---
 
-[드럼 셔플·블루스 셔플 리듬 — 완전 가이드](/stories/practice-room-drum-shuffle1) | [드럼 펑크 포켓·타이트 그루브·James Brown 스타일 — 완전 가이드](/stories/practice-room-drum-funk-pocket1) | [드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 하이햇 패턴·개폐 컨트롤 — 완전 가이드](/stories/practice-room-drum-hihat-patterns1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)
+[드럼 그루브 구성 고급·포켓·레이어링 — 완전 가이드](/stories/practice-room-drum-groove-construction-advanced1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1)

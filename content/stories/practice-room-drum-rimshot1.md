@@ -95,10 +95,10 @@ faq:
 
 위치를 잡는 건 팔이 아니라 손목입니다. 팔 전체를 휘두르면 매번 타점이 미세하게 달라져 소리가 들쭉날쭉해져요. 손목의 회전으로 스틱을 정확히 같은 자리에 떨어뜨리는 훈련을 하세요.
 
-림샷에도 종류가 있어요. 스틱을 림에 살짝만 걸치는 부분 림샷은 부드럽고, 깊게 걸치는 풀 림샷은 폭발적입니다. 이 둘을 구분해 쓰면 같은 백비트라도 다이내믹의 폭이 넓어져요. 록의 강한 백비트는 [록 드럼](/stories/practice-room-drum-rock1)에서 이어집니다.
+림샷에도 종류가 있어요. 스틱을 림에 살짝만 걸치는 부분 림샷은 부드럽고, 깊게 걸치는 풀 림샷은 폭발적입니다. 이 둘을 구분해 쓰면 같은 백비트라도 다이내믹의 폭이 넓어져요. 록의 강한 백비트는 록 드럼에서 이어집니다.
 
 부분 림샷과 풀 림샷의 음량은 다릅니다. 각각 단독 연습으로 음색 라이브러리를 손에 익힙니다.
 
 ---
 
-[드럼 림샷·크로스스틱 고급 훈련 — 드럼 림샷 완성 가이드](/stories/practice-room-drum-rimshot-adv1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 킥·베이스 드럼 테크닉 — 킥 드럼 완성 가이드](/stories/practice-room-drum-kick1) | [드럼 스네어·림샷 테크닉 — 스네어 드럼 완성 가이드](/stories/practice-room-drum-snare1) | [드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1)
+[드럼 림샷·크로스스틱 고급 훈련 — 드럼 림샷 완성 가이드](/stories/practice-room-drum-rimshot-adv1) | [전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 스네어·림샷 테크닉 — 스네어 드럼 완성 가이드](/stories/practice-room-drum-snare1) | [드럼 악센트·강세 패턴 훈련 — 드럼 악센트 완성 가이드](/stories/practice-room-drum-accent1) | [드럼 카운트·리듬 카운팅 훈련 — 드럼 박자 감각 완성 가이드](/stories/practice-room-drum-count1)

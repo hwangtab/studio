@@ -240,4 +240,4 @@ A2 (명확한 음)
 
 펑크 베이스를 혼자 연습할 때 가장 아까운 건 드럼 없이 보내는 시간입니다. 원 드롭이든 고스트 노트든 기준이 되는 킥과 스네어가 없으면 자기 박자 안에서만 정확해지기 쉽습니다. 같은 패턴이라도 루프의 템포를 조금씩 바꿔 가며 쳐 보면, 느린 템포에서만 굴러가던 그루브인지 아닌지가 금방 드러납니다. 연습실에서의 시간을 최대한 활용하려면 집에서 이미 기초 연습을 충분히 마친 상태에서 방문하는 것이 이상적입니다. 집에서는 조용히 운지나 리듬 패턴을 머릿속으로 시뮬레이션하고, 연습실에서는 실제 악기와 앰프로 이를 확인하고 정밀하게 다듬는 방식으로 역할을 나누면 효율이 높아집니다. 연습 노트를 작성해 각 세션의 목표, 성과, 다음에 집중할 부분을 기록해두면 지속적인 성장을 체계적으로 관리할 수 있습니다.
 
-[가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 팝 그루브·차트 팝 베이스라인 — 완전 가이드](/stories/practice-room-bass-pop-groove1) | [베이스 슬랩·팝 고급 기법 — 완전 가이드](/stories/practice-room-bass-slap-advanced1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1)
+[가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1) | [베이스 팝 그루브·차트 팝 베이스라인 — 완전 가이드](/stories/practice-room-bass-pop-groove1) | [베이스 슬랩·팝 고급 기법 — 완전 가이드](/stories/practice-room-bass-slap-advanced1) | [베이스 블루스·12마디 블루스 베이스라인 — 완전 가이드](/stories/practice-room-bass-blues1)

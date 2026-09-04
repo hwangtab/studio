@@ -121,4 +121,4 @@ faq:
 
 컨트리 드럼은 두 박과 네 박에 강한 스네어 악센트와 셔플 하이햇이 특징인 장르입니다. 트레인 비트(기차 소리를 모방한 패턴)와 부기 그루브를 연습하면 컨트리 씬의 다양한 리듬 어휘를 익힐 수 있습니다. 카우벨과 우드블록 같은 보조 타악기 활용도 컨트리 드럼 사운드를 완성하는 요소입니다.
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 필인·전환 패턴 연습 — 드럼 필인 완성 가이드](/stories/practice-room-drum-fill1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1) | [드럼 힙합·트랩 비트 — 드럼 힙합 완성 가이드](/stories/practice-room-drum-hiphop1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 펑크 그루브·펑크 비트 — 드럼 펑크 완성 가이드](/stories/practice-room-drum-funk1) | [드럼 힙합·트랩 비트 — 드럼 힙합 완성 가이드](/stories/practice-room-drum-hiphop1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1)

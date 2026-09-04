@@ -103,8 +103,8 @@ faq:
 
 밋밋하게 뻗기만 하면 긴 음이 지루해져요. 음의 앞쪽은 곧게 뻗다가 후반부에 비브라토를 살짝 얹으면, 같은 길이라도 훨씬 생기 있게 들립니다. 다만 비브라토는 지지가 안정된 다음에 얹어야 음정이 흔들리지 않아요.
 
-그리고 긴 음도 박자예요. "4박을 채운다"는 의식 없이 감으로 뻗으면 매번 길이가 달라져 반주와 어긋납니다. 메트로놈에 맞춰 정확히 몇 박을 채우는지 세면서 연습하세요. 바탕이 되는 [호흡 컨트롤](/stories/practice-room-vocal-breath-control1)이 결국 서스테인의 전부입니다.
+그리고 긴 음도 박자예요. "4박을 채운다"는 의식 없이 감으로 뻗으면 매번 길이가 달라져 반주와 어긋납니다. 메트로놈에 맞춰 정확히 몇 박을 채우는지 세면서 연습하세요. 바탕이 되는 [호흡 컨트롤](/stories/practice-room-vocal1)이 결국 서스테인의 전부입니다.
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 인토네이션·음정 정확도 연습 — 음치 탈출 완성 가이드](/stories/practice-room-vocal-intonation1) | [보컬 피치·음정 교정 훈련 — 보컬 음정 완성 가이드](/stories/practice-room-vocal-pitch1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 인토네이션·음정 정확도 연습 — 음치 탈출 완성 가이드](/stories/practice-room-vocal-intonation1) | [보컬 피치·음정 교정 훈련 — 보컬 음정 완성 가이드](/stories/practice-room-vocal1)

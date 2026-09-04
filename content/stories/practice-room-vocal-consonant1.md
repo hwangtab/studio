@@ -117,4 +117,4 @@ faq:
 
 ---
 
-[보컬 발음·딕션 훈련 — 노래 발음 완성 가이드](/stories/practice-room-vocal-technique21) | [보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath-adv1) | [보컬 브레스 컨트롤·호흡 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21)
+[보컬 발음·딕션 훈련 — 노래 발음 완성 가이드](/stories/practice-room-vocal-technique21) | [보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal1) | [보컬 브레스 컨트롤·호흡 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21)

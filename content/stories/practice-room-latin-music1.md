@@ -129,4 +129,4 @@ faq:
 
 ---
 
-[드럼 그루브·리듬 패턴 심화 연습 — 드러머 그루브 완성](/stories/practice-room-drum-groove1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1)
+[드럼 그루브·리듬 패턴 심화 연습 — 드러머 그루브 완성](/stories/practice-room-drum-groove1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1)

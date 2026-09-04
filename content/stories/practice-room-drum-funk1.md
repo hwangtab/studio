@@ -105,8 +105,8 @@ faq:
 
 하지만 펑크를 진짜 펑크로 완성하는 건 킥과 베이스의 관계입니다. 드럼 혼자 아무리 잘 쳐도, 킥 드럼과 베이시스트의 음이 서로 다른 자리에 떨어지면 그루브가 흐물흐물해져요. 반대로 킥과 베이스가 정확히 같은 지점에 딱 맞아떨어지면, 두 악기가 한 몸이 된 것처럼 바닥이 단단해집니다. 그 위에서 기타와 보컬이 마음껏 놀 수 있죠.
 
-그러니 연습할 때부터 베이스 라인을 의식적으로 들으며 킥을 맞추는 습관을 들이세요. 펑크는 드럼 솔로가 아니라 리듬 섹션의 팀워크예요. 빈 공간을 다루는 [펑크 포켓 그루브](/stories/practice-room-drum-funk-pocket1)에서 더 깊이 이어집니다.
+그러니 연습할 때부터 베이스 라인을 의식적으로 들으며 킥을 맞추는 습관을 들이세요. 펑크는 드럼 솔로가 아니라 리듬 섹션의 팀워크예요. 빈 공간을 다루는 펑크 포켓 그루브에서 더 깊이 이어집니다.
 
 ---
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 리니어 그루브·선형 비트 — 리니어 드럼 완성 가이드](/stories/practice-room-drum-linear1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass-funk1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass-groove1) | [드럼 컨트리·블루그래스 비트 — 드럼 컨트리 완성 가이드](/stories/practice-room-drum-country1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass1) | [베이스 그루브·리듬감 훈련 — 베이스 그루브 완성 가이드](/stories/practice-room-bass1) | [드럼 컨트리·블루그래스 비트 — 드럼 컨트리 완성 가이드](/stories/practice-room-drum-country1)

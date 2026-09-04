@@ -96,4 +96,4 @@ faq:
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1) | [장르별 보컬 특성·크로스오버 보컬 — 크로스오버 보컬 완성 가이드](/stories/practice-room-vocal-genre1) | [보컬 뮤지컬 스타일·역할 보컬 훈련 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-vocal-musical-style1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [팝·K-POP 보컬 스타일 — 팝 보컬 완성 가이드](/stories/practice-room-pop-vocal1) | [장르별 보컬 특성·크로스오버 보컬 — 크로스오버 보컬 완성 가이드](/stories/practice-room-vocal1) | [보컬 뮤지컬 스타일·역할 보컬 훈련 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-vocal-musical-style1)

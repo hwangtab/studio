@@ -145,4 +145,4 @@ faq:
 
 ---
 
-[베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass-walking-lines1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1)
+[베이스 워킹 라인 구성·크로매틱 접근·가이드 톤 — 완전 가이드](/stories/practice-room-bass1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [연습실 예약 방법 완전 가이드 — 시간 대여부터 월세 입주까지](/stories/practice-room-booking1) | [연습실 에티켓 완전 가이드 — 처음 이용하는 분이 꼭 알아야 할 규칙](/stories/practice-room-etiquette1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1)

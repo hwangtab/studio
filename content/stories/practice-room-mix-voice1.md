@@ -123,4 +123,4 @@ faq:
 
 ---
 
-[음역대 확장·고음 훈련 — 고음 발성 완성 가이드](/stories/practice-room-vocal-range1) | [보컬 믹스 보이스·체스트 헤드 연결 — 믹스 보이스 완성 가이드](/stories/practice-room-vocal-mix1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal-microphone-technique1)
+[음역대 확장·고음 훈련 — 고음 발성 완성 가이드](/stories/practice-room-vocal-range1) | [보컬 믹스 보이스·체스트 헤드 연결 — 믹스 보이스 완성 가이드](/stories/practice-room-vocal-mix1) | [보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 마이크 기법·녹음실 발성 — 완전 가이드](/stories/practice-room-vocal1)

@@ -205,4 +205,4 @@ Hold 파라미터는 게이트가 열린 상태를 유지하는 시간으로, �
 
 ---
 
-[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [컴프레서 완전 가이드](/stories/compress1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [사이드체인 완전 가이드](/stories/sidechain1)
+[보컬 EQ 완전 가이드](/stories/vocal-eq1) | [보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [컴프레서 완전 가이드](/stories/vocal-compression1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [사이드체인 완전 가이드](/stories/sidechain1)

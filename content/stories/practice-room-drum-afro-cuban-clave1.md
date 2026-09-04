@@ -273,9 +273,9 @@ Tito Puente는 **팀발레스(Timbales)**의 거장이며 맘보 드러밍의 �
 
 은평구 24시간 음악연습실에서 클라베를 마음속에 새기며 아프로큐반의 세계로 들어오세요.
 
-[드럼 포스트펑크·뉴웨이브 리듬 — 완전 가이드](/stories/practice-room-drum-post-punk1)
+드럼 포스트펑크·뉴웨이브 리듬 — 완전 가이드
 
-[보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1) | [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1)
+[보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1) | [드럼 그루브·포켓 연주·리듬 감각 — 완전 가이드](/stories/practice-room-drum-groove-pocket1) | [드럼 라틴 퍼커션·살사·삼바 리듬 — 완전 가이드](/stories/practice-room-drum-latin-percussion1) | [드럼 연습 공간 선택법](/stories/practice-room-drum1)
 
 ---
 
@@ -295,4 +295,4 @@ Tito Puente는 **팀발레스(Timbales)**의 거장이며 맘보 드러밍의 �
 
 방음된 개인 연습실에서는 전자 드럼이나 연습 패드로 소음 걱정 없이 볼륨을 다뤄볼 수 있어 다이나믹 조절 훈련에 적합합니다. 피아니시모부터 포르테까지 다양한 강도로 같은 패턴을 연주하는 훈련은 표현력 향상에 직접적으로 연결됩니다. 필인 타이밍을 곡의 섹션 전환에 맞게 배치하는 감각을 키우면 밴드 연주에서 곡의 구조를 이끄는 역할을 자신 있게 수행할 수 있습니다. 다양한 리듬 패턴을 한 박자씩 분해해 연습하는 방식이 복잡한 그루브를 익히는 데 효율적입니다. 음악을 배우는 과정에서 이론과 실기를 함께 발전시키는 것이 이상적입니다. 화성학 기초를 이해하면 코드 진행을 귀로 파악하는 능력이 향상되고, 즉흥 연주나 작곡의 기반이 됩니다. 악보를 보고 연주하는 초견 능력은 꾸준히 새로운 악보를 접하는 훈련으로만 향상됩니다. 함께 연주할 동료를 찾아 앙상블 경험을 쌓는 것도 개인 연습에서는 얻기 어려운 실전 감각을 키워주는 중요한 방법입니다.
 
-[드럼 템포 컨트롤·메트로놈 훈련법 — 완전 가이드](/stories/practice-room-drum-tempo-control1)
+드럼 템포 컨트롤·메트로놈 훈련법 — 완전 가이드

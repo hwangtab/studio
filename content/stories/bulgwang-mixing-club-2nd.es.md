@@ -60,4 +60,3 @@ Studio NOL es un estudio boutique de grabación y mezcla situado a 5 minutos a p
 * [Directorio de salas de ensayo en Yeonsinnae](/practice-room)
 
 Para consultar sobre los encuentros, usa el canal de KakaoTalk Studio NOL Yeonsinnae o envía un SMS al %%phone%% para confirmar tu plaza. Los anuncios de los lunes fijan la lista de la semana y los cupos vuelan rápido.
-

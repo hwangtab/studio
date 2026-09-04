@@ -181,7 +181,7 @@ BPM: 80
 **관련 가이드**
 - [연신내 음악연습실 완전 가이드](/stories/practice-room-yeonsinnae1)
 - [베이스 재즈 워킹 베이스라인 음악연습실](/stories/practice-room-bass-jazz1)
-- [베이스 라틴 리듬 음악연습실](/stories/practice-room-bass-latin1)
+- [베이스 라틴 리듬 음악연습실](/stories/practice-room-bass1)
 
 ## 믹스 창에 올려놓으면 고스트노트가 제일 먼저 보입니다
 

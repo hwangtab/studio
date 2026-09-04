@@ -233,4 +233,4 @@ summary: >-
 
 은평구 24시간 음악연습실에서 다양한 심벌 기법을 자유롭게 탐구하고 자신만의 심벌 어휘를 완성하세요.
 
-[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 리니어 패턴·비트 분산 기법 — 완전 가이드](/stories/practice-room-drum-linear-patterns1) | [드럼 레코딩·오버더빙 기법 — 완전 가이드](/stories/practice-room-drum-recording-overdub1) | [드럼 연습실 완벽 가이드](/stories/practice-room-drum1) | [드럼 루디먼트·스틱 컨트롤 가이드](/stories/practice-room-drum-rudiments1)
+[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 필·트랜지션 고급 기법 — 완전 가이드](/stories/practice-room-drum-fills-transitions1) | [드럼 레코딩·오버더빙 기법 — 완전 가이드](/stories/practice-room-drum-recording-overdub1) | [드럼 연습실 완벽 가이드](/stories/practice-room-drum1) | [드럼 루디먼트·스틱 컨트롤 가이드](/stories/practice-room-drum-rudiments1)

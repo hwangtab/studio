@@ -92,10 +92,10 @@ faq:
 
 표정과 제스처도 마찬가지예요. 감정은 목소리에만 담기는 게 아니라 얼굴과 몸에서 먼저 보입니다. 다만 억지로 만든 동작은 어색하니, 노래의 감정에서 자연스럽게 흘러나오는 정도면 충분해요.
 
-이걸 점검하는 가장 정직한 도구는 영상입니다. 내 무대 동선이나 습관은 내 눈으로 볼 수 없거든요. 스마트폰으로 한 곡을 찍어 보면, 나도 몰랐던 버릇(한쪽으로만 몸이 기운다든가)이 그대로 드러납니다. 표정·마이크 핸들링까지 아우르는 점검은 [보컬 퍼포먼스 스킬](/stories/practice-room-vocal-performance-skills1)에서 이어집니다.
+이걸 점검하는 가장 정직한 도구는 영상입니다. 내 무대 동선이나 습관은 내 눈으로 볼 수 없거든요. 스마트폰으로 한 곡을 찍어 보면, 나도 몰랐던 버릇(한쪽으로만 몸이 기운다든가)이 그대로 드러납니다. 표정·마이크 핸들링까지 아우르는 점검은 [보컬 퍼포먼스 스킬](/stories/practice-room-vocal1)에서 이어집니다.
 
 ---
 
 무대 보컬 퍼포먼스는 기술적 발성 능력에 더해 청중과 교감하는 스테이지 존재감(Stage Presence)이 중요합니다. 보컬 연습과 병행하여 거울 앞에서 표정과 제스처를 연습하고, 실제 청중 앞에서 노래하는 기회를 자주 갖는 것이 무대 공포를 극복하는 가장 효과적인 방법입니다.
 
-[보컬 무대 퍼포먼스 고급·스테이지 존재감 — 무대 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage-adv1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [뮤지컬 넘버·무대 노래 연습 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-musical-theater1)
+[보컬 무대 퍼포먼스 고급·스테이지 존재감 — 무대 퍼포먼스 완성 가이드](/stories/practice-room-vocal1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [뮤지컬 넘버·무대 노래 연습 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-musical-theater1)

@@ -273,4 +273,4 @@ Beach Boys의 복합 화음:
 
 ---
 
-[보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)
+[보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal1) | [보컬 아카펠라 그룹 퍼포먼스 — 완전 가이드](/stories/practice-room-vocal-acappella-group1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)

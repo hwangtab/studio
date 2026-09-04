@@ -98,4 +98,4 @@ faq:
 
 ---
 
-[기타 핑거피킹·핑거스타일 입문 — 핑거피킹 완성 가이드](/stories/practice-room-guitar-fingerpicking1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerpicking1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [베이스 핑거스타일·손가락 주법 — 베이스 핑거스타일 완성 가이드](/stories/practice-room-bass-fingerstyle1)
+[기타 핑거피킹·핑거스타일 입문 — 핑거피킹 완성 가이드](/stories/practice-room-guitar-fingerpicking1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerstyle1) | [핑거스타일 기타 고급 테크닉 — 핑거스타일 완성 가이드](/stories/practice-room-guitar-fingerstyle21) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass1) | [베이스 핑거스타일·손가락 주법 — 베이스 핑거스타일 완성 가이드](/stories/practice-room-bass1)

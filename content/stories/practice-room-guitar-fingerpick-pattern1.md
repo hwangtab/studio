@@ -99,4 +99,4 @@ p-i-m-a부터 트래비스까지. 방음 개인실에서 핑거피킹 레퍼토�
 
 ---
 
-[기타 핑거피킹·핑거스타일 입문 — 핑거피킹 완성 가이드](/stories/practice-room-guitar-fingerpicking1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerpicking1) | [기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1) | [기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1)
+[기타 핑거피킹·핑거스타일 입문 — 핑거피킹 완성 가이드](/stories/practice-room-guitar-fingerpicking1) | [핑거피킹·아르페지오 기타 연습 — 핑거스타일 기초 완성 가이드](/stories/practice-room-fingerstyle1) | [기타 코드 아르페지오·코드 분산 연주 — 코드 분산 기타 완성 가이드](/stories/practice-room-guitar-chord-arpeggio1) | [기타 피킹·스트로크 패턴 연습 — 리듬 기타 완성 가이드](/stories/practice-room-guitar-picking1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1)

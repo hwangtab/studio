@@ -176,4 +176,4 @@ Valhalla Room(짧은 룸, Decay 0.6~1.0초)을 리드 보컬에, Valhalla Plate(
 
 ---
 
-[보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [컴프레서 사용법](/stories/compress1) | [DAW 선택 가이드](/stories/daw1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[보컬 믹싱 완전 가이드](/stories/vocal-mixing1) | [보컬 EQ 완전 가이드](/stories/eq1) | [컴프레서 사용법](/stories/vocal-compression1) | [DAW 선택 가이드](/stories/daw1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

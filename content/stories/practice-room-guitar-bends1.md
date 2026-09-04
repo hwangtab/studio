@@ -167,7 +167,7 @@ faq:
 
 *관련 아티클:*
 
-[보컬 비브라토·트릴 훈련법 — 완전 가이드](/stories/practice-room-vocal-vibrato1)
+[보컬 비브라토·트릴 훈련법 — 완전 가이드](/stories/practice-room-vocal1)
 
 ## 벤딩은 정확한 음정에 도달해야 비로소 음악이 됩니다
 

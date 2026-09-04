@@ -115,4 +115,4 @@ BOOM-chick이라고 부르는 그 느낌은 강박의 루트가 바닥을 찍고
 
 ---
 
-[일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass-beginner1) | [베이스 코드·코드 주법 — 베이스 코드 완성 가이드](/stories/practice-room-bass-chord1) | [베이스 핑거스타일·손가락 주법 — 베이스 핑거스타일 완성 가이드](/stories/practice-room-bass-fingerstyle1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass-funk1)
+[일렉 베이스·베이스 기타 입문 연습 — 베이스 기초 완성 가이드](/stories/practice-room-electric-bass1) | [베이스 기타 독학 입문 — 베이스 독학 완성 가이드](/stories/practice-room-bass1) | [베이스 코드·코드 주법 — 베이스 코드 완성 가이드](/stories/practice-room-bass1) | [베이스 핑거스타일·손가락 주법 — 베이스 핑거스타일 완성 가이드](/stories/practice-room-bass1) | [베이스 펑크 그루브·리듬 베이스 — 베이스 펑크 완성 가이드](/stories/practice-room-bass1)

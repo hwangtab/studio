@@ -250,4 +250,4 @@ Keith Moon:
 
 드럼 연습에서 기초 루디먼트는 절대 간과해서는 안 될 핵심 요소입니다. 싱글 스트로크, 더블 스트로크, 패러디들을 꾸준히 연습하면 양손 밸런스가 균등하게 발전합니다. 메트로놈 없이 연습하는 습관은 박자 안정성을 해치므로 항상 클릭 트랙을 활용하는 것이 좋습니다. 처음에는 느린 템포부터 시작해 정확도가 높아지면 점차 BPM을 올려가는 방식이 효과적입니다. 드럼 패드에서 충분히 익힌 뒤 실제 드럼 세트로 전환하면 습득 속도가 크게 빨라집니다. 규칙적인 연습 루틴을 만들고 꾸준히 유지하는 것이 단기간의 집중 연습보다 장기적으로 더 큰 효과를 만들어냅니다. 하루 30분씩 매일 연습하는 것이 주말에만 3시간씩 연습하는 것보다 신체 기억과 음악적 감각 형성에 훨씬 유리합니다. 연습 중 어려운 부분에 막힐 때는 천천히, 더 작은 단위로 나눠 반복하는 것이 돌파구가 됩니다. 목표 악기와 음악 스타일에 맞는 연습 방법을 지속적으로 탐구하고 실험하는 자세가 장기적인 성장의 원동력입니다.
 
-[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1) | [드럼 홀수박자·변박 리듬 — 완전 가이드](/stories/practice-room-drum-odd-times1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1)
+[드럼 고급 필인·전환 기법·John Bonham — 완전 가이드](/stories/practice-room-drum-fills-advanced1) | [드럼 아프로큐반 리듬·클라베 — 완전 가이드](/stories/practice-room-drum-afro-cuban-clave1) | [보사노바 드럼·브라질 리듬·클라베·이파네마 패턴 — 완전 가이드](/stories/practice-room-drum-bossa-nova1)

@@ -122,4 +122,4 @@ CCM은 가사가 곧 메시지라서 "감정을 담아 부르세요"라는 말�
 
 ---
 
-[카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass-technique1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1)
+[카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [베이스 슬랩·테크닉 연습 — 펑크 베이스 완성 가이드](/stories/practice-room-bass1) | [블루스 음악·블루스 기타 연습 — 블루스 필링 완성 가이드](/stories/practice-room-blues1) | [호흡·복식호흡 보컬 연습 — 발성의 기초 완성 가이드](/stories/practice-room-breath-control1)

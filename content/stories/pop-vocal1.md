@@ -148,4 +148,4 @@ inlineFallback:
 
 ---
 
-[보컬 컴프레서 완전 가이드](/stories/compressor1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [백 보컬 녹음으로 완성도 높이기](/stories/background-vocal1) | [보컬 연습 스케줄 완전 가이드](/stories/practice-schedule1) | [믹스 보이스 완전 가이드](/stories/mixvoice1)
+[보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [록 보컬 녹음 완전 가이드](/stories/rock-vocal1) | [R&B 보컬 녹음 완전 가이드](/stories/rnb-vocal1) | [발라드 보컬 녹음 완전 가이드](/stories/ballad-vocal1) | [녹음 준비 완전 가이드](/stories/recording-preparation1) | [백 보컬 녹음으로 완성도 높이기](/stories/background-vocal1) | [보컬 연습 스케줄 완전 가이드](/stories/practice-schedule1) | [믹스 보이스 완전 가이드](/stories/mixvoice1)

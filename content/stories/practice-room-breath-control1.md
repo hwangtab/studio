@@ -99,7 +99,7 @@ faq:
 - 방음 환경에서 집중력이 최대로 유지되는 환경
 - 스스로 녹음하여 객관적으로 청취하는 피드백 루틴
 
-[보컬 브레스 컨트롤·호흡 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath-adv1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)
+[보컬 브레스 컨트롤·호흡 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal-breath1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 호흡·성대 컨트롤 고급 훈련 — 보컬 호흡 완성 가이드](/stories/practice-room-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)
 
 ---
 
@@ -112,4 +112,3 @@ faq:
 이걸 몸에 익히는 방법은 단순해요. 편하게 서서 어깨가 움직이지 않게 배에만 숨을 넣고, "스—" 소리를 내며 8초 동안 일정하게 내쉬어 보세요. 익숙해지면 16초, 24초로 늘려 갑니다. 어깨가 들썩이면 흉식 호흡이 섞인 거니 거울로 확인하면서 하세요. 이 균일한 날숨이 곧 긴 프레이즈를 한 호흡에 소화하는 힘이 됩니다.
 
 집에서는 소리를 크게 내기 어려워 이 훈련이 어중간해지기 쉬운데, 방음실에서는 실제 노래 볼륨으로 프레이즈를 끝까지 밀어붙이며 호흡이 어디서 무너지는지 확인할 수 있어요. 성대 컨트롤까지 함께 다루는 고급 훈련은 [보컬 브레스 컨트롤·호흡 훈련](/stories/practice-room-vocal-breath1)에서 이어집니다.
-

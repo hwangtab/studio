@@ -126,4 +126,4 @@ faq:
 
 ---
 
-[보컬 인토네이션·음정 정확도 연습 — 음치 탈출 완성 가이드](/stories/practice-room-vocal-intonation1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [저음·저음역대 보컬 연습 — 중저음 보컬 개발 가이드](/stories/practice-room-vocal-low1)
+[보컬 인토네이션·음정 정확도 연습 — 음치 탈출 완성 가이드](/stories/practice-room-vocal-intonation1) | [첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [저음·저음역대 보컬 연습 — 중저음 보컬 개발 가이드](/stories/practice-room-vocal1)

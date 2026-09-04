@@ -106,8 +106,8 @@ R&B를 부르고 싶은 분들이 흔히 원곡의 화려한 애드리브부터 
 
 R&B만의 또 다른 무기는 숨소리예요. 다른 장르에선 피해야 할 숨소리를, R&B는 오히려 표현 도구로 씁니다. 호흡량을 조절해 일부러 바람이 섞인 브레시 톤을 만들면 특유의 나른하고 관능적인 질감이 나와요. 이건 의도적으로 연습해야 손에 들어옵니다.
 
-그리고 R&B는 다이내믹 폭이 굉장히 넓어요. 귀에 대고 속삭이는 듯한 소리부터 가슴을 울리는 파워 보컬까지, 한 곡 안에서 오가는 그 낙차가 감정을 만듭니다. 이 전환을 의식적으로 설계하세요. 런과 멜리스마 같은 화려한 기술을 더 파고드는 법은 [보컬 테크닉·런·멜리스마 연습](/stories/practice-room-vocal-technique1)에서 이어집니다.
+그리고 R&B는 다이내믹 폭이 굉장히 넓어요. 귀에 대고 속삭이는 듯한 소리부터 가슴을 울리는 파워 보컬까지, 한 곡 안에서 오가는 그 낙차가 감정을 만듭니다. 이 전환을 의식적으로 설계하세요. 런과 멜리스마 같은 화려한 기술을 더 파고드는 법은 [보컬 테크닉·런·멜리스마 연습](/stories/practice-room-vocal1)에서 이어집니다.
 
 ---
 
-[보컬 테크닉·런·멜리스마 연습 — 화려한 보컬 기술 완성](/stories/practice-room-vocal-technique1) | [보컬 가스펠·소울 스타일 — 보컬 가스펠 완성 가이드](/stories/practice-room-vocal-gospel1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)
+[보컬 테크닉·런·멜리스마 연습 — 화려한 보컬 기술 완성](/stories/practice-room-vocal1) | [보컬 가스펠·소울 스타일 — 보컬 가스펠 완성 가이드](/stories/practice-room-vocal-gospel1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1)

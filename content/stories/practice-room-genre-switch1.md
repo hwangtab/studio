@@ -119,4 +119,4 @@ faq:
 
 ---
 
-[베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1) | [드럼 재즈 스윙 콤핑 — 4/4 재즈 드럼 완전 가이드](/stories/practice-room-drum-jazz-swing-comping1)
+[베이스 재즈 스타일·재즈 베이스 — 베이스 재즈 완성 가이드](/stories/practice-room-bass-jazz1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [음악 다시 시작하는 분을 위한 연습실 가이드 — 음악 복귀 완벽 안내](/stories/practice-room-comeback1) | [커플·연인 음악 취미 연습실 — 함께하는 음악 활동 가이드](/stories/practice-room-couple1)

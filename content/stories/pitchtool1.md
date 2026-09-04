@@ -162,4 +162,4 @@ Auto-Tune이 처리하지 못하는 반음 이상 벗어난 음정(특히 고음
 
 ---
 
-[오토튠 완전 가이드](/stories/autotune1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [마스터링이란?](/stories/mastering1) | [녹음실 용어 사전](/stories/glossary1)
+[오토튠 완전 가이드](/stories/autotune1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [마스터링이란?](/stories/mastering1) | [녹음실 용어 사전](/stories/glossary1)

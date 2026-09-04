@@ -100,4 +100,4 @@ faq:
 
 ---
 
-[오디션 영상·포트폴리오 촬영 준비 — 완성된 영상으로 합격하기](/stories/practice-room-video-audition1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal-audition1) | [예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1)
+[오디션 영상·포트폴리오 촬영 준비 — 완성된 영상으로 합격하기](/stories/practice-room-video-audition1) | [기타 음악 이론·음악 이론 기타 적용 — 기타 이론 완성 가이드](/stories/practice-room-guitar-theory1) | [보컬 오디션 준비·심사 기준 이해 — 보컬 오디션 완성 가이드](/stories/practice-room-vocal1) | [예술고·음악고 입시 준비 — 예중·예고 실기 완성 가이드](/stories/practice-room-arts-high1) | [오디션을 위한 연습실 활용법 — 보컬 오디션 준비 완벽 가이드](/stories/practice-room-audition1)

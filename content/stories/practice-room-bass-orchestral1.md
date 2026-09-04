@@ -268,4 +268,4 @@ Pizz. 표기가 나오면 대부분 어디서 뜯을지에만 집중합니다. �
 
 ---
 
-[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1) | [베이스 왼손 기법·레가토·슬라이드·비브라토 — 완전 가이드](/stories/practice-room-bass-left-hand1)
+[베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1) | [베이스 왼손 기법·레가토·슬라이드·비브라토 — 완전 가이드](/stories/practice-room-bass1)

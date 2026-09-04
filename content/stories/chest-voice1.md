@@ -162,4 +162,4 @@ K-POP 남성 보컬에서 자주 볼 수 있는 고음 파트는 대부분 이 �
 
 ---
 
-[저음 발성 완전 가이드](/stories/low-note1) | [고음 발성 완전 가이드](/stories/high-note1) | [두성 완전 가이드](/stories/head-voice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [고음 내는 법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 완전 가이드](/stories/vocalrange1) | [흉성·두성 공명 배치 완전 가이드](/stories/practice-room-vocal-resonance-chest1)
+[저음 발성 완전 가이드](/stories/low-note1) | [고음 발성 완전 가이드](/stories/highnote1) | [두성 완전 가이드](/stories/headvoice1) | [믹스 보이스 완전 가이드](/stories/mixvoice1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1) | [고음 내는 법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 완전 가이드](/stories/vocalrange1) | [흉성·두성 공명 배치 완전 가이드](/stories/practice-room-vocal-resonance-chest1)

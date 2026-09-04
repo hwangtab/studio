@@ -206,4 +206,4 @@ G|--i(12)-m(14)-i(12)-m(14)--|
 
 녹음은 이 모든 과정에서 가장 값싼 피드백 도구입니다. 스마트폰으로 간단히 녹음한 뒤 나중에 들어보면 연주 중에는 인식하지 못했던 리듬 불안정, 음정 이탈, 다이나믹 부재가 그대로 드러납니다. 자기 연주를 비판적으로 들을 수 있게 될수록 혼자 하는 교정의 효율이 올라갑니다. 그러려면 우선 연습실의 앰프나 모니터를 통해 자기 소리를 정확히 듣는 환경부터 만들어야 합니다.
 
-[베이스 썸피킹·핑거스타일 혼합 — 베이스 썸피킹 완성 가이드](/stories/practice-room-bass-thumb1) | [베이스 이펙터·페달 보드 활용 — 베이스 이펙터 완성 가이드](/stories/practice-room-bass-effects1) | [베이스 그루브 락·킥드럼 동조 — 완전 가이드](/stories/practice-room-bass-groove-locks1) | [베이스 넥 포지션·전체 지판 활용 — 완전 가이드](/stories/practice-room-bass-neck-position1) | [베이스 루트 노트·코드 읽기 고급 — 베이스 루트 완성 가이드](/stories/practice-room-bass-root-adv1)
+[베이스 썸피킹·핑거스타일 혼합 — 베이스 썸피킹 완성 가이드](/stories/practice-room-bass1) | [베이스 이펙터·페달 보드 활용 — 베이스 이펙터 완성 가이드](/stories/practice-room-bass1) | [베이스 그루브 락·킥드럼 동조 — 완전 가이드](/stories/practice-room-bass-groove-locks1) | [베이스 넥 포지션·전체 지판 활용 — 완전 가이드](/stories/practice-room-bass-neck-position1) | [베이스 루트 노트·코드 읽기 고급 — 베이스 루트 완성 가이드](/stories/practice-room-bass-root-adv1)

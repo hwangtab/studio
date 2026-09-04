@@ -99,4 +99,4 @@ faq:
 
 ---
 
-[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 팝 스타일·팝 보컬 테크닉 — 보컬 팝 완성 가이드](/stories/practice-room-vocal-pop1) | [보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드](/stories/practice-room-vocal-rasp1)
+[재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [보컬 팝 스타일·팝 보컬 테크닉 — 보컬 팝 완성 가이드](/stories/practice-room-vocal1) | [보컬 그릿·래스프 발성 훈련 — 거친 보컬 테크닉 완성 가이드](/stories/practice-room-vocal-rasp1)

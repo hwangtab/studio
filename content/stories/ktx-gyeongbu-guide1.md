@@ -152,4 +152,4 @@ KTX 운행 시간표는 시기에 따라 변동됩니다. [코레일 홈페이�
 
 각 도시에서 스튜디오 놀까지의 상세 이동 경로, 현지 음악 씬 소개, 맞춤 세션 안내는 아래 개별 가이드를 참고하세요.
 
-[대전 가이드](/stories/daejeon1) | [대구 가이드](/stories/daegu1) | [부산 가이드](/stories/busan1) | [울산 가이드](/stories/ulsan1) | [포항 가이드](/stories/pohang1) | [창원 가이드](/stories/gyeongnam1) | [김해 가이드](/stories/gyeongnam1) | [구미 가이드](/stories/gumi1) | [경주 가이드](/stories/pohang1) | [천안아산 가이드](/stories/chungnam1)
+[대전 가이드](/stories/daejeon1) | [대구 가이드](/stories/daegu1) | [부산 가이드](/stories/busan1) | [울산 가이드](/stories/ulsan1) | [포항 가이드](/stories/gyeongbuk1) | [창원 가이드](/stories/gyeongnam1) | [김해 가이드](/stories/gyeongnam1) | [구미 가이드](/stories/gyeongbuk1) | [경주 가이드](/stories/gyeongbuk1) | [천안아산 가이드](/stories/chungnam1)

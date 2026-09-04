@@ -216,4 +216,4 @@ BPM 110: 도전
 
 베이스 연주에서는 일정한 타이밍과 그루브가 중요합니다. 메트로놈에 맞춰 천천히 연습하다 보면 자연스럽게 리듬 감각이 몸에 배어들게 됩니다. 드럼 트랙과 함께 연습하면 밴드 앙상블에서 베이스의 역할을 직접 체험할 수 있어 훨씬 빠르게 실력이 향상됩니다. 오른손 두 손가락을 균등하게 사용하는 훈련을 꾸준히 하면 스피드와 다이나믹 조절 능력이 동시에 발전합니다. 연주 후 스스로 녹음을 들어보는 습관을 들이면 미처 인식하지 못했던 실수를 발견하고 빠르게 교정할 수 있습니다.
 
-[베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass-chords-harmony1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass-jazz-bass1)
+[베이스 썸 테크닉·슬랩 베이스 고급 — 완전 가이드](/stories/practice-room-bass-thumb-technique1) | [베이스 코드·하모닉스 솔로 베이스 — 완전 가이드](/stories/practice-room-bass1) | [베이스 확장 음역·5현·6현 베이스 활용법 — 완전 가이드](/stories/practice-room-bass-extended-range1) | [가스펠 베이스·교회 리듬·소울 그루브·찬양팀 베이스 — 완전 가이드](/stories/practice-room-bass-gospel1) | [베이스 재즈 베이스·스윙 그루브 — 완전 가이드](/stories/practice-room-bass1)

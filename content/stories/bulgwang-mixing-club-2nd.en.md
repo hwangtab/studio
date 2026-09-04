@@ -60,4 +60,3 @@ Studio NOL is a boutique recording and mixing room located a 5-minute walk from 
 * [Yeonsinnae practice-room directory](/practice-room)
 
 For meetup questions, use the KakaoTalk open chat channel for Studio NOL Yeonsinnae, or SMS %%phone%% to confirm a seat. Sessions fill fast — Monday posts lock the current week's list.
-

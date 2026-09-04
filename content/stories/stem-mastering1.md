@@ -148,4 +148,4 @@ faq:
 
 ---
 
-[AI 마스터링 완전 가이드](/stories/ai-mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 파일 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[AI 마스터링 완전 가이드](/stories/mastering1) | [마스터링 완전 가이드](/stories/mastering1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 파일 가이드](/stories/stemfile1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

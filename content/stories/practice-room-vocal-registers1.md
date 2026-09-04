@@ -204,8 +204,8 @@ G4-F4-E4-D4-C4 (5음 하행, '이' 발음)
 
 전환을 매끄럽게 만드는 건 믹스 보이스예요. 흉성에서 두성으로 뚝 끊어 갈아타면 그 자리에서 소리가 툭 바뀌어 표현이 끊깁니다. 두 음역을 다리처럼 이어 주는 믹스 보이스로 넘어가면 이음매가 보이지 않아요.
 
-차가운 목으로 풀 음역을 오르내리는 건 위험합니다. 10분쯤 중음역부터 워밍업으로 데운 뒤, 조금씩 위아래로 넓혀 가세요. 이음매를 매끄럽게 잇는 구체적 방법은 [믹스 보이스](/stories/practice-room-vocal-mix-voice1)에서 이어집니다.
+차가운 목으로 풀 음역을 오르내리는 건 위험합니다. 10분쯤 중음역부터 워밍업으로 데운 뒤, 조금씩 위아래로 넓혀 가세요. 이음매를 매끄럽게 잇는 구체적 방법은 [믹스 보이스](/stories/practice-room-vocal1)에서 이어집니다.
 
 ---
 
-[보컬 파워·성량 키우기 연습 — 강한 목소리 완성 가이드](/stories/practice-room-vocal-power1) | [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [휘슬 레지스터·초고음 보컬 연습 — 초고음 발성 완성 가이드](/stories/practice-room-vocal-whistle1) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [한국 발라드 보컬·감정 표현·직접적 감성·이모션 완전 가이드](/stories/practice-room-vocal-korean-ballad1)
+[보컬 파워·성량 키우기 연습 — 강한 목소리 완성 가이드](/stories/practice-room-vocal-power1) | [보컬 소울·R&B·그루브 느낌·Aretha Franklin 스타일 — 완전 가이드](/stories/practice-room-vocal-soul-rn1) | [휘슬 레지스터·초고음 보컬 연습 — 초고음 발성 완성 가이드](/stories/practice-room-vocal-whistle1) | [보컬 커버곡 완성·원곡 재현 — 보컬 커버 완성 가이드](/stories/practice-room-vocal-cover1) | [한국 발라드 보컬·감정 표현·직접적 감성·이모션 완전 가이드](/stories/practice-room-vocal1)

@@ -184,4 +184,4 @@ EQ 하나, 컴프레서 하나를 손에 익도록 깊이 쓰는 게 열 개를 
 
 ---
 
-[VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/compress1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)
+[VST 플러그인 완전 가이드](/stories/vst-guide1) | [보컬 EQ 완전 가이드](/stories/eq1) | [보컬 컴프레서 사용법](/stories/vocal-compression1) | [음정 교정 도구 비교](/stories/pitchtool1) | [셀프 믹싱 vs 전문 믹싱 비교](/stories/selfmix1)

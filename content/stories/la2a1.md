@@ -205,4 +205,4 @@ Optical 특유의 따뜻함에 취해 자꾸 더 걸고 싶어지지만, GR이 �
 
 ---
 
-[SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [컴프레서 완전 가이드](/stories/compressor1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 플러그인 완전 가이드](/stories/plugins1)
+[SSL G-Bus 컴프레서 완전 가이드](/stories/ssl-bus1) | [1176 컴프레서 완전 가이드](/stories/comp1176) | [컴프레서 완전 가이드](/stories/vocal-compression1) | [패러럴 컴프레션 완전 가이드](/stories/parallel-compression1) | [보컬 믹싱 플러그인 완전 가이드](/stories/plugins1)

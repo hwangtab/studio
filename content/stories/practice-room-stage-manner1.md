@@ -107,4 +107,4 @@ faq:
 
 ---
 
-[보컬 무대 퍼포먼스·스테이지 연기 — 보컬 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage1) | [보컬 무대 퍼포먼스 고급·스테이지 존재감 — 무대 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage-adv1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [뮤지컬 넘버·무대 노래 연습 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-musical-theater1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21)
+[보컬 무대 퍼포먼스·스테이지 연기 — 보컬 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage1) | [보컬 무대 퍼포먼스 고급·스테이지 존재감 — 무대 퍼포먼스 완성 가이드](/stories/practice-room-vocal1) | [재즈 보컬 스캣·즉흥 보컬 — 재즈 보컬 완성 가이드](/stories/practice-room-jazz-vocal1) | [뮤지컬 넘버·무대 노래 연습 — 뮤지컬 보컬 완성 가이드](/stories/practice-room-musical-theater1) | [보컬 숨소리·브레시 보컬 스타일 — 브레시 보컬 완성 가이드](/stories/practice-room-vocal-breath21)

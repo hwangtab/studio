@@ -158,4 +158,4 @@ EQ 상담에서 제가 가장 자주 고쳐드리는 습관이, 부족해 보이
 
 ---
 
-[주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/compressor1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [EQ 주파수 대역 완전 가이드](/stories/frequency-spectrum1)
+[주파수 마스킹 완전 가이드](/stories/frequency-masking1) | [보컬 컴프레서 완전 가이드](/stories/vocal-compression1) | [마스터링 완전 가이드](/stories/mastering1) | [홈 레코딩 완전 가이드](/stories/home-recording1) | [셀프 보컬 녹음 완전 가이드](/stories/self-recording1) | [EQ 주파수 대역 완전 가이드](/stories/frequency-spectrum1)

@@ -284,7 +284,7 @@ Kevin Olusola (셀로/퍼커션): 비트박스 + 첼로
 
 [보컬 팝 애드립·스타일링 기법 — 완전 가이드](/stories/practice-room-vocal-pop-adlib1)
 
-[보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal-performance-skills1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal-scat-improvisation1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal-stage-fright1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)
+[보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 퍼포먼스·무대 기술 고급 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 스캣 즉흥연주 — 재즈 보컬 완전 가이드](/stories/practice-room-vocal1) | [보컬 무대 공포증 극복·퍼포먼스 자신감 — 완전 가이드](/stories/practice-room-vocal1) | [보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1)
 
 ---
 
