@@ -380,6 +380,19 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
 
   const renderSegment = (segment: ContentSegment, index: number) => {
     if (segment.type === 'shortcode') {
+      /**
+       * ko 전용 숏코드는 다른 locale에서 렌더하지 않는다.
+       *
+       * 일곱 컴포넌트 모두 카피가 한국어 하드코딩이고(locale은 링크·GA4에만 쓰인다),
+       * VocalMixBridge·OnlineRequest는 카카오 옐로와 한국어 오픈채팅 직링크까지 낸다.
+       * 언어 스위처는 번역 유무와 무관하게 전환하므로 비-ko 폴백 페이지에서 실제로
+       * 도달한다 — 바로 아래 inline directive가 같은 이유로 이미 막고 있던 것을,
+       * 숏코드 분기만 빠뜨리고 있었다.
+       *
+       * plain text로 떨어뜨리면 %%...%% 원문이 보이므로 null이 안전하다.
+       */
+      if (currentLocale !== 'ko') return null;
+
       if (segment.name === 'online-fallback') return <OnlineFallback key={index} locale={currentLocale} />;
       if (segment.name === 'session-checklist') return <SessionChecklist key={index} locale={currentLocale} />;
       if (segment.name === 'studio-more') return <StudioMore key={index} locale={currentLocale} />;
