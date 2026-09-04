@@ -35,7 +35,7 @@ faq:
       톤(비브라토 없는 음)이 오히려 더 어울리는 경우가 많습니다. 비브라토를 '선택적으로 사용할 수 있는' 능력을 기르는 것이
       목표입니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![비브라토 훈련 — 스튜디오 놀](/images/recording2.webp)
 

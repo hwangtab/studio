@@ -30,7 +30,7 @@ faq:
       스튜디오 놀은 보컬 레슨을 운영하지 않습니다. 보컬 녹음·음악연습실과 현직 프로듀서의 1:1 작곡·믹싱·발매 레슨을 제공합니다.
       보컬 트레이닝은 외부 코치에게, 녹음은 스튜디오 놀에서 진행하는 방식을 이용하시는 분들이 많습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 트레이닝 — 스튜디오 놀](/images/album3.webp)
 

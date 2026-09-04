@@ -182,6 +182,15 @@ posture1 등)의 하단 CTA를 바꾸므로 10/1 판정 뒤에 정책 수준에�
 vocal-range·belting·falsetto·vibrato·breath·warmup·posture·articulation·pitch-train·ear-train·
 harmony-sing)을 걷어내 정책 수준에서 재발을 막는다.
 
+**보류 철회 (2026-09-04).** 미제공 서비스 오추천을 실험 보호보다 아래 둔 것이 잘못이었고,
+실험 논리로도 미룰 이유가 없었다 — 레슨 카드·CTA는 실험 시작 전부터 처치 14편·대조 22편
+양쪽에 깔려 있어, 양 군에서 동시에 걷어내면 T/C 비교는 그대로다(판정은 두 군의 차이지
+사전 대비가 아니다). 보류 38편 frontmatter도 recording-pro로 교정했고, 정책은 코드 가드
+(`storyCtaPolicy` vocal 가드·`stories.ts` 폴백 가격 가드)와 CI(`content/vocalCategoryNoLesson.test.ts`)
+로 고정했다. CTR 잠금 `chest-voice1`·`highnote1`도 포함 — 본문 중간 가격 카드 교체는 SERP
+타이틀 클릭(측정값)에 닿지 않는다고 판단, 사용자 승인. 10/1 판정 시 이 변경이 9/4에 양 군
+동시 적용됐음을 전제로 읽을 것.
+
 ## 실험 결과 판정 (2026-08-14)
 
 > 리뷰일이 지났거나 오늘 도래한 3편(copyright-cover1·songstructure1·falsetto1)을 확정 판정하고,

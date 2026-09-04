@@ -33,7 +33,7 @@ faq:
       음정 정확도가 높아져 녹음 테이크 수가 줄어듭니다. 코드를 귀로 들으면서 자연스럽게 하모니를 만들 수 있고, 멜로디를 한 번 듣고
       바로 부를 수 있는 초견 능력도 향상됩니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 cta: recording
 ---
 ![음감 훈련(Ear Training) 완전 가이드 — 스튜디오 놀](/images/recording11.webp)

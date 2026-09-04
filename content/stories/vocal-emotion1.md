@@ -33,7 +33,7 @@ faq:
       같은 음정이라도 어둡게, 밝게, 따뜻하게, 냉정하게 등 다양한 음색 변화를 만들 수 있습니다. 이런 음색 변화를 '보컬
       컬러(Color)'라 하며, 가사의 감정과 스토리에 맞게 의도적으로 색조를 바꾸는 것이 고급 표현 기법입니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 감정 표현 완전 가이드 — 스튜디오 놀](/images/service3.webp)
 

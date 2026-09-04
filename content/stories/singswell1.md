@@ -32,7 +32,7 @@ faq:
       고음은 억지로 지르는 것이 아니라 발성 기술로 접근해야 합니다. 두성(두성 발성·헤드 보이스), 믹스 보이스, 팔세토 활용을 단계별로
       훈련하세요. 무리한 고음 연습은 성대 결절을 유발할 수 있으므로 전문 보컬 레슨을 병행하는 것이 좋습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![노래 잘하는 방법 — 스튜디오 놀](/images/lesson1.webp)
 

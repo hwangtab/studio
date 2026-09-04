@@ -131,6 +131,29 @@ EP 하한이 4곡 번들가인데 상품은 3-5곡인 이유: 기획·유통·�
 위키는 `wiki-query`가 읽는 운영 지식 베이스라, 옛 표기가 남으면 사이트에 없는 이름으로
 고객에게 답하게 된다.
 
+### 보컬·악기 레슨은 없다 — 코드 가드가 든다
+
+스튜디오의 레슨은 **프로듀싱 레슨(미디·작곡·믹싱·마스터링)** 하나다. 보컬 발성·악기 레슨은
+하지 않는다. 그런데 보컬 글(category 보컬 가이드)에 레슨 오퍼가 붙으면 독자는 보컬 레슨으로
+읽는다 — 없는 서비스를 광고하는 셈이라, 이 조합은 **어떤 경로로도 만들어지면 안 된다.**
+
+2026-09-03 전수 확인: 보컬 글 76편이 frontmatter `inlineFallback.price: lesson-monthly`로
+본문에 프로듀싱 레슨 가격 카드를 띄우고 있었고, `storyCtaPolicy`의 슬러그 패턴(head-voice·
+belting·breath…)이 하단 CTA도 레슨으로 보내고 있었다. 카테고리 기본값(`vocal: recording-pro`)은
+처음부터 맞았는데 frontmatter와 슬러그 패턴이 그걸 덮어썼다.
+
+지금은 세 겹으로 막는다: `lib/storyCtaPolicy.ts`의 vocal 가드(어떤 경로든 lesson 반환 불가),
+`lib/stories.ts`의 폴백 가격 가드(vocal + lesson-monthly → recording-pro), 그리고
+`content/vocalCategoryNoLesson.test.ts`(frontmatter 자체를 CI에서 검사). 보컬 글에 레슨 오퍼를
+넣고 싶어지면 그건 규칙이 아니라 사실 확인이 먼저다 — 서비스 범위의 정본은 이 절과 memory
+`feedback_studionol_services`이지 코드 주석이 아니다.
+
+**정책 주석은 사업 사실을 뒤집을 수 없다.** 이 사고의 직접 원인은 "보컬 테크닉은 lesson이
+의도에 더 맞는다"는 AI 작성 주석이었다. 그럴듯한 주석 한 줄이 `storyAutoFallback.ts`에
+이미 적혀 있던 올바른 규칙("보컬 발성 코칭은 미제공")과 같은 저장소 안에서 공존했다. 라우팅·
+오퍼 정책을 바꿀 때는 먼저 이 파일과 memory에서 사실을 확인하고, 규칙은 주석이 아니라
+테스트로 고정할 것.
+
 ### 중복 콘텐츠 게이트가 두 겹인 이유
 
 `scan-near-duplicates.mjs`는 **문서 전체** Jaccard 0.45로 본다. 2,400자 글에서 380자

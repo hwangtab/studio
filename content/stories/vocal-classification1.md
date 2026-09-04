@@ -33,7 +33,7 @@ faq:
       성대는 나이·훈련·생활 습관에 따라 변합니다. 청소년기 변성 후 20대에 안정되고, 나이가 들면서 음역대가 약간 변하는 경우가
       많습니다. 훈련을 통해 음역을 확장할 수 있으며, 원래 타입이 바뀌기보다 활용 가능한 범위가 넓어지는 방식으로 변화합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 음역 분류 완전 가이드 — 스튜디오 놀](/images/recording16.webp)
 

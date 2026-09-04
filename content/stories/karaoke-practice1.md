@@ -33,7 +33,7 @@ faq:
       연습 목적이라면 반주 볼륨을 약간 낮추고 마이크 볼륨을 올려 본인 목소리를 더 또렷하게 들으세요. 본인 목소리가 잘 들려야 음정
       판단이 정확해집니다. 반주가 너무 크면 자신의 실제 음정을 인식하기 어렵습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![노래방 연습 방법 — 스튜디오 놀](/images/console.webp)
 

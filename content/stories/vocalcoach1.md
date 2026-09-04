@@ -33,7 +33,7 @@ faq:
       서울 기준 개인 레슨 1시간 3~10만원이 일반적입니다. 지나치게 저렴한 경우 강사 경험 부족이나 학원 내 조교 레슨일 수 있습니다.
       반대로 높은 수업료가 반드시 좋은 코치를 의미하지도 않습니다. 체험 레슨과 수강생 후기를 함께 확인하세요.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![좋은 보컬 코치 찾는 방법 — 스튜디오 놀](/images/studio5.webp)
 

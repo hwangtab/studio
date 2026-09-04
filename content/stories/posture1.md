@@ -33,7 +33,7 @@ faq:
       스튜디오 녹음 시 마이크 앞에서 서서 녹음하는 것이 기본입니다. 마이크 스탠드 높이를 입에 맞게 조절하고, 마이크를 내려다보거나
       올려다보지 않도록 합니다. 마이크를 보며 목을 앞으로 빼는 자세는 성도를 압박합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 자세 가이드 — 스튜디오 놀](/images/recording15.webp)
 

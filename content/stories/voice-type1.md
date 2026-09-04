@@ -33,7 +33,7 @@ faq:
       성인 이후에는 보이스 타입이 크게 바뀌지 않습니다. 다만 훈련과 나이에 따라 음역이 약간 확장되거나 음색이 변화할 수 있습니다.
       잘못된 훈련으로 억지로 음역을 바꾸려 하면 성대에 무리가 생깁니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![목소리 유형(보이스 타입) 완전 가이드 — 스튜디오 놀](/images/room5.webp)
 

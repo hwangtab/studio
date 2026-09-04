@@ -14,9 +14,25 @@ describe('resolveStoryCTAType', () => {
     expect(resolveStoryCTAType({ slug: 'topline-melody-writing', categoryKey: 'vocal' })).toBe('practice');
   });
 
-  it('keeps vocal technique topics on the lesson CTA before mixing matches', () => {
-    expect(resolveStoryCTAType({ slug: 'mix-voice-training', categoryKey: 'vocal' })).toBe('lesson');
-    expect(resolveStoryCTAType({ slug: 'belting-warmup-routine', categoryKey: 'recording' })).toBe('lesson');
+  it('never sends vocal-category stories to the lesson CTA — no vocal lessons are offered', () => {
+    // 슬러그가 lesson 패턴에 걸려도 vocal 카테고리는 recording으로.
+    expect(resolveStoryCTAType({ slug: 'vocal-lesson1', categoryKey: 'vocal' })).toBe('recording');
+    expect(resolveStoryCTAType({ slug: 'kpop-trainee1', categoryKey: 'vocal' })).toBe('recording');
+    // frontmatter가 lesson을 명시해도 가드가 이긴다.
+    expect(resolveStoryCTAType({ slug: 'belting1', categoryKey: 'vocal', override: 'lesson' })).toBe('recording');
+    // 발성 항목은 더 이상 lesson 패턴이 아니다(카테고리 폴백을 따른다).
+    expect(resolveStoryCTAType({ slug: 'mix-voice-training', categoryKey: 'vocal' })).toBe('recording');
+    expect(resolveStoryCTAType({ slug: 'belting-warmup-routine', categoryKey: 'recording' })).toBe('recording');
+    // '믹스 보이스'는 믹싱이 아니다 — mix 패턴의 예외.
+    expect(resolveStoryCTAType({ slug: 'mixedvoice1', categoryKey: 'vocal' })).toBe('recording');
+    expect(resolveStoryCTAType({ slug: 'mix-voice-training', categoryKey: 'vocal' })).toBe('recording');
+    expect(resolveStoryCTAType({ slug: 'vocal-mixing1', categoryKey: 'vocal' })).toBe('production');
+  });
+
+  it('still pairs producing-lesson topics with the lesson CTA outside the vocal category', () => {
+    // midi-*는 PRACTICE 패턴이 먼저 잡는다(설계) — 연습실 항목이 없는 학습 슬러그로 검증.
+    expect(resolveStoryCTAType({ slug: 'beginner-lesson-guide', categoryKey: 'production' })).toBe('lesson');
+    expect(resolveStoryCTAType({ slug: 'daw-tutorial1', categoryKey: 'lesson' })).toBe('lesson');
   });
 
   it('routes mixing topics to production without catching excluded recording tools', () => {

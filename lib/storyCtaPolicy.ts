@@ -7,8 +7,13 @@ interface ResolveStoryCTATypeInput {
 }
 
 const PRACTICE_SLUG_PATTERN = /(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody(?!ne)|topline)/i;
-const LESSON_SLUG_PATTERN = /(^|[-_])(lesson|tutor|train(ing)?|beginner|breath|warmup|articulation|posture|pitch-?train|ear-?train|sight-?read|belting|falsetto|vibrato|head-?voice|chest-?voice|mix-?voice|mixed-?voice|vocal-?range|harmony-?sing)/i;
-const PRODUCTION_SLUG_PATTERN = /(^|[-_])(mix|master(ing)?|eq[-_]|compress|reverb|delay|chorus-effect|de-?esser|sidechain|loudness|limiter|stereo-?imag|automation|bus-?comp|808-bass|ai-master|auto-?tune|autotune|clipper)/i;
+// 프로듀싱 레슨(미디·작곡·믹싱)이 맞는 학습 주제만. 발성 항목(breath·belting·falsetto·
+// vibrato·head/chest/mix-voice·vocal-range·posture·warmup·articulation·ear/pitch/sight…)은
+// 2026-09-04에 걷어냈다 — 스튜디오는 보컬·악기 레슨을 하지 않는다(CLAUDE.md "보컬·악기
+// 레슨은 없다"). 슬러그가 lesson을 가리켜도 vocal 카테고리는 아래 가드가 막는다.
+const LESSON_SLUG_PATTERN = /(^|[-_])(lesson|tutor|train(ing)?|beginner)/i;
+// mix(?!…voice): mixvoice1·mixedvoice1·mix-voice-*는 발성(믹스 보이스) 글이라 믹싱 CTA에서 제외.
+const PRODUCTION_SLUG_PATTERN = /(^|[-_])(mix(?!(-?ed)?-?voice)|master(ing)?|eq[-_]|compress|reverb|delay|chorus-effect|de-?esser|sidechain|loudness|limiter|stereo-?imag|automation|bus-?comp|808-bass|ai-master|auto-?tune|autotune|clipper)/i;
 const RECORDING_SLUG_PATTERN = /(^|[-_])(record(ing)?|mic[-_]|demo-?tape|tracking|punch-?in|comping|studio-?record|takes)/i;
 // 발매·유통·스트리밍 등록 계열. `live-streaming`은 공연 중계지 음원 유통이 아니라 제외한다.
 const RELEASE_SLUG_PATTERN =
@@ -38,7 +43,20 @@ const getCategoryFallbackCTA = (categoryKey: string | undefined): StoryCTAOverri
  * 글 주제 -> CTA 매칭. slug 키워드 우선, categoryKey 폴백 모두 deterministic.
  * frontmatter `cta`가 있으면 작가 명시값을 우선한다.
  */
-export const resolveStoryCTAType = ({
+// 사업 규칙: 보컬 카테고리 글은 어떤 경로(frontmatter override·슬러그 패턴·카테고리
+// 폴백)로도 lesson CTA를 받지 않는다. 우리 레슨은 프로듀싱 레슨이고 보컬 발성 코칭은
+// 미제공이라, 발성 글 독자에게 레슨을 권하면 없는 서비스를 광고하는 것이 된다.
+// 2026-09-03 전수 확인에서 76편이 이렇게 새고 있었다(docs/ctr-surgery-log.md).
+// 이 규칙은 주석이 아니라 코드와 content/vocalCategoryNoLesson.test.ts가 든다.
+const VOCAL_LESSON_GUARD_FALLBACK: StoryCTAOverride = 'recording';
+
+export const resolveStoryCTAType = (input: ResolveStoryCTATypeInput): StoryCTAOverride => {
+  const resolved = resolveStoryCTATypeUnguarded(input);
+  if (input.categoryKey === 'vocal' && resolved === 'lesson') return VOCAL_LESSON_GUARD_FALLBACK;
+  return resolved;
+};
+
+const resolveStoryCTATypeUnguarded = ({
   slug,
   categoryKey,
   override,
@@ -50,8 +68,7 @@ export const resolveStoryCTAType = ({
   // melody(?!ne)는 Melodyne 같은 mixing 도구를 제외한다.
   if (PRACTICE_SLUG_PATTERN.test(slug)) return 'practice';
 
-  // 보컬 테크닉은 vocal 카테고리 폴백보다 lesson이 의도에 더 맞는다.
-  // lesson이 production보다 앞에 있어야 mix-voice가 mixing CTA로 가지 않는다.
+  // 작곡·미디 입문 등 학습 주제 → 프로듀싱 레슨. (vocal 카테고리는 상단 가드가 걸러낸다.)
   if (LESSON_SLUG_PATTERN.test(slug)) return 'lesson';
 
   // amp-sim은 recording 가이드 위치라 production 패턴에서 제외하고 카테고리 폴백을 따른다.

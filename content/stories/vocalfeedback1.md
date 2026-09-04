@@ -33,7 +33,7 @@ faq:
       음정 정확도, 리듬/박자, 딕션(발음 명확성), 다이나믹(강약 조절), 음색(브레스 컨트롤), 감정 표현 이렇게 6가지가 핵심입니다.
       한 번에 모든 것을 고치려 하지 말고 한 가지씩 집중 개선하는 것이 효과적입니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 피드백 받는 방법 — 스튜디오 놀](/images/studio5.webp)
 

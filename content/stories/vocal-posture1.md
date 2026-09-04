@@ -32,7 +32,7 @@ faq:
       마이크에서 15~25cm 거리에 서고, 마이크를 약간 올려다 볼 수 있도록 마이크 높이를 맞춥니다. 마이크를 고정한 채로 몸 전체가
       소리를 내는 느낌으로 서고, 마이크에 너무 집중해 몸이 경직되지 않도록 주의합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 자세 완전 가이드 — 스튜디오 놀](/images/room3.webp)
 

@@ -46,7 +46,7 @@ faq:
       호흡·발성 방법의 변화는 4~8주 안에 느껴집니다. 곡 표현력이 눈에 띄게 향상되는 데는 3~6개월이 필요하며, 고음 안정화나
       믹스보이스 같은 기술적 발전은 6개월~1년 이상의 꾸준한 훈련이 필요합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 레슨·보컬 코치 선택 완전 가이드 — 스튜디오 놀](/images/recording16.webp)
 

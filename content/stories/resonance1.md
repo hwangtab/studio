@@ -33,7 +33,7 @@ faq:
       같은 음량으로도 더 멀리, 더 풍성하게 들립니다. 성대에 가하는 압력을 줄이면서도 더 큰 소리를 낼 수 있어 성대 피로가 줄어듭니다.
       음색이 풍부해지고 청중에게 더 인상적으로 전달됩니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 공명 훈련 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
 

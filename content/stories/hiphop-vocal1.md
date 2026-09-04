@@ -33,7 +33,7 @@ faq:
       플로우는 비트 위에서 음절과 강세를 배치하는 방식입니다. 같은 가사라도 어디에 강세를 두느냐에 따라 플로우가 달라집니다. 다양한
       BPM과 박자 패턴에 맞춰 연습하면서 자신만의 플로우를 개발합니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![힙합 보컬·플로우 완전 가이드 — 스튜디오 놀](/images/hardware2.webp)
 

@@ -32,7 +32,7 @@ faq:
       목을 조르면 성대에 과도한 긴장이 가해져 단기적으로 높은 음이 날 수 있지만 장기적으로 성대 결절·성대 마비 등 손상을 유발합니다.
       올바른 고음은 복식 호흡과 성대 접촉의 균형으로 목의 긴장 없이 만들어집니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 음역대 확장 완전 가이드 — 스튜디오 놀](/images/studio2.webp)
 

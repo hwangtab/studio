@@ -33,7 +33,7 @@ faq:
       현대 팝·R&B·재즈에서는 비브라토를 선택적으로 사용합니다. 특히 노트 시작 부분은 직선(스트레이트)으로 발성하고 노트 끝부분에만
       비브라토를 추가하는 방식이 자연스럽습니다. 모든 노트에 비브라토를 붙이면 오히려 과한 느낌을 줄 수 있습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![보컬 비브라토 완전 가이드 — 스튜디오 놀](/images/recording8.webp)
 

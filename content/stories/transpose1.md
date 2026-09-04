@@ -32,7 +32,7 @@ faq:
       네, 가능합니다. 스튜디오 녹음 세션에서 엔지니어가 MR(반주) 키를 조절해드릴 수 있습니다. 사전에 원하는 키를 알려주시거나,
       세션에서 같이 찾아드립니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 howTo:
   name: "내 음역에 맞는 노래 키 찾기 4단계 절차"
   description: "원곡 키로 불러 약점을 파악하고 반음씩 올리거나 내려 고음·저음이 모두 편안한 최적 키를 찾는 절차입니다."

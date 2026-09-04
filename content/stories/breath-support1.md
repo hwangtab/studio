@@ -30,7 +30,7 @@ faq:
   - q: 지지가 부족하면 어떤 문제가 생기나요?
     a: '음정이 불안정해지고, 고음에서 목을 쥐어짜게 됩니다. 롱 노트에서 소리가 점점 작아지거나 흔들리고, 조기 성대 피로가 생깁니다.'
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 howTo:
   name: "보컬 호흡 지지(Breath Support) 훈련 단계"
   description: "아포지오 원리에 기반한 보컬 호흡 지지 훈련 4단계 절차. 씨 훈련부터 발성 적용까지 단계적으로 진행합니다."

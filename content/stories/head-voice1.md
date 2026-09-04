@@ -34,7 +34,7 @@ faq:
       두성 공명을 찾는 허밍 연습, 낮은 볼륨에서 점진적으로 올라가는 스케일 연습, 코 공명 연습('흥흥흥' 또는 'ng' 소리)이
       효과적입니다. 성대 근육이 발달하면 두성에서도 지지감이 강해집니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 cta: recording
 ---
 ![두성·헤드보이스 완전 가이드 — 스튜디오 놀](/images/room8.webp)

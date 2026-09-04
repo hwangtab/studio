@@ -33,7 +33,7 @@ faq:
       같은 힘으로 더 선명하고 멀리 들리는 소리를 만들 수 있습니다. 고음 발성 시 성대 부담이 줄고 투명한 음색이 됩니다. 벨팅과
       결합하면 강력하면서도 명료한 고음을 만들 수 있습니다.
 inlineFallback:
-  price: lesson-monthly
+  price: recording-pro
 ---
 ![트왕 발성 완전 가이드 — 스튜디오 놀](/images/service4.webp)
 
