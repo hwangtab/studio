@@ -49,8 +49,12 @@ export const getOperatorProfileUrlById = (id: OperatorProfileId): string =>
 export const studioOperator = {
   name: '황경하',
   // 비-ko 페이지 본문·크레딧은 로마자 표기라, 별칭이 없으면 AI 엔진이 "Hwang Kyungha"와
-  // "황경하"를 별개 인물로 볼 수 있다. 표기 정본은 Kyungha(authorProfile·llms.txt 동일).
-  alternateName: 'Hwang Kyungha',
+  // "황경하"를 별개 인물로 볼 수 있다. 철자 정본은 Kyungha(authorProfile·llms.txt 동일).
+  // 어순은 두 갈래로 실제 쓰인다 — 포트폴리오·siteConfig·data/home.ts 프로즈는 한국식
+  // 성-이름 순("Hwang Kyungha"), authorProfile.ts·llms.ts는 영문식 이름-성 순
+  // ("Kyungha Hwang"). 한쪽으로 강제 통일하지 않고 배열로 둘 다 실어 GEO 엔티티
+  // 병합을 돕는다 — 문자열 하나만 실으면 다른 어순으로 검색·인용된 건은 못 붙는다.
+  alternateName: ['Hwang Kyungha', 'Kyungha Hwang'],
   sameAs: operatorProfiles.map((profile) => profile.url),
   // 운영자 인물 사진(정사각, 원형 크롭 전제) — 홈 신뢰 스트립·/author 히어로·Person JSON-LD의
   // image가 함께 쓴다. 사진을 교체하면 치수도 여기서 같이 바뀌도록 src와 한자리에 둔다.

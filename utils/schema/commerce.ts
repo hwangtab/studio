@@ -1,5 +1,6 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { PRACTICE_ROOM_MONTHLY_PRICE } from '../../data/pricing';
 import { getSchemaLanguage } from './shared';
 
 export const generatePracticeRoomMonthlyRentSchema = (
@@ -113,11 +114,11 @@ export const generatePracticeRoomMonthlyRentSchema = (
     offers: {
       '@type': 'Offer',
       name: copy.offerName,
-      price: 360000,
+      price: PRACTICE_ROOM_MONTHLY_PRICE,
       priceCurrency: 'KRW',
       priceSpecification: {
         '@type': 'UnitPriceSpecification',
-        price: 360000,
+        price: PRACTICE_ROOM_MONTHLY_PRICE,
         priceCurrency: 'KRW',
         unitCode: 'MON',
         unitText: locale === 'ko' ? '월'

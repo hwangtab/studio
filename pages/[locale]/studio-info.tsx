@@ -25,6 +25,7 @@ import type { Locale } from '../../lib/i18n';
 import { getHubLocaleContent } from '../../data/faq';
 import { getStudioFaqData } from '../../data/faq';
 import { getSiteConfig } from '../../data/siteConfig';
+import { DAY_LOCK_PRICE, RECORDING_HOURLY_PRICE } from '../../data/pricing';
 import { getSchemaLanguage } from '../../utils/schema';
 import { createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 
@@ -91,7 +92,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         '@type': 'Offer',
         name: locale === 'ko' ? '시간당 레코딩' : 'Hourly Recording',
         priceCurrency: 'KRW',
-        price: 100000,
+        price: RECORDING_HOURLY_PRICE,
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing`,
       },
@@ -99,7 +100,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         '@type': 'Offer',
         name: locale === 'ko' ? 'Day Lock (6시간)' : 'Day Lock (6 hours)',
         priceCurrency: 'KRW',
-        price: 500000,
+        price: DAY_LOCK_PRICE,
         availability: 'https://schema.org/InStock',
         url: `${siteConfig.url}/${locale}/pricing`,
       },

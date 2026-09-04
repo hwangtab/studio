@@ -7,8 +7,16 @@
  * 깨지면 남은 소비처를 마저 고치라는 신호다.
  */
 import {
+  ALBUM_BUNDLE_PER_SONG_PRICE,
+  ALBUM_BUNDLE_PRICE,
+  ALBUM_LINE_ITEM_TOTAL,
+  CONSULTING_HOURLY_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_PRICE,
+  EP_BUNDLE_PER_SONG_PRICE,
+  EP_BUNDLE_PRICE,
+  EP_LINE_ITEM_TOTAL,
+  FUNDING_DESIGN_PRICE,
   formatPriceAmount,
   getPricingData,
   LESSON_MONTHLY_PRICE,
@@ -18,20 +26,21 @@ import {
   MIXING_LEVEL2_PRICE,
   MIXING_LEVEL3_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
-  ALBUM_BUNDLE_PRICE,
-  EP_BUNDLE_PRICE,
   PRODUCTION_OFFER_PRICE,
   RECORDING_HOURLY_PRICE,
   RELEASE_ALBUM_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
   RELEASE_SINGLE_FROM_PRICE,
+  RELEASE_SONG_PRODUCTION_UNIT_PRICE,
   RENTAL_HOURLY_PRICE,
   SINGLE_BUNDLE_PRICE,
+  SINGLE_LINE_ITEM_TOTAL,
   VOCAL_PACKAGE_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from './pricing';
 import { generateDefaultSchema } from '../utils/schema/business';
+import { generatePracticeRoomMonthlyRentSchema } from '../utils/schema/commerce';
 import fs from 'fs';
 import path from 'path';
 
@@ -105,6 +114,38 @@ describe('가격 SSOT 정합', () => {
     expect(biz.hasOfferCatalog.itemListElement.map((o) => o.price)).toEqual(expected);
   });
 
+  /**
+   * business.ts(JSON-LD) 외에도 utils/schema/commerce.ts(연습실 Service 스키마)와
+   * pages/[locale]/studio-info.tsx(LocalBusiness Offer)가 가격 리터럴을 따로 들고
+   * 있었다(각각 360,000·100,000/500,000) — 값은 정본과 일치했지만 SSOT 링크가 없어
+   * 상수가 바뀌어도 안 따라올 수 있었다. commerce.ts는 여기서 직접 검사하고,
+   * studio-info.tsx는 컴포넌트 내부 useMemo라 단위 테스트로 값을 못 뽑으므로
+   * import 자체(파일 상단에서 data/pricing 상수를 참조하는지)로 대신 확인한다.
+   */
+  it('utils/schema/commerce.ts 연습실 Offer 가격이 SSOT 상수와 일치한다', () => {
+    const schema = generatePracticeRoomMonthlyRentSchema(
+      'https://studionol.co.kr/ko/practice-room',
+      'ko'
+    ) as { offers: { price: number; priceSpecification: { price: number } } };
+    expect(schema.offers.price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+    expect(schema.offers.priceSpecification.price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+  });
+
+  it('pages/[locale]/studio-info.tsx가 가격 리터럴 대신 SSOT 상수를 import한다', () => {
+    const source = fs.readFileSync(
+      path.join(__dirname, '..', 'pages', '[locale]', 'studio-info.tsx'),
+      'utf8'
+    );
+    expect(source).toMatch(
+      /import\s*{[^}]*\bRECORDING_HOURLY_PRICE\b[^}]*}\s*from\s*['"]\.\.\/\.\.\/data\/pricing['"]/
+    );
+    expect(source).toMatch(
+      /import\s*{[^}]*\bDAY_LOCK_PRICE\b[^}]*}\s*from\s*['"]\.\.\/\.\.\/data\/pricing['"]/
+    );
+    expect(source).toContain('price: RECORDING_HOURLY_PRICE');
+    expect(source).toContain('price: DAY_LOCK_PRICE');
+  });
+
   it('릴리즈 티어 카피(ko common.json)가 RELEASE_* 상수의 만원 표기를 포함한다', () => {
     const tiers = (
       koCommon as unknown as {
@@ -141,12 +182,18 @@ describe('가격 SSOT 정합', () => {
    * (2026-09-02에 손으로 발견). 상수가 움직였는데 카피가 안 따라오는 것 —
    * 이게 이 저장소에서 실제로 나는 드리프트 형태다.
    *
-   * 규칙: data/ 아래 모든 .ts(가격 SSOT 본체와 테스트는 제외)에 나오는
+   * 규칙: data/ 아래 모든 .ts(테스트 파일은 제외)에 나오는
    * "250,000원"·"25만원"은
    *   (a) 현재 SSOT 상수 중 하나이거나
    *   (b) 우리 상품이 아닌 외부 시세여서 EXTERNAL_MARKET_AMOUNTS에 등재됐거나
    * 둘 중 하나여야 한다. 새 가격을 카피에 넣을 땐 formatPriceLabel로 상수에서
    * 끌어오는 게 원칙이고, 리터럴이 꼭 필요하면 여기서 걸린다.
+   *
+   * pricing.ts 본체도 이제 스캔 대상이다 — 상수뿐 아니라 그 상수를 설명하는
+   * 파생 합계 카피("55만원"·"212만원"·"424만원")도 들고 있어서, 예전엔 여기만
+   * 빼놓아 상수가 바뀌어도 카피가 안 따라오는 드리프트를 못 잡았다. 지금은 그
+   * 파생 합계도 SINGLE_LINE_ITEM_TOTAL 등으로 상수화해 formatPriceLabel로
+   * 끌어 쓰므로, 본체를 포함해도 리터럴이 남지 않는다.
    *
    * 대상에서 뺀 것: docs/wiki는 log.md·decisions/가 과거 수치를 그대로 남기는
    * 이력 문서라 현재값 강제가 맞지 않는다. common.json은 위 테스트들이 맡는다.
@@ -181,16 +228,28 @@ describe('가격 SSOT 정합', () => {
       SINGLE_BUNDLE_PRICE,
       EP_BUNDLE_PRICE,
       ALBUM_BUNDLE_PRICE,
+      // 번들 카피(subtitle·description·features)가 formatPriceLabel로 끌어 쓰는
+      // 파생 합계·곡당 단가. pricing.ts 본체를 더 이상 스캔 대상에서 빼지 않으므로
+      // (아래 walk 참조) 이 파일 자신의 카피도 여기서 함께 검사받는다.
+      SINGLE_LINE_ITEM_TOTAL,
+      RELEASE_SONG_PRODUCTION_UNIT_PRICE,
+      EP_LINE_ITEM_TOTAL,
+      ALBUM_LINE_ITEM_TOTAL,
+      EP_BUNDLE_PER_SONG_PRICE,
+      ALBUM_BUNDLE_PER_SONG_PRICE,
+      FUNDING_DESIGN_PRICE,
+      CONSULTING_HOURLY_PRICE,
     ]);
 
     // data/ 아래 전체를 훑는다 — data/portfolio/처럼 하위 디렉터리에 가격이
-    // 들어와도 놓치지 않으려면 재귀여야 한다.
+    // 들어와도 놓치지 않으려면 재귀여야 한다. pricing.ts 본체도 이제 포함한다 —
+    // 상수뿐 아니라 그 상수를 설명하는 카피(파생 합계 "55만원"류)도 들고 있어서,
+    // 예전 제외 규칙은 상수가 바뀌어도 카피가 안 따라오는 드리프트를 못 잡았다.
     const walk = (dir: string): string[] =>
       fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
         const full = path.join(dir, e.name);
         if (e.isDirectory()) return walk(full);
         if (!e.name.endsWith('.ts') || e.name.includes('.test.')) return [];
-        if (full === path.join(__dirname, 'pricing.ts')) return []; // SSOT 본체
         return [full];
       });
 
