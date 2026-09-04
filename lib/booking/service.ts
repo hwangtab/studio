@@ -8,11 +8,12 @@ import { computeAmounts } from './amounts';
 import { kstDateTime } from './kst';
 import { getProduct } from './products';
 import { generateManageToken, generateOrderNo } from './token';
-import type { CreateBookingPayload } from './validation';
+import { PENDING_HOLD_SECONDS, type CreateBookingPayload } from './validation';
 
 export { rangesOverlap } from './overlap';
 
-export const PENDING_HOLD_SECONDS = 900;
+// 클라이언트(예약 위저드 카운트다운)와 공유해야 해서 validation.ts가 정본이다.
+export { PENDING_HOLD_SECONDS };
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
