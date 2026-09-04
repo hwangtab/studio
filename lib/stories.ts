@@ -15,6 +15,7 @@ import {
   matchReviewForCategory,
   matchServiceForStory,
   injectAutoFallbackMarker,
+  resolveFallbackPriceId,
 } from './storyAutoFallback';
 import {
   computeThinContentStatus,
@@ -377,16 +378,13 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     // frontmatter inlineFallback 객체가 정의되면(빈 object 포함) 작가 명시 의도로 간주.
     // categoryKey 단순 매핑 우회 — 빈 object {}는 자동 fallback 완전 비활성을 의미.
     const hasFrontmatterFallback = frontmatterFallback !== undefined;
-    // 보컬 카테고리에 레슨 가격 카드는 미제공 서비스(보컬 레슨) 광고가 된다 — frontmatter가
-    // lesson-monthly를 가리켜도 카테고리 기본값(recording-pro)으로 돌린다. 2026-09-03 전수
-    // 확인에서 76편이 이 값으로 본문에 프로듀싱 레슨 카드를 띄우고 있었다.
-    const frontmatterPrice =
-      baseStory.categoryKey === 'vocal' && frontmatterFallback?.price === 'lesson-monthly'
-        ? matchPricingForStory(baseStory.categoryKey, slug)
-        : (frontmatterFallback?.price ?? null);
-    const matchedPriceId = hasFrontmatterFallback
-      ? frontmatterPrice
-      : matchPricingForStory(baseStory.categoryKey, slug);
+    // 가격 카드 id는 resolveFallbackPriceId 한 곳에서 결정한다(보컬+lesson-monthly 가드 포함).
+    // scripts/cta-routing-baseline.ts 게이트가 같은 함수로 기준선을 만든다.
+    const matchedPriceId = resolveFallbackPriceId({
+      categoryKey: baseStory.categoryKey,
+      slug,
+      frontmatterFallback,
+    });
     const matchedReviewId = hasFrontmatterFallback
       ? (frontmatterFallback?.review ?? null)
       : matchReviewForCategory(baseStory.categoryKey);

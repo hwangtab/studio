@@ -53,6 +53,7 @@
     "content-check": "node scripts/content-quality-check.js --korean",
     "check:dup-sections": "node scripts/check-duplicate-sections.mjs",
     "check:facts": "node scripts/check-fact-consistency.mjs",
+    "check:cta-routing": "npx tsx scripts/cta-routing-baseline.ts",
     "content-check:ci": "node scripts/content-quality-check.js --korean --ci",
     "audit:thin": "node scripts/audit-thin-content.js --summary",
     "audit:thin:ci": "node scripts/audit-thin-content.js --fail"

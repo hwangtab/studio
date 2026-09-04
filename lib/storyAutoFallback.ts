@@ -113,3 +113,26 @@ export const injectAutoFallbackMarker = (content: string, marker: string): strin
     ...lines.slice(lastH2),
   ].join('\n');
 };
+
+/**
+ * frontmatter inlineFallback과 카테고리 기본값에서 "가격 카드 id"를 결정한다.
+ * lib/stories.ts(렌더)와 scripts/cta-routing-baseline.ts(게이트)가 같은 함수를 쓴다 —
+ * 두 곳에 로직이 복제돼 있으면 한쪽만 바뀌어 기준선이 조용히 어긋난다.
+ *
+ * 규칙:
+ * - frontmatter inlineFallback이 정의되면(빈 {} 포함) 작가 명시 의도 → 카테고리 매핑 우회.
+ * - 단, 보컬 카테고리에 lesson-monthly는 미제공 서비스(보컬 레슨) 광고가 되므로 무시하고
+ *   카테고리 기본값(recording-pro)으로 돌린다. 2026-09-03 전수 확인에서 76편이 이 값이었다.
+ */
+export const resolveFallbackPriceId = (input: {
+  categoryKey: string;
+  slug: string;
+  frontmatterFallback?: { price?: string } | undefined;
+}): string | null => {
+  const { categoryKey, slug, frontmatterFallback } = input;
+  if (frontmatterFallback === undefined) return matchPricingForStory(categoryKey, slug);
+  if (categoryKey === 'vocal' && frontmatterFallback.price === 'lesson-monthly') {
+    return matchPricingForStory(categoryKey, slug);
+  }
+  return frontmatterFallback.price ?? null;
+};

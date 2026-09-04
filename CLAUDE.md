@@ -64,6 +64,10 @@ node scripts/check-duplicate-sections.mjs --update  # 기준선 갱신
 
 # 서비스 수치 정합 검사 (CI)
 npm run check:facts
+
+# 스토리 라우팅 기준선 (CI) — 하단 CTA·가격 카드 판정이 바뀐 글을 잡는다
+npm run check:cta-routing
+npx tsx scripts/cta-routing-baseline.ts --update   # 의도한 변경이면 기준선 갱신
 ```
 
 ### 서비스 수치는 정본에서만 온다
@@ -147,6 +151,14 @@ belting·breath…)이 하단 CTA도 레슨으로 보내고 있었다. 카테고
 `content/vocalCategoryNoLesson.test.ts`(frontmatter 자체를 CI에서 검사). 보컬 글에 레슨 오퍼를
 넣고 싶어지면 그건 규칙이 아니라 사실 확인이 먼저다 — 서비스 범위의 정본은 이 절과 memory
 `feedback_studionol_services`이지 코드 주석이 아니다.
+
+**라우팅 기준선 게이트.** `content/cta-routing.baseline.json`에 전 ko 스토리의 하단 CTA와
+가격 카드 id 판정을 커밋해 두고, `content/ctaRouting.baseline.test.ts`가 현재 판정과 대조한다.
+`storyCtaPolicy`·`storyAutoFallback`·frontmatter(`cta`·`inlineFallback`) 중 무엇을 바꾸든
+판정이 달라진 글이 있으면 CI가 서고, 그 목록을 카테고리 × from→to로 보여준다. 위 76편
+사고는 이 대조 한 번이면 즉시 보였을 일이다. 의도한 변경이면 `--update`로 기준선을 갱신하되
+**같은 커밋에 "왜 이 글들의 목적지가 바뀌는지"를 적을 것** — 기준선 갱신을 이유 없이 끼워
+넣으면 게이트가 무력화된다.
 
 **정책 주석은 사업 사실을 뒤집을 수 없다.** 이 사고의 직접 원인은 "보컬 테크닉은 lesson이
 의도에 더 맞는다"는 AI 작성 주석이었다. 그럴듯한 주석 한 줄이 `storyAutoFallback.ts`에
