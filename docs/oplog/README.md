@@ -68,7 +68,10 @@ Claude Code를 쓰는 중이라면 그냥 말해도 된다. "오늘 보컬 세�
 - `days_total`: 첫 납품부터 최종 확정까지 달력 일수
 
 **quotes.csv** — `date, channel, service, outcome, days_to_close, notes`
-- `channel`: `kakao` · `email` · `naver`(플레이스·톡톡) · `phone` · `referral`
+- `channel`: **어떻게 알고 왔는가**(2026-09-04 확장). 첫 응대에서 "어떻게 알고 오셨어요?"를 고정으로 묻는다.
+  - 경로: `chatgpt` · `other_ai`(Gemini·Perplexity 등) · `naver_place` · `naver_search` · `naver_blog` · `google_map` · `google_search` · `instagram` · `marketplace`(크몽·탈잉·숨고) · `referral`(지인)
+  - 수단(경로를 못 들었을 때만): `kakao` · `email` · `naver`(톡톡) · `phone`
+  - 왜: 믹싱 문의는 ChatGPT 추천, 녹음·연습실은 플레이스 경유가 주 경로인데 둘 다 GA4가 못 본다. 채널별 성사율은 여기서만 나온다.
 - `outcome`: `won` · `lost` · `pending`
 - `days_to_close`: 첫 문의부터 결제·확정까지. `pending`이면 비움
 

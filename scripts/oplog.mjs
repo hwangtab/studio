@@ -51,7 +51,15 @@ const SCHEMA = {
     },
     required: ['channel', 'outcome'],
     enums: {
-      channel: ['kakao', 'email', 'naver', 'phone', 'referral'],
+      // channel은 '연락 수단'이 아니라 '어떻게 알고 왔는가'다(2026-09-04 확장). 믹싱은 ChatGPT,
+      // 녹음·연습실은 플레이스 경유가 주 경로인데 둘 다 GA4 밖이라 여기서만 잡힌다.
+      // 첫 응대에서 "어떻게 알고 오셨어요?" 한 문장을 고정으로 묻고 그 답을 적는다.
+      // 옛 값(kakao·email·phone)은 수단이라 유지하되, 경로를 들었으면 경로를 우선 적는다.
+      channel: [
+        'kakao', 'email', 'naver', 'phone', 'referral',
+        'chatgpt', 'other_ai', 'naver_place', 'naver_search', 'naver_blog',
+        'google_map', 'google_search', 'instagram', 'marketplace',
+      ],
       outcome: ['won', 'lost', 'pending'],
     },
     numeric: ['days_to_close'],

@@ -16,6 +16,10 @@ const WANT = [
   { parameterName: 'error_code', displayName: 'error_code', scope: 'EVENT' },
   { parameterName: 'error_type', displayName: 'error_type', scope: 'EVENT' },
   { parameterName: 'status_code', displayName: 'status_code', scope: 'EVENT' },
+  // 2026-09-04: CTA 위치·id 분해용. 코드는 이미 전송 중이었으나 미등록이라 Data API에서
+  // 조회 불가였다(10/1 믹싱 오퍼·보컬 브릿지 실험 판정이 cta_id 분해를 전제). 소급 안 됨.
+  { parameterName: 'component', displayName: 'component', scope: 'EVENT' },
+  { parameterName: 'cta_id', displayName: 'cta_id', scope: 'EVENT' },
 ];
 
 async function list() {
