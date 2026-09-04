@@ -456,7 +456,15 @@ export const getStoryPaths = (): StoryPath[] => {
 
   slugs.forEach((slug) => {
     locales.forEach((locale) => {
-      if (locale === defaultLocale && !fs.existsSync(path.join(storiesDirectory, `${slug}.md`))) {
+      // 해당 로케일의 원문 파일이 있는 조합만 빌드타임에 미리 만든다.
+      // 번역이 없는 로케일은 ko 본문을 대신 보여주는 폴백이고, 그 렌더는
+      // robots를 'noindex, follow'로 내리고 canonical을 원본 로케일로 돌린다
+      // (pages/[locale]/stories/[id].tsx). 사이트맵도 getIndexableStoryLocales로
+      // 같은 조합만 싣는다 — 즉 색인 대상이 아닌 페이지 수천 장을 매 빌드마다
+      // 만들고 있었다. 목록에서 빠진 조합은 fallback: 'blocking'이 첫 요청에
+      // 만들어 ISR로 캐시하므로 사용자에게 보이는 결과는 같다.
+      const sourceFile = locale === defaultLocale ? `${slug}.md` : `${slug}.${locale}.md`;
+      if (!fs.existsSync(path.join(storiesDirectory, sourceFile))) {
         return;
       }
       paths.push({ params: { locale, id: slug } });
