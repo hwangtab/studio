@@ -345,7 +345,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                 id="hours"
                 value={hours}
                 onChange={(e) => handleHoursChange(Number(e.target.value))}
-                className="w-full sm:w-48 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full sm:w-48 min-w-0 max-w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 {hourOptions.map((h) => (
                   <option key={h} value={h}>
@@ -389,7 +389,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
               min={minDate}
               max={maxDate}
               onChange={handleDateChange}
-              className="w-full sm:w-56 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="block w-full sm:w-56 min-w-0 max-w-full appearance-none box-border px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 

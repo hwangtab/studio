@@ -31,8 +31,8 @@ export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   { id: 'voice-acting-hourly', service: 'voice-acting', nameKo: '성우 녹음', kind: 'hourly', unitAmount: VOICEOVER_HOURLY_PRICE, minHours: 2, maxHours: 8 },
   { id: 'wedding-song', service: 'wedding-song', nameKo: '축가 녹음 패키지', kind: 'package', unitAmount: WEDDING_PACKAGE_PRICE, sessionHours: 2 },
   { id: 'cover-video', service: 'cover-video', nameKo: '커버 영상 패키지', kind: 'package', unitAmount: COVER_VIDEO_PACKAGE_PRICE, sessionHours: 3 },
-  // 운영자 실결제 검증용 — 100원(+VAT 10원 = 110원 결제). 가격 SSOT 대상 상품이 아니다.
-  { id: 'smoke-test', service: 'smoke-test', nameKo: '결제 연동 테스트 (운영자용)', kind: 'package', unitAmount: 100, sessionHours: 1 },
+  // 운영자 실결제 검증용 — 200원(+VAT 20원 = 220원 결제). 토스 계좌이체 최소 결제금액이 200원이라 그 위로 잡는다. 가격 SSOT 대상 상품이 아니다.
+  { id: 'smoke-test', service: 'smoke-test', nameKo: '결제 연동 테스트 (운영자용)', kind: 'package', unitAmount: 200, sessionHours: 1 },
 ] as const;
 
 export const getProduct = (id: string): SessionProduct | undefined =>
