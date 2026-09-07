@@ -1,7 +1,13 @@
 import { computeAmounts } from './amounts';
-import { getProduct, resolveHours } from './products';
+import { getProduct, productsForService, resolveHours } from './products';
 
 describe('SESSION_PRODUCTS', () => {
+  it('smoke-test 픽스처는 고객 서비스 4종 어디에도 섞이지 않는다', () => {
+    for (const svc of ['recording', 'voice-acting', 'wedding-song', 'cover-video']) {
+      expect(productsForService(svc).map((p) => p.id)).not.toContain('smoke-test');
+    }
+    expect(productsForService('smoke-test').map((p) => p.id)).toEqual(['smoke-test']);
+  });
   it('세션 4서비스의 상품이 전부 있다', () => {
     for (const id of ['recording-pro', 'recording-hourly', 'voice-acting-hourly', 'wedding-song', 'cover-video']) {
       expect(getProduct(id)).toBeDefined();
