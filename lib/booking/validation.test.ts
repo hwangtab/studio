@@ -1,4 +1,4 @@
-import { validateCreateBookingPayload } from './validation';
+import { normalizeKoreanMobile, validateCreateBookingPayload } from './validation';
 
 const base = {
   productId: 'recording-pro', date: '2026-09-10', startHour: 14,
@@ -34,5 +34,30 @@ describe('validateCreateBookingPayload', () => {
   });
   it('폐장을 넘는 시작 시각 거부', () => {
     expect(validateCreateBookingPayload({ ...base, startHour: 20 }, now).ok).toBe(false);
+  });
+});
+
+describe('normalizeKoreanMobile — 국제 형식·구분자 섞인 입력을 010-XXXX-XXXX로 모은다', () => {
+  it.each([
+    ['+821042557893', '010-4255-7893'],
+    ['+82 10-4255-7893', '010-4255-7893'],
+    ['+82 (10) 4255 7893', '010-4255-7893'],
+    ['821042557893', '010-4255-7893'],
+    ['010 4255 7893', '010-4255-7893'],
+    ['01042557893', '010-4255-7893'],
+    ['010-4255-7893', '010-4255-7893'],
+    ['011-123-4567', '011-123-4567'],
+  ])('%s → %s', (input, expected) => {
+    expect(normalizeKoreanMobile(input)).toBe(expected);
+  });
+
+  it.each([['02-123-4567'], ['+82 2 123 4567'], ['+8210'], ['010-1234'], ['abc'], ['']])('%s는 거부', (input) => {
+    expect(normalizeKoreanMobile(input)).toBeNull();
+  });
+
+  it('검증 통과 시 저장 값이 정규화된 형태다', () => {
+    const r = validateCreateBookingPayload({ ...base, customerPhone: '+82 10 4255 7893' }, now);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.value.customerPhone).toBe('010-4255-7893');
   });
 });
