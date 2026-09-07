@@ -31,7 +31,21 @@ export interface CreateBookingPayload {
 
 type Result = { ok: true; value: CreateBookingPayload } | { ok: false; message: string };
 
-const PHONE_RE = /^01[016789]-?\d{3,4}-?\d{4}$/;
+/**
+ * 휴대폰 번호 정규화 — 국제 형식(+82 10-4255-7893, +821042557893, 82-10-…)과
+ * 공백·하이픈·괄호 섞인 입력을 전부 010XXXXXXXX로 모은 뒤 검증한다.
+ * 저장은 항상 010-1234-5678 형태로 통일해 메일·관리자 화면 표기를 일관되게 한다.
+ * 정규화 불가(자릿수·국번 불일치)면 null.
+ */
+export const normalizeKoreanMobile = (raw: string): string | null => {
+  let digits = raw.replace(/[^\d+]/g, '');
+  if (digits.startsWith('+82')) digits = '0' + digits.slice(3);
+  else if (digits.startsWith('82') && digits.length >= 12) digits = '0' + digits.slice(2);
+  digits = digits.replace(/\D/g, '');
+  if (!/^01[016789]\d{7,8}$/.test(digits)) return null;
+  const mid = digits.length === 11 ? digits.slice(3, 7) : digits.slice(3, 6);
+  return `${digits.slice(0, 3)}-${mid}-${digits.slice(-4)}`;
+};
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 export const validateCreateBookingPayload = (body: unknown, now: Date): Result => {
@@ -58,8 +72,8 @@ export const validateCreateBookingPayload = (body: unknown, now: Date): Result =
 
   const name = typeof b.customerName === 'string' ? b.customerName.trim() : '';
   if (name.length < 2 || name.length > 40) return { ok: false, message: '이름을 확인해 주세요.' };
-  const phone = typeof b.customerPhone === 'string' ? b.customerPhone.trim() : '';
-  if (!PHONE_RE.test(phone)) return { ok: false, message: '휴대폰 번호를 확인해 주세요.' };
+  const phone = typeof b.customerPhone === 'string' ? normalizeKoreanMobile(b.customerPhone) : null;
+  if (!phone) return { ok: false, message: '휴대폰 번호를 확인해 주세요.' };
   const email = typeof b.customerEmail === 'string' ? b.customerEmail.trim() : '';
   if (!isEmail(email)) return { ok: false, message: '이메일을 확인해 주세요.' };
   const note = typeof b.customerNote === 'string' ? b.customerNote.trim().slice(0, 500) : undefined;
