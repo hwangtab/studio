@@ -18,6 +18,7 @@ import {
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
+import { PRACTICE_ROOM_HAS_VACANCY } from '../../data/practiceRoomAvailability';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
@@ -430,7 +431,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <SectionHeading
           icon={Building}
           title={t('pricing.practiceRoom.title')}
-          subtitle={t('pricing.practiceRoom.subtitle')}
+          subtitle={t(PRACTICE_ROOM_HAS_VACANCY ? 'pricing.practiceRoom.subtitleVacant' : 'pricing.practiceRoom.subtitle')}
         />
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {VAT_NOTICE}

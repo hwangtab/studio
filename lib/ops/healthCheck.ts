@@ -3,6 +3,7 @@ import { and, eq, isNotNull, lt, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, contracts, orders } from '../../db/schema';
 import { fetchBusyRanges } from '../booking/gcal';
+import { runLeadRateCheck } from './leadRateCheck';
 
 /**
  * 조용히 실패한 것들을 하루 한 번 훑어 운영자에게 알린다.
@@ -68,6 +69,14 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
 
   const calendar = await checkCalendar(now);
   if (calendar) issues.push(calendar);
+
+  /**
+   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
+   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상), GA4 호출 자체가
+   * 죽으면 "점검이 죽은 것"이므로 throw해 기존 catch 경로가 운영자에게 알리게 둔다.
+   */
+  const leadRate = await runLeadRateCheck();
+  issues.push(...leadRate.issues);
 
   /**
    * 결제·확정은 정상인데 구글 캘린더에 이벤트가 없는 예약. 운영자 캘린더에는 그 시간이
