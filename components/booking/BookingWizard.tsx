@@ -345,7 +345,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                 id="hours"
                 value={hours}
                 onChange={(e) => handleHoursChange(Number(e.target.value))}
-                className="w-full sm:w-48 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                className="w-full sm:w-48 min-w-0 max-w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
               >
                 {hourOptions.map((h) => (
                   <option key={h} value={h}>
@@ -389,7 +389,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
               min={minDate}
               max={maxDate}
               onChange={handleDateChange}
-              className="w-full sm:w-56 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              className="block w-full sm:w-56 min-w-0 max-w-full appearance-none box-border px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
             />
           </div>
 
@@ -572,16 +572,16 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                 className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
                 role="status"
               >
-                이 시간대를 <strong>{formatHoldLeft(holdRemainingMs)}</strong> 동안 잡아 두었습니다.
-                시간이 지나면 다른 분이 예약할 수 있어 결제가 취소될 수 있습니다.
+                결제까지 <strong>{formatHoldLeft(holdRemainingMs)}</strong> 남았습니다.
+                시간이 지나면 이 시간대가 다시 열려 다른 분이 예약할 수 있습니다.
               </p>
             ) : (
               <div
                 className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200"
                 role="alert"
               >
-                <strong>선점 시간이 지났습니다.</strong> 지금 결제하면 이미 다른 예약이 잡혀
-                취소될 수 있습니다. 시간대를 다시 선택해 주세요.
+                <strong>자리를 잡아둔 시간이 지났습니다.</strong> 다른 분이 먼저 예약했을 수
+                있으니, 시간대를 다시 선택해 주세요.
                 <span className="mt-2 block">
                   <Button type="button" variant="outline" onClick={() => { setConfirmedOrder(null); setHoldExpiresAt(null); setStep(2); }}>
                     시간대 다시 선택

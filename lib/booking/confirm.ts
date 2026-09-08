@@ -112,6 +112,16 @@ export const confirmBookingPayment = async (input: {
     // CONFIG_ERROR·NETWORK_ERROR는 우리 쪽 설정·네트워크 문제라 원문을 그대로 보이면
     // 내부 구성(비밀키 누락 등)이 새어나간다 — 고객에겐 일반 문구, 원문은 서버 로그에만.
     const isInternalError = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
+    // 토스가 거부한 모든 승인은 코드와 함께 남긴다 — 고객 화면엔 메시지만 나가서, 로그가 없으면
+    // '업체 사정으로 결제가 중지되었습니다' 같은 문구만 보고 원인(계약 미개통·한도·카드사 거절)을
+    // 추적할 길이 없다(2026-09-07 라이브 첫 결제에서 실제로 겪음).
+    console.error('[booking-confirm] 토스 승인 거부', {
+      orderNo: order.orderNo,
+      paymentKey: input.paymentKey,
+      amount: input.amount,
+      tossCode: toss.code,
+      tossMessage: toss.message,
+    });
     if (isInternalError) {
       console.error('[booking-confirm] 토스 승인 내부 오류', {
         orderNo: order.orderNo,
