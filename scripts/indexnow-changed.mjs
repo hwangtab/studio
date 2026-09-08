@@ -113,6 +113,8 @@ async function main() {
   const urls = mapChangedFilesToUrls(entries);
 
   if (urls.length === 0) {
+    // 조용히 끝내면 CI 로그에서 '0건'과 '안 돌았음'을 구분할 수 없다(2026-09-08 점검).
+    console.log(`IndexNow: ${BASE}..${HEAD} 변경 ${entries.length}개 파일 중 색인 대상 URL 없음 — 제출 생략`);
     process.exit(0);
   }
 
