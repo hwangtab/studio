@@ -46,7 +46,7 @@ const walk = (dir: string, out: string[] = []): string[] => {
   return out;
 };
 
-const SCAN_DIRS = ['components', 'pages', 'data'];
+const SCAN_DIRS = ['components', 'pages', 'data', 'lib', 'utils'];
 
 // (bg|text|border|...)-kakao(-dark|-ink)? 형태만 카카오 계열로 본다.
 const KAKAO_CLASS_RE =

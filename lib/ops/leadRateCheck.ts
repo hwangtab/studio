@@ -173,8 +173,10 @@ export const runLeadRateCheck = async (
   const client = clientFactory(env);
 
   const [recent, baseline] = await Promise.all([
-    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(3, 0)),
-    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(31, 4)),
+    // 창 끝을 '어제'로 둔다. GA4 Data API는 당일·전일 데이터가 미완성이라(처리 지연 24~48h)
+    // 오늘을 넣으면 최근 3일 표본이 늘 깎여 판정이 흔들린다. 최근 = D-4~D-1, 기준선 = D-32~D-5.
+    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(4, 1)),
+    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(32, 5)),
   ]);
 
   const issues: HealthIssue[] = [];
