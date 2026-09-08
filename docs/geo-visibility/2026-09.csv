@@ -1,0 +1,61 @@
+month,query_id,engine,cited(yes/no),cited_url,position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes
+2026-09,Q01,chatgpt,no,,,,absent,memory on; no web search; general vocal recording advice
+2026-09,Q02,chatgpt,no,,,,absent,memory on; no web search; general vocal technique advice
+2026-09,Q03,chatgpt,no,,,,absent,memory on; no web search; referenced prior Q01 via memory
+2026-09,Q04,chatgpt,no,,,,absent,memory on; no web search; referenced prior Q03 via memory
+2026-09,Q05,chatgpt,no,,,,absent,memory on; no web search; referenced prior Q02/Q03 via memory
+2026-09,Q06,chatgpt,no,,,,absent,memory on; no web search; general breathing technique advice
+2026-09,Q07,chatgpt,no,,,,absent,memory on; no web search; general vocal range advice
+2026-09,Q08,chatgpt,no,,,,absent,memory on; no web search; general practice schedule advice
+2026-09,Q09,chatgpt,no,,,"이창훈 엔지니어;크몽(Kroki/saifromtheseoul/머스캣사운드/Musicman);SoundBetter",absent,memory on; web search used; personalized response
+2026-09,Q10,chatgpt,no,,,,absent,memory on; no web search; general mastering pricing table
+2026-09,Q11,chatgpt,no,,,,absent,memory on; no web search; general mixing pricing by track count
+2026-09,Q12,chatgpt,no,,,,absent,memory on; no web search; general file preparation guide
+2026-09,Q13,chatgpt,no,,,,absent,memory on; no web search; general revision policy info
+2026-09,Q14,chatgpt,yes,https://studionol.co.kr/ko/stories/mastering1,3,Harmonic Standard;크몽,neutral,memory on; web search used; cited as source link (not in-text recommendation)
+2026-09,Q15,chatgpt,yes,https://studionol.co.kr/ko/stories/studio-compare1,4,"서서울 레코딩;루나뮤직;스튜디오세븐;블루포닉 녹음 스튜디오;레드박스 보컬스튜디오;그루브앤밸런스",positive,memory on; web search + map used; ranked 1st in final recommendation order
+2026-09,Q16,chatgpt,yes,https://studionol.co.kr/ko/stories/practice-room-yeonsinnae1,1,"연신내 음악연습실(갈현동);엘뮤직음악연습실;아트웨이브 연신내연습실",positive,"memory on; web search + map used; listed 1st with price details; ""가장 명확"""
+2026-09,Q17,chatgpt,yes,https://studionol.co.kr/ko,1,"제이삼십이도 레코드(J32c_Record);(주)서울사운드",positive,"memory on; web search + map used; ""가장 추천"" heading; listed 1st"
+2026-09,Q18,chatgpt,yes,https://studionol.co.kr/ko/practice-room,1,온리(Ownly),positive,memory on; web search used; Studio NOL is the main answer with details (보증금0/월36만/24시간)
+2026-09,Q19,chatgpt,yes,https://studionol.co.kr/ko,2,"크몽;파도뮤직스튜디오;녹음실 스튜디오세븐;블루포닉 녹음 스튜디오",positive,"memory on; web search + map used; ""직접적인 후보"" with 축가 올인원 35만원 detail"
+2026-09,Q20,chatgpt,no,,,"칸사운드;클립핀 스튜디오;하이보이스;스노우핑거 스튜디오;애드사운드",absent,memory on; web search + map used; voice acting/dubbing studios only
+2026-09,Q01,perplexity,no,,,"antarestech;vocallogacademy;woowonwoo.tistory",absent,web search used; sources from vocal technique blogs
+2026-09,Q02,perplexity,yes,https://studionol.co.kr/ko/stories/practice-room-mix-voice1,1,,positive,web search used; studionol.co.kr used as primary source throughout the answer
+2026-09,Q03,perplexity,no,,,,absent,web search used; sources from naver blogs
+2026-09,Q04,perplexity,no,,,,absent,web search used
+2026-09,Q05,perplexity,no,,,,absent,web search used
+2026-09,Q06,perplexity,yes,studionol.co.kr (breath-support content),1,,positive,web search used; studionol.co.kr cited as primary source for breathing technique
+2026-09,Q07,perplexity,no,,,,absent,web search used
+2026-09,Q08,perplexity,yes,studionol.co.kr (practice-schedule content),1,,positive,web search used; studionol.co.kr heavily cited as primary source (8+ citations)
+2026-09,Q09,perplexity,yes,studionol.co.kr,6,"크몽;STUDIOSOOM;MUZIPSTUDIO;zealousound;STUDIO VICE;T2Sound;Peak-Studios",neutral,web search used; listed 6th among mixing services with price (20만원/10트랙이하)
+2026-09,Q10,perplexity,yes,studionol.co.kr,1,,positive,"web search used; 스튜디오 놀 as ""대표적 예시"" with price (10만원/곡)"
+2026-09,Q11,perplexity,yes,studionol.co.kr,1,,positive,web search used
+2026-09,Q12,perplexity,yes,studionol.co.kr,1,,positive,web search used
+2026-09,Q13,perplexity,yes,studionol.co.kr,,,neutral,web search used
+2026-09,Q14,perplexity,yes,studionol.co.kr,1,,positive,web search used
+2026-09,Q15,perplexity,yes,studionol.co.kr,1,스튜디오세븐,positive,"web search used; ""서북부 대표 보컬 전문 스튜디오로 꼽힘""; listed 1st in table"
+2026-09,Q16,perplexity,yes,studionol.co.kr,1,"엘뮤직;아트웨이브;갈현동",positive,web search used
+2026-09,Q17,perplexity,yes,studionol.co.kr,1,"블루포닉;서울사운드",positive,web search used
+2026-09,Q18,perplexity,yes,studionol.co.kr,1,,positive,web search used
+2026-09,Q19,perplexity,yes,studionol.co.kr,,파도뮤직,positive,web search used
+2026-09,Q20,perplexity,no,,,,absent,web search used
+2026-09,Q01,gemini,no,,,,absent,
+2026-09,Q02,gemini,no,,,,absent,
+2026-09,Q03,gemini,no,,,,absent,
+2026-09,Q04,gemini,no,,,,absent,
+2026-09,Q05,gemini,no,,,,absent,
+2026-09,Q06,gemini,no,,,,absent,
+2026-09,Q07,gemini,no,,,,absent,
+2026-09,Q08,gemini,no,,,,absent,
+2026-09,Q09,gemini,no,,,"크몽;SoundBetter;Fiverr;LANDR",absent,
+2026-09,Q10,gemini,yes,studionol.co.kr,,,neutral,cited as source
+2026-09,Q11,gemini,no,,,,absent,
+2026-09,Q12,gemini,no,,,,absent,
+2026-09,Q13,gemini,no,,,,absent,
+2026-09,Q14,gemini,yes,studionol.co.kr,,,neutral,
+2026-09,Q15,gemini,yes,studionol.co.kr,1,,positive,
+2026-09,Q16,gemini,yes,studionol.co.kr,1,,positive,
+2026-09,Q17,gemini,yes,studionol.co.kr,1,,positive,
+2026-09,Q18,gemini,yes,studionol.co.kr,1,,positive,
+2026-09,Q19,gemini,no,,,,absent,
+2026-09,Q20,gemini,no,,,,absent,
