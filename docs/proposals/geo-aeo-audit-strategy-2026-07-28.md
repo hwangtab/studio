@@ -107,7 +107,7 @@
 1. **믹싱/마스터링 전용 페이지 신설** (`/[locale]/mixing-mastering`) — Service+Offer(가격 SSOT 재사용)+FAQ 6문항+HowTo(작업 프로세스)+2회 수정 포함 정책 명시. llms.txt Key Pages 등재, 기존 스토리 94건에서 내부링크. en 버전도 `lib/enIndexablePaths.json`에 추가(원격 믹싱은 영어 응대 가능 서비스).
 2. **Person sameAs 확장** (`data/siteConfig.ts`) — Apple Music 아티스트 페이지(〈눈녹듯〉 본인 확인 후)·멜론·지니·Spotify·Instagram(@podopodopo)·YouTube. 분열된 아티스트 엔티티를 #person-hwang으로 통합. ChatGPT의 author entity resolution에 직결.
 3. **Wikidata 항목 생성** (황경하 → Studio NOL 순) — 출처: 2017 한국대중음악상 선정위원 특별상, 한겨레21·ize 보도, Bugs·ggac 프로필. 등록은 본인 계정으로. 완료 후 sameAs에 Wikidata URI 추가. ChatGPT 상위 인용 ~48%가 위키 계열 — 단일 최대 레버.
-4. **네이버 블로그 발행 개시** — 준비된 21편을 주 1편 페이스로(우선순위 07→02→01). 발행 전 `docs/naver-blog/README.md`의 사실 오류 정정 필수: "보컬레슨(월 35만원)" → 보컬·악기 레슨은 제공하지 않음, 1:1 프로듀싱(미디·믹싱·작곡) 레슨 월 35만원. 네이버 블로그는 한국어 ChatGPT·Perplexity의 핵심 인용 소스이자 플레이스 연동 지역 신호.
+4. **네이버 블로그 발행 개시** — 준비된 21편을 주 1편 페이스로(우선순위 07→02→01). 발행 전 `docs/naver-blog/README.md`의 사실 오류 정정 필수: "보컬레슨(월 35만원)" → 보컬·악기 레슨은 제공하지 않음, 1:1 프로듀싱(미디·믹싱·작곡) 레슨 월 35만원. ~~네이버 블로그는 한국어 ChatGPT·Perplexity의 핵심 인용 소스~~ **2026-09-08 정정: 틀렸다.** `blog.naver.com/robots.txt`가 GPTBot·OAI-SearchBot·PerplexityBot·ClaudeBot·Google-Extended·CCBot을 전부 `Disallow: /`로 막는다. AI가 자발적으로 인용할 후보에 들어가지 않는다. 블로그의 값어치는 **네이버 자체 검색 노출과 구글 색인**(Googlebot은 본문 허용)이지 LLM 인용이 아니다. 상세는 `docs/p3-external-channels-runbook.md` 상단.
 5. **dateModified 정합화** — mtime 대신 git 최종 커밋 시각 또는 frontmatter `lastmod`로 전환 + 스토리 화면에 "최종 업데이트: YYYY-MM-DD" 가시 표기(`<time>` 태그). 가짜 균일 freshness 제거.
 6. **실명 바이라인 확대** — 상업 연관 상위 스토리(LLM 유입 상위 60건부터) author를 '황경하'로 전환해 가시 바이라인 ↔ JSON-LD 일치.
 7. (소소) 믹싱 강좌 번역본 category `lesson` → 원본과 동일 taxonomy로 정정.
