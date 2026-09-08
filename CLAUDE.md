@@ -364,6 +364,14 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
 - **미적용(의도)**: `ContactInfoCard`·`about` 연락처 카드는 버튼이 아니라 텍스트/카드형
   링크라 제외. `StoryCTA`의 amber는 스토리 테마 색이지 카카오 신호가 아니므로 건드리지 않는다.
 
+### 소셜 발행 (Instagram·Threads API)
+
+`scripts/social/post.mjs --slug <s> [--dry-run]`로 스토리 한 편을 두 플랫폼에 올린다. 상세는
+`docs/social/README.md`. 기억할 것: Meta는 **HTTPS redirect만** 받아 OAuth는 `auth.mjs`가
+URL 출력 → 사이트로 돌아온 `?code=`를 `--code`로 넘기는 2단계다. Instagram은 **JPEG 공개 URL만**
+받으므로 OG 카드(PNG)를 sharp로 바꿔 Blob에 올린다. 장기 토큰 60일, `auth.mjs --refresh`.
+발행 원장 `docs/social/posted.json`이 중복 발행을 막는다.
+
 ## SEO·GA4·GSC 분석 규칙 (오진 재발 방지)
 
 **데이터를 열기 전에 반드시 먼저 실행한다:**
