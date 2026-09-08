@@ -20,6 +20,7 @@ import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
+import { PRACTICE_ROOM_HAS_VACANCY } from '../../data/practiceRoomAvailability';
 import { PRACTICE_ROOM_RELATED_GUIDES, type PracticeRoomRelatedGuide } from '../../data/practiceRoomRelatedGuides';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
 import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
@@ -172,7 +173,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           priceValue={t('practiceRoom.pricing.priceValue')}
           priceCaption={t('practiceRoom.pricing.priceCaption')}
           badges={pricingBadges}
-          note={t('practiceRoom.pricing.note')}
+          note={t(PRACTICE_ROOM_HAS_VACANCY ? 'practiceRoom.pricing.noteVacant' : 'practiceRoom.pricing.note')}
           locale={locale}
         />
       )}
@@ -374,7 +375,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
       <Section variant="default" className="py-12">
         <div className="max-w-2xl mx-auto text-center">
           <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-6">
-            {t('practiceRoom.midCta.note')}
+            {t(PRACTICE_ROOM_HAS_VACANCY ? 'practiceRoom.midCta.noteVacant' : 'practiceRoom.midCta.note')}
           </p>
           <div className="flex justify-center">
             <HeroKakaoCta

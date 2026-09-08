@@ -300,6 +300,7 @@
     "practiceRoom": {
       "title": "Mashg'ulot xonasiga oylik joylashuv",
       "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
+      "subtitleVacant": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — hozirda ko'chib kirish uchun bo'sh xonalar mavjud.",
       "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish"
     },
     "additional": {
@@ -551,10 +552,12 @@
           "caption": "1 oydan boshlab"
         }
       ],
-      "note": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Xonalar to'la bo'lsa, navbatga yozilish mumkin."
+      "note": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Xonalar to'la bo'lsa, navbatga yozilish mumkin.",
+      "noteVacant": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Hozirda ko'chib kirish uchun bo'sh xonalar mavjud."
     },
     "midCta": {
-      "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz."
+      "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz.",
+    "noteVacant": "Hozirda ko'chib kirish uchun bo'sh xonalar mavjud. Qaror qilishdan oldin xonani ko'rib chiqishingiz mumkin. Murojaat qoldiring, tez orada javob beramiz."
     },
     "painPoints": {
       "title": "Quyidagi muammolar sizda bormi?",

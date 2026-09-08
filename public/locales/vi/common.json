@@ -300,6 +300,7 @@
     "practiceRoom": {
       "title": "Thuê phòng tập theo tháng",
       "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
+      "subtitleVacant": "Không gian cách âm 24/7 thuê theo tháng — hiện đang có phòng trống có thể vào ở ngay.",
       "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân"
     },
     "additional": {
@@ -551,10 +552,12 @@
           "caption": "Bắt đầu từ 1 tháng"
         }
       ],
-      "note": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Có danh sách chờ khi hết phòng."
+      "note": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Có danh sách chờ khi hết phòng.",
+      "noteVacant": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Hiện đang có phòng trống có thể vào ở ngay."
     },
     "midCta": {
-      "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự."
+      "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự.",
+    "noteVacant": "Hiện đang có phòng trống có thể vào ở ngay. Bạn có thể xem phòng trực tiếp trước khi quyết định. Hãy liên hệ, chúng tôi sẽ phản hồi ngay."
     },
     "painPoints": {
       "title": "Bạn có gặp những vấn đề này?",

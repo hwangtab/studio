@@ -73,6 +73,13 @@ npx tsx scripts/cta-routing-baseline.ts --update   # 의도한 변경이면 기�
 npm run indexnow:changed -- --dry-run
 ```
 
+### 연습실 공실 상태 = 상수 하나
+
+연습실 만실/공실은 `data/practiceRoomAvailability.ts`의 `PRACTICE_ROOM_HAS_VACANCY` 하나로
+바꾼다. 카피 3곳(연습실·pricing 페이지 note/subtitle)과 `pages/api/llms.ts`가 이 상수를
+따라간다. 바꿀 때 `PRACTICE_ROOM_AVAILABILITY_UPDATED_ON`도 함께 갱신할 것 — 오래되면
+`practiceRoomAvailability.test.ts`가 CI에서 실패한다.
+
 ### 서비스 수치는 정본에서만 온다
 
 스토리가 말하는 납기·수정 횟수·대표 가격이 정본과 어긋나면 `check:facts`가 CI를 세운다.
