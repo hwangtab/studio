@@ -370,7 +370,8 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
 `docs/social/README.md`. 기억할 것: Meta는 **HTTPS redirect만** 받아 OAuth는 `auth.mjs`가
 URL 출력 → 사이트로 돌아온 `?code=`를 `--code`로 넘기는 2단계다. Instagram은 **JPEG 공개 URL만**
 받으므로 OG 카드(PNG)를 sharp로 바꿔 Blob에 올린다. 장기 토큰 60일, `auth.mjs --refresh`.
-발행 원장 `docs/social/posted.json`이 중복 발행을 막는다.
+발행 원장 `docs/social/posted.json`이 중복 발행을 막는다. 반응 확인·답글은 `inbox.mjs`(자동 답글 없음,
+IG DM은 모바일 앱의 "메시지 액세스 허용" 토글 필요), 지표 적재는 `insights.mjs`.
 
 ## SEO·GA4·GSC 분석 규칙 (오진 재발 방지)
 

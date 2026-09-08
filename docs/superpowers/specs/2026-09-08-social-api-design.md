@@ -56,7 +56,10 @@
 - `--dry-run`: 캡션·이미지 URL·호출 계획을 출력만 한다.
 - 첫 실제 발행은 운영자가 직접 실행한다.
 
-## 범위 밖 (2·3차)
+## 2·3차 (같은 날 구현, 실측 기반으로 계획 수정)
 
-댓글·멘션 폴링과 답글 초안, DM 웹훅(`pages/api/social/webhook`, 앱 심사 필요),
-인사이트 주간 적재. 자동 답글은 하지 않는다.
+- `inbox.mjs`: IG 댓글·Threads 답글 중 미답 항목 나열, `--reply`로 답글. IG DM은 웹훅 없이
+  `/me/conversations` 폴링으로 되므로 별도 엔드포인트·앱 심사가 필요 없었다(계획 변경).
+  단 `instagram_business_manage_messages` scope 재승인과 모바일 앱의 "메시지 액세스 허용"
+  토글이 필요하다. Threads는 DM API 없음. 자동 답글은 하지 않는다.
+- `insights.mjs`: 최근 7일 계정 지표를 `docs/social/insights.csv`에 적재.
