@@ -42,6 +42,37 @@
 
 ---
 
+## 네이버 계열은 AI 크롤러를 전면 차단한다 (2026-09-08 robots.txt 실측)
+
+`map.naver.com` · `m.place.naver.com` · `blog.naver.com` · `m.blog.naver.com` ·
+`search.naver.com` · `cafe.naver.com` 전부 아래 주석과 함께 AI 봇을 명시 차단한다.
+
+> `# BOT ACCESS FOR THE PURPOSES OF AI TRAINING AND RETRIEVAL-AUGMENTED GENERATION (RAG) IS STRICTLY PROHIBITED.`
+
+차단 목록: `GPTBot` · `OAI-SearchBot` · `PerplexityBot` · `Google-Extended` · `ClaudeBot` ·
+`Claude-SearchBot` · `meta-externalagent` · `Applebot-Extended` · `CCBot` — 전부 `Disallow: /`.
+
+**두 계열의 차이가 중요하다.**
+
+| 도메인 | `User-agent: *` | 뜻 |
+|---|---|---|
+| `map.naver.com` · `m.place.naver.com` | `Disallow: /` (루트만 허용) | **일반 크롤러도 못 읽는다.** 구글 색인도 안 된다. 플레이스 텍스트는 네이버 안에서만 산다 |
+| `blog.naver.com` | 특정 `.nhn`/`.naver` 경로만 차단, **본문 URL은 허용** | Googlebot은 읽는다 → 구글 검색 색인·AI Overviews 경로는 열려 있다 |
+
+`ChatGPT-User`·`Perplexity-User`·`Claude-User` 같은 **사용자 트리거 페처는 어디에도 명시돼 있지
+않다**(실측 0건). RFC 9309상 명명되지 않은 UA는 `*` 그룹을 따르므로, 블로그 본문은 사용자가
+링크를 주면 읽히지만 플레이스는 `*`가 `Disallow: /`라 그것도 막힌다.
+
+**따라서 정정한다 — "네이버 블로그는 한국어 ChatGPT·Perplexity의 핵심 인용 소스"는 틀렸다.**
+색인을 만드는 `GPTBot`·`PerplexityBot`이 차단돼 있어 AI가 자발적으로 인용할 후보에 들어가지
+않는다. 네이버 블로그의 값어치는 **네이버 자체 검색 노출과 구글 색인**이지 LLM 인용이 아니다.
+
+**플레이스 텍스트 수정의 값어치도 GEO가 아니다.** 사람이 읽고 결정하는 것, 네이버 내부 검색·
+AI 브리핑, 그리고 조건·가격 불일치로 생기는 분쟁 예방이다. AI 인용을 노리는 작업은
+studionol.co.kr 본체(llms.txt·스키마·본문)에서만 효과가 난다.
+
+---
+
 # 3-1. 네이버 플레이스 최적화 ⭐ 최우선
 
 전환율 2.75% 채널을 여는 작업. 이번 주 안에 1)~6) 완료 목표.
