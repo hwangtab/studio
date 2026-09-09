@@ -79,5 +79,7 @@ it('검증 실패 400, 품절 409', async () => {
   (getFundingProject as jest.Mock).mockReturnValue(project);
   expect((await call({ ...body, quantity: 0 })).status).toBe(400);
   (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'sold_out' });
-  expect((await call(body)).status).toBe(409);
+  const r = await call(body);
+  expect(r.status).toBe(409);
+  expect(r.body.message).toBe('남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.');
 });

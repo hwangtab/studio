@@ -55,6 +55,10 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
           shipping: reward.requiresShipping ? ship : undefined,
         }),
       });
+      if (!res.headers.get('content-type')?.includes('application/json')) {
+        setError('서버 오류가 발생했습니다.');
+        return;
+      }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '후원 신청에 실패했습니다.'); return; }
       if (json.depositUrl) { await router.push(json.depositUrl); return; }
@@ -92,7 +96,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
             const soldOut = left !== null && left !== undefined && left <= 0;
             return (
               <label key={r.id} className={`flex items-start gap-3 rounded-lg border p-3 ${soldOut ? 'opacity-50' : ''}`}>
-                <input type="radio" name="reward" value={r.id} checked={rewardId === r.id} disabled={soldOut} onChange={() => setRewardId(r.id)} />
+                <input type="radio" name="reward" value={r.id} checked={rewardId === r.id} disabled={soldOut} onChange={() => { setRewardId(r.id); setQuantity(1); }} />
                 <span><strong>{formatPriceAmount(r.amount)}원</strong> {r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}</span>
               </label>
             );
@@ -100,7 +104,10 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         </div>
         <label className="mt-4 block text-sm">수량
           <input type="number" min={1} max={Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY)} value={quantity} className={field}
-            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))} />
+            onChange={(e) => {
+              const cap = Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY);
+              setQuantity(Math.min(cap, Math.max(1, Number(e.target.value) || 1)));
+            }} />
         </label>
         <label className="mt-4 block text-sm">추가 후원금 (선택, 1,000원 단위)
           <input type="number" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additional} className={field}

@@ -29,8 +29,8 @@ const {
   getIndexableStoryLocales,
   getRouteLastmod,
   getCategoryLastmod,
-  fundingDir,
 } = require('./lib/sitemap/routes');
+const { readFundingProjects } = require('./lib/sitemap/fundingMeta');
 
 // 라우트 단위 en 색인 개방 대상(단일 소스 lib/enIndexablePaths.json) — 이 경로의 en
 // 버전은 noindex 전면 제외에서 예외로 사이트맵에 등재된다(런타임 metadataUrls와 대칭).
@@ -203,19 +203,16 @@ module.exports = {
       }
     }
     // 펀딩 프로젝트 상세 페이지 — draft·hidden 프로젝트(예: 결제 스모크 테스트용)는 등재하지 않는다.
-    if (fs.existsSync(fundingDir)) {
-      for (const file of fs.readdirSync(fundingDir).filter((f) => f.endsWith('.md'))) {
-        const raw = fs.readFileSync(path.join(fundingDir, file), 'utf-8');
-        if (/^status:\s*draft/m.test(raw) || /^hidden:\s*true/m.test(raw)) continue;
-        const routePath = `/ko/funding/${file.replace(/\.md$/, '')}`;
-        results.push({
-          loc: routePath,
-          lastmod: getRouteLastmod(routePath, buildTimestamp),
-          changefreq: 'daily',
-          priority: 0.7,
-          alternateRefs: getAlternateRefs(routePath),
-        });
-      }
+    for (const project of readFundingProjects()) {
+      if (project.draft || project.hidden) continue;
+      const routePath = `/ko/funding/${project.slug}`;
+      results.push({
+        loc: routePath,
+        lastmod: getRouteLastmod(routePath, buildTimestamp),
+        changefreq: 'daily',
+        priority: 0.7,
+        alternateRefs: getAlternateRefs(routePath),
+      });
     }
 
     return results;

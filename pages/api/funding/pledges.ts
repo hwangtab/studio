@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await expireStalePledges(now);
   const result = await createFundingPledge(validated.value, project!, validated.reward, now);
-  if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '방금 이 리워드가 마감되었습니다. 다른 리워드를 선택해 주세요.' });
+  if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
 
   let depositUrl: string | undefined;
   let emailSent = false;

@@ -43,6 +43,13 @@ rewards:
     amount: 5000
     requiresShipping: false
     estimatedDelivery: 2026-11
+  - id: cd
+    title: CD
+    description: d
+    amount: 30000
+    totalQuantity: 1
+    requiresShipping: false
+    estimatedDelivery: 2026-12
 ---
 `, 'demo');
 
@@ -100,4 +107,13 @@ it('수기 등록 → orders paid·FND-M-·payments 없음, funding_pledges manu
 it('quantity 11 → 400', async () => {
   const r = await call({ ...VALID_BODY, quantity: 11 });
   expect(r.status).toBe(400);
+});
+
+it('한정 수량 리워드가 이미 소진되면 409 남은 수량 메시지', async () => {
+  const first = await call({ ...VALID_BODY, rewardId: 'cd', quantity: 1, additionalAmount: 0 });
+  expect(first.status).toBe(201);
+
+  const second = await call({ ...VALID_BODY, rewardId: 'cd', quantity: 1, additionalAmount: 0 });
+  expect(second.status).toBe(409);
+  expect(second.body.message).toBe('남은 수량(0)을 초과합니다.');
 });

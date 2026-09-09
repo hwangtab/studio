@@ -11,7 +11,8 @@ const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manag
 const PHONE = '문의: 010-4255-7893';
 
 const summaryLines = (order: FundingOrder, project: FundingProject | null): string[] => {
-  const p = order.fundingPledge!;
+  const p = order.fundingPledge;
+  if (!p) return [];
   const reward = project?.rewards.find((r) => r.id === p.rewardId);
   return [
     `프로젝트: ${project?.title ?? p.projectSlug}`,
@@ -34,7 +35,7 @@ const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEm
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
   send([
     { key: 'customer', params: {
-      to: order.customerEmail,
+      to: order.customerEmail, replyTo: OPERATOR_EMAIL,
       subject: `[스튜디오 놀] 후원이 확정되었습니다 — ${project?.title ?? ''}`,
       text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
     } },
@@ -46,17 +47,19 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
     } },
   ]);
 
-export const sendFundingBankDepositEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
-  send([
+export const sendFundingBankDepositEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> => {
+  const pledge = order.fundingPledge;
+  if (!pledge) return Promise.resolve('missing_pledge');
+  return send([
     { key: 'customer', params: {
-      to: order.customerEmail,
+      to: order.customerEmail, replyTo: OPERATOR_EMAIL,
       subject: `[스튜디오 놀] 무통장입금 안내 — ${project?.title ?? ''}`,
       text: [
         `${order.customerName}님, 아래 계좌로 입금해 주시면 후원이 확정됩니다.`,
         `계좌: ${BANK_ACCOUNT.bank} ${BANK_ACCOUNT.number} (${BANK_ACCOUNT.holder})`,
         `금액: ${formatPriceAmount(order.totalAmount)}원`,
         `입금자명: ${order.customerName} (후원 신청 이름과 같게 해 주세요)`,
-        `입금 기한: ${formatKstDateTimeFull(order.fundingPledge!.holdExpiresAt.toISOString())} — 기한이 지나면 자동 취소됩니다`,
+        `입금 기한: ${formatKstDateTimeFull(pledge.holdExpiresAt.toISOString())} — 기한이 지나면 자동 취소됩니다`,
         ...summaryLines(order, project), '', `후원 확인: ${manageUrl(order)}`, PHONE,
       ].join('\n'),
     } },
@@ -66,6 +69,7 @@ export const sendFundingBankDepositEmails = (order: FundingOrder, project: Fundi
       text: [...summaryLines(order, project), `입금자명(예정): ${order.customerName}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
   ]);
+};
 
 const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_requested: '취소 요청을 접수했습니다', recorded: '환불 처리 안내' } as const;
 const CANCEL_BODY = {

@@ -29,6 +29,7 @@ export default function FundingProgress({ goalAmount, endAt, now, data }: Props)
       <div
         className="mt-3 h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
         role="progressbar"
+        aria-label="펀딩 달성률"
         aria-valuenow={percent}
         aria-valuemin={0}
         aria-valuemax={100}

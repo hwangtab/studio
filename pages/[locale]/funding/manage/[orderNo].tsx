@@ -23,14 +23,28 @@ export default function FundingManagePage(p: Props) {
   const [refundRequested, setRefundRequested] = useState(p.refundRequested);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
   const cancel = async () => {
-    if (!window.confirm(`후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`)) return;
+    const confirmText = p.paymentMethod === 'bank_transfer'
+      ? '취소를 요청할까요? 환불은 운영자가 계좌로 진행합니다.'
+      : `후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
+    if (!window.confirm(confirmText)) return;
     setBusy(true); setError(null);
     try {
       const res = await fetch('/api/funding/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo: p.orderNo, token: p.token }) });
+      if (!res.headers.get('content-type')?.includes('application/json')) {
+        setError('서버 오류가 발생했습니다.');
+        return;
+      }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '취소에 실패했습니다.'); return; }
-      if (json.mode === 'refund_requested') setRefundRequested(true); else setStatus('refunded');
+      if (json.mode === 'refund_requested') {
+        setRefundRequested(true);
+        setConfirmMessage('취소 요청을 접수했습니다. 환불 계좌를 메일로 회신해 주세요.');
+      } else {
+        setStatus('refunded');
+        setConfirmMessage(`취소되었습니다. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원이 환불됩니다.`);
+      }
     } catch { setError('네트워크 오류가 발생했습니다.'); } finally { setBusy(false); }
   };
   return (
@@ -51,6 +65,7 @@ export default function FundingManagePage(p: Props) {
         {status === 'paid' && !refundRequested && (p.canCancel
           ? <Button className="mt-8" variant="outline" onClick={cancel} disabled={busy}>후원 취소 (전액 환불)</Button>
           : <p className="mt-8 text-sm text-gray-500">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>)}
+        {confirmMessage && <p role="status" className="mt-3 text-green-700">{confirmMessage}</p>}
         {error && <p role="alert" className="mt-3 text-red-600">{error}</p>}
       </main>
     </>

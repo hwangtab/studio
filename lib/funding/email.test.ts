@@ -1,5 +1,6 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
+import { OPERATOR_EMAIL } from '../operatorContact';
 import { sendFundingBankDepositEmails, sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 
 const order = {
@@ -18,20 +19,28 @@ const project = { title: '데모 앨범', rewards: [{ id: 'mail', estimatedDeliv
 
 beforeEach(() => (sendEmail as jest.Mock).mockClear());
 
-it('확정 메일은 고객·운영자 두 통, manage 링크·리워드 포함', async () => {
+it('확정 메일은 고객·운영자 두 통, manage 링크·리워드 포함, 고객 메일은 replyTo 운영자', async () => {
   expect(await sendFundingConfirmedEmails(order, project)).toBeNull();
   expect(sendEmail).toHaveBeenCalledTimes(2);
   const customer = (sendEmail as jest.Mock).mock.calls[0][0];
   expect(customer.to).toBe('a@b.com');
+  expect(customer.replyTo).toBe(OPERATOR_EMAIL);
   expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
   expect(customer.text).toContain('감사 메일');
 });
-it('무통장 안내는 계좌·기한·입금자명', async () => {
+it('무통장 안내는 계좌·기한·입금자명, 고객 메일은 replyTo 운영자', async () => {
   await sendFundingBankDepositEmails(order, project);
-  const text = (sendEmail as jest.Mock).mock.calls[0][0].text as string;
+  const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+  expect(customer.replyTo).toBe(OPERATOR_EMAIL);
+  const text = customer.text as string;
   expect(text).toContain('3333-12-5480849');
   expect(text).toContain('입금자명');
   expect(text).toContain('2026.10.16');
+});
+it('무통장 안내는 fundingPledge가 없으면 메일을 보내지 않고 missing_pledge를 반환', async () => {
+  const orderWithoutPledge = { ...(order as Record<string, unknown>), fundingPledge: null } as never;
+  expect(await sendFundingBankDepositEmails(orderWithoutPledge, project)).toBe('missing_pledge');
+  expect(sendEmail).not.toHaveBeenCalled();
 });
 it('한 통이라도 실패하면 요약을 돌려준다', async () => {
   (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });

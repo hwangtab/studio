@@ -10,7 +10,7 @@ import { duplicateKey, serializePledgeForAdmin } from '../../../../../lib/fundin
 import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
 import { findReward, getFundingProject } from '../../../../../lib/funding/projects';
-import { expireStalePledges, generateFundingOrderNo } from '../../../../../lib/funding/service';
+import { aggregateProjectStatus, expireStalePledges, generateFundingOrderNo } from '../../../../../lib/funding/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -57,6 +57,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ ok: false, message: '프로젝트·리워드·수량·이름을 확인해 주세요.' });
     }
     const now = new Date();
+    await expireStalePledges(now);
+    if (reward.totalQuantity !== null) {
+      const status = await aggregateProjectStatus(project, now);
+      const remaining = status.remaining[reward.id];
+      if (remaining !== null && remaining !== undefined && quantity > remaining) {
+        return res.status(409).json({ ok: false, message: `남은 수량(${remaining})을 초과합니다.` });
+      }
+    }
     const amounts = computeFundingAmounts(reward.amount, quantity, additionalAmount);
     const orderNo = generateFundingOrderNo(now, true);
     const db = getDb();

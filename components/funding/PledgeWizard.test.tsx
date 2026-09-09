@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
@@ -38,10 +38,13 @@ rewards:
 `, 'demo');
 
 beforeEach(() => {
-  global.fetch = jest.fn().mockResolvedValue({ ok: true, status: 201, json: async () => ({
-    ok: true, orderNo: 'FND-1', paymentMethod: 'toss', holdExpiresAt: new Date(Date.now() + 900000).toISOString(),
-    itemAmount: 27273, vatAmount: 2727, totalAmount: 30000,
-  }) }) as never;
+  global.fetch = jest.fn().mockResolvedValue({
+    ok: true, status: 201, headers: { get: () => 'application/json' },
+    json: async () => ({
+      ok: true, orderNo: 'FND-1', paymentMethod: 'toss', holdExpiresAt: new Date(Date.now() + 900000).toISOString(),
+      itemAmount: 27273, vatAmount: 2727, totalAmount: 30000,
+    }),
+  }) as never;
 });
 
 it('배송 리워드는 배송지 입력이 보이고, 한정 수량이면 무통장 선택지가 없다', async () => {
@@ -61,6 +64,22 @@ it('무제한 리워드는 무통장 선택지가 있고, 제출하면 서버 �
   expect(screen.getByText(/합계 30,000원/)).toBeInTheDocument();
   // funding_pledge_start는 페이지 진입 시 pledge.tsx에서 발화한다 — 제출에서는 발화하지 않는다.
   expect(trackMicroEvent).not.toHaveBeenCalled();
+});
+
+it('remaining보다 큰 수량을 입력하면 remaining으로 클램프된다', () => {
+  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 3, mail: null }} />);
+  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
+  fireEvent.change(quantityInput, { target: { value: '10' } });
+  expect(quantityInput.value).toBe('3');
+});
+
+it('리워드를 바꾸면 수량이 1로 리셋된다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
+  fireEvent.change(quantityInput, { target: { value: '4' } });
+  expect(quantityInput.value).toBe('4');
+  await userEvent.click(screen.getByLabelText(/감사 메일/));
+  expect((screen.getByLabelText('수량') as HTMLInputElement).value).toBe('1');
 });
 
 it('한정 수량 리워드는 무통장을 고를 수 없고, 제출하면 결제수단이 toss로 나간다', async () => {
