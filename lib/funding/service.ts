@@ -12,6 +12,9 @@ import type { CreatePledgePayload } from './validation';
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
+/** 같은 고객(이메일+전화)이 한 프로젝트에서 동시에 열어 둘 수 있는 미만료 pending 홀드 수. */
+export const MAX_OPEN_HOLDS_PER_CUSTOMER = 2;
+
 export const generateFundingOrderNo = (now: Date, manual = false): string =>
   `FND-${manual ? 'M-' : ''}${kstDateString(now).replace(/-/g, '')}-${randomBytes(4).toString('hex').toUpperCase()}`;
 
@@ -46,7 +49,7 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
  */
 export const createFundingPledge = async (
   payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
-): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' }> => {
+): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' | 'too_many_holds' }> => {
   const db = getDb();
   const amounts = computeFundingAmounts(reward.amount, payload.quantity, payload.additionalAmount);
   const orderNo = generateFundingOrderNo(now);
@@ -62,6 +65,21 @@ export const createFundingPledge = async (
       AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
       AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
   `);
+
+  // 한 사람이 결제 대기(pending) 홀드를 무한정 쌓아 한정 리워드 재고를 잠그는 것을 막는다.
+  // 위 자기 홀드 해제는 toss pending만 푼다(무통장은 이미 입금했을 수 있어 못 푼다) — 그래서
+  // 무통장으로 반복 제출하면 12시간짜리 홀드가 계속 쌓여 재고가 통째로 묶인다.
+  // 해제 뒤에 세므로, 정상적인 위저드 되돌아가기·재제출은 걸리지 않는다.
+  const [openHolds] = await db.all<{ n: number }>(sql`
+    SELECT COUNT(*) AS n FROM orders o
+    JOIN funding_pledges fp ON fp.order_id = o.id
+    WHERE o.type = 'funding' AND o.status = 'pending'
+      AND o.customer_email = ${payload.customerEmail} AND o.customer_phone = ${payload.customerPhone}
+      AND fp.project_slug = ${project.slug} AND fp.hold_expires_at > ${toEpoch(now)}
+  `);
+  if (Number(openHolds?.n ?? 0) >= MAX_OPEN_HOLDS_PER_CUSTOMER) {
+    return { ok: false, code: 'too_many_holds' };
+  }
 
   const [order] = await db.insert(orders).values({
     orderNo, type: 'funding',

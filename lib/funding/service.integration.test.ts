@@ -131,6 +131,33 @@ describe('createFundingPledge', () => {
   });
 });
 
+describe('createFundingPledge — 홀드 남용 상한', () => {
+  it('같은 고객의 미만료 무통장 홀드가 2개면 세 번째는 too_many_holds', async () => {
+    // 자기 홀드 해제는 toss pending만 푼다 — 무통장으로 반복 제출하면 12시간짜리 홀드가
+    // 계속 쌓여 한정 리워드 재고가 통째로 잠긴다.
+    const p = { paymentMethod: 'bank_transfer' as const, customerEmail: 'hold@example.com', customerPhone: '010-4' };
+    expect((await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).ok).toBe(true);
+    expect((await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).ok).toBe(true);
+    expect(await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).toMatchObject({ ok: false, code: 'too_many_holds' });
+  });
+
+  it('홀드가 만료됐거나 다른 프로젝트면 상한에 세지 않는다', async () => {
+    const p = { paymentMethod: 'bank_transfer' as const, customerEmail: 'hold2@example.com', customerPhone: '010-3' };
+    const long = 13 * 60 * 60 * 1000; // BANK_HOLD_SECONDS(12시간)를 넘긴 과거
+    await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), new Date(NOW.getTime() - long));
+    await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), new Date(NOW.getTime() - long));
+    // 만료된 홀드 2개는 재고도 상한도 잡지 않는다.
+    expect((await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).ok).toBe(true);
+  });
+
+  it('토스 재제출은 자기 홀드 해제 뒤에 세므로 상한에 걸리지 않는다', async () => {
+    const p = { paymentMethod: 'toss' as const, customerEmail: 'wizard@example.com', customerPhone: '010-2' };
+    for (let i = 0; i < 5; i += 1) {
+      expect((await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).ok).toBe(true);
+    }
+  });
+});
+
 describe('findFundingOrderByOrderNo — 소문자 orderNo도 찾는다', () => {
   it('middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, 소문자로 조회해도 대문자 주문을 찾아야 한다', async () => {
     const created = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
