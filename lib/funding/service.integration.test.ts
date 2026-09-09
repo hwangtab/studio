@@ -103,6 +103,14 @@ describe('createFundingPledge', () => {
     const prev = await findFundingOrderByOrderNo(a.ok ? a.orderNo : '');
     expect(prev?.status).toBe('expired');
   });
+
+  it('다른 프로젝트에 후원해도 이 프로젝트의 기존 pending은 만료시키지 않는다', async () => {
+    const a = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const otherProject = { ...PROJECT, slug: 'other' };
+    await createFundingPledge(payloadFor({ projectSlug: 'other' }), otherProject, reward('mail'), NOW);
+    const prev = await findFundingOrderByOrderNo(a.ok ? a.orderNo : '');
+    expect(prev?.status).toBe('pending');
+  });
 });
 
 describe('expireStalePledges · aggregateProjectStatus', () => {

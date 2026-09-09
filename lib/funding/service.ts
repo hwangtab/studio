@@ -52,6 +52,7 @@ export const createFundingPledge = async (
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
     WHERE type = 'funding' AND status = 'pending'
       AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+      AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug})
   `);
 
   const [order] = await db.insert(orders).values({
