@@ -147,8 +147,11 @@ export const createMixingOrder = async (
 export const findOrderByOrderNo = async (
   orderNo: string,
 ): Promise<(Order & { bookings: Booking[]; payments: Payment[]; workOrders: WorkOrder[] }) | undefined> =>
+  // middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, URL에서 온
+  // orderNo는 소문자로 도착할 수 있다(generateOrderNo는 항상 대문자만 생성) —
+  // 대문자로 정규화해 비교한다. SQLite `=`는 대소문자 구분.
   getDb().query.orders.findFirst({
-    where: (t, { eq }) => eq(t.orderNo, orderNo),
+    where: (t, { eq }) => eq(t.orderNo, orderNo.toUpperCase()),
     with: { bookings: true, payments: true, workOrders: true },
   });
 

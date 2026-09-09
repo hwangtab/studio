@@ -18,8 +18,11 @@ export const generateFundingOrderNo = (now: Date, manual = false): string =>
 export type FundingOrder = Order & { fundingPledge: FundingPledge | null; payments: Payment[] };
 
 export const findFundingOrderByOrderNo = async (orderNo: string): Promise<FundingOrder | undefined> => {
+  // middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, URL에서 온
+  // orderNo는 소문자로 도착할 수 있다(generateFundingOrderNo는 항상 대문자만 생성) —
+  // 대문자로 정규화해 비교한다. SQLite `=`는 대소문자 구분.
   const row = await getDb().query.orders.findFirst({
-    where: (t, { eq }) => eq(t.orderNo, orderNo),
+    where: (t, { eq }) => eq(t.orderNo, orderNo.toUpperCase()),
     with: { fundingPledge: true, payments: true },
   });
   return row?.type === 'funding' ? (row as FundingOrder) : undefined;

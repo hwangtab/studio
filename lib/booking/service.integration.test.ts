@@ -23,7 +23,7 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { createBookingOrder } from './service';
+import { createBookingOrder, findOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import type { CreateBookingPayload } from './validation';
 
@@ -100,5 +100,16 @@ describe('createBookingOrder — 자가 선점 해제', () => {
       NOW,
     );
     expect(b).toEqual({ ok: false, code: 'slot_taken' });
+  });
+});
+
+describe('findOrderByOrderNo — 소문자 orderNo도 찾는다', () => {
+  it('middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, 소문자로 조회해도 대문자 주문을 찾아야 한다', async () => {
+    const created = await createBookingOrder(payloadFor(), NOW);
+    expect(created.ok).toBe(true);
+    if (!created.ok) throw new Error('unreachable — 위 expect가 이미 걸렀다');
+
+    const found = await findOrderByOrderNo(created.orderNo.toLowerCase());
+    expect(found?.orderNo).toBe(created.orderNo);
   });
 });

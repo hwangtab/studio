@@ -120,6 +120,17 @@ describe('createFundingPledge', () => {
   });
 });
 
+describe('findFundingOrderByOrderNo — 소문자 orderNo도 찾는다', () => {
+  it('middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, 소문자로 조회해도 대문자 주문을 찾아야 한다', async () => {
+    const created = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    expect(created.ok).toBe(true);
+    if (!created.ok) throw new Error('unreachable — 위 expect가 이미 걸렀다');
+
+    const found = await findFundingOrderByOrderNo(created.orderNo.toLowerCase());
+    expect(found?.orderNo).toBe(created.orderNo);
+  });
+});
+
 describe('expireStalePledges · aggregateProjectStatus', () => {
   it('만료 pending은 expired, 집계는 paid만 센다', async () => {
     const stale = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), new Date(NOW.getTime() - 2000 * 1000));
