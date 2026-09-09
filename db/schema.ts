@@ -232,7 +232,7 @@ export const orderStatusEnum = [
   'failed', // 승인 실패
   'expired', // 15분 내 미결제
 ] as const;
-export const orderTypeEnum = ['session', 'mixing', 'subscription'] as const;
+export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
 export const refundStatusEnum = ['done', 'failed'] as const;
 export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
@@ -321,9 +321,10 @@ export const webhookEvents = sqliteTable('webhook_events', {
   processedAt: integer('processed_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });
 
-export const ordersRelations = relations(orders, ({ many }) => ({
+export const ordersRelations = relations(orders, ({ many, one }) => ({
   payments: many(payments),
   bookings: many(bookings),
+  fundingPledge: one(fundingPledges, { fields: [orders.id], references: [fundingPledges.orderId] }),
 }));
 export const paymentsRelations = relations(payments, ({ one, many }) => ({
   order: one(orders, { fields: [payments.orderId], references: [orders.id] }),
@@ -343,6 +344,54 @@ export type Refund = typeof refunds.$inferSelect;
 export type Booking = typeof bookings.$inferSelect;
 export type NewBooking = typeof bookings.$inferInsert;
 export type AvailabilityBlock = typeof availabilityBlocks.$inferSelect;
+
+// ─── 펀딩 (리워드형 크라우드펀딩) ─────────────────────────────────────────────
+// 프로젝트·리워드의 정본은 content/funding/<slug>.md다. 이 테이블은 후원 1건 = 주문 1건의
+// 부속 정보(리워드 스냅샷·배송·발송)만 담는다. 돈은 orders/payments/refunds가 SSOT.
+
+export const fundingPaymentMethodEnum = ['toss', 'bank_transfer'] as const;
+export const fulfillmentStatusEnum = ['none', 'preparing', 'shipped', 'delivered'] as const;
+export const fundingEntrySourceEnum = ['online', 'manual'] as const;
+
+export const fundingPledges = sqliteTable('funding_pledges', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  orderId: text('order_id').notNull().unique().references(() => orders.id),
+  projectSlug: text('project_slug').notNull(),
+  /** 후원 시점의 리워드 스냅샷 — 파일이 바뀌어도 기록은 그대로다. */
+  rewardId: text('reward_id').notNull(),
+  rewardTitle: text('reward_title').notNull(),
+  unitAmount: integer('unit_amount').notNull(),
+  quantity: integer('quantity').notNull(),
+  additionalAmount: integer('additional_amount').notNull().default(0),
+  paymentMethod: text('payment_method', { enum: fundingPaymentMethodEnum }).notNull(),
+  /** 결제 대기 만료. 토스 +15분, 무통장 +12시간. 지나면 재고 계산에서 빠지고 lazy로 expired 처리. */
+  holdExpiresAt: integer('hold_expires_at', { mode: 'timestamp' }).notNull(),
+  paidAt: integer('paid_at', { mode: 'timestamp' }),
+  supporterMessage: text('supporter_message'),
+  displayNamePublic: integer('display_name_public', { mode: 'boolean' }).notNull().default(false),
+  shippingName: text('shipping_name'),
+  shippingPhone: text('shipping_phone'),
+  shippingPostcode: text('shipping_postcode'),
+  shippingAddress1: text('shipping_address1'),
+  shippingAddress2: text('shipping_address2'),
+  shippingMemo: text('shipping_memo'),
+  fulfillmentStatus: text('fulfillment_status', { enum: fulfillmentStatusEnum }).notNull().default('none'),
+  trackingCompany: text('tracking_company'),
+  trackingNumber: text('tracking_number'),
+  entrySource: text('entry_source', { enum: fundingEntrySourceEnum }).notNull().default('online'),
+  /** 무통장 후원자의 셀프 취소 요청 시각. 운영자가 계좌 환불 후 orders를 refunded로 바꾼다. */
+  refundRequestedAt: integer('refund_requested_at', { mode: 'timestamp' }),
+  adminMemo: text('admin_memo'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const fundingPledgesRelations = relations(fundingPledges, ({ one }) => ({
+  order: one(orders, { fields: [fundingPledges.orderId], references: [orders.id] }),
+}));
+
+export type FundingPledge = typeof fundingPledges.$inferSelect;
+export type NewFundingPledge = typeof fundingPledges.$inferInsert;
 
 /**
  * 요청 제한 카운터. 서버리스는 인스턴스가 여러 개라 프로세스 메모리로는 제한이 새기

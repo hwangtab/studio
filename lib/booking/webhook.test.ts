@@ -1,6 +1,10 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
 jest.mock('./toss', () => ({ fetchPayment: jest.fn() }));
 jest.mock('./confirm', () => ({ confirmBookingPayment: jest.fn() }));
+jest.mock('../funding/confirm', () => ({
+  confirmFundingPledge: jest.fn().mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', projectSlug: 'demo' }),
+  syncFundingCancelledFromToss: jest.fn().mockResolvedValue(undefined),
+}));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 (confirm.test.ts·
 // cancel.test.ts와 동일 이유 — webhook.ts도 한 실행 안에서 getDb()를 여러 번 부른다:
 // webhookEvents insert → (CANCELED 분기라면) booking 선점 run → refunds insert·orders update가
@@ -25,6 +29,7 @@ import { processTossWebhook } from './webhook';
 import { findOrderByOrderNo } from './service';
 import { fetchPayment } from './toss';
 import { confirmBookingPayment } from './confirm';
+import { confirmFundingPledge } from '../funding/confirm';
 import { getDb } from '../../db/client';
 
 type MockDb = {
@@ -412,5 +417,19 @@ describe('processTossWebhook', () => {
     expect(result).toEqual({ status: 200 });
     expect(confirmBookingPayment).not.toHaveBeenCalled();
     expect(mockDb().batch).not.toHaveBeenCalled();
+  });
+
+  it('펀딩 주문의 DONE 웹훅은 confirmFundingPledge로 간다', async () => {
+    (fetchPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_f', orderId: 'FND-1', status: 'DONE', totalAmount: 5000 },
+    });
+    (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+      id: 'o', orderNo: 'FND-1', type: 'funding', status: 'pending', totalAmount: 5000, bookings: [], payments: [],
+    });
+    const { status } = await processTossWebhook({ data: { paymentKey: 'pk_f', status: 'DONE' } });
+    expect(status).toBe(200);
+    expect(confirmFundingPledge).toHaveBeenCalledWith({ orderNo: 'FND-1', paymentKey: 'pk_f', amount: 5000 });
+    expect(confirmBookingPayment).not.toHaveBeenCalled();
   });
 });

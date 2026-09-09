@@ -2,6 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, refunds, webhookEvents, type Order, type Payment } from '../../db/schema';
+import { confirmFundingPledge, syncFundingCancelledFromToss, type FundingConfirmOutcome } from '../funding/confirm';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { findOrderByOrderNo } from './service';
 import { fetchPayment, type TossPayment } from './toss';
@@ -144,8 +145,9 @@ const releaseEventKey = async (eventKey: string): Promise<void> => {
  * 일시성이라 재시도해야 한다. not_found·invalid_state·amount_mismatch는 몇 번을 다시 보내도
  * 같은 답이 나오는 영구 상태라 기록을 남긴 채 200으로 끝낸다.
  */
-const isTransientConfirmFailure = (code: Extract<ConfirmOutcome, { ok: false }>['code']): boolean =>
-  code === 'recording_failed' || code === 'toss_rejected';
+const isTransientConfirmFailure = (
+  code: Extract<ConfirmOutcome | FundingConfirmOutcome, { ok: false }>['code'],
+): boolean => code === 'recording_failed' || code === 'toss_rejected';
 
 /** unique 위반(PK 충돌 = 이미 처리한 이벤트)인지, 그 외 DB 장애인지를 가른다. */
 const isUniqueViolation = (error: unknown): boolean => {
@@ -200,7 +202,14 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
   try {
     if (payment.status === 'DONE') {
       // 승인 경로(success SSR)가 죽었을 때의 복구 — 금액은 토스 재조회값으로 검증된다.
-      const outcome = await confirmBookingPayment({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount });
+      // order.type을 알아야 분기하므로 여기서 조회한다 — READY 등 무관 상태 이벤트에는 이
+      // DB 읽기가 없어야 한다(예전 동작 유지, 브랜치 밖에서 매번 부르지 않는다).
+      const order = await findOrderByOrderNo(payment.orderId);
+      const orderType = order?.type ?? 'session';
+      const outcome =
+        orderType === 'funding'
+          ? await confirmFundingPledge({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount })
+          : await confirmBookingPayment({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount });
       if (!outcome.ok && isTransientConfirmFailure(outcome.code)) {
         console.error('[booking-webhook] 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
           eventKey,
@@ -210,7 +219,13 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         return { status: 500 };
       }
     } else if (payment.status === 'CANCELED' || payment.status === 'PARTIAL_CANCELED') {
-      await syncCancelledFromToss(payment);
+      const order = await findOrderByOrderNo(payment.orderId);
+      const orderType = order?.type ?? 'session';
+      if (orderType === 'funding') {
+        await syncFundingCancelledFromToss(payment);
+      } else {
+        await syncCancelledFromToss(payment);
+      }
     }
   } catch (error) {
     // DB 장애로 처리가 통째로 실패했다 — 기록만 남고 처리는 안 된 상태를 만들지 않는다.

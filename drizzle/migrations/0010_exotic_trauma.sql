@@ -1,0 +1,32 @@
+CREATE TABLE `funding_pledges` (
+	`id` text PRIMARY KEY NOT NULL,
+	`order_id` text NOT NULL,
+	`project_slug` text NOT NULL,
+	`reward_id` text NOT NULL,
+	`reward_title` text NOT NULL,
+	`unit_amount` integer NOT NULL,
+	`quantity` integer NOT NULL,
+	`additional_amount` integer DEFAULT 0 NOT NULL,
+	`payment_method` text NOT NULL,
+	`hold_expires_at` integer NOT NULL,
+	`paid_at` integer,
+	`supporter_message` text,
+	`display_name_public` integer DEFAULT false NOT NULL,
+	`shipping_name` text,
+	`shipping_phone` text,
+	`shipping_postcode` text,
+	`shipping_address1` text,
+	`shipping_address2` text,
+	`shipping_memo` text,
+	`fulfillment_status` text DEFAULT 'none' NOT NULL,
+	`tracking_company` text,
+	`tracking_number` text,
+	`entry_source` text DEFAULT 'online' NOT NULL,
+	`refund_requested_at` integer,
+	`admin_memo` text,
+	`created_at` integer DEFAULT (unixepoch()) NOT NULL,
+	`updated_at` integer DEFAULT (unixepoch()) NOT NULL,
+	FOREIGN KEY (`order_id`) REFERENCES `orders`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE UNIQUE INDEX `funding_pledges_order_id_unique` ON `funding_pledges` (`order_id`);

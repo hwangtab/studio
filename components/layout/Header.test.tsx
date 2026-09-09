@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, cleanup, within } from '@testing-library/react';
 
 /**
  * 헤더 모바일 메뉴가 라우트 변경 시 닫히는지.
@@ -107,5 +107,37 @@ describe('Header 모바일 메뉴', () => {
 
     expect(menuToggle()).toHaveAttribute('aria-expanded', 'false');
     expect(mobileNav()).toHaveAttribute('aria-hidden', 'true');
+  });
+
+  /**
+   * 펀딩 퍼널은 ko 전용(스펙 §8) — 다른 로케일 헤더에는 항목 자체가 없어야 한다.
+   * react-i18next는 t: (key) => key로 목킹돼 있어 실제 렌더 텍스트는 번역 라벨이
+   * 아니라 키('nav.funding')다. MobileNav는 항상 DOM에 마운트돼 있으므로(CSS 토글)
+   * 드롭다운을 열지 않아도 링크가 조회된다.
+   */
+  it('ko에서는 음원 발매 그룹에 펀딩 항목이 있고 en에서는 없다', () => {
+    renderHeader();
+    // 모바일 메뉴 → 음원 발매 그룹 아코디언을 열어야 항목이 DOM에 렌더된다
+    // (그룹 내용은 열림 상태에서만 mount되는 구조 — DropdownMenu도 동일).
+    act(() => {
+      menuToggle().click();
+    });
+    const nav = mobileNav() as HTMLElement;
+    act(() => {
+      within(nav).getByRole('button', { name: 'nav.groups.release' }).click();
+    });
+    expect(within(nav).getByRole('link', { name: 'nav.funding' })).toHaveAttribute('href', '/ko/funding');
+    cleanup();
+
+    render(
+      <Header
+        locale="en"
+        isScrolled={false}
+        hasHero={false}
+        isDarkMode={false}
+        toggleDarkMode={() => {}}
+      />,
+    );
+    expect(screen.queryByRole('link', { name: 'nav.funding' })).toBeNull();
   });
 });

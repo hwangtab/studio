@@ -46,6 +46,11 @@ export default function AdminIndexPage() {
                 예약 관리
               </Button>
             </Link>
+            <Link href="/admin/funding" passHref>
+              <Button fullWidth size="lg" variant="secondary">
+                펀딩 관리
+              </Button>
+            </Link>
             <Button variant="ghost" onClick={handleLogout}>
               로그아웃
             </Button>

@@ -30,6 +30,7 @@ const {
   getRouteLastmod,
   getCategoryLastmod,
 } = require('./lib/sitemap/routes');
+const { readFundingProjects } = require('./lib/sitemap/fundingMeta');
 
 // 라우트 단위 en 색인 개방 대상(단일 소스 lib/enIndexablePaths.json) — 이 경로의 en
 // 버전은 noindex 전면 제외에서 예외로 사이트맵에 등재된다(런타임 metadataUrls와 대칭).
@@ -92,7 +93,11 @@ module.exports = {
   priority: 0.7,
   // /admin·계약 서명 경로는 운영자·당사자 전용이라 색인 대상이 아니다(각 페이지에도 noindex).
   // /booking·/terms도 동일 — 예약 퍼널·약관 고지는 검색 노출 대상이 아니다.
-  exclude: ['/api/*', '/404', '/500', '/', '/*/privacy-policy', '/admin', '/admin/*', '/*/contracts/*', '/*/booking/*', '/*/terms'],
+  exclude: [
+    '/api/*', '/404', '/500', '/', '/*/privacy-policy', '/admin', '/admin/*', '/*/contracts/*', '/*/booking/*', '/*/terms',
+    // 펀딩 트랜잭셔널 경로 — noindex + Cache-Control: no-store 페이지라 사이트맵 등재 대상이 아니다.
+    '/*/funding/success', '/*/funding/fail', '/*/funding/deposit/*', '/*/funding/manage/*', '/*/funding/*/pledge', '/*/funding/terms',
+  ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
     // 따라서 명명된 봇 그룹에 allow:'/'만 두면 그 봇들은 /api/ disallow를 잃는다
@@ -106,7 +111,11 @@ module.exports = {
         allow: ['/', '/api/rss', '/api/og/'],
         // /admin·계약 서명 링크는 크롤 대상이 아니다(전자계약 운영·당사자 전용).
         // /ko/booking/은 예약 퍼널(결제 진행 중 상태 등)이라 크롤 대상이 아니다.
-        disallow: ['/api/', '/admin', '/ko/contracts/', '/en/contracts/', '/ko/booking/'],
+        disallow: [
+          '/api/', '/admin', '/ko/contracts/', '/en/contracts/', '/ko/booking/',
+          // 펀딩 트랜잭셔널 경로 — 결제 진행 중 상태 등이라 크롤 대상이 아니다.
+          '/ko/funding/success', '/ko/funding/fail', '/ko/funding/deposit/', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
+        ],
       };
       const NAMED_BOTS = [
         // Google (Google-Extended는 SGE/Gemini 학습용 분리 신호 — 정책 가시성 목적 명시)
@@ -193,6 +202,19 @@ module.exports = {
         });
       }
     }
+    // 펀딩 프로젝트 상세 페이지 — draft·hidden 프로젝트(예: 결제 스모크 테스트용)는 등재하지 않는다.
+    for (const project of readFundingProjects()) {
+      if (project.draft || project.hidden) continue;
+      const routePath = `/ko/funding/${project.slug}`;
+      results.push({
+        loc: routePath,
+        lastmod: getRouteLastmod(routePath, buildTimestamp),
+        changefreq: 'daily',
+        priority: 0.7,
+        alternateRefs: getAlternateRefs(routePath),
+      });
+    }
+
     return results;
   },
   transform: async (config, routePath) => {

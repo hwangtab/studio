@@ -111,6 +111,19 @@ describe('TossPaymentWidget', () => {
     expect(setAmount).toHaveBeenCalledWith({ currency: 'KRW', value: 250000 });
   });
 
+  it('successUrl/failUrl prop이 있으면 그대로 requestPayment에 싣는다', async () => {
+    render(<TossPaymentWidget {...PROPS} orderNo="FND-1" amount={5000} orderName="[펀딩] 데모 · 감사 메일"
+      successUrl="/ko/funding/success" failUrl="/ko/funding/fail?orderNo=FND-1" />);
+    await waitFor(() => expect(screen.getByRole('button', { name: '결제하기' })).toBeEnabled());
+
+    await userEvent.click(screen.getByRole('button', { name: '결제하기' }));
+
+    expect(requestPayment).toHaveBeenCalledWith(expect.objectContaining({
+      successUrl: `${window.location.origin}/ko/funding/success`,
+      failUrl: `${window.location.origin}/ko/funding/fail?orderNo=FND-1`,
+    }));
+  });
+
   it('사용자가 결제창을 닫아도 예외가 새어 나가지 않는다', async () => {
     requestPayment.mockRejectedValue(new Error('USER_CANCEL'));
 

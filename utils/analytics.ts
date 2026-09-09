@@ -28,7 +28,10 @@ export type LeadEventName =
  * 주요 이벤트로 지정하지 말 것 — 그러면 유일하게 신뢰 가능한 지표(카톡 리드)가
  * 다시 오염된다.
  */
-export type MicroEventName = 'micro_click_service' | 'micro_click_contact';
+// funding_pledge_start / funding_pledge_paid: 펀딩 신청 제출·확정 마이크로 전환.
+// 위 micro_ 계열과 동일 이유로 GA4 key event로 지정 금지 — 지정하면 유일하게
+// 신뢰 가능한 지표(카톡 리드)가 다시 희석된다.
+export type MicroEventName = 'micro_click_service' | 'micro_click_contact' | 'funding_pledge_start' | 'funding_pledge_paid';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
 
