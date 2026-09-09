@@ -133,6 +133,15 @@ describe('confirmBookingPayment', () => {
     });
   });
 
+  it.each(['CONFIG_ERROR', 'NETWORK_ERROR'])('%s는 주문을 failed로 마킹하지 않는다 — 승인 여부를 모르는 상태다', async (code) => {
+    // "토스가 거절했다"가 아니라 "물어보지도 못했다"이다. failed로 찍으면 실제로는 승인된
+    // 결제를 복구하러 오는 웹훅 DONE이 `status !== 'pending'`에 영구히 막힌다.
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue({ ok: false, code, message: '내부 사정' });
+    await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(mockDb().run).not.toHaveBeenCalled();
+  });
+
   // ALREADY_PROCESSED_PAYMENT는 "실패"가 아니라 "우리 DB만 뒤처졌다"는 신호다. 웹훅 DONE 복구와
   // success 페이지 이중 새로고침이 여기로 온다 — failed로 마킹하면 돈이 들어온 주문이 실패로 확정된다.
   const alreadyProcessed = { ok: false, code: 'ALREADY_PROCESSED_PAYMENT', message: '이미 처리된 결제 입니다.' };

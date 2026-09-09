@@ -176,15 +176,62 @@ describe('confirmFundingPledge', () => {
     expect(o?.fundingPledge?.adminMemo).toContain('[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요');
   });
 
-  it('웹훅 경로여도 failed·refunded 주문은 거부한다', async () => {
+  it('웹훅 경로여도 refunded 주문은 거부한다 — 이미 결론이 난 주문', async () => {
     const c = await createFundingPledge(payloadFor({ customerEmail: 'f@example.com', customerPhone: '010-6' }), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
-    for (const status of ['failed', 'refunded', 'partially_refunded']) {
+    for (const status of ['refunded', 'partially_refunded']) {
       await client.execute({ sql: 'UPDATE orders SET status = ? WHERE order_no = ?', args: [status, c.orderNo] });
       expect(await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true }))
         .toMatchObject({ ok: false, code: 'invalid_state' });
     }
     expect(mockConfirm).not.toHaveBeenCalled();
+  });
+
+  it('네트워크 오류는 failed로 확정하지 않고 pending으로 남긴다', async () => {
+    // NETWORK_ERROR·CONFIG_ERROR는 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다.
+    // 여기서 failed를 찍으면 실제로는 승인된 결제를 뒤늦게 복구하러 오는 웹훅이 막힌다.
+    for (const code of ['NETWORK_ERROR', 'CONFIG_ERROR']) {
+      const c = await createFundingPledge(payloadFor({ customerEmail: `${code}@example.com`, customerPhone: '010-7' }), PROJECT, reward('mail'), NOW);
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce({ ok: false, code, message: '내부 사정' });
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_net', amount: 5000 });
+      expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+      // 내부 오류의 원문은 고객에게 보이지 않는다.
+      expect((r as { message: string }).message).not.toContain('내부 사정');
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('pending');
+    }
+  });
+
+  it('네트워크 오류로 failed가 된 옛 주문도 웹훅이 paid로 복구한다 — SSR 경로는 거부', async () => {
+    const c = await createFundingPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await client.execute({ sql: `UPDATE orders SET status = 'failed' WHERE order_no = ?`, args: [c.orderNo] });
+
+    // SSR 경로는 그대로 거부한다(토스를 부르지도 않는다).
+    expect(await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }))
+      .toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(mockConfirm).not.toHaveBeenCalled();
+
+    mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+    expect((await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true })).ok).toBe(true);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    expect(o?.status).toBe('paid');
+    expect(o?.payments[0].paymentKey).toBe('pk_1');
+    expect(o?.fundingPledge?.adminMemo).toContain('failed 처리 후 승인 확인');
+  });
+
+  it('웹훅 경로의 invalid_state·amount_mismatch는 대사 단서를 로그로 남긴다', async () => {
+    const c = await createFundingPledge(payloadFor({ customerEmail: 'log@example.com', customerPhone: '010-5' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    await client.execute({ sql: `UPDATE orders SET status = 'refunded' WHERE order_no = ?`, args: [c.orderNo] });
+    await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true });
+    expect(spy.mock.calls.some(([m]) => String(m).includes('확정 불가 상태'))).toBe(true);
+
+    await client.execute({ sql: `UPDATE orders SET status = 'pending' WHERE order_no = ?`, args: [c.orderNo] });
+    await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 4999 }, { trustedByWebhook: true });
+    expect(spy.mock.calls.some(([m]) => String(m).includes('금액 불일치'))).toBe(true);
   });
 
   it('예약 주문번호로 오면 not_found', async () => {

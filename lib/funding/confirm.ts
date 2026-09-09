@@ -39,11 +39,27 @@ export const confirmFundingPledge = async (
   // 오는 것이 이 사고의 실제 형태다. 여기서 거부하면(비-transient) 200으로 끝나 승인된 돈이
   // 영구 미기록으로 남는다. batch UPDATE도 pending·expired 둘 다 커버한다.
   // failed·refunded·partially_refunded는 웹훅이라도 거부한다 — 이미 다른 결론이 난 주문이다.
-  const acceptableStatuses = options.trustedByWebhook ? ['pending', 'expired'] : ['pending'];
-  if (!acceptableStatuses.includes(order.status)) return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' };
+  // failed도 웹훅 경로에서는 받는다 — 네트워크·설정 오류로 failed가 찍힌 주문이라도 웹훅은
+  // fetchPayment로 DONE + 금액을 재검증한 뒤에 온다. 거부하면 승인된 돈이 영구 미기록으로 남는다.
+  const acceptableStatuses = options.trustedByWebhook ? ['pending', 'expired', 'failed'] : ['pending'];
+  if (!acceptableStatuses.includes(order.status)) {
+    if (options.trustedByWebhook) {
+      console.error('[funding-confirm] 웹훅이 확정 불가 상태의 주문을 만남 — 수동 대사 필요', {
+        orderNo: order.orderNo, paymentKey: input.paymentKey, status: order.status,
+      });
+    }
+    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' };
+  }
 
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다(위변조 차단).
-  if (input.amount !== order.totalAmount) return { ok: false, code: 'amount_mismatch', message: '결제 금액이 후원 내용과 일치하지 않습니다.' };
+  if (input.amount !== order.totalAmount) {
+    if (options.trustedByWebhook) {
+      console.error('[funding-confirm] 웹훅 금액 불일치 — 수동 대사 필요', {
+        orderNo: order.orderNo, paymentKey: input.paymentKey, status: order.status,
+      });
+    }
+    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 후원 내용과 일치하지 않습니다.' };
+  }
 
   // 홀드 만료도 스스로 적용한다 — expireStalePledges는 lazy 호출이라 만료 후에도 pending으로
   // 남아 있을 수 있다. 만료 확인 없이 승인을 부르면 이미 다른 후원자가 같은 재고를 가져간
@@ -72,9 +88,16 @@ export const confirmFundingPledge = async (
     }
     approved = refetched.payment;
   } else {
-    await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
+    // CONFIG_ERROR·NETWORK_ERROR는 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다. 실제로는
+    // 승인이 성사됐을 수 있으므로 failed로 확정하면 안 된다 — failed로 찍으면 뒤늦게 오는 웹훅
+    // DONE 복구가 막힌다. pending으로 두면 홀드 만료 또는 웹훅이 결론을 낸다.
     const internal = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
-    console.error('[funding-confirm] 토스 승인 거부', { orderNo: order.orderNo, tossCode: toss.code, tossMessage: toss.message });
+    if (!internal) {
+      await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
+    }
+    console.error('[funding-confirm] 토스 승인 거부', {
+      orderNo: order.orderNo, tossCode: toss.code, tossMessage: toss.message, markedFailed: !internal,
+    });
     return { ok: false, code: 'toss_rejected', message: internal ? GENERIC : toss.message };
   }
 
@@ -94,7 +117,7 @@ export const confirmFundingPledge = async (
       // 'expired'까지 대상에 넣는다 — 토스 승인 왕복(수 초) 동안 expireStalePledges나 다른
       // 요청의 자기 홀드 해제가 이 주문을 expired로 바꿀 수 있는데, 그때 UPDATE가 0행이면
       // 돈만 받고 pending도 paid도 아닌 주문이 남는다.
-      db.update(orders).set({ status: 'paid', updatedAt: now }).where(and(eq(orders.id, order.id), inArray(orders.status, ['pending', 'expired']))),
+      db.update(orders).set({ status: 'paid', updatedAt: now }).where(and(eq(orders.id, order.id), inArray(orders.status, ['pending', 'expired', 'failed']))),
       db.update(fundingPledges).set({ paidAt: now, updatedAt: now }).where(eq(fundingPledges.orderId, order.id)),
     ]);
     // 그래도 0행이면 paid가 아닌 제3의 상태(failed·refunded 등)로 이미 옮겨간 것 — 결제는
@@ -104,8 +127,10 @@ export const confirmFundingPledge = async (
     // paid가 아닌" 상태로 남고, 드러나는 경로는 관리자 목록의 mismatch 배지뿐이다.
     // 만료된 주문을 웹훅이 되살렸다면 재고를 초과했을 수 있다 — 운영자가 관리자 화면에서
     // 볼 수 있도록 흔적을 남긴다. 로그만으로는 아무도 보지 않는다.
-    if (order.status === 'expired') {
-      const note = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요';
+    if (order.status === 'expired' || order.status === 'failed') {
+      const note = order.status === 'expired'
+        ? '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요'
+        : '[웹훅] failed 처리 후 승인 확인 — 재고 초과 가능, 확인 필요';
       console.error('[funding-confirm] 홀드 만료 주문을 웹훅이 확정 — 재고 확인 필요', { orderNo: order.orderNo, paymentKey: approved.paymentKey });
       try {
         await db.run(

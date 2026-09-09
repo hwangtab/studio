@@ -246,10 +246,15 @@ export const confirmBookingPayment = async (input: {
     }
     approved = payment;
   } else {
-    await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
     // CONFIG_ERROR·NETWORK_ERROR는 우리 쪽 설정·네트워크 문제라 원문을 그대로 보이면
     // 내부 구성(비밀키 누락 등)이 새어나간다 — 고객에겐 일반 문구, 원문은 서버 로그에만.
     const isInternalError = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
+    // 그리고 이 둘은 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다 — 실제로는 승인이
+    // 성사됐을 수 있으므로 failed로 확정하지 않는다. failed로 찍으면 뒤늦게 오는 웹훅 DONE
+    // 복구가 `status !== 'pending'`에 영구히 막힌다. pending으로 두면 만료 또는 웹훅이 끝낸다.
+    if (!isInternalError) {
+      await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
+    }
     // 토스가 거부한 모든 승인은 코드와 함께 남긴다 — 고객 화면엔 메시지만 나가서, 로그가 없으면
     // '업체 사정으로 결제가 중지되었습니다' 같은 문구만 보고 원인(계약 미개통·한도·카드사 거절)을
     // 추적할 길이 없다(2026-09-07 라이브 첫 결제에서 실제로 겪음).
