@@ -71,6 +71,13 @@
       "when": 1788917342107,
       "tag": "0009_graceful_captain_cross",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "6",
+      "when": 1788928101247,
+      "tag": "0010_exotic_trauma",
+      "breakpoints": true
     }
   ]
 }
