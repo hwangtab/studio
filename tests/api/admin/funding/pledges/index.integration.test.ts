@@ -21,7 +21,7 @@ jest.mock('../../../../../lib/funding/projects', () => ({
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';
 // eslint-disable-next-line import/first
-import handler from './index';
+import handler from '../../../../../pages/api/admin/funding/pledges/index';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../../../lib/funding/projects';
 

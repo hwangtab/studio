@@ -3,7 +3,7 @@ jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn(
 jest.mock('../../../lib/funding/service', () => ({ findFundingOrderByOrderNo: jest.fn() }));
 jest.mock('../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from './cancel';
+import handler from '../../../pages/api/funding/cancel';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { cancelFundingPledge } from '../../../lib/funding/cancel';
 

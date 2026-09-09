@@ -11,7 +11,7 @@ jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../../lib/funding/projects', () => ({ ...jest.requireActual('../../../../lib/funding/projects'), getFundingProject: () => PROJECT }));
 
 // eslint-disable-next-line import/first
-import { getServerSideProps } from './pledge';
+import { getServerSideProps } from '../../../../pages/[locale]/funding/[slug]/pledge';
 // eslint-disable-next-line import/first
 import { createFundingPledge } from '../../../../lib/funding/service';
 // eslint-disable-next-line import/first

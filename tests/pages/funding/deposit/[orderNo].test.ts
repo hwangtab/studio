@@ -8,10 +8,9 @@ import * as schema from '../../../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../../../../lib/funding/projects', () => ({ ...jest.requireActual('../../../../lib/funding/projects'), getFundingProject: () => PROJECT }));
 
 // eslint-disable-next-line import/first
-import { getServerSideProps } from './[orderNo]';
+import { getServerSideProps } from '../../../../pages/[locale]/funding/deposit/[orderNo]';
 // eslint-disable-next-line import/first
 import { createFundingPledge, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
 // eslint-disable-next-line import/first
@@ -32,13 +31,6 @@ goalAmount: 100000
 startAt: 2026-10-01T10:00:00+09:00
 endAt: 2026-10-31T23:59:59+09:00
 rewards:
-  - id: cd
-    title: CD
-    description: d
-    amount: 30000
-    totalQuantity: 1
-    requiresShipping: true
-    estimatedDelivery: 2026-12
   - id: mail
     title: 감사 메일
     description: d
@@ -49,18 +41,13 @@ rewards:
 `, 'demo');
 
 const payloadFor = (over: Partial<CreatePledgePayload> = {}): CreatePledgePayload => ({
-  projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'toss',
+  projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'bank_transfer',
   customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@example.com',
   displayNamePublic: true, termsAgreed: true, ...over,
 });
 const reward = (id: string) => PROJECT.rewards.find((r) => r.id === id)!;
 
 const resStub = () => ({ setHeader: jest.fn() }) as unknown as import('http').ServerResponse;
-
-const markPaid = async (orderNo: string) => {
-  const o = await findFundingOrderByOrderNo(orderNo);
-  await client.execute({ sql: "UPDATE orders SET status='paid' WHERE id=?", args: [o!.id] });
-};
 
 beforeAll(async () => {
   client = createClient({ url: ':memory:' });
@@ -80,7 +67,7 @@ beforeEach(async () => {
 afterEach(() => jest.restoreAllMocks());
 afterAll(() => client.close());
 
-describe('funding manage getServerSideProps', () => {
+describe('funding deposit getServerSideProps', () => {
   it('토큰 없음 → notFound', async () => {
     const res = resStub();
     const result = await getServerSideProps({
@@ -92,7 +79,6 @@ describe('funding manage getServerSideProps', () => {
 
   it('토큰 불일치 → notFound', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
-    await markPaid(c.orderNo);
     const res = resStub();
     const result = await getServerSideProps({
       params: { locale: 'ko', orderNo: c.orderNo }, query: { token: 'wrong-token' }, res,
@@ -108,6 +94,15 @@ describe('funding manage getServerSideProps', () => {
     expect(result).toEqual({ notFound: true });
   });
 
+  it('토스 주문(무통장이 아님) → notFound', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'toss' }), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const res = resStub();
+    const result = await getServerSideProps({
+      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res,
+    } as never);
+    expect(result).toEqual({ notFound: true });
+  });
+
   it('비-ko locale → /ko/funding redirect', async () => {
     const res = resStub();
     const result = await getServerSideProps({
@@ -116,9 +111,8 @@ describe('funding manage getServerSideProps', () => {
     expect(result).toEqual({ redirect: { destination: '/ko/funding', permanent: false } });
   });
 
-  it('정상 토큰 → props에 manageToken은 없고 쿼리 token만 echo, 상태·금액이 맞다', async () => {
+  it('정상 토큰(무통장) → props에 manageToken은 없고 쿼리 token만 echo, 상태·금액이 맞다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
-    await markPaid(c.orderNo);
     const res = resStub();
     const result = await getServerSideProps({
       params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res,
@@ -126,11 +120,11 @@ describe('funding manage getServerSideProps', () => {
     if (!('props' in result)) throw new Error('props 기대');
     const props = await result.props;
     expect(props).not.toHaveProperty('manageToken');
-    expect(props.token).toBe(c.manageToken);
     expect(props.orderNo).toBe(c.orderNo);
-    expect(props.status).toBe('paid');
+    expect(props.status).toBe('pending');
     expect(props.totalAmount).toBe(5000);
-    expect(props.projectTitle).toBe('데모');
+    expect(props.manageUrl).toBe(`/ko/funding/manage/${c.orderNo}?token=${c.manageToken}`);
+    expect(await findFundingOrderByOrderNo(c.orderNo)).toBeTruthy();
     expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', expect.stringContaining('no-store'));
   });
 });

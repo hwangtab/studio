@@ -1,4 +1,4 @@
-import { FUNDING_TERMS_SECTIONS } from './terms';
+import { FUNDING_TERMS_SECTIONS } from '../../../pages/[locale]/funding/terms';
 
 it('스펙 §9의 16개 조항이 모두 있고 핵심 문구를 담는다', () => {
   expect(FUNDING_TERMS_SECTIONS).toHaveLength(16);

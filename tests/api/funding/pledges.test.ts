@@ -10,7 +10,7 @@ jest.mock('../../../lib/funding/projects', () => ({
   getFundingProject: jest.fn(),
 }));
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from './pledges';
+import handler from '../../../pages/api/funding/pledges';
 import { createFundingPledge } from '../../../lib/funding/service';
 import { getFundingProject, parseFundingProject } from '../../../lib/funding/projects';
 

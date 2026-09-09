@@ -7,7 +7,7 @@ jest.mock('../../../../lib/funding/projects', () => ({
   getFundingProject: jest.fn(),
 }));
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from './status';
+import handler from '../../../../pages/api/funding/[slug]/status';
 import { aggregateProjectStatus, expireStalePledges } from '../../../../lib/funding/service';
 import { getFundingProject, parseFundingProject } from '../../../../lib/funding/projects';
 

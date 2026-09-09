@@ -12,7 +12,7 @@ jest.mock('../../../../../db/client', () => ({
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-import handler from './[id]';
+import handler from '../../../../../pages/api/admin/funding/pledges/[id]';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
