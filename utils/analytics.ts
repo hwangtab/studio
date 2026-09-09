@@ -13,10 +13,7 @@ export type LeadEventName =
   // 폼 funnel 분석용 — 방문자가 어느 단계에서 이탈하는지 추적.
   | 'lead_form_start'        // 첫 필드 입력 시작
   | 'lead_form_field_error'  // 필드 검증 실패 (어느 필드에서 막히는지)
-  | 'lead_form_abandon'      // 폼 시작했으나 성공 전 페이지 이탈
-  // 온라인 예약/주문 진입 — 카카오 상담 없이 바로 결제 퍼널로 들어가는 가장 강한 의도 신호.
-  // pricing·mixing-mastering의 PricingCard 보조 CTA(`/ko/booking/*`)가 발화한다.
-  | 'lead_click_booking_entry';
+  | 'lead_form_abandon';      // 폼 시작했으나 성공 전 페이지 이탈
 
 /**
  * 마이크로 전환 — 리드가 아니다.
@@ -34,7 +31,18 @@ export type LeadEventName =
 // funding_pledge_start / funding_pledge_paid: 펀딩 신청 제출·확정 마이크로 전환.
 // 위 micro_ 계열과 동일 이유로 GA4 key event로 지정 금지 — 지정하면 유일하게
 // 신뢰 가능한 지표(카톡 리드)가 다시 희석된다.
-export type MicroEventName = 'micro_click_service' | 'micro_click_contact' | 'funding_pledge_start' | 'funding_pledge_paid';
+// micro_click_booking_entry: 온라인 예약/주문 페이지(`/ko/booking/*`)로의 "이동" —
+// 결제 확정이 아니다. 카카오 상담 없이 결제 퍼널로 바로 들어가는 신호이긴 하나
+// 리드는 아니므로(진짜 전환은 결제 확정) micro_ 접두사로 남긴다. 이전 이름
+// lead_click_booking_entry는 `lead_` 접두사 때문에 GA4 key event 지정 시
+// lead_* 패밀리와 함께 체크될 위험이 있었다 — micro_click_contact와 같은 이유.
+// pricing·mixing-mastering의 PricingCard 보조 CTA가 발화한다.
+export type MicroEventName =
+  | 'micro_click_service'
+  | 'micro_click_contact'
+  | 'micro_click_booking_entry'
+  | 'funding_pledge_start'
+  | 'funding_pledge_paid';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
 

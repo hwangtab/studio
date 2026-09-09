@@ -285,7 +285,10 @@ describe('processTossWebhook', () => {
     expect(db.delete).toHaveBeenCalled();
   });
 
-  it('재조회 응답에 cancels가 없어 cancelled 합계가 0이면 orders 상태를 그대로 유지한다 (partially_refunded로 오기록하지 않는다)', async () => {
+  // M-2: 취소 합계 0은 "반영할 취소가 없다"는 뜻이다. 예전엔 booking을 cancelled로 선점한
+  // 뒤 0원 환불 행을 남겨, 실제로 취소되지 않은 예약을 취소된 것으로 만들었다.
+  // lib/funding/confirm.ts의 syncFundingCancelledFromToss와 같은 방어로 선점 전에 물러난다.
+  it('재조회 응답에 cancels가 없어 취소 합계가 0이면 선점도 기록도 하지 않고 물러난다', async () => {
     const cancelledTossResult = {
       ok: true,
       payment: { paymentKey: 'pk1', orderId: 'SNB-1', status: 'CANCELED', totalAmount: 275000 }, // cancels 필드 자체가 없음
@@ -298,11 +301,15 @@ describe('processTossWebhook', () => {
 
     expect(result).toEqual({ status: 200 });
     const db = mockDb();
-    expect(db.batch).toHaveBeenCalled();
-    const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '토스 외부 취소 동기화');
-    expect(refundInsert).toMatchObject({ amount: 0 });
-    const orderUpdate = setCallsOf(db).find((c) => 'status' in c);
-    expect(orderUpdate).toMatchObject({ status: 'paid' }); // 기존 상태(paid) 유지 — partially_refunded 아님
+    expect(db.run).not.toHaveBeenCalled(); // bookings 선점 UPDATE 자체가 없다
+    expect(db.batch).not.toHaveBeenCalled();
+    // webhookEvents INSERT 하나뿐 — refunds 행은 만들지 않는다.
+    expect(insertValuesCallsOf(db).find((c) => c.reason === '토스 외부 취소 동기화')).toBeUndefined();
+    expect(setCallsOf(db).find((c) => 'status' in c)).toBeUndefined();
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      '[booking-webhook] CANCELED 동기화 스킵 — 취소 합계 0(cancels 부재)',
+      expect.objectContaining({ orderNo: 'SNB-1' }),
+    );
   });
 
   it('재조회(fetchPayment) 네트워크 실패는 키를 남기지 않고 500을 반환한다 (토스가 재시도하도록)', async () => {

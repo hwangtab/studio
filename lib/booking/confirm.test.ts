@@ -1,6 +1,6 @@
 // PENDING_HOLD_SECONDS도 함께 노출한다 — confirm.ts가 선점 만료를 스스로 판정할 때 쓴다.
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn(), PENDING_HOLD_SECONDS: 900 }));
-jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
+jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn(), cancelPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
 jest.mock('./email', () => ({
   sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null),
@@ -24,7 +24,7 @@ jest.mock('../../db/client', () => {
 
 import { confirmBookingPayment } from './confirm';
 import { findOrderByOrderNo } from './service';
-import { confirmPayment, fetchPayment } from './toss';
+import { cancelPayment, confirmPayment, fetchPayment } from './toss';
 import { createBookingEvent } from './gcal';
 import { sendBookingConfirmedEmails } from './email';
 import { getDb } from '../../db/client';
@@ -52,7 +52,9 @@ const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
     : [];
 
 const order = (over: object = {}) => ({
-  id: 'o1', orderNo: 'SNB-1', status: 'pending', totalAmount: 275000,
+  // type은 실제 행에 항상 있다(orders.type NOT NULL DEFAULT 'session') — 선점 만료 검사가
+  // 세션에만 적용되므로 픽스처도 그대로 갖춰야 한다.
+  id: 'o1', orderNo: 'SNB-1', status: 'pending', type: 'session', totalAmount: 275000,
   // 선점 만료 판정의 기준 — 기본값은 "방금 만든 주문"이라 만료 검사에 걸리지 않는다.
   createdAt: new Date(),
   customerName: '김보컬', customerPhone: '010-1234-5678', customerEmail: 'a@b.c',
@@ -214,6 +216,22 @@ describe('confirmBookingPayment', () => {
       expect(confirmPayment).toHaveBeenCalled();
     });
 
+    // H-1/H-2: 만료 검사는 슬롯을 지키는 장치라 슬롯이 없는 믹싱에는 지킬 대상이 없다. 오히려
+    // 기록 실패한 승인을 되살리는 웹훅 DONE 복구가 900초 뒤에 오면 여기서 막혀 돈만 들어온
+    // 주문으로 남는다 — 믹싱은 통과시키고, 진짜로 만료된 건 승인 후 orders 0행으로 잡는다.
+    it('믹싱 주문은 900초가 지나도 만료 검사에 걸리지 않는다 (웹훅 DONE 복구 경로 보호)', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue({
+        ...order({ type: 'mixing', totalAmount: 220000, bookings: [], createdAt: new Date(Date.now() - 901 * 1000) }),
+        workOrders: [{ id: 'w1', status: 'pending', songCount: 1, vocalTuning: false, customerNote: null, serviceType: 'mixing' }],
+      });
+      (confirmPayment as jest.Mock).mockResolvedValue({
+        ok: true, payment: { paymentKey: 'pk', orderId: 'SNB-1', status: 'DONE', totalAmount: 220000 },
+      });
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 220000 });
+      expect(r).toMatchObject({ ok: true, orderType: 'mixing' });
+      expect(confirmPayment).toHaveBeenCalled();
+    });
+
     it('이미 paid인 주문은 만료 검사보다 먼저 멱등 성공으로 답한다 (뒤늦은 새로고침이 깨지지 않는다)', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', createdAt: new Date(Date.now() - 86400 * 1000) }));
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
@@ -296,6 +314,86 @@ describe('confirmBookingPayment', () => {
       '[booking-confirm] bookings 없는 주문 — 후처리 생략',
       expect.objectContaining({ orderNo: 'SNB-1' }),
     );
+  });
+
+  // C-1: 승인 왕복 사이에 주문이 pending을 벗어나면 batch의 orders UPDATE가 0행이 된다.
+  // 돈만 들어오고 주문은 만료된 상태를 남기지 않도록 전액을 즉시 자동 취소한다.
+  describe('승인 후 orders 전이 실패 (만료된 주문의 지연 승인)', () => {
+    /** batch 결과: [payments INSERT, orders UPDATE, 하위 테이블 UPDATE] — 인덱스 1이 orders. */
+    const batchResult = (orderRows: number, childRows = 1) => [
+      { rowsAffected: 1 }, { rowsAffected: orderRows }, { rowsAffected: childRows },
+    ];
+
+    it('orders 전이가 0행이면 전액 자동 취소하고 invalid_state를 돌려준다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      const db = mockDb();
+      db.batch.mockResolvedValueOnce(batchResult(0));
+      db.query.payments.findFirst.mockResolvedValueOnce({ id: 'p1', paymentKey: 'pk' });
+      (cancelPayment as jest.Mock).mockResolvedValue({
+        ok: true, payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'ck1', cancelAmount: 275000 }] },
+      });
+
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+
+      expect(r).toEqual({
+        ok: false, code: 'invalid_state',
+        message: '주문이 만료된 뒤 결제가 승인되어 자동으로 취소되었습니다. 결제 금액은 취소 처리되었으니 다시 주문해 주세요.',
+      });
+      // 멱등키는 cancel.ts와 같은 규약 — 웹훅 재도착이 같은 키로 replay되어 돈이 두 번 나가지 않는다.
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({
+        cancelAmount: 275000, idempotencyKey: 'refund:SNB-1:275000',
+      }));
+      const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '주문 만료 후 승인 — 자동 전액 취소');
+      expect(refundInsert).toMatchObject({
+        paymentId: 'p1', amount: 275000, requestedBy: 'admin', status: 'done', tossTransactionKey: 'ck1',
+      });
+    });
+
+    it('자동 취소가 실패하면 failed 환불 행을 남기고 recording_failed로 돌려준다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      const db = mockDb();
+      db.batch.mockResolvedValueOnce(batchResult(0));
+      db.query.payments.findFirst.mockResolvedValueOnce({ id: 'p1', paymentKey: 'pk' });
+      (cancelPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'FORBIDDEN_REQUEST', message: '취소 불가' });
+
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+
+      expect(r).toMatchObject({ ok: false, code: 'recording_failed' });
+      const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '주문 만료 후 승인 — 자동 전액 취소');
+      expect(refundInsert).toMatchObject({ status: 'failed', tossTransactionKey: null });
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[booking-confirm] 만료 주문 자동 전액 취소 실패 — 수동 대사 필요',
+        expect.objectContaining({ orderNo: 'SNB-1' }),
+      );
+    });
+
+    it('하위 테이블만 0행이고 orders가 1행이면 정상 성공이다 (멱등 재생) — 로그만 남긴다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      mockDb().batch.mockResolvedValueOnce(batchResult(1, 0));
+
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+
+      expect(r).toMatchObject({ ok: true });
+      expect(cancelPayment).not.toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[booking-confirm] 하위 테이블 전이 0행 — orders는 전이됨(멱등 재생 등)',
+        expect.objectContaining({ orderNo: 'SNB-1', table: 'bookings' }),
+      );
+    });
+
+    it('rowsAffected를 읽을 수 없는 batch 응답은 정상으로 흘려보낸다 (없는 실패를 지어내 취소하지 않는다)', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      mockDb().batch.mockResolvedValueOnce([]);
+
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+
+      expect(r).toMatchObject({ ok: true });
+      expect(cancelPayment).not.toHaveBeenCalled();
+    });
   });
 
   // 계획서 §4: 믹싱은 bookings 대신 work_orders pending→received로 전이하고, 캘린더 없이

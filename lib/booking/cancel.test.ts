@@ -278,6 +278,58 @@ describe('cancelBookingWithRefund', () => {
     });
   });
 
+  // H-3: 부분환불 이력이 있는 주문에 셀프 취소가 다시 들어오면 computeRefund는 **총액** 기준
+  // 티어 금액을 그대로 돌려준다. 잔액으로 캡하지 않으면 남은 돈보다 큰 취소를 토스에 요청한다.
+  describe('부분환불된 주문의 재취소 — 잔액 상한 (H-3)', () => {
+    /** 총액 275,000 중 200,000이 이미 done으로 환불된 주문. 잔액 75,000. */
+    const partiallyRefundedOrder = (over: Record<string, unknown> = {}) =>
+      order({
+        status: 'partially_refunded',
+        payments: [{
+          id: 'p1', paymentKey: 'pk',
+          refunds: [
+            { id: 'r1', amount: 200000, status: 'done' },
+            { id: 'r2', amount: 50000, status: 'failed' }, // 실패 이력은 잔액 계산에서 빠진다
+          ],
+        }],
+        ...over,
+      });
+
+    it('고객 셀프 취소액이 잔액을 넘으면 잔액으로 깎아서 환불한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(partiallyRefundedOrder());
+      (cancelPayment as jest.Mock).mockResolvedValue({
+        ok: true, payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'ck2', cancelAmount: 75000 }] },
+      });
+      // 3일 전 취소 = 100% 티어라 계산액은 275,000이지만 잔액은 75,000뿐이다.
+      const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+      expect(r).toEqual({ ok: true, refundAmount: 75000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({
+        cancelAmount: 75000, idempotencyKey: 'refund:SNB-1:75000',
+      }));
+      // 잔액을 전부 돌려줬으니 결과는 전액 환불이다.
+      expect(setCallsOf(mockDb()).find((c) => 'status' in c)).toMatchObject({ status: 'refunded' });
+    });
+
+    it('잔액이 0이면 토스를 부르지 않고 invalid_state로 거부한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        partiallyRefundedOrder({ payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ id: 'r1', amount: 275000, status: 'done' }] }] }),
+      );
+      const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '이미 전액 환불된 주문입니다.' });
+      expect(cancelPayment).not.toHaveBeenCalled();
+      expect(mockDb().run).not.toHaveBeenCalled(); // 선점도 하지 않는다
+    });
+
+    it('관리자 overrideAmount 상한도 총액이 아니라 잔액이다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(partiallyRefundedOrder());
+      const r = await cancelBookingWithRefund({
+        orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 100000, now: NOW,
+      });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+      expect(cancelPayment).not.toHaveBeenCalled();
+    });
+  });
+
   it('gcal 삭제 실패 시 gcalError 기록이 호출되고 취소 결과는 성공으로 유지된다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
@@ -362,6 +414,56 @@ describe('cancelBookingWithRefund', () => {
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 220000, now: NOW,
       });
       expect(r).toEqual({ ok: true, refundAmount: 220000 });
+    });
+
+    // H-4: 착수 후 부분환불로 마무리한 주문에 관리자가 잔액을 더 돌려주려는 경우. work_order는
+    // 이미 cancelled라 선점할 대상이 없다 — 선점을 건너뛰지 않으면 rowsAffected 0에 막혀
+    // 관리자가 잔액을 영영 환불하지 못한다.
+    it('cancelled + partially_refunded면 관리자 추가 환불을 잔액 상한으로 허용한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({
+          status: 'partially_refunded',
+          workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }],
+          payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ id: 'r1', amount: 120000, status: 'done' }] }],
+        }),
+      );
+      (cancelPayment as jest.Mock).mockResolvedValue({
+        ok: true, payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'ck2', cancelAmount: 100000 }] },
+      });
+      const db = mockDb();
+      const r = await cancelBookingWithRefund({
+        orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 추가 환불', overrideAmount: 100000, now: NOW,
+      });
+      expect(r).toEqual({ ok: true, refundAmount: 100000 });
+      // 이미 cancelled라 선점 UPDATE를 다시 걸지 않는다.
+      expect(db.run).not.toHaveBeenCalled();
+      expect(setCallsOf(db).find((c) => 'status' in c)).toMatchObject({ status: 'refunded' }); // 잔액 100,000을 다 환불
+    });
+
+    it('cancelled + partially_refunded라도 잔액을 넘는 추가 환불은 거부한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({
+          status: 'partially_refunded',
+          workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }],
+          payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ id: 'r1', amount: 120000, status: 'done' }] }],
+        }),
+      );
+      const r = await cancelBookingWithRefund({
+        orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 추가 환불', overrideAmount: 150000, now: NOW,
+      });
+      expect(r).toEqual({ ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' });
+      expect(cancelPayment).not.toHaveBeenCalled();
+    });
+
+    it('cancelled인데 주문이 paid면(부분환불 이력 없음) 종전대로 거부한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({ workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }] }),
+      );
+      const r = await cancelBookingWithRefund({
+        orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
+      });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(cancelPayment).not.toHaveBeenCalled();
     });
 
     it('이미 취소된 주문(work_orders.status=cancelled)은 invalid_state로 거부한다', async () => {

@@ -46,7 +46,7 @@ import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServ
 import { generateHowToSchema } from '../../utils/schema';
 import { createFadeInAnimation, createInViewEnterAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import { createTranslatedHowToSteps, createTranslatedQaItems } from '../../utils/translatedList';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import type { NextPageWithLayout } from '../../types';
 
 /** 믹싱 또는 마스터링을 스튜디오 놀이 직접 맡은 작업만 고른다.
@@ -287,7 +287,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                     secondaryCtaLabel: t('mixingMastering.cta.order', { defaultValue: '온라인 주문' }),
                     secondaryCtaHref: `/ko/booking/mixing-mastering?product=${offer.id}`,
                     onSecondaryCtaClick: () =>
-                      trackLeadEvent('lead_click_booking_entry', {
+                      trackMicroEvent('micro_click_booking_entry', {
                         locale,
                         component: 'MixingMasteringPage',
                         cta_id: `mixing_price_${offer.id}_booking`,
@@ -335,7 +335,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                     secondaryCtaLabel: t('mixingMastering.cta.order', { defaultValue: '온라인 주문' }),
                     secondaryCtaHref: `/ko/booking/mixing-mastering?product=${offer.id}`,
                     onSecondaryCtaClick: () =>
-                      trackLeadEvent('lead_click_booking_entry', {
+                      trackMicroEvent('micro_click_booking_entry', {
                         locale,
                         component: 'MixingMasteringPage',
                         cta_id: `mastering_price_${offer.id}_booking`,

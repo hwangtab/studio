@@ -83,6 +83,20 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
     paymentRow = order.payments[0];
   }
 
+  // 취소 합계를 선점보다 **먼저** 본다. 0이면(재조회 응답에 cancels가 없다) 반영할 취소가
+  // 없는 것이므로 아무것도 바꾸지 않고 물러난다 — 그대로 진행하면 booking·work_order를
+  // cancelled로 선점해 놓고 환불 0원 행만 남겨, 취소되지 않은 예약을 취소된 것으로 만든다.
+  // lib/funding/confirm.ts의 syncFundingCancelledFromToss와 같은 방어다.
+  const cancelled = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+  if (cancelled <= 0) {
+    console.error('[booking-webhook] CANCELED 동기화 스킵 — 취소 합계 0(cancels 부재)', {
+      orderNo: order.orderNo,
+      paymentKey: payment.paymentKey,
+      status: payment.status,
+    });
+    return;
+  }
+
   // 원자적 선점 — cancel.ts의 claim 패턴을 그대로 미러링한다. paymentKey:status가 멱등 키라
   // PARTIAL_CANCELED와 CANCELED는 서로 다른 이벤트로 취급되어 둘 다 webhookEvents INSERT를
   // 통과할 수 있다. 두 이벤트가 동시에 여기 도달하면 위 읽기 시점엔 둘 다 booking을
@@ -119,7 +133,6 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
     return;
   }
 
-  const cancelled = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
   const now = new Date();
   await db.batch([
     db.insert(refunds).values({

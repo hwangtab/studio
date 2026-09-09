@@ -1,7 +1,7 @@
 import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, orders, refunds, type Booking, type Order, type Payment, type WorkOrder } from '../../db/schema';
+import { bookings, orders, refunds, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
 import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
 import { deleteBookingEvent } from './gcal';
 import { computeRefund } from './refund-policy';
@@ -29,7 +29,7 @@ const GENERIC_TOSS_ERROR_MESSAGE = '취소 처리 중 오류가 발생했습니�
  * 두 번째가 replay된다. 부분환불 두 번을 같은 금액으로 쪼개 넣는 운영은 없고, 있다 해도
  * 이중 환불 사고보다 훨씬 가벼운 실패 방향이라 감수한다.
  */
-const refundIdempotencyKey = (orderNo: string, refundAmount: number): string =>
+export const refundIdempotencyKey = (orderNo: string, refundAmount: number): string =>
   `refund:${orderNo}:${refundAmount}`;
 
 const RECORDING_FAILED_MESSAGE =
@@ -37,6 +37,29 @@ const RECORDING_FAILED_MESSAGE =
 
 const MIXING_STARTED_MESSAGE =
   '작업이 시작된 주문은 온라인으로 취소할 수 없습니다. 010-4255-7893으로 문의해 주세요.';
+
+/** payments 각각의 refunds까지 물고 온 행 — findOrderByOrderNo가 이 형태로 돌려준다. */
+type PaymentWithRefunds = Payment & { refunds?: Refund[] };
+
+/**
+ * 아직 환불하지 않고 남은 금액.
+ *
+ * 이미 done으로 기록된 환불(부분환불·웹훅 대사 보정 포함)을 총액에서 뺀다. 이 값이 환불액의
+ * 상한이다 — 없으면 partially_refunded 주문에 고객이 다시 셀프 취소를 걸었을 때 computeRefund가
+ * 총액 기준 티어 금액을 그대로 돌려주고, 그 합이 결제액을 넘어 토스 취소가 거절되거나
+ * (잔액이 남아 있으면) 과다 환불로 나간다.
+ *
+ * refunds가 undefined인 행도 0으로 다룬다 — 관계 로딩 없이 만든 테스트 픽스처 방어.
+ */
+const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): number => {
+  const refunded = payments.reduce(
+    (sum, p) => sum + (p.refunds ?? []).filter((r) => r.status === 'done').reduce((s, r) => s + r.amount, 0),
+    0,
+  );
+  return Math.max(0, order.totalAmount - refunded);
+};
+
+const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
 
 export type CancelInput = {
   orderNo: string;
@@ -46,12 +69,16 @@ export type CancelInput = {
   now: Date;
 };
 
-/** 관리자 임의 환불액은 0원(당일 취소와 동형의 유효한 액션) 이상 총액 이하의 정수만 허용한다. */
-const validateOverrideAmount = (order: Order, input: CancelInput): string | null => {
+/**
+ * 관리자 임의 환불액은 0원(당일 취소와 동형의 유효한 액션) 이상 **잔액** 이하의 정수만 허용한다.
+ * 상한이 totalAmount가 아니라 remaining인 이유: 이미 일부를 환불한 주문에 총액을 다시 넣으면
+ * 토스 잔액을 넘어 거절되거나, 두 번째 결제가 남아 있는 경우 과다 환불이 된다.
+ */
+const validateOverrideAmount = (remaining: number, input: CancelInput): string | null => {
   if (
     input.requestedBy === 'admin' &&
     typeof input.overrideAmount === 'number' &&
-    (!Number.isInteger(input.overrideAmount) || input.overrideAmount < 0 || input.overrideAmount > order.totalAmount)
+    (!Number.isInteger(input.overrideAmount) || input.overrideAmount < 0 || input.overrideAmount > remaining)
   )
     return '환불 금액이 올바르지 않습니다.';
   return null;
@@ -71,8 +98,8 @@ const tossFailureMessage = (context: string, orderNo: string, code: string, mess
  * REFUND_TIERS)이고, 고객 셀프 취소는 이용 시작 전에만 가능하다.
  */
 const cancelSessionBooking = async (
-  order: Order & { bookings: Booking[] },
-  payment: Payment | undefined,
+  order: Order & { bookings: Booking[]; payments: PaymentWithRefunds[] },
+  payment: PaymentWithRefunds | undefined,
   input: CancelInput,
 ): Promise<CancelOutcome> => {
   const booking = order.bookings[0];
@@ -84,12 +111,19 @@ const cancelSessionBooking = async (
   if (input.requestedBy === 'customer' && booking.startAt.getTime() <= input.now.getTime())
     return { ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가합니다.' };
 
-  const overrideError = validateOverrideAmount(order, input);
+  const remaining = remainingRefundable(order, order.payments);
+  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
+
+  const overrideError = validateOverrideAmount(remaining, input);
   if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
 
-  const refundAmount = input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
-    ? input.overrideAmount
-    : computeRefund(order.totalAmount, booking.startAt, input.now).refundAmount;
+  // 잔액이 상한 — computeRefund는 총액 기준 티어라 부분환불 이력이 있으면 잔액을 넘을 수 있다.
+  const refundAmount = Math.min(
+    input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
+      ? input.overrideAmount
+      : computeRefund(order.totalAmount, booking.startAt, input.now).refundAmount,
+    remaining,
+  );
 
   const db = getDb();
 
@@ -146,7 +180,9 @@ const cancelSessionBooking = async (
     tossTransactionKey = toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null;
   }
 
-  const nextOrderStatus = refundAmount >= order.totalAmount ? 'refunded'
+  // 이번 환불까지 더해 총액에 도달했는지로 판정한다 — 이미 부분환불된 주문의 잔액을 마저
+  // 환불하면 refundAmount 자체는 총액에 못 미쳐도 결과는 전액 환불이다.
+  const nextOrderStatus = refundAmount >= remaining ? 'refunded'
     : refundAmount > 0 ? 'partially_refunded' : order.status;
 
   try {
@@ -214,13 +250,20 @@ const cancelSessionBooking = async (
  * 시간이 들어갔기 때문이다.
  */
 const cancelMixingOrder = async (
-  order: Order,
+  order: Order & { payments: PaymentWithRefunds[] },
   workOrder: WorkOrder | undefined,
-  payment: Payment | undefined,
+  payment: PaymentWithRefunds | undefined,
   input: CancelInput,
 ): Promise<CancelOutcome> => {
   if (!workOrder || !payment || !(order.status === 'paid' || order.status === 'partially_refunded'))
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+
+  // 관리자 추가 환불: 이미 취소 처리된 주문(work_order cancelled)에 부분환불만 나간 상태라면
+  // 잔액을 더 돌려줄 수 있어야 한다. 이 경우 선점할 대상이 없으므로(이미 cancelled) 아래
+  // claim UPDATE를 건너뛴다 — 그대로 두면 rowsAffected 0으로 "이미 취소된 주문"에 막혀
+  // 관리자가 잔액을 영영 환불하지 못한다.
+  const isAdditionalRefund =
+    input.requestedBy === 'admin' && workOrder.status === 'cancelled' && order.status === 'partially_refunded';
 
   if (input.requestedBy === 'customer') {
     if (workOrder.status === 'in_progress' || workOrder.status === 'delivered')
@@ -228,6 +271,7 @@ const cancelMixingOrder = async (
     if (workOrder.status !== 'received')
       return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
   } else if (
+    !isAdditionalRefund &&
     workOrder.status !== 'received' &&
     workOrder.status !== 'in_progress' &&
     workOrder.status !== 'delivered'
@@ -235,24 +279,32 @@ const cancelMixingOrder = async (
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
   }
 
-  const overrideError = validateOverrideAmount(order, input);
+  const remaining = remainingRefundable(order, order.payments);
+  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
+
+  const overrideError = validateOverrideAmount(remaining, input);
   if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
 
-  // 착수 전 취소는 전액, 관리자 임의 환불은 지정액 — 세션의 날짜별 티어 대신 이 상품군은
+  // 착수 전 취소는 전액(=잔액), 관리자 임의 환불은 지정액 — 세션의 날짜별 티어 대신 이 상품군은
   // "착수 여부" 하나로만 갈린다(MIXING_REFUND_POLICY_LINES).
-  const refundAmount = input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
-    ? input.overrideAmount
-    : order.totalAmount;
+  const refundAmount = Math.min(
+    input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
+      ? input.overrideAmount
+      : order.totalAmount,
+    remaining,
+  );
 
   const db = getDb();
 
   // 원자적 선점 — cancelSessionBooking과 같은 이유. 읽은 시점의 status로 조건을 걸어야
   // received에서 눌렀는데 그 사이 관리자가 착수 처리한 경합도 안전하게 걸러진다.
-  const claim = await db.run(
-    sql`UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = ${workOrder.status}`,
-  );
-  if (Number(claim.rowsAffected) === 0)
-    return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 주문입니다.' };
+  if (!isAdditionalRefund) {
+    const claim = await db.run(
+      sql`UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = ${workOrder.status}`,
+    );
+    if (Number(claim.rowsAffected) === 0)
+      return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 주문입니다.' };
+  }
 
   let tossTransactionKey: string | null = null;
 
@@ -265,15 +317,18 @@ const cancelMixingOrder = async (
     });
     if (!toss.ok) {
       // 토스 거절 — 선점을 원래 상태로 되돌린다(cancelSessionBooking과 동일 원칙).
-      try {
-        await db.run(
-          sql`UPDATE work_orders SET status = ${workOrder.status}, cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = 'cancelled'`,
-        );
-      } catch (revertError) {
-        console.error('[booking-cancel] 믹싱 선점 revert 실패 — 수동 복구 필요', {
-          orderNo: order.orderNo,
-          error: revertError,
-        });
+      // 추가 환불 경로는 선점하지 않았으므로 되돌릴 것도 없다.
+      if (!isAdditionalRefund) {
+        try {
+          await db.run(
+            sql`UPDATE work_orders SET status = ${workOrder.status}, cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = 'cancelled'`,
+          );
+        } catch (revertError) {
+          console.error('[booking-cancel] 믹싱 선점 revert 실패 — 수동 복구 필요', {
+            orderNo: order.orderNo,
+            error: revertError,
+          });
+        }
       }
       await db.insert(refunds).values({
         paymentId: payment.id, amount: refundAmount, reason: input.reason,
@@ -288,7 +343,8 @@ const cancelMixingOrder = async (
     tossTransactionKey = toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null;
   }
 
-  const nextOrderStatus = refundAmount >= order.totalAmount ? 'refunded'
+  // 세션과 같은 판정 — 잔액을 다 돌려주면 전액 환불이다.
+  const nextOrderStatus = refundAmount >= remaining ? 'refunded'
     : refundAmount > 0 ? 'partially_refunded' : order.status;
 
   try {

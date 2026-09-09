@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 
 import type { BookingService } from '../../lib/booking/products';
-import { trackLeadEvent } from '../../utils/analytics';
+import { trackMicroEvent } from '../../utils/analytics';
 
 interface BookingEntryButtonProps {
   service: BookingService;
@@ -23,7 +23,7 @@ const BookingEntryButton = ({ service, locale }: BookingEntryButtonProps) => {
       href={`/ko/booking/${service}`}
       prefetch={false}
       onClick={() =>
-        trackLeadEvent('lead_click_booking_entry', {
+        trackMicroEvent('micro_click_booking_entry', {
           locale,
           component: 'BookingEntryButton',
           cta_id: `${service}_booking_entry`,

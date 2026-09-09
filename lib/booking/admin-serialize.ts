@@ -4,6 +4,16 @@ import { getProduct } from './products';
 
 const iso = (date: Date | null | undefined): string | null => (date ? date.toISOString() : null);
 
+/**
+ * 이 주문에서 "그 결제"로 볼 행 — createdAt 최신.
+ *
+ * 목록과 상세가 같은 행을 골라야 한다. 예전엔 상세만 payments[0](관계 로딩 순서에 좌우되는
+ * 임의의 행)을 써서, payments가 2건 이상인 주문에서 목록의 paymentKey 접두사와 상세의
+ * 결제수단·영수증·환불 이력이 서로 다른 결제를 가리켰다.
+ */
+const latestPaymentOf = <T extends { createdAt: Date }>(payments: T[]): T | undefined =>
+  payments.slice().sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+
 /** work_orders가 pending(결제 전)을 지나 실제로 접수된 이후 상태들 — 미정합 판정에서 쓴다. */
 const WORK_ORDER_RECEIVED_OR_LATER: ReadonlySet<WorkOrder['status']> = new Set([
   'received', 'in_progress', 'delivered',
@@ -87,9 +97,7 @@ export const serializeBookingForAdmin = (
   const isMixing = order.type === 'mixing';
   const mixingProduct = isMixing && workOrder ? getMixingProduct(workOrder.productId) : undefined;
   const product = !isMixing && booking ? getProduct(booking.productId) : undefined;
-  const latestPayment = order.payments
-    .slice()
-    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())[0];
+  const latestPayment = latestPaymentOf(order.payments);
 
   return {
     id: order.id,
@@ -161,7 +169,7 @@ export const serializeBookingDetailForAdmin = (
   const base = serializeBookingForAdmin(order);
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
-  const payment = order.payments[0];
+  const payment = latestPaymentOf(order.payments);
 
   return {
     ...base,
