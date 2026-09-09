@@ -64,10 +64,14 @@
   토글이 필요하다. Threads는 DM API 없음. 자동 답글은 하지 않는다.
 - `insights.mjs`: 최근 7일 계정 지표를 `docs/social/insights.csv`에 적재.
 
-## 토큰 수명 (2026-09-09 추가)
+## 토큰 수명 (2026-09-09)
 
-두 API 모두 영구 토큰이 없다. 60일 장기 토큰을 `refresh_access_token`으로 무제한 연장하되,
-**만료 후에는 연장 불가**라 갱신 누락이 유일한 실패 모드다. 그래서 만료 시각을
-`.env.local`(`*_TOKEN_EXPIRES_AT`)에 기록하고 두 겹으로 갱신한다 — CLI 실행 시
-`ensureFreshToken`(잔여 21일 이내), 그리고 주간 launchd 작업. 임계 21일은 주간 실행을
-두어 번 걸러도 60일 창을 못 넘기게 잡은 값이다.
+두 API 모두 영구 토큰이 없다. 60일 장기 토큰을 `refresh_access_token`으로 무제한 연장하되
+**만료 후에는 연장 불가**라 갱신 누락이 유일한 실패 모드다.
+
+- 저장소: Turso `social_tokens(platform, access_token, expires_at, updated_at)`. Vercel env에
+  되쓰는 방식은 배포 전까지 함수가 옛 값을 보므로 기각. launchd(이 맥) 방식은 맥 의존이라 기각.
+- 갱신: Vercel Cron `/api/cron/social-refresh` 주 1회. `lib/social/tokens.ts`가 잔여 21일
+  이내·발급 24시간 경과 조건으로 갱신하고, 토큰 없음·만료·실패일 때만 운영자 메일.
+- 로컬 CLI는 같은 표를 읽고(`scripts/social/meta.mjs`), 보조로 `ensureFreshToken`을 둔다.
+- 앱 ID·시크릿은 Vercel env(production·development)에 등록, 로컬은 `vercel env pull`.

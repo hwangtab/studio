@@ -1,7 +1,7 @@
 /**
  * Meta(Instagram·Threads) Graph API 공용 헬퍼 — 실행은 `node --env-file=.env.local …` 관례.
  *
- * 토큰은 .env.local에만 산다(저장소는 public). saveEnv()가 해당 키 줄만 바꿔 쓴다.
+ * 앱 ID·시크릿은 Vercel env → `vercel env pull`로 .env.local에 온다. 토큰은 Turso(아래).
  * 두 플랫폼은 도메인·버전·필드명이 다르므로 PLATFORMS 표 하나에 차이를 모아 둔다.
  */
 import fs from 'node:fs';
@@ -19,8 +19,6 @@ export const PLATFORMS = {
     label: 'Instagram',
     appIdKey: 'INSTAGRAM_APP_ID',
     secretKey: 'INSTAGRAM_APP_SECRET',
-    tokenKey: 'INSTAGRAM_ACCESS_TOKEN',
-    expiresKey: 'INSTAGRAM_TOKEN_EXPIRES_AT',
     userIdKey: 'INSTAGRAM_USER_ID',
     authorizeUrl: 'https://www.instagram.com/oauth/authorize',
     tokenUrl: 'https://api.instagram.com/oauth/access_token',
@@ -39,8 +37,6 @@ export const PLATFORMS = {
     label: 'Threads',
     appIdKey: 'THREADS_APP_ID',
     secretKey: 'THREADS_APP_SECRET',
-    tokenKey: 'THREADS_ACCESS_TOKEN',
-    expiresKey: 'THREADS_TOKEN_EXPIRES_AT',
     userIdKey: 'THREADS_USER_ID',
     authorizeUrl: 'https://threads.net/oauth/authorize',
     tokenUrl: 'https://graph.threads.net/oauth/access_token',
@@ -89,7 +85,8 @@ export class GraphError extends Error {
 /** GET은 query, POST는 x-www-form-urlencoded. 토큰은 항상 access_token 파라미터. */
 export async function graph(platform, method, pathname, params = {}, { token } = {}) {
   const p = PLATFORMS[platform];
-  const accessToken = token ?? requireEnv(p.tokenKey);
+  const accessToken = token ?? (await loadToken(platform))?.accessToken;
+  if (!accessToken) throw new Error(`${p.label} 토큰이 저장돼 있지 않다. scripts/social/auth.mjs --platform ${platform} 로 승인할 것.`);
   const body = new URLSearchParams({ ...params, access_token: accessToken });
   const url = `${p.graph}${pathname}${method === 'GET' ? `?${body}` : ''}`;
   const res = await fetch(url, method === 'GET' ? {} : { method, body });
@@ -100,36 +97,67 @@ export async function graph(platform, method, pathname, params = {}, { token } =
 
 
 /**
- * 토큰 수명 관리 — Instagram·Threads 모두 **영구 토큰이 없다**. 장기 토큰 60일이고
- * `refresh_access_token`으로 무제한 연장할 수 있지만, 만료된 뒤에는 연장이 안 되고
- * 60일 동안 한 번도 갱신하지 않아도 영구 만료된다(2026-09-09 문서·실측 확인).
- * 그래서 "재발급 안 하고 영원히"의 실제 구현은 **자동 갱신을 빠뜨리지 않는 것**이다.
+ * 토큰 저장소 = Turso `social_tokens` (lib/social/tokens.ts와 같은 표).
  *
- * 두 겹으로 막는다:
- *   1. 아래 ensureFreshToken() — 어떤 CLI를 실행하든 만료가 가까우면 먼저 갱신한다.
- *   2. launchd 주간 작업(scripts/social/refresh-token.sh) — CLI를 몇 달 안 써도 살아 있게.
+ * 영구 토큰이 없어서(60일, 무제한 연장, 만료 후 연장 불가) 갱신은 Vercel Cron
+ * (api/cron/social-refresh, 매주 월)이 맡는다. 로컬은 .env.local에 토큰을 두지 않고
+ * `vercel env pull`로 받은 TURSO_* 자격으로 같은 행을 읽는다. 여기 ensureFreshToken은
+ * 크론이 몇 주 죽어 있던 경우의 보조 장치일 뿐이다.
+ *
+ * 컬럼을 바꾸면 lib/social/tokens.ts·db/schema.ts도 함께 고칠 것.
  */
 export const REFRESH_WHEN_DAYS_LEFT = 21;
 
-export function saveToken(platform, { access_token: accessToken, expires_in: expiresIn }) {
-  const p = PLATFORMS[platform];
-  const updates = { [p.tokenKey]: accessToken };
-  if (expiresIn) updates[p.expiresKey] = new Date(Date.now() + expiresIn * 1000).toISOString();
-  saveEnv(updates);
+let dbClient = null;
+async function db() {
+  if (dbClient) return dbClient;
+  const { createClient } = await import('@libsql/client');
+  const url = requireEnv('TURSO_DATABASE_URL');
+  const authToken = process.env.TURSO_AUTH_TOKEN;
+  dbClient = createClient({ url, authToken });
+  return dbClient;
 }
 
-/** 남은 일수. 만료 시각을 모르면 null(= 갱신 대상으로 본다). */
-export function daysLeft(platform) {
-  const raw = process.env[PLATFORMS[platform].expiresKey];
-  if (!raw) return null;
-  const ms = Date.parse(raw);
-  return Number.isNaN(ms) ? null : (ms - Date.now()) / 86400000;
+const tokenCache = new Map();
+
+/** 저장된 토큰 행. 없으면 null. 결과는 프로세스 안에서 캐시한다. */
+export async function loadToken(platform) {
+  if (tokenCache.has(platform)) return tokenCache.get(platform);
+  const c = await db();
+  const { rows } = await c.execute({
+    sql: 'select access_token, expires_at, updated_at from social_tokens where platform = ?',
+    args: [platform],
+  });
+  const row = rows[0]
+    ? { accessToken: rows[0].access_token, expiresAt: Number(rows[0].expires_at), updatedAt: Number(rows[0].updated_at) }
+    : null;
+  tokenCache.set(platform, row);
+  return row;
+}
+
+export async function saveToken(platform, { access_token: accessToken, expires_in: expiresIn }) {
+  const now = Math.floor(Date.now() / 1000);
+  const expiresAt = now + Number(expiresIn ?? 60 * 86400);
+  const c = await db();
+  await c.execute({
+    sql: `insert into social_tokens (platform, access_token, expires_at, updated_at) values (?, ?, ?, ?)
+          on conflict(platform) do update set access_token = excluded.access_token,
+          expires_at = excluded.expires_at, updated_at = excluded.updated_at`,
+    args: [platform, accessToken, expiresAt, now],
+  });
+  tokenCache.set(platform, { accessToken, expiresAt, updatedAt: now });
+}
+
+/** 남은 일수. 행이 없으면 null. */
+export async function daysLeft(platform) {
+  const row = await loadToken(platform);
+  return row ? (row.expiresAt * 1000 - Date.now()) / 86400000 : null;
 }
 
 export async function refreshToken(platform) {
   const p = PLATFORMS[platform];
   const res = await graph(platform, 'GET', '/refresh_access_token', { grant_type: p.refreshGrant });
-  saveToken(platform, res);
+  await saveToken(platform, res);
   return Math.round(res.expires_in / 86400);
 }
 
@@ -138,24 +166,25 @@ export async function refreshToken(platform) {
  * 토큰이 아직 유효할 수 있으므로 본 작업(발행·조회)을 막지 않는 편이 낫다.
  */
 export async function ensureFreshToken(platform, { quiet = false } = {}) {
-  const left = daysLeft(platform);
-  if (left !== null && left > REFRESH_WHEN_DAYS_LEFT) return { refreshed: false, daysLeft: left };
+  const row = await loadToken(platform);
+  if (!row) return { refreshed: false, daysLeft: null };
+  const left = (row.expiresAt * 1000 - Date.now()) / 86400000;
+  if (left > REFRESH_WHEN_DAYS_LEFT || Date.now() / 1000 - row.updatedAt < 86400) return { refreshed: false, daysLeft: left };
   try {
     const days = await refreshToken(platform);
     if (!quiet) console.log(`[${PLATFORMS[platform].label}] 토큰 자동 갱신 — ${days}일 남음`);
     return { refreshed: true, daysLeft: days };
   } catch (err) {
     console.warn(`[${PLATFORMS[platform].label}] 토큰 자동 갱신 실패: ${err.message}`);
-    if (left !== null && left <= 0) console.warn('만료된 토큰은 갱신할 수 없다. auth.mjs로 재승인할 것.');
+    if (left <= 0) console.warn('만료된 토큰은 갱신할 수 없다. auth.mjs로 재승인할 것.');
     return { refreshed: false, daysLeft: left, error: err };
   }
 }
 
-/** 여러 플랫폼을 한 번에. 토큰이 없는 플랫폼은 건너뛴다(아직 승인 전). */
+/** 여러 플랫폼을 한 번에. 저장된 토큰이 없는 플랫폼은 건너뛴다(아직 승인 전). */
 export async function ensureFreshTokens(platforms, opts) {
   for (const platform of platforms) {
-    if (!process.env[PLATFORMS[platform].tokenKey]) continue;
-    await ensureFreshToken(platform, opts);
+    if (await loadToken(platform)) await ensureFreshToken(platform, opts);
   }
 }
 
