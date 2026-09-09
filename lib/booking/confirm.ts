@@ -47,6 +47,18 @@ const STALE_APPROVAL_MESSAGE =
 const AUTO_CANCEL_REASON = '주문 만료 후 승인 — 자동 전액 취소';
 
 /**
+ * 자동 전액 취소마저 실패했을 때의 고객 문구.
+ *
+ * 예전엔 recording_failed를 돌려줬는데, 그건 "일시 실패이니 재시도하면 된다"는 뜻이라
+ * 웹훅(webhook.ts isTransientConfirmFailure)이 계속 재시도하게 만든다. 그런데 이 시점의
+ * 주문은 이미 pending이 아니라서 재시도는 전부 `status !== 'pending'`에 막힌다 — 아무것도
+ * 고치지 못하는 재시도 루프다. 영구 실패(invalid_state)로 끝내고 수동 대사로 넘긴다.
+ * 위 console.error가 그 대사의 단서이며, 관리자 미정합 목록도 이 주문을 잡는다.
+ */
+const AUTO_CANCEL_FAILED_MESSAGE =
+  '결제 확인 중 문제가 발생했습니다. 결제가 이뤄졌다면 확인 후 환불해 드립니다. 문의: 010-4255-7893';
+
+/**
  * libSQL batch 결과 한 항목의 rowsAffected.
  *
  * drizzle의 LibSQLSession.batch는 Promise<unknown[]>를 돌려주고(node_modules/drizzle-orm/
@@ -66,12 +78,14 @@ const rowsAffectedOf = (result: unknown): number | undefined => {
  * 승인은 끝났는데 orders pending→paid 전이가 0행인 경우의 자동 복구.
  *
  * 승인 요청과 승인 응답 사이에 그 주문이 pending을 벗어난 것이다 — expireStaleOrders가
- * 만료시켰거나(믹싱 pending도 900초에 expire된다), 같은 고객의 재제출이 자가 선점 해제로
- * expired를 찍었거나. 이대로 두면 돈만 들어오고 주문은 만료된 채 남는다(관리자 화면 mismatch).
+ * 만료시켰거나(세션은 900초, 믹싱은 24시간), 같은 고객의 재제출이 자가 선점 해제로 expired를
+ * 찍었거나. 이대로 두면 돈만 들어오고 주문은 만료된 채 남는다(관리자 화면 mismatch).
  * 전액을 즉시 되돌려 그 상태를 만들지 않는다.
  *
- * 멱등키는 cancel.ts의 refundIdempotencyKey 규약을 그대로 쓴다 — 웹훅 DONE 복구가 같은 경로로
- * 다시 들어와도 토스가 최초 취소를 replay해 돈이 두 번 나가지 않는다.
+ * 멱등키는 cancel.ts의 refundIdempotencyKey를 쓰되 접두사를 'autocancel'로 분리한다. 같은 접두사를
+ * 쓰면 이 자동 취소가 실패한 뒤 관리자가 같은 주문·같은 금액(전액)으로 수동 환불을 넣을 때
+ * 토스가 15일 안의 **실패 응답**을 replay해 영영 환불되지 않는다. 접두사만 다르면 이 경로의
+ * 재시도(웹훅 DONE 복구)는 여전히 서로 replay되어 이중 환불을 막는다.
  *
  * orders는 건드리지 않는다 — 이미 expired/failed이고, 여기서 다른 상태를 덮어쓰면 어떤 경로가
  * 주문을 끝냈는지 알 수 없게 된다.
@@ -89,7 +103,7 @@ const autoCancelStaleApproval = async (order: Order, approved: TossPayment): Pro
     paymentKey: approved.paymentKey,
     cancelReason: AUTO_CANCEL_REASON,
     cancelAmount: order.totalAmount,
-    idempotencyKey: refundIdempotencyKey(order.orderNo, order.totalAmount),
+    idempotencyKey: refundIdempotencyKey(order.orderNo, order.totalAmount, 'autocancel'),
   });
 
   // refunds.payment_id는 FK라 방금 batch가 넣은 payments 행의 id가 필요하다(INSERT에
@@ -145,7 +159,7 @@ const autoCancelStaleApproval = async (order: Order, approved: TossPayment): Pro
       code: cancelled.code,
       message: cancelled.message,
     });
-    return { ok: false, code: 'recording_failed', message: RECORDING_FAILED_MESSAGE };
+    return { ok: false, code: 'invalid_state', message: AUTO_CANCEL_FAILED_MESSAGE };
   }
 
   return { ok: false, code: 'invalid_state', message: STALE_APPROVAL_MESSAGE };
@@ -179,9 +193,11 @@ export const confirmBookingPayment = async (input: {
   // 세션에만 적용한다. 믹싱은 점유할 슬롯이 없어 이 검사가 지킬 대상 자체가 없고, 반대로
   // 해를 끼친다 — 기록이 실패한 승인을 되살리는 웹훅 DONE 복구가 900초 뒤에 도착하면
   // (토스 재시도 간격상 흔하다) 여기서 막혀 돈만 들어온 주문으로 남는다.
-  // expireStaleOrders는 믹싱 pending도 900초에 expire하는데 그건 그대로 둔다: 그 뒤에 도착한
-  // 늦은 승인은 아래 batch의 orders 전이가 0행이 되고, autoCancelStaleApproval이 전액을
-  // 자동으로 되돌린다 — 만료 판정은 DB 상태 하나로 통일하고, 취소는 승인 이후에 정확히 한다.
+  // expireStaleOrders도 같은 이유로 믹싱 pending은 MIXING_PENDING_TTL_SECONDS(24시간)까지
+  // 살려 둔다 — 예전엔 여기와 달리 900초에 expire해서, 15분을 넘겨 도착한 웹훅 재시도가
+  // 위의 `status !== 'pending'`에 영구히 막혔다(자동 취소는 batch 앞이라 타지도 않는다).
+  // 24시간을 넘긴 뒤 오는 늦은 승인은 아래 batch의 orders 전이가 0행이 되고,
+  // autoCancelStaleApproval이 전액을 자동으로 되돌린다.
   if (
     order.type === 'session' &&
     order.createdAt instanceof Date &&

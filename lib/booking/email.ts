@@ -14,6 +14,23 @@ const kstTimeLabel = (d: Date): string => {
   return `${kstDateString(d)} ${String(t.getUTCHours()).padStart(2, '0')}:00`;
 };
 
+/**
+ * 고객에게 나가는 메일의 회신 주소.
+ *
+ * 발신은 noreply@studionol.co.kr(lib/email/resend.ts DEFAULT_FROM)이라, replyTo가 없으면
+ * 고객이 누른 "답장"은 아무도 읽지 않는 사서함으로 사라진다. 믹싱 확정 메일은 본문에서
+ * "이 메일에 회신으로 파일 링크를 보내주세요"라고 **명시적으로 회신을 요구**하므로 특히
+ * 치명적이고, 나머지 메일도 회신이 사라져 손해 볼 이유가 없어 네 통 모두에 붙인다
+ * (lib/funding/email.ts가 같은 패턴을 이미 쓴다).
+ *
+ * OPERATOR_EMAIL(기본 hwangtab@gmail.com)이 아니라 hello@ 별칭을 쓰는 이유: 이 주소가
+ * pages/api/inbound/resend.ts의 INBOUND_ALIAS로, 수신 웹훅이 첨부까지 운영자 Gmail로
+ * 포워딩한다. 사이트 도메인 주소라 고객에게 보이는 신뢰도도 높고, 운영자 개인 주소를
+ * 발송 메일에 노출하지 않는다. 상수를 공유하지 못하는 건 INBOUND_ALIAS가 그 라우트의
+ * 지역 상수이기 때문이다 — 주소를 바꾼다면 두 곳을 함께 고쳐야 한다.
+ */
+const CUSTOMER_REPLY_TO = 'hello@studionol.co.kr';
+
 const manageUrl = (order: Order): string =>
   `${SITE_URL}/ko/booking/manage/${order.orderNo}?token=${order.manageToken}`;
 
@@ -23,7 +40,7 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
   const failures: string[] = [];
 
   const customer = await sendEmail({
-    to: order.customerEmail,
+    to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 예약이 확정되었습니다 — ${when}`,
     text: [
       `${order.customerName}님, 예약이 확정되었습니다.`,
@@ -60,7 +77,7 @@ export const sendBookingCancelledEmails = async (
   const when = kstTimeLabel(booking.startAt);
   const failures: string[] = [];
   const customer = await sendEmail({
-    to: order.customerEmail,
+    to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 예약이 취소되었습니다 — ${when}`,
     text: [
       `${order.customerName}님, 예약이 취소되었습니다.`,
@@ -95,7 +112,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
   const failures: string[] = [];
 
   const customer = await sendEmail({
-    to: order.customerEmail,
+    to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 주문이 접수되었습니다 — ${productName}`,
     text: [
       `${order.customerName}님, 주문이 접수되었습니다.`,
@@ -147,7 +164,7 @@ export const sendMixingOrderCancelledEmails = async (
   const failures: string[] = [];
 
   const customer = await sendEmail({
-    to: order.customerEmail,
+    to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 주문이 취소되었습니다 — ${productName}`,
     text: [
       `${order.customerName}님, 주문이 취소되었습니다.`,

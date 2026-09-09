@@ -23,7 +23,9 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { createBookingOrder, createMixingOrder, findOrderByOrderNo } from './service';
+import { createBookingOrder, createMixingOrder, expireStaleOrders, findOrderByOrderNo } from './service';
+// eslint-disable-next-line import/first
+import { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS } from './validation';
 // eslint-disable-next-line import/first
 import type { CreateBookingPayload, CreateMixingOrderPayload } from './validation';
 
@@ -168,5 +170,77 @@ describe('createBookingOrder / createMixingOrder — 자가 선점 해제의 typ
 
     const secondOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, second.orderNo) });
     expect(secondOrder?.status).toBe('pending');
+  });
+});
+
+/**
+ * C-3 회귀: 믹싱 pending을 세션과 같은 900초에 expire하던 문제.
+ *
+ * confirm이 승인은 받았는데 DB 기록에 실패하면 복구는 토스 DONE 웹훅 재시도가 맡는데,
+ * 그 재시도는 15분을 넘겨 도착하는 일이 흔하다. 900초에 expire해 버리면 그 재시도가
+ * confirm의 `status !== 'pending'`에 영구히 막히고, 자동 취소(autoCancelStaleApproval)는
+ * batch 앞에서 끝나 타지도 않는다 — 돈은 들어왔는데 주문은 만료된 채 남는다.
+ */
+describe('expireStaleOrders — 타입별 만료 창', () => {
+  const backdate = async (orderNo: string, seconds: number): Promise<void> => {
+    await client.execute({
+      sql: `UPDATE bookings SET created_at = created_at - ? WHERE order_id IN (SELECT id FROM orders WHERE order_no = ?)`,
+      args: [seconds, orderNo],
+    });
+    await client.execute({
+      sql: `UPDATE work_orders SET created_at = created_at - ? WHERE order_id IN (SELECT id FROM orders WHERE order_no = ?)`,
+      args: [seconds, orderNo],
+    });
+    await client.execute({
+      sql: 'UPDATE orders SET created_at = created_at - ? WHERE order_no = ?',
+      args: [seconds, orderNo],
+    });
+  };
+
+  const mixingPayload: CreateMixingOrderPayload = {
+    productId: 'mixing-level1',
+    songCount: 1,
+    vocalTuning: false,
+    customerName: '김보컬',
+    customerPhone: '010-1234-5678',
+    customerEmail: 'singer@example.com',
+    refundPolicyAgreed: true,
+  };
+
+  const statusOf = async (orderNo: string): Promise<{ order?: string; workOrder?: string }> => {
+    const o = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, orderNo) });
+    const w = await mockDb.query.workOrders.findFirst({ where: eq(workOrders.orderId, o!.id) });
+    return { order: o?.status, workOrder: w?.status };
+  };
+
+  it('믹싱 pending은 900초가 지나도 pending으로 남는다 (웹훅 재시도 창 보호)', async () => {
+    const mixing = await createMixingOrder(mixingPayload, NOW);
+    await backdate(mixing.orderNo, PENDING_HOLD_SECONDS + 60);
+
+    await expireStaleOrders(new Date());
+
+    expect(await statusOf(mixing.orderNo)).toEqual({ order: 'pending', workOrder: 'pending' });
+  });
+
+  it('믹싱 pending도 24시간이 지나면 expired·cancelled로 정리된다', async () => {
+    const mixing = await createMixingOrder(mixingPayload, NOW);
+    await backdate(mixing.orderNo, MIXING_PENDING_TTL_SECONDS + 60);
+
+    await expireStaleOrders(new Date());
+
+    expect(await statusOf(mixing.orderNo)).toEqual({ order: 'expired', workOrder: 'cancelled' });
+  });
+
+  it('세션 pending은 종전대로 900초에 만료된다 (슬롯을 잡아 두므로)', async () => {
+    const session = await createBookingOrder(payloadFor(), NOW);
+    if (!session.ok) throw new Error('세션 주문 생성 실패');
+    await backdate(session.orderNo, PENDING_HOLD_SECONDS + 60);
+
+    await expireStaleOrders(new Date());
+
+    const order = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, session.orderNo) });
+    expect(order?.status).toBe('expired');
+    const booking = await mockDb.query.bookings.findFirst({ where: eq(bookings.id, session.bookingId) });
+    expect(booking?.status).toBe('cancelled');
   });
 });
