@@ -22,6 +22,8 @@ import { confirmBankDeposit } from './bank-transfer';
 // eslint-disable-next-line import/first
 import { cancelPayment } from '../booking/toss';
 // eslint-disable-next-line import/first
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
+// eslint-disable-next-line import/first
 import { createFundingPledge, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
@@ -102,6 +104,18 @@ describe('cancelFundingPledge', () => {
     expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 5000 });
     expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 5000, idempotencyKey: `refund:${c.orderNo}:5000` }));
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('refunded');
+    const rows = await client.execute('SELECT status, amount, toss_transaction_key FROM refunds');
+    expect(rows.rows).toHaveLength(1);
+    expect(rows.rows[0]).toMatchObject({ status: 'done', amount: 5000, toss_transaction_key: 'tx' });
+  });
+  it('취소 메일이 실패 문자열을 돌려줘도 outcome은 ok:true이고 notificationError에 남는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] } });
+    (sendFundingCancelledEmails as jest.Mock).mockResolvedValueOnce('customer:API_ERROR');
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+    expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 5000 });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBe('customer:API_ERROR');
   });
   it('토스가 거절하면 상태를 되돌리고 failed refund를 남긴다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
@@ -142,5 +156,12 @@ describe('confirmBankDeposit', () => {
     const t = await createFundingPledge(payloadFor({ customerEmail: 't@example.com', customerPhone: '010-5' }), PROJECT, reward('mail'), NOW); if (!t.ok) throw new Error();
     const to = await findFundingOrderByOrderNo(t.orderNo);
     expect((await confirmBankDeposit({ orderId: to!.id, now: NOW })).ok).toBe(false);
+  });
+  it('입금 확인 메일이 실패 문자열을 돌려줘도 ok:true이고 notificationError에 남는다', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'bank_transfer', customerEmail: 'n@example.com', customerPhone: '010-9' }), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    (sendFundingConfirmedEmails as jest.Mock).mockResolvedValueOnce('customer:API_ERROR');
+    expect(await confirmBankDeposit({ orderId: o!.id, now: NOW })).toEqual({ ok: true });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBe('customer:API_ERROR');
   });
 });

@@ -19,7 +19,18 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
   if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '입금 확인할 수 있는 상태가 아닙니다.' };
   await db.update(fundingPledges).set({ paidAt: input.now, updatedAt: input.now }).where(eq(fundingPledges.id, order.fundingPledge.id));
   const fresh = (await findFundingOrderById(order.id)) ?? order;
-  const emailError = await sendFundingConfirmedEmails(fresh, getFundingProject(fresh.fundingPledge?.projectSlug ?? ''));
-  if (emailError) await db.update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+
+  let emailError: string | null = null;
+  try {
+    emailError = await sendFundingConfirmedEmails(fresh, getFundingProject(fresh.fundingPledge?.projectSlug ?? ''));
+  } catch (error) {
+    console.error('[funding-bank-transfer] 입금 확인 메일 발송 중 예외', { orderId: order.id, error });
+    emailError = error instanceof Error ? error.message : String(error);
+  }
+  try {
+    await db.update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+  } catch (error) {
+    console.error('[funding-bank-transfer] notificationError 기록 실패', { orderId: order.id, emailError, error });
+  }
   return { ok: true };
 };
