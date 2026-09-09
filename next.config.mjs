@@ -109,11 +109,9 @@ const nextConfig = {
 
   async redirects() {
     return [
-      {
-        source: '/:locale(ko|en|zh|es|vi|th|uz)/stories/song-structure1',
-        destination: '/:locale/stories/songstructure1',
-        permanent: true,
-      },
+      // song-structure1 → songstructure1 규칙은 여기 없다: lib/regionRedirectMap.json에
+      // 같은 키가 있어 middleware가 항상 먼저 308을 낸다(실측 2026-09-08, 단일 308 확인).
+      // 이 규칙이 있었을 때도 절대 실행되지 않는 죽은 코드였다 — 제거함.
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/stories/practice-room-drum1',
         destination: '/:locale/practice-room',
@@ -176,6 +174,14 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=43200' },
         ],
       },
+      // 주의: 아래 stale-while-revalidate는 코드상 선언일 뿐, 이 라우트는 서버리스
+      // 함수(/api/llms, /api/llms-full)로 rewrite되므로 Vercel이 응답 헤더를 정규화해
+      // SWR 지시자가 실제로는 빠진다. 실측(2026-09-08) `/llms.txt` 프로덕션 응답:
+      // `Cache-Control: public, max-age=3600`만 나감(stale-while-revalidate 없음).
+      // 캐시 자체는 정상 작동(x-vercel-cache: HIT, age 증가) — "재검증 유예 없이 만료
+      // 후 즉시 미스"로 동작한다는 뜻이지 캐시가 깨졌다는 뜻이 아니다. 정적 파일인
+      // /sitemap.xml은 같은 헤더를 선언해도 SWR이 그대로 보존된다 — 서버리스 응답에서만
+      // 벌어지는 차이. 다음에 헤더를 의심하게 되면 코드가 아니라 실제 응답을 먼저 볼 것.
       {
         source: '/llms(-full)?.txt',
         headers: [
@@ -185,7 +191,7 @@ const nextConfig = {
       },
       // locale-scoped 변종은 위 패턴이 잡지 못한다(/llms-full-ko.txt 등). 핸들러가 같은
       // 헤더를 직접 세팅하므로 실피해는 없지만, config가 실제와 어긋나 있으면 나중에
-      // 핸들러 쪽을 정리할 때 조용히 깨진다.
+      // 핸들러 쪽을 정리할 때 조용히 깨진다. 같은 서버리스 SWR 소실이 여기도 적용된다.
       {
         source: '/llms-full-:locale(ko|en|zh).txt',
         headers: [
