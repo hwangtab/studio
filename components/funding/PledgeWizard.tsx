@@ -75,7 +75,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         <PriceBreakdown amounts={{ itemAmount: created.itemAmount, vatAmount: created.vatAmount, totalAmount: created.totalAmount }} />
         {remainingMs !== null && !expired && <p className="text-sm text-gray-500">결제 대기 {Math.floor(remainingMs / 60000)}:{String(Math.floor((remainingMs % 60000) / 1000)).padStart(2, '0')}</p>}
         {expired ? (
-          <p role="alert" className="text-red-600">결제 대기 시간이 지났습니다. <button type="button" className="underline" onClick={() => setCreated(null)}>다시 신청</button></p>
+          <p role="alert" className="text-red-600">결제 대기 시간이 지났습니다. <button type="button" className="underline" onClick={() => { setCreated(null); setRemainingMs(null); }}>다시 신청</button></p>
         ) : (
           <TossPaymentWidget orderNo={created.orderNo} amount={created.totalAmount}
             orderName={`[펀딩] ${project.title} · ${reward.title}`.slice(0, 100)}
@@ -111,7 +111,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         </label>
         <label className="mt-4 block text-sm">추가 후원금 (선택, 1,000원 단위)
           <input type="number" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additional} className={field}
-            onChange={(e) => setAdditional(Math.max(0, Math.floor((Number(e.target.value) || 0) / ADDITIONAL_AMOUNT_STEP) * ADDITIONAL_AMOUNT_STEP))} />
+            onChange={(e) => setAdditional(Math.min(MAX_ADDITIONAL_AMOUNT, Math.max(0, Math.floor((Number(e.target.value) || 0) / ADDITIONAL_AMOUNT_STEP) * ADDITIONAL_AMOUNT_STEP)))} />
         </label>
         <p className="mt-3 text-sm text-gray-600">예상 합계 {formatPriceAmount(preview.totalAmount)}원 (VAT 포함) — 실제 청구액은 다음 단계에서 서버가 확정합니다.</p>
       </fieldset>

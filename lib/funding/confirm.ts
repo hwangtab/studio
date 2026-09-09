@@ -102,6 +102,19 @@ export const confirmFundingPledge = async (
     // 주의: payments INSERT는 같은 batch에서 이미 커밋됐다(여기서 되돌리지 않는다 — 승인된
     // 결제의 기록을 지우는 쪽이 더 위험하다). 그래서 이 주문은 "payments는 있는데 상태는
     // paid가 아닌" 상태로 남고, 드러나는 경로는 관리자 목록의 mismatch 배지뿐이다.
+    // 만료된 주문을 웹훅이 되살렸다면 재고를 초과했을 수 있다 — 운영자가 관리자 화면에서
+    // 볼 수 있도록 흔적을 남긴다. 로그만으로는 아무도 보지 않는다.
+    if (order.status === 'expired') {
+      const note = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요';
+      console.error('[funding-confirm] 홀드 만료 주문을 웹훅이 확정 — 재고 확인 필요', { orderNo: order.orderNo, paymentKey: approved.paymentKey });
+      try {
+        await db.run(
+          sql`UPDATE funding_pledges SET admin_memo = COALESCE(admin_memo || char(10), '') || ${note}, updated_at = unixepoch() WHERE order_id = ${order.id}`,
+        );
+      } catch (memoError) {
+        console.error('[funding-confirm] adminMemo 기록 실패', { orderNo: order.orderNo, error: memoError });
+      }
+    }
     if (Number(batchResult[1]?.rowsAffected ?? 0) === 0) {
       console.error('[funding-confirm] 결제 승인됨, 주문 상태 전이 실패(0행) — 수동 확인 필요', {
         orderNo: order.orderNo, paymentKey: approved.paymentKey, status: order.status,

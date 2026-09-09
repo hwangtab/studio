@@ -25,3 +25,9 @@ it('그 외 상태 → 문의 문구', () => {
   render(<BankDepositGuide {...PROPS} status="failed" />);
   expect(screen.getByText('처리할 수 없는 상태입니다. 문의해 주세요.')).toBeInTheDocument();
 });
+// 부분환불 건이 "처리할 수 없는 상태"로 떨어지면, 실제로는 후원이 살아 있는데도
+// 고객이 계좌·기한 대신 오류 문구를 보게 된다.
+it('partially_refunded → 일부 환불 문구', () => {
+  render(<BankDepositGuide {...PROPS} status="partially_refunded" />);
+  expect(screen.getByText('일부 환불된 후원입니다.')).toBeInTheDocument();
+});

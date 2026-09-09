@@ -2,7 +2,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, type FundingPledge, type Order, type Payment } from '../../db/schema';
+import { orders, type FundingPledge, type Order, type Payment, type Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
@@ -15,7 +15,9 @@ const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 export const generateFundingOrderNo = (now: Date, manual = false): string =>
   `FND-${manual ? 'M-' : ''}${kstDateString(now).replace(/-/g, '')}-${randomBytes(4).toString('hex').toUpperCase()}`;
 
-export type FundingOrder = Order & { fundingPledge: FundingPledge | null; payments: Payment[] };
+/** payments 각각의 done/failed 환불까지 물고 온다 — 환불 잔액 계산(refundable.ts)이 전 결제행을 봐야 한다. */
+export type FundingPaymentWithRefunds = Payment & { refunds?: Refund[] };
+export type FundingOrder = Order & { fundingPledge: FundingPledge | null; payments: FundingPaymentWithRefunds[] };
 
 export const findFundingOrderByOrderNo = async (orderNo: string): Promise<FundingOrder | undefined> => {
   // middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, URL에서 온
@@ -23,7 +25,7 @@ export const findFundingOrderByOrderNo = async (orderNo: string): Promise<Fundin
   // 대문자로 정규화해 비교한다. SQLite `=`는 대소문자 구분.
   const row = await getDb().query.orders.findFirst({
     where: (t, { eq }) => eq(t.orderNo, orderNo.toUpperCase()),
-    with: { fundingPledge: true, payments: true },
+    with: { fundingPledge: true, payments: { with: { refunds: true } } },
   });
   return row?.type === 'funding' ? (row as FundingOrder) : undefined;
 };
@@ -31,14 +33,16 @@ export const findFundingOrderByOrderNo = async (orderNo: string): Promise<Fundin
 export const findFundingOrderById = async (id: string): Promise<FundingOrder | undefined> => {
   const row = await getDb().query.orders.findFirst({
     where: (t, { eq }) => eq(t.id, id),
-    with: { fundingPledge: true, payments: true },
+    with: { fundingPledge: true, payments: { with: { refunds: true } } },
   });
   return row?.type === 'funding' ? (row as FundingOrder) : undefined;
 };
 
 /**
  * 재고 조건이 붙은 단일 INSERT — 동시 요청은 한쪽만 rowsAffected 1.
- * remaining = totalQuantity − Σpaid − Σ(pending ∧ hold 미만료). 무제한이면 조건 없음.
+ * remaining = totalQuantity − Σ(paid ∨ partially_refunded) − Σ(pending ∧ hold 미만료). 무제한이면 조건 없음.
+ * partially_refunded를 빼먹으면 aggregateProjectStatus(품절 표시)와 이 INSERT 조건이 어긋나,
+ * 화면엔 품절인데 서버는 재고가 남았다고 보고 한정 리워드를 초과 판매한다.
  */
 export const createFundingPledge = async (
   payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
@@ -74,7 +78,7 @@ export const createFundingPledge = async (
         SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
         JOIN orders o ON o.id = fp.order_id
         WHERE fp.project_slug = ${project.slug} AND fp.reward_id = ${reward.id}
-          AND (o.status = 'paid' OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+          AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
       ) + ${payload.quantity} <= ${reward.totalQuantity}`;
 
   const result = await db.run(sql`

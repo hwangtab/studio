@@ -72,22 +72,26 @@ export const sendFundingBankDepositEmails = (order: FundingOrder, project: Fundi
 };
 
 const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_requested: '취소 요청을 접수했습니다', recorded: '환불 처리 안내' } as const;
+/**
+ * 본문 금액은 totalAmount가 아니라 **실제 환불액**이다 — 부분환불 이력이 있는 건에서 두 값은
+ * 다르고, 총액을 적으면 이미 돌려준 몫까지 다시 돌려주는 것처럼 읽힌다.
+ */
 const CANCEL_BODY = {
-  refunded: (o: FundingOrder) => `결제하신 ${formatPriceAmount(o.totalAmount)}원이 결제 수단으로 환불됩니다(카드사에 따라 3~7일).`,
+  refunded: (amount: number) => `${formatPriceAmount(amount)}원이 결제 수단으로 환불됩니다(카드사에 따라 3~7일).`,
   refund_requested: () => '무통장 후원은 운영자가 확인 후 계좌로 환불합니다. 환불받을 계좌(은행·계좌번호·예금주)를 이 메일에 회신해 주세요.',
-  recorded: (o: FundingOrder) => `${formatPriceAmount(o.totalAmount)}원 환불 처리가 완료되었습니다.`,
+  recorded: (amount: number) => `${formatPriceAmount(amount)}원 환불 처리가 완료되었습니다.`,
 } as const;
 
-export const sendFundingCancelledEmails = (order: FundingOrder, project: FundingProject | null, mode: 'refunded' | 'refund_requested' | 'recorded'): Promise<string | null> =>
+export const sendFundingCancelledEmails = (order: FundingOrder, project: FundingProject | null, mode: 'refunded' | 'refund_requested' | 'recorded', refundAmount: number): Promise<string | null> =>
   send([
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: OPERATOR_EMAIL,
       subject: `[스튜디오 놀] ${CANCEL_SUBJECT[mode]} — ${project?.title ?? ''}`,
-      text: [`${order.customerName}님,`, CANCEL_BODY[mode](order), ...summaryLines(order, project), PHONE].join('\n'),
+      text: [`${order.customerName}님,`, CANCEL_BODY[mode](refundAmount), ...summaryLines(order, project), PHONE].join('\n'),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
       subject: `[펀딩] ${CANCEL_SUBJECT[mode]} — ${order.customerName} (${mode})`,
-      text: [...summaryLines(order, project), `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
+      text: [...summaryLines(order, project), `환불 금액: ${formatPriceAmount(refundAmount)}원`, `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
   ]);

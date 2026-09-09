@@ -24,9 +24,18 @@ afterEach(() => jest.restoreAllMocks());
 // md와 무관하게 DB에서 오므로 목록까지 함께 죽을 이유가 없다.
 it('md 파싱이 실패해도 500이 아니라 빈 프로젝트 목록 + 에러 배너', async () => {
   (getAllFundingProjects as jest.Mock).mockImplementation(() => { throw new Error('frontmatter: title 누락'); });
-  const result = (await getServerSideProps(context)) as { props: { projects: unknown[]; error?: string } };
+  const result = (await getServerSideProps(context)) as { props: { projects: unknown[]; error?: string; pledgesError?: string } };
   expect(result.props.projects).toEqual([]);
   expect(result.props.error).toContain('펀딩 프로젝트 파일을 읽지 못했습니다');
+  // 목록 조회는 멀쩡했다 — pledgesError가 없어야 화면이 표를 그린다.
+  expect(result.props.pledgesError).toBeUndefined();
+});
+
+it('후원 목록 조회가 실패했을 때만 pledgesError가 붙는다', async () => {
+  (getAllFundingProjects as jest.Mock).mockReturnValue([]);
+  (listFundingOrders as jest.Mock).mockRejectedValueOnce(new Error('db down'));
+  const result = (await getServerSideProps(context)) as { props: { pledgesError?: string } };
+  expect(result.props.pledgesError).toContain('후원 목록을 불러오는 중 오류');
 });
 
 it('정상일 때는 에러 없이 프로젝트를 내려준다', async () => {

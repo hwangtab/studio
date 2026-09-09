@@ -44,5 +44,21 @@ it('무통장 안내는 fundingPledge가 없으면 메일을 보내지 않고 mi
 });
 it('한 통이라도 실패하면 요약을 돌려준다', async () => {
   (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });
-  expect(await sendFundingCancelledEmails(order, project, 'refunded')).toBe('customer:API_ERROR');
+  expect(await sendFundingCancelledEmails(order, project, 'refunded', 5000)).toBe('customer:API_ERROR');
+});
+
+// 부분환불 이력이 있으면 총액과 실제 환불액이 다르다 — 총액을 적으면 이미 돌려준 몫까지
+// 다시 돌려주는 것처럼 읽힌다.
+it('취소 메일 본문은 총액이 아니라 실제 환불액을 말한다', async () => {
+  await sendFundingCancelledEmails(order, project, 'refunded', 3000);
+  const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+  expect(customer.text).toContain('3,000원이 결제 수단으로 환불됩니다');
+  expect(customer.text).not.toContain('5,000원이 결제 수단으로');
+  const operator = (sendEmail as jest.Mock).mock.calls[1][0];
+  expect(operator.text).toContain('환불 금액: 3,000원');
+});
+
+it('무통장 환불 기록 메일도 환불액을 말한다', async () => {
+  await sendFundingCancelledEmails(order, project, 'recorded', 1500);
+  expect((sendEmail as jest.Mock).mock.calls[0][0].text).toContain('1,500원 환불 처리가 완료되었습니다');
 });

@@ -172,6 +172,8 @@ describe('confirmFundingPledge', () => {
     const o = await findFundingOrderByOrderNo(stale.orderNo);
     expect(o?.status).toBe('paid');
     expect(o?.payments[0].paymentKey).toBe('pk_1');
+    // 만료 뒤 승인은 재고를 넘겼을 수 있다 — 운영자가 관리자 화면에서 볼 수 있게 흔적을 남긴다.
+    expect(o?.fundingPledge?.adminMemo).toContain('[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요');
   });
 
   it('웹훅 경로여도 failed·refunded 주문은 거부한다', async () => {

@@ -90,6 +90,17 @@ describe('createFundingPledge', () => {
     expect(second).toEqual({ ok: false, code: 'sold_out' });
   });
 
+  // 재고 조건이 paid만 보던 시절엔, 부분환불된 한정 리워드가 재고를 놓아준 것처럼 보여
+  // 화면(aggregateProjectStatus 기준 품절)과 서버 판정이 어긋나 초과 판매가 났다.
+  it('partially_refunded 후원도 한정 재고를 잡는다 — 다음 후원은 sold_out', async () => {
+    const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
+    const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p1@example.com' }), PROJECT, reward('cd'), NOW);
+    if (!first.ok) throw new Error();
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [first.orderNo] });
+    const second = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p2@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
+    expect(second).toEqual({ ok: false, code: 'sold_out' });
+  });
+
   it('홀드가 지난 pending은 재고를 잡지 않는다', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
     await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), new Date(NOW.getTime() - 1000 * 1000));
