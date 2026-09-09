@@ -359,6 +359,26 @@ export const rateLimits = sqliteTable('rate_limits', {
 
 export type RateLimit = typeof rateLimits.$inferSelect;
 
+/**
+ * Instagram·Threads 장기 액세스 토큰.
+ *
+ * 두 API 모두 영구 토큰이 없다 — 60일 토큰을 refresh로 무제한 연장할 수 있을 뿐이고, 만료된
+ * 뒤에는 연장이 안 된다. 갱신은 Vercel Cron(api/cron/social-refresh)이 주간으로 하는데,
+ * 갱신된 토큰을 Vercel 환경 변수에 되쓰면 다음 배포 전까지 함수가 옛 값을 보므로 환경 변수는
+ * 저장소로 못 쓴다. 이미 붙어 있는 Turso가 런타임에 읽고 쓸 수 있는 유일한 공유 저장소다.
+ * 로컬 CLI(scripts/social)도 같은 행을 읽는다.
+ */
+export const socialTokens = sqliteTable('social_tokens', {
+  /** 'ig' | 'threads' */
+  platform: text('platform').primaryKey(),
+  accessToken: text('access_token').notNull(),
+  /** 만료 시각 (epoch seconds). refresh 응답의 expires_in으로 계산한다. */
+  expiresAt: integer('expires_at').notNull(),
+  updatedAt: integer('updated_at').notNull(),
+});
+
+export type SocialToken = typeof socialTokens.$inferSelect;
+
 export type Contract = typeof contracts.$inferSelect;
 export type NewContract = typeof contracts.$inferInsert;
 export type Signature = typeof signatures.$inferSelect;

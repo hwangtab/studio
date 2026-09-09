@@ -18,26 +18,31 @@ node --env-file=.env.local scripts/social/auth.mjs --refresh                   #
 Instagram Login·Threads 어느 쪽도 만료 없는 토큰을 주지 않는다(2026-09-09 문서·실측 확인).
 장기 토큰 60일을 `refresh_access_token`으로 **무제한** 연장할 수 있을 뿐이고, 한 번 만료되면
 연장이 불가능해 브라우저 재승인 말고는 방법이 없다. 그래서 "영원히 쓰기"의 실제 구현은
-**갱신을 빠뜨리지 않는 것**이고, 두 겹으로 막는다.
+**갱신을 빠뜨리지 않는 것**이다.
 
-1. **CLI 실행 시 자동 갱신** — `post`·`inbox`·`insights` 중 무엇을 돌리든 만료가 21일 이내면
-   먼저 갱신한다(`meta.mjs`의 `ensureFreshToken`). 실패해도 본 작업은 계속한다.
-2. **주간 launchd 작업** — CLI를 몇 달 안 써도 살아 있게 한다.
+| 무엇 | 어디 | 왜 |
+|---|---|---|
+| 앱 ID·시크릿 | Vercel env (production·development) | `vercel env pull`로 로컬에 온다. 손으로 관리하지 않는다 |
+| 액세스 토큰·만료 시각 | Turso `social_tokens` | Vercel env는 배포 시점에 함수에 박혀 크론이 갱신한 값을 다음 배포까지 못 본다. Turso는 런타임에 읽고 쓴다 |
+| 주간 갱신 | Vercel Cron `/api/cron/social-refresh` (월 01:00 UTC = 10:00 KST) | 이 맥에 의존하지 않는다. 잔여 21일 이내면 갱신, 처리 필요 시에만 운영자 메일 |
+| 보조 갱신 | CLI 실행 시 `ensureFreshToken` | 크론이 몇 주 죽어 있던 경우 대비 |
+
+로컬 CLI는 `.env.local`의 `TURSO_*`(= 프로덕션 DB)로 같은 행을 읽는다. 토큰을 `.env.local`에
+두지 않는다. 비용: 주 1회 요청 두 개 + Turso 읽기·쓰기 넷 — Pro 플랜 크론 한도(100개) 안이고
+함수 시간은 초 단위라 사실상 0이다.
 
 ```bash
-bash scripts/social/refresh-token.sh --install     # 매주 월 10:00 등록 (설치 1회)
-bash scripts/social/refresh-token.sh               # 지금 한 번 갱신
-bash scripts/social/refresh-token.sh --uninstall
-node --env-file=.env.local scripts/social/auth.mjs --status   # 남은 일수
-tail ~/Library/Logs/studionol-social-refresh.log              # 주간 작업 로그
+node --env-file=.env.local scripts/social/auth.mjs --status     # 남은 일수
+node --env-file=.env.local scripts/social/auth.mjs --refresh    # 지금 갱신(24시간 지난 토큰만)
+curl -H "Authorization: Bearer $CRON_SECRET" https://studionol.co.kr/api/cron/social-refresh  # 크론 수동 실행
 ```
 
-만료 시각은 `.env.local`의 `*_TOKEN_EXPIRES_AT`에 기록된다. 갱신은 발급 24시간 뒤부터 된다.
+만료됐거나 토큰이 없으면 크론이 메일로 알린다. 그때는 `auth.mjs --platform <ig|threads>`가
+출력하는 URL로 승인하고 돌아온 `?code=`를 `--code`로 넘긴다(Meta는 HTTPS redirect만 받는다).
 
 > 인터넷에 도는 "만료 없는 인스타 토큰"은 **페이스북 페이지 액세스 토큰** 이야기다.
 > 페이스북 로그인 기반 Instagram Graph API에서 페이지를 연결했을 때만 해당하고, 지금 쓰는
-> Instagram Login 방식에는 적용되지 않는다. Threads에는 그런 경로가 아예 없어서 어느 쪽이든
-> 갱신 장치는 있어야 한다.
+> Instagram Login 방식에는 적용되지 않는다. Threads에는 그런 경로가 아예 없다.
 
 ## 반응 확인·답하기 (`inbox.mjs`)
 

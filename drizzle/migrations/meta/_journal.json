@@ -64,6 +64,13 @@
       "when": 1788246118091,
       "tag": "0008_unknown_silver_centurion",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1788917342107,
+      "tag": "0009_graceful_captain_cross",
+      "breakpoints": true
     }
   ]
 }

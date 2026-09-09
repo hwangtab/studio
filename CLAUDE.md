@@ -369,9 +369,9 @@ iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예
 `scripts/social/post.mjs --slug <s> [--dry-run]`로 스토리 한 편을 두 플랫폼에 올린다. 상세는
 `docs/social/README.md`. 기억할 것: Meta는 **HTTPS redirect만** 받아 OAuth는 `auth.mjs`가
 URL 출력 → 사이트로 돌아온 `?code=`를 `--code`로 넘기는 2단계다. Instagram은 **JPEG 공개 URL만**
-받으므로 OG 카드(PNG)를 sharp로 바꿔 Blob에 올린다. **영구 토큰은 없다** — 60일 장기 토큰을 무제한 연장할 뿐이라, CLI 실행 시 자동 갱신
-(`ensureFreshToken`, 잔여 21일 이내)과 주간 launchd 작업(`refresh-token.sh --install`) 두 겹으로 막는다.
-만료된 뒤에는 연장이 안 되고 재승인만 남는다.
+받으므로 OG 카드(PNG)를 sharp로 바꿔 Blob에 올린다. **영구 토큰은 없다** — 60일 장기 토큰을 무제한 연장할 뿐이고 만료 후엔 재승인만 남는다.
+토큰은 env가 아니라 Turso `social_tokens`에 있고(Vercel env는 배포 시점에 박혀 갱신값을 못 본다),
+Vercel Cron `/api/cron/social-refresh`가 주간 갱신한다. 앱 ID·시크릿은 Vercel env → `vercel env pull`.
 발행 원장 `docs/social/posted.json`이 중복 발행을 막는다. 반응 확인·답글은 `inbox.mjs`(자동 답글 없음,
 IG DM은 모바일 앱의 "메시지 액세스 허용" 토글 필요), 지표 적재는 `insights.mjs`.
 

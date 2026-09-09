@@ -9,8 +9,8 @@
  *   상태:         node --env-file=.env.local scripts/social/auth.mjs --status
  *
  * 장기 토큰은 60일이고 영구 토큰은 없다. --refresh는 24시간 이상 지났고 아직 만료되지 않은
- * 토큰만 연장한다. 갱신을 빠뜨리지 않는 장치는 meta.mjs의 ensureFreshToken(CLI 실행 시)과
- * launchd 주간 작업(scripts/social/refresh-token.sh) 두 겹이다.
+ * 토큰만 연장한다. 토큰은 Turso에 저장되고 주간 갱신은 Vercel Cron(api/cron/social-refresh)이
+ * 한다. 이 스크립트는 최초 승인·재승인·수동 확인용이다.
  */
 import {
   PLATFORMS, REDIRECT_URI, REFRESH_WHEN_DAYS_LEFT,
@@ -64,7 +64,7 @@ async function authorize(platform) {
 
   const me = await graph(platform, 'GET', '/me', { fields: 'id,username' }, { token: long.access_token });
   saveEnv({ [p.userIdKey]: me.id });
-  saveToken(platform, long);
+  await saveToken(platform, long);
   console.log(`[${p.label}] @${me.username} (id ${me.id}) 장기 토큰 저장. 만료 ${Math.round(long.expires_in / 86400)}일 후.`);
 }
 
@@ -73,11 +73,10 @@ async function refresh1(platform) {
   console.log(`[${PLATFORMS[platform].label}] 토큰 갱신. 만료 ${days}일 후.`);
 }
 
-function report(platform) {
+async function report(platform) {
   const p = PLATFORMS[platform];
-  const left = daysLeft(platform);
-  if (!process.env[p.tokenKey]) { console.log(`[${p.label}] 토큰 없음 — auth.mjs로 승인할 것`); return; }
-  if (left === null) { console.log(`[${p.label}] 만료 시각 미기록 — 다음 실행에서 갱신된다`); return; }
+  const left = await daysLeft(platform);
+  if (left === null) { console.log(`[${p.label}] 저장된 토큰 없음 — auth.mjs --platform ${platform} 로 승인할 것`); return; }
   const state = left <= 0 ? '만료됨 (재승인 필요)' : left <= REFRESH_WHEN_DAYS_LEFT ? '갱신 예정' : '정상';
   console.log(`[${p.label}] ${Math.floor(left)}일 남음 — ${state}`);
 }
@@ -85,7 +84,7 @@ function report(platform) {
 try {
   for (const t of targets) {
     if (!PLATFORMS[t]) throw new Error(`알 수 없는 플랫폼: ${t}`);
-    if (status) report(t);
+    if (status) await report(t);
     else await (refresh ? refresh1(t) : authorize(t));
   }
 } catch (err) {
