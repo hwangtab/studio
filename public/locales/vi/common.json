@@ -21,7 +21,8 @@
     },
     "short": {
       "practiceRoom": "Phòng tập",
-      "pricing": "Giá"
+      "pricing": "Giá",
+      "artists": "Support Artists"
     },
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
@@ -29,7 +30,8 @@
     "releaseProject": "Tổng quan",
     "releaseSingle": "Single",
     "releaseEp": "EP",
-    "releaseAlbum": "Album đầy đủ"
+    "releaseAlbum": "Album đầy đủ",
+    "artists": "Support Artists"
   },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
@@ -2492,6 +2494,74 @@
     "hubCallout": {
       "title": "Phát hành nhạc indie A-Z — hướng dẫn một trang",
       "subtitle": "Quy trình phát hành single·EP·album, phân phối và tiền bản quyền trong một trang."
+    }
+  },
+  "artists": {
+    "seo": {
+      "title": "Support Artists | Studio NOL",
+      "description": "Support artists who have worked with Studio NOL with a small monthly contribution. Your support goes toward the artist's activities, and supporters receive updates from the artist.",
+      "keywords": "support artists, support indie musicians, monthly support, Studio NOL"
+    },
+    "hero": {
+      "title": "Support an Artist Every Month",
+      "subtitle": "These are the artists behind the music made together at Studio NOL. A small amount becomes time for the next song.",
+      "imageAlt": "Artist recording in the Studio NOL live room"
+    },
+    "how": {
+      "title": "How It Works",
+      "items": [
+        {
+          "title": "Choose an Artist",
+          "body": "Browse profiles and past work to choose the team you want to support."
+        },
+        {
+          "title": "Support a Fixed Amount Monthly",
+          "body": "Your card is charged automatically on the same day each month, and you can cancel anytime."
+        },
+        {
+          "title": "It Reaches the Artist",
+          "body": "Most of your support goes directly to the artist, and you'll receive updates from them."
+        }
+      ]
+    },
+    "list": {
+      "title": "Artists You Can Support",
+      "empty": "We're preparing our first artist. Check back here soon.",
+      "viewProfile": "View Profile"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Common questions about how support works, and how to cancel or get a refund.",
+      "items": [
+        {
+          "question": "Where does my support go?",
+          "answer": "Studio NOL sells the membership and pays a fixed share to your chosen artist every month. The share is published on the artist's page."
+        },
+        {
+          "question": "Can I cancel anytime?",
+          "answer": "Yes. You can cancel instantly from the support management link, and you won't be charged from the following month."
+        },
+        {
+          "question": "What do supporters receive?",
+          "answer": "A place on the artist's supporter list (only if you choose) and a monthly update email from the artist."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Have a Question?",
+      "subtitle": "Feel free to ask about how support works or how artists join, via KakaoTalk.",
+      "label": "Ask via KakaoTalk"
+    },
+    "detail": {
+      "metaDescription": "{{name}} — {{tagline}}. Support artists who have worked with Studio NOL every month.",
+      "backToList": "Back to Artist List",
+      "worksTitle": "Work Together at Studio NOL",
+      "linksTitle": "Listen & Watch More",
+      "supportTitle": "Support This Artist",
+      "supportPending": "Support Is Coming Soon",
+      "supportPendingBody": "We'll let you know when monthly support opens. Leave your interest via KakaoTalk in the meantime.",
+      "supportPendingLabel": "Get Updates via KakaoTalk",
+      "shareTitle": "Support {{name}} — Studio NOL"
     }
   }
 }
