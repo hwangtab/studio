@@ -74,6 +74,12 @@ it('set_fulfillment 잘못된 값 → 400', async () => {
   expect(r.status).toBe(400);
 });
 
+it('set_fulfillment은 paid가 아닌 주문에서 409', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'pending' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'preparing' });
+  expect(r.status).toBe(409);
+});
+
 it('알 수 없는 action → 400', async () => {
   const r = await call('PATCH', { id: 'order-1' }, { action: 'nope' });
   expect(r.status).toBe(400);

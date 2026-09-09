@@ -9,7 +9,7 @@ import { logoutAdmin } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
-import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
+import { duplicateKey, serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { listFundingOrders } from '../../../lib/funding/admin-list';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { getAllFundingProjects } from '../../../lib/funding/projects';
@@ -17,9 +17,16 @@ import { expireStalePledges } from '../../../lib/funding/service';
 
 const LIST_LIMIT = 200;
 
+interface ProjectRewardOption {
+  id: string;
+  title: string;
+  amount: number;
+}
+
 interface ProjectOption {
   slug: string;
   title: string;
+  rewards: ProjectRewardOption[];
 }
 
 interface AdminFundingPageProps {
@@ -39,13 +46,19 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
   const slugParam = context.query.slug;
   const slug = typeof slugParam === 'string' && slugParam ? slugParam : null;
 
+  const projects: ProjectOption[] = getAllFundingProjects().map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    rewards: p.rewards.map((r) => ({ id: r.id, title: r.title, amount: r.amount })),
+  }));
+
   try {
     await expireStalePledges(new Date());
     const orders = await listFundingOrders(slug);
     const counts = new Map<string, number>();
     for (const o of orders) {
       if (o.status === 'pending' && o.fundingPledge?.paymentMethod === 'bank_transfer') {
-        const key = `${o.customerName}:${o.totalAmount}`;
+        const key = duplicateKey(o);
         counts.set(key, (counts.get(key) ?? 0) + 1);
       }
     }
@@ -55,7 +68,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
       props: {
         items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdmin(o, dups)),
         truncated: orders.length > LIST_LIMIT,
-        projects: getAllFundingProjects().map((p) => ({ slug: p.slug, title: p.title })),
+        projects,
         slug,
       },
     };
@@ -65,7 +78,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
       props: {
         items: [],
         truncated: false,
-        projects: getAllFundingProjects().map((p) => ({ slug: p.slug, title: p.title })),
+        projects,
         slug,
         error: '후원 목록을 불러오는 중 오류가 발생했습니다.',
       },
@@ -297,14 +310,18 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                       </select>
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">리워드 id</label>
-                      <input
-                        type="text"
+                      <label className="block text-xs font-medium text-gray-600 mb-1">리워드</label>
+                      <select
                         value={formRewardId}
                         onChange={(e) => setFormRewardId(e.target.value)}
-                        placeholder="리워드 id"
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                      />
+                        disabled={!selectedProject}
+                      >
+                        <option value="">선택</option>
+                        {(selectedProject?.rewards ?? []).map((r) => (
+                          <option key={r.id} value={r.id}>{r.title} ({formatPriceAmount(r.amount)}원)</option>
+                        ))}
+                      </select>
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-600 mb-1">수량</label>
@@ -366,11 +383,6 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                       />
                     </div>
                   </div>
-                  {selectedProject && (
-                    <p className="text-xs text-gray-500">
-                      리워드 id는 콘텐츠 파일(content/funding/{selectedProject.slug}.md)의 rewards[].id를 그대로 입력합니다.
-                    </p>
-                  )}
                   <Button type="submit" disabled={busy}>등록</Button>
                 </form>
               )}

@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../../db/client';
@@ -7,6 +8,7 @@ import { generateManageToken } from '../../../../../lib/booking/token';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
 import { duplicateKey, serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
 import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
+import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
 import { findReward, getFundingProject } from '../../../../../lib/funding/projects';
 import { expireStalePledges, generateFundingOrderNo } from '../../../../../lib/funding/service';
 
@@ -44,8 +46,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       !reward ||
       !Number.isInteger(quantity) ||
       quantity < 1 ||
+      quantity > MAX_QUANTITY ||
       !Number.isInteger(additionalAmount) ||
       additionalAmount < 0 ||
+      additionalAmount > MAX_ADDITIONAL_AMOUNT ||
+      additionalAmount % ADDITIONAL_AMOUNT_STEP !== 0 ||
       typeof b.customerName !== 'string' ||
       !b.customerName
     ) {
@@ -55,9 +60,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const amounts = computeFundingAmounts(reward.amount, quantity, additionalAmount);
     const orderNo = generateFundingOrderNo(now, true);
     const db = getDb();
-    const [order] = await db
-      .insert(orders)
-      .values({
+    const s = (typeof b.shipping === 'object' && b.shipping) || {};
+    const orderId = randomUUID().replace(/-/g, '');
+    const pledgeId = randomUUID().replace(/-/g, '');
+    // orders·funding_pledges INSERT를 하나의 배치로 묶는다 — 둘 중 하나만 성공하면
+    // payments 없이 paid로 남는 고아 주문이 생긴다(예약 confirm.ts의 batch 패턴).
+    await db.batch([
+      db.insert(orders).values({
+        id: orderId,
         orderNo,
         type: 'funding',
         status: 'paid',
@@ -66,30 +76,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         customerEmail: String(b.customerEmail ?? 'manual@studionol.co.kr'),
         ...amounts,
         manageToken: generateManageToken(),
-      })
-      .returning({ id: orders.id });
-    const s = (typeof b.shipping === 'object' && b.shipping) || {};
-    await db.insert(fundingPledges).values({
-      orderId: order.id,
-      projectSlug: project.slug,
-      rewardId: reward.id,
-      rewardTitle: reward.title,
-      unitAmount: reward.amount,
-      quantity,
-      additionalAmount,
-      paymentMethod: 'bank_transfer',
-      holdExpiresAt: now,
-      paidAt: now,
-      displayNamePublic: b.displayNamePublic === true,
-      entrySource: 'manual',
-      shippingName: s.name ?? null,
-      shippingPhone: s.phone ?? null,
-      shippingPostcode: s.postcode ?? null,
-      shippingAddress1: s.address1 ?? null,
-      shippingAddress2: s.address2 ?? null,
-      shippingMemo: s.memo ?? null,
-      adminMemo: typeof b.adminMemo === 'string' ? b.adminMemo : null,
-    });
+      }),
+      db.insert(fundingPledges).values({
+        id: pledgeId,
+        orderId,
+        projectSlug: project.slug,
+        rewardId: reward.id,
+        rewardTitle: reward.title,
+        unitAmount: reward.amount,
+        quantity,
+        additionalAmount,
+        paymentMethod: 'bank_transfer',
+        holdExpiresAt: now,
+        paidAt: now,
+        displayNamePublic: b.displayNamePublic === true,
+        entrySource: 'manual',
+        shippingName: s.name ?? null,
+        shippingPhone: s.phone ?? null,
+        shippingPostcode: s.postcode ?? null,
+        shippingAddress1: s.address1 ?? null,
+        shippingAddress2: s.address2 ?? null,
+        shippingMemo: s.memo ?? null,
+        adminMemo: typeof b.adminMemo === 'string' ? b.adminMemo : null,
+      }),
+    ]);
     return res.status(201).json({ ok: true, orderNo });
   }
   return res.status(405).json({ ok: false });
