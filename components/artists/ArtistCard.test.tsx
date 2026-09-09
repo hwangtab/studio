@@ -4,9 +4,8 @@ import '@testing-library/jest-dom';
 import ArtistCard from './ArtistCard';
 
 const artist = {
-  slug: 'sample-band', name: '샘플 밴드', portfolioArtist: '샘플 밴드', tagline: '연신내의 기타 팝',
-  bio: '', image: '/images/artists/sample-band.jpg', links: {}, supportActive: true,
-  taxType: 'withholding' as const, joinedOn: '2026-09-08', updatedOn: '2026-09-08',
+  slug: 'sample-band', name: '샘플 밴드', tagline: '연신내의 기타 팝',
+  image: '/images/artists/sample-band.jpg',
 };
 
 describe('ArtistCard', () => {

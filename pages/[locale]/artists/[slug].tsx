@@ -14,13 +14,20 @@ import ArtistSupportCallout from '../../../components/artists/ArtistSupportCallo
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { SUPPORTED_ARTISTS, getSupportedArtist, getArtistPortfolioItems, type SupportedArtist, type ArtistLinkKey } from '../../../data/artists';
+import {
+  SUPPORTED_ARTISTS,
+  getSupportedArtist,
+  getArtistPortfolioItems,
+  toArtistPageData,
+  type ArtistPageData,
+  type ArtistLinkKey,
+} from '../../../data/artists';
 import type { PortfolioItem } from '../../../types/data';
 import type { NextPageWithLayout } from '../../../types';
 
 interface ArtistPageProps {
   locale: Locale;
-  artist: SupportedArtist;
+  artist: ArtistPageData;
   works: PortfolioItem[];
 }
 
@@ -40,7 +47,7 @@ const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works
     url: `${siteConfig.url}/${locale}/artists/${artist.slug}`,
     image: `${siteConfig.url}${artist.image}`,
     description: artist.tagline,
-    sameAs: links.map(([, url]) => url),
+    ...(links.length > 0 && { sameAs: links.map(([, url]) => url) }),
   };
 
   const breadcrumbItems = [
@@ -58,6 +65,8 @@ const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works
         canonical={`/${locale}/artists/${artist.slug}`}
         ogImage={artist.image}
         ogImageAlt={artist.name}
+        ogImageWidth={800}
+        ogImageHeight={600}
         includeSchema
         schema={schema}
         availableLocales={['ko']}
@@ -106,21 +115,23 @@ const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works
         </div>
       </Section>
 
-      <Section variant="alternate">
-        <div className="max-w-3xl mx-auto">
-          <ArtistSupportCallout
-            artist={artist}
-            locale={locale}
-            kakaoUrl={siteConfig.contact.kakaoUrl}
-            labels={{
-              title: t('artists.detail.supportTitle'),
-              pending: t('artists.detail.supportPending'),
-              pendingBody: t('artists.detail.supportPendingBody'),
-              pendingLabel: t('artists.detail.supportPendingLabel'),
-            }}
-          />
-        </div>
-      </Section>
+      {artist.supportActive && (
+        <Section variant="alternate">
+          <div className="max-w-3xl mx-auto">
+            <ArtistSupportCallout
+              artist={artist}
+              locale={locale}
+              kakaoUrl={siteConfig.contact.kakaoUrl}
+              labels={{
+                title: t('artists.detail.supportTitle'),
+                pending: t('artists.detail.supportPending'),
+                pendingBody: t('artists.detail.supportPendingBody'),
+                pendingLabel: t('artists.detail.supportPendingLabel'),
+              }}
+            />
+          </div>
+        </Section>
+      )}
 
       {works.length > 0 && (
         <Section>
@@ -154,7 +165,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
   return buildPageStaticProps(
     locale,
-    { artist, works },
+    { artist: toArtistPageData(artist), works },
     { revalidate: 86400, i18nSections: ['artists', 'portfolio'] },
   );
 };

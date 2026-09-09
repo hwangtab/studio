@@ -11,7 +11,7 @@ import ArtistCard from '../../../components/artists/ArtistCard';
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
-import { getSupportedArtists, type SupportedArtist } from '../../../data/artists';
+import { getSupportedArtists, toArtistCardData, type ArtistCardData } from '../../../data/artists';
 import type { NextPageWithLayout } from '../../../types';
 
 const FAQSection = dynamic(() => import('../../../components/ui/FAQSection'));
@@ -19,7 +19,7 @@ const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA')
 
 interface ArtistsHubProps {
   locale: Locale;
-  artists: SupportedArtist[];
+  artists: ArtistCardData[];
 }
 
 const HOW_ICONS = [Users, Heart, Send];
@@ -42,6 +42,7 @@ const ArtistsHub: NextPageWithLayout<ArtistsHubProps> = ({ locale, artists }) =>
         ogImageAlt={t('artists.hero.imageAlt')}
         ogImageWidth={1200}
         ogImageHeight={630}
+        robots={artists.length === 0 ? 'noindex, follow' : undefined}
         includeSchema
         availableLocales={['ko']}
         webPageType="CollectionPage"
@@ -120,7 +121,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   return buildPageStaticProps(
     locale,
-    { artists: getSupportedArtists() },
+    { artists: getSupportedArtists().map(toArtistCardData) },
     { revalidate: 86400, i18nSections: ['artists'] },
   );
 };

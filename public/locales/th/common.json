@@ -2520,11 +2520,11 @@
         },
         {
           "title": "Support a Fixed Amount Monthly",
-          "body": "Your card is charged automatically on the same day each month, and you can cancel anytime."
+          "body": "Once support opens, your card will be charged automatically on the same day each month, and you'll be able to cancel anytime."
         },
         {
           "title": "It Reaches the Artist",
-          "body": "Most of your support goes directly to the artist, and you'll receive updates from them."
+          "body": "Most of your support will go directly to the artist, and you'll receive updates from them."
         }
       ]
     },
@@ -2539,15 +2539,15 @@
       "items": [
         {
           "question": "Where does my support go?",
-          "answer": "Studio NOL sells the membership and pays a fixed share to your chosen artist every month. The share is published on the artist's page."
+          "answer": "Studio NOL will sell the membership and pay a fixed share to your chosen artist every month. The share will be published on the artist's page once support opens."
         },
         {
           "question": "Can I cancel anytime?",
-          "answer": "Yes. You can cancel instantly from the support management link, and you won't be charged from the following month."
+          "answer": "Yes. Once support opens, you'll be able to cancel instantly from the management link, and you won't be charged from the following month."
         },
         {
           "question": "What do supporters receive?",
-          "answer": "A place on the artist's supporter list (only if you choose) and a monthly update email from the artist."
+          "answer": "We're preparing a place on the artist's supporter list (only if you choose) and a monthly update email from the artist."
         }
       ]
     },

@@ -25,9 +25,35 @@ export interface SupportedArtist {
   /** 지급 시 세금 처리 — 3.3% 원천징수 | 사업자 세금계산서 (스펙 §10). */
   taxType: 'withholding' | 'invoice';
   joinedOn: string;
-  /** 사이트맵 lastmod. 소개·링크를 고치면 올린다. */
+  /** 소개·링크를 마지막으로 고친 날. 사이트맵 lastmod는 이 파일의 커밋 시각을 쓰므로(lib/sitemap/routes.js) 표시·기록용이다. */
   updatedOn: string;
 }
+
+/** 목록 카드가 실제로 쓰는 필드만. taxType·joinedOn·portfolioArtist는 __NEXT_DATA__에 실리면 안 된다. */
+export type ArtistCardData = Pick<SupportedArtist, 'slug' | 'name' | 'tagline' | 'image'>;
+
+export const toArtistCardData = (a: SupportedArtist): ArtistCardData => ({
+  slug: a.slug,
+  name: a.name,
+  tagline: a.tagline,
+  image: a.image,
+});
+
+/** 상세 페이지가 실제로 쓰는 필드만. taxType·joinedOn·portfolioArtist는 __NEXT_DATA__에 실리면 안 된다. */
+export type ArtistPageData = Pick<
+  SupportedArtist,
+  'slug' | 'name' | 'tagline' | 'bio' | 'image' | 'links' | 'supportActive'
+>;
+
+export const toArtistPageData = (a: SupportedArtist): ArtistPageData => ({
+  slug: a.slug,
+  name: a.name,
+  tagline: a.tagline,
+  bio: a.bio,
+  image: a.image,
+  links: a.links,
+  supportActive: a.supportActive,
+});
 
 export const SUPPORTED_ARTISTS: readonly SupportedArtist[] = [];
 

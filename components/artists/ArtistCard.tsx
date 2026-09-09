@@ -1,11 +1,11 @@
 import React from 'react';
 import BaseCard from '../ui/BaseCard';
 import ResponsiveImage from '../ResponsiveImage';
-import type { SupportedArtist } from '../../data/artists';
+import type { ArtistCardData } from '../../data/artists';
 import type { Locale } from '../../lib/i18n';
 
 interface ArtistCardProps {
-  artist: SupportedArtist;
+  artist: ArtistCardData;
   locale: Locale;
   viewProfileLabel: string;
 }
