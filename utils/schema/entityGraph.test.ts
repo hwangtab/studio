@@ -100,14 +100,25 @@ describe('엔티티 그래프 — 운영자 Person을 커머셜 페이지에서 
     expect(offers.priceValidUntil).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
-  it('/author의 프로필 노드와 기본 그래프 노드가 값 충돌 없이 병합된다', () => {
-    // 같은 @id 노드가 둘이어도 안전한 이유는 "값이 같아서"다. 이 계약이 깨지면
-    // url·jobTitle이 배열로 합쳐져 예전 #organization 사고가 Person에서 재현된다.
+  it('/author 프로필은 완전 노드를 다시 만들지 않고 @id로 참조만 한다', () => {
+    // 예전엔 같은 @id의 완전 노드가 두 개였고 "값이 같으니 안전하다"고 봤다. 그러나
+    // JSON-LD node-map 병합을 엄격히 하는 소비자는 배열 속성(award·sameAs·subjectOf)을
+    // 합집합으로 처리해 수상 6건이 중복으로 보일 수 있다(2026-09-08 감사 #3).
+    // 정본은 generateDefaultSchema가 심는 노드 하나뿐이고, /author는 description만 얹는다.
     const merged = graphOf(generatePersonProfileSchema(SITE, 'ko', '설명'));
     const persons = merged.filter((n) => n['@id'] === personId);
     expect(persons.length).toBeGreaterThan(1);
-    for (const key of ['@type', 'name', 'url', 'jobTitle', 'award']) {
-      expect(new Set(persons.map((p) => JSON.stringify(p[key]))).size).toBe(1);
+
+    const fullNodes = persons.filter((p) => p.name !== undefined);
+    expect(fullNodes).toHaveLength(1);
+    expect(fullNodes[0].award).toBeDefined();
+
+    const referenceNodes = persons.filter((p) => p.name === undefined);
+    expect(referenceNodes).toHaveLength(1);
+    expect(referenceNodes[0].description).toBe('설명');
+    // 참조 노드는 정본과 겹치는 속성을 들고 있으면 안 된다.
+    for (const key of ['name', 'url', 'jobTitle', 'award', 'sameAs', 'subjectOf', 'image']) {
+      expect(referenceNodes[0][key]).toBeUndefined();
     }
   });
 });

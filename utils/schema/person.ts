@@ -45,16 +45,15 @@ export const getOperatorAwards = (): string[] =>
 /**
  * 운영자 Person entity(#person-hwang)의 canonical 노드 — @context 없는 @graph용 조각.
  *
- * 소비처가 둘이다:
- *   1) generateDefaultSchema — 전 페이지 @graph에 심어 Organization.founder가 가리킬 실체를 만든다.
- *      이게 없으면 /pricing·/recording 같은 커머셜 페이지에 Person entity가 아예 없어서,
- *      정작 "연신내 녹음실" 류 쿼리가 도달하는 면에 수상 이력과 얼굴이 하나도 실리지
- *      않는다(스토리와 /author에만 있었다).
- *   2) generatePersonProfileSchema — /author 페이지의 mainEntity. description만 더 얹는다.
+ * 유일한 소비처는 generateDefaultSchema다. 전 페이지 @graph에 심어 Organization.founder가
+ * 가리킬 실체를 만든다. 이게 없으면 /pricing·/recording 같은 커머셜 페이지에 Person entity가
+ * 아예 없어서, 정작 "연신내 녹음실" 류 쿼리가 도달하는 면에 수상 이력과 얼굴이 하나도 실리지
+ * 않는다(스토리와 /author에만 있었다).
  *
- * 두 노드가 같은 @graph에 동시에 존재해도 안전하다. JSON-LD는 같은 @id를 같은 노드로 병합하고,
- * 여기서 나온 두 결과는 값이 충돌하지 않는다(같은 빌더 산출물이라 url·jobTitle·award·image가 동일).
- * 충돌이 문제가 되는 건 값이 다를 때다 — 그게 예전 contact.tsx의 #organization 사고였다.
+ * /author 페이지(generatePersonProfileSchema)는 이 완전 노드를 다시 만들지 않는다 — @id 참조 +
+ * 그 페이지에만 필요한 description만 낸다. 완전 노드를 두 번 내보내면 배열 속성(award·sameAs·
+ * subjectOf)이 값은 같아도 물리적으로 중복된 두 객체로 남아, node-map 병합을 엄격히 하는
+ * 소비자에게 합집합 중복으로 보일 수 있다(2026-09-08 감사 #3). 정본은 여기 하나뿐이다.
  */
 export const buildOperatorPersonNode = (
   siteUrl: string,
@@ -99,12 +98,21 @@ export const buildOperatorPersonNode = (
  * Person 프로필 스키마 — /[locale]/author 페이지의 mainEntity.
  * generateArticleSchema·generateReleaseProjectSchema와 동일한 @id(#person-hwang)를 사용해
  * 사이트 전체에서 황경하를 단일 entity로 인식시킨다 (GEO/E-E-A-T 핵심).
+ *
+ * 완전 노드가 아니라 @id 참조 + description만 낸다. name·jobTitle·award·sameAs·subjectOf
+ * 같은 정본 속성은 generateDefaultSchema가 이미 같은 @graph에 심어 둔 buildOperatorPersonNode
+ * 노드가 담당한다(위 주석 참고) — 여기서 다시 내면 같은 @id를 가진 완전 노드가 두 개가 된다.
  */
 export const generatePersonProfileSchema = (
   siteUrl: string,
   locale: Locale,
   description: string
-) => ({
-  '@context': 'https://schema.org',
-  ...buildOperatorPersonNode(siteUrl, locale, { description }),
-});
+) => {
+  void locale;
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': getOperatorPersonId(siteUrl),
+    description,
+  };
+};
