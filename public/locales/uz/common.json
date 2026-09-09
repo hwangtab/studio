@@ -335,7 +335,9 @@
       "title": "Chiqarish loyihasini boshlashga tayyormisiz?",
       "subtitle": "30 daqiqa bepul maslahat · Maxsus narx · Bo'lib to'lash imkoniyati",
       "location": "Onlayn murojaat",
-      "inquiry": "Bepul Maslahat Olish"
+      "inquiry": "Bepul Maslahat Olish",
+      "bookingEntry": "Onlayn bron qilish",
+      "orderEntry": "Onlayn buyurtma"
     },
     "relatedStoriesTitle": "Bron qilishdan oldin ko'rib chiqishga arziydigan qo'llanmalar",
     "relatedStoriesSubtitle": "Xarajat, reliz va yozuv jarayonini oldindan bilsangiz, birinchi seansdan ko'proq foyda olasiz.",
@@ -559,7 +561,7 @@
     },
     "midCta": {
       "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz.",
-    "noteVacant": "Hozirda ko'chib kirish uchun bo'sh xonalar mavjud. Qaror qilishdan oldin xonani ko'rib chiqishingiz mumkin. Murojaat qoldiring, tez orada javob beramiz."
+      "noteVacant": "Hozirda ko'chib kirish uchun bo'sh xonalar mavjud. Qaror qilishdan oldin xonani ko'rib chiqishingiz mumkin. Murojaat qoldiring, tez orada javob beramiz."
     },
     "painPoints": {
       "title": "Quyidagi muammolar sizda bormi?",
@@ -1507,7 +1509,8 @@
       "titleHighlight": "shunchaki faylni yuboring",
       "subtitleLine1": "Trek sonini ayting — narxni darhol aytamiz.",
       "subtitleLine2": "Butun mamlakat yoki chet eldan fayl yuborish orqali ishlaydi.",
-      "imageAlt": "Studio NOL miks buyurtmasi so'rovi"
+      "imageAlt": "Studio NOL miks buyurtmasi so'rovi",
+      "order": "Onlayn buyurtma"
     }
   },
   "voiceActing": {

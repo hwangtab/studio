@@ -1,7 +1,10 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
 jest.mock('./toss', () => ({ cancelPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ deleteBookingEvent: jest.fn().mockResolvedValue(undefined) }));
-jest.mock('./email', () => ({ sendBookingCancelledEmails: jest.fn().mockResolvedValue(null) }));
+jest.mock('./email', () => ({
+  sendBookingCancelledEmails: jest.fn().mockResolvedValue(null),
+  sendMixingOrderCancelledEmails: jest.fn().mockResolvedValue(null),
+}));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 (confirm.test.ts와 동일 이유
 // — cancel.ts도 한 실행 안에서 getDb()를 여러 번 부르므로 claim(run)·batch·insert·후처리 update가 같은
 // 참조를 봐야 한다). run 기본값은 rowsAffected:1 — "선점 성공"이 기본 경로다.
@@ -21,7 +24,7 @@ import { cancelBookingWithRefund } from './cancel';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment } from './toss';
 import { deleteBookingEvent } from './gcal';
-import { sendBookingCancelledEmails } from './email';
+import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
 import { getDb } from '../../db/client';
 
 type MockDb = {
@@ -297,5 +300,77 @@ describe('cancelBookingWithRefund', () => {
     const notificationErrorCall = setCallsOf(db).find((c) => 'notificationError' in c);
     expect(notificationErrorCall).toBeDefined();
     expect((notificationErrorCall as { notificationError: string }).notificationError).toBe('customer:TIMEOUT');
+  });
+
+  // 계획서 §4: 믹싱은 날짜 티어가 아니라 "작업 착수" 하나로만 갈린다 — received면 전액 환불,
+  // in_progress·delivered는 고객 셀프 취소가 막히고 관리자 임의 환불만 남는다.
+  describe('믹싱·마스터링 주문(work_orders) 취소', () => {
+    const mixingOrder = (over: Record<string, unknown> = {}) => ({
+      id: 'o1', orderNo: 'SNB-1', status: 'paid', type: 'mixing', totalAmount: 220000,
+      customerName: '김보컬', customerPhone: '010-1234-5678', customerEmail: 'a@b.c',
+      manageToken: 't',
+      bookings: [],
+      workOrders: [
+        { id: 'w1', status: 'received', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: null },
+      ],
+      payments: [{ id: 'p1', paymentKey: 'pk' }],
+      ...over,
+    });
+
+    it('received 상태의 고객 셀프 취소는 전액 환불로 성공한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(mixingOrder());
+      (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
+      const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+      expect(r).toEqual({ ok: true, refundAmount: 220000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 220000 }));
+      expect(sendMixingOrderCancelledEmails).toHaveBeenCalled();
+      const db = mockDb();
+      const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
+      expect(orderStatusUpdate).toMatchObject({ status: 'refunded' });
+    });
+
+    it('in_progress 상태의 고객 셀프 취소는 착수 안내 문구로 거부되고 토스를 부르지 않는다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({ workOrders: [{ id: 'w1', status: 'in_progress', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: null }] }),
+      );
+      const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
+      expect(r).toEqual({
+        ok: false, code: 'invalid_state',
+        message: '작업이 시작된 주문은 온라인으로 취소할 수 없습니다. 010-4255-7893으로 문의해 주세요.',
+      });
+      expect(cancelPayment).not.toHaveBeenCalled();
+    });
+
+    it('in_progress 상태의 관리자 임의 환불은 허용된다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({ workOrders: [{ id: 'w1', status: 'in_progress', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: null }] }),
+      );
+      (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
+      const r = await cancelBookingWithRefund({
+        orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 100000, now: NOW,
+      });
+      expect(r).toEqual({ ok: true, refundAmount: 100000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 100000 }));
+    });
+
+    it('delivered 상태의 관리자 임의 환불도 허용된다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({ workOrders: [{ id: 'w1', status: 'delivered', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: null }] }),
+      );
+      (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
+      const r = await cancelBookingWithRefund({
+        orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 220000, now: NOW,
+      });
+      expect(r).toEqual({ ok: true, refundAmount: 220000 });
+    });
+
+    it('이미 취소된 주문(work_orders.status=cancelled)은 invalid_state로 거부한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        mixingOrder({ workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }] }),
+      );
+      const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', now: NOW });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(cancelPayment).not.toHaveBeenCalled();
+    });
   });
 });

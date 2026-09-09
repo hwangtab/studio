@@ -60,6 +60,28 @@ export const refundBooking = async (
   }
 };
 
+/** 믹싱·마스터링 주문(work_orders) 전용 — received→in_progress 또는 in_progress→delivered. */
+export const setWorkOrderStage = async (
+  id: string,
+  action: 'start_work' | 'deliver',
+): Promise<BookingActionResult> => {
+  try {
+    const response = await fetch(`/api/admin/bookings/${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin',
+      body: JSON.stringify({ action }),
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result?.ok) {
+      return { ok: false, message: result?.message || '상태 변경에 실패했습니다.' };
+    }
+    return { ok: true };
+  } catch {
+    return { ok: false, message: '네트워크 오류가 발생했습니다.' };
+  }
+};
+
 export const resendBookingNotification = async (id: string): Promise<BookingActionResult> => {
   try {
     const response = await fetch(`/api/admin/bookings/${id}`, {

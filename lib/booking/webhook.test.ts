@@ -67,6 +67,7 @@ const order = (over: Record<string, unknown> = {}) => ({
   customerName: '김보컬', customerPhone: '010-1234-5678', customerEmail: 'a@b.c',
   manageToken: 't',
   bookings: [{ id: 'b1', status: 'confirmed', startAt: new Date(), endAt: new Date(), durationHours: 3, serviceType: 'recording', customerNote: null, gcalEventId: null }],
+  workOrders: [],
   payments: [{ id: 'p1', paymentKey: 'pk1' }],
   ...over,
 });

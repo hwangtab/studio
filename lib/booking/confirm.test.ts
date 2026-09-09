@@ -2,7 +2,10 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn(), PENDING_HOLD_SECONDS: 900 }));
 jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
-jest.mock('./email', () => ({ sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null) }));
+jest.mock('./email', () => ({
+  sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null),
+  sendMixingOrderConfirmedEmails: jest.fn().mockResolvedValue(null),
+}));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 —
 // confirm.ts는 한 실행 안에서 getDb()를 여러 번 부르므로(toss_rejected 분기 / batch / 후처리),
 // 테스트가 batch·payments 조회 결과를 mockResolvedValueOnce 등으로 제어하려면 같은 참조가 필요하다.
@@ -54,6 +57,7 @@ const order = (over: object = {}) => ({
   createdAt: new Date(),
   customerName: '김보컬', customerPhone: '010-1234-5678', customerEmail: 'a@b.c',
   manageToken: 't', bookings: [{ id: 'b1', status: 'pending', startAt: new Date(), endAt: new Date(), durationHours: 3, serviceType: 'recording', customerNote: null }],
+  workOrders: [],
   payments: [], ...over,
 });
 
@@ -89,7 +93,7 @@ describe('confirmBookingPayment', () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: true });
   });
 
   it('토스가 거절하면 orders를 failed로 마킹하고 토스 메시지를 그대로 전달한다', async () => {
@@ -136,7 +140,7 @@ describe('confirmBookingPayment', () => {
     });
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: true });
     expect(db.batch).toHaveBeenCalled(); // 정상 승인과 같은 batch 경로
     expect(db.run).not.toHaveBeenCalled(); // orders를 failed로 마킹하는 db.run이 없다
     // rawResponse는 재조회한 payment로 남는다.
@@ -206,14 +210,14 @@ describe('confirmBookingPayment', () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ createdAt: new Date(Date.now() - 899 * 1000) }));
       (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: true });
       expect(confirmPayment).toHaveBeenCalled();
     });
 
     it('이미 paid인 주문은 만료 검사보다 먼저 멱등 성공으로 답한다 (뒤늦은 새로고침이 깨지지 않는다)', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', createdAt: new Date(Date.now() - 86400 * 1000) }));
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't' });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
     });
   });
 
@@ -239,7 +243,7 @@ describe('confirmBookingPayment', () => {
     db.batch.mockRejectedValueOnce(new Error('UNIQUE constraint failed: payments.payment_key'));
     db.query.payments.findFirst.mockResolvedValueOnce({ id: 'p1', paymentKey: 'pk' });
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
   });
 
   it('batch도 멱등 판정 조회도 둘 다 실패하면 throw 대신 recording_failed로 떨어진다', async () => {
@@ -263,7 +267,7 @@ describe('confirmBookingPayment', () => {
     (createBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('캘린더 이벤트 생성 실패: 500'));
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: true });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: true });
     const gcalErrorCall = setCallsOf(db).find((c) => 'gcalError' in c);
     expect(gcalErrorCall).toBeDefined();
     expect((gcalErrorCall as { gcalError: string }).gcalError).toContain('캘린더 이벤트 생성 실패: 500');
@@ -275,7 +279,7 @@ describe('confirmBookingPayment', () => {
     (sendBookingConfirmedEmails as jest.Mock).mockResolvedValueOnce('customer:TIMEOUT');
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't', emailSent: false });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: false });
     const notificationErrorCall = setCallsOf(db).find((c) => 'notificationError' in c);
     expect(notificationErrorCall).toBeDefined();
     expect((notificationErrorCall as { notificationError: string }).notificationError).toBe('customer:TIMEOUT');
@@ -285,12 +289,36 @@ describe('confirmBookingPayment', () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ bookings: [] }));
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', manageToken: 't' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
     expect(createBookingEvent).not.toHaveBeenCalled();
     expect(sendBookingConfirmedEmails).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       '[booking-confirm] bookings 없는 주문 — 후처리 생략',
       expect.objectContaining({ orderNo: 'SNB-1' }),
     );
+  });
+
+  // 계획서 §4: 믹싱은 bookings 대신 work_orders pending→received로 전이하고, 캘린더 없이
+  // 확정 메일만 보낸다.
+  describe('믹싱 주문(work_orders) 확정', () => {
+    const mixingOrder = (over: object = {}) => ({
+      id: 'o1', orderNo: 'SNB-1', status: 'pending', type: 'mixing', totalAmount: 220000,
+      createdAt: new Date(),
+      customerName: '김보컬', customerPhone: '010-1234-5678', customerEmail: 'a@b.c',
+      manageToken: 't', bookings: [],
+      workOrders: [{ id: 'w1', status: 'pending', songCount: 1, vocalTuning: false, customerNote: null, serviceType: 'mixing' }],
+      payments: [], ...over,
+    });
+
+    it('work_orders를 received로 전이하고 믹싱 확정 메일을 보낸다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(mixingOrder());
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 220000 });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'mixing', manageToken: 't', emailSent: true });
+      expect(createBookingEvent).not.toHaveBeenCalled(); // 믹싱은 슬롯이 없어 캘린더 등록이 없다
+      const db = mockDb();
+      const workOrderUpdate = setCallsOf(db).find((c) => 'status' in c && (c as { status: unknown }).status === 'received');
+      expect(workOrderUpdate).toBeDefined();
+    });
   });
 });

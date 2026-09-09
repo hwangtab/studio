@@ -1,6 +1,7 @@
 import isEmail from 'validator/lib/isEmail';
 
 import { daysUntilKst, kstDateTime } from './kst';
+import { getMixingProduct, resolveSongCount } from './mixing-products';
 import { getProduct, resolveHours } from './products';
 import { CLOSE_HOUR, OPEN_HOUR } from './slots';
 
@@ -31,6 +32,28 @@ export interface CreateBookingPayload {
 
 type Result = { ok: true; value: CreateBookingPayload } | { ok: false; message: string };
 
+export interface CreateMixingOrderPayload {
+  productId: string;
+  songCount: number;
+  vocalTuning: boolean;
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerNote?: string;
+  refundPolicyAgreed: true;
+}
+
+type MixingResult = { ok: true; value: CreateMixingOrderPayload } | { ok: false; message: string };
+
+interface CustomerFields {
+  customerName: string;
+  customerPhone: string;
+  customerEmail: string;
+  customerNote?: string;
+}
+
+type CustomerResult = { ok: true; value: CustomerFields } | { ok: false; message: string };
+
 /**
  * 휴대폰 번호 정규화 — 국제 형식(+82 10-4255-7893, +821042557893, 82-10-…)과
  * 공백·하이픈·괄호 섞인 입력을 전부 010XXXXXXXX로 모은 뒤 검증한다.
@@ -47,6 +70,25 @@ export const normalizeKoreanMobile = (raw: string): string | null => {
   return `${digits.slice(0, 3)}-${mid}-${digits.slice(-4)}`;
 };
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * 이름·휴대폰·이메일·요청사항·환불 규정 동의 — 세션 예약과 믹싱 주문이 공유하는 고객
+ * 정보 검증. 원래 validateCreateBookingPayload 안에 있던 로직을 그대로 옮겼을 뿐이라
+ * 메시지·동작은 바뀌지 않는다.
+ */
+const validateCustomerFields = (b: Record<string, unknown>): CustomerResult => {
+  const name = typeof b.customerName === 'string' ? b.customerName.trim() : '';
+  if (name.length < 2 || name.length > 40) return { ok: false, message: '이름을 확인해 주세요.' };
+  const phone = typeof b.customerPhone === 'string' ? normalizeKoreanMobile(b.customerPhone) : null;
+  if (!phone) return { ok: false, message: '휴대폰 번호를 확인해 주세요.' };
+  const email = typeof b.customerEmail === 'string' ? b.customerEmail.trim() : '';
+  if (!isEmail(email)) return { ok: false, message: '이메일을 확인해 주세요.' };
+  const note = typeof b.customerNote === 'string' ? b.customerNote.trim().slice(0, 500) : undefined;
+
+  if (b.refundPolicyAgreed !== true) return { ok: false, message: '환불 규정에 동의해 주세요.' };
+
+  return { ok: true, value: { customerName: name, customerPhone: phone, customerEmail: email, customerNote: note } };
+};
 
 export const validateCreateBookingPayload = (body: unknown, now: Date): Result => {
   if (typeof body !== 'object' || body === null) return { ok: false, message: '잘못된 요청입니다.' };
@@ -70,22 +112,41 @@ export const validateCreateBookingPayload = (body: unknown, now: Date): Result =
   if (daysUntilKst(now, startAt) > MAX_BOOK_DAYS)
     return { ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` };
 
-  const name = typeof b.customerName === 'string' ? b.customerName.trim() : '';
-  if (name.length < 2 || name.length > 40) return { ok: false, message: '이름을 확인해 주세요.' };
-  const phone = typeof b.customerPhone === 'string' ? normalizeKoreanMobile(b.customerPhone) : null;
-  if (!phone) return { ok: false, message: '휴대폰 번호를 확인해 주세요.' };
-  const email = typeof b.customerEmail === 'string' ? b.customerEmail.trim() : '';
-  if (!isEmail(email)) return { ok: false, message: '이메일을 확인해 주세요.' };
-  const note = typeof b.customerNote === 'string' ? b.customerNote.trim().slice(0, 500) : undefined;
-
-  if (b.refundPolicyAgreed !== true) return { ok: false, message: '환불 규정에 동의해 주세요.' };
+  const customer = validateCustomerFields(b);
+  if (!customer.ok) return customer;
 
   return {
     ok: true,
     value: {
       productId: product.id, hours, date: b.date, startHour: b.startHour,
-      customerName: name, customerPhone: phone, customerEmail: email,
-      customerNote: note, refundPolicyAgreed: true,
+      ...customer.value, refundPolicyAgreed: true,
+    },
+  };
+};
+
+export const validateCreateMixingOrderPayload = (body: unknown, now: Date): MixingResult => {
+  void now; // 세션과 시그니처를 맞춰 두되, 믹싱은 날짜 개념이 없어 지금은 쓰지 않는다.
+  if (typeof body !== 'object' || body === null) return { ok: false, message: '잘못된 요청입니다.' };
+  const b = body as Record<string, unknown>;
+
+  const product = typeof b.productId === 'string' ? getMixingProduct(b.productId) : undefined;
+  if (!product) return { ok: false, message: '알 수 없는 상품입니다.' };
+
+  const songCount = resolveSongCount(product, b.songCount);
+  if (songCount === null) return { ok: false, message: '곡 수가 올바르지 않습니다.' };
+
+  if (typeof b.vocalTuning !== 'boolean') return { ok: false, message: '보컬 튜닝 옵션이 올바르지 않습니다.' };
+  if (b.vocalTuning && !product.tuningEligible)
+    return { ok: false, message: '이 상품은 보컬 튜닝 옵션을 선택할 수 없습니다.' };
+
+  const customer = validateCustomerFields(b);
+  if (!customer.ok) return customer;
+
+  return {
+    ok: true,
+    value: {
+      productId: product.id, songCount, vocalTuning: b.vocalTuning,
+      ...customer.value, refundPolicyAgreed: true,
     },
   };
 };

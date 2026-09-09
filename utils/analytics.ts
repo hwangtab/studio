@@ -13,7 +13,10 @@ export type LeadEventName =
   // 폼 funnel 분석용 — 방문자가 어느 단계에서 이탈하는지 추적.
   | 'lead_form_start'        // 첫 필드 입력 시작
   | 'lead_form_field_error'  // 필드 검증 실패 (어느 필드에서 막히는지)
-  | 'lead_form_abandon';     // 폼 시작했으나 성공 전 페이지 이탈
+  | 'lead_form_abandon'      // 폼 시작했으나 성공 전 페이지 이탈
+  // 온라인 예약/주문 진입 — 카카오 상담 없이 바로 결제 퍼널로 들어가는 가장 강한 의도 신호.
+  // pricing·mixing-mastering의 PricingCard 보조 CTA(`/ko/booking/*`)가 발화한다.
+  | 'lead_click_booking_entry';
 
 /**
  * 마이크로 전환 — 리드가 아니다.

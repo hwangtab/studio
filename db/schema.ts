@@ -303,6 +303,31 @@ export const bookings = sqliteTable('bookings', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });
 
+export const workOrderStatusEnum = ['pending', 'received', 'in_progress', 'delivered', 'cancelled'] as const;
+
+/**
+ * 믹싱·마스터링 주문형 결제(Phase 2)의 작업 단위. bookings(슬롯 예약)와 달리 시작·종료
+ * 시각이 없다 — 파일을 받아 착수하는 작업이라 상태 전이(접수→착수→납품)로만 진행을 표현한다.
+ * 한 orders 행은 세션이면 bookings 1건, 믹싱이면 work_orders 1건을 갖는다(둘 다는 없음).
+ */
+export const workOrders = sqliteTable('work_orders', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  orderId: text('order_id').notNull().references(() => orders.id),
+  /** lib/booking/mixing-products.ts MIXING_PRODUCTS의 id. */
+  productId: text('product_id').notNull(),
+  /** 'mixing' | 'mastering'. */
+  serviceType: text('service_type').notNull(),
+  songCount: integer('song_count').notNull(),
+  vocalTuning: integer('vocal_tuning', { mode: 'boolean' }).notNull().default(false),
+  status: text('status', { enum: workOrderStatusEnum }).notNull().default('pending'),
+  customerNote: text('customer_note'),
+  startedAt: integer('started_at', { mode: 'timestamp' }),
+  deliveredAt: integer('delivered_at', { mode: 'timestamp' }),
+  cancelledAt: integer('cancelled_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
 export const availabilityBlocks = sqliteTable('availability_blocks', {
   id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
   startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
@@ -325,6 +350,7 @@ export const ordersRelations = relations(orders, ({ many, one }) => ({
   payments: many(payments),
   bookings: many(bookings),
   fundingPledge: one(fundingPledges, { fields: [orders.id], references: [fundingPledges.orderId] }),
+  workOrders: many(workOrders),
 }));
 export const paymentsRelations = relations(payments, ({ one, many }) => ({
   order: one(orders, { fields: [payments.orderId], references: [orders.id] }),
@@ -336,6 +362,9 @@ export const refundsRelations = relations(refunds, ({ one }) => ({
 export const bookingsRelations = relations(bookings, ({ one }) => ({
   order: one(orders, { fields: [bookings.orderId], references: [orders.id] }),
 }));
+export const workOrdersRelations = relations(workOrders, ({ one }) => ({
+  order: one(orders, { fields: [workOrders.orderId], references: [orders.id] }),
+}));
 
 export type Order = typeof orders.$inferSelect;
 export type NewOrder = typeof orders.$inferInsert;
@@ -343,6 +372,8 @@ export type Payment = typeof payments.$inferSelect;
 export type Refund = typeof refunds.$inferSelect;
 export type Booking = typeof bookings.$inferSelect;
 export type NewBooking = typeof bookings.$inferInsert;
+export type WorkOrder = typeof workOrders.$inferSelect;
+export type NewWorkOrder = typeof workOrders.$inferInsert;
 export type AvailabilityBlock = typeof availabilityBlocks.$inferSelect;
 
 // ─── 펀딩 (리워드형 크라우드펀딩) ─────────────────────────────────────────────

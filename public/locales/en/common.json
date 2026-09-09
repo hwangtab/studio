@@ -363,7 +363,9 @@
       "title": "Ready to start your release project?",
       "subtitle": "30-min free consultation · Custom quote based on rate sheet · Installment payment available",
       "location": "Contact Online",
-      "inquiry": "Book a Free Consultation"
+      "inquiry": "Book a Free Consultation",
+      "bookingEntry": "Book online",
+      "orderEntry": "Order online"
     },
     "relatedStoriesTitle": "Guides Worth a Look Before You Book",
     "relatedStoriesSubtitle": "Knowing costs, release steps, and the recording process in advance helps you make the most of your first session.",
@@ -587,7 +589,7 @@
     },
     "midCta": {
       "note": "Rooms are often fully booked, so we keep a waitlist. Reach out and we'll contact you in order as soon as a room opens.",
-    "noteVacant": "Rooms are available right now. You're welcome to visit before deciding — leave a message and we'll get back to you promptly."
+      "noteVacant": "Rooms are available right now. You're welcome to visit before deciding — leave a message and we'll get back to you promptly."
     },
     "painPoints": {
       "title": "Are you having these troubles?",
@@ -1535,7 +1537,8 @@
       "titleHighlight": "coming together, just send the files",
       "subtitleLine1": "Tell us the track count and we'll quote you right away.",
       "subtitleLine2": "Works by file transfer from anywhere in Korea or abroad.",
-      "imageAlt": "Studio NOL mixing inquiry"
+      "imageAlt": "Studio NOL mixing inquiry",
+      "order": "Order online"
     }
   },
   "voiceActing": {
@@ -2538,9 +2541,18 @@
     "how": {
       "title": "How It Works",
       "items": [
-        { "title": "Choose an Artist", "body": "Browse profiles and past work to choose the team you want to support." },
-        { "title": "Support a Fixed Amount Monthly", "body": "Once support opens, your card will be charged automatically on the same day each month, and you'll be able to cancel anytime." },
-        { "title": "It Reaches the Artist", "body": "Most of your support will go directly to the artist, and you'll receive updates from them." }
+        {
+          "title": "Choose an Artist",
+          "body": "Browse profiles and past work to choose the team you want to support."
+        },
+        {
+          "title": "Support a Fixed Amount Monthly",
+          "body": "Once support opens, your card will be charged automatically on the same day each month, and you'll be able to cancel anytime."
+        },
+        {
+          "title": "It Reaches the Artist",
+          "body": "Most of your support will go directly to the artist, and you'll receive updates from them."
+        }
       ]
     },
     "list": {
@@ -2552,9 +2564,18 @@
       "title": "Frequently Asked Questions",
       "subtitle": "Common questions about how support works, and how to cancel or get a refund.",
       "items": [
-        { "question": "Where does my support go?", "answer": "Studio NOL will sell the membership and pay a fixed share to your chosen artist every month. The share will be published on the artist's page once support opens." },
-        { "question": "Can I cancel anytime?", "answer": "Yes. Once support opens, you'll be able to cancel instantly from the management link, and you won't be charged from the following month." },
-        { "question": "What do supporters receive?", "answer": "We're preparing a place on the artist's supporter list (only if you choose) and a monthly update email from the artist." }
+        {
+          "question": "Where does my support go?",
+          "answer": "Studio NOL will sell the membership and pay a fixed share to your chosen artist every month. The share will be published on the artist's page once support opens."
+        },
+        {
+          "question": "Can I cancel anytime?",
+          "answer": "Yes. Once support opens, you'll be able to cancel instantly from the management link, and you won't be charged from the following month."
+        },
+        {
+          "question": "What do supporters receive?",
+          "answer": "We're preparing a place on the artist's supporter list (only if you choose) and a monthly update email from the artist."
+        }
       ]
     },
     "cta": {

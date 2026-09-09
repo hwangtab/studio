@@ -44,7 +44,8 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
       orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
       limit: LIST_LIMIT + 1,
       // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
-      with: { bookings: true, payments: true },
+      // workOrders는 믹싱·마스터링 주문(Phase 2)의 상태·곡 수·튜닝 여부를 싣는다.
+      with: { bookings: true, payments: true, workOrders: true },
     });
 
     const allBlocks = await getDb().query.availabilityBlocks.findMany({
@@ -93,6 +94,23 @@ const BOOKING_STATUS_CLASS: Record<string, string> = {
   confirmed: 'bg-green-100 text-green-700',
   completed: 'bg-blue-100 text-blue-700',
   no_show: 'bg-red-100 text-red-700',
+  cancelled: 'bg-gray-200 text-gray-600',
+};
+
+/** work_orders 상태 라벨 — bookingStatus와 별개 어휘를 쓴다(계획서 §4: 접수됨/작업 중/납품 완료/취소됨). */
+const WORK_ORDER_STATUS_LABELS: Record<string, string> = {
+  pending: '결제대기',
+  received: '접수됨',
+  in_progress: '작업 중',
+  delivered: '납품 완료',
+  cancelled: '취소됨',
+};
+
+const WORK_ORDER_STATUS_CLASS: Record<string, string> = {
+  pending: 'bg-gray-100 text-gray-700',
+  received: 'bg-green-100 text-green-700',
+  in_progress: 'bg-blue-100 text-blue-700',
+  delivered: 'bg-purple-100 text-purple-700',
   cancelled: 'bg-gray-200 text-gray-600',
 };
 
@@ -317,7 +335,8 @@ export default function AdminBookingsPage({
                 <table className="w-full text-sm text-left">
                   <thead className="bg-gray-50 text-gray-600 uppercase text-xs">
                     <tr>
-                      <th className="px-4 py-3 rounded-l-lg">일시</th>
+                      <th className="px-4 py-3 rounded-l-lg">유형</th>
+                      <th className="px-4 py-3">일시 / 상품</th>
                       <th className="px-4 py-3">고객</th>
                       <th className="px-4 py-3">상품</th>
                       <th className="px-4 py-3">금액</th>
@@ -326,52 +345,74 @@ export default function AdminBookingsPage({
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredBookings.map((booking) => (
-                      <tr key={booking.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          {formatKstDateTime(booking.startAt)}
-                        </td>
-                        <td className="px-4 py-3 font-medium text-gray-900">
-                          {booking.customerName}
-                          <div className="text-xs text-gray-500 font-normal">
-                            {booking.customerPhone}
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">{booking.productName}</td>
-                        <td className="px-4 py-3 whitespace-nowrap">
-                          {formatPriceAmount(booking.totalAmount)}원
-                        </td>
-                        <td className="px-4 py-3">
-                          {booking.bookingStatus && (
+                    {filteredBookings.map((booking) => {
+                      const isMixing = booking.orderType === 'mixing';
+                      return (
+                        <tr key={booking.id} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="px-4 py-3 whitespace-nowrap">
                             <span
-                              className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${BOOKING_STATUS_CLASS[booking.bookingStatus]}`}
+                              className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                                isMixing ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
+                              }`}
                             >
-                              {BOOKING_STATUS_LABELS[booking.bookingStatus]}
+                              {isMixing ? '믹싱' : '세션'}
                             </span>
-                          )}
-                          <div className="mt-1 text-xs text-gray-500">
-                            {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
-                          </div>
-                          {booking.mismatch && (
-                            <div className="mt-1">
-                              <span className="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
-                                미정합
-                              </span>
+                          </td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {isMixing
+                              ? `${booking.productName} × ${booking.workOrder?.songCount ?? '-'}곡${booking.workOrder?.vocalTuning ? ' (튜닝)' : ''}`
+                              : formatKstDateTime(booking.startAt)}
+                          </td>
+                          <td className="px-4 py-3 font-medium text-gray-900">
+                            {booking.customerName}
+                            <div className="text-xs text-gray-500 font-normal">
+                              {booking.customerPhone}
                             </div>
-                          )}
-                          {booking.notificationError && (
-                            <div className="mt-1 text-xs text-amber-700 font-medium">알림 실패</div>
-                          )}
-                        </td>
-                        <td className="px-4 py-3">
-                          <Link href={`/admin/bookings/${booking.id}`} passHref>
-                            <Button size="sm" variant="outline">
-                              상세
-                            </Button>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+                          <td className="px-4 py-3">{booking.productName}</td>
+                          <td className="px-4 py-3 whitespace-nowrap">
+                            {formatPriceAmount(booking.totalAmount)}원
+                          </td>
+                          <td className="px-4 py-3">
+                            {isMixing
+                              ? booking.workOrder && (
+                                  <span
+                                    className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${WORK_ORDER_STATUS_CLASS[booking.workOrder.status]}`}
+                                  >
+                                    {WORK_ORDER_STATUS_LABELS[booking.workOrder.status]}
+                                  </span>
+                                )
+                              : booking.bookingStatus && (
+                                  <span
+                                    className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${BOOKING_STATUS_CLASS[booking.bookingStatus]}`}
+                                  >
+                                    {BOOKING_STATUS_LABELS[booking.bookingStatus]}
+                                  </span>
+                                )}
+                            <div className="mt-1 text-xs text-gray-500">
+                              {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
+                            </div>
+                            {booking.mismatch && (
+                              <div className="mt-1">
+                                <span className="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                                  미정합
+                                </span>
+                              </div>
+                            )}
+                            {booking.notificationError && (
+                              <div className="mt-1 text-xs text-amber-700 font-medium">알림 실패</div>
+                            )}
+                          </td>
+                          <td className="px-4 py-3">
+                            <Link href={`/admin/bookings/${booking.id}`} passHref>
+                              <Button size="sm" variant="outline">
+                                상세
+                              </Button>
+                            </Link>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

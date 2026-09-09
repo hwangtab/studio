@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Check } from '@/lib/lucide-icons';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import BaseCard from './BaseCard';
@@ -26,6 +27,14 @@ interface PricingCardProps {
      */
     trackingComponent?: string;
     locale?: string;
+    /**
+     * 1차 CTA(카카오 상담) 아래에 붙는 온라인 예약/주문 보조 CTA.
+     * 세 값이 전부 있어야 렌더한다 — 하나라도 빠지면 기존 소비처는 레이아웃 변화 0.
+     * 옐로(카카오) 금지: 목적지가 카카오톡이 아니므로 outline 스타일만 쓴다.
+     */
+    secondaryCtaLabel?: string;
+    secondaryCtaHref?: string;
+    onSecondaryCtaClick?: () => void;
 }
 
 const PricingCard = ({
@@ -42,6 +51,9 @@ const PricingCard = ({
     onCtaClick,
     trackingComponent,
     locale,
+    secondaryCtaLabel,
+    secondaryCtaHref,
+    onSecondaryCtaClick,
 }: PricingCardProps) => {
     const isKakaoCta = Boolean(ctaHref && ctaHref.includes('kakao'));
 
@@ -131,6 +143,20 @@ const PricingCard = ({
                 >
                     {ctaLabel}
                 </a>
+            )}
+
+            {secondaryCtaLabel && secondaryCtaHref && (
+                <Link
+                    href={secondaryCtaHref}
+                    prefetch={false}
+                    onClick={onSecondaryCtaClick}
+                    /* outline — 1차(카카오/primary)와 위계가 갈려야 하고, 목적지가
+                       카카오톡이 아니므로 옐로는 절대 쓰지 않는다(CLAUDE.md 카카오 배색 규칙).
+                       min-h-11(44px)로 터치 타깃 확보. */
+                    className="mt-3 flex items-center justify-center w-full min-h-11 py-3 px-4 rounded-xl font-semibold text-sm border-2 border-primary/30 text-primary hover:bg-primary/5 hover:border-primary/50 transition-colors"
+                >
+                    {secondaryCtaLabel}
+                </Link>
             )}
         </BaseCard>
     );

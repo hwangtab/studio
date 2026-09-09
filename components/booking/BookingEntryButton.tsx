@@ -1,7 +1,8 @@
 import React from 'react';
 import Link from 'next/link';
 
-export type BookingService = 'recording' | 'voice-acting' | 'wedding-song' | 'cover-video';
+import type { BookingService } from '../../lib/booking/products';
+import { trackLeadEvent } from '../../utils/analytics';
 
 interface BookingEntryButtonProps {
   service: BookingService;
@@ -21,6 +22,13 @@ const BookingEntryButton = ({ service, locale }: BookingEntryButtonProps) => {
     <Link
       href={`/ko/booking/${service}`}
       prefetch={false}
+      onClick={() =>
+        trackLeadEvent('lead_click_booking_entry', {
+          locale,
+          component: 'BookingEntryButton',
+          cta_id: `${service}_booking_entry`,
+        })
+      }
       className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark shadow-md hover:shadow-lg transition-colors duration-200"
     >
       온라인 예약

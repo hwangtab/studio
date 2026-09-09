@@ -1,8 +1,8 @@
 import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, orders, payments } from '../../db/schema';
-import { sendBookingConfirmedEmails } from './email';
+import { bookings, orders, payments, workOrders } from '../../db/schema';
+import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './email';
 import { createBookingEvent } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { confirmPayment, fetchPayment, type TossPayment } from './toss';
@@ -12,6 +12,8 @@ export type ConfirmOutcome =
   | {
       ok: true;
       orderNo: string;
+      /** 성공 화면이 세션 완료 문구와 믹싱 접수 문구를 분기하는 데 쓴다. */
+      orderType: 'session' | 'mixing';
       /**
        * 예약 확인·취소에 필요한 토큰. 예전엔 이 값이 **확인 메일에만** 실려서, 메일 발송이
        * 실패하면 고객이 스스로 취소할 방법이 사라졌다(화면은 "보내드렸습니다"라고 단언했다).
@@ -47,7 +49,8 @@ export const confirmBookingPayment = async (input: {
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
 
   // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 이미 확정이면 성공으로 답한다.
-  if (order.status === 'paid') return { ok: true, orderNo: order.orderNo, manageToken: order.manageToken };
+  if (order.status === 'paid')
+    return { ok: true, orderNo: order.orderNo, orderType: order.type === 'mixing' ? 'mixing' : 'session', manageToken: order.manageToken };
   if (order.status !== 'pending')
     return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
 
@@ -132,10 +135,14 @@ export const confirmBookingPayment = async (input: {
     return { ok: false, code: 'toss_rejected', message: isInternalError ? GENERIC_TOSS_ERROR_MESSAGE : toss.message };
   }
 
+  const isMixing = order.type === 'mixing';
   const booking = order.bookings[0];
+  const workOrder = order.workOrders[0];
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
+    // 세션은 bookings pending→confirmed, 믹싱은 work_orders pending→received — 한 주문이
+    // 둘 중 하나만 갖는다(db/schema.ts workOrders 주석)는 불변식을 그대로 따른다.
     await db.batch([
       db.insert(payments).values({
         orderId: order.id,
@@ -148,9 +155,13 @@ export const confirmBookingPayment = async (input: {
       db.update(orders)
         .set({ status: 'paid', updatedAt: new Date() })
         .where(and(eq(orders.id, order.id), eq(orders.status, 'pending'))),
-      db.update(bookings)
-        .set({ status: 'confirmed', updatedAt: new Date() })
-        .where(and(eq(bookings.orderId, order.id), eq(bookings.status, 'pending'))),
+      isMixing
+        ? db.update(workOrders)
+            .set({ status: 'received', updatedAt: new Date() })
+            .where(and(eq(workOrders.orderId, order.id), eq(workOrders.status, 'pending')))
+        : db.update(bookings)
+            .set({ status: 'confirmed', updatedAt: new Date() })
+            .where(and(eq(bookings.orderId, order.id), eq(bookings.status, 'pending'))),
     ]);
   } catch (error) {
     // 토스 승인은 이미 끝났다 — 이 실패가 "동시 확정에서 다른 쪽이 이겼다"(멱등, paymentKey
@@ -169,7 +180,8 @@ export const confirmBookingPayment = async (input: {
         error: lookupError,
       });
     }
-    if (existing) return { ok: true, orderNo: order.orderNo, manageToken: order.manageToken };
+    if (existing)
+      return { ok: true, orderNo: order.orderNo, orderType: order.type === 'mixing' ? 'mixing' : 'session', manageToken: order.manageToken };
     console.error('[booking-confirm] 결제 승인됨, DB 기록 실패 — 웹훅 복구 대기', {
       orderNo: order.orderNo,
       paymentKey: approved.paymentKey,
@@ -180,7 +192,20 @@ export const confirmBookingPayment = async (input: {
 
   // 후처리 — 결제는 이미 성공했으므로 실패를 삼키되 반드시 기록한다 (스펙 §10).
   let emailSent: boolean | undefined;
-  if (booking) {
+  if (isMixing && workOrder) {
+    // 믹싱은 슬롯이 없어 캘린더 등록이 없다 — 확정 메일만 보낸다.
+    const notifyError = await sendMixingOrderConfirmedEmails({ ...order, status: 'paid' }, workOrder);
+    emailSent = !notifyError;
+    try {
+      await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));
+    } catch (error) {
+      console.error('[booking-confirm] notificationError 기록 실패', {
+        orderNo: order.orderNo,
+        notifyError,
+        error,
+      });
+    }
+  } else if (!isMixing && booking) {
     try {
       const eventId = await createBookingEvent({
         summary: `[예약] ${booking.serviceType} — ${order.customerName}`,
@@ -221,10 +246,17 @@ export const confirmBookingPayment = async (input: {
         error,
       });
     }
-  } else {
+  } else if (!isMixing) {
     // Phase 1에선 발생 불가(주문 생성이 항상 bookings 1건을 동반) — 상태 불변식이 깨졌을 때의 방어 로그.
+    // 믹싱 쪽 방어는 필요 없다 — createMixingOrder가 겹침 검사 없이 항상 work_orders 1건을 만든다.
     console.error('[booking-confirm] bookings 없는 주문 — 후처리 생략', { orderNo: order.orderNo });
   }
 
-  return { ok: true, orderNo: order.orderNo, manageToken: order.manageToken, emailSent };
+  return {
+    ok: true,
+    orderNo: order.orderNo,
+    orderType: isMixing ? 'mixing' : 'session',
+    manageToken: order.manageToken,
+    emailSent,
+  };
 };
