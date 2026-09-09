@@ -10,6 +10,17 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr')
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;
 const PHONE = '문의: 010-4255-7893';
 
+/**
+ * 제목 꼬리표. 프로젝트를 못 찾으면(슬러그 오타·비공개 전환) `project?.title ?? ''`가
+ * 빈 문자열이 되어 "후원이 확정되었습니다 — "처럼 em dash로 끝나는 제목이 나갔다.
+ */
+const titleSuffix = (project: FundingProject | null): string => (project?.title ? ` — ${project.title}` : '');
+
+/** 운영자 메일용 결제수단 라벨 — 원문 enum(toss·bank_transfer)을 그대로 보이지 않는다. */
+const PAYMENT_METHOD_LABEL: Record<string, string> = { toss: '토스', bank_transfer: '무통장' };
+const paymentMethodLabel = (method: string | null | undefined): string =>
+  (method && PAYMENT_METHOD_LABEL[method]) || method || '미지정';
+
 const summaryLines = (order: FundingOrder, project: FundingProject | null): string[] => {
   const p = order.fundingPledge;
   if (!p) return [];
@@ -36,14 +47,14 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
   send([
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: OPERATOR_EMAIL,
-      subject: `[스튜디오 놀] 후원이 확정되었습니다 — ${project?.title ?? ''}`,
+      subject: `[스튜디오 놀] 후원이 확정되었습니다${titleSuffix(project)}`,
       text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
       subject: `[펀딩] 후원 확정 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
       text: [...summaryLines(order, project), `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
-        `결제수단: ${order.fundingPledge?.paymentMethod}`, `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
+        `결제수단: ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`, `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
   ]);
 
@@ -53,7 +64,7 @@ export const sendFundingBankDepositEmails = (order: FundingOrder, project: Fundi
   return send([
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: OPERATOR_EMAIL,
-      subject: `[스튜디오 놀] 무통장입금 안내 — ${project?.title ?? ''}`,
+      subject: `[스튜디오 놀] 무통장입금 안내${titleSuffix(project)}`,
       text: [
         `${order.customerName}님, 아래 계좌로 입금해 주시면 후원이 확정됩니다.`,
         `계좌: ${BANK_ACCOUNT.bank} ${BANK_ACCOUNT.number} (${BANK_ACCOUNT.holder})`,
@@ -86,7 +97,7 @@ export const sendFundingCancelledEmails = (order: FundingOrder, project: Funding
   send([
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: OPERATOR_EMAIL,
-      subject: `[스튜디오 놀] ${CANCEL_SUBJECT[mode]} — ${project?.title ?? ''}`,
+      subject: `[스튜디오 놀] ${CANCEL_SUBJECT[mode]}${titleSuffix(project)}`,
       text: [`${order.customerName}님,`, CANCEL_BODY[mode](refundAmount), ...summaryLines(order, project), PHONE].join('\n'),
     } },
     { key: 'operator', params: {

@@ -62,3 +62,35 @@ it('무통장 환불 기록 메일도 환불액을 말한다', async () => {
   await sendFundingCancelledEmails(order, project, 'recorded', 1500);
   expect((sendEmail as jest.Mock).mock.calls[0][0].text).toContain('1,500원 환불 처리가 완료되었습니다');
 });
+
+describe('제목 꼬리표 · 결제수단 라벨', () => {
+  it('프로젝트를 못 찾으면 제목이 em dash로 끝나지 않는다', async () => {
+    await sendFundingConfirmedEmails(order, null);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 후원이 확정되었습니다');
+
+    (sendEmail as jest.Mock).mockClear();
+    await sendFundingBankDepositEmails(order, null);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 무통장입금 안내');
+
+    (sendEmail as jest.Mock).mockClear();
+    await sendFundingCancelledEmails(order, null, 'refunded', 5000);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 환불이 완료되었습니다');
+  });
+
+  it('프로젝트가 있으면 제목에 붙는다', async () => {
+    await sendFundingConfirmedEmails(order, project);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 후원이 확정되었습니다 — 데모 앨범');
+  });
+
+  it('운영자 메일의 결제수단은 한글 라벨로 나간다 — enum 원문을 보이지 않는다', async () => {
+    await sendFundingConfirmedEmails(order, project);
+    const operator = (sendEmail as jest.Mock).mock.calls[1][0];
+    expect(operator.text).toContain('결제수단: 무통장');
+    expect(operator.text).not.toContain('bank_transfer');
+
+    (sendEmail as jest.Mock).mockClear();
+    const tossOrder = { ...(order as object), fundingPledge: { ...(order as { fundingPledge: object }).fundingPledge, paymentMethod: 'toss' } } as never;
+    await sendFundingConfirmedEmails(tossOrder, project);
+    expect((sendEmail as jest.Mock).mock.calls[1][0].text).toContain('결제수단: 토스');
+  });
+});

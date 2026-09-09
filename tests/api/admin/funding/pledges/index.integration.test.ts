@@ -117,3 +117,21 @@ it('한정 수량 리워드가 이미 소진되면 409 남은 수량 메시지',
   expect(second.status).toBe(409);
   expect(second.body.message).toBe('남은 수량(0)을 초과합니다.');
 });
+
+// ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 칸을 그대로 보내면 customer_email=''인
+// 주문이 생겨, 나중에 보내는 확정·환불 메일이 빈 주소로 나가고 조용히 실패한다.
+it.each<[string | undefined, string]>([['', '빈 문자열'], ['   ', '공백만'], [undefined, '미전송']])(
+  '이메일이 %s(%s)면 플레이스홀더 주소로 저장한다',
+  async (customerEmail) => {
+    const r = await call({ ...VALID_BODY, customerEmail });
+    expect(r.status).toBe(201);
+    const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+    expect(order.rows[0]?.customer_email).toBe('manual@studionol.co.kr');
+  },
+);
+
+it('이메일이 있으면 앞뒤 공백만 정리해 그대로 쓴다', async () => {
+  const r = await call({ ...VALID_BODY, customerEmail: '  real@example.com  ' });
+  const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+  expect(order.rows[0]?.customer_email).toBe('real@example.com');
+});

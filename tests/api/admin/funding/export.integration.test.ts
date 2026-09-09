@@ -140,3 +140,19 @@ it('형식이 어긋난 slug는 400이고 CSV를 만들지 않는다', async () 
   expect(r.status).toBe(400);
   expect(r.headers.some(([k]) => k === 'Content-Disposition')).toBe(false);
 });
+
+// 택배사 없이 송장번호만으로는 조회 링크를 만들 수 없다 — 발송 실무용 CSV의 핵심 컬럼이다.
+it('trackingCompany 컬럼이 헤더와 본문에 함께 실린다', async () => {
+  const orderNo = await seed({ customerEmail: 't@example.com', customerPhone: '010-7' }, 'paid');
+  await client.execute({
+    sql: `UPDATE funding_pledges SET tracking_company = 'CJ대한통운', tracking_number = '123456789'
+          WHERE order_id = (SELECT id FROM orders WHERE order_no = ?)`,
+    args: [orderNo],
+  });
+  const r = await call({});
+  const [header, row] = r.csv.trim().split('\n');
+  expect(header.split(',')).toContain('trackingCompany');
+  expect(header.indexOf('trackingCompany')).toBeLessThan(header.indexOf('trackingNumber'));
+  expect(row).toContain('CJ대한통운');
+  expect(row).toContain('123456789');
+});
