@@ -4,11 +4,24 @@
 `docs/superpowers/specs/2026-09-08-social-api-design.md`.
 
 ```bash
+# 스토리 — frontmatter로 캡션을 조립한다
 node --env-file=.env.local scripts/social/post.mjs --slug ableton1 --dry-run   # 캡션·이미지 확인
 node --env-file=.env.local scripts/social/post.mjs --slug ableton1             # 실제 발행 (ig,threads)
 node --env-file=.env.local scripts/social/post.mjs --slug ableton1 --to threads
-node --env-file=.env.local scripts/social/auth.mjs --refresh                   # 60일 토큰 연장
+
+# 임의 글 — 준 문장을 그대로 쓴다(공연·발매 안내처럼 사이트에 글이 없는 경우)
+node --env-file=.env.local scripts/social/post.mjs --text "…" --image ~/사진.png --dry-run
+node --env-file=.env.local scripts/social/post.mjs --text-file post.txt --image ~/사진.png
 ```
+
+임의 글의 원장 키는 본문 해시라, 같은 글로 두 번 실행해도 중복 발행되지 않는다. Threads
+500자를 넘으면 자르지 않고 멈춘다 — 준 문장을 임의로 줄이면 뜻이 바뀌기 때문이다.
+
+**이미지는 Blob에 올린 뒤 `/api/social/media/<파일명>`으로 공개한다.** Meta 서버가 인증 없이
+가져갈 수 있어야 하는데, 이 프로젝트의 Blob 저장소는 계약서 PDF 때문에 private이라 직접
+공개 URL을 못 쓴다. 그 라우트는 `social/` 접두사와 `.jpg`만 통과시킨다
+(`lib/social/mediaPath.ts`, 테스트 있음). **접두사를 넓히지 말 것 — 같은 저장소에 계약서가 있다.**
+Instagram은 비율 0.8~1.91만 받으므로 정사각형이나 가로형을 쓴다.
 
 - `posted.json`은 발행 원장이다. 같은 글은 `--force` 없이는 다시 올라가지 않는다.
 - Instagram은 JPEG만 받으므로 OG 카드를 sharp로 변환해 Vercel Blob에 올린다.
