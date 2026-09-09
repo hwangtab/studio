@@ -3,7 +3,7 @@ import { randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, type Booking, type Order, type Payment, type WorkOrder } from '../../db/schema';
+import { orders, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
 import { computeAmounts } from './amounts';
 import { kstDateTime } from './kst';
 import { computeMixingAmounts, getMixingProduct } from './mixing-products';
@@ -46,16 +46,24 @@ export const createBookingOrder = async (
   // 안전성: 여기서 해제되는 주문을 다른 탭이 그 사이 결제 중이었더라도, confirm()은
   // order.status !== 'pending'에서 토스 승인 호출 전에 멈추므로(confirm.ts) 과금은
   // 일어나지 않는다 — PENDING_HOLD_SECONDS 자연 만료(expireStaleOrders)와 같은 성질이다.
+  //
+  // type = 'session' 조건이 반드시 있어야 한다. 없으면 (email, phone)만으로 그 고객의 **모든**
+  // pending 주문을 죽인다 — 같은 고객이 다른 탭에서 믹싱·펀딩 주문을 결제 중일 때 세션 예약을
+  // 새로 만드는 것만으로 그 주문이 expired가 되어 결제가 통째로 무산되던 사고다. 자가 선점
+  // 해제는 "내가 방금 만든 같은 종류의 주문"만 대상으로 한다(lib/funding/service.ts의
+  // createFundingPledge가 type='funding'으로 같은 조건을 이미 걸어 둔 것과 같은 이유).
   await db.run(sql`
     UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
     WHERE status = 'pending' AND order_id IN (
       SELECT id FROM orders
-      WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+      WHERE status = 'pending' AND type = 'session'
+        AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
     )
   `);
   await db.run(sql`
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+    WHERE status = 'pending' AND type = 'session'
+      AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
   `);
 
   const [order] = await db
@@ -111,16 +119,21 @@ export const createMixingOrder = async (
 
   // 자가 선점 해제 — 순서 주의: work_orders를 먼저 cancelled로 바꾼다(createBookingOrder와 같은 이유,
   // orders를 먼저 expired로 바꾸면 아래 IN 서브쿼리가 비어 work_orders가 갱신되지 않는다).
+  //
+  // type = 'mixing' 조건도 createBookingOrder와 같은 이유로 필수다 — 없으면 같은 고객이 다른
+  // 타입(세션·펀딩) 주문을 결제 중일 때 그 주문을 죽인다.
   await db.run(sql`
     UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
     WHERE status = 'pending' AND order_id IN (
       SELECT id FROM orders
-      WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+      WHERE status = 'pending' AND type = 'mixing'
+        AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
     )
   `);
   await db.run(sql`
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+    WHERE status = 'pending' AND type = 'mixing'
+      AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
   `);
 
   const [order] = await db
@@ -144,15 +157,23 @@ export const createMixingOrder = async (
   return { ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount, workOrderId };
 };
 
+/**
+ * payments에 refunds까지 물고 온다 — cancel.ts가 "이미 환불된 금액"을 빼고 잔액을 상한으로
+ * 잡아야 하기 때문이다(부분환불된 주문에 고객 셀프 취소가 다시 들어오면 티어 계산액이 잔액을
+ * 넘어설 수 있다). 조인 1단 추가는 주문 1건 조회라 비용이 무시할 만하다.
+ */
 export const findOrderByOrderNo = async (
   orderNo: string,
-): Promise<(Order & { bookings: Booking[]; payments: Payment[]; workOrders: WorkOrder[] }) | undefined> =>
+): Promise<
+  | (Order & { bookings: Booking[]; payments: (Payment & { refunds: Refund[] })[]; workOrders: WorkOrder[] })
+  | undefined
+> =>
   // middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, URL에서 온
   // orderNo는 소문자로 도착할 수 있다(generateOrderNo는 항상 대문자만 생성) —
   // 대문자로 정규화해 비교한다. SQLite `=`는 대소문자 구분.
   getDb().query.orders.findFirst({
     where: (t, { eq }) => eq(t.orderNo, orderNo.toUpperCase()),
-    with: { bookings: true, payments: true, workOrders: true },
+    with: { bookings: true, payments: { with: { refunds: true } }, workOrders: true },
   });
 
 /**

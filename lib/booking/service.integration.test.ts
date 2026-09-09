@@ -17,15 +17,15 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
-import { bookings, orders } from '../../db/schema';
+import { bookings, orders, workOrders } from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { createBookingOrder, findOrderByOrderNo } from './service';
+import { createBookingOrder, createMixingOrder, findOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
-import type { CreateBookingPayload } from './validation';
+import type { CreateBookingPayload, CreateMixingOrderPayload } from './validation';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-09-01T00:00:00Z');
@@ -46,6 +46,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  await client.execute('DELETE FROM work_orders');
   await client.execute('DELETE FROM bookings');
   await client.execute('DELETE FROM orders');
 });
@@ -111,5 +112,61 @@ describe('findOrderByOrderNo — 소문자 orderNo도 찾는다', () => {
 
     const found = await findOrderByOrderNo(created.orderNo.toLowerCase());
     expect(found?.orderNo).toBe(created.orderNo);
+  });
+});
+
+/**
+ * C-2 회귀: 자가 선점 해제가 (email, phone)만 보고 **모든** 타입의 pending 주문을 죽이던 문제.
+ * 같은 고객이 다른 탭에서 믹싱 결제창을 띄워 둔 채 세션 예약을 새로 만들면, 그 믹싱 주문이
+ * expired가 되어 결제가 통째로 무산됐다(그 반대도 마찬가지).
+ */
+describe('createBookingOrder / createMixingOrder — 자가 선점 해제의 type 격리', () => {
+  const mixingPayloadFor = (over: Partial<CreateMixingOrderPayload> = {}): CreateMixingOrderPayload => ({
+    productId: 'mixing-level1',
+    songCount: 1,
+    vocalTuning: false,
+    customerName: '김보컬',
+    customerPhone: '010-1234-5678',
+    customerEmail: 'singer@example.com',
+    refundPolicyAgreed: true,
+    ...over,
+  });
+
+  it('세션 예약 생성이 같은 고객의 믹싱 pending 주문을 만료시키지 않는다', async () => {
+    const mixing = await createMixingOrder(mixingPayloadFor(), NOW);
+    const session = await createBookingOrder(payloadFor(), NOW);
+    expect(session.ok).toBe(true);
+
+    const mixingOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, mixing.orderNo) });
+    expect(mixingOrder?.status).toBe('pending');
+    const workOrder = await mockDb.query.workOrders.findFirst({ where: eq(workOrders.id, mixing.workOrderId) });
+    expect(workOrder?.status).toBe('pending');
+  });
+
+  it('믹싱 주문 생성이 같은 고객의 세션 pending 주문·예약을 만료시키지 않는다', async () => {
+    const session = await createBookingOrder(payloadFor(), NOW);
+    expect(session.ok).toBe(true);
+    if (!session.ok) throw new Error('unreachable');
+
+    await createMixingOrder(mixingPayloadFor(), NOW);
+
+    const sessionOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, session.orderNo) });
+    expect(sessionOrder?.status).toBe('pending');
+    const booking = await mockDb.query.bookings.findFirst({ where: eq(bookings.id, session.bookingId) });
+    expect(booking?.status).toBe('pending');
+  });
+
+  it('같은 타입(믹싱) 재제출은 종전대로 직전 pending을 해제한다', async () => {
+    const first = await createMixingOrder(mixingPayloadFor(), NOW);
+    const second = await createMixingOrder(mixingPayloadFor(), NOW);
+    expect(second.orderNo).not.toBe(first.orderNo);
+
+    const firstOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, first.orderNo) });
+    expect(firstOrder?.status).toBe('expired');
+    const firstWorkOrder = await mockDb.query.workOrders.findFirst({ where: eq(workOrders.id, first.workOrderId) });
+    expect(firstWorkOrder?.status).toBe('cancelled');
+
+    const secondOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, second.orderNo) });
+    expect(secondOrder?.status).toBe('pending');
   });
 });

@@ -1,11 +1,12 @@
 import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, orders, payments, workOrders } from '../../db/schema';
+import { bookings, orders, payments, refunds, workOrders, type Order } from '../../db/schema';
+import { refundIdempotencyKey } from './cancel';
 import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './email';
 import { createBookingEvent } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
-import { confirmPayment, fetchPayment, type TossPayment } from './toss';
+import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
 
 export type ConfirmOutcome =
@@ -40,6 +41,116 @@ const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬�
 const RECORDING_FAILED_MESSAGE =
   '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
 
+/** 승인 뒤 주문이 이미 pending을 벗어나 있어 자동 전액 취소한 경우의 고객 문구. */
+const STALE_APPROVAL_MESSAGE =
+  '주문이 만료된 뒤 결제가 승인되어 자동으로 취소되었습니다. 결제 금액은 취소 처리되었으니 다시 주문해 주세요.';
+const AUTO_CANCEL_REASON = '주문 만료 후 승인 — 자동 전액 취소';
+
+/**
+ * libSQL batch 결과 한 항목의 rowsAffected.
+ *
+ * drizzle의 LibSQLSession.batch는 Promise<unknown[]>를 돌려주고(node_modules/drizzle-orm/
+ * libsql/session.d.ts), returning 없는 INSERT/UPDATE 항목은 @libsql/client의 ResultSet
+ * ({ rowsAffected, rows, columns, ... })으로 그대로 실린다. 인덱스는 batch에 넘긴 순서와 같다.
+ * 판정 불가(모킹된 빈 배열 등)는 undefined로 돌려 "정상"으로 흘려보낸다 — 없는 실패를
+ * 지어내 결제를 취소하는 쪽이 훨씬 위험하다.
+ */
+const rowsAffectedOf = (result: unknown): number | undefined => {
+  if (!result || typeof result !== 'object' || !('rowsAffected' in result)) return undefined;
+  const value = (result as { rowsAffected: unknown }).rowsAffected;
+  const n = Number(value);
+  return Number.isFinite(n) ? n : undefined;
+};
+
+/**
+ * 승인은 끝났는데 orders pending→paid 전이가 0행인 경우의 자동 복구.
+ *
+ * 승인 요청과 승인 응답 사이에 그 주문이 pending을 벗어난 것이다 — expireStaleOrders가
+ * 만료시켰거나(믹싱 pending도 900초에 expire된다), 같은 고객의 재제출이 자가 선점 해제로
+ * expired를 찍었거나. 이대로 두면 돈만 들어오고 주문은 만료된 채 남는다(관리자 화면 mismatch).
+ * 전액을 즉시 되돌려 그 상태를 만들지 않는다.
+ *
+ * 멱등키는 cancel.ts의 refundIdempotencyKey 규약을 그대로 쓴다 — 웹훅 DONE 복구가 같은 경로로
+ * 다시 들어와도 토스가 최초 취소를 replay해 돈이 두 번 나가지 않는다.
+ *
+ * orders는 건드리지 않는다 — 이미 expired/failed이고, 여기서 다른 상태를 덮어쓰면 어떤 경로가
+ * 주문을 끝냈는지 알 수 없게 된다.
+ */
+const autoCancelStaleApproval = async (order: Order, approved: TossPayment): Promise<ConfirmOutcome> => {
+  const db = getDb();
+  console.error('[booking-confirm] 승인 후 orders 전이 0행 — 만료된 주문의 지연 승인으로 판단, 전액 자동 취소', {
+    orderNo: order.orderNo,
+    paymentKey: approved.paymentKey,
+    orderStatus: order.status,
+    totalAmount: order.totalAmount,
+  });
+
+  const cancelled = await cancelPayment({
+    paymentKey: approved.paymentKey,
+    cancelReason: AUTO_CANCEL_REASON,
+    cancelAmount: order.totalAmount,
+    idempotencyKey: refundIdempotencyKey(order.orderNo, order.totalAmount),
+  });
+
+  // refunds.payment_id는 FK라 방금 batch가 넣은 payments 행의 id가 필요하다(INSERT에
+  // returning이 없어 paymentKey로 되찾는다). 못 찾으면 기록만 포기하고 로그를 남긴다.
+  let paymentId: string | undefined;
+  try {
+    const row = await db.query.payments.findFirst({
+      where: (t, { eq: equals }) => equals(t.paymentKey, approved.paymentKey),
+    });
+    paymentId = row?.id;
+  } catch (error) {
+    console.error('[booking-confirm] 자동 취소 기록용 payments 조회 실패', {
+      orderNo: order.orderNo,
+      paymentKey: approved.paymentKey,
+      error,
+    });
+  }
+
+  if (paymentId) {
+    try {
+      await db.insert(refunds).values({
+        paymentId,
+        amount: order.totalAmount,
+        reason: AUTO_CANCEL_REASON,
+        // refundRequesterEnum은 customer|admin|webhook뿐이다. 고객이 요청한 환불이 아니고
+        // 'webhook'은 토스 웹훅 대사 경로의 표식이라, 시스템이 스스로 낸 환불은 'admin'으로 남긴다.
+        requestedBy: 'admin',
+        tossTransactionKey: cancelled.ok
+          ? (cancelled.payment.cancels?.[cancelled.payment.cancels.length - 1]?.transactionKey ?? null)
+          : null,
+        status: cancelled.ok ? 'done' : 'failed',
+      });
+    } catch (error) {
+      console.error('[booking-confirm] 자동 취소 환불 기록 실패', {
+        orderNo: order.orderNo,
+        paymentKey: approved.paymentKey,
+        error,
+      });
+    }
+  } else {
+    console.error('[booking-confirm] 자동 취소 환불 기록 생략 — payments 행을 찾지 못함', {
+      orderNo: order.orderNo,
+      paymentKey: approved.paymentKey,
+    });
+  }
+
+  if (!cancelled.ok) {
+    // 돈은 들어왔고 되돌리지도 못했다 — 관리자 미정합 목록(admin-serialize mismatch: 미결제
+    // 주문에 payments 행이 있음)이 잡도록 로그를 남기고 수동 대사로 넘긴다.
+    console.error('[booking-confirm] 만료 주문 자동 전액 취소 실패 — 수동 대사 필요', {
+      orderNo: order.orderNo,
+      paymentKey: approved.paymentKey,
+      code: cancelled.code,
+      message: cancelled.message,
+    });
+    return { ok: false, code: 'recording_failed', message: RECORDING_FAILED_MESSAGE };
+  }
+
+  return { ok: false, code: 'invalid_state', message: STALE_APPROVAL_MESSAGE };
+};
+
 export const confirmBookingPayment = async (input: {
   orderNo: string;
   paymentKey: string;
@@ -64,7 +175,15 @@ export const confirmBookingPayment = async (input: {
   // 같은 슬롯을 예약·결제·확정할 수 있다. 만료 확인 없이 여기서 승인을 부르면 같은 시간대에
   // confirmed 예약 2건이 생긴다 — 아직 승인 전이라 이 시점의 거부는 과금 없이 끝난다
   // (토스 결제는 confirm API 호출로 확정되고, 미승인 건은 그대로 만료된다).
+  //
+  // 세션에만 적용한다. 믹싱은 점유할 슬롯이 없어 이 검사가 지킬 대상 자체가 없고, 반대로
+  // 해를 끼친다 — 기록이 실패한 승인을 되살리는 웹훅 DONE 복구가 900초 뒤에 도착하면
+  // (토스 재시도 간격상 흔하다) 여기서 막혀 돈만 들어온 주문으로 남는다.
+  // expireStaleOrders는 믹싱 pending도 900초에 expire하는데 그건 그대로 둔다: 그 뒤에 도착한
+  // 늦은 승인은 아래 batch의 orders 전이가 0행이 되고, autoCancelStaleApproval이 전액을
+  // 자동으로 되돌린다 — 만료 판정은 DB 상태 하나로 통일하고, 취소는 승인 이후에 정확히 한다.
   if (
+    order.type === 'session' &&
     order.createdAt instanceof Date &&
     Date.now() - order.createdAt.getTime() > PENDING_HOLD_SECONDS * 1000
   ) {
@@ -138,12 +257,13 @@ export const confirmBookingPayment = async (input: {
   const isMixing = order.type === 'mixing';
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
+  let batchResults: unknown[] = [];
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
     // 세션은 bookings pending→confirmed, 믹싱은 work_orders pending→received — 한 주문이
     // 둘 중 하나만 갖는다(db/schema.ts workOrders 주석)는 불변식을 그대로 따른다.
-    await db.batch([
+    batchResults = await db.batch([
       db.insert(payments).values({
         orderId: order.id,
         paymentKey: approved.paymentKey,
@@ -188,6 +308,22 @@ export const confirmBookingPayment = async (input: {
       error,
     });
     return { ok: false, code: 'recording_failed', message: RECORDING_FAILED_MESSAGE };
+  }
+
+  // batch는 성공했지만 orders UPDATE가 0행일 수 있다 — WHERE status='pending'이 걸려 있고,
+  // 승인 왕복 사이에 만료·자가 해제·expireStaleOrders가 주문을 pending에서 빼낼 수 있다.
+  // 인덱스 1 = 위 batch의 두 번째 항목(orders UPDATE).
+  const orderRowsAffected = rowsAffectedOf(batchResults[1]);
+  if (orderRowsAffected === 0) return autoCancelStaleApproval(order, approved);
+
+  // 하위 테이블(bookings/work_orders, 인덱스 2)만 0행인 경우는 정상으로 본다 — 이미 confirmed·
+  // received로 넘어간 멱등 재생이 대표적이다. 다만 조용히 지나가지는 않는다.
+  if (rowsAffectedOf(batchResults[2]) === 0) {
+    console.error('[booking-confirm] 하위 테이블 전이 0행 — orders는 전이됨(멱등 재생 등)', {
+      orderNo: order.orderNo,
+      paymentKey: approved.paymentKey,
+      table: isMixing ? 'work_orders' : 'bookings',
+    });
   }
 
   // 후처리 — 결제는 이미 성공했으므로 실패를 삼키되 반드시 기록한다 (스펙 §10).
