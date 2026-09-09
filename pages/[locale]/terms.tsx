@@ -1,4 +1,5 @@
 import type { GetServerSideProps, NextPage } from 'next';
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { Section } from '../../components/ui/Section';
@@ -78,6 +79,11 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
                   <li key={line}>{line}</li>
                 ))}
               </ul>
+              <p className="mt-6 text-sm">
+                <Link href="/ko/funding/terms" className="underline">
+                  펀딩(리워드 선주문) 약관 보기
+                </Link>
+              </p>
             </article>
 
             <article className="glass-card rounded-xl p-6">
