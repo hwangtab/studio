@@ -2,8 +2,8 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, refunds, webhookEvents, type Order, type Payment } from '../../db/schema';
-import { confirmFundingPledge, syncFundingCancelledFromToss } from '../funding/confirm';
-import { confirmBookingPayment } from './confirm';
+import { confirmFundingPledge, syncFundingCancelledFromToss, type FundingConfirmOutcome } from '../funding/confirm';
+import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { findOrderByOrderNo } from './service';
 import { fetchPayment, type TossPayment } from './toss';
 
@@ -146,7 +146,7 @@ const releaseEventKey = async (eventKey: string): Promise<void> => {
  * 같은 답이 나오는 영구 상태라 기록을 남긴 채 200으로 끝낸다.
  */
 const isTransientConfirmFailure = (
-  code: 'recording_failed' | 'toss_rejected' | 'not_found' | 'invalid_state' | 'amount_mismatch',
+  code: Extract<ConfirmOutcome | FundingConfirmOutcome, { ok: false }>['code'],
 ): boolean => code === 'recording_failed' || code === 'toss_rejected';
 
 /** unique 위반(PK 충돌 = 이미 처리한 이벤트)인지, 그 외 DB 장애인지를 가른다. */
@@ -200,10 +200,12 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
   }
 
   try {
-    const order = await findOrderByOrderNo(payment.orderId);
-    const orderType = order?.type ?? 'session';
     if (payment.status === 'DONE') {
       // 승인 경로(success SSR)가 죽었을 때의 복구 — 금액은 토스 재조회값으로 검증된다.
+      // order.type을 알아야 분기하므로 여기서 조회한다 — READY 등 무관 상태 이벤트에는 이
+      // DB 읽기가 없어야 한다(예전 동작 유지, 브랜치 밖에서 매번 부르지 않는다).
+      const order = await findOrderByOrderNo(payment.orderId);
+      const orderType = order?.type ?? 'session';
       const outcome =
         orderType === 'funding'
           ? await confirmFundingPledge({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount })
@@ -217,6 +219,8 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         return { status: 500 };
       }
     } else if (payment.status === 'CANCELED' || payment.status === 'PARTIAL_CANCELED') {
+      const order = await findOrderByOrderNo(payment.orderId);
+      const orderType = order?.type ?? 'session';
       if (orderType === 'funding') {
         await syncFundingCancelledFromToss(payment);
       } else {

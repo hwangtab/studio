@@ -100,26 +100,54 @@ export const confirmFundingPledge = async (input: { orderNo: string; paymentKey:
   const fresh = (await findFundingOrderByOrderNo(order.orderNo)) ?? order;
   const emailError = await sendFundingConfirmedEmails(fresh, getFundingProject(fresh.fundingPledge?.projectSlug ?? ''));
   if (emailError) {
-    await db.update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+    // 결제는 이미 성공했다 — 이 기록 실패가 예외로 새서 confirm 전체를 실패로 만들면 안 된다
+    // (lib/booking/confirm.ts notificationError 기록과 같은 처리).
+    try {
+      await db.update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+    } catch (error) {
+      console.error('[funding-confirm] notificationError 기록 실패', { orderNo: order.orderNo, emailError, error });
+    }
   }
   return success(fresh, emailError === null);
 };
 
-/** 토스 콘솔 등 외부에서 이미 취소된 펀딩 결제를 DB에 반영만 한다(취소 API 재호출 없음). */
+/**
+ * 토스 콘솔 등 외부에서 이미 취소된 펀딩 결제를 DB에 반영만 한다(취소 API 재호출 없음).
+ *
+ * lib/booking/webhook.ts의 nextOrderStatus·reconcileRefunds와 같은 로직 — 펀딩은 booking처럼
+ * 별도로 선점할 하위 엔티티가 없어 orders 자체에 바로 적용한다. cancels 부재(재조회 응답에
+ * 취소 내역이 없음)는 0으로 취급해 전액 환불을 날조하지 않고, 이미 기록된 done 환불 합계와
+ * 대사해 델타만 INSERT한다 — 같은 이벤트가 두 번 오거나 부분 취소 뒤 전체 취소가 와도
+ * 매번 이 대사 한 번으로 정확해진다(중복 INSERT도, 반영 누락도 없다).
+ */
 export const syncFundingCancelledFromToss = async (payment: TossPayment): Promise<void> => {
   const order = await findFundingOrderByOrderNo(payment.orderId);
   if (!order) return;
   const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
   if (!paymentRow) return;
 
-  const db = getDb();
-  const claim = await db.run(sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'paid'`);
-  if (Number(claim.rowsAffected) === 0) return;
+  const cancelledTotal = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+  if (cancelledTotal <= 0) return; // cancels 부재 — 전액 환불로 오기록하지 않는다
 
-  const cancelled = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? order.totalAmount;
+  const db = getDb();
+  const nextStatus = cancelledTotal >= order.totalAmount ? 'refunded' : 'partially_refunded';
+  // 이미 같은 상태거나 그 이상(refunded)으로 전이된 주문은 다시 잡지 않는다 — 원자적이지만
+  // 결과를 좌우하지는 않는다: 아래 환불 대사가 claim 성공 여부와 무관하게 델타로 정확해진다.
+  await db.run(
+    sql`UPDATE orders SET status = ${nextStatus}, updated_at = unixepoch() WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')`,
+  );
+
+  const recorded = await db.query.refunds.findMany({
+    where: (t, { eq: equals }) => and(equals(t.paymentId, paymentRow.id), equals(t.status, 'done')),
+  });
+  const refundedSum = recorded.reduce((sum, r) => sum + r.amount, 0);
+  // 기록이 토스를 따라잡았다면(같은 이벤트 재도착, 또는 우리 쪽이 더 많은 경우) 할 일이 없다.
+  if (cancelledTotal <= refundedSum) return;
+
+  const delta = cancelledTotal - refundedSum;
   await db.insert(refunds).values({
     paymentId: paymentRow.id,
-    amount: cancelled,
+    amount: delta,
     reason: '토스 외부 취소 동기화',
     requestedBy: 'webhook',
     tossTransactionKey: payment.cancels?.[payment.cancels.length - 1]?.transactionKey ?? null,
