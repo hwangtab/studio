@@ -124,6 +124,9 @@ export const Footer = ({ locale }: FooterProps) => {
             <ul className="flex flex-col">
               <FooterLink href={`/${locale}/stories`}>{t('nav.stories')}</FooterLink>
               <FooterLink href={`/${locale}/portfolio`}>{t('nav.portfolio')}</FooterLink>
+              {locale === 'ko' && (
+                <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>
+              )}
             </ul>
           </div>
 
