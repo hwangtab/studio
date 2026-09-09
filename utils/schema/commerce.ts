@@ -1,7 +1,7 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_MONTHLY_PRICE } from '../../data/pricing';
-import { getSchemaLanguage } from './shared';
+import { DEFAULT_SCHEMA_IMAGE, getSchemaLanguage } from './shared';
 
 export const generatePracticeRoomMonthlyRentSchema = (
   pageUrl: string,
@@ -168,7 +168,7 @@ export const generateAggregateOfferSchema = (
     '@id': `${config.url}/#pricing-catalog`,
     name: catalogName,
     inLanguage: schemaLanguage,
-    image: `${config.url}/thumbnail.jpg`,
+    image: `${config.url}${DEFAULT_SCHEMA_IMAGE.url}`,
     brand: {
       '@type': 'Organization',
       '@id': `${config.url}/#organization`,

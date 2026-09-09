@@ -9,6 +9,7 @@ import {
 } from '../../data/pricing';
 import { buildOperatorPersonNode, getOperatorPersonId } from './person';
 import {
+  DEFAULT_SCHEMA_IMAGE,
   getOfferPriceValidUntil,
   MIXING_OFFER_NAMES,
   OFFER_CATALOG_NAMES,
@@ -83,9 +84,9 @@ export const generateDefaultSchema = (
         },
         image: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/thumbnail.jpg`,
-          width: 1440,
-          height: 809,
+          url: `${siteUrl}${DEFAULT_SCHEMA_IMAGE.url}`,
+          width: DEFAULT_SCHEMA_IMAGE.width,
+          height: DEFAULT_SCHEMA_IMAGE.height,
         },
         email: config.contact.email,
         telephone: `+82-${config.contact.phone.replace(/^0/, '')}`,
@@ -139,9 +140,9 @@ export const generateDefaultSchema = (
         name: 'Studio NOL',
         image: {
           '@type': 'ImageObject',
-          url: `${siteUrl}/thumbnail.jpg`,
-          width: 1440,
-          height: 809,
+          url: `${siteUrl}${DEFAULT_SCHEMA_IMAGE.url}`,
+          width: DEFAULT_SCHEMA_IMAGE.width,
+          height: DEFAULT_SCHEMA_IMAGE.height,
         },
         logo: {
           '@type': 'ImageObject',
