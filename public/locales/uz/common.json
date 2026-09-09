@@ -473,7 +473,8 @@
       "subtitle": "Haftada 1 marta · 60 daqiqa · oyiga 4 seans",
       "unit": "KRW / oy",
       "breakdown": "Oyiga 4 seans · taxminan ₩87,500 / seans",
-      "cta": "Konsultatsiyaga yozilish"
+      "cta": "Konsultatsiyaga yozilish",
+      "subscriptionNote": "Maslahatdan so'ng sizga havola yuboramiz — oylik to'lovni karta orqali muntazam to'lov sifatida amalga oshirishingiz mumkin."
     },
     "quickAnswers": {
       "title": "Dars qisqacha",
@@ -557,7 +558,8 @@
         }
       ],
       "note": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Xonalar to'la bo'lsa, navbatga yozilish mumkin.",
-      "noteVacant": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Hozirda ko'chib kirish uchun bo'sh xonalar mavjud."
+      "noteVacant": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Hozirda ko'chib kirish uchun bo'sh xonalar mavjud.",
+      "subscriptionNote": "Maslahatdan so'ng sizga havola yuboramiz — oylik to'lovni karta orqali muntazam to'lov sifatida amalga oshirishingiz mumkin."
     },
     "midCta": {
       "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz.",

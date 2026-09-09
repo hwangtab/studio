@@ -5,6 +5,9 @@ jest.mock('../funding/confirm', () => ({
   confirmFundingPledge: jest.fn().mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', projectSlug: 'demo' }),
   syncFundingCancelledFromToss: jest.fn().mockResolvedValue(undefined),
 }));
+jest.mock('../billing/service', () => ({
+  reconcileSubscriptionPaymentFromToss: jest.fn().mockResolvedValue(undefined),
+}));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 (confirm.test.ts·
 // cancel.test.ts와 동일 이유 — webhook.ts도 한 실행 안에서 getDb()를 여러 번 부른다:
 // webhookEvents insert → (CANCELED 분기라면) booking 선점 run → refunds insert·orders update가
@@ -30,6 +33,7 @@ import { findOrderByOrderNo } from './service';
 import { fetchPayment } from './toss';
 import { confirmBookingPayment } from './confirm';
 import { confirmFundingPledge } from '../funding/confirm';
+import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { getDb } from '../../db/client';
 
 type MockDb = {
@@ -443,5 +447,44 @@ describe('processTossWebhook', () => {
       { trustedByWebhook: true },
     );
     expect(confirmBookingPayment).not.toHaveBeenCalled();
+  });
+
+  it('구독 회차의 DONE 웹훅은 reconcileSubscriptionPaymentFromToss로 간다(confirmBookingPayment 아님)', async () => {
+    const subPayment = {
+      paymentKey: 'pk_s', orderId: 'SUB-1', status: 'DONE', totalAmount: 396000,
+    };
+    (fetchPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: subPayment });
+    (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+      id: 'o', orderNo: 'SUB-1', type: 'subscription', status: 'pending', totalAmount: 396000, bookings: [], workOrders: [], payments: [],
+    });
+    const { status } = await processTossWebhook({ data: { paymentKey: 'pk_s', status: 'DONE' } });
+    expect(status).toBe(200);
+    expect(reconcileSubscriptionPaymentFromToss).toHaveBeenCalledWith(subPayment);
+    expect(confirmBookingPayment).not.toHaveBeenCalled();
+    expect(confirmFundingPledge).not.toHaveBeenCalled();
+  });
+
+  it('구독 회차의 CANCELED 웹훅은 환불만 대사하고 bookings/work_orders 선점을 시도하지 않는다', async () => {
+    const cancelledSubPayment = {
+      paymentKey: 'pk_s', orderId: 'SUB-1', status: 'CANCELED', totalAmount: 396000,
+      cancels: [{ transactionKey: 'ck_s', cancelAmount: 396000 }],
+    };
+    (fetchPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: cancelledSubPayment });
+    (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+      id: 'o', orderNo: 'SUB-1', type: 'subscription', status: 'paid', totalAmount: 396000,
+      bookings: [], workOrders: [], payments: [{ id: 'p_s', paymentKey: 'pk_s' }],
+    });
+    mockDb().query.refunds.findMany.mockResolvedValueOnce([]);
+
+    const { status } = await processTossWebhook({ data: { paymentKey: 'pk_s', status: 'CANCELED' } });
+    expect(status).toBe(200);
+
+    // syncCancelledFromToss 경로였다면 bookings/work_orders 선점 UPDATE(db.run)가 먼저 나갔을
+    // 것이다 — 구독 분기는 db.run을 전혀 쓰지 않고 refunds INSERT + orders UPDATE만 한다.
+    expect(mockDb().run).not.toHaveBeenCalled();
+    const insertedRefund = insertValuesCallsOf(mockDb()).find((c) => 'paymentId' in c);
+    expect(insertedRefund).toMatchObject({ paymentId: 'p_s', amount: 396000 });
+    const orderUpdate = setCallsOf(mockDb()).find((c) => c.status === 'refunded');
+    expect(orderUpdate).toBeDefined();
   });
 });

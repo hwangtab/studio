@@ -29,7 +29,7 @@ const kstTimeLabel = (d: Date): string => {
  * 발송 메일에 노출하지 않는다. 상수를 공유하지 못하는 건 INBOUND_ALIAS가 그 라우트의
  * 지역 상수이기 때문이다 — 주소를 바꾼다면 두 곳을 함께 고쳐야 한다.
  */
-const CUSTOMER_REPLY_TO = 'hello@studionol.co.kr';
+export const CUSTOMER_REPLY_TO = 'hello@studionol.co.kr';
 
 const manageUrl = (order: Order): string =>
   `${SITE_URL}/ko/booking/manage/${order.orderNo}?token=${order.manageToken}`;

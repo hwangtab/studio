@@ -51,6 +51,11 @@ export default function AdminIndexPage() {
                 펀딩 관리
               </Button>
             </Link>
+            <Link href="/admin/subscriptions" passHref>
+              <Button fullWidth size="lg" variant="secondary">
+                구독 관리
+              </Button>
+            </Link>
             <Button variant="ghost" onClick={handleLogout}>
               로그아웃
             </Button>
