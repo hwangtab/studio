@@ -8,7 +8,7 @@ const COLUMNS = [
   'orderNo', 'status', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
   'rewardTitle', 'quantity', 'additionalAmount', 'totalAmount',
   'shippingName', 'shippingPhone', 'shippingPostcode', 'shippingAddress1', 'shippingAddress2', 'shippingMemo',
-  'fulfillmentStatus', 'trackingNumber', 'supporterMessage', 'paidAt',
+  'fulfillmentStatus', 'trackingCompany', 'trackingNumber', 'supporterMessage', 'paidAt',
 ];
 
 /** 프로젝트 slug는 파일명(Content-Disposition)에 그대로 들어가므로 형식을 먼저 검증한다. */
@@ -47,6 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       shippingAddress2: p.shippingAddress2,
       shippingMemo: p.shippingMemo,
       fulfillmentStatus: p.fulfillmentStatus,
+      trackingCompany: p.trackingCompany,
       trackingNumber: p.trackingNumber,
       supporterMessage: p.supporterMessage,
       paidAt: p.paidAt?.toISOString() ?? null,

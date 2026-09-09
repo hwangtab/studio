@@ -81,7 +81,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         status: 'paid',
         customerName: b.customerName,
         customerPhone: String(b.customerPhone ?? '-'),
-        customerEmail: String(b.customerEmail ?? 'manual@studionol.co.kr'),
+        // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 이메일 칸을 그대로 보내면
+        // customer_email=''인 주문이 생겨 확정 메일이 빈 주소로 나가고 실패한다. 공백만 있는
+        // 입력도 같다. 실제로 값이 있을 때만 쓰고, 아니면 플레이스홀더로 떨어뜨린다.
+        customerEmail: String(b.customerEmail || '').trim() || 'manual@studionol.co.kr',
         ...amounts,
         manageToken: generateManageToken(),
       }),

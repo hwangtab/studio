@@ -8,9 +8,6 @@ import { trackMicroEvent } from '../../utils/analytics';
 import { MAX_ADDITIONAL_AMOUNT } from '../../lib/funding/policy';
 
 jest.mock('../booking/TossPaymentWidget', () => function MockTossPaymentWidget() { return <div data-testid="toss-widget" />; });
-jest.mock('next/router', () => ({
-  useRouter: () => ({ push: jest.fn() }),
-}));
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 
 const project = parseFundingProject(`---
@@ -38,7 +35,20 @@ rewards:
 ---
 `, 'demo');
 
+/**
+ * 무통장 안내 페이지 이동은 router.push(클라 전환)가 아니라 전체 페이지 이동이어야 한다 —
+ * 클라 전환이면 이미 로드된 gtag가 ?token=이 붙은 URL로 page_view를 보낸다.
+ */
+const assignMock = jest.fn();
+beforeAll(() => {
+  Object.defineProperty(window, 'location', {
+    configurable: true,
+    value: { ...window.location, assign: assignMock },
+  });
+});
+
 beforeEach(() => {
+  assignMock.mockClear();
   global.fetch = jest.fn().mockResolvedValue({
     ok: true, status: 201, headers: { get: () => 'application/json' },
     json: async () => ({
@@ -165,4 +175,24 @@ it('"다시 신청"은 남은 시간을 초기화한다 — 재제출이 곧바�
   } finally {
     jest.useRealTimers();
   }
+});
+
+it('무통장 제출은 depositUrl로 전체 페이지 이동한다 — 토큰이 붙은 URL을 클라 전환으로 열지 않는다', async () => {
+  (global.fetch as jest.Mock).mockResolvedValue({
+    ok: true, status: 201, headers: { get: () => 'application/json' },
+    json: async () => ({
+      ok: true, orderNo: 'FND-1', paymentMethod: 'bank_transfer',
+      holdExpiresAt: new Date(Date.now() + 900000).toISOString(),
+      itemAmount: 4545, vatAmount: 455, totalAmount: 5000,
+      depositUrl: '/ko/funding/deposit/FND-1?token=tok',
+    }),
+  });
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await userEvent.click(screen.getByLabelText(/무통장/));
+  await userEvent.type(screen.getByLabelText('이름'), '김후원');
+  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
+  await userEvent.click(screen.getByLabelText(/약관/));
+  await userEvent.click(screen.getByRole('button', { name: /결제로 이동|신청/ }));
+  expect(assignMock).toHaveBeenCalledWith('/ko/funding/deposit/FND-1?token=tok');
 });
