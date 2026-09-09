@@ -51,3 +51,15 @@ const schemaLanguageByLocale: Record<Locale, string> = {
 };
 
 export const getSchemaLanguage = (locale: Locale): string => schemaLanguageByLocale[locale] || schemaLanguageByLocale.ko;
+
+// 스키마 대표 이미지(Organization/EntertainmentBusiness/Product 등 image 필드)의 단일 소스.
+// 예전엔 세 곳(business.ts ×2, commerce.ts ×1)이 각자 `${siteUrl}/thumbnail.jpg`를 하드코딩했는데,
+// 그 루트 파일은 middleware.ts 로케일 매처에 걸려 /thumbnail.jpg → 307 → /ko/thumbnail.jpg → 404였다
+// (public/thumbnail.jpg 자체는 실재하지만 라우팅이 씹는다). `/images/`는 매처에서 이미 제외돼 있어
+// 같은 문제가 재발하지 않는다. 스키마 소비자 호환성이 넓은 .jpg를 쓴다(SEO.tsx 기본 ogImage인
+// .webp와는 다르다 — 그건 사람이 보는 OG 카드, 이건 구조화 데이터 image).
+export const DEFAULT_SCHEMA_IMAGE = {
+  url: '/images/og-default.jpg',
+  width: 1200,
+  height: 630,
+} as const;
