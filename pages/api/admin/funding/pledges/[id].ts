@@ -10,6 +10,9 @@ import { sendFundingBankDepositEmails, sendFundingConfirmedEmails } from '../../
 import { getFundingProject } from '../../../../../lib/funding/projects';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
 
+/** 수기 등록 시 채워 넣는 플레이스홀더 주소 — 실제 수신함이 아니다. */
+const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
+
 const CANCEL_STATUS: Record<string, number> = { not_found: 404, invalid_state: 409, toss_failed: 502, recording_failed: 500 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -48,8 +51,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .update(fundingPledges)
         .set({
           fulfillmentStatus: status,
-          trackingCompany: typeof b.trackingCompany === 'string' ? b.trackingCompany : order.fundingPledge.trackingCompany,
-          trackingNumber: typeof b.trackingNumber === 'string' ? b.trackingNumber : order.fundingPledge.trackingNumber,
+          // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다.
+          trackingCompany: typeof b.trackingCompany === 'string' ? (b.trackingCompany || null) : order.fundingPledge.trackingCompany,
+          trackingNumber: typeof b.trackingNumber === 'string' ? (b.trackingNumber || null) : order.fundingPledge.trackingNumber,
           updatedAt: now,
         })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
@@ -65,6 +69,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'resend_email': {
       if (order.status !== 'paid' && !(order.status === 'pending' && order.fundingPledge.paymentMethod === 'bank_transfer')) {
         return res.status(409).json({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+      }
+      // 수기 등록 건은 실제 고객 메일이 없다(플레이스홀더가 들어간다) — 재발송하면
+      // 우리 도메인 주소로 되돌아오거나 반송된다.
+      if (order.fundingPledge.entrySource === 'manual' && order.customerEmail === MANUAL_PLACEHOLDER_EMAIL) {
+        return res.status(409).json({ ok: false, message: '수기 등록 건은 메일을 보내지 않습니다.' });
       }
       const project = getFundingProject(order.fundingPledge.projectSlug);
       const err = order.status === 'paid'

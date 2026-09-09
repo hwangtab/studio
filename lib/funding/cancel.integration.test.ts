@@ -135,6 +135,28 @@ describe('cancelFundingPledge', () => {
     expect(await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW })).toEqual({ ok: true, mode: 'recorded', refundAmount: 5000 });
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('refunded');
   });
+  it('무통장 셀프 취소를 다시 누르면 invalid_state — 요청 메일이 반복해 쌓이지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
+    expect((await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW })).ok).toBe(true);
+    (sendFundingCancelledEmails as jest.Mock).mockClear();
+    const again = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+    expect(again).toMatchObject({ ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었습니다.' });
+    expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+  });
+  it('부분환불 건 — 고객은 거부, 관리자는 잔액만 환불한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
+    await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r1','p1',2000,'부분','admin','done')");
+    expect(await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW }))
+      .toMatchObject({ ok: false, code: 'invalid_state', message: '일부 환불된 후원은 문의해 주세요.' });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx2', cancelAmount: 3000 }] } });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 3000 });
+    expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 3000 }));
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('refunded');
+  });
   it('마감 후 셀프 취소는 거부, 관리자는 허용', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);

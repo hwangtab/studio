@@ -15,7 +15,7 @@ interface Props {
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean; depositUrl: string | null;
 }
-const STATUS_LABEL: Record<string, string> = { pending: '결제 대기', paid: '후원 확정', refunded: '환불 완료', expired: '만료', failed: '결제 실패' };
+const STATUS_LABEL: Record<string, string> = { pending: '결제 대기', paid: '후원 확정', partially_refunded: '일부 환불', refunded: '환불 완료', expired: '만료', failed: '결제 실패' };
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
 
 export default function FundingManagePage(p: Props) {

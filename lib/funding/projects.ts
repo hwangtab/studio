@@ -2,6 +2,11 @@ import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
 
+import { computeProjectState, type ProjectState } from './projectState';
+
+export { computeProjectState };
+export type { ProjectState };
+
 export interface FundingReward {
   id: string; title: string; description: string; amount: number;
   totalQuantity: number | null; requiresShipping: boolean; estimatedDelivery: string; image: string | null;
@@ -11,7 +16,6 @@ export interface FundingProject {
   goalAmount: number; startAt: string; endAt: string; status: 'auto' | 'draft' | 'closed';
   hidden: boolean; lastmod: string; rewards: FundingReward[]; content: string;
 }
-export type ProjectState = 'draft' | 'upcoming' | 'live' | 'closed';
 
 export const FUNDING_DIR = path.join(process.cwd(), 'content', 'funding');
 
@@ -74,26 +78,22 @@ export const parseFundingProject = (raw: string, slug: string): FundingProject =
   };
 };
 
-export const computeProjectState = (
-  project: Pick<FundingProject, 'status' | 'startAt' | 'endAt'>, now: Date,
-): ProjectState => {
-  if (project.status === 'draft') return 'draft';
-  if (project.status === 'closed') return 'closed';
-  const t = now.getTime();
-  if (t < new Date(project.startAt).getTime()) return 'upcoming';
-  if (t < new Date(project.endAt).getTime()) return 'live';
-  return 'closed';
-};
-
 export const getFundingProject = (slug: string): FundingProject | null => {
   if (!/^[a-z0-9-]+$/.test(slug)) return null;
+  if (!fs.existsSync(FUNDING_DIR)) {
+    console.error('[funding] content/funding 디렉터리 없음 — 배포 번들에 md가 포함되지 않았을 가능성');
+    return null;
+  }
   const file = path.join(FUNDING_DIR, `${slug}.md`);
   if (!fs.existsSync(file)) return null;
   return parseFundingProject(fs.readFileSync(file, 'utf-8'), slug);
 };
 
 export const getAllFundingProjects = (): FundingProject[] => {
-  if (!fs.existsSync(FUNDING_DIR)) return [];
+  if (!fs.existsSync(FUNDING_DIR)) {
+    console.error('[funding] content/funding 디렉터리 없음 — 배포 번들에 md가 포함되지 않았을 가능성');
+    return [];
+  }
   return fs.readdirSync(FUNDING_DIR)
     .filter((f) => f.endsWith('.md'))
     .map((f) => parseFundingProject(fs.readFileSync(path.join(FUNDING_DIR, f), 'utf-8'), f.replace(/\.md$/, '')));

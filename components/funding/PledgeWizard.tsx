@@ -22,7 +22,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   const [quantity, setQuantity] = useState(1);
   const [additional, setAdditional] = useState(0);
   const [method, setMethod] = useState<'toss' | 'bank_transfer'>('toss');
-  const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: true, termsAgreed: false });
+  const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false, termsAgreed: false });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);

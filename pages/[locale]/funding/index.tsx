@@ -13,6 +13,9 @@ interface Item {
   cover: string;
   goalAmount: number;
   state: ProjectState;
+  status: 'auto' | 'draft' | 'closed';
+  startAt: string;
+  endAt: string;
 }
 interface Props {
   items: Item[];
@@ -59,6 +62,9 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     cover: p.cover,
     goalAmount: p.goalAmount,
     state: computeProjectState(p, now),
+    status: p.status,
+    startAt: p.startAt,
+    endAt: p.endAt,
   }));
   return buildPageStaticProps(defaultLocale, { items }, { i18nSections: [] });
 };

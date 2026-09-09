@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges, orders, payments, refunds } from '../../db/schema';
@@ -9,7 +9,7 @@ import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 
 export type FundingConfirmOutcome =
   | { ok: true; orderNo: string; manageToken: string; projectSlug: string; emailSent?: boolean }
-  | { ok: false; code: 'not_found' | 'amount_mismatch' | 'invalid_state' | 'toss_rejected' | 'recording_failed'; message: string };
+  | { ok: false; code: 'not_found' | 'amount_mismatch' | 'invalid_state' | 'hold_expired' | 'toss_rejected' | 'recording_failed'; message: string };
 
 /** 토스가 "이미 승인된 결제"에 재승인을 요청받았을 때 돌려주는 코드. 실패가 아니라 지연 신호다. */
 const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
@@ -26,7 +26,10 @@ const success = (order: FundingOrder, emailSent?: boolean): FundingConfirmOutcom
   ...(emailSent === undefined ? {} : { emailSent }),
 });
 
-export const confirmFundingPledge = async (input: { orderNo: string; paymentKey: string; amount: number }): Promise<FundingConfirmOutcome> => {
+export const confirmFundingPledge = async (
+  input: { orderNo: string; paymentKey: string; amount: number },
+  options: { trustedByWebhook?: boolean } = {},
+): Promise<FundingConfirmOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
   if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '후원을 찾을 수 없습니다.' };
 
@@ -40,9 +43,12 @@ export const confirmFundingPledge = async (input: { orderNo: string; paymentKey:
   // 홀드 만료도 스스로 적용한다 — expireStalePledges는 lazy 호출이라 만료 후에도 pending으로
   // 남아 있을 수 있다. 만료 확인 없이 승인을 부르면 이미 다른 후원자가 같은 재고를 가져간
   // 뒤에도 이 결제가 확정될 수 있다.
-  if (order.fundingPledge.holdExpiresAt.getTime() < Date.now()) {
+  // 단, 웹훅 경로는 예외다 — 토스 재조회로 DONE + 금액까지 확인된 "이미 받은 돈"이라,
+  // 재고 경합보다 미기록(승인됐는데 pledge가 없는 상태)이 훨씬 나쁘다. 재고 초과는 운영자가
+  // 관리자 화면에서 보고 처리할 수 있지만, 유실된 결제는 고객이 먼저 발견한다.
+  if (!options.trustedByWebhook && order.fundingPledge.holdExpiresAt.getTime() < Date.now()) {
     console.error('[funding-confirm] 홀드 만료 주문의 승인 요청 — 토스를 부르지 않고 거부', { orderNo: order.orderNo });
-    return { ok: false, code: 'invalid_state', message: EXPIRED };
+    return { ok: false, code: 'hold_expired', message: EXPIRED };
   }
 
   const db = getDb();
@@ -71,7 +77,7 @@ export const confirmFundingPledge = async (input: { orderNo: string; paymentKey:
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
-    await db.batch([
+    const batchResult = await db.batch([
       db.insert(payments).values({
         orderId: order.id,
         paymentKey: approved.paymentKey,
@@ -80,9 +86,20 @@ export const confirmFundingPledge = async (input: { orderNo: string; paymentKey:
         receiptUrl: approved.receipt?.url ?? null,
         rawResponse: JSON.stringify(approved),
       }),
-      db.update(orders).set({ status: 'paid', updatedAt: now }).where(and(eq(orders.id, order.id), eq(orders.status, 'pending'))),
+      // 'expired'까지 대상에 넣는다 — 토스 승인 왕복(수 초) 동안 expireStalePledges나 다른
+      // 요청의 자기 홀드 해제가 이 주문을 expired로 바꿀 수 있는데, 그때 UPDATE가 0행이면
+      // 돈만 받고 pending도 paid도 아닌 주문이 남는다.
+      db.update(orders).set({ status: 'paid', updatedAt: now }).where(and(eq(orders.id, order.id), inArray(orders.status, ['pending', 'expired']))),
       db.update(fundingPledges).set({ paidAt: now, updatedAt: now }).where(eq(fundingPledges.orderId, order.id)),
     ]);
+    // 그래도 0행이면 paid가 아닌 제3의 상태(failed·refunded 등)로 이미 옮겨간 것 — 결제는
+    // 됐는데 기록은 못 한 상태이므로 성공으로 답하지 않는다.
+    if (Number(batchResult[1]?.rowsAffected ?? 0) === 0) {
+      console.error('[funding-confirm] 결제 승인됨, 주문 상태 전이 실패(0행) — 수동 확인 필요', {
+        orderNo: order.orderNo, paymentKey: approved.paymentKey, status: order.status,
+      });
+      return { ok: false, code: 'recording_failed', message: RECORDING_FAILED };
+    }
   } catch (error) {
     // 토스 승인은 이미 끝났다 — 이 실패가 멱등(paymentKey unique 위반)인지 진짜 DB 장애인지는
     // payments에 이 paymentKey가 이미 있는지로 가른다.

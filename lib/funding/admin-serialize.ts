@@ -63,7 +63,9 @@ export const serializePledgeForAdmin = (o: FundingOrder, duplicateKeys: Set<stri
     adminMemo: p.adminMemo,
     notificationError: o.notificationError,
     hasPayment: o.payments.length > 0,
-    mismatch: o.status === 'pending' && o.payments.length > 0,
+    // 결제 기록이 있는데 상태가 "돈을 받은 상태"가 아니면 전부 미정합이다 — pending만 보면
+    // expired·failed·refunded로 잘못 전이된 건(승인 경합 사고의 실제 흔적)이 안 잡힌다.
+    mismatch: o.payments.length > 0 && !['paid', 'partially_refunded', 'refunded'].includes(o.status),
     duplicateWarning: o.status === 'pending' && p.paymentMethod === 'bank_transfer' && duplicateKeys.has(duplicateKey(o)),
   };
 };

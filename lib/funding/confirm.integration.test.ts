@@ -130,8 +130,39 @@ describe('confirmFundingPledge', () => {
     );
     if (!stale.ok) throw new Error();
     const r = await confirmFundingPledge({ orderNo: stale.orderNo, paymentKey: 'pk', amount: 5000 });
-    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(r).toMatchObject({ ok: false, code: 'hold_expired' });
     expect(mockConfirm).not.toHaveBeenCalled();
+  });
+
+  it('승인 왕복 중 expired로 바뀌어도 paid로 되돌리고 결제를 기록한다', async () => {
+    // 실제 경합: 토스 승인이 오가는 동안 expireStalePledges나 다른 요청의 자기 홀드 해제가
+    // 이 주문을 expired로 바꾼다. UPDATE가 'pending'만 대상이면 0행인데도 성공을 반환해
+    // 돈만 받고 pending도 paid도 아닌 주문이 남았다.
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    mockConfirm.mockImplementationOnce(async () => {
+      await client.execute({ sql: `UPDATE orders SET status = 'expired' WHERE order_no = ?`, args: [c.orderNo] });
+      return approved(c.orderNo, 5000);
+    });
+    const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+    expect(r.ok).toBe(true);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    expect(o?.status).toBe('paid');
+    expect(o?.payments[0].paymentKey).toBe('pk_1');
+  });
+
+  it('홀드가 만료돼도 웹훅 경로(trustedByWebhook)는 확정한다 — SSR 경로는 여전히 거부', async () => {
+    const stale = await createFundingPledge(
+      payloadFor({ customerEmail: 'w@example.com', customerPhone: '010-9' }),
+      PROJECT, reward('mail'), new Date(NOW.getTime() - 2000 * 1000),
+    );
+    if (!stale.ok) throw new Error();
+    expect(await confirmFundingPledge({ orderNo: stale.orderNo, paymentKey: 'pk_1', amount: 5000 }))
+      .toMatchObject({ ok: false, code: 'hold_expired' });
+    mockConfirm.mockResolvedValueOnce(approved(stale.orderNo, 5000));
+    const r = await confirmFundingPledge({ orderNo: stale.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true });
+    expect(r.ok).toBe(true);
+    expect((await findFundingOrderByOrderNo(stale.orderNo))?.status).toBe('paid');
   });
 
   it('예약 주문번호로 오면 not_found', async () => {

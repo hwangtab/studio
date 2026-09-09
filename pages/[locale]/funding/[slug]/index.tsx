@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import MarkdownRenderer from '../../../../components/MarkdownRenderer';
@@ -30,7 +31,10 @@ export default function FundingProjectPage({ project, initialState }: Props) {
   const { data } = useFundingStatus(project.slug, initialState);
   const state = data?.state ?? initialState;
   const canPledge = state === 'live';
-  const now = new Date();
+  // 렌더 본문에서 new Date()를 부르면 서버(빌드 시각)와 클라이언트 값이 달라 D-day 텍스트가
+  // 하이드레이션 불일치를 낸다 — 마운트 후에만 시계를 읽는다.
+  const [now, setNow] = useState<Date | null>(null);
+  useEffect(() => { setNow(new Date()); }, []);
   return (
     <>
       <SEO

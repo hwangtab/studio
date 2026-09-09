@@ -1,5 +1,7 @@
 /** @jest-environment node */
-import { computeProjectState, findReward, getFundingProject, getListableFundingProjects, parseFundingProject } from './projects';
+import fs from 'node:fs';
+
+import { computeProjectState, findReward, getAllFundingProjects, getFundingProject, getListableFundingProjects, parseFundingProject } from './projects';
 
 const RAW = `---
 slug: demo
@@ -63,5 +65,20 @@ describe('파일 로더', () => {
     expect(findReward(p!, 'thanks')?.amount).toBe(1000);
     expect(getListableFundingProjects().some((x) => x.slug === 'smoke-test')).toBe(false);
     expect(getFundingProject('없는-슬러그')).toBeNull();
+  });
+});
+
+describe('content/funding 디렉터리 자체가 없을 때', () => {
+  // 배포 번들에서 md가 빠지면 이 상태가 된다 — 조용히 "프로젝트 없음"으로 보이므로
+  // 로그 한 줄이 유일한 단서다.
+  it('빈 결과를 주되 원인을 로그로 남긴다', () => {
+    const exists = jest.spyOn(fs, 'existsSync').mockReturnValue(false);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(getAllFundingProjects()).toEqual([]);
+    expect(getFundingProject('demo')).toBeNull();
+    expect(error).toHaveBeenCalledTimes(2);
+    expect(String(error.mock.calls[0][0])).toContain('content/funding 디렉터리 없음');
+    exists.mockRestore();
+    error.mockRestore();
   });
 });

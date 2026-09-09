@@ -80,7 +80,7 @@ export default function AdminFundingDetailPage({ pledge }: AdminFundingDetailPag
   const handleConfirmDeposit = () => run(() => patchPledge(pledge.id, { action: 'confirm_deposit' }), '입금을 확인 처리할까요? 후원이 확정됩니다.');
   const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), '이 후원을 환불할까요? 되돌릴 수 없습니다.');
   const handleSaveFulfillment = () =>
-    run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany: trackingCompany || undefined, trackingNumber: trackingNumber || undefined }));
+    run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
   const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
 
