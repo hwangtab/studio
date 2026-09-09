@@ -18,6 +18,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
+import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -305,7 +306,10 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
                     timeout(5초) 까지 script 로드 0 → 점수 안정. 실 사용자는 첫
                     pointermove/scroll/touchstart 시 즉시 로드되어 분석 정상.
                     구현은 components/common/DeferredAnalytics에 격리. */}
-                <DeferredAnalytics />
+                {/* 관리 토큰·paymentKey가 쿼리에 실리는 경로에서는 측정 스크립트를 아예
+                    올리지 않는다 — GA4 page_location이 쿼리 전체를 담아 비밀값을 외부로
+                    내보낸다(lib/analytics/privatePaths). */}
+                {!isPrivateAnalyticsPath(router.asPath) && <DeferredAnalytics />}
               </Layout>
             </MotionConfig>
           </LazyMotion>

@@ -252,6 +252,39 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 펀딩·예약의 결제·관리 화면도 같은 이유로 공유 캐시에 얹히면 안 된다 — URL에
+      // 관리 토큰·paymentKey가 실리고, 응답 본문에 후원자 이름·연락처·주소가 들어간다.
+      // 계약 규칙과 마찬가지로 아래 로케일 캐시 규칙보다 반드시 앞에 둘 것(첫 매칭 우선).
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/(success|fail|terms)',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/(deposit|manage)/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/:slug/pledge',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/booking/(success|fail)',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/booking/manage/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/:path*',
         headers: [
