@@ -2,6 +2,7 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, refunds, webhookEvents, type Order, type Payment } from '../../db/schema';
+import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { confirmFundingPledge, syncFundingCancelledFromToss, type FundingConfirmOutcome } from '../funding/confirm';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { findOrderByOrderNo } from './service';
@@ -232,28 +233,45 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
       // DB 읽기가 없어야 한다(예전 동작 유지, 브랜치 밖에서 매번 부르지 않는다).
       const order = await findOrderByOrderNo(payment.orderId);
       const orderType = order?.type ?? 'session';
-      const outcome =
-        orderType === 'funding'
-          ? await confirmFundingPledge(
-              { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
-              // 여기까지 온 결제는 토스 재조회로 DONE + 금액이 확인된 돈이다 — 홀드가 지났다는
-              // 이유로 거절하면 승인된 결제가 영구 미기록으로 남는다.
-              { trustedByWebhook: true },
-            )
-          : await confirmBookingPayment({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount });
-      if (!outcome.ok && isTransientConfirmFailure(outcome.code)) {
-        console.error('[booking-webhook] 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
-          eventKey,
-          code: outcome.code,
-        });
-        await releaseEventKey(eventKey);
-        return { status: 500 };
+      if (orderType === 'subscription') {
+        // 구독 회차는 bookings/work_orders 같은 하위 엔티티가 없어 confirmBookingPayment를
+        // 재사용할 수 없다 — chargeCycle 성공 경로와 같은 계산을 쓰는 전용 함수로 반영한다.
+        // 이 함수는 실패해도 던지지 않고 로그만 남긴다(멱등 대사이지 신규 승인 확정이 아니므로
+        // 재시도 유도가 없어도 다음 cron이나 다음 웹훅 재도착이 같은 경로로 다시 정리한다).
+        await reconcileSubscriptionPaymentFromToss(payment);
+      } else {
+        const outcome =
+          orderType === 'funding'
+            ? await confirmFundingPledge(
+                { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+                // 여기까지 온 결제는 토스 재조회로 DONE + 금액이 확인된 돈이다 — 홀드가 지났다는
+                // 이유로 거절하면 승인된 결제가 영구 미기록으로 남는다.
+                { trustedByWebhook: true },
+              )
+            : await confirmBookingPayment({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount });
+        if (!outcome.ok && isTransientConfirmFailure(outcome.code)) {
+          console.error('[booking-webhook] 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
+            eventKey,
+            code: outcome.code,
+          });
+          await releaseEventKey(eventKey);
+          return { status: 500 };
+        }
       }
     } else if (payment.status === 'CANCELED' || payment.status === 'PARTIAL_CANCELED') {
       const order = await findOrderByOrderNo(payment.orderId);
       const orderType = order?.type ?? 'session';
       if (orderType === 'funding') {
         await syncFundingCancelledFromToss(payment);
+      } else if (orderType === 'subscription') {
+        // 관리자가 토스 콘솔에서 회차 하나를 취소해도 구독 자체는 유지한다(스펙 §6 관리자 절 —
+        // 정지·해지는 관리자 화면의 별도 조작이지 결제 취소의 부작용이 아니다). 환불 금액만
+        // 대사하고 subscriptions·subscriptionPayments 상태는 건드리지 않는다. syncCancelledFromToss는
+        // bookings/work_orders 선점을 전제하므로 여기서는 쓰지 않고 reconcileRefunds만 재사용한다.
+        if (order) {
+          const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
+          if (paymentRow) await reconcileRefunds(order, paymentRow, payment);
+        }
       } else {
         await syncCancelledFromToss(payment);
       }

@@ -170,6 +170,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           priceCaption={t('practiceRoom.pricing.priceCaption')}
           badges={pricingBadges}
           note={t(PRACTICE_ROOM_HAS_VACANCY ? 'practiceRoom.pricing.noteVacant' : 'practiceRoom.pricing.note')}
+          subscriptionNote={locale === 'ko' ? t('practiceRoom.pricing.subscriptionNote') : undefined}
           locale={locale}
         />
       )}

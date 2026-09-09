@@ -11,6 +11,7 @@ import {
   downloadContractPdf,
   mutateContract,
 } from '../../../../components/admin/contractActions';
+import { createSubscription as createSubscriptionRequest } from '../../../../components/admin/subscriptionActions';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
@@ -37,6 +38,8 @@ interface AdminContractDetailPageProps {
   /** 계약에 붙은 이용수칙 사본. 첨부 목록은 제목만 보여 주므로 본문은 따로 싣는다. */
   rulesContent: string;
   auditTrail: SerializedAuditTrail;
+  /** 이 계약으로 만든 구독이 있으면 그 id — 있으면 새로 만들지 않고 상세로 안내한다. */
+  subscriptionId: string | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps> = async (
@@ -66,6 +69,15 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
     return { notFound: true };
   }
 
+  // 최신 구독 하나만 있으면 충분하다(연습실 구독은 계약당 하나가 정상 운영 형태 —
+  // lib/billing/service.ts의 already_exists 가드가 진행 중인 상태에서 중복을 막는다).
+  const subscription = await getDb()
+    .query.subscriptions.findFirst({
+      where: (t, { eq }) => eq(t.contractId, id),
+      orderBy: (t, { desc }) => [desc(t.createdAt)],
+    })
+    .catch(() => null);
+
   return {
     props: {
       contract: serializeContractForAdmin(contract),
@@ -74,6 +86,7 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       attachments: contract.contractAttachments.map(serializeAttachment),
       rulesContent: resolveRulesContent(contract.contractAttachments),
       auditTrail: serializeAuditTrail(buildAuditTrail(contract)),
+      subscriptionId: subscription?.id ?? null,
     },
   };
 };
@@ -103,10 +116,12 @@ export default function AdminContractDetailPage({
   attachments,
   rulesContent,
   auditTrail,
+  subscriptionId,
 }: AdminContractDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [subscriptionSetupUrl, setSubscriptionSetupUrl] = useState<string | null>(null);
 
   const customerSignature = signatures.find((s) => s.signerRole === 'customer');
 
@@ -183,6 +198,27 @@ export default function AdminContractDetailPage({
 
           {notice && (
             <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+          )}
+
+          {subscriptionSetupUrl && (
+            <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-900 rounded-lg text-sm">
+              <strong className="block mb-2">고객에게 보낼 카드 등록 링크</strong>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 min-w-0 truncate bg-white border border-green-200 rounded px-2 py-1 text-xs">
+                  {subscriptionSetupUrl}
+                </code>
+                <Button
+                  variant="outline"
+                  onClick={async () => {
+                    const copied = await copyToClipboard(subscriptionSetupUrl);
+                    setNotice(copied ? '링크를 복사했습니다.' : '링크 복사에 실패했습니다.');
+                  }}
+                >
+                  복사
+                </Button>
+              </div>
+              <p className="mt-2 text-green-700">카톡으로 보내는 것이 주 채널입니다.</p>
+            </div>
           )}
 
           {/* 메일·PDF는 응답 이후에 처리돼 실패해도 화면에 흔적이 없었다. 남겨 둔 사유를
@@ -447,6 +483,37 @@ export default function AdminContractDetailPage({
                 >
                   완료 메일 재발송
                 </Button>
+              )}
+
+              {contract.status === 'signed' && (
+                subscriptionId ? (
+                  <Link href={`/admin/subscriptions/${subscriptionId}`} passHref>
+                    <Button variant="outline">정기결제 구독 보기</Button>
+                  </Link>
+                ) : (
+                  <Button
+                    variant="outline"
+                    disabled={busy}
+                    onClick={() =>
+                      run(async () => {
+                        const result = await createSubscriptionRequest({
+                          kind: 'practice-room',
+                          contractId: contract.id,
+                          customerName: contract.customerName,
+                          customerPhone: contract.customerPhone,
+                          customerEmail: contract.customerEmail,
+                          billingDay: contract.paymentDay,
+                        });
+                        if (result.ok && result.setupUrl) {
+                          setSubscriptionSetupUrl(result.setupUrl);
+                        }
+                        return result;
+                      }, '이 계약으로 정기결제 구독을 만들까요? 고객에게 카드 등록 안내 메일이 발송됩니다.')
+                    }
+                  >
+                    정기결제 링크 만들기
+                  </Button>
+                )
               )}
 
               {isActionAllowed(contract.status, 'update') && (

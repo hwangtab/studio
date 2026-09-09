@@ -370,6 +370,11 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                                     <span className="break-keep">{t('lesson.format.items.2.label')}: <strong>{t('lesson.format.items.2.value')}</strong></span>
                                 </li>
                             </ul>
+                            {locale === 'ko' && (
+                                <p className="text-center text-body-2 text-gray-500 dark:text-gray-400 mb-4 break-keep">
+                                    {t('lesson.pricing.subscriptionNote')}
+                                </p>
+                            )}
                             {/* 카카오 오픈채팅은 한국어 상담 채널이다. 비-ko는 /contact 폼으로
                                 보내고 옐로도 쓰지 않는다(노란 버튼 = 카카오톡 규칙). */}
                             {locale === 'ko' ? (

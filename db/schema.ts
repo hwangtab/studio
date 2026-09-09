@@ -1,5 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const contractStatusEnum = [
   'draft',
@@ -351,6 +351,7 @@ export const ordersRelations = relations(orders, ({ many, one }) => ({
   bookings: many(bookings),
   fundingPledge: one(fundingPledges, { fields: [orders.id], references: [fundingPledges.orderId] }),
   workOrders: many(workOrders),
+  subscriptionPayment: one(subscriptionPayments, { fields: [orders.id], references: [subscriptionPayments.orderId] }),
 }));
 export const paymentsRelations = relations(payments, ({ one, many }) => ({
   order: one(orders, { fields: [payments.orderId], references: [orders.id] }),
@@ -467,3 +468,136 @@ export type ContractClause = typeof contractClauses.$inferSelect;
 export type NewContractClause = typeof contractClauses.$inferInsert;
 export type ContractAttachment = typeof contractAttachments.$inferSelect;
 export type NewContractAttachment = typeof contractAttachments.$inferInsert;
+
+// ─── 구독 자동결제 (Phase 3: 빌링키 정기결제) ─────────────────────────────────
+// 연습실 월 이용료·프로듀싱 레슨 월정액. 회차마다 orders 1건 + payments 1건을 남겨
+// 기존 관리자·웹훅·환불 도구가 그대로 붙는다(구독 전용 정산 경로를 새로 만들지 않는다).
+
+export const subscriptionKindEnum = ['practice-room', 'lesson'] as const;
+export const subscriptionStatusEnum = [
+  'pending_card', // 생성됨, 카드 등록 전 (첫 결제까지 성공해야 active)
+  'active',
+  'past_due', // 회차 결제 실패, 재시도 대기
+  'paused', // 재시도 한도 소진 — 카드 재등록 전까지 청구하지 않는다
+  'cancelled', // 해지 예약. endsAt까지는 이용 가능
+  'ended',
+] as const;
+export const subscriptionPaymentStatusEnum = ['pending', 'paid', 'failed'] as const;
+/**
+ * 카드 등록 링크의 용도.
+ *
+ * 'initial'은 발급 직후 첫 달치를 즉시 결제하지만, 'change'(카드 교체)는 결제하지 않고
+ * 키만 갈아 끼운다. 같은 등록 페이지·같은 토큰 구조를 쓰기 때문에, 어느 쪽인지 서버가
+ * 알지 못하면 카드만 바꾸려던 고객에게 한 달치가 더 청구된다.
+ */
+export const subscriptionSetupModeEnum = ['initial', 'change'] as const;
+
+export const subscriptions = sqliteTable('subscriptions', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  kind: text('kind', { enum: subscriptionKindEnum }).notNull(),
+  /** 연습실만 채워진다 — 임대차 계약이 청구 근거이자 금액·결제일의 출처다. */
+  contractId: text('contract_id').references(() => contracts.id),
+  customerName: text('customer_name').notNull(),
+  customerPhone: text('customer_phone').notNull(),
+  customerEmail: text('customer_email').notNull(),
+  /**
+   * 토스 빌링의 고객 식별자. 구독마다 고유하고 예측 불가여야 한다는 토스 규격이라
+   * `sub_` + uuid로 만든다(구독 id를 그대로 쓰지 않는 이유 — URL에 노출되는 값이다).
+   */
+  customerKey: text('customer_key').notNull().unique(),
+  /** 월 상품가(VAT 별도) + VAT = 청구액. 생성 시점 pricing SSOT에서 계산해 고정한다. */
+  itemAmount: integer('item_amount').notNull(),
+  vatAmount: integer('vat_amount').notNull(),
+  totalAmount: integer('total_amount').notNull(),
+  /** 1~31. 연습실은 계약서 paymentDay. 그 달에 없는 날이면 말일에 청구(계약 제2조 ①). */
+  billingDay: integer('billing_day').notNull(),
+  status: text('status', { enum: subscriptionStatusEnum }).notNull().default('pending_card'),
+  /**
+   * 현재 유효한 카드. billing_keys가 subscriptions를 참조하므로 여기서 FK를 걸면
+   * 순환 참조가 된다 — 값은 billing_keys.id이고 무결성은 서비스 계층이 지킨다.
+   */
+  billingKeyId: text('billing_key_id'),
+  nextBillingAt: integer('next_billing_at', { mode: 'timestamp' }),
+  currentPeriodStart: integer('current_period_start', { mode: 'timestamp' }),
+  currentPeriodEnd: integer('current_period_end', { mode: 'timestamp' }),
+  /** 카드 등록 링크 토큰. 1회성(발급 성공 시 비운다) + 7일 만료 — 결제수단을 다루는 링크라 상시 토큰으로 두지 않는다. */
+  setupToken: text('setup_token').unique(),
+  setupTokenExpiresAt: integer('setup_token_expires_at', { mode: 'timestamp' }),
+  setupMode: text('setup_mode', { enum: subscriptionSetupModeEnum }).notNull().default('initial'),
+  /** 고객 조회·해지 링크 토큰 (orders.manageToken과 같은 성질의 상시 토큰). */
+  manageToken: text('manage_token').notNull().unique(),
+  cancelledAt: integer('cancelled_at', { mode: 'timestamp' }),
+  cancelReason: text('cancel_reason'),
+  /** 해지 예정일 = 이미 결제한 기간의 끝. 이 시각이 지나면 ended로 넘어간다. */
+  endsAt: integer('ends_at', { mode: 'timestamp' }),
+  notificationError: text('notification_error'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const billingKeys = sqliteTable('billing_keys', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  subscriptionId: text('subscription_id').notNull().references(() => subscriptions.id),
+  /** 토스 빌링키. 서버 밖으로 나가지 않는다(로그·메일 금지, 스펙 §9). */
+  billingKey: text('billing_key').notNull().unique(),
+  cardCompany: text('card_company'),
+  cardNumberMasked: text('card_number_masked'),
+  cardType: text('card_type'),
+  issuedAt: integer('issued_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  /** 카드 교체·해지로 더는 쓰지 않는 키. 행을 지우지 않는 이유는 과거 회차의 결제 수단 근거이기 때문. */
+  revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  rawResponse: text('raw_response'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+/**
+ * 회차 결제 시도 1건. (subscriptionId, cycleYm, attempt) 유니크가 같은 달의 같은 시도를
+ * DB 층에서 막고, attempt가 토스 멱등키에도 들어간다 — 재시도가 최초 실패 응답을
+ * replay하면 영영 결제되지 않기 때문이다(토스는 같은 멱등키에 최초 응답을 재사용한다).
+ */
+export const subscriptionPayments = sqliteTable(
+  'subscription_payments',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    subscriptionId: text('subscription_id').notNull().references(() => subscriptions.id),
+    orderId: text('order_id').notNull().references(() => orders.id),
+    /** 청구 대상 월 'YYYY-MM' (KST 기준). */
+    cycleYm: text('cycle_ym').notNull(),
+    attempt: integer('attempt').notNull(),
+    amount: integer('amount').notNull(),
+    status: text('status', { enum: subscriptionPaymentStatusEnum }).notNull().default('pending'),
+    tossCode: text('toss_code'),
+    tossMessage: text('toss_message'),
+    paymentKey: text('payment_key'),
+    attemptedAt: integer('attempted_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    paidAt: integer('paid_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    cycleAttemptUnique: uniqueIndex('subscription_payments_cycle_attempt_unique').on(
+      t.subscriptionId,
+      t.cycleYm,
+      t.attempt,
+    ),
+  }),
+);
+
+export const subscriptionsRelations = relations(subscriptions, ({ one, many }) => ({
+  contract: one(contracts, { fields: [subscriptions.contractId], references: [contracts.id] }),
+  billingKeys: many(billingKeys),
+  subscriptionPayments: many(subscriptionPayments),
+}));
+export const billingKeysRelations = relations(billingKeys, ({ one }) => ({
+  subscription: one(subscriptions, { fields: [billingKeys.subscriptionId], references: [subscriptions.id] }),
+}));
+export const subscriptionPaymentsRelations = relations(subscriptionPayments, ({ one }) => ({
+  subscription: one(subscriptions, { fields: [subscriptionPayments.subscriptionId], references: [subscriptions.id] }),
+  order: one(orders, { fields: [subscriptionPayments.orderId], references: [orders.id] }),
+}));
+
+export type Subscription = typeof subscriptions.$inferSelect;
+export type NewSubscription = typeof subscriptions.$inferInsert;
+export type BillingKey = typeof billingKeys.$inferSelect;
+export type NewBillingKey = typeof billingKeys.$inferInsert;
+export type SubscriptionPayment = typeof subscriptionPayments.$inferSelect;
+export type NewSubscriptionPayment = typeof subscriptionPayments.$inferInsert;

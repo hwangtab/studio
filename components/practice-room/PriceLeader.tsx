@@ -20,6 +20,8 @@ interface PriceLeaderProps {
   priceCaption: string;
   badges: PricingBadge[];
   note: string;
+  /** ko 전용 정기결제 안내 한 줄(연습실 월 이용료 카드결제 링크). 없으면 렌더하지 않는다. */
+  subscriptionNote?: string;
   locale: Locale;
 }
 
@@ -32,6 +34,7 @@ const PriceLeader = ({
   priceCaption,
   badges,
   note,
+  subscriptionNote,
   locale,
 }: PriceLeaderProps) => (
   <Section variant="default" className="py-12">
@@ -86,6 +89,11 @@ const PriceLeader = ({
       <p className={`text-center typo-caption text-gray-500 dark:text-gray-400 mt-4 italic ${locale === 'ko' ? 'break-keep' : 'break-words'}`}>
         {note}
       </p>
+      {subscriptionNote && (
+        <p className="text-center typo-caption text-gray-500 dark:text-gray-400 mt-2 break-keep">
+          {subscriptionNote}
+        </p>
+      )}
     </div>
   </Section>
 );

@@ -67,7 +67,7 @@ const AUTO_CANCEL_FAILED_MESSAGE =
  * 판정 불가(모킹된 빈 배열 등)는 undefined로 돌려 "정상"으로 흘려보낸다 — 없는 실패를
  * 지어내 결제를 취소하는 쪽이 훨씬 위험하다.
  */
-const rowsAffectedOf = (result: unknown): number | undefined => {
+export const rowsAffectedOf = (result: unknown): number | undefined => {
   if (!result || typeof result !== 'object' || !('rowsAffected' in result)) return undefined;
   const value = (result as { rowsAffected: unknown }).rowsAffected;
   const n = Number(value);
