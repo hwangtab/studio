@@ -31,6 +31,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   if (computeProjectState(project, now) !== 'live') return { redirect: { destination: `/ko/funding/${project.slug}`, permanent: false } };
   await expireStalePledges(now);
   const status = await aggregateProjectStatus(project, now);
-  const initialRewardId = typeof query.reward === 'string' && project.rewards.some((r) => r.id === query.reward) ? query.reward : null;
+  const initialRewardId = typeof query.reward === 'string' && project.rewards.some((r) => r.id === query.reward) && status.remaining[query.reward] !== 0
+    ? query.reward : null;
   return { props: { project, initialRewardId, remaining: status.remaining } };
 };

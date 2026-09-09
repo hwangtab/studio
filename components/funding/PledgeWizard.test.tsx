@@ -58,3 +58,38 @@ it('무제한 리워드는 무통장 선택지가 있고, 제출하면 서버 �
   expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
   expect(screen.getByText(/합계 30,000원/)).toBeInTheDocument();
 });
+
+it('한정 수량 리워드는 무통장을 고를 수 없고, 제출하면 결제수단이 toss로 나간다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+  await userEvent.type(screen.getByLabelText('이름'), '김후원');
+  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
+  await userEvent.type(screen.getByLabelText('받는 분'), '김후원');
+  await userEvent.type(screen.getByLabelText('받는 분 연락처'), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText('우편번호'), '12345');
+  await userEvent.type(screen.getByLabelText('주소'), '서울시 어딘가');
+  await userEvent.click(screen.getByLabelText(/약관/));
+  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
+  await screen.findByTestId('toss-widget');
+  const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+  expect(body.paymentMethod).toBe('toss');
+});
+
+it('무제한 리워드에서 무통장을 고른 뒤 한정 리워드로 바꾸면 결제수단이 toss로 되돌아가 그대로 제출된다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await userEvent.click(screen.getByLabelText(/무통장/));
+  await userEvent.click(screen.getByLabelText(/CD/));
+  expect(screen.queryByLabelText(/무통장/)).toBeNull();
+  await userEvent.type(screen.getByLabelText('이름'), '김후원');
+  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
+  await userEvent.type(screen.getByLabelText('받는 분'), '김후원');
+  await userEvent.type(screen.getByLabelText('받는 분 연락처'), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText('우편번호'), '12345');
+  await userEvent.type(screen.getByLabelText('주소'), '서울시 어딘가');
+  await userEvent.click(screen.getByLabelText(/약관/));
+  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
+  await screen.findByTestId('toss-widget');
+  const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+  expect(body.paymentMethod).toBe('toss');
+});
