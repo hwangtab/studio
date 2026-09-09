@@ -16,7 +16,7 @@ import { confirmFundingPledge, syncFundingCancelledFromToss } from './confirm';
 // eslint-disable-next-line import/first
 import { confirmPayment, fetchPayment } from '../booking/toss';
 // eslint-disable-next-line import/first
-import { createFundingPledge, findFundingOrderByOrderNo } from './service';
+import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
@@ -151,18 +151,38 @@ describe('confirmFundingPledge', () => {
     expect(o?.payments[0].paymentKey).toBe('pk_1');
   });
 
-  it('홀드가 만료돼도 웹훅 경로(trustedByWebhook)는 확정한다 — SSR 경로는 여전히 거부', async () => {
+  it('expireStalePledges로 expired가 된 뒤 온 DONE 웹훅도 확정한다 — SSR 경로는 여전히 거부', async () => {
+    // 실제 사고 형태: 홀드가 지나 expireStalePledges가 먼저 돌고, 그 뒤 토스 DONE 웹훅이 온다.
     const stale = await createFundingPledge(
       payloadFor({ customerEmail: 'w@example.com', customerPhone: '010-9' }),
       PROJECT, reward('mail'), new Date(NOW.getTime() - 2000 * 1000),
     );
     if (!stale.ok) throw new Error();
+    await expireStalePledges(NOW);
+    expect((await findFundingOrderByOrderNo(stale.orderNo))?.status).toBe('expired');
+
+    // SSR 경로: expired는 그대로 거부한다.
     expect(await confirmFundingPledge({ orderNo: stale.orderNo, paymentKey: 'pk_1', amount: 5000 }))
-      .toMatchObject({ ok: false, code: 'hold_expired' });
+      .toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(mockConfirm).not.toHaveBeenCalled();
+
     mockConfirm.mockResolvedValueOnce(approved(stale.orderNo, 5000));
     const r = await confirmFundingPledge({ orderNo: stale.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true });
     expect(r.ok).toBe(true);
-    expect((await findFundingOrderByOrderNo(stale.orderNo))?.status).toBe('paid');
+    const o = await findFundingOrderByOrderNo(stale.orderNo);
+    expect(o?.status).toBe('paid');
+    expect(o?.payments[0].paymentKey).toBe('pk_1');
+  });
+
+  it('웹훅 경로여도 failed·refunded 주문은 거부한다', async () => {
+    const c = await createFundingPledge(payloadFor({ customerEmail: 'f@example.com', customerPhone: '010-6' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    for (const status of ['failed', 'refunded', 'partially_refunded']) {
+      await client.execute({ sql: 'UPDATE orders SET status = ? WHERE order_no = ?', args: [status, c.orderNo] });
+      expect(await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true }))
+        .toMatchObject({ ok: false, code: 'invalid_state' });
+    }
+    expect(mockConfirm).not.toHaveBeenCalled();
   });
 
   it('예약 주문번호로 오면 not_found', async () => {

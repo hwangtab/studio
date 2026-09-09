@@ -35,7 +35,12 @@ export const confirmFundingPledge = async (
 
   // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 이미 확정이면 성공으로 답한다(토스 미호출).
   if (order.status === 'paid') return success(order);
-  if (order.status !== 'pending') return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' };
+  // 웹훅 경로는 expired도 받는다 — expireStalePledges가 먼저 돌아 expired가 된 뒤 DONE 웹훅이
+  // 오는 것이 이 사고의 실제 형태다. 여기서 거부하면(비-transient) 200으로 끝나 승인된 돈이
+  // 영구 미기록으로 남는다. batch UPDATE도 pending·expired 둘 다 커버한다.
+  // failed·refunded·partially_refunded는 웹훅이라도 거부한다 — 이미 다른 결론이 난 주문이다.
+  const acceptableStatuses = options.trustedByWebhook ? ['pending', 'expired'] : ['pending'];
+  if (!acceptableStatuses.includes(order.status)) return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' };
 
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다(위변조 차단).
   if (input.amount !== order.totalAmount) return { ok: false, code: 'amount_mismatch', message: '결제 금액이 후원 내용과 일치하지 않습니다.' };
@@ -94,6 +99,9 @@ export const confirmFundingPledge = async (
     ]);
     // 그래도 0행이면 paid가 아닌 제3의 상태(failed·refunded 등)로 이미 옮겨간 것 — 결제는
     // 됐는데 기록은 못 한 상태이므로 성공으로 답하지 않는다.
+    // 주의: payments INSERT는 같은 batch에서 이미 커밋됐다(여기서 되돌리지 않는다 — 승인된
+    // 결제의 기록을 지우는 쪽이 더 위험하다). 그래서 이 주문은 "payments는 있는데 상태는
+    // paid가 아닌" 상태로 남고, 드러나는 경로는 관리자 목록의 mismatch 배지뿐이다.
     if (Number(batchResult[1]?.rowsAffected ?? 0) === 0) {
       console.error('[funding-confirm] 결제 승인됨, 주문 상태 전이 실패(0행) — 수동 확인 필요', {
         orderNo: order.orderNo, paymentKey: approved.paymentKey, status: order.status,

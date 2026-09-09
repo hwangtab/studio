@@ -23,11 +23,20 @@ const PLEDGE = {
 // 예전엔 빈 값을 `|| undefined`로 걸러 보내지 않아, 잘못 입력한 운송장을 지울 수 없었다.
 it('운송장을 비우고 저장하면 빈 문자열을 그대로 보낸다', () => {
   (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
-  render(<AdminFundingDetailPage pledge={PLEDGE} />);
+  render(<AdminFundingDetailPage pledge={PLEDGE} refundableAmount={30000} />);
   fireEvent.change(screen.getByDisplayValue('CJ'), { target: { value: '' } });
   fireEvent.change(screen.getByDisplayValue('123'), { target: { value: '' } });
   fireEvent.click(screen.getByRole('button', { name: '저장' }));
   expect(patchPledge).toHaveBeenCalledWith('order-1', {
     action: 'set_fulfillment', fulfillmentStatus: 'shipped', trackingCompany: '', trackingNumber: '',
   });
+});
+
+// 부분환불 건은 환불 버튼 자체가 사라져 남은 금액을 정리할 방법이 없었다.
+it('partially_refunded도 환불 버튼이 보이고, confirm에 남은 잔액을 알린다', () => {
+  (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
+  window.confirm = jest.fn().mockReturnValue(false);
+  render(<AdminFundingDetailPage pledge={{ ...PLEDGE, status: 'partially_refunded' }} refundableAmount={18000} />);
+  fireEvent.click(screen.getByRole('button', { name: /환불/ }));
+  expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('18,000원'));
 });

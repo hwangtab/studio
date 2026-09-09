@@ -90,10 +90,14 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
       await notifyCancelled(db, order, project, 'refund_requested');
       return { ok: true, mode: 'refund_requested', refundAmount: order.totalAmount };
     }
-    const claim = await db.run(sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'paid'`);
+    const claim = await db.run(
+      sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')`,
+    );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 후원입니다.' };
     await notifyCancelled(db, order, project, 'recorded');
-    return { ok: true, mode: 'recorded', refundAmount: order.totalAmount };
+    // 무통장도 부분환불 이력이 있을 수 있다(관리자가 일부만 돌려준 뒤 나머지를 정리하는 경우) —
+    // 잔액만 알린다. 토스 경로와 같은 계산이다.
+    return { ok: true, mode: 'recorded', refundAmount };
   }
 
   // 토스: 선점 → 취소 API → 기록. 실패 시 되돌림(예약 cancel.ts와 같은 순서).
