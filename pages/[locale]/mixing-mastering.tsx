@@ -282,6 +282,18 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                   cta_id: `mixing_price_${offer.id}_kakao`,
                 })
               }
+              {...(locale === 'ko'
+                ? {
+                    secondaryCtaLabel: t('mixingMastering.cta.order', { defaultValue: '온라인 주문' }),
+                    secondaryCtaHref: `/ko/booking/mixing-mastering?product=${offer.id}`,
+                    onSecondaryCtaClick: () =>
+                      trackLeadEvent('lead_click_booking_entry', {
+                        locale,
+                        component: 'MixingMasteringPage',
+                        cta_id: `mixing_price_${offer.id}_booking`,
+                      }),
+                  }
+                : {})}
             />
           ))}
         </div>
@@ -318,6 +330,18 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                   cta_id: `mastering_price_${offer.id}_kakao`,
                 })
               }
+              {...(locale === 'ko'
+                ? {
+                    secondaryCtaLabel: t('mixingMastering.cta.order', { defaultValue: '온라인 주문' }),
+                    secondaryCtaHref: `/ko/booking/mixing-mastering?product=${offer.id}`,
+                    onSecondaryCtaClick: () =>
+                      trackLeadEvent('lead_click_booking_entry', {
+                        locale,
+                        component: 'MixingMasteringPage',
+                        cta_id: `mastering_price_${offer.id}_booking`,
+                      }),
+                  }
+                : {})}
             />
           ))}
         </div>

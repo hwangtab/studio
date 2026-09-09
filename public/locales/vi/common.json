@@ -335,7 +335,9 @@
       "title": "Sẵn sàng bắt đầu dự án phát hành?",
       "subtitle": "Tư vấn miễn phí 30 phút · Báo giá tùy chỉnh · Thanh toán trả góp",
       "location": "Liên hệ Trực tuyến",
-      "inquiry": "Đặt lịch Tư vấn Miễn phí"
+      "inquiry": "Đặt lịch Tư vấn Miễn phí",
+      "bookingEntry": "Đặt lịch online",
+      "orderEntry": "Đặt hàng online"
     },
     "relatedStoriesTitle": "Những hướng dẫn nên xem trước khi đặt lịch",
     "relatedStoriesSubtitle": "Biết trước chi phí, quy trình phát hành và thu âm giúp bạn tận dụng tối đa buổi thu đầu tiên.",
@@ -559,7 +561,7 @@
     },
     "midCta": {
       "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự.",
-    "noteVacant": "Hiện đang có phòng trống có thể vào ở ngay. Bạn có thể xem phòng trực tiếp trước khi quyết định. Hãy liên hệ, chúng tôi sẽ phản hồi ngay."
+      "noteVacant": "Hiện đang có phòng trống có thể vào ở ngay. Bạn có thể xem phòng trực tiếp trước khi quyết định. Hãy liên hệ, chúng tôi sẽ phản hồi ngay."
     },
     "painPoints": {
       "title": "Bạn có gặp những vấn đề này?",
@@ -1507,7 +1509,8 @@
       "titleHighlight": "chỉ cần gửi file",
       "subtitleLine1": "Cho chúng tôi biết số track là có báo giá ngay.",
       "subtitleLine2": "Làm việc qua gửi file từ bất cứ đâu trong nước hay nước ngoài.",
-      "imageAlt": "Tư vấn công việc mixing Studio NOL"
+      "imageAlt": "Tư vấn công việc mixing Studio NOL",
+      "order": "Đặt hàng online"
     }
   },
   "voiceActing": {

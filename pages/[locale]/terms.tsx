@@ -5,7 +5,7 @@ import SEO from '../../components/SEO';
 import { Section } from '../../components/ui/Section';
 import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../lib/getStatic';
-import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
+import { MIXING_REFUND_POLICY_LINES, REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import type { Locale } from '../../lib/i18n';
 
 // ko 전용 페이지 — 예약 퍼널(lib/booking/*)이 ko 전용이라 약관·환불규정도 ko에만 존재한다.
@@ -76,6 +76,12 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {REFUND_POLICY_LINES.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">믹싱·마스터링 주문</h3>
+              <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
+                {MIXING_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>

@@ -62,7 +62,9 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
   const order = await findOrderByOrderNo(payment.orderId);
   if (!order) return;
   const booking = order.bookings[0];
-  if (!booking) return;
+  const workOrder = order.workOrders[0];
+  // 세션은 bookings, 믹싱은 work_orders — 둘 다 없으면 반영할 대상이 없다.
+  if (!booking && !workOrder) return;
 
   const db = getDb();
   let paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey);
@@ -87,9 +89,19 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
   // confirmed로 보지만, UPDATE...WHERE status='confirmed'는 하나만 rowsAffected 1을 받는다
   // — 진 쪽은 전액 refunds를 중복 INSERT하지 않고 아래 대사 경로로만 넘어간다.
   let claimed = false;
-  if (booking.status === 'confirmed') {
+  if (booking && booking.status === 'confirmed') {
     const claim = await db.run(
       sql`UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'confirmed'`,
+    );
+    claimed = Number(claim.rowsAffected) > 0;
+  } else if (
+    workOrder &&
+    (workOrder.status === 'received' || workOrder.status === 'in_progress' || workOrder.status === 'delivered')
+  ) {
+    // 믹싱은 세 상태 어디서든(cancel.ts의 고객/관리자 취소 조건과 동일 범위) 선점 대상이다 —
+    // 읽은 시점의 status로 조건을 걸어 다른 요청이 먼저 가져간 경우를 걸러낸다.
+    const claim = await db.run(
+      sql`UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = ${workOrder.status}`,
     );
     claimed = Number(claim.rowsAffected) > 0;
   }

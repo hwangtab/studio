@@ -37,8 +37,29 @@ import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import { buildPricingPageSchema } from '../../lib/pricingSchema';
+import { trackLeadEvent } from '../../utils/analytics';
 import type { StoryCardData } from '../../types/story';
 import type { NextPageWithLayout } from '../../types';
+
+/**
+ * ko에서 온라인 결제까지 이어지는 오퍼만 보조 CTA를 받는다(Phase 2 §5).
+ * 발매 패키지(single/ep/album 번들)·연습실·레슨·부가서비스(컨설팅 등)는
+ * 온라인 결제 상품이 아니므로 여기 없다 — 없으면 PricingCard가 렌더하지 않는다.
+ * href는 이미 ko 전용이라 로케일 접두사를 하드코딩한다(비-ko는 아예 호출하지 않음).
+ */
+const BOOKING_ENTRY: Record<string, { href: string; kind: 'reserve' | 'order' }> = {
+  'recording-pro': { href: '/ko/booking/recording', kind: 'reserve' },
+  'recording-hourly': { href: '/ko/booking/recording', kind: 'reserve' },
+  'recording-daylock': { href: '/ko/booking/recording', kind: 'reserve' },
+  'package-wedding': { href: '/ko/booking/wedding-song', kind: 'reserve' },
+  'package-cover-video': { href: '/ko/booking/cover-video', kind: 'reserve' },
+  'package-voiceover': { href: '/ko/booking/voice-acting', kind: 'reserve' },
+  'mixing-level1': { href: '/ko/booking/mixing-mastering?product=mixing-level1', kind: 'order' },
+  'mixing-level2': { href: '/ko/booking/mixing-mastering?product=mixing-level2', kind: 'order' },
+  'mixing-level3': { href: '/ko/booking/mixing-mastering?product=mixing-level3', kind: 'order' },
+  'mastering-single': { href: '/ko/booking/mixing-mastering?product=mastering-single', kind: 'order' },
+  'mastering-package': { href: '/ko/booking/mixing-mastering?product=mastering-package', kind: 'order' },
+};
 
 interface PricingProps {
   locale: Locale;
@@ -66,6 +87,30 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   // 이 한 줄이 가격 카드 6장의 목적지·배색·계측을 함께 맞춘다.
   const kakaoUrl =
     locale === 'ko' ? siteConfig.contact.kakaoUrl : `/${locale}/contact`;
+
+  // ko + BOOKING_ENTRY에 있는 오퍼에만 보조 CTA props를 만든다. 비-ko는 예약 퍼널이
+  // 아예 없으므로 props 자체를 넘기지 않는다(카드 6곳 분기 복붙 방지, 여기 한 곳으로 모음).
+  const getBookingEntryProps = React.useCallback(
+    (offerId: string, component: string) => {
+      if (locale !== 'ko') return {};
+      const entry = BOOKING_ENTRY[offerId];
+      if (!entry) return {};
+      return {
+        secondaryCtaLabel:
+          entry.kind === 'reserve'
+            ? t('pricing.cta.bookingEntry', { defaultValue: '온라인 예약' })
+            : t('pricing.cta.orderEntry', { defaultValue: '온라인 주문' }),
+        secondaryCtaHref: entry.href,
+        onSecondaryCtaClick: () =>
+          trackLeadEvent('lead_click_booking_entry', {
+            locale,
+            component,
+            cta_id: `pricing_${offerId}_booking`,
+          }),
+      };
+    },
+    [locale, t]
+  );
 
   // 카피는 번역 파일에, 숫자는 data/pricing.ts SSOT에 남긴다(리터럴 하드코딩 금지).
   const priceLabels = React.useMemo(() => ({
@@ -314,6 +359,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingSpecial"
                 locale={locale}
+                {...getBookingEntryProps(offer.id, 'PricingSpecial')}
               />
             </div>
           ))}
@@ -346,6 +392,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingRecording"
                 locale={locale}
+                {...getBookingEntryProps(offer.id, 'PricingRecording')}
               />
             </div>
           ))}
@@ -378,6 +425,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingMixing"
                 locale={locale}
+                {...getBookingEntryProps(offer.id, 'PricingMixing')}
               />
             </div>
           ))}
@@ -419,6 +467,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingMastering"
                 locale={locale}
+                {...getBookingEntryProps(offer.id, 'PricingMastering')}
               />
             </div>
           ))}

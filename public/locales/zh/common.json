@@ -335,7 +335,9 @@
       "title": "准备好开始发行项目了吗？",
       "subtitle": "30分钟免费咨询 · 基于费率表的定制报价 · 支持分期付款",
       "location": "在线咨询",
-      "inquiry": "申请免费咨询"
+      "inquiry": "申请免费咨询",
+      "bookingEntry": "在线预约",
+      "orderEntry": "在线下单"
     },
     "relatedStoriesTitle": "预约前值得再看一遍的指南",
     "relatedStoriesSubtitle": "提前了解费用·发行·录音流程，让你的首次录音更高效。",
@@ -559,7 +561,7 @@
     },
     "midCta": {
       "note": "房间经常满员，我们提供候补登记。留言咨询后，一有空房即按顺序通知您。",
-    "noteVacant": "现在有可入住的空房。您可以先实地查看再决定。留言咨询后我们会尽快为您安排。"
+      "noteVacant": "现在有可入住的空房。您可以先实地查看再决定。留言咨询后我们会尽快为您安排。"
     },
     "painPoints": {
       "title": "是否有这些困扰？",
@@ -1507,7 +1509,8 @@
       "titleHighlight": "只需寄送文件",
       "subtitleLine1": "告知音轨数即可立即获得报价。",
       "subtitleLine2": "无论全国或海外，仅靠文件传输即可进行。",
-      "imageAlt": "Studio NOL 混音作业咨询"
+      "imageAlt": "Studio NOL 混音作业咨询",
+      "order": "在线下单"
     }
   },
   "voiceActing": {

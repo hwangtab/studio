@@ -24,6 +24,8 @@ export const MIXING_LEVEL3_PRICE = 500000;
 export const MASTERING_SINGLE_PRICE = 100000;
 /** EP·정규(4곡 이상) 일괄 마스터링 곡당 단가. 싱글 단건(MASTERING_SINGLE_PRICE)보다 곡당 저렴하다. */
 export const MASTERING_PACKAGE_PRICE = 80000;
+// 정교한 보컬 튜닝·박자 보정 곡당 추가. mixing-mastering 페이지 FAQ(mixingMastering.faq.items[0].a) 정본.
+export const VOCAL_TUNING_ADDON_PRICE = 150000;
 export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사용 믹싱 포함)
 export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;

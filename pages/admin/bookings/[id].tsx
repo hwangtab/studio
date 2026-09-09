@@ -8,6 +8,7 @@ import {
   refundBooking,
   resendBookingNotification,
   setBookingStatus,
+  setWorkOrderStage,
   type BookingActionResult,
 } from '../../../components/admin/bookingActions';
 import { Button } from '../../../components/ui/Button';
@@ -40,7 +41,7 @@ export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps>
   const order = await getDb().query.orders
     .findFirst({
       where: (ordersTable, { eq }) => eq(ordersTable.id, id),
-      with: { bookings: true, payments: { with: { refunds: true } } },
+      with: { bookings: true, payments: { with: { refunds: true } }, workOrders: true },
     })
     .catch((error: unknown) => {
       console.error('[admin/bookings/[id]] Failed to load order:', error);
@@ -80,6 +81,23 @@ const BOOKING_STATUS_CLASS: Record<string, string> = {
   confirmed: 'bg-green-100 text-green-700',
   completed: 'bg-blue-100 text-blue-700',
   no_show: 'bg-red-100 text-red-700',
+  cancelled: 'bg-gray-200 text-gray-600',
+};
+
+/** work_orders 상태 라벨 — index.tsx와 같은 어휘(계획서 §4: 접수됨/작업 중/납품 완료/취소됨). */
+const WORK_ORDER_STATUS_LABELS: Record<string, string> = {
+  pending: '결제대기',
+  received: '접수됨',
+  in_progress: '작업 중',
+  delivered: '납품 완료',
+  cancelled: '취소됨',
+};
+
+const WORK_ORDER_STATUS_CLASS: Record<string, string> = {
+  pending: 'bg-gray-100 text-gray-700',
+  received: 'bg-green-100 text-green-700',
+  in_progress: 'bg-blue-100 text-blue-700',
+  delivered: 'bg-purple-100 text-purple-700',
   cancelled: 'bg-gray-200 text-gray-600',
 };
 
@@ -139,6 +157,18 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
   const handleResend = () => run(() => resendBookingNotification(booking.id));
 
+  const handleStartWork = () =>
+    run(
+      () => setWorkOrderStage(booking.id, 'start_work'),
+      '이 주문을 작업 중으로 변경할까요?',
+    );
+
+  const handleDeliver = () =>
+    run(
+      () => setWorkOrderStage(booking.id, 'deliver'),
+      '이 주문을 납품 완료로 변경할까요?',
+    );
+
   // components/admin/bookingActions.ts에 넣지 않고 여기 인라인으로 둔다 — 이번 작업의
   // 수정 허용 파일 목록에 그 파일이 없고(다른 에이전트가 동시에 만지는 파일들과 분리해
   // 두기 위한 경계), resendBookingNotification과 같은 fetch 패턴이라 그대로 옮겨 왔다.
@@ -184,11 +214,22 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
     await run(() => refundBooking(booking.id, refundAmount, refundReason.trim()));
   };
 
-  const canChangeStatus = booking.bookingStatus === 'confirmed';
-  const canResend = booking.bookingStatus !== null && booking.bookingStatus !== 'pending';
+  const isMixing = booking.orderType === 'mixing';
+  const workOrder = booking.workOrder;
+
+  // 완료·노쇼·캘린더·재발송은 슬롯이 있는 세션 예약만의 개념(API도 믹싱엔 409를 준다).
+  const canChangeStatus = !isMixing && booking.bookingStatus === 'confirmed';
+  const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending';
   // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
   // (pages/api/admin/bookings/[id].ts retry-gcal).
-  const canRetryGcal = booking.bookingStatus !== null && booking.bookingStatus !== 'cancelled';
+  const canRetryGcal = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'cancelled';
+
+  const canStartWork = isMixing && workOrder?.status === 'received';
+  const canDeliver = isMixing && workOrder?.status === 'in_progress';
+  // 임의 환불은 착수 전후 어디서든 가능(계획서 §4) — cancel.ts의 관리자 취소 조건과 같다.
+  const canRefund = isMixing
+    ? workOrder !== null && ['received', 'in_progress', 'delivered'].includes(workOrder.status)
+    : canChangeStatus;
 
   return (
     <>
@@ -262,13 +303,28 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
             <div className="p-6 md:p-8 border-b border-gray-200">
               <div className="flex flex-wrap items-center gap-3 mb-5">
-                {booking.bookingStatus && (
-                  <span
-                    className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${BOOKING_STATUS_CLASS[booking.bookingStatus]}`}
-                  >
-                    {BOOKING_STATUS_LABELS[booking.bookingStatus]}
-                  </span>
-                )}
+                <span
+                  className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                    isMixing ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
+                  }`}
+                >
+                  {isMixing ? '믹싱·마스터링' : '세션 예약'}
+                </span>
+                {isMixing
+                  ? workOrder && (
+                      <span
+                        className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${WORK_ORDER_STATUS_CLASS[workOrder.status]}`}
+                      >
+                        {WORK_ORDER_STATUS_LABELS[workOrder.status]}
+                      </span>
+                    )
+                  : booking.bookingStatus && (
+                      <span
+                        className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${BOOKING_STATUS_CLASS[booking.bookingStatus]}`}
+                      >
+                        {BOOKING_STATUS_LABELS[booking.bookingStatus]}
+                      </span>
+                    )}
                 <span className="text-gray-500 text-sm">
                   {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
                 </span>
@@ -286,14 +342,40 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                 </div>
 
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">예약 정보</h2>
+                  <h2 className="text-lg font-bold text-gray-900 mb-4">
+                    {isMixing ? '주문 정보' : '예약 정보'}
+                  </h2>
                   <dl className="space-y-2 text-sm">
                     <DescriptionRow label="상품" value={booking.productName} />
-                    <DescriptionRow label="일시" value={formatKstDateTime(booking.startAt)} />
-                    <DescriptionRow
-                      label="이용 시간"
-                      value={booking.durationHours ? `${booking.durationHours}시간` : '-'}
-                    />
+                    {isMixing ? (
+                      <>
+                        <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
+                        <DescriptionRow
+                          label="보컬 튜닝"
+                          value={workOrder?.vocalTuning ? '포함' : '미포함'}
+                        />
+                        {workOrder?.startedAt && (
+                          <DescriptionRow
+                            label="착수일시"
+                            value={formatKstDateTimeFull(workOrder.startedAt)}
+                          />
+                        )}
+                        {workOrder?.deliveredAt && (
+                          <DescriptionRow
+                            label="납품일시"
+                            value={formatKstDateTimeFull(workOrder.deliveredAt)}
+                          />
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <DescriptionRow label="일시" value={formatKstDateTime(booking.startAt)} />
+                        <DescriptionRow
+                          label="이용 시간"
+                          value={booking.durationHours ? `${booking.durationHours}시간` : '-'}
+                        />
+                      </>
+                    )}
                     {booking.cancelledAt && (
                       <DescriptionRow
                         label="취소일시"
@@ -391,24 +473,37 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                   </>
                 )}
 
+                {canStartWork && (
+                  <Button disabled={busy} onClick={handleStartWork}>
+                    작업 시작
+                  </Button>
+                )}
+                {canDeliver && (
+                  <Button disabled={busy} onClick={handleDeliver}>
+                    납품 완료
+                  </Button>
+                )}
+
                 {canResend && (
                   <Button variant="secondary" disabled={busy} onClick={handleResend}>
                     알림 재발송
                   </Button>
                 )}
 
-                {!canChangeStatus && !canResend && (
-                  <p className="text-sm text-gray-500">결제 대기 중인 예약에는 가능한 작업이 없습니다.</p>
+                {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
+                  <p className="text-sm text-gray-500">
+                    {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
+                  </p>
                 )}
               </div>
             </div>
 
-            {canChangeStatus && (
+            {canRefund && (
               <div className="pt-6 border-t border-gray-100">
                 <h2 className="text-lg font-bold text-gray-900 mb-1">임의 환불</h2>
                 <p className="text-sm text-gray-500 mb-4">
-                  예약을 취소하고 지정한 금액을 환불합니다. 처리하면 예약은 즉시 취소 상태가 되며
-                  되돌릴 수 없습니다.
+                  {isMixing ? '주문을 취소하고' : '예약을 취소하고'} 지정한 금액을 환불합니다. 처리하면{' '}
+                  {isMixing ? '주문은' : '예약은'} 즉시 취소 상태가 되며 되돌릴 수 없습니다.
                 </p>
 
                 <form onSubmit={handleRefund} className="space-y-3 max-w-md">

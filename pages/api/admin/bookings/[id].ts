@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { and, eq } from 'drizzle-orm';
 
 import { getDb } from '../../../../db/client';
-import { bookings, orders } from '../../../../db/schema';
+import { bookings, orders, workOrders } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
@@ -41,7 +41,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     order = await getDb().query.orders.findFirst({
       where: (ordersTable, { eq: eqCol }) => eqCol(ordersTable.id, id),
-      with: { bookings: true, payments: { with: { refunds: true } } },
+      with: { bookings: true, payments: { with: { refunds: true } }, workOrders: true },
     });
   } catch (error: unknown) {
     console.error('[API/admin/bookings/[id]] Query failed:', error);
@@ -53,6 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const booking = order.bookings[0];
+  const workOrder = order.workOrders[0];
+  const isMixing = order.type === 'mixing';
 
   if (req.method === 'PATCH') {
     if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body)) {
@@ -64,6 +66,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res
         .status(400)
         .json({ ok: false, message: `status는 ${STATUS_TRANSITIONS.join(', ')} 중 하나여야 합니다.` });
+    }
+    // 완료·노쇼는 슬롯이 있는 세션 예약만의 개념 — 믹싱 주문은 접수·착수·납품·취소로만 진행한다.
+    if (isMixing) {
+      return res.status(409).json({ ok: false, message: '믹싱·마스터링 주문에는 지원하지 않는 작업입니다.' });
     }
     if (!booking) {
       return res.status(404).json({ ok: false, message: '예약을 찾을 수 없습니다.' });
@@ -179,6 +185,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (body.action === 'retry-gcal') {
+      // 믹싱은 슬롯·캘린더 개념이 없다 — retry 대상 자체가 없다.
+      if (isMixing) {
+        return res.status(409).json({ ok: false, message: '믹싱·마스터링 주문에는 지원하지 않는 작업입니다.' });
+      }
       if (!booking) {
         return res.status(409).json({ ok: false, message: '재시도할 예약이 없습니다.' });
       }
@@ -241,6 +251,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           console.error('[API/admin/bookings/[id]] gcalError 기록 실패:', writeError);
         }
         return res.status(500).json({ ok: false, message: '캘린더 재시도에 실패했습니다.' });
+      }
+    }
+
+    if (body.action === 'start_work' || body.action === 'deliver') {
+      if (!isMixing || !workOrder) {
+        return res.status(409).json({ ok: false, message: '믹싱·마스터링 주문에만 지원하는 작업입니다.' });
+      }
+
+      // received→in_progress, in_progress→delivered — 조건부 UPDATE 한 문장으로 동시 클릭을
+      // 막는다(위 PATCH complete/no_show, cancel.ts의 원자적 선점과 같은 원칙).
+      const isStart = body.action === 'start_work';
+      const fromStatus = isStart ? 'received' : 'in_progress';
+      const toStatus = isStart ? 'in_progress' : 'delivered';
+      const now = new Date();
+
+      try {
+        const result = await getDb()
+          .update(workOrders)
+          .set(isStart ? { status: toStatus, startedAt: now, updatedAt: now } : { status: toStatus, deliveredAt: now, updatedAt: now })
+          .where(and(eq(workOrders.id, workOrder.id), eq(workOrders.status, fromStatus)));
+
+        if ((result.rowsAffected ?? 0) === 0) {
+          return res.status(409).json({
+            ok: false,
+            message: '이미 처리되었거나 상태가 바뀐 주문입니다. 새로고침 후 확인해 주세요.',
+          });
+        }
+
+        return res.status(200).json({ ok: true });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] work_orders 상태 변경 실패:', error);
+        return res.status(500).json({ ok: false, message: '상태 변경에 실패했습니다.' });
       }
     }
 

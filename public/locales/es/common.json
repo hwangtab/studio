@@ -335,7 +335,9 @@
       "title": "¿Listo para empezar tu proyecto de lanzamiento?",
       "subtitle": "Consulta gratuita 30 min · Presupuesto personalizado · Pago en cuotas disponible",
       "location": "Contactar Online",
-      "inquiry": "Solicitar Consulta Gratuita"
+      "inquiry": "Solicitar Consulta Gratuita",
+      "bookingEntry": "Reservar en línea",
+      "orderEntry": "Pedir en línea"
     },
     "relatedStoriesTitle": "Guías que conviene revisar antes de reservar",
     "relatedStoriesSubtitle": "Conocer de antemano los costos, el lanzamiento y el proceso de grabación te ayuda a aprovechar al máximo tu primera sesión.",
@@ -559,7 +561,7 @@
     },
     "midCta": {
       "note": "Las salas suelen estar completas, por lo que mantenemos una lista de espera. Escríbenos y te avisaremos por orden en cuanto se libere una sala.",
-    "noteVacant": "Hay salas disponibles ahora mismo. Puedes visitar antes de decidir. Escríbenos y te responderemos enseguida."
+      "noteVacant": "Hay salas disponibles ahora mismo. Puedes visitar antes de decidir. Escríbenos y te responderemos enseguida."
     },
     "painPoints": {
       "title": "¿Tienes estos problemas?",
@@ -1507,7 +1509,8 @@
       "titleHighlight": "termina de cuajar, solo envía los archivos",
       "subtitleLine1": "Dinos el número de pistas y te damos el presupuesto al momento.",
       "subtitleLine2": "Funciona por transferencia de archivos desde cualquier parte de Corea o del extranjero.",
-      "imageAlt": "Consulta de trabajo de mezcla de Studio NOL"
+      "imageAlt": "Consulta de trabajo de mezcla de Studio NOL",
+      "order": "Pedir en línea"
     }
   },
   "voiceActing": {

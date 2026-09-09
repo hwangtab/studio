@@ -3,12 +3,13 @@ import { randomUUID } from 'node:crypto';
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, type Booking, type Order, type Payment } from '../../db/schema';
+import { orders, type Booking, type Order, type Payment, type WorkOrder } from '../../db/schema';
 import { computeAmounts } from './amounts';
 import { kstDateTime } from './kst';
+import { computeMixingAmounts, getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
 import { generateManageToken, generateOrderNo } from './token';
-import { PENDING_HOLD_SECONDS, type CreateBookingPayload } from './validation';
+import { PENDING_HOLD_SECONDS, type CreateBookingPayload, type CreateMixingOrderPayload } from './validation';
 
 export { rangesOverlap } from './overlap';
 
@@ -93,12 +94,62 @@ export const createBookingOrder = async (
   return { ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount, bookingId };
 };
 
+/**
+ * 믹싱·마스터링 주문형 결제(Phase 2). bookings 대신 work_orders 1건을 만든다 — 슬롯 겹침
+ * 검사가 없어 createBookingOrder보다 단순하지만, 자가 선점 해제는 같은 이유로 필요하다
+ * (BookingWizard의 "← 정보 수정"과 같은 되돌아가기 패턴이 MixingOrderWizard에도 있다).
+ */
+export const createMixingOrder = async (
+  payload: CreateMixingOrderPayload,
+  now: Date,
+): Promise<{ ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; workOrderId: string }> => {
+  const db = getDb();
+  const product = getMixingProduct(payload.productId)!; // validation이 보장
+  const amounts = computeMixingAmounts(product, payload.songCount, payload.vocalTuning);
+  const orderNo = generateOrderNo(now);
+  const manageToken = generateManageToken();
+
+  // 자가 선점 해제 — 순서 주의: work_orders를 먼저 cancelled로 바꾼다(createBookingOrder와 같은 이유,
+  // orders를 먼저 expired로 바꾸면 아래 IN 서브쿼리가 비어 work_orders가 갱신되지 않는다).
+  await db.run(sql`
+    UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+    WHERE status = 'pending' AND order_id IN (
+      SELECT id FROM orders
+      WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+    )
+  `);
+  await db.run(sql`
+    UPDATE orders SET status = 'expired', updated_at = unixepoch()
+    WHERE status = 'pending' AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+  `);
+
+  const [order] = await db
+    .insert(orders)
+    .values({
+      orderNo, type: 'mixing',
+      customerName: payload.customerName, customerPhone: payload.customerPhone,
+      customerEmail: payload.customerEmail,
+      itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount,
+      manageToken,
+    })
+    .returning({ id: orders.id });
+
+  const workOrderId = randomUUID().replace(/-/g, '');
+  await db.run(sql`
+    INSERT INTO work_orders (id, order_id, product_id, service_type, song_count, vocal_tuning, status, customer_note)
+    VALUES (${workOrderId}, ${order.id}, ${product.id}, ${product.serviceType},
+            ${payload.songCount}, ${payload.vocalTuning ? 1 : 0}, 'pending', ${payload.customerNote ?? null})
+  `);
+
+  return { ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount, workOrderId };
+};
+
 export const findOrderByOrderNo = async (
   orderNo: string,
-): Promise<(Order & { bookings: Booking[]; payments: Payment[] }) | undefined> =>
+): Promise<(Order & { bookings: Booking[]; payments: Payment[]; workOrders: WorkOrder[] }) | undefined> =>
   getDb().query.orders.findFirst({
     where: (t, { eq }) => eq(t.orderNo, orderNo),
-    with: { bookings: true, payments: true },
+    with: { bookings: true, payments: true, workOrders: true },
   });
 
 /**
@@ -111,6 +162,10 @@ export const expireStaleOrders = async (now: Date): Promise<void> => {
   const cutoff = toEpoch(now) - PENDING_HOLD_SECONDS;
   await db.run(sql`
     UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+    WHERE status = 'pending' AND created_at < ${cutoff}
+  `);
+  await db.run(sql`
+    UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
     WHERE status = 'pending' AND created_at < ${cutoff}
   `);
   await db.run(sql`

@@ -1,8 +1,8 @@
 import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, orders, refunds } from '../../db/schema';
-import { sendBookingCancelledEmails } from './email';
+import { bookings, orders, refunds, type Booking, type Order, type Payment, type WorkOrder } from '../../db/schema';
+import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
 import { deleteBookingEvent } from './gcal';
 import { computeRefund } from './refund-policy';
 import { findOrderByOrderNo } from './service';
@@ -35,18 +35,47 @@ const refundIdempotencyKey = (orderNo: string, refundAmount: number): string =>
 const RECORDING_FAILED_MESSAGE =
   '환불은 완료되었으나 처리 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.';
 
-export const cancelBookingWithRefund = async (input: {
+const MIXING_STARTED_MESSAGE =
+  '작업이 시작된 주문은 온라인으로 취소할 수 없습니다. 010-4255-7893으로 문의해 주세요.';
+
+export type CancelInput = {
   orderNo: string;
   requestedBy: 'customer' | 'admin';
   reason: string;
   overrideAmount?: number;
   now: Date;
-}): Promise<CancelOutcome> => {
-  const order = await findOrderByOrderNo(input.orderNo);
-  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+};
 
+/** 관리자 임의 환불액은 0원(당일 취소와 동형의 유효한 액션) 이상 총액 이하의 정수만 허용한다. */
+const validateOverrideAmount = (order: Order, input: CancelInput): string | null => {
+  if (
+    input.requestedBy === 'admin' &&
+    typeof input.overrideAmount === 'number' &&
+    (!Number.isInteger(input.overrideAmount) || input.overrideAmount < 0 || input.overrideAmount > order.totalAmount)
+  )
+    return '환불 금액이 올바르지 않습니다.';
+  return null;
+};
+
+/** 토스 취소가 거절됐을 때 로그를 남기고, 내부 오류는 원문을 감춘 일반 문구로 바꾼다(confirm.ts와 동일 원칙). */
+const tossFailureMessage = (context: string, orderNo: string, code: string, message: string): string => {
+  const isInternalError = code === 'CONFIG_ERROR' || code === 'NETWORK_ERROR';
+  if (isInternalError) {
+    console.error(`[${context}] 토스 취소 내부 오류`, { orderNo, code, message });
+  }
+  return isInternalError ? GENERIC_TOSS_ERROR_MESSAGE : message;
+};
+
+/**
+ * 세션 예약(bookings) 취소 — 기존 Phase 1 로직 그대로. 이용일 기준 3단계 환불(refund-policy.ts
+ * REFUND_TIERS)이고, 고객 셀프 취소는 이용 시작 전에만 가능하다.
+ */
+const cancelSessionBooking = async (
+  order: Order & { bookings: Booking[] },
+  payment: Payment | undefined,
+  input: CancelInput,
+): Promise<CancelOutcome> => {
   const booking = order.bookings[0];
-  const payment = order.payments[0];
   const cancellable = (order.status === 'paid' || order.status === 'partially_refunded') && booking?.status === 'confirmed';
   if (!cancellable || !payment)
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
@@ -55,13 +84,8 @@ export const cancelBookingWithRefund = async (input: {
   if (input.requestedBy === 'customer' && booking.startAt.getTime() <= input.now.getTime())
     return { ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가합니다.' };
 
-  // 관리자 임의 환불액은 0원(당일 취소와 동형의 유효한 액션) 이상 총액 이하의 정수만 허용한다.
-  if (
-    input.requestedBy === 'admin' &&
-    typeof input.overrideAmount === 'number' &&
-    (!Number.isInteger(input.overrideAmount) || input.overrideAmount < 0 || input.overrideAmount > order.totalAmount)
-  )
-    return { ok: false, code: 'invalid_state', message: '환불 금액이 올바르지 않습니다.' };
+  const overrideError = validateOverrideAmount(order, input);
+  if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
 
   const refundAmount = input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
     ? input.overrideAmount
@@ -113,17 +137,11 @@ export const cancelBookingWithRefund = async (input: {
         paymentId: payment.id, amount: refundAmount, reason: input.reason,
         requestedBy: input.requestedBy, status: 'failed',
       });
-      // CONFIG_ERROR·NETWORK_ERROR는 우리 쪽 설정·네트워크 문제라 원문을 그대로 보이면
-      // 내부 구성(비밀키 누락 등)이 새어나간다 — 고객에겐 일반 문구, 원문은 서버 로그에만(confirm.ts와 동일 원칙).
-      const isInternalError = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
-      if (isInternalError) {
-        console.error('[booking-cancel] 토스 취소 내부 오류', {
-          orderNo: order.orderNo,
-          code: toss.code,
-          message: toss.message,
-        });
-      }
-      return { ok: false, code: 'toss_failed', message: isInternalError ? GENERIC_TOSS_ERROR_MESSAGE : toss.message };
+      return {
+        ok: false,
+        code: 'toss_failed',
+        message: tossFailureMessage('booking-cancel', order.orderNo, toss.code, toss.message),
+      };
     }
     tossTransactionKey = toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null;
   }
@@ -185,4 +203,133 @@ export const cancelBookingWithRefund = async (input: {
   }
 
   return { ok: true, refundAmount };
+};
+
+/**
+ * 믹싱·마스터링 주문(work_orders) 취소.
+ *
+ * 세션과 달리 날짜 기준 환불 단계가 없다 — "작업 착수" 이전/이후 단 하나의 경계로 나뉜다
+ * (계획서 §4, 2026-09-09 사업 판단). 착수 전(received)이면 고객도 관리자도 취소·전액 환불이
+ * 가능하고, 착수 후(in_progress·delivered)에는 관리자 임의 환불만 남는다 — 이미 엔지니어
+ * 시간이 들어갔기 때문이다.
+ */
+const cancelMixingOrder = async (
+  order: Order,
+  workOrder: WorkOrder | undefined,
+  payment: Payment | undefined,
+  input: CancelInput,
+): Promise<CancelOutcome> => {
+  if (!workOrder || !payment || !(order.status === 'paid' || order.status === 'partially_refunded'))
+    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+
+  if (input.requestedBy === 'customer') {
+    if (workOrder.status === 'in_progress' || workOrder.status === 'delivered')
+      return { ok: false, code: 'invalid_state', message: MIXING_STARTED_MESSAGE };
+    if (workOrder.status !== 'received')
+      return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+  } else if (
+    workOrder.status !== 'received' &&
+    workOrder.status !== 'in_progress' &&
+    workOrder.status !== 'delivered'
+  ) {
+    return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
+  }
+
+  const overrideError = validateOverrideAmount(order, input);
+  if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
+
+  // 착수 전 취소는 전액, 관리자 임의 환불은 지정액 — 세션의 날짜별 티어 대신 이 상품군은
+  // "착수 여부" 하나로만 갈린다(MIXING_REFUND_POLICY_LINES).
+  const refundAmount = input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
+    ? input.overrideAmount
+    : order.totalAmount;
+
+  const db = getDb();
+
+  // 원자적 선점 — cancelSessionBooking과 같은 이유. 읽은 시점의 status로 조건을 걸어야
+  // received에서 눌렀는데 그 사이 관리자가 착수 처리한 경합도 안전하게 걸러진다.
+  const claim = await db.run(
+    sql`UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = ${workOrder.status}`,
+  );
+  if (Number(claim.rowsAffected) === 0)
+    return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 주문입니다.' };
+
+  let tossTransactionKey: string | null = null;
+
+  if (refundAmount > 0) {
+    const toss = await cancelPayment({
+      paymentKey: payment.paymentKey,
+      cancelReason: input.reason,
+      cancelAmount: refundAmount,
+      idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
+    });
+    if (!toss.ok) {
+      // 토스 거절 — 선점을 원래 상태로 되돌린다(cancelSessionBooking과 동일 원칙).
+      try {
+        await db.run(
+          sql`UPDATE work_orders SET status = ${workOrder.status}, cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = 'cancelled'`,
+        );
+      } catch (revertError) {
+        console.error('[booking-cancel] 믹싱 선점 revert 실패 — 수동 복구 필요', {
+          orderNo: order.orderNo,
+          error: revertError,
+        });
+      }
+      await db.insert(refunds).values({
+        paymentId: payment.id, amount: refundAmount, reason: input.reason,
+        requestedBy: input.requestedBy, status: 'failed',
+      });
+      return {
+        ok: false,
+        code: 'toss_failed',
+        message: tossFailureMessage('booking-cancel', order.orderNo, toss.code, toss.message),
+      };
+    }
+    tossTransactionKey = toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null;
+  }
+
+  const nextOrderStatus = refundAmount >= order.totalAmount ? 'refunded'
+    : refundAmount > 0 ? 'partially_refunded' : order.status;
+
+  try {
+    await db.batch([
+      db.insert(refunds).values({
+        paymentId: payment.id, amount: refundAmount, reason: input.reason,
+        requestedBy: input.requestedBy, tossTransactionKey, status: 'done',
+      }),
+      db.update(orders)
+        .set({ status: nextOrderStatus, updatedAt: input.now })
+        .where(eq(orders.id, order.id)),
+    ]);
+  } catch (error) {
+    // 복구는 webhook.ts의 syncCancelledFromToss(work_orders 분기)가 맡는다(cancelSessionBooking과 동일 원칙).
+    console.error('[booking-cancel] 믹싱 환불 완료, DB 기록 실패', {
+      orderNo: order.orderNo,
+      refundAmount,
+      error,
+    });
+    return { ok: false, code: 'recording_failed', message: RECORDING_FAILED_MESSAGE };
+  }
+
+  // 후처리 — 캘린더 삭제 없음(믹싱은 슬롯이 없다).
+  const notifyError = await sendMixingOrderCancelledEmails(order, workOrder, refundAmount);
+  try {
+    await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));
+  } catch (error) {
+    console.error('[booking-cancel] notificationError 기록 실패', {
+      orderNo: order.orderNo,
+      notifyError,
+      error,
+    });
+  }
+
+  return { ok: true, refundAmount };
+};
+
+export const cancelBookingWithRefund = async (input: CancelInput): Promise<CancelOutcome> => {
+  const order = await findOrderByOrderNo(input.orderNo);
+  if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
+
+  if (order.type === 'mixing') return cancelMixingOrder(order, order.workOrders[0], order.payments[0], input);
+  return cancelSessionBooking(order, order.payments[0], input);
 };
