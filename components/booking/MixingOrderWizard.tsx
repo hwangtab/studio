@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import PriceBreakdown from './PriceBreakdown';
@@ -8,7 +8,6 @@ import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing'
 import type { OrderAmounts } from '../../lib/booking/amounts';
 import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingProduct } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
-import { PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
 
 interface MixingOrderWizardProps {
   /** ?product= 쿼리를 서버에서 검증해 넘긴 값 — 없거나 유효하지 않으면 undefined(1번 상품이 기본). */
@@ -43,14 +42,6 @@ interface CreateMixingOrderResponse {
 
 /** '믹싱 · 10트랙 이하' + 3곡 → '믹싱 · 10트랙 이하 × 3곡' */
 const formatOrderName = (nameKo: string, songCount: number): string => `${nameKo} × ${songCount}곡`;
-
-/** 남은 선점 시간을 "12분 3초"로. 1분 미만이면 초만 보여 촉박함이 드러나게 한다. */
-const formatHoldLeft = (ms: number): string => {
-  const total = Math.ceil(ms / 1000);
-  const m = Math.floor(total / 60);
-  const sec = total % 60;
-  return m > 0 ? `${m}분 ${sec}초` : `${sec}초`;
-};
 
 export default function MixingOrderWizard({ initialProductId }: MixingOrderWizardProps) {
   const firstProduct = getMixingProduct(initialProductId ?? '') ?? MIXING_PRODUCTS[0];
@@ -101,8 +92,6 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
   // Step 3: 결제 — 표시 금액은 서버가 POST 응답으로 돌려준 값(SSOT)만 쓴다(BookingWizard와 동일 원칙).
   const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; amounts: OrderAmounts } | null>(null);
-  const [holdExpiresAt, setHoldExpiresAt] = useState<number | null>(null);
-  const [holdRemainingMs, setHoldRemainingMs] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -144,7 +133,6 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
           orderNo: data.orderNo,
           amounts: { itemAmount: data.itemAmount, vatAmount: data.vatAmount, totalAmount: data.totalAmount },
         });
-        setHoldExpiresAt(Date.now() + PENDING_HOLD_SECONDS * 1000);
         setStep(3);
         return;
       }
@@ -157,18 +145,6 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       setSubmitting(false);
     }
   };
-
-  // 선점 카운트다운. 3단계에 있을 때만 돌리고, 0에 닿으면 멈춘다.
-  useEffect(() => {
-    if (step !== 3 || holdExpiresAt === null) {
-      setHoldRemainingMs(null);
-      return;
-    }
-    const tick = () => setHoldRemainingMs(Math.max(0, holdExpiresAt - Date.now()));
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, [step, holdExpiresAt]);
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
@@ -383,29 +359,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
             3. 결제
           </h2>
 
-          {holdRemainingMs !== null && (
-            holdRemainingMs > 0 ? (
-              <p
-                className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
-                role="status"
-              >
-                결제까지 <strong>{formatHoldLeft(holdRemainingMs)}</strong> 남았습니다.
-              </p>
-            ) : (
-              <div
-                className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200"
-                role="alert"
-              >
-                <strong>주문 대기 시간이 지났습니다.</strong> 다시 신청해 주세요.
-                <span className="mt-2 block">
-                  <Button type="button" variant="outline" onClick={() => { setConfirmedOrder(null); setHoldExpiresAt(null); setStep(1); }}>
-                    처음부터 다시
-                  </Button>
-                </span>
-              </div>
-            )
-          )}
-
+          {/* 카운트다운 없음 — 믹싱 주문은 잡아 둘 슬롯이 없어 서버가 pending을 24시간
+              (MIXING_PENDING_TTL_SECONDS) 유지한다. 세션 위저드의 15분 안내를 그대로 두면
+              사실과 어긋나 멀쩡한 주문을 "만료됐다"며 다시 신청하게 만든다. */}
           <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
             결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.
           </p>

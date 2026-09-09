@@ -119,8 +119,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
 
       try {
-        // 정수·범위(0≤amount≤totalAmount) 검증은 cancelBookingWithRefund 내부에서 한다
-        // (lib/booking/cancel.ts) — 여기서 중복 검사하지 않는다.
+        // 정수·범위 검증은 cancelBookingWithRefund 내부에서 한다(lib/booking/cancel.ts) —
+        // 여기서 중복 검사하지 않는다. 상한은 총액이 아니라 **잔액**(0 ≤ amount ≤ remaining,
+        // 총액에서 이미 done으로 기록된 환불을 뺀 값)이다. 부분환불된 주문에 총액을 다시 넣으면
+        // 토스 잔액을 넘어 거절되거나 과다 환불이 된다.
         const result = await cancelBookingWithRefund({
           orderNo: order.orderNo,
           requestedBy: 'admin',

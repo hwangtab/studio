@@ -18,6 +18,24 @@ export const MAX_BOOK_DAYS = 60;
  */
 export const PENDING_HOLD_SECONDS = 900;
 
+/**
+ * 믹싱·마스터링 주문(work_orders + orders type='mixing')의 pending 만료 시간(초).
+ *
+ * 세션의 900초와 다른 값인 데는 두 가지 이유가 있다.
+ *
+ * 1. 잡아 둔 자원이 없다. 900초는 "다른 고객이 이 슬롯을 못 잡게 막아 두는 시간"인데,
+ *    믹싱은 슬롯이 없어 pending을 오래 두어도 아무도 손해 보지 않는다.
+ * 2. 토스 웹훅 재시도가 도착할 창을 열어 둬야 한다. confirm이 승인은 받았는데 DB 기록에
+ *    실패하면(recording_failed) 복구는 토스의 DONE 웹훅 재시도가 맡는데, 재시도는 수십 분~
+ *    수 시간에 걸쳐 온다. 900초에 expire해 버리면 그 재시도가 confirm의 `status !== 'pending'`
+ *    에 영구히 막히고, 자동 취소(autoCancelStaleApproval)는 batch 앞에서 끝나 타지도 않는다
+ *    — 돈은 들어왔는데 주문은 만료된 채 남는, 정확히 피해야 할 상태다.
+ *
+ * 24시간이면 토스 웹훅 재시도 주기를 충분히 덮으면서, 결제 안 한 주문이 관리자 목록에
+ * 무기한 쌓이지도 않는다.
+ */
+export const MIXING_PENDING_TTL_SECONDS = 86400;
+
 export interface CreateBookingPayload {
   productId: string;
   hours?: number;

@@ -9,12 +9,12 @@ import { kstDateTime } from './kst';
 import { computeMixingAmounts, getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
 import { generateManageToken, generateOrderNo } from './token';
-import { PENDING_HOLD_SECONDS, type CreateBookingPayload, type CreateMixingOrderPayload } from './validation';
+import { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS, type CreateBookingPayload, type CreateMixingOrderPayload } from './validation';
 
 export { rangesOverlap } from './overlap';
 
 // 클라이언트(예약 위저드 카운트다운)와 공유해야 해서 validation.ts가 정본이다.
-export { PENDING_HOLD_SECONDS };
+export { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS };
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
@@ -178,22 +178,34 @@ export const findOrderByOrderNo = async (
 
 /**
  * 결제가 오지 않은 선점을 정리한다. 슬롯 조회·관리자 목록에서 lazy 호출
- * (expireOverdueContracts 패턴). 두 UPDATE는 원자성이 필요 없다 — 겹침 검사가
+ * (expireOverdueContracts 패턴). UPDATE들은 원자성이 필요 없다 — 겹침 검사가
  * 어차피 900초 지난 pending을 무시하므로, 이 정리는 표시용 상태 정합일 뿐이다.
+ *
+ * 만료 창은 타입마다 다르다. 세션은 슬롯을 잡아 두므로 PENDING_HOLD_SECONDS(900초)에
+ * 풀어야 하지만, 믹싱은 잡아 둔 자원이 없고 토스 웹훅 재시도가 도착할 창을 열어 둬야 해서
+ * MIXING_PENDING_TTL_SECONDS(24시간)를 쓴다 — 왜 그런지는 validation.ts의 상수 주석에.
+ *
+ * orders UPDATE에 type 조건이 붙은 것도 의도다. 예전엔 조건 없이 900초 지난 **모든** pending
+ * 주문을 expired로 바꿔서, 무통장 입금 기한이 며칠인 펀딩 주문(lib/funding/service.ts의
+ * expireStalePledges가 hold_expires_at으로 따로 관리한다)까지 예약 슬롯 조회 한 번에
+ * 15분 만에 죽였다. 이 함수는 예약·믹싱 주문만 책임진다.
  */
 export const expireStaleOrders = async (now: Date): Promise<void> => {
   const db = getDb();
-  const cutoff = toEpoch(now) - PENDING_HOLD_SECONDS;
+  const sessionCutoff = toEpoch(now) - PENDING_HOLD_SECONDS;
+  const mixingCutoff = toEpoch(now) - MIXING_PENDING_TTL_SECONDS;
   await db.run(sql`
     UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
-    WHERE status = 'pending' AND created_at < ${cutoff}
+    WHERE status = 'pending' AND created_at < ${sessionCutoff}
   `);
   await db.run(sql`
     UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
-    WHERE status = 'pending' AND created_at < ${cutoff}
+    WHERE status = 'pending' AND created_at < ${mixingCutoff}
   `);
   await db.run(sql`
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE status = 'pending' AND created_at < ${cutoff}
+    WHERE status = 'pending'
+      AND ((type = 'session' AND created_at < ${sessionCutoff})
+           OR (type = 'mixing' AND created_at < ${mixingCutoff}))
   `);
 };

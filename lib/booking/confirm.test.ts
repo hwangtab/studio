@@ -10,7 +10,11 @@ jest.mock('./email', () => ({
 // confirm.ts는 한 실행 안에서 getDb()를 여러 번 부르므로(toss_rejected 분기 / batch / 후처리),
 // 테스트가 batch·payments 조회 결과를 mockResolvedValueOnce 등으로 제어하려면 같은 참조가 필요하다.
 jest.mock('../../db/client', () => {
-  const batch = jest.fn().mockResolvedValue([]);
+  // 기본 batch 응답은 실제 libSQL이 돌려주는 모양([payments INSERT, orders UPDATE, 하위 테이블
+  // UPDATE] 각각의 ResultSet)을 흉내 낸다. 예전 기본값이던 []는 rowsAffected 판정 불가라
+  // "0행 감지"를 통째로 우회했다 — 그 관대함이 실수로 모든 테스트에 적용되면 자동 취소 경로의
+  // 회귀를 놓친다. 판정 불가 케이스는 전용 테스트에서만 mockResolvedValueOnce([])로 만든다.
+  const batch = jest.fn().mockResolvedValue([{ rowsAffected: 1 }, { rowsAffected: 1 }, { rowsAffected: 1 }]);
   const run = jest.fn().mockResolvedValue({ rowsAffected: 1 });
   const paymentsFindFirst = jest.fn().mockResolvedValue(undefined);
   const insertValues = jest.fn().mockReturnValue({});
@@ -342,7 +346,7 @@ describe('confirmBookingPayment', () => {
       });
       // 멱등키는 cancel.ts와 같은 규약 — 웹훅 재도착이 같은 키로 replay되어 돈이 두 번 나가지 않는다.
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({
-        cancelAmount: 275000, idempotencyKey: 'refund:SNB-1:275000',
+        cancelAmount: 275000, idempotencyKey: 'autocancel:SNB-1:275000',
       }));
       const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '주문 만료 후 승인 — 자동 전액 취소');
       expect(refundInsert).toMatchObject({
@@ -350,7 +354,7 @@ describe('confirmBookingPayment', () => {
       });
     });
 
-    it('자동 취소가 실패하면 failed 환불 행을 남기고 recording_failed로 돌려준다', async () => {
+    it('자동 취소가 실패하면 failed 환불 행을 남기고 invalid_state(영구 실패)로 돌려준다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
       (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
       const db = mockDb();
@@ -360,7 +364,12 @@ describe('confirmBookingPayment', () => {
 
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
 
-      expect(r).toMatchObject({ ok: false, code: 'recording_failed' });
+      // 재시도로 고칠 수 없는 상태라 영구 실패(invalid_state)다 — recording_failed면 웹훅이
+      // 계속 재시도하지만 그 재시도는 전부 `status !== 'pending'`에 막힌다.
+      expect(r).toEqual({
+        ok: false, code: 'invalid_state',
+        message: '결제 확인 중 문제가 발생했습니다. 결제가 이뤄졌다면 확인 후 환불해 드립니다. 문의: 010-4255-7893',
+      });
       const refundInsert = insertValuesCallsOf(db).find((c) => c.reason === '주문 만료 후 승인 — 자동 전액 취소');
       expect(refundInsert).toMatchObject({ status: 'failed', tossTransactionKey: null });
       expect(consoleErrorSpy).toHaveBeenCalledWith(
