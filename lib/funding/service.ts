@@ -48,11 +48,12 @@ export const createFundingPledge = async (
   const holdExpiresAt = new Date(now.getTime() + holdSeconds * 1000);
 
   // 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 같은 고객의 pending 펀딩 주문을 만료시킨다.
+  // 무통장(bank_transfer) pending은 제외 — 이미 입금했을 수 있어 재제출만으로 만료시키면 안 된다.
   await db.run(sql`
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
     WHERE type = 'funding' AND status = 'pending'
       AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-      AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug})
+      AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
   `);
 
   const [order] = await db.insert(orders).values({

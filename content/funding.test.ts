@@ -23,4 +23,8 @@ describe('content/funding', () => {
   it('slug는 [a-z0-9-]만 쓴다', () => {
     for (const p of getAllFundingProjects()) expect(p.slug).toMatch(/^[a-z0-9-]+$/);
   });
+
+  it('slug는 트랜잭셔널 라우트 예약어(success·fail·terms·deposit·manage·pledge)를 쓰지 않는다', () => {
+    for (const p of getAllFundingProjects()) expect(p.slug).not.toMatch(/^(success|fail|terms|deposit|manage|pledge)$/);
+  });
 });

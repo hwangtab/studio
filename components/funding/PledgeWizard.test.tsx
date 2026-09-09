@@ -4,11 +4,13 @@ import '@testing-library/jest-dom';
 
 import PledgeWizard from './PledgeWizard';
 import { parseFundingProject } from '../../lib/funding/projects';
+import { trackMicroEvent } from '../../utils/analytics';
 
 jest.mock('../booking/TossPaymentWidget', () => function MockTossPaymentWidget() { return <div data-testid="toss-widget" />; });
 jest.mock('next/router', () => ({
   useRouter: () => ({ push: jest.fn() }),
 }));
+jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 
 const project = parseFundingProject(`---
 slug: demo
@@ -57,6 +59,8 @@ it('무제한 리워드는 무통장 선택지가 있고, 제출하면 서버 �
   await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
   expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
   expect(screen.getByText(/합계 30,000원/)).toBeInTheDocument();
+  // funding_pledge_start는 페이지 진입 시 pledge.tsx에서 발화한다 — 제출에서는 발화하지 않는다.
+  expect(trackMicroEvent).not.toHaveBeenCalled();
 });
 
 it('한정 수량 리워드는 무통장을 고를 수 없고, 제출하면 결제수단이 toss로 나간다', async () => {

@@ -5,10 +5,9 @@ jest.mock('../../../../../lib/funding/bank-transfer', () => ({ confirmBankDeposi
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
+const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
 jest.mock('../../../../../db/client', () => ({
-  getDb: jest.fn(() => ({
-    update: jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) })),
-  })),
+  getDb: jest.fn(() => ({ update: mockUpdate })),
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -17,6 +16,7 @@ import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
+import { sendFundingConfirmedEmails, sendFundingBankDepositEmails } from '../../../../../lib/funding/email';
 
 const call = async (method: string, query: unknown, body: unknown) => {
   const json = jest.fn();
@@ -83,4 +83,37 @@ it('set_fulfillment은 paid가 아닌 주문에서 409', async () => {
 it('알 수 없는 action → 400', async () => {
   const r = await call('PATCH', { id: 'order-1' }, { action: 'nope' });
   expect(r.status).toBe(400);
+});
+
+it('resend_email: refunded 주문은 재발송할 메일이 없어 409, DB 기록도 안 한다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'refunded' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(r.status).toBe(409);
+  expect(r.body).toEqual({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+  expect(sendFundingBankDepositEmails).not.toHaveBeenCalled();
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('resend_email: paid면 확정 메일을 재발송한다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'paid' });
+  (sendFundingConfirmedEmails as jest.Mock).mockResolvedValue(null);
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(sendFundingConfirmedEmails).toHaveBeenCalled();
+  expect(r.status).toBe(200);
+});
+
+it('resend_email: pending + 무통장이면 안내 메일을 재발송한다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'pending' });
+  (sendFundingBankDepositEmails as jest.Mock).mockResolvedValue(null);
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(sendFundingBankDepositEmails).toHaveBeenCalled();
+  expect(r.status).toBe(200);
+});
+
+it('resend_email: pending이어도 토스면 재발송할 메일이 없어 409', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'pending', fundingPledge: { ...BASE_ORDER.fundingPledge, paymentMethod: 'toss' } });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(r.status).toBe(409);
+  expect(mockUpdate).not.toHaveBeenCalled();
 });

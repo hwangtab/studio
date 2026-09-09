@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { eq } from 'drizzle-orm';
 
+import { getDb } from '../../../db/client';
+import { orders } from '../../../db/schema';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { sendFundingBankDepositEmails } from '../../../lib/funding/email';
@@ -25,13 +28,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '방금 이 리워드가 마감되었습니다. 다른 리워드를 선택해 주세요.' });
 
   let depositUrl: string | undefined;
+  let emailSent = false;
   if (validated.value.paymentMethod === 'bank_transfer') {
     depositUrl = `/ko/funding/deposit/${result.orderNo}?token=${result.manageToken}`;
     const order = await findFundingOrderByOrderNo(result.orderNo);
-    if (order) void sendFundingBankDepositEmails(order, project!);
+    if (order) {
+      let emailError: string | null = null;
+      try {
+        emailError = await sendFundingBankDepositEmails(order, project!);
+      } catch (error) {
+        console.error('[funding-pledges] 무통장 안내 메일 발송 중 예외', { orderId: order.id, error });
+        emailError = error instanceof Error ? error.message : String(error);
+      }
+      emailSent = !emailError;
+      try {
+        await getDb().update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+      } catch (error) {
+        console.error('[funding-pledges] notificationError 기록 실패', { orderId: order.id, emailError, error });
+      }
+    }
   }
   return res.status(201).json({
     ok: true, orderNo: result.orderNo, paymentMethod: validated.value.paymentMethod,
-    holdExpiresAt: result.holdExpiresAt.toISOString(), ...result.amounts, ...(depositUrl ? { depositUrl } : {}),
+    holdExpiresAt: result.holdExpiresAt.toISOString(), ...result.amounts, ...(depositUrl ? { depositUrl, emailSent } : {}),
   });
 }

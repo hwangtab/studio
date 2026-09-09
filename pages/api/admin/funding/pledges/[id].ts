@@ -63,13 +63,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true });
     }
     case 'resend_email': {
+      if (order.status !== 'paid' && !(order.status === 'pending' && order.fundingPledge.paymentMethod === 'bank_transfer')) {
+        return res.status(409).json({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+      }
       const project = getFundingProject(order.fundingPledge.projectSlug);
-      const err =
-        order.status === 'paid'
-          ? await sendFundingConfirmedEmails(order, project)
-          : order.fundingPledge.paymentMethod === 'bank_transfer'
-            ? await sendFundingBankDepositEmails(order, project)
-            : '재발송할 메일이 없는 상태';
+      const err = order.status === 'paid'
+        ? await sendFundingConfirmedEmails(order, project)
+        : await sendFundingBankDepositEmails(order, project);
       await db.update(orders).set({ notificationError: err, updatedAt: now }).where(eq(orders.id, order.id));
       return err ? res.status(502).json({ ok: false, message: err }) : res.status(200).json({ ok: true });
     }
