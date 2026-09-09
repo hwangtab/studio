@@ -11,9 +11,33 @@ node --env-file=.env.local scripts/social/auth.mjs --refresh                   #
 ```
 
 - `posted.json`은 발행 원장이다. 같은 글은 `--force` 없이는 다시 올라가지 않는다.
-- 토큰은 60일. 만료 전 `--refresh`. 만료됐으면 `auth.mjs --platform ig`가 출력하는 URL로
-  승인 후 돌아온 `?code=`를 `--code`로 넘긴다(Meta는 HTTPS redirect만 받아 로컬 서버를 안 쓴다).
 - Instagram은 JPEG만 받으므로 OG 카드를 sharp로 변환해 Vercel Blob에 올린다.
+
+## 토큰 — 영구 토큰은 없다
+
+Instagram Login·Threads 어느 쪽도 만료 없는 토큰을 주지 않는다(2026-09-09 문서·실측 확인).
+장기 토큰 60일을 `refresh_access_token`으로 **무제한** 연장할 수 있을 뿐이고, 한 번 만료되면
+연장이 불가능해 브라우저 재승인 말고는 방법이 없다. 그래서 "영원히 쓰기"의 실제 구현은
+**갱신을 빠뜨리지 않는 것**이고, 두 겹으로 막는다.
+
+1. **CLI 실행 시 자동 갱신** — `post`·`inbox`·`insights` 중 무엇을 돌리든 만료가 21일 이내면
+   먼저 갱신한다(`meta.mjs`의 `ensureFreshToken`). 실패해도 본 작업은 계속한다.
+2. **주간 launchd 작업** — CLI를 몇 달 안 써도 살아 있게 한다.
+
+```bash
+bash scripts/social/refresh-token.sh --install     # 매주 월 10:00 등록 (설치 1회)
+bash scripts/social/refresh-token.sh               # 지금 한 번 갱신
+bash scripts/social/refresh-token.sh --uninstall
+node --env-file=.env.local scripts/social/auth.mjs --status   # 남은 일수
+tail ~/Library/Logs/studionol-social-refresh.log              # 주간 작업 로그
+```
+
+만료 시각은 `.env.local`의 `*_TOKEN_EXPIRES_AT`에 기록된다. 갱신은 발급 24시간 뒤부터 된다.
+
+> 인터넷에 도는 "만료 없는 인스타 토큰"은 **페이스북 페이지 액세스 토큰** 이야기다.
+> 페이스북 로그인 기반 Instagram Graph API에서 페이지를 연결했을 때만 해당하고, 지금 쓰는
+> Instagram Login 방식에는 적용되지 않는다. Threads에는 그런 경로가 아예 없어서 어느 쪽이든
+> 갱신 장치는 있어야 한다.
 
 ## 반응 확인·답하기 (`inbox.mjs`)
 

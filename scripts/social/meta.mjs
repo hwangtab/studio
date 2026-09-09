@@ -20,6 +20,7 @@ export const PLATFORMS = {
     appIdKey: 'INSTAGRAM_APP_ID',
     secretKey: 'INSTAGRAM_APP_SECRET',
     tokenKey: 'INSTAGRAM_ACCESS_TOKEN',
+    expiresKey: 'INSTAGRAM_TOKEN_EXPIRES_AT',
     userIdKey: 'INSTAGRAM_USER_ID',
     authorizeUrl: 'https://www.instagram.com/oauth/authorize',
     tokenUrl: 'https://api.instagram.com/oauth/access_token',
@@ -39,6 +40,7 @@ export const PLATFORMS = {
     appIdKey: 'THREADS_APP_ID',
     secretKey: 'THREADS_APP_SECRET',
     tokenKey: 'THREADS_ACCESS_TOKEN',
+    expiresKey: 'THREADS_TOKEN_EXPIRES_AT',
     userIdKey: 'THREADS_USER_ID',
     authorizeUrl: 'https://threads.net/oauth/authorize',
     tokenUrl: 'https://graph.threads.net/oauth/access_token',
@@ -94,6 +96,67 @@ export async function graph(platform, method, pathname, params = {}, { token } =
   const json = await res.json().catch(() => ({}));
   if (!res.ok || json.error) throw new GraphError(res.status, json, url);
   return json;
+}
+
+
+/**
+ * 토큰 수명 관리 — Instagram·Threads 모두 **영구 토큰이 없다**. 장기 토큰 60일이고
+ * `refresh_access_token`으로 무제한 연장할 수 있지만, 만료된 뒤에는 연장이 안 되고
+ * 60일 동안 한 번도 갱신하지 않아도 영구 만료된다(2026-09-09 문서·실측 확인).
+ * 그래서 "재발급 안 하고 영원히"의 실제 구현은 **자동 갱신을 빠뜨리지 않는 것**이다.
+ *
+ * 두 겹으로 막는다:
+ *   1. 아래 ensureFreshToken() — 어떤 CLI를 실행하든 만료가 가까우면 먼저 갱신한다.
+ *   2. launchd 주간 작업(scripts/social/refresh-token.sh) — CLI를 몇 달 안 써도 살아 있게.
+ */
+export const REFRESH_WHEN_DAYS_LEFT = 21;
+
+export function saveToken(platform, { access_token: accessToken, expires_in: expiresIn }) {
+  const p = PLATFORMS[platform];
+  const updates = { [p.tokenKey]: accessToken };
+  if (expiresIn) updates[p.expiresKey] = new Date(Date.now() + expiresIn * 1000).toISOString();
+  saveEnv(updates);
+}
+
+/** 남은 일수. 만료 시각을 모르면 null(= 갱신 대상으로 본다). */
+export function daysLeft(platform) {
+  const raw = process.env[PLATFORMS[platform].expiresKey];
+  if (!raw) return null;
+  const ms = Date.parse(raw);
+  return Number.isNaN(ms) ? null : (ms - Date.now()) / 86400000;
+}
+
+export async function refreshToken(platform) {
+  const p = PLATFORMS[platform];
+  const res = await graph(platform, 'GET', '/refresh_access_token', { grant_type: p.refreshGrant });
+  saveToken(platform, res);
+  return Math.round(res.expires_in / 86400);
+}
+
+/**
+ * 만료가 REFRESH_WHEN_DAYS_LEFT일 이내면 갱신한다. 실패해도 던지지 않는다 —
+ * 토큰이 아직 유효할 수 있으므로 본 작업(발행·조회)을 막지 않는 편이 낫다.
+ */
+export async function ensureFreshToken(platform, { quiet = false } = {}) {
+  const left = daysLeft(platform);
+  if (left !== null && left > REFRESH_WHEN_DAYS_LEFT) return { refreshed: false, daysLeft: left };
+  try {
+    const days = await refreshToken(platform);
+    if (!quiet) console.log(`[${PLATFORMS[platform].label}] 토큰 자동 갱신 — ${days}일 남음`);
+    return { refreshed: true, daysLeft: days };
+  } catch (err) {
+    console.warn(`[${PLATFORMS[platform].label}] 토큰 자동 갱신 실패: ${err.message}`);
+    if (left !== null && left <= 0) console.warn('만료된 토큰은 갱신할 수 없다. auth.mjs로 재승인할 것.');
+    return { refreshed: false, daysLeft: left, error: err };
+  }
+}
+
+/** 여러 플랫폼을 한 번에. 토큰이 없는 플랫폼은 건너뛴다(아직 승인 전). */
+export async function ensureFreshTokens(platforms, opts) {
+  for (const platform of platforms) {
+    if (!process.env[PLATFORMS[platform].tokenKey]) continue;
+    await ensureFreshToken(platform, opts);
+  }
 }
 
 export function hintForError(err) {

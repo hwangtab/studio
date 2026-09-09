@@ -12,7 +12,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import matter from 'gray-matter';
-import { ROOT, graph, requireEnv, hintForError, sleep, PLATFORMS } from './meta.mjs';
+import { ROOT, graph, requireEnv, hintForError, sleep, PLATFORMS, ensureFreshTokens } from './meta.mjs';
 import {
   buildInstagramCaption,
   buildThreadsText,
@@ -116,6 +116,8 @@ const pending = to.filter((t) => {
   return true;
 });
 if (pending.length === 0) process.exit(0);
+
+if (!dryRun) await ensureFreshTokens(pending);
 
 console.log(`${story.title}\n${storyUrl(slug)}`);
 const imageUrl = await resolveImageUrl(story);

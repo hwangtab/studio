@@ -9,7 +9,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
-import { ROOT, graph, hintForError } from './meta.mjs';
+import { ROOT, graph, hintForError, ensureFreshTokens } from './meta.mjs';
 
 const CSV = path.join(ROOT, 'docs/social/insights.csv');
 const HEADER = 'date,ig_followers,ig_reach_7d,ig_profile_views_7d,ig_engaged_7d,ig_views_7d,th_followers,th_views_7d,th_likes_7d,th_replies_7d,th_reposts_7d,th_quotes_7d';
@@ -49,6 +49,7 @@ async function collect() {
 }
 
 try {
+  await ensureFreshTokens(['ig', 'threads']);
   const row = await collect();
   console.table(row);
   if (!printOnly) {
