@@ -1,19 +1,16 @@
 /** @jest-environment node */
 
 import { getStaticProps } from './pages/[locale]/practice-room';
-import {
-  PRACTICE_ROOM_RELATED_GUIDES,
-  type PracticeRoomRelatedGuide,
-} from './data/practiceRoomRelatedGuides';
 
 describe('practice-room static props', () => {
-  it('serializes related guides as compact data instead of large HTML strings', async () => {
+  it('no longer round-trips related guide data through props', async () => {
     const result = await getStaticProps({ params: { locale: 'ko' } });
     expect('props' in result).toBe(true);
     if (!('props' in result)) return;
 
     const props = result.props as Record<string, unknown>;
     const legacyRelatedGuidePropNames = [
+      'relatedGuides',
       ['relatedGuides', 'Visible', 'Html'].join(''),
       ['relatedGuides', 'Hidden', 'Html'].join(''),
       ['relatedGuides', 'Hidden', 'Count'].join(''),
@@ -22,18 +19,18 @@ describe('practice-room static props', () => {
       expect(props[propName]).toBeUndefined();
     });
 
-    const relatedGuides = props.relatedGuides as PracticeRoomRelatedGuide[];
-    expect(relatedGuides).toHaveLength(PRACTICE_ROOM_RELATED_GUIDES.length);
-    expect(relatedGuides[0]).toEqual(PRACTICE_ROOM_RELATED_GUIDES[0]);
-    expect(JSON.stringify(props).length).toBeLessThan(128_000);
+    // 남는 것은 locale + i18nResources뿐이다. 임계값은 i18n 페이로드(약 9.8KB) 위에
+    // 여유를 둔 값 — relatedGuides(약 52KB)가 되돌아오면 즉시 넘긴다.
+    expect(Object.keys(props).sort()).toEqual(['i18nResources', 'locale']);
+    expect(JSON.stringify(props).length).toBeLessThan(20_000);
   });
 
-  it('omits related guide data for non-Korean practice-room pages', async () => {
+  it('serializes the same (small) props shape for non-Korean locales', async () => {
     const result = await getStaticProps({ params: { locale: 'en' } });
     expect('props' in result).toBe(true);
     if (!('props' in result)) return;
 
     const props = result.props as Record<string, unknown>;
-    expect(props.relatedGuides).toEqual([]);
+    expect(props.relatedGuides).toBeUndefined();
   });
 });

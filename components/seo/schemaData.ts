@@ -65,5 +65,12 @@ export const buildFinalSchemaData = ({
 };
 
 export const serializeJsonLd = (data: JsonLdObject) => (
-  JSON.stringify(data).replace(/<\//g, '<\\/')
+  JSON.stringify(data)
+    // </script>가 파서를 벗어나지 못하게 이스케이프.
+    .replace(/<\//g, '<\\/')
+    // <!--가 들어가면 <script> 파서가 "script data escaped" 상태로 진입해 그 뒤 닫는 태그를
+    // 삼킨다(현재 frontmatter에 0건이라 미노출이지만 재발 방지). U+2028/U+2029은 JSON 문자열
+    // 안에서는 유효하지만 HTML 밖 일부 JS 파서(줄 종결자 처리)에서 문제가 될 수 있어 함께 이스케이프.
+    .replace(/\u2028/g, '\\u2028')
+    .replace(/\u2029/g, '\\u2029')
 );

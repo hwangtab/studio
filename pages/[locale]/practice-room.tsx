@@ -21,7 +21,6 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { PRACTICE_ROOM_HAS_VACANCY } from '../../data/practiceRoomAvailability';
-import { PRACTICE_ROOM_RELATED_GUIDES, type PracticeRoomRelatedGuide } from '../../data/practiceRoomRelatedGuides';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
 import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
@@ -50,8 +49,6 @@ import {
 
 interface PracticeRoomProps {
   locale: Locale;
-  /** 음악연습실 hub-and-spoke 가이드 링크. ko에서만 채운다. */
-  relatedGuides: PracticeRoomRelatedGuide[];
 }
 
 const PAIN_POINTS_ANIMATION = createFadeInAnimation();
@@ -61,7 +58,6 @@ const RESIDENT_BENEFITS_ANIMATION = createFadeInAnimation();
 
 const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   locale,
-  relatedGuides,
 }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
@@ -403,7 +399,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 
       <RelatedGuidesSection
         title={t('practiceRoom.relatedGuides.title')}
-        guides={relatedGuides}
+        locale={locale}
       />
 
       <RegionLinksSection locale={locale} />
@@ -450,14 +446,12 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
 
-  // 앵커 타이틀이 한국어 전용이므로 ko 허브에서만 렌더 (기존 동작 유지).
-  const relatedGuides = locale === 'ko' ? PRACTICE_ROOM_RELATED_GUIDES : [];
-
+  // relatedGuides는 더 이상 props로 왕복하지 않는다 — RelatedGuidesSection이
+  // data/practiceRoomRelatedGuides를 직접 import하고 locale로 ko 전용 판정을 한다.
+  // 같은 데이터가 이미 SSR된 <a> 태그로 HTML에 있어 __NEXT_DATA__ 재전송이 불필요했다.
   return buildPageStaticProps(
     locale,
-    {
-      relatedGuides,
-    },
+    {},
     { revalidate: 86400, i18nSections: ['practiceRoom'] }
   );
 };

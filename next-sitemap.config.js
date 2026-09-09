@@ -117,21 +117,27 @@ module.exports = {
           '/ko/funding/success', '/ko/funding/fail', '/ko/funding/deposit/', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
         ],
       };
+      // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명
+      // 그룹이 위 RULES를 그대로 복제하고, 명명되지 않은 UA는 RFC 9309에 따라
+      // '*' 그룹을 따르므로 규칙 자체가 동일하다. 따라서 이 배열은 운영자가
+      // robots.txt를 읽을 때 "이 봇을 인지하고 있다"를 보여주는 문서적 가시성
+      // 목적이며, 새 봇 추가는 기능 변경이 아니다.
       const NAMED_BOTS = [
-        // Google (Google-Extended는 SGE/Gemini 학습용 분리 신호 — 정책 가시성 목적 명시)
-        'Googlebot', 'Googlebot-Image', 'Google-Extended',
-        // Bing / Naver / DuckDuckGo
-        'Bingbot', 'Yeti', 'DuckDuckBot',
+        // Google (Google-Extended는 SGE/Gemini 학습용 분리 신호 — 정책 가시성 목적 명시,
+        // GoogleOther는 품질평가·기타 용도 크롤러 — 동일하게 가시성 목적)
+        'Googlebot', 'Googlebot-Image', 'Google-Extended', 'GoogleOther',
+        // Bing / Naver / DuckDuckGo (DuckAssistBot은 DuckDuckGo AI 답변용 분리 봇)
+        'Bingbot', 'Yeti', 'DuckDuckBot', 'DuckAssistBot',
         // OpenAI
         'GPTBot', 'OAI-SearchBot', 'ChatGPT-User',
-        // Anthropic
-        'ClaudeBot', 'anthropic-ai',
+        // Anthropic (Claude-SearchBot·Claude-User는 답변 시 실시간 fetch/검색 봇)
+        'ClaudeBot', 'anthropic-ai', 'Claude-SearchBot', 'Claude-User',
         // Perplexity (Perplexity-User는 답변 시 실시간 fetch 봇)
         'PerplexityBot', 'Perplexity-User',
         // Meta / Apple (Applebot-Extended는 AI 학습용 분리 봇)
         'FacebookBot', 'Meta-ExternalAgent', 'Applebot', 'Applebot-Extended',
-        // ByteDance / Amazon / Cohere / Common Crawl
-        'Bytespider', 'Amazonbot', 'cohere-ai', 'CCBot',
+        // ByteDance / Amazon / Cohere / Common Crawl / Mistral (MistralAI-User는 답변 시 실시간 fetch 봇)
+        'Bytespider', 'Amazonbot', 'cohere-ai', 'CCBot', 'MistralAI-User',
       ];
       return [
         { userAgent: '*', ...RULES },

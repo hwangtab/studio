@@ -103,6 +103,11 @@ ${items}
   </channel>
 </rss>`;
 
+  // 주의: stale-while-revalidate는 이 서버리스 함수 응답에서는 실제로 나가지 않는다
+  // (Vercel이 함수 응답 Cache-Control을 정규화). 실측(2026-09-08) `/api/rss` 프로덕션
+  // 응답: `Cache-Control: public`만 확인, s-maxage·SWR 모두 빠짐. 캐시 자체는 정상
+  // 동작(x-vercel-cache: HIT, age 증가) — "재검증 유예 없이 즉시 미스"로 동작한다는
+  // 뜻이지 고장은 아니다. 정적 파일(/sitemap.xml)은 같은 선언에서도 SWR이 보존된다.
   res.setHeader('Content-Type', 'application/rss+xml; charset=utf-8');
   res.setHeader('X-Robots-Tag', 'noindex');
   res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=604800');
