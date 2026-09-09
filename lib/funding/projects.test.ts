@@ -46,7 +46,8 @@ describe('computeProjectState', () => {
   it('시작 전 upcoming, 기간 중 live, 종료 후 closed', () => {
     expect(computeProjectState(p, new Date('2026-10-01T00:59:59Z'))).toBe('upcoming'); // KST 09:59
     expect(computeProjectState(p, new Date('2026-10-01T01:00:00Z'))).toBe('live');     // KST 10:00
-    expect(computeProjectState(p, new Date('2026-10-31T14:59:59Z'))).toBe('live');     // KST 23:59:59
+    expect(computeProjectState(p, new Date('2026-10-31T14:59:58Z'))).toBe('live');     // KST 23:59:58
+    expect(computeProjectState(p, new Date('2026-10-31T14:59:59Z'))).toBe('closed');   // KST 23:59:59 = endAt
     expect(computeProjectState(p, new Date('2026-10-31T15:00:00Z'))).toBe('closed');   // KST 24:00
   });
   it('status 덮어쓰기', () => {

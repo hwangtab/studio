@@ -81,7 +81,7 @@ export const computeProjectState = (
   if (project.status === 'closed') return 'closed';
   const t = now.getTime();
   if (t < new Date(project.startAt).getTime()) return 'upcoming';
-  if (t <= new Date(project.endAt).getTime()) return 'live';
+  if (t < new Date(project.endAt).getTime()) return 'live';
   return 'closed';
 };
 
