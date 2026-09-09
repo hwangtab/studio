@@ -7,10 +7,10 @@ import { useRouter } from 'next/router';
 import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
 import { Button } from '../../../components/ui/Button';
 import { formatPriceAmount } from '../../../data/pricing';
-import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
+import { remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
 
 interface AdminFundingDetailPageProps {
@@ -34,13 +34,9 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
   });
   if (!order || !order.fundingPledge) return { notFound: true };
 
-  const paymentIds = order.payments.map((p) => p.id);
-  const done = paymentIds.length
-    ? await getDb().query.refunds.findMany({
-        where: (t, { and, eq, inArray }) => and(inArray(t.paymentId, paymentIds), eq(t.status, 'done')),
-      })
-    : [];
-  const refundableAmount = order.totalAmount - done.reduce((sum, r) => sum + r.amount, 0);
+  // 취소 로직과 같은 헬퍼를 쓴다 — 화면이 보여주는 잔액과 실제 환불액이 갈리면 관리자가
+  // 확인창에서 본 금액과 다른 금액이 나간다.
+  const refundableAmount = remainingRefundable(order);
 
   return { props: { pledge: serializePledgeForAdmin(order, new Set()), refundableAmount } };
 };

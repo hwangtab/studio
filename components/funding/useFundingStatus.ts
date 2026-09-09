@@ -6,7 +6,10 @@ export interface FundingStatusResponse {
   remaining: Record<string, number | null>; publicBackers: string[];
 }
 
-/** 마운트 시 1회 + live일 때 5분 폴링. 실패는 error로만 알린다(후원은 막지 않는다). */
+/**
+ * 마운트 시 1회 + live일 때 5분 폴링. 실패는 error로만 알린다(후원은 막지 않는다).
+ * 마감(closed)이 확인되면 폴링을 멈춘다 — 더 바뀔 값이 없는데 계속 두드릴 이유가 없다.
+ */
 export const useFundingStatus = (slug: string, initialState: ProjectState) => {
   const [data, setData] = useState<FundingStatusResponse | null>(null);
   const [error, setError] = useState(false);
@@ -21,7 +24,10 @@ export const useFundingStatus = (slug: string, initialState: ProjectState) => {
         if (!alive) return;
         setData(json);
         setError(false);
-        if (json.state === 'live' && !timer) {
+        if (json.state === 'closed' && timer) {
+          clearInterval(timer);
+          timer = undefined;
+        } else if (json.state === 'live' && !timer) {
           timer = setInterval(load, 5 * 60 * 1000);
         }
       } catch {

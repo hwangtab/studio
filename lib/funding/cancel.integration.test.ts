@@ -166,6 +166,47 @@ describe('cancelFundingPledge', () => {
     expect(r).toEqual({ ok: true, mode: 'recorded', refundAmount: 3500 });
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('refunded');
   });
+  // 환불이 payments[1]에 기록돼 있으면 payments[0]만 보는 계산은 그 환불을 통째로 놓친다 —
+  // 웹훅 대사(syncFundingCancelledFromToss)가 paymentKey로 행을 골라 기록하므로 실제로 생기는 형태다.
+  it('환불이 두 번째 결제 행에 기록돼 있어도 잔액은 전 행 합산으로 계산한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    await client.execute({ sql: "INSERT INTO payments (id,order_id,payment_key) VALUES ('p2',?, 'pk_c2')", args: [o!.id] });
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE id=?", args: [o!.id] });
+    await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r2','p2',2000,'부분','webhook','done')");
+
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx3', cancelAmount: 3000 }] } });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 3000 });
+    expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 3000 }));
+    expect(sendFundingCancelledEmails).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'refunded', 3000);
+  });
+
+  it('잔액이 0이면 토스를 부르지 않고 invalid_state', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    await client.execute({ sql: "INSERT INTO payments (id,order_id,payment_key) VALUES ('p2',?, 'pk_c2')", args: [o!.id] });
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE id=?", args: [o!.id] });
+    await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r3','p2',5000,'전액','webhook','done')");
+
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('partially_refunded');
+  });
+
+  it('무통장도 잔액이 0이면 refunded로 넘기지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
+    await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r4','p1',5000,'전액','admin','done')");
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('partially_refunded');
+  });
+
   it('마감 후 셀프 취소는 거부, 관리자는 허용', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);

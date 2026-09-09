@@ -34,7 +34,10 @@ interface AdminFundingPageProps {
   truncated: boolean;
   projects: ProjectOption[];
   slug: string | null;
+  /** 부수적 실패(프로젝트 md 파싱 등) — 배너로만 알리고 표는 그대로 보여준다. */
   error?: string;
+  /** 후원 목록 조회 자체가 실패했을 때만 — 이때는 보여줄 표가 없으므로 전체 화면 오류. */
+  pledgesError?: string;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = async (context) => {
@@ -90,9 +93,8 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
         truncated: false,
         projects,
         slug,
-        error: projectsError
-          ? `후원 목록을 불러오는 중 오류가 발생했습니다. ${projectsError}`
-          : '후원 목록을 불러오는 중 오류가 발생했습니다.',
+        ...(projectsError ? { error: projectsError } : {}),
+        pledgesError: '후원 목록을 불러오는 중 오류가 발생했습니다.',
       },
     };
   }
@@ -110,7 +112,7 @@ const STATUS_LABELS: Record<string, string> = {
 const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '무통장' };
 const FULFILLMENT_LABELS: Record<string, string> = { none: '미발송', preparing: '준비중', shipped: '발송완료', delivered: '수령완료' };
 
-export default function AdminFundingPage({ items, truncated, projects, slug, error }: AdminFundingPageProps) {
+export default function AdminFundingPage({ items, truncated, projects, slug, error, pledgesError }: AdminFundingPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -126,7 +128,9 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
   const [formMemo, setFormMemo] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  const paidItems = useMemo(() => items.filter((i) => i.status === 'paid'), [items]);
+  // 확정 집계는 aggregateProjectStatus와 같은 상태 집합을 쓴다 — 부분환불 건도 후원 자체는
+  // 살아 있고 리워드도 나간다. 한쪽만 빼면 관리자 화면과 공개 현황판의 숫자가 어긋난다.
+  const paidItems = useMemo(() => items.filter((i) => i.status === 'paid' || i.status === 'partially_refunded'), [items]);
   const pendingBankItems = useMemo(() => items.filter((i) => i.status === 'pending' && i.paymentMethod === 'bank_transfer'), [items]);
   const mismatched = useMemo(() => items.filter((i) => i.mismatch), [items]);
 
@@ -199,12 +203,14 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
     await refresh();
   };
 
-  if (error) {
+  // 전체 화면 오류는 후원 목록 자체를 못 읽었을 때만이다. 프로젝트 md 파싱 실패처럼 표와
+  // 무관한 사고까지 여기서 막으면, 멀쩡히 조회된 후원 목록을 관리자가 못 보게 된다.
+  if (pledgesError) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
           <h1 className="text-xl font-bold text-gray-900 mb-2">오류</h1>
-          <p className="text-gray-600">{error}</p>
+          <p className="text-gray-600">{[pledgesError, error].filter(Boolean).join(' ')}</p>
         </div>
       </div>
     );
@@ -243,6 +249,12 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
 
             <div className="p-6 md:p-8">
               {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+
+              {error && (
+                <div role="alert" className="mb-4 p-3 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
 
               {mismatched.length > 0 && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">

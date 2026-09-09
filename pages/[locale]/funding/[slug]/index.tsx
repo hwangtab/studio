@@ -28,7 +28,7 @@ interface Props {
 const STATE_LABEL: Record<ProjectState, string> = { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' };
 
 export default function FundingProjectPage({ project, initialState }: Props) {
-  const { data } = useFundingStatus(project.slug, initialState);
+  const { data, error: statusError } = useFundingStatus(project.slug, initialState);
   const state = data?.state ?? initialState;
   const canPledge = state === 'live';
   // 렌더 본문에서 new Date()를 부르면 서버(빌드 시각)와 클라이언트 값이 달라 D-day 텍스트가
@@ -57,6 +57,11 @@ export default function FundingProjectPage({ project, initialState }: Props) {
             <p className="text-sm font-semibold text-primary dark:text-accent">{STATE_LABEL[state]}</p>
             <h1 className="mt-2 text-3xl font-bold text-gray-900 dark:text-white">{project.title}</h1>
             <p className="mt-3 text-gray-600 dark:text-gray-300">{project.summary}</p>
+            {statusError && (
+              <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">
+                현황을 불러오지 못했습니다. 새로고침해 주세요.
+              </p>
+            )}
             <div className="mt-6">
               <FundingProgress
                 goalAmount={project.goalAmount}
