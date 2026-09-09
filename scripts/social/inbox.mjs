@@ -12,7 +12,7 @@
  *
  * Threads에는 DM API가 없다. IG DM은 상대가 먼저 보낸 뒤 24시간 안에만 답할 수 있다.
  */
-import { graph, requireEnv, hintForError, sleep, PLATFORMS } from './meta.mjs';
+import { graph, requireEnv, hintForError, sleep, PLATFORMS, ensureFreshTokens } from './meta.mjs';
 
 const args = process.argv.slice(2);
 const flag = (name) => {
@@ -112,6 +112,8 @@ async function sendDm(igsid, text) {
 }
 
 try {
+  const used = flag('--reply') ? [flag('--reply').split(':')[0]] : flag('--dm-send') || args.includes('--dm') ? ['ig'] : ['ig', 'threads'];
+  await ensureFreshTokens(used.filter((x) => PLATFORMS[x]));
   if (flag('--reply')) await reply(flag('--reply'), flag('--text'));
   else if (flag('--dm-send')) await sendDm(flag('--dm-send'), flag('--text'));
   else if (args.includes('--dm')) await listDm();

@@ -63,3 +63,11 @@
   단 `instagram_business_manage_messages` scope 재승인과 모바일 앱의 "메시지 액세스 허용"
   토글이 필요하다. Threads는 DM API 없음. 자동 답글은 하지 않는다.
 - `insights.mjs`: 최근 7일 계정 지표를 `docs/social/insights.csv`에 적재.
+
+## 토큰 수명 (2026-09-09 추가)
+
+두 API 모두 영구 토큰이 없다. 60일 장기 토큰을 `refresh_access_token`으로 무제한 연장하되,
+**만료 후에는 연장 불가**라 갱신 누락이 유일한 실패 모드다. 그래서 만료 시각을
+`.env.local`(`*_TOKEN_EXPIRES_AT`)에 기록하고 두 겹으로 갱신한다 — CLI 실행 시
+`ensureFreshToken`(잔여 21일 이내), 그리고 주간 launchd 작업. 임계 21일은 주간 실행을
+두어 번 걸러도 60일 창을 못 넘기게 잡은 값이다.
