@@ -123,3 +123,9 @@ it('무제한 리워드에서 무통장을 고른 뒤 한정 리워드로 바꾸
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
   expect(body.paymentMethod).toBe('toss');
 });
+
+// 실명 공개는 옵트인이어야 한다 — 기본 체크는 후원자가 모르는 사이에 이름이 명단에 올라간다.
+it('후원자 명단 이름 공개는 기본 해제', () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  expect(screen.getByLabelText(/이름 공개/)).not.toBeChecked();
+});

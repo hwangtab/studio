@@ -141,4 +141,14 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'] });
   });
+
+  it('partially_refunded도 paid와 같이 센다 — 후원은 살아 있고 재고도 나간 상태다', async () => {
+    const partial = await createFundingPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [partial.ok ? partial.orderNo : ''] });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.raisedAmount).toBe(30000);
+    expect(s.backerCount).toBe(1);
+    expect(s.remaining.cd).toBe(0);
+    expect(s.publicBackers).toEqual(['김후원']);
+  });
 });

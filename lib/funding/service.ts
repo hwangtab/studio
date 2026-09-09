@@ -110,18 +110,25 @@ export interface ProjectStatus {
   raisedAmount: number; backerCount: number; remaining: Record<string, number | null>; publicBackers: string[];
 }
 
+/**
+ * partially_refunded는 paid와 같이 집계한다 — 리워드 일부만 환불한 건이라 후원 자체는 살아
+ * 있고, 리워드 재고도 여전히 나간 상태다. 모금액은 엄밀히는 total_amount − Σ(done 환불)이
+ * 정확하지만, 그 차감은 payments/refunds 조인이 필요해 이 집계(핫 경로, 상태 API가 폴링)를
+ * 무겁게 만든다. 부분환불은 드물고 오차는 하향이 아니라 상향이라, 지금은 total_amount를
+ * 그대로 더한다.
+ */
 export const aggregateProjectStatus = async (project: FundingProject, now: Date): Promise<ProjectStatus> => {
   const db = getDb();
   const totals = await db.all<{ raised: number | null; backers: number | null }>(sql`
     SELECT SUM(o.total_amount) AS raised, COUNT(*) AS backers
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status = 'paid'
+    WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded')
   `);
   const claimed = await db.all<{ reward_id: string; qty: number }>(sql`
     SELECT fp.reward_id, SUM(fp.quantity) AS qty
     FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
     WHERE fp.project_slug = ${project.slug}
-      AND (o.status = 'paid' OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
     GROUP BY fp.reward_id
   `);
   const claimedBy = new Map(claimed.map((r) => [r.reward_id, Number(r.qty)]));
@@ -131,7 +138,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   }
   const names = await db.all<{ customer_name: string }>(sql`
     SELECT o.customer_name FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status = 'paid' AND fp.display_name_public = 1
+    WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded') AND fp.display_name_public = 1
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
   return {

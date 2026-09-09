@@ -7,6 +7,7 @@ import { useRouter } from 'next/router';
 import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
 import { Button } from '../../../components/ui/Button';
 import { formatPriceAmount } from '../../../data/pricing';
+import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
@@ -14,6 +15,8 @@ import { findFundingOrderById } from '../../../lib/funding/service';
 
 interface AdminFundingDetailPageProps {
   pledge: AdminPledgeItem;
+  /** 아직 환불하지 않은 금액 = totalAmount − 기록된 done 환불 합. 부분환불 건에서 totalAmount와 다르다. */
+  refundableAmount: number;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps> = async (context) => {
@@ -31,7 +34,15 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
   });
   if (!order || !order.fundingPledge) return { notFound: true };
 
-  return { props: { pledge: serializePledgeForAdmin(order, new Set()) } };
+  const paymentIds = order.payments.map((p) => p.id);
+  const done = paymentIds.length
+    ? await getDb().query.refunds.findMany({
+        where: (t, { and, eq, inArray }) => and(inArray(t.paymentId, paymentIds), eq(t.status, 'done')),
+      })
+    : [];
+  const refundableAmount = order.totalAmount - done.reduce((sum, r) => sum + r.amount, 0);
+
+  return { props: { pledge: serializePledgeForAdmin(order, new Set()), refundableAmount } };
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -54,7 +65,7 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
   </div>
 );
 
-export default function AdminFundingDetailPage({ pledge }: AdminFundingDetailPageProps) {
+export default function AdminFundingDetailPage({ pledge, refundableAmount }: AdminFundingDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -75,12 +86,13 @@ export default function AdminFundingDetailPage({ pledge }: AdminFundingDetailPag
   };
 
   const canConfirmDeposit = (pledge.status === 'pending' || pledge.status === 'expired') && pledge.paymentMethod === 'bank_transfer';
-  const canRefund = pledge.status === 'paid';
+  // 부분환불 건도 잔액이 남아 있으면 관리자가 마저 환불할 수 있어야 한다.
+  const canRefund = ['paid', 'partially_refunded'].includes(pledge.status);
 
   const handleConfirmDeposit = () => run(() => patchPledge(pledge.id, { action: 'confirm_deposit' }), '입금을 확인 처리할까요? 후원이 확정됩니다.');
-  const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), '이 후원을 환불할까요? 되돌릴 수 없습니다.');
+  const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 후원의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
   const handleSaveFulfillment = () =>
-    run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany: trackingCompany || undefined, trackingNumber: trackingNumber || undefined }));
+    run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
   const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
 

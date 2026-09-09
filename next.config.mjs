@@ -27,6 +27,12 @@ const nextConfig = {
     ],
     '/[locale]/contracts/**': ['./lib/contracts/*.md'],
     '/admin/contracts/**': ['./lib/contracts/*.md'],
+    // 펀딩 프로젝트 md는 런타임에 fs로 읽는다(getFundingProject) — 계약서 md와 같은 이유로
+    // 이 목록에 없으면 서버리스 번들에서 빠져 배포판에서만 프로젝트가 통째로 사라진다.
+    '/api/funding/**': ['./content/funding/*.md'],
+    '/[locale]/funding/**': ['./content/funding/*.md'],
+    '/admin/funding/**': ['./content/funding/*.md'],
+    '/api/admin/funding/**': ['./content/funding/*.md'],
   },
 
   // Optimized image configuration

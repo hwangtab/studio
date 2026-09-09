@@ -154,8 +154,9 @@ const releaseEventKey = async (eventKey: string): Promise<void> => {
  * 재시도하면 결과가 달라질 수 있는 실패인가.
  *
  * recording_failed(승인은 됐고 DB 기록만 실패)·toss_rejected(재조회 실패 등 판정 보류)는
- * 일시성이라 재시도해야 한다. not_found·invalid_state·amount_mismatch는 몇 번을 다시 보내도
- * 같은 답이 나오는 영구 상태라 기록을 남긴 채 200으로 끝낸다.
+ * 일시성이라 재시도해야 한다. not_found·invalid_state·amount_mismatch·hold_expired는 몇 번을
+ * 다시 보내도 같은 답이 나오는 영구 상태라 기록을 남긴 채 200으로 끝낸다(hold_expired는
+ * 웹훅 경로에서 애초에 건너뛰므로 여기 도달하지 않지만, 유니온 완전성을 위해 포함한다).
  */
 const isTransientConfirmFailure = (
   code: Extract<ConfirmOutcome | FundingConfirmOutcome, { ok: false }>['code'],
@@ -220,7 +221,12 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
       const orderType = order?.type ?? 'session';
       const outcome =
         orderType === 'funding'
-          ? await confirmFundingPledge({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount })
+          ? await confirmFundingPledge(
+              { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+              // 여기까지 온 결제는 토스 재조회로 DONE + 금액이 확인된 돈이다 — 홀드가 지났다는
+              // 이유로 거절하면 승인된 결제가 영구 미기록으로 남는다.
+              { trustedByWebhook: true },
+            )
           : await confirmBookingPayment({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount });
       if (!outcome.ok && isTransientConfirmFailure(outcome.code)) {
         console.error('[booking-webhook] 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {

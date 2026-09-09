@@ -46,7 +46,13 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '후원을 찾을 수 없습니다.' };
   const pledge = order.fundingPledge;
   const project = getFundingProject(pledge.projectSlug);
-  if (order.status !== 'paid') return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES.not_paid };
+  // 부분환불 건은 관리자만 다룰 수 있다 — 남은 금액 계산이 걸려 있어 고객 셀프 취소에 맡기지 않는다.
+  if (order.status === 'partially_refunded' && input.requestedBy !== 'admin') {
+    return { ok: false, code: 'invalid_state', message: '일부 환불된 후원은 문의해 주세요.' };
+  }
+  if (order.status !== 'paid' && !(order.status === 'partially_refunded' && input.requestedBy === 'admin')) {
+    return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES.not_paid };
+  }
   if (input.requestedBy === 'customer') {
     const verdict = assessSelfCancel({
       orderStatus: order.status,
@@ -57,6 +63,16 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   }
   const db = getDb();
   const payment = order.payments[0];
+  // 이미 done으로 기록된 환불을 뺀 잔액만 취소한다 — 부분환불 건에 전액을 다시 요청하면
+  // 토스가 거절하거나(초과) 이중 환불이 된다.
+  const refundedSum = payment
+    ? (
+        await db.query.refunds.findMany({
+          where: (t, { and: all, eq: equals }) => all(equals(t.paymentId, payment.id), equals(t.status, 'done')),
+        })
+      ).reduce((sum, r) => sum + r.amount, 0)
+    : 0;
+  const refundAmount = order.totalAmount - refundedSum;
 
   if (pledge.paymentMethod === 'toss' && !payment) {
     return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 후원입니다. 관리자에게 문의해 주세요.' };
@@ -65,37 +81,46 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   // 무통장: 토스가 없으니 돈이 자동으로 나가지 않는다.
   if (pledge.paymentMethod === 'bank_transfer') {
     if (input.requestedBy === 'customer') {
+      // 이미 접수된 취소 요청을 다시 눌러도 새 요청처럼 처리하지 않는다 — 운영자에게 같은
+      // 건의 메일이 반복해서 쌓인다.
+      if (pledge.refundRequestedAt) {
+        return { ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었습니다.' };
+      }
       await db.update(fundingPledges).set({ refundRequestedAt: input.now, updatedAt: input.now }).where(eq(fundingPledges.id, pledge.id));
       await notifyCancelled(db, order, project, 'refund_requested');
       return { ok: true, mode: 'refund_requested', refundAmount: order.totalAmount };
     }
-    const claim = await db.run(sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'paid'`);
+    const claim = await db.run(
+      sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')`,
+    );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 후원입니다.' };
     await notifyCancelled(db, order, project, 'recorded');
-    return { ok: true, mode: 'recorded', refundAmount: order.totalAmount };
+    // 무통장도 부분환불 이력이 있을 수 있다(관리자가 일부만 돌려준 뒤 나머지를 정리하는 경우) —
+    // 잔액만 알린다. 토스 경로와 같은 계산이다.
+    return { ok: true, mode: 'recorded', refundAmount };
   }
 
   // 토스: 선점 → 취소 API → 기록. 실패 시 되돌림(예약 cancel.ts와 같은 순서).
-  const claim = await db.run(sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'paid'`);
+  const claim = await db.run(sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}`);
   if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 후원입니다.' };
   const toss = await cancelPayment({
-    paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: order.totalAmount,
-    idempotencyKey: refundIdempotencyKey(order.orderNo, order.totalAmount),
+    paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: refundAmount,
+    idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
   });
   if (!toss.ok) {
     try {
-      await db.run(sql`UPDATE orders SET status = 'paid', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'refunded'`);
+      await db.run(sql`UPDATE orders SET status = ${order.status}, updated_at = unixepoch() WHERE id = ${order.id} AND status = 'refunded'`);
     } catch (revertError) {
       console.error('[funding-cancel] 선점 revert 실패 — 수동 복구 필요', { orderNo: order.orderNo, error: revertError });
     }
-    await db.insert(refunds).values({ paymentId: payment!.id, amount: order.totalAmount, reason: input.reason, requestedBy: input.requestedBy, status: 'failed' });
+    await db.insert(refunds).values({ paymentId: payment!.id, amount: refundAmount, reason: input.reason, requestedBy: input.requestedBy, status: 'failed' });
     const internal = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
     console.error('[funding-cancel] 토스 취소 실패', { orderNo: order.orderNo, code: toss.code, message: toss.message });
     return { ok: false, code: 'toss_failed', message: internal ? GENERIC : toss.message };
   }
   try {
     await db.insert(refunds).values({
-      paymentId: payment!.id, amount: order.totalAmount, reason: input.reason, requestedBy: input.requestedBy,
+      paymentId: payment!.id, amount: refundAmount, reason: input.reason, requestedBy: input.requestedBy,
       tossTransactionKey: toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null, status: 'done',
     });
   } catch (error) {
@@ -103,5 +128,5 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     return { ok: false, code: 'recording_failed', message: '환불은 완료되었으나 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.' };
   }
   await notifyCancelled(db, order, project, 'refunded');
-  return { ok: true, mode: 'refunded', refundAmount: order.totalAmount };
+  return { ok: true, mode: 'refunded', refundAmount };
 };

@@ -430,7 +430,11 @@ describe('processTossWebhook', () => {
     });
     const { status } = await processTossWebhook({ data: { paymentKey: 'pk_f', status: 'DONE' } });
     expect(status).toBe(200);
-    expect(confirmFundingPledge).toHaveBeenCalledWith({ orderNo: 'FND-1', paymentKey: 'pk_f', amount: 5000 });
+    // 홀드 만료를 건너뛰는 옵션 — 재조회로 DONE이 확인된 돈을 미기록으로 버리지 않는다.
+    expect(confirmFundingPledge).toHaveBeenCalledWith(
+      { orderNo: 'FND-1', paymentKey: 'pk_f', amount: 5000 },
+      { trustedByWebhook: true },
+    );
     expect(confirmBookingPayment).not.toHaveBeenCalled();
   });
 });

@@ -117,3 +117,40 @@ it('resend_email: pending이어도 토스면 재발송할 메일이 없어 409',
   expect(r.status).toBe(409);
   expect(mockUpdate).not.toHaveBeenCalled();
 });
+
+it('resend_email: 수기 등록 + 플레이스홀더 이메일이면 409 — 발송하지 않는다', async () => {
+  // 수기 등록 건에는 실제 고객 주소가 없다(manual@studionol.co.kr) — 재발송해 봐야
+  // 우리 도메인으로 되돌아온다.
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'paid', customerEmail: 'manual@studionol.co.kr',
+    fundingPledge: { ...BASE_ORDER.fundingPledge, entrySource: 'manual' },
+  });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(r.status).toBe(409);
+  expect(r.body).toEqual({ ok: false, message: '수기 등록 건은 메일을 보내지 않습니다.' });
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+});
+
+it('resend_email: 수기 등록이어도 실제 고객 이메일이면 발송한다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'paid', customerEmail: 'real@example.com',
+    fundingPledge: { ...BASE_ORDER.fundingPledge, entrySource: 'manual' },
+  });
+  (sendFundingConfirmedEmails as jest.Mock).mockResolvedValue(null);
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'resend_email' })).status).toBe(200);
+});
+
+it('set_fulfillment: 빈 문자열 운송장은 null로 저장한다(비우기)', async () => {
+  // 예전엔 빈 문자열이 그대로 저장돼 잘못 입력한 운송장을 지울 방법이 없었다.
+  const set = jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'paid',
+    fundingPledge: { ...BASE_ORDER.fundingPledge, trackingCompany: 'CJ', trackingNumber: '123' },
+  });
+  const r = await call('PATCH', { id: 'order-1' }, {
+    action: 'set_fulfillment', fulfillmentStatus: 'preparing', trackingCompany: '', trackingNumber: '',
+  });
+  expect(r.status).toBe(200);
+  expect(set).toHaveBeenCalledWith(expect.objectContaining({ trackingCompany: null, trackingNumber: null }));
+});

@@ -45,3 +45,9 @@ it('비JSON 응답이면 서버 오류 문구', async () => {
   await userEvent.click(screen.getByRole('button', { name: /후원 취소/ }));
   expect(await screen.findByText('서버 오류가 발생했습니다.')).toBeInTheDocument();
 });
+
+// 부분환불 건은 상태 코드가 그대로 노출돼 고객이 'partially_refunded'를 읽고 있었다.
+it('partially_refunded 상태는 한국어 라벨로 보인다', () => {
+  render(<FundingManagePage {...baseProps} status="partially_refunded" canCancel={false} paymentMethod="toss" />);
+  expect(screen.getByText('일부 환불')).toBeInTheDocument();
+});

@@ -46,11 +46,20 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
   const slugParam = context.query.slug;
   const slug = typeof slugParam === 'string' && slugParam ? slugParam : null;
 
-  const projects: ProjectOption[] = getAllFundingProjects().map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    rewards: p.rewards.map((r) => ({ id: r.id, title: r.title, amount: r.amount })),
-  }));
+  // md 한 편이 깨져도(frontmatter 파싱 예외) 관리자 화면 전체가 500이 되면 안 된다 —
+  // 후원 목록은 md와 무관하게 DB에서 온다.
+  let projects: ProjectOption[] = [];
+  let projectsError: string | undefined;
+  try {
+    projects = getAllFundingProjects().map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      rewards: p.rewards.map((r) => ({ id: r.id, title: r.title, amount: r.amount })),
+    }));
+  } catch (error: unknown) {
+    console.error('[admin/funding] Failed to load funding projects:', error);
+    projectsError = '펀딩 프로젝트 파일을 읽지 못했습니다. 수기 등록은 사용할 수 없습니다.';
+  }
 
   try {
     await expireStalePledges(new Date());
@@ -70,6 +79,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
         truncated: orders.length > LIST_LIMIT,
         projects,
         slug,
+        ...(projectsError ? { error: projectsError } : {}),
       },
     };
   } catch (error: unknown) {
@@ -80,7 +90,9 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
         truncated: false,
         projects,
         slug,
-        error: '후원 목록을 불러오는 중 오류가 발생했습니다.',
+        error: projectsError
+          ? `후원 목록을 불러오는 중 오류가 발생했습니다. ${projectsError}`
+          : '후원 목록을 불러오는 중 오류가 발생했습니다.',
       },
     };
   }
