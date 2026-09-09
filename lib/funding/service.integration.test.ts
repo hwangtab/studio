@@ -138,7 +138,14 @@ describe('createFundingPledge — 홀드 남용 상한', () => {
     const p = { paymentMethod: 'bank_transfer' as const, customerEmail: 'hold@example.com', customerPhone: '010-4' };
     expect((await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).ok).toBe(true);
     expect((await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).ok).toBe(true);
-    expect(await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).toMatchObject({ ok: false, code: 'too_many_holds' });
+    expect(await createFundingPledge(payloadFor(p), PROJECT, reward('mail'), NOW)).toMatchObject({ ok: false, code: 'too_many_bank_holds' });
+  });
+
+  it('무통장 홀드 2건이 있어도 같은 고객의 토스 후원은 막지 않는다 — 결제수단별로 센다', async () => {
+    const who = { customerEmail: 'mixed@example.com', customerPhone: '010-1' };
+    await createFundingPledge(payloadFor({ ...who, paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    await createFundingPledge(payloadFor({ ...who, paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    expect((await createFundingPledge(payloadFor({ ...who, paymentMethod: 'toss' }), PROJECT, reward('mail'), NOW)).ok).toBe(true);
   });
 
   it('홀드가 만료됐거나 다른 프로젝트면 상한에 세지 않는다', async () => {

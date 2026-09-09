@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 import TossPaymentWidget from '../booking/TossPaymentWidget';
@@ -16,7 +15,6 @@ interface Created { orderNo: string; totalAmount: number; itemAmount: number; va
 const field = 'mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 dark:border-gray-600 dark:bg-gray-800';
 
 export default function PledgeWizard({ project, initialRewardId, remaining }: Props) {
-  const router = useRouter();
   const [rewardId, setRewardId] = useState(initialRewardId ?? project.rewards[0].id);
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
   const [quantity, setQuantity] = useState(1);
@@ -61,7 +59,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '후원 신청에 실패했습니다.'); return; }
-      if (json.depositUrl) { await router.push(json.depositUrl); return; }
+      // router.push가 아니라 전체 페이지 이동 — 클라이언트 전환이면 이미 로드된 gtag가
+      // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
+      if (json.depositUrl) { window.location.assign(json.depositUrl); return; }
       setCreated(json);
     } catch { setError('네트워크 오류가 발생했습니다.'); }
     finally { setSubmitting(false); }

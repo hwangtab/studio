@@ -25,7 +25,7 @@ const PUBLIC_CACHE_SOURCE = `${LOCALE}/:path*`;
 
 const PRIVATE_SOURCES = [
   `${LOCALE}/contracts/:path*`,
-  `${LOCALE}/funding/(success|fail|terms)`,
+  `${LOCALE}/funding/(success|fail)`,
   `${LOCALE}/funding/(deposit|manage)/:path*`,
   `${LOCALE}/funding/:slug/pledge`,
   `${LOCALE}/booking/(success|fail)`,
@@ -48,5 +48,11 @@ describe('next.config headers — 개인정보 경로 no-store', () => {
     const publicIndex = indexOf(PUBLIC_CACHE_SOURCE);
     expect(publicIndex).toBeGreaterThanOrEqual(0);
     expect(indexOf(source)).toBeLessThan(publicIndex);
+  });
+
+  // terms는 누구에게나 같은 공개 정적 페이지다 — no-store로 내리면 CDN 캐시만 버린다.
+  it('/funding/terms는 no-store 대상이 아니다', () => {
+    const sources = rules.map((r) => r.source).join('\n');
+    expect(sources).not.toContain('terms');
   });
 });

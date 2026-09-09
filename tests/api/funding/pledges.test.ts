@@ -135,11 +135,20 @@ describe('속도 제한 · 홀드 상한', () => {
     expect(consumeRateLimit).toHaveBeenCalledWith(expect.stringContaining('funding_create:ip:'), 20, 3600);
   });
 
-  it('한정 리워드 + 토스면 IP 홀드 카운터를 홀드 창 길이로 함께 소비한다', async () => {
+  it('한정 리워드 + 토스면 IP 시도 카운터를 홀드 창 길이로 함께 소비한다', async () => {
     (getFundingProject as jest.Mock).mockReturnValue(limitedProject);
     (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'sold_out' });
     await call({ ...body, ...cdBodyExtra, paymentMethod: 'toss' });
-    expect(consumeRateLimit).toHaveBeenCalledWith(expect.stringContaining('funding_hold:ip:'), 3, TOSS_HOLD_SECONDS);
+    expect(consumeRateLimit).toHaveBeenCalledWith(expect.stringContaining('funding_hold:ip:'), 5, TOSS_HOLD_SECONDS);
+  });
+
+  it('무제한 리워드는 위저드 재제출을 4번 반복해도 전부 201 — IP 카운터를 쓰지 않는다', async () => {
+    (getFundingProject as jest.Mock).mockReturnValue(limitedProject);
+    (createFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', holdExpiresAt: new Date(0), amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 } });
+    for (let i = 0; i < 4; i += 1) {
+      expect((await call({ ...body, rewardId: 'mail', paymentMethod: 'toss' })).status).toBe(201);
+    }
+    expect((consumeRateLimit as jest.Mock).mock.calls.filter(([k]) => String(k).startsWith('funding_hold:'))).toHaveLength(0);
   });
 
   it('무제한 리워드나 무통장에는 홀드 카운터를 쓰지 않는다', async () => {
@@ -150,20 +159,20 @@ describe('속도 제한 · 홀드 상한', () => {
     expect((consumeRateLimit as jest.Mock).mock.calls.filter(([k]) => String(k).startsWith('funding_hold:'))).toHaveLength(0);
   });
 
-  it('IP 홀드 카운터가 초과되면 429 + 안내 문구', async () => {
+  it('IP 시도 카운터가 초과되면 429 + 안내 문구', async () => {
     (getFundingProject as jest.Mock).mockReturnValue(limitedProject);
     (consumeRateLimit as jest.Mock).mockImplementation(async (key: string) => !key.startsWith('funding_hold:'));
     const r = await call({ ...body, ...cdBodyExtra, paymentMethod: 'toss' });
     expect(r.status).toBe(429);
-    expect(r.body.message).toBe('결제 대기 중인 후원이 너무 많습니다. 15분 뒤 다시 시도해 주세요.');
+    expect(r.body.message).toBe('한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.');
     expect(createFundingPledge).not.toHaveBeenCalled();
   });
 
-  it('고객 단위 홀드 상한(too_many_holds)도 409가 아니라 429다', async () => {
+  it('무통장 홀드 상한은 429가 아니라 409 — 시간이 아니라 입금·자동취소로 풀리는 상태다', async () => {
     (getFundingProject as jest.Mock).mockReturnValue(project);
-    (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'too_many_holds' });
+    (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'too_many_bank_holds' });
     const r = await call(body);
-    expect(r.status).toBe(429);
-    expect(r.body.message).toBe('결제 대기 중인 후원이 너무 많습니다. 15분 뒤 다시 시도해 주세요.');
+    expect(r.status).toBe(409);
+    expect(r.body.message).toBe('입금 대기 중인 무통장 후원이 이미 2건 있습니다. 입금하시거나 12시간 뒤 자동 취소된 후에 다시 신청해 주세요.');
   });
 });

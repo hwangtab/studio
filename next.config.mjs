@@ -256,7 +256,7 @@ const nextConfig = {
       // 관리 토큰·paymentKey가 실리고, 응답 본문에 후원자 이름·연락처·주소가 들어간다.
       // 계약 규칙과 마찬가지로 아래 로케일 캐시 규칙보다 반드시 앞에 둘 것(첫 매칭 우선).
       {
-        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/(success|fail|terms)',
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/(success|fail)',
         headers: [
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],

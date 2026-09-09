@@ -13,9 +13,18 @@ import { validateCreatePledgePayload } from '../../../lib/funding/validation';
 
 /** 시간당 IP별 후원 생성 시도 상한. 위저드 재시도·가족 단위 후원을 감안해 넉넉히 둔다. */
 const FUNDING_CREATE_LIMIT = 20;
-/** 한 IP가 동시에 열어 둘 수 있는 한정 리워드 토스 홀드 수. */
-const MAX_OPEN_HOLDS_PER_IP = 3;
-const TOO_MANY_HOLDS_MESSAGE = '결제 대기 중인 후원이 너무 많습니다. 15분 뒤 다시 시도해 주세요.';
+/**
+ * 한정 리워드 토스 결제 시도의 IP별 상한.
+ *
+ * 이건 "동시에 살아 있는 홀드 수"가 아니라 **시도 횟수** 카운터다(rate_limits는 성공·취소로
+ * 되돌아가지 않는다). 위저드를 되돌아가 재제출하면 자기 홀드 해제로 홀드는 1개뿐인데도
+ * 카운터는 계속 오르므로, 정상 사용자를 막지 않을 만큼 여유를 둔다. NAT 공유 IP도 같은 이유다.
+ * 무제한 리워드·무통장은 아예 세지 않는다 — 이 카운터가 지키는 건 한정 재고뿐이다.
+ */
+const MAX_LIMITED_TOSS_ATTEMPTS_PER_IP = 5;
+const TOO_MANY_ATTEMPTS_MESSAGE = '한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.';
+const TOO_MANY_BANK_HOLDS_MESSAGE =
+  '입금 대기 중인 무통장 후원이 이미 2건 있습니다. 입금하시거나 12시간 뒤 자동 취소된 후에 다시 신청해 주세요.';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -34,19 +43,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!(await consumeRateLimit(`funding_create:ip:${ip}`, FUNDING_CREATE_LIMIT, 3600)))
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
 
-  // 한정 리워드 + 토스 결제에만 별도의 홀드 카운터를 둔다. 이메일·전화를 매번 바꾸면
-  // 고객 단위 상한(MAX_OPEN_HOLDS_PER_CUSTOMER)을 우회할 수 있는데, 홀드 창과 같은 길이의
-  // IP 카운터면 "동시에 살아 있는 홀드 3개"와 사실상 같은 제한이 된다.
+  // 이메일·전화를 매번 바꾸면 고객 단위 상한을 우회할 수 있다 — 한정 재고를 잠그는 그 경로만
+  // IP 카운터로 한 번 더 막는다(한정 수량 리워드 + 토스). 무제한 리워드·무통장은 세지 않는다.
   const limitedReward = validated.reward.totalQuantity !== null;
   if (validated.value.paymentMethod === 'toss' && limitedReward) {
-    if (!(await consumeRateLimit(`funding_hold:ip:${ip}`, MAX_OPEN_HOLDS_PER_IP, TOSS_HOLD_SECONDS)))
-      return res.status(429).json({ ok: false, code: 'too_many_holds', message: TOO_MANY_HOLDS_MESSAGE });
+    if (!(await consumeRateLimit(`funding_hold:ip:${ip}`, MAX_LIMITED_TOSS_ATTEMPTS_PER_IP, TOSS_HOLD_SECONDS)))
+      return res.status(429).json({ ok: false, code: 'too_many_attempts', message: TOO_MANY_ATTEMPTS_MESSAGE });
   }
 
   await expireStalePledges(now);
   const result = await createFundingPledge(validated.value, project!, validated.reward, now);
-  if (!result.ok && result.code === 'too_many_holds')
-    return res.status(429).json({ ok: false, code: result.code, message: TOO_MANY_HOLDS_MESSAGE });
+  // 무통장 홀드 상한은 429(속도 제한)가 아니라 409다 — 잠시 뒤 재시도해서 풀리는 상태가
+  // 아니라, 입금하거나 12시간 뒤 자동 취소돼야 풀리는 상태다.
+  if (!result.ok && result.code === 'too_many_bank_holds')
+    return res.status(409).json({ ok: false, code: result.code, message: TOO_MANY_BANK_HOLDS_MESSAGE });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
 
   let depositUrl: string | undefined;

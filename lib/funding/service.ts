@@ -12,7 +12,11 @@ import type { CreatePledgePayload } from './validation';
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
-/** 같은 고객(이메일+전화)이 한 프로젝트에서 동시에 열어 둘 수 있는 미만료 pending 홀드 수. */
+/**
+ * 같은 고객(이메일+전화)이 한 프로젝트에서 **같은 결제수단으로** 동시에 열어 둘 수 있는
+ * 미만료 pending 홀드 수. 결제수단을 섞어 세면 무통장 대기 2건이 토스 후원까지 막는다.
+ * 토스는 바로 위 자기 홀드 해제로 매번 0이 되므로, 실질적으로는 무통장 홀드 상한이다.
+ */
 export const MAX_OPEN_HOLDS_PER_CUSTOMER = 2;
 
 export const generateFundingOrderNo = (now: Date, manual = false): string =>
@@ -49,7 +53,7 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
  */
 export const createFundingPledge = async (
   payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
-): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' | 'too_many_holds' }> => {
+): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' | 'too_many_bank_holds' }> => {
   const db = getDb();
   const amounts = computeFundingAmounts(reward.amount, payload.quantity, payload.additionalAmount);
   const orderNo = generateFundingOrderNo(now);
@@ -75,10 +79,11 @@ export const createFundingPledge = async (
     JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE o.type = 'funding' AND o.status = 'pending'
       AND o.customer_email = ${payload.customerEmail} AND o.customer_phone = ${payload.customerPhone}
-      AND fp.project_slug = ${project.slug} AND fp.hold_expires_at > ${toEpoch(now)}
+      AND fp.project_slug = ${project.slug} AND fp.payment_method = ${payload.paymentMethod}
+      AND fp.hold_expires_at > ${toEpoch(now)}
   `);
   if (Number(openHolds?.n ?? 0) >= MAX_OPEN_HOLDS_PER_CUSTOMER) {
-    return { ok: false, code: 'too_many_holds' };
+    return { ok: false, code: 'too_many_bank_holds' };
   }
 
   const [order] = await db.insert(orders).values({
