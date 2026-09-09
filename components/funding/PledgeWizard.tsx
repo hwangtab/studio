@@ -103,9 +103,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
           })}
         </div>
         <label className="mt-4 block text-sm">수량
-          <input type="number" min={1} max={Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY)} value={quantity} className={field}
+          <input type="number" min={1} max={Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY))} value={quantity} className={field}
             onChange={(e) => {
-              const cap = Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY);
+              const cap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
               setQuantity(Math.min(cap, Math.max(1, Number(e.target.value) || 1)));
             }} />
         </label>

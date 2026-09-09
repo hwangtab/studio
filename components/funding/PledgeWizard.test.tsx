@@ -73,6 +73,13 @@ it('remaining보다 큰 수량을 입력하면 remaining으로 클램프된다',
   expect(quantityInput.value).toBe('3');
 });
 
+it('선택된 리워드의 remaining이 0이어도(품절) 수량이 0이 아니라 1로 바닥 고정된다', () => {
+  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
+  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
+  fireEvent.change(quantityInput, { target: { value: '5' } });
+  expect(quantityInput.value).toBe('1');
+});
+
 it('리워드를 바꾸면 수량이 1로 리셋된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
