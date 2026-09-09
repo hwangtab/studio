@@ -31,8 +31,8 @@
     "releaseSingle": "单曲",
     "releaseEp": "EP",
     "releaseAlbum": "专辑",
-    "artists": "Support Artists"
-  },
+    "funding": "众筹",
+    "artists": "Support Artists"  },
   "footer": {
     "rights": "版权所有。",
     "address": "地址",

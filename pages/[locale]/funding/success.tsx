@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
+import { trackMicroEvent } from '../../../utils/analytics';
 
 interface SuccessProps {
   outcome: 'confirmed' | 'error';
@@ -16,6 +18,14 @@ interface SuccessProps {
 }
 
 export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, projectSlug, emailSent }: SuccessProps) {
+  useEffect(() => {
+    if (outcome !== 'confirmed') return;
+    // 펀딩 확정 마이크로 전환 — GA4 key event로 지정 금지(utils/analytics.ts 참조,
+    // 유일하게 신뢰 가능한 지표인 카톡 리드를 희석하지 않기 위함).
+    trackMicroEvent('funding_pledge_paid', { component: 'funding_success', landing_slug: projectSlug });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [outcome]);
+
   return (
     <>
       <Head>

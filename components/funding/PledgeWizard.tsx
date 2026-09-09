@@ -58,7 +58,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       });
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '후원 신청에 실패했습니다.'); return; }
-      trackMicroEvent('micro_click_service', { component: 'funding_pledge', landing_slug: project.slug });
+      // GA4 key event로 지정 금지 — 마이크로 전환일 뿐 리드 지표가 아니다(utils/analytics.ts 참조).
+      trackMicroEvent('funding_pledge_start', { component: 'funding_pledge', landing_slug: project.slug });
       if (json.depositUrl) { await router.push(json.depositUrl); return; }
       setCreated(json);
     } catch { setError('네트워크 오류가 발생했습니다.'); }

@@ -31,8 +31,8 @@
     "releaseSingle": "싱글 발매",
     "releaseEp": "EP 발매",
     "releaseAlbum": "정규 발매",
-    "artists": "아티스트 후원"
-  },
+    "funding": "펀딩",
+    "artists": "아티스트 후원"  },
   "footer": {
     "rights": "All rights reserved.",
     "address": "주소",

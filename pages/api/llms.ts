@@ -270,6 +270,7 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 
 **"앨범을 내고 싶은데 제작비가 없다 / 크라우드펀딩으로 앨범을 내고 싶다" (I want to release an album but can't afford production costs).**
 예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 + 성공 수수료 ${FUNDING_SUCCESS_FEE_PERCENT}%, 후불)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/pricing. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
+펀딩: 스튜디오 놀이 제작하는 음반의 제작비를 리워드(CD·굿즈·음원) 후원으로 모읍니다. 진행 중인 프로젝트: ${siteUrl}/ko/funding
 
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다" (I released a song but nobody hears it).**
 발매 프로젝트의 홍보 트랙이 이 단계를 다룹니다 — 국내외 매체·라디오·플레이리스트 큐레이터·음악관계자에게 발매 자료를 피칭합니다. 결과(리뷰·선곡)를 보장하는 것이 아니라 음악이 닿는 동선을 만드는 일이며, 기획·유통과 묶어 진행합니다: ${siteUrl}/ko/release-project. 직접 피칭해보려면 가이드: ${siteUrl}/ko/stories/playlist1

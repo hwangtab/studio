@@ -31,8 +31,8 @@
     "releaseSingle": "Single",
     "releaseEp": "EP",
     "releaseAlbum": "Full Album",
-    "artists": "Support Artists"
-  },
+    "funding": "Funding",
+    "artists": "Support Artists"  },
   "footer": {
     "rights": "All rights reserved.",
     "address": "Address",
