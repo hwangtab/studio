@@ -8,12 +8,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const slug = typeof req.query.slug === 'string' ? req.query.slug : '';
   const project = getFundingProject(slug);
   const now = new Date();
-  if (!project || computeProjectState(project, now) === 'draft') return res.status(404).json({ ok: false });
+  const state = project ? computeProjectState(project, now) : null;
+  if (!project || state === 'draft') return res.status(404).json({ ok: false });
   await expireStalePledges(now);
   const s = await aggregateProjectStatus(project, now);
   res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
   return res.status(200).json({
-    ok: true, state: computeProjectState(project, now), goalAmount: project.goalAmount, endAt: project.endAt,
+    ok: true, state, goalAmount: project.goalAmount, endAt: project.endAt,
     raisedAmount: s.raisedAmount, backerCount: s.backerCount,
     percent: Math.floor((s.raisedAmount / project.goalAmount) * 100),
     remaining: s.remaining, publicBackers: s.publicBackers,
