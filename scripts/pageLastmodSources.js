@@ -20,6 +20,7 @@ const collectSourceFiles = () => {
   // 동적 라우트 2종은 페이지 파일이 아니라 콘텐츠 단일 소스의 날짜를 쓴다.
   files.add('data/portfolio.ts'); // /portfolio/{id}
   files.add('data/buyerIntentHubs.ts'); // /guides/{slug}
+  files.add('data/artists/index.ts'); // /artists
   return [...files].sort();
 };
 

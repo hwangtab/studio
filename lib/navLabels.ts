@@ -17,7 +17,8 @@ export type NavKey =
   | 'releaseProject'
   | 'releaseSingle'
   | 'releaseEp'
-  | 'releaseAlbum';
+  | 'releaseAlbum'
+  | 'artists';
 
 export const navLabels: Record<Locale, Record<NavKey, string>> = {
   ko: {
@@ -36,6 +37,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: '싱글 발매',
     releaseEp: 'EP 발매',
     releaseAlbum: '정규 발매',
+    artists: '아티스트 후원',
   },
   en: {
     home: 'Home',
@@ -53,6 +55,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: 'Single',
     releaseEp: 'EP',
     releaseAlbum: 'Full Album',
+    artists: 'Support Artists',
   },
   zh: {
     home: '主页',
@@ -70,6 +73,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: '单曲',
     releaseEp: 'EP',
     releaseAlbum: '专辑',
+    artists: 'Support Artists',
   },
   es: {
     home: 'Inicio',
@@ -87,6 +91,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: 'Single',
     releaseEp: 'EP',
     releaseAlbum: 'Álbum completo',
+    artists: 'Support Artists',
   },
   vi: {
     home: 'Trang chủ',
@@ -104,6 +109,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: 'Single',
     releaseEp: 'EP',
     releaseAlbum: 'Album đầy đủ',
+    artists: 'Support Artists',
   },
   th: {
     home: 'หน้าแรก',
@@ -121,6 +127,7 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: 'ซิงเกิล',
     releaseEp: 'EP',
     releaseAlbum: 'อัลบั้มเต็ม',
+    artists: 'Support Artists',
   },
   uz: {
     home: 'Bosh sahifa',
@@ -138,5 +145,6 @@ export const navLabels: Record<Locale, Record<NavKey, string>> = {
     releaseSingle: 'Singl',
     releaseEp: 'EP',
     releaseAlbum: "To'liq albom",
+    artists: 'Support Artists',
   },
 };

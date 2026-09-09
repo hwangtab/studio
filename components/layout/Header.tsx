@@ -47,9 +47,13 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   // 드롭다운 밖 1탭 링크로 둔다. 나머지는 라벨과 내용이 일치하는 4개 그룹.
   // 이전 구조의 '녹음/믹싱' 그룹에는 소개·가격·장비가 섞여 있어, 연습실 요금을 찾는
   // 사람이 '녹음/믹싱'을 열어야 했다.
+  // 아티스트 후원은 ko 전용(결제 퍼널과 같은 정책, 스펙 §11.2) — 비-ko에선 링크를 만들지 않는다.
   const directLinks = useMemo(() => [
     { id: 'practice-room', label: t('nav.short.practiceRoom'), href: `/${locale}/practice-room` },
     { id: 'pricing', label: t('nav.short.pricing'), href: `/${locale}/pricing` },
+    ...(locale === 'ko'
+      ? [{ id: 'artists', label: t('nav.short.artists'), href: `/${locale}/artists` }]
+      : []),
   ], [locale, t]);
 
   const navGroups = useMemo(() => [
@@ -98,7 +102,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const desktopNavItems = useMemo(() => [
     { kind: 'link' as const, ...directLinks[0] },
     ...navGroups.map((group) => ({ kind: 'group' as const, ...group })),
-    { kind: 'link' as const, ...directLinks[1] },
+    ...directLinks.slice(1).map((link) => ({ kind: 'link' as const, ...link })),
   ], [directLinks, navGroups]);
 
   // 모바일 메뉴 최상단 고정 노출 퀵링크. 4개 그룹 아코디언이 모두 접힌 채 시작하므로
@@ -108,6 +112,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
   const quickLinks = useMemo(() => [
     { label: t('nav.practiceRoom'), href: `/${locale}/practice-room` },
     { label: t('nav.pricing'), href: `/${locale}/pricing` },
+    ...(locale === 'ko' ? [{ label: t('nav.artists'), href: `/${locale}/artists` }] : []),
     { label: t('nav.contact'), href: `/${locale}/contact` },
   ], [locale, t]);
 

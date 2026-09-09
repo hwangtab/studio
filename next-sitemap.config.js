@@ -41,6 +41,7 @@ const buildTimestamp = new Date().toISOString();
 // Map of marketing pages to their representative OG images.
 // title/caption은 Google Image Search용 메타. Studio NOL 브랜드 + 페이지 주제 포함.
 const pageImageMap = {
+  '/artists': { url: '/images/og-recording15.webp', title: 'Support Artists - Studio NOL', caption: 'Monthly support for independent artists who recorded at Studio NOL, Seoul.' },
   '/release-project': { url: '/images/og-recording15.webp', title: 'Studio NOL Release Project - Indie Music Release by Producer Hwang Gyeongha', caption: 'Full-service indie music release: planning, recording, sessions, mixing, distribution, and media PR by 15-year producer Hwang Gyeongha.' },
   '/release-project/single': { url: '/images/og-recording15.webp', title: 'Studio NOL Single Release - Indie Single by Producer Hwang Gyeongha', caption: 'Indie single release project: planning, vocal recording, sessions, mixing, distribution, and PR by 15-year producer Hwang Gyeongha.' },
   '/release-project/ep': { url: '/images/og-recording15.webp', title: 'Studio NOL EP Release - Indie EP by Producer Hwang Gyeongha', caption: 'Indie EP release project: 3–5 tracks with planning, recording, sessions, mixing, distribution, and PR by 15-year producer Hwang Gyeongha.' },
@@ -285,7 +286,7 @@ module.exports = {
     }
 
     // guides 포함: buyer-intent 허브는 구매 직전 의도 LP라 서비스 페이지와 동급(0.9).
-    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson|release-project|guides)(\/|$)/)) {
+    if (routePath.match(/\/(pricing|contact|studio-info|practice-room|wedding-song|voice-acting|cover-video|lesson|release-project|guides|artists)(\/|$)/)) {
       return { ...entry, priority: 0.9 };
     }
 

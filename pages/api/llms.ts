@@ -198,7 +198,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
   - Full Album Release tier: ${siteUrl}/${locale}/release-project/album
 - Cover Video Package: ${siteUrl}/${locale}/cover-video
 - Portfolio: ${siteUrl}/${locale}/portfolio
-- Stories & News: ${siteUrl}/${locale}/stories
+${locale === 'ko' ? `- Support Artists (monthly patronage for artists who recorded here): ${siteUrl}/ko/artists\n` : ''}- Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
 - Recording Studio (rental, rates, booking): ${siteUrl}/${locale}/recording
 - Mixing & Mastering (remote-friendly, rates, file specs): ${siteUrl}/${locale}/mixing-mastering

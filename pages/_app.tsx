@@ -203,7 +203,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         { '@type': 'SiteNavigationElement', name: labels.lesson, url: `${base}/lesson` },
         { '@type': 'SiteNavigationElement', name: labels.weddingSong, url: `${base}/wedding-song` },
         { '@type': 'SiteNavigationElement', name: labels.voiceActing, url: `${base}/voice-acting` },
+        { '@type': 'SiteNavigationElement', name: labels.mixingMastering, url: `${base}/mixing-mastering` },
         { '@type': 'SiteNavigationElement', name: labels.portfolio, url: `${base}/portfolio` },
+        ...(locale === 'ko'
+          ? [{ '@type': 'SiteNavigationElement', name: labels.artists, url: `${base}/artists` }]
+          : []),
         { '@type': 'SiteNavigationElement', name: labels.stories, url: `${base}/stories` },
         { '@type': 'SiteNavigationElement', name: labels.contact, url: `${base}/contact` },
       ],
