@@ -2,6 +2,7 @@
   "data/buyerIntentHubs.ts": "2026-07-17T16:00:58.000Z",
   "data/portfolio.ts": "2026-04-27T08:28:04.000Z",
   "pages/[locale]/about.tsx": "2026-09-01T15:59:15.000Z",
+  "pages/[locale]/artists/index.tsx": "2026-09-09T01:50:58.000Z",
   "pages/[locale]/author.tsx": "2026-07-28T07:29:29.000Z",
   "pages/[locale]/contact.tsx": "2026-07-25T19:22:49.000Z",
   "pages/[locale]/cover-video.tsx": "2026-08-31T08:46:49.000Z",
