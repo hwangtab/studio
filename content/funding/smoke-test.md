@@ -6,7 +6,7 @@ cover: /images/funding/smoke-test/cover.webp
 goalAmount: 10000
 startAt: 2026-09-01T00:00:00+09:00
 endAt: 2027-12-31T23:59:59+09:00
-status: auto
+status: draft
 hidden: true
 lastmod: 2026-09-09
 rewards:
