@@ -66,7 +66,7 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
 
           <div className="space-y-6">
             {FUNDING_TERMS_SECTIONS.map((section) => (
-              <article key={section.heading} className="glass-card rounded-xl p-6">
+              <article key={section.heading} className="glass-card rounded-2xl p-6">
                 <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
                 {section.body.map((paragraph) => (
                   <p key={paragraph} className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed mb-2 last:mb-0">
@@ -76,7 +76,7 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
               </article>
             ))}
 
-            <article className="glass-card rounded-xl p-6">
+            <article className="glass-card rounded-2xl p-6">
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">사업자 정보</h2>
               <dl className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed space-y-1">
                 <div className="flex gap-2">

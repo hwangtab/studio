@@ -22,7 +22,7 @@ export default function FundingProgress({ goalAmount, endAt, now, data }: Props)
         <>
           <p className="text-4xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{formatPriceAmount(data.raisedAmount)}원</p>
           <p className="typo-card-meta mt-2">
-            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-primary-light">{data.percent}%</span> · {data.backerCount}명 후원{dday ? ` · ${dday}` : ''}
+            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-violet-300">{data.percent}%</span> · {data.backerCount}명 후원{dday ? ` · ${dday}` : ''}
           </p>
         </>
       ) : (

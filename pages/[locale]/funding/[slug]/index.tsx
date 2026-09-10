@@ -54,7 +54,7 @@ export default function FundingProjectPage({ project, initialState }: Props) {
             priority
           />
           <div className="lg:pt-2">
-            <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-primary-light">
+            <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-violet-300">
               {STATE_LABEL[state]}
             </span>
             <h1 className="typo-section-title mt-3">{project.title}</h1>

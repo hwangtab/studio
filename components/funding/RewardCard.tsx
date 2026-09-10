@@ -34,7 +34,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge }:
       </ul>
       <div className="mt-5">
         {soldOut ? (
-          <span className="inline-block rounded-full bg-gray-200 px-3 py-1 text-sm font-semibold text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+          <span className="inline-flex w-fit items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">
             품절
           </span>
         ) : canPledge ? (

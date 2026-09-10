@@ -58,7 +58,7 @@ export default function FundingManagePage(p: Props) {
           <div className="flex flex-wrap items-center gap-3">
             <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
               status === 'paid'
-                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-primary-light'
+                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-violet-300'
                 : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
             }`}>
               {STATUS_LABEL[status] ?? status}

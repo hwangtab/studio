@@ -41,7 +41,7 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
           <span
             className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
               state === 'live'
-                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-primary-light'
+                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-violet-300'
                 : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
             }`}
           >

@@ -8,14 +8,11 @@ import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
+import { inputClass } from '../ui/formClasses';
 
 interface Props { project: FundingProject; initialRewardId: string | null; remaining: Record<string, number | null> }
 interface Created { orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number; holdExpiresAt: string }
 
-// 예약 위저드(components/booking/BookingWizard.tsx)와 같은 입력 재질 — 사이트 안에서
-// 폼이 한 벌로 읽히도록 클래스를 복제하지 않고 같은 정의를 그대로 쓴다.
-const inputClass =
-  'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent';
 const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200';
 const helpClass = 'typo-card-meta mt-1.5';
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
