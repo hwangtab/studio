@@ -101,6 +101,10 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   // 스토리 상세는 스크롤 시 StickyBottomCTA(하단 바)가 상시 카카오 CTA 역할을 하므로
   // 전역 KakaoFab을 숨겨 우하단 요소 중복·시각 충돌을 제거한다.
   const isStoryDetail = router.pathname === '/[locale]/stories/[id]';
+  // 펀딩 후원 페이지는 모바일에서 FundingMobileCta(전폭 하단 고정 바)가 항상 떠 있다.
+  // 전역 KakaoFab·ScrollToTop과 같은 우하단 자리라 겹친다 — 계약 서명 화면과 같은 이유로
+  // 이 페이지에서는 떠 있는 버튼을 전부 치운다. 카카오 문의는 헤더 버튼으로 계속 갈 수 있다.
+  const isFundingPledge = router.pathname === '/[locale]/funding/[slug]/pledge';
   /**
    * 계약 화면에서는 떠 있는 버튼을 전부 치운다.
    *
@@ -177,8 +181,8 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       {!isBareLayout && <Footer locale={locale} />}
-      {!isStoryDetail && !isBareLayout && <KakaoFab locale={locale} />}
-      {!isBareLayout && <ScrollToTop locale={locale} />}
+      {!isStoryDetail && !isFundingPledge && !isBareLayout && <KakaoFab locale={locale} />}
+      {!isFundingPledge && !isBareLayout && <ScrollToTop locale={locale} />}
     </div>
   );
 };
