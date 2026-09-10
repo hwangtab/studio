@@ -10,6 +10,7 @@ import type { SessionProduct } from '../../lib/booking/products';
 import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
+import { inputClass } from '../ui/formClasses';
 
 interface BookingWizardProps {
   service: string;
@@ -18,8 +19,6 @@ interface BookingWizardProps {
 
 type Step = 1 | 2 | 3 | 4;
 
-const inputClass =
-  'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent';
 
 /** 예약 API 페이로드 — 서버에 금액을 절대 보내지 않는다(서버가 SSOT로 재계산). */
 interface CreateBookingBody {

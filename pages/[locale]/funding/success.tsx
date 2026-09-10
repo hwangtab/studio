@@ -32,11 +32,12 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
         <title>후원 결제 완료 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-24 text-center">
+      <main className="mx-auto max-w-xl px-4 pb-24 pt-28 sm:pt-32">
+        <div className="glass-card rounded-2xl p-6 text-center sm:p-8">
         {outcome === 'confirmed' ? (
           <>
-            <h1 className="text-2xl font-bold">후원이 확정되었습니다</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">
+            <h1 className="typo-card-title text-gray-900 dark:text-white">후원이 확정되었습니다</h1>
+            <p className="typo-card-body mx-auto mt-3 max-w-md">
               주문번호 {orderNo}.
               {emailSent === false
                 ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
@@ -45,23 +46,23 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
                 실패하면 고객이 후원을 스스로 취소할 방법이 아예 없었다. */}
             {manageUrl && (
-              <p className="mt-4">
+              <p className="mt-6">
                 <Link
                   href={manageUrl}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark"
+                  className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
                 >
                   후원 확인·취소 페이지 열기
                 </Link>
               </p>
             )}
             {manageUrl && (
-              <p className="mt-3 break-all text-xs text-gray-500">
+              <p className="typo-card-meta mx-auto mt-3 max-w-md break-all">
                 이 주소를 저장해 두세요: {manageUrl}
               </p>
             )}
             {projectSlug && (
-              <p className="mt-6">
-                <Link href={`/ko/funding/${projectSlug}`} className="underline">
+              <p className="typo-card-meta mt-6">
+                <Link href={`/ko/funding/${projectSlug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">
                   프로젝트로 돌아가기
                 </Link>
               </p>
@@ -69,12 +70,24 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
           </>
         ) : (
           <>
-            <h1 className="text-2xl font-bold">결제를 확정하지 못했습니다</h1>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-            <p className="mt-2 text-sm text-gray-500">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
+            <h1 className="typo-card-title text-gray-900 dark:text-white">결제를 확정하지 못했습니다</h1>
+            <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
+            <p className="typo-card-meta mx-auto mt-3 max-w-md">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
+            {/* 오류 분기에도 눌러야 할 곳이 하나는 있어야 한다 — fail.tsx와 같은 solid 버튼. */}
+            <Link
+              href="/ko/funding"
+              className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
+            >
+              펀딩 목록으로 돌아가기
+            </Link>
           </>
         )}
-        <Link href="/ko/funding" className="mt-8 inline-block underline">펀딩 목록으로</Link>
+        </div>
+        {outcome === 'confirmed' && (
+          <p className="typo-card-meta mt-6 text-center">
+            <Link href="/ko/funding" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 목록으로</Link>
+          </p>
+        )}
       </main>
     </>
   );

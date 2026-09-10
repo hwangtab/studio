@@ -8,6 +8,7 @@ import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing'
 import type { OrderAmounts } from '../../lib/booking/amounts';
 import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingProduct } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
+import { inputClass } from '../ui/formClasses';
 
 interface MixingOrderWizardProps {
   /** ?product= 쿼리를 서버에서 검증해 넘긴 값 — 없거나 유효하지 않으면 undefined(1번 상품이 기본). */
@@ -16,8 +17,6 @@ interface MixingOrderWizardProps {
 
 type Step = 1 | 2 | 3;
 
-const inputClass =
-  'w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent';
 
 interface CreateMixingOrderBody {
   productId: string;

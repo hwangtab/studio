@@ -59,14 +59,14 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
         ]}
       />
 
-      <Section variant="default" className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{title}</h1>
-          <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-8">{subtitle}</p>
+      <Section variant="default" className="pb-16 pt-28 md:pb-24 md:pt-36">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="typo-section-title">{title}</h1>
+          <p className="typo-section-lead mt-4 mb-10">{subtitle}</p>
 
           <div className="space-y-6">
             {FUNDING_TERMS_SECTIONS.map((section) => (
-              <article key={section.heading} className="glass-card rounded-xl p-6">
+              <article key={section.heading} className="glass-card rounded-2xl p-6">
                 <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
                 {section.body.map((paragraph) => (
                   <p key={paragraph} className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed mb-2 last:mb-0">
@@ -76,7 +76,7 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
               </article>
             ))}
 
-            <article className="glass-card rounded-xl p-6">
+            <article className="glass-card rounded-2xl p-6">
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">사업자 정보</h2>
               <dl className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed space-y-1">
                 <div className="flex gap-2">
