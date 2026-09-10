@@ -59,10 +59,10 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
         ]}
       />
 
-      <Section variant="default" className="py-16 md:py-20">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{title}</h1>
-          <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-8">{subtitle}</p>
+      <Section variant="default" className="pb-16 pt-28 md:pb-24 md:pt-36">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="typo-section-title">{title}</h1>
+          <p className="typo-section-lead mt-4 mb-10">{subtitle}</p>
 
           <div className="space-y-6">
             {FUNDING_TERMS_SECTIONS.map((section) => (

@@ -29,15 +29,20 @@ export default function FundingIndexPage({ items }: Props) {
         description="스튜디오 놀이 제작하는 음반의 제작비를 리워드 후원으로 함께 만듭니다."
         canonical="/ko/funding"
       />
-      <Section className="pt-28">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">펀딩</h1>
-        <p className="mt-3 text-gray-600 dark:text-gray-300">
-          음반 제작비를 후원자와 함께 만듭니다. 리워드를 고르면 CD·굿즈·음원으로 돌려드립니다.
-        </p>
+      <Section className="pb-16 pt-28 md:pb-24 md:pt-36">
+        <div className="max-w-3xl">
+          <h1 className="typo-section-title">펀딩</h1>
+          <p className="typo-section-lead mt-4">
+            음반 제작비를 후원자와 함께 만듭니다. 리워드를 고르면 CD·굿즈·음원으로 돌려드립니다.
+          </p>
+        </div>
         {items.length === 0 ? (
-          <p className="mt-12 text-gray-500">지금 진행 중인 펀딩이 없습니다. 새 프로젝트는 스토리와 SNS에서 먼저 알립니다.</p>
+          <div className="glass-card mt-12 max-w-2xl rounded-2xl p-8">
+            <p className="typo-card-title text-gray-900 dark:text-white">진행 중인 펀딩이 없습니다</p>
+            <p className="typo-card-body mt-2">새 프로젝트는 스토리와 SNS에서 먼저 알립니다.</p>
+          </div>
         ) : (
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid max-w-6xl items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
             {items.map((it) => (
               <FundingProjectCard key={it.slug} {...it} />
             ))}

@@ -12,10 +12,16 @@ export default function DepositPage(p: Props) {
   return (
     <>
       <Head><title>무통장입금 안내 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
-      <main className="mx-auto max-w-lg px-4 pb-24 pt-28">
-        <h1 className="text-2xl font-bold">무통장입금 안내</h1>
-        <div className="mt-6"><BankDepositGuide {...p} /></div>
-        <p className="mt-8 text-sm">입금 확인 후 확정 메일을 보내드립니다. <Link href={p.manageUrl} className="underline">후원 확인 페이지</Link> · <Link href={`/ko/funding/${p.projectSlug}`} className="underline">프로젝트</Link></p>
+      <main className="mx-auto max-w-xl px-4 pb-24 pt-28 sm:pt-32">
+        <h1 className="typo-section-title">무통장입금 안내</h1>
+        <p className="typo-section-lead mt-3">아래 계좌로 기한 안에 입금하면 후원이 확정됩니다.</p>
+        <div className="glass-card mt-8 rounded-2xl p-6 sm:p-8"><BankDepositGuide {...p} /></div>
+        <p className="typo-card-meta mt-6">
+          입금 확인 후 확정 메일을 보내드립니다.{' '}
+          <Link href={p.manageUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">후원 확인 페이지</Link>
+          {' · '}
+          <Link href={`/ko/funding/${p.projectSlug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">프로젝트</Link>
+        </p>
       </main>
     </>
   );

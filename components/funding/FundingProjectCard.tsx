@@ -28,8 +28,8 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
     setState(computeProjectState({ status, startAt, endAt }, new Date()));
   }, [status, startAt, endAt]);
   return (
-    <Link href={`/ko/funding/${slug}`} prefetch={false} className="block">
-      <BaseCard variant="glass" className="overflow-hidden">
+    <Link href={`/ko/funding/${slug}`} prefetch={false} className="block h-full">
+      <BaseCard variant="glass" className="flex h-full flex-col overflow-hidden">
         <ResponsiveImage
           src={cover}
           alt=""
@@ -37,13 +37,21 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
           className="object-cover"
           loading="lazy"
         />
-        <div className="p-5">
-          <span className={`text-xs font-semibold ${state === 'live' ? 'text-primary dark:text-accent' : 'text-gray-500'}`}>
+        <div className="flex flex-1 flex-col p-6">
+          <span
+            className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+              state === 'live'
+                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-primary-light'
+                : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
+            }`}
+          >
             {STATE_LABEL[state]}
           </span>
-          <h2 className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{title}</h2>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{summary}</p>
-          <p className="mt-3 text-xs text-gray-500">목표 {formatPriceAmount(goalAmount)}원</p>
+          <h2 className="typo-card-title mt-3 text-gray-900 dark:text-white">{title}</h2>
+          <p className="typo-card-body mt-2 flex-1">{summary}</p>
+          <p className="typo-card-meta mt-4 border-t border-gray-200/70 pt-3 dark:border-gray-700/70">
+            목표 {formatPriceAmount(goalAmount)}원
+          </p>
         </div>
       </BaseCard>
     </Link>

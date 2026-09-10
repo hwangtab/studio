@@ -24,10 +24,10 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge }:
           loading="lazy"
         />
       )}
-      <p className="text-2xl font-bold text-gray-900 dark:text-white">{formatPriceAmount(reward.amount)}원</p>
-      <h3 className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{reward.title}</h3>
-      <p className="mt-2 flex-1 whitespace-pre-line text-sm text-gray-600 dark:text-gray-300">{reward.description}</p>
-      <ul className="mt-4 space-y-1 text-xs text-gray-500 dark:text-gray-400">
+      <p className="text-2xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{formatPriceAmount(reward.amount)}원</p>
+      <h3 className="typo-card-subtitle mt-1 text-gray-900 dark:text-white">{reward.title}</h3>
+      <p className="typo-card-body mt-3 flex-1 whitespace-pre-line">{reward.description}</p>
+      <ul className="typo-card-meta mt-5 space-y-1 border-t border-gray-200/70 pt-4 dark:border-gray-700/70">
         <li>예상 전달: {reward.estimatedDelivery}</li>
         <li>{reward.requiresShipping ? '배송 리워드 (배송지 입력)' : '배송 없음'}</li>
         {remaining !== null && !soldOut && <li>{remaining}개 남음 / 한정 {reward.totalQuantity}개</li>}
@@ -41,7 +41,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge }:
           <Link
             href={pledgeHref}
             prefetch={false}
-            className="inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 font-medium text-white hover:bg-primary-dark"
+            className="inline-flex h-12 w-full items-center justify-center rounded-xl bg-primary px-5 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
           >
             이 리워드로 후원하기
           </Link>
