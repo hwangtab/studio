@@ -305,7 +305,7 @@
     },
     "hero": {
       "title": "Recording ₩100,000/hr · Practice Room ₩360,000/mo · Wedding Song ₩350,000",
-      "subtitleLine1": "Actual rates, VAT excluded. Every case where an extra fee applies is listed below.",
+      "subtitleLine1": "Except the monthly practice-room rate, prices are actual rates with VAT excluded. Every case where an extra fee applies is listed below.",
       "subtitleLine2": "The table right below shows every service rate at a glance.",
       "alt": "Studio NOL Pricing",
       "ctaKakao": "Get a Free Quote on KakaoTalk"
@@ -332,7 +332,8 @@
       "title": "Practice Room Residency",
       "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
       "subtitleVacant": "A 24/7 soundproof workspace rented by the month — rooms are currently available for move-in.",
-      "detailLink": "See practice room facilities and resident perks"
+      "detailLink": "See practice room facilities and resident perks",
+      "priceNote": "Utilities included · no deposit · month-to-month"
     },
     "additional": {
       "title": "Additional Services",
@@ -566,7 +567,7 @@
       "subtitle": "₩0 deposit · 50% off first month (1-year plan) · 24/7 access + overnight stays",
       "priceLabel": "Monthly",
       "priceValue": "From ₩360K",
-      "priceCaption": "VAT excl. · utilities included",
+      "priceCaption": "Utilities included",
       "badges": [
         {
           "label": "₩0 deposit",

@@ -277,7 +277,7 @@
     },
     "hero": {
       "title": "Thu âm ₩100,000/giờ · Phòng tập ₩360,000/tháng · Đám cưới ₩350,000",
-      "subtitleLine1": "Giá thực tế, chưa gồm VAT. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
+      "subtitleLine1": "Ngoài phí thuê phòng tập theo tháng, giá là giá thực tế chưa gồm VAT. Mọi trường hợp phát sinh phí đều được nêu bên dưới.",
       "subtitleLine2": "Bảng ngay bên dưới hiển thị toàn bộ đơn giá dịch vụ.",
       "alt": "Bảng giá Studio NOL",
       "ctaKakao": "Nhận báo giá miễn phí qua KakaoTalk"
@@ -304,7 +304,8 @@
       "title": "Thuê phòng tập theo tháng",
       "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
       "subtitleVacant": "Không gian cách âm 24/7 thuê theo tháng — hiện đang có phòng trống có thể vào ở ngay.",
-      "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân"
+      "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân",
+      "priceNote": "Đã gồm phí quản lý · không đặt cọc · hợp đồng theo tháng"
     },
     "additional": {
       "title": "Dịch vụ bổ sung",
@@ -324,7 +325,7 @@
         },
         {
           "q": "Phòng tập nhạc giá bao nhiêu?",
-          "a": "Giá {{practiceRoom}} mỗi tháng, không đặt cọc (đã gồm phí quản lý, chưa gồm VAT). Bạn dùng được 24/7 và có thể ở lại qua đêm; ký hợp đồng một năm được giảm 50% tháng đầu. Chúng tôi không cho thuê theo giờ hay ngắn hạn."
+          "a": "Giá {{practiceRoom}} mỗi tháng, không đặt cọc (đã gồm phí quản lý). Bạn dùng được 24/7 và có thể ở lại qua đêm; ký hợp đồng một năm được giảm 50% tháng đầu. Chúng tôi không cho thuê theo giờ hay ngắn hạn."
         },
         {
           "q": "Đặt lịch hoặc xin báo giá thế nào?",
@@ -538,7 +539,7 @@
       "subtitle": "Không cọc · Giảm 50% tháng đầu (gói 1 năm) · 24/7 + ở qua đêm",
       "priceLabel": "Hàng tháng",
       "priceValue": "Từ ₩360K",
-      "priceCaption": "Chưa VAT · Đã gồm phí quản lý",
+      "priceCaption": "Đã gồm phí quản lý",
       "badges": [
         {
           "label": "Không cọc",

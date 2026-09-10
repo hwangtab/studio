@@ -277,7 +277,7 @@
     },
     "hero": {
       "title": "Yozuv ₩100,000/soat · Mashq xonasi ₩360,000/oy · To'y qo'shig'i ₩350,000",
-      "subtitleLine1": "Haqiqiy narxlar, QQS alohida. Qo'shimcha to'lov qo'llaniladigan barcha holatlar quyida ko'rsatilgan.",
+      "subtitleLine1": "Mashg‘ulot xonasining oylik to‘lovidan tashqari narxlar QQSsiz haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
       "subtitleLine2": "Quyidagi jadvalda barcha xizmat narxlari bir joyda.",
       "alt": "Studio NOL narxlari",
       "ctaKakao": "KakaoTalk orqali bepul narx oling"
@@ -304,7 +304,8 @@
       "title": "Mashg'ulot xonasiga oylik joylashuv",
       "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
       "subtitleVacant": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — hozirda ko'chib kirish uchun bo'sh xonalar mavjud.",
-      "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish"
+      "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish",
+      "priceNote": "Kommunal to‘lovlar kiritilgan · depozitsiz · oylik shartnoma"
     },
     "additional": {
       "title": "Qo'shimcha xizmatlar",
@@ -538,7 +539,7 @@
       "subtitle": "Zakaladsiz · Birinchi oyga 50% (1 yillik shartnoma) · 24/7 foydalanish + tunab qolish",
       "priceLabel": "Oylik",
       "priceValue": "₩360Kʼdan",
-      "priceCaption": "QQS kiritilmagan · kommunal kiritilgan",
+      "priceCaption": "Kommunal to‘lovlar kiritilgan",
       "badges": [
         {
           "label": "Zakalad yoʻq",
