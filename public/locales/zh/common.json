@@ -277,7 +277,7 @@
     },
     "hero": {
       "title": "录音每小时 ₩100,000 · 练习室每月 ₩360,000 · 婚礼献唱 ₩350,000",
-      "subtitleLine1": "均为实际单价（不含增值税），需额外收费的情况已全部列于下方。",
+      "subtitleLine1": "除练习室月租外，均为实际单价（不含增值税），需额外收费的情况已全部列于下方。",
       "subtitleLine2": "下方表格可一次查看全部服务单价。",
       "alt": "Studio NOL 价格",
       "ctaKakao": "通过KakaoTalk获取免费报价"
@@ -304,7 +304,8 @@
       "title": "音乐练习室入住",
       "subtitle": "按月租用的24小时隔音工作室——满室的月份较多，同时接受入住等候登记。",
       "subtitleVacant": "按月租用的24小时隔音工作室——现有可入住的空房。",
-      "detailLink": "查看练习室设施与入住福利"
+      "detailLink": "查看练习室设施与入住福利",
+      "priceNote": "含管理费 · 无押金 · 按月签约"
     },
     "additional": {
       "title": "附加服务",
@@ -538,7 +539,7 @@
       "subtitle": "0保证金 · 签约1年以上首月5折 · 24小时使用 + 可过夜",
       "priceLabel": "月租",
       "priceValue": "36万韩元起",
-      "priceCaption": "不含增值税·含管理费",
+      "priceCaption": "含管理费",
       "badges": [
         {
           "label": "0保证金",

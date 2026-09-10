@@ -277,7 +277,7 @@
     },
     "hero": {
       "title": "Grabación ₩100,000/h · Sala de ensayo ₩360,000/mes · Boda ₩350,000",
-      "subtitleLine1": "Tarifas reales, IVA no incluido. Abajo se detalla cada caso con coste adicional.",
+      "subtitleLine1": "Salvo la tarifa mensual de la sala de ensayo, son tarifas reales con IVA no incluido. Abajo se detalla cada caso con coste adicional.",
       "subtitleLine2": "La tabla de abajo muestra todas las tarifas de un vistazo.",
       "alt": "Precios de Studio NOL",
       "ctaKakao": "Cotización gratis por KakaoTalk"
@@ -304,7 +304,8 @@
       "title": "Residencia en Sala de Práctica",
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
       "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: hay salas disponibles ahora mismo.",
-      "detailLink": "Ver instalaciones y beneficios para residentes"
+      "detailLink": "Ver instalaciones y beneficios para residentes",
+      "priceNote": "Servicios incluidos · sin depósito · contrato mensual"
     },
     "additional": {
       "title": "Servicios adicionales",
@@ -538,7 +539,7 @@
       "subtitle": "Sin depósito · 50% dto. primer mes (plan 1 año) · Acceso 24/7 + pernocta",
       "priceLabel": "Mensual",
       "priceValue": "Desde ₩360K",
-      "priceCaption": "IVA no incl. · servicios incluidos",
+      "priceCaption": "Servicios incluidos",
       "badges": [
         {
           "label": "Sin depósito",
