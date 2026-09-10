@@ -32,7 +32,8 @@
     "releaseEp": "EP",
     "releaseAlbum": "Album đầy đủ",
     "funding": "Gây quỹ",
-    "artists": "Support Artists"  },
+    "artists": "Support Artists"
+  },
   "footer": {
     "rights": "Tất cả quyền được bảo lưu.",
     "address": "Địa chỉ",
@@ -474,8 +475,7 @@
       "subtitle": "1 buổi/tuần · 60 phút · 4 buổi/tháng",
       "unit": "KRW / tháng",
       "breakdown": "4 buổi/tháng · khoảng ₩87.500/buổi",
-      "cta": "Đặt lịch tư vấn",
-      "subscriptionNote": "Sau khi tư vấn, chúng tôi sẽ gửi liên kết để bạn thanh toán phí hàng tháng bằng thẻ định kỳ."
+      "cta": "Đặt lịch tư vấn"
     },
     "quickAnswers": {
       "title": "Tóm tắt khóa học",
@@ -558,8 +558,7 @@
         }
       ],
       "note": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Có danh sách chờ khi hết phòng.",
-      "noteVacant": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Hiện đang có phòng trống có thể vào ở ngay.",
-      "subscriptionNote": "Sau khi tư vấn, chúng tôi sẽ gửi liên kết để bạn thanh toán phí hàng tháng bằng thẻ định kỳ."
+      "noteVacant": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Hiện đang có phòng trống có thể vào ở ngay."
     },
     "midCta": {
       "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự.",
