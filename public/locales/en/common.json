@@ -32,7 +32,8 @@
     "releaseEp": "EP",
     "releaseAlbum": "Full Album",
     "funding": "Funding",
-    "artists": "Support Artists"  },
+    "artists": "Support Artists"
+  },
   "footer": {
     "rights": "All rights reserved.",
     "address": "Address",
@@ -502,8 +503,7 @@
       "subtitle": "1×/week · 60 min · 4 sessions/mo",
       "unit": "KRW / mo",
       "breakdown": "4 sessions per month · about ₩87,500 per session",
-      "cta": "Book a Consultation",
-      "subscriptionNote": "After a consultation, we'll send you a link to pay your monthly fee by recurring card payment."
+      "cta": "Book a Consultation"
     },
     "quickAnswers": {
       "title": "Lesson at a Glance",
@@ -586,8 +586,7 @@
         }
       ],
       "note": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Waitlist available when rooms are full.",
-      "noteVacant": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Rooms are currently available for move-in.",
-      "subscriptionNote": "After a consultation, we'll send you a link to pay your monthly fee by recurring card payment."
+      "noteVacant": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Rooms are currently available for move-in."
     },
     "midCta": {
       "note": "Rooms are often fully booked, so we keep a waitlist. Reach out and we'll contact you in order as soon as a room opens.",

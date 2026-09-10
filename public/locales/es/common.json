@@ -32,7 +32,8 @@
     "releaseEp": "EP",
     "releaseAlbum": "Álbum completo",
     "funding": "Crowdfunding",
-    "artists": "Support Artists"  },
+    "artists": "Support Artists"
+  },
   "footer": {
     "rights": "Todos los derechos reservados.",
     "address": "Dirección",
@@ -474,8 +475,7 @@
       "subtitle": "1×/semana · 60 min · 4 sesiones/mes",
       "unit": "KRW / mes",
       "breakdown": "4 sesiones al mes · unos 87.500 KRW por sesión",
-      "cta": "Solicitar consulta",
-      "subscriptionNote": "Tras la consulta, te enviaremos un enlace para pagar la cuota mensual con pago recurrente por tarjeta."
+      "cta": "Solicitar consulta"
     },
     "quickAnswers": {
       "title": "Lección en breve",
@@ -558,8 +558,7 @@
         }
       ],
       "note": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Lista de espera disponible cuando esté completo.",
-      "noteVacant": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Hay salas disponibles ahora mismo.",
-      "subscriptionNote": "Tras la consulta, te enviaremos un enlace para pagar la cuota mensual con pago recurrente por tarjeta."
+      "noteVacant": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Hay salas disponibles ahora mismo."
     },
     "midCta": {
       "note": "Las salas suelen estar completas, por lo que mantenemos una lista de espera. Escríbenos y te avisaremos por orden en cuanto se libere una sala.",
