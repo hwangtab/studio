@@ -24,6 +24,7 @@ import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingConfirmedEmails, sendFundingBankDepositEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 
 const call = async (method: string, query: unknown, body: unknown) => {
   const json = jest.fn();
@@ -301,4 +302,41 @@ it('clear_stock_review: 원문을 남긴 채 확인 내용을 날짜와 함께 �
   // 고객에게 알릴 내용이 아니다 — 운영 내부의 재고 확인 기록이다.
   expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
   expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
+});
+
+/**
+ * 해제 항목은 반드시 한 줄이어야 한다 — 판정이 줄 단위라, 사유에 개행이 들어가면 둘째
+ * 줄부터는 해제 항목으로 분류되지 않는다. 운영자가 웹훅 원문을 그대로 붙여 넣으면 그 줄이
+ * 경고 형태를 갖춰 해제 뒤에 새 경고가 선 꼴이 되고, 방금 누른 해제가 무효가 된다.
+ */
+it('clear_stock_review: 사유에 개행이 있어도 해제가 한 줄로 접혀 배지가 꺼진다', () => {
+  const original = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요';
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged(original));
+  // 운영자가 웹훅 원문을 줄바꿈과 함께 인용해 붙여 넣은 입력.
+  return call('PATCH', { id: 'order-1' }, {
+    action: 'clear_stock_review',
+    reason: `웹훅 메모를 확인했습니다.\n${original}\n잔여 3개, 초과 없음`,
+  }).then((r) => {
+    expect(r.status).toBe(200);
+    const memo = set.mock.calls[0][0].adminMemo as string;
+    // 덧붙은 항목이 한 줄이다(원문 1줄 + 해제 1줄).
+    expect(memo.split('\n')).toHaveLength(2);
+    // 인용 내용은 그대로 남는다 — 접기는 기록을 지우지 않는다.
+    expect(memo).toContain('잔여 3개, 초과 없음');
+    // 그리고 실제로 꺼진다 — 이 단언이 이 액션과 판정 함수의 결합을 고정한다.
+    expect(hasReviewMarker(memo)).toBe(false);
+  });
+});
+
+// 인용이 개행 없이 한 줄에 들어간 흔한 경우도 같이 못 박는다.
+it('clear_stock_review: 사유에 마커 문구를 인용해도 배지가 꺼진다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
+  await call('PATCH', { id: 'order-1' }, {
+    action: 'clear_stock_review', reason: '웹훅 메모(재고 초과 가능, 확인 필요) 확인함, 문제없음',
+  });
+  expect(hasReviewMarker(set.mock.calls[0][0].adminMemo as string)).toBe(false);
 });

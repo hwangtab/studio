@@ -156,7 +156,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!hasReviewMarker(order.fundingPledge.adminMemo)) {
         return res.status(409).json({ ok: false, message: '재고 확인이 필요한 후원이 아닙니다.' });
       }
-      const entry = `[${kstDateString(now)}] ${REVIEW_CLEARED_MARKER} — ${reason}`;
+      // 해제 항목은 **반드시 한 줄**이어야 한다 — 판정이 줄 단위라, 사유에 개행이 들어가면
+      // 둘째 줄부터는 해제 항목으로 분류되지 않는다. 운영자가 웹훅 원문을 그대로 붙여 넣어
+      // 그 줄이 경고 형태(접두 + 마커)를 갖추면 해제 뒤에 새 경고가 선 꼴이 되어 다시 켜진다.
+      // 개행을 공백으로 접어 그 경로를 없앤다(내용은 그대로 남는다).
+      const entry = `[${kstDateString(now)}] ${REVIEW_CLEARED_MARKER} — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)

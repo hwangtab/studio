@@ -68,17 +68,50 @@ export const REVIEW_MEMO_MARKER = '재고 초과 가능, 확인 필요';
 export const REVIEW_CLEARED_MARKER = '재고 확인 완료';
 
 /**
- * adminMemo는 append로 쌓인다. **마지막 경고 뒤에 해제가 적혀 있으면 꺼진 것**으로 본다.
+ * 경고 줄의 접두 — confirm.ts(웹훅 확정 경로)가 adminMemo에 쓰는 태그.
+ * 여기에 없는 접두로 남긴 메모는 경고로 세지 않는다.
+ */
+export const REVIEW_MEMO_PREFIXES = ['[웹훅]', '[지연승인]'] as const;
+
+/**
+ * 한 줄이 **웹훅이 남긴 경고 항목**인가. 접두 + 마커 꼬리를 둘 다 본다.
+ * 사람이 사유 안에서 마커 문구를 인용한 줄은 이 접두가 없으므로 걸리지 않는다.
+ */
+export const isReviewWarningLine = (line: string): boolean => {
+  const t = line.trim();
+  return REVIEW_MEMO_PREFIXES.some((prefix) => t.startsWith(prefix)) && t.endsWith(REVIEW_MEMO_MARKER);
+};
+
+/**
+ * 한 줄이 **해제 항목**인가. clear_stock_review가 쓰는 `[YYYY-MM-DD] 재고 확인 완료 — 사유`.
+ * 패턴을 상수에서 조립해 표식만 바꿔도 어긋나지 않게 한다(REVIEW_CLEARED_MARKER에는
+ * 정규식 메타문자가 없다 — 바꿀 때 이 전제를 함께 볼 것).
+ */
+const CLEARED_LINE_PATTERN = new RegExp(`^\\[\\d{4}-\\d{2}-\\d{2}\\]\\s*${REVIEW_CLEARED_MARKER}`);
+export const isReviewClearedLine = (line: string): boolean => CLEARED_LINE_PATTERN.test(line.trim());
+
+/**
+ * adminMemo는 append로 쌓인다. **마지막 경고 줄이 마지막 해제 줄보다 뒤에 있을 때만** 켠다.
  *
- * 순서를 보는 이유: 이미 한 번 확인해 닫은 건을 웹훅이 다시 되살려 확정하면(만료 후 재승인이
- * 두 번 날 수 있다) 새 경고가 해제 기록보다 뒤에 붙는다. 단순 포함 여부로 보면 그 두 번째
- * 경고가 첫 번째 해제에 묻혀 영영 안 뜬다.
+ * 순서를 보는 이유: 이미 한 번 닫은 건을 웹훅이 다시 되살려 확정하면(만료 후 재승인은 두 번
+ * 날 수 있다) 새 경고가 해제 기록보다 뒤에 붙는다. 그때 신호가 다시 켜져야 한다.
+ *
+ * **문자열 위치가 아니라 줄 단위로 보는 이유**: 화면 배너가 "관리자 메모에 웹훅이 남긴
+ * 원문이 있습니다"라고 안내하므로, 운영자가 해제 사유에 그 원문을 인용하는 것은 실제로
+ * 나올 법한 입력이다. lastIndexOf로 보면 **방금 쓴 해제 항목 안의 인용**이 마커의 마지막
+ * 등장 위치가 되고 해제 표식은 그보다 앞이라, 해제가 무효가 되어 영구 점등한다 — 이 장치가
+ * 막으려던 실패 모드가 그대로 재현된다. 줄로 나누면 그 줄은 접두로 이미 해제 항목이라,
+ * 안에 무엇이 들어 있든 판정에 영향이 없다.
  */
 export const hasReviewMarker = (adminMemo: string | null | undefined): boolean => {
   if (typeof adminMemo !== 'string') return false;
-  const flaggedAt = adminMemo.lastIndexOf(REVIEW_MEMO_MARKER);
-  if (flaggedAt === -1) return false;
-  return adminMemo.indexOf(REVIEW_CLEARED_MARKER, flaggedAt) === -1;
+  let lastWarning = -1;
+  let lastCleared = -1;
+  adminMemo.split('\n').forEach((line, index) => {
+    if (isReviewWarningLine(line)) lastWarning = index;
+    else if (isReviewClearedLine(line)) lastCleared = index;
+  });
+  return lastWarning > lastCleared;
 };
 
 /** 동명·동액 경고 키: pending 무통장 건끼리 이름+금액이 같으면 관리자가 입금 매칭을 헷갈린다. */

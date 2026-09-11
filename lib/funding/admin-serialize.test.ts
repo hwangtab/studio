@@ -2,7 +2,10 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { REVIEW_CLEARED_MARKER, REVIEW_MEMO_MARKER, hasReviewMarker, serializePledgeForAdmin } from './admin-serialize';
+import {
+  REVIEW_CLEARED_MARKER, REVIEW_MEMO_MARKER, REVIEW_MEMO_PREFIXES,
+  hasReviewMarker, isReviewWarningLine, serializePledgeForAdmin,
+} from './admin-serialize';
 import type { FundingOrder } from './service';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -111,6 +114,37 @@ describe('serializePledgeForAdmin — needsReview', () => {
     expect(hasReviewMarker(`[2026-10-20] ${REVIEW_CLEARED_MARKER} — x`)).toBe(false);
   });
 
+  /**
+   * 판정이 문자열 위치(lastIndexOf)였을 때의 실패. 화면 배너가 "관리자 메모에 웹훅이 남긴
+   * 원문이 있습니다"라고 안내하므로 사유에 원문을 인용하는 건 실제로 나올 법한 입력인데,
+   * 그 인용이 마커의 마지막 등장 위치가 되어 **해제가 통째로 무효**가 됐다. 200으로 성공해도
+   * 배지가 안 꺼지고, 같은 문구를 계속 인용하면 영구 점등한다.
+   */
+  it('해제 사유에 마커 문구를 그대로 인용해도 꺼진 상태가 유지된다', () => {
+    const memo = [
+      WEBHOOK_NOTES[0],
+      `[2026-10-20] ${REVIEW_CLEARED_MARKER} — 웹훅 메모(${REVIEW_MEMO_MARKER}) 확인함, 문제없음`,
+    ].join('\n');
+    expect(hasReviewMarker(memo)).toBe(false);
+  });
+
+  // 경고·해제가 여러 번 오가도 마지막 줄의 순서만 본다.
+  it('경고 → 해제 → 경고 → 해제 순이면 꺼진 상태', () => {
+    const memo = [
+      WEBHOOK_NOTES[0],
+      `[2026-10-20] ${REVIEW_CLEARED_MARKER} — 1차 확인`,
+      WEBHOOK_NOTES[1],
+      `[2026-10-22] ${REVIEW_CLEARED_MARKER} — 2차 확인`,
+    ].join('\n');
+    expect(hasReviewMarker(memo)).toBe(false);
+  });
+
+  // 접두가 없는 줄은 경고가 아니다 — 운영자가 마커 문구만 적어 둔 메모로 신호가 켜지면
+  // 배지의 뜻이 "웹훅이 되살린 건"에서 "메모에 이 문구가 있는 건"으로 바뀐다.
+  it('접두 없이 마커 문구만 있는 줄은 경고로 세지 않는다', () => {
+    expect(hasReviewMarker(`[2026-10-20] 확인 요청 — ${REVIEW_MEMO_MARKER}`)).toBe(false);
+  });
+
   it('메모가 없거나 관계없는 메모면 false', () => {
     expect(serializePledgeForAdmin(orderWith('paid', true, null, null), new Set()).needsReview).toBe(false);
     expect(serializePledgeForAdmin(orderWith('paid', true, null, '입금자명 김철수'), new Set()).needsReview).toBe(false);
@@ -133,11 +167,28 @@ describe('serializePledgeForAdmin — needsReview', () => {
  * 조립하는 방식이어야 한다. policy.ts·confirm.ts 모두 이 작업의 소유가 아니라 이번엔
  * 소스 대조로 막고, 관련 PR이 모두 병합된 뒤 후속 커밋에서 접는다.
  */
-it('confirm.ts의 [웹훅] 메모 문구가 전부 REVIEW_MEMO_MARKER로 끝난다', () => {
-  const source = readFileSync(path.join(process.cwd(), 'lib/funding/confirm.ts'), 'utf-8');
-  const literals = [...source.matchAll(/'(\[웹훅\][^']*)'/g)].map((m) => m[1]);
-  expect(literals.length).toBeGreaterThan(0);
-  for (const literal of literals) {
-    expect(literal.endsWith(REVIEW_MEMO_MARKER)).toBe(true);
-  }
+describe('confirm.ts 소스 대조 — 표식이 어긋나면 배지가 조용히 꺼진다', () => {
+  const source = () => readFileSync(path.join(process.cwd(), 'lib/funding/confirm.ts'), 'utf-8');
+  const literalsIn = (src: string) => [...src.matchAll(/'([^'\n]*)'/g)].map((m) => m[1]);
+
+  // 꼬리 드리프트: 두 문구 중 한쪽만 바뀌어도 잡는다.
+  it('[웹훅] 접두 문구가 전부 REVIEW_MEMO_MARKER로 끝난다', () => {
+    const webhookNotes = literalsIn(source()).filter((l) => l.startsWith('[웹훅]'));
+    expect(webhookNotes.length).toBeGreaterThan(0);
+    for (const note of webhookNotes) expect(note.endsWith(REVIEW_MEMO_MARKER)).toBe(true);
+  });
+
+  /**
+   * 접두 드리프트: 판정은 줄의 **형태**(접두 + 마커 꼬리)를 본다. confirm.ts가 마커를 단
+   * 메모를 REVIEW_MEMO_PREFIXES에 없는 접두로 남기기 시작하면 경고가 통째로 안 잡힌다.
+   */
+  it('마커를 단 문구는 전부 경고 줄 형태를 만족한다', () => {
+    const flagged = literalsIn(source()).filter((l) => l.includes(REVIEW_MEMO_MARKER));
+    expect(flagged.length).toBeGreaterThan(0);
+    for (const note of flagged) expect(isReviewWarningLine(note)).toBe(true);
+  });
+
+  it('알고 있는 접두가 실제로 confirm.ts에 하나 이상 쓰이고 있다', () => {
+    expect(REVIEW_MEMO_PREFIXES.some((prefix) => source().includes(prefix))).toBe(true);
+  });
 });
