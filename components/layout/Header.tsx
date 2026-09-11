@@ -16,6 +16,24 @@ interface HeaderProps {
   toggleDarkMode: () => void;
 }
 
+/**
+ * 드롭다운 밖 1탭 경로 — 데스크톱 헤더와 모바일 퀵링크가 같은 것을 가리키도록
+ * 한 곳에서 정의한다.
+ *
+ * 여기 들어오는 기준은 "드롭다운에 넣으면 오히려 못 찾는 것"이다.
+ * 음악연습실(최다 유입·전환, 2026-08-24 IA 감사: GSC 449클릭·리드 51),
+ * 스토리(1,582편·11개 카테고리라 어떤 그룹에도 안 들어간다),
+ * 가격(전 상품 공통).
+ *
+ * 라벨 키가 둘인 이유: 데스크톱은 가로 배치라 축약형(nav.short.*)을 쓰고,
+ * 모바일은 세로 타일이라 전체 이름을 쓴다. 스토리는 원래 짧아 둘이 같다.
+ */
+const PRIMARY_ROUTES = [
+  { id: 'practice-room', path: 'practice-room', shortKey: 'nav.short.practiceRoom', fullKey: 'nav.practiceRoom' },
+  { id: 'stories', path: 'stories', shortKey: 'nav.stories', fullKey: 'nav.stories' },
+  { id: 'pricing', path: 'pricing', shortKey: 'nav.short.pricing', fullKey: 'nav.pricing' },
+] as const;
+
 export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isScrolled, hasHero, isDarkMode, toggleDarkMode }, ref) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
@@ -56,11 +74,14 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
    * 아티스트 그룹의 항목은 전부 ko 전용이라 그룹째 ko에서만 렌더한다 — 비-ko에서
    * 빈 드롭다운이 열리면 안 된다.
    */
-  const directLinks = useMemo(() => [
-    { id: 'practice-room', label: t('nav.short.practiceRoom'), href: `/${locale}/practice-room` },
-    { id: 'stories', label: t('nav.stories'), href: `/${locale}/stories` },
-    { id: 'pricing', label: t('nav.short.pricing'), href: `/${locale}/pricing` },
-  ], [locale, t]);
+  const directLinks = useMemo(
+    () => PRIMARY_ROUTES.map(({ id, path, shortKey }) => ({
+      id,
+      label: t(shortKey),
+      href: `/${locale}/${path}`,
+    })),
+    [locale, t]
+  );
 
   const navGroups = useMemo(() => [
     {
@@ -125,20 +146,25 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
    * 모바일 메뉴 최상단 고정 퀵링크. 그룹 아코디언이 모두 접힌 채 시작하므로
    * 그룹 밖 1탭 경로를 위로 올린다.
    *
-   * **데스크톱 1탭(directLinks)과 같은 구성이어야 한다** — 두 뷰포트의 우선순위가
-   * 갈리면 같은 사이트가 기기마다 다른 것을 중요하다고 말하는 셈이다. 실제로
-   * 아티스트 후원이 여기만 남아 있다가 아티스트 그룹과 중복된 적이 있다.
-   * 문의만 추가로 둔다 — 모바일에서는 전환 경로를 손가락 가까이 두는 편이 낫다.
+   * 데스크톱 1탭과 **같은 PRIMARY_ROUTES에서 파생한다.** 예전엔 두 배열을 따로
+   * 적어 두고 주석으로만 "일치해야 한다"고 해 뒀는데, 실제로 아티스트 후원이
+   * 여기만 남아 아티스트 그룹과 중복된 적이 있다. 주석은 한쪽만 고치는 것을
+   * 막지 못한다.
    *
-   * 라벨은 데스크톱의 nav.short.* 대신 전체 이름을 쓴다. 세로 목록이라 폭에
-   * 여유가 있고, 축약형은 가로 배치를 위한 것이다.
+   * 문의만 추가로 둔다 — 모바일에서는 전환 경로를 손가락 가까이 두는 편이 낫다.
+   * 라벨은 nav.short.*(가로 배치용 축약) 대신 전체 이름을 쓴다. 세로 타일이라
+   * 폭에 여유가 있다.
    */
-  const quickLinks = useMemo(() => [
-    { label: t('nav.practiceRoom'), href: `/${locale}/practice-room` },
-    { label: t('nav.stories'), href: `/${locale}/stories` },
-    { label: t('nav.pricing'), href: `/${locale}/pricing` },
-    { label: t('nav.contact'), href: `/${locale}/contact` },
-  ], [locale, t]);
+  const quickLinks = useMemo(
+    () => [
+      ...PRIMARY_ROUTES.map(({ path, fullKey }) => ({
+        label: t(fullKey),
+        href: `/${locale}/${path}`,
+      })),
+      { label: t('nav.contact'), href: `/${locale}/contact` },
+    ],
+    [locale, t]
+  );
 
   const handleNavigate = useCallback(() => {
     setIsMenuOpen(false);

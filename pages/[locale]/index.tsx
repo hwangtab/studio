@@ -306,9 +306,12 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           체류하는 사용자에게는 가성비 나쁜 비용이라 prefetch={false}로 차단. */}
       <Section variant="default" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
-          {/* 발매 프로젝트 pill은 ko 전용 — nav.releaseProject는 하위메뉴 맥락 라벨이라
-              비한국어에서 "Overview"로 해석돼 홈에서 맥락을 잃는다. 플래그십은 한국 인디
-              아티스트 중심이고 비-ko 홈은 저트래픽이라 ko에만 노출한다. */}
+          {/* 발매 프로젝트 pill은 ko 전용.
+
+              예전 근거 두 개 중 하나는 사라졌다 — nav.releaseProject가 'Overview'라
+              비한국어에서 맥락을 잃는다는 것은 2026-09-11 리네임('Release Project')으로
+              해소됐다. 남은 이유로 게이트를 유지한다: 플래그십은 한국 인디 아티스트
+              중심이고 비-ko 홈은 저트래픽이라 pill 자리를 쓸 값이 없다. */}
           {locale === 'ko' && (
             <Link
               href={getLink('/release-project')}

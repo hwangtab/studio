@@ -100,16 +100,33 @@ export const Footer = ({ locale }: FooterProps) => {
               <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
               <FooterLink href={`/${locale}/music-promotion`}>{t('nav.musicPromotion')}</FooterLink>
             </ul>
-            {/* 발매 프로젝트 — nav.releaseProject 등은 하위메뉴 맥락 라벨('Overview')이라
-                비-ko 푸터에선 맥락을 잃는다. 홈 pill과 동일하게 ko 전용 노출. */}
+            {/* 발매 티어를 전 로케일에 연다(2026-09-11).
+
+                예전엔 ko 전용이었고 근거는 "nav.releaseProject가 'Overview' 같은
+                하위메뉴 맥락 라벨이라 비-ko 푸터에선 맥락을 잃는다"였다. 그 라벨을
+                'Release Project'로 바꾸면서 근거가 사라졌다. 확인해 보니 티어 상세
+                카피도 7개 로케일 전부 번역돼 있고(releaseProject.tiers.*.detail 각 30키),
+                헤더는 이미 모든 로케일에서 /release-project를 링크한다. 푸터만 막을
+                이유가 없다. 색인 여부는 별개이며 lib/enIndexablePaths.json이 정한다. */}
+            <SubHeading>{t('footer.sections.release')}</SubHeading>
+            <ul className="flex flex-col">
+              <FooterLink href={`/${locale}/release-project`}>{t('nav.releaseProject')}</FooterLink>
+              <FooterLink href={`/${locale}/release-project/single`}>{t('nav.releaseSingle')}</FooterLink>
+              <FooterLink href={`/${locale}/release-project/ep`}>{t('nav.releaseEp')}</FooterLink>
+              <FooterLink href={`/${locale}/release-project/album`}>{t('nav.releaseAlbum')}</FooterLink>
+            </ul>
+            {/* 후원·선구매·예매는 행위가 달라도 대상이 같다 — 함께 만든 아티스트다.
+                헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다.
+
+                이 블록만 ko 전용이다. 위 발매 티어와 이유가 다르다 — 여긴 결제 퍼널이라
+                한국 결제·통신판매 요건에 묶여 있다(스펙 §8·§11.2). 번역이 생겨도 이
+                게이트는 풀지 않는다. 결제를 다른 나라에 여는 것은 별개 결정이다. */}
             {locale === 'ko' && (
               <>
-                <SubHeading>{t('footer.sections.release')}</SubHeading>
+                <SubHeading>{t('footer.sections.artist')}</SubHeading>
                 <ul className="flex flex-col">
-                  <FooterLink href={`/${locale}/release-project`}>{t('nav.releaseProject')}</FooterLink>
-                  <FooterLink href={`/${locale}/release-project/single`}>{t('nav.releaseSingle')}</FooterLink>
-                  <FooterLink href={`/${locale}/release-project/ep`}>{t('nav.releaseEp')}</FooterLink>
-                  <FooterLink href={`/${locale}/release-project/album`}>{t('nav.releaseAlbum')}</FooterLink>
+                  <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>
+                  <FooterLink href={`/${locale}/funding`}>{t('nav.funding')}</FooterLink>
                 </ul>
                 {/* 후원·선구매·예매는 행위가 달라도 대상이 같다 — 함께 만든 아티스트다.
                     헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다. */}

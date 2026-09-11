@@ -573,8 +573,12 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <div className="flex flex-wrap justify-center gap-4">
           {/* 발매 프로젝트를 맨 앞에 — 통합 패키지가 기획·유통·홍보까지 포함하므로
               그 다음 행선지이고, 바로 아래 CTA가 부르는 페이지이기도 하다.
-              라벨에 nav.releaseProject를 쓰지 않는다: ko만 '음원 발매 개요'이고
-              나머지 로케일은 드롭다운 하위 라벨인 'Overview'라 단독으로 뜻이 안 통한다. */}
+
+              라벨로 pricing.releaseLink를 쓴다. 예전 이유("nav.releaseProject는
+              드롭다운 하위 라벨 'Overview'라 단독으로 뜻이 안 통한다")는 2026-09-11
+              리네임으로 사라졌다. 두 키가 같은 것을 가리키므로 언젠가 합쳐야 하는데,
+              어느 로케일이 갈려 있는지는 주석에 적지 않는다 — 그 목록을 손으로 적었다가
+              vi를 빠뜨린 적이 있다. 현재 상태는 lib/navLabels.test.ts가 찍어 준다. */}
           <Link
             href={`/${locale}/release-project`}
             prefetch={false}
