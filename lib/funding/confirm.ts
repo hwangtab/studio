@@ -6,6 +6,7 @@ import { confirmPayment, fetchPayment, type TossPayment } from '../booking/toss'
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProject } from './projects';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
+import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 
 export type FundingConfirmOutcome =
   | { ok: true; orderNo: string; manageToken: string; projectSlug: string; emailSent?: boolean }
@@ -63,8 +64,6 @@ export const revivalNote = (tag: string, from: 'expired' | 'failed'): string =>
  * 침묵한다 — 무증상 사고다. inflight를 남기면 즉시 잡히고 관리자 화면에서 복구할 수 있다.
  * 정상 종료 시 발송 결과(성공 null / 실패 사유)가 덮어쓴다.
  */
-const SEND_PENDING = 'send_pending';
-const SEND_INFLIGHT = 'send_inflight';
 
 /**
  * libSQL 결과의 rowsAffected — 판정 불가는 undefined로 돌려 "정상"으로 흘려보낸다.

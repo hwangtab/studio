@@ -8,6 +8,7 @@ import { createBookingEvent } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
+import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 
 export type ConfirmOutcome =
   | {
@@ -79,8 +80,6 @@ const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(c
  * 시간 기반 재시도를 잘못 잡으면 느린 발송을 죽은 것으로 오인해 메일이 두 통 나간다 —
  * 이 라운드에서 되돌리려던 바로 그 사고다. 가시성 회복 + 수동 재발송까지가 안전한 선이다.
  */
-const SEND_PENDING = 'send_pending';
-const SEND_INFLIGHT = 'send_inflight';
 
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';

@@ -124,7 +124,7 @@ function SubscribeSetupOk(props: OkProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        <Link href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
+        <Link href="/ko" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
           홈으로
         </Link>
       </main>

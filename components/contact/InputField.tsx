@@ -22,7 +22,7 @@ type IconInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 const IconInput = ({ icon: Icon, invalid, className, ...props }: IconInputProps) => (
   <div className="relative">
     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-400" aria-hidden="true" />
     </div>
     <TextInput invalid={invalid} className={['pl-10', className].filter(Boolean).join(' ')} {...props} />
   </div>

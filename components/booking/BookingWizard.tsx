@@ -182,7 +182,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
       return 'h-11 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed';
     if (selectedStartHour === slot.startHour)
       return 'h-11 rounded-md border border-primary bg-primary text-white font-semibold';
-    return 'h-11 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary transition-colors';
+    return 'h-11 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-lighter transition-colors';
   };
 
   // Step 3: 예약자 정보
@@ -293,7 +293,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-      <Link href={`/ko/${service}`} className="text-sm text-primary hover:underline">
+      <Link href={`/ko/${service}`} className="text-sm text-primary dark:text-primary-lighter hover:underline">
         ← 서비스 소개로 돌아가기
       </Link>
       <h1 className="mt-3 typo-page-title">

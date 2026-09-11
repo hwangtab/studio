@@ -128,6 +128,13 @@ export const Footer = ({ locale }: FooterProps) => {
                   <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>
                   <FooterLink href={`/${locale}/funding`}>{t('nav.funding')}</FooterLink>
                 </ul>
+                {/* 후원·선구매·예매는 행위가 달라도 대상이 같다 — 함께 만든 아티스트다.
+                    헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다. */}
+                <SubHeading>{t('footer.sections.artist')}</SubHeading>
+                <ul className="flex flex-col">
+                  <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>
+                  <FooterLink href={`/${locale}/funding`}>{t('nav.funding')}</FooterLink>
+                </ul>
               </>
             )}
           </div>

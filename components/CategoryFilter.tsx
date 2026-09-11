@@ -79,7 +79,7 @@ const CategoryFilter = ({
     <div>
       {showTitle && (
         <div className="flex items-center mb-6">
-          {TitleIcon && React.createElement(TitleIcon, { className: "text-xl text-primary mr-3" })}
+          {TitleIcon && React.createElement(TitleIcon, { className: "text-xl text-primary dark:text-primary-lighter mr-3" })}
           <h3 className="typo-card-title text-gray-600 dark:text-gray-200">{resolvedTitleText}</h3>
         </div>
       )}

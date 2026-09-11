@@ -82,7 +82,7 @@ const ArtistsHub: NextPageWithLayout<ArtistsHubProps> = ({ locale, artists }) =>
             const Icon = HOW_ICONS[i] ?? Heart;
             return (
               <li key={item.title} className="glass-card rounded-xl p-6">
-                <Icon className="h-6 w-6 text-primary dark:text-primary-light" aria-hidden="true" />
+                <Icon className="h-6 w-6 text-primary dark:text-primary-lighter" aria-hidden="true" />
                 <h3 className="typo-card-subtitle mt-3 text-gray-900 dark:text-white">{item.title}</h3>
                 <p className="mt-2 text-gray-600 dark:text-gray-300">{item.body}</p>
               </li>

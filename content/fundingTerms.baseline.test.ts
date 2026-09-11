@@ -4,7 +4,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { FUNDING_TERMS_VERSION } from '../lib/funding/policy';
+import { POLICY_COPY_BY_LOCALE } from '../data/privacyPolicy';
+import { FUNDING_PRIVACY_SECTION_HEADINGS, FUNDING_TERMS_VERSION } from '../lib/funding/policy';
 import {
   assertBaselineUpdateAllowed,
   serializeAgreedDocuments,
@@ -48,7 +49,8 @@ describe('펀딩 약관 판본 게이트', () => {
   if (process.env.UPDATE_FUNDING_TERMS_BASELINE === '1') {
     it('기준선을 갱신한다 (UPDATE_FUNDING_TERMS_BASELINE=1)', () => {
       // 갱신 경로도 같은 규칙을 지킨다 — 여기서 막지 않으면 자물쇠 옆에 열쇠를 걸어 두는 셈이다.
-      assertBaselineUpdateAllowed(readBaseline(), { version: FUNDING_TERMS_VERSION, hash });
+      // 파일이 없는 최초 생성은 ALLOW_BASELINE_CREATE=1을 명시했을 때만 통과한다.
+      assertBaselineUpdateAllowed(readBaseline(), { version: FUNDING_TERMS_VERSION, hash }, process.env.ALLOW_BASELINE_CREATE === '1');
       const payload: FundingTermsBaseline = {
         note: '후원자가 동의하는 문서 묶음(펀딩 약관 + ko 개인정보 처리방침 + 공유 상수)의 내용 해시. 내용이 바뀌면 FUNDING_TERMS_VERSION을 먼저 올린 뒤 UPDATE_FUNDING_TERMS_BASELINE=1 로 갱신할 것.',
         version: FUNDING_TERMS_VERSION,
@@ -119,6 +121,17 @@ describe('펀딩 약관 판본 게이트', () => {
     expect('funding-terms-2026-09-11-r2').toMatch(TERMS_VERSION_PATTERN);
   });
 
+  // 이전 패턴(-r[2-9]\d*)은 첫 자리를 [2-9]로 고정해 -r10~-r19·-r100~-r199처럼 십의 자리
+  // 이상이 붙는 접미사를 전부 거부했다 — 같은 날 열 번째 이상 개정에서 판본을 못 올리는 버그였다.
+  it('판본 접미사는 -r10 이상(선행 0 없음)도 받는다', () => {
+    for (const ok of ['funding-terms-2026-09-11-r2', 'funding-terms-2026-09-11-r9', 'funding-terms-2026-09-11-r10', 'funding-terms-2026-09-11-r19', 'funding-terms-2026-09-11-r100']) {
+      expect(ok).toMatch(TERMS_VERSION_PATTERN);
+    }
+    for (const bad of ['funding-terms-2026-09-11-r0', 'funding-terms-2026-09-11-r1', 'funding-terms-2026-09-11-r01']) {
+      expect(bad).not.toMatch(TERMS_VERSION_PATTERN);
+    }
+  });
+
   it('직렬화 대상에 약관 16개 조항과 처리방침 펀딩 절이 모두 들어간다', () => {
     for (const heading of ['제1조 (목적)', '제8조 (청약철회의 권리 및 기간)', '제16조 (준거법 및 문의처)']) {
       expect(serialized).toContain(heading);
@@ -170,7 +183,56 @@ describe('assertBaselineUpdateAllowed — 갱신 경로 우회 차단', () => {
     expect(() => assertBaselineUpdateAllowed(existing, { version: existing.version, hash: existing.hash })).not.toThrow();
   });
 
-  it('최초 생성은 통과시킨다', () => {
-    expect(() => assertBaselineUpdateAllowed(null, { version: existing.version, hash: 'b'.repeat(64) })).not.toThrow();
+  it('최초 생성은 allowCreate=true를 명시했을 때만 통과시킨다', () => {
+    expect(() => assertBaselineUpdateAllowed(null, { version: existing.version, hash: 'b'.repeat(64) }, true)).not.toThrow();
+  });
+
+  // 실측된 두 번째 우회: 거부 메시지를 본 사람이 baseline 파일을 지우면 existing이 null이 되어
+  // "최초 생성"으로 취급되고, 옛 판본 문자열 + 새 내용이 그대로 기준선이 되어 이후 검사가 초록이 된다.
+  it('기준선 파일이 없는데 플래그 없이 갱신하면 거부한다(파일 삭제 우회 차단)', () => {
+    expect(() => assertBaselineUpdateAllowed(null, { version: existing.version, hash: 'b'.repeat(64) }))
+      .toThrow(/찾을 수 없다/);
+  });
+
+  it('allowCreate 기본값은 false다 — 인자를 생략해도 거부가 기본 동작이다', () => {
+    expect(() => assertBaselineUpdateAllowed(null, { version: existing.version, hash: 'b'.repeat(64) }, false))
+      .toThrow(/ALLOW_BASELINE_CREATE=1/);
+  });
+
+  it('파일 삭제 우회 거부 메시지는 "지우고 다시 만들라"가 아니라 git 복구를 안내한다', () => {
+    try {
+      assertBaselineUpdateAllowed(null, { version: existing.version, hash: 'b'.repeat(64) });
+      throw new Error('던지지 않았다');
+    } catch (error) {
+      const message = (error as Error).message;
+      expect(message).toMatch(/git checkout/);
+      expect(message).toMatch(/ALLOW_BASELINE_CREATE=1/);
+    }
+  });
+});
+
+/**
+ * 약관 §13이 가리키는 처리방침 항 제목은 lib/funding/policy.ts에 베껴 두고 있다 — 약관
+ * 페이지가 처리방침 정본을 직접 import하면 7개 로케일 본문 전체가 약관 번들에 딸려 오기
+ * 때문이다(실측 확인). 베낀 값이라 드리프트가 가능하므로, 여기서 정본과 대조한다.
+ *
+ * 이 테스트가 서면 처리방침에서 펀딩 항을 추가·개명·재번호한 것이다. policy.ts의 배열을
+ * 맞춘 뒤, 그 값이 약관 §13 본문에 보간되어 **해시 대상**이라는 점을 잊지 말 것 —
+ * FUNDING_TERMS_VERSION을 먼저 올리고 기준선을 다시 써야 한다.
+ */
+describe('약관 §13의 처리방침 항 참조', () => {
+  it('policy.ts의 제목 목록이 ko 처리방침에서 실제로 뽑히는 항과 같다', () => {
+    const derived = POLICY_COPY_BY_LOCALE.ko.sections
+      .map((section) => section.heading)
+      .filter((heading) => /^\d+\. 펀딩/.test(heading));
+    expect([...FUNDING_PRIVACY_SECTION_HEADINGS]).toEqual(derived);
+  });
+
+  it('약관 페이지는 처리방침 정본을 직접 import하지 않는다', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'pages/[locale]/funding/terms.tsx'),
+      'utf-8',
+    );
+    expect(source).not.toMatch(/privacy-?[Pp]olicy/);
   });
 });

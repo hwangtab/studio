@@ -124,7 +124,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         <Section variant="default">
           <div className="max-w-3xl mx-auto">
             <BaseCard variant="default" className="p-8">
-              <div className="flex items-center gap-3 mb-2 text-primary">
+              <div className="flex items-center gap-3 mb-2 text-primary dark:text-primary-lighter">
                 <Award size={22} aria-hidden="true" />
                 <span className="typo-card-meta font-semibold">{t('about.producer.tagline')}</span>
               </div>
@@ -138,14 +138,14 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                 <Link
                   href={`/${locale}/portfolio`}
                   prefetch={false}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
                 >
                   {t('about.producer.portfolioCta')} <ArrowRight size={16} aria-hidden="true" />
                 </Link>
                 <Link
                   href={`/${locale}/release-project`}
                   prefetch={false}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200 min-h-[44px] touch-manipulation"
                 >
                   {t('about.producer.releaseCta')} <ArrowRight size={16} aria-hidden="true" />
                 </Link>
@@ -240,7 +240,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
                   className="p-4"
                 >
                   <div className="flex items-center mb-2">
-                    <Icon className="text-primary dark:text-primary-light mr-2" aria-hidden="true" />
+                    <Icon className="text-primary dark:text-primary-lighter mr-2" aria-hidden="true" />
                     <h3 className="typo-card-subtitle">{advantage.title}</h3>
                   </div>
                   <p className="typo-card-body">{advantage.description}</p>
@@ -276,11 +276,11 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Phone className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <Phone className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.call')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.phone}</p>
+            <p className="typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors">{siteConfig.contact.phone}</p>
           </BaseCard>
 
           <BaseCard
@@ -296,11 +296,11 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <Mail className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <Mail className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.email')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.email}</p>
+            <p className="typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors">{siteConfig.contact.email}</p>
           </BaseCard>
 
           <BaseCard
@@ -318,11 +318,11 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MessageCircle className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <MessageCircle className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.kakao')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{t('contact.info.kakao')}</p>
+            <p className="typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors">{t('contact.info.kakao')}</p>
           </BaseCard>
 
           <BaseCard
@@ -340,11 +340,11 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           >
             <div className="flex justify-center mb-4">
               <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-full">
-                <MapPin className="text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <MapPin className="text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
               </div>
             </div>
             <h3 className="typo-card-subtitle mb-2">{t('actions.location')}</h3>
-            <p className="typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors">{siteConfig.contact.address}</p>
+            <p className="typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors">{siteConfig.contact.address}</p>
           </BaseCard>
         </div>
       </Section>
@@ -359,35 +359,35 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/lesson`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -400,7 +400,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           title={
             <>
               <span className="block">{t('about.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('about.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('about.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

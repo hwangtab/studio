@@ -46,7 +46,7 @@ const PracticeRoomTerms: React.FC<PracticeRoomTermsProps> = ({ locale = 'ko' }) 
       </dl>
       <p className="px-6 pb-4 text-sm text-gray-600 dark:text-gray-400">
         방 상태와 남은 자리는{' '}
-        <NextLink href={`/${locale}/practice-room`} prefetch={false} className="text-primary hover:underline underline-offset-4">
+        <NextLink href={`/${locale}/practice-room`} prefetch={false} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4">
           음악연습실 안내
         </NextLink>
         에서 확인하실 수 있습니다.

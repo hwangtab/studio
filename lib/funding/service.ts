@@ -98,9 +98,16 @@ export const createFundingPledge = async (
       AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
   `);
 
-  // 한 사람이 결제 대기(pending) 홀드를 무한정 쌓아 한정 리워드 재고를 잠그는 것을 막는다.
-  // 위 자기 홀드 해제는 toss pending만 푼다(무통장은 이미 입금했을 수 있어 못 푼다) — 그래서
-  // 무통장으로 반복 제출하면 12시간짜리 홀드가 계속 쌓여 재고가 통째로 묶인다.
+  // 한 사람이 결제 대기(pending) 주문을 무한정 쌓는 것을 막는다.
+  //
+  // 위 자기 홀드 해제는 toss pending만 푼다 — 무통장은 이미 입금했을 수 있어 재제출만으로
+  // 만료시킬 수 없다. 그래서 무통장으로 반복 제출하면 12시간짜리 미결제 주문이 계속 쌓인다.
+  //
+  // **한정 수량 재고와는 무관하다.** 한정 리워드(totalQuantity !== null)는 무통장 자체를
+  // 거부하므로(lib/funding/validation.ts — "한정 수량 리워드는 무통장 불가"), 무통장 홀드가
+  // 한정 재고를 잠그는 상황은 만들어질 수 없다. 이 가드가 실제로 막는 것은 입금 대기 주문이
+  // 쌓여 운영자가 입금자명을 대조할 대상이 불어나는 쪽이다.
+  //
   // 해제 뒤에 세므로, 정상적인 위저드 되돌아가기·재제출은 걸리지 않는다.
   const [openHolds] = await db.all<{ n: number }>(sql`
     SELECT COUNT(*) AS n FROM orders o

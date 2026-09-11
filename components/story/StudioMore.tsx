@@ -48,7 +48,7 @@ const StudioMore: React.FC<StudioMoreProps> = ({ locale = 'ko' }) => {
             <NextLink
               href={l.href}
               prefetch={false}
-              className="font-medium text-primary hover:underline underline-offset-4"
+              className="font-medium text-primary dark:text-primary-lighter hover:underline underline-offset-4"
             >
               {l.label}
             </NextLink>

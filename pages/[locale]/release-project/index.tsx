@@ -157,15 +157,15 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               className="glass-card rounded-2xl p-8 flex flex-col"
             >
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t(`releaseProject.tiers.${key}.label`)}</h3>
-              <div className="flex items-center gap-1.5 text-primary mb-4">
+              <div className="flex items-center gap-1.5 text-primary dark:text-primary-lighter mb-4">
                 <Clock size={14} className="flex-shrink-0" />
                 <span className="text-sm font-medium">{t(`releaseProject.tiers.${key}.duration`)}</span>
               </div>
               <p className="text-base text-gray-700 dark:text-gray-200 font-semibold mb-2">{t(`releaseProject.tiers.${key}.range`)}</p>
-              <p className="text-sm text-gray-400 dark:text-gray-500 mb-5">{t(`releaseProject.tiers.${key}.note`)}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">{t(`releaseProject.tiers.${key}.note`)}</p>
               <Link
                 href={getLink(`/release-project/${key}`)}
-                className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:text-primary-dark hover:underline underline-offset-2 transition-colors"
+                className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:text-primary-dark dark:hover:text-white hover:underline underline-offset-2 transition-colors"
               >
                 {t('releaseProject.tiers.detailCta')} <ArrowRight size={14} />
               </Link>
@@ -176,7 +176,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           {t('releaseProject.tiers.footNotePre')}{' '}
           <strong>{t('releaseProject.tiers.footNoteHighlight')}</strong>{' '}
           {t('releaseProject.tiers.footNoteMid')}{' '}
-          <Link href={getLink('/pricing')} className="text-primary underline underline-offset-2 hover:text-primary-dark">
+          <Link href={getLink('/pricing')} className="text-primary dark:text-primary-lighter underline underline-offset-2 hover:text-primary-dark dark:hover:text-white">
             {t('releaseProject.tiers.footNotePricingLabel')}
           </Link>
           {t('releaseProject.tiers.footNotePost')}
@@ -207,7 +207,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               key={i}
               className="flex items-start gap-3 glass-card rounded-xl p-5"
             >
-              <CheckCircle size={20} className="text-primary flex-shrink-0 mt-0.5" />
+              <CheckCircle size={20} className="text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5" />
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
             </div>
           ))}
@@ -233,14 +233,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               <div key={s.step} className="flex gap-5">
                 <div className="flex-shrink-0 flex flex-col items-center self-stretch">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                    <Icon size={18} className="text-primary" />
+                    <Icon size={18} className="text-primary dark:text-primary-lighter" />
                   </div>
                   {!isLast && (
                     <div className="w-0.5 flex-1 bg-gray-200 dark:bg-gray-700 my-1.5" />
                   )}
                 </div>
                 <div className={`flex-1 pt-1.5 ${!isLast ? 'pb-6' : ''}`}>
-                  <p className="text-xs font-mono text-primary/60 mb-1 tracking-wide">{s.step}</p>
+                  <p className="text-xs font-mono text-primary dark:text-primary-lighter mb-1 tracking-wide">{s.step}</p>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">{t(`releaseProject.process.steps.${i}.title`)}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{t(`releaseProject.process.steps.${i}.desc`)}</p>
                 </div>
@@ -258,7 +258,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           subtitle={t('releaseProject.inProgress.sectionSubtitle')}
           className="mb-3"
         />
-        <p className="text-center text-xs text-gray-400 dark:text-gray-500 mb-10">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mb-10">
           {t('releaseProject.inProgress.asOf', { date: asOf })}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
@@ -267,7 +267,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               key={`${item.artist}-${item.titleKey}`}
               className="glass-card rounded-xl p-5"
             >
-              <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
+              <span className="inline-block text-xs font-medium text-primary dark:text-primary-lighter bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
                 {t(`releaseProject.inProgress.types.${item.typeKey}`)}
               </span>
               <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
@@ -322,14 +322,14 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   </div>
                 )}
                 <div className="p-6 flex flex-col flex-1">
-                  <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary transition-colors">
+                  <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{item.artist}</p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                     {item.title}
                   </h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed mb-4 flex-1 line-clamp-6">
                     {item.noteExcerpt}
                   </p>
-                  <span className="inline-flex items-center gap-1 text-xs text-primary font-medium self-start mt-auto">
+                  <span className="inline-flex items-center gap-1 text-xs text-primary dark:text-primary-lighter font-medium self-start mt-auto">
                     {t('releaseProject.spotlight.viewFull')} <ArrowRight size={12} />
                   </span>
                 </div>
@@ -385,7 +385,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           title={
             <>
               <span className="block">{t('releaseProject.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('releaseProject.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('releaseProject.cta.titleHighlight')}</span>
             </>
           }
           subtitle={t('releaseProject.cta.subtitle')}

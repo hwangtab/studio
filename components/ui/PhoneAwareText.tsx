@@ -44,7 +44,7 @@ const PhoneAwareText = ({ text, locale = 'ko', source }: PhoneAwareTextProps) =>
           <a
             key={`tel-${index}`}
             href={toTelHref(part)}
-            className="text-primary dark:text-primary-light hover:underline underline-offset-4 whitespace-nowrap"
+            className="text-primary dark:text-primary-lighter hover:underline underline-offset-4 whitespace-nowrap"
             onClick={() =>
               trackLeadEvent('lead_click_phone', {
                 locale,

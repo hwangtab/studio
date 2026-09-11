@@ -91,7 +91,7 @@ export const SectionAnchorNav = ({ items, ariaLabel, className }: SectionAnchorN
                   aria-current={isActive ? 'true' : undefined}
                   className={`inline-flex items-center min-h-[40px] px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-950 ${isActive
                     ? 'bg-primary text-white'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:text-accent'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:text-accent-light'
                     }`}
                 >
                   {item.label}

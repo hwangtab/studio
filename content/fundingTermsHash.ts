@@ -23,7 +23,7 @@ import {
   PRIVACY_RETENTION_TEXT,
   TOSS_HOLD_SECONDS,
 } from '../lib/funding/policy';
-import { POLICY_COPY_BY_LOCALE } from '../pages/[locale]/privacy-policy';
+import { POLICY_COPY_BY_LOCALE } from '../data/privacyPolicy';
 import { FUNDING_TERMS_SECTIONS } from '../pages/[locale]/funding/terms';
 
 /** 해시 대상을 사람이 읽을 수 있는 형태로 직렬화한다 — 실패했을 때 무엇이 바뀌었는지 diff로 보이도록. */
@@ -56,7 +56,10 @@ export const serializeAgreedDocuments = (): string => {
   return lines.join('\n');
 };
 
-export const TERMS_VERSION_PATTERN = /^funding-terms-\d{4}-\d{2}-\d{2}(-r[2-9]\d*)?$/;
+// -r2~-r9뿐 아니라 -r10 이상(선행 0 없는 두 자리 이상)도 받는다. 이전 패턴(-r[2-9]\d*)은
+// 첫 자리를 [2-9]로 고정해 두 번째 개정부터 아홉 번째까지만 통과시키고 -r10~-r19,
+// -r100~-r199를 전부 거부했다 — 같은 날 열 번째 이상 개정이 필요해지면 판본을 못 올린다.
+export const TERMS_VERSION_PATTERN = /^funding-terms-\d{4}-\d{2}-\d{2}(-r([2-9]|[1-9]\d+))?$/;
 
 export type FundingTermsBaseline = {
   note: string;
@@ -78,12 +81,36 @@ export type FundingTermsBaseline = {
  *
  * 그래서 **갱신 경로 자체가** 내용이 바뀌었는데 판본이 그대로인 조합을 거부한다.
  * 검사 모드만 막으면 자물쇠 옆에 열쇠를 걸어 두는 것과 같다.
+ *
+ * 두 번째 우회도 같은 모양으로 재현됐다: `existing`이 없으면(= 파일이 없으면) 무조건
+ * `return`했으므로, 거부 메시지를 본 사람이 `content/funding-terms.baseline.json`을 지우고
+ * 다시 쓰면 "최초 생성"으로 취급돼 판본 검사를 통째로 건너뛴다 — 지운 순간 "옛 판본 + 새 내용"이
+ * 그대로 새 기준선이 되고, 그 뒤로는 검사 모드도 초록이다. 그래서 최초 생성에도 자물쇠를 단다:
+ * `allowCreate`가 명시적으로 true일 때만 파일 없음을 통과시킨다. 기본값은 false다 — 아무도
+ * 이 인자를 넣지 않고 호출하면(실수로든, 우회 목적으로든) 거부가 기본 동작이 된다.
  */
 export const assertBaselineUpdateAllowed = (
   existing: Pick<FundingTermsBaseline, 'version' | 'hash'> | null,
   next: { version: string; hash: string },
+  allowCreate: boolean = false,
 ): void => {
-  if (!existing) return; // 최초 생성.
+  if (!existing) {
+    if (allowCreate) return; // 명시적으로 승인된 최초 생성.
+    throw new Error(
+      [
+        '기준선 생성을 거부한다 — content/funding-terms.baseline.json을 찾을 수 없다.',
+        '',
+        '이 파일이 원래 있었다면 지우지 말고 git으로 복구할 것:',
+        '  git checkout -- content/funding-terms.baseline.json',
+        '지우고 이 명령으로 다시 만들면 "이전 내용과 비교"가 통째로 사라져, 판본을 안 올린',
+        '변경도 무조건 통과하는 새 기준선이 깔린다 — 이 게이트가 막으려던 상태 그 자체다.',
+        '',
+        '정말 이 저장소에 처음 만드는 것이 맞다면(초기 세팅) ALLOW_BASELINE_CREATE=1을',
+        '함께 주고 다시 실행할 것:',
+        '  ALLOW_BASELINE_CREATE=1 UPDATE_FUNDING_TERMS_BASELINE=1 npx jest content/fundingTerms.baseline.test.ts',
+      ].join('\n'),
+    );
+  }
   if (existing.hash === next.hash) return; // 내용이 그대로면 판본만 손봐도 된다.
   if (existing.version !== next.version) return; // 내용이 바뀌었고 판본도 올렸다 — 정상.
   throw new Error(

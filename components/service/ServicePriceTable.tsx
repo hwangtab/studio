@@ -73,7 +73,7 @@ const ServicePriceTable = ({ caption, groups, serviceColLabel, priceColLabel, cl
                   )}
                 </th>
                 <td className="py-3 pl-4 text-right whitespace-nowrap align-top">
-                  <span className="font-bold text-primary dark:text-primary-light tabular-nums">{row.price}</span>
+                  <span className="font-bold text-primary dark:text-primary-lighter tabular-nums">{row.price}</span>
                   {row.unit && <span className="typo-card-meta"> {row.unit}</span>}
                 </td>
               </tr>

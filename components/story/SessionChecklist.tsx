@@ -23,7 +23,7 @@ const SessionChecklist: React.FC<SessionChecklistProps> = () => {
               '충분한 수분 (물 500ml 이상)',
             ].map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                <span className="mt-0.5 text-primary" aria-hidden="true">✓</span>
+                <span className="mt-0.5 text-primary dark:text-primary-lighter" aria-hidden="true">✓</span>
                 {item}
               </li>
             ))}

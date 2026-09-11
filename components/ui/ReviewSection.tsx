@@ -104,16 +104,19 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                         <span className="block font-bold typo-card-title text-base mb-1">
                                             {review.author}
                                         </span>
-                                        <span className="text-sm text-primary font-semibold">
+                                        <span className="text-sm text-primary dark:text-primary-lighter font-semibold">
                                             {review.category}
                                         </span>
+                                        {/* 메타·캡션 역할색은 라이트 gray-500 / 다크 gray-400 (docs/design-system.md §1).
+                                            여기만 라이트도 gray-400이라 흰 배경 위 2.51:1로 AA 미달이었다 —
+                                            이 저장소는 gray-500을 #4b5563으로 어둡게 조정해 뒀고 gray-400은 스톡이다. */}
                                         {review.datePublished && (
-                                            <span className="block text-xs text-gray-400 dark:text-gray-500 mt-1 tabular-nums">
+                                            <span className="block text-xs text-gray-500 dark:text-gray-400 mt-1 tabular-nums">
                                                 {review.datePublished.replace(/-/g, '.')}
                                             </span>
                                         )}
                                     </div>
-                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary" aria-hidden="true">
+                                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center text-primary dark:text-primary-lighter" aria-hidden="true">
                                         <MessageSquare size={20} />
                                     </div>
                                 </div>

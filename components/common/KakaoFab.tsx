@@ -65,7 +65,7 @@ const KakaoFab = ({ locale }: KakaoFabProps) => {
         href={telHref}
         onClick={handlePhoneClick}
         aria-label={phoneLabel}
-        className="inline-flex items-center justify-center w-[52px] h-[52px] rounded-full bg-white dark:bg-gray-800 text-primary dark:text-primary-light border border-gray-200 dark:border-gray-700 shadow-lg shadow-black/20 touch-manipulation transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="inline-flex items-center justify-center w-[52px] h-[52px] rounded-full bg-white dark:bg-gray-800 text-primary dark:text-primary-lighter border border-gray-200 dark:border-gray-700 shadow-lg shadow-black/20 touch-manipulation transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
       >
         <Phone size={22} aria-hidden="true" />
       </a>

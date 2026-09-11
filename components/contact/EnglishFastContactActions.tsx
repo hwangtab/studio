@@ -25,7 +25,7 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
     </p>
     <a
       href={`/${locale}/pricing`}
-      className="mt-2 inline-block text-xs font-semibold text-primary underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+      className="mt-2 inline-block text-xs font-semibold text-primary dark:text-primary-lighter underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
     >
       See transparent pricing →
     </a>
@@ -56,7 +56,7 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
           cta_id: 'en_contact_fast_email',
         })
       }
-      className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+      className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary dark:hover:text-primary-lighter focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
     >
       <Mail size={18} aria-hidden="true" />
       Email Studio NOL
@@ -70,7 +70,7 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
           cta_id: 'en_contact_fast_phone',
         })
       }
-      className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
+      className="mt-2 inline-flex w-full min-h-[44px] items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-800 transition-colors hover:border-primary hover:text-primary dark:hover:text-primary-lighter focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100"
     >
       <Phone size={18} aria-hidden="true" />
       Call Studio NOL

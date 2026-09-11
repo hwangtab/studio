@@ -85,7 +85,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
           className="absolute left-2 top-1/2 -translate-y-1/2 z-30 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/85 dark:bg-gray-800/85 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label={t('gallery.previous')}
         >
-          <ChevronLeft className="w-6 h-6 text-primary-dark dark:text-primary-light" />
+          <ChevronLeft className="w-6 h-6 text-primary-dark dark:text-primary-lighter" />
         </button>
       )}
       {showRightArrow && (
@@ -95,7 +95,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
           className="absolute right-2 top-1/2 -translate-y-1/2 z-30 min-h-[44px] min-w-[44px] inline-flex items-center justify-center bg-white/85 dark:bg-gray-800/85 rounded-full shadow-lg hover:bg-white dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           aria-label={t('gallery.next')}
         >
-          <ChevronRight className="w-6 h-6 text-primary-dark dark:text-primary-light" />
+          <ChevronRight className="w-6 h-6 text-primary-dark dark:text-primary-lighter" />
         </button>
       )}
 
@@ -158,7 +158,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
                 type="button"
                 onClick={() => scrollToImage(i)}
                 className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${i === activeIndex
-                    ? 'text-primary'
+                    ? 'text-primary dark:text-primary-lighter'
                     : 'text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500'
                   }`}
                 aria-label={t('gallery.goToImage', { number: i + 1 })}

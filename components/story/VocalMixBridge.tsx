@@ -77,7 +77,7 @@ const VocalMixBridge: React.FC<VocalMixBridgeProps> = ({ locale = 'ko' }) => {
               service_type: 'mixing',
             })
           }
-          className="rounded text-sm font-semibold text-primary hover:underline underline-offset-4 min-h-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+          className="rounded text-sm font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4 min-h-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
         >
           온라인 믹싱 의뢰 안내
         </NextLink>

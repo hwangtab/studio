@@ -122,7 +122,7 @@ export default function FundingManagePage(p: Props) {
                  private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
           <dl className="mt-5 space-y-3">
             {[
-              { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">{p.projectTitle}</a> },
+              { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">{p.projectTitle}</a> },
               { k: '리워드', v: `${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 후원 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),
@@ -156,7 +156,7 @@ export default function FundingManagePage(p: Props) {
 
           {status === 'pending' && p.depositUrl && (
             <p className="typo-card-meta mt-5">
-              <a href={p.depositUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">무통장입금 안내 보기</a>
+              <a href={p.depositUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">무통장입금 안내 보기</a>
             </p>
           )}
           {isPendingBank && (
@@ -181,10 +181,10 @@ export default function FundingManagePage(p: Props) {
             공개 목적지라 rel="noreferrer" — 이 URL에는 관리 토큰이 실린다(위 주석 참조). */}
         <p className="typo-card-meta mt-6">
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- next/link 클라 전환으로 나갔다 뒤로가기를 누르면 gtag가 토큰 붙은 이 URL로 page_view를 보낸다(위 주석). 문서 이동으로 유지한다. */}
-          <a href="/ko/funding/terms" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 약관·청약철회·환불 규정</a>
+          <a href="/ko/funding/terms" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">펀딩 약관·청약철회·환불 규정</a>
           {' · '}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- next/link 클라 전환으로 나갔다 뒤로가기를 누르면 gtag가 토큰 붙은 이 URL로 page_view를 보낸다(위 주석). 문서 이동으로 유지한다. */}
-          <a href="/ko/privacy-policy" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">개인정보 처리방침</a>
+          <a href="/ko/privacy-policy" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">개인정보 처리방침</a>
         </p>
       </main>
     </>

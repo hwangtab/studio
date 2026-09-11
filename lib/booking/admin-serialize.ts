@@ -53,6 +53,18 @@ export interface AdminBookingListItem {
   workOrder: AdminWorkOrderSummary | null;
   notificationError: string | null;
   gcalError: string | null;
+  /**
+   * 확정됐는데 구글 캘린더 이벤트가 없다 — 운영자 캘린더가 빈 채로 남아 오프라인 이중예약이 난다.
+   *
+   * **gcalError가 없어도 참일 수 있다.** 확정 트랜잭션(status='confirmed' + 후처리 센티널)이
+   * 커밋된 직후 ensureBookingEvent가 돌기 전에 함수가 죽으면 gcal_event_id·gcal_error가 둘 다
+   * NULL로 남는다. 예전엔 화면도 운영 점검도 gcalError만 봐서 이 예약이 어디에도 안 보였고,
+   * 운영자가 알림 배너를 보고 "알림 재발송"을 누르면 마지막 신호(notification_error 센티널)까지
+   * 지워져 무증상이 됐다.
+   *
+   * 믹싱·마스터링 주문은 bookings 행이 없어 항상 false다(점유할 슬롯이 없으니 캘린더도 없다).
+   */
+  gcalMissing: boolean;
   /** 이 주문에 기록된 결제 건수. 0인데 주문이 paid거나, 있는데 주문이 미결제면 미정합이다. */
   paymentCount: number;
   /**
@@ -130,6 +142,7 @@ export const serializeBookingForAdmin = (
       : null,
     notificationError: order.notificationError,
     gcalError: booking?.gcalError ?? null,
+    gcalMissing: booking !== undefined && booking.status === 'confirmed' && !booking.gcalEventId,
     paymentCount: order.payments.length,
     latestPaymentKeyPrefix: latestPayment ? latestPayment.paymentKey.slice(0, 8) : null,
     mismatch:

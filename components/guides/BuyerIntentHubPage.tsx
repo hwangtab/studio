@@ -186,7 +186,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
               className="p-6 rounded-xl glass-card"
             >
               <div className="inline-flex items-center justify-center p-2.5 bg-primary/10 dark:bg-primary/20 rounded-full mb-4" aria-hidden="true">
-                <CheckCircle2 className="text-primary dark:text-primary-light" size={20} />
+                <CheckCircle2 className="text-primary dark:text-primary-lighter" size={20} />
               </div>
               <h3 className="typo-card-subtitle mb-2 text-gray-900 dark:text-white">{feature.title}</h3>
               <p className="typo-card-body text-gray-600 dark:text-gray-400">{feature.description}</p>
@@ -267,7 +267,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
             <Link
               href={`/${locale}/portfolio`}
               prefetch={false}
-              className="inline-flex items-center gap-1 typo-card-cta text-primary hover:underline"
+              className="inline-flex items-center gap-1 typo-card-cta text-primary dark:text-primary-lighter hover:underline"
             >
               {t('nav.portfolio')}
               <ArrowRight size={16} aria-hidden="true" />
