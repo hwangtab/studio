@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
 import { type Locale, defaultLocale } from '../lib/i18n';
+import { isPrivatePageRoute } from '../lib/analytics/privatePaths';
 
 // 스크롤 인터랙션 보조 컴포넌트들은 첫 paint에 시각적 영향이 없어 hydration 후 lazy load.
 // LCP/FCP 측정 창에서 빠지면서 _app/Layout 청크에서 분리.
@@ -125,8 +126,24 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    */
   const isAdminPage = router.pathname.startsWith('/admin');
 
+  /**
+   * 결제·관리 화면도 사이트 껍데기를 두르지 않는다.
+   *
+   * URL에 관리 토큰·paymentKey·주문번호가 실리는 페이지들이다. 측정 스크립트는 `_app`이
+   * mount하지 않지만(lib/analytics/privatePaths.ts), 그 게이팅은 `router.asPath` 기준이라
+   * **클라이언트 전환으로 이 화면을 벗어나는 순간 무력해진다** — 공개 페이지에서 gtag가
+   * mount되고, 뒤로가기로 돌아오면 토큰이 붙은 URL로 page_view가 나간다. 본문 링크를 전부
+   * 문서 이동으로 바꿔도 헤더 로고·네비·푸터가 next/link라 그대로 재현되고, 실제로는 본문
+   * "홈으로"보다 헤더 로고가 더 자주 눌린다.
+   *
+   * 계약 화면과 같은 판단이기도 하다 — 결제 결과·예약 확인은 한 가지 일만 하러 온 화면이라
+   * 네비게이션은 새게 만들 뿐이고, 각 페이지가 자기 상단에서 브랜드를, 본문에서 이탈 경로를
+   * 직접 밝힌다. `/funding/[slug]/pledge`는 결제 전 입력 폼이라 제외한다(위 파일 주석 참조).
+   */
+  const isPrivatePaymentPage = isPrivatePageRoute(router.pathname);
+
   /** 한 가지 일만 하러 온 화면 — 사이트 헤더·푸터·플로팅 버튼을 두르지 않는다. */
-  const isBareLayout = isContractPage || isAdminPage;
+  const isBareLayout = isContractPage || isAdminPage || isPrivatePaymentPage;
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const skipLabel = t('actions.skipToContent');
 

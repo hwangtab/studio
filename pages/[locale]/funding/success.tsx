@@ -1,7 +1,13 @@
+/* eslint-disable @next/next/no-html-link-for-pages --
+ * private 페이지(URL에 관리 토큰·paymentKey·orderId가 실린다)의 이탈 링크는 next/link가
+ * 아니라 문서 이동이어야 한다. 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면, 그 사이
+ * mount된 gtag가 살아 있는 채로 비밀값이 붙은 URL에 돌아와 page_view를 보낸다.
+ * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
+ * tests/pages/privateLinkNavigation.test.ts
+ */
 import { useEffect } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
 import { trackMicroEvent } from '../../../utils/analytics';
@@ -32,8 +38,12 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
         <title>후원 결제 완료 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-xl px-4 pb-24 pt-28 sm:pt-32">
+      <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
         <div className="glass-card rounded-2xl p-6 text-center sm:p-8">
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="typo-card-meta mb-2">스튜디오 놀</p>
         {outcome === 'confirmed' ? (
           <>
             <h1 className="typo-page-title">후원이 확정되었습니다</h1>
@@ -45,14 +55,22 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
             </p>
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
                 실패하면 고객이 후원을 스스로 취소할 방법이 아예 없었다. */}
+            {/* 이 URL에는 토스 paymentKey·orderId가, manageUrl에는 관리 토큰이 실린다.
+                이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+              1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+                 그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+              2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+                 strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+                 없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+                 private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
             {manageUrl && (
               <p className="mt-6">
-                <Link
+                <a
                   href={manageUrl}
                   className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
                 >
                   후원 확인·취소 페이지 열기
-                </Link>
+                </a>
               </p>
             )}
             {manageUrl && (
@@ -62,9 +80,9 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
             )}
             {projectSlug && (
               <p className="typo-card-meta mt-6">
-                <Link href={`/ko/funding/${projectSlug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">
+                <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">
                   프로젝트로 돌아가기
-                </Link>
+                </a>
               </p>
             )}
           </>
@@ -74,18 +92,19 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
             <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
             <p className="typo-card-meta mx-auto mt-3 max-w-md">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
             {/* 오류 분기에도 눌러야 할 곳이 하나는 있어야 한다 — fail.tsx와 같은 solid 버튼. */}
-            <Link
+            <a
               href="/ko/funding"
+              rel="noreferrer"
               className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
             >
               펀딩 목록으로 돌아가기
-            </Link>
+            </a>
           </>
         )}
         </div>
         {outcome === 'confirmed' && (
           <p className="typo-card-meta mt-6 text-center">
-            <Link href="/ko/funding" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 목록으로</Link>
+            <a href="/ko/funding" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 목록으로</a>
           </p>
         )}
       </main>

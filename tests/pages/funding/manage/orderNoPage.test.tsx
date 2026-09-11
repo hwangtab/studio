@@ -46,6 +46,15 @@ it('비JSON 응답이면 서버 오류 문구', async () => {
   expect(await screen.findByText('서버 오류가 발생했습니다.')).toBeInTheDocument();
 });
 
+// 이 페이지의 URL에는 관리 토큰이 실린다. 이탈 링크가 클라 전환이면 공개 페이지에 나갔다
+// 뒤로가기 할 때 gtag가 토큰 붙은 URL로 page_view를 보낸다 — 링크 종류(next/link 아님)는
+// tests/pages/privateLinkNavigation.test.ts가 소스로 단언하고, 여기서는 href를 확인한다.
+it('프로젝트·무통장 안내 링크는 href를 가진 앵커다', () => {
+  render(<FundingManagePage {...baseProps} status="pending" paymentMethod="bank_transfer" depositUrl="/ko/funding/deposit/FND-1?token=tok" />);
+  expect(screen.getByRole('link', { name: '데모' })).toHaveAttribute('href', '/ko/funding/demo');
+  expect(screen.getByRole('link', { name: /무통장입금 안내/ })).toHaveAttribute('href', '/ko/funding/deposit/FND-1?token=tok');
+});
+
 // 부분환불 건은 상태 코드가 그대로 노출돼 고객이 'partially_refunded'를 읽고 있었다.
 it('partially_refunded 상태는 한국어 라벨로 보인다', () => {
   render(<FundingManagePage {...baseProps} status="partially_refunded" canCancel={false} paymentMethod="toss" />);

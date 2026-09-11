@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { type KeyboardEvent, useEffect, useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import TossPaymentWidget from '../booking/TossPaymentWidget';
@@ -19,6 +19,38 @@ const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
 const choiceRow =
   'flex items-start gap-3 rounded-xl border p-4 transition-colors cursor-pointer border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary-light/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:border-primary-light dark:has-[:checked]:bg-primary-light/10';
 const radioClass = 'mt-0.5 h-4 w-4 shrink-0 accent-primary';
+
+/**
+ * 수량·추가 후원금은 **문자열 상태로 자유 입력**받고, 정규화는 blur와 제출 직전에만 한다.
+ *
+ * 예전엔 onChange가 매 키 입력마다 정규화한 값을 상태로 되돌려 넣었다. 그래서 추가
+ * 후원금은 1,000원 단위 내림이 글자마다 걸려 `5`→0, `50`→0, `500`→0 … 즉 **어떤 값도
+ * 타이핑으로 넣을 수 없었고**(스피너가 없는 모바일에서는 기능 자체가 없었다), 수량은
+ * 기본값 `1`에 한 글자만 더 쳐도(`12`) 곧바로 상한으로 튀었다.
+ *
+ * native `min`/`max`/`step`은 그대로 둔다 — 데스크톱 스피너와 ↑↓ 키가 추가 후원금에서
+ * **유일하게 동작하던 입력 수단**이라, 없애면 `step` 기본값 1로 ↑ 한 번이 `1`이 되고 blur의
+ * 1,000원 단위 내림에 0으로 지워진다. 대신 두 칸에서 Enter를 가로채(`onKeyDown`) 정규화 뒤
+ * 직접 제출한다 — 브라우저 제약 검증(stepMismatch·rangeOverflow) 경로를 아예 타지 않으므로
+ * 정규화 전 중간값이 남은 채 Enter를 눌러도 말풍선으로 막히지 않는다. `noValidate`는 쓰지
+ * 않는다(이름·연락처·이메일의 native `required`·type=email 검증까지 죽는다).
+ *
+ * 규칙은 아래 두 함수 한 곳에만 있고, 서버 `lib/funding/validation.ts`(수량 1~MAX_QUANTITY
+ * 정수, 추가금 0~MAX_ADDITIONAL_AMOUNT의 ADDITIONAL_AMOUNT_STEP 배수)와 같은 규칙이다.
+ * 최종 판정은 언제나 서버다.
+ */
+const clampQuantity = (raw: string, cap: number): number => {
+  const n = Math.floor(Number(raw));
+  // 빈 문자열·`-`·`.` 같은 타이핑 중간 상태는 폴백값으로 읽는다(입력 자체는 막지 않는다).
+  return Number.isFinite(n) ? Math.min(cap, Math.max(1, n)) : 1;
+};
+
+const clampAdditional = (raw: string): number => {
+  const n = Number(raw);
+  if (!Number.isFinite(n)) return 0;
+  const stepped = Math.floor(Math.max(0, n) / ADDITIONAL_AMOUNT_STEP) * ADDITIONAL_AMOUNT_STEP;
+  return Math.min(MAX_ADDITIONAL_AMOUNT, stepped);
+};
 
 function StepHeader({ n, title, hint }: { n: number; title: string; hint?: string }) {
   return (
@@ -41,8 +73,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   const uid = useId();
   const [rewardId, setRewardId] = useState(initialRewardId ?? project.rewards[0].id);
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
-  const [quantity, setQuantity] = useState(1);
-  const [additional, setAdditional] = useState(0);
+  const [quantityText, setQuantityText] = useState('1');
+  const [additionalText, setAdditionalText] = useState('0');
   const [method, setMethod] = useState<'toss' | 'bank_transfer'>('toss');
   const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false, termsAgreed: false });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
@@ -53,6 +85,10 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
 
   const limited = reward.totalQuantity !== null;
   useEffect(() => { if (limited && method === 'bank_transfer') setMethod('toss'); }, [limited, method]);
+  // 화면 요약·서버 전송에 쓰는 값은 언제나 정규화본이다 — 입력 칸의 문자열은 건드리지 않는다.
+  const quantityCap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
+  const quantity = clampQuantity(quantityText, quantityCap);
+  const additional = clampAdditional(additionalText);
   const preview = useMemo(() => computeFundingAmounts(reward.amount, quantity, additional), [reward.amount, quantity, additional]);
 
   useEffect(() => {
@@ -67,6 +103,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   const submit = async () => {
     setError(null);
     if (!form.termsAgreed) { setError('약관에 동의해 주세요.'); return; }
+    // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
+    setQuantityText(String(quantity));
+    setAdditionalText(String(additional));
     setSubmitting(true);
     try {
       const res = await fetch('/api/funding/pledges', {
@@ -89,6 +128,21 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       setCreated(json);
     } catch { setError('네트워크 오류가 발생했습니다.'); }
     finally { setSubmitting(false); }
+  };
+
+  /**
+   * 숫자 칸에서 Enter를 가로챈다. 그냥 두면 브라우저의 암묵적 제출이 제약 검증
+   * (stepMismatch·rangeOverflow)을 먼저 돌려, 아직 정규화 전인 중간값(`5500`·`12`)에
+   * 말풍선을 띄우고 제출을 막는다 — 우리가 곧바로 정규화해 줄 값인데도.
+   *
+   * 이 경로는 native 검증을 건너뛰므로 이름·연락처·이메일 누락은 서버가 판정해 메시지를
+   * 돌려준다(`validateCreatePledgePayload`). 버튼 클릭·다른 칸에서의 Enter는 종전대로
+   * form의 native 검증을 탄다.
+   */
+  const handleNumericEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    void submit();
   };
 
   if (created) {
@@ -127,7 +181,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
             const soldOut = left !== null && left !== undefined && left <= 0;
             return (
               <label key={r.id} className={`${choiceRow} ${soldOut ? 'cursor-not-allowed opacity-50' : ''}`}>
-                <input type="radio" name="reward" value={r.id} className={radioClass} checked={rewardId === r.id} disabled={soldOut} onChange={() => { setRewardId(r.id); setQuantity(1); }} />
+                <input type="radio" name="reward" value={r.id} className={radioClass} checked={rewardId === r.id} disabled={soldOut} onChange={() => { setRewardId(r.id); setQuantityText('1'); }} />
                 <span className="min-w-0">
                   <span className="block font-bold text-gray-900 dark:text-white">{formatPriceAmount(r.amount)}원</span>
                   <span className="typo-card-meta block">{r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}</span>
@@ -138,18 +192,19 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <Field id={`${uid}-qty`} label="수량">
-              <TextInput type="number" min={1} max={Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY))} value={quantity}
-                onChange={(e) => {
-                  const cap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
-                  setQuantity(Math.min(cap, Math.max(1, Number(e.target.value) || 1)));
-                }} />
+            <Field id={`${uid}-qty`} label="수량" hint={`1~${quantityCap}개까지 후원할 수 있습니다.`}>
+              <TextInput type="number" inputMode="numeric" min={1} max={quantityCap} step={1} value={quantityText}
+                onChange={(e) => setQuantityText(e.target.value)}
+                onKeyDown={handleNumericEnter}
+                onBlur={() => setQuantityText(String(clampQuantity(quantityText, quantityCap)))} />
             </Field>
           </div>
           <div>
-            <Field id={`${uid}-add`} label="추가 후원금" hint="선택 항목입니다. 1,000원 단위로 올릴 수 있습니다.">
-              <TextInput type="number" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additional}
-                onChange={(e) => setAdditional(Math.min(MAX_ADDITIONAL_AMOUNT, Math.max(0, Math.floor((Number(e.target.value) || 0) / ADDITIONAL_AMOUNT_STEP) * ADDITIONAL_AMOUNT_STEP)))} />
+            <Field id={`${uid}-add`} label="추가 후원금" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
+              <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
+                onChange={(e) => setAdditionalText(e.target.value)}
+                onKeyDown={handleNumericEnter}
+                onBlur={() => setAdditionalText(String(clampAdditional(additionalText)))} />
             </Field>
           </div>
         </div>
