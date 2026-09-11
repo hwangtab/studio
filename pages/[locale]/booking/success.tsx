@@ -92,7 +92,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
               </p>
             )}
             {manageUrl && (
-              <p className="mt-3 break-all text-xs text-gray-500">
+              <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">
                 이 주소를 저장해 두세요: {manageUrl}
               </p>
             )}
@@ -101,7 +101,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
           <>
             <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-            <p className="mt-2 text-sm text-gray-500">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
           </>
         )}
         <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>

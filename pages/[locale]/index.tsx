@@ -278,7 +278,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               href={getLink(service.link)}
               variant="highlight"
               cta={
-                <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
+                <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-lighter transition-colors duration-300">
                   {t('home.sections.servicesCta')}
                   <span className="ml-1">
                     <ArrowRight size={14} aria-hidden="true" />

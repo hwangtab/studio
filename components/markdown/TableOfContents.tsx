@@ -57,7 +57,7 @@ const TableOfContents = ({ content, title, className }: TableOfContentsProps) =>
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                className={`block py-1.5 text-sm leading-snug rounded transition-colors hover:text-primary dark:hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${heading.level >= 3
+                className={`block py-1.5 text-sm leading-snug rounded transition-colors hover:text-primary dark:hover:text-accent-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${heading.level >= 3
                   ? 'text-gray-500 dark:text-gray-400'
                   : 'text-gray-700 dark:text-gray-300 font-medium'
                   }`}

@@ -13,9 +13,9 @@ export default function FundingTrustNotice() {
         <p>후원은 리워드 선주문 형태의 통신판매 계약이며 기부가 아닙니다. 목표 미달 시에도 모금액으로 제작을 진행합니다(Keep-it-All).</p>
       </div>
       <p className="mt-4 border-t border-gray-200 pt-3 text-xs text-gray-600 dark:border-gray-700 dark:text-gray-300">
-        <Link href="/ko/funding/terms" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 약관·청약철회·환불 규정</Link>
+        <Link href="/ko/funding/terms" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">펀딩 약관·청약철회·환불 규정</Link>
         {' · '}
-        <Link href="/ko/privacy-policy" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">개인정보 처리방침</Link>
+        <Link href="/ko/privacy-policy" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">개인정보 처리방침</Link>
       </p>
     </div>
   );

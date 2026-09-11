@@ -154,7 +154,7 @@ export const MobileNav = ({
               tabIndex={isOpen ? 0 : -1}
               className={`flex items-center justify-center min-h-[44px] px-2 py-2 text-sm font-bold rounded-lg text-center transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === link.href
                 ? 'bg-primary text-white'
-                : 'bg-primary/10 text-primary dark:text-accent hover:bg-primary/20'
+                : 'bg-primary/10 text-primary dark:text-accent-light hover:bg-primary/20'
                 }`}
             >
               {link.label}
@@ -194,7 +194,7 @@ export const MobileNav = ({
                       aria-current={currentPath === item.href ? 'page' : undefined}
                       tabIndex={isOpen ? 0 : -1}
                       className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === item.href
-                        ? 'bg-primary/10 text-primary dark:text-accent font-medium'
+                        ? 'bg-primary/10 text-primary dark:text-accent-light font-medium'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                         }`}
                     >

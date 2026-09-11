@@ -173,7 +173,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
             </div>
           ))}
-          <p className="text-sm text-gray-400 dark:text-gray-500 text-center mt-4 pt-1">
+          <p className="text-sm text-gray-400 dark:text-gray-400 text-center mt-4 pt-1">
             {t(k('personaNotFitNote'))}
           </p>
         </div>
@@ -253,13 +253,13 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             </ul>
           </div>
           <div className="bg-gray-50 dark:bg-gray-900/50 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
-            <h3 className="font-semibold text-gray-400 dark:text-gray-500 mb-4 flex items-center gap-2 text-sm">
+            <h3 className="font-semibold text-gray-400 dark:text-gray-400 mb-4 flex items-center gap-2 text-sm">
               <X size={16} className="flex-shrink-0" />
               {t(k('deliverablesExcludedTitle'))}
             </h3>
             <ul className="space-y-2.5">
               {Array.isArray(deliverablesExcluded) && deliverablesExcluded.map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-500 dark:text-gray-500">
+                <li key={i} className="flex items-start gap-2 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex-shrink-0 mt-0.5">—</span>
                   <span>{item}</span>
                 </li>

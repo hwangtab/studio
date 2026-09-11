@@ -111,10 +111,10 @@ export const DropdownMenu = ({
                 type="button"
                 className={`flex items-center gap-1 px-2 xl:px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                     ? !isTransparent
-                        ? 'text-primary dark:text-accent font-bold'
+                        ? 'text-primary dark:text-accent-light font-bold'
                         : 'text-white font-bold bg-white/20'
                     : !isTransparent
-                        ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent'
+                        ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary dark:hover:text-accent-light'
                         : 'text-white hover:bg-white/10 hover:text-white'
                     }`}
                 aria-expanded={isOpen}
@@ -158,7 +158,7 @@ export const DropdownMenu = ({
                                         }}
                                         onKeyDown={(e) => handleItemKeyDown(e, index)}
                                         className={`flex items-center min-h-[44px] px-4 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:bg-primary/5 focus-visible:text-primary dark:focus-visible:text-primary-lighter ${isItemActive
-                                            ? 'bg-primary/5 text-primary dark:text-accent font-medium'
+                                            ? 'bg-primary/5 text-primary dark:text-accent-light font-medium'
                                             : 'text-gray-700 dark:text-gray-200 hover:bg-white/45 dark:hover:bg-white/10'
                                             }`}
                                     >

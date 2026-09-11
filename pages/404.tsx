@@ -41,7 +41,7 @@ const NotFoundPage: NextPage = () => {
 
       {/* badge를 h1(delay 0)보다 DOM에 먼저 두므로 진입 delay를 0으로 맞춰 (latent) 순서 역전 제거 */}
       <m.div
-        className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-light"
+        className="inline-flex items-center justify-center rounded-full bg-primary/10 dark:bg-primary/20 px-6 py-3 mb-6 typo-card-subtitle text-primary-dark dark:text-primary-lighter"
         {...PAGE_SUBTITLE_ANIMATION}
         transition={{ ...PAGE_SUBTITLE_ANIMATION.transition, delay: 0 }}
       >
@@ -109,7 +109,7 @@ const NotFoundPage: NextPage = () => {
             <Link
               key={item.href}
               href={item.href}
-              className="inline-flex items-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:text-accent transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+              className="inline-flex items-center min-h-[44px] px-4 py-2 rounded-full text-sm font-medium bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-primary/10 hover:text-primary dark:hover:text-accent-light transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
             >
               {item.label}
             </Link>

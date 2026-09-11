@@ -12,7 +12,7 @@ interface KoreanFastContactActionsProps {
 
 const KoreanFastContactActions = ({ locale, naverMapUrl, kakaoUrl, phone }: KoreanFastContactActionsProps) => (
   <div className="mb-6 rounded-lg border border-primary/20 bg-primary/5 p-4 dark:border-primary-light/30 dark:bg-primary-light/10">
-    <p className="text-sm font-semibold text-gray-950 dark:text-primary-light">
+    <p className="text-sm font-semibold text-gray-950 dark:text-primary-lighter">
       빠른 문의·방문 경로
     </p>
     <div className="mt-3 grid gap-2 sm:grid-cols-3">

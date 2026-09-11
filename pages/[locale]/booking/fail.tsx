@@ -64,12 +64,12 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
         <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
         <h1 className="typo-page-title">결제를 완료하지 못했습니다</h1>
         <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-        {code && <p className="mt-2 text-sm text-gray-500">오류 코드: {code}</p>}
-        {orderNo && <p className="mt-1 text-sm text-gray-500">주문번호: {orderNo}</p>}
-        <p className="mt-2 text-sm text-gray-500">예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
+        {code && <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">오류 코드: {code}</p>}
+        {orderNo && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">주문번호: {orderNo}</p>}
+        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
         {/* 정본 연락처를 상시 표기한다 — message가 비거나 알 수 없는 코드여도 기댈 곳이
             화면에 있어야 한다(funding/fail.tsx와 같은 이유). */}
-        <p className="mt-3 text-sm text-gray-500">문의: 010-4255-7893 · hello@studionol.co.kr</p>
+        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893 · hello@studionol.co.kr</p>
         {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). 이 페이지는
             ko 전용(아래 getServerSideProps가 비-ko를 /ko로 리다이렉트)이라 분기가 필요 없다. */}
         <p className="mt-6">
@@ -81,8 +81,7 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
           >
             카카오톡으로 문의하기
           </a>
-        </p>
-        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+        </p>        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
             1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
                그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
             2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가

@@ -152,7 +152,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
               <p className="typo-card-meta mt-6">
                 {/* 공개 목적지에는 rel="noreferrer" — 이 URL에 비밀값은 없지만(주문번호뿐),
                     도착지 gtag의 page_referrer에 주문번호까지 실어 보낼 이유는 없다. */}
-                <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">
+                <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
                   프로젝트로 돌아가기
                 </a>
               </p>
@@ -199,7 +199,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
         </div>
         {outcome === 'confirmed' && (
           <p className="typo-card-meta mt-6 text-center">
-            <a href="/ko/funding" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 목록으로</a>
+            <a href="/ko/funding" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">펀딩 목록으로</a>
           </p>
         )}
       </main>

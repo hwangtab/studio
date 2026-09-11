@@ -152,7 +152,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                 <Link
                   href={`/${locale}/recording`}
                   prefetch={false}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px]"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px]"
                 >
                   Recording studio &amp; rates <ArrowRight size={16} aria-hidden="true" />
                 </Link>

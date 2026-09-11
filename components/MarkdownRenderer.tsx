@@ -162,7 +162,7 @@ const STATIC_OVERRIDES = {
   },
   strong: {
     component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <strong className="font-bold text-primary-dark dark:text-primary-light" {...props}>
+      <strong className="font-bold text-primary-dark dark:text-primary-lighter" {...props}>
         {children}
       </strong>
     ),
@@ -311,7 +311,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
     a: {
       component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
         if (!isAllowedLinkHref(href)) {
-          return <span className="text-gray-500">{children}</span>;
+          return <span className="text-gray-500 dark:text-gray-400">{children}</span>;
         }
 
         // tel:·mailto:는 라우팅 대상이 아니다. 예전에는 isExternal(http/https) 판정에만

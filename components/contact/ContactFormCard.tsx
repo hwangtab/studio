@@ -25,7 +25,7 @@ type IconTextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
 const IconTextArea = ({ icon: Icon, invalid, className, ...props }: IconTextAreaProps) => (
   <div className="relative">
     <div className="absolute top-3 left-3 pointer-events-none">
-      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-400" aria-hidden="true" />
     </div>
     <TextArea invalid={invalid} className={['pl-10', className].filter(Boolean).join(' ')} {...props} />
   </div>

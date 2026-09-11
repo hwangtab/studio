@@ -80,7 +80,7 @@ const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works
       />
 
       <Section variant="alternate" className="pt-8 pb-12">
-        <Link href={`/${locale}/artists`} className="inline-flex items-center gap-1 text-sm text-primary dark:text-primary-light">
+        <Link href={`/${locale}/artists`} className="inline-flex items-center gap-1 text-sm text-primary dark:text-primary-lighter">
           <ArrowLeft className="h-4 w-4" aria-hidden="true" /> {t('artists.detail.backToList')}
         </Link>
         <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-start">

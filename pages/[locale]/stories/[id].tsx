@@ -360,7 +360,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
               ))}
             </div>
           ) : (
-            <p className="typo-card-body text-gray-500 mb-6">{t('stories.detail.noRelated')}</p>
+            <p className="typo-card-body text-gray-500 dark:text-gray-400 mb-6">{t('stories.detail.noRelated')}</p>
           )}
           <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />

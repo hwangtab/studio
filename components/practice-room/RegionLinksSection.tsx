@@ -35,7 +35,7 @@ const RegionLinksSection = ({ locale }: RegionLinksSectionProps) => {
             if (items.length === 0) return null;
             return (
               <div key={group}>
-                <h3 className="text-sm font-bold text-primary dark:text-primary-light mb-3 uppercase tracking-wide">
+                <h3 className="text-sm font-bold text-primary dark:text-primary-lighter mb-3 uppercase tracking-wide">
                   {PRACTICE_ROOM_REGION_GROUP_LABELS[group]}
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -46,7 +46,7 @@ const RegionLinksSection = ({ locale }: RegionLinksSectionProps) => {
                       prefetch={false}
                       className="group block px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary-light hover:shadow-md transition-all duration-200"
                     >
-                      <div className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-light transition-colors">
+                      <div className="font-semibold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                         {lp.region} 음악연습실
                       </div>
                       <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">

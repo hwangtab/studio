@@ -56,7 +56,7 @@ const AudienceCard = ({
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-3">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={22} aria-hidden="true" />
+        <Icon className="text-primary dark:text-primary-lighter" size={22} aria-hidden="true" />
       </div>
       <h3 className="typo-card-subtitle">{title}</h3>
     </div>

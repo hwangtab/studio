@@ -12,7 +12,7 @@ interface RelatedGuidesSectionProps {
 }
 
 const VISIBLE_GUIDES = 32;
-const relatedGuideLinkClassName = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-200';
+const relatedGuideLinkClassName = 'inline-flex items-center justify-between gap-2 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-lighter transition-colors duration-200';
 
 const RelatedGuidesSection = ({ title, locale }: RelatedGuidesSectionProps) => {
   // 앵커 타이틀이 한국어 전용이므로 ko 허브에서만 렌더 (기존 동작 유지).
@@ -52,7 +52,7 @@ const RelatedGuidesSection = ({ title, locale }: RelatedGuidesSectionProps) => {
         </div>
         {hiddenRelatedGuides.length > 0 && (
           <details className="mt-6 group">
-            <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-light transition-colors">
+            <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-lighter transition-colors">
               <span className="group-open:hidden">
                 가이드 +{hiddenRelatedGuides.length}개 더 보기
               </span>

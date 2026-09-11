@@ -351,7 +351,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         <div className="p-8">
                             <div className="flex justify-center items-end mb-2">
                                 <span className="text-4xl font-bold text-gray-800 dark:text-white">{formatPriceAmount(LESSON_MONTHLY_PRICE)}</span>
-                                <span className="text-xl text-gray-500 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
+                                <span className="text-xl text-gray-500 dark:text-gray-400 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
                             </div>
                             <p className="text-center text-body-2 text-gray-600 dark:text-gray-300 mb-6 break-keep">
                                 {t('lesson.pricing.breakdown')}

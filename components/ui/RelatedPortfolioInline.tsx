@@ -30,7 +30,7 @@ const RelatedPortfolioInline = ({ items, locale }: RelatedPortfolioInlineProps) 
       <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="inline-flex items-center justify-center p-2.5 bg-primary/10 dark:bg-primary/20 rounded-full" aria-hidden="true">
-            <Disc className="text-primary dark:text-primary-light" size={20} />
+            <Disc className="text-primary dark:text-primary-lighter" size={20} />
           </div>
           <h3
             id="story-related-portfolio-heading"

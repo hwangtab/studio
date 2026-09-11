@@ -19,7 +19,7 @@ const CurriculumCard = ({ step, title, subtitle, phaseLabel, description, icon: 
             {step}
         </div>
         <div className="relative z-10">
-            <div className="bg-primary/10 dark:bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary dark:text-primary-light">
+            <div className="bg-primary/10 dark:bg-primary/20 w-16 h-16 rounded-2xl flex items-center justify-center mb-6 text-primary dark:text-primary-lighter">
                 <Icon size={32} />
             </div>
             {phaseLabel && (

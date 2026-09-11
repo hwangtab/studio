@@ -180,7 +180,7 @@ export default function SubscribeManagePage(props: ManageProps) {
                           ? 'font-medium text-green-700 dark:text-green-400'
                           : p.status === 'failed'
                             ? 'font-medium text-red-600 dark:text-red-400'
-                            : 'font-medium text-gray-500'
+                            : 'font-medium text-gray-500 dark:text-gray-400'
                       }
                     >
                       {PAYMENT_STATUS_LABELS[p.status]}

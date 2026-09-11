@@ -64,9 +64,9 @@ const ContactInfoCard = ({
               cta_id: 'contact_info_naver_map',
             })
           }
-          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors touch-manipulation"
         >
-          <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
+          <MapPin className="w-5 h-5 mr-2 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <span className="leading-relaxed">{siteConfig.contact.address}</span>
         </a>
         <a
@@ -78,9 +78,9 @@ const ContactInfoCard = ({
               cta_id: 'contact_info_phone',
             })
           }
-          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors touch-manipulation"
         >
-          <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
+          <Phone className="w-5 h-5 mr-2 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <span className="leading-relaxed">{siteConfig.contact.phone}</span>
         </a>
         <a
@@ -92,9 +92,9 @@ const ContactInfoCard = ({
               cta_id: 'contact_info_email',
             })
           }
-          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors touch-manipulation"
         >
-          <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
+          <Mail className="w-5 h-5 mr-2 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <span className="leading-relaxed">{siteConfig.contact.email}</span>
         </a>
         <a
@@ -108,9 +108,9 @@ const ContactInfoCard = ({
               cta_id: 'contact_info_kakao',
             })
           }
-          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-light transition-colors touch-manipulation"
+          className="flex items-center typo-card-body hover:text-primary dark:hover:text-primary-lighter transition-colors touch-manipulation"
         >
-          <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-light" aria-hidden="true" />
+          <MessageCircle className="w-5 h-5 mr-2 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <span className="leading-relaxed">{t('actions.kakao')}</span>
         </a>
       </div>

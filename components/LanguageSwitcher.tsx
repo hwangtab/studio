@@ -151,7 +151,7 @@ export const LanguageSwitcher = ({
                     className={`
                       flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                       ${currentLocale === locale
-                        ? 'bg-primary/10 text-primary dark:text-accent font-medium'
+                        ? 'bg-primary/10 text-primary dark:text-accent-light font-medium'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
                       }
                     `}
@@ -197,7 +197,7 @@ export const LanguageSwitcher = ({
               : 'bg-white/20 text-white shadow-sm'
             : ''}
           ${!isOpen && !isFloating
-            ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+            ? 'text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800'
             : !isOpen
               ? 'text-white/90 hover:text-white hover:bg-white/10'
               : ''}
