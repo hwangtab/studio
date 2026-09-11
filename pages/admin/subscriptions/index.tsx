@@ -142,7 +142,7 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
                       </td>
                       <td className="px-4 py-3">
                         <div className="font-medium text-gray-900">{sub.customerName}</div>
-                        <div className="text-gray-400 text-xs">{sub.customerPhone}</div>
+                        <div className="text-gray-500 text-xs">{sub.customerPhone}</div>
                       </td>
                       <td className="px-4 py-3">
                         <span
@@ -156,7 +156,7 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
                         {sub.failedCount > 0 ? (
                           <span className="text-red-600 font-medium">{sub.failedCount}</span>
                         ) : (
-                          <span className="text-gray-400">-</span>
+                          <span className="text-gray-500">-</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-right font-medium">
@@ -166,7 +166,7 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
                   ))}
                   {subscriptions.length === 0 && (
                     <tr>
-                      <td colSpan={6} className="px-4 py-8 text-center text-gray-400">
+                      <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
                         구독이 없습니다.
                       </td>
                     </tr>
