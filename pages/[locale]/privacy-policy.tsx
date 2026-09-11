@@ -3,6 +3,13 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { Section } from '../../components/ui/Section';
 import { getSiteConfig } from '../../data/siteConfig';
+import {
+  FUNDING_COLLECTED_ITEMS,
+  FUNDING_COLLECTION_PURPOSES,
+  FUNDING_DATA_PROCESSORS,
+  PRIVACY_LEGAL_RETENTION_TEXT,
+  PRIVACY_RETENTION_TEXT,
+} from '../../lib/funding/policy';
 import { buildPageStaticProps, getCommonStaticPaths } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 
@@ -13,6 +20,10 @@ interface PrivacyPolicyProps {
 type PolicySection = {
   heading: string;
   body: string;
+  /** 본문 아래 목록. 수집 항목·이용 목적처럼 열거가 본문보다 읽기 쉬운 곳에만 쓴다. */
+  items?: readonly string[];
+  /** 수탁자 표. 개인정보보호법 제26조 고지 형식(수탁자·업무·항목)을 그대로 따른다. */
+  processors?: ReadonlyArray<{ name: string; purpose: string; items: string }>;
 };
 
 type PolicyCopy = {
@@ -23,12 +34,13 @@ type PolicyCopy = {
   sections: PolicySection[];
 };
 
-const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
+/** 테스트(tests/pages/privacy-policy.test.tsx)가 로케일 간 모순을 검사하므로 export한다. */
+export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
   ko: {
     title: '개인정보 처리방침',
-    subtitle: '스튜디오 놀은 문의 접수 및 상담 응대에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
+    subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 2월 12일',
+    lastUpdatedValue: '2026년 9월 11일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
@@ -40,7 +52,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. 보유 및 이용 기간',
-        body: '개인정보는 상담 완료 후 지체 없이 파기하며, 관련 법령에 보관 의무가 있는 경우에만 해당 기간 동안 보관합니다.',
+        body: '문의·상담으로 수집한 개인정보는 상담 완료 후 지체 없이 파기합니다. 펀딩 후원으로 수집한 개인정보의 보유 기간은 아래 8항을 따르며, 법령에 보관 의무가 있는 기록은 해당 기간 동안 보관합니다.',
       },
       {
         heading: '4. 제3자 제공 및 처리위탁',
@@ -50,13 +62,35 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '5. 이용자의 권리',
         body: '정보주체는 언제든지 개인정보 열람, 정정, 삭제를 요청할 수 있으며, 요청 시 지체 없이 조치합니다.',
       },
+      // 6~9항은 펀딩(리워드 선주문) 전용이다. 펀딩 신청 화면의 동의 체크박스 하나가 펀딩 약관과
+      // 이 처리방침을 함께 동의받으므로, 두 문서의 보유기간·수집 항목이 어긋나면 그 동의가 무효가 된다.
+      // 보유기간·법정 보존 문구는 lib/funding/policy.ts의 상수를 약관(제13조)과 함께 쓴다(복제 금지).
+      {
+        heading: '6. 펀딩(리워드 선주문) 수집 항목',
+        body: '펀딩 후원은 통신판매 계약이라 문의·상담과 수집 항목이 다릅니다. 후원 신청 화면에서 다음 항목을 수집합니다.',
+        items: FUNDING_COLLECTED_ITEMS,
+      },
+      {
+        heading: '7. 펀딩 개인정보의 이용 목적',
+        body: '후원으로 수집한 개인정보는 아래 목적으로만 이용합니다.',
+        items: FUNDING_COLLECTION_PURPOSES,
+      },
+      {
+        heading: '8. 펀딩 개인정보의 보유·이용 기간',
+        body: `후원으로 수집한 개인정보는 ${PRIVACY_RETENTION_TEXT} 보관한 뒤 지체 없이 파기합니다. 다만 ${PRIVACY_LEGAL_RETENTION_TEXT} 후원자가 후원을 취소해 환불이 완료된 경우에도 이 거래기록 보존 의무는 그대로 적용됩니다.`,
+      },
+      {
+        heading: '9. 펀딩 개인정보의 처리위탁',
+        body: '후원 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다.',
+        processors: FUNDING_DATA_PROCESSORS,
+      },
     ],
   },
   en: {
     title: 'Privacy Policy',
     subtitle: 'Studio NOL collects only the minimum personal data required for inquiries and consultation support.',
     lastUpdatedLabel: 'Effective date',
-    lastUpdatedValue: 'February 12, 2026',
+    lastUpdatedValue: 'September 11, 2026',
     sections: [
       {
         heading: '1. Personal data we collect',
@@ -68,7 +102,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. Retention period',
-        body: 'Personal data is deleted without delay after consultation is completed, except where retention is required by applicable law.',
+        body: 'Personal data collected through inquiries is deleted without delay after the consultation is completed. Personal data collected through crowdfunding pledges (offered on our Korean pages only) is kept until one year after reward delivery and then destroyed, except for transaction records that Korean e-commerce law requires us to keep for up to five years. See the Korean privacy policy and funding terms for details.',
       },
       {
         heading: '4. Third-party sharing and outsourcing',
@@ -84,7 +118,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '隐私政策',
     subtitle: 'Studio NOL 仅收集处理咨询与沟通所需的最少个人信息，并进行安全管理。',
     lastUpdatedLabel: '生效日期',
-    lastUpdatedValue: '2026年2月12日',
+    lastUpdatedValue: '2026年9月11日',
     sections: [
       {
         heading: '1. 我们收集的个人信息',
@@ -96,7 +130,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. 保存与使用期限',
-        body: '个人信息在咨询完成后将及时删除；如法律法规另有保存要求，则按规定期限保存。',
+        body: '因咨询而收集的个人信息在咨询完成后将及时删除。通过众筹支持（仅在韩语页面提供）收集的个人信息保存至回报寄送完成后 1 年再行销毁；韩国电子商务法要求保存的交易记录最长保存 5 年。详情请参阅韩语版隐私政策及众筹条款。',
       },
       {
         heading: '4. 向第三方提供与委托处理',
@@ -112,7 +146,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Política de privacidad',
     subtitle: 'Studio NOL recopila solo los datos personales mínimos necesarios para responder consultas y brindar orientación.',
     lastUpdatedLabel: 'Fecha de entrada en vigor',
-    lastUpdatedValue: '12 de febrero de 2026',
+    lastUpdatedValue: '11 de septiembre de 2026',
     sections: [
       {
         heading: '1. Datos personales que recopilamos',
@@ -124,7 +158,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. Período de conservación',
-        body: 'Los datos personales se eliminan sin demora tras finalizar la atención, salvo que la ley exija su conservación.',
+        body: 'Los datos personales recopilados en consultas se eliminan sin demora al finalizar la atención. Los datos recopilados por aportes de crowdfunding (disponible solo en nuestras páginas en coreano) se conservan hasta un año después de la entrega de la recompensa y luego se destruyen, salvo los registros de la transacción que la ley coreana de comercio electrónico obliga a conservar hasta cinco años. Consulte la política de privacidad y los términos de financiación en coreano.',
       },
       {
         heading: '4. Cesión a terceros y tratamiento encargado',
@@ -140,7 +174,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Chính sách bảo mật',
     subtitle: 'Studio NOL chỉ thu thập tối thiểu thông tin cá nhân cần thiết để tiếp nhận và phản hồi tư vấn.',
     lastUpdatedLabel: 'Ngày hiệu lực',
-    lastUpdatedValue: '12 tháng 2, 2026',
+    lastUpdatedValue: '11 tháng 9, 2026',
     sections: [
       {
         heading: '1. Thông tin cá nhân được thu thập',
@@ -152,7 +186,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. Thời gian lưu trữ',
-        body: 'Thông tin cá nhân sẽ được xóa ngay sau khi hoàn tất tư vấn, trừ trường hợp pháp luật yêu cầu lưu trữ.',
+        body: 'Thông tin cá nhân thu thập qua tư vấn sẽ được xóa ngay sau khi hoàn tất tư vấn. Thông tin thu thập khi tham gia gây quỹ (chỉ có trên trang tiếng Hàn) được lưu đến một năm sau khi giao phần thưởng rồi hủy, trừ hồ sơ giao dịch mà luật thương mại điện tử Hàn Quốc yêu cầu lưu tới năm năm. Xem chính sách bảo mật và điều khoản gây quỹ bản tiếng Hàn để biết chi tiết.',
       },
       {
         heading: '4. Cung cấp cho bên thứ ba và ủy quyền xử lý',
@@ -168,7 +202,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'นโยบายความเป็นส่วนตัว',
     subtitle: 'Studio NOL เก็บข้อมูลส่วนบุคคลเท่าที่จําเป็นสําหรับการรับและตอบคําสอบถามเท่านั้น',
     lastUpdatedLabel: 'วันที่มีผลบังคับใช้',
-    lastUpdatedValue: '12 กุมภาพันธ์ 2026',
+    lastUpdatedValue: '11 กันยายน 2026',
     sections: [
       {
         heading: '1. ข้อมูลส่วนบุคคลที่เราเก็บรวบรวม',
@@ -180,7 +214,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. ระยะเวลาการเก็บรักษา',
-        body: 'ข้อมูลส่วนบุคคลจะถูกลบโดยไม่ชักช้าหลังเสร็จสิ้นการให้คําปรึกษา ยกเว้นกรณีที่กฎหมายกําหนดให้ต้องเก็บรักษา',
+        body: 'ข้อมูลส่วนบุคคลที่เก็บจากการสอบถามจะถูกลบโดยไม่ชักช้าหลังเสร็จสิ้นการให้คําปรึกษา ส่วนข้อมูลที่เก็บจากการร่วมสนับสนุนโครงการระดมทุน (มีเฉพาะหน้าภาษาเกาหลี) จะเก็บไว้จนถึงหนึ่งปีหลังส่งมอบของตอบแทนแล้วจึงทําลาย ยกเว้นบันทึกธุรกรรมที่กฎหมายพาณิชย์อิเล็กทรอนิกส์ของเกาหลีกําหนดให้เก็บสูงสุดห้าปี รายละเอียดดูได้จากนโยบายความเป็นส่วนตัวและข้อกําหนดการระดมทุนฉบับภาษาเกาหลี',
       },
       {
         heading: '4. การเปิดเผยต่อบุคคลที่สามและการว่าจ้างประมวลผล',
@@ -196,7 +230,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Maxfiylik siyosati',
     subtitle: 'Studio NOL faqat murojaatlarni qabul qilish va javob berish uchun zarur bo\'lgan eng kam shaxsiy ma\'lumotlarni yig\'adi.',
     lastUpdatedLabel: 'Kuchga kirish sanasi',
-    lastUpdatedValue: '2026-yil 12-fevral',
+    lastUpdatedValue: '2026-yil 11-sentabr',
     sections: [
       {
         heading: '1. Yig\'iladigan shaxsiy ma\'lumotlar',
@@ -208,7 +242,7 @@ const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. Saqlash muddati',
-        body: 'Shaxsiy ma\'lumotlar maslahat yakunlangach kechiktirmasdan o\'chiriladi, qonun talab qilgan holatlar bundan mustasno.',
+        body: 'Murojaat orqali yig\'ilgan shaxsiy ma\'lumotlar maslahat yakunlangach kechiktirmasdan o\'chiriladi. Kraudfanding qo\'llab-quvvatlashi orqali yig\'ilgan ma\'lumotlar (faqat koreys tilidagi sahifalarda mavjud) mukofot yetkazilgandan keyin bir yilgacha saqlanadi va so\'ng yo\'q qilinadi; Koreya elektron tijorat qonuni talab qiladigan tranzaksiya yozuvlari besh yilgacha saqlanadi. Tafsilotlar koreyscha maxfiylik siyosati va kraudfanding shartlarida.',
       },
       {
         heading: '4. Uchinchi tomonga berish va qayta ishlashni topshirish',
@@ -254,6 +288,34 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
               <article key={section.heading} className="glass-card rounded-xl p-6">
                 <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">{section.heading}</h2>
                 <p className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed">{section.body}</p>
+                {section.items && (
+                  <ul className="typo-card-body mt-3 list-disc space-y-1 pl-5 text-gray-700 dark:text-gray-300 leading-relaxed">
+                    {section.items.map((item) => <li key={item}>{item}</li>)}
+                  </ul>
+                )}
+                {section.processors && (
+                  /* 표는 좁은 화면에서 가로 스크롤로 넘긴다 — 본문이 가로로 밀리면 안 된다. */
+                  <div className="mt-3 overflow-x-auto">
+                    <table className="typo-card-body w-full min-w-[32rem] border-collapse text-left text-gray-700 dark:text-gray-300">
+                      <thead>
+                        <tr className="border-b border-gray-300 dark:border-gray-600">
+                          <th scope="col" className="py-2 pr-4 font-semibold">수탁자</th>
+                          <th scope="col" className="py-2 pr-4 font-semibold">위탁 업무</th>
+                          <th scope="col" className="py-2 font-semibold">위탁 항목</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {section.processors.map((row) => (
+                          <tr key={row.name} className="border-b border-gray-200/70 last:border-0 dark:border-gray-700/70">
+                            <td className="py-2 pr-4 align-top font-medium text-gray-900 dark:text-white">{row.name}</td>
+                            <td className="py-2 pr-4 align-top">{row.purpose}</td>
+                            <td className="py-2 align-top">{row.items}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </article>
             ))}
           </div>

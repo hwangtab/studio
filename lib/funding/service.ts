@@ -6,7 +6,7 @@ import { orders, type FundingPledge, type Order, type Payment, type Refund } fro
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
-import { BANK_HOLD_SECONDS, TOSS_HOLD_SECONDS } from './policy';
+import { BANK_HOLD_SECONDS, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload } from './validation';
 
@@ -104,16 +104,20 @@ export const createFundingPledge = async (
           AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
       ) + ${payload.quantity} <= ${reward.totalQuantity}`;
 
+  // terms_agreed_at을 now로 적는 근거: validateCreatePledgePayload가 termsAgreed !== true를
+  // 먼저 막으므로(lib/funding/validation.ts), 이 지점에 온 요청은 동의를 마친 요청뿐이다.
   const result = await db.run(sql`
     INSERT INTO funding_pledges (
       id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
       payment_method, hold_expires_at, supporter_message, display_name_public,
-      shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo
+      shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
+      terms_agreed_at, terms_version
     )
     SELECT ${pledgeId}, ${order.id}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
            ${payload.quantity}, ${payload.additionalAmount}, ${payload.paymentMethod}, ${toEpoch(holdExpiresAt)},
            ${payload.supporterMessage ?? null}, ${payload.displayNamePublic ? 1 : 0},
-           ${s?.name ?? null}, ${s?.phone ?? null}, ${s?.postcode ?? null}, ${s?.address1 ?? null}, ${s?.address2 ?? null}, ${s?.memo ?? null}
+           ${s?.name ?? null}, ${s?.phone ?? null}, ${s?.postcode ?? null}, ${s?.address1 ?? null}, ${s?.address2 ?? null}, ${s?.memo ?? null},
+           ${toEpoch(now)}, ${FUNDING_TERMS_VERSION}
     WHERE ${stockCondition}
   `);
 

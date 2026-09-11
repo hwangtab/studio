@@ -32,6 +32,15 @@ export default function DepositPage(p: Props) {
           {' · '}
           <a href={`/ko/funding/${p.projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">프로젝트</a>
         </p>
+        {/* 전자상거래법 제13조 2항 — 계약 성립 뒤 후원자가 도달하는 문서에는 청약철회·환불 조건에
+            닿는 경로가 있어야 한다. 이 화면은 FundingTrustNotice를 두르지 않아 링크가 없었다. */}
+        <p className="typo-card-meta mt-2">
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- next/link 클라 전환으로 나갔다 뒤로가기를 누르면 gtag가 토큰 붙은 이 URL로 page_view를 보낸다(위 주석). 문서 이동으로 유지한다. */}
+          <a href="/ko/funding/terms" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">펀딩 약관·청약철회·환불 규정</a>
+          {' · '}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- next/link 클라 전환으로 나갔다 뒤로가기를 누르면 gtag가 토큰 붙은 이 URL로 page_view를 보낸다(위 주석). 문서 이동으로 유지한다. */}
+          <a href="/ko/privacy-policy" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">개인정보 처리방침</a>
+        </p>
       </main>
     </>
   );

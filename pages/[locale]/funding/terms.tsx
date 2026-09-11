@@ -4,7 +4,7 @@ import SEO from '../../../components/SEO';
 import { Section } from '../../../components/ui/Section';
 import { getSiteConfig, studioOperator } from '../../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
-import { PRIVACY_RETENTION_TEXT } from '../../../lib/funding/policy';
+import { FUNDING_TERMS_VERSION, PRIVACY_LEGAL_RETENTION_TEXT, PRIVACY_RETENTION_TEXT } from '../../../lib/funding/policy';
 import type { Locale } from '../../../lib/i18n';
 
 // 펀딩(리워드 선주문) 전용 약관 — /ko/terms의 예약 이용약관과 별개다.
@@ -33,7 +33,7 @@ export const FUNDING_TERMS_SECTIONS: FundingTermsSection[] = [
   { heading: '제10조 (환불)', body: ['환불은 청약철회 접수일부터 3영업일 이내에 처리합니다. 온라인 결제는 결제 수단으로 취소하며, 무통장입금은 후원자가 알려준 계좌로 송금합니다.', '리워드를 받은 뒤 청약철회하는 경우 리워드 반환에 드는 비용은 후원자가 부담합니다. 다만 리워드가 표시·광고와 다른 경우에는 스튜디오가 부담합니다.'] },
   { heading: '제11조 (환불 지연에 대한 배상)', body: ['스튜디오가 환불을 지연한 경우 전자상거래법이 정하는 지연배상금을 지급합니다.'] },
   { heading: '제12조 (후원자의 의무)', body: ['후원자는 정확한 이름·연락처·이메일·배송지를 입력해야 하며, 무통장입금 시 입금자명을 후원 신청 이름과 같게 해야 합니다.', '타인의 정보를 도용하거나 결제 수단을 부정하게 사용해서는 안 됩니다.'] },
-  { heading: '제13조 (개인정보의 처리)', body: [`스튜디오는 후원 확정·리워드 발송·고객 응대 목적으로 후원자의 이름·연락처·이메일·배송지를 수집하며, ${PRIVACY_RETENTION_TEXT} 보관한 뒤 파기합니다. 전자상거래법 등 법령이 더 긴 보존을 요구하는 거래 기록은 그 기간 동안 보관합니다.`, '후원자 명단 공개에 동의한 후원자의 이름은 프로젝트 페이지에 표시되며, 동의는 후원 확인 페이지 또는 문의로 철회할 수 있습니다.'] },
+  { heading: '제13조 (개인정보의 처리)', body: [`스튜디오는 후원 확정·리워드 발송·고객 응대 목적으로 후원자의 이름·연락처·이메일·배송지를 수집하며, ${PRIVACY_RETENTION_TEXT} 보관한 뒤 파기합니다. ${PRIVACY_LEGAL_RETENTION_TEXT}`, '후원자 명단 공개에 동의한 후원자의 이름은 프로젝트 페이지에 표시되며, 동의는 후원 확인 페이지 또는 문의로 철회할 수 있습니다.', '수집 항목·이용 목적·처리위탁 현황은 개인정보 처리방침의 "펀딩(리워드 선주문) 개인정보 처리" 절에 함께 고지합니다.'] },
   { heading: '제14조 (면책)', body: ['천재지변·전쟁·배송사 사정 등 스튜디오의 통제를 벗어난 사유로 리워드 제공이 지연된 경우 그 기간 동안 책임을 지지 않습니다. 다만 그 사실을 후원자에게 고지합니다.'] },
   { heading: '제15조 (분쟁 해결)', body: ['후원과 관련한 분쟁은 스튜디오와 후원자가 성실히 협의하여 해결하며, 협의가 어려우면 한국소비자원 등 분쟁조정기구의 조정을 받을 수 있습니다.'] },
   { heading: '제16조 (준거법 및 문의처)', body: ['이 약관은 대한민국 법을 따르며, 분쟁의 관할은 민사소송법에 따릅니다.', '문의: hello@studionol.co.kr · 010-4255-7893'] },
@@ -62,7 +62,9 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
       <Section variant="default" className="pb-16 pt-28 md:pb-24 md:pt-36">
         <div className="max-w-3xl mx-auto">
           <h1 className="typo-section-title">{title}</h1>
-          <p className="typo-section-lead mt-4 mb-10">{subtitle}</p>
+          <p className="typo-section-lead mt-4 mb-2">{subtitle}</p>
+          {/* 후원 시 funding_pledges.terms_version에 기록되는 값과 같다 — 분쟁 시 "어느 판본에 동의했는가"를 대조한다. */}
+          <p className="typo-card-meta mb-10">약관 버전: {FUNDING_TERMS_VERSION}</p>
 
           <div className="space-y-6">
             {FUNDING_TERMS_SECTIONS.map((section) => (

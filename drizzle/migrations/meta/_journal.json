@@ -92,6 +92,13 @@
       "when": 1788969572950,
       "tag": "0012_typical_johnny_storm",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "6",
+      "when": 1789106588400,
+      "tag": "0013_glossy_ghost_rider",
+      "breakpoints": true
     }
   ]
 }
