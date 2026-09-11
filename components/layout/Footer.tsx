@@ -100,8 +100,12 @@ export const Footer = ({ locale }: FooterProps) => {
               <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
               <FooterLink href={`/${locale}/music-promotion`}>{t('nav.musicPromotion')}</FooterLink>
             </ul>
-            {/* 발매 프로젝트 — nav.releaseProject 등은 하위메뉴 맥락 라벨('Overview')이라
-                비-ko 푸터에선 맥락을 잃는다. 홈 pill과 동일하게 ko 전용 노출. */}
+            {/* 발매 티어는 ko 전용으로 둔다. 예전 근거("라벨이 'Overview' 같은 하위메뉴
+                맥락 라벨이라 비-ko에서 맥락을 잃는다")는 2026-09-11 리네임으로 사라졌다 —
+                지금 nav.releaseProject는 'Release Project'라 단독으로 읽힌다.
+                남은 이유는 하나다: 티어 상세 4페이지는 ko 번역만 있다. 비-ko 방문자를
+                한국어 페이지로 보내지 않으려고 링크를 걸지 않는다.
+                아래 아티스트 블록은 이유가 다르다 — 거기 주석을 볼 것. */}
             {locale === 'ko' && (
               <>
                 <SubHeading>{t('footer.sections.release')}</SubHeading>
@@ -112,7 +116,11 @@ export const Footer = ({ locale }: FooterProps) => {
                   <FooterLink href={`/${locale}/release-project/album`}>{t('nav.releaseAlbum')}</FooterLink>
                 </ul>
                 {/* 후원·선구매·예매는 행위가 달라도 대상이 같다 — 함께 만든 아티스트다.
-                    헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다. */}
+                    헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다.
+
+                    ko 전용인 이유는 위 발매 티어와 다르다: 결제 퍼널이라 한국 결제·
+                    통신판매 요건에 묶여 있다(스펙 §8·§11.2). 번역이 생겨도 이 게이트는
+                    풀지 않는다 — 결제를 다른 나라에 여는 것은 별개 결정이다. */}
                 <SubHeading>{t('footer.sections.artist')}</SubHeading>
                 <ul className="flex flex-col">
                   <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>

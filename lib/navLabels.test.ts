@@ -1,0 +1,46 @@
+/**
+ * navLabels.ts ↔ common.json 동기화 가드.
+ *
+ * `lib/navLabels.ts`는 SSR/SSG에서 i18n 런타임 없이 SiteNavigationElement JSON-LD를
+ * 만들려고 nav 라벨을 손으로 복제해 둔 정적 매핑이다. 파일 주석이 "동기화 유지"를
+ * 요구하지만 강제하는 것이 없었다.
+ *
+ * 실제로 어긋났다: 2026-09-11 헤더 재정렬에서 `nav.releaseProject`를
+ * "음원 발매 개요"(en "Overview")에서 "발매 프로젝트"로 바꿨는데 이 파일만
+ * 안 따라와, 화면과 breadcrumb은 새 이름을 말하는데 구조화 데이터는 "Overview"를
+ * 검색엔진에 내보내고 있었다. 타입체크도 테스트도 잡지 못했다 — 두 값이
+ * 각각 유효한 문자열이라 코드로는 차이가 보이지 않는다.
+ */
+import fs from 'fs';
+import path from 'path';
+import { navLabels, type NavKey } from './navLabels';
+
+const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
+
+const navSection = (locale: string): Record<string, unknown> => {
+  const file = path.join(__dirname, '..', 'public', 'locales', locale, 'common.json');
+  return JSON.parse(fs.readFileSync(file, 'utf8')).nav;
+};
+
+describe('navLabels ↔ common.json', () => {
+  it('모든 로케일의 모든 NavKey가 common.json의 nav 라벨과 같다', () => {
+    const mismatches: string[] = [];
+    for (const locale of LOCALES) {
+      const nav = navSection(locale);
+      for (const [key, label] of Object.entries(navLabels[locale]) as [NavKey, string][]) {
+        const source = nav[key];
+        if (source !== label) {
+          mismatches.push(`${locale}.${key}: navLabels=${JSON.stringify(label)} vs common.json=${JSON.stringify(source)}`);
+        }
+      }
+    }
+    expect(mismatches).toEqual([]);
+  });
+
+  it('로케일마다 같은 키 집합을 갖는다 (한 곳만 추가되면 JSON-LD가 로케일별로 달라진다)', () => {
+    const reference = Object.keys(navLabels.ko).sort();
+    for (const locale of LOCALES) {
+      expect(Object.keys(navLabels[locale]).sort()).toEqual(reference);
+    }
+  });
+});
