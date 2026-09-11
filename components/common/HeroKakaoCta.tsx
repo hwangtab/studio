@@ -50,7 +50,7 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   // 똑같이 /contact 폼으로 가른다. 옐로도 쓰지 않는다 — 노란 버튼 = 카카오톡 규칙.
   const isKorean = locale === 'ko';
   // 레이아웃(가변 높이·전폭·줄바꿈)은 variant가 표현하지 못하므로 className으로 유지한다.
-  const ctaLayout = 'w-full sm:w-auto h-auto min-h-[48px] py-4 px-10 text-center whitespace-normal leading-snug font-bold touch-manipulation';
+  const ctaLayout = 'w-full sm:w-auto h-auto min-h-[48px] py-4 px-10 text-base sm:text-lg text-center whitespace-normal leading-snug font-bold touch-manipulation';
   // 어두운 히어로 오버레이 위에서는 링/오프셋 색을 흰 계열로 덮는다.
   const onImageRing = 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20';
 

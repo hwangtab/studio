@@ -98,7 +98,7 @@ const ProjectRowCard = ({
                             {category}
                         </span>
                         {services.slice(0, 3).map((service, i) => (
-                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/40 dark:border-white/10 px-2 py-0.5 rounded max-w-full break-words">
+                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/40 dark:border-white/10 px-2 py-0.5 rounded-full max-w-full break-words">
                                 {service}
                             </span>
                         ))}

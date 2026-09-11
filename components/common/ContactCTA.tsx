@@ -140,7 +140,7 @@ const ContactCTA = ({
                                     onClick={trackPrimaryCta}
                                     className={ctaLayout}
                                 >
-                                    <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                    <MessageCircle className="flex-shrink-0" size={20} aria-hidden="true" />
                                     <span className="min-w-0">{primaryLabel}</span>
                                 </a>
                             </Button>
@@ -152,7 +152,7 @@ const ContactCTA = ({
                                     onClick={trackPrimaryCta}
                                     className={ctaLayout}
                                 >
-                                    <Mail className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                    <Mail className="flex-shrink-0" size={20} aria-hidden="true" />
                                     <span className="min-w-0">{primaryLabel}</span>
                                 </Link>
                             </Button>

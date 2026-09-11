@@ -48,9 +48,16 @@ const walk = (dir: string, out: string[] = []): string[] => {
 
 const SCAN_DIRS = ['components', 'pages', 'data', 'lib', 'utils'];
 
+/**
+ * 색을 받는 Tailwind 유틸리티 접두사. 카카오 토큰 검사와 yellow-* 금지 검사가 **같은**
+ * 목록을 써야 한다 — 예전엔 yellow 가드가 더 좁아서(bg|text|border|ring|from|to|via|
+ * fill|stroke) `shadow-yellow-400`·`placeholder-yellow-500` 같은 표기가 그냥 빠져나갔다.
+ */
+const COLOR_UTILITY_PREFIXES =
+  'bg|text|border|ring|from|to|via|fill|stroke|outline|decoration|placeholder|caret|accent|shadow|divide';
+
 // (bg|text|border|...)-kakao(-dark|-ink)? 형태만 카카오 계열로 본다.
-const KAKAO_CLASS_RE =
-  /(?:bg|text|border|ring|from|to|via|fill|stroke|outline|decoration|placeholder|caret|accent|shadow)-(kakao(?:-[\w]+)?)\b/g;
+const KAKAO_CLASS_RE = new RegExp(`(?:${COLOR_UTILITY_PREFIXES})-(kakao(?:-[\\w]+)?)\\b`, 'g');
 
 describe('카카오 CTA 색 토큰', () => {
   it('kakao 계열 유틸리티 클래스가 쓰는 색 이름은 전부 tailwind.config.ts에 존재해야 한다', () => {
@@ -162,7 +169,8 @@ describe('옐로 사용 제한', () => {
       }
       for (const file of files) {
         const content = readFileSync(file, 'utf-8');
-        for (const match of content.matchAll(/\b(?:bg|text|border|ring|from|to|via|fill|stroke)-yellow-\d+\b/g)) {
+        const yellowRe = new RegExp(`\\b(?:${COLOR_UTILITY_PREFIXES})-yellow-\\d+\\b`, 'g');
+        for (const match of content.matchAll(yellowRe)) {
           offenders.push(`${path.relative(ROOT, file)}: ${match[0]}`);
         }
       }
