@@ -199,10 +199,87 @@ describe('옐로 사용 제한', () => {
 // 라이트 고정 화면(pages/admin/**, contracts/{sign,complete})은 제외한다 —
 // theme-init.js가 모든 라우트에 .dark를 붙이므로, 흰 카드 위에 밝은 보라가 뜨면
 // 오히려 대비가 깨진다(docs/design-system.md §1 다크모드).
-const BRAND_TEXT_RE = /(?<![-\w])((?:[a-z-]+:)*)text-(primary|secondary|accent)(?![-\w/])/g;
+// 알파 접미사(`text-primary/60`)도 토큰의 일부로 본다. 예전 `(?![-\w/])`는 `/`를 만나면
+// 매치를 통째로 버려서 알파 표기가 가드를 그냥 지나갔다 — release-project의 STEP 라벨
+// `text-primary/60`(흰 배경 3.09:1)이 그렇게 빠져나가 있었다.
+// 주석 줄. JSX 주석(`{/* … */`로 시작하는 줄)도 코드가 아니므로 스캔에서 뺀다.
+const isCommentLine = (trimmed: string) =>
+  trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*') || trimmed.startsWith('{/*');
 
+const BRAND_TEXT_RE = /(?<![-\w])((?:[a-z-]+:)*)text-(primary|secondary|accent)(\/\d+)?(?![-\w/])/g;
+
+/**
+ * 라이트 고정 화면. 정본(docs/design-system.md §1 다크모드)이 면제하는 계약 라우트는
+ * 서명·완료 **두 장뿐**이다. 예전엔 `rel.includes('/contracts/')`로 계약 경로 전체를
+ * 면제해서, 앞으로 생길 일반 다크 테마 라우트(예: contracts/index.tsx)까지 조용히
+ * 가드 밖으로 나갈 판이었다.
+ */
 const LIGHT_FIXED = (rel: string) =>
-  rel.startsWith('pages/admin/') || rel.startsWith('components/admin/') || rel.includes('/contracts/');
+  rel.startsWith('pages/admin/') ||
+  rel.startsWith('components/admin/') ||
+  rel.startsWith('components/contracts/') ||
+  /^pages\/\[locale\]\/contracts\/\[id\]\/(sign|complete)\.tsx$/.test(rel);
+
+/**
+ * 한 줄 안에서 **문제 토큰이 들어 있는 문자열 리터럴 구간**만 돌려준다.
+ *
+ * 짝 검사를 줄 전체로 하면 삼항 분기를 서로의 짝으로 오인한다 — AudioPlayer/Playlist의
+ * `isActive ? 'text-primary' : 'text-gray-900 dark:text-white'`가 실제로 그렇게 통과했다
+ * (활성 트랙 제목이 #121212 패널 위에서 2.64:1). 템플릿 리터럴 안의 `${...}` 식은
+ * 별개 구간으로 쪼개므로 위 예에서 두 분기가 서로 섞이지 않는다.
+ */
+const quotedSegments = (line: string): [number, number][] => {
+  const segs: [number, number][] = [];
+
+  const readQuoted = (start: number): number => {
+    const quote = line[start];
+    let i = start + 1;
+    let chunkStart = i;
+    while (i < line.length) {
+      const c = line[i];
+      if (c === '\\') { i += 2; continue; }
+      if (c === quote) { segs.push([chunkStart, i]); return i + 1; }
+      if (quote === '`' && c === '$' && line[i + 1] === '{') {
+        segs.push([chunkStart, i]);
+        i = readExpr(i + 2);
+        chunkStart = i;
+        continue;
+      }
+      i += 1;
+    }
+    segs.push([chunkStart, line.length]); // 여러 줄에 걸친 리터럴 — 줄 끝까지를 한 구간으로
+    return line.length;
+  };
+
+  const readExpr = (start: number): number => {
+    let i = start;
+    let depth = 1;
+    while (i < line.length) {
+      const c = line[i];
+      if (c === '{') { depth += 1; i += 1; }
+      else if (c === '}') { depth -= 1; i += 1; if (depth === 0) return i; }
+      else if (c === "'" || c === '"' || c === '`') { i = readQuoted(i); }
+      else i += 1;
+    }
+    return i;
+  };
+
+  let i = 0;
+  while (i < line.length) {
+    const c = line[i];
+    if (c === "'" || c === '"' || c === '`') i = readQuoted(i);
+    else i += 1;
+  }
+  return segs;
+};
+
+/** 토큰이 놓인 문자열 구간. 어느 구간에도 없으면(따옴표 밖) 줄 전체로 되돌린다. */
+const scopeOf = (line: string, index: number): string => {
+  for (const [start, end] of quotedSegments(line)) {
+    if (index >= start && index < end) return line.slice(start, end);
+  }
+  return line;
+};
 
 /**
  * 텍스트 색이 아니라서 다크 짝이 필요 없는 자리. 파일 + 줄 안에 들어 있는 고정 문자열로
@@ -216,6 +293,7 @@ const BRAND_TEXT_ALLOW: { file: string; snippet: string; reason: string }[] = [
   { file: 'components/booking/MixingOrderWizard.tsx', snippet: 'rounded border-gray-300 dark:border-gray-600 text-primary', reason: '체크박스 체크표시 채움색' },
   { file: 'components/contact/ContactFormCard.tsx', snippet: 'rounded border-gray-300 dark:border-gray-600 text-primary', reason: '체크박스 체크표시 채움색' },
   { file: 'components/lesson/CurriculumCard.tsx', snippet: 'opacity-10 font-bold text-6xl text-primary', reason: 'opacity-10 장식 워터마크 — 읽는 텍스트가 아니다' },
+  { file: 'components/ui/ReviewSection.tsx', snippet: 'text-primary/10 group-hover:text-primary/20', reason: 'aria-hidden 장식 인용부호(알파 10~20%) — 읽는 텍스트가 아니다' },
 ];
 
 describe('브랜드색 텍스트의 다크 짝', () => {
@@ -235,14 +313,15 @@ describe('브랜드색 텍스트의 다크 짝', () => {
 
         readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
           const trimmed = line.trim();
-          if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
+          if (isCommentLine(trimmed)) return;
 
           BRAND_TEXT_RE.lastIndex = 0;
           let match: RegExpExecArray | null;
           while ((match = BRAND_TEXT_RE.exec(line))) {
             const [full, variantPrefix] = match;
             if (variantPrefix.includes('dark:')) continue; // 이미 다크 전용 유틸리티
-            if (new RegExp(`dark:${variantPrefix}text-`).test(line)) continue; // 같은 variant의 다크 짝 있음
+            const scope = scopeOf(line, match.index); // 같은 문자열 리터럴 안에서만 짝을 찾는다
+            if (new RegExp(`dark:${variantPrefix}text-`).test(scope)) continue; // 같은 variant의 다크 짝 있음
             if (BRAND_TEXT_ALLOW.some((a) => a.file === rel && line.includes(a.snippet))) continue;
             offenders.push(`${rel}:${index + 1}: ${full} — ${trimmed.slice(0, 100)}`);
           }
@@ -320,7 +399,7 @@ describe('다크 짝의 대비가 충분한가', () => {
 
         readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
           const trimmed = line.trim();
-          if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
+          if (isCommentLine(trimmed)) return;
 
           DARK_UNSAFE_RE.lastIndex = 0;
           let match: RegExpExecArray | null;
@@ -347,6 +426,70 @@ describe('다크 짝의 대비가 충분한가', () => {
     const defined = definedColorNames();
     for (const name of ['primary-light', 'primary-dark', 'secondary-dark', 'accent-dark']) {
       expect(defined.has(name)).toBe(true);
+    }
+  });
+});
+
+// variant 그림자 가드 (2026-09-11, 3라운드).
+//
+// 앞의 두 가드는 "다크 짝이 있는가 / 충분한가"만 봤다. 그래서 다크 짝을 **추가하는 행위
+// 자체가** hover 색을 죽이는 회귀를 초록 CI로 통과시켰다 — 53곳.
+//
+// 원인은 명시도다. Tailwind가 내는 `.dark\:text-x:is(.dark *)`와 `.hover\:text-white:hover`는
+// 둘 다 (0,2,0)으로 **같고**, `dark:` 규칙이 CSS에서 뒤에 나온다. 따라서 다크모드에서는
+// hover 색이 지고 기본 색이 그대로 남는다. 아웃라인 pill(`border-2 border-primary
+// text-primary dark:text-primary-lighter hover:bg-primary hover:text-white`)에서 실측:
+//   primary 2.61:1 · secondary 1.71:1 · accent 2.16:1  ← 전부 AA 미달
+// 이 브랜치 이전(다크 짝이 없던 상태)에는 7.10 / 5.48 / 6.04:1이었다.
+//
+// 해결은 `dark:hover:text-white`처럼 **같은 variant의 다크 짝**을 함께 두는 것이다
+// (명시도 (0,3,0)으로 둘 다 이긴다). 정본 §1이 요구하는 규칙과 같다.
+const PLAIN_DARK_TEXT_RE = /(?<![-\w:])dark:text-[a-z0-9-]+(?:\/\d+)?(?![-\w])/;
+const SHADOWED_VARIANTS = ['hover', 'focus-visible', 'focus', 'group-hover', 'group-focus-visible'];
+const SHADOWED_VARIANT_RE = new RegExp(
+  `(?<![-\\w:])(${SHADOWED_VARIANTS.join('|')}):text-[a-z0-9-]+(?:\\/\\d+)?(?![-\\w])`,
+  'g',
+);
+
+describe('다크 짝이 variant 색을 덮어쓰지 않는가', () => {
+  it('variant 없는 dark:text-*와 같은 줄의 hover/focus 계열 text-*는 대응하는 dark: 짝이 있어야 한다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of ['components', 'pages']) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!rel.endsWith('.tsx') || rel.endsWith('.test.tsx') || LIGHT_FIXED(rel)) continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (isCommentLine(trimmed)) return;
+          if (!PLAIN_DARK_TEXT_RE.test(line)) return;
+
+          SHADOWED_VARIANT_RE.lastIndex = 0;
+          let match: RegExpExecArray | null;
+          while ((match = SHADOWED_VARIANT_RE.exec(line))) {
+            const variant = match[1];
+            if (new RegExp(`(?<![-\\w:])dark:${variant}:text-`).test(line)) continue;
+            offenders.push(`${rel}:${index + 1}: ${match[0]} — ${trimmed.slice(0, 100)}`);
+          }
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '다크 짝(dark:text-*)이 같은 줄의 hover/focus 색을 명시도로 덮어씁니다 — 다크모드에서 ' +
+          '그 hover 색이 적용되지 않습니다.\n' +
+          '같은 variant의 다크 짝을 함께 두세요: hover:text-white → dark:hover:text-white, ' +
+          'group-hover:text-primary-dark → dark:group-hover:text-primary-lighter.\n' +
+          offenders.join('\n'),
+      );
     }
   });
 });

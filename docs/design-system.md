@@ -120,6 +120,32 @@ portfolio 8 · 홈 4 · about 4). 세 부류였다.
 `tailwind.config.test.ts`의 「다크 짝의 대비가 충분한가」가 이를 CI에서 강제한다. 예외는
 `DARK_BRAND_ALLOW`에 **이유와 함께** 등재한다(현재 1건 — `Button`의 `light` 옵트인).
 
+#### 다크 짝을 "추가하는 행위" 자체가 hover 색을 죽인다 (2026-09-11 3라운드)
+
+`dark:text-*`를 붙이는 순간 **같은 요소의 non-dark `hover:text-*`가 적용되지 않는다.**
+Tailwind가 내는 `.dark\:text-x:is(.dark *)`와 `.hover\:text-white:hover`는 명시도가
+둘 다 `(0,2,0)`으로 **같고**, `dark:` 규칙이 CSS에서 **뒤에** 나오기 때문이다. 1·2라운드
+가드는 "다크 짝이 있는가 / 충분한가"만 봤으므로 이 회귀를 초록 CI로 통과시켰다 — 53곳.
+
+아웃라인 pill(`border-2 border-primary text-primary dark:text-primary-lighter
+hover:bg-primary hover:text-white`)에서 hover 실측:
+
+| | 다크 짝 추가 전 | 추가 후(회귀) | `dark:hover:` 짝까지 넣은 뒤 |
+|---|---|---|---|
+| primary | 7.10:1 | **2.61:1** | 15.6:1 |
+| secondary | 5.48:1 | **1.71:1** | 8.6:1 |
+| accent | 6.04:1 | **2.16:1** | 6.4:1 |
+
+따라서 **`dark:text-*`와 `hover:text-*`는 항상 같이 다닌다** — `hover:text-white`에는
+`dark:hover:text-white`, `group-hover:text-primary-dark`에는 `dark:group-hover:text-primary-lighter`.
+`dark:hover:`는 명시도 `(0,3,0)`이라 둘 다 이긴다. `focus-visible:`·`focus:`도 같다.
+
+`tailwind.config.test.ts`의 「다크 짝이 variant 색을 덮어쓰지 않는가」가 이를 CI에서 막는다.
+같은 라운드에서 짝 검사 범위도 **줄 전체 → 문제 토큰이 든 문자열 리터럴**로 좁혔다:
+`isActive ? 'text-primary' : 'text-gray-900 dark:text-white'`에서 **다른 분기의**
+`dark:text-white`를 짝으로 오인해 활성 트랙 제목(2.64:1)을 통과시킨 적이 있다.
+가드가 면제하는 라이트 고정 계약 라우트도 이 문서와 같게 서명·완료 **두 장으로** 좁혔다.
+
 남은 부채: `AudioPlayer`·포트폴리오 카드의 `dark:bg-[#121212]`·`#1a1a1a` 같은 임의 hex.
 이번엔 그 위의 **텍스트 색만** 올렸고, 배경을 `gray` 토큰으로 바꾸는 것은 별건이다.
 
