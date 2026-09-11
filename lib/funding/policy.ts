@@ -1,18 +1,16 @@
 import type { ProjectState } from './projects';
 
 export const TOSS_HOLD_SECONDS = 900;
-export const BANK_HOLD_SECONDS = 12 * 60 * 60;
 export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_AMOUNT = 5_000_000;
 export const ADDITIONAL_AMOUNT_STEP = 1000;
-/** 전자계약 기본 계좌와 동일(db/schema.ts contracts 기본값). */
-export const BANK_ACCOUNT = { bank: '카카오뱅크', number: '3333-12-5480849', holder: '황경하 / 스튜디오 놀' } as const;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
 
 /**
  * "후원자가 취소를 요청했는데 아직 돈이 안 나간" 상태로 볼 orders.status 집합.
  *
- * 무통장은 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로 남는다.
+ * **지금은 새로 만들어지지 않는다.** 이 상태를 만들던 것은 무통장입금 셀프 취소뿐이었고,
+ * 그 결제수단은 2026-09-11에 중단했다. 중단 전에 만들어진 행을 위해 판정·알람은 남겨 둔다.
  * partially_refunded도 포함하는 이유: 잔액이 남은 건은 여전히 환불이 덜 끝난 것이라
  * 알람이 꺼지면 안 되고, 그 잔액을 정리하는 경로(관리자 환불)도 열려 있어야 한다.
  * refunded로 넘어가면 refundRequestedAt은 그대로 남지만(cancel.ts는 지우지 않는다)
@@ -62,7 +60,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r4';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r5';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.

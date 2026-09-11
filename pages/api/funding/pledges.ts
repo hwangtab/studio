@@ -5,7 +5,6 @@ import { getDb } from '../../../db/client';
 import { orders } from '../../../db/schema';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
-import { sendFundingBankDepositEmails } from '../../../lib/funding/email';
 import { getFundingProject } from '../../../lib/funding/projects';
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
@@ -19,12 +18,10 @@ const FUNDING_CREATE_LIMIT = 20;
  * 이건 "동시에 살아 있는 홀드 수"가 아니라 **시도 횟수** 카운터다(rate_limits는 성공·취소로
  * 되돌아가지 않는다). 위저드를 되돌아가 재제출하면 자기 홀드 해제로 홀드는 1개뿐인데도
  * 카운터는 계속 오르므로, 정상 사용자를 막지 않을 만큼 여유를 둔다. NAT 공유 IP도 같은 이유다.
- * 무제한 리워드·무통장은 아예 세지 않는다 — 이 카운터가 지키는 건 한정 재고뿐이다.
+ * 무제한 리워드는 아예 세지 않는다 — 이 카운터가 지키는 건 한정 재고뿐이다.
  */
 const MAX_LIMITED_TOSS_ATTEMPTS_PER_IP = 5;
 const TOO_MANY_ATTEMPTS_MESSAGE = '한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.';
-const TOO_MANY_BANK_HOLDS_MESSAGE =
-  '입금 대기 중인 무통장 후원이 이미 2건 있습니다. 입금하시거나 12시간 뒤 자동 취소된 후에 다시 신청해 주세요.';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -44,49 +41,24 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
 
   // 이메일·전화를 매번 바꾸면 고객 단위 상한을 우회할 수 있다 — 한정 재고를 잠그는 그 경로만
-  // IP 카운터로 한 번 더 막는다(한정 수량 리워드 + 토스). 무제한 리워드·무통장은 세지 않는다.
+  // IP 카운터로 한 번 더 막는다(한정 수량 리워드). 무제한 리워드는 세지 않는다.
   const limitedReward = validated.reward.totalQuantity !== null;
-  if (validated.value.paymentMethod === 'toss' && limitedReward) {
+  if (limitedReward) {
     if (!(await consumeRateLimit(`funding_hold:ip:${ip}`, MAX_LIMITED_TOSS_ATTEMPTS_PER_IP, TOSS_HOLD_SECONDS)))
       return res.status(429).json({ ok: false, code: 'too_many_attempts', message: TOO_MANY_ATTEMPTS_MESSAGE });
   }
 
   await expireStalePledges(now);
   const result = await createFundingPledge(validated.value, project!, validated.reward, now);
-  // 무통장 홀드 상한은 429(속도 제한)가 아니라 409다 — 잠시 뒤 재시도해서 풀리는 상태가
-  // 아니라, 입금하거나 12시간 뒤 자동 취소돼야 풀리는 상태다.
-  if (!result.ok && result.code === 'too_many_bank_holds')
-    return res.status(409).json({ ok: false, code: result.code, message: TOO_MANY_BANK_HOLDS_MESSAGE });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
 
-  let depositUrl: string | undefined;
-  let emailSent = false;
-  if (validated.value.paymentMethod === 'bank_transfer') {
-    depositUrl = `/ko/funding/deposit/${result.orderNo}?token=${result.manageToken}`;
-    const order = await findFundingOrderByOrderNo(result.orderNo);
-    if (order) {
-      let emailError: string | null = null;
-      try {
-        emailError = await sendFundingBankDepositEmails(order, project!);
-      } catch (error) {
-        console.error('[funding-pledges] 무통장 안내 메일 발송 중 예외', { orderId: order.id, error });
-        emailError = error instanceof Error ? error.message : String(error);
-      }
-      emailSent = !emailError;
-      try {
-        await getDb().update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
-      } catch (error) {
-        console.error('[funding-pledges] notificationError 기록 실패', { orderId: order.id, emailError, error });
-      }
-    }
-  }
   return res.status(201).json({
-    ok: true, orderNo: result.orderNo, paymentMethod: validated.value.paymentMethod,
+    ok: true, orderNo: result.orderNo, paymentMethod: 'toss',
     holdExpiresAt: result.holdExpiresAt.toISOString(),
     // 홀드를 만든 서버 시각. 클라이언트는 (holdExpiresAt − serverNow)로 남은 시간의 총량을
     // 구하고, 경과분은 자기 시계 안에서만 잰다 — 기기 시계가 빠르면 방금 만든 홀드가
     // 즉시 만료로 보이던 문제를 막는다(components/funding/PledgeWizard.tsx holdDurationMs).
     serverNow: now.toISOString(),
-    ...result.amounts, ...(depositUrl ? { depositUrl, emailSent } : {}),
+    ...result.amounts,
   });
 }

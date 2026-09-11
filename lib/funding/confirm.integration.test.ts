@@ -23,8 +23,6 @@ import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email'
 // eslint-disable-next-line import/first
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
-import { confirmBankDeposit } from './bank-transfer';
-// eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
@@ -163,35 +161,6 @@ describe('confirmFundingPledge', () => {
     });
   });
 
-  describe('무통장 후원은 토스 confirm 경로를 타지 않는다 (A-2)', () => {
-    const bankPledge = async (email: string) => {
-      const c = await createFundingPledge(
-        payloadFor({ paymentMethod: 'bank_transfer', customerEmail: email, customerPhone: '010-4' }),
-        PROJECT, reward('mail'), NOW,
-      );
-      if (!c.ok) throw new Error();
-      return c;
-    };
-
-    it('제3자의 잘못된 confirm 시도가 무통장 pending 주문을 failed로 만들지 않는다', async () => {
-      const c = await bankPledge('bank@example.com');
-      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_위조', amount: 5000 });
-      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
-      expect(JSON.stringify(r)).not.toContain(c.manageToken);
-      // 토스를 부르지도 않고, 주문 상태도 그대로다.
-      expect(mockConfirm).not.toHaveBeenCalled();
-      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('pending');
-    });
-
-    it('방해 시도 뒤에도 관리자 입금 확인이 정상 동작한다', async () => {
-      const c = await bankPledge('bank2@example.com');
-      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_위조', amount: 5000 });
-      const o = await findFundingOrderByOrderNo(c.orderNo);
-      const deposit = await confirmBankDeposit({ orderId: o!.id, now: NOW });
-      expect(deposit).toEqual({ ok: true });
-      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid');
-    });
-  });
 
   it('결제 미존재 계열 거절은 토스 주문을 failed로 낙인하지 않는다', async () => {
     // NOT_FOUND_PAYMENT는 "이 주문의 결제가 거절됐다"가 아니라 "그런 결제가 없다"이다.

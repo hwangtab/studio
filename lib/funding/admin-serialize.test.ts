@@ -25,13 +25,13 @@ describe('serializePledgeForAdmin — mismatch', () => {
   // pending만 보던 시절엔 승인 경합으로 expired·failed에 남은 "돈은 받았는데 확정 안 된" 건이
   // 관리자 화면에서 정상으로 보였다. 그게 정확히 찾아내야 할 사고 형태다.
   it.each(['pending', 'expired', 'failed'])('결제 기록이 있는데 %s면 미정합', (status) => {
-    expect(serializePledgeForAdmin(orderWith(status, true), new Set()).mismatch).toBe(true);
+    expect(serializePledgeForAdmin(orderWith(status, true)).mismatch).toBe(true);
   });
   it.each(['paid', 'partially_refunded', 'refunded'])('%s는 결제 기록이 있어도 정상', (status) => {
-    expect(serializePledgeForAdmin(orderWith(status, true), new Set()).mismatch).toBe(false);
+    expect(serializePledgeForAdmin(orderWith(status, true)).mismatch).toBe(false);
   });
   it('결제 기록이 없으면 어떤 상태든 미정합이 아니다', () => {
-    expect(serializePledgeForAdmin(orderWith('expired', false), new Set()).mismatch).toBe(false);
+    expect(serializePledgeForAdmin(orderWith('expired', false)).mismatch).toBe(false);
   });
 });
 
@@ -41,25 +41,25 @@ describe('serializePledgeForAdmin — mismatch', () => {
  */
 describe('serializePledgeForAdmin — refundRequested', () => {
   it('환불 요청 시각이 있으면 status가 paid여도 refundRequested', () => {
-    const item = serializePledgeForAdmin(orderWith('paid', true, new Date('2026-10-16T02:00:00Z')), new Set());
+    const item = serializePledgeForAdmin(orderWith('paid', true, new Date('2026-10-16T02:00:00Z')));
     expect(item.refundRequested).toBe(true);
     expect(item.status).toBe('paid');
     expect(item.refundRequestedAt).toBe('2026-10-16T02:00:00.000Z');
   });
   it('요청이 없으면 false', () => {
-    expect(serializePledgeForAdmin(orderWith('paid', true), new Set()).refundRequested).toBe(false);
+    expect(serializePledgeForAdmin(orderWith('paid', true)).refundRequested).toBe(false);
   });
   // cancel.ts는 환불할 때 refundRequestedAt을 지우지 않는다 — 시각만 보면 첫 환불을 처리한
   // 다음 날부터 배너·배지가 영구히 켜진 채로 남아 이 신호가 첫 사용 직후 죽는다.
   it('환불이 끝난 건은 요청 시각이 남아 있어도 false', () => {
-    const item = serializePledgeForAdmin(orderWith('refunded', true, new Date('2026-10-16T02:00:00Z')), new Set());
+    const item = serializePledgeForAdmin(orderWith('refunded', true, new Date('2026-10-16T02:00:00Z')));
     expect(item.refundRequested).toBe(false);
     // 상세 화면이 쓰는 원본 시각은 그대로 보존한다.
     expect(item.refundRequestedAt).toBe('2026-10-16T02:00:00.000Z');
   });
   // 잔액이 남은 부분환불 건은 아직 환불이 덜 끝난 것이라 신호가 꺼지면 안 된다.
   it('partially_refunded는 여전히 true', () => {
-    expect(serializePledgeForAdmin(orderWith('partially_refunded', true, new Date()), new Set()).refundRequested).toBe(true);
+    expect(serializePledgeForAdmin(orderWith('partially_refunded', true, new Date())).refundRequested).toBe(true);
   });
 });
 
@@ -77,13 +77,13 @@ describe('serializePledgeForAdmin — needsReview', () => {
 
   it.each(WEBHOOK_NOTES)('confirm.ts가 남기는 문구 "%s"를 표식으로 인식한다', (note) => {
     expect(note).toContain(REVIEW_MEMO_MARKER);
-    expect(serializePledgeForAdmin(orderWith('paid', true, null, note), new Set()).needsReview).toBe(true);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, note)).needsReview).toBe(true);
   });
 
   // adminMemo는 append로 쌓인다 — 관계없는 메모가 뒤에 붙는다고 꺼지면 안 된다.
   it('관계없는 메모가 덧붙어도 켜진 채로 남는다', () => {
     const memo = `${WEBHOOK_NOTES[0]}\n[2026-10-20] 입금자명 김철수로 확인`;
-    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(true);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo)).needsReview).toBe(true);
   });
 
   /**
@@ -92,7 +92,7 @@ describe('serializePledgeForAdmin — needsReview', () => {
    */
   it('해제 표식이 뒤에 붙으면 꺼진다', () => {
     const memo = `${WEBHOOK_NOTES[0]}\n[2026-10-20] ${REVIEW_CLEARED_MARKER} — 잔여 3개 확인`;
-    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(false);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo)).needsReview).toBe(false);
   });
 
   /**
@@ -105,7 +105,7 @@ describe('serializePledgeForAdmin — needsReview', () => {
       `[2026-10-20] ${REVIEW_CLEARED_MARKER} — 잔여 3개 확인`,
       WEBHOOK_NOTES[1],
     ].join('\n');
-    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(true);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo)).needsReview).toBe(true);
   });
 
   it('해제 표식만 있고 경고가 없으면 애초에 꺼진 상태', () => {
@@ -144,8 +144,8 @@ describe('serializePledgeForAdmin — needsReview', () => {
   });
 
   it('메모가 없거나 관계없는 메모면 false', () => {
-    expect(serializePledgeForAdmin(orderWith('paid', true, null, null), new Set()).needsReview).toBe(false);
-    expect(serializePledgeForAdmin(orderWith('paid', true, null, '입금자명 김철수'), new Set()).needsReview).toBe(false);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, null)).needsReview).toBe(false);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, '입금자명 김철수')).needsReview).toBe(false);
   });
 
   it('hasReviewMarker는 null·undefined를 안전하게 받는다', () => {

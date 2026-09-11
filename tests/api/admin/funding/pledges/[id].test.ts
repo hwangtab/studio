@@ -6,9 +6,8 @@ jest.mock('../../../../../lib/funding/service', () => ({
   ...jest.requireActual('../../../../../lib/funding/service'),
   findFundingOrderById: jest.fn(),
 }));
-jest.mock('../../../../../lib/funding/bank-transfer', () => ({ confirmBankDeposit: jest.fn() }));
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
-jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
+jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
 // set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
@@ -21,9 +20,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../../pages/api/admin/funding/pledges/[id]';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
-import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
-import { sendFundingConfirmedEmails, sendFundingBankDepositEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 
 const call = async (method: string, query: unknown, body: unknown) => {
@@ -60,14 +58,6 @@ it('인증 실패 → 401', async () => {
   expect(r.status).toBe(401);
 });
 
-it('confirm_deposit → confirmBankDeposit 호출', async () => {
-  (confirmBankDeposit as jest.Mock).mockResolvedValue({ ok: true });
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'confirm_deposit' });
-  expect(confirmBankDeposit).toHaveBeenCalledWith(expect.objectContaining({ orderId: 'order-1', now: expect.any(Date) }));
-  expect(r.status).toBe(200);
-  expect(r.body).toEqual({ ok: true });
-});
-
 it('refund → cancelFundingPledge를 requestedBy admin으로 호출', async () => {
   (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: true, mode: 'refunded' });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'refund', reason: '고객 요청' });
@@ -100,7 +90,6 @@ it('resend_email: refunded 주문은 재발송할 메일이 없어 409, DB 기�
   expect(r.status).toBe(409);
   expect(r.body).toEqual({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
   expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
-  expect(sendFundingBankDepositEmails).not.toHaveBeenCalled();
   expect(mockUpdate).not.toHaveBeenCalled();
 });
 
@@ -112,16 +101,24 @@ it('resend_email: paid면 확정 메일을 재발송한다', async () => {
   expect(r.status).toBe(200);
 });
 
-it('resend_email: pending + 무통장이면 안내 메일을 재발송한다', async () => {
-  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'pending' });
-  (sendFundingBankDepositEmails as jest.Mock).mockResolvedValue(null);
+/**
+ * 무통장입금이 없어진 뒤로 결제 전 주문(pending)에는 보낼 메일이 자체가 없다 —
+ * confirm_deposit도 안내 메일도 사라졌다. 확정 메일 재발송은 paid 주문에만 허용한다.
+ */
+it('resend_email: pending(결제 전, toss)이면 재발송할 메일이 없어 409', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'pending', fundingPledge: { ...BASE_ORDER.fundingPledge, paymentMethod: 'toss' },
+  });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
-  expect(sendFundingBankDepositEmails).toHaveBeenCalled();
-  expect(r.status).toBe(200);
+  expect(r.status).toBe(409);
+  expect(r.body).toEqual({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+  expect(mockUpdate).not.toHaveBeenCalled();
 });
 
-it('resend_email: pending이어도 토스면 재발송할 메일이 없어 409', async () => {
-  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'pending', fundingPledge: { ...BASE_ORDER.fundingPledge, paymentMethod: 'toss' } });
+// 레거시 무통장 pending 행(중단 전 생성)도 결국 같은 결론(409)이다 — 결제 전 주문에는
+// 어떤 결제수단이든 보낼 메일이 없다는 두 번째 가드가 최종적으로 막는다.
+it('resend_email: pending(결제 전, 레거시 무통장)이어도 409', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'pending' });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
   expect(mockUpdate).not.toHaveBeenCalled();

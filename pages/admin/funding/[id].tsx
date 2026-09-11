@@ -41,7 +41,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
   // 확인창에서 본 금액과 다른 금액이 나간다.
   const refundableAmount = remainingRefundable(order);
 
-  return { props: { pledge: serializePledgeForAdmin(order, new Set()), refundableAmount } };
+  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount } };
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -103,11 +103,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
-  const canConfirmDeposit = (pledge.status === 'pending' || pledge.status === 'expired') && pledge.paymentMethod === 'bank_transfer';
   // 부분환불 건도 잔액이 남아 있으면 관리자가 마저 환불할 수 있어야 한다.
   const canRefund = ['paid', 'partially_refunded'].includes(pledge.status);
 
-  const handleConfirmDeposit = () => run(() => patchPledge(pledge.id, { action: 'confirm_deposit' }), '입금을 확인 처리할까요? 후원이 확정됩니다.');
   const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 후원의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
   const handleSaveFulfillment = () =>
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
@@ -236,9 +234,6 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             </div>
 
             <div className="flex flex-wrap gap-2">
-              {canConfirmDeposit && (
-                <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
-              )}
               {canRefund && (
                 <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}

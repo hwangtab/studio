@@ -29,12 +29,12 @@ import type { AdminPledgeItem } from '../../../../lib/funding/admin-serialize';
 const NOW = new Date('2026-10-15T03:00:00Z');
 
 const ITEM: AdminPledgeItem = {
-  id: 'o1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'bank_transfer',
+  id: 'o1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
   rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
   trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null,
   refundRequestedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
-  adminMemo: null, notificationError: null, hasPayment: true, mismatch: false, duplicateWarning: false,
+  adminMemo: null, notificationError: null, hasPayment: true, mismatch: false,
   refundRequested: false, needsReview: false,
 };
 

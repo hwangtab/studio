@@ -266,7 +266,7 @@ const nextConfig = {
         ],
       },
       {
-        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/(deposit|manage)/:path*',
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/manage/:path*',
         headers: [
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],

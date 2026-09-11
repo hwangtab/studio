@@ -6,7 +6,7 @@ import { fundingPledges, orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { generateManageToken } from '../../../../../lib/booking/token';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
-import { duplicateKey, serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
+import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
 import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
 import { findReward, getFundingProject } from '../../../../../lib/funding/projects';
@@ -24,16 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await expireStalePledges(new Date());
     const slug = typeof req.query.slug === 'string' ? req.query.slug : null;
     const items = await listFundingOrders(slug);
-    const counts = new Map<string, number>();
-    for (const o of items) {
-      if (o.status === 'pending' && o.fundingPledge?.paymentMethod === 'bank_transfer') {
-        counts.set(duplicateKey(o), (counts.get(duplicateKey(o)) ?? 0) + 1);
-      }
-    }
-    const dups = new Set([...counts].filter(([, n]) => n > 1).map(([k]) => k));
     return res.status(200).json({
       ok: true,
-      items: items.slice(0, 200).map((o) => serializePledgeForAdmin(o, dups)),
+      items: items.slice(0, 200).map((o) => serializePledgeForAdmin(o)),
       truncated: items.length > 200,
     });
   }

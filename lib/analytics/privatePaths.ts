@@ -11,8 +11,7 @@
  * mount 게이팅은 `router.asPath` 기준이라 **이 페이지들에서 나가는 링크가 클라이언트
  * 전환이면 안 된다.** next/link로 공개 페이지에 갔다가 뒤로가기를 누르면, 그 사이 mount된
  * gtag가 살아 있는 채로 토큰이 실린 URL에 되돌아와 page_view를 보낸다. 그래서 private
- * 페이지의 이탈 링크는 전부 문서 이동(`<a href>`)으로 둔다 — PledgeWizard가 depositUrl을
- * `window.location.assign`으로 여는 것과 같은 이유다.
+ * 페이지의 이탈 링크는 전부 문서 이동(`<a href>`)으로 둔다.
  */
 
 /** 정규식(런타임 판정)과 next.config.mjs의 no-store `source`를 함께 만드는 한 벌의 정의. */
@@ -21,7 +20,8 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   // fail에는 토스가 orderId(=주문번호)를 붙인다. 예전엔 success만 제외해 놓아서
   // 결제 실패 페이지의 주문번호가 상시 측정에 적재됐다.
   ['funding/(success|fail)', false],
-  ['funding/(deposit|manage)', true],
+  // 무통장입금(deposit)은 2026-09-11에 결제수단에서 빠지며 페이지도 함께 삭제됐다.
+  ['funding/manage', true],
   ['booking/(success|fail)', false],
   ['booking/manage', true],
 ];
@@ -93,7 +93,6 @@ export const PRIVATE_NO_STORE_SOURCES: readonly string[] = PRIVATE_ROUTE_BODIES.
  */
 export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/funding/manage/[orderNo]',
-  '/[locale]/funding/deposit/[orderNo]',
   '/[locale]/funding/success',
   '/[locale]/funding/fail',
   '/[locale]/booking/manage/[orderNo]',

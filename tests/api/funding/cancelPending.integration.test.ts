@@ -5,6 +5,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../../db/schema';
+import { generateManageToken, generateOrderNo } from '../../../lib/booking/token';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../../db/client', () => ({ getDb: () => mockDb }));
@@ -16,22 +17,18 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 // eslint-disable-next-line import/first
 import handler from '../../../pages/api/funding/cancel';
 // eslint-disable-next-line import/first
-import { createFundingPledge, findFundingOrderByOrderNo } from '../../../lib/funding/service';
+import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../lib/funding/projects';
-// eslint-disable-next-line import/first
-import type { CreatePledgePayload } from '../../../lib/funding/validation';
 
 /**
- * 무통장 pending을 고객이 스스로 푸는 경로(항목 7).
+ * 무통장(bank_transfer) 결제수단은 2026-09-11에 중단됐다 — 새 후원은 toss로만 만들어진다
+ * (lib/funding/validation.ts). 그런데 중단 전에 만들어진 pending 무통장 행이 DB에 남아
+ * 있을 수 있어, `pages/api/funding/cancel.ts`는 그 행을 셀프 해제(pending → expired)하는
+ * 분기를 legacy 호환용으로 남겨 뒀다(cancel.ts 주석 참조).
  *
- * 같은 이메일+전화로 열어 둘 수 있는 무통장 홀드는 2건이고, 홀드는 12시간짜리다
- * (lib/funding/service.ts MAX_OPEN_HOLDS_PER_CUSTOMER). 예전에는 세 번째 신청이 막혀도
- * 후원자가 직접 풀 수단이 없어 12시간을 기다려야 했다. 이 테스트는 "취소하면 곧바로 다시
- * 신청할 수 있다"를 실제 DB로 확인한다.
- *
- * 한정 리워드 재고는 이 경로와 무관하다 — validation이 한정 수량 리워드에 무통장을 아예
- * 금지하므로(lib/funding/validation.ts) 무통장 pending이 잠그는 재고는 없다.
+ * `createFundingPledge`는 이제 bank_transfer를 받지 않으므로(validation이 막는다), 이
+ * 레거시 상태는 직접 행을 심어 재현한다 — 실제로 중단 전 DB에 남아 있는 모양 그대로다.
  */
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -55,18 +52,27 @@ rewards:
 ---
 `, 'demo');
 
-const payload = (): CreatePledgePayload => ({
-  projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'bank_transfer',
-  customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@example.com',
-  displayNamePublic: false, termsAgreed: true,
-});
-const reward = PROJECT.rewards[0];
-
 const call = async (body: unknown) => {
   const json = jest.fn(); const status = jest.fn().mockReturnValue({ json });
   const res = { setHeader: jest.fn(), status } as unknown as NextApiResponse;
   await handler({ method: 'POST', body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
+};
+
+/** 중단 전 DB에 남아 있을 법한 pending 무통장 행을 직접 심는다. */
+const insertLegacyPendingBankTransfer = async () => {
+  const manageToken = generateManageToken();
+  const [order] = await mockDb.insert(schema.orders).values({
+    orderNo: generateOrderNo(NOW), type: 'funding', status: 'pending',
+    customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@example.com',
+    itemAmount: 4545, vatAmount: 455, totalAmount: 5000, manageToken,
+  }).returning();
+  await mockDb.insert(schema.fundingPledges).values({
+    orderId: order.id, projectSlug: 'demo', rewardId: 'mail', rewardTitle: '감사 메일',
+    unitAmount: 5000, quantity: 1, paymentMethod: 'bank_transfer',
+    holdExpiresAt: new Date(NOW.getTime() + 12 * 3600 * 1000), displayNamePublic: false,
+  });
+  return { orderNo: order.orderNo, manageToken };
 };
 
 beforeAll(async () => {
@@ -85,37 +91,25 @@ beforeEach(async () => {
 });
 afterAll(() => client.close());
 
-it('입금 전 무통장 신청을 취소하면 expired가 되고, 막혀 있던 새 신청이 곧바로 통과한다', async () => {
-  const first = await createFundingPledge(payload(), PROJECT, reward, NOW);
-  const second = await createFundingPledge(payload(), PROJECT, reward, NOW);
-  if (!first.ok || !second.ok) throw new Error('사전 조건');
-  // 세 번째는 홀드 상한에 막힌다 — 지금까지는 12시간을 기다리는 수밖에 없었다.
-  const blocked = await createFundingPledge(payload(), PROJECT, reward, NOW);
-  expect(blocked).toEqual({ ok: false, code: 'too_many_bank_holds' });
-
-  const r = await call({ orderNo: first.orderNo, token: first.manageToken });
+it('입금 전 무통장 레거시 행을 취소하면 expired가 된다', async () => {
+  const { orderNo, manageToken } = await insertLegacyPendingBankTransfer();
+  const r = await call({ orderNo, token: manageToken });
   expect(r.status).toBe(200);
   expect(r.body).toEqual({ ok: true, mode: 'pending_released' });
-  expect((await findFundingOrderByOrderNo(first.orderNo))!.status).toBe('expired');
-
-  // 고객당 홀드 상한이 하나 풀렸으니 다시 신청할 수 있다.
-  const retry = await createFundingPledge(payload(), PROJECT, reward, NOW);
-  expect(retry.ok).toBe(true);
+  expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('expired');
 });
 
 it('같은 신청을 두 번 취소하면 두 번째는 409 — 이미 처리된 건을 되돌리지 않는다', async () => {
-  const created = await createFundingPledge(payload(), PROJECT, reward, NOW);
-  if (!created.ok) throw new Error('사전 조건');
-  expect((await call({ orderNo: created.orderNo, token: created.manageToken })).status).toBe(200);
-  const again = await call({ orderNo: created.orderNo, token: created.manageToken });
+  const { orderNo, manageToken } = await insertLegacyPendingBankTransfer();
+  expect((await call({ orderNo, token: manageToken })).status).toBe(200);
+  const again = await call({ orderNo, token: manageToken });
   expect(again.status).toBe(409);
   expect(again.body).toMatchObject({ ok: false, code: 'invalid_state' });
 });
 
 it('토큰이 틀리면 404 — 주문 존재 여부를 흘리지 않는다', async () => {
-  const created = await createFundingPledge(payload(), PROJECT, reward, NOW);
-  if (!created.ok) throw new Error('사전 조건');
-  const r = await call({ orderNo: created.orderNo, token: 'wrong-token' });
+  const { orderNo } = await insertLegacyPendingBankTransfer();
+  const r = await call({ orderNo, token: 'wrong-token' });
   expect(r.status).toBe(404);
-  expect((await findFundingOrderByOrderNo(created.orderNo))!.status).toBe('pending');
+  expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('pending');
 });

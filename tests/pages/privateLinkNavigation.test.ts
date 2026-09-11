@@ -19,7 +19,6 @@ import { MEASURED_PRIVATE_PAGE_ROUTES, PRIVATE_PAGE_ROUTES, isPrivateAnalyticsPa
  */
 const PRIVATE_PAGE_FILES = [
   'pages/[locale]/funding/manage/[orderNo].tsx',
-  'pages/[locale]/funding/deposit/[orderNo].tsx',
   'pages/[locale]/funding/success.tsx',
   'pages/[locale]/funding/fail.tsx',
   'pages/[locale]/booking/manage/[orderNo].tsx',

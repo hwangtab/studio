@@ -35,22 +35,9 @@ rewards:
 ---
 `, 'demo');
 
-/**
- * 무통장 안내 페이지 이동은 router.push(클라 전환)가 아니라 전체 페이지 이동이어야 한다 —
- * 클라 전환이면 이미 로드된 gtag가 ?token=이 붙은 URL로 page_view를 보낸다.
- */
-const assignMock = jest.fn();
-beforeAll(() => {
-  Object.defineProperty(window, 'location', {
-    configurable: true,
-    value: { ...window.location, assign: assignMock },
-  });
-});
-
 afterEach(() => jest.restoreAllMocks());
 
 beforeEach(() => {
-  assignMock.mockClear();
   global.fetch = jest.fn().mockResolvedValue({
     ok: true, status: 201, headers: { get: () => 'application/json' },
     json: async () => ({
@@ -61,14 +48,12 @@ beforeEach(() => {
   }) as never;
 });
 
-it('배송 리워드는 배송지 입력이 보이고, 한정 수량이면 무통장 선택지가 없다', async () => {
+it('배송 리워드는 배송지 입력이 보인다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
   expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
-  expect(screen.queryByLabelText(/무통장/)).toBeNull();
 });
-it('무제한 리워드는 무통장 선택지가 있고, 제출하면 서버 금액으로 결제 단계가 뜬다', async () => {
+it('제출하면 서버 금액으로 결제 단계가 뜬다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  expect(screen.getByLabelText(/무통장/)).toBeInTheDocument();
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
@@ -162,27 +147,8 @@ it('리워드를 바꾸면 수량이 1로 리셋된다', async () => {
   expect((screen.getByLabelText('수량') as HTMLInputElement).value).toBe('1');
 });
 
-it('한정 수량 리워드는 무통장을 고를 수 없고, 제출하면 결제수단이 toss로 나간다', async () => {
+it('제출하면 결제수단이 toss로 나간다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
-  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '김후원');
-  await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
-  await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
-  await userEvent.click(screen.getByLabelText(/약관/));
-  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
-  await screen.findByTestId('toss-widget');
-  const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
-  expect(body.paymentMethod).toBe('toss');
-});
-
-it('무제한 리워드에서 무통장을 고른 뒤 한정 리워드로 바꾸면 결제수단이 toss로 되돌아가 그대로 제출된다', async () => {
-  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  await userEvent.click(screen.getByLabelText(/무통장/));
-  await userEvent.click(screen.getByLabelText(/CD/));
-  expect(screen.queryByLabelText(/무통장/)).toBeNull();
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
@@ -285,26 +251,6 @@ it('"다시 신청"은 남은 시간을 초기화한다 — 재제출이 곧바�
   } finally {
     jest.useRealTimers();
   }
-});
-
-it('무통장 제출은 depositUrl로 전체 페이지 이동한다 — 토큰이 붙은 URL을 클라 전환으로 열지 않는다', async () => {
-  (global.fetch as jest.Mock).mockResolvedValue({
-    ok: true, status: 201, headers: { get: () => 'application/json' },
-    json: async () => ({
-      ok: true, orderNo: 'FND-1', paymentMethod: 'bank_transfer',
-      holdExpiresAt: new Date(Date.now() + 900000).toISOString(),
-      itemAmount: 4545, vatAmount: 455, totalAmount: 5000,
-      depositUrl: '/ko/funding/deposit/FND-1?token=tok',
-    }),
-  });
-  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  await userEvent.click(screen.getByLabelText(/무통장/));
-  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
-  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.click(screen.getByLabelText(/약관/));
-  await userEvent.click(screen.getByRole('button', { name: /결제로 이동|신청/ }));
-  expect(assignMock).toHaveBeenCalledWith('/ko/funding/deposit/FND-1?token=tok');
 });
 
 /**
