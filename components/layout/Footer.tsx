@@ -95,6 +95,7 @@ export const Footer = ({ locale }: FooterProps) => {
               <FooterLink href={`/${locale}/wedding-song`}>{t('nav.weddingSong')}</FooterLink>
               <FooterLink href={`/${locale}/cover-video`}>{t('nav.coverVideo')}</FooterLink>
               <FooterLink href={`/${locale}/lesson`}>{t('nav.lesson')}</FooterLink>
+              <FooterLink href={`/${locale}/music-promotion`}>{t('nav.musicPromotion')}</FooterLink>
             </ul>
             {/* 발매 프로젝트 — nav.releaseProject 등은 하위메뉴 맥락 라벨('Overview')이라
                 비-ko 푸터에선 맥락을 잃는다. 홈 pill과 동일하게 ko 전용 노출. */}

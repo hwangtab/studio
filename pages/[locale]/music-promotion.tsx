@@ -52,8 +52,16 @@ import type { NextPageWithLayout } from '../../types';
 
 const DELIVERABLE_ICONS: LucideIcon[] = [Newspaper, Globe2, Megaphone, Mic, Video, ClipboardList];
 
-/** 실제로 만든 프레스킷. 페이지에서 "말 대신 결과물"을 보여주는 자리다. */
-const CASE_LINKS = ['https://marikoyukie.vercel.app/ko/press', 'https://ggac.kr/ko/press/hwa'] as const;
+/**
+ * 실제로 만든 프레스킷. 페이지에서 "말 대신 결과물"을 보여주는 자리다.
+ *
+ * 카피의 cases 배열과 순서가 맞아야 한다. 사례를 늘릴 때 여기를 빠뜨리면
+ * 새 사례가 남의 프레스킷을 가리키게 되므로, 링크가 없으면 아예 안 그린다.
+ */
+const CASE_LINKS: readonly string[] = [
+  'https://marikoyukie.vercel.app/ko/press',
+  'https://ggac.kr/ko/press/hwa',
+];
 
 // 컴포넌트 밖에서 한 번만 계산한다. 항목이 없으면 null(가짜 날짜 금지, lib/pageLastmod.ts).
 const MUSIC_PROMOTION_LASTMOD_DISPLAY = formatLastmodDate(getRouteLastmod('/music-promotion'));
@@ -64,11 +72,19 @@ type MusicPromotionProps = {
   relatedStories: StoryCardData[];
 };
 
-/** '2026-12-31' → ko '2026년 12월 31일', 그 외 'December 31, 2026'. */
+/**
+ * '2026-12-31'을 각 로케일 표기로.
+ *
+ * 이 날짜는 할인 종료일이라 카피 안에 들어간다. en-US로 고정하면 태국어 문장
+ * 한가운데 "December 31, 2026"이 끼어든다.
+ */
+const DATE_LOCALE: Record<Locale, string> = {
+  ko: 'ko-KR', en: 'en-US', zh: 'zh-CN', es: 'es-ES', vi: 'vi-VN', th: 'th-TH', uz: 'uz-UZ',
+};
+
 const formatEndsOn = (iso: string, locale: Locale): string => {
   const [y, m, d] = iso.split('-').map(Number);
-  if (locale === 'ko') return `${y}년 ${m}월 ${d}일`;
-  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString('en-US', {
+  return new Date(Date.UTC(y, m - 1, d)).toLocaleDateString(DATE_LOCALE[locale] ?? 'en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -164,7 +180,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           serviceType: locale === 'ko' ? '음원 발매 홍보' : 'Music Release Publicity',
           offerName: t('musicPromotion.hero.title'),
           offerPrice: RELEASE_PRESS_INTRO_PRICE,
-          pricingHash: 'additional-services',
+          pricingHash: 'support-services',
         }),
         generateHowToSchema(
           t('musicPromotion.process.title'),
@@ -182,8 +198,16 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         title={t('musicPromotion.seo.title')}
         description={t('musicPromotion.seo.description')}
         keywords={t('musicPromotion.seo.keywords')}
+        ogImage="/images/og-hardware1.webp"
+        ogImageAlt={t('musicPromotion.hero.alt')}
+        ogImageWidth={1200}
+        ogImageHeight={630}
         includeSchema
         canonical={`/${locale}/music-promotion`}
+        breadcrumbs={[
+          { name: t('nav.home'), path: `/${locale}` },
+          { name: t('musicPromotion.hero.title'), path: `/${locale}/music-promotion` },
+        ]}
         faqItems={faqItems}
         schema={schema}
       />
@@ -301,15 +325,17 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                 <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                   {item.note}
                 </p>
-                <a
-                  href={CASE_LINKS[index] ?? CASE_LINKS[0]}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
-                >
-                  {t('musicPromotion.evidence.linkLabel')}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </a>
+                {CASE_LINKS[index] && (
+                  <a
+                    href={CASE_LINKS[index]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                  >
+                    {t('musicPromotion.evidence.linkLabel')}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                )}
               </BaseCard>
             </m.div>
           ))}
@@ -427,6 +453,9 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
               description={pressOffer.description}
               features={deliverables.map((item) => item.title)}
               recommended
+              locale={locale}
+              /* ctaLabel이 없으면 PricingCard가 버튼을 통째로 그리지 않는다. */
+              ctaLabel={t('musicPromotion.cta.inquiry')}
               ctaHref={siteConfig.contact.kakaoUrl}
               trackingComponent="MusicPromotionPricing"
             />

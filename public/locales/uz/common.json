@@ -27,6 +27,7 @@
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
     "coverVideo": "Cover video suratga olish",
+    "musicPromotion": "Reliz press-kampaniyasi",
     "releaseProject": "Umumiy ko'rinish",
     "releaseSingle": "Singl",
     "releaseEp": "EP",
@@ -1651,27 +1652,27 @@
       "steps": [
         {
           "title": "Murojaat va musiqani yuborish",
-          "body": "KakaoTalk orqali yozing va musiqa bilan asosiy ma'lumotlarni yuboring. Hali chiqmagan bo'lsa ham, allaqachon chiqqan bo'lsa ham bo'laveradi."
+          "description": "KakaoTalk orqali yozing va musiqa bilan asosiy ma'lumotlarni yuboring. Hali chiqmagan bo'lsa ham, allaqachon chiqqan bo'lsa ham bo'laveradi."
         },
         {
           "title": "Saralash — 3 ish kuni",
-          "body": "Prodyuser barcha treklarni eshitib, qaror qiladi. Ololmaydigan bo'lsak, sababini yozib bildiramiz."
+          "description": "Prodyuser barcha treklarni eshitib, qaror qiladi. Ololmaydigan bo'lsak, sababini yozib bildiramiz."
         },
         {
           "title": "Materiallar — 5 kun",
-          "body": "Press-reliz, press-kit sahifasi, qo'shimcha matnlar va videoni tayyorlaymiz."
+          "description": "Press-reliz, press-kit sahifasi, qo'shimcha matnlar va videoni tayyorlaymiz."
         },
         {
           "title": "Tasdiqlash",
-          "body": "Yuborishdan oldin hammasini ko'rsatamiz. Faktlarni faqat ijodkorning o'zi biladi, shuning uchun bu bosqichni o'tkazib yuborib bo'lmaydi."
+          "description": "Yuborishdan oldin hammasini ko'rsatamiz. Faktlarni faqat ijodkorning o'zi biladi, shuning uchun bu bosqichni o'tkazib yuborib bo'lmaydi."
         },
         {
           "title": "Yuborish — 1-3 hafta",
-          "body": "Domen obro'sini saqlash uchun bo'lib-bo'lib yuboramiz. Bir yo'la otilsa, spam papkasiga tushadi."
+          "description": "Domen obro'sini saqlash uchun bo'lib-bo'lib yuboramiz. Bir yo'la otilsa, spam papkasiga tushadi."
         },
         {
           "title": "Hisobot",
-          "body": "Yuborilganlar ro'yxati va kelgan javoblarni jamlab beramiz."
+          "description": "Yuborilganlar ro'yxati va kelgan javoblarni jamlab beramiz."
         }
       ]
     },

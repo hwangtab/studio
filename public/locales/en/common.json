@@ -27,6 +27,7 @@
     "weddingSong": "Wedding Song",
     "voiceActing": "Voice Acting",
     "coverVideo": "Cover Video",
+    "musicPromotion": "Release Press",
     "releaseProject": "Overview",
     "releaseSingle": "Single",
     "releaseEp": "EP",
@@ -1679,27 +1680,27 @@
       "steps": [
         {
           "title": "Get in touch and send the music",
-          "body": "Message us on KakaoTalk with the audio and the basic details. Whether it's still unreleased or already out, either is fine."
+          "description": "Message us on KakaoTalk with the audio and the basic details. Whether it's still unreleased or already out, either is fine."
         },
         {
           "title": "Review — 3 business days",
-          "body": "The producer listens to every track and decides. If we can't take it, we write out the reason and tell you."
+          "description": "The producer listens to every track and decides. If we can't take it, we write out the reason and tell you."
         },
         {
           "title": "Materials — 5 days",
-          "body": "We produce the press release, the press kit page, the derivative copy and the video."
+          "description": "We produce the press release, the press kit page, the derivative copy and the video."
         },
         {
           "title": "Your check",
-          "body": "You see all of it before anything goes out. Only the artist knows whether the facts are right, so this step can't be skipped."
+          "description": "You see all of it before anything goes out. Only the artist knows whether the facts are right, so this step can't be skipped."
         },
         {
           "title": "Send-out — 1 to 3 weeks",
-          "body": "We spread it out to protect our sending domain. Fire it all at once and it lands in the spam folder."
+          "description": "We spread it out to protect our sending domain. Fire it all at once and it lands in the spam folder."
         },
         {
           "title": "Report",
-          "body": "We write up the send-out record and the responses for you."
+          "description": "We write up the send-out record and the responses for you."
         }
       ]
     },
