@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 
 import { createSubscription, copyToClipboard } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, TextInput } from '../../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import { subscriptionAmounts } from '../../../lib/billing/amounts';
@@ -123,45 +125,41 @@ export default function NewLessonSubscriptionPage() {
                 프로듀싱 레슨 월정액: {formatPriceAmount(lessonAmounts.totalAmount)}원 (VAT 포함)
               </p>
 
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">이름</label>
-                <input
+              <Field id="customer-name" label="이름" className={lightOnlyField}>
+                <TextInput
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className={`text-sm ${lightOnlyControl}`}
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">전화번호</label>
-                <input
+              </Field>
+              <Field id="customer-phone" label="전화번호" className={lightOnlyField}>
+                <TextInput
                   type="text"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="010-1234-5678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className={`text-sm ${lightOnlyControl}`}
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">이메일</label>
-                <input
+              </Field>
+              <Field id="customer-email" label="이메일" className={lightOnlyField}>
+                <TextInput
                   type="email"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className={`text-sm ${lightOnlyControl}`}
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">결제일 (매월 1~31일)</label>
-                <input
+              </Field>
+              <Field id="billing-day" label="결제일 (매월 1~31일)" className={lightOnlyField}>
+                <TextInput
                   type="number"
                   min={1}
                   max={31}
                   value={billingDay}
                   onChange={(e) => setBillingDay(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  className={`text-sm ${lightOnlyControl}`}
                 />
-              </div>
+              </Field>
 
               {error && <p className="text-sm text-red-600">{error}</p>}
 

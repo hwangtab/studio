@@ -8,7 +8,7 @@ import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing'
 import type { OrderAmounts } from '../../lib/booking/amounts';
 import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingProduct } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
-import { inputClass } from '../ui/formClasses';
+import { Field, Select, TextArea, TextInput } from '../ui/Field';
 
 interface MixingOrderWizardProps {
   /** ?product= 쿼리를 서버에서 검증해 넘긴 값 — 없거나 유효하지 않으면 undefined(1번 상품이 기본). */
@@ -188,21 +188,19 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
           </fieldset>
 
           <div className="mb-4">
-            <label htmlFor="songCount" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-              곡 수
-            </label>
-            <select
-              id="songCount"
-              value={songCount}
-              onChange={(e) => setSongCount(Number(e.target.value))}
-              className="w-full sm:w-48 min-w-0 max-w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            >
-              {songCountOptions.map((n) => (
-                <option key={n} value={n}>
-                  {n}곡
-                </option>
-              ))}
-            </select>
+            <Field id="songCount" label="곡 수">
+              <Select
+                value={songCount}
+                onChange={(e) => setSongCount(Number(e.target.value))}
+                className="sm:w-48 min-w-0 max-w-full"
+              >
+                {songCountOptions.map((n) => (
+                  <option key={n} value={n}>
+                    {n}곡
+                  </option>
+                ))}
+              </Select>
+            </Field>
           </div>
 
           {selectedProduct.tuningEligible && (
@@ -239,65 +237,53 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="customerName" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                이름
-              </label>
-              <input
-                id="customerName"
-                type="text"
-                autoComplete="name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                required
-                className={inputClass}
-              />
+              <Field id="customerName" label="이름" required>
+                <TextInput
+                  type="text"
+                  autoComplete="name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                />
+              </Field>
             </div>
 
             <div>
-              <label htmlFor="customerPhone" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                휴대폰 번호
-              </label>
-              <input
-                id="customerPhone"
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                placeholder="010-1234-5678"
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                required
-                className={inputClass}
-              />
+              <Field id="customerPhone" label="휴대폰 번호" required>
+                <TextInput
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="010-1234-5678"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  required
+                />
+              </Field>
             </div>
 
             <div>
-              <label htmlFor="customerEmail" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                이메일
-              </label>
-              <input
-                id="customerEmail"
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                value={customerEmail}
-                onChange={(e) => setCustomerEmail(e.target.value)}
-                required
-                className={inputClass}
-              />
+              <Field id="customerEmail" label="이메일" required>
+                <TextInput
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  required
+                />
+              </Field>
             </div>
 
             <div>
-              <label htmlFor="customerNote" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                요청사항 (선택)
-              </label>
-              <textarea
-                id="customerNote"
-                rows={4}
-                placeholder="파일 링크(구글 드라이브·WeTransfer)가 이미 있으면 여기 적어주셔도 됩니다."
-                value={customerNote}
-                onChange={(e) => setCustomerNote(e.target.value)}
-                className={inputClass}
-              />
+              <Field id="customerNote" label="요청사항 (선택)">
+                <TextArea
+                  rows={4}
+                  placeholder="파일 링크(구글 드라이브·WeTransfer)가 이미 있으면 여기 적어주셔도 됩니다."
+                  value={customerNote}
+                  onChange={(e) => setCustomerNote(e.target.value)}
+                />
+              </Field>
             </div>
 
             <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">

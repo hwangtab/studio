@@ -12,6 +12,8 @@ import {
   type BookingActionResult,
 } from '../../../components/admin/bookingActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, TextArea, TextInput } from '../../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -507,30 +509,30 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                 </p>
 
                 <form onSubmit={handleRefund} className="space-y-3 max-w-md">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                      환불 금액 (원, 최대 {formatPriceAmount(booking.totalAmount)})
-                    </label>
-                    <input
+                  <Field
+                    id="refund-amount"
+                    label={`환불 금액 (원, 최대 ${formatPriceAmount(booking.totalAmount)})`}
+                    className={lightOnlyField}
+                  >
+                    <TextInput
                       type="number"
                       min={0}
                       max={booking.totalAmount}
                       step={1}
                       value={refundAmount}
                       onChange={(e) => setRefundAmount(Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      className={`text-sm ${lightOnlyControl}`}
                     />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">환불 사유</label>
-                    <textarea
+                  </Field>
+                  <Field id="refund-reason" label="환불 사유" className={lightOnlyField}>
+                    <TextArea
                       value={refundReason}
                       onChange={(e) => setRefundReason(e.target.value)}
                       rows={2}
                       placeholder="예: 고객 요청 — 개인 사정으로 취소"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      className={`min-h-0 text-sm ${lightOnlyControl}`}
                     />
-                  </div>
+                  </Field>
                   {refundError && (
                     <p className="text-sm text-red-600">{refundError}</p>
                   )}

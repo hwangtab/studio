@@ -9,7 +9,26 @@ import EnglishFastContactActions from './EnglishFastContactActions';
 import KoreanFastContactActions from './KoreanFastContactActions';
 import ContactFormErrorFallback from './ContactFormErrorFallback';
 import InputField from './InputField';
+import { Field, TextArea } from '../ui/Field';
 import type { ContactTranslate } from './contactTypes';
+
+type IconTextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
+  icon: React.ElementType;
+  invalid?: boolean;
+};
+
+/**
+ * 아이콘 슬롯 때문에 컨트롤을 relative 래퍼로 감싼다 — `Field`가 담지 못하는 부분이다.
+ * `Field`가 주입하는 id·aria-*는 그대로 `TextArea`로 흘려보내고, invalid만 직접 넘긴다.
+ */
+const IconTextArea = ({ icon: Icon, invalid, className, ...props }: IconTextAreaProps) => (
+  <div className="relative">
+    <div className="absolute top-3 left-3 pointer-events-none">
+      <Icon className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+    </div>
+    <TextArea invalid={invalid} className={['pl-10', className].filter(Boolean).join(' ')} {...props} />
+  </div>
+);
 
 type ContactErrors = Record<'name' | 'email' | 'phone' | 'message', string>;
 type MotionDivProps = Omit<React.ComponentProps<typeof m.div>, 'className' | 'children'>;
@@ -221,34 +240,26 @@ const ContactFormCard = ({
           spellCheck={false}
         />
 
-        <div className="relative mb-6">
-          <label htmlFor="message" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">{t('contact.form.message')}</label>
-          <div className="relative">
-            <div className="absolute top-3 left-3 pointer-events-none">
-              <Send className="w-5 h-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
-            </div>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={onChange}
-              onBlur={onBlur}
-              aria-required="true"
-              aria-invalid={!!errors.message}
-              aria-describedby={errors.message ? 'message-error' : undefined}
-              placeholder={t('contact.form.messagePlaceholder')}
-              className={`w-full pl-10 pr-3 py-2 border ${errors.message ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-md leading-5 bg-white dark:bg-gray-700 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary dark:focus:ring-primary-light focus:border-transparent`}
-              rows={8}
-              required
-              autoComplete="on"
-            ></textarea>
-          </div>
-          {errors.message && (
-            <span id="message-error" role="alert" className="text-xs text-red-600 mt-1 pl-10 block">
-              {errors.message}
-            </span>
-          )}
-        </div>
+        <Field
+          id="message"
+          label={t('contact.form.message')}
+          required
+          error={errors.message}
+          className="mb-6"
+        >
+          <IconTextArea
+            icon={Send}
+            invalid={!!errors.message}
+            name="message"
+            value={formData.message}
+            onChange={onChange}
+            onBlur={onBlur}
+            placeholder={t('contact.form.messagePlaceholder')}
+            rows={8}
+            required
+            autoComplete="on"
+          />
+        </Field>
 
         <div className="flex items-start gap-2.5">
           <input

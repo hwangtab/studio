@@ -11,6 +11,8 @@ import {
   mutateContract,
 } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
+import { TextInput } from '../../../components/ui/Field';
+import { lightOnlyControl } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { contractStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -301,12 +303,12 @@ export default function AdminContractsPage({
                   ))}
                 </div>
 
-                <input
+                <TextInput
                   type="text"
                   placeholder="이름, 이메일, 전화번호, 호실 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="flex-1 min-w-[240px] px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+                  className={`w-auto flex-1 min-w-[240px] px-4 ${lightOnlyControl}`}
                 />
               </div>
 

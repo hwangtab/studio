@@ -10,6 +10,8 @@ import {
   type SubscriptionActionResult,
 } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, TextArea } from '../../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -381,16 +383,15 @@ export default function AdminSubscriptionDetailPage({
                   해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.
                 </p>
                 <form onSubmit={handleCancel} className="space-y-3 max-w-md">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">해지 사유</label>
-                    <textarea
+                  <Field id="cancel-reason" label="해지 사유" className={lightOnlyField}>
+                    <TextArea
                       value={cancelReason}
                       onChange={(e) => setCancelReason(e.target.value)}
                       rows={2}
                       placeholder="예: 고객 요청 — 개인 사정으로 해지"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      className={`min-h-0 text-sm ${lightOnlyControl}`}
                     />
-                  </div>
+                  </Field>
                   {cancelError && <p className="text-sm text-red-600">{cancelError}</p>}
                   <Button type="submit" variant="outline" disabled={busy}>
                     해지 처리

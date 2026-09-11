@@ -7,6 +7,8 @@ import Markdown from 'markdown-to-jsx';
 
 import ContractContent from '../../../../components/contracts/ContractContent';
 import { Button } from '../../../../components/ui/Button';
+import { Field, TextInput } from '../../../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../../../components/ui/adminFieldClass';
 import { getDb } from '../../../../db/client';
 import {
   serializeAttachment,
@@ -153,6 +155,11 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
   }
 };
 
+
+
+/** 계약서 페이지는 종이처럼 항상 밝다 — 공용 컨트롤의 다크 분기만 되돌린다. */
+const LIGHT_CONTROL = `px-4 py-3 ${lightOnlyControl}`;
+const LIGHT_FIELD = lightOnlyField;
 
 export default function ContractSignPage({
   locale,
@@ -529,49 +536,37 @@ export default function ContractSignPage({
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="customerBirthdate"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-1"
-                    >
-                      생년월일 <span className="text-red-600 dark:text-red-600">*</span>
-                    </label>
-                    <input
-                      id="customerBirthdate"
+                  <Field
+                    id="customerBirthdate"
+                    label="생년월일"
+                    required
+                    error={detailErrors.customerBirthdate}
+                    className={LIGHT_FIELD}
+                  >
+                    <TextInput
                       type="date"
                       value={customerBirthdate}
                       onChange={(e) => setCustomerBirthdate(e.target.value)}
                       max={new Date().toISOString().slice(0, 10)}
-                      className="w-full rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [color-scheme:light]"
+                      className={`${LIGHT_CONTROL} [color-scheme:light]`}
                     />
-                    {detailErrors.customerBirthdate && (
-                      <p className="mt-1 text-xs text-red-600 dark:text-red-600">
-                        {detailErrors.customerBirthdate}
-                      </p>
-                    )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label
-                      htmlFor="customerAddress"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-1"
-                    >
-                      주소 <span className="text-red-600 dark:text-red-600">*</span>
-                    </label>
-                    <input
-                      id="customerAddress"
+                  <Field
+                    id="customerAddress"
+                    label="주소"
+                    required
+                    error={detailErrors.customerAddress}
+                    className={LIGHT_FIELD}
+                  >
+                    <TextInput
                       value={customerAddress}
                       onChange={(e) => setCustomerAddress(e.target.value)}
                       placeholder="예: 서울시 은평구 대조동 00-0"
                       autoComplete="street-address"
-                      className="w-full rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                      className={LIGHT_CONTROL}
                     />
-                    {detailErrors.customerAddress && (
-                      <p className="mt-1 text-xs text-red-600 dark:text-red-600">
-                        {detailErrors.customerAddress}
-                      </p>
-                    )}
-                  </div>
+                  </Field>
                 </div>
               </div>
 
@@ -630,7 +625,7 @@ export default function ContractSignPage({
                   </span>
                 </p>
 
-                <input
+                <TextInput
                   type="text"
                   inputMode="numeric"
                   autoComplete="off"
@@ -641,10 +636,7 @@ export default function ContractSignPage({
                   }
                   placeholder={'0'.repeat(IDENTITY_DIGITS)}
                   aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
-                  /* 배경·글자색을 명시한다. globals.css의 `color-scheme: light dark` 때문에
-                     OS가 다크 모드면 브라우저가 입력칸을 제멋대로 어둡게 칠하고, 글자색은
-                     상속을 따라가 입력한 네 자리가 보이지 않는 조합이 만들어진다. */
-                  className="w-32 text-center tracking-[0.4em] text-lg rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [color-scheme:light]"
+                  className={`w-32 text-center tracking-[0.4em] text-lg ${LIGHT_CONTROL} [color-scheme:light]`}
                 />
 
                 <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">

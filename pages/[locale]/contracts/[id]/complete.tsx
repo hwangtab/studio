@@ -4,6 +4,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import ContractNotice from '../../../../components/contracts/ContractNotice';
+import { TextInput } from '../../../../components/ui/Field';
+import { lightOnlyControl } from '../../../../components/ui/adminFieldClass';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
@@ -285,7 +287,7 @@ export default function ContractCompletePage({
               >
                 본인 확인을 위해 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
               </label>
-              <input
+              <TextInput
                 id="download-identity-digits"
                 type="text"
                 inputMode="numeric"
@@ -296,7 +298,8 @@ export default function ContractCompletePage({
                 placeholder="0000"
                 aria-describedby={downloadError ? 'download-identity-error' : undefined}
                 aria-invalid={downloadError ? true : undefined}
-                className="w-full mb-4 rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white px-4 py-3 text-center text-lg tracking-[0.5em] text-gray-900 dark:text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                invalid={Boolean(downloadError)}
+                className={`mb-4 px-4 py-3 text-center text-lg tracking-[0.5em] ${lightOnlyControl}`}
               />
 
               <Button

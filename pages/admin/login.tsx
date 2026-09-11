@@ -3,6 +3,8 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 
 import { Button } from '../../components/ui/Button';
+import { Field, TextInput } from '../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../components/ui/adminFieldClass';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -48,19 +50,15 @@ export default function AdminLoginPage() {
           <p className="text-gray-600 mb-6">비밀번호를 입력하세요.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-                비밀번호
-              </label>
-              <input
-                id="password"
+            <Field id="password" label="비밀번호" required className={lightOnlyField}>
+              <TextInput
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+                className={lightOnlyControl}
                 required
               />
-            </div>
+            </Field>
 
             {error && (
               <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">{error}</div>

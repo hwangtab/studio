@@ -10,7 +10,7 @@ import type { SessionProduct } from '../../lib/booking/products';
 import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
-import { inputClass } from '../ui/formClasses';
+import { Field, Select, TextArea, TextInput } from '../ui/Field';
 
 interface BookingWizardProps {
   service: string;
@@ -337,21 +337,19 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
           {selectedProduct.kind === 'hourly' && (
             <div className="mb-4">
-              <label htmlFor="hours" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                이용 시간
-              </label>
-              <select
-                id="hours"
-                value={hours}
-                onChange={(e) => handleHoursChange(Number(e.target.value))}
-                className="w-full sm:w-48 min-w-0 max-w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              >
-                {hourOptions.map((h) => (
-                  <option key={h} value={h}>
-                    {h}시간
-                  </option>
-                ))}
-              </select>
+              <Field id="hours" label="이용 시간">
+                <Select
+                  value={hours}
+                  onChange={(e) => handleHoursChange(Number(e.target.value))}
+                  className="sm:w-48 min-w-0 max-w-full"
+                >
+                  {hourOptions.map((h) => (
+                    <option key={h} value={h}>
+                      {h}시간
+                    </option>
+                  ))}
+                </Select>
+              </Field>
             </div>
           )}
 
@@ -378,18 +376,16 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
           )}
 
           <div className="mb-4">
-            <label htmlFor="booking-date" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-              날짜
-            </label>
-            <input
-              id="booking-date"
-              type="date"
-              value={date}
-              min={minDate}
-              max={maxDate}
-              onChange={handleDateChange}
-              className="block w-full sm:w-56 min-w-0 max-w-full appearance-none box-border px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-            />
+            <Field id="booking-date" label="날짜">
+              <TextInput
+                type="date"
+                value={date}
+                min={minDate}
+                max={maxDate}
+                onChange={handleDateChange}
+                className="sm:w-56 min-w-0 max-w-full appearance-none box-border"
+              />
+            </Field>
           </div>
 
           {date && (
@@ -447,64 +443,52 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label htmlFor="customerName" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                이름
-              </label>
-              <input
-                id="customerName"
-                type="text"
-                autoComplete="name"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-                required
-                className={inputClass}
-              />
+              <Field id="customerName" label="이름" required>
+                <TextInput
+                  type="text"
+                  autoComplete="name"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  required
+                />
+              </Field>
             </div>
 
             <div>
-              <label htmlFor="customerPhone" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                휴대폰 번호
-              </label>
-              <input
-                id="customerPhone"
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                placeholder="010-1234-5678"
-                value={customerPhone}
-                onChange={(e) => setCustomerPhone(e.target.value)}
-                required
-                className={inputClass}
-              />
+              <Field id="customerPhone" label="휴대폰 번호" required>
+                <TextInput
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="010-1234-5678"
+                  value={customerPhone}
+                  onChange={(e) => setCustomerPhone(e.target.value)}
+                  required
+                />
+              </Field>
             </div>
 
             <div>
-              <label htmlFor="customerEmail" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                이메일
-              </label>
-              <input
-                id="customerEmail"
-                type="email"
-                inputMode="email"
-                autoComplete="email"
-                value={customerEmail}
-                onChange={(e) => setCustomerEmail(e.target.value)}
-                required
-                className={inputClass}
-              />
+              <Field id="customerEmail" label="이메일" required>
+                <TextInput
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={customerEmail}
+                  onChange={(e) => setCustomerEmail(e.target.value)}
+                  required
+                />
+              </Field>
             </div>
 
             <div>
-              <label htmlFor="customerNote" className="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                요청사항 (선택)
-              </label>
-              <textarea
-                id="customerNote"
-                rows={4}
-                value={customerNote}
-                onChange={(e) => setCustomerNote(e.target.value)}
-                className={inputClass}
-              />
+              <Field id="customerNote" label="요청사항 (선택)">
+                <TextArea
+                  rows={4}
+                  value={customerNote}
+                  onChange={(e) => setCustomerNote(e.target.value)}
+                />
+              </Field>
             </div>
 
             <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">

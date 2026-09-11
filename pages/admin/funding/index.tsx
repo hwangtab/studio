@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { createManualPledge } from '../../../components/admin/fundingActions';
 import { logoutAdmin } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, Select, TextInput } from '../../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { duplicateKey, serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
@@ -320,92 +322,84 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                 <form onSubmit={handleCreateManual} className="mb-6 p-4 bg-gray-50 rounded-xl space-y-3">
                   {formError && <div className="p-2 bg-red-50 text-red-700 rounded text-sm">{formError}</div>}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">프로젝트</label>
-                      <select
+                    <Field id="form-project-slug" label="프로젝트" className={lightOnlyField}>
+                      <Select
                         value={formProjectSlug}
                         onChange={(e) => { setFormProjectSlug(e.target.value); setFormRewardId(''); }}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       >
                         <option value="">선택</option>
                         {projects.map((p) => (
                           <option key={p.slug} value={p.slug}>{p.title}</option>
                         ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">리워드</label>
-                      <select
+                      </Select>
+                    </Field>
+                    <Field id="form-reward-id" label="리워드" className={lightOnlyField}>
+                      <Select
                         value={formRewardId}
                         onChange={(e) => setFormRewardId(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                         disabled={!selectedProject}
                       >
                         <option value="">선택</option>
                         {(selectedProject?.rewards ?? []).map((r) => (
                           <option key={r.id} value={r.id}>{r.title} ({formatPriceAmount(r.amount)}원)</option>
                         ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">수량</label>
-                      <input
+                      </Select>
+                    </Field>
+                    <Field id="form-quantity" label="수량" className={lightOnlyField}>
+                      <TextInput
                         type="number"
                         min={1}
                         max={10}
                         value={formQuantity}
                         onChange={(e) => setFormQuantity(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">추가 후원금(원)</label>
-                      <input
+                    </Field>
+                    <Field id="form-additional-amount" label="추가 후원금(원)" className={lightOnlyField}>
+                      <TextInput
                         type="number"
                         min={0}
                         max={5_000_000}
                         step={1000}
                         value={formAdditionalAmount}
                         onChange={(e) => setFormAdditionalAmount(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">이름</label>
-                      <input
+                    </Field>
+                    <Field id="form-customer-name" label="이름" className={lightOnlyField}>
+                      <TextInput
                         type="text"
                         value={formCustomerName}
                         onChange={(e) => setFormCustomerName(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">연락처</label>
-                      <input
+                    </Field>
+                    <Field id="form-customer-phone" label="연락처" className={lightOnlyField}>
+                      <TextInput
                         type="text"
                         value={formCustomerPhone}
                         onChange={(e) => setFormCustomerPhone(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">이메일</label>
-                      <input
+                    </Field>
+                    <Field id="form-customer-email" label="이메일" className={lightOnlyField}>
+                      <TextInput
                         type="email"
                         value={formCustomerEmail}
                         onChange={(e) => setFormCustomerEmail(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">메모</label>
-                      <input
+                    </Field>
+                    <Field id="form-memo" label="메모" className={lightOnlyField}>
+                      <TextInput
                         type="text"
                         value={formMemo}
                         onChange={(e) => setFormMemo(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        className={`text-sm ${lightOnlyControl}`}
                       />
-                    </div>
+                    </Field>
                   </div>
                   <Button type="submit" disabled={busy}>등록</Button>
                 </form>

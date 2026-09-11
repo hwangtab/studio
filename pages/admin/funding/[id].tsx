@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 
 import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
+import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
@@ -161,39 +163,36 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             <div>
               <h2 className="text-lg font-bold text-gray-900 mb-3">발송 상태</h2>
               <div className="flex flex-wrap items-end gap-3 p-4 bg-gray-50 rounded-xl">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">상태</label>
-                  <select
+                <Field id="fulfillment-status" label="상태" className={lightOnlyField}>
+                  <Select
                     value={fulfillmentStatus}
                     onChange={(e) => setFulfillmentStatus(e.target.value as typeof fulfillmentStatus)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className={`w-auto text-sm ${lightOnlyControl}`}
                     disabled={pledge.status !== 'paid'}
                   >
                     {FULFILLMENT_OPTIONS.map((s) => (
                       <option key={s} value={s}>{FULFILLMENT_LABELS[s]}</option>
                     ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">택배사</label>
-                  <input
+                  </Select>
+                </Field>
+                <Field id="tracking-company" label="택배사" className={lightOnlyField}>
+                  <TextInput
                     type="text"
                     value={trackingCompany}
                     onChange={(e) => setTrackingCompany(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className={`w-auto text-sm ${lightOnlyControl}`}
                     disabled={pledge.status !== 'paid'}
                   />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">운송장번호</label>
-                  <input
+                </Field>
+                <Field id="tracking-number" label="운송장번호" className={lightOnlyField}>
+                  <TextInput
                     type="text"
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className={`w-auto text-sm ${lightOnlyControl}`}
                     disabled={pledge.status !== 'paid'}
                   />
-                </div>
+                </Field>
                 <Button disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
               </div>
               {pledge.status !== 'paid' && (
@@ -204,11 +203,12 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             <div>
               <h2 className="text-lg font-bold text-gray-900 mb-3">관리자 메모</h2>
               <div className="flex flex-col gap-3">
-                <textarea
+                <TextArea
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  aria-label="관리자 메모"
+                  className={`min-h-0 text-sm ${lightOnlyControl}`}
                 />
                 <Button disabled={busy} onClick={handleSaveMemo} className="self-start">메모 저장</Button>
               </div>
