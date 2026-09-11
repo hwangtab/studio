@@ -18,8 +18,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: {} };
 };
 
-// 청구액은 subscriptionAmounts 하나에서만 온다 — 레슨은 VAT 포함(35만원이 최종액),
-// 연습실은 VAT 별도라 규칙이 다르다. 여기서 다시 계산하면 둘이 어긋난다.
+// 청구액은 subscriptionAmounts 하나에서만 온다. 여기서 VAT를 다시 계산하면
+// 규칙이 바뀔 때 화면과 실제 청구액이 조용히 어긋난다.
 const lessonAmounts = subscriptionAmounts('lesson');
 
 export default function NewLessonSubscriptionPage() {
@@ -120,7 +120,7 @@ export default function NewLessonSubscriptionPage() {
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
               <p className="text-sm text-gray-600">
-                프로듀싱 레슨 월정액: {formatPriceAmount(lessonAmounts.totalAmount)}원 (VAT 포함)
+                프로듀싱 레슨 월정액: {formatPriceAmount(lessonAmounts.totalAmount)}원 청구 ({formatPriceAmount(lessonAmounts.itemAmount)}원 + VAT)
               </p>
 
               <div>
