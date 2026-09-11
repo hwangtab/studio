@@ -42,6 +42,10 @@ export const Select = React.forwardRef<HTMLSelectElement, ControlProps<React.Sel
 );
 Select.displayName = 'Select';
 
+// invalid는 우리 컨트롤 3종만 구조분해로 걷어낸다. 참조 동일성으로 판정한다 —
+// TextInput/TextArea/Select 선언 뒤에 둬야 한다(순서 주의).
+const FIELD_CONTROLS = new Set<unknown>([TextInput, TextArea, Select]);
+
 export interface FieldProps {
   id: string;
   label: string;
@@ -49,7 +53,13 @@ export interface FieldProps {
   error?: string;
   hint?: string;
   className?: string;
-  /** 컨트롤 엘리먼트 하나. id는 Field의 id와 같아야 레이블이 연결된다. */
+  /**
+   * 컨트롤 엘리먼트 하나. id는 Field의 id와 같아야 레이블이 연결된다.
+   * `TextInput`/`TextArea`/`Select` 사용을 권장한다 — 네이티브 엘리먼트(생짜 `<input>` 등)를
+   * 넣으면 오류 테두리(`invalid`)는 적용되지 않고 aria 속성만 배선된다. `invalid`를
+   * 네이티브 엘리먼트에 그대로 주입하면 DOM 속성으로 새어 React가
+   * "Received true for a non-boolean attribute" 경고를 낸다.
+   */
   children: React.ReactElement;
 }
 
@@ -67,7 +77,7 @@ export const Field = ({ id, label, required, error, hint, className, children }:
     'aria-required': required || undefined,
     'aria-invalid': error ? true : undefined,
     'aria-describedby': describedBy,
-    invalid: Boolean(error) || undefined,
+    ...(FIELD_CONTROLS.has(children.type) ? { invalid: Boolean(error) || undefined } : {}),
   });
 
   return (

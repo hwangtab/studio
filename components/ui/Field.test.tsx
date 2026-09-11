@@ -75,4 +75,27 @@ describe('Field', () => {
     render(<TextInput id="x" aria-label="x" invalid />);
     expect(screen.getByLabelText('x').className).toMatch(/border-red-500/);
   });
+
+  it('자식이 생짜 <input>이면 invalid를 DOM에 새지 않고 aria-invalid만 배선한다', () => {
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(
+      <Field id="native" label="네이티브" error="오류">
+        <input />
+      </Field>,
+    );
+    const input = screen.getByLabelText('네이티브');
+    expect(input.getAttribute('invalid')).toBeNull();
+    expect(input).toHaveAttribute('aria-invalid', 'true');
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it('자식이 TextInput이면 기존대로 오류 테두리가 적용된다(회귀 방지)', () => {
+    render(
+      <Field id="ctl" label="컨트롤" error="오류">
+        <TextInput />
+      </Field>,
+    );
+    expect(screen.getByLabelText('컨트롤').className).toMatch(/border-red-500/);
+  });
 });
