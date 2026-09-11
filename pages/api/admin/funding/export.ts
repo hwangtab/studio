@@ -3,12 +3,24 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { listFundingOrdersForExport } from '../../../../lib/funding/admin-list';
 import { toCsv } from '../../../../lib/funding/csv';
+import { isRefundPendingStatus } from '../../../../lib/funding/policy';
 
+/**
+ * shipHold는 사람이 읽는 칸이다. refundRequestedAt만으로는 부족하다 — 주소로 정렬해
+ * 라벨을 뽑는 실무에서 ISO 타임스탬프 한 칸은 눈에 안 들어온다. 값은 "발송금지" 아니면
+ * 빈 칸이라, 엑셀에서 이 열만 훑거나 정렬하면 한 번에 걸러진다. 맨 앞(주문번호 다음)에
+ * 두는 것도 같은 이유다.
+ *
+ * refundRequestedAt은 status 바로 옆에 둔다 — 무통장 청약철회는 orders.status가 paid로
+ * 남은 채 이 컬럼만 찍히므로(자동 환불이 불가능해 운영자가 계좌로 보내야 한다), 이 값이
+ * 빠진 CSV는 **취소를 요청한 사람을 발송 목록에 그대로 싣는다.** adminMemo도 같은 이유로
+ * 싣는다 — 웹훅이 남긴 '재고 확인 필요' 같은 메모가 발송 실무 화면 어디에도 안 보였다.
+ */
 const COLUMNS = [
-  'orderNo', 'status', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
+  'orderNo', 'shipHold', 'status', 'refundRequestedAt', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
   'rewardTitle', 'quantity', 'additionalAmount', 'totalAmount',
   'shippingName', 'shippingPhone', 'shippingPostcode', 'shippingAddress1', 'shippingAddress2', 'shippingMemo',
-  'fulfillmentStatus', 'trackingCompany', 'trackingNumber', 'supporterMessage', 'paidAt',
+  'fulfillmentStatus', 'trackingCompany', 'trackingNumber', 'supporterMessage', 'paidAt', 'adminMemo',
 ];
 
 /** 프로젝트 slug는 파일명(Content-Disposition)에 그대로 들어가므로 형식을 먼저 검증한다. */
@@ -31,7 +43,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const p = o.fundingPledge!;
     return {
       orderNo: o.orderNo,
+      // 청약철회했는데 돈이 아직 안 나간 건. 환불이 끝난 건(refunded)은 애초에 이 조회에
+      // 들어오지 않지만, 판정은 화면·헬스체크와 같은 헬퍼를 쓴다.
+      shipHold: p.refundRequestedAt && isRefundPendingStatus(o.status) ? '발송금지' : '',
       status: o.status,
+      refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
       paymentMethod: p.paymentMethod,
       customerName: o.customerName,
       customerPhone: o.customerPhone,
@@ -51,6 +67,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       trackingNumber: p.trackingNumber,
       supporterMessage: p.supporterMessage,
       paidAt: p.paidAt?.toISOString() ?? null,
+      adminMemo: p.adminMemo,
     };
   });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');

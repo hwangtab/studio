@@ -135,6 +135,10 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
   const paidItems = useMemo(() => items.filter((i) => i.status === 'paid' || i.status === 'partially_refunded'), [items]);
   const pendingBankItems = useMemo(() => items.filter((i) => i.status === 'pending' && i.paymentMethod === 'bank_transfer'), [items]);
   const mismatched = useMemo(() => items.filter((i) => i.mismatch), [items]);
+  // 무통장 청약철회는 자동 환불 경로가 없어 orders.status가 paid로 남는다 — 상태 칸만 보면
+  // 정상 확정 건과 똑같이 보이므로, 목록에서 따로 세어 배너로 올린다. 약관 제10조가 약속한
+  // 3영업일 환불 기한을 놓치는 사고가 여기서 시작된다.
+  const refundRequested = useMemo(() => items.filter((i) => i.refundRequested), [items]);
 
   const totals = useMemo(() => ({
     confirmedAmount: paidItems.reduce((sum, i) => sum + i.totalAmount, 0),
@@ -262,6 +266,14 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                 <div className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
                   <strong>결제 기록과 주문 상태가 어긋난 후원이 {mismatched.length}건 있습니다</strong> (
                   {mismatched.map((m) => m.orderNo).join(', ')}). 토스 콘솔에서 확인해 주세요.
+                </div>
+              )}
+
+              {refundRequested.length > 0 && (
+                <div className="mb-4 p-3 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
+                  <strong>{refundRequested.length}건이 계좌 환불 대기 중입니다</strong> (
+                  {refundRequested.map((m) => m.orderNo).join(', ')}). 후원자가 취소를 요청했지만 돈은 아직
+                  나가지 않았습니다. 약관상 접수일부터 3영업일 이내에 환불해야 하며, 이 건들은 발송하면 안 됩니다.
                 </div>
               )}
 
@@ -433,6 +445,11 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                           {item.mismatch && (
                             <div className="mt-1">
                               <span className="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">미정합</span>
+                            </div>
+                          )}
+                          {item.refundRequested && (
+                            <div className="mt-1">
+                              <span className="inline-flex px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold">환불요청</span>
                             </div>
                           )}
                         </td>

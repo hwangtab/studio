@@ -1,7 +1,7 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
-import { sendFundingBankDepositEmails, sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
+import { sendFundingBankDepositEmails, sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from './email';
 
 const order = {
   id: 'o', orderNo: 'FND-20261015-ABCDEF12', type: 'funding', status: 'paid', manageToken: 'tok',
@@ -119,4 +119,21 @@ describe('청약철회 고지 (전자상거래법 제13조 2항)', () => {
     await sendFundingConfirmedEmails(order, project);
     expect((sendEmail as jest.Mock).mock.calls[1][0].text as string).not.toContain('[청약철회 안내]');
   });
+});
+
+/**
+ * 관리자가 취소 요청을 철회 처리하면 고객이 남긴 청약철회 의사가 사라진다. 알리지 않으면
+ * 고객은 취소가 접수된 줄 알고 기다리다가 리워드를 받는다.
+ */
+it('취소 요청 철회 메일은 고객·운영자 두 통, 사유와 다시 요청하는 방법이 들어간다', async () => {
+  expect(await sendFundingRefundRequestClearedEmails(order, project, '후원자 전화 철회')).toBeNull();
+  expect(sendEmail).toHaveBeenCalledTimes(2);
+  const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+  expect(customer.to).toBe('a@b.com');
+  expect(customer.replyTo).toBe(OPERATOR_EMAIL);
+  expect(customer.subject).toBe('[스튜디오 놀] 취소 요청이 철회 처리되었습니다 — 데모 앨범');
+  expect(customer.text).toContain('사유: 후원자 전화 철회');
+  expect(customer.text).toContain('다시 취소를 요청');
+  expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
+  expect((sendEmail as jest.Mock).mock.calls[1][0].to).toBe(OPERATOR_EMAIL);
 });

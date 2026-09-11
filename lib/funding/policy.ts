@@ -9,6 +9,24 @@ export const ADDITIONAL_AMOUNT_STEP = 1000;
 export const BANK_ACCOUNT = { bank: '카카오뱅크', number: '3333-12-5480849', holder: '황경하 / 스튜디오 놀' } as const;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
 
+/**
+ * "후원자가 취소를 요청했는데 아직 돈이 안 나간" 상태로 볼 orders.status 집합.
+ *
+ * 무통장은 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로 남는다.
+ * partially_refunded도 포함하는 이유: 잔액이 남은 건은 여전히 환불이 덜 끝난 것이라
+ * 알람이 꺼지면 안 되고, 그 잔액을 정리하는 경로(관리자 환불)도 열려 있어야 한다.
+ * refunded로 넘어가면 refundRequestedAt은 그대로 남지만(cancel.ts는 지우지 않는다)
+ * 처리가 끝난 것이므로 여기서 빠진다 — 이 집합을 안 쓰면 첫 환불을 처리한 다음 날부터
+ * 배너·배지·헬스체크가 영구히 켜져 신호가 죽는다.
+ *
+ * 관리자 목록 배지·배너(admin-serialize), 헬스체크, clear_refund_request가 모두 이
+ * 하나를 본다. 셋이 갈리면 화면·메일·API가 서로 다른 사실을 말하게 된다.
+ */
+export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as const;
+
+export const isRefundPendingStatus = (status: string): boolean =>
+  (REFUND_PENDING_ORDER_STATUSES as readonly string[]).includes(status);
+
 export type CancelEligibility = { ok: true } | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' };
 
 /** 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다. */

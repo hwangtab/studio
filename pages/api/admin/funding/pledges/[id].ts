@@ -6,9 +6,11 @@ import { fulfillmentStatusEnum, fundingPledges, orders } from '../../../../../db
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
-import { sendFundingBankDepositEmails, sendFundingConfirmedEmails } from '../../../../../lib/funding/email';
+import { sendFundingBankDepositEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
 import { getFundingProject } from '../../../../../lib/funding/projects';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
+import { kstDateString } from '../../../../../lib/booking/kst';
 
 /** 수기 등록 시 채워 넣는 플레이스홀더 주소 — 실제 수신함이 아니다. */
 const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
@@ -47,6 +49,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '발송 상태가 올바르지 않습니다.' });
       }
       if (order.status !== 'paid') return res.status(409).json({ ok: false, message: '확정된 후원만 발송 상태를 바꿀 수 있습니다.' });
+      // 무통장 청약철회는 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로
+      // 남는다. 그 상태를 '발송 완료'로 바꿀 수 있게 두면, 청약철회한 사람에게 실물이
+      // 나간 기록이 시스템 안에서 정상 발송으로 굳는다. 예외는 두지 않는다 — 되돌리려면
+      // 환불을 처리하거나(주문이 refunded가 되어 이 분기 앞에서 걸린다) 아래
+      // clear_refund_request로 요청을 취소하는 두 경로뿐이다. 후자는 사유를 필수로 받아
+      // 관리자 메모에 날짜와 함께 덧붙이고 후원자에게 메일을 보낸다 — 즉 둘 다 흔적이 남고
+      // 고객도 알게 된다.
+      if (order.fundingPledge.refundRequestedAt) {
+        return res.status(409).json({
+          ok: false,
+          message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+        });
+      }
       await db
         .update(fundingPledges)
         .set({
@@ -58,6 +73,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
+    }
+    /**
+     * 후원자가 취소 요청을 철회했거나 운영자가 잘못 접수한 경우의 유일한 되돌림 경로.
+     * 이게 없으면 set_fulfillment 차단이 영구 잠금이 되고(refundRequestedAt을 지우는
+     * 코드가 저장소에 하나도 없었다) 헬스체크가 매일 영구히 울려 경보 피로로 신호가 죽는다.
+     *
+     * 다만 이 액션은 **고객이 남긴 청약철회 의사를 지운다.** 조용히 지워지면 안 되므로
+     * 세 가지를 강제한다: 사유 필수, 관리자 메모에 append(덮어쓰지 않는다 — 기존 메모가
+     * 사라지면 그것도 기록 손실이다), 후원자에게 확인 메일. 상태 게이트는 화면·헬스체크와
+     * 같은 집합이라 잔액이 남은 partially_refunded 건도 정리할 수 있다.
+     */
+    case 'clear_refund_request': {
+      const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
+      if (!reason) {
+        return res.status(400).json({ ok: false, message: '환불 요청을 취소하려면 사유를 입력해야 합니다.' });
+      }
+      if (!order.fundingPledge.refundRequestedAt) {
+        return res.status(409).json({ ok: false, message: '환불 요청이 없는 후원입니다.' });
+      }
+      if (!isRefundPendingStatus(order.status)) {
+        return res.status(409).json({ ok: false, message: '확정 상태인 후원만 환불 요청을 취소할 수 있습니다.' });
+      }
+      const entry = `[${kstDateString(now)}] 환불 요청 취소 — ${reason}`;
+      const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
+      await db
+        .update(fundingPledges)
+        .set({ refundRequestedAt: null, adminMemo: memo, updatedAt: now })
+        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      // 메일 실패가 기록을 되돌리지는 않는다(이 저장소의 원칙: 상태 변경은 끝났으므로
+      // 후속 실패는 삼키되 기록한다). notificationError는 헬스체크가 매일 읽는다.
+      const mailError = await sendFundingRefundRequestClearedEmails(order, getFundingProject(order.fundingPledge.projectSlug), reason);
+      await db.update(orders).set({ notificationError: mailError, updatedAt: now }).where(eq(orders.id, order.id));
+      return res.status(200).json({ ok: true, ...(mailError ? { message: `기록은 되었으나 메일 발송에 실패했습니다: ${mailError}` } : {}) });
     }
     case 'set_memo': {
       await db

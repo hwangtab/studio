@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -73,6 +73,22 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   const [trackingNumber, setTrackingNumber] = useState(pledge.trackingNumber ?? '');
   const [memo, setMemo] = useState(pledge.adminMemo ?? '');
 
+  /**
+   * 서버가 메모를 바꾸면 textarea를 따라가게 한다.
+   *
+   * run()의 router.replace는 props만 갱신하고 이 컴포넌트를 remount하지 않는다. 그래서
+   * '환불 요청 취소'가 adminMemo에 `[날짜] 환불 요청 취소 — 사유`를 덧붙여도 textarea에는
+   * append 이전 값이 남아 있었고, 이어서 '메모 저장'을 누르면 set_memo가 그 옛 값으로
+   * 통째로 덮어써 방금 남긴 청약철회 기록이 사라졌다 — 흔적을 남기려고 만든 장치가 같은
+   * 화면의 다음 클릭 한 번으로 무너진다.
+   *
+   * 의존성은 서버 값 하나뿐이라, 서버 값이 그대로인 다른 액션(입금 확인·발송 저장)에서는
+   * 이 effect가 다시 돌지 않는다. 즉 아직 저장하지 않은 입력은 지워지지 않는다.
+   */
+  useEffect(() => {
+    setMemo(pledge.adminMemo ?? '');
+  }, [pledge.adminMemo]);
+
   const run = async (task: () => Promise<FundingActionResult>, confirmText?: string) => {
     if (confirmText && !window.confirm(confirmText)) return;
     setBusy(true);
@@ -93,6 +109,25 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
   const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
+  /**
+   * 고객이 남긴 청약철회 의사를 지우는 조작이라 사유를 반드시 받는다(API도 없으면 400).
+   * 사유는 관리자 메모에 날짜와 함께 덧붙고, 후원자에게는 확인 메일이 나간다.
+   */
+  const handleClearRefundRequest = () => {
+    const reason = window.prompt(
+      '후원자가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 후원자에게 확인 메일이 나갑니다).',
+    );
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('환불 요청을 취소하려면 사유를 입력해야 합니다.');
+      return;
+    }
+    return run(() => patchPledge(pledge.id, { action: 'clear_refund_request', reason: reason.trim() }));
+  };
+
+  // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
+  // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
+  const fulfillmentLocked = pledge.status !== 'paid' || pledge.refundRequested;
 
   return (
     <>
@@ -116,6 +151,20 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
               <strong className="block mb-1">결제 기록과 주문 상태 불일치 — 토스 콘솔 확인 필요</strong>
               주문 상태는 “{STATUS_LABELS[pledge.status] ?? pledge.status}”인데 결제 기록이 있습니다.
+            </div>
+          )}
+
+          {pledge.refundRequested && (
+            <div className="mb-4 p-4 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
+              <strong className="block mb-1">후원자가 취소를 요청했습니다 — 계좌 환불 대기</strong>
+              {pledge.refundRequestedAt ? `${formatKstDateTimeFull(pledge.refundRequestedAt)}에 접수되었습니다. ` : ''}
+              무통장은 자동 환불이 되지 않아 운영자가 계좌로 직접 송금해야 합니다.
+              약관 제10조에 따라 접수일부터 3영업일 이내에 처리해 주세요.
+              <span className="block mt-2">
+                <strong>이 후원은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
+                “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다. 철회 처리에는 사유가 필요하며,
+                사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.
+              </span>
             </div>
           )}
 
@@ -157,6 +206,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               {canRefund && (
                 <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}
+              {pledge.refundRequested && pledge.status === 'paid' && (
+                <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
+              )}
               <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>
 
@@ -168,7 +220,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={fulfillmentStatus}
                     onChange={(e) => setFulfillmentStatus(e.target.value as typeof fulfillmentStatus)}
                     light className="w-auto text-sm"
-                    disabled={pledge.status !== 'paid'}
+                    disabled={fulfillmentLocked}
                   >
                     {FULFILLMENT_OPTIONS.map((s) => (
                       <option key={s} value={s}>{FULFILLMENT_LABELS[s]}</option>
@@ -181,7 +233,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={trackingCompany}
                     onChange={(e) => setTrackingCompany(e.target.value)}
                     light className="w-auto text-sm"
-                    disabled={pledge.status !== 'paid'}
+                    disabled={fulfillmentLocked}
                   />
                 </Field>
                 <Field id="tracking-number" label="운송장번호" className={lightOnlyField}>
@@ -190,13 +242,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
                     light className="w-auto text-sm"
-                    disabled={pledge.status !== 'paid'}
+                    disabled={fulfillmentLocked}
                   />
                 </Field>
-                <Button light disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
+                <Button light disabled={busy || fulfillmentLocked} onClick={handleSaveFulfillment}>저장</Button>
               </div>
               {pledge.status !== 'paid' && (
                 <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
+              )}
+              {pledge.status === 'paid' && pledge.refundRequested && (
+                <p className="mt-2 text-xs text-orange-700">
+                  환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿀 수 있습니다.
+                </p>
               )}
             </div>
 
