@@ -1,11 +1,9 @@
 /** @jest-environment node */
-import { readFileSync } from 'node:fs';
-import path from 'node:path';
-
 import {
   REVIEW_CLEARED_MARKER, REVIEW_MEMO_MARKER, REVIEW_MEMO_PREFIXES,
   hasReviewMarker, isReviewWarningLine, serializePledgeForAdmin,
 } from './admin-serialize';
+import { REVIVAL_NOTE_TAGS, revivalNote } from './confirm';
 import type { FundingOrder } from './service';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -158,37 +156,33 @@ describe('serializePledgeForAdmin — needsReview', () => {
 
 /**
  * 표식 문자열은 confirm.ts(다른 작업이 소유)와 이 파일에 나뉘어 있다. 한쪽만 바뀌면 배지가
- * 조용히 꺼지고, 그 실패는 사고가 난 뒤에야 드러난다 — 소스를 직접 읽어 대조한다.
+ * 조용히 꺼지고, 그 실패는 사고가 난 뒤에야 드러난다.
  *
- * "어딘가에 있다"만 보면 두 문구 중 **한쪽만** 바뀌었을 때 통과한다. confirm.ts에서
- * `[웹훅]`으로 시작하는 문자열 리터럴을 전부 뽑아 **모두가** 마커로 끝나는지 본다.
- *
- * 근본 해결은 아니다 — 확정 결합은 lib/funding/policy.ts에 상수를 두고 confirm.ts가
- * 조립하는 방식이어야 한다. policy.ts·confirm.ts 모두 이 작업의 소유가 아니라 이번엔
- * 소스 대조로 막고, 관련 PR이 모두 병합된 뒤 후속 커밋에서 접는다.
+ * 예전엔 confirm.ts 소스에서 작은따옴표 문자열 리터럴을 정규식으로 뽑아 대조했다.
+ * confirm.ts가 되살림 문구를 `revivalNote(tag, from)` 조립 함수로 리팩터하면서
+ * (#65) 그 소스 스캔이 헛돌게 됐다 — 문구가 백틱 템플릿 안에 있어 작은따옴표
+ * 정규식에 안 걸리고, `tag`(`'[웹훅]'`)는 그 자체로는 마커로 끝나지 않는 리터럴이라
+ * 오탐이 났다. 지금은 그 조립 함수(`revivalNote`)와 그것이 실제로 쓰는 태그 목록
+ * (`REVIVAL_NOTE_TAGS`)을 confirm.ts에서 export해, **모든 (tag × from) 조합의
+ * 실제 출력**이 `isReviewWarningLine`을 만족하는지를 직접 검증한다 — 소스 문자열을
+ * 흉내 내는 대신 진짜 조립 결과를 본다.
  */
-describe('confirm.ts 소스 대조 — 표식이 어긋나면 배지가 조용히 꺼진다', () => {
-  const source = () => readFileSync(path.join(process.cwd(), 'lib/funding/confirm.ts'), 'utf-8');
-  const literalsIn = (src: string) => [...src.matchAll(/'([^'\n]*)'/g)].map((m) => m[1]);
+describe('confirm.ts 되살림 문구 대조 — 표식이 어긋나면 배지가 조용히 꺼진다', () => {
+  const FROM_VALUES = ['expired', 'failed'] as const;
 
-  // 꼬리 드리프트: 두 문구 중 한쪽만 바뀌어도 잡는다.
-  it('[웹훅] 접두 문구가 전부 REVIEW_MEMO_MARKER로 끝난다', () => {
-    const webhookNotes = literalsIn(source()).filter((l) => l.startsWith('[웹훅]'));
-    expect(webhookNotes.length).toBeGreaterThan(0);
-    for (const note of webhookNotes) expect(note.endsWith(REVIEW_MEMO_MARKER)).toBe(true);
+  it('REVIVAL_NOTE_TAGS는 REVIEW_MEMO_PREFIXES의 부분집합이다', () => {
+    expect(REVIVAL_NOTE_TAGS.length).toBeGreaterThan(0);
+    for (const tag of REVIVAL_NOTE_TAGS) expect(REVIEW_MEMO_PREFIXES).toContain(tag);
   });
 
-  /**
-   * 접두 드리프트: 판정은 줄의 **형태**(접두 + 마커 꼬리)를 본다. confirm.ts가 마커를 단
-   * 메모를 REVIEW_MEMO_PREFIXES에 없는 접두로 남기기 시작하면 경고가 통째로 안 잡힌다.
-   */
-  it('마커를 단 문구는 전부 경고 줄 형태를 만족한다', () => {
-    const flagged = literalsIn(source()).filter((l) => l.includes(REVIEW_MEMO_MARKER));
-    expect(flagged.length).toBeGreaterThan(0);
-    for (const note of flagged) expect(isReviewWarningLine(note)).toBe(true);
-  });
-
-  it('알고 있는 접두가 실제로 confirm.ts에 하나 이상 쓰이고 있다', () => {
-    expect(REVIEW_MEMO_PREFIXES.some((prefix) => source().includes(prefix))).toBe(true);
-  });
+  // 꼬리 드리프트 + 접두 드리프트를 한 번에 본다: revivalNote가 실제로 조립하는 모든
+  // (tag × from) 출력이 경고 줄 형태(접두 + REVIEW_MEMO_MARKER 꼬리)를 만족해야 한다.
+  it.each(REVIVAL_NOTE_TAGS.flatMap((tag) => FROM_VALUES.map((from) => [tag, from] as const)))(
+    'revivalNote(%s, %s)의 출력은 경고 줄 형태를 만족하고 마커로 끝난다',
+    (tag, from) => {
+      const note = revivalNote(tag, from);
+      expect(note.endsWith(REVIEW_MEMO_MARKER)).toBe(true);
+      expect(isReviewWarningLine(note)).toBe(true);
+    },
+  );
 });

@@ -142,7 +142,10 @@ describe('processTossWebhook', () => {
 
     const result = await processTossWebhook(donePayload);
     expect(result).toEqual({ status: 200 });
-    expect(confirmBookingPayment).toHaveBeenCalledWith({ orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 });
+    expect(confirmBookingPayment).toHaveBeenCalledWith(
+      { orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 },
+      { trustedByWebhook: true },
+    );
   });
 
   it('CANCELED 동기화 시 payments가 빈 배열이면 crash 대신 로그만 남기고 조용히 스킵한다', async () => {
@@ -375,7 +378,10 @@ describe('processTossWebhook', () => {
       const real = await processTossWebhook(donePayload);
 
       expect(real).toEqual({ status: 200 });
-      expect(confirmBookingPayment).toHaveBeenCalledWith({ orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 });
+      expect(confirmBookingPayment).toHaveBeenCalledWith(
+      { orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 },
+      { trustedByWebhook: true },
+    );
       const eventKeys = insertValuesCallsOf(mockDb()).filter((c) => 'eventKey' in c).map((c) => c.eventKey);
       expect(eventKeys).toEqual(['pk1:IN_PROGRESS', 'pk1:DONE']);
     });
@@ -408,7 +414,10 @@ describe('processTossWebhook', () => {
     (confirmBookingPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' });
     const result = await processTossWebhook(donePayload);
     expect(result).toEqual({ status: 200 });
-    expect(confirmBookingPayment).toHaveBeenCalledWith({ orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 });
+    expect(confirmBookingPayment).toHaveBeenCalledWith(
+      { orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 },
+      { trustedByWebhook: true },
+    );
   });
 
   it('DONE + 이미 paid인 주문이면 confirmBookingPayment 내부 멱등에 맡기고 그대로 호출한다', async () => {
@@ -417,7 +426,10 @@ describe('processTossWebhook', () => {
     (confirmBookingPayment as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'SNB-1' });
     const result = await processTossWebhook(donePayload);
     expect(result).toEqual({ status: 200 });
-    expect(confirmBookingPayment).toHaveBeenCalledWith({ orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 });
+    expect(confirmBookingPayment).toHaveBeenCalledWith(
+      { orderNo: 'SNB-1', paymentKey: 'pk1', amount: 275000 },
+      { trustedByWebhook: true },
+    );
   });
 
   it('그 외 상태(예: READY)는 무시하고 200을 반환한다', async () => {

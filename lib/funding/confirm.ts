@@ -3,7 +3,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { fundingPledges, orders, payments, refunds } from '../../db/schema';
 import { confirmPayment, fetchPayment, type TossPayment } from '../booking/toss';
-import { sendFundingConfirmedEmails } from './email';
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProject } from './projects';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 
@@ -15,28 +15,67 @@ export type FundingConfirmOutcome =
 const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
 
 /**
- * "그 paymentKey로는 결제 자체가 없다"는 토스 거절 코드들.
+ * "이 주문의 결제가 실제로 거절됐다"고 단정할 수 있는 토스 코드 — **allowlist**다.
  *
- * 토스 confirm은 paymentKey·orderId·amount 세 값이 모두 맞아야 승인한다 — 아무 문자열이나
- * paymentKey로 넣거나 남의 주문번호를 붙이면 여기로 떨어진다. 정상 고객 흐름에서는 나올 수
- * 없는 코드다(결제창이 발급한 paymentKey를 그대로 넘기므로).
+ * 예전에는 반대로 denylist(NOT_FOUND_PAYMENT 계열만 제외)였다. 그러면 목록 밖의 어떤 코드든
+ * (INVALID_REQUEST·UNAUTHORIZED_KEY·FORBIDDEN_REQUEST…) 주문을 failed로 낙인한다 —
+ * 주문번호는 비밀이 아니므로 제3자가 success URL을 열어 남의 후원을 망가뜨릴 수 있고,
+ * 무통장 주문은 failed가 되는 순간 관리자 입금 확인(bank-transfer.ts는 pending·expired만
+ * claim)이 영구히 막힌다. allowlist면 모르는 코드는 주문을 건드리지 않고 pending으로 남아
+ * 홀드 만료나 웹훅이 결론을 낸다 — 과소 낙인은 스스로 치유되고, 과대 낙인은 아니다.
  *
- * 이걸 일반 거절로 취급해 주문을 failed로 낙인하면, 제3자가 주문번호만 알고 아무 paymentKey나
- * 넣어 남의 후원을 망가뜨릴 수 있다 — 특히 무통장 12시간 홀드 주문은 failed가 되는 순간
- * 관리자 입금 확인(bank-transfer.ts는 pending·expired만 claim)이 영구히 막힌다.
- * 그래서 이 계열은 주문 상태를 건드리지 않는다.
+ * 접두사로 보는 이유: 토스 거절 코드는 카드사/계좌 사유별로 계속 늘어나는 계열이라
+ * (REJECT_CARD_COMPANY·INVALID_CARD_EXPIRATION·EXCEED_MAX_DAILY_PAYMENT_COUNT…)
+ * 개별 열거는 곧 낡는다. 계열 밖 코드는 낙인하지 않는 쪽이 안전하다.
+ * lib/booking/confirm.ts에 같은 판단이 복제돼 있다(모듈 그래프를 섞지 않으려는 의도적 중복 —
+ * ALREADY_PROCESSED_CODE도 같은 이유로 양쪽에 있다).
  */
-const PAYMENT_ABSENT_CODES = new Set(['NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION']);
+const DECLINE_CODE_PATTERN =
+  /^(REJECT_|INVALID_REJECT_CARD|EXCEED_MAX_|INVALID_CARD|INVALID_STOPPED_CARD$|INVALID_ACCOUNT_INFO|NOT_ENOUGH_BALANCE$|NOT_AVAILABLE_BANK$|CARD_PROCESSING_ERROR$|PAY_PROCESS_(CANCELED|ABORTED)$)/;
+
+/** 고객 결제수단이 실제로 거절된 경우인가 — 참일 때만 orders.status를 failed로 낙인한다. */
+const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(code);
 
 /**
- * "확정은 됐는데 확정 메일을 아직 못 보냈다"는 센티널.
+ * 되살림 흔적에 실제로 쓰이는 태그 — 아래 `tag` 계산(options.trustedByWebhook 분기)과
+ * 이 배열이 어긋나면 admin-serialize.test.ts의 대조 테스트가 잡는다. 이 파일이
+ * REVIEW_MEMO_PREFIXES(admin-serialize.ts)의 부분집합을 실제로 쓰고 있다는 보증은
+ * 여기 export한 이 상수를 그 테스트가 직접 가져다 확인하는 형태로만 성립한다.
+ */
+export const REVIVAL_NOTE_TAGS = ['[웹훅]', '[지연승인]'] as const;
+
+/** 웹훅·지연 승인이 만료/실패 주문을 되살렸을 때 관리자 화면에 남기는 흔적. */
+export const revivalNote = (tag: string, from: 'expired' | 'failed'): string =>
+  from === 'expired'
+    ? `${tag} 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요`
+    : `${tag} failed 처리 후 승인 확인 — 재고 초과 가능, 확인 필요`;
+
+/**
+ * 확정 메일 상태를 notificationError에 싣는 **두 단계 센티널** (lib/booking/confirm.ts와 같은 장치 —
+ * 자세한 근거는 그쪽 SEND_PENDING 주석에 있다).
  *
- * batch(주문 paid 전이)와 같은 트랜잭션에 함께 써 넣고, 메일 발송이 끝나야 지운다. 예전엔
- * batch 직후 메일 단계에서 프로세스가 죽으면(타임아웃·배포 중 종료) 확정 메일이 영영 나가지
- * 않았다 — 뒤이어 오는 웹훅 재시도는 status가 이미 paid라 조기 반환했기 때문이다.
- * 이제 웹훅은 이 센티널이 남아 있으면 메일만 다시 보낸다.
+ * - `send_pending` — batch(주문 paid 전이)와 같은 트랜잭션에 써 넣는다. 웹훅 재도착이 이 값을
+ *   보면 메일을 대신 보낸다.
+ * - `send_inflight` — 선점에 성공한 실행이 바꿔 놓는 값. 경쟁자를 막으면서도 **비어 있지 않다**.
+ *
+ * 선점 값을 NULL로 두면 발송 구간(0.3~1.5초)에서 죽었을 때 주문은 paid인데 확정 메일 0통,
+ * 고객은 관리 링크도 없는 상태가 되고 healthCheck(`isNotNull(orders.notificationError)`)는
+ * 침묵한다 — 무증상 사고다. inflight를 남기면 즉시 잡히고 관리자 화면에서 복구할 수 있다.
+ * 정상 종료 시 발송 결과(성공 null / 실패 사유)가 덮어쓴다.
  */
 const SEND_PENDING = 'send_pending';
+const SEND_INFLIGHT = 'send_inflight';
+
+/**
+ * libSQL 결과의 rowsAffected — 판정 불가는 undefined로 돌려 "정상"으로 흘려보낸다.
+ * lib/booking/confirm.ts의 같은 이름 함수와 같은 규약이다(모듈 그래프를 섞지 않으려는
+ * 의도적 복제 — ALREADY_PROCESSED_CODE·DECLINE_CODE_PATTERN과 같은 이유).
+ */
+const rowsAffectedOf = (result: unknown): number | undefined => {
+  if (!result || typeof result !== 'object' || !('rowsAffected' in result)) return undefined;
+  const n = Number((result as { rowsAffected: unknown }).rowsAffected);
+  return Number.isFinite(n) ? n : undefined;
+};
 
 /** 확정 메일 발송. 예외를 삼켜 문자열로 바꾼다 — 결제는 이미 끝났으므로 confirm 결과를 뒤집으면 안 된다. */
 const deliverConfirmedEmails = async (order: FundingOrder): Promise<string | null> => {
@@ -55,6 +94,32 @@ const recordEmailResult = async (orderId: string, orderNo: string, emailError: s
   } catch (error) {
     console.error('[funding-confirm] notificationError 기록 실패', { orderNo, emailError, error });
   }
+};
+
+/**
+ * 확정 메일을 **정확히 한 번** 보낸다 — 발송권을 센티널 선점으로 정한다.
+ *
+ * 취소 가드와 같은 패턴이다(읽어서 검사하지 않고 `UPDATE … WHERE notification_error =
+ * 'send_pending'`으로 하나만 이기게 한다). 이게 없으면 SSR 확정이 메일(0.3~1.5초)을 보내는
+ * 동안 **바로 그 승인이 유발한** 토스 DONE 웹훅이 1~3초 안에 도착해, status='paid' + 센티널을
+ * 보고 확정 메일을 한 통 더 보낸다. rowsAffected 1을 받은 쪽만 발송한다.
+ *
+ * undefined는 "이번 호출이 보내지 않았다"는 뜻이다(success()의 emailSent 의미 그대로).
+ */
+const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean | undefined> => {
+  // CAS — send_pending을 send_inflight로 원자적으로 바꾼 쪽만 보낸다. 판정 불가는 보내는
+  // 쪽으로 흘린다(rowsAffectedOf의 규약) — 없는 실패를 지어내 확정 메일을 통째로 막는 쪽이
+  // 중복 발송보다 나쁘다.
+  const claim = await getDb().run(
+    sql`UPDATE orders SET notification_error = ${SEND_INFLIGHT} WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
+  );
+  if (rowsAffectedOf(claim) === 0) {
+    console.error('[funding-confirm] 확정 메일을 다른 경로가 이미 선점 — 중복 발송하지 않는다', { orderNo: order.orderNo });
+    return undefined;
+  }
+  const emailError = await deliverConfirmedEmails(order);
+  await recordEmailResult(order.id, order.orderNo, emailError);
+  return emailError === null;
 };
 
 const GENERIC = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
@@ -91,11 +156,11 @@ export const confirmFundingPledge = async (
       // 웹훅은 fetchPayment로 DONE + 금액을 이미 재검증하고 온 신뢰 경로다.
       // 다만 확정 메일 센티널이 남아 있으면 "확정은 됐는데 메일이 안 나간" 주문이므로,
       // 여기서 조기 반환하지 않고 메일만 다시 보낸다(H — 복구 경로가 닫히지 않게).
+      // send_inflight는 "다른 실행이 지금 보내고 있다"라 가로채지 않는다 — 그 실행이 죽어
+      // 값이 남으면 healthCheck가 잡는다(SEND_PENDING 주석 참조).
       if (order.notificationError !== SEND_PENDING) return success(order);
       console.error('[funding-confirm] 확정 메일 미발송 센티널 발견 — 웹훅 경로에서 재발송', { orderNo: order.orderNo });
-      const emailError = await deliverConfirmedEmails(order);
-      await recordEmailResult(order.id, order.orderNo, emailError);
-      return success(order, emailError === null);
+      return success(order, await deliverConfirmedEmailsOnce(order));
     }
     // success 페이지 새로고침 멱등성 — 단, 소유 증명이 있을 때만이다.
     // success()는 manageToken을 그대로 담고, success.tsx는 그 토큰으로 manage URL을 만들어
@@ -180,24 +245,24 @@ export const confirmFundingPledge = async (
     // 승인이 성사됐을 수 있으므로 failed로 확정하면 안 된다 — failed로 찍으면 뒤늦게 오는 웹훅
     // DONE 복구가 막힌다. pending으로 두면 홀드 만료 또는 웹훅이 결론을 낸다.
     const internal = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
-    // 결제 미존재 계열도 failed로 찍지 않는다 — 그 주문의 결제가 거절된 게 아니라, 아예 없는
-    // 결제를 승인하려 한 것이다(제3자가 주문번호만 알고 아무 paymentKey나 넣은 경우가 전형).
-    // 남의 주문을 failed로 만들어 복구 경로를 닫는 방해 공격을 여기서 끊는다.
-    const absent = PAYMENT_ABSENT_CODES.has(toss.code);
-    const markedFailed = !internal && !absent;
-    if (markedFailed) {
+    // 결제수단이 실제로 거절된 계열만 failed로 낙인한다(allowlist). 그 밖의 코드는 "이 주문의
+    // 결제가 거절됐다"를 뜻하지 않으므로 — 없는 결제를 승인하려 한 제3자 요청이 대표적이다 —
+    // 주문 상태를 건드리지 않는다. 남의 주문의 복구 경로를 닫는 방해 공격을 여기서 끊는다.
+    const declined = !internal && isCustomerDecline(toss.code);
+    if (declined) {
       await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
     }
     console.error('[funding-confirm] 토스 승인 거부', {
-      orderNo: order.orderNo, tossCode: toss.code, tossMessage: toss.message, markedFailed,
+      orderNo: order.orderNo, tossCode: toss.code, tossMessage: toss.message, markedFailed: declined,
     });
-    return { ok: false, code: 'toss_rejected', message: internal || absent ? GENERIC : toss.message };
+    return { ok: false, code: 'toss_rejected', message: declined ? toss.message : GENERIC };
   }
 
   const now = new Date();
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
+    const tag = options.trustedByWebhook ? REVIVAL_NOTE_TAGS[0] : REVIVAL_NOTE_TAGS[1];
     const batchResult = await db.batch([
       db.insert(payments).values({
         orderId: order.id,
@@ -207,6 +272,22 @@ export const confirmFundingPledge = async (
         receiptUrl: approved.receipt?.url ?? null,
         rawResponse: JSON.stringify(approved),
       }),
+      // 되살림 흔적 — orders 전이보다 **먼저** 실행해 "전이 직전의 실제 status"를 읽는다.
+      // 진입 시점에 읽은 order.status로 판정하면, 토스 승인 왕복(수 초) 동안 expireStalePledges가
+      // 돌아 expired가 된 건을 통째로 놓친다(진입 시엔 pending이었으므로). 같은 batch = 같은
+      // 트랜잭션이라 이 SELECT는 바로 아래 UPDATE가 덮어쓰기 전의 값을 본다.
+      // batch 안에 두는 이유는 하나 더 있다 — 전이는 성공했는데 흔적만 유실되는 조합을 없앤다.
+      db.update(fundingPledges)
+        .set({
+          adminMemo: sql`COALESCE(admin_memo || char(10), '') || CASE (SELECT status FROM orders WHERE id = ${order.id}) WHEN 'expired' THEN ${revivalNote(tag, 'expired')} ELSE ${revivalNote(tag, 'failed')} END`,
+          updatedAt: now,
+        })
+        .where(
+          and(
+            eq(fundingPledges.orderId, order.id),
+            sql`(SELECT status FROM orders WHERE id = ${order.id}) IN ('expired', 'failed')`,
+          ),
+        ),
       // 'expired'까지 대상에 넣는다 — 토스 승인 왕복(수 초) 동안 expireStalePledges나 다른
       // 요청의 자기 홀드 해제가 이 주문을 expired로 바꿀 수 있는데, 그때 UPDATE가 0행이면
       // 돈만 받고 pending도 paid도 아닌 주문이 남는다.
@@ -224,20 +305,13 @@ export const confirmFundingPledge = async (
     // paid가 아닌" 상태로 남고, 드러나는 경로는 관리자 목록의 mismatch 배지뿐이다.
     // 만료된 주문을 웹훅이 되살렸다면 재고를 초과했을 수 있다 — 운영자가 관리자 화면에서
     // 볼 수 있도록 흔적을 남긴다. 로그만으로는 아무도 보지 않는다.
-    if (order.status === 'expired' || order.status === 'failed') {
-      const note = order.status === 'expired'
-        ? '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요'
-        : '[웹훅] failed 처리 후 승인 확인 — 재고 초과 가능, 확인 필요';
-      console.error('[funding-confirm] 홀드 만료 주문을 웹훅이 확정 — 재고 확인 필요', { orderNo: order.orderNo, paymentKey: approved.paymentKey });
-      try {
-        await db.run(
-          sql`UPDATE funding_pledges SET admin_memo = COALESCE(admin_memo || char(10), '') || ${note}, updated_at = unixepoch() WHERE order_id = ${order.id}`,
-        );
-      } catch (memoError) {
-        console.error('[funding-confirm] adminMemo 기록 실패', { orderNo: order.orderNo, error: memoError });
-      }
+    // 흔적이 실제로 남았는지는 batch 결과로 안다 — 진입 스냅샷이 아니라 전이 직전 상태 기준이다.
+    if (Number(batchResult[1]?.rowsAffected ?? 0) > 0) {
+      console.error('[funding-confirm] 만료·실패 주문을 되살려 확정 — 재고 확인 필요', {
+        orderNo: order.orderNo, paymentKey: approved.paymentKey, statusAtEntry: order.status, tag,
+      });
     }
-    if (Number(batchResult[1]?.rowsAffected ?? 0) === 0) {
+    if (Number(batchResult[2]?.rowsAffected ?? 0) === 0) {
       console.error('[funding-confirm] 결제 승인됨, 주문 상태 전이 실패(0행) — 수동 확인 필요', {
         orderNo: order.orderNo, paymentKey: approved.paymentKey, status: order.status,
       });
@@ -259,11 +333,10 @@ export const confirmFundingPledge = async (
 
   const fresh = (await findFundingOrderByOrderNo(order.orderNo)) ?? order;
   // 결제는 이미 성공했다 — 메일 예외나 기록 실패가 confirm 결과를 뒤집으면 안 된다.
-  // 성공이면 null을 써서 위 batch가 심은 센티널을 지운다(실패면 사유가 센티널을 대체해
-  // 관리자 화면의 '메일 실패' 목록에 잡힌다).
-  const emailError = await deliverConfirmedEmails(fresh);
-  await recordEmailResult(order.id, order.orderNo, emailError);
-  return success(fresh, emailError === null);
+  // 발송권은 센티널 선점으로 정한다: 이 승인이 유발한 토스 DONE 웹훅이 메일 발송 중에
+  // 도착해도 확정 메일이 두 통 나가지 않는다. 성공이면 null이 센티널을 지우고, 실패면
+  // 사유가 센티널을 대체해 관리자 화면·healthCheck의 '메일 실패' 목록에 잡힌다.
+  return success(fresh, await deliverConfirmedEmailsOnce(fresh));
 };
 
 /**
@@ -272,17 +345,41 @@ export const confirmFundingPledge = async (
  * lib/booking/webhook.ts의 nextOrderStatus·reconcileRefunds와 같은 로직 — 펀딩은 booking처럼
  * 별도로 선점할 하위 엔티티가 없어 orders 자체에 바로 적용한다. cancels 부재(재조회 응답에
  * 취소 내역이 없음)는 0으로 취급해 전액 환불을 날조하지 않고, 이미 기록된 done 환불 합계와
- * 대사해 델타만 INSERT한다 — 같은 이벤트가 두 번 오거나 부분 취소 뒤 전체 취소가 와도
- * 매번 이 대사 한 번으로 정확해진다(중복 INSERT도, 반영 누락도 없다).
+ * 대사해 델타만 INSERT한다 — 같은 이벤트가 두 번 오면 델타가 0이라 아무것도 쓰지 않고,
+ * 부분 취소 뒤 전체 취소가 오면 차액만 채운다.
+ *
+ * **단, 정확해지는 것은 이 함수가 실제로 호출됐을 때뿐이다.** 웹훅 진입부(lib/booking/webhook.ts)의
+ * 멱등 키가 취소 합계를 포함해야 부분취소 2회가 서로 다른 이벤트로 들어온다 — 예전엔
+ * `paymentKey:status`뿐이라 두 번째 부분취소가 통째로 스킵됐고, 이 대사는 호출조차 되지 않았다.
+ *
+ * 델타를 실제로 기록했다면 후원자에게도 알린다 — 운영자가 토스 콘솔에서 직접 환불하면
+ * 이 경로 말고는 통지가 나가지 않아, 후원자는 카드 명세서로만 취소를 알게 된다.
  */
 export const syncFundingCancelledFromToss = async (payment: TossPayment): Promise<void> => {
   const order = await findFundingOrderByOrderNo(payment.orderId);
-  if (!order) return;
+  if (!order) {
+    // 예약 경로(lib/booking/webhook.ts)와 같은 규칙 — 조용한 조기 반환은 대사 단서를 지운다.
+    console.error('[funding-confirm] 취소 동기화 스킵 — 후원 주문을 찾지 못함', {
+      orderId: payment.orderId, paymentKey: payment.paymentKey,
+    });
+    return;
+  }
   const paymentRow = order.payments.find((p) => p.paymentKey === payment.paymentKey) ?? order.payments[0];
-  if (!paymentRow) return;
+  if (!paymentRow) {
+    console.error('[funding-confirm] 취소 동기화 스킵 — 주문에 payments 행이 없음', {
+      orderNo: order.orderNo, paymentKey: payment.paymentKey,
+    });
+    return;
+  }
 
   const cancelledTotal = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
-  if (cancelledTotal <= 0) return; // cancels 부재 — 전액 환불로 오기록하지 않는다
+  if (cancelledTotal <= 0) {
+    // cancels 부재 — 전액 환불로 오기록하지 않는다. 다만 무로그로 물러나지는 않는다.
+    console.error('[funding-confirm] 취소 동기화 스킵 — 취소 합계 0(cancels 부재)', {
+      orderNo: order.orderNo, paymentKey: payment.paymentKey, status: payment.status,
+    });
+    return;
+  }
 
   const db = getDb();
   const nextStatus = cancelledTotal >= order.totalAmount ? 'refunded' : 'partially_refunded';
@@ -308,4 +405,22 @@ export const syncFundingCancelledFromToss = async (payment: TossPayment): Promis
     tossTransactionKey: payment.cancels?.[payment.cancels.length - 1]?.transactionKey ?? null,
     status: 'done',
   });
+
+  // 기록이 실제로 늘어난 경우에만(= 여기까지 온 경우에만) 통지한다 — 같은 이벤트 재도착은
+  // 위 대사에서 이미 return했으므로 같은 취소로 메일이 반복되지 않는다. 금액은 **누적 취소
+  // 합계**를 적는다(델타는 우리 기록과의 차이일 뿐, 후원자가 돌려받는 금액이 아니다).
+  // 메일 실패가 동기화를 뒤집으면 안 된다 — cancel.ts notifyCancelled와 같은 처리.
+  let emailError: string | null = null;
+  try {
+    emailError = await sendFundingCancelledEmails(
+      order,
+      getFundingProject(order.fundingPledge?.projectSlug ?? ''),
+      'recorded',
+      cancelledTotal,
+    );
+  } catch (error) {
+    console.error('[funding-confirm] 외부 취소 통지 중 예외', { orderNo: order.orderNo, error });
+    emailError = error instanceof Error ? error.message : String(error);
+  }
+  await recordEmailResult(order.id, order.orderNo, emailError);
 };

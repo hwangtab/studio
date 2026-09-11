@@ -49,6 +49,13 @@ const setCallsOf = (db: MockDb): object[] =>
     ? (db.update.mock.results[0].value.set as jest.Mock).mock.calls.map((c: unknown[]) => c[0] as object)
     : [];
 
+/**
+ * db.run(sql`…`) 호출을 문자열로 본다 — 확정 경로도 센티널 선점에 db.run을 쓰므로
+ * "run이 아예 안 불렸다"로는 failed 낙인 여부를 판정할 수 없다. drizzle SQL 객체의
+ * queryChunks에 실린 리터럴을 그대로 훑는다.
+ */
+const runSqlTextsOf = (db: MockDb): string[] => db.run.mock.calls.map(([q]) => JSON.stringify(q));
+
 /** db.insert(...).values(...) 호출 인자 전체 — insert 체인도 테이블과 무관하게 같은 values mock을 공유한다. */
 const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
   db.insert.mock.results.length
@@ -146,6 +153,124 @@ describe('confirmBookingPayment', () => {
     }
   });
 
+  it('거절 계열(allowlist) 밖의 코드는 주문을 failed로 낙인하지 않는다', async () => {
+    // 예전 denylist에서는 NOT_FOUND_PAYMENT 계열만 예외라, 아래 코드들이 전부 낙인으로
+    // 이어졌다 — 주문번호만 아는 제3자가 남의 주문의 복구 경로를 닫을 수 있었다.
+    for (const code of ['INVALID_REQUEST', 'UNAUTHORIZED_KEY', 'FORBIDDEN_REQUEST', 'PROVIDER_ERROR']) {
+      jest.clearAllMocks();
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue({ ok: false, code, message: '내부 사정' });
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+      expect((r as { message: string }).message).not.toContain('내부 사정');
+      expect(mockDb().run).not.toHaveBeenCalled();
+    }
+  });
+
+  it.each([
+    'REJECT_CARD_COMPANY', 'INVALID_CARD_EXPIRATION', 'EXCEED_MAX_DAILY_PAYMENT_COUNT', 'NOT_ENOUGH_BALANCE',
+    'INVALID_REJECT_CARD', 'INVALID_ACCOUNT_INFO_RESEND',
+  ])(
+    '%s는 실제 거절이므로 failed로 낙인한다',
+    async (code) => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue({ ok: false, code, message: '카드사 거절' });
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toEqual({ ok: false, code: 'toss_rejected', message: '카드사 거절' });
+      expect(mockDb().run).toHaveBeenCalled();
+    },
+  );
+
+  describe('웹훅 신뢰 경로 (trustedByWebhook)', () => {
+    it('failed·expired 주문도 웹훅 경로에서는 확정 대상이다', async () => {
+      for (const status of ['failed', 'expired']) {
+        jest.clearAllMocks();
+        (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
+        (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+        const r = await confirmBookingPayment(
+          { orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 },
+          { trustedByWebhook: true },
+        );
+        expect(r).toMatchObject({ ok: true, orderNo: 'SNB-1' });
+      }
+    });
+
+    it('SSR 경로는 failed·expired를 그대로 거부한다 — 토스를 부르지도 않는다', async () => {
+      for (const status of ['failed', 'expired']) {
+        jest.clearAllMocks();
+        (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
+        const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+        expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+        expect(confirmPayment).not.toHaveBeenCalled();
+      }
+    });
+
+    it('웹훅이라도 refunded·partially_refunded·cancelled는 거부하고 대사 단서를 남긴다', async () => {
+      for (const status of ['refunded', 'partially_refunded', 'cancelled']) {
+        jest.clearAllMocks();
+        (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
+        const r = await confirmBookingPayment(
+          { orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 },
+          { trustedByWebhook: true },
+        );
+        expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+        expect(confirmPayment).not.toHaveBeenCalled();
+      }
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        '[booking-confirm] 웹훅이 확정 불가 상태의 주문을 만남 — 수동 대사 필요',
+        expect.objectContaining({ orderNo: 'SNB-1' }),
+      );
+    });
+
+    it('paid + 소유 증명 없는 웹훅 재도착도 통과한다 — fetchPayment로 이미 재검증하고 온다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', payments: [] }));
+      const r = await confirmBookingPayment(
+        { orderNo: 'SNB-1', paymentKey: 'pk', amount: 1 },
+        { trustedByWebhook: true },
+      );
+      expect(r).toMatchObject({ ok: true, manageToken: 't' });
+    });
+
+    it('웹훅 경로는 선점 만료 세션도 거부하지 않는다 — batch 0행이면 자동 취소로 간다', async () => {
+      const stale = order({ createdAt: new Date(Date.now() - 901 * 1000) });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(stale);
+      (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+      const db = mockDb();
+      db.batch.mockResolvedValueOnce([{ rowsAffected: 1 }, { rowsAffected: 0 }, { rowsAffected: 0 }]);
+      (cancelPayment as jest.Mock).mockResolvedValue({
+        ok: true,
+        payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'tx', cancelAmount: 275000 }] },
+      });
+      const r = await confirmBookingPayment(
+        { orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 },
+        { trustedByWebhook: true },
+      );
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(cancelPayment).toHaveBeenCalled(); // 전액 자동 취소
+    });
+  });
+
+  it('센티널 선점의 rowsAffected를 읽을 수 없으면 발송하는 쪽으로 흘린다 (fail-open)', async () => {
+    // rowsAffectedOf와 같은 규약 — 없는 실패를 지어내 확정 메일을 통째로 막으면 고객이
+    // 예약 확인·취소 링크를 아예 못 받는다. 중복 발송보다 나쁘다.
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    mockDb().run.mockResolvedValueOnce({}); // 선점 결과에 rowsAffected가 없다
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toMatchObject({ ok: true, emailSent: true });
+    expect(sendBookingConfirmedEmails).toHaveBeenCalledTimes(1);
+  });
+
+  it('선점이 0행이면(다른 경로가 가져감) 발송하지 않고 emailSent를 남기지 않는다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    mockDb().run.mockResolvedValueOnce({ rowsAffected: 0 });
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
+    expect(sendBookingConfirmedEmails).not.toHaveBeenCalled();
+    expect(createBookingEvent).not.toHaveBeenCalled();
+  });
+
   it('확정 메일이 예외를 던져도 confirm 결과를 뒤집지 않는다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
@@ -217,7 +342,8 @@ describe('confirmBookingPayment', () => {
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
     expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: true });
     expect(db.batch).toHaveBeenCalled(); // 정상 승인과 같은 batch 경로
-    expect(db.run).not.toHaveBeenCalled(); // orders를 failed로 마킹하는 db.run이 없다
+    // 확정 경로의 db.run은 센티널 선점뿐이다 — orders를 failed로 마킹하는 문장은 없어야 한다.
+    expect(runSqlTextsOf(db).some((t) => t.includes('failed'))).toBe(false);
     // rawResponse는 재조회한 payment로 남는다.
     const paymentInsert = insertValuesCallsOf(db).find((c) => 'paymentKey' in c);
     expect(paymentInsert).toMatchObject({ paymentKey: 'pk', method: '카드' });
@@ -373,22 +499,30 @@ describe('confirmBookingPayment', () => {
     const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
     expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: false });
-    const notificationErrorCall = setCallsOf(db).find((c) => 'notificationError' in c);
-    expect(notificationErrorCall).toBeDefined();
-    expect((notificationErrorCall as { notificationError: string }).notificationError).toBe('customer:TIMEOUT');
+    // batch의 orders 전이가 먼저 센티널('send_pending')을 심고, 메일 단계가 결과로 덮어쓴다 —
+    // 확정 기록은 **마지막** notificationError 호출이다.
+    const notificationErrorCalls = setCallsOf(db).filter((c) => 'notificationError' in c) as {
+      notificationError: string | null;
+    }[];
+    expect(notificationErrorCalls[0].notificationError).toBe('send_pending');
+    expect(notificationErrorCalls[notificationErrorCalls.length - 1].notificationError).toBe('customer:TIMEOUT');
   });
 
   it('bookings가 없는 주문은 후처리를 생략하고 방어 로그만 남긴 채 성공을 반환한다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ bookings: [] }));
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: false });
     expect(createBookingEvent).not.toHaveBeenCalled();
     expect(sendBookingConfirmedEmails).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       '[booking-confirm] bookings 없는 주문 — 후처리 생략',
       expect.objectContaining({ orderNo: 'SNB-1' }),
     );
+    // 센티널은 선점에서 지워지고 사람이 읽을 사유로 대체된다 — send_pending으로 영구 잔류하지 않는다.
+    const notice = setCallsOf(db).find((c) => 'notificationError' in c && c.notificationError !== 'send_pending');
+    expect(notice).toMatchObject({ notificationError: expect.stringContaining('확정 후처리 대상 행 없음') });
   });
 
   // C-1: 승인 왕복 사이에 주문이 pending을 벗어나면 batch의 orders UPDATE가 0행이 된다.

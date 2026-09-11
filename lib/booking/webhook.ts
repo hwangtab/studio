@@ -16,6 +16,31 @@ import { fetchPayment, type TossPayment } from './toss';
 const nextOrderStatus = (order: Order, cancelledTotal: number): Order['status'] =>
   cancelledTotal >= order.totalAmount ? 'refunded' : cancelledTotal > 0 ? 'partially_refunded' : order.status;
 
+/** 재조회 응답의 누적 취소 합계. cancels 부재는 0(반영할 취소 없음). */
+const cancelledTotalOf = (payment: TossPayment): number =>
+  payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+
+/** 취소 계열 상태 — 한 결제에 여러 번 도착할 수 있는 유일한 이벤트군이다. */
+const CANCEL_STATUSES = new Set(['CANCELED', 'PARTIAL_CANCELED']);
+
+/**
+ * 멱등 키. DONE은 `paymentKey:status`면 충분하지만 **취소 계열은 누적 취소 합계까지 넣는다.**
+ *
+ * 한 결제에 부분취소를 두 번 걸면 재조회 status가 두 번 다 PARTIAL_CANCELED다 —
+ * `paymentKey:status`로는 두 이벤트의 키가 같아져, 두 번째가 unique 위반으로 "중복"
+ * 처리되어 통째로 스킵됐다. 두 번째 환불액이 refunds에 영영 안 들어가고 주문도
+ * partially_refunded에 머문다 → 원장이 과대 계상되고(환불 기록이 실제보다 적다),
+ * 그 뒤 관리자 환불은 remainingRefundable이 실제보다 크게 나와 토스에서 초과취소로
+ * 계속 거절된다. 합계를 키에 넣으면 취소 1회차(2,500)와 2회차(누적 5,000)가 서로 다른
+ * 이벤트가 되어 둘 다 대사 경로를 탄다.
+ *
+ * 같은 이벤트가 재도착하면 합계도 같으므로 키가 같다 — 멱등성은 그대로다.
+ */
+const eventKeyFor = (paymentKey: string, payment: TossPayment): string =>
+  CANCEL_STATUSES.has(payment.status)
+    ? `${paymentKey}:${payment.status}:${cancelledTotalOf(payment)}`
+    : `${paymentKey}:${payment.status}`;
+
 /**
  * 토스가 취소한 금액과 우리가 기록한 환불 합계를 맞춘다.
  *
@@ -26,7 +51,7 @@ const nextOrderStatus = (order: Order, cancelledTotal: number): Order['status'] 
  */
 const reconcileRefunds = async (order: Order, paymentRow: Payment, payment: TossPayment): Promise<void> => {
   const db = getDb();
-  const cancelledTotal = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+  const cancelledTotal = cancelledTotalOf(payment);
   const recorded = await db.query.refunds.findMany({
     where: (t, { eq: equals }) => and(equals(t.paymentId, paymentRow.id), equals(t.status, 'done')),
   });
@@ -88,7 +113,7 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
   // 없는 것이므로 아무것도 바꾸지 않고 물러난다 — 그대로 진행하면 booking·work_order를
   // cancelled로 선점해 놓고 환불 0원 행만 남겨, 취소되지 않은 예약을 취소된 것으로 만든다.
   // lib/funding/confirm.ts의 syncFundingCancelledFromToss와 같은 방어다.
-  const cancelled = payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? 0;
+  const cancelled = cancelledTotalOf(payment);
   if (cancelled <= 0) {
     console.error('[booking-webhook] CANCELED 동기화 스킵 — 취소 합계 0(cancels 부재)', {
       orderNo: order.orderNo,
@@ -98,9 +123,9 @@ const syncCancelledFromToss = async (payment: TossPayment): Promise<void> => {
     return;
   }
 
-  // 원자적 선점 — cancel.ts의 claim 패턴을 그대로 미러링한다. paymentKey:status가 멱등 키라
-  // PARTIAL_CANCELED와 CANCELED는 서로 다른 이벤트로 취급되어 둘 다 webhookEvents INSERT를
-  // 통과할 수 있다. 두 이벤트가 동시에 여기 도달하면 위 읽기 시점엔 둘 다 booking을
+  // 원자적 선점 — cancel.ts의 claim 패턴을 그대로 미러링한다. 멱등 키가 상태(+취소 합계)를
+  // 포함하므로 PARTIAL_CANCELED와 CANCELED는 서로 다른 이벤트로 취급되어 둘 다 webhookEvents
+  // INSERT를 통과할 수 있다. 두 이벤트가 동시에 여기 도달하면 위 읽기 시점엔 둘 다 booking을
   // confirmed로 보지만, UPDATE...WHERE status='confirmed'는 하나만 rowsAffected 1을 받는다
   // — 진 쪽은 전액 refunds를 중복 INSERT하지 않고 아래 대사 경로로만 넘어간다.
   let claimed = false;
@@ -213,7 +238,7 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
 
   // 처리보다 기록을 먼저 — PK 충돌이 "이미 처리했다"는 신호다.
   const db = getDb();
-  const eventKey = `${paymentKey}:${payment.status}`;
+  const eventKey = eventKeyFor(paymentKey, payment);
   try {
     await db.insert(webhookEvents).values({ eventKey, payload: JSON.stringify(payload) });
   } catch (error) {
@@ -248,7 +273,12 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
                 // 이유로 거절하면 승인된 결제가 영구 미기록으로 남는다.
                 { trustedByWebhook: true },
               )
-            : await confirmBookingPayment({ orderNo: payment.orderId, paymentKey, amount: payment.totalAmount });
+            : await confirmBookingPayment(
+                { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+                // 펀딩과 같은 신뢰 경로 — 재조회로 DONE + 금액이 확인된 돈이라, 과거에 찍힌
+                // failed/expired 때문에 승인된 결제를 영구 미기록으로 버리지 않는다.
+                { trustedByWebhook: true },
+              );
         if (!outcome.ok && isTransientConfirmFailure(outcome.code)) {
           console.error('[booking-webhook] 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
             eventKey,

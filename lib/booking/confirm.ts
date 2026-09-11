@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, orders, payments, refunds, workOrders, type Order } from '../../db/schema';
@@ -37,14 +37,50 @@ export type ConfirmOutcome =
 const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
 
 /**
- * "그 paymentKey로는 결제 자체가 없다"는 토스 거절 코드들 (lib/funding/confirm.ts와 같은 판단).
+ * "이 주문의 결제가 실제로 거절됐다"고 단정할 수 있는 토스 코드 — **allowlist**다
+ * (lib/funding/confirm.ts와 같은 판단·같은 패턴. 두 모듈의 import 그래프를 섞지 않으려고
+ * ALREADY_PROCESSED_CODE처럼 의도적으로 복제해 둔다).
  *
- * 토스 confirm은 paymentKey·orderId·amount가 모두 맞아야 승인한다 — 아무 문자열이나 넣거나
- * 남의 주문번호를 붙이면 여기로 떨어진다. 정상 고객 흐름에서는 나오지 않는 코드라, 이걸
- * 일반 거절로 보고 주문을 failed로 낙인하면 제3자가 주문번호만으로 남의 주문의 복구 경로를
- * 영구히 닫을 수 있다(failed는 아래 `status !== 'pending'`에 걸려 웹훅 복구까지 막는다).
+ * 예전에는 denylist였다 — NOT_FOUND_PAYMENT 계열만 빼고 나머지 전부를 failed로 낙인했다.
+ * 그러면 목록 밖 코드(INVALID_REQUEST·UNAUTHORIZED_KEY·FORBIDDEN_REQUEST…)로도 낙인이 되고,
+ * 주문번호는 비밀이 아니므로 제3자가 `?paymentKey=아무거나&orderId=<주문번호>`로 남의 주문을
+ * failed로 만들 수 있었다. allowlist면 모르는 코드는 주문을 건드리지 않고 pending으로 남아
+ * 선점 만료 또는 웹훅이 결론을 낸다 — 과소 낙인은 스스로 치유되지만 과대 낙인은 아니다.
+ *
+ * 접두사로 보는 이유: 거절 코드는 카드사·계좌 사유별로 계속 늘어나는 계열이라
+ * (REJECT_CARD_COMPANY·INVALID_CARD_EXPIRATION·EXCEED_MAX_DAILY_PAYMENT_COUNT…)
+ * 개별 열거는 금세 낡는다.
  */
-const PAYMENT_ABSENT_CODES = new Set(['NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION']);
+const DECLINE_CODE_PATTERN =
+  /^(REJECT_|INVALID_REJECT_CARD|EXCEED_MAX_|INVALID_CARD|INVALID_STOPPED_CARD$|INVALID_ACCOUNT_INFO|NOT_ENOUGH_BALANCE$|NOT_AVAILABLE_BANK$|CARD_PROCESSING_ERROR$|PAY_PROCESS_(CANCELED|ABORTED)$)/;
+
+/** 고객 결제수단이 실제로 거절된 경우인가 — 참일 때만 orders.status를 failed로 낙인한다. */
+const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(code);
+
+/**
+ * 확정 후처리 상태를 notificationError에 싣는 **두 단계 센티널** (lib/funding/confirm.ts와 같은 장치).
+ *
+ * - `send_pending` — batch(주문 pending→paid 전이)와 같은 트랜잭션에 써 넣는다. "확정은 됐는데
+ *   후처리는 아직"이라는 뜻이고, 웹훅 재도착이 이 값을 보면 후처리를 대신 수행한다.
+ * - `send_inflight` — 선점에 성공한 실행이 `send_pending`을 이 값으로 바꾼다. "누가 지금 하고
+ *   있다"는 뜻이라 경쟁자를 막으면서도 **비어 있지 않다**.
+ *
+ * 선점 값이 NULL이면 안 되는 이유: 센티널이 지키려는 구간이 정확히 gcal(0.2~0.8초) +
+ * 메일(0.3~1.5초)이다. 그 구간에서 함수 타임아웃·배포 종료로 죽으면 주문은 paid인데 확정
+ * 메일 0통, 캘린더 빈 칸, SSR 응답도 못 받아 고객은 관리 링크조차 없다. NULL로 지워 두면
+ * healthCheck(`isNotNull(orders.notificationError)`)도 gcal 검사(gcalError IS NOT NULL)도
+ * 전부 침묵해 **무증상 사고**가 되고, 빈 슬롯에 전화 예약을 받아 오프라인 이중예약까지 간다.
+ * inflight 값을 남기면 healthCheck가 즉시 잡고 관리자 화면의 알림 재발송으로 사람이 복구한다.
+ *
+ * 정상 종료 시 발송 결과(성공이면 null, 실패면 사유)가 이 값을 덮어쓴다.
+ *
+ * inflight의 **자동** 복구는 이번 범위에서 뺐다 — "언제부터 멈춰 있나"를 판단하려면 updated_at을
+ * 봐야 하는데 그 컬럼은 취소·환불·상태 전이가 함께 건드려서 후처리 시작 시각으로 못 쓴다.
+ * 시간 기반 재시도를 잘못 잡으면 느린 발송을 죽은 것으로 오인해 메일이 두 통 나간다 —
+ * 이 라운드에서 되돌리려던 바로 그 사고다. 가시성 회복 + 수동 재발송까지가 안전한 선이다.
+ */
+const SEND_PENDING = 'send_pending';
+const SEND_INFLIGHT = 'send_inflight';
 
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';
@@ -87,9 +123,16 @@ export const rowsAffectedOf = (result: unknown): number | undefined => {
 /**
  * 승인은 끝났는데 orders pending→paid 전이가 0행인 경우의 자동 복구.
  *
- * 승인 요청과 승인 응답 사이에 그 주문이 pending을 벗어난 것이다 — expireStaleOrders가
- * 만료시켰거나(세션은 900초, 믹싱은 24시간), 같은 고객의 재제출이 자가 선점 해제로 expired를
- * 찍었거나. 이대로 두면 돈만 들어오고 주문은 만료된 채 남는다(관리자 화면 mismatch).
+ * 0행이 되는 경우는 두 가지다.
+ *  ① 승인 요청과 승인 응답 사이에 그 주문이 확정 대상 상태를 벗어났다 — expireStaleOrders가
+ *     만료시켰거나(세션은 900초, 믹싱은 24시간), 같은 고객의 재제출이 자가 선점 해제로
+ *     expired를 찍었거나.
+ *  ② 웹훅 신뢰 경로가 **선점이 이미 풀린 세션 주문**을 들고 왔다. 이때 order.status는
+ *     여전히 'pending'일 수 있다 — batch WHERE의 sessionHoldGuard(created_at 기준)가
+ *     상태와 무관하게 매치를 막기 때문이다. 즉 "0행 = 주문이 pending이 아니다"는 더 이상
+ *     성립하지 않는다. 이 경로를 만든 이유는 그 주문을 확정하면 다른 고객이 이미 확정한
+ *     슬롯에 confirmed 예약이 하나 더 생기기 때문이다.
+ * 어느 쪽이든 이대로 두면 돈만 들어오고 주문은 확정되지 않은 채 남는다(관리자 화면 mismatch).
  * 전액을 즉시 되돌려 그 상태를 만들지 않는다.
  *
  * 멱등키는 cancel.ts의 refundIdempotencyKey를 쓰되 접두사를 'autocancel'로 분리한다. 같은 접두사를
@@ -97,7 +140,8 @@ export const rowsAffectedOf = (result: unknown): number | undefined => {
  * 토스가 15일 안의 **실패 응답**을 replay해 영영 환불되지 않는다. 접두사만 다르면 이 경로의
  * 재시도(웹훅 DONE 복구)는 여전히 서로 replay되어 이중 환불을 막는다.
  *
- * orders는 건드리지 않는다 — 이미 expired/failed이고, 여기서 다른 상태를 덮어쓰면 어떤 경로가
+ * orders는 건드리지 않는다 — ①이면 이미 expired/failed이고, ②면 pending인 채로 홀드가
+ * 지났을 뿐이라 곧 expireStaleOrders가 정리한다. 여기서 다른 상태를 덮어쓰면 어떤 경로가
  * 주문을 끝냈는지 알 수 없게 된다.
  */
 const autoCancelStaleApproval = async (order: Order, approved: TossPayment): Promise<ConfirmOutcome> => {
@@ -191,11 +235,137 @@ const deliverConfirmedEmails = async (send: () => Promise<string | null>): Promi
   }
 };
 
-export const confirmBookingPayment = async (input: {
-  orderNo: string;
-  paymentKey: string;
-  amount: number;
-}): Promise<ConfirmOutcome> => {
+type BookingOrder = NonNullable<Awaited<ReturnType<typeof findOrderByOrderNo>>>;
+
+/** 멱등 재생(새로고침·웹훅 재도착)에서 돌려주는 성공 결과 — 이번 호출이 메일을 보내지 않았으므로 emailSent는 없다. */
+const replay = (order: BookingOrder): ConfirmOutcome => ({
+  ok: true,
+  orderNo: order.orderNo,
+  orderType: order.type === 'mixing' ? 'mixing' : 'session',
+  manageToken: order.manageToken,
+});
+
+/** notificationError 확정 기록 — 실패해도 확정 결과를 뒤집지 않는다(스펙 §10). */
+const recordNotification = async (orderId: string, orderNo: string, notifyError: string | null): Promise<void> => {
+  try {
+    await getDb().update(orders).set({ notificationError: notifyError }).where(eq(orders.id, orderId));
+  } catch (error) {
+    console.error('[booking-confirm] notificationError 기록 실패', { orderNo, notifyError, error });
+  }
+};
+
+/** 하위 행이 없어 후처리를 못 한 주문에 남기는 사유 — 센티널이 아니라 사람이 읽을 실패다. */
+const MISSING_ROW_NOTICE = '확정 후처리 대상 행 없음(bookings·work_orders 부재) — 수동 확인 필요';
+
+/** 캘린더 등록. 실패는 확정을 뒤집지 않고 bookings.gcalError에만 남는다. */
+const ensureBookingEvent = async (
+  order: BookingOrder,
+  booking: BookingOrder['bookings'][number],
+): Promise<void> => {
+  const db = getDb();
+  try {
+    const eventId = await createBookingEvent({
+      summary: `[예약] ${booking.serviceType} — ${order.customerName}`,
+      description: [
+        `상품: ${booking.productId} (${booking.durationHours}시간)`,
+        `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
+        `주문번호: ${order.orderNo}`,
+        `요청사항: ${booking.customerNote ?? '없음'}`,
+      ].join('\n'),
+      start: booking.startAt,
+      end: booking.endAt,
+    });
+    await db.update(bookings).set({ gcalEventId: eventId }).where(eq(bookings.id, booking.id));
+  } catch (error) {
+    const detail = error instanceof Error ? error.message : String(error);
+    try {
+      await db
+        .update(bookings)
+        .set({ gcalError: `create(${kstDateString(new Date())}): ${detail}` })
+        .where(eq(bookings.id, booking.id));
+    } catch (writeError) {
+      console.error('[booking-confirm] gcalError 기록 실패', {
+        orderNo: order.orderNo,
+        bookingId: booking.id,
+        error: writeError,
+      });
+    }
+  }
+};
+
+/**
+ * 확정 후처리 — 캘린더 등록 + 확정 메일 + notificationError 기록. 확정 경로와 웹훅 센티널
+ * 복구 경로가 **같은 함수**를 쓴다.
+ *
+ * 소유권은 센티널 선점으로 정한다(취소 가드와 같은 패턴 — 읽어서 검사하지 않고
+ * `UPDATE … WHERE notification_error = 'send_pending'`으로 하나만 이기게 한다). 이게 없으면
+ * SSR 확정이 gcal(0.2~0.8초)+메일(0.3~1.5초)을 처리하는 동안 **바로 그 승인이 유발한**
+ * 토스 DONE 웹훅이 1~3초 안에 도착해 status='paid' + 센티널을 보고 같은 일을 한 번 더 한다 —
+ * 확정 메일 2통, 캘린더 이벤트 2건. rowsAffected 1을 받은 쪽만 후처리를 수행한다.
+ *
+ * 반환값은 ConfirmOutcome.emailSent의 의미 그대로다 — undefined는 "이번 호출이 보내지 않았다".
+ */
+const deliverPostConfirmation = async (order: BookingOrder): Promise<boolean | undefined> => {
+  const isMixing = order.type === 'mixing';
+  const booking = order.bookings[0];
+  const workOrder = order.workOrders[0];
+
+  // CAS — send_pending을 send_inflight로 **원자적으로** 바꾼 쪽만 후처리한다.
+  // 판정 불가(rowsAffected를 못 읽는 드라이버·목)는 발송하는 쪽으로 흘린다. 같은 파일의
+  // rowsAffectedOf가 이미 그 규약이다 — 없는 실패를 지어내 확정 메일을 통째로 막는 쪽이
+  // 중복 발송보다 나쁘다(고객이 확인·취소 링크를 아예 못 받는다).
+  const claim = await getDb().run(
+    sql`UPDATE orders SET notification_error = ${SEND_INFLIGHT} WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
+  );
+  if (rowsAffectedOf(claim) === 0) {
+    console.error('[booking-confirm] 확정 후처리를 다른 경로가 이미 선점 — 중복 발송하지 않는다', {
+      orderNo: order.orderNo,
+    });
+    return undefined;
+  }
+
+  if (isMixing ? !workOrder : !booking) {
+    // Phase 1에선 발생 불가(주문 생성이 항상 하위 1건을 동반) — 상태 불변식이 깨졌을 때의 방어.
+    // 센티널은 지금 send_inflight다. 그대로 두면 healthCheck에 정체불명 문자열로 남으므로,
+    // 사람이 읽을 수 있는 사유로 바꿔 남긴다(가시성은 유지하면서 원인을 밝힌다).
+    console.error('[booking-confirm] bookings 없는 주문 — 후처리 생략', { orderNo: order.orderNo, isMixing });
+    await recordNotification(order.id, order.orderNo, MISSING_ROW_NOTICE);
+    return false;
+  }
+
+  // 세션만 캘린더를 쓴다(믹싱은 점유할 슬롯이 없다). gcalEventId·gcalError가 **둘 다 null**이면
+  // 등록을 시도조차 못 한 것이다 — batch 직후 프로세스가 죽어 센티널만 남은 복구 건이 정확히
+  // 그 상태다. 여기서 만들지 않으면 운영자 캘린더가 빈 채 confirmed 예약이 남고, healthCheck는
+  // gcalError가 null이라 이 주문을 잡지 못해 전화 이중예약으로 간다.
+  // 값이 하나라도 있으면 다시 만들지 않는다 — 복구 경로가 중복 이벤트를 만들지 않게 하는 조건이다.
+  if (!isMixing && booking && !booking.gcalEventId && !booking.gcalError) {
+    await ensureBookingEvent(order, booking);
+  }
+
+  const notifyError = await deliverConfirmedEmails(() =>
+    isMixing
+      ? sendMixingOrderConfirmedEmails({ ...order, status: 'paid' }, workOrder)
+      : sendBookingConfirmedEmails({ ...order, status: 'paid' }, booking),
+  );
+  await recordNotification(order.id, order.orderNo, notifyError);
+  return !notifyError;
+};
+
+export const confirmBookingPayment = async (
+  input: {
+    orderNo: string;
+    paymentKey: string;
+    amount: number;
+  },
+  /**
+   * 웹훅 경로 표식 — 펀딩(lib/funding/confirm.ts)과 같은 형태.
+   *
+   * 이 옵션이 켜진 호출은 토스 재조회로 status DONE + 금액이 이미 검증된 뒤에 온다. 그래서
+   * 과거에 찍힌 failed·expired를 이유로 거절하지 않는다 — 거절하면 이미 승인된 돈이 영구
+   * 미기록으로 남고, 그 사실은 고객이 먼저 발견한다. 금액 검증·DONE 검증은 그대로 유지된다.
+   */
+  options: { trustedByWebhook?: boolean } = {},
+): Promise<ConfirmOutcome> => {
   const order = await findOrderByOrderNo(input.orderNo);
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
 
@@ -207,6 +377,21 @@ export const confirmBookingPayment = async (input: {
   // 한 번으로 남의 관리 토큰이 발급되고, 그 토큰이면 개인정보 열람과 전액 환불이 가능하다.
   // 진짜 고객의 새로고침·웹훅 재도착은 둘 다 그 주문의 실제 paymentKey를 갖고 온다.
   if (order.status === 'paid') {
+    if (options.trustedByWebhook) {
+      // 웹훅은 fetchPayment로 DONE + 금액을 이미 재검증하고 온 신뢰 경로다. 다만 확정 메일
+      // 센티널이 남아 있으면 "확정은 됐는데 메일이 안 나간" 주문이므로, 조기 반환하지 않고
+      // 메일만 다시 보낸다(펀딩 confirm과 같은 복구 경로).
+      // send_inflight는 "다른 실행이 지금 하고 있다"라 여기서 가로채지 않는다 — 그 실행이
+      // 죽어 값이 남으면 healthCheck가 잡고 관리자 재발송으로 복구한다(SEND_PENDING 주석 참조).
+      if (order.notificationError !== SEND_PENDING) return replay(order);
+      // 복구 대상은 "batch는 커밋됐는데 후처리 직전에 죽은" 주문이다 — 메일만이 아니라
+      // 캘린더 등록도 건너뛴 상태다. deliverPostConfirmation이 둘 다 본다.
+      console.error('[booking-confirm] 확정 후처리 미완 센티널 발견 — 웹훅 경로에서 복구', {
+        orderNo: order.orderNo,
+      });
+      const emailSent = await deliverPostConfirmation(order);
+      return { ...(replay(order) as Extract<ConfirmOutcome, { ok: true }>), emailSent };
+    }
     const provesOwnership =
       input.amount === order.totalAmount && order.payments.some((p) => p.paymentKey === input.paymentKey);
     if (!provesOwnership) {
@@ -216,10 +401,28 @@ export const confirmBookingPayment = async (input: {
       });
       return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
     }
-    return { ok: true, orderNo: order.orderNo, orderType: order.type === 'mixing' ? 'mixing' : 'session', manageToken: order.manageToken };
+    return replay(order);
   }
-  if (order.status !== 'pending')
+  // 웹훅 경로는 expired·failed도 받는다 — 펀딩(lib/funding/confirm.ts)과 같은 집합이다.
+  // 네트워크·설정 오류로 failed가 찍힌 과거 주문, expireStaleOrders가 먼저 돌아 expired가 된
+  // 주문이라도 웹훅은 재조회로 DONE + 금액을 확인한 뒤에 온다. 여기서 거절하면 승인된 돈이
+  // 영구 미기록으로 남는다.
+  // **되살릴지 되돌릴지는 아래 batch가 정한다** — 세션은 슬롯이 걸려 있어 선점이 이미 풀린
+  // 주문은 batch가 0행이 되고 autoCancelStaleApproval이 전액을 자동 환불한다(이중 예약 방지).
+  // refunded·partially_refunded·cancelled는 웹훅이라도 거부한다 — 이미 결론이 난 주문이다.
+  const acceptableStatuses: Order['status'][] = options.trustedByWebhook
+    ? ['pending', 'expired', 'failed']
+    : ['pending'];
+  if (!acceptableStatuses.includes(order.status)) {
+    if (options.trustedByWebhook) {
+      console.error('[booking-confirm] 웹훅이 확정 불가 상태의 주문을 만남 — 수동 대사 필요', {
+        orderNo: order.orderNo,
+        paymentKey: input.paymentKey,
+        status: order.status,
+      });
+    }
     return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
+  }
 
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다(위변조 차단).
   if (input.amount !== order.totalAmount)
@@ -240,14 +443,19 @@ export const confirmBookingPayment = async (input: {
   // 위의 `status !== 'pending'`에 영구히 막혔다(자동 취소는 batch 앞이라 타지도 않는다).
   // 24시간을 넘긴 뒤 오는 늦은 승인은 아래 batch의 orders 전이가 0행이 되고,
   // autoCancelStaleApproval이 전액을 자동으로 되돌린다.
-  if (
+  //
+  // 웹훅 경로는 여기서 거절하지 않는다 — 그 결제는 이미 승인된 돈이라, 거절하면 기록도 환불도
+  // 없이 사라진다. 대신 같은 조건을 아래 batch의 WHERE(sessionHoldGuard)에 걸어 두어 0행 →
+  // autoCancelStaleApproval(전액 자동 환불)로 보낸다. 이중 예약은 여전히 만들지 않으면서,
+  // 고객에게 돈은 돌아간다. 조건을 SQL에 두면 읽기와 batch 사이에 홀드가 지나는 경합도 막힌다.
+  const sessionHoldExpired =
     order.type === 'session' &&
     order.createdAt instanceof Date &&
-    Date.now() - order.createdAt.getTime() > PENDING_HOLD_SECONDS * 1000
-  ) {
+    Date.now() - order.createdAt.getTime() > PENDING_HOLD_SECONDS * 1000;
+  if (sessionHoldExpired && !options.trustedByWebhook) {
     console.error('[booking-confirm] 선점 만료 주문의 승인 요청 — 토스를 부르지 않고 거부', {
       orderNo: order.orderNo,
-      createdAt: order.createdAt.toISOString(),
+      createdAt: (order.createdAt as Date).toISOString(),
     });
     return { ok: false, code: 'invalid_state', message: EXPIRED_MESSAGE };
   }
@@ -304,13 +512,12 @@ export const confirmBookingPayment = async (input: {
     // CONFIG_ERROR·NETWORK_ERROR는 우리 쪽 설정·네트워크 문제라 원문을 그대로 보이면
     // 내부 구성(비밀키 누락 등)이 새어나간다 — 고객에겐 일반 문구, 원문은 서버 로그에만.
     const isInternalError = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
-    // 결제 미존재 계열도 failed로 찍지 않는다 — 이 주문의 결제가 거절된 게 아니라 애초에
-    // 없는 결제를 승인하려 한 것이다. 낙인하면 제3자가 주문번호만으로 남의 주문을 망가뜨린다.
-    const isPaymentAbsent = PAYMENT_ABSENT_CODES.has(toss.code);
-    // 그리고 이 둘은 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다 — 실제로는 승인이
-    // 성사됐을 수 있으므로 failed로 확정하지 않는다. failed로 찍으면 뒤늦게 오는 웹훅 DONE
-    // 복구가 `status !== 'pending'`에 영구히 막힌다. pending으로 두면 만료 또는 웹훅이 끝낸다.
-    if (!isInternalError && !isPaymentAbsent) {
+    // CONFIG_ERROR·NETWORK_ERROR는 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다 —
+    // 실제로는 승인이 성사됐을 수 있으므로 failed로 확정하지 않는다.
+    // 그 밖의 코드는 **거절 계열(allowlist)일 때만** 낙인한다. 모르는 코드까지 낙인하면
+    // 제3자가 주문번호만으로 남의 주문을 망가뜨릴 수 있다(위 DECLINE_CODE_PATTERN 주석).
+    const isDeclined = !isInternalError && isCustomerDecline(toss.code);
+    if (isDeclined) {
       await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
     }
     // 토스가 거부한 모든 승인은 코드와 함께 남긴다 — 고객 화면엔 메시지만 나가서, 로그가 없으면
@@ -333,13 +540,16 @@ export const confirmBookingPayment = async (input: {
     return {
       ok: false,
       code: 'toss_rejected',
-      message: isInternalError || isPaymentAbsent ? GENERIC_TOSS_ERROR_MESSAGE : toss.message,
+      message: isDeclined ? toss.message : GENERIC_TOSS_ERROR_MESSAGE,
     };
   }
 
   const isMixing = order.type === 'mixing';
-  const booking = order.bookings[0];
-  const workOrder = order.workOrders[0];
+  // 선점이 풀린 세션 주문은 status가 무엇이든 이 batch에 매치되면 안 된다 — 매치되면 이미
+  // 다른 고객이 확정한 슬롯에 confirmed 예약이 하나 더 생긴다. 0행이 되면 아래
+  // autoCancelStaleApproval이 전액을 자동으로 되돌린다. 믹싱은 점유할 슬롯이 없어 제외한다.
+  const sessionHoldGuard =
+    order.type === 'session' ? sql`${orders.createdAt} > unixepoch() - ${PENDING_HOLD_SECONDS}` : undefined;
   let batchResults: unknown[] = [];
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
@@ -355,16 +565,35 @@ export const confirmBookingPayment = async (input: {
         receiptUrl: approved.receipt?.url ?? null,
         rawResponse: JSON.stringify(approved),
       }),
+      // notificationError에 센티널을 함께 쓴다 — 아래 메일 단계에서 프로세스가 죽어도(타임아웃·
+      // 배포 중 종료) 웹훅 재시도가 "메일이 아직 안 나갔다"를 읽고 재발송할 수 있어야 하고,
+      // 그전까지는 healthCheck가 이 주문을 '메일 실패'로 들고 있어야 한다(펀딩과 같은 장치).
       db.update(orders)
-        .set({ status: 'paid', updatedAt: new Date() })
-        .where(and(eq(orders.id, order.id), eq(orders.status, 'pending'))),
+        .set({ status: 'paid', updatedAt: new Date(), notificationError: SEND_PENDING })
+        .where(and(eq(orders.id, order.id), inArray(orders.status, acceptableStatuses), sessionHoldGuard)),
+      // 하위 전이는 **주문이 실제로 paid가 됐을 때만** 한다. 같은 batch = 같은 트랜잭션이라
+      // 바로 위 UPDATE의 결과를 읽는다. 예전엔 이 조건이 없어서, orders 전이가 0행이라
+      // autoCancelStaleApproval이 전액을 되돌리는 경우에도 bookings만 confirmed로 남았다 —
+      // 취소된 결제로 슬롯이 점유된 유령 예약이다.
       isMixing
         ? db.update(workOrders)
             .set({ status: 'received', updatedAt: new Date() })
-            .where(and(eq(workOrders.orderId, order.id), eq(workOrders.status, 'pending')))
+            .where(
+              and(
+                eq(workOrders.orderId, order.id),
+                eq(workOrders.status, 'pending'),
+                sql`EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`,
+              ),
+            )
         : db.update(bookings)
             .set({ status: 'confirmed', updatedAt: new Date() })
-            .where(and(eq(bookings.orderId, order.id), eq(bookings.status, 'pending'))),
+            .where(
+              and(
+                eq(bookings.orderId, order.id),
+                eq(bookings.status, 'pending'),
+                sql`EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`,
+              ),
+            ),
     ]);
   } catch (error) {
     // 토스 승인은 이미 끝났다 — 이 실패가 "동시 확정에서 다른 쪽이 이겼다"(멱등, paymentKey
@@ -410,70 +639,9 @@ export const confirmBookingPayment = async (input: {
   }
 
   // 후처리 — 결제는 이미 성공했으므로 실패를 삼키되 반드시 기록한다 (스펙 §10).
-  let emailSent: boolean | undefined;
-  if (isMixing && workOrder) {
-    // 믹싱은 슬롯이 없어 캘린더 등록이 없다 — 확정 메일만 보낸다.
-    const notifyError = await deliverConfirmedEmails(() =>
-      sendMixingOrderConfirmedEmails({ ...order, status: 'paid' }, workOrder),
-    );
-    emailSent = !notifyError;
-    try {
-      await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));
-    } catch (error) {
-      console.error('[booking-confirm] notificationError 기록 실패', {
-        orderNo: order.orderNo,
-        notifyError,
-        error,
-      });
-    }
-  } else if (!isMixing && booking) {
-    try {
-      const eventId = await createBookingEvent({
-        summary: `[예약] ${booking.serviceType} — ${order.customerName}`,
-        description: [
-          `상품: ${booking.productId} (${booking.durationHours}시간)`,
-          `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
-          `주문번호: ${order.orderNo}`,
-          `요청사항: ${booking.customerNote ?? '없음'}`,
-        ].join('\n'),
-        start: booking.startAt,
-        end: booking.endAt,
-      });
-      await db.update(bookings).set({ gcalEventId: eventId }).where(eq(bookings.id, booking.id));
-    } catch (error) {
-      const detail = error instanceof Error ? error.message : String(error);
-      try {
-        await db
-          .update(bookings)
-          .set({ gcalError: `create(${kstDateString(new Date())}): ${detail}` })
-          .where(eq(bookings.id, booking.id));
-      } catch (writeError) {
-        console.error('[booking-confirm] gcalError 기록 실패', {
-          orderNo: order.orderNo,
-          bookingId: booking.id,
-          error: writeError,
-        });
-      }
-    }
-
-    const notifyError = await deliverConfirmedEmails(() =>
-      sendBookingConfirmedEmails({ ...order, status: 'paid' }, booking),
-    );
-    emailSent = !notifyError;
-    try {
-      await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));
-    } catch (error) {
-      console.error('[booking-confirm] notificationError 기록 실패', {
-        orderNo: order.orderNo,
-        notifyError,
-        error,
-      });
-    }
-  } else if (!isMixing) {
-    // Phase 1에선 발생 불가(주문 생성이 항상 bookings 1건을 동반) — 상태 불변식이 깨졌을 때의 방어 로그.
-    // 믹싱 쪽 방어는 필요 없다 — createMixingOrder가 겹침 검사 없이 항상 work_orders 1건을 만든다.
-    console.error('[booking-confirm] bookings 없는 주문 — 후처리 생략', { orderNo: order.orderNo });
-  }
+  // 센티널 선점이 이 안에 있다: 같은 승인이 유발한 토스 DONE 웹훅이 후처리 중에 도착해도
+  // 확정 메일·캘린더 이벤트가 두 번 만들어지지 않는다.
+  const emailSent = await deliverPostConfirmation(order);
 
   return {
     ok: true,
