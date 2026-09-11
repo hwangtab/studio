@@ -379,7 +379,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       />
 
       {/* 전환 CTA */}
-      <Section variant="alternate" className="py-16">
+      <Section variant="alternate">
         <ContactCTA
           locale={locale}
           title={

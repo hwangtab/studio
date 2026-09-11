@@ -16,7 +16,7 @@ const RegionLinksSection = ({ locale }: RegionLinksSectionProps) => {
   }
 
   return (
-    <Section variant="alternate" className="py-10" defer>
+    <Section variant="alternate" spacing="tight" defer>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           icon={MapPin}

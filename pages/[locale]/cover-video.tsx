@@ -361,7 +361,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
         ]}
       />
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={

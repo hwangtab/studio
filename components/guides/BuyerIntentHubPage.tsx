@@ -284,7 +284,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         variant="alternate"
       />
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title="시작할 준비가 되셨나요"

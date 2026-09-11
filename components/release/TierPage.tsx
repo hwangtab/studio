@@ -383,7 +383,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         subtitle={t('releaseProject.hubCallout.subtitle')}
       />
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={

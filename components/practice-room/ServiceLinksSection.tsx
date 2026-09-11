@@ -45,7 +45,7 @@ const ServiceLinksSection = ({ locale, labels }: ServiceLinksSectionProps) => {
   ];
 
   return (
-    <Section variant="alternate" className="py-10" defer>
+    <Section variant="alternate" spacing="tight" defer>
       <div className="flex flex-wrap justify-center gap-4">
         {serviceLinks.map((link) => (
           <Link

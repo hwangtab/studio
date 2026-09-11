@@ -253,7 +253,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="default" className="py-10">
+      <Section variant="default" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
@@ -286,7 +286,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
         </div>
       </Section>
 
-      <Section variant="alternate" className="py-16">
+      <Section variant="alternate">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

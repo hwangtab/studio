@@ -209,7 +209,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
         subtitle={t('portfolio.detail.relatedStoriesSubtitle', { defaultValue: '실제 녹음·믹싱·프로덕션 과정에서 사용하는 기법을 가이드로 정리했습니다.' })}
       />
 
-      <Section variant="alternate" className="py-12">
+      <Section variant="alternate" spacing="tight">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <p className="text-body mb-6 text-gray-600 dark:text-gray-300">{t('portfolio.detail.ctaPrompt', '당신의 음악도 완성해 드립니다.')}</p>
           {/* prefetch={false}: 본문 fold 내 button CTA들의 무거운 SSG JSON

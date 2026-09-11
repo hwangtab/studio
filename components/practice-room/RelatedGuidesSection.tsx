@@ -27,7 +27,7 @@ const RelatedGuidesSection = ({ title, locale }: RelatedGuidesSectionProps) => {
   }
 
   return (
-    <Section variant="default" className="py-10" defer>
+    <Section variant="default" spacing="tight" defer>
       <div className="max-w-5xl mx-auto">
         <SectionHeading
           icon={BookOpen}

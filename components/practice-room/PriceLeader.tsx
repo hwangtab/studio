@@ -34,7 +34,7 @@ const PriceLeader = ({
   note,
   locale,
 }: PriceLeaderProps) => (
-  <Section variant="default" className="py-12">
+  <Section variant="default" spacing="tight">
     <div className="max-w-5xl mx-auto">
       <div className="text-center mb-8">
         <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-semibold shadow-sm">

@@ -368,7 +368,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           클릭 가능한 전환 버튼이 없던 공백을 메운다(2026-08-04 매출 감사).
           만실이어도 문의는 입주 대기로 이어지므로(운영 방침) 대기 접수를 명시해
           "만실이면 문의해도 소용없겠지" 이탈을 막는다. */}
-      <Section variant="default" className="py-12">
+      <Section variant="default" spacing="tight">
         <div className="max-w-2xl mx-auto text-center">
           <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-6">
             {t(PRACTICE_ROOM_HAS_VACANCY ? 'practiceRoom.midCta.noteVacant' : 'practiceRoom.midCta.note')}
@@ -414,7 +414,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         }}
       />
 
-      <Section variant="default" className="py-16" defer>
+      <Section variant="default" defer>
         <ContactCTA
           locale={locale}
           title={

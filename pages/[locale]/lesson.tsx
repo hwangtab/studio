@@ -438,7 +438,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
             />
 
             {/* Improved CTA Section */}
-            <Section variant="alternate" className="py-16">
+            <Section variant="alternate">
                 <ContactCTA
                     locale={locale}
                     title={

@@ -304,7 +304,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
       {/* 서비스 바로가기 — 6~7개 link(ko는 발매 pill 포함)가 메인 viewport에 들어오면 next/link 기본 prefetch가
           각 페이지의 SSG JSON·청크를 동시 다운로드한다. 메인 페이지 LCP/TBT 측정 창에
           체류하는 사용자에게는 가성비 나쁜 비용이라 prefetch={false}로 차단. */}
-      <Section variant="default" className="py-10">
+      <Section variant="default" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           {/* 발매 프로젝트 pill은 ko 전용 — nav.releaseProject는 하위메뉴 맥락 라벨이라
               비한국어에서 "Overview"로 해석돼 홈에서 맥락을 잃는다. 플래그십은 한국 인디
@@ -371,7 +371,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
       </Section>
 
       {/* 하단 CTA 섹션 */}
-      <Section variant="alternate" className="py-24">
+      <Section variant="alternate" spacing="loose">
         <ContactCTA
           locale={locale}
           title={
