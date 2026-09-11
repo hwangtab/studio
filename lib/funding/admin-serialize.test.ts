@@ -1,10 +1,13 @@
 /** @jest-environment node */
-import { serializePledgeForAdmin } from './admin-serialize';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
+
+import { REVIEW_MEMO_MARKER, hasReviewMarker, serializePledgeForAdmin } from './admin-serialize';
 import type { FundingOrder } from './service';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
 
-const orderWith = (status: string, hasPayment: boolean, refundRequestedAt: Date | null = null): FundingOrder =>
+const orderWith = (status: string, hasPayment: boolean, refundRequestedAt: Date | null = null, adminMemo: string | null = null): FundingOrder =>
   ({
     id: 'o1', orderNo: 'FND-1', status, totalAmount: 5000, customerName: '김후원',
     customerPhone: '010-1111-2222', customerEmail: 'a@example.com', notificationError: null, createdAt: NOW,
@@ -12,7 +15,7 @@ const orderWith = (status: string, hasPayment: boolean, refundRequestedAt: Date 
       id: 'p1', projectSlug: 'demo', paymentMethod: 'toss', entrySource: 'online', rewardTitle: 'CD',
       quantity: 1, additionalAmount: 0, fulfillmentStatus: 'none', trackingCompany: null, trackingNumber: null,
       shippingAddress1: null, supporterMessage: null, refundRequestedAt, paidAt: null,
-      holdExpiresAt: NOW, adminMemo: null,
+      holdExpiresAt: NOW, adminMemo,
     },
     payments: hasPayment ? [{ id: 'pay1' }] : [],
   }) as unknown as FundingOrder;
@@ -57,4 +60,47 @@ describe('serializePledgeForAdmin — refundRequested', () => {
   it('partially_refunded는 여전히 true', () => {
     expect(serializePledgeForAdmin(orderWith('partially_refunded', true, new Date()), new Set()).refundRequested).toBe(true);
   });
+});
+
+/**
+ * 웹훅이 만료·failed 주문을 되살려 확정하면 한정 리워드 재고를 초과했을 수 있다.
+ * confirm.ts는 그 흔적을 adminMemo에 남기지만, 그 값이 관리자 목록 어디에도 안 보여서
+ * 로그에만 남고 아무도 확인하지 않았다.
+ */
+describe('serializePledgeForAdmin — needsReview', () => {
+  // confirm.ts가 실제로 쓰는 두 문구. 이 상수가 어긋나면 배지가 조용히 꺼진다.
+  const WEBHOOK_NOTES = [
+    '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요',
+    '[웹훅] failed 처리 후 승인 확인 — 재고 초과 가능, 확인 필요',
+  ];
+
+  it.each(WEBHOOK_NOTES)('confirm.ts가 남기는 문구 "%s"를 표식으로 인식한다', (note) => {
+    expect(note).toContain(REVIEW_MEMO_MARKER);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, note), new Set()).needsReview).toBe(true);
+  });
+
+  // adminMemo는 append로 쌓인다 — 뒤에 운영자 메모가 붙어도 표식이 묻히면 안 된다.
+  it('뒤에 다른 메모가 덧붙어도 켜진 채로 남는다', () => {
+    const memo = `${WEBHOOK_NOTES[0]}\n[2026-10-20] 재고 확인함 — 문제 없음`;
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(true);
+  });
+
+  it('메모가 없거나 관계없는 메모면 false', () => {
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, null), new Set()).needsReview).toBe(false);
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, '입금자명 김철수'), new Set()).needsReview).toBe(false);
+  });
+
+  it('hasReviewMarker는 null·undefined를 안전하게 받는다', () => {
+    expect(hasReviewMarker(null)).toBe(false);
+    expect(hasReviewMarker(undefined)).toBe(false);
+  });
+});
+
+/**
+ * 표식 문자열은 confirm.ts(다른 작업이 소유)와 이 파일에 나뉘어 있다. 한쪽만 바뀌면 배지가
+ * 조용히 꺼지고, 그 실패는 사고가 난 뒤에야 드러난다 — 소스를 직접 읽어 대조한다.
+ */
+it('REVIEW_MEMO_MARKER가 confirm.ts의 실제 문구와 일치한다', () => {
+  const source = readFileSync(path.join(process.cwd(), 'lib/funding/confirm.ts'), 'utf-8');
+  expect(source).toContain(REVIEW_MEMO_MARKER);
 });

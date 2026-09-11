@@ -138,7 +138,22 @@ export const expireStalePledges = async (now: Date): Promise<void> => {
 };
 
 export interface ProjectStatus {
-  raisedAmount: number; backerCount: number; remaining: Record<string, number | null>; publicBackers: string[];
+  raisedAmount: number;
+  /**
+   * 확정 후원 **건수**(COUNT(*)). 사람 수가 아니다 — 같은 사람이 두 번 후원하면 2로 센다.
+   * 이름을 바꾸지 않는 이유: 공개 API 응답 필드이고 소비처가 components/funding/** 에 있다.
+   * 의미를 좁히는 대신 라벨을 'N건 후원'으로 맞추고, 인원이 필요한 자리에는 아래
+   * backerPersonCount를 쓴다.
+   */
+  backerCount: number;
+  /**
+   * 확정 후원 **인원**. 이메일+전화 조합으로 중복 후원자를 제거한 수라 항상 backerCount 이하.
+   * 추가 필드로 둔 것은 backerCount의 의미를 바꾸면 기존 소비처가 조용히 다른 수를 그리기
+   * 때문이다 — 세는 대상이 다르면 필드도 다르다.
+   */
+  backerPersonCount: number;
+  remaining: Record<string, number | null>;
+  publicBackers: string[];
 }
 
 /**
@@ -150,8 +165,12 @@ export interface ProjectStatus {
  */
 export const aggregateProjectStatus = async (project: FundingProject, now: Date): Promise<ProjectStatus> => {
   const db = getDb();
-  const totals = await db.all<{ raised: number | null; backers: number | null }>(sql`
-    SELECT SUM(o.total_amount) AS raised, COUNT(*) AS backers
+  const totals = await db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
+    SELECT SUM(o.total_amount) AS raised,
+           -- 후원 '건수'. 인원이 아니다.
+           COUNT(*) AS backers,
+           -- 후원 '인원'. 이메일+전화가 같으면 한 사람으로 본다(orders는 둘 다 NOT NULL).
+           COUNT(DISTINCT o.customer_email || '|' || o.customer_phone) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded')
   `);
@@ -175,6 +194,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   return {
     raisedAmount: Number(totals[0]?.raised ?? 0),
     backerCount: Number(totals[0]?.backers ?? 0),
+    backerPersonCount: Number(totals[0]?.persons ?? 0),
     remaining,
     publicBackers: names.map((n) => n.customer_name),
   };

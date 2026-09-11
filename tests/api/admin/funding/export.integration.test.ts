@@ -210,3 +210,28 @@ it('환불 요청이 없는 건의 refundRequestedAt은 빈 칸이다', async ()
   const idx = header.trim().split(',').indexOf('refundRequestedAt');
   expect(row.split(',')[idx]).toBe('');
 });
+
+/**
+ * 웹훅이 만료·failed 주문을 되살려 확정한 건은 한정 리워드 재고를 초과했을 수 있다.
+ * adminMemo는 맨 끝 칸의 긴 자유 텍스트라 스크롤해야 보이고 여러 줄이 쌓이면 묻힌다 —
+ * shipHold와 같은 이유로 사람이 훑을 수 있는 한 칸을 앞쪽에 따로 둔다.
+ */
+it('needsReview 칸에 재고확인 표시가 실리고, 평범한 건은 빈 칸이다', async () => {
+  const flagged = await seed({ customerEmail: 'w@example.com', customerPhone: '010-20' }, 'paid');
+  await seed({ customerEmail: 'z@example.com', customerPhone: '010-21' }, 'paid');
+  await client.execute({
+    sql: `UPDATE funding_pledges SET admin_memo = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요'
+          WHERE order_id = (SELECT id FROM orders WHERE order_no = ?)`,
+    args: [flagged],
+  });
+  const r = await call({});
+  const lines = r.csv.trim().split('\n');
+  const idx = lines[0].trim().split(',').indexOf('needsReview');
+  expect(idx).toBe(2); // shipHold 바로 옆 — 상태 칸보다 앞
+  const flaggedRow = lines.find((l) => l.includes(flagged))!;
+  const normalRow = lines.slice(1).find((l) => !l.includes(flagged))!;
+  expect(flaggedRow.split(',')[idx]).toBe('재고확인');
+  expect(normalRow.split(',')[idx]).toBe('');
+  // 원본 메모도 여전히 실린다 — 요약 칸이 원문을 대체하지는 않는다.
+  expect(flaggedRow).toContain('재고 초과 가능, 확인 필요');
+});

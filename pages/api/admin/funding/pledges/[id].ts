@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../../../db/client';
 import { fulfillmentStatusEnum, fundingPledges, orders } from '../../../../../db/schema';
@@ -62,16 +62,48 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
         });
       }
-      await db
-        .update(fundingPledges)
-        .set({
-          fulfillmentStatus: status,
-          // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다.
-          trackingCompany: typeof b.trackingCompany === 'string' ? (b.trackingCompany || null) : order.fundingPledge.trackingCompany,
-          trackingNumber: typeof b.trackingNumber === 'string' ? (b.trackingNumber || null) : order.fundingPledge.trackingNumber,
-          updatedAt: now,
-        })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다.
+      const trackingCompany = typeof b.trackingCompany === 'string'
+        ? (b.trackingCompany || null) : order.fundingPledge.trackingCompany;
+      const trackingNumber = typeof b.trackingNumber === 'string'
+        ? (b.trackingNumber || null) : order.fundingPledge.trackingNumber;
+
+      /**
+       * delivered_at은 약관 제13조가 약속한 '리워드 전달 완료 후 1년 파기'의 기산점이다.
+       *
+       * delivered로 갈 때: COALESCE로 **첫 전달 시각을 보존**한다. 운송장만 고쳐 다시 저장하는
+       * 흔한 실무에서 기산점이 계속 밀리면 파기 시점도 함께 밀린다.
+       * delivered에서 되돌릴 때(오조작 정정·반송): **NULL로 되돌린다.** 기산점은 '실제로
+       * 전달이 끝난 시각'이어야 하는데, 잘못 눌러 찍힌 시각을 남겨 두면 아직 배송 중인 건의
+       * 배송지가 1년 뒤 파기 대상이 된다. 기산점은 항상 현재 fulfillment_status와 일치시킨다.
+       */
+      const deliveredAt = status === 'delivered'
+        ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`
+        : sql`NULL`;
+
+      /**
+       * 위 두 검사는 사람에게 이유를 알려 주기 위한 것이고, **경합을 막는 것은 이 WHERE다.**
+       * 읽고-검사-쓰기 사이에 환불이 들어오면 두 요청이 모두 검사를 통과해 청약철회한 건이
+       * '발송완료'로 굳는다. 조건을 UPDATE에 실으면 진 쪽이 rowsAffected 0을 받는다.
+       * (lib/booking/cancel.ts의 선점 패턴과 같다.)
+       */
+      const claim = await db.run(sql`
+        UPDATE funding_pledges
+        SET fulfillment_status = ${status},
+            tracking_company = ${trackingCompany},
+            tracking_number = ${trackingNumber},
+            delivered_at = ${deliveredAt},
+            updated_at = unixepoch()
+        WHERE id = ${order.fundingPledge.id}
+          AND refund_requested_at IS NULL
+          AND EXISTS (SELECT 1 FROM orders o WHERE o.id = funding_pledges.order_id AND o.status = 'paid')
+      `);
+      if (Number(claim.rowsAffected) === 0) {
+        return res.status(409).json({
+          ok: false,
+          message: '그 사이 환불 요청이나 주문 상태 변경이 있었습니다. 새로고침 후 다시 확인해 주세요.',
+        });
+      }
       return res.status(200).json({ ok: true });
     }
     /**

@@ -6,8 +6,10 @@ jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jes
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
+// set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
+const mockRun = jest.fn().mockResolvedValue({ rowsAffected: 1 });
 jest.mock('../../../../../db/client', () => ({
-  getDb: jest.fn(() => ({ update: mockUpdate })),
+  getDb: jest.fn(() => ({ update: mockUpdate, run: mockRun })),
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -41,6 +43,7 @@ const BASE_ORDER = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockRun.mockResolvedValue({ rowsAffected: 1 });
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
   (findFundingOrderById as jest.Mock).mockResolvedValue(BASE_ORDER);
 });
@@ -140,20 +143,8 @@ it('resend_email: 수기 등록이어도 실제 고객 이메일이면 발송한
   expect((await call('PATCH', { id: 'order-1' }, { action: 'resend_email' })).status).toBe(200);
 });
 
-it('set_fulfillment: 빈 문자열 운송장은 null로 저장한다(비우기)', async () => {
-  // 예전엔 빈 문자열이 그대로 저장돼 잘못 입력한 운송장을 지울 방법이 없었다.
-  const set = jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) }));
-  mockUpdate.mockReturnValueOnce({ set } as never);
-  (findFundingOrderById as jest.Mock).mockResolvedValue({
-    ...BASE_ORDER, status: 'paid',
-    fundingPledge: { ...BASE_ORDER.fundingPledge, trackingCompany: 'CJ', trackingNumber: '123' },
-  });
-  const r = await call('PATCH', { id: 'order-1' }, {
-    action: 'set_fulfillment', fulfillmentStatus: 'preparing', trackingCompany: '', trackingNumber: '',
-  });
-  expect(r.status).toBe(200);
-  expect(set).toHaveBeenCalledWith(expect.objectContaining({ trackingCompany: null, trackingNumber: null }));
-});
+// 빈 문자열 운송장이 null로 저장되는지, delivered_at이 실제로 채워지는지처럼 SQL이 쓴
+// 값을 확인하는 것은 setFulfillment.integration.test.ts가 실 DB로 본다.
 
 /**
  * 무통장 청약철회는 refundRequestedAt만 찍고 주문은 paid로 남긴다. 예전엔 그 건도
@@ -171,13 +162,27 @@ it('set_fulfillment: 환불 요청된 후원은 409이고 DB를 건드리지 않
     ok: false,
     message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
   });
-  expect(mockUpdate).not.toHaveBeenCalled();
+  expect(mockRun).not.toHaveBeenCalled();
 });
+
+/**
+ * 위 두 검사는 사람에게 이유를 알려 주는 것이고, 경합을 막는 것은 UPDATE의 WHERE다.
+ * 읽고-검사-쓰기 사이에 환불이 들어오면 두 요청이 모두 검사를 통과해 청약철회한 건이
+ * '발송완료'로 굳는다. 진 쪽은 rowsAffected 0을 받아 409여야 한다.
+ */
+it('set_fulfillment: 경합으로 선점에 실패(rowsAffected 0)하면 409', async () => {
+  mockRun.mockResolvedValueOnce({ rowsAffected: 0 });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
+  expect(r.status).toBe(409);
+  expect(r.body.message).toContain('새로고침');
+});
+
+
 
 it('set_fulfillment: 환불 요청이 없으면 그대로 저장된다', async () => {
   const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
   expect(r.status).toBe(200);
-  expect(mockUpdate).toHaveBeenCalled();
+  expect(mockRun).toHaveBeenCalled();
 });
 
 /**

@@ -12,12 +12,17 @@ import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { duplicateKey, serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
-import { listFundingOrders } from '../../../lib/funding/admin-list';
+import { aggregateAdminFundingTotals, listFundingOrders, type AdminFundingTotals } from '../../../lib/funding/admin-list';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { getAllFundingProjects } from '../../../lib/funding/projects';
 import { expireStalePledges } from '../../../lib/funding/service';
 
 const LIST_LIMIT = 200;
+
+/** 조회 자체가 실패했을 때 화면이 그릴 값 — 이 경우 전체 화면 오류라 표시되지는 않는다. */
+const EMPTY_TOTALS: AdminFundingTotals = {
+  confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+};
 
 interface ProjectRewardOption {
   id: string;
@@ -33,6 +38,11 @@ interface ProjectOption {
 
 interface AdminFundingPageProps {
   items: AdminPledgeItem[];
+  /**
+   * 상단 KPI. **목록(items)에서 계산하지 않는다** — items는 최대 200건으로 잘리므로
+   * 201건째부터 화면 수치가 공개 진행률과 갈라진다. 집계 SQL이 전건을 센다.
+   */
+  totals: AdminFundingTotals;
   truncated: boolean;
   projects: ProjectOption[];
   slug: string | null;
@@ -68,7 +78,9 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
 
   try {
     await expireStalePledges(new Date());
-    const orders = await listFundingOrders(slug);
+    // 만료 처리 뒤에 집계·목록을 같은 순서로 읽는다 — 만료 전에 세면 이미 죽은 홀드가
+    // 입금 대기 금액에 남는다.
+    const [totals, orders] = await Promise.all([aggregateAdminFundingTotals(slug), listFundingOrders(slug)]);
     const counts = new Map<string, number>();
     for (const o of orders) {
       if (o.status === 'pending' && o.fundingPledge?.paymentMethod === 'bank_transfer') {
@@ -81,6 +93,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
     return {
       props: {
         items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdmin(o, dups)),
+        totals,
         truncated: orders.length > LIST_LIMIT,
         projects,
         slug,
@@ -92,6 +105,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
     return {
       props: {
         items: [],
+        totals: EMPTY_TOTALS,
         truncated: false,
         projects,
         slug,
@@ -114,7 +128,7 @@ const STATUS_LABELS: Record<string, string> = {
 const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '무통장' };
 const FULFILLMENT_LABELS: Record<string, string> = { none: '미발송', preparing: '준비중', shipped: '발송완료', delivered: '수령완료' };
 
-export default function AdminFundingPage({ items, truncated, projects, slug, error, pledgesError }: AdminFundingPageProps) {
+export default function AdminFundingPage({ items, totals, truncated, projects, slug, error, pledgesError }: AdminFundingPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -130,22 +144,16 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
   const [formMemo, setFormMemo] = useState('');
   const [formError, setFormError] = useState<string | null>(null);
 
-  // 확정 집계는 aggregateProjectStatus와 같은 상태 집합을 쓴다 — 부분환불 건도 후원 자체는
-  // 살아 있고 리워드도 나간다. 한쪽만 빼면 관리자 화면과 공개 현황판의 숫자가 어긋난다.
-  const paidItems = useMemo(() => items.filter((i) => i.status === 'paid' || i.status === 'partially_refunded'), [items]);
-  const pendingBankItems = useMemo(() => items.filter((i) => i.status === 'pending' && i.paymentMethod === 'bank_transfer'), [items]);
+  // 배너는 목록에 실린 건에 대한 경고라 items에서 센다(표에서 바로 찾아 누를 수 있어야
+  // 하므로). 반대로 상단 KPI는 목록과 무관한 전건 집계여서 서버에서 내려온 totals를 쓴다.
   const mismatched = useMemo(() => items.filter((i) => i.mismatch), [items]);
   // 무통장 청약철회는 자동 환불 경로가 없어 orders.status가 paid로 남는다 — 상태 칸만 보면
   // 정상 확정 건과 똑같이 보이므로, 목록에서 따로 세어 배너로 올린다. 약관 제10조가 약속한
   // 3영업일 환불 기한을 놓치는 사고가 여기서 시작된다.
   const refundRequested = useMemo(() => items.filter((i) => i.refundRequested), [items]);
-
-  const totals = useMemo(() => ({
-    confirmedAmount: paidItems.reduce((sum, i) => sum + i.totalAmount, 0),
-    backerCount: paidItems.length,
-    pendingAmount: pendingBankItems.reduce((sum, i) => sum + i.totalAmount, 0),
-    pendingCount: pendingBankItems.length,
-  }), [paidItems, pendingBankItems]);
+  // 웹훅이 만료·failed 주문을 되살려 확정한 건 — 재고를 초과했을 수 있다. confirm.ts가
+  // adminMemo에 남기는 흔적이 로그 말고는 어디에도 안 보였다.
+  const needsReview = useMemo(() => items.filter((i) => i.needsReview), [items]);
 
   const refresh = async () => {
     await router.replace(router.asPath, undefined, { scroll: false });
@@ -277,9 +285,18 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                 </div>
               )}
 
+              {needsReview.length > 0 && (
+                <div className="mb-4 p-3 bg-purple-50 border border-purple-300 text-purple-900 rounded-lg text-sm">
+                  <strong>웹훅이 되살려 확정한 후원이 {needsReview.length}건 있습니다</strong> (
+                  {needsReview.map((m) => m.orderNo).join(', ')}). 홀드가 만료된(또는 실패 처리된) 뒤 결제가
+                  승인된 건이라 <strong>한정 리워드 재고를 초과했을 수 있습니다.</strong> 남은 수량을 확인한 뒤
+                  발송해 주세요.
+                </div>
+              )}
+
               {truncated && (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-                  최근 {LIST_LIMIT}건만 표시합니다.
+                  <strong>목록</strong>은 최근 {LIST_LIMIT}건만 표시합니다. 위 지표와 CSV 내보내기는 전건 기준입니다.
                 </div>
               )}
 
@@ -302,14 +319,22 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                 ))}
               </div>
 
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              {/*
+                후원 '건수'와 '인원'을 나란히 둔다 — COUNT(*)는 건수이고, 같은 사람이 두 번
+                후원하면 2다. 예전엔 그 값을 '후원자 수 N명'으로 적어 인원을 부풀렸다.
+              */}
+              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-2">
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="text-xs text-gray-500">확정 금액</div>
                   <div className="text-lg font-bold text-gray-900">{formatPriceAmount(totals.confirmedAmount)}원</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">후원자 수</div>
-                  <div className="text-lg font-bold text-gray-900">{totals.backerCount}명</div>
+                  <div className="text-xs text-gray-500">확정 후원 건수</div>
+                  <div className="text-lg font-bold text-gray-900">{totals.confirmedCount}건</div>
+                </div>
+                <div className="p-4 bg-gray-50 rounded-xl">
+                  <div className="text-xs text-gray-500">후원자 수(중복 제외)</div>
+                  <div className="text-lg font-bold text-gray-900">{totals.confirmedPersonCount}명</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
                   <div className="text-xs text-gray-500">입금 대기 금액</div>
@@ -320,6 +345,9 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                   <div className="text-lg font-bold text-gray-900">{totals.pendingCount}건</div>
                 </div>
               </div>
+              <p className="text-xs text-gray-500 mb-6">
+                아래 목록의 표시 건수와 무관하게 {slug ? '이 프로젝트의 ' : ''}전건을 집계한 값입니다.
+              </p>
 
               <div className="flex flex-wrap gap-2 mb-6">
                 <a href={exportHref}>
@@ -450,6 +478,16 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                           {item.refundRequested && (
                             <div className="mt-1">
                               <span className="inline-flex px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold">환불요청</span>
+                            </div>
+                          )}
+                          {item.needsReview && (
+                            <div className="mt-1">
+                              <span
+                                className="inline-flex px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-xs font-semibold"
+                                title="웹훅이 만료·실패 주문을 되살려 확정 — 재고 초과 가능"
+                              >
+                                재고확인
+                              </span>
                             </div>
                           )}
                         </td>

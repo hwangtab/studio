@@ -1,14 +1,14 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/projects', () => ({ getAllFundingProjects: jest.fn() }));
-jest.mock('../../../../lib/funding/admin-list', () => ({ listFundingOrders: jest.fn() }));
+jest.mock('../../../../lib/funding/admin-list', () => ({ listFundingOrders: jest.fn(), aggregateAdminFundingTotals: jest.fn() }));
 jest.mock('../../../../lib/funding/service', () => ({ expireStalePledges: jest.fn() }));
 
 import type { GetServerSidePropsContext } from 'next';
 import { getServerSideProps } from '../../../../pages/admin/funding/index';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { getAllFundingProjects } from '../../../../lib/funding/projects';
-import { listFundingOrders } from '../../../../lib/funding/admin-list';
+import { aggregateAdminFundingTotals, listFundingOrders } from '../../../../lib/funding/admin-list';
 
 const context = { query: {} } as unknown as GetServerSidePropsContext;
 
@@ -16,6 +16,9 @@ beforeEach(() => {
   jest.clearAllMocks();
   (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
   (listFundingOrders as jest.Mock).mockResolvedValue([]);
+  (aggregateAdminFundingTotals as jest.Mock).mockResolvedValue({
+    confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+  });
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });
 afterEach(() => jest.restoreAllMocks());
