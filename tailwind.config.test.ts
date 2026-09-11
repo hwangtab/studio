@@ -94,3 +94,56 @@ describe('카카오 CTA 색 토큰', () => {
     expect(defined.has('kakao-ink')).toBe(true);
   });
 });
+
+// `.typo-*` 컴포넌트 클래스도 같은 사고를 냈다(2026-09-11): typo-button·typo-caption·
+// typo-body가 정의 없이 6곳에서 쓰여 404/500 버튼과 연습실 캡션이 스타일 없이 렌더됐다.
+// 색 토큰과 달리 Tailwind 기본 팔레트 같은 "정의 없이도 유효한 이름"이 없으므로
+// typo- 접두사 전체를 검사해도 오탐이 생기지 않는다.
+const definedTypoClasses = (): Set<string> => {
+  const source = readFileSync(path.join(ROOT, 'tailwind.config.ts'), 'utf-8');
+  const names = new Set<string>();
+  for (const match of source.matchAll(/'\.(typo-[\w-]+)'\s*:/g)) names.add(match[1]);
+  return names;
+};
+
+describe('typo 컴포넌트 클래스', () => {
+  it('쓰이는 .typo-* 클래스는 전부 tailwind.config.ts에 정의돼 있어야 한다', () => {
+    const defined = definedTypoClasses();
+    const missing: string[] = [];
+
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const content = readFileSync(file, 'utf-8');
+        for (const match of content.matchAll(/\btypo-[\w-]+/g)) {
+          if (!defined.has(match[0])) {
+            missing.push(`${path.relative(ROOT, file)}: ${match[0]}`);
+          }
+        }
+      }
+    }
+
+    if (missing.length > 0) {
+      throw new Error(
+        'tailwind.config.ts에 정의되지 않은 .typo-* 클래스를 쓰는 곳이 있습니다:\n' +
+          missing.join('\n'),
+      );
+    }
+  });
+
+  it('역할 클래스 최소 구성이 존재한다', () => {
+    const defined = definedTypoClasses();
+    for (const name of [
+      'typo-section-title', 'typo-section-lead', 'typo-page-title',
+      'typo-card-title', 'typo-card-subtitle', 'typo-card-body', 'typo-card-meta',
+      'typo-card-cta', 'typo-body', 'typo-caption', 'typo-button',
+    ]) {
+      expect(defined.has(name)).toBe(true);
+    }
+  });
+});

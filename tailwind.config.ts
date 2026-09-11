@@ -228,6 +228,46 @@ const config: Config = {
           lineHeight: theme('fontSize.caption[1].lineHeight'),
           fontWeight: theme('fontSize.caption[1].fontWeight'),
         },
+        // 트랜잭션·결과 페이지 h1(예약 완료, 서명, 구독 관리). 마케팅 페이지 h1은
+        // ImageHero의 font-hero 스케일을 쓰므로 여기 해당하지 않는다.
+        '.typo-page-title': {
+          fontFamily: theme('fontFamily.title'),
+          fontSize: theme('fontSize.heading-3[0]'),
+          lineHeight: theme('fontSize.heading-3[1].lineHeight'),
+          letterSpacing: theme('fontSize.heading-3[1].letterSpacing'),
+          fontWeight: '700',
+          color: theme('colors.gray.900'),
+          '.dark &': {
+            color: theme('colors.white'),
+          },
+        },
+        // 카드 밖 일반 본문. .typo-card-body와 값은 같고 의미만 다르다 —
+        // 호출부가 text-gray-* 를 덧붙이면 utilities 레이어가 이겨서 그 색이 적용된다.
+        '.typo-body': {
+          fontSize: theme('fontSize.body-1[0]'),
+          lineHeight: theme('fontSize.body-1[1].lineHeight'),
+          fontWeight: theme('fontSize.body-1[1].fontWeight'),
+          color: theme('colors.gray.700'),
+          '.dark &': {
+            color: theme('colors.gray.300'),
+          },
+        },
+        '.typo-caption': {
+          fontSize: theme('fontSize.caption[0]'),
+          lineHeight: theme('fontSize.caption[1].lineHeight'),
+          fontWeight: theme('fontSize.caption[1].fontWeight'),
+          color: theme('colors.gray.500'),
+          '.dark &': {
+            color: theme('colors.gray.400'),
+          },
+        },
+        // 버튼 라벨. 색은 버튼 variant가 정하므로 여기서 지정하지 않는다.
+        '.typo-button': {
+          fontFamily: theme('fontFamily.title'),
+          fontSize: theme('fontSize.body-1-medium[0]'),
+          lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
+          fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
+        },
       })
 
       // Liquid Glass 재질 클래스 — 값은 styles/globals.css의 --glass-* 토큰.
