@@ -64,6 +64,42 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 보여야 하는 법적 문서). 두 경로에도 `theme-init.js`가 `<html class="dark">`를 붙이므로, 라이트
 고정은 "다크 스타일을 안 쓰는 것"이 아니라 **`dark:` 짝을 라이트 값으로 되돌려 쓰는 것**이다.
 
+#### 브랜드색 텍스트는 다크 짝을 함께 쓴다
+
+`primary`·`secondary`·`accent`의 DEFAULT는 **흰 배경에서 AA를 통과하도록** 고른 값이다
+(secondary·accent는 그래서 -700 계열로 승격돼 있다). 같은 이유로 다크 배경에서는 반대로
+너무 어둡다. 2026-09-11 실측(프로덕션, 알파 합성 + 대형 텍스트 완화 적용)에서 8개 페이지
+1,273개 인터랙티브 요소 중 **41건**이 이것 때문에 미달했다.
+
+해결은 새 토큰이 아니라 **이미 있는 변형**이다. 배경 `gray-900`(`#030712`) 기준 실측:
+
+| 토큰 | 값 | 대비 | 다크 텍스트로 |
+|---|---|---|---|
+| `primary`(DEFAULT) | `#6d28d9` | 2.83:1 | ✗ |
+| `primary-light` | `#7c3aed` | 3.53:1 | ✗ (간발의 차로 미달 — 쓰지 말 것) |
+| `primary-lighter` | `#a78bfa` | 7.40:1 | ✓ |
+| `secondary`(DEFAULT) | `#be185d` | 3.33:1 | ✗ |
+| `secondary-light` | `#ec4899` | 5.71:1 | ✓ |
+| `accent`(DEFAULT) | `#047857` | 3.67:1 | ✗ |
+| `accent-light` | `#10b981` | 7.94:1 | ✓ |
+
+따라서 짝은 셋뿐이다 — `text-primary` + `dark:text-primary-lighter`,
+`text-secondary` + `dark:text-secondary-light`, `text-accent` + `dark:text-accent-light`.
+`hover:`·`group-hover:`·`focus-visible:` 같은 variant도 **같은 variant의 다크 짝**이 필요하다
+(`hover:text-primary` → `dark:hover:text-primary-lighter`). 아이콘은 `stroke`/`fill`이
+currentColor라 같은 텍스트 색 규칙을 그대로 따른다.
+
+`tailwind.config.test.ts`의 「브랜드색 텍스트의 다크 짝」이 CI에서 이를 강제한다. 텍스트가
+아닌 자리(체크박스·라디오의 채움색, `opacity-10` 장식 워터마크)만 `BRAND_TEXT_ALLOW`에
+**이유와 함께** 등재한다 — 이유 없이 넣으면 가드가 무의미해진다. 라이트 고정 경로
+(`pages/admin/**`·계약 서명·완료)는 스캔에서 제외된다: 흰 카드 위에 밝은 보라를 올리면
+대비가 **오히려** 깨진다.
+
+남은 부채: `dark:text-primary-light`(3.53:1)를 쓰는 자리가 약 47곳 남아 있다. 대부분
+`aria-hidden` 아이콘이거나 `text-3xl` 이상 대형 숫자라 완화 기준(3:1)은 통과하지만,
+본문 크기 텍스트에 남은 것은 `-lighter`로 올려야 한다. `ProjectRowCard`의
+`dark:text-primary/80`도 같은 부채다.
+
 본문 회색의 역할별 기본값:
 
 | 역할 | 라이트 | 다크 |

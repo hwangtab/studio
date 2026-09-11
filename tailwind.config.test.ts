@@ -183,3 +183,88 @@ describe('옐로 사용 제한', () => {
     }
   });
 });
+
+// 브랜드색 텍스트의 다크모드 대비 가드 (2026-09-11).
+//
+// primary·secondary·accent의 DEFAULT는 **흰 배경에서 AA를 통과하도록** 고른 값이다
+// (secondary·accent는 그 때문에 -700 계열로 승격돼 있다). 그래서 다크 배경
+// (gray-900 #030712) 위에서는 반대로 너무 어둡다 — 실측 primary 2.83:1 ·
+// secondary 3.33:1 · accent 3.67:1로 전부 AA(4.5) 미달이다. 2026-09-11 실측에서
+// 8개 페이지 1,273개 인터랙티브 요소 중 41건이 이 이유로 미달했다.
+//
+// 해결은 새 토큰이 아니라 기존 변형이다: primary-lighter(7.40:1) ·
+// secondary-light(5.71:1) · accent-light(7.94:1). primary-light(#7c3aed)는
+// 3.53:1로 여전히 미달이라 다크 짝으로 쓸 수 없다.
+//
+// 라이트 고정 화면(pages/admin/**, contracts/{sign,complete})은 제외한다 —
+// theme-init.js가 모든 라우트에 .dark를 붙이므로, 흰 카드 위에 밝은 보라가 뜨면
+// 오히려 대비가 깨진다(docs/design-system.md §1 다크모드).
+const BRAND_TEXT_RE = /(?<![-\w])((?:[a-z-]+:)*)text-(primary|secondary|accent)(?![-\w/])/g;
+
+const LIGHT_FIXED = (rel: string) =>
+  rel.startsWith('pages/admin/') || rel.startsWith('components/admin/') || rel.includes('/contracts/');
+
+/**
+ * 텍스트 색이 아니라서 다크 짝이 필요 없는 자리. 파일 + 줄 안에 들어 있는 고정 문자열로
+ * 지정한다(줄 번호는 금방 어긋난다). 새로 추가할 땐 **왜 텍스트가 아닌지**를 적을 것 —
+ * 이유 없이 넣으면 가드가 무의미해진다.
+ */
+const BRAND_TEXT_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  { file: 'components/booking/BookingWizard.tsx', snippet: 'h-4 w-4 text-primary', reason: '라디오 버튼 채움색(폼 컨트롤)' },
+  { file: 'components/booking/BookingWizard.tsx', snippet: 'rounded border-gray-300 dark:border-gray-600 text-primary', reason: '체크박스 체크표시 채움색' },
+  { file: 'components/booking/MixingOrderWizard.tsx', snippet: 'h-4 w-4 text-primary', reason: '라디오 버튼 채움색(폼 컨트롤)' },
+  { file: 'components/booking/MixingOrderWizard.tsx', snippet: 'rounded border-gray-300 dark:border-gray-600 text-primary', reason: '체크박스 체크표시 채움색' },
+  { file: 'components/contact/ContactFormCard.tsx', snippet: 'rounded border-gray-300 dark:border-gray-600 text-primary', reason: '체크박스 체크표시 채움색' },
+  { file: 'components/lesson/CurriculumCard.tsx', snippet: 'opacity-10 font-bold text-6xl text-primary', reason: 'opacity-10 장식 워터마크 — 읽는 텍스트가 아니다' },
+];
+
+describe('브랜드색 텍스트의 다크 짝', () => {
+  it('text-{primary,secondary,accent}에는 같은 variant의 dark: 짝이 있어야 한다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of ['components', 'pages']) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!rel.endsWith('.tsx') || rel.endsWith('.test.tsx') || LIGHT_FIXED(rel)) continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
+
+          BRAND_TEXT_RE.lastIndex = 0;
+          let match: RegExpExecArray | null;
+          while ((match = BRAND_TEXT_RE.exec(line))) {
+            const [full, variantPrefix] = match;
+            if (variantPrefix.includes('dark:')) continue; // 이미 다크 전용 유틸리티
+            if (new RegExp(`dark:${variantPrefix}text-`).test(line)) continue; // 같은 variant의 다크 짝 있음
+            if (BRAND_TEXT_ALLOW.some((a) => a.file === rel && line.includes(a.snippet))) continue;
+            offenders.push(`${rel}:${index + 1}: ${full} — ${trimmed.slice(0, 100)}`);
+          }
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '브랜드색 텍스트에 다크 짝이 없습니다. 다크 배경(#030712)에서 AA 미달이 됩니다.\n' +
+          'text-primary→dark:text-primary-lighter · text-secondary→dark:text-secondary-light · ' +
+          'text-accent→dark:text-accent-light (primary-light는 3.53:1로 미달이라 쓰지 말 것).\n' +
+          '텍스트가 아닌 자리(폼 컨트롤 채움색·장식)라면 BRAND_TEXT_ALLOW에 이유와 함께 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+
+  it('다크 짝으로 쓰는 세 토큰이 tailwind.config.ts에 존재한다', () => {
+    const defined = definedColorNames();
+    expect(defined.has('primary-lighter')).toBe(true);
+    expect(defined.has('secondary-light')).toBe(true);
+    expect(defined.has('accent-light')).toBe(true);
+  });
+});
