@@ -77,7 +77,7 @@ export default function NewLessonSubscriptionPage() {
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">레슨 구독 만들기</h1>
             <Link href="/admin/subscriptions" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -97,15 +97,15 @@ export default function NewLessonSubscriptionPage() {
                   <code className="flex-1 min-w-0 truncate bg-gray-50 border border-gray-200 rounded px-2 py-1 text-xs">
                     {setupUrl}
                   </code>
-                  <Button variant="outline" onClick={() => copyToClipboard(setupUrl)}>
+                  <Button light variant="outline" onClick={() => copyToClipboard(setupUrl)}>
                     복사
                   </Button>
                 </div>
                 <p className="mt-2 text-xs text-gray-500">카톡으로 보내는 것이 주 채널입니다.</p>
               </div>
               <div className="flex gap-3">
-                <Button onClick={() => router.push('/admin/subscriptions')}>목록으로</Button>
-                <Button
+                <Button light onClick={() => router.push('/admin/subscriptions')}>목록으로</Button>
+                <Button light
                   variant="outline"
                   onClick={() => {
                     setSetupUrl(null);
@@ -163,7 +163,7 @@ export default function NewLessonSubscriptionPage() {
 
               {error && <p className="text-sm text-red-600">{error}</p>}
 
-              <Button type="submit" disabled={busy} fullWidth>
+              <Button light type="submit" disabled={busy} fullWidth>
                 {busy ? '생성 중...' : '구독 생성 + 등록 링크 발송'}
               </Button>
             </form>

@@ -252,7 +252,7 @@ export default function AdminBookingsPage({
               </div>
               <div className="flex gap-2">
                 <Link href="/admin/contracts" passHref>
-                  <Button variant="secondary">계약 관리</Button>
+                  <Button light variant="secondary">계약 관리</Button>
                 </Link>
                 <Button
                   variant="outline"
@@ -407,7 +407,7 @@ export default function AdminBookingsPage({
                           </td>
                           <td className="px-4 py-3">
                             <Link href={`/admin/bookings/${booking.id}`} passHref>
-                              <Button size="sm" variant="outline">
+                              <Button light size="sm" variant="outline">
                                 상세
                               </Button>
                             </Link>
@@ -482,7 +482,7 @@ export default function AdminBookingsPage({
                   light className="text-sm"
                 />
               </Field>
-              <Button type="submit" size="sm" disabled={busy}>
+              <Button light type="submit" size="sm" disabled={busy}>
                 등록
               </Button>
             </form>
@@ -504,7 +504,7 @@ export default function AdminBookingsPage({
                       {formatKstDateTime(block.startAt)} ~ {formatKstDateTime(block.endAt)}
                       {block.memo && <span className="text-gray-500 ml-2">({block.memo})</span>}
                     </span>
-                    <Button
+                    <Button light
                       size="sm"
                       variant="ghost"
                       className="text-red-600 hover:bg-red-50"

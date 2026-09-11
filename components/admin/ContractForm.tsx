@@ -360,11 +360,13 @@ export default function ContractForm({
             />
           </Field>
 
+          {/* required를 주지 않는다 — 아래 컨트롤은 readOnly + tabIndex={-1}이라 포커스도 입력도
+              할 수 없다. 거기에 aria-required="true"가 붙으면 스크린리더가 "채울 수 없는 필수
+              칸"을 알리게 된다. 값의 출처는 hint가 설명한다. */}
           <Field
             label="보증금"
             id="depositAmount"
             error={errorMap.depositAmount}
-            required
             hint="제5조에 따라 월 이용료와 같은 금액이며, 계약 시 납부를 면제합니다"
             className={ADMIN_FIELD}
           >
@@ -406,7 +408,7 @@ export default function ContractForm({
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">특약사항</h2>
-          <Button
+          <Button light
             type="button"
             size="sm"
             variant="outline"
@@ -467,10 +469,10 @@ export default function ContractForm({
       )}
 
       <div className="flex flex-wrap gap-3 pt-2 border-t border-gray-200">
-        <Button type="submit" size="lg" disabled={submitting}>
+        <Button light type="submit" size="lg" disabled={submitting}>
           {submitting ? '저장 중...' : submitLabel}
         </Button>
-        <Button type="button" size="lg" variant="outline" onClick={handleCancel} disabled={submitting}>
+        <Button light type="button" size="lg" variant="outline" onClick={handleCancel} disabled={submitting}>
           취소
         </Button>
       </div>

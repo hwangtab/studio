@@ -106,7 +106,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">후원 상세</h1>
             <Link href="/admin/funding" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -152,12 +152,12 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
             <div className="flex flex-wrap gap-2">
               {canConfirmDeposit && (
-                <Button disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
+                <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
               )}
               {canRefund && (
-                <Button variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
+                <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}
-              <Button variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
+              <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>
 
             <div>
@@ -193,7 +193,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     disabled={pledge.status !== 'paid'}
                   />
                 </Field>
-                <Button disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
+                <Button light disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
               </div>
               {pledge.status !== 'paid' && (
                 <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
@@ -210,7 +210,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                   aria-label="관리자 메모"
                   light className="min-h-0 text-sm"
                 />
-                <Button disabled={busy} onClick={handleSaveMemo} className="self-start">메모 저장</Button>
+                <Button light disabled={busy} onClick={handleSaveMemo} className="self-start">메모 저장</Button>
               </div>
             </div>
           </div>

@@ -245,7 +245,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">예약 상세</h1>
             <Link href="/admin/bookings" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -290,7 +290,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                 등록해 주세요.
               </span>
               {canRetryGcal && (
-                <Button
+                <Button light
                   variant="secondary"
                   disabled={busy}
                   onClick={handleRetryGcal}
@@ -466,28 +466,28 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
               <div className="flex flex-wrap gap-3">
                 {canChangeStatus && (
                   <>
-                    <Button disabled={busy} onClick={handleComplete}>
+                    <Button light disabled={busy} onClick={handleComplete}>
                       완료 처리
                     </Button>
-                    <Button variant="outline" disabled={busy} onClick={handleNoShow}>
+                    <Button light variant="outline" disabled={busy} onClick={handleNoShow}>
                       노쇼 처리
                     </Button>
                   </>
                 )}
 
                 {canStartWork && (
-                  <Button disabled={busy} onClick={handleStartWork}>
+                  <Button light disabled={busy} onClick={handleStartWork}>
                     작업 시작
                   </Button>
                 )}
                 {canDeliver && (
-                  <Button disabled={busy} onClick={handleDeliver}>
+                  <Button light disabled={busy} onClick={handleDeliver}>
                     납품 완료
                   </Button>
                 )}
 
                 {canResend && (
-                  <Button variant="secondary" disabled={busy} onClick={handleResend}>
+                  <Button light variant="secondary" disabled={busy} onClick={handleResend}>
                     알림 재발송
                   </Button>
                 )}
@@ -512,6 +512,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                   <Field
                     id="refund-amount"
                     label={`환불 금액 (원, 최대 ${formatPriceAmount(booking.totalAmount)})`}
+                    error={refundError ?? undefined}
                     className={lightOnlyField}
                   >
                     <TextInput
@@ -533,10 +534,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                       light className="min-h-0 text-sm"
                     />
                   </Field>
-                  {refundError && (
-                    <p className="text-sm text-red-600">{refundError}</p>
-                  )}
-                  <Button type="submit" variant="outline" disabled={busy}>
+                  <Button light type="submit" variant="outline" disabled={busy}>
                     환불 처리
                   </Button>
                 </form>

@@ -236,7 +236,7 @@ export default function AdminContractsPage({
               </div>
               <div className="flex gap-2">
                 <Link href="/admin/contracts/new" passHref>
-                  <Button variant="secondary">새 계약 작성</Button>
+                  <Button light variant="secondary">새 계약 작성</Button>
                 </Link>
                 <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40" onClick={handleLogout}>
                   로그아웃
@@ -385,13 +385,13 @@ export default function AdminContractsPage({
                           <td className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
                               <Link href={`/admin/contracts/${contract.id}`} passHref>
-                                <Button size="sm" variant="outline">
+                                <Button light size="sm" variant="outline">
                                   상세
                                 </Button>
                               </Link>
 
                               {contract.status === 'draft' && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() => handleSend(contract)}
@@ -401,7 +401,7 @@ export default function AdminContractsPage({
                               )}
 
                               {contract.status === 'sent' && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   variant="secondary"
                                   onClick={() => handleCopyLink(contract)}
@@ -411,7 +411,7 @@ export default function AdminContractsPage({
                               )}
 
                               {(contract.status === 'expired' || contract.status === 'cancelled') && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() => handleResend(contract)}
@@ -421,7 +421,7 @@ export default function AdminContractsPage({
                               )}
 
                               {contract.status === 'signed' && !contract.purgedAt && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() =>

@@ -693,7 +693,7 @@ export default function ContractSignPage({
               )}
 
               <div className="mt-8">
-                <Button
+                <Button light
                   size="lg"
                   fullWidth
                   disabled={submitting || !detailsReady || !allAgreed || !identityReady || !hasSigned}

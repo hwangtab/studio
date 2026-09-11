@@ -47,13 +47,49 @@ const buttonVariants = cva(
       },
       fullWidth: {
         true: "w-full",
-      }
+      },
+      /**
+       * 라이트 고정 화면 옵트인. 실제 클래스는 compoundVariants가 준다 — cva는
+       * compoundVariants를 variants **뒤**에 이어 붙이므로 twMerge에서 확실히 이긴다.
+       * 여기에 클래스를 두면 variants 객체의 키 순서에 의존하게 되어 취약하다.
+       */
+      light: {
+        true: "",
+      },
     },
     defaultVariants: {
       variant: "solid",
       size: "md",
       shape: "block",
     },
+    /**
+     * `public/scripts/theme-init.js`는 경로 예외 없이 모든 라우트에 `<html class="dark">`를
+     * 붙인다. 그런데 docs/design-system.md §1대로 `pages/admin/**`과 계약 서명·완료 화면은
+     * 종이처럼 항상 밝다 — 그 화면에서 다크 분기가 켜지면 흰 카드 위에 다크용 색이 뜬다
+     * (outline의 primary-lighter #a78bfa on #fff = 2.72:1, AA 4.5:1은 물론 대형 텍스트
+     * 완화 3:1에도 미달. 라이트 값 #6d28d9는 7.10:1). `Field`의 `light` 옵트인과 같은 처방.
+     *
+     * 실제로 라이트 고정 화면에서 쓰이는 variant만 되돌린다(solid·outline·ghost·secondary).
+     * glass·kakao·scrim은 그 화면에 없다.
+     */
+    compoundVariants: [
+      { light: true, variant: "solid", class: "dark:focus-visible:ring-offset-white" },
+      {
+        light: true,
+        variant: "outline",
+        class: "dark:text-primary dark:border-primary/20 dark:hover:border-primary/40 dark:focus-visible:ring-offset-white",
+      },
+      {
+        light: true,
+        variant: "ghost",
+        class: "dark:text-gray-600 dark:hover:bg-gray-100 dark:focus-visible:ring-offset-white",
+      },
+      {
+        light: true,
+        variant: "secondary",
+        class: "dark:bg-white dark:text-gray-900 dark:border-gray-200 dark:hover:bg-gray-50 dark:focus-visible:ring-offset-white",
+      },
+    ],
   }
 );
 
@@ -72,8 +108,9 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, shape, fullWidth, asChild, children, ...props }, ref) => {
-    const classes = cn(buttonVariants({ variant, size, shape, fullWidth, className }));
+  ({ className, variant, size, shape, fullWidth, light, asChild, children, ...props }, ref) => {
+    // light는 DOM 속성이 아니다 — 구조분해로 걷어내 <button>/<a>에 새지 않게 한다.
+    const classes = cn(buttonVariants({ variant, size, shape, fullWidth, light, className }));
 
     if (asChild) {
       const child = React.Children.only(children) as React.ReactElement<{ className?: string }>;

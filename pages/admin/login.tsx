@@ -64,7 +64,7 @@ export default function AdminLoginPage() {
               <div className="p-3 bg-red-50 text-red-700 rounded-lg text-sm">{error}</div>
             )}
 
-            <Button type="submit" size="lg" fullWidth disabled={loading || !password}>
+            <Button light type="submit" size="lg" fullWidth disabled={loading || !password}>
               {loading ? '로그인 중...' : '로그인'}
             </Button>
           </form>

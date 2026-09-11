@@ -237,7 +237,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
               </div>
               <div className="flex gap-2">
                 <Link href="/admin" passHref>
-                  <Button variant="secondary">관리자 홈</Button>
+                  <Button light variant="secondary">관리자 홈</Button>
                 </Link>
                 <Button
                   variant="outline"
@@ -311,9 +311,9 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
 
               <div className="flex flex-wrap gap-2 mb-6">
                 <a href={exportHref}>
-                  <Button variant="secondary">CSV 내보내기</Button>
+                  <Button light variant="secondary">CSV 내보내기</Button>
                 </a>
-                <Button variant="outline" onClick={() => setShowForm((v) => !v)}>
+                <Button light variant="outline" onClick={() => setShowForm((v) => !v)}>
                   {showForm ? '수기 등록 닫기' : '수기 등록'}
                 </Button>
               </div>
@@ -401,7 +401,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                       />
                     </Field>
                   </div>
-                  <Button type="submit" disabled={busy}>등록</Button>
+                  <Button light type="submit" disabled={busy}>등록</Button>
                 </form>
               )}
 

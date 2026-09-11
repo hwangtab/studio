@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import { Button, buttonVariants } from './Button';
@@ -50,6 +50,64 @@ describe('Button', () => {
     expect(buttonVariants({ shape: 'pill' })).toMatch(/rounded-full/);
     expect(buttonVariants({ shape: 'block' })).toMatch(/rounded-xl/);
     expect(buttonVariants({ shape: 'pill' })).not.toMatch(/rounded-xl/);
+  });
+
+  // light는 className이 아니라 prop이다 — Field.test.tsx의 같은 이름 블록과 짝이다.
+  // theme-init.js가 pages/admin/**·계약 화면에도 <html class="dark">를 붙이기 때문에
+  // 다크 오버라이드가 흰 카드 위로 새어 나온다(outline: #a78bfa on #fff = 2.72:1).
+  //
+  // 단언은 반드시 **렌더 결과**로 한다. buttonVariants()는 cva의 단순 연결이라
+  // 나중 클래스가 앞 클래스를 지우지 않는다 — twMerge는 컴포넌트의 cn()에서만 돈다.
+  const classesOf = (el: React.ReactElement) => {
+    const { container } = render(el);
+    return (container.firstElementChild as HTMLElement).className;
+  };
+
+  describe('light 옵트인', () => {
+    it('outline + light면 다크 보라(primary-lighter)가 사라지고 라이트 보라가 남는다', () => {
+      const cls = classesOf(<Button light variant="outline">x</Button>);
+      expect(cls).not.toMatch(/dark:text-primary-lighter/);
+      expect(cls).not.toMatch(/dark:border-primary-lighter/);
+      expect(cls).toMatch(/(^|\s)dark:text-primary(\s|$)/);
+      expect(cls).toMatch(/(^|\s)dark:border-primary\/20(\s|$)/);
+      expect(cls).toMatch(/(^|\s)text-primary(\s|$)/); // 라이트 값 자체는 그대로
+    });
+
+    it.each([
+      ['ghost', /dark:text-gray-300/, /(^|\s)dark:text-gray-600(\s|$)/],
+      ['secondary', /dark:bg-gray-800/, /(^|\s)dark:bg-white(\s|$)/],
+    ] as const)('%s + light면 다크 전용 색이 라이트 값으로 돌아간다', (variant, gone, kept) => {
+      const cls = classesOf(<Button light variant={variant}>x</Button>);
+      expect(cls).not.toMatch(gone);
+      expect(cls).toMatch(kept);
+    });
+
+    it('light면 포커스 오프셋도 라이트 배경 기준으로 돌아간다', () => {
+      for (const variant of ['solid', 'outline', 'ghost', 'secondary'] as const) {
+        const cls = classesOf(<Button light variant={variant}>x</Button>);
+        expect(cls).not.toMatch(/dark:focus-visible:ring-offset-gray-900/);
+        expect(cls).toMatch(/dark:focus-visible:ring-offset-white/);
+        cleanup();
+      }
+    });
+
+    it('light 없이는 다크 오버라이드가 그대로다(공개 페이지는 다크가 정상)', () => {
+      expect(classesOf(<Button variant="outline">x</Button>)).toMatch(/dark:text-primary-lighter/);
+    });
+
+    it('호출부 className은 light보다 뒤에 와서 이긴다', () => {
+      const cls = classesOf(<Button light variant="outline" className="dark:text-white">x</Button>);
+      expect(cls).toMatch(/dark:text-white/);
+      expect(cls).not.toMatch(/dark:text-primary\b/);
+    });
+
+    it('light는 DOM 속성으로 새지 않는다', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      render(<Button light variant="outline">x</Button>);
+      expect(screen.getByRole('button', { name: 'x' }).getAttribute('light')).toBeNull();
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
   });
 
   it('모든 variant가 44px 이상 터치 타깃과 focus-visible 링을 갖는다', () => {

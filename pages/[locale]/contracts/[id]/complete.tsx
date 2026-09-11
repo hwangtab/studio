@@ -301,7 +301,7 @@ export default function ContractCompletePage({
                 light className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
               />
 
-              <Button
+              <Button light
                 size="lg"
                 fullWidth
                 disabled={downloading || identityDigits.length !== IDENTITY_DIGITS}
@@ -329,7 +329,7 @@ export default function ContractCompletePage({
           )}
 
           <Link href={`/${locale}`} passHref>
-            <Button size="lg" variant="outline" fullWidth>
+            <Button light size="lg" variant="outline" fullWidth>
               스튜디오 홈으로
             </Button>
           </Link>
