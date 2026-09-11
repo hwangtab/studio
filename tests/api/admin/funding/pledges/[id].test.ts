@@ -3,7 +3,7 @@ jest.mock('../../../../../lib/contracts/admin-auth', () => ({ authenticateAdminA
 jest.mock('../../../../../lib/funding/service', () => ({ findFundingOrderById: jest.fn() }));
 jest.mock('../../../../../lib/funding/bank-transfer', () => ({ confirmBankDeposit: jest.fn() }));
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
-jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn() }));
+jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
 jest.mock('../../../../../db/client', () => ({
@@ -16,7 +16,7 @@ import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
-import { sendFundingConfirmedEmails, sendFundingBankDepositEmails } from '../../../../../lib/funding/email';
+import { sendFundingConfirmedEmails, sendFundingBankDepositEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 
 const call = async (method: string, query: unknown, body: unknown) => {
   const json = jest.fn();
@@ -180,25 +180,71 @@ it('set_fulfillment: 환불 요청이 없으면 그대로 저장된다', async (
   expect(mockUpdate).toHaveBeenCalled();
 });
 
-// 이게 없으면 발송 차단이 영구 잠금이 된다 — refundRequestedAt을 지우는 코드가 없었다.
-it('clear_refund_request: 확정 건의 요청을 지운다', async () => {
-  const set = jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) }));
+/**
+ * 이게 없으면 발송 차단이 영구 잠금이 되고 헬스체크가 매일 영구히 울린다. 다만 이 액션은
+ * 고객이 남긴 청약철회 의사를 지우므로, 흔적(사유 + 메모 append)과 통지(확인 메일)를
+ * 강제한다. 셋 중 하나라도 빠지면 조용히 지워진다.
+ */
+const requested = (status = 'paid', adminMemo: string | null = null) => ({
+  ...BASE_ORDER, status,
+  fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
+});
+
+it('clear_refund_request: 사유가 없으면 400이고 아무것도 안 바꾼다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(requested());
+  for (const body of [{ action: 'clear_refund_request' }, { action: 'clear_refund_request', reason: '   ' }]) {
+    const r = await call('PATCH', { id: 'order-1' }, body);
+    expect(r.status).toBe(400);
+  }
+  expect(mockUpdate).not.toHaveBeenCalled();
+  expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
+});
+
+it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 후원자에게 메일을 보낸다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
-  (findFundingOrderById as jest.Mock).mockResolvedValue({
-    ...BASE_ORDER, status: 'paid',
-    fundingPledge: { ...BASE_ORDER.fundingPledge, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
-  });
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request' });
+  (findFundingOrderById as jest.Mock).mockResolvedValue(requested('paid', '기존 메모'));
+  (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '후원자 전화 철회' });
   expect(r.status).toBe(200);
-  expect(set).toHaveBeenCalledWith(expect.objectContaining({ refundRequestedAt: null }));
+  const written = set.mock.calls[0][0];
+  expect(written.refundRequestedAt).toBeNull();
+  // 덮어쓰지 않는다 — 기존 메모가 사라지면 그것도 기록 손실이다.
+  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 후원자 전화 철회$/);
+  const mailArgs = (sendFundingRefundRequestClearedEmails as jest.Mock).mock.calls[0];
+  expect(mailArgs[0]).toMatchObject({ orderNo: 'FND-1' });
+  expect(mailArgs[2]).toBe('후원자 전화 철회');
+});
+
+it('clear_refund_request: 메모가 없던 건은 항목 하나로 시작한다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(requested());
+  (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
+  await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '오접수' });
+  expect(set.mock.calls[0][0].adminMemo as string).toMatch(/^\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 오접수$/);
+});
+
+// 메일 실패가 기록을 되돌리지는 않지만(상태 변경은 이미 끝났다) 운영자에게는 알려야 한다.
+it('clear_refund_request: 메일이 실패하면 notificationError에 남기고 메시지로 알린다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(requested());
+  (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue('customer:TIMEOUT');
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '오접수' });
+  expect(r.status).toBe(200);
+  expect(r.body.message).toContain('customer:TIMEOUT');
 });
 
 it('clear_refund_request: 요청이 없으면 409, 이미 환불된 건도 409', async () => {
-  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request' })).status).toBe(409);
-  (findFundingOrderById as jest.Mock).mockResolvedValue({
-    ...BASE_ORDER, status: 'refunded',
-    fundingPledge: { ...BASE_ORDER.fundingPledge, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
-  });
-  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request' })).status).toBe(409);
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: 'x' })).status).toBe(409);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(requested('refunded'));
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: 'x' })).status).toBe(409);
   expect(mockUpdate).not.toHaveBeenCalled();
+  expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
+});
+
+// 잔액이 남은 부분환불 건도 정리할 수 있어야 한다 — 화면·헬스체크와 같은 상태 집합이다.
+it('clear_refund_request: partially_refunded도 허용한다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(requested('partially_refunded'));
+  (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '철회' })).status).toBe(200);
 });

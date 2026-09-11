@@ -1,3 +1,4 @@
+import { isRefundPendingStatus } from './policy';
 import type { FundingOrder } from './service';
 
 export interface AdminPledgeItem {
@@ -29,8 +30,10 @@ export interface AdminPledgeItem {
   mismatch: boolean;
   duplicateWarning: boolean;
   /**
-   * 후원자가 셀프 취소를 요청했는데 아직 돈이 안 나간 상태. 무통장은 자동 환불이 불가능해
-   * orders.status가 paid로 남으므로, 목록 상태 칸만 보면 정상 확정 건과 구분되지 않는다.
+   * 후원자가 셀프 취소를 요청했는데 **아직 돈이 안 나간** 상태. 무통장은 자동 환불이
+   * 불가능해 orders.status가 paid로 남으므로, 목록 상태 칸만 보면 정상 확정 건과
+   * 구분되지 않는다. 환불이 끝나면(refunded) 꺼져야 한다 — cancel.ts는 환불 시
+   * refundRequestedAt을 지우지 않으므로, 시각만 보면 첫 환불 이후 영구히 켜진다.
    */
   refundRequested: boolean;
 }
@@ -72,6 +75,6 @@ export const serializePledgeForAdmin = (o: FundingOrder, duplicateKeys: Set<stri
     // expired·failed·refunded로 잘못 전이된 건(승인 경합 사고의 실제 흔적)이 안 잡힌다.
     mismatch: o.payments.length > 0 && !['paid', 'partially_refunded', 'refunded'].includes(o.status),
     duplicateWarning: o.status === 'pending' && p.paymentMethod === 'bank_transfer' && duplicateKeys.has(duplicateKey(o)),
-    refundRequested: Boolean(p.refundRequestedAt),
+    refundRequested: Boolean(p.refundRequestedAt) && isRefundPendingStatus(o.status),
   };
 };

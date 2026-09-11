@@ -1,8 +1,9 @@
-import { and, eq, isNotNull, lt, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, lt, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingPledges, orders } from '../../db/schema';
 import { fetchBusyRanges } from '../booking/gcal';
+import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { runLeadRateCheck } from './leadRateCheck';
 
 /**
@@ -162,15 +163,20 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
    *
    * 기한 계산은 영업일이 아니라 48시간으로 한다. 저장소에 영업일·공휴일 계산이 아예
    * 없고(한국 공휴일표가 필요하다), 여기서 필요한 것은 정확한 법정 기한이 아니라
-   * **3영업일을 넘기기 전에 울리는 알람**이다. 48시간은 어떤 요일에 접수돼도 3영업일
-   * 기한보다 먼저 오므로 과하게 울릴지언정 늦게 울지는 않는다.
+   * **3영업일을 넘기기 전에 울리는 알람**이다. 이 점검은 크론이 하루 한 번 돌리므로
+   * 실제 경보 시점은 48~72시간 사이다 — 금요일 접수 건이 최악(토·일이 영업일이 아니라
+   * 3영업일 기한은 수요일인데 경보는 일요일)이고, 어느 요일이든 기한 전에 울린다.
+   * 대기 중(medium) 항목은 48시간 전에도 매일 보고되므로 첫 알림은 그보다 빠르다.
+   *
+   * 대상 상태는 REFUND_PENDING_ORDER_STATUSES 하나에서 온다 — 관리자 목록 배지·배너와
+   * 같은 집합이어야 화면과 메일이 같은 건수를 말한다.
    */
   const REFUND_DUE_MS = 48 * 60 * 60 * 1000;
   const refundPending = await db
     .select({ orderNo: orders.orderNo, requestedAt: fundingPledges.refundRequestedAt })
     .from(fundingPledges)
     .innerJoin(orders, eq(orders.id, fundingPledges.orderId))
-    .where(and(isNotNull(fundingPledges.refundRequestedAt), eq(orders.status, 'paid')));
+    .where(and(isNotNull(fundingPledges.refundRequestedAt), inArray(orders.status, [...REFUND_PENDING_ORDER_STATUSES])));
 
   if (refundPending.length > 0) {
     const overdue = refundPending.filter(
@@ -185,7 +191,8 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
       detail:
         `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
         '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
-        '처리 전까지 이 후원은 발송 대상이 아닙니다(발송 상태 변경은 막혀 있습니다).',
+        '처리 전까지 이 후원은 발송 대상이 아닙니다 — 배송 CSV의 shipHold 칸에 "발송금지"로 나오고, ' +
+        '발송 상태 변경은 API에서 막힙니다.',
     });
   }
 

@@ -93,11 +93,21 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
   const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
-  const handleClearRefundRequest = () =>
-    run(
-      () => patchPledge(pledge.id, { action: 'clear_refund_request' }),
-      '후원자가 취소 요청을 철회했습니까? 요청 표시를 지우면 이 후원은 다시 발송 대상이 됩니다.',
+  /**
+   * 고객이 남긴 청약철회 의사를 지우는 조작이라 사유를 반드시 받는다(API도 없으면 400).
+   * 사유는 관리자 메모에 날짜와 함께 덧붙고, 후원자에게는 확인 메일이 나간다.
+   */
+  const handleClearRefundRequest = () => {
+    const reason = window.prompt(
+      '후원자가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 후원자에게 확인 메일이 나갑니다).',
     );
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('환불 요청을 취소하려면 사유를 입력해야 합니다.');
+      return;
+    }
+    return run(() => patchPledge(pledge.id, { action: 'clear_refund_request', reason: reason.trim() }));
+  };
 
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
@@ -136,7 +146,8 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               약관 제10조에 따라 접수일부터 3영업일 이내에 처리해 주세요.
               <span className="block mt-2">
                 <strong>이 후원은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
-                “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다.
+                “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다. 철회 처리에는 사유가 필요하며,
+                사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.
               </span>
             </div>
           )}

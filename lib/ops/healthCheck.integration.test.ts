@@ -240,6 +240,15 @@ describe('운영 점검', () => {
     expect(issues[0].title).toContain('계좌 환불을 기다리는 취소 요청 1건');
   });
 
+  // 잔액이 남은 부분환불 건에서 알람이 꺼지면, 덜 돌려준 돈이 조용히 묻힌다.
+  it('partially_refunded 건도 계속 센다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'partially_refunded' });
+    await insertFundingPledge({ refund_requested_at: EPOCH('2026-09-07T00:00:00Z') });
+    const issues = (await runHealthCheck(NOW)).issues;
+    expect(issues[0].severity).toBe('high');
+    expect(issues[0].detail).toContain('FND-1');
+  });
+
   it('이미 환불된 건과 요청이 없는 건은 보고하지 않는다', async () => {
     await insertOrder({ order_no: 'FND-1', status: 'refunded' });
     await insertFundingPledge({ refund_requested_at: EPOCH('2026-09-01T00:00:00Z') });

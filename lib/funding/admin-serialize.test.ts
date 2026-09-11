@@ -45,4 +45,16 @@ describe('serializePledgeForAdmin — refundRequested', () => {
   it('요청이 없으면 false', () => {
     expect(serializePledgeForAdmin(orderWith('paid', true), new Set()).refundRequested).toBe(false);
   });
+  // cancel.ts는 환불할 때 refundRequestedAt을 지우지 않는다 — 시각만 보면 첫 환불을 처리한
+  // 다음 날부터 배너·배지가 영구히 켜진 채로 남아 이 신호가 첫 사용 직후 죽는다.
+  it('환불이 끝난 건은 요청 시각이 남아 있어도 false', () => {
+    const item = serializePledgeForAdmin(orderWith('refunded', true, new Date('2026-10-16T02:00:00Z')), new Set());
+    expect(item.refundRequested).toBe(false);
+    // 상세 화면이 쓰는 원본 시각은 그대로 보존한다.
+    expect(item.refundRequestedAt).toBe('2026-10-16T02:00:00.000Z');
+  });
+  // 잔액이 남은 부분환불 건은 아직 환불이 덜 끝난 것이라 신호가 꺼지면 안 된다.
+  it('partially_refunded는 여전히 true', () => {
+    expect(serializePledgeForAdmin(orderWith('partially_refunded', true, new Date()), new Set()).refundRequested).toBe(true);
+  });
 });

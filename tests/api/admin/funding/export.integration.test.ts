@@ -181,6 +181,28 @@ it('환불 요청 건은 status가 paid여도 refundRequestedAt이 CSV에 실린
   expect(row).toContain('paid');
 });
 
+/**
+ * ISO 타임스탬프 한 칸으로는 부족하다 — 주소로 정렬해 라벨을 뽑는 실무에서 눈에 안 들어온다.
+ * 사람이 읽는 값이 한 칸 있어야 이 열만 훑어서 걸러낼 수 있다.
+ */
+it('shipHold 칸에 사람이 읽는 발송금지 표시가 실린다', async () => {
+  const hold = await seed({ customerEmail: 'h@example.com', customerPhone: '010-10' }, 'paid');
+  await seed({ customerEmail: 'n@example.com', customerPhone: '010-11' }, 'paid');
+  await client.execute({
+    sql: `UPDATE funding_pledges SET refund_requested_at = ?
+          WHERE order_id = (SELECT id FROM orders WHERE order_no = ?)`,
+    args: [Math.floor(new Date('2026-10-16T02:00:00Z').getTime() / 1000), hold],
+  });
+  const r = await call({});
+  const lines = r.csv.trim().split('\n');
+  const idx = lines[0].trim().split(',').indexOf('shipHold');
+  expect(idx).toBe(1); // 주문번호 바로 옆 — 가장 먼저 보이는 자리
+  const held = lines.find((l) => l.includes(hold))!;
+  const normal = lines.slice(1).find((l) => !l.includes(hold))!;
+  expect(held.split(',')[idx]).toBe('발송금지');
+  expect(normal.split(',')[idx]).toBe('');
+});
+
 it('환불 요청이 없는 건의 refundRequestedAt은 빈 칸이다', async () => {
   await seed({ customerEmail: 'd@example.com', customerPhone: '010-9' }, 'paid');
   const r = await call({});

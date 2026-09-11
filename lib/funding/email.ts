@@ -122,3 +122,41 @@ export const sendFundingCancelledEmails = (order: FundingOrder, project: Funding
       text: [...summaryLines(order, project), `환불 금액: ${formatPriceAmount(refundAmount)}원`, `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
   ]);
+
+/**
+ * 관리자가 취소 요청을 철회 처리했을 때. 후원자에게 **반드시** 나가야 한다 — 이 액션은
+ * 고객이 남긴 청약철회 의사를 지우는 것이라, 알리지 않으면 고객은 취소가 접수된 줄 알고
+ * 기다리다가 리워드를 받게 된다. 다시 요청하는 방법(관리 링크)을 함께 적는다.
+ */
+export const sendFundingRefundRequestClearedEmails = (
+  order: FundingOrder,
+  project: FundingProject | null,
+  reason: string,
+): Promise<string | null> =>
+  send([
+    { key: 'customer', params: {
+      to: order.customerEmail, replyTo: OPERATOR_EMAIL,
+      subject: `[스튜디오 놀] 취소 요청이 철회 처리되었습니다${titleSuffix(project)}`,
+      text: [
+        `${order.customerName}님,`,
+        '접수해 두었던 후원 취소 요청을 철회 처리했습니다. 이 후원은 다시 정상 진행됩니다.',
+        `사유: ${reason}`,
+        '',
+        '취소를 원하지 않으셨다면 아래 링크에서 다시 취소를 요청하시거나 이 메일에 회신해 주세요.',
+        ...summaryLines(order, project),
+        '',
+        `후원 확인·취소: ${manageUrl(order)}`,
+        PHONE,
+      ].join('\n'),
+    } },
+    { key: 'operator', params: {
+      to: OPERATOR_EMAIL,
+      subject: `[펀딩] 취소 요청 철회 처리 — ${order.customerName}`,
+      text: [
+        ...summaryLines(order, project),
+        `사유: ${reason}`,
+        `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
+        `관리자: ${SITE_URL}/admin/funding`,
+      ].join('\n'),
+    } },
+  ]);

@@ -62,11 +62,44 @@ it('getServerSideProps가 환불 요청 건에 refundRequested: true를 실어 �
   expect(result.props.items[0].status).toBe('paid');
 });
 
+it('getServerSideProps: 환불이 끝난 건은 refundRequested가 false다', async () => {
+  (listFundingOrders as jest.Mock).mockResolvedValue([
+    {
+      id: 'o1', orderNo: 'FND-1', status: 'refunded', totalAmount: 30000, customerName: '김후원',
+      customerPhone: '010-1', customerEmail: 'a@b.com', notificationError: null, createdAt: NOW,
+      payments: [],
+      fundingPledge: {
+        id: 'p1', projectSlug: 'demo', paymentMethod: 'bank_transfer', entrySource: 'online',
+        rewardTitle: 'CD', quantity: 1, additionalAmount: 0, fulfillmentStatus: 'none',
+        trackingCompany: null, trackingNumber: null, shippingAddress1: null, supporterMessage: null,
+        refundRequestedAt: new Date('2026-10-14T02:00:00Z'), paidAt: null, holdExpiresAt: NOW, adminMemo: null,
+      },
+    },
+  ]);
+  const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
+    props: { items: AdminPledgeItem[] };
+  };
+  expect(result.props.items[0].refundRequested).toBe(false);
+});
+
 it('환불 요청 건은 상태 칸에 배지가, 상단에 대기 건수 배너가 뜬다', () => {
   render(<AdminFundingPage {...baseProps} items={[{ ...ITEM, refundRequested: true }]} />);
   expect(screen.getByText('환불요청')).toBeInTheDocument();
   expect(screen.getByText('1건이 계좌 환불 대기 중입니다')).toBeInTheDocument();
   expect(screen.getByText(/발송하면 안 됩니다/)).toBeInTheDocument();
+});
+
+// 환불을 처리해도 refundRequestedAt은 남는다(cancel.ts가 지우지 않는다) — 직렬화가
+// 게이트하지 않으면 첫 환불 다음 날부터 배너가 영구히 켜져 신호가 죽는다.
+it('환불이 끝난 건은 배지도 배너도 뜨지 않는다', () => {
+  render(
+    <AdminFundingPage
+      {...baseProps}
+      items={[{ ...ITEM, status: 'refunded', refundRequested: false, refundRequestedAt: '2026-10-14T02:00:00Z' }]}
+    />,
+  );
+  expect(screen.queryByText('환불요청')).not.toBeInTheDocument();
+  expect(screen.queryByText(/계좌 환불 대기 중/)).not.toBeInTheDocument();
 });
 
 it('환불 요청이 없으면 배지도 배너도 없다', () => {
