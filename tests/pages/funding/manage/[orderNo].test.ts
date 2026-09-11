@@ -160,3 +160,42 @@ describe('funding manage getServerSideProps', () => {
     expect((await result.props).canEditDisplayName).toBe(false);
   });
 });
+
+/**
+ * 이 한 줄(SSR이 `assessSelfCancel`에 `paymentMethod`를 넘기는 것)이 빠져서 죽은 취소
+ * 버튼이 났다. 토스가 아닌 후원 — 운영자가 계좌로 받아 수기 등록한 건과 무통장입금
+ * 중단(2026-09-11) 전의 건 — 은 취소할 결제가 없어 환불이 계좌 송금이다.
+ * 판정 자체는 policy.test.ts가 덮고, 여기서는 **배선**을 고정한다.
+ */
+describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
+  it('토스가 아닌 후원은 canCancel=false + 문의 안내를 내려보낸다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+    await client.execute({
+      sql: "UPDATE funding_pledges SET payment_method='bank_transfer' WHERE order_id=(SELECT id FROM orders WHERE order_no=?)",
+      args: [c.orderNo],
+    });
+
+    const result = (await getServerSideProps({
+      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
+    } as never)) as { props: { canCancel: boolean; cancelBlockedReason: string | null } };
+
+    expect(result.props.canCancel).toBe(false);
+    expect(result.props.cancelBlockedReason).toContain('문의로 접수');
+  });
+
+  // 토스 후원은 결제수단 때문에 막히지 않는다. canCancel 자체는 프로젝트 진행 상태(실시간
+  // 기준)에 좌우되므로 단언하지 않고, **차단 사유가 offline_payment가 아니라는 것**만 본다.
+  it('토스 후원은 결제수단 때문에 막히지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+
+    const result = (await getServerSideProps({
+      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
+    } as never)) as { props: { cancelBlockedReason: string | null } };
+
+    expect(result.props.cancelBlockedReason ?? '').not.toContain('계좌로 받은 후원');
+  });
+});

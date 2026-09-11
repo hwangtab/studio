@@ -15,7 +15,6 @@
  * 상수만 바뀌어도 후원자가 읽는 문장이 달라지기 때문이다.
  */
 import {
-  BANK_HOLD_SECONDS,
   FUNDING_COLLECTED_ITEMS,
   FUNDING_COLLECTION_PURPOSES,
   FUNDING_DATA_PROCESSORS,
@@ -48,7 +47,6 @@ export const serializeAgreedDocuments = (): string => {
   lines.push(`PRIVACY_RETENTION_TEXT=${PRIVACY_RETENTION_TEXT}`);
   lines.push(`PRIVACY_LEGAL_RETENTION_TEXT=${PRIVACY_LEGAL_RETENTION_TEXT}`);
   lines.push(`TOSS_HOLD_SECONDS=${TOSS_HOLD_SECONDS}`);
-  lines.push(`BANK_HOLD_SECONDS=${BANK_HOLD_SECONDS}`);
   for (const item of FUNDING_COLLECTED_ITEMS) lines.push(`COLLECTED=${item}`);
   for (const item of FUNDING_COLLECTION_PURPOSES) lines.push(`PURPOSE=${item}`);
   for (const p of FUNDING_DATA_PROCESSORS) lines.push(`PROCESSOR=${p.name}|${p.purpose}|${p.items}`);

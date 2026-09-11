@@ -146,7 +146,7 @@ describe('펀딩 약관 판본 게이트', () => {
   // 해시는 export된 데이터 구조에서 나온다 — className·주석·비-ko 카피에는 반응하지 않고
   // 후원자가 읽는 텍스트에만 반응해야 한다. 실제 조항 한 줄을 바꿔 그것을 확인한다.
   it('조항 본문이 한 글자만 바뀌어도 해시가 달라진다', () => {
-    const tampered = serialized.replace('3영업일 이내에 처리합니다', '5영업일 이내에 처리합니다');
+    const tampered = serialized.replace('3영업일 이내에 결제한 수단으로', '5영업일 이내에 결제한 수단으로');
     expect(tampered).not.toBe(serialized); // 대상 문장이 실제로 직렬화에 들어 있다
     expect(sha256(tampered)).not.toBe(hash);
   });

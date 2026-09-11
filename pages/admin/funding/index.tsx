@@ -11,7 +11,7 @@ import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
-import { duplicateKey, serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
+import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { aggregateAdminFundingTotals, listFundingOrders, type AdminFundingTotals } from '../../../lib/funding/admin-list';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { getAllFundingProjects } from '../../../lib/funding/projects';
@@ -81,18 +81,9 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
     // 만료 처리 뒤에 집계·목록을 같은 순서로 읽는다 — 만료 전에 세면 이미 죽은 홀드가
     // 입금 대기 금액에 남는다.
     const [totals, orders] = await Promise.all([aggregateAdminFundingTotals(slug), listFundingOrders(slug)]);
-    const counts = new Map<string, number>();
-    for (const o of orders) {
-      if (o.status === 'pending' && o.fundingPledge?.paymentMethod === 'bank_transfer') {
-        const key = duplicateKey(o);
-        counts.set(key, (counts.get(key) ?? 0) + 1);
-      }
-    }
-    const dups = new Set([...counts].filter(([, n]) => n > 1).map(([k]) => k));
-
     return {
       props: {
-        items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdmin(o, dups)),
+        items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdmin(o)),
         totals,
         truncated: orders.length > LIST_LIMIT,
         projects,
@@ -470,7 +461,6 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                         </td>
                         <td className="px-4 py-3">
                           {STATUS_LABELS[item.status] ?? item.status}
-                          {item.duplicateWarning && <span className="ml-1 text-amber-600" title="동명·동액 대기 건 존재">⚠</span>}
                           {item.mismatch && (
                             <div className="mt-1">
                               <span className="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">미정합</span>

@@ -60,6 +60,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
       orderStatus: order.status,
       projectState: project ? computeProjectState(project, input.now) : 'closed',
       fulfillmentStatus: pledge.fulfillmentStatus,
+      paymentMethod: pledge.paymentMethod,
     });
     if (!verdict.ok) return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES[verdict.code] };
   }
@@ -80,29 +81,21 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 후원입니다. 관리자에게 문의해 주세요.' };
   }
 
-  // 무통장: 토스가 없으니 돈이 자동으로 나가지 않는다.
+  /**
+   * 무통장입금은 2026-09-11에 중단했다 — 새 무통장 후원은 만들어질 수 없다
+   * (lib/funding/validation.ts가 결제수단을 toss로 못박는다).
+   *
+   * 그래도 이 분기를 남기는 이유: 중단 전에 만들어진 행이 DB에 남아 있고, 그 행들이
+   * 토스 취소 경로로 흘러가면 결제 기록이 없어 엉뚱하게 실패한다. 관리자 쪽 기록 경로만
+   * 남겨 두면 옛 행을 닫을 수단이 있고, 고객 셀프 취소는 명시적으로 거절한다 —
+   * 셀프 취소를 받아 두면 운영자가 손으로 송금할 환불 요청이 다시 쌓인다. 그것이
+   * 이 결제수단을 걷어낸 이유다.
+   */
   if (pledge.paymentMethod === 'bank_transfer') {
     if (input.requestedBy === 'customer') {
-      // 이미 접수된 취소 요청을 다시 눌러도 새 요청처럼 처리하지 않는다 — 운영자에게 같은
-      // 건의 메일이 반복해서 쌓인다.
-      //
-      // 가드를 **UPDATE의 WHERE로** 옮긴 이유: 위에서 읽은 스냅샷으로 if를 돌면 동시 요청
-      // 두 건이 둘 다 "아직 요청 없음"을 보고 통과해 요청 메일이 2통 나간다. 발송 준비
-      // 시작(fulfillment_status)·결제 상태도 같은 이유로 함께 건다 — assessSelfCancel은 읽기
-      // 시점만 보므로, 판정과 기록 사이에 관리자가 발송 준비로 넘기면 "발송 준비 중인데
-      // 취소 요청 접수됨"이 성립한다. 토스 경로가 이미 쓰는 선점 패턴과 같은 형태다.
-      const claim = await db.run(sql`
-        UPDATE funding_pledges
-        SET refund_requested_at = ${Math.floor(input.now.getTime() / 1000)}, updated_at = unixepoch()
-        WHERE id = ${pledge.id}
-          AND refund_requested_at IS NULL
-          AND fulfillment_status = 'none'
-          AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`);
-      if (Number(claim.rowsAffected) === 0) {
-        return { ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었습니다.' };
-      }
-      await notifyCancelled(db, order, project, 'refund_requested', order.totalAmount);
-      return { ok: true, mode: 'refund_requested', refundAmount: order.totalAmount };
+      // 위 assessSelfCancel이 먼저 걸러내므로 여기까지 오지 않는다 — 두 판정이 갈리면
+      // 화면은 버튼을 띄우는데 서버가 거절하는 조합이 생기므로, 같은 문구로 방어만 남긴다.
+      return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES.offline_payment };
     }
     if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
     const claim = await db.run(
@@ -110,8 +103,6 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 후원입니다.' };
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
-    // 무통장도 부분환불 이력이 있을 수 있다(관리자가 일부만 돌려준 뒤 나머지를 정리하는 경우) —
-    // 잔액만 알린다. 토스 경로와 같은 계산이다.
     return { ok: true, mode: 'recorded', refundAmount };
   }
 

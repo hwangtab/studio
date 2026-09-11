@@ -17,4 +17,4 @@ rewards:
     requiresShipping: false
     estimatedDelivery: 2026-10
 ---
-운영자가 토스 실결제와 무통장 흐름을 검증할 때만 쓰는 프로젝트입니다.
+운영자가 토스 실결제 흐름을 검증할 때만 쓰는 프로젝트입니다.

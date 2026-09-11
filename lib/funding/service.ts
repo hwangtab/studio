@@ -6,18 +6,11 @@ import { orders, type FundingPledge, type Order, type Payment, type Refund } fro
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
-import { BANK_HOLD_SECONDS, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
+import { FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload } from './validation';
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
-
-/**
- * 같은 고객(이메일+전화)이 한 프로젝트에서 **같은 결제수단으로** 동시에 열어 둘 수 있는
- * 미만료 pending 홀드 수. 결제수단을 섞어 세면 무통장 대기 2건이 토스 후원까지 막는다.
- * 토스는 바로 위 자기 홀드 해제로 매번 0이 되므로, 실질적으로는 무통장 홀드 상한이다.
- */
-export const MAX_OPEN_HOLDS_PER_CUSTOMER = 2;
 
 /**
  * 수기 등록(오프라인 현금·계좌 후원)에서 연락처 칸이 비었을 때 채워 넣는 플레이스홀더.
@@ -81,45 +74,24 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
  */
 export const createFundingPledge = async (
   payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
-): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' | 'too_many_bank_holds' }> => {
+): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' }> => {
   const db = getDb();
   const amounts = computeFundingAmounts(reward.amount, payload.quantity, payload.additionalAmount);
   const orderNo = generateFundingOrderNo(now);
   const manageToken = generateManageToken();
-  const holdSeconds = payload.paymentMethod === 'toss' ? TOSS_HOLD_SECONDS : BANK_HOLD_SECONDS;
-  const holdExpiresAt = new Date(now.getTime() + holdSeconds * 1000);
+  // 결제수단은 토스 하나뿐이다(무통장입금 중단, 2026-09-11) — 홀드도 한 종류다.
+  const holdExpiresAt = new Date(now.getTime() + TOSS_HOLD_SECONDS * 1000);
 
   // 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 같은 고객의 pending 펀딩 주문을 만료시킨다.
-  // 무통장(bank_transfer) pending은 제외 — 이미 입금했을 수 있어 재제출만으로 만료시키면 안 된다.
+  //
+  // 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
+  // (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
   await db.run(sql`
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
     WHERE type = 'funding' AND status = 'pending'
       AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
       AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
   `);
-
-  // 한 사람이 결제 대기(pending) 주문을 무한정 쌓는 것을 막는다.
-  //
-  // 위 자기 홀드 해제는 toss pending만 푼다 — 무통장은 이미 입금했을 수 있어 재제출만으로
-  // 만료시킬 수 없다. 그래서 무통장으로 반복 제출하면 12시간짜리 미결제 주문이 계속 쌓인다.
-  //
-  // **한정 수량 재고와는 무관하다.** 한정 리워드(totalQuantity !== null)는 무통장 자체를
-  // 거부하므로(lib/funding/validation.ts — "한정 수량 리워드는 무통장 불가"), 무통장 홀드가
-  // 한정 재고를 잠그는 상황은 만들어질 수 없다. 이 가드가 실제로 막는 것은 입금 대기 주문이
-  // 쌓여 운영자가 입금자명을 대조할 대상이 불어나는 쪽이다.
-  //
-  // 해제 뒤에 세므로, 정상적인 위저드 되돌아가기·재제출은 걸리지 않는다.
-  const [openHolds] = await db.all<{ n: number }>(sql`
-    SELECT COUNT(*) AS n FROM orders o
-    JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE o.type = 'funding' AND o.status = 'pending'
-      AND o.customer_email = ${payload.customerEmail} AND o.customer_phone = ${payload.customerPhone}
-      AND fp.project_slug = ${project.slug} AND fp.payment_method = ${payload.paymentMethod}
-      AND fp.hold_expires_at > ${toEpoch(now)}
-  `);
-  if (Number(openHolds?.n ?? 0) >= MAX_OPEN_HOLDS_PER_CUSTOMER) {
-    return { ok: false, code: 'too_many_bank_holds' };
-  }
 
   const [order] = await db.insert(orders).values({
     orderNo, type: 'funding',

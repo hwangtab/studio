@@ -21,8 +21,7 @@ const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
  * 예전에는 반대로 denylist(NOT_FOUND_PAYMENT 계열만 제외)였다. 그러면 목록 밖의 어떤 코드든
  * (INVALID_REQUEST·UNAUTHORIZED_KEY·FORBIDDEN_REQUEST…) 주문을 failed로 낙인한다 —
  * 주문번호는 비밀이 아니므로 제3자가 success URL을 열어 남의 후원을 망가뜨릴 수 있고,
- * 무통장 주문은 failed가 되는 순간 관리자 입금 확인(bank-transfer.ts는 pending·expired만
- * claim)이 영구히 막힌다. allowlist면 모르는 코드는 주문을 건드리지 않고 pending으로 남아
+ * 중단 전에 만들어진 무통장 주문은 failed가 되면 되살릴 경로가 없다. allowlist면 모르는 코드는 주문을 건드리지 않고 pending으로 남아
  * 홀드 만료나 웹훅이 결론을 낸다 — 과소 낙인은 스스로 치유되고, 과대 낙인은 아니다.
  *
  * 접두사로 보는 이유: 토스 거절 코드는 카드사/계좌 사유별로 계속 늘어나는 계열이라

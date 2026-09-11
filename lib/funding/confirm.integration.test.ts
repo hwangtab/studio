@@ -23,8 +23,6 @@ import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email'
 // eslint-disable-next-line import/first
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
-import { confirmBankDeposit } from './bank-transfer';
-// eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
@@ -106,6 +104,29 @@ afterEach(() => {
 afterAll(() => client.close());
 
 describe('confirmFundingPledge', () => {
+  /**
+   * 무통장입금은 2026-09-11에 중단했지만, 중단 전 행과 관리자 수기 등록 건이 여전히
+   * `payment_method='bank_transfer'`로 남는다. 그 주문번호로 success URL을 열면 토스가
+   * 거절하고, 그 거절이 주문을 failed로 낙인해 되살릴 경로가 없어진다. 주문번호는 비밀이
+   * 아니므로 제3자가 남의 후원을 망가뜨릴 수 있다 — confirm.ts가 그 요청을 상태를 건드리지
+   * 않고 거부하는지 고정한다(그 가드를 덮던 테스트가 결제수단 제거 때 함께 지워졌다).
+   */
+  it('토스 결제가 아닌 후원에 승인 요청이 오면 주문 상태를 건드리지 않고 거부한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await client.execute({
+      sql: "UPDATE funding_pledges SET payment_method='bank_transfer' WHERE order_id=(SELECT id FROM orders WHERE order_no=?)",
+      args: [c.orderNo],
+    });
+
+    const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_forged', amount: 5000 });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(mockConfirm).not.toHaveBeenCalled();
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    expect(o?.status).toBe('pending'); // failed로 낙인되지 않는다
+  });
+
   it('금액이 맞으면 승인하고 paid·payments·paidAt을 기록한다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
@@ -163,35 +184,6 @@ describe('confirmFundingPledge', () => {
     });
   });
 
-  describe('무통장 후원은 토스 confirm 경로를 타지 않는다 (A-2)', () => {
-    const bankPledge = async (email: string) => {
-      const c = await createFundingPledge(
-        payloadFor({ paymentMethod: 'bank_transfer', customerEmail: email, customerPhone: '010-4' }),
-        PROJECT, reward('mail'), NOW,
-      );
-      if (!c.ok) throw new Error();
-      return c;
-    };
-
-    it('제3자의 잘못된 confirm 시도가 무통장 pending 주문을 failed로 만들지 않는다', async () => {
-      const c = await bankPledge('bank@example.com');
-      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_위조', amount: 5000 });
-      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
-      expect(JSON.stringify(r)).not.toContain(c.manageToken);
-      // 토스를 부르지도 않고, 주문 상태도 그대로다.
-      expect(mockConfirm).not.toHaveBeenCalled();
-      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('pending');
-    });
-
-    it('방해 시도 뒤에도 관리자 입금 확인이 정상 동작한다', async () => {
-      const c = await bankPledge('bank2@example.com');
-      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_위조', amount: 5000 });
-      const o = await findFundingOrderByOrderNo(c.orderNo);
-      const deposit = await confirmBankDeposit({ orderId: o!.id, now: NOW });
-      expect(deposit).toEqual({ ok: true });
-      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid');
-    });
-  });
 
   it('결제 미존재 계열 거절은 토스 주문을 failed로 낙인하지 않는다', async () => {
     // NOT_FOUND_PAYMENT는 "이 주문의 결제가 거절됐다"가 아니라 "그런 결제가 없다"이다.

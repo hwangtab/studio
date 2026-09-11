@@ -1,18 +1,16 @@
 import type { ProjectState } from './projects';
 
 export const TOSS_HOLD_SECONDS = 900;
-export const BANK_HOLD_SECONDS = 12 * 60 * 60;
 export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_AMOUNT = 5_000_000;
 export const ADDITIONAL_AMOUNT_STEP = 1000;
-/** 전자계약 기본 계좌와 동일(db/schema.ts contracts 기본값). */
-export const BANK_ACCOUNT = { bank: '카카오뱅크', number: '3333-12-5480849', holder: '황경하 / 스튜디오 놀' } as const;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
 
 /**
  * "후원자가 취소를 요청했는데 아직 돈이 안 나간" 상태로 볼 orders.status 집합.
  *
- * 무통장은 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로 남는다.
+ * **지금은 새로 만들어지지 않는다.** 이 상태를 만들던 것은 무통장입금 셀프 취소뿐이었고,
+ * 그 결제수단은 2026-09-11에 중단했다. 중단 전에 만들어진 행을 위해 판정·알람은 남겨 둔다.
  * partially_refunded도 포함하는 이유: 잔액이 남은 건은 여전히 환불이 덜 끝난 것이라
  * 알람이 꺼지면 안 되고, 그 잔액을 정리하는 경로(관리자 환불)도 열려 있어야 한다.
  * refunded로 넘어가면 refundRequestedAt은 그대로 남지만(cancel.ts는 지우지 않는다)
@@ -27,11 +25,30 @@ export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as c
 export const isRefundPendingStatus = (status: string): boolean =>
   (REFUND_PENDING_ORDER_STATUSES as readonly string[]).includes(status);
 
-export type CancelEligibility = { ok: true } | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' };
+export type CancelEligibility =
+  | { ok: true }
+  | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' | 'offline_payment' };
 
-/** 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다. */
-export const assessSelfCancel = (input: { orderStatus: string; projectState: ProjectState; fulfillmentStatus: string }): CancelEligibility => {
+/**
+ * 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다.
+ *
+ * `paymentMethod`를 함께 보는 이유: 토스 결제가 아닌 후원은 취소할 결제가 없어 환불이
+ * 계좌 송금이다. 그걸 안 보면 화면이 "전액 환불" 버튼을 띄우는데 눌러도 cancel.ts가
+ * 거절한다 — 죽은 버튼이다. 지금 이 경우는 운영자가 계좌로 받아 수기 등록한 건과
+ * 무통장입금 중단(2026-09-11) 전에 만들어진 건 둘뿐이다.
+ *
+ * **필수 인자로 둔다.** 이 버그가 들어온 자리는 manage 페이지 getServerSideProps의 한
+ * 줄이었고, 선택 인자면 그 줄에서 빼먹어도 컴파일도 테스트도 통과한다. 값은 두 호출부
+ * 모두 손에 쥐고 있으므로 필수로 두는 비용이 없다 — 재발을 타입이 막게 한다.
+ */
+export const assessSelfCancel = (input: {
+  orderStatus: string;
+  projectState: ProjectState;
+  fulfillmentStatus: string;
+  paymentMethod: string;
+}): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
+  if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
   if (input.projectState !== 'live') return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   return { ok: true };
@@ -41,6 +58,9 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
   not_paid: '결제가 확정된 후원만 취소할 수 있습니다.',
   project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
+  // 운영자가 계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
+  // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다.
+  offline_payment: '계좌로 받은 후원은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
 };
 
 /**
@@ -62,7 +82,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r4';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r6';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -93,7 +113,7 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
   { name: '토스페이먼츠', purpose: '결제 승인·취소·환불 처리', items: '후원자 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
-  { name: 'Resend', purpose: '후원 확정·무통장입금·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 후원 내역' },
+  { name: 'Resend', purpose: '후원 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 후원 내역' },
   { name: 'Vercel', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', purpose: '후원 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
 ];

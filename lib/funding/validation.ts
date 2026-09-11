@@ -6,7 +6,8 @@ import { computeProjectState, findReward, type FundingProject, type FundingRewar
 export interface PledgeShipping { name: string; phone: string; postcode: string; address1: string; address2?: string; memo?: string }
 export interface CreatePledgePayload {
   projectSlug: string; rewardId: string; quantity: number; additionalAmount: number;
-  paymentMethod: 'toss' | 'bank_transfer';
+  /** 토스 결제위젯만 쓴다 — 무통장입금은 2026-09-11에 중단했다(lib/funding/policy.ts 참조). */
+  paymentMethod: 'toss';
   customerName: string; customerPhone: string; customerEmail: string;
   supporterMessage?: string; displayNamePublic: boolean; shipping?: PledgeShipping; termsAgreed: true;
 }
@@ -29,9 +30,9 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   if (typeof additionalAmount !== 'number' || !Number.isInteger(additionalAmount) || additionalAmount < 0
     || additionalAmount > MAX_ADDITIONAL_AMOUNT || additionalAmount % ADDITIONAL_AMOUNT_STEP !== 0)
     return { ok: false, message: '추가 후원금은 1,000원 단위로 500만원까지 가능합니다.' };
-  if (b.paymentMethod !== 'toss' && b.paymentMethod !== 'bank_transfer') return { ok: false, message: '결제수단을 선택해 주세요.' };
-  if (b.paymentMethod === 'bank_transfer' && reward.totalQuantity !== null)
-    return { ok: false, message: '한정 수량 리워드는 무통장입금으로 후원할 수 없습니다.' };
+  // 무통장입금은 중단했다. 예전 클라이언트나 손으로 만든 요청이 'bank_transfer'를 보내도
+  // 여기서 끊는다 — 받아들이면 운영자가 입금을 손으로 대조해야 하는 주문이 다시 생긴다.
+  if (b.paymentMethod !== 'toss') return { ok: false, message: '결제수단을 선택해 주세요.' };
   const customerName = text(b.customerName, 50);
   const customerPhone = text(b.customerPhone, 30);
   const customerEmail = typeof b.customerEmail === 'string' && isEmail(b.customerEmail.trim()) ? b.customerEmail.trim() : null;

@@ -19,7 +19,7 @@ const PLEDGE: AdminPledgeItem = {
   trackingCompany: 'CJ', trackingNumber: '123', shipping: null, supporterMessage: null,
   refundRequestedAt: null, paidAt: null, holdExpiresAt: new Date().toISOString(),
   createdAt: new Date().toISOString(), adminMemo: null, notificationError: null,
-  hasPayment: true, mismatch: false, duplicateWarning: false, refundRequested: false, needsReview: false,
+  hasPayment: true, mismatch: false, refundRequested: false, needsReview: false,
 };
 
 // 예전엔 빈 값을 `|| undefined`로 걸러 보내지 않아, 잘못 입력한 운송장을 지울 수 없었다.

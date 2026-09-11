@@ -2,22 +2,15 @@
 jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 jest.mock('../../../lib/funding/service', () => ({
   createFundingPledge: jest.fn(), expireStalePledges: jest.fn().mockResolvedValue(undefined),
-  findFundingOrderByOrderNo: jest.fn().mockResolvedValue({ id: 'order-1', orderNo: 'FND-1' }),
 }));
-jest.mock('../../../lib/funding/email', () => ({ sendFundingBankDepositEmails: jest.fn().mockResolvedValue(null) }));
 jest.mock('../../../lib/funding/projects', () => ({
   ...jest.requireActual('../../../lib/funding/projects'),
   getFundingProject: jest.fn(),
 }));
-const mockWhere = jest.fn().mockResolvedValue(undefined);
-const mockSet = jest.fn(() => ({ where: mockWhere }));
-const mockUpdate = jest.fn(() => ({ set: mockSet }));
-jest.mock('../../../db/client', () => ({ getDb: jest.fn(() => ({ update: mockUpdate })) }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/funding/pledges';
-import { createFundingPledge, findFundingOrderByOrderNo } from '../../../lib/funding/service';
-import { sendFundingBankDepositEmails } from '../../../lib/funding/email';
+import { createFundingPledge } from '../../../lib/funding/service';
 import { getFundingProject, parseFundingProject } from '../../../lib/funding/projects';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
@@ -75,38 +68,12 @@ const call = async (body: unknown) => {
   await handler({ method: 'POST', body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
 };
-const body = { projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'bank_transfer',
+const body = { projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'toss',
   customerName: '김', customerPhone: '010', customerEmail: 'a@b.com', displayNamePublic: true, termsAgreed: true };
 
 beforeEach(() => {
   jest.clearAllMocks();
   (consumeRateLimit as jest.Mock).mockResolvedValue(true);
-});
-
-it('무통장 후원 생성 → 201 + depositUrl, 메일 발송을 await하고 emailSent: true', async () => {
-  (getFundingProject as jest.Mock).mockReturnValue(project);
-  (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue({ id: 'order-1', orderNo: 'FND-1' });
-  (sendFundingBankDepositEmails as jest.Mock).mockResolvedValue(null);
-  (createFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', holdExpiresAt: new Date(0), amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 } });
-  const r = await call(body);
-  expect(r.status).toBe(201);
-  expect(r.body.depositUrl).toBe('/ko/funding/deposit/FND-1?token=t');
-  expect(r.body.emailSent).toBe(true);
-  expect(sendFundingBankDepositEmails).toHaveBeenCalledTimes(1);
-  // notificationError를 null로 orders에 기록한다(성공 케이스도 기록해 실패 이력이 안 남는다).
-  expect(mockUpdate).toHaveBeenCalled();
-  expect(mockSet).toHaveBeenCalledWith({ notificationError: null });
-});
-
-it('메일 발송 실패 문자열이 반환되면 orders.notificationError에 기록하고 emailSent: false', async () => {
-  (getFundingProject as jest.Mock).mockReturnValue(project);
-  (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue({ id: 'order-1', orderNo: 'FND-1' });
-  (sendFundingBankDepositEmails as jest.Mock).mockResolvedValue('customer:send_failed');
-  (createFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', holdExpiresAt: new Date(0), amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 } });
-  const r = await call(body);
-  expect(r.status).toBe(201);
-  expect(r.body.emailSent).toBe(false);
-  expect(mockSet).toHaveBeenCalledWith({ notificationError: 'customer:send_failed' });
 });
 
 /**
@@ -168,11 +135,10 @@ describe('속도 제한 · 홀드 상한', () => {
     expect((consumeRateLimit as jest.Mock).mock.calls.filter(([k]) => String(k).startsWith('funding_hold:'))).toHaveLength(0);
   });
 
-  it('무제한 리워드나 무통장에는 홀드 카운터를 쓰지 않는다', async () => {
+  it('무제한 리워드에는 홀드 카운터를 쓰지 않는다', async () => {
     (getFundingProject as jest.Mock).mockReturnValue(limitedProject);
     (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'sold_out' });
     await call({ ...body, rewardId: 'mail', paymentMethod: 'toss' });
-    await call({ ...body, ...cdBodyExtra, paymentMethod: 'bank_transfer' });
     expect((consumeRateLimit as jest.Mock).mock.calls.filter(([k]) => String(k).startsWith('funding_hold:'))).toHaveLength(0);
   });
 
@@ -183,13 +149,5 @@ describe('속도 제한 · 홀드 상한', () => {
     expect(r.status).toBe(429);
     expect(r.body.message).toBe('한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.');
     expect(createFundingPledge).not.toHaveBeenCalled();
-  });
-
-  it('무통장 홀드 상한은 429가 아니라 409 — 시간이 아니라 입금·자동취소로 풀리는 상태다', async () => {
-    (getFundingProject as jest.Mock).mockReturnValue(project);
-    (createFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'too_many_bank_holds' });
-    const r = await call(body);
-    expect(r.status).toBe(409);
-    expect(r.body.message).toBe('입금 대기 중인 무통장 후원이 이미 2건 있습니다. 입금하시거나 12시간 뒤 자동 취소된 후에 다시 신청해 주세요.');
   });
 });

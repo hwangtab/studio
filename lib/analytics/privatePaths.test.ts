@@ -4,7 +4,6 @@ describe('isPrivateAnalyticsPath', () => {
   it('관리 토큰·paymentKey가 실리는 경로는 측정 대상에서 뺀다', () => {
     for (const path of [
       '/ko/funding/manage/FND-20261015-ABCD1234?token=secret',
-      '/ko/funding/deposit/FND-20261015-ABCD1234?token=secret',
       '/en/booking/manage/SNB-1?token=secret',
       '/uz/booking/success?paymentKey=pk_abc',
       '/ko/contracts/abc123',
@@ -35,7 +34,7 @@ describe('isPrivateAnalyticsPath', () => {
   });
 
   it('해시·빈 문자열도 안전하게 처리한다', () => {
-    expect(isPrivateAnalyticsPath('/ko/funding/deposit/FND-1#top')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/funding/manage/FND-1#top')).toBe(true);
     expect(isPrivateAnalyticsPath('')).toBe(false);
   });
 
@@ -80,7 +79,7 @@ describe('isPrivateAnalyticsPath', () => {
     expect(PRIVATE_NO_STORE_SOURCES).toEqual([
       '/:locale(ko|en|zh|es|vi|th|uz)/contracts/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/funding/(success|fail)',
-      '/:locale(ko|en|zh|es|vi|th|uz)/funding/(deposit|manage)/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/funding/manage/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/manage/:path*',
     ]);

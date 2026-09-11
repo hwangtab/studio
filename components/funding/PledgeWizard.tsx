@@ -114,7 +114,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
   const [quantityText, setQuantityText] = useState('1');
   const [additionalText, setAdditionalText] = useState('0');
-  const [method, setMethod] = useState<'toss' | 'bank_transfer'>('toss');
   const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false, termsAgreed: false });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
@@ -124,8 +123,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
 
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
   const allSoldOut = project.rewards.every((r) => isSoldOut(remaining, r.id));
-  const limited = reward.totalQuantity !== null;
-  useEffect(() => { if (limited && method === 'bank_transfer') setMethod('toss'); }, [limited, method]);
   // 화면 요약·서버 전송에 쓰는 값은 언제나 정규화본이다 — 입력 칸의 문자열은 건드리지 않는다.
   const quantityCap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
   const quantity = clampQuantity(quantityText, quantityCap);
@@ -156,7 +153,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       const res = await fetch('/api/funding/pledges', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          projectSlug: project.slug, rewardId: reward.id, quantity, additionalAmount: additional, paymentMethod: method,
+          projectSlug: project.slug, rewardId: reward.id, quantity, additionalAmount: additional, paymentMethod: 'toss',
           ...form, supporterMessage: form.supporterMessage || undefined,
           shipping: reward.requiresShipping ? ship : undefined,
         }),
@@ -172,7 +169,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       const receivedAt = Date.now();
       // router.push가 아니라 전체 페이지 이동 — 클라이언트 전환이면 이미 로드된 gtag가
       // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
-      if (json.depositUrl) { window.location.assign(json.depositUrl); return; }
       setCreated({ ...json, receivedAt });
     } catch { setError('네트워크 오류가 발생했습니다.'); }
     finally { setSubmitting(false); }
@@ -337,22 +333,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         </div>
       </fieldset>
 
-      <fieldset className={cardClass}>
-        <StepHeader n={3} title="결제수단" />
-        <div className="space-y-2">
-          <label className={choiceRow}>
-            <input type="radio" name="method" className={radioClass} checked={method === 'toss'} onChange={() => setMethod('toss')} />
-            <span className="text-sm text-gray-700 dark:text-gray-200">카드·계좌이체·간편결제 (토스페이먼츠)</span>
-          </label>
-          {!limited && (
-            <label className={choiceRow}>
-              <input type="radio" name="method" className={radioClass} checked={method === 'bank_transfer'} onChange={() => setMethod('bank_transfer')} />
-              <span className="text-sm text-gray-700 dark:text-gray-200">무통장입금 (12시간 안에 입금)</span>
-            </label>
-          )}
-        </div>
-        {limited && <p className={`${helpClass} mt-3`}>한정 수량 리워드는 온라인 결제만 가능합니다.</p>}
-      </fieldset>
 
       {/* 선택 내용과 합계를 제출 버튼 바로 위에 붙여 둔다 — 모바일에서 폼을 다시
           위로 스크롤하지 않고도 무엇을 얼마에 사는지 확인할 수 있어야 한다. */}
@@ -379,7 +359,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
           <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
         )}
         <Button type="submit" size="lg" fullWidth className="mt-4" disabled={submitting || allSoldOut}>
-          {submitting ? '처리 중…' : method === 'toss' ? '결제로 이동' : '무통장 후원 신청'}
+          {submitting ? '처리 중…' : '결제로 이동'}
         </Button>
       </div>
     </form>

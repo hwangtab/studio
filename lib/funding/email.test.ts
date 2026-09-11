@@ -1,7 +1,7 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
-import { sendFundingBankDepositEmails, sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from './email';
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from './email';
 
 const order = {
   id: 'o', orderNo: 'FND-20261015-ABCDEF12', type: 'funding', status: 'paid', manageToken: 'tok',
@@ -27,20 +27,6 @@ it('확정 메일은 고객·운영자 두 통, manage 링크·리워드 포함,
   expect(customer.replyTo).toBe(OPERATOR_EMAIL);
   expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
   expect(customer.text).toContain('감사 메일');
-});
-it('무통장 안내는 계좌·기한·입금자명, 고객 메일은 replyTo 운영자', async () => {
-  await sendFundingBankDepositEmails(order, project);
-  const customer = (sendEmail as jest.Mock).mock.calls[0][0];
-  expect(customer.replyTo).toBe(OPERATOR_EMAIL);
-  const text = customer.text as string;
-  expect(text).toContain('3333-12-5480849');
-  expect(text).toContain('입금자명');
-  expect(text).toContain('2026.10.16');
-});
-it('무통장 안내는 fundingPledge가 없으면 메일을 보내지 않고 missing_pledge를 반환', async () => {
-  const orderWithoutPledge = { ...(order as Record<string, unknown>), fundingPledge: null } as never;
-  expect(await sendFundingBankDepositEmails(orderWithoutPledge, project)).toBe('missing_pledge');
-  expect(sendEmail).not.toHaveBeenCalled();
 });
 it('한 통이라도 실패하면 요약을 돌려준다', async () => {
   (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });
@@ -69,10 +55,6 @@ describe('제목 꼬리표 · 결제수단 라벨', () => {
     expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 후원이 확정되었습니다');
 
     (sendEmail as jest.Mock).mockClear();
-    await sendFundingBankDepositEmails(order, null);
-    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 무통장입금 안내');
-
-    (sendEmail as jest.Mock).mockClear();
     await sendFundingCancelledEmails(order, null, 'refunded', 5000);
     expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 환불이 완료되었습니다');
   });
@@ -99,11 +81,8 @@ describe('제목 꼬리표 · 결제수단 라벨', () => {
 // 계약 내용(약관)이 없으면 서면 교부 요건을 못 채운다. 예전엔 확정·무통장 메일 어디에도
 // 약관 링크가 없었다. 문구는 약관 제8조(기간)·제10조(환불)와 같아야 한다.
 describe('청약철회 고지 (전자상거래법 제13조 2항)', () => {
-  it.each([
-    ['확정', sendFundingConfirmedEmails],
-    ['무통장 안내', sendFundingBankDepositEmails],
-  ])('%s 메일 고객 본문에 청약철회 기한·방법과 약관 링크가 있다', async (_label, fn) => {
-    await fn(order, project);
+  it('확정 메일 고객 본문에 청약철회 기한·방법과 약관 링크가 있다', async () => {
+    await sendFundingConfirmedEmails(order, project);
     const text = (sendEmail as jest.Mock).mock.calls[0][0].text as string;
     expect(text).toContain('청약철회');
     expect(text).toContain('받은 날부터 7일 이내');

@@ -12,7 +12,7 @@ import { expireStalePledges, findFundingOrderByOrderNo } from '../../../../lib/f
 interface Props {
   orderNo: string; token: string; projectSlug: string; projectTitle: string; rewardTitle: string; quantity: number; additionalAmount: number;
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
-  canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean; depositUrl: string | null;
+  canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean;
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
   displayNamePublic: boolean; canEditDisplayName: boolean;
 }
@@ -27,8 +27,6 @@ export default function FundingManagePage(p: Props) {
   const [nameBusy, setNameBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
-  // 입금 전 무통장 신청은 환불할 돈이 없다 — '취소'가 아니라 '신청 취소'(만료와 같은 전이)다.
-  const isPendingBank = status === 'pending' && p.paymentMethod === 'bank_transfer';
 
   /**
    * 약관 제13조 2항 — "후원 확인 페이지에서 이름 공개 동의를 철회할 수 있다". 낙관적으로
@@ -61,11 +59,7 @@ export default function FundingManagePage(p: Props) {
   };
 
   const cancel = async () => {
-    const confirmText = isPendingBank
-      ? '입금 전 신청을 취소할까요? 이미 입금하셨다면 취소하지 마시고 문의해 주세요.'
-      : p.paymentMethod === 'bank_transfer'
-        ? '취소를 요청할까요? 환불은 운영자가 계좌로 진행합니다.'
-        : `후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
+    const confirmText = `후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
     if (!window.confirm(confirmText)) return;
     setBusy(true); setError(null);
     try {
@@ -76,10 +70,10 @@ export default function FundingManagePage(p: Props) {
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '취소에 실패했습니다.'); return; }
-      if (json.mode === 'pending_released') {
-        setStatus('expired');
-        setConfirmMessage('신청을 취소했습니다. 입금하지 않으셔도 됩니다. 다시 후원하시려면 프로젝트 페이지에서 새로 신청해 주세요.');
-      } else if (json.mode === 'refund_requested') {
+      // `pending_released`(입금 전 무통장 신청의 셀프 해제) 분기는 그 엔드포인트와 함께
+      // 없어졌다. `refund_requested`도 지금은 만들어지지 않지만, 서버가 옛 행에 그 모드를
+      // 돌려줄 여지가 남아 있어 표시만 남긴다.
+      if (json.mode === 'refund_requested') {
         setRefundRequested(true);
         setConfirmMessage('취소 요청을 접수했습니다. 환불 계좌를 메일로 회신해 주세요.');
       } else {
@@ -154,17 +148,6 @@ export default function FundingManagePage(p: Props) {
             ))}
           </dl>
 
-          {status === 'pending' && p.depositUrl && (
-            <p className="typo-card-meta mt-5">
-              <a href={p.depositUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">무통장입금 안내 보기</a>
-            </p>
-          )}
-          {isPendingBank && (
-            <>
-              <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>신청 취소 (입금 전)</Button>
-              <p className="typo-card-meta mt-2">취소하면 입금 대기가 끝나고, 같은 프로젝트에 바로 다시 신청할 수 있습니다.</p>
-            </>
-          )}
           {status === 'paid' && !refundRequested && (p.canCancel
             ? <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>후원 취소 (전액 환불)</Button>
             : <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>)}
@@ -203,7 +186,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!order?.fundingPledge || !isTokenMatch(order.manageToken, token)) return { notFound: true };
   const pl = order.fundingPledge;
   const project = getFundingProject(pl.projectSlug);
-  const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus });
+  const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod });
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardTitle: pl.rewardTitle,
@@ -215,6 +198,5 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // 이름이 공개돼 있거나 앞으로 공개될 수 있는 상태에서만 바꾼다
     // (pages/api/funding/display-name.ts의 EDITABLE_STATUSES와 같은 판정).
     canEditDisplayName: ['pending', 'paid', 'partially_refunded'].includes(order.status),
-    depositUrl: pl.paymentMethod === 'bank_transfer' ? `/ko/funding/deposit/${order.orderNo}?token=${token}` : null,
   } };
 };

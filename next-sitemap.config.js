@@ -96,7 +96,7 @@ module.exports = {
   exclude: [
     '/api/*', '/404', '/500', '/', '/*/privacy-policy', '/admin', '/admin/*', '/*/contracts/*', '/*/booking/*', '/*/terms',
     // 펀딩 트랜잭셔널 경로 — noindex + Cache-Control: no-store 페이지라 사이트맵 등재 대상이 아니다.
-    '/*/funding/success', '/*/funding/fail', '/*/funding/deposit/*', '/*/funding/manage/*', '/*/funding/*/pledge', '/*/funding/terms',
+    '/*/funding/success', '/*/funding/fail', '/*/funding/manage/*', '/*/funding/*/pledge', '/*/funding/terms',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
@@ -114,7 +114,7 @@ module.exports = {
         disallow: [
           '/api/', '/admin', '/ko/contracts/', '/en/contracts/', '/ko/booking/',
           // 펀딩 트랜잭셔널 경로 — 결제 진행 중 상태 등이라 크롤 대상이 아니다.
-          '/ko/funding/success', '/ko/funding/fail', '/ko/funding/deposit/', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
+          '/ko/funding/success', '/ko/funding/fail', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
         ],
       };
       // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명
