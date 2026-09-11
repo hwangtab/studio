@@ -23,7 +23,7 @@ import {
   PRIVACY_RETENTION_TEXT,
   TOSS_HOLD_SECONDS,
 } from '../lib/funding/policy';
-import { POLICY_COPY_BY_LOCALE } from '../pages/[locale]/privacy-policy';
+import { POLICY_COPY_BY_LOCALE } from '../data/privacyPolicy';
 import { FUNDING_TERMS_SECTIONS } from '../pages/[locale]/funding/terms';
 
 /** 해시 대상을 사람이 읽을 수 있는 형태로 직렬화한다 — 실패했을 때 무엇이 바뀌었는지 diff로 보이도록. */

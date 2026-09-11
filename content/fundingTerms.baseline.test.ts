@@ -4,7 +4,8 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { FUNDING_TERMS_VERSION } from '../lib/funding/policy';
+import { POLICY_COPY_BY_LOCALE } from '../data/privacyPolicy';
+import { FUNDING_PRIVACY_SECTION_HEADINGS, FUNDING_TERMS_VERSION } from '../lib/funding/policy';
 import {
   assertBaselineUpdateAllowed,
   serializeAgreedDocuments,
@@ -207,5 +208,31 @@ describe('assertBaselineUpdateAllowed — 갱신 경로 우회 차단', () => {
       expect(message).toMatch(/git checkout/);
       expect(message).toMatch(/ALLOW_BASELINE_CREATE=1/);
     }
+  });
+});
+
+/**
+ * 약관 §13이 가리키는 처리방침 항 제목은 lib/funding/policy.ts에 베껴 두고 있다 — 약관
+ * 페이지가 처리방침 정본을 직접 import하면 7개 로케일 본문 전체가 약관 번들에 딸려 오기
+ * 때문이다(실측 확인). 베낀 값이라 드리프트가 가능하므로, 여기서 정본과 대조한다.
+ *
+ * 이 테스트가 서면 처리방침에서 펀딩 항을 추가·개명·재번호한 것이다. policy.ts의 배열을
+ * 맞춘 뒤, 그 값이 약관 §13 본문에 보간되어 **해시 대상**이라는 점을 잊지 말 것 —
+ * FUNDING_TERMS_VERSION을 먼저 올리고 기준선을 다시 써야 한다.
+ */
+describe('약관 §13의 처리방침 항 참조', () => {
+  it('policy.ts의 제목 목록이 ko 처리방침에서 실제로 뽑히는 항과 같다', () => {
+    const derived = POLICY_COPY_BY_LOCALE.ko.sections
+      .map((section) => section.heading)
+      .filter((heading) => /^\d+\. 펀딩/.test(heading));
+    expect([...FUNDING_PRIVACY_SECTION_HEADINGS]).toEqual(derived);
+  });
+
+  it('약관 페이지는 처리방침 정본을 직접 import하지 않는다', () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), 'pages/[locale]/funding/terms.tsx'),
+      'utf-8',
+    );
+    expect(source).not.toMatch(/privacy-?[Pp]olicy/);
   });
 });

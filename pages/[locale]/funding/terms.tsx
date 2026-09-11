@@ -4,9 +4,13 @@ import SEO from '../../../components/SEO';
 import { Section } from '../../../components/ui/Section';
 import { getSiteConfig, hostingProvider, studioOperator } from '../../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
-import { FUNDING_TERMS_VERSION, PRIVACY_LEGAL_RETENTION_TEXT, PRIVACY_RETENTION_TEXT } from '../../../lib/funding/policy';
+import {
+  FUNDING_PRIVACY_SECTION_HEADINGS,
+  FUNDING_TERMS_VERSION,
+  PRIVACY_LEGAL_RETENTION_TEXT,
+  PRIVACY_RETENTION_TEXT,
+} from '../../../lib/funding/policy';
 import type { Locale } from '../../../lib/i18n';
-import { POLICY_COPY_BY_LOCALE } from '../privacy-policy';
 
 /**
  * 약관 제13조가 가리키는 처리방침 항의 범위 — **제목을 문자열로 복제하지 않는다.**
@@ -14,9 +18,7 @@ import { POLICY_COPY_BY_LOCALE } from '../privacy-policy';
  * 정본(POLICY_COPY_BY_LOCALE.ko)에서 '펀딩'으로 시작하는 항의 실제 제목을 끌어와,
  * 처리방침에서 항을 추가·개명하면 약관 문장도 함께 따라오게 한다.
  */
-const FUNDING_PRIVACY_SECTIONS = POLICY_COPY_BY_LOCALE.ko.sections
-  .map((section) => section.heading)
-  .filter((heading) => /^\d+\. 펀딩/.test(heading));
+const FUNDING_PRIVACY_SECTIONS = FUNDING_PRIVACY_SECTION_HEADINGS;
 
 export const FUNDING_PRIVACY_SECTION_REFERENCE = FUNDING_PRIVACY_SECTIONS.length === 0
   ? '개인정보 처리방침'
