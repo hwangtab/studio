@@ -216,11 +216,16 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
           {/* prefetch={false}: 본문 fold 내 button CTA들의 무거운 SSG JSON
               자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
           <div className="flex flex-wrap justify-center gap-4">
-            <Link href={getLink('/pricing')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors">
+            <Link href={getLink('/pricing')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark">
               {t('nav.pricing')}
             </Link>
             {/* 같은 줄의 형제 둘이 rounded-lg 카드형 버튼이라 반경·굵기만 넘겨 맞춘다.
-                화살표는 형제와 어긋나므로 끈다. 색 3규칙과 포커스 링은 pill에서 온다. */}
+                화살표는 형제와 어긋나므로 끈다. 색 3규칙과 포커스 링은 pill에서 온다.
+                형제 둘의 링 알파도 pill과 같은 /70이다 — SC 1.4.11은 3:1을 요구하는데
+                /40은 라이트 2.04:1로 "있지만 안 보이는" 링이 된다(정본 §5). 솔리드
+                pricing 버튼은 같은 파일 primaryActionClassName과 같은 흰 링(오프셋
+                primary-dark 위 5.14:1), 회색 아웃라인 버튼은 페이지 표면 위에 놓이므로
+                pill과 같은 primary 링(라이트 3.84:1 · 다크 4.06:1)을 쓴다. */}
             <ServiceLinkPill
               href={getLink('/contact')}
               tone="primary"
@@ -229,7 +234,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
             >
               {t('nav.contact')}
             </ServiceLinkPill>
-            <Link href={getLink('/studio-info')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-lighter rounded-lg font-medium transition-colors">
+            <Link href={getLink('/studio-info')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-lighter rounded-lg font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
               {t('nav.equipment')}
             </Link>
           </div>

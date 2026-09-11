@@ -287,8 +287,14 @@ JSON을 한꺼번에 당겨오는 것을 막는다), 라벨 뒤 화살표는 `sh
 
 `ServiceLinkPill.test.tsx`가 tone 3종의 포커스 링·`dark:hover:text-white`·다크 텍스트 토큰을
 렌더 className으로 고정하고, `tailwind.config.test.ts`의 「아웃라인 pill은 손으로 다시 짜지
-않는다」가 `border-2` + `border-{brand}` + `text-{brand}` 조합을 손으로 다시 심는 것을 CI에서
-막는다(예외 1건 — 링크가 아닌 공유 `<button>`).
+않는다」가 `border-{brand}` + `text-{brand}` + `hover:bg-{같은 brand}` 조합을 손으로 다시 심는
+것을 CI에서 막는다(예외 1건 — 링크가 아닌 공유 `<button>`). **조건에 `border-2`를 넣지 않는
+이유**: 흡수한 셸 둘은 `border-2`가 JSX 템플릿에 있고 색은 별도 상수에 있는 형태였다
+(`ServiceQuickLinksSection`의 옛 `COLOR_CLASS`, 연습실 `ServiceLinksSection`의 per-link
+className) — 같은 리터럴에서 `border-2`를 요구하면 그 형태로 되돌려도 가드가 초록이다.
+스캔 범위도 카카오 토큰 가드와 같은 `components`·`pages`·`data`·`lib`·`utils`의 `.ts`까지다
+(pill 클래스가 상수 파일로 옮겨가면 보이지 않으므로). 라이트 고정 화면은 다른 가드와 같게
+면제한다 — 강제하면 admin·계약 서명 화면에 `dark:` 클래스를 심게 된다.
 
 ### 배지
 
@@ -305,11 +311,32 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 
 | 표면 | 링 색 / 오프셋 색 |
 |---|---|
-| 일반 배경 | `ring-primary/40` + `ring-offset-white dark:ring-offset-gray-900` |
+| 일반 배경 | `ring-primary/70 dark:ring-primary-lighter/70` + `ring-offset-white dark:ring-offset-gray-900` |
+| 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
 | 카카오 옐로 버튼 | `ring-kakao-ink` + 표면에 맞는 오프셋 |
-| 어두운 히어로 이미지 위 | `ring-white/70` + `ring-offset-black/20` |
+| 어두운 히어로 이미지 위 / 솔리드 브랜드 버튼 | `ring-white/70` + 표면색 오프셋(`ring-offset-black/20`·`ring-offset-primary-dark`) |
 
 터치 타깃은 최소 44×44px(`min-h-[44px]` 또는 `h-11`). 아이콘 전용 버튼에는 `aria-label`.
+
+### 알파가 낮으면 "있지만 안 보이는" 링이 된다 — 기준은 4.5:1이 아니라 **3:1**
+
+포커스 표시기는 텍스트가 아니라 **WCAG 2.2 SC 1.4.11(비텍스트 대비)**의 대상이고, 요구값은
+**3:1**이다. 그리고 링은 표면색 위에 알파로 그려지므로 재는 대상은 토큰 원색이 아니라
+**"링 합성색 vs 표면색"**이다. 이 문서가 오랫동안 표준으로 적어 온 `/40`은 그 기준을 어디서도
+통과하지 못한다(실측, `getComputedStyle`의 `boxShadow`에서 읽은 실제 링 색 기준):
+
+| 알파 | 라이트(#fff) | 다크(gray-900 #030712, 원색) | 다크(밝은 짝) |
+|---|---|---|---|
+| `/40` | primary 2.04 · secondary 2.04 · accent 1.83 ✗ | 1.33 · 1.37 · 1.47 ✗ | 2.03 · 1.74 · 2.09 ✗ |
+| `/70` | **3.84 · 3.69 · 3.11** ✓ | 1.91 · 2.10 · 2.32 ✗ | **4.06 · 3.22 · 4.28** ✓ |
+
+읽는 법 두 가지:
+
+1. **알파는 `/70`**. `/40`은 링을 "주기는 했는데 보이지 않는" 상태다 — 코드 리뷰도 가드도
+   클래스가 있으면 통과시키므로 육안·실측 말고는 드러나지 않는다.
+2. **다크에서는 원색을 쓰지 않는다.** 링도 텍스트와 같은 논리로 밝은 짝
+   (`primary-lighter`·`secondary-light`·`accent-light`)을 써야 3:1을 넘는다. gray-900 위
+   원색은 `/70`에서도 1.91~2.32:1로 미달이다.
 
 ## 6. 모션
 
@@ -378,6 +405,7 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 |---|---|
 | 대비 가드가 줄 단위라 hover 색과 텍스트 색이 **다른 줄**에 있으면 못 잡는다 | pill 45곳은 `ServiceLinkPill`로 흡수돼 더는 이 형태가 아니다. 남은 자리(`ServiceLinksSection`은 해소)에 대해서는 hover 실측 CI화가 근본 해법 |
 | 대비 측정이 그라디언트·사진 배경 위 텍스트를 못 잰다 | 투명 헤더가 히어로 사진 위에 있어 스크립트가 흰색으로 폴백한다. 그 자리는 육안 확인에 의존 |
+| **저장소의 거의 모든 `focus-visible` 링이 SC 1.4.11(3:1) 미달** | 이 문서 §5가 지금까지 `ring-primary/40`을 표준으로 말해 왔고 코드가 그대로 따랐다 — 라이트 2.04:1, 다크 1.33:1이라 링이 **있지만 보이지 않는다**. `ServiceLinkPill`과 `portfolio/[id]` 하단 CTA 줄만 `/70`(+ 다크 밝은 짝)로 고쳤고 **나머지는 별건이다**. 같은 파일의 공유 `<button>`(`ring-primary/40`)도 아직 남아 있다. 근본 해법은 ①§5 표를 따라 남은 `ring-*/40`을 일괄 `/70`으로 올리고 ②알파 `/40` 이하의 포커스 링을 금지하는 가드를 `tailwind.config.test.ts`에 추가하는 것 |
 | `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
 | 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |

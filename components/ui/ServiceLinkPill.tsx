@@ -19,7 +19,10 @@ import { cn } from '../../lib/utils';
  * 2. `dark:text-*`를 쓰면 `dark:hover:text-white`를 **반드시** 함께 쓴다. Tailwind가 내는
  *    `.dark\:text-x:is(.dark *)`와 `.hover\:text-white:hover`는 명시도가 둘 다 (0,2,0)으로
  *    같고 `dark:` 규칙이 CSS 뒤에 나와 hover 색이 진다. `dark:hover:`는 (0,3,0)이라 이긴다.
- * 3. 인터랙티브 요소에는 `focus-visible` 링(정본 §5)과 44px 터치 타깃.
+ * 3. 인터랙티브 요소에는 `focus-visible` 링(정본 §5)과 44px 터치 타깃. 링 **알파는 /70**이고
+ *    다크에서는 텍스트와 같은 논리로 밝은 짝을 쓴다 — 포커스 표시기는 텍스트가 아니라
+ *    WCAG 2.2 SC 1.4.11(3:1)의 대상이고, 기준은 "링 합성색 vs 표면색"이다. 정본이 표준으로
+ *    말해 온 `/40`은 라이트 2.04:1, 다크 1.33:1로 **있지만 안 보이는 링**이다(정본 §5·§9).
  *
  * `prefetch={false}`가 기본값인 이유: 이 pill들은 본문 fold 안에 무더기로 놓이는데,
  * 자동 prefetch를 두면 목적지 페이지의 무거운 SSG JSON을 한꺼번에 받는다. hover/focus
@@ -40,11 +43,14 @@ const BASE =
 
 const TONE_CLASS: Record<ServiceLinkTone, string> = {
   primary:
-    'border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:text-white focus-visible:ring-primary/40',
+    'border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:text-white ' +
+    'focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70',
   secondary:
-    'border-secondary text-secondary dark:text-secondary-light hover:bg-secondary hover:text-white dark:hover:text-white focus-visible:ring-secondary/40',
+    'border-secondary text-secondary dark:text-secondary-light hover:bg-secondary hover:text-white dark:hover:text-white ' +
+    'focus-visible:ring-secondary/70 dark:focus-visible:ring-secondary-light/70',
   accent:
-    'border-accent text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:text-white focus-visible:ring-accent/40',
+    'border-accent text-accent dark:text-accent-light hover:bg-accent hover:text-white dark:hover:text-white ' +
+    'focus-visible:ring-accent/70 dark:focus-visible:ring-accent-light/70',
 };
 
 /**

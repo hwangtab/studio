@@ -8,10 +8,25 @@ import ServiceLinkPill, { serviceLinkPillClass, type ServiceLinkTone } from './S
  * 이 pill은 접근성 회귀 두 번의 진원지였다(정본 §1 3라운드·§5). 세 규칙을 렌더 결과
  * className으로 고정한다 — 컴포넌트 안에서 토큰을 "정리"하다 조용히 깨지는 것을 막는다.
  */
-const TONES: { tone: ServiceLinkTone; darkText: string; ring: string }[] = [
-  { tone: 'primary', darkText: 'dark:text-primary-lighter', ring: 'focus-visible:ring-primary/40' },
-  { tone: 'secondary', darkText: 'dark:text-secondary-light', ring: 'focus-visible:ring-secondary/40' },
-  { tone: 'accent', darkText: 'dark:text-accent-light', ring: 'focus-visible:ring-accent/40' },
+const TONES: { tone: ServiceLinkTone; darkText: string; ring: string; darkRing: string }[] = [
+  {
+    tone: 'primary',
+    darkText: 'dark:text-primary-lighter',
+    ring: 'focus-visible:ring-primary/70',
+    darkRing: 'dark:focus-visible:ring-primary-lighter/70',
+  },
+  {
+    tone: 'secondary',
+    darkText: 'dark:text-secondary-light',
+    ring: 'focus-visible:ring-secondary/70',
+    darkRing: 'dark:focus-visible:ring-secondary-light/70',
+  },
+  {
+    tone: 'accent',
+    darkText: 'dark:text-accent-light',
+    ring: 'focus-visible:ring-accent/70',
+    darkRing: 'dark:focus-visible:ring-accent-light/70',
+  },
 ];
 
 const classesOf = (tone: ServiceLinkTone, className?: string): string[] => {
@@ -23,7 +38,7 @@ const classesOf = (tone: ServiceLinkTone, className?: string): string[] => {
   return (screen.getByRole('link').getAttribute('class') ?? '').split(/\s+/).filter(Boolean);
 };
 
-describe.each(TONES)('ServiceLinkPill — $tone', ({ tone, darkText, ring }) => {
+describe.each(TONES)('ServiceLinkPill — $tone', ({ tone, darkText, ring, darkRing }) => {
   it('focus-visible 포커스 링을 준다 (정본 §5 — 45곳 전부 빠져 있던 결함)', () => {
     const classes = classesOf(tone);
     for (const required of [
@@ -33,6 +48,7 @@ describe.each(TONES)('ServiceLinkPill — $tone', ({ tone, darkText, ring }) => 
       'focus-visible:ring-offset-white',
       'dark:focus-visible:ring-offset-gray-900',
       ring,
+      darkRing,
     ]) {
       expect(classes).toContain(required);
     }
@@ -84,7 +100,8 @@ describe('ServiceLinkPill — 동작', () => {
     expect(merged).not.toContain('py-3');
     // 덮어써도 색 3규칙과 포커스 링은 남는다.
     expect(merged).toContain('dark:hover:text-white');
-    expect(merged).toContain('focus-visible:ring-primary/40');
+    expect(merged).toContain('focus-visible:ring-primary/70');
+    expect(merged).toContain('dark:focus-visible:ring-primary-lighter/70');
     expect(merged).toContain('min-h-[44px]');
   });
 });
