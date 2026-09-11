@@ -74,3 +74,40 @@ it('환불 요청 취소는 사유를 받고, 빈 사유면 요청을 보내지 
   fireEvent.click(screen.getByRole('button', { name: '환불 요청 취소' }));
   expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'clear_refund_request', reason: '후원자 전화 철회' });
 });
+
+/**
+ * run()의 router.replace는 props만 갱신하고 remount하지 않는다. 메모 state가 재동기화되지
+ * 않으면, 환불 요청 취소가 덧붙인 기록이 textarea에는 안 보이고 '메모 저장' 한 번에
+ * 통째로 덮여 사라진다 — 흔적을 남기려고 만든 장치가 같은 화면의 다음 클릭으로 무너진다.
+ */
+it('환불 요청 취소가 덧붙인 기록이 메모 칸에 반영되고, 이어서 저장해도 지워지지 않는다', () => {
+  (patchPledge as jest.Mock).mockReset().mockResolvedValue({ ok: true });
+  const before: AdminPledgeItem = {
+    ...PLEDGE, adminMemo: '기존 메모', refundRequested: true, refundRequestedAt: '2026-10-16T02:00:00Z',
+  };
+  const { rerender } = render(<AdminFundingDetailPage pledge={before} refundableAmount={30000} />);
+  expect(screen.getByLabelText('관리자 메모')).toHaveValue('기존 메모');
+
+  // 서버가 메모에 항목을 덧붙이고 요청 표시를 지운 뒤의 props (router.replace와 같은 상태).
+  const appended = '기존 메모\n[2026-10-16] 환불 요청 취소 — 후원자 전화 철회';
+  rerender(
+    <AdminFundingDetailPage
+      pledge={{ ...before, adminMemo: appended, refundRequested: false }}
+      refundableAmount={30000}
+    />,
+  );
+  expect(screen.getByLabelText('관리자 메모')).toHaveValue(appended);
+
+  fireEvent.click(screen.getByRole('button', { name: '메모 저장' }));
+  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'set_memo', adminMemo: appended });
+});
+
+// 서버 값이 그대로인 액션에서는 아직 저장하지 않은 입력이 지워지면 안 된다.
+it('메모가 그대로인 갱신에서는 입력 중인 초안을 유지한다', () => {
+  (patchPledge as jest.Mock).mockReset().mockResolvedValue({ ok: true });
+  const pledge: AdminPledgeItem = { ...PLEDGE, adminMemo: '기존 메모' };
+  const { rerender } = render(<AdminFundingDetailPage pledge={pledge} refundableAmount={30000} />);
+  fireEvent.change(screen.getByLabelText('관리자 메모'), { target: { value: '작성 중인 초안' } });
+  rerender(<AdminFundingDetailPage pledge={{ ...pledge, fulfillmentStatus: 'delivered' }} refundableAmount={30000} />);
+  expect(screen.getByLabelText('관리자 메모')).toHaveValue('작성 중인 초안');
+});
