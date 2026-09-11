@@ -247,6 +247,31 @@ describe('confirmFundingPledge', () => {
       expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
     });
 
+    it('SSR 확정 중 그 승인이 유발한 웹훅이 도착해도 확정 메일은 1통 (후속 리뷰 Important 1)', async () => {
+      // SSR이 batch를 커밋해 센티널을 심고 메일(0.3~1.5초)을 보내는 동안, 같은 승인이 유발한
+      // 토스 DONE 웹훅이 1~3초 안에 도착한다. 선점이 없으면 그 웹훅이 status='paid' + 센티널을
+      // 보고 확정 메일을 한 통 더 보낸다.
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: 'dup@example.com', customerPhone: '010-1' }), PROJECT, reward('mail'), NOW,
+      );
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      let webhookOutcome: unknown;
+      mockEmail.mockImplementationOnce(async () => {
+        webhookOutcome = await confirmFundingPledge(
+          { orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 },
+          { trustedByWebhook: true },
+        );
+        return null;
+      });
+
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      expect(r).toMatchObject({ ok: true, emailSent: true });
+      expect(webhookOutcome).toMatchObject({ ok: true });
+      expect(mockEmail).toHaveBeenCalledTimes(1); // 정확히 1통
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
+    });
+
     it('센티널이 없으면 웹훅 재도착은 메일을 다시 보내지 않는다', async () => {
       const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
@@ -476,7 +501,12 @@ describe('confirmFundingPledge', () => {
   });
 
   it('거절 계열(allowlist) 코드만 orders.status를 failed로 남긴다', async () => {
-    for (const code of ['REJECT_CARD_COMPANY', 'INVALID_CARD_EXPIRATION', 'EXCEED_MAX_DAILY_PAYMENT_COUNT', 'NOT_ENOUGH_BALANCE']) {
+    for (const code of [
+      'REJECT_CARD_COMPANY', 'INVALID_CARD_EXPIRATION', 'EXCEED_MAX_DAILY_PAYMENT_COUNT', 'NOT_ENOUGH_BALANCE',
+      // 접두사 계열에서 빠져 있던 두 가지 — INVALID_로 시작하지만 카드 거절이고,
+      // INVALID_ACCOUNT_INFO는 뒤에 접미어가 붙는 변형이 있다.
+      'INVALID_REJECT_CARD', 'INVALID_ACCOUNT_INFO_RESEND',
+    ]) {
       const c = await createFundingPledge(payloadFor({ customerEmail: `${code}@example.com` }), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce({ ok: false, code, message: '카드사 거절' });

@@ -31,7 +31,7 @@ const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
  * ALREADY_PROCESSED_CODE도 같은 이유로 양쪽에 있다).
  */
 const DECLINE_CODE_PATTERN =
-  /^(REJECT_|EXCEED_MAX_|INVALID_CARD|INVALID_STOPPED_CARD$|INVALID_ACCOUNT_INFO$|NOT_ENOUGH_BALANCE$|NOT_AVAILABLE_BANK$|CARD_PROCESSING_ERROR$|PAY_PROCESS_(CANCELED|ABORTED)$)/;
+  /^(REJECT_|INVALID_REJECT_CARD|EXCEED_MAX_|INVALID_CARD|INVALID_STOPPED_CARD$|INVALID_ACCOUNT_INFO|NOT_ENOUGH_BALANCE$|NOT_AVAILABLE_BANK$|CARD_PROCESSING_ERROR$|PAY_PROCESS_(CANCELED|ABORTED)$)/;
 
 /** 고객 결제수단이 실제로 거절된 경우인가 — 참일 때만 orders.status를 failed로 낙인한다. */
 const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(code);
@@ -71,6 +71,29 @@ const recordEmailResult = async (orderId: string, orderNo: string, emailError: s
   }
 };
 
+/**
+ * 확정 메일을 **정확히 한 번** 보낸다 — 발송권을 센티널 선점으로 정한다.
+ *
+ * 취소 가드와 같은 패턴이다(읽어서 검사하지 않고 `UPDATE … WHERE notification_error =
+ * 'send_pending'`으로 하나만 이기게 한다). 이게 없으면 SSR 확정이 메일(0.3~1.5초)을 보내는
+ * 동안 **바로 그 승인이 유발한** 토스 DONE 웹훅이 1~3초 안에 도착해, status='paid' + 센티널을
+ * 보고 확정 메일을 한 통 더 보낸다. rowsAffected 1을 받은 쪽만 발송한다.
+ *
+ * undefined는 "이번 호출이 보내지 않았다"는 뜻이다(success()의 emailSent 의미 그대로).
+ */
+const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean | undefined> => {
+  const claim = await getDb().run(
+    sql`UPDATE orders SET notification_error = NULL WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
+  );
+  if (Number(claim.rowsAffected) !== 1) {
+    console.error('[funding-confirm] 확정 메일을 다른 경로가 이미 선점 — 중복 발송하지 않는다', { orderNo: order.orderNo });
+    return undefined;
+  }
+  const emailError = await deliverConfirmedEmails(order);
+  await recordEmailResult(order.id, order.orderNo, emailError);
+  return emailError === null;
+};
+
 const GENERIC = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const EXPIRED = '결제 대기 시간이 만료된 후원입니다. 다시 후원해 주세요.';
 const RECORDING_FAILED = '결제는 완료되었으나 후원 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
@@ -107,9 +130,7 @@ export const confirmFundingPledge = async (
       // 여기서 조기 반환하지 않고 메일만 다시 보낸다(H — 복구 경로가 닫히지 않게).
       if (order.notificationError !== SEND_PENDING) return success(order);
       console.error('[funding-confirm] 확정 메일 미발송 센티널 발견 — 웹훅 경로에서 재발송', { orderNo: order.orderNo });
-      const emailError = await deliverConfirmedEmails(order);
-      await recordEmailResult(order.id, order.orderNo, emailError);
-      return success(order, emailError === null);
+      return success(order, await deliverConfirmedEmailsOnce(order));
     }
     // success 페이지 새로고침 멱등성 — 단, 소유 증명이 있을 때만이다.
     // success()는 manageToken을 그대로 담고, success.tsx는 그 토큰으로 manage URL을 만들어
@@ -282,11 +303,10 @@ export const confirmFundingPledge = async (
 
   const fresh = (await findFundingOrderByOrderNo(order.orderNo)) ?? order;
   // 결제는 이미 성공했다 — 메일 예외나 기록 실패가 confirm 결과를 뒤집으면 안 된다.
-  // 성공이면 null을 써서 위 batch가 심은 센티널을 지운다(실패면 사유가 센티널을 대체해
-  // 관리자 화면의 '메일 실패' 목록에 잡힌다).
-  const emailError = await deliverConfirmedEmails(fresh);
-  await recordEmailResult(order.id, order.orderNo, emailError);
-  return success(fresh, emailError === null);
+  // 발송권은 센티널 선점으로 정한다: 이 승인이 유발한 토스 DONE 웹훅이 메일 발송 중에
+  // 도착해도 확정 메일이 두 통 나가지 않는다. 성공이면 null이 센티널을 지우고, 실패면
+  // 사유가 센티널을 대체해 관리자 화면·healthCheck의 '메일 실패' 목록에 잡힌다.
+  return success(fresh, await deliverConfirmedEmailsOnce(fresh));
 };
 
 /**

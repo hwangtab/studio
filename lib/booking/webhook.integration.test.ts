@@ -31,6 +31,10 @@ jest.mock('../funding/email', () => ({
 // eslint-disable-next-line import/first
 import { processTossWebhook } from './webhook';
 // eslint-disable-next-line import/first
+import { confirmBookingPayment } from './confirm';
+// eslint-disable-next-line import/first
+import { createBookingEvent } from './gcal';
+// eslint-disable-next-line import/first
 import { cancelPayment, confirmPayment, fetchPayment } from './toss';
 // eslint-disable-next-line import/first
 import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './email';
@@ -148,6 +152,7 @@ beforeEach(async () => {
   mockCancelMail.mockResolvedValue(null);
   (sendBookingConfirmedEmails as jest.Mock).mockResolvedValue(null);
   (sendMixingOrderConfirmedEmails as jest.Mock).mockResolvedValue(null);
+  (createBookingEvent as jest.Mock).mockResolvedValue('evt1');
   jest.spyOn(Date, 'now').mockReturnValue(NOW.getTime());
 });
 
@@ -311,6 +316,105 @@ describe('토스 콘솔 취소 통지·무로그 조기 반환 (항목 4)', () =
   });
 });
 
+describe('SSR 확정과 그 승인이 유발한 웹훅이 겹칠 때 (후속 리뷰 Important 1·2)', () => {
+  const doneFor = (orderNo: string, amount: number, paymentKey = 'pk_b') => ({
+    ok: true,
+    payment: { paymentKey, orderId: orderNo, status: 'DONE', totalAmount: amount, method: '카드' },
+  });
+
+  /** SSR 확정이 후처리 중일 때 웹훅이 도착하는 상황을 재현한다. */
+  const confirmWithWebhookDuring = async (
+    hook: 'gcal' | 'email',
+  ): Promise<{ orderNo: string; webhook: { status: number } | undefined }> => {
+    // SSR 경로는 선점 만료를 Date.now()와 created_at(실제 벽시계)으로 비교한다 — NOW 픽스처를
+    // 그대로 두면 미래 시각이라 정상 주문이 만료로 읽힌다. 이 묶음은 실제 시계를 쓴다.
+    (Date.now as unknown as jest.SpyInstance).mockRestore();
+    const a = await createBookingOrder(bookingPayload(), NOW);
+    if (!a.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+    mockFetch.mockResolvedValue(doneFor(a.orderNo, a.totalAmount));
+    let webhook: { status: number } | undefined;
+    const arrive = async () => {
+      webhook = await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } });
+    };
+    if (hook === 'gcal') {
+      (createBookingEvent as jest.Mock).mockImplementationOnce(async () => {
+        await arrive();
+        return 'evt1';
+      });
+    } else {
+      (sendBookingConfirmedEmails as jest.Mock).mockImplementationOnce(async () => {
+        await arrive();
+        return null;
+      });
+    }
+    const r = await confirmBookingPayment({ orderNo: a.orderNo, paymentKey: 'pk_b', amount: a.totalAmount });
+    expect(r).toMatchObject({ ok: true, emailSent: true });
+    return { orderNo: a.orderNo, webhook };
+  };
+
+  it('캘린더 등록 중(0.2~0.8초)에 웹훅이 와도 확정 메일 1통·캘린더 1건', async () => {
+    const { orderNo, webhook } = await confirmWithWebhookDuring('gcal');
+    expect(webhook).toEqual({ status: 200 });
+    expect(createBookingEvent).toHaveBeenCalledTimes(1);
+    expect(sendBookingConfirmedEmails).toHaveBeenCalledTimes(1);
+    expect((await findOrderByOrderNo(orderNo))?.notificationError).toBeNull();
+  });
+
+  it('확정 메일 발송 중(0.3~1.5초)에 웹훅이 와도 확정 메일은 1통', async () => {
+    const { orderNo, webhook } = await confirmWithWebhookDuring('email');
+    expect(webhook).toEqual({ status: 200 });
+    expect(sendBookingConfirmedEmails).toHaveBeenCalledTimes(1);
+    expect(createBookingEvent).toHaveBeenCalledTimes(1);
+    expect((await findOrderByOrderNo(orderNo))?.notificationError).toBeNull();
+  });
+
+  it('센티널 복구는 캘린더 구멍도 함께 메운다 — gcal_event_id·gcal_error가 둘 다 null이면 등록한다', async () => {
+    const a = await createBookingOrder(bookingPayload(), NOW);
+    if (!a.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+    mockFetch.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+    await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } });
+    // batch 직후 프로세스가 죽은 상태: 센티널만 남고 gcal·메일 둘 다 못 갔다.
+    await client.execute({ sql: `UPDATE orders SET notification_error = 'send_pending' WHERE order_no = ?`, args: [a.orderNo] });
+    await client.execute('UPDATE bookings SET gcal_event_id = NULL, gcal_error = NULL');
+    (createBookingEvent as jest.Mock).mockClear();
+    (sendBookingConfirmedEmails as jest.Mock).mockClear();
+
+    mockFetch.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+    await client.execute('DELETE FROM webhook_events');
+    await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } });
+
+    expect(createBookingEvent).toHaveBeenCalledTimes(1);
+    expect(sendBookingConfirmedEmails).toHaveBeenCalledTimes(1);
+    const order = await findOrderByOrderNo(a.orderNo);
+    expect(order?.bookings[0].gcalEventId).toBe('evt1');
+    expect(order?.notificationError).toBeNull();
+  });
+
+  it('이미 등록됐거나 실패 기록이 있으면 복구가 캘린더 이벤트를 다시 만들지 않는다', async () => {
+    for (const setup of ["gcal_event_id = 'already'", "gcal_error = 'create(2026-10-15): 500'"]) {
+      await client.execute('DELETE FROM webhook_events');
+      await client.execute('DELETE FROM payments');
+      await client.execute('DELETE FROM bookings');
+      await client.execute('DELETE FROM orders');
+      const a = await createBookingOrder(bookingPayload(), NOW);
+      if (!a.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+      mockFetch.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+      await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } });
+      await client.execute({ sql: `UPDATE orders SET notification_error = 'send_pending' WHERE order_no = ?`, args: [a.orderNo] });
+      await client.execute(`UPDATE bookings SET gcal_event_id = NULL, gcal_error = NULL, ${setup}`);
+      (createBookingEvent as jest.Mock).mockClear();
+
+      mockFetch.mockResolvedValueOnce(doneFor(a.orderNo, a.totalAmount));
+      await client.execute('DELETE FROM webhook_events');
+      await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } });
+      expect(createBookingEvent).not.toHaveBeenCalled();
+    }
+  });
+});
+
 describe('예약 웹훅 복구 대칭 (항목 5)', () => {
   const doneFor = (orderNo: string, amount: number, paymentKey = 'pk_b') => ({
     ok: true,
@@ -353,7 +457,9 @@ describe('예약 웹훅 복구 대칭 (항목 5)', () => {
     expect(await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } })).toEqual({ status: 200 });
 
     const order = await findOrderByOrderNo(a.orderNo);
-    expect(order?.status).not.toBe('paid');
+    // status는 여전히 pending이다 — 막은 것은 상태가 아니라 batch WHERE의 sessionHoldGuard다.
+    // (autoCancelStaleApproval의 계약: "0행 = pending이 아니다"가 더 이상 성립하지 않는다.)
+    expect(order?.status).toBe('pending');
     expect(order?.bookings[0].status).toBe('pending'); // confirmed로 넘어가지 않는다
     expect(mockCancel).toHaveBeenCalledTimes(1);
     const rows = await refundRows(a.orderNo);

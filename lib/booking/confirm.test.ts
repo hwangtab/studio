@@ -49,6 +49,13 @@ const setCallsOf = (db: MockDb): object[] =>
     ? (db.update.mock.results[0].value.set as jest.Mock).mock.calls.map((c: unknown[]) => c[0] as object)
     : [];
 
+/**
+ * db.run(sql`…`) 호출을 문자열로 본다 — 확정 경로도 센티널 선점에 db.run을 쓰므로
+ * "run이 아예 안 불렸다"로는 failed 낙인 여부를 판정할 수 없다. drizzle SQL 객체의
+ * queryChunks에 실린 리터럴을 그대로 훑는다.
+ */
+const runSqlTextsOf = (db: MockDb): string[] => db.run.mock.calls.map(([q]) => JSON.stringify(q));
+
 /** db.insert(...).values(...) 호출 인자 전체 — insert 체인도 테이블과 무관하게 같은 values mock을 공유한다. */
 const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
   db.insert.mock.results.length
@@ -160,7 +167,10 @@ describe('confirmBookingPayment', () => {
     }
   });
 
-  it.each(['REJECT_CARD_COMPANY', 'INVALID_CARD_EXPIRATION', 'EXCEED_MAX_DAILY_PAYMENT_COUNT', 'NOT_ENOUGH_BALANCE'])(
+  it.each([
+    'REJECT_CARD_COMPANY', 'INVALID_CARD_EXPIRATION', 'EXCEED_MAX_DAILY_PAYMENT_COUNT', 'NOT_ENOUGH_BALANCE',
+    'INVALID_REJECT_CARD', 'INVALID_ACCOUNT_INFO_RESEND',
+  ])(
     '%s는 실제 거절이므로 failed로 낙인한다',
     async (code) => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
@@ -311,7 +321,8 @@ describe('confirmBookingPayment', () => {
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
     expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: true });
     expect(db.batch).toHaveBeenCalled(); // 정상 승인과 같은 batch 경로
-    expect(db.run).not.toHaveBeenCalled(); // orders를 failed로 마킹하는 db.run이 없다
+    // 확정 경로의 db.run은 센티널 선점뿐이다 — orders를 failed로 마킹하는 문장은 없어야 한다.
+    expect(runSqlTextsOf(db).some((t) => t.includes('failed'))).toBe(false);
     // rawResponse는 재조회한 payment로 남는다.
     const paymentInsert = insertValuesCallsOf(db).find((c) => 'paymentKey' in c);
     expect(paymentInsert).toMatchObject({ paymentKey: 'pk', method: '카드' });
@@ -479,14 +490,18 @@ describe('confirmBookingPayment', () => {
   it('bookings가 없는 주문은 후처리를 생략하고 방어 로그만 남긴 채 성공을 반환한다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ bookings: [] }));
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    const db = mockDb();
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't', emailSent: false });
     expect(createBookingEvent).not.toHaveBeenCalled();
     expect(sendBookingConfirmedEmails).not.toHaveBeenCalled();
     expect(consoleErrorSpy).toHaveBeenCalledWith(
       '[booking-confirm] bookings 없는 주문 — 후처리 생략',
       expect.objectContaining({ orderNo: 'SNB-1' }),
     );
+    // 센티널은 선점에서 지워지고 사람이 읽을 사유로 대체된다 — send_pending으로 영구 잔류하지 않는다.
+    const notice = setCallsOf(db).find((c) => 'notificationError' in c && c.notificationError !== 'send_pending');
+    expect(notice).toMatchObject({ notificationError: expect.stringContaining('확정 후처리 대상 행 없음') });
   });
 
   // C-1: 승인 왕복 사이에 주문이 pending을 벗어나면 batch의 orders UPDATE가 0행이 된다.
