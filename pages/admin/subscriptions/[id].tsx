@@ -239,7 +239,7 @@ export default function AdminSubscriptionDetailPage({
                 >
                   {STATUS_LABELS[subscription.status] ?? subscription.status}
                 </span>
-                <span className="text-gray-400 text-xs font-mono">{subscription.id}</span>
+                <span className="text-gray-500 text-xs font-mono">{subscription.id}</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -335,7 +335,7 @@ export default function AdminSubscriptionDetailPage({
                   </table>
                 </div>
               )}
-              <p className="mt-4 text-xs text-gray-400">
+              <p className="mt-4 text-xs text-gray-500">
                 회차 환불은 토스 콘솔에서 직접 취소해 주세요. 웹훅이 취소 상태를 자동으로 동기화합니다.
               </p>
             </div>

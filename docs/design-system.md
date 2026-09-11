@@ -64,6 +64,91 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 보여야 하는 법적 문서). 두 경로에도 `theme-init.js`가 `<html class="dark">`를 붙이므로, 라이트
 고정은 "다크 스타일을 안 쓰는 것"이 아니라 **`dark:` 짝을 라이트 값으로 되돌려 쓰는 것**이다.
 
+#### 브랜드색 텍스트는 다크 짝을 함께 쓴다
+
+`primary`·`secondary`·`accent`의 DEFAULT는 **흰 배경에서 AA를 통과하도록** 고른 값이다
+(secondary·accent는 그래서 -700 계열로 승격돼 있다). 같은 이유로 다크 배경에서는 반대로
+너무 어둡다. 2026-09-11 실측(프로덕션, 알파 합성 + 대형 텍스트 완화 적용)에서 8개 페이지
+1,273개 인터랙티브 요소 중 **41건**이 이것 때문에 미달했다.
+
+해결은 새 토큰이 아니라 **이미 있는 변형**이다. 배경 `gray-900`(`#030712`) 기준 실측:
+
+| 토큰 | 값 | 대비 | 다크 텍스트로 |
+|---|---|---|---|
+| `primary`(DEFAULT) | `#6d28d9` | 2.83:1 | ✗ |
+| `primary-light` | `#7c3aed` | 3.53:1 | ✗ (간발의 차로 미달 — 쓰지 말 것) |
+| `primary-lighter` | `#a78bfa` | 7.40:1 | ✓ |
+| `secondary`(DEFAULT) | `#be185d` | 3.33:1 | ✗ |
+| `secondary-light` | `#ec4899` | 5.71:1 | ✓ |
+| `accent`(DEFAULT) | `#047857` | 3.67:1 | ✗ |
+| `accent-light` | `#10b981` | 7.94:1 | ✓ |
+
+따라서 짝은 셋뿐이다 — `text-primary` + `dark:text-primary-lighter`,
+`text-secondary` + `dark:text-secondary-light`, `text-accent` + `dark:text-accent-light`.
+`hover:`·`group-hover:`·`focus-visible:` 같은 variant도 **같은 variant의 다크 짝**이 필요하다
+(`hover:text-primary` → `dark:hover:text-primary-lighter`). 아이콘은 `stroke`/`fill`이
+currentColor라 같은 텍스트 색 규칙을 그대로 따른다.
+
+`tailwind.config.test.ts`의 「브랜드색 텍스트의 다크 짝」이 CI에서 이를 강제한다. 텍스트가
+아닌 자리(체크박스·라디오의 채움색, `opacity-10` 장식 워터마크)만 `BRAND_TEXT_ALLOW`에
+**이유와 함께** 등재한다 — 이유 없이 넣으면 가드가 무의미해진다. 라이트 고정 경로
+(`pages/admin/**`·계약 서명·완료)는 스캔에서 제외된다: 흰 카드 위에 밝은 보라를 올리면
+대비가 **오히려** 깨진다.
+
+#### 다크 짝은 "있는지"가 아니라 "충분한지"를 본다 (2026-09-11 2라운드)
+
+1라운드 가드는 `dark:text-` 짝의 **존재**만 봤다. 그래서 `text-primary
+dark:text-primary-light`가 통과했는데 그 짝 자체가 3.53:1로 미달이었다 — 자물쇠를 걸고
+열쇠를 옆에 걸어 둔 꼴이다. 측정 범위도 링크·버튼(`a`·`button`)에 한정돼 있어
+`<span>`·`<div>`·`<strong>` 같은 일반 텍스트를 통째로 빠뜨렸다.
+
+범위를 **텍스트 노드를 직접 가진 모든 엘리먼트**로 넓혀 다시 재니 같은 8개 페이지에서
+**71건**이 더 나왔다(pricing 17 · practice-room 19 · recording 10 · release-project 9 ·
+portfolio 8 · 홈 4 · about 4). 세 부류였다.
+
+| 부류 | 원인 | 조치 |
+|---|---|---|
+| A | `dark:text-primary-light`(3.53:1) — 가장 많다 | 전부 `dark:text-primary-lighter`로 승격. `dark:text-accent`(3.67:1)·`dark:text-primary`(2.83:1)·`dark:text-primary/80`도 같이 |
+| B | 메타·캡션이 `dark:text-gray-500`(2.45:1)이거나 다크 짝이 아예 없음 | 아래 역할표대로 `dark:text-gray-400` |
+| C | portfolio·AudioPlayer의 임의 hex 패널 위 `dark:text-white/40`(3.78:1) | `dark:text-white/60`(7.4:1). 임의 hex 자체는 별도 부채로 남긴다 |
+
+대형 텍스트(24px↑ 또는 18.66px↑ bold)는 완화 기준 3:1이라 `primary-light`가 산술적으로는
+통과하지만 **함께 올렸다.** 클래스 문자열만 보고는 그 자리가 대형인지 알 수 없고, 같은
+컴포넌트(`PricingCard`·`PriceLeader`)가 작은 자리에 재사용되면 조용히 깨진다. 그래서
+`primary-light`는 크기와 무관하게 다크 짝으로 금지한다.
+
+`tailwind.config.test.ts`의 「다크 짝의 대비가 충분한가」가 이를 CI에서 강제한다. 예외는
+`DARK_BRAND_ALLOW`에 **이유와 함께** 등재한다(현재 1건 — `Button`의 `light` 옵트인).
+
+#### 다크 짝을 "추가하는 행위" 자체가 hover 색을 죽인다 (2026-09-11 3라운드)
+
+`dark:text-*`를 붙이는 순간 **같은 요소의 non-dark `hover:text-*`가 적용되지 않는다.**
+Tailwind가 내는 `.dark\:text-x:is(.dark *)`와 `.hover\:text-white:hover`는 명시도가
+둘 다 `(0,2,0)`으로 **같고**, `dark:` 규칙이 CSS에서 **뒤에** 나오기 때문이다. 1·2라운드
+가드는 "다크 짝이 있는가 / 충분한가"만 봤으므로 이 회귀를 초록 CI로 통과시켰다 — 53곳.
+
+아웃라인 pill(`border-2 border-primary text-primary dark:text-primary-lighter
+hover:bg-primary hover:text-white`)에서 hover 실측:
+
+| | 다크 짝 추가 전 | 추가 후(회귀) | `dark:hover:` 짝까지 넣은 뒤 |
+|---|---|---|---|
+| primary | 7.10:1 | **2.61:1** | 15.6:1 |
+| secondary | 5.48:1 | **1.71:1** | 8.6:1 |
+| accent | 6.04:1 | **2.16:1** | 6.4:1 |
+
+따라서 **`dark:text-*`와 `hover:text-*`는 항상 같이 다닌다** — `hover:text-white`에는
+`dark:hover:text-white`, `group-hover:text-primary-dark`에는 `dark:group-hover:text-primary-lighter`.
+`dark:hover:`는 명시도 `(0,3,0)`이라 둘 다 이긴다. `focus-visible:`·`focus:`도 같다.
+
+`tailwind.config.test.ts`의 「다크 짝이 variant 색을 덮어쓰지 않는가」가 이를 CI에서 막는다.
+같은 라운드에서 짝 검사 범위도 **줄 전체 → 문제 토큰이 든 문자열 리터럴**로 좁혔다:
+`isActive ? 'text-primary' : 'text-gray-900 dark:text-white'`에서 **다른 분기의**
+`dark:text-white`를 짝으로 오인해 활성 트랙 제목(2.64:1)을 통과시킨 적이 있다.
+가드가 면제하는 라이트 고정 계약 라우트도 이 문서와 같게 서명·완료 **두 장으로** 좁혔다.
+
+남은 부채: `AudioPlayer`·포트폴리오 카드의 `dark:bg-[#121212]`·`#1a1a1a` 같은 임의 hex.
+이번엔 그 위의 **텍스트 색만** 올렸고, 배경을 `gray` 토큰으로 바꾸는 것은 별건이다.
+
 본문 회색의 역할별 기본값:
 
 | 역할 | 라이트 | 다크 |
@@ -239,15 +324,38 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 5. 인터랙티브 요소에 `focus-visible` 링과 44px 터치 타깃이 있는가?
 6. 새로 만든 클래스명이 실제로 `tailwind.config.ts`에 정의돼 있는가? (0절)
 
-## 9. 미해결 부채 (2026-09-11 감사)
+## 9. 부채 현황
 
-| 항목 | 상태 |
+### 해소됨 (2026-09-11 감사 → 2026-09-12)
+
+| 항목 | 어떻게 |
 |---|---|
-| 스토리 본문(MarkdownRenderer) 제목 스케일이 정적 페이지와 다름 | 의도 확인 필요 — 마크다운은 반응형(`md:`) 스케일, 정적 페이지는 고정 |
-| `body-1`이 weight 300인데 실제 본문 상당수가 medium/semibold | 스케일을 실사용에 맞출지, 사용처를 스케일에 맞출지 미결 |
-| `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일 |
-| 히어로 오버레이 `[#a8c0ff]` + rgba가 4개 파일에 복붙 | 토큰화 대상 |
-| 카테고리 배지 3종(포트폴리오·스토리·프로젝트)의 색 체계가 서로 다름 | 맥락이 달라 색은 유지, 반경만 `rounded-full`로 통일 |
-| 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않음 |
-| 공개 컴포넌트 38곳에서 `bg-white`/`text-gray-900`에 `dark:` 짝 없음 | 푸터·내비처럼 고정 배경 위라 정상인 경우가 섞여 있어 개별 확인 필요 |
+| 정의 없이 쓰이던 `.typo-*` 3종 | 정의 추가 + 가드가 CI에서 미정의 사용을 막는다(§0) |
+| 버튼·폼·간격·색·타이포 원시 유틸리티 난립 | `Button`·`Field`·`Section` 프리미티브로 흡수, 역할 클래스 치환 |
+| 히어로 오버레이 `[#a8c0ff]` 복붙 4곳 | `--hero-title-accent`·`--hero-title-glow` CSS 변수로 토큰화 |
+| 카테고리 배지 반경 불일치 | `rounded-full`로 통일(색은 맥락이 달라 유지) |
+| 다크모드 브랜드색·메타색 텍스트 AA 미달 | 8개 페이지 실측 112건 → 0건. 대비 부족한 다크 짝을 가드가 막는다 |
+
+### 판단을 내린 것 — 더 이상 미결이 아니다
+
+**스토리 본문과 정적 페이지의 제목 스케일이 다른 것은 의도로 둔다.**
+`MarkdownRenderer`는 반응형(`text-3xl md:text-4xl`), 역할 클래스는 고정 크기다. 스토리 본문은
+길게 읽는 산문이라 뷰포트에 따라 제목이 커지는 편이 낫고, 마케팅·정적 페이지는 레이아웃이
+설계된 화면이라 고정이 맞다. 둘은 **다른 타이포 영역**이며 서로 맞출 대상이 아니다.
+역할 클래스(`.typo-*`)는 화면 구조(카드·섹션·내비)를 지배하고, 마크다운 스케일은 본문 안에서만 산다.
+
+**`body-1`의 weight 300은 산문 기준이며, 실사용의 medium·semibold는 결함이 아니다.**
+`font-medium`·`font-semibold`가 많이 보이는 자리는 산문이 아니라 레이블·강조·수치다. 그것들은
+각자의 역할 클래스(`.typo-card-cta`·`.typo-button`·`.typo-card-subtitle`)나 의도된 강조를 쓰고 있다.
+산문 본문에 굵기를 올려 쓰는 것만 피하면 된다.
+
+### 남아 있는 것
+
+| 항목 | 판단 |
+|---|---|
+| **아웃라인 pill className이 9개 파일에 50번 가까이 복붙** | **가장 값어치 있는 남은 부채.** 다크 대비 회귀도, hover 그림자 회귀도 전부 여기서 났다. 컴포넌트로 묶으면 같은 사고가 구조적으로 사라진다 |
+| 대비 가드가 줄 단위라 hover 색과 텍스트 색이 **다른 줄**에 있으면 못 잡는다 | `ServiceLinksSection`이 그 형태였다(손으로 고침). 근본 해법은 hover 실측 CI화 또는 위 pill 컴포넌트화 |
+| 대비 측정이 그라디언트·사진 배경 위 텍스트를 못 잰다 | 투명 헤더가 히어로 사진 위에 있어 스크립트가 흰색으로 폴백한다. 그 자리는 육안 확인에 의존 |
+| `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
+| 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |

@@ -188,7 +188,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     title={
                         <>
                             <span className="block">{t('lesson.intro.titleLine1')}</span>
-                            <span className="block text-primary">{t('lesson.intro.titleHighlight')}</span>
+                            <span className="block text-primary dark:text-primary-lighter">{t('lesson.intro.titleHighlight')}</span>
                         </>
                     }
                     subtitle={
@@ -316,7 +316,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         <div className="space-y-10">
                             <div className="flex">
                                 <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <Mic2 className="text-primary" size={32} aria-hidden="true" />
+                                    <Mic2 className="text-primary dark:text-primary-lighter" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h3 className="typo-card-title mb-3">{t('lesson.why.items.0.title')}</h3>
@@ -327,7 +327,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                             </div>
                             <div className="flex">
                                 <div className="bg-primary/10 p-4 rounded-xl h-fit mr-6">
-                                    <Disc className="text-primary" size={32} aria-hidden="true" />
+                                    <Disc className="text-primary dark:text-primary-lighter" size={32} aria-hidden="true" />
                                 </div>
                                 <div>
                                     <h3 className="typo-card-title mb-3">{t('lesson.why.items.1.title')}</h3>
@@ -351,22 +351,22 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                         <div className="p-8">
                             <div className="flex justify-center items-end mb-2">
                                 <span className="text-4xl font-bold text-gray-800 dark:text-white">{formatPriceAmount(LESSON_MONTHLY_PRICE)}</span>
-                                <span className="text-xl text-gray-500 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
+                                <span className="text-xl text-gray-500 dark:text-gray-400 mb-1 ml-1">{t('lesson.pricing.unit')}</span>
                             </div>
                             <p className="text-center text-body-2 text-gray-600 dark:text-gray-300 mb-6 break-keep">
                                 {t('lesson.pricing.breakdown')}
                             </p>
                             <ul className="space-y-2 mb-6 text-body-2 text-gray-700 dark:text-gray-200">
                                 <li className="flex items-start">
-                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary dark:text-primary-lighter flex-shrink-0" aria-hidden="true" />
                                     <span className="break-keep">{t('lesson.format.items.0.label')}: <strong>{t('lesson.format.items.0.value')}</strong></span>
                                 </li>
                                 <li className="flex items-start">
-                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary dark:text-primary-lighter flex-shrink-0" aria-hidden="true" />
                                     <span className="break-keep">{t('lesson.format.items.1.label')}: <strong>{t('lesson.format.items.1.value')}</strong></span>
                                 </li>
                                 <li className="flex items-start">
-                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary flex-shrink-0" aria-hidden="true" />
+                                    <CheckCircle size={16} className="mt-0.5 mr-2 text-primary dark:text-primary-lighter flex-shrink-0" aria-hidden="true" />
                                     <span className="break-keep">{t('lesson.format.items.2.label')}: <strong>{t('lesson.format.items.2.value')}</strong></span>
                                 </li>
                             </ul>
@@ -444,7 +444,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                     title={
                         <>
                             <span className="block">{t('lesson.cta.titleLine1')}</span>
-                            <span className="block text-primary">{t('lesson.cta.titleHighlight')}</span>
+                            <span className="block text-primary dark:text-primary-lighter">{t('lesson.cta.titleHighlight')}</span>
                         </>
                     }
                     subtitle={

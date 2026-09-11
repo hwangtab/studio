@@ -64,7 +64,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                                 <span className="text-lg font-title font-bold text-gray-800 dark:text-gray-200 leading-tight pr-8 min-w-0 break-words flex-1">
                                     {item.question}
                                 </span>
-                                <span className="flex-shrink-0 text-primary dark:text-primary-light">
+                                <span className="flex-shrink-0 text-primary dark:text-primary-lighter">
                                     {activeIndex === index ? (
                                         <Minus className="w-6 h-6" aria-hidden="true" />
                                     ) : (

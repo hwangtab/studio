@@ -294,7 +294,7 @@ function SessionManageView(props: SessionManageProps) {
                strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
                없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
                private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary hover:underline">
+        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
           홈으로
         </a>
       </main>
@@ -383,7 +383,7 @@ function MixingManageView(props: MixingManageProps) {
                strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
                없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
                private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary hover:underline">
+        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
           홈으로
         </a>
       </main>

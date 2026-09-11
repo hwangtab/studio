@@ -46,7 +46,7 @@ const SectionHeading = ({
           "inline-flex items-center justify-center p-3 bg-primary/10 dark:bg-primary/20 rounded-full mb-4",
           align === 'center' ? "mx-auto" : "" // Only center if alignment is center
         )} aria-hidden="true">
-          {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-light" })}
+          {React.createElement(Icon, { className: "text-2xl text-primary dark:text-primary-lighter" })}
         </div>
       )}
 

@@ -180,7 +180,7 @@ export default function SubscribeManagePage(props: ManageProps) {
                           ? 'font-medium text-green-700 dark:text-green-400'
                           : p.status === 'failed'
                             ? 'font-medium text-red-600 dark:text-red-400'
-                            : 'font-medium text-gray-500'
+                            : 'font-medium text-gray-500 dark:text-gray-400'
                       }
                     >
                       {PAYMENT_STATUS_LABELS[p.status]}
@@ -216,7 +216,7 @@ export default function SubscribeManagePage(props: ManageProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        <Link href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
+        <Link href="/ko" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
           홈으로
         </Link>
       </main>

@@ -20,7 +20,7 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
       <Head><title>{project.title} 후원하기 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
       <main className="mx-auto max-w-2xl px-4 pb-24 pt-28 sm:pt-32">
         <p className="typo-card-meta">
-          <Link href={`/ko/funding/${project.slug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">
+          <Link href={`/ko/funding/${project.slug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
             ← {project.title}
           </Link>
         </p>

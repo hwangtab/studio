@@ -30,7 +30,7 @@ const RelatedPortfolioInline = ({ items, locale }: RelatedPortfolioInlineProps) 
       <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
         <div className="flex items-center gap-3">
           <div className="inline-flex items-center justify-center p-2.5 bg-primary/10 dark:bg-primary/20 rounded-full" aria-hidden="true">
-            <Disc className="text-primary dark:text-primary-light" size={20} />
+            <Disc className="text-primary dark:text-primary-lighter" size={20} />
           </div>
           <h3
             id="story-related-portfolio-heading"
@@ -42,7 +42,7 @@ const RelatedPortfolioInline = ({ items, locale }: RelatedPortfolioInlineProps) 
         <Link
           href={`/${locale}/portfolio`}
           prefetch={false}
-          className="inline-flex items-center gap-1 typo-card-cta text-primary hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="inline-flex items-center gap-1 typo-card-cta text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.detail.viewAllPortfolio', { defaultValue: '전체 포트폴리오' })}
           <ArrowRight size={16} aria-hidden="true" />

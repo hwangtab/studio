@@ -37,7 +37,7 @@ const HubLocaleContentSection: React.FC<HubLocaleContentSectionProps> = ({
       <div className="max-w-4xl mx-auto space-y-6">
         {content.items.map((item) => (
           <BaseCard key={item.heading} variant="default" className="p-6">
-            <h3 className="typo-card-title mb-3 text-primary">{item.heading}</h3>
+            <h3 className="typo-card-title mb-3 text-primary dark:text-primary-lighter">{item.heading}</h3>
             <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
           </BaseCard>
         ))}

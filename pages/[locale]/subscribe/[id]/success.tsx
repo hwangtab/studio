@@ -60,7 +60,7 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
           <>
             <h1 className="typo-page-title">카드 등록을 완료하지 못했습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-            <p className="mt-2 text-sm text-gray-500">문의: 010-4255-7893</p>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893</p>
           </>
         )}
 
@@ -75,7 +75,7 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
                 구독 조회·해지 페이지 열기
               </Link>
             </p>
-            <p className="mt-3 break-all text-xs text-gray-500">이 주소를 저장해 두세요: {manageUrl}</p>
+            <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">이 주소를 저장해 두세요: {manageUrl}</p>
           </>
         )}
 

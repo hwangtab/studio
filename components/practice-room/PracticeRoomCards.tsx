@@ -29,7 +29,7 @@ export const FeatureCard = ({
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-4">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
+        <Icon className="text-primary dark:text-primary-lighter" size={24} aria-hidden="true" />
       </div>
       <h3 className="typo-card-title">{title}</h3>
     </div>
@@ -74,7 +74,7 @@ export const TargetAudience = ({
   <BaseCard variant="default" delay={delay} className="p-6 mb-4">
     <div className="flex items-center mb-2">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={24} aria-hidden="true" />
+        <Icon className="text-primary dark:text-primary-lighter" size={24} aria-hidden="true" />
       </div>
       <h3 className="typo-card-subtitle">{title}</h3>
     </div>
@@ -127,7 +127,7 @@ export const BenefitCard = ({
     </div>
     {valueBadge && (
       <div className="mb-3">
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary/10 to-secondary/10 text-primary dark:text-primary-light border border-primary/20">
+        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-primary/10 to-secondary/10 text-primary dark:text-primary-lighter border border-primary/20">
           <Sparkles size={12} aria-hidden="true" />
           {valueBadge}
         </span>
@@ -140,7 +140,7 @@ export const BenefitCard = ({
         return (
           <li key={idx} className="flex items-start gap-2">
             <Check
-              className="text-primary dark:text-primary-light mt-1 flex-shrink-0"
+              className="text-primary dark:text-primary-lighter mt-1 flex-shrink-0"
               size={16}
               aria-hidden="true"
             />
@@ -156,7 +156,7 @@ export const BenefitCard = ({
                     rel="noopener noreferrer"
                     /* URL은 공백이 없어 keep-all에서 끊길 자리가 없다 — 좁은 카드(3~4열
                        그리드)에서 카드 밖으로 넘치던 것을 break-all로 허용 */
-                    className="text-primary underline hover:text-primary-dark break-all"
+                    className="text-primary dark:text-primary-lighter underline hover:text-primary-dark dark:hover:text-white break-all"
                   >
                     {calendarLinkLabel}
                   </a>

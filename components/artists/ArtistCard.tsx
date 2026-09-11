@@ -26,7 +26,7 @@ const ArtistCard = ({ artist, locale, viewProfileLabel }: ArtistCardProps) => (
     <div className="p-5">
       <h3 className="typo-card-title text-gray-900 dark:text-white">{artist.name}</h3>
       <p className="typo-card-body mt-1 text-gray-600 dark:text-gray-400">{artist.tagline}</p>
-      <span className="mt-3 inline-block text-sm font-medium text-primary dark:text-primary-light">
+      <span className="mt-3 inline-block text-sm font-medium text-primary dark:text-primary-lighter">
         {viewProfileLabel} →
       </span>
     </div>

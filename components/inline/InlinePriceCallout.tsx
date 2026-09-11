@@ -94,9 +94,9 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
           className="inline-flex items-center justify-center p-1.5 rounded-full bg-primary/15"
           aria-hidden="true"
         >
-          <Tag className="text-primary dark:text-primary-light" size={14} />
+          <Tag className="text-primary dark:text-primary-lighter" size={14} />
         </div>
-        <span className="text-xs font-semibold uppercase tracking-wider text-primary dark:text-primary-light">
+        <span className="text-xs font-semibold uppercase tracking-wider text-primary dark:text-primary-lighter">
           {categoryLabel}
         </span>
       </div>
@@ -105,7 +105,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
         {title}
       </h4>
       <div className="flex items-baseline gap-1 mb-3">
-        <span className="text-3xl font-extrabold text-primary dark:text-primary-light">
+        <span className="text-3xl font-extrabold text-primary dark:text-primary-lighter">
           {priceDisplay}
         </span>
         {unit && (
@@ -125,7 +125,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
               className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
             >
               <CheckCircle2
-                className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-light"
+                className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-lighter"
                 size={16}
                 aria-hidden="true"
               />
@@ -157,7 +157,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
         <Link
           href={`/${locale}/pricing`}
           prefetch={false}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.inline.priceDetail', { defaultValue: '가격표 전체 보기' })}
           <ArrowRight size={14} aria-hidden="true" />

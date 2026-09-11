@@ -204,7 +204,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="glass-card rounded-xl p-6"
               >
-                <h3 className="text-heading-4 font-title mb-3 text-primary">{item.heading}</h3>
+                <h3 className="text-heading-4 font-title mb-3 text-primary dark:text-primary-lighter">{item.heading}</h3>
                 <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
               </m.div>
             ))}
@@ -228,7 +228,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               containerClassName="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden ring-1 ring-black/10 dark:ring-white/15 shadow-md"
               className="w-full h-full object-cover"
             />
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary mb-2">
+            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary dark:text-primary-lighter mb-2">
               <Award size={18} aria-hidden="true" />
               {producerCredibility.eyebrow}
             </div>
@@ -242,14 +242,14 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                   key={stat.label}
                   className="glass-card rounded-xl p-5"
                 >
-                  <div className="text-3xl font-extrabold text-primary tabular-nums">{stat.value}</div>
+                  <div className="text-3xl font-extrabold text-primary dark:text-primary-lighter tabular-nums">{stat.value}</div>
                   <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-keep">{stat.label}</div>
                 </div>
               ))}
             </div>
             <Link
               href={getLink('/author')}
-              className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold text-primary hover:underline underline-offset-4"
+              className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4"
             >
               {producerCredibility.profileCtaLabel}
               <ArrowRight size={16} aria-hidden="true" />
@@ -278,7 +278,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               href={getLink(service.link)}
               variant="highlight"
               cta={
-                <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-light/80 transition-colors duration-300">
+                <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-lighter transition-colors duration-300">
                   {t('home.sections.servicesCta')}
                   <span className="ml-1">
                     <ArrowRight size={14} aria-hidden="true" />
@@ -313,7 +313,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
             <Link
               href={getLink('/release-project')}
               prefetch={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
             >
               {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
             </Link>
@@ -321,49 +321,49 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           <Link
             href={getLink('/practice-room')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/mixing-mastering')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.mixingMastering')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/wedding-song')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/voice-acting')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/lesson')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/pricing')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={getLink('/stories')}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -377,7 +377,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           title={
             <>
               <span className="block">{t('home.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('home.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('home.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

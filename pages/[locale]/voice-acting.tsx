@@ -56,7 +56,7 @@ const AudienceCard = ({
   <BaseCard variant="default" delay={delay} className="p-6 h-full">
     <div className="flex items-center mb-3">
       <div className="bg-primary/10 dark:bg-primary/20 p-3 rounded-full mr-4">
-        <Icon className="text-primary dark:text-primary-light" size={22} aria-hidden="true" />
+        <Icon className="text-primary dark:text-primary-lighter" size={22} aria-hidden="true" />
       </div>
       <h3 className="typo-card-subtitle">{title}</h3>
     </div>
@@ -245,7 +245,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0"
+                      className="text-primary dark:text-primary-lighter flex-shrink-0"
                       size={20}
                       aria-hidden="true"
                     />
@@ -309,7 +309,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
             <ol className="space-y-4">
               {([0, 1, 2, 3] as const).map((i) => (
                 <li key={i} className="flex gap-4">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary font-bold text-sm">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center text-primary dark:text-primary-lighter font-bold text-sm">
                     {i + 1}
                   </span>
                   <div className="min-w-0">
@@ -331,7 +331,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
               <ul className="space-y-3 mb-4">
                 {([0, 1, 2] as const).map((i) => (
                   <li key={i} className="flex gap-3 typo-card-body text-sm">
-                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-primary" aria-hidden="true" />
+                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-lighter" aria-hidden="true" />
                     <span className="min-w-0">{t(`voiceActing.hiring.quoteItems.${i}`)}</span>
                   </li>
                 ))}
@@ -346,7 +346,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
               <ul className="space-y-3">
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex gap-3 typo-card-body text-sm">
-                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-primary" aria-hidden="true" />
+                    <CheckCircle2 size={18} className="flex-shrink-0 mt-0.5 text-primary dark:text-primary-lighter" aria-hidden="true" />
                     <span className="min-w-0">{t(`voiceActing.hiring.deliveryItems.${i}`)}</span>
                   </li>
                 ))}
@@ -373,7 +373,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
                 whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
                 </div>
                 <h3 className="typo-card-subtitle mb-2">
                   {t(`voiceActing.process.steps.${i}.title`)}
@@ -435,7 +435,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
           title={
             <>
               <span className="block">{t('voiceActing.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('voiceActing.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('voiceActing.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

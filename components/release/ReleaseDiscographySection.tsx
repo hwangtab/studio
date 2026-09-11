@@ -78,8 +78,8 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
               </div>
             )}
             <div className="p-5">
-              <p className="text-xs text-primary font-medium mb-1">{item.artist}</p>
-              <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+              <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{item.artist}</p>
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                 {item.title}
               </h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
@@ -90,7 +90,7 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
       <div className="text-center mt-10">
         <Link
           href={getLink('/portfolio')}
-          className="inline-flex items-center gap-2 text-primary font-semibold hover:underline underline-offset-2"
+          className="inline-flex items-center gap-2 text-primary dark:text-primary-lighter font-semibold hover:underline underline-offset-2"
         >
           {viewAllLabel} <ArrowRight size={16} />
         </Link>

@@ -308,7 +308,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                         )}
                       </th>
                       <td className="py-3 pl-4 text-right whitespace-nowrap align-top">
-                        <span className="font-bold text-primary dark:text-primary-light">{offer.priceDisplay}</span>{' '}
+                        <span className="font-bold text-primary dark:text-primary-lighter">{offer.priceDisplay}</span>{' '}
                         <span className="typo-card-meta">{offer.unit}</span>
                       </td>
                     </tr>
@@ -433,7 +433,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           ))}
         </div>
         <div className="mt-8 max-w-3xl mx-auto glass-card rounded-xl p-6 ring-1 ring-primary/20 flex items-start">
-          <Info className="text-primary mt-1 mr-3 flex-shrink-0" size={18} aria-hidden="true" />
+          <Info className="text-primary dark:text-primary-lighter mt-1 mr-3 flex-shrink-0" size={18} aria-hidden="true" />
           <div>
             <h3 className="typo-card-subtitle mb-1">{t('pricing.mixing.noticeTitle')}</h3>
             <p className="typo-card-body text-sm">
@@ -513,7 +513,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 typo-card-body font-semibold text-primary hover:underline"
+            className="inline-flex items-center gap-2 typo-card-body font-semibold text-primary dark:text-primary-lighter hover:underline"
           >
             {t('pricing.practiceRoom.detailLink')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -578,35 +578,35 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           <Link
             href={`/${locale}/release-project`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('pricing.releaseLink')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/studio-info`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/practice-room`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/wedding-song`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/voice-acting`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
           >
             {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>

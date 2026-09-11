@@ -19,7 +19,7 @@ const EquipmentSection = ({ title, items, icon: Icon }: EquipmentSectionProps) =
             whileHover={cardHoverMotion}
         >
             <h3 className="typo-card-title mb-4 flex items-center">
-                <Icon className="mr-2 text-primary dark:text-primary-light" size={20} aria-hidden="true" />
+                <Icon className="mr-2 text-primary dark:text-primary-lighter" size={20} aria-hidden="true" />
                 {title}
             </h3>
             <ul className="grid gap-2">

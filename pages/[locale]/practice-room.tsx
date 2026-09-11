@@ -206,7 +206,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             icon={Target}
             title={t('practiceRoom.audience.title')}
             className="mb-6"
-            titleClassName="text-primary"
+            titleClassName="text-primary dark:text-primary-lighter"
           />
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -321,7 +321,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             <div className="max-w-4xl mx-auto mb-12 rounded-2xl p-6 md:p-8 bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10 border border-primary/20">
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="flex-shrink-0 text-center md:text-left">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 dark:bg-gray-800/80 text-xs font-semibold text-primary dark:text-primary-light mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 dark:bg-gray-800/80 text-xs font-semibold text-primary dark:text-primary-lighter mb-3">
                     <Sparkles size={12} aria-hidden="true" />
                     {t('practiceRoom.residentBenefits.valueSummary.eyebrow')}
                   </span>
@@ -420,7 +420,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           title={
             <>
               <span className="block">{t('practiceRoom.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('practiceRoom.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

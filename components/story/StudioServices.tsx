@@ -25,7 +25,7 @@ const StudioServices: React.FC<StudioServicesProps> = ({ locale = 'ko' }) => {
       body: (
         <>
           방문 없이 파일만 보내도 진행됩니다 (
-          <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="text-primary hover:underline underline-offset-4">
+          <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4">
             믹싱·마스터링 안내
           </NextLink>
           )

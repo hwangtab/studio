@@ -55,7 +55,7 @@ const PriceLeader = ({
           <p className="typo-caption text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
             {priceLabel}
           </p>
-          <p className="text-4xl md:text-5xl font-bold text-primary dark:text-primary-light leading-tight">
+          <p className="text-4xl md:text-5xl font-bold text-primary dark:text-primary-lighter leading-tight">
             {priceValue}
           </p>
           <p className="typo-caption text-gray-500 dark:text-gray-400 mt-2">
@@ -67,7 +67,7 @@ const PriceLeader = ({
             const BadgeIcon = PRICING_BADGE_ICONS[idx] ?? Check;
             return (
               <div key={idx} className="flex items-start gap-3">
-                <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-full text-primary dark:text-primary-light flex-shrink-0">
+                <div className="bg-primary/10 dark:bg-primary/20 p-2 rounded-full text-primary dark:text-primary-lighter flex-shrink-0">
                   <BadgeIcon size={16} aria-hidden="true" />
                 </div>
                 <div>

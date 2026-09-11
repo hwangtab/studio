@@ -35,7 +35,7 @@ const Breadcrumb = ({ items, className }: BreadcrumbProps) => {
                 <Link
                   href={item.path}
                   prefetch={false}
-                  className="hover:text-primary dark:hover:text-primary-light transition-colors"
+                  className="hover:text-primary dark:hover:text-primary-lighter transition-colors"
                 >
                   {item.name}
                 </Link>

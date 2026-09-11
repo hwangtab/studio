@@ -112,7 +112,7 @@ const PricingCard = ({
             )}
             <h3 className="typo-card-title mb-2">{title}</h3>
             <div className="flex items-baseline mb-4">
-                <span className="text-3xl font-extrabold text-primary dark:text-primary-light">{price}</span>
+                <span className="text-3xl font-extrabold text-primary dark:text-primary-lighter">{price}</span>
                 {unit && <span className="text-gray-500 dark:text-gray-400 ml-1 text-sm">{unit}</span>}
             </div>
             <p className="typo-card-body mb-6">{description}</p>
