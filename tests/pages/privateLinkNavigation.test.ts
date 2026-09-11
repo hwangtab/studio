@@ -78,6 +78,8 @@ describe('private 페이지의 이탈 링크', () => {
   it('측정 예외 라우트는 승인 URL을 렌더하지 않고 리다이렉트한다', () => {
     const source = read('pages/[locale]/funding/success.tsx');
     expect(source).toMatch(/redirect:\s*\{\s*destination:\s*`\/ko\/funding\/success\?o=\$\{encodeURIComponent\(result\.orderNo\)\}`/);
+    // 확정 **실패**도 그 자리에서 렌더하지 않는다 — 승인 URL이 측정에 적재된다.
+    expect(source).toMatch(/if \(!result\.ok\) return \{ redirect: \{ destination: `\/ko\/funding\/success\?e=/);
     // 관리 토큰은 URL이 아니라 httpOnly 쿠키로 넘어간다.
     expect(source).toContain('HttpOnly');
   });

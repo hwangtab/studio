@@ -42,11 +42,17 @@ it('같은 주문을 다시 열면 이벤트를 또 보내지 않는다', () => 
   expect(trackMicroEvent).toHaveBeenCalledTimes(1);
 });
 
-it('확정을 되살릴 수 없는 화면(unknown)에서는 이벤트를 보내지 않는다', () => {
-  render(<FundingSuccessPage outcome="unknown" />);
+/**
+ * 쿠키가 막히거나 30분이 지나면 관리 링크를 만들 근거가 없다. 그래도 결제한 사람이 빈손으로
+ * 나가면 안 된다 — 주문번호와 문의처, 그리고 "관리 링크는 메일에 있다"까지는 남겨야 한다.
+ */
+it('확정을 되살릴 수 없는 화면(unknown)에는 주문번호·문의처가 남고 이벤트는 안 보낸다', () => {
+  render(<FundingSuccessPage outcome="unknown" orderNo="FND-20261015-ABCD1234" />);
   expect(trackMicroEvent).not.toHaveBeenCalled();
+  expect(screen.getByText(/FND-20261015-ABCD1234/)).toBeInTheDocument();
   expect(screen.getByText(/후원 확인 메일에/)).toBeInTheDocument();
   expect(screen.getByText(/010-4255-7893/)).toBeInTheDocument();
+  expect(screen.getByText(/hello@studionol.co.kr/)).toBeInTheDocument();
 });
 
 it('오류 화면에서도 이벤트를 보내지 않는다', () => {

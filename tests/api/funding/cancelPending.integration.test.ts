@@ -27,8 +27,11 @@ import type { CreatePledgePayload } from '../../../lib/funding/validation';
  *
  * 같은 이메일+전화로 열어 둘 수 있는 무통장 홀드는 2건이고, 홀드는 12시간짜리다
  * (lib/funding/service.ts MAX_OPEN_HOLDS_PER_CUSTOMER). 예전에는 세 번째 신청이 막혀도
- * 후원자가 직접 풀 수단이 없어 12시간을 기다려야 했다 — 한정 리워드라면 그동안 재고도
- * 함께 묶인다. 이 테스트는 "취소하면 곧바로 다시 신청할 수 있다"를 실제 DB로 확인한다.
+ * 후원자가 직접 풀 수단이 없어 12시간을 기다려야 했다. 이 테스트는 "취소하면 곧바로 다시
+ * 신청할 수 있다"를 실제 DB로 확인한다.
+ *
+ * 한정 리워드 재고는 이 경로와 무관하다 — validation이 한정 수량 리워드에 무통장을 아예
+ * 금지하므로(lib/funding/validation.ts) 무통장 pending이 잠그는 재고는 없다.
  */
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -95,7 +98,7 @@ it('입금 전 무통장 신청을 취소하면 expired가 되고, 막혀 있던
   expect(r.body).toEqual({ ok: true, mode: 'pending_released' });
   expect((await findFundingOrderByOrderNo(first.orderNo))!.status).toBe('expired');
 
-  // 홀드가 하나 풀렸으니 다시 신청할 수 있다.
+  // 고객당 홀드 상한이 하나 풀렸으니 다시 신청할 수 있다.
   const retry = await createFundingPledge(payload(), PROJECT, reward, NOW);
   expect(retry.ok).toBe(true);
 });

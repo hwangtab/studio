@@ -49,9 +49,12 @@ export default function FundingManagePage(p: Props) {
       const json = await res.json();
       if (!res.ok) { setDisplayNamePublic(previous); setError(json.message ?? '이름 공개 설정을 바꾸지 못했습니다.'); return; }
       setDisplayNamePublic(Boolean(json.displayNamePublic));
+      // 프로젝트 페이지의 공개 명단은 상태 API 응답(s-maxage=60 · SWR 300)을 통해 나가므로
+      // 여기서 즉답해도 화면에는 최대 몇 분 뒤 반영된다 — 그걸 말하지 않으면
+      // "철회가 안 됐다"는 문의가 온다.
       setConfirmMessage(json.displayNamePublic
-        ? '후원자 명단에 이름을 공개합니다.'
-        : '후원자 명단에서 이름을 내렸습니다.');
+        ? '후원자 명단에 이름을 공개합니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
+        : '후원자 명단에서 이름을 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
     } catch {
       setDisplayNamePublic(previous); setError('네트워크 오류가 발생했습니다.');
     } finally { setNameBusy(false); }
@@ -159,7 +162,7 @@ export default function FundingManagePage(p: Props) {
           {isPendingBank && (
             <>
               <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>신청 취소 (입금 전)</Button>
-              <p className="typo-card-meta mt-2">취소하면 리워드 수량이 바로 풀리고, 같은 프로젝트에 다시 신청할 수 있습니다.</p>
+              <p className="typo-card-meta mt-2">취소하면 입금 대기가 끝나고, 같은 프로젝트에 바로 다시 신청할 수 있습니다.</p>
             </>
           )}
           {status === 'paid' && !refundRequested && (p.canCancel

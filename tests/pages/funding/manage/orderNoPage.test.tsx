@@ -77,7 +77,9 @@ describe('이름 공개 철회', () => {
     const toggle = screen.getByLabelText('후원자 명단에 이름 공개');
     expect(toggle).toBeChecked();
     await userEvent.click(toggle);
-    expect(await screen.findByText('후원자 명단에서 이름을 내렸습니다.')).toBeInTheDocument();
+    // 공개 명단은 상태 API 캐시(s-maxage=60 · SWR 300)를 통해 나가므로 즉시 반영되지 않는다 —
+    // 그걸 말하지 않으면 "철회가 안 됐다"는 문의가 온다.
+    expect(await screen.findByText(/후원자 명단에서 이름을 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/funding/display-name');
     expect(init.method).toBe('PATCH');

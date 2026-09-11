@@ -54,15 +54,43 @@ const buildConfirmCookie = (orderNo: string, token: string): string =>
     ...(process.env.NODE_ENV === 'production' ? ['Secure'] : []),
   ].join('; ');
 
+/**
+ * Next는 `req.cookies`를 이미 디코드해 준다 — 여기서 다시 디코드하면 `%`가 든 손상된 쿠키
+ * 하나로 getServerSideProps가 URIError 500을 낸다(결제를 마친 사람이 보는 화면이다).
+ * 값은 base64url 토큰과 주문번호뿐이라 추가 디코드가 필요하지도 않다.
+ */
 const parseConfirmCookie = (raw: string | undefined): { orderNo: string; token: string } | null => {
   if (!raw) return null;
-  const value = decodeURIComponent(raw);
+  const value = raw;
   const sep = value.indexOf('.');
   if (sep <= 0 || sep === value.length - 1) return null;
   return { orderNo: value.slice(0, sep), token: value.slice(sep + 1) };
 };
 
 const PHONE = '010-4255-7893';
+const EMAIL = 'hello@studionol.co.kr';
+
+/**
+ * 확정 실패 코드 → 우리가 쓴 문구.
+ *
+ * 실패도 **비밀값 없는 URL로 리다이렉트**해야 한다. 예전(이 파일의 첫 수정본)에는 실패만
+ * 승인 URL 그 자리에서 렌더했는데, 이 경로는 측정 대상이라 `?paymentKey=…&orderId=…`가
+ * 그대로 GA4의 page_location에 적재된다 — 결제창을 오래 열어 뒀다 승인(hold_expired)하거나
+ * 카드사가 거절(toss_rejected)하면 실제 paymentKey가 남는다. 그래서 코드만 `?e=`로 넘기고
+ * 문구는 여기서 고른다(fail.tsx와 같은 방식). 모르는 코드는 일반 문구로 떨어진다.
+ *
+ * 키는 `FundingConfirmOutcome`의 실패 코드다(lib/funding/confirm.ts).
+ */
+const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
+  not_found: '후원을 찾을 수 없습니다. 주문번호를 확인해 주세요.',
+  amount_mismatch: '결제 금액이 후원 내용과 일치하지 않습니다.',
+  invalid_state: '이미 처리되었거나 만료된 후원입니다.',
+  hold_expired: '결제 대기 시간이 만료된 후원입니다. 다시 후원해 주세요.',
+  toss_rejected: '결제 승인이 거절되었습니다. 다시 시도하시거나 다른 결제수단을 이용해 주세요.',
+  recording_failed: '결제는 완료되었으나 후원 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정됩니다.',
+};
+const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
+const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 
 export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, projectSlug, emailSent }: SuccessProps) {
   useEffect(() => {
@@ -133,11 +161,18 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
         ) : outcome === 'unknown' ? (
           <>
             <h1 className="typo-page-title">후원 내역을 확인해 주세요</h1>
+            {/* 쿠키가 없으면(브라우저 차단·30분 경과·다른 기기) 관리 링크를 만들 근거가 없다.
+                그래도 결제한 사람이 빈손으로 나가면 안 된다 — 주문번호와 문의처, 그리고
+                "관리 링크는 메일에 있다"까지는 반드시 남긴다. 토큰을 URL에 실어 폴백을
+                만드는 방법은 쓰지 않는다: 그 순간 이 경로가 다시 비밀값을 달게 되고,
+                주문번호만 알면 열리는 화면이 되어 confirm이 막아 둔 구멍이 되살아난다. */}
             <p className="typo-card-body mx-auto mt-3 max-w-md">
-              이 화면에서는 후원 상세를 다시 열 수 없습니다. 결제가 끝났다면 후원 확인 메일에
-              후원 확인·취소 링크가 들어 있습니다.
+              {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 후원 상세를 다시 열 수 없습니다.
+              결제가 끝났다면 후원 확인 메일에 후원 확인·취소 링크가 들어 있습니다.
             </p>
-            <p className="typo-card-meta mx-auto mt-3 max-w-md">메일이 보이지 않으면 문의해 주세요: {PHONE}</p>
+            <p className="typo-card-meta mx-auto mt-3 max-w-md">
+              메일이 보이지 않거나 취소를 원하시면 주문번호와 함께 연락해 주세요: {PHONE} · {EMAIL}
+            </p>
             <a
               href="/ko/funding"
               rel="noreferrer"
@@ -150,7 +185,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
           <>
             <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
             <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
-            <p className="typo-card-meta mx-auto mt-3 max-w-md">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: {PHONE}</p>
+            <p className="typo-card-meta mx-auto mt-3 max-w-md">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: {PHONE} · {EMAIL}</p>
             {/* 오류 분기에도 눌러야 할 곳이 하나는 있어야 한다 — fail.tsx와 같은 solid 버튼. */}
             <a
               href="/ko/funding"
@@ -189,9 +224,16 @@ export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ que
   const { paymentKey, orderId, amount } = query;
   if (typeof paymentKey === 'string' && typeof orderId === 'string' && typeof amount === 'string') {
     const result = await confirmFundingPledge({ orderNo: orderId, paymentKey, amount: Number(amount) });
-    if (!result.ok) return { props: { outcome: 'error', message: result.message } };
+    // 성공이든 실패든 이 URL에서는 화면을 그리지 않는다 — paymentKey·orderId가 붙은 채로
+    // 렌더되는 순간 측정에 적재된다(CONFIRM_ERROR_MESSAGES 주석).
+    if (!result.ok) return { redirect: { destination: `/ko/funding/success?e=${encodeURIComponent(result.code)}`, permanent: false } };
     res.setHeader('Set-Cookie', buildConfirmCookie(result.orderNo, result.manageToken));
     return { redirect: { destination: `/ko/funding/success?o=${encodeURIComponent(result.orderNo)}`, permanent: false } };
+  }
+
+  if (typeof query.e === 'string') {
+    const code = ERROR_CODE_PATTERN.test(query.e) ? query.e : '';
+    return { props: { outcome: 'error', message: CONFIRM_ERROR_MESSAGES[code] ?? GENERIC_ERROR } };
   }
 
   const requested = typeof query.o === 'string' && ORDER_NO_PATTERN.test(query.o) ? query.o.toUpperCase() : null;
@@ -200,9 +242,12 @@ export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ que
   const cookie = parseConfirmCookie(req.cookies?.[CONFIRM_COOKIE]);
   // 쿠키가 없거나 다른 주문의 것이면 DB를 아예 조회하지 않는다 — 주문번호만 아는 제3자가
   // 주문의 존재 여부를 떠볼 수 있는 경로를 만들지 않는다.
-  if (!cookie || cookie.orderNo.toUpperCase() !== requested) return { props: { outcome: 'unknown' } };
+  // 주문번호는 비밀이 아니므로(메일·화면·영수증에 평문) unknown 화면에 그대로 되돌려준다 —
+  // 문의할 때 이 번호가 없으면 고객이 스스로 할 수 있는 일이 없다.
+  const unknown = { props: { outcome: 'unknown' as const, orderNo: requested } };
+  if (!cookie || cookie.orderNo.toUpperCase() !== requested) return unknown;
   const order = await findFundingOrderByOrderNo(requested);
-  if (!order || !isTokenMatch(order.manageToken, cookie.token)) return { props: { outcome: 'unknown' } };
+  if (!order || !isTokenMatch(order.manageToken, cookie.token)) return unknown;
   return {
     props: {
       outcome: 'confirmed',

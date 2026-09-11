@@ -52,6 +52,22 @@ describe('isPrivateAnalyticsPath', () => {
     expect(MEASURED_PRIVATE_PAGE_ROUTES).toEqual(['/[locale]/funding/success']);
   });
 
+  /**
+   * 예외는 **경로**에 거는 것이지 "이 경로는 무조건 안전하다"는 선언이 아니다. 실패 분기
+   * 하나가 승인 URL을 그 자리에서 렌더하면 그대로 paymentKey가 측정에 적재된다 — 실제로
+   * 이 예외를 처음 넣었을 때 확정 실패 경로가 그랬다. 비밀값 이름이 쿼리에 보이면 예외를
+   * 취소하고 측정에서 뺀다.
+   */
+  it('비밀값이 쿼리에 있으면 예외를 취소한다 — 안전한 쪽으로 틀린다', () => {
+    expect(isPrivateAnalyticsPath('/ko/funding/success?paymentKey=x')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/funding/success?orderId=FND-1&amount=1')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/funding/success?token=secret')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/funding/success?paymentKey=x#top')).toBe(true);
+    // 우리가 만드는 URL 두 가지는 그대로 측정된다.
+    expect(isPrivateAnalyticsPath('/ko/funding/success?o=FND-20261015-ABCD1234')).toBe(false);
+    expect(isPrivateAnalyticsPath('/ko/funding/success?e=hold_expired')).toBe(false);
+  });
+
   // 예외는 펀딩 success 하나뿐이다 — booking success는 토스 승인 URL을 그대로 렌더한다.
   it('예약 success·펀딩 fail은 여전히 측정 제외다', () => {
     expect(isPrivateAnalyticsPath('/ko/booking/success?paymentKey=pk_abc')).toBe(true);

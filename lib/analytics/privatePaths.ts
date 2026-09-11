@@ -44,13 +44,24 @@ const PRIVATE_PATH_PATTERN = new RegExp(
  * fail은 예외가 아니다 — 토스가 실패 URL에 orderId를 직접 붙이므로 우리가 막을 수 없다.
  *
  * 주의: 이 예외를 늘리려면 "그 경로가 렌더될 때 URL에 비밀값이 절대 없는가"를 먼저 증명해야
- * 한다. 지금 그것을 보장하는 것은 success의 리다이렉트 한 줄이다
- * (pages/[locale]/funding/success.tsx getServerSideProps).
+ * 한다. success는 **성공도 실패도** 리다이렉트로 그것을 보장한다
+ * (pages/[locale]/funding/success.tsx getServerSideProps). 그래도 그 한 줄에만 기대지 않는다 —
+ * 아래 SECRET_QUERY_PATTERN이 비밀값이 붙은 URL을 발견하면 예외를 취소하고 측정에서 뺀다.
+ * 예외가 조용히 새는 경로(승인 실패를 그 자리에서 렌더하는 분기 하나면 충분했다)를 코드로
+ * 막아 두는 것이다.
  */
 const MEASURED_EXCEPTION_PATTERN = new RegExp(`^/${LOCALE_GROUP}/funding/success$`);
 
 /** 위 예외에 해당하는 `router.pathname` 목록 — Layout은 계속 껍데기를 벗긴다(테스트가 대조). */
 export const MEASURED_PRIVATE_PAGE_ROUTES: readonly string[] = ['/[locale]/funding/success'];
+
+/**
+ * 쿼리에 이 이름들이 있으면 예외를 **취소**한다 — 측정 제외로 되돌린다.
+ *
+ * 경로만 보고 예외를 적용하면, 그 경로가 어쩌다 비밀값을 달고 렌더되는 순간 그대로 유출된다.
+ * 값이 무엇인지는 보지 않는다 — 이름이 보이면 그걸로 충분하다(안전한 쪽으로 틀린다).
+ */
+const SECRET_QUERY_PATTERN = /(^|&)(paymentKey|orderId|token|secret)=/i;
 
 /**
  * next.config.mjs `headers()`가 `private, no-store`로 내려야 하는 경로들. 측정 제외 목록과
@@ -92,9 +103,12 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);
 
-/** `router.asPath`처럼 쿼리·해시가 붙어 있어도 된다 — 경로 부분만 본다. */
+/** `router.asPath`처럼 쿼리·해시가 붙어 있어도 된다 — 경로로 판정하되 쿼리는 예외 취소에 쓴다. */
 export const isPrivateAnalyticsPath = (pathOrUrl: string): boolean => {
-  const path = (pathOrUrl || '').split('#')[0].split('?')[0];
-  if (MEASURED_EXCEPTION_PATTERN.test(path)) return false;
+  const withoutHash = (pathOrUrl || '').split('#')[0];
+  const queryAt = withoutHash.indexOf('?');
+  const path = queryAt === -1 ? withoutHash : withoutHash.slice(0, queryAt);
+  const query = queryAt === -1 ? '' : withoutHash.slice(queryAt + 1);
+  if (MEASURED_EXCEPTION_PATTERN.test(path) && !SECRET_QUERY_PATTERN.test(query)) return false;
   return PRIVATE_PATH_PATTERN.test(path);
 };

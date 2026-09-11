@@ -47,15 +47,51 @@ describe('토스 승인 URL', () => {
     expect(cookie).toContain('HttpOnly');
     expect(cookie).toContain('SameSite=Lax');
     expect(cookie).toContain(`Path=/ko/funding/success`);
+    expect(cookie).toContain('Max-Age=1800');
+    // 로컬(http)에서는 Secure를 붙이면 브라우저가 쿠키를 아예 저장하지 않는다.
+    expect(cookie).not.toContain('Secure');
   });
 
-  it('확정 실패는 화면에 남고 쿠키를 세우지 않는다', async () => {
-    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' });
-    const c = ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '1' });
-    const result = (await c.run()) as { props: { outcome: string; message: string } };
-    expect(result.props.outcome).toBe('error');
-    expect(result.props.message).toContain('이미 처리되었거나');
+  it('프로덕션에서는 Secure를 붙인다', async () => {
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: ORDER_NO, manageToken: TOKEN, projectSlug: 'demo' });
+    const original = process.env.NODE_ENV;
+    Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', configurable: true });
+    try {
+      const c = ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '30000' });
+      await c.run();
+      expect(cookieHeader(c.res)).toContain('Secure');
+    } finally {
+      Object.defineProperty(process.env, 'NODE_ENV', { value: original, configurable: true });
+    }
+  });
+
+  /**
+   * 실패도 그 자리에서 렌더하면 안 된다 — 이 경로는 측정 대상이라
+   * `?paymentKey=…&orderId=…`가 GA4의 page_location에 그대로 적재된다. 결제창을 오래 열어
+   * 뒀다 승인하거나(hold_expired) 카드사가 거절하면(toss_rejected) 실제 paymentKey가 남는다.
+   */
+  it('확정 실패도 비밀값 없는 ?e= 로 리다이렉트하고 쿠키를 세우지 않는다', async () => {
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'hold_expired', message: '결제 대기 시간이 만료된 후원입니다.' });
+    const c = ctx({ paymentKey: 'pk_live_abc', orderId: ORDER_NO, amount: '1' });
+    const result = (await c.run()) as { redirect: { destination: string } };
+    expect(result.redirect.destination).toBe('/ko/funding/success?e=hold_expired');
+    expect(result.redirect.destination).not.toContain('pk_live_abc');
+    expect(result.redirect.destination).not.toContain(ORDER_NO);
     expect(cookieHeader(c.res)).toBeUndefined();
+  });
+});
+
+describe('리다이렉트된 실패 화면(?e=)', () => {
+  it('코드를 우리 문구로 옮긴다', async () => {
+    const result = (await ctx({ e: 'hold_expired' }).run()) as { props: { outcome: string; message: string } };
+    expect(result.props.outcome).toBe('error');
+    expect(result.props.message).toBe('결제 대기 시간이 만료된 후원입니다. 다시 후원해 주세요.');
+  });
+
+  it('모르는 코드·형식 밖 코드는 일반 문구 — 쿼리 문자열을 그대로 뿌리지 않는다', async () => {
+    const injected = (await ctx({ e: '환불 문의: 010-0000-0000' }).run()) as { props: { message: string } };
+    expect(injected.props.message).toBe('결제를 확정하지 못했습니다.');
+    expect((await ctx({ e: 'made_up' }).run()) as { props: { message: string } }).toMatchObject({ props: { message: '결제를 확정하지 못했습니다.' } });
   });
 });
 
@@ -79,10 +115,18 @@ describe('리다이렉트된 화면(?o=)', () => {
     expect(result.props.emailSent).toBe(false);
   });
 
-  it('쿠키가 없으면 DB를 조회하지 않는다 — 주문번호만으로는 아무 것도 열리지 않는다', async () => {
-    const result = (await ctx({ o: ORDER_NO }).run()) as { props: { outcome: string } };
+  it('쿠키가 없으면 DB를 조회하지 않되, 주문번호는 화면에 되돌려준다', async () => {
+    const result = (await ctx({ o: ORDER_NO }).run()) as { props: { outcome: string; orderNo: string } };
     expect(result.props.outcome).toBe('unknown');
+    // 쿠키가 막힌 브라우저에서도 결제한 사람이 문의할 근거는 남아야 한다.
+    expect(result.props.orderNo).toBe(ORDER_NO);
     expect(findFundingOrderByOrderNo).not.toHaveBeenCalled();
+  });
+
+  // Next가 이미 디코드해 준 값을 다시 디코드하면 손상된 쿠키 하나로 500이 난다.
+  it('쿠키 값이 깨져 있어도 500이 아니라 unknown으로 떨어진다', async () => {
+    const result = (await ctx({ o: ORDER_NO }, { fnd_confirm: '%E0%A4%A' }).run()) as { props: { outcome: string } };
+    expect(result.props.outcome).toBe('unknown');
   });
 
   it('다른 주문의 쿠키로는 열 수 없다', async () => {
