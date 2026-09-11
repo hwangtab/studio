@@ -59,7 +59,10 @@ Tailwind는 정의되지 않은 클래스명을 **에러 없이 빌드 CSS에서
 ### 다크모드
 
 `.dark` 클래스 전략이다(`components/Layout.tsx`가 `<html>`에 토글). 배경·텍스트·보더를 지정하는
-모든 곳에 `dark:` 짝을 함께 쓴다. 예외는 `pages/admin/**` — 운영자 전용 백오피스라 라이트 고정이다.
+모든 곳에 `dark:` 짝을 함께 쓴다. 라이트 고정 예외는 두 곳이다 — `pages/admin/**`(운영자 전용
+백오피스)과 계약 서명·완료 화면(`pages/[locale]/contracts/[id]/{sign,complete}.tsx`, 종이처럼
+보여야 하는 법적 문서). 두 경로에도 `theme-init.js`가 `<html class="dark">`를 붙이므로, 라이트
+고정은 "다크 스타일을 안 쓰는 것"이 아니라 **`dark:` 짝을 라이트 값으로 되돌려 쓰는 것**이다.
 
 본문 회색의 역할별 기본값:
 
@@ -167,6 +170,12 @@ text-shadow). 흰 틴트(`bg-white/*`)는 배경을 밝혀 흰 글씨 대비를 
 - 필수: 레이블 뒤 `*`(`text-red-600`) + `aria-required`
 - 에러: `border-red-500` + 컨트롤 아래 `text-xs text-red-600`, `aria-invalid`·`aria-describedby` 연결
 - 포커스: 아래 포커스 규칙과 동일 (`focus-visible`)
+- 라이트 고정 화면(위 다크모드 절의 두 예외)에서는 컨트롤에 **`light` prop**을 넘긴다
+  (`<TextInput light />`). 래퍼(레이블·힌트·에러)는 `lightOnlyField`를
+  `Field`의 `className`으로 준다. **같은 클래스를 문자열로 `className`에 얹지 말 것** —
+  `cn`은 twMerge라 뒤에 온 `dark:border-gray-300`이 오류 테두리의 `dark:border-red-500`을
+  지운다. 합성 순서는 `fieldControlClass → light → invalid → className`으로 고정돼 있고,
+  `Field.test.tsx`의 "light 옵트인" 케이스가 이 순서를 지킨다.
 
 ### 카드 — `components/ui/BaseCard.tsx`
 

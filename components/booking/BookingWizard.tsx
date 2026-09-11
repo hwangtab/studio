@@ -484,6 +484,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
             <div>
               <Field id="customerNote" label="요청사항 (선택)">
                 <TextArea
+                  className="min-h-0"
                   rows={4}
                   value={customerNote}
                   onChange={(e) => setCustomerNote(e.target.value)}

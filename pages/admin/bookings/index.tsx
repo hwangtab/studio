@@ -8,7 +8,7 @@ import { createBlock, deleteBlock } from '../../../components/admin/bookingActio
 import { logoutAdmin } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { orderStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -329,7 +329,7 @@ export default function AdminBookingsPage({
                   placeholder="이름, 이메일, 전화번호, 주문번호 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className={`w-auto flex-1 min-w-[240px] px-4 ${lightOnlyControl}`}
+                  light className="w-auto flex-1 min-w-[240px] px-4"
                 />
               </div>
 
@@ -443,7 +443,7 @@ export default function AdminBookingsPage({
                   type="date"
                   value={blockDate}
                   onChange={(e) => setBlockDate(e.target.value)}
-                  className={`w-auto text-sm ${lightOnlyControl}`}
+                  light className="w-auto text-sm"
                   required
                 />
               </Field>
@@ -451,7 +451,7 @@ export default function AdminBookingsPage({
                 <Select
                   value={blockStartHour}
                   onChange={(e) => setBlockStartHour(Number(e.target.value))}
-                  className={`w-auto text-sm ${lightOnlyControl}`}
+                  light className="w-auto text-sm"
                 >
                   {HOURS.map((h) => (
                     <option key={h} value={h}>
@@ -464,7 +464,7 @@ export default function AdminBookingsPage({
                 <Select
                   value={blockEndHour}
                   onChange={(e) => setBlockEndHour(Number(e.target.value))}
-                  className={`w-auto text-sm ${lightOnlyControl}`}
+                  light className="w-auto text-sm"
                 >
                   {[...HOURS, 24].map((h) => (
                     <option key={h} value={h}>
@@ -479,7 +479,7 @@ export default function AdminBookingsPage({
                   value={blockMemo}
                   onChange={(e) => setBlockMemo(e.target.value)}
                   placeholder="예: 장비 점검"
-                  className={`text-sm ${lightOnlyControl}`}
+                  light className="text-sm"
                 />
               </Field>
               <Button type="submit" size="sm" disabled={busy}>

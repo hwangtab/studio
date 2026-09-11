@@ -19,25 +19,51 @@ export const fieldControlClass = cn(
 
 const invalidClass = 'border-red-500 dark:border-red-500';
 
-type ControlProps<T> = T & { invalid?: boolean };
+/**
+ * 다크 분기만 라이트 값으로 되돌린다. 관리자 화면(pages/admin/**)과 계약 서명·완료
+ * 화면은 종이처럼 항상 밝아야 하는데, theme-init.js는 그 경로에도 `<html class="dark">`를
+ * 붙인다. 반경·포커스 같은 나머지 규칙은 `fieldControlClass`를 그대로 따른다.
+ */
+export const lightOnlyControl =
+  'dark:bg-white dark:text-gray-900 dark:border-gray-300 dark:placeholder:text-gray-400 dark:focus-visible:ring-offset-white';
+
+/**
+ * `light`는 prop으로 받는다 — 호출부가 `className`으로 넘기면 twMerge 순서상
+ * `dark:border-gray-300`이 뒤에 와서 `invalid`의 `dark:border-red-500`을 지운다
+ * (다크 사용자에게 오류 테두리가 회색으로 뜬다). 합성 순서는 항상
+ * fieldControlClass → light → invalid → className 이어야 한다.
+ */
+type ControlProps<T> = T & { invalid?: boolean; light?: boolean };
 
 export const TextInput = React.forwardRef<HTMLInputElement, ControlProps<React.InputHTMLAttributes<HTMLInputElement>>>(
-  ({ className, invalid, ...props }, ref) => (
-    <input ref={ref} className={cn(fieldControlClass, invalid && invalidClass, className)} {...props} />
+  ({ className, invalid, light, ...props }, ref) => (
+    <input
+      ref={ref}
+      className={cn(fieldControlClass, light && lightOnlyControl, invalid && invalidClass, className)}
+      {...props}
+    />
   ),
 );
 TextInput.displayName = 'TextInput';
 
 export const TextArea = React.forwardRef<HTMLTextAreaElement, ControlProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>>>(
-  ({ className, invalid, ...props }, ref) => (
-    <textarea ref={ref} className={cn(fieldControlClass, 'min-h-[8rem]', invalid && invalidClass, className)} {...props} />
+  ({ className, invalid, light, ...props }, ref) => (
+    <textarea
+      ref={ref}
+      className={cn(fieldControlClass, 'min-h-[8rem]', light && lightOnlyControl, invalid && invalidClass, className)}
+      {...props}
+    />
   ),
 );
 TextArea.displayName = 'TextArea';
 
 export const Select = React.forwardRef<HTMLSelectElement, ControlProps<React.SelectHTMLAttributes<HTMLSelectElement>>>(
-  ({ className, invalid, ...props }, ref) => (
-    <select ref={ref} className={cn(fieldControlClass, invalid && invalidClass, className)} {...props} />
+  ({ className, invalid, light, ...props }, ref) => (
+    <select
+      ref={ref}
+      className={cn(fieldControlClass, light && lightOnlyControl, invalid && invalidClass, className)}
+      {...props}
+    />
   ),
 );
 Select.displayName = 'Select';

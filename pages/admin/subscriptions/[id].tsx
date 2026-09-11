@@ -11,7 +11,7 @@ import {
 } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextArea } from '../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -389,7 +389,7 @@ export default function AdminSubscriptionDetailPage({
                       onChange={(e) => setCancelReason(e.target.value)}
                       rows={2}
                       placeholder="예: 고객 요청 — 개인 사정으로 해지"
-                      className={`min-h-0 text-sm ${lightOnlyControl}`}
+                      light className="min-h-0 text-sm"
                     />
                   </Field>
                   {cancelError && <p className="text-sm text-red-600">{cancelError}</p>}

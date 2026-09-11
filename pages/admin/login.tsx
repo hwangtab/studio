@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 
 import { Button } from '../../components/ui/Button';
 import { Field, TextInput } from '../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../components/ui/adminFieldClass';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={lightOnlyControl}
+                light
                 required
               />
             </Field>

@@ -8,7 +8,7 @@ import { createManualPledge } from '../../../components/admin/fundingActions';
 import { logoutAdmin } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { duplicateKey, serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
@@ -326,7 +326,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                       <Select
                         value={formProjectSlug}
                         onChange={(e) => { setFormProjectSlug(e.target.value); setFormRewardId(''); }}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       >
                         <option value="">선택</option>
                         {projects.map((p) => (
@@ -338,7 +338,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                       <Select
                         value={formRewardId}
                         onChange={(e) => setFormRewardId(e.target.value)}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                         disabled={!selectedProject}
                       >
                         <option value="">선택</option>
@@ -354,7 +354,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                         max={10}
                         value={formQuantity}
                         onChange={(e) => setFormQuantity(Number(e.target.value))}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       />
                     </Field>
                     <Field id="form-additional-amount" label="추가 후원금(원)" className={lightOnlyField}>
@@ -365,7 +365,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                         step={1000}
                         value={formAdditionalAmount}
                         onChange={(e) => setFormAdditionalAmount(Number(e.target.value))}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       />
                     </Field>
                     <Field id="form-customer-name" label="이름" className={lightOnlyField}>
@@ -373,7 +373,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                         type="text"
                         value={formCustomerName}
                         onChange={(e) => setFormCustomerName(e.target.value)}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       />
                     </Field>
                     <Field id="form-customer-phone" label="연락처" className={lightOnlyField}>
@@ -381,7 +381,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                         type="text"
                         value={formCustomerPhone}
                         onChange={(e) => setFormCustomerPhone(e.target.value)}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       />
                     </Field>
                     <Field id="form-customer-email" label="이메일" className={lightOnlyField}>
@@ -389,7 +389,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                         type="email"
                         value={formCustomerEmail}
                         onChange={(e) => setFormCustomerEmail(e.target.value)}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       />
                     </Field>
                     <Field id="form-memo" label="메모" className={lightOnlyField}>
@@ -397,7 +397,7 @@ export default function AdminFundingPage({ items, truncated, projects, slug, err
                         type="text"
                         value={formMemo}
                         onChange={(e) => setFormMemo(e.target.value)}
-                        className={`text-sm ${lightOnlyControl}`}
+                        light className="text-sm"
                       />
                     </Field>
                   </div>

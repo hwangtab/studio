@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
@@ -167,7 +167,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                   <Select
                     value={fulfillmentStatus}
                     onChange={(e) => setFulfillmentStatus(e.target.value as typeof fulfillmentStatus)}
-                    className={`w-auto text-sm ${lightOnlyControl}`}
+                    light className="w-auto text-sm"
                     disabled={pledge.status !== 'paid'}
                   >
                     {FULFILLMENT_OPTIONS.map((s) => (
@@ -180,7 +180,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     type="text"
                     value={trackingCompany}
                     onChange={(e) => setTrackingCompany(e.target.value)}
-                    className={`w-auto text-sm ${lightOnlyControl}`}
+                    light className="w-auto text-sm"
                     disabled={pledge.status !== 'paid'}
                   />
                 </Field>
@@ -189,7 +189,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     type="text"
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
-                    className={`w-auto text-sm ${lightOnlyControl}`}
+                    light className="w-auto text-sm"
                     disabled={pledge.status !== 'paid'}
                   />
                 </Field>
@@ -208,7 +208,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                   onChange={(e) => setMemo(e.target.value)}
                   rows={3}
                   aria-label="관리자 메모"
-                  className={`min-h-0 text-sm ${lightOnlyControl}`}
+                  light className="min-h-0 text-sm"
                 />
                 <Button disabled={busy} onClick={handleSaveMemo} className="self-start">메모 저장</Button>
               </div>

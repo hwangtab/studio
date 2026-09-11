@@ -13,7 +13,7 @@ import {
 } from '../../../components/admin/bookingActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -521,7 +521,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                       step={1}
                       value={refundAmount}
                       onChange={(e) => setRefundAmount(Number(e.target.value))}
-                      className={`text-sm ${lightOnlyControl}`}
+                      light className="text-sm"
                     />
                   </Field>
                   <Field id="refund-reason" label="환불 사유" className={lightOnlyField}>
@@ -530,7 +530,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                       onChange={(e) => setRefundReason(e.target.value)}
                       rows={2}
                       placeholder="예: 고객 요청 — 개인 사정으로 취소"
-                      className={`min-h-0 text-sm ${lightOnlyControl}`}
+                      light className="min-h-0 text-sm"
                     />
                   </Field>
                   {refundError && (

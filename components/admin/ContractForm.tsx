@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../ui/adminFieldClass';
+import { lightOnlyField } from '../ui/adminFieldClass';
 import type { ValidationError } from '../../lib/contracts/validation';
 
 export interface ContractFormValues {
@@ -39,7 +39,6 @@ export const EMPTY_CONTRACT_FORM: ContractFormValues = {
   specialTerms: [],
 };
 
-const ADMIN_CONTROL = `text-sm ${lightOnlyControl}`;
 const ADMIN_FIELD = lightOnlyField;
 
 /** 폼 값(모두 문자열)을 API가 기대하는 타입으로 변환한다. 검증은 서버가 한다. */
@@ -240,7 +239,8 @@ export default function ContractForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="성명" id="customerName" error={errorMap.customerName} required className={ADMIN_FIELD}>
             <TextInput
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.customerName}
               onChange={(e) => set('customerName', e.target.value)}
               autoComplete="off"
@@ -252,7 +252,8 @@ export default function ContractForm({
             className={ADMIN_FIELD}>
             <TextInput
               type="email"
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.customerEmail}
               onChange={(e) => set('customerEmail', e.target.value)}
               autoComplete="off"
@@ -263,7 +264,8 @@ export default function ContractForm({
             hint="뒤 4자리가 고객의 본인 확인에 쓰입니다."
             className={ADMIN_FIELD}>
             <TextInput
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.customerPhone}
               onChange={(e) => set('customerPhone', e.target.value)}
               autoComplete="off"
@@ -283,7 +285,8 @@ export default function ContractForm({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="호실" id="roomNumber" error={errorMap.roomNumber} required hint="예: A, 201" className={ADMIN_FIELD}>
             <TextInput
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.roomNumber}
               onChange={(e) => set('roomNumber', e.target.value)}
             />
@@ -291,7 +294,8 @@ export default function ContractForm({
 
           <Field label="면적" id="roomArea" error={errorMap.roomArea} className={ADMIN_FIELD}>
             <TextInput
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.roomArea}
               onChange={(e) => set('roomArea', e.target.value)}
             />
@@ -300,7 +304,8 @@ export default function ContractForm({
           <Field label="시작일" id="startDate" error={errorMap.startDate} required className={ADMIN_FIELD}>
             <TextInput
               type="date"
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.startDate}
               onChange={(e) => set('startDate', e.target.value)}
             />
@@ -309,7 +314,8 @@ export default function ContractForm({
           <Field label="종료일" id="endDate" error={errorMap.endDate} required className={ADMIN_FIELD}>
             <TextInput
               type="date"
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.endDate}
               onChange={(e) => set('endDate', e.target.value)}
             />
@@ -347,7 +353,8 @@ export default function ContractForm({
           <Field label="월 이용료" id="monthlyRent" error={errorMap.monthlyRent} required hint="원 단위 숫자" className={ADMIN_FIELD}>
             <TextInput
               inputMode="numeric"
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.monthlyRent}
               onChange={(e) => handleMonthlyRentChange(e.target.value)}
             />
@@ -367,7 +374,8 @@ export default function ContractForm({
               inputMode="numeric"
               readOnly
               tabIndex={-1}
-              className={`${ADMIN_CONTROL} bg-gray-50 text-gray-600 cursor-not-allowed`}
+              light
+              className="text-sm bg-gray-50 text-gray-600 dark:bg-gray-50 dark:text-gray-600 cursor-not-allowed"
               value={values.depositAmount}
             />
           </Field>
@@ -386,7 +394,8 @@ export default function ContractForm({
           >
             <TextInput
               inputMode="numeric"
-              className={ADMIN_CONTROL}
+              light
+              className="text-sm"
               value={values.paymentDay}
               onChange={(e) => set('paymentDay', e.target.value.replace(/[^0-9]/g, ''))}
             />
@@ -414,7 +423,8 @@ export default function ContractForm({
             {values.specialTerms.map((term, index) => (
               <div key={specialTermIds[index] ?? index} className="flex gap-2">
                 <TextInput
-                  className={ADMIN_CONTROL}
+                  light
+              className="text-sm"
                   value={term}
                   placeholder={`특약 ${index + 1}`}
                   onChange={(e) => updateSpecialTerm(index, e.target.value)}
@@ -444,7 +454,8 @@ export default function ContractForm({
           className={ADMIN_FIELD}
         >
           <TextInput
-            className={ADMIN_CONTROL}
+            light
+              className="text-sm"
             value={values.title}
             onChange={(e) => set('title', e.target.value)}
           />

@@ -5,7 +5,6 @@ import Link from 'next/link';
 
 import ContractNotice from '../../../../components/contracts/ContractNotice';
 import { TextInput } from '../../../../components/ui/Field';
-import { lightOnlyControl } from '../../../../components/ui/adminFieldClass';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
@@ -299,7 +298,7 @@ export default function ContractCompletePage({
                 aria-describedby={downloadError ? 'download-identity-error' : undefined}
                 aria-invalid={downloadError ? true : undefined}
                 invalid={Boolean(downloadError)}
-                className={`mb-4 px-4 py-3 text-center text-lg tracking-[0.5em] ${lightOnlyControl}`}
+                light className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
               />
 
               <Button

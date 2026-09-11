@@ -8,7 +8,7 @@ import Markdown from 'markdown-to-jsx';
 import ContractContent from '../../../../components/contracts/ContractContent';
 import { Button } from '../../../../components/ui/Button';
 import { Field, TextInput } from '../../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../../components/ui/adminFieldClass';
 import { getDb } from '../../../../db/client';
 import {
   serializeAttachment,
@@ -157,8 +157,7 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
 
 
 
-/** 계약서 페이지는 종이처럼 항상 밝다 — 공용 컨트롤의 다크 분기만 되돌린다. */
-const LIGHT_CONTROL = `px-4 py-3 ${lightOnlyControl}`;
+/** 계약서 페이지는 종이처럼 항상 밝다 — 컨트롤은 `light` prop, 래퍼는 이 클래스로 되돌린다. */
 const LIGHT_FIELD = lightOnlyField;
 
 export default function ContractSignPage({
@@ -548,7 +547,8 @@ export default function ContractSignPage({
                       value={customerBirthdate}
                       onChange={(e) => setCustomerBirthdate(e.target.value)}
                       max={new Date().toISOString().slice(0, 10)}
-                      className={`${LIGHT_CONTROL} [color-scheme:light]`}
+                      light
+                      className="px-4 py-3 [color-scheme:light]"
                     />
                   </Field>
 
@@ -564,7 +564,8 @@ export default function ContractSignPage({
                       onChange={(e) => setCustomerAddress(e.target.value)}
                       placeholder="예: 서울시 은평구 대조동 00-0"
                       autoComplete="street-address"
-                      className={LIGHT_CONTROL}
+                      light
+                      className="px-4 py-3"
                     />
                   </Field>
                 </div>
@@ -636,7 +637,8 @@ export default function ContractSignPage({
                   }
                   placeholder={'0'.repeat(IDENTITY_DIGITS)}
                   aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
-                  className={`w-32 text-center tracking-[0.4em] text-lg ${LIGHT_CONTROL} [color-scheme:light]`}
+                  light
+                  className="w-32 text-center tracking-[0.4em] text-lg px-4 py-3 [color-scheme:light]"
                 />
 
                 <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">

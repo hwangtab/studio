@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import { Field, TextInput, TextArea, fieldControlClass } from './Field';
+import { Field, TextInput, TextArea, Select, fieldControlClass } from './Field';
 
 describe('Field', () => {
   it('레이블을 컨트롤에 연결한다', () => {
@@ -97,5 +97,50 @@ describe('Field', () => {
       </Field>,
     );
     expect(screen.getByLabelText('컨트롤').className).toMatch(/border-red-500/);
+  });
+
+  // light는 className이 아니라 prop이다 — 문자열로 넘기면 twMerge 순서상
+  // dark:border-gray-300이 뒤에 와서 오류 테두리의 dark:border-red-500을 지운다.
+  // 관리자·계약 화면에도 <html class="dark">가 붙으므로 실제로 보이는 회귀였다.
+  describe('light 옵트인', () => {
+    it.each([
+      ['TextInput', TextInput],
+      ['TextArea', TextArea],
+      ['Select', Select],
+    ] as const)('%s: light + invalid면 다크 오류 테두리가 살아남는다', (_name, Control) => {
+      render(<Control aria-label="ctl" light invalid />);
+      const cls = screen.getByLabelText('ctl').className;
+      expect(cls).toMatch(/(^|\s)dark:border-red-500(\s|$)/);
+      expect(cls).not.toMatch(/dark:border-gray-300/);
+      expect(cls).not.toMatch(/dark:border-gray-600/);
+    });
+
+    it('light면 다크 배경·글자색이 라이트 값으로 돌아간다', () => {
+      render(<TextInput aria-label="ctl" light />);
+      const cls = screen.getByLabelText('ctl').className;
+      expect(cls).toMatch(/dark:bg-white/);
+      expect(cls).toMatch(/dark:text-gray-900/);
+      expect(cls).not.toMatch(/dark:bg-gray-800/);
+    });
+
+    it('light 없이 invalid면 기본 다크 오류 테두리를 그대로 쓴다', () => {
+      render(<TextInput aria-label="ctl" invalid />);
+      expect(screen.getByLabelText('ctl').className).toMatch(/dark:border-red-500/);
+    });
+
+    it('호출부 className은 light보다 뒤에 와서 이긴다(읽기전용 칸의 회색 배경)', () => {
+      render(<TextInput aria-label="ctl" light readOnly className="bg-gray-50 dark:bg-gray-50" />);
+      const cls = screen.getByLabelText('ctl').className;
+      expect(cls).toMatch(/dark:bg-gray-50/);
+      expect(cls).not.toMatch(/dark:bg-white/);
+    });
+
+    it('light는 DOM 속성으로 새지 않는다', () => {
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      render(<TextInput aria-label="ctl" light />);
+      expect(screen.getByLabelText('ctl').getAttribute('light')).toBeNull();
+      expect(spy).not.toHaveBeenCalled();
+      spy.mockRestore();
+    });
   });
 });

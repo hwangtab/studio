@@ -278,6 +278,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
             <div>
               <Field id="customerNote" label="요청사항 (선택)">
                 <TextArea
+                  className="min-h-0"
                   rows={4}
                   placeholder="파일 링크(구글 드라이브·WeTransfer)가 이미 있으면 여기 적어주셔도 됩니다."
                   value={customerNote}

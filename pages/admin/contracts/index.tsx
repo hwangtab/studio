@@ -12,7 +12,6 @@ import {
 } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
-import { lightOnlyControl } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { contractStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -308,7 +307,7 @@ export default function AdminContractsPage({
                   placeholder="이름, 이메일, 전화번호, 호실 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className={`w-auto flex-1 min-w-[240px] px-4 ${lightOnlyControl}`}
+                  light className="w-auto flex-1 min-w-[240px] px-4"
                 />
               </div>
 

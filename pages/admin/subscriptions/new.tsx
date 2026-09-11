@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import { createSubscription, copyToClipboard } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextInput } from '../../../components/ui/Field';
-import { lightOnlyControl, lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import { subscriptionAmounts } from '../../../lib/billing/amounts';
@@ -130,7 +130,7 @@ export default function NewLessonSubscriptionPage() {
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className={`text-sm ${lightOnlyControl}`}
+                  light className="text-sm"
                 />
               </Field>
               <Field id="customer-phone" label="전화번호" className={lightOnlyField}>
@@ -139,7 +139,7 @@ export default function NewLessonSubscriptionPage() {
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="010-1234-5678"
-                  className={`text-sm ${lightOnlyControl}`}
+                  light className="text-sm"
                 />
               </Field>
               <Field id="customer-email" label="이메일" className={lightOnlyField}>
@@ -147,7 +147,7 @@ export default function NewLessonSubscriptionPage() {
                   type="email"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className={`text-sm ${lightOnlyControl}`}
+                  light className="text-sm"
                 />
               </Field>
               <Field id="billing-day" label="결제일 (매월 1~31일)" className={lightOnlyField}>
@@ -157,7 +157,7 @@ export default function NewLessonSubscriptionPage() {
                   max={31}
                   value={billingDay}
                   onChange={(e) => setBillingDay(Number(e.target.value))}
-                  className={`text-sm ${lightOnlyControl}`}
+                  light className="text-sm"
                 />
               </Field>
 
