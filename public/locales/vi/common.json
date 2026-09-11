@@ -27,6 +27,7 @@
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
     "coverVideo": "Quay Video Cover",
+    "musicPromotion": "Quảng bá phát hành",
     "releaseProject": "Tổng quan",
     "releaseSingle": "Single",
     "releaseEp": "EP",
@@ -1651,27 +1652,27 @@
       "steps": [
         {
           "title": "Liên hệ và gửi bản nhạc",
-          "body": "Hãy nhắn cho chúng tôi qua KakaoTalk kèm bản nhạc và thông tin cơ bản. Chưa phát hành hay đã phát hành rồi đều được."
+          "description": "Hãy nhắn cho chúng tôi qua KakaoTalk kèm bản nhạc và thông tin cơ bản. Chưa phát hành hay đã phát hành rồi đều được."
         },
         {
           "title": "Duyệt — 3 ngày làm việc",
-          "body": "Nhà sản xuất nghe hết các bài rồi quyết định. Nếu khó nhận, chúng tôi sẽ ghi rõ lý do và báo lại."
+          "description": "Nhà sản xuất nghe hết các bài rồi quyết định. Nếu khó nhận, chúng tôi sẽ ghi rõ lý do và báo lại."
         },
         {
           "title": "Làm tài liệu — 5 ngày",
-          "body": "Chúng tôi làm thông cáo báo chí, trang press kit, các bản thảo phái sinh và video."
+          "description": "Chúng tôi làm thông cáo báo chí, trang press kit, các bản thảo phái sinh và video."
         },
         {
           "title": "Bạn xác nhận",
-          "body": "Trước khi gửi, chúng tôi cho bạn xem toàn bộ. Chỉ nghệ sĩ mới biết đúng sai về mặt dữ kiện, nên bước này không thể bỏ qua."
+          "description": "Trước khi gửi, chúng tôi cho bạn xem toàn bộ. Chỉ nghệ sĩ mới biết đúng sai về mặt dữ kiện, nên bước này không thể bỏ qua."
         },
         {
           "title": "Gửi đi — 1-3 tuần",
-          "body": "Chúng tôi chia nhỏ để giữ uy tín tên miền. Bắn hết một lần thì chỉ vào hòm thư rác."
+          "description": "Chúng tôi chia nhỏ để giữ uy tín tên miền. Bắn hết một lần thì chỉ vào hòm thư rác."
         },
         {
           "title": "Báo cáo",
-          "body": "Chúng tôi tổng hợp danh mục đã gửi và các phản hồi rồi gửi bạn."
+          "description": "Chúng tôi tổng hợp danh mục đã gửi và các phản hồi rồi gửi bạn."
         }
       ]
     },

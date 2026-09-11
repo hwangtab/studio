@@ -77,6 +77,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
         { label: t('nav.releaseSingle'), href: `/${locale}/release-project/single` },
         { label: t('nav.releaseEp'), href: `/${locale}/release-project/ep` },
         { label: t('nav.releaseAlbum'), href: `/${locale}/release-project/album` },
+        // 제작을 맡기지 않아도 되는 단독 상품이라 발매 그룹 끝에 둔다.
+        { label: t('nav.musicPromotion'), href: `/${locale}/music-promotion` },
         // 펀딩 퍼널은 ko 전용(스펙 §8) — 다른 로케일엔 항목 자체를 넣지 않는다.
         ...(locale === 'ko' ? [{ label: t('nav.funding'), href: `/${locale}/funding` }] : []),
       ]

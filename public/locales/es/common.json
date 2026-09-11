@@ -27,6 +27,7 @@
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
     "coverVideo": "Video Cover",
+    "musicPromotion": "Campaña de Prensa",
     "releaseProject": "Descripción general",
     "releaseSingle": "Single",
     "releaseEp": "EP",
@@ -1651,27 +1652,27 @@
       "steps": [
         {
           "title": "Contacto y envío de la música",
-          "body": "Escríbenos por KakaoTalk y mándanos la música y los datos básicos. Da igual si aún no ha salido o si ya está publicada."
+          "description": "Escríbenos por KakaoTalk y mándanos la música y los datos básicos. Da igual si aún no ha salido o si ya está publicada."
         },
         {
           "title": "Escucha previa — 3 días hábiles",
-          "body": "El productor escucha todos los temas y decide. Si no podemos aceptarlo, te lo decimos explicando el motivo."
+          "description": "El productor escucha todos los temas y decide. Si no podemos aceptarlo, te lo decimos explicando el motivo."
         },
         {
           "title": "Producción de materiales — 5 días",
-          "body": "Hacemos la nota de prensa, la página de press kit, los textos derivados y el vídeo."
+          "description": "Hacemos la nota de prensa, la página de press kit, los textos derivados y el vídeo."
         },
         {
           "title": "Revisión contigo",
-          "body": "Te lo enseñamos todo antes de enviar nada. Los hechos solo los conoce el artista, así que este paso no se puede saltar."
+          "description": "Te lo enseñamos todo antes de enviar nada. Los hechos solo los conoce el artista, así que este paso no se puede saltar."
         },
         {
           "title": "Envío — de 1 a 3 semanas",
-          "body": "Lo repartimos para proteger la reputación del dominio. Si se dispara todo de golpe, acaba en la carpeta de spam."
+          "description": "Lo repartimos para proteger la reputación del dominio. Si se dispara todo de golpe, acaba en la carpeta de spam."
         },
         {
           "title": "Informe",
-          "body": "Te preparamos el detalle de los envíos y las reacciones."
+          "description": "Te preparamos el detalle de los envíos y las reacciones."
         }
       ]
     },
