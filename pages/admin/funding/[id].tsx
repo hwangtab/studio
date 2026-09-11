@@ -14,6 +14,7 @@ import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/f
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
+import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 interface AdminFundingDetailPageProps {
   pledge: AdminPledgeItem;
@@ -72,6 +73,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   const [trackingCompany, setTrackingCompany] = useState(pledge.trackingCompany ?? '');
   const [trackingNumber, setTrackingNumber] = useState(pledge.trackingNumber ?? '');
   const [memo, setMemo] = useState(pledge.adminMemo ?? '');
+
+  // 센티널(`send_pending`·`send_inflight`)과 실제 실패 사유를 갈라 읽는다 — 원문 노출 금지.
+  const notificationCopy = describeNotificationError(pledge.notificationError);
 
   /**
    * 서버가 메모를 바꾸면 textarea를 따라가게 한다.
@@ -196,10 +200,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             </div>
           )}
 
-          {pledge.notificationError && (
+          {/* notificationError는 자유 문자열이 아니다 — 확정 후처리 소유권 CAS가 쓰는
+              `send_pending`·`send_inflight`가 같은 칸에 들어온다. 원문을 그대로 찍으면
+              "알림 발송에 실패했습니다 send_inflight"가 되어 정상 진행 중인 후원을 사고로
+              읽게 만든다(lib/ops/notificationSentinel.ts). */}
+          {notificationCopy && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              <strong className="block mb-1">알림 발송에 실패했습니다</strong>
-              {pledge.notificationError}
+              <strong className="block mb-1">{notificationCopy.title}</strong>
+              {notificationCopy.detail}
               <span className="block mt-2 text-amber-700">아래 “메일 재발송”을 눌러 다시 보내 주세요.</span>
             </div>
           )}

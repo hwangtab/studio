@@ -21,6 +21,7 @@ import {
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { expireStaleOrders } from '../../../lib/booking/service';
+import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 주문이 잘린다는 사실을 화면에 알린다(contracts와 동일). */
 const LIST_LIMIT = 200;
@@ -161,11 +162,18 @@ export default function AdminBookingsPage({
   const mailFailed = useMemo(() => bookings.filter((b) => b.notificationError), [bookings]);
 
   /**
-   * 구글 캘린더 등록에 실패한 예약. 결제·확정은 정상이라 목록에서는 완전히 정상으로
+   * 구글 캘린더에 등록되지 않은 예약. 결제·확정은 정상이라 목록에서는 완전히 정상으로
    * 보이는데, 정작 운영자 캘린더에는 그 시간이 비어 있다. 그 상태로 전화 예약을 받으면
    * 오프라인 이중예약이 난다 — 알림 실패보다 위에 둔다(고객이 이미 돈을 냈고 온다).
+   *
+   * gcalError(시도했다가 실패)만이 아니라 gcalMissing(시도 자체가 없음 — 확정 직후 후처리가
+   * 죽어 gcal_event_id·gcal_error가 둘 다 NULL)도 함께 센다. 운영 점검 메일
+   * (lib/ops/healthCheck.ts)과 같은 판정이어야 화면과 메일이 같은 건수를 말한다.
    */
-  const gcalFailed = useMemo(() => bookings.filter((b) => b.gcalError), [bookings]);
+  const gcalFailed = useMemo(
+    () => bookings.filter((b) => b.gcalError || b.gcalMissing),
+    [bookings],
+  );
 
   // 결제 기록과 주문 상태가 어긋난 건 — 돈이 걸린 문제라 알림 실패보다 위에 둔다(스펙 §10).
   const mismatched = useMemo(() => bookings.filter((b) => b.mismatch), [bookings]);
@@ -401,8 +409,12 @@ export default function AdminBookingsPage({
                                 </span>
                               </div>
                             )}
+                            {/* 원문 대신 배지 문구 — `send_pending`·`send_inflight`는 실패가
+                                아니라 진행/대기 상태다(lib/ops/notificationSentinel.ts). */}
                             {booking.notificationError && (
-                              <div className="mt-1 text-xs text-amber-700 font-medium">알림 실패</div>
+                              <div className="mt-1 text-xs text-amber-700 font-medium">
+                                {describeNotificationError(booking.notificationError)?.badge}
+                              </div>
                             )}
                           </td>
                           <td className="px-4 py-3">

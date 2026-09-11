@@ -22,6 +22,7 @@ import {
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
+import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 interface AdminBookingDetailPageProps {
   booking: AdminBookingDetail;
@@ -224,7 +225,20 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
   const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending';
   // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
   // (pages/api/admin/bookings/[id].ts retry-gcal).
-  const canRetryGcal = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'cancelled';
+  //
+  // 뒤쪽 괄호가 "고칠 것이 실제로 있는가"다. 예전엔 이 버튼이 gcalError 배너 **안**에만
+  // 있어서 그 조건을 따로 적을 필요가 없었는데, 등록 시도 자체가 없었던 예약
+  // (gcalEventId·gcalError 둘 다 NULL)에는 배너가 안 떠서 버튼도 같이 사라졌다.
+  // gcalMissing은 confirmed에서만 참이므로(admin-serialize) 대기·취소 예약에 등록 버튼이
+  // 새로 뜨는 일은 없고, gcalError가 있는 완료·노쇼 예약의 기존 재시도 경로도 그대로다.
+  const canRetryGcal =
+    !isMixing &&
+    booking.bookingStatus !== null &&
+    booking.bookingStatus !== 'cancelled' &&
+    (booking.gcalError !== null || booking.gcalMissing);
+
+  // 센티널(`send_pending`·`send_inflight`)과 실제 실패 사유를 갈라 읽는다 — 원문 노출 금지.
+  const notificationCopy = describeNotificationError(booking.notificationError);
 
   const canStartWork = isMixing && workOrder?.status === 'received';
   const canDeliver = isMixing && workOrder?.status === 'in_progress';
@@ -268,26 +282,53 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
           )}
 
           {/* gcalError·notificationError는 결제·환불은 정상 처리됐지만 후속 처리(캘린더 등록,
-              메일 발송)만 실패한 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 그대로 보여준다. */}
-          {booking.notificationError && (
+              메일 발송)만 남은 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 보여준다.
+
+              notificationError는 자유 문자열이 아니다. 확정 후처리 소유권을 CAS로 정하면서
+              `send_pending`·`send_inflight` 두 예약어가 같은 칸에 들어온다. 원문을 그대로
+              찍으면 "알림 발송에 실패했습니다 send_inflight"가 되어, 정상 진행 중인 주문을
+              사고로 읽게 만든다 — describeNotificationError가 그 해석을 맡는다. */}
+          {notificationCopy && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              <strong className="block mb-1">알림 발송에 실패했습니다</strong>
-              {booking.notificationError}
+              <strong className="block mb-1">{notificationCopy.title}</strong>
+              {notificationCopy.detail}
               <span className="block mt-2 text-amber-700">
-                고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. 아래 “알림 재발송”을
-                눌러 다시 보내 주세요.
+                {notificationCopy.kind === 'failure'
+                  ? '고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. '
+                  : ''}
+                {/* 믹싱·마스터링 주문에는 재발송 버튼이 없다(bookings 행이 없어 API도 409를
+                    준다). 없는 버튼을 가리키면 운영자가 화면을 뒤지게 되므로 안내를 가른다. */}
+                {canResend
+                  ? '아래 “알림 재발송”을 눌러 다시 보내 주세요.'
+                  : '이 주문에는 재발송 버튼이 없습니다 — 고객에게 직접 연락해 주세요.'}
               </span>
             </div>
           )}
 
-          {booking.gcalError && (
+          {/* 캘린더 구멍은 두 모습으로 온다 — 배너를 하나로 두고 제목·본문만 가른다.
+              (1) 등록을 시도했다가 실패: gcalError에 사유가 남는다.
+              (2) 등록 시도 자체가 없음: gcalEventId·gcalError가 둘 다 NULL(gcalMissing).
+              확정 직후 후처리가 죽은 경우라 오류 기록조차 없다. 예전엔 (1)만 배너를 띄워서
+              (2)는 화면 어디에도 안 보였고, 운영자가 알림 배너를 보고 “알림 재발송”을 누르면
+              남은 신호까지 지워져 빈 캘린더로 confirmed 예약만 남았다. */}
+          {(booking.gcalError || booking.gcalMissing) && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
-              {booking.gcalError}
+              {booking.gcalError ? (
+                <>
+                  <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
+                  {booking.gcalError}
+                </>
+              ) : (
+                <strong className="block mb-1">
+                  구글 캘린더에 등록되지 않았습니다 — 등록 시도 기록이 없습니다
+                </strong>
+              )}
               <span className="block mt-2 text-amber-700">
                 운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
-                비어 있으면 다른 일정이 겹칠 수 있습니다. 아래 “캘린더 재시도”를 눌러 다시
-                등록해 주세요.
+                비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
+                {canRetryGcal
+                  ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
+                  : '캘린더에 직접 넣어 주세요.'}
               </span>
               {canRetryGcal && (
                 <Button light
