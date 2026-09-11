@@ -27,11 +27,24 @@ const FAIL_MESSAGES: Record<string, string> = {
 };
 const GENERIC_MESSAGE = '결제창이 닫혔거나 결제가 거절되었습니다.';
 /** 화면에 그대로 보여도 되는 코드 형태. 표에 없는 코드도 문의할 때 쓸 수 있게 보여준다. */
+/**
+ * 화면에 그대로 띄워도 되는 주문번호 형태 — 토스가 실패 URL에 `orderId`로 실어 보낸다.
+ * 주소창에 이미 들어 있으므로 새로 노출되는 정보는 없고, 주문번호만으로는 아무 데도
+ * 접근하지 못한다(확정 멱등 분기가 amount + paymentKey 일치를 함께 요구한다 — PR #56).
+ * 형태를 좁게 검증해, 임의 문자열이 우리 레이아웃 안에 렌더되는 경로를 만들지 않는다.
+ */
+const ORDER_NO_PATTERN = /^(SNB|FND)-(M-)?\d{8}-[0-9A-F]{8}$/;
 const CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
 
-interface Props { slug: string | null; code: string | null; message: string }
+interface Props {
+  slug: string | null;
+  code: string | null;
+  message: string;
+  /** 문의할 때 댈 주문번호. 형태 검증을 통과한 값만 온다. */
+  orderNo: string | null;
+}
 
-export default function FundingFailPage({ slug, code, message }: Props) {
+export default function FundingFailPage({ slug, code, message, orderNo }: Props) {
   return (
     <>
       <Head><title>결제 실패 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
@@ -52,6 +65,9 @@ export default function FundingFailPage({ slug, code, message }: Props) {
             문의: 010-4255-7893 · hello@studionol.co.kr
           </p>
           {code && <p className="typo-card-meta mx-auto mt-3 max-w-md">오류 코드: {code}</p>}
+          {orderNo && (
+            <p className="typo-card-meta mx-auto mt-1 max-w-md">주문번호: {orderNo}</p>
+          )}
           {/* 이 URL에는 토스가 붙인 orderId(주문번호)가 실린다. 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
               1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
                  그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
@@ -77,5 +93,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   const slug = typeof query.slug === 'string' && /^[a-z0-9-]+$/.test(query.slug) ? query.slug : null;
   // code만 받는다. query.message는 읽지도 않는다 — 표에 없는 코드는 일반 문구로 떨어진다.
   const code = typeof query.code === 'string' && CODE_PATTERN.test(query.code) ? query.code : null;
-  return { props: { slug, code, message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE } };
+  // 토스가 실어 보내는 orderId — 문의용 식별자로만 쓴다(형태를 벗어나면 버린다).
+  const orderId = typeof query.orderId === 'string' ? query.orderId.toUpperCase() : null;
+  const orderNo = orderId && ORDER_NO_PATTERN.test(orderId) ? orderId : null;
+  return {
+    props: { slug, code, message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE, orderNo },
+  };
 };

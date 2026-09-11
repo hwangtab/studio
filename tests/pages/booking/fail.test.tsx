@@ -24,7 +24,7 @@ import BookingFailPage, { getServerSideProps } from '../../../pages/[locale]/boo
  */
 
 type Ctx = Parameters<typeof getServerSideProps>[0];
-type Ok = { props: { service: string; code: string | null; message: string } };
+type Ok = { props: { service: string; code: string | null; message: string; orderNo: string | null } };
 
 const run = async (query: Record<string, string>): Promise<Ok> =>
   (await getServerSideProps({
@@ -81,7 +81,7 @@ describe('결제 실패 페이지 — 쿼리의 message는 버린다', () => {
 
 describe('결제 실패 페이지 — 렌더링', () => {
   it('message가 비거나 알 수 없어도 정본 연락처와 카카오 진입점이 있다', () => {
-    render(<BookingFailPage service="recording" code={null} message="결제 진행 중 문제가 발생했습니다." />);
+    render(<BookingFailPage service="recording" code={null} message="결제 진행 중 문제가 발생했습니다." orderNo={null} />);
     expect(screen.getByText(/010-4255-7893/)).toBeInTheDocument();
     const kakaoLink = screen.getByRole('link', { name: /카카오톡으로 문의하기/ });
     expect(kakaoLink).toHaveAttribute('href', expect.stringContaining('kakao'));
@@ -91,7 +91,26 @@ describe('결제 실패 페이지 — 렌더링', () => {
   });
 
   it('돌아가기 링크가 상품에 맞는 예약/주문 페이지를 가리킨다', () => {
-    render(<BookingFailPage service="mixing-mastering" code={null} message="결제 진행 중 문제가 발생했습니다." />);
+    render(<BookingFailPage service="mixing-mastering" code={null} message="결제 진행 중 문제가 발생했습니다." orderNo={null} />);
     expect(screen.getByRole('link', { name: /주문 페이지로 돌아가기/ })).toHaveAttribute('href', '/ko/booking/mixing-mastering');
+  });
+});
+
+/**
+ * 결제가 실패하면 고객이 문의를 하는데, 댈 수 있는 식별자가 화면에 없었다. 토스가 실패 URL에
+ * `orderId`로 실어 보내므로 주소창에는 이미 들어 있다 — 화면에 옮겨 적을 뿐이다.
+ * 주문번호만으로는 아무 데도 접근하지 못한다(확정 멱등 분기가 amount + paymentKey를 함께 본다).
+ */
+describe('주문번호 표기', () => {
+  it('형태가 맞는 orderId는 문의용 주문번호로 보여준다', async () => {
+    const r = await run({ service: 'recording', orderId: 'SNB-20260911-AB12CD34' });
+    expect(r.props.orderNo).toBe('SNB-20260911-AB12CD34');
+  });
+
+  it('형태를 벗어난 값은 버린다 — 임의 문자열이 화면에 렌더되지 않는다', async () => {
+    for (const bad of ['<script>x</script>', '연락처는 010-0000-0000 입니다', 'SNB-1', '']) {
+      const r = await run({ service: 'recording', orderId: bad });
+      expect(r.props.orderNo).toBeNull();
+    }
   });
 });

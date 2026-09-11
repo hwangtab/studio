@@ -26,6 +26,15 @@ const FAIL_MESSAGES: Record<string, string> = {
   INVALID_CARD_NUMBER: '카드번호를 다시 확인해 주세요.',
   NOT_AVAILABLE_BANK: '은행 서비스 시간이 아닙니다. 잠시 후 다시 시도해 주세요.',
 };
+/**
+ * 화면에 그대로 띄워도 되는 주문번호 형태 — 토스가 실패 URL에 `orderId`로 실어 보낸다.
+ *
+ * 왜 보여주는가: 결제가 실패하면 고객이 문의를 하는데, 댈 수 있는 식별자가 화면에 없었다.
+ * 주소창에는 이미 들어 있으니 새로 노출되는 정보는 없고, 주문번호만으로는 아무 데도
+ * 접근하지 못한다(확정 멱등 분기가 amount + paymentKey 일치를 함께 요구한다 — PR #56).
+ * 형태를 좁게 검증해, 임의 문자열이 우리 레이아웃 안에 렌더되는 경로를 만들지 않는다.
+ */
+const ORDER_NO_PATTERN = /^(SNB|FND)-(M-)?\d{8}-[0-9A-F]{8}$/;
 const GENERIC_MESSAGE = '결제 진행 중 문제가 발생했습니다.';
 /** 화면에 그대로 보여도 되는 코드 형태. 표에 없는 코드도 문의할 때 쓸 수 있게 보여준다. */
 const CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
@@ -36,9 +45,11 @@ interface FailProps {
   code: string | null;
   /** 표에서 옮긴 안전한 문구. 쿼리 원문이 아니다. */
   message: string;
+  /** 문의할 때 댈 주문번호. 형태 검증을 통과한 값만 온다. */
+  orderNo: string | null;
 }
 
-export default function BookingFailPage({ code, message, service }: FailProps) {
+export default function BookingFailPage({ code, message, orderNo, service }: FailProps) {
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   return (
     <>
@@ -54,6 +65,7 @@ export default function BookingFailPage({ code, message, service }: FailProps) {
         <h1 className="typo-page-title">결제를 완료하지 못했습니다</h1>
         <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
         {code && <p className="mt-2 text-sm text-gray-500">오류 코드: {code}</p>}
+        {orderNo && <p className="mt-1 text-sm text-gray-500">주문번호: {orderNo}</p>}
         <p className="mt-2 text-sm text-gray-500">예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
         {/* 정본 연락처를 상시 표기한다 — message가 비거나 알 수 없는 코드여도 기댈 곳이
             화면에 있어야 한다(funding/fail.tsx와 같은 이유). */}
@@ -89,7 +101,7 @@ export const getServerSideProps: GetServerSideProps<FailProps> = async ({ query,
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
 
-  const { code, service } = query;
+  const { code, orderId, service } = query;
   // 쿼리값을 그대로 경로에 넣지 않는다 — 아는 서비스일 때만 쓰고 아니면 녹음으로 돌아간다.
   // 목록을 베끼지 않고 상품 정본에서 끌어온다 — 서비스가 늘면 여기도 자동으로 따라간다.
   // 믹싱·마스터링은 슬롯 없는 주문형 결제라 SESSION_PRODUCTS에 없다([service].tsx와 같은 이유로
@@ -98,11 +110,17 @@ export const getServerSideProps: GetServerSideProps<FailProps> = async ({ query,
   const safeService = typeof service === 'string' && knownServices.has(service) ? service : 'recording';
   // code만 받는다. query.message는 읽지도 않는다 — 표에 없는 코드는 일반 문구로 떨어진다.
   const safeCode = typeof code === 'string' && CODE_PATTERN.test(code) ? code : null;
+  // 토스가 실어 보내는 orderId — 문의용 식별자로만 쓴다(형태를 벗어나면 버린다).
+  const safeOrderNo =
+    typeof orderId === 'string' && ORDER_NO_PATTERN.test(orderId.toUpperCase())
+      ? orderId.toUpperCase()
+      : null;
   return {
     props: {
       service: safeService,
       code: safeCode,
       message: (safeCode && FAIL_MESSAGES[safeCode]) || GENERIC_MESSAGE,
+      orderNo: safeOrderNo,
     },
   };
 };
