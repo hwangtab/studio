@@ -91,20 +91,17 @@ beforeEach(async () => {
 });
 afterAll(() => client.close());
 
-it('입금 전 무통장 레거시 행을 취소하면 expired가 된다', async () => {
+/**
+ * 입금 전 무통장 신청의 셀프 해제(pending → expired)는 결제수단과 함께 사라졌다.
+ * 남아 있는 레거시 pending 행은 홀드 만료가 스스로 정리한다 — 화면에도 그 버튼이 없다.
+ * 이 경로로 들어오면 취소는 결제 확정 건만 받으므로 409다.
+ */
+it('입금 전 무통장 레거시 행은 셀프 해제되지 않는다 — 홀드 만료가 정리한다', async () => {
   const { orderNo, manageToken } = await insertLegacyPendingBankTransfer();
   const r = await call({ orderNo, token: manageToken });
-  expect(r.status).toBe(200);
-  expect(r.body).toEqual({ ok: true, mode: 'pending_released' });
-  expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('expired');
-});
-
-it('같은 신청을 두 번 취소하면 두 번째는 409 — 이미 처리된 건을 되돌리지 않는다', async () => {
-  const { orderNo, manageToken } = await insertLegacyPendingBankTransfer();
-  expect((await call({ orderNo, token: manageToken })).status).toBe(200);
-  const again = await call({ orderNo, token: manageToken });
-  expect(again.status).toBe(409);
-  expect(again.body).toMatchObject({ ok: false, code: 'invalid_state' });
+  expect(r.status).toBe(409);
+  expect(r.body).toMatchObject({ ok: false, code: 'invalid_state' });
+  expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('pending');
 });
 
 it('토큰이 틀리면 404 — 주문 존재 여부를 흘리지 않는다', async () => {

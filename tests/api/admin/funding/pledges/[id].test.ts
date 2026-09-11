@@ -88,7 +88,7 @@ it('resend_email: refunded 주문은 재발송할 메일이 없어 409, DB 기�
   (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'refunded' });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
-  expect(r.body).toEqual({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+  expect(r.body).toEqual({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
   expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
   expect(mockUpdate).not.toHaveBeenCalled();
 });
@@ -111,7 +111,7 @@ it('resend_email: pending(결제 전, toss)이면 재발송할 메일이 없어 
   });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
-  expect(r.body).toEqual({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+  expect(r.body).toEqual({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
   expect(mockUpdate).not.toHaveBeenCalled();
 });
 

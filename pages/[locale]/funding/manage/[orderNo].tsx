@@ -186,7 +186,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!order?.fundingPledge || !isTokenMatch(order.manageToken, token)) return { notFound: true };
   const pl = order.fundingPledge;
   const project = getFundingProject(pl.projectSlug);
-  const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus });
+  const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod });
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardTitle: pl.rewardTitle,

@@ -25,11 +25,28 @@ export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as c
 export const isRefundPendingStatus = (status: string): boolean =>
   (REFUND_PENDING_ORDER_STATUSES as readonly string[]).includes(status);
 
-export type CancelEligibility = { ok: true } | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' };
+export type CancelEligibility =
+  | { ok: true }
+  | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' | 'offline_payment' };
 
-/** 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다. */
-export const assessSelfCancel = (input: { orderStatus: string; projectState: ProjectState; fulfillmentStatus: string }): CancelEligibility => {
+/**
+ * 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다.
+ *
+ * `paymentMethod`를 함께 보는 이유: 토스 결제가 아닌 후원은 취소할 결제가 없어 환불이
+ * 계좌 송금이다. 그걸 안 보면 화면이 "전액 환불" 버튼을 띄우는데 눌러도 cancel.ts가
+ * 거절한다 — 죽은 버튼이다. 지금 이 경우는 운영자가 계좌로 받아 수기 등록한 건과
+ * 무통장입금 중단(2026-09-11) 전에 만들어진 건 둘뿐이다.
+ */
+export const assessSelfCancel = (input: {
+  orderStatus: string;
+  projectState: ProjectState;
+  fulfillmentStatus: string;
+  paymentMethod?: string;
+}): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
+  if (input.paymentMethod !== undefined && input.paymentMethod !== 'toss') {
+    return { ok: false, code: 'offline_payment' };
+  }
   if (input.projectState !== 'live') return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   return { ok: true };
@@ -39,6 +56,9 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
   not_paid: '결제가 확정된 후원만 취소할 수 있습니다.',
   project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
+  // 운영자가 계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
+  // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다.
+  offline_payment: '계좌로 받은 후원은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
 };
 
 /**
@@ -60,7 +80,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r5';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r6';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -91,7 +111,7 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
   { name: '토스페이먼츠', purpose: '결제 승인·취소·환불 처리', items: '후원자 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
-  { name: 'Resend', purpose: '후원 확정·무통장입금·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 후원 내역' },
+  { name: 'Resend', purpose: '후원 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 후원 내역' },
   { name: 'Vercel', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', purpose: '후원 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
 ];

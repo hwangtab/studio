@@ -60,6 +60,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
       orderStatus: order.status,
       projectState: project ? computeProjectState(project, input.now) : 'closed',
       fulfillmentStatus: pledge.fulfillmentStatus,
+      paymentMethod: pledge.paymentMethod,
     });
     if (!verdict.ok) return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES[verdict.code] };
   }
@@ -92,11 +93,9 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
    */
   if (pledge.paymentMethod === 'bank_transfer') {
     if (input.requestedBy === 'customer') {
-      return {
-        ok: false,
-        code: 'invalid_state',
-        message: '무통장입금 후원은 화면에서 취소할 수 없습니다. 문의로 연락해 주시면 처리해 드리겠습니다.',
-      };
+      // 위 assessSelfCancel이 먼저 걸러내므로 여기까지 오지 않는다 — 두 판정이 갈리면
+      // 화면은 버튼을 띄우는데 서버가 거절하는 조합이 생기므로, 같은 문구로 방어만 남긴다.
+      return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES.offline_payment };
     }
     if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
     const claim = await db.run(

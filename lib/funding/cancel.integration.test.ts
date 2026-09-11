@@ -27,7 +27,7 @@ import { cancelFundingPledge } from './cancel';
 // eslint-disable-next-line import/first
 import { cancelPayment } from '../booking/toss';
 // eslint-disable-next-line import/first
-import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
+import { sendFundingCancelledEmails } from './email';
 // eslint-disable-next-line import/first
 import { createFundingPledge, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first

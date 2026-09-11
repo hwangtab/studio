@@ -93,3 +93,24 @@ describe('이름 공개 철회', () => {
   });
 });
 
+
+/**
+ * 토스 결제가 아닌 후원(운영자가 계좌로 받아 수기 등록한 건, 무통장입금 중단 전의 건)은
+ * 취소할 결제가 없어 환불이 계좌 송금이다. `assessSelfCancel`이 그걸 보지 않던 동안
+ * 화면은 "후원 취소 (전액 환불)" 버튼을 띄웠는데, 누르면 서버가 거절하는 죽은 버튼이었다.
+ * 약관 제8조가 약속한 "후원 확인 페이지에서 바로 취소"와도 어긋났다.
+ */
+describe('토스 결제가 아닌 후원', () => {
+  it('셀프 취소 버튼 대신 문의 안내를 보여준다', () => {
+    render(
+      <FundingManagePage
+        {...baseProps}
+        paymentMethod="bank_transfer"
+        canCancel={false}
+        cancelBlockedReason="계좌로 받은 후원은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다."
+      />,
+    );
+    expect(screen.queryByRole('button', { name: /후원 취소/ })).not.toBeInTheDocument();
+    expect(screen.getByText(/문의로 접수해 주시면 계좌로 환불/)).toBeInTheDocument();
+  });
+});

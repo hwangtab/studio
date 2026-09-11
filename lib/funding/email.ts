@@ -1,7 +1,6 @@
 import { formatPriceAmount } from '../../data/pricing';
 import { sendEmail } from '../email/resend';
 import { OPERATOR_EMAIL } from '../operatorContact';
-import { formatKstDateTimeFull } from '../booking/format';
 
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';

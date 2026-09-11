@@ -13,12 +13,6 @@ import type { CreatePledgePayload } from './validation';
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
 /**
- * 같은 고객(이메일+전화)이 한 프로젝트에서 **같은 결제수단으로** 동시에 열어 둘 수 있는
- * 미만료 pending 홀드 수. 결제수단을 섞어 세면 무통장 대기 2건이 토스 후원까지 막는다.
- * 토스는 바로 위 자기 홀드 해제로 매번 0이 되므로, 실질적으로는 무통장 홀드 상한이다.
- */
-
-/**
  * 수기 등록(오프라인 현금·계좌 후원)에서 연락처 칸이 비었을 때 채워 넣는 플레이스홀더.
  * 실제 수신함도 번호도 아니다 — pages/api/admin/funding/pledges/index.ts가 넣고,
  * [id].ts의 메일 재발송이 이 값을 보고 발송을 막는다. **한 곳만 보도록 여기 모은다.**

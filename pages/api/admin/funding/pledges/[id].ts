@@ -173,8 +173,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true });
     }
     case 'resend_email': {
-      if (order.status !== 'paid' && !(order.status === 'pending' && order.fundingPledge.paymentMethod === 'bank_transfer')) {
-        return res.status(409).json({ ok: false, message: '재발송할 메일이 없는 상태입니다.' });
+      // 확정 메일만 재발송한다 — 결제 전 주문에는 보낼 메일이 없다(무통장 입금 안내는
+      // 2026-09-11에 그 결제수단과 함께 없어졌다).
+      if (order.status !== 'paid') {
+        return res.status(409).json({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
       }
       // 수기 등록 건은 실제 고객 메일이 없다(플레이스홀더가 들어간다) — 재발송하면
       // 우리 도메인 주소로 되돌아오거나 반송된다.
@@ -182,11 +184,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: '수기 등록 건은 메일을 보내지 않습니다.' });
       }
       const project = getFundingProject(order.fundingPledge.projectSlug);
-      // 확정 메일만 재발송한다 — 결제 전 주문에는 보낼 메일이 없다(무통장 입금 안내는
-      // 2026-09-11에 그 결제수단과 함께 없어졌다).
-      if (order.status !== 'paid') {
-        return res.status(409).json({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
-      }
       const err = await sendFundingConfirmedEmails(order, project);
       await db.update(orders).set({ notificationError: err, updatedAt: now }).where(eq(orders.id, order.id));
       return err ? res.status(502).json({ ok: false, message: err }) : res.status(200).json({ ok: true });

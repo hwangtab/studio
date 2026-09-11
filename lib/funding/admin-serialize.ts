@@ -113,8 +113,6 @@ export const hasReviewMarker = (adminMemo: string | null | undefined): boolean =
   return lastWarning > lastCleared;
 };
 
-/** 동명·동액 경고 키: pending 무통장 건끼리 이름+금액이 같으면 관리자가 입금 매칭을 헷갈린다. */
-
 export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
   const p = o.fundingPledge!;
   return {
