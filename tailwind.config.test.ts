@@ -147,3 +147,31 @@ describe('typo 컴포넌트 클래스', () => {
     }
   });
 });
+
+// "노란 건 카카오톡"이라는 학습이 성립하려면 카카오 토큰 밖의 옐로가 없어야 한다.
+// 경고·주의는 amber, 별점도 amber를 쓴다(docs/design-system.md §1).
+describe('옐로 사용 제한', () => {
+  it('kakao 토큰 밖에서 yellow-* 유틸리티를 쓰지 않는다', () => {
+    const offenders: string[] = [];
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const content = readFileSync(file, 'utf-8');
+        for (const match of content.matchAll(/\b(?:bg|text|border|ring|from|to|via|fill|stroke)-yellow-\d+\b/g)) {
+          offenders.push(`${path.relative(ROOT, file)}: ${match[0]}`);
+        }
+      }
+    }
+    if (offenders.length > 0) {
+      throw new Error(
+        'yellow-*는 카카오 옐로와 충돌합니다. 경고·주의·별점은 amber-*를 쓰세요:\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});

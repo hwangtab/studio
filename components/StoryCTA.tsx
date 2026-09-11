@@ -148,17 +148,17 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             visualGradient: 'from-blue-500 to-indigo-400',
         },
         release: {
-            gradient: 'from-rose-900 to-purple-900',
-            accentColor: 'text-rose-200',
-            accentBg: 'bg-rose-200',
-            buttonBg: 'bg-white text-rose-900 hover:bg-rose-50',
-            secondaryButtonBg: 'bg-rose-800/50 text-white hover:bg-rose-800/70 border-rose-500/30',
+            gradient: 'from-red-900 to-purple-900',
+            accentColor: 'text-red-200',
+            accentBg: 'bg-red-200',
+            buttonBg: 'bg-white text-red-900 hover:bg-red-50',
+            secondaryButtonBg: 'bg-red-800/50 text-white hover:bg-red-800/70 border-red-500/30',
             icons: (
                 <>
                     <Disc size={20} />
-                    <span className="w-1 h-1 bg-rose-200 rounded-full" />
+                    <span className="w-1 h-1 bg-red-200 rounded-full" />
                     <Send size={20} />
-                    <span className="w-1 h-1 bg-rose-200 rounded-full" />
+                    <span className="w-1 h-1 bg-red-200 rounded-full" />
                     <Globe size={20} />
                 </>
             ),
@@ -179,7 +179,7 @@ const StoryCTA: React.FC<StoryCTAProps> = ({ type = 'recording', locale = 'ko' }
             secondaryLink: getLink('/contact'),
             secondaryText: t('stories.cta.release.secondaryText'),
             visualText: t('stories.cta.release.visualText'),
-            visualGradient: 'from-rose-500 to-purple-400',
+            visualGradient: 'from-red-500 to-purple-400',
         }
     };
 

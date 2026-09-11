@@ -13,7 +13,7 @@ interface ContactFormErrorFallbackProps {
 }
 
 const ContactFormErrorFallback = ({ locale, kakaoUrl, phone, email, t }: ContactFormErrorFallbackProps) => (
-  <div className="mb-6 rounded-md border border-yellow-300 bg-yellow-50 p-4 dark:border-yellow-500/30 dark:bg-yellow-500/10">
+  <div className="mb-6 rounded-md border border-amber-300 bg-amber-50 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">
     <p className="mb-3 text-sm font-medium text-gray-800 dark:text-gray-100">
       {t('contact.form.failFallback', { defaultValue: '전송이 안 되면 아래로 바로 연락 주세요.' })}
     </p>
