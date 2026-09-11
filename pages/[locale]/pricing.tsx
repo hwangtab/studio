@@ -576,10 +576,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
               라벨로 pricing.releaseLink를 쓴다. 예전 이유("nav.releaseProject는
               드롭다운 하위 라벨 'Overview'라 단독으로 뜻이 안 통한다")는 2026-09-11
-              리네임으로 사라졌고, 지금 두 키는 ko·en·zh·es에서 글자까지 같다.
-              th·uz만 번역이 갈리는데(예: uz 'Chiqarish loyihasi' vs 'Reliz loyihasi')
-              어느 쪽이 나은지는 번역 판단이라 통합을 미뤘다 — 합칠 때는 남길 번역을
-              먼저 고르고 navLabels.ts까지 함께 본다. */}
+              리네임으로 사라졌다. 두 키가 같은 것을 가리키므로 언젠가 합쳐야 하는데,
+              어느 로케일이 갈려 있는지는 주석에 적지 않는다 — 그 목록을 손으로 적었다가
+              vi를 빠뜨린 적이 있다. 현재 상태는 lib/navLabels.test.ts가 찍어 준다. */}
           <Link
             href={`/${locale}/release-project`}
             prefetch={false}

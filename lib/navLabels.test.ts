@@ -51,4 +51,44 @@ describe('navLabels ↔ common.json', () => {
       expect(Object.keys(navLabels[locale]).sort()).toEqual(reference);
     }
   });
+
+  /**
+   * pricing.releaseLink ↔ nav.releaseProject.
+   *
+   * 두 키가 같은 것(발매 프로젝트 페이지)을 가리킨다. 원래 pricing이 별도 키를 둔
+   * 이유는 nav 쪽이 'Overview' 같은 하위메뉴 맥락 라벨이어서였는데, 2026-09-11
+   * 리네임으로 그 이유가 사라졌다.
+   *
+   * 아직 합치지 않은 것은 th·uz의 번역이 갈려 있어서다 — 어느 쪽을 남길지는 번역
+   * 판단이라 코드가 정할 일이 아니다. 대신 **그 목록을 여기 상수로 둔다.**
+   * 주석에 손으로 적었다가 vi를 빠뜨린 적이 있다(대소문자만 다른 경우였다).
+   * 목록이 달라지면 이 테스트가 실패하므로 갱신이 강제된다.
+   */
+  const PRICING_LINK_DIVERGED: string[] = ['th', 'uz'];
+
+  const pricingSection = (locale: string): Record<string, unknown> => {
+    const file = path.join(__dirname, '..', 'public', 'locales', locale, 'common.json');
+    return JSON.parse(fs.readFileSync(file, 'utf8')).pricing;
+  };
+
+  it('pricing.releaseLink가 갈린 로케일이 통합 대기 목록과 같다', () => {
+    const diverged = LOCALES.filter(
+      (locale) => pricingSection(locale)?.releaseLink !== navSection(locale).releaseProject
+    );
+    expect(diverged).toEqual(PRICING_LINK_DIVERGED);
+  });
+
+  /**
+   * 대소문자만 다른 것은 번역 판단이 아니라 그냥 불일치다 — 통합 대기가 아니라
+   * 지금 고칠 것이므로 실패시킨다. vi가 실제로 이 상태였다
+   * ('Dự án Phát hành' vs 'Dự án phát hành').
+   */
+  it('대소문자만 다른 불일치는 남기지 않는다', () => {
+    const caseOnly = LOCALES.filter((locale) => {
+      const a = String(pricingSection(locale)?.releaseLink ?? '');
+      const b = String(navSection(locale).releaseProject ?? '');
+      return a !== b && a.toLowerCase() === b.toLowerCase();
+    });
+    expect(caseOnly).toEqual([]);
+  });
 });
