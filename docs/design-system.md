@@ -95,10 +95,33 @@ currentColor라 같은 텍스트 색 규칙을 그대로 따른다.
 (`pages/admin/**`·계약 서명·완료)는 스캔에서 제외된다: 흰 카드 위에 밝은 보라를 올리면
 대비가 **오히려** 깨진다.
 
-남은 부채: `dark:text-primary-light`(3.53:1)를 쓰는 자리가 약 47곳 남아 있다. 대부분
-`aria-hidden` 아이콘이거나 `text-3xl` 이상 대형 숫자라 완화 기준(3:1)은 통과하지만,
-본문 크기 텍스트에 남은 것은 `-lighter`로 올려야 한다. `ProjectRowCard`의
-`dark:text-primary/80`도 같은 부채다.
+#### 다크 짝은 "있는지"가 아니라 "충분한지"를 본다 (2026-09-11 2라운드)
+
+1라운드 가드는 `dark:text-` 짝의 **존재**만 봤다. 그래서 `text-primary
+dark:text-primary-light`가 통과했는데 그 짝 자체가 3.53:1로 미달이었다 — 자물쇠를 걸고
+열쇠를 옆에 걸어 둔 꼴이다. 측정 범위도 링크·버튼(`a`·`button`)에 한정돼 있어
+`<span>`·`<div>`·`<strong>` 같은 일반 텍스트를 통째로 빠뜨렸다.
+
+범위를 **텍스트 노드를 직접 가진 모든 엘리먼트**로 넓혀 다시 재니 같은 8개 페이지에서
+**71건**이 더 나왔다(pricing 17 · practice-room 19 · recording 10 · release-project 9 ·
+portfolio 8 · 홈 4 · about 4). 세 부류였다.
+
+| 부류 | 원인 | 조치 |
+|---|---|---|
+| A | `dark:text-primary-light`(3.53:1) — 가장 많다 | 전부 `dark:text-primary-lighter`로 승격. `dark:text-accent`(3.67:1)·`dark:text-primary`(2.83:1)·`dark:text-primary/80`도 같이 |
+| B | 메타·캡션이 `dark:text-gray-500`(2.45:1)이거나 다크 짝이 아예 없음 | 아래 역할표대로 `dark:text-gray-400` |
+| C | portfolio·AudioPlayer의 임의 hex 패널 위 `dark:text-white/40`(3.78:1) | `dark:text-white/60`(7.4:1). 임의 hex 자체는 별도 부채로 남긴다 |
+
+대형 텍스트(24px↑ 또는 18.66px↑ bold)는 완화 기준 3:1이라 `primary-light`가 산술적으로는
+통과하지만 **함께 올렸다.** 클래스 문자열만 보고는 그 자리가 대형인지 알 수 없고, 같은
+컴포넌트(`PricingCard`·`PriceLeader`)가 작은 자리에 재사용되면 조용히 깨진다. 그래서
+`primary-light`는 크기와 무관하게 다크 짝으로 금지한다.
+
+`tailwind.config.test.ts`의 「다크 짝의 대비가 충분한가」가 이를 CI에서 강제한다. 예외는
+`DARK_BRAND_ALLOW`에 **이유와 함께** 등재한다(현재 1건 — `Button`의 `light` 옵트인).
+
+남은 부채: `AudioPlayer`·포트폴리오 카드의 `dark:bg-[#121212]`·`#1a1a1a` 같은 임의 hex.
+이번엔 그 위의 **텍스트 색만** 올렸고, 배경을 `gray` 토큰으로 바꾸는 것은 별건이다.
 
 본문 회색의 역할별 기본값:
 

@@ -268,3 +268,85 @@ describe('브랜드색 텍스트의 다크 짝', () => {
     expect(defined.has('accent-light')).toBe(true);
   });
 });
+
+// 다크 짝이 "있는지"가 아니라 "충분한지" 보는 가드 (2026-09-11, 2라운드).
+//
+// 1라운드 가드는 `dark:text-` 짝의 **존재**만 봤다. 그래서 `text-primary
+// dark:text-primary-light`가 그대로 통과했는데, primary-light(#7c3aed)는 다크 배경에서
+// 3.53:1로 AA(4.5) 미달이다 — 자물쇠는 걸었는데 열쇠를 옆에 걸어 둔 셈이었다.
+// 2라운드 실측(텍스트 노드를 직접 가진 모든 엘리먼트로 범위를 넓힘)에서 8개 페이지
+// 71건이 이 구멍으로 빠져나가 있었다: pricing 가격 `500,000원`(16px/700),
+// FAQ 배지 `Q 1`(12px/600), practice-room `월 6만원 상당`(12px/600) 등.
+//
+// 다크 배경(gray-900 #030712) 실측 — docs/design-system.md §1 표와 같은 값:
+//   primary 2.83 · primary-dark 1.96 · primary-light 3.53 · secondary 3.33 ·
+//   secondary-dark 2.25 · accent 3.67 · accent-dark 2.21  → 전부 AA 미달
+//   primary-lighter 7.40 · secondary-light 5.71 · accent-light 7.94 → 통과
+//
+// 대형 텍스트(24px↑ 또는 18.66px↑ bold)는 완화 기준 3:1이라 primary-light가 산술적으로는
+// 통과하지만, 클래스 문자열만 보고는 그 자리가 대형인지 알 수 없고 같은 컴포넌트가
+// 작은 자리에 재사용되면 조용히 깨진다. 그래서 크기와 무관하게 일괄 금지한다.
+const DARK_UNSAFE_RE =
+  /(?<![-\w])((?:[a-z-]+:)*dark:(?:[a-z-]+:)*)text-(primary-light|primary-dark|secondary-dark|accent-dark|primary|secondary|accent)(?![-\w])(\/\d+)?/g;
+
+/**
+ * 다크 분기인데 **일부러** 라이트 값을 써야 하는 자리. 파일 + 줄 안의 고정 문자열로 지정한다.
+ * 새로 넣을 땐 **왜 밝은 배경 위에 뜨는지**를 적을 것 — 이유 없이 넣으면 가드가 무의미해진다.
+ */
+const DARK_BRAND_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  {
+    file: 'components/ui/Button.tsx',
+    snippet: 'dark:text-primary dark:border-primary/20',
+    reason:
+      'Button의 light 옵트인 compoundVariant. theme-init.js가 라이트 고정 화면에도 .dark를 ' +
+      '붙이므로 거기서는 다크 분기를 라이트 값으로 되돌려야 한다(흰 카드 위 primary-lighter = 2.72:1).',
+  },
+];
+
+describe('다크 짝의 대비가 충분한가', () => {
+  it('dark:text-*에 다크 배경용으로 부족한 브랜드 토큰이 오면 안 된다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of ['components', 'pages']) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!rel.endsWith('.tsx') || rel.endsWith('.test.tsx') || LIGHT_FIXED(rel)) continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*')) return;
+
+          DARK_UNSAFE_RE.lastIndex = 0;
+          let match: RegExpExecArray | null;
+          while ((match = DARK_UNSAFE_RE.exec(line))) {
+            if (DARK_BRAND_ALLOW.some((a) => a.file === rel && line.includes(a.snippet))) continue;
+            offenders.push(`${rel}:${index + 1}: ${match[0]} — ${trimmed.slice(0, 100)}`);
+          }
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '다크 배경에서 AA에 못 미치는 브랜드 토큰이 dark: 분기에 쓰였습니다.\n' +
+          '허용되는 다크 짝은 셋뿐입니다 — primary-lighter(7.40:1) · secondary-light(5.71:1) · ' +
+          'accent-light(7.94:1). (회색·white 계열은 이 가드의 대상이 아닙니다.)\n' +
+          '라이트 고정 화면 때문에 어쩔 수 없다면 DARK_BRAND_ALLOW에 이유와 함께 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+
+  it('금지 토큰이 실제로 tailwind.config.ts에 정의돼 있다(오탈자로 가드가 비는 것을 막는다)', () => {
+    const defined = definedColorNames();
+    for (const name of ['primary-light', 'primary-dark', 'secondary-dark', 'accent-dark']) {
+      expect(defined.has(name)).toBe(true);
+    }
+  });
+});
