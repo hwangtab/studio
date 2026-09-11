@@ -476,7 +476,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       />
 
       {MUSIC_PROMOTION_LASTMOD_DISPLAY && (
-        <p className="pb-4 text-center text-xs text-gray-400 dark:text-gray-400">
+        <p className="pb-4 text-center text-xs text-gray-500 dark:text-gray-400">
           {MUSIC_PROMOTION_LASTMOD_DISPLAY}
         </p>
       )}

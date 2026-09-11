@@ -162,7 +162,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                 <span className="text-sm font-medium">{t(`releaseProject.tiers.${key}.duration`)}</span>
               </div>
               <p className="text-base text-gray-700 dark:text-gray-200 font-semibold mb-2">{t(`releaseProject.tiers.${key}.range`)}</p>
-              <p className="text-sm text-gray-400 dark:text-gray-400 mb-5">{t(`releaseProject.tiers.${key}.note`)}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">{t(`releaseProject.tiers.${key}.note`)}</p>
               <Link
                 href={getLink(`/release-project/${key}`)}
                 className="mt-auto inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:text-primary-dark dark:hover:text-white hover:underline underline-offset-2 transition-colors"
@@ -240,7 +240,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   )}
                 </div>
                 <div className={`flex-1 pt-1.5 ${!isLast ? 'pb-6' : ''}`}>
-                  <p className="text-xs font-mono text-primary/60 dark:text-primary-lighter/80 mb-1 tracking-wide">{s.step}</p>
+                  <p className="text-xs font-mono text-primary dark:text-primary-lighter mb-1 tracking-wide">{s.step}</p>
                   <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">{t(`releaseProject.process.steps.${i}.title`)}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{t(`releaseProject.process.steps.${i}.desc`)}</p>
                 </div>
@@ -258,7 +258,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           subtitle={t('releaseProject.inProgress.sectionSubtitle')}
           className="mb-3"
         />
-        <p className="text-center text-xs text-gray-400 dark:text-gray-400 mb-10">
+        <p className="text-center text-xs text-gray-500 dark:text-gray-400 mb-10">
           {t('releaseProject.inProgress.asOf', { date: asOf })}
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
