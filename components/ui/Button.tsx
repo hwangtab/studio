@@ -29,6 +29,8 @@ const buttonVariants = cva(
         sm: "h-11 px-3 text-sm",
         md: "h-11 px-5 text-base",
         lg: "h-14 px-8 text-lg",
+        // 기본 shape("block")과 조합하면 사각형이 된다 — 원형 아이콘 버튼이 필요하면
+        // shape="pill"을 함께 지정할 것.
         icon: "h-11 w-11",
       },
       shape: {
@@ -56,6 +58,9 @@ export interface ButtonProps
    * 단일 자식 엘리먼트(<a>·next/link)에 버튼 스타일을 합성해 그 자식을 렌더한다.
    * 링크를 버튼처럼 보이게 할 때 쓴다 — 이 저장소는 @radix-ui/react-slot을 두지 않으므로
    * cloneElement로 직접 구현한다. 자식의 className과 나머지 props는 보존된다.
+   *
+   * 주의: asChild일 때 ref는 자식 엘리먼트로 전달되므로, 실제 런타임 타입이
+   * HTMLButtonElement가 아닐 수 있다(예: <a> asChild면 HTMLAnchorElement).
    */
   asChild?: boolean;
 }
@@ -69,6 +74,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       return React.cloneElement(child, {
         ...props,
         ...child.props,
+        // 병합 순서 주의: 자식의 props가 Button의 props를 **덮어쓴다**(합성이 아니다).
+        // 이 저장소의 CTA는 추적 핸들러(trackLeadEvent)가 자식 <a>에 붙어 있어 이 순서가
+        // 맞지만, <Button asChild onClick={...}>처럼 Button 쪽에 핸들러를 주면 자식에
+        // 같은 이름이 있을 때 조용히 사라진다. 핸들러는 항상 자식에 붙일 것.
         // 자식의 className을 뒤에 둬 호출부가 개별 조정을 이길 수 있게 한다.
         className: cn(classes, child.props.className),
         ref,
