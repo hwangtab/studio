@@ -16,7 +16,11 @@ import { confirmFundingPledge, syncFundingCancelledFromToss } from './confirm';
 // eslint-disable-next-line import/first
 import { confirmPayment, fetchPayment } from '../booking/toss';
 // eslint-disable-next-line import/first
+import { sendFundingConfirmedEmails } from './email';
+// eslint-disable-next-line import/first
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
+// eslint-disable-next-line import/first
+import { confirmBankDeposit } from './bank-transfer';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
@@ -28,6 +32,7 @@ let client: Client;
 
 const mockConfirm = confirmPayment as jest.Mock;
 const mockFetch = fetchPayment as jest.Mock;
+const mockEmail = sendFundingConfirmedEmails as jest.Mock;
 
 // service.integration.test.ts의 PROJECT·payloadFor를 그대로 재사용하는 것이 아니라 값만
 // 복제한다 — 테스트 파일을 모듈로 import하면 그 파일의 jest.mock('../../db/client', ...)가
@@ -85,6 +90,7 @@ beforeEach(async () => {
   await client.execute('DELETE FROM payments');
   await client.execute('DELETE FROM orders');
   jest.clearAllMocks();
+  mockEmail.mockResolvedValue(null);
   // confirm.ts의 홀드 만료 판정은 Date.now()(실제 벽시계)와 비교한다 — NOW 픽스처가 실행 시점의
   // 실제 시각보다 미래라 고정하지 않으면 "홀드 만료" 케이스가 항상 만료되지 않은 것으로 읽힌다.
   jest.spyOn(Date, 'now').mockReturnValue(NOW.getTime());
@@ -107,15 +113,157 @@ describe('confirmFundingPledge', () => {
     expect(o?.fundingPledge?.paidAt).toBeInstanceOf(Date);
   });
 
-  it('이미 paid면 토스를 부르지 않고 성공(멱등)', async () => {
+  it('이미 paid여도 그 주문의 실제 paymentKey면 토스를 부르지 않고 성공(멱등) — 토큰도 돌려준다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
     await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
     mockConfirm.mockClear();
     const again = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
-    expect(again.ok).toBe(true);
+    expect(again).toMatchObject({ ok: true, orderNo: c.orderNo, manageToken: c.manageToken });
     expect(mockConfirm).not.toHaveBeenCalled();
+  });
+
+  describe('확정된 후원의 관리 토큰은 소유 증명 없이 나오지 않는다', () => {
+    /** 주문번호는 비밀이 아니다 — 확정 메일·화면·토스 영수증·fail URL에 평문으로 실린다. */
+    const paidPledge = async (email: string) => {
+      const c = await createFundingPledge(payloadFor({ customerEmail: email, customerPhone: '010-3' }), PROJECT, reward('mail'), NOW);
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      mockConfirm.mockClear();
+      return c;
+    };
+
+    it('틀린 paymentKey로 조회하면 토큰 없는 invalid_state', async () => {
+      const c = await paidPledge('probe@example.com');
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_아무거나', amount: 5000 });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(JSON.stringify(r)).not.toContain(c.manageToken);
+      expect(mockConfirm).not.toHaveBeenCalled();
+    });
+
+    it('금액만 1원으로 바꿔 찔러도 토큰이 나오지 않는다 (실제 공격 URL 형태)', async () => {
+      const c = await paidPledge('probe2@example.com');
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'x', amount: 1 });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(JSON.stringify(r)).not.toContain(c.manageToken);
+    });
+
+    it('웹훅 경로는 소유 증명 없이도 그대로 통과한다 — fetchPayment로 이미 재검증하고 온다', async () => {
+      const c = await paidPledge('hook@example.com');
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true });
+      expect(r).toMatchObject({ ok: true, manageToken: c.manageToken });
+      expect(mockConfirm).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('무통장 후원은 토스 confirm 경로를 타지 않는다 (A-2)', () => {
+    const bankPledge = async (email: string) => {
+      const c = await createFundingPledge(
+        payloadFor({ paymentMethod: 'bank_transfer', customerEmail: email, customerPhone: '010-4' }),
+        PROJECT, reward('mail'), NOW,
+      );
+      if (!c.ok) throw new Error();
+      return c;
+    };
+
+    it('제3자의 잘못된 confirm 시도가 무통장 pending 주문을 failed로 만들지 않는다', async () => {
+      const c = await bankPledge('bank@example.com');
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_위조', amount: 5000 });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(JSON.stringify(r)).not.toContain(c.manageToken);
+      // 토스를 부르지도 않고, 주문 상태도 그대로다.
+      expect(mockConfirm).not.toHaveBeenCalled();
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('pending');
+    });
+
+    it('방해 시도 뒤에도 관리자 입금 확인이 정상 동작한다', async () => {
+      const c = await bankPledge('bank2@example.com');
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_위조', amount: 5000 });
+      const o = await findFundingOrderByOrderNo(c.orderNo);
+      const deposit = await confirmBankDeposit({ orderId: o!.id, now: NOW });
+      expect(deposit).toEqual({ ok: true });
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid');
+    });
+  });
+
+  it('결제 미존재 계열 거절은 토스 주문을 failed로 낙인하지 않는다', async () => {
+    // NOT_FOUND_PAYMENT는 "이 주문의 결제가 거절됐다"가 아니라 "그런 결제가 없다"이다.
+    // failed로 찍으면 제3자가 주문번호만으로 남의 후원의 복구 경로를 닫을 수 있다.
+    for (const code of ['NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION']) {
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: `${code}@example.com`, customerPhone: '010-2' }), PROJECT, reward('mail'), NOW,
+      );
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce({ ok: false, code, message: '존재하지 않는 결제 정보 입니다.' });
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_없음', amount: 5000 });
+      expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('pending');
+    }
+  });
+
+  it('승인 응답이 DONE이 아니면(가상계좌 입금 대기) 확정하지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_va', orderId: c.orderNo, status: 'WAITING_FOR_DEPOSIT', totalAmount: 5000 },
+    });
+    const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_va', amount: 5000 });
+    expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    // pending으로 남아야 실제 입금 뒤 오는 DONE 웹훅이 정상 경로로 확정할 수 있다.
+    expect(o?.status).toBe('pending');
+    expect(o?.payments).toHaveLength(0);
+  });
+
+  describe('확정 메일 미발송 센티널 (H)', () => {
+    it('발송에 성공하면 센티널이 지워진다', async () => {
+      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
+    });
+
+    it('메일 단계에서 프로세스가 죽어 센티널이 남으면 웹훅 재시도가 확정 메일을 다시 보낸다', async () => {
+      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      // batch는 커밋됐지만 메일 단계 전에 죽은 상태를 재현한다.
+      await client.execute({ sql: `UPDATE orders SET notification_error = 'send_pending' WHERE order_no = ?`, args: [c.orderNo] });
+      mockEmail.mockClear();
+
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true });
+      expect(r).toMatchObject({ ok: true, emailSent: true });
+      expect(mockEmail).toHaveBeenCalledTimes(1);
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
+    });
+
+    it('센티널이 없으면 웹훅 재도착은 메일을 다시 보내지 않는다', async () => {
+      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      mockEmail.mockClear();
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true });
+      expect(mockEmail).not.toHaveBeenCalled();
+    });
+
+    it('메일 함수가 예외를 던져도 confirm은 성공으로 끝나고 사유가 기록된다', async () => {
+      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      if (!c.ok) throw new Error();
+      jest.spyOn(console, 'error').mockImplementation(() => {});
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      mockEmail.mockRejectedValueOnce(new Error('SMTP 폭발'));
+      const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      expect(r).toMatchObject({ ok: true, emailSent: false });
+      const o = await findFundingOrderByOrderNo(c.orderNo);
+      expect(o?.status).toBe('paid');
+      expect(o?.notificationError).toContain('SMTP 폭발');
+    });
   });
 
   it('금액 불일치·홀드 만료는 토스를 부르지 않고 거부', async () => {

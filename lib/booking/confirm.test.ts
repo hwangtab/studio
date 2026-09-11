@@ -88,11 +88,71 @@ describe('confirmBookingPayment', () => {
     expect(confirmPayment).not.toHaveBeenCalled();
   });
 
-  it('이미 paid면 재승인 없이 성공 (새로고침 멱등)', async () => {
-    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid' }));
+  it('이미 paid이고 그 주문의 실제 paymentKey면 재승인 없이 성공 (새로고침 멱등)', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', payments: [{ paymentKey: 'pk' }] }));
     const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
-    expect(r).toMatchObject({ ok: true });
+    expect(r).toMatchObject({ ok: true, manageToken: 't' });
     expect(confirmPayment).not.toHaveBeenCalled();
+  });
+
+  describe('확정된 주문의 관리 토큰은 소유 증명 없이 나오지 않는다', () => {
+    // 주문번호는 비밀이 아니다(확인 메일·화면·토스 영수증·fail URL에 평문). 예전엔 paid 분기가
+    // paymentKey를 보지 않아서, 주문번호 하나로 manageToken을 받아 개인정보 열람·전액 환불이
+    // 가능했다.
+    it('틀린 paymentKey로 조회하면 토큰 없는 invalid_state', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', payments: [{ paymentKey: 'pk' }] }));
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk_아무거나', amount: 275000 });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(JSON.stringify(r)).not.toContain('manageToken');
+      expect(confirmPayment).not.toHaveBeenCalled();
+    });
+
+    it('금액을 1원으로 바꿔 찔러도 토큰이 나오지 않는다 (실제 공격 URL 형태)', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', payments: [{ paymentKey: 'pk' }] }));
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'x', amount: 1 });
+      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+      expect(JSON.stringify(r)).not.toContain('manageToken');
+    });
+
+    it('웹훅 복구 경로(실제 paymentKey를 들고 오는 재도착)는 그대로 통과한다', async () => {
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', payments: [{ paymentKey: 'pk' }] }));
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+      expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
+    });
+  });
+
+  it('승인 응답이 DONE이 아니면(가상계좌 입금 대기) 확정하지 않고 pending을 유지한다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue({
+      ok: true, payment: { paymentKey: 'pk', orderId: 'SNB-1', status: 'WAITING_FOR_DEPOSIT', totalAmount: 275000 },
+    });
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+    // 기록도, failed 낙인도 없다 — 실제 입금 뒤 오는 DONE 웹훅이 정상 경로로 확정한다.
+    expect(mockDb().batch).not.toHaveBeenCalled();
+    expect(mockDb().run).not.toHaveBeenCalled();
+  });
+
+  it('결제 미존재 계열 거절은 주문을 failed로 낙인하지 않는다', async () => {
+    for (const code of ['NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION']) {
+      jest.clearAllMocks();
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+      (confirmPayment as jest.Mock).mockResolvedValue({ ok: false, code, message: '존재하지 않는 결제 정보 입니다.' });
+      const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk_없음', amount: 275000 });
+      expect(r).toMatchObject({ ok: false, code: 'toss_rejected' });
+      // 토스 원문도 내보내지 않는다 — 남의 주문번호를 찔러 본 쪽에 상태를 알려 줄 이유가 없다.
+      expect((r as { message: string }).message).not.toContain('존재하지 않는');
+      expect(mockDb().run).not.toHaveBeenCalled();
+    }
+  });
+
+  it('확정 메일이 예외를 던져도 confirm 결과를 뒤집지 않는다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    (sendBookingConfirmedEmails as jest.Mock).mockRejectedValueOnce(new Error('SMTP 폭발'));
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toMatchObject({ ok: true, emailSent: false });
+    expect(setCallsOf(mockDb())).toContainEqual(expect.objectContaining({ notificationError: 'SMTP 폭발' }));
   });
 
   it('정상 경로는 토스 승인 후 성공', async () => {
@@ -246,7 +306,9 @@ describe('confirmBookingPayment', () => {
     });
 
     it('이미 paid인 주문은 만료 검사보다 먼저 멱등 성공으로 답한다 (뒤늦은 새로고침이 깨지지 않는다)', async () => {
-      (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'paid', createdAt: new Date(Date.now() - 86400 * 1000) }));
+      (findOrderByOrderNo as jest.Mock).mockResolvedValue(
+        order({ status: 'paid', createdAt: new Date(Date.now() - 86400 * 1000), payments: [{ paymentKey: 'pk' }] }),
+      );
       const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
       expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
     });
