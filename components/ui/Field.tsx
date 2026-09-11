@@ -8,8 +8,12 @@ import { cn } from '../../lib/utils';
  */
 export const fieldControlClass = cn(
   'w-full rounded-lg border px-3 py-2 typo-body',
-  'bg-white text-gray-900 placeholder:text-gray-400',
-  'dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500',
+  // 플레이스홀더 명암을 뒤집지 말 것. 이 저장소는 gray-500을 접근성 때문에 #4b5563으로
+  // 어둡게 조정했고(tailwind.config.ts) gray-400은 스톡 #9ca3af 그대로다. 따라서 라이트
+  // (on #fff)는 gray-500(7.56:1), 다크(on gray-800 #111827)는 gray-400(6.99:1)이 맞다.
+  // 뒤집으면 각각 2.54:1 · 2.35:1로 AA(4.5:1)에 한참 못 미친다.
+  'bg-white text-gray-900 placeholder:text-gray-500',
+  'dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400',
   'border-gray-300 dark:border-gray-600',
   'transition-[colors,box-shadow] duration-fast ease-standard',
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',

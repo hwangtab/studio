@@ -10,6 +10,7 @@ import KoreanFastContactActions from './KoreanFastContactActions';
 import ContactFormErrorFallback from './ContactFormErrorFallback';
 import InputField from './InputField';
 import { Field, TextArea } from '../ui/Field';
+import { Button } from '../ui/Button';
 import type { ContactTranslate } from './contactTypes';
 
 type IconTextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -283,7 +284,7 @@ const ContactFormCard = ({
               href={privacyPolicyHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline underline-offset-2"
+              className="rounded text-primary hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
             >
               {t('contact.form.consentPolicyLink', { defaultValue: '개인정보 처리방침' })}
             </a>
@@ -296,45 +297,52 @@ const ContactFormCard = ({
         )}
 
         <div className="flex flex-col gap-3">
-          <m.button
-            {...interactiveMotionProps}
-            type="submit"
-            disabled={isSubmitting}
-            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors duration-200 font-title disabled:opacity-50 touch-manipulation"
-          >
-            {isSubmitting ? (
-              <>
-                <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                {t('contact.form.loading')}
-              </>
-            ) : (
-              <>
-                <Send className="mr-2" size={18} aria-hidden="true" />
-                {t('contact.form.submit')}
-              </>
-            )}
-          </m.button>
+          {/* 반경·포커스는 Button이 소유한다(정본 §3 폼 안 버튼 rounded-xl · §5 focus-visible).
+              추적 핸들러·type·href는 자식에 남긴다 — asChild의 병합 순서상 자식이 이긴다.
+              아이콘 여백은 Button 기본 gap-2가 준다(mr-2를 더하면 16px이 된다). */}
+          <Button asChild variant="solid" shape="block" size="md" fullWidth>
+            <m.button
+              {...interactiveMotionProps}
+              type="submit"
+              disabled={isSubmitting}
+              className="touch-manipulation"
+            >
+              {isSubmitting ? (
+                <>
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {t('contact.form.loading')}
+                </>
+              ) : (
+                <>
+                  <Send size={18} aria-hidden="true" />
+                  {t('contact.form.submit')}
+                </>
+              )}
+            </m.button>
+          </Button>
 
-          <m.a
-            {...interactiveMotionProps}
-            href={siteConfig.contact.kakaoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() =>
-              trackLeadEvent('lead_click_kakao', {
-                locale,
-                component: 'ContactPage',
-                cta_id: 'contact_form_kakao',
-              })
-            }
-            className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-md shadow-sm text-body-1 text-kakao-ink dark:text-kakao-ink bg-kakao hover:bg-kakao-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-kakao-ink transition-colors duration-200 font-title touch-manipulation"
-          >
-            <MessageCircle className="mr-2" size={18} aria-hidden="true" />
-            {t('contact.form.kakao')}
-          </m.a>
+          <Button asChild variant="kakao" shape="block" size="md" fullWidth>
+            <m.a
+              {...interactiveMotionProps}
+              href={siteConfig.contact.kakaoUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackLeadEvent('lead_click_kakao', {
+                  locale,
+                  component: 'ContactPage',
+                  cta_id: 'contact_form_kakao',
+                })
+              }
+              className="touch-manipulation"
+            >
+              <MessageCircle size={18} aria-hidden="true" />
+              {t('contact.form.kakao')}
+            </m.a>
+          </Button>
           <p className="text-center text-sm text-gray-500 dark:text-gray-400">
             {t('actions.responseAssurance', { defaultValue: '보통 24시간 이내 답변 · 당일 예약도 가능합니다' })}
           </p>

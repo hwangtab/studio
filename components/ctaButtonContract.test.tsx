@@ -5,13 +5,23 @@ import '@testing-library/jest-dom';
 import BookingEntryButton from './booking/BookingEntryButton';
 import ContactCTA from './common/ContactCTA';
 import HeroKakaoCta from './common/HeroKakaoCta';
+import KakaoFab from './common/KakaoFab';
+import ContactFormCard from './contact/ContactFormCard';
+import ContactFormErrorFallback from './contact/ContactFormErrorFallback';
+import EnglishFastContactActions from './contact/EnglishFastContactActions';
+import KoreanFastContactActions from './contact/KoreanFastContactActions';
 import InlineBookingCallout from './inline/InlineBookingCallout';
 import InlinePriceCallout from './inline/InlinePriceCallout';
 import InlineServiceCallout from './inline/InlineServiceCallout';
 import StickyBottomCTA from './inline/StickyBottomCTA';
+import HeaderActions from './layout/HeaderActions';
+import ReleaseHeroCtas from './release/ReleaseHeroCtas';
+import OnlineRequest from './story/OnlineRequest';
+import VocalMixBridge from './story/VocalMixBridge';
 import PricingCard from './ui/PricingCard';
 import NotFoundPage from '../pages/404';
 import ServerErrorPage from '../pages/500';
+import { getSiteConfig } from '../data/siteConfig';
 
 /**
  * Task 4에서 전환 CTA를 Button 프리미티브로 옮겼다. 이 테스트는 그 전환이 되돌아가거나
@@ -52,7 +62,7 @@ jest.mock('framer-motion', () => {
     ({ children, ...rest }: Record<string, unknown> & { children?: React.ReactNode }) =>
       R.createElement(Tag, Object.fromEntries(Object.entries(rest).filter(([k]) => !MOTION_PROPS.test(k))), children);
   return {
-    m: { div: pass('div'), h1: pass('h1'), p: pass('p'), nav: pass('nav'), span: pass('span'), create: () => pass('a') },
+    m: { div: pass('div'), h1: pass('h1'), p: pass('p'), nav: pass('nav'), span: pass('span'), a: pass('a'), button: pass('button'), create: () => pass('a') },
     AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
     LazyMotion: ({ children }: { children?: React.ReactNode }) => children,
     domAnimation: {},
@@ -89,6 +99,55 @@ const renderStickyBottomCTA = (): HTMLElement => {
 
 const renderOf = (element: React.ReactElement) => (): HTMLElement => render(element).container;
 
+const tStub = ((key: string, options?: string | { defaultValue?: string }) => {
+  if (typeof options === 'string') return options;
+  return options?.defaultValue ?? key;
+}) as never;
+
+/** HeaderActions는 LanguageSwitcher를 품는다 — 그쪽 반경·포커스는 이 계약의 관심사가 아니다. */
+jest.mock('./LanguageSwitcher', () => ({
+  LanguageSwitcher: () => null,
+}));
+
+const renderHeaderActions = (locale: 'ko' | 'en', isTransparent: boolean) =>
+  renderOf(
+    <HeaderActions
+      isTransparent={isTransparent}
+      isDarkMode={false}
+      toggleDarkMode={() => {}}
+      locale={locale}
+      t={tStub}
+      siteConfig={getSiteConfig(locale)}
+      isMenuOpen={false}
+      setIsMenuOpen={() => {}}
+      mobileNavId="nav"
+    />,
+  );
+
+/** /contact 폼 카드. ko는 KoreanFastContactActions, en은 EnglishFastContactActions를 함께 렌더한다. */
+const renderContactFormCard = (locale: 'ko' | 'en') =>
+  renderOf(
+    <ContactFormCard
+      locale={locale}
+      siteConfig={getSiteConfig(locale)}
+      t={tStub}
+      validationCopy={{ errorsFound: 'errors' }}
+      formData={{ name: '', email: '', phone: '', message: '', company: '' }}
+      errors={{ name: '', email: '', phone: '', message: '' }}
+      submitMessage=""
+      isSubmitSuccess={false}
+      isSubmitting={false}
+      canRetrySubmit={false}
+      retryLabel="다시 시도"
+      errorCount={0}
+      noticeItems={null}
+      onChange={() => {}}
+      onBlur={() => {}}
+      onSubmit={async () => {}}
+      onRetrySubmit={() => {}}
+    />,
+  );
+
 /** [라벨, 렌더 팩토리, 이 화면에 있어야 할 카카오 목적지 링크 수] */
 const cases: Array<[string, () => HTMLElement, number]> = [
   ['HeroKakaoCta ko onImage', renderOf(<HeroKakaoCta locale="ko" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="카톡 상담" phone="010-4255-7893" />), 1],
@@ -107,6 +166,25 @@ const cases: Array<[string, () => HTMLElement, number]> = [
   ['PricingCard 비-kakao (옐로 금지)', renderOf(<PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="Contact" ctaHref="/en/contact" trackingComponent="X" locale="en" />), 0],
   ['404', renderOf(<NotFoundPage />), 0],
   ['500', renderOf(<ServerErrorPage />), 0],
+
+  // 아래는 2026-09-11 최종 리뷰에서 "손으로 짠 카카오 버튼이라 계약 밖에 있었다"고
+  // 지목된 표면들이다. 헤더는 전 페이지에 뜨는 최고 노출 자리라 누락 비용이 가장 컸다.
+  ['HeaderActions ko (solid)', renderHeaderActions('ko', false), 1],
+  ['HeaderActions ko (transparent)', renderHeaderActions('ko', true), 1],
+  ['HeaderActions en (옐로 금지)', renderHeaderActions('en', false), 0],
+  ['ReleaseHeroCtas ko', renderOf(<ReleaseHeroCtas locale="ko" kakaoUrl={KAKAO_URL} consultLabel="상담" secondaryHref="/ko/portfolio" secondaryLabel="포트폴리오" />), 1],
+  ['ReleaseHeroCtas en (옐로 금지)', renderOf(<ReleaseHeroCtas locale="en" kakaoUrl={KAKAO_URL} consultLabel="Consult" secondaryHref="/en/portfolio" secondaryLabel="Portfolio" />), 0],
+  // 폼 카드는 제출 버튼 옆 카카오 + 상단 빠른 연락 블록의 카카오, 둘 다 노란색이어야 한다.
+  ['ContactFormCard ko', renderContactFormCard('ko'), 2],
+  ['ContactFormCard en', renderContactFormCard('en'), 2],
+  ['KoreanFastContactActions', renderOf(<KoreanFastContactActions locale="ko" naverMapUrl="https://map.naver.com/x" kakaoUrl={KAKAO_URL} phone="010-4255-7893" />), 1],
+  ['EnglishFastContactActions', renderOf(<EnglishFastContactActions locale="en" kakaoUrl={KAKAO_URL} email="hello@studionol.co.kr" phone="010-4255-7893" />), 1],
+  ['ContactFormErrorFallback', renderOf(<ContactFormErrorFallback locale="ko" kakaoUrl={KAKAO_URL} phone="010-4255-7893" email="hello@studionol.co.kr" t={tStub} />), 1],
+  ['OnlineRequest', renderOf(<OnlineRequest locale="ko" />), 1],
+  ['VocalMixBridge', renderOf(<VocalMixBridge locale="ko" />), 1],
+  // FAB은 로케일과 무관하게 카카오 오픈채팅으로 간다(분기가 없다) — 양쪽 모두 옐로가 정답.
+  ['KakaoFab ko', renderOf(<KakaoFab locale="ko" />), 1],
+  ['KakaoFab en', renderOf(<KakaoFab locale="en" />), 1],
 ];
 
 const hasKakaoStyle = (cls: string) => /\bbg-kakao\b/.test(cls);

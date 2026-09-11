@@ -1,5 +1,6 @@
 import React from 'react';
 import NextLink from 'next/link';
+import { Button } from '../ui/Button';
 import { getSiteConfig } from '../../data/siteConfig';
 import { MIXING_LEVEL1_PRICE, formatPriceAmount } from '../../data/pricing';
 import { type Locale } from '../../lib/i18n';
@@ -46,21 +47,25 @@ const VocalMixBridge: React.FC<VocalMixBridgeProps> = ({ locale = 'ko' }) => {
         ))}
       </ul>
       <div className="px-6 pb-5 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <a
-          href={siteConfig.contact.kakaoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() =>
-            trackLeadEvent('lead_click_kakao', {
-              locale,
-              component: 'VocalMixBridge',
-              cta_id: 'vocal_mix_bridge_kakao',
-            })
-          }
-          className="inline-flex items-center justify-center rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
-        >
-          파일 보내고 원인 물어보기
-        </a>
+        {/* 반경·포커스 링은 Button이 소유한다 — 직접 짠 rounded-lg에는
+            focus-visible 링이 아예 없었다(정본 §3·§5). */}
+        <Button asChild variant="kakao" shape="block" size="md">
+          <a
+            href={siteConfig.contact.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'VocalMixBridge',
+                cta_id: 'vocal_mix_bridge_kakao',
+              })
+            }
+            className="touch-manipulation"
+          >
+            파일 보내고 원인 물어보기
+          </a>
+        </Button>
         <NextLink
           href={`/${locale}/mixing-mastering`}
           prefetch={false}
@@ -72,7 +77,7 @@ const VocalMixBridge: React.FC<VocalMixBridgeProps> = ({ locale = 'ko' }) => {
               service_type: 'mixing',
             })
           }
-          className="text-sm font-semibold text-primary hover:underline underline-offset-4 min-h-[44px] inline-flex items-center"
+          className="rounded text-sm font-semibold text-primary hover:underline underline-offset-4 min-h-[44px] inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
         >
           온라인 믹싱 의뢰 안내
         </NextLink>
