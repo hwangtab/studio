@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { PAGE_TITLE_ANIMATION, PAGE_SUBTITLE_ANIMATION, PAGE_CONTENT_ANIMATION } from '../utils/animationUtils';
 import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
+import { Button } from '../components/ui/Button';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
 import { getAllLocalesI18nResourcesServer } from '../lib/i18n.server';
 
@@ -25,6 +26,8 @@ const ServerErrorPage: NextPage = () => {
 
   const { t } = useTranslation('common', { lng: locale });
   const pageContentMotionProps = PAGE_CONTENT_ANIMATION;
+  // variant가 표현하지 못하는 레이아웃(모바일 전폭·가변 높이·긴 라벨 줄바꿈)만 유지한다.
+  const errorCtaLayout = 'w-full sm:w-auto h-auto min-h-[44px] px-6 py-3 text-center whitespace-normal leading-snug touch-manipulation';
 
   return (
     <Section variant="default" className="min-h-[60vh] flex flex-col justify-center text-center">
@@ -65,18 +68,16 @@ const ServerErrorPage: NextPage = () => {
         className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
         {...pageContentMotionProps}
       >
-        <Link
-          href={`/${locale}`}
-          className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors duration-300 typo-button shadow-lg hover:shadow-xl hover:-translate-y-0.5 transform touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-        >
-          {t('serverError.goHome')}
-        </Link>
-        <Link
-          href={`/${locale}/contact`}
-          className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[44px] px-6 py-3 rounded-full border border-primary text-primary hover:bg-primary/10 dark:border-primary-light dark:text-primary-light transition-colors duration-300 typo-button touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-        >
-          {t('serverError.contact')}
-        </Link>
+        <Button asChild variant="solid" shape="pill" size="md">
+          <Link href={`/${locale}`} className={errorCtaLayout}>
+            {t('serverError.goHome')}
+          </Link>
+        </Button>
+        <Button asChild variant="outline" shape="pill" size="md">
+          <Link href={`/${locale}/contact`} className={errorCtaLayout}>
+            {t('serverError.contact')}
+          </Link>
+        </Button>
       </m.div>
     </Section>
   );

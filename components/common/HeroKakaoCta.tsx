@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { MessageCircle, Mail, Phone } from '@/lib/lucide-icons';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
+import { Button } from '../ui/Button';
 import type { Locale } from '../../lib/i18n';
 
 interface HeroKakaoCtaProps {
@@ -28,9 +29,9 @@ interface HeroKakaoCtaProps {
   /**
    * 카카오 버튼 자체는 두 경우 모두 카카오 옐로로 동일하다(사이트 전역 규칙:
    * 노란 버튼 = 카카오톡). surface는 옆에 붙는 2차 전화 버튼과 focus ring만 가른다.
-   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 반투명 흰 전화 버튼.
-   * 'onSurface': 본문 섹션 배경 위 — 라이트 모드 밝은 배경에서 전화 버튼
-   * (text-white/bg-white/15)이 보이지 않으므로 테두리 전화 버튼으로 강등한다.
+   * 'onImage'(기본): 어두운 히어로 오버레이 위 — 스크림 아웃라인(scrim) 전화 버튼.
+   * 'onSurface': 본문 섹션 배경 위 — 라이트 모드 밝은 배경에서 스크림 버튼이
+   * 보이지 않으므로 테두리(outline) 전화 버튼으로 강등한다.
    */
   surface?: 'onImage' | 'onSurface';
 }
@@ -48,47 +49,48 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   // (앱이 없으면 설치 유도)에 떨어지므로, ContactCTA·ReleaseHeroCtas·HeaderActions와
   // 똑같이 /contact 폼으로 가른다. 옐로도 쓰지 않는다 — 노란 버튼 = 카카오톡 규칙.
   const isKorean = locale === 'ko';
+  // 레이아웃(가변 높이·전폭·줄바꿈)은 variant가 표현하지 못하므로 className으로 유지한다.
+  const ctaLayout = 'w-full sm:w-auto h-auto min-h-[48px] py-4 px-10 text-center whitespace-normal leading-snug font-bold touch-manipulation';
+  // 어두운 히어로 오버레이 위에서는 링/오프셋 색을 흰 계열로 덮는다.
+  const onImageRing = 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20';
+
   const primaryButton = isKorean ? (
-    <a
-      href={kakaoUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      onClick={() =>
-        trackLeadEvent('lead_click_kakao', {
-          locale,
-          component,
-          cta_id: ctaId,
-        })
-      }
-      className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] font-bold text-base sm:text-lg py-4 px-10 rounded-full bg-kakao text-kakao-ink hover:bg-kakao-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-        onImage
-          ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
-          : 'focus-visible:ring-kakao-ink focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
-      }`}
-    >
-      <MessageCircle className="w-5 h-5" aria-hidden="true" />
-      {label}
-    </a>
+    <Button asChild variant="kakao" shape="pill" size="lg">
+      <a
+        href={kakaoUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() =>
+          trackLeadEvent('lead_click_kakao', {
+            locale,
+            component,
+            cta_id: ctaId,
+          })
+        }
+        className={`${ctaLayout} ${onImage ? onImageRing : ''}`}
+      >
+        <MessageCircle className="w-5 h-5" aria-hidden="true" />
+        {label}
+      </a>
+    </Button>
   ) : (
-    <Link
-      href={`/${locale}/contact`}
-      prefetch={false}
-      onClick={() =>
-        trackMicroEvent('micro_click_contact', {
-          locale,
-          component,
-          cta_id: `${ctaId}_contact`,
-        })
-      }
-      className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] font-bold text-base sm:text-lg py-4 px-10 rounded-full bg-primary text-white hover:bg-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-        onImage
-          ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
-          : 'focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
-      }`}
-    >
-      <Mail className="w-5 h-5" aria-hidden="true" />
-      {contactLabel ?? label}
-    </Link>
+    <Button asChild variant="solid" shape="pill" size="lg">
+      <Link
+        href={`/${locale}/contact`}
+        prefetch={false}
+        onClick={() =>
+          trackMicroEvent('micro_click_contact', {
+            locale,
+            component,
+            cta_id: `${ctaId}_contact`,
+          })
+        }
+        className={`${ctaLayout} ${onImage ? onImageRing : ''}`}
+      >
+        <Mail className="w-5 h-5" aria-hidden="true" />
+        {contactLabel ?? label}
+      </Link>
+    </Button>
   );
 
   if (!phone) return primaryButton;
@@ -96,26 +98,26 @@ const HeroKakaoCta = ({ locale, kakaoUrl, component, ctaId, label, contactLabel,
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3">
       {primaryButton}
-      {/* 2차 전화 CTA. 히어로 오버레이 위 흰 글씨 가독성을 위해 glass 토큰이 아닌
-          고정 반투명 bg-white/15 + text-white를 쓴다(CLAUDE.md 히어로 CTA 규칙). */}
-      <a
-        href={`tel:${phone}`}
-        onClick={() =>
-          trackLeadEvent('lead_click_phone', {
-            locale,
-            component,
-            cta_id: phoneCtaId ?? `${ctaId}_phone`,
-          })
-        }
-        className={`inline-flex items-center justify-center gap-2 w-full sm:w-auto min-h-[48px] py-4 px-8 rounded-full border font-semibold text-base sm:text-lg transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-          onImage
-            ? 'border-white/40 bg-white/15 text-white hover:bg-white/25 focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
-            : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
-        }`}
-      >
-        <Phone className="w-5 h-5" aria-hidden="true" />
-        {phone}
-      </a>
+      {/* 2차 전화 CTA. 어두운 히어로 위에서는 스크림 아웃라인(bg-black/30 + border-white/40
+          + text-shadow)을 쓴다 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다
+          (CLAUDE.md 카카오 CTA 배색 규칙, 홈 히어로·ReleaseHeroCtas와 동일).
+          본문 섹션 배경 위(onSurface)에서는 테두리 버튼으로 강등한다. */}
+      <Button asChild variant={onImage ? 'scrim' : 'outline'} shape="pill" size="lg">
+        <a
+          href={`tel:${phone}`}
+          onClick={() =>
+            trackLeadEvent('lead_click_phone', {
+              locale,
+              component,
+              cta_id: phoneCtaId ?? `${ctaId}_phone`,
+            })
+          }
+          className="w-full sm:w-auto h-auto min-h-[48px] py-4 px-8 font-semibold touch-manipulation"
+        >
+          <Phone className="w-5 h-5" aria-hidden="true" />
+          {phone}
+        </a>
+      </Button>
     </div>
   );
 };

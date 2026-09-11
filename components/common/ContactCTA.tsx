@@ -9,6 +9,7 @@ import type { Locale } from '../../lib/i18n';
 import type { LucideIcon } from '@/lib/lucide-icons';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
+import { Button } from '../ui/Button';
 
 interface ContactCTAProps {
     locale: Locale;
@@ -90,6 +91,9 @@ const ContactCTA = ({
         });
     }, [isKorean, locale]);
 
+    // variant가 표현하지 못하는 레이아웃(전폭·가변 높이·긴 라벨 줄바꿈)만 남긴다.
+    const ctaLayout = 'w-full sm:w-auto h-auto min-h-[44px] py-4 px-8 text-center break-all sm:break-normal whitespace-normal leading-snug font-bold touch-manipulation';
+
     const contactCtaMotionProps = {
         initial: { opacity: 0 },
         whileInView: { opacity: 1 },
@@ -114,38 +118,44 @@ const ContactCTA = ({
                     />
                     <div className="flex flex-col sm:flex-row gap-4">
                         {isKorean && (
-                            <Link
-                                href={contactHref}
-                                prefetch={false}
-                                onClick={trackSecondaryContact}
-                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-bold py-4 px-8 rounded-2xl shadow-md hover:shadow-lg transition-colors transition-shadow duration-300 border border-gray-100 dark:border-gray-600 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                            >
-                                <span className="min-w-0">{secondaryLabel}</span>
-                            </Link>
+                            <Button asChild variant="secondary" shape="pill" size="lg">
+                                <Link
+                                    href={contactHref}
+                                    prefetch={false}
+                                    onClick={trackSecondaryContact}
+                                    className={ctaLayout}
+                                >
+                                    <span className="min-w-0">{secondaryLabel}</span>
+                                </Link>
+                            </Button>
                         )}
                         {isKorean ? (
-                            <a
-                                href={primaryHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={trackPrimaryCta}
-                                /* 목적지가 카카오톡일 때만 옐로. 비-ko는 /contact 폼으로 가므로
-                                   아래 Link가 primary 보라를 유지한다(노란 버튼 = 카카오톡 규칙). */
-                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-                            >
-                                <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                                <span className="min-w-0">{primaryLabel}</span>
-                            </a>
+                            /* 목적지가 카카오톡일 때만 옐로. 비-ko는 /contact 폼으로 가므로
+                               아래 Link가 primary 보라를 유지한다(노란 버튼 = 카카오톡 규칙). */
+                            <Button asChild variant="kakao" shape="pill" size="lg">
+                                <a
+                                    href={primaryHref}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    onClick={trackPrimaryCta}
+                                    className={ctaLayout}
+                                >
+                                    <MessageCircle className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                    <span className="min-w-0">{primaryLabel}</span>
+                                </a>
+                            </Button>
                         ) : (
-                            <Link
-                                href={primaryHref}
-                                prefetch={false}
-                                onClick={trackPrimaryCta}
-                                className="inline-flex items-center justify-center w-full sm:w-auto text-center break-all sm:break-normal whitespace-normal leading-snug min-h-[44px] bg-primary hover:bg-primary-dark text-white font-bold py-4 px-8 rounded-2xl shadow-xl transition-colors transition-shadow duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary-dark"
-                            >
-                                <Mail className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
-                                <span className="min-w-0">{primaryLabel}</span>
-                            </Link>
+                            <Button asChild variant="solid" shape="pill" size="lg">
+                                <Link
+                                    href={primaryHref}
+                                    prefetch={false}
+                                    onClick={trackPrimaryCta}
+                                    className={ctaLayout}
+                                >
+                                    <Mail className="mr-2 flex-shrink-0" size={20} aria-hidden="true" />
+                                    <span className="min-w-0">{primaryLabel}</span>
+                                </Link>
+                            </Button>
                         )}
                     </div>
                     <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
