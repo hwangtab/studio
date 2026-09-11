@@ -30,7 +30,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
       <main className="mx-auto max-w-lg px-4 py-24 text-center">
         {outcome === 'confirmed' ? (
           <>
-            <h1 className="text-2xl font-bold">{isMixing ? '주문이 접수되었습니다' : '예약이 확정되었습니다'}</h1>
+            <h1 className="typo-page-title">{isMixing ? '주문이 접수되었습니다' : '예약이 확정되었습니다'}</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">
               주문번호 {orderNo}.
               {emailSent === false
@@ -81,7 +81,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
           </>
         ) : (
           <>
-            <h1 className="text-2xl font-bold">결제를 확정하지 못했습니다</h1>
+            <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
             <p className="mt-2 text-sm text-gray-500">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
           </>

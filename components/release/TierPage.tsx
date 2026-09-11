@@ -363,7 +363,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               className="group glass-card rounded-2xl p-6 hover:-translate-y-0.5 transition-all duration-200"
             >
               <p className="text-xs text-primary font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+              <h3 className="typo-card-subtitle text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                 {t(`releaseProject.tiers.${otherTier}.label`)}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(`releaseProject.tiers.${otherTier}.note`)}</p>

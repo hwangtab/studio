@@ -225,7 +225,7 @@ export default function ContractCompletePage({
 
           {/* 사이트 헤더를 붙이지 않으므로 여기가 브랜드를 밝히는 유일한 자리다. */}
           <p className="text-gray-400 dark:text-gray-400 text-sm font-medium mb-2">스튜디오 놀</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-900 mb-3">계약서 서명 완료</h1>
+          <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mb-3">계약서 서명 완료</h1>
           <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
             {/* 파기된 계약은 이름 자리에 "(개인정보 파기됨)"이 들어 있다. 그대로 부르면
                 기계가 사람 이름을 잘못 읽은 것처럼 보인다. */}

@@ -150,12 +150,12 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       <Link href="/ko/mixing-mastering" className="text-sm text-primary hover:underline">
         ← 서비스 소개로 돌아가기
       </Link>
-      <h1 className="mt-3 text-2xl font-bold text-gray-900 dark:text-white">믹싱·마스터링 온라인 주문</h1>
+      <h1 className="mt-3 typo-page-title">믹싱·마스터링 온라인 주문</h1>
       <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 3</p>
 
       {step === 1 && (
         <section aria-labelledby="mixing-step1-heading">
-          <h2 id="mixing-step1-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="mixing-step1-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             1. 상품과 곡 수 선택
           </h2>
 
@@ -231,7 +231,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
       {step === 2 && (
         <section aria-labelledby="mixing-step2-heading">
-          <h2 id="mixing-step2-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="mixing-step2-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             2. 주문자 정보
           </h2>
 
@@ -341,7 +341,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
       {step === 3 && confirmedOrder && (
         <section aria-labelledby="mixing-step3-heading">
-          <h2 id="mixing-step3-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="mixing-step3-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             3. 결제
           </h2>
 

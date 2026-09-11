@@ -138,7 +138,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
 
         {/* 작업 연보 — 음반을 앞에, 기획·전시·축제를 뒤에. 녹음을 의뢰하러 온 사람은 앞부분만
             보고 판단하고, 더 궁금한 사람이 아래까지 읽는다. 배경 설명은 넣지 않는다(작품명·연도·역할만). */}
-        <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+        <h3 className="mt-12 mb-4 typo-card-subtitle text-gray-900 dark:text-gray-50">
           {profile.headings.credits}
         </h3>
         {([
@@ -168,7 +168,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
           </div>
         ))}
 
-        <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+        <h3 className="mt-12 mb-4 typo-card-subtitle text-gray-900 dark:text-gray-50">
           {profile.headings.expertise}
         </h3>
         <ul className="flex max-w-3xl flex-wrap gap-2">
@@ -182,7 +182,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
           ))}
         </ul>
 
-        <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+        <h3 className="mt-12 mb-4 typo-card-subtitle text-gray-900 dark:text-gray-50">
           {profile.headings.profiles}
         </h3>
         <ul className="space-y-2">
@@ -203,7 +203,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
 
         {profile.pressCoverage.length > 0 && (
           <>
-            <h3 className="mt-12 mb-4 text-lg font-semibold text-gray-900 dark:text-gray-50">
+            <h3 className="mt-12 mb-4 typo-card-subtitle text-gray-900 dark:text-gray-50">
               {profile.headings.press}
             </h3>
             <ul className="space-y-3">

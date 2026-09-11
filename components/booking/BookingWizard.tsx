@@ -296,14 +296,14 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
       <Link href={`/ko/${service}`} className="text-sm text-primary hover:underline">
         ← 서비스 소개로 돌아가기
       </Link>
-      <h1 className="mt-3 text-2xl font-bold text-gray-900 dark:text-white">
+      <h1 className="mt-3 typo-page-title">
         {selectedProduct.nameKo} 온라인 예약
       </h1>
       <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 4</p>
 
       {step === 1 && (
         <section aria-labelledby="booking-step1-heading">
-          <h2 id="booking-step1-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step1-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             1. 상품과 시간 선택
           </h2>
 
@@ -365,7 +365,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
       {step === 2 && (
         <section aria-labelledby="booking-step2-heading">
-          <h2 id="booking-step2-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step2-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             2. 날짜와 시간 선택
           </h2>
 
@@ -437,7 +437,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
       {step === 3 && (
         <section aria-labelledby="booking-step3-heading">
-          <h2 id="booking-step3-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step3-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             3. 예약자 정보
           </h2>
 
@@ -546,7 +546,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
       {step === 4 && confirmedOrder && selectedStartHour !== null && (
         <section aria-labelledby="booking-step4-heading">
-          <h2 id="booking-step4-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+          <h2 id="booking-step4-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             4. 결제
           </h2>
 

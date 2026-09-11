@@ -120,11 +120,11 @@ export default function SubscribeManagePage(props: ManageProps) {
         <meta name="referrer" content="no-referrer" />
       </Head>
       <main className="mx-auto max-w-2xl min-w-0 max-w-full px-4 py-12 sm:py-16">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">정기결제 관리</h1>
+        <h1 className="typo-page-title">정기결제 관리</h1>
 
         <section className="mt-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{productName}</h2>
+            <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
             <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
               {STATUS_LABELS[currentStatus]}
             </span>

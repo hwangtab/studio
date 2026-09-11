@@ -492,7 +492,7 @@ export default function ContractSignPage({
               <p className="text-white/70 dark:text-white/70 text-sm font-medium mb-1">
                 스튜디오 놀 · 서울 은평구 대조동
               </p>
-              <h1 className="text-2xl md:text-3xl font-bold text-white dark:text-white">음악연습실 이용계약서</h1>
+              <h1 className="typo-page-title text-white dark:text-white">음악연습실 이용계약서</h1>
               <p className="text-white dark:text-white/80 mt-2">
                 {contract.customerName}님, 아래 내용을 확인하고 서명해 주세요.
               </p>
@@ -529,7 +529,7 @@ export default function ContractSignPage({
                 여기서 채운 값으로 위 계약서가 완성된 뒤 그 최종본에 서명이 붙는다.
               */}
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">이용자 정보</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">이용자 정보</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
                   아래 두 항목은 계약서에 그대로 기재됩니다. 정확히 입력해 주세요.
                 </p>
@@ -572,7 +572,7 @@ export default function ContractSignPage({
               </div>
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
 
                 <div className="space-y-3">
                   {clauses.map((clause) => (
@@ -617,7 +617,7 @@ export default function ContractSignPage({
               </div>
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   계약 체결 시 등록하신 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
                   <span className="block mt-1 text-gray-500 dark:text-gray-500">
@@ -656,7 +656,7 @@ export default function ContractSignPage({
               </div>
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
                 </p>
