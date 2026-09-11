@@ -18,16 +18,18 @@ jest.mock('react-i18next', () => ({
   }),
 }));
 
-const cases: [string, React.ReactElement][] = [
-  ['BookingEntryButton', <BookingEntryButton service="recording" locale="ko" />],
-  ['InlineBookingCallout', <InlineBookingCallout message="EP 제작·발매 일정 상담" locale="ko" />],
-  ['InlinePriceCallout', <InlinePriceCallout id="recording-pro" locale="ko" />],
-  ['InlineServiceCallout', <InlineServiceCallout type="lesson" locale="ko" />],
+// 배열에 엘리먼트를 그대로 담으면 react/jsx-key에 걸린다. 팩토리로 담고 테스트 안에서
+// 호출하면 규칙을 끄지 않고 해소되고, 케이스마다 새 엘리먼트를 쓰게 되는 이점도 있다.
+const cases: [string, () => React.ReactElement][] = [
+  ['BookingEntryButton', () => <BookingEntryButton service="recording" locale="ko" />],
+  ['InlineBookingCallout', () => <InlineBookingCallout message="EP 제작·발매 일정 상담" locale="ko" />],
+  ['InlinePriceCallout', () => <InlinePriceCallout id="recording-pro" locale="ko" />],
+  ['InlineServiceCallout', () => <InlineServiceCallout type="lesson" locale="ko" />],
 ];
 
 describe('전환 CTA 포커스 링', () => {
-  it.each(cases)('%s의 모든 링크·버튼에 focus-visible 링이 있다', (label, element) => {
-    const { container } = render(element);
+  it.each(cases)('%s의 모든 링크·버튼에 focus-visible 링이 있다', (label, makeElement) => {
+    const { container } = render(makeElement());
     const targets = container.querySelectorAll('a, button');
     expect(targets.length).toBeGreaterThan(0);
     targets.forEach((el) => {

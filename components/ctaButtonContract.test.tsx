@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 import BookingEntryButton from './booking/BookingEntryButton';
@@ -8,82 +8,157 @@ import HeroKakaoCta from './common/HeroKakaoCta';
 import InlineBookingCallout from './inline/InlineBookingCallout';
 import InlinePriceCallout from './inline/InlinePriceCallout';
 import InlineServiceCallout from './inline/InlineServiceCallout';
+import StickyBottomCTA from './inline/StickyBottomCTA';
 import PricingCard from './ui/PricingCard';
+import NotFoundPage from '../pages/404';
+import ServerErrorPage from '../pages/500';
 
 /**
- * Task 4에서 전환 CTA 10종을 Button 프리미티브로 옮겼다. 이 테스트는 그 전환이
- * 되돌아가거나 variant를 잘못 고른 것을 렌더 결과에서 잡는다. 지키는 계약 셋:
- *  1) 옐로 버튼에는 반드시 text-kakao-ink가 따라온다 — 흰 글씨는 대비 1.3:1로 WCAG 미달이고,
- *     2026-08-13에 카카오 버튼이 색 없이 20시간 렌더된 사고가 있었다.
- *  2) 반경은 pill(rounded-full) 또는 block(rounded-xl) 하나만 — 둘이 섞이면 shape 충돌이다.
- *  3) 모든 버튼에 focus-visible:ring-2 — 마우스로는 드러나지 않는 결함이라 테스트로 고정.
- *  4) 목적지가 카카오톡이 아닌 링크에는 절대 bg-kakao가 붙지 않는다(비-ko는 /contact 폼).
+ * Task 4에서 전환 CTA를 Button 프리미티브로 옮겼다. 이 테스트는 그 전환이 되돌아가거나
+ * variant를 잘못 고른 것을 **렌더 결과**에서 잡는다. 지키는 계약 넷:
+ *
+ *  1) 카카오 목적지(href에 'kakao')인 링크에는 반드시 bg-kakao + text-kakao-ink가 있다.
+ *     역방향 규칙이 핵심이다 — 2026-08-13 사고는 카카오 버튼이 "색이 다른" 게 아니라
+ *     **스타일이 통째로 빠진 채** 20시간 렌더된 형태였다. 그래서 후보를 반경으로 거르지
+ *     않고 `a[href]`·`button` 전체에서 잡는다(반경으로 걸렀다면 스타일이 빠진 링크는
+ *     애초에 검사 대상에서 탈락해 이 사고를 못 잡는다).
+ *  2) 반대로 bg-kakao가 붙은 것의 목적지는 반드시 카카오톡이어야 한다 — 비-ko는 /contact
+ *     폼으로 가므로 옐로가 새면 안 된다(CLAUDE.md 카카오 배색 규칙).
+ *  3) 카카오 링크 개수를 케이스마다 고정한다. 형제 버튼이 남아 "하나라도 있으면 통과"로
+ *     무성이 되는 것을 막는다.
+ *  4) 버튼형(반경 보유) 엘리먼트는 반경이 pill·block 중 하나뿐이고, 모든 링크·버튼에
+ *     focus-visible 링이 있다.
  */
 jest.mock('react-i18next', () => ({
+  // 404·500이 lib/i18n을 타고 들어오므로 initReactI18next도 함께 내줘야 한다.
+  initReactI18next: { type: '3rdParty', init: () => {} },
+  I18nextProvider: ({ children }: { children?: unknown }) => children,
   useTranslation: () => ({
-    t: (key: string, options?: { defaultValue?: string }) => options?.defaultValue ?? key,
+    t: (key: string, options?: string | { defaultValue?: string }) => {
+      if (typeof options === 'string') return options;
+      return options?.defaultValue ?? key;
+    },
   }),
+}));
+
+jest.mock('next/router', () => ({
+  useRouter: () => ({ asPath: '/ko/does-not-exist', push: jest.fn(), events: { on: jest.fn(), off: jest.fn() } }),
 }));
 
 jest.mock('framer-motion', () => {
   const R = jest.requireActual('react');
+  const MOTION_PROPS = /^(initial|animate|exit|whileInView|whileHover|whileTap|whileFocus|viewport|transition|variants|layout|layoutId)$/;
   const pass = (Tag: string) =>
-    ({ children, ...rest }: Record<string, unknown> & { children?: React.ReactNode }) => {
-      const dom = Object.fromEntries(
-        Object.entries(rest).filter(([k]) => !/^(initial|animate|whileInView|whileHover|whileTap|viewport|transition|variants)$/.test(k))
-      );
-      return R.createElement(Tag, dom, children);
-    };
-  return { m: { div: pass('div'), create: () => pass('a') } };
+    ({ children, ...rest }: Record<string, unknown> & { children?: React.ReactNode }) =>
+      R.createElement(Tag, Object.fromEntries(Object.entries(rest).filter(([k]) => !MOTION_PROPS.test(k))), children);
+  return {
+    m: { div: pass('div'), h1: pass('h1'), p: pass('p'), nav: pass('nav'), span: pass('span'), create: () => pass('a') },
+    AnimatePresence: ({ children }: { children?: React.ReactNode }) => children,
+    LazyMotion: ({ children }: { children?: React.ReactNode }) => children,
+    domAnimation: {},
+  };
 });
 
 const KAKAO_URL = 'https://open.kakao.com/o/test';
 
-// 팩토리로 두면 jsx-key 규칙에 걸리지 않고 케이스마다 새 엘리먼트를 쓴다.
-const cases: Array<[string, () => React.ReactElement]> = [
-  ['HeroKakaoCta ko', () => <HeroKakaoCta locale="ko" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="카톡 상담" phone="010-4255-7893" />],
-  ['HeroKakaoCta ko onSurface', () => <HeroKakaoCta locale="ko" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="카톡 상담" phone="010-4255-7893" surface="onSurface" />],
-  ['HeroKakaoCta en', () => <HeroKakaoCta locale="en" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="L" contactLabel="Contact" />],
-  ['ContactCTA ko', () => <ContactCTA locale="ko" title="t" subtitle="s" imageSrc="/i.webp" imageAlt="a" />],
-  ['ContactCTA en', () => <ContactCTA locale="en" title="t" subtitle="s" imageSrc="/i.webp" imageAlt="a" />],
-  ['BookingEntryButton', () => <BookingEntryButton service="recording" locale="ko" />],
-  ['InlinePriceCallout', () => <InlinePriceCallout id="recording-pro" locale="ko" />],
-  ['InlineServiceCallout', () => <InlineServiceCallout type="lesson" locale="ko" />],
-  ['InlineBookingCallout', () => <InlineBookingCallout message="EP 제작 상담" locale="ko" />],
-  ['PricingCard kakao', () => <PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="카톡 문의" ctaHref={KAKAO_URL} trackingComponent="X" locale="ko" secondaryCtaLabel="온라인 예약" secondaryCtaHref="/ko/booking/recording" />],
-  ['PricingCard non-kakao', () => <PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="Contact" ctaHref="/en/contact" trackingComponent="X" locale="en" />],
+/** StickyBottomCTA는 marker가 viewport 위로 올라가야 렌더된다 — 그 트리거를 재현한다. */
+const renderStickyBottomCTA = (): HTMLElement => {
+  let trigger: ((entries: Partial<IntersectionObserverEntry>[]) => void) | null = null;
+  const original = global.IntersectionObserver;
+  // @ts-expect-error 테스트용 전역 mock
+  global.IntersectionObserver = function (cb: IntersectionObserverCallback) {
+    trigger = (entries) => cb(entries as IntersectionObserverEntry[], {} as IntersectionObserver);
+    return { observe: () => {}, unobserve: () => {}, disconnect: () => {} };
+  };
+  const Harness = () => {
+    const ref = React.useRef<HTMLDivElement>(null);
+    return (
+      <>
+        <div ref={ref} />
+        <StickyBottomCTA markerRef={ref} locale="ko" />
+      </>
+    );
+  };
+  const { container } = render(<Harness />);
+  act(() => {
+    trigger!([{ isIntersecting: false, boundingClientRect: { top: -100 } as DOMRectReadOnly }]);
+  });
+  global.IntersectionObserver = original;
+  return container;
+};
+
+const renderOf = (element: React.ReactElement) => (): HTMLElement => render(element).container;
+
+/** [라벨, 렌더 팩토리, 이 화면에 있어야 할 카카오 목적지 링크 수] */
+const cases: Array<[string, () => HTMLElement, number]> = [
+  ['HeroKakaoCta ko onImage', renderOf(<HeroKakaoCta locale="ko" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="카톡 상담" phone="010-4255-7893" />), 1],
+  ['HeroKakaoCta ko onSurface', renderOf(<HeroKakaoCta locale="ko" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="카톡 상담" phone="010-4255-7893" surface="onSurface" />), 1],
+  ['HeroKakaoCta en (옐로 금지)', renderOf(<HeroKakaoCta locale="en" kakaoUrl={KAKAO_URL} component="c" ctaId="hero" label="L" contactLabel="Contact" />), 0],
+  // 사진 패널 링크도 카카오로 가지만 버튼이 아니라 계약 대상이 아니다(isImageLink 참조).
+  ['ContactCTA ko', renderOf(<ContactCTA locale="ko" title="t" subtitle="s" imageSrc="/i.webp" imageAlt="a" />), 1],
+  ['ContactCTA en (옐로 금지)', renderOf(<ContactCTA locale="en" title="t" subtitle="s" imageSrc="/i.webp" imageAlt="a" />), 0],
+  ['BookingEntryButton', renderOf(<BookingEntryButton service="recording" locale="ko" />), 0],
+  ['InlinePriceCallout', renderOf(<InlinePriceCallout id="recording-pro" locale="ko" />), 1],
+  ['InlineServiceCallout', renderOf(<InlineServiceCallout type="lesson" locale="ko" />), 1],
+  ['InlineBookingCallout', renderOf(<InlineBookingCallout message="EP 제작 상담" locale="ko" />), 1],
+  // 전 스토리 페이지에 뜨는 최대 노출 표면 — 데스크톱 라벨 + 모바일 아이콘 2개.
+  ['StickyBottomCTA', renderStickyBottomCTA, 2],
+  ['PricingCard kakao+2차', renderOf(<PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="카톡 문의" ctaHref={KAKAO_URL} trackingComponent="X" locale="ko" secondaryCtaLabel="온라인 예약" secondaryCtaHref="/ko/booking/recording" />), 1],
+  ['PricingCard 비-kakao (옐로 금지)', renderOf(<PricingCard id="p" title="t" price="10" description="d" features={['f']} ctaLabel="Contact" ctaHref="/en/contact" trackingComponent="X" locale="en" />), 0],
+  ['404', renderOf(<NotFoundPage />), 0],
+  ['500', renderOf(<ServerErrorPage />), 0],
 ];
 
+const hasKakaoStyle = (cls: string) => /\bbg-kakao\b/.test(cls);
+/**
+ * 이미지 전체를 감싼 링크(ContactCTA의 사진 패널)는 목적지가 카카오톡이어도 버튼이 아니다 —
+ * 배경색을 칠하면 사진을 덮는다. 버튼 계약에서 제외하되, 판정 근거를 "img/picture를 품고
+ * 있다"는 구조로 좁혀 둔다(라벨이나 클래스 이름 같은 느슨한 기준을 쓰지 않는다).
+ */
+const isImageLink = (el: Element) => el.querySelector('img, picture') !== null;
+const isKakaoDestination = (el: Element) =>
+  (el.getAttribute('href') ?? '').includes('kakao') && !isImageLink(el);
+
 describe('전환 CTA의 Button 계약', () => {
-  it.each(cases)('%s', (label, makeElement) => {
-    const { container } = render(makeElement());
-    const buttons = Array.from(container.querySelectorAll('a, button')).filter((el) =>
-      /\brounded-(full|xl)\b/.test(el.className)
-    );
-    expect(buttons.length).toBeGreaterThan(0);
+  it.each(cases)('%s', (label, renderCase, expectedKakaoLinks) => {
+    const container = renderCase();
 
-    buttons.forEach((el) => {
-      const cls = el.className;
-      const where = `${label} > "${el.textContent?.trim()}": ${cls}`;
+    // 후보를 반경으로 거르지 않는다 — 스타일이 통째로 빠진 링크도 반드시 검사에 들어와야 한다.
+    const candidates = Array.from(container.querySelectorAll('a[href], button'));
+    expect(candidates.length).toBeGreaterThan(0);
 
-      // 반경은 한 종류만
-      const radii = new Set(cls.match(/\brounded-(full|xl)\b/g));
-      expect(`${where} | radii=${[...radii]}`).toMatch(/radii=rounded-(full|xl)$/);
+    const kakaoDestinations = candidates.filter(isKakaoDestination);
+    const kakaoStyled = candidates.filter((el) => hasKakaoStyle(el.className));
 
-      expect(where).toMatch(/focus-visible:ring-2/);
-      expect(where).toMatch(/focus-visible:outline-none/);
+    // (3) 개수 고정 — 형제 버튼이 남아 무성이 되는 것을 막는다.
+    expect(
+      `${label}: 카카오 목적지 링크 ${kakaoDestinations.length}개 (기대 ${expectedKakaoLinks})`
+    ).toBe(`${label}: 카카오 목적지 링크 ${expectedKakaoLinks}개 (기대 ${expectedKakaoLinks})`);
 
-      const href = el.getAttribute('href') ?? '';
-      if (/\bbg-kakao\b/.test(cls)) {
-        // 옐로 위 글씨는 항상 kakao-ink
-        expect(where).toMatch(/\btext-kakao-ink\b/);
-        expect(cls.replace(/dark:\S+/g, '')).not.toMatch(/\btext-white\b/);
-        // 옐로는 카카오톡 목적지 전용
-        expect(`${label} kakao href=${href}`).toMatch(/kakao/);
-      } else if (href.includes('kakao')) {
-        // 역방향: 카카오 목적지인데 옐로가 빠지면 2026-08-13 사고 재발
+    // (2) 옐로는 카카오톡 목적지 전용 — 비-ko /contact 폼에 새면 안 된다.
+    kakaoStyled.forEach((el) => {
+      expect(`${label} > bg-kakao인데 href=${el.getAttribute('href')}`).toMatch(/kakao/);
+    });
+
+    // (1) 역방향 — 카카오 목적지인데 옐로가 빠지면 2026-08-13 사고 재발.
+    kakaoDestinations.forEach((el) => {
+      const where = `${label} > "${el.textContent?.trim()}": ${el.className}`;
+      if (!hasKakaoStyle(el.className)) {
         throw new Error(`카카오 목적지인데 bg-kakao가 없다 — ${where}`);
       }
+      // 옐로 위 글씨는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 WCAG 미달).
+      expect(where).toMatch(/\btext-kakao-ink\b/);
+      expect(where.replace(/dark:\S+/g, '')).not.toMatch(/\btext-white\b/);
+    });
+
+    // (4) 반경 단일성 + 포커스 링
+    candidates.forEach((el) => {
+      const cls = el.className;
+      const where = `${label} > "${el.textContent?.trim()}": ${cls}`;
+      const radii = new Set(cls.match(/\brounded-(?:full|xl|2xl|lg)\b/g) ?? []);
+      expect(`${where} | radii=${[...radii].join(',')}`).toMatch(/radii=(rounded-(?:full|xl))?$/);
+      expect(where).toMatch(/focus-visible:ring-2/);
+      expect(where).toMatch(/focus-visible:outline-none/);
     });
   });
 });

@@ -237,7 +237,7 @@ export default function AdminContractsPage({
                 <Link href="/admin/contracts/new" passHref>
                   <Button variant="secondary">새 계약 작성</Button>
                 </Link>
-                <Button variant="outline" className="border-white/40 text-white hover:bg-white/10" onClick={handleLogout}>
+                <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40" onClick={handleLogout}>
                   로그아웃
                 </Button>
               </div>

@@ -254,7 +254,7 @@ export default function AdminBookingsPage({
                 </Link>
                 <Button
                   variant="outline"
-                  className="border-white/40 text-white hover:bg-white/10"
+                  className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40"
                   onClick={handleLogout}
                 >
                   로그아웃

@@ -27,7 +27,10 @@ describe('Button', () => {
   it('asChild가 자식의 기존 className을 잃지 않는다', () => {
     render(
       <Button asChild>
-        <a href="/x" className="custom-class">링크</a>
+        {/* href는 이 케이스의 관심사가 아니다. 내부 경로를 쓰면
+            @next/next/no-html-link-for-pages에 걸리므로 외부 URL로 둔다 —
+            규칙을 파일 전체에서 끄는 것보다 이쪽이 안전하다. */}
+        <a href="https://example.com/x" className="custom-class">링크</a>
       </Button>,
     );
     const link = screen.getByRole('link', { name: '링크' });
