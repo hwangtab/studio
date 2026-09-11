@@ -14,6 +14,13 @@ jest.mock('./email', () => ({
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
 }));
 jest.mock('./projects', () => ({ ...jest.requireActual('./projects'), getFundingProject: () => PROJECT }));
+// findFundingOrderByOrderNo를 감싼다 — cancel.ts가 "읽고 → 검사 → 쓰기"를 하는 구조라,
+// 읽기와 쓰기 **사이**에 경쟁 요청이 끼어든 상황을 재현하려면 그 창을 열 수 있어야 한다.
+// 기본 구현은 실제 함수 그대로다.
+jest.mock('./service', () => {
+  const actual = jest.requireActual('./service');
+  return { ...actual, findFundingOrderByOrderNo: jest.fn(actual.findFundingOrderByOrderNo) };
+});
 
 // eslint-disable-next-line import/first
 import { cancelFundingPledge } from './cancel';
@@ -214,6 +221,90 @@ describe('cancelFundingPledge', () => {
     expect((await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: after })).ok).toBe(false);
     (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [] } });
     expect((await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: after })).ok).toBe(true);
+  });
+});
+
+describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () => {
+  const staleRead = (mutate: string, args: unknown[]) => {
+    const actual = jest.requireActual('./service').findFundingOrderByOrderNo;
+    (findFundingOrderByOrderNo as jest.Mock).mockImplementationOnce(async (orderNo: string) => {
+      const order = await actual(orderNo);
+      // 우리가 읽은 **뒤** 경쟁 요청이 먼저 기록한다 — 스냅샷은 그대로 낡은 값을 들고 있다.
+      await client.execute({ sql: mutate, args: args as never[] });
+      return order;
+    });
+  };
+
+  it('무통장 셀프 취소: 동시 요청 두 건이 둘 다 성립하지 않는다 — 요청 메일도 한 통뿐', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead('UPDATE funding_pledges SET refund_requested_at = 1 WHERE order_id = ?', [o!.id]);
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었습니다.' });
+    expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+    // 경쟁 요청이 찍은 값이 덮어써지지 않았다.
+    const rows = await client.execute('SELECT refund_requested_at AS t FROM funding_pledges');
+    expect(Number(rows.rows[0].t)).toBe(1);
+  });
+
+  it('무통장 셀프 취소: 읽은 뒤 발송 준비가 시작되면 요청을 접수하지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead("UPDATE funding_pledges SET fulfillment_status = 'preparing' WHERE order_id = ?", [o!.id]);
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.refundRequestedAt).toBeNull();
+  });
+
+  it('무통장 셀프 취소: 읽은 뒤 주문이 환불로 끝나면 요청을 접수하지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead("UPDATE orders SET status = 'refunded' WHERE id = ?", [o!.id]);
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+  });
+
+  it('토스 셀프 취소: 읽은 뒤 발송 준비가 시작되면 토스를 부르지 않고 거부한다', async () => {
+    // 예전엔 assessSelfCancel이 읽기 시점만 봐서, 환불과 발송이 둘 다 성립할 수 있었다.
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead("UPDATE funding_pledges SET fulfillment_status = 'shipped' WHERE order_id = ?", [o!.id]);
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid'); // 선점도 없었다
+  });
+
+  it('관리자 취소는 발송 준비 중에도 그대로 환불한다 — 가드는 셀프 취소에만 건다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute("UPDATE funding_pledges SET fulfillment_status = 'shipped'");
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 5000 });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('refunded');
   });
 });
 

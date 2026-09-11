@@ -1,7 +1,7 @@
 import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingPledges, orders, refunds } from '../../db/schema';
+import { orders, refunds } from '../../db/schema';
 import { cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
@@ -85,10 +85,22 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     if (input.requestedBy === 'customer') {
       // 이미 접수된 취소 요청을 다시 눌러도 새 요청처럼 처리하지 않는다 — 운영자에게 같은
       // 건의 메일이 반복해서 쌓인다.
-      if (pledge.refundRequestedAt) {
+      //
+      // 가드를 **UPDATE의 WHERE로** 옮긴 이유: 위에서 읽은 스냅샷으로 if를 돌면 동시 요청
+      // 두 건이 둘 다 "아직 요청 없음"을 보고 통과해 요청 메일이 2통 나간다. 발송 준비
+      // 시작(fulfillment_status)·결제 상태도 같은 이유로 함께 건다 — assessSelfCancel은 읽기
+      // 시점만 보므로, 판정과 기록 사이에 관리자가 발송 준비로 넘기면 "발송 준비 중인데
+      // 취소 요청 접수됨"이 성립한다. 토스 경로가 이미 쓰는 선점 패턴과 같은 형태다.
+      const claim = await db.run(sql`
+        UPDATE funding_pledges
+        SET refund_requested_at = ${Math.floor(input.now.getTime() / 1000)}, updated_at = unixepoch()
+        WHERE id = ${pledge.id}
+          AND refund_requested_at IS NULL
+          AND fulfillment_status = 'none'
+          AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`);
+      if (Number(claim.rowsAffected) === 0) {
         return { ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었습니다.' };
       }
-      await db.update(fundingPledges).set({ refundRequestedAt: input.now, updatedAt: input.now }).where(eq(fundingPledges.id, pledge.id));
       await notifyCancelled(db, order, project, 'refund_requested', order.totalAmount);
       return { ok: true, mode: 'refund_requested', refundAmount: order.totalAmount };
     }
@@ -108,7 +120,17 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
 
   // 토스: 선점 → 취소 API → 기록. 실패 시 되돌림(예약 cancel.ts와 같은 순서).
-  const claim = await db.run(sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}`);
+  //
+  // 셀프 취소는 "발송 준비 전"이라는 조건을 선점 WHERE에 함께 건다 — assessSelfCancel이 읽기
+  // 시점에만 보므로, 판정과 선점 사이에 관리자가 발송 준비로 넘기면 환불과 발송이 둘 다
+  // 성립한다(돈은 나가고 리워드도 나간다). 관리자 취소는 발송 중에도 허용해야 하므로 제외한다.
+  const selfCancelGuard =
+    input.requestedBy === 'customer'
+      ? sql` AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND fulfillment_status = 'none')`
+      : sql.empty();
+  const claim = await db.run(
+    sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}${selfCancelGuard}`,
+  );
   if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 후원입니다.' };
   const toss = await cancelPayment({
     paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: refundAmount,
