@@ -36,6 +36,16 @@ export type ConfirmOutcome =
 /** 토스가 "이미 승인된 결제"에 재승인을 요청받았을 때 돌려주는 코드. 실패가 아니라 지연 신호다. */
 const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
 
+/**
+ * "그 paymentKey로는 결제 자체가 없다"는 토스 거절 코드들 (lib/funding/confirm.ts와 같은 판단).
+ *
+ * 토스 confirm은 paymentKey·orderId·amount가 모두 맞아야 승인한다 — 아무 문자열이나 넣거나
+ * 남의 주문번호를 붙이면 여기로 떨어진다. 정상 고객 흐름에서는 나오지 않는 코드라, 이걸
+ * 일반 거절로 보고 주문을 failed로 낙인하면 제3자가 주문번호만으로 남의 주문의 복구 경로를
+ * 영구히 닫을 수 있다(failed는 아래 `status !== 'pending'`에 걸려 웹훅 복구까지 막는다).
+ */
+const PAYMENT_ABSENT_CODES = new Set(['NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION']);
+
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';
 const RECORDING_FAILED_MESSAGE =
@@ -165,6 +175,22 @@ const autoCancelStaleApproval = async (order: Order, approved: TossPayment): Pro
   return { ok: false, code: 'invalid_state', message: STALE_APPROVAL_MESSAGE };
 };
 
+/**
+ * 확정 메일 발송 — 예외를 삼켜 실패 사유 문자열로 바꾼다.
+ *
+ * 결제는 이미 승인·기록이 끝난 뒤라, 메일 라이브러리가 던진 예외가 confirmBookingPayment
+ * 밖으로 새면 완료 화면은 "결제를 확정하지 못했습니다"를 띄운다 — 돈은 빠져나갔고 주문은
+ * paid인데 고객은 실패로 읽는다. 실패는 notificationError로만 남긴다(스펙 §10).
+ */
+const deliverConfirmedEmails = async (send: () => Promise<string | null>): Promise<string | null> => {
+  try {
+    return await send();
+  } catch (error) {
+    console.error('[booking-confirm] 확정 메일 발송 중 예외', { error });
+    return error instanceof Error ? error.message : String(error);
+  }
+};
+
 export const confirmBookingPayment = async (input: {
   orderNo: string;
   paymentKey: string;
@@ -173,9 +199,25 @@ export const confirmBookingPayment = async (input: {
   const order = await findOrderByOrderNo(input.orderNo);
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
 
-  // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 이미 확정이면 성공으로 답한다.
-  if (order.status === 'paid')
+  // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 단, 소유 증명이 있을 때만이다.
+  //
+  // 이 분기는 manageToken을 그대로 돌려주고, success.tsx는 그 토큰으로 manage URL을 만들어
+  // props(=HTML)에 박는다. 주문번호는 비밀이 아니다(확인 메일·화면·토스 영수증·fail URL에
+  // 평문) — 여기서 paymentKey를 보지 않으면 `?paymentKey=아무거나&orderId=<주문번호>&amount=1`
+  // 한 번으로 남의 관리 토큰이 발급되고, 그 토큰이면 개인정보 열람과 전액 환불이 가능하다.
+  // 진짜 고객의 새로고침·웹훅 재도착은 둘 다 그 주문의 실제 paymentKey를 갖고 온다.
+  if (order.status === 'paid') {
+    const provesOwnership =
+      input.amount === order.totalAmount && order.payments.some((p) => p.paymentKey === input.paymentKey);
+    if (!provesOwnership) {
+      console.error('[booking-confirm] 확정된 주문에 소유 증명 없는 접근 — 관리 토큰을 발급하지 않는다', {
+        orderNo: order.orderNo,
+        paymentKey: input.paymentKey,
+      });
+      return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
+    }
     return { ok: true, orderNo: order.orderNo, orderType: order.type === 'mixing' ? 'mixing' : 'session', manageToken: order.manageToken };
+  }
   if (order.status !== 'pending')
     return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
 
@@ -215,6 +257,19 @@ export const confirmBookingPayment = async (input: {
 
   let approved: TossPayment;
   if (toss.ok) {
+    // 200이 곧 DONE은 아니다 — 가상계좌 승인 응답은 입금 0원인 WAITING_FOR_DEPOSIT으로 온다.
+    // 그대로 확정하면 돈이 안 들어온 주문이 paid + 확정 메일 + 슬롯 점유가 되고, 뒤따르는
+    // EXPIRED 웹훅에는 처리 경로가 없어 영구 paid로 남는다. 아래 ALREADY_PROCESSED 재조회
+    // 분기가 이미 DONE을 요구하고 있었으니(비대칭) 여기서도 같은 기준을 적용한다.
+    // 주문은 pending으로 남겨 둔다 — 실제 입금되면 DONE 웹훅이 정상 경로로 확정한다.
+    if (toss.payment.status !== 'DONE') {
+      console.error('[booking-confirm] 승인 응답이 DONE이 아님 — 확정하지 않는다', {
+        orderNo: order.orderNo,
+        paymentKey: input.paymentKey,
+        status: toss.payment.status,
+      });
+      return { ok: false, code: 'toss_rejected', message: GENERIC_TOSS_ERROR_MESSAGE };
+    }
     approved = toss.payment;
   } else if (toss.code === ALREADY_PROCESSED_CODE) {
     // 토스는 이미 승인된 결제의 재승인을 거절한다 — 그런데 이 상황은 "실패"가 아니라 "우리 DB만
@@ -249,10 +304,13 @@ export const confirmBookingPayment = async (input: {
     // CONFIG_ERROR·NETWORK_ERROR는 우리 쪽 설정·네트워크 문제라 원문을 그대로 보이면
     // 내부 구성(비밀키 누락 등)이 새어나간다 — 고객에겐 일반 문구, 원문은 서버 로그에만.
     const isInternalError = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
+    // 결제 미존재 계열도 failed로 찍지 않는다 — 이 주문의 결제가 거절된 게 아니라 애초에
+    // 없는 결제를 승인하려 한 것이다. 낙인하면 제3자가 주문번호만으로 남의 주문을 망가뜨린다.
+    const isPaymentAbsent = PAYMENT_ABSENT_CODES.has(toss.code);
     // 그리고 이 둘은 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다 — 실제로는 승인이
     // 성사됐을 수 있으므로 failed로 확정하지 않는다. failed로 찍으면 뒤늦게 오는 웹훅 DONE
     // 복구가 `status !== 'pending'`에 영구히 막힌다. pending으로 두면 만료 또는 웹훅이 끝낸다.
-    if (!isInternalError) {
+    if (!isInternalError && !isPaymentAbsent) {
       await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
     }
     // 토스가 거부한 모든 승인은 코드와 함께 남긴다 — 고객 화면엔 메시지만 나가서, 로그가 없으면
@@ -272,7 +330,11 @@ export const confirmBookingPayment = async (input: {
         message: toss.message,
       });
     }
-    return { ok: false, code: 'toss_rejected', message: isInternalError ? GENERIC_TOSS_ERROR_MESSAGE : toss.message };
+    return {
+      ok: false,
+      code: 'toss_rejected',
+      message: isInternalError || isPaymentAbsent ? GENERIC_TOSS_ERROR_MESSAGE : toss.message,
+    };
   }
 
   const isMixing = order.type === 'mixing';
@@ -351,7 +413,9 @@ export const confirmBookingPayment = async (input: {
   let emailSent: boolean | undefined;
   if (isMixing && workOrder) {
     // 믹싱은 슬롯이 없어 캘린더 등록이 없다 — 확정 메일만 보낸다.
-    const notifyError = await sendMixingOrderConfirmedEmails({ ...order, status: 'paid' }, workOrder);
+    const notifyError = await deliverConfirmedEmails(() =>
+      sendMixingOrderConfirmedEmails({ ...order, status: 'paid' }, workOrder),
+    );
     emailSent = !notifyError;
     try {
       await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));
@@ -392,7 +456,9 @@ export const confirmBookingPayment = async (input: {
       }
     }
 
-    const notifyError = await sendBookingConfirmedEmails({ ...order, status: 'paid' }, booking);
+    const notifyError = await deliverConfirmedEmails(() =>
+      sendBookingConfirmedEmails({ ...order, status: 'paid' }, booking),
+    );
     emailSent = !notifyError;
     try {
       await db.update(orders).set({ notificationError: notifyError }).where(eq(orders.id, order.id));

@@ -4,6 +4,15 @@ import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { processTossWebhook } from '../../../lib/booking/webhook';
 
+/**
+ * 이 라우트는 한 요청에서 토스 재조회(fetchPayment) → confirm(토스 승인 재시도 포함) →
+ * batch 기록 → 확정 메일 발송까지 직렬로 수행한다. Vercel 기본 실행 한도(10초)에서는
+ * 이 사슬이 통째로 끊길 수 있는데, 여기서 죽으면 승인된 결제가 미기록으로 남고 복구 경로도
+ * 이 웹훅뿐이라 재시도마다 같은 지점에서 잘린다. 다른 장기 라우트(contracts·cron)와 같은
+ * 60초를 준다.
+ */
+export const config = { maxDuration: 60 };
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
 
