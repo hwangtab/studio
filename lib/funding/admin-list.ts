@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges } from '../../db/schema';
-import type { FundingOrder } from './service';
+import { backerIdentitySql, type FundingOrder } from './service';
 
 /**
  * 관리자 목록·CSV export가 공유하는 조회.
@@ -84,7 +84,8 @@ export interface AdminFundingTotals {
    */
   confirmedCount: number;
   /**
-   * 확정 후원 **인원**. 이메일+전화 조합으로 중복을 제거한 수라 항상 confirmedCount 이하다.
+   * 확정 후원 **인원**. 신원 키는 service.ts의 backerIdentitySql — 이메일+전화 조합이되
+   * 수기 등록 플레이스홀더는 주문 단위로 떨어뜨린다. 항상 confirmedCount 이하다.
    * 리워드 수량이 아니라 "몇 사람이 참여했나"를 말해야 하는 자리에서만 쓴다.
    */
   confirmedPersonCount: number;
@@ -112,7 +113,7 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
       COALESCE(SUM(CASE WHEN o.status IN ('paid', 'partially_refunded') THEN o.total_amount END), 0) AS confirmed_amount,
       COUNT(CASE WHEN o.status IN ('paid', 'partially_refunded') THEN 1 END) AS confirmed_count,
       COUNT(DISTINCT CASE WHEN o.status IN ('paid', 'partially_refunded')
-        THEN o.customer_email || '|' || o.customer_phone END) AS confirmed_person_count,
+        THEN ${backerIdentitySql()} END) AS confirmed_person_count,
       COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN o.total_amount END), 0) AS pending_amount,
       COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN 1 END) AS pending_count
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id

@@ -4,16 +4,14 @@ import { eq, sql } from 'drizzle-orm';
 import { getDb } from '../../../../../db/client';
 import { fulfillmentStatusEnum, fundingPledges, orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { REVIEW_CLEARED_MARKER, hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingBankDepositEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
 import { getFundingProject } from '../../../../../lib/funding/projects';
-import { findFundingOrderById } from '../../../../../lib/funding/service';
+import { MANUAL_PLACEHOLDER_EMAIL, findFundingOrderById } from '../../../../../lib/funding/service';
 import { kstDateString } from '../../../../../lib/booking/kst';
-
-/** 수기 등록 시 채워 넣는 플레이스홀더 주소 — 실제 수신함이 아니다. */
-const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
 
 const CANCEL_STATUS: Record<string, number> = { not_found: 404, invalid_state: 409, toss_failed: 502, recording_failed: 500 };
 
@@ -139,7 +137,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await db.update(orders).set({ notificationError: mailError, updatedAt: now }).where(eq(orders.id, order.id));
       return res.status(200).json({ ok: true, ...(mailError ? { message: `기록은 되었으나 메일 발송에 실패했습니다: ${mailError}` } : {}) });
     }
+    /**
+     * '재고 확인 완료' — needsReview 배지·배너·CSV 칸을 끄는 유일한 경로.
+     *
+     * clear_refund_request와 같은 모양을 쓴다(사유 필수, 관리자 메모에 append). 다른 점은
+     * 후원자에게 메일을 보내지 않는다는 것뿐이다 — 이건 고객이 남긴 의사를 지우는 조작이
+     * 아니라 운영 내부의 재고 확인 기록이라, 고객에게 알릴 내용이 없다.
+     *
+     * 덮어쓰지 않고 덧붙이는 이유도 같다: 웹훅이 남긴 경고 원문이 사라지면 "무엇을 확인한
+     * 것인지"가 기록에서 없어진다. hasReviewMarker는 **마지막 경고 뒤에** 해제가 있는지를
+     * 보므로, 같은 건이 다시 되살아나면 신호도 다시 켜진다.
+     */
+    case 'clear_stock_review': {
+      const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
+      if (!reason) {
+        return res.status(400).json({ ok: false, message: '재고 확인을 닫으려면 확인 내용을 입력해야 합니다.' });
+      }
+      if (!hasReviewMarker(order.fundingPledge.adminMemo)) {
+        return res.status(409).json({ ok: false, message: '재고 확인이 필요한 후원이 아닙니다.' });
+      }
+      const entry = `[${kstDateString(now)}] ${REVIEW_CLEARED_MARKER} — ${reason}`;
+      const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
+      await db
+        .update(fundingPledges)
+        .set({ adminMemo: memo, updatedAt: now })
+        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      return res.status(200).json({ ok: true });
+    }
     case 'set_memo': {
+      // 주의: 메모 전체를 덮어쓰는 액션이라 웹훅 표식도 함께 지워질 수 있다. 재고 확인을
+      // '닫는' 의도라면 clear_stock_review를 쓸 것 — 그쪽은 원문을 남기고 사유를 강제한다.
       await db
         .update(fundingPledges)
         .set({ adminMemo: typeof b.adminMemo === 'string' ? b.adminMemo : null, updatedAt: now })

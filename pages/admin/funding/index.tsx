@@ -296,7 +296,8 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
 
               {truncated && (
                 <div className="mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-                  <strong>목록</strong>은 최근 {LIST_LIMIT}건만 표시합니다. 위 지표와 CSV 내보내기는 전건 기준입니다.
+                  <strong>목록</strong>은 최근 {LIST_LIMIT}건만 표시합니다. 위 지표는 전건 기준이고,
+                  CSV 내보내기는 건수 상한 없이 확정 건(확정·부분환불) 전량을 싣습니다.
                 </div>
               )}
 

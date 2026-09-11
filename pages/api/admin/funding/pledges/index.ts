@@ -10,7 +10,10 @@ import { duplicateKey, serializePledgeForAdmin } from '../../../../../lib/fundin
 import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
 import { findReward, getFundingProject } from '../../../../../lib/funding/projects';
-import { aggregateProjectStatus, expireStalePledges, generateFundingOrderNo } from '../../../../../lib/funding/service';
+import {
+  MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
+  aggregateProjectStatus, expireStalePledges, generateFundingOrderNo,
+} from '../../../../../lib/funding/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -80,11 +83,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         type: 'funding',
         status: 'paid',
         customerName: b.customerName,
-        customerPhone: String(b.customerPhone ?? '-'),
+        customerPhone: String(b.customerPhone ?? MANUAL_PLACEHOLDER_PHONE),
         // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 이메일 칸을 그대로 보내면
         // customer_email=''인 주문이 생겨 확정 메일이 빈 주소로 나가고 실패한다. 공백만 있는
         // 입력도 같다. 실제로 값이 있을 때만 쓰고, 아니면 플레이스홀더로 떨어뜨린다.
-        customerEmail: String(b.customerEmail || '').trim() || 'manual@studionol.co.kr',
+        customerEmail: String(b.customerEmail || '').trim() || MANUAL_PLACEHOLDER_EMAIL,
         ...amounts,
         manageToken: generateManageToken(),
       }),

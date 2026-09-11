@@ -40,6 +40,8 @@ export interface AdminPledgeItem {
    * 웹훅이 만료·failed 주문을 되살려 확정한 건 — **재고를 초과했을 수 있어 사람이 봐야 한다.**
    * 판정 근거는 confirm.ts가 adminMemo에 남기는 표식뿐이다(REVIEW_MEMO_MARKER 참조).
    * 그 흔적이 관리자 목록 어디에도 안 보여서, 로그에만 남고 아무도 확인하지 않았다.
+   * 확인이 끝나면 clear_stock_review가 해제 표식을 덧붙여 꺼진다 — 해제 경로가 없는
+   * 경고는 경보 피로로 첫 사용 직후 죽는다.
    */
   needsReview: boolean;
 }
@@ -56,9 +58,28 @@ export interface AdminPledgeItem {
  */
 export const REVIEW_MEMO_MARKER = '재고 초과 가능, 확인 필요';
 
-/** adminMemo는 append로 쌓이므로 포함 여부로 본다(마지막 줄만 보면 이후 메모에 묻힌다). */
-export const hasReviewMarker = (adminMemo: string | null | undefined): boolean =>
-  typeof adminMemo === 'string' && adminMemo.includes(REVIEW_MEMO_MARKER);
+/**
+ * 운영자가 재고를 확인하고 닫았음을 뜻하는 표식(clear_stock_review 액션이 적는다).
+ *
+ * 해제 경로가 없는 경고는 첫 사용 직후 죽는다 — 이 저장소가 이미 겪은 형태다
+ * (refundRequestedAt에 지우는 코드가 하나도 없어 배너가 영구히 켜져 있던 사고,
+ * 그 대응이 clear_refund_request다). 같은 짝을 needsReview에도 둔다.
+ */
+export const REVIEW_CLEARED_MARKER = '재고 확인 완료';
+
+/**
+ * adminMemo는 append로 쌓인다. **마지막 경고 뒤에 해제가 적혀 있으면 꺼진 것**으로 본다.
+ *
+ * 순서를 보는 이유: 이미 한 번 확인해 닫은 건을 웹훅이 다시 되살려 확정하면(만료 후 재승인이
+ * 두 번 날 수 있다) 새 경고가 해제 기록보다 뒤에 붙는다. 단순 포함 여부로 보면 그 두 번째
+ * 경고가 첫 번째 해제에 묻혀 영영 안 뜬다.
+ */
+export const hasReviewMarker = (adminMemo: string | null | undefined): boolean => {
+  if (typeof adminMemo !== 'string') return false;
+  const flaggedAt = adminMemo.lastIndexOf(REVIEW_MEMO_MARKER);
+  if (flaggedAt === -1) return false;
+  return adminMemo.indexOf(REVIEW_CLEARED_MARKER, flaggedAt) === -1;
+};
 
 /** 동명·동액 경고 키: pending 무통장 건끼리 이름+금액이 같으면 관리자가 입금 매칭을 헷갈린다. */
 export const duplicateKey = (o: FundingOrder): string => `${o.customerName}:${o.totalAmount}`;

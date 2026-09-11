@@ -157,6 +157,36 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     expect(totals.pendingAmount).toBe(7000);
   });
 
+  /**
+   * 수기 등록(오프라인 현금 후원)은 연락처 칸이 비면 플레이스홀더가 들어간다. 신원 키를
+   * 이메일+전화로만 만들면 그 건들이 전부 한 사람으로 뭉쳐, 부스에서 받은 30건이
+   * "확정 30건 / 후원자 1명"이 된다. 플레이스홀더는 '신원 불명'이지 '같은 사람'이 아니다.
+   */
+  it('연락처 없는 수기 등록은 주문 단위로 센다 — 인원이 1명으로 붕괴하지 않는다', async () => {
+    for (let i = 0; i < 5; i += 1) {
+      await seedPaid(i, 'a', 'paid', 5000, 'manual@studionol.co.kr', '-');
+    }
+    const totals = await aggregateAdminFundingTotals('a');
+    expect(totals.confirmedCount).toBe(5);
+    expect(totals.confirmedPersonCount).toBe(5);
+  });
+
+  // customerPhone은 `?? '-'`라 빈 문자열을 통과시킨다 — 그 경로도 같이 떨어뜨린다.
+  it('전화가 빈 문자열인 수기 등록도 주문 단위로 센다', async () => {
+    for (let i = 0; i < 3; i += 1) await seedPaid(i, 'a', 'paid', 5000, 'manual@studionol.co.kr', '');
+    expect((await aggregateAdminFundingTotals('a')).confirmedPersonCount).toBe(3);
+  });
+
+  // 반대로 진짜 연락처를 적어 준 수기 등록은 평소대로 중복이 합쳐져야 한다.
+  it('연락처가 있는 건은 여전히 이메일+전화로 중복을 제거한다', async () => {
+    await seedPaid(1, 'a', 'paid', 5000, 'real@example.com', '010-7777');
+    await seedPaid(2, 'a', 'paid', 5000, 'real@example.com', '010-7777');
+    await seedPaid(3, 'a', 'paid', 5000, 'manual@studionol.co.kr', '-');
+    const totals = await aggregateAdminFundingTotals('a');
+    expect(totals.confirmedCount).toBe(3);
+    expect(totals.confirmedPersonCount).toBe(2); // 실명 1 + 수기 1
+  });
+
   it('slug 필터가 DB에서 걸린다 — 프로젝트 탭의 숫자와 목록이 같은 모집단이어야 한다', async () => {
     await seedPaid(1, 'a');
     await seedPaid(2, 'a');

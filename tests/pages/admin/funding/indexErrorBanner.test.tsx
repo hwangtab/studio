@@ -83,6 +83,8 @@ it('KPI는 화면에 그려진 목록이 아니라 서버 집계(totals)를 그�
 // truncated 안내는 목록에만 걸린다 — 지표까지 "최근 200건 기준"이면 고친 게 아니다.
 it('truncated 배너는 목록에만 해당한다고 말한다', () => {
   render(<AdminFundingPage items={[item()]} totals={TOTALS} truncated projects={[]} slug={null} />);
-  expect(screen.getByText(/전건 기준/)).toBeInTheDocument();
+  expect(screen.getByText(/위 지표는 전건 기준/)).toBeInTheDocument();
+  // CSV의 범위(확정 건 전량)까지 밝힌다 — "전건"이라고만 하면 대기 건도 실리는 줄 안다.
+  expect(screen.getByText(/확정·부분환불/)).toBeInTheDocument();
   expect(screen.getByText(/전건을 집계한 값입니다/)).toBeInTheDocument();
 });

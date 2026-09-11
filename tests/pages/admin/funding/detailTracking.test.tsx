@@ -111,3 +111,32 @@ it('메모가 그대로인 갱신에서는 입력 중인 초안을 유지한다'
   rerender(<AdminFundingDetailPage pledge={{ ...pledge, fulfillmentStatus: 'delivered' }} refundableAmount={30000} />);
   expect(screen.getByLabelText('관리자 메모')).toHaveValue('작성 중인 초안');
 });
+
+/**
+ * needsReview에 해제 경로가 없으면 배지·배너가 영구히 켜져 경보 피로로 신호가 죽는다 —
+ * 이 저장소가 refundRequestedAt으로 이미 겪은 형태다. 환불 요청 취소와 같은 모양으로
+ * 사유를 강제한다.
+ */
+it('재고 확인 필요 건에 배너와 “재고 확인 완료” 버튼이 뜬다', () => {
+  (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
+  window.prompt = jest.fn().mockReturnValue('잔여 3개 확인');
+  render(<AdminFundingDetailPage pledge={{ ...PLEDGE, needsReview: true }} refundableAmount={30000} />);
+  expect(screen.getByText(/재고 확인 필요/)).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: '재고 확인 완료' }));
+  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'clear_stock_review', reason: '잔여 3개 확인' });
+});
+
+it('사유를 비우면 API를 부르지 않는다', () => {
+  // 이 파일에는 전역 clearAllMocks가 없다 — 직전 테스트의 호출이 남는다.
+  (patchPledge as jest.Mock).mockClear();
+  window.prompt = jest.fn().mockReturnValue('   ');
+  render(<AdminFundingDetailPage pledge={{ ...PLEDGE, needsReview: true }} refundableAmount={30000} />);
+  fireEvent.click(screen.getByRole('button', { name: '재고 확인 완료' }));
+  expect(patchPledge).not.toHaveBeenCalled();
+});
+
+it('평범한 건에는 버튼도 배너도 없다', () => {
+  render(<AdminFundingDetailPage pledge={PLEDGE} refundableAmount={30000} />);
+  expect(screen.queryByRole('button', { name: '재고 확인 완료' })).not.toBeInTheDocument();
+  expect(screen.queryByText(/재고 확인 필요/)).not.toBeInTheDocument();
+});

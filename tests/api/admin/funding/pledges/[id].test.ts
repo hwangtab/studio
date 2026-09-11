@@ -1,6 +1,11 @@
 /** @jest-environment node */
 jest.mock('../../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
-jest.mock('../../../../../lib/funding/service', () => ({ findFundingOrderById: jest.fn() }));
+// 플레이스홀더 상수도 service.ts에서 온다 — 목이 통째로 덮으면 상수가 undefined가 되어
+// 수기 등록 메일 차단이 조용히 풀린다. 실제 모듈을 펼친 위에 조회만 목으로 바꾼다.
+jest.mock('../../../../../lib/funding/service', () => ({
+  ...jest.requireActual('../../../../../lib/funding/service'),
+  findFundingOrderById: jest.fn(),
+}));
 jest.mock('../../../../../lib/funding/bank-transfer', () => ({ confirmBankDeposit: jest.fn() }));
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
@@ -252,4 +257,48 @@ it('clear_refund_request: partially_refunded도 허용한다', async () => {
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested('partially_refunded'));
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
   expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '철회' })).status).toBe(200);
+});
+
+/**
+ * 해제 경로가 없는 경고는 첫 사용 직후 경보 피로로 죽는다 — 환불 요청 취소와 같은 모양
+ * (사유 필수·메모 append)을 쓰되, 고객 의사를 지우는 조작이 아니라 메일은 보내지 않는다.
+ */
+const flagged = (adminMemo: string | null = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요') => ({
+  ...BASE_ORDER, status: 'paid', fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo },
+});
+
+it('clear_stock_review: 사유가 없으면 400이고 아무것도 안 바꾼다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
+  for (const body of [{ action: 'clear_stock_review' }, { action: 'clear_stock_review', reason: '  ' }]) {
+    expect((await call('PATCH', { id: 'order-1' }, body)).status).toBe(400);
+  }
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('clear_stock_review: 표식이 없는 건은 409', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged(null));
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: 'x' })).status).toBe(409);
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('clear_stock_review: 이미 닫은 건은 409 — 두 번 닫히지 않는다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(
+    flagged('[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요\n[2026-10-20] 재고 확인 완료 — 잔여 3개'),
+  );
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: 'x' })).status).toBe(409);
+});
+
+it('clear_stock_review: 원문을 남긴 채 확인 내용을 날짜와 함께 덧붙인다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: '잔여 3개 확인' });
+  expect(r.status).toBe(200);
+  const memo = set.mock.calls[0][0].adminMemo as string;
+  // 웹훅 원문이 사라지면 "무엇을 확인한 것인지"가 기록에서 없어진다.
+  expect(memo).toContain('[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요');
+  expect(memo).toMatch(/\n\[\d{4}-\d{2}-\d{2}\] 재고 확인 완료 — 잔여 3개 확인$/);
+  // 고객에게 알릴 내용이 아니다 — 운영 내부의 재고 확인 기록이다.
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+  expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
 });

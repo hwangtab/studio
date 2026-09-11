@@ -125,6 +125,22 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     return run(() => patchPledge(pledge.id, { action: 'clear_refund_request', reason: reason.trim() }));
   };
 
+  /**
+   * needsReview를 끄는 유일한 경로. 해제 경로가 없는 경고는 첫 사용 직후 경보 피로로
+   * 죽는다 — 환불 요청 취소와 같은 모양(사유 필수·메모 append)을 그대로 쓴다.
+   */
+  const handleClearStockReview = () => {
+    const reason = window.prompt(
+      '한정 리워드 재고를 확인한 뒤에 닫아 주세요. 확인 내용을 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
+    );
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('재고 확인을 닫으려면 확인 내용을 입력해야 합니다.');
+      return;
+    }
+    return run(() => patchPledge(pledge.id, { action: 'clear_stock_review', reason: reason.trim() }));
+  };
+
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
   const fulfillmentLocked = pledge.status !== 'paid' || pledge.refundRequested;
@@ -164,6 +180,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <strong>이 후원은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
                 “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다. 철회 처리에는 사유가 필요하며,
                 사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.
+              </span>
+            </div>
+          )}
+
+          {pledge.needsReview && (
+            <div className="mb-4 p-4 bg-purple-50 border border-purple-300 text-purple-900 rounded-lg text-sm">
+              <strong className="block mb-1">웹훅이 되살려 확정한 후원 — 재고 확인 필요</strong>
+              홀드가 만료된(또는 실패 처리된) 뒤 결제가 승인된 건이라 <strong>한정 리워드 재고를
+              초과했을 수 있습니다.</strong> 아래 관리자 메모에 웹훅이 남긴 원문이 있습니다.
+              <span className="block mt-2">
+                남은 수량을 확인한 뒤 “재고 확인 완료”를 누르면 이 경고가 꺼집니다. 확인 내용은
+                관리자 메모에 날짜와 함께 남습니다.
               </span>
             </div>
           )}
@@ -208,6 +236,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               )}
               {pledge.refundRequested && pledge.status === 'paid' && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
+              )}
+              {pledge.needsReview && (
+                <Button light variant="outline" disabled={busy} onClick={handleClearStockReview}>재고 확인 완료</Button>
               )}
               <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>

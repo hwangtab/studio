@@ -19,6 +19,34 @@ const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
  */
 export const MAX_OPEN_HOLDS_PER_CUSTOMER = 2;
 
+/**
+ * 수기 등록(오프라인 현금·계좌 후원)에서 연락처 칸이 비었을 때 채워 넣는 플레이스홀더.
+ * 실제 수신함도 번호도 아니다 — pages/api/admin/funding/pledges/index.ts가 넣고,
+ * [id].ts의 메일 재발송이 이 값을 보고 발송을 막는다. **한 곳만 보도록 여기 모은다.**
+ */
+export const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
+export const MANUAL_PLACEHOLDER_PHONE = '-';
+
+/**
+ * 후원 **인원**을 셀 때 쓰는 신원 키(SQL 조각). 기본은 이메일+전화 조합이지만,
+ * 플레이스홀더가 들어간 건은 **주문 id로 떨어뜨린다.**
+ *
+ * 그렇게 하지 않으면 연락처 없이 등록한 수기 후원이 전부 같은 키(`manual@…|-`)를 갖는다.
+ * 오프라인 부스에서 현금으로 받은 30건이 "확정 30건 / 후원자 1명"이 되는 식이라, 숫자
+ * 불일치를 없애려다 새 불일치를 들이는 꼴이 된다. 플레이스홀더는 "신원 불명"이라는
+ * 뜻이지 "같은 사람"이라는 뜻이 아니므로, 합칠 근거가 없을 때는 합치지 않는다.
+ *
+ * 빈 문자열 전화도 같이 본다 — customerPhone은 `?? '-'`라 빈 문자열을 통과시킨다.
+ * 호출할 때마다 새 조각을 만든다(하나를 여러 쿼리에 돌려 쓰지 않는다).
+ */
+export const backerIdentitySql = () => sql`CASE
+  WHEN o.customer_email = ${MANUAL_PLACEHOLDER_EMAIL}
+    OR o.customer_phone = ${MANUAL_PLACEHOLDER_PHONE}
+    OR o.customer_phone = ''
+  THEN o.id
+  ELSE o.customer_email || '|' || o.customer_phone
+END`;
+
 export const generateFundingOrderNo = (now: Date, manual = false): string =>
   `FND-${manual ? 'M-' : ''}${kstDateString(now).replace(/-/g, '')}-${randomBytes(4).toString('hex').toUpperCase()}`;
 
@@ -169,8 +197,9 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     SELECT SUM(o.total_amount) AS raised,
            -- 후원 '건수'. 인원이 아니다.
            COUNT(*) AS backers,
-           -- 후원 '인원'. 이메일+전화가 같으면 한 사람으로 본다(orders는 둘 다 NOT NULL).
-           COUNT(DISTINCT o.customer_email || '|' || o.customer_phone) AS persons
+           -- 후원 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로
+           -- 떨어뜨린다(연락처 없는 후원끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
+           COUNT(DISTINCT ${backerIdentitySql()}) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded')
   `);

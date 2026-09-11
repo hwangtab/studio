@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { REVIEW_MEMO_MARKER, hasReviewMarker, serializePledgeForAdmin } from './admin-serialize';
+import { REVIEW_CLEARED_MARKER, REVIEW_MEMO_MARKER, hasReviewMarker, serializePledgeForAdmin } from './admin-serialize';
 import type { FundingOrder } from './service';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -79,10 +79,36 @@ describe('serializePledgeForAdmin — needsReview', () => {
     expect(serializePledgeForAdmin(orderWith('paid', true, null, note), new Set()).needsReview).toBe(true);
   });
 
-  // adminMemo는 append로 쌓인다 — 뒤에 운영자 메모가 붙어도 표식이 묻히면 안 된다.
-  it('뒤에 다른 메모가 덧붙어도 켜진 채로 남는다', () => {
-    const memo = `${WEBHOOK_NOTES[0]}\n[2026-10-20] 재고 확인함 — 문제 없음`;
+  // adminMemo는 append로 쌓인다 — 관계없는 메모가 뒤에 붙는다고 꺼지면 안 된다.
+  it('관계없는 메모가 덧붙어도 켜진 채로 남는다', () => {
+    const memo = `${WEBHOOK_NOTES[0]}\n[2026-10-20] 입금자명 김철수로 확인`;
     expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(true);
+  });
+
+  /**
+   * 해제 경로가 없는 경고는 첫 사용 직후 경보 피로로 죽는다 — 이 저장소가 refundRequestedAt
+   * 으로 이미 겪은 형태다(지우는 코드가 하나도 없어 배너가 영구히 켜져 있었다).
+   */
+  it('해제 표식이 뒤에 붙으면 꺼진다', () => {
+    const memo = `${WEBHOOK_NOTES[0]}\n[2026-10-20] ${REVIEW_CLEARED_MARKER} — 잔여 3개 확인`;
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(false);
+  });
+
+  /**
+   * 순서를 본다. 한 번 닫은 건을 웹훅이 다시 되살려 확정하면 새 경고가 해제 기록보다 뒤에
+   * 붙는다 — 단순 포함 여부로 보면 그 두 번째 경고가 첫 해제에 묻혀 영영 안 뜬다.
+   */
+  it('닫은 뒤에 경고가 또 붙으면 다시 켜진다', () => {
+    const memo = [
+      WEBHOOK_NOTES[0],
+      `[2026-10-20] ${REVIEW_CLEARED_MARKER} — 잔여 3개 확인`,
+      WEBHOOK_NOTES[1],
+    ].join('\n');
+    expect(serializePledgeForAdmin(orderWith('paid', true, null, memo), new Set()).needsReview).toBe(true);
+  });
+
+  it('해제 표식만 있고 경고가 없으면 애초에 꺼진 상태', () => {
+    expect(hasReviewMarker(`[2026-10-20] ${REVIEW_CLEARED_MARKER} — x`)).toBe(false);
   });
 
   it('메모가 없거나 관계없는 메모면 false', () => {
@@ -99,8 +125,19 @@ describe('serializePledgeForAdmin — needsReview', () => {
 /**
  * 표식 문자열은 confirm.ts(다른 작업이 소유)와 이 파일에 나뉘어 있다. 한쪽만 바뀌면 배지가
  * 조용히 꺼지고, 그 실패는 사고가 난 뒤에야 드러난다 — 소스를 직접 읽어 대조한다.
+ *
+ * "어딘가에 있다"만 보면 두 문구 중 **한쪽만** 바뀌었을 때 통과한다. confirm.ts에서
+ * `[웹훅]`으로 시작하는 문자열 리터럴을 전부 뽑아 **모두가** 마커로 끝나는지 본다.
+ *
+ * 근본 해결은 아니다 — 확정 결합은 lib/funding/policy.ts에 상수를 두고 confirm.ts가
+ * 조립하는 방식이어야 한다. policy.ts·confirm.ts 모두 이 작업의 소유가 아니라 이번엔
+ * 소스 대조로 막고, 관련 PR이 모두 병합된 뒤 후속 커밋에서 접는다.
  */
-it('REVIEW_MEMO_MARKER가 confirm.ts의 실제 문구와 일치한다', () => {
+it('confirm.ts의 [웹훅] 메모 문구가 전부 REVIEW_MEMO_MARKER로 끝난다', () => {
   const source = readFileSync(path.join(process.cwd(), 'lib/funding/confirm.ts'), 'utf-8');
-  expect(source).toContain(REVIEW_MEMO_MARKER);
+  const literals = [...source.matchAll(/'(\[웹훅\][^']*)'/g)].map((m) => m[1]);
+  expect(literals.length).toBeGreaterThan(0);
+  for (const literal of literals) {
+    expect(literal.endsWith(REVIEW_MEMO_MARKER)).toBe(true);
+  }
 });
