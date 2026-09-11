@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { SESSION_PRODUCTS } from '../../../lib/booking/products';
 
@@ -25,9 +24,12 @@ export default function BookingFailPage({ code, message, service }: FailProps) {
         </p>
         {code && <p className="mt-2 text-sm text-gray-500">오류 코드: {code}</p>}
         <p className="mt-2 text-sm text-gray-500">예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
-        <Link href={`/ko/booking/${service}`} className="mt-8 inline-block underline">
+        {/* 이탈 링크는 문서 이동(`<a href>`) — 이 URL에는 토스가 붙인 orderId가 실린다.
+            next/link 클라 전환으로 나갔다가 뒤로가기를 누르면 그 사이 mount된 gtag가
+            이 URL로 page_view를 보낸다(lib/analytics/privatePaths.ts). */}
+        <a href={`/ko/booking/${service}`} className="mt-8 inline-block underline">
           {service === 'mixing-mastering' ? '주문 페이지로 돌아가기' : '예약 페이지로 돌아가기'}
-        </Link>
+        </a>
       </main>
     </>
   );

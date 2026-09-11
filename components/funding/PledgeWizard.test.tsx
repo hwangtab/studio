@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import PledgeWizard from './PledgeWizard';
 import { parseFundingProject } from '../../lib/funding/projects';
 import { trackMicroEvent } from '../../utils/analytics';
-import { MAX_ADDITIONAL_AMOUNT } from '../../lib/funding/policy';
+import { MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
 
 jest.mock('../booking/TossPaymentWidget', () => function MockTossPaymentWidget() { return <div data-testid="toss-widget" />; });
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
@@ -77,24 +77,83 @@ it('무제한 리워드는 무통장 선택지가 있고, 제출하면 서버 �
   expect(trackMicroEvent).not.toHaveBeenCalled();
 });
 
-it('remaining보다 큰 수량을 입력하면 remaining으로 클램프된다', () => {
+/**
+ * 이 블록은 **반드시 한 글자씩** 입력해야 의미가 있다. 예전 onChange는 매 키 입력마다
+ * 정규화한 값을 상태로 되돌려 넣어서, 값을 통째로 주입하는 fireEvent.change로는 버그가
+ * 드러나지 않았다(추가 후원금은 `5`→0, `50`→0 … 으로 타이핑 자체가 불가능했고 수량은
+ * `1`에 한 글자만 더 쳐도 상한으로 튀었다). 정규화는 blur·제출 직전에만 일어난다.
+ */
+const typeInto = async (input: HTMLInputElement, value: string) => {
+  await userEvent.clear(input);
+  await userEvent.type(input, value);
+};
+
+it('추가 후원금을 한 글자씩 타이핑할 수 있다 — 중간 글자에서 0으로 깎이지 않는다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
+  await typeInto(input, '5000');
+  expect(input.value).toBe('5000');
+  await userEvent.tab();
+  expect(input.value).toBe('5000');
+});
+
+it('추가 후원금은 blur 때 1,000원 단위로 내림된다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
+  await typeInto(input, '5500');
+  expect(input.value).toBe('5500');
+  await userEvent.tab();
+  expect(input.value).toBe('5000');
+});
+
+it('추가 후원금을 비우면 0으로 폴백된다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
+  await userEvent.clear(input);
+  expect(input.value).toBe('');
+  await userEvent.tab();
+  expect(input.value).toBe('0');
+});
+
+it('수량을 한 글자씩 타이핑해도 상한으로 튀지 않고, blur에서 클램프된다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  const input = screen.getByLabelText('수량') as HTMLInputElement;
+  await typeInto(input, '12');
+  // 타이핑 중에는 손대지 않는다 — 예전엔 `1` 뒤의 `2`에서 곧바로 10으로 튀었다.
+  expect(input.value).toBe('12');
+  await userEvent.tab();
+  expect(input.value).toBe('10');
+});
+
+it('수량을 비우면 1로 폴백된다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  const input = screen.getByLabelText('수량') as HTMLInputElement;
+  await userEvent.clear(input);
+  expect(input.value).toBe('');
+  await userEvent.tab();
+  expect(input.value).toBe('1');
+});
+
+it('remaining보다 큰 수량을 입력하면 blur에서 remaining으로 클램프된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 3, mail: null }} />);
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  fireEvent.change(quantityInput, { target: { value: '10' } });
+  await typeInto(quantityInput, '10');
+  await userEvent.tab();
   expect(quantityInput.value).toBe('3');
 });
 
-it('선택된 리워드의 remaining이 0이어도(품절) 수량이 0이 아니라 1로 바닥 고정된다', () => {
+it('선택된 리워드의 remaining이 0이어도(품절) 수량이 0이 아니라 1로 바닥 고정된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  fireEvent.change(quantityInput, { target: { value: '5' } });
+  await typeInto(quantityInput, '5');
+  await userEvent.tab();
   expect(quantityInput.value).toBe('1');
 });
 
 it('리워드를 바꾸면 수량이 1로 리셋된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  fireEvent.change(quantityInput, { target: { value: '4' } });
+  await typeInto(quantityInput, '4');
   expect(quantityInput.value).toBe('4');
   await userEvent.click(screen.getByLabelText(/감사 메일/));
   expect((screen.getByLabelText('수량') as HTMLInputElement).value).toBe('1');
@@ -143,11 +202,28 @@ it('후원자 명단 이름 공개는 기본 해제', () => {
 
 // 상한 없이 두면 5,000,000원을 넘긴 값이 그대로 서버로 가서 400으로 튕긴다 —
 // 입력 단계에서 잘라내야 후원자가 이유 없이 실패를 본다는 느낌을 받지 않는다.
-it('추가 후원금은 MAX_ADDITIONAL_AMOUNT로 클램프된다', () => {
+it('추가 후원금은 blur에서 MAX_ADDITIONAL_AMOUNT로 클램프된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
-  fireEvent.change(input, { target: { value: '99999999' } });
+  await typeInto(input, '99999999');
+  await userEvent.tab();
   expect(Number(input.value)).toBe(MAX_ADDITIONAL_AMOUNT);
+});
+
+// blur 없이 Enter로 바로 제출해도 서버에는 정규화된 값이 나가야 한다(서버 검증과 같은 규칙).
+it('정규화 전 중간값 상태로 제출해도 서버에는 정규화된 수량·추가금이 나간다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await typeInto(screen.getByLabelText('수량') as HTMLInputElement, '12');
+  await typeInto(screen.getByLabelText(/추가 후원금/) as HTMLInputElement, '5500');
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await userEvent.click(screen.getByLabelText(/약관/));
+  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
+  await screen.findByTestId('toss-widget');
+  const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+  expect(body.quantity).toBe(MAX_QUANTITY);
+  expect(body.additionalAmount).toBe(5000);
 });
 
 // 만료 뒤 "다시 신청"을 누르면 remainingMs가 0으로 남아, 새로 만든 주문의 결제 화면이

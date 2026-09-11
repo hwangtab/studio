@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
@@ -68,9 +67,12 @@ export default function FundingManagePage(p: Props) {
             )}
           </div>
 
+          {/* private 페이지의 이탈 링크는 문서 이동(`<a href>`)이어야 한다 — next/link 클라
+              전환으로 나갔다가 뒤로가기를 누르면, 그 사이 mount된 gtag가 살아 있는 채로
+              ?token=이 실린 이 URL에 돌아와 page_view를 보낸다(lib/analytics/privatePaths.ts). */}
           <dl className="mt-5 space-y-3">
             {[
-              { k: '프로젝트', v: <Link href={`/ko/funding/${p.projectSlug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">{p.projectTitle}</Link> },
+              { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">{p.projectTitle}</a> },
               { k: '리워드', v: `${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 후원 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),
@@ -86,7 +88,7 @@ export default function FundingManagePage(p: Props) {
 
           {status === 'pending' && p.depositUrl && (
             <p className="typo-card-meta mt-5">
-              <Link href={p.depositUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">무통장입금 안내 보기</Link>
+              <a href={p.depositUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">무통장입금 안내 보기</a>
             </p>
           )}
           {status === 'paid' && !refundRequested && (p.canCancel

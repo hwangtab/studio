@@ -1,6 +1,12 @@
+/* eslint-disable @next/next/no-html-link-for-pages --
+ * private 페이지(URL에 관리 토큰·paymentKey·orderId가 실린다)의 이탈 링크는 next/link가
+ * 아니라 문서 이동이어야 한다. 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면, 그 사이
+ * mount된 gtag가 살아 있는 채로 비밀값이 붙은 URL에 돌아와 page_view를 보낸다.
+ * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
+ * tests/pages/privateLinkNavigation.test.ts
+ */
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { confirmBookingPayment } from '../../../lib/booking/confirm';
 import { getSiteConfig } from '../../../data/siteConfig';
@@ -63,14 +69,18 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
             )}
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
                 실패하면 고객이 예약을 스스로 취소할 방법이 아예 없었다. */}
+            {/* 이 URL에는 토스 paymentKey·orderId가, manageUrl에는 관리 토큰이 실린다.
+                이탈 링크는 전부 문서 이동(`<a href>`)이어야 한다 — next/link로 공개 페이지에
+                나갔다 뒤로가기 하면 그 사이 mount된 gtag가 이 URL로 page_view를 보낸다
+                (lib/analytics/privatePaths.ts). */}
             {manageUrl && (
               <p className="mt-4">
-                <Link
+                <a
                   href={manageUrl}
                   className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark"
                 >
                   {isMixing ? '주문 확인·취소 페이지 열기' : '예약 확인·취소 페이지 열기'}
-                </Link>
+                </a>
               </p>
             )}
             {manageUrl && (
@@ -86,7 +96,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
             <p className="mt-2 text-sm text-gray-500">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
           </>
         )}
-        <Link href="/ko" className="mt-8 inline-block underline">홈으로</Link>
+        <a href="/ko" className="mt-8 inline-block underline">홈으로</a>
       </main>
     </>
   );

@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 interface Props { slug: string | null; message: string }
 export default function FundingFailPage({ slug, message }: Props) {
@@ -14,12 +13,14 @@ export default function FundingFailPage({ slug, message }: Props) {
           <p className="typo-card-meta mx-auto mt-3 max-w-md">
             결제가 이뤄지지 않았으므로 청구되지 않습니다. 15분 뒤 신청이 자동 해제되며 다시 후원할 수 있습니다.
           </p>
-          <Link
+          {/* 이 URL에는 토스가 붙인 orderId(주문번호)가 실린다 — 문서 이동으로 나가야
+              뒤로가기 때 gtag가 그 URL로 page_view를 보내지 않는다. */}
+          <a
             href={slug ? `/ko/funding/${slug}` : '/ko/funding'}
             className="mt-8 inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
           >
             프로젝트로 돌아가기
-          </Link>
+          </a>
         </div>
       </main>
     </>

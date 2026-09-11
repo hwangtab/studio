@@ -1,6 +1,8 @@
 /** @jest-environment node */
 import { execFileSync } from 'node:child_process';
 
+import { PRIVATE_NO_STORE_SOURCES } from '../../lib/analytics/privatePaths';
+
 /**
  * 결제·관리 화면이 Vercel 공유 캐시에 얹히면 다른 사람의 후원자 이름·연락처·배송지가
  * 그대로 보인다. next.config headers는 **첫 매칭이 우선**이라, no-store 규칙이 넓은 로케일
@@ -23,14 +25,13 @@ const loadHeaders = (): HeaderRule[] =>
 const LOCALE = '/:locale(ko|en|zh|es|vi|th|uz)';
 const PUBLIC_CACHE_SOURCE = `${LOCALE}/:path*`;
 
-const PRIVATE_SOURCES = [
-  `${LOCALE}/contracts/:path*`,
-  `${LOCALE}/funding/(success|fail)`,
-  `${LOCALE}/funding/(deposit|manage)/:path*`,
-  `${LOCALE}/funding/:slug/pledge`,
-  `${LOCALE}/booking/(success|fail)`,
-  `${LOCALE}/booking/manage/:path*`,
-];
+/**
+ * 측정 제외 목록(lib/analytics/privatePaths.ts)에서 파생시킨다 — 두 목록이 갈라지면
+ * "헤더는 막는데 측정은 새는" 조합이 조용히 생긴다(실제로 funding/fail이 그랬다).
+ * pledge 폼만 no-store 전용 예외라 여기서 더한다(사유는 privatePaths.ts 주석).
+ */
+const PLEDGE_FORM_SOURCE = `${LOCALE}/funding/:slug/pledge`;
+const PRIVATE_SOURCES = [...PRIVATE_NO_STORE_SOURCES, PLEDGE_FORM_SOURCE];
 
 describe('next.config headers — 개인정보 경로 no-store', () => {
   const rules = loadHeaders();

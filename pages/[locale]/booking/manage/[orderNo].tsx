@@ -1,7 +1,13 @@
+/* eslint-disable @next/next/no-html-link-for-pages --
+ * private 페이지(URL에 관리 토큰·paymentKey·orderId가 실린다)의 이탈 링크는 next/link가
+ * 아니라 문서 이동이어야 한다. 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면, 그 사이
+ * mount된 gtag가 살아 있는 채로 비밀값이 붙은 URL에 돌아와 page_view를 보낸다.
+ * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
+ * tests/pages/privateLinkNavigation.test.ts
+ */
 import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
@@ -277,9 +283,12 @@ function SessionManageView(props: SessionManageProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        <Link href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
+        {/* 이탈 링크는 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를
+            누르면 그 사이 mount된 gtag가 ?token=이 실린 이 URL로 page_view를 보낸다
+            (lib/analytics/privatePaths.ts). */}
+        <a href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
           홈으로
-        </Link>
+        </a>
       </main>
     </>
   );
@@ -355,9 +364,12 @@ function MixingManageView(props: MixingManageProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        <Link href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
+        {/* 이탈 링크는 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를
+            누르면 그 사이 mount된 gtag가 ?token=이 실린 이 URL로 page_view를 보낸다
+            (lib/analytics/privatePaths.ts). */}
+        <a href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
           홈으로
-        </Link>
+        </a>
       </main>
     </>
   );

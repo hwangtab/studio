@@ -255,6 +255,10 @@ const nextConfig = {
       // 펀딩·예약의 결제·관리 화면도 같은 이유로 공유 캐시에 얹히면 안 된다 — URL에
       // 관리 토큰·paymentKey가 실리고, 응답 본문에 후원자 이름·연락처·주소가 들어간다.
       // 계약 규칙과 마찬가지로 아래 로케일 캐시 규칙보다 반드시 앞에 둘 것(첫 매칭 우선).
+      //
+      // 이 source 집합의 정본은 lib/analytics/privatePaths.ts의 PRIVATE_NO_STORE_SOURCES다
+      // (.mjs라 TS를 직접 import할 수 없어 문자열만 복제한다). 여기만 고치면 측정 제외
+      // 목록과 갈라지므로 tests/config/noStoreHeaders.test.ts가 둘을 대조해 막는다.
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/(success|fail)',
         headers: [
