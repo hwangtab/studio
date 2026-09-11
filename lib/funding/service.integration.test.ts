@@ -14,6 +14,8 @@ import { aggregateProjectStatus, createFundingPledge, expireStalePledges, findFu
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
+import { FUNDING_TERMS_VERSION } from './policy';
+// eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
@@ -80,6 +82,18 @@ describe('createFundingPledge', () => {
     const order = await findFundingOrderByOrderNo(r.orderNo);
     expect(order?.type).toBe('funding');
     expect(order?.fundingPledge?.rewardTitle).toBe('감사 메일');
+  });
+
+  // 동의 사실이 행에 남지 않던 시절엔 분쟁이 나면 "그때 무엇에 동의했는가"를 git 이력으로
+  // 손수 대조해야 했다. 후원 0건인 지금 컬럼을 넣어 두는 것이 유일한 무비용 시점이었다.
+  it('약관 동의 시각과 동의한 판본을 행에 남긴다', async () => {
+    const r = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!r.ok) throw new Error();
+    const pledge = (await findFundingOrderByOrderNo(r.orderNo))?.fundingPledge;
+    expect(pledge?.termsAgreedAt?.getTime()).toBe(NOW.getTime());
+    expect(pledge?.termsVersion).toBe(FUNDING_TERMS_VERSION);
+    // delivered_at 배선(fulfillment_status='delivered')은 후속 작업 — 지금은 컬럼만 있다.
+    expect(pledge?.deliveredAt).toBeNull();
   });
 
   it('한정 수량 1개에 두 번 후원하면 두 번째는 sold_out', async () => {

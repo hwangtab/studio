@@ -94,3 +94,29 @@ describe('제목 꼬리표 · 결제수단 라벨', () => {
     expect((sendEmail as jest.Mock).mock.calls[1][0].text).toContain('결제수단: 토스');
   });
 });
+
+// 전자상거래법 제13조 2항 — 계약 성립 뒤 후원자에게 도달하는 문서에 청약철회의 기한·방법과
+// 계약 내용(약관)이 없으면 서면 교부 요건을 못 채운다. 예전엔 확정·무통장 메일 어디에도
+// 약관 링크가 없었다. 문구는 약관 제8조(기간)·제10조(환불)와 같아야 한다.
+describe('청약철회 고지 (전자상거래법 제13조 2항)', () => {
+  it.each([
+    ['확정', sendFundingConfirmedEmails],
+    ['무통장 안내', sendFundingBankDepositEmails],
+  ])('%s 메일 고객 본문에 청약철회 기한·방법과 약관 링크가 있다', async (_label, fn) => {
+    await fn(order, project);
+    const text = (sendEmail as jest.Mock).mock.calls[0][0].text as string;
+    expect(text).toContain('청약철회');
+    expect(text).toContain('받은 날부터 7일 이내');
+    expect(text).toContain('3개월 이내');
+    expect(text).toContain('30일 이내');
+    expect(text).toContain('3영업일 이내');
+    expect(text).toContain('https://studionol.co.kr/ko/funding/terms');
+    // 행사 방법 — 후원 확인 페이지에서 직접 취소할 수 있다는 경로를 함께 준다.
+    expect(text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
+  });
+
+  it('운영자 메일에는 청약철회 고지를 넣지 않는다 — 수신자가 후원자가 아니다', async () => {
+    await sendFundingConfirmedEmails(order, project);
+    expect((sendEmail as jest.Mock).mock.calls[1][0].text as string).not.toContain('[청약철회 안내]');
+  });
+});
