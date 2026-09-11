@@ -41,6 +41,28 @@ export const CONSULTING_HOURLY_PRICE = 50000;
 // llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
 export const FUNDING_DESIGN_PRICE = 400000;
 export const FUNDING_SUCCESS_FEE_PERCENT = 10;
+
+/**
+ * 음원 발매 홍보 — 제작과 무관하게 단독으로 파는 상품.
+ *
+ * 정가 120만원의 근거는 집중 작업 5일 × 8시간 × 시간당 3만원이며, 해외 동급
+ * (Music With Depth 4주 스타터 $995 ≈ 139만원)과도 같은 자리다.
+ *
+ * 도입가 30만원은 한시 할인이다. 게재 실적 기록이 아직 없어 정가를 받을 근거가
+ * 없기 때문이고, 실적과 사례를 사는 가격이다. 설계는
+ * docs/superpowers/specs/2026-09-11-music-promotion-service-design.md.
+ */
+export const RELEASE_PRESS_PRICE = 1200000;
+export const RELEASE_PRESS_INTRO_PRICE = 300000;
+/**
+ * 도입가 종료일. 이 날이 지나면 정가로 돌아간다.
+ *
+ * 정가를 한 번도 팔지 않은 채 할인가만 계속 운영하면 표시광고법상 부당한
+ * 표시·광고가 된다 — 기간이 무기한 연장되는 것이 전형적인 제재 사유다.
+ * 그래서 날짜를 상수로 박고 data/pricing.test.ts가 만료를 CI에서 잡는다.
+ * 연장하려면 날짜를 옮기는 게 아니라 "정가로 얼마간 팔았는가"를 먼저 볼 것.
+ */
+export const RELEASE_PRESS_INTRO_ENDS_ON = '2026-12-31';
 // 발매 프로젝트 티어 시작가 — 한국어 카피 SSOT는 common.json releaseProject.tiers.*.range
 // ("약 50만원~" 등)이며, data/pricing.test.ts가 아래 상수와 만원 표기 정합을 강제한다.
 // 각 티어의 하한은 아래 통합 번들(고정 구성 정찰가)과 같은 값이다 — 번들이 발매
@@ -385,33 +407,40 @@ export const getPricingData = (locale: Locale) => {
       note: t(locale, { ko: '+ 성공 수수료 10% (후불)', en: '+ 10% success fee', zh: '+ 10% 成功手续费', es: '+ 10% tarifa de éxito', vi: '+ Phí thành công 10% (trả sau)', th: '+ ค่าธรรมเนียมความสำเร็จ 10% (ชำระภายหลัง)', uz: '+ 10% muvaffaqiyat to"lovi (keyin to"lanadi)' }),
     },
     {
-      id: 'service-promo',
-      title: t(locale, { ko: '기본 홍보 패키지', en: 'Basic Promotion', zh: '基础宣传套餐', es: 'Promoción Básica', vi: 'Gói PR cơ bản', th: 'แพ็กเกจโปรโมตพื้นฐาน', uz: 'Asosiy targ"ibot paketi' }),
-      priceDisplay: t(locale, { ko: '300,000원', en: '₩300,000', zh: '₩300,000', es: '₩300,000', vi: '₩300,000', th: '₩300,000', uz: '₩300,000' }),
-      priceValue: 300000,
-      description: t(locale, {
-        ko: '전문 보도자료 작성, 국내외 매체·라디오·플레이리스트 피칭, 주요 음악 사이트 앨범 소개 등록 대행',
-        en: 'Press release writing, media distribution, and music site registration.',
-        zh: '撰写专业新闻稿并分发给媒体，代为登记主要音乐网站专辑介绍',
-        es: 'Redacción de comunicados de prensa, distribución en medios y registro en sitios de música.',
-        vi: 'Viết thông cáo báo chí, phân phối truyền thông và đăng giới thiệu album trên các trang nhạc.',
-        th: 'เขียนข่าวประชาสัมพันธ์ กระจายสื่อ และลงทะเบียนแนะนำอัลบั้มในเว็บเพลงหลัก',
-        uz: 'Press-reliz yozish, OAV tarqatish va musiqiy saytlar ro"yxatiga kiritish.'
+      /**
+       * 예전의 service-promo(30만원 '기본 홍보 패키지')와 service-epk(50만원 EPK)를
+       * 대신한다. 둘 다 이 상품에 흡수됐다 — 같은 일을 다른 이름으로 팔거나,
+       * 단품이 전체 패키지보다 비싼 가격 역전이 생기기 때문이다.
+       */
+      id: 'service-release-press',
+      title: t(locale, { ko: '음원 발매 홍보', en: 'Release Press Campaign', zh: '音乐发行宣传', es: 'Campaña de Prensa', vi: 'Chiến dịch PR phát hành', th: 'แคมเปญข่าวประชาสัมพันธ์', uz: 'Reliz uchun press-kampaniya' }),
+      priceDisplay: t(locale, {
+        ko: `${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}원`,
+        en: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
+        zh: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
+        es: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
+        vi: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
+        th: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
+        uz: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
       }),
-    },
-    {
-      id: 'service-epk',
-      title: t(locale, { ko: 'EPK 웹사이트', en: 'EPK Website', zh: 'EPK 网站', es: 'Sitio Web EPK', vi: 'Website EPK', th: 'เว็บไซต์ EPK', uz: 'EPK veb-sayti' }),
-      priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
-      priceValue: 500000,
+      priceValue: RELEASE_PRESS_INTRO_PRICE,
       description: t(locale, {
-        ko: '아티스트/앨범 소개를 위한 반응형 웹사이트 제작 (Electronic Press Kit)',
-        en: 'Responsive website for artist/album introduction (Electronic Press Kit).',
-        zh: '制作艺术家/专辑介绍的响应式网站 (电子新闻资料包)',
-        es: 'Sitio web adaptable para presentación de artista/álbum (Kit de Prensa Electrónico).',
-        vi: 'Tạo website responsive giới thiệu nghệ sĩ/album (Electronic Press Kit).',
-        th: 'สร้างเว็บไซต์แบบ responsive เพื่อแนะนำศิลปิน/อัลบั้ม (Electronic Press Kit)',
-        uz: "San'atkor/albom taqdimoti uchun moslashuvchan veb-sayt (Electronic Press Kit)."
+        ko: '보도자료 5개 언어 작성, 프레스킷 페이지 제작, 국내 음악 기자·평론가와 해외 매체·라디오·레코드숍 발송, 전곡 이어듣기 영상, 발송 리포트까지. 심사를 통과한 음원만 진행합니다',
+        en: 'Press release in five languages, a press kit page, outreach to Korean music journalists and critics plus overseas outlets, radio and record shops, a full-album listening video, and a delivery report. We take on releases that pass our review.',
+        zh: '五种语言新闻稿、媒体资料页、韩国音乐记者与乐评人及海外媒体·电台·唱片行发送、全曲连播影片、发送报告。仅承接通过审核的作品',
+        es: 'Nota de prensa en cinco idiomas, página de prensa, envío a periodistas y críticos musicales coreanos además de medios, radios y tiendas de discos del extranjero, video del álbum completo e informe de envío. Solo trabajamos con lanzamientos que pasan nuestra revisión.',
+        vi: 'Thông cáo báo chí 5 ngôn ngữ, trang press kit, gửi tới nhà báo và nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa nước ngoài, video nghe trọn album và báo cáo gửi. Chỉ nhận tác phẩm qua vòng duyệt.',
+        th: 'ข่าวประชาสัมพันธ์ 5 ภาษา หน้าเพรสคิต ส่งถึงนักข่าวและนักวิจารณ์เพลงเกาหลี รวมถึงสื่อ วิทยุ ร้านแผ่นเสียงต่างประเทศ วิดีโอฟังทั้งอัลบั้ม และรายงานการส่ง รับเฉพาะผลงานที่ผ่านการพิจารณา',
+        uz: "Besh tilda press-reliz, press-kit sahifasi, Koreya musiqa jurnalistlari va tanqidchilari hamda xorijiy OAV, radio va plastinka do'konlariga yuborish, to'liq albom videosi va yuborish hisoboti. Faqat ko'rikdan o'tgan relizlar bilan ishlaymiz.",
+      }),
+      note: t(locale, {
+        ko: `정가 ${formatPriceLabel(RELEASE_PRESS_PRICE, 'ko')} · ${RELEASE_PRESS_INTRO_ENDS_ON}까지 초기 파트너 가격 · 월 3팀`,
+        en: `List price ${formatPriceLabel(RELEASE_PRESS_PRICE, 'en')} · introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} · three releases a month`,
+        zh: `原价 ${formatPriceLabel(RELEASE_PRESS_PRICE, 'zh')} · ${RELEASE_PRESS_INTRO_ENDS_ON} 前为早期合作价 · 每月 3 组`,
+        es: `Precio normal ${formatPriceLabel(RELEASE_PRESS_PRICE, 'es')} · tarifa inicial hasta ${RELEASE_PRESS_INTRO_ENDS_ON} · tres lanzamientos al mes`,
+        vi: `Giá gốc ${formatPriceLabel(RELEASE_PRESS_PRICE, 'vi')} · giá đối tác sớm đến ${RELEASE_PRESS_INTRO_ENDS_ON} · 3 dự án mỗi tháng`,
+        th: `ราคาปกติ ${formatPriceLabel(RELEASE_PRESS_PRICE, 'th')} · ราคาพาร์ตเนอร์ช่วงแรกถึง ${RELEASE_PRESS_INTRO_ENDS_ON} · เดือนละ 3 ผลงาน`,
+        uz: `Asosiy narx ${formatPriceLabel(RELEASE_PRESS_PRICE, 'uz')} · ${RELEASE_PRESS_INTRO_ENDS_ON} gacha dastlabki hamkor narxi · oyiga 3 ta reliz`,
       }),
     },
   ];
@@ -424,6 +453,11 @@ export const getPricingData = (locale: Locale) => {
   const epLineItemTotalIntl = formatPriceLabel(EP_LINE_ITEM_TOTAL, 'en');
   const albumLineItemTotalKo = formatPriceLabel(ALBUM_LINE_ITEM_TOTAL, 'ko');
   const albumLineItemTotalIntl = formatPriceLabel(ALBUM_LINE_ITEM_TOTAL, 'en');
+  // 번들 features가 "단독 구매 시 얼마"를 말할 때 쓰는 발매 홍보 정가.
+  // 도입가가 아니라 정가를 적는다 — 할인은 한시적이고, 번들의 체감 가치는
+  // 정가 기준이어야 맞다.
+  const releasePressListKo = formatPriceLabel(RELEASE_PRESS_PRICE, 'ko');
+  const releasePressListIntl = formatPriceLabel(RELEASE_PRESS_PRICE, 'en');
   const epPerSongKo = formatPriceLabel(EP_BUNDLE_PER_SONG_PRICE, 'ko');
   const epPerSongIntl = formatPriceLabel(EP_BUNDLE_PER_SONG_PRICE, 'en');
   const albumPerSongKo = formatPriceLabel(ALBUM_BUNDLE_PER_SONG_PRICE, 'ko');
@@ -463,13 +497,13 @@ export const getPricingData = (locale: Locale) => {
         uz: `Bitta qo'shiq rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Narxi ishlab chiqarish yig'indisi ${singleLineItemTotalIntl} dan past, rejalashtirish, tarqatish va matbuotga yuborish ham kiradi.`
       }),
       features: tArray(locale, {
-        ko: ['기획 · 방향 디렉팅', '보컬 녹음 1프로 (3시간, 전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', '발매 홍보 — 국내 기자·평론가 + 해외 매체·라디오·플레이리스트 피칭', `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],
-        en: ['Concept planning & direction', 'Vocal Recording 1 Song (3h, dedicated engineer)', 'Mixing ≤10 Tracks (2 revisions)', 'Single Mastering (1 revision)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', 'Release promotion — pitched to Korean journalists/critics and international media, radio & playlist curators', `~9% off the ${singleLineItemTotalIntl} production line-item total`],
-        zh: ['策划 · 方向指导', '人声录音1首（3小时，专属工程师）', '混音 ≤10轨（含2次修改）', '单曲母带（含1次修改）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', '撰写发行新闻稿并发送给音乐记者·乐评人', `比制作单项合计 ${singleLineItemTotalIntl} 便宜约9%`],
-        es: ['Planificación de concepto y dirección', 'Grabación vocal 1 canción (3h, ingeniero dedicado)', 'Mezcla ≤10 pistas (2 revisiones)', 'Masterización de sencillo (1 revisión)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', 'Nota de prensa redactada y enviada a periodistas y críticos musicales', `~9% de descuento sobre la suma de producción (${singleLineItemTotalIntl})`],
-        vi: ['Lên kế hoạch & định hướng', 'Thu âm vocal 1 bài (3h, kỹ sư chuyên trách)', 'Mixing ≤10 track (2 lần chỉnh sửa)', 'Mastering single (1 lần chỉnh sửa)', 'Đăng ký phát hành số (Melon, Spotify, Apple Music, YouTube Music)', 'Viết thông cáo phát hành & gửi tới nhà báo, nhà phê bình âm nhạc', `Giảm ~9% so với tổng chi phí sản xuất ${singleLineItemTotalIntl}`],
-        th: ['วางแผนคอนเซปต์และกำกับทิศทาง', 'อัดเสียงร้อง 1 เพลง (3 ชม. วิศวกรประจำ)', 'มิกซ์ ≤10 แทร็ก (แก้ไข 2 ครั้ง)', 'มาสเตอร์ซิงเกิล (แก้ไข 1 ครั้ง)', 'ลงทะเบียนจัดจำหน่ายดิจิทัล (Melon, Spotify, Apple Music, YouTube Music)', 'เขียนข่าวประชาสัมพันธ์และส่งถึงนักข่าวและนักวิจารณ์ดนตรี', `ลด ~9% จากผลรวมค่าผลิต ${singleLineItemTotalIntl}`],
-        uz: ["Konsepsiya rejasi va yo'nalish", 'Vokal yozuv 1 qo\'shiq (3 soat, maxsus muhandis)', 'Miks ≤10 trek (2 tahrir)', 'Single mastering (1 tahrir)', 'Raqamli tarqatish (Melon, Spotify, Apple Music, YouTube Music)', 'Chiqarish uchun press-reliz yozilib, musiqa jurnalistlari va tanqidchilariga yuboriladi', `Ishlab chiqarish yig'indisi ${singleLineItemTotalIntl} dan ~9% chegirma`]
+        ko: ['기획 · 방향 디렉팅', '보컬 녹음 1프로 (3시간, 전담 엔지니어)', '믹싱 10트랙 이하 (수정 2회)', '싱글 마스터링 (수정 1회)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 포함 — 보도자료·매체 발송 (단독 구매 시 ${releasePressListKo})`, `제작 단가 합계 ${singleLineItemTotalKo} 대비 약 9% 할인`],
+        en: ['Concept planning & direction', 'Vocal Recording 1 Song (3h, dedicated engineer)', 'Mixing ≤10 Tracks (2 revisions)', 'Single Mastering (1 revision)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', `Release press campaign included — press release and outreach (${releasePressListIntl} on its own)`, `~9% off the ${singleLineItemTotalIntl} production line-item total`],
+        zh: ['策划 · 方向指导', '人声录音1首（3小时，专属工程师）', '混音 ≤10轨（含2次修改）', '单曲母带（含1次修改）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', `含发行宣传 — 新闻稿撰写与媒体发送（单独购买 ${releasePressListIntl}）`, `比制作单项合计 ${singleLineItemTotalIntl} 便宜约9%`],
+        es: ['Planificación de concepto y dirección', 'Grabación vocal 1 canción (3h, ingeniero dedicado)', 'Mezcla ≤10 pistas (2 revisiones)', 'Masterización de sencillo (1 revisión)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', `Campaña de prensa incluida — nota de prensa y envío a medios (${releasePressListIntl} por separado)`, `~9% de descuento sobre la suma de producción (${singleLineItemTotalIntl})`],
+        vi: ['Lên kế hoạch & định hướng', 'Thu âm vocal 1 bài (3h, kỹ sư chuyên trách)', 'Mixing ≤10 track (2 lần chỉnh sửa)', 'Mastering single (1 lần chỉnh sửa)', 'Đăng ký phát hành số (Melon, Spotify, Apple Music, YouTube Music)', `Bao gồm chiến dịch PR — thông cáo báo chí và gửi truyền thông (mua riêng ${releasePressListIntl})`, `Giảm ~9% so với tổng chi phí sản xuất ${singleLineItemTotalIntl}`],
+        th: ['วางแผนคอนเซปต์และกำกับทิศทาง', 'อัดเสียงร้อง 1 เพลง (3 ชม. วิศวกรประจำ)', 'มิกซ์ ≤10 แทร็ก (แก้ไข 2 ครั้ง)', 'มาสเตอร์ซิงเกิล (แก้ไข 1 ครั้ง)', 'ลงทะเบียนจัดจำหน่ายดิจิทัล (Melon, Spotify, Apple Music, YouTube Music)', `รวมแคมเปญข่าวประชาสัมพันธ์ — เขียนและส่งถึงสื่อ (ซื้อแยก ${releasePressListIntl})`, `ลด ~9% จากผลรวมค่าผลิต ${singleLineItemTotalIntl}`],
+        uz: ["Konsepsiya rejasi va yo'nalish", 'Vokal yozuv 1 qo\'shiq (3 soat, maxsus muhandis)', 'Miks ≤10 trek (2 tahrir)', 'Single mastering (1 tahrir)', 'Raqamli tarqatish (Melon, Spotify, Apple Music, YouTube Music)', `Reliz press-kampaniyasi kiritilgan — press-reliz va OAVga yuborish (alohida ${releasePressListIntl})`, `Ishlab chiqarish yig'indisi ${singleLineItemTotalIntl} dan ~9% chegirma`]
       }),
     },
     {
@@ -505,13 +539,13 @@ export const getPricingData = (locale: Locale) => {
         uz: `To'liq EP rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Har bir qo'shiq ${epPerSongIntl} — ishlab chiqarish yig'indisi ${epLineItemTotalIntl} dan past, albom rejasi, treklist kuratsiyasi, tarqatish va matbuotga yuborish ham kiradi. Boshqa qo'shiq soni har bir qo'shiq narxi bo'yicha hisoblanadi.`
       }),
       features: tArray(locale, {
-        ko: ['앨범 기획 · 트랙리스트 큐레이션', '보컬 녹음 1프로 × 4곡 (곡당 3시간, 전담 엔지니어)', '믹싱 10트랙 이하 × 4곡 (곡당 수정 2회)', 'EP 마스터링 × 4곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', '발매 홍보 — 국내 기자·평론가 + 해외 매체·라디오·플레이리스트 피칭', `제작 단가 합계 ${epLineItemTotalKo} 대비 약 15% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
-        en: ['Album planning & tracklist curation', 'Vocal Recording 1 Song × 4 (3h each, dedicated engineer)', 'Mixing ≤10 Tracks × 4 (2 revisions each)', 'EP Mastering × 4 (album-wide tone & loudness)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', 'Release promotion — pitched to Korean journalists/critics and international media, radio & playlist curators', `~15% off the ${epLineItemTotalIntl} production line-item total`, '11+ track arrangements billed at the mixing difference'],
-        zh: ['专辑策划 · 曲目编排', '人声录音1首 × 4（各 3 小时，专属工程师）', '混音 ≤10轨 × 4（各含2次修改）', 'EP 母带 × 4（全专辑音色·响度统一）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', '撰写发行新闻稿并发送给音乐记者·乐评人', `比制作单项合计 ${epLineItemTotalIntl} 便宜约 15%`, '11轨以上编制按混音差额另计'],
-        es: ['Planificación del álbum y curaduría del tracklist', 'Grabación vocal 1 canción × 4 (3h cada una, ingeniero dedicado)', 'Mezcla ≤10 pistas × 4 (2 revisiones cada una)', 'Masterización EP × 4 (tono y loudness unificados)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', 'Nota de prensa redactada y enviada a periodistas y críticos musicales', `~15% de descuento sobre la suma de producción ${epLineItemTotalIntl}`, 'Arreglos de 11+ pistas se facturan por la diferencia de mezcla'],
-        vi: ['Lên kế hoạch album & sắp xếp tracklist', 'Thu âm vocal 1 bài × 4 (3h mỗi bài, kỹ sư chuyên trách)', 'Mixing ≤10 track × 4 (2 lần chỉnh sửa mỗi bài)', 'Mastering EP × 4 (đồng nhất tone & loudness)', 'Đăng ký phát hành số (Melon, Spotify, Apple Music, YouTube Music)', 'Viết thông cáo phát hành & gửi tới nhà báo, nhà phê bình âm nhạc', `Giảm ~15% so với tổng chi phí sản xuất ${epLineItemTotalIntl}`, 'Phối khí 11+ track tính thêm phần chênh mixing'],
-        th: ['วางแผนอัลบั้มและคัดเลือกลำดับเพลง', 'อัดเสียงร้อง 1 เพลง × 4 (เพลงละ 3 ชม. วิศวกรประจำ)', 'มิกซ์ ≤10 แทร็ก × 4 (แก้ไขเพลงละ 2 ครั้ง)', 'มาสเตอริ่ง EP × 4 (โทนและความดังทั้งอัลบั้ม)', 'ลงทะเบียนจัดจำหน่ายดิจิทัล (Melon, Spotify, Apple Music, YouTube Music)', 'เขียนข่าวประชาสัมพันธ์และส่งถึงนักข่าวและนักวิจารณ์ดนตรี', `ลด ~15% จากผลรวมค่าผลิต ${epLineItemTotalIntl}`, 'การเรียบเรียง 11+ แทร็ก คิดส่วนต่างค่ามิกซ์'],
-        uz: ['Albom rejasi va treklist kuratsiyasi', "Vokal yozuv 1 qo\'shiq × 4 (har biri 3 soat, maxsus muhandis)", 'Miks ≤10 trek × 4 (har biriga 2 tahrir)', 'EP mastering × 4 (albom bo\'yicha ton va balandlik)', 'Raqamli tarqatish (Melon, Spotify, Apple Music, YouTube Music)', 'Chiqarish uchun press-reliz yozilib, musiqa jurnalistlari va tanqidchilariga yuboriladi', `Ishlab chiqarish yig'indisi ${epLineItemTotalIntl} dan ~15% chegirma`, '11+ trek aranjirovka miks farqi bo\'yicha hisoblanadi']
+        ko: ['앨범 기획 · 트랙리스트 큐레이션', '보컬 녹음 1프로 × 4곡 (곡당 3시간, 전담 엔지니어)', '믹싱 10트랙 이하 × 4곡 (곡당 수정 2회)', 'EP 마스터링 × 4곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 포함 — 보도자료·매체 발송 (단독 구매 시 ${releasePressListKo})`, `제작 단가 합계 ${epLineItemTotalKo} 대비 약 15% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
+        en: ['Album planning & tracklist curation', 'Vocal Recording 1 Song × 4 (3h each, dedicated engineer)', 'Mixing ≤10 Tracks × 4 (2 revisions each)', 'EP Mastering × 4 (album-wide tone & loudness)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', `Release press campaign included — press release and outreach (${releasePressListIntl} on its own)`, `~15% off the ${epLineItemTotalIntl} production line-item total`, '11+ track arrangements billed at the mixing difference'],
+        zh: ['专辑策划 · 曲目编排', '人声录音1首 × 4（各 3 小时，专属工程师）', '混音 ≤10轨 × 4（各含2次修改）', 'EP 母带 × 4（全专辑音色·响度统一）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', `含发行宣传 — 新闻稿撰写与媒体发送（单独购买 ${releasePressListIntl}）`, `比制作单项合计 ${epLineItemTotalIntl} 便宜约 15%`, '11轨以上编制按混音差额另计'],
+        es: ['Planificación del álbum y curaduría del tracklist', 'Grabación vocal 1 canción × 4 (3h cada una, ingeniero dedicado)', 'Mezcla ≤10 pistas × 4 (2 revisiones cada una)', 'Masterización EP × 4 (tono y loudness unificados)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', `Campaña de prensa incluida — nota de prensa y envío a medios (${releasePressListIntl} por separado)`, `~15% de descuento sobre la suma de producción ${epLineItemTotalIntl}`, 'Arreglos de 11+ pistas se facturan por la diferencia de mezcla'],
+        vi: ['Lên kế hoạch album & sắp xếp tracklist', 'Thu âm vocal 1 bài × 4 (3h mỗi bài, kỹ sư chuyên trách)', 'Mixing ≤10 track × 4 (2 lần chỉnh sửa mỗi bài)', 'Mastering EP × 4 (đồng nhất tone & loudness)', 'Đăng ký phát hành số (Melon, Spotify, Apple Music, YouTube Music)', `Bao gồm chiến dịch PR — thông cáo báo chí và gửi truyền thông (mua riêng ${releasePressListIntl})`, `Giảm ~15% so với tổng chi phí sản xuất ${epLineItemTotalIntl}`, 'Phối khí 11+ track tính thêm phần chênh mixing'],
+        th: ['วางแผนอัลบั้มและคัดเลือกลำดับเพลง', 'อัดเสียงร้อง 1 เพลง × 4 (เพลงละ 3 ชม. วิศวกรประจำ)', 'มิกซ์ ≤10 แทร็ก × 4 (แก้ไขเพลงละ 2 ครั้ง)', 'มาสเตอริ่ง EP × 4 (โทนและความดังทั้งอัลบั้ม)', 'ลงทะเบียนจัดจำหน่ายดิจิทัล (Melon, Spotify, Apple Music, YouTube Music)', `รวมแคมเปญข่าวประชาสัมพันธ์ — เขียนและส่งถึงสื่อ (ซื้อแยก ${releasePressListIntl})`, `ลด ~15% จากผลรวมค่าผลิต ${epLineItemTotalIntl}`, 'การเรียบเรียง 11+ แทร็ก คิดส่วนต่างค่ามิกซ์'],
+        uz: ['Albom rejasi va treklist kuratsiyasi', "Vokal yozuv 1 qo\'shiq × 4 (har biri 3 soat, maxsus muhandis)", 'Miks ≤10 trek × 4 (har biriga 2 tahrir)', 'EP mastering × 4 (albom bo\'yicha ton va balandlik)', 'Raqamli tarqatish (Melon, Spotify, Apple Music, YouTube Music)', `Reliz press-kampaniyasi kiritilgan — press-reliz va OAVga yuborish (alohida ${releasePressListIntl})`, `Ishlab chiqarish yig'indisi ${epLineItemTotalIntl} dan ~15% chegirma`, '11+ trek aranjirovka miks farqi bo\'yicha hisoblanadi']
       }),
     },
     {
@@ -547,13 +581,13 @@ export const getPricingData = (locale: Locale) => {
         uz: `To'liq albom rejalashtirishdan tarqatish va PRgacha birga olib boriladi. Har bir qo'shiq ${albumPerSongIntl} — ishlab chiqarish yig'indisi ${albumLineItemTotalIntl} dan past, A&R konsalting, treklist ketma-ketligi, tarqatish va matbuotga yuborish ham kiradi. Boshqa qo'shiq soni har bir qo'shiq narxi bo'yicha hisoblanadi.`
       }),
       features: tArray(locale, {
-        ko: ['A&R 컨설팅 · 트랙리스트 시퀀스 설계', '보컬 녹음 1프로 × 8곡 (곡당 3시간, 전담 엔지니어)', '믹싱 10트랙 이하 × 8곡 (곡당 수정 2회)', '정규 마스터링 × 8곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', '발매 홍보 — 국내 기자·평론가 + 해외 매체·라디오·플레이리스트 피칭', `제작 단가 합계 ${albumLineItemTotalKo} 대비 약 20% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
-        en: ['A&R consulting & tracklist sequencing', 'Vocal Recording 1 Song × 8 (3h each, dedicated engineer)', 'Mixing ≤10 Tracks × 8 (2 revisions each)', 'Album Mastering × 8 (album-wide tone & loudness)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', 'Release promotion — pitched to Korean journalists/critics and international media, radio & playlist curators', `~20% off the ${albumLineItemTotalIntl} production line-item total`, '11+ track arrangements billed at the mixing difference'],
-        zh: ['A&R 咨询 · 曲序设计', '人声录音1首 × 8（各 3 小时，专属工程师）', '混音 ≤10轨 × 8（各含2次修改）', '专辑母带 × 8（全专辑音色·响度统一）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', '撰写发行新闻稿并发送给音乐记者·乐评人', `比制作单项合计 ${albumLineItemTotalIntl} 便宜约 20%`, '11轨以上编制按混音差额另计'],
-        es: ['Consultoría A&R y secuenciación del tracklist', 'Grabación vocal 1 canción × 8 (3h cada una, ingeniero dedicado)', 'Mezcla ≤10 pistas × 8 (2 revisiones cada una)', 'Masterización de álbum × 8 (tono y loudness unificados)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', 'Nota de prensa redactada y enviada a periodistas y críticos musicales', `~20% de descuento sobre la suma de producción ${albumLineItemTotalIntl}`, 'Arreglos de 11+ pistas se facturan por la diferencia de mezcla'],
-        vi: ['Tư vấn A&R & thiết kế thứ tự tracklist', 'Thu âm vocal 1 bài × 8 (3h mỗi bài, kỹ sư chuyên trách)', 'Mixing ≤10 track × 8 (2 lần chỉnh sửa mỗi bài)', 'Mastering album × 8 (đồng nhất tone & loudness)', 'Đăng ký phát hành số (Melon, Spotify, Apple Music, YouTube Music)', 'Viết thông cáo phát hành & gửi tới nhà báo, nhà phê bình âm nhạc', `Giảm ~20% so với tổng chi phí sản xuất ${albumLineItemTotalIntl}`, 'Phối khí 11+ track tính thêm phần chênh mixing'],
-        th: ['ที่ปรึกษา A&R และออกแบบลำดับเพลง', 'อัดเสียงร้อง 1 เพลง × 8 (เพลงละ 3 ชม. วิศวกรประจำ)', 'มิกซ์ ≤10 แทร็ก × 8 (แก้ไขเพลงละ 2 ครั้ง)', 'มาสเตอริ่งอัลบั้ม × 8 (โทนและความดังทั้งอัลบั้ม)', 'ลงทะเบียนจัดจำหน่ายดิจิทัล (Melon, Spotify, Apple Music, YouTube Music)', 'เขียนข่าวประชาสัมพันธ์และส่งถึงนักข่าวและนักวิจารณ์ดนตรี', `ลด ~20% จากผลรวมค่าผลิต ${albumLineItemTotalIntl}`, 'การเรียบเรียง 11+ แทร็ก คิดส่วนต่างค่ามิกซ์'],
-        uz: ['A&R konsalting va treklist ketma-ketligi', "Vokal yozuv 1 qo\'shiq × 8 (har biri 3 soat, maxsus muhandis)", 'Miks ≤10 trek × 8 (har biriga 2 tahrir)', "Albom mastering × 8 (albom bo\'yicha ton va balandlik)", 'Raqamli tarqatish (Melon, Spotify, Apple Music, YouTube Music)', 'Chiqarish uchun press-reliz yozilib, musiqa jurnalistlari va tanqidchilariga yuboriladi', `Ishlab chiqarish yig'indisi ${albumLineItemTotalIntl} dan ~20% chegirma`, '11+ trek aranjirovka miks farqi bo\'yicha hisoblanadi']
+        ko: ['A&R 컨설팅 · 트랙리스트 시퀀스 설계', '보컬 녹음 1프로 × 8곡 (곡당 3시간, 전담 엔지니어)', '믹싱 10트랙 이하 × 8곡 (곡당 수정 2회)', '정규 마스터링 × 8곡 (앨범 톤·라우드니스 통일)', '디지털 유통 등록 (멜론·스포티파이·애플뮤직·유튜브뮤직)', `발매 홍보 포함 — 보도자료·매체 발송 (단독 구매 시 ${releasePressListKo})`, `제작 단가 합계 ${albumLineItemTotalKo} 대비 약 20% 할인`, '11트랙 이상 편성은 믹싱 차액 별도'],
+        en: ['A&R consulting & tracklist sequencing', 'Vocal Recording 1 Song × 8 (3h each, dedicated engineer)', 'Mixing ≤10 Tracks × 8 (2 revisions each)', 'Album Mastering × 8 (album-wide tone & loudness)', 'Digital distribution (Melon, Spotify, Apple Music, YouTube Music)', `Release press campaign included — press release and outreach (${releasePressListIntl} on its own)`, `~20% off the ${albumLineItemTotalIntl} production line-item total`, '11+ track arrangements billed at the mixing difference'],
+        zh: ['A&R 咨询 · 曲序设计', '人声录音1首 × 8（各 3 小时，专属工程师）', '混音 ≤10轨 × 8（各含2次修改）', '专辑母带 × 8（全专辑音色·响度统一）', '数字发行登记（Melon·Spotify·Apple Music·YouTube Music）', `含发行宣传 — 新闻稿撰写与媒体发送（单独购买 ${releasePressListIntl}）`, `比制作单项合计 ${albumLineItemTotalIntl} 便宜约 20%`, '11轨以上编制按混音差额另计'],
+        es: ['Consultoría A&R y secuenciación del tracklist', 'Grabación vocal 1 canción × 8 (3h cada una, ingeniero dedicado)', 'Mezcla ≤10 pistas × 8 (2 revisiones cada una)', 'Masterización de álbum × 8 (tono y loudness unificados)', 'Distribución digital (Melon, Spotify, Apple Music, YouTube Music)', `Campaña de prensa incluida — nota de prensa y envío a medios (${releasePressListIntl} por separado)`, `~20% de descuento sobre la suma de producción ${albumLineItemTotalIntl}`, 'Arreglos de 11+ pistas se facturan por la diferencia de mezcla'],
+        vi: ['Tư vấn A&R & thiết kế thứ tự tracklist', 'Thu âm vocal 1 bài × 8 (3h mỗi bài, kỹ sư chuyên trách)', 'Mixing ≤10 track × 8 (2 lần chỉnh sửa mỗi bài)', 'Mastering album × 8 (đồng nhất tone & loudness)', 'Đăng ký phát hành số (Melon, Spotify, Apple Music, YouTube Music)', `Bao gồm chiến dịch PR — thông cáo báo chí và gửi truyền thông (mua riêng ${releasePressListIntl})`, `Giảm ~20% so với tổng chi phí sản xuất ${albumLineItemTotalIntl}`, 'Phối khí 11+ track tính thêm phần chênh mixing'],
+        th: ['ที่ปรึกษา A&R และออกแบบลำดับเพลง', 'อัดเสียงร้อง 1 เพลง × 8 (เพลงละ 3 ชม. วิศวกรประจำ)', 'มิกซ์ ≤10 แทร็ก × 8 (แก้ไขเพลงละ 2 ครั้ง)', 'มาสเตอริ่งอัลบั้ม × 8 (โทนและความดังทั้งอัลบั้ม)', 'ลงทะเบียนจัดจำหน่ายดิจิทัล (Melon, Spotify, Apple Music, YouTube Music)', `รวมแคมเปญข่าวประชาสัมพันธ์ — เขียนและส่งถึงสื่อ (ซื้อแยก ${releasePressListIntl})`, `ลด ~20% จากผลรวมค่าผลิต ${albumLineItemTotalIntl}`, 'การเรียบเรียง 11+ แทร็ก คิดส่วนต่างค่ามิกซ์'],
+        uz: ['A&R konsalting va treklist ketma-ketligi', "Vokal yozuv 1 qo\'shiq × 8 (har biri 3 soat, maxsus muhandis)", 'Miks ≤10 trek × 8 (har biriga 2 tahrir)', "Albom mastering × 8 (albom bo\'yicha ton va balandlik)", 'Raqamli tarqatish (Melon, Spotify, Apple Music, YouTube Music)', `Reliz press-kampaniyasi kiritilgan — press-reliz va OAVga yuborish (alohida ${releasePressListIntl})`, `Ishlab chiqarish yig'indisi ${albumLineItemTotalIntl} dan ~20% chegirma`, '11+ trek aranjirovka miks farqi bo\'yicha hisoblanadi']
       }),
     },
     {

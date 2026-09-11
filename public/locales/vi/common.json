@@ -1515,6 +1515,252 @@
       "order": "Đặt hàng online"
     }
   },
+  "musicPromotion": {
+    "seo": {
+      "title": "Quảng bá phát hành nhạc — gửi thẳng tới nhà báo và nhà phê bình âm nhạc | Studio NOL",
+      "description": "Không phải dịch vụ rải thông cáo báo chí tới 908 đầu mối cùng lúc. Chúng tôi gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc và tới truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia, bằng chính ngôn ngữ mà họ đọc. Gồm thông cáo 5 thứ tiếng, trang press kit, video nghe trọn album và báo cáo gửi đi. Chỉ nhận những bản nhạc qua được vòng duyệt.",
+      "keywords": "quảng bá nhạc, quảng bá album, thông cáo báo chí âm nhạc, PR nhạc indie, PR âm nhạc, quảng bá phát hành, viết thông cáo báo chí, quảng bá đĩa nhạc, dịch vụ PR âm nhạc, PR âm nhạc quốc tế, press kit, làm EPK"
+    },
+    "hero": {
+      "title": "Quảng bá phát hành nhạc",
+      "subtitleLine1": "Tới nhà báo, nhà phê bình âm nhạc Hàn Quốc và truyền thông 60 quốc gia, bằng ngôn ngữ họ đọc",
+      "subtitleLine2": "{{intro}} · 3 nghệ sĩ mỗi tháng · Chỉ nhận nhạc qua được vòng duyệt",
+      "badge": "Giá gốc {{list}} → {{intro}} (giá đối tác sớm, đến hết {{until}})",
+      "alt": "Màn hình làm việc khi viết thông cáo phát hành tại Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Những điều bạn sẽ thắc mắc trước tiên",
+      "subtitle": "Chúng tôi trả lời trước để bạn không phải đọc dài",
+      "items": [
+        {
+          "q": "Giá bao nhiêu?",
+          "a": "{{intro}} (chưa gồm VAT). Giá gốc là {{list}}, và đến hết {{until}} chúng tôi nhận theo giá đối tác sớm. Không có phụ phí — mọi thứ ghi bên dưới đều đã bao gồm."
+        },
+        {
+          "q": "Các bạn làm những gì?",
+          "a": "Chúng tôi viết thông cáo báo chí bằng 5 thứ tiếng, dựng trang press kit, rồi gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa và liên hoan âm nhạc nước ngoài. Chúng tôi cũng làm video nghe trọn album, và khi kết thúc sẽ gửi bạn báo cáo đã gửi gì tới đâu."
+        },
+        {
+          "q": "Mất bao lâu?",
+          "a": "5 ngày để làm tài liệu, 1-3 tuần để gửi đi. Lý do không gửi hết trong một ngày là uy tín tên miền — bắn hơn 1.000 email cùng lúc thì tất cả bị xếp vào thư rác, và mọi thứ thành vô nghĩa."
+        },
+        {
+          "q": "Các bạn có bảo đảm bài báo sẽ được đăng không?",
+          "a": "Chúng tôi không bảo đảm. Vì đó không phải việc có thể bảo đảm. Nếu có nơi nào nói bảo đảm được, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo. Thứ chúng tôi hứa là khối lượng thực thi — làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào, tất cả được chứng minh bằng báo cáo."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Khác với dịch vụ phát tán thông cáo báo chí",
+      "subtitle": "Khác nhau không phải ở giá mà ở chính món hàng. Đặt cạnh mặt bằng giá trong nước sẽ thấy rõ.",
+      "columns": [
+        "",
+        "Nền tảng phát tán thông cáo",
+        "Marketing chạy số lượt xem",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Người nhận",
+          "Rải một lượt tới 908 đầu mối",
+          "Hiển thị quảng cáo",
+          "Đích danh nhà báo, nhà phê bình âm nhạc"
+        ],
+        [
+          "Nội dung",
+          "Tất cả cùng một bản thảo",
+          "Chất liệu quảng cáo",
+          "Khác nhau theo tính chất đầu mối và ngôn ngữ"
+        ],
+        [
+          "Nước ngoài",
+          "Không có",
+          "Không có",
+          "Truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia"
+        ],
+        [
+          "Giá",
+          "₩77,000–₩660,000",
+          "₩150,000–₩600,000",
+          "{{intro}}"
+        ]
+      ],
+      "note": "Chúng tôi không tìm được một công ty PR chuyên về âm nhạc nào ở Hàn Quốc công khai bảng giá (khảo sát tháng 9/2026). Nơi rải thông cáo thì nhiều, nhưng danh sách đó không phải báo chí âm nhạc, cũng không phải nhà báo âm nhạc."
+    },
+    "evidence": {
+      "title": "Chúng tôi đã gửi thực tế như thế này",
+      "subtitle": "Ghi chép chính xác hơn lời nói. Đây là số liệu đo được từ các chiến dịch chúng tôi tự thực hiện.",
+      "cases": [
+        {
+          "title": "Mariko & Yukie 〈Namsan Tower Lights〉",
+          "meta": "Album đầu tay · phát hành tháng 9/2026",
+          "stats": [
+            "Gửi tới 1.218 nơi",
+            "60 quốc gia",
+            "8 ngôn ngữ",
+            "Rải đều trong 12 ngày"
+          ],
+          "note": "15 bài hát tiếng Hàn do một cặp vợ chồng người Nhật sống ở Seoul thể hiện. Studio NOL đảm nhiệm từ mixing cho tới lên kế hoạch, sản xuất và quảng bá phát hành."
+        },
+        {
+          "title": "HWA 〈HWA〉",
+          "meta": "EP grindcore · phát hành tháng 8/2026",
+          "stats": [
+            "Gửi tới 125 nơi",
+            "Tập trung vào báo chí chuyên về metal",
+            "Trong nước và quốc tế cùng lúc"
+          ],
+          "note": "Dòng nhạc hẹp thì danh sách cũng đi hẹp. Chúng tôi đã thu thập mới các đầu mối chuyên về metal riêng cho album này."
+        }
+      ],
+      "linkLabel": "Xem trang press kit chúng tôi đã làm thật"
+    },
+    "deliverables": {
+      "title": "Những gì được bao gồm",
+      "subtitle": "Tất cả đều bao gồm. Không có hạng mục nào bán riêng như tùy chọn.",
+      "items": [
+        {
+          "title": "Thông cáo báo chí 5 thứ tiếng",
+          "body": "Ngoài tiếng Hàn và tiếng Anh, chúng tôi chọn thêm 3 ngôn ngữ khu vực hợp với âm nhạc và nghệ sĩ. Không phải văn bản chạy qua máy dịch — viết thẳng bằng ngôn ngữ đó rồi kiểm tra lại bằng cách dịch ngược."
+        },
+        {
+          "title": "Trang press kit",
+          "body": "Nghe trọn từng bài ngay trên trang, lời bài hát, credit, ảnh bìa độ phân giải cao và file ZIP press kit, gói trong một trang. Khi nhà báo mở ra để viết bài, mọi thứ họ cần phải có sẵn ở đó."
+        },
+        {
+          "title": "Gửi tới đầu mối trong và ngoài nước",
+          "body": "Nhà báo và nhà phê bình âm nhạc, ban biên tập, đài phát thanh, cửa hàng đĩa, liên hoan âm nhạc. Nội dung khác nhau theo tính chất đầu mối — ban biên tập nhận bản thảo có thể lên bài, đài phát thanh nhận những câu dẫn để đọc trước khi phát bài."
+        },
+        {
+          "title": "Các bản thảo phái sinh",
+          "body": "Lời dẫn cho DJ phát thanh, bài giới thiệu dùng trong cửa hàng, bản rút gọn vừa khớp với biểu mẫu gửi tin của tòa soạn. Mỗi cửa một kiểu, nên chúng tôi làm sẵn để khỏi phải viết lại mỗi lần."
+        },
+        {
+          "title": "Video nghe trọn album",
+          "body": "Một video duy nhất có chương riêng cho từng bài. Nếu bạn gửi lời bài hát, chúng tôi khớp cả phụ đề. Không giới hạn số bài."
+        },
+        {
+          "title": "Báo cáo gửi đi",
+          "body": "Đã làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào, phản hồi và bài đăng nào đã xác nhận được. Cả thư bị trả lại và yêu cầu ngừng nhận cũng ghi rõ, không giấu."
+        }
+      ]
+    },
+    "process": {
+      "title": "Quy trình thực hiện",
+      "subtitle": "Từ lúc đặt tới khi có báo cáo là xong trong một lần. Không phải kiểu thu tiền hằng tháng mà không thấy đang làm gì.",
+      "steps": [
+        {
+          "title": "Liên hệ và gửi bản nhạc",
+          "body": "Hãy nhắn cho chúng tôi qua KakaoTalk kèm bản nhạc và thông tin cơ bản. Chưa phát hành hay đã phát hành rồi đều được."
+        },
+        {
+          "title": "Duyệt — 3 ngày làm việc",
+          "body": "Nhà sản xuất nghe hết các bài rồi quyết định. Nếu khó nhận, chúng tôi sẽ ghi rõ lý do và báo lại."
+        },
+        {
+          "title": "Làm tài liệu — 5 ngày",
+          "body": "Chúng tôi làm thông cáo báo chí, trang press kit, các bản thảo phái sinh và video."
+        },
+        {
+          "title": "Bạn xác nhận",
+          "body": "Trước khi gửi, chúng tôi cho bạn xem toàn bộ. Chỉ nghệ sĩ mới biết đúng sai về mặt dữ kiện, nên bước này không thể bỏ qua."
+        },
+        {
+          "title": "Gửi đi — 1-3 tuần",
+          "body": "Chúng tôi chia nhỏ để giữ uy tín tên miền. Bắn hết một lần thì chỉ vào hòm thư rác."
+        },
+        {
+          "title": "Báo cáo",
+          "body": "Chúng tôi tổng hợp danh mục đã gửi và các phản hồi rồi gửi bạn."
+        }
+      ]
+    },
+    "review": {
+      "title": "Chúng tôi không nhận mọi bản nhạc",
+      "lead": "Chúng tôi chỉ quảng bá âm nhạc hay. Nói chính xác hơn — chúng tôi xem đây có phải bản nhạc mà các nhà báo, nhà phê bình chúng tôi quen biết sẽ nghe tới hết hay không.",
+      "criteria": [
+        {
+          "title": "Có đầu mối nào để đến được không",
+          "body": "Chúng tôi mạnh ở indie, alternative, world music, city pop, metal và folk. Dù là nhạc hay, nếu không có điểm giao với những đầu mối chúng tôi tiếp cận được thì cũng chẳng có chỗ để gửi."
+        },
+        {
+          "title": "Có câu chuyện để kể không",
+          "body": "Thông cáo báo chí không phải bài giới thiệu mà là nguyên liệu để nhà báo dựng thành bài. Chỉ mỗi câu \"vừa ra bài mới\" thì không ai viết cả."
+        },
+        {
+          "title": "Chúng tôi có thích không",
+          "body": "Không thể giới thiệu cho người khác thứ âm nhạc mà mình không thích. Email kiểu đó, người đọc nhận ra ngay."
+        }
+      ],
+      "rejection": "Khi khó nhận, chúng tôi sẽ ghi rõ lý do và gửi lại cho bạn. Phần lớn không phải là \"nhạc dở\" mà là \"trong số các đầu mối chúng tôi tiếp cận được, không tìm ra nơi nào sẽ đón nhận bản nhạc này\". Trong trường hợp đó, chúng tôi ghi lại cho bạn những nơi nên gửi, trong phạm vi hiểu biết của mình.",
+      "why": "Có hai lý do để duyệt. Đối tượng chúng tôi gửi mỗi lần đều là cùng những con người ấy, nên cứ gửi đi gửi lại tài liệu không phù hợp thì chính mối quan hệ đó bị bào mòn. Và lòng tin một khi đã đốt thì không lấy lại được."
+    },
+    "notPromised": {
+      "title": "Những điều chúng tôi không hứa",
+      "subtitle": "Chúng tôi sẽ không nói là làm được điều mình không làm được.",
+      "items": [
+        {
+          "title": "Chúng tôi không bảo đảm bài báo được đăng",
+          "body": "Viết hay không là do nhà báo quyết định. Nếu có nơi nào bảo đảm, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo."
+        },
+        {
+          "title": "Chúng tôi không bảo đảm vào playlist hay các con số streaming",
+          "body": "Chúng tôi làm việc khác với những dịch vụ bán lượt xem, lượt đăng ký, lượt nghe. Những con số đó mua thì tăng, nhưng chẳng để lại gì."
+        },
+        {
+          "title": "Chúng tôi không hứa xuất hiện trên một đầu mối cụ thể nào",
+          "body": "Thứ chúng tôi kiểm soát được chỉ tới mức \"đến tay ai, dưới hình thức nào\". Phần sau đó là phần của âm nhạc."
+        }
+      ],
+      "instead": "Thay vào đó, chúng tôi hứa khối lượng thực thi. Khi bản nhạc qua vòng duyệt, chúng tôi chốt bằng con số và báo cho bạn biết sẽ làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào; kết thúc thì chứng minh bằng báo cáo."
+    },
+    "pricing": {
+      "title": "Giá",
+      "subtitle": "Một gói duy nhất. Chúng tôi không chia hạng.",
+      "note": "Đến hết {{until}}, chúng tôi nhận theo giá đối tác sớm. Vì mới bắt đầu tích lũy hồ sơ bài đăng nên chưa có căn cứ để lấy giá gốc. Hết thời hạn sẽ trở lại giá gốc {{list}}.",
+      "capacity": "Mỗi tháng chúng tôi chỉ nhận 3 nghệ sĩ. Mỗi ca chiếm trọn năm ngày tập trung, nhiều hơn thế thì không giữ được lời hứa."
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "subtitle": "",
+      "items": [
+        {
+          "q": "Nhạc đã phát hành rồi có làm được không?",
+          "a": "Được. Thực ra trường hợp này còn nhiều hơn — phát hành xong người ta mới nghĩ tới quảng bá. Các công ty PR nước ngoài thường đòi trước ngày phát hành 6-8 tuần, chúng tôi thì không. Thời điểm phát hành chỉ làm thay đổi góc tiếp cận của thông cáo."
+        },
+        {
+          "q": "Chúng tôi không thu âm ở studio của các bạn, vẫn đặt được chứ?",
+          "a": "Vẫn đặt được. Làm ở đâu cũng được, miễn là bản nhạc đã hoàn thiện. Tuy nhiên vòng duyệt thì vẫn như nhau."
+        },
+        {
+          "q": "Vì sao gửi đi lại mất tới 1-3 tuần?",
+          "a": "Dồn email gửi hết trong một ngày thì tên miền gửi bị xếp vào thư rác. Khi đó cả chiến dịch kết thúc mà không tới được hòm thư đến. Đó cũng là lý do các công ty bắn hết trong một ngày không có hiệu quả."
+        },
+        {
+          "q": "Chúng tôi cần chuẩn bị những gì?",
+          "a": "Chỉ cần đã đăng ký phát hành (có link streaming) là bắt đầu được. Ảnh bìa, ảnh nghệ sĩ, credit, lời bài hát nếu có thì tốt hơn nhiều, nhưng không bắt buộc."
+        },
+        {
+          "q": "Trong báo cáo có những gì?",
+          "a": "Chúng tôi thống kê các đầu mối đã gửi theo tính chất, ngôn ngữ và khu vực; các đầu mối là pháp nhân thì ghi theo tên miền. Nhà báo và nhà phê bình cá nhân chỉ ghi số người — vì chúng tôi không thể chuyển tên và địa chỉ của họ cho bên thứ ba. Cùng với phản hồi và bài đăng, thư bị trả lại và yêu cầu ngừng nhận cũng ghi nguyên như vậy."
+        },
+        {
+          "q": "Chúng tôi muốn đặt luôn cả phần sản xuất.",
+          "a": "Nếu làm theo dự án phát hành thì thu âm, mixing, mastering và phân phối đi cùng luôn. Trường hợp đó, phần quảng bá này đã nằm trong gói."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Những bài chúng tôi viết về phát hành và quảng bá",
+    "relatedStoriesSubtitle": "Dành cho những ai muốn tự làm, chúng tôi ghi lại những gì mình biết",
+    "cta": {
+      "inquiry": "Hỏi về quảng bá phát hành nhạc",
+      "titleLine1": "Vẫn còn những nơi",
+      "titleHighlight": "mà âm nhạc có thể chạm tới",
+      "subtitleLine1": "Gửi bản nhạc qua KakaoTalk, chúng tôi trả lời trong 3 ngày làm việc.",
+      "subtitleLine2": "Ngay cả khi khó nhận, chúng tôi cũng ghi rõ lý do và trả lời bạn.",
+      "imageAlt": "Phòng làm việc của Studio NOL"
+    }
+  },
   "voiceActing": {
     "seo": {
       "title": "Phòng Thu Lồng Tiếng · Narration ₩100.000/giờ | Studio NOL",

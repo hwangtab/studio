@@ -1515,6 +1515,252 @@
       "order": "Onlayn buyurtma"
     }
   },
+  "musicPromotion": {
+    "seo": {
+      "title": "Chiqarish PRi — press-relizni musiqa jurnalistlari va tanqidchilariga to'g'ridan-to'g'ri yuboramiz | Studio NOL",
+      "description": "Bu press-relizni bir yo'la 908 ta manzilga sochadigan xizmat emas. Biz uni Koreya musiqa jurnalistlari va tanqidchilariga hamda 60 ta mamlakatdagi nashrlar, radiolar va plastinka do'konlariga, har biri o'qiydigan tilda yuboramiz. 5 tilda press-reliz, press-kit sahifasi, butun albom videosi va yuborish hisoboti kiradi. Faqat saralashdan o'tgan musiqani olamiz.",
+      "keywords": "musiqa PRi, albom reklamasi, musiqa press-relizi, indi musiqa PRi, musiqiy PR, chiqarish PRi, press-reliz yozish, plastinka reklamasi, musiqa PR agentligi, xalqaro musiqa PRi, press-kit, EPK tayyorlash"
+    },
+    "hero": {
+      "title": "Chiqarish PRi",
+      "subtitleLine1": "Koreya musiqa jurnalistlari va tanqidchilariga hamda 60 ta mamlakat nashrlariga — har biri o'qiydigan tilda",
+      "subtitleLine2": "{{intro}} · oyiga 3 ta ijodkor · faqat saralashdan o'tgan musiqa",
+      "badge": "To'liq narx {{list}} → {{intro}} ({{until}} gacha dastlabki hamkor narxi)",
+      "alt": "Studio NOLda chiqarish press-relizi yozilayotgan ish ekrani"
+    },
+    "quickAnswers": {
+      "title": "Avval qiziqadigan narsalaringiz",
+      "subtitle": "Uzoq o'qimasligingiz uchun avval javob beramiz",
+      "items": [
+        {
+          "q": "Narxi qancha?",
+          "a": "{{intro}} (VATsiz). To'liq narx {{list}}, {{until}} gacha esa dastlabki hamkor narxida olamiz. Qo'shimcha to'lov yo'q — quyida yozilganlarning hammasi shunga kiradi."
+        },
+        {
+          "q": "Nima qilib berasiz?",
+          "a": "Press-relizni 5 tilda yozamiz, press-kit sahifasini tayyorlaymiz va uni Koreya musiqa jurnalistlari va tanqidchilariga hamda chet eldagi nashrlar, radiolar, plastinka do'konlari va festivallarga yuboramiz. Butun albomni ketma-ket eshitiladigan video ham tayyorlaymiz, ish tugagach esa nimani qayerga yuborganimiz haqida hisobot beramiz."
+        },
+        {
+          "q": "Qancha vaqt oladi?",
+          "a": "Materiallarni tayyorlashga 5 kun, yuborishga 1-3 hafta. Yuborishni bir kunda tugatmasligimizning sababi — domen obro'si. 1,000 dan ortiq xatni bir yo'la otsangiz, hammasi spamga tushadi va butun ish behuda ketadi."
+        },
+        {
+          "q": "Maqola chiqishini kafolatlaysizmi?",
+          "a": "Kafolatlamaymiz. Chunki buni kafolatlab bo'lmaydi. Kafolatlayman degan kompaniya bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi. Biz va'da qiladigan narsa — bajarilgan ish hajmi. Qanday materiallar tayyorlanib, qanday turdagi nechta manzilga yuborilganini hisobot bilan isbotlaymiz."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Bu press-reliz tarqatish xizmati emas",
+      "subtitle": "Farq narxda emas, mahsulotning o'zida. Koreyadagi bozor narxlari yoniga qo'yib ko'rsangiz, yaqqol ko'rinadi.",
+      "columns": [
+        "",
+        "Press-reliz tarqatish platformalari",
+        "Ko'rishlar soni marketingi",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Kim oladi",
+          "908 ta manzilga bir yo'la",
+          "Reklama ko'rsatuvlari",
+          "Musiqa jurnalistlari va tanqidchilarining o'zi"
+        ],
+        [
+          "Matn",
+          "Hammaga bitta matn",
+          "Reklama materiali",
+          "Nashr turi va tiliga qarab har xil"
+        ],
+        [
+          "Chet el",
+          "Yo'q",
+          "Yo'q",
+          "60 ta mamlakatdagi nashrlar, radiolar, plastinka do'konlari"
+        ],
+        [
+          "Narx",
+          "₩77,000–₩660,000",
+          "₩150,000–₩600,000",
+          "{{intro}}"
+        ]
+      ],
+      "note": "Koreyada narxini ochiq e'lon qilgan bironta ham musiqaga ixtisoslashgan PR agentligini topa olmadik (2026-yil sentyabr tadqiqoti). Press-reliz sochadigan joylar ko'p, lekin ularning ro'yxati na musiqa nashrlari, na musiqa jurnalistlaridan iborat."
+    },
+    "evidence": {
+      "title": "Amalda mana shunday yuborganmiz",
+      "subtitle": "Yozuv gapdan aniqroq. Bular o'zimiz olib borgan kampaniyalarning o'lchangan raqamlari.",
+      "cases": [
+        {
+          "title": "Mariko & Yukie «Namsan Tower Lights»",
+          "meta": "Debyut to'liq albom · 2026-yil sentyabrda chiqdi",
+          "stats": [
+            "1,218 manzilga yuborildi",
+            "60 mamlakat",
+            "8 til",
+            "12 kunga taqsimlab"
+          ],
+          "note": "Seulda yashaydigan yapon er-xotin koreys tilida kuylagan 15 ta qo'shiq. Studio NOL mikslashdan tortib loyihalash, ishlab chiqarish va chiqarish PRigacha bo'lgan ishni o'z zimmasiga oldi."
+        },
+        {
+          "title": "HWA «HWA»",
+          "meta": "Grindcore EP · 2026-yil avgustda chiqdi",
+          "stats": [
+            "125 manzilga yuborildi",
+            "metal nashrlariga qaratilgan",
+            "ichkarida va chet elda bir vaqtda"
+          ],
+          "note": "Janr tor bo'lsa, ro'yxat ham tor bo'ladi. Shu albom uchun metalga ixtisoslashgan nashrlarni yangidan yig'ib chiqdik."
+        }
+      ],
+      "linkLabel": "Haqiqatda tayyorlagan press-kit sahifamizni ko'rish"
+    },
+    "deliverables": {
+      "title": "Nimalar kiradi",
+      "subtitle": "Hammasi kiradi. Alohida opsiya sifatida sotiladigan narsa yo'q.",
+      "items": [
+        {
+          "title": "5 tilda press-reliz",
+          "body": "Koreys va ingliz tilidan tashqari, musiqa va ijodkorga mos keladigan 3 ta mintaqaviy til tanlanadi. Tarjimon dasturdan o'tkazilgan matn emas — o'sha tilda yoziladi va teskari tarjima bilan tekshiriladi."
+        },
+        {
+          "title": "Press-kit sahifasi",
+          "body": "Barcha treklarni sahifaning o'zida eshitish, matnlar, kredit, yuqori aniqlikdagi muqova va press-kit ZIP fayli — bitta sahifada. Jurnalist maqola yozish uchun ochganda, kerak bo'ladigan hamma narsa shu yerda turishi kerak."
+        },
+        {
+          "title": "Ichki va tashqi nashrlarga yuborish",
+          "body": "Musiqa jurnalistlari va tanqidchilari, tahririyatlar, radiolar, plastinka do'konlari, festivallar. Matn nashr turiga qarab farq qiladi — tahririyatga maqola qilib berish mumkin bo'lgan matn, radioga esa qo'shiq oldidan o'qiladigan jumlalar boradi."
+        },
+        {
+          "title": "Qo'shimcha matnlar",
+          "body": "Radio DJlari uchun matn, do'konlar uchun tanishtiruv, tahririyat shakllariga moslangan qisqartma variantlar. Har bir kanal o'z formatini so'raydi, shuning uchun har safar qaytadan yozmaslik uchun ularni oldindan tayyorlab qo'yamiz."
+        },
+        {
+          "title": "Butun albom videosi",
+          "body": "Har bir qo'shiq uchun alohida bo'limli bitta video. Qo'shiq matnlarini bersangiz, subtitrlarni ham moslab qo'yamiz. Qo'shiqlar soniga cheklov yo'q."
+        },
+        {
+          "title": "Yuborish hisoboti",
+          "body": "Qanday materiallar tayyorlangani, qanday turdagi nechta manzilga yuborilgani, qaysi javob va chop etishlar tasdiqlangani. Qaytib kelgan xatlar va obunadan chiqishlar ham yashirilmay yoziladi."
+        }
+      ]
+    },
+    "process": {
+      "title": "Ish shunday boradi",
+      "subtitle": "Buyurtmadan hisobotgacha bir yo'la tugaydi. Bu har oy pul olib, nima qilayotgani ko'rinmaydigan usul emas.",
+      "steps": [
+        {
+          "title": "Murojaat va musiqani yuborish",
+          "body": "KakaoTalk orqali yozing va musiqa bilan asosiy ma'lumotlarni yuboring. Hali chiqmagan bo'lsa ham, allaqachon chiqqan bo'lsa ham bo'laveradi."
+        },
+        {
+          "title": "Saralash — 3 ish kuni",
+          "body": "Prodyuser barcha treklarni eshitib, qaror qiladi. Ololmaydigan bo'lsak, sababini yozib bildiramiz."
+        },
+        {
+          "title": "Materiallar — 5 kun",
+          "body": "Press-reliz, press-kit sahifasi, qo'shimcha matnlar va videoni tayyorlaymiz."
+        },
+        {
+          "title": "Tasdiqlash",
+          "body": "Yuborishdan oldin hammasini ko'rsatamiz. Faktlarni faqat ijodkorning o'zi biladi, shuning uchun bu bosqichni o'tkazib yuborib bo'lmaydi."
+        },
+        {
+          "title": "Yuborish — 1-3 hafta",
+          "body": "Domen obro'sini saqlash uchun bo'lib-bo'lib yuboramiz. Bir yo'la otilsa, spam papkasiga tushadi."
+        },
+        {
+          "title": "Hisobot",
+          "body": "Yuborilganlar ro'yxati va kelgan javoblarni jamlab beramiz."
+        }
+      ]
+    },
+    "review": {
+      "title": "Har qanday musiqani olavermaymiz",
+      "lead": "Biz faqat yaxshi musiqani targ'ib qilamiz. Aniqrog'i — biz taniydigan jurnalist va tanqidchilarga yuborilganda, ular oxirigacha eshitadigan musiqami, shuni ko'ramiz.",
+      "criteria": [
+        {
+          "title": "Yetib boradigan nashr bormi",
+          "body": "Biz indi, alternativ, world music, siti-pop, metal va folk yo'nalishlarida kuchlimiz. Yaxshi musiqa bo'lsa ham, biz yetib boradigan nashrlar bilan kesishmasa, yuboradigan joy topilmaydi."
+        },
+        {
+          "title": "Undan hikoya chiqadimi",
+          "body": "Press-reliz tanishtiruv matni emas, jurnalist maqola qiladigan xomashyo. Faqat \"yangi qo'shiq chiqardi\" degani bilan hech kim yozmaydi."
+        },
+        {
+          "title": "O'zimizga yoqadimi",
+          "body": "Yoqmagan musiqani boshqaga tavsiya qilib bo'lmaydi. Bunday xat o'qiganga bilinib qoladi."
+        }
+      ],
+      "rejection": "Ololmaydigan bo'lsak, sababini yozib yuboramiz. Ko'p hollarda bu \"musiqa yomon\" emas, balki \"biz yetib boradigan nashrlar orasidan bu musiqani oladigan joyni topa olmadik\" degani bo'ladi. Bunday paytda qayerga yuborganingiz ma'qulligini bilganimizcha yozib beramiz.",
+      "why": "Saralashning ikkita sababi bor. Har safar yuboradigan manzillarimiz o'sha-o'sha odamlar, shuning uchun mos kelmaydigan materialni qayta-qayta yuborsak, munosabatning o'zi sarflanib bitadi. Va bir marta kuydirilgan ishonch qayta tiklanmaydi."
+    },
+    "notPromised": {
+      "title": "Va'da qilmaydigan narsalarimiz",
+      "subtitle": "Qo'limizdan kelmaydigan ishni keladi deb aytmaymiz.",
+      "items": [
+        {
+          "title": "Maqola chiqishini kafolatlamaymiz",
+          "body": "Yozish-yozmaslikni jurnalistning o'zi hal qiladi. Kafolatlaydigan joy bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi."
+        },
+        {
+          "title": "Pleylistga kirish yoki striming raqamlarini kafolatlamaymiz",
+          "body": "Ko'rishlar, obunachilar va eshitishlar sonini sotadigan xizmatlardan boshqa ish qilamiz. U raqamlar sotib olsangiz ko'tariladi, lekin ortidan hech narsa qoldirmaydi."
+        },
+        {
+          "title": "Muayyan nashrda chiqishni va'da qilmaymiz",
+          "body": "Biz nazorat qiladigan narsa \"kimga, qanday shaklda yetib borishi\" bilan tugaydi. Undan keyingisi musiqaning o'ziga bog'liq."
+        }
+      ],
+      "instead": "Buning o'rniga bajarilgan ish hajmini va'da qilamiz. Saralashdan o'tganda, qanday materiallar tayyorlab, qanday turdagi nechta manzilga yuborishimizni raqamlar bilan aniq aytamiz, ish tugagach esa hisobot bilan isbotlaymiz."
+    },
+    "pricing": {
+      "title": "Narx",
+      "subtitle": "Yagona xizmat. Darajalarga bo'lmaymiz.",
+      "note": "{{until}} gacha dastlabki hamkor narxida olamiz. Chop etilish tarixini endigina yig'a boshlaganimiz uchun to'liq narx so'rashga hali asos yo'q. Muddat tugagach, to'liq narx {{list}} ga qaytadi.",
+      "capacity": "Oyiga atigi 3 ta ijodkorni olamiz. Bitta ishga besh kun to'liq sarflanadi, undan ortig'ida bergan so'zimizda tura olmaymiz."
+    },
+    "faq": {
+      "title": "Ko'p so'raladigan savollar",
+      "subtitle": "",
+      "items": [
+        {
+          "q": "Allaqachon chiqqan musiqa ham bo'ladimi?",
+          "a": "Bo'ladi. Aksincha, ko'pincha shunday bo'ladi — PR haqida odatda chiqargandan keyin o'ylab qolinadi. Chet eldagi PR agentliklari ko'pincha chiqishdan 6-8 hafta oldin murojaat qilishni talab qiladi, biz bunday talab qo'ymaymiz. Chiqish sanasi faqat press-reliz qaysi burchakdan yozilishini o'zgartiradi."
+        },
+        {
+          "q": "Sizning studiyangizda yozmaganmiz, baribir buyurtma bera olamizmi?",
+          "a": "Bera olasiz. Qayerda tayyorlangan bo'lsa ham, tugallangan musiqa bo'lsa bo'ldi. Faqat saralash baribir o'tkaziladi."
+        },
+        {
+          "q": "Nega yuborish 1-3 hafta oladi?",
+          "a": "Xatlarni bir kunda jamlab yuborsangiz, yuboruvchi domen spam deb belgilanadi. Shunda butun kampaniya kiruvchi xatlar qutisiga yetib bormay tugaydi. Hammasini bir kunda otadigan kompaniyalarning samarasi yo'qligining sababi ham shu."
+        },
+        {
+          "q": "Nima tayyorlashimiz kerak?",
+          "a": "Tarqatish uchun ro'yxatdan o'tgan bo'lsangiz (striming havolasi bo'lsa) boshlash mumkin. Muqova, profil suratlari, kredit va qo'shiq matnlari bo'lsa ancha yaxshi, lekin majburiy emas."
+        },
+        {
+          "q": "Hisobotda nimalar yoziladi?",
+          "a": "Yuborilgan nashrlarni turi, tili va mintaqasi bo'yicha jamlaymiz, yuridik shaxs bo'lgan nashrlarni domeni bilan yozamiz. Yakka jurnalist va tanqidchilar bo'yicha esa faqat sonini yozamiz — ularning ismi va manzilini uchinchi shaxsga bera olmaymiz. Javoblar va chop etishlar bilan birga qaytib kelgan xatlar hamda obunadan chiqishlar ham borligicha yoziladi."
+        },
+        {
+          "q": "Ishlab chiqarishni ham birga topshirmoqchimiz.",
+          "a": "Chiqarish loyihasi sifatida olib borsangiz, yozib olish, mikslash, mastering va tarqatish ham qo'shilib ketadi. Bunday holda bu PR paketning ichida bo'ladi."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Chiqarish va PR haqida yozganlarimiz",
+    "relatedStoriesSubtitle": "O'zi qilmoqchi bo'lganlar uchun bilganimizni yozib qo'ydik",
+    "cta": {
+      "inquiry": "Chiqarish PRi bo'yicha murojaat",
+      "titleLine1": "Musiqangiz yetib boradigan joylar",
+      "titleHighlight": "hali bor",
+      "subtitleLine1": "KakaoTalk orqali musiqani yuboring, 3 ish kuni ichida javob beramiz.",
+      "subtitleLine2": "Ololmaydigan bo'lsak ham, sababini yozib yuboramiz.",
+      "imageAlt": "Studio NOL ish xonasi"
+    }
+  },
   "voiceActing": {
     "seo": {
       "title": "Ovoz Yozish Studiyasi · Naratsiya 100,000₩/soat | Studio NOL",

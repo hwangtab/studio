@@ -30,6 +30,9 @@ import {
   RECORDING_HOURLY_PRICE,
   RELEASE_ALBUM_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
+  RELEASE_PRESS_INTRO_ENDS_ON,
+  RELEASE_PRESS_INTRO_PRICE,
+  RELEASE_PRESS_PRICE,
   RELEASE_SINGLE_FROM_PRICE,
   RELEASE_SONG_PRODUCTION_UNIT_PRICE,
   RENTAL_HOURLY_PRICE,
@@ -86,6 +89,8 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('package-ep-bundle')).toBe(EP_BUNDLE_PRICE);
     expect(byId.get('package-album-bundle')).toBe(ALBUM_BUNDLE_PRICE);
     expect(byId.get('package-voiceover')).toBe(VOICEOVER_HOURLY_PRICE);
+    // 발매 홍보는 도입가로 판다 — 표시·청구가 정가가 아니라 도입가여야 한다.
+    expect(byId.get('service-release-press')).toBe(RELEASE_PRESS_INTRO_PRICE);
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);
     expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
@@ -198,10 +203,27 @@ describe('가격 SSOT 정합', () => {
    * 대상에서 뺀 것: docs/wiki는 log.md·decisions/가 과거 수치를 그대로 남기는
    * 이력 문서라 현재값 강제가 맞지 않는다. common.json은 위 테스트들이 맡는다.
    */
+  /**
+   * 발매 홍보 도입가는 한시 할인이다.
+   *
+   * 정가를 한 번도 팔지 않은 채 할인가만 계속 운영하면 표시광고법상 부당한
+   * 표시·광고가 된다 — 기간이 무기한 연장되는 것이 전형적인 제재 사유다.
+   * 기한이 지나면 이 테스트가 CI를 세워 "정가로 돌릴지, 기간을 다시 정할지"를
+   * 강제로 묻는다. 날짜만 옮기고 지나가지 말 것.
+   */
+  it('발매 홍보 도입가 기간이 아직 남아 있다 (지나면 정가로 돌릴 것)', () => {
+    const today = new Date().toISOString().slice(0, 10);
+    expect(today <= RELEASE_PRESS_INTRO_ENDS_ON).toBe(true);
+    expect(RELEASE_PRESS_INTRO_PRICE).toBeLessThan(RELEASE_PRESS_PRICE);
+  });
+
   it('data/**/*.ts의 가격 리터럴이 SSOT 상수를 벗어나지 않는다', () => {
     // 우리 상품이 아니어서 상수가 바뀌어도 따라가면 안 되는 금액.
     const NON_SSOT_AMOUNTS = new Map<number, string>([
+      // 300000은 RELEASE_PRESS_INTRO_PRICE이기도 해서 ssot에서 먼저 걸러진다.
+      // 이 항목은 그 상수와 무관한 외부 시세 카피가 남아 있다는 기록으로 둔다.
       [300000, '오디오 인터페이스 입문가 "20~30만원"의 상단 (외부 시세)'],
+      [1390000, '해외 음악 PR 시세 비교 주석 "$995 ≈ 139만원" (외부 시세)'],
       [30000, '유통 대행사(DistroKid) 연 정액 "3만원대" (외부 시세)'],
       [87500, '레슨 월정액 350,000원을 월 4회로 나눈 회당 환산값'],
       [4200, '언론 기사 제목 "천 번을 들어줘야 4200원" 인용'],
@@ -239,6 +261,8 @@ describe('가격 SSOT 정합', () => {
       ALBUM_BUNDLE_PER_SONG_PRICE,
       FUNDING_DESIGN_PRICE,
       CONSULTING_HOURLY_PRICE,
+      RELEASE_PRESS_PRICE,
+      RELEASE_PRESS_INTRO_PRICE,
     ]);
 
     // data/ 아래 전체를 훑는다 — data/portfolio/처럼 하위 디렉터리에 가격이
