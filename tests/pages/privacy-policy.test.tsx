@@ -1,4 +1,4 @@
-import { INQUIRY_DATA_PROCESSORS, POLICY_COPY_BY_LOCALE } from '../../pages/[locale]/privacy-policy';
+import { POLICY_COPY_BY_LOCALE, SERVICE_DATA_PROCESSORS } from '../../pages/[locale]/privacy-policy';
 import {
   FUNDING_COLLECTED_ITEMS,
   FUNDING_COLLECTION_PURPOSES,
@@ -76,34 +76,65 @@ describe('비-ko 로케일의 보유기간 항', () => {
 
 // 4항 제목은 "제3자 제공 및 처리위탁"인데 본문은 "원칙적으로 외부에 제공하지 않으며"로 끝나고
 // 수탁자를 한 곳도 밝히지 않았다 — 바로 아래 9항이 펀딩 수탁자 4곳을 표로 싣는데도. 그리고
-// 문의 폼 데이터도 실제로는 Resend·Vercel을 거치는데 그 위탁은 어디에도 고지돼 있지 않았다
-// (개인정보보호법 제26조·제30조). 아래 단언이 그 상태로 되돌아가는 것을 막는다.
-describe('처리방침 4항 — 문의·상담의 처리위탁 고지', () => {
+// 문의·예약 데이터가 실제로 거치는 곳은 어디에도 고지돼 있지 않았다(개인정보보호법 제26조·제30조).
+//
+// 고친 뒤 한 번 더 틀릴 뻔한 자리도 함께 고정한다: 본문이 "아래와 같이 위탁하고 있으며"라는
+// 열거형 단언이 된 이상 **표가 곧 사실 주장**이다. Resend·Vercel만 싣고 예약 플로우의
+// Turso·Google·토스페이먼츠를 빠뜨리면 모호했던 옛 문장보다 적극적으로 부정확해진다.
+describe('처리방침 4항 — 문의·예약의 처리위탁 고지', () => {
   const ko4 = POLICY_COPY_BY_LOCALE.ko.sections.find((s) => s.heading.startsWith('4.'))!;
 
   it('ko 4항이 수탁자 표를 싣고, 그 내용이 상수에서 온다', () => {
-    expect(ko4.processors).toBe(INQUIRY_DATA_PROCESSORS);
-    expect(INQUIRY_DATA_PROCESSORS.map((p) => p.name)).toEqual(['Resend', 'Vercel']);
+    expect(ko4.processors).toBe(SERVICE_DATA_PROCESSORS);
   });
 
-  it('ko 4항이 펀딩 위탁은 9항을 보라고 가리킨다', () => {
+  // 아래 다섯은 전부 코드에서 확인된 실제 경로다. 하나라도 빠지면 4항의 열거가 거짓이 된다.
+  //   Resend        lib/booking/email.ts → lib/email/resend.ts, pages/api/contact/send-email.ts
+  //   Vercel        vercel.json · data/siteConfig.ts hostingProvider
+  //   Turso         db/client.ts — orders·bookings 영속
+  //   Google LLC    lib/booking/gcal.ts + confirm.ts (이벤트 본문에 이름·전화·이메일·요청사항)
+  //   토스페이먼츠   components/booking/TossPaymentWidget.tsx · lib/booking/toss.ts
+  it('예약 플로우의 수탁자가 모두 들어 있다', () => {
+    expect(SERVICE_DATA_PROCESSORS.map((p) => p.name).sort()).toEqual(
+      ['Google LLC', 'Resend', 'Turso', 'Vercel', '토스페이먼츠'].sort(),
+    );
+  });
+
+  it('구글 캘린더 위탁 항목이 실제로 이벤트에 담기는 필드를 밝힌다', () => {
+    const google = SERVICE_DATA_PROCESSORS.find((p) => p.name === 'Google LLC')!;
+    // lib/booking/confirm.ts가 이벤트 description에 고객 이름·전화·이메일을 담는다.
+    for (const field of ['이름', '연락처', '이메일']) expect(google.items).toContain(field);
+  });
+
+  it('ko 4항이 펀딩 위탁은 9항, 언론 홍보는 10~12항이라고 가리킨다', () => {
     expect(ko4.body).toContain('9항');
+    expect(ko4.body).toContain('10~12항');
     // "원칙적으로 제공하지 않으며"로 끝나 수탁자를 감추던 문장은 돌아오면 안 된다.
     expect(ko4.body).not.toContain('원칙적으로');
   });
 
   it('ko 4항이 9항과 같은 3열 형식(수탁자·업무·항목)을 쓴다', () => {
-    for (const row of INQUIRY_DATA_PROCESSORS) {
+    for (const row of SERVICE_DATA_PROCESSORS) {
       expect(Object.keys(row).sort()).toEqual(['items', 'name', 'purpose']);
       expect(row.purpose.length).toBeGreaterThan(0);
       expect(row.items.length).toBeGreaterThan(0);
     }
   });
 
-  it.each(locales.filter((l) => l !== 'ko'))('%s — 4항이 Resend·Vercel 위탁을 밝힌다', (locale) => {
+  // 4항이 예약을 포함한다고 말하는 이상 1항도 예약 수집 항목을 밝혀야 한다 —
+  // 예전엔 "문의 양식"만 말해 예약이 통째로 빠져 있었다.
+  it('1항이 예약·결제 수집 항목을 밝힌다', () => {
+    const collected = POLICY_COPY_BY_LOCALE.ko.sections.find((s) => s.heading.startsWith('1.'))!.body;
+    for (const field of ['예약 일시', '요청사항', '주문번호', '결제 금액']) {
+      expect(collected).toContain(field);
+    }
+  });
+
+  it.each(locales.filter((l) => l !== 'ko'))('%s — 4항이 문의·예약 수탁자를 모두 밝힌다', (locale) => {
     const section = POLICY_COPY_BY_LOCALE[locale].sections.find((s) => s.heading.startsWith('4.'))!;
-    expect(section.body).toContain('Resend');
-    expect(section.body).toContain('Vercel');
+    for (const name of ['Resend', 'Vercel', 'Turso', 'Google', 'Toss']) {
+      expect(section.body).toContain(name);
+    }
     expect(section.body).toMatch(/9/);
   });
 });

@@ -56,6 +56,8 @@ export const serializeAgreedDocuments = (): string => {
   return lines.join('\n');
 };
 
+export const TERMS_VERSION_PATTERN = /^funding-terms-\d{4}-\d{2}-\d{2}(-r[2-9]\d*)?$/;
+
 export type FundingTermsBaseline = {
   note: string;
   version: string;
@@ -63,4 +65,38 @@ export type FundingTermsBaseline = {
   hash: string;
   /** 사람이 "무엇이 들어 있는지" 눈으로 확인하는 용도. 판정에는 쓰지 않는다. */
   covers: string[];
+};
+
+/**
+ * 기준선 갱신을 허용할지 판정한다 — **이 게이트의 유일한 자물쇠**다.
+ *
+ * 처음 구현은 update 모드가 기존 baseline을 읽지도 않고 `{ version: 현재 상수, hash: 새 해시 }`를
+ * 무조건 덮어썼다. 그러면 실패 메시지의 갱신 절차 중 ①(버전 올리기)을 빠뜨리고 ②만 실행해도
+ * 기준선이 "옛 버전 + 새 내용"으로 기록되고 다음 실행은 초록이 된다 — 리뷰 샌드박스에서 실제로
+ * 재현됐다(제10조 환불 기한 3영업일 → 5영업일, 버전 그대로, 5 passed).
+ * 절차 한 단계를 빠뜨리는 것이 정확히 사람이 하는 실수라, 그 우회는 예외가 아니라 기본 동작이었다.
+ *
+ * 그래서 **갱신 경로 자체가** 내용이 바뀌었는데 판본이 그대로인 조합을 거부한다.
+ * 검사 모드만 막으면 자물쇠 옆에 열쇠를 걸어 두는 것과 같다.
+ */
+export const assertBaselineUpdateAllowed = (
+  existing: Pick<FundingTermsBaseline, 'version' | 'hash'> | null,
+  next: { version: string; hash: string },
+): void => {
+  if (!existing) return; // 최초 생성.
+  if (existing.hash === next.hash) return; // 내용이 그대로면 판본만 손봐도 된다.
+  if (existing.version !== next.version) return; // 내용이 바뀌었고 판본도 올렸다 — 정상.
+  throw new Error(
+    [
+      '기준선 갱신을 거부한다 — 동의 문서의 내용이 바뀌었는데 FUNDING_TERMS_VERSION이 그대로다.',
+      `  판본: ${next.version} (기준선과 동일)`,
+      `  해시: ${existing.hash.slice(0, 12)}… → ${next.hash.slice(0, 12)}…`,
+      '',
+      '이대로 기록하면 "옛 판본 문자열 + 새 내용"이 되어, 서로 다른 내용에 동의한 후원 행들이',
+      '같은 판본을 갖게 된다 — 이 게이트가 막으려던 상태 그 자체다.',
+      '',
+      '먼저 lib/funding/policy.ts의 FUNDING_TERMS_VERSION을 올린 뒤 다시 실행할 것',
+      '(같은 날 두 번째 개정이면 -r2, -r3 접미사를 쓴다).',
+    ].join('\n'),
+  );
 };

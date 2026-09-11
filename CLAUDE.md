@@ -127,10 +127,20 @@ npm run indexnow:changed -- --dry-run
 약관 본문에 보간되는 공유 상수(보유기간·법정 보존·결제 대기 시간·수집 항목·이용 목적·수탁자).
 처리방침은 ko만 본다 — 펀딩은 ko 전용이라 동의 화면에 뜨는 것이 ko 문서다.
 
-갱신 절차(실패 메시지에도 적혀 있다): ① `FUNDING_TERMS_VERSION`을 오늘 날짜로 올린다
+갱신 절차(실패 메시지에도 적혀 있다): ① `FUNDING_TERMS_VERSION`을 올린다
 → ② `UPDATE_FUNDING_TERMS_BASELINE=1 npx jest content/fundingTerms.baseline.test.ts`
 → ③ 같은 커밋에 **어느 조항이 어떻게 바뀌었는지** 적는다. 이미 후원이 들어온 뒤라면
 기존 행의 `terms_version`은 옛 문자열 그대로 두고, 옛 본문은 git 이력으로 추적한다.
+
+**①을 빠뜨리고 ②만 실행하는 것이 이 게이트의 유일한 구멍이었다.** 갱신 경로가 기존 기준선을
+읽지 않고 덮어써서, 절차 한 단계를 건너뛰면 "옛 판본 + 새 내용"이 조용히 기록되고 다음
+실행은 초록이 됐다(리뷰 샌드박스 재현: 제10조 환불 기한 3영업일 → 5영업일). 지금은 갱신
+경로 자체가 `assertBaselineUpdateAllowed`로 그 조합을 거부한다 — 검사 모드만 막으면
+자물쇠 옆에 열쇠를 걸어 두는 셈이다.
+
+판본 형식은 `funding-terms-YYYY-MM-DD`이고 **같은 날 두 번째 개정부터 `-r2`·`-r3`**를 붙인다.
+날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 사라진다 —
+`-r2`가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
 
 `status`·`hidden`은 다른 frontmatter 필드와 같이 **엄격 검증**한다(`lib/funding/projects.ts`).
 `status: Draft` 오타나 따옴표가 붙은 `hidden: "true"`는 예전엔 조용히 공개로 떨어졌다.

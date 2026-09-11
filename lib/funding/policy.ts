@@ -54,9 +54,15 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * **이 규칙은 주석이 아니라 테스트가 강제한다** — `content/fundingTerms.baseline.test.ts`가
  * 약관 조항 + ko 처리방침 + 아래 공유 상수들을 직렬화해 해시하고,
  * `content/funding-terms.baseline.json`의 해시와 대조한다. 내용이 바뀌었는데 이 문자열이
- * 그대로면 CI가 선다. 갱신 절차는 그 테스트의 실패 메시지에 적혀 있다.
+ * 그대로면 CI가 선다. 갱신 절차는 그 테스트의 실패 메시지에 적혀 있다. 갱신 **경로 자체도**
+ * 같은 규칙을 지킨다 — 내용이 바뀌었는데 이 문자열이 그대로면 기준선을 쓰지 않고 던진다
+ * (`assertBaselineUpdateAllowed`). 검사 모드만 막으면 자물쇠 옆에 열쇠를 걸어 두는 셈이다.
+ *
+ * 형식은 `funding-terms-YYYY-MM-DD`이고, **같은 날 두 번째 개정부터 `-r2`·`-r3` 접미사**를 붙인다.
+ * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
+ * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r2';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.

@@ -70,7 +70,30 @@ const WHY: Record<Violation['kind'], string> = {
   'reward-amount-changed': '오픈 뒤 금액을 바꾸면 기존 후원 기록의 단가와 화면 표시가 어긋난다 — 후원 행은 결제 당시 단가를 스스로 저장하므로 DB는 3만원인데 상세 페이지·관리자 화면·CSV는 3.5만원이라 말하게 되고, 환불 금액과 모금액 설명이 서로 맞지 않는다. 가격을 바꿔야 하면 기존 리워드는 그대로 두고 새 id로 티어를 추가할 것.',
 };
 
+/**
+ * amount가 없는 구 포맷 기준선을 알아보고 사람이 읽을 수 있게 세운다.
+ *
+ * 2026-09-11 이전 기준선은 `{ limited }`만 담았다. 그대로 대조하면 `ra.amount`가 undefined라
+ * 비교가 조용히 통과하거나(undefined !== number → 전 리워드가 금액 변경으로 뜬다) 무의미한
+ * 스택트레이스만 남는다. "기준선이 오래됐다"는 사실 자체를 말해 주는 편이 낫다.
+ */
+const assertBaselineFormat = (base: Record<string, ProjectEntry>): void => {
+  for (const [slug, entry] of Object.entries(base)) {
+    for (const [id, reward] of Object.entries(entry.rewards ?? {})) {
+      if (reward == null || typeof reward.amount !== 'number') {
+        throw new Error(
+          `기준선 포맷이 오래됐다 — ${slug}.${id}에 amount가 없다.\n` +
+          '2026-09-11부터 기준선은 리워드 단가까지 담는다(오픈 뒤 금액 변경을 잡기 위해).\n' +
+          'npm run check:funding-baseline -- --update 로 기준선을 다시 생성할 것 — ' +
+          '갱신 전에 content/funding/*.md의 금액이 실제 판매 단가와 같은지 먼저 확인하라.',
+        );
+      }
+    }
+  }
+};
+
 export const diffFundingBaseline = (base: Record<string, ProjectEntry>, now: Record<string, ProjectEntry>): Violation[] => {
+  assertBaselineFormat(base);
   const violations: Violation[] = [];
   for (const slug of [...new Set([...Object.keys(base), ...Object.keys(now)])].sort()) {
     const a = base[slug];

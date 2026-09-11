@@ -75,6 +75,13 @@ describe('diffFundingBaseline', () => {
     expect(diffFundingBaseline(base, now).map((x) => x.kind).sort()).toEqual(['reward-amount-changed', 'reward-limit-changed']);
   });
 
+  // amount 없는 2026-09-11 이전 기준선과 대조하면 예전엔 TypeError 스택트레이스만 나왔다.
+  it('구 포맷(amount 없는) 기준선은 포맷이 오래됐다고 안내한다', () => {
+    const legacy = { album: { rewards: { cd: { limited: true } } } } as unknown as typeof base;
+    expect(() => diffFundingBaseline(legacy, base)).toThrow(/기준선 포맷이 오래됐다/);
+    expect(() => diffFundingBaseline(legacy, base)).toThrow(/check:funding-baseline -- --update/);
+  });
+
   it('실패 메시지는 --update와 "이유를 적으라"를 안내한다', () => {
     const msg = formatViolations(diffFundingBaseline(base, { album: base.album }));
     expect(msg).toContain('npm run check:funding-baseline -- --update');
