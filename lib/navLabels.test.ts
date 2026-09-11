@@ -14,8 +14,16 @@
 import fs from 'fs';
 import path from 'path';
 import { navLabels, type NavKey } from './navLabels';
+import { locales } from './i18n-config';
 
-const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
+/**
+ * 로케일 목록은 i18n-config에서 가져온다.
+ *
+ * 여기 배열을 손으로 적어 두면 8번째 로케일이 생겼을 때 navLabels에는 타입이
+ * 추가를 강제하는데 이 검사만 조용히 건너뛴다 — 이 파일이 막으려는 실패가
+ * 이 파일 안에서 재현되는 셈이다.
+ */
+const LOCALES = locales;
 
 const navSection = (locale: string): Record<string, unknown> => {
   const file = path.join(__dirname, '..', 'public', 'locales', locale, 'common.json');
