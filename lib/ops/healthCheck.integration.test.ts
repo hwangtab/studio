@@ -89,6 +89,10 @@ const insertBooking = async (over: Record<string, unknown> = {}) => {
     start_at: EPOCH('2026-09-20T05:00:00Z'),
     end_at: EPOCH('2026-09-20T08:00:00Z'),
     duration_hours: 3,
+    // 정상 확정 예약은 캘린더 이벤트 id를 갖는다 — 확정 배치 직후 ensureBookingEvent가
+    // event_id 또는 gcal_error 중 하나를 반드시 채운다(lib/booking/confirm.ts). 둘 다 NULL인
+    // 상태 자체가 사고이므로, "아무 문제 없음" 기준선은 event id가 있는 쪽이다.
+    gcal_event_id: 'ev-1',
     gcal_error: null,
     created_at: EPOCH('2026-09-01'),
     updated_at: EPOCH('2026-09-01'),
@@ -170,8 +174,52 @@ describe('운영 점검', () => {
 
   it('캘린더 등록에 실패한 확정 예약을 잡는다 (오프라인 이중예약 위험)', async () => {
     await insertOrder();
-    await insertBooking({ gcal_error: 'create: 500' });
+    await insertBooking({ gcal_error: 'create: 500', gcal_event_id: null });
     expect((await titles()).join()).toContain('구글 캘린더에 등록되지 않은 확정 예약 1건');
+  });
+
+  /**
+   * PR #65가 확정 후처리 소유권을 센티널 CAS 선점으로 바꾸면서 생긴 사각지대를 재현한다.
+   * 선점(notification_error='send_inflight')에 성공한 실행이 ensureBookingEvent **전에**
+   * 죽으면 gcal_event_id·gcal_error가 둘 다 NULL로 남는다. 예전 조건
+   * (`gcal_error IS NOT NULL`)은 이 예약을 영원히 못 잡았고, 그 사이 운영자가 알림 배너를
+   * 보고 "알림 재발송"을 누르면 센티널까지 지워져 무증상 이중예약이 됐다.
+   */
+  it('선점 직후·캘린더 등록 전에 죽은 확정 예약을 잡는다 (오류 기록조차 없는 구멍)', async () => {
+    await insertOrder({ notification_error: 'send_inflight' });
+    await insertBooking({ gcal_event_id: null, gcal_error: null });
+    const issues = (await runHealthCheck(NOW)).issues;
+    const gcal = issues.find((i) => i.title.includes('구글 캘린더'));
+    expect(gcal).toBeDefined();
+    expect(gcal!.title).toContain('확정 예약 1건');
+    expect(gcal!.detail).toContain('등록 시도 자체가 없음: 1건');
+    expect(gcal!.detail).not.toContain('시도했다가 실패');
+  });
+
+  // 운영자가 배너 지시대로 "알림 재발송"을 눌러 센티널이 지워져도 캘린더 구멍은 계속 보여야
+  // 한다 — 그 덮어쓰기가 유일한 신호를 지우던 것이 이 점검을 넣은 이유다.
+  it('센티널이 지워져도 캘린더 구멍은 계속 보고한다', async () => {
+    await insertOrder({ notification_error: null });
+    await insertBooking({ gcal_event_id: null, gcal_error: null });
+    expect((await titles()).join()).toContain('구글 캘린더에 등록되지 않은 확정 예약 1건');
+  });
+
+  // 한 예약이 "등록 실패"와 "이벤트 없음" 양쪽에 해당해도 한 번만 센다 — 두 건으로 세면
+  // 운영자가 규모를 오해한다.
+  it('등록 실패와 이벤트 없음이 겹친 예약을 두 번 세지 않는다', async () => {
+    await insertOrder();
+    await insertBooking({ gcal_event_id: null, gcal_error: 'create: 500' });
+    const gcal = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('구글 캘린더'))!;
+    expect(gcal.title).toContain('확정 예약 1건');
+    expect(gcal.detail).toContain('등록을 시도했다가 실패: 1건');
+    expect(gcal.detail).not.toContain('등록 시도 자체가 없음');
+  });
+
+  // 믹싱·마스터링 주문은 bookings 행이 아예 없다 — 캘린더 점검에 걸릴 일이 없어야 한다.
+  it('믹싱 주문(bookings 행 없음)은 캘린더 점검에 걸리지 않는다', async () => {
+    await insertOrder({ type: 'mixing', notification_error: 'send_inflight' });
+    const issues = (await runHealthCheck(NOW)).issues;
+    expect(issues.some((i) => i.title.includes('구글 캘린더에 등록되지 않은'))).toBe(false);
   });
 
   it('취소된 예약의 캘린더 오류는 세지 않는다 (이미 지나간 일)', async () => {
@@ -260,7 +308,7 @@ describe('운영 점검', () => {
   it('긴급 항목을 먼저 보여준다', async () => {
     await insertContract({ notification_error: 'x' });
     await insertOrder();
-    await insertBooking({ gcal_error: 'create: 500' });
+    await insertBooking({ gcal_error: 'create: 500', gcal_event_id: null });
     const issues = (await runHealthCheck(NOW)).issues;
     expect(issues[0].severity).toBe('high');
     expect(issues[issues.length - 1].severity).toBe('medium');
@@ -268,7 +316,7 @@ describe('운영 점검', () => {
 
   it('메일 본문에 무엇을 해야 하는지가 들어간다', async () => {
     await insertOrder();
-    await insertBooking({ gcal_error: 'create: 500' });
+    await insertBooking({ gcal_error: 'create: 500', gcal_event_id: null });
     const text = formatHealthReport(await runHealthCheck(NOW));
     expect(text).toContain('[긴급]');
     expect(text).toContain('이 메일은 이상이 있을 때만 발송됩니다.');

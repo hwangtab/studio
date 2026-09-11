@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, lt, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingPledges, orders } from '../../db/schema';
@@ -82,19 +82,50 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   /**
    * 결제·확정은 정상인데 구글 캘린더에 이벤트가 없는 예약. 운영자 캘린더에는 그 시간이
    * 비어 있으므로, 그대로 두면 같은 시간에 전화 예약을 받아 오프라인 이중예약이 난다.
+   *
+   * 두 갈래를 **한 점검으로** 본다. 운영자가 할 일이 "관리자 > 예약 상세에서 캘린더 재시도"
+   * 하나로 같고, 갈라서 두 건으로 세면 한 예약이 두 번 세어져(재시도 실패로 gcal_error가
+   * 남은 채 이벤트 id가 여전히 NULL인 건이 양쪽에 모두 걸린다) 규모를 오해한다.
+   * - **시도했다가 실패**: gcal_error에 사유가 남아 있다.
+   * - **시도 자체가 없음**: gcal_event_id·gcal_error가 둘 다 NULL. 확정 트랜잭션이 커밋된
+   *   직후 ensureBookingEvent 전에 함수가 죽은 경우다(후처리 센티널 선점 직후 사망).
+   *   예전 조건은 `gcal_error IS NOT NULL`이라 이 예약을 **영원히** 못 잡았고, 그 사이
+   *   운영자가 알림 배너를 보고 "알림 재발송"을 누르면 남은 신호(notification_error 센티널)
+   *   까지 지워져 무증상 이중예약으로 되돌아갔다.
+   *
+   * 확정 직후 후처리가 **정상 진행 중**인 몇 초 동안도 event_id는 NULL이다. 이 점검은 크론이
+   * 하루 한 번 돌리므로 그 창에 걸릴 확률은 무시할 수준이고, 걸려도 다음 날 자동으로 사라진다 —
+   * 과소보고(무증상 이중예약)보다 훨씬 안전한 방향이다.
    */
-  const gcalFailed = await db
-    .select({ id: bookings.id })
+  const gcalGap = await db
+    .select({ id: bookings.id, gcalError: bookings.gcalError, gcalEventId: bookings.gcalEventId })
     .from(bookings)
-    .where(and(isNotNull(bookings.gcalError), eq(bookings.status, 'confirmed')));
+    .where(
+      and(
+        eq(bookings.status, 'confirmed'),
+        or(isNotNull(bookings.gcalError), isNull(bookings.gcalEventId)),
+      ),
+    );
 
-  if (gcalFailed.length > 0) {
+  if (gcalGap.length > 0) {
+    const untried = gcalGap.filter((row) => row.gcalError === null && row.gcalEventId === null);
+    const failed = gcalGap.length - untried.length;
     issues.push({
       severity: 'high',
-      title: `구글 캘린더에 등록되지 않은 확정 예약 ${gcalFailed.length}건`,
-      detail:
-        '결제는 정상이지만 캘린더에는 이 시간이 비어 있습니다. 같은 시간에 전화 예약을 받으면 겹칩니다.\n' +
-        '관리자 > 예약에서 재시도하거나 캘린더에 직접 넣어 주세요.',
+      title: `구글 캘린더에 등록되지 않은 확정 예약 ${gcalGap.length}건`,
+      detail: [
+        '결제는 정상이지만 캘린더에는 이 시간이 비어 있습니다. 같은 시간에 전화 예약을 받으면 겹칩니다.',
+        ...(failed > 0
+          ? [`- 등록을 시도했다가 실패: ${failed}건 (사유는 예약 상세의 캘린더 오류에 있습니다)`]
+          : []),
+        ...(untried.length > 0
+          ? [
+              `- 등록 시도 자체가 없음: ${untried.length}건 ` +
+                '(확정 직후 후처리가 중단된 건이라 오류 기록도 남지 않습니다)',
+            ]
+          : []),
+        '관리자 > 예약 상세에서 “캘린더 재시도”를 누르거나 캘린더에 직접 넣어 주세요.',
+      ].join('\n'),
     });
   }
 
