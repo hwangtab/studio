@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 
-import { PRIVATE_PAGE_ROUTES, isPrivateAnalyticsPath } from '../../lib/analytics/privatePaths';
+import { MEASURED_PRIVATE_PAGE_ROUTES, PRIVATE_PAGE_ROUTES, isPrivateAnalyticsPath } from '../../lib/analytics/privatePaths';
 
 /**
  * private 페이지(URL에 관리 토큰·paymentKey·주문번호가 실린다)의 이탈 링크 규칙 두 가지를
@@ -61,11 +61,25 @@ describe('private 페이지의 이탈 링크', () => {
    * `Layout`이 껍데기를 벗기는 라우트 목록과 측정 제외 판정이 같은 집합을 가리키는지 본다.
    * 한쪽만 늘어나면 헤더 로고·푸터(전부 next/link)로 위 1번 유출이 그대로 재현된다.
    */
-  it('Layout이 bare로 두는 라우트는 전부 측정 제외 경로다', () => {
+  it('Layout이 bare로 두는 라우트는 명시된 예외를 빼면 전부 측정 제외 경로다', () => {
     for (const route of PRIVATE_PAGE_ROUTES) {
+      if (MEASURED_PRIVATE_PAGE_ROUTES.includes(route)) continue;
       const asPath = route.replace('[locale]', 'ko').replace('[orderNo]', 'FND-20261015-ABCD1234');
       expect(isPrivateAnalyticsPath(asPath)).toBe(true);
     }
+  });
+
+  /**
+   * 예외(펀딩 success)는 **렌더되는 순간의 URL에 비밀값이 없을 때만** 성립한다. 그것을
+   * 보장하는 것은 success getServerSideProps의 리다이렉트 한 줄이다 — 승인 URL
+   * (paymentKey·orderId·amount)에서는 화면을 그리지 않고 `?o=<주문번호>`로 보낸다.
+   * 이 줄이 사라지면 토큰이 실린 URL이 측정에 그대로 적재되므로 소스로 못 박아 둔다.
+   */
+  it('측정 예외 라우트는 승인 URL을 렌더하지 않고 리다이렉트한다', () => {
+    const source = read('pages/[locale]/funding/success.tsx');
+    expect(source).toMatch(/redirect:\s*\{\s*destination:\s*`\/ko\/funding\/success\?o=\$\{encodeURIComponent\(result\.orderNo\)\}`/);
+    // 관리 토큰은 URL이 아니라 httpOnly 쿠키로 넘어간다.
+    expect(source).toContain('HttpOnly');
   });
 
   it('bare 라우트 목록과 위 페이지 파일 목록이 같은 페이지를 가리킨다', () => {

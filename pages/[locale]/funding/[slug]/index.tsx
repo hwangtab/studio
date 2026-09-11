@@ -28,8 +28,15 @@ interface Props {
 const STATE_LABEL: Record<ProjectState, string> = { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' };
 
 export default function FundingProjectPage({ project, initialState }: Props) {
-  const { data, error: statusError } = useFundingStatus(project.slug, initialState);
-  const state = data?.state ?? initialState;
+  // timing을 함께 넘긴다 — 훅이 오픈 시각에 맞춰 1회 재조회하고, 마운트 뒤로는 브라우저
+  // 시계로도 상태를 다시 판정한다(FundingProjectCard와 같은 이유: 정적 생성된 initialState는
+  // 빌드 시각에 고정돼 있고 상태 API 응답도 CDN 캐시라 최대 몇 분 뒤처진다). 오픈을 기다리며
+  // 탭을 띄워 둔 사람에게 후원 버튼이 그 순간 나타나야 한다.
+  const { data, error: statusError, state } = useFundingStatus(project.slug, initialState, {
+    status: project.status,
+    startAt: project.startAt,
+    endAt: project.endAt,
+  });
   const canPledge = state === 'live';
   // 렌더 본문에서 new Date()를 부르면 서버(빌드 시각)와 클라이언트 값이 달라 D-day 텍스트가
   // 하이드레이션 불일치를 낸다 — 마운트 후에만 시계를 읽는다.

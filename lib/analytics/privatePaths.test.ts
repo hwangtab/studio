@@ -1,11 +1,10 @@
-import { isPrivateAnalyticsPath, PRIVATE_NO_STORE_SOURCES } from './privatePaths';
+import { isPrivateAnalyticsPath, MEASURED_PRIVATE_PAGE_ROUTES, PRIVATE_NO_STORE_SOURCES } from './privatePaths';
 
 describe('isPrivateAnalyticsPath', () => {
   it('관리 토큰·paymentKey가 실리는 경로는 측정 대상에서 뺀다', () => {
     for (const path of [
       '/ko/funding/manage/FND-20261015-ABCD1234?token=secret',
       '/ko/funding/deposit/FND-20261015-ABCD1234?token=secret',
-      '/ko/funding/success?paymentKey=pk_abc&orderId=FND-1',
       '/en/booking/manage/SNB-1?token=secret',
       '/uz/booking/success?paymentKey=pk_abc',
       '/ko/contracts/abc123',
@@ -36,8 +35,27 @@ describe('isPrivateAnalyticsPath', () => {
   });
 
   it('해시·빈 문자열도 안전하게 처리한다', () => {
-    expect(isPrivateAnalyticsPath('/ko/funding/success#top')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/funding/deposit/FND-1#top')).toBe(true);
     expect(isPrivateAnalyticsPath('')).toBe(false);
+  });
+
+  /**
+   * 펀딩 success는 확정 뒤 비밀값 없는 `?o=<주문번호>`로 리다이렉트하므로 **렌더되는 순간의
+   * URL에 토큰·paymentKey가 없다.** 측정에서 빼 두면 funding_pledge_paid가 큐에만 쌓이다
+   * 탭을 닫을 때 사라져 퍼널이 진입 100%·결제 0%로 보인다 — 그래서 이 경로만 예외다.
+   * no-store는 그대로 유지된다(HTML에는 관리 토큰이 들어간다).
+   */
+  it('펀딩 success는 측정 대상이다 — 확정 뒤 비밀값 없는 URL로 리다이렉트하기 때문', () => {
+    expect(isPrivateAnalyticsPath('/ko/funding/success')).toBe(false);
+    expect(isPrivateAnalyticsPath('/ko/funding/success?o=FND-20261015-ABCD1234')).toBe(false);
+    expect(isPrivateAnalyticsPath('/ko/funding/success#top')).toBe(false);
+    expect(MEASURED_PRIVATE_PAGE_ROUTES).toEqual(['/[locale]/funding/success']);
+  });
+
+  // 예외는 펀딩 success 하나뿐이다 — booking success는 토스 승인 URL을 그대로 렌더한다.
+  it('예약 success·펀딩 fail은 여전히 측정 제외다', () => {
+    expect(isPrivateAnalyticsPath('/ko/booking/success?paymentKey=pk_abc')).toBe(true);
+    expect(isPrivateAnalyticsPath('/ko/funding/fail?orderId=FND-1')).toBe(true);
   });
 
   // 측정 제외와 no-store 헤더가 갈라지면 "헤더는 막는데 측정은 새는" 조합이 조용히 생긴다

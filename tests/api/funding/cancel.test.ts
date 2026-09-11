@@ -57,3 +57,27 @@ it('cancelFundingPledge 실패 → 409 code·message', async () => {
   expect(r.status).toBe(409);
   expect(r.body).toEqual({ ok: false, code: 'invalid_state', message: '이미 취소됐습니다.' });
 });
+
+/**
+ * 입금 전 무통장(pending + bank_transfer)만 만료 전이 경로로 빠진다 — 나머지는 종전대로
+ * cancelFundingPledge가 판정한다(환불이 따라야 하는 취소다).
+ */
+it('pending + toss는 만료 경로가 아니라 cancelFundingPledge로 간다', async () => {
+  (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue({
+    manageToken: 'correct-token', status: 'pending', fundingPledge: { paymentMethod: 'toss' },
+  });
+  (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'not_paid', message: '결제가 확정된 후원만 취소할 수 있습니다.' });
+  const r = await call({ orderNo: 'FND-1', token: 'correct-token' });
+  expect(r.status).toBe(409);
+  expect(cancelFundingPledge).toHaveBeenCalled();
+});
+
+it('paid + bank_transfer도 cancelFundingPledge로 간다 — 만료 경로는 pending 전용이다', async () => {
+  (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue({
+    manageToken: 'correct-token', status: 'paid', fundingPledge: { paymentMethod: 'bank_transfer' },
+  });
+  (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: true, mode: 'refund_requested' });
+  const r = await call({ orderNo: 'FND-1', token: 'correct-token' });
+  expect(r.status).toBe(200);
+  expect(r.body).toMatchObject({ mode: 'refund_requested' });
+});

@@ -13,6 +13,8 @@ interface Props {
   orderNo: string; token: string; projectSlug: string; projectTitle: string; rewardTitle: string; quantity: number; additionalAmount: number;
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean; depositUrl: string | null;
+  /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
+  displayNamePublic: boolean; canEditDisplayName: boolean;
 }
 const STATUS_LABEL: Record<string, string> = { pending: '결제 대기', paid: '후원 확정', partially_refunded: '일부 환불', refunded: '환불 완료', expired: '만료', failed: '결제 실패' };
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
@@ -20,13 +22,47 @@ const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '
 export default function FundingManagePage(p: Props) {
   const [status, setStatus] = useState(p.status);
   const [refundRequested, setRefundRequested] = useState(p.refundRequested);
+  const [displayNamePublic, setDisplayNamePublic] = useState(p.displayNamePublic);
   const [busy, setBusy] = useState(false);
+  const [nameBusy, setNameBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
+  // 입금 전 무통장 신청은 환불할 돈이 없다 — '취소'가 아니라 '신청 취소'(만료와 같은 전이)다.
+  const isPendingBank = status === 'pending' && p.paymentMethod === 'bank_transfer';
+
+  /**
+   * 약관 제13조 2항 — "후원 확인 페이지에서 이름 공개 동의를 철회할 수 있다". 낙관적으로
+   * 먼저 바꾸고 실패하면 되돌린다(토글은 즉각 반응해야 한다).
+   */
+  const updateDisplayName = async (next: boolean) => {
+    const previous = displayNamePublic;
+    setDisplayNamePublic(next);
+    setNameBusy(true); setError(null); setConfirmMessage(null);
+    try {
+      const res = await fetch('/api/funding/display-name', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNo: p.orderNo, token: p.token, displayNamePublic: next }),
+      });
+      if (!res.headers.get('content-type')?.includes('application/json')) {
+        setDisplayNamePublic(previous); setError('서버 오류가 발생했습니다.'); return;
+      }
+      const json = await res.json();
+      if (!res.ok) { setDisplayNamePublic(previous); setError(json.message ?? '이름 공개 설정을 바꾸지 못했습니다.'); return; }
+      setDisplayNamePublic(Boolean(json.displayNamePublic));
+      setConfirmMessage(json.displayNamePublic
+        ? '후원자 명단에 이름을 공개합니다.'
+        : '후원자 명단에서 이름을 내렸습니다.');
+    } catch {
+      setDisplayNamePublic(previous); setError('네트워크 오류가 발생했습니다.');
+    } finally { setNameBusy(false); }
+  };
+
   const cancel = async () => {
-    const confirmText = p.paymentMethod === 'bank_transfer'
-      ? '취소를 요청할까요? 환불은 운영자가 계좌로 진행합니다.'
-      : `후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
+    const confirmText = isPendingBank
+      ? '입금 전 신청을 취소할까요? 이미 입금하셨다면 취소하지 마시고 문의해 주세요.'
+      : p.paymentMethod === 'bank_transfer'
+        ? '취소를 요청할까요? 환불은 운영자가 계좌로 진행합니다.'
+        : `후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
     if (!window.confirm(confirmText)) return;
     setBusy(true); setError(null);
     try {
@@ -37,7 +73,10 @@ export default function FundingManagePage(p: Props) {
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '취소에 실패했습니다.'); return; }
-      if (json.mode === 'refund_requested') {
+      if (json.mode === 'pending_released') {
+        setStatus('expired');
+        setConfirmMessage('신청을 취소했습니다. 입금하지 않으셔도 됩니다. 다시 후원하시려면 프로젝트 페이지에서 새로 신청해 주세요.');
+      } else if (json.mode === 'refund_requested') {
         setRefundRequested(true);
         setConfirmMessage('취소 요청을 접수했습니다. 환불 계좌를 메일로 회신해 주세요.');
       } else {
@@ -85,6 +124,24 @@ export default function FundingManagePage(p: Props) {
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),
               ...(p.shipping ? [{ k: '배송지', v: p.shipping }] : []),
+              {
+                k: '이름 공개',
+                v: p.canEditDisplayName ? (
+                  <label className="inline-flex items-center justify-end gap-2">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 accent-primary"
+                      checked={displayNamePublic}
+                      disabled={nameBusy}
+                      aria-label="후원자 명단에 이름 공개"
+                      onChange={(e) => void updateDisplayName(e.target.checked)}
+                    />
+                    <span>{displayNamePublic ? '공개' : '비공개'}</span>
+                  </label>
+                ) : (
+                  displayNamePublic ? '공개' : '비공개'
+                ),
+              },
               { k: '주문번호', v: p.orderNo },
             ].map((row) => (
               <div key={row.k} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-gray-200/70 pb-3 last:border-0 last:pb-0 dark:border-gray-700/70">
@@ -98,6 +155,12 @@ export default function FundingManagePage(p: Props) {
             <p className="typo-card-meta mt-5">
               <a href={p.depositUrl} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">무통장입금 안내 보기</a>
             </p>
+          )}
+          {isPendingBank && (
+            <>
+              <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>신청 취소 (입금 전)</Button>
+              <p className="typo-card-meta mt-2">취소하면 리워드 수량이 바로 풀리고, 같은 프로젝트에 다시 신청할 수 있습니다.</p>
+            </>
           )}
           {status === 'paid' && !refundRequested && (p.canCancel
             ? <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>후원 취소 (전액 환불)</Button>
@@ -145,6 +208,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     paymentMethod: pl.paymentMethod, fulfillmentStatus: pl.fulfillmentStatus, shipping,
     canCancel: verdict.ok, cancelBlockedReason: verdict.ok ? null : CANCEL_BLOCK_MESSAGES[verdict.code],
     refundRequested: pl.refundRequestedAt !== null,
+    displayNamePublic: pl.displayNamePublic,
+    // 이름이 공개돼 있거나 앞으로 공개될 수 있는 상태에서만 바꾼다
+    // (pages/api/funding/display-name.ts의 EDITABLE_STATUSES와 같은 판정).
+    canEditDisplayName: ['pending', 'paid', 'partially_refunded'].includes(order.status),
     depositUrl: pl.paymentMethod === 'bank_transfer' ? `/ko/funding/deposit/${order.orderNo}?token=${token}` : null,
   } };
 };

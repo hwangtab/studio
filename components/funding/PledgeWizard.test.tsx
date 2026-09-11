@@ -47,12 +47,15 @@ beforeAll(() => {
   });
 });
 
+afterEach(() => jest.restoreAllMocks());
+
 beforeEach(() => {
   assignMock.mockClear();
   global.fetch = jest.fn().mockResolvedValue({
     ok: true, status: 201, headers: { get: () => 'application/json' },
     json: async () => ({
-      ok: true, orderNo: 'FND-1', paymentMethod: 'toss', holdExpiresAt: new Date(Date.now() + 900000).toISOString(),
+      ok: true, orderNo: 'FND-1', paymentMethod: 'toss',
+      holdExpiresAt: new Date(Date.now() + 900000).toISOString(), serverNow: new Date().toISOString(),
       itemAmount: 27273, vatAmount: 2727, totalAmount: 30000,
     }),
   }) as never;
@@ -262,7 +265,9 @@ it('"다시 신청"은 남은 시간을 초기화한다 — 재제출이 곧바�
   try {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: true, status: 201, headers: { get: () => 'application/json' },
-      json: async () => ({ ok: true, orderNo: 'FND-1', holdExpiresAt: new Date(Date.now() - 1000).toISOString(), itemAmount: 4545, vatAmount: 455, totalAmount: 5000 }),
+      // serverNow를 함께 준다 — 남은 시간은 (holdExpiresAt − serverNow)로 잰다. 기기 시계와
+      // 직접 비교하지 않으므로, 진짜로 만료된 홀드임을 서버 시각 한 쌍으로 말해야 한다.
+      json: async () => ({ ok: true, orderNo: 'FND-1', holdExpiresAt: new Date(Date.now() - 1000).toISOString(), serverNow: new Date().toISOString(), itemAmount: 4545, vatAmount: 455, totalAmount: 5000 }),
     });
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     fireEvent.change(screen.getByLabelText(/^이름\*$/), { target: { value: '김후원' } });
@@ -300,4 +305,81 @@ it('무통장 제출은 depositUrl로 전체 페이지 이동한다 — 토큰�
   await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제로 이동|신청/ }));
   expect(assignMock).toHaveBeenCalledWith('/ko/funding/deposit/FND-1?token=tok');
+});
+
+/**
+ * 품절 리워드 초기 선택 회귀 — 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해서,
+ * 후원자는 폼을 전부 채우고 제출한 **뒤에야** 409를 봤다.
+ */
+it('첫 리워드가 품절이면 고를 수 있는 리워드가 선택된 채로 시작한다', () => {
+  render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
+  expect(screen.getByLabelText(/CD/)).toBeDisabled();
+  expect(screen.getByLabelText(/CD/)).not.toBeChecked();
+  expect(screen.getByLabelText(/감사 메일/)).toBeChecked();
+  // 선택된 리워드가 하단 요약에도 그대로 반영된다(품절 카드가 아니라 고를 수 있는 쪽).
+  expect(screen.getAllByText('감사 메일').length).toBeGreaterThan(0);
+});
+
+it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () => {
+  render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: 0 }} />);
+  const submit = screen.getByRole('button', { name: /결제로 이동/ });
+  expect(submit).toBeDisabled();
+  expect(screen.getByRole('status')).toHaveTextContent('모든 리워드가 품절되었습니다');
+  // 폼 자체를 제출해도(Enter 등) 서버를 부르지 않는다.
+  fireEvent.submit(submit.closest('form')!);
+  await act(async () => { await Promise.resolve(); });
+  expect(global.fetch).not.toHaveBeenCalled();
+});
+
+/**
+ * 기기 시계 스큐 회귀 — 예전에는 서버가 준 절대 시각(holdExpiresAt)을 기기의 Date.now()와
+ * 직접 비교했다. 기기 시계가 15분 이상 빠르면 방금 만든 홀드가 **생성 직후 만료**로 판정돼
+ * 결제 위젯이 영영 뜨지 않았고, "다시 신청"을 눌러도 새 주문이 같은 이유로 또 만료였다.
+ */
+describe('기기 시계가 서버보다 빠를 때', () => {
+  const SERVER_NOW = new Date('2026-10-15T03:00:00Z');
+  const submitAll = async () => {
+    fireEvent.change(screen.getByLabelText(/^이름\*$/), { target: { value: '김후원' } });
+    fireEvent.change(screen.getByLabelText(/^연락처\*$/), { target: { value: '010-1111-2222' } });
+    fireEvent.change(screen.getByLabelText(/^이메일\*$/), { target: { value: 'a@b.com' } });
+    fireEvent.click(screen.getByLabelText(/약관/));
+    fireEvent.submit(screen.getByRole('button', { name: /결제로 이동/ }).closest('form')!);
+    await act(async () => { await Promise.resolve(); });
+  };
+
+  it('20분 빨라도 결제 위젯이 뜨고 남은 시간은 서버 기준으로 센다', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true, status: 201, headers: { get: () => 'application/json' },
+      json: async () => ({
+        ok: true, orderNo: 'FND-1',
+        holdExpiresAt: new Date(SERVER_NOW.getTime() + 15 * 60 * 1000).toISOString(),
+        serverNow: SERVER_NOW.toISOString(),
+        itemAmount: 4545, vatAmount: 455, totalAmount: 5000,
+      }),
+    });
+    // 기기 시계만 20분 앞선다 — 서버가 준 두 시각은 그대로다.
+    jest.spyOn(Date, 'now').mockReturnValue(SERVER_NOW.getTime() + 20 * 60 * 1000);
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitAll();
+    expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
+    expect(screen.queryByText(/결제 대기 시간이 지났습니다/)).toBeNull();
+    expect(screen.getByText(/결제 대기 15:00/)).toBeInTheDocument();
+  });
+
+  it('serverNow가 없는 응답이면 만료로 단정하지 않는다 — 카운트다운만 감춘다', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: true, status: 201, headers: { get: () => 'application/json' },
+      json: async () => ({
+        ok: true, orderNo: 'FND-1',
+        holdExpiresAt: new Date(SERVER_NOW.getTime() + 15 * 60 * 1000).toISOString(),
+        itemAmount: 4545, vatAmount: 455, totalAmount: 5000,
+      }),
+    });
+    jest.spyOn(Date, 'now').mockReturnValue(SERVER_NOW.getTime() + 20 * 60 * 1000);
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitAll();
+    expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
+    expect(screen.queryByText(/결제 대기 시간이 지났습니다/)).toBeNull();
+    expect(screen.queryByText(/결제 대기 \d/)).toBeNull();
+  });
 });

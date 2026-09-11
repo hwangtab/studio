@@ -133,4 +133,30 @@ describe('funding manage getServerSideProps', () => {
     expect(props.projectTitle).toBe('데모');
     expect(res.setHeader).toHaveBeenCalledWith('Cache-Control', expect.stringContaining('no-store'));
   });
+
+  // 약관 제13조 2항이 약속한 철회 UI의 입력값 — 공개 여부와 "지금 바꿀 수 있는지"가 함께 와야 한다.
+  it('이름 공개 동의 여부와 편집 가능 여부를 함께 넘긴다', async () => {
+    const c = await createFundingPledge(payloadFor({ displayNamePublic: true }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+    const result = await getServerSideProps({
+      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
+    } as never);
+    if (!('props' in result)) throw new Error('props 기대');
+    const props = await result.props;
+    expect(props.displayNamePublic).toBe(true);
+    expect(props.canEditDisplayName).toBe(true);
+  });
+
+  it('환불 완료 건은 이름 공개 설정을 바꿀 수 없다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE id=?", args: [o!.id] });
+    const result = await getServerSideProps({
+      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
+    } as never);
+    if (!('props' in result)) throw new Error('props 기대');
+    expect((await result.props).canEditDisplayName).toBe(false);
+  });
 });

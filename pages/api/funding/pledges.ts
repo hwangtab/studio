@@ -82,6 +82,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   return res.status(201).json({
     ok: true, orderNo: result.orderNo, paymentMethod: validated.value.paymentMethod,
-    holdExpiresAt: result.holdExpiresAt.toISOString(), ...result.amounts, ...(depositUrl ? { depositUrl, emailSent } : {}),
+    holdExpiresAt: result.holdExpiresAt.toISOString(),
+    // 홀드를 만든 서버 시각. 클라이언트는 (holdExpiresAt − serverNow)로 남은 시간의 총량을
+    // 구하고, 경과분은 자기 시계 안에서만 잰다 — 기기 시계가 빠르면 방금 만든 홀드가
+    // 즉시 만료로 보이던 문제를 막는다(components/funding/PledgeWizard.tsx holdDurationMs).
+    serverNow: now.toISOString(),
+    ...result.amounts, ...(depositUrl ? { depositUrl, emailSent } : {}),
   });
 }
