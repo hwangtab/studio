@@ -109,7 +109,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
         target="_blank"
         rel="noopener noreferrer"
         onClick={trackKakaoClick}
-        className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink text-sm font-bold min-h-[44px] touch-manipulation"
+        className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink text-sm font-bold min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
       >
         {t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
         <ArrowRight size={14} aria-hidden="true" />
@@ -117,14 +117,14 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       <Link
         href={`/${locale}/pricing`}
         prefetch={false}
-        className="hidden sm:inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold text-amber-700 dark:text-amber-300 hover:underline min-h-[44px] touch-manipulation"
+        className="hidden sm:inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold text-amber-700 dark:text-amber-300 hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
       >
         {t('nav.pricing')}
       </Link>
       <a
         href={telHref}
         onClick={trackPhoneClick}
-        className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-500/20 touch-manipulation"
+        className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-500/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
         aria-label={t('stories.sticky.phone', { defaultValue: '전화 문의' })}
       >
         <Phone size={20} aria-hidden="true" />
@@ -134,7 +134,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
         target="_blank"
         rel="noopener noreferrer"
         onClick={trackKakaoClick}
-        className="sm:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink touch-manipulation"
+        className="sm:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
         aria-label={t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
       >
         <MessageCircle size={20} aria-hidden="true" />
@@ -142,7 +142,7 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       <button
         type="button"
         onClick={handleDismiss}
-        className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-amber-200 dark:hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 touch-manipulation"
+        className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-amber-200 dark:hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
         aria-label={t('stories.sticky.dismiss', { defaultValue: '닫기' })}
       >
         <X size={18} aria-hidden="true" />

@@ -228,7 +228,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
               service_type: type,
             })
           }
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
+          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
         >
           {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}
           <ArrowRight size={14} aria-hidden="true" />
@@ -244,7 +244,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
               service_type: type,
             })
           }
-          className="inline-flex items-center gap-1 text-sm font-semibold text-secondary dark:text-secondary-light hover:underline min-h-[44px] touch-manipulation"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-secondary dark:text-secondary-light hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.inline.serviceDetail', { defaultValue: '서비스 자세히 보기' })}
           <ArrowRight size={14} aria-hidden="true" />

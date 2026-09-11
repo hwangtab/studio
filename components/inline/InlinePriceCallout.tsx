@@ -146,7 +146,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
               cta_id: 'inline_price_kakao',
             })
           }
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
+          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
         >
           {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}
           <ArrowRight size={14} aria-hidden="true" />
@@ -154,7 +154,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
         <Link
           href={`/${locale}/pricing`}
           prefetch={false}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px] touch-manipulation"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.inline.priceDetail', { defaultValue: '가격표 전체 보기' })}
           <ArrowRight size={14} aria-hidden="true" />
