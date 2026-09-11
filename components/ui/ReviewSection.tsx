@@ -55,7 +55,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                 >
                     <span className="flex" aria-hidden="true">
                         {FIVE_STARS.map((i) => (
-                            <Star key={i} size={20} className="text-yellow-400 fill-yellow-400" />
+                            <Star key={i} size={20} className="text-amber-400 fill-amber-400" />
                         ))}
                     </span>
                     <span className="font-bold text-lg tabular-nums" aria-hidden="true">{avgRating}</span>
@@ -91,7 +91,7 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                                     })}
                                 >
                                     {FIVE_STARS.slice(0, review.rating).map((i) => (
-                                        <Star key={i} size={18} className="text-yellow-400 fill-yellow-400 mr-1" aria-hidden="true" />
+                                        <Star key={i} size={18} className="text-amber-400 fill-amber-400 mr-1" aria-hidden="true" />
                                     ))}
                                 </div>
 

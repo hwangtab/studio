@@ -2,9 +2,19 @@ import React from 'react';
 import { cn } from '../../lib/utils';
 
 export type SectionVariant = 'default' | 'alternate';
+export type SectionSpacing = 'default' | 'tight' | 'loose';
+
+const SPACING: Record<SectionSpacing, string> = {
+  default: 'py-16 md:py-24',
+  tight: 'py-10 md:py-12',
+  loose: 'py-20 md:py-32',
+};
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   variant?: SectionVariant;
+  /** 세로 간격 variant. 기본은 `default`(py-16 md:py-24) —
+   *  값은 docs/design-system.md §3 참고. */
+  spacing?: SectionSpacing;
   container?: boolean; // If true, wraps children in a container
   /** true면 content-visibility: auto를 적용 — 스크롤로 뷰포트에 들어오기 전까지
    *  layout/paint 작업을 연기한다. 긴 페이지의 below-fold 섹션에 쓰면 초기
@@ -13,7 +23,7 @@ interface SectionProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 export const Section = React.forwardRef<HTMLElement, SectionProps>(
-  ({ className, variant = 'default', container = true, defer = false, style, children, ...props }, ref) => {
+  ({ className, variant = 'default', spacing = 'default', container = true, defer = false, style, children, ...props }, ref) => {
     const bgClass =
       variant === 'alternate'
         ? 'bg-gray-50 dark:bg-gray-950/50' // Slightly distinctive from gray-900 but not pitch black
@@ -28,7 +38,7 @@ export const Section = React.forwardRef<HTMLElement, SectionProps>(
     return (
       <section
         ref={ref}
-        className={cn('py-16 md:py-24', bgClass, className)}
+        className={cn(SPACING[spacing], bgClass, className)}
         style={deferStyle ? { ...deferStyle, ...style } : style}
         {...props}
       >

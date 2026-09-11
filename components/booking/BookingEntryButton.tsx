@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import type { BookingService } from '../../lib/booking/products';
 import { trackMicroEvent } from '../../utils/analytics';
+import { Button } from '../ui/Button';
 
 interface BookingEntryButtonProps {
   service: BookingService;
@@ -19,20 +20,22 @@ const BookingEntryButton = ({ service, locale }: BookingEntryButtonProps) => {
   if (locale !== 'ko') return null;
 
   return (
-    <Link
-      href={`/ko/booking/${service}`}
-      prefetch={false}
-      onClick={() =>
-        trackMicroEvent('micro_click_booking_entry', {
-          locale,
-          component: 'BookingEntryButton',
-          cta_id: `${service}_booking_entry`,
-        })
-      }
-      className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-primary text-white font-bold text-lg hover:bg-primary-dark shadow-md hover:shadow-lg transition-colors duration-200"
-    >
-      온라인 예약
-    </Link>
+    <Button asChild variant="solid" shape="pill" size="lg">
+      <Link
+        href={`/ko/booking/${service}`}
+        prefetch={false}
+        onClick={() =>
+          trackMicroEvent('micro_click_booking_entry', {
+            locale,
+            component: 'BookingEntryButton',
+            cta_id: `${service}_booking_entry`,
+          })
+        }
+        className="h-auto min-h-[48px] py-4 font-bold"
+      >
+        온라인 예약
+      </Link>
+    </Button>
   );
 };
 

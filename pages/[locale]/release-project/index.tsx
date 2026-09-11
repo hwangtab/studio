@@ -111,7 +111,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         title={
           <>
             <span className="block mb-2 text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titlePrefix')}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--hero-title-accent)] to-white drop-shadow-[0_0_25px_var(--hero-title-glow)]">
               {t('releaseProject.hero.titleHighlight')}
             </span>
             <span className="text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titleSuffix')}</span>
@@ -379,7 +379,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       />
 
       {/* 전환 CTA */}
-      <Section variant="alternate" className="py-16">
+      <Section variant="alternate">
         <ContactCTA
           locale={locale}
           title={

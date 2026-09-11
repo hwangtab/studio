@@ -83,7 +83,7 @@ export default function FundingProjectPage({ project, initialState }: Props) {
           </div>
         </div>
       </Section>
-      <Section className="py-12 md:py-16">
+      <Section spacing="tight">
         <article className="prose prose-lg max-w-3xl dark:prose-invert">
           <MarkdownRenderer content={project.content} locale="ko" />
         </article>

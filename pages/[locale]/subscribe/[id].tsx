@@ -67,11 +67,11 @@ function SubscribeSetupOk(props: OkProps) {
         <meta name="referrer" content="no-referrer" />
       </Head>
       <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-12 sm:py-16">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">정기결제 카드 등록</h1>
+        <h1 className="typo-page-title">정기결제 카드 등록</h1>
         <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">{customerName}님</p>
 
         <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{productName}</h2>
+          <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
 
           <dl className="mt-6 space-y-3 text-sm">
             <div className="flex justify-between">
@@ -141,7 +141,7 @@ export default function SubscribeSetupPage(props: SubscribeSetupProps) {
           <meta name="robots" content="noindex, nofollow" />
         </Head>
         <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">카드를 등록할 수 없습니다</h1>
+          <h1 className="typo-page-title">카드를 등록할 수 없습니다</h1>
           <p className="mt-4 text-gray-600 dark:text-gray-300">{ERROR_MESSAGES[props.code]}</p>
           <Link href="/ko" className="mt-8 inline-block underline">홈으로</Link>
         </main>

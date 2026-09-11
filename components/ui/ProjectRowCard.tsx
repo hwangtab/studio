@@ -94,11 +94,11 @@ const ProjectRowCard = ({
 
                 <div className="relative z-10">
                     <div className="flex flex-wrap gap-2 mb-3 min-w-0">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${getCategoryColor(category)} uppercase tracking-wider max-w-full break-words`}>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getCategoryColor(category)} uppercase tracking-wider max-w-full break-words`}>
                             {category}
                         </span>
                         {services.slice(0, 3).map((service, i) => (
-                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/40 dark:border-white/10 px-2 py-0.5 rounded max-w-full break-words">
+                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/40 dark:border-white/10 px-2 py-0.5 rounded-full max-w-full break-words">
                                 {service}
                             </span>
                         ))}

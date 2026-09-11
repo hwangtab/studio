@@ -12,6 +12,8 @@ import {
   type BookingActionResult,
 } from '../../../components/admin/bookingActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, TextArea, TextInput } from '../../../components/ui/Field';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -243,7 +245,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">예약 상세</h1>
             <Link href="/admin/bookings" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -288,7 +290,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                 등록해 주세요.
               </span>
               {canRetryGcal && (
-                <Button
+                <Button light
                   variant="secondary"
                   disabled={busy}
                   onClick={handleRetryGcal}
@@ -464,28 +466,28 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
               <div className="flex flex-wrap gap-3">
                 {canChangeStatus && (
                   <>
-                    <Button disabled={busy} onClick={handleComplete}>
+                    <Button light disabled={busy} onClick={handleComplete}>
                       완료 처리
                     </Button>
-                    <Button variant="outline" disabled={busy} onClick={handleNoShow}>
+                    <Button light variant="outline" disabled={busy} onClick={handleNoShow}>
                       노쇼 처리
                     </Button>
                   </>
                 )}
 
                 {canStartWork && (
-                  <Button disabled={busy} onClick={handleStartWork}>
+                  <Button light disabled={busy} onClick={handleStartWork}>
                     작업 시작
                   </Button>
                 )}
                 {canDeliver && (
-                  <Button disabled={busy} onClick={handleDeliver}>
+                  <Button light disabled={busy} onClick={handleDeliver}>
                     납품 완료
                   </Button>
                 )}
 
                 {canResend && (
-                  <Button variant="secondary" disabled={busy} onClick={handleResend}>
+                  <Button light variant="secondary" disabled={busy} onClick={handleResend}>
                     알림 재발송
                   </Button>
                 )}
@@ -507,34 +509,32 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                 </p>
 
                 <form onSubmit={handleRefund} className="space-y-3 max-w-md">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">
-                      환불 금액 (원, 최대 {formatPriceAmount(booking.totalAmount)})
-                    </label>
-                    <input
+                  <Field
+                    id="refund-amount"
+                    label={`환불 금액 (원, 최대 ${formatPriceAmount(booking.totalAmount)})`}
+                    error={refundError ?? undefined}
+                    className={lightOnlyField}
+                  >
+                    <TextInput
                       type="number"
                       min={0}
                       max={booking.totalAmount}
                       step={1}
                       value={refundAmount}
                       onChange={(e) => setRefundAmount(Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      light className="text-sm"
                     />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">환불 사유</label>
-                    <textarea
+                  </Field>
+                  <Field id="refund-reason" label="환불 사유" className={lightOnlyField}>
+                    <TextArea
                       value={refundReason}
                       onChange={(e) => setRefundReason(e.target.value)}
                       rows={2}
                       placeholder="예: 고객 요청 — 개인 사정으로 취소"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      light className="min-h-0 text-sm"
                     />
-                  </div>
-                  {refundError && (
-                    <p className="text-sm text-red-600">{refundError}</p>
-                  )}
-                  <Button type="submit" variant="outline" disabled={busy}>
+                  </Field>
+                  <Button light type="submit" variant="outline" disabled={busy}>
                     환불 처리
                   </Button>
                 </form>

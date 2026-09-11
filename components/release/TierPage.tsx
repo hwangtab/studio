@@ -124,7 +124,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         title={
           <>
             <span className="block mb-2 text-gray-100 drop-shadow-lg">{t(k('heroTitlePrefix'))}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#a8c0ff] to-white drop-shadow-[0_0_25px_rgba(255,255,255,0.3)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--hero-title-accent)] to-white drop-shadow-[0_0_25px_var(--hero-title-glow)]">
               {t(k('heroTitleHighlight'))}
             </span>
             <span className="text-gray-100 drop-shadow-lg"> {t(k('heroTitleSuffix'))}</span>
@@ -363,7 +363,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               className="group glass-card rounded-2xl p-6 hover:-translate-y-0.5 transition-all duration-200"
             >
               <p className="text-xs text-primary font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+              <h3 className="typo-card-subtitle text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
                 {t(`releaseProject.tiers.${otherTier}.label`)}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(`releaseProject.tiers.${otherTier}.note`)}</p>
@@ -383,7 +383,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         subtitle={t('releaseProject.hubCallout.subtitle')}
       />
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={

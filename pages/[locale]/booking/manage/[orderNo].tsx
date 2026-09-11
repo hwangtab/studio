@@ -224,12 +224,12 @@ function SessionManageView(props: SessionManageProps) {
       </Head>
 
       <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">예약 확인</h1>
+        <h1 className="typo-page-title">예약 확인</h1>
         <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">주문번호 {orderNo}</p>
 
         <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{productName}</h2>
+            <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
             <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
               {STATUS_LABELS[status]}
             </span>
@@ -300,12 +300,12 @@ function MixingManageView(props: MixingManageProps) {
       </Head>
 
       <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">주문 확인</h1>
+        <h1 className="typo-page-title">주문 확인</h1>
         <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">주문번호 {orderNo}</p>
 
         <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
           <div className="flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">{productName}</h2>
+            <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
             <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
               {WORK_ORDER_STATUS_LABELS[status]}
             </span>

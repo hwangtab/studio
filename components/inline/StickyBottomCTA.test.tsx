@@ -70,6 +70,11 @@ describe('StickyBottomCTA', () => {
       }]);
     });
     expect(screen.getByRole('region')).toBeInTheDocument();
+
+    // 포커스 링 회귀 방지 (2026-09-11 감사)
+    screen.getAllByRole('link').forEach((el) => {
+      expect(el.className).toMatch(/focus-visible:ring-2/);
+    });
   });
 
   it('marker가 viewport 아래에 있으면 hidden', () => {

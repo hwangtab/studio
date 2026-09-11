@@ -32,7 +32,7 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
       <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
         {outcome === 'activated' && (
           <>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">정기결제가 시작됐습니다</h1>
+            <h1 className="typo-page-title">정기결제가 시작됐습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">
               첫 달 결제 완료 {typeof amount === 'number' ? `${formatPriceAmount(amount)}원` : ''}
             </p>
@@ -43,13 +43,13 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
         )}
         {outcome === 'card_changed' && (
           <>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">카드 등록이 완료됐습니다</h1>
+            <h1 className="typo-page-title">카드 등록이 완료됐습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">이번 결제는 없으며, 다음 결제일부터 새 카드로 청구됩니다.</p>
           </>
         )}
         {outcome === 'first_charge_failed' && (
           <>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">카드는 등록됐으나 결제가 승인되지 않았습니다</h1>
+            <h1 className="typo-page-title">카드는 등록됐으나 결제가 승인되지 않았습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
             <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               다른 카드로 다시 등록해야 합니다 — 담당자에게 새 등록 링크를 요청해 주세요. 010-4255-7893
@@ -58,7 +58,7 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
         )}
         {outcome === 'error' && (
           <>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">카드 등록을 완료하지 못했습니다</h1>
+            <h1 className="typo-page-title">카드 등록을 완료하지 못했습니다</h1>
             <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
             <p className="mt-2 text-sm text-gray-500">문의: 010-4255-7893</p>
           </>

@@ -1,5 +1,6 @@
 import React from 'react';
 import NextLink from 'next/link';
+import { Button } from '../ui/Button';
 import { getSiteConfig } from '../../data/siteConfig';
 import { type Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
@@ -30,7 +31,7 @@ const OnlineRequest: React.FC<OnlineRequestProps> = ({ locale = 'ko' }) => {
       body: (
         <>
           파일을 받은 뒤 3~7영업일 (
-          <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="text-primary hover:underline underline-offset-4">
+          <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="rounded text-primary hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2">
             요금·절차 보기
           </NextLink>
           )
@@ -53,21 +54,25 @@ const OnlineRequest: React.FC<OnlineRequestProps> = ({ locale = 'ko' }) => {
         ))}
       </dl>
       <div className="px-6 pb-5">
-        <a
-          href={siteConfig.contact.kakaoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() =>
-            trackLeadEvent('lead_click_kakao', {
-              locale,
-              component: 'OnlineRequest',
-              cta_id: 'online_request_kakao',
-            })
-          }
-          className="inline-flex items-center justify-center rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
-        >
-          카카오톡으로 파일 보내기
-        </a>
+        {/* 반경·포커스 링은 Button이 소유한다 — 직접 짠 rounded-lg에는
+            focus-visible 링이 아예 없었다(정본 §3·§5). */}
+        <Button asChild variant="kakao" shape="block" size="md">
+          <a
+            href={siteConfig.contact.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'OnlineRequest',
+                cta_id: 'online_request_kakao',
+              })
+            }
+            className="touch-manipulation"
+          >
+            카카오톡으로 파일 보내기
+          </a>
+        </Button>
       </div>
     </div>
   );

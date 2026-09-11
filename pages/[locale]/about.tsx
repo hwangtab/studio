@@ -354,7 +354,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
       {/* 서비스 바로가기 — 본문 fold 안 button pill들. next/link 자동 prefetch가
           대상 페이지의 SSG JSON·청크를 동시 다운로드하지 않도록 prefetch={false}.
           hover/focus 시 prefetch는 next/link 기본 휴리스틱으로 그대로 작동. */}
-      <Section variant="alternate" className="py-10">
+      <Section variant="alternate" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}
@@ -394,7 +394,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
         </div>
       </Section>
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={

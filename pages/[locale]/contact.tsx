@@ -202,7 +202,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         // 스키마 항목 ≠ 본문 항목이면 구조화 데이터 가이드라인 위반(스팸 판정 리스크).
         const faqs = contactFaqData;
         return (
-          <Section variant="alternate" className="py-12">
+          <Section variant="alternate" spacing="tight">
             <div className="container mx-auto px-4 max-w-6xl">
               <div className="grid md:grid-cols-2 gap-10">
                 <div>
@@ -248,7 +248,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 
       {/* 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" className="py-10">
+      <Section variant="alternate" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/wedding-song`}

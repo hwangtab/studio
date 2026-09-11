@@ -39,7 +39,7 @@ const ReleaseReviewsSection = ({
           >
             <div className="flex items-center gap-1 mb-3" aria-label={`${review.rating} / 5`}>
               {Array.from({ length: review.rating }).map((_, i) => (
-                <Star key={i} size={14} className="text-yellow-400 fill-yellow-400" aria-hidden="true" />
+                <Star key={i} size={14} className="text-amber-400 fill-amber-400" aria-hidden="true" />
               ))}
             </div>
             <blockquote className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-4 flex-1">

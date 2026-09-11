@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Check } from '@/lib/lucide-icons';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import BaseCard from './BaseCard';
+import { Button } from './Button';
 
 interface PricingCardProps {
     id: string;
@@ -128,35 +129,42 @@ const PricingCard = ({
             </ul>
 
             {ctaLabel && ctaHref && (
-                <a
-                    href={ctaHref}
-                    target={ctaHref.startsWith('http') ? '_blank' : undefined}
-                    rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    onClick={handleCtaClick}
-                    /* 카드마다 상품은 달라도 행동은 하나(카톡 문의)라 CTA 색도 하나여야
-                       한다. 카카오가 아닌 목적지(폼·상세 페이지)일 때만 primary 유지. */
-                    className={`mt-6 block w-full text-center py-3 px-4 rounded-xl font-semibold text-sm transition-colors ${
-                        isKakaoCta
-                            ? 'bg-kakao hover:bg-kakao-dark text-kakao-ink font-bold'
-                            : 'bg-primary hover:bg-primary-dark text-white'
-                    }`}
+                /* 카드마다 상품은 달라도 행동은 하나(카톡 문의)라 CTA 색도 하나여야
+                   한다. 카카오가 아닌 목적지(폼·상세 페이지)일 때만 primary 유지.
+                   카드 안이므로 shape은 block(rounded-xl) — 외곽 rounded-3xl과 동심원. */
+                <Button
+                    asChild
+                    variant={isKakaoCta ? 'kakao' : 'solid'}
+                    shape="block"
+                    size="md"
+                    fullWidth
                 >
-                    {ctaLabel}
-                </a>
+                    <a
+                        href={ctaHref}
+                        target={ctaHref.startsWith('http') ? '_blank' : undefined}
+                        rel={ctaHref.startsWith('http') ? 'noopener noreferrer' : undefined}
+                        onClick={handleCtaClick}
+                        className={`mt-6 h-auto min-h-11 py-3 px-4 text-sm ${isKakaoCta ? 'font-bold' : 'font-semibold'}`}
+                    >
+                        {ctaLabel}
+                    </a>
+                </Button>
             )}
 
             {secondaryCtaLabel && secondaryCtaHref && (
-                <Link
-                    href={secondaryCtaHref}
-                    prefetch={false}
-                    onClick={onSecondaryCtaClick}
-                    /* outline — 1차(카카오/primary)와 위계가 갈려야 하고, 목적지가
-                       카카오톡이 아니므로 옐로는 절대 쓰지 않는다(CLAUDE.md 카카오 배색 규칙).
-                       min-h-11(44px)로 터치 타깃 확보. */
-                    className="mt-3 flex items-center justify-center w-full min-h-11 py-3 px-4 rounded-xl font-semibold text-sm border-2 border-primary/30 text-primary hover:bg-primary/5 hover:border-primary/50 transition-colors"
-                >
-                    {secondaryCtaLabel}
-                </Link>
+                /* outline — 1차(카카오/primary)와 위계가 갈려야 하고, 목적지가
+                   카카오톡이 아니므로 옐로는 절대 쓰지 않는다(CLAUDE.md 카카오 배색 규칙).
+                   size md(h-11 = 44px)로 터치 타깃 확보. */
+                <Button asChild variant="outline" shape="block" size="md" fullWidth>
+                    <Link
+                        href={secondaryCtaHref}
+                        prefetch={false}
+                        onClick={onSecondaryCtaClick}
+                        className="mt-3 h-auto min-h-11 py-3 px-4 text-sm font-semibold"
+                    >
+                        {secondaryCtaLabel}
+                    </Link>
+                </Button>
             )}
         </BaseCard>
     );

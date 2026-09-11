@@ -8,12 +8,11 @@ import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
-import { inputClass } from '../ui/formClasses';
+import { Field, TextArea, TextInput } from '../ui/Field';
 
 interface Props { project: FundingProject; initialRewardId: string | null; remaining: Record<string, number | null> }
 interface Created { orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number; holdExpiresAt: string }
 
-const labelClass = 'block text-sm font-medium text-gray-700 dark:text-gray-200';
 const helpClass = 'typo-card-meta mt-1.5';
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
 // 선택 가능한 행(리워드·결제수단)은 탭 타깃이 카드 전체가 되도록.
@@ -139,18 +138,19 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         </div>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor={`${uid}-qty`} className={labelClass}>수량</label>
-            <input id={`${uid}-qty`} type="number" min={1} max={Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY))} value={quantity} className={`${inputClass} mt-1`}
-              onChange={(e) => {
-                const cap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
-                setQuantity(Math.min(cap, Math.max(1, Number(e.target.value) || 1)));
-              }} />
+            <Field id={`${uid}-qty`} label="수량">
+              <TextInput type="number" min={1} max={Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY))} value={quantity}
+                onChange={(e) => {
+                  const cap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
+                  setQuantity(Math.min(cap, Math.max(1, Number(e.target.value) || 1)));
+                }} />
+            </Field>
           </div>
           <div>
-            <label htmlFor={`${uid}-add`} className={labelClass}>추가 후원금</label>
-            <input id={`${uid}-add`} type="number" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additional} className={`${inputClass} mt-1`}
-              onChange={(e) => setAdditional(Math.min(MAX_ADDITIONAL_AMOUNT, Math.max(0, Math.floor((Number(e.target.value) || 0) / ADDITIONAL_AMOUNT_STEP) * ADDITIONAL_AMOUNT_STEP)))} />
-            <p className={helpClass}>선택 항목입니다. 1,000원 단위로 올릴 수 있습니다.</p>
+            <Field id={`${uid}-add`} label="추가 후원금" hint="선택 항목입니다. 1,000원 단위로 올릴 수 있습니다.">
+              <TextInput type="number" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additional}
+                onChange={(e) => setAdditional(Math.min(MAX_ADDITIONAL_AMOUNT, Math.max(0, Math.floor((Number(e.target.value) || 0) / ADDITIONAL_AMOUNT_STEP) * ADDITIONAL_AMOUNT_STEP)))} />
+            </Field>
           </div>
         </div>
       </fieldset>
@@ -159,16 +159,19 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         <StepHeader n={2} title="후원자 정보" hint="후원 확인 메일과 리워드 발송에 씁니다." />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor={`${uid}-name`} className={labelClass}>이름</label>
-            <input id={`${uid}-name`} required className={`${inputClass} mt-1`} value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
+            <Field id={`${uid}-name`} label="이름" required>
+              <TextInput required value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
+            </Field>
           </div>
           <div>
-            <label htmlFor={`${uid}-phone`} className={labelClass}>연락처</label>
-            <input id={`${uid}-phone`} required inputMode="tel" className={`${inputClass} mt-1`} value={form.customerPhone} onChange={(e) => setForm({ ...form, customerPhone: e.target.value })} />
+            <Field id={`${uid}-phone`} label="연락처" required>
+              <TextInput required inputMode="tel" value={form.customerPhone} onChange={(e) => setForm({ ...form, customerPhone: e.target.value })} />
+            </Field>
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor={`${uid}-email`} className={labelClass}>이메일</label>
-            <input id={`${uid}-email`} required type="email" className={`${inputClass} mt-1`} value={form.customerEmail} onChange={(e) => setForm({ ...form, customerEmail: e.target.value })} />
+            <Field id={`${uid}-email`} label="이메일" required>
+              <TextInput required type="email" value={form.customerEmail} onChange={(e) => setForm({ ...form, customerEmail: e.target.value })} />
+            </Field>
           </div>
         </div>
 
@@ -178,37 +181,43 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
             <p className={helpClass}>이 리워드는 배송이 있습니다.</p>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor={`${uid}-sname`} className={labelClass}>받는 분</label>
-                <input id={`${uid}-sname`} required className={`${inputClass} mt-1`} value={ship.name} onChange={(e) => setShip({ ...ship, name: e.target.value })} />
+                <Field id={`${uid}-sname`} label="받는 분" required>
+                  <TextInput required value={ship.name} onChange={(e) => setShip({ ...ship, name: e.target.value })} />
+                </Field>
               </div>
               <div>
-                <label htmlFor={`${uid}-sphone`} className={labelClass}>받는 분 연락처</label>
-                <input id={`${uid}-sphone`} required inputMode="tel" className={`${inputClass} mt-1`} value={ship.phone} onChange={(e) => setShip({ ...ship, phone: e.target.value })} />
+                <Field id={`${uid}-sphone`} label="받는 분 연락처" required>
+                  <TextInput required inputMode="tel" value={ship.phone} onChange={(e) => setShip({ ...ship, phone: e.target.value })} />
+                </Field>
               </div>
               <div>
-                <label htmlFor={`${uid}-post`} className={labelClass}>우편번호</label>
-                <input id={`${uid}-post`} required inputMode="numeric" className={`${inputClass} mt-1`} value={ship.postcode} onChange={(e) => setShip({ ...ship, postcode: e.target.value })} />
+                <Field id={`${uid}-post`} label="우편번호" required>
+                  <TextInput required inputMode="numeric" value={ship.postcode} onChange={(e) => setShip({ ...ship, postcode: e.target.value })} />
+                </Field>
               </div>
               <div>
-                <label htmlFor={`${uid}-addr1`} className={labelClass}>주소</label>
-                <input id={`${uid}-addr1`} required className={`${inputClass} mt-1`} value={ship.address1} onChange={(e) => setShip({ ...ship, address1: e.target.value })} />
+                <Field id={`${uid}-addr1`} label="주소" required>
+                  <TextInput required value={ship.address1} onChange={(e) => setShip({ ...ship, address1: e.target.value })} />
+                </Field>
               </div>
               <div>
-                <label htmlFor={`${uid}-addr2`} className={labelClass}>상세주소</label>
-                <input id={`${uid}-addr2`} className={`${inputClass} mt-1`} value={ship.address2} onChange={(e) => setShip({ ...ship, address2: e.target.value })} />
+                <Field id={`${uid}-addr2`} label="상세주소">
+                  <TextInput value={ship.address2} onChange={(e) => setShip({ ...ship, address2: e.target.value })} />
+                </Field>
               </div>
               <div>
-                <label htmlFor={`${uid}-memo`} className={labelClass}>배송 메모</label>
-                <input id={`${uid}-memo`} className={`${inputClass} mt-1`} value={ship.memo} onChange={(e) => setShip({ ...ship, memo: e.target.value })} />
+                <Field id={`${uid}-memo`} label="배송 메모">
+                  <TextInput value={ship.memo} onChange={(e) => setShip({ ...ship, memo: e.target.value })} />
+                </Field>
               </div>
             </div>
           </div>
         )}
 
         <div className="mt-5">
-          <label htmlFor={`${uid}-msg`} className={labelClass}>응원 메시지</label>
-          <textarea id={`${uid}-msg`} rows={3} className={`${inputClass} mt-1`} maxLength={500} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
-          <p className={helpClass}>선택 항목이며 운영자에게만 보입니다.</p>
+          <Field id={`${uid}-msg`} label="응원 메시지" hint="선택 항목이며 운영자에게만 보입니다.">
+            <TextArea rows={3} className="min-h-0" maxLength={500} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
+          </Field>
         </div>
 
         <div className="mt-5 space-y-2">

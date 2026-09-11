@@ -11,8 +11,8 @@ interface EnglishFastContactActionsProps {
 }
 
 const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFastContactActionsProps) => (
-  <div className="mb-6 rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-500/30 dark:bg-yellow-500/10">
-    <p className="text-sm font-semibold text-gray-950 dark:text-yellow-100">
+  <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">
+    <p className="text-sm font-semibold text-gray-950 dark:text-amber-100">
       Fastest way to reach Studio NOL
     </p>
     <p className="mt-1 text-xs leading-relaxed text-gray-700 dark:text-gray-200">
@@ -20,7 +20,7 @@ const EnglishFastContactActions = ({ locale, kakaoUrl, email, phone }: EnglishFa
     </p>
     {/* 가격 즉답 — ChatGPT 등 LLM 유입 영어 방문자(이탈률 64%)가 클릭 없이 핵심 요금을
         바로 확인하도록 상단 노출. 수치는 pricing.ts SSOT / llms.txt English Quick Facts와 일치. */}
-    <p className="mt-1 text-xs font-medium text-gray-900 dark:text-yellow-100">
+    <p className="mt-1 text-xs font-medium text-gray-900 dark:text-amber-100">
       Recording ₩100,000/hr · 1-song vocal package ₩250,000 · Mixing from ₩200,000/song
     </p>
     <a

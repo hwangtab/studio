@@ -34,6 +34,10 @@
     /* 스펙큘러 글로우: 텍스트 뒤(::after z-index:-1)로 깔리므로 대비를 해치지
        않지만, 과한 블룸을 피해 은은하게 0.18. */
     --glass-glow: rgba(255, 255, 255, 0.18);
+
+    /* 히어로 제목 그라디언트 — index·release-project·TierPage·BuyerIntentHubPage 공용 */
+    --hero-title-accent: #a8c0ff;
+    --hero-title-glow: rgb(255 255 255 / 0.3);
   }
 
   .dark {

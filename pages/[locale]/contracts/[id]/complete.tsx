@@ -4,6 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 
 import ContractNotice from '../../../../components/contracts/ContractNotice';
+import { TextInput } from '../../../../components/ui/Field';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { formatDate } from '../../../../lib/contracts/format';
@@ -224,7 +225,7 @@ export default function ContractCompletePage({
 
           {/* 사이트 헤더를 붙이지 않으므로 여기가 브랜드를 밝히는 유일한 자리다. */}
           <p className="text-gray-400 dark:text-gray-400 text-sm font-medium mb-2">스튜디오 놀</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-900 mb-3">계약서 서명 완료</h1>
+          <h1 className="typo-page-title text-gray-900 dark:text-gray-900 mb-3">계약서 서명 완료</h1>
           <p className="text-gray-600 dark:text-gray-600 mb-8 leading-relaxed">
             {/* 파기된 계약은 이름 자리에 "(개인정보 파기됨)"이 들어 있다. 그대로 부르면
                 기계가 사람 이름을 잘못 읽은 것처럼 보인다. */}
@@ -285,7 +286,7 @@ export default function ContractCompletePage({
               >
                 본인 확인을 위해 계약서에 등록된 연락처 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
               </label>
-              <input
+              <TextInput
                 id="download-identity-digits"
                 type="text"
                 inputMode="numeric"
@@ -296,10 +297,11 @@ export default function ContractCompletePage({
                 placeholder="0000"
                 aria-describedby={downloadError ? 'download-identity-error' : undefined}
                 aria-invalid={downloadError ? true : undefined}
-                className="w-full mb-4 rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white px-4 py-3 text-center text-lg tracking-[0.5em] text-gray-900 dark:text-gray-900 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40"
+                invalid={Boolean(downloadError)}
+                light className="mb-4 px-4 py-3 text-center text-lg tracking-[0.5em]"
               />
 
-              <Button
+              <Button light
                 size="lg"
                 fullWidth
                 disabled={downloading || identityDigits.length !== IDENTITY_DIGITS}
@@ -327,7 +329,7 @@ export default function ContractCompletePage({
           )}
 
           <Link href={`/${locale}`} passHref>
-            <Button size="lg" variant="outline" fullWidth>
+            <Button light size="lg" variant="outline" fullWidth>
               스튜디오 홈으로
             </Button>
           </Link>

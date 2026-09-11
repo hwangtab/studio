@@ -46,7 +46,7 @@ const PortfolioMiniCard = ({ item, locale }: PortfolioMiniCardProps) => {
         />
       </div>
       <div className="p-4">
-        <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider mb-2 ${badgeClass}`}>
+        <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 ${badgeClass}`}>
           {item.category}
         </span>
         <h4 className="typo-card-subtitle line-clamp-2 mb-1 text-gray-900 dark:text-white">

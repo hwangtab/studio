@@ -48,9 +48,16 @@ const walk = (dir: string, out: string[] = []): string[] => {
 
 const SCAN_DIRS = ['components', 'pages', 'data', 'lib', 'utils'];
 
+/**
+ * 색을 받는 Tailwind 유틸리티 접두사. 카카오 토큰 검사와 yellow-* 금지 검사가 **같은**
+ * 목록을 써야 한다 — 예전엔 yellow 가드가 더 좁아서(bg|text|border|ring|from|to|via|
+ * fill|stroke) `shadow-yellow-400`·`placeholder-yellow-500` 같은 표기가 그냥 빠져나갔다.
+ */
+const COLOR_UTILITY_PREFIXES =
+  'bg|text|border|ring|from|to|via|fill|stroke|outline|decoration|placeholder|caret|accent|shadow|divide';
+
 // (bg|text|border|...)-kakao(-dark|-ink)? 형태만 카카오 계열로 본다.
-const KAKAO_CLASS_RE =
-  /(?:bg|text|border|ring|from|to|via|fill|stroke|outline|decoration|placeholder|caret|accent|shadow)-(kakao(?:-[\w]+)?)\b/g;
+const KAKAO_CLASS_RE = new RegExp(`(?:${COLOR_UTILITY_PREFIXES})-(kakao(?:-[\\w]+)?)\\b`, 'g');
 
 describe('카카오 CTA 색 토큰', () => {
   it('kakao 계열 유틸리티 클래스가 쓰는 색 이름은 전부 tailwind.config.ts에 존재해야 한다', () => {
@@ -92,5 +99,87 @@ describe('카카오 CTA 색 토큰', () => {
     expect(defined.has('kakao')).toBe(true);
     expect(defined.has('kakao-dark')).toBe(true);
     expect(defined.has('kakao-ink')).toBe(true);
+  });
+});
+
+// `.typo-*` 컴포넌트 클래스도 같은 사고를 냈다(2026-09-11): typo-button·typo-caption·
+// typo-body가 정의 없이 6곳에서 쓰여 404/500 버튼과 연습실 캡션이 스타일 없이 렌더됐다.
+// 색 토큰과 달리 Tailwind 기본 팔레트 같은 "정의 없이도 유효한 이름"이 없으므로
+// typo- 접두사 전체를 검사해도 오탐이 생기지 않는다.
+const definedTypoClasses = (): Set<string> => {
+  const source = readFileSync(path.join(ROOT, 'tailwind.config.ts'), 'utf-8');
+  const names = new Set<string>();
+  for (const match of source.matchAll(/'\.(typo-[\w-]+)'\s*:/g)) names.add(match[1]);
+  return names;
+};
+
+describe('typo 컴포넌트 클래스', () => {
+  it('쓰이는 .typo-* 클래스는 전부 tailwind.config.ts에 정의돼 있어야 한다', () => {
+    const defined = definedTypoClasses();
+    const missing: string[] = [];
+
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const content = readFileSync(file, 'utf-8');
+        for (const match of content.matchAll(/\btypo-[\w-]+/g)) {
+          if (!defined.has(match[0])) {
+            missing.push(`${path.relative(ROOT, file)}: ${match[0]}`);
+          }
+        }
+      }
+    }
+
+    if (missing.length > 0) {
+      throw new Error(
+        'tailwind.config.ts에 정의되지 않은 .typo-* 클래스를 쓰는 곳이 있습니다:\n' +
+          missing.join('\n'),
+      );
+    }
+  });
+
+  it('역할 클래스 최소 구성이 존재한다', () => {
+    const defined = definedTypoClasses();
+    for (const name of [
+      'typo-section-title', 'typo-section-lead', 'typo-page-title',
+      'typo-card-title', 'typo-card-subtitle', 'typo-card-body', 'typo-card-meta',
+      'typo-card-cta', 'typo-body', 'typo-caption', 'typo-button',
+    ]) {
+      expect(defined.has(name)).toBe(true);
+    }
+  });
+});
+
+// "노란 건 카카오톡"이라는 학습이 성립하려면 카카오 토큰 밖의 옐로가 없어야 한다.
+// 경고·주의는 amber, 별점도 amber를 쓴다(docs/design-system.md §1).
+describe('옐로 사용 제한', () => {
+  it('kakao 토큰 밖에서 yellow-* 유틸리티를 쓰지 않는다', () => {
+    const offenders: string[] = [];
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const content = readFileSync(file, 'utf-8');
+        const yellowRe = new RegExp(`\\b(?:${COLOR_UTILITY_PREFIXES})-yellow-\\d+\\b`, 'g');
+        for (const match of content.matchAll(yellowRe)) {
+          offenders.push(`${path.relative(ROOT, file)}: ${match[0]}`);
+        }
+      }
+    }
+    if (offenders.length > 0) {
+      throw new Error(
+        'yellow-*는 카카오 옐로와 충돌합니다. 경고·주의·별점은 amber-*를 쓰세요:\n' +
+          offenders.join('\n'),
+      );
+    }
   });
 });

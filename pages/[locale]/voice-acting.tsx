@@ -429,7 +429,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         ]}
       />
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={

@@ -8,6 +8,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { buyerIntentHubs } from '../../data/buyerIntentHubs';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
+import { Button } from '../ui/Button';
 
 interface InlinePriceCalloutProps {
   id: string;
@@ -135,26 +136,28 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
       )}
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <a
-          href={siteConfig.contact.kakaoUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() =>
-            trackLeadEvent('lead_click_kakao', {
-              locale,
-              component: 'InlinePriceCallout',
-              cta_id: 'inline_price_kakao',
-            })
-          }
-          className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-kakao px-4 py-2.5 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
-        >
-          {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}
-          <ArrowRight size={14} aria-hidden="true" />
-        </a>
+        <Button asChild variant="kakao" shape="pill" size="md">
+          <a
+            href={siteConfig.contact.kakaoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() =>
+              trackLeadEvent('lead_click_kakao', {
+                locale,
+                component: 'InlinePriceCallout',
+                cta_id: 'inline_price_kakao',
+              })
+            }
+            className="gap-1.5 h-auto min-h-[44px] px-4 py-2.5 text-sm font-bold touch-manipulation"
+          >
+            {t('stories.inline.kakaoCta', { defaultValue: '카카오톡으로 문의' })}
+            <ArrowRight size={14} aria-hidden="true" />
+          </a>
+        </Button>
         <Link
           href={`/${locale}/pricing`}
           prefetch={false}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px] touch-manipulation"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-light hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.inline.priceDetail', { defaultValue: '가격표 전체 보기' })}
           <ArrowRight size={14} aria-hidden="true" />

@@ -16,8 +16,8 @@ const FINGERPRINT_TONE = {
   match: 'bg-green-50 border-green-200 text-green-900',
   mismatch: 'bg-red-50 border-red-200 text-red-900',
   purged: 'bg-gray-50 border-gray-200 text-gray-700',
-  missing: 'bg-yellow-50 border-yellow-200 text-yellow-900',
-  unverifiable: 'bg-yellow-50 border-yellow-200 text-yellow-900',
+  missing: 'bg-amber-50 border-amber-200 text-amber-900',
+  unverifiable: 'bg-amber-50 border-amber-200 text-amber-900',
   unsigned: 'bg-gray-50 border-gray-200 text-gray-600',
 } as const;
 
@@ -141,7 +141,7 @@ const AuditTrail = ({ trail }: { trail: SerializedAuditTrail }) => (
     </ol>
 
     {trail.chainGaps.length > 0 && (
-      <div className="rounded-xl border border-yellow-200 bg-yellow-50 p-4 text-sm text-yellow-900 mb-4">
+      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 mb-4">
         <p className="font-semibold mb-1">기록에 빈 곳이 있습니다</p>
         <ul className="list-disc pl-5 space-y-0.5">
           {trail.chainGaps.map((gap) => (

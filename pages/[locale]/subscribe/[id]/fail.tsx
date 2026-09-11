@@ -18,7 +18,7 @@ export default function SubscribeFailPage({ id, setupToken, code, message }: Fai
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">카드 등록을 완료하지 못했습니다</h1>
+        <h1 className="typo-page-title">카드 등록을 완료하지 못했습니다</h1>
         <p className="mt-4 text-gray-600 dark:text-gray-300">{message || '카드 인증 중 문제가 발생했습니다.'}</p>
         {code && <p className="mt-2 text-sm text-gray-500">오류 코드: {code}</p>}
         <p className="mt-2 text-sm text-gray-500">아직 청구되지 않았습니다 — 안심하고 다시 시도해 주세요.</p>

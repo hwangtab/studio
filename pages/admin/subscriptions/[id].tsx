@@ -10,6 +10,8 @@ import {
   type SubscriptionActionResult,
 } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, TextArea } from '../../../components/ui/Field';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -192,7 +194,7 @@ export default function AdminSubscriptionDetailPage({
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">구독 상세</h1>
             <Link href="/admin/subscriptions" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -205,7 +207,7 @@ export default function AdminSubscriptionDetailPage({
                 <code className="flex-1 min-w-0 truncate bg-white border border-green-200 rounded px-2 py-1 text-xs">
                   {linkNotice}
                 </code>
-                <Button
+                <Button light
                   variant="outline"
                   onClick={async () => {
                     const ok = await copyToClipboard(linkNotice);
@@ -344,27 +346,27 @@ export default function AdminSubscriptionDetailPage({
               <h2 className="text-lg font-bold text-gray-900 mb-4">작업</h2>
               <div className="flex flex-wrap gap-3">
                 {canCharge && (
-                  <Button disabled={busy} onClick={handleCharge}>
+                  <Button light disabled={busy} onClick={handleCharge}>
                     수동 결제
                   </Button>
                 )}
                 {canPause && (
-                  <Button variant="secondary" disabled={busy} onClick={handlePause}>
+                  <Button light variant="secondary" disabled={busy} onClick={handlePause}>
                     일시정지
                   </Button>
                 )}
                 {canResume && (
-                  <Button disabled={busy} onClick={handleResume}>
+                  <Button light disabled={busy} onClick={handleResume}>
                     재개
                   </Button>
                 )}
                 {canCardChangeLink && (
-                  <Button variant="outline" disabled={busy} onClick={handleCardChangeLink}>
+                  <Button light variant="outline" disabled={busy} onClick={handleCardChangeLink}>
                     카드 변경 링크 발급
                   </Button>
                 )}
                 {canResendSetup && (
-                  <Button variant="outline" disabled={busy} onClick={handleResendSetup}>
+                  <Button light variant="outline" disabled={busy} onClick={handleResendSetup}>
                     등록 링크 재발송
                   </Button>
                 )}
@@ -381,18 +383,16 @@ export default function AdminSubscriptionDetailPage({
                   해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.
                 </p>
                 <form onSubmit={handleCancel} className="space-y-3 max-w-md">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">해지 사유</label>
-                    <textarea
+                  <Field id="cancel-reason" label="해지 사유" error={cancelError ?? undefined} className={lightOnlyField}>
+                    <TextArea
                       value={cancelReason}
                       onChange={(e) => setCancelReason(e.target.value)}
                       rows={2}
                       placeholder="예: 고객 요청 — 개인 사정으로 해지"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                      light className="min-h-0 text-sm"
                     />
-                  </div>
-                  {cancelError && <p className="text-sm text-red-600">{cancelError}</p>}
-                  <Button type="submit" variant="outline" disabled={busy}>
+                  </Field>
+                  <Button light type="submit" variant="outline" disabled={busy}>
                     해지 처리
                   </Button>
                 </form>

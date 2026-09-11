@@ -262,7 +262,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
 
       {/* 상단 즉답 가격 요약표 — 상세 카드로 스크롤하기 전에 전체 단가를 한눈에. */}
-      <Section variant="default" className="py-10">
+      <Section variant="default" spacing="tight">
         <SectionHeading
           icon={Info}
           title={t('pricing.summary.title', { defaultValue: '한눈에 보는 가격표' })}
@@ -569,7 +569,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" className="py-10">
+      <Section variant="alternate" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           {/* 발매 프로젝트를 맨 앞에 — 통합 패키지가 기획·유통·홍보까지 포함하므로
               그 다음 행선지이고, 바로 아래 CTA가 부르는 페이지이기도 하다.
@@ -614,7 +614,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Improved CTA Section */}
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

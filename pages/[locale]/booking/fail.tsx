@@ -19,7 +19,7 @@ export default function BookingFailPage({ code, message, service }: FailProps) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-lg px-4 py-24 text-center">
-        <h1 className="text-2xl font-bold">결제를 완료하지 못했습니다</h1>
+        <h1 className="typo-page-title">결제를 완료하지 못했습니다</h1>
         <p className="mt-4 text-gray-600 dark:text-gray-300">
           {message || '결제 진행 중 문제가 발생했습니다.'}
         </p>

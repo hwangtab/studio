@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 
 import { createSubscription, copyToClipboard } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, TextInput } from '../../../components/ui/Field';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import { subscriptionAmounts } from '../../../lib/billing/amounts';
@@ -75,7 +77,7 @@ export default function NewLessonSubscriptionPage() {
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">레슨 구독 만들기</h1>
             <Link href="/admin/subscriptions" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -95,15 +97,15 @@ export default function NewLessonSubscriptionPage() {
                   <code className="flex-1 min-w-0 truncate bg-gray-50 border border-gray-200 rounded px-2 py-1 text-xs">
                     {setupUrl}
                   </code>
-                  <Button variant="outline" onClick={() => copyToClipboard(setupUrl)}>
+                  <Button light variant="outline" onClick={() => copyToClipboard(setupUrl)}>
                     복사
                   </Button>
                 </div>
                 <p className="mt-2 text-xs text-gray-500">카톡으로 보내는 것이 주 채널입니다.</p>
               </div>
               <div className="flex gap-3">
-                <Button onClick={() => router.push('/admin/subscriptions')}>목록으로</Button>
-                <Button
+                <Button light onClick={() => router.push('/admin/subscriptions')}>목록으로</Button>
+                <Button light
                   variant="outline"
                   onClick={() => {
                     setSetupUrl(null);
@@ -123,49 +125,45 @@ export default function NewLessonSubscriptionPage() {
                 프로듀싱 레슨 월정액: {formatPriceAmount(lessonAmounts.totalAmount)}원 청구 ({formatPriceAmount(lessonAmounts.itemAmount)}원 + VAT)
               </p>
 
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">이름</label>
-                <input
+              <Field id="customer-name" label="이름" className={lightOnlyField}>
+                <TextInput
                   type="text"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="text-sm"
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">전화번호</label>
-                <input
+              </Field>
+              <Field id="customer-phone" label="전화번호" className={lightOnlyField}>
+                <TextInput
                   type="text"
                   value={customerPhone}
                   onChange={(e) => setCustomerPhone(e.target.value)}
                   placeholder="010-1234-5678"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="text-sm"
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">이메일</label>
-                <input
+              </Field>
+              <Field id="customer-email" label="이메일" className={lightOnlyField}>
+                <TextInput
                   type="email"
                   value={customerEmail}
                   onChange={(e) => setCustomerEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="text-sm"
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">결제일 (매월 1~31일)</label>
-                <input
+              </Field>
+              <Field id="billing-day" label="결제일 (매월 1~31일)" className={lightOnlyField}>
+                <TextInput
                   type="number"
                   min={1}
                   max={31}
                   value={billingDay}
                   onChange={(e) => setBillingDay(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="text-sm"
                 />
-              </div>
+              </Field>
 
               {error && <p className="text-sm text-red-600">{error}</p>}
 
-              <Button type="submit" disabled={busy} fullWidth>
+              <Button light type="submit" disabled={busy} fullWidth>
                 {busy ? '생성 중...' : '구독 생성 + 등록 링크 발송'}
               </Button>
             </form>

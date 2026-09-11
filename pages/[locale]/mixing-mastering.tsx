@@ -590,7 +590,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
       />
 
       {/* 관련 서비스 바로가기 */}
-      <Section variant="alternate" className="py-10">
+      <Section variant="alternate" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           <Link
             href={`/${locale}/recording`}
@@ -616,7 +616,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
         </div>
       </Section>
 
-      <Section variant="default" className="py-16">
+      <Section variant="default">
         <ContactCTA
           locale={locale}
           title={

@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
+import { Field, TextInput } from '../ui/Field';
+import { lightOnlyField } from '../ui/adminFieldClass';
 import type { ValidationError } from '../../lib/contracts/validation';
 
 export interface ContractFormValues {
@@ -37,8 +39,7 @@ export const EMPTY_CONTRACT_FORM: ContractFormValues = {
   specialTerms: [],
 };
 
-const INPUT_CLASS =
-  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary disabled:bg-gray-50';
+const ADMIN_FIELD = lightOnlyField;
 
 /** 폼 값(모두 문자열)을 API가 기대하는 타입으로 변환한다. 검증은 서버가 한다. */
 export const toContractPayload = (values: ContractFormValues): Record<string, unknown> => ({
@@ -57,27 +58,6 @@ export const toContractPayload = (values: ContractFormValues): Record<string, un
   paymentDay: values.paymentDay === '' ? undefined : Number(values.paymentDay),
   specialTerms: values.specialTerms.map((term) => term.trim()).filter((term) => term !== ''),
 });
-
-interface FieldProps {
-  label: string;
-  htmlFor: string;
-  error?: string;
-  hint?: string;
-  required?: boolean;
-  children: React.ReactNode;
-}
-
-const Field = ({ label, htmlFor, error, hint, required, children }: FieldProps) => (
-  <div>
-    <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 mb-1">
-      {label}
-      {required && <span className="text-red-500 ml-0.5">*</span>}
-    </label>
-    {children}
-    {hint && !error && <p className="mt-1 text-xs text-gray-500">{hint}</p>}
-    {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
-  </div>
-);
 
 /**
  * 기간 버튼이 채우는 종료일. 말일 보정(1/31 + 1개월 = 2/28)을 포함한다.
@@ -257,33 +237,35 @@ export default function ContractForm({
       <section>
         <h2 className="text-lg font-bold text-gray-900 mb-4">이용자 정보</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="성명" htmlFor="customerName" error={errorMap.customerName} required>
-            <input
-              id="customerName"
-              className={INPUT_CLASS}
+          <Field label="성명" id="customerName" error={errorMap.customerName} required className={ADMIN_FIELD}>
+            <TextInput
+              light
+              className="text-sm"
               value={values.customerName}
               onChange={(e) => set('customerName', e.target.value)}
               autoComplete="off"
             />
           </Field>
 
-          <Field label="이메일" htmlFor="customerEmail" error={errorMap.customerEmail} required
-            hint="이 주소로 서명 링크가 발송됩니다.">
-            <input
-              id="customerEmail"
+          <Field label="이메일" id="customerEmail" error={errorMap.customerEmail} required
+            hint="이 주소로 서명 링크가 발송됩니다."
+            className={ADMIN_FIELD}>
+            <TextInput
               type="email"
-              className={INPUT_CLASS}
+              light
+              className="text-sm"
               value={values.customerEmail}
               onChange={(e) => set('customerEmail', e.target.value)}
               autoComplete="off"
             />
           </Field>
 
-          <Field label="연락처" htmlFor="customerPhone" error={errorMap.customerPhone} required
-            hint="뒤 4자리가 고객의 본인 확인에 쓰입니다.">
-            <input
-              id="customerPhone"
-              className={INPUT_CLASS}
+          <Field label="연락처" id="customerPhone" error={errorMap.customerPhone} required
+            hint="뒤 4자리가 고객의 본인 확인에 쓰입니다."
+            className={ADMIN_FIELD}>
+            <TextInput
+              light
+              className="text-sm"
               value={values.customerPhone}
               onChange={(e) => set('customerPhone', e.target.value)}
               autoComplete="off"
@@ -301,39 +283,39 @@ export default function ContractForm({
       <section>
         <h2 className="text-lg font-bold text-gray-900 mb-4">이용 대상 및 기간</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Field label="호실" htmlFor="roomNumber" error={errorMap.roomNumber} required hint="예: A, 201">
-            <input
-              id="roomNumber"
-              className={INPUT_CLASS}
+          <Field label="호실" id="roomNumber" error={errorMap.roomNumber} required hint="예: A, 201" className={ADMIN_FIELD}>
+            <TextInput
+              light
+              className="text-sm"
               value={values.roomNumber}
               onChange={(e) => set('roomNumber', e.target.value)}
             />
           </Field>
 
-          <Field label="면적" htmlFor="roomArea" error={errorMap.roomArea}>
-            <input
-              id="roomArea"
-              className={INPUT_CLASS}
+          <Field label="면적" id="roomArea" error={errorMap.roomArea} className={ADMIN_FIELD}>
+            <TextInput
+              light
+              className="text-sm"
               value={values.roomArea}
               onChange={(e) => set('roomArea', e.target.value)}
             />
           </Field>
 
-          <Field label="시작일" htmlFor="startDate" error={errorMap.startDate} required>
-            <input
-              id="startDate"
+          <Field label="시작일" id="startDate" error={errorMap.startDate} required className={ADMIN_FIELD}>
+            <TextInput
               type="date"
-              className={INPUT_CLASS}
+              light
+              className="text-sm"
               value={values.startDate}
               onChange={(e) => set('startDate', e.target.value)}
             />
           </Field>
 
-          <Field label="종료일" htmlFor="endDate" error={errorMap.endDate} required>
-            <input
-              id="endDate"
+          <Field label="종료일" id="endDate" error={errorMap.endDate} required className={ADMIN_FIELD}>
+            <TextInput
               type="date"
-              className={INPUT_CLASS}
+              light
+              className="text-sm"
               value={values.endDate}
               onChange={(e) => set('endDate', e.target.value)}
             />
@@ -368,39 +350,43 @@ export default function ContractForm({
       <section>
         <h2 className="text-lg font-bold text-gray-900 mb-4">이용료</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Field label="월 이용료" htmlFor="monthlyRent" error={errorMap.monthlyRent} required hint="원 단위 숫자">
-            <input
-              id="monthlyRent"
+          <Field label="월 이용료" id="monthlyRent" error={errorMap.monthlyRent} required hint="원 단위 숫자" className={ADMIN_FIELD}>
+            <TextInput
               inputMode="numeric"
-              className={INPUT_CLASS}
+              light
+              className="text-sm"
               value={values.monthlyRent}
               onChange={(e) => handleMonthlyRentChange(e.target.value)}
             />
           </Field>
 
+          {/* required를 주지 않는다 — 아래 컨트롤은 readOnly + tabIndex={-1}이라 포커스도 입력도
+              할 수 없다. 거기에 aria-required="true"가 붙으면 스크린리더가 "채울 수 없는 필수
+              칸"을 알리게 된다. 값의 출처는 hint가 설명한다. */}
           <Field
             label="보증금"
-            htmlFor="depositAmount"
+            id="depositAmount"
             error={errorMap.depositAmount}
-            required
             hint="제5조에 따라 월 이용료와 같은 금액이며, 계약 시 납부를 면제합니다"
+            className={ADMIN_FIELD}
           >
             {/* 제5조가 금액을 정하고 있어 따로 받지 않는다. 다른 값을 넣으면 계약서 안에서
                 요약표와 제5조가 서로 다른 말을 하게 된다. */}
-            <input
-              id="depositAmount"
+            <TextInput
               inputMode="numeric"
               readOnly
               tabIndex={-1}
-              className={`${INPUT_CLASS} bg-gray-50 text-gray-600 cursor-not-allowed`}
+              light
+              className="text-sm bg-gray-50 text-gray-600 dark:bg-gray-50 dark:text-gray-600 cursor-not-allowed"
               value={values.depositAmount}
             />
           </Field>
 
           <Field
             label="납부일"
-            htmlFor="paymentDay"
+            id="paymentDay"
             error={errorMap.paymentDay}
+            className={ADMIN_FIELD}
             // 29~31일은 없는 달이 있어 계약서에 그대로 적히면 이행 시점이 모호해진다.
             hint={
               Number(values.paymentDay) >= 29
@@ -408,10 +394,10 @@ export default function ContractForm({
                 : '매월 며칠(선불)'
             }
           >
-            <input
-              id="paymentDay"
+            <TextInput
               inputMode="numeric"
-              className={INPUT_CLASS}
+              light
+              className="text-sm"
               value={values.paymentDay}
               onChange={(e) => set('paymentDay', e.target.value.replace(/[^0-9]/g, ''))}
             />
@@ -422,7 +408,7 @@ export default function ContractForm({
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-bold text-gray-900">특약사항</h2>
-          <Button
+          <Button light
             type="button"
             size="sm"
             variant="outline"
@@ -438,8 +424,9 @@ export default function ContractForm({
           <div className="space-y-2">
             {values.specialTerms.map((term, index) => (
               <div key={specialTermIds[index] ?? index} className="flex gap-2">
-                <input
-                  className={INPUT_CLASS}
+                <TextInput
+                  light
+              className="text-sm"
                   value={term}
                   placeholder={`특약 ${index + 1}`}
                   onChange={(e) => updateSpecialTerm(index, e.target.value)}
@@ -463,13 +450,14 @@ export default function ContractForm({
       <section>
         <Field
           label="계약 제목"
-          htmlFor="title"
+          id="title"
           error={errorMap.title}
           hint="비워 두면 “○○○님 음악연습실 이용계약”으로 저장됩니다."
+          className={ADMIN_FIELD}
         >
-          <input
-            id="title"
-            className={INPUT_CLASS}
+          <TextInput
+            light
+              className="text-sm"
             value={values.title}
             onChange={(e) => set('title', e.target.value)}
           />
@@ -481,10 +469,10 @@ export default function ContractForm({
       )}
 
       <div className="flex flex-wrap gap-3 pt-2 border-t border-gray-200">
-        <Button type="submit" size="lg" disabled={submitting}>
+        <Button light type="submit" size="lg" disabled={submitting}>
           {submitting ? '저장 중...' : submitLabel}
         </Button>
-        <Button type="button" size="lg" variant="outline" onClick={handleCancel} disabled={submitting}>
+        <Button light type="button" size="lg" variant="outline" onClick={handleCancel} disabled={submitting}>
           취소
         </Button>
       </div>

@@ -11,6 +11,7 @@ import {
   mutateContract,
 } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
+import { TextInput } from '../../../components/ui/Field';
 import { getDb } from '../../../db/client';
 import { contractStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -104,7 +105,7 @@ const STATUS_CLASS: Record<string, string> = {
   sent: 'bg-blue-100 text-blue-700',
   signed: 'bg-green-100 text-green-700',
   cancelled: 'bg-red-100 text-red-700',
-  expired: 'bg-yellow-100 text-yellow-700',
+  expired: 'bg-amber-100 text-amber-700',
   terminated: 'bg-gray-200 text-gray-600',
 };
 
@@ -235,9 +236,9 @@ export default function AdminContractsPage({
               </div>
               <div className="flex gap-2">
                 <Link href="/admin/contracts/new" passHref>
-                  <Button variant="secondary">새 계약 작성</Button>
+                  <Button light variant="secondary">새 계약 작성</Button>
                 </Link>
-                <Button variant="outline" className="border-white/40 text-white hover:bg-white/10" onClick={handleLogout}>
+                <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40" onClick={handleLogout}>
                   로그아웃
                 </Button>
               </div>
@@ -301,12 +302,12 @@ export default function AdminContractsPage({
                   ))}
                 </div>
 
-                <input
+                <TextInput
                   type="text"
                   placeholder="이름, 이메일, 전화번호, 호실 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="flex-1 min-w-[240px] px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="w-auto flex-1 min-w-[240px] px-4"
                 />
               </div>
 
@@ -384,13 +385,13 @@ export default function AdminContractsPage({
                           <td className="px-4 py-3">
                             <div className="flex flex-wrap gap-2">
                               <Link href={`/admin/contracts/${contract.id}`} passHref>
-                                <Button size="sm" variant="outline">
+                                <Button light size="sm" variant="outline">
                                   상세
                                 </Button>
                               </Link>
 
                               {contract.status === 'draft' && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() => handleSend(contract)}
@@ -400,7 +401,7 @@ export default function AdminContractsPage({
                               )}
 
                               {contract.status === 'sent' && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   variant="secondary"
                                   onClick={() => handleCopyLink(contract)}
@@ -410,7 +411,7 @@ export default function AdminContractsPage({
                               )}
 
                               {(contract.status === 'expired' || contract.status === 'cancelled') && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() => handleResend(contract)}
@@ -420,7 +421,7 @@ export default function AdminContractsPage({
                               )}
 
                               {contract.status === 'signed' && !contract.purgedAt && (
-                                <Button
+                                <Button light
                                   size="sm"
                                   disabled={busy}
                                   onClick={() =>

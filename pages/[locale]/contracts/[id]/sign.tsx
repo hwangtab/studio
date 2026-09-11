@@ -7,6 +7,8 @@ import Markdown from 'markdown-to-jsx';
 
 import ContractContent from '../../../../components/contracts/ContractContent';
 import { Button } from '../../../../components/ui/Button';
+import { Field, TextInput } from '../../../../components/ui/Field';
+import { lightOnlyField } from '../../../../components/ui/adminFieldClass';
 import { getDb } from '../../../../db/client';
 import {
   serializeAttachment,
@@ -153,6 +155,10 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
   }
 };
 
+
+
+/** 계약서 페이지는 종이처럼 항상 밝다 — 컨트롤은 `light` prop, 래퍼는 이 클래스로 되돌린다. */
+const LIGHT_FIELD = lightOnlyField;
 
 export default function ContractSignPage({
   locale,
@@ -486,7 +492,7 @@ export default function ContractSignPage({
               <p className="text-white/70 dark:text-white/70 text-sm font-medium mb-1">
                 스튜디오 놀 · 서울 은평구 대조동
               </p>
-              <h1 className="text-2xl md:text-3xl font-bold text-white dark:text-white">음악연습실 이용계약서</h1>
+              <h1 className="typo-page-title text-white dark:text-white">음악연습실 이용계약서</h1>
               <p className="text-white dark:text-white/80 mt-2">
                 {contract.customerName}님, 아래 내용을 확인하고 서명해 주세요.
               </p>
@@ -523,60 +529,50 @@ export default function ContractSignPage({
                 여기서 채운 값으로 위 계약서가 완성된 뒤 그 최종본에 서명이 붙는다.
               */}
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">이용자 정보</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">이용자 정보</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4 leading-relaxed">
                   아래 두 항목은 계약서에 그대로 기재됩니다. 정확히 입력해 주세요.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor="customerBirthdate"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-1"
-                    >
-                      생년월일 <span className="text-red-600 dark:text-red-600">*</span>
-                    </label>
-                    <input
-                      id="customerBirthdate"
+                  <Field
+                    id="customerBirthdate"
+                    label="생년월일"
+                    required
+                    error={detailErrors.customerBirthdate}
+                    className={LIGHT_FIELD}
+                  >
+                    <TextInput
                       type="date"
                       value={customerBirthdate}
                       onChange={(e) => setCustomerBirthdate(e.target.value)}
                       max={new Date().toISOString().slice(0, 10)}
-                      className="w-full rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [color-scheme:light]"
+                      light
+                      className="px-4 py-3 [color-scheme:light]"
                     />
-                    {detailErrors.customerBirthdate && (
-                      <p className="mt-1 text-xs text-red-600 dark:text-red-600">
-                        {detailErrors.customerBirthdate}
-                      </p>
-                    )}
-                  </div>
+                  </Field>
 
-                  <div>
-                    <label
-                      htmlFor="customerAddress"
-                      className="block text-sm font-medium text-gray-700 dark:text-gray-700 mb-1"
-                    >
-                      주소 <span className="text-red-600 dark:text-red-600">*</span>
-                    </label>
-                    <input
-                      id="customerAddress"
+                  <Field
+                    id="customerAddress"
+                    label="주소"
+                    required
+                    error={detailErrors.customerAddress}
+                    className={LIGHT_FIELD}
+                  >
+                    <TextInput
                       value={customerAddress}
                       onChange={(e) => setCustomerAddress(e.target.value)}
                       placeholder="예: 서울시 은평구 대조동 00-0"
                       autoComplete="street-address"
-                      className="w-full rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary"
+                      light
+                      className="px-4 py-3"
                     />
-                    {detailErrors.customerAddress && (
-                      <p className="mt-1 text-xs text-red-600 dark:text-red-600">
-                        {detailErrors.customerAddress}
-                      </p>
-                    )}
-                  </div>
+                  </Field>
                 </div>
               </div>
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-4">필수 동의</h2>
 
                 <div className="space-y-3">
                   {clauses.map((clause) => (
@@ -621,7 +617,7 @@ export default function ContractSignPage({
               </div>
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">본인 확인</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   계약 체결 시 등록하신 연락처의 뒤 {IDENTITY_DIGITS}자리를 입력해 주세요.
                   <span className="block mt-1 text-gray-500 dark:text-gray-500">
@@ -630,7 +626,7 @@ export default function ContractSignPage({
                   </span>
                 </p>
 
-                <input
+                <TextInput
                   type="text"
                   inputMode="numeric"
                   autoComplete="off"
@@ -641,10 +637,8 @@ export default function ContractSignPage({
                   }
                   placeholder={'0'.repeat(IDENTITY_DIGITS)}
                   aria-label={`연락처 뒤 ${IDENTITY_DIGITS}자리`}
-                  /* 배경·글자색을 명시한다. globals.css의 `color-scheme: light dark` 때문에
-                     OS가 다크 모드면 브라우저가 입력칸을 제멋대로 어둡게 칠하고, 글자색은
-                     상속을 따라가 입력한 네 자리가 보이지 않는 조합이 만들어진다. */
-                  className="w-32 text-center tracking-[0.4em] text-lg rounded-xl border border-gray-300 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary [color-scheme:light]"
+                  light
+                  className="w-32 text-center tracking-[0.4em] text-lg px-4 py-3 [color-scheme:light]"
                 />
 
                 <label className="mt-5 flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-50 rounded-xl cursor-pointer hover:bg-gray-100">
@@ -662,7 +656,7 @@ export default function ContractSignPage({
               </div>
 
               <div className="mt-10 border-t border-gray-200 dark:border-gray-200 pt-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
+                <h2 className="typo-card-subtitle text-gray-900 dark:text-gray-900 mb-2">전자서명</h2>
                 <p className="text-sm text-gray-600 dark:text-gray-600 mb-4">
                   아래 영역에 마우스나 손가락으로 서명해 주세요.
                 </p>
@@ -699,7 +693,7 @@ export default function ContractSignPage({
               )}
 
               <div className="mt-8">
-                <Button
+                <Button light
                   size="lg"
                   fullWidth
                   disabled={submitting || !detailsReady || !allAgreed || !identityReady || !hasSigned}

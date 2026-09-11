@@ -60,15 +60,15 @@ beforeEach(() => {
 
 it('배송 리워드는 배송지 입력이 보이고, 한정 수량이면 무통장 선택지가 없다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-  expect(screen.getByLabelText('받는 분')).toBeInTheDocument();
+  expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
   expect(screen.queryByLabelText(/무통장/)).toBeNull();
 });
 it('무제한 리워드는 무통장 선택지가 있고, 제출하면 서버 금액으로 결제 단계가 뜬다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   expect(screen.getByLabelText(/무통장/)).toBeInTheDocument();
-  await userEvent.type(screen.getByLabelText('이름'), '김후원');
-  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
   expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
@@ -102,13 +102,13 @@ it('리워드를 바꾸면 수량이 1로 리셋된다', async () => {
 
 it('한정 수량 리워드는 무통장을 고를 수 없고, 제출하면 결제수단이 toss로 나간다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-  await userEvent.type(screen.getByLabelText('이름'), '김후원');
-  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
-  await userEvent.type(screen.getByLabelText('받는 분'), '김후원');
-  await userEvent.type(screen.getByLabelText('받는 분 연락처'), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText('우편번호'), '12345');
-  await userEvent.type(screen.getByLabelText('주소'), '서울시 어딘가');
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
+  await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
   await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
   await screen.findByTestId('toss-widget');
@@ -121,13 +121,13 @@ it('무제한 리워드에서 무통장을 고른 뒤 한정 리워드로 바꾸
   await userEvent.click(screen.getByLabelText(/무통장/));
   await userEvent.click(screen.getByLabelText(/CD/));
   expect(screen.queryByLabelText(/무통장/)).toBeNull();
-  await userEvent.type(screen.getByLabelText('이름'), '김후원');
-  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
-  await userEvent.type(screen.getByLabelText('받는 분'), '김후원');
-  await userEvent.type(screen.getByLabelText('받는 분 연락처'), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText('우편번호'), '12345');
-  await userEvent.type(screen.getByLabelText('주소'), '서울시 어딘가');
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
+  await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
   await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
   await screen.findByTestId('toss-widget');
@@ -160,9 +160,9 @@ it('"다시 신청"은 남은 시간을 초기화한다 — 재제출이 곧바�
       json: async () => ({ ok: true, orderNo: 'FND-1', holdExpiresAt: new Date(Date.now() - 1000).toISOString(), itemAmount: 4545, vatAmount: 455, totalAmount: 5000 }),
     });
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    fireEvent.change(screen.getByLabelText('이름'), { target: { value: '김후원' } });
-    fireEvent.change(screen.getByLabelText('연락처'), { target: { value: '010-1111-2222' } });
-    fireEvent.change(screen.getByLabelText('이메일'), { target: { value: 'a@b.com' } });
+    fireEvent.change(screen.getByLabelText(/^이름\*$/), { target: { value: '김후원' } });
+    fireEvent.change(screen.getByLabelText(/^연락처\*$/), { target: { value: '010-1111-2222' } });
+    fireEvent.change(screen.getByLabelText(/^이메일\*$/), { target: { value: 'a@b.com' } });
     fireEvent.click(screen.getByLabelText(/약관/));
     fireEvent.submit(screen.getByRole('button', { name: /결제로 이동/ }).closest('form')!);
     await act(async () => { await Promise.resolve(); });
@@ -170,7 +170,7 @@ it('"다시 신청"은 남은 시간을 초기화한다 — 재제출이 곧바�
 
     fireEvent.click(screen.getByRole('button', { name: '다시 신청' }));
     // 폼으로 돌아오고, 남은 시간 표시도 만료 상태가 아니다.
-    expect(screen.getByLabelText('이름')).toBeInTheDocument();
+    expect(screen.getByLabelText(/^이름\*$/)).toBeInTheDocument();
     expect(screen.queryByText(/결제 대기 시간이 지났습니다/)).toBeNull();
   } finally {
     jest.useRealTimers();
@@ -189,9 +189,9 @@ it('무통장 제출은 depositUrl로 전체 페이지 이동한다 — 토큰�
   });
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   await userEvent.click(screen.getByLabelText(/무통장/));
-  await userEvent.type(screen.getByLabelText('이름'), '김후원');
-  await userEvent.type(screen.getByLabelText('연락처'), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText('이메일'), 'a@b.com');
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제로 이동|신청/ }));
   expect(assignMock).toHaveBeenCalledWith('/ko/funding/deposit/FND-1?token=tok');

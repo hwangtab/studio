@@ -6,6 +6,8 @@ import { useRouter } from 'next/router';
 
 import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
@@ -104,7 +106,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
           <div className="mb-6 flex items-center justify-between">
             <h1 className="text-2xl font-bold text-gray-900">후원 상세</h1>
             <Link href="/admin/funding" passHref>
-              <Button variant="outline">목록으로</Button>
+              <Button light variant="outline">목록으로</Button>
             </Link>
           </div>
 
@@ -150,51 +152,48 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
             <div className="flex flex-wrap gap-2">
               {canConfirmDeposit && (
-                <Button disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
+                <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
               )}
               {canRefund && (
-                <Button variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
+                <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}
-              <Button variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
+              <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>
 
             <div>
               <h2 className="text-lg font-bold text-gray-900 mb-3">발송 상태</h2>
               <div className="flex flex-wrap items-end gap-3 p-4 bg-gray-50 rounded-xl">
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">상태</label>
-                  <select
+                <Field id="fulfillment-status" label="상태" className={lightOnlyField}>
+                  <Select
                     value={fulfillmentStatus}
                     onChange={(e) => setFulfillmentStatus(e.target.value as typeof fulfillmentStatus)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    light className="w-auto text-sm"
                     disabled={pledge.status !== 'paid'}
                   >
                     {FULFILLMENT_OPTIONS.map((s) => (
                       <option key={s} value={s}>{FULFILLMENT_LABELS[s]}</option>
                     ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">택배사</label>
-                  <input
+                  </Select>
+                </Field>
+                <Field id="tracking-company" label="택배사" className={lightOnlyField}>
+                  <TextInput
                     type="text"
                     value={trackingCompany}
                     onChange={(e) => setTrackingCompany(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    light className="w-auto text-sm"
                     disabled={pledge.status !== 'paid'}
                   />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">운송장번호</label>
-                  <input
+                </Field>
+                <Field id="tracking-number" label="운송장번호" className={lightOnlyField}>
+                  <TextInput
                     type="text"
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
-                    className="px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    light className="w-auto text-sm"
                     disabled={pledge.status !== 'paid'}
                   />
-                </div>
-                <Button disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
+                </Field>
+                <Button light disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
               </div>
               {pledge.status !== 'paid' && (
                 <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
@@ -204,13 +203,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             <div>
               <h2 className="text-lg font-bold text-gray-900 mb-3">관리자 메모</h2>
               <div className="flex flex-col gap-3">
-                <textarea
+                <TextArea
                   value={memo}
                   onChange={(e) => setMemo(e.target.value)}
                   rows={3}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  aria-label="관리자 메모"
+                  light className="min-h-0 text-sm"
                 />
-                <Button disabled={busy} onClick={handleSaveMemo} className="self-start">메모 저장</Button>
+                <Button light disabled={busy} onClick={handleSaveMemo} className="self-start">메모 저장</Button>
               </div>
             </div>
           </div>

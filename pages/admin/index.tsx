@@ -37,26 +37,26 @@ export default function AdminIndexPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-6">관리자</h1>
           <div className="flex flex-col gap-3">
             <Link href="/admin/contracts" passHref>
-              <Button fullWidth size="lg">
+              <Button light fullWidth size="lg">
                 계약 관리
               </Button>
             </Link>
             <Link href="/admin/bookings" passHref>
-              <Button fullWidth size="lg" variant="secondary">
+              <Button light fullWidth size="lg" variant="secondary">
                 예약 관리
               </Button>
             </Link>
             <Link href="/admin/funding" passHref>
-              <Button fullWidth size="lg" variant="secondary">
+              <Button light fullWidth size="lg" variant="secondary">
                 펀딩 관리
               </Button>
             </Link>
             <Link href="/admin/subscriptions" passHref>
-              <Button fullWidth size="lg" variant="secondary">
+              <Button light fullWidth size="lg" variant="secondary">
                 구독 관리
               </Button>
             </Link>
-            <Button variant="ghost" onClick={handleLogout}>
+            <Button light variant="ghost" onClick={handleLogout}>
               로그아웃
             </Button>
           </div>

@@ -7,6 +7,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
+import { Button } from '../ui/Button';
 
 interface StickyBottomCTAProps {
   /** article 시작 직전 invisible marker ref */
@@ -104,45 +105,50 @@ const StickyBottomCTA = ({ markerRef, locale }: StickyBottomCTAProps) => {
       <p className="flex-1 typo-card-body text-sm text-gray-800 dark:text-gray-200 truncate">
         {t('stories.sticky.headline', { defaultValue: '예약·문의는 카카오톡으로' })}
       </p>
-      <a
-        href={siteConfig.contact.kakaoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={trackKakaoClick}
-        className="hidden sm:inline-flex items-center gap-1 px-4 py-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink text-sm font-bold min-h-[44px] touch-manipulation"
-      >
-        {t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
-        <ArrowRight size={14} aria-hidden="true" />
-      </a>
+      {/* 링 오프셋만 amber 바 배경에 맞춰 덮는다(기본은 흰색/gray-900). */}
+      <Button asChild variant="kakao" shape="pill" size="md">
+        <a
+          href={siteConfig.contact.kakaoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={trackKakaoClick}
+          className="hidden sm:inline-flex gap-1 h-auto min-h-[44px] px-4 py-2 text-sm font-bold touch-manipulation focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
+        >
+          {t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
+          <ArrowRight size={14} aria-hidden="true" />
+        </a>
+      </Button>
       <Link
         href={`/${locale}/pricing`}
         prefetch={false}
-        className="hidden sm:inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold text-amber-700 dark:text-amber-300 hover:underline min-h-[44px] touch-manipulation"
+        className="hidden sm:inline-flex items-center gap-1 px-3 py-2 text-sm font-semibold text-amber-700 dark:text-amber-300 hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
       >
         {t('nav.pricing')}
       </Link>
       <a
         href={telHref}
         onClick={trackPhoneClick}
-        className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-500/20 touch-manipulation"
+        className="inline-flex items-center justify-center w-11 h-11 rounded-full border-2 border-amber-400 dark:border-amber-500/50 text-amber-800 dark:text-amber-200 hover:bg-amber-200 dark:hover:bg-amber-500/20 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
         aria-label={t('stories.sticky.phone', { defaultValue: '전화 문의' })}
       >
         <Phone size={20} aria-hidden="true" />
       </a>
-      <a
-        href={siteConfig.contact.kakaoUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        onClick={trackKakaoClick}
-        className="sm:hidden inline-flex items-center justify-center w-11 h-11 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink touch-manipulation"
-        aria-label={t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
-      >
-        <MessageCircle size={20} aria-hidden="true" />
-      </a>
+      <Button asChild variant="kakao" shape="pill" size="icon">
+        <a
+          href={siteConfig.contact.kakaoUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={trackKakaoClick}
+          className="sm:hidden touch-manipulation focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
+          aria-label={t('stories.sticky.kakao', { defaultValue: '카카오톡' })}
+        >
+          <MessageCircle size={20} aria-hidden="true" />
+        </a>
+      </Button>
       <button
         type="button"
         onClick={handleDismiss}
-        className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-amber-200 dark:hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 touch-manipulation"
+        className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-amber-200 dark:hover:bg-amber-500/20 text-amber-800 dark:text-amber-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-amber-50 dark:focus-visible:ring-offset-amber-900"
         aria-label={t('stories.sticky.dismiss', { defaultValue: '닫기' })}
       >
         <X size={18} aria-hidden="true" />

@@ -7,6 +7,8 @@ import { useRouter } from 'next/router';
 import { createBlock, deleteBlock } from '../../../components/admin/bookingActions';
 import { logoutAdmin } from '../../../components/admin/contractActions';
 import { Button } from '../../../components/ui/Button';
+import { Field, Select, TextInput } from '../../../components/ui/Field';
+import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
 import { orderStatusEnum } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -250,11 +252,11 @@ export default function AdminBookingsPage({
               </div>
               <div className="flex gap-2">
                 <Link href="/admin/contracts" passHref>
-                  <Button variant="secondary">계약 관리</Button>
+                  <Button light variant="secondary">계약 관리</Button>
                 </Link>
                 <Button
                   variant="outline"
-                  className="border-white/40 text-white hover:bg-white/10"
+                  className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40"
                   onClick={handleLogout}
                 >
                   로그아웃
@@ -322,12 +324,12 @@ export default function AdminBookingsPage({
                   ))}
                 </div>
 
-                <input
+                <TextInput
                   type="text"
                   placeholder="이름, 이메일, 전화번호, 주문번호 검색"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="flex-1 min-w-[240px] px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="w-auto flex-1 min-w-[240px] px-4"
                 />
               </div>
 
@@ -405,7 +407,7 @@ export default function AdminBookingsPage({
                           </td>
                           <td className="px-4 py-3">
                             <Link href={`/admin/bookings/${booking.id}`} passHref>
-                              <Button size="sm" variant="outline">
+                              <Button light size="sm" variant="outline">
                                 상세
                               </Button>
                             </Link>
@@ -436,55 +438,51 @@ export default function AdminBookingsPage({
               onSubmit={handleCreateBlock}
               className="flex flex-wrap items-end gap-3 mb-6 p-4 bg-gray-50 rounded-xl"
             >
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">날짜</label>
-                <input
+              <Field id="block-date" label="날짜" required className={lightOnlyField}>
+                <TextInput
                   type="date"
                   value={blockDate}
                   onChange={(e) => setBlockDate(e.target.value)}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="w-auto text-sm"
                   required
                 />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">시작</label>
-                <select
+              </Field>
+              <Field id="block-start" label="시작" className={lightOnlyField}>
+                <Select
                   value={blockStartHour}
                   onChange={(e) => setBlockStartHour(Number(e.target.value))}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="w-auto text-sm"
                 >
                   {HOURS.map((h) => (
                     <option key={h} value={h}>
                       {h}시
                     </option>
                   ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">종료</label>
-                <select
+                </Select>
+              </Field>
+              <Field id="block-end" label="종료" className={lightOnlyField}>
+                <Select
                   value={blockEndHour}
                   onChange={(e) => setBlockEndHour(Number(e.target.value))}
-                  className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="w-auto text-sm"
                 >
                   {[...HOURS, 24].map((h) => (
                     <option key={h} value={h}>
                       {h}시
                     </option>
                   ))}
-                </select>
-              </div>
-              <div className="flex-1 min-w-[160px]">
-                <label className="block text-xs font-medium text-gray-600 mb-1">메모 (선택)</label>
-                <input
+                </Select>
+              </Field>
+              <Field id="block-memo" label="메모 (선택)" className={lightOnlyField + ' flex-1 min-w-[160px]'}>
+                <TextInput
                   type="text"
                   value={blockMemo}
                   onChange={(e) => setBlockMemo(e.target.value)}
                   placeholder="예: 장비 점검"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                  light className="text-sm"
                 />
-              </div>
-              <Button type="submit" size="sm" disabled={busy}>
+              </Field>
+              <Button light type="submit" size="sm" disabled={busy}>
                 등록
               </Button>
             </form>
@@ -506,7 +504,7 @@ export default function AdminBookingsPage({
                       {formatKstDateTime(block.startAt)} ~ {formatKstDateTime(block.endAt)}
                       {block.memo && <span className="text-gray-500 ml-2">({block.memo})</span>}
                     </span>
-                    <Button
+                    <Button light
                       size="sm"
                       variant="ghost"
                       className="text-red-600 hover:bg-red-50"

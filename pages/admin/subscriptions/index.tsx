@@ -102,12 +102,12 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
             <h1 className="text-2xl font-bold text-gray-900">구독 관리</h1>
             <div className="flex gap-2">
               <Link href="/admin/subscriptions/new" passHref>
-                <Button>레슨 구독 만들기</Button>
+                <Button light>레슨 구독 만들기</Button>
               </Link>
               <Link href="/admin" passHref>
-                <Button variant="outline">관리자 홈</Button>
+                <Button light variant="outline">관리자 홈</Button>
               </Link>
-              <Button variant="ghost" onClick={() => logoutAdmin()}>
+              <Button light variant="ghost" onClick={() => logoutAdmin()}>
                 로그아웃
               </Button>
             </div>

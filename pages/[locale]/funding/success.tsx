@@ -36,7 +36,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
         <div className="glass-card rounded-2xl p-6 text-center sm:p-8">
         {outcome === 'confirmed' ? (
           <>
-            <h1 className="typo-card-title text-gray-900 dark:text-white">후원이 확정되었습니다</h1>
+            <h1 className="typo-page-title">후원이 확정되었습니다</h1>
             <p className="typo-card-body mx-auto mt-3 max-w-md">
               주문번호 {orderNo}.
               {emailSent === false
@@ -70,7 +70,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
           </>
         ) : (
           <>
-            <h1 className="typo-card-title text-gray-900 dark:text-white">결제를 확정하지 못했습니다</h1>
+            <h1 className="typo-page-title">결제를 확정하지 못했습니다</h1>
             <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
             <p className="typo-card-meta mx-auto mt-3 max-w-md">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
             {/* 오류 분기에도 눌러야 할 곳이 하나는 있어야 한다 — fail.tsx와 같은 solid 버튼. */}
