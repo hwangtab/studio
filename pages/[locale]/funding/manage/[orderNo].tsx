@@ -49,8 +49,12 @@ export default function FundingManagePage(p: Props) {
   return (
     <>
       <Head><title>후원 확인 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
-      <main className="mx-auto max-w-xl px-4 pb-24 pt-28 sm:pt-32">
-        <h1 className="typo-section-title">후원 확인</h1>
+      <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="typo-card-meta">스튜디오 놀</p>
+        <h1 className="typo-section-title mt-1">후원 확인</h1>
         <p className="typo-section-lead mt-3">후원 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있습니다.</p>
 
         <div className="glass-card mt-8 rounded-2xl p-6 sm:p-8">
@@ -67,12 +71,16 @@ export default function FundingManagePage(p: Props) {
             )}
           </div>
 
-          {/* private 페이지의 이탈 링크는 문서 이동(`<a href>`)이어야 한다 — next/link 클라
-              전환으로 나갔다가 뒤로가기를 누르면, 그 사이 mount된 gtag가 살아 있는 채로
-              ?token=이 실린 이 URL에 돌아와 page_view를 보낸다(lib/analytics/privatePaths.ts). */}
+          {/* 이 URL에는 관리 토큰이 실린다. 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+              1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+                 그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+              2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+                 strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+                 없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+                 private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
           <dl className="mt-5 space-y-3">
             {[
-              { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">{p.projectTitle}</a> },
+              { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-light">{p.projectTitle}</a> },
               { k: '리워드', v: `${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 후원 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),

@@ -230,7 +230,11 @@ function SessionManageView(props: SessionManageProps) {
       </Head>
 
       <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-        <h1 className="typo-page-title">예약 확인</h1>
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
+        <h1 className="typo-page-title mt-1">예약 확인</h1>
         <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">주문번호 {orderNo}</p>
 
         <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
@@ -283,10 +287,14 @@ function SessionManageView(props: SessionManageProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        {/* 이탈 링크는 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를
-            누르면 그 사이 mount된 gtag가 ?token=이 실린 이 URL로 page_view를 보낸다
-            (lib/analytics/privatePaths.ts). */}
-        <a href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
+        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+            1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+               그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+            2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+               strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+               없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+               private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
+        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary hover:underline">
           홈으로
         </a>
       </main>
@@ -309,7 +317,11 @@ function MixingManageView(props: MixingManageProps) {
       </Head>
 
       <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-        <h1 className="typo-page-title">주문 확인</h1>
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
+        <h1 className="typo-page-title mt-1">주문 확인</h1>
         <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">주문번호 {orderNo}</p>
 
         <section className="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">
@@ -364,10 +376,14 @@ function MixingManageView(props: MixingManageProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        {/* 이탈 링크는 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를
-            누르면 그 사이 mount된 gtag가 ?token=이 실린 이 URL로 page_view를 보낸다
-            (lib/analytics/privatePaths.ts). */}
-        <a href="/ko" className="mt-2 inline-block text-sm text-primary hover:underline">
+        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+            1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+               그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+            2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+               strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+               없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+               private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
+        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary hover:underline">
           홈으로
         </a>
       </main>

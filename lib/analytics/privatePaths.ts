@@ -45,6 +45,33 @@ export const PRIVATE_NO_STORE_SOURCES: readonly string[] = PRIVATE_ROUTE_BODIES.
   ([body, hasSubPath]) => `/:locale${LOCALE_GROUP}/${body}${hasSubPath ? '/:path*' : ''}`,
 );
 
+/**
+ * 같은 페이지들을 Next.js `router.pathname`(동적 세그먼트가 `[...]`인 형태)으로 적은 목록.
+ * `components/Layout.tsx`가 사이트 껍데기(헤더·푸터·플로팅 버튼)를 벗길 때 쓴다.
+ *
+ * 본문 링크만 문서 이동으로 바꾸는 것으로는 부족하다 — 헤더 로고·네비·푸터가 전부
+ * next/link라, 로고 한 번이면 위에 적은 뒤로가기 유출이 그대로 재현된다. 본문의 "홈으로"
+ * 보다 헤더 로고가 더 자주 눌린다. 계약 화면과 같은 판단이기도 하다: 한 가지 일만 하러
+ * 온 화면이라 네비게이션이 필요 없고, 브랜드는 페이지가 자기 상단에서 직접 밝힌다.
+ *
+ * `/funding/[slug]/pledge`는 **일부러 뺐다.** URL에 비밀값이 없는 결제 **전** 입력 폼이라
+ * 측정 대상이고, 후원자가 가격·약관을 다시 보러 나갈 수 있어야 한다(우하단 플로팅 버튼만
+ * FundingMobileCta와 겹쳐 `Layout`이 이미 따로 숨긴다).
+ *
+ * 계약 화면은 `Layout`이 `isContractPage`로 따로 판정한다 — 라이트 고정 등 규칙이 더 있다.
+ */
+export const PRIVATE_PAGE_ROUTES: readonly string[] = [
+  '/[locale]/funding/manage/[orderNo]',
+  '/[locale]/funding/deposit/[orderNo]',
+  '/[locale]/funding/success',
+  '/[locale]/funding/fail',
+  '/[locale]/booking/manage/[orderNo]',
+  '/[locale]/booking/success',
+  '/[locale]/booking/fail',
+];
+
+export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);
+
 /** `router.asPath`처럼 쿼리·해시가 붙어 있어도 된다 — 경로 부분만 본다. */
 export const isPrivateAnalyticsPath = (pathOrUrl: string): boolean => {
   const path = (pathOrUrl || '').split('#')[0].split('?')[0];

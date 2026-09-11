@@ -211,19 +211,48 @@ it('추가 후원금은 blur에서 MAX_ADDITIONAL_AMOUNT로 클램프된다', as
 });
 
 // blur 없이 Enter로 바로 제출해도 서버에는 정규화된 값이 나가야 한다(서버 검증과 같은 규칙).
-it('정규화 전 중간값 상태로 제출해도 서버에는 정규화된 수량·추가금이 나간다', async () => {
+/**
+ * 숫자 칸에서 Enter로 곧바로 제출하는 경로. blur가 없어 **정규화 전 중간값이 화면에 남아
+ * 있는 상태**여야 의미가 있으므로, 다른 필드를 모두 채운 **뒤** 숫자 칸에서 Enter로 끝낸다.
+ * (순서를 바꿔 숫자 칸을 먼저 채우면 다음 `userEvent.type`이 포커스를 옮기며 blur를
+ * 일으켜 이미 정규화돼 버린다 — 그러면 파생값 덕분에 submit의 setText 두 줄을 지워도
+ * 통과하는 무의미한 테스트가 된다.)
+ *
+ * 브라우저에서 이 Enter는 `handleNumericEnter`가 가로챈다. 그대로 두면 제약 검증
+ * (step 1,000 · max 10)이 `5500`·`12`에 말풍선을 띄워 제출을 막는다.
+ */
+it('숫자 칸에서 Enter로 바로 제출해도 서버에는 정규화된 수량·추가금이 나간다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  await typeInto(screen.getByLabelText('수량') as HTMLInputElement, '12');
-  await typeInto(screen.getByLabelText(/추가 후원금/) as HTMLInputElement, '5500');
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   await userEvent.click(screen.getByLabelText(/약관/));
-  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
+  await userEvent.type(screen.getByLabelText(/추가 후원금/), '{selectall}5500');
+  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
+  await userEvent.type(quantityInput, '{selectall}12{Enter}');
+  // 수량 칸은 blur 없이 Enter로 끝나 `12`가 그대로 남은 상태에서 제출됐다.
   await screen.findByTestId('toss-widget');
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
   expect(body.quantity).toBe(MAX_QUANTITY);
   expect(body.additionalAmount).toBe(5000);
+});
+
+// 제출이 실패해 폼이 그대로 남는 경우로 submit()의 "제출 직전 확정"을 본다 — 성공 경로는
+// 곧바로 결제 단계로 넘어가 입력 칸이 사라져서 확인할 자리가 없다.
+it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남는다', async () => {
+  (global.fetch as jest.Mock).mockResolvedValue({
+    ok: false, status: 400, headers: { get: () => 'application/json' },
+    json: async () => ({ ok: false, message: '후원 신청에 실패했습니다.' }),
+  });
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await userEvent.click(screen.getByLabelText(/약관/));
+  const additionalInput = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
+  await userEvent.type(additionalInput, '{selectall}5500{Enter}');
+  expect(await screen.findByRole('alert')).toHaveTextContent('후원 신청에 실패했습니다.');
+  expect(additionalInput).toHaveValue(5000);
 });
 
 // 만료 뒤 "다시 신청"을 누르면 remainingMs가 0으로 남아, 새로 만든 주문의 결제 화면이

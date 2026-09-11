@@ -51,6 +51,18 @@ describe('next.config headers — 개인정보 경로 no-store', () => {
     expect(indexOf(source)).toBeLessThan(publicIndex);
   });
 
+  /**
+   * 위 두 검사는 목록 → config 한 방향만 본다. config에만 no-store 규칙을 더하면 측정
+   * 제외에서 조용히 빠진다 — funding/fail 사고와 정확히 같은 형태다. 그래서 반대 방향,
+   * config의 no-store 규칙 집합이 목록과 **정확히 일치**하는지도 본다.
+   */
+  it('config의 no-store 규칙 집합은 목록과 정확히 일치한다 (config에만 추가되는 것도 잡는다)', () => {
+    const noStoreInConfig = rules
+      .filter((r) => r.headers.some((h) => h.key === 'Cache-Control' && h.value.includes('no-store')))
+      .map((r) => r.source);
+    expect([...noStoreInConfig].sort()).toEqual([...PRIVATE_SOURCES].sort());
+  });
+
   // terms는 누구에게나 같은 공개 정적 페이지다 — no-store로 내리면 CDN 캐시만 버린다.
   it('/funding/terms는 no-store 대상이 아니다', () => {
     const sources = rules.map((r) => r.source).join('\n');

@@ -18,16 +18,24 @@ export default function BookingFailPage({ code, message, service }: FailProps) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-lg px-4 py-24 text-center">
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
         <h1 className="typo-page-title">결제를 완료하지 못했습니다</h1>
         <p className="mt-4 text-gray-600 dark:text-gray-300">
           {message || '결제 진행 중 문제가 발생했습니다.'}
         </p>
         {code && <p className="mt-2 text-sm text-gray-500">오류 코드: {code}</p>}
         <p className="mt-2 text-sm text-gray-500">예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
-        {/* 이탈 링크는 문서 이동(`<a href>`) — 이 URL에는 토스가 붙인 orderId가 실린다.
-            next/link 클라 전환으로 나갔다가 뒤로가기를 누르면 그 사이 mount된 gtag가
-            이 URL로 page_view를 보낸다(lib/analytics/privatePaths.ts). */}
-        <a href={`/ko/booking/${service}`} className="mt-8 inline-block underline">
+        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+            1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+               그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+            2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+               strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+               없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+               private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
+        <a href={`/ko/booking/${service}`} rel="noreferrer" className="mt-8 inline-block underline">
           {service === 'mixing-mastering' ? '주문 페이지로 돌아가기' : '예약 페이지로 돌아가기'}
         </a>
       </main>

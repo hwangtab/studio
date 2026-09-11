@@ -34,6 +34,10 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-lg px-4 py-24 text-center">
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
         {outcome === 'confirmed' ? (
           <>
             <h1 className="typo-page-title">{isMixing ? '주문이 접수되었습니다' : '예약이 확정되었습니다'}</h1>
@@ -70,9 +74,13 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
                 실패하면 고객이 예약을 스스로 취소할 방법이 아예 없었다. */}
             {/* 이 URL에는 토스 paymentKey·orderId가, manageUrl에는 관리 토큰이 실린다.
-                이탈 링크는 전부 문서 이동(`<a href>`)이어야 한다 — next/link로 공개 페이지에
-                나갔다 뒤로가기 하면 그 사이 mount된 gtag가 이 URL로 page_view를 보낸다
-                (lib/analytics/privatePaths.ts). */}
+                이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+              1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+                 그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+              2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+                 strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+                 없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+                 private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
             {manageUrl && (
               <p className="mt-4">
                 <a
@@ -96,7 +104,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
             <p className="mt-2 text-sm text-gray-500">결제가 이뤄졌다면 자동으로 취소되거나 확정됩니다. 문의: 010-4255-7893</p>
           </>
         )}
-        <a href="/ko" className="mt-8 inline-block underline">홈으로</a>
+        <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
       </main>
     </>
   );

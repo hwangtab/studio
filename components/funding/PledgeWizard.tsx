@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useState } from 'react';
+import { type KeyboardEvent, useEffect, useId, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import TossPaymentWidget from '../booking/TossPaymentWidget';
@@ -28,11 +28,16 @@ const radioClass = 'mt-0.5 h-4 w-4 shrink-0 accent-primary';
  * 타이핑으로 넣을 수 없었고**(스피너가 없는 모바일에서는 기능 자체가 없었다), 수량은
  * 기본값 `1`에 한 글자만 더 쳐도(`12`) 곧바로 상한으로 튀었다.
  *
- * 같은 이유로 native `min`/`max`/`step` 속성도 두지 않는다 — 정규화 전 중간값이 남은 채
- * Enter로 제출하면 브라우저 제약 검증이 말풍선으로 제출을 막아 버린다(우리가 어차피
- * 정규화해 줄 값인데도). 규칙은 아래 두 함수 한 곳에만 있고, 서버
- * `lib/funding/validation.ts`(수량 1~MAX_QUANTITY 정수, 추가금 0~MAX_ADDITIONAL_AMOUNT의
- * ADDITIONAL_AMOUNT_STEP 배수)와 같은 규칙이다. 최종 판정은 언제나 서버다.
+ * native `min`/`max`/`step`은 그대로 둔다 — 데스크톱 스피너와 ↑↓ 키가 추가 후원금에서
+ * **유일하게 동작하던 입력 수단**이라, 없애면 `step` 기본값 1로 ↑ 한 번이 `1`이 되고 blur의
+ * 1,000원 단위 내림에 0으로 지워진다. 대신 두 칸에서 Enter를 가로채(`onKeyDown`) 정규화 뒤
+ * 직접 제출한다 — 브라우저 제약 검증(stepMismatch·rangeOverflow) 경로를 아예 타지 않으므로
+ * 정규화 전 중간값이 남은 채 Enter를 눌러도 말풍선으로 막히지 않는다. `noValidate`는 쓰지
+ * 않는다(이름·연락처·이메일의 native `required`·type=email 검증까지 죽는다).
+ *
+ * 규칙은 아래 두 함수 한 곳에만 있고, 서버 `lib/funding/validation.ts`(수량 1~MAX_QUANTITY
+ * 정수, 추가금 0~MAX_ADDITIONAL_AMOUNT의 ADDITIONAL_AMOUNT_STEP 배수)와 같은 규칙이다.
+ * 최종 판정은 언제나 서버다.
  */
 const clampQuantity = (raw: string, cap: number): number => {
   const n = Math.floor(Number(raw));
@@ -125,6 +130,21 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
     finally { setSubmitting(false); }
   };
 
+  /**
+   * 숫자 칸에서 Enter를 가로챈다. 그냥 두면 브라우저의 암묵적 제출이 제약 검증
+   * (stepMismatch·rangeOverflow)을 먼저 돌려, 아직 정규화 전인 중간값(`5500`·`12`)에
+   * 말풍선을 띄우고 제출을 막는다 — 우리가 곧바로 정규화해 줄 값인데도.
+   *
+   * 이 경로는 native 검증을 건너뛰므로 이름·연락처·이메일 누락은 서버가 판정해 메시지를
+   * 돌려준다(`validateCreatePledgePayload`). 버튼 클릭·다른 칸에서의 Enter는 종전대로
+   * form의 native 검증을 탄다.
+   */
+  const handleNumericEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    void submit();
+  };
+
   if (created) {
     const expired = remainingMs !== null && remainingMs <= 0;
     return (
@@ -173,15 +193,17 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-qty`} label="수량" hint={`1~${quantityCap}개까지 후원할 수 있습니다.`}>
-              <TextInput type="number" inputMode="numeric" value={quantityText}
+              <TextInput type="number" inputMode="numeric" min={1} max={quantityCap} step={1} value={quantityText}
                 onChange={(e) => setQuantityText(e.target.value)}
+                onKeyDown={handleNumericEnter}
                 onBlur={() => setQuantityText(String(clampQuantity(quantityText, quantityCap)))} />
             </Field>
           </div>
           <div>
-            <Field id={`${uid}-add`} label="추가 후원금" hint="선택 항목입니다. 1,000원 단위로 올릴 수 있습니다.">
-              <TextInput type="number" inputMode="numeric" value={additionalText}
+            <Field id={`${uid}-add`} label="추가 후원금" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
+              <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
                 onChange={(e) => setAdditionalText(e.target.value)}
+                onKeyDown={handleNumericEnter}
                 onBlur={() => setAdditionalText(String(clampAdditional(additionalText)))} />
             </Field>
           </div>
