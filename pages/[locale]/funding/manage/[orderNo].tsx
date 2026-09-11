@@ -70,10 +70,10 @@ export default function FundingManagePage(p: Props) {
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '취소에 실패했습니다.'); return; }
-      if (json.mode === 'pending_released') {
-        setStatus('expired');
-        setConfirmMessage('신청을 취소했습니다. 입금하지 않으셔도 됩니다. 다시 후원하시려면 프로젝트 페이지에서 새로 신청해 주세요.');
-      } else if (json.mode === 'refund_requested') {
+      // `pending_released`(입금 전 무통장 신청의 셀프 해제) 분기는 그 엔드포인트와 함께
+      // 없어졌다. `refund_requested`도 지금은 만들어지지 않지만, 서버가 옛 행에 그 모드를
+      // 돌려줄 여지가 남아 있어 표시만 남긴다.
+      if (json.mode === 'refund_requested') {
         setRefundRequested(true);
         setConfirmMessage('취소 요청을 접수했습니다. 환불 계좌를 메일로 회신해 주세요.');
       } else {

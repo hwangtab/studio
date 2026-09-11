@@ -1,14 +1,14 @@
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 describe('assessSelfCancel', () => {
   it('paid + live + 발송 전이면 가능', () => {
-    expect(assessSelfCancel({ orderStatus: 'paid', projectState: 'live', fulfillmentStatus: 'none' })).toEqual({ ok: true });
+    expect(assessSelfCancel({ orderStatus: 'paid', projectState: 'live', fulfillmentStatus: 'none', paymentMethod: 'toss' })).toEqual({ ok: true });
   });
   it.each([
     ['pending', 'live', 'none', 'not_paid'],
     ['paid', 'closed', 'none', 'project_not_live'],
     ['paid', 'live', 'preparing', 'fulfilling'],
   ])('%s/%s/%s → %s', (orderStatus, projectState, fulfillmentStatus, code) => {
-    expect(assessSelfCancel({ orderStatus, projectState: projectState as never, fulfillmentStatus })).toEqual({ ok: false, code });
+    expect(assessSelfCancel({ orderStatus, projectState: projectState as never, fulfillmentStatus, paymentMethod: 'toss' })).toEqual({ ok: false, code });
   });
 });
 
@@ -20,6 +20,7 @@ describe('assessSelfCancel', () => {
 describe('assessSelfCancel — 결제수단', () => {
   const live = { orderStatus: 'paid', projectState: 'live' as const, fulfillmentStatus: 'none' };
 
+
   it('토스 결제는 종전대로 셀프 취소를 허용한다', () => {
     expect(assessSelfCancel({ ...live, paymentMethod: 'toss' })).toEqual({ ok: true });
   });
@@ -27,10 +28,6 @@ describe('assessSelfCancel — 결제수단', () => {
   it('토스가 아니면 offline_payment로 막는다', () => {
     expect(assessSelfCancel({ ...live, paymentMethod: 'bank_transfer' }))
       .toEqual({ ok: false, code: 'offline_payment' });
-  });
-
-  it('결제수단을 넘기지 않으면 종전 판정 그대로다 — 기존 호출부를 깨지 않는다', () => {
-    expect(assessSelfCancel(live)).toEqual({ ok: true });
   });
 
   it('모든 차단 코드에 안내 문구가 있다 — 화면이 undefined를 렌더하지 않는다', () => {

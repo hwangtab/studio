@@ -36,17 +36,19 @@ export type CancelEligibility =
  * 계좌 송금이다. 그걸 안 보면 화면이 "전액 환불" 버튼을 띄우는데 눌러도 cancel.ts가
  * 거절한다 — 죽은 버튼이다. 지금 이 경우는 운영자가 계좌로 받아 수기 등록한 건과
  * 무통장입금 중단(2026-09-11) 전에 만들어진 건 둘뿐이다.
+ *
+ * **필수 인자로 둔다.** 이 버그가 들어온 자리는 manage 페이지 getServerSideProps의 한
+ * 줄이었고, 선택 인자면 그 줄에서 빼먹어도 컴파일도 테스트도 통과한다. 값은 두 호출부
+ * 모두 손에 쥐고 있으므로 필수로 두는 비용이 없다 — 재발을 타입이 막게 한다.
  */
 export const assessSelfCancel = (input: {
   orderStatus: string;
   projectState: ProjectState;
   fulfillmentStatus: string;
-  paymentMethod?: string;
+  paymentMethod: string;
 }): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
-  if (input.paymentMethod !== undefined && input.paymentMethod !== 'toss') {
-    return { ok: false, code: 'offline_payment' };
-  }
+  if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
   if (input.projectState !== 'live') return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   return { ok: true };
