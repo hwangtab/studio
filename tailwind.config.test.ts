@@ -493,3 +493,92 @@ describe('다크 짝이 variant 색을 덮어쓰지 않는가', () => {
     }
   });
 });
+
+// 아웃라인 pill 재복붙 가드 (2026-09-12).
+//
+// 위 세 가드는 "이미 심어진 클래스 문자열이 규칙에 맞는가"만 본다. 그런데 이 저장소에서
+// 실제로 일어난 일은 **같은 pill을 손으로 다시 짜는 것**이었다 — 같은 className이 9개
+// 파일에 45번 복붙됐고, 위 세 가드가 잡은 회귀가 전부 그 45곳에서 났다. 게다가 45곳
+// 전부 `focus-visible` 링이 빠져 있었는데, 그건 "틀린 클래스"가 아니라 "없는 클래스"라
+// 어떤 가드도 볼 수 없었다.
+//
+// 그래서 재료가 아니라 **조합**을 본다: 브랜드 보더 + 같은 브랜드 텍스트 + 같은 브랜드
+// `hover:bg-`는 아웃라인 pill이고, 그건 components/ui/ServiceLinkPill.tsx가 소유한다.
+//
+// **`border-2`를 조건에 넣지 않는 이유**(2026-09-12 리뷰): 이번에 흡수한 셸 두 개가 정확히
+// 그 반대 형태였다 — `border-2`는 셸의 JSX 템플릿에 있고 색은 별도 상수에 있었다
+// (`ServiceQuickLinksSection`의 옛 `COLOR_CLASS`, 연습실 `ServiceLinksSection`의 per-link
+// className). `border-2`를 같은 리터럴에서 요구하면 그 두 형태를 되돌려도 가드가 초록이다.
+// 대신 pill의 정체를 이루는 `hover:bg-{같은 brand}`를 요구한다 — 실측 결과 이 교체로
+// 새로 걸리는 것은 pill 본체(skip)와 allowlist된 공유 버튼뿐이라 오탐 증가는 0이다.
+//
+// 오탐이 적은 이유: 알파가 붙은 보더(`border-primary/20` — Button의 outline variant)는
+// 제외하고, 브랜드 **텍스트**가 같은 문자열에 없으면(BuyerIntentHubPage의 채워진 히어로
+// CTA `bg-primary … text-white`) 걸리지 않는다. 전환 직후 실측 예외는 1건뿐이다.
+//
+// 스캔 범위는 카카오 토큰 가드와 같은 SCAN_DIRS(`data`·`lib`·`utils`의 `.ts` 포함)다 —
+// pill 클래스가 상수 파일로 옮겨가면 components/pages만 훑어서는 안 보인다.
+const PILL_BRAND_BORDER_RE = /(?<![-\w:])border-(primary|secondary|accent)(?![-\w/])/;
+const PILL_BRAND_TEXT_RE = /(?<![-\w:])text-(primary|secondary|accent)(?![-\w/])/;
+const pillBrandHoverBgRe = (brand: string) =>
+  new RegExp(`(?<![-\\w:])hover:bg-${brand}(?![-\\w/])`);
+
+/** ServiceLinkPill로 표현할 수 없는 자리만 등재한다. 이유 없이 넣지 말 것. */
+const PILL_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  {
+    file: 'pages/[locale]/portfolio/[id].tsx',
+    snippet: 'flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary',
+    reason:
+      'sharePortfolio를 부르는 공유 <button>이다 — 링크가 아니라 ServiceLinkPill(next/link ' +
+      '래퍼)로 표현할 수 없다. 포커스 링·다크 짝·44px 타깃은 이미 갖추고 있다.',
+  },
+];
+
+describe('아웃라인 pill은 손으로 다시 짜지 않는다', () => {
+  it('border-{brand} + text-{brand} + hover:bg-{brand} 조합은 ServiceLinkPill을 쓴다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!/\.tsx?$/.test(rel) || /\.test\.tsx?$/.test(rel)) continue;
+        // 라이트 고정 화면은 다른 가드와 같게 면제한다 — 강제하면 admin·계약 서명 화면에
+        // `dark:` 클래스를 심게 되어 정본 §1의 면제와 정면으로 부딪힌다.
+        if (LIGHT_FIXED(rel)) continue;
+        // pill 본체는 당연히 이 조합을 가진다.
+        if (rel === 'components/ui/ServiceLinkPill.tsx') continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (isCommentLine(trimmed)) return;
+
+          const match = PILL_BRAND_BORDER_RE.exec(line);
+          if (!match) return;
+          // 같은 **문자열 리터럴** 안에서만 본다 — 다른 분기의 클래스와 섞이지 않게.
+          const scope = scopeOf(line, match.index);
+          if (!PILL_BRAND_TEXT_RE.test(scope)) return;
+          if (!pillBrandHoverBgRe(match[1]).test(scope)) return;
+          if (PILL_ALLOW.some((a) => a.file === rel && line.includes(a.snippet))) return;
+
+          offenders.push(`${rel}:${index + 1}: ${trimmed.slice(0, 120)}`);
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '아웃라인 서비스 pill을 손으로 다시 짰습니다 — components/ui/ServiceLinkPill을 쓰세요.\n' +
+          '이 조합을 복붙하면 다크 텍스트 대비·dark:hover 짝·focus-visible 링을 매번 다시 ' +
+          '맞춰야 하고, 실제로 그 세 가지가 45곳에서 한꺼번에 틀어진 적이 있습니다.\n' +
+          '링크가 아니라서 pill로 표현할 수 없다면 PILL_ALLOW에 이유와 함께 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});

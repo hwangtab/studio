@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building } from '@/lib/lucide-icons';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import { useTranslation } from 'react-i18next';
@@ -579,41 +580,21 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
               리네임으로 사라졌다. 두 키가 같은 것을 가리키므로 언젠가 합쳐야 하는데,
               어느 로케일이 갈려 있는지는 주석에 적지 않는다 — 그 목록을 손으로 적었다가
               vi를 빠뜨린 적이 있다. 현재 상태는 lib/navLabels.test.ts가 찍어 준다. */}
-          <Link
-            href={`/${locale}/release-project`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('pricing.releaseLink')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/studio-info`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <ServiceLinkPill href={`/${locale}/release-project`} tone="primary">
+            {t('pricing.releaseLink')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/studio-info`} tone="primary">
+            {t('nav.equipment')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/practice-room`} tone="secondary">
+            {t('nav.practiceRoom')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="accent">
+            {t('nav.weddingSong')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="accent">
+            {t('nav.voiceActing')}
+          </ServiceLinkPill>
         </div>
       </Section>
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
+import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import { m } from 'framer-motion';
 import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, SlidersHorizontal, Video, ShieldCheck, Award } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
@@ -313,63 +314,31 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               해소됐다. 남은 이유로 게이트를 유지한다: 플래그십은 한국 인디 아티스트
               중심이고 비-ko 홈은 저트래픽이라 pill 자리를 쓸 값이 없다. */}
           {locale === 'ko' && (
-            <Link
-              href={getLink('/release-project')}
-              prefetch={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-            >
-              {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            <ServiceLinkPill href={getLink('/release-project')} tone="primary">
+              {t('nav.releaseProject')}
+            </ServiceLinkPill>
           )}
-          <Link
-            href={getLink('/practice-room')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={getLink('/mixing-mastering')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.mixingMastering')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={getLink('/wedding-song')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={getLink('/voice-acting')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={getLink('/lesson')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={getLink('/pricing')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={getLink('/stories')}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <ServiceLinkPill href={getLink('/practice-room')} tone="secondary">
+            {t('nav.practiceRoom')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={getLink('/mixing-mastering')} tone="accent">
+            {t('nav.mixingMastering')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={getLink('/wedding-song')} tone="primary">
+            {t('nav.weddingSong')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={getLink('/voice-acting')} tone="secondary">
+            {t('nav.voiceActing')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={getLink('/lesson')} tone="accent">
+            {t('nav.lesson')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={getLink('/pricing')} tone="primary">
+            {t('nav.pricing')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={getLink('/stories')} tone="secondary">
+            {t('nav.stories')}
+          </ServiceLinkPill>
         </div>
       </Section>
 

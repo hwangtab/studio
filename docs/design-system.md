@@ -268,6 +268,34 @@ variant: `default`·`highlight`·`outline`·`glass`·`glass-highlight`. 기본 �
 (blur 없는 글래스)다. **glass 카드 hover에 `SHADOW_HOVER`를 섞지 않는다** — inline boxShadow가
 inset 스펙큘러를 지운다.
 
+### 서비스 링크 pill — `components/ui/ServiceLinkPill.tsx`
+
+브랜드색 아웃라인 링크 pill(`<ServiceLinkPill href tone="primary|secondary|accent">라벨</ServiceLinkPill>`).
+홈·contact·about·pricing·studio-info·portfolio·mixing-mastering·stories 하단의 "다른 서비스
+바로가기" 줄과, 그 줄을 감싸는 두 셸(`ServiceQuickLinksSection`·연습실 `ServiceLinksSection`)이
+전부 이걸 쓴다. `prefetch={false}`가 기본값이고(fold 안에 pill이 무더기로 놓여 목적지의 SSG
+JSON을 한꺼번에 당겨오는 것을 막는다), 라벨 뒤 화살표는 `showArrow={false}`로 끈다.
+패딩·반경 같은 차이는 `className`으로 넘긴다 — twMerge라 뒤가 이긴다.
+
+**직접 짜지 말 것.** 이 pill은 접근성 회귀 **두 번의 진원지**였다. 같은 className이 9개
+파일에 45번 복붙돼 있었고, 다크 텍스트 대비 미달(§1 1·2라운드)도 다크 짝이 `hover:text-white`를
+명시도로 덮어쓴 회귀(§1 3라운드)도 전부 그 45곳에서 났다. 한 번은 고쳐도 다음 복붙이
+옛 문자열을 도로 심는다. 게다가 **45곳 전부 `focus-visible` 링이 없었다** — 키보드 사용자는
+포커스 위치를 볼 수 없었고, "틀린 클래스"가 아니라 "없는 클래스"라 어떤 대비 가드도 볼 수
+없었다. 세 규칙(다크 짝은 `-lighter`/`-light` · `dark:hover:` 짝 동반 · 포커스 링 + 44px)이
+이제 이 파일 한 곳에만 있다.
+
+`ServiceLinkPill.test.tsx`가 tone 3종의 포커스 링·`dark:hover:text-white`·다크 텍스트 토큰을
+렌더 className으로 고정하고, `tailwind.config.test.ts`의 「아웃라인 pill은 손으로 다시 짜지
+않는다」가 `border-{brand}` + `text-{brand}` + `hover:bg-{같은 brand}` 조합을 손으로 다시 심는
+것을 CI에서 막는다(예외 1건 — 링크가 아닌 공유 `<button>`). **조건에 `border-2`를 넣지 않는
+이유**: 흡수한 셸 둘은 `border-2`가 JSX 템플릿에 있고 색은 별도 상수에 있는 형태였다
+(`ServiceQuickLinksSection`의 옛 `COLOR_CLASS`, 연습실 `ServiceLinksSection`의 per-link
+className) — 같은 리터럴에서 `border-2`를 요구하면 그 형태로 되돌려도 가드가 초록이다.
+스캔 범위도 카카오 토큰 가드와 같은 `components`·`pages`·`data`·`lib`·`utils`의 `.ts`까지다
+(pill 클래스가 상수 파일로 옮겨가면 보이지 않으므로). 라이트 고정 화면은 다른 가드와 같게
+면제한다 — 강제하면 admin·계약 서명 화면에 `dark:` 클래스를 심게 된다.
+
 ### 배지
 
 `rounded-full px-2 py-0.5 typo-caption`을 기본으로 하고, 색만 의미에 따라 바꾼다.
@@ -283,11 +311,32 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 
 | 표면 | 링 색 / 오프셋 색 |
 |---|---|
-| 일반 배경 | `ring-primary/40` + `ring-offset-white dark:ring-offset-gray-900` |
+| 일반 배경 | `ring-primary/70 dark:ring-primary-lighter/70` + `ring-offset-white dark:ring-offset-gray-900` |
+| 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
 | 카카오 옐로 버튼 | `ring-kakao-ink` + 표면에 맞는 오프셋 |
-| 어두운 히어로 이미지 위 | `ring-white/70` + `ring-offset-black/20` |
+| 어두운 히어로 이미지 위 / 솔리드 브랜드 버튼 | `ring-white/70` + 표면색 오프셋(`ring-offset-black/20`·`ring-offset-primary-dark`) |
 
 터치 타깃은 최소 44×44px(`min-h-[44px]` 또는 `h-11`). 아이콘 전용 버튼에는 `aria-label`.
+
+### 알파가 낮으면 "있지만 안 보이는" 링이 된다 — 기준은 4.5:1이 아니라 **3:1**
+
+포커스 표시기는 텍스트가 아니라 **WCAG 2.2 SC 1.4.11(비텍스트 대비)**의 대상이고, 요구값은
+**3:1**이다. 그리고 링은 표면색 위에 알파로 그려지므로 재는 대상은 토큰 원색이 아니라
+**"링 합성색 vs 표면색"**이다. 이 문서가 오랫동안 표준으로 적어 온 `/40`은 그 기준을 어디서도
+통과하지 못한다(실측, `getComputedStyle`의 `boxShadow`에서 읽은 실제 링 색 기준):
+
+| 알파 | 라이트(#fff) | 다크(gray-900 #030712, 원색) | 다크(밝은 짝) |
+|---|---|---|---|
+| `/40` | primary 2.04 · secondary 2.04 · accent 1.83 ✗ | 1.33 · 1.37 · 1.47 ✗ | 2.03 · 1.74 · 2.09 ✗ |
+| `/70` | **3.84 · 3.69 · 3.11** ✓ | 1.91 · 2.10 · 2.32 ✗ | **4.06 · 3.22 · 4.28** ✓ |
+
+읽는 법 두 가지:
+
+1. **알파는 `/70`**. `/40`은 링을 "주기는 했는데 보이지 않는" 상태다 — 코드 리뷰도 가드도
+   클래스가 있으면 통과시키므로 육안·실측 말고는 드러나지 않는다.
+2. **다크에서는 원색을 쓰지 않는다.** 링도 텍스트와 같은 논리로 밝은 짝
+   (`primary-lighter`·`secondary-light`·`accent-light`)을 써야 3:1을 넘는다. gray-900 위
+   원색은 `/70`에서도 1.91~2.32:1로 미달이다.
 
 ## 6. 모션
 
@@ -335,6 +384,7 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 | 히어로 오버레이 `[#a8c0ff]` 복붙 4곳 | `--hero-title-accent`·`--hero-title-glow` CSS 변수로 토큰화 |
 | 카테고리 배지 반경 불일치 | `rounded-full`로 통일(색은 맥락이 달라 유지) |
 | 다크모드 브랜드색·메타색 텍스트 AA 미달 | 8개 페이지 실측 112건 → 0건. 대비 부족한 다크 짝을 가드가 막는다 |
+| 아웃라인 pill className이 9개 파일에 45번 복붙 + 45곳 전부 `focus-visible` 링 없음 | `components/ui/ServiceLinkPill`로 흡수(§4). 포커스 링·44px 타깃을 함께 얻었고, 재복붙은 `tailwind.config.test.ts`의 조합 스캔이 막는다 |
 
 ### 판단을 내린 것 — 더 이상 미결이 아니다
 
@@ -353,9 +403,9 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 
 | 항목 | 판단 |
 |---|---|
-| **아웃라인 pill className이 9개 파일에 50번 가까이 복붙** | **가장 값어치 있는 남은 부채.** 다크 대비 회귀도, hover 그림자 회귀도 전부 여기서 났다. 컴포넌트로 묶으면 같은 사고가 구조적으로 사라진다 |
-| 대비 가드가 줄 단위라 hover 색과 텍스트 색이 **다른 줄**에 있으면 못 잡는다 | `ServiceLinksSection`이 그 형태였다(손으로 고침). 근본 해법은 hover 실측 CI화 또는 위 pill 컴포넌트화 |
+| 대비 가드가 줄 단위라 hover 색과 텍스트 색이 **다른 줄**에 있으면 못 잡는다 | pill 45곳은 `ServiceLinkPill`로 흡수돼 더는 이 형태가 아니다. 남은 자리(`ServiceLinksSection`은 해소)에 대해서는 hover 실측 CI화가 근본 해법 |
 | 대비 측정이 그라디언트·사진 배경 위 텍스트를 못 잰다 | 투명 헤더가 히어로 사진 위에 있어 스크립트가 흰색으로 폴백한다. 그 자리는 육안 확인에 의존 |
+| **저장소의 거의 모든 `focus-visible` 링이 SC 1.4.11(3:1) 미달** | 이 문서 §5가 지금까지 `ring-primary/40`을 표준으로 말해 왔고 코드가 그대로 따랐다 — 라이트 2.04:1, 다크 1.33:1이라 링이 **있지만 보이지 않는다**. `ServiceLinkPill`과 `portfolio/[id]` 하단 CTA 줄만 `/70`(+ 다크 밝은 짝)로 고쳤고 **나머지는 별건이다**. 같은 파일의 공유 `<button>`(`ring-primary/40`)도 아직 남아 있다. 근본 해법은 ①§5 표를 따라 남은 `ring-*/40`을 일괄 `/70`으로 올리고 ②알파 `/40` 이하의 포커스 링을 금지하는 가드를 `tailwind.config.test.ts`에 추가하는 것 |
 | `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
 | 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |

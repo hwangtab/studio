@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import { m } from 'framer-motion';
 import {
   SlidersHorizontal,
@@ -552,13 +553,9 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Link
-              href={`/${locale}/portfolio`}
-              prefetch={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-            >
-              {t('nav.portfolio')} <ArrowRight size={16} aria-hidden="true" />
-            </Link>
+            <ServiceLinkPill href={`/${locale}/portfolio`} tone="primary">
+              {t('nav.portfolio')}
+            </ServiceLinkPill>
           </div>
         </Section>
       )}
@@ -592,27 +589,15 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
       {/* 관련 서비스 바로가기 */}
       <Section variant="alternate" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/recording`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.recording')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/release-project`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <ServiceLinkPill href={`/${locale}/recording`} tone="primary">
+            {t('nav.recording')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/release-project`} tone="secondary">
+            {t('nav.releaseProject')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/pricing`} tone="accent">
+            {t('nav.pricing')}
+          </ServiceLinkPill>
         </div>
       </Section>
 

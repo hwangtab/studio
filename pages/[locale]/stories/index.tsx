@@ -2,10 +2,9 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import Link from 'next/link';
+import ServiceLinkPill from '../../../components/ui/ServiceLinkPill';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
-import { ArrowRight } from '@/lib/lucide-icons';
 import StoryCard from '../../../components/StoryCard';
 import CategoryFilter from '../../../components/CategoryFilter';
 import SEO from '../../../components/SEO';
@@ -307,34 +306,18 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="default" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
+            {t('nav.weddingSong')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="secondary">
+            {t('nav.voiceActing')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/lesson`} tone="accent">
+            {t('nav.lesson')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">
+            {t('nav.practiceRoom')}
+          </ServiceLinkPill>
         </div>
       </Section>
 
