@@ -2,6 +2,11 @@ import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
 import { getSchemaLanguage } from './shared';
 import { getOperatorAwards, getOperatorKnowsAbout } from './person';
+import {
+  RELEASE_SINGLE_FROM_PRICE,
+  RELEASE_EP_FROM_PRICE,
+  RELEASE_ALBUM_FROM_PRICE,
+} from '../../data/pricing';
 
 const RELEASE_SERVICE_NAMES: Record<Locale, string> = {
   ko: '음원 발매 프로듀싱',
@@ -53,7 +58,19 @@ const RELEASE_TIER_LABELS: Record<'single' | 'ep' | 'album', Record<Locale, stri
     es: 'Proyecto de Álbum', vi: 'Dự án phát hành Album', th: 'โปรเจกต์ปล่อยอัลบั้มเต็ม', uz: 'Toʻliq albom reliz loyihasi',
   },
 };
-const RELEASE_TIER_PRICES = { single: 500000, ep: 1500000, album: 4000000 };
+/**
+ * JSON-LD Offer에 실리는 티어 하한. data/pricing.ts의 SSOT 상수를 그대로 쓴다.
+ *
+ * 예전엔 { single: 500000, ep: 1500000, album: 4000000 }으로 박혀 있었다.
+ * 상수가 EP 180만·정규 340만으로 바뀌었는데 이 파일만 안 따라와서, 구조화
+ * 데이터가 실제 판매가와 다른 값을 검색엔진에 내보내고 있었다. 이 파일은
+ * data/pricing.test.ts의 리터럴 스캔 대상이 아니라 CI가 잡지 못했다.
+ */
+const RELEASE_TIER_PRICES = {
+  single: RELEASE_SINGLE_FROM_PRICE,
+  ep: RELEASE_EP_FROM_PRICE,
+  album: RELEASE_ALBUM_FROM_PRICE,
+};
 const RELEASE_TIER_DURATIONS = { single: 'P12W', ep: 'P6M', album: 'P12M' };
 
 /**

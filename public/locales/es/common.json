@@ -1515,6 +1515,252 @@
       "order": "Pedir en línea"
     }
   },
+  "musicPromotion": {
+    "seo": {
+      "title": "Promoción de lanzamientos — directo a periodistas y críticos musicales | Studio NOL",
+      "description": "No es una agencia que dispara tu nota de prensa a 908 medios de golpe. La enviamos a periodistas y críticos musicales coreanos, y a medios, radios y tiendas de discos de 60 países, en el idioma que cada uno lee. Incluye nota de prensa en 5 idiomas, página de press kit, vídeo con el álbum completo e informe de envío. Solo aceptamos música que pasa nuestra escucha previa.",
+      "keywords": "promoción musical, promoción de álbum, nota de prensa musical, promoción indie, PR musical, promoción de lanzamiento, redacción de nota de prensa, promoción de disco, agencia de PR musical, promoción internacional, press kit, EPK"
+    },
+    "hero": {
+      "title": "Promoción de lanzamientos",
+      "subtitleLine1": "A periodistas y críticos musicales coreanos y a medios de 60 países, en el idioma que cada uno lee",
+      "subtitleLine2": "{{intro}} · 3 artistas al mes · Solo música que pasa nuestra escucha previa",
+      "badge": "Precio de lista {{list}} → {{intro}} (precio de socio inicial hasta el {{until}})",
+      "alt": "Redactando la nota de prensa de un lanzamiento en Studio NOL"
+    },
+    "quickAnswers": {
+      "title": "Lo que seguramente te preguntas primero",
+      "subtitle": "Respondemos antes, para que no tengas que leer mucho",
+      "items": [
+        {
+          "q": "¿Cuánto cuesta?",
+          "a": "{{intro}} (IVA no incluido). El precio de lista es {{list}}, y hasta el {{until}} lo tomamos al precio de socio inicial. No hay cargos añadidos: todo lo que aparece abajo va incluido."
+        },
+        {
+          "q": "¿Qué hacen exactamente?",
+          "a": "Escribimos la nota de prensa en cinco idiomas, montamos una página de press kit y la enviamos a periodistas y críticos musicales coreanos, y a medios, radios, tiendas de discos y festivales del extranjero. También producimos un vídeo con el álbum completo y, al terminar, te entregamos un informe de qué se envió y adónde."
+        },
+        {
+          "q": "¿Cuánto tarda?",
+          "a": "Cinco días para producir los materiales y de una a tres semanas para el envío. No cerramos el envío en un solo día por la reputación del dominio: disparar más de mil correos de golpe hace que todos acaben clasificados como spam, y entonces nada de esto sirve."
+        },
+        {
+          "q": "¿Garantizan que salgan notas de prensa publicadas?",
+          "a": "No lo garantizamos. No es algo que se pueda garantizar. Si una empresa dice que sí, lo que hace es comprar publicidad y disfrazarla de artículo. Lo que sí prometemos es el trabajo ejecutado: el informe demuestra qué materiales hicimos y a cuántos medios de qué tipo los enviamos."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Esto no es una difusión masiva de notas de prensa",
+      "subtitle": "Lo que cambia no es el precio, sino el producto. Puesto al lado de las tarifas habituales en Corea, se ve claro.",
+      "columns": [
+        "",
+        "Plataformas de difusión de notas de prensa",
+        "Marketing de visualizaciones",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Quién lo recibe",
+          "908 medios, todos a la vez",
+          "Impresiones publicitarias",
+          "Periodistas y críticos musicales, en persona"
+        ],
+        [
+          "El texto",
+          "El mismo original para todos",
+          "Material publicitario",
+          "Distinto según el tipo de medio y el idioma"
+        ],
+        [
+          "Extranjero",
+          "No hay",
+          "No hay",
+          "Medios, radios y tiendas de discos de 60 países"
+        ],
+        [
+          "Precio",
+          "₩77,000–₩660,000",
+          "₩150,000–₩600,000",
+          "{{intro}}"
+        ]
+      ],
+      "note": "No encontramos en Corea ni una sola agencia de PR especializada en música que publique sus precios (estudio de septiembre de 2026). Sitios que esparcen notas de prensa hay muchos, pero esa lista no son medios musicales ni periodistas musicales."
+    },
+    "evidence": {
+      "title": "Así lo enviamos en la práctica",
+      "subtitle": "El registro es más preciso que las palabras. Estas son cifras medidas de campañas que hicimos nosotros mismos.",
+      "cases": [
+        {
+          "title": "Mariko & Yukie, «Namsan Tower Lights»",
+          "meta": "Primer álbum de estudio · lanzado en septiembre de 2026",
+          "stats": [
+            "1.218 destinatarios",
+            "60 países",
+            "8 idiomas",
+            "repartido a lo largo de 12 días"
+          ],
+          "note": "Quince canciones en coreano de un matrimonio japonés que vive en Seúl. Studio NOL se encargó desde la mezcla hasta la planificación, la producción y la promoción del lanzamiento."
+        },
+        {
+          "title": "HWA, «HWA»",
+          "meta": "EP de grindcore · lanzado en agosto de 2026",
+          "stats": [
+            "125 destinatarios",
+            "concentrado en prensa especializada en metal",
+            "Corea y el extranjero a la vez"
+          ],
+          "note": "Si el género es estrecho, la lista también va estrecha. Para este disco reunimos desde cero medios especializados en metal."
+        }
+      ],
+      "linkLabel": "Ver una página de press kit que hicimos de verdad"
+    },
+    "deliverables": {
+      "title": "Qué incluye",
+      "subtitle": "Todo incluido. No hay nada que vendamos aparte como opción.",
+      "items": [
+        {
+          "title": "Nota de prensa en 5 idiomas",
+          "body": "Además de coreano e inglés, elegimos tres idiomas de la región que encajen con la música y con el artista. No son textos pasados por un traductor automático: se escriben en ese idioma y se revisan con retrotraducción."
+        },
+        {
+          "title": "Página de press kit",
+          "body": "Reproducción de todos los temas, letras, créditos, portada en alta resolución y un ZIP con el press kit, todo en una sola página. Cuando un periodista la abre para escribir, tiene que estar ahí todo lo que necesita."
+        },
+        {
+          "title": "Envío a medios coreanos y extranjeros",
+          "body": "Periodistas y críticos musicales, redacciones, radios, tiendas de discos y festivales. El texto cambia según el tipo de medio: a las redacciones les llega un original publicable, y a la radio, frases para leer antes de la canción."
+        },
+        {
+          "title": "Textos derivados",
+          "body": "Guiones para locutores de radio, una presentación para tiendas y versiones reducidas ajustadas a los formularios de contacto de los medios. Cada ventanilla pide un formato distinto, así que los preparamos de antemano para no reescribirlos cada vez."
+        },
+        {
+          "title": "Vídeo con el álbum completo",
+          "body": "Un solo vídeo con un capítulo por canción. Si nos pasas las letras, ajustamos también los subtítulos. No hay límite en el número de temas."
+        },
+        {
+          "title": "Informe de envío",
+          "body": "Qué materiales hicimos, a cuántos medios de qué tipo los enviamos y qué respuestas y publicaciones se confirmaron. Los rebotes y las bajas también se anotan: no los escondemos."
+        }
+      ]
+    },
+    "process": {
+      "title": "Así lo hacemos",
+      "subtitle": "Desde el encargo hasta el informe, termina de una vez. No es de esos servicios que cobran cada mes sin que se vea qué están haciendo.",
+      "steps": [
+        {
+          "title": "Contacto y envío de la música",
+          "body": "Escríbenos por KakaoTalk y mándanos la música y los datos básicos. Da igual si aún no ha salido o si ya está publicada."
+        },
+        {
+          "title": "Escucha previa — 3 días hábiles",
+          "body": "El productor escucha todos los temas y decide. Si no podemos aceptarlo, te lo decimos explicando el motivo."
+        },
+        {
+          "title": "Producción de materiales — 5 días",
+          "body": "Hacemos la nota de prensa, la página de press kit, los textos derivados y el vídeo."
+        },
+        {
+          "title": "Revisión contigo",
+          "body": "Te lo enseñamos todo antes de enviar nada. Los hechos solo los conoce el artista, así que este paso no se puede saltar."
+        },
+        {
+          "title": "Envío — de 1 a 3 semanas",
+          "body": "Lo repartimos para proteger la reputación del dominio. Si se dispara todo de golpe, acaba en la carpeta de spam."
+        },
+        {
+          "title": "Informe",
+          "body": "Te preparamos el detalle de los envíos y las reacciones."
+        }
+      ]
+    },
+    "review": {
+      "title": "No aceptamos cualquier disco",
+      "lead": "Solo promocionamos buena música. Dicho con precisión: miramos si, al mandárselo a los periodistas y críticos que conocemos, es música que van a escuchar hasta el final.",
+      "criteria": [
+        {
+          "title": "¿Hay algún medio al que pueda llegar?",
+          "body": "Somos fuertes en indie, alternativo, world music, city pop, metal y folk. Aunque sea buena música, si no tiene ningún punto de contacto con los medios a los que llegamos, no hay adónde enviarla."
+        },
+        {
+          "title": "¿Sale de ahí una historia?",
+          "body": "Una nota de prensa no es una presentación, es el material con el que un periodista construye un artículo. Con «han sacado canción nueva» no escribe nadie."
+        },
+        {
+          "title": "¿Nos gusta a nosotros?",
+          "body": "No se puede recomendar a otro una música que no te gusta. Eso se nota en el correo, y quien lo lee lo percibe."
+        }
+      ],
+      "rejection": "Cuando no podemos aceptarlo, te escribimos el motivo y te lo devolvemos. Casi nunca es «la música es mala», sino «entre los medios a los que llegamos no encontramos ninguno que acogiera esta música». En ese caso te anotamos, hasta donde sepamos, adónde te conviene enviarla.",
+      "why": "Hacemos esa escucha previa por dos razones. Enviamos siempre a las mismas personas, así que mandarles una y otra vez material que no encaja desgasta esa relación. Y la confianza, una vez quemada, no se recupera."
+    },
+    "notPromised": {
+      "title": "Lo que no prometemos",
+      "subtitle": "No vamos a decir que podemos hacer lo que no podemos.",
+      "items": [
+        {
+          "title": "No garantizamos la publicación de artículos",
+          "body": "Escribir o no lo decide el periodista. Si algún sitio lo garantiza, lo que está haciendo es comprar publicidad y disfrazarla de artículo."
+        },
+        {
+          "title": "No garantizamos entradas en playlists ni cifras de streaming",
+          "body": "Hacemos un trabajo distinto del de los servicios que venden visualizaciones, seguidores y reproducciones. Esos números suben si los compras, pero no dejan nada detrás."
+        },
+        {
+          "title": "No prometemos aparecer en un medio concreto",
+          "body": "Lo que controlamos llega hasta «a quién le llega y de qué forma». Lo que viene después le toca a la música."
+        }
+      ],
+      "instead": "A cambio prometemos el trabajo ejecutado. Cuando la música pasa la escucha previa, te confirmamos con cifras qué materiales haremos y a cuántos medios de qué tipo los enviaremos, y al terminar lo demostramos con el informe."
+    },
+    "pricing": {
+      "title": "Precio",
+      "subtitle": "Un único producto. No lo dividimos en niveles.",
+      "note": "Hasta el {{until}} lo tomamos al precio de socio inicial. Acabamos de empezar a acumular historial de publicaciones, así que todavía no tenemos base para cobrar el precio de lista. Pasado ese plazo, vuelve al precio de lista de {{list}}.",
+      "capacity": "Aceptamos solo tres artistas al mes. Cada uno se lleva cinco días de trabajo concentrado, y más de eso no nos permitiría cumplir lo prometido."
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "subtitle": "",
+      "items": [
+        {
+          "q": "¿Sirve también para música ya publicada?",
+          "a": "Sí. De hecho es lo más habitual: uno piensa en la promoción justo después de publicar. Las agencias de PR extranjeras suelen exigir de 6 a 8 semanas antes del lanzamiento; nosotros no. La fecha de lanzamiento solo cambia el enfoque de la nota de prensa."
+        },
+        {
+          "q": "No grabamos en su estudio. ¿Podemos encargarlo igual?",
+          "a": "Se puede. Se haya hecho donde se haya hecho, basta con que la música esté terminada. Eso sí, la escucha previa es la misma."
+        },
+        {
+          "q": "¿Por qué el envío tarda de 1 a 3 semanas?",
+          "a": "Si los correos se mandan todos en un día, el dominio emisor queda clasificado como spam. Entonces la campaña entera termina sin llegar a ninguna bandeja de entrada. Es también la razón por la que las empresas que lo disparan todo en un día no consiguen resultados."
+        },
+        {
+          "q": "¿Qué tenemos que preparar?",
+          "a": "Con tener hecho el registro de distribución (el enlace de streaming) ya se puede empezar. La portada, las fotos de perfil, los créditos y las letras ayudan mucho si los tienes, pero no son imprescindibles."
+        },
+        {
+          "q": "¿Qué aparece en el informe?",
+          "a": "Contabilizamos los medios a los que enviamos por tipo, idioma y región, y los medios que son empresas los anotamos por su dominio. De los periodistas y críticos particulares solo indicamos el número: no podemos entregar sus nombres y direcciones a terceros. Junto con las respuestas y las publicaciones, anotamos tal cual los rebotes y las bajas."
+        },
+        {
+          "q": "Queremos encargar también la producción.",
+          "a": "Si lo llevas como proyecto de lanzamiento, entran también la grabación, la mezcla, la masterización y la distribución. En ese caso esta promoción va incluida en el paquete."
+        }
+      ]
+    },
+    "relatedStoriesTitle": "Lo que hemos escrito sobre lanzar y promocionar",
+    "relatedStoriesSubtitle": "Para quienes quieran hacerlo por su cuenta, hemos dejado por escrito lo que sabemos",
+    "cta": {
+      "inquiry": "Consultar sobre promoción de lanzamientos",
+      "titleLine1": "Todavía quedan sitios",
+      "titleHighlight": "a los que tu música puede llegar",
+      "subtitleLine1": "Mándanos la música por KakaoTalk y te respondemos en 3 días hábiles.",
+      "subtitleLine2": "Aun cuando no podamos aceptarla, te escribimos el motivo.",
+      "imageAlt": "El taller de Studio NOL"
+    }
+  },
   "voiceActing": {
     "seo": {
       "title": "Estudio de Locución · Narración ₩100,000/hora | Studio NOL",

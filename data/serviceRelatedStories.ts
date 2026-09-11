@@ -11,7 +11,7 @@
  * - 카테고리 분포는 의도적으로 다양하게 (recording/vocal/lesson/business 혼합)
  */
 
-export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering';
+export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering' | 'music-promotion';
 
 export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
   'recording': [
@@ -31,6 +31,16 @@ export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
     'global-release1',
     // 발매 홍보(보도자료·기자·평론가·해외 매체 피칭)를 정면으로 다루는 유일한 글.
     'music-pr1',
+  ],
+  'music-promotion': [
+    // 발매 홍보를 정면으로 다루는 글이 먼저 온다. 나머지는 발매 준비 전반이라
+    // release-project와 겹치지만, 홍보를 찾아온 사람에게도 필요한 맥락이다.
+    'music-pr1',
+    'release-timeline1',
+    'music-distribution1',
+    'global-release1',
+    'streaming-platforms1',
+    'music-copyright1',
   ],
   'wedding-song': [
     'wedding-song-guide1',
