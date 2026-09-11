@@ -9,6 +9,11 @@ interface Props {
   data: { raisedAmount: number; backerCount: number; percent: number; state: ProjectState } | null;
 }
 
+/**
+ * 후원자 수가 아니라 **건수**로 적는다. 서버 집계(lib/funding/service.ts aggregateProjectStatus)는
+ * `COUNT(*)` — 주문 행 수다. 한 사람이 두 번 후원하면 2가 되므로 'N명'은 사실과 다르다
+ * (중복 후원자를 인원으로 부풀린다). 집계 SQL은 그대로 두고 라벨을 맞춘다.
+ */
 export default function FundingProgress({ goalAmount, endAt, now, data }: Props) {
   // now가 null이면(마운트 전) D-day를 비운다 — 서버/클라이언트 시계 차이로 인한 하이드레이션
   // 불일치를 피하려는 것이고, 컨테이너 min-height가 높이를 예약하고 있어 레이아웃은 안 흔들린다.
@@ -22,7 +27,7 @@ export default function FundingProgress({ goalAmount, endAt, now, data }: Props)
         <>
           <p className="text-4xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{formatPriceAmount(data.raisedAmount)}원</p>
           <p className="typo-card-meta mt-2">
-            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-violet-300">{data.percent}%</span> · {data.backerCount}명 후원{dday ? ` · ${dday}` : ''}
+            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-violet-300">{data.percent}%</span> · {data.backerCount}건 후원{dday ? ` · ${dday}` : ''}
           </p>
         </>
       ) : (

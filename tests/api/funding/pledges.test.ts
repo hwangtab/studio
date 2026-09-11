@@ -109,6 +109,23 @@ it('메일 발송 실패 문자열이 반환되면 orders.notificationError에 �
   expect(mockSet).toHaveBeenCalledWith({ notificationError: 'customer:send_failed' });
 });
 
+/**
+ * 클라이언트는 남은 시간을 (holdExpiresAt − serverNow)로 재고, 경과분만 자기 시계로 센다
+ * (components/funding/PledgeWizard.tsx holdDurationMs). serverNow가 빠지면 기기 시계가 빠른
+ * 후원자에게 결제 위젯이 영영 안 뜨던 상태로 되돌아간다.
+ */
+it('응답에 holdExpiresAt과 같은 시계의 serverNow가 함께 실린다', async () => {
+  (getFundingProject as jest.Mock).mockReturnValue(project);
+  const holdExpiresAt = new Date('2026-10-15T03:15:00Z');
+  (createFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', holdExpiresAt, amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 } });
+  const r = await call({ ...body, paymentMethod: 'toss' });
+  expect(r.status).toBe(201);
+  expect(typeof r.body.serverNow).toBe('string');
+  expect(Number.isFinite(new Date(r.body.serverNow).getTime())).toBe(true);
+  // 홀드는 아직 남아 있어야 한다 — 이 차이가 곧 클라이언트의 카운트다운 총량이다.
+  expect(new Date(r.body.holdExpiresAt).getTime() - new Date(r.body.serverNow).getTime()).toBeGreaterThan(0);
+});
+
 it('검증 실패 400, 품절 409', async () => {
   (getFundingProject as jest.Mock).mockReturnValue(project);
   expect((await call({ ...body, quantity: 0 })).status).toBe(400);

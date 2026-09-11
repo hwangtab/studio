@@ -11,9 +11,39 @@ import type { FundingProject } from '../../lib/funding/projects';
 import { Field, TextArea, TextInput } from '../ui/Field';
 
 interface Props { project: FundingProject; initialRewardId: string | null; remaining: Record<string, number | null> }
-interface Created { orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number; holdExpiresAt: string }
+interface Created {
+  orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number;
+  holdExpiresAt: string;
+  /** 서버가 홀드를 만든 시각. 있으면 기기 시계와 무관하게 남은 시간을 잴 수 있다. */
+  serverNow?: string;
+  /** 응답을 받은 순간의 **기기** 시계. 이후 경과 시간은 전부 이 값과의 차이로만 잰다. */
+  receivedAt: number;
+}
+
+/**
+ * 결제 대기 시간의 총량(ms). `null`이면 "알 수 없음"이고, 그때는 만료로 단정하지 않는다.
+ *
+ * 예전엔 서버가 준 절대 시각(`holdExpiresAt`)을 기기의 `Date.now()`와 직접 비교했다. 기기
+ * 시계가 15분 이상 빨리 가면 방금 만든 홀드가 **생성 직후 만료**로 판정돼 결제 위젯이 영영
+ * 뜨지 않았고, "다시 신청"을 눌러도 같은 결과였다(새 주문의 holdExpiresAt도 같은 이유로
+ * 과거가 된다). 지금은 서버 시각(`serverNow`)과의 차이로 총량을 구하고, 남은 시간은
+ * **응답 수신 이후 경과분**만 빼서 잰다 — 두 시계를 섞지 않는다.
+ */
+const holdDurationMs = (c: Created): number | null => {
+  const end = new Date(c.holdExpiresAt).getTime();
+  if (!Number.isFinite(end)) return null;
+  if (c.serverNow) {
+    const server = new Date(c.serverNow).getTime();
+    if (Number.isFinite(server)) return end - server;
+  }
+  // serverNow가 없는 응답(구버전)에는 기기 시계로 폴백하되, 음수는 "시계가 어긋났다"는
+  // 신호로 읽고 만료로 단정하지 않는다 — 방금 만든 홀드가 이미 지났을 리는 없다.
+  const local = end - c.receivedAt;
+  return local > 0 ? local : null;
+};
 
 const helpClass = 'typo-card-meta mt-1.5';
+const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
 // 선택 가능한 행(리워드·결제수단)은 탭 타깃이 카드 전체가 되도록.
 const choiceRow =
@@ -69,9 +99,18 @@ function StepHeader({ n, title, hint }: { n: number; title: string; hint?: strin
   );
 }
 
+/** 품절 판정 — remaining이 없거나(null=무제한, undefined=미집계) 1개 이상 남았으면 고를 수 있다. */
+const isSoldOut = (remaining: Record<string, number | null>, rewardId: string): boolean =>
+  (remaining[rewardId] ?? 1) <= 0;
+
 export default function PledgeWizard({ project, initialRewardId, remaining }: Props) {
   const uid = useId();
-  const [rewardId, setRewardId] = useState(initialRewardId ?? project.rewards[0].id);
+  // 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해, 후원자가 폼을 다 채우고
+  // 제출한 뒤에야 409를 봤다. 고를 수 있는 첫 리워드를 기본값으로 둔다(전부 품절이면
+  // 첫 리워드를 그대로 두되 아래에서 제출 자체를 막는다).
+  const [rewardId, setRewardId] = useState(
+    initialRewardId ?? (project.rewards.find((r) => !isSoldOut(remaining, r.id)) ?? project.rewards[0]).id,
+  );
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
   const [quantityText, setQuantityText] = useState('1');
   const [additionalText, setAdditionalText] = useState('0');
@@ -83,6 +122,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   const [created, setCreated] = useState<Created | null>(null);
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
 
+  // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
+  const allSoldOut = project.rewards.every((r) => isSoldOut(remaining, r.id));
   const limited = reward.totalQuantity !== null;
   useEffect(() => { if (limited && method === 'bank_transfer') setMethod('toss'); }, [limited, method]);
   // 화면 요약·서버 전송에 쓰는 값은 언제나 정규화본이다 — 입력 칸의 문자열은 건드리지 않는다.
@@ -93,8 +134,11 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
 
   useEffect(() => {
     if (!created) return;
-    const end = new Date(created.holdExpiresAt).getTime();
-    const tick = () => setRemainingMs(Math.max(0, end - Date.now()));
+    const total = holdDurationMs(created);
+    // 총량을 못 구하면 카운트다운도, 만료 판정도 하지 않는다 — 결제 위젯은 그대로 뜬다.
+    // 실제 만료는 서버가 판정한다(confirm이 hold_expired로 거절).
+    if (total === null) { setRemainingMs(null); return; }
+    const tick = () => setRemainingMs(Math.max(0, total - (Date.now() - created.receivedAt)));
     tick();
     const t = setInterval(tick, 1000);
     return () => clearInterval(t);
@@ -102,6 +146,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
 
   const submit = async () => {
     setError(null);
+    if (allSoldOut) { setError(ALL_SOLD_OUT_MESSAGE); return; }
     if (!form.termsAgreed) { setError('약관에 동의해 주세요.'); return; }
     // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
     setQuantityText(String(quantity));
@@ -122,10 +167,13 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '후원 신청에 실패했습니다.'); return; }
+      // 남은 시간은 이 시각 기준으로만 잰다 — 서버가 준 절대 시각을 기기 시계와 직접
+      // 비교하지 않는다(holdDurationMs 주석).
+      const receivedAt = Date.now();
       // router.push가 아니라 전체 페이지 이동 — 클라이언트 전환이면 이미 로드된 gtag가
       // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
       if (json.depositUrl) { window.location.assign(json.depositUrl); return; }
-      setCreated(json);
+      setCreated({ ...json, receivedAt });
     } catch { setError('네트워크 오류가 발생했습니다.'); }
     finally { setSubmitting(false); }
   };
@@ -178,7 +226,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         <div className="space-y-2">
           {project.rewards.map((r) => {
             const left = remaining[r.id];
-            const soldOut = left !== null && left !== undefined && left <= 0;
+            const soldOut = isSoldOut(remaining, r.id);
             return (
               <label key={r.id} className={`${choiceRow} ${soldOut ? 'cursor-not-allowed opacity-50' : ''}`}>
                 <input type="radio" name="reward" value={r.id} className={radioClass} checked={rewardId === r.id} disabled={soldOut} onChange={() => { setRewardId(r.id); setQuantityText('1'); }} />
@@ -324,10 +372,13 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
           </div>
         </dl>
         <p className={helpClass}>VAT 포함. 실제 청구액은 다음 단계에서 서버가 확정합니다.</p>
+        {allSoldOut && (
+          <p role="status" className="mt-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
+        )}
         {error && (
           <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
         )}
-        <Button type="submit" size="lg" fullWidth className="mt-4" disabled={submitting}>
+        <Button type="submit" size="lg" fullWidth className="mt-4" disabled={submitting || allSoldOut}>
           {submitting ? '처리 중…' : method === 'toss' ? '결제로 이동' : '무통장 후원 신청'}
         </Button>
       </div>

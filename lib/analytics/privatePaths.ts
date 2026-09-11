@@ -33,6 +33,37 @@ const PRIVATE_PATH_PATTERN = new RegExp(
 );
 
 /**
+ * 위 목록에서 **측정만** 되돌리는 예외. no-store는 그대로 유지된다(HTML에 관리 토큰이 실린다).
+ *
+ * 펀딩 success는 토스가 돌려보내는 승인 URL(paymentKey·orderId·amount)에서 확정을 끝낸 뒤
+ * 비밀값이 없는 `?o=<주문번호>`로 **리다이렉트**한다 — 즉 이 경로가 실제로 렌더되는 순간의
+ * URL에는 토큰도 paymentKey도 없다. 그런데 측정에서 빠져 있는 동안 `funding_pledge_paid`가
+ * 큐에만 쌓이다 탭을 닫으면 사라져, 퍼널이 **진입 100% · 결제 0%** 로 보였다(첫 캠페인
+ * 트래픽을 재려면 오픈 전에 고쳐야 하는 문제였다).
+ *
+ * fail은 예외가 아니다 — 토스가 실패 URL에 orderId를 직접 붙이므로 우리가 막을 수 없다.
+ *
+ * 주의: 이 예외를 늘리려면 "그 경로가 렌더될 때 URL에 비밀값이 절대 없는가"를 먼저 증명해야
+ * 한다. success는 **성공도 실패도** 리다이렉트로 그것을 보장한다
+ * (pages/[locale]/funding/success.tsx getServerSideProps). 그래도 그 한 줄에만 기대지 않는다 —
+ * 아래 SECRET_QUERY_PATTERN이 비밀값이 붙은 URL을 발견하면 예외를 취소하고 측정에서 뺀다.
+ * 예외가 조용히 새는 경로(승인 실패를 그 자리에서 렌더하는 분기 하나면 충분했다)를 코드로
+ * 막아 두는 것이다.
+ */
+const MEASURED_EXCEPTION_PATTERN = new RegExp(`^/${LOCALE_GROUP}/funding/success$`);
+
+/** 위 예외에 해당하는 `router.pathname` 목록 — Layout은 계속 껍데기를 벗긴다(테스트가 대조). */
+export const MEASURED_PRIVATE_PAGE_ROUTES: readonly string[] = ['/[locale]/funding/success'];
+
+/**
+ * 쿼리에 이 이름들이 있으면 예외를 **취소**한다 — 측정 제외로 되돌린다.
+ *
+ * 경로만 보고 예외를 적용하면, 그 경로가 어쩌다 비밀값을 달고 렌더되는 순간 그대로 유출된다.
+ * 값이 무엇인지는 보지 않는다 — 이름이 보이면 그걸로 충분하다(안전한 쪽으로 틀린다).
+ */
+const SECRET_QUERY_PATTERN = /(^|&)(paymentKey|orderId|token|secret)=/i;
+
+/**
  * next.config.mjs `headers()`가 `private, no-store`로 내려야 하는 경로들. 측정 제외 목록과
  * 갈라지지 않도록 같은 정의에서 파생시킨다 — `tests/config/noStoreHeaders.test.ts`가 실제
  * 설정과 대조한다.
@@ -72,8 +103,12 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);
 
-/** `router.asPath`처럼 쿼리·해시가 붙어 있어도 된다 — 경로 부분만 본다. */
+/** `router.asPath`처럼 쿼리·해시가 붙어 있어도 된다 — 경로로 판정하되 쿼리는 예외 취소에 쓴다. */
 export const isPrivateAnalyticsPath = (pathOrUrl: string): boolean => {
-  const path = (pathOrUrl || '').split('#')[0].split('?')[0];
+  const withoutHash = (pathOrUrl || '').split('#')[0];
+  const queryAt = withoutHash.indexOf('?');
+  const path = queryAt === -1 ? withoutHash : withoutHash.slice(0, queryAt);
+  const query = queryAt === -1 ? '' : withoutHash.slice(queryAt + 1);
+  if (MEASURED_EXCEPTION_PATTERN.test(path) && !SECRET_QUERY_PATTERN.test(query)) return false;
   return PRIVATE_PATH_PATTERN.test(path);
 };
