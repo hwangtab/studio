@@ -69,6 +69,10 @@ npm run check:facts
 npm run check:cta-routing
 npx tsx scripts/cta-routing-baseline.ts --update   # 의도한 변경이면 기준선 갱신
 
+# 펀딩 콘텐츠 불변식 기준선 (CI) — slug 개명·리워드 id 변경·프로젝트 삭제를 잡는다
+npm run check:funding-baseline
+npm run check:funding-baseline -- --update         # 의도한 변경이면 기준선 갱신
+
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
 npm run indexnow:changed -- --dry-run
 ```
@@ -79,6 +83,31 @@ npm run indexnow:changed -- --dry-run
 바꾼다. 카피 3곳(연습실·pricing 페이지 note/subtitle)과 `pages/api/llms.ts`가 이 상수를
 따라간다. 바꿀 때 `PRACTICE_ROOM_AVAILABILITY_UPDATED_ON`도 함께 갱신할 것 — 오래되면
 `practiceRoomAvailability.test.ts`가 CI에서 실패한다.
+
+### 오픈 뒤 펀딩 프로젝트의 리워드 id·slug·금액은 바꾸지 않는다
+
+프로젝트·리워드의 정본은 `content/funding/<slug>.md`인데, 후원 기록은 DB에 문자열
+`project_slug`·`reward_id`로 남는다. 파일만 고치면 에러 없이 조용히 깨진다.
+
+- **리워드 id 변경 → 한정 재고가 0으로 리셋된다.** `lib/funding/service.ts`의 재고 조건은
+  `fp.reward_id = <파일의 id>`로 기존 후원을 세므로, id가 바뀐 순간 그 후원들이 안 세어져
+  100개짜리 리워드가 200개 팔린다.
+- **slug 변경 → 진행 중 모금액이 공개적으로 0원이 되고**, 기존 후원자는 manage 페이지에서
+  프로젝트를 못 찾아 셀프 취소·후원 확인을 잃는다.
+- **금액 변경 →** 후원 기록이 단가를 스스로 저장하므로 데이터는 안 깨지지만 상세 페이지와
+  관리자 화면의 표시가 어긋난다(스펙 §3.1: "오픈 뒤에는 리워드 id 삭제와 금액 변경을 하지
+  않는다 … 이 규칙은 코드로 막을 수 없어 이 절이 정본이다" —
+  `docs/superpowers/specs/2026-09-08-funding-design.md`).
+
+스펙이 "코드로 막을 수 없다"고 적어 둔 자리를 `content/funding.baseline.json` +
+`content/funding.baseline.test.ts`가 대신 지킨다(slug × 리워드 id × 한정 여부). 의도한
+변경이면 `npm run check:funding-baseline -- --update` 후 **같은 커밋에 왜 바뀌는지를 적을 것**
+— 이유 없는 갱신은 게이트를 무력화한다.
+
+`status`·`hidden`은 다른 frontmatter 필드와 같이 **엄격 검증**한다(`lib/funding/projects.ts`).
+`status: Draft` 오타나 따옴표가 붙은 `hidden: "true"`는 예전엔 조용히 공개로 떨어졌다.
+사이트맵 쪽(`lib/sitemap/fundingMeta.js`)도 정규식이 아니라 같은 파서(gray-matter)로 같은
+규칙을 적용한다 — 두 판정이 갈리면 앱은 404인데 사이트맵·IndexNow가 그 URL을 제출한다.
 
 ### 서비스 수치는 정본에서만 온다
 

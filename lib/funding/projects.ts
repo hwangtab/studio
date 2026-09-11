@@ -13,7 +13,7 @@ export interface FundingReward {
 }
 export interface FundingProject {
   slug: string; title: string; summary: string; cover: string; ogImage: string | null;
-  goalAmount: number; startAt: string; endAt: string; status: 'auto' | 'draft' | 'closed';
+  goalAmount: number; startAt: string; endAt: string; status: FundingStatus;
   hidden: boolean; lastmod: string; rewards: FundingReward[]; content: string;
 }
 
@@ -33,6 +33,29 @@ const isoDate = (v: unknown, name: string): string => {
   return s;
 };
 
+export const FUNDING_STATUSES = ['auto', 'draft', 'closed'] as const;
+export type FundingStatus = (typeof FUNDING_STATUSES)[number];
+
+/**
+ * status·hidden은 오래 "조용한 폴백"이었다 — 오타 난 `status: Draft`는 auto로 떨어져 초안이
+ * 공개되고, 따옴표가 붙은 `hidden: "true"`는 문자열이라 `=== true` 비교를 통과하지 못해
+ * 숨김이 풀렸다. 둘 다 화면에 아무 표시를 남기지 않으므로 다른 필드처럼 던지게 한다.
+ */
+const enumValue = (v: unknown, name: string, allowed: readonly string[], fallback: string): string => {
+  if (v === undefined || v === null) return fallback;
+  if (typeof v !== 'string' || !allowed.includes(v)) {
+    throw new Error(`funding frontmatter: ${name}은(는) ${allowed.join(' | ')} 중 하나여야 합니다 (받은 값: ${JSON.stringify(v)})`);
+  }
+  return v;
+};
+const bool = (v: unknown, name: string, fallback: boolean): boolean => {
+  if (v === undefined || v === null) return fallback;
+  if (typeof v !== 'boolean') {
+    throw new Error(`funding frontmatter: ${name}은(는) boolean(true | false)이어야 합니다 — 따옴표가 붙은 "true"는 문자열이라 거부합니다 (받은 값: ${JSON.stringify(v)})`);
+  }
+  return v;
+};
+
 const parseReward = (raw: unknown, index: number): FundingReward => {
   if (typeof raw !== 'object' || raw === null) throw new Error(`funding frontmatter: rewards[${index}] 형식 오류`);
   const r = raw as Record<string, unknown>;
@@ -42,7 +65,7 @@ const parseReward = (raw: unknown, index: number): FundingReward => {
     description: str(r.description, `rewards[${index}].description`),
     amount: posInt(r.amount, `rewards[${index}].amount`),
     totalQuantity: r.totalQuantity === undefined || r.totalQuantity === null ? null : posInt(r.totalQuantity, `rewards[${index}].totalQuantity`),
-    requiresShipping: r.requiresShipping === true,
+    requiresShipping: bool(r.requiresShipping, `rewards[${index}].requiresShipping`, false),
     estimatedDelivery: str(r.estimatedDelivery, `rewards[${index}].estimatedDelivery`),
     image: typeof r.image === 'string' && r.image !== '' ? r.image : null,
   };
@@ -63,7 +86,7 @@ export const parseFundingProject = (raw: string, slug: string): FundingProject =
     if (ids.has(r.id)) throw new Error(`funding frontmatter: 리워드 id 중복 — ${r.id}`);
     ids.add(r.id);
   }
-  const status = d.status === 'draft' || d.status === 'closed' ? d.status : 'auto';
+  const status = enumValue(d.status, 'status', FUNDING_STATUSES, 'auto') as FundingStatus;
   return {
     slug,
     title: str(d.title, 'title'),
@@ -72,7 +95,7 @@ export const parseFundingProject = (raw: string, slug: string): FundingProject =
     ogImage: typeof d.ogImage === 'string' && d.ogImage !== '' ? d.ogImage : null,
     goalAmount: posInt(d.goalAmount, 'goalAmount'),
     startAt, endAt, status,
-    hidden: d.hidden === true,
+    hidden: bool(d.hidden, 'hidden', false),
     lastmod: d.lastmod instanceof Date ? d.lastmod.toISOString().slice(0, 10) : typeof d.lastmod === 'string' ? d.lastmod : startAt.slice(0, 10),
     rewards, content,
   };

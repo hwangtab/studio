@@ -82,3 +82,33 @@ describe('content/funding 디렉터리 자체가 없을 때', () => {
     error.mockRestore();
   });
 });
+
+describe('status·hidden 엄격 검증', () => {
+  // 이전에는 둘 다 조용한 폴백이었다 — 오타 난 status는 auto(=공개)로, 문자열 "true"인
+  // hidden은 `=== true` 비교를 통과 못 해 false(=공개)로 떨어졌다. 화면에 아무 단서가 없다.
+  it('status가 auto·draft·closed가 아니면 던진다', () => {
+    expect(() => parseFundingProject(RAW.replace('rewards:', 'status: Draft\nrewards:'), 'demo'))
+      .toThrow(/status은\(는\) auto \| draft \| closed 중 하나여야 합니다 \(받은 값: "Draft"\)/);
+    expect(() => parseFundingProject(RAW.replace('rewards:', 'status: live\nrewards:'), 'demo')).toThrow(/status/);
+    expect(() => parseFundingProject(RAW.replace('rewards:', 'status: true\nrewards:'), 'demo')).toThrow(/status/);
+  });
+  it('status가 없으면 auto, 있으면 그 값을 쓴다', () => {
+    expect(parseFundingProject(RAW, 'demo').status).toBe('auto');
+    for (const s of ['auto', 'draft', 'closed'] as const) {
+      expect(parseFundingProject(RAW.replace('rewards:', `status: ${s}\nrewards:`), 'demo').status).toBe(s);
+    }
+  });
+  it('hidden이 boolean이 아니면 던진다 — 문자열 "true" 포함', () => {
+    expect(() => parseFundingProject(RAW.replace('rewards:', 'hidden: "true"\nrewards:'), 'demo'))
+      .toThrow(/hidden은\(는\) boolean/);
+    expect(() => parseFundingProject(RAW.replace('rewards:', 'hidden: 1\nrewards:'), 'demo')).toThrow(/hidden/);
+  });
+  it('hidden true·false는 그대로 통과한다', () => {
+    expect(parseFundingProject(RAW.replace('rewards:', 'hidden: true\nrewards:'), 'demo').hidden).toBe(true);
+    expect(parseFundingProject(RAW.replace('rewards:', 'hidden: false\nrewards:'), 'demo').hidden).toBe(false);
+  });
+  it('rewards[].requiresShipping도 같은 규칙이다 — 문자열이면 배송지를 조용히 안 받게 된다', () => {
+    expect(() => parseFundingProject(RAW.replace('requiresShipping: true', 'requiresShipping: "true"'), 'demo'))
+      .toThrow(/rewards\[0\]\.requiresShipping은\(는\) boolean/);
+  });
+});
