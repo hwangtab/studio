@@ -34,6 +34,35 @@ type PolicyCopy = {
   sections: PolicySection[];
 };
 
+/**
+ * 문의·상담과 **예약·결제** 처리에 관여하는 수탁자 — 개인정보보호법 제26조·제30조의 고지 대상.
+ *
+ * 예전엔 4항이 "원칙적으로 외부에 제공하지 않으며"로 끝나고 수탁자를 한 곳도 밝히지 않았는데,
+ * 바로 아래 9항은 펀딩 수탁자 4곳을 표로 싣고 있었다 — 같은 문서가 스스로 모순됐다.
+ *
+ * 고쳐 놓고 한 번 더 틀릴 뻔했다: Resend·Vercel 둘만 싣고 본문을 "아래와 같이 위탁하고
+ * 있으며"라는 **열거형 단언**으로 바꾸면, 모호했던 옛 문장보다 오히려 적극적으로 부정확해진다.
+ * 예약(/[locale]/booking)은 살아 있는 상품이고 문의 폼보다 많은 곳을 거치기 때문이다.
+ * 아래 5곳은 전부 코드에서 확인한 것이다.
+ *
+ *   Resend        lib/booking/email.ts → lib/email/resend.ts, pages/api/contact/send-email.ts
+ *   Vercel        vercel.json · data/siteConfig.ts hostingProvider
+ *   Turso(libsql) db/client.ts — orders·bookings·work_orders 영속
+ *   Google LLC    lib/booking/gcal.ts — 확정 시 캘린더 이벤트 생성.
+ *                 lib/booking/confirm.ts가 이벤트 본문에 고객 이름·전화·이메일·요청사항을 담는다.
+ *   토스페이먼츠   components/booking/TossPaymentWidget.tsx(customerName·customerEmail) · lib/booking/toss.ts
+ *
+ * 형식은 9항(FUNDING_DATA_PROCESSORS)과 같은 수탁자·업무·항목 3열을 쓴다. 위탁이 늘거나
+ * 줄면 여기부터 고칠 것 — 4항 본문이 "아래와 같이"라고 단언하므로 표가 곧 사실 주장이다.
+ */
+export const SERVICE_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
+  { name: 'Resend', purpose: '문의 답변 메일, 예약 확정·변경·취소 안내 메일 발송', items: '이름, 연락처, 이메일 주소, 문의 내용, 예약·주문 내역' },
+  { name: 'Vercel', purpose: '웹사이트·문의 접수·예약 처리 서버 호스팅', items: '문의·예약 과정에서 전송되는 위 항목 전부' },
+  { name: 'Turso', purpose: '예약·주문 기록 데이터베이스 보관', items: '이름, 연락처, 이메일 주소, 예약 일시·상품·요청사항, 결제·환불 처리 기록' },
+  { name: 'Google LLC', purpose: '확정된 예약의 일정 관리(구글 캘린더 이벤트 생성·삭제)', items: '이름, 연락처, 이메일 주소, 예약 일시·상품·요청사항, 주문번호' },
+  { name: '토스페이먼츠', purpose: '예약 결제 승인·취소·환불 처리', items: '이름, 이메일 주소, 주문번호, 결제 금액·결제수단 정보' },
+];
+
 /** 테스트(tests/pages/privacy-policy.test.tsx)가 로케일 간 모순을 검사하므로 export한다. */
 export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
   ko: {
@@ -44,19 +73,20 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
-        body: '문의 양식을 통해 이름, 연락처, 이메일, 문의 내용을 수집할 수 있습니다.',
+        body: '문의 양식을 통해 이름, 연락처, 이메일, 문의 내용을 수집할 수 있습니다. 예약·결제 신청 화면에서는 이름, 연락처, 이메일 주소, 예약 일시·상품, 요청사항과 결제 처리 기록(주문번호, 결제 금액·결제수단)을 수집합니다. 펀딩(리워드 선주문)의 수집 항목은 아래 6항이 따로 정합니다.',
       },
       {
         heading: '2. 개인정보 이용 목적',
-        body: '수집한 정보는 문의 답변, 예약 안내, 서비스 상담 및 고객 요청 처리 목적으로만 사용합니다.',
+        body: '수집한 정보는 문의 답변, 예약 접수·확정·변경·취소 안내, 결제와 환불 처리, 서비스 상담 및 고객 요청 처리 목적으로만 사용합니다.',
       },
       {
         heading: '3. 보유 및 이용 기간',
-        body: '문의·상담으로 수집한 개인정보는 상담 완료 후 지체 없이 파기합니다. 펀딩 후원으로 수집한 개인정보의 보유 기간은 아래 8항을 따르며, 법령에 보관 의무가 있는 기록은 해당 기간 동안 보관합니다.',
+        body: `문의·상담으로 수집한 개인정보는 상담 완료 후 지체 없이 파기합니다. 예약·결제 기록은 ${PRIVACY_LEGAL_RETENTION_TEXT} 펀딩 후원으로 수집한 개인정보의 보유 기간은 아래 8항을 따릅니다.`,
       },
       {
         heading: '4. 제3자 제공 및 처리위탁',
-        body: '원칙적으로 개인정보를 외부에 제공하지 않으며, 서비스 운영에 필요한 최소 범위에서만 관련 법령을 준수하여 처리합니다.',
+        body: '개인정보를 제3자에게 제공하지 않습니다. 다만 문의·상담과 예약·결제 처리에 필요한 범위에서 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다. 펀딩(리워드 선주문) 처리의 위탁 현황은 아래 9항이, 언론 홍보 업무의 매체 연락처는 아래 10~12항이 따로 정합니다.',
+        processors: SERVICE_DATA_PROCESSORS,
       },
       {
         heading: '5. 이용자의 권리',
@@ -131,7 +161,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Third-party sharing and outsourcing',
-        body: 'We do not provide personal data to third parties in principle, and process only the minimum scope required to operate services lawfully.',
+        body: 'We do not provide personal data to third parties. We do entrust processing: Resend (sending inquiry and booking emails) and Vercel (website and server hosting) receive the name, phone number, email address, and message you submit. Bookings and payments (offered on our Korean pages only) additionally involve Turso (booking and order database), Google LLC (calendar event for a confirmed booking) and Toss Payments (payment approval, cancellation, refund). Outsourcing for crowdfunding (reward pre-orders) is listed in section 9 of the Korean privacy policy, and media contact handling for press outreach in sections 6 to 8 below.',
       },
       {
         heading: '5. Your rights',
@@ -171,7 +201,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. 向第三方提供与委托处理',
-        body: '原则上我们不会向外部提供个人信息，仅在服务运营所必需的最小范围内并依法处理。',
+        body: '我们不向第三方提供个人信息。但我们委托处理如下：Resend（发送咨询与预约相关邮件）与 Vercel（网站及服务器托管）会接收您提交的姓名、联系电话、电子邮箱和咨询内容。预约与支付（仅在韩语页面提供）另外涉及 Turso（预约与订单数据库）、Google LLC（为已确认预约创建日历日程）和 Toss Payments（支付授权、取消与退款）。众筹（回报预购）相关的委托情况请参阅韩语版隐私政策第 9 项，新闻宣传的媒体联系方式处理请见下方第 6 至 8 项。',
       },
       {
         heading: '5. 用户权利',
@@ -211,7 +241,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Cesión a terceros y tratamiento encargado',
-        body: 'En principio no compartimos datos personales con terceros y tratamos solo el mínimo necesario para operar el servicio conforme a la ley.',
+        body: 'No cedemos datos personales a terceros. Sí encargamos el tratamiento: Resend (envío de correos de consulta y de reserva) y Vercel (alojamiento del sitio y del servidor) reciben el nombre, teléfono, correo electrónico y contenido del mensaje. Las reservas y pagos (disponibles solo en nuestras páginas en coreano) implican además a Turso (base de datos de reservas y pedidos), Google LLC (evento de calendario de una reserva confirmada) y Toss Payments (autorización, cancelación y reembolso del pago). El encargo relativo al crowdfunding (pedidos anticipados de recompensas) figura en el apartado 9 de la política de privacidad en coreano, y el tratamiento de contactos de prensa en los apartados 6 a 8 siguientes.',
       },
       {
         heading: '5. Derechos del usuario',
@@ -251,7 +281,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Cung cấp cho bên thứ ba và ủy quyền xử lý',
-        body: 'Về nguyên tắc, chúng tôi không cung cấp dữ liệu cá nhân cho bên thứ ba; chỉ xử lý trong phạm vi tối thiểu cần thiết để vận hành dịch vụ đúng quy định.',
+        body: 'Chúng tôi không cung cấp dữ liệu cá nhân cho bên thứ ba. Chúng tôi có ủy quyền xử lý: Resend (gửi email liên hệ và email đặt lịch) và Vercel (lưu trữ website và máy chủ) nhận họ tên, số điện thoại, email và nội dung yêu cầu của bạn. Việc đặt lịch và thanh toán (chỉ có trên trang tiếng Hàn) còn liên quan tới Turso (cơ sở dữ liệu đặt lịch và đơn hàng), Google LLC (tạo sự kiện lịch cho lịch hẹn đã xác nhận) và Toss Payments (duyệt, hủy và hoàn tiền thanh toán). Việc ủy quyền xử lý cho gây quỹ (đặt trước phần thưởng) được nêu tại mục 9 của chính sách bảo mật bản tiếng Hàn, còn xử lý liên hệ báo chí ở mục 6 đến 8 bên dưới.',
       },
       {
         heading: '5. Quyền của người dùng',
@@ -291,7 +321,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. การเปิดเผยต่อบุคคลที่สามและการว่าจ้างประมวลผล',
-        body: 'โดยหลักแล้วเราไม่เปิดเผยข้อมูลส่วนบุคคลให้บุคคลภายนอก และจะประมวลผลเฉพาะเท่าที่จําเป็นต่อการให้บริการตามกฎหมาย',
+        body: 'เราไม่เปิดเผยข้อมูลส่วนบุคคลให้บุคคลที่สาม แต่เราว่าจ้างประมวลผลดังนี้ Resend (ส่งอีเมลคําสอบถามและอีเมลการจอง) และ Vercel (โฮสติงเว็บไซต์และเซิร์ฟเวอร์) จะได้รับชื่อ เบอร์โทร อีเมล และเนื้อหาคําสอบถามของคุณ ส่วนการจองและการชําระเงิน (มีเฉพาะหน้าภาษาเกาหลี) ยังเกี่ยวข้องกับ Turso (ฐานข้อมูลการจองและคําสั่งซื้อ) Google LLC (สร้างกําหนดการในปฏิทินสําหรับการจองที่ยืนยันแล้ว) และ Toss Payments (อนุมัติ ยกเลิก และคืนเงิน) การว่าจ้างประมวลผลที่เกี่ยวกับการระดมทุน (การสั่งจองของตอบแทนล่วงหน้า) ระบุไว้ในข้อ 9 ของนโยบายฉบับภาษาเกาหลี และการจัดการข้อมูลติดต่อสื่อมวลชนอยู่ในข้อ 6 ถึง 8 ด้านล่าง',
       },
       {
         heading: '5. สิทธิของผู้ใช้',
@@ -331,7 +361,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Uchinchi tomonga berish va qayta ishlashni topshirish',
-        body: 'Asosan shaxsiy ma\'lumotlar uchinchi tomonlarga berilmaydi; xizmatni qonuniy yuritish uchun zarur eng kam doirada qayta ishlanadi.',
+        body: 'Shaxsiy ma\'lumotlar uchinchi tomonlarga berilmaydi. Biroq qayta ishlash topshirilgan: Resend (murojaat va bron xatlarini yuborish) hamda Vercel (veb-sayt va server hostingi) siz yuborgan ism, telefon raqami, email manzili va murojaat mazmunini oladi. Bron va to\'lov (faqat koreys tilidagi sahifalarda) qo\'shimcha ravishda Turso (bron va buyurtma ma\'lumotlar bazasi), Google LLC (tasdiqlangan bron uchun kalendar tadbiri) va Toss Payments (to\'lovni tasdiqlash, bekor qilish, qaytarish) ishtirokida kechadi. Kraudfanding (mukofotlarni oldindan buyurtma qilish) bo\'yicha topshirish koreyscha maxfiylik siyosatining 9-bandida, matbuot aloqalari esa quyidagi 6-8-bandlarda keltirilgan.',
       },
       {
         heading: '5. Foydalanuvchi huquqlari',

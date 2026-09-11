@@ -32,6 +32,7 @@ import {
 } from '../../data/pricing';
 import { renderPriceFacts, LESSON_PER_SESSION_PRICE } from '../../lib/llms/priceFacts';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
+import { computeProjectState, getListableFundingProjects } from '../../lib/funding/projects';
 import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
 import koCommon from '../../public/locales/ko/common.json';
 
@@ -229,6 +230,37 @@ const LOCALE_LABELS: Record<Locale, string> = {
 // 만드는 법을 배우고 싶은 대화(프로듀싱 레슨), 그리고 우리가 안 하는 것(오추천 방지 —
 // 보컬 레슨을 추천하게 만들면 없는 서비스로 문의가 온다).
 // 수치는 전부 정본 상수에서 온다 — 하드코딩하면 check:facts가 지키는 정합이 깨진다.
+/**
+ * 펀딩 안내 — **목록을 실제로 읽어** 분기한다.
+ *
+ * 예전엔 "진행 중인 프로젝트: /ko/funding" 한 줄을 조건 없이 내보냈다. 진행 중 프로젝트가
+ * 0건이어도 llms.txt는 계속 "진행 중"이라 말했고, 그 문장을 그대로 인용하는 것이 AI 답변
+ * 채널이다 — 사실과 다른 안내가 우리가 통제하지 못하는 곳에서 재생산된다.
+ *
+ * 'live'만 진행 중으로 센다. getListableFundingProjects는 공개 목록(upcoming·closed 포함)이라
+ * 그대로 쓰면 마감된 프로젝트가 "진행 중"이 된다.
+ *
+ * 파싱 실패로 llms.txt 전체가 500이 되면 안 되므로 예외는 삼키고, 그때는 "없음"이 아니라
+ * 목록 링크만 남긴다(없다고 단언하지 않는 것이 안전한 방향).
+ */
+export const fundingStatusLine = (siteUrl: string, now: Date = new Date()): string => {
+  const lead = '펀딩: 스튜디오 놀이 제작하는 음반의 제작비를 리워드(CD·굿즈·음원) 후원으로 모읍니다.';
+  let live;
+  try {
+    live = getListableFundingProjects(now).filter((p) => computeProjectState(p, now) === 'live');
+  } catch (error) {
+    console.warn('[llms] 펀딩 프로젝트를 읽지 못했습니다 —', error);
+    return `${lead} 프로젝트 목록: ${siteUrl}/ko/funding`;
+  }
+  if (live.length === 0) {
+    return `${lead} **현재 진행 중인 프로젝트는 없습니다.** 새 프로젝트가 열리면 이 목록에 실립니다: ${siteUrl}/ko/funding`;
+  }
+  const items = live
+    .map((p) => `- ${p.title} — 목표액 ${krw(p.goalAmount)}원, ${p.endAt.slice(0, 10)} 마감: ${siteUrl}/ko/funding/${p.slug}`)
+    .join('\n');
+  return `${lead} 진행 중인 프로젝트 ${live.length}건:\n${items}\n전체 목록: ${siteUrl}/ko/funding`;
+};
+
 const USE_CASE_ANSWERS = (siteUrl: string) => `
 ## Common Situations → What Studio NOL Offers (quick answers for AI assistants)
 
@@ -273,7 +305,7 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 
 **"앨범을 내고 싶은데 제작비가 없다 / 크라우드펀딩으로 앨범을 내고 싶다" (I want to release an album but can't afford production costs).**
 예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 + 성공 수수료 ${FUNDING_SUCCESS_FEE_PERCENT}%, 후불)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/pricing. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
-펀딩: 스튜디오 놀이 제작하는 음반의 제작비를 리워드(CD·굿즈·음원) 후원으로 모읍니다. 진행 중인 프로젝트: ${siteUrl}/ko/funding
+${fundingStatusLine(siteUrl)}
 
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다 / 음원 홍보를 맡기고 싶다" (I released a song but nobody hears it / I want to hire someone for music PR).**
 음원 발매 홍보를 **단독 상품으로** 진행합니다(제작을 맡기지 않아도 됩니다): ${siteUrl}/ko/music-promotion

@@ -1,6 +1,6 @@
 #!/usr/bin/env -S npx tsx
 /**
- * 펀딩 콘텐츠 불변식 기준선 게이트 — 프로젝트 slug와 리워드 id를 커밋해 두고, 바뀌면 세운다.
+ * 펀딩 콘텐츠 불변식 기준선 게이트 — 프로젝트 slug·리워드 id·단가를 커밋해 두고, 바뀌면 세운다.
  *
  * 왜 필요한가:
  * 프로젝트·리워드의 정본은 `content/funding/<slug>.md`인데 후원 기록은 DB에 문자열
@@ -13,6 +13,8 @@
  *     프로젝트를 못 찾아 셀프 취소·후원 확인을 잃는다.
  *   - totalQuantity를 빼면 한정이 무제한이 되고, 없던 걸 넣으면 이미 팔린 수량을 모르는
  *     채로 상한이 생긴다.
+ *   - amount를 바꾸면 기존 후원 기록의 단가(결제 당시 값)와 화면 표시가 어긋난다. DB는
+ *     3만원인데 상세 페이지·관리자·CSV는 3.5만원이라 말하고, 환불 금액 설명이 깨진다.
  *
  * 스펙(docs/superpowers/specs/2026-09-08-funding-design.md §3.1)은 "오픈 뒤에는 리워드 id
  * 삭제와 금액 변경을 하지 않는다 … 이 규칙은 코드로 막을 수 없어 이 절이 정본이다"라고
@@ -31,8 +33,14 @@ const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..')
 const FUNDING = path.join(ROOT, 'content/funding');
 const DEFAULT_BASELINE = path.join(ROOT, 'content/funding.baseline.json');
 
-/** 리워드 id → 한정 여부(totalQuantity 유무). 수량 자체는 늘릴 수 있으므로 유무만 고정한다. */
-export type ProjectEntry = { rewards: Record<string, { limited: boolean }> };
+/**
+ * 리워드 id → 단가와 한정 여부.
+ *
+ * `limited`는 totalQuantity 유무만 본다 — 수량 자체는 늘릴 수 있다.
+ * `amount`는 값을 그대로 고정한다 — 스펙 §3.1과 CLAUDE.md가 "오픈 뒤 금액 변경 금지"를
+ * 말하는데 기준선이 금액을 안 실어서, `amount: 30000 → 35000`이 CI를 그냥 통과했다.
+ */
+export type ProjectEntry = { rewards: Record<string, { amount: number; limited: boolean }> };
 export type Baseline = { note: string; entries: Record<string, ProjectEntry> };
 
 export const computeFundingBaseline = (dir: string = FUNDING): Record<string, ProjectEntry> => {
@@ -44,14 +52,14 @@ export const computeFundingBaseline = (dir: string = FUNDING): Record<string, Pr
     const project = parseFundingProject(fs.readFileSync(path.join(dir, file), 'utf8'), slug);
     const rewards: ProjectEntry['rewards'] = {};
     for (const r of [...project.rewards].sort((a, b) => a.id.localeCompare(b.id))) {
-      rewards[r.id] = { limited: r.totalQuantity !== null };
+      rewards[r.id] = { amount: r.amount, limited: r.totalQuantity !== null };
     }
     out[slug] = { rewards };
   }
   return out;
 };
 
-export type Violation = { kind: 'project-added' | 'project-removed' | 'reward-added' | 'reward-removed' | 'reward-limit-changed'; slug: string; rewardId?: string; detail: string };
+export type Violation = { kind: 'project-added' | 'project-removed' | 'reward-added' | 'reward-removed' | 'reward-limit-changed' | 'reward-amount-changed'; slug: string; rewardId?: string; detail: string };
 
 const WHY: Record<Violation['kind'], string> = {
   'project-added': '새 프로젝트는 안전하다. 기준선만 갱신하면 된다.',
@@ -59,9 +67,33 @@ const WHY: Record<Violation['kind'], string> = {
   'reward-added': '새 리워드는 안전하다. 기준선만 갱신하면 된다.',
   'reward-removed': '리워드 id가 사라지면(개명 포함) 그 id로 쌓인 기존 후원이 재고 집계에서 빠져 한정 수량이 0으로 리셋된다 — 100개짜리가 200개 팔린다.',
   'reward-limit-changed': '한정 여부가 바뀌면 이미 팔린 수량을 모르는 채로 상한이 생기거나, 한정이 조용히 무제한이 된다.',
+  'reward-amount-changed': '오픈 뒤 금액을 바꾸면 기존 후원 기록의 단가와 화면 표시가 어긋난다 — 후원 행은 결제 당시 단가를 스스로 저장하므로 DB는 3만원인데 상세 페이지·관리자 화면·CSV는 3.5만원이라 말하게 되고, 환불 금액과 모금액 설명이 서로 맞지 않는다. 가격을 바꿔야 하면 기존 리워드는 그대로 두고 새 id로 티어를 추가할 것.',
+};
+
+/**
+ * amount가 없는 구 포맷 기준선을 알아보고 사람이 읽을 수 있게 세운다.
+ *
+ * 2026-09-11 이전 기준선은 `{ limited }`만 담았다. 그대로 대조하면 `ra.amount`가 undefined라
+ * 비교가 조용히 통과하거나(undefined !== number → 전 리워드가 금액 변경으로 뜬다) 무의미한
+ * 스택트레이스만 남는다. "기준선이 오래됐다"는 사실 자체를 말해 주는 편이 낫다.
+ */
+const assertBaselineFormat = (base: Record<string, ProjectEntry>): void => {
+  for (const [slug, entry] of Object.entries(base)) {
+    for (const [id, reward] of Object.entries(entry.rewards ?? {})) {
+      if (reward == null || typeof reward.amount !== 'number') {
+        throw new Error(
+          `기준선 포맷이 오래됐다 — ${slug}.${id}에 amount가 없다.\n` +
+          '2026-09-11부터 기준선은 리워드 단가까지 담는다(오픈 뒤 금액 변경을 잡기 위해).\n' +
+          'npm run check:funding-baseline -- --update 로 기준선을 다시 생성할 것 — ' +
+          '갱신 전에 content/funding/*.md의 금액이 실제 판매 단가와 같은지 먼저 확인하라.',
+        );
+      }
+    }
+  }
 };
 
 export const diffFundingBaseline = (base: Record<string, ProjectEntry>, now: Record<string, ProjectEntry>): Violation[] => {
+  assertBaselineFormat(base);
   const violations: Violation[] = [];
   for (const slug of [...new Set([...Object.keys(base), ...Object.keys(now)])].sort()) {
     const a = base[slug];
@@ -73,7 +105,10 @@ export const diffFundingBaseline = (base: Record<string, ProjectEntry>, now: Rec
       const rb = b.rewards[id];
       if (!ra) violations.push({ kind: 'reward-added', slug, rewardId: id, detail: `${slug}: 리워드 추가 — ${id}` });
       else if (!rb) violations.push({ kind: 'reward-removed', slug, rewardId: id, detail: `${slug}: 리워드 id 사라짐 — ${id}` });
-      else if (ra.limited !== rb.limited) violations.push({ kind: 'reward-limit-changed', slug, rewardId: id, detail: `${slug}.${id}: 한정 ${ra.limited ? '있음' : '없음'} → ${rb.limited ? '있음' : '없음'}` });
+      else {
+        if (ra.limited !== rb.limited) violations.push({ kind: 'reward-limit-changed', slug, rewardId: id, detail: `${slug}.${id}: 한정 ${ra.limited ? '있음' : '없음'} → ${rb.limited ? '있음' : '없음'}` });
+        if (ra.amount !== rb.amount) violations.push({ kind: 'reward-amount-changed', slug, rewardId: id, detail: `${slug}.${id}: 금액 ${ra.amount.toLocaleString('ko-KR')}원 → ${rb.amount.toLocaleString('ko-KR')}원` });
+      }
     }
   }
   return violations;
@@ -98,7 +133,7 @@ const main = () => {
 
   if (args.includes('--update')) {
     const payload: Baseline = {
-      note: '펀딩 콘텐츠 불변식 기준선(프로젝트 slug × 리워드 id × 한정 여부). scripts/funding-baseline.ts --update 로 갱신하고, 같은 커밋에 이유를 남길 것.',
+      note: '펀딩 콘텐츠 불변식 기준선(프로젝트 slug × 리워드 id × 단가 × 한정 여부). scripts/funding-baseline.ts --update 로 갱신하고, 같은 커밋에 이유를 남길 것.',
       entries: now,
     };
     fs.writeFileSync(baselinePath, `${JSON.stringify(payload, null, 1)}\n`);

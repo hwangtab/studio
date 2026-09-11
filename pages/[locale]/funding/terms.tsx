@@ -2,10 +2,25 @@ import type { GetServerSideProps, NextPage } from 'next';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import { Section } from '../../../components/ui/Section';
-import { getSiteConfig, studioOperator } from '../../../data/siteConfig';
+import { getSiteConfig, hostingProvider, studioOperator } from '../../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import { FUNDING_TERMS_VERSION, PRIVACY_LEGAL_RETENTION_TEXT, PRIVACY_RETENTION_TEXT } from '../../../lib/funding/policy';
 import type { Locale } from '../../../lib/i18n';
+import { POLICY_COPY_BY_LOCALE } from '../privacy-policy';
+
+/**
+ * 약관 제13조가 가리키는 처리방침 항의 범위 — **제목을 문자열로 복제하지 않는다.**
+ * 예전엔 "펀딩(리워드 선주문) 개인정보 처리" 절이라 적었는데 그런 제목의 항이 없었다.
+ * 정본(POLICY_COPY_BY_LOCALE.ko)에서 '펀딩'으로 시작하는 항의 실제 제목을 끌어와,
+ * 처리방침에서 항을 추가·개명하면 약관 문장도 함께 따라오게 한다.
+ */
+const FUNDING_PRIVACY_SECTIONS = POLICY_COPY_BY_LOCALE.ko.sections
+  .map((section) => section.heading)
+  .filter((heading) => /^\d+\. 펀딩/.test(heading));
+
+export const FUNDING_PRIVACY_SECTION_REFERENCE = FUNDING_PRIVACY_SECTIONS.length === 0
+  ? '개인정보 처리방침'
+  : `개인정보 처리방침의 "${FUNDING_PRIVACY_SECTIONS[0]}"부터 "${FUNDING_PRIVACY_SECTIONS[FUNDING_PRIVACY_SECTIONS.length - 1]}"까지의 항`;
 
 // 펀딩(리워드 선주문) 전용 약관 — /ko/terms의 예약 이용약관과 별개다.
 // 펀딩 페이지 전부 ko 전용이라 비-ko 경로는 getServerSideProps에서 /ko/funding/terms로
@@ -33,7 +48,7 @@ export const FUNDING_TERMS_SECTIONS: FundingTermsSection[] = [
   { heading: '제10조 (환불)', body: ['환불은 청약철회 접수일부터 3영업일 이내에 처리합니다. 온라인 결제는 결제 수단으로 취소하며, 무통장입금은 후원자가 알려준 계좌로 송금합니다.', '리워드를 받은 뒤 청약철회하는 경우 리워드 반환에 드는 비용은 후원자가 부담합니다. 다만 리워드가 표시·광고와 다른 경우에는 스튜디오가 부담합니다.'] },
   { heading: '제11조 (환불 지연에 대한 배상)', body: ['스튜디오가 환불을 지연한 경우 전자상거래법이 정하는 지연배상금을 지급합니다.'] },
   { heading: '제12조 (후원자의 의무)', body: ['후원자는 정확한 이름·연락처·이메일·배송지를 입력해야 하며, 무통장입금 시 입금자명을 후원 신청 이름과 같게 해야 합니다.', '타인의 정보를 도용하거나 결제 수단을 부정하게 사용해서는 안 됩니다.'] },
-  { heading: '제13조 (개인정보의 처리)', body: [`스튜디오는 후원 확정·리워드 발송·고객 응대 목적으로 후원자의 이름·연락처·이메일·배송지를 수집하며, ${PRIVACY_RETENTION_TEXT} 보관한 뒤 파기합니다. ${PRIVACY_LEGAL_RETENTION_TEXT}`, '후원자 명단 공개에 동의한 후원자의 이름은 프로젝트 페이지에 표시되며, 동의는 후원 확인 페이지 또는 문의로 철회할 수 있습니다.', '수집 항목·이용 목적·처리위탁 현황은 개인정보 처리방침의 "펀딩(리워드 선주문) 개인정보 처리" 절에 함께 고지합니다.'] },
+  { heading: '제13조 (개인정보의 처리)', body: [`스튜디오는 후원 확정·리워드 발송·고객 응대 목적으로 후원자의 이름·연락처·이메일·배송지를 수집하며, ${PRIVACY_RETENTION_TEXT} 보관한 뒤 파기합니다. ${PRIVACY_LEGAL_RETENTION_TEXT}`, '후원자 명단 공개에 동의한 후원자의 이름은 프로젝트 페이지에 표시되며, 동의는 후원 확인 페이지 또는 문의로 철회할 수 있습니다.', `수집 항목·이용 목적·보유 기간·처리위탁 현황은 ${FUNDING_PRIVACY_SECTION_REFERENCE}에 함께 고지합니다.`] },
   { heading: '제14조 (면책)', body: ['천재지변·전쟁·배송사 사정 등 스튜디오의 통제를 벗어난 사유로 리워드 제공이 지연된 경우 그 기간 동안 책임을 지지 않습니다. 다만 그 사실을 후원자에게 고지합니다.'] },
   { heading: '제15조 (분쟁 해결)', body: ['후원과 관련한 분쟁은 스튜디오와 후원자가 성실히 협의하여 해결하며, 협의가 어려우면 한국소비자원 등 분쟁조정기구의 조정을 받을 수 있습니다.'] },
   { heading: '제16조 (준거법 및 문의처)', body: ['이 약관은 대한민국 법을 따르며, 분쟁의 관할은 민사소송법에 따릅니다.', '문의: hello@studionol.co.kr · 010-4255-7893'] },
@@ -111,6 +126,12 @@ const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
                     <dd>{siteConfig.mailOrderSalesNumber}</dd>
                   </div>
                 )}
+                {/* 제4조가 "사업자 정보는 이 페이지 하단과 푸터에 표시"라고 말하므로, 푸터에만 있고
+                    여기 없으면 약관이 스스로 틀린 말을 한다. 전자상거래법 제10조 표시사항이다. */}
+                <div className="flex gap-2">
+                  <dt className="font-semibold shrink-0">호스팅서비스 제공자</dt>
+                  <dd>{hostingProvider.name}</dd>
+                </div>
               </dl>
             </article>
           </div>
