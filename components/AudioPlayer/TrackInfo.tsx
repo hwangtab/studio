@@ -140,7 +140,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                     {track.artist}
                 </m.p>
 
-                <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/40 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
+                <div className="flex items-center justify-center gap-2 text-xs font-mono text-gray-500 dark:text-white/60 uppercase tracking-widest border border-gray-200 dark:border-white/5 rounded-full py-1.5 px-4 mx-auto w-fit bg-gray-50 dark:bg-white/5">
                     <Disc size={12} aria-hidden="true" />
                     <span>{t('audioPlayer.highFidelity')}</span>
                     <span className="w-1 h-1 bg-gray-300 dark:bg-white/20 rounded-full mx-1" />

@@ -98,13 +98,13 @@ const ProjectRowCard = ({
                             {category}
                         </span>
                         {services.slice(0, 3).map((service, i) => (
-                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/40 dark:border-white/10 px-2 py-0.5 rounded-full max-w-full break-words">
+                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/60 dark:border-white/10 px-2 py-0.5 rounded-full max-w-full break-words">
                                 {service}
                             </span>
                         ))}
                     </div>
 
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary transition-colors mb-1 line-clamp-2 break-words" title={title}>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors mb-1 line-clamp-2 break-words" title={title}>
                         {title}
                     </h3>
                     <div className="flex items-center text-gray-600 dark:text-white/60 mb-2">
@@ -118,7 +118,7 @@ const ProjectRowCard = ({
                         {description}
                     </p>
 
-                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary/80 opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300 flex-shrink-0">
+                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary-lighter opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300 flex-shrink-0">
                         <span className="mr-2">{viewProjectLabel}</span>
                         <ExternalLink size={14} aria-hidden="true" />
                     </div>
