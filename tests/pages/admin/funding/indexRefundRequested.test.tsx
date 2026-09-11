@@ -12,13 +12,18 @@ jest.mock('../../../../components/admin/contractActions', () => ({ logoutAdmin: 
 // admin-auth는 iron-session(ESM)을 끌고 들어온다.
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/projects', () => ({ getAllFundingProjects: jest.fn(() => []) }));
-jest.mock('../../../../lib/funding/admin-list', () => ({ listFundingOrders: jest.fn() }));
+jest.mock('../../../../lib/funding/admin-list', () => ({
+  listFundingOrders: jest.fn(),
+  aggregateAdminFundingTotals: jest.fn().mockResolvedValue({
+    confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+  }),
+}));
 jest.mock('../../../../lib/funding/service', () => ({ expireStalePledges: jest.fn() }));
 
 import type { GetServerSidePropsContext } from 'next';
 import AdminFundingPage, { getServerSideProps } from '../../../../pages/admin/funding/index';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
-import { listFundingOrders } from '../../../../lib/funding/admin-list';
+import { aggregateAdminFundingTotals, listFundingOrders } from '../../../../lib/funding/admin-list';
 import type { AdminPledgeItem } from '../../../../lib/funding/admin-serialize';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -30,10 +35,15 @@ const ITEM: AdminPledgeItem = {
   trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null,
   refundRequestedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
   adminMemo: null, notificationError: null, hasPayment: true, mismatch: false, duplicateWarning: false,
-  refundRequested: false,
+  refundRequested: false, needsReview: false,
 };
 
-const baseProps = { truncated: false, projects: [], slug: null };
+const baseProps = {
+  truncated: false,
+  projects: [],
+  slug: null,
+  totals: { confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0 },
+};
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -106,4 +116,59 @@ it('환불 요청이 없으면 배지도 배너도 없다', () => {
   render(<AdminFundingPage {...baseProps} items={[ITEM]} />);
   expect(screen.queryByText('환불요청')).not.toBeInTheDocument();
   expect(screen.queryByText(/계좌 환불 대기 중/)).not.toBeInTheDocument();
+});
+
+/**
+ * 웹훅이 만료·failed 주문을 되살려 확정한 건은 한정 리워드 재고를 초과했을 수 있다.
+ * confirm.ts가 adminMemo에 흔적을 남겨도 목록 화면 어디에도 안 보이면 아무도 확인하지
+ * 않는다 — 배지와 배너가 그 흔적을 실무 동선 위로 끌어올린다.
+ */
+it('재고 초과 가능 건은 상태 칸에 배지가, 상단에 배너가 뜬다', () => {
+  render(<AdminFundingPage {...baseProps} items={[{ ...ITEM, needsReview: true }]} />);
+  expect(screen.getByText('재고확인')).toBeInTheDocument();
+  expect(screen.getByText('웹훅이 되살려 확정한 후원이 1건 있습니다')).toBeInTheDocument();
+  expect(screen.getByText(/재고를 초과했을 수 있습니다/)).toBeInTheDocument();
+});
+
+it('평범한 건에는 재고확인 배지도 배너도 없다', () => {
+  render(<AdminFundingPage {...baseProps} items={[ITEM]} />);
+  expect(screen.queryByText('재고확인')).not.toBeInTheDocument();
+  expect(screen.queryByText(/웹훅이 되살려 확정한/)).not.toBeInTheDocument();
+});
+
+it('getServerSideProps가 웹훅 메모가 있는 건에 needsReview: true를 실어 보낸다', async () => {
+  (listFundingOrders as jest.Mock).mockResolvedValue([
+    {
+      id: 'o1', orderNo: 'FND-1', status: 'paid', totalAmount: 30000, customerName: '김후원',
+      customerPhone: '010-1', customerEmail: 'a@b.com', notificationError: null, createdAt: NOW,
+      payments: [],
+      fundingPledge: {
+        id: 'p1', projectSlug: 'demo', paymentMethod: 'toss', entrySource: 'online',
+        rewardTitle: 'CD', quantity: 1, additionalAmount: 0, fulfillmentStatus: 'none',
+        trackingCompany: null, trackingNumber: null, shippingAddress1: null, supporterMessage: null,
+        refundRequestedAt: null, paidAt: null, holdExpiresAt: NOW,
+        adminMemo: '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요',
+      },
+    },
+  ]);
+  const result = (await getServerSideProps({ query: {} } as unknown as GetServerSidePropsContext)) as {
+    props: { items: AdminPledgeItem[] };
+  };
+  expect(result.props.items[0].needsReview).toBe(true);
+});
+
+/**
+ * 상단 KPI는 서버 집계에서 온다 — 목록에서 계산하면 201건째부터 공개 진행률과 갈라진다.
+ * getServerSideProps가 그 집계를 실제로 불러 props에 싣는지 확인한다.
+ */
+it('getServerSideProps가 집계 SQL 결과를 totals로 내려보낸다', async () => {
+  (listFundingOrders as jest.Mock).mockResolvedValue([]);
+  (aggregateAdminFundingTotals as jest.Mock).mockResolvedValue({
+    confirmedAmount: 9_000_000, confirmedCount: 401, confirmedPersonCount: 350, pendingAmount: 5000, pendingCount: 1,
+  });
+  const result = (await getServerSideProps({ query: { slug: 'demo' } } as unknown as GetServerSidePropsContext)) as {
+    props: { totals: { confirmedCount: number } };
+  };
+  expect(aggregateAdminFundingTotals).toHaveBeenCalledWith('demo');
+  expect(result.props.totals.confirmedCount).toBe(401);
 });

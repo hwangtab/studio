@@ -19,6 +19,34 @@ const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
  */
 export const MAX_OPEN_HOLDS_PER_CUSTOMER = 2;
 
+/**
+ * 수기 등록(오프라인 현금·계좌 후원)에서 연락처 칸이 비었을 때 채워 넣는 플레이스홀더.
+ * 실제 수신함도 번호도 아니다 — pages/api/admin/funding/pledges/index.ts가 넣고,
+ * [id].ts의 메일 재발송이 이 값을 보고 발송을 막는다. **한 곳만 보도록 여기 모은다.**
+ */
+export const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
+export const MANUAL_PLACEHOLDER_PHONE = '-';
+
+/**
+ * 후원 **인원**을 셀 때 쓰는 신원 키(SQL 조각). 기본은 이메일+전화 조합이지만,
+ * 플레이스홀더가 들어간 건은 **주문 id로 떨어뜨린다.**
+ *
+ * 그렇게 하지 않으면 연락처 없이 등록한 수기 후원이 전부 같은 키(`manual@…|-`)를 갖는다.
+ * 오프라인 부스에서 현금으로 받은 30건이 "확정 30건 / 후원자 1명"이 되는 식이라, 숫자
+ * 불일치를 없애려다 새 불일치를 들이는 꼴이 된다. 플레이스홀더는 "신원 불명"이라는
+ * 뜻이지 "같은 사람"이라는 뜻이 아니므로, 합칠 근거가 없을 때는 합치지 않는다.
+ *
+ * 빈 문자열 전화도 같이 본다 — customerPhone은 `?? '-'`라 빈 문자열을 통과시킨다.
+ * 호출할 때마다 새 조각을 만든다(하나를 여러 쿼리에 돌려 쓰지 않는다).
+ */
+export const backerIdentitySql = () => sql`CASE
+  WHEN o.customer_email = ${MANUAL_PLACEHOLDER_EMAIL}
+    OR o.customer_phone = ${MANUAL_PLACEHOLDER_PHONE}
+    OR o.customer_phone = ''
+  THEN o.id
+  ELSE o.customer_email || '|' || o.customer_phone
+END`;
+
 export const generateFundingOrderNo = (now: Date, manual = false): string =>
   `FND-${manual ? 'M-' : ''}${kstDateString(now).replace(/-/g, '')}-${randomBytes(4).toString('hex').toUpperCase()}`;
 
@@ -138,7 +166,22 @@ export const expireStalePledges = async (now: Date): Promise<void> => {
 };
 
 export interface ProjectStatus {
-  raisedAmount: number; backerCount: number; remaining: Record<string, number | null>; publicBackers: string[];
+  raisedAmount: number;
+  /**
+   * 확정 후원 **건수**(COUNT(*)). 사람 수가 아니다 — 같은 사람이 두 번 후원하면 2로 센다.
+   * 이름을 바꾸지 않는 이유: 공개 API 응답 필드이고 소비처가 components/funding/** 에 있다.
+   * 의미를 좁히는 대신 라벨을 'N건 후원'으로 맞추고, 인원이 필요한 자리에는 아래
+   * backerPersonCount를 쓴다.
+   */
+  backerCount: number;
+  /**
+   * 확정 후원 **인원**. 이메일+전화 조합으로 중복 후원자를 제거한 수라 항상 backerCount 이하.
+   * 추가 필드로 둔 것은 backerCount의 의미를 바꾸면 기존 소비처가 조용히 다른 수를 그리기
+   * 때문이다 — 세는 대상이 다르면 필드도 다르다.
+   */
+  backerPersonCount: number;
+  remaining: Record<string, number | null>;
+  publicBackers: string[];
 }
 
 /**
@@ -150,8 +193,13 @@ export interface ProjectStatus {
  */
 export const aggregateProjectStatus = async (project: FundingProject, now: Date): Promise<ProjectStatus> => {
   const db = getDb();
-  const totals = await db.all<{ raised: number | null; backers: number | null }>(sql`
-    SELECT SUM(o.total_amount) AS raised, COUNT(*) AS backers
+  const totals = await db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
+    SELECT SUM(o.total_amount) AS raised,
+           -- 후원 '건수'. 인원이 아니다.
+           COUNT(*) AS backers,
+           -- 후원 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로
+           -- 떨어뜨린다(연락처 없는 후원끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
+           COUNT(DISTINCT ${backerIdentitySql()}) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded')
   `);
@@ -175,6 +223,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   return {
     raisedAmount: Number(totals[0]?.raised ?? 0),
     backerCount: Number(totals[0]?.backers ?? 0),
+    backerPersonCount: Number(totals[0]?.persons ?? 0),
     remaining,
     publicBackers: names.map((n) => n.customer_name),
   };

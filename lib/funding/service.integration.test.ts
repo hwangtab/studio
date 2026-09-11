@@ -92,7 +92,8 @@ describe('createFundingPledge', () => {
     const pledge = (await findFundingOrderByOrderNo(r.orderNo))?.fundingPledge;
     expect(pledge?.termsAgreedAt?.getTime()).toBe(NOW.getTime());
     expect(pledge?.termsVersion).toBe(FUNDING_TERMS_VERSION);
-    // delivered_at 배선(fulfillment_status='delivered')은 후속 작업 — 지금은 컬럼만 있다.
+    // 후원 생성 시점에는 아직 전달이 없다. 채우는 곳은 관리자 set_fulfillment의
+    // 'delivered' 전이뿐이다(tests/api/admin/funding/pledges/setFulfillment.integration.test.ts).
     expect(pledge?.deliveredAt).toBeNull();
   });
 
@@ -198,7 +199,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
     await expireStalePledges(NOW);
     expect((await findFundingOrderByOrderNo(stale.ok ? stale.orderNo : ''))?.status).toBe('expired');
     const s = await aggregateProjectStatus(PROJECT, NOW);
-    expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'] });
+    expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, backerPersonCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'] });
   });
 
   it('partially_refunded도 paid와 같이 센다 — 후원은 살아 있고 재고도 나간 상태다', async () => {
@@ -209,5 +210,59 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
     expect(s.backerCount).toBe(1);
     expect(s.remaining.cd).toBe(0);
     expect(s.publicBackers).toEqual(['김후원']);
+  });
+});
+
+/**
+ * backerCount는 COUNT(*) — 후원 **건수**다. 같은 사람이 두 번 후원하면 2다. 그 값을
+ * '후원자 N명'으로 적으면 인원이 부풀려진다. 필드 의미를 바꾸면 공개 소비처가 조용히 다른
+ * 수를 그리므로, 인원은 **별도 필드**로 더한다.
+ */
+describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
+  it('같은 고객(이메일+전화)이 여러 번 후원하면 건수만 늘고 인원은 그대로다', async () => {
+    for (const email of ['dup@example.com', 'dup@example.com', 'solo@example.com']) {
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: email, customerPhone: email === 'dup@example.com' ? '010-111' : '010-222' }),
+        PROJECT, reward('mail'), NOW,
+      );
+      await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
+    }
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(3); // 건수
+    expect(s.backerPersonCount).toBe(2); // 인원
+  });
+
+  // 공개 집계도 같은 신원 키를 쓴다 — 수기 등록 플레이스홀더가 인원을 1로 붕괴시키면
+  // 관리자 화면만 고쳐 봐야 공개 쪽에서 같은 거짓말이 나온다.
+  it('연락처 없는 수기 등록은 주문 단위로 센다', async () => {
+    for (let i = 0; i < 4; i += 1) {
+      await client.execute({
+        sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+              item_amount, vat_amount, total_amount, manage_token)
+              VALUES (?,?,'funding','paid','현장후원','-','manual@studionol.co.kr',4545,455,5000,?)`,
+        args: [`mo${i}`, `FND-M-${i}`, `mtok-${i}`],
+      });
+      await client.execute({
+        sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+              quantity, additional_amount, payment_method, hold_expires_at, entry_source)
+              VALUES (?,?,?,'mail','감사 메일',5000,1,0,'bank_transfer',9999999999,'manual')`,
+        args: [`mfp${i}`, `mo${i}`, PROJECT.slug],
+      });
+    }
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(4);
+    expect(s.backerPersonCount).toBe(4);
+  });
+
+  it('이메일이 같아도 전화가 다르면 다른 사람으로 센다', async () => {
+    for (const phone of ['010-1', '010-2']) {
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: 'shared@example.com', customerPhone: phone }), PROJECT, reward('mail'), NOW,
+      );
+      await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
+    }
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(2);
+    expect(s.backerPersonCount).toBe(2);
   });
 });

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { listFundingOrdersForExport } from '../../../../lib/funding/admin-list';
+import { hasReviewMarker } from '../../../../lib/funding/admin-serialize';
 import { toCsv } from '../../../../lib/funding/csv';
 import { isRefundPendingStatus } from '../../../../lib/funding/policy';
 
@@ -15,9 +16,13 @@ import { isRefundPendingStatus } from '../../../../lib/funding/policy';
  * 남은 채 이 컬럼만 찍히므로(자동 환불이 불가능해 운영자가 계좌로 보내야 한다), 이 값이
  * 빠진 CSV는 **취소를 요청한 사람을 발송 목록에 그대로 싣는다.** adminMemo도 같은 이유로
  * 싣는다 — 웹훅이 남긴 '재고 확인 필요' 같은 메모가 발송 실무 화면 어디에도 안 보였다.
+ *
+ * needsReview도 shipHold와 같은 판단이다. adminMemo는 맨 끝 칸의 긴 자유 텍스트라
+ * 스크롤해야 보이고, 여러 줄이 append로 쌓이면 표식이 그 안에 묻힌다. 사람이 훑거나
+ * 정렬할 수 있는 한 칸을 앞쪽에 따로 둔다.
  */
 const COLUMNS = [
-  'orderNo', 'shipHold', 'status', 'refundRequestedAt', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
+  'orderNo', 'shipHold', 'needsReview', 'status', 'refundRequestedAt', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
   'rewardTitle', 'quantity', 'additionalAmount', 'totalAmount',
   'shippingName', 'shippingPhone', 'shippingPostcode', 'shippingAddress1', 'shippingAddress2', 'shippingMemo',
   'fulfillmentStatus', 'trackingCompany', 'trackingNumber', 'supporterMessage', 'paidAt', 'adminMemo',
@@ -46,6 +51,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 청약철회했는데 돈이 아직 안 나간 건. 환불이 끝난 건(refunded)은 애초에 이 조회에
       // 들어오지 않지만, 판정은 화면·헬스체크와 같은 헬퍼를 쓴다.
       shipHold: p.refundRequestedAt && isRefundPendingStatus(o.status) ? '발송금지' : '',
+      // 웹훅이 만료·failed 주문을 되살려 확정한 건 — 한정 리워드 재고를 초과했을 수 있다.
+      needsReview: hasReviewMarker(p.adminMemo) ? '재고확인' : '',
       status: o.status,
       refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
       paymentMethod: p.paymentMethod,

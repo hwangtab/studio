@@ -1,13 +1,20 @@
 /** @jest-environment node */
 jest.mock('../../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
-jest.mock('../../../../../lib/funding/service', () => ({ findFundingOrderById: jest.fn() }));
+// 플레이스홀더 상수도 service.ts에서 온다 — 목이 통째로 덮으면 상수가 undefined가 되어
+// 수기 등록 메일 차단이 조용히 풀린다. 실제 모듈을 펼친 위에 조회만 목으로 바꾼다.
+jest.mock('../../../../../lib/funding/service', () => ({
+  ...jest.requireActual('../../../../../lib/funding/service'),
+  findFundingOrderById: jest.fn(),
+}));
 jest.mock('../../../../../lib/funding/bank-transfer', () => ({ confirmBankDeposit: jest.fn() }));
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingBankDepositEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
+// set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
+const mockRun = jest.fn().mockResolvedValue({ rowsAffected: 1 });
 jest.mock('../../../../../db/client', () => ({
-  getDb: jest.fn(() => ({ update: mockUpdate })),
+  getDb: jest.fn(() => ({ update: mockUpdate, run: mockRun })),
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -17,6 +24,7 @@ import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { confirmBankDeposit } from '../../../../../lib/funding/bank-transfer';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingConfirmedEmails, sendFundingBankDepositEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 
 const call = async (method: string, query: unknown, body: unknown) => {
   const json = jest.fn();
@@ -41,6 +49,7 @@ const BASE_ORDER = {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockRun.mockResolvedValue({ rowsAffected: 1 });
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
   (findFundingOrderById as jest.Mock).mockResolvedValue(BASE_ORDER);
 });
@@ -140,20 +149,8 @@ it('resend_email: 수기 등록이어도 실제 고객 이메일이면 발송한
   expect((await call('PATCH', { id: 'order-1' }, { action: 'resend_email' })).status).toBe(200);
 });
 
-it('set_fulfillment: 빈 문자열 운송장은 null로 저장한다(비우기)', async () => {
-  // 예전엔 빈 문자열이 그대로 저장돼 잘못 입력한 운송장을 지울 방법이 없었다.
-  const set = jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) }));
-  mockUpdate.mockReturnValueOnce({ set } as never);
-  (findFundingOrderById as jest.Mock).mockResolvedValue({
-    ...BASE_ORDER, status: 'paid',
-    fundingPledge: { ...BASE_ORDER.fundingPledge, trackingCompany: 'CJ', trackingNumber: '123' },
-  });
-  const r = await call('PATCH', { id: 'order-1' }, {
-    action: 'set_fulfillment', fulfillmentStatus: 'preparing', trackingCompany: '', trackingNumber: '',
-  });
-  expect(r.status).toBe(200);
-  expect(set).toHaveBeenCalledWith(expect.objectContaining({ trackingCompany: null, trackingNumber: null }));
-});
+// 빈 문자열 운송장이 null로 저장되는지, delivered_at이 실제로 채워지는지처럼 SQL이 쓴
+// 값을 확인하는 것은 setFulfillment.integration.test.ts가 실 DB로 본다.
 
 /**
  * 무통장 청약철회는 refundRequestedAt만 찍고 주문은 paid로 남긴다. 예전엔 그 건도
@@ -171,13 +168,27 @@ it('set_fulfillment: 환불 요청된 후원은 409이고 DB를 건드리지 않
     ok: false,
     message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
   });
-  expect(mockUpdate).not.toHaveBeenCalled();
+  expect(mockRun).not.toHaveBeenCalled();
 });
+
+/**
+ * 위 두 검사는 사람에게 이유를 알려 주는 것이고, 경합을 막는 것은 UPDATE의 WHERE다.
+ * 읽고-검사-쓰기 사이에 환불이 들어오면 두 요청이 모두 검사를 통과해 청약철회한 건이
+ * '발송완료'로 굳는다. 진 쪽은 rowsAffected 0을 받아 409여야 한다.
+ */
+it('set_fulfillment: 경합으로 선점에 실패(rowsAffected 0)하면 409', async () => {
+  mockRun.mockResolvedValueOnce({ rowsAffected: 0 });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
+  expect(r.status).toBe(409);
+  expect(r.body.message).toContain('새로고침');
+});
+
+
 
 it('set_fulfillment: 환불 요청이 없으면 그대로 저장된다', async () => {
   const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
   expect(r.status).toBe(200);
-  expect(mockUpdate).toHaveBeenCalled();
+  expect(mockRun).toHaveBeenCalled();
 });
 
 /**
@@ -247,4 +258,85 @@ it('clear_refund_request: partially_refunded도 허용한다', async () => {
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested('partially_refunded'));
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
   expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '철회' })).status).toBe(200);
+});
+
+/**
+ * 해제 경로가 없는 경고는 첫 사용 직후 경보 피로로 죽는다 — 환불 요청 취소와 같은 모양
+ * (사유 필수·메모 append)을 쓰되, 고객 의사를 지우는 조작이 아니라 메일은 보내지 않는다.
+ */
+const flagged = (adminMemo: string | null = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요') => ({
+  ...BASE_ORDER, status: 'paid', fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo },
+});
+
+it('clear_stock_review: 사유가 없으면 400이고 아무것도 안 바꾼다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
+  for (const body of [{ action: 'clear_stock_review' }, { action: 'clear_stock_review', reason: '  ' }]) {
+    expect((await call('PATCH', { id: 'order-1' }, body)).status).toBe(400);
+  }
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('clear_stock_review: 표식이 없는 건은 409', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged(null));
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: 'x' })).status).toBe(409);
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('clear_stock_review: 이미 닫은 건은 409 — 두 번 닫히지 않는다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(
+    flagged('[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요\n[2026-10-20] 재고 확인 완료 — 잔여 3개'),
+  );
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: 'x' })).status).toBe(409);
+});
+
+it('clear_stock_review: 원문을 남긴 채 확인 내용을 날짜와 함께 덧붙인다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: '잔여 3개 확인' });
+  expect(r.status).toBe(200);
+  const memo = set.mock.calls[0][0].adminMemo as string;
+  // 웹훅 원문이 사라지면 "무엇을 확인한 것인지"가 기록에서 없어진다.
+  expect(memo).toContain('[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요');
+  expect(memo).toMatch(/\n\[\d{4}-\d{2}-\d{2}\] 재고 확인 완료 — 잔여 3개 확인$/);
+  // 고객에게 알릴 내용이 아니다 — 운영 내부의 재고 확인 기록이다.
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+  expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
+});
+
+/**
+ * 해제 항목은 반드시 한 줄이어야 한다 — 판정이 줄 단위라, 사유에 개행이 들어가면 둘째
+ * 줄부터는 해제 항목으로 분류되지 않는다. 운영자가 웹훅 원문을 그대로 붙여 넣으면 그 줄이
+ * 경고 형태를 갖춰 해제 뒤에 새 경고가 선 꼴이 되고, 방금 누른 해제가 무효가 된다.
+ */
+it('clear_stock_review: 사유에 개행이 있어도 해제가 한 줄로 접혀 배지가 꺼진다', () => {
+  const original = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요';
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged(original));
+  // 운영자가 웹훅 원문을 줄바꿈과 함께 인용해 붙여 넣은 입력.
+  return call('PATCH', { id: 'order-1' }, {
+    action: 'clear_stock_review',
+    reason: `웹훅 메모를 확인했습니다.\n${original}\n잔여 3개, 초과 없음`,
+  }).then((r) => {
+    expect(r.status).toBe(200);
+    const memo = set.mock.calls[0][0].adminMemo as string;
+    // 덧붙은 항목이 한 줄이다(원문 1줄 + 해제 1줄).
+    expect(memo.split('\n')).toHaveLength(2);
+    // 인용 내용은 그대로 남는다 — 접기는 기록을 지우지 않는다.
+    expect(memo).toContain('잔여 3개, 초과 없음');
+    // 그리고 실제로 꺼진다 — 이 단언이 이 액션과 판정 함수의 결합을 고정한다.
+    expect(hasReviewMarker(memo)).toBe(false);
+  });
+});
+
+// 인용이 개행 없이 한 줄에 들어간 흔한 경우도 같이 못 박는다.
+it('clear_stock_review: 사유에 마커 문구를 인용해도 배지가 꺼진다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
+  await call('PATCH', { id: 'order-1' }, {
+    action: 'clear_stock_review', reason: '웹훅 메모(재고 초과 가능, 확인 필요) 확인함, 문제없음',
+  });
+  expect(hasReviewMarker(set.mock.calls[0][0].adminMemo as string)).toBe(false);
 });
