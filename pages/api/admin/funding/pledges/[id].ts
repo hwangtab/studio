@@ -47,6 +47,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '발송 상태가 올바르지 않습니다.' });
       }
       if (order.status !== 'paid') return res.status(409).json({ ok: false, message: '확정된 후원만 발송 상태를 바꿀 수 있습니다.' });
+      // 무통장 청약철회는 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로
+      // 남는다. 그 상태를 '발송 완료'로 바꿀 수 있게 두면, 청약철회한 사람에게 실물이
+      // 나간 기록이 시스템 안에서 정상 발송으로 굳는다. 예외는 두지 않는다 — 되돌리려면
+      // 환불을 처리하거나(주문이 refunded가 되어 이 분기 앞에서 걸린다) 아래
+      // clear_refund_request로 요청을 취소하는 두 경로뿐이고, 둘 다 흔적이 남는다.
+      if (order.fundingPledge.refundRequestedAt) {
+        return res.status(409).json({
+          ok: false,
+          message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+        });
+      }
       await db
         .update(fundingPledges)
         .set({
@@ -56,6 +67,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           trackingNumber: typeof b.trackingNumber === 'string' ? (b.trackingNumber || null) : order.fundingPledge.trackingNumber,
           updatedAt: now,
         })
+        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      return res.status(200).json({ ok: true });
+    }
+    /**
+     * 후원자가 취소 요청을 철회했거나 운영자가 잘못 접수한 경우의 유일한 되돌림 경로.
+     * 이게 없으면 set_fulfillment 차단이 영구 잠금이 된다(refundRequestedAt을 지우는
+     * 코드가 저장소에 하나도 없었다). 확정 상태에서만 허용한다 — 이미 환불된 건을
+     * 되살리는 데 쓰이면 안 된다.
+     */
+    case 'clear_refund_request': {
+      if (!order.fundingPledge.refundRequestedAt) {
+        return res.status(409).json({ ok: false, message: '환불 요청이 없는 후원입니다.' });
+      }
+      if (order.status !== 'paid') {
+        return res.status(409).json({ ok: false, message: '확정 상태인 후원만 환불 요청을 취소할 수 있습니다.' });
+      }
+      await db
+        .update(fundingPledges)
+        .set({ refundRequestedAt: null, updatedAt: now })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }

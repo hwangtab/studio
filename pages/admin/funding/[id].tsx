@@ -93,6 +93,15 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
   const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
+  const handleClearRefundRequest = () =>
+    run(
+      () => patchPledge(pledge.id, { action: 'clear_refund_request' }),
+      '후원자가 취소 요청을 철회했습니까? 요청 표시를 지우면 이 후원은 다시 발송 대상이 됩니다.',
+    );
+
+  // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
+  // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
+  const fulfillmentLocked = pledge.status !== 'paid' || pledge.refundRequested;
 
   return (
     <>
@@ -116,6 +125,19 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
               <strong className="block mb-1">결제 기록과 주문 상태 불일치 — 토스 콘솔 확인 필요</strong>
               주문 상태는 “{STATUS_LABELS[pledge.status] ?? pledge.status}”인데 결제 기록이 있습니다.
+            </div>
+          )}
+
+          {pledge.refundRequested && (
+            <div className="mb-4 p-4 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
+              <strong className="block mb-1">후원자가 취소를 요청했습니다 — 계좌 환불 대기</strong>
+              {pledge.refundRequestedAt ? `${formatKstDateTimeFull(pledge.refundRequestedAt)}에 접수되었습니다. ` : ''}
+              무통장은 자동 환불이 되지 않아 운영자가 계좌로 직접 송금해야 합니다.
+              약관 제10조에 따라 접수일부터 3영업일 이내에 처리해 주세요.
+              <span className="block mt-2">
+                <strong>이 후원은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
+                “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다.
+              </span>
             </div>
           )}
 
@@ -157,6 +179,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               {canRefund && (
                 <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}
+              {pledge.refundRequested && pledge.status === 'paid' && (
+                <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
+              )}
               <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>
 
@@ -168,7 +193,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={fulfillmentStatus}
                     onChange={(e) => setFulfillmentStatus(e.target.value as typeof fulfillmentStatus)}
                     light className="w-auto text-sm"
-                    disabled={pledge.status !== 'paid'}
+                    disabled={fulfillmentLocked}
                   >
                     {FULFILLMENT_OPTIONS.map((s) => (
                       <option key={s} value={s}>{FULFILLMENT_LABELS[s]}</option>
@@ -181,7 +206,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={trackingCompany}
                     onChange={(e) => setTrackingCompany(e.target.value)}
                     light className="w-auto text-sm"
-                    disabled={pledge.status !== 'paid'}
+                    disabled={fulfillmentLocked}
                   />
                 </Field>
                 <Field id="tracking-number" label="운송장번호" className={lightOnlyField}>
@@ -190,13 +215,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={trackingNumber}
                     onChange={(e) => setTrackingNumber(e.target.value)}
                     light className="w-auto text-sm"
-                    disabled={pledge.status !== 'paid'}
+                    disabled={fulfillmentLocked}
                   />
                 </Field>
-                <Button light disabled={busy || pledge.status !== 'paid'} onClick={handleSaveFulfillment}>저장</Button>
+                <Button light disabled={busy || fulfillmentLocked} onClick={handleSaveFulfillment}>저장</Button>
               </div>
               {pledge.status !== 'paid' && (
                 <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
+              )}
+              {pledge.status === 'paid' && pledge.refundRequested && (
+                <p className="mt-2 text-xs text-orange-700">
+                  환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿀 수 있습니다.
+                </p>
               )}
             </div>
 

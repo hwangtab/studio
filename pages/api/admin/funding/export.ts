@@ -4,11 +4,17 @@ import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { listFundingOrdersForExport } from '../../../../lib/funding/admin-list';
 import { toCsv } from '../../../../lib/funding/csv';
 
+/**
+ * refundRequestedAt은 status 바로 옆에 둔다 — 무통장 청약철회는 orders.status가 paid로
+ * 남은 채 이 컬럼만 찍히므로(자동 환불이 불가능해 운영자가 계좌로 보내야 한다), 이 값이
+ * 빠진 CSV는 **취소를 요청한 사람을 발송 목록에 그대로 싣는다.** adminMemo도 같은 이유로
+ * 싣는다 — 웹훅이 남긴 '재고 확인 필요' 같은 메모가 발송 실무 화면 어디에도 안 보였다.
+ */
 const COLUMNS = [
-  'orderNo', 'status', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
+  'orderNo', 'status', 'refundRequestedAt', 'paymentMethod', 'customerName', 'customerPhone', 'customerEmail',
   'rewardTitle', 'quantity', 'additionalAmount', 'totalAmount',
   'shippingName', 'shippingPhone', 'shippingPostcode', 'shippingAddress1', 'shippingAddress2', 'shippingMemo',
-  'fulfillmentStatus', 'trackingCompany', 'trackingNumber', 'supporterMessage', 'paidAt',
+  'fulfillmentStatus', 'trackingCompany', 'trackingNumber', 'supporterMessage', 'paidAt', 'adminMemo',
 ];
 
 /** 프로젝트 slug는 파일명(Content-Disposition)에 그대로 들어가므로 형식을 먼저 검증한다. */
@@ -32,6 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return {
       orderNo: o.orderNo,
       status: o.status,
+      refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
       paymentMethod: p.paymentMethod,
       customerName: o.customerName,
       customerPhone: o.customerPhone,
@@ -51,6 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       trackingNumber: p.trackingNumber,
       supporterMessage: p.supporterMessage,
       paidAt: p.paidAt?.toISOString() ?? null,
+      adminMemo: p.adminMemo,
     };
   });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');

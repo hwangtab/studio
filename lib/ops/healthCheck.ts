@@ -1,7 +1,7 @@
 import { and, eq, isNotNull, lt, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { bookings, contracts, orders } from '../../db/schema';
+import { bookings, contracts, fundingPledges, orders } from '../../db/schema';
 import { fetchBusyRanges } from '../booking/gcal';
 import { runLeadRateCheck } from './leadRateCheck';
 
@@ -151,6 +151,41 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
       detail:
         `주문번호: ${sample(paymentMismatch.map((row) => row.orderNo))}\n` +
         '토스 콘솔에서 실제 결제·취소 상태를 확인한 뒤 처리해 주세요.',
+    });
+  }
+
+  /**
+   * 무통장 후원자가 셀프 취소를 요청했는데 돈이 아직 안 나간 건. 무통장은 자동 환불
+   * 경로가 없어 refundRequestedAt만 찍히고 orders.status는 paid로 남으므로(설계상 옳다 —
+   * 운영자가 계좌로 송금해야 한다), 아무도 안 보면 약관 제10조가 약속한 "청약철회
+   * 접수일부터 3영업일 이내 환불"을 조용히 넘긴다. 그 사이 이 건은 발송 CSV에도 실린다.
+   *
+   * 기한 계산은 영업일이 아니라 48시간으로 한다. 저장소에 영업일·공휴일 계산이 아예
+   * 없고(한국 공휴일표가 필요하다), 여기서 필요한 것은 정확한 법정 기한이 아니라
+   * **3영업일을 넘기기 전에 울리는 알람**이다. 48시간은 어떤 요일에 접수돼도 3영업일
+   * 기한보다 먼저 오므로 과하게 울릴지언정 늦게 울지는 않는다.
+   */
+  const REFUND_DUE_MS = 48 * 60 * 60 * 1000;
+  const refundPending = await db
+    .select({ orderNo: orders.orderNo, requestedAt: fundingPledges.refundRequestedAt })
+    .from(fundingPledges)
+    .innerJoin(orders, eq(orders.id, fundingPledges.orderId))
+    .where(and(isNotNull(fundingPledges.refundRequestedAt), eq(orders.status, 'paid')));
+
+  if (refundPending.length > 0) {
+    const overdue = refundPending.filter(
+      (row) => row.requestedAt !== null && now.getTime() - row.requestedAt.getTime() >= REFUND_DUE_MS,
+    );
+    issues.push({
+      severity: overdue.length > 0 ? 'high' : 'medium',
+      title:
+        overdue.length > 0
+          ? `환불 기한이 임박한 취소 요청 ${overdue.length}건 (대기 ${refundPending.length}건)`
+          : `계좌 환불을 기다리는 취소 요청 ${refundPending.length}건`,
+      detail:
+        `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
+        '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
+        '처리 전까지 이 후원은 발송 대상이 아닙니다(발송 상태 변경은 막혀 있습니다).',
     });
   }
 

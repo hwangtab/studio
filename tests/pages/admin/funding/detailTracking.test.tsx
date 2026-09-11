@@ -40,3 +40,17 @@ it('partially_refunded도 환불 버튼이 보이고, confirm에 남은 잔액�
   fireEvent.click(screen.getByRole('button', { name: /환불/ }));
   expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('18,000원'));
 });
+
+// 상세 화면도 API와 같은 판정을 보여야 한다 — 저장을 눌렀다가 409를 보고서야 아는 건
+// 이미 늦다(운영자는 그 사이 송장을 입력했다).
+it('환불 요청 건은 발송 저장이 잠기고, 되돌릴 경로를 안내한다', () => {
+  render(
+    <AdminFundingDetailPage
+      pledge={{ ...PLEDGE, refundRequested: true, refundRequestedAt: '2026-10-16T02:00:00Z' }}
+      refundableAmount={30000}
+    />,
+  );
+  expect(screen.getByText(/후원자가 취소를 요청했습니다/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: '저장' })).toBeDisabled();
+  expect(screen.getByRole('button', { name: '환불 요청 취소' })).toBeInTheDocument();
+});

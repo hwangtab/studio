@@ -154,3 +154,51 @@ it('set_fulfillment: 빈 문자열 운송장은 null로 저장한다(비우기)'
   expect(r.status).toBe(200);
   expect(set).toHaveBeenCalledWith(expect.objectContaining({ trackingCompany: null, trackingNumber: null }));
 });
+
+/**
+ * 무통장 청약철회는 refundRequestedAt만 찍고 주문은 paid로 남긴다. 예전엔 그 건도
+ * '발송 완료'로 바꿀 수 있어서, 취소를 요청한 사람에게 실물이 나간 뒤 시스템 안에서는
+ * 정상 발송으로 굳었다.
+ */
+it('set_fulfillment: 환불 요청된 후원은 409이고 DB를 건드리지 않는다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'paid',
+    fundingPledge: { ...BASE_ORDER.fundingPledge, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
+  });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
+  expect(r.status).toBe(409);
+  expect(r.body).toEqual({
+    ok: false,
+    message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+  });
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('set_fulfillment: 환불 요청이 없으면 그대로 저장된다', async () => {
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
+  expect(r.status).toBe(200);
+  expect(mockUpdate).toHaveBeenCalled();
+});
+
+// 이게 없으면 발송 차단이 영구 잠금이 된다 — refundRequestedAt을 지우는 코드가 없었다.
+it('clear_refund_request: 확정 건의 요청을 지운다', async () => {
+  const set = jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'paid',
+    fundingPledge: { ...BASE_ORDER.fundingPledge, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
+  });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request' });
+  expect(r.status).toBe(200);
+  expect(set).toHaveBeenCalledWith(expect.objectContaining({ refundRequestedAt: null }));
+});
+
+it('clear_refund_request: 요청이 없으면 409, 이미 환불된 건도 409', async () => {
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request' })).status).toBe(409);
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'refunded',
+    fundingPledge: { ...BASE_ORDER.fundingPledge, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
+  });
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request' })).status).toBe(409);
+  expect(mockUpdate).not.toHaveBeenCalled();
+});

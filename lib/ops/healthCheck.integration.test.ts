@@ -47,7 +47,7 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  for (const table of ['payments', 'bookings', 'orders', 'contracts']) {
+  for (const table of ['payments', 'bookings', 'funding_pledges', 'orders', 'contracts']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -126,6 +126,29 @@ const insertContract = async (over: Record<string, unknown> = {}) => {
   await client.execute({ sql: `INSERT INTO contracts (${cols}) VALUES (${marks})`, args: Object.values(row) as never[] });
 };
 
+/** 무통장 후원 한 건 + 취소 요청 시각. 주문 상태는 인자로 받은 값 그대로 둔다. */
+const insertFundingPledge = async (over: Record<string, unknown> = {}) => {
+  const row = {
+    id: 'fp1',
+    order_id: 'o1',
+    project_slug: 'demo',
+    reward_id: 'cd',
+    reward_title: 'CD',
+    unit_amount: 30000,
+    quantity: 1,
+    additional_amount: 0,
+    payment_method: 'bank_transfer',
+    hold_expires_at: EPOCH('2026-09-05'),
+    refund_requested_at: null,
+    created_at: EPOCH('2026-09-01'),
+    updated_at: EPOCH('2026-09-01'),
+    ...over,
+  };
+  const cols = Object.keys(row).join(', ');
+  const marks = Object.keys(row).map(() => '?').join(', ');
+  await client.execute({ sql: `INSERT INTO funding_pledges (${cols}) VALUES (${marks})`, args: Object.values(row) as never[] });
+};
+
 const titles = async (): Promise<string[]> => (await runHealthCheck(NOW)).issues.map((i) => i.title);
 
 describe('운영 점검', () => {
@@ -192,6 +215,36 @@ describe('운영 점검', () => {
 
   it('기한이 남은 미서명 계약은 보고하지 않는다', async () => {
     await insertContract({ status: 'sent', expires_at: EPOCH('2026-09-30') });
+    expect(await titles()).toEqual([]);
+  });
+
+  /**
+   * 무통장 청약철회는 자동 환불 경로가 없어 orders.status가 paid로 남는다 — 이 점검이
+   * 없으면 약관 제10조의 3영업일 기한을 아무 알림 없이 넘긴다.
+   */
+  it('48시간이 지난 취소 요청을 긴급으로 보고한다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'paid' });
+    await insertFundingPledge({ refund_requested_at: EPOCH('2026-09-07T00:00:00Z') }); // NOW − 72h
+    const issues = (await runHealthCheck(NOW)).issues;
+    expect(issues[0].severity).toBe('high');
+    expect(issues[0].title).toContain('환불 기한이 임박한 취소 요청 1건');
+    expect(issues[0].detail).toContain('FND-1');
+  });
+
+  it('48시간이 안 지난 취소 요청은 대기 항목으로만 알린다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'paid' });
+    await insertFundingPledge({ refund_requested_at: EPOCH('2026-09-09T12:00:00Z') }); // NOW − 12h
+    const issues = (await runHealthCheck(NOW)).issues;
+    expect(issues).toHaveLength(1);
+    expect(issues[0].severity).toBe('medium');
+    expect(issues[0].title).toContain('계좌 환불을 기다리는 취소 요청 1건');
+  });
+
+  it('이미 환불된 건과 요청이 없는 건은 보고하지 않는다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'refunded' });
+    await insertFundingPledge({ refund_requested_at: EPOCH('2026-09-01T00:00:00Z') });
+    await insertOrder({ id: 'o2', order_no: 'FND-2', status: 'paid', manage_token: 'tok2' });
+    await insertFundingPledge({ id: 'fp2', order_id: 'o2' });
     expect(await titles()).toEqual([]);
   });
 

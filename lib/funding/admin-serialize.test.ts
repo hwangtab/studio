@@ -4,14 +4,14 @@ import type { FundingOrder } from './service';
 
 const NOW = new Date('2026-10-15T03:00:00Z');
 
-const orderWith = (status: string, hasPayment: boolean): FundingOrder =>
+const orderWith = (status: string, hasPayment: boolean, refundRequestedAt: Date | null = null): FundingOrder =>
   ({
     id: 'o1', orderNo: 'FND-1', status, totalAmount: 5000, customerName: '김후원',
     customerPhone: '010-1111-2222', customerEmail: 'a@example.com', notificationError: null, createdAt: NOW,
     fundingPledge: {
       id: 'p1', projectSlug: 'demo', paymentMethod: 'toss', entrySource: 'online', rewardTitle: 'CD',
       quantity: 1, additionalAmount: 0, fulfillmentStatus: 'none', trackingCompany: null, trackingNumber: null,
-      shippingAddress1: null, supporterMessage: null, refundRequestedAt: null, paidAt: null,
+      shippingAddress1: null, supporterMessage: null, refundRequestedAt, paidAt: null,
       holdExpiresAt: NOW, adminMemo: null,
     },
     payments: hasPayment ? [{ id: 'pay1' }] : [],
@@ -28,5 +28,21 @@ describe('serializePledgeForAdmin — mismatch', () => {
   });
   it('결제 기록이 없으면 어떤 상태든 미정합이 아니다', () => {
     expect(serializePledgeForAdmin(orderWith('expired', false), new Set()).mismatch).toBe(false);
+  });
+});
+
+/**
+ * 무통장 청약철회는 orders.status를 paid로 남긴 채 refundRequestedAt만 찍는다 — 목록의
+ * 상태 칸만 보면 정상 확정 건과 구분이 안 되고, 그대로 발송 CSV에 실린다.
+ */
+describe('serializePledgeForAdmin — refundRequested', () => {
+  it('환불 요청 시각이 있으면 status가 paid여도 refundRequested', () => {
+    const item = serializePledgeForAdmin(orderWith('paid', true, new Date('2026-10-16T02:00:00Z')), new Set());
+    expect(item.refundRequested).toBe(true);
+    expect(item.status).toBe('paid');
+    expect(item.refundRequestedAt).toBe('2026-10-16T02:00:00.000Z');
+  });
+  it('요청이 없으면 false', () => {
+    expect(serializePledgeForAdmin(orderWith('paid', true), new Set()).refundRequested).toBe(false);
   });
 });

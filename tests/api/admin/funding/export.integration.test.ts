@@ -156,3 +156,35 @@ it('trackingCompany 컬럼이 헤더와 본문에 함께 실린다', async () =>
   expect(row).toContain('CJ대한통운');
   expect(row).toContain('123456789');
 });
+
+/**
+ * 무통장 청약철회는 orders.status를 건드리지 않는다(자동 환불 경로가 없어 운영자가 계좌로
+ * 보낸다) — 그래서 이 CSV의 상태 칸은 끝까지 paid다. refundRequestedAt이 빠져 있던 동안
+ * 이 CSV는 **취소를 요청한 사람의 주소를 발송 목록에 그대로 실어 보냈다.**
+ */
+it('환불 요청 건은 status가 paid여도 refundRequestedAt이 CSV에 실린다', async () => {
+  const orderNo = await seed({ customerEmail: 'c@example.com', customerPhone: '010-8' }, 'paid');
+  await client.execute({
+    sql: `UPDATE funding_pledges SET refund_requested_at = ?, admin_memo = '재고 확인 필요'
+          WHERE order_id = (SELECT id FROM orders WHERE order_no = ?)`,
+    args: [Math.floor(new Date('2026-10-16T02:00:00Z').getTime() / 1000), orderNo],
+  });
+  const r = await call({});
+  const [header, row] = r.csv.trim().split('\n');
+  // 마지막 컬럼에는 CRLF의 \r가 붙어 온다 — 열 이름만 비교한다.
+  const columns = header.trim().split(',');
+  expect(columns).toContain('refundRequestedAt');
+  expect(columns).toContain('adminMemo');
+  expect(row).toContain('2026-10-16T02:00:00.000Z');
+  // 웹훅·운영자가 남긴 메모도 발송 실무 화면 어디에도 안 보이던 값이다.
+  expect(row).toContain('재고 확인 필요');
+  expect(row).toContain('paid');
+});
+
+it('환불 요청이 없는 건의 refundRequestedAt은 빈 칸이다', async () => {
+  await seed({ customerEmail: 'd@example.com', customerPhone: '010-9' }, 'paid');
+  const r = await call({});
+  const [header, row] = r.csv.trim().split('\n');
+  const idx = header.trim().split(',').indexOf('refundRequestedAt');
+  expect(row.split(',')[idx]).toBe('');
+});
