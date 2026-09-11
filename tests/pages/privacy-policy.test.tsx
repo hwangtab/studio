@@ -1,4 +1,4 @@
-import { POLICY_COPY_BY_LOCALE } from '../../pages/[locale]/privacy-policy';
+import { INQUIRY_DATA_PROCESSORS, POLICY_COPY_BY_LOCALE } from '../../pages/[locale]/privacy-policy';
 import {
   FUNDING_COLLECTED_ITEMS,
   FUNDING_COLLECTION_PURPOSES,
@@ -71,5 +71,39 @@ describe('비-ko 로케일의 보유기간 항', () => {
     const text = flatten(locale);
     expect(text).toMatch(/1\s*[년年]|one year|un año|một năm|หนึ่งปี|bir yil/i);
     expect(text).toMatch(/5\s*[년年]|five years|cinco años|năm năm|ห้าปี|besh yil/i);
+  });
+});
+
+// 4항 제목은 "제3자 제공 및 처리위탁"인데 본문은 "원칙적으로 외부에 제공하지 않으며"로 끝나고
+// 수탁자를 한 곳도 밝히지 않았다 — 바로 아래 9항이 펀딩 수탁자 4곳을 표로 싣는데도. 그리고
+// 문의 폼 데이터도 실제로는 Resend·Vercel을 거치는데 그 위탁은 어디에도 고지돼 있지 않았다
+// (개인정보보호법 제26조·제30조). 아래 단언이 그 상태로 되돌아가는 것을 막는다.
+describe('처리방침 4항 — 문의·상담의 처리위탁 고지', () => {
+  const ko4 = POLICY_COPY_BY_LOCALE.ko.sections.find((s) => s.heading.startsWith('4.'))!;
+
+  it('ko 4항이 수탁자 표를 싣고, 그 내용이 상수에서 온다', () => {
+    expect(ko4.processors).toBe(INQUIRY_DATA_PROCESSORS);
+    expect(INQUIRY_DATA_PROCESSORS.map((p) => p.name)).toEqual(['Resend', 'Vercel']);
+  });
+
+  it('ko 4항이 펀딩 위탁은 9항을 보라고 가리킨다', () => {
+    expect(ko4.body).toContain('9항');
+    // "원칙적으로 제공하지 않으며"로 끝나 수탁자를 감추던 문장은 돌아오면 안 된다.
+    expect(ko4.body).not.toContain('원칙적으로');
+  });
+
+  it('ko 4항이 9항과 같은 3열 형식(수탁자·업무·항목)을 쓴다', () => {
+    for (const row of INQUIRY_DATA_PROCESSORS) {
+      expect(Object.keys(row).sort()).toEqual(['items', 'name', 'purpose']);
+      expect(row.purpose.length).toBeGreaterThan(0);
+      expect(row.items.length).toBeGreaterThan(0);
+    }
+  });
+
+  it.each(locales.filter((l) => l !== 'ko'))('%s — 4항이 Resend·Vercel 위탁을 밝힌다', (locale) => {
+    const section = POLICY_COPY_BY_LOCALE[locale].sections.find((s) => s.heading.startsWith('4.'))!;
+    expect(section.body).toContain('Resend');
+    expect(section.body).toContain('Vercel');
+    expect(section.body).toMatch(/9/);
   });
 });

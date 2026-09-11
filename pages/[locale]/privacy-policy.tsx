@@ -34,6 +34,23 @@ type PolicyCopy = {
   sections: PolicySection[];
 };
 
+/**
+ * 문의·상담 처리에 관여하는 수탁자 — 개인정보보호법 제26조·제30조의 고지 대상.
+ *
+ * 예전엔 4항이 "원칙적으로 외부에 제공하지 않으며"로 끝나고 수탁자를 한 곳도 밝히지 않았는데,
+ * 바로 아래 9항은 펀딩 수탁자 4곳을 표로 싣고 있었다 — 같은 문서가 스스로 모순됐다.
+ * 더 실질적으로, 문의 폼 데이터도 실제로는 Resend(메일 발송)와 Vercel(서버 호스팅)을 거친다.
+ * 펀딩만 고지하고 문의는 빼놓을 근거가 없다.
+ *
+ * 구성 근거는 코드에 있다 — pages/api/contact/send-email.ts → lib/email/resend.ts,
+ * 그리고 Vercel 배포(vercel.json · data/siteConfig.ts hostingProvider).
+ * 형식은 9항(FUNDING_DATA_PROCESSORS)과 같은 수탁자·업무·항목 3열을 쓴다.
+ */
+export const INQUIRY_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
+  { name: 'Resend', purpose: '문의 접수 알림·답변 메일 발송', items: '이름, 연락처, 이메일 주소, 문의 내용' },
+  { name: 'Vercel', purpose: '웹사이트·문의 접수 서버 호스팅', items: '문의 양식으로 전송되는 위 항목 전부' },
+];
+
 /** 테스트(tests/pages/privacy-policy.test.tsx)가 로케일 간 모순을 검사하므로 export한다. */
 export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
   ko: {
@@ -56,7 +73,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. 제3자 제공 및 처리위탁',
-        body: '원칙적으로 개인정보를 외부에 제공하지 않으며, 서비스 운영에 필요한 최소 범위에서만 관련 법령을 준수하여 처리합니다.',
+        body: '개인정보를 제3자에게 제공하지 않습니다. 다만 서비스 운영에 필요한 범위에서 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다. 펀딩(리워드 선주문) 처리의 위탁 현황은 아래 9항을 참조하십시오.',
+        processors: INQUIRY_DATA_PROCESSORS,
       },
       {
         heading: '5. 이용자의 권리',
@@ -131,7 +149,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Third-party sharing and outsourcing',
-        body: 'We do not provide personal data to third parties in principle, and process only the minimum scope required to operate services lawfully.',
+        body: 'We do not provide personal data to third parties. We do entrust processing to Resend (sending inquiry notification and reply emails) and Vercel (website and inquiry server hosting); the data entrusted is the name, phone number, email address, and message you submit. Outsourcing for crowdfunding (reward pre-orders) is listed in section 9 of the Korean privacy policy.',
       },
       {
         heading: '5. Your rights',
@@ -171,7 +189,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. 向第三方提供与委托处理',
-        body: '原则上我们不会向外部提供个人信息，仅在服务运营所必需的最小范围内并依法处理。',
+        body: '我们不向第三方提供个人信息。但在服务运营所需范围内，我们将个人信息处理委托给 Resend（发送咨询通知与回复邮件）和 Vercel（网站与咨询受理服务器托管），委托项目为您提交的姓名、联系电话、电子邮箱和咨询内容。众筹（回报预购）相关的委托情况请参阅韩语版隐私政策第 9 项。',
       },
       {
         heading: '5. 用户权利',
@@ -211,7 +229,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Cesión a terceros y tratamiento encargado',
-        body: 'En principio no compartimos datos personales con terceros y tratamos solo el mínimo necesario para operar el servicio conforme a la ley.',
+        body: 'No cedemos datos personales a terceros. Sí encargamos el tratamiento a Resend (envío de avisos y respuestas por correo) y a Vercel (alojamiento del sitio web y del servidor de consultas); los datos encargados son el nombre, teléfono, correo electrónico y contenido del mensaje. El encargo relativo al crowdfunding (pedidos anticipados de recompensas) figura en el apartado 9 de la política de privacidad en coreano.',
       },
       {
         heading: '5. Derechos del usuario',
@@ -251,7 +269,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Cung cấp cho bên thứ ba và ủy quyền xử lý',
-        body: 'Về nguyên tắc, chúng tôi không cung cấp dữ liệu cá nhân cho bên thứ ba; chỉ xử lý trong phạm vi tối thiểu cần thiết để vận hành dịch vụ đúng quy định.',
+        body: 'Chúng tôi không cung cấp dữ liệu cá nhân cho bên thứ ba. Chúng tôi có ủy quyền xử lý cho Resend (gửi email thông báo và phản hồi yêu cầu) và Vercel (lưu trữ website và máy chủ tiếp nhận yêu cầu); thông tin được ủy quyền là họ tên, số điện thoại, email và nội dung yêu cầu. Việc ủy quyền xử lý cho gây quỹ (đặt trước phần thưởng) được nêu tại mục 9 của chính sách bảo mật bản tiếng Hàn.',
       },
       {
         heading: '5. Quyền của người dùng',
@@ -291,7 +309,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. การเปิดเผยต่อบุคคลที่สามและการว่าจ้างประมวลผล',
-        body: 'โดยหลักแล้วเราไม่เปิดเผยข้อมูลส่วนบุคคลให้บุคคลภายนอก และจะประมวลผลเฉพาะเท่าที่จําเป็นต่อการให้บริการตามกฎหมาย',
+        body: 'เราไม่เปิดเผยข้อมูลส่วนบุคคลให้บุคคลที่สาม แต่เราว่าจ้างให้ Resend (ส่งอีเมลแจ้งเตือนและตอบกลับคําสอบถาม) และ Vercel (โฮสติงเว็บไซต์และเซิร์ฟเวอร์รับคําสอบถาม) ประมวลผลข้อมูล โดยข้อมูลที่ว่าจ้างคือชื่อ เบอร์โทร อีเมล และเนื้อหาคําสอบถามของคุณ ส่วนการว่าจ้างประมวลผลที่เกี่ยวกับการระดมทุน (การสั่งจองของตอบแทนล่วงหน้า) ระบุไว้ในข้อ 9 ของนโยบายความเป็นส่วนตัวฉบับภาษาเกาหลี',
       },
       {
         heading: '5. สิทธิของผู้ใช้',
@@ -331,7 +349,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '4. Uchinchi tomonga berish va qayta ishlashni topshirish',
-        body: 'Asosan shaxsiy ma\'lumotlar uchinchi tomonlarga berilmaydi; xizmatni qonuniy yuritish uchun zarur eng kam doirada qayta ishlanadi.',
+        body: 'Shaxsiy ma\'lumotlar uchinchi tomonlarga berilmaydi. Biroq qayta ishlash Resend (murojaat bildirishnomalari va javob xatlarini yuborish) hamda Vercel (veb-sayt va murojaat serverini hosting qilish) ga topshirilgan; topshiriladigan ma\'lumotlar — ism, telefon raqami, email manzili va murojaat mazmuni. Kraudfanding (mukofotlarni oldindan buyurtma qilish) bo\'yicha topshirish koreyscha maxfiylik siyosatining 9-bandida keltirilgan.',
       },
       {
         heading: '5. Foydalanuvchi huquqlari',

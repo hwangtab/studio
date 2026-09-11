@@ -2,6 +2,17 @@ import type { SiteConfig, SEODefaults } from '../types/data';
 import type { Locale } from '../lib/i18n';
 import { CANONICAL_FACTS } from '../lib/factTokens';
 
+/**
+ * 호스팅서비스 제공자 — 전자상거래 등에서의 소비자보호에 관한 법률 제10조 제1항의 표시사항.
+ *
+ * 상호·대표자·사업자등록번호·주소·연락처는 이미 푸터에 있었는데 이 한 항목만 빠져 있었다
+ * (2026-09-11 펀딩 감사). 통신판매 페이지(펀딩)를 연 이상 표시 누락은 시정 대상이다.
+ *
+ * 값의 근거는 추정이 아니라 저장소에 있다 — 리포지토리 루트의 `vercel.json`, `@vercel/*`
+ * 런타임 의존 5종, CLAUDE.md "Hosting: Vercel". 호스팅을 옮기면 여기부터 고칠 것.
+ */
+export const hostingProvider = { name: 'Vercel Inc.' } as const;
+
 // Social profiles — 계정 개설 시 URL 추가 (schema.org sameAs에 자동 반영됨)
 export const socialProfiles = {
   instagram: 'https://www.instagram.com/studio_nol_',

@@ -58,6 +58,13 @@ node scripts/generate-hero-font.mjs --check  # 네트워크 없이 subset 커버
 npm run generate:page-lastmod
 node scripts/generate-page-lastmod.mjs --check  # git 없이 커버리지만 검증
 
+# postbuild는 조용히 실패하지 않는다
+# postbuild = `rm -f public/sitemap*.xml public/robots.txt && next-sitemap && node scripts/normalize-sitemap-hreflang.js`.
+# next-sitemap은 내부 오류를 .catch(Logger.error)로 삼키고 exit 0으로 끝나므로, 예전엔 사이트맵과
+# robots.txt가 지워진 채 "초록 빌드"로 배포될 수 있었다(rm이 선행이라 이전 산출물도 안 남는다).
+# 지금은 normalize 스크립트가 sitemap*.xml이 0개이거나 robots.txt가 없으면 원인을 적고 exit 1 한다.
+# 회귀 방지: scripts/normalize-sitemap-hreflang.test.ts
+
 # 섹션 단위 중복 검사 (CI)
 npm run check:dup-sections
 node scripts/check-duplicate-sections.mjs --update  # 기준선 갱신
@@ -69,9 +76,13 @@ npm run check:facts
 npm run check:cta-routing
 npx tsx scripts/cta-routing-baseline.ts --update   # 의도한 변경이면 기준선 갱신
 
-# 펀딩 콘텐츠 불변식 기준선 (CI) — slug 개명·리워드 id 변경·프로젝트 삭제를 잡는다
+# 펀딩 콘텐츠 불변식 기준선 (CI) — slug 개명·리워드 id 변경·리워드 금액 변경·프로젝트 삭제를 잡는다
 npm run check:funding-baseline
 npm run check:funding-baseline -- --update         # 의도한 변경이면 기준선 갱신
+
+# 펀딩 약관 판본 게이트 (CI) — 동의 문서 내용이 바뀌었는데 FUNDING_TERMS_VERSION이 그대로면 실패
+npx jest content/fundingTerms.baseline.test.ts
+UPDATE_FUNDING_TERMS_BASELINE=1 npx jest content/fundingTerms.baseline.test.ts   # 버전을 올린 뒤 갱신
 
 # IndexNow 변경분 제출 — 전량 반복 제출 금지, CI(main push)가 diff로 바뀐 URL만 자동 제출한다.
 npm run indexnow:changed -- --dry-run
@@ -94,15 +105,32 @@ npm run indexnow:changed -- --dry-run
   100개짜리 리워드가 200개 팔린다.
 - **slug 변경 → 진행 중 모금액이 공개적으로 0원이 되고**, 기존 후원자는 manage 페이지에서
   프로젝트를 못 찾아 셀프 취소·후원 확인을 잃는다.
-- **금액 변경 →** 후원 기록이 단가를 스스로 저장하므로 데이터는 안 깨지지만 상세 페이지와
-  관리자 화면의 표시가 어긋난다(스펙 §3.1: "오픈 뒤에는 리워드 id 삭제와 금액 변경을 하지
-  않는다 … 이 규칙은 코드로 막을 수 없어 이 절이 정본이다" —
-  `docs/superpowers/specs/2026-09-08-funding-design.md`).
+- **금액 변경 →** 후원 기록이 결제 당시 단가를 스스로 저장하므로 기록은 남지만, DB의 단가와
+  상세 페이지·관리자 화면·CSV의 표시가 어긋나 환불 금액과 모금액 설명이 맞지 않게 된다.
+  가격을 바꿔야 하면 기존 리워드는 두고 **새 id로 티어를 추가**한다.
 
-스펙이 "코드로 막을 수 없다"고 적어 둔 자리를 `content/funding.baseline.json` +
-`content/funding.baseline.test.ts`가 대신 지킨다(slug × 리워드 id × 한정 여부). 의도한
-변경이면 `npm run check:funding-baseline -- --update` 후 **같은 커밋에 왜 바뀌는지를 적을 것**
-— 이유 없는 갱신은 게이트를 무력화한다.
+`content/funding.baseline.json` + `content/funding.baseline.test.ts`가 이 규칙을 지킨다
+(slug × 리워드 id × **단가** × 한정 여부). 2026-09-11까지 기준선이 `{ limited }`만 실어서
+`amount: 30000 → 35000`이 CI를 그냥 통과했다 — 이 절의 제목이 "금액은 바꾸지 않는다"인데
+게이트가 금액을 안 보고 있었다. 의도한 변경이면 `npm run check:funding-baseline -- --update`
+후 **같은 커밋에 왜 바뀌는지를 적을 것** — 이유 없는 갱신은 게이트를 무력화한다.
+
+### 약관·처리방침을 고치면 FUNDING_TERMS_VERSION을 함께 올린다
+
+`funding_pledges.terms_version`은 "그때 이 내용에 동의했다"는 증거다. 내용이 바뀌었는데
+문자열이 같으면 서로 다른 문서에 동의한 후원 행들이 같은 판본을 갖게 되어 증거 능력이
+무효가 된다. 이 규칙은 `lib/funding/policy.ts` 주석에만 있었다 —
+`content/fundingTerms.baseline.test.ts`가 이제 테스트로 고정한다.
+
+해시 대상은 **같은 동의 체크박스가 함께 받는 문서 전부**다: 펀딩 약관 16개 조항
+(`FUNDING_TERMS_SECTIONS`), ko 개인정보 처리방침 전체(`POLICY_COPY_BY_LOCALE.ko`), 그리고
+약관 본문에 보간되는 공유 상수(보유기간·법정 보존·결제 대기 시간·수집 항목·이용 목적·수탁자).
+처리방침은 ko만 본다 — 펀딩은 ko 전용이라 동의 화면에 뜨는 것이 ko 문서다.
+
+갱신 절차(실패 메시지에도 적혀 있다): ① `FUNDING_TERMS_VERSION`을 오늘 날짜로 올린다
+→ ② `UPDATE_FUNDING_TERMS_BASELINE=1 npx jest content/fundingTerms.baseline.test.ts`
+→ ③ 같은 커밋에 **어느 조항이 어떻게 바뀌었는지** 적는다. 이미 후원이 들어온 뒤라면
+기존 행의 `terms_version`은 옛 문자열 그대로 두고, 옛 본문은 git 이력으로 추적한다.
 
 `status`·`hidden`은 다른 frontmatter 필드와 같이 **엄격 검증**한다(`lib/funding/projects.ts`).
 `status: Draft` 오타나 따옴표가 붙은 `hidden: "true"`는 예전엔 조용히 공개로 떨어졌다.

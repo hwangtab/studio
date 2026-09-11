@@ -1,9 +1,10 @@
 {
- "note": "펀딩 콘텐츠 불변식 기준선(프로젝트 slug × 리워드 id × 한정 여부). scripts/funding-baseline.ts --update 로 갱신하고, 같은 커밋에 이유를 남길 것.",
+ "note": "펀딩 콘텐츠 불변식 기준선(프로젝트 slug × 리워드 id × 단가 × 한정 여부). scripts/funding-baseline.ts --update 로 갱신하고, 같은 커밋에 이유를 남길 것.",
  "entries": {
   "smoke-test": {
    "rewards": {
     "thanks": {
+     "amount": 1000,
      "limited": false
     }
    }

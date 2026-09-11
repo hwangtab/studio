@@ -50,6 +50,11 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 둘 중 하나라도 내용이 바뀌면 날짜를 올려야 한다. 페이지가 아니라 여기 두는 이유: 이 값을
  * 쓰는 곳이 INSERT 경로(lib/funding/service.ts)라, 페이지 모듈에 두면 서버 함수가 React 페이지를
  * 끌고 들어온다. terms.tsx가 이 상수를 import해 화면에 표시한다.
+ *
+ * **이 규칙은 주석이 아니라 테스트가 강제한다** — `content/fundingTerms.baseline.test.ts`가
+ * 약관 조항 + ko 처리방침 + 아래 공유 상수들을 직렬화해 해시하고,
+ * `content/funding-terms.baseline.json`의 해시와 대조한다. 내용이 바뀌었는데 이 문자열이
+ * 그대로면 CI가 선다. 갱신 절차는 그 테스트의 실패 메시지에 적혀 있다.
  */
 export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11';
 

@@ -22,12 +22,12 @@ describe('funding content baseline', () => {
 
 describe('diffFundingBaseline', () => {
   const base = {
-    album: { rewards: { cd: { limited: true }, thanks: { limited: false } } },
-    demo: { rewards: { cd: { limited: false } } },
+    album: { rewards: { cd: { amount: 30000, limited: true }, thanks: { amount: 1000, limited: false } } },
+    demo: { rewards: { cd: { amount: 30000, limited: false } } },
   };
 
   it('리워드 id 변경을 제거+추가로 잡고, 재고 리셋 위험을 설명한다', () => {
-    const now = { ...base, album: { rewards: { 'cd-v2': { limited: true }, thanks: { limited: false } } } };
+    const now = { ...base, album: { rewards: { 'cd-v2': { amount: 30000, limited: true }, thanks: { amount: 1000, limited: false } } } };
     const v = diffFundingBaseline(base, now);
     expect(v).toEqual(expect.arrayContaining([
       expect.objectContaining({ kind: 'reward-removed', slug: 'album', rewardId: 'cd' }),
@@ -49,14 +49,30 @@ describe('diffFundingBaseline', () => {
   });
 
   it('totalQuantity 유무가 바뀌면 잡는다', () => {
-    const now = { ...base, demo: { rewards: { cd: { limited: true } } } };
+    const now = { ...base, demo: { rewards: { cd: { amount: 30000, limited: true } } } };
     expect(diffFundingBaseline(base, now)).toEqual([
       expect.objectContaining({ kind: 'reward-limit-changed', slug: 'demo', rewardId: 'cd' }),
     ]);
   });
 
   it('리워드 순서·수량 값만 바뀐 것은 통과한다', () => {
-    expect(diffFundingBaseline(base, { demo: base.demo, album: { rewards: { thanks: { limited: false }, cd: { limited: true } } } })).toEqual([]);
+    expect(diffFundingBaseline(base, { demo: base.demo, album: { rewards: { thanks: { amount: 1000, limited: false }, cd: { amount: 30000, limited: true } } } })).toEqual([]);
+  });
+
+  // 이 케이스가 예전엔 통째로 통과했다 — 기준선이 { limited }만 실어서 금액을 안 봤다.
+  it('금액 변경을 잡고, 기존 후원 기록의 단가와 어긋난다고 설명한다', () => {
+    const now = { ...base, album: { rewards: { cd: { amount: 35000, limited: true }, thanks: { amount: 1000, limited: false } } } };
+    const v = diffFundingBaseline(base, now);
+    expect(v).toEqual([
+      expect.objectContaining({ kind: 'reward-amount-changed', slug: 'album', rewardId: 'cd', detail: expect.stringContaining('30,000원 → 35,000원') }),
+    ]);
+    expect(formatViolations(v)).toMatch(/기존 후원 기록의 단가/);
+    expect(formatViolations(v)).toMatch(/새 id로 티어를 추가/);
+  });
+
+  it('금액과 한정 여부가 함께 바뀌면 두 건을 각각 보고한다', () => {
+    const now = { ...base, demo: { rewards: { cd: { amount: 40000, limited: true } } } };
+    expect(diffFundingBaseline(base, now).map((x) => x.kind).sort()).toEqual(['reward-amount-changed', 'reward-limit-changed']);
   });
 
   it('실패 메시지는 --update와 "이유를 적으라"를 안내한다', () => {
@@ -67,7 +83,7 @@ describe('diffFundingBaseline', () => {
 });
 
 describe('computeFundingBaseline', () => {
-  it('md 파일에서 slug × 리워드 id × 한정 여부만 뽑는다', () => {
+  it('md 파일에서 slug × 리워드 id × 단가 × 한정 여부만 뽑는다', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'funding-baseline-'));
     fs.writeFileSync(path.join(dir, 'demo.md'), `---
 slug: demo
@@ -94,7 +110,7 @@ rewards:
 ---
 본문`);
     expect(computeFundingBaseline(dir)).toEqual({
-      demo: { rewards: { cd: { limited: true }, thanks: { limited: false } } },
+      demo: { rewards: { cd: { amount: 30000, limited: true }, thanks: { amount: 1000, limited: false } } },
     });
     fs.rmSync(dir, { recursive: true, force: true });
   });

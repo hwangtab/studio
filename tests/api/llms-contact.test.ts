@@ -185,3 +185,20 @@ describe('external content index policy', () => {
     expect(getBody()).not.toContain('/ko/stories/bulgwang-mixing-club</link>');
   });
 });
+
+// 실제 content/funding/ 을 읽는 통합 확인. 지금 저장소엔 draft·hidden인 스모크 테스트
+// 프로젝트뿐이라 진행 중은 0건이고, llms.txt는 그 사실을 그대로 말해야 한다.
+// (분기 단위 테스트는 tests/api/llms-funding.test.ts)
+describe('llms.txt 펀딩 안내는 실제 프로젝트 목록을 따른다', () => {
+  it('진행 중이 없으면 "진행 중"이라 말하지 않는다', () => {
+    const { res, getBody } = createResponse();
+
+    llmsHandler(createRequest(), res);
+    const body = getBody();
+
+    expect(body).toContain('현재 진행 중인 프로젝트는 없습니다');
+    // draft·hidden 프로젝트는 어떤 경우에도 llms.txt에 노출되면 안 된다.
+    expect(body).not.toContain('/ko/funding/smoke-test');
+    expect(body).not.toContain('결제 스모크 테스트 프로젝트');
+  });
+});
