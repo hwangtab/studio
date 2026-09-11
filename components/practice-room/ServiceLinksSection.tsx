@@ -25,22 +25,22 @@ const ServiceLinksSection = ({ locale, labels }: ServiceLinksSectionProps) => {
     {
       href: `/${locale}/lesson`,
       label: labels.lesson,
-      className: 'border-primary text-primary hover:bg-primary',
+      className: 'border-primary text-primary dark:text-primary-lighter hover:bg-primary',
     },
     {
       href: `/${locale}/pricing`,
       label: labels.pricing,
-      className: 'border-secondary text-secondary hover:bg-secondary',
+      className: 'border-secondary text-secondary dark:text-secondary-light hover:bg-secondary',
     },
     {
       href: `/${locale}/stories`,
       label: labels.stories,
-      className: 'border-accent text-accent hover:bg-accent',
+      className: 'border-accent text-accent dark:text-accent-light hover:bg-accent',
     },
     {
       href: `/${locale}/contact`,
       label: labels.contact,
-      className: 'border-primary text-primary hover:bg-primary',
+      className: 'border-primary text-primary dark:text-primary-lighter hover:bg-primary',
     },
   ];
 

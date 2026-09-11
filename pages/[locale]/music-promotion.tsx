@@ -264,7 +264,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                     scope="col"
                     className={`px-4 py-3 font-semibold ${
                       i === comparisonColumns.length - 1
-                        ? 'text-primary'
+                        ? 'text-primary dark:text-primary-lighter'
                         : 'text-gray-500 dark:text-gray-400'
                     }`}
                   >
@@ -316,7 +316,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                   {item.stats.map((stat) => (
                     <li
                       key={stat}
-                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary"
+                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary dark:text-primary-lighter"
                     >
                       {stat}
                     </li>
@@ -330,7 +330,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                     href={CASE_LINKS[index]}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline"
                   >
                     {t('musicPromotion.evidence.linkLabel')}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -353,7 +353,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             return (
               <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.06 })}>
                 <BaseCard className="h-full p-6">
-                  <Icon className="h-7 w-7 text-primary" aria-hidden="true" />
+                  <Icon className="h-7 w-7 text-primary dark:text-primary-lighter" aria-hidden="true" />
                   <h3 className="mt-4 font-bold text-gray-900 dark:text-white">{item.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                     {item.body}
@@ -374,7 +374,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           {howToSteps.map((step, index) => (
             <li key={step.name}>
               <BaseCard className="h-full p-6">
-                <span className="text-sm font-bold text-primary">{String(index + 1).padStart(2, '0')}</span>
+                <span className="text-sm font-bold text-primary dark:text-primary-lighter">{String(index + 1).padStart(2, '0')}</span>
                 <h3 className="mt-2 font-bold text-gray-900 dark:text-white">{step.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                   {step.text}
@@ -395,7 +395,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           <div className="mt-8 space-y-5">
             {criteria.map((item) => (
               <div key={item.title} className="flex gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
                 <div>
                   <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
                   <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
@@ -432,7 +432,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           ))}
         </div>
         <div className="mx-auto mt-8 flex max-w-3xl gap-3 rounded-xl border border-primary/20 bg-primary/5 p-5">
-          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-200">
             {t('musicPromotion.notPromised.instead')}
           </p>
@@ -492,19 +492,19 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         <div className="mx-auto flex max-w-2xl flex-wrap justify-center gap-3">
           <Link
             href={`/${locale}/release-project`}
-            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:border-primary hover:text-primary dark:border-gray-600 dark:text-gray-300"
+            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:border-primary hover:text-primary dark:hover:text-primary-lighter dark:border-gray-600 dark:text-gray-300"
           >
             {t('nav.releaseProject', '발매 프로젝트')}
           </Link>
           <Link
             href={`/${locale}/mixing-mastering`}
-            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:border-primary hover:text-primary dark:border-gray-600 dark:text-gray-300"
+            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:border-primary hover:text-primary dark:hover:text-primary-lighter dark:border-gray-600 dark:text-gray-300"
           >
             {t('nav.mixingMastering', '믹싱 · 마스터링')}
           </Link>
           <Link
             href={`/${locale}/pricing`}
-            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:border-primary hover:text-primary dark:border-gray-600 dark:text-gray-300"
+            className="rounded-full border border-gray-300 px-4 py-2 text-sm text-gray-700 transition hover:border-primary hover:text-primary dark:hover:text-primary-lighter dark:border-gray-600 dark:text-gray-300"
           >
             {t('nav.pricing', '가격 안내')}
           </Link>
@@ -517,7 +517,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         title={
           <>
             {t('musicPromotion.cta.titleLine1')}{' '}
-            <span className="text-primary">{t('musicPromotion.cta.titleHighlight')}</span>
+            <span className="text-primary dark:text-primary-lighter">{t('musicPromotion.cta.titleHighlight')}</span>
           </>
         }
         subtitle={

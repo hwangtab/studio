@@ -206,7 +206,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
             icon={Target}
             title={t('practiceRoom.audience.title')}
             className="mb-6"
-            titleClassName="text-primary"
+            titleClassName="text-primary dark:text-primary-lighter"
           />
 
           <div className="grid md:grid-cols-3 gap-6 mb-12">
@@ -420,7 +420,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           title={
             <>
               <span className="block">{t('practiceRoom.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('practiceRoom.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('practiceRoom.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

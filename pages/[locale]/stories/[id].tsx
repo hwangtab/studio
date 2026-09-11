@@ -265,7 +265,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
             // 핵심 요약 리드 — meta에만 쓰이던 summary를 본문 상단에 가시 렌더.
             // AI 검색엔진(ChatGPT·Perplexity 등)이 인용하기 좋은 자기완결 요약 + 독자 UX.
             <div className="mb-8 rounded-lg border-l-4 border-primary bg-primary/5 p-5 dark:bg-primary/10">
-              <p className="text-sm font-semibold text-primary mb-1.5">
+              <p className="text-sm font-semibold text-primary dark:text-primary-lighter mb-1.5">
                 {t('stories.detail.summaryLabel', { defaultValue: '핵심 요약' })}
               </p>
               <p itemProp="description" className="typo-card-body leading-relaxed text-gray-700 dark:text-gray-200">

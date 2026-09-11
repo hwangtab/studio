@@ -158,7 +158,7 @@ const ContactFormCard = ({
         <button
           type="button"
           onClick={onRetrySubmit}
-          className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+          className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary dark:text-primary-lighter hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
         >
           {retryLabel}
         </button>
@@ -284,7 +284,7 @@ const ContactFormCard = ({
               href={privacyPolicyHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded text-primary hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+              className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
             >
               {t('contact.form.consentPolicyLink', { defaultValue: '개인정보 처리방침' })}
             </a>

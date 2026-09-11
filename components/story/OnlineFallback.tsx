@@ -15,7 +15,7 @@ const OnlineFallback: React.FC<OnlineFallbackProps> = ({ locale = 'ko' }) => {
         직접 방문이 어렵다면{' '}
         <NextLink
           href={href}
-          className="font-semibold text-primary hover:underline underline-offset-4"
+          className="font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4"
         >
           온라인 파일 의뢰
         </NextLink>

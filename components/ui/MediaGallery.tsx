@@ -158,7 +158,7 @@ const MediaGallery = ({ images, className = '', locale = defaultLocale }: MediaG
                 type="button"
                 onClick={() => scrollToImage(i)}
                 className={`min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-full transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 ${i === activeIndex
-                    ? 'text-primary'
+                    ? 'text-primary dark:text-primary-lighter'
                     : 'text-gray-300 dark:text-gray-600 hover:text-gray-400 dark:hover:text-gray-500'
                   }`}
                 aria-label={t('gallery.goToImage', { number: i + 1 })}

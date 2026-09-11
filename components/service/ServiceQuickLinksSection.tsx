@@ -21,9 +21,9 @@ interface ServiceQuickLinksSectionProps {
 // prefetch={false}: 본문 fold 내 button pill들의 무거운 SSG JSON 자동 prefetch
 // 방지. hover/focus 시 prefetch는 유지(next/link 기본 동작).
 const COLOR_CLASS: Record<ServiceQuickLinkColor, string> = {
-  primary: 'border-primary text-primary font-semibold hover:bg-primary hover:text-white',
-  secondary: 'border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white',
-  accent: 'border-accent text-accent font-semibold hover:bg-accent hover:text-white',
+  primary: 'border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white',
+  secondary: 'border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white',
+  accent: 'border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white',
 };
 
 const ServiceQuickLinksSection = ({

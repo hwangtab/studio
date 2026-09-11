@@ -72,7 +72,7 @@ const RelatedStoriesSection: React.FC<RelatedStoriesSectionProps> = ({
       <div className="mt-10 text-center">
         <Link
           href={allHref}
-          className="inline-flex items-center gap-2 typo-card-cta text-primary hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="inline-flex items-center gap-2 typo-card-cta text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.detail.viewAll', { defaultValue: t('nav.stories') })}
           <ArrowRight size={16} aria-hidden="true" />

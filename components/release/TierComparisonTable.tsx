@@ -87,7 +87,7 @@ const TierComparisonTable: React.FC<TierComparisonTableProps> = ({ locale, highl
                   <span className="block text-base font-bold text-gray-900 dark:text-white">
                     {t(`releaseProject.tiers.${tier}.label`)}
                   </span>
-                  <span className="block text-xs text-primary font-medium mt-1">
+                  <span className="block text-xs text-primary dark:text-primary-lighter font-medium mt-1">
                     {t(`releaseProject.tiers.${tier}.range`)}
                   </span>
                 </th>
@@ -121,7 +121,7 @@ const TierComparisonTable: React.FC<TierComparisonTableProps> = ({ locale, highl
                   >
                     {rowKey === 'keyDeliverables' ? (
                       <div className="flex items-start gap-2">
-                        <CheckCircle size={14} className="text-primary flex-shrink-0 mt-1" />
+                        <CheckCircle size={14} className="text-primary dark:text-primary-lighter flex-shrink-0 mt-1" />
                         <span>{cellValue}</span>
                       </div>
                     ) : (
@@ -146,13 +146,13 @@ const TierComparisonTable: React.FC<TierComparisonTableProps> = ({ locale, highl
                   }`}
                 >
                   {highlightTier === tier ? (
-                    <span className="inline-flex items-center gap-1 text-xs text-primary font-medium opacity-60">
+                    <span className="inline-flex items-center gap-1 text-xs text-primary dark:text-primary-lighter font-medium opacity-60">
                       {t('releaseProject.tiers.detailCta')} ({t('releaseProject.tiers.currentBadge')})
                     </span>
                   ) : (
                     <Link
                       href={getLink(`/release-project/${tier}`)}
-                      className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline underline-offset-2"
+                      className="inline-flex items-center gap-1 text-xs text-primary dark:text-primary-lighter font-medium hover:underline underline-offset-2"
                     >
                       {t('releaseProject.tiers.detailCta')} <ArrowRight size={12} />
                     </Link>

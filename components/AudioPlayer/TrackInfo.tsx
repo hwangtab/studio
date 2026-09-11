@@ -134,7 +134,7 @@ const TrackInfo = ({ track, trackNumber, isPlaying, locale = defaultLocale }: Tr
                     {track.title}
                 </m.h3>
                 <m.p
-                    className="text-lg text-primary font-medium mb-6"
+                    className="text-lg text-primary dark:text-primary-lighter font-medium mb-6"
                     layout
                 >
                     {track.artist}

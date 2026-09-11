@@ -267,7 +267,7 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
             <Link
               href={`/${locale}/portfolio`}
               prefetch={false}
-              className="inline-flex items-center gap-1 typo-card-cta text-primary hover:underline"
+              className="inline-flex items-center gap-1 typo-card-cta text-primary dark:text-primary-lighter hover:underline"
             >
               {t('nav.portfolio')}
               <ArrowRight size={16} aria-hidden="true" />

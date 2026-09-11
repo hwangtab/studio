@@ -147,7 +147,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-      <Link href="/ko/mixing-mastering" className="text-sm text-primary hover:underline">
+      <Link href="/ko/mixing-mastering" className="text-sm text-primary dark:text-primary-lighter hover:underline">
         ← 서비스 소개로 돌아가기
       </Link>
       <h1 className="mt-3 typo-page-title">믹싱·마스터링 온라인 주문</h1>

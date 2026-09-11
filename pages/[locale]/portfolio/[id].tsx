@@ -193,7 +193,7 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
               <button
                 type="button"
                 onClick={sharePortfolio}
-                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white rounded-lg transition-colors font-medium touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
               >
                 <Share2 size={16} aria-hidden="true" />
                 {t('portfolio.detail.share')}
@@ -218,10 +218,10 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
             <Link href={getLink('/pricing')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors">
               {t('nav.pricing')}
             </Link>
-            <Link href={getLink('/contact')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg font-medium transition-colors">
+            <Link href={getLink('/contact')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border-2 border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white rounded-lg font-medium transition-colors">
               {t('nav.contact')}
             </Link>
-            <Link href={getLink('/studio-info')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary rounded-lg font-medium transition-colors">
+            <Link href={getLink('/studio-info')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-lighter rounded-lg font-medium transition-colors">
               {t('nav.equipment')}
             </Link>
           </div>

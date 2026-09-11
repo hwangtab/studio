@@ -408,7 +408,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                 whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
                 </div>
                 <h3 className="typo-card-subtitle mb-2">
                   {t(`mixingMastering.process.steps.${i}.title`)}
@@ -446,7 +446,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0 mt-0.5"
+                      className="text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5"
                       size={18}
                       aria-hidden="true"
                     />
@@ -493,7 +493,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0"
+                      className="text-primary dark:text-primary-lighter flex-shrink-0"
                       size={20}
                       aria-hidden="true"
                     />
@@ -506,7 +506,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
               <Link
                 href={`/${locale}/studio-info`}
                 prefetch={false}
-                className="mt-8 inline-flex items-center gap-2 text-primary font-semibold hover:underline"
+                className="mt-8 inline-flex items-center gap-2 text-primary dark:text-primary-lighter font-semibold hover:underline"
               >
                 {t('mixingMastering.environment.equipmentLink')} <ArrowRight size={16} aria-hidden="true" />
               </Link>
@@ -555,7 +555,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             <Link
               href={`/${locale}/portfolio`}
               prefetch={false}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
             >
               {t('nav.portfolio')} <ArrowRight size={16} aria-hidden="true" />
             </Link>
@@ -595,21 +595,21 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           <Link
             href={`/${locale}/recording`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white transition-colors duration-200"
           >
             {t('nav.recording')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/release-project`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white transition-colors duration-200"
           >
             {t('nav.releaseProject')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
           <Link
             href={`/${locale}/pricing`}
             prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white transition-colors duration-200"
           >
             {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
           </Link>
@@ -622,7 +622,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           title={
             <>
               <span className="block">{t('mixingMastering.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('mixingMastering.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('mixingMastering.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

@@ -323,7 +323,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
           return (
             <a
               href={href}
-              className="text-primary hover:underline underline-offset-4"
+              className="text-primary dark:text-primary-lighter hover:underline underline-offset-4"
               onClick={() =>
                 trackLeadEvent(isPhone ? 'lead_click_phone' : 'lead_click_email', {
                   locale: currentLocale,
@@ -349,13 +349,13 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
         }
         if (isExternal) {
           return (
-            <a href={finalHref} className="text-primary hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer nofollow" {...props}>
+            <a href={finalHref} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer nofollow" {...props}>
               {children}
             </a>
           );
         }
         return (
-          <NextLink href={finalHref ?? '/'} className="text-primary hover:underline underline-offset-4" {...props}>
+          <NextLink href={finalHref ?? '/'} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4" {...props}>
             {children}
           </NextLink>
         );

@@ -242,7 +242,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0"
+                      className="text-primary dark:text-primary-lighter flex-shrink-0"
                       size={20}
                       aria-hidden="true"
                     />
@@ -305,7 +305,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
                 whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
                 </div>
                 <h3 className="typo-card-subtitle mb-2">
                   {t(`coverVideo.process.steps.${i}.title`)}
@@ -367,7 +367,7 @@ const CoverVideo: NextPageWithLayout<CoverVideoProps> = ({ locale, pricingData, 
           title={
             <>
               <span className="block">{t('coverVideo.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('coverVideo.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('coverVideo.cta.titleHighlight')}</span>
             </>
           }
           subtitle={

@@ -169,7 +169,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               key={i}
               className="flex items-start gap-3 glass-card rounded-xl p-5"
             >
-              <CheckCircle size={20} className="text-primary flex-shrink-0 mt-0.5" />
+              <CheckCircle size={20} className="text-primary dark:text-primary-lighter flex-shrink-0 mt-0.5" />
               <span className="text-gray-700 dark:text-gray-300">{item}</span>
             </div>
           ))}
@@ -220,7 +220,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                   )}
                 </div>
                 <div className={`flex-1 ${!isLast ? 'pb-6' : ''}`}>
-                  <p className="text-xs font-bold text-primary mb-1 tracking-wide">{item.month}</p>
+                  <p className="text-xs font-bold text-primary dark:text-primary-lighter mb-1 tracking-wide">{item.month}</p>
                   <p className="font-bold text-gray-900 dark:text-white mb-1">{item.label}</p>
                   <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">{item.desc}</p>
                 </div>
@@ -240,13 +240,13 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         <div className="max-w-3xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-6">
           <div className="glass-card rounded-2xl p-6">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2 text-sm">
-              <CheckCircle size={16} className="text-primary flex-shrink-0" />
+              <CheckCircle size={16} className="text-primary dark:text-primary-lighter flex-shrink-0" />
               {t(k('deliverablesIncludedTitle'))}
             </h3>
             <ul className="space-y-2.5">
               {Array.isArray(deliverablesIncluded) && deliverablesIncluded.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                  <span className="text-primary mt-0.5 flex-shrink-0 text-base leading-none">✓</span>
+                  <span className="text-primary dark:text-primary-lighter mt-0.5 flex-shrink-0 text-base leading-none">✓</span>
                   <span>{item}</span>
                 </li>
               ))}
@@ -282,7 +282,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         <div className="max-w-2xl mx-auto">
           <div className="glass-card rounded-2xl p-8 text-center">
             <p className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{t(k('priceRange'))}</p>
-            <p className="text-sm text-primary font-medium mb-4">{t(k('priceRationale'))}</p>
+            <p className="text-sm text-primary dark:text-primary-lighter font-medium mb-4">{t(k('priceRationale'))}</p>
             <p className="text-sm text-gray-500 dark:text-gray-400">{t(k('priceNote'))}</p>
           </div>
           {Array.isArray(priceFactors) && priceFactors.length > 0 && (
@@ -296,7 +296,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
                     key={i}
                     className="glass-card rounded-xl p-4"
                   >
-                    <p className="text-xs font-bold text-primary mb-1">{f.label}</p>
+                    <p className="text-xs font-bold text-primary dark:text-primary-lighter mb-1">{f.label}</p>
                     <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{f.detail}</p>
                   </div>
                 ))}
@@ -307,7 +307,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             {t('releaseProject.tiers.footNotePre')}{' '}
             <strong>{t('releaseProject.tiers.footNoteHighlight')}</strong>{' '}
             {t('releaseProject.tiers.footNoteMid')}{' '}
-            <Link href={getLink('/pricing')} className="text-primary underline underline-offset-2 hover:text-primary-dark">
+            <Link href={getLink('/pricing')} className="text-primary dark:text-primary-lighter underline underline-offset-2 hover:text-primary-dark dark:hover:text-white">
               {t('releaseProject.tiers.footNotePricingLabel')}
             </Link>
             {t('releaseProject.tiers.footNotePost')}
@@ -362,12 +362,12 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               href={getLink(`/release-project/${otherTier}`)}
               className="group glass-card rounded-2xl p-6 hover:-translate-y-0.5 transition-all duration-200"
             >
-              <p className="text-xs text-primary font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
-              <h3 className="typo-card-subtitle text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">
+              <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
+              <h3 className="typo-card-subtitle text-gray-900 dark:text-white mb-2 group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                 {t(`releaseProject.tiers.${otherTier}.label`)}
               </h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(`releaseProject.tiers.${otherTier}.note`)}</p>
-              <span className="inline-flex items-center gap-1 text-sm text-primary font-medium">
+              <span className="inline-flex items-center gap-1 text-sm text-primary dark:text-primary-lighter font-medium">
                 {t('releaseProject.tiers.detailCta')} <ArrowRight size={14} />
               </span>
             </Link>
@@ -389,7 +389,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
           title={
             <>
               <span className="block">{t('releaseProject.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('releaseProject.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('releaseProject.cta.titleHighlight')}</span>
             </>
           }
           subtitle={t('releaseProject.cta.subtitle')}

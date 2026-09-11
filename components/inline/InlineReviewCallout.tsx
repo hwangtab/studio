@@ -30,7 +30,7 @@ const InlineReviewCallout = ({ id, locale }: InlineReviewCalloutProps) => {
       className="my-8 rounded-xl border-l-4 border-l-primary glass-card p-6"
     >
       <div className="flex items-center gap-2 mb-3">
-        <Quote className="text-primary flex-shrink-0" size={18} aria-hidden="true" />
+        <Quote className="text-primary dark:text-primary-lighter flex-shrink-0" size={18} aria-hidden="true" />
         <div className="flex gap-0.5" aria-label={`${review.rating}/5`}>
           {Array.from({ length: review.rating }).map((_, i) => (
             <Star key={i} size={14} className="text-amber-500 fill-amber-500" aria-hidden="true" />

@@ -251,7 +251,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
                 {([0, 1, 2, 3] as const).map((i) => (
                   <li key={i} className="flex items-center gap-3">
                     <CheckCircle2
-                      className="text-primary flex-shrink-0"
+                      className="text-primary dark:text-primary-lighter flex-shrink-0"
                       size={20}
                       aria-hidden="true"
                     />
@@ -347,7 +347,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
                 whileHover={{ ...HOVER_SCALE, transition: TRANSITION_STANDARD }}
               >
                 <div className="w-10 h-10 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center mb-4">
-                  <span className="text-primary font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="text-primary dark:text-primary-lighter font-bold text-sm">{String(i + 1).padStart(2, '0')}</span>
                 </div>
                 <h3 className="typo-card-subtitle mb-2">
                   {t(`recording.process.steps.${i}.title`)}
@@ -412,7 +412,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
           title={
             <>
               <span className="block">{t('recording.cta.titleLine1')}</span>
-              <span className="block text-primary">{t('recording.cta.titleHighlight')}</span>
+              <span className="block text-primary dark:text-primary-lighter">{t('recording.cta.titleHighlight')}</span>
             </>
           }
           subtitle={
