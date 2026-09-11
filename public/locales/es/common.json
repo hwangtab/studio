@@ -16,19 +16,18 @@
     "groups": {
       "production": "Grabación",
       "release": "Lanzamiento",
-      "guide": "Guías",
+      "artist": "Artistas",
       "studio": "Estudio"
     },
     "short": {
       "practiceRoom": "Sala",
-      "pricing": "Precios",
-      "artists": "Support Artists"
+      "pricing": "Precios"
     },
     "weddingSong": "Canción de Boda",
     "voiceActing": "Locución",
     "coverVideo": "Video Cover",
     "musicPromotion": "Campaña de Prensa",
-    "releaseProject": "Descripción general",
+    "releaseProject": "Proyecto de Lanzamiento",
     "releaseSingle": "Single",
     "releaseEp": "EP",
     "releaseAlbum": "Álbum completo",
@@ -47,6 +46,7 @@
     "sections": {
       "services": "Servicios",
       "release": "Lanzamiento Musical",
+      "artist": "Artistas",
       "content": "Lecturas",
       "studio": "Estudio"
     }

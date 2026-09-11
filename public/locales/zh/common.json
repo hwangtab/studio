@@ -16,19 +16,18 @@
     "groups": {
       "production": "录音制作",
       "release": "音源发行",
-      "guide": "指南",
+      "artist": "艺术家",
       "studio": "工作室"
     },
     "short": {
       "practiceRoom": "练习室",
-      "pricing": "价格",
-      "artists": "Support Artists"
+      "pricing": "价格"
     },
     "weddingSong": "婚礼祝歌录音",
     "voiceActing": "配音录音",
     "coverVideo": "翻唱视频拍摄",
     "musicPromotion": "音乐发行宣传",
-    "releaseProject": "概览",
+    "releaseProject": "发行项目",
     "releaseSingle": "单曲",
     "releaseEp": "EP",
     "releaseAlbum": "专辑",
@@ -47,6 +46,7 @@
     "sections": {
       "services": "服务",
       "release": "音源发行",
+      "artist": "艺术家",
       "content": "阅读",
       "studio": "工作室"
     }

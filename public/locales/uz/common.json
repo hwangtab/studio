@@ -16,19 +16,18 @@
     "groups": {
       "production": "Yozuv",
       "release": "Chiqarish",
-      "guide": "Qo'llanma",
+      "artist": "San'atkorlar",
       "studio": "Studiya"
     },
     "short": {
       "practiceRoom": "Mashg'ulot",
-      "pricing": "Narxlar",
-      "artists": "Support Artists"
+      "pricing": "Narxlar"
     },
     "weddingSong": "To'y qo'shig'i",
     "voiceActing": "Ovoz yozish",
     "coverVideo": "Cover video suratga olish",
     "musicPromotion": "Reliz press-kampaniyasi",
-    "releaseProject": "Umumiy ko'rinish",
+    "releaseProject": "Reliz loyihasi",
     "releaseSingle": "Singl",
     "releaseEp": "EP",
     "releaseAlbum": "To'liq albom",
@@ -47,6 +46,7 @@
     "sections": {
       "services": "Xizmatlar",
       "release": "Musiqa chiqarish",
+      "artist": "San'atkorlar",
       "content": "O'qish uchun",
       "studio": "Studiya"
     }

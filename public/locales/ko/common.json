@@ -16,19 +16,18 @@
     "groups": {
       "production": "녹음·제작",
       "release": "음원 발매",
-      "guide": "가이드",
+      "artist": "아티스트",
       "studio": "스튜디오"
     },
     "short": {
       "practiceRoom": "음악연습실",
-      "pricing": "가격",
-      "artists": "아티스트 후원"
+      "pricing": "가격"
     },
     "weddingSong": "축가 녹음",
     "voiceActing": "성우 녹음",
     "coverVideo": "커버 영상 촬영",
     "musicPromotion": "음원 발매 홍보",
-    "releaseProject": "음원 발매 개요",
+    "releaseProject": "발매 프로젝트",
     "releaseSingle": "싱글 발매",
     "releaseEp": "EP 발매",
     "releaseAlbum": "정규 발매",
@@ -47,6 +46,7 @@
     "sections": {
       "services": "서비스",
       "release": "음원 발매",
+      "artist": "아티스트",
       "content": "읽을거리",
       "studio": "스튜디오"
     }
