@@ -84,6 +84,31 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: '후원 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다.',
         processors: FUNDING_DATA_PROCESSORS,
       },
+      // 10~12항은 음원 발매 홍보 업무 전용이다. 이 업무는 정보주체(기자·매체)가 아닌
+      // 곳에서 개인정보를 수집하므로, 처리 사실과 출처·수신거부·제3자 제공 원칙을
+      // 공개해 두어야 한다. 공개하지 않고 하면 같은 행위가 "몰래 했다"가 된다.
+      {
+        heading: '10. 언론 홍보 업무를 위한 매체 연락처 처리',
+        body:
+          '스튜디오 놀은 음원 발매 홍보 업무를 위해 언론사·매체·방송·음반 유통처가 스스로 공개한 ' +
+          '업무용 연락처(편집부·제보·기고 접수 창구 등)를 수집해 보도자료를 보냅니다. 정보주체가 ' +
+          '공개한 범위 안에서만 이용하며, 개인이 사적으로 쓰는 주소는 수집하지 않습니다. ' +
+          '주소를 어디서 확인했는지는 보내는 메일에 함께 밝히고, 요청하시면 개별 출처를 알려드립니다.',
+      },
+      {
+        heading: '11. 매체 연락처의 수신거부와 보유 기간',
+        body:
+          '수신을 원하지 않는다는 뜻을 밝히시면 즉시 발송 대상에서 제외하고, 이후 어떤 캠페인에서도 ' +
+          '다시 보내지 않습니다. 이 제외 기록과 발송 기록은 같은 메일이 두 번 가는 것을 막기 위해 ' +
+          '보관합니다 — 기록을 지우면 다시 보내게 되기 때문입니다.',
+      },
+      {
+        heading: '12. 매체 연락처의 제3자 제공',
+        body:
+          '수집한 매체 연락처는 어떤 경우에도 제3자에게 제공하지 않습니다. 홍보를 의뢰한 고객에게 ' +
+          '드리는 결과 보고서에도 개인의 이름과 이메일 주소는 싣지 않으며, 법인·단체 매체는 공개 ' +
+          '도메인으로, 개인 기자·평론가는 인원 집계로만 적습니다.',
+      },
     ],
   },
   en: {
@@ -111,6 +136,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '5. Your rights',
         body: 'You may request access, correction, or deletion of your personal data at any time, and we will respond without undue delay.',
+      },
+      {
+        heading: '6. Media contact details for press outreach',
+        body: 'For music release publicity, Studio NOL collects business contact details that press outlets, media companies, broadcasters, and music distributors have themselves made public (editorial desks, news tip lines, contribution intake channels, and similar) and uses them to send press releases. We use them only within the scope the data subject has made public, and we do not collect addresses that individuals use privately. Every email we send states where we found the address, and we will disclose the individual source on request.',
+      },
+      {
+        heading: '7. Opt-out and retention of media contact details',
+        body: 'If you tell us you do not wish to receive our emails, we remove you from the send list immediately and will not send to you again in any later campaign. We keep that opt-out record together with our send log to prevent the same email being sent twice - deleting the record would make us send it again.',
+      },
+      {
+        heading: '8. Third-party sharing of media contact details',
+        body: 'We never provide collected media contact details to third parties under any circumstances. The result reports we give to clients who commission publicity do not carry individual names or email addresses either: outlets that are companies or organisations are listed by their public domain, and individual reporters and critics are recorded only as a headcount.',
       },
     ],
   },
@@ -140,6 +177,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '5. 用户权利',
         body: '您可随时请求查阅、更正或删除个人信息，我们将及时处理。',
       },
+      {
+        heading: '6. 为新闻宣传业务处理媒体联系方式',
+        body: 'Studio NOL 为音乐作品发行宣传业务，收集新闻机构、媒体、广播电视及音乐发行方自行公开的公务联系方式（编辑部、报料与投稿受理窗口等），并据此发送新闻稿。我们仅在信息主体已公开的范围内使用，不收集个人私下使用的地址。该地址的获取来源会在发出的邮件中一并说明，如您提出要求，我们也会单独告知具体出处。',
+      },
+      {
+        heading: '7. 媒体联系方式的拒绝接收与保存期限',
+        body: '若您表示不希望继续接收，我们将立即将其从发送对象中排除，此后在任何宣传活动中都不会再次发送。该排除记录与发送记录将予以保存，以防同一封邮件重复发出——若删除记录，我们就会再次发送。',
+      },
+      {
+        heading: '8. 媒体联系方式向第三方提供',
+        body: '所收集的媒体联系方式在任何情况下都不会向第三方提供。向委托宣传的客户提交的结果报告中也不会载明个人姓名与电子邮箱；法人及团体媒体仅以公开域名记载，个人记者与评论人仅以人数统计记载。',
+      },
     ],
   },
   es: {
@@ -167,6 +216,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '5. Derechos del usuario',
         body: 'Puede solicitar en cualquier momento acceso, corrección o eliminación de sus datos personales, y responderemos sin demoras indebidas.',
+      },
+      {
+        heading: '6. Tratamiento de contactos de medios para labores de prensa',
+        body: 'Para la promoción de lanzamientos musicales, Studio NOL recopila datos de contacto profesionales que los medios de comunicación, las emisoras y las distribuidoras musicales han hecho públicos por sí mismos (redacción, buzón de avisos, recepción de colaboraciones, etc.) y les envía notas de prensa. Los usamos únicamente dentro del ámbito que el interesado ha hecho público y no recopilamos direcciones de uso personal privado. En cada correo indicamos dónde obtuvimos la dirección y, si lo solicita, le informamos de la fuente concreta.',
+      },
+      {
+        heading: '7. Baja y conservación de los contactos de medios',
+        body: 'Si nos comunica que no desea recibir nuestros envíos, lo excluimos de inmediato de la lista de envío y no volveremos a escribirle en ninguna campaña posterior. Conservamos ese registro de exclusión junto con el registro de envíos para evitar que el mismo correo salga dos veces: si borráramos el registro, volveríamos a enviarlo.',
+      },
+      {
+        heading: '8. Cesión a terceros de los contactos de medios',
+        body: 'Los contactos de medios recopilados no se ceden a terceros en ningún caso. Los informes de resultados que entregamos al cliente que encarga la promoción tampoco incluyen nombres ni correos electrónicos de personas: los medios que son empresas o entidades se indican por su dominio público y los periodistas y críticos individuales, solo como recuento de personas.',
       },
     ],
   },
@@ -196,6 +257,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '5. Quyền của người dùng',
         body: 'Bạn có thể yêu cầu truy cập, chỉnh sửa hoặc xóa thông tin cá nhân bất cứ lúc nào, và chúng tôi sẽ xử lý sớm nhất có thể.',
       },
+      {
+        heading: '6. Xử lý thông tin liên hệ của báo chí cho hoạt động truyền thông',
+        body: 'Để phục vụ hoạt động quảng bá phát hành âm nhạc, Studio NOL thu thập các địa chỉ liên hệ công vụ mà cơ quan báo chí, đơn vị truyền thông, đài phát thanh - truyền hình và nhà phân phối âm nhạc tự công khai (ban biên tập, kênh tiếp nhận tin báo, kênh nhận bài cộng tác, v.v.) để gửi thông cáo báo chí. Chúng tôi chỉ sử dụng trong phạm vi mà chủ thể thông tin đã công khai và không thu thập địa chỉ cá nhân dùng cho mục đích riêng tư. Trong mỗi email gửi đi, chúng tôi nêu rõ đã lấy địa chỉ từ đâu, và sẽ thông báo nguồn cụ thể nếu bạn yêu cầu.',
+      },
+      {
+        heading: '7. Từ chối nhận thư và thời gian lưu trữ thông tin liên hệ của báo chí',
+        body: 'Nếu bạn cho biết không muốn nhận thư, chúng tôi lập tức loại khỏi danh sách gửi và sẽ không gửi lại trong bất kỳ chiến dịch nào sau đó. Bản ghi loại trừ này cùng nhật ký gửi thư được lưu để tránh gửi trùng cùng một email - vì nếu xóa bản ghi, chúng tôi sẽ gửi lại.',
+      },
+      {
+        heading: '8. Cung cấp thông tin liên hệ của báo chí cho bên thứ ba',
+        body: 'Thông tin liên hệ của báo chí đã thu thập không được cung cấp cho bên thứ ba trong bất kỳ trường hợp nào. Báo cáo kết quả gửi cho khách hàng đặt hàng truyền thông cũng không ghi tên và địa chỉ email của cá nhân; cơ quan báo chí là pháp nhân hoặc tổ chức chỉ được ghi bằng tên miền công khai, còn phóng viên và nhà phê bình cá nhân chỉ được ghi theo số lượng người.',
+      },
     ],
   },
   th: {
@@ -224,6 +297,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '5. สิทธิของผู้ใช้',
         body: 'คุณสามารถขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลได้ทุกเมื่อ และเราจะดําเนินการโดยเร็ว',
       },
+      {
+        heading: '6. การประมวลผลข้อมูลติดต่อของสื่อมวลชนเพื่องานประชาสัมพันธ์',
+        body: 'เพื่องานประชาสัมพันธ์การเผยแพร่ผลงานเพลง Studio NOL เก็บรวบรวมข้อมูลติดต่อเชิงธุรกิจที่สํานักข่าว สื่อมวลชน สถานีวิทยุโทรทัศน์ และผู้จัดจําหน่ายเพลงเปิดเผยไว้เอง (กองบรรณาธิการ ช่องทางแจ้งข่าว ช่องทางรับบทความ เป็นต้น) เพื่อส่งข่าวประชาสัมพันธ์ เราใช้เฉพาะในขอบเขตที่เจ้าของข้อมูลส่วนบุคคลเปิดเผยไว้เท่านั้น และไม่เก็บที่อยู่ที่บุคคลใช้เป็นการส่วนตัว อีเมลที่เราส่งจะระบุด้วยว่าได้ที่อยู่นั้นมาจากที่ใด และหากร้องขอ เราจะแจ้งแหล่งที่มาเฉพาะรายให้ทราบ',
+      },
+      {
+        heading: '7. การปฏิเสธการรับข่าวสารและระยะเวลาเก็บรักษาข้อมูลติดต่อของสื่อมวลชน',
+        body: 'หากคุณแจ้งว่าไม่ประสงค์จะรับข่าวสาร เราจะนําออกจากรายชื่อผู้รับทันที และจะไม่ส่งอีกในทุกแคมเปญหลังจากนั้น บันทึกการนําออกนี้และบันทึกการส่งจะถูกเก็บไว้เพื่อป้องกันไม่ให้อีเมลฉบับเดียวกันถูกส่งซ้ํา เพราะหากลบบันทึกทิ้ง เราจะส่งซ้ําอีก',
+      },
+      {
+        heading: '8. การเปิดเผยข้อมูลติดต่อของสื่อมวลชนต่อบุคคลที่สาม',
+        body: 'ข้อมูลติดต่อของสื่อมวลชนที่เก็บรวบรวมไว้จะไม่ถูกเปิดเผยต่อบุคคลที่สามไม่ว่ากรณีใด ๆ รายงานผลที่ส่งให้ลูกค้าผู้ว่าจ้างงานประชาสัมพันธ์ก็จะไม่ระบุชื่อและอีเมลของบุคคล โดยสื่อที่เป็นนิติบุคคลหรือองค์กรจะระบุเป็นโดเมนสาธารณะ ส่วนนักข่าวและนักวิจารณ์ที่เป็นบุคคลจะระบุเพียงจํานวนคนเท่านั้น',
+      },
     ],
   },
   uz: {
@@ -251,6 +336,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '5. Foydalanuvchi huquqlari',
         body: 'Siz istalgan vaqtda shaxsiy ma\'lumotlaringizni ko\'rish, tuzatish yoki o\'chirishni so\'rashingiz mumkin va biz buni tezkor ko\'rib chiqamiz.',
+      },
+      {
+        heading: '6. Matbuot targ\'iboti uchun ommaviy axborot vositalari aloqa ma\'lumotlarini qayta ishlash',
+        body: 'Studio NOL musiqa relizlarini targ\'ib qilish uchun nashrlar, ommaviy axborot vositalari, teleradiokanallar va musiqa distributorlari o\'zlari oshkor qilgan ish aloqa manzillarini (tahririyat, xabar berish, maqola qabul qilish kanallari va shu kabilar) yig\'adi va press-relizlar yuboradi. Ular faqat ma\'lumotlar subyekti oshkor qilgan doirada ishlatiladi va shaxslar shaxsiy maqsadda foydalanadigan manzillar yig\'ilmaydi. Manzilni qayerdan olganimizni yuboradigan xatimizda ko\'rsatamiz, so\'rasangiz aniq manbani alohida ma\'lum qilamiz.',
+      },
+      {
+        heading: '7. Ommaviy axborot vositalari aloqa ma\'lumotlaridan voz kechish va saqlash muddati',
+        body: 'Agar xat olishni istamasligingizni bildirsangiz, sizni darhol yuborish ro\'yxatidan chiqaramiz va bundan keyin hech qanday kampaniyada qayta yubormaymiz. Bu chiqarish yozuvi va yuborish yozuvi bir xil xat ikki marta ketmasligi uchun saqlanadi - yozuv o\'chirilsa, xat qayta yuboriladi.',
+      },
+      {
+        heading: '8. Ommaviy axborot vositalari aloqa ma\'lumotlarini uchinchi tomonga berish',
+        body: 'Yig\'ilgan ommaviy axborot vositalari aloqa ma\'lumotlari hech qanday holatda uchinchi tomonlarga berilmaydi. Targ\'ibotni buyurtma qilgan mijozga beriladigan natija hisobotida ham shaxslarning ismi va email manzili ko\'rsatilmaydi; yuridik shaxs va tashkilot bo\'lgan nashrlar ommaviy domen bilan, alohida jurnalist va tanqidchilar esa faqat kishilar soni bilan qayd etiladi.',
       },
     ],
   },
