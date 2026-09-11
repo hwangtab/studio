@@ -22,6 +22,10 @@ const config: Config = {
           light: '#7c3aed', // 밝은 보라색
           DEFAULT: '#6d28d9', // 보라색
           dark: '#5b21b6', // 진한 보라색
+          // 다크 배경(gray-900 #030712) 위 텍스트·테두리용. primary-light(#7c3aed)는
+          // 3.53:1로 AA 미달이라 outline 버튼 라벨에 쓸 수 없다 — secondary·accent의
+          // DEFAULT를 대비 때문에 승격한 것과 같은 이유의 토큰이다(측정 7.40:1).
+          lighter: '#a78bfa',
         },
         secondary: {
           light: '#ec4899', // 밝은 핑크

@@ -12,10 +12,12 @@ const buttonVariants = cva(
       variant: {
         solid: "bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 다크 오버라이드는 필수다 — text-primary(#6d28d9)만 두면 gray-900 배경 위 대비가
-        // 약 2.4:1로 AA(4.5:1)는 물론 대형 텍스트(3:1)에도 미달한다. 소비처
-        // (HeroKakaoCta onSurface 전화·404/500 2차·PricingCard 2차)가 같은 결함을 공유하므로
-        // 개별 className이 아니라 여기서 고친다.
-        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-light dark:border-primary-light/30 dark:hover:border-primary-light/50 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        // 2.5:1로 AA(4.5:1)는 물론 대형 텍스트(3:1)에도 미달한다. primary-light(#7c3aed)도
+        // 3.53:1로 여전히 미달이고 버튼 라벨은 text-lg(18px)라 대형 텍스트 완화
+        // (18.66px bold)에도 못 걸린다 — 그래서 다크 전용 primary-lighter(7.40:1)를 쓴다.
+        // 소비처(HeroKakaoCta onSurface 전화·404/500 2차·PricingCard 2차 외 44곳)가 같은
+        // 결함을 공유하므로 개별 className이 아니라 여기서 고친다.
+        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-lighter dark:border-primary-lighter/40 dark:hover:border-primary-lighter/60 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
