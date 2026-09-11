@@ -2326,6 +2326,11 @@
    "cta": "practice",
    "price": "recording-pro"
   },
+  "mariko-yukie-namsan-tower-release": {
+   "category": "event",
+   "cta": "release",
+   "price": null
+  },
   "mariko-yukie-namsan-tower": {
    "category": "event",
    "cta": "recording",

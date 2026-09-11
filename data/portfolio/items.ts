@@ -17,6 +17,48 @@ export const buildPortfolioItems = (locale: Locale): PortfolioItem[] => {
 
     const items: PortfolioItem[] = [
         {
+            "id": "mariko-yukie-namsan-tower",
+            "title": "마리코 & 유키에 <남산타워>",
+            "description": t(locale, { ko: "기획, 믹싱, 홍보, 웹사이트 제작", en: "Planning, Mixing, Promotion, Web Dev", vi: "Lên kế hoạch, Mixing, PR/Quảng bá, Phát triển web", th: "วางแผน, มิกซ์, ประชาสัมพันธ์, พัฒนาเว็บ", uz: "Rejalash, Miks, Targ‘ibot, Veb dev" }),
+            "image": "/images/mariko-yukie-album-cover.jpg",
+            "link": "https://marikoyukie.vercel.app",
+            "category": "album",
+            "services": [
+                getService(services.planning),
+                getService(services.mixing),
+                getService(services.promotion),
+                getService(services.web)
+            ],
+            "featured": true,
+            "artist": "마리코 & 유키에",
+            "releaseDate": "2026-09-04",
+            "credits": {
+                "engineer": "Studio NOL (황경하)",
+                "musicians": ["마리코 (Vocal)", "사토 유키에 (Guitar, Vocal)"]
+            },
+            "trackList": [
+                { "no": 1, "title": "Mari Yuki Theme", "duration": "1:48" },
+                { "no": 2, "title": "사랑의 술잔", "duration": "3:30" },
+                { "no": 3, "title": "Hot Flash", "duration": "2:56" },
+                { "no": 4, "title": "맥주와 커피", "duration": "4:12" },
+                { "no": 5, "title": "남산타워", "duration": "2:38" },
+                { "no": 6, "title": "맞아 맞아 송", "duration": "3:08" },
+                { "no": 7, "title": "술 소독 Blues", "duration": "3:50" },
+                { "no": 8, "title": "홍어의 눈물", "duration": "2:46" },
+                { "no": 9, "title": "안녕 내사랑", "duration": "3:16" },
+                { "no": 10, "title": "고향", "duration": "4:11" },
+                { "no": 11, "title": "愛の盃 (Japanese Ver.)", "duration": "3:30" },
+                { "no": 12, "title": "ホットフラッシュ (Japanese Ver.)", "duration": "2:56" },
+                { "no": 13, "title": "ビールとコーヒー (Japanese Ver.)", "duration": "4:12" },
+                { "no": 14, "title": "南山タワー (Japanese Ver.)", "duration": "2:37" },
+                { "no": 15, "title": "夢で逢った男 (The Man in My Dream)", "duration": "3:42" }
+            ],
+            "productionNotes": {
+                "ko": "마리코 & 유키에의 정규 1집 《남산타워》(Namsan Tower Lights)는 2026년 9월 4일 발매됐다. 한국어 10곡과 일본어 5곡, 모두 15트랙이다. 일본어 트랙은 한국어 곡의 번역이 아니라 각각 다시 쓴 재해석이고, CD는 한·일 가사와 Thanks To를 실은 12쪽 부클릿과 함께 500장 한정으로 찍었다. 마리코는 일본에서 한국가요 콘테스트를 거쳐 2016년 한국 CD로 데뷔한 트로트 가수이고, 사토 유키에는 1995년 서울에 와 1999년 한국 최초의 일본인 록밴드 곱창전골로 데뷔한 뒤 30년째 서울에 살고 있다. 타이틀곡 「남산타워」에서 남산타워는 관광 명소가 아니라 두 사람이 사는 동네의 랜드마크로 등장한다.\n\n사운드의 뼈대는 1960~70년대 그룹 사운드이고, 그 위에 80년대 트로트 창법이 얹힌다. 녹음은 Bohemian Studio에서 2024년 4월부터 2025년 7월까지 곽우영 디렉션으로 진행했고, 믹싱은 스튜디오 놀에서 2025년 8월부터 12월까지 황경하가 맡았다. 마스터링은 Aubrite Mastering Studio의 Hashimoto Yoei가 담당했다. 믹싱에서 잡은 방향은 이 소리를 현대적으로 다듬는 쪽이 아니라, 기타·베이스·드럼이 한 덩어리로 밀고 나오는 밴드 앙상블의 두께와 빈티지한 기타 톤, 아날로그의 온기를 가리지 않고 그대로 내보내는 쪽이었다. 프로듀스는 사토 유키에다.\n\n스튜디오 놀은 믹싱과 함께 이 음반의 기획·제작·운영을 맡았다. 한국어·일본어·영어 3개 국어 공식 웹사이트와 프레스 페이지, 보도용 사진과 4000px 재킷을 담은 프레스킷, 3개 언어 보도자료, 곡별 챕터와 가사 자막을 넣은 49분 전곡 이어듣기 영상 3판을 만들었다. 발매에 맞춰 국내외 음악 매체·라디오·평론가·레코드숍·공연장 1,218곳에 9개 언어로 보도자료를 보냈다. 발매 기념공연은 2026년 9월 6일 서울 스페이스 한강에서 후원자 초청으로 열렸다.",
+                "en": "Namsan Tower Lights (남산타워), the debut full-length album by Mariko & Yukie, was released on September 4, 2026. It holds 15 tracks — 10 in Korean and 5 in Japanese. The Japanese tracks are not translations of the Korean songs but separate rewrites, and the CD was pressed in a limited run of 500 copies with a 12-page booklet carrying the Korean and Japanese lyrics side by side. Mariko is a trot singer who came up through Korean-song contests in Japan and made her Korean CD debut in 2016; Sato Yukie arrived in Seoul in 1995, debuted in 1999 with Kopchangjeongol, Korea's first all-Japanese rock band, and has lived in Seoul for the 30 years since. On the title track, Namsan Tower is not a tourist sight but the landmark over the neighbourhood where the two live.\n\nThe sound is built on 1960s–70s Korean group sound, with an '80s trot vocal style riding over it. Recording ran at Bohemian Studio from April 2024 to July 2025 under recording director Kwak Woo-young; mixing was done at Studio NOL by Hwang Kyung Ha between August and December 2025. Mastering was handled by Hashimoto Yoei at Aubrite Mastering Studio. The mixing brief was not to modernise the record but to let the thickness of the band ensemble, the vintage guitar tone and the warmth of the analogue source through without covering them. The album was produced by Sato Yukie.\n\nAlongside the mix, Studio NOL handled planning, production and day-to-day operation of the project. That included the official website and press page in Korean, Japanese and English, a press kit with press photography and the 4000px cover art, a press release in three languages, and a 49-minute full-album video with per-track chapters and lyric subtitles, produced in three localised versions. For the release, the press material went out in nine languages to 1,218 music outlets, radio programmes, critics, record shops and venues in Korea and abroad. The release show was held on September 6, 2026 at Space Hangang in Seoul, by invitation for the project's backers."
+            }
+        },
+        {
             "id": "tierliner-bite-me",
             "title": "티어라이너 <Bite Me>",
             "description": t(locale, { ko: "레코딩, 믹싱", en: "Recording, Mixing" }),
