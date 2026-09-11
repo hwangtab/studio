@@ -36,8 +36,16 @@ const DECLINE_CODE_PATTERN =
 /** 고객 결제수단이 실제로 거절된 경우인가 — 참일 때만 orders.status를 failed로 낙인한다. */
 const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(code);
 
+/**
+ * 되살림 흔적에 실제로 쓰이는 태그 — 아래 `tag` 계산(options.trustedByWebhook 분기)과
+ * 이 배열이 어긋나면 admin-serialize.test.ts의 대조 테스트가 잡는다. 이 파일이
+ * REVIEW_MEMO_PREFIXES(admin-serialize.ts)의 부분집합을 실제로 쓰고 있다는 보증은
+ * 여기 export한 이 상수를 그 테스트가 직접 가져다 확인하는 형태로만 성립한다.
+ */
+export const REVIVAL_NOTE_TAGS = ['[웹훅]', '[지연승인]'] as const;
+
 /** 웹훅·지연 승인이 만료/실패 주문을 되살렸을 때 관리자 화면에 남기는 흔적. */
-const revivalNote = (tag: string, from: 'expired' | 'failed'): string =>
+export const revivalNote = (tag: string, from: 'expired' | 'failed'): string =>
   from === 'expired'
     ? `${tag} 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요`
     : `${tag} failed 처리 후 승인 확인 — 재고 초과 가능, 확인 필요`;
@@ -254,7 +262,7 @@ export const confirmFundingPledge = async (
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
-    const tag = options.trustedByWebhook ? '[웹훅]' : '[지연승인]';
+    const tag = options.trustedByWebhook ? REVIVAL_NOTE_TAGS[0] : REVIVAL_NOTE_TAGS[1];
     const batchResult = await db.batch([
       db.insert(payments).values({
         orderId: order.id,
