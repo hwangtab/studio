@@ -250,6 +250,27 @@ describe('confirmBookingPayment', () => {
     });
   });
 
+  it('센티널 선점의 rowsAffected를 읽을 수 없으면 발송하는 쪽으로 흘린다 (fail-open)', async () => {
+    // rowsAffectedOf와 같은 규약 — 없는 실패를 지어내 확정 메일을 통째로 막으면 고객이
+    // 예약 확인·취소 링크를 아예 못 받는다. 중복 발송보다 나쁘다.
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    mockDb().run.mockResolvedValueOnce({}); // 선점 결과에 rowsAffected가 없다
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toMatchObject({ ok: true, emailSent: true });
+    expect(sendBookingConfirmedEmails).toHaveBeenCalledTimes(1);
+  });
+
+  it('선점이 0행이면(다른 경로가 가져감) 발송하지 않고 emailSent를 남기지 않는다', async () => {
+    (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    (confirmPayment as jest.Mock).mockResolvedValue(paidToss);
+    mockDb().run.mockResolvedValueOnce({ rowsAffected: 0 });
+    const r = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
+    expect(r).toEqual({ ok: true, orderNo: 'SNB-1', orderType: 'session', manageToken: 't' });
+    expect(sendBookingConfirmedEmails).not.toHaveBeenCalled();
+    expect(createBookingEvent).not.toHaveBeenCalled();
+  });
+
   it('확정 메일이 예외를 던져도 confirm 결과를 뒤집지 않는다', async () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (confirmPayment as jest.Mock).mockResolvedValue(paidToss);

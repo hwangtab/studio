@@ -58,15 +58,29 @@ const DECLINE_CODE_PATTERN =
 const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(code);
 
 /**
- * "확정은 됐는데 확정 메일을 아직 못 보냈다"는 센티널 (lib/funding/confirm.ts와 같은 장치).
+ * 확정 후처리 상태를 notificationError에 싣는 **두 단계 센티널** (lib/funding/confirm.ts와 같은 장치).
  *
- * batch(주문 pending→paid 전이)와 같은 트랜잭션에 써 넣고 메일 발송이 끝나야 지운다. 예전엔
- * batch 직후 메일 단계에서 프로세스가 죽으면(타임아웃·배포 중 종료) 확정 메일이 영영 나가지
- * 않았다 — 뒤이어 오는 웹훅 재시도는 status가 이미 paid라 조기 반환했고, notificationError가
- * null이라 healthCheck의 '메일 실패' 목록에도 안 잡혔다. 이제 웹훅은 센티널이 남아 있으면
- * 메일만 다시 보내고, 그전까지는 healthCheck가 이 주문을 들고 있다.
+ * - `send_pending` — batch(주문 pending→paid 전이)와 같은 트랜잭션에 써 넣는다. "확정은 됐는데
+ *   후처리는 아직"이라는 뜻이고, 웹훅 재도착이 이 값을 보면 후처리를 대신 수행한다.
+ * - `send_inflight` — 선점에 성공한 실행이 `send_pending`을 이 값으로 바꾼다. "누가 지금 하고
+ *   있다"는 뜻이라 경쟁자를 막으면서도 **비어 있지 않다**.
+ *
+ * 선점 값이 NULL이면 안 되는 이유: 센티널이 지키려는 구간이 정확히 gcal(0.2~0.8초) +
+ * 메일(0.3~1.5초)이다. 그 구간에서 함수 타임아웃·배포 종료로 죽으면 주문은 paid인데 확정
+ * 메일 0통, 캘린더 빈 칸, SSR 응답도 못 받아 고객은 관리 링크조차 없다. NULL로 지워 두면
+ * healthCheck(`isNotNull(orders.notificationError)`)도 gcal 검사(gcalError IS NOT NULL)도
+ * 전부 침묵해 **무증상 사고**가 되고, 빈 슬롯에 전화 예약을 받아 오프라인 이중예약까지 간다.
+ * inflight 값을 남기면 healthCheck가 즉시 잡고 관리자 화면의 알림 재발송으로 사람이 복구한다.
+ *
+ * 정상 종료 시 발송 결과(성공이면 null, 실패면 사유)가 이 값을 덮어쓴다.
+ *
+ * inflight의 **자동** 복구는 이번 범위에서 뺐다 — "언제부터 멈춰 있나"를 판단하려면 updated_at을
+ * 봐야 하는데 그 컬럼은 취소·환불·상태 전이가 함께 건드려서 후처리 시작 시각으로 못 쓴다.
+ * 시간 기반 재시도를 잘못 잡으면 느린 발송을 죽은 것으로 오인해 메일이 두 통 나간다 —
+ * 이 라운드에서 되돌리려던 바로 그 사고다. 가시성 회복 + 수동 재발송까지가 안전한 선이다.
  */
 const SEND_PENDING = 'send_pending';
+const SEND_INFLIGHT = 'send_inflight';
 
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';
@@ -296,10 +310,14 @@ const deliverPostConfirmation = async (order: BookingOrder): Promise<boolean | u
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];
 
+  // CAS — send_pending을 send_inflight로 **원자적으로** 바꾼 쪽만 후처리한다.
+  // 판정 불가(rowsAffected를 못 읽는 드라이버·목)는 발송하는 쪽으로 흘린다. 같은 파일의
+  // rowsAffectedOf가 이미 그 규약이다 — 없는 실패를 지어내 확정 메일을 통째로 막는 쪽이
+  // 중복 발송보다 나쁘다(고객이 확인·취소 링크를 아예 못 받는다).
   const claim = await getDb().run(
-    sql`UPDATE orders SET notification_error = NULL WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
+    sql`UPDATE orders SET notification_error = ${SEND_INFLIGHT} WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
   );
-  if (Number(claim.rowsAffected) !== 1) {
+  if (rowsAffectedOf(claim) === 0) {
     console.error('[booking-confirm] 확정 후처리를 다른 경로가 이미 선점 — 중복 발송하지 않는다', {
       orderNo: order.orderNo,
     });
@@ -308,8 +326,8 @@ const deliverPostConfirmation = async (order: BookingOrder): Promise<boolean | u
 
   if (isMixing ? !workOrder : !booking) {
     // Phase 1에선 발생 불가(주문 생성이 항상 하위 1건을 동반) — 상태 불변식이 깨졌을 때의 방어.
-    // 센티널은 위 선점에서 이미 지워졌다. 그대로 두면 healthCheck의 '메일 실패' 목록에
-    // send_pending으로 영구 잔류하므로, 사람이 읽을 수 있는 사유로 바꿔 남긴다.
+    // 센티널은 지금 send_inflight다. 그대로 두면 healthCheck에 정체불명 문자열로 남으므로,
+    // 사람이 읽을 수 있는 사유로 바꿔 남긴다(가시성은 유지하면서 원인을 밝힌다).
     console.error('[booking-confirm] bookings 없는 주문 — 후처리 생략', { orderNo: order.orderNo, isMixing });
     await recordNotification(order.id, order.orderNo, MISSING_ROW_NOTICE);
     return false;
@@ -363,6 +381,8 @@ export const confirmBookingPayment = async (
       // 웹훅은 fetchPayment로 DONE + 금액을 이미 재검증하고 온 신뢰 경로다. 다만 확정 메일
       // 센티널이 남아 있으면 "확정은 됐는데 메일이 안 나간" 주문이므로, 조기 반환하지 않고
       // 메일만 다시 보낸다(펀딩 confirm과 같은 복구 경로).
+      // send_inflight는 "다른 실행이 지금 하고 있다"라 여기서 가로채지 않는다 — 그 실행이
+      // 죽어 값이 남으면 healthCheck가 잡고 관리자 재발송으로 복구한다(SEND_PENDING 주석 참조).
       if (order.notificationError !== SEND_PENDING) return replay(order);
       // 복구 대상은 "batch는 커밋됐는데 후처리 직전에 죽은" 주문이다 — 메일만이 아니라
       // 캘린더 등록도 건너뛴 상태다. deliverPostConfirmation이 둘 다 본다.

@@ -43,14 +43,31 @@ const revivalNote = (tag: string, from: 'expired' | 'failed'): string =>
     : `${tag} failed 처리 후 승인 확인 — 재고 초과 가능, 확인 필요`;
 
 /**
- * "확정은 됐는데 확정 메일을 아직 못 보냈다"는 센티널.
+ * 확정 메일 상태를 notificationError에 싣는 **두 단계 센티널** (lib/booking/confirm.ts와 같은 장치 —
+ * 자세한 근거는 그쪽 SEND_PENDING 주석에 있다).
  *
- * batch(주문 paid 전이)와 같은 트랜잭션에 함께 써 넣고, 메일 발송이 끝나야 지운다. 예전엔
- * batch 직후 메일 단계에서 프로세스가 죽으면(타임아웃·배포 중 종료) 확정 메일이 영영 나가지
- * 않았다 — 뒤이어 오는 웹훅 재시도는 status가 이미 paid라 조기 반환했기 때문이다.
- * 이제 웹훅은 이 센티널이 남아 있으면 메일만 다시 보낸다.
+ * - `send_pending` — batch(주문 paid 전이)와 같은 트랜잭션에 써 넣는다. 웹훅 재도착이 이 값을
+ *   보면 메일을 대신 보낸다.
+ * - `send_inflight` — 선점에 성공한 실행이 바꿔 놓는 값. 경쟁자를 막으면서도 **비어 있지 않다**.
+ *
+ * 선점 값을 NULL로 두면 발송 구간(0.3~1.5초)에서 죽었을 때 주문은 paid인데 확정 메일 0통,
+ * 고객은 관리 링크도 없는 상태가 되고 healthCheck(`isNotNull(orders.notificationError)`)는
+ * 침묵한다 — 무증상 사고다. inflight를 남기면 즉시 잡히고 관리자 화면에서 복구할 수 있다.
+ * 정상 종료 시 발송 결과(성공 null / 실패 사유)가 덮어쓴다.
  */
 const SEND_PENDING = 'send_pending';
+const SEND_INFLIGHT = 'send_inflight';
+
+/**
+ * libSQL 결과의 rowsAffected — 판정 불가는 undefined로 돌려 "정상"으로 흘려보낸다.
+ * lib/booking/confirm.ts의 같은 이름 함수와 같은 규약이다(모듈 그래프를 섞지 않으려는
+ * 의도적 복제 — ALREADY_PROCESSED_CODE·DECLINE_CODE_PATTERN과 같은 이유).
+ */
+const rowsAffectedOf = (result: unknown): number | undefined => {
+  if (!result || typeof result !== 'object' || !('rowsAffected' in result)) return undefined;
+  const n = Number((result as { rowsAffected: unknown }).rowsAffected);
+  return Number.isFinite(n) ? n : undefined;
+};
 
 /** 확정 메일 발송. 예외를 삼켜 문자열로 바꾼다 — 결제는 이미 끝났으므로 confirm 결과를 뒤집으면 안 된다. */
 const deliverConfirmedEmails = async (order: FundingOrder): Promise<string | null> => {
@@ -82,10 +99,13 @@ const recordEmailResult = async (orderId: string, orderNo: string, emailError: s
  * undefined는 "이번 호출이 보내지 않았다"는 뜻이다(success()의 emailSent 의미 그대로).
  */
 const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean | undefined> => {
+  // CAS — send_pending을 send_inflight로 원자적으로 바꾼 쪽만 보낸다. 판정 불가는 보내는
+  // 쪽으로 흘린다(rowsAffectedOf의 규약) — 없는 실패를 지어내 확정 메일을 통째로 막는 쪽이
+  // 중복 발송보다 나쁘다.
   const claim = await getDb().run(
-    sql`UPDATE orders SET notification_error = NULL WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
+    sql`UPDATE orders SET notification_error = ${SEND_INFLIGHT} WHERE id = ${order.id} AND notification_error = ${SEND_PENDING}`,
   );
-  if (Number(claim.rowsAffected) !== 1) {
+  if (rowsAffectedOf(claim) === 0) {
     console.error('[funding-confirm] 확정 메일을 다른 경로가 이미 선점 — 중복 발송하지 않는다', { orderNo: order.orderNo });
     return undefined;
   }
@@ -128,6 +148,8 @@ export const confirmFundingPledge = async (
       // 웹훅은 fetchPayment로 DONE + 금액을 이미 재검증하고 온 신뢰 경로다.
       // 다만 확정 메일 센티널이 남아 있으면 "확정은 됐는데 메일이 안 나간" 주문이므로,
       // 여기서 조기 반환하지 않고 메일만 다시 보낸다(H — 복구 경로가 닫히지 않게).
+      // send_inflight는 "다른 실행이 지금 보내고 있다"라 가로채지 않는다 — 그 실행이 죽어
+      // 값이 남으면 healthCheck가 잡는다(SEND_PENDING 주석 참조).
       if (order.notificationError !== SEND_PENDING) return success(order);
       console.error('[funding-confirm] 확정 메일 미발송 센티널 발견 — 웹훅 경로에서 재발송', { orderNo: order.orderNo });
       return success(order, await deliverConfirmedEmailsOnce(order));

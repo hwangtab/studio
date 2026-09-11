@@ -415,6 +415,77 @@ describe('SSR 확정과 그 승인이 유발한 웹훅이 겹칠 때 (후속 리
   });
 });
 
+describe('센티널 선점의 원자성·가시성 (후속 리뷰 High)', () => {
+  const doneFor2 = (orderNo: string, amount: number, paymentKey = 'pk_b') => ({
+    ok: true,
+    payment: { paymentKey, orderId: orderNo, status: 'DONE', totalAmount: amount, method: '카드' },
+  });
+
+  const sentinelOf = async (orderNo: string): Promise<string | null> => {
+    const rows = await client.execute({ sql: 'SELECT notification_error AS e FROM orders WHERE order_no = ?', args: [orderNo] });
+    return (rows.rows[0].e as string | null) ?? null;
+  };
+
+  /** paid + send_pending(후처리 미완) 상태의 세션 주문을 만든다. */
+  const pendingPostConfirmation = async (): Promise<{ orderNo: string; amount: number }> => {
+    (Date.now as unknown as jest.SpyInstance).mockRestore();
+    const a = await createBookingOrder(bookingPayload(), NOW);
+    if (!a.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce(doneFor2(a.orderNo, a.totalAmount));
+    mockFetch.mockResolvedValueOnce(doneFor2(a.orderNo, a.totalAmount));
+    await processTossWebhook({ data: { paymentKey: 'pk_b', status: 'DONE' } });
+    await client.execute({ sql: `UPDATE orders SET notification_error = 'send_pending' WHERE order_no = ?`, args: [a.orderNo] });
+    await client.execute('UPDATE bookings SET gcal_event_id = NULL, gcal_error = NULL');
+    (createBookingEvent as jest.Mock).mockClear();
+    (sendBookingConfirmedEmails as jest.Mock).mockClear();
+    return { orderNo: a.orderNo, amount: a.totalAmount };
+  };
+
+  it('후처리 중에는 센티널이 비어 있지 않다 — 그 구간에서 죽어도 healthCheck가 잡는다', async () => {
+    // 선점 값이 NULL이면 gcal(0.2~0.8초)+메일(0.3~1.5초) 구간에서 죽었을 때
+    // notificationError도 gcalError도 전부 null이라 아무 점검에도 안 걸린다(무증상 사고).
+    const { orderNo, amount } = await pendingPostConfirmation();
+    const seen: Array<string | null> = [];
+    (createBookingEvent as jest.Mock).mockImplementationOnce(async () => {
+      seen.push(await sentinelOf(orderNo)); // 캘린더 등록 중
+      return 'evt1';
+    });
+    (sendBookingConfirmedEmails as jest.Mock).mockImplementationOnce(async () => {
+      seen.push(await sentinelOf(orderNo)); // 메일 발송 중
+      return null;
+    });
+
+    await confirmBookingPayment({ orderNo, paymentKey: 'pk_b', amount }, { trustedByWebhook: true });
+
+    expect(seen).toEqual(['send_inflight', 'send_inflight']);
+    expect(await sentinelOf(orderNo)).toBeNull(); // 정상 종료하면 결과가 덮어쓴다
+  });
+
+  it('발송이 실패하면 inflight가 사유로 대체된다 (센티널이 남지 않는다)', async () => {
+    const { orderNo, amount } = await pendingPostConfirmation();
+    (sendBookingConfirmedEmails as jest.Mock).mockResolvedValueOnce('customer:API_ERROR');
+    await confirmBookingPayment({ orderNo, paymentKey: 'pk_b', amount }, { trustedByWebhook: true });
+    expect(await sentinelOf(orderNo)).toBe('customer:API_ERROR');
+  });
+
+  it('선점은 원자적이다 — 같은 센티널을 두고 두 복구가 동시에 들어와도 한 쪽만 후처리한다', async () => {
+    // 둘 다 "센티널이 send_pending이다"를 읽은 뒤 경쟁한다. 읽고-검사-쓰기였다면 둘 다
+    // 통과해 확정 메일 2통·캘린더 2건이 된다 — CAS라야 하나만 rowsAffected 1을 받는다.
+    const { orderNo, amount } = await pendingPostConfirmation();
+    const results = await Promise.all([
+      confirmBookingPayment({ orderNo, paymentKey: 'pk_b', amount }, { trustedByWebhook: true }),
+      confirmBookingPayment({ orderNo, paymentKey: 'pk_b', amount }, { trustedByWebhook: true }),
+    ]);
+
+    expect(sendBookingConfirmedEmails).toHaveBeenCalledTimes(1);
+    expect(createBookingEvent).toHaveBeenCalledTimes(1);
+    const sent = results.map((r) => (r.ok ? r.emailSent : 'failed'));
+    expect(sent.filter((v) => v === true)).toHaveLength(1); // 이긴 쪽만 보냈다
+    expect(sent.filter((v) => v === undefined)).toHaveLength(1); // 진 쪽은 아무것도 안 했다
+    expect(await sentinelOf(orderNo)).toBeNull();
+  });
+});
+
 describe('예약 웹훅 복구 대칭 (항목 5)', () => {
   const doneFor = (orderNo: string, amount: number, paymentKey = 'pk_b') => ({
     ok: true,

@@ -282,6 +282,46 @@ describe('confirmFundingPledge', () => {
       expect(mockEmail).not.toHaveBeenCalled();
     });
 
+    it('발송 중에는 센티널이 비어 있지 않다 (send_inflight) — 그 구간에서 죽어도 healthCheck가 잡는다', async () => {
+      // 선점 값이 NULL이면 발송 구간(0.3~1.5초)에서 죽었을 때 주문은 paid인데 확정 메일 0통,
+      // notificationError도 null이라 어떤 점검에도 안 걸린다(무증상 사고).
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: 'inflight@example.com', customerPhone: '010-0' }), PROJECT, reward('mail'), NOW,
+      );
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      let seen: string | null = 'unread';
+      mockEmail.mockImplementationOnce(async () => {
+        const rows = await client.execute({ sql: 'SELECT notification_error AS e FROM orders WHERE order_no = ?', args: [c.orderNo] });
+        seen = (rows.rows[0].e as string | null) ?? null;
+        return null;
+      });
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      expect(seen).toBe('send_inflight');
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
+    });
+
+    it('선점은 원자적이다 — 두 복구가 동시에 들어와도 확정 메일은 1통', async () => {
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: 'cas@example.com', customerPhone: '010-00' }), PROJECT, reward('mail'), NOW,
+      );
+      if (!c.ok) throw new Error();
+      mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+      await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+      await client.execute({ sql: `UPDATE orders SET notification_error = 'send_pending' WHERE order_no = ?`, args: [c.orderNo] });
+      mockEmail.mockClear();
+
+      const results = await Promise.all([
+        confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true }),
+        confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 }, { trustedByWebhook: true }),
+      ]);
+      expect(mockEmail).toHaveBeenCalledTimes(1);
+      const sent = results.map((r) => (r.ok ? r.emailSent : 'failed'));
+      expect(sent.filter((v) => v === true)).toHaveLength(1);
+      expect(sent.filter((v) => v === undefined)).toHaveLength(1);
+      expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
+    });
+
     it('메일 함수가 예외를 던져도 confirm은 성공으로 끝나고 사유가 기록된다', async () => {
       const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
