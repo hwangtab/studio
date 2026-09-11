@@ -1,4 +1,4 @@
-import { POLICY_COPY_BY_LOCALE, SERVICE_DATA_PROCESSORS } from '../../pages/[locale]/privacy-policy';
+import { POLICY_COPY_BY_LOCALE, SERVICE_DATA_PROCESSORS } from '../../data/privacyPolicy';
 import {
   FUNDING_COLLECTED_ITEMS,
   FUNDING_COLLECTION_PURPOSES,

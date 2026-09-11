@@ -62,7 +62,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r3';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-11-r4';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -96,4 +96,26 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
   { name: 'Resend', purpose: '후원 확정·무통장입금·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 후원 내역' },
   { name: 'Vercel', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', purpose: '후원 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
+];
+
+/**
+ * 펀딩 약관 §13이 가리키는 처리방침 항 제목 — ko 처리방침의 정본 문구를 그대로 옮긴 것.
+ *
+ * 왜 베껴 두는가: 약관 페이지가 처리방침 정본에서 직접 골라 쓰면 동기화는 공짜로 얻지만,
+ * 약관 페이지 번들에 **7개 로케일 처리방침 본문 전체**가 딸려 온다(실측으로 확인했다 —
+ * uz 문구까지 약관 청크에 들어 있었다). 트리셰이킹은 파생값의 원본을 떨어내지 못한다.
+ *
+ * 그래서 목록은 여기(양쪽이 이미 가져다 쓰는 작은 모듈)에 두고, 동기화는 주석이 아니라
+ * 테스트로 강제한다 — content/fundingTermsHash.test.ts가 이 배열이 ko 처리방침에서 실제로
+ * 뽑히는 항 제목과 정확히 같은지 대조한다. 처리방침에서 항을 추가·개명·재번호하면 그
+ * 테스트가 CI에서 먼저 선다.
+ *
+ * **이 값은 약관 §13 본문에 보간되므로 해시 대상이다.** 바꾸면 FUNDING_TERMS_VERSION을
+ * 먼저 올린 뒤 기준선을 다시 쓴다.
+ */
+export const FUNDING_PRIVACY_SECTION_HEADINGS: readonly string[] = [
+  '6. 펀딩(리워드 선주문) 수집 항목',
+  '7. 펀딩 개인정보의 이용 목적',
+  '8. 펀딩 개인정보의 보유·이용 기간',
+  '9. 펀딩 개인정보의 처리위탁',
 ];
