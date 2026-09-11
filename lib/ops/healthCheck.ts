@@ -1,6 +1,7 @@
 import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, orders } from '../../db/schema';
 import { fetchBusyRanges } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
@@ -130,19 +131,37 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   }
 
   /**
-   * 확인 메일이 실패한 예약. 고객은 예약 확인·취소 링크를 받지 못한 상태다
+   * 확인 메일이 나가지 않은 주문. 고객은 예약 확인·취소 링크를 받지 못한 상태다
    * (완료 화면에도 링크를 띄우도록 고쳤지만, 그 화면을 닫은 뒤에는 메일이 유일한 경로다).
+   *
+   * 이 컬럼에는 실제 실패 사유만 들어오는 게 아니다. 확정 후처리 소유권을 CAS로 정하면서
+   * `send_pending`(발송 시작 전)·`send_inflight`(발송 중)가 같은 칸을 쓴다. 셋을 뭉뚱그려
+   * "실패"라고 보고하면, 웹훅이 곧 처리할 건까지 사고로 읽혀 운영자가 매번 헛걸음한다 —
+   * 건수는 함께 세되 본문에서 갈라 말한다.
    */
   const orderMailFailed = await db
-    .select({ orderNo: orders.orderNo })
+    .select({ orderNo: orders.orderNo, notificationError: orders.notificationError })
     .from(orders)
     .where(isNotNull(orders.notificationError));
 
   if (orderMailFailed.length > 0) {
+    const stuck = orderMailFailed.filter((row) => isNotificationSentinel(row.notificationError));
+    const failed = orderMailFailed.filter((row) => !isNotificationSentinel(row.notificationError));
     issues.push({
       severity: 'medium',
-      title: `확인 메일이 나가지 않은 예약 ${orderMailFailed.length}건`,
-      detail: `주문번호: ${sample(orderMailFailed.map((row) => row.orderNo))}`,
+      title: `확인 메일이 나가지 않은 주문 ${orderMailFailed.length}건`,
+      detail: [
+        ...(failed.length > 0
+          ? [`- 발송 실패: ${failed.length}건 (${sample(failed.map((row) => row.orderNo))})`]
+          : []),
+        ...(stuck.length > 0
+          ? [
+              `- 발송이 시작되지 않았거나 도중에 멈춤: ${stuck.length}건 `
+                + `(${sample(stuck.map((row) => row.orderNo))})`,
+            ]
+          : []),
+        '관리자 > 예약·후원 상세에서 재발송할 수 있습니다.',
+      ].join('\n'),
     });
   }
 

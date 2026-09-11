@@ -22,6 +22,7 @@ import {
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
+import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 interface AdminBookingDetailPageProps {
   booking: AdminBookingDetail;
@@ -236,6 +237,9 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
     booking.bookingStatus !== 'cancelled' &&
     (booking.gcalError !== null || booking.gcalMissing);
 
+  // 센티널(`send_pending`·`send_inflight`)과 실제 실패 사유를 갈라 읽는다 — 원문 노출 금지.
+  const notificationCopy = describeNotificationError(booking.notificationError);
+
   const canStartWork = isMixing && workOrder?.status === 'received';
   const canDeliver = isMixing && workOrder?.status === 'in_progress';
   // 임의 환불은 착수 전후 어디서든 가능(계획서 §4) — cancel.ts의 관리자 취소 조건과 같다.
@@ -278,14 +282,25 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
           )}
 
           {/* gcalError·notificationError는 결제·환불은 정상 처리됐지만 후속 처리(캘린더 등록,
-              메일 발송)만 실패한 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 그대로 보여준다. */}
-          {booking.notificationError && (
+              메일 발송)만 남은 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 보여준다.
+
+              notificationError는 자유 문자열이 아니다. 확정 후처리 소유권을 CAS로 정하면서
+              `send_pending`·`send_inflight` 두 예약어가 같은 칸에 들어온다. 원문을 그대로
+              찍으면 "알림 발송에 실패했습니다 send_inflight"가 되어, 정상 진행 중인 주문을
+              사고로 읽게 만든다 — describeNotificationError가 그 해석을 맡는다. */}
+          {notificationCopy && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              <strong className="block mb-1">알림 발송에 실패했습니다</strong>
-              {booking.notificationError}
+              <strong className="block mb-1">{notificationCopy.title}</strong>
+              {notificationCopy.detail}
               <span className="block mt-2 text-amber-700">
-                고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. 아래 “알림 재발송”을
-                눌러 다시 보내 주세요.
+                {notificationCopy.kind === 'failure'
+                  ? '고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. '
+                  : ''}
+                {/* 믹싱·마스터링 주문에는 재발송 버튼이 없다(bookings 행이 없어 API도 409를
+                    준다). 없는 버튼을 가리키면 운영자가 화면을 뒤지게 되므로 안내를 가른다. */}
+                {canResend
+                  ? '아래 “알림 재발송”을 눌러 다시 보내 주세요.'
+                  : '이 주문에는 재발송 버튼이 없습니다 — 고객에게 직접 연락해 주세요.'}
               </span>
             </div>
           )}

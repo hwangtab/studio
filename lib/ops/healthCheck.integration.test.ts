@@ -228,11 +228,32 @@ describe('운영 점검', () => {
     expect(await titles()).toEqual([]);
   });
 
-  it('확인 메일이 실패한 예약을 주문번호와 함께 보고한다', async () => {
+  it('확인 메일이 실패한 주문을 주문번호와 함께 보고한다', async () => {
     await insertOrder({ notification_error: 'customer:TIMEOUT' });
     const issues = (await runHealthCheck(NOW)).issues;
-    expect(issues[0].title).toContain('확인 메일이 나가지 않은 예약 1건');
+    expect(issues[0].title).toContain('확인 메일이 나가지 않은 주문 1건');
+    expect(issues[0].detail).toContain('발송 실패: 1건');
     expect(issues[0].detail).toContain('SNB-1');
+  });
+
+  /**
+   * 센티널(`send_pending`·`send_inflight`)은 실패가 아니라 "아직 안 나갔다"다. 셋을
+   * 뭉뚱그려 "발송 실패"로 보고하면 웹훅이 곧 처리할 건까지 사고로 읽혀 헛걸음을 만든다.
+   */
+  it('센티널로 멈춘 건은 발송 실패와 갈라 센다', async () => {
+    await insertOrder({ id: 'o1', order_no: 'SNB-1', manage_token: 't1', notification_error: 'customer:TIMEOUT' });
+    await insertOrder({ id: 'o2', order_no: 'SNB-2', manage_token: 't2', notification_error: 'send_inflight' });
+    await insertOrder({ id: 'o3', order_no: 'SNB-3', manage_token: 't3', notification_error: 'send_pending' });
+
+    const issue = (await runHealthCheck(NOW)).issues.find((i) =>
+      i.title.includes('확인 메일이 나가지 않은 주문'),
+    )!;
+    expect(issue.title).toContain('3건');
+    expect(issue.detail).toContain('발송 실패: 1건');
+    expect(issue.detail).toContain('멈춤: 2건');
+    // 운영자에게 내부 예약어를 보여주지 않는다.
+    expect(issue.detail).not.toContain('send_inflight');
+    expect(issue.detail).not.toContain('send_pending');
   });
 
   it('돈은 들어왔는데 미결제로 남은 주문을 잡는다', async () => {

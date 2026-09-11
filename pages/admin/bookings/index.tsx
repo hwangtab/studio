@@ -21,6 +21,7 @@ import {
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { expireStaleOrders } from '../../../lib/booking/service';
+import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
 /** 한 화면에 싣는 최대 건수. 넘으면 오래된 주문이 잘린다는 사실을 화면에 알린다(contracts와 동일). */
 const LIST_LIMIT = 200;
@@ -408,8 +409,12 @@ export default function AdminBookingsPage({
                                 </span>
                               </div>
                             )}
+                            {/* 원문 대신 배지 문구 — `send_pending`·`send_inflight`는 실패가
+                                아니라 진행/대기 상태다(lib/ops/notificationSentinel.ts). */}
                             {booking.notificationError && (
-                              <div className="mt-1 text-xs text-amber-700 font-medium">알림 실패</div>
+                              <div className="mt-1 text-xs text-amber-700 font-medium">
+                                {describeNotificationError(booking.notificationError)?.badge}
+                              </div>
                             )}
                           </td>
                           <td className="px-4 py-3">

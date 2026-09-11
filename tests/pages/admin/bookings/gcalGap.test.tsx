@@ -81,3 +81,49 @@ it('믹싱 주문에는 캘린더 배너·버튼이 뜨지 않는다', () => {
   );
   expect(retryButton()).not.toBeInTheDocument();
 });
+
+/**
+ * 센티널 노출 회귀 — `notification_error`에는 실제 실패 사유만이 아니라 후처리 소유권 CAS가
+ * 쓰는 예약어(`send_pending`·`send_inflight`)가 들어온다. 원문을 그대로 찍으면
+ * "알림 발송에 실패했습니다 send_inflight"가 되어, 정상 진행 중인 주문을 사고로 읽게 만든다.
+ */
+describe('알림 배너는 센티널 원문을 노출하지 않는다', () => {
+  it.each(['send_pending', 'send_inflight'])('%s를 화면에 그대로 찍지 않는다', (sentinel) => {
+    const { container } = render(
+      <AdminBookingDetailPage booking={{ ...SESSION, notificationError: sentinel }} />,
+    );
+    expect(container.textContent).not.toContain(sentinel);
+    // 센티널은 실패가 아니다 — "실패했습니다"라고 말하면 거짓이다.
+    expect(screen.queryByText('알림 발송에 실패했습니다')).not.toBeInTheDocument();
+  });
+
+  it('실제 실패 사유는 원문 그대로 보여준다', () => {
+    render(
+      <AdminBookingDetailPage
+        booking={{ ...SESSION, notificationError: 'Resend 550: rejected' }}
+      />,
+    );
+    expect(screen.getByText('알림 발송에 실패했습니다')).toBeInTheDocument();
+    expect(screen.getByText(/Resend 550: rejected/)).toBeInTheDocument();
+  });
+
+  /**
+   * 믹싱 주문에는 "알림 재발송" 버튼이 없다(bookings 행이 없어 API도 409를 준다).
+   * 그런데 배너는 "아래 알림 재발송을 눌러 주세요"라고 말하고 있었다 — 없는 버튼을
+   * 가리키면 운영자가 화면을 뒤지다 포기한다.
+   */
+  it('재발송 버튼이 없는 주문에는 그 버튼을 가리키지 않는다', () => {
+    render(
+      <AdminBookingDetailPage
+        booking={{
+          ...SESSION, orderType: 'mixing', bookingId: null, bookingStatus: null,
+          startAt: null, endAt: null, durationHours: null, gcalMissing: false,
+          notificationError: 'Resend 550: rejected',
+          workOrder: { id: 'w1', status: 'received', songCount: 2, vocalTuning: false, startedAt: null, deliveredAt: null },
+        }}
+      />,
+    );
+    expect(screen.queryByRole('button', { name: '알림 재발송' })).not.toBeInTheDocument();
+    expect(screen.getByText(/재발송 버튼이 없습니다/)).toBeInTheDocument();
+  });
+});
