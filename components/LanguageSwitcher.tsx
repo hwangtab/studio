@@ -250,7 +250,7 @@ export const LanguageSwitcher = ({
                     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                     ${currentLocale === locale
                       ? 'bg-primary text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 hover:bg-white/45 dark:hover:bg-white/10'}
+                      : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/45 dark:hover:bg-white/10'}
                   `}
                   aria-current={currentLocale === locale ? 'page' : undefined}
                 >

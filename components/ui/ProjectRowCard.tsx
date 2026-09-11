@@ -118,7 +118,7 @@ const ProjectRowCard = ({
                         {description}
                     </p>
 
-                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary-lighter opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300 flex-shrink-0">
+                    <div className="flex items-center text-xs font-mono text-primary group-hover:text-primary-dark dark:text-primary-lighter dark:group-hover:text-primary-lighter opacity-0 group-hover:opacity-100 transform translate-x-4 group-hover:translate-x-0 transition-[opacity,transform] duration-300 flex-shrink-0">
                         <span className="mr-2">{viewProjectLabel}</span>
                         <ExternalLink size={14} aria-hidden="true" />
                     </div>

@@ -52,7 +52,7 @@ const RelatedGuidesSection = ({ title, locale }: RelatedGuidesSectionProps) => {
         </div>
         {hiddenRelatedGuides.length > 0 && (
           <details className="mt-6 group">
-            <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-lighter transition-colors">
+            <summary className="list-none [&::-webkit-details-marker]:hidden cursor-pointer select-none flex items-center justify-center gap-1.5 py-3 text-sm font-semibold text-primary hover:text-primary-dark dark:text-primary-lighter dark:hover:text-white transition-colors">
               <span className="group-open:hidden">
                 가이드 +{hiddenRelatedGuides.length}개 더 보기
               </span>

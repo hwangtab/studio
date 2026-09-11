@@ -52,7 +52,7 @@ const ServiceLinksSection = ({ locale, labels }: ServiceLinksSectionProps) => {
             key={link.href}
             href={link.href}
             prefetch={false}
-            className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 font-semibold hover:text-white transition-colors duration-200 ${link.className}`}
+            className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 font-semibold hover:text-white dark:hover:text-white transition-colors duration-200 ${link.className}`}
           >
             {link.label} <ArrowRight size={16} aria-hidden="true" />
           </Link>

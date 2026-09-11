@@ -101,7 +101,7 @@ const Playlist = ({
                             </div>
 
                             <div className="flex-1 min-w-0">
-                                <h4 className={`text-sm font-medium truncate ${isActive ? 'text-primary' : 'text-gray-900 dark:text-white'}`} title={track.title}>
+                                <h4 className={`text-sm font-medium truncate ${isActive ? 'text-primary dark:text-primary-lighter' : 'text-gray-900 dark:text-white'}`} title={track.title}>
                                     {track.title}
                                 </h4>
                                 <p className="text-xs text-gray-500 dark:text-white/50 truncate" title={track.artist}>
