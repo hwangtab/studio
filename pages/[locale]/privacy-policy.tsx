@@ -93,7 +93,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '스튜디오 놀은 음원 발매 홍보 업무를 위해 언론사·매체·방송·음반 유통처가 스스로 공개한 ' +
           '업무용 연락처(편집부·제보·기고 접수 창구 등)를 수집해 보도자료를 보냅니다. 정보주체가 ' +
           '공개한 범위 안에서만 이용하며, 개인이 사적으로 쓰는 주소는 수집하지 않습니다. ' +
-          '주소를 어디서 확인했는지는 보내는 메일에 함께 밝히고, 요청하시면 개별 출처를 알려드립니다.',
+          '주소를 어디서 확인했는지는 보내는 메일에 함께 밝히고, 요청하시면 수집 경위를 알려드립니다.',
       },
       {
         heading: '11. 매체 연락처의 수신거부와 보유 기간',
@@ -139,7 +139,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '6. Media contact details for press outreach',
-        body: 'For music release publicity, Studio NOL collects business contact details that press outlets, media companies, broadcasters, and music distributors have themselves made public (editorial desks, news tip lines, contribution intake channels, and similar) and uses them to send press releases. We use them only within the scope the data subject has made public, and we do not collect addresses that individuals use privately. Every email we send states where we found the address, and we will disclose the individual source on request.',
+        body: 'For music release publicity, Studio NOL collects business contact details that press outlets, media companies, broadcasters, and music distributors have themselves made public (editorial desks, news tip lines, contribution intake channels, and similar) and uses them to send press releases. We use them only within the scope the data subject has made public, and we do not collect addresses that individuals use privately. Every email we send states where we found the address, and we will explain how it was collected on request.',
       },
       {
         heading: '7. Opt-out and retention of media contact details',
@@ -179,7 +179,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '6. 为新闻宣传业务处理媒体联系方式',
-        body: 'Studio NOL 为音乐作品发行宣传业务，收集新闻机构、媒体、广播电视及音乐发行方自行公开的公务联系方式（编辑部、报料与投稿受理窗口等），并据此发送新闻稿。我们仅在信息主体已公开的范围内使用，不收集个人私下使用的地址。该地址的获取来源会在发出的邮件中一并说明，如您提出要求，我们也会单独告知具体出处。',
+        body: 'Studio NOL 为音乐作品发行宣传业务，收集新闻机构、媒体、广播电视及音乐发行方自行公开的公务联系方式（编辑部、报料与投稿受理窗口等），并据此发送新闻稿。我们仅在信息主体已公开的范围内使用，不收集个人私下使用的地址。该地址的获取来源会在发出的邮件中一并说明，如您提出要求，我们也会说明收集经过。',
       },
       {
         heading: '7. 媒体联系方式的拒绝接收与保存期限',
@@ -219,7 +219,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '6. Tratamiento de contactos de medios para labores de prensa',
-        body: 'Para la promoción de lanzamientos musicales, Studio NOL recopila datos de contacto profesionales que los medios de comunicación, las emisoras y las distribuidoras musicales han hecho públicos por sí mismos (redacción, buzón de avisos, recepción de colaboraciones, etc.) y les envía notas de prensa. Los usamos únicamente dentro del ámbito que el interesado ha hecho público y no recopilamos direcciones de uso personal privado. En cada correo indicamos dónde obtuvimos la dirección y, si lo solicita, le informamos de la fuente concreta.',
+        body: 'Para la promoción de lanzamientos musicales, Studio NOL recopila datos de contacto profesionales que los medios de comunicación, las emisoras y las distribuidoras musicales han hecho públicos por sí mismos (redacción, buzón de avisos, recepción de colaboraciones, etc.) y les envía notas de prensa. Los usamos únicamente dentro del ámbito que el interesado ha hecho público y no recopilamos direcciones de uso personal privado. En cada correo indicamos dónde obtuvimos la dirección y, si lo solicita, le explicamos cómo la recopilamos.',
       },
       {
         heading: '7. Baja y conservación de los contactos de medios',
@@ -259,7 +259,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '6. Xử lý thông tin liên hệ của báo chí cho hoạt động truyền thông',
-        body: 'Để phục vụ hoạt động quảng bá phát hành âm nhạc, Studio NOL thu thập các địa chỉ liên hệ công vụ mà cơ quan báo chí, đơn vị truyền thông, đài phát thanh - truyền hình và nhà phân phối âm nhạc tự công khai (ban biên tập, kênh tiếp nhận tin báo, kênh nhận bài cộng tác, v.v.) để gửi thông cáo báo chí. Chúng tôi chỉ sử dụng trong phạm vi mà chủ thể thông tin đã công khai và không thu thập địa chỉ cá nhân dùng cho mục đích riêng tư. Trong mỗi email gửi đi, chúng tôi nêu rõ đã lấy địa chỉ từ đâu, và sẽ thông báo nguồn cụ thể nếu bạn yêu cầu.',
+        body: 'Để phục vụ hoạt động quảng bá phát hành âm nhạc, Studio NOL thu thập các địa chỉ liên hệ công vụ mà cơ quan báo chí, đơn vị truyền thông, đài phát thanh - truyền hình và nhà phân phối âm nhạc tự công khai (ban biên tập, kênh tiếp nhận tin báo, kênh nhận bài cộng tác, v.v.) để gửi thông cáo báo chí. Chúng tôi chỉ sử dụng trong phạm vi mà chủ thể thông tin đã công khai và không thu thập địa chỉ cá nhân dùng cho mục đích riêng tư. Trong mỗi email gửi đi, chúng tôi nêu rõ đã lấy địa chỉ từ đâu, và sẽ giải thích cách thu thập nếu bạn yêu cầu.',
       },
       {
         heading: '7. Từ chối nhận thư và thời gian lưu trữ thông tin liên hệ của báo chí',
@@ -299,7 +299,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '6. การประมวลผลข้อมูลติดต่อของสื่อมวลชนเพื่องานประชาสัมพันธ์',
-        body: 'เพื่องานประชาสัมพันธ์การเผยแพร่ผลงานเพลง Studio NOL เก็บรวบรวมข้อมูลติดต่อเชิงธุรกิจที่สํานักข่าว สื่อมวลชน สถานีวิทยุโทรทัศน์ และผู้จัดจําหน่ายเพลงเปิดเผยไว้เอง (กองบรรณาธิการ ช่องทางแจ้งข่าว ช่องทางรับบทความ เป็นต้น) เพื่อส่งข่าวประชาสัมพันธ์ เราใช้เฉพาะในขอบเขตที่เจ้าของข้อมูลส่วนบุคคลเปิดเผยไว้เท่านั้น และไม่เก็บที่อยู่ที่บุคคลใช้เป็นการส่วนตัว อีเมลที่เราส่งจะระบุด้วยว่าได้ที่อยู่นั้นมาจากที่ใด และหากร้องขอ เราจะแจ้งแหล่งที่มาเฉพาะรายให้ทราบ',
+        body: 'เพื่องานประชาสัมพันธ์การเผยแพร่ผลงานเพลง Studio NOL เก็บรวบรวมข้อมูลติดต่อเชิงธุรกิจที่สํานักข่าว สื่อมวลชน สถานีวิทยุโทรทัศน์ และผู้จัดจําหน่ายเพลงเปิดเผยไว้เอง (กองบรรณาธิการ ช่องทางแจ้งข่าว ช่องทางรับบทความ เป็นต้น) เพื่อส่งข่าวประชาสัมพันธ์ เราใช้เฉพาะในขอบเขตที่เจ้าของข้อมูลส่วนบุคคลเปิดเผยไว้เท่านั้น และไม่เก็บที่อยู่ที่บุคคลใช้เป็นการส่วนตัว อีเมลที่เราส่งจะระบุด้วยว่าได้ที่อยู่นั้นมาจากที่ใด และหากร้องขอ เราจะอธิบายวิธีการเก็บรวบรวมให้ทราบ',
       },
       {
         heading: '7. การปฏิเสธการรับข่าวสารและระยะเวลาเก็บรักษาข้อมูลติดต่อของสื่อมวลชน',
@@ -339,7 +339,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '6. Matbuot targ\'iboti uchun ommaviy axborot vositalari aloqa ma\'lumotlarini qayta ishlash',
-        body: 'Studio NOL musiqa relizlarini targ\'ib qilish uchun nashrlar, ommaviy axborot vositalari, teleradiokanallar va musiqa distributorlari o\'zlari oshkor qilgan ish aloqa manzillarini (tahririyat, xabar berish, maqola qabul qilish kanallari va shu kabilar) yig\'adi va press-relizlar yuboradi. Ular faqat ma\'lumotlar subyekti oshkor qilgan doirada ishlatiladi va shaxslar shaxsiy maqsadda foydalanadigan manzillar yig\'ilmaydi. Manzilni qayerdan olganimizni yuboradigan xatimizda ko\'rsatamiz, so\'rasangiz aniq manbani alohida ma\'lum qilamiz.',
+        body: 'Studio NOL musiqa relizlarini targ\'ib qilish uchun nashrlar, ommaviy axborot vositalari, teleradiokanallar va musiqa distributorlari o\'zlari oshkor qilgan ish aloqa manzillarini (tahririyat, xabar berish, maqola qabul qilish kanallari va shu kabilar) yig\'adi va press-relizlar yuboradi. Ular faqat ma\'lumotlar subyekti oshkor qilgan doirada ishlatiladi va shaxslar shaxsiy maqsadda foydalanadigan manzillar yig\'ilmaydi. Manzilni qayerdan olganimizni yuboradigan xatimizda ko\'rsatamiz, so\'rasangiz qanday yig\'ilganini tushuntiramiz.',
       },
       {
         heading: '7. Ommaviy axborot vositalari aloqa ma\'lumotlaridan voz kechish va saqlash muddati',
