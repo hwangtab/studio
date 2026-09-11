@@ -493,3 +493,77 @@ describe('다크 짝이 variant 색을 덮어쓰지 않는가', () => {
     }
   });
 });
+
+// 아웃라인 pill 재복붙 가드 (2026-09-12).
+//
+// 위 세 가드는 "이미 심어진 클래스 문자열이 규칙에 맞는가"만 본다. 그런데 이 저장소에서
+// 실제로 일어난 일은 **같은 pill을 손으로 다시 짜는 것**이었다 — 같은 className이 9개
+// 파일에 45번 복붙됐고, 위 세 가드가 잡은 회귀가 전부 그 45곳에서 났다. 게다가 45곳
+// 전부 `focus-visible` 링이 빠져 있었는데, 그건 "틀린 클래스"가 아니라 "없는 클래스"라
+// 어떤 가드도 볼 수 없었다.
+//
+// 그래서 재료가 아니라 **조합**을 본다: `border-2` + 브랜드 보더 + 같은 브랜드 텍스트는
+// 아웃라인 pill이고, 그건 components/ui/ServiceLinkPill.tsx가 소유한다.
+//
+// 오탐이 적은 이유: 알파가 붙은 보더(`border-primary/20` — Button의 outline variant)는
+// 제외하고, 브랜드 **텍스트**가 같은 문자열에 없으면(BuyerIntentHubPage의 채워진 히어로
+// CTA `bg-primary … text-white`) 걸리지 않는다. 전환 직후 실측 예외는 1건뿐이다.
+const PILL_BORDER_RE = /border-2\b/;
+const PILL_BRAND_BORDER_RE = /(?<![-\w:])border-(primary|secondary|accent)(?![-\w/])/;
+const PILL_BRAND_TEXT_RE = /(?<![-\w:])text-(primary|secondary|accent)(?![-\w/])/;
+
+/** ServiceLinkPill로 표현할 수 없는 자리만 등재한다. 이유 없이 넣지 말 것. */
+const PILL_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  {
+    file: 'pages/[locale]/portfolio/[id].tsx',
+    snippet: 'flex-1 flex items-center justify-center gap-2 px-6 py-3 min-h-[44px] border-2 border-primary',
+    reason:
+      'sharePortfolio를 부르는 공유 <button>이다 — 링크가 아니라 ServiceLinkPill(next/link ' +
+      '래퍼)로 표현할 수 없다. 포커스 링·다크 짝·44px 타깃은 이미 갖추고 있다.',
+  },
+];
+
+describe('아웃라인 pill은 손으로 다시 짜지 않는다', () => {
+  it('border-2 + border-{brand} + text-{brand} 조합은 ServiceLinkPill을 쓴다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of ['components', 'pages']) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!rel.endsWith('.tsx') || rel.endsWith('.test.tsx')) continue;
+        // pill 본체는 당연히 이 조합을 가진다.
+        if (rel === 'components/ui/ServiceLinkPill.tsx') continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (isCommentLine(trimmed)) return;
+
+          const match = PILL_BRAND_BORDER_RE.exec(line);
+          if (!match) return;
+          // 같은 **문자열 리터럴** 안에서만 본다 — 다른 분기의 클래스와 섞이지 않게.
+          const scope = scopeOf(line, match.index);
+          if (!PILL_BORDER_RE.test(scope) || !PILL_BRAND_TEXT_RE.test(scope)) return;
+          if (PILL_ALLOW.some((a) => a.file === rel && line.includes(a.snippet))) return;
+
+          offenders.push(`${rel}:${index + 1}: ${trimmed.slice(0, 120)}`);
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '아웃라인 서비스 pill을 손으로 다시 짰습니다 — components/ui/ServiceLinkPill을 쓰세요.\n' +
+          '이 조합을 복붙하면 다크 텍스트 대비·dark:hover 짝·focus-visible 링을 매번 다시 ' +
+          '맞춰야 하고, 실제로 그 세 가지가 45곳에서 한꺼번에 틀어진 적이 있습니다.\n' +
+          '링크가 아니라서 pill로 표현할 수 없다면 PILL_ALLOW에 이유와 함께 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});
