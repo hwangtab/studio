@@ -110,23 +110,28 @@ describe('Header 모바일 메뉴', () => {
   });
 
   /**
-   * 펀딩 퍼널은 ko 전용(스펙 §8) — 다른 로케일 헤더에는 항목 자체가 없어야 한다.
+   * 펀딩 퍼널과 아티스트 후원은 ko 전용(스펙 §8·§11.2) — 다른 로케일 헤더에는
+   * 항목이 없어야 한다. 2026-09-11 재정렬로 둘을 '아티스트' 그룹으로 모았고,
+   * 항목이 전부 ko 전용이라 **그룹째** ko에서만 렌더한다(비-ko에서 빈 드롭다운이
+   * 열리면 안 된다).
+   *
    * react-i18next는 t: (key) => key로 목킹돼 있어 실제 렌더 텍스트는 번역 라벨이
    * 아니라 키('nav.funding')다. MobileNav는 항상 DOM에 마운트돼 있으므로(CSS 토글)
-   * 드롭다운을 열지 않아도 링크가 조회된다.
+   * 드롭다운을 열지 않아도 그룹 버튼이 조회된다.
    */
-  it('ko에서는 음원 발매 그룹에 펀딩 항목이 있고 en에서는 없다', () => {
+  it('ko에서는 아티스트 그룹에 후원·펀딩이 있고 en에서는 그룹 자체가 없다', () => {
     renderHeader();
-    // 모바일 메뉴 → 음원 발매 그룹 아코디언을 열어야 항목이 DOM에 렌더된다
+    // 모바일 메뉴 → 아티스트 그룹 아코디언을 열어야 항목이 DOM에 렌더된다
     // (그룹 내용은 열림 상태에서만 mount되는 구조 — DropdownMenu도 동일).
     act(() => {
       menuToggle().click();
     });
     const nav = mobileNav() as HTMLElement;
     act(() => {
-      within(nav).getByRole('button', { name: 'nav.groups.release' }).click();
+      within(nav).getByRole('button', { name: 'nav.groups.artist' }).click();
     });
     expect(within(nav).getByRole('link', { name: 'nav.funding' })).toHaveAttribute('href', '/ko/funding');
+    expect(within(nav).getByRole('link', { name: 'nav.artists' })).toHaveAttribute('href', '/ko/artists');
     cleanup();
 
     render(
@@ -138,6 +143,49 @@ describe('Header 모바일 메뉴', () => {
         toggleDarkMode={() => {}}
       />,
     );
+    // 그룹을 여는 버튼조차 없어야 한다 — 빈 드롭다운이 남으면 정리가 덜 된 것이다.
+    expect(screen.queryByRole('button', { name: 'nav.groups.artist' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'nav.funding' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'nav.artists' })).toBeNull();
+  });
+
+  /**
+   * 재정렬의 뼈대를 고정한다. 그룹 라벨과 1탭 링크가 다시 뒤섞이면 여기서 잡힌다.
+   *
+   *   1탭  = 드롭다운에 넣으면 오히려 못 찾는 것 (연습실·스토리·가격)
+   *   그룹 = 방문자가 하려는 일 (만든다 / 낸다 / 함께한다 / 안다)
+   */
+  it('메뉴 뼈대가 유지된다 — 1탭 셋과 그룹 넷', () => {
+    renderHeader();
+    act(() => {
+      menuToggle().click();
+    });
+    const nav = mobileNav() as HTMLElement;
+
+    // 모바일 퀵링크는 nav.short.*(가로 배치용 축약)가 아니라 전체 이름을 쓴다.
+    // 항목 구성은 데스크톱 1탭과 같아야 한다 — 문의만 모바일에 추가로 둔다.
+    for (const [name, href] of [
+      ['nav.practiceRoom', '/ko/practice-room'],
+      ['nav.stories', '/ko/stories'],
+      ['nav.pricing', '/ko/pricing'],
+      ['nav.contact', '/ko/contact'],
+    ] as const) {
+      expect(within(nav).getByRole('link', { name })).toHaveAttribute('href', href);
+    }
+    // 아티스트 후원은 퀵링크가 아니라 아티스트 그룹에만 있어야 한다(중복 금지).
+    expect(within(nav).queryByRole('link', { name: 'nav.artists' })).toBeNull();
+
+    for (const group of ['production', 'release', 'artist', 'studio']) {
+      expect(within(nav).getByRole('button', { name: `nav.groups.${group}` })).toBeTruthy();
+    }
+    // 가이드 그룹은 해체됐다 — 포트폴리오는 스튜디오로, 스토리는 1탭으로 갔다.
+    expect(within(nav).queryByRole('button', { name: 'nav.groups.guide' })).toBeNull();
+
+    // 발매 그룹에는 티어를 넣지 않는다(개요 페이지의 비교표가 그 역할).
+    act(() => {
+      within(nav).getByRole('button', { name: 'nav.groups.release' }).click();
+    });
+    expect(within(nav).getByRole('link', { name: 'nav.musicPromotion' })).toBeTruthy();
+    expect(within(nav).queryByRole('link', { name: 'nav.releaseSingle' })).toBeNull();
   });
 });

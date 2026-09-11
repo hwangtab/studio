@@ -16,19 +16,18 @@
     "groups": {
       "production": "Thu âm",
       "release": "Phát hành",
-      "guide": "Hướng dẫn",
+      "artist": "Nghệ sĩ",
       "studio": "Studio"
     },
     "short": {
       "practiceRoom": "Phòng tập",
-      "pricing": "Giá",
-      "artists": "Support Artists"
+      "pricing": "Giá"
     },
     "weddingSong": "Thu Âm Bài Chúc",
     "voiceActing": "Lồng Tiếng",
     "coverVideo": "Quay Video Cover",
     "musicPromotion": "Quảng bá phát hành",
-    "releaseProject": "Tổng quan",
+    "releaseProject": "Dự án phát hành",
     "releaseSingle": "Single",
     "releaseEp": "EP",
     "releaseAlbum": "Album đầy đủ",
@@ -47,6 +46,7 @@
     "sections": {
       "services": "Dịch vụ",
       "release": "Phát hành nhạc",
+      "artist": "Nghệ sĩ",
       "content": "Bài viết",
       "studio": "Studio"
     }

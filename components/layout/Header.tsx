@@ -42,18 +42,24 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     return () => router.events.off('routeChangeStart', closeMenu);
   }, [router.events]);
 
-  // 메뉴 순서는 성과 데이터에 맞춘다(2026-08-24 IA 감사).
-  // 최다 유입·전환 페이지인 음악연습실(GSC 449클릭·리드 51)과 전 상품 공통인 가격은
-  // 드롭다운 밖 1탭 링크로 둔다. 나머지는 라벨과 내용이 일치하는 4개 그룹.
-  // 이전 구조의 '녹음/믹싱' 그룹에는 소개·가격·장비가 섞여 있어, 연습실 요금을 찾는
-  // 사람이 '녹음/믹싱'을 열어야 했다.
-  // 아티스트 후원은 ko 전용(결제 퍼널과 같은 정책, 스펙 §11.2) — 비-ko에선 링크를 만들지 않는다.
+  /**
+   * 메뉴는 "방문자가 무엇을 하러 왔는가"로 가른다 (2026-09-11 재정렬).
+   *
+   *   당신의 음악을 만든다  → 녹음·제작 · 음원 발매   (의뢰인)
+   *   우리 음악을 듣고 함께한다 → 아티스트            (청중·팬)
+   *   우리를 안다            → 스튜디오 · 스토리 · 가격 · 연습실
+   *
+   * 1탭 링크는 "드롭다운에 넣으면 오히려 못 찾는 것"만 둔다 — 최다 유입·전환인
+   * 음악연습실(2026-08-24 IA 감사: GSC 449클릭·리드 51), 전 상품 공통인 가격,
+   * 그리고 1,582편·11개 카테고리라 어떤 그룹에도 안 들어가는 스토리.
+   *
+   * 아티스트 그룹의 항목은 전부 ko 전용이라 그룹째 ko에서만 렌더한다 — 비-ko에서
+   * 빈 드롭다운이 열리면 안 된다.
+   */
   const directLinks = useMemo(() => [
     { id: 'practice-room', label: t('nav.short.practiceRoom'), href: `/${locale}/practice-room` },
+    { id: 'stories', label: t('nav.stories'), href: `/${locale}/stories` },
     { id: 'pricing', label: t('nav.short.pricing'), href: `/${locale}/pricing` },
-    ...(locale === 'ko'
-      ? [{ id: 'artists', label: t('nav.short.artists'), href: `/${locale}/artists` }]
-      : []),
   ], [locale, t]);
 
   const navGroups = useMemo(() => [
@@ -70,32 +76,38 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       ]
     },
     {
+      /**
+       * 티어(싱글·EP·정규)는 넣지 않는다. 개요 페이지의 티어 비교표가 그 역할이고,
+       * 메뉴에 네 개가 들어가 있으면 단독 상품인 발매 홍보가 그 뒤에 묻힌다.
+       * 티어 페이지는 개요·푸터·사이트맵에서 계속 링크된다.
+       */
       id: 'release',
       label: t('nav.groups.release'),
       items: [
         { label: t('nav.releaseProject'), href: `/${locale}/release-project` },
-        { label: t('nav.releaseSingle'), href: `/${locale}/release-project/single` },
-        { label: t('nav.releaseEp'), href: `/${locale}/release-project/ep` },
-        { label: t('nav.releaseAlbum'), href: `/${locale}/release-project/album` },
-        // 제작을 맡기지 않아도 되는 단독 상품이라 발매 그룹 끝에 둔다.
         { label: t('nav.musicPromotion'), href: `/${locale}/music-promotion` },
-        // 펀딩 퍼널은 ko 전용(스펙 §8) — 다른 로케일엔 항목 자체를 넣지 않는다.
-        ...(locale === 'ko' ? [{ label: t('nav.funding'), href: `/${locale}/funding` }] : []),
       ]
     },
-    {
-      id: 'guide',
-      label: t('nav.groups.guide'),
+    /**
+     * 후원·선구매·예매는 행위가 제각각이라 행위로는 묶이지 않는다. 묶이는 건
+     * 대상이다 — 전부 "스튜디오 놀과 함께 만든 음악의 주인공들"이 중심이다.
+     * 공연 예매가 붙으면 여기 들어간다.
+     */
+    ...(locale === 'ko' ? [{
+      id: 'artist',
+      label: t('nav.groups.artist'),
       items: [
-        { label: t('nav.stories'), href: `/${locale}/stories` },
-        { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
+        { label: t('nav.artists'), href: `/${locale}/artists` },
+        { label: t('nav.funding'), href: `/${locale}/funding` },
       ]
-    },
+    }] : []),
     {
+      // 소개(누구인가) → 포트폴리오(무엇을 했나) → 장비(무엇으로) → 문의(연락).
       id: 'studio',
       label: t('nav.groups.studio'),
       items: [
         { label: t('nav.about'), href: `/${locale}/about` },
+        { label: t('nav.portfolio'), href: `/${locale}/portfolio` },
         { label: t('nav.equipment'), href: `/${locale}/studio-info` },
         { label: t('nav.contact'), href: `/${locale}/contact` },
       ]
@@ -109,14 +121,22 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     ...directLinks.slice(1).map((link) => ({ kind: 'link' as const, ...link })),
   ], [directLinks, navGroups]);
 
-  // 모바일 메뉴 최상단 고정 노출 퀵링크. 4개 그룹 아코디언이 모두 접힌 채 시작하므로
-  // 고객 최다 의도를 그룹 밖 1탭 경로로 승격한다. 포트폴리오는 90일 검색 클릭 0·리드 0이라
-  // 이 자리에서 내리고(가이드 그룹으로 이동), 최다 유입인 음악연습실을 올렸다.
-  // 연습실·가격은 데스크톱에서도 1탭이므로 두 뷰포트의 우선순위가 일치한다.
+  /**
+   * 모바일 메뉴 최상단 고정 퀵링크. 그룹 아코디언이 모두 접힌 채 시작하므로
+   * 그룹 밖 1탭 경로를 위로 올린다.
+   *
+   * **데스크톱 1탭(directLinks)과 같은 구성이어야 한다** — 두 뷰포트의 우선순위가
+   * 갈리면 같은 사이트가 기기마다 다른 것을 중요하다고 말하는 셈이다. 실제로
+   * 아티스트 후원이 여기만 남아 있다가 아티스트 그룹과 중복된 적이 있다.
+   * 문의만 추가로 둔다 — 모바일에서는 전환 경로를 손가락 가까이 두는 편이 낫다.
+   *
+   * 라벨은 데스크톱의 nav.short.* 대신 전체 이름을 쓴다. 세로 목록이라 폭에
+   * 여유가 있고, 축약형은 가로 배치를 위한 것이다.
+   */
   const quickLinks = useMemo(() => [
     { label: t('nav.practiceRoom'), href: `/${locale}/practice-room` },
+    { label: t('nav.stories'), href: `/${locale}/stories` },
     { label: t('nav.pricing'), href: `/${locale}/pricing` },
-    ...(locale === 'ko' ? [{ label: t('nav.artists'), href: `/${locale}/artists` }] : []),
     { label: t('nav.contact'), href: `/${locale}/contact` },
   ], [locale, t]);
 

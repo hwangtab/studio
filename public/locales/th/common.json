@@ -16,19 +16,18 @@
     "groups": {
       "production": "บันทึกเสียง",
       "release": "ปล่อยเพลง",
-      "guide": "คู่มือ",
+      "artist": "ศิลปิน",
       "studio": "สตูดิโอ"
     },
     "short": {
       "practiceRoom": "ห้องซ้อม",
-      "pricing": "ราคา",
-      "artists": "Support Artists"
+      "pricing": "ราคา"
     },
     "weddingSong": "บันทึกเพลงอวยพร",
     "voiceActing": "บันทึกเสียงพากย์",
     "coverVideo": "ถ่ายวิดีโอ Cover",
     "musicPromotion": "โปรโมตการปล่อยผลงาน",
-    "releaseProject": "ภาพรวม",
+    "releaseProject": "โปรเจกต์ปล่อยเพลง",
     "releaseSingle": "ซิงเกิล",
     "releaseEp": "EP",
     "releaseAlbum": "อัลบั้มเต็ม",
@@ -47,6 +46,7 @@
     "sections": {
       "services": "บริการ",
       "release": "ปล่อยเพลง",
+      "artist": "ศิลปิน",
       "content": "บทความ",
       "studio": "สตูดิโอ"
     }
