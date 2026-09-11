@@ -35,6 +35,9 @@ import listHandler from '../../../../pages/api/admin/subscriptions/index';
 import detailHandler from '../../../../pages/api/admin/subscriptions/[id]';
 // eslint-disable-next-line import/first
 import { completeCardSetup, createSubscription } from '../../../../lib/billing/service';
+import { subscriptionAmounts } from '../../../../lib/billing/amounts';
+
+const LESSON_TOTAL = subscriptionAmounts('lesson').totalAmount;
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -131,14 +134,14 @@ describe('POST /api/admin/subscriptions/[id] (수동 결제)', () => {
     });
     chargeBillingKey.mockResolvedValueOnce({
       ok: true,
-      payment: { paymentKey: 'pay_1', orderId: 'x', status: 'DONE', totalAmount: 385000, approvedAt: now.toISOString() },
+      payment: { paymentKey: 'pay_1', orderId: 'x', status: 'DONE', totalAmount: LESSON_TOTAL, approvedAt: now.toISOString() },
     });
     await completeCardSetup({ id: created.id, token: created.setupToken, authKey: 'auth', customerKey: (await mockDb.query.subscriptions.findFirst({ where: (t, { eq }) => eq(t.id, created.id) }))!.customerKey }, now);
 
     sendEmail.mockClear();
     chargeBillingKey.mockResolvedValueOnce({
       ok: true,
-      payment: { paymentKey: 'pay_2', orderId: 'x', status: 'DONE', totalAmount: 385000, approvedAt: '2026-04-05T00:00:00.000Z' },
+      payment: { paymentKey: 'pay_2', orderId: 'x', status: 'DONE', totalAmount: LESSON_TOTAL, approvedAt: '2026-04-05T00:00:00.000Z' },
     });
 
     const { status, body } = await call(detailHandler, {

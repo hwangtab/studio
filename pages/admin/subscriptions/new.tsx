@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 import { createSubscription, copyToClipboard } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
-import { LESSON_MONTHLY_PRICE, formatPriceAmount } from '../../../data/pricing';
-import { VAT_RATE } from '../../../lib/booking/amounts';
+import { formatPriceAmount } from '../../../data/pricing';
+import { subscriptionAmounts } from '../../../lib/billing/amounts';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const auth = await authenticateAdminRequest(context);
@@ -18,7 +18,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return { props: {} };
 };
 
-const totalWithVat = Math.round(LESSON_MONTHLY_PRICE * (1 + VAT_RATE));
+// 청구액은 subscriptionAmounts 하나에서만 온다 — 레슨은 VAT 포함(35만원이 최종액),
+// 연습실은 VAT 별도라 규칙이 다르다. 여기서 다시 계산하면 둘이 어긋난다.
+const lessonAmounts = subscriptionAmounts('lesson');
 
 export default function NewLessonSubscriptionPage() {
   const router = useRouter();
@@ -118,7 +120,7 @@ export default function NewLessonSubscriptionPage() {
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-4">
               <p className="text-sm text-gray-600">
-                프로듀싱 레슨 월정액: {formatPriceAmount(totalWithVat)}원 (VAT 포함, {formatPriceAmount(LESSON_MONTHLY_PRICE)}원 + VAT)
+                프로듀싱 레슨 월정액: {formatPriceAmount(lessonAmounts.totalAmount)}원 (VAT 포함)
               </p>
 
               <div>

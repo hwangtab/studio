@@ -14,6 +14,9 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
+import { subscriptionAmounts } from './amounts';
+
+const LESSON_TOTAL = subscriptionAmounts('lesson').totalAmount;
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
@@ -146,7 +149,7 @@ describe('createSubscription', () => {
     if (!result.ok) throw new Error('unreachable');
     const sub = (await findSubscriptionById(result.id))!;
     expect(sub.status).toBe('pending_card');
-    expect(sub.totalAmount).toBe(385000);
+    expect(sub.totalAmount).toBe(LESSON_TOTAL);
     expect(sub.customerKey.startsWith('sub_')).toBe(true);
     expect(sub.setupToken).toBe(result.setupToken);
     expect(sub.manageToken).toBe(result.manageToken);
@@ -362,7 +365,7 @@ describe('chargeCycle — 이전 pending 회차 재조회 대사 (unresolved)', 
 
     fetchPaymentByOrderId.mockResolvedValue({
       ok: true,
-      payment: { paymentKey: 'pay_recovered', orderId: orderNo, status: 'DONE', totalAmount: 385000 },
+      payment: { paymentKey: 'pay_recovered', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
     });
 
     const april6 = new Date('2026-04-06T00:00:00Z');
@@ -398,7 +401,7 @@ describe('chargeCycle — 이전 pending 회차 재조회 대사 (unresolved)', 
 
     fetchPaymentByOrderId.mockResolvedValue({
       ok: true,
-      payment: { paymentKey: 'pay_never', orderId: orderNo, status: 'EXPIRED', totalAmount: 385000 },
+      payment: { paymentKey: 'pay_never', orderId: orderNo, status: 'EXPIRED', totalAmount: LESSON_TOTAL },
     });
     chargeBillingKey.mockResolvedValue(chargeOk('pay_new_attempt'));
 
@@ -543,7 +546,7 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
 
     const orderNo = await orderNoOf(created.id, '2026-04');
     await reconcileSubscriptionPaymentFromToss(
-      { paymentKey: 'pay_recovered', orderId: orderNo, status: 'DONE', totalAmount: 385000 },
+      { paymentKey: 'pay_recovered', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
       april,
     );
 
@@ -561,7 +564,7 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
     const orderNo = await orderNoOf(created.id, '2026-03');
     // activated()의 첫 결제는 이미 paid — 재도착 웹훅이 다시 와도 no-op이어야 한다.
     await reconcileSubscriptionPaymentFromToss(
-      { paymentKey: 'pay_1', orderId: orderNo, status: 'DONE', totalAmount: 385000 },
+      { paymentKey: 'pay_1', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
       NOW,
     );
     const sub = (await findSubscriptionById(created.id))!;
@@ -577,7 +580,7 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
     const orderNo = await orderNoOf(created.id, '2026-04');
 
     await reconcileSubscriptionPaymentFromToss(
-      { paymentKey: 'pay_x', orderId: orderNo, status: 'CANCELED', totalAmount: 385000 },
+      { paymentKey: 'pay_x', orderId: orderNo, status: 'CANCELED', totalAmount: LESSON_TOTAL },
       april,
     );
     const rows = await client.execute('SELECT status FROM orders ORDER BY created_at');
