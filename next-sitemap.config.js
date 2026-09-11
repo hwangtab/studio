@@ -61,7 +61,7 @@ const pageImageMap = {
   '/pricing': { url: '/images/og-hardware2.webp', title: 'Studio NOL Pricing - Transparent Recording Fees', caption: 'Studio NOL pricing: practice room ₩360K/mo, recording ₩100K/hr, wedding song ₩350K, voiceover ₩100K/hr.' },
   '/stories': { url: '/images/og-studio1.webp', title: 'Studio NOL Stories - Mixing & Recording Guides', caption: 'Production guides, engineering tutorials, and studio stories by Studio NOL.' },
   '/studio-info': { url: '/images/og-hardware1.webp', title: 'Studio NOL Equipment - Analog Gear & Neumann Mics', caption: 'Studio NOL gear list: Neumann microphones, analog outboard, pro DAW setup.' },
-  '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩150K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
+  '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩350K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
   '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩100K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
   '/cover-video': { url: '/images/og-recording1.webp', title: 'Studio NOL Cover Video Package - ₩350K', caption: 'Cover video filming + recording + mixing all-in-one at Studio NOL, Yeonsinnae.' },
   // Buyer-intent 가이드 허브 6종 — 이미지 소스는 data/buyerIntentHubs.ts hero.image와

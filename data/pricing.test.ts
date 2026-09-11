@@ -44,12 +44,32 @@ import {
 } from './pricing';
 import { generateDefaultSchema } from '../utils/schema/business';
 import { generatePracticeRoomMonthlyRentSchema } from '../utils/schema/commerce';
+import { generateReleaseProjectSchema } from '../utils/schema/releaseProject';
+import { generateCourseSchema } from '../utils/schema/basics';
 import fs from 'fs';
 import path from 'path';
 
 import koCommon from '../public/locales/ko/common.json';
 
 const LOCALES = ['ko', 'en', 'zh', 'es', 'vi', 'th', 'uz'] as const;
+
+const SITE_URL = 'https://studionol.co.kr';
+
+/**
+ * 중첩된 JSON-LD 어디에 있든 주어진 키의 숫자 값을 전부 모은다.
+ * Offer가 hasOfferCatalog·priceSpecification 등 여러 겹으로 들어가므로
+ * 경로를 특정하지 않고 값만 본다 — 스키마 구조가 바뀌어도 가드가 살아남는다.
+ */
+const collectNumbers = (node: unknown, key: string): number[] => {
+  if (Array.isArray(node)) return node.flatMap((child) => collectNumbers(child, key));
+  if (node && typeof node === 'object') {
+    return Object.entries(node as Record<string, unknown>).flatMap(([k, v]) => {
+      const here = k === key ? [Number(v)].filter((n) => Number.isFinite(n)) : [];
+      return [...here, ...collectNumbers(v, key)];
+    });
+  }
+  return [];
+};
 
 const collectOffers = (locale: (typeof LOCALES)[number]) => {
   const d = getPricingData(locale);
@@ -215,6 +235,96 @@ describe('가격 SSOT 정합', () => {
     const today = new Date().toISOString().slice(0, 10);
     expect(today <= RELEASE_PRESS_INTRO_ENDS_ON).toBe(true);
     expect(RELEASE_PRESS_INTRO_PRICE).toBeLessThan(RELEASE_PRESS_PRICE);
+  });
+
+
+  /**
+   * 발매 티어 JSON-LD가 SSOT 상수를 그대로 내보낸다.
+   *
+   * utils/schema/releaseProject.ts가 { single: 500000, ep: 1500000, album: 4000000 }을
+   * 리터럴로 들고 있다가 상수(EP 180만·정규 340만)와 어긋난 채로 배포된 적이 있다.
+   * 그동안 EP·정규 발매 페이지의 Offer.price가 실제 판매가와 다른 값을 검색엔진에
+   * 나가고 있었는데, 이 파일은 data/**의 리터럴 스캔 대상이 아니고 반환값을 보는
+   * 테스트도 없어서 CI가 잡을 방법이 없었다.
+   */
+  it('발매 티어 JSON-LD Offer 가격이 SSOT 상수와 일치한다', () => {
+    const expected: Record<'single' | 'ep' | 'album', number> = {
+      single: RELEASE_SINGLE_FROM_PRICE,
+      ep: RELEASE_EP_FROM_PRICE,
+      album: RELEASE_ALBUM_FROM_PRICE,
+    };
+    for (const tier of ['single', 'ep', 'album'] as const) {
+      const graph = generateReleaseProjectSchema(SITE_URL, 'ko', tier);
+      const prices = collectNumbers(graph, 'price');
+      expect(prices).toContain(expected[tier]);
+      // 다른 티어 가격이 섞여 나가면 안 된다 — 예전 드리프트가 정확히 그 모양이었다.
+      for (const other of ['single', 'ep', 'album'] as const) {
+        if (other === tier || expected[other] === expected[tier]) continue;
+        expect(prices).not.toContain(expected[other]);
+      }
+    }
+
+    // 티어를 지정하지 않으면 hasOfferCatalog로 셋을 모두 싣는다.
+    const hub = collectNumbers(generateReleaseProjectSchema(SITE_URL, 'ko'), 'price');
+    for (const tier of ['single', 'ep', 'album'] as const) {
+      expect(hub).toContain(expected[tier]);
+    }
+  });
+
+  /**
+   * 레슨 Course 스키마도 같은 사고 이력이 있다(basics.ts 주석 참조 — 리터럴 350000이
+   * 박혀 있었다). 고쳐졌지만 회귀를 막는 테스트가 없어서 여기에 건다.
+   */
+  it('레슨 Course JSON-LD 가격이 LESSON_MONTHLY_PRICE와 일치한다', () => {
+    const schema = generateCourseSchema(
+      '프로듀싱 레슨',
+      '미디·작곡·믹싱·마스터링',
+      SITE_URL,
+      `${SITE_URL}/images/og.webp`,
+      `${SITE_URL}/ko/lesson`,
+      'ko'
+    );
+    expect(collectNumbers(schema, 'price')).toContain(LESSON_MONTHLY_PRICE);
+  });
+
+  /**
+   * OG 이미지 메타(next-sitemap.config.js)의 금액.
+   *
+   * 구글 이미지 검색에 나가는 title·caption인데 .js 파일이라 data/** 리터럴 스캔에
+   * 안 잡히고 상수를 import하지도 않는다. 실제로 축가가 ₩150K로 굳어 있었다 —
+   * 실제 판매가는 35만원이라 검색 결과가 절반 이하 가격을 광고하던 셈이다.
+   */
+  it('OG 이미지 메타의 금액이 SSOT 상수와 일치한다 (next-sitemap.config.js)', () => {
+    const config = fs.readFileSync(path.join(__dirname, '..', 'next-sitemap.config.js'), 'utf8');
+    const toK = (won: number) => `₩${won / 1000}K`;
+    const expectations: { route: string; won: number }[] = [
+      { route: '/recording', won: VOCAL_PACKAGE_PRICE },
+      { route: '/mixing-mastering', won: MIXING_LEVEL1_PRICE },
+      { route: '/wedding-song', won: WEDDING_PACKAGE_PRICE },
+      { route: '/voice-acting', won: VOICEOVER_HOURLY_PRICE },
+      { route: '/cover-video', won: COVER_VIDEO_PACKAGE_PRICE },
+    ];
+    // 어긋난 라우트를 한 번에 모아 보여준다 — 하나씩 터지면 여러 번 돌려야 한다.
+    const offenders = expectations
+      .map(({ route, won }) => {
+        const line = config.split('\n').find((l) => l.includes(`'${route}':`) && l.includes('title:'));
+        if (!line) return `${route}: pageImageMap 항목 없음`;
+        return line.includes(toK(won)) ? null : `${route}: OG 타이틀이 ${toK(won)}를 말하지 않음`;
+      })
+      .filter((x): x is string => x !== null);
+    expect(offenders).toEqual([]);
+
+    // /pricing 캡션은 네 상품을 한 줄에 나열한다.
+    const pricingLine = config.split('\n').find((l) => l.includes("'/pricing':"));
+    expect(pricingLine).toBeDefined();
+    for (const won of [
+      PRACTICE_ROOM_MONTHLY_PRICE,
+      RECORDING_HOURLY_PRICE,
+      WEDDING_PACKAGE_PRICE,
+      VOICEOVER_HOURLY_PRICE,
+    ]) {
+      expect(pricingLine).toContain(toK(won));
+    }
   });
 
   it('data/**/*.ts의 가격 리터럴이 SSOT 상수를 벗어나지 않는다', () => {
