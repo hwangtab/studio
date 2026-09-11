@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import { CheckCircle, ArrowRight, MessageCircle } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
@@ -250,55 +251,27 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
       <Section variant="alternate" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href={`/${locale}/wedding-song`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.weddingSong')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/voice-acting`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.voiceActing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/pricing`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.pricing')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/stories`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.stories')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/studio-info`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-secondary text-secondary dark:text-secondary-light font-semibold hover:bg-secondary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.equipment')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/lesson`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-accent text-accent dark:text-accent-light font-semibold hover:bg-accent hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.lesson')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
-          <Link
-            href={`/${locale}/practice-room`}
-            prefetch={false}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 border-primary text-primary dark:text-primary-lighter font-semibold hover:bg-primary hover:text-white dark:hover:text-white transition-colors duration-200"
-          >
-            {t('nav.practiceRoom')} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <ServiceLinkPill href={`/${locale}/wedding-song`} tone="primary">
+            {t('nav.weddingSong')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/voice-acting`} tone="secondary">
+            {t('nav.voiceActing')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/pricing`} tone="accent">
+            {t('nav.pricing')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/stories`} tone="primary">
+            {t('nav.stories')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/studio-info`} tone="secondary">
+            {t('nav.equipment')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/lesson`} tone="accent">
+            {t('nav.lesson')}
+          </ServiceLinkPill>
+          <ServiceLinkPill href={`/${locale}/practice-room`} tone="primary">
+            {t('nav.practiceRoom')}
+          </ServiceLinkPill>
         </div>
       </Section>
     </>

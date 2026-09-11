@@ -1,13 +1,12 @@
 import React from 'react';
-import Link from 'next/link';
-import { ArrowRight } from '@/lib/lucide-icons';
 import type { Locale } from '../../lib/i18n';
+import ServiceLinkPill, { type ServiceLinkTone } from '../ui/ServiceLinkPill';
 import { Section } from '../ui/Section';
 
 interface ServiceLinkItem {
   href: string;
   label: string;
-  className: string;
+  tone: ServiceLinkTone;
 }
 
 interface ServiceLinksSectionProps {
@@ -22,40 +21,19 @@ interface ServiceLinksSectionProps {
 
 const ServiceLinksSection = ({ locale, labels }: ServiceLinksSectionProps) => {
   const serviceLinks: ServiceLinkItem[] = [
-    {
-      href: `/${locale}/lesson`,
-      label: labels.lesson,
-      className: 'border-primary text-primary dark:text-primary-lighter hover:bg-primary',
-    },
-    {
-      href: `/${locale}/pricing`,
-      label: labels.pricing,
-      className: 'border-secondary text-secondary dark:text-secondary-light hover:bg-secondary',
-    },
-    {
-      href: `/${locale}/stories`,
-      label: labels.stories,
-      className: 'border-accent text-accent dark:text-accent-light hover:bg-accent',
-    },
-    {
-      href: `/${locale}/contact`,
-      label: labels.contact,
-      className: 'border-primary text-primary dark:text-primary-lighter hover:bg-primary',
-    },
+    { href: `/${locale}/lesson`, label: labels.lesson, tone: 'primary' },
+    { href: `/${locale}/pricing`, label: labels.pricing, tone: 'secondary' },
+    { href: `/${locale}/stories`, label: labels.stories, tone: 'accent' },
+    { href: `/${locale}/contact`, label: labels.contact, tone: 'primary' },
   ];
 
   return (
     <Section variant="alternate" spacing="tight" defer>
       <div className="flex flex-wrap justify-center gap-4">
         {serviceLinks.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            prefetch={false}
-            className={`inline-flex items-center gap-2 px-6 py-3 rounded-full border-2 font-semibold hover:text-white dark:hover:text-white transition-colors duration-200 ${link.className}`}
-          >
-            {link.label} <ArrowRight size={16} aria-hidden="true" />
-          </Link>
+          <ServiceLinkPill key={link.href} href={link.href} tone={link.tone}>
+            {link.label}
+          </ServiceLinkPill>
         ))}
       </div>
     </Section>

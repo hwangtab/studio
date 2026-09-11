@@ -2,6 +2,7 @@ import React from 'react';
 import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
+import ServiceLinkPill from '../../../components/ui/ServiceLinkPill';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
 import { ArrowLeft, Share2 } from '@/lib/lucide-icons';
@@ -218,9 +219,16 @@ const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item,
             <Link href={getLink('/pricing')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] bg-primary hover:bg-primary-dark text-white rounded-lg font-medium transition-colors">
               {t('nav.pricing')}
             </Link>
-            <Link href={getLink('/contact')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border-2 border-primary text-primary dark:text-primary-lighter hover:bg-primary hover:text-white dark:hover:text-white rounded-lg font-medium transition-colors">
+            {/* 같은 줄의 형제 둘이 rounded-lg 카드형 버튼이라 반경·굵기만 넘겨 맞춘다.
+                화살표는 형제와 어긋나므로 끈다. 색 3규칙과 포커스 링은 pill에서 온다. */}
+            <ServiceLinkPill
+              href={getLink('/contact')}
+              tone="primary"
+              showArrow={false}
+              className="gap-0 rounded-lg font-medium"
+            >
               {t('nav.contact')}
-            </Link>
+            </ServiceLinkPill>
             <Link href={getLink('/studio-info')} prefetch={false} className="inline-flex items-center px-6 py-3 min-h-[44px] border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:border-primary hover:text-primary dark:hover:text-primary-lighter rounded-lg font-medium transition-colors">
               {t('nav.equipment')}
             </Link>
