@@ -34,7 +34,7 @@ const ITEM: AdminPledgeItem = {
   rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
   trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null,
   refundRequestedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
-  adminMemo: null, notificationError: null, hasPayment: true, mismatch: false,
+  adminMemo: null, notificationError: null, hasPayment: true, mismatch: false, virtualAccountPayment: false,
   refundRequested: false, needsReview: false,
 };
 

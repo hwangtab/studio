@@ -287,6 +287,18 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
             <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
           )}
 
+          {booking.virtualAccountPayment && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+              <strong className="block mb-1">가상계좌 결제 — 화면에서 환불할 수 없습니다</strong>
+              토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
+              받는 화면이 없습니다. 아래 환불 폼을 써도 실패합니다.
+              <span className="block mt-2">
+                고객에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 취소하면 웹훅 대사가
+                이 화면의 상태를 맞춥니다.
+              </span>
+            </div>
+          )}
+
           {/* 결제 기록과 주문 상태의 불일치는 돈이 걸린 문제라 맨 위에 둔다(스펙 §10). */}
           {booking.mismatch && (
             <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">

@@ -1,3 +1,4 @@
+import { isVirtualAccountMethod } from '../booking/toss';
 import { isRefundPendingStatus } from './policy';
 import type { FundingOrder } from './service';
 
@@ -28,6 +29,13 @@ export interface AdminPledgeItem {
   notificationError: string | null;
   hasPayment: boolean;
   mismatch: boolean;
+  /**
+   * 결제수단이 **가상계좌**다 — 우리가 쓸 수 없는 수단이다(2026-09-11 확인). 환불에
+   * refundReceiveAccount가 필수인데 그 값을 받는 화면이 없어 제품 안에서 환불할 수 없다.
+   * 승인 단계에서 막지만(lib/booking/toss.ts) 이미 입금돼 기록된 건은 운영자가 **보고**
+   * 토스 콘솔에서 손으로 처리해야 한다 — 조용히 두면 환불 버튼을 눌러 502를 본 뒤에야 안다.
+   */
+  virtualAccountPayment: boolean;
   /**
    * 후원자가 셀프 취소를 요청했는데 **아직 돈이 안 나간** 상태. 무통장은 자동 환불이
    * 불가능해 orders.status가 paid로 남으므로, 목록 상태 칸만 보면 정상 확정 건과
@@ -146,6 +154,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     // 결제 기록이 있는데 상태가 "돈을 받은 상태"가 아니면 전부 미정합이다 — pending만 보면
     // expired·failed·refunded로 잘못 전이된 건(승인 경합 사고의 실제 흔적)이 안 잡힌다.
     mismatch: o.payments.length > 0 && !['paid', 'partially_refunded', 'refunded'].includes(o.status),
+    virtualAccountPayment: o.payments.some((p) => isVirtualAccountMethod(p.method)),
     refundRequested: Boolean(p.refundRequestedAt) && isRefundPendingStatus(o.status),
     needsReview: hasReviewMarker(p.adminMemo),
   };

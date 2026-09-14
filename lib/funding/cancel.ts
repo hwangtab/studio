@@ -136,6 +136,9 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const toss = await cancelPayment({
     paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: refundAmount,
     idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
+    // 가상계좌면 토스를 부르지 않고 운영자가 알아볼 수 있는 문구로 끝낸다 — 부르면 토스가
+    // refundReceiveAccount 누락으로 거절하고 그 원문이 고객 화면에 그대로 나간다.
+    paymentMethod: payment!.method,
   });
   if (!toss.ok) {
     try {

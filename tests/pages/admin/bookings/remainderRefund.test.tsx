@@ -22,7 +22,7 @@ const SESSION: AdminBookingDetail = {
   bookingId: 'b1', bookingStatus: 'confirmed', workOrder: null,
   notificationError: null, gcalError: null, gcalMissing: false,
   paymentCount: 1, latestPaymentKeyPrefix: 'pk123456', mismatch: false,
-  createdAt: '2026-09-01T00:00:00.000Z',
+  createdAt: '2026-09-01T00:00:00.000Z', virtualAccountPayment: false,
   customerNote: null, cancelledAt: null, payment: null, refunds: [], refundableAmount: 275000,
 };
 

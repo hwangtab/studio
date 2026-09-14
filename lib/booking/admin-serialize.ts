@@ -1,4 +1,5 @@
 import type { AvailabilityBlock, Booking, Order, Payment, Refund, WorkOrder } from '../../db/schema';
+import { isVirtualAccountMethod } from './toss';
 import { getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
 
@@ -84,6 +85,16 @@ export interface AdminBookingListItem {
    * 어느 쪽이든 관리자가 토스 콘솔과 대조해야 한다.
    */
   mismatch: boolean;
+  /**
+   * 결제수단이 **가상계좌**다 — 우리가 쓸 수 없는 수단이다(2026-09-11 확인).
+   *
+   * 환불에 refundReceiveAccount(은행·계좌번호·예금주)가 필수인데 그 값을 받는 화면이 없어서,
+   * 이 주문은 제품 안에서 환불할 수 없다(약관 제10조의 3영업일 환불을 지킬 수단이 없다).
+   * 승인 단계에서 막지만(toss.ts) 이미 입금돼 들어온 건은 기록하는 쪽이 맞으므로, 그런 건이
+   * 생기면 운영자가 **보고** 토스 콘솔에서 손으로 처리해야 한다. 조용히 두면 환불 버튼을
+   * 눌러 502를 보고 나서야 알게 된다.
+   */
+  virtualAccountPayment: boolean;
   createdAt: string;
 }
 
@@ -149,6 +160,7 @@ export const serializeBookingForAdmin = (
       (UNPAID_ORDER_STATUSES.has(order.status) && order.payments.length > 0) ||
       (booking?.status === 'confirmed' && order.status === 'failed') ||
       (workOrder !== undefined && WORK_ORDER_RECEIVED_OR_LATER.has(workOrder.status) && order.status === 'failed'),
+    virtualAccountPayment: order.payments.some((p) => isVirtualAccountMethod(p.method)),
     createdAt: order.createdAt.toISOString(),
   };
 };

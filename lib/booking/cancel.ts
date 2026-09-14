@@ -157,6 +157,8 @@ const settleRefund = async (args: {
       // 승인한다(50% 티어 275,000원 건에서 137,500원 초과 지급). 키가 (주문번호, 환불액)로
       // 결정적이라 그 재시도가 최초 취소의 응답을 그대로 재사용해 실제 취소는 한 번만 일어난다.
       idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
+      // 가상계좌는 refundReceiveAccount 없이 취소할 수 없다 — 부르지 않고 끝낸다(toss.ts).
+      paymentMethod: payment.method,
     });
     if (!toss.ok) {
       // 토스가 거절했으니 선점을 되돌린다 — 안 그러면 환불 한 푼 없이 예약만 취소된 채 남는다.

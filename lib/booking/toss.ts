@@ -60,8 +60,51 @@ const request = async (
   }
 };
 
-export const confirmPayment = (input: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult> =>
-  request('/payments/confirm', { method: 'POST', body: input });
+/**
+ * 가상계좌 결제인가 — `method`(한글 '가상계좌')와 미입금 상태(WAITING_FOR_DEPOSIT)를 함께 본다.
+ *
+ * **우리는 가상계좌를 쓸 수 없다(2026-09-11 확인).** 환불이 불가능하기 때문이다: 토스는
+ * 가상계좌 취소에 refundReceiveAccount(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는
+ * 그 값을 받는 화면도 저장하는 자리도 없다. 그런데 코드에는 결제수단 제한이 없어
+ * (위젯은 콘솔에서 개통된 수단을 그대로 보여준다) 가상계좌가 열리는 순간 조용히 흘러들었다:
+ * 승인 응답이 WAITING_FOR_DEPOSIT이라 confirm은 pending으로 두고, 입금 뒤 DONE 웹훅이
+ * 확정하며, 그 후원의 취소·환불은 전부 502로 끝난다(약관 제10조의 3영업일 환불을 제품
+ * 안에서 이행할 수단이 없다).
+ *
+ * 그래서 **쓸 수 없는 수단을 조용히 받아들이지 않는다** — 승인 단계에서 명시적으로 거절하고,
+ * 이미 들어온 건은 관리자 화면이 드러낸다(admin-serialize의 virtualAccountPayment).
+ */
+const VIRTUAL_ACCOUNT_METHODS = ['가상계좌', 'VIRTUAL_ACCOUNT', 'VIRTUAL ACCOUNT', 'virtualAccount'];
+export const VIRTUAL_ACCOUNT_ERROR_CODE = 'VIRTUAL_ACCOUNT_UNSUPPORTED';
+export const VIRTUAL_ACCOUNT_MESSAGE =
+  '가상계좌는 사용할 수 없는 결제수단입니다. 카드·간편결제로 다시 시도해 주세요. 문의: 010-4255-7893';
+
+export const isVirtualAccountMethod = (method: string | null | undefined): boolean =>
+  typeof method === 'string' && VIRTUAL_ACCOUNT_METHODS.some((m) => m.toLowerCase() === method.trim().toLowerCase());
+
+/** 승인 응답이 가상계좌인가 — method가 비어 오는 경우를 대비해 미입금 상태도 함께 본다. */
+export const isVirtualAccountPayment = (payment: Pick<TossPayment, 'method' | 'status'>): boolean =>
+  isVirtualAccountMethod(payment.method) || payment.status === 'WAITING_FOR_DEPOSIT';
+
+export const confirmPayment = async (input: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult> => {
+  const result = await request('/payments/confirm', { method: 'POST', body: input });
+  /**
+   * 아직 돈이 움직이지 않은 가상계좌 승인(WAITING_FOR_DEPOSIT)은 여기서 끊는다 — 주문은
+   * pending으로 남고 홀드 만료로 정리된다. 호출자(confirm.ts)가 이미 `status !== 'DONE'`을
+   * 거절하지만, 그 판정은 "왜 거절했는지"를 남기지 않아 운영자가 원인을 알 수 없었다.
+   *
+   * **이미 입금된(DONE) 가상계좌는 통과시킨다.** 받은 돈을 미기록으로 남기는 쪽이 훨씬 나쁘다 —
+   * 그 건은 기록한 뒤 관리자 화면의 경고로 드러내고 토스 콘솔에서 손으로 환불한다.
+   */
+  if (result.ok && result.payment.status !== 'DONE' && isVirtualAccountPayment(result.payment)) {
+    console.error('[toss] 지원하지 않는 결제수단(가상계좌) 승인 시도 — 확정하지 않는다', {
+      paymentKey: input.paymentKey, orderId: input.orderId,
+      method: result.payment.method, status: result.payment.status,
+    });
+    return { ok: false, code: VIRTUAL_ACCOUNT_ERROR_CODE, message: VIRTUAL_ACCOUNT_MESSAGE };
+  }
+  return result;
+};
 
 /**
  * 결제를 취소(환불)한다.
@@ -75,12 +118,32 @@ export const cancelPayment = (input: {
   cancelReason: string;
   cancelAmount: number;
   idempotencyKey?: string;
-}): Promise<TossResult> =>
-  request(`/payments/${encodeURIComponent(input.paymentKey)}/cancel`, {
+  /**
+   * 이 결제의 payments.method. 가상계좌면 토스가 refundReceiveAccount를 필수로 요구하는데
+   * 우리는 그 값을 받는 화면도 저장하는 자리도 없다 — 요청을 보내 봐야 거절되고, 그 원문이
+   * 고객 화면에 그대로 노출된다. 아예 부르지 않고 운영자가 알아볼 수 있는 문구로 끝낸다.
+   *
+   * 선택 인자로 둔다: 모르는 호출자(booking/confirm.ts의 지연 승인 자동 취소)는 종전대로
+   * 요청을 보내고 토스의 판단을 따른다. 값을 넘길 수 있는 자리(cancel.ts 두 곳)에서는 넘긴다.
+   */
+  paymentMethod?: string | null;
+}): Promise<TossResult> => {
+  if (isVirtualAccountMethod(input.paymentMethod)) {
+    console.error('[toss] 가상계좌 결제의 취소 요청 — 환불계좌를 받을 수 없어 부르지 않는다', {
+      paymentKey: input.paymentKey, cancelAmount: input.cancelAmount,
+    });
+    return Promise.resolve({
+      ok: false,
+      code: VIRTUAL_ACCOUNT_ERROR_CODE,
+      message: '가상계좌 결제는 화면에서 환불할 수 없습니다. 토스 콘솔에서 환불계좌를 받아 처리해 주세요. 문의: 010-4255-7893',
+    });
+  }
+  return request(`/payments/${encodeURIComponent(input.paymentKey)}/cancel`, {
     method: 'POST',
     body: { cancelReason: input.cancelReason, cancelAmount: input.cancelAmount },
     idempotencyKey: input.idempotencyKey,
   });
+};
 
 export const fetchPayment = (paymentKey: string): Promise<TossResult> =>
   request(`/payments/${encodeURIComponent(paymentKey)}`);

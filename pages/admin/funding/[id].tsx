@@ -175,6 +175,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             </div>
           )}
 
+          {pledge.virtualAccountPayment && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+              <strong className="block mb-1">가상계좌 결제 — 화면에서 환불할 수 없습니다</strong>
+              토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
+              받는 화면이 없습니다. 아래 “환불”을 눌러도 실패합니다.
+              <span className="block mt-2">
+                후원자에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 약관 제10조에 따라
+                접수일부터 3영업일 이내입니다. 취소하면 웹훅 대사가 이 화면의 상태를 맞춥니다.
+              </span>
+            </div>
+          )}
+
           {pledge.refundRequested && (
             <div className="mb-4 p-4 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
               <strong className="block mb-1">후원자가 취소를 요청했습니다 — 계좌 환불 대기</strong>

@@ -109,3 +109,66 @@ describe('CONFIG_ERROR', () => {
     expect(mock).not.toHaveBeenCalled();
   });
 });
+
+/**
+ * 가상계좌는 우리가 쓸 수 없는 결제수단이다(2026-09-11 확인) — 환불에
+ * refundReceiveAccount(은행·계좌번호·예금주)가 필수인데 그 값을 받는 화면도 저장하는 자리도 없다.
+ * 코드에 결제수단 제한이 없어(위젯은 콘솔에서 개통된 수단을 그대로 보여준다) 조용히 흘러들면
+ * 그 주문의 취소·환불이 전부 502로 끝나고, 약관 제10조의 3영업일 환불을 이행할 수단이 사라진다.
+ */
+describe('가상계좌 차단', () => {
+  const realFetch = global.fetch;
+  beforeEach(() => { process.env.TOSS_SECRET_KEY = 'test_sk_abc'; });
+  afterEach(() => { global.fetch = realFetch; });
+
+  const respond = (payment: Record<string, unknown>) => {
+    global.fetch = jest.fn().mockResolvedValue({ ok: true, json: async () => payment }) as unknown as typeof fetch;
+  };
+
+  it('미입금 가상계좌 승인은 거절한다 — 주문이 확정되지 않는다', async () => {
+    respond({ paymentKey: 'pk', orderId: 'FND-1', status: 'WAITING_FOR_DEPOSIT', totalAmount: 30000, method: '가상계좌' });
+    const r = await confirmPayment({ paymentKey: 'pk', orderId: 'FND-1', amount: 30000 });
+    expect(r).toMatchObject({ ok: false, code: 'VIRTUAL_ACCOUNT_UNSUPPORTED' });
+  });
+
+  it('method가 비어 와도 WAITING_FOR_DEPOSIT이면 거절한다', async () => {
+    respond({ paymentKey: 'pk', orderId: 'FND-1', status: 'WAITING_FOR_DEPOSIT', totalAmount: 30000 });
+    expect(await confirmPayment({ paymentKey: 'pk', orderId: 'FND-1', amount: 30000 }))
+      .toMatchObject({ ok: false, code: 'VIRTUAL_ACCOUNT_UNSUPPORTED' });
+  });
+
+  /**
+   * 이미 입금된(DONE) 건은 통과시킨다 — 받은 돈을 미기록으로 남기는 쪽이 훨씬 나쁘다.
+   * 그 건은 기록한 뒤 관리자 화면의 경고(virtualAccountPayment)로 드러낸다.
+   */
+  it('입금이 끝난 DONE 건은 통과시킨다', async () => {
+    respond({ paymentKey: 'pk', orderId: 'FND-1', status: 'DONE', totalAmount: 30000, method: '가상계좌' });
+    expect(await confirmPayment({ paymentKey: 'pk', orderId: 'FND-1', amount: 30000 })).toMatchObject({ ok: true });
+  });
+
+  it('카드 결제는 영향을 받지 않는다', async () => {
+    respond({ paymentKey: 'pk', orderId: 'FND-1', status: 'DONE', totalAmount: 30000, method: '카드' });
+    expect(await confirmPayment({ paymentKey: 'pk', orderId: 'FND-1', amount: 30000 })).toMatchObject({ ok: true });
+  });
+
+  // 토스를 부르면 refundReceiveAccount 누락으로 거절되고 그 원문이 고객 화면에 그대로 노출된다.
+  it('가상계좌 취소는 토스를 부르지 않고 운영자용 문구로 끝낸다', async () => {
+    const mock = jest.fn();
+    global.fetch = mock as unknown as typeof fetch;
+    const r = await cancelPayment({ paymentKey: 'pk', cancelReason: 'x', cancelAmount: 1000, paymentMethod: '가상계좌' });
+    expect(r).toMatchObject({ ok: false, code: 'VIRTUAL_ACCOUNT_UNSUPPORTED' });
+    expect(r.ok === false && r.message).toContain('토스 콘솔');
+    expect(mock).not.toHaveBeenCalled();
+  });
+
+  it('카드 취소는 종전대로 토스를 부른다', async () => {
+    respond({ paymentKey: 'pk', orderId: 'SNB-1', status: 'CANCELED', totalAmount: 1000 });
+    const r = await cancelPayment({ paymentKey: 'pk', cancelReason: 'x', cancelAmount: 1000, paymentMethod: '카드' });
+    expect(r.ok).toBe(true);
+  });
+
+  it('결제수단을 모르면 종전대로 토스를 부른다(지연 승인 자동 취소 경로)', async () => {
+    respond({ paymentKey: 'pk', orderId: 'SNB-1', status: 'CANCELED', totalAmount: 1000 });
+    expect((await cancelPayment({ paymentKey: 'pk', cancelReason: 'x', cancelAmount: 1000 })).ok).toBe(true);
+  });
+});
