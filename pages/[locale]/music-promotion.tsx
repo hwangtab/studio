@@ -215,7 +215,18 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       <ImageHero
         locale={locale}
         priority
-        backgroundImage="/images/console.webp"
+        /**
+         * 밤의 서울 전경.
+         *
+         * 전에는 console.webp였는데 두 가지가 틀렸다. 960×1280 **세로** 사진을 가로
+         * 히어로에 늘려 쓰고 있었고, 무엇보다 믹싱 콘솔은 "녹음 스튜디오"를 말하지
+         * 이 페이지가 파는 "발매를 알리는 일"을 말하지 않는다.
+         *
+         * 이 사진은 1280×720이고 위쪽 절반이 거의 검은 하늘이라 흰 제목이 가장 잘
+         * 산다 — 히어로 텍스트 대비를 실측해서 고른 자리다. 얼굴이 없어 초상 사용
+         * 문제도 없다.
+         */
+        backgroundImage="/images/seoul-night-skyline.webp"
         imageAlt={t('musicPromotion.hero.alt')}
         title={t('musicPromotion.hero.title')}
         subtitle={
@@ -254,42 +265,104 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           title={t('musicPromotion.comparison.title')}
           subtitle={t('musicPromotion.comparison.subtitle')}
         />
-        <div className="mt-8 overflow-x-auto">
-          <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+        {/*
+          모바일은 표가 아니라 카드다.
+
+          전에는 min-w-[640px] 표를 가로 스크롤로 뒀는데, 390px 화면에서는 경쟁사
+          두 열만 보이고 **우리 열이 잘려 나갔다**. 우리를 돋보이게 하려는 표가
+          정확히 우리만 숨기고 있었다. 항목마다 세 답을 세로로 쌓으면 잘릴 것이 없다.
+        */}
+        <div className="mt-8 space-y-4 md:hidden">
+          {comparisonRows.map((row) => (
+            <div
+              key={`card-${row[0]}`}
+              className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700"
+            >
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                {row[0]}
+              </p>
+              <dl className="mt-3 space-y-2">
+                {row.slice(1).map((cell, i) => {
+                  const isUs = i === row.length - 2;
+                  return (
+                    <div
+                      key={`card-${row[0]}-${i}`}
+                      className={`flex flex-col gap-0.5 rounded-lg px-3 py-2 ${
+                        isUs ? 'bg-primary/10 dark:bg-primary/20' : ''
+                      }`}
+                    >
+                      <dt
+                        className={`text-xs ${
+                          isUs
+                            ? 'font-semibold text-primary dark:text-primary-lighter'
+                            : 'text-gray-500 dark:text-gray-400'
+                        }`}
+                      >
+                        {comparisonColumns[i + 1]}
+                      </dt>
+                      <dd
+                        className={`text-sm ${
+                          isUs
+                            ? 'font-semibold text-gray-900 dark:text-white'
+                            : 'text-gray-600 dark:text-gray-400'
+                        }`}
+                      >
+                        {cell}
+                      </dd>
+                    </div>
+                  );
+                })}
+              </dl>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-8 hidden overflow-x-auto md:block">
+          <table className="w-full border-collapse text-left text-sm">
             <thead>
               <tr className="border-b border-gray-200 dark:border-gray-700">
-                {comparisonColumns.map((col, i) => (
-                  <th
-                    key={col || `col-${i}`}
-                    scope="col"
-                    className={`px-4 py-3 font-semibold ${
-                      i === comparisonColumns.length - 1
-                        ? 'text-primary dark:text-primary-lighter'
-                        : 'text-gray-500 dark:text-gray-400'
-                    }`}
-                  >
-                    {col}
-                  </th>
-                ))}
+                {comparisonColumns.map((col, i) => {
+                  const isUs = i === comparisonColumns.length - 1;
+                  return (
+                    <th
+                      key={col || `col-${i}`}
+                      scope="col"
+                      className={`px-4 py-3 font-semibold ${
+                        isUs
+                          ? 'rounded-t-xl bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary-lighter'
+                          : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                    >
+                      {/* 첫 칸은 행 이름이라 제목이 없다. 비어 보이지 않게 스크린리더용으로만 둔다. */}
+                      {i === 0 ? <span className="sr-only">{t('musicPromotion.comparison.rowHeader')}</span> : col}
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
             <tbody>
               {comparisonRows.map((row) => (
                 <tr key={row[0]} className="border-b border-gray-100 dark:border-gray-800">
-                  {row.map((cell, i) => (
-                    <td
-                      key={`${row[0]}-${i}`}
-                      className={`px-4 py-3 ${
-                        i === 0
-                          ? 'font-medium text-gray-700 dark:text-gray-300'
-                          : i === row.length - 1
-                            ? 'font-semibold text-gray-900 dark:text-white'
-                            : 'text-gray-600 dark:text-gray-400'
-                      }`}
-                    >
-                      {cell}
-                    </td>
-                  ))}
+                  {row.map((cell, i) => {
+                    const isUs = i === row.length - 1;
+                    return (
+                      <th
+                        key={`${row[0]}-${i}`}
+                        scope={i === 0 ? 'row' : undefined}
+                        // 첫 칸만 행 제목(th), 나머지는 데이터 칸이다.
+                        {...(i === 0 ? {} : { role: 'cell' })}
+                        className={`px-4 py-3 text-left ${
+                          i === 0
+                            ? 'font-medium text-gray-700 dark:text-gray-300'
+                            : isUs
+                              ? 'bg-primary/10 font-semibold text-gray-900 dark:bg-primary/20 dark:text-white'
+                              : 'font-normal text-gray-600 dark:text-gray-400'
+                        }`}
+                      >
+                        {cell}
+                      </th>
+                    );
+                  })}
                 </tr>
               ))}
             </tbody>

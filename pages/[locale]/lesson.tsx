@@ -6,7 +6,7 @@ import { Mic2, Music, Sliders, Disc, CheckCircle, GraduationCap, BookOpen, Calen
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -130,7 +130,7 @@ const Lesson: NextPageWithLayout<LessonProps> = ({ locale, hubLocaleContent, rel
                 backgroundImage="/images/lesson1.webp"
                 imageAlt={t('lesson.hero.alt')}
                 minHeight="min-h-[60vh]"
-                overlayGradient="from-black/40 via-transparent to-black/20"
+                overlayGradient={HERO_SCRIM}
                 breadcrumbItems={[
                     { name: t('nav.home'), path: `/${locale}` },
                     { name: t('nav.lesson'), path: `/${locale}/lesson` },

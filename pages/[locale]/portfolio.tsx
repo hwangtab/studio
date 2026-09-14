@@ -12,7 +12,7 @@ import CategoryFilter from '../../components/CategoryFilter';
 import SEO from '../../components/SEO';
 import { generateItemListSchema, generateAudioObjectSchema } from '../../utils/schema';
 import { getSiteConfig } from '../../data/siteConfig';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 import { getPortfolioItems, getAudioTracks, getCategories } from '../../data/portfolio';
 const PortfolioDetailModal = dynamic(() => import('../../components/PortfolioDetailModal'), { ssr: false });
@@ -160,7 +160,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
           backgroundImage: "/images/recording1.webp",
           imageAlt: t('portfolio.heroAlt'),
           minHeight: "min-h-[60vh]",
-          overlayGradient: "from-black/40 via-transparent to-black/20",
+          overlayGradient: HERO_SCRIM,
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.portfolio'), path: `/${locale}/portfolio` },

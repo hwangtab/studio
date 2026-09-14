@@ -1546,16 +1546,16 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Music Release PR — Sent Straight to Music Journalists and Critics | Studio NOL",
-      "description": "Not a service that blasts your press release to 908 outlets at once. We write to Korean music journalists and critics, and to media, radio and record shops across 60 countries, in the language each of them reads. Press release in 5 languages, press kit page, full-album video and a send-out report are all included. We only take music that passes our review.",
+      "title": "Music Release PR — We Pick the Outlets That Would Cover It | Studio NOL",
+      "description": "Not a service that blasts a press release to 908 outlets. We pick the Korean music outlets and the media, radio and record shops in 60 countries that would actually cover the record, and write to each in the language it reads. 1,200,000 KRW → 300,000 KRW.",
       "keywords": "music PR, album promotion, music press release, indie music PR, music publicity, release promotion, press release writing, record promotion, music PR agency, international music PR, press kit, EPK"
     },
     "hero": {
       "title": "Music Release PR",
-      "subtitleLine1": "To Korean music journalists and critics, and to media in 60 countries — in the language each of them reads",
+      "subtitleLine1": "To the Korean music outlets and media in 60 countries that would cover it — in the language each one reads",
       "subtitleLine2": "{{intro}} · 3 acts a month · Only music that passes our review",
       "badge": "List price {{list}} → {{intro}} (early-partner price until {{until}})",
-      "alt": "Writing a release press kit at Studio NOL"
+      "alt": "Seoul at night, the city spread out under its lights"
     },
     "quickAnswers": {
       "title": "What you're probably wondering first",
@@ -1567,7 +1567,7 @@
         },
         {
           "q": "What do you actually do?",
-          "a": "We write the press release in five languages, build a press kit page, and send it to Korean music journalists and critics as well as international media, radio stations, record shops and festivals. We also produce a full-album listening video, and when it's over you get a report on what went where."
+          "a": "We write the press release in five languages, build a press-kit page, and send it to the Korean music outlets and the overseas media, radio, record shops and festivals that would cover the record. We also make a full-album listening video."
         },
         {
           "q": "How long does it take?",
@@ -1580,41 +1580,48 @@
       ]
     },
     "comparison": {
-      "title": "This is not a press release blast",
-      "subtitle": "It isn't the price that differs, it's the product. Put it next to the going rates in Korea and it's clear.",
+      "title": "Compare us with the people selling the same thing",
+      "subtitle": "Press-release blasters are cheap but their lists are not music outlets; the overseas agencies selling what we sell are an order of magnitude more.",
       "columns": [
         "",
-        "Press release distribution platforms",
-        "View-count marketing",
+        "Press-release platforms",
+        "Overseas music PR agencies",
         "Studio NOL"
       ],
       "rows": [
         [
-          "Who receives it",
+          "Who it goes to",
           "908 outlets, all at once",
-          "Ad impressions",
-          "Music journalists and critics, in person"
+          "Music outlets",
+          "Only the ones that would cover it"
         ],
         [
-          "The text",
-          "The same copy for everyone",
-          "Ad creative",
-          "Different for each outlet type and language"
+          "The copy",
+          "You write it",
+          "The agency writes it",
+          "We write it"
+        ],
+        [
+          "The body",
+          "Same text for everyone",
+          "Per outlet",
+          "Differs by outlet and language"
         ],
         [
           "Overseas",
           "None",
-          "None",
-          "Media, radio and record shops in 60 countries"
+          "Mostly English-speaking",
+          "60 countries · 8 languages"
         ],
         [
           "Price",
-          "₩77,000–₩660,000",
-          "₩150,000–₩600,000",
+          "77,000–660,000 KRW",
+          "830,000–3,490,000 KRW",
           "{{intro}}"
         ]
       ],
-      "note": "We could not find a single music-specialist PR agency in Korea that publishes its prices (surveyed September 2026). There are plenty of places that will scatter a press release, but the list they scatter it to is neither music media nor music journalists."
+      "note": "We found no Korean music-specialist PR agency publishing its prices (September 2026). Plenty of firms will blast a press release, but their lists are not music outlets — and the overseas agencies selling the same thing are an order of magnitude more.",
+      "rowHeader": "What we compare"
     },
     "evidence": {
       "title": "This is how we actually sent it",
@@ -1658,7 +1665,7 @@
         },
         {
           "title": "Send-out to outlets at home and abroad",
-          "body": "Music journalists and critics, editorial desks, radio, record shops, festivals. The text differs by the nature of the outlet — desks get copy they can run as an article, radio gets lines to read before the song."
+          "body": "Music outlets and their desks, radio, record shops, festivals. The body differs by the kind of outlet — a desk gets copy it can run, radio gets a line to read before the track."
         },
         {
           "title": "Derivative copy",
@@ -1706,7 +1713,7 @@
     },
     "review": {
       "title": "We don't take every record",
-      "lead": "We only promote music we think is good. To put it precisely — we ask whether the journalists and critics we know would listen to it all the way through.",
+      "lead": "We only promote music we think is good. To put it precisely — we ask whether the outlets we write to would listen to it all the way through.",
       "criteria": [
         {
           "title": "Is there an outlet it can reach",

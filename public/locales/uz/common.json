@@ -1518,16 +1518,16 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Chiqarish PRi — press-relizni musiqa jurnalistlari va tanqidchilariga to'g'ridan-to'g'ri yuboramiz | Studio NOL",
-      "description": "Bu press-relizni bir yo'la 908 ta manzilga sochadigan xizmat emas. Biz uni Koreya musiqa jurnalistlari va tanqidchilariga hamda 60 ta mamlakatdagi nashrlar, radiolar va plastinka do'konlariga, har biri o'qiydigan tilda yuboramiz. 5 tilda press-reliz, press-kit sahifasi, butun albom videosi va yuborish hisoboti kiradi. Faqat saralashdan o'tgan musiqani olamiz.",
+      "title": "Chiqarish PRi — faqat shu musiqani yoritadigan nashrlarni tanlaymiz | Studio NOL",
+      "description": "Press-relizni 908 ta manzilga ommaviy tarqatadigan xizmat emas. Shu albomni haqiqatan yoritadigan Koreya musiqa nashrlarini hamda 60 ta mamlakatdagi nashr, radio va plastinka do'konlarini tanlab, har biriga o'zi o'qiydigan tilda yozamiz. 1 200 000 → 300 000 KRW.",
       "keywords": "musiqa PRi, albom reklamasi, musiqa press-relizi, indi musiqa PRi, musiqiy PR, chiqarish PRi, press-reliz yozish, plastinka reklamasi, musiqa PR agentligi, xalqaro musiqa PRi, press-kit, EPK tayyorlash"
     },
     "hero": {
       "title": "Chiqarish PRi",
-      "subtitleLine1": "Koreya musiqa jurnalistlari va tanqidchilariga hamda 60 ta mamlakat nashrlariga — har biri o'qiydigan tilda",
+      "subtitleLine1": "Shu albomni yoritadigan Koreya musiqa nashrlariga va 60 ta mamlakat nashrlariga — har biri o'qiydigan tilda",
       "subtitleLine2": "{{intro}} · oyiga 3 ta ijodkor · faqat saralashdan o'tgan musiqa",
       "badge": "To'liq narx {{list}} → {{intro}} ({{until}} gacha dastlabki hamkor narxi)",
-      "alt": "Studio NOLda chiqarish press-relizi yozilayotgan ish ekrani"
+      "alt": "Tungi Seul markazi manzarasi — chiroqlar ostida yoyilgan shahar"
     },
     "quickAnswers": {
       "title": "Avval qiziqadigan narsalaringiz",
@@ -1539,7 +1539,7 @@
         },
         {
           "q": "Nima qilib berasiz?",
-          "a": "Press-relizni 5 tilda yozamiz, press-kit sahifasini tayyorlaymiz va uni Koreya musiqa jurnalistlari va tanqidchilariga hamda chet eldagi nashrlar, radiolar, plastinka do'konlari va festivallarga yuboramiz. Butun albomni ketma-ket eshitiladigan video ham tayyorlaymiz, ish tugagach esa nimani qayerga yuborganimiz haqida hisobot beramiz."
+          "a": "Press-relizni besh tilda yozamiz, press-kit sahifasini tayyorlaymiz va faqat shu albomni yoritadigan Koreya musiqa nashrlari hamda chet eldagi nashr, radio, plastinka do'koni va festivallarga yuboramiz. Butun albomni tinglash videosini ham tayyorlaymiz."
         },
         {
           "q": "Qancha vaqt oladi?",
@@ -1552,41 +1552,48 @@
       ]
     },
     "comparison": {
-      "title": "Bu press-reliz tarqatish xizmati emas",
-      "subtitle": "Farq narxda emas, mahsulotning o'zida. Koreyadagi bozor narxlari yoniga qo'yib ko'rsangiz, yaqqol ko'rinadi.",
+      "title": "Xuddi shu xizmatni sotadiganlar bilan solishtiring",
+      "subtitle": "Press-reliz tarqatish arzon, ammo u ro'yxatlar musiqa nashrlari emas; xuddi shu xizmatni sotadigan chet el agentliklari esa boshqa narx darajasida.",
       "columns": [
         "",
         "Press-reliz tarqatish platformalari",
-        "Ko'rishlar soni marketingi",
+        "Chet el musiqa PR agentliklari",
         "Studio NOL"
       ],
       "rows": [
         [
-          "Kim oladi",
-          "908 ta manzilga bir yo'la",
-          "Reklama ko'rsatuvlari",
-          "Musiqa jurnalistlari va tanqidchilarining o'zi"
+          "Kimga boradi",
+          "908 manzilga bir yo'la",
+          "Musiqa nashrlari",
+          "Faqat yoritadiganlarga"
         ],
         [
           "Matn",
-          "Hammaga bitta matn",
-          "Reklama materiali",
-          "Nashr turi va tiliga qarab har xil"
+          "Mijoz o'zi yozadi",
+          "Agentlik yozadi",
+          "Biz yozamiz"
+        ],
+        [
+          "Mazmun",
+          "Hammaga bir xil",
+          "Nashrga qarab",
+          "Nashr turi va tiliga qarab"
         ],
         [
           "Chet el",
           "Yo'q",
-          "Yo'q",
-          "60 ta mamlakatdagi nashrlar, radiolar, plastinka do'konlari"
+          "Asosan ingliz tilida",
+          "60 mamlakat · 8 til"
         ],
         [
           "Narx",
-          "₩77,000–₩660,000",
-          "₩150,000–₩600,000",
+          "77 000–660 000 KRW",
+          "830 000–3 490 000 KRW",
           "{{intro}}"
         ]
       ],
-      "note": "Koreyada narxini ochiq e'lon qilgan bironta ham musiqaga ixtisoslashgan PR agentligini topa olmadik (2026-yil sentyabr tadqiqoti). Press-reliz sochadigan joylar ko'p, lekin ularning ro'yxati na musiqa nashrlari, na musiqa jurnalistlaridan iborat."
+      "note": "So'rov doirasida narxini e'lon qilgan koreyalik musiqaga ixtisoslashgan PR agentligi topilmadi (2026-yil sentyabr). Press-reliz tarqatadiganlar ko'p, ammo ularning ro'yxati musiqa nashrlari emas; xuddi shu xizmatni sotadigan chet el agentliklari esa boshqa narx darajasida.",
+      "rowHeader": "Taqqoslash mezoni"
     },
     "evidence": {
       "title": "Amalda mana shunday yuborganmiz",
@@ -1630,7 +1637,7 @@
         },
         {
           "title": "Ichki va tashqi nashrlarga yuborish",
-          "body": "Musiqa jurnalistlari va tanqidchilari, tahririyatlar, radiolar, plastinka do'konlari, festivallar. Matn nashr turiga qarab farq qiladi — tahririyatga maqola qilib berish mumkin bo'lgan matn, radioga esa qo'shiq oldidan o'qiladigan jumlalar boradi."
+          "body": "Musiqa nashrlari va tahririyatlar, radio, plastinka do'konlari, festivallar. Matn nashr turiga qarab farq qiladi — tahririyatga chop etishga tayyor material, radioga qo'shiq oldidan o'qiladigan jumla ketadi."
         },
         {
           "title": "Qo'shimcha matnlar",
@@ -1678,7 +1685,7 @@
     },
     "review": {
       "title": "Har qanday musiqani olavermaymiz",
-      "lead": "Biz faqat yaxshi musiqani targ'ib qilamiz. Aniqrog'i — biz taniydigan jurnalist va tanqidchilarga yuborilganda, ular oxirigacha eshitadigan musiqami, shuni ko'ramiz.",
+      "lead": "Biz faqat yaxshi musiqani targ'ib qilamiz. Aniqrog'i — biz yozadigan nashrlar uni oxirigacha tinglaydimi, shuni ko'ramiz.",
       "criteria": [
         {
           "title": "Yetib boradigan nashr bormi",
