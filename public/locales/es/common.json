@@ -1518,13 +1518,13 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Promoción de lanzamientos — directo a periodistas y críticos musicales | Studio NOL",
-      "description": "No es una agencia que dispara tu nota de prensa a 908 medios de golpe. La enviamos a periodistas y críticos musicales coreanos, y a medios, radios y tiendas de discos de 60 países, en el idioma que cada uno lee. Incluye nota de prensa en 5 idiomas, página de press kit, vídeo con el álbum completo e informe de envío. Solo aceptamos música que pasa nuestra escucha previa.",
+      "title": "Promoción de lanzamientos — elegimos los medios que lo cubrirían | Studio NOL",
+      "description": "No es un servicio que dispara la nota de prensa a 908 medios. Elegimos los medios musicales coreanos y los medios, radios y tiendas de discos de 60 países que de verdad cubrirían el disco, y escribimos a cada uno en su idioma. 1.200.000 KRW → 300.000 KRW.",
       "keywords": "promoción musical, promoción de álbum, nota de prensa musical, promoción indie, PR musical, promoción de lanzamiento, redacción de nota de prensa, promoción de disco, agencia de PR musical, promoción internacional, press kit, EPK"
     },
     "hero": {
       "title": "Promoción de lanzamientos",
-      "subtitleLine1": "A periodistas y críticos musicales coreanos y a medios de 60 países, en el idioma que cada uno lee",
+      "subtitleLine1": "A los medios musicales coreanos y a medios de 60 países que lo cubrirían, en el idioma que cada uno lee",
       "subtitleLine2": "{{intro}} · 3 artistas al mes · Solo música que pasa nuestra escucha previa",
       "badge": "Precio de lista {{list}} → {{intro}} (precio de socio inicial hasta el {{until}})",
       "alt": "Redactando la nota de prensa de un lanzamiento en Studio NOL"
@@ -1539,7 +1539,7 @@
         },
         {
           "q": "¿Qué hacen exactamente?",
-          "a": "Escribimos la nota de prensa en cinco idiomas, montamos una página de press kit y la enviamos a periodistas y críticos musicales coreanos, y a medios, radios, tiendas de discos y festivales del extranjero. También producimos un vídeo con el álbum completo y, al terminar, te entregamos un informe de qué se envió y adónde."
+          "a": "Escribimos la nota de prensa en cinco idiomas, montamos una página de prensa y la enviamos solo a los medios musicales coreanos y a los medios, radios, tiendas de discos y festivales del extranjero que cubrirían el disco. También hacemos un vídeo con el álbum completo."
         },
         {
           "q": "¿Cuánto tarda?",
@@ -1552,41 +1552,48 @@
       ]
     },
     "comparison": {
-      "title": "Esto no es una difusión masiva de notas de prensa",
-      "subtitle": "Lo que cambia no es el precio, sino el producto. Puesto al lado de las tarifas habituales en Corea, se ve claro.",
+      "title": "Compáranos con quien vende lo mismo",
+      "subtitle": "Disparar notas de prensa es barato, pero esas listas no son medios musicales; las agencias extranjeras que venden lo que vendemos están en otro orden de magnitud.",
       "columns": [
         "",
-        "Plataformas de difusión de notas de prensa",
-        "Marketing de visualizaciones",
+        "Plataformas de notas de prensa",
+        "Agencias de PR musical del extranjero",
         "Studio NOL"
       ],
       "rows": [
         [
-          "Quién lo recibe",
-          "908 medios, todos a la vez",
-          "Impresiones publicitarias",
-          "Periodistas y críticos musicales, en persona"
+          "A quién llega",
+          "908 medios, de golpe",
+          "Medios musicales",
+          "Solo a los que lo cubrirían"
         ],
         [
           "El texto",
-          "El mismo original para todos",
-          "Material publicitario",
-          "Distinto según el tipo de medio y el idioma"
+          "Lo escribes tú",
+          "Lo escribe la agencia",
+          "Lo escribimos nosotros"
+        ],
+        [
+          "El cuerpo",
+          "El mismo para todos",
+          "Por medio",
+          "Cambia según el medio y el idioma"
         ],
         [
           "Extranjero",
-          "No hay",
-          "No hay",
-          "Medios, radios y tiendas de discos de 60 países"
+          "Ninguno",
+          "Sobre todo anglosajón",
+          "60 países · 8 idiomas"
         ],
         [
           "Precio",
-          "₩77,000–₩660,000",
-          "₩150,000–₩600,000",
+          "77.000–660.000 KRW",
+          "830.000–3.490.000 KRW",
           "{{intro}}"
         ]
       ],
-      "note": "No encontramos en Corea ni una sola agencia de PR especializada en música que publique sus precios (estudio de septiembre de 2026). Sitios que esparcen notas de prensa hay muchos, pero esa lista no son medios musicales ni periodistas musicales."
+      "note": "No encontramos ninguna agencia coreana de PR especializada en música que publique sus precios (septiembre de 2026). Hay muchas firmas que disparan notas de prensa, pero sus listas no son medios musicales; y las agencias extranjeras que venden lo mismo están en otro orden de magnitud.",
+      "rowHeader": "Aspecto comparado"
     },
     "evidence": {
       "title": "Así lo enviamos en la práctica",
@@ -1630,7 +1637,7 @@
         },
         {
           "title": "Envío a medios coreanos y extranjeros",
-          "body": "Periodistas y críticos musicales, redacciones, radios, tiendas de discos y festivales. El texto cambia según el tipo de medio: a las redacciones les llega un original publicable, y a la radio, frases para leer antes de la canción."
+          "body": "Medios musicales y sus redacciones, radio, tiendas de discos, festivales. El cuerpo cambia según el medio: a una redacción le llega texto publicable; a la radio, una frase para leer antes del tema."
         },
         {
           "title": "Textos derivados",
@@ -1678,7 +1685,7 @@
     },
     "review": {
       "title": "No aceptamos cualquier disco",
-      "lead": "Solo promocionamos buena música. Dicho con precisión: miramos si, al mandárselo a los periodistas y críticos que conocemos, es música que van a escuchar hasta el final.",
+      "lead": "Solo promocionamos buena música. Dicho con precisión: miramos si los medios a los que escribimos la escucharían hasta el final.",
       "criteria": [
         {
           "title": "¿Hay algún medio al que pueda llegar?",
