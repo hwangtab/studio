@@ -15,6 +15,8 @@
  *     (index.tsx → /ko. booking/·contracts/·portfolio/·stories/·guides/·release-project/
  *     하위의 동적 라우트는 제외 — 정적 최상위 라우트만)
  *     lib/enIndexablePaths.json에 등재된 라우트는 /en/<route>도 함께 제출
+ *     lib/sitemap/noindexStaticRoutes.json에 등재된 라우트(privacy-policy·terms)는
+ *     제출하지 않음 — 사이트맵이 같은 파일을 보고 이미 빼는 noindex 라우트다
  *   - public/locales/ko/common.json        → 매핑하지 않음(전 페이지 공유 파일이라 매핑하면
  *     전량 제출로 번진다)
  *
@@ -33,6 +35,14 @@ const enIndexablePaths = JSON.parse(
   fs.readFileSync(path.join(ROOT, 'lib/enIndexablePaths.json'), 'utf8')
 );
 const EN_INDEXABLE_PATHS = new Set(enIndexablePaths);
+
+// ko 정적 최상위 라우트 중 SEO noindex인 것들의 단일 소스(next-sitemap.config.js의
+// exclude 목록도 같은 파일에서 파생). 사이트맵에서 일부러 뺀 라우트(/ko/privacy-policy·
+// /ko/terms)를 IndexNow가 제출하면 신호가 모순된다(2026-09-14 적발).
+const noindexStaticRoutes = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'lib/sitemap/noindexStaticRoutes.json'), 'utf8')
+);
+const NOINDEX_STATIC_ROUTES = new Set(noindexStaticRoutes);
 
 const STORY_FILE_RE = /^content\/stories\/([^/]+)\.md$/;
 const STATIC_ROUTE_RE = /^pages\/\[locale\]\/([^/]+)\.tsx$/;
@@ -75,6 +85,7 @@ export const mapChangedFilesToUrls = (entries) => {
     const routeMatch = filePath.match(STATIC_ROUTE_RE);
     if (routeMatch) {
       const file = routeMatch[1];
+      if (NOINDEX_STATIC_ROUTES.has(file)) continue; // 사이트맵에서도 뺀 noindex 라우트 — 제출 안 함
       const routeSuffix = file === 'index' ? '' : `/${file}`;
       urls.add(`${SITE}/ko${routeSuffix}`);
       if (EN_INDEXABLE_PATHS.has(`/${file}`)) {
