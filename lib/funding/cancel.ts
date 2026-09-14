@@ -6,7 +6,7 @@ import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cance
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 import { computeProjectState, getFundingProject } from './projects';
-import { remainingRefundable } from './refundable';
+import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
 import { findFundingOrderByOrderNo, isManualPlaceholderRecipient, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
 
@@ -109,7 +109,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     }
     if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
     const claim = await db.run(
-      sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')`,
+      sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
     );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 후원입니다.' };
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
