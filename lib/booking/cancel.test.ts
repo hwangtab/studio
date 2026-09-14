@@ -42,6 +42,15 @@ const setCallsOf = (db: MockDb): Record<string, unknown>[] =>
     ? (db.update.mock.results[0].value.set as jest.Mock).mock.calls.map((c: unknown[]) => c[0] as Record<string, unknown>)
     : [];
 
+/**
+ * orders 상태 전이만 골라낸다.
+ *
+ * 잔액 환불 경로는 refunds 선점 행도 `.set({ status: 'done' })`으로 올리므로, 단순히
+ * "status가 있는 첫 set"을 집으면 refunds 쪽을 잡는다. orders 전이만 `updatedAt`을 함께 쓴다.
+ */
+const orderStatusSetOf = (db: MockDb): Record<string, unknown> | undefined =>
+  setCallsOf(db).find((c) => 'status' in c && 'updatedAt' in c);
+
 /** db.insert(...).values(...) 호출 인자 전체 — insert 체인도 테이블과 무관하게 같은 values mock을 공유한다. */
 const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
   db.insert.mock.results.length
@@ -136,7 +145,7 @@ describe('cancelBookingWithRefund', () => {
     });
     const db = mockDb();
     expect(db.run).toHaveBeenCalledTimes(1); // 선점 UPDATE만 — 토스 성공했으니 revert 없음
-    const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
+    const orderStatusUpdate = orderStatusSetOf(db);
     expect(orderStatusUpdate).toMatchObject({ status: 'refunded' });
     const refundInsert = insertValuesCallsOf(db).find((c) => c.status === 'done');
     expect(refundInsert).toMatchObject({ amount: 275000, status: 'done', tossTransactionKey: 'ck1' });
@@ -358,7 +367,7 @@ describe('cancelBookingWithRefund', () => {
       expect(db.run).not.toHaveBeenCalled(); // 선점 UPDATE도 revert도 없다
       expect(deleteBookingEvent).not.toHaveBeenCalled(); // 첫 취소에서 이미 지웠다
       expect(sendBookingCancelledEmails).not.toHaveBeenCalled(); // 없는 취소를 다시 알리지 않는다
-      expect(setCallsOf(db).find((c) => 'status' in c)).toMatchObject({ status: 'refunded' }); // 잔액 100,000 전액
+      expect(orderStatusSetOf(db)).toMatchObject({ status: 'refunded' }); // 잔액 100,000 전액
     });
 
     it('잔액을 넘는 추가 환불은 거부한다', async () => {
@@ -462,7 +471,7 @@ describe('cancelBookingWithRefund', () => {
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 220000 }));
       expect(sendMixingOrderCancelledEmails).toHaveBeenCalled();
       const db = mockDb();
-      const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
+      const orderStatusUpdate = orderStatusSetOf(db);
       expect(orderStatusUpdate).toMatchObject({ status: 'refunded' });
     });
 
@@ -522,7 +531,7 @@ describe('cancelBookingWithRefund', () => {
       expect(r).toEqual({ ok: true, refundAmount: 100000 });
       // 이미 cancelled라 선점 UPDATE를 다시 걸지 않는다.
       expect(db.run).not.toHaveBeenCalled();
-      expect(setCallsOf(db).find((c) => 'status' in c)).toMatchObject({ status: 'refunded' }); // 잔액 100,000을 다 환불
+      expect(orderStatusSetOf(db)).toMatchObject({ status: 'refunded' }); // 잔액 100,000을 다 환불
     });
 
     it('cancelled + partially_refunded라도 잔액을 넘는 추가 환불은 거부한다', async () => {

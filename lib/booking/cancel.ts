@@ -70,6 +70,26 @@ const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): numb
 
 const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
 
+const DUPLICATE_REMAINDER_REFUND_MESSAGE =
+  '같은 금액의 잔액 환불이 이미 처리 중이거나 처리되었습니다. 새로고침해 환불 이력을 확인한 뒤 금액을 달리해 주세요.';
+const ZERO_REMAINDER_REFUND_MESSAGE = '추가로 환불할 금액을 입력해 주세요(0원은 처리할 것이 없습니다).';
+
+/**
+ * 잔액 환불의 **선점 키** — refunds.id에 그대로 쓴다(PK라 같은 키의 두 번째 INSERT가 실패한다).
+ *
+ * 잔액 환불 경로에는 붙잡을 상태가 없다(예약·주문이 이미 cancelled라 claim UPDATE를 건너뛴다).
+ * 그래서 두 탭에서 같은 금액을 동시에 제출하면 **토스는 멱등키로 한 번만 취소하는데 우리
+ * 원장에는 done 행이 2건** 들어가고 orders.status를 두 번 쓴다. 환불액이 2배로 계상돼
+ * remainingRefundable이 0으로 눌리고, 이후의 정당한 잔액 환불이 영영 막힌다.
+ *
+ * 키의 정의역을 **멱등키와 같게**(주문번호 × 환불액) 맞춘 것이 핵심이다. 토스가 replay하는
+ * 범위와 우리 원장이 중복을 막는 범위가 같아야 둘의 판단이 갈리지 않는다. 같은 금액을 15일
+ * 안에 두 번 나눠 환불하려는 운영이 막히는 것은 멱등키가 이미 안고 있던 한계이고
+ * (refundIdempotencyKey 주석), 지금까지는 그 경우 **토스는 replay하고 우리는 done 행을 또
+ * 남겨** 원장이 조용히 어긋났다 — 막는 편이 정확하다.
+ */
+const refundClaimId = (orderNo: string, refundAmount: number): string => `remainder:${orderNo}:${refundAmount}`;
+
 
 export type CancelInput = {
   orderNo: string;
@@ -157,6 +177,28 @@ const settleRefund = async (args: {
   const db = getDb();
   let tossTransactionKey: string | null = null;
 
+  /**
+   * 잔액 환불 경로(revertClaim === null)는 붙잡을 상태가 없으므로 **refunds PK로 선점한다.**
+   * 먼저 status='failed'로 심는다 — remainingRefundable은 done 행만 세므로 잔액 계산에
+   * 영향이 없고, 토스가 거절하면 그대로 두는 것이 정확한 기록이다. 성공하면 done으로 올린다.
+   */
+  const claimId = revertClaim === null ? refundClaimId(order.orderNo, refundAmount) : null;
+  if (claimId) {
+    try {
+      await db.insert(refunds).values({
+        id: claimId, paymentId: payment.id, amount: refundAmount, reason: input.reason,
+        requestedBy: input.requestedBy, status: 'failed',
+      });
+    } catch (error) {
+      // PK 충돌이 압도적으로 흔한 경우지만, 다른 오류도 여기로 온다 — 돈을 내보내기 전이므로
+      // 어느 쪽이든 멈추는 것이 맞다. 원인은 로그로 남긴다.
+      console.error('[booking-cancel] 잔액 환불 선점 실패 — 토스를 부르지 않는다', {
+        orderNo: order.orderNo, refundAmount, error,
+      });
+      return { ok: false, code: 'invalid_state', message: DUPLICATE_REMAINDER_REFUND_MESSAGE };
+    }
+  }
+
   if (refundAmount > 0) {
     const toss = await cancelPayment({
       paymentKey: payment.paymentKey,
@@ -178,10 +220,13 @@ const settleRefund = async (args: {
       if (revertClaim) await revertClaim();
       // 실패도 이력이다 — 관리자가 재시도할 근거를 남긴다. orders 상태는 건드리지 않는다
       // (위 동시성 절: 거절된 요청이 성공한 요청의 판정을 덮어쓰면 안 된다).
-      await db.insert(refunds).values({
-        paymentId: payment.id, amount: refundAmount, reason: input.reason,
-        requestedBy: input.requestedBy, status: 'failed',
-      });
+      // 잔액 환불 경로는 위 선점에서 이미 failed 행을 심었으므로 또 넣지 않는다.
+      if (!claimId) {
+        await db.insert(refunds).values({
+          paymentId: payment.id, amount: refundAmount, reason: input.reason,
+          requestedBy: input.requestedBy, status: 'failed',
+        });
+      }
       return {
         ok: false,
         code: 'toss_failed',
@@ -199,10 +244,13 @@ const settleRefund = async (args: {
   try {
     // 예약·주문은 이미 위 선점에서 cancelled로 넘어갔다 — 여기선 refunds 기록과 orders 상태 전이만 한다.
     await db.batch([
-      db.insert(refunds).values({
-        paymentId: payment.id, amount: refundAmount, reason: input.reason,
-        requestedBy: input.requestedBy, tossTransactionKey, status: 'done',
-      }),
+      claimId
+        // 선점해 둔 행을 올린다 — 새로 넣으면 선점의 의미가 없어진다(같은 키로 두 행).
+        ? db.update(refunds).set({ tossTransactionKey, status: 'done' }).where(eq(refunds.id, claimId))
+        : db.insert(refunds).values({
+            paymentId: payment.id, amount: refundAmount, reason: input.reason,
+            requestedBy: input.requestedBy, tossTransactionKey, status: 'done',
+          }),
       db.update(orders)
         .set({ status: nextOrderStatus, updatedAt: input.now })
         .where(eq(orders.id, order.id)),
@@ -276,6 +324,16 @@ const cancelSessionBooking = async (
       : computeRefund(order.totalAmount, booking.startAt, input.now).refundAmount,
     remaining,
   );
+
+
+  /**
+   * 잔액 환불에 0원은 **아무 일도 하지 않는 성공**이다 — 토스를 부르지 않고, 예약은 이미
+   * 취소돼 있고, orders 상태도 그대로다. 그런데 amount=0인 done 행만 남기고 ok를 돌려줘
+   * 관리자는 처리된 줄 안다. 폼의 min=0이 실제로 허용하던 입력이다(0% 티어 당일 취소와
+   * 동형이라 일반 경로에서는 유효하지만, 이미 취소된 건에는 의미가 없다).
+   */
+  if (isAdditionalRefund && refundAmount <= 0)
+    return { ok: false, code: 'invalid_state', message: ZERO_REMAINDER_REFUND_MESSAGE };
 
   const db = getDb();
 
@@ -390,6 +448,16 @@ const cancelMixingOrder = async (
       : order.totalAmount,
     remaining,
   );
+
+
+  /**
+   * 잔액 환불에 0원은 **아무 일도 하지 않는 성공**이다 — 토스를 부르지 않고, 예약은 이미
+   * 취소돼 있고, orders 상태도 그대로다. 그런데 amount=0인 done 행만 남기고 ok를 돌려줘
+   * 관리자는 처리된 줄 안다. 폼의 min=0이 실제로 허용하던 입력이다(0% 티어 당일 취소와
+   * 동형이라 일반 경로에서는 유효하지만, 이미 취소된 건에는 의미가 없다).
+   */
+  if (isAdditionalRefund && refundAmount <= 0)
+    return { ok: false, code: 'invalid_state', message: ZERO_REMAINDER_REFUND_MESSAGE };
 
   const db = getDb();
 

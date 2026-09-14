@@ -201,8 +201,12 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
     // 상한은 총액이 아니라 **잔액**이다 — cancel.ts validateOverrideAmount와 같은 기준.
     // 총액을 상한으로 두면 부분환불 이력이 있는 건에서 서버가 되돌리는 죽은 입력이 된다.
-    if (!Number.isInteger(refundAmount) || refundAmount < 0 || refundAmount > booking.refundableAmount) {
-      setRefundError(`환불 금액은 0 ~ ${formatPriceAmount(booking.refundableAmount)}원 사이의 정수여야 합니다.`);
+    //
+    // 하한은 경로마다 다르다. 일반 취소의 0원은 유효한 액션이지만(0% 티어 당일 취소와 동형)
+    // 이미 취소된 건의 잔액 환불에서 0원은 아무 일도 하지 않는다 — 서버도 거절한다.
+    const minAmount = isRemainderRefund ? 1 : 0;
+    if (!Number.isInteger(refundAmount) || refundAmount < minAmount || refundAmount > booking.refundableAmount) {
+      setRefundError(`환불 금액은 ${minAmount} ~ ${formatPriceAmount(booking.refundableAmount)}원 사이의 정수여야 합니다.`);
       return;
     }
     if (refundReason.trim() === '') {
@@ -599,7 +603,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                   >
                     <TextInput
                       type="number"
-                      min={0}
+                      min={isRemainderRefund ? 1 : 0}
                       max={booking.refundableAmount}
                       step={1}
                       value={refundAmount}
