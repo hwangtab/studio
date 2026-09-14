@@ -81,12 +81,25 @@ const withoutUndeliverableCustomer = (
 ): Array<{ key: string; params: Parameters<typeof sendEmail>[0] }> =>
   isManualPlaceholderRecipient(order) ? pairs.filter((p) => p.key !== 'customer') : pairs;
 
+/**
+ * 디지털 리워드 내려받기 안내 — 후원한 리워드에 downloadUrl이 있을 때만 붙는다.
+ *
+ * 주소는 후원 확인 페이지에도 뜬다. 메일을 지우거나 못 받아도 받을 길이 남아야 하기
+ * 때문이다(그 화면 주소는 바로 아래 줄에 함께 나간다).
+ */
+const downloadLines = (order: FundingOrder, project: FundingProject | null): string[] => {
+  const rewardId = order.fundingPledge?.rewardId;
+  const reward = project?.rewards.find((r) => r.id === rewardId);
+  if (!reward?.downloadUrl) return [];
+  return ['', '[음원 내려받기]', reward.downloadUrl, '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.'];
+};
+
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
   send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 후원이 확정되었습니다${titleSuffix(project)}`,
-      text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...withdrawalLines(order), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
+      text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...downloadLines(order, project), ...withdrawalLines(order), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,

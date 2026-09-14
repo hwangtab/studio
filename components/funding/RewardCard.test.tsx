@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import RewardCard from './RewardCard';
 
-const reward = { id: 'cd', title: 'CD + 엽서', description: '설명', amount: 30000, totalQuantity: 10, requiresShipping: true, estimatedDelivery: '2026-12', image: null };
+const reward = { id: 'cd', title: 'CD + 엽서', description: '설명', amount: 30000, totalQuantity: 10, requiresShipping: true, estimatedDelivery: '2026-12', image: null, downloadUrl: null };
 
 it('금액·남은 수량·배송·전달 시기와 후원 링크를 보여준다', () => {
   render(<RewardCard reward={reward} remaining={3} pledgeHref="/ko/funding/demo/pledge?reward=cd" canPledge />);
