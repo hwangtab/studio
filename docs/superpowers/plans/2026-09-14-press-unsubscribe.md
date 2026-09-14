@@ -940,9 +940,16 @@ Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>"
 
 `studio/middleware.press.test.ts`:
 
+**두 가지를 반드시 지킬 것.** 하나라도 빠지면 이 테스트는 통과하면서 아무것도 지키지 못한다.
+
+1. 파일 첫 줄의 `/** @jest-environment node */`. jsdom에서는 `NextRequest`가 기대하는 Web API가 온전하지 않다. 기존 `middleware.test.ts`가 같은 이유로 이 docblock을 달고 있다.
+2. **`NODE_ENV=production`으로 모듈을 다시 불러올 것.** `middleware.ts`는 모듈 평가 시점에 env를 읽어 `shouldEnforceCanonicalHost`를 const로 고정한다. 기본 테스트 환경에서는 그 값이 false라 canonical 강제가 아예 꺼져 있고, 그러면 **조기 반환을 지워도 이 테스트가 통과한다** — 이 과제가 막으려는 바로 그 버그를 못 잡는다. `jest.mock`으로는 격리되지 않으므로 `jest.resetModules()` 후 동적 import를 쓴다(기존 `middleware.test.ts:1-40`의 `loadMiddleware` 패턴).
+
 ```ts
-import { NextRequest } from 'next/server';
-import { middleware } from './middleware';
+/** @jest-environment node */
+
+type MiddlewareModule = typeof import('./middleware');
+type NextServerModule = typeof import('next/server');
 
 /**
  * press.studionol.co.kr은 수신거부 링크 하나만 응답한다.
@@ -953,34 +960,72 @@ import { middleware } from './middleware';
  *      걸리면 기자가 누른 링크가 404로 끝나고, 그건 배포 후에야 드러난다.
  *   2. 그 밖의 경로는 전부 404일 것. 안 막으면 사이트 전체가 두 주소로 살면서
  *      색인이 갈리고 canonical·hreflang 정리가 무너진다.
+ *
+ * 반드시 **프로덕션 env로** 불러온다. middleware.ts는 모듈 평가 시점에 env를 읽어
+ * shouldEnforceCanonicalHost를 const로 고정하므로, 기본 테스트 환경에서는 canonical
+ * 강제가 꺼진 채 돈다 — 그 상태로는 조기 반환을 지워도 이 테스트가 통과한다.
  */
-const request = (url: string) => new NextRequest(new URL(url), { headers: { host: new URL(url).host } });
+const loadProdMiddleware = async (): Promise<{
+  middleware: MiddlewareModule['middleware'];
+  NextRequest: NextServerModule['NextRequest'];
+}> => {
+  jest.resetModules();
+  process.env.NEXT_PUBLIC_SITE_URL = 'https://studionol.co.kr';
+  process.env.VERCEL_ENV = 'production';
+  // NODE_ENV는 읽기 전용 취급이라 defineProperty로 덮는다.
+  Object.defineProperty(process.env, 'NODE_ENV', { value: 'production', configurable: true });
+  const [{ middleware }, { NextRequest }] = await Promise.all([
+    import('./middleware'),
+    import('next/server'),
+  ]);
+  return { middleware, NextRequest };
+};
 
-describe('press.studionol.co.kr', () => {
-  it('/u/<token>을 수신거부 API로 rewrite한다', () => {
-    const res = middleware(request('https://press.studionol.co.kr/u/abc.def'));
+describe('press.studionol.co.kr (프로덕션 env)', () => {
+  const originalEnv = process.env;
+  let middleware: MiddlewareModule['middleware'];
+  let NextRequest: NextServerModule['NextRequest'];
+
+  beforeAll(async () => {
+    ({ middleware, NextRequest } = await loadProdMiddleware());
+  });
+
+  afterAll(() => {
+    process.env = originalEnv;
+    jest.resetModules();
+  });
+
+  const req = (url: string) =>
+    new NextRequest(new URL(url), { headers: { host: new URL(url).host } });
+
+  /**
+   * 이 테스트가 이 과제의 이유다. 조기 반환이 canonical 강제보다 뒤에 있으면
+   * 308이 나온다.
+   */
+  it('/u/<token>을 수신거부 API로 rewrite한다 (308이 아니다)', () => {
+    const res = middleware(req('https://press.studionol.co.kr/u/abc.def'));
     expect(res.status).toBe(200);
     expect(res.headers.get('x-middleware-rewrite')).toContain('/api/press/unsubscribe/abc.def');
   });
 
   it('루트는 404다', () => {
-    expect(middleware(request('https://press.studionol.co.kr/')).status).toBe(404);
+    expect(middleware(req('https://press.studionol.co.kr/')).status).toBe(404);
   });
 
-  it('본진 경로를 이 호스트로 요청해도 404다 (308이 아니다)', () => {
-    for (const path of ['/ko', '/ko/pricing', '/api/funding/pledges', '/sitemap.xml']) {
-      const res = middleware(request(`https://press.studionol.co.kr${path}`));
-      expect(res.status).toBe(404);
+  it('본진 경로를 이 호스트로 요청해도 404다', () => {
+    for (const path of ['/ko', '/ko/pricing', '/sitemap.xml']) {
+      expect(middleware(req(`https://press.studionol.co.kr${path}`)).status).toBe(404);
     }
   });
 
   it('토큰이 없는 /u는 404다', () => {
-    expect(middleware(request('https://press.studionol.co.kr/u')).status).toBe(404);
-    expect(middleware(request('https://press.studionol.co.kr/u/')).status).toBe(404);
+    expect(middleware(req('https://press.studionol.co.kr/u')).status).toBe(404);
+    expect(middleware(req('https://press.studionol.co.kr/u/')).status).toBe(404);
   });
 
-  it('본진 호스트의 /u는 이 규칙과 무관하다', () => {
-    const res = middleware(request('https://studionol.co.kr/u/abc.def'));
+  /** 본진 호스트는 이 규칙과 무관하다 — /u는 본진에 없는 경로일 뿐이다. */
+  it('본진 호스트의 /u는 rewrite되지 않는다', () => {
+    const res = middleware(req('https://studionol.co.kr/u/abc.def'));
     expect(res.headers.get('x-middleware-rewrite')).toBeNull();
   });
 });
@@ -1034,7 +1079,11 @@ Expected: 모두 PASS — **기존 `middleware.test.ts`도 함께 돌려 회귀�
 
 - [ ] **Step 5: 가드가 실제로 잡는지 확인한다**
 
-조기 반환 블록을 canonical host 강제 **뒤로** 임시로 옮기고 테스트를 돌린다. `/u/<token>` 테스트가 실패해야 한다(308이 나온다). 확인했으면 되돌린다.
+조기 반환 블록을 canonical host 강제 **뒤로**(즉 `shouldEnforceCanonicalHost` 블록 다음으로) 임시로 옮기고 테스트를 돌린다.
+
+**`/u/<token>` 테스트가 308로 실패해야 한다.** 통과한다면 프로덕션 env로 모듈을 불러오지 못한 것이므로, `loadProdMiddleware`를 고치기 전에는 이 과제를 끝내지 않는다 — 통과하면서 아무것도 지키지 않는 테스트는 없느니만 못하다.
+
+확인했으면 블록을 되돌린다.
 
 - [ ] **Step 6: 커밋**
 
