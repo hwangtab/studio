@@ -446,6 +446,47 @@ describe('카드 재등록', () => {
     // 새 카드로 결제됐는지 — 옛 키가 남아 있으면 revoke가 무의미하다.
     expect((chargeBillingKey.mock.calls.at(-1)![0] as { billingKey: string }).billingKey).toBe('bkey_2');
   });
+
+  /**
+   * 첫 결제가 카드사 거절로 실패하면 구독은 pending_card로 남는다. 관리자 상세 화면에는
+   * 이 상태에서도 '카드 변경 링크 발급' 버튼이 떠 있는데, 그 링크에 setupMode='change'가
+   * 걸리면 고객이 새 카드를 정상 등록해도 첫 결제가 건너뛰어진다 — 카드는 붙었고 고객은
+   * '등록 완료' 화면을 봤는데 status는 pending_card, nextBillingAt은 null이라
+   * listDueSubscriptions가 영원히 집지 않고 첫 달치가 조용히 미청구로 남는다.
+   */
+  it('pending_card에 발급한 링크는 initial이라, 새 카드 등록과 함께 첫 결제가 돈다', async () => {
+    const created = await createSubscription(lessonInput, NOW);
+    if (!created.ok) throw new Error('unreachable');
+    issueBillingKey.mockResolvedValue(issuedOk());
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    const sub = (await findSubscriptionById(created.id))!;
+    // 첫 결제가 카드사 거절 → pending_card로 남는다(재시도 일정 없음).
+    await completeCardSetup({ id: created.id, token: created.setupToken, authKey: 'auth_1', customerKey: sub.customerKey }, NOW);
+    expect((await findSubscriptionById(created.id))!.status).toBe('pending_card');
+
+    const changeAt = new Date('2026-03-06T00:00:00Z');
+    const token = await issueCardChangeToken(created.id, changeAt);
+    if (!token.ok) throw new Error('unreachable');
+    expect((await findSubscriptionById(created.id))!.setupMode).toBe('initial');
+
+    issueBillingKey.mockResolvedValue(issuedOk('bkey_2'));
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_first_retry'));
+    const setup = await completeCardSetup(
+      { id: created.id, token: token.setupToken, authKey: 'auth_2', customerKey: sub.customerKey },
+      changeAt,
+    );
+    expect(setup).toMatchObject({ ok: true, charged: true });
+    const after = (await findSubscriptionById(created.id))!;
+    expect(after.status).toBe('active');
+    expect(after.nextBillingAt).not.toBeNull();
+  });
+
+  it('청구가 도는 구독(active)의 카드 교체는 그대로 change — 등록만으로 한 달치가 더 나가지 않는다', async () => {
+    const { created } = await activated();
+    const token = await issueCardChangeToken(created.id, new Date('2026-03-10T00:00:00Z'));
+    expect(token.ok).toBe(true);
+    expect((await findSubscriptionById(created.id))!.setupMode).toBe('change');
+  });
 });
 
 describe('해지·정지·재개·만료', () => {

@@ -592,7 +592,24 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
   return { ok: true, subscription: row };
 };
 
-/** 카드 교체 링크 발급. setupMode='change'라 등록이 끝나도 결제하지 않는다. */
+/**
+ * 카드 교체 링크 발급.
+ *
+ * setupMode는 **상태에 따라 갈린다.** 이미 카드가 붙어 청구가 도는 구독(active·past_due·
+ * paused)은 'change' — 등록이 끝나도 결제하지 않는다(카드만 바꾸려던 고객에게 한 달치가
+ * 더 나가면 안 된다, schema의 setupMode 주석).
+ *
+ * 그런데 pending_card는 **첫 결제를 아직 한 번도 못 한 구독**이다(첫 결제 거절은 재시도
+ * 일정을 걸지 않고 pending_card로 남긴다 — chargeCycle의 reason==='first' 분기). 여기에
+ * 'change'를 걸면 고객이 새 카드를 정상 등록해도 completeCardSetup이 chargeCycle을 부르지
+ * 않고 끝나, 카드는 붙었고 고객은 '등록 완료' 화면을 봤는데 status는 pending_card·
+ * nextBillingAt은 null이라 **첫 달치가 조용히 미청구로 남는다**(listDueSubscriptions가
+ * 영원히 집지 않고, 관리자 UI의 '결제' 버튼도 pending_card를 제외한다). 관리자 상세
+ * 화면에는 pending_card에서도 '카드 변경 링크 발급' 버튼이 떠 있어 실제로 밟히는 길이다.
+ *
+ * 그래서 pending_card에는 'initial'을 준다 — 등록 직후 첫 결제가 정상으로 돈다.
+ * 이중 청구 걱정은 없다: chargeCycle이 같은 회차에 성공한 기록이 있으면 다시 걷지 않는다.
+ */
 export const issueCardChangeToken = async (
   id: string,
   now: Date,
@@ -607,7 +624,7 @@ export const issueCardChangeToken = async (
     .set({
       setupToken,
       setupTokenExpiresAt: new Date(now.getTime() + SETUP_TOKEN_TTL_SECONDS * 1000),
-      setupMode: 'change',
+      setupMode: subscription.status === 'pending_card' ? 'initial' : 'change',
       updatedAt: now,
     })
     .where(eq(subscriptions.id, id));
