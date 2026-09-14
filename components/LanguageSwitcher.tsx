@@ -58,9 +58,18 @@ export const LanguageSwitcher = ({
 
     const segments = path.split('/');
     const hasLocaleSegment = locales.includes(segments[1] as Locale);
-    const pathWithoutLocale = hasLocaleSegment ? `/${segments.slice(2).join('/')}` : path;
 
-    // funding·artists 같은 ko 전용 SSG 라우트(fallback:false, ko만 프리렌더)는
+    // ko 전용 판정은 쿼리·해시를 뺀 순수 경로로 해야 한다. asPath에 쿼리·해시가 붙으면
+    // (utm 유입이 기본값이다) 마지막 세그먼트가 'success?orderNo=A1' 같은 문자열이 돼
+    // 리터럴 형제 매칭이 깨진다 — 판정이 asPath에 물린 쿼리 유무로 양방향 뒤집힌다
+    // (utm 붙은 /ko/artists는 404가 그대로 남고, /ko/funding/success?orderNo=...는
+    // 맥락 없이 홈으로 튕긴다). 생성하는 링크 자체는 쿼리·해시를 보존해야 하므로(위 두
+    // 사례 모두 유지가 맞는 정보다) 판정용 경로만 따로 만들고 segments는 그대로 둔다.
+    const pathnameOnly = path.split(/[?#]/)[0];
+    const cleanSegments = pathnameOnly.split('/');
+    const pathWithoutLocale = hasLocaleSegment ? `/${cleanSegments.slice(2).join('/')}` : pathnameOnly;
+
+    // funding·artists·guides 같은 ko 전용 SSG 라우트(fallback:false, ko만 프리렌더)는
     // 로케일 세그먼트만 바꿔서는 다른 로케일 파일이 아예 없어 404가 난다. 목적지
     // 로케일이 ko가 아니면 그 로케일 홈으로 탈출시킨다(isRoutePatternPath와 같은 처리).
     if (isKoOnlyRoutePath(pathWithoutLocale) && targetLocale !== 'ko') {

@@ -76,4 +76,45 @@ describe('LanguageSwitcher — ko 전용 라우트 탈출', () => {
     const enLink = screen.getByRole('link', { name: 'English' });
     expect(enLink).toHaveAttribute('href', '/en/funding/terms');
   });
+
+  // 회귀 방지(적대적 재검토, 2026-09-14): asPath를 그대로 split('/')에 넣으면 쿼리·
+  // 해시가 마지막 세그먼트에 눌러붙어 판정이 asPath에 쿼리 유무로 양방향 뒤집혔다.
+  //   - /ko/funding/success?orderNo=A1 → 세그먼트가 'success?orderNo=A1'이라
+  //     리터럴 형제('success') 매칭 실패 → 과잉 탈출(홈으로 튕겨 맥락 상실)
+  //   - /ko/artists?utm_source=x → pathWithoutLocale이 '/artists?utm_source=x'라
+  //     ko 전용 판정 자체가 실패 → 부족(이 PR이 고치려던 404가 그대로 남음)
+  // utm은 예외가 아니라 유입의 기본값이라 실사용 영향이 크다. 판정은 쿼리·해시를
+  // 뺀 경로로 하되, 생성하는 링크에는 쿼리·해시를 그대로 보존해야 한다(주문번호·
+  // utm 모두 잃으면 안 되는 정보다) — 아래 각 케이스가 이 두 가지를 함께 본다.
+  it('쿼리스트링이 있어도 ko 전용 판정이 과잉 탈출하지 않는다(/ko/funding/success?orderNo=A1)', () => {
+    mockAsPath.current = '/ko/funding/success?orderNo=A1';
+    render(<LanguageSwitcher currentLocale="ko" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    const enLink = screen.getByRole('link', { name: 'English' });
+    expect(enLink).toHaveAttribute('href', '/en/funding/success?orderNo=A1');
+  });
+
+  it('쿼리스트링이 있어도 ko 전용 판정이 빠지지 않는다(/ko/artists?utm_source=x)', () => {
+    mockAsPath.current = '/ko/artists?utm_source=x';
+    render(<LanguageSwitcher currentLocale="ko" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    const enLink = screen.getByRole('link', { name: 'English' });
+    expect(enLink).toHaveAttribute('href', '/en');
+  });
+
+  it('해시가 있어도 ko 전용 판정이 빠지지 않는다(/ko/funding#sec)', () => {
+    mockAsPath.current = '/ko/funding#sec';
+    render(<LanguageSwitcher currentLocale="ko" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    const enLink = screen.getByRole('link', { name: 'English' });
+    expect(enLink).toHaveAttribute('href', '/en');
+  });
+
+  it('쿼리스트링이 있어도 ko 전용이 아닌 라우트는 그대로 세그먼트 치환 + 쿼리 보존', () => {
+    mockAsPath.current = '/ko/pricing?utm_source=x';
+    render(<LanguageSwitcher currentLocale="ko" isFloating={false} variant="inline" />);
+    fireEvent.click(screen.getByRole('button'));
+    const enLink = screen.getByRole('link', { name: 'English' });
+    expect(enLink).toHaveAttribute('href', '/en/pricing?utm_source=x');
+  });
 });
