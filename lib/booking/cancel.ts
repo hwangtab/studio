@@ -70,25 +70,33 @@ const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): numb
 
 const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
 
-const DUPLICATE_REMAINDER_REFUND_MESSAGE =
-  '같은 금액의 잔액 환불이 이미 처리 중이거나 처리되었습니다. 새로고침해 환불 이력을 확인한 뒤 금액을 달리해 주세요.';
+const ALREADY_REFUNDED_AMOUNT_MESSAGE =
+  '이 금액은 이미 환불되어 기록까지 끝났습니다. 환불 이력을 확인해 주세요.';
+const CLAIM_LOOKUP_FAILED_MESSAGE =
+  '환불 이력을 확인하지 못했습니다. 잠시 후 같은 금액으로 다시 시도해 주세요.';
 const ZERO_REMAINDER_REFUND_MESSAGE = '추가로 환불할 금액을 입력해 주세요(0원은 처리할 것이 없습니다).';
 
 /**
- * 잔액 환불의 **선점 키** — refunds.id에 그대로 쓴다(PK라 같은 키의 두 번째 INSERT가 실패한다).
+ * 잔액 환불의 **선점 네임스페이스**.
  *
  * 잔액 환불 경로에는 붙잡을 상태가 없다(예약·주문이 이미 cancelled라 claim UPDATE를 건너뛴다).
- * 그래서 두 탭에서 같은 금액을 동시에 제출하면 **토스는 멱등키로 한 번만 취소하는데 우리
- * 원장에는 done 행이 2건** 들어가고 orders.status를 두 번 쓴다. 환불액이 2배로 계상돼
- * remainingRefundable이 0으로 눌리고, 이후의 정당한 잔액 환불이 영영 막힌다.
+ * 그래서 두 탭에서 같은 금액을 동시에 제출하면 원장에 done 행이 2건 들어가고 환불액이 2배로
+ * 계상돼 remainingRefundable이 0으로 눌린다. 그걸 막으려고 refunds.id(PK)를 선점으로 쓴다.
  *
- * 키의 정의역을 **멱등키와 같게**(주문번호 × 환불액) 맞춘 것이 핵심이다. 토스가 replay하는
- * 범위와 우리 원장이 중복을 막는 범위가 같아야 둘의 판단이 갈리지 않는다. 같은 금액을 15일
- * 안에 두 번 나눠 환불하려는 운영이 막히는 것은 멱등키가 이미 안고 있던 한계이고
- * (refundIdempotencyKey 주석), 지금까지는 그 경우 **토스는 replay하고 우리는 done 행을 또
- * 남겨** 원장이 조용히 어긋났다 — 막는 편이 정확하다.
+ * **이 접두사는 토스 멱등키의 접두사이기도 하다** — 잔액 환불은 `refunds.id`와 멱등키를
+ * *문자 그대로 같은 문자열*로 쓴다(REMAINDER_PREFIX를 양쪽에 넘긴다). 그래야 "토스가
+ * replay하는 범위"와 "우리 원장이 중복을 막는 범위"가 실제로 일치한다.
+ *
+ * 전 라운드에는 선점만 `remainder:`로 두고 멱등키는 기본 접두사(`refund:`)를 그대로 썼다.
+ * 그 결과 **고객이 돈을 못 받는 경로가 생겼다**: 275,000원 예약을 50% 티어로 137,500 취소하면
+ * 멱등키 `refund:SNB-1:137500`이 쓰이고, 이어서 잔액 137,500을 환불하면 같은 키가 만들어져
+ * 토스가 1차 취소를 replay한다 — 돈은 안 나가는데 성공 응답이 오고, 우리는 done 행을 하나 더
+ * 쌓아 주문을 refunded로 올린다. 접두사를 갈라야 하는 이유가 바로 이것이다
+ * (confirm.ts의 `autocancel` 전례와 같은 형태).
  */
-const refundClaimId = (orderNo: string, refundAmount: number): string => `remainder:${orderNo}:${refundAmount}`;
+const REMAINDER_PREFIX = 'remainder';
+const refundClaimId = (orderNo: string, refundAmount: number): string =>
+  refundIdempotencyKey(orderNo, refundAmount, REMAINDER_PREFIX);
 
 
 export type CancelInput = {
@@ -189,13 +197,42 @@ const settleRefund = async (args: {
         id: claimId, paymentId: payment.id, amount: refundAmount, reason: input.reason,
         requestedBy: input.requestedBy, status: 'failed',
       });
-    } catch (error) {
-      // PK 충돌이 압도적으로 흔한 경우지만, 다른 오류도 여기로 온다 — 돈을 내보내기 전이므로
-      // 어느 쪽이든 멈추는 것이 맞다. 원인은 로그로 남긴다.
-      console.error('[booking-cancel] 잔액 환불 선점 실패 — 토스를 부르지 않는다', {
-        orderNo: order.orderNo, refundAmount, error,
+    } catch (insertError) {
+      /**
+       * PK 충돌 — 같은 (주문번호, 금액)의 잔액 환불이 이미 한 번 시도됐다는 뜻이다.
+       * **무조건 거절하면 안 된다.** 여기서 막아야 하는 것은 "이미 나간 돈을 또 세는 것"뿐이고,
+       * 아직 안 나간 건의 재시도는 **막을수록 위험해진다**:
+       *
+       * 네트워크 오류(토스는 취소했는데 12초 타임아웃으로 응답만 못 받은 경우 포함) 뒤에
+       * 같은 금액 재시도를 차단하면, 운영자는 금액을 1원 바꿔 다시 넣는다. 그건 새 멱등키라
+       * 토스가 **실제로 두 번째 취소를 승인한다** — 우리가 이중 환불을 유도하는 꼴이다.
+       * 같은 금액 재시도는 멱등키가 replay로 보호하는, 유일하게 안전한 경로다.
+       *
+       * 그래서 기존 행의 상태로 가른다. `done`이면 이미 기록까지 끝난 것이라 거절하고,
+       * `failed`(= 아직 성사되지 않음)면 **그 행을 그대로 재사용**해 같은 멱등키로 토스를
+       * 다시 부른다. 동시 요청 2건도 같은 행을 공유하므로 done 행이 둘로 늘지 않는다 —
+       * 이 선점이 애초에 막으려던 것이 정확히 그것이다.
+       */
+      const existing = await db.query.refunds
+        .findFirst({ where: (t, { eq: equals }) => equals(t.id, claimId) })
+        .catch((lookupError: unknown) => {
+          console.error('[booking-cancel] 잔액 환불 선점 조회 실패', { orderNo: order.orderNo, refundAmount, lookupError });
+          return undefined;
+        });
+      if (!existing) {
+        // 충돌이 아니었거나(다른 DB 오류) 조회까지 실패했다 — 돈을 내보내기 전이므로 멈춘다.
+        // 같은 금액으로 다시 시도해도 안전하다는 것을 문구로 알린다.
+        console.error('[booking-cancel] 잔액 환불 선점 실패 — 토스를 부르지 않는다', {
+          orderNo: order.orderNo, refundAmount, insertError,
+        });
+        return { ok: false, code: 'invalid_state', message: CLAIM_LOOKUP_FAILED_MESSAGE };
+      }
+      if (existing.status === 'done') {
+        return { ok: false, code: 'invalid_state', message: ALREADY_REFUNDED_AMOUNT_MESSAGE };
+      }
+      console.warn('[booking-cancel] 잔액 환불 재시도 — 실패한 선점 행을 재사용한다(같은 멱등키로 replay 보호)', {
+        orderNo: order.orderNo, refundAmount, claimId,
       });
-      return { ok: false, code: 'invalid_state', message: DUPLICATE_REMAINDER_REFUND_MESSAGE };
     }
   }
 
@@ -210,7 +247,12 @@ const settleRefund = async (args: {
       // computeRefund가 같은 부분환불액을 또 계산하고, 잔액이 남아 있어 토스가 두 번째 취소도
       // 승인한다(50% 티어 275,000원 건에서 137,500원 초과 지급). 키가 (주문번호, 환불액)로
       // 결정적이라 그 재시도가 최초 취소의 응답을 그대로 재사용해 실제 취소는 한 번만 일어난다.
-      idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
+      //
+      // 잔액 환불은 **선점 키(refunds.id)를 그대로** 멱등키로 쓴다 — 두 문자열이 같아야
+      // "토스가 replay하는 범위"와 "우리 원장이 중복을 막는 범위"가 일치한다. 기본 접두사를
+      // 쓰면 1차 취소가 같은 금액이었을 때 그 응답이 replay돼 **돈이 안 나가고 성공만 온다**
+      // (REMAINDER_PREFIX 주석의 137,500원 사례).
+      idempotencyKey: claimId ?? refundIdempotencyKey(order.orderNo, refundAmount),
       // 가상계좌는 refundReceiveAccount 없이 취소할 수 없다 — 부르지 않고 끝낸다(toss.ts).
       paymentMethod: payment.method,
     });
