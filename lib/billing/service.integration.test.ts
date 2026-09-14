@@ -530,6 +530,36 @@ describe('claimDueSubscription — cron 동시 실행 방어', () => {
   });
 });
 
+describe('chargeCycle — 승인 왕복 중 들어온 해지', () => {
+  /**
+   * chargeCycle은 진입부에서 status를 **한 번** 읽고 통과시킨 뒤 토스에 HTTP로 청구한다
+   * (통상 1~3초). 그 사이 고객이 관리 페이지에서 셀프 해지를 누르면, 성공 batch가 상태를
+   * 보지 않고 active로 덮어써 해지가 사라진다. 같은 batch의 orders는 여전히 pending이라
+   * 기존 0행 경보도 울리지 않는다 — 조용히 다음 달 재청구로 이어진다.
+   */
+  it('승인 왕복 중 해지가 들어오면 active로 되돌리지 않는다', async () => {
+    const { created } = await activated();
+    const april = new Date('2026-04-05T00:00:00Z');
+    // 토스 왕복 "도중"에 셀프 해지가 들어오는 상황을 그대로 재현한다.
+    chargeBillingKey.mockImplementation(async () => {
+      await cancelSubscription(created.id, { requestedBy: 'customer', reason: '왕복 중 해지' }, april);
+      return chargeOk('pay_race');
+    });
+
+    const result = await chargeCycle(created.id, april, { reason: 'scheduled' });
+    expect(result.ok).toBe(true); // 승인 자체는 성공했다 — 회차는 paid로 남는다
+
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('cancelled');
+    expect(sub.nextBillingAt).toBeNull();
+    expect(await listDueSubscriptions(new Date('2026-06-05T00:00:00Z'))).toHaveLength(0);
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('승인 후 구독 상태 전이 0행'),
+      expect.objectContaining({ subscriptionId: created.id }),
+    );
+  });
+});
+
 describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
   const orderNoOf = orderNoForCycle;
 
@@ -570,6 +600,67 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
     const sub = (await findSubscriptionById(created.id))!;
     // nextBillingAt이 그대로다 — 다시 반영했다면 5월로 또 전진했을 것이다.
     expect(sub.nextBillingAt?.toISOString()).toBe('2026-04-05T00:00:00.000Z');
+  });
+
+  /**
+   * 실제 동선: 청구가 NETWORK_ERROR로 끝나 결제 실패 메일이 나가고(회차는 pending으로 남는다),
+   * 고객이 그 메일을 보고 관리 링크에서 셀프 해지를 누른다. 그런데 토스는 실제로 승인했었고
+   * 뒤늦게 DONE 웹훅이 온다. 구독 status를 보지 않고 active로 덮어쓰면 해지가 조용히 사라지고
+   * nextBillingAt이 다음 달로 다시 잡혀, **해지한 고객의 카드를 다음 cron이 또 긁는다.**
+   * endsAt은 남지만 endExpiredSubscriptions는 status='cancelled'만 보므로 닫지도 못한다.
+   */
+  it('해지된 구독에 뒤늦은 DONE 웹훅이 와도 되살아나지 않는다 — 회차만 paid로 반영하고 알린다', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    const april = new Date('2026-04-05T00:00:00Z');
+    await chargeCycle(created.id, april, { reason: 'scheduled' });
+
+    const cancelledAt = new Date('2026-04-06T00:00:00Z');
+    expect((await cancelSubscription(created.id, { requestedBy: 'customer', reason: '결제 실패' }, cancelledAt)).ok).toBe(true);
+
+    const orderNo = await orderNoOf(created.id, '2026-04');
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_late', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      new Date('2026-04-07T00:00:00Z'),
+    );
+
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('cancelled');
+    // 다음 결제일이 되살아나면 cron의 listDueSubscriptions가 이 구독을 다시 집는다.
+    expect(sub.nextBillingAt).toBeNull();
+    expect(await listDueSubscriptions(new Date('2026-06-05T00:00:00Z'))).toHaveLength(0);
+    // 해지 예정일이 지나면 여전히 ended로 닫힌다(status가 cancelled로 남아 있어야 가능하다).
+    expect(await endExpiredSubscriptions(new Date('2026-05-05T00:00:00Z'))).toBe(1);
+
+    // 돈은 실제로 들어왔다 — 회차 기록은 그대로 paid로 반영한다.
+    const orders = await client.execute('SELECT status FROM orders ORDER BY created_at');
+    expect(orders.rows.map((r) => r.status)).toEqual(['paid', 'paid']);
+    const details = (await getSubscriptionWithDetails(created.id))!;
+    expect(details.payments.find((p) => p.cycleYm === '2026-04')).toMatchObject({ status: 'paid', paymentKey: 'pay_late' });
+    // 환불 여부는 사람이 판단해야 하므로 조용히 넘어가지 않는다.
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('해지·종료된 구독에 뒤늦은 승인 도착'),
+      expect.objectContaining({ subscriptionId: created.id }),
+    );
+  });
+
+  it('종료(ended)된 구독도 되살아나지 않는다', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    const april = new Date('2026-04-05T00:00:00Z');
+    await chargeCycle(created.id, april, { reason: 'scheduled' });
+    await cancelSubscription(created.id, { requestedBy: 'customer', reason: '종료' }, april);
+    expect(await endExpiredSubscriptions(new Date('2026-05-05T00:00:00Z'))).toBe(1);
+    expect((await findSubscriptionById(created.id))!.status).toBe('ended');
+
+    const orderNo = await orderNoOf(created.id, '2026-04');
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_late_2', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      new Date('2026-05-06T00:00:00Z'),
+    );
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('ended');
+    expect(sub.nextBillingAt).toBeNull();
   });
 
   it('CANCELED 등 DONE이 아닌 상태는 무시한다', async () => {

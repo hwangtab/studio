@@ -45,6 +45,17 @@ export type ChargeReason = 'scheduled' | 'retry' | 'manual' | 'first';
 const SETUP_ALLOWED_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 /** 같은 계약에 구독을 새로 못 만드는 상태들(진행 중인 청구가 이미 있다). */
 const OCCUPYING_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
+/**
+ * 승인 결과를 반영하며 `active`로 전이시켜도 되는 상태들 — **해지·종료는 되살리지 않는다.**
+ *
+ * 승인은 우리가 요청한 시점과 기록하는 시점이 떨어져 있다(웹훅 복구는 수분~수시간, 청구
+ * 왕복도 1~3초). 그 사이에 고객이 해지를 누를 수 있는데, 상태를 보지 않고 `active`로
+ * 덮어쓰면 해지가 조용히 사라지고 nextBillingAt까지 다음 달로 다시 잡혀 **해지한 고객의
+ * 카드를 다음 cron이 또 긁는다**(endsAt은 남지만 endExpiredSubscriptions는 `status =
+ * 'cancelled'`만 보므로 더 이상 닫지도 못한다). 회차 기록(orders·subscriptionPayments)은
+ * 그대로 paid로 반영하고 — 돈은 실제로 들어왔다 — 구독 전이만 건너뛴 뒤 로그로 알린다.
+ */
+const REACTIVATABLE_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
@@ -480,7 +491,9 @@ export const chargeCycle = async (
         nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
         updatedAt: now,
       })
-      .where(eq(subscriptions.id, subscriptionId)),
+      // 진입부(위)의 cancelled/ended 검사는 **읽기 시점 한 번**이다. 승인 왕복(1~3초) 사이에
+      // 들어온 셀프 해지를 여기서 되돌리지 않도록 상태를 다시 건다.
+      .where(and(eq(subscriptions.id, subscriptionId), inArray(subscriptions.status, REACTIVATABLE_STATUSES))),
   ]);
 
   // orders 전이가 0행이면 승인 왕복 사이에 주문이 pending을 벗어난 것이다. 구독 회차는
@@ -492,6 +505,19 @@ export const chargeCycle = async (
       orderNo,
       paymentKey: approved.paymentKey,
     });
+  }
+
+  // 구독 전이가 0행이면 승인 왕복 사이에 해지·종료가 들어온 것이다. 돈은 들어왔고 회차는
+  // paid로 남았으므로 환불 여부는 사람이 판단해야 한다 — 되살리지 않고 알린다.
+  if (rowsAffectedOf(batchResults[3]) === 0) {
+    console.error('[billing] 승인 후 구독 상태 전이 0행 — 해지·종료된 구독일 수 있다, 환불 판단 필요', {
+      subscriptionId,
+      orderNo,
+      paymentKey: approved.paymentKey,
+      cycleYm,
+    });
+    const current = await findSubscriptionById(subscriptionId);
+    return { ok: true, status: current?.status ?? subscription.status, paymentKey: approved.paymentKey, cycleYm, attempt };
   }
 
   return { ok: true, status: 'active', paymentKey: approved.paymentKey, cycleYm, attempt };
@@ -718,7 +744,10 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
           nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
           updatedAt: now,
         })
-        .where(eq(subscriptions.id, subscription.id)),
+        // 해지·종료된 구독은 되살리지 않는다 — 형제 항목(orders·subscriptionPayments)의
+        // 상태 가드와 같은 이유다. 뒤늦은 DONE 웹훅은 수분~수시간 뒤에도 오고, 그 사이
+        // 고객이 결제 실패 메일을 보고 셀프 해지를 누르는 것이 정상 동선이다.
+        .where(and(eq(subscriptions.id, subscription.id), inArray(subscriptions.status, REACTIVATABLE_STATUSES))),
     ]);
   } catch (error) {
     // paymentKey unique 위반이면 cron chargeCycle이나 형제 웹훅 이벤트가 먼저 반영한 것 —
@@ -743,6 +772,17 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
     console.error('[billing] 웹훅 DONE 복구 — orders 전이 0행, 수동 대사 필요', {
       orderNo: order.orderNo,
       paymentKey: payment.paymentKey,
+    });
+  }
+
+  // 회차는 paid로 반영됐지만 구독은 그대로 둔 경우 — 해지·종료된 구독에 뒤늦은 승인이
+  // 도착한 것이다. 재활성은 하지 않되 돈이 들어온 사실은 남겨 환불 여부를 사람이 정한다.
+  if (rowsAffectedOf(batchResults[3]) === 0) {
+    console.error('[billing] 웹훅 DONE 복구 — 해지·종료된 구독에 뒤늦은 승인 도착, 수동 환불 판단 필요', {
+      orderNo: order.orderNo,
+      paymentKey: payment.paymentKey,
+      subscriptionId: subscription.id,
+      status: subscription.status,
     });
   }
 };
