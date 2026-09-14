@@ -101,3 +101,112 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
     expect(isKoOnlyRoutePath('/funding/some-project/pledge')).toBe(false);
   });
 });
+
+/**
+ * 위 describe는 KO_ONLY_ROUTE_RULES가 가리키는 파일들"만" 대조한다 — 하드코딩된
+ * 목록을 도는 것이라, 규칙표 자체가 실태에서 갈리는 세 가지를 못 잡는다(적대적
+ * 재검토, 2026-09-14 확인):
+ *   1. 이미 ko 전용인 페이지의 getStaticPaths에 다른 로케일을 한 줄 추가해도
+ *      (예: '번역이 추가되면 해당 locale을 합류'라는 guides의 주석대로) green.
+ *   2. funding에 새 SSR 형제 페이지(예: faq.tsx)가 생겨도 literalSiblings를
+ *      안 넣으면 green — 그 순간부터 전환기가 그 경로를 홈으로 잘못 탈출시킨다.
+ *   3. 완전히 새로운 ko 전용 세그먼트(예: events/index.tsx)가 생겨도 규칙표에
+ *      없으면 green — 새 404 구멍이 조용히 열린다.
+ *
+ * 아래는 pages/[locale] 트리를 직접 walk해서 각 페이지의 실제 데이터 페칭 전략
+ * (ko 전용 정적 vs 다국어 정적 vs SSR)을 소스에서 도출한 뒤, 그 결과와
+ * isKoOnlyRoutePath()의 판정을 파일 단위로 전수 대조한다 — 이미 정규식으로
+ * 소스를 읽던 방식을 디렉터리 전체로 넓힌 것뿐, 새 기계를 들이지 않는다.
+ */
+describe('isKoOnlyRoutePath ↔ pages/[locale] 실태 전수 대조 (디렉터리 walk)', () => {
+  const PAGES_LOCALE_DIR = path.join(process.cwd(), 'pages', '[locale]');
+  const SAMPLE_SLUG = 'sample-slug-for-discovery-check';
+
+  type RouteKind = 'ko-only-fallback-false' | 'multi-locale-static' | 'other-static' | 'ssr' | 'unclassified';
+
+  interface DiscoveredRoute {
+    filePath: string;
+    segments: string[];
+    kind: RouteKind;
+  }
+
+  const walk = (dir: string): string[] => {
+    const out: string[] = [];
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) out.push(...walk(full));
+      else if (entry.isFile() && entry.name.endsWith('.tsx')) out.push(full);
+    }
+    return out;
+  };
+
+  const toSegments = (absFile: string): string[] => {
+    const rel = path.relative(PAGES_LOCALE_DIR, absFile).replace(/\.tsx$/, '');
+    let parts = rel.split(path.sep);
+    if (parts[parts.length - 1] === 'index') parts = parts.slice(0, -1);
+    return parts.map((seg) => (/^\[.+\]$/.test(seg) ? ':param' : seg));
+  };
+
+  // getCommonStaticPaths(lib/getStatic.ts)를 참조하는 페이지는 locales.map으로
+  // 7개 로케일을 전부 등록한다 — 추론이 아니라 그 소스를 직접 읽어 근거를 둔다.
+  // 이 결합이 깨지면(누군가 getCommonStaticPaths를 ko 전용으로 바꾸면) 아래
+  // discoverRoutes()의 전제가 조용히 틀려지므로 여기서 먼저 잡는다.
+  const commonStaticPathsSource = fs.readFileSync(path.join(process.cwd(), 'lib/getStatic.ts'), 'utf-8');
+  it('getCommonStaticPaths는 여전히 locales.map으로 전 로케일을 등록한다(전제 검증)', () => {
+    const block = commonStaticPathsSource.slice(commonStaticPathsSource.indexOf('export const getCommonStaticPaths'));
+    expect(block).toMatch(/locales\.map\(/);
+  });
+
+  const classify = (absFile: string): RouteKind => {
+    const source = fs.readFileSync(absFile, 'utf-8');
+
+    // 다국어 공용 헬퍼를 그대로 참조하는 페이지(직접 대입 또는 async () => 호출
+    // 양쪽 형태 모두) — 위에서 검증한 대로 항상 전 로케일을 등록한다.
+    if (source.includes('getCommonStaticPaths')) return 'multi-locale-static';
+
+    const gspIdx = source.indexOf('getStaticPaths');
+    if (gspIdx === -1) {
+      return /getServerSideProps/.test(source) ? 'ssr' : 'unclassified';
+    }
+
+    // getStaticPaths 선언부만 잘라서 본다(다음 최상위 export 전까지). 이 저장소의
+    // 페이지 파일은 컴포넌트 → getStaticPaths → getStaticProps/export default
+    // 순서를 지키므로 이 경계로 충분하다.
+    const rest = source.slice(gspIdx);
+    const boundary = rest.search(/\n\s*export const getStaticProps|\n\s*export default/);
+    const block = boundary === -1 ? rest : rest.slice(0, boundary);
+
+    const hasLocalesIterator = /\blocales\.(map|flatMap|forEach)\(/.test(block);
+    const hasNonKoLocaleLiteral = /locale:\s*['"](?!ko['"])[a-z]{2}['"]/.test(block);
+    if (hasLocalesIterator || hasNonKoLocaleLiteral) return 'multi-locale-static';
+
+    const hasFallbackFalse = /fallback:\s*false/.test(block);
+    const hasKoOrDefaultLocaleOnly = /locale:\s*(defaultLocale|'ko')/.test(block);
+    if (hasFallbackFalse && hasKoOrDefaultLocaleOnly) return 'ko-only-fallback-false';
+
+    return 'other-static';
+  };
+
+  const discoverRoutes = (): DiscoveredRoute[] =>
+    walk(PAGES_LOCALE_DIR).map((absFile) => ({
+      filePath: path.relative(process.cwd(), absFile),
+      segments: toSegments(absFile),
+      kind: classify(absFile),
+    }));
+
+  const routes = discoverRoutes();
+
+  it('pages/[locale] 아래 모든 페이지가 분류된다(getStaticPaths 또는 getServerSideProps)', () => {
+    const unclassified = routes.filter((r) => r.kind === 'unclassified').map((r) => r.filePath);
+    expect(unclassified).toEqual([]);
+  });
+
+  it.each(routes.map((r) => [r.filePath, r] as const))(
+    '%s',
+    (_label, route) => {
+      const urlPath = '/' + route.segments.map((s) => (s === ':param' ? SAMPLE_SLUG : s)).join('/');
+      const expectedKoOnly = route.kind === 'ko-only-fallback-false';
+      expect(isKoOnlyRoutePath(urlPath)).toBe(expectedKoOnly);
+    }
+  );
+});
