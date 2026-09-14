@@ -1518,13 +1518,13 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Quảng bá phát hành nhạc — gửi thẳng tới nhà báo và nhà phê bình âm nhạc | Studio NOL",
-      "description": "Không phải dịch vụ rải thông cáo báo chí tới 908 đầu mối cùng lúc. Chúng tôi gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc và tới truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia, bằng chính ngôn ngữ mà họ đọc. Gồm thông cáo 5 thứ tiếng, trang press kit, video nghe trọn album và báo cáo gửi đi. Chỉ nhận những bản nhạc qua được vòng duyệt.",
+      "title": "Quảng bá phát hành nhạc — chỉ chọn nơi sẽ đưa tin về đĩa nhạc | Studio NOL",
+      "description": "Không phải dịch vụ rải thông cáo tới 908 đầu mối. Chúng tôi chọn các đầu báo âm nhạc Hàn Quốc và truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia thực sự sẽ đưa tin, rồi viết cho từng nơi bằng ngôn ngữ họ đọc. 1.200.000 KRW → 300.000 KRW.",
       "keywords": "quảng bá nhạc, quảng bá album, thông cáo báo chí âm nhạc, PR nhạc indie, PR âm nhạc, quảng bá phát hành, viết thông cáo báo chí, quảng bá đĩa nhạc, dịch vụ PR âm nhạc, PR âm nhạc quốc tế, press kit, làm EPK"
     },
     "hero": {
       "title": "Quảng bá phát hành nhạc",
-      "subtitleLine1": "Tới nhà báo, nhà phê bình âm nhạc Hàn Quốc và truyền thông 60 quốc gia, bằng ngôn ngữ họ đọc",
+      "subtitleLine1": "Tới các đầu báo âm nhạc Hàn Quốc và truyền thông 60 quốc gia sẽ đưa tin, bằng ngôn ngữ từng nơi đọc",
       "subtitleLine2": "{{intro}} · 3 nghệ sĩ mỗi tháng · Chỉ nhận nhạc qua được vòng duyệt",
       "badge": "Giá gốc {{list}} → {{intro}} (giá đối tác sớm, đến hết {{until}})",
       "alt": "Toàn cảnh trung tâm Seoul về đêm, thành phố trải dài dưới ánh đèn"
@@ -1539,7 +1539,7 @@
         },
         {
           "q": "Các bạn làm những gì?",
-          "a": "Chúng tôi viết thông cáo báo chí bằng 5 thứ tiếng, dựng trang press kit, rồi gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa và liên hoan âm nhạc nước ngoài. Chúng tôi cũng làm video nghe trọn album, và khi kết thúc sẽ gửi bạn báo cáo đã gửi gì tới đâu."
+          "a": "Chúng tôi viết thông cáo bằng năm thứ tiếng, dựng trang press kit, và chỉ gửi tới các đầu báo âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa, lễ hội nước ngoài sẽ đưa tin. Chúng tôi cũng làm video nghe trọn album."
         },
         {
           "q": "Mất bao lâu?",
@@ -1552,41 +1552,48 @@
       ]
     },
     "comparison": {
-      "title": "Khác với dịch vụ phát tán thông cáo báo chí",
-      "subtitle": "Khác nhau không phải ở giá mà ở chính món hàng. Đặt cạnh mặt bằng giá trong nước sẽ thấy rõ.",
+      "title": "Hãy so với nơi bán đúng thứ chúng tôi bán",
+      "subtitle": "Rải thông cáo thì rẻ nhưng danh sách đó không phải đầu báo âm nhạc; các hãng nước ngoài bán đúng thứ này lại ở một bậc giá khác.",
       "columns": [
         "",
-        "Nền tảng phát tán thông cáo",
-        "Marketing chạy số lượt xem",
+        "Nền tảng rải thông cáo",
+        "Hãng PR âm nhạc nước ngoài",
         "Studio NOL"
       ],
       "rows": [
         [
-          "Người nhận",
-          "Rải một lượt tới 908 đầu mối",
-          "Hiển thị quảng cáo",
-          "Đích danh nhà báo, nhà phê bình âm nhạc"
+          "Gửi tới đâu",
+          "908 đầu mối cùng lúc",
+          "Đầu báo âm nhạc",
+          "Chỉ nơi sẽ đưa tin"
+        ],
+        [
+          "Bản thảo",
+          "Khách tự viết",
+          "Hãng viết",
+          "Chúng tôi viết"
         ],
         [
           "Nội dung",
-          "Tất cả cùng một bản thảo",
-          "Chất liệu quảng cáo",
-          "Khác nhau theo tính chất đầu mối và ngôn ngữ"
+          "Một bản cho tất cả",
+          "Theo từng nơi",
+          "Khác theo tính chất và ngôn ngữ"
         ],
         [
           "Nước ngoài",
-          "Không có",
-          "Không có",
-          "Truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia"
+          "Không",
+          "Chủ yếu nói tiếng Anh",
+          "60 quốc gia · 8 ngôn ngữ"
         ],
         [
           "Giá",
-          "₩77,000–₩660,000",
-          "₩150,000–₩600,000",
+          "77.000–660.000 KRW",
+          "830.000–3.490.000 KRW",
           "{{intro}}"
         ]
       ],
-      "note": "Chúng tôi không tìm được một công ty PR chuyên về âm nhạc nào ở Hàn Quốc công khai bảng giá (khảo sát tháng 9/2026). Nơi rải thông cáo thì nhiều, nhưng danh sách đó không phải báo chí âm nhạc, cũng không phải nhà báo âm nhạc."
+      "note": "Trong phạm vi khảo sát không có hãng PR chuyên về âm nhạc ở Hàn Quốc công bố giá (tháng 9/2026). Nhiều nơi rải thông cáo, nhưng danh sách của họ không phải đầu báo âm nhạc; còn các hãng nước ngoài bán đúng thứ này thì ở một bậc giá khác.",
+      "rowHeader": "Hạng mục so sánh"
     },
     "evidence": {
       "title": "Chúng tôi đã gửi thực tế như thế này",
@@ -1630,7 +1637,7 @@
         },
         {
           "title": "Gửi tới đầu mối trong và ngoài nước",
-          "body": "Nhà báo và nhà phê bình âm nhạc, ban biên tập, đài phát thanh, cửa hàng đĩa, liên hoan âm nhạc. Nội dung khác nhau theo tính chất đầu mối — ban biên tập nhận bản thảo có thể lên bài, đài phát thanh nhận những câu dẫn để đọc trước khi phát bài."
+          "body": "Đầu báo âm nhạc và ban biên tập, đài phát thanh, cửa hàng đĩa, lễ hội. Nội dung khác nhau theo tính chất từng nơi — ban biên tập nhận bản thảo đăng được, đài nhận câu đọc trước khi phát bài."
         },
         {
           "title": "Các bản thảo phái sinh",
@@ -1678,7 +1685,7 @@
     },
     "review": {
       "title": "Chúng tôi không nhận mọi bản nhạc",
-      "lead": "Chúng tôi chỉ quảng bá âm nhạc hay. Nói chính xác hơn — chúng tôi xem đây có phải bản nhạc mà các nhà báo, nhà phê bình chúng tôi quen biết sẽ nghe tới hết hay không.",
+      "lead": "Chúng tôi chỉ quảng bá âm nhạc hay. Nói chính xác hơn — chúng tôi xem những nơi mình gửi tới có nghe hết bản nhạc này không.",
       "criteria": [
         {
           "title": "Có đầu mối nào để đến được không",
