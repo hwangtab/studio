@@ -32,10 +32,15 @@ const amountLine = (sub: Pick<Subscription, 'totalAmount'>): string =>
  * 등록 화면(pages/[locale]/subscribe/[id].tsx)도 같은 값으로 같은 분기를 한다.
  */
 export const sendSubscriptionSetupEmail = (
-  sub: Pick<Subscription, 'id' | 'kind' | 'customerEmail' | 'customerName' | 'totalAmount' | 'billingDay' | 'setupMode'>,
+  sub: Pick<Subscription, 'id' | 'kind' | 'customerEmail' | 'customerName' | 'totalAmount' | 'billingDay' | 'setupMode' | 'status'>,
   setupUrl: string,
 ): Promise<string | null> => {
   const isChange = sub.setupMode === 'change';
+  // 일시정지(paused) 구독은 카드를 새로 등록해도 자동으로 재개되지 않는다 —
+  // listDueSubscriptions가 active·past_due만 집어 간다(lib/billing/service.ts). 그 상태에
+  // "다음 결제일부터 새 카드로 청구됩니다"라고 쓰면 **오지 않을 청구를 예고**하는 것이라,
+  // 바로 위 주석이 말하는 'change' 거짓 안내와 같은 종류의 거짓이 된다.
+  const isPaused = sub.status === 'paused';
   return sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
@@ -49,7 +54,9 @@ export const sendSubscriptionSetupEmail = (
       `결제일: 매월 ${sub.billingDay}일`,
       '',
       isChange
-        ? '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 다음 결제일부터 새 카드로 청구됩니다.'
+        ? isPaused
+          ? '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 정기결제가 멈춰 있는 상태라 재개는 문의로 안내해 드립니다.'
+          : '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 다음 결제일부터 새 카드로 청구됩니다.'
         : '아래 링크에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제됩니다.',
       setupUrl,
       '',

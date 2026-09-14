@@ -2,7 +2,7 @@ import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
-import { bookings, contracts, fundingPledges, orders } from '../../db/schema';
+import { bookings, contracts, fundingPledges, orders, subscriptionPayments, subscriptions } from '../../db/schema';
 import { fetchBusyRanges } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { runLeadRateCheck } from './leadRateCheck';
@@ -162,6 +162,38 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
           : []),
         '관리자 > 예약·후원 상세에서 재발송할 수 있습니다.',
       ].join('\n'),
+    });
+  }
+
+  /**
+   * 해지·종료된 구독에 돈이 들어온 건 — **환불 판단이 필요한데 아무도 모르는 상태.**
+   *
+   * 청구 실패 → 고객 셀프 해지 → 수 시간 뒤 토스 DONE 웹훅이 도착하는 순서로 생긴다.
+   * 승인 반영은 구독 상태를 보고 되살리지 않으므로(lib/billing/service.ts) 결제 기록만
+   * paid로 남고 이용기간은 전진하지 않는다. 고객은 한 달치를 냈는데 이용은 끝나 있다.
+   *
+   * 그 순간 운영자에게 메일이 한 통 나가지만(alertLateApproval) 메일은 실패하거나 묻힐 수
+   * 있다. 이 저장소가 PR #59에서 이미 배운 것이 그것이다 — 되돌림 경로가 한 겹뿐이면
+   * 조용히 새고, 전자상거래법상 환불 기한은 그 사이에도 돈다. 여기가 두 번째 겹이다.
+   *
+   * 해소 조건: 환불하면 orders.status가 refunded/partially_refunded로 바뀌어 빠진다.
+   * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다 — 영구히 켜지지 않는다.
+   */
+  const lateApproval = await db
+    .select({ orderNo: orders.orderNo, customerName: subscriptions.customerName, status: subscriptions.status })
+    .from(subscriptionPayments)
+    .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
+    .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
+    .where(and(eq(orders.status, 'paid'), inArray(subscriptions.status, ['cancelled', 'ended'])));
+
+  if (lateApproval.length > 0) {
+    issues.push({
+      severity: 'high',
+      title: `해지된 구독에 결제가 남아 있는 건 ${lateApproval.length}건 — 환불 판단 필요`,
+      detail:
+        `주문번호: ${sample(lateApproval.map((row) => row.orderNo))}\n` +
+        '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 토스 콘솔에서 취소하고 관리자 > 구독에서 확인해 주세요.\n' +
+        '환불하면 이 항목은 자동으로 사라집니다.',
     });
   }
 

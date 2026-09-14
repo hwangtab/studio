@@ -2,7 +2,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges, orders, payments, refunds } from '../../db/schema';
-import { confirmPayment, fetchPayment, type TossPayment } from '../booking/toss';
+import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from '../booking/toss';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProject } from './projects';
 import { liveFundingOrderStatusList } from './refundable';
@@ -227,7 +227,12 @@ export const confirmFundingPledge = async (
       console.error('[funding-confirm] 승인 응답이 DONE이 아님 — 확정하지 않는다', {
         orderNo: order.orderNo, paymentKey: input.paymentKey, status: toss.payment.status,
       });
-      return { ok: false, code: 'toss_rejected', message: GENERIC };
+      // 가상계좌는 우리가 쓸 수 없는 수단이다(lib/booking/toss.ts 주석). 일반 문구
+      // ("잠시 후 다시 시도해 주세요")는 입금을 기다리는 사람에게 틀린 지시라, 무엇을
+      // 하면 되는지 말해 준다. **주문 상태는 건드리지 않는다** — 거절이 아니라 미입금이고,
+      // 실제 입금이 일어나면 DONE 웹훅이 정상 경로로 확정한다.
+      const message = isVirtualAccountPayment(toss.payment) ? VIRTUAL_ACCOUNT_CONFIRM_MESSAGE : GENERIC;
+      return { ok: false, code: 'toss_rejected', message };
     }
     approved = toss.payment;
   } else if (toss.code === ALREADY_PROCESSED_CODE) {
