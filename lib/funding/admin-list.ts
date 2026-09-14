@@ -14,20 +14,31 @@ import { backerIdentitySql, type FundingOrder } from './service';
  * slug 필터는 반드시 DB 쪽 where에 넣는다 — limit 201로 잘라낸 뒤 JS에서 걸러내면
  * 특정 프로젝트 건이 다른 프로젝트 건에 밀려 잘려 나갈 수 있고, 그러면 프로젝트별
  * 합계·CSV가 조용히 누락된다.
+ *
+ * **pledge 존재 조건도 같은 이유로 DB 쪽에 둔다.** 한정 리워드 품절 경합에서
+ * createFundingPledge는 orders를 먼저 INSERT하고 조건부 pledge INSERT가 0행이면 그 주문을
+ * status='failed'로 남긴다 — 즉 pledge가 없는 type='funding' 주문이 실제로 생긴다. 예전엔
+ * limit 201로 자른 뒤 JS `filter(o => o.fundingPledge)`로 그런 행을 버려서, 창 안에 k건이
+ * 있으면 반환 길이가 201−k가 되고 화면의 `truncated: orders.length > 200`이 k≥1이면 false가
+ * 됐다. 후원 300건짜리 프로젝트에서도 '최근 200건만 표시' 배너가 안 떠서 운영자는 화면에
+ * 보이는 200건 미만을 전량으로 믿게 된다. 걸러내기를 201 상한 **앞**으로 옮겨 판정 모집단과
+ * 상한을 일치시킨다(아래 filter는 이제 타입 좁히기 용도로만 남는다 — 버려질 행이 없다).
  */
 export const listFundingOrders = async (slug: string | null): Promise<FundingOrder[]> => {
   const db = getDb();
   const rows = await db.query.orders.findMany({
-    where: (t, { eq: e, and, inArray }) =>
-      slug
-        ? and(
-            e(t.type, 'funding'),
-            inArray(
-              t.id,
-              db.select({ id: fundingPledges.orderId }).from(fundingPledges).where(e(fundingPledges.projectSlug, slug)),
-            ),
-          )
-        : e(t.type, 'funding'),
+    where: (t, { eq: e, and, inArray }) => {
+      const pledgeOrderIds = db
+        .select({ id: fundingPledges.orderId })
+        .from(fundingPledges);
+      return and(
+        e(t.type, 'funding'),
+        inArray(
+          t.id,
+          slug ? pledgeOrderIds.where(e(fundingPledges.projectSlug, slug)) : pledgeOrderIds,
+        ),
+      );
+    },
     with: { fundingPledge: true, payments: true },
     orderBy: (t, { desc }) => [desc(t.createdAt)],
     limit: 201,
