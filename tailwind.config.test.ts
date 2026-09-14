@@ -604,8 +604,15 @@ describe('아웃라인 pill은 손으로 다시 짜지 않는다', () => {
  * 예: 어두운 히어로 위 `ring-white/70 + ring-offset-black/20`)는 면제한다 — 그런 자리에
  * 다크 짝을 강제하면 오히려 대비가 떨어진다(흰 카드 위 `primary-lighter/70` = 1.96:1).
  */
+/**
+ * `dark:` 접두사를 **매치 안에** 넣는다(1번 캡처). 예전엔 앞이 `:`면 거부하는 lookbehind
+ * 때문에 `dark:focus-visible:ring-...`이 스캔 자체에서 빠져, 이 파일이 막으려던 낮은 알파가
+ * 다크 쪽으로는 그냥 통과했다 — 실측: `'focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/20'`
+ * 에서 뒤쪽 `/20`(약 1.5:1)이 한 건도 안 걸렸다. 알파 기준(`MIN_RING_ALPHA`)은 라이트·다크
+ * 구분 없이 같게 적용한다.
+ */
 const FOCUS_RING_COLOR_RE =
-  /(?<![-\w:])focus-visible:ring-(?!offset-|inset(?![-\w])|\d)([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?:\/(\d+))?(?![-\w])/g;
+  /(?<![-\w:])(dark:)?focus-visible:ring-(?!offset-|inset(?![-\w])|\d)([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?:\/(\d+))?(?![-\w])/g;
 /** `dark:focus-visible:ring-<색>` — 오프셋·굵기·inset은 링 색이 아니다. */
 const DARK_FOCUS_RING_COLOR_RE =
   /(?<![-\w:])dark:focus-visible:ring-(?!offset-|inset(?![-\w])|\d)[a-z]/;
@@ -649,7 +656,7 @@ describe('포커스 링이 실제로 보이는가', () => {
   it('알파는 /50 이상이고, 테마에 따라 표면이 바뀌면 다크 짝이 있어야 한다', () => {
     const offenders: string[] = [];
 
-    for (const dir of ['components', 'pages']) {
+    for (const dir of SCAN_DIRS) {
       let files: string[] = [];
       try {
         files = walk(path.join(ROOT, dir));
@@ -658,7 +665,8 @@ describe('포커스 링이 실제로 보이는가', () => {
       }
       for (const file of files) {
         const rel = path.relative(ROOT, file).split(path.sep).join('/');
-        if (!/\.tsx$/.test(rel) || /\.test\.tsx$/.test(rel)) continue;
+        // pill 가드(SCAN_DIRS)와 같은 파일집합 — `.ts`의 클래스 상수도 본다.
+        if (/\.test\.tsx?$/.test(rel)) continue;
 
         readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
           const trimmed = line.trim();
@@ -667,7 +675,7 @@ describe('포커스 링이 실제로 보이는가', () => {
           FOCUS_RING_COLOR_RE.lastIndex = 0;
           let match: RegExpExecArray | null;
           while ((match = FOCUS_RING_COLOR_RE.exec(line))) {
-            const [full, , alphaRaw] = match;
+            const [full, darkPrefix, , alphaRaw] = match;
             // 같은 **문자열 리터럴** 안에서만 짝을 찾는다 — 삼항 분기를 서로의 짝으로 오인하지 않게.
             const scope = scopeOf(line, match.index);
             const allowed = FOCUS_RING_ALLOW.some((a) => a.file === rel && scope.includes(a.snippet));
@@ -680,6 +688,8 @@ describe('포커스 링이 실제로 보이는가', () => {
             }
 
             if (allowed) continue;
+            // `dark:` 링 자체는 이미 다크 짝이다 — 알파만 보고 짝 검사는 건너뛴다.
+            if (darkPrefix) continue;
             // 라이트 고정 화면은 다른 가드와 같게 면제한다(정본 §1).
             if (LIGHT_FIXED(rel)) continue;
             if (DARK_FOCUS_RING_COLOR_RE.test(scope)) continue;
@@ -727,6 +737,12 @@ describe('포커스 링이 실제로 보이는가', () => {
  * 검사 단위가 "한 줄"이 아니라 "이어 붙는 문자열 리터럴 묶음"인 이유: `cn(...)`·`cva(...)`는
  * 클래스를 여러 인자로 쪼개 두므로(`Field.tsx`가 그렇다) 줄 단위로 보면 transition과 ring이
  * 서로 다른 줄에 있어 놓친다.
+ */
+/**
+ * 알려진 한계: 묶음은 **이어 붙는 문자열 리터럴**만 합치므로, `cn('x', cond && 'y')`처럼
+ * 식이 끼어드는 형태·`cva` variants의 서로 다른 슬롯·`${...}` 보간으로 끊긴 템플릿 리터럴에서
+ * transition과 ring이 갈라져 있으면 못 잡는다. 현재 저장소에 그런 구멍은 0건이라 그대로 둔다 —
+ * 새로 생기면 클래스를 한 묶음으로 붙여 쓰거나 여기를 확장할 것.
  */
 const RING_TOKEN_RE = /(?:^|[\s])(?:[a-z-]+:)*focus(?:-visible)?:ring-\d/;
 const SHADOW_TRANSITION_RE =
@@ -804,7 +820,7 @@ describe('포커스 링이 늦게 나타나지 않는가', () => {
   it('focus ring이 있는 요소는 box-shadow를 transition 하지 않는다', () => {
     const offenders: string[] = [];
 
-    for (const dir of ['components', 'pages']) {
+    for (const dir of SCAN_DIRS) {
       let files: string[] = [];
       try {
         files = walk(path.join(ROOT, dir));

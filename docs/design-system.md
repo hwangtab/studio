@@ -315,6 +315,7 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 | 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
 | 카카오 옐로 버튼 | `ring-kakao-ink dark:ring-kakao` + 표면에 맞는 오프셋 |
 | 어두운 히어로 이미지 위 / 솔리드 브랜드 버튼 | `ring-white/70` + 표면색 오프셋(`ring-offset-black/20`·`ring-offset-primary-dark`) |
+| 스토리 amber 고정 바 | `ring-primary/70 dark:ring-white/70` + `ring-offset-amber-50 dark:ring-offset-amber-900` — 다크 짝이 `primary-lighter`가 아닌 이유는 amber-900 위 2.32:1로 미달이라서다(`white/70`은 통과) |
 
 터치 타깃은 최소 44×44px(`min-h-[44px]` 또는 `h-11`). 아이콘 전용 버튼에는 `aria-label`.
 
