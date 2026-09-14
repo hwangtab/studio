@@ -8,7 +8,12 @@ import * as schema from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../booking/toss', () => ({ cancelPayment: jest.fn(), confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
+// 상수(VIRTUAL_ACCOUNT_ERROR_CODE 등)까지 목이 덮으면 undefined가 되어 cancel.ts의 분기가
+// 조용히 꺼진다 — 실제 모듈을 펼친 위에 네트워크로 나가는 함수만 목으로 바꾼다.
+jest.mock('../booking/toss', () => ({
+  ...jest.requireActual('../booking/toss'),
+  cancelPayment: jest.fn(), confirmPayment: jest.fn(), fetchPayment: jest.fn(),
+}));
 jest.mock('./email', () => ({
   sendFundingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
@@ -314,4 +319,47 @@ it('실제 고객 주소면 종전대로 취소 메일을 보낸다', async () =
   const { orderNo } = await insertLegacyBankPledge('FND-M-REAL');
   await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
   expect(sendFundingCancelledEmails).toHaveBeenCalled();
+});
+
+/**
+ * 가상계좌 취소 거절 문구는 **보는 사람에 따라 달라야 한다.**
+ *
+ * 이 message는 후원자 셀프 취소 응답(409) 본문에 그대로 실린다. 운영자용 한 벌만 두면
+ * 후원자가 관리 링크에서 취소를 눌렀을 때 "토스 콘솔에서 …" 같은 내부 운영 지시를 보게 된다.
+ * DONE 가상계좌는 의도적으로 통과시키므로(lib/booking/toss.ts) 실제로 도달 가능한 경로다.
+ *
+ * cancelPayment 자체가 토스를 부르지 않는다는 것은 lib/booking/toss.test.ts가 본다.
+ * 여기서 보는 것은 **그 결과를 누구에게 어떻게 전하는가**(cancel.ts의 분기)다.
+ */
+describe('가상계좌 취소 거절 문구', () => {
+  const toss = jest.requireActual('../booking/toss');
+
+  const seedVirtualAccountPledge = async (orderNo: string) => {
+    const created = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const id = created.ok ? (await findFundingOrderByOrderNo(created.orderNo))!.id : '';
+    await client.execute({ sql: "UPDATE orders SET status='paid', order_no=? WHERE id=?", args: [orderNo, id] });
+    await client.execute({
+      sql: "INSERT INTO payments (id, order_id, payment_key, method) VALUES ('pva',?, 'pk_va', '가상계좌')",
+      args: [id],
+    });
+    // 실제 구현을 그대로 쓴다 — 가상계좌 가드에 걸려 네트워크로 나가지 않는다.
+    (cancelPayment as jest.Mock).mockImplementation(toss.cancelPayment);
+    return orderNo;
+  };
+
+  it('후원자 셀프 취소에는 운영 지시가 아니라 연락 안내가 나간다', async () => {
+    const orderNo = await seedVirtualAccountPledge('FND-20261015-VA000001');
+    const r = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 취소', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+    const message = r.ok === false ? r.message : '';
+    expect(message).not.toContain('토스 콘솔');
+    expect(message).toBe(toss.VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE);
+  });
+
+  it('관리자 환불에는 운영 지시가 나간다', async () => {
+    const orderNo = await seedVirtualAccountPledge('FND-20261015-VA000002');
+    const r = await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+    expect(r.ok === false && r.message).toBe(toss.VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE);
+  });
 });

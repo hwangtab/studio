@@ -2,7 +2,7 @@ import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, refunds } from '../../db/schema';
-import { cancelPayment } from '../booking/toss';
+import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 import { computeProjectState, getFundingProject } from './projects';
@@ -149,7 +149,13 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     await db.insert(refunds).values({ paymentId: payment!.id, amount: refundAmount, reason: input.reason, requestedBy: input.requestedBy, status: 'failed' });
     const internal = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
     console.error('[funding-cancel] 토스 취소 실패', { orderNo: order.orderNo, code: toss.code, message: toss.message });
-    return { ok: false, code: 'toss_failed', message: internal ? GENERIC : toss.message };
+    // 이 message는 **후원자 셀프 취소 응답 본문에 그대로 실린다.** 가상계좌 거절의 기본
+    // 문구는 고객용이고(toss.ts), 운영 지시는 관리자가 요청했을 때만 바꿔 단다.
+    const adminOnly = toss.code === VIRTUAL_ACCOUNT_ERROR_CODE && input.requestedBy === 'admin';
+    return {
+      ok: false, code: 'toss_failed',
+      message: internal ? GENERIC : adminOnly ? VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE : toss.message,
+    };
   }
   try {
     await db.insert(refunds).values({

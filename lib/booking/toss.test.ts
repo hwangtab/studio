@@ -3,7 +3,7 @@
  * .abort()만 존재). toss.ts는 AbortSignal.timeout을 쓰므로 이 파일만 node 환경으로 돈다.
  * @jest-environment node
  */
-import { confirmPayment, cancelPayment, fetchPayment } from './toss';
+import { VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE, confirmPayment, cancelPayment, fetchPayment } from './toss';
 
 const okPayment = { paymentKey: 'pk', orderId: 'SNB-1', status: 'DONE', totalAmount: 275000 };
 
@@ -151,13 +151,19 @@ describe('가상계좌 차단', () => {
     expect(await confirmPayment({ paymentKey: 'pk', orderId: 'FND-1', amount: 30000 })).toMatchObject({ ok: true });
   });
 
-  // 토스를 부르면 refundReceiveAccount 누락으로 거절되고 그 원문이 고객 화면에 그대로 노출된다.
-  it('가상계좌 취소는 토스를 부르지 않고 운영자용 문구로 끝낸다', async () => {
+  /**
+   * 토스를 부르면 refundReceiveAccount 누락으로 거절되고 그 원문이 고객 화면에 그대로 노출된다.
+   *
+   * **기본 문구는 고객용이다** — 이 message는 셀프 취소 응답 본문에 그대로 실린다. 운영 지시
+   * ("토스 콘솔에서…")는 관리자 요청일 때만 cancel.ts가 바꿔 단다.
+   */
+  it('가상계좌 취소는 토스를 부르지 않고 고객용 문구로 끝낸다', async () => {
     const mock = jest.fn();
     global.fetch = mock as unknown as typeof fetch;
     const r = await cancelPayment({ paymentKey: 'pk', cancelReason: 'x', cancelAmount: 1000, paymentMethod: '가상계좌' });
     expect(r).toMatchObject({ ok: false, code: 'VIRTUAL_ACCOUNT_UNSUPPORTED' });
-    expect(r.ok === false && r.message).toContain('토스 콘솔');
+    expect(r.ok === false && r.message).toBe(VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE);
+    expect(r.ok === false && r.message).not.toContain('토스 콘솔');
     expect(mock).not.toHaveBeenCalled();
   });
 

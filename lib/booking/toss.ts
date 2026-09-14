@@ -76,8 +76,19 @@ const request = async (
  */
 const VIRTUAL_ACCOUNT_METHODS = ['가상계좌', 'VIRTUAL_ACCOUNT', 'VIRTUAL ACCOUNT', 'virtualAccount'];
 export const VIRTUAL_ACCOUNT_ERROR_CODE = 'VIRTUAL_ACCOUNT_UNSUPPORTED';
-export const VIRTUAL_ACCOUNT_MESSAGE =
-  '가상계좌는 사용할 수 없는 결제수단입니다. 카드·간편결제로 다시 시도해 주세요. 문의: 010-4255-7893';
+
+/**
+ * 취소 실패 문구는 **보는 사람에 따라 다르다.**
+ *
+ * 이 코드는 고객 셀프 취소 응답에도 그대로 실린다(cancel.ts → toss_failed → 409 본문).
+ * 그래서 기본값은 고객용이고, 운영 지시("토스 콘솔에서…")는 관리자 요청일 때만
+ * 호출자가 바꿔 단다. 예전엔 운영자용 한 벌뿐이라, 후원자가 관리 링크에서 취소를 누르면
+ * 내부 운영 절차가 그대로 노출됐다.
+ */
+export const VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE =
+  '이 결제수단은 화면에서 취소할 수 없습니다. 010-4255-7893으로 연락 주시면 환불해 드립니다.';
+export const VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE =
+  '가상계좌 결제는 화면에서 환불할 수 없습니다. 고객에게 환불받을 계좌(은행·계좌번호·예금주)를 받아 토스 콘솔에서 직접 취소해 주세요.';
 
 export const isVirtualAccountMethod = (method: string | null | undefined): boolean =>
   typeof method === 'string' && VIRTUAL_ACCOUNT_METHODS.some((m) => m.toLowerCase() === method.trim().toLowerCase());
@@ -97,11 +108,17 @@ export const confirmPayment = async (input: { paymentKey: string; orderId: strin
    * 그 건은 기록한 뒤 관리자 화면의 경고로 드러내고 토스 콘솔에서 손으로 환불한다.
    */
   if (result.ok && result.payment.status !== 'DONE' && isVirtualAccountPayment(result.payment)) {
-    console.error('[toss] 지원하지 않는 결제수단(가상계좌) 승인 시도 — 확정하지 않는다', {
+    /**
+     * 고객용 문구를 여기서 따로 만들지 않는다 — 호출자(confirm.ts)는 거절 계열(allowlist,
+     * DECLINE_CODE_PATTERN)이 아닌 코드의 message를 **고객에게 보여주지 않고** 자기 GENERIC
+     * 문구로 바꾼다. 그래서 여기 적는 문구는 어떤 사용자에게도 닿지 않는다. 안 닿는 문구를
+     * 남겨 두면 다음 사람이 닿는 줄 알고 고치므로, 설명은 이 로그 한 곳에만 둔다.
+     */
+    console.error('[toss] 지원하지 않는 결제수단(가상계좌) 승인 시도 — 확정하지 않는다. 고객에겐 일반 문구가 나간다', {
       paymentKey: input.paymentKey, orderId: input.orderId,
       method: result.payment.method, status: result.payment.status,
     });
-    return { ok: false, code: VIRTUAL_ACCOUNT_ERROR_CODE, message: VIRTUAL_ACCOUNT_MESSAGE };
+    return { ok: false, code: VIRTUAL_ACCOUNT_ERROR_CODE, message: '가상계좌는 지원하지 않는 결제수단입니다.' };
   }
   return result;
 };
@@ -135,7 +152,9 @@ export const cancelPayment = (input: {
     return Promise.resolve({
       ok: false,
       code: VIRTUAL_ACCOUNT_ERROR_CODE,
-      message: '가상계좌 결제는 화면에서 환불할 수 없습니다. 토스 콘솔에서 환불계좌를 받아 처리해 주세요. 문의: 010-4255-7893',
+      // 기본값은 **고객용**이다 — 이 message는 셀프 취소 응답 본문에 그대로 실린다.
+      // 관리자 요청이면 호출자가 VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE로 바꿔 단다.
+      message: VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE,
     });
   }
   return request(`/payments/${encodeURIComponent(input.paymentKey)}/cancel`, {

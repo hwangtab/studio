@@ -7,7 +7,7 @@ import { deleteBookingEvent } from './gcal';
 import { canAdminRefund, isCancelledRemainderRefund } from './admin-serialize';
 import { computeRefund } from './refund-policy';
 import { findOrderByOrderNo } from './service';
-import { cancelPayment } from './toss';
+import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from './toss';
 
 export type CancelOutcome =
   | { ok: true; refundAmount: number }
@@ -94,13 +94,25 @@ const validateOverrideAmount = (remaining: number, input: CancelInput): string |
   return null;
 };
 
-/** 토스 취소가 거절됐을 때 로그를 남기고, 내부 오류는 원문을 감춘 일반 문구로 바꾼다(confirm.ts와 동일 원칙). */
-const tossFailureMessage = (context: string, orderNo: string, code: string, message: string): string => {
+/**
+ * 토스 취소가 거절됐을 때 로그를 남기고, 내부 오류는 원문을 감춘 일반 문구로 바꾼다
+ * (confirm.ts와 동일 원칙).
+ *
+ * `requestedBy`를 함께 보는 이유: 이 문구는 **고객 셀프 취소 응답 본문에 그대로 실린다.**
+ * 가상계좌 거절의 기본 문구는 고객용이고(toss.ts), 운영 지시("토스 콘솔에서…")는 관리자가
+ * 요청했을 때만 바꿔 단다. 예전엔 한 벌뿐이라 후원자가 관리 링크에서 취소를 누르면 내부
+ * 운영 절차가 그대로 노출됐다.
+ */
+const tossFailureMessage = (
+  context: string, orderNo: string, code: string, message: string, requestedBy: 'customer' | 'admin',
+): string => {
   const isInternalError = code === 'CONFIG_ERROR' || code === 'NETWORK_ERROR';
   if (isInternalError) {
     console.error(`[${context}] 토스 취소 내부 오류`, { orderNo, code, message });
   }
-  return isInternalError ? GENERIC_TOSS_ERROR_MESSAGE : message;
+  if (isInternalError) return GENERIC_TOSS_ERROR_MESSAGE;
+  if (code === VIRTUAL_ACCOUNT_ERROR_CODE && requestedBy === 'admin') return VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE;
+  return message;
 };
 
 /** cancelSessionBooking·cancelMixingOrder가 공유하는 실패 결과 타입. */
@@ -173,7 +185,7 @@ const settleRefund = async (args: {
       return {
         ok: false,
         code: 'toss_failed',
-        message: tossFailureMessage('booking-cancel', order.orderNo, toss.code, toss.message),
+        message: tossFailureMessage('booking-cancel', order.orderNo, toss.code, toss.message, input.requestedBy),
       };
     }
     tossTransactionKey = toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null;
