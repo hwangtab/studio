@@ -618,3 +618,26 @@ export type BillingKey = typeof billingKeys.$inferSelect;
 export type NewBillingKey = typeof billingKeys.$inferInsert;
 export type SubscriptionPayment = typeof subscriptionPayments.$inferSelect;
 export type NewSubscriptionPayment = typeof subscriptionPayments.$inferInsert;
+
+/**
+ * 보도자료 메일의 수신거부.
+ *
+ * 주소가 아니라 sha256(주소 + 솔트)의 앞 32자를 담는다. 솔트는 운영자 맥에만 있어
+ * 이 테이블만으로는 누구인지 알 수 없고, 우리는 우리 명단에서 맞추므로 잃는 기능이
+ * 없다. 기자·평론가 명단을 클라우드에 두지 않기 위한 선택이다.
+ *
+ * email_hash가 UNIQUE인 것과 삽입이 ON CONFLICT DO NOTHING인 것은 한 쌍이다 —
+ * campaign_slug·created_at은 **처음 거부한 시점**이라 나중 값으로 덮으면
+ * "언제부터 거부했는가"를 잃는다.
+ */
+export const pressOptoutSourceEnum = ['one-click', 'page'] as const;
+
+export const pressOptouts = sqliteTable('press_optouts', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  emailHash: text('email_hash').notNull().unique(),
+  campaignSlug: text('campaign_slug').notNull(),
+  source: text('source', { enum: pressOptoutSourceEnum }).notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+});
