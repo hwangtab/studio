@@ -1,0 +1,19 @@
+{
+  "note": "두 저장소가 같은 토큰 형식을 쓰는지 고정하는 벡터. studio/tests/press/press-token-vectors.json과 내용이 같아야 한다.",
+  "secret": "vector-secret-not-for-production",
+  "salt": "vector-salt-not-for-production",
+  "cases": [
+    {
+      "email": "Critic@Example.com",
+      "hash": "bfb9572515b1f09d46fa0c352d7a5fef",
+      "payload": { "v": 1, "h": "bfb9572515b1f09d46fa0c352d7a5fef", "c": "namsan-tower", "l": "ko", "t": 1789000000 },
+      "token": "eyJ2IjoxLCJoIjoiYmZiOTU3MjUxNWIxZjA5ZDQ2ZmEwYzM1MmQ3YTVmZWYiLCJjIjoibmFtc2FuLXRvd2VyIiwibCI6ImtvIiwidCI6MTc4OTAwMDAwMH0.tWoB3NPqUmOlpy8qxP_meGfk-86nPTdQ2hI9u22W6K4"
+    },
+    {
+      "email": " editor@press.example.jp ",
+      "hash": "d59b5966b777ea2e442b91f8b846ffb8",
+      "payload": { "v": 1, "h": "d59b5966b777ea2e442b91f8b846ffb8", "c": "ksfp-press", "l": "ja", "t": 1789000001 },
+      "token": "eyJ2IjoxLCJoIjoiZDU5YjU5NjZiNzc3ZWEyZTQ0MmI5MWY4Yjg0NmZmYjgiLCJjIjoia3NmcC1wcmVzcyIsImwiOiJqYSIsInQiOjE3ODkwMDAwMDF9.bfv6WCfpUlb9SiSIxY68wRk5q4SyKRC3d7Rqv07Vteo"
+    }
+  ]
+}

@@ -3,6 +3,8 @@ import { defaultLocale, locales, type Locale } from './lib/i18n-config';
 import { BOT_PATTERN } from './lib/bot-detection';
 import { isRoutePatternPath } from './lib/routePattern';
 import regionRedirectMap from './lib/regionRedirectMap.json';
+// 수신거부 링크 전용 호스트. 이 호스트는 /u/<token> 하나만 응답한다.
+import { PRESS_HOST } from './lib/press/host';
 
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 
@@ -10,6 +12,7 @@ const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 // next.config.mjs redirects()는 routes 한도(1000)를 초과하므로 middleware에서 처리.
 const REGION_REDIRECT_MAP = regionRedirectMap as Record<string, string>;
 const STORIES_PATH_RE = /^\/(ko|en|zh|es|vi|th|uz)\/stories\/([^/]+)\/?$/;
+
 
 // /stories/<slug>이 스토리가 아니라 상위 페이지로 308되는 슬러그 → 목적지 경로.
 // regionRedirectMap이 이 슬러그를 destSlug로 가리킬 때 /stories/destSlug(다시 308)로
@@ -138,6 +141,27 @@ export function middleware(request: NextRequest) {
     // return으로 해소.
     if (pathname === '/llms-full-ko.txt' || pathname === '/llms-full-en.txt' || pathname === '/llms-full-zh.txt') {
         return NextResponse.next();
+    }
+
+    /**
+     * press.studionol.co.kr — 보도자료 수신거부 링크 전용 호스트.
+     *
+     * 이 블록이 canonical host 강제보다 **앞에** 있어야 한다. 아래쪽
+     * shouldEnforceCanonicalHost는 studionol.co.kr이 아닌 호스트를 전부 308로
+     * 돌려보내므로, 여기서 먼저 끊지 않으면 기자가 누른 수신거부 링크가
+     * studionol.co.kr/u/<token>으로 튕겨 404로 끝난다.
+     *
+     * 그리고 /u 말고는 전부 404다. 한 프로젝트에 도메인을 하나 더 붙이는 것이라,
+     * 막지 않으면 사이트 전체가 두 주소로 살면서 색인이 갈린다.
+     */
+    if (request.headers.get('host') === PRESS_HOST) {
+        const unsub = /^\/u\/(.+)$/.exec(pathname);
+        if (!unsub) {
+            return setSecurityHeaders(new NextResponse(null, { status: 404 }));
+        }
+        const target = request.nextUrl.clone();
+        target.pathname = `/api/press/unsubscribe/${unsub[1]}`;
+        return setSecurityHeaders(NextResponse.rewrite(target));
     }
 
     /**
