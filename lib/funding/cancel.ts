@@ -2,11 +2,11 @@ import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, refunds } from '../../db/schema';
-import { cancelPayment } from '../booking/toss';
+import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 import { computeProjectState, getFundingProject } from './projects';
-import { remainingRefundable } from './refundable';
+import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
 
@@ -30,6 +30,10 @@ const notifyCancelled = async (
   refundAmount: number,
 ): Promise<void> => {
   let emailError: string | null = null;
+  // 플레이스홀더 주소(수기 등록에서 연락처를 비운 건)로 가는 **고객 항목**은 발송 계층이
+  // 조용히 떨어뜨린다(email.ts withoutUndeliverableCustomer). 여기서 통째로 건너뛰면
+  // 운영자 사본까지 사라지는데, 수기 건의 환불은 손으로 계좌에 송금하는 작업이라 그
+  // 메일이 실무의 시작점이다.
   try {
     emailError = await sendFundingCancelledEmails(order, project, mode, refundAmount);
   } catch (error) {
@@ -99,7 +103,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     }
     if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
     const claim = await db.run(
-      sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')`,
+      sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
     );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 후원입니다.' };
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
@@ -126,6 +130,9 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const toss = await cancelPayment({
     paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: refundAmount,
     idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),
+    // 가상계좌면 토스를 부르지 않고 운영자가 알아볼 수 있는 문구로 끝낸다 — 부르면 토스가
+    // refundReceiveAccount 누락으로 거절하고 그 원문이 고객 화면에 그대로 나간다.
+    paymentMethod: payment!.method,
   });
   if (!toss.ok) {
     try {
@@ -136,7 +143,13 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     await db.insert(refunds).values({ paymentId: payment!.id, amount: refundAmount, reason: input.reason, requestedBy: input.requestedBy, status: 'failed' });
     const internal = toss.code === 'CONFIG_ERROR' || toss.code === 'NETWORK_ERROR';
     console.error('[funding-cancel] 토스 취소 실패', { orderNo: order.orderNo, code: toss.code, message: toss.message });
-    return { ok: false, code: 'toss_failed', message: internal ? GENERIC : toss.message };
+    // 이 message는 **후원자 셀프 취소 응답 본문에 그대로 실린다.** 가상계좌 거절의 기본
+    // 문구는 고객용이고(toss.ts), 운영 지시는 관리자가 요청했을 때만 바꿔 단다.
+    const adminOnly = toss.code === VIRTUAL_ACCOUNT_ERROR_CODE && input.requestedBy === 'admin';
+    return {
+      ok: false, code: 'toss_failed',
+      message: internal ? GENERIC : adminOnly ? VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE : toss.message,
+    };
   }
   try {
     await db.insert(refunds).values({

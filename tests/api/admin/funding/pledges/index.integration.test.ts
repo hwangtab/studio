@@ -9,10 +9,16 @@ import * as schema from '../../../../../db/schema';
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../../../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn().mockResolvedValue({ ok: true }) }));
-jest.mock('../../../../../lib/funding/service', () => ({
-  ...jest.requireActual('../../../../../lib/funding/service'),
-  expireStalePledges: jest.fn().mockResolvedValue(undefined),
-}));
+jest.mock('../../../../../lib/funding/service', () => {
+  const actual = jest.requireActual('../../../../../lib/funding/service');
+  return {
+    ...actual,
+    expireStalePledges: jest.fn().mockResolvedValue(undefined),
+    // 사전 검사와 INSERT 사이의 경합을 재현하려면 "읽기 시점의 낡은 스냅샷"을 만들 수 있어야
+    // 한다. 기본 구현은 실제 함수 그대로다.
+    aggregateProjectStatus: jest.fn((...args: unknown[]) => actual.aggregateProjectStatus(...args)),
+  };
+});
 jest.mock('../../../../../lib/funding/projects', () => ({
   ...jest.requireActual('../../../../../lib/funding/projects'),
   getFundingProject: (slug: string) => (slug === 'demo' ? PROJECT : null),
@@ -24,6 +30,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../../pages/api/admin/funding/pledges/index';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../../../lib/funding/projects';
+// eslint-disable-next-line import/first
+import { aggregateProjectStatus } from '../../../../../lib/funding/service';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -134,4 +142,46 @@ it('이메일이 있으면 앞뒤 공백만 정리해 그대로 쓴다', async (
   const r = await call({ ...VALID_BODY, customerEmail: '  real@example.com  ' });
   const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
   expect(order.rows[0]?.customer_email).toBe('real@example.com');
+});
+
+/**
+ * 수기 등록도 온라인 경로와 같은 원자적 재고 조건을 써야 한다.
+ *
+ * 예전엔 aggregateProjectStatus로 remaining을 읽어 검사한 뒤 **무조건** INSERT했다. 그 읽기와
+ * 쓰기 사이(수백 ms)에 온라인 후원자가 같은 한정 리워드를 집으면 양쪽 다 검사를 통과해
+ * 한정 수량을 초과 판매했다. 둘 다 확정 상태라 자동 취소 대상이 아니고, remaining은
+ * Math.max로 하한이 걸려 화면엔 '품절'로만 보여 초과분이 드러나지도 않았다.
+ *
+ * 여기서는 사전 검사가 낡은 스냅샷(재고 남음)을 보게 하고 실제 DB 재고는 0으로 만든다 —
+ * 막아 내는 것이 INSERT의 WHERE뿐임을 보이기 위해서다.
+ */
+it('사전 검사 뒤 재고가 소진되면 409 — 고아 주문도 남기지 않는다', async () => {
+  // 실제 재고는 이미 0 — 한정 1개짜리 CD를 온라인 후원이 pending 홀드로 잡은 상태.
+  await client.execute(`INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+      manage_token, item_amount, vat_amount, total_amount, created_at, updated_at)
+    VALUES ('rival','FND-RIVAL','funding','pending','경쟁자','010-2','r@example.com','tok-rival',27273,2727,30000, unixepoch(), unixepoch())`);
+  await client.execute(`INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+      quantity, additional_amount, payment_method, hold_expires_at, created_at, updated_at)
+    VALUES ('rival-p','rival','demo','cd','CD',30000,1,0,'toss', unixepoch()+900, unixepoch(), unixepoch())`);
+
+  // 읽기 시점의 낡은 스냅샷 — 사전 검사는 이걸 보고 통과한다.
+  (aggregateProjectStatus as jest.Mock).mockResolvedValueOnce({
+    raisedAmount: 0, backerCount: 0, backerPersonCount: 0, remaining: { cd: 1, mail: null }, publicBackers: [],
+  });
+
+  const r = await call({ ...VALID_BODY, rewardId: 'cd', quantity: 1, additionalAmount: 0 });
+  expect(r.status).toBe(409);
+
+  /**
+   * 진 쪽의 주문은 **온라인 경로와 같은 모양**(status='failed')으로 남아야 한다. paid로
+   * 남으면 pledge 없는 확정 주문이 되어 목록·CSV·집계가 서로 다르게 취급한다.
+   */
+  const orphans = await client.execute(
+    "SELECT status FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
+  );
+  expect(orphans.rows.map((r) => String(r.status))).toEqual(['failed']);
+
+  // 한정 수량도 지켜져야 한다 — CD pledge는 여전히 1건뿐.
+  const cd = await client.execute("SELECT COUNT(*) AS c FROM funding_pledges WHERE reward_id='cd'");
+  expect(Number(cd.rows[0].c)).toBe(1);
 });

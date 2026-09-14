@@ -12,7 +12,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
-import { remainingRefundable } from '../../../lib/funding/refundable';
+import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
@@ -104,13 +104,22 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   };
 
   // 부분환불 건도 잔액이 남아 있으면 관리자가 마저 환불할 수 있어야 한다.
-  const canRefund = ['paid', 'partially_refunded'].includes(pledge.status);
+  const canRefund = isLiveFundingOrderStatus(pledge.status);
 
   const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 후원의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
   const handleSaveFulfillment = () =>
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
-  const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
+  /**
+   * 확인을 받는다 — 이 버튼은 상태와 무관하게 **항상** 렌더되는데 누르면 곧바로 고객에게
+   * 메일이 나간다. 되돌릴 수 없는 대외 발송에 확인이 없던 유일한 자리였다.
+   * 무엇이 나가는지도 함께 알린다(확정 안내인지 환불 안내인지가 주문 상태로 갈린다).
+   */
+  const handleResendEmail = () =>
+    run(
+      () => patchPledge(pledge.id, { action: 'resend_email' }),
+      `${pledge.customerEmail}로 ${isLiveFundingOrderStatus(pledge.status) ? '후원 확정' : '환불'} 안내 메일을 다시 보낼까요?`,
+    );
   /**
    * 고객이 남긴 청약철회 의사를 지우는 조작이라 사유를 반드시 받는다(API도 없으면 400).
    * 사유는 관리자 메모에 날짜와 함께 덧붙고, 후원자에게는 확인 메일이 나간다.
@@ -145,7 +154,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
-  const fulfillmentLocked = pledge.status !== 'paid' || pledge.refundRequested;
+  //
+  // 상태 판정은 API·CSV·집계와 같은 헬퍼를 쓴다. 화면만 'paid'로 굳어 있으면 서버가 허용하는
+  // 조작을 화면이 막는(또는 그 반대의) 조합이 다시 생긴다 — 부분환불 건이 정확히 그랬다.
+  const fulfillmentLocked = !isLiveFundingOrderStatus(pledge.status) || pledge.refundRequested;
 
   return (
     <>
@@ -169,6 +181,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
               <strong className="block mb-1">결제 기록과 주문 상태 불일치 — 토스 콘솔 확인 필요</strong>
               주문 상태는 “{STATUS_LABELS[pledge.status] ?? pledge.status}”인데 결제 기록이 있습니다.
+            </div>
+          )}
+
+          {pledge.virtualAccountPayment && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+              <strong className="block mb-1">가상계좌 결제 — 화면에서 환불할 수 없습니다</strong>
+              토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
+              받는 화면이 없습니다. 아래 “환불”을 눌러도 실패합니다.
+              <span className="block mt-2">
+                후원자에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 약관 제10조에 따라
+                접수일부터 3영업일 이내입니다. 취소하면 웹훅 대사가 이 화면의 상태를 맞춥니다.
+              </span>
             </div>
           )}
 
@@ -228,7 +252,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />
-                <DescriptionRow label="입금 기한" value={formatKstDateTimeFull(pledge.holdExpiresAt)} />
+                <DescriptionRow label="결제 홀드 만료" value={formatKstDateTimeFull(pledge.holdExpiresAt)} />
                 <DescriptionRow label="접수 시각" value={formatKstDateTime(pledge.createdAt)} />
               </dl>
             </div>
@@ -237,7 +261,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               {canRefund && (
                 <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}
-              {pledge.refundRequested && pledge.status === 'paid' && (
+              {pledge.refundRequested && isLiveFundingOrderStatus(pledge.status) && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
               )}
               {pledge.needsReview && (
@@ -281,10 +305,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 </Field>
                 <Button light disabled={busy || fulfillmentLocked} onClick={handleSaveFulfillment}>저장</Button>
               </div>
-              {pledge.status !== 'paid' && (
+              {!isLiveFundingOrderStatus(pledge.status) && (
                 <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
               )}
-              {pledge.status === 'paid' && pledge.refundRequested && (
+              {isLiveFundingOrderStatus(pledge.status) && pledge.refundRequested && (
                 <p className="mt-2 text-xs text-orange-700">
                   환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿀 수 있습니다.
                 </p>

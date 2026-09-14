@@ -5,6 +5,7 @@ import { fundingPledges, orders, payments, refunds } from '../../db/schema';
 import { confirmPayment, fetchPayment, type TossPayment } from '../booking/toss';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProject } from './projects';
+import { liveFundingOrderStatusList } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 
@@ -384,7 +385,7 @@ export const syncFundingCancelledFromToss = async (payment: TossPayment): Promis
   // 이미 같은 상태거나 그 이상(refunded)으로 전이된 주문은 다시 잡지 않는다 — 원자적이지만
   // 결과를 좌우하지는 않는다: 아래 환불 대사가 claim 성공 여부와 무관하게 델타로 정확해진다.
   await db.run(
-    sql`UPDATE orders SET status = ${nextStatus}, updated_at = unixepoch() WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')`,
+    sql`UPDATE orders SET status = ${nextStatus}, updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
   );
 
   const recorded = await db.query.refunds.findMany({

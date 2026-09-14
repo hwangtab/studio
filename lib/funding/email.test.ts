@@ -117,6 +117,40 @@ it('취소 요청 철회 메일은 고객·운영자 두 통, 사유와 다시 �
   expect((sendEmail as jest.Mock).mock.calls[1][0].to).toBe(OPERATOR_EMAIL);
 });
 
+/**
+ * 수기 등록에서 연락처를 비우면 customer_email이 플레이스홀더(manual@studionol.co.kr)다.
+ * 우리 도메인이라 resend.ts의 배달불가 판정(RFC 2606 예약 도메인)에 안 걸려 실제로 발송되고,
+ * 그 메일은 우리 수신함으로 되돌아오거나 반송돼 발신 도메인 평판을 깎는다.
+ *
+ * **운영자 사본은 반드시 남아야 한다** — 수기 건의 환불은 손으로 계좌에 송금하는 작업이라,
+ * 무엇을 얼마나 돌려줘야 하는지 알려 주는 그 메일이 실무의 시작점이다.
+ */
+describe('플레이스홀더 주소', () => {
+  const manualOrder = { ...(order as object), customerEmail: 'manual@studionol.co.kr' } as never;
+
+  it.each([
+    ['확정', () => sendFundingConfirmedEmails(manualOrder, project)],
+    ['취소', () => sendFundingCancelledEmails(manualOrder, project, 'recorded', 5000)],
+    ['환불요청 철회', () => sendFundingRefundRequestClearedEmails(manualOrder, project, '사유')],
+  ])('%s 메일: 고객 항목만 빠지고 운영자 사본은 나간다', async (_label, call) => {
+    await call();
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].to).toBe(OPERATOR_EMAIL);
+  });
+
+  /**
+   * 조용히 빼는 것이 의도다 — 실패로 세면 그 문자열이 orders.notificationError에 남아
+   * 헬스체크의 '확인 메일이 나가지 않은 주문'이 영구히 울린다.
+   */
+  it('건너뛴 고객 항목을 실패로 세지 않는다', async () => {
+    expect(await sendFundingCancelledEmails(manualOrder, project, 'recorded', 5000)).toBeNull();
+  });
+
+  it('실제 고객 주소면 종전대로 두 통 모두 나간다', async () => {
+    await sendFundingCancelledEmails(order, project, 'recorded', 5000);
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+  });
+});
 
 /**
  * 고객이 **보는** 주소는 운영자 개인 Gmail이 아니라 사이트 주소여야 한다.

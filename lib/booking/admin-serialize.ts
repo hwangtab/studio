@@ -1,4 +1,5 @@
 import type { AvailabilityBlock, Booking, Order, Payment, Refund, WorkOrder } from '../../db/schema';
+import { isVirtualAccountMethod } from './toss';
 import { getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
 
@@ -84,6 +85,16 @@ export interface AdminBookingListItem {
    * 어느 쪽이든 관리자가 토스 콘솔과 대조해야 한다.
    */
   mismatch: boolean;
+  /**
+   * 결제수단이 **가상계좌**다 — 우리가 쓸 수 없는 수단이다(2026-09-11 확인).
+   *
+   * 환불에 refundReceiveAccount(은행·계좌번호·예금주)가 필수인데 그 값을 받는 화면이 없어서,
+   * 이 주문은 제품 안에서 환불할 수 없다(약관 제10조의 3영업일 환불을 지킬 수단이 없다).
+   * 승인 단계에서 막지만(toss.ts) 이미 입금돼 들어온 건은 기록하는 쪽이 맞으므로, 그런 건이
+   * 생기면 운영자가 **보고** 토스 콘솔에서 손으로 처리해야 한다. 조용히 두면 환불 버튼을
+   * 눌러 502를 보고 나서야 알게 된다.
+   */
+  virtualAccountPayment: boolean;
   createdAt: string;
 }
 
@@ -149,6 +160,7 @@ export const serializeBookingForAdmin = (
       (UNPAID_ORDER_STATUSES.has(order.status) && order.payments.length > 0) ||
       (booking?.status === 'confirmed' && order.status === 'failed') ||
       (workOrder !== undefined && WORK_ORDER_RECEIVED_OR_LATER.has(workOrder.status) && order.status === 'failed'),
+    virtualAccountPayment: order.payments.some((p) => isVirtualAccountMethod(p.method)),
     createdAt: order.createdAt.toISOString(),
   };
 };
@@ -174,6 +186,15 @@ export interface AdminBookingDetail extends AdminBookingListItem {
   } | null;
   /** 최신순. Phase 1은 예약당 최대 1건이지만(취소는 confirmed에서만 가능) 실패 이력까지 보여준다. */
   refunds: AdminRefundItem[];
+  /**
+   * 아직 환불하지 않고 남은 금액 = totalAmount − Σ(done 환불, **모든 payments 행**).
+   *
+   * 화면의 '임의 환불' 상한이 이 값이어야 한다. 예전엔 totalAmount를 상한으로 띄워서,
+   * 부분환불 이력이 있는 건에 총액을 넣으면 서버가 '환불 금액이 올바르지 않습니다'로
+   * 되돌리는 죽은 입력이 됐다(cancel.ts validateOverrideAmount의 상한은 잔액이다).
+   * 관리자 환불 버튼을 띄울지도 이 값을 본다 — 잔액 0이면 돌려줄 돈이 없다.
+   */
+  refundableAmount: number;
 }
 
 export const serializeBookingDetailForAdmin = (
@@ -208,8 +229,75 @@ export const serializeBookingDetailForAdmin = (
         tossTransactionKey: refund.tossTransactionKey,
         createdAt: refund.createdAt.toISOString(),
       })),
+    // 잔액은 **모든** payments 행의 done 환불을 합산해 뺀다 — 최신 결제 한 행만 보면 웹훅이
+    // 다른 행에 기록한 환불이 빠져 상한이 과다 계산된다(lib/funding/refundable.ts와 같은 이유).
+    refundableAmount: Math.max(
+      0,
+      order.totalAmount -
+        order.payments.reduce(
+          (sum, p) => sum + p.refunds.filter((r) => r.status === 'done').reduce((s, r) => s + r.amount, 0),
+          0,
+        ),
+    ),
   };
 };
+
+/**
+ * 결제가 아직 살아 있는 orders.status — 환불할 돈이 남아 있을 수 있는 상태다.
+ * (0% 티어 당일 취소는 환불액이 0원이라 주문이 'paid'로 남는다 — 그래서 둘 다 본다.)
+ */
+export const LIVE_ORDER_STATUSES_FOR_REFUND = ['paid', 'partially_refunded'] as const;
+
+/**
+ * 관리자 환불 폼을 띄워도 되는 예약·주문 상태.
+ *
+ * `cancelled`가 들어 있는 것이 이번 수정의 핵심이다. 두 가지 실제 상황이 여기로 들어온다.
+ *  ① 이용일 1~2일 전 셀프 취소 → 50% 티어 → booking cancelled + order partially_refunded.
+ *     나머지 50%를 호의로 더 돌려주려면 잔액 환불이 필요하다.
+ *  ② 이용일 **당일** 셀프 취소 → 0% 티어 → booking cancelled인데 order는 'paid' 그대로.
+ *     분쟁·호의 환불을 제품 안에서 할 방법이 아예 없었다(토스 콘솔 수기 취소가 유일한 우회).
+ *
+ * lib은 그 경로(isCancelledRemainderRefund)를 진작 갖고 있었는데 **그 입력을 띄우는 화면이
+ * 없었다.** 그래서 판정을 이 한 함수로 모으고, 화면(pages/admin/bookings/[id].tsx)과
+ * cancelSessionBooking·cancelMixingOrder가 같은 것을 본다.
+ *
+ * `completed`·`no_show`는 넣지 않는다 — cancelSessionBooking이 거절하므로 폼을 띄우면
+ * 눌러도 실패하는 죽은 버튼이 된다.
+ */
+const ADMIN_REFUNDABLE_ENTITY_STATUSES = {
+  session: ['confirmed', 'cancelled'],
+  mixing: ['received', 'in_progress', 'delivered', 'cancelled'],
+} as const;
+
+export const canAdminRefund = (input: {
+  /** 'mixing'이면 work_orders.status를, 아니면 bookings.status를 본다. */
+  orderType: string;
+  orderStatus: string;
+  /** 세션은 bookings.status, 믹싱은 work_orders.status. 행이 없으면 null. */
+  entityStatus: string | null;
+  /** remainingRefundable 결과. 0이면 돌려줄 돈이 없다. */
+  refundableAmount: number;
+}): boolean => {
+  if (!(LIVE_ORDER_STATUSES_FOR_REFUND as readonly string[]).includes(input.orderStatus)) return false;
+  if (input.refundableAmount <= 0) return false;
+  if (input.entityStatus === null) return false;
+  const allowed: readonly string[] =
+    ADMIN_REFUNDABLE_ENTITY_STATUSES[input.orderType === 'mixing' ? 'mixing' : 'session'];
+  return allowed.includes(input.entityStatus);
+};
+
+/**
+ * 이미 취소된 예약·주문에 **잔액만 더 돌려주는** 경로인가 — 선점할 대상이 없고(이미 cancelled)
+ * 후처리(캘린더 삭제·취소 메일)도 다시 할 것이 없다.
+ */
+export const isCancelledRemainderRefund = (input: {
+  requestedBy: 'customer' | 'admin';
+  entityStatus: string;
+  orderStatus: string;
+}): boolean =>
+  input.requestedBy === 'admin' &&
+  input.entityStatus === 'cancelled' &&
+  (LIVE_ORDER_STATUSES_FOR_REFUND as readonly string[]).includes(input.orderStatus);
 
 export interface AdminBlockItem {
   id: string;

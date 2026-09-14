@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges } from '../../db/schema';
+import { LIVE_FUNDING_ORDER_STATUSES, liveFundingOrderStatusList } from './refundable';
 import { backerIdentitySql, type FundingOrder } from './service';
 
 /**
@@ -13,20 +14,31 @@ import { backerIdentitySql, type FundingOrder } from './service';
  * slug 필터는 반드시 DB 쪽 where에 넣는다 — limit 201로 잘라낸 뒤 JS에서 걸러내면
  * 특정 프로젝트 건이 다른 프로젝트 건에 밀려 잘려 나갈 수 있고, 그러면 프로젝트별
  * 합계·CSV가 조용히 누락된다.
+ *
+ * **pledge 존재 조건도 같은 이유로 DB 쪽에 둔다.** 한정 리워드 품절 경합에서
+ * createFundingPledge는 orders를 먼저 INSERT하고 조건부 pledge INSERT가 0행이면 그 주문을
+ * status='failed'로 남긴다 — 즉 pledge가 없는 type='funding' 주문이 실제로 생긴다. 예전엔
+ * limit 201로 자른 뒤 JS `filter(o => o.fundingPledge)`로 그런 행을 버려서, 창 안에 k건이
+ * 있으면 반환 길이가 201−k가 되고 화면의 `truncated: orders.length > 200`이 k≥1이면 false가
+ * 됐다. 후원 300건짜리 프로젝트에서도 '최근 200건만 표시' 배너가 안 떠서 운영자는 화면에
+ * 보이는 200건 미만을 전량으로 믿게 된다. 걸러내기를 201 상한 **앞**으로 옮겨 판정 모집단과
+ * 상한을 일치시킨다(아래 filter는 이제 타입 좁히기 용도로만 남는다 — 버려질 행이 없다).
  */
 export const listFundingOrders = async (slug: string | null): Promise<FundingOrder[]> => {
   const db = getDb();
   const rows = await db.query.orders.findMany({
-    where: (t, { eq: e, and, inArray }) =>
-      slug
-        ? and(
-            e(t.type, 'funding'),
-            inArray(
-              t.id,
-              db.select({ id: fundingPledges.orderId }).from(fundingPledges).where(e(fundingPledges.projectSlug, slug)),
-            ),
-          )
-        : e(t.type, 'funding'),
+    where: (t, { eq: e, and, inArray }) => {
+      const pledgeOrderIds = db
+        .select({ id: fundingPledges.orderId })
+        .from(fundingPledges);
+      return and(
+        e(t.type, 'funding'),
+        inArray(
+          t.id,
+          slug ? pledgeOrderIds.where(e(fundingPledges.projectSlug, slug)) : pledgeOrderIds,
+        ),
+      );
+    },
     with: { fundingPledge: true, payments: true },
     orderBy: (t, { desc }) => [desc(t.createdAt)],
     limit: 201,
@@ -46,7 +58,7 @@ export const listFundingOrdersForExport = async (slug: string | null): Promise<F
   const db = getDb();
   const rows = await db.query.orders.findMany({
     where: (t, { eq: e, and, inArray }) => {
-      const statusFilter = inArray(t.status, ['paid', 'partially_refunded']);
+      const statusFilter = inArray(t.status, [...LIVE_FUNDING_ORDER_STATUSES]);
       return slug
         ? and(
             e(t.type, 'funding'),
@@ -89,9 +101,19 @@ export interface AdminFundingTotals {
    * 리워드 수량이 아니라 "몇 사람이 참여했나"를 말해야 하는 자리에서만 쓴다.
    */
   confirmedPersonCount: number;
-  /** 무통장 입금 대기(pending + bank_transfer) 금액 합계. */
+  /**
+   * **결제 대기(pending) 금액 합계** — 토스 결제창을 띄워 두고 아직 승인되지 않은 홀드다.
+   *
+   * 예전 조건은 `pending AND payment_method='bank_transfer'`였다. 온라인 생성은 validation이
+   * 결제수단을 toss로 못박고 수기 등록은 항상 paid + bank_transfer로 들어오므로, 무통장입금을
+   * 중단한 2026-09-11 이후 이 조합의 새 행은 **생길 수 없다.** 그래서 목록에 '결제대기' 행이
+   * 떠 있어도 요약 타일은 영구히 0건이라고 말했다 — 화면이 거짓을 말하던 자리다.
+   *
+   * 집계 직전에 expireStalePledges가 돌므로(getServerSideProps·API GET) 이미 죽은 홀드는
+   * expired로 빠진 뒤의 값이다.
+   */
   pendingAmount: number;
-  /** 무통장 입금 대기 건수. */
+  /** 결제 대기 건수. 위와 같은 모집단. */
   pendingCount: number;
 }
 
@@ -110,12 +132,12 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
   const slugFilter = slug ? sql` AND fp.project_slug = ${slug}` : sql.empty();
   const rows = await db.all<TotalsRow>(sql`
     SELECT
-      COALESCE(SUM(CASE WHEN o.status IN ('paid', 'partially_refunded') THEN o.total_amount END), 0) AS confirmed_amount,
-      COUNT(CASE WHEN o.status IN ('paid', 'partially_refunded') THEN 1 END) AS confirmed_count,
-      COUNT(DISTINCT CASE WHEN o.status IN ('paid', 'partially_refunded')
+      COALESCE(SUM(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN o.total_amount END), 0) AS confirmed_amount,
+      COUNT(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN 1 END) AS confirmed_count,
+      COUNT(DISTINCT CASE WHEN o.status IN (${liveFundingOrderStatusList()})
         THEN ${backerIdentitySql()} END) AS confirmed_person_count,
-      COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN o.total_amount END), 0) AS pending_amount,
-      COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN 1 END) AS pending_count
+      COALESCE(SUM(CASE WHEN o.status = 'pending' THEN o.total_amount END), 0) AS pending_amount,
+      COUNT(CASE WHEN o.status = 'pending' THEN 1 END) AS pending_count
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE o.type = 'funding'${slugFilter}
   `);
