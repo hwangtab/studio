@@ -8,7 +8,7 @@ import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import BaseCard from '../../components/ui/BaseCard';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
@@ -107,7 +107,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
           backgroundImage: "/images/recording15.webp",
           imageAlt: t('about.heroAlt'),
           minHeight: "min-h-[60vh]",
-          overlayGradient: "from-black/40 via-transparent to-black/20",
+          overlayGradient: HERO_SCRIM,
           breadcrumbItems: [
             { name: t('nav.home'), path: `/${locale}` },
             { name: t('nav.about'), path: `/${locale}/about` },

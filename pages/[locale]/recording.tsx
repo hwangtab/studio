@@ -8,7 +8,7 @@ import ResponsiveImage from '../../components/ResponsiveImage';
 import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -170,7 +170,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         backgroundImage="/images/recording1.webp"
         imageAlt={t('recording.hero.alt')}
         minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
+        overlayGradient={HERO_SCRIM_STRONG}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.recording'), path: `/${locale}/recording` },

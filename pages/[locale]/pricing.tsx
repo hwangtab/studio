@@ -25,7 +25,7 @@ import { Section } from '../../components/ui/Section';
 import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
 import PricingCard from '../../components/ui/PricingCard';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 
 // Below-fold 컴포넌트 code-splitting (초기 JS 번들 감소 → TBT 단축)
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -240,7 +240,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         imageAlt={t('pricing.hero.alt')}
         // 60vh → 40vh: 아래 요약표를 모바일 첫 화면 안으로 끌어올린다.
         minHeight="min-h-[40vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
+        overlayGradient={HERO_SCRIM}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.pricing'), path: `/${locale}/pricing` },

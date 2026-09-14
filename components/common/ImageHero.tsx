@@ -5,6 +5,32 @@ import type { Locale } from '../../lib/i18n';
 import type { Breadcrumb as BreadcrumbItem } from '../../types/data';
 import { hasNavigatedSinceLoad } from '../../lib/navigationState';
 
+/**
+ * 히어로 사진 위 스크림.
+ *
+ * 예전에는 열 개 페이지가 `from-black/40 via-transparent to-black/20`을 각자
+ * 복사해 쓰고 있었다. **가운데가 투명인데 히어로 텍스트가 정확히 그 자리에 앉는다** —
+ * 제목과 부제가 스크림 0인 구간 위에 얹혀 있었다.
+ *
+ * 2026-09-14 프로덕션 실측(렌더된 배경 픽셀 기준, 흰 글씨 대비 / AA 미달 픽셀 비율):
+ *
+ *   practice-room    1.71:1  92%      mixing-mastering  2.77:1  63%
+ *   cover-video      3.54:1  45%      recording         3.60:1  45%
+ *   lesson           4.03:1  34%      pricing           4.64:1  33%
+ *   홈               4.88:1  24%      voice-acting      5.04:1  61%
+ *   studio-info      6.00:1  19%      wedding-song      8.04:1  10%
+ *
+ * 두 단계로 나눈 이유: 한 값으로 밝은 사진을 살리면 이미 어두운 사진이 검게 죽는다.
+ * 값은 합성 결과로 역산했다 — 검정 오버레이 알파 a는 배경 휘도를 (1-a)배로 낮추므로,
+ * 목표 대비에서 필요한 a가 나온다. 목표는 평균 6:1(AA 4.5:1 위로 여유).
+ *
+ * 사진을 새로 넣을 때는 짐작하지 말고 재 볼 것. 밝은 사진이면 STRONG이다.
+ */
+export const HERO_SCRIM = "from-black/45 via-black/40 to-black/40";
+
+/** 밝은 사진용. 위 측정에서 평균 4:1 아래로 떨어지던 페이지들이 쓴다. */
+export const HERO_SCRIM_STRONG = "from-black/65 via-black/70 to-black/60";
+
 interface ImageHeroProps {
   title: React.ReactNode;
   /** h1 위에 놓이는 요소(예: /author의 인물 아바타). h1 안에 넣으면 hero 텍스트가 오염되므로 별도 슬롯. */
@@ -37,7 +63,7 @@ const ImageHero = ({
   priority = false,
   breadcrumbItems,
 }: ImageHeroProps) => {
-  const cinematicOverlay = "bg-gradient-to-b from-black/20 via-black/10 to-transparent";
+  const cinematicOverlay = `bg-gradient-to-b ${HERO_SCRIM}`;
 
   const alignmentClass = textAlign === 'center'
     ? 'text-center'

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import FeatureCard from '../../components/ui/FeatureCard';
 import SectionHeading from '../../components/ui/SectionHeading';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import MediaGallery from '../../components/ui/MediaGallery';
 import { Section } from '../../components/ui/Section';
@@ -104,7 +104,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         backgroundImage={heroContent.backgroundImage}
         imageAlt={heroContent.imageAlt}
         minHeight="min-h-[100svh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
+        overlayGradient={HERO_SCRIM}
         ctaButtons={
           <>
             {/* prefetch={false}: hero CTA가 LCP 측정 창 안에 있어 자동 prefetch가
