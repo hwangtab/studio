@@ -18,6 +18,18 @@ describe('renderUnsubPage', () => {
     expect(html).toContain('수신거부');
   });
 
+  /**
+   * via=page는 Referer 대신 쓰는 표시다. Referer를 전면 차단하는 브라우저·확장에서도
+   * 사람이 이 버튼을 눌렀다는 사실이 폼 자체에 실려 있어야, 라우트가 원클릭과 정확히
+   * 구분해 완료 화면을 보여줄 수 있다. 이 필드가 사라지면 사람이 눌러도 빈 204가
+   * 돌아가는데, 그건 실제로 눌러 봐야만 드러난다.
+   */
+  it('확인 화면 폼은 via=page를 싣는다', () => {
+    const html = renderUnsubPage('confirm', 'ko', 'TOKEN123');
+    expect(html).toContain('name="via"');
+    expect(html).toContain('value="page"');
+  });
+
   it('완료 화면은 되돌리기 버튼 대신 회신을 안내한다', () => {
     const html = renderUnsubPage('done', 'ko', 'TOKEN123');
     expect(html).not.toContain('<form');

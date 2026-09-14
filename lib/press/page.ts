@@ -70,9 +70,14 @@ export const renderUnsubPage = (state: State, locale: string, token: string): st
   const lang = COPY[locale] ? locale : 'en';
   const copy = COPY[lang][state];
 
+  // via=page는 Referer 대신 쓰는 표시다. Referer는 브라우저·확장(Brave 엄격 모드 등)이
+  // 전면 차단할 수 있어, 사람이 이 버튼을 눌러도 원클릭으로 오분류될 수 있다. RFC 8058
+  // 원클릭은 List-Unsubscribe=One-Click 본문만 보내므로 via는 절대 들어오지 않는다 —
+  // 이 폼에서 왔는지를 직접 보는 편이 헤더 유무보다 결정적이다.
   const form =
     state === 'confirm'
       ? `<form method="post" action="/u/${esc(token)}">
+      <input type="hidden" name="via" value="page">
       <button type="submit">${esc(copy.button ?? '')}</button>
     </form>`
       : '';

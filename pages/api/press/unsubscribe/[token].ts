@@ -66,14 +66,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return sendPage(res, 200, renderUnsubPage('confirm', payload.l, token as string));
   }
 
+  /**
+   * 사람이 확인 화면을 거쳐 눌렀는지, 메일 클라이언트가 원클릭으로 보냈는지는
+   * Referer가 아니라 **우리 폼이 실어 보낸 필드**로 가른다.
+   *
+   * Referer는 브라우저·확장(Brave 엄격 모드 등)이 전면 차단할 수 있어, 사람이
+   * 확인 화면의 버튼을 눌러도 비어 있을 수 있다 — 그러면 거부는 기록되는데
+   * 화면 없이 204만 돌아가 기자는 처리됐는지 알 길이 없다. RFC 8058 원클릭은
+   * List-Unsubscribe=One-Click 본문만 보내고 `via` 같은 필드를 절대 싣지 않으므로,
+   * 이 값의 유무는 브라우저 설정과 무관하게 결정적이다.
+   *
+   * Next.js는 application/x-www-form-urlencoded를 자동으로 객체로 파싱하지만,
+   * 다른 Content-Type(원클릭이 보낼 수 있는 text/plain 등)에서는 req.body가
+   * 문자열이거나 undefined일 수 있어 방어한다.
+   */
+  const body = req.body;
+  const via = body && typeof body === 'object' ? (body as Record<string, unknown>).via : undefined;
+  const fromPage = via === 'page';
+
   try {
     await recordPressOptout({
       emailHash: payload.h,
       campaignSlug: payload.c,
-      // 사람이 확인 화면을 거쳐 눌렀는지, 메일 클라이언트가 원클릭으로 보냈는지.
-      // 후자는 Referer가 없다 — 이 구분은 나중에 "어느 경로가 실제로 쓰이는가"를
-      // 볼 때만 의미가 있고, 처리 자체는 같다.
-      source: req.headers.referer ? 'page' : 'one-click',
+      // 이 구분은 나중에 "어느 경로가 실제로 쓰이는가"를 볼 때만 의미가 있고,
+      // 처리 자체는 같다.
+      source: fromPage ? 'page' : 'one-click',
     });
   } catch (error) {
     console.error('[press-unsubscribe] 기록 실패:', error);
@@ -82,9 +99,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   /**
    * 원클릭 POST는 메일 클라이언트가 보내고 사람은 응답 본문을 보지 않는다.
-   * 확인 화면에서 온 POST는 사람이 결과를 봐야 한다 — Referer로 갈린다.
+   * 확인 화면에서 온 POST는 사람이 결과를 봐야 한다.
    */
-  if (req.headers.referer) {
+  if (fromPage) {
     return sendPage(res, 200, renderUnsubPage('done', payload.l, ''));
   }
   return res.status(204).end();
