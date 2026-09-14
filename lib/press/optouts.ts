@@ -42,9 +42,17 @@ export const recordPressOptout = async (input: {
  * 호출부는 직전 응답의 now를 다음 since로 쓴다. 이상으로 읽으면 경계에 걸친 행을
  * 매번 다시 받아 오고, 그 자체로는 무해하지만 "새로 들어온 건수"가 늘 부풀어 보인다.
  */
+/**
+ * 한 번에 돌려주는 최대 행 수.
+ *
+ * 호출부가 이 값과 rows.length를 비교해 "더 남았는가"를 판정하므로 상수로 내보낸다.
+ * 숫자를 라우트에 따로 적어 두면 한쪽만 바뀌는 날 초과분이 조용히 사라진다.
+ */
+export const PRESS_OPTOUT_PAGE_SIZE = 1000;
+
 export const listPressOptouts = async (
   sinceEpoch: number,
-  limit = 1000,
+  limit = PRESS_OPTOUT_PAGE_SIZE,
 ): Promise<PressOptoutRow[]> => {
   const rows = await getDb()
     .select({

@@ -64,8 +64,23 @@ describe('press.studionol.co.kr (프로덕션 env)', () => {
     expect(middleware(req('https://press.studionol.co.kr/')).status).toBe(404);
   });
 
+  /**
+   * 목록이 `/ko`·`/ko/pricing`뿐인 것은 빠뜨린 것이 아니다.
+   *
+   * 이 테스트는 middleware를 **직접 부른다** — config.matcher를 거치지 않는다.
+   * 그래서 matcher의 negative lookahead가 제외하는 경로(`/sitemap.xml`·`/robots.txt`·
+   * `/llms.txt`·`/api/*`·`/images/*` 등)를 여기에 적으면, 프로덕션에서는 미들웨어가
+   * 아예 안 도는데 테스트만 404를 받아 "막혀 있다"고 통과한다. 지키는 것이 없는
+   * 단언은 없느니만 못하다 — 다음 사람이 그 줄을 보고 안심한다.
+   *
+   * 실제로 press 호스트에서도 그 정적 경로들은 응답한다. 색인이 갈리는 것은
+   * robots·canonical 쪽 문제이고, **당겨가기 엔드포인트(/api/press/optouts)만은**
+   * 핸들러 초입에서 직접 호스트를 보고 404를 낸다(pages/api/press/optouts.ts).
+   *
+   * 여기 남기는 것은 matcher를 실제로 통과하는 경로뿐이다.
+   */
   it('본진 경로를 이 호스트로 요청해도 404다', () => {
-    for (const path of ['/ko', '/ko/pricing', '/sitemap.xml']) {
+    for (const path of ['/ko', '/ko/pricing']) {
       expect(middleware(req(`https://press.studionol.co.kr${path}`)).status).toBe(404);
     }
   });

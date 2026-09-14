@@ -3,6 +3,8 @@ import { defaultLocale, locales, type Locale } from './lib/i18n-config';
 import { BOT_PATTERN } from './lib/bot-detection';
 import { isRoutePatternPath } from './lib/routePattern';
 import regionRedirectMap from './lib/regionRedirectMap.json';
+// 수신거부 링크 전용 호스트. 이 호스트는 /u/<token> 하나만 응답한다.
+import { PRESS_HOST } from './lib/press/host';
 
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 
@@ -11,8 +13,6 @@ const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 const REGION_REDIRECT_MAP = regionRedirectMap as Record<string, string>;
 const STORIES_PATH_RE = /^\/(ko|en|zh|es|vi|th|uz)\/stories\/([^/]+)\/?$/;
 
-// 수신거부 링크 전용 호스트. 이 호스트는 /u/<token> 하나만 응답한다.
-const PRESS_HOST = 'press.studionol.co.kr';
 
 // /stories/<slug>이 스토리가 아니라 상위 페이지로 308되는 슬러그 → 목적지 경로.
 // regionRedirectMap이 이 슬러그를 destSlug로 가리킬 때 /stories/destSlug(다시 308)로
