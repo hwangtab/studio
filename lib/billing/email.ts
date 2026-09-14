@@ -22,28 +22,42 @@ export const subscriptionManageUrl = (sub: Pick<Subscription, 'id' | 'manageToke
 const amountLine = (sub: Pick<Subscription, 'totalAmount'>): string =>
   `월 ${formatPriceAmount(sub.totalAmount)}원 (VAT 포함)`;
 
-/** 카드 등록 안내. 등록 즉시 첫 달치가 결제된다는 사실을 반드시 명시한다(스펙 §6). */
+/**
+ * 카드 등록 안내.
+ *
+ * **setupMode에 따라 안내가 갈린다.** 'initial'은 등록 즉시 첫 달치가 결제된다는 사실을
+ * 반드시 명시해야 하고(스펙 §6), 'change'(이미 청구가 도는 구독의 카드 교체)는 결제가
+ * 없다 — 한 문구로 뭉뚱그리면 둘 중 하나는 거짓이 된다. 예전에는 'change' 링크를 받은
+ * 고객에게도 "즉시 첫 달치가 결제되고"라고 알려, **없는 청구를 예고**하고 있었다.
+ * 등록 화면(pages/[locale]/subscribe/[id].tsx)도 같은 값으로 같은 분기를 한다.
+ */
 export const sendSubscriptionSetupEmail = (
-  sub: Pick<Subscription, 'id' | 'kind' | 'customerEmail' | 'customerName' | 'totalAmount' | 'billingDay'>,
+  sub: Pick<Subscription, 'id' | 'kind' | 'customerEmail' | 'customerName' | 'totalAmount' | 'billingDay' | 'setupMode'>,
   setupUrl: string,
-): Promise<string | null> =>
-  sendEmail({
+): Promise<string | null> => {
+  const isChange = sub.setupMode === 'change';
+  return sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} 정기결제 카드 등록 안내`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} 정기결제 ${isChange ? '카드 변경' : '카드 등록'} 안내`,
     text: [
-      `${sub.customerName}님, ${subscriptionOrderName(sub.kind)} 정기결제를 위한 카드 등록을 안내드립니다.`,
+      isChange
+        ? `${sub.customerName}님, ${subscriptionOrderName(sub.kind)} 정기결제에 사용할 카드 변경을 안내드립니다.`
+        : `${sub.customerName}님, ${subscriptionOrderName(sub.kind)} 정기결제를 위한 카드 등록을 안내드립니다.`,
       `상품: ${subscriptionOrderName(sub.kind)}`,
       `${amountLine(sub)}`,
       `결제일: 매월 ${sub.billingDay}일`,
       '',
-      '아래 링크에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제됩니다.',
+      isChange
+        ? '아래 링크에서 새 카드를 등록하시면 카드만 교체되며, 이번에는 결제되지 않습니다. 다음 결제일부터 새 카드로 청구됩니다.'
+        : '아래 링크에서 카드를 등록하면 즉시 첫 달치가 결제되고, 이후 매월 같은 날 자동으로 결제됩니다.',
       setupUrl,
       '',
       '링크는 발급일로부터 7일간 유효합니다.',
       '문의: 010-4255-7893',
     ].join('\n'),
   }).then((result) => (result.ok ? null : `setup:${result.errorCode}`));
+};
 
 /** 카드 등록 + 첫 결제 성공 확정. */
 export const sendSubscriptionActivatedEmail = (

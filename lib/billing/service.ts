@@ -647,7 +647,12 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
 export const issueCardChangeToken = async (
   id: string,
   now: Date,
-): Promise<{ ok: true; setupToken: string } | { ok: false; code: 'not_found' | 'invalid_state' }> => {
+): Promise<
+  // setupMode를 함께 돌려준다 — 호출부가 이 값으로 안내 메일 문구를 고른다. 발급 **전에**
+  // 읽어 둔 구독 행에는 옛 값이 들어 있어서, 그걸 믿으면 'change' 링크에 "즉시 첫 달치가
+  // 결제됩니다"라는 없는 청구 예고가 나간다.
+  { ok: true; setupToken: string; setupMode: 'initial' | 'change' } | { ok: false; code: 'not_found' | 'invalid_state' }
+> => {
   const db = getDb();
   const subscription = await findSubscriptionById(id);
   if (!subscription) return { ok: false, code: 'not_found' };
@@ -663,7 +668,7 @@ export const issueCardChangeToken = async (
       updatedAt: now,
     })
     .where(eq(subscriptions.id, id));
-  return { ok: true, setupToken };
+  return { ok: true, setupToken, setupMode };
 };
 
 /** cron이 이번 회차에 청구할 구독들. paused는 자동 청구 대상이 아니다. */
