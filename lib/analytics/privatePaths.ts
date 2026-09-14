@@ -24,6 +24,16 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   ['funding/manage', true],
   ['booking/(success|fail)', false],
   ['booking/manage', true],
+  // 정기결제(구독). 카드 등록 링크 `?token=<setupToken>`과 관리 링크 `?token=<manageToken>`이
+  // 전부 쿼리로 실린다 — manageToken은 만료도 1회성도 없고(service.ts findSubscriptionForManage)
+  // 그 값 하나로 결제 이력 열람·해지·새 카드등록 토큰 발급까지 된다. 하위 경로
+  // (`[id]`·`[id]/success`·`[id]/fail`·`manage/[id]`)를 한 번에 덮는다.
+  //
+  // ⚠️ `subscribe` **아래 전부**가 대상이다 — 여기에 공개 페이지(요금 안내·랜딩 같은)를
+  // 만들면 조용히 측정에서 빠지고 no-store로 내려가 CDN 캐시도 못 탄다. 새 경로를 넣기
+  // 전에 이 항목을 먼저 보고, 공개 페이지라면 body를 좁히거나(`subscribe/(manage|…)`)
+  // 그 경로를 다른 자리에 두라. 안전한 쪽으로 틀리는 구조라 기본값은 이대로 둔다.
+  ['subscribe', true],
 ];
 
 const LOCALE_GROUP = '(ko|en|zh|es|vi|th|uz)';
@@ -98,6 +108,10 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/booking/manage/[orderNo]',
   '/[locale]/booking/success',
   '/[locale]/booking/fail',
+  '/[locale]/subscribe/[id]',
+  '/[locale]/subscribe/[id]/success',
+  '/[locale]/subscribe/[id]/fail',
+  '/[locale]/subscribe/manage/[id]',
 ];
 
 export const isPrivatePageRoute = (pathname: string): boolean => PRIVATE_PAGE_ROUTES.includes(pathname);

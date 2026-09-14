@@ -24,6 +24,11 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/booking/manage/[orderNo].tsx',
   'pages/[locale]/booking/success.tsx',
   'pages/[locale]/booking/fail.tsx',
+  // 정기결제(구독) — 카드 등록 링크·관리 링크의 `?token=`이 URL에 실린다(PR #57·#66과 같은 유형).
+  'pages/[locale]/subscribe/[id].tsx',
+  'pages/[locale]/subscribe/[id]/success.tsx',
+  'pages/[locale]/subscribe/[id]/fail.tsx',
+  'pages/[locale]/subscribe/manage/[id].tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');
@@ -54,6 +59,17 @@ describe('private 페이지의 이탈 링크', () => {
     const publicAnchors = openingAnchorTags(read(file)).filter(needsNoReferrer);
     expect(publicAnchors.length).toBeGreaterThan(0);
     for (const tag of publicAnchors) expect(tag).toContain('rel="noreferrer"');
+  });
+
+  /**
+   * 헤더·푸터가 없는 화면이라 **페이지가 자기 상단에서 브랜드를 밝혀야 한다** — 메일 링크로
+   * 들어온 사람이 피싱과 구별할 수 있어야 하고, 결제·해지가 일어나는 자리다. 제목 태그가
+   * 아니라 **본문**에 상호가 있어야 한다(탭 제목은 화면에 안 보인다).
+   */
+  it.each(PRIVATE_PAGE_FILES)('%s 본문에 상호가 표기돼 있다', (file) => {
+    const source = read(file);
+    const withoutHead = source.replace(/<title>[^<]*<\/title>/g, '');
+    expect(withoutHead).toContain('스튜디오 놀');
   });
 
   /**
