@@ -231,7 +231,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />
-                <DescriptionRow label="입금 기한" value={formatKstDateTimeFull(pledge.holdExpiresAt)} />
+                <DescriptionRow label="결제 홀드 만료" value={formatKstDateTimeFull(pledge.holdExpiresAt)} />
                 <DescriptionRow label="접수 시각" value={formatKstDateTime(pledge.createdAt)} />
               </dl>
             </div>

@@ -79,7 +79,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
   try {
     await expireStalePledges(new Date());
     // 만료 처리 뒤에 집계·목록을 같은 순서로 읽는다 — 만료 전에 세면 이미 죽은 홀드가
-    // 입금 대기 금액에 남는다.
+    // 결제 대기 금액에 남는다.
     const [totals, orders] = await Promise.all([aggregateAdminFundingTotals(slug), listFundingOrders(slug)]);
     return {
       props: {
@@ -329,16 +329,17 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                   <div className="text-lg font-bold text-gray-900">{totals.confirmedPersonCount}명</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">입금 대기 금액</div>
+                  <div className="text-xs text-gray-500">결제 대기 금액</div>
                   <div className="text-lg font-bold text-gray-900">{formatPriceAmount(totals.pendingAmount)}원</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">입금 대기 건수</div>
+                  <div className="text-xs text-gray-500">결제 대기 건수</div>
                   <div className="text-lg font-bold text-gray-900">{totals.pendingCount}건</div>
                 </div>
               </div>
               <p className="text-xs text-gray-500 mb-6">
                 아래 목록의 표시 건수와 무관하게 {slug ? '이 프로젝트의 ' : ''}전건을 집계한 값입니다.
+                “결제 대기”는 결제창을 띄워 두고 아직 승인되지 않은 홀드입니다(15분 뒤 자동 만료).
               </p>
 
               <div className="flex flex-wrap gap-2 mb-6">

@@ -137,10 +137,15 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     expect(totals.confirmedAmount).toBe(10_000);
   });
 
-  it('입금 대기는 무통장 pending만 센다', async () => {
-    await seedPaid(1, 'a', 'pending', 7000); // bank_transfer
+  /**
+   * 예전 조건은 `pending AND payment_method='bank_transfer'`였다. 무통장입금을 중단한
+   * 2026-09-11 이후 그 조합의 새 행은 생길 수 없어서(온라인은 toss 고정, 수기 등록은 항상
+   * paid), 목록에 '결제대기' 행이 떠 있어도 요약 타일은 영구히 0건이라고 말했다.
+   * 결제수단 필터를 빼고 **살아 있는 토스 홀드까지** 센다.
+   */
+  it('결제 대기는 결제수단과 무관하게 pending 전부를 센다', async () => {
+    await seedPaid(1, 'a', 'pending', 7000); // 레거시 무통장 pending
     await seedPaid(2, 'a', 'paid');
-    // 토스 pending은 입금 대기가 아니다 — 결제창을 닫은 홀드다.
     await client.execute({
       sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
             item_amount, vat_amount, total_amount, manage_token)
@@ -153,8 +158,8 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     });
 
     const totals = await aggregateAdminFundingTotals('a');
-    expect(totals.pendingCount).toBe(1);
-    expect(totals.pendingAmount).toBe(7000);
+    expect(totals.pendingCount).toBe(2);
+    expect(totals.pendingAmount).toBe(12_000);
   });
 
   /**

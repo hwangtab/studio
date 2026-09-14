@@ -101,9 +101,19 @@ export interface AdminFundingTotals {
    * 리워드 수량이 아니라 "몇 사람이 참여했나"를 말해야 하는 자리에서만 쓴다.
    */
   confirmedPersonCount: number;
-  /** 무통장 입금 대기(pending + bank_transfer) 금액 합계. */
+  /**
+   * **결제 대기(pending) 금액 합계** — 토스 결제창을 띄워 두고 아직 승인되지 않은 홀드다.
+   *
+   * 예전 조건은 `pending AND payment_method='bank_transfer'`였다. 온라인 생성은 validation이
+   * 결제수단을 toss로 못박고 수기 등록은 항상 paid + bank_transfer로 들어오므로, 무통장입금을
+   * 중단한 2026-09-11 이후 이 조합의 새 행은 **생길 수 없다.** 그래서 목록에 '결제대기' 행이
+   * 떠 있어도 요약 타일은 영구히 0건이라고 말했다 — 화면이 거짓을 말하던 자리다.
+   *
+   * 집계 직전에 expireStalePledges가 돌므로(getServerSideProps·API GET) 이미 죽은 홀드는
+   * expired로 빠진 뒤의 값이다.
+   */
   pendingAmount: number;
-  /** 무통장 입금 대기 건수. */
+  /** 결제 대기 건수. 위와 같은 모집단. */
   pendingCount: number;
 }
 
@@ -126,8 +136,8 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
       COUNT(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN 1 END) AS confirmed_count,
       COUNT(DISTINCT CASE WHEN o.status IN (${liveFundingOrderStatusList()})
         THEN ${backerIdentitySql()} END) AS confirmed_person_count,
-      COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN o.total_amount END), 0) AS pending_amount,
-      COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN 1 END) AS pending_count
+      COALESCE(SUM(CASE WHEN o.status = 'pending' THEN o.total_amount END), 0) AS pending_amount,
+      COUNT(CASE WHEN o.status = 'pending' THEN 1 END) AS pending_count
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE o.type = 'funding'${slugFilter}
   `);
