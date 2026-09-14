@@ -19,3 +19,46 @@ it('후원 불가 상태면 링크가 없다', () => {
   render(<RewardCard reward={reward} remaining={null} pledgeHref="/x" canPledge={false} />);
   expect(screen.queryByRole('link')).toBeNull();
 });
+
+/**
+ * 모달을 붙인 뒤에도 카드는 **버튼이 아니라 진짜 링크**여야 한다. 클릭만 가로챈다.
+ * 이 구분이 무너지면 JS가 없는 환경에서 후원 경로가 통째로 사라지고, 새 탭으로 열기와
+ * 주소 복사도 안 된다.
+ */
+describe('모달 연동', () => {
+  const href = '/ko/funding/demo/pledge?reward=cd';
+
+  it('onSelect가 있어도 href는 남는다', () => {
+    render(<RewardCard reward={reward} remaining={3} pledgeHref={href} canPledge onSelect={jest.fn()} />);
+    expect(screen.getByRole('link')).toHaveAttribute('href', href);
+  });
+
+  it('평범한 클릭은 가로채 모달을 연다 — 이동하지 않는다', () => {
+    const onSelect = jest.fn();
+    render(<RewardCard reward={reward} remaining={3} pledgeHref={href} canPledge onSelect={onSelect} />);
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    screen.getByRole('link').dispatchEvent(click);
+
+    expect(onSelect).toHaveBeenCalledWith(reward);
+    expect(click.defaultPrevented).toBe(true);
+  });
+
+  it('수식 키를 누른 클릭은 브라우저에 넘긴다 — 새 탭으로 열려야 한다', () => {
+    const onSelect = jest.fn();
+    render(<RewardCard reward={reward} remaining={3} pledgeHref={href} canPledge onSelect={onSelect} />);
+
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true, metaKey: true });
+    screen.getByRole('link').dispatchEvent(click);
+
+    expect(onSelect).not.toHaveBeenCalled();
+    expect(click.defaultPrevented).toBe(false);
+  });
+
+  it('onSelect가 없으면 그냥 링크다 — JS가 없어도 후원 페이지로 간다', () => {
+    const click = new MouseEvent('click', { bubbles: true, cancelable: true });
+    render(<RewardCard reward={reward} remaining={3} pledgeHref={href} canPledge />);
+    screen.getByRole('link').dispatchEvent(click);
+    expect(click.defaultPrevented).toBe(false);
+  });
+});

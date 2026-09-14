@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import MarkdownRenderer from '../../../../components/MarkdownRenderer';
@@ -9,10 +9,11 @@ import RewardCard from '../../../../components/funding/RewardCard';
 import BackerNameRoll from '../../../../components/funding/BackerNameRoll';
 import FundingTrustNotice from '../../../../components/funding/FundingTrustNotice';
 import FundingMobileCta from '../../../../components/funding/FundingMobileCta';
+import RewardModal from '../../../../components/funding/RewardModal';
 import { useFundingStatus } from '../../../../components/funding/useFundingStatus';
 import { buildPageStaticProps } from '../../../../lib/getStatic';
 import { defaultLocale } from '../../../../lib/i18n';
-import { computeProjectState, getAllFundingProjects, getFundingProject, stripRewardDownloads, type FundingProject, type ProjectState } from '../../../../lib/funding/projects';
+import { computeProjectState, getAllFundingProjects, getFundingProject, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
 
 interface Props {
   project: FundingProject;
@@ -36,6 +37,16 @@ export default function FundingProjectPage({ project, initialState }: Props) {
   // 하이드레이션 불일치를 낸다 — 마운트 후에만 시계를 읽는다.
   const [now, setNow] = useState<Date | null>(null);
   useEffect(() => { setNow(new Date()); }, []);
+
+  // 리워드 모달은 페이지에 **하나만** 둔다. 카드마다 띄우면 결제 위젯 인스턴스가 여러 벌
+  // 살아 있을 수 있다.
+  const [openReward, setOpenReward] = useState<FundingReward | null>(null);
+  const closeModal = useCallback(() => setOpenReward(null), []);
+  // 상태 API가 아직 안 왔으면 파일의 한정 수량을 그대로 쓴다(/pledge 페이지와 같은 폴백).
+  const remaining = useMemo<Record<string, number | null>>(() => {
+    const fallback = Object.fromEntries(project.rewards.map((r) => [r.id, r.totalQuantity]));
+    return { ...fallback, ...(data?.remaining ?? {}) };
+  }, [data?.remaining, project.rewards]);
   return (
     <>
       <SEO
@@ -46,72 +57,72 @@ export default function FundingProjectPage({ project, initialState }: Props) {
         robots={project.hidden ? 'noindex, nofollow' : undefined}
       />
       <Section className="pb-16 pt-28 md:pb-20 md:pt-36">
-        <div className="grid items-start gap-10 lg:grid-cols-[3fr_2fr] lg:gap-12">
-          <ResponsiveImage
-            src={project.cover}
-            alt=""
-            containerClassName="relative block aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lg"
-            className="object-cover"
-            priority
-          />
-          <div className="lg:pt-2">
-            <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-violet-300">
-              {STATE_LABEL[state]}
-            </span>
-            <h1 className="typo-section-title mt-3">{project.title}</h1>
-            <p className="typo-section-lead mt-3">{project.summary}</p>
+        <ResponsiveImage
+          src={project.cover}
+          alt=""
+          containerClassName="relative block aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lg"
+          className="object-cover"
+          priority
+        />
+        <div className="mt-8 max-w-3xl">
+          <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-violet-300">
+            {STATE_LABEL[state]}
+          </span>
+          <h1 className="typo-section-title mt-3">{project.title}</h1>
+          <p className="typo-section-lead mt-3">{project.summary}</p>
+        </div>
+      </Section>
+
+      {/*
+        본문(왼쪽)과 후원 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라, 본문을
+        읽는 내내 모금 현황과 리워드가 화면에 남는다 — 예전엔 진행률이 히어로에만 있어서
+        정작 리워드를 고르는 순간에는 근거가 화면 밖으로 사라졌다.
+      */}
+      <Section spacing="tight" className="pb-28 lg:pb-16">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+          <div className="min-w-0">
             {statusError && (
-              <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+              <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
                 현황을 불러오지 못했습니다. 새로고침해 주세요.
               </p>
             )}
-            <div className="glass-card mt-6 rounded-2xl p-5 sm:p-6">
+            <article className="prose prose-lg max-w-none dark:prose-invert">
+              <MarkdownRenderer content={project.content} locale="ko" />
+            </article>
+            <div className="mt-12 space-y-8">
+              <BackerNameRoll names={data?.publicBackers ?? []} />
+              <FundingTrustNotice />
+            </div>
+          </div>
+
+          <aside id="rewards" className="scroll-mt-20 lg:sticky lg:top-24">
+            <div className="glass-card rounded-2xl p-5 sm:p-6">
               <FundingProgress
                 goalAmount={project.goalAmount}
                 endAt={project.endAt}
                 now={now}
                 data={data ? { raisedAmount: data.raisedAmount, backerCount: data.backerCount, percent: data.percent, state } : null}
               />
-              {canPledge && (
-                <a
-                  href="#rewards"
-                  className="mt-5 inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark"
-                >
-                  후원하기
-                </a>
-              )}
             </div>
-          </div>
+            <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
+            <p className="typo-card-meta mt-2">후원 금액에 따라 돌려드릴 구성입니다.</p>
+            <div className="mt-4 space-y-4">
+              {project.rewards.map((r) => (
+                <RewardCard
+                  key={r.id}
+                  reward={r}
+                  remaining={remaining[r.id]}
+                  pledgeHref={`/ko/funding/${project.slug}/pledge?reward=${encodeURIComponent(r.id)}`}
+                  canPledge={canPledge}
+                  onSelect={canPledge ? setOpenReward : undefined}
+                />
+              ))}
+            </div>
+          </aside>
         </div>
       </Section>
-      <Section spacing="tight">
-        <article className="prose prose-lg max-w-3xl dark:prose-invert">
-          <MarkdownRenderer content={project.content} locale="ko" />
-        </article>
-      </Section>
-      <Section id="rewards" variant="alternate" className="scroll-mt-16">
-        <div className="max-w-3xl">
-          <h2 className="typo-section-title">리워드</h2>
-          <p className="typo-section-lead mt-3">후원 금액에 따라 돌려드릴 구성입니다. 배송이 있는 리워드는 배송지를 입력받습니다.</p>
-        </div>
-        <div className="mt-10 grid max-w-6xl items-stretch gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {project.rewards.map((r) => (
-            <RewardCard
-              key={r.id}
-              reward={r}
-              remaining={data?.remaining[r.id] ?? (r.totalQuantity === null ? null : r.totalQuantity)}
-              pledgeHref={`/ko/funding/${project.slug}/pledge?reward=${encodeURIComponent(r.id)}`}
-              canPledge={canPledge}
-            />
-          ))}
-        </div>
-      </Section>
-      <Section className="pb-28 pt-12 md:py-16">
-        <div className="max-w-3xl space-y-8">
-          <BackerNameRoll names={data?.publicBackers ?? []} />
-          <FundingTrustNotice />
-        </div>
-      </Section>
+
+      <RewardModal project={project} reward={openReward} remaining={remaining} onClose={closeModal} />
       <FundingMobileCta visible={canPledge} />
     </>
   );

@@ -10,7 +10,17 @@ import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../
 import type { FundingProject } from '../../lib/funding/projects';
 import { Field, TextArea, TextInput } from '../ui/Field';
 
-interface Props { project: FundingProject; initialRewardId: string | null; remaining: Record<string, number | null> }
+interface Props {
+  project: FundingProject;
+  initialRewardId: string | null;
+  remaining: Record<string, number | null>;
+  /**
+   * 결제 위젯(토스 iframe)이 화면에 있는 동안 true. 모달이 이 값을 받아 **포커스 트랩을
+   * 끈다** — 트랩의 포커스 대상 목록에 iframe이 없어서, 켜 둔 채로는 키보드 사용자가
+   * 카드번호 칸에 Tab으로 못 들어가고 첫 요소로 되감긴다.
+   */
+  onPaymentActiveChange?: (active: boolean) => void;
+}
 interface Created {
   orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number;
   holdExpiresAt: string;
@@ -103,7 +113,7 @@ function StepHeader({ n, title, hint }: { n: number; title: string; hint?: strin
 const isSoldOut = (remaining: Record<string, number | null>, rewardId: string): boolean =>
   (remaining[rewardId] ?? 1) <= 0;
 
-export default function PledgeWizard({ project, initialRewardId, remaining }: Props) {
+export default function PledgeWizard({ project, initialRewardId, remaining, onPaymentActiveChange }: Props) {
   const uid = useId();
   // 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해, 후원자가 폼을 다 채우고
   // 제출한 뒤에야 409를 봤다. 고를 수 있는 첫 리워드를 기본값으로 둔다(전부 품절이면
@@ -157,6 +167,15 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
     }
   };
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
+
+  // 위젯이 실제로 렌더되는 조건(아래 `if (created)` 분기와 같은 식)을 한 곳에서 판정해
+  // 부모에게 알린다. 만료 화면에는 iframe이 없으므로 트랩을 유지한다.
+  const paymentActive = created !== null && !(remainingMs !== null && remainingMs <= 0);
+  useEffect(() => {
+    onPaymentActiveChange?.(paymentActive);
+  }, [onPaymentActiveChange, paymentActive]);
+  // 언마운트(모달 닫기)될 때 켜진 상태가 남지 않도록 되돌린다.
+  useEffect(() => () => onPaymentActiveChange?.(false), [onPaymentActiveChange]);
 
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
   const allSoldOut = project.rewards.every((r) => isSoldOut(remaining, r.id));
@@ -229,7 +248,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   };
 
   if (created) {
-    const expired = remainingMs !== null && remainingMs <= 0;
+    const expired = !paymentActive;
     return (
       <div className={`${cardClass} space-y-5`}>
         <div>

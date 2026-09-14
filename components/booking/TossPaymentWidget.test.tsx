@@ -46,8 +46,44 @@ describe('TossPaymentWidget', () => {
     await waitFor(() => expect(setAmount).toHaveBeenCalledWith({ currency: 'KRW', value: 250000 }));
     expect(loadTossPayments).toHaveBeenCalledWith('test_ck_dummy');
     expect(widgets).toHaveBeenCalledWith({ customerKey: 'ANONYMOUS' });
-    expect(renderPaymentMethods).toHaveBeenCalledWith({ selector: '#toss-payment-methods' });
-    expect(renderAgreement).toHaveBeenCalledWith({ selector: '#toss-agreement' });
+    // 셀렉터는 인스턴스마다 달라지므로 접두사와 "그 노드가 실제로 있다"만 고정한다.
+    const methodsSelector = renderPaymentMethods.mock.calls[0][0].selector as string;
+    const agreementSelector = renderAgreement.mock.calls[0][0].selector as string;
+    expect(methodsSelector).toMatch(/^#toss-payment-methods-[a-zA-Z0-9_-]+$/);
+    expect(agreementSelector).toMatch(/^#toss-agreement-[a-zA-Z0-9_-]+$/);
+    expect(document.querySelector(methodsSelector)).not.toBeNull();
+    expect(document.querySelector(agreementSelector)).not.toBeNull();
+  });
+
+  /**
+   * 펀딩 리워드 모달은 열고 닫으며 위젯을 여러 번 만든다. 마운트 지점이 전역 고정 id면
+   * 두 인스턴스가 같은 노드를 두고 부딪혀, 나중 것이 빈 채로 뜨거나 iframe이 겹친다.
+   */
+  it('인스턴스마다 마운트 지점 id가 다르다', async () => {
+    const { unmount } = render(<TossPaymentWidget {...PROPS} />);
+    await waitFor(() => expect(renderPaymentMethods).toHaveBeenCalledTimes(1));
+    unmount();
+
+    render(<TossPaymentWidget {...PROPS} />);
+    await waitFor(() => expect(renderPaymentMethods).toHaveBeenCalledTimes(2));
+
+    const first = renderPaymentMethods.mock.calls[0][0].selector as string;
+    const second = renderPaymentMethods.mock.calls[1][0].selector as string;
+    expect(second).not.toBe(first);
+  });
+
+  it('언마운트하면 위젯이 심은 노드를 비운다', async () => {
+    const { unmount } = render(<TossPaymentWidget {...PROPS} />);
+    await waitFor(() => expect(renderPaymentMethods).toHaveBeenCalledTimes(1));
+
+    const selector = renderPaymentMethods.mock.calls[0][0].selector as string;
+    const container = document.querySelector(selector);
+    expect(container).not.toBeNull();
+    // SDK 대역은 iframe을 안 심으므로, 실제 SDK가 하는 일을 흉내 내 둔다.
+    container!.innerHTML = '<iframe title="toss"></iframe>';
+
+    unmount();
+    expect(container!.innerHTML).toBe('');
   });
 
   it('위젯이 준비되기 전에는 결제 버튼을 누를 수 없다', async () => {
