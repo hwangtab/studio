@@ -10,6 +10,18 @@ export type { ProjectState };
 export interface FundingReward {
   id: string; title: string; description: string; amount: number;
   totalQuantity: number | null; requiresShipping: boolean; estimatedDelivery: string; image: string | null;
+  /**
+   * 디지털 리워드 다운로드 주소. 값이 있으면 결제 확정 메일과 후원 확인 페이지에 내려받기
+   * 줄이 붙는다(lib/funding/email.ts · pages/[locale]/funding/manage/[orderNo].tsx).
+   *
+   * **리워드마다 다르게 둘 수 있다** — 후원 금액에 따라 음질을 가르는 식이다. 프로젝트에
+   * 하나만 두면 그게 안 된다.
+   *
+   * 공개 주소라 아는 사람은 누구나 받을 수 있다. 그래서 경로에 추측하기 어려운 세그먼트를
+   * 넣는다(스토리지 쪽 규칙이라 코드가 강제하지는 않는다). 이 자리에 접근 제어가 필요해지면
+   * 서명 URL로 바꿔야 하는데, 그때는 이 필드가 아니라 발급 함수가 들어와야 한다.
+   */
+  downloadUrl: string | null;
 }
 export interface FundingProject {
   slug: string; title: string; summary: string; cover: string; ogImage: string | null;
@@ -68,6 +80,7 @@ const parseReward = (raw: unknown, index: number): FundingReward => {
     requiresShipping: bool(r.requiresShipping, `rewards[${index}].requiresShipping`, false),
     estimatedDelivery: str(r.estimatedDelivery, `rewards[${index}].estimatedDelivery`),
     image: typeof r.image === 'string' && r.image !== '' ? r.image : null,
+    downloadUrl: typeof r.downloadUrl === 'string' && r.downloadUrl !== '' ? r.downloadUrl : null,
   };
 };
 

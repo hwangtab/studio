@@ -1,6 +1,8 @@
 /** @jest-environment node */
 
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getListableFundingProjects } from '../../lib/funding/projects';
+import { computeProjectState } from '../../lib/funding/projectState';
 import llmsHandler, { CURATED_GUIDES } from '../../pages/api/llms';
 import llmsFullHandler from '../../pages/api/llms-full';
 import rssHandler from '../../pages/api/rss';
@@ -186,17 +188,25 @@ describe('external content index policy', () => {
   });
 });
 
-// 실제 content/funding/ 을 읽는 통합 확인. 지금 저장소엔 draft·hidden인 스모크 테스트
-// 프로젝트뿐이라 진행 중은 0건이고, llms.txt는 그 사실을 그대로 말해야 한다.
+// 실제 content/funding/ 을 읽는 통합 확인. 진행 중 프로젝트가 있으면 그 목록을 말하고,
+// 없으면 없다고 말해야 한다 — 어느 쪽이든 **파일의 실제 상태를 따라간다**.
 // (분기 단위 테스트는 tests/api/llms-funding.test.ts)
 describe('llms.txt 펀딩 안내는 실제 프로젝트 목록을 따른다', () => {
-  it('진행 중이 없으면 "진행 중"이라 말하지 않는다', () => {
+  it('실제 목록과 같은 것을 말한다', () => {
     const { res, getBody } = createResponse();
 
     llmsHandler(createRequest(), res);
     const body = getBody();
 
-    expect(body).toContain('현재 진행 중인 프로젝트는 없습니다');
+    const live = getListableFundingProjects().filter(
+      (p) => computeProjectState(p, new Date()) === 'live',
+    );
+    if (live.length === 0) {
+      expect(body).toContain('현재 진행 중인 프로젝트는 없습니다');
+    } else {
+      expect(body).not.toContain('현재 진행 중인 프로젝트는 없습니다');
+      for (const p of live) expect(body).toContain(`/ko/funding/${p.slug}`);
+    }
     // draft·hidden 프로젝트는 어떤 경우에도 llms.txt에 노출되면 안 된다.
     expect(body).not.toContain('/ko/funding/smoke-test');
     expect(body).not.toContain('결제 스모크 테스트 프로젝트');

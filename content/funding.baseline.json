@@ -1,6 +1,26 @@
 {
  "note": "펀딩 콘텐츠 불변식 기준선(프로젝트 slug × 리워드 id × 단가 × 한정 여부). scripts/funding-baseline.ts --update 로 갱신하고, 같은 커밋에 이유를 남길 것.",
  "entries": {
+  "keep-singing-for-palestine": {
+   "rewards": {
+    "mp3": {
+     "amount": 10000,
+     "limited": false
+    },
+    "wav-cd": {
+     "amount": 30000,
+     "limited": false
+    },
+    "wav-hires": {
+     "amount": 50000,
+     "limited": false
+    },
+    "wav-hires-plus": {
+     "amount": 100000,
+     "limited": false
+    }
+   }
+  },
   "smoke-test": {
    "rewards": {
     "thanks": {

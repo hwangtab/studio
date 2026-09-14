@@ -168,3 +168,40 @@ describe('고객 메일에 개인 주소를 노출하지 않는다', () => {
     expect(customer.text).not.toContain(OPERATOR_EMAIL);
   });
 });
+
+/**
+ * 디지털 리워드 내려받기 — 후원한 **그 리워드**의 주소만 나가야 한다. 티어마다 음질이
+ * 달라서(1만 MP3 / 3만 WAV / 5만·10만 고음질), 다른 티어의 주소가 섞이면 돈을 덜 낸
+ * 사람이 더 좋은 파일을 받는다.
+ */
+describe('확정 메일의 음원 내려받기', () => {
+  // project 픽스처가 `as never`라 스프레드가 안 된다 — 필요한 모양만 독립적으로 만든다.
+  const projectWith = (rewards: Array<{ id: string; downloadUrl: string | null }>) =>
+    ({
+      title: '데모 앨범',
+      rewards: rewards.map((r) => ({
+        id: r.id, title: r.id, description: '', amount: 10000, totalQuantity: null,
+        requiresShipping: false, estimatedDelivery: '2026-09', image: null, downloadUrl: r.downloadUrl,
+      })),
+    }) as never;
+
+  const orderFor = (rewardId: string) =>
+    ({ ...(order as Record<string, unknown>), fundingPledge: { ...((order as Record<string, Record<string, unknown>>).fundingPledge), rewardId } }) as never;
+
+  it('후원한 리워드의 주소만 싣는다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
+    await sendFundingConfirmedEmails(
+      orderFor('mp3'),
+      projectWith([{ id: 'mp3', downloadUrl: 'https://x/mp3.zip' }, { id: 'hires', downloadUrl: 'https://x/hires.zip' }]),
+    );
+    const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(customer.text).toContain('https://x/mp3.zip');
+    expect(customer.text).not.toContain('https://x/hires.zip');
+  });
+
+  it('downloadUrl이 없는 리워드에는 내려받기 줄이 붙지 않는다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
+    await sendFundingConfirmedEmails(orderFor('mp3'), projectWith([{ id: 'mp3', downloadUrl: null }]));
+    expect((sendEmail as jest.Mock).mock.calls[0][0].text).not.toContain('음원 내려받기');
+  });
+});
