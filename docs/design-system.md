@@ -313,7 +313,7 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 |---|---|
 | 일반 배경 | `ring-primary/70 dark:ring-primary-lighter/70` + `ring-offset-white dark:ring-offset-gray-900` |
 | 브랜드 아웃라인 pill | tone에 맞춰 `ring-{tone}/70` + 다크는 밝은 짝 `/70`(§4 `ServiceLinkPill`) |
-| 카카오 옐로 버튼 | `ring-kakao-ink` + 표면에 맞는 오프셋 |
+| 카카오 옐로 버튼 | `ring-kakao-ink dark:ring-kakao` + 표면에 맞는 오프셋 |
 | 어두운 히어로 이미지 위 / 솔리드 브랜드 버튼 | `ring-white/70` + 표면색 오프셋(`ring-offset-black/20`·`ring-offset-primary-dark`) |
 
 터치 타깃은 최소 44×44px(`min-h-[44px]` 또는 `h-11`). 아이콘 전용 버튼에는 `aria-label`.
@@ -337,6 +337,29 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 2. **다크에서는 원색을 쓰지 않는다.** 링도 텍스트와 같은 논리로 밝은 짝
    (`primary-lighter`·`secondary-light`·`accent-light`)을 써야 3:1을 넘는다. gray-900 위
    원색은 `/70`에서도 1.91~2.32:1로 미달이다.
+3. **카카오 버튼의 `ring-kakao-ink`도 라이트 전용이다**(2026-09-14에 알게 된 것).
+   `#191600`은 흰 배경 위 18.16:1로 훌륭하지만, 오프셋이 `dark:ring-offset-gray-900`이라
+   다크에서는 **어두운 표면 위에 검은 링**이 놓여 1.11:1 — 사실상 보이지 않는다.
+   다크 짝은 `dark:ring-kakao`(`#FEE500`, gray-900 위 15.74:1)를 쓴다. 카카오 배색
+   규칙과도 어긋나지 않는다 — 옐로가 곧 카카오 신호다.
+
+### 오프셋 색은 "실제 표면"이어야 한다
+
+링 대비는 **오프셋 색을 기준으로** 잰다. `ring-offset-2`만 쓰고 색을 빼면 Tailwind 기본값인
+흰색이 들어가므로, 다크 화면에서는 재는 기준과 실제 표면이 달라 계산이 통째로 무의미해진다
+(2026-09-14 실측: 카카오/전화 버튼·갤러리 화살표·AudioPlayer 슬라이더 등 다크에서 15곳).
+`focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`을 기본으로 두고,
+표면이 페이지 배경이 아니면 그 색으로 맞춘다(AudioPlayer 패널 `dark:ring-offset-[#121212]`,
+스토리 고정 바 `ring-offset-amber-50 dark:ring-offset-amber-900`).
+
+반대로 **표면이 한 테마로 고정된 자리에는 다크 짝을 주지 않는다.** 흰 카드·흰 버튼 위
+(`ring-offset-white`만 있고 `dark:` 오프셋 짝이 없는 줄)에 `primary-lighter/70`을 올리면
+1.96:1로 **오히려 나빠진다**. 어두운 히어로 위(`ring-offset-black/20`)도 같은 이유로
+`ring-white/70` 하나로 둔다. `pages/admin/**`·계약 서명·완료 화면도 마찬가지다.
+
+`tailwind.config.test.ts`의 **'포커스 링이 실제로 보이는가'** 가드가 이 두 규칙을 CI에서
+지킨다: 알파가 `/50` 미만이면 실패, 오프셋이 테마에 따라 바뀌는데 다크 짝이 없으면 실패.
+예외는 `FOCUS_RING_ALLOW`에 **실측 대비값과 함께** 등재한다.
 
 ## 6. 모션
 
@@ -385,6 +408,8 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 | 카테고리 배지 반경 불일치 | `rounded-full`로 통일(색은 맥락이 달라 유지) |
 | 다크모드 브랜드색·메타색 텍스트 AA 미달 | 8개 페이지 실측 112건 → 0건. 대비 부족한 다크 짝을 가드가 막는다 |
 | 아웃라인 pill className이 9개 파일에 45번 복붙 + 45곳 전부 `focus-visible` 링 없음 | `components/ui/ServiceLinkPill`로 흡수(§4). 포커스 링·44px 타깃을 함께 얻었고, 재복붙은 `tailwind.config.test.ts`의 조합 스캔이 막는다 |
+| 나머지 `focus-visible` 링 `/40` 75곳이 SC 1.4.11(3:1) 미달 | §5 표대로 `ring-primary/70 dark:ring-primary-lighter/70`로 일괄 교체(2026-09-14). 카카오 다크 링 6곳·불투명 `ring-primary` 4곳·오프셋 색 누락 23곳도 함께. 6개 페이지 × 라이트·다크 실측 미달 336건(테마당 168) → **0건** |
+| "클래스가 있으면 통과"하던 포커스 가드 | `tailwind.config.test.ts`의 '포커스 링이 실제로 보이는가'가 알파 하한(`/50`)과 다크 짝을 CI에서 강제한다(§5) |
 
 ### 판단을 내린 것 — 더 이상 미결이 아니다
 
@@ -405,7 +430,6 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 |---|---|
 | 대비 가드가 줄 단위라 hover 색과 텍스트 색이 **다른 줄**에 있으면 못 잡는다 | pill 45곳은 `ServiceLinkPill`로 흡수돼 더는 이 형태가 아니다. 남은 자리(`ServiceLinksSection`은 해소)에 대해서는 hover 실측 CI화가 근본 해법 |
 | 대비 측정이 그라디언트·사진 배경 위 텍스트를 못 잰다 | 투명 헤더가 히어로 사진 위에 있어 스크립트가 흰색으로 폴백한다. 그 자리는 육안 확인에 의존 |
-| **저장소의 거의 모든 `focus-visible` 링이 SC 1.4.11(3:1) 미달** | 이 문서 §5가 지금까지 `ring-primary/40`을 표준으로 말해 왔고 코드가 그대로 따랐다 — 라이트 2.04:1, 다크 1.33:1이라 링이 **있지만 보이지 않는다**. `ServiceLinkPill`과 `portfolio/[id]` 하단 CTA 줄만 `/70`(+ 다크 밝은 짝)로 고쳤고 **나머지는 별건이다**. 같은 파일의 공유 `<button>`(`ring-primary/40`)도 아직 남아 있다. 근본 해법은 ①§5 표를 따라 남은 `ring-*/40`을 일괄 `/70`으로 올리고 ②알파 `/40` 이하의 포커스 링을 금지하는 가드를 `tailwind.config.test.ts`에 추가하는 것 |
 | `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
 | 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |
