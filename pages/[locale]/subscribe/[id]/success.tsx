@@ -1,3 +1,10 @@
+/* eslint-disable @next/next/no-html-link-for-pages --
+ * private 페이지(URL에 관리 토큰·paymentKey·orderId가 실린다)의 이탈 링크는 next/link가
+ * 아니라 문서 이동이어야 한다. 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면, 그 사이
+ * mount된 gtag가 살아 있는 채로 비밀값이 붙은 URL에 돌아와 page_view를 보낸다.
+ * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
+ * tests/pages/privateLinkNavigation.test.ts
+ */
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 
