@@ -12,6 +12,12 @@ describe('isPrivateAnalyticsPath', () => {
       '/ko/funding/fail?code=PAY_PROCESS_CANCELED&orderId=FND-20261015-ABCD1234',
       '/ko/funding/fail',
       '/en/booking/fail?orderId=SNB-1',
+      // 정기결제(구독) — setupToken·manageToken이 쿼리에 실린다. manageToken은 만료도
+      // 1회성도 없고 그 값 하나로 결제 이력 열람·해지·새 등록 토큰 발급까지 된다.
+      '/ko/subscribe/sub_abc?token=setup_secret',
+      '/ko/subscribe/sub_abc/success?token=s&customerKey=sub_abc&authKey=ak',
+      '/ko/subscribe/sub_abc/fail?token=setup_secret',
+      '/ko/subscribe/manage/sub_abc?token=manage_secret',
     ]) {
       expect(isPrivateAnalyticsPath(path)).toBe(true);
     }
@@ -82,6 +88,7 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/funding/manage/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/manage/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/subscribe/:path*',
     ]);
     // pledge 폼은 no-store 전용 예외라 측정 제외 목록에는 없어야 한다.
     expect(isPrivateAnalyticsPath('/ko/funding/demo/pledge')).toBe(false);
