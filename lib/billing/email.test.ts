@@ -58,3 +58,29 @@ it('운영자 알림에 late_approval 종류가 있다 — 제목만 보고 환�
   expect(mail.text).toContain('2026-04분');
   expect(mail.text).toContain('/admin/subscriptions/sub-1');
 });
+
+/**
+ * 일시정지(paused) 구독은 카드를 새로 등록해도 자동으로 재개되지 않는다 —
+ * `listDueSubscriptions`가 active·past_due만 집어 간다. 그 상태에 "다음 결제일부터 새
+ * 카드로 청구됩니다"라고 쓰면 위 describe가 고친 것과 **같은 종류의 거짓**이 된다.
+ */
+describe('sendSubscriptionSetupEmail — 일시정지 구독', () => {
+  it('paused에는 다음 결제일 청구를 예고하지 않는다', async () => {
+    await sendSubscriptionSetupEmail(
+      sub({ setupMode: 'change', status: 'paused' }),
+      'https://studionol.co.kr/ko/subscribe/sub-1?token=t',
+    );
+    const mail = lastCall();
+    expect(mail.text).toContain('이번에는 결제되지 않습니다');
+    expect(mail.text).not.toContain('다음 결제일부터');
+    expect(mail.text).toContain('멈춰 있는 상태');
+  });
+
+  it('active는 종전대로 다음 결제일 청구를 알린다', async () => {
+    await sendSubscriptionSetupEmail(
+      sub({ setupMode: 'change', status: 'active' }),
+      'https://studionol.co.kr/ko/subscribe/sub-1?token=t',
+    );
+    expect(lastCall().text).toContain('다음 결제일부터');
+  });
+});

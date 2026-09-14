@@ -66,10 +66,13 @@ describe('private 페이지의 이탈 링크', () => {
    * 들어온 사람이 피싱과 구별할 수 있어야 하고, 결제·해지가 일어나는 자리다. 제목 태그가
    * 아니라 **본문**에 상호가 있어야 한다(탭 제목은 화면에 안 보인다).
    */
-  it.each(PRIVATE_PAGE_FILES)('%s 본문에 상호가 표기돼 있다', (file) => {
+  it.each(PRIVATE_PAGE_FILES)('%s 본문에 상호를 밝히는 전용 줄이 있다', (file) => {
     const source = read(file);
     const withoutHead = source.replace(/<title>[^<]*<\/title>/g, '');
-    expect(withoutHead).toContain('스튜디오 놀');
+    // 단순히 '스튜디오 놀'이 어딘가 있는지만 보면 푸터의 "문의: 스튜디오 놀 010-…" 한 줄이
+    // 상단 브랜드 표기를 지워도 테스트를 통과시킨다(실제로 그런 사각이 있었다). 상호만
+    // 담은 **전용 요소**를 요구해 그 우회를 막는다.
+    expect(withoutHead).toMatch(/>\s*스튜디오 놀\s*</);
   });
 
   /**

@@ -85,6 +85,16 @@ export const VIRTUAL_ACCOUNT_ERROR_CODE = 'VIRTUAL_ACCOUNT_UNSUPPORTED';
  * 호출자가 바꿔 단다. 예전엔 운영자용 한 벌뿐이라, 후원자가 관리 링크에서 취소를 누르면
  * 내부 운영 절차가 그대로 노출됐다.
  */
+/**
+ * 승인 단계에서 가상계좌를 거절할 때 고객이 보는 문구.
+ *
+ * 예전엔 이 자리에 GENERIC("잠시 후 다시 시도해 주세요")이 나갔다. 입금을 기다리는
+ * 사람에게 "다시 시도하라"는 **틀린 지시**다 — 다시 시도해도 같은 수단이면 같은 결과다.
+ * 무엇을 하면 되는지(다른 수단으로 결제)를 말한다.
+ */
+export const VIRTUAL_ACCOUNT_CONFIRM_MESSAGE =
+  '가상계좌는 이용하실 수 없는 결제수단입니다. 카드·계좌이체·간편결제로 다시 결제해 주세요.';
+
 export const VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE =
   '이 결제수단은 화면에서 취소할 수 없습니다. 010-4255-7893으로 연락 주시면 환불해 드립니다.';
 export const VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE =
