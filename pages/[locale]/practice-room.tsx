@@ -6,7 +6,7 @@ import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, 
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 
@@ -142,7 +142,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
         backgroundImage="/images/room5.webp"
         imageAlt={t('practiceRoom.hero.alt')}
         minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
+        overlayGradient={HERO_SCRIM_STRONG}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.practiceRoom'), path: `/${locale}/practice-room` },

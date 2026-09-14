@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import HubLocaleContentSection from '../../components/ui/HubLocaleContentSection';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { getEquipmentData } from '../../data/equipment';
 import EquipmentSection from '../../components/studio/EquipmentSection';
@@ -136,7 +136,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         backgroundImage="/images/hardware1.webp"
         imageAlt={t('studioInfo.hero.alt')}
         minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
+        overlayGradient={HERO_SCRIM}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.equipment'), path: `/${locale}/studio-info` },

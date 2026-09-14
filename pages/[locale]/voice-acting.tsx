@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
 import SEO from '../../components/SEO';
-import ImageHero from '../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -167,7 +167,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
         backgroundImage="/images/hardware3.webp"
         imageAlt={t('voiceActing.hero.alt')}
         minHeight="min-h-[60vh]"
-        overlayGradient="from-black/40 via-transparent to-black/20"
+        overlayGradient={HERO_SCRIM_STRONG}
         breadcrumbItems={[
           { name: t('nav.home'), path: `/${locale}` },
           { name: t('nav.voiceActing'), path: `/${locale}/voice-acting` },
