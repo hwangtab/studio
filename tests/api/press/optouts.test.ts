@@ -2,7 +2,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import handler from './optouts';
+import handler from '../../../pages/api/press/optouts';
 import { PRESS_HOST } from '../../../lib/press/host';
 import { PRESS_OPTOUT_PAGE_SIZE, listPressOptouts } from '../../../lib/press/optouts';
 

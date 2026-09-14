@@ -5,7 +5,7 @@ import path from 'path';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import handler from './[token]';
+import handler from '../../../../pages/api/press/unsubscribe/[token]';
 import { recordPressOptout } from '../../../../lib/press/optouts';
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { renderUnsubPage } from '../../../../lib/press/page';
