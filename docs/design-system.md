@@ -361,6 +361,48 @@ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
 지킨다: 알파가 `/50` 미만이면 실패, 오프셋이 테마에 따라 바뀌는데 다크 짝이 없으면 실패.
 예외는 `FOCUS_RING_ALLOW`에 **실측 대비값과 함께** 등재한다.
 
+### 링은 box-shadow다 — transition에 box-shadow를 넣으면 링이 늦게 뜬다
+
+Tailwind의 `ring-*`는 outline이 아니라 **box-shadow로** 그려진다(`--tw-ring-shadow`가
+`box-shadow` 슬롯에 들어간다). 그래서 같은 요소가 box-shadow를 보간하면 — `transition-all`,
+`transition-shadow`, `transition-[...box-shadow...]`, 접두사 없는 `transition` — 포커스 링이
+**0px·투명에서 시작해 duration에 걸쳐 서서히 나타난다.** 2026-09-14 실측(헤더 카카오 CTA,
+`transition-all duration-300`):
+
+| t | 링 |
+|---|---|
+| 0ms | `0px` 투명 |
+| 50ms | `0.34px` α0.06 |
+| 150ms | `3.3px` α0.58 |
+| 300ms | `4px` α0.70 ✓ |
+
+클래스도(`focus-visible:ring-2`), CSS 변수도(`--tw-ring-color`), 생성된 규칙도 전부 정상이다 —
+**아직 그려지지 않았을 뿐**이다. Tab으로 빠르게 넘기는 키보드 사용자는 링을 온전히 못 보고,
+알파 가드는 클래스와 색이 다 맞으므로 이 형태를 그냥 통과시킨다.
+
+규칙: **포커스 링을 가진 요소는 box-shadow를 transition 목록에 넣지 않는다.** 필요한 속성만
+명시한다(`transition-transform`, `transition-[background-color,border-color,color,transform]`).
+hover의 `shadow-md → shadow-lg`가 즉시 바뀌는 것은 허용된 비용이다 — 포커스 표시기가 우선이다.
+`tailwind.config.test.ts`의 **'포커스 링이 늦게 나타나지 않는가'** 가드가 CI에서 지킨다.
+
+### 포커스 링 측정은 반드시 **Tab**으로 — `.focus()`는 `:focus-visible`을 켜지 못한다
+
+`el.focus()`는 프로그램적 포커스라 브라우저가 "보여줄 포커스"로 판정하지 않는다. 즉
+`:focus-visible` 규칙이 적용되지 않으므로, `.focus()`로 잰 측정은 **링이 실제로 그려지는
+상태를 한 번도 보지 못한다.** 2026-09-14 라운드가 "미달 0"이라고 잘못 보고한 원인이 이것이다.
+
+측정은 이렇게 한다:
+
+1. `page.keyboard.press('Tab')`으로 이동하며 `document.activeElement`를 대상으로 삼는다.
+2. `el.matches(':focus-visible')`가 **true**인 것만 센다.
+3. **전환이 끝난 뒤에 읽는다.** Tab 직후 같은 tick에 `getComputedStyle`을 읽으면 위 표의
+   0ms 값을 읽게 되어, 실제로는 멀쩡한 요소까지 "링 없음"으로 잡힌다(반대 방향 오진).
+   `el.getAnimations()`가 빌 때까지 기다리거나 duration보다 넉넉히(≥400ms) 기다린다.
+4. 대비는 토큰 원색이 아니라 `getComputedStyle(el).boxShadow`에서 읽은 **합성 링 색 vs
+   오프셋 색**으로 잰다(§5 앞 절).
+
+라이트·다크 양쪽을 다 잰다(`page.emulateMediaFeatures`의 `prefers-color-scheme`).
+
 ## 6. 모션
 
 `utils/animationUtils.ts`의 프리셋과 `duration-fast|base|slow`(200/300/700ms) ·`ease-standard`

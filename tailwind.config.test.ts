@@ -708,3 +708,133 @@ describe('포커스 링이 실제로 보이는가', () => {
     }
   });
 });
+
+/**
+ * 포커스 링을 **보이지 않게** 만드는 두 번째 경로: transition.
+ *
+ * 2026-09-14에 드러난 결함이다. `focus-visible:ring-2`도, `--tw-ring-color`도, 생성된
+ * `.focus-visible\:ring-2` 규칙도 전부 정상인데 헤더 카카오 CTA에 링이 안 보였다.
+ * 원인은 Tailwind가 `ring-*`를 outline이 아니라 **box-shadow로** 그린다는 데 있다 —
+ * 같은 요소가 box-shadow를 보간하면(`transition-all`·`transition-shadow`·
+ * `transition-[...box-shadow...]`·prefix 없는 `transition`) 링이 0px·투명에서 시작해
+ * duration에 걸쳐 서서히 나타난다. 실측: t=0ms 0px → t=150ms 3.3px → t=300ms 4px.
+ * Tab으로 빠르게 넘기는 키보드 사용자는 링을 온전히 보지 못하고, 포커스가 지금 어디에
+ * 있는지 읽어내지 못한다.
+ *
+ * 알파 가드(위)는 이 형태를 통과시킨다 — 클래스도 색도 다 맞기 때문이다. 그래서 별도 규칙:
+ * **포커스 링을 가진 요소는 box-shadow를 transition 목록에 넣지 않는다.**
+ *
+ * 검사 단위가 "한 줄"이 아니라 "이어 붙는 문자열 리터럴 묶음"인 이유: `cn(...)`·`cva(...)`는
+ * 클래스를 여러 인자로 쪼개 두므로(`Field.tsx`가 그렇다) 줄 단위로 보면 transition과 ring이
+ * 서로 다른 줄에 있어 놓친다.
+ */
+const RING_TOKEN_RE = /(?:^|[\s])(?:[a-z-]+:)*focus(?:-visible)?:ring-\d/;
+const SHADOW_TRANSITION_RE =
+  /(?:^|\s)(transition-all|transition-shadow|transition)(?=\s|$)|transition-\[[^\]]*\bbox-shadow\b[^\]]*\]/;
+
+/**
+ * 파일을 훑어 문자열 리터럴을 뽑되, **공백·쉼표·`+`·주석만으로 이어지는** 리터럴들은
+ * 한 묶음으로 합친다(= 같은 className으로 합성될 것들). 템플릿 리터럴의 `${...}` 식은
+ * 경계로 삼아 삼항 분기가 서로 섞이지 않게 한다.
+ */
+const classGroups = (src: string): string[] => {
+  const groups: string[] = [];
+  let cur: string[] = [];
+  let gap = '';
+  const flush = () => {
+    if (cur.length) groups.push(cur.join(' '));
+    cur = [];
+  };
+  const push = (lit: string) => {
+    // 리터럴 사이가 공백/쉼표/`+`뿐이면 같은 묶음으로 이어 붙인다.
+    if (cur.length && !/^[\s,+]*$/.test(gap)) flush();
+    cur.push(lit);
+    gap = '';
+  };
+
+  let i = 0;
+  const readString = (quote: string) => {
+    i += 1;
+    let buf = '';
+    while (i < src.length) {
+      const c = src[i];
+      if (c === '\\') { buf += src[i + 1] ?? ''; i += 2; continue; }
+      if (c === quote) { i += 1; push(buf); return; }
+      if (quote === '`' && c === '$' && src[i + 1] === '{') {
+        push(buf);
+        flush();           // 보간식은 경계다
+        buf = '';
+        i += 2;
+        let depth = 1;
+        while (i < src.length && depth > 0) {
+          const d = src[i];
+          if (d === '{') depth += 1;
+          else if (d === '}') depth -= 1;
+          else if (d === "'" || d === '"' || d === '`') { readString(d); continue; }
+          i += 1;
+        }
+        gap = '';
+        continue;
+      }
+      buf += c;
+      i += 1;
+    }
+    push(buf);
+  };
+
+  while (i < src.length) {
+    const c = src[i];
+    if (c === '/' && src[i + 1] === '/') { while (i < src.length && src[i] !== '\n') i += 1; continue; }
+    if (c === '/' && src[i + 1] === '*') { i += 2; while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i += 1; i += 2; continue; }
+    if (c === "'" || c === '"' || c === '`') { readString(c); continue; }
+    gap += c;
+    i += 1;
+  }
+  flush();
+  return groups;
+};
+
+/**
+ * 예외는 **왜 링이 box-shadow로 안 그려지는지**를 적을 것(예: outline 기반 표시기).
+ * "보기에 괜찮아서"는 이유가 아니다 — 이 결함은 눈이 아니라 타이밍의 문제다.
+ */
+const RING_TRANSITION_ALLOW: { file: string; snippet: string; reason: string }[] = [];
+
+describe('포커스 링이 늦게 나타나지 않는가', () => {
+  it('focus ring이 있는 요소는 box-shadow를 transition 하지 않는다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of ['components', 'pages']) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (/\.test\.tsx?$/.test(rel)) continue;
+
+        for (const group of classGroups(readFileSync(file, 'utf-8'))) {
+          if (!RING_TOKEN_RE.test(group)) continue;
+          const bad = SHADOW_TRANSITION_RE.exec(group);
+          if (!bad) continue;
+          if (RING_TRANSITION_ALLOW.some((a) => a.file === rel && group.includes(a.snippet))) continue;
+          offenders.push(`${rel}: ${bad[0].trim()} — ${group.trim().slice(0, 90)}…`);
+        }
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        'Tailwind의 ring은 box-shadow로 그려집니다 — box-shadow를 보간하면 포커스 링이 ' +
+          'duration만큼 늦게 떠올라 Tab으로 넘기는 사용자에게는 사실상 안 보입니다.\n' +
+          '· transition 목록에서 box-shadow를 빼세요(`transition-all`·`transition-shadow`·' +
+          '접두사 없는 `transition` 포함). 필요한 속성만 명시하면 됩니다.\n' +
+          '· hover shadow가 즉시 바뀌는 것은 허용된 비용입니다. 포커스 표시기가 우선입니다.\n' +
+          '· 근거와 측정 방법은 docs/design-system.md §5.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});
