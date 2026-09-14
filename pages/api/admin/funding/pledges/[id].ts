@@ -219,11 +219,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          */
         const remaining = remainingRefundable(order);
         const isTossRefund = order.payments.length > 0;
-        err = await sendFundingCancelledEmails(
-          order, project,
-          isTossRefund ? 'refunded' : 'recorded',
-          isTossRefund ? order.totalAmount - remaining : remaining,
-        );
+        const refundedAmount = isTossRefund ? order.totalAmount - remaining : remaining;
+        /**
+         * 0원이면 보낼 것이 없다 — 보내면 고객에게 "0원이 환불됩니다"가 나간다.
+         *
+         * 실제로 생기는 상태다: 웹훅이 orders.status만 refunded로 옮기고 refunds 기록이
+         * 아직 붙지 않은 창(대사 보정 전), 또는 기록이 실패한 건. 그 창에서 재발송을 누르면
+         * 계산값이 0이 된다. 금액을 지어내느니 거절하고, 대사가 끝난 뒤 다시 누르게 한다.
+         */
+        if (refundedAmount <= 0) {
+          return res.status(409).json({
+            ok: false,
+            message: '환불 기록이 아직 없어 안내할 금액을 계산할 수 없습니다. 결제사 대사가 끝난 뒤 다시 시도해 주세요.',
+          });
+        }
+        err = await sendFundingCancelledEmails(order, project, isTossRefund ? 'refunded' : 'recorded', refundedAmount);
       } else {
         return res.status(409).json({ ok: false, message: '결제가 완료되었거나 환불된 후원만 메일을 재발송할 수 있습니다.' });
       }

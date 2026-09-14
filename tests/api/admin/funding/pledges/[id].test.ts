@@ -119,6 +119,22 @@ it('resend_email: partially_refunded는 남은 잔액을 뺀 실제 환불액으
   expect(sendFundingCancelledEmails).toHaveBeenCalledWith(expect.anything(), undefined, 'refunded', 12000);
 });
 
+/**
+ * 웹훅이 orders.status만 refunded로 옮기고 refunds 기록이 아직 붙지 않은 창에서 재발송을
+ * 누르면 계산값이 0이 된다. 그대로 보내면 고객에게 "0원이 환불됩니다"가 나간다.
+ * 금액을 지어내느니 거절하고 대사가 끝난 뒤 다시 누르게 한다.
+ */
+it('resend_email: 환불 기록이 없어 금액이 0이면 409 — 0원 안내를 보내지 않는다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'refunded',
+    payments: [{ id: 'p1', paymentKey: 'pk', refunds: [] }],
+  });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(r.status).toBe(409);
+  expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
 // 토스 결제 기록이 없는 옛 무통장·수기 건은 계좌 송금 안내('recorded')로 보낸다.
 it('resend_email: 결제 기록이 없는 환불 건은 recorded 모드로 보낸다', async () => {
   (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'refunded', payments: [] });

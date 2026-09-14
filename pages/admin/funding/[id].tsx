@@ -110,7 +110,16 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   const handleSaveFulfillment = () =>
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
-  const handleResendEmail = () => run(() => patchPledge(pledge.id, { action: 'resend_email' }));
+  /**
+   * 확인을 받는다 — 이 버튼은 상태와 무관하게 **항상** 렌더되는데 누르면 곧바로 고객에게
+   * 메일이 나간다. 되돌릴 수 없는 대외 발송에 확인이 없던 유일한 자리였다.
+   * 무엇이 나가는지도 함께 알린다(확정 안내인지 환불 안내인지가 주문 상태로 갈린다).
+   */
+  const handleResendEmail = () =>
+    run(
+      () => patchPledge(pledge.id, { action: 'resend_email' }),
+      `${pledge.customerEmail}로 ${isLiveFundingOrderStatus(pledge.status) ? '후원 확정' : '환불'} 안내 메일을 다시 보낼까요?`,
+    );
   /**
    * 고객이 남긴 청약철회 의사를 지우는 조작이라 사유를 반드시 받는다(API도 없으면 400).
    * 사유는 관리자 메모에 날짜와 함께 덧붙고, 후원자에게는 확인 메일이 나간다.

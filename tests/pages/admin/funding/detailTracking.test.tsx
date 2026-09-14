@@ -140,3 +140,27 @@ it('평범한 건에는 버튼도 배너도 없다', () => {
   expect(screen.queryByRole('button', { name: '재고 확인 완료' })).not.toBeInTheDocument();
   expect(screen.queryByText(/재고 확인 필요/)).not.toBeInTheDocument();
 });
+
+/**
+ * '메일 재발송'은 상태와 무관하게 항상 렌더되는데 누르면 곧바로 고객에게 메일이 나간다 —
+ * 되돌릴 수 없는 대외 발송에 확인이 없던 유일한 자리였다.
+ */
+describe('메일 재발송 확인', () => {
+  it('취소하면 아무것도 보내지 않는다', () => {
+    (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
+    window.confirm = jest.fn().mockReturnValue(false);
+    render(<AdminFundingDetailPage pledge={PLEDGE} refundableAmount={30000} />);
+    fireEvent.click(screen.getByRole('button', { name: '메일 재발송' }));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('a@b.com'));
+    expect(patchPledge).not.toHaveBeenCalled();
+  });
+
+  it('확인하면 재발송하고, 무엇이 나가는지 상태에 맞게 알린다', () => {
+    (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
+    window.confirm = jest.fn().mockReturnValue(true);
+    render(<AdminFundingDetailPage pledge={{ ...PLEDGE, status: 'refunded' }} refundableAmount={0} />);
+    fireEvent.click(screen.getByRole('button', { name: '메일 재발송' }));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('환불'));
+    expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'resend_email' });
+  });
+});
