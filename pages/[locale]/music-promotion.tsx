@@ -215,7 +215,18 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       <ImageHero
         locale={locale}
         priority
-        backgroundImage="/images/console.webp"
+        /**
+         * 밤의 서울 전경.
+         *
+         * 전에는 console.webp였는데 두 가지가 틀렸다. 960×1280 **세로** 사진을 가로
+         * 히어로에 늘려 쓰고 있었고, 무엇보다 믹싱 콘솔은 "녹음 스튜디오"를 말하지
+         * 이 페이지가 파는 "발매를 알리는 일"을 말하지 않는다.
+         *
+         * 이 사진은 1280×720이고 위쪽 절반이 거의 검은 하늘이라 흰 제목이 가장 잘
+         * 산다 — 히어로 텍스트 대비를 실측해서 고른 자리다. 얼굴이 없어 초상 사용
+         * 문제도 없다.
+         */
+        backgroundImage="/images/seoul-night-skyline.webp"
         imageAlt={t('musicPromotion.hero.alt')}
         title={t('musicPromotion.hero.title')}
         subtitle={
