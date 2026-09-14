@@ -31,7 +31,7 @@ interface DesktopNavProps {
 // 1탭 링크의 시각 스펙은 DropdownMenu 트리거 버튼과 같다 — 같은 줄에 섞여 있으므로
 // 패딩·타이포·상태 색이 어긋나면 두 종류가 다른 위계로 보인다. 차이는 chevron 유무뿐.
 const linkClass = (isActive: boolean, isTransparent: boolean) =>
-  `flex items-center px-2 xl:px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+  `flex items-center px-2 xl:px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
     ? !isTransparent
       ? 'text-primary dark:text-accent-light font-bold'
       : 'text-white font-bold bg-white/20'

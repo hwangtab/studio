@@ -16,7 +16,7 @@ export const fieldControlClass = cn(
   'dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400',
   'border-gray-300 dark:border-gray-600',
   'transition-[colors,box-shadow] duration-fast ease-standard',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   'disabled:opacity-50 disabled:cursor-not-allowed',
 );

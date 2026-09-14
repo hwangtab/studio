@@ -65,7 +65,7 @@ const KakaoFab = ({ locale }: KakaoFabProps) => {
         href={telHref}
         onClick={handlePhoneClick}
         aria-label={phoneLabel}
-        className="inline-flex items-center justify-center w-[52px] h-[52px] rounded-full bg-white dark:bg-gray-800 text-primary dark:text-primary-lighter border border-gray-200 dark:border-gray-700 shadow-lg shadow-black/20 touch-manipulation transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        className="inline-flex items-center justify-center w-[52px] h-[52px] rounded-full bg-white dark:bg-gray-800 text-primary dark:text-primary-lighter border border-gray-200 dark:border-gray-700 shadow-lg shadow-black/20 touch-manipulation transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-lighter focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
       >
         <Phone size={22} aria-hidden="true" />
       </a>
@@ -75,7 +75,7 @@ const KakaoFab = ({ locale }: KakaoFabProps) => {
         rel="noopener noreferrer"
         onClick={handleClick}
         aria-label={label}
-        className="inline-flex items-center gap-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink shadow-lg shadow-black/20 pl-4 pr-5 py-3 min-h-[52px] font-bold touch-manipulation transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2"
+        className="inline-flex items-center gap-2 rounded-full bg-kakao hover:bg-kakao-dark text-kakao-ink shadow-lg shadow-black/20 pl-4 pr-5 py-3 min-h-[52px] font-bold touch-manipulation transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
       >
         <MessageCircle size={22} aria-hidden="true" className="flex-shrink-0" />
         <span className="text-sm whitespace-nowrap">{label}</span>

@@ -121,7 +121,7 @@ export const MobileNav = ({
         <div className="flex flex-col gap-2 pb-3 border-b border-gray-100 dark:border-gray-800 sm:hidden">
           <button
             type="button"
-            className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
+            className="flex items-center justify-between w-full px-3 py-2 text-left font-bold text-gray-900 dark:text-white focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-lighter rounded-lg"
             onClick={toggleDarkMode}
             aria-label={isDarkMode ? t('actions.toggleThemeLight') : t('actions.toggleThemeDark')}
             tabIndex={isOpen ? 0 : -1}
@@ -154,7 +154,7 @@ export const MobileNav = ({
               onClick={onClose}
               aria-current={currentPath === link.href ? 'page' : undefined}
               tabIndex={isOpen ? 0 : -1}
-              className={`flex items-center justify-center min-h-[44px] px-2 py-2 text-sm font-bold rounded-lg text-center transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === link.href
+              className={`flex items-center justify-center min-h-[44px] px-2 py-2 text-sm font-bold rounded-lg text-center transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === link.href
                 ? 'bg-primary text-white'
                 : 'bg-primary/10 text-primary dark:text-accent-light hover:bg-primary/20'
                 }`}
@@ -171,7 +171,7 @@ export const MobileNav = ({
               onClick={() => toggleGroup(group.id)}
               aria-expanded={expandedGroups.includes(group.id)}
               tabIndex={isOpen ? 0 : -1}
-              className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded-lg"
+              className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded-lg"
             >
               {group.label}
               <ChevronDown
@@ -195,7 +195,7 @@ export const MobileNav = ({
                       onClick={onClose}
                       aria-current={currentPath === item.href ? 'page' : undefined}
                       tabIndex={isOpen ? 0 : -1}
-                      className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === item.href
+                      className={`flex items-center min-h-[44px] px-3 py-2 text-sm rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${currentPath === item.href
                         ? 'bg-primary/10 text-primary dark:text-accent-light font-medium'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
                         }`}
