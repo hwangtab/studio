@@ -301,24 +301,20 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
  * 도메인 평판이 깎여 진짜 고객 메일이 스팸함으로 간다. 메일 재발송 쪽에는 가드가 있었는데
  * 환불 경로에는 없어서, 관리자 환불 한 번이 그대로 반송을 만들었다.
  */
-it('플레이스홀더 주소의 수기 후원을 환불해도 취소 메일을 보내지 않는다', async () => {
+it('플레이스홀더 주소의 수기 후원도 환불 안내를 발송 계층에 넘긴다 — 운영자 사본이 필요하다', async () => {
   const { id, orderNo } = await insertLegacyBankPledge('FND-M-PLACEHOLDER');
   await client.execute({ sql: "UPDATE orders SET customer_email='manual@studionol.co.kr' WHERE id=?", args: [id] });
 
   const r = await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
   expect(r).toMatchObject({ ok: true, mode: 'recorded' });
-  expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+  // 배달 불가 주소를 떨어뜨리는 것은 **고객 항목 하나**이고, 그 판정은 발송 계층이 한다
+  // (lib/funding/email.test.ts의 '플레이스홀더 주소' 블록). 여기서 통째로 건너뛰면 수기 건
+  // 계좌 송금의 시작점인 운영자 사본까지 사라진다.
+  expect(sendFundingCancelledEmails).toHaveBeenCalled();
 
-  // 환불 기록 자체는 정상이어야 한다 — 메일만 건너뛴다.
   const row = await client.execute({ sql: 'SELECT status, notification_error FROM orders WHERE id=?', args: [id] });
   expect(row.rows[0].status).toBe('refunded');
   expect(row.rows[0].notification_error).toBeNull();
-});
-
-it('실제 고객 주소면 종전대로 취소 메일을 보낸다', async () => {
-  const { orderNo } = await insertLegacyBankPledge('FND-M-REAL');
-  await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
-  expect(sendFundingCancelledEmails).toHaveBeenCalled();
 });
 
 /**

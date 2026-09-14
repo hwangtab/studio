@@ -122,10 +122,40 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   /**
    * 직전에 만든 **자기** 주문번호. 재제출 시 서버에 함께 보내 그 주문 하나만 만료시킨다
    * (자기 홀드 해제의 소유 증명 — lib/funding/service.ts createFundingPledge 주석).
-   * created와 달리 "다시 신청"으로 지우지 않는다 — 지우면 증명이 사라져 자기 홀드가
-   * 자연 만료될 때까지 한정 재고를 계속 붙들고 있게 된다.
+   *
+   * **sessionStorage에 둔다.** React state만 쓰면 가장 흔한 동선에서 증명이 항상 사라진다:
+   * 결제 위젯이 토스로 **전체 이동**했다가 실패·뒤로가기로 돌아오면 페이지가 새로 뜨고
+   * state는 초기화된다. 그러면 본인 홀드가 15분간 한정 재고를 붙들고 본인이 "품절"을 본다
+   * (한정 1개짜리에서는 확실히 체감된다). 탭 단위로만 살아 있고 탭을 닫으면 사라지므로
+   * 증명의 수명이 홀드의 수명을 넘지 않는다.
+   *
+   * 키를 slug별로 나누는 이유: 자기 홀드 해제 UPDATE가 프로젝트별로 걸리므로, 다른
+   * 프로젝트의 주문번호를 보내면 아무것도 만료시키지 못한 채 요청만 커진다.
+   *
+   * localStorage가 아니라 sessionStorage인 것, 그리고 read/write를 전부 try/catch로 감싸는
+   * 것은 사생활 보호 모드·저장 차단 브라우저에서 접근 자체가 throw하기 때문이다.
    */
+  const holdProofKey = `funding:lastOrderNo:${project.slug}`;
   const [previousOrderNo, setPreviousOrderNo] = useState<string | null>(null);
+
+  // 마운트 시 한 번 읽어 온다(SSR에서는 window가 없다).
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem(holdProofKey);
+      if (saved) setPreviousOrderNo(saved);
+    } catch {
+      /* 저장소 접근이 막힌 브라우저 — 증명 없이 진행한다(자기 홀드는 자연 만료된다). */
+    }
+  }, [holdProofKey]);
+
+  const rememberOrderNo = (orderNo: string) => {
+    setPreviousOrderNo(orderNo);
+    try {
+      window.sessionStorage.setItem(holdProofKey, orderNo);
+    } catch {
+      /* 위와 같다 — 기억하지 못해도 결제 자체는 진행된다. */
+    }
+  };
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
 
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
@@ -175,7 +205,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       // 남은 시간은 이 시각 기준으로만 잰다 — 서버가 준 절대 시각을 기기 시계와 직접
       // 비교하지 않는다(holdDurationMs 주석).
       const receivedAt = Date.now();
-      if (typeof json.orderNo === 'string') setPreviousOrderNo(json.orderNo);
+      if (typeof json.orderNo === 'string') rememberOrderNo(json.orderNo);
       // router.push가 아니라 전체 페이지 이동 — 클라이언트 전환이면 이미 로드된 gtag가
       // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
       setCreated({ ...json, receivedAt });

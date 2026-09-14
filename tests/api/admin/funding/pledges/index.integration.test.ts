@@ -172,11 +172,14 @@ it('사전 검사 뒤 재고가 소진되면 409 — 고아 주문도 남기지 
   const r = await call({ ...VALID_BODY, rewardId: 'cd', quantity: 1, additionalAmount: 0 });
   expect(r.status).toBe(409);
 
-  // 고아 주문(pledge 없는 paid funding 주문)이 남으면 목록·CSV·집계가 서로 다르게 취급한다.
+  /**
+   * 진 쪽의 주문은 **온라인 경로와 같은 모양**(status='failed')으로 남아야 한다. paid로
+   * 남으면 pledge 없는 확정 주문이 되어 목록·CSV·집계가 서로 다르게 취급한다.
+   */
   const orphans = await client.execute(
-    "SELECT COUNT(*) AS c FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
+    "SELECT status FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
   );
-  expect(Number(orphans.rows[0].c)).toBe(0);
+  expect(orphans.rows.map((r) => String(r.status))).toEqual(['failed']);
 
   // 한정 수량도 지켜져야 한다 — CD pledge는 여전히 1건뿐.
   const cd = await client.execute("SELECT COUNT(*) AS c FROM funding_pledges WHERE reward_id='cd'");

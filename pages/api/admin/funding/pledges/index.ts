@@ -114,11 +114,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       `),
     ]);
 
-    // libSQL batch는 트랜잭션이지만 "0행 INSERT"는 오류가 아니라 정상 커밋이라 롤백되지 않는다.
-    // 그래서 진 쪽의 주문 행을 직접 지운다 — 남겨 두면 pledge 없는 paid 주문이 생기고,
-    // 그건 관리자 목록·CSV·집계가 전부 다르게 취급하는 유령 행이다.
+    /**
+     * libSQL batch는 트랜잭션이지만 "0행 INSERT"는 오류가 아니라 정상 커밋이라 롤백되지 않는다.
+     * 그래서 진 쪽의 주문을 **온라인 경로와 같은 모양으로** 정리한다 — `status='failed'`
+     * (lib/funding/service.ts createFundingPledge의 품절 처리와 같다).
+     *
+     * DELETE가 아닌 이유: 지우기는 실패하면 **pledge 없는 `paid` 주문**이 남는데, 그건 관리자
+     * 목록이 걸러내고(listFundingOrders의 pledge EXISTS) 예약 목록도 안 싣는 상태라 어떤
+     * 관리 화면에도 안 보인다. failed 마킹은 UPDATE가 실패해도 흔적이 남고, 무엇보다 같은
+     * 상황을 두 경로가 같은 모양으로 남겨야 나중에 세는 사람이 헷갈리지 않는다.
+     */
     if (rowsAffectedOf(result[1]) === 0) {
-      await db.delete(orders).where(eq(orders.id, orderId));
+      await db.update(orders).set({ status: 'failed', updatedAt: now }).where(eq(orders.id, orderId));
       return res.status(409).json({ ok: false, message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.' });
     }
     return res.status(201).json({ ok: true, orderNo });
