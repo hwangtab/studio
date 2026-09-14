@@ -128,7 +128,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                     cta_id: 'hero_primary_kakao',
                   })
                 }
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-kakao text-kakao-ink font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-kakao-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-kakao text-kakao-ink font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-kakao-dark transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
               >
                 {heroContent.cta.reserve}
               </a>
@@ -143,7 +143,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                     cta_id: 'hero_primary_contact',
                   })
                 }
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
               >
                 {heroContent.cta.reserve}
               </Link>
@@ -169,7 +169,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
                   });
                 }
               }}
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-black/30 border-2 border-white/40 text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-black/40 hover:border-white/60 transition-transform transition-shadow transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
+              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-black/30 border-2 border-white/40 text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-black/40 hover:border-white/60 transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
             >
               {heroContent.cta.secondary}
             </Link>

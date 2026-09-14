@@ -46,6 +46,15 @@ describe('Button', () => {
     expect(cls).not.toMatch(/text-white/);
   });
 
+  // kakao-ink(#191600)는 흰 배경 위 18.16:1이지만, 오프셋이 gray-900인 다크에서는
+  // 어두운 표면 위 검은 링이 되어 1.11:1 — 사실상 보이지 않는다(정본 §5).
+  it('kakao variant의 다크 포커스 링은 옐로다 — 검은 링은 다크에서 1.11:1', () => {
+    const cls = buttonVariants({ variant: 'kakao' });
+    // `\b`는 `kakao`와 `-ink` 사이에도 성립한다 — 그 경계로 두면 이 테스트가 막으려는
+    // `dark:focus-visible:ring-kakao-ink`(1.11:1)를 그대로 통과시킨다.
+    expect(cls).toMatch(/dark:focus-visible:ring-kakao(?![\w-])/);
+  });
+
   it('shape이 반경을 정한다 — pill은 full, block은 xl', () => {
     expect(buttonVariants({ shape: 'pill' })).toMatch(/rounded-full/);
     expect(buttonVariants({ shape: 'block' })).toMatch(/rounded-xl/);

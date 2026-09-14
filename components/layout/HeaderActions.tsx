@@ -30,7 +30,10 @@ export const HeaderActions = ({
   mobileNavId,
   t
 }: HeaderActionsProps) => {
-  const headerCtaBaseClass = 'inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95';
+  // transition에서 box-shadow·outline을 뺀다(= transition-all 금지). Tailwind의 ring은
+  // box-shadow로 그려져서, 보간하면 포커스 링이 300ms에 걸쳐 서서히 떠오른다.
+  // 자세한 근거는 components/ui/Button.tsx 주석과 docs/design-system.md §5.
+  const headerCtaBaseClass = 'inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-[background-color,border-color,color,transform] duration-300 transform hover:scale-105 active:scale-95';
 
   // ko의 목적지는 카카오톡이므로 헤더 두 상태 모두 옐로(노란 버튼 = 카카오톡 규칙).
   // 투명 상태에서도 옐로는 솔리드라 배경 사진 밝기와 무관하게 kakao-ink 글씨 대비가
@@ -38,7 +41,7 @@ export const HeaderActions = ({
   // text-shadow도 필요 없다. focus ring만 배경에 맞춰 가른다.
   const kakaoCtaButtonClass = `${headerCtaBaseClass} bg-kakao hover:bg-kakao-dark text-kakao-ink border-transparent shadow-md hover:shadow-lg ${isTransparent
     ? 'focus-visible:ring-white/70 focus-visible:ring-offset-black/20'
-    : 'focus-visible:ring-kakao-ink focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
+    : 'focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900'
     }`;
 
   // 비-ko는 목적지가 카카오톡이 아니라 /contact 폼이라 옐로를 쓰면 안 된다 — 기존 배색 유지.
@@ -46,7 +49,7 @@ export const HeaderActions = ({
   // 밝혀 흰 글씨 대비를 오히려 낮추므로, 어두운 스크림(bg-black/25)+text-shadow로
   // 밝은 히어로에서도 글씨가 읽히게 한다. glass 토큰은 모바일 폴백 시 불투명
   // 흰색이 되어 흰 글씨가 사라지므로 여기선 쓰지 않는다.
-  const formCtaButtonClass = `${headerCtaBaseClass} focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+  const formCtaButtonClass = `${headerCtaBaseClass} focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
     ? 'bg-gradient-to-r from-primary to-secondary text-white shadow-md hover:shadow-lg border-transparent'
     : 'bg-black/25 hover:bg-black/35 text-white border-white/35 [text-shadow:0_1px_2px_rgb(0_0_0/0.55)]'
     }`;
@@ -55,7 +58,7 @@ export const HeaderActions = ({
     <div className="flex-shrink-0 flex items-center space-x-2 sm:space-x-4">
       <div className="hidden sm:flex items-center space-x-2">
         <button
-          className={`flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+          className={`flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
             ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
             : 'text-white hover:bg-white/20'
             }`}
@@ -106,7 +109,7 @@ export const HeaderActions = ({
       )}
 
       <button
-        className={`lg:hidden flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
+        className={`lg:hidden flex items-center justify-center p-2 min-h-[44px] min-w-[44px] rounded-full transition-colors duration-300 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${!isTransparent
           ? 'text-gray-800 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
           : 'text-white hover:bg-white/20'
           }`}

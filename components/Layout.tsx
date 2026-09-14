@@ -153,7 +153,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
     >
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white focus:text-gray-900 focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
       >
         {skipLabel}
       </a>
@@ -190,7 +190,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         // 키보드 사용자에게 보이지 않는다. ring-inset은 전폭 요소 바깥으로 링이
         // 삐져나와 가로 스크롤을 만드는 것을 막는다. focus-visible이라 마우스로
         // 본문을 클릭했을 때(tabIndex=-1 요소는 클릭으로도 focus가 간다)는 뜨지 않는다.
-        className={`page-main flex-grow outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/60 ${
+        className={`page-main flex-grow outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 ${
           isHome || hasHero || isBareLayout ? 'pt-0' : 'pt-20'
         }`}
       >

@@ -29,7 +29,7 @@ const HubLinkCallout: React.FC<HubLinkCalloutProps> = ({ hubSlug, locale, title,
       <Link
         href={href}
         prefetch={false}
-        className="group flex items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-xl border-2 border-primary/30 hover:border-primary bg-primary/5 hover:bg-primary/10 transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        className="group flex items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-xl border-2 border-primary/30 hover:border-primary bg-primary/5 hover:bg-primary/10 transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
       >
         <div className="flex-shrink-0 inline-flex items-center justify-center p-3 rounded-full bg-primary/15" aria-hidden="true">
           <BookMarked className="text-primary dark:text-primary-lighter" size={22} />

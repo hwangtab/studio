@@ -326,7 +326,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                       value={p.id}
                       checked={selectedProductId === p.id}
                       onChange={() => handleProductChange(p.id)}
-                      className="h-4 w-4 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                      className="h-4 w-4 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
                     />
                     <span className="text-sm text-gray-800 dark:text-gray-100">{p.nameKo}</span>
                   </label>
@@ -514,7 +514,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                 aria-required="true"
                 aria-invalid={agreeError}
                 aria-describedby={agreeError ? 'refund-agree-error' : undefined}
-                className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
               />
               <label htmlFor="refund-agree" className="text-sm text-gray-600 dark:text-gray-400 leading-snug">
                 위 환불 규정에 동의합니다 (필수)

@@ -6,27 +6,39 @@ const buttonVariants = cva(
   // transition-all → 명시 property: iOS Safari에서 transition-all은 layout 트리거 가능 속성도
   // 보간해 hover 시 reflow 깜빡 유발. 시각 변화는 colors·shadow·transform만.
   // 반경은 shape variant가 소유한다 — 여기에 rounded-*를 두면 pill과 충돌한다.
-  "inline-flex items-center justify-center gap-2 typo-button transition-[colors,box-shadow,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  //
+  // box-shadow는 transition 목록에 넣지 않는다. Tailwind의 `ring-*`는 outline이 아니라
+  // **box-shadow로** 그려지므로, box-shadow를 보간하면 포커스 링이 0px·투명에서
+  // duration만큼 서서히 나타난다 — Tab으로 빠르게 넘기는 키보드 사용자는 링을 한 번도
+  // 온전히 보지 못한다(2026-09-14 실측: t=0ms 0px → t=300ms 4px). 클래스·CSS 변수는
+  // 전부 정상이라 정적 검사로는 드러나지 않고, `.focus()` 기반 측정도 :focus-visible을
+  // 켜지 못해 놓친다. 측정 방법론은 docs/design-system.md §5.
+  // hover shadow-md→lg는 이제 즉시 전환된다 — 포커스 표시기를 지연시키는 값이 아니다.
+  //
+  // 주의: `colors`는 CSS 속성 이름이 아니라 그냥 ident라 실제로는 아무것도 보간하지 않는다
+  // (Tailwind의 `transition-colors`가 펼치는 4개 속성과 다르다). 이 줄의 원래 의도와
+  // 어긋나지만 고치면 44곳의 hover 색 전환 동작이 새로 생기므로 이번 범위에서 제외했다.
+  "inline-flex items-center justify-center gap-2 typo-button transition-[colors,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        solid: "bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        solid: "bg-primary text-white hover:bg-primary-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 다크 오버라이드는 필수다 — text-primary(#6d28d9)만 두면 gray-900 배경 위 대비가
         // 2.5:1로 AA(4.5:1)는 물론 대형 텍스트(3:1)에도 미달한다. primary-light(#7c3aed)도
         // 3.53:1로 여전히 미달이고 버튼 라벨은 text-lg(18px)라 대형 텍스트 완화
         // (18.66px bold)에도 못 걸린다 — 그래서 다크 전용 primary-lighter(7.40:1)를 쓴다.
         // 소비처(HeroKakaoCta onSurface 전화·404/500 2차·PricingCard 2차 외 44곳)가 같은
         // 결함을 공유하므로 개별 className이 아니라 여기서 고친다.
-        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-lighter dark:border-primary-lighter/40 dark:hover:border-primary-lighter/60 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
-        secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        outline: "border-2 border-primary/20 bg-transparent text-primary hover:bg-primary/5 hover:border-primary/40 dark:text-primary-lighter dark:border-primary-lighter/40 dark:hover:border-primary-lighter/60 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        ghost: "bg-transparent text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        secondary: "bg-white text-gray-900 shadow-sm hover:bg-gray-50 border border-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // Liquid Glass 재질 버튼. bg/border/shadow는 .glass-regular(components 레이어)가
         // 제공하므로 여기에 bg-* 등 충돌 유틸리티를 추가하지 말 것 — utilities 레이어가
         // 재질을 덮어써 폴백(솔리드 강등)까지 깨진다.
-        glass: "glass-regular text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:ring-primary/40 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        glass: "glass-regular text-gray-700 dark:text-gray-200 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97] focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 카카오톡 목적지 전용. 옐로 위 글자는 항상 kakao-ink(흰 글씨는 대비 1.3:1로 미달),
         // 포커스 링도 옐로 위에서 보이도록 ink를 쓴다.
-        kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-kakao-ink focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
+        kakao: "bg-kakao text-kakao-ink hover:bg-kakao-dark shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-kakao-ink dark:focus-visible:ring-kakao focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900",
         // 어두운 히어로 이미지 위 2차 액션. 흰 틴트(bg-white/*)는 배경을 밝혀 흰 글씨
         // 대비를 오히려 떨어뜨리므로 어두운 스크림 + 흰 테두리를 쓴다.
         scrim: "bg-black/30 border border-white/40 text-white [text-shadow:0_1px_3px_rgb(0_0_0/0.55)] hover:bg-black/45 hover:-translate-y-0.5 active:translate-y-0 focus-visible:ring-white/70 focus-visible:ring-offset-black/20",

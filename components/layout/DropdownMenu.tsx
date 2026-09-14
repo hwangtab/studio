@@ -109,7 +109,7 @@ export const DropdownMenu = ({
             <button
                 ref={triggerRef}
                 type="button"
-                className={`flex items-center gap-1 px-2 xl:px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
+                className={`flex items-center gap-1 px-2 xl:px-3 py-2 rounded-md typo-nav-link text-sm transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 ${isActive
                     ? !isTransparent
                         ? 'text-primary dark:text-accent-light font-bold'
                         : 'text-white font-bold bg-white/20'

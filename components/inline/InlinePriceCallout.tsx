@@ -157,7 +157,7 @@ const InlinePriceCallout = ({ id, locale }: InlinePriceCalloutProps) => {
         <Link
           href={`/${locale}/pricing`}
           prefetch={false}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {t('stories.inline.priceDetail', { defaultValue: '가격표 전체 보기' })}
           <ArrowRight size={14} aria-hidden="true" />

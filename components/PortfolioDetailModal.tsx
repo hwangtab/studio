@@ -124,7 +124,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
             ref={closeButtonRef}
             onClick={onClose}
             type="button"
-            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
             aria-label={t('actions.close')}
           >
             <X size={20} className="text-gray-600 dark:text-gray-300" aria-hidden="true" />
@@ -132,7 +132,7 @@ const PortfolioDetailModal = ({ item, categories, onClose, locale = defaultLocal
           <button
             onClick={sharePortfolio}
             type="button"
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary dark:text-primary-lighter hover:bg-primary/10 rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary dark:text-primary-lighter hover:bg-primary/10 rounded-lg transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           >
             <Share2 size={16} aria-hidden="true" />
             {t('portfolio.detail.share')}

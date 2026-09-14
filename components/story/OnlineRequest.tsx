@@ -31,7 +31,7 @@ const OnlineRequest: React.FC<OnlineRequestProps> = ({ locale = 'ko' }) => {
       body: (
         <>
           파일을 받은 뒤 3~7영업일 (
-          <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2">
+          <NextLink href={`/${locale}/mixing-mastering`} prefetch={false} className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
             요금·절차 보기
           </NextLink>
           )
