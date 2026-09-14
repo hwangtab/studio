@@ -9,6 +9,7 @@ import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
 import { getFundingProject } from '../../../../../lib/funding/projects';
+import { isLiveFundingOrderStatus, liveFundingOrderStatusList, remainingRefundable } from '../../../../../lib/funding/refundable';
 import { MANUAL_PLACEHOLDER_EMAIL, findFundingOrderById } from '../../../../../lib/funding/service';
 import { kstDateString } from '../../../../../lib/booking/kst';
 
@@ -41,7 +42,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!(fulfillmentStatusEnum as readonly string[]).includes(status)) {
         return res.status(400).json({ ok: false, message: '발송 상태가 올바르지 않습니다.' });
       }
-      if (order.status !== 'paid') return res.status(409).json({ ok: false, message: '확정된 후원만 발송 상태를 바꿀 수 있습니다.' });
+      // 상태 게이트는 CSV·집계·관리자 환불과 **같은 집합**을 본다(LIVE_FUNDING_ORDER_STATUSES).
+      // 예전엔 여기만 'paid' 하나로 굳어 있어, 부분환불된 후원이 실제로 발송돼도 기록을 남길
+      // 수 없었다 — 목록·CSV에는 영구 '미발송'으로 떠 다음 회차 중복 발송 후보가 됐고,
+      // delivered_at이 안 찍혀 아래 주석이 말하는 파기 기산점 자체가 생기지 않았다.
+      if (!isLiveFundingOrderStatus(order.status)) {
+        return res.status(409).json({ ok: false, message: '확정된 후원만 발송 상태를 바꿀 수 있습니다.' });
+      }
       // 무통장 청약철회는 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로
       // 남는다. 그 상태를 '발송 완료'로 바꿀 수 있게 두면, 청약철회한 사람에게 실물이
       // 나간 기록이 시스템 안에서 정상 발송으로 굳는다. 예외는 두지 않는다 — 되돌리려면
@@ -89,7 +96,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             updated_at = unixepoch()
         WHERE id = ${order.fundingPledge.id}
           AND refund_requested_at IS NULL
-          AND EXISTS (SELECT 1 FROM orders o WHERE o.id = funding_pledges.order_id AND o.status = 'paid')
+          AND EXISTS (SELECT 1 FROM orders o WHERE o.id = funding_pledges.order_id AND o.status IN (${liveFundingOrderStatusList()}))
       `);
       if (Number(claim.rowsAffected) === 0) {
         return res.status(409).json({

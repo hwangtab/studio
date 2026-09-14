@@ -2,6 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges } from '../../db/schema';
+import { LIVE_FUNDING_ORDER_STATUSES, liveFundingOrderStatusList } from './refundable';
 import { backerIdentitySql, type FundingOrder } from './service';
 
 /**
@@ -46,7 +47,7 @@ export const listFundingOrdersForExport = async (slug: string | null): Promise<F
   const db = getDb();
   const rows = await db.query.orders.findMany({
     where: (t, { eq: e, and, inArray }) => {
-      const statusFilter = inArray(t.status, ['paid', 'partially_refunded']);
+      const statusFilter = inArray(t.status, [...LIVE_FUNDING_ORDER_STATUSES]);
       return slug
         ? and(
             e(t.type, 'funding'),
@@ -110,9 +111,9 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
   const slugFilter = slug ? sql` AND fp.project_slug = ${slug}` : sql.empty();
   const rows = await db.all<TotalsRow>(sql`
     SELECT
-      COALESCE(SUM(CASE WHEN o.status IN ('paid', 'partially_refunded') THEN o.total_amount END), 0) AS confirmed_amount,
-      COUNT(CASE WHEN o.status IN ('paid', 'partially_refunded') THEN 1 END) AS confirmed_count,
-      COUNT(DISTINCT CASE WHEN o.status IN ('paid', 'partially_refunded')
+      COALESCE(SUM(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN o.total_amount END), 0) AS confirmed_amount,
+      COUNT(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN 1 END) AS confirmed_count,
+      COUNT(DISTINCT CASE WHEN o.status IN (${liveFundingOrderStatusList()})
         THEN ${backerIdentitySql()} END) AS confirmed_person_count,
       COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN o.total_amount END), 0) AS pending_amount,
       COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' THEN 1 END) AS pending_count

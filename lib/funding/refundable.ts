@@ -1,3 +1,5 @@
+import { sql, type SQL } from 'drizzle-orm';
+
 import type { FundingOrder } from './service';
 
 /**
@@ -17,3 +19,33 @@ export const remainingRefundable = (order: FundingOrder): number => {
   );
   return Math.max(0, order.totalAmount - refunded);
 };
+
+/**
+ * "아직 살아 있는 후원"으로 볼 orders.status 집합 — 돈을 받았고, 리워드 의무가 남아 있다.
+ *
+ * `partially_refunded`가 들어가는 이유: 일부만 환불한 건도 **리워드는 나가야 한다.** 이 판정이
+ * 저장소 안에서 네 군데로 흩어져 있었고, 발송 기록 한 곳만 `paid` 하나로 굳어 있었다. 그래서
+ * 부분환불된 후원은 실제로 발송해도 상태를 기록할 수 없었고(API 409 + UPDATE WHERE 0행),
+ * CSV·목록에는 영구히 '미발송'으로 남아 다음 회차 중복 발송 후보가 됐다. `delivered_at`도
+ * 못 찍혀 약관 제13조의 '전달 완료 후 1년 파기' 기산점이 아예 생기지 않았다.
+ *
+ * 지금 이 상수 하나를 보는 곳: CSV export(admin-list.ts), 공개·관리자 집계(service.ts,
+ * admin-list.ts), 관리자 환불 버튼(pages/admin/funding/[id].tsx), 발송 기록 API
+ * (pages/api/admin/funding/pledges/[id].ts). 다시 갈리지 않도록
+ * `lib/funding/refundable.test.ts`가 policy.ts의 REFUND_PENDING_ORDER_STATUSES와 같은
+ * 집합인지까지 대조한다 — 둘은 근거가 달라도 같은 "살아 있는 후원"을 가리켜야 한다.
+ */
+export const LIVE_FUNDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as const;
+
+export const isLiveFundingOrderStatus = (status: string): boolean =>
+  (LIVE_FUNDING_ORDER_STATUSES as readonly string[]).includes(status);
+
+/**
+ * 위 집합의 SQL 조각 — `o.status IN (…)` 자리에 그대로 넣는다.
+ *
+ * 문자열 리터럴을 쿼리마다 다시 적으면 한 곳만 고치는 사고가 정확히 이 버그의 형태였다.
+ * 호출할 때마다 새 조각을 만든다(하나를 여러 쿼리에 돌려 쓰지 않는다 — service.ts의
+ * backerIdentitySql과 같은 관례).
+ */
+export const liveFundingOrderStatusList = (): SQL =>
+  sql.join(LIVE_FUNDING_ORDER_STATUSES.map((s) => sql`${s}`), sql`, `);

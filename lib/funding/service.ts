@@ -7,6 +7,7 @@ import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
 import { FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
+import { liveFundingOrderStatusList } from './refundable';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload } from './validation';
 
@@ -108,7 +109,7 @@ export const createFundingPledge = async (
         SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
         JOIN orders o ON o.id = fp.order_id
         WHERE fp.project_slug = ${project.slug} AND fp.reward_id = ${reward.id}
-          AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+          AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
       ) + ${payload.quantity} <= ${reward.totalQuantity}`;
 
   // terms_agreed_at을 now로 적는 근거: validateCreatePledgePayload가 termsAgreed !== true를
@@ -180,13 +181,13 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
            -- 떨어뜨린다(연락처 없는 후원끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
            COUNT(DISTINCT ${backerIdentitySql()}) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded')
+    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()})
   `);
   const claimed = await db.all<{ reward_id: string; qty: number }>(sql`
     SELECT fp.reward_id, SUM(fp.quantity) AS qty
     FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
     WHERE fp.project_slug = ${project.slug}
-      AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
     GROUP BY fp.reward_id
   `);
   const claimedBy = new Map(claimed.map((r) => [r.reward_id, Number(r.qty)]));
@@ -196,7 +197,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   }
   const names = await db.all<{ customer_name: string }>(sql`
     SELECT o.customer_name FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded') AND fp.display_name_public = 1
+    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
   return {

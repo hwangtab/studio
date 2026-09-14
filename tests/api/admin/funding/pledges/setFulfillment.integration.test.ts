@@ -160,3 +160,29 @@ it('읽은 뒤 주문이 환불되면 UPDATE가 0행 — 409', async () => {
   expect(r.status).toBe(409);
   expect((await pledgeRow()).fulfillment_status).toBe('none');
 });
+
+/**
+ * 부분환불된 후원도 리워드는 나간다 — CSV export·공개 집계·관리자 환불·환불요청 해제가 모두
+ * 이 상태를 '살아 있는 후원'으로 본다. 발송 기록만 'paid' 하나로 굳어 있어서, 실제로 발송한
+ * 리워드가 영구히 '미발송'으로 남아 다음 회차 중복 발송 후보가 됐고 delivered_at도 안 찍혀
+ * 약관 제13조의 파기 기산점이 생기지 않았다.
+ */
+it('partially_refunded 후원도 발송 상태·운송장을 기록할 수 있다', async () => {
+  await client.execute("UPDATE orders SET status = 'partially_refunded' WHERE id = 'order-1'");
+  const r = await call({ action: 'set_fulfillment', fulfillmentStatus: 'delivered', trackingCompany: 'CJ대한통운', trackingNumber: '777' });
+  expect(r.status).toBe(200);
+  const row = await pledgeRow();
+  expect(row.fulfillment_status).toBe('delivered');
+  expect(row.tracking_number).toBe('777');
+  // 파기 기산점이 실제로 생겨야 한다 — 이게 이 버그의 개인정보 쪽 결과였다.
+  expect(row.delivered_at).not.toBeNull();
+});
+
+it('refunded·pending처럼 살아 있지 않은 주문은 여전히 409', async () => {
+  for (const status of ['refunded', 'pending', 'expired', 'failed']) {
+    await client.execute(`UPDATE orders SET status = '${status}' WHERE id = 'order-1'`);
+    const r = await call({ action: 'set_fulfillment', fulfillmentStatus: 'shipped' });
+    expect({ status, code: r.status }).toEqual({ status, code: 409 });
+    expect((await pledgeRow()).fulfillment_status).toBe('none');
+  }
+});

@@ -12,7 +12,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
-import { remainingRefundable } from '../../../lib/funding/refundable';
+import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 
@@ -104,7 +104,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   };
 
   // 부분환불 건도 잔액이 남아 있으면 관리자가 마저 환불할 수 있어야 한다.
-  const canRefund = ['paid', 'partially_refunded'].includes(pledge.status);
+  const canRefund = isLiveFundingOrderStatus(pledge.status);
 
   const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 후원의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
   const handleSaveFulfillment = () =>
@@ -145,7 +145,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
-  const fulfillmentLocked = pledge.status !== 'paid' || pledge.refundRequested;
+  //
+  // 상태 판정은 API·CSV·집계와 같은 헬퍼를 쓴다. 화면만 'paid'로 굳어 있으면 서버가 허용하는
+  // 조작을 화면이 막는(또는 그 반대의) 조합이 다시 생긴다 — 부분환불 건이 정확히 그랬다.
+  const fulfillmentLocked = !isLiveFundingOrderStatus(pledge.status) || pledge.refundRequested;
 
   return (
     <>
@@ -237,7 +240,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               {canRefund && (
                 <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
               )}
-              {pledge.refundRequested && pledge.status === 'paid' && (
+              {pledge.refundRequested && isLiveFundingOrderStatus(pledge.status) && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>
               )}
               {pledge.needsReview && (
@@ -281,10 +284,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 </Field>
                 <Button light disabled={busy || fulfillmentLocked} onClick={handleSaveFulfillment}>저장</Button>
               </div>
-              {pledge.status !== 'paid' && (
+              {!isLiveFundingOrderStatus(pledge.status) && (
                 <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
               )}
-              {pledge.status === 'paid' && pledge.refundRequested && (
+              {isLiveFundingOrderStatus(pledge.status) && pledge.refundRequested && (
                 <p className="mt-2 text-xs text-orange-700">
                   환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿀 수 있습니다.
                 </p>
