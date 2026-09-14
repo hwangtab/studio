@@ -1,6 +1,6 @@
 import { formatPriceAmount } from '../../data/pricing';
 import { sendEmail } from '../email/resend';
-import { OPERATOR_EMAIL } from '../operatorContact';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
@@ -45,7 +45,7 @@ const withdrawalLines = (order: FundingOrder): string[] => [
   '',
   '[청약철회 안내]',
   '· 기한: 프로젝트 마감 전이고 리워드 발송 준비가 시작되기 전이면 언제든 취소하고 전액 환불받을 수 있습니다. 리워드를 받은 뒤에는 받은 날부터 7일 이내에 청약철회할 수 있습니다(표시·광고와 다르거나 계약 내용과 다르게 이행된 경우에는 받은 날부터 3개월 이내, 그 사실을 안 날부터 30일 이내).',
-  `· 방법: 후원 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${OPERATOR_EMAIL} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
+  `· 방법: 후원 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
   `· 약관 전문(청약철회·환불 규정 포함): ${SITE_URL}/ko/funding/terms`,
 ];
 
@@ -61,7 +61,7 @@ const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEm
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
   send([
     { key: 'customer', params: {
-      to: order.customerEmail, replyTo: OPERATOR_EMAIL,
+      to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 후원이 확정되었습니다${titleSuffix(project)}`,
       text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...withdrawalLines(order), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
     } },
@@ -88,7 +88,7 @@ const CANCEL_BODY = {
 export const sendFundingCancelledEmails = (order: FundingOrder, project: FundingProject | null, mode: 'refunded' | 'refund_requested' | 'recorded', refundAmount: number): Promise<string | null> =>
   send([
     { key: 'customer', params: {
-      to: order.customerEmail, replyTo: OPERATOR_EMAIL,
+      to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] ${CANCEL_SUBJECT[mode]}${titleSuffix(project)}`,
       text: [`${order.customerName}님,`, CANCEL_BODY[mode](refundAmount), ...summaryLines(order, project), PHONE].join('\n'),
     } },
@@ -111,7 +111,7 @@ export const sendFundingRefundRequestClearedEmails = (
 ): Promise<string | null> =>
   send([
     { key: 'customer', params: {
-      to: order.customerEmail, replyTo: OPERATOR_EMAIL,
+      to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 취소 요청이 철회 처리되었습니다${titleSuffix(project)}`,
       text: [
         `${order.customerName}님,`,
