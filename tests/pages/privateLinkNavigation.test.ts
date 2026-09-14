@@ -62,6 +62,17 @@ describe('private 페이지의 이탈 링크', () => {
   });
 
   /**
+   * 헤더·푸터가 없는 화면이라 **페이지가 자기 상단에서 브랜드를 밝혀야 한다** — 메일 링크로
+   * 들어온 사람이 피싱과 구별할 수 있어야 하고, 결제·해지가 일어나는 자리다. 제목 태그가
+   * 아니라 **본문**에 상호가 있어야 한다(탭 제목은 화면에 안 보인다).
+   */
+  it.each(PRIVATE_PAGE_FILES)('%s 본문에 상호가 표기돼 있다', (file) => {
+    const source = read(file);
+    const withoutHead = source.replace(/<title>[^<]*<\/title>/g, '');
+    expect(withoutHead).toContain('스튜디오 놀');
+  });
+
+  /**
    * `Layout`이 껍데기를 벗기는 라우트 목록과 측정 제외 판정이 같은 집합을 가리키는지 본다.
    * 한쪽만 늘어나면 헤더 로고·푸터(전부 next/link)로 위 1번 유출이 그대로 재현된다.
    */

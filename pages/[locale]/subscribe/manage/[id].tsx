@@ -126,6 +126,9 @@ export default function SubscribeManagePage(props: ManageProps) {
         <meta name="referrer" content="no-referrer" />
       </Head>
       <main className="mx-auto max-w-2xl min-w-0 max-w-full px-4 py-12 sm:py-16">
+        {/* Layout이 헤더·푸터를 벗기는 화면이라(lib/analytics/privatePaths.ts) 여기가 브랜드를
+            밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 피싱과 구별할 수 있어야 한다. */}
+        <p className="typo-card-meta mb-2">스튜디오 놀</p>
         <h1 className="typo-page-title">정기결제 관리</h1>
 
         <section className="mt-8 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 sm:p-8">

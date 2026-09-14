@@ -36,6 +36,9 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
         <meta name="referrer" content="no-referrer" />
       </Head>
       <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
+        {/* Layout이 헤더·푸터를 벗기는 화면이라(lib/analytics/privatePaths.ts) 여기가 브랜드를
+            밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 피싱과 구별할 수 있어야 한다. */}
+        <p className="typo-card-meta mb-2">스튜디오 놀</p>
         {outcome === 'activated' && (
           <>
             <h1 className="typo-page-title">정기결제가 시작됐습니다</h1>

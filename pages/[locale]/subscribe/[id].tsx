@@ -73,6 +73,9 @@ function SubscribeSetupOk(props: OkProps) {
         <meta name="referrer" content="no-referrer" />
       </Head>
       <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-12 sm:py-16">
+        {/* Layout이 헤더·푸터를 벗기는 화면이라(lib/analytics/privatePaths.ts) 여기가 브랜드를
+            밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 피싱과 구별할 수 있어야 한다. */}
+        <p className="typo-card-meta mb-2">스튜디오 놀</p>
         <h1 className="typo-page-title">정기결제 카드 등록</h1>
         <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">{customerName}님</p>
 
@@ -152,6 +155,7 @@ export default function SubscribeSetupPage(props: SubscribeSetupProps) {
           <meta name="robots" content="noindex, nofollow" />
         </Head>
         <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
+          <p className="typo-card-meta mb-2">스튜디오 놀</p>
           <h1 className="typo-page-title">카드를 등록할 수 없습니다</h1>
           <p className="mt-4 text-gray-600 dark:text-gray-300">{ERROR_MESSAGES[props.code]}</p>
           <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
