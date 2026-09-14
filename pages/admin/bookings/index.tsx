@@ -44,6 +44,20 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
     await expireStaleOrders(new Date());
 
     const allOrders = await getDb().query.orders.findMany({
+      /**
+       * **예약 목록의 모집단은 session·mixing 둘뿐이다.**
+       *
+       * orders.type enum은 ['session','mixing','subscription','funding']이고, 후원 1건도
+       * 구독 월 청구 1회도 orders 행을 하나씩 만든다. where 절이 없던 동안 그 행들이 이
+       * 목록에 섞여 indigo '세션' 배지 + 일시 '-' + 상품 '-'로 나왔고(표 분기가
+       * `orderType === 'mixing'` 두 갈래뿐이다), 상태 카운트와 미정합·메일실패·캘린더
+       * 배너까지 함께 셌다. 더 나쁜 건 200건 상한을 잠식한다는 것이다 — 후원이 200건을
+       * 넘는 캠페인에서는 실제 예약이 목록에서 통째로 밀려나고, 그 상태에서 배너들은
+       * '최근 200개 주문 안의 예약'만 보게 된다.
+       *
+       * 후원·구독은 각자의 관리 화면(/admin/funding, /admin/subscriptions)이 정본이다.
+       */
+      where: (ordersTable, { inArray }) => inArray(ordersTable.type, ['session', 'mixing']),
       orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
       limit: LIST_LIMIT + 1,
       // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
