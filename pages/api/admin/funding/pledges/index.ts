@@ -1,10 +1,12 @@
 import { randomUUID } from 'node:crypto';
+import { eq, sql } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../../db/client';
-import { fundingPledges, orders } from '../../../../../db/schema';
+import { orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { generateManageToken } from '../../../../../lib/booking/token';
+import { rowsAffectedOf } from '../../../../../lib/booking/confirm';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
 import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
 import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
@@ -12,7 +14,7 @@ import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../
 import { findReward, getFundingProject } from '../../../../../lib/funding/projects';
 import {
   MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
-  aggregateProjectStatus, expireStalePledges, generateFundingOrderNo,
+  aggregateProjectStatus, expireStalePledges, fundingStockCondition, generateFundingOrderNo,
 } from '../../../../../lib/funding/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -54,6 +56,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     const now = new Date();
     await expireStalePledges(now);
+    // 이 사전 검사는 **사람에게 이유를 알려 주기 위한 것**이고, 초과 판매를 실제로 막는 것은
+    // 아래 INSERT에 실린 재고 조건이다(fundingStockCondition). 여기서만 검사하면 읽기와 쓰기
+    // 사이에 들어온 온라인 후원과 둘 다 통과해 한정 수량을 넘긴다.
     if (reward.totalQuantity !== null) {
       const status = await aggregateProjectStatus(project, now);
       const remaining = status.remaining[reward.id];
@@ -67,9 +72,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const s = (typeof b.shipping === 'object' && b.shipping) || {};
     const orderId = randomUUID().replace(/-/g, '');
     const pledgeId = randomUUID().replace(/-/g, '');
-    // orders·funding_pledges INSERT를 하나의 배치로 묶는다 — 둘 중 하나만 성공하면
-    // payments 없이 paid로 남는 고아 주문이 생긴다(예약 confirm.ts의 batch 패턴).
-    await db.batch([
+    const epoch = (d: Date) => Math.floor(d.getTime() / 1000);
+    /**
+     * pledge INSERT에 **재고 조건을 실어** 온라인 경로(createFundingPledge)와 같은 원자적
+     * 패턴을 쓴다. 예전엔 위 사전 검사만 하고 무조건 INSERT해서, 잔여 1개를 온라인 후원자와
+     * 수기 등록이 수백 ms 차이로 동시에 집으면 둘 다 확정되고 한정 수량을 초과했다.
+     * 둘 다 확정 상태라 자동 취소 대상이 아니고, aggregateProjectStatus의 remaining은
+     * Math.max로 하한이 걸려 화면엔 '품절'로만 보여 초과분이 드러나지도 않았다.
+     */
+    const result = await db.batch([
+      // orders·funding_pledges INSERT를 하나의 배치로 묶는다 — 둘 중 하나만 성공하면
+      // payments 없이 paid로 남는 고아 주문이 생긴다(예약 confirm.ts의 batch 패턴).
       db.insert(orders).values({
         id: orderId,
         orderNo,
@@ -84,29 +97,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         ...amounts,
         manageToken: generateManageToken(),
       }),
-      db.insert(fundingPledges).values({
-        id: pledgeId,
-        orderId,
-        projectSlug: project.slug,
-        rewardId: reward.id,
-        rewardTitle: reward.title,
-        unitAmount: reward.amount,
-        quantity,
-        additionalAmount,
-        paymentMethod: 'bank_transfer',
-        holdExpiresAt: now,
-        paidAt: now,
-        displayNamePublic: b.displayNamePublic === true,
-        entrySource: 'manual',
-        shippingName: s.name ?? null,
-        shippingPhone: s.phone ?? null,
-        shippingPostcode: s.postcode ?? null,
-        shippingAddress1: s.address1 ?? null,
-        shippingAddress2: s.address2 ?? null,
-        shippingMemo: s.memo ?? null,
-        adminMemo: typeof b.adminMemo === 'string' ? b.adminMemo : null,
-      }),
+      db.run(sql`
+        INSERT INTO funding_pledges (
+          id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
+          payment_method, hold_expires_at, paid_at, display_name_public, entry_source,
+          shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
+          admin_memo
+        )
+        SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
+               ${quantity}, ${additionalAmount}, 'bank_transfer', ${epoch(now)}, ${epoch(now)},
+               ${b.displayNamePublic === true ? 1 : 0}, 'manual',
+               ${s.name ?? null}, ${s.phone ?? null}, ${s.postcode ?? null},
+               ${s.address1 ?? null}, ${s.address2 ?? null}, ${s.memo ?? null},
+               ${typeof b.adminMemo === 'string' ? b.adminMemo : null}
+        WHERE ${fundingStockCondition(project.slug, reward, quantity, now)}
+      `),
     ]);
+
+    // libSQL batch는 트랜잭션이지만 "0행 INSERT"는 오류가 아니라 정상 커밋이라 롤백되지 않는다.
+    // 그래서 진 쪽의 주문 행을 직접 지운다 — 남겨 두면 pledge 없는 paid 주문이 생기고,
+    // 그건 관리자 목록·CSV·집계가 전부 다르게 취급하는 유령 행이다.
+    if (rowsAffectedOf(result[1]) === 0) {
+      await db.delete(orders).where(eq(orders.id, orderId));
+      return res.status(409).json({ ok: false, message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.' });
+    }
     return res.status(201).json({ ok: true, orderNo });
   }
   return res.status(405).json({ ok: false });

@@ -1,5 +1,5 @@
 import { randomBytes, randomUUID } from 'node:crypto';
-import { sql } from 'drizzle-orm';
+import { sql, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, type FundingPledge, type Order, type Payment, type Refund } from '../../db/schema';
@@ -90,6 +90,31 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
  * partially_refunded를 빼먹으면 aggregateProjectStatus(품절 표시)와 이 INSERT 조건이 어긋나,
  * 화면엔 품절인데 서버는 재고가 남았다고 보고 한정 리워드를 초과 판매한다.
  */
+/**
+ * 한정 리워드의 재고 조건 — `INSERT ... SELECT ... WHERE <이것>` 한 문장에 실어 쓴다.
+ *
+ * remaining = totalQuantity − Σ(paid ∨ partially_refunded) − Σ(pending ∧ hold 미만료).
+ * 무제한(totalQuantity === null)이면 조건이 없다.
+ *
+ * **읽고-검사-쓰기로 대체하지 말 것.** 별도 SELECT로 남은 수량을 확인한 뒤 무조건 INSERT하면
+ * 그 사이에 들어온 동시 요청과 둘 다 검사를 통과해 한정 수량을 초과 판매한다. 조건을 INSERT에
+ * 실으면 진 쪽이 rowsAffected 0을 받는다. 온라인 후원 경로는 처음부터 이 패턴이었는데 관리자
+ * 수기 등록만 아니어서, 잔여 1개를 온라인과 수기가 동시에 집으면 둘 다 확정됐다.
+ * partially_refunded를 빼먹으면 aggregateProjectStatus(품절 표시)와 어긋나 화면엔 품절인데
+ * 서버는 재고가 남았다고 본다.
+ */
+export const fundingStockCondition = (
+  projectSlug: string, reward: Pick<FundingReward, 'id' | 'totalQuantity'>, quantity: number, now: Date,
+): SQL =>
+  reward.totalQuantity === null
+    ? sql`1 = 1`
+    : sql`(
+        SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
+        JOIN orders o ON o.id = fp.order_id
+        WHERE fp.project_slug = ${projectSlug} AND fp.reward_id = ${reward.id}
+          AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      ) + ${quantity} <= ${reward.totalQuantity}`;
+
 export const createFundingPledge = async (
   payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
 ): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' }> => {
@@ -120,14 +145,7 @@ export const createFundingPledge = async (
 
   const pledgeId = randomUUID().replace(/-/g, '');
   const s = payload.shipping;
-  const stockCondition = reward.totalQuantity === null
-    ? sql`1 = 1`
-    : sql`(
-        SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
-        JOIN orders o ON o.id = fp.order_id
-        WHERE fp.project_slug = ${project.slug} AND fp.reward_id = ${reward.id}
-          AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
-      ) + ${payload.quantity} <= ${reward.totalQuantity}`;
+  const stockCondition = fundingStockCondition(project.slug, reward, payload.quantity, now);
 
   // terms_agreed_at을 now로 적는 근거: validateCreatePledgePayload가 termsAgreed !== true를
   // 먼저 막으므로(lib/funding/validation.ts), 이 지점에 온 요청은 동의를 마친 요청뿐이다.
