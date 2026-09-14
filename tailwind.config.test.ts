@@ -582,3 +582,129 @@ describe('아웃라인 pill은 손으로 다시 짜지 않는다', () => {
     }
   });
 });
+
+/* ------------------------------------------------------------------------- *
+ * 포커스 링은 "있으면 통과"가 아니라 **보이면** 통과다 (정본 §5)
+ * ------------------------------------------------------------------------- */
+
+/**
+ * 포커스 표시기는 텍스트가 아니라 WCAG 2.2 SC 1.4.11(비텍스트 대비) 대상이고 기준은
+ * **3:1**이다. 그리고 링은 표면색 위에 알파로 그려지므로 재는 대상은 토큰 원색이 아니라
+ * "링 합성색 vs 표면색"이다. 이 저장소가 오랫동안 표준으로 써 온 `ring-primary/40`은
+ * 라이트 2.04:1 · 다크 1.33:1로, **있지만 보이지 않는** 링이었다(2026-09-14 실측 75곳).
+ *
+ * 기존 가드들은 "focus-visible 클래스가 있는가"만 봤기 때문에 이 상태를 전부 통과시켰다.
+ * 그래서 여기서는 두 가지를 본다.
+ *
+ *   1. 알파가 `/40` 이하면 실패. 어떤 표면에서도 3:1을 넘지 못한다.
+ *   2. 표면이 테마에 따라 변하는데 다크 짝이 없으면 실패. 다크 배경 위 원색은
+ *      `/70`에서도 1.91~2.32:1이라 밝은 짝(`primary-lighter`·`white`·`kakao`)이 필요하다.
+ *
+ * 표면이 **한 테마로 고정된 자리**(오프셋 색이 하나뿐이고 `dark:` 오프셋 짝이 없는 줄,
+ * 예: 어두운 히어로 위 `ring-white/70 + ring-offset-black/20`)는 면제한다 — 그런 자리에
+ * 다크 짝을 강제하면 오히려 대비가 떨어진다(흰 카드 위 `primary-lighter/70` = 1.96:1).
+ */
+const FOCUS_RING_COLOR_RE =
+  /(?<![-\w:])focus-visible:ring-(?!offset-|inset(?![-\w])|\d)([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?:\/(\d+))?(?![-\w])/g;
+/** `dark:focus-visible:ring-<색>` — 오프셋·굵기·inset은 링 색이 아니다. */
+const DARK_FOCUS_RING_COLOR_RE =
+  /(?<![-\w:])dark:focus-visible:ring-(?!offset-|inset(?![-\w])|\d)[a-z]/;
+/** 링 오프셋 **색**(굵기 `ring-offset-2`는 색이 아니다). */
+const FOCUS_RING_OFFSET_COLOR_RE =
+  /(?<![-\w:])focus-visible:ring-offset-(?!\d+(?![-\w]))([a-z[][^\s`'"]*)/;
+const DARK_FOCUS_RING_OFFSET_COLOR_RE =
+  /(?<![-\w:])dark:focus-visible:ring-offset-(?!\d+(?![-\w]))([a-z[][^\s`'"]*)/;
+
+/**
+ * 링이 닿는 표면이 테마에 따라 실제로 바뀌는가. 오프셋 색이 라이트·다크 **같은 값**이면
+ * (히어로 오버레이의 `ring-offset-black/20 dark:ring-offset-black/20`처럼) 표면은 고정이다 —
+ * 이런 줄에 다크 짝을 강제하면 어두운 사진 위 흰 링을 보라로 바꾸라는 말이 된다.
+ */
+const surfaceVariesByTheme = (scope: string): boolean => {
+  const light = FOCUS_RING_OFFSET_COLOR_RE.exec(scope)?.[1];
+  const dark = DARK_FOCUS_RING_OFFSET_COLOR_RE.exec(scope)?.[1];
+  if (!light) return true; // 오프셋 색이 없으면 페이지 배경 = 테마를 탄다
+  if (!dark) return false; // 한 색으로 고정
+  return light !== dark;
+};
+
+/** 최소 알파. `/40`은 라이트 2.04 · 다크 1.33으로 어디서도 3:1을 못 넘는다. */
+const MIN_RING_ALPHA = 50;
+
+/**
+ * 다크 짝 없이 단색 링을 쓰는 자리. **왜 그 표면에서 3:1을 넘는지**를 실측값과 함께 적을 것 —
+ * 이유 없이 넣으면 이 가드는 예전 가드와 똑같이 "클래스가 있으면 통과"로 되돌아간다.
+ */
+const FOCUS_RING_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  {
+    file: 'components/contact/KoreanFastContactActions.tsx',
+    snippet: 'focus-visible:ring-green-700',
+    reason:
+      '네이버(green-700 #15803d)는 브랜드색 그대로 써야 하는 자리이고, 실측이 양쪽 다 ' +
+      '통과한다 — 흰 배경 5.02:1 · gray-900 4.01:1.',
+  },
+];
+
+describe('포커스 링이 실제로 보이는가', () => {
+  it('알파는 /50 이상이고, 테마에 따라 표면이 바뀌면 다크 짝이 있어야 한다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of ['components', 'pages']) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!/\.tsx$/.test(rel) || /\.test\.tsx$/.test(rel)) continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (isCommentLine(trimmed)) return;
+
+          FOCUS_RING_COLOR_RE.lastIndex = 0;
+          let match: RegExpExecArray | null;
+          while ((match = FOCUS_RING_COLOR_RE.exec(line))) {
+            const [full, , alphaRaw] = match;
+            // 같은 **문자열 리터럴** 안에서만 짝을 찾는다 — 삼항 분기를 서로의 짝으로 오인하지 않게.
+            const scope = scopeOf(line, match.index);
+            const allowed = FOCUS_RING_ALLOW.some((a) => a.file === rel && scope.includes(a.snippet));
+
+            if (alphaRaw !== undefined && Number(alphaRaw) < MIN_RING_ALPHA) {
+              offenders.push(
+                `${rel}:${index + 1}: ${full} — 알파가 낮아 3:1을 못 넘습니다(/40 = 라이트 2.04 · 다크 1.33)`,
+              );
+              continue;
+            }
+
+            if (allowed) continue;
+            // 라이트 고정 화면은 다른 가드와 같게 면제한다(정본 §1).
+            if (LIGHT_FIXED(rel)) continue;
+            if (DARK_FOCUS_RING_COLOR_RE.test(scope)) continue;
+
+            // 표면이 한 테마로 고정된 자리(오프셋 색이 하나뿐)는 다크 짝이 필요 없다.
+            if (!surfaceVariesByTheme(scope)) continue;
+
+            offenders.push(
+              `${rel}:${index + 1}: ${full} — 표면이 테마에 따라 바뀌는데 다크 짝이 없습니다`,
+            );
+          }
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '포커스 링이 "있지만 보이지 않는" 상태입니다 — docs/design-system.md §5를 보세요.\n' +
+          '· 알파는 `/70`(라이트 3.84 · 다크 밝은 짝 4.06). `/40`은 어디서도 3:1을 못 넘습니다.\n' +
+          '· 다크 표면에는 원색이 아니라 밝은 짝을 씁니다: ' +
+          '`focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70`.\n' +
+          '· 표면이 한 테마로 고정된 자리라면 오프셋 색을 그 테마 하나로만 두면 면제됩니다.\n' +
+          '· 그래도 예외라면 FOCUS_RING_ALLOW에 **실측 대비값과 함께** 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});
