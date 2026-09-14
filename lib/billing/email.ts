@@ -129,7 +129,7 @@ export const sendSubscriptionCancelledEmail = (
     ].join('\n'),
   }).then((result) => (result.ok ? null : `cancelled:${result.errorCode}`));
 
-export type SubscriptionAlertKind = 'paused' | 'first_charge_failed' | 'cancelled';
+export type SubscriptionAlertKind = 'paused' | 'first_charge_failed' | 'cancelled' | 'late_approval';
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
 export const sendSubscriptionOperatorAlert = (
@@ -141,6 +141,9 @@ export const sendSubscriptionOperatorAlert = (
     paused: '정기결제 정지',
     first_charge_failed: '첫 결제 실패',
     cancelled: '고객 해지',
+    // 해지·종료된 구독에 승인이 뒤늦게 도착한 경우. 돈은 들어왔는데 이용기간은 전진하지
+    // 않으므로 환불 기한이 도는 건이다 — 로그가 아니라 사람에게 닿아야 한다(PR #59의 교훈).
+    late_approval: '해지 구독에 뒤늦은 승인 — 환불 판단 필요',
   };
 
   return sendEmail({

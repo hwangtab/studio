@@ -21,6 +21,15 @@ const LESSON_TOTAL = subscriptionAmounts('lesson').totalAmount;
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
+/**
+ * 운영자 알림은 메일 채널이라 실제로 나가면 안 된다 — 호출 여부만 본다.
+ * (해지 구독에 뒤늦은 승인이 도착하면 사람에게 닿아야 한다는 규칙의 회귀 테스트용.)
+ */
+const sendSubscriptionOperatorAlert = jest.fn().mockResolvedValue(null);
+jest.mock('./email', () => ({
+  sendSubscriptionOperatorAlert: (...args: unknown[]) => sendSubscriptionOperatorAlert(...args),
+}));
+
 const issueBillingKey = jest.fn();
 const chargeBillingKey = jest.fn();
 const fetchPaymentByOrderId = jest.fn();
@@ -86,6 +95,8 @@ beforeEach(async () => {
   await client.execute('DELETE FROM payments');
   await client.execute('DELETE FROM orders');
   await client.execute('DELETE FROM contracts');
+  sendSubscriptionOperatorAlert.mockReset();
+  sendSubscriptionOperatorAlert.mockResolvedValue(null);
   issueBillingKey.mockReset();
   chargeBillingKey.mockReset();
   fetchPaymentByOrderId.mockReset();
@@ -598,6 +609,11 @@ describe('chargeCycle — 승인 왕복 중 들어온 해지', () => {
       expect.stringContaining('승인 후 구독 상태 전이 0행'),
       expect.objectContaining({ subscriptionId: created.id }),
     );
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: created.id }),
+      'late_approval',
+      expect.stringContaining('환불'),
+    );
   });
 });
 
@@ -683,6 +699,13 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
       expect.stringContaining('해지·종료된 구독에 뒤늦은 승인 도착'),
       expect.objectContaining({ subscriptionId: created.id }),
     );
+    // 로그만으로는 아무도 못 본다(Vercel 런타임 로그뿐) — 운영자 메일까지 나가야 한다.
+    // 같은 형태의 사고를 PR #59에서 이미 한 번 고쳤다.
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: created.id }),
+      'late_approval',
+      expect.stringContaining('환불'),
+    );
   });
 
   it('종료(ended)된 구독도 되살아나지 않는다', async () => {
@@ -702,6 +725,23 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
     const sub = (await findSubscriptionById(created.id))!;
     expect(sub.status).toBe('ended');
     expect(sub.nextBillingAt).toBeNull();
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(expect.objectContaining({ id: created.id }), 'late_approval', expect.any(String));
+  });
+
+  it('운영자 알림 발송이 실패하면 notificationError에 남긴다 — 조용히 삼키지 않는다', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    const april = new Date('2026-04-05T00:00:00Z');
+    await chargeCycle(created.id, april, { reason: 'scheduled' });
+    await cancelSubscription(created.id, { requestedBy: 'customer', reason: '결제 실패' }, april);
+    sendSubscriptionOperatorAlert.mockResolvedValue('operator:send_failed');
+
+    const orderNo = await orderNoOf(created.id, '2026-04');
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_late_3', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      april,
+    );
+    expect((await findSubscriptionById(created.id))!.notificationError).toBe('operator:send_failed');
   });
 
   it('CANCELED 등 DONE이 아닌 상태는 무시한다', async () => {

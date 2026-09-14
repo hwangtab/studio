@@ -19,6 +19,7 @@ import {
   type Subscription,
   type SubscriptionPayment,
 } from '../../db/schema';
+import { formatPriceAmount } from '../../data/pricing';
 import { rowsAffectedOf } from '../booking/confirm';
 import { subscriptionAmounts, subscriptionOrderName, type SubscriptionKind } from './amounts';
 import {
@@ -28,6 +29,7 @@ import {
   periodFor,
   retryAtFor,
 } from './schedule';
+import { sendSubscriptionOperatorAlert } from './email';
 import { chargeBillingKey, fetchPaymentByOrderId, issueBillingKey, type TossPayment } from './toss-billing';
 import {
   generateCustomerKey,
@@ -58,6 +60,29 @@ const OCCUPYING_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'pas
 const REACTIVATABLE_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
+
+/**
+ * 해지·종료된 구독에 승인이 뒤늦게 도착했다 — 운영자에게 **메일로** 알린다.
+ *
+ * 이 상태는 고객이 한 달치를 냈는데 이용기간은 전진하지 않은 것이라 환불 기한이 도는 건이다.
+ * console.error만 남기면 Vercel 런타임 로그에만 쌓여 사실상 아무도 못 본다 — 같은 형태의
+ * 사고(무통장 환불 요청이 어디에도 안 보이던 문제)를 PR #59에서 이미 한 번 고쳤다.
+ * 메일 실패도 삼키지 않고 notificationError에 남긴다(다른 발송 경로와 같은 관례).
+ */
+const alertLateApproval = async (
+  subscription: Subscription,
+  detail: string,
+  now: Date,
+): Promise<void> => {
+  const notificationError = await sendSubscriptionOperatorAlert(subscription, 'late_approval', detail);
+  if (!notificationError) return;
+  console.error('[billing] 뒤늦은 승인 운영자 알림 발송 실패', { subscriptionId: subscription.id, notificationError });
+  try {
+    await getDb().update(subscriptions).set({ notificationError, updatedAt: now }).where(eq(subscriptions.id, subscription.id));
+  } catch (error) {
+    console.error('[billing] notificationError 기록 실패', { subscriptionId: subscription.id, error });
+  }
+};
 
 // ─── 생성 ───────────────────────────────────────────────────────────────────
 
@@ -517,6 +542,15 @@ export const chargeCycle = async (
       cycleYm,
     });
     const current = await findSubscriptionById(subscriptionId);
+    await alertLateApproval(
+      current ?? subscription,
+      [
+        `${cycleYm}분 ${formatPriceAmount(subscription.totalAmount)}원이 승인됐지만 구독 상태가 ${current?.status ?? '알 수 없음'}이라 이용기간을 전진시키지 않았습니다.`,
+        '승인 왕복 중에 해지가 들어온 것으로 보입니다 — 환불 여부를 판단해 주세요.',
+        `주문번호 ${orderNo} / paymentKey ${approved.paymentKey}`,
+      ].join('\n'),
+      now,
+    );
     return { ok: true, status: current?.status ?? subscription.status, paymentKey: approved.paymentKey, cycleYm, attempt };
   }
 
@@ -619,12 +653,13 @@ export const issueCardChangeToken = async (
   if (!subscription) return { ok: false, code: 'not_found' };
   if (!SETUP_ALLOWED_STATUSES.includes(subscription.status)) return { ok: false, code: 'invalid_state' };
   const setupToken = generateSetupToken();
+  const setupMode = subscription.status === 'pending_card' ? 'initial' : 'change';
   await db
     .update(subscriptions)
     .set({
       setupToken,
       setupTokenExpiresAt: new Date(now.getTime() + SETUP_TOKEN_TTL_SECONDS * 1000),
-      setupMode: subscription.status === 'pending_card' ? 'initial' : 'change',
+      setupMode,
       updatedAt: now,
     })
     .where(eq(subscriptions.id, id));
@@ -801,5 +836,14 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
       subscriptionId: subscription.id,
       status: subscription.status,
     });
+    await alertLateApproval(
+      subscription,
+      [
+        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했지만 구독이 ${subscription.status}라 이용기간을 전진시키지 않았습니다.`,
+        '고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+        `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
+      ].join('\n'),
+      now,
+    );
   }
 };
