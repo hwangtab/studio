@@ -24,6 +24,11 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/booking/manage/[orderNo].tsx',
   'pages/[locale]/booking/success.tsx',
   'pages/[locale]/booking/fail.tsx',
+  // 정기결제(구독) — 카드 등록 링크·관리 링크의 `?token=`이 URL에 실린다(PR #57·#66과 같은 유형).
+  'pages/[locale]/subscribe/[id].tsx',
+  'pages/[locale]/subscribe/[id]/success.tsx',
+  'pages/[locale]/subscribe/[id]/fail.tsx',
+  'pages/[locale]/subscribe/manage/[id].tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');

@@ -1,6 +1,5 @@
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { formatPriceAmount } from '../../../../data/pricing';
 import {
@@ -68,18 +67,25 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
         {manageUrl && (
           <>
             <p className="mt-6">
-              <Link
+              {/* 목적지도 토큰이 붙는 private 화면이라 rel은 불필요하지만, 문서 이동인 것은
+                  필수다(위 규칙). */}
+              <a
                 href={manageUrl}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark"
               >
                 구독 조회·해지 페이지 열기
-              </Link>
+              </a>
             </p>
             <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">이 주소를 저장해 두세요: {manageUrl}</p>
           </>
         )}
 
-        <Link href="/ko" className="mt-8 inline-block underline">홈으로</Link>
+        {/* 이 URL에는 관리·등록 토큰이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다.
+            next/link 클라 전환으로 공개 페이지에 나갔다 뒤로가기를 누르면, 그 사이 mount된
+            gtag가 토큰이 붙은 이 URL로 page_view를 보낸다. 공개 목적지에는 rel="noreferrer"도
+            함께 — 사이트 Referrer-Policy가 동일 출처 이동에 전체 URL을 보낸다
+            (규칙 정본: lib/analytics/privatePaths.ts). */}
+        <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
       </main>
     </>
   );

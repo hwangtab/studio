@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { Button } from '../../../../components/ui/Button';
@@ -216,9 +215,14 @@ export default function SubscribeManagePage(props: ManageProps) {
         </section>
 
         <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">문의: 스튜디오 놀 010-4255-7893</p>
-        <Link href="/ko" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
+        {/* 이 URL에는 관리·등록 토큰이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다.
+            next/link 클라 전환으로 공개 페이지에 나갔다 뒤로가기를 누르면, 그 사이 mount된
+            gtag가 토큰이 붙은 이 URL로 page_view를 보낸다. 공개 목적지에는 rel="noreferrer"도
+            함께 — 사이트 Referrer-Policy가 동일 출처 이동에 전체 URL을 보낸다
+            (규칙 정본: lib/analytics/privatePaths.ts). */}
+        <a href="/ko" rel="noreferrer" className="mt-2 inline-block text-sm text-primary dark:text-primary-lighter hover:underline">
           홈으로
-        </Link>
+        </a>
       </main>
     </>
   );
