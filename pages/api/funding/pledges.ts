@@ -49,7 +49,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   await expireStalePledges(now);
-  const result = await createFundingPledge(validated.value, project!, validated.reward, now);
+  /**
+   * 위저드가 직전 응답으로 받은 자기 주문번호 — 자기 홀드 해제의 **소유 증명**이다
+   * (lib/funding/service.ts createFundingPledge 주석). 없으면 아무것도 만료시키지 않는다.
+   * 형식은 여기서 좁게 검사한다: 생성기가 만드는 모양(FND-[M-]YYYYMMDD-XXXXXXXX)만 통과.
+   */
+  const previousOrderNo =
+    typeof req.body?.previousOrderNo === 'string' && /^FND-(?:M-)?\d{8}-[0-9A-Fa-f]{8}$/.test(req.body.previousOrderNo)
+      ? req.body.previousOrderNo
+      : null;
+  const result = await createFundingPledge(validated.value, project!, validated.reward, now, {
+    releaseOrderNo: previousOrderNo,
+  });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
 
   return res.status(201).json({

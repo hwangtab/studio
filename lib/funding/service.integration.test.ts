@@ -123,17 +123,62 @@ describe('createFundingPledge', () => {
     expect(later.ok).toBe(true);
   });
 
-  it('같은 고객의 기존 pending을 만료시킨다(자기 홀드 해제)', async () => {
+  it('자기 주문번호를 증명으로 내면 그 pending을 만료시킨다(자기 홀드 해제)', async () => {
     const a = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
-    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW, {
+      releaseOrderNo: a.ok ? a.orderNo : null,
+    });
     const prev = await findFundingOrderByOrderNo(a.ok ? a.orderNo : '');
     expect(prev?.status).toBe('expired');
+  });
+
+  /**
+   * 소유 증명이 없으면 아무것도 만료시키지 않는다.
+   *
+   * 예전엔 조건이 이메일+전화 문자열 일치뿐이었고 둘 다 요청 본문에서 오는 미검증 값이라,
+   * 피해자의 연락처를 아는 제3자가 후원 요청 한 번으로 피해자의 pending 주문을 expired로
+   * 만들 수 있었다. 피해자는 결제창 인증을 마치고 돌아와 '이미 처리되었거나 만료된
+   * 후원입니다'로 거절당하고, 풀린 한정 재고는 공격자의 INSERT가 가져간다.
+   */
+  it('증명 없이 같은 이메일·전화로 보내면 남의 pending을 건드리지 못한다', async () => {
+    const victim = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); // 공격자 — 증명 없음
+    const prev = await findFundingOrderByOrderNo(victim.ok ? victim.orderNo : '');
+    expect(prev?.status).toBe('pending');
+  });
+
+  it('남의 주문번호를 넣어도 이메일·전화가 다르면 만료되지 않는다', async () => {
+    const victim = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createFundingPledge(
+      payloadFor({ customerEmail: 'attacker@example.com', customerPhone: '010-9999-9999' }),
+      PROJECT, reward('mail'), NOW,
+      { releaseOrderNo: victim.ok ? victim.orderNo : null },
+    );
+    const prev = await findFundingOrderByOrderNo(victim.ok ? victim.orderNo : '');
+    expect(prev?.status).toBe('pending');
+  });
+
+  /**
+   * 증명을 **가진** 요청도 자기 주문 하나만 만료시킨다. 같은 이메일·전화로 두 건이 열려 있을 때
+   * order_no 조건이 없으면 두 건이 함께 만료된다 — 공격자가 자기 주문번호를 증명으로 내고
+   * 피해자의 홀드까지 함께 날리는 경로가 그대로 남는다.
+   */
+  it('증명한 주문 하나만 만료된다 — 같은 연락처의 다른 pending은 살아 있다', async () => {
+    const victim = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const mine = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW, {
+      releaseOrderNo: mine.ok ? mine.orderNo : null,
+    });
+    expect((await findFundingOrderByOrderNo(mine.ok ? mine.orderNo : ''))?.status).toBe('expired');
+    expect((await findFundingOrderByOrderNo(victim.ok ? victim.orderNo : ''))?.status).toBe('pending');
   });
 
   it('다른 프로젝트에 후원해도 이 프로젝트의 기존 pending은 만료시키지 않는다', async () => {
     const a = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     const otherProject = { ...PROJECT, slug: 'other' };
-    await createFundingPledge(payloadFor({ projectSlug: 'other' }), otherProject, reward('mail'), NOW);
+    await createFundingPledge(payloadFor({ projectSlug: 'other' }), otherProject, reward('mail'), NOW, {
+      releaseOrderNo: a.ok ? a.orderNo : null,
+    });
     const prev = await findFundingOrderByOrderNo(a.ok ? a.orderNo : '');
     expect(prev?.status).toBe('pending');
   });

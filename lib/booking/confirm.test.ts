@@ -1,6 +1,13 @@
 // PENDING_HOLD_SECONDS도 함께 노출한다 — confirm.ts가 선점 만료를 스스로 판정할 때 쓴다.
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn(), PENDING_HOLD_SECONDS: 900 }));
-jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn(), cancelPayment: jest.fn() }));
+// 네트워크를 타는 함수만 가린다 — 순수 판정(isVirtualAccountPayment)과 문구 상수는 실제
+// 구현을 써야 '고객이 무엇을 보는가'를 검증할 수 있다. 전부 가리면 그 자리가 빈 채로 통과한다.
+jest.mock('./toss', () => ({
+  ...jest.requireActual('./toss'),
+  confirmPayment: jest.fn(),
+  fetchPayment: jest.fn(),
+  cancelPayment: jest.fn(),
+}));
 jest.mock('./gcal', () => ({ createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
 jest.mock('./email', () => ({
   sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null),
@@ -138,6 +145,10 @@ describe('confirmBookingPayment', () => {
     // 기록도, failed 낙인도 없다 — 실제 입금 뒤 오는 DONE 웹훅이 정상 경로로 확정한다.
     expect(mockDb().batch).not.toHaveBeenCalled();
     expect(mockDb().run).not.toHaveBeenCalled();
+    // 문구도 본다 — 예전엔 "잠시 후 다시 시도해 주세요"라는 일반 문구가 나갔는데, 입금을
+    // 기다리는 사람에게 다시 시도하라는 것은 틀린 지시다(같은 수단이면 같은 결과다).
+    expect(r.ok === false && r.message).toContain('카드·계좌이체·간편결제');
+    expect(r.ok === false && r.message).not.toContain('잠시 후 다시 시도');
   });
 
   it('결제 미존재 계열 거절은 주문을 failed로 낙인하지 않는다', async () => {

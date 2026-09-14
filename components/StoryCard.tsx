@@ -48,7 +48,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
     // prefetch={false}: stories listing 등에서 다수 카드가 viewport에 동시 존재.
     // 기본 prefetch면 carousel/그리드 한 줄에 표시되는 모든 /stories/[slug] SSG JSON이
     // 동시에 다운로드되어 모바일 데이터·메인스레드 부담. hover/focus 시 prefetch는 유지.
-    <Link href={href} prefetch={false} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
+    <Link href={href} prefetch={false} className="block h-full touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
       <article
         itemScope
         itemType="https://schema.org/BlogPosting"

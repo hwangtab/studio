@@ -8,7 +8,12 @@ import * as schema from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../booking/toss', () => ({ cancelPayment: jest.fn(), confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
+// 상수(VIRTUAL_ACCOUNT_ERROR_CODE 등)까지 목이 덮으면 undefined가 되어 cancel.ts의 분기가
+// 조용히 꺼진다 — 실제 모듈을 펼친 위에 네트워크로 나가는 함수만 목으로 바꾼다.
+jest.mock('../booking/toss', () => ({
+  ...jest.requireActual('../booking/toss'),
+  cancelPayment: jest.fn(), confirmPayment: jest.fn(), fetchPayment: jest.fn(),
+}));
 jest.mock('./email', () => ({
   sendFundingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
@@ -288,3 +293,69 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
   });
 });
 
+
+/**
+ * 수기 등록에서 이메일 칸을 비우면 customer_email에 플레이스홀더(manual@studionol.co.kr)가
+ * 들어간다. 우리 도메인이라 resend.ts의 배달불가 판정(RFC 2606 예약 도메인)에 안 걸려
+ * 실제로 발송되고, 그 메일은 우리 수신함으로 되돌아오거나 반송된다. 반송이 쌓이면 발신
+ * 도메인 평판이 깎여 진짜 고객 메일이 스팸함으로 간다. 메일 재발송 쪽에는 가드가 있었는데
+ * 환불 경로에는 없어서, 관리자 환불 한 번이 그대로 반송을 만들었다.
+ */
+it('플레이스홀더 주소의 수기 후원도 환불 안내를 발송 계층에 넘긴다 — 운영자 사본이 필요하다', async () => {
+  const { id, orderNo } = await insertLegacyBankPledge('FND-M-PLACEHOLDER');
+  await client.execute({ sql: "UPDATE orders SET customer_email='manual@studionol.co.kr' WHERE id=?", args: [id] });
+
+  const r = await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
+  expect(r).toMatchObject({ ok: true, mode: 'recorded' });
+  // 배달 불가 주소를 떨어뜨리는 것은 **고객 항목 하나**이고, 그 판정은 발송 계층이 한다
+  // (lib/funding/email.test.ts의 '플레이스홀더 주소' 블록). 여기서 통째로 건너뛰면 수기 건
+  // 계좌 송금의 시작점인 운영자 사본까지 사라진다.
+  expect(sendFundingCancelledEmails).toHaveBeenCalled();
+
+  const row = await client.execute({ sql: 'SELECT status, notification_error FROM orders WHERE id=?', args: [id] });
+  expect(row.rows[0].status).toBe('refunded');
+  expect(row.rows[0].notification_error).toBeNull();
+});
+
+/**
+ * 가상계좌 취소 거절 문구는 **보는 사람에 따라 달라야 한다.**
+ *
+ * 이 message는 후원자 셀프 취소 응답(409) 본문에 그대로 실린다. 운영자용 한 벌만 두면
+ * 후원자가 관리 링크에서 취소를 눌렀을 때 "토스 콘솔에서 …" 같은 내부 운영 지시를 보게 된다.
+ * DONE 가상계좌는 의도적으로 통과시키므로(lib/booking/toss.ts) 실제로 도달 가능한 경로다.
+ *
+ * cancelPayment 자체가 토스를 부르지 않는다는 것은 lib/booking/toss.test.ts가 본다.
+ * 여기서 보는 것은 **그 결과를 누구에게 어떻게 전하는가**(cancel.ts의 분기)다.
+ */
+describe('가상계좌 취소 거절 문구', () => {
+  const toss = jest.requireActual('../booking/toss');
+
+  const seedVirtualAccountPledge = async (orderNo: string) => {
+    const created = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const id = created.ok ? (await findFundingOrderByOrderNo(created.orderNo))!.id : '';
+    await client.execute({ sql: "UPDATE orders SET status='paid', order_no=? WHERE id=?", args: [orderNo, id] });
+    await client.execute({
+      sql: "INSERT INTO payments (id, order_id, payment_key, method) VALUES ('pva',?, 'pk_va', '가상계좌')",
+      args: [id],
+    });
+    // 실제 구현을 그대로 쓴다 — 가상계좌 가드에 걸려 네트워크로 나가지 않는다.
+    (cancelPayment as jest.Mock).mockImplementation(toss.cancelPayment);
+    return orderNo;
+  };
+
+  it('후원자 셀프 취소에는 운영 지시가 아니라 연락 안내가 나간다', async () => {
+    const orderNo = await seedVirtualAccountPledge('FND-20261015-VA000001');
+    const r = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 취소', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+    const message = r.ok === false ? r.message : '';
+    expect(message).not.toContain('토스 콘솔');
+    expect(message).toBe(toss.VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE);
+  });
+
+  it('관리자 환불에는 운영 지시가 나간다', async () => {
+    const orderNo = await seedVirtualAccountPledge('FND-20261015-VA000002');
+    const r = await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+    expect(r.ok === false && r.message).toBe(toss.VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE);
+  });
+});

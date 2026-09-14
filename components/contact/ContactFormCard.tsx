@@ -148,7 +148,7 @@ const ContactFormCard = ({
           role="status"
           aria-live="polite"
           aria-atomic="true"
-          className={`mb-4 p-4 rounded-md flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
+          className={`mb-4 p-4 rounded-md flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
         >
           {isSubmitSuccess && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
           {submitMessage}
@@ -158,7 +158,7 @@ const ContactFormCard = ({
         <button
           type="button"
           onClick={onRetrySubmit}
-          className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary dark:text-primary-lighter hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+          className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary dark:text-primary-lighter hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           {retryLabel}
         </button>
@@ -276,7 +276,7 @@ const ContactFormCard = ({
             aria-required="true"
             aria-invalid={consentError}
             aria-describedby={consentError ? 'privacy-consent-error' : undefined}
-            className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 touch-manipulation"
+            className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 touch-manipulation"
           />
           <label htmlFor="privacy-consent" className="text-sm text-gray-600 dark:text-gray-400 leading-snug">
             {t('contact.form.consentLabel', { defaultValue: '개인정보 수집·이용에 동의합니다 (필수)' })}{' '}
@@ -284,7 +284,7 @@ const ContactFormCard = ({
               href={privacyPolicyHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2"
+              className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
             >
               {t('contact.form.consentPolicyLink', { defaultValue: '개인정보 처리방침' })}
             </a>

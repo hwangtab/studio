@@ -117,6 +117,40 @@ it('취소 요청 철회 메일은 고객·운영자 두 통, 사유와 다시 �
   expect((sendEmail as jest.Mock).mock.calls[1][0].to).toBe(OPERATOR_EMAIL);
 });
 
+/**
+ * 수기 등록에서 연락처를 비우면 customer_email이 플레이스홀더(manual@studionol.co.kr)다.
+ * 우리 도메인이라 resend.ts의 배달불가 판정(RFC 2606 예약 도메인)에 안 걸려 실제로 발송되고,
+ * 그 메일은 우리 수신함으로 되돌아오거나 반송돼 발신 도메인 평판을 깎는다.
+ *
+ * **운영자 사본은 반드시 남아야 한다** — 수기 건의 환불은 손으로 계좌에 송금하는 작업이라,
+ * 무엇을 얼마나 돌려줘야 하는지 알려 주는 그 메일이 실무의 시작점이다.
+ */
+describe('플레이스홀더 주소', () => {
+  const manualOrder = { ...(order as object), customerEmail: 'manual@studionol.co.kr' } as never;
+
+  it.each([
+    ['확정', () => sendFundingConfirmedEmails(manualOrder, project)],
+    ['취소', () => sendFundingCancelledEmails(manualOrder, project, 'recorded', 5000)],
+    ['환불요청 철회', () => sendFundingRefundRequestClearedEmails(manualOrder, project, '사유')],
+  ])('%s 메일: 고객 항목만 빠지고 운영자 사본은 나간다', async (_label, call) => {
+    await call();
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].to).toBe(OPERATOR_EMAIL);
+  });
+
+  /**
+   * 조용히 빼는 것이 의도다 — 실패로 세면 그 문자열이 orders.notificationError에 남아
+   * 헬스체크의 '확인 메일이 나가지 않은 주문'이 영구히 울린다.
+   */
+  it('건너뛴 고객 항목을 실패로 세지 않는다', async () => {
+    expect(await sendFundingCancelledEmails(manualOrder, project, 'recorded', 5000)).toBeNull();
+  });
+
+  it('실제 고객 주소면 종전대로 두 통 모두 나간다', async () => {
+    await sendFundingCancelledEmails(order, project, 'recorded', 5000);
+    expect(sendEmail).toHaveBeenCalledTimes(2);
+  });
+});
 
 /**
  * 고객이 **보는** 주소는 운영자 개인 Gmail이 아니라 사이트 주소여야 한다.
@@ -132,5 +166,42 @@ describe('고객 메일에 개인 주소를 노출하지 않는다', () => {
     const customer = (sendEmail as jest.Mock).mock.calls[0][0];
     expect(customer.text).toContain(CUSTOMER_REPLY_TO);
     expect(customer.text).not.toContain(OPERATOR_EMAIL);
+  });
+});
+
+/**
+ * 디지털 리워드 내려받기 — 후원한 **그 리워드**의 주소만 나가야 한다. 티어마다 음질이
+ * 달라서(1만 MP3 / 3만 WAV / 5만·10만 고음질), 다른 티어의 주소가 섞이면 돈을 덜 낸
+ * 사람이 더 좋은 파일을 받는다.
+ */
+describe('확정 메일의 음원 내려받기', () => {
+  // project 픽스처가 `as never`라 스프레드가 안 된다 — 필요한 모양만 독립적으로 만든다.
+  const projectWith = (rewards: Array<{ id: string; downloadUrl: string | null }>) =>
+    ({
+      title: '데모 앨범',
+      rewards: rewards.map((r) => ({
+        id: r.id, title: r.id, description: '', amount: 10000, totalQuantity: null,
+        requiresShipping: false, estimatedDelivery: '2026-09', image: null, downloadUrl: r.downloadUrl,
+      })),
+    }) as never;
+
+  const orderFor = (rewardId: string) =>
+    ({ ...(order as Record<string, unknown>), fundingPledge: { ...((order as Record<string, Record<string, unknown>>).fundingPledge), rewardId } }) as never;
+
+  it('후원한 리워드의 주소만 싣는다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
+    await sendFundingConfirmedEmails(
+      orderFor('mp3'),
+      projectWith([{ id: 'mp3', downloadUrl: 'https://x/mp3.zip' }, { id: 'hires', downloadUrl: 'https://x/hires.zip' }]),
+    );
+    const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(customer.text).toContain('https://x/mp3.zip');
+    expect(customer.text).not.toContain('https://x/hires.zip');
+  });
+
+  it('downloadUrl이 없는 리워드에는 내려받기 줄이 붙지 않는다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
+    await sendFundingConfirmedEmails(orderFor('mp3'), projectWith([{ id: 'mp3', downloadUrl: null }]));
+    expect((sendEmail as jest.Mock).mock.calls[0][0].text).not.toContain('음원 내려받기');
   });
 });

@@ -30,7 +30,7 @@ const ProgressBar = ({ currentTime, duration, progress, progressBarRef, onChange
                     aria-valuetext={formatTime(currentTime)}
                     aria-valuemin={0}
                     aria-valuemax={duration || 0}
-                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 rounded-full"
+                    className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#121212] rounded-full"
                 />
 
                 {/* Background Track */}

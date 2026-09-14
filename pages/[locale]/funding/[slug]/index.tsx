@@ -12,13 +12,7 @@ import FundingMobileCta from '../../../../components/funding/FundingMobileCta';
 import { useFundingStatus } from '../../../../components/funding/useFundingStatus';
 import { buildPageStaticProps } from '../../../../lib/getStatic';
 import { defaultLocale } from '../../../../lib/i18n';
-import {
-  computeProjectState,
-  getAllFundingProjects,
-  getFundingProject,
-  type FundingProject,
-  type ProjectState,
-} from '../../../../lib/funding/projects';
+import { computeProjectState, getAllFundingProjects, getFundingProject, stripRewardDownloads, type FundingProject, type ProjectState } from '../../../../lib/funding/projects';
 
 interface Props {
   project: FundingProject;
@@ -135,7 +129,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   if (!project || project.status === 'draft') return { notFound: true };
   return buildPageStaticProps(
     defaultLocale,
-    { project, initialState: computeProjectState(project, new Date()) },
+    // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/projects.ts 주석).
+    { project: stripRewardDownloads(project), initialState: computeProjectState(project, new Date()) },
     { i18nSections: ['stories'] },
   );
 };

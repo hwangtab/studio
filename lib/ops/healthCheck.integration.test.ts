@@ -47,7 +47,8 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  for (const table of ['payments', 'bookings', 'funding_pledges', 'orders', 'contracts']) {
+  // subscription_payments가 orders·subscriptions를 참조하므로 그 둘보다 먼저 지운다.
+  for (const table of ['payments', 'bookings', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -341,5 +342,47 @@ describe('운영 점검', () => {
     const text = formatHealthReport(await runHealthCheck(NOW));
     expect(text).toContain('[긴급]');
     expect(text).toContain('이 메일은 이상이 있을 때만 발송됩니다.');
+  });
+});
+
+/**
+ * 해지·종료된 구독에 돈이 들어온 건 — 고객은 한 달치를 냈는데 이용기간은 전진하지 않았다.
+ * 승인 시점에 운영자 메일이 한 통 나가지만(alertLateApproval) 메일은 실패하거나 묻힐 수
+ * 있어, 두 번째 겹으로 여기서도 센다. 환불하면 자동으로 사라져야 한다(영구 알람 금지).
+ */
+describe('해지된 구독에 남은 결제', () => {
+  const seed = async (subStatus: string, orderStatus = 'paid') => {
+    await client.execute({
+      sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status, created_at, updated_at)
+            VALUES ('s1','lesson','김수강','010-1','a@b.c','sub_k','mtok',360000,36000,396000,5,?,unixepoch(),unixepoch())`,
+      args: [subStatus],
+    });
+    await insertOrder({ id: 'o9', order_no: 'SUB-1', manage_token: 't9', status: orderStatus });
+    await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status)
+      VALUES ('sp1','s1','o9','2026-09',1,396000,'paid')`);
+  };
+
+  it('해지된 구독에 paid 주문이 남아 있으면 환불 판단 필요로 보고한다', async () => {
+    await seed('cancelled');
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('환불 판단 필요'))!;
+    expect(issue).toBeDefined();
+    expect(issue.severity).toBe('high');
+    expect(issue.detail).toContain('SUB-1');
+  });
+
+  it('종료된 구독도 같이 센다', async () => {
+    await seed('ended');
+    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(true);
+  });
+
+  it('환불하면 사라진다 — 영구히 켜지지 않는다', async () => {
+    await seed('cancelled', 'refunded');
+    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(false);
+  });
+
+  it('살아 있는 구독은 세지 않는다', async () => {
+    await seed('active');
+    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(false);
   });
 });

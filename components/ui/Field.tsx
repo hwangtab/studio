@@ -15,8 +15,11 @@ export const fieldControlClass = cn(
   'bg-white text-gray-900 placeholder:text-gray-500',
   'dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-400',
   'border-gray-300 dark:border-gray-600',
-  'transition-[colors,box-shadow] duration-fast ease-standard',
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40',
+  // transition 클래스는 없다. ring은 box-shadow로 그려져 보간하면 포커스 링이 duration만큼
+  // 늦게 뜨므로 box-shadow를 뺐는데(정본 §5), 남은 `transition-[colors]`의 `colors`는 CSS
+  // 속성명이 아니라 ident라 보간 대상이 0개인 사문이었다. Button.tsx는 `transform`이 살아
+  // 있어 그대로 둔다.
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70',
   'focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900',
   'disabled:opacity-50 disabled:cursor-not-allowed',
 );

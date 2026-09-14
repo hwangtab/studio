@@ -45,6 +45,7 @@ rewards:
     amount: 5000
     requiresShipping: false
     estimatedDelivery: 2026-11
+    downloadUrl: https://cdn.example/album.zip
 ---
 `, 'demo');
 
@@ -197,5 +198,41 @@ describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
     } as never)) as { props: { cancelBlockedReason: string | null } };
 
     expect(result.props.cancelBlockedReason ?? '').not.toContain('계좌로 받은 후원');
+  });
+});
+
+
+/**
+ * 디지털 리워드 내려받기 주소는 **결제가 살아 있는 건에만** 내려보낸다.
+ *
+ * 환불·만료된 건에 링크가 남으면 돈을 돌려받고도 리워드를 계속 받는 화면이 된다. 관리
+ * 토큰은 취소 뒤에도 유효하므로(취소 결과를 확인해야 한다) 링크를 지우는 판정이 서버에
+ * 있어야 한다. 화면은 서버가 준 값을 그대로 렌더할 뿐이다.
+ */
+describe('음원 내려받기 주소는 결제가 살아 있을 때만 내려간다', () => {
+  const propsFor = async (orderNo: string, token: string) =>
+    ((await getServerSideProps({
+      params: { locale: 'ko', orderNo }, query: { token }, res: resStub(),
+    } as never)) as { props: { downloadUrl: string | null } }).props;
+
+  it('결제 확정 건에는 주소가 내려간다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+    expect((await propsFor(c.orderNo, c.manageToken)).downloadUrl).toBe('https://cdn.example/album.zip');
+  });
+
+  it('환불된 건에는 주소를 내려보내지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE order_no=?", args: [c.orderNo] });
+    expect((await propsFor(c.orderNo, c.manageToken)).downloadUrl).toBeNull();
+  });
+
+  it('결제 전(pending) 건에도 내려보내지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    expect((await propsFor(c.orderNo, c.manageToken)).downloadUrl).toBeNull();
   });
 });

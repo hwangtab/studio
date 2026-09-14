@@ -582,3 +582,275 @@ describe('아웃라인 pill은 손으로 다시 짜지 않는다', () => {
     }
   });
 });
+
+/* ------------------------------------------------------------------------- *
+ * 포커스 링은 "있으면 통과"가 아니라 **보이면** 통과다 (정본 §5)
+ * ------------------------------------------------------------------------- */
+
+/**
+ * 포커스 표시기는 텍스트가 아니라 WCAG 2.2 SC 1.4.11(비텍스트 대비) 대상이고 기준은
+ * **3:1**이다. 그리고 링은 표면색 위에 알파로 그려지므로 재는 대상은 토큰 원색이 아니라
+ * "링 합성색 vs 표면색"이다. 이 저장소가 오랫동안 표준으로 써 온 `ring-primary/40`은
+ * 라이트 2.04:1 · 다크 1.33:1로, **있지만 보이지 않는** 링이었다(2026-09-14 실측 75곳).
+ *
+ * 기존 가드들은 "focus-visible 클래스가 있는가"만 봤기 때문에 이 상태를 전부 통과시켰다.
+ * 그래서 여기서는 두 가지를 본다.
+ *
+ *   1. 알파가 `/40` 이하면 실패. 어떤 표면에서도 3:1을 넘지 못한다.
+ *   2. 표면이 테마에 따라 변하는데 다크 짝이 없으면 실패. 다크 배경 위 원색은
+ *      `/70`에서도 1.91~2.32:1이라 밝은 짝(`primary-lighter`·`white`·`kakao`)이 필요하다.
+ *
+ * 표면이 **한 테마로 고정된 자리**(오프셋 색이 하나뿐이고 `dark:` 오프셋 짝이 없는 줄,
+ * 예: 어두운 히어로 위 `ring-white/70 + ring-offset-black/20`)는 면제한다 — 그런 자리에
+ * 다크 짝을 강제하면 오히려 대비가 떨어진다(흰 카드 위 `primary-lighter/70` = 1.96:1).
+ */
+/**
+ * `dark:` 접두사를 **매치 안에** 넣는다(1번 캡처). 예전엔 앞이 `:`면 거부하는 lookbehind
+ * 때문에 `dark:focus-visible:ring-...`이 스캔 자체에서 빠져, 이 파일이 막으려던 낮은 알파가
+ * 다크 쪽으로는 그냥 통과했다 — 실측: `'focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/20'`
+ * 에서 뒤쪽 `/20`(약 1.5:1)이 한 건도 안 걸렸다. 알파 기준(`MIN_RING_ALPHA`)은 라이트·다크
+ * 구분 없이 같게 적용한다.
+ */
+const FOCUS_RING_COLOR_RE =
+  /(?<![-\w:])(dark:)?focus-visible:ring-(?!offset-|inset(?![-\w])|\d)([a-z][a-z0-9]*(?:-[a-z0-9]+)*)(?:\/(\d+))?(?![-\w])/g;
+/** `dark:focus-visible:ring-<색>` — 오프셋·굵기·inset은 링 색이 아니다. */
+const DARK_FOCUS_RING_COLOR_RE =
+  /(?<![-\w:])dark:focus-visible:ring-(?!offset-|inset(?![-\w])|\d)[a-z]/;
+/** 링 오프셋 **색**(굵기 `ring-offset-2`는 색이 아니다). */
+const FOCUS_RING_OFFSET_COLOR_RE =
+  /(?<![-\w:])focus-visible:ring-offset-(?!\d+(?![-\w]))([a-z[][^\s`'"]*)/;
+const DARK_FOCUS_RING_OFFSET_COLOR_RE =
+  /(?<![-\w:])dark:focus-visible:ring-offset-(?!\d+(?![-\w]))([a-z[][^\s`'"]*)/;
+
+/**
+ * 링이 닿는 표면이 테마에 따라 실제로 바뀌는가. 오프셋 색이 라이트·다크 **같은 값**이면
+ * (히어로 오버레이의 `ring-offset-black/20 dark:ring-offset-black/20`처럼) 표면은 고정이다 —
+ * 이런 줄에 다크 짝을 강제하면 어두운 사진 위 흰 링을 보라로 바꾸라는 말이 된다.
+ */
+const surfaceVariesByTheme = (scope: string): boolean => {
+  const light = FOCUS_RING_OFFSET_COLOR_RE.exec(scope)?.[1];
+  const dark = DARK_FOCUS_RING_OFFSET_COLOR_RE.exec(scope)?.[1];
+  if (!light) return true; // 오프셋 색이 없으면 페이지 배경 = 테마를 탄다
+  if (!dark) return false; // 한 색으로 고정
+  return light !== dark;
+};
+
+/** 최소 알파. `/40`은 라이트 2.04 · 다크 1.33으로 어디서도 3:1을 못 넘는다. */
+const MIN_RING_ALPHA = 50;
+
+/**
+ * 다크 짝 없이 단색 링을 쓰는 자리. **왜 그 표면에서 3:1을 넘는지**를 실측값과 함께 적을 것 —
+ * 이유 없이 넣으면 이 가드는 예전 가드와 똑같이 "클래스가 있으면 통과"로 되돌아간다.
+ */
+const FOCUS_RING_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  {
+    file: 'components/contact/KoreanFastContactActions.tsx',
+    snippet: 'focus-visible:ring-green-700',
+    reason:
+      '네이버(green-700 #15803d)는 브랜드색 그대로 써야 하는 자리이고, 실측이 양쪽 다 ' +
+      '통과한다 — 흰 배경 5.02:1 · gray-900 4.01:1.',
+  },
+];
+
+describe('포커스 링이 실제로 보이는가', () => {
+  it('알파는 /50 이상이고, 테마에 따라 표면이 바뀌면 다크 짝이 있어야 한다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        // pill 가드(SCAN_DIRS)와 같은 파일집합 — `.ts`의 클래스 상수도 본다.
+        if (/\.test\.tsx?$/.test(rel)) continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (isCommentLine(trimmed)) return;
+
+          FOCUS_RING_COLOR_RE.lastIndex = 0;
+          let match: RegExpExecArray | null;
+          while ((match = FOCUS_RING_COLOR_RE.exec(line))) {
+            const [full, darkPrefix, , alphaRaw] = match;
+            // 같은 **문자열 리터럴** 안에서만 짝을 찾는다 — 삼항 분기를 서로의 짝으로 오인하지 않게.
+            const scope = scopeOf(line, match.index);
+            const allowed = FOCUS_RING_ALLOW.some((a) => a.file === rel && scope.includes(a.snippet));
+
+            if (alphaRaw !== undefined && Number(alphaRaw) < MIN_RING_ALPHA) {
+              offenders.push(
+                `${rel}:${index + 1}: ${full} — 알파가 낮아 3:1을 못 넘습니다(/40 = 라이트 2.04 · 다크 1.33)`,
+              );
+              continue;
+            }
+
+            if (allowed) continue;
+            // `dark:` 링 자체는 이미 다크 짝이다 — 알파만 보고 짝 검사는 건너뛴다.
+            if (darkPrefix) continue;
+            // 라이트 고정 화면은 다른 가드와 같게 면제한다(정본 §1).
+            if (LIGHT_FIXED(rel)) continue;
+            if (DARK_FOCUS_RING_COLOR_RE.test(scope)) continue;
+
+            // 표면이 한 테마로 고정된 자리(오프셋 색이 하나뿐)는 다크 짝이 필요 없다.
+            if (!surfaceVariesByTheme(scope)) continue;
+
+            offenders.push(
+              `${rel}:${index + 1}: ${full} — 표면이 테마에 따라 바뀌는데 다크 짝이 없습니다`,
+            );
+          }
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '포커스 링이 "있지만 보이지 않는" 상태입니다 — docs/design-system.md §5를 보세요.\n' +
+          '· 알파는 `/70`(라이트 3.84 · 다크 밝은 짝 4.06). `/40`은 어디서도 3:1을 못 넘습니다.\n' +
+          '· 다크 표면에는 원색이 아니라 밝은 짝을 씁니다: ' +
+          '`focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70`.\n' +
+          '· 표면이 한 테마로 고정된 자리라면 오프셋 색을 그 테마 하나로만 두면 면제됩니다.\n' +
+          '· 그래도 예외라면 FOCUS_RING_ALLOW에 **실측 대비값과 함께** 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});
+
+/**
+ * 포커스 링을 **보이지 않게** 만드는 두 번째 경로: transition.
+ *
+ * 2026-09-14에 드러난 결함이다. `focus-visible:ring-2`도, `--tw-ring-color`도, 생성된
+ * `.focus-visible\:ring-2` 규칙도 전부 정상인데 헤더 카카오 CTA에 링이 안 보였다.
+ * 원인은 Tailwind가 `ring-*`를 outline이 아니라 **box-shadow로** 그린다는 데 있다 —
+ * 같은 요소가 box-shadow를 보간하면(`transition-all`·`transition-shadow`·
+ * `transition-[...box-shadow...]`·prefix 없는 `transition`) 링이 0px·투명에서 시작해
+ * duration에 걸쳐 서서히 나타난다. 실측: t=0ms 0px → t=150ms 3.3px → t=300ms 4px.
+ * Tab으로 빠르게 넘기는 키보드 사용자는 링을 온전히 보지 못하고, 포커스가 지금 어디에
+ * 있는지 읽어내지 못한다.
+ *
+ * 알파 가드(위)는 이 형태를 통과시킨다 — 클래스도 색도 다 맞기 때문이다. 그래서 별도 규칙:
+ * **포커스 링을 가진 요소는 box-shadow를 transition 목록에 넣지 않는다.**
+ *
+ * 검사 단위가 "한 줄"이 아니라 "이어 붙는 문자열 리터럴 묶음"인 이유: `cn(...)`·`cva(...)`는
+ * 클래스를 여러 인자로 쪼개 두므로(`Field.tsx`가 그렇다) 줄 단위로 보면 transition과 ring이
+ * 서로 다른 줄에 있어 놓친다.
+ */
+/**
+ * 알려진 한계: 묶음은 **이어 붙는 문자열 리터럴**만 합치므로, `cn('x', cond && 'y')`처럼
+ * 식이 끼어드는 형태·`cva` variants의 서로 다른 슬롯·`${...}` 보간으로 끊긴 템플릿 리터럴에서
+ * transition과 ring이 갈라져 있으면 못 잡는다. 현재 저장소에 그런 구멍은 0건이라 그대로 둔다 —
+ * 새로 생기면 클래스를 한 묶음으로 붙여 쓰거나 여기를 확장할 것.
+ */
+const RING_TOKEN_RE = /(?:^|[\s])(?:[a-z-]+:)*focus(?:-visible)?:ring-\d/;
+const SHADOW_TRANSITION_RE =
+  /(?:^|\s)(transition-all|transition-shadow|transition)(?=\s|$)|transition-\[[^\]]*\bbox-shadow\b[^\]]*\]/;
+
+/**
+ * 파일을 훑어 문자열 리터럴을 뽑되, **공백·쉼표·`+`·주석만으로 이어지는** 리터럴들은
+ * 한 묶음으로 합친다(= 같은 className으로 합성될 것들). 템플릿 리터럴의 `${...}` 식은
+ * 경계로 삼아 삼항 분기가 서로 섞이지 않게 한다.
+ */
+const classGroups = (src: string): string[] => {
+  const groups: string[] = [];
+  let cur: string[] = [];
+  let gap = '';
+  const flush = () => {
+    if (cur.length) groups.push(cur.join(' '));
+    cur = [];
+  };
+  const push = (lit: string) => {
+    // 리터럴 사이가 공백/쉼표/`+`뿐이면 같은 묶음으로 이어 붙인다.
+    if (cur.length && !/^[\s,+]*$/.test(gap)) flush();
+    cur.push(lit);
+    gap = '';
+  };
+
+  let i = 0;
+  const readString = (quote: string) => {
+    i += 1;
+    let buf = '';
+    while (i < src.length) {
+      const c = src[i];
+      if (c === '\\') { buf += src[i + 1] ?? ''; i += 2; continue; }
+      if (c === quote) { i += 1; push(buf); return; }
+      if (quote === '`' && c === '$' && src[i + 1] === '{') {
+        push(buf);
+        flush();           // 보간식은 경계다
+        buf = '';
+        i += 2;
+        let depth = 1;
+        while (i < src.length && depth > 0) {
+          const d = src[i];
+          if (d === '{') depth += 1;
+          else if (d === '}') depth -= 1;
+          else if (d === "'" || d === '"' || d === '`') { readString(d); continue; }
+          i += 1;
+        }
+        gap = '';
+        continue;
+      }
+      buf += c;
+      i += 1;
+    }
+    push(buf);
+  };
+
+  while (i < src.length) {
+    const c = src[i];
+    if (c === '/' && src[i + 1] === '/') { while (i < src.length && src[i] !== '\n') i += 1; continue; }
+    if (c === '/' && src[i + 1] === '*') { i += 2; while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i += 1; i += 2; continue; }
+    if (c === "'" || c === '"' || c === '`') { readString(c); continue; }
+    gap += c;
+    i += 1;
+  }
+  flush();
+  return groups;
+};
+
+/**
+ * 예외는 **왜 링이 box-shadow로 안 그려지는지**를 적을 것(예: outline 기반 표시기).
+ * "보기에 괜찮아서"는 이유가 아니다 — 이 결함은 눈이 아니라 타이밍의 문제다.
+ */
+const RING_TRANSITION_ALLOW: { file: string; snippet: string; reason: string }[] = [];
+
+describe('포커스 링이 늦게 나타나지 않는가', () => {
+  it('focus ring이 있는 요소는 box-shadow를 transition 하지 않는다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (/\.test\.tsx?$/.test(rel)) continue;
+
+        for (const group of classGroups(readFileSync(file, 'utf-8'))) {
+          if (!RING_TOKEN_RE.test(group)) continue;
+          const bad = SHADOW_TRANSITION_RE.exec(group);
+          if (!bad) continue;
+          if (RING_TRANSITION_ALLOW.some((a) => a.file === rel && group.includes(a.snippet))) continue;
+          offenders.push(`${rel}: ${bad[0].trim()} — ${group.trim().slice(0, 90)}…`);
+        }
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        'Tailwind의 ring은 box-shadow로 그려집니다 — box-shadow를 보간하면 포커스 링이 ' +
+          'duration만큼 늦게 떠올라 Tab으로 넘기는 사용자에게는 사실상 안 보입니다.\n' +
+          '· transition 목록에서 box-shadow를 빼세요(`transition-all`·`transition-shadow`·' +
+          '접두사 없는 `transition` 포함). 필요한 속성만 명시하면 됩니다.\n' +
+          '· hover shadow가 즉시 바뀌는 것은 허용된 비용입니다. 포커스 표시기가 우선입니다.\n' +
+          '· 근거와 측정 방법은 docs/design-system.md §5.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});

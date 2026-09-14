@@ -1,6 +1,12 @@
+/* eslint-disable @next/next/no-html-link-for-pages --
+ * private 페이지(URL에 관리 토큰·paymentKey·orderId가 실린다)의 이탈 링크는 next/link가
+ * 아니라 문서 이동이어야 한다. 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면, 그 사이
+ * mount된 gtag가 살아 있는 채로 비밀값이 붙은 URL에 돌아와 page_view를 보낸다.
+ * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
+ * tests/pages/privateLinkNavigation.test.ts
+ */
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { formatPriceAmount } from '../../../../data/pricing';
 import {
@@ -30,6 +36,9 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
         <meta name="referrer" content="no-referrer" />
       </Head>
       <main className="mx-auto max-w-lg min-w-0 max-w-full px-4 py-24 text-center">
+        {/* Layout이 헤더·푸터를 벗기는 화면이라(lib/analytics/privatePaths.ts) 여기가 브랜드를
+            밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 피싱과 구별할 수 있어야 한다. */}
+        <p className="typo-card-meta mb-2">스튜디오 놀</p>
         {outcome === 'activated' && (
           <>
             <h1 className="typo-page-title">정기결제가 시작됐습니다</h1>
@@ -68,18 +77,25 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
         {manageUrl && (
           <>
             <p className="mt-6">
-              <Link
+              {/* 목적지도 토큰이 붙는 private 화면이라 rel은 불필요하지만, 문서 이동인 것은
+                  필수다(위 규칙). */}
+              <a
                 href={manageUrl}
                 className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark"
               >
                 구독 조회·해지 페이지 열기
-              </Link>
+              </a>
             </p>
             <p className="mt-3 break-all text-xs text-gray-500 dark:text-gray-400">이 주소를 저장해 두세요: {manageUrl}</p>
           </>
         )}
 
-        <Link href="/ko" className="mt-8 inline-block underline">홈으로</Link>
+        {/* 이 URL에는 관리·등록 토큰이 실린다 — 이탈 링크는 문서 이동(`<a href>`)이어야 한다.
+            next/link 클라 전환으로 공개 페이지에 나갔다 뒤로가기를 누르면, 그 사이 mount된
+            gtag가 토큰이 붙은 이 URL로 page_view를 보낸다. 공개 목적지에는 rel="noreferrer"도
+            함께 — 사이트 Referrer-Policy가 동일 출처 이동에 전체 URL을 보낸다
+            (규칙 정본: lib/analytics/privatePaths.ts). */}
+        <a href="/ko" rel="noreferrer" className="mt-8 inline-block underline">홈으로</a>
       </main>
     </>
   );

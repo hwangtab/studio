@@ -7,7 +7,7 @@ jest.mock('../../../../../lib/funding/service', () => ({
   findFundingOrderById: jest.fn(),
 }));
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
-jest.mock('../../../../../lib/funding/email', () => ({ sendFundingConfirmedEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
+jest.mock('../../../../../lib/funding/email', () => ({ sendFundingCancelledEmails: jest.fn(), sendFundingConfirmedEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
 // set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
@@ -21,7 +21,7 @@ import handler from '../../../../../pages/api/admin/funding/pledges/[id]';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
-import { sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 
 const call = async (method: string, query: unknown, body: unknown) => {
@@ -36,6 +36,9 @@ const BASE_ORDER = {
   id: 'order-1',
   orderNo: 'FND-1',
   status: 'paid',
+  customerEmail: 'backer@example.com',
+  totalAmount: 30000,
+  payments: [{ id: 'p1', paymentKey: 'pk', refunds: [] as Array<{ amount: number; status: string }> }],
   fundingPledge: {
     id: 'pledge-1',
     projectSlug: 'demo',
@@ -84,13 +87,60 @@ it('알 수 없는 action → 400', async () => {
   expect(r.status).toBe(400);
 });
 
-it('resend_email: refunded 주문은 재발송할 메일이 없어 409, DB 기록도 안 한다', async () => {
-  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'refunded' });
+/**
+ * 취소 메일 발송이 실패하면 cancelFundingPledge가 주문을 이미 refunded로 옮긴 뒤라, 그 실패
+ * 문자열이 orders.notificationError에 영구히 박혔다. 화면은 "메일 재발송을 눌러 주세요"
+ * 배너를 띄우는데 그 버튼이 409였고, 컬럼을 비우는 다른 경로도 없어 헬스체크 알람이
+ * 매일 영원히 울렸다 — 경보 피로로 신호가 죽는 자리다. 예약 쪽의 cancelled 분기와 같은
+ * 모양으로 취소 메일을 다시 보낸다.
+ */
+it('resend_email: refunded 주문은 취소 메일을 재발송하고 notificationError를 갱신한다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'refunded',
+    payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ amount: 30000, status: 'done' }] }],
+  });
+  (sendFundingCancelledEmails as jest.Mock).mockResolvedValue(null);
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(r.status).toBe(200);
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+  // 실제로 나간 금액(30,000)을 refunds에서 다시 계산해 싣는다 — totalAmount를 그대로 적으면
+  // 이미 돌려준 몫까지 또 돌려주는 것처럼 읽힌다.
+  expect(sendFundingCancelledEmails).toHaveBeenCalledWith(expect.anything(), undefined, 'refunded', 30000);
+  expect(mockUpdate).toHaveBeenCalled();
+});
+
+it('resend_email: partially_refunded는 남은 잔액을 뺀 실제 환불액으로 취소 메일을 보낸다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'partially_refunded',
+    payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ amount: 12000, status: 'done' }, { amount: 5000, status: 'failed' }] }],
+  });
+  (sendFundingCancelledEmails as jest.Mock).mockResolvedValue(null);
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'resend_email' })).status).toBe(200);
+  expect(sendFundingCancelledEmails).toHaveBeenCalledWith(expect.anything(), undefined, 'refunded', 12000);
+});
+
+/**
+ * 웹훅이 orders.status만 refunded로 옮기고 refunds 기록이 아직 붙지 않은 창에서 재발송을
+ * 누르면 계산값이 0이 된다. 그대로 보내면 고객에게 "0원이 환불됩니다"가 나간다.
+ * 금액을 지어내느니 거절하고 대사가 끝난 뒤 다시 누르게 한다.
+ */
+it('resend_email: 환불 기록이 없어 금액이 0이면 409 — 0원 안내를 보내지 않는다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({
+    ...BASE_ORDER, status: 'refunded',
+    payments: [{ id: 'p1', paymentKey: 'pk', refunds: [] }],
+  });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
-  expect(r.body).toEqual({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
-  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+  expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
   expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+// 토스 결제 기록이 없는 옛 무통장·수기 건은 계좌 송금 안내('recorded')로 보낸다.
+it('resend_email: 결제 기록이 없는 환불 건은 recorded 모드로 보낸다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, status: 'refunded', payments: [] });
+  (sendFundingCancelledEmails as jest.Mock).mockResolvedValue(null);
+  await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
+  expect(sendFundingCancelledEmails).toHaveBeenCalledWith(expect.anything(), undefined, 'recorded', 30000);
 });
 
 it('resend_email: paid면 확정 메일을 재발송한다', async () => {
@@ -111,7 +161,7 @@ it('resend_email: pending(결제 전, toss)이면 재발송할 메일이 없어 
   });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
-  expect(r.body).toEqual({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
+  expect(r.body).toEqual({ ok: false, message: '결제가 완료되었거나 환불된 후원만 메일을 재발송할 수 있습니다.' });
   expect(mockUpdate).not.toHaveBeenCalled();
 });
 

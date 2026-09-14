@@ -97,7 +97,7 @@ const BaseCard = React.memo(({
         }
         : {};
     const interactiveStyles = isInteractive
-        ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        ? "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         : "";
     const cardClassName = cn(baseStyles, variants[variant], interactiveStyles, className);
     const isExternal = Boolean(href && /^(https?:|mailto:|tel:)/.test(href));

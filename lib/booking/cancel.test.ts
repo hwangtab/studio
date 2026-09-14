@@ -42,6 +42,15 @@ const setCallsOf = (db: MockDb): Record<string, unknown>[] =>
     ? (db.update.mock.results[0].value.set as jest.Mock).mock.calls.map((c: unknown[]) => c[0] as Record<string, unknown>)
     : [];
 
+/**
+ * orders 상태 전이만 골라낸다.
+ *
+ * 잔액 환불 경로는 refunds 선점 행도 `.set({ status: 'done' })`으로 올리므로, 단순히
+ * "status가 있는 첫 set"을 집으면 refunds 쪽을 잡는다. orders 전이만 `updatedAt`을 함께 쓴다.
+ */
+const orderStatusSetOf = (db: MockDb): Record<string, unknown> | undefined =>
+  setCallsOf(db).find((c) => 'status' in c && 'updatedAt' in c);
+
 /** db.insert(...).values(...) 호출 인자 전체 — insert 체인도 테이블과 무관하게 같은 values mock을 공유한다. */
 const insertValuesCallsOf = (db: MockDb): Record<string, unknown>[] =>
   db.insert.mock.results.length
@@ -136,7 +145,7 @@ describe('cancelBookingWithRefund', () => {
     });
     const db = mockDb();
     expect(db.run).toHaveBeenCalledTimes(1); // 선점 UPDATE만 — 토스 성공했으니 revert 없음
-    const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
+    const orderStatusUpdate = orderStatusSetOf(db);
     expect(orderStatusUpdate).toMatchObject({ status: 'refunded' });
     const refundInsert = insertValuesCallsOf(db).find((c) => c.status === 'done');
     expect(refundInsert).toMatchObject({ amount: 275000, status: 'done', tossTransactionKey: 'ck1' });
@@ -358,7 +367,7 @@ describe('cancelBookingWithRefund', () => {
       expect(db.run).not.toHaveBeenCalled(); // 선점 UPDATE도 revert도 없다
       expect(deleteBookingEvent).not.toHaveBeenCalled(); // 첫 취소에서 이미 지웠다
       expect(sendBookingCancelledEmails).not.toHaveBeenCalled(); // 없는 취소를 다시 알리지 않는다
-      expect(setCallsOf(db).find((c) => 'status' in c)).toMatchObject({ status: 'refunded' }); // 잔액 100,000 전액
+      expect(orderStatusSetOf(db)).toMatchObject({ status: 'refunded' }); // 잔액 100,000 전액
     });
 
     it('잔액을 넘는 추가 환불은 거부한다', async () => {
@@ -370,13 +379,18 @@ describe('cancelBookingWithRefund', () => {
       expect(cancelPayment).not.toHaveBeenCalled();
     });
 
-    it('cancelled인데 주문이 paid면(부분환불 이력 없음) 종전대로 거부한다', async () => {
+    /**
+     * 이용일 **당일** 셀프 취소는 0% 티어라 환불액이 0원이고, settleRefund의 nextOrderStatus가
+     * orders를 'paid'로 남긴다(cancel.ts). 예전엔 이 조합을 거절해서 호의 환불·분쟁 환불을
+     * 제품 안에서 할 경로가 아예 없었다 — 토스 콘솔 수기 취소가 유일한 우회였다.
+     */
+    it('cancelled인데 주문이 paid면(당일 취소 0원) 관리자 잔액 환불이 열린다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(additionalRefundOrder({ status: 'paid' }));
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
       });
-      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
-      expect(cancelPayment).not.toHaveBeenCalled();
+      expect(r).toMatchObject({ ok: true, refundAmount: 10000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 10000 }));
     });
 
     it('고객 셀프 취소는 이 경로를 탈 수 없다 (관리자 전용)', async () => {
@@ -457,7 +471,7 @@ describe('cancelBookingWithRefund', () => {
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 220000 }));
       expect(sendMixingOrderCancelledEmails).toHaveBeenCalled();
       const db = mockDb();
-      const orderStatusUpdate = setCallsOf(db).find((c) => 'status' in c);
+      const orderStatusUpdate = orderStatusSetOf(db);
       expect(orderStatusUpdate).toMatchObject({ status: 'refunded' });
     });
 
@@ -517,7 +531,7 @@ describe('cancelBookingWithRefund', () => {
       expect(r).toEqual({ ok: true, refundAmount: 100000 });
       // 이미 cancelled라 선점 UPDATE를 다시 걸지 않는다.
       expect(db.run).not.toHaveBeenCalled();
-      expect(setCallsOf(db).find((c) => 'status' in c)).toMatchObject({ status: 'refunded' }); // 잔액 100,000을 다 환불
+      expect(orderStatusSetOf(db)).toMatchObject({ status: 'refunded' }); // 잔액 100,000을 다 환불
     });
 
     it('cancelled + partially_refunded라도 잔액을 넘는 추가 환불은 거부한다', async () => {
@@ -535,20 +549,27 @@ describe('cancelBookingWithRefund', () => {
       expect(cancelPayment).not.toHaveBeenCalled();
     });
 
-    it('cancelled인데 주문이 paid면(부분환불 이력 없음) 종전대로 거부한다', async () => {
+    // 세션과 같은 이유로 열어 둔다 — 취소된 주문에 잔액이 남아 있으면 관리자가 마저 돌려줄 수
+    // 있어야 하고, 그 경로가 없으면 토스 콘솔 수기 취소가 유일한 수단이 된다.
+    it('cancelled인데 주문이 paid면 관리자 잔액 환불이 열린다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(
         mixingOrder({ workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }] }),
       );
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
       });
-      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
-      expect(cancelPayment).not.toHaveBeenCalled();
+      expect(r).toMatchObject({ ok: true, refundAmount: 10000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 10000 }));
     });
 
-    it('이미 취소된 주문(work_orders.status=cancelled)은 invalid_state로 거부한다', async () => {
+    // 잔액이 0이면 여전히 거절한다 — 돌려줄 돈이 없다.
+    it('이미 전액 환불된 취소 주문은 잔액이 없어 거부한다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(
-        mixingOrder({ workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }] }),
+        mixingOrder({
+          status: 'refunded',
+          workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }],
+          payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ id: 'r1', amount: 270000, status: 'done' }] }],
+        }),
       );
       const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', now: NOW });
       expect(r).toMatchObject({ ok: false, code: 'invalid_state' });

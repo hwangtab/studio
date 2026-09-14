@@ -43,7 +43,7 @@ const TableOfContents = ({ content, title, className }: TableOfContentsProps) =>
       open
       className={`mb-10 rounded-lg border border-gray-200 bg-gray-50/70 dark:border-gray-700 dark:bg-gray-800/40 ${className ?? ''}`}
     >
-      <summary className="flex items-center gap-2 cursor-pointer select-none px-5 py-3 font-bold text-gray-900 dark:text-white touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded-lg">
+      <summary className="flex items-center gap-2 cursor-pointer select-none px-5 py-3 font-bold text-gray-900 dark:text-white touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 rounded-lg">
         <List size={18} aria-hidden="true" className="text-primary dark:text-primary-lighter" />
         {title}
       </summary>
@@ -57,7 +57,7 @@ const TableOfContents = ({ content, title, className }: TableOfContentsProps) =>
               <a
                 href={`#${heading.id}`}
                 onClick={(e) => handleClick(e, heading.id)}
-                className={`block py-1.5 text-sm leading-snug rounded transition-colors hover:text-primary dark:hover:text-accent-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${heading.level >= 3
+                className={`block py-1.5 text-sm leading-snug rounded transition-colors hover:text-primary dark:hover:text-accent-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 ${heading.level >= 3
                   ? 'text-gray-500 dark:text-gray-400'
                   : 'text-gray-700 dark:text-gray-300 font-medium'
                   }`}

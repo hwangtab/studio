@@ -1,5 +1,5 @@
 import { randomBytes, randomUUID } from 'node:crypto';
-import { sql } from 'drizzle-orm';
+import { sql, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders, type FundingPledge, type Order, type Payment, type Refund } from '../../db/schema';
@@ -7,6 +7,7 @@ import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
 import { FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
+import { liveFundingOrderStatusList } from './refundable';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload } from './validation';
 
@@ -19,6 +20,23 @@ const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
  */
 export const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
 export const MANUAL_PLACEHOLDER_PHONE = '-';
+
+/**
+ * 이 주문의 고객 메일 주소가 **실제로 배달될 수 없는 플레이스홀더**인가.
+ *
+ * 수기 등록에서 이메일 칸을 비우면 customer_email에 MANUAL_PLACEHOLDER_EMAIL이 들어간다.
+ * 우리 도메인이라 lib/email/resend.ts의 UNDELIVERABLE_DOMAIN(RFC 2606 예약 도메인)에는
+ * 안 걸려서 Resend 호출이 실제로 일어나고, 그 메일은 우리 수신함으로 되돌아오거나 반송된다.
+ * 반송이 쌓이면 발신 도메인 평판이 깎이고 그 대가는 진짜 고객 메일이 스팸함으로 가는
+ * 형태로 돌아온다.
+ *
+ * 가드는 원래 메일 재발송 한 곳에만 있었다 — 관리자 환불(cancel.ts notifyCancelled)과
+ * 환불 요청 취소는 같은 주소로 그냥 보내고 있었다. **판정을 여기 하나로 모은다.**
+ * entrySource는 보지 않는다: 배달 가능 여부를 정하는 건 주소뿐이고, 경로를 함께 보면
+ * 같은 주소를 다른 경로에서 통과시키는 구멍이 다시 생긴다.
+ */
+export const isManualPlaceholderRecipient = (order: { customerEmail: string }): boolean =>
+  order.customerEmail === MANUAL_PLACEHOLDER_EMAIL;
 
 /**
  * 후원 **인원**을 셀 때 쓰는 신원 키(SQL 조각). 기본은 이메일+전화 조합이지만,
@@ -72,8 +90,42 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
  * partially_refunded를 빼먹으면 aggregateProjectStatus(품절 표시)와 이 INSERT 조건이 어긋나,
  * 화면엔 품절인데 서버는 재고가 남았다고 보고 한정 리워드를 초과 판매한다.
  */
+/**
+ * 한정 리워드의 재고 조건 — `INSERT ... SELECT ... WHERE <이것>` 한 문장에 실어 쓴다.
+ *
+ * remaining = totalQuantity − Σ(paid ∨ partially_refunded) − Σ(pending ∧ hold 미만료).
+ * 무제한(totalQuantity === null)이면 조건이 없다.
+ *
+ * **읽고-검사-쓰기로 대체하지 말 것.** 별도 SELECT로 남은 수량을 확인한 뒤 무조건 INSERT하면
+ * 그 사이에 들어온 동시 요청과 둘 다 검사를 통과해 한정 수량을 초과 판매한다. 조건을 INSERT에
+ * 실으면 진 쪽이 rowsAffected 0을 받는다. 온라인 후원 경로는 처음부터 이 패턴이었는데 관리자
+ * 수기 등록만 아니어서, 잔여 1개를 온라인과 수기가 동시에 집으면 둘 다 확정됐다.
+ * partially_refunded를 빼먹으면 aggregateProjectStatus(품절 표시)와 어긋나 화면엔 품절인데
+ * 서버는 재고가 남았다고 본다.
+ */
+export const fundingStockCondition = (
+  projectSlug: string, reward: Pick<FundingReward, 'id' | 'totalQuantity'>, quantity: number, now: Date,
+): SQL =>
+  reward.totalQuantity === null
+    ? sql`1 = 1`
+    : sql`(
+        SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
+        JOIN orders o ON o.id = fp.order_id
+        WHERE fp.project_slug = ${projectSlug} AND fp.reward_id = ${reward.id}
+          AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      ) + ${quantity} <= ${reward.totalQuantity}`;
+
 export const createFundingPledge = async (
   payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
+  options: {
+    /**
+     * 같은 위저드 세션이 **직전에 만든 자기 주문의 주문번호**. 있으면 그 주문 하나만 만료시킨다.
+     *
+     * 소유 증명이다. orderNo에는 randomBytes(4) 8자리가 들어 있어 추측할 수 없고, 이 값을
+     * 아는 것은 그 주문을 만든 클라이언트뿐이다(생성 응답으로만 나간다).
+     */
+    releaseOrderNo?: string | null;
+  } = {},
 ): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' }> => {
   const db = getDb();
   const amounts = computeFundingAmounts(reward.amount, payload.quantity, payload.additionalAmount);
@@ -82,16 +134,38 @@ export const createFundingPledge = async (
   // 결제수단은 토스 하나뿐이다(무통장입금 중단, 2026-09-11) — 홀드도 한 종류다.
   const holdExpiresAt = new Date(now.getTime() + TOSS_HOLD_SECONDS * 1000);
 
-  // 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 같은 고객의 pending 펀딩 주문을 만료시킨다.
-  //
-  // 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
-  // (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
-  await db.run(sql`
-    UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE type = 'funding' AND status = 'pending'
-      AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-      AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
-  `);
+  /**
+   * 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 **자기** pending 주문을 만료시킨다.
+   *
+   * **소유 증명(releaseOrderNo)이 없으면 아무것도 만료시키지 않는다.**
+   *
+   * 예전엔 조건이 `customer_email = ? AND customer_phone = ?`뿐이었다. 두 값은 요청 본문에서
+   * 오는 미검증 문자열이고(validation.ts는 형식만 본다 — 인증 코드가 없다), manageToken 같은
+   * 소유 증명은 어디에도 없었다. 그래서 피해자의 이메일·전화를 아는 제3자가 같은 프로젝트로
+   * 후원 요청 한 번만 보내면 피해자의 pending 주문이 expired가 됐다. 피해자가 결제창 인증을
+   * 마치고 success로 돌아오면 confirm이 `acceptableStatuses = ['pending']`에 걸려
+   * '이미 처리되었거나 만료된 후원입니다'로 거절하고, 풀린 한정 재고는 공격자의 INSERT가
+   * 가져간다. 돈은 안 움직이지만 결제가 실패한다.
+   *
+   * orderNo는 randomBytes(4) 8자리를 포함해 추측할 수 없고 생성 응답으로만 나가므로,
+   * 그 값을 조건에 넣는 것만으로 이 경로가 남의 주문에 닿을 수 없게 된다. 이메일·전화·
+   * 프로젝트 조건은 그대로 함께 건다(방어 깊이).
+   *
+   * 증명이 없는 요청은 자기 홀드가 자연 만료(TOSS_HOLD_SECONDS)될 때까지 기다린다 — 한정
+   * 리워드 재고가 빠듯할 때만 체감되는 비용이고, 남의 결제를 깨뜨릴 수 있는 편보다 낫다.
+   *
+   * 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
+   * (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
+   */
+  if (options.releaseOrderNo) {
+    await db.run(sql`
+      UPDATE orders SET status = 'expired', updated_at = unixepoch()
+      WHERE type = 'funding' AND status = 'pending'
+        AND order_no = ${options.releaseOrderNo.toUpperCase()}
+        AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+        AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
+    `);
+  }
 
   const [order] = await db.insert(orders).values({
     orderNo, type: 'funding',
@@ -102,14 +176,7 @@ export const createFundingPledge = async (
 
   const pledgeId = randomUUID().replace(/-/g, '');
   const s = payload.shipping;
-  const stockCondition = reward.totalQuantity === null
-    ? sql`1 = 1`
-    : sql`(
-        SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
-        JOIN orders o ON o.id = fp.order_id
-        WHERE fp.project_slug = ${project.slug} AND fp.reward_id = ${reward.id}
-          AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
-      ) + ${payload.quantity} <= ${reward.totalQuantity}`;
+  const stockCondition = fundingStockCondition(project.slug, reward, payload.quantity, now);
 
   // terms_agreed_at을 now로 적는 근거: validateCreatePledgePayload가 termsAgreed !== true를
   // 먼저 막으므로(lib/funding/validation.ts), 이 지점에 온 요청은 동의를 마친 요청뿐이다.
@@ -180,13 +247,13 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
            -- 떨어뜨린다(연락처 없는 후원끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
            COUNT(DISTINCT ${backerIdentitySql()}) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded')
+    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()})
   `);
   const claimed = await db.all<{ reward_id: string; qty: number }>(sql`
     SELECT fp.reward_id, SUM(fp.quantity) AS qty
     FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
     WHERE fp.project_slug = ${project.slug}
-      AND (o.status IN ('paid', 'partially_refunded') OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
     GROUP BY fp.reward_id
   `);
   const claimedBy = new Map(claimed.map((r) => [r.reward_id, Number(r.qty)]));
@@ -196,7 +263,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   }
   const names = await db.all<{ customer_name: string }>(sql`
     SELECT o.customer_name FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN ('paid', 'partially_refunded') AND fp.display_name_public = 1
+    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
   return {

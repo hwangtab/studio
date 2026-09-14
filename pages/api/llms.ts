@@ -33,6 +33,7 @@ import {
 import { renderPriceFacts, LESSON_PER_SESSION_PRICE } from '../../lib/llms/priceFacts';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
 import { computeProjectState, getListableFundingProjects } from '../../lib/funding/projects';
+import { getSupportedArtists } from '../../data/artists';
 import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
 import koCommon from '../../public/locales/ko/common.json';
 
@@ -191,6 +192,14 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - llms-full.txt locale-scoped: ${siteUrl}/llms-full-ko.txt · ${siteUrl}/llms-full-en.txt · ${siteUrl}/llms-full-zh.txt
 `;
 
+// 아티스트 후원 링크는 후원 가능한 아티스트가 실제로 있을 때만 안내한다.
+// data/artists가 비어 있으면 /ko/artists는 noindex로 렌더되므로(pages/[locale]/artists/index.tsx),
+// 없는 것을 AI에 조건 없이 안내하지 않는다 — fundingStatusLine과 같은 원칙.
+export const artistsLine = (siteUrl: string, locale: Locale): string =>
+  locale === 'ko' && getSupportedArtists().length > 0
+    ? `- Support Artists (monthly patronage for artists who recorded here): ${siteUrl}/ko/artists\n`
+    : '';
+
 const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## Key Pages (${label})
 
 - Home: ${siteUrl}/${locale}
@@ -202,7 +211,7 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
   - Full Album Release tier: ${siteUrl}/${locale}/release-project/album
 - Cover Video Package: ${siteUrl}/${locale}/cover-video
 - Portfolio: ${siteUrl}/${locale}/portfolio
-${locale === 'ko' ? `- Support Artists (monthly patronage for artists who recorded here): ${siteUrl}/ko/artists\n` : ''}- Stories & News: ${siteUrl}/${locale}/stories
+${artistsLine(siteUrl, locale)}- Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
 - Recording Studio (rental, rates, booking): ${siteUrl}/${locale}/recording
 - Mixing & Mastering (remote-friendly, rates, file specs): ${siteUrl}/${locale}/mixing-mastering

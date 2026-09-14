@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import PledgeWizard from '../../../../components/funding/PledgeWizard';
 import FundingTrustNotice from '../../../../components/funding/FundingTrustNotice';
-import { computeProjectState, getFundingProject, type FundingProject } from '../../../../lib/funding/projects';
+import { computeProjectState, getFundingProject, stripRewardDownloads, type FundingProject } from '../../../../lib/funding/projects';
 import { aggregateProjectStatus, expireStalePledges } from '../../../../lib/funding/service';
 import { trackMicroEvent } from '../../../../utils/analytics';
 
@@ -44,5 +44,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   const status = await aggregateProjectStatus(project, now);
   const initialRewardId = typeof query.reward === 'string' && project.rewards.some((r) => r.id === query.reward) && status.remaining[query.reward] !== 0
     ? query.reward : null;
-  return { props: { project, initialRewardId, remaining: status.remaining } };
+  // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/projects.ts 주석).
+  return { props: { project: stripRewardDownloads(project), initialRewardId, remaining: status.remaining } };
 };

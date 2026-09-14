@@ -174,7 +174,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: '지금 상태에서는 카드 변경 링크를 발급할 수 없습니다.' });
       }
       const setupUrl = subscriptionSetupUrl(subscription, result.setupToken);
-      const notificationError = await sendSubscriptionSetupEmail(subscription, setupUrl);
+      // subscription은 발급 **전에** 읽은 행이라 setupMode가 옛 값이다 — 방금 정해진 모드를
+      // 덮어써 넘긴다. 그러지 않으면 카드 교체 링크에 "즉시 첫 달치가 결제됩니다"라는
+      // 없는 청구 예고가 나간다(lib/billing/email.ts sendSubscriptionSetupEmail 주석).
+      const notificationError = await sendSubscriptionSetupEmail(
+        { ...subscription, setupMode: result.setupMode },
+        setupUrl,
+      );
       if (notificationError) {
         await getDb().update(subscriptions).set({ notificationError }).where(eq(subscriptions.id, id));
       }

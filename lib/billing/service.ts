@@ -19,6 +19,7 @@ import {
   type Subscription,
   type SubscriptionPayment,
 } from '../../db/schema';
+import { formatPriceAmount } from '../../data/pricing';
 import { rowsAffectedOf } from '../booking/confirm';
 import { subscriptionAmounts, subscriptionOrderName, type SubscriptionKind } from './amounts';
 import {
@@ -28,6 +29,7 @@ import {
   periodFor,
   retryAtFor,
 } from './schedule';
+import { sendSubscriptionOperatorAlert } from './email';
 import { chargeBillingKey, fetchPaymentByOrderId, issueBillingKey, type TossPayment } from './toss-billing';
 import {
   generateCustomerKey,
@@ -45,8 +47,42 @@ export type ChargeReason = 'scheduled' | 'retry' | 'manual' | 'first';
 const SETUP_ALLOWED_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 /** 같은 계약에 구독을 새로 못 만드는 상태들(진행 중인 청구가 이미 있다). */
 const OCCUPYING_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
+/**
+ * 승인 결과를 반영하며 `active`로 전이시켜도 되는 상태들 — **해지·종료는 되살리지 않는다.**
+ *
+ * 승인은 우리가 요청한 시점과 기록하는 시점이 떨어져 있다(웹훅 복구는 수분~수시간, 청구
+ * 왕복도 1~3초). 그 사이에 고객이 해지를 누를 수 있는데, 상태를 보지 않고 `active`로
+ * 덮어쓰면 해지가 조용히 사라지고 nextBillingAt까지 다음 달로 다시 잡혀 **해지한 고객의
+ * 카드를 다음 cron이 또 긁는다**(endsAt은 남지만 endExpiredSubscriptions는 `status =
+ * 'cancelled'`만 보므로 더 이상 닫지도 못한다). 회차 기록(orders·subscriptionPayments)은
+ * 그대로 paid로 반영하고 — 돈은 실제로 들어왔다 — 구독 전이만 건너뛴 뒤 로그로 알린다.
+ */
+const REACTIVATABLE_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
+
+/**
+ * 해지·종료된 구독에 승인이 뒤늦게 도착했다 — 운영자에게 **메일로** 알린다.
+ *
+ * 이 상태는 고객이 한 달치를 냈는데 이용기간은 전진하지 않은 것이라 환불 기한이 도는 건이다.
+ * console.error만 남기면 Vercel 런타임 로그에만 쌓여 사실상 아무도 못 본다 — 같은 형태의
+ * 사고(무통장 환불 요청이 어디에도 안 보이던 문제)를 PR #59에서 이미 한 번 고쳤다.
+ * 메일 실패도 삼키지 않고 notificationError에 남긴다(다른 발송 경로와 같은 관례).
+ */
+const alertLateApproval = async (
+  subscription: Subscription,
+  detail: string,
+  now: Date,
+): Promise<void> => {
+  const notificationError = await sendSubscriptionOperatorAlert(subscription, 'late_approval', detail);
+  if (!notificationError) return;
+  console.error('[billing] 뒤늦은 승인 운영자 알림 발송 실패', { subscriptionId: subscription.id, notificationError });
+  try {
+    await getDb().update(subscriptions).set({ notificationError, updatedAt: now }).where(eq(subscriptions.id, subscription.id));
+  } catch (error) {
+    console.error('[billing] notificationError 기록 실패', { subscriptionId: subscription.id, error });
+  }
+};
 
 // ─── 생성 ───────────────────────────────────────────────────────────────────
 
@@ -480,7 +516,9 @@ export const chargeCycle = async (
         nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
         updatedAt: now,
       })
-      .where(eq(subscriptions.id, subscriptionId)),
+      // 진입부(위)의 cancelled/ended 검사는 **읽기 시점 한 번**이다. 승인 왕복(1~3초) 사이에
+      // 들어온 셀프 해지를 여기서 되돌리지 않도록 상태를 다시 건다.
+      .where(and(eq(subscriptions.id, subscriptionId), inArray(subscriptions.status, REACTIVATABLE_STATUSES))),
   ]);
 
   // orders 전이가 0행이면 승인 왕복 사이에 주문이 pending을 벗어난 것이다. 구독 회차는
@@ -492,6 +530,28 @@ export const chargeCycle = async (
       orderNo,
       paymentKey: approved.paymentKey,
     });
+  }
+
+  // 구독 전이가 0행이면 승인 왕복 사이에 해지·종료가 들어온 것이다. 돈은 들어왔고 회차는
+  // paid로 남았으므로 환불 여부는 사람이 판단해야 한다 — 되살리지 않고 알린다.
+  if (rowsAffectedOf(batchResults[3]) === 0) {
+    console.error('[billing] 승인 후 구독 상태 전이 0행 — 해지·종료된 구독일 수 있다, 환불 판단 필요', {
+      subscriptionId,
+      orderNo,
+      paymentKey: approved.paymentKey,
+      cycleYm,
+    });
+    const current = await findSubscriptionById(subscriptionId);
+    await alertLateApproval(
+      current ?? subscription,
+      [
+        `${cycleYm}분 ${formatPriceAmount(subscription.totalAmount)}원이 승인됐지만 구독 상태가 ${current?.status ?? '알 수 없음'}이라 이용기간을 전진시키지 않았습니다.`,
+        '승인 왕복 중에 해지가 들어온 것으로 보입니다 — 환불 여부를 판단해 주세요.',
+        `주문번호 ${orderNo} / paymentKey ${approved.paymentKey}`,
+      ].join('\n'),
+      now,
+    );
+    return { ok: true, status: current?.status ?? subscription.status, paymentKey: approved.paymentKey, cycleYm, attempt };
   }
 
   return { ok: true, status: 'active', paymentKey: approved.paymentKey, cycleYm, attempt };
@@ -566,26 +626,49 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
   return { ok: true, subscription: row };
 };
 
-/** 카드 교체 링크 발급. setupMode='change'라 등록이 끝나도 결제하지 않는다. */
+/**
+ * 카드 교체 링크 발급.
+ *
+ * setupMode는 **상태에 따라 갈린다.** 이미 카드가 붙어 청구가 도는 구독(active·past_due·
+ * paused)은 'change' — 등록이 끝나도 결제하지 않는다(카드만 바꾸려던 고객에게 한 달치가
+ * 더 나가면 안 된다, schema의 setupMode 주석).
+ *
+ * 그런데 pending_card는 **첫 결제를 아직 한 번도 못 한 구독**이다(첫 결제 거절은 재시도
+ * 일정을 걸지 않고 pending_card로 남긴다 — chargeCycle의 reason==='first' 분기). 여기에
+ * 'change'를 걸면 고객이 새 카드를 정상 등록해도 completeCardSetup이 chargeCycle을 부르지
+ * 않고 끝나, 카드는 붙었고 고객은 '등록 완료' 화면을 봤는데 status는 pending_card·
+ * nextBillingAt은 null이라 **첫 달치가 조용히 미청구로 남는다**(listDueSubscriptions가
+ * 영원히 집지 않고, 관리자 UI의 '결제' 버튼도 pending_card를 제외한다). 관리자 상세
+ * 화면에는 pending_card에서도 '카드 변경 링크 발급' 버튼이 떠 있어 실제로 밟히는 길이다.
+ *
+ * 그래서 pending_card에는 'initial'을 준다 — 등록 직후 첫 결제가 정상으로 돈다.
+ * 이중 청구 걱정은 없다: chargeCycle이 같은 회차에 성공한 기록이 있으면 다시 걷지 않는다.
+ */
 export const issueCardChangeToken = async (
   id: string,
   now: Date,
-): Promise<{ ok: true; setupToken: string } | { ok: false; code: 'not_found' | 'invalid_state' }> => {
+): Promise<
+  // setupMode를 함께 돌려준다 — 호출부가 이 값으로 안내 메일 문구를 고른다. 발급 **전에**
+  // 읽어 둔 구독 행에는 옛 값이 들어 있어서, 그걸 믿으면 'change' 링크에 "즉시 첫 달치가
+  // 결제됩니다"라는 없는 청구 예고가 나간다.
+  { ok: true; setupToken: string; setupMode: 'initial' | 'change' } | { ok: false; code: 'not_found' | 'invalid_state' }
+> => {
   const db = getDb();
   const subscription = await findSubscriptionById(id);
   if (!subscription) return { ok: false, code: 'not_found' };
   if (!SETUP_ALLOWED_STATUSES.includes(subscription.status)) return { ok: false, code: 'invalid_state' };
   const setupToken = generateSetupToken();
+  const setupMode = subscription.status === 'pending_card' ? 'initial' : 'change';
   await db
     .update(subscriptions)
     .set({
       setupToken,
       setupTokenExpiresAt: new Date(now.getTime() + SETUP_TOKEN_TTL_SECONDS * 1000),
-      setupMode: 'change',
+      setupMode,
       updatedAt: now,
     })
     .where(eq(subscriptions.id, id));
-  return { ok: true, setupToken };
+  return { ok: true, setupToken, setupMode };
 };
 
 /** cron이 이번 회차에 청구할 구독들. paused는 자동 청구 대상이 아니다. */
@@ -718,7 +801,10 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
           nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
           updatedAt: now,
         })
-        .where(eq(subscriptions.id, subscription.id)),
+        // 해지·종료된 구독은 되살리지 않는다 — 형제 항목(orders·subscriptionPayments)의
+        // 상태 가드와 같은 이유다. 뒤늦은 DONE 웹훅은 수분~수시간 뒤에도 오고, 그 사이
+        // 고객이 결제 실패 메일을 보고 셀프 해지를 누르는 것이 정상 동선이다.
+        .where(and(eq(subscriptions.id, subscription.id), inArray(subscriptions.status, REACTIVATABLE_STATUSES))),
     ]);
   } catch (error) {
     // paymentKey unique 위반이면 cron chargeCycle이나 형제 웹훅 이벤트가 먼저 반영한 것 —
@@ -744,5 +830,25 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
       orderNo: order.orderNo,
       paymentKey: payment.paymentKey,
     });
+  }
+
+  // 회차는 paid로 반영됐지만 구독은 그대로 둔 경우 — 해지·종료된 구독에 뒤늦은 승인이
+  // 도착한 것이다. 재활성은 하지 않되 돈이 들어온 사실은 남겨 환불 여부를 사람이 정한다.
+  if (rowsAffectedOf(batchResults[3]) === 0) {
+    console.error('[billing] 웹훅 DONE 복구 — 해지·종료된 구독에 뒤늦은 승인 도착, 수동 환불 판단 필요', {
+      orderNo: order.orderNo,
+      paymentKey: payment.paymentKey,
+      subscriptionId: subscription.id,
+      status: subscription.status,
+    });
+    await alertLateApproval(
+      subscription,
+      [
+        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했지만 구독이 ${subscription.status}라 이용기간을 전진시키지 않았습니다.`,
+        '고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+        `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
+      ].join('\n'),
+      now,
+    );
   }
 };

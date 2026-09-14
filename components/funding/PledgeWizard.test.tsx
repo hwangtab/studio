@@ -329,3 +329,61 @@ describe('기기 시계가 서버보다 빠를 때', () => {
     expect(screen.queryByText(/결제 대기 \d/)).toBeNull();
   });
 });
+
+/**
+ * 자기 홀드 해제의 **소유 증명**(직전 자기 주문번호)이 살아남는지.
+ *
+ * React state만 쓰면 가장 흔한 동선에서 증명이 항상 사라진다 — 결제 위젯은 토스로 **전체
+ * 이동**하므로, 실패·뒤로가기로 돌아오면 페이지가 새로 뜨고 state가 초기화된다. 그러면
+ * 본인 홀드가 15분간 한정 재고를 붙들고 본인이 "품절"을 본다.
+ */
+describe('자기 홀드 해제 증명 보관', () => {
+  const submitOnce = async () => {
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.click(screen.getByLabelText(/약관/));
+    await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
+    await screen.findByTestId('toss-widget');
+  };
+
+  const lastBody = () => JSON.parse((global.fetch as jest.Mock).mock.calls.at(-1)![1].body);
+
+  beforeEach(() => window.sessionStorage.clear());
+
+  it('첫 제출에는 증명이 없고, 받은 주문번호를 보관한다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitOnce();
+    expect(lastBody().previousOrderNo).toBeUndefined();
+    expect(window.sessionStorage.getItem('funding:lastOrderNo:demo')).toBe('FND-1');
+  });
+
+  // 토스 전체 이동에서 돌아온 동선 — 컴포넌트가 완전히 새로 마운트된다.
+  it('페이지가 새로 떠도 보관된 증명을 다시 싣는다', async () => {
+    const { unmount } = render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitOnce();
+    unmount();
+
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitOnce();
+    expect(lastBody().previousOrderNo).toBe('FND-1');
+  });
+
+  // 자기 홀드 해제 UPDATE는 프로젝트별로 걸린다 — 다른 프로젝트 주문번호는 쓸모가 없다.
+  it('증명은 프로젝트(slug)별로 나뉜다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitOnce();
+    const other = { ...project, slug: 'other' };
+    render(<PledgeWizard project={other} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(window.sessionStorage.getItem('funding:lastOrderNo:other')).toBeNull();
+  });
+
+  // 사생활 보호 모드 등에서는 접근 자체가 throw한다 — 결제가 막히면 안 된다.
+  it('저장소 접근이 막혀도 제출은 진행된다', async () => {
+    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await submitOnce();
+    expect(screen.getByTestId('toss-widget')).toBeInTheDocument();
+  });
+});

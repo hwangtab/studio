@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { m, AnimatePresence } from 'framer-motion';
 import { locales, localeNames, type Locale } from '../lib/i18n';
 import { isRoutePatternPath } from '../lib/routePattern';
+import { isKoOnlyRoutePath } from '../lib/koOnlyRoutes';
 import { DUR, EASE_STANDARD, TRANSITION_STANDARD } from '../utils/animationUtils';
 
 interface LanguageSwitcherProps {
@@ -56,8 +57,26 @@ export const LanguageSwitcher = ({
     }
 
     const segments = path.split('/');
+    const hasLocaleSegment = locales.includes(segments[1] as Locale);
 
-    if (locales.includes(segments[1] as Locale)) {
+    // ko 전용 판정은 쿼리·해시를 뺀 순수 경로로 해야 한다. asPath에 쿼리·해시가 붙으면
+    // (utm 유입이 기본값이다) 마지막 세그먼트가 'success?orderNo=A1' 같은 문자열이 돼
+    // 리터럴 형제 매칭이 깨진다 — 판정이 asPath에 물린 쿼리 유무로 양방향 뒤집힌다
+    // (utm 붙은 /ko/artists는 404가 그대로 남고, /ko/funding/success?orderNo=...는
+    // 맥락 없이 홈으로 튕긴다). 생성하는 링크 자체는 쿼리·해시를 보존해야 하므로(위 두
+    // 사례 모두 유지가 맞는 정보다) 판정용 경로만 따로 만들고 segments는 그대로 둔다.
+    const pathnameOnly = path.split(/[?#]/)[0];
+    const cleanSegments = pathnameOnly.split('/');
+    const pathWithoutLocale = hasLocaleSegment ? `/${cleanSegments.slice(2).join('/')}` : pathnameOnly;
+
+    // funding·artists·guides 같은 ko 전용 SSG 라우트(fallback:false, ko만 프리렌더)는
+    // 로케일 세그먼트만 바꿔서는 다른 로케일 파일이 아예 없어 404가 난다. 목적지
+    // 로케일이 ko가 아니면 그 로케일 홈으로 탈출시킨다(isRoutePatternPath와 같은 처리).
+    if (isKoOnlyRoutePath(pathWithoutLocale) && targetLocale !== 'ko') {
+      return `/${targetLocale}`;
+    }
+
+    if (hasLocaleSegment) {
       segments[1] = targetLocale;
       return segments.join('/') || '/';
     }
@@ -118,7 +137,7 @@ export const LanguageSwitcher = ({
           // aria-controls는 두지 않는다 — 패널이 닫히면 언마운트돼 참조가 끊긴다
           // (dropdown 변형도 같은 이유로 aria-expanded만 쓴다).
           aria-expanded={isOpen}
-          className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+          className="flex items-center justify-between w-full min-h-[44px] px-3 py-2 text-left font-bold text-gray-900 dark:text-white touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
           <div className="flex items-center gap-2">
             <span>🌐</span>
@@ -149,7 +168,7 @@ export const LanguageSwitcher = ({
                     prefetch={false}
                     onClick={() => setIsOpen(false)}
                     className={`
-                      flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                      flex items-center min-h-[44px] px-3 py-2 rounded-lg text-sm transition-colors text-left touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                       ${currentLocale === locale
                         ? 'bg-primary/10 text-primary dark:text-accent-light font-medium'
                         : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'
@@ -190,7 +209,7 @@ export const LanguageSwitcher = ({
         className={`
           inline-flex items-center gap-1 px-2 py-2 sm:px-3 sm:py-2 min-h-[44px] sm:min-h-[36px] rounded-md text-sm sm:text-xs font-bold tracking-normal transition-colors duration-200 touch-manipulation
           max-w-[120px] sm:max-w-[160px]
-          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
           ${isOpen
             ? !isFloating
               ? 'bg-primary text-white shadow-sm'
@@ -247,7 +266,7 @@ export const LanguageSwitcher = ({
                   }}
                   className={`
                     px-3 py-2 sm:px-2 sm:py-1.5 min-h-[44px] sm:min-h-[36px] rounded text-sm sm:text-xs font-bold text-left transition-colors duration-200 touch-manipulation
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900
                     ${currentLocale === locale
                       ? 'bg-primary text-white shadow-sm'
                       : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-white/45 dark:hover:bg-white/10'}

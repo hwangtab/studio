@@ -2,6 +2,8 @@ import { formatPriceAmount } from '../../data/pricing';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
+import { isManualPlaceholderRecipient } from './service';
+
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
 
@@ -58,12 +60,46 @@ const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEm
   return failures.length ? failures.join(', ') : null;
 };
 
+/**
+ * 수신 불가 주소로 가는 **고객 항목만** 떨어뜨린다. 운영자 사본은 그대로 나간다.
+ *
+ * 수기 등록에서 연락처를 비우면 customer_email에 플레이스홀더(manual@studionol.co.kr)가
+ * 들어간다. 우리 도메인이라 resend.ts의 배달불가 판정(RFC 2606 예약 도메인)에 안 걸려
+ * 실제로 발송되고, 그 메일은 우리 수신함으로 되돌아오거나 반송돼 발신 도메인 평판을 깎는다.
+ *
+ * **운영자 사본까지 함께 끊으면 안 된다** — 수기 건의 환불은 손으로 계좌에 송금하는
+ * 작업이라, 무엇을 얼마나 돌려줘야 하는지 알려 주는 그 메일이 실무의 시작점이다.
+ * 예전엔 호출부(cancel.ts)에서 통째로 건너뛰어 그 사본까지 사라졌다.
+ *
+ * 여기(발송 계층)에 두면 취소·환불요청 해제·확정 등 모든 경로가 같은 규칙을 따른다.
+ * `errorCode`를 만들지 않고 **조용히 빼는** 것도 의도다 — 실패로 세면 그 문자열이
+ * orders.notificationError에 남아 헬스체크가 영구히 울린다.
+ */
+const withoutUndeliverableCustomer = (
+  order: FundingOrder,
+  pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>,
+): Array<{ key: string; params: Parameters<typeof sendEmail>[0] }> =>
+  isManualPlaceholderRecipient(order) ? pairs.filter((p) => p.key !== 'customer') : pairs;
+
+/**
+ * 디지털 리워드 내려받기 안내 — 후원한 리워드에 downloadUrl이 있을 때만 붙는다.
+ *
+ * 주소는 후원 확인 페이지에도 뜬다. 메일을 지우거나 못 받아도 받을 길이 남아야 하기
+ * 때문이다(그 화면 주소는 바로 아래 줄에 함께 나간다).
+ */
+const downloadLines = (order: FundingOrder, project: FundingProject | null): string[] => {
+  const rewardId = order.fundingPledge?.rewardId;
+  const reward = project?.rewards.find((r) => r.id === rewardId);
+  if (!reward?.downloadUrl) return [];
+  return ['', '[음원 내려받기]', reward.downloadUrl, '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.'];
+};
+
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
-  send([
+  send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 후원이 확정되었습니다${titleSuffix(project)}`,
-      text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...withdrawalLines(order), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
+      text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...downloadLines(order, project), ...withdrawalLines(order), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
@@ -71,7 +107,7 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
       text: [...summaryLines(order, project), `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `결제수단: ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`, `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
-  ]);
+  ]));
 
 
 const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_requested: '취소 요청을 접수했습니다', recorded: '환불 처리 안내' } as const;
@@ -86,7 +122,7 @@ const CANCEL_BODY = {
 } as const;
 
 export const sendFundingCancelledEmails = (order: FundingOrder, project: FundingProject | null, mode: 'refunded' | 'refund_requested' | 'recorded', refundAmount: number): Promise<string | null> =>
-  send([
+  send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] ${CANCEL_SUBJECT[mode]}${titleSuffix(project)}`,
@@ -97,7 +133,7 @@ export const sendFundingCancelledEmails = (order: FundingOrder, project: Funding
       subject: `[펀딩] ${CANCEL_SUBJECT[mode]} — ${order.customerName} (${mode})`,
       text: [...summaryLines(order, project), `환불 금액: ${formatPriceAmount(refundAmount)}원`, `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
-  ]);
+  ]));
 
 /**
  * 관리자가 취소 요청을 철회 처리했을 때. 후원자에게 **반드시** 나가야 한다 — 이 액션은
@@ -109,7 +145,7 @@ export const sendFundingRefundRequestClearedEmails = (
   project: FundingProject | null,
   reason: string,
 ): Promise<string | null> =>
-  send([
+  send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 취소 요청이 철회 처리되었습니다${titleSuffix(project)}`,
@@ -135,4 +171,4 @@ export const sendFundingRefundRequestClearedEmails = (
         `관리자: ${SITE_URL}/admin/funding`,
       ].join('\n'),
     } },
-  ]);
+  ]));

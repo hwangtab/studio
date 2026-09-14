@@ -8,7 +8,13 @@ import * as schema from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../booking/toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
+// 네트워크를 타는 함수만 가린다 — 순수 판정(isVirtualAccountPayment)과 문구 상수는 실제
+// 구현을 써야 '고객이 무엇을 보는가'를 검증할 수 있다. 전부 가리면 그 자리가 빈 채로 통과한다.
+jest.mock('../booking/toss', () => ({
+  ...jest.requireActual('../booking/toss'),
+  confirmPayment: jest.fn(),
+  fetchPayment: jest.fn(),
+}));
 jest.mock('./email', () => ({
   sendFundingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
@@ -213,6 +219,10 @@ describe('confirmFundingPledge', () => {
     // pending으로 남아야 실제 입금 뒤 오는 DONE 웹훅이 정상 경로로 확정할 수 있다.
     expect(o?.status).toBe('pending');
     expect(o?.payments).toHaveLength(0);
+    // 문구도 본다 — 예전엔 "잠시 후 다시 시도해 주세요"라는 일반 문구가 나갔는데, 입금을
+    // 기다리는 사람에게 다시 시도하라는 것은 틀린 지시다(같은 수단이면 같은 결과다).
+    expect(r.ok === false && r.message).toContain('카드·계좌이체·간편결제');
+    expect(r.ok === false && r.message).not.toContain('잠시 후 다시 시도');
   });
 
   describe('확정 메일 미발송 센티널 (H)', () => {

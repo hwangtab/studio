@@ -31,6 +31,13 @@ const {
   getCategoryLastmod,
 } = require('./lib/sitemap/routes');
 const { readFundingProjects } = require('./lib/sitemap/fundingMeta');
+const { SUPPORTED_ARTIST_COUNT } = require('./lib/sitemap/artistsMeta');
+
+// ko 정적 최상위 라우트 중 SEO noindex인 것들의 정본(단일 소스). exclude 목록의
+// '/*/<route>' 항목을 여기서 파생시키고, scripts/indexnow-changed.mjs도 같은 파일을
+// 읽어 noindex 라우트를 변경분 제출에서 뺀다 — 한쪽만 고치면 사이트맵은 안 실었는데
+// IndexNow는 제출하는 모순이 생긴다(2026-09-14 적발: /ko/privacy-policy·/ko/terms).
+const NOINDEX_STATIC_ROUTES = require('./lib/sitemap/noindexStaticRoutes.json');
 
 // 라우트 단위 en 색인 개방 대상(단일 소스 lib/enIndexablePaths.json) — 이 경로의 en
 // 버전은 noindex 전면 제외에서 예외로 사이트맵에 등재된다(런타임 metadataUrls와 대칭).
@@ -94,7 +101,8 @@ module.exports = {
   // /admin·계약 서명 경로는 운영자·당사자 전용이라 색인 대상이 아니다(각 페이지에도 noindex).
   // /booking·/terms도 동일 — 예약 퍼널·약관 고지는 검색 노출 대상이 아니다.
   exclude: [
-    '/api/*', '/404', '/500', '/', '/*/privacy-policy', '/admin', '/admin/*', '/*/contracts/*', '/*/booking/*', '/*/terms',
+    '/api/*', '/404', '/500', '/', '/admin', '/admin/*', '/*/contracts/*', '/*/booking/*',
+    ...NOINDEX_STATIC_ROUTES.map((route) => `/*/${route}`),
     // 펀딩 트랜잭셔널 경로 — noindex + Cache-Control: no-store 페이지라 사이트맵 등재 대상이 아니다.
     '/*/funding/success', '/*/funding/fail', '/*/funding/manage/*', '/*/funding/*/pledge', '/*/funding/terms',
   ],
@@ -241,6 +249,14 @@ module.exports = {
     // 단, 상업 3페이지(/pricing·/contact·/release-project)의 en 버전은 선별 색인
     // 개방 대상이라 예외로 등재 — 런타임 metadataUrls의 EN_INDEXABLE_PATHS와 대칭.
     if (locale !== 'ko' && !(locale === 'en' && EN_INDEXABLE_PATHS.has(pathWithoutLocale))) {
+      return null;
+    }
+
+    // 후원 가능한 아티스트가 0명이면 pages/[locale]/artists/index.tsx가
+    // robots="noindex, follow"로 렌더된다(data/artists/index.ts:SUPPORTED_ARTISTS 참조,
+    // CJS 거울은 lib/sitemap/artistsMeta.js). noindex 페이지를 사이트맵에 실으면
+    // "제출된 URL이 noindex로 표시됨" GSC 오류가 쌓이므로 같은 조건에서 함께 뺀다.
+    if (pathWithoutLocale === '/artists' && SUPPORTED_ARTIST_COUNT === 0) {
       return null;
     }
 

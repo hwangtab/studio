@@ -24,6 +24,11 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/booking/manage/[orderNo].tsx',
   'pages/[locale]/booking/success.tsx',
   'pages/[locale]/booking/fail.tsx',
+  // 정기결제(구독) — 카드 등록 링크·관리 링크의 `?token=`이 URL에 실린다(PR #57·#66과 같은 유형).
+  'pages/[locale]/subscribe/[id].tsx',
+  'pages/[locale]/subscribe/[id]/success.tsx',
+  'pages/[locale]/subscribe/[id]/fail.tsx',
+  'pages/[locale]/subscribe/manage/[id].tsx',
 ];
 
 const read = (file: string) => readFileSync(path.join(process.cwd(), file), 'utf-8');
@@ -54,6 +59,20 @@ describe('private 페이지의 이탈 링크', () => {
     const publicAnchors = openingAnchorTags(read(file)).filter(needsNoReferrer);
     expect(publicAnchors.length).toBeGreaterThan(0);
     for (const tag of publicAnchors) expect(tag).toContain('rel="noreferrer"');
+  });
+
+  /**
+   * 헤더·푸터가 없는 화면이라 **페이지가 자기 상단에서 브랜드를 밝혀야 한다** — 메일 링크로
+   * 들어온 사람이 피싱과 구별할 수 있어야 하고, 결제·해지가 일어나는 자리다. 제목 태그가
+   * 아니라 **본문**에 상호가 있어야 한다(탭 제목은 화면에 안 보인다).
+   */
+  it.each(PRIVATE_PAGE_FILES)('%s 본문에 상호를 밝히는 전용 줄이 있다', (file) => {
+    const source = read(file);
+    const withoutHead = source.replace(/<title>[^<]*<\/title>/g, '');
+    // 단순히 '스튜디오 놀'이 어딘가 있는지만 보면 푸터의 "문의: 스튜디오 놀 010-…" 한 줄이
+    // 상단 브랜드 표기를 지워도 테스트를 통과시킨다(실제로 그런 사각이 있었다). 상호만
+    // 담은 **전용 요소**를 요구해 그 우회를 막는다.
+    expect(withoutHead).toMatch(/>\s*스튜디오 놀\s*</);
   });
 
   /**

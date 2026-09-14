@@ -135,4 +135,26 @@ describe('mapChangedFilesToUrls', () => {
     ]);
     expect(urls).toEqual(['https://studionol.co.kr/ko/wedding-song']);
   });
+
+  // 회귀 방지(2026-09-14 적발): privacy-policy·terms는 SEO noindex라 next-sitemap
+  // exclude에서도 빠져 있는데, IndexNow는 조건 없이 제출하고 있었다. 사이트맵에서 뺀
+  // 라우트를 검색엔진에 색인 요청으로 미는 것은 신호가 모순이다.
+  it('excludes noindex static routes (privacy-policy, terms) — 사이트맵과 동일 정책', () => {
+    const urls = mapChangedFilesToUrls([
+      { status: 'M', path: 'pages/[locale]/privacy-policy.tsx' },
+      { status: 'M', path: 'pages/[locale]/terms.tsx' },
+    ]);
+    expect(urls).toEqual([]);
+  });
+});
+
+// lib/sitemap/noindexStaticRoutes.json이 이 스크립트와 next-sitemap.config.js의
+// exclude 목록 양쪽에서 같은 값을 보게 하는 단일 소스다. 값 자체가 두 정책을 가르는
+// 기준이므로, 파일 내용이 예상과 다르면(오타·삭제) 조용히 통과시키지 않는다.
+describe('lib/sitemap/noindexStaticRoutes.json', () => {
+  it('privacy-policy·terms를 담고 있다', () => {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const noindexStaticRoutes = require('../lib/sitemap/noindexStaticRoutes.json');
+    expect(noindexStaticRoutes.sort()).toEqual(['privacy-policy', 'terms']);
+  });
 });

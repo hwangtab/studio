@@ -7,7 +7,7 @@ import FundingManagePage from '../../../../pages/[locale]/funding/manage/[orderN
 const baseProps = {
   orderNo: 'FND-1', token: 'tok', projectSlug: 'demo', projectTitle: '데모', rewardTitle: '감사 메일',
   quantity: 1, additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
-  canCancel: true, cancelBlockedReason: null, refundRequested: false,
+  canCancel: true, cancelBlockedReason: null, refundRequested: false, downloadUrl: null,
   displayNamePublic: false, canEditDisplayName: true,
 };
 

@@ -137,10 +137,15 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     expect(totals.confirmedAmount).toBe(10_000);
   });
 
-  it('입금 대기는 무통장 pending만 센다', async () => {
-    await seedPaid(1, 'a', 'pending', 7000); // bank_transfer
+  /**
+   * 예전 조건은 `pending AND payment_method='bank_transfer'`였다. 무통장입금을 중단한
+   * 2026-09-11 이후 그 조합의 새 행은 생길 수 없어서(온라인은 toss 고정, 수기 등록은 항상
+   * paid), 목록에 '결제대기' 행이 떠 있어도 요약 타일은 영구히 0건이라고 말했다.
+   * 결제수단 필터를 빼고 **살아 있는 토스 홀드까지** 센다.
+   */
+  it('결제 대기는 결제수단과 무관하게 pending 전부를 센다', async () => {
+    await seedPaid(1, 'a', 'pending', 7000); // 레거시 무통장 pending
     await seedPaid(2, 'a', 'paid');
-    // 토스 pending은 입금 대기가 아니다 — 결제창을 닫은 홀드다.
     await client.execute({
       sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
             item_amount, vat_amount, total_amount, manage_token)
@@ -153,8 +158,8 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     });
 
     const totals = await aggregateAdminFundingTotals('a');
-    expect(totals.pendingCount).toBe(1);
-    expect(totals.pendingAmount).toBe(7000);
+    expect(totals.pendingCount).toBe(2);
+    expect(totals.pendingAmount).toBe(12_000);
   });
 
   /**
@@ -203,4 +208,36 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
       confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
     });
   });
+});
+
+/**
+ * 품절 경합 잔해(pledge 없는 type='funding' 주문)가 201 상한 **안에서** 걸러지는지.
+ *
+ * 예전엔 201로 자른 뒤 JS에서 버려서, 창 안에 그런 행이 k건이면 반환 길이가 201−k가 되고
+ * 화면의 `truncated: orders.length > 200`이 k≥1이면 false가 됐다. 후원 300건짜리
+ * 프로젝트에서도 '최근 200건만 표시' 배너가 안 떠서 운영자가 화면의 200건 미만을 전량으로
+ * 믿게 된다.
+ */
+it('pledge 없는 주문이 섞여 있어도 201건 잘림 판정이 어긋나지 않는다', async () => {
+  const now = NOW;
+  // 품절 경합 잔해 — createFundingPledge가 남기는 것과 같은 모양(orders만 failed).
+  for (let i = 0; i < 5; i += 1) {
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+              manage_token, item_amount, vat_amount, total_amount, created_at, updated_at)
+            VALUES (?,?,'funding','failed','김후원','010-9','x@example.com',?,4546,454,5000, unixepoch(), unixepoch())`,
+      args: [`orphan-${i}`, `FND-ORPHAN-${i}`, `tok-orphan-${i}`],
+    });
+  }
+  for (let i = 0; i < 201; i += 1) {
+    await createFundingPledge(
+      payloadFor({ customerEmail: `t${i}@example.com`, customerPhone: `010-9${i}` }),
+      PROJECT_A, reward(PROJECT_A), now,
+    );
+  }
+
+  const rows = await listFundingOrders(null);
+  // 상한이 201이므로 '더 있다'는 신호(길이 > 200)가 잔해 때문에 꺼지면 안 된다.
+  expect(rows.length).toBe(201);
+  expect(rows.every((o) => o.fundingPledge)).toBe(true);
 });
