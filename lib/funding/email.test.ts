@@ -1,6 +1,6 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
-import { OPERATOR_EMAIL } from '../operatorContact';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from './email';
 
 const order = {
@@ -19,12 +19,12 @@ const project = { title: '데모 앨범', rewards: [{ id: 'mail', estimatedDeliv
 
 beforeEach(() => (sendEmail as jest.Mock).mockClear());
 
-it('확정 메일은 고객·운영자 두 통, manage 링크·리워드 포함, 고객 메일은 replyTo 운영자', async () => {
+it('확정 메일은 고객·운영자 두 통, manage 링크·리워드 포함, 고객 메일 replyTo는 사이트 주소', async () => {
   expect(await sendFundingConfirmedEmails(order, project)).toBeNull();
   expect(sendEmail).toHaveBeenCalledTimes(2);
   const customer = (sendEmail as jest.Mock).mock.calls[0][0];
   expect(customer.to).toBe('a@b.com');
-  expect(customer.replyTo).toBe(OPERATOR_EMAIL);
+  expect(customer.replyTo).toBe(CUSTOMER_REPLY_TO);
   expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
   expect(customer.text).toContain('감사 메일');
 });
@@ -109,10 +109,28 @@ it('취소 요청 철회 메일은 고객·운영자 두 통, 사유와 다시 �
   expect(sendEmail).toHaveBeenCalledTimes(2);
   const customer = (sendEmail as jest.Mock).mock.calls[0][0];
   expect(customer.to).toBe('a@b.com');
-  expect(customer.replyTo).toBe(OPERATOR_EMAIL);
+  expect(customer.replyTo).toBe(CUSTOMER_REPLY_TO);
   expect(customer.subject).toBe('[스튜디오 놀] 취소 요청이 철회 처리되었습니다 — 데모 앨범');
   expect(customer.text).toContain('사유: 후원자 전화 철회');
   expect(customer.text).toContain('다시 취소를 요청');
   expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
   expect((sendEmail as jest.Mock).mock.calls[1][0].to).toBe(OPERATOR_EMAIL);
+});
+
+
+/**
+ * 고객이 **보는** 주소는 운영자 개인 Gmail이 아니라 사이트 주소여야 한다.
+ *
+ * 청약철회 접수 주소가 특히 중요하다 — 이 문구는 전자상거래법 제13조 2항의 계약 내용
+ * 서면 교부에 실리고, 같은 사이트의 펀딩 약관 제16조가 hello@를 문의처로 고지한다.
+ * 둘이 갈리면 계약 서면 안의 접수 주소가 약관과 다른 상태가 된다(실제로 그랬다).
+ */
+describe('고객 메일에 개인 주소를 노출하지 않는다', () => {
+  it('청약철회 안내의 접수 주소가 약관과 같은 사이트 주소다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
+    await sendFundingConfirmedEmails(order, project);
+    const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(customer.text).toContain(CUSTOMER_REPLY_TO);
+    expect(customer.text).not.toContain(OPERATOR_EMAIL);
+  });
 });

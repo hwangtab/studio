@@ -3,7 +3,7 @@
  * 전부 실패 요약(string) 또는 null(성공)을 돌려주고, notificationError로 저장된다.
  */
 import { sendEmail } from '../email/resend';
-import { CUSTOMER_REPLY_TO } from '../booking/email';
+import { CUSTOMER_REPLY_TO } from '../operatorContact';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import type { Subscription } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
