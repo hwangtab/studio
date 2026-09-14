@@ -30,7 +30,10 @@ export const HeaderActions = ({
   mobileNavId,
   t
 }: HeaderActionsProps) => {
-  const headerCtaBaseClass = 'inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-all duration-300 transform hover:scale-105 active:scale-95';
+  // transition에서 box-shadow·outline을 뺀다(= transition-all 금지). Tailwind의 ring은
+  // box-shadow로 그려져서, 보간하면 포커스 링이 300ms에 걸쳐 서서히 떠오른다.
+  // 자세한 근거는 components/ui/Button.tsx 주석과 docs/design-system.md §5.
+  const headerCtaBaseClass = 'inline-flex items-center justify-center px-4 py-2 min-h-[44px] rounded-full text-sm font-bold leading-normal text-center whitespace-nowrap border touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 transition-[background-color,border-color,color,transform] duration-300 transform hover:scale-105 active:scale-95';
 
   // ko의 목적지는 카카오톡이므로 헤더 두 상태 모두 옐로(노란 버튼 = 카카오톡 규칙).
   // 투명 상태에서도 옐로는 솔리드라 배경 사진 밝기와 무관하게 kakao-ink 글씨 대비가

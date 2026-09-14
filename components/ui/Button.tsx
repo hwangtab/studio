@@ -6,7 +6,19 @@ const buttonVariants = cva(
   // transition-all → 명시 property: iOS Safari에서 transition-all은 layout 트리거 가능 속성도
   // 보간해 hover 시 reflow 깜빡 유발. 시각 변화는 colors·shadow·transform만.
   // 반경은 shape variant가 소유한다 — 여기에 rounded-*를 두면 pill과 충돌한다.
-  "inline-flex items-center justify-center gap-2 typo-button transition-[colors,box-shadow,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+  //
+  // box-shadow는 transition 목록에 넣지 않는다. Tailwind의 `ring-*`는 outline이 아니라
+  // **box-shadow로** 그려지므로, box-shadow를 보간하면 포커스 링이 0px·투명에서
+  // duration만큼 서서히 나타난다 — Tab으로 빠르게 넘기는 키보드 사용자는 링을 한 번도
+  // 온전히 보지 못한다(2026-09-14 실측: t=0ms 0px → t=300ms 4px). 클래스·CSS 변수는
+  // 전부 정상이라 정적 검사로는 드러나지 않고, `.focus()` 기반 측정도 :focus-visible을
+  // 켜지 못해 놓친다. 측정 방법론은 docs/design-system.md §5.
+  // hover shadow-md→lg는 이제 즉시 전환된다 — 포커스 표시기를 지연시키는 값이 아니다.
+  //
+  // 주의: `colors`는 CSS 속성 이름이 아니라 그냥 ident라 실제로는 아무것도 보간하지 않는다
+  // (Tailwind의 `transition-colors`가 펼치는 4개 속성과 다르다). 이 줄의 원래 의도와
+  // 어긋나지만 고치면 44곳의 hover 색 전환 동작이 새로 생기므로 이번 범위에서 제외했다.
+  "inline-flex items-center justify-center gap-2 typo-button transition-[colors,transform] duration-base ease-standard focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
