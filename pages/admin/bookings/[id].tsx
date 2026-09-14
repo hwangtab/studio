@@ -18,6 +18,7 @@ import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
+  canAdminRefund,
   serializeBookingDetailForAdmin,
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
@@ -198,8 +199,10 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
     e.preventDefault();
     setRefundError(null);
 
-    if (!Number.isInteger(refundAmount) || refundAmount < 0 || refundAmount > booking.totalAmount) {
-      setRefundError(`환불 금액은 0 ~ ${formatPriceAmount(booking.totalAmount)}원 사이의 정수여야 합니다.`);
+    // 상한은 총액이 아니라 **잔액**이다 — cancel.ts validateOverrideAmount와 같은 기준.
+    // 총액을 상한으로 두면 부분환불 이력이 있는 건에서 서버가 되돌리는 죽은 입력이 된다.
+    if (!Number.isInteger(refundAmount) || refundAmount < 0 || refundAmount > booking.refundableAmount) {
+      setRefundError(`환불 금액은 0 ~ ${formatPriceAmount(booking.refundableAmount)}원 사이의 정수여야 합니다.`);
       return;
     }
     if (refundReason.trim() === '') {
@@ -208,7 +211,9 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
     }
     if (
       !window.confirm(
-        `${formatPriceAmount(refundAmount)}원을 환불 처리할까요? 예약은 즉시 취소되며 되돌릴 수 없습니다.`,
+        isRemainderRefund
+          ? `${formatPriceAmount(refundAmount)}원을 추가로 환불할까요? 되돌릴 수 없습니다.`
+          : `${formatPriceAmount(refundAmount)}원을 환불 처리할까요? 예약은 즉시 취소되며 되돌릴 수 없습니다.`,
       )
     ) {
       return;
@@ -242,10 +247,25 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
   const canStartWork = isMixing && workOrder?.status === 'received';
   const canDeliver = isMixing && workOrder?.status === 'in_progress';
-  // 임의 환불은 착수 전후 어디서든 가능(계획서 §4) — cancel.ts의 관리자 취소 조건과 같다.
-  const canRefund = isMixing
-    ? workOrder !== null && ['received', 'in_progress', 'delivered'].includes(workOrder.status)
-    : canChangeStatus;
+  /**
+   * 임의 환불 폼을 띄울지 — **cancel.ts와 같은 함수를 쓴다**(canAdminRefund).
+   *
+   * 예전엔 이 화면이 세션은 `confirmed`, 믹싱은 received/in_progress/delivered만 봤다. 그래서
+   * 한 번 취소된 건(셀프 취소 50% 티어 → cancelled + partially_refunded, 또는 당일 취소
+   * 0원 → cancelled + paid)에는 폼이 아예 렌더되지 않았고, lib이 그 용도로 만들어 둔
+   * 잔액 환불 경로(isCancelledRemainderRefund)가 제품 안에서 도달 불가였다 — 호의 환불·
+   * 분쟁 환불을 하려면 토스 콘솔에서 손으로 취소하는 수밖에 없었다.
+   *
+   * 판정이 갈리면 폼은 있는데 API가 거절하거나(죽은 버튼) 그 반대가 된다. 한 함수로 묶는다.
+   */
+  const canRefund = canAdminRefund({
+    orderType: booking.orderType,
+    orderStatus: booking.orderStatus,
+    entityStatus: isMixing ? (workOrder?.status ?? null) : booking.bookingStatus,
+    refundableAmount: booking.refundableAmount,
+  });
+  const isRemainderRefund =
+    (isMixing ? workOrder?.status : booking.bookingStatus) === 'cancelled';
 
   return (
     <>
@@ -543,23 +563,32 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
             {canRefund && (
               <div className="pt-6 border-t border-gray-100">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">임의 환불</h2>
+                <h2 className="text-lg font-bold text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
                 <p className="text-sm text-gray-500 mb-4">
-                  {isMixing ? '주문을 취소하고' : '예약을 취소하고'} 지정한 금액을 환불합니다. 처리하면{' '}
-                  {isMixing ? '주문은' : '예약은'} 즉시 취소 상태가 되며 되돌릴 수 없습니다.
+                  {isRemainderRefund ? (
+                    <>
+                      이미 취소된 {isMixing ? '주문' : '예약'}의 남은 금액을 더 돌려줍니다. 취소 안내는 이미 나갔으므로
+                      메일·캘린더 후처리 없이 환불만 처리합니다.
+                    </>
+                  ) : (
+                    <>
+                      {isMixing ? '주문을 취소하고' : '예약을 취소하고'} 지정한 금액을 환불합니다. 처리하면{' '}
+                      {isMixing ? '주문은' : '예약은'} 즉시 취소 상태가 되며 되돌릴 수 없습니다.
+                    </>
+                  )}
                 </p>
 
                 <form onSubmit={handleRefund} className="space-y-3 max-w-md">
                   <Field
                     id="refund-amount"
-                    label={`환불 금액 (원, 최대 ${formatPriceAmount(booking.totalAmount)})`}
+                    label={`환불 금액 (원, 잔액 ${formatPriceAmount(booking.refundableAmount)})`}
                     error={refundError ?? undefined}
                     className={lightOnlyField}
                   >
                     <TextInput
                       type="number"
                       min={0}
-                      max={booking.totalAmount}
+                      max={booking.refundableAmount}
                       step={1}
                       value={refundAmount}
                       onChange={(e) => setRefundAmount(Number(e.target.value))}

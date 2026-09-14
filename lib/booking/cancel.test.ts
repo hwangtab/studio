@@ -370,13 +370,18 @@ describe('cancelBookingWithRefund', () => {
       expect(cancelPayment).not.toHaveBeenCalled();
     });
 
-    it('cancelled인데 주문이 paid면(부분환불 이력 없음) 종전대로 거부한다', async () => {
+    /**
+     * 이용일 **당일** 셀프 취소는 0% 티어라 환불액이 0원이고, settleRefund의 nextOrderStatus가
+     * orders를 'paid'로 남긴다(cancel.ts). 예전엔 이 조합을 거절해서 호의 환불·분쟁 환불을
+     * 제품 안에서 할 경로가 아예 없었다 — 토스 콘솔 수기 취소가 유일한 우회였다.
+     */
+    it('cancelled인데 주문이 paid면(당일 취소 0원) 관리자 잔액 환불이 열린다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(additionalRefundOrder({ status: 'paid' }));
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
       });
-      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
-      expect(cancelPayment).not.toHaveBeenCalled();
+      expect(r).toMatchObject({ ok: true, refundAmount: 10000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 10000 }));
     });
 
     it('고객 셀프 취소는 이 경로를 탈 수 없다 (관리자 전용)', async () => {
@@ -535,20 +540,27 @@ describe('cancelBookingWithRefund', () => {
       expect(cancelPayment).not.toHaveBeenCalled();
     });
 
-    it('cancelled인데 주문이 paid면(부분환불 이력 없음) 종전대로 거부한다', async () => {
+    // 세션과 같은 이유로 열어 둔다 — 취소된 주문에 잔액이 남아 있으면 관리자가 마저 돌려줄 수
+    // 있어야 하고, 그 경로가 없으면 토스 콘솔 수기 취소가 유일한 수단이 된다.
+    it('cancelled인데 주문이 paid면 관리자 잔액 환불이 열린다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(
         mixingOrder({ workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }] }),
       );
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
       });
-      expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
-      expect(cancelPayment).not.toHaveBeenCalled();
+      expect(r).toMatchObject({ ok: true, refundAmount: 10000 });
+      expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 10000 }));
     });
 
-    it('이미 취소된 주문(work_orders.status=cancelled)은 invalid_state로 거부한다', async () => {
+    // 잔액이 0이면 여전히 거절한다 — 돌려줄 돈이 없다.
+    it('이미 전액 환불된 취소 주문은 잔액이 없어 거부한다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(
-        mixingOrder({ workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }] }),
+        mixingOrder({
+          status: 'refunded',
+          workOrders: [{ id: 'w1', status: 'cancelled', songCount: 1, vocalTuning: false, customerNote: null, cancelledAt: NOW }],
+          payments: [{ id: 'p1', paymentKey: 'pk', refunds: [{ id: 'r1', amount: 270000, status: 'done' }] }],
+        }),
       );
       const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', now: NOW });
       expect(r).toMatchObject({ ok: false, code: 'invalid_state' });

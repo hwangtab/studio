@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { bookings, orders, refunds, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
 import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
 import { deleteBookingEvent } from './gcal';
+import { canAdminRefund, isCancelledRemainderRefund } from './admin-serialize';
 import { computeRefund } from './refund-policy';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment } from './toss';
@@ -68,6 +69,7 @@ const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): numb
 };
 
 const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
+
 
 export type CancelInput = {
   orderNo: string;
@@ -225,25 +227,30 @@ const cancelSessionBooking = async (
   if (!booking || !payment)
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
 
-  // 관리자 추가 환불: 이미 취소된 예약에 부분환불만 나간 상태라면 잔액을 더 돌려줄 수 있어야
-  // 한다(믹싱 cancelMixingOrder와 대칭). 선점할 대상이 없으므로 claim UPDATE를 건너뛰고,
-  // 후처리(캘린더 삭제·취소 메일)도 하지 않는다 — 예약은 이미 취소됐고 고객은 이미 취소
-  // 안내를 받았다. 여기서 또 "예약이 취소되었습니다"를 보내면 없는 취소를 다시 알리는 꼴이다.
-  const isAdditionalRefund =
-    input.requestedBy === 'admin' && booking.status === 'cancelled' && order.status === 'partially_refunded';
+  // 관리자 추가 환불: 이미 취소된 예약에 잔액이 남아 있으면 더 돌려줄 수 있어야 한다(믹싱
+  // cancelMixingOrder와 대칭). 선점할 대상이 없으므로 claim UPDATE를 건너뛰고, 후처리
+  // (캘린더 삭제·취소 메일)도 하지 않는다 — 예약은 이미 취소됐고 고객은 이미 취소 안내를
+  // 받았다. 여기서 또 "예약이 취소되었습니다"를 보내면 없는 취소를 다시 알리는 꼴이다.
+  const isAdditionalRefund = isCancelledRemainderRefund({
+    requestedBy: input.requestedBy, entityStatus: booking.status, orderStatus: order.status,
+  });
 
+  const remaining = remainingRefundable(order, order.payments);
+  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
+
+  // 관리자 판정은 화면(pages/admin/bookings/[id].tsx)과 **같은 함수**를 쓴다 — 갈리면 화면에
+  // 폼이 없는데 API는 받거나(경로가 사라진다), 폼은 있는데 API가 거절하는(죽은 버튼) 조합이
+  // 생긴다. 실제로 전자였다: lib이 만든 잔액 환불 경로를 띄우는 화면이 없었다.
   const cancellable =
-    isAdditionalRefund ||
-    ((order.status === 'paid' || order.status === 'partially_refunded') && booking.status === 'confirmed');
+    input.requestedBy === 'admin'
+      ? canAdminRefund({ orderType: order.type, orderStatus: order.status, entityStatus: booking.status, refundableAmount: remaining })
+      : (order.status === 'paid' || order.status === 'partially_refunded') && booking.status === 'confirmed';
   if (!cancellable)
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
 
   // 고객 셀프 취소는 이용 시작 전에만 — 시작 후 처리는 관리자의 몫(노쇼/완료/임의 환불).
   if (input.requestedBy === 'customer' && booking.startAt.getTime() <= input.now.getTime())
     return { ok: false, code: 'invalid_state', message: '이용 시작 후에는 온라인 취소가 불가합니다.' };
-
-  const remaining = remainingRefundable(order, order.payments);
-  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
 
   const overrideError = validateOverrideAmount(remaining, input);
   if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
@@ -335,12 +342,16 @@ const cancelMixingOrder = async (
   if (!workOrder || !payment || !(order.status === 'paid' || order.status === 'partially_refunded'))
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
 
-  // 관리자 추가 환불: 이미 취소 처리된 주문(work_order cancelled)에 부분환불만 나간 상태라면
-  // 잔액을 더 돌려줄 수 있어야 한다. 이 경우 선점할 대상이 없으므로(이미 cancelled) 아래
-  // claim UPDATE를 건너뛴다 — 그대로 두면 rowsAffected 0으로 "이미 취소된 주문"에 막혀
-  // 관리자가 잔액을 영영 환불하지 못한다. cancelSessionBooking에 같은 경로가 있다.
-  const isAdditionalRefund =
-    input.requestedBy === 'admin' && workOrder.status === 'cancelled' && order.status === 'partially_refunded';
+  // 관리자 추가 환불: 이미 취소 처리된 주문(work_order cancelled)에 잔액이 남아 있으면 더
+  // 돌려줄 수 있어야 한다. 이 경우 선점할 대상이 없으므로(이미 cancelled) 아래 claim UPDATE를
+  // 건너뛴다 — 그대로 두면 rowsAffected 0으로 "이미 취소된 주문"에 막혀 관리자가 잔액을
+  // 영영 환불하지 못한다. cancelSessionBooking에 같은 경로가 있다.
+  const isAdditionalRefund = isCancelledRemainderRefund({
+    requestedBy: input.requestedBy, entityStatus: workOrder.status, orderStatus: order.status,
+  });
+
+  const remaining = remainingRefundable(order, order.payments);
+  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
 
   if (input.requestedBy === 'customer') {
     if (workOrder.status === 'in_progress' || workOrder.status === 'delivered')
@@ -348,16 +359,11 @@ const cancelMixingOrder = async (
     if (workOrder.status !== 'received')
       return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
   } else if (
-    !isAdditionalRefund &&
-    workOrder.status !== 'received' &&
-    workOrder.status !== 'in_progress' &&
-    workOrder.status !== 'delivered'
+    // 관리자 판정은 화면과 같은 함수를 쓴다(위 세션 주석 참조).
+    !canAdminRefund({ orderType: order.type, orderStatus: order.status, entityStatus: workOrder.status, refundableAmount: remaining })
   ) {
     return { ok: false, code: 'invalid_state', message: '취소할 수 있는 상태가 아닙니다.' };
   }
-
-  const remaining = remainingRefundable(order, order.payments);
-  if (remaining <= 0) return { ok: false, code: 'invalid_state', message: FULLY_REFUNDED_MESSAGE };
 
   const overrideError = validateOverrideAmount(remaining, input);
   if (overrideError) return { ok: false, code: 'invalid_state', message: overrideError };
