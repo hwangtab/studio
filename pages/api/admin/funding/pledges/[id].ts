@@ -6,11 +6,16 @@ import { fulfillmentStatusEnum, fundingPledges, orders } from '../../../../../db
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { REVIEW_CLEARED_MARKER, hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
-import { sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
 import { getFundingProject } from '../../../../../lib/funding/projects';
-import { isLiveFundingOrderStatus, liveFundingOrderStatusList, remainingRefundable } from '../../../../../lib/funding/refundable';
-import { MANUAL_PLACEHOLDER_EMAIL, findFundingOrderById } from '../../../../../lib/funding/service';
+import {
+  isLiveFundingOrderStatus,
+  isRefundedFundingOrderStatus,
+  liveFundingOrderStatusList,
+  remainingRefundable,
+} from '../../../../../lib/funding/refundable';
+import { findFundingOrderById, isManualPlaceholderRecipient } from '../../../../../lib/funding/service';
 import { kstDateString } from '../../../../../lib/booking/kst';
 
 const CANCEL_STATUS: Record<string, number> = { not_found: 404, invalid_state: 409, toss_failed: 502, recording_failed: 500 };
@@ -135,7 +140,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       // 메일 실패가 기록을 되돌리지는 않는다(이 저장소의 원칙: 상태 변경은 끝났으므로
       // 후속 실패는 삼키되 기록한다). notificationError는 헬스체크가 매일 읽는다.
-      const mailError = await sendFundingRefundRequestClearedEmails(order, getFundingProject(order.fundingPledge.projectSlug), reason);
+      // 플레이스홀더 주소로는 보내지 않는다 — 반송이 발신 도메인 평판을 깎는다(cancel.ts와 같은 가드).
+      const mailError = isManualPlaceholderRecipient(order)
+        ? null
+        : await sendFundingRefundRequestClearedEmails(order, getFundingProject(order.fundingPledge.projectSlug), reason);
       await db.update(orders).set({ notificationError: mailError, updatedAt: now }).where(eq(orders.id, order.id));
       return res.status(200).json({ ok: true, ...(mailError ? { message: `기록은 되었으나 메일 발송에 실패했습니다: ${mailError}` } : {}) });
     }
@@ -180,18 +188,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true });
     }
     case 'resend_email': {
-      // 확정 메일만 재발송한다 — 결제 전 주문에는 보낼 메일이 없다(무통장 입금 안내는
-      // 2026-09-11에 그 결제수단과 함께 없어졌다).
-      if (order.status !== 'paid') {
-        return res.status(409).json({ ok: false, message: '결제가 완료된 후원만 메일을 재발송할 수 있습니다.' });
-      }
       // 수기 등록 건은 실제 고객 메일이 없다(플레이스홀더가 들어간다) — 재발송하면
       // 우리 도메인 주소로 되돌아오거나 반송된다.
-      if (order.fundingPledge.entrySource === 'manual' && order.customerEmail === MANUAL_PLACEHOLDER_EMAIL) {
+      if (isManualPlaceholderRecipient(order)) {
         return res.status(409).json({ ok: false, message: '수기 등록 건은 메일을 보내지 않습니다.' });
       }
+      /**
+       * 무엇을 다시 보낼지는 **주문 상태**가 정한다 — 예약 쪽(pages/api/admin/bookings/[id].ts)의
+       * cancelled 분기와 같은 모양이다.
+       *
+       * 예전엔 `order.status !== 'paid'`면 통째로 409였다. 그런데 취소 메일 발송이 실패하면
+       * (Resend non-2xx·네트워크 오류) cancelFundingPledge가 이미 주문을 refunded로 옮긴 뒤라,
+       * 그 실패 문자열이 orders.notificationError에 **영구히** 박혔다: 화면은 "아래 메일
+       * 재발송을 눌러 주세요" 배너를 띄우는데 그 버튼이 409를 돌려주고, 컬럼을 비우는 다른
+       * 경로도 없어 헬스체크의 '확인 메일이 나가지 않은 주문 N건' 알람이 매일 영원히 울렸다.
+       * 경보 피로로 신호가 죽는 것이 이 저장소가 반복해서 막아 온 실패 모드다.
+       */
       const project = getFundingProject(order.fundingPledge.projectSlug);
-      const err = await sendFundingConfirmedEmails(order, project);
+      let err: string | null;
+      if (order.status === 'paid') {
+        err = await sendFundingConfirmedEmails(order, project);
+      } else if (isRefundedFundingOrderStatus(order.status)) {
+        /**
+         * 금액은 **원래 취소 메일이 말한 것과 같아야 한다** — totalAmount를 그대로 적으면 이미
+         * 돌려준 몫까지 다시 돌려주는 것처럼 읽힌다(email.ts CANCEL_BODY 주석).
+         *
+         * 토스 건은 refunds에 done 행이 남으므로 `총액 − 잔액`이 실제로 나간 금액이다.
+         * 토스 결제가 없는 옛 무통장·수기 건은 cancel.ts가 refunds 행을 만들지 않고
+         * 'recorded'(계좌 송금 완료 안내) 모드로 **잔액 전부**를 보냈으므로 그 값을 쓴다.
+         */
+        const remaining = remainingRefundable(order);
+        const isTossRefund = order.payments.length > 0;
+        err = await sendFundingCancelledEmails(
+          order, project,
+          isTossRefund ? 'refunded' : 'recorded',
+          isTossRefund ? order.totalAmount - remaining : remaining,
+        );
+      } else {
+        return res.status(409).json({ ok: false, message: '결제가 완료되었거나 환불된 후원만 메일을 재발송할 수 있습니다.' });
+      }
       await db.update(orders).set({ notificationError: err, updatedAt: now }).where(eq(orders.id, order.id));
       return err ? res.status(502).json({ ok: false, message: err }) : res.status(200).json({ ok: true });
     }

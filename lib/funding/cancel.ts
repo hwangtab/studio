@@ -7,7 +7,7 @@ import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 import { computeProjectState, getFundingProject } from './projects';
 import { remainingRefundable } from './refundable';
-import { findFundingOrderByOrderNo, type FundingOrder } from './service';
+import { findFundingOrderByOrderNo, isManualPlaceholderRecipient, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
 
 export type FundingCancelOutcome =
@@ -30,6 +30,16 @@ const notifyCancelled = async (
   refundAmount: number,
 ): Promise<void> => {
   let emailError: string | null = null;
+  // 수기 등록에서 연락처를 비운 건은 customer_email이 플레이스홀더(manual@studionol.co.kr)다.
+  // 우리 도메인이라 resend.ts의 배달불가 판정에 안 걸려 실제로 발송되고, 그 메일은 우리
+  // 수신함으로 되돌아오거나 반송돼 발신 도메인 평판을 깎는다. 메일 재발송에는 이 가드가
+  // 이미 있었는데 환불 경로에는 없어서, 관리자 환불 한 번이 그대로 반송을 만들었다.
+  if (isManualPlaceholderRecipient(order)) {
+    console.warn('[funding-cancel] 플레이스홀더 주소 — 취소 안내 메일을 보내지 않는다', {
+      orderNo: order.orderNo, mode, refundAmount,
+    });
+    return;
+  }
   try {
     emailError = await sendFundingCancelledEmails(order, project, mode, refundAmount);
   } catch (error) {

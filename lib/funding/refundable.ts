@@ -49,3 +49,7 @@ export const isLiveFundingOrderStatus = (status: string): boolean =>
  */
 export const liveFundingOrderStatusList = (): SQL =>
   sql.join(LIVE_FUNDING_ORDER_STATUSES.map((s) => sql`${s}`), sql`, `);
+
+/** 환불이 일어난 뒤의 orders.status — 취소 안내 메일의 대상이다. */
+export const isRefundedFundingOrderStatus = (status: string): boolean =>
+  status === 'refunded' || status === 'partially_refunded';

@@ -22,6 +22,23 @@ export const MANUAL_PLACEHOLDER_EMAIL = 'manual@studionol.co.kr';
 export const MANUAL_PLACEHOLDER_PHONE = '-';
 
 /**
+ * 이 주문의 고객 메일 주소가 **실제로 배달될 수 없는 플레이스홀더**인가.
+ *
+ * 수기 등록에서 이메일 칸을 비우면 customer_email에 MANUAL_PLACEHOLDER_EMAIL이 들어간다.
+ * 우리 도메인이라 lib/email/resend.ts의 UNDELIVERABLE_DOMAIN(RFC 2606 예약 도메인)에는
+ * 안 걸려서 Resend 호출이 실제로 일어나고, 그 메일은 우리 수신함으로 되돌아오거나 반송된다.
+ * 반송이 쌓이면 발신 도메인 평판이 깎이고 그 대가는 진짜 고객 메일이 스팸함으로 가는
+ * 형태로 돌아온다.
+ *
+ * 가드는 원래 메일 재발송 한 곳에만 있었다 — 관리자 환불(cancel.ts notifyCancelled)과
+ * 환불 요청 취소는 같은 주소로 그냥 보내고 있었다. **판정을 여기 하나로 모은다.**
+ * entrySource는 보지 않는다: 배달 가능 여부를 정하는 건 주소뿐이고, 경로를 함께 보면
+ * 같은 주소를 다른 경로에서 통과시키는 구멍이 다시 생긴다.
+ */
+export const isManualPlaceholderRecipient = (order: { customerEmail: string }): boolean =>
+  order.customerEmail === MANUAL_PLACEHOLDER_EMAIL;
+
+/**
  * 후원 **인원**을 셀 때 쓰는 신원 키(SQL 조각). 기본은 이메일+전화 조합이지만,
  * 플레이스홀더가 들어간 건은 **주문 id로 떨어뜨린다.**
  *
