@@ -119,6 +119,13 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [created, setCreated] = useState<Created | null>(null);
+  /**
+   * 직전에 만든 **자기** 주문번호. 재제출 시 서버에 함께 보내 그 주문 하나만 만료시킨다
+   * (자기 홀드 해제의 소유 증명 — lib/funding/service.ts createFundingPledge 주석).
+   * created와 달리 "다시 신청"으로 지우지 않는다 — 지우면 증명이 사라져 자기 홀드가
+   * 자연 만료될 때까지 한정 재고를 계속 붙들고 있게 된다.
+   */
+  const [previousOrderNo, setPreviousOrderNo] = useState<string | null>(null);
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
 
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
@@ -154,6 +161,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectSlug: project.slug, rewardId: reward.id, quantity, additionalAmount: additional, paymentMethod: 'toss',
+          ...(previousOrderNo ? { previousOrderNo } : {}),
           ...form, supporterMessage: form.supporterMessage || undefined,
           shipping: reward.requiresShipping ? ship : undefined,
         }),
@@ -167,6 +175,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining }: Pr
       // 남은 시간은 이 시각 기준으로만 잰다 — 서버가 준 절대 시각을 기기 시계와 직접
       // 비교하지 않는다(holdDurationMs 주석).
       const receivedAt = Date.now();
+      if (typeof json.orderNo === 'string') setPreviousOrderNo(json.orderNo);
       // router.push가 아니라 전체 페이지 이동 — 클라이언트 전환이면 이미 로드된 gtag가
       // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
       setCreated({ ...json, receivedAt });
