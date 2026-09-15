@@ -35,12 +35,12 @@ const updateCall = () => {
   return { update, set, where };
 };
 
-const call = async (query: Record<string, string>) => {
+const call = async (body: Record<string, string>, method = 'POST') => {
   const json = jest.fn();
   const status = jest.fn().mockReturnValue({ json });
   const redirect = jest.fn();
   const res = { setHeader: jest.fn(), status, redirect } as unknown as NextApiResponse;
-  await handler({ method: 'GET', query, headers: {}, socket: {} } as unknown as NextApiRequest, res);
+  await handler({ method, body, query: body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return {
     status: status.mock.calls[0]?.[0] as number | undefined,
     body: json.mock.calls[0]?.[0],
@@ -69,6 +69,30 @@ beforeEach(() => {
 });
 
 const ok = { orderNo: 'FND-1', token: 'correct-token', file: KEY };
+
+/**
+ * 핵심 회귀. GET으로도 기록이 남으면, 확정 메일의 링크를 긁는 검사기·미리보기 봇이
+ * 후원자의 청약철회권을 대신 소멸시킨다 — 고지한 조건("내려받기가 시작된 뒤")과 판정
+ * 조건("주소에 요청이 한 번 닿음")이 달라져 그 기록은 환불 거절의 근거가 못 된다.
+ */
+it('GET으로는 아무것도 하지 않는다 — 기록도 서명도 없다', async () => {
+  const { update } = updateCall();
+  const r = await call(ok, 'GET');
+  expect(r.status).toBe(405);
+  expect(update).not.toHaveBeenCalled();
+  expect(presignFundingDownload).not.toHaveBeenCalled();
+});
+
+it('쿼리스트링만으로는 통하지 않는다 — 본문으로 온 값만 본다', async () => {
+  const { update } = updateCall();
+  const json = jest.fn();
+  const status = jest.fn().mockReturnValue({ json });
+  const redirect = jest.fn();
+  const res = { setHeader: jest.fn(), status, redirect } as unknown as NextApiResponse;
+  await handler({ method: 'POST', body: {}, query: ok, headers: {}, socket: {} } as unknown as NextApiRequest, res);
+  expect(status.mock.calls[0][0]).toBe(400);
+  expect(update).not.toHaveBeenCalled();
+});
 
 it('정상 → 서명 주소로 302, 저장소 주소를 응답 본문에 담지 않는다', async () => {
   const r = await call(ok);

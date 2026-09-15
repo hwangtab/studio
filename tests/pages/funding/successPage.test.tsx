@@ -97,27 +97,37 @@ describe('확정 화면의 내려받기', () => {
       <FundingSuccessPage
         {...confirmed}
         downloads={[
-          { label: 'MP3 320kbps', url: '/api/funding/download?orderNo=X&token=t&file=a' },
-          { label: 'WAV 24bit 96kHz', url: '/api/funding/download?orderNo=X&token=t&file=b' },
+          { label: 'MP3 320kbps', key: 'demo/a.zip' },
+          { label: 'WAV 24bit 96kHz', key: 'demo/b.zip' },
         ]}
       />
     );
-    expect(screen.getByRole('link', { name: /MP3 320kbps 내려받기/ })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /WAV 24bit 96kHz 내려받기/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /MP3 320kbps 내려받기/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /WAV 24bit 96kHz 내려받기/ })).toBeInTheDocument();
   });
 
-  it('저장소 원본이 아니라 기록되는 경로를 가리킨다', () => {
-    render(
-      <FundingSuccessPage {...confirmed} downloads={[{ label: 'MP3', url: '/api/funding/download?orderNo=X&token=t&file=a' }]} />
+  /**
+   * 링크가 아니라 **폼**이어야 한다. 주소를 여는 것만으로 기록이 남으면, 메일 링크를 긁는
+   * 검사기·미리보기 봇이 후원자의 청약철회권을 대신 소멸시킨다.
+   */
+  it('링크가 아니라 POST 폼이다 — 사람이 누른 것만 기록된다', () => {
+    const { container } = render(
+      <FundingSuccessPage {...confirmed} manageToken="tok" downloads={[{ label: 'MP3', key: 'demo/a.zip' }]} />
     );
-    expect(screen.getByRole('link', { name: /MP3 내려받기/ })).toHaveAttribute(
-      'href',
-      expect.stringContaining('/api/funding/download?')
-    );
+    expect(screen.queryByRole('link', { name: /MP3 내려받기/ })).toBeNull();
+    const form = container.querySelector('form[action="/api/funding/download"]') as HTMLFormElement;
+    expect(form).not.toBeNull();
+    expect(form.method).toBe('post');
+    // 저장소 주소는 화면 어디에도 없다 — 나가는 값은 키뿐이다.
+    expect(container.innerHTML).not.toContain('r2.dev');
+    expect(container.innerHTML).not.toContain('r2.cloudflarestorage.com');
+    const value = (name: string) => (form.querySelector(`input[name="${name}"]`) as HTMLInputElement)?.value;
+    expect(value('file')).toBe('demo/a.zip');
+    expect(value('token')).toBe('tok');
   });
 
   it('내려받기와 함께 청약철회 제한을 고지한다', () => {
-    render(<FundingSuccessPage {...confirmed} downloads={[{ label: 'MP3', url: '/x' }]} />);
+    render(<FundingSuccessPage {...confirmed} downloads={[{ label: 'MP3', key: 'demo/a.zip' }]} />);
     expect(screen.getByText(/청약철회가 제한됩니다/)).toBeInTheDocument();
   });
 

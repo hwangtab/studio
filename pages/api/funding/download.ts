@@ -28,19 +28,30 @@ import { presignFundingDownload } from '../../../lib/funding/r2';
  *
  * 전제: 버킷의 공개 접근이 꺼져 있어야 한다. 켜져 있으면 서명을 떼고 같은 객체를 받을 수
  * 있어 이 경로가 다시 기록 장치로만 남는다.
+ *
+ * **POST만 받는다.** GET이면 메일 본문의 주소를 여는 것만으로 기록이 남는데, 그 주소를
+ * 여는 것이 사람이라는 보장이 없다 — 회사 메일의 링크 검사기(Safe Links·Proofpoint)나
+ * 카카오톡·슬랙의 미리보기 봇이 배달 시점에 한 번 긁는다. 그러면 후원자는 파일을 받은
+ * 적이 없는데 "내려받은 뒤에는 청약철회가 제한됩니다"를 보게 되고, 셀프 취소를 잃는다.
+ * 고지한 조건("내려받기가 시작된 뒤")과 판정 조건("이 주소에 GET이 한 번 닿음")이 다르면
+ * 그 기록은 환불을 거절할 근거가 못 된다.
+ *
+ * 그래서 메일에는 이 주소를 싣지 않고 후원 확인 페이지로 보낸다. 내려받기는 그 페이지와
+ * 확정 화면의 버튼(form POST)에서만 시작된다 — 사람이 누른 것만 기록에 남는다.
  */
 
 const NOT_FOUND = { ok: false, message: '후원을 찾을 수 없습니다.' } as const;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'GET') return res.status(405).json({ ok: false });
+  if (req.method !== 'POST') return res.status(405).json({ ok: false, message: '내려받기는 후원 확인 페이지의 버튼으로 시작해 주세요.' });
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_download:ip:${ip}`, 60, 3600)))
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
 
-  const { orderNo, token, file } = req.query;
+  // 폼 전송이라 본문으로 온다. 쿼리는 보지 않는다 — 받으면 GET과 같은 구멍이 우회로로 남는다.
+  const { orderNo, token, file } = (req.body ?? {}) as Record<string, unknown>;
   if (typeof orderNo !== 'string' || typeof token !== 'string' || typeof file !== 'string' || !orderNo || !token)
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
 

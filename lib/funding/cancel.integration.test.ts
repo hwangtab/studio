@@ -38,6 +38,8 @@ import { createFundingPledge, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
+import { isLiveFundingOrderStatus, remainingRefundable } from './refundable';
+// eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
@@ -163,6 +165,48 @@ describe('cancelFundingPledge', () => {
     const rows = await client.execute('SELECT status FROM refunds');
     expect(rows.rows[0].status).toBe('failed');
   });
+  /**
+   * 토스 호출은 12초에 타임아웃하는데, 그 실패는 "거절됐다"와 "됐는데 응답만 늦었다"를
+   * 구분하지 못한다. 후자라면 CANCELED 웹훅이 먼저 도착해 done 환불을 남긴다. 예전에는
+   * 그 뒤 revert가 돌아 **환불이 끝난 건을 paid로 되살렸다** — 공개 모금액에 환불된 돈이
+   * 남고, 그 사람이 음원을 계속 받고, 재취소는 잔액 0이라 막힌다. 스스로 낫지 않는다.
+   */
+  it('토스 응답이 늦는 사이 웹훅이 환불을 기록하면 되돌리지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    (cancelPayment as jest.Mock).mockImplementationOnce(async () => {
+      // 취소는 성사됐고, 그 웹훅이 우리 응답보다 먼저 도착해 대사를 끝냈다.
+      await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('rw','p1',5000,'웹훅 대사','webhook','done')");
+      await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE order_no=?", args: [c.orderNo] });
+      return { ok: false, code: 'NETWORK_ERROR', message: '타임아웃' };
+    });
+
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+
+    const after = await findFundingOrderByOrderNo(c.orderNo);
+    expect(after?.status).toBe('refunded');
+    // 살아 있는 후원이 아니어야 음원·모금액·발송 명단에서 함께 빠진다.
+    expect(isLiveFundingOrderStatus(after!.status)).toBe(false);
+    expect(remainingRefundable(after!)).toBe(0);
+  });
+
+  /**
+   * 대조. 웹훅이 끼어들지 않았으면 예전처럼 되돌아가야 한다 — 가드가 정상 실패까지
+   * 붙들어 두면 결제된 건이 영영 refunded로 남는다. 이미 부분환불이 있던 건도 마찬가지다.
+   */
+  it('이미 있던 부분환불은 되돌림을 막지 않는다 — 그 사이 새로 기록된 것이 없으면 되돌린다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
+    await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('rp','p1',2000,'부분','admin','done')");
+
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: false, code: 'X', message: '거절' });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('partially_refunded');
+  });
+
   it('부분환불 건 — 고객은 거부, 관리자는 잔액만 환불한다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);

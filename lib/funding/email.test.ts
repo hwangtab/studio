@@ -188,27 +188,32 @@ describe('확정 메일의 음원 내려받기', () => {
   const orderFor = (rewardId: string) =>
     ({ ...(order as Record<string, unknown>), fundingPledge: { ...((order as Record<string, Record<string, unknown>>).fundingPledge), rewardId } }) as never;
 
-  it('후원한 리워드의 키만 싣는다 — 저장소 주소는 나가지 않는다', async () => {
+  it('받을 파일 이름을 싣되, 내려받기 주소는 싣지 않는다', async () => {
     (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
     await sendFundingConfirmedEmails(
       orderFor('mp3'),
       projectWith([{ id: 'mp3', downloads: [{ label: 'MP3 320kbps', key: 'demo/mp3.zip' }] }, { id: 'hires', downloads: [{ label: 'WAV', key: 'demo/hires.zip' }] }]),
     );
     const customer = (sendEmail as jest.Mock).mock.calls[0][0];
-    // 저장소 주소를 **그대로 싣지 않는다** — 내려받기 경로를 거쳐야 서버가 최초 접근을
-    // 기록하고, 그래야 약관 제8조 2항(내려받기 뒤 청약철회 제한)을 판정할 수 있다.
-    expect(customer.text).toContain('/api/funding/download?');
-    expect(customer.text).toContain(encodeURIComponent('demo/mp3.zip'));
+
+    // 무엇을 받게 되는지는 메일에서 바로 보인다.
+    expect(customer.text).toContain('MP3 320kbps');
     // 다른 티어의 파일은 이 후원자의 메일에 없다.
-    expect(customer.text).not.toContain(encodeURIComponent('demo/hires.zip'));
+    expect(customer.text).not.toContain('WAV');
+
     /**
-     * 메일에 **받을 수 있는 주소**가 실리면 안 된다. 예전에는 저장소 공개 주소를 그대로
-     * 실어 보내서, 후원자가 게이트를 건너뛰고 받은 뒤 전액 셀프 환불을 할 수 있었다.
-     * 나가도 되는 http 주소는 우리 사이트뿐이다.
+     * 메일에는 **여는 것만으로 기록이 남는 주소**가 없어야 한다. 예전에는 파일마다 게이트
+     * 주소를 실었고, 회사 메일의 링크 검사기가 배달 시점에 긁으면 후원자가 파일을 받은 적도
+     * 없이 셀프 취소를 잃었다. 지금은 후원 확인 페이지로 보내고, 거기 버튼에서만 시작된다.
      */
+    expect(customer.text).not.toContain('/api/funding/download');
+    expect(customer.text).toContain('/ko/funding/manage/');
+    expect(customer.text).toContain('청약철회가 제한됩니다');
+
+    // 저장소 주소도 키도 나가지 않는다. 나가도 되는 http 주소는 우리 사이트뿐이다.
+    expect(customer.text).not.toContain('demo/mp3.zip');
     for (const url of (customer.text as string).match(/https?:\/\/[^\s]+/g) ?? [])
       expect(url.startsWith('https://studionol.co.kr')).toBe(true);
-    expect(customer.text).toContain('청약철회가 제한됩니다');
   });
 
   /**

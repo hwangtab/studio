@@ -2,9 +2,10 @@ import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
-import { bookings, contracts, fundingPledges, orders, subscriptionPayments, subscriptions } from '../../db/schema';
+import { bookings, contracts, fundingPledges, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { fetchBusyRanges } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
+import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { runLeadRateCheck } from './leadRateCheck';
 
 /**
@@ -275,6 +276,41 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
         '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
         '처리 전까지 이 후원은 발송 대상이 아닙니다 — 배송 CSV의 shipHold 칸에 "발송금지"로 나오고, ' +
         '발송 상태 변경은 API에서 막힙니다.',
+    });
+  }
+
+  /**
+   * **환불액이 결제액에 닿았는데 주문은 아직 살아 있는 건.**
+   *
+   * 이 상태는 저절로 생긴다. 셀프 취소가 주문을 refunded로 선점한 뒤 토스 호출이
+   * 타임아웃하면 되돌리는데, 그 사이 CANCELED 웹훅이 진짜 환불을 기록했을 수 있다.
+   * 지금은 되돌림에 가드가 있어(lib/funding/cancel.ts) 그 조합을 막지만, 가드가 닿지
+   * 않는 경로로도 같은 어긋남은 생길 수 있다 — 토스 콘솔에서 손으로 취소하면 웹훅만
+   * 환불을 남기고 우리 상태는 paid 그대로다.
+   *
+   * 어긋난 채 남으면 아무도 모른다. 공개 모금액에 환불된 돈이 계속 잡히고, 그 후원자가
+   * 음원을 계속 받고(isLiveFundingOrderStatus가 참), 발송 명단에도 남는다. 관리자 목록의
+   * 불일치 배지는 이걸 못 본다 — 거기 허용 목록에 paid가 들어 있다.
+   */
+  const refundedButLive = await db
+    .select({ orderNo: orders.orderNo, status: orders.status, totalAmount: orders.totalAmount, refunded: sql<number>`COALESCE(SUM(${refunds.amount}), 0)` })
+    .from(orders)
+    .innerJoin(fundingPledges, eq(fundingPledges.orderId, orders.id))
+    .innerJoin(payments, eq(payments.orderId, orders.id))
+    .innerJoin(refunds, and(eq(refunds.paymentId, payments.id), eq(refunds.status, 'done')))
+    .where(inArray(orders.status, [...LIVE_FUNDING_ORDER_STATUSES]))
+    .groupBy(orders.id)
+    .having(sql`COALESCE(SUM(${refunds.amount}), 0) >= ${orders.totalAmount}`);
+
+  if (refundedButLive.length > 0) {
+    issues.push({
+      severity: 'high',
+      title: `전액 환불됐는데 주문이 살아 있는 후원 ${refundedButLive.length}건`,
+      detail:
+        `주문번호: ${sample(refundedButLive.map((row) => row.orderNo))}\n` +
+        '환불 기록은 결제액에 닿았는데 주문 상태가 아직 paid/partially_refunded입니다. ' +
+        '이 상태로 두면 공개 모금액에 환불된 돈이 남고, 그 후원자가 음원을 계속 받으며, 발송 명단에도 남습니다.\n' +
+        '토스 콘솔에서 실제 취소 여부를 확인한 뒤 관리자 > 펀딩 상세에서 상태를 맞춰 주세요.',
     });
   }
 

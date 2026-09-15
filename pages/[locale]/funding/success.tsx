@@ -23,6 +23,8 @@ interface SuccessProps {
   orderNo?: string;
   /** 후원 확인·취소 링크. 메일이 실패해도 고객이 여기서 바로 받을 수 있어야 한다. */
   manageUrl?: string;
+  /** 내려받기 폼이 서버에 자기 자격을 증명할 값. 이미 manageUrl에 실려 있는 그 토큰이다. */
+  manageToken?: string;
   projectSlug?: string;
   /** 확인 메일이 실제로 나갔는지(orders.notificationError 기준). */
   emailSent?: boolean;
@@ -31,10 +33,11 @@ interface SuccessProps {
    * 확인 페이지로 한 번 더 들어가야 음원을 받을 수 있었다. 결제를 막 마친 사람에게
    * 필요한 것은 "확정되었습니다"가 아니라 파일이다.
    *
-   * 주소는 저장소 원본이 아니라 게이트 경로다(pages/api/funding/download.ts) — 서버가
-   * 최초 접근을 기록해야 약관 제8조 2항(내려받기 뒤 청약철회 제한)을 판정할 수 있다.
+   * 나가는 값은 저장소 주소가 아니라 파일 키다 — 실제 주소는 버튼을 눌렀을 때 서버가
+   * 서명해 만든다(pages/api/funding/download.ts). 그래야 최초 접근을 기록해 약관 제8조
+   * 2항(내려받기 뒤 청약철회 제한)을 판정할 수 있다.
    */
-  downloads?: Array<{ label: string; url: string }>;
+  downloads?: Array<{ label: string; key: string }>;
 }
 
 /**
@@ -103,7 +106,7 @@ const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
 const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
 const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 
-export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, projectSlug, emailSent, downloads }: SuccessProps) {
+export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, manageToken, projectSlug, emailSent, downloads }: SuccessProps) {
   useEffect(() => {
     if (outcome !== 'confirmed' || !orderNo) return;
     // 결제가 확정됐으니 후원 폼에 남아 있던 이름·연락처·주소 임시 저장을 지운다
@@ -151,15 +154,19 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
             {downloads && downloads.length > 0 && (
               <div className="mt-6 space-y-2 text-left">
                 <p className="typo-card-meta text-center">지금 바로 받으실 수 있습니다.</p>
+                {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야 한다. */}
                 {downloads.map((d) => (
-                  <a
-                    key={d.url}
-                    href={d.url}
-                    rel="noreferrer"
-                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-                  >
-                    {d.label} 내려받기
-                  </a>
+                  <form key={d.key} method="post" action="/api/funding/download">
+                    <input type="hidden" name="orderNo" value={orderNo} />
+                    <input type="hidden" name="token" value={manageToken} />
+                    <input type="hidden" name="file" value={d.key} />
+                    <button
+                      type="submit"
+                      className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
+                    >
+                      {d.label} 내려받기
+                    </button>
+                  </form>
                 ))}
                 <p className="typo-card-meta text-center">
                   내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).
@@ -289,11 +296,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
    */
   const project = order.fundingPledge ? getFundingProject(order.fundingPledge.projectSlug) : null;
   const reward = project?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
-  const downloads = (reward?.downloads ?? []).map((d) => ({
-    label: d.label,
-    url: `/api/funding/download?orderNo=${encodeURIComponent(order.orderNo)}`
-      + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(d.key)}`,
-  }));
+  const downloads = (reward?.downloads ?? []).map((d) => ({ label: d.label, key: d.key }));
 
   return {
     props: {
@@ -301,6 +304,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
       orderNo: order.orderNo,
       downloads,
       manageUrl: `/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`,
+      manageToken: order.manageToken,
       projectSlug: order.fundingPledge?.projectSlug ?? '',
       // notificationError는 확정 메일 결과다 — null이면 발송 성공, 문자열이면 실패이거나
       // 아직 발송 전(confirm.ts의 send_pending 센티널)이다. 둘 다 "링크를 저장하세요"가 맞다.

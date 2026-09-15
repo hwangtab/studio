@@ -84,12 +84,16 @@ const withoutUndeliverableCustomer = (
 /**
  * 디지털 리워드 내려받기 안내 — 후원한 리워드에 내려받을 파일이 있을 때만 붙는다.
  *
- * 파일이 여럿이면 전부 싣는다. 상위 티어는 하위 티어가 주는 것을 포함하므로 한 줄만
- * 보내면 약속한 것을 덜 주게 된다. 레이블을 앞에 붙이는 이유도 같다 — 주소만 나열하면
- * 어느 것이 MP3이고 어느 것이 원본인지 알 수 없다.
+ * **메일에는 내려받기 주소를 싣지 않는다.** 예전에는 파일마다 게이트 주소를 실어 보냈는데,
+ * 그 주소는 여는 것만으로 `downloaded_at`을 남겼다. 여는 주체가 사람이라는 보장이 없다 —
+ * 회사 메일의 링크 검사기나 메신저 미리보기 봇이 배달 시점에 한 번 긁는다. 그러면 후원자는
+ * 파일을 받은 적이 없는데 셀프 취소만 잃고, "내려받은 뒤에는 청약철회가 제한됩니다"라는
+ * 사실과 다른 문구를 보게 된다.
  *
- * 주소는 후원 확인 페이지에도 뜬다. 메일을 지우거나 못 받아도 받을 길이 남아야 하기
- * 때문이다(그 화면 주소는 바로 아래 줄에 함께 나간다).
+ * 그래서 후원 확인 페이지로 보낸다. 거기 버튼을 눌러야 내려받기가 시작되고, 그때 기록된다.
+ *
+ * 받을 파일의 이름은 여기 적는다. 상위 티어는 하위 티어가 주는 것을 포함하므로, 무엇을
+ * 받게 되는지는 메일에서 바로 보여야 한다.
  */
 const downloadLines = (order: FundingOrder, project: FundingProject | null): string[] => {
   const rewardId = order.fundingPledge?.rewardId;
@@ -97,16 +101,11 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
   // `downloads`가 없는 리워드가 들어와도 여기서 터지면 안 된다 — 이 함수는 결제 확정
   // 메일 경로 안이라, 던지면 결제는 됐는데 안내 메일이 통째로 실패한다.
   if (!reward?.downloads?.length) return [];
-  // 저장소 주소를 그대로 싣지 않고 내려받기 경로를 거친다 — 서버가 **최초 접근을 기록**해야
-  // 약관 제8조 2항("내려받기가 시작된 뒤 청약철회 제한")을 판정할 수 있다.
-  const link = (key: string): string =>
-    `${SITE_URL}/api/funding/download?orderNo=${encodeURIComponent(order.orderNo)}`
-    + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(key)}`;
   return [
     '',
     '[음원 내려받기]',
-    ...reward.downloads.map((d) => `${d.label}: ${link(d.key)}`),
-    '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.',
+    ...reward.downloads.map((d) => `· ${d.label}`),
+    `아래 후원 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
     '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
 };
