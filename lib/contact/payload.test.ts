@@ -33,10 +33,14 @@ describe('isTooFast — 봇 시간 트랩', () => {
     expect(isTooFast(actuallySpent)).toBe(false);
 
     // 시계가 1분 빠르거나 느린 기기에서도 경과 시간 자체는 그대로다.
+    // `now`는 **한 번만** 읽는다 — 두 번 읽으면 그 사이 밀리초가 넘어가며 1이 어긋나,
+    // 시계 스큐와 무관한 이유로 CI가 무작위로 빨개진다(실제로 났다).
+    const now = Date.now();
     for (const skew of [-600_000, -60_000, 60_000, 600_000]) {
       expect(isTooFast(actuallySpent)).toBe(false);
       // 스큐는 경과 시간 계산에 아예 개입하지 않는다(클라이언트가 한 시계로 뺀다).
-      expect(Date.now() + skew - (Date.now() + skew - actuallySpent)).toBe(actuallySpent);
+      const startedAt = now + skew - actuallySpent;
+      expect(now + skew - startedAt).toBe(actuallySpent);
     }
   });
 

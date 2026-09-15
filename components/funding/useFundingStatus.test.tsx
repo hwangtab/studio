@@ -104,3 +104,59 @@ describe('오픈 예정(upcoming)', () => {
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
   });
 });
+
+/**
+ * 폴링은 5분 간격이다. 그 사이에 후원이 취소되면 열어 둔 탭은 내려간 이름·메시지를 최대
+ * 5분간 계속 보여 준다 — 취소한 사람이 자기 이름이 아직 떠 있는 것을 보게 되는 자리다.
+ * 탭으로 돌아오면 바로 다시 읽는다.
+ */
+describe('탭 복귀 시 다시 읽기', () => {
+  const setVisibility = (v: 'visible' | 'hidden') => {
+    Object.defineProperty(document, 'visibilityState', { value: v, configurable: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+  };
+
+  it('탭으로 돌아오면 폴링을 기다리지 않고 다시 읽는다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue(
+      jsonResponse({ state: 'live', remaining: {}, publicBackers: ['김후원'], publicMessages: [] })
+    );
+    global.fetch = fetchMock as never;
+
+    renderHook(() => useFundingStatus('demo', 'live'));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    // 최소 간격(20초)을 넘긴 뒤 복귀
+    jest.spyOn(Date, 'now').mockReturnValue(Date.now() + 60_000);
+    await act(async () => { setVisibility('visible'); });
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(2));
+  });
+
+  it('숨겨질 때는 읽지 않는다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue(
+      jsonResponse({ state: 'live', remaining: {}, publicBackers: [], publicMessages: [] })
+    );
+    global.fetch = fetchMock as never;
+
+    renderHook(() => useFundingStatus('demo', 'live'));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    jest.spyOn(Date, 'now').mockReturnValue(Date.now() + 60_000);
+    await act(async () => { setVisibility('hidden'); });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+
+  it('짧은 간격으로 오가면 다시 읽지 않는다 — 요청이 몰리지 않게', async () => {
+    const fetchMock = jest.fn().mockResolvedValue(
+      jsonResponse({ state: 'live', remaining: {}, publicBackers: [], publicMessages: [] })
+    );
+    global.fetch = fetchMock as never;
+
+    renderHook(() => useFundingStatus('demo', 'live'));
+    await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
+
+    // 방금 읽었으므로 최소 간격 안이다
+    await act(async () => { setVisibility('visible'); });
+    await act(async () => { setVisibility('visible'); });
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+  });
+});
