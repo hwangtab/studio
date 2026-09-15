@@ -1590,7 +1590,7 @@
       ]
     },
     "comparison": {
-      "title": "Xuddi shu xizmatni sotadiganlar bilan solishtiring",
+      "title": "Variantlarni solishtiring",
       "subtitle": "Narx bilan yuboriladigan manzillarni yonma-yon qo'ysangiz, nima sotib olayotganingiz aniq ko'rinadi.",
       "columns": [
         "",
@@ -1630,7 +1630,7 @@
           "{{intro}} (to'plamda {{list}} ga teng)"
         ]
       ],
-      "note": "So'rov doirasida narxini e'lon qilgan koreyalik musiqaga ixtisoslashgan PR agentligi topilmadi (2026-yil sentyabr). Press-reliz tarqatadiganlar ko'p, ammo ularning ro'yxati musiqa nashrlari emas; xuddi shu xizmatni sotadigan chet el agentliklari esa boshqa narx darajasida.",
+      "note": "So'rov doirasida narxini e'lon qilgan koreyalik musiqaga ixtisoslashgan PR agentligi topilmadi (2026-yil sentyabr). Press-reliz tarqatadiganlar ko'p, ammo ularning ro'yxati musiqa nashrlari emas; xuddi shu ishni qiladigan chet el agentliklari esa boshqa narx darajasida.",
       "rowHeader": "Taqqoslash mezoni"
     },
     "deliverables": {

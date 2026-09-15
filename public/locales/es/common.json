@@ -1590,7 +1590,7 @@
       ]
     },
     "comparison": {
-      "title": "Compáranos con quien vende lo mismo",
+      "title": "Compara las opciones",
       "subtitle": "Poniendo los precios y los destinatarios uno al lado del otro se ve con claridad qué estás comprando.",
       "columns": [
         "",
@@ -1630,7 +1630,7 @@
           "{{intro}} (equivale a {{list}} dentro del pack)"
         ]
       ],
-      "note": "No encontramos ninguna agencia coreana de PR especializada en música que publique sus precios (septiembre de 2026). Hay muchas firmas que disparan notas de prensa, pero sus listas no son medios musicales; y las agencias extranjeras que venden lo mismo están en otro orden de magnitud.",
+      "note": "No encontramos ninguna agencia coreana de PR especializada en música que publique sus precios (septiembre de 2026). Hay muchas firmas que disparan notas de prensa, pero sus listas no son medios musicales; y las agencias extranjeras que hacen el mismo trabajo están en otro orden de magnitud.",
       "rowHeader": "Aspecto comparado"
     },
     "deliverables": {
