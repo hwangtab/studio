@@ -1596,8 +1596,8 @@
       "rowHeader": "Hạng mục so sánh"
     },
     "evidence": {
-      "title": "Chúng tôi đã gửi thực tế như thế này",
-      "subtitle": "Ghi chép chính xác hơn lời nói. Đây là số liệu đo được từ các chiến dịch chúng tôi tự thực hiện. Quy mô gửi dao động từ vài trăm đến hơn một nghìn nơi, tùy thể loại và vùng ngôn ngữ — thể loại hẹp thì danh sách hẹp mới đúng.",
+      "title": "Quy mô gửi do âm nhạc quyết định",
+      "subtitle": "Gửi nhiều không đồng nghĩa với làm tốt. Tùy thể loại và vùng ngôn ngữ, con số dao động từ vài trăm đến hơn một nghìn nơi. Đây là số liệu đo được từ hai chiến dịch chúng tôi tự thực hiện, cho thấy biên độ đó.",
       "cases": [
         {
           "title": "Mariko & Yukie 〈Namsan Tower Lights〉",
@@ -1608,7 +1608,8 @@
             "8 ngôn ngữ",
             "Rải đều trong 12 ngày"
           ],
-          "note": "15 bài hát tiếng Hàn do một cặp vợ chồng người Nhật sống ở Seoul thể hiện. Studio NOL đảm nhiệm từ mixing cho tới lên kế hoạch, sản xuất và quảng bá phát hành."
+          "note": "15 bài hát tiếng Hàn do một cặp vợ chồng người Nhật sống ở Seoul thể hiện. Vì câu chuyện chạm tới khán giả nói tiếng Hàn, tiếng Nhật lẫn tiếng Anh nên album được gửi bằng 8 ngôn ngữ. Studio NOL đảm nhiệm toàn bộ từ mixing đến lên kế hoạch, sản xuất và quảng bá phát hành.",
+          "label": "Rộng nhất"
         },
         {
           "title": "HWA 〈HWA〉",
@@ -1618,10 +1619,12 @@
             "Tập trung vào báo chí chuyên về metal",
             "Trong nước và quốc tế cùng lúc"
           ],
-          "note": "Dòng nhạc hẹp thì danh sách cũng đi hẹp. Chúng tôi đã thu thập mới các đầu mối chuyên về metal riêng cho album này."
+          "note": "Grindcore vốn có rất ít đầu mối truyền thông đưa tin. 125 nơi không phải là thiếu, mà là con số phù hợp với dòng nhạc này, và chúng tôi đã thu thập mới danh sách các đầu mối chuyên về metal riêng cho album này. Cố gửi thêm cho những nơi không phù hợp chỉ khiến thư bị trả lại và bị hủy đăng ký nhiều hơn.",
+          "label": "Thể loại hẹp"
         }
       ],
-      "linkLabel": "Xem trang press kit chúng tôi đã làm thật"
+      "linkLabel": "Xem trang press kit chúng tôi đã làm thật",
+      "priorWork": "Chúng tôi chỉ mới cung cấp dịch vụ này một cách độc lập từ năm nay. Trước đó, đây là một phần trong gói dự án phát hành, và khi ấy chúng tôi không lưu lại số liệu theo từng chiến dịch — vì vậy hai trường hợp trên là những gì chúng tôi có thể cho bạn xem bằng con số."
     },
     "deliverables": {
       "title": "Những gì được bao gồm",
