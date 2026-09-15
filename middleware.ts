@@ -4,7 +4,7 @@ import { BOT_PATTERN } from './lib/bot-detection';
 import { isRoutePatternPath } from './lib/routePattern';
 import regionRedirectMap from './lib/regionRedirectMap.json';
 // 수신거부 링크 전용 호스트. 이 호스트는 /u/<token> 하나만 응답한다.
-import { PRESS_HOST } from './lib/press/host';
+import { PRESS_HOST, PRESS_UNSUB_TOKEN_HEADER } from './lib/press/host';
 
 const DEFAULT_SITE_URL = 'https://studionol.co.kr';
 
@@ -159,9 +159,24 @@ export function middleware(request: NextRequest) {
         if (!unsub) {
             return setSecurityHeaders(new NextResponse(null, { status: 404 }));
         }
-        const target = request.nextUrl.clone();
-        target.pathname = `/api/press/unsubscribe/${unsub[1]}`;
-        return setSecurityHeaders(NextResponse.rewrite(target));
+        /**
+         * 토큰을 **쿼리로도** 실어 보낸다.
+         *
+         * rewrite로 들어가면 Next가 목적지의 동적 세그먼트(`[token]`)를 채우지 않는다.
+         * 핸들러에서 `req.query.token`이 undefined이고 `req.url`은 원본 `/u/…` 그대로였다
+         * (2026-09-15 로컬 재현 — 프로덕션에서는 유효한 토큰이 전부 400이었다).
+         * 직접 요청(`/api/press/unsubscribe/<token>`)일 때는 세그먼트가 정상적으로 채워지고
+         * 그때는 쿼리가 없으므로, 두 경로가 서로를 밟지 않는다.
+         *
+         * URL을 문자열로 만들어 넘긴다 — `NextURL.pathname` setter는 이 저장소에서 이미
+         * 한 번 문제를 낸 자리다(아래 redirect 쪽 주석 참조).
+         */
+        const target = new URL(`/api/press/unsubscribe/${unsub[1]}`, request.url);
+        const forwarded = new Headers(request.headers);
+        forwarded.set(PRESS_UNSUB_TOKEN_HEADER, unsub[1]);
+        return setSecurityHeaders(
+            NextResponse.rewrite(target, { request: { headers: forwarded } }),
+        );
     }
 
     /**
