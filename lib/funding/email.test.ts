@@ -15,7 +15,7 @@ const order = {
     createdAt: new Date(), updatedAt: new Date(),
   },
 } as never;
-const project = { title: '데모 앨범', rewards: [{ id: 'mail', estimatedDelivery: '2026-11' }] } as never;
+const project = { title: '데모 앨범', rewards: [{ id: 'mail', estimatedDelivery: '2026-11', downloads: [] }] } as never;
 
 beforeEach(() => (sendEmail as jest.Mock).mockClear());
 
@@ -176,12 +176,12 @@ describe('고객 메일에 개인 주소를 노출하지 않는다', () => {
  */
 describe('확정 메일의 음원 내려받기', () => {
   // project 픽스처가 `as never`라 스프레드가 안 된다 — 필요한 모양만 독립적으로 만든다.
-  const projectWith = (rewards: Array<{ id: string; downloadUrl: string | null }>) =>
+  const projectWith = (rewards: Array<{ id: string; downloads: Array<{ label: string; url: string }> }>) =>
     ({
       title: '데모 앨범',
       rewards: rewards.map((r) => ({
         id: r.id, title: r.id, description: '', amount: 10000, totalQuantity: null,
-        requiresShipping: false, estimatedDelivery: '2026-09', image: null, downloadUrl: r.downloadUrl,
+        requiresShipping: false, estimatedDelivery: '2026-09', image: null, downloads: r.downloads,
       })),
     }) as never;
 
@@ -192,16 +192,26 @@ describe('확정 메일의 음원 내려받기', () => {
     (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
     await sendFundingConfirmedEmails(
       orderFor('mp3'),
-      projectWith([{ id: 'mp3', downloadUrl: 'https://x/mp3.zip' }, { id: 'hires', downloadUrl: 'https://x/hires.zip' }]),
+      projectWith([{ id: 'mp3', downloads: [{ label: 'MP3 320kbps', url: 'https://x/mp3.zip' }] }, { id: 'hires', downloads: [{ label: 'WAV', url: 'https://x/hires.zip' }] }]),
     );
     const customer = (sendEmail as jest.Mock).mock.calls[0][0];
     expect(customer.text).toContain('https://x/mp3.zip');
     expect(customer.text).not.toContain('https://x/hires.zip');
   });
 
-  it('downloadUrl이 없는 리워드에는 내려받기 줄이 붙지 않는다', async () => {
+  /**
+   * `downloads`가 없는 리워드가 들어와도 확정 메일이 통째로 실패하면 안 된다 — 결제는 됐는데
+   * 안내만 못 가는 상황이 된다. 스키마를 목록으로 바꾸면서 실제로 한 번 터뜨렸다.
+   */
+  it('리워드에 downloads 필드가 아예 없어도 확정 메일은 나간다', async () => {
+    const broken = { title: '데모 앨범', rewards: [{ id: 'mp3', estimatedDelivery: '2026-09' }] } as never;
+    await expect(sendFundingConfirmedEmails(orderFor('mp3'), broken)).resolves.not.toThrow();
+    expect((sendEmail as jest.Mock).mock.calls.length).toBeGreaterThan(0);
+  });
+
+  it('내려받을 파일이 없는 리워드에는 내려받기 줄이 붙지 않는다', async () => {
     (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
-    await sendFundingConfirmedEmails(orderFor('mp3'), projectWith([{ id: 'mp3', downloadUrl: null }]));
+    await sendFundingConfirmedEmails(orderFor('mp3'), projectWith([{ id: 'mp3', downloads: [] }]));
     expect((sendEmail as jest.Mock).mock.calls[0][0].text).not.toContain('음원 내려받기');
   });
 });

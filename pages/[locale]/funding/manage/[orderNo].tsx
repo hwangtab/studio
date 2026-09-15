@@ -15,7 +15,7 @@ interface Props {
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean;
   /** 디지털 리워드 내려받기 주소. 결제가 살아 있는 건에만 내려보낸다. */
-  downloadUrl: string | null;
+  downloads: Array<{ label: string; url: string }>;
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
   displayNamePublic: boolean; canEditDisplayName: boolean;
 }
@@ -154,16 +154,19 @@ export default function FundingManagePage(p: Props) {
           {/* 디지털 리워드 내려받기. 확정 메일에도 같은 주소가 나가지만, 메일을 지우거나 못
               받는 사람이 있어 이 화면에도 둔다 — 관리 토큰으로만 열리는 자리다.
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
-          {p.downloadUrl && (
-            <p className="mt-6">
-              <a
-                href={p.downloadUrl}
-                rel="noreferrer"
-                className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-              >
-                음원 내려받기
-              </a>
-            </p>
+          {p.downloads.length > 0 && (
+            <div className="mt-6 space-y-2">
+              {p.downloads.map((d) => (
+                <a
+                  key={d.url}
+                  href={d.url}
+                  rel="noreferrer"
+                  className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
+                >
+                  {d.label} 내려받기
+                </a>
+              ))}
+            </div>
           )}
 
           {status === 'paid' && !refundRequested && (p.canCancel
@@ -211,7 +214,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
    * 쓴다(lib/funding/refundable.ts).
    */
   const reward = project?.rewards.find((r) => r.id === pl.rewardId);
-  const downloadUrl = isLiveFundingOrderStatus(order.status) ? reward?.downloadUrl ?? null : null;
+  const downloads = isLiveFundingOrderStatus(order.status) ? reward?.downloads ?? [] : [];
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardTitle: pl.rewardTitle,
@@ -219,7 +222,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     paymentMethod: pl.paymentMethod, fulfillmentStatus: pl.fulfillmentStatus, shipping,
     canCancel: verdict.ok, cancelBlockedReason: verdict.ok ? null : CANCEL_BLOCK_MESSAGES[verdict.code],
     refundRequested: pl.refundRequestedAt !== null,
-    downloadUrl,
+    downloads,
     displayNamePublic: pl.displayNamePublic,
     // 이름이 공개돼 있거나 앞으로 공개될 수 있는 상태에서만 바꾼다
     // (pages/api/funding/display-name.ts의 EDITABLE_STATUSES와 같은 판정).

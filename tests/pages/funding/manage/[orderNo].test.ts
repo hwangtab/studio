@@ -45,7 +45,11 @@ rewards:
     amount: 5000
     requiresShipping: false
     estimatedDelivery: 2026-11
-    downloadUrl: https://cdn.example/album.zip
+    downloads:
+      - label: MP3 320kbps
+        url: https://cdn.example/album-mp3.zip
+      - label: WAV 24bit 96kHz
+        url: https://cdn.example/album-wav.zip
 ---
 `, 'demo');
 
@@ -213,13 +217,17 @@ describe('음원 내려받기 주소는 결제가 살아 있을 때만 내려간
   const propsFor = async (orderNo: string, token: string) =>
     ((await getServerSideProps({
       params: { locale: 'ko', orderNo }, query: { token }, res: resStub(),
-    } as never)) as { props: { downloadUrl: string | null } }).props;
+    } as never)) as { props: { downloads: Array<{ label: string; url: string }> } }).props;
 
-  it('결제 확정 건에는 주소가 내려간다', async () => {
+  it('결제 확정 건에는 주소가 내려간다 — 리워드에 걸린 파일을 전부', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
-    expect((await propsFor(c.orderNo, c.manageToken)).downloadUrl).toBe('https://cdn.example/album.zip');
+    // 상위 티어는 하위 티어가 주는 것을 포함한다. 한 줄만 내려가면 약속한 것을 덜 주게 된다.
+    expect((await propsFor(c.orderNo, c.manageToken)).downloads).toEqual([
+      { label: 'MP3 320kbps', url: 'https://cdn.example/album-mp3.zip' },
+      { label: 'WAV 24bit 96kHz', url: 'https://cdn.example/album-wav.zip' },
+    ]);
   });
 
   it('환불된 건에는 주소를 내려보내지 않는다', async () => {
@@ -227,12 +235,12 @@ describe('음원 내려받기 주소는 결제가 살아 있을 때만 내려간
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE order_no=?", args: [c.orderNo] });
-    expect((await propsFor(c.orderNo, c.manageToken)).downloadUrl).toBeNull();
+    expect((await propsFor(c.orderNo, c.manageToken)).downloads).toEqual([]);
   });
 
   it('결제 전(pending) 건에도 내려보내지 않는다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
-    expect((await propsFor(c.orderNo, c.manageToken)).downloadUrl).toBeNull();
+    expect((await propsFor(c.orderNo, c.manageToken)).downloads).toEqual([]);
   });
 });
