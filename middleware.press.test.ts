@@ -60,6 +60,25 @@ describe('press.studionol.co.kr (프로덕션 env)', () => {
     expect(res.headers.get('x-middleware-rewrite')).toContain('/api/press/unsubscribe/abc.def');
   });
 
+  /**
+   * 리라이트가 토큰을 **헤더로** 넘겨야 한다.
+   *
+   * 경로만 바꾸면 Next가 목적지의 동적 세그먼트를 채우지 않고 쿼리도 전달하지 않는다 —
+   * 핸들러에서 req.query가 통째로 {}였다. 프로덕션에서 유효한 토큰이 전부 400을 받았고
+   * 로컬에서 핸들러 로그로 재현했다(2026-09-15). 경로 rewrite만 확인하는 단언은
+   * 이 결함을 통과시킨다.
+   */
+  it('리라이트가 토큰을 요청 헤더로 넘긴다', () => {
+    const token = 'eyJhIjoxfQ.abc-DEF_123';
+    const res = middleware(req(`https://press.studionol.co.kr/u/${token}`));
+    expect(res.headers.get('x-middleware-rewrite')).toContain(
+      `/api/press/unsubscribe/${token}`,
+    );
+    // 미들웨어가 덧붙인 요청 헤더는 x-middleware-request-* 로 실려 나간다.
+    const forwarded = res.headers.get('x-middleware-request-x-press-unsub-token');
+    expect(forwarded).toBe(token);
+  });
+
   it('루트는 404다', () => {
     expect(middleware(req('https://press.studionol.co.kr/')).status).toBe(404);
   });

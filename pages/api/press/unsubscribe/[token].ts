@@ -4,6 +4,7 @@ import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { recordPressOptout } from '../../../../lib/press/optouts';
 import { renderUnsubPage } from '../../../../lib/press/page';
+import { PRESS_UNSUB_TOKEN_HEADER } from '../../../../lib/press/host';
 import { verifyPressToken } from '../../../../lib/press/token';
 
 /**
@@ -28,7 +29,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ ok: false });
   }
 
-  const token = Array.isArray(req.query.token) ? req.query.token[0] : req.query.token;
+  /**
+   * 토큰은 두 경로로 들어온다.
+   *
+   * press.studionol.co.kr/u/<token>은 미들웨어가 여기로 rewrite하는데, 그때 Next가
+   * 동적 세그먼트를 채우지 않아 `req.query`가 비어 있다 — 그래서 미들웨어가 헤더로
+   * 넘긴다. 본진에서 이 경로를 직접 부르면 세그먼트가 정상적으로 채워진다.
+   */
+  const fromHeader = req.headers[PRESS_UNSUB_TOKEN_HEADER];
+  const token =
+    (Array.isArray(req.query.token) ? req.query.token[0] : req.query.token) ??
+    (Array.isArray(fromHeader) ? fromHeader[0] : fromHeader);
   const secret = process.env.PRESS_UNSUB_SECRET;
 
   /**
