@@ -2,6 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { FUNDING_DIR, getAllFundingProjects, parseFundingProject } from '../lib/funding/projects';
+import { isSafeObjectKey } from '../lib/funding/objectKey';
 
 describe('content/funding', () => {
   const files = fs.existsSync(FUNDING_DIR) ? fs.readdirSync(FUNDING_DIR).filter((f) => f.endsWith('.md')) : [];
@@ -46,8 +47,8 @@ describe('디지털 리워드는 금액이 오를수록 누적된다', () => {
       sorted.forEach((reward, i) => {
         for (const lower of sorted.slice(0, i)) {
           const missing = lower.downloads
-            .map((d) => d.url)
-            .filter((url) => !reward.downloads.some((d) => d.url === url));
+            .map((d) => d.key)
+            .filter((key) => !reward.downloads.some((d) => d.key === key));
           expect(
             `${reward.id}(${reward.amount}원)에 없는 ${lower.id}(${lower.amount}원)의 파일: ${missing.join(', ')}`
           ).toBe(`${reward.id}(${reward.amount}원)에 없는 ${lower.id}(${lower.amount}원)의 파일: `);
@@ -57,16 +58,19 @@ describe('디지털 리워드는 금액이 오를수록 누적된다', () => {
 
     it(`${project.slug}: 같은 파일을 두 번 싣지 않는다`, () => {
       for (const reward of digital) {
-        const urls = reward.downloads.map((d) => d.url);
-        expect(new Set(urls).size).toBe(urls.length);
+        const keys = reward.downloads.map((d) => d.key);
+        expect(new Set(keys).size).toBe(keys.length);
       }
     });
 
-    it(`${project.slug}: 내려받기 항목에 빈 레이블·주소가 없다`, () => {
+    it(`${project.slug}: 내려받기 항목이 주소가 아니라 저장소 키다`, () => {
       for (const reward of digital) {
         for (const d of reward.downloads) {
           expect(d.label.trim()).not.toBe('');
-          expect(d.url).toMatch(/^https:\/\//);
+          // 주소를 적어 두면 그 값이 메일·화면으로 그대로 나가 게이트를 우회할 수 있다.
+          expect(d.key).not.toMatch(/^https?:\/\//);
+          expect(d.key).not.toContain('r2.dev');
+          expect(isSafeObjectKey(d.key)).toBe(true);
         }
       }
     });

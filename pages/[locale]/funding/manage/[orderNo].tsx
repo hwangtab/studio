@@ -15,7 +15,7 @@ interface Props {
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean;
   /** 디지털 리워드 내려받기 주소. 결제가 살아 있는 건에만 내려보낸다. */
-  downloads: Array<{ label: string; url: string }>;
+  downloads: Array<{ label: string; key: string }>;
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
   displayNamePublic: boolean; canEditDisplayName: boolean;
 }
@@ -158,8 +158,8 @@ export default function FundingManagePage(p: Props) {
             <div className="mt-6 space-y-2">
               {p.downloads.map((d) => (
                 <a
-                  key={d.url}
-                  href={`/api/funding/download?orderNo=${encodeURIComponent(p.orderNo)}&token=${encodeURIComponent(p.token)}&file=${encodeURIComponent(d.url)}`}
+                  key={d.key}
+                  href={`/api/funding/download?orderNo=${encodeURIComponent(p.orderNo)}&token=${encodeURIComponent(p.token)}&file=${encodeURIComponent(d.key)}`}
                   rel="noreferrer"
                   className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
                 >

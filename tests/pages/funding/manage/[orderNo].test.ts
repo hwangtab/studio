@@ -47,9 +47,9 @@ rewards:
     estimatedDelivery: 2026-11
     downloads:
       - label: MP3 320kbps
-        url: https://cdn.example/album-mp3.zip
+        key: demo/album-mp3.zip
       - label: WAV 24bit 96kHz
-        url: https://cdn.example/album-wav.zip
+        key: demo/album-wav.zip
 ---
 `, 'demo');
 
@@ -213,11 +213,11 @@ describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
  * 토큰은 취소 뒤에도 유효하므로(취소 결과를 확인해야 한다) 링크를 지우는 판정이 서버에
  * 있어야 한다. 화면은 서버가 준 값을 그대로 렌더할 뿐이다.
  */
-describe('음원 내려받기 주소는 결제가 살아 있을 때만 내려간다', () => {
+describe('음원 내려받기 키는 결제가 살아 있을 때만 내려간다', () => {
   const propsFor = async (orderNo: string, token: string) =>
     ((await getServerSideProps({
       params: { locale: 'ko', orderNo }, query: { token }, res: resStub(),
-    } as never)) as { props: { downloads: Array<{ label: string; url: string }> } }).props;
+    } as never)) as { props: { downloads: Array<{ label: string; key: string }> } }).props;
 
   it('결제 확정 건에는 주소가 내려간다 — 리워드에 걸린 파일을 전부', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
@@ -225,8 +225,8 @@ describe('음원 내려받기 주소는 결제가 살아 있을 때만 내려간
     await markPaid(c.orderNo);
     // 상위 티어는 하위 티어가 주는 것을 포함한다. 한 줄만 내려가면 약속한 것을 덜 주게 된다.
     expect((await propsFor(c.orderNo, c.manageToken)).downloads).toEqual([
-      { label: 'MP3 320kbps', url: 'https://cdn.example/album-mp3.zip' },
-      { label: 'WAV 24bit 96kHz', url: 'https://cdn.example/album-wav.zip' },
+      { label: 'MP3 320kbps', key: 'demo/album-mp3.zip' },
+      { label: 'WAV 24bit 96kHz', key: 'demo/album-wav.zip' },
     ]);
   });
 

@@ -99,13 +99,13 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
   if (!reward?.downloads?.length) return [];
   // 저장소 주소를 그대로 싣지 않고 내려받기 경로를 거친다 — 서버가 **최초 접근을 기록**해야
   // 약관 제8조 2항("내려받기가 시작된 뒤 청약철회 제한")을 판정할 수 있다.
-  const link = (url: string): string =>
+  const link = (key: string): string =>
     `${SITE_URL}/api/funding/download?orderNo=${encodeURIComponent(order.orderNo)}`
-    + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(url)}`;
+    + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(key)}`;
   return [
     '',
     '[음원 내려받기]',
-    ...reward.downloads.map((d) => `${d.label}: ${link(d.url)}`),
+    ...reward.downloads.map((d) => `${d.label}: ${link(d.key)}`),
     '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.',
     '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
