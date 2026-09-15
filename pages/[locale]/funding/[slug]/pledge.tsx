@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 import Link from 'next/link';
 import PledgeWizard from '../../../../components/funding/PledgeWizard';
@@ -33,7 +33,7 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ params, query, res }) => {
+export const getServerSideProps = withI18nServerProps<Props>(async ({ params, query, res }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: `/ko/funding/${String(params?.slug ?? '')}/pledge`, permanent: false } };
   const project = getFundingProject(String(params.slug ?? ''));
@@ -46,4 +46,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
     ? query.reward : null;
   // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/projects.ts 주석).
   return { props: { project: stripRewardDownloads(project), initialRewardId, remaining: status.remaining } };
-};
+});

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
@@ -196,7 +196,7 @@ export default function FundingManagePage(p: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async (context) => {
+export const getServerSideProps = withI18nServerProps<Props>(async (context) => {
   denyContractPageCaching(context.res);
   const { locale, orderNo } = context.params as { locale: string; orderNo: string };
   if (locale !== 'ko') return { redirect: { destination: '/ko/funding', permanent: false } };
@@ -229,4 +229,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
     // (pages/api/funding/display-name.ts의 EDITABLE_STATUSES와 같은 판정).
     canEditDisplayName: ['pending', 'paid', 'partially_refunded'].includes(order.status),
   } };
-};
+});

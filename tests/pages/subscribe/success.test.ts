@@ -71,7 +71,7 @@ it('첫 결제 실패는 운영자 알림을 보내고 first_charge_failed를 �
     contract: null,
   });
   const r = await run({ token: 'tok', customerKey: 'sub_abc', authKey: 'auth' });
-  expect(r.props).toEqual({ outcome: 'first_charge_failed', message: '카드 한도 초과' });
+  expect(r.props).toMatchObject({ outcome: 'first_charge_failed', message: '카드 한도 초과' });
   expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(
     expect.objectContaining({ id: 'sub-1' }),
     'first_charge_failed',

@@ -6,7 +6,7 @@
  * tests/pages/privateLinkNavigation.test.ts
  */
 import { useState } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
@@ -238,7 +238,7 @@ export default function SubscribeManagePage(props: ManageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<ManageProps> = async ({ query, res, params }) => {
+export const getServerSideProps = withI18nServerProps<ManageProps>(async ({ query, res, params }) => {
   denyContractPageCaching(res);
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
 
@@ -277,4 +277,4 @@ export const getServerSideProps: GetServerSideProps<ManageProps> = async ({ quer
       })),
     },
   };
-};
+});

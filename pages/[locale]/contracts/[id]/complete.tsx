@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -49,7 +49,7 @@ interface CompletePageProps {
   terminated?: boolean;
 }
 
-export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (context) => {
+export const getServerSideProps = withI18nServerProps<CompletePageProps>(async (context) => {
   // 계약 본문은 개인정보다. 공유 캐시 지시자를 먼저 걷어낸다(page-cache.ts 주석 참조).
   denyContractPageCaching(context.res);
 
@@ -121,7 +121,7 @@ export const getServerSideProps: GetServerSideProps<CompletePageProps> = async (
     // DB 장애다 — "찾을 수 없다"고 말하면 안 된다. 서명은 이미 접수됐을 수 있다.
     return { props: { ...empty, unavailable: 'error' as const } };
   }
-};
+});
 
 
 export default function ContractCompletePage({

@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
 /**
@@ -87,7 +87,7 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
     </>
   );
 }
-export const getServerSideProps: GetServerSideProps<Props> = async ({ params, query, res }) => {
+export const getServerSideProps = withI18nServerProps<Props>(async ({ params, query, res }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko/funding', permanent: false } };
   const slug = typeof query.slug === 'string' && /^[a-z0-9-]+$/.test(query.slug) ? query.slug : null;
@@ -99,4 +99,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, qu
   return {
     props: { slug, code, message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE, orderNo },
   };
-};
+});

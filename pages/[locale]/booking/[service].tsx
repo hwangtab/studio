@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
 import BookingWizard from '../../../components/booking/BookingWizard';
@@ -34,7 +34,7 @@ export default function BookingPage(props: BookingPageProps) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<BookingPageProps> = async ({ params, query }) => {
+export const getServerSideProps = withI18nServerProps<BookingPageProps>(async ({ params, query }) => {
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
   const service = typeof params?.service === 'string' ? params.service : '';
 
@@ -49,4 +49,4 @@ export const getServerSideProps: GetServerSideProps<BookingPageProps> = async ({
   const products = productsForService(service);
   if (products.length === 0) return { notFound: true };
   return { props: { service, kind: 'session', products } };
-};
+});

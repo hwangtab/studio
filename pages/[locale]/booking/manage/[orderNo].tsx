@@ -6,7 +6,7 @@
  * tests/pages/privateLinkNavigation.test.ts
  */
 import { useState } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
 import { Button } from '../../../../components/ui/Button';
@@ -395,7 +395,7 @@ export default function BookingManagePage(props: ManagePageProps) {
   return props.kind === 'mixing' ? <MixingManageView {...props} /> : <SessionManageView {...props} />;
 }
 
-export const getServerSideProps: GetServerSideProps<ManagePageProps> = async (context) => {
+export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (context) => {
   // 예약 관리 페이지는 개인정보(일시·금액·연락 상태)를 담는다. next.config.mjs의
   // `/:locale(ko|en|zh|es|vi|th|uz)/:path*` 규칙이 이 경로에도 공유 캐시 헤더를 붙이므로
   // (contracts sign 페이지와 같은 문제 — lib/contracts/page-cache.ts 주석 참조) 렌더 이전에
@@ -475,4 +475,4 @@ export const getServerSideProps: GetServerSideProps<ManagePageProps> = async (co
       refundQuote,
     },
   };
-};
+});

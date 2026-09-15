@@ -1,6 +1,6 @@
 import ContractNotice from '../../../../components/contracts/ContractNotice';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Markdown from 'markdown-to-jsx';
@@ -50,7 +50,7 @@ interface SignPageProps {
   error?: string;
 }
 
-export const getServerSideProps: GetServerSideProps<SignPageProps> = async (context) => {
+export const getServerSideProps = withI18nServerProps<SignPageProps>(async (context) => {
   // 계약 본문은 개인정보다. 공유 캐시 지시자를 먼저 걷어낸다(page-cache.ts 주석 참조).
   denyContractPageCaching(context.res);
 
@@ -153,7 +153,7 @@ export const getServerSideProps: GetServerSideProps<SignPageProps> = async (cont
       },
     };
   }
-};
+});
 
 
 
