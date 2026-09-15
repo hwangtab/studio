@@ -266,18 +266,26 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           title={t('musicPromotion.outcome.title')}
           subtitle={t('musicPromotion.outcome.subtitle')}
         />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        {/* 테두리 없이 여백으로 나눈다. 이 페이지는 3열 네모 카드가 섹션마다
+            반복돼 스크롤이 단조로웠다 — 형태는 내용의 성격을 따라가야 한다.
+            여기 여섯 항목은 순서가 없는 병렬이고 본문이 길어, 칸을 좁히는 카드보다
+            넓은 2열에 큰 번호를 세우는 쪽이 읽기 편하다. */}
+        <div className="mx-auto mt-12 grid max-w-5xl gap-x-12 gap-y-10 sm:grid-cols-2">
           {outcomes.map((item, index) => (
-            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.05 })}>
-              <BaseCard className="h-full p-6">
-                <span className="text-sm font-bold text-primary dark:text-primary-lighter">
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <h3 className="mt-2 font-bold text-gray-900 dark:text-white">{item.title}</h3>
+            <m.div
+              key={item.title}
+              {...createInViewEnterAnimation({ delay: index * 0.05 })}
+              className="flex gap-4"
+            >
+              <span className="shrink-0 text-3xl font-bold leading-none tabular-nums text-primary/25 dark:text-primary-lighter/25">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                   {item.body}
                 </p>
-              </BaseCard>
+              </div>
             </m.div>
           ))}
         </div>
@@ -538,16 +546,26 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           title={t('musicPromotion.review.title')}
           subtitle={t('musicPromotion.review.lead')}
         />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
+        {/* 세 항목뿐이라 카드 3열은 과했다. 체크 아이콘이 일렬로 서면서
+            타임라인의 번호 마커와 같은 원리로 시각적 중심을 만든다 —
+            제목이 가운데여도 축이 갈리지 않는다(#127에서 고쳤던 경우와 다르다). */}
+        <div className="mx-auto mt-10 max-w-3xl space-y-7">
           {criteria.map((item, index) => (
-            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.06 })}>
-              <BaseCard className="h-full p-6">
-                <CheckCircle2 className="h-6 w-6 text-primary dark:text-primary-lighter" aria-hidden="true" />
-                <h3 className="mt-3 font-bold text-gray-900 dark:text-white">{item.title}</h3>
+            <m.div
+              key={item.title}
+              {...createInViewEnterAnimation({ delay: index * 0.06 })}
+              className="flex gap-4"
+            >
+              <CheckCircle2
+                className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter"
+                aria-hidden="true"
+              />
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                   {item.body}
                 </p>
-              </BaseCard>
+              </div>
             </m.div>
           ))}
         </div>
