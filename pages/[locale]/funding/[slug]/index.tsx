@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import MarkdownRenderer from '../../../../components/MarkdownRenderer';
-import ResponsiveImage from '../../../../components/ResponsiveImage';
 import ImageHero, { HERO_SCRIM_STRONG } from '../../../../components/common/ImageHero';
 import { Section } from '../../../../components/ui/Section';
 import FundingProgress from '../../../../components/funding/FundingProgress';
@@ -135,21 +134,10 @@ export default function FundingProjectPage({ project, initialState }: Props) {
                 data={data ? { raisedAmount: data.raisedAmount, backerCount: data.backerCount, percent: data.percent, state } : null}
               />
             </div>
-            {/* 표지를 여기 두는 이유: 이 앨범이 곧 리워드다. 16:9 파일의 가운데를 정사각으로
-                따서 바탕색 여백이 보이지 않게 한다. */}
-            <div className="mt-8 flex items-center gap-3">
-              <ResponsiveImage
-                src={project.cover}
-                alt=""
-                containerClassName="relative block aspect-square w-16 shrink-0 overflow-hidden rounded-lg"
-                className="object-cover"
-                loading="lazy"
-              />
-              <div className="min-w-0">
-                <h2 className="typo-card-title text-gray-900 dark:text-white">리워드</h2>
-                <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
-              </div>
-            </div>
+            {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
+                리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
+            <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
+            <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
                 <RewardCard

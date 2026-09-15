@@ -3,7 +3,6 @@ slug: keep-singing-for-palestine
 title: Keep Singing for Palestine — 9·19 거리집회 후원
 summary: 팔레스타인 해방을 위한 거리집회에 함께합니다. 후원해 주시면 앨범 〈이름을 모르는 먼 곳의 그대에게〉 13곡을 보내 드립니다.
 cover: /images/funding/keep-singing-for-palestine/cover.webp
-heroImage: /images/funding/keep-singing-for-palestine/hero.webp
 goalAmount: 1000000
 startAt: 2026-09-14T00:00:00+09:00
 endAt: 2026-10-19T23:59:59+09:00
@@ -75,7 +74,7 @@ rewards:
 
 ## 그날 노래하는 사람들
 
-다섯이 나옵니다. 그중 넷은 후원 리워드인 앨범에도 목소리를 남겼습니다.
+다섯이 거리에 섭니다.
 
 ### 모레도토요일
 
@@ -103,7 +102,7 @@ rewards:
 ![이형주](/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp "240")
 
 
-이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다. 앨범에는 참여하지 않았지만 이날 거리에는 함께 섭니다.
+이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다.
 
 ### 남수
 
@@ -122,6 +121,8 @@ rewards:
 > 팔레스타인에서 한반도까지, 전쟁이 끝나지 않는 한 우리의 노래도 끝나지 않는다.
 
 ## 후원해 주시면 보내 드리는 것 — 〈이름을 모르는 먼 곳의 그대에게〉
+
+![〈이름을 모르는 먼 곳의 그대에게〉 앨범 표지](/images/funding/keep-singing-for-palestine/album.webp "260")
 
 2024년, 강정피스앤뮤직캠프는 캠프를 열지 못했습니다. 대신 12팀의 뮤지션이 모여 앨범 한 장을 만들었습니다. 록과 포크와 재즈와 일렉트로닉이 한 장에 들어갔고, 히든 트랙을 포함해 모두 13곡이 됐습니다.
 
