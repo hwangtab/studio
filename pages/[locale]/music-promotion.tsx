@@ -135,7 +135,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'musicPromotion.faq.items', 8),
+    () => createTranslatedQaItems(t, 'musicPromotion.faq.items', 9),
     [t]
   );
 
@@ -488,6 +488,57 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         </ol>
       </Section>
 
+      <Section>
+        {/* 이 섹션만 단일 컬럼이라 제목은 가운데, 본문은 왼쪽으로 축이 둘이었다.
+            나머지 섹션(outcome·deliverables·process)과 같은 3열 카드로 맞춘다. */}
+        <SectionHeading
+          title={t('musicPromotion.review.title')}
+          subtitle={t('musicPromotion.review.lead')}
+        />
+        {/* 세 항목뿐이라 카드 3열은 과했다. 체크 아이콘이 일렬로 서면서
+            타임라인의 번호 마커와 같은 원리로 시각적 중심을 만든다 —
+            제목이 가운데여도 축이 갈리지 않는다(#127에서 고쳤던 경우와 다르다). */}
+        <div className="mx-auto mt-10 max-w-3xl space-y-7">
+          {criteria.map((item, index) => (
+            <m.div
+              key={item.title}
+              {...createInViewEnterAnimation({ delay: index * 0.06 })}
+              className="flex gap-4"
+            >
+              <CheckCircle2
+                className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter"
+                aria-hidden="true"
+              />
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                  {item.body}
+                </p>
+              </div>
+            </m.div>
+          ))}
+        </div>
+        {/* 이 페이지 전체가 한 사람의 판단에 걸려 있는데 그 사람이 끝까지 익명이었다.
+            수상 이력은 쓰지 않고(운영자 톤) 이름과 소개 경로만 연다. */}
+        <p className="mx-auto mt-6 max-w-3xl text-center">
+          <Link
+            href={`/${locale}/author`}
+            className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline dark:text-primary-lighter"
+          >
+            {t('musicPromotion.review.producerLink')}
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
+          </Link>
+        </p>
+        <div className="mx-auto mt-8 max-w-3xl space-y-4 text-center">
+          <p className="rounded-xl bg-gray-50 p-5 text-sm leading-relaxed text-gray-600 dark:bg-gray-900/40 dark:text-gray-300">
+            {t('musicPromotion.review.rejection')}
+          </p>
+          <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+            {t('musicPromotion.review.why')}
+          </p>
+        </div>
+      </Section>
+
       <Section id="pricing" className="scroll-mt-32">
         <SectionHeading
           title={t('musicPromotion.pricing.title')}
@@ -535,46 +586,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                 </Link>
               </>
             )}
-          </p>
-        </div>
-      </Section>
-
-      <Section>
-        {/* 이 섹션만 단일 컬럼이라 제목은 가운데, 본문은 왼쪽으로 축이 둘이었다.
-            나머지 섹션(outcome·deliverables·process)과 같은 3열 카드로 맞춘다. */}
-        <SectionHeading
-          title={t('musicPromotion.review.title')}
-          subtitle={t('musicPromotion.review.lead')}
-        />
-        {/* 세 항목뿐이라 카드 3열은 과했다. 체크 아이콘이 일렬로 서면서
-            타임라인의 번호 마커와 같은 원리로 시각적 중심을 만든다 —
-            제목이 가운데여도 축이 갈리지 않는다(#127에서 고쳤던 경우와 다르다). */}
-        <div className="mx-auto mt-10 max-w-3xl space-y-7">
-          {criteria.map((item, index) => (
-            <m.div
-              key={item.title}
-              {...createInViewEnterAnimation({ delay: index * 0.06 })}
-              className="flex gap-4"
-            >
-              <CheckCircle2
-                className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter"
-                aria-hidden="true"
-              />
-              <div>
-                <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                  {item.body}
-                </p>
-              </div>
-            </m.div>
-          ))}
-        </div>
-        <div className="mx-auto mt-8 max-w-3xl space-y-4 text-center">
-          <p className="rounded-xl bg-gray-50 p-5 text-sm leading-relaxed text-gray-600 dark:bg-gray-900/40 dark:text-gray-300">
-            {t('musicPromotion.review.rejection')}
-          </p>
-          <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-            {t('musicPromotion.review.why')}
           </p>
         </div>
       </Section>

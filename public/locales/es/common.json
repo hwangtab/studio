@@ -1565,7 +1565,7 @@
       "items": [
         {
           "q": "¿Qué le pasa a mi música si hago esto?",
-          "a": "La escucha gente que no te conoce. La música llega a la bandeja de entrada de redacciones, radios y tiendas de discos de Corea y del extranjero que se dedican a buscar música, acompañada de un texto escrito en el idioma que leen. Antes de enviar nada te confirmamos con cifras a cuántos destinatarios irá, y al terminar el informe muestra que se hizo con ese número y qué volvió. Las cinco notas de prensa y la página de press kit siguen siendo tuyas cuando la campaña acaba."
+          "a": "Tu música queda sobre la mesa de gente que no te conoce. La música llega a la bandeja de entrada de redacciones, radios y tiendas de discos de Corea y del extranjero que se dedican a buscar música, acompañada de un texto escrito en el idioma que leen. Antes de enviar nada te confirmamos con cifras a cuántos destinatarios irá, y al terminar el informe muestra que se hizo con ese número y qué volvió. Las cinco notas de prensa y la página de press kit siguen siendo tuyas cuando la campaña acaba."
         },
         {
           "q": "¿Qué hacen exactamente?",
@@ -1621,7 +1621,7 @@
           "Extranjero",
           "Ninguno",
           "Sobre todo anglosajón",
-          "60 países · 9 idiomas"
+          "60 países · nota de prensa en 5 idiomas"
         ],
         [
           "Precio",
@@ -1703,7 +1703,7 @@
     },
     "review": {
       "title": "Primero contamos a cuántos se puede enviar",
-      "lead": "El productor escucha el disco de principio a fin y te dice dónde, y aproximadamente a cuántos medios de Corea y del extranjero, se puede enviar esta música. Tres días hábiles, gratis. No es un sitio donde se puntúe si la música está bien hecha, sino donde averiguamos con qué ventanillas encaja. Decides después de ver la cifra.",
+      "lead": "El productor escucha el disco de principio a fin y te dice dónde, y aproximadamente a cuántos medios de Corea y del extranjero, se puede enviar esta música. Tres días hábiles, gratis. Solo enviamos la música que hemos aceptado, así que no se trabaja en balde ni de un lado ni del otro. Decides después de ver la cifra.",
       "criteria": [
         {
           "title": "Qué medios cubren esta música",
@@ -1715,11 +1715,12 @@
         },
         {
           "title": "El productor lo escucha hasta el final",
-          "body": "Un productor con quince años en la escena musical escucha el álbum del primer tema al último. Un correo escrito por alguien que lo escuchó entero no se parece a uno que no, y quien lo recibe lo nota."
+          "body": "El productor Hwang Kyungha escucha el álbum del primer tema al último. Lleva quince años ideando y produciendo discos independientes. Un correo escrito por alguien que lo escuchó entero no se parece a uno que no, y quien lo recibe lo nota."
         }
       ],
       "rejection": "Respondemos en tres días hábiles y gratis. En la respuesta va escrito, en cifras, a cuántos medios de qué tipo se puede enviar. Si vemos que la ventanilla adecuada no es la nuestra, también lo escribimos tal cual y añadimos, hasta donde sepamos, adónde te conviene enviarlo.",
-      "why": "Una lista no es algo que se usa una vez y se tira. Las redacciones que cubren ese género son las mismas para tu próximo disco, y mandarles una y otra vez material que no encaja es lo que cierra esas ventanillas. Lo que compras no es una lista de direcciones, sino unas ventanillas donde la confianza sigue viva."
+      "why": "No es el primer correo a una dirección que vemos por primera vez. A las mismas redacciones, las mismas radios y las mismas tiendas de discos llevamos quince años escribiendo, y esas ventanillas siguen sin cerrarse. Es porque quien está al otro lado sabe que no mandamos cualquier cosa: por eso no aceptamos la música que a esas ventanillas les costaría recibir. Lo que compras no es una lista de direcciones, sino unas ventanillas que se han mantenido abiertas así.",
+      "producerLink": "Ver el perfil del productor"
     },
     "pricing": {
       "title": "Precio",
@@ -1742,6 +1743,10 @@
         {
           "q": "¿Por qué el envío tarda de una a tres semanas?",
           "a": "Cada tipo de medio recibe un texto distinto, y el correo enviado de golpe no llega a las bandejas de entrada. Ir región por región e idioma por idioma hace que el disco se lea más. «Namsan Tower Lights» salió a 1.270 sitios a lo largo de trece días (datos a 14 de septiembre de 2026)."
+        },
+        {
+          "q": "¿De dónde han salido esas direcciones?",
+          "a": "Son canales de trabajo que los propios medios, publicaciones, emisoras y distribuidoras han hecho públicos: redacciones, buzones de avisos y de envío de material, y cosas así. No recogemos direcciones de uso personal privado, y en cada correo que enviamos indicamos dónde localizamos esa dirección. La baja se tramita de una sola vez dentro del correo y la dirección sale de la lista en ese mismo momento. Podemos hacerlo porque no es una lista que se compre y se venda, sino una que reunimos y mantenemos nosotros."
         },
         {
           "q": "¿Qué tenemos que preparar?",

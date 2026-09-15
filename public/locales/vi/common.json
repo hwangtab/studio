@@ -1565,7 +1565,7 @@
       "items": [
         {
           "q": "Làm việc này thì âm nhạc của tôi sẽ ra sao?",
-          "a": "Những người chưa biết bạn sẽ nghe. Bản nhạc đến hộp thư của các ban biên tập, đài phát thanh và cửa hàng đĩa trong lẫn ngoài nước — những người lấy việc đi tìm nhạc làm nghề — kèm bản thảo viết bằng đúng ngôn ngữ họ đọc. Sẽ gửi tới bao nhiêu nơi, chúng tôi chốt bằng con số và báo bạn trước khi gửi; xong việc, báo cáo cho thấy đã làm đúng con số đó và nhận lại được gì. Năm bản thông cáo cùng trang press kit vẫn còn lại sau khi chiến dịch kết thúc."
+          "a": "Bản nhạc được đặt lên bàn làm việc của những người chưa biết bạn. Bản nhạc đến hộp thư của các ban biên tập, đài phát thanh và cửa hàng đĩa trong lẫn ngoài nước — những người lấy việc đi tìm nhạc làm nghề — kèm bản thảo viết bằng đúng ngôn ngữ họ đọc. Sẽ gửi tới bao nhiêu nơi, chúng tôi chốt bằng con số và báo bạn trước khi gửi; xong việc, báo cáo cho thấy đã làm đúng con số đó và nhận lại được gì. Năm bản thông cáo cùng trang press kit vẫn còn lại sau khi chiến dịch kết thúc."
         },
         {
           "q": "Các bạn làm những gì?",
@@ -1621,7 +1621,7 @@
           "Nước ngoài",
           "Không",
           "Chủ yếu nói tiếng Anh",
-          "60 quốc gia · 9 ngôn ngữ"
+          "60 quốc gia · thông cáo báo chí 5 ngôn ngữ"
         ],
         [
           "Giá",
@@ -1703,7 +1703,7 @@
     },
     "review": {
       "title": "Chúng tôi đếm trước số nơi sẽ gửi",
-      "lead": "Nhà sản xuất nghe trọn album, rồi đếm và cho bạn biết trong nước lẫn ngoài nước có khoảng bao nhiêu đầu mối xứng đáng nhận bản nhạc này và là những nơi nào. 3 ngày làm việc, miễn phí. Đây không phải chỗ chấm điểm nhạc hay hay dở, mà là chỗ tìm xem bản nhạc này hợp với những cửa nào. Bạn xem con số rồi quyết định.",
+      "lead": "Nhà sản xuất nghe trọn album, rồi đếm và cho bạn biết trong nước lẫn ngoài nước có khoảng bao nhiêu đầu mối xứng đáng nhận bản nhạc này và là những nơi nào. 3 ngày làm việc, miễn phí. Chúng tôi chỉ gửi bản nhạc đã nhận lời làm, nên cả bên gửi lẫn bên nhận đều không mất công vô ích. Bạn xem con số rồi quyết định.",
       "criteria": [
         {
           "title": "Những nơi nào đưa tin về dòng nhạc này",
@@ -1715,11 +1715,12 @@
         },
         {
           "title": "Nhà sản xuất nghe đến hết",
-          "body": "Một nhà sản xuất đã làm 15 năm trong giới nhạc sẽ nghe album từ đầu đến cuối. Email của người đã nghe hết và email của người chưa nghe hết, bên nhận phân biệt được."
+          "body": "Nhà sản xuất Hwang Kyungha nghe album từ đầu đến cuối. Anh đã mười lăm năm lên kế hoạch và làm ra những đĩa nhạc indie. Email của người đã nghe hết và email của người chưa nghe hết, bên nhận phân biệt được."
         }
       ],
       "rejection": "Chúng tôi trả lời trong 3 ngày làm việc và không tính phí. Trong câu trả lời có con số: có thể gửi tới bao nhiêu đầu mối thuộc những loại nào. Nếu thấy cửa phù hợp không nằm ở chỗ chúng tôi, chúng tôi cũng ghi đúng như vậy, kèm theo những nơi bạn nên gửi trong phạm vi hiểu biết của mình.",
-      "why": "Danh sách không phải thứ dùng một lần rồi bỏ. Những cánh cửa chuyên đưa tin về dòng nhạc đó vẫn là những cánh cửa ấy ở album kế tiếp, và cứ gửi tài liệu không phù hợp nhiều lần thì cánh cửa ấy đóng lại. Thứ bạn mua không phải một danh sách địa chỉ, mà là những cánh cửa mà lòng tin vẫn còn sống."
+      "why": "Đây không phải email lần đầu gửi tới một địa chỉ lạ. Vẫn những ban biên tập ấy, những đài phát thanh ấy, những cửa hàng đĩa ấy — chúng tôi đã gửi suốt mười lăm năm và những cánh cửa đó đến nay vẫn chưa đóng. Bởi bên nhận biết rằng chúng tôi không gửi bừa — nên bản nhạc mà bên đó khó lòng nhận thì chúng tôi cũng không nhận. Thứ bạn mua không phải một danh sách địa chỉ, mà là những cánh cửa được giữ gìn như vậy.",
+      "producerLink": "Xem giới thiệu nhà sản xuất"
     },
     "pricing": {
       "title": "Giá",
@@ -1742,6 +1743,10 @@
         {
           "q": "Vì sao việc gửi mất một đến ba tuần?",
           "a": "Mỗi loại đầu báo nhận một bản viết khác nhau, và thư gửi dồn một lúc thì không vào được hộp thư đến. Gửi lần lượt theo khu vực và ngôn ngữ thì số lượng thực sự được đọc nhiều hơn. 〈Namsan Tower Lights〉 đã đến 1.270 nơi trong mười ba ngày (số liệu tính đến ngày 14 tháng 9 năm 2026)."
+        },
+        {
+          "q": "Những địa chỉ đó lấy từ đâu?",
+          "a": "Đó là các đầu mối công việc do chính cơ quan báo chí, tòa soạn, đài phát thanh và nhà phân phối công khai — hòm thư ban biên tập, địa chỉ nhận tin báo và bài gửi, những thứ như vậy. Chúng tôi không thu thập địa chỉ mà cá nhân dùng riêng, và trong mỗi email gửi đi đều ghi rõ đã tìm thấy địa chỉ đó ở đâu. Việc từ chối nhận thư được xử lý gọn trong một bước ngay trong email, và ngay lúc đó địa chỉ bị xóa khỏi danh sách. Làm được như vậy vì đây không phải danh sách mua đi bán lại, mà là danh sách chúng tôi tự thu thập và tự quản lý."
         },
         {
           "q": "Chúng tôi cần chuẩn bị những gì?",
