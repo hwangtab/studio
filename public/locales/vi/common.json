@@ -1581,7 +1581,7 @@
         },
         {
           "q": "Thể loại nhạc kén người nghe thì có sao không?",
-          "a": "Càng hẹp thì càng trúng. EP grindcore đã đi tới 125 đầu báo chuyên về metal, và 125 nơi đó là danh sách chúng tôi thu thập mới riêng cho album này. Con số nhỏ nghĩa là từng lá thư đều đến đúng nơi thực sự đưa tin về dòng nhạc ấy. Chúng tôi nghe trọn album rồi đếm trước xem có bao nhiêu nơi và báo bạn."
+          "a": "Thể loại hẹp không có nghĩa là gửi ít hơn. Chúng tôi tìm các đầu mối chuyên đưa tin về dòng nhạc đó để bổ sung vào danh sách, rồi cộng thêm báo chí âm nhạc quốc tế để gửi. Riêng cho EP grindcore của HWA, chúng tôi đã thu thập mới 116 đầu mối chuyên về metal — không có thì chúng tôi lập ra. Chúng tôi nghe trọn album rồi đếm trước xem gửi tới đâu, bao nhiêu nơi và báo bạn."
         },
         {
           "q": "Nhạc đã phát hành rồi có làm được không?",
@@ -1634,8 +1634,8 @@
       "rowHeader": "Hạng mục so sánh"
     },
     "evidence": {
-      "title": "Quy mô gửi do âm nhạc quyết định",
-      "subtitle": "Quy mô gửi do thể loại và vùng ngôn ngữ quyết định. Con số dao động từ hơn trăm đến hơn nghìn nơi, và dù rơi vào bên nào thì đó cũng là con số hợp với bản nhạc ấy. Đây là số liệu đo được từ hai chiến dịch chúng tôi tự thực hiện, cho thấy biên độ đó.",
+      "title": "Chúng tôi đã gửi thực tế như thế này",
+      "subtitle": "Dù là dòng nhạc nào, chúng tôi cũng tìm trước các đầu mối chuyên đưa tin về thể loại đó, rồi cộng thêm báo chí âm nhạc quốc tế để gửi. Đây là số liệu đo được từ hai chiến dịch chúng tôi tự thực hiện.",
       "cases": [
         {
           "title": "Mariko & Yukie 〈Namsan Tower Lights〉",
@@ -1647,18 +1647,17 @@
             "Rải đều trong 13 ngày"
           ],
           "note": "15 bài hát tiếng Hàn do một cặp vợ chồng người Nhật sống ở Seoul thể hiện. Vì câu chuyện chạm tới khán giả nói tiếng Hàn, tiếng Nhật lẫn tiếng Anh nên album được gửi bằng 9 ngôn ngữ. Studio NOL đảm nhiệm toàn bộ từ mixing đến lên kế hoạch, sản xuất và quảng bá phát hành. Số liệu gửi tính đến ngày 14 tháng 9 năm 2026.",
-          "label": "Rộng nhất"
+          "label": "Quy mô gửi"
         },
         {
           "title": "HWA 〈HWA〉",
           "meta": "EP grindcore · phát hành tháng 8/2026",
           "stats": [
-            "Gửi tới 125 nơi",
-            "Tập trung vào báo chí chuyên về metal",
+            "Thu thập mới 116 đầu mối chuyên về metal",
             "Trong nước và quốc tế cùng lúc"
           ],
-          "note": "Grindcore vốn có rất ít đầu mối truyền thông đưa tin. 125 nơi không phải là thiếu, mà là con số phù hợp với dòng nhạc này, và chúng tôi đã thu thập mới danh sách các đầu mối chuyên về metal riêng cho album này. Cố gửi thêm cho những nơi không phù hợp chỉ khiến thư bị trả lại và bị hủy đăng ký nhiều hơn.",
-          "label": "Thể loại hẹp"
+          "note": "Danh sách sẵn có của chúng tôi gần như không có nơi nào đưa tin về grindcore. Vì vậy, riêng cho album này chúng tôi đã tìm mới 116 đầu mối chuyên về metal, đài phát thanh và cửa hàng đĩa rồi bổ sung vào danh sách. Danh sách một khi đã lập thì nghệ sĩ metal tiếp theo dùng lại nguyên vẹn.",
+          "label": "Trường hợp lập danh sách mới"
         }
       ],
       "linkLabel": "Xem trang press kit chúng tôi đã làm thật",
@@ -1734,7 +1733,7 @@
       "criteria": [
         {
           "title": "Những nơi nào đưa tin về dòng nhạc này",
-          "body": "Chúng tôi có nhiều cửa ở indie, alternative, world music, city pop, metal và folk. Chúng tôi xem nhạc của bạn rơi vào nhánh nào và ở đó có bao nhiêu đầu mối. HWA đếm ra 125 nơi, 〈Namsan Tower Lights〉 đếm ra 1.270 nơi."
+          "body": "Chúng tôi có nhiều cửa ở indie, alternative, world music, city pop, metal và folk. Chúng tôi xem nhạc của bạn rơi vào nhánh nào và ở đó có bao nhiêu đầu mối. Nếu là thể loại chưa có trong danh sách sẵn có thì chúng tôi tìm mới — 116 đầu mối chuyên về metal cho HWA đã được thu thập đúng như vậy."
         },
         {
           "title": "Câu chuyện thành bài báo nằm ở đâu",

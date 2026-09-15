@@ -1581,7 +1581,7 @@
         },
         {
           "q": "¿Importa si el género es muy de nicho?",
-          "a": "Cuanto más estrecho, más preciso resulta. Un EP de grindcore llegó a 125 medios especializados en metal, y esos 125 se reunieron desde cero para ese disco. Que la cifra sea pequeña significa que cada correo que sale va a un sitio que de verdad cubre esa música. Escuchamos el disco entero y te decimos primero cuántos son."
+          "a": "Un género de nicho no significa un envío más pequeño. Buscamos los medios especializados que cubren ese género, los añadimos a la lista y los combinamos con la prensa musical internacional. Para el EP de grindcore de HWA reunimos desde cero 116 medios especializados en metal: si no están en la lista, la creamos. Escuchamos el disco entero y te decimos primero adónde y cuántos son."
         },
         {
           "q": "¿Sirve también para música ya publicada?",
@@ -1634,8 +1634,8 @@
       "rowHeader": "Aspecto comparado"
     },
     "evidence": {
-      "title": "El tamaño del envío lo decide la música",
-      "subtitle": "El tamaño del envío lo deciden el género y la zona lingüística. Va de los cientos a los miles, y en cualquiera de los dos casos es la cifra que le corresponde a esa música. Aquí está ese rango, con las cifras medidas de dos campañas que hicimos nosotros mismos.",
+      "title": "Así lo enviamos de verdad",
+      "subtitle": "Sea cual sea la música, primero buscamos los medios especializados que cubren ese género y les sumamos la prensa musical internacional. Estas son las cifras medidas de dos campañas que hicimos nosotros mismos.",
       "cases": [
         {
           "title": "Mariko & Yukie, «Namsan Tower Lights»",
@@ -1647,18 +1647,17 @@
             "repartido a lo largo de 13 días"
           ],
           "note": "Quince canciones en coreano interpretadas por un matrimonio japonés que vive en Seúl. Es una música que conecta con el público de habla coreana y japonesa, y también con el de habla inglesa, así que se envió en 9 idiomas. Studio NOL se encargó de todo, desde la mezcla hasta la planificación, la producción y la promoción del lanzamiento. Las cifras de envío corresponden al 14 de septiembre de 2026.",
-          "label": "Mayor alcance"
+          "label": "Tamaño del envío"
         },
         {
           "title": "HWA, «HWA»",
           "meta": "EP de grindcore · lanzado en agosto de 2026",
           "stats": [
-            "125 destinatarios",
-            "concentrado en prensa especializada en metal",
+            "116 medios especializados en metal reunidos desde cero",
             "Corea y el extranjero a la vez"
           ],
-          "note": "El grindcore simplemente tiene menos medios que lo cubran. 125 no es que falte: es el número que corresponde a este tipo de música, y reunimos desde cero una lista de medios especializados en metal para este disco. Forzar el envío a destinatarios que no encajan solo genera más rebotes y bajas.",
-          "label": "Género estrecho"
+          "note": "En nuestra lista existente casi no había medios que cubrieran el grindcore. Así que para este disco buscamos y añadimos 116 medios especializados en metal, programas de radio y tiendas de discos. Una vez creada, esa lista se usa tal cual para el siguiente artista de metal.",
+          "label": "Lista creada desde cero"
         }
       ],
       "linkLabel": "Ver una página de press kit que hicimos de verdad",
@@ -1734,7 +1733,7 @@
       "criteria": [
         {
           "title": "Qué medios cubren esta música",
-          "body": "Nuestras ventanillas son más densas en indie, alternativo, world music, city pop, metal y folk. Miramos de qué lado cae tu música y contamos cuántos hay ahí. Contado así, HWA dio 125 y «Namsan Tower Lights» dio 1.270."
+          "body": "Nuestras ventanillas son más densas en indie, alternativo, world music, city pop, metal y folk. Miramos de qué lado cae tu música y contamos cuántos hay ahí. Si el género no está en la lista existente, lo buscamos desde cero: así reunimos 116 medios especializados en metal para HWA."
         },
         {
           "title": "Dónde está la historia que se puede escribir",

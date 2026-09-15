@@ -1581,7 +1581,7 @@
         },
         {
           "q": "Janr juda tor bo'lsa ham bo'ladimi?",
-          "a": "Qanchalik tor bo'lsa, shunchalik aniq bo'ladi. Grindcore EP metalga ixtisoslashgan 125 nashrga bordi va o'sha 125 manzil aynan shu albom uchun yangidan yig'ilgan. Raqamning kichikligi — yuborilgan har bir xat shu musiqani haqiqatan yoritadigan joyga borishini bildiradi. Albomni tinglab, nechta manzil borligini avval sanab aytamiz."
+          "a": "Janr tor bo'lgani uchun kamroq yubormaymiz. O'sha janrni yorituvchi ixtisoslashgan nashrlarni topib ro'yxatga qo'shamiz va ustiga xalqaro musiqa nashrlarini qo'shib yuboramiz. HWAning grindcore EPsi uchun metalga ixtisoslashgan 116 nashrni yangidan yig'dik — yo'q bo'lsa, o'zimiz tuzamiz. Albomni oxirigacha tinglab, qayerga va nechta manzilga yuborilishini avval sanab aytamiz."
         },
         {
           "q": "Allaqachon chiqqan musiqa ham bo'ladimi?",
@@ -1634,8 +1634,8 @@
       "rowHeader": "Taqqoslash mezoni"
     },
     "evidence": {
-      "title": "Yuborish hajmini musiqa belgilaydi",
-      "subtitle": "Yuborish hajmini janr va til hududi belgilaydi. Raqam bir necha yuzdan minglabgacha o'zgaradi va qaysi bo'lishidan qat'i nazar, bu o'sha musiqaga mos son. O'zimiz olib borgan ikkita kampaniyaning o'lchangan raqamlari bilan shu farqni ko'rsatamiz.",
+      "title": "Biz aynan shunday yubordik",
+      "subtitle": "Qanday musiqa bo'lmasin, avval o'sha janrni yorituvchi ixtisoslashgan nashrlarni topamiz, ustiga xalqaro musiqa nashrlarini qo'shib yuboramiz. Quyida o'zimiz olib borgan ikkita kampaniyaning o'lchangan raqamlari.",
       "cases": [
         {
           "title": "Mariko & Yukie «Namsan Tower Lights»",
@@ -1647,18 +1647,17 @@
             "13 kunga taqsimlab"
           ],
           "note": "Seulda yashaydigan yapon er-xotin koreys tilida kuylagan 15 ta qo'shiq. Bu musiqa koreys va yapon tilidagi tinglovchilarga, shuningdek ingliz tilidagilarga ham yetib boradigan hikoya bo'lgani uchun 9 tilda yuborildi. Studio NOL mikslashdan tortib loyihalash, ishlab chiqarish va chiqarish PRigacha bo'lgan barcha ishni o'z zimmasiga oldi. Yuborish ko'rsatkichlari 2026-yil 14-sentabr holatiga ko'ra.",
-          "label": "Eng keng qamrov"
+          "label": "Yuborish hajmi"
         },
         {
           "title": "HWA «HWA»",
           "meta": "Grindcore EP · 2026-yil avgustda chiqdi",
           "stats": [
-            "125 manzilga yuborildi",
-            "metal nashrlariga qaratilgan",
+            "Metalga ixtisoslashgan 116 nashr yangidan yig'ildi",
             "ichkarida va chet elda bir vaqtda"
           ],
-          "note": "Grindcore janrini yorituvchi nashrlarning o'zi kam. 125 ta yetarli emasligidan emas, balki bu musiqaga mos son — va shu albom uchun metalga ixtisoslashgan nashrlar ro'yxatini yangidan yig'ib chiqdik. Mos kelmaydigan manzillarga zo'rma-zo'raki ko'proq yuborish faqat qaytgan xatlar va obunani bekor qilishni ko'paytiradi.",
-          "label": "Janr tor"
+          "note": "Mavjud ro'yxatimizda grindcore janrini yorituvchi nashrlar deyarli yo'q edi. Shuning uchun shu albom uchun metalga ixtisoslashgan 116 ta nashr, radio va plastinka do'konini yangidan topib, ro'yxatga qo'shdik. Bir marta tuzilgan ro'yxat keyingi metal ijrochisiga o'shaligicha ishlatiladi.",
+          "label": "Ro'yxat yangidan tuzilgan holat"
         }
       ],
       "linkLabel": "Haqiqatda tayyorlagan press-kit sahifamizni ko'rish",
@@ -1734,7 +1733,7 @@
       "criteria": [
         {
           "title": "Bu musiqani qayerda yoritishadi",
-          "body": "Indi, alternativ, world music, siti-pop, metal va folk yo'nalishlarida kanallarimiz qalin. Musiqangiz qaysi yo'nalishga tushishini va u yerda nechta manzil borligini sanaymiz. HWA shunday sanalganda 125 ta chiqqan, «Namsan Tower Lights» esa 1,270 ta."
+          "body": "Indi, alternativ, world music, siti-pop, metal va folk yo'nalishlarida kanallarimiz qalin. Musiqangiz qaysi yo'nalishga tushishini va u yerda nechta manzil borligini sanaymiz. Mavjud ro'yxatda yo'q janr bo'lsa, yangidan qidiramiz — HWA uchun metalga ixtisoslashgan 116 nashrni aynan shunday yig'dik."
         },
         {
           "title": "Maqola bo'ladigan hikoya qayerda",

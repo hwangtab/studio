@@ -1609,7 +1609,7 @@
         },
         {
           "q": "Does it matter if the genre is niche?",
-          "a": "The narrower it is, the more precise this gets. A grindcore EP went to 125 metal-specialist outlets, and that list of 125 was built from scratch for the record. A smaller number means every single email goes somewhere that genuinely covers that music. We listen to the whole thing and count the outlets for you first."
+          "a": "A niche genre does not mean a smaller send. We find the outlets that specialise in that genre, add them to the list, and combine them with international music press. For HWA's grindcore EP we gathered 116 metal-specialist outlets from scratch — if they aren't on the list, we build the list. We listen to the whole record and count where and how many first."
         },
         {
           "q": "Can you do this for music that's already out?",
@@ -1662,8 +1662,8 @@
       "rowHeader": "What we compare"
     },
     "evidence": {
-      "title": "The Music Decides the Send Size",
-      "subtitle": "Genre and language decide the size of a send-out. It ranges from the low hundreds to the low thousands, and either way it is the number that fits the music. Here is that range, in measured figures from two campaigns we ran ourselves.",
+      "title": "This Is How We Actually Sent It",
+      "subtitle": "Whatever the music is, we first find the outlets that specialise in that genre, then add international music press on top. These are measured figures from two campaigns we ran ourselves.",
       "cases": [
         {
           "title": "Mariko & Yukie, Namsan Tower Lights",
@@ -1675,18 +1675,17 @@
             "spread over 13 days"
           ],
           "note": "Fifteen songs sung in Korean by a Japanese couple living in Seoul — a story that reaches Korean and Japanese speakers as well as English speakers, so it went out in 9 languages. Studio NOL handled everything from mixing to planning, production, and release PR. Send figures are as of 14 September 2026.",
-          "label": "Widest reach"
+          "label": "Send size"
         },
         {
           "title": "HWA, HWA",
           "meta": "Grindcore EP · released August 2026",
           "stats": [
-            "125 outlets",
-            "concentrated on metal press",
+            "116 metal-specialist outlets newly gathered",
             "Korea and abroad at once"
           ],
-          "note": "Grindcore simply has fewer outlets that cover it. 125 isn't a shortfall — it's the right number for this kind of music, and we built a new list of metal-specialist outlets just for this record. Padding the list with outlets that don't fit only adds bounces and unsubscribes.",
-          "label": "Narrow genre"
+          "note": "Almost nothing on our existing list covered grindcore. So for this record we went and found 116 metal-specialist outlets, radio shows and record shops, and added them to the list. Once a list is built, the next metal artist gets it as it is.",
+          "label": "List built from scratch"
         }
       ],
       "linkLabel": "See a press kit page we actually built",
@@ -1762,7 +1761,7 @@
       "criteria": [
         {
           "title": "Which outlets cover this music",
-          "body": "Our channels run deepest in indie, alternative, world music, city pop, metal and folk. We work out which of them your music belongs to and count how many there are. Counted that way, HWA came to 125 and Namsan Tower Lights to 1,270."
+          "body": "Our channels run deepest in indie, alternative, world music, city pop, metal and folk. We work out which of them your music belongs to and count how many there are. If the genre isn't on our existing list, we go and find it — that is how we gathered 116 metal-specialist outlets for HWA."
         },
         {
           "title": "Where the story a journalist can write is",
