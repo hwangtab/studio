@@ -448,16 +448,33 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           title={t('musicPromotion.process.title')}
           subtitle={t('musicPromotion.process.subtitle')}
         />
-        <ol className="mt-8 grid gap-6 md:grid-cols-3">
+        {/* 단계는 순서가 있는 흐름이라 그리드에 흩어 놓으면 흐름이 안 보인다 —
+            번호를 붙여도 왼→오른→다음 줄로 읽히는 힘은 약하다. 세로 타임라인은
+            순서를 형태로 말한다.
+
+            페이지 리듬도 같이 본다. 이 페이지는 3열 카드가 다섯 섹션 연속이라
+            스크롤이 단조로웠다. 타임라인·카드·표 세 형태가 섞여야 읽는 눈이 쉰다.
+
+            왼쪽 정렬이지만 축이 둘로 갈리지 않는다 — 번호 마커가 일렬로 서서
+            그 자체로 시각적 중심을 만든다(review 섹션에서 겪은 문제와 다른 경우). */}
+        <ol className="relative mx-auto mt-10 max-w-3xl">
           {howToSteps.map((step, index) => (
-            <li key={step.name}>
-              <BaseCard className="h-full p-6">
-                <span className="text-sm font-bold text-primary dark:text-primary-lighter">{String(index + 1).padStart(2, '0')}</span>
-                <h3 className="mt-2 font-bold text-gray-900 dark:text-white">{step.name}</h3>
+            <li key={step.name} className="relative flex gap-5 pb-10 last:pb-0">
+              {index < howToSteps.length - 1 && (
+                <span
+                  className="absolute left-[19px] top-11 h-[calc(100%-2.75rem)] w-px bg-gradient-to-b from-primary/40 to-primary/10 dark:from-primary-lighter/40 dark:to-primary-lighter/10"
+                  aria-hidden="true"
+                />
+              )}
+              <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-primary/25 bg-primary/10 text-sm font-bold tabular-nums text-primary dark:border-primary-lighter/25 dark:bg-primary-lighter/10 dark:text-primary-lighter">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <div className="pt-1.5">
+                <h3 className="font-bold text-gray-900 dark:text-white">{step.name}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                   {step.text}
                 </p>
-              </BaseCard>
+              </div>
             </li>
           ))}
         </ol>
