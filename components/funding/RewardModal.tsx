@@ -146,6 +146,10 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 initialRewardId={reward.id}
                 remaining={remaining}
                 onPaymentActiveChange={handlePaymentActiveChange}
+                // 카드를 눌러 이미 고르고 들어왔다. 여기서 또 고르게 하지 않는다.
+                lockedReward
+                // 모달 본문이 자체 스크롤 컨테이너라 sticky 요약이 폼 위로 떠 겹친다.
+                stickySummary={false}
               />
             </>
           )}
