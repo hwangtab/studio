@@ -361,9 +361,10 @@ LP 순위를 되돌릴 코드 수단이 없고(위 참조), monthly1이 2~3위�
   8/17 pricing h1 즉답화(`93b788596a`)와 StoryCTA→LP 배선을 구글이 아직 본 적이 없다. 사이트맵
   lastmod은 정확히 나가고 있다(9/08·9/04). 9/02 "LP는 나이 문제라 기다린다"는 판정은 **구글이
   다시 긁는다는 전제** 위에 있었는데 그 전제가 약하다. 색인 요청은 `docs/seo-indexing-remediation.md`
-  3.3에 계획만 있고 실행된 적이 없다 — LP 4종(`/ko/pricing`·`/ko/recording`·`/ko/mixing-mastering`·
-  `/ko/lesson`)에 GSC URL 검사 → 색인 요청을 수동으로 넣는 것이 남은 조치다. 10/26 재평가는 그 뒤에
-  의미가 있다.
+  3.3에 계획만 있고 실행된 적이 없었다. **2026-09-15 실행** — hwangtab@gmail.com 계정, LP 4종
+  (`/ko/pricing`·`/ko/recording`·`/ko/mixing-mastering`·`/ko/lesson`) 전부 "우선순위 크롤링 대기열에
+  추가" 확인. 요청 직전 콘솔 표시 마지막 크롤: pricing 7/26 · recording 8/11 · mixing-mastering 9/09 ·
+  lesson 8/29. 재크롤 여부는 다음 라운드에 URL 검사로 확인할 것. 10/26 재평가는 그 뒤에 의미가 있다.
 - **lastmod 오상승 재발.** `#98`(music-promotion)이 `pageLastmod.json`을 재생성하며 무관한
   `recording`·`mixing-mastering`을 9/15로 올렸다(정본 9/04 `89dafefab2`). CLAUDE.md lastmod 절이
   경고한 그대로다. 이 커밋에서 되돌렸다. 크롤이 드문 페이지일수록 lastmod 신뢰가 중요하다.
