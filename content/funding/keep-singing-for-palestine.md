@@ -13,7 +13,7 @@ lastmod: 2026-09-14
 rewards:
   - id: mp3
     title: 음원 후원 — MP3
-    description: 앨범 13곡 전체를 MP3 320kbps로 받으실 수 있습니다. 내려받기 주소는 결제 확정 메일과 후원 확인 페이지에 함께 보내 드립니다.
+    description: 앨범 13곡 전체를 MP3 320kbps로 보내 드립니다. 내려받기 주소는 결제 확정 메일과 후원 확인 페이지에 함께 보내 드립니다.
     amount: 10000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -21,8 +21,8 @@ rewards:
       - label: MP3 320kbps
         url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-mp3-320.zip
   - id: wav-cd
-    title: 음원 후원 — MP3 + WAV (CD 음질)
-    description: 위 MP3에 더해 16bit 44.1kHz WAV 원본을 함께 받으실 수 있습니다.
+    title: 음원 후원 — MP3 + CD 음질, 두 가지 모두
+    description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.
     amount: 30000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -32,8 +32,8 @@ rewards:
       - label: WAV 16bit 44.1kHz (CD 음질)
         url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-16-44.zip
   - id: wav-hires
-    title: 음원 후원 — 24bit 96kHz 고음질
-    description: 위 두 가지에 더해 스튜디오 마스터와 같은 24bit 96kHz WAV 원본까지 함께 받으실 수 있습니다. 세 가지 음질을 모두 드립니다(고음질 원본은 약 1.8GB).
+    title: 음원 후원 — 24bit 96kHz까지 세 가지 모두
+    description: 세 가지 음질을 모두 보내 드립니다. MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)입니다.
     amount: 50000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -45,8 +45,8 @@ rewards:
       - label: WAV 24bit 96kHz (스튜디오 마스터)
         url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-24-96.zip
   - id: wav-hires-plus
-    title: 든든한 후원 — 24bit 96kHz 고음질
-    description: 위와 같이 세 가지 음질을 모두 받으시고, 원하시면 후원자 명단에 이름을 올려 드립니다. 이름 공개 여부는 후원 확인 페이지에서 언제든 바꾸실 수 있습니다.
+    title: 든든한 후원 — 세 가지 모두 + 후원자 명단
+    description: 세 가지 음질을 모두 보내 드리고, 원하시면 후원자 명단에 이름을 올려 드립니다. 이름 공개 여부는 후원 확인 페이지에서 언제든 바꾸실 수 있습니다.
     amount: 100000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -149,7 +149,7 @@ rewards:
 | 12 | 우리 | 이서영 |
 | 13 | 모르는 (Hidden Track) | 모레도토요일 |
 
-후원 금액이 오를수록 받는 음질이 더해집니다. 1만 원은 MP3 320kbps, 3만 원은 거기에 CD 음질인 16bit 44.1kHz WAV를 더해서, 5만 원부터는 여기에 24bit 96kHz 스튜디오 마스터까지 세 가지를 모두 보내 드립니다. 위 티어를 고르셨다고 해서 MP3를 못 받는 일은 없습니다 — 1.8GB짜리 원본은 집에서 듣고 MP3는 들고 다니시라는 뜻입니다. 어느 티어든 13곡 전체입니다.
+후원 금액이 오를수록 받는 음질이 더해집니다. 1만 원은 MP3 320kbps, 3만 원은 거기에 CD 음질 WAV까지 두 가지, 5만 원부터는 24bit 96kHz 스튜디오 마스터까지 세 가지를 전부 보내 드립니다. 위 티어를 고르셨다고 MP3를 못 받는 일은 없습니다 — 1.8GB짜리 원본은 집에서 듣고 MP3는 들고 다니시라는 뜻입니다. 어느 티어든 13곡 전체입니다.
 
 ## 후원금은 이렇게 쓰입니다
 
