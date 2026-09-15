@@ -1524,7 +1524,7 @@
     },
     "hero": {
       "title": "Chiqarish PRi",
-      "subtitleLine1": "Sizni tanimaydigan odamlar eshitadi — Koreya musiqa nashrlariga va 60 ta mamlakatga, har biri o'qiydigan tilda",
+      "subtitleLine1": "Sizni tanimaydigan odamlarga yetib boradi — Koreya musiqa nashrlariga va 60 ta mamlakatga, har biri o'qiydigan tilda",
       "subtitleLine2": "Press-reliz yozishdan tortib yuborish va hisobotgacha — {{intro}} · albomni oxirigacha tinglab, nechta manzilga yuborish mumkinligini sanab beramiz, keyin to'laysiz",
       "badge": "Chiqarish to'plamida {{list}} evaziga taqdim etilgan ish · dastlabki hamkor narxi {{intro}} ({{until}} gacha)",
       "alt": "Tungi Seul markazi manzarasi — chiroqlar ostida yoyilgan shahar"
@@ -1534,7 +1534,7 @@
       "subtitle": "Maqola chiqadimi-yo'qmi — buni tahririyat hal qiladi. Bizning zimmamizdagi ish musiqani o'sha tahririyat stoliga qo'yish, va shu yo'lda ijodkorda oltita narsa qoladi.",
       "items": [
         {
-          "title": "Sizni tanimaydigan odam eshitadi",
+          "title": "Sizni tanimaydigan odamning ko'z o'ngiga qo'yiladi",
           "body": "Chiqqanning ertasiga striming havolasini ochadiganlar, asosan, sizni allaqachon biladiganlar. Bu ish musiqani kasbi musiqa izlash bo'lgan odamlarning — tahririyat, radio, plastinka do'koni va festivallarning — kiruvchi qutisiga qo'yadi. «Namsan Tower Lights» ana shunday 1,218 manzilga bordi."
         },
         {
@@ -1662,7 +1662,7 @@
         }
       ],
       "linkLabel": "Haqiqatda tayyorlagan press-kit sahifamizni ko'rish",
-      "priorWork": "Alohida xizmatga aylangani shu yildan, lekin bu yangi ish emas. Undan oldin ham xuddi shu ishni {{list}} turadigan chiqarish loyihasi to'plamining bir qismi sifatida qilib kelganmiz; yuqoridagi ikki holat esa kampaniya bo'yicha raqam yuritishni boshlagan paytimiz."
+      "priorWork": "Alohida xizmatga aylangani shu yildan, lekin bu yangi ish emas. Undan oldin ham xuddi shu ishni chiqarish loyihasi to'plamining bir qismi sifatida qilib kelganmiz; yuqoridagi ikki holat esa kampaniya bo'yicha raqam yuritishni boshlagan paytimiz."
     },
     "deliverables": {
       "title": "Nimalar kiradi",
@@ -1742,17 +1742,17 @@
         },
         {
           "title": "Prodyuser oxirigacha tinglaydi",
-          "body": "Musiqa sahnasida 15 yil ishlagan prodyuser albomni boshidan oxirigacha tinglaydi. Oxirigacha tinglagan odam yozgan xat bilan tinglamagani yozgan xatni qabul qiluvchi tomon ajratadi. Bizning xatlarimiz hamon ochilayotganining sababi shunda."
+          "body": "Musiqa sahnasida 15 yil ishlagan prodyuser albomni boshidan oxirigacha tinglaydi. Oxirigacha tinglagan odam yozgan xat bilan tinglamagani yozgan xatni qabul qiluvchi tomon ajratadi."
         }
       ],
       "rejection": "3 ish kuni ichida, bepul javob beramiz. Javobda qanday turdagi nechta nashrga yuborish mumkinligi raqam bilan yoziladi. Agar mos kanal biz tomonda emas deb hisoblasak, buni ham borligicha yozamiz va qayerga yuborganingiz ma'qulligini bilganimizcha qo'shib beramiz.",
-      "why": "Biz yuboradigan manzillar har safar o'sha tahririyat, o'sha radio, o'sha plastinka do'koni. O'sha eshiklarning ochiq turgani — bu xizmatning asl mohiyati. Shuning uchun mos kelmaydigan materialni yubormaymiz — siz sotib olayotgan narsa manzillar ro'yxati emas, ishonch hali tirik turgan eshiklar."
+      "why": "Ro'yxat bir marta ishlatib tashlanadigan narsa emas. O'sha janr haqida yozadigan eshiklar keyingi albomingizda ham o'sha eshiklar bo'ladi, mos kelmaydigan materialni qayta-qayta yuboraversangiz esa o'sha eshik yopiladi. Siz sotib olayotgan narsa manzillar ro'yxati emas, ishonch hali tirik turgan eshiklar."
     },
     "pricing": {
       "title": "Narx",
       "subtitle": "Yagona xizmat. Darajalarga bo'lmaymiz.",
       "note": "Bu ish reliz loyihasi to'plamining doimiy qismi sifatida {{list}} evaziga taqdim etib kelingan. Endi uni birinchi marta alohida xizmat sifatida chiqarayotganimiz uchun {{until}} gacha dastlabki hamkor narxida olamiz — buning evaziga ish tajribasi va hisobotni ommaga ko'rsatishga ruxsat berasiz; bu narx {{until}} dan keyin tuzilgan shartnomalarga tatbiq etilmaydi.",
-      "capacity": "Oyiga 3 ta ijodkor. Bitta ishga besh kun to'liq ketadi, shuning uchun ish davom etayotgan paytda sizning albomingiz o'sha haftaning yagona ishi bo'ladi."
+      "capacity": "Oyiga 3 ta ijodkor. Bitta ishga besh kun jamlanib ishlaymiz, shuning uchun bundan ortig'ini olmaymiz."
     },
     "faq": {
       "title": "Ko'p so'raladigan savollar",

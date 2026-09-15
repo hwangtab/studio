@@ -1518,13 +1518,13 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Quảng bá phát hành nhạc — tìm đúng nơi sẽ đưa tin về đĩa nhạc | Studio NOL",
-      "description": "Chúng tôi tìm các đầu báo âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia sẽ đưa tin về âm nhạc của bạn, rồi viết cho từng nơi bằng ngôn ngữ họ đọc. Bao gồm thông cáo báo chí 5 thứ tiếng, trang press kit và báo cáo gửi đi. 1.200.000 KRW → 300.000 KRW.",
+      "title": "Quảng bá phát hành nhạc — tìm đúng nơi có thể đưa tin về đĩa nhạc | Studio NOL",
+      "description": "Chúng tôi tìm các đầu báo âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia có thể đưa tin về âm nhạc của bạn, rồi viết cho từng nơi bằng ngôn ngữ họ đọc. Bao gồm thông cáo báo chí 5 thứ tiếng, trang press kit và báo cáo gửi đi. 1.200.000 KRW → 300.000 KRW.",
       "keywords": "quảng bá nhạc, quảng bá album, thông cáo báo chí âm nhạc, PR nhạc indie, PR âm nhạc, quảng bá phát hành, viết thông cáo báo chí, quảng bá đĩa nhạc, dịch vụ PR âm nhạc, PR âm nhạc quốc tế, press kit, làm EPK"
     },
     "hero": {
       "title": "Quảng bá phát hành nhạc",
-      "subtitleLine1": "Để những người chưa biết bạn được nghe — tới các đầu báo âm nhạc Hàn Quốc và 60 quốc gia, bằng ngôn ngữ từng nơi đọc",
+      "subtitleLine1": "Đến được với những người chưa biết bạn — tới các đầu báo âm nhạc Hàn Quốc và 60 quốc gia, bằng ngôn ngữ từng nơi đọc",
       "subtitleLine2": "Từ viết thông cáo đến gửi đi và báo cáo — {{intro}} · chúng tôi nghe trọn album rồi đếm cho bạn số nơi sẽ gửi, sau đó bạn mới thanh toán",
       "badge": "Thuộc gói phát hành với {{list}} · giá đối tác sớm {{intro}} (đến {{until}})",
       "alt": "Toàn cảnh trung tâm Seoul về đêm, thành phố trải dài dưới ánh đèn"
@@ -1534,7 +1534,7 @@
       "subtitle": "Có đăng bài hay không là do ban biên tập quyết định. Phần của chúng tôi là đặt bản nhạc lên bàn của những ban biên tập ấy — và trên đường đó, nghệ sĩ giữ lại được sáu thứ.",
       "items": [
         {
-          "title": "Người chưa biết bạn sẽ nghe",
+          "title": "Được đặt trước mặt người chưa biết bạn",
           "body": "Ngày hôm sau khi phát hành, người mở link streaming phần lớn là người đã biết bạn. Việc này đặt bản nhạc vào hộp thư của những người lấy việc đi tìm nhạc làm nghề — ban biên tập, đài phát thanh, cửa hàng đĩa, lễ hội. 〈Namsan Tower Lights〉 đã đến 1.218 nơi như vậy."
         },
         {
@@ -1603,7 +1603,7 @@
           "Gửi tới đâu",
           "908 đầu mối cùng lúc",
           "Đầu báo âm nhạc",
-          "Đi tìm nơi sẽ đưa tin về dòng nhạc này — 〈Namsan Tower Lights〉 1.218 nơi, 60 nước"
+          "Đi tìm nơi chuyên đưa tin về dòng nhạc này — 〈Namsan Tower Lights〉 1.218 nơi, 60 nước"
         ],
         [
           "Bản thảo",
@@ -1662,7 +1662,7 @@
         }
       ],
       "linkLabel": "Xem trang press kit chúng tôi đã làm thật",
-      "priorWork": "Việc tách ra thành một dịch vụ riêng thì mới từ năm nay, nhưng đây không phải việc mới. Trước đó chúng tôi vẫn làm đúng phần việc này như một hạng mục của gói dự án phát hành trị giá {{list}}, và hai trường hợp trên là lúc chúng tôi bắt đầu lưu lại số liệu theo từng chiến dịch."
+      "priorWork": "Việc tách ra thành một dịch vụ riêng thì mới từ năm nay, nhưng đây không phải việc mới. Trước đó chúng tôi vẫn làm đúng phần việc này như một hạng mục của gói dự án phát hành, và hai trường hợp trên là lúc chúng tôi bắt đầu lưu lại số liệu theo từng chiến dịch."
     },
     "deliverables": {
       "title": "Những gì được bao gồm",
@@ -1742,17 +1742,17 @@
         },
         {
           "title": "Nhà sản xuất nghe đến hết",
-          "body": "Một nhà sản xuất đã làm 15 năm trong giới nhạc sẽ nghe album từ đầu đến cuối. Email của người đã nghe hết và email của người chưa nghe hết, bên nhận phân biệt được. Đó là lý do email của chúng tôi vẫn tiếp tục được mở."
+          "body": "Một nhà sản xuất đã làm 15 năm trong giới nhạc sẽ nghe album từ đầu đến cuối. Email của người đã nghe hết và email của người chưa nghe hết, bên nhận phân biệt được."
         }
       ],
       "rejection": "Chúng tôi trả lời trong 3 ngày làm việc và không tính phí. Trong câu trả lời có con số: có thể gửi tới bao nhiêu đầu mối thuộc những loại nào. Nếu thấy cửa phù hợp không nằm ở chỗ chúng tôi, chúng tôi cũng ghi đúng như vậy, kèm theo những nơi bạn nên gửi trong phạm vi hiểu biết của mình.",
-      "why": "Nơi chúng tôi gửi mỗi lần vẫn là những ban biên tập ấy, đài phát thanh ấy, cửa hàng đĩa ấy. Việc những cánh cửa đó còn mở mới là thứ có thật trong dịch vụ này. Vì vậy chúng tôi không gửi tài liệu không phù hợp — thứ bạn mua không phải một danh sách địa chỉ, mà là những cánh cửa mà lòng tin vẫn còn sống."
+      "why": "Danh sách không phải thứ dùng một lần rồi bỏ. Những cánh cửa chuyên đưa tin về dòng nhạc đó vẫn là những cánh cửa ấy ở album kế tiếp, và cứ gửi tài liệu không phù hợp nhiều lần thì cánh cửa ấy đóng lại. Thứ bạn mua không phải một danh sách địa chỉ, mà là những cánh cửa mà lòng tin vẫn còn sống."
     },
     "pricing": {
       "title": "Giá",
       "subtitle": "Một gói duy nhất. Chúng tôi không chia hạng.",
       "note": "Phần việc này lâu nay là một hạng mục của gói dự án phát hành, trị giá {{list}}. Lần đầu tách ra bán riêng, đến hết {{until}} chúng tôi nhận theo giá đối tác sớm — đổi lại, bạn cho phép chúng tôi công bố hồ sơ và báo cáo của ca này; mức giá này không áp dụng cho hợp đồng ký sau {{until}}.",
-      "capacity": "Mỗi tháng 3 nghệ sĩ. Mỗi ca chiếm trọn năm ngày, nên trong lúc làm, album của bạn là công việc duy nhất của tuần đó."
+      "capacity": "Mỗi tháng 3 nghệ sĩ. Mỗi ca cần năm ngày làm tập trung, nên chúng tôi không nhận nhiều hơn thế."
     },
     "faq": {
       "title": "Câu hỏi thường gặp",

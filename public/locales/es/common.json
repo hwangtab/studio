@@ -1524,7 +1524,7 @@
     },
     "hero": {
       "title": "Promoción de lanzamientos",
-      "subtitleLine1": "Para que la escuche gente que aún no te conoce: medios musicales coreanos y 60 países, cada uno en el idioma que lee",
+      "subtitleLine1": "Llega a gente que aún no te conoce: medios musicales coreanos y 60 países, cada uno en el idioma que lee",
       "subtitleLine2": "Desde la redacción de la nota de prensa hasta el envío y el informe: {{intro}} · escuchamos el disco entero y contamos los destinatarios; pagas después",
       "badge": "Incluido en el paquete de lanzamiento por {{list}} · precio de socio inicial {{intro}} (hasta {{until}})",
       "alt": "Vista nocturna de Seúl, la ciudad extendida bajo sus luces"
@@ -1534,7 +1534,7 @@
       "subtitle": "Que salga una publicación lo decide la redacción. Poner la música sobre esa mesa es lo que nos toca a nosotros, y por el camino al artista le quedan seis cosas.",
       "items": [
         {
-          "title": "La escucha gente que no te conoce",
+          "title": "Queda delante de gente que no te conoce",
           "body": "Quien abre tu enlace de streaming al día siguiente del lanzamiento suele ser gente que ya te conocía. Este trabajo deja la música en la bandeja de entrada de quienes se dedican a buscarla: redacciones, radios, tiendas de discos, festivales. «Namsan Tower Lights» llegó a 1.218 de esos sitios."
         },
         {
@@ -1662,7 +1662,7 @@
         }
       ],
       "linkLabel": "Ver una página de press kit que hicimos de verdad",
-      "priorWork": "Se vende por separado desde este año, pero el trabajo no es nuevo. Antes hacíamos lo mismo como una pieza de un proyecto de lanzamiento de {{list}}; estas dos campañas son simplemente las primeras de las que guardamos las cifras."
+      "priorWork": "Se vende por separado desde este año, pero el trabajo no es nuevo. Antes hacíamos lo mismo como una pieza de un proyecto de lanzamiento; estas dos campañas son simplemente las primeras de las que guardamos las cifras."
     },
     "deliverables": {
       "title": "Qué incluye",
@@ -1742,17 +1742,17 @@
         },
         {
           "title": "El productor lo escucha hasta el final",
-          "body": "Un productor con quince años en la escena musical escucha el álbum del primer tema al último. Un correo escrito por alguien que lo escuchó entero no se parece a uno que no, y quien lo recibe lo nota. Por eso nuestros correos se siguen abriendo."
+          "body": "Un productor con quince años en la escena musical escucha el álbum del primer tema al último. Un correo escrito por alguien que lo escuchó entero no se parece a uno que no, y quien lo recibe lo nota."
         }
       ],
       "rejection": "Respondemos en tres días hábiles y gratis. En la respuesta va escrito, en cifras, a cuántos medios de qué tipo se puede enviar. Si vemos que la ventanilla adecuada no es la nuestra, también lo escribimos tal cual y añadimos, hasta donde sepamos, adónde te conviene enviarlo.",
-      "why": "Escribimos siempre a las mismas redacciones, las mismas radios, las mismas tiendas de discos. Que esas ventanillas sigan abiertas es lo que de verdad es este servicio. Por eso no enviamos material que no encaja: lo que compras no es una lista de direcciones, sino unas ventanillas donde la confianza sigue viva."
+      "why": "Una lista no es algo que se usa una vez y se tira. Las redacciones que cubren ese género son las mismas para tu próximo disco, y mandarles una y otra vez material que no encaja es lo que cierra esas ventanillas. Lo que compras no es una lista de direcciones, sino unas ventanillas donde la confianza sigue viva."
     },
     "pricing": {
       "title": "Precio",
       "subtitle": "Un único producto. No lo dividimos en niveles.",
       "note": "Este trabajo lo veníamos ofreciendo como parte fija del pack de proyecto de lanzamiento, por un equivalente a {{list}}. Ahora que lo sacamos por primera vez como producto suelto, hasta el {{until}} lo tomamos al precio de socio inicial: a cambio de que nos dejes publicar el caso y el informe. Ese precio no se aplica a los contratos posteriores al {{until}}.",
-      "capacity": "Tres artistas al mes. Cada uno se lleva cinco días enteros, así que mientras el tuyo está en marcha, tu álbum es el único trabajo de esa semana."
+      "capacity": "Tres artistas al mes. Cada uno se lleva cinco días de trabajo concentrado, así que no aceptamos más."
     },
     "faq": {
       "title": "Preguntas frecuentes",

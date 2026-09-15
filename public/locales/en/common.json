@@ -1552,7 +1552,7 @@
     },
     "hero": {
       "title": "Music Release PR",
-      "subtitleLine1": "So that people who don't know you get to hear it — Korean music outlets and 60 countries abroad, each in the language it reads",
+      "subtitleLine1": "It reaches people who don't know you — Korean music outlets and 60 countries abroad, each in the language it reads",
       "subtitleLine2": "From writing the press release to the send-out and the report — {{intro}} · we listen to the whole record and count the outlets first, then you pay",
       "badge": "Part of our release bundle at {{list}} · early-partner price {{intro}} (through {{until}})",
       "alt": "Seoul at night, the city spread out under its lights"
@@ -1562,7 +1562,7 @@
       "subtitle": "Whether a piece runs is the editor's decision. Getting the music onto that editor's desk is ours — and along the way, six things stay with the artist.",
       "items": [
         {
-          "title": "People who don't know you hear it",
+          "title": "It lands in front of people who don't know you",
           "body": "The people who open your streaming link the day after release are mostly people who already know you. This work puts the music in the inboxes of people whose job is finding music — editors, radio, record shops, festivals. Namsan Tower Lights reached 1,218 of them."
         },
         {
@@ -1690,7 +1690,7 @@
         }
       ],
       "linkLabel": "See a press kit page we actually built",
-      "priorWork": "It became a service you can buy on its own this year, but the work itself isn't new. Before that we did the same thing as one component of a {{list}} release project; these two are simply the first campaigns where we kept the numbers."
+      "priorWork": "It became a service you can buy on its own this year, but the work itself isn't new. Before that we did the same thing as one component of a release project; these two are simply the first campaigns where we kept the numbers."
     },
     "deliverables": {
       "title": "What's included",
@@ -1770,17 +1770,17 @@
         },
         {
           "title": "The producer listens all the way through",
-          "body": "A producer with fifteen years in the music scene listens to the album from the first track to the last. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell. That is why our mail keeps getting opened."
+          "body": "A producer with fifteen years in the music scene listens to the album from the first track to the last. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell."
         }
       ],
       "rejection": "You get an answer within three business days, free. It says in numbers how many outlets of what kind we can send to. If we judge that our channels aren't the right fit for it, we write that plainly too, and add whatever we know about where you'd do better to send it.",
-      "why": "We write to the same desks, the same radio stations, the same record shops every time. Those channels staying open is what this service actually is. So we don't send material that doesn't fit — what you're buying is not a list of addresses but a set of doors where the trust is still intact."
+      "why": "A list is not something you use once and throw away. The desks that cover a given genre are the same desks for your next album, and sending them material that doesn't fit, over and over, is how those doors close. What you're buying is not a list of addresses but a set of doors where the trust is still intact."
     },
     "pricing": {
       "title": "Price",
       "subtitle": "One single product. We don't split it into tiers.",
       "note": "We've been providing this work at {{list}} as a fixed part of the release-project bundle. Now that we're offering it on its own for the first time, we take it at the early-partner price until {{until}} — in return for letting us publish the case and the report. The price does not apply to contracts made after {{until}}.",
-      "capacity": "Three acts a month. Each one takes five days whole, so while yours is running, your album is the only work of that week."
+      "capacity": "Three acts a month. Each one takes five focused days, so we don't take on more than that."
     },
     "faq": {
       "title": "Frequently asked",

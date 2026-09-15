@@ -147,7 +147,11 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   const comparisonRows = React.useMemo(
     () =>
       (t('musicPromotion.comparison.rows', { returnObjects: true }) as string[][]).map((row) =>
-        row.map((cell) => cell.replace('{{intro}}', priceVars.intro))
+        // 셀에 어떤 가격 변수가 올지 모르므로 전부 치환한다. {{intro}}만 치환하던 동안
+        // 번들 열의 "{{list}} 상당"이 화면에 그대로 찍히고 있었다.
+        row.map((cell) =>
+          Object.entries(priceVars).reduce((acc, [key, value]) => acc.split(`{{${key}}}`).join(value), cell)
+        )
       ),
     [t, priceVars]
   );
@@ -334,7 +338,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           ))}
         </div>
         <p className="mx-auto mt-8 max-w-3xl text-center text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-          {t('musicPromotion.evidence.priorWork')}
+          {t('musicPromotion.evidence.priorWork', priceVars)}
         </p>
       </Section>
 
@@ -454,7 +458,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       <Section>
         <SectionHeading
           title={t('musicPromotion.deliverables.title')}
-          subtitle={t('musicPromotion.deliverables.subtitle')}
+          subtitle={t('musicPromotion.deliverables.subtitle', priceVars)}
         />
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {deliverables.map((item, index) => {
