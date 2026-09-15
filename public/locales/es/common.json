@@ -1525,8 +1525,8 @@
     "hero": {
       "title": "Promoción de lanzamientos",
       "subtitleLine1": "A los medios musicales coreanos y a medios de 60 países que lo cubrirían, en el idioma que cada uno lee",
-      "subtitleLine2": "{{intro}} · 3 artistas al mes · Solo música que pasa nuestra escucha previa",
-      "badge": "Precio de lista {{list}} → {{intro}} (precio de socio inicial hasta el {{until}})",
+      "subtitleLine2": "Desde la redacción de la nota de prensa hasta el envío y el informe: {{intro}} · pagas después de la escucha previa",
+      "badge": "Incluido en el paquete de lanzamiento por {{list}} · precio de socio inicial {{intro}} (hasta {{until}})",
       "alt": "Vista nocturna de Seúl, la ciudad extendida bajo sus luces"
     },
     "quickAnswers": {
@@ -1535,19 +1535,19 @@
       "items": [
         {
           "q": "¿Cuánto cuesta?",
-          "a": "{{intro}} (IVA no incluido). El precio de lista es {{list}}, y hasta el {{until}} lo tomamos al precio de socio inicial. No hay cargos añadidos: todo lo que aparece abajo va incluido."
+          "a": "{{intro}} (IVA no incluido). No hay cargos añadidos: todo lo que aparece abajo va incluido. Pagas después de que la música pase la escucha previa y de que te confirmemos el tamaño del envío. Si lo dejas antes de que empiece la producción, te devolvemos todo."
         },
         {
           "q": "¿Qué hacen exactamente?",
-          "a": "Escribimos la nota de prensa en cinco idiomas, montamos una página de prensa y la enviamos solo a los medios musicales coreanos y a los medios, radios, tiendas de discos y festivales del extranjero que cubrirían el disco. También hacemos un vídeo con el álbum completo."
+          "a": "Escribimos la nota de prensa en cinco idiomas, montamos una página de prensa y salimos a buscar los medios musicales coreanos y los medios, radios, tiendas de discos y festivales del extranjero que cubren esta clase de música. También hacemos un vídeo con el álbum completo."
         },
         {
           "q": "¿Cuánto tarda?",
-          "a": "Cinco días para producir los materiales y de una a tres semanas para el envío. No cerramos el envío en un solo día por la reputación del dominio: disparar más de mil correos de golpe hace que todos acaben clasificados como spam, y entonces nada de esto sirve."
+          "a": "Cinco días para producir los materiales y de una a tres semanas para el envío. El envío no se cierra en un día porque lo que escribimos cambia según el destinatario: las redacciones, las webzines extranjeras, las radios y las tiendas de discos quieren formatos distintos. Vamos por zonas y por idiomas. «Namsan Tower Lights» salió a 1.218 destinatarios a lo largo de doce días."
         },
         {
-          "q": "¿Garantizan que salgan notas de prensa publicadas?",
-          "a": "No lo garantizamos. No es algo que se pueda garantizar. Si una empresa dice que sí, lo que hace es comprar publicidad y disfrazarla de artículo. Lo que sí prometemos es el trabajo ejecutado: el informe demuestra qué materiales hicimos y a cuántos medios de qué tipo los enviamos."
+          "q": "¿Qué prometen exactamente?",
+          "a": "Si la música pasa la escucha previa, antes de enviar nada te confirmamos con cifras qué materiales haremos y a cuántos medios de qué tipo los enviaremos. Al terminar, el informe demuestra que se hizo tal cual. Que salga o no una publicación lo decide la redacción de cada medio, y eso no lo puede prometer nadie: lo que asumimos nosotros es que la música llegue bien a esas redacciones."
         }
       ]
     },
@@ -1565,7 +1565,7 @@
           "A quién llega",
           "908 medios, de golpe",
           "Medios musicales",
-          "Solo a los que lo cubrirían"
+          "Salimos a buscar los que la cubrirían — «Namsan Tower Lights»: 1.218 en 60 países"
         ],
         [
           "El texto",
@@ -1589,7 +1589,7 @@
           "Precio",
           "77.000–660.000 KRW",
           "830.000–3.490.000 KRW",
-          "{{intro}}"
+          "{{intro}} (equivale a {{list}} dentro del pack)"
         ]
       ],
       "note": "No encontramos ninguna agencia coreana de PR especializada en música que publique sus precios (septiembre de 2026). Hay muchas firmas que disparan notas de prensa, pero sus listas no son medios musicales; y las agencias extranjeras que venden lo mismo están en otro orden de magnitud.",
@@ -1597,7 +1597,7 @@
     },
     "evidence": {
       "title": "Así lo enviamos en la práctica",
-      "subtitle": "El registro es más preciso que las palabras. Estas son cifras medidas de campañas que hicimos nosotros mismos.",
+      "subtitle": "El registro es más preciso que las palabras. Estas son cifras medidas de campañas que hicimos nosotros mismos. El tamaño del envío va de unos cientos a más de mil según el género y la zona lingüística: un género estrecho debe salir estrecho.",
       "cases": [
         {
           "title": "Mariko & Yukie, «Namsan Tower Lights»",
@@ -1675,7 +1675,7 @@
         },
         {
           "title": "Envío — de 1 a 3 semanas",
-          "description": "Lo repartimos para proteger la reputación del dominio. Si se dispara todo de golpe, acaba en la carpeta de spam."
+          "description": "Enviamos por tandas, según el tipo de medio y la región: así es como el correo llega a las bandejas de entrada."
         },
         {
           "title": "Informe",
@@ -1684,8 +1684,8 @@
       ]
     },
     "review": {
-      "title": "No aceptamos cualquier disco",
-      "lead": "Solo promocionamos buena música. Dicho con precisión: miramos si los medios a los que escribimos la escucharían hasta el final.",
+      "title": "Primero miramos si hay adónde enviarlo",
+      "lead": "No aceptamos cualquier disco. No juzgamos si la música está bien hecha: miramos si entre los medios a los que llegamos hay alguno que acogería este disco. Si no lo hay, no lo aceptamos. Cobrar por algo que no va a salir es lo peor para ambas partes.",
       "criteria": [
         {
           "title": "¿Hay algún medio al que pueda llegar?",
@@ -1696,37 +1696,29 @@
           "body": "Una nota de prensa no es una presentación, es el material con el que un periodista construye un artículo. Con «han sacado canción nueva» no escribe nadie."
         },
         {
-          "title": "¿Nos gusta a nosotros?",
-          "body": "No se puede recomendar a otro una música que no te gusta. Eso se nota en el correo, y quien lo lee lo percibe."
+          "title": "¿Lo escuchamos hasta el final?",
+          "body": "No se puede recomendar a otro una música que uno no ha escuchado entera. Quien lee ese correo lo nota."
         }
       ],
-      "rejection": "Cuando no podemos aceptarlo, te escribimos el motivo y te lo devolvemos. Casi nunca es «la música es mala», sino «entre los medios a los que llegamos no encontramos ninguno que acogiera esta música». En ese caso te anotamos, hasta donde sepamos, adónde te conviene enviarla.",
+      "rejection": "La escucha previa es gratuita y respondemos en tres días hábiles. Cuando no podemos aceptarlo, te escribimos el motivo y te anotamos, hasta donde sepamos, adónde te conviene enviarlo.",
       "why": "Hacemos esa escucha previa por dos razones. Enviamos siempre a las mismas personas, así que mandarles una y otra vez material que no encaja desgasta esa relación. Y la confianza, una vez quemada, no se recupera."
     },
     "notPromised": {
-      "title": "Lo que no prometemos",
+      "title": "Lo que te decimos de entrada",
       "subtitle": "No vamos a decir que podemos hacer lo que no podemos.",
       "items": [
         {
           "title": "No garantizamos la publicación de artículos",
-          "body": "Escribir o no lo decide el periodista. Si algún sitio lo garantiza, lo que está haciendo es comprar publicidad y disfrazarla de artículo."
-        },
-        {
-          "title": "No garantizamos entradas en playlists ni cifras de streaming",
-          "body": "Hacemos un trabajo distinto del de los servicios que venden visualizaciones, seguidores y reproducciones. Esos números suben si los compras, pero no dejan nada detrás."
-        },
-        {
-          "title": "No prometemos aparecer en un medio concreto",
-          "body": "Lo que controlamos llega hasta «a quién le llega y de qué forma». Lo que viene después le toca a la música."
+          "body": "Escribir o no lo decide la redacción del medio. Si algún sitio lo garantiza, lo que está haciendo es comprar publicidad y disfrazarla de artículo. De lo que respondemos nosotros es del volumen de trabajo que te confirmamos antes del envío, y eso lo demuestra el informe."
         }
       ],
-      "instead": "A cambio prometemos el trabajo ejecutado. Cuando la música pasa la escucha previa, te confirmamos con cifras qué materiales haremos y a cuántos medios de qué tipo los enviaremos, y al terminar lo demostramos con el informe."
+      "instead": "El pago llega después de pasar la escucha previa y de cerrar el volumen de trabajo. Si lo dejas antes de que empiece la producción, te devolvemos todo."
     },
     "pricing": {
       "title": "Precio",
       "subtitle": "Un único producto. No lo dividimos en niveles.",
-      "note": "Hasta el {{until}} lo tomamos al precio de socio inicial. Acabamos de empezar a acumular historial de publicaciones, así que todavía no tenemos base para cobrar el precio de lista. Pasado ese plazo, vuelve al precio de lista de {{list}}.",
-      "capacity": "Aceptamos solo tres artistas al mes. Cada uno se lleva cinco días de trabajo concentrado, y más de eso no nos permitiría cumplir lo prometido."
+      "note": "Este trabajo lo veníamos ofreciendo como parte fija del pack de proyecto de lanzamiento, por un equivalente a {{list}}. Ahora que lo sacamos por primera vez como producto suelto, hasta el {{until}} lo tomamos al precio de socio inicial: a cambio de que nos dejes publicar el caso y el informe.",
+      "capacity": "Aceptamos solo tres artistas al mes. Cada uno se lleva cinco días de trabajo concentrado, y más de eso no nos permitiría cumplir lo prometido. El pago es posterior a la escucha previa, y antes de que empiece la producción se devuelve el importe íntegro."
     },
     "faq": {
       "title": "Preguntas frecuentes",
@@ -1741,8 +1733,8 @@
           "a": "Se puede. Se haya hecho donde se haya hecho, basta con que la música esté terminada. Eso sí, la escucha previa es la misma."
         },
         {
-          "q": "¿Por qué el envío tarda de 1 a 3 semanas?",
-          "a": "Si los correos se mandan todos en un día, el dominio emisor queda clasificado como spam. Entonces la campaña entera termina sin llegar a ninguna bandeja de entrada. Es también la razón por la que las empresas que lo disparan todo en un día no consiguen resultados."
+          "q": "¿Por qué el envío tarda de una a tres semanas?",
+          "a": "Cada tipo de medio recibe un texto distinto, y el correo enviado de golpe no llega a las bandejas de entrada. Ir región por región e idioma por idioma hace que el disco se lea más. «Namsan Tower Lights» salió a 1.218 sitios a lo largo de doce días."
         },
         {
           "q": "¿Qué tenemos que preparar?",
@@ -1765,7 +1757,7 @@
       "titleLine1": "Todavía quedan sitios",
       "titleHighlight": "a los que tu música puede llegar",
       "subtitleLine1": "Mándanos la música por KakaoTalk y te respondemos en 3 días hábiles.",
-      "subtitleLine2": "Aun cuando no podamos aceptarla, te escribimos el motivo.",
+      "subtitleLine2": "La escucha previa es gratuita, y pagas solo después de pasarla.",
       "imageAlt": "El taller de Studio NOL"
     }
   },
