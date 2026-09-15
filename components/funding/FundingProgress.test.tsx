@@ -7,9 +7,17 @@ it('모금액·달성률·후원 건수·D-day', () => {
   expect(screen.getByText('450,000원')).toBeInTheDocument();
   expect(screen.getByText('45%')).toBeInTheDocument();
   // 서버 집계는 COUNT(*)(건수)다 — 'N명'이면 중복 후원자를 인원으로 부풀린다.
-  expect(screen.getByText(/12건 후원/)).toBeInTheDocument();
+  // 단위가 '건'인지만 본다. 뒤에 '후원'이 붙는지는 D-day 유무로 갈리고(중복을 피해
+  // D-day가 있을 때는 'N건'으로 줄인다) 그건 표현이지 이 테스트가 지키려는 규칙이 아니다.
+  expect(screen.getByText(/12건/)).toBeInTheDocument();
   expect(screen.queryByText(/12명/)).not.toBeInTheDocument();
   expect(screen.getByText(/D-11/)).toBeInTheDocument();
+});
+
+it('D-day가 없으면 건수 뒤에 후원을 붙여 무엇의 건수인지 밝힌다', () => {
+  render(<FundingProgress goalAmount={1000000} endAt="2026-10-31T23:59:59+09:00" now={null}
+    data={{ raisedAmount: 450000, backerCount: 12, percent: 45, state: 'live' }} />);
+  expect(screen.getByText(/12건 후원/)).toBeInTheDocument();
 });
 it('progressbar에 aria-label이 있다', () => {
   render(<FundingProgress goalAmount={1000000} endAt="2026-10-31T23:59:59+09:00" now={new Date('2026-10-20T00:00:00Z')}
