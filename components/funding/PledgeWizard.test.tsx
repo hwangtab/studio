@@ -623,3 +623,45 @@ describe('결제수단 선택', () => {
     expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
   });
 });
+
+/**
+ * 애플페이는 **되는 기기에서만** 목록에 있어야 한다. 토스 애플페이는 PC=Safari, 모바일=iOS
+ * 에서만 동작하고 그 환경에서만 `window.ApplePaySession`이 있다. 안드로이드·윈도우에서
+ * 고르게 두면 결제창이 열리지 않아 후원자는 자기가 뭘 잘못한 줄 안다.
+ */
+describe('애플페이 노출 조건', () => {
+  const setApplePay = (supported: boolean) => {
+    if (supported) {
+      (window as unknown as { ApplePaySession?: unknown }).ApplePaySession = { canMakePayments: () => true };
+    } else {
+      delete (window as unknown as { ApplePaySession?: unknown }).ApplePaySession;
+    }
+  };
+  afterEach(() => setApplePay(false));
+
+  it('지원하지 않는 기기에는 애플페이가 없다', () => {
+    setApplePay(false);
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.queryByRole('radio', { name: /애플페이/ })).toBeNull();
+    // 나머지 수단은 그대로 있다 — 애플페이 하나만 빠진다.
+    expect(screen.getByRole('radio', { name: /네이버페이/ })).toBeInTheDocument();
+  });
+
+  it('지원하는 기기에는 애플페이가 뜬다', () => {
+    setApplePay(true);
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByRole('radio', { name: /애플페이/ })).toBeInTheDocument();
+  });
+
+  it('네이버페이는 네이버페이 창으로 직행한다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.click(screen.getByRole('radio', { name: /네이버페이/ }));
+    await userEvent.click(screen.getByLabelText(/약관/));
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(requestPayment.mock.calls.at(-1)![0].card).toEqual({ flowMode: 'DIRECT', easyPay: '네이버페이' });
+  });
+});
