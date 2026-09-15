@@ -38,7 +38,10 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
   const { data } = useFundingStatus(slug, initialState, { status, startAt, endAt });
   // 마운트 전에는 D-day를 비운다 — 서버/클라이언트 시계 차이로 인한 하이드레이션 불일치 방지.
   const days = now ? daysUntilKst(now, new Date(endAt)) : 0;
-  const dday = !now || state === 'closed' ? '' : days <= 0 ? 'D-DAY' : `D-${days}`;
+  // 무엇의 D-day인지 밝힌다. 이 프로젝트처럼 행사일(9/19 집회)과 후원 마감일(10/19)이
+  // 다른 경우, 맨 D-34는 행사가 34일 남은 것으로 읽힌다 — 카드 본문이 행사 날짜를
+  // 말하고 있으면 더 그렇다.
+  const dday = !now || state === 'closed' ? '' : days <= 0 ? '후원 마감일' : `후원 D-${days}`;
   // 후원이 0건일 때는 현황 대신 목표액을 그대로 둔다. "0원 · 0% · 0건"은 정직하지만
   // 사회적 증거를 거꾸로 세운다 — 첫 후원자가 가장 망설이는 자리에서 "아무도 안 했다"를
   // 먼저 읽히게 할 이유가 없다. 첫 건이 들어오면 그때부터 숫자가 일한다.

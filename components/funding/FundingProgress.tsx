@@ -19,7 +19,9 @@ export default function FundingProgress({ goalAmount, endAt, now, data }: Props)
   // 불일치를 피하려는 것이고, 컨테이너 min-height가 높이를 예약하고 있어 레이아웃은 안 흔들린다.
   const days = now ? daysUntilKst(now, new Date(endAt)) : 0;
   const state = data?.state;
-  const dday = !now ? '' : state === 'closed' ? '마감' : days <= 0 ? 'D-DAY' : `D-${days}`;
+  // 카드와 같은 이유로 무엇의 D-day인지 밝힌다 — 행사일과 후원 마감일이 다른
+  // 프로젝트에서 맨 D-N은 행사까지 남은 날로 읽힌다.
+  const dday = !now ? '' : state === 'closed' ? '후원 마감' : days <= 0 ? '후원 마감일' : `후원 D-${days}`;
   const percent = data ? Math.min(100, data.percent) : 0;
   return (
     <div className="min-h-[120px]" aria-live="polite">
@@ -27,7 +29,7 @@ export default function FundingProgress({ goalAmount, endAt, now, data }: Props)
         <>
           <p className="text-4xl font-bold tabular-nums tracking-tight text-gray-900 dark:text-white">{formatPriceAmount(data.raisedAmount)}원</p>
           <p className="typo-card-meta mt-2">
-            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-violet-300">{data.percent}%</span> · {data.backerCount}건 후원{dday ? ` · ${dday}` : ''}
+            목표 {formatPriceAmount(goalAmount)}원 · <span className="font-semibold text-primary dark:text-violet-300">{data.percent}%</span> · {data.backerCount}건{dday ? ` · ${dday}` : ' 후원'}
           </p>
         </>
       ) : (
