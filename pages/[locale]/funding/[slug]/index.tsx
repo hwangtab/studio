@@ -56,42 +56,51 @@ export default function FundingProjectPage({ project, initialState }: Props) {
         ogImage={project.ogImage ?? project.cover}
         robots={project.hidden ? 'noindex, nofollow' : undefined}
       />
-      <Section className="pb-16 pt-28 md:pb-20 md:pt-36">
-        <ResponsiveImage
-          src={project.cover}
-          alt=""
-          containerClassName="relative block aspect-[16/9] w-full overflow-hidden rounded-2xl shadow-lg"
-          className="object-cover"
-          priority
-        />
-        <div className="mt-8 max-w-3xl">
-          <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-violet-300">
-            {STATE_LABEL[state]}
-          </span>
-          <h1 className="typo-section-title mt-3">{project.title}</h1>
-          <p className="typo-section-lead mt-3">{project.summary}</p>
-        </div>
-      </Section>
-
       {/*
-        본문(왼쪽)과 후원 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라, 본문을
-        읽는 내내 모금 현황과 리워드가 화면에 남는다 — 예전엔 진행률이 히어로에만 있어서
-        정작 리워드를 고르는 순간에는 근거가 화면 밖으로 사라졌다.
+        제목·본문(왼쪽)과 후원 패널(오른쪽)을 **페이지 맨 위부터** 나란히 둔다. 히어로를 따로
+        띄우면 첫 화면이 그림과 제목으로만 차고 진행률·리워드는 스크롤해야 나온다 — 후원
+        의사가 가장 높은 순간에 후원할 수단이 화면에 없는 셈이다. 패널은 데스크톱에서
+        sticky라 본문을 읽는 내내 모금 현황과 리워드가 남는다.
       */}
-      <Section spacing="tight" className="pb-28 lg:pb-16">
+      <Section className="pb-28 pt-24 md:pt-28 lg:pb-16">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
-            {statusError && (
-              <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
-                현황을 불러오지 못했습니다. 새로고침해 주세요.
-              </p>
-            )}
-            <article className="prose prose-lg max-w-none dark:prose-invert">
-              <MarkdownRenderer content={project.content} locale="ko" />
-            </article>
-            <div className="mt-12 space-y-8">
-              <BackerNameRoll names={data?.publicBackers ?? []} />
-              <FundingTrustNotice />
+            {/*
+              커버는 목록 카드·OG 이미지와 같은 16:9 파일 하나를 공유하지만, 여기서는
+              **정사각으로 잘라** 쓴다. 원본이 정사각 앨범아트면 16:9 파일의 좌우는 바탕색
+              여백일 뿐이라, 넓게 펴 놓으면 큰 회색 판이 먼저 보이고 그림이 작아진다.
+              가운데를 정사각으로 따면 여백이 통째로 빠져 작품만 남는다.
+            */}
+            <div className="grid items-center gap-6 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:gap-8">
+              <ResponsiveImage
+                src={project.cover}
+                alt=""
+                containerClassName="relative block aspect-square w-full max-w-[15rem] overflow-hidden rounded-2xl shadow-lg sm:max-w-none"
+                className="object-cover"
+                priority
+              />
+              <div>
+                <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-violet-300">
+                  {STATE_LABEL[state]}
+                </span>
+                <h1 className="typo-card-title mt-3 text-gray-900 dark:text-white">{project.title}</h1>
+                <p className="typo-card-body mt-3">{project.summary}</p>
+              </div>
+            </div>
+
+            <div className="mt-12">
+              {statusError && (
+                <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+                  현황을 불러오지 못했습니다. 새로고침해 주세요.
+                </p>
+              )}
+              <article className="prose prose-lg max-w-none dark:prose-invert">
+                <MarkdownRenderer content={project.content} locale="ko" />
+              </article>
+              <div className="mt-12 space-y-8">
+                <BackerNameRoll names={data?.publicBackers ?? []} />
+                <FundingTrustNotice />
+              </div>
             </div>
           </div>
 
