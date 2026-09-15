@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
@@ -585,4 +585,32 @@ describe('단계 제목이 카드를 벗어나지 않는다', () => {
       expect(container.querySelector(`#${CSS.escape(fs.getAttribute('aria-labelledby')!)}`)).not.toBeNull();
     }
   });
+});
+
+/**
+ * 수량·추가 후원금 칸에서 Enter를 연타하면(모바일 '완료' 연타·키 리피트 포함) 같은 tick에
+ * submit()이 두 번 불린다. `submitting` 상태는 비동기라 두 번째를 못 막고, pending 주문이
+ * 두 건 생긴다. 한정 리워드면 본인이 남은 재고를 잠근 채 한 건만 결제하게 된다.
+ */
+it('수량 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', async () => {
+  const user = userEvent.setup();
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await user.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await user.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await user.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await user.click(screen.getByLabelText(/약관/));
+
+  // **같은 tick에** 세 번 — userEvent.keyboard는 키 사이에 await가 들어가 상태가 갱신되므로
+  // 이 버그(비동기 setState를 재진입 가드로 쓴 것)를 재현하지 못한다.
+  const qty = screen.getByLabelText(/^수량$/);
+  await act(async () => {
+    fireEvent.keyDown(qty, { key: 'Enter' });
+    fireEvent.keyDown(qty, { key: 'Enter' });
+    fireEvent.keyDown(qty, { key: 'Enter' });
+  });
+
+  await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+  const pledgeCalls = (global.fetch as jest.Mock).mock.calls
+    .filter((c) => String(c[0]).includes('/api/funding/pledges'));
+  expect(pledgeCalls.length).toBe(1);
 });

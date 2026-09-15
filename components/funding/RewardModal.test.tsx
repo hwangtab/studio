@@ -161,3 +161,35 @@ describe('RewardModal', () => {
     expect(screen.getByRole('button', { name: '품절' })).toBeDisabled();
   });
 });
+
+/**
+ * 결제 단계로 넘어가면 포커스 트랩을 끄는데, 훅이 꺼질 때 스스로 포커스를 되돌리게 두면
+ * **모달 뒤 리워드 카드**(백드롭에 가려진 자리)로 튕겨 나간다. 되돌리는 시점은 모달이
+ * 실제로 닫힐 때여야 한다.
+ */
+describe('포커스 복원 시점', () => {
+  it('결제 단계로 넘어가도 포커스가 모달 밖으로 나가지 않는다', async () => {
+    const user = userEvent.setup();
+    const trigger = document.createElement('a');
+    trigger.href = '#';
+    trigger.textContent = '리워드 카드';
+    document.body.appendChild(trigger);
+    trigger.focus();
+
+    renderModal();
+    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
+    await user.click(screen.getByRole('button', { name: '결제 단계로' }));
+
+    expect(document.activeElement).not.toBe(trigger);
+    expect(screen.getByRole('dialog').contains(document.activeElement)).toBe(true);
+  });
+
+  it('닫을 때는 열기 전 자리로 포커스를 돌려준다', async () => {
+    const user = userEvent.setup();
+    const onClose = jest.fn();
+    renderModal(REWARD, onClose);
+
+    await user.click(screen.getByRole('button', { name: '닫기' }));
+    expect(onClose).toHaveBeenCalled();
+  });
+});

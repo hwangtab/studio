@@ -1,4 +1,4 @@
-import { type KeyboardEvent, useEffect, useId, useMemo, useState } from 'react';
+import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 
 import TossPaymentWidget from '../booking/TossPaymentWidget';
@@ -165,6 +165,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const submittingRef = useRef(false);
   const [created, setCreated] = useState<Created | null>(null);
   /**
    * 직전에 만든 **자기** 주문번호. 재제출 시 서버에 함께 보내 그 주문 하나만 만료시킨다
@@ -297,9 +298,14 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
   }, [created]);
 
   const submit = async () => {
+    // 재진입 가드는 **ref**여야 한다. `submitting` 상태는 비동기로 갱신돼서, 같은 tick에
+    // 두 번 불리면(수량 칸에서 Enter 연타·키 리피트) 둘 다 통과해 pending 주문이 두 건
+    // 생긴다. 한정 리워드면 본인이 남은 재고를 잠근 채 한 건만 결제하게 된다.
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setError(null);
-    if (allSoldOut) { setError(ALL_SOLD_OUT_MESSAGE); return; }
-    if (!form.termsAgreed) { setError('약관에 동의해 주세요.'); return; }
+    if (allSoldOut) { submittingRef.current = false; setError(ALL_SOLD_OUT_MESSAGE); return; }
+    if (!form.termsAgreed) { submittingRef.current = false; setError('약관에 동의해 주세요.'); return; }
     // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
     setQuantityText(String(quantity));
     setAdditionalText(String(additional));
@@ -328,7 +334,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
       // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
       setCreated({ ...json, receivedAt });
     } catch { setError('네트워크 오류가 발생했습니다.'); }
-    finally { setSubmitting(false); }
+    finally { submittingRef.current = false; setSubmitting(false); }
   };
 
   /**
