@@ -504,3 +504,49 @@ describe('임시 저장', () => {
     expect(screen.getByLabelText(/^이름\*$/)).toHaveValue('김후원');
   });
 });
+
+/**
+ * 리워드 카드를 눌러 연 모달은 **이미 고르고 들어온** 화면이다. 거기서 네 개를 다시
+ * 보여 주면 방금 고른 것이 반영됐는지 의심하게 된다. 그리고 모달 본문은 자체 스크롤
+ * 컨테이너라, sticky 요약이 컨테이너 바닥에 붙으면서 폼 위로 떠 내용과 겹친다.
+ * 둘 다 실제로 그렇게 배포됐다가 잡았다.
+ */
+describe('모달에서 여는 경우 (lockedReward · stickySummary)', () => {
+  const remaining = { cd: 5, mail: null } as Record<string, number | null>;
+
+  it('잠그면 리워드 라디오를 보여 주지 않는다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />);
+    expect(screen.queryByRole('radio')).toBeNull();
+    const picked = screen.getByText('고르신 리워드').parentElement!;
+    expect(picked.textContent).toContain('30,000원');
+    expect(picked.textContent).toContain('CD');
+  });
+
+  it('잠그지 않으면 종전대로 고를 수 있다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    expect(screen.getAllByRole('radio').length).toBeGreaterThan(1);
+    expect(screen.queryByText('고르신 리워드')).toBeNull();
+  });
+
+  it('잠그면 후원자 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
+    const { container } = render(
+      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
+    );
+    expect(container.textContent).toContain('후원자 정보');
+    expect(screen.queryByText('리워드', { selector: 'h2,h3' })).toBeNull();
+  });
+
+  it('stickySummary=false면 요약 줄이 sticky가 아니다', () => {
+    const { container } = render(
+      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} stickySummary={false} />
+    );
+    const summary = [...container.querySelectorAll('div')].find((d) => d.textContent?.includes('예상 합계'));
+    expect(summary!.className).not.toContain('sticky');
+  });
+
+  it('기본값에서는 요약 줄이 sticky다 — 페이지에서는 붙는 게 맞다', () => {
+    const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    const summary = [...container.querySelectorAll('div')].find((d) => d.className.includes('bottom-0'));
+    expect(summary!.className).toContain('sticky');
+  });
+});

@@ -38,6 +38,17 @@ interface Props {
    * 카드번호 칸에 Tab으로 못 들어가고 첫 요소로 되감긴다.
    */
   onPaymentActiveChange?: (active: boolean) => void;
+  /**
+   * 리워드를 이미 고르고 들어온 화면에서 선택 단계를 감춘다. 리워드 카드를 눌러 연 모달이
+   * 그런 경우다 — 방금 고른 것을 네 개 중에서 또 고르게 하면 무엇을 고른 건지 의심하게 된다.
+   * 고른 티어는 읽기 전용으로 보여 주고, 바꾸려면 모달을 닫고 다른 카드를 누른다.
+   */
+  lockedReward?: boolean;
+  /**
+   * 요약·결제 줄을 화면 아래에 붙일지. 페이지에서는 붙이는 게 맞지만 모달은 **본문 자체가
+   * 스크롤 컨테이너**라, sticky가 컨테이너 바닥에 붙으면서 폼 위로 떠 내용과 겹친다.
+   */
+  stickySummary?: boolean;
 }
 interface Created {
   orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number;
@@ -131,7 +142,7 @@ function StepHeader({ n, title, hint }: { n: number; title: string; hint?: strin
 const isSoldOut = (remaining: Record<string, number | null>, rewardId: string): boolean =>
   (remaining[rewardId] ?? 1) <= 0;
 
-export default function PledgeWizard({ project, initialRewardId, remaining, onPaymentActiveChange }: Props) {
+export default function PledgeWizard({ project, initialRewardId, remaining, onPaymentActiveChange, lockedReward = false, stickySummary = true }: Props) {
   const uid = useId();
   // 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해, 후원자가 폼을 다 채우고
   // 제출한 뒤에야 409를 봤다. 고를 수 있는 첫 리워드를 기본값으로 둔다(전부 품절이면
@@ -356,7 +367,16 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
       <fieldset className={cardClass}>
-        <StepHeader n={1} title="리워드" hint="후원 금액에 따라 돌려드릴 구성입니다." />
+        {lockedReward ? (
+          <div className="mb-5 rounded-xl border border-primary bg-primary/5 p-4 dark:border-primary-light dark:bg-primary-light/10">
+            <p className="typo-card-meta">고르신 리워드</p>
+            <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(reward.amount)}원</p>
+            <p className="typo-card-meta">{reward.title}</p>
+          </div>
+        ) : (
+          <StepHeader n={1} title="리워드" hint="후원 금액에 따라 돌려드릴 구성입니다." />
+        )}
+        {!lockedReward && (
         <div className="space-y-2">
           {project.rewards.map((r) => {
             const left = remaining[r.id];
@@ -372,6 +392,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
             );
           })}
         </div>
+        )}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-qty`} label="수량" hint={`1~${quantityCap}개까지 후원할 수 있습니다.`}>
@@ -393,7 +414,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
       </fieldset>
 
       <fieldset className={cardClass}>
-        <StepHeader n={2} title="후원자 정보" hint="후원 확인 메일과 리워드 발송에 씁니다." />
+        <StepHeader n={lockedReward ? 1 : 2} title="후원자 정보" hint="후원 확인 메일과 리워드 발송에 씁니다." />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-name`} label="이름" required>
@@ -474,7 +495,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
 
       {/* 선택 내용과 합계를 제출 버튼 바로 위에 붙여 둔다 — 모바일에서 폼을 다시
           위로 스크롤하지 않고도 무엇을 얼마에 사는지 확인할 수 있어야 한다. */}
-      <div className="sticky bottom-0 z-10 -mx-4 border-t border-gray-200 bg-white/95 px-4 pb-4 pt-4 backdrop-blur sm:mx-0 sm:rounded-2xl sm:border sm:px-6 dark:border-gray-700 dark:bg-gray-900/95">
+      <div className={`${stickySummary ? 'sticky bottom-0 z-10 -mx-4 px-4 backdrop-blur sm:mx-0 sm:px-6' : 'px-4 sm:px-6'} border-t border-gray-200 bg-white/95 pb-4 pt-4 sm:rounded-2xl sm:border dark:border-gray-700 dark:bg-gray-900/95`}>
         <dl className="space-y-1.5">
           <div className="flex items-baseline justify-between gap-4">
             <dt className="typo-card-meta">선택 리워드</dt>
