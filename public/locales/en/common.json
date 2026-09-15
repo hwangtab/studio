@@ -1563,7 +1563,7 @@
       "items": [
         {
           "q": "How much is it?",
-          "a": "{{intro}}, excluding VAT. There are no extras — everything listed below is included. You pay after the music passes review and we've confirmed the size of the send-out with you. If you stop before production begins, you get all of it back."
+          "a": "{{intro}}, excluding VAT. There are no extras — everything listed below is included. You pay after the music passes review and we've confirmed the size of the send-out with you."
         },
         {
           "q": "What do you actually do?",
@@ -1576,6 +1576,14 @@
         {
           "q": "What do you actually promise?",
           "a": "Once the music passes review, we tell you in numbers — before anything goes out — what materials we'll make and how many outlets of what kind will receive them. When it's done, the report shows we did exactly that. Whether a piece runs is the outlet's editorial decision, and nobody can promise that. What we take on is making sure the music arrives at those desks properly."
+        },
+        {
+          "q": "Does it matter if the genre is niche?",
+          "a": "It's fine. The send-out just gets smaller, and that's not a loss — a grindcore EP still went out to 125 outlets. Forcing it on outlets that don't cover that kind of music just gets you bounced emails and unsubscribes. If there's genuinely nowhere to send it, we'll tell you that at the review stage."
+        },
+        {
+          "q": "What if I want to stop partway through?",
+          "a": "You pay only after the music passes review and we've confirmed the send-out size with you, so nothing costs you anything before that. Even after you pay, if you stop before production begins, you get it all back. Once production has started, it's non-refundable — but we hand over the press release, press kit, and video files made up to that point, and you're free to use them elsewhere."
         }
       ]
     },
@@ -1738,23 +1746,11 @@
       "rejection": "The review is free and you'll hear back within three business days. When we can't take it, we write out the reason, and we add whatever we know about where you'd do better to send it.",
       "why": "There are two reasons we review. We send to the same people every time, so repeatedly sending them material that doesn't fit burns that relationship itself. And trust, once burned, does not come back."
     },
-    "notPromised": {
-      "title": "What we'll tell you up front",
-      "subtitle": "We won't tell you we can do what we can't.",
-      "items": [
-        {
-          "title": "We do not guarantee coverage",
-          "body": "Whether to run a piece is the outlet's editorial decision. If somewhere guarantees it, what they're doing is buying advertising and making it look like an article. What we're answerable for is the volume of work we confirm with you before the send-out — and the report proves it."
-        }
-      ],
-      "instead": "You pay after the music passes review and the volume of work is confirmed. If you stop before production begins, you get all of it back.",
-      "termsLink": "Read the full cancellation and refund terms"
-    },
     "pricing": {
       "title": "Price",
       "subtitle": "One single product. We don't split it into tiers.",
       "note": "We've been providing this work at {{list}} as a fixed part of the release-project bundle. Now that we're offering it on its own for the first time, we take it at the early-partner price until {{until}} — in return for letting us publish the case and the report.",
-      "capacity": "We take only three acts a month. Each one takes five days of concentrated work, so beyond that we couldn't keep our word. You pay after the review passes, and before production begins you can get all of it back."
+      "capacity": "We take only three acts a month. Each one takes five days of concentrated work, so beyond that we couldn't keep our word."
     },
     "faq": {
       "title": "Frequently asked",
@@ -1799,6 +1795,10 @@
       "subtitleLine1": "Send us the music on KakaoTalk and we'll answer within 3 business days.",
       "subtitleLine2": "The review is free, and you pay only once it passes.",
       "imageAlt": "The Studio NOL workroom"
+    },
+    "payment": {
+      "assurance": "You pay after the music passes review and the volume of work is confirmed. If you stop before production begins, you get all of it back.",
+      "termsLink": "Read the full cancellation and refund terms"
     }
   },
   "voiceActing": {

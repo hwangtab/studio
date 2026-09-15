@@ -23,6 +23,14 @@ const KO_COMMON = path.join(__dirname, '..', 'public', 'locales', 'ko', 'common.
 
 const CALL_RE = /createTranslated(QaItems|HowToSteps)\(\s*t,\s*'([\w.]+)',\s*(\d+)\s*\)/g;
 
+/**
+ * 헬퍼를 거치지 않고 손으로 같은 일을 하는 자리도 있다 —
+ * `Array.from({ length: N }, (_, i) => ({ q: t(`prefix.${i}.q`) … }))`.
+ * 헬퍼 호출만 검사하면 이쪽이 그대로 빠져나간다(music-promotion의
+ * quickAnswers가 실제로 이 형태였고, 4열로 굳어 있었다).
+ */
+const INLINE_RE = /Array\.from\(\{\s*length:\s*(\d+)\s*\}[\s\S]{0,160}?t\(`([\w.]+)\.\$\{i\}\./g;
+
 interface CallSite {
   file: string;
   helper: string;
@@ -36,6 +44,9 @@ const collectCallSites = (): CallSite[] => {
     const source = fs.readFileSync(path.join(PAGES_DIR, file), 'utf-8');
     for (const [, helper, keyPath, count] of source.matchAll(CALL_RE)) {
       sites.push({ file, helper, keyPath, declared: Number(count) });
+    }
+    for (const [, count, keyPath] of source.matchAll(INLINE_RE)) {
+      sites.push({ file, helper: 'inline', keyPath, declared: Number(count) });
     }
   }
   return sites;

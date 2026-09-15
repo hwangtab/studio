@@ -1535,7 +1535,7 @@
       "items": [
         {
           "q": "Giá bao nhiêu?",
-          "a": "{{intro}} (chưa gồm VAT). Không có phụ phí — mọi thứ ghi bên dưới đều đã bao gồm. Bạn thanh toán sau khi bản nhạc qua vòng duyệt và chúng tôi đã chốt quy mô gửi đi với bạn. Nếu dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ."
+          "a": "{{intro}} (chưa gồm VAT). Không có phụ phí — mọi thứ ghi bên dưới đều đã bao gồm. Bạn thanh toán sau khi bản nhạc qua vòng duyệt và chúng tôi đã chốt quy mô gửi đi với bạn."
         },
         {
           "q": "Các bạn làm những gì?",
@@ -1548,6 +1548,14 @@
         {
           "q": "Các bạn hứa điều gì?",
           "a": "Khi bản nhạc qua vòng duyệt, trước lúc gửi chúng tôi chốt bằng con số: sẽ làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào. Xong việc, báo cáo chứng minh đã làm đúng con số đó. Có đăng bài hay không là quyết định của ban biên tập từng nơi, không ai hứa được điều đó — phần chúng tôi nhận là đưa bản nhạc đến đúng các ban biên tập ấy."
+        },
+        {
+          "q": "Thể loại nhạc kén người nghe thì có sao không?",
+          "a": "Không sao cả. Quy mô gửi đi sẽ nhỏ hơn thôi, và đó không phải là thiệt thòi — một EP grindcore vẫn được gửi tới 125 nơi. Cố gửi cho những nơi không đưa tin về dòng nhạc đó chỉ khiến email bị trả lại và bị huỷ đăng ký nhiều hơn. Nếu thực sự không có nơi nào phù hợp để gửi, chúng tôi sẽ nói rõ điều đó ngay ở vòng duyệt."
+        },
+        {
+          "q": "Nếu giữa chừng muốn dừng thì sao?",
+          "a": "Bạn chỉ thanh toán sau khi bản nhạc qua vòng duyệt và chúng tôi đã chốt quy mô gửi đi với bạn, nên trước đó bạn không mất chi phí gì. Ngay cả sau khi thanh toán, nếu dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ. Sau khi đã bắt tay vào làm thì không hoàn tiền, nhưng chúng tôi sẽ trao lại thông cáo báo chí, press kit và video đã làm đến thời điểm đó để bạn dùng ở nơi khác."
         }
       ]
     },
@@ -1710,23 +1718,11 @@
       "rejection": "Vòng duyệt miễn phí và chúng tôi trả lời trong 3 ngày làm việc. Khi khó nhận, chúng tôi ghi rõ lý do, kèm theo những nơi bạn nên gửi trong phạm vi hiểu biết của mình.",
       "why": "Có hai lý do để duyệt. Đối tượng chúng tôi gửi mỗi lần đều là cùng những con người ấy, nên cứ gửi đi gửi lại tài liệu không phù hợp thì chính mối quan hệ đó bị bào mòn. Và lòng tin một khi đã đốt thì không lấy lại được."
     },
-    "notPromised": {
-      "title": "Nói trước cho rõ",
-      "subtitle": "Chúng tôi sẽ không nói là làm được điều mình không làm được.",
-      "items": [
-        {
-          "title": "Chúng tôi không bảo đảm bài báo được đăng",
-          "body": "Viết hay không là do ban biên tập của từng nơi quyết định. Nếu có chỗ nào bảo đảm, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo. Phần chúng tôi chịu trách nhiệm là khối lượng thực thi đã chốt trước khi gửi, và điều đó được chứng minh bằng báo cáo."
-        }
-      ],
-      "instead": "Thanh toán diễn ra sau khi qua vòng duyệt và chốt khối lượng thực thi. Nếu bạn dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ.",
-      "termsLink": "Xem toàn văn điều khoản hủy và hoàn tiền"
-    },
     "pricing": {
       "title": "Giá",
       "subtitle": "Một gói duy nhất. Chúng tôi không chia hạng.",
       "note": "Phần việc này lâu nay là một hạng mục cố định của gói dự án phát hành, trị giá {{list}}. Lần đầu tách ra bán riêng, đến hết {{until}} chúng tôi nhận theo giá đối tác sớm — đổi lại, bạn cho phép chúng tôi công bố hồ sơ và báo cáo của ca này.",
-      "capacity": "Mỗi tháng chúng tôi chỉ nhận 3 nghệ sĩ. Mỗi ca chiếm trọn năm ngày tập trung, nhiều hơn thế thì không giữ được lời hứa. Thanh toán sau khi qua vòng duyệt, và trước khi bắt tay vào làm thì hoàn lại toàn bộ."
+      "capacity": "Mỗi tháng chúng tôi chỉ nhận 3 nghệ sĩ. Mỗi ca chiếm trọn năm ngày tập trung, nhiều hơn thế thì không giữ được lời hứa."
     },
     "faq": {
       "title": "Câu hỏi thường gặp",
@@ -1771,6 +1767,10 @@
       "subtitleLine1": "Gửi bản nhạc qua KakaoTalk, chúng tôi trả lời trong 3 ngày làm việc.",
       "subtitleLine2": "Vòng duyệt miễn phí, qua rồi mới thanh toán.",
       "imageAlt": "Phòng làm việc của Studio NOL"
+    },
+    "payment": {
+      "assurance": "Thanh toán diễn ra sau khi qua vòng duyệt và chốt khối lượng thực thi. Nếu bạn dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ.",
+      "termsLink": "Xem toàn văn điều khoản hủy và hoàn tiền"
     }
   },
   "voiceActing": {

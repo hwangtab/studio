@@ -1535,7 +1535,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta?",
-          "a": "{{intro}} (IVA no incluido). No hay cargos añadidos: todo lo que aparece abajo va incluido. Pagas después de que la música pase la escucha previa y de que te confirmemos el tamaño del envío. Si lo dejas antes de que empiece la producción, te devolvemos todo."
+          "a": "{{intro}} (IVA no incluido). No hay cargos añadidos: todo lo que aparece abajo va incluido. Pagas después de que la música pase la escucha previa y de que te confirmemos el tamaño del envío."
         },
         {
           "q": "¿Qué hacen exactamente?",
@@ -1548,6 +1548,14 @@
         {
           "q": "¿Qué prometen exactamente?",
           "a": "Si la música pasa la escucha previa, antes de enviar nada te confirmamos con cifras qué materiales haremos y a cuántos medios de qué tipo los enviaremos. Al terminar, el informe demuestra que se hizo tal cual. Que salga o no una publicación lo decide la redacción de cada medio, y eso no lo puede prometer nadie: lo que asumimos nosotros es que la música llegue bien a esas redacciones."
+        },
+        {
+          "q": "¿Importa si el género es muy de nicho?",
+          "a": "No hay problema. El envío será más pequeño, y eso no es una pérdida — un EP de grindcore llegó a 125 medios. Forzarlo con medios que no cubren ese tipo de música solo trae rebotes y bajas. Si de verdad no hay dónde enviarlo, te lo decimos en la escucha previa."
+        },
+        {
+          "q": "¿Qué pasa si quiero dejarlo a medias?",
+          "a": "Pagas solo después de que la música pase la escucha previa y de que confirmemos contigo el tamaño del envío, así que hasta entonces no supone ningún coste. Incluso después de pagar, si lo dejas antes de que empiece la producción, te devolvemos todo. Una vez empezada la producción no hay reembolso, pero te entregamos la nota de prensa, el press kit y el vídeo que se hayan hecho hasta ese momento, para que los uses donde quieras."
         }
       ]
     },
@@ -1710,23 +1718,11 @@
       "rejection": "La escucha previa es gratuita y respondemos en tres días hábiles. Cuando no podemos aceptarlo, te escribimos el motivo y te anotamos, hasta donde sepamos, adónde te conviene enviarlo.",
       "why": "Hacemos esa escucha previa por dos razones. Enviamos siempre a las mismas personas, así que mandarles una y otra vez material que no encaja desgasta esa relación. Y la confianza, una vez quemada, no se recupera."
     },
-    "notPromised": {
-      "title": "Lo que te decimos de entrada",
-      "subtitle": "No vamos a decir que podemos hacer lo que no podemos.",
-      "items": [
-        {
-          "title": "No garantizamos la publicación de artículos",
-          "body": "Escribir o no lo decide la redacción del medio. Si algún sitio lo garantiza, lo que está haciendo es comprar publicidad y disfrazarla de artículo. De lo que respondemos nosotros es del volumen de trabajo que te confirmamos antes del envío, y eso lo demuestra el informe."
-        }
-      ],
-      "instead": "El pago llega después de pasar la escucha previa y de cerrar el volumen de trabajo. Si lo dejas antes de que empiece la producción, te devolvemos todo.",
-      "termsLink": "Ver los términos completos de cancelación y reembolso"
-    },
     "pricing": {
       "title": "Precio",
       "subtitle": "Un único producto. No lo dividimos en niveles.",
       "note": "Este trabajo lo veníamos ofreciendo como parte fija del pack de proyecto de lanzamiento, por un equivalente a {{list}}. Ahora que lo sacamos por primera vez como producto suelto, hasta el {{until}} lo tomamos al precio de socio inicial: a cambio de que nos dejes publicar el caso y el informe.",
-      "capacity": "Aceptamos solo tres artistas al mes. Cada uno se lleva cinco días de trabajo concentrado, y más de eso no nos permitiría cumplir lo prometido. El pago es posterior a la escucha previa, y antes de que empiece la producción se devuelve el importe íntegro."
+      "capacity": "Aceptamos solo tres artistas al mes. Cada uno se lleva cinco días de trabajo concentrado, y más de eso no nos permitiría cumplir lo prometido."
     },
     "faq": {
       "title": "Preguntas frecuentes",
@@ -1771,6 +1767,10 @@
       "subtitleLine1": "Mándanos la música por KakaoTalk y te respondemos en 3 días hábiles.",
       "subtitleLine2": "La escucha previa es gratuita, y pagas solo después de pasarla.",
       "imageAlt": "El taller de Studio NOL"
+    },
+    "payment": {
+      "assurance": "El pago llega después de pasar la escucha previa y de cerrar el volumen de trabajo. Si lo dejas antes de que empiece la producción, te devolvemos todo.",
+      "termsLink": "Ver los términos completos de cancelación y reembolso"
     }
   },
   "voiceActing": {

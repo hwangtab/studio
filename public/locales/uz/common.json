@@ -1535,7 +1535,7 @@
       "items": [
         {
           "q": "Narxi qancha?",
-          "a": "{{intro}} (VATsiz). Qo'shimcha to'lov yo'q — quyida yozilganlarning hammasi shunga kiradi. Musiqa saralashdan o'tib, yuborish hajmini siz bilan aniqlab olganimizdan keyin to'laysiz. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz."
+          "a": "{{intro}} (VATsiz). Qo'shimcha to'lov yo'q — quyida yozilganlarning hammasi shunga kiradi. Musiqa saralashdan o'tib, yuborish hajmini siz bilan aniqlab olganimizdan keyin to'laysiz."
         },
         {
           "q": "Nima qilib berasiz?",
@@ -1548,6 +1548,14 @@
         {
           "q": "Nimani va'da qilasiz?",
           "a": "Musiqa saralashdan o'tsa, yuborishdan oldin qanday materiallar tayyorlanishini va qanday turdagi nechta manzilga yuborilishini raqamlar bilan aniq aytamiz. Ish tugagach, o'sha raqam bo'yicha bajarilganini hisobotda ko'rsatamiz. Maqola chiqishi esa nashr tahririyatining qarori — buni hech kim va'da qila olmaydi. Bizning zimmamizdagi ish — musiqani o'sha tahririyatlarga joyida yetkazish."
+        },
+        {
+          "q": "Janr juda tor bo'lsa ham bo'ladimi?",
+          "a": "Bo'ladi. Yuborish hajmi kichrayadi, xolos, va bu zarar emas — grindcore EP ham 125 manzilga yetib borgan. Bunday musiqani yoritmaydigan joylarga zo'rlab yuborish faqat qaytgan xatlar va obunani bekor qilishlarni ko'paytiradi. Yuborishga haqiqatan ham joy topilmasa, buni saralash bosqichida sizga aytamiz."
+        },
+        {
+          "q": "Yarim yo'lda to'xtatsam nima bo'ladi?",
+          "a": "Musiqa saralashdan o'tib, yuborish hajmini siz bilan aniqlab olgandan keyingina to'lov qilasiz, shuning uchun bungacha hech qanday xarajat bo'lmaydi. To'lovdan keyin ham, ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz. Ish boshlangandan keyin pul qaytarilmaydi, lekin o'sha paytgacha tayyorlangan press-reliz, press-kit va videoning asl fayllarini sizga topshiramiz — boshqa joyda foydalanishingiz mumkin."
         }
       ]
     },
@@ -1710,23 +1718,11 @@
       "rejection": "Saralash bepul va 3 ish kuni ichida javob beramiz. Ololmaydigan bo'lsak, sababini yozamiz va qayerga yuborganingiz ma'qulligini bilganimizcha qo'shib beramiz.",
       "why": "Saralashning ikkita sababi bor. Har safar yuboradigan manzillarimiz o'sha-o'sha odamlar, shuning uchun mos kelmaydigan materialni qayta-qayta yuborsak, munosabatning o'zi sarflanib bitadi. Va bir marta kuydirilgan ishonch qayta tiklanmaydi."
     },
-    "notPromised": {
-      "title": "Oldindan aytib qo'yadiganimiz",
-      "subtitle": "Qo'limizdan kelmaydigan ishni keladi deb aytmaymiz.",
-      "items": [
-        {
-          "title": "Maqola chiqishini kafolatlamaymiz",
-          "body": "Yozish-yozmaslikni nashr tahririyati hal qiladi. Kafolatlaydigan joy bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi. Biz javob beradigan narsa — yuborishdan oldin aniqlab aytilgan ish hajmi, va buni hisobot isbotlaydi."
-        }
-      ],
-      "instead": "To'lov saralashdan o'tib, ish hajmi aniqlangandan keyin bo'ladi. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz.",
-      "termsLink": "Bekor qilish va pul qaytarish shartlarini to'liq o'qish"
-    },
     "pricing": {
       "title": "Narx",
       "subtitle": "Yagona xizmat. Darajalarga bo'lmaymiz.",
       "note": "Bu ish reliz loyihasi to'plamining doimiy qismi sifatida {{list}} evaziga taqdim etib kelingan. Endi uni birinchi marta alohida xizmat sifatida chiqarayotganimiz uchun {{until}} gacha dastlabki hamkor narxida olamiz — buning evaziga ish tajribasi va hisobotni ommaga ko'rsatishga ruxsat berasiz.",
-      "capacity": "Oyiga atigi 3 ta ijodkorni olamiz. Bitta ishga besh kun to'liq sarflanadi, undan ortig'ida bergan so'zimizda tura olmaymiz. To'lov saralashdan o'tgandan keyin, ishga kirishishdan oldin esa pul to'liq qaytariladi."
+      "capacity": "Oyiga atigi 3 ta ijodkorni olamiz. Bitta ishga besh kun to'liq sarflanadi, undan ortig'ida bergan so'zimizda tura olmaymiz."
     },
     "faq": {
       "title": "Ko'p so'raladigan savollar",
@@ -1771,6 +1767,10 @@
       "subtitleLine1": "KakaoTalk orqali musiqani yuboring, 3 ish kuni ichida javob beramiz.",
       "subtitleLine2": "Saralash bepul, o'tgandan keyingina to'laysiz.",
       "imageAlt": "Studio NOL ish xonasi"
+    },
+    "payment": {
+      "assurance": "To'lov saralashdan o'tib, ish hajmi aniqlangandan keyin bo'ladi. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz.",
+      "termsLink": "Bekor qilish va pul qaytarish shartlarini to'liq o'qish"
     }
   },
   "voiceActing": {
