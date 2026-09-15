@@ -47,22 +47,37 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
    * 부모 document로 올라오지 않으므로 트랩이 해 줄 수 있는 일도 없다. 같은 판단이
    * saf-2026의 다음 우편번호 모달에도 주석으로 남아 있다.
    */
-  useFocusTrapDialog({
+  const { restoreFocus } = useFocusTrapDialog({
     isOpen: isOpen && !paymentActive,
     containerRef: dialogRef,
     initialFocusRef: closeButtonRef,
+    // 훅이 꺼질 때 스스로 포커스를 되돌리게 두면 **결제 단계로 넘어가는 순간** 포커스가
+    // 모달 뒤 리워드 카드로 튕겨 나간다(백드롭에 가려진 자리다). 되돌리는 시점은 모달이
+    // 실제로 닫힐 때여야 하므로 직접 부른다.
+    restoreOnCleanup: false,
   });
+
+  // 결제 단계로 넘어가면 트랩이 꺼지므로, 포커스를 다이얼로그 안에 명시적으로 옮겨 둔다.
+  // 그러지 않으면 방금 사라진 버튼에 있던 포커스가 body로 떨어진다.
+  useEffect(() => {
+    if (paymentActive) dialogRef.current?.focus();
+  }, [paymentActive]);
+
+  const close = useCallback(() => {
+    restoreFocus();
+    onClose();
+  }, [onClose, restoreFocus]);
 
   // Escape는 트랩과 무관하게 항상 받는다 — 위 훅에 onClose를 넘기면 결제 단계에서
   // 트랩이 꺼질 때 닫기까지 함께 사라진다.
   useEffect(() => {
     if (!isOpen) return;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') close();
     };
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [isOpen, onClose]);
+  }, [close, isOpen]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -79,10 +94,11 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={close} aria-hidden="true" />
       <div
         ref={dialogRef}
         role="dialog"
+        tabIndex={-1}
         aria-modal="true"
         aria-labelledby="reward-modal-title"
         className="relative flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-t-2xl bg-gray-50 shadow-2xl sm:rounded-2xl dark:bg-gray-900"
@@ -94,7 +110,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
           <button
             ref={closeButtonRef}
             type="button"
-            onClick={onClose}
+            onClick={close}
             aria-label="닫기"
             className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-300 dark:focus-visible:ring-primary-lighter/70 dark:hover:bg-gray-700"
           >
