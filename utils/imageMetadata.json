@@ -47,6 +47,38 @@
     "width": 280,
     "height": 72
   },
+  "/images/funding/keep-singing-for-palestine/album.webp": {
+    "width": 800,
+    "height": 800
+  },
+  "/images/funding/keep-singing-for-palestine/cover.webp": {
+    "width": 1920,
+    "height": 1080
+  },
+  "/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp": {
+    "width": 560,
+    "height": 560
+  },
+  "/images/funding/keep-singing-for-palestine/lineup/lee-seoyoung.webp": {
+    "width": 560,
+    "height": 560
+  },
+  "/images/funding/keep-singing-for-palestine/lineup/momo.webp": {
+    "width": 560,
+    "height": 560
+  },
+  "/images/funding/keep-singing-for-palestine/lineup/moredo-saturday.webp": {
+    "width": 560,
+    "height": 560
+  },
+  "/images/funding/keep-singing-for-palestine/lineup/namsu.webp": {
+    "width": 560,
+    "height": 560
+  },
+  "/images/funding/smoke-test/cover.webp": {
+    "width": 1440,
+    "height": 960
+  },
   "/images/hardware1.jpg": {
     "width": 1280,
     "height": 720
@@ -412,6 +444,10 @@
     "height": 720
   },
   "/images/room8.webp": {
+    "width": 1280,
+    "height": 720
+  },
+  "/images/seoul-night-skyline.jpg": {
     "width": 1280,
     "height": 720
   },

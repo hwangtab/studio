@@ -3,7 +3,6 @@ slug: keep-singing-for-palestine
 title: Keep Singing for Palestine — 9·19 거리집회 후원
 summary: 팔레스타인 해방을 위한 거리집회에 함께합니다. 후원해 주시면 앨범 〈이름을 모르는 먼 곳의 그대에게〉 13곡을 보내 드립니다.
 cover: /images/funding/keep-singing-for-palestine/cover.webp
-heroImage: /images/funding/keep-singing-for-palestine/hero.webp
 goalAmount: 1000000
 startAt: 2026-09-14T00:00:00+09:00
 endAt: 2026-10-19T23:59:59+09:00
@@ -13,7 +12,7 @@ lastmod: 2026-09-14
 rewards:
   - id: mp3
     title: 음원 후원 — MP3
-    description: 앨범 13곡 전체를 MP3 320kbps로 받으실 수 있습니다. 내려받기 주소는 결제 확정 메일과 후원 확인 페이지에 함께 보내 드립니다.
+    description: 앨범 13곡 전체를 MP3 320kbps로 보내 드립니다. 내려받기 주소는 결제 확정 메일과 후원 확인 페이지에 함께 보내 드립니다.
     amount: 10000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -21,8 +20,8 @@ rewards:
       - label: MP3 320kbps
         url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-mp3-320.zip
   - id: wav-cd
-    title: 음원 후원 — MP3 + WAV (CD 음질)
-    description: 위 MP3에 더해 16bit 44.1kHz WAV 원본을 함께 받으실 수 있습니다.
+    title: 음원 후원 — MP3 + CD 음질, 두 가지 모두
+    description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.
     amount: 30000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -32,8 +31,8 @@ rewards:
       - label: WAV 16bit 44.1kHz (CD 음질)
         url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-16-44.zip
   - id: wav-hires
-    title: 음원 후원 — 24bit 96kHz 고음질
-    description: 위 두 가지에 더해 스튜디오 마스터와 같은 24bit 96kHz WAV 원본까지 함께 받으실 수 있습니다. 세 가지 음질을 모두 드립니다(고음질 원본은 약 1.8GB).
+    title: 음원 후원 — 24bit 96kHz까지 세 가지 모두
+    description: 세 가지 음질을 모두 보내 드립니다. MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)입니다.
     amount: 50000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -45,8 +44,8 @@ rewards:
       - label: WAV 24bit 96kHz (스튜디오 마스터)
         url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-24-96.zip
   - id: wav-hires-plus
-    title: 든든한 후원 — 24bit 96kHz 고음질
-    description: 위와 같이 세 가지 음질을 모두 받으시고, 원하시면 후원자 명단에 이름을 올려 드립니다. 이름 공개 여부는 후원 확인 페이지에서 언제든 바꾸실 수 있습니다.
+    title: 든든한 후원 — 세 가지 모두 + 후원자 명단
+    description: 세 가지 음질을 모두 보내 드리고, 원하시면 후원자 명단에 이름을 올려 드립니다. 이름 공개 여부는 후원 확인 페이지에서 언제든 바꾸실 수 있습니다.
     amount: 100000
     requiresShipping: false
     estimatedDelivery: 2026-09
@@ -73,7 +72,43 @@ rewards:
 
 무대도 객석도 없습니다. 지나가던 사람이 관객이고, 멈춰 서면 그 자리가 공연장입니다.
 
-노래하는 사람은 넷입니다. 이서영은 숲해설가이면서 노래를 만듭니다. 나무를 설명하는 일과 노래를 만드는 일이 그에게는 같은 일인 듯합니다. 이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주하는데, 2017년부터 사회적 폭력이 있는 현장을 찾아다니며 노래해 왔습니다. 모레도토요일은 제주 강정마을 평화운동 현장에서 만난 두 사람이 만든 포크 듀오입니다. 모모는 예진 안젤라 박과 황슬기의 재즈 듀오로, 분쟁지역의 평범한 하루와 그 안에 깔린 긴장을 소리로 옮깁니다.
+## 그날 노래하는 사람들
+
+다섯이 거리에 섭니다.
+
+### 모레도토요일
+
+![모레도토요일](/images/funding/keep-singing-for-palestine/lineup/moredo-saturday.webp "240")
+
+
+모레도토요일은 제주 강정마을 평화운동 현장에서 만난 두 사람이 결성한 포크 듀오입니다. 모레와 도토, 두 이름이 그대로 팀 이름이 됐습니다. 바람에 흔들리는 나뭇잎 같은 소리라는 말이 이들에게 자주 붙습니다. 앨범에 두 곡을 남겼는데, 가자로 향하던 여성들의 노래 〈We will sail for your freedom〉과 강정에서의 4년을 적은 〈모르는〉입니다. 이 앨범에서 두 곡을 부른 유일한 팀입니다. ([인스타그램](https://www.instagram.com/saturday_moredo/))
+
+### 모모
+
+![모모](/images/funding/keep-singing-for-palestine/lineup/momo.webp "240")
+
+
+모모는 예진 안젤라 박과 황슬기의 재즈 듀오입니다. 즉흥과 실험을 밑천으로 삼되, 그 소리가 향하는 곳은 분쟁지역의 평범한 하루와 그 안에 깔린 긴장입니다. 앨범에 실은 〈If this can be tolerated, what can't be?〉는 단 한 줄의 가사를 끝없이 되풀이하며 우리의 무감각을 묻습니다. ([인스타그램](https://www.instagram.com/momoismothermother/))
+
+### 이서영
+
+![이서영](/images/funding/keep-singing-for-palestine/lineup/lee-seoyoung.webp "240")
+
+
+이서영은 숲해설가이면서 노래를 만듭니다. 나무를 설명하는 일과 노래를 만드는 일이 그에게는 같은 일인 듯합니다. 포크에 앰비언트와 일렉트로닉을 섞고, 맑고 서늘한 음색으로 고독과 공존을 노래합니다. 앨범에 실은 〈우리〉는 대학 시절에 쓴 곡을 10년 만에 다시 꺼내 고쳐 쓴 것입니다. ([인스타그램](https://www.instagram.com/leesyoung.kr/))
+
+### 이형주
+
+![이형주](/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp "240")
+
+
+이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다.
+
+### 남수
+
+![남수](/images/funding/keep-singing-for-palestine/lineup/namsu.webp "240")
+
+남수는 인디와 포크, 블루스와 재즈를 오가며 노래하고, 〈딱따구리 책방〉이라는 문화공간을 꾸립니다. 앨범 네 번째 곡 〈안녕 (먼 곳의 그대에게)〉이 그의 노래입니다. 가사에 "나의 이름을 모르는 그대에게"라는 구절이 있는데, 앨범 제목과 같은 자리에서 나온 말처럼 들립니다. 남수는 이 곡을 두고 "멀리에 있지만 같은 마음과 소망을 품은 우리, 이름을 모르지만 서로의 안녕을 바라는 우리"라고 했습니다. 본래 같은 날 낮 집회의 연대 공연자였다가, 행사가 통째로 거리로 나오면서 낮과 저녁의 구분이 사라져 한 무대에 서게 됐습니다. ([인스타그램](https://www.instagram.com/namsu_ggu/))
 
 ## 왜 강정에서 온 사람들이 팔레스타인을 노래하나
 
@@ -86,6 +121,8 @@ rewards:
 > 팔레스타인에서 한반도까지, 전쟁이 끝나지 않는 한 우리의 노래도 끝나지 않는다.
 
 ## 후원해 주시면 보내 드리는 것 — 〈이름을 모르는 먼 곳의 그대에게〉
+
+![〈이름을 모르는 먼 곳의 그대에게〉 앨범 표지](/images/funding/keep-singing-for-palestine/album.webp "260")
 
 2024년, 강정피스앤뮤직캠프는 캠프를 열지 못했습니다. 대신 12팀의 뮤지션이 모여 앨범 한 장을 만들었습니다. 록과 포크와 재즈와 일렉트로닉이 한 장에 들어갔고, 히든 트랙을 포함해 모두 13곡이 됐습니다.
 
@@ -113,7 +150,7 @@ rewards:
 | 12 | 우리 | 이서영 |
 | 13 | 모르는 (Hidden Track) | 모레도토요일 |
 
-후원 금액이 오를수록 받는 음질이 더해집니다. 1만 원은 MP3 320kbps, 3만 원은 거기에 CD 음질인 16bit 44.1kHz WAV를 더해서, 5만 원부터는 여기에 24bit 96kHz 스튜디오 마스터까지 세 가지를 모두 보내 드립니다. 위 티어를 고르셨다고 해서 MP3를 못 받는 일은 없습니다 — 1.8GB짜리 원본은 집에서 듣고 MP3는 들고 다니시라는 뜻입니다. 어느 티어든 13곡 전체입니다.
+후원 금액이 오를수록 받는 음질이 더해집니다. 1만 원은 MP3 320kbps, 3만 원은 거기에 CD 음질 WAV까지 두 가지, 5만 원부터는 24bit 96kHz 스튜디오 마스터까지 세 가지를 전부 보내 드립니다. 위 티어를 고르셨다고 MP3를 못 받는 일은 없습니다 — 1.8GB짜리 원본은 집에서 듣고 MP3는 들고 다니시라는 뜻입니다. 어느 티어든 13곡 전체입니다.
 
 ## 후원금은 이렇게 쓰입니다
 
