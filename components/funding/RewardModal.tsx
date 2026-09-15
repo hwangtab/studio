@@ -28,29 +28,40 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [step, setStep] = useState<'detail' | 'pledge'>('detail');
+  const [paymentActive, setPaymentActive] = useState(false);
 
   const isOpen = reward !== null;
 
   // 리워드가 바뀌면 항상 상세부터 다시 시작한다.
   useEffect(() => {
-    if (reward) setStep('detail');
+    if (reward) {
+      setStep('detail');
+      setPaymentActive(false);
+    }
   }, [reward]);
 
   /**
-   * 트랩은 모달이 열려 있는 동안 계속 켜 둔다.
-   *
-   * 예전에는 결제 단계에서 껐다 — 결제위젯의 iframe이 모달 안에 떠 있었는데, 트랩의 포커스
-   * 대상 선택자에 `iframe`이 없어서 켜 둔 채로는 키보드 사용자가 카드번호 칸에 못 들어갔다.
-   * 지금은 폼에서 결제수단을 고르면 곧바로 토스 결제창으로 **전체 이동**하므로 모달 안에
-   * iframe이 뜰 일이 없고, 끌 이유도 사라졌다.
+   * 결제 단계에서는 포커스 트랩을 끈다. 트랩의 포커스 대상 선택자에 `iframe`이 없어서,
+   * 켜 둔 채로는 마지막 요소에서 Tab을 누를 때 첫 요소로 되감기며 **결제 iframe을 영영
+   * 건너뛴다**(키보드만 쓰는 후원자는 카드번호를 입력할 방법이 없다). iframe 안의 키 입력은
+   * 부모 document로 올라오지 않으므로 트랩이 해 줄 수 있는 일도 없다. 같은 판단이
+   * saf-2026의 다음 우편번호 모달에도 주석으로 남아 있다.
    */
   const { restoreFocus } = useFocusTrapDialog({
-    isOpen,
+    isOpen: isOpen && !paymentActive,
     containerRef: dialogRef,
     initialFocusRef: closeButtonRef,
-    // 되돌리는 시점은 모달이 실제로 닫힐 때다 — 아래 close()가 직접 부른다.
+    // 훅이 꺼질 때 스스로 포커스를 되돌리게 두면 **결제 단계로 넘어가는 순간** 포커스가
+    // 모달 뒤 리워드 카드로 튕겨 나간다(백드롭에 가려진 자리다). 되돌리는 시점은 모달이
+    // 실제로 닫힐 때여야 하므로 직접 부른다.
     restoreOnCleanup: false,
   });
+
+  // 결제 단계로 넘어가면 트랩이 꺼지므로, 포커스를 다이얼로그 안에 명시적으로 옮겨 둔다.
+  // 그러지 않으면 방금 사라진 버튼에 있던 포커스가 body로 떨어진다.
+  useEffect(() => {
+    if (paymentActive) dialogRef.current?.focus();
+  }, [paymentActive]);
 
   const close = useCallback(() => {
     restoreFocus();
@@ -73,6 +84,8 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
     lockBodyScroll();
     return () => unlockBodyScroll();
   }, [isOpen]);
+
+  const handlePaymentActiveChange = useCallback((active: boolean) => setPaymentActive(active), []);
 
   if (!reward) return null;
 
@@ -148,6 +161,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 project={project}
                 initialRewardId={reward.id}
                 remaining={remaining}
+                onPaymentActiveChange={handlePaymentActiveChange}
                 // 카드를 눌러 이미 고르고 들어왔다. 여기서 또 고르게 하지 않는다.
                 lockedReward
                 // 모달 본문이 자체 스크롤 컨테이너라 sticky 요약이 폼 위로 떠 겹친다.

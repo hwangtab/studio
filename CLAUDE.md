@@ -116,6 +116,29 @@ npm run indexnow:changed -- --dry-run
 게이트가 금액을 안 보고 있었다. 의도한 변경이면 `npm run check:funding-baseline -- --update`
 후 **같은 커밋에 왜 바뀌는지를 적을 것** — 이유 없는 갱신은 게이트를 무력화한다.
 
+### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
+
+`NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는
+**결제위젯 연동 키 쌍**이다. v2 SDK는 두 갈래인데 이 키로는 한쪽만 된다.
+
+| 갈래 | 요구하는 키 | 우리 상태 |
+|---|---|---|
+| `toss.widgets()` + `renderPaymentMethods` | 위젯 키(`gck`) | **이걸 쓴다** |
+| `toss.payment()` + `requestPayment` | API 개별 연동 키(`ck`) | 못 쓴다 |
+
+SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언하고, 아니면
+`NotSupportedWidgetKeyError("결제위젯 연동키는 지원하지 않습니다.")`를 던진다. 예외는
+SDK에 하드코딩된 위젯 키 2개뿐이고 우리 키는 거기 없다.
+
+**API가 통과하는 것과 SDK가 통과시키는 것은 다르다.** 결제창 개설 API
+(`px-payment-parameters`)는 위젯 키로도 토큰을 내준다 — 그래서 API로만 확인하면
+"된다"는 잘못된 결론이 나온다(2026-09-15에 실제로 그렇게 배포했다가 되돌렸다).
+판정은 반드시 **브라우저에서 `toss.payment()`를 실제로 불러** 할 것.
+
+결제수단을 폼에서 직접 고르게 하려면(saf-2026 방식) 토스에서 **API 개별 연동 키**를 새로
+발급받아야 하고, 그러면 `TOSS_SECRET_KEY`도 그 쌍의 `live_sk_`로 함께 바꿔야 한다 —
+승인·조회·취소가 전부 같은 쌍이어야 한다. 한쪽만 바꾸면 결제는 열리는데 승인이 실패한다.
+
 ### 약관·처리방침을 고치면 FUNDING_TERMS_VERSION을 함께 올린다
 
 `funding_pledges.terms_version`은 "그때 이 내용에 동의했다"는 증거다. 내용이 바뀌었는데
