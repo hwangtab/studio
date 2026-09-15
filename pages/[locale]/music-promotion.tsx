@@ -11,7 +11,6 @@ import {
   Video,
   ClipboardList,
   ShieldCheck,
-  X,
   ArrowRight,
   CheckCircle2,
 } from '@/lib/lucide-icons';
@@ -114,9 +113,11 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   );
 
   // 가격을 말하는 답이 섞여 있어 보간을 넘겨 렌더한다.
+  // 개수는 3열 그리드에 맞춰 6이다 — 4면 마지막 줄에 한 장만 남는다.
+  // 이 숫자와 ko 배열 길이의 일치는 utils/translatedList.counts.test.ts가 지킨다.
   const quickAnswers = React.useMemo(
     () =>
-      Array.from({ length: 4 }, (_, i) => ({
+      Array.from({ length: 6 }, (_, i) => ({
         question: t(`musicPromotion.quickAnswers.items.${i}.q`),
         answer: t(`musicPromotion.quickAnswers.items.${i}.a`, priceVars),
       })),
@@ -159,10 +160,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
     label: string;
   }[];
   const criteria = t('musicPromotion.review.criteria', { returnObjects: true }) as {
-    title: string;
-    body: string;
-  }[];
-  const notPromised = t('musicPromotion.notPromised.items', { returnObjects: true }) as {
     title: string;
     body: string;
   }[];
@@ -495,6 +492,27 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             {t('musicPromotion.pricing.capacity')}
           </p>
         </div>
+        {/* 결제 조건과 약관 링크는 값을 보는 자리에 붙어 있어야 한다.
+            제작 착수 후 청약철회 제한은 "미리 고지"해야 효력이 생기므로
+            (전자상거래법 제17조 제6항), 이 링크가 그 고지의 성립 조건이다.
+            떼면 환불 규정이 약관에 적혀 있어도 무효가 된다. */}
+        <div className="mx-auto mt-8 flex max-w-2xl gap-3 rounded-xl border border-primary/20 bg-primary/5 p-5">
+          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
+          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-200">
+            {t('musicPromotion.payment.assurance')}
+            {locale === 'ko' && (
+              <>
+                {' '}
+                <Link
+                  href="/ko/terms"
+                  className="underline underline-offset-2 transition hover:text-primary dark:hover:text-primary-lighter"
+                >
+                  {t('musicPromotion.payment.termsLink')}
+                </Link>
+              </>
+            )}
+          </p>
+        </div>
       </Section>
 
       <Section>
@@ -521,44 +539,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           </p>
           <p className="mt-4 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             {t('musicPromotion.review.why')}
-          </p>
-        </div>
-      </Section>
-
-      <Section className="bg-gray-50 dark:bg-gray-900/40">
-        <SectionHeading
-          title={t('musicPromotion.notPromised.title')}
-          subtitle={t('musicPromotion.notPromised.subtitle')}
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-3">
-          {notPromised.map((item) => (
-            <BaseCard key={item.title} className="h-full p-6">
-              <X className="h-6 w-6 text-gray-400" aria-hidden="true" />
-              <h3 className="mt-3 font-bold text-gray-900 dark:text-white">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                {item.body}
-              </p>
-            </BaseCard>
-          ))}
-        </div>
-        <div className="mx-auto mt-8 flex max-w-3xl gap-3 rounded-xl border border-primary/20 bg-primary/5 p-5">
-          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
-          <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-200">
-            {t('musicPromotion.notPromised.instead')}
-            {/* 제작 착수 후 청약철회 제한은 "미리 고지"해야 효력이 생긴다(전자상거래법 제17조
-                제6항). 결제 결정 바로 옆에서 규정 전문으로 가는 경로가 그 고지의 성립 조건이다.
-                terms 페이지는 ko 전용이라 ko에서만 건다. */}
-            {locale === 'ko' && (
-              <>
-                {' '}
-                <Link
-                  href="/ko/terms"
-                  className="underline underline-offset-2 transition hover:text-primary dark:hover:text-primary-lighter"
-                >
-                  {t('musicPromotion.notPromised.termsLink')}
-                </Link>
-              </>
-            )}
           </p>
         </div>
       </Section>
