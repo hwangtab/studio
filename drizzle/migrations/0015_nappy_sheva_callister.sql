@@ -1,0 +1,1 @@
+ALTER TABLE `funding_pledges` ADD `downloaded_at` integer;

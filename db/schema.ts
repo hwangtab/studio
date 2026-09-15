@@ -399,6 +399,15 @@ export const fundingPledges = sqliteTable('funding_pledges', {
   /** 결제 대기 만료. 토스 +15분, 무통장 +12시간. 지나면 재고 계산에서 빠지고 lazy로 expired 처리. */
   holdExpiresAt: integer('hold_expires_at', { mode: 'timestamp' }).notNull(),
   paidAt: integer('paid_at', { mode: 'timestamp' }),
+  /**
+   * 디지털 리워드를 **처음 내려받은 시각**. 약관 제8조 2항이 "내려받기가 시작된 뒤에는
+   * 청약철회가 제한됩니다"라고 고지하는데(전자상거래법 제17조 2항 5호), 그 판정 근거가
+   * 서버에 없어 고지만 있고 구현이 없는 상태였다 — 1.8GB 원본을 받고 전액 환불이 됐다.
+   *
+   * 값이 있으면 셀프 취소를 막는다(lib/funding/policy.ts assessSelfCancel). 처음 한 번만
+   * 쓰고 이후 접근에는 덮어쓰지 않는다 — "시작된 시점"이 판정 기준이다.
+   */
+  downloadedAt: integer('downloaded_at', { mode: 'timestamp' }),
   supporterMessage: text('supporter_message'),
   displayNamePublic: integer('display_name_public', { mode: 'boolean' }).notNull().default(false),
   shippingName: text('shipping_name'),

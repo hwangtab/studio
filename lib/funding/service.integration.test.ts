@@ -297,13 +297,17 @@ describe('응원 메시지 공개', () => {
     expect(s.publicMessages.map((m) => m.message)).toContain('끝까지 함께합니다');
   });
 
-  it('옛 판본에 동의한 건의 메시지는 나가지 않는다 — 이름은 그대로 나간다', async () => {
+  /**
+   * 판본 게이트는 걷었다. 그것이 가린 것은 운영자 본인의 후원 1건뿐이었고 본인이 공개를
+   * 지시했다(2026-09-15). 이후 후원은 전부 현재 문서에 동의하므로 판본으로 가를 이유가 없다.
+   */
+  it('판본이 달라도 공개 동의만 있으면 메시지가 나간다', async () => {
     await paidWith(
       { customerEmail: 'm2@example.com', customerPhone: '010-9002', customerName: '옛동의자', supporterMessage: '옛 문서로 남긴 말' },
       'funding-terms-2026-01-01'
     );
     const s = await aggregateProjectStatus(PROJECT, NOW);
-    expect(s.publicMessages.map((m) => m.message)).not.toContain('옛 문서로 남긴 말');
+    expect(s.publicMessages.map((m) => m.message)).toContain('옛 문서로 남긴 말');
     expect(s.publicBackers).toContain('옛동의자');
   });
 

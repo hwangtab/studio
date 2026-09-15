@@ -65,6 +65,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
       projectState: project ? computeProjectState(project, input.now) : 'closed',
       fulfillmentStatus: pledge.fulfillmentStatus,
       paymentMethod: pledge.paymentMethod,
+      downloadedAt: pledge.downloadedAt ?? null,
     });
     if (!verdict.ok) return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES[verdict.code] };
   }

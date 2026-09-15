@@ -195,8 +195,12 @@ describe('확정 메일의 음원 내려받기', () => {
       projectWith([{ id: 'mp3', downloads: [{ label: 'MP3 320kbps', url: 'https://x/mp3.zip' }] }, { id: 'hires', downloads: [{ label: 'WAV', url: 'https://x/hires.zip' }] }]),
     );
     const customer = (sendEmail as jest.Mock).mock.calls[0][0];
-    expect(customer.text).toContain('https://x/mp3.zip');
-    expect(customer.text).not.toContain('https://x/hires.zip');
+    // 저장소 주소를 **그대로 싣지 않는다** — 내려받기 경로를 거쳐야 서버가 최초 접근을
+    // 기록하고, 그래야 약관 제8조 2항(내려받기 뒤 청약철회 제한)을 판정할 수 있다.
+    expect(customer.text).toContain('/api/funding/download?');
+    expect(customer.text).toContain(encodeURIComponent('https://x/mp3.zip'));
+    expect(customer.text).not.toContain(encodeURIComponent('https://x/hires.zip'));
+    expect(customer.text).toContain('청약철회가 제한됩니다');
   });
 
   /**

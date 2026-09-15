@@ -263,16 +263,20 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     remaining[r.id] = r.totalQuantity === null ? null : Math.max(0, r.totalQuantity - (claimedBy.get(r.id) ?? 0));
   }
   /**
-   * 공개 명단. `display_name_public = 1`이 공개 동의다.
+   * 공개 명단. `display_name_public = 1`이 공개 동의다 — 이름과 응원 메시지를 한 단위로 받는다.
    *
-   * **메시지는 새 판본(FUNDING_TERMS_VERSION) 이후 동의한 건만 싣는다.** 그 전 동의 문서는
-   * 응원 메시지를 "운영자에게만 보입니다"라고 약속했으므로, 문구를 바꿨다고 해서 이미 받은
-   * 메시지를 소급해 공개하면 동의하지 않은 처리를 하는 것이 된다. 이름 공개는 옛 문서도
-   * 고지하고 있어 그대로 둔다.
+   * 한동안 메시지에 판본 게이트(`terms_version = FUNDING_TERMS_VERSION`)를 걸어 뒀다. 옛 동의
+   * 문서가 메시지를 "운영자에게만 보입니다"라고 약속했기 때문이다. 그 게이트가 실제로 가린
+   * 것은 **운영자 본인의 후원 1건**뿐이었고, 본인이 2026-09-15에 공개를 지시해 걷어 냈다.
+   * 이후 들어오는 후원은 전부 현재 문서(이름·메시지 공개를 고지한다)에 동의하므로 게이트가
+   * 보호할 대상이 없다.
+   *
+   * 옛 문서로 동의한 후원이 다시 생길 일이 있다면(과거 데이터 이관 등) 그때는 이 자리에
+   * 판본 조건을 되살려야 한다.
    */
   const names = await db.all<{ customer_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
     SELECT o.customer_name,
-           CASE WHEN fp.terms_version = ${FUNDING_TERMS_VERSION} THEN fp.supporter_message ELSE NULL END AS supporter_message,
+           fp.supporter_message,
            fp.paid_at, o.created_at
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
