@@ -1590,7 +1590,7 @@
       ]
     },
     "comparison": {
-      "title": "Hãy so với nơi bán đúng thứ chúng tôi bán",
+      "title": "So sánh các lựa chọn",
       "subtitle": "Đặt giá và nơi gửi cạnh nhau là thấy rõ mình đang mua thứ gì.",
       "columns": [
         "",
@@ -1630,7 +1630,7 @@
           "{{intro}} (tương đương {{list}} trong gói)"
         ]
       ],
-      "note": "Trong phạm vi khảo sát không có hãng PR chuyên về âm nhạc ở Hàn Quốc công bố giá (tháng 9/2026). Nhiều nơi rải thông cáo, nhưng danh sách của họ không phải đầu báo âm nhạc; còn các hãng nước ngoài bán đúng thứ này thì ở một bậc giá khác.",
+      "note": "Trong phạm vi khảo sát không có hãng PR chuyên về âm nhạc ở Hàn Quốc công bố giá (tháng 9/2026). Nhiều nơi rải thông cáo, nhưng danh sách của họ không phải đầu báo âm nhạc; còn các hãng nước ngoài làm cùng công việc này thì ở một bậc giá khác.",
       "rowHeader": "Hạng mục so sánh"
     },
     "deliverables": {
