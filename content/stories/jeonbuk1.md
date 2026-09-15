@@ -123,4 +123,4 @@ faq:
 
 전라북도에서 KTX로 1시간 30~2시간 이동 피로가 있을 수 있으므로 세션 전 워밍업 시간을 여유롭게 확보해두세요.
 
-[전주에서 서울 녹음실 방문 가이드](/stories/jeonju1) | [익산에서 서울 녹음실 방문 가이드](/stories/iksan1) | [군산에서 서울 녹음실 방문 가이드](/stories/gunsan1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
+[전주에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [익산에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [군산에서 서울 녹음실 방문 가이드](/stories/jeonbuk1) | [지방에서 서울 녹음실 이용 방법](/stories/nationwide1) | [호남선 KTX 가이드](/stories/ktx-honam-guide1)
