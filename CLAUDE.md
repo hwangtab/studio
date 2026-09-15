@@ -40,6 +40,7 @@ node scripts/seo-preflight.mjs                              # 데이터 열기 �
 node --env-file=.env.local scripts/gsc-fetch-detail.mjs     # GSC 90일 원시 데이터
 node --env-file=.env.local scripts/ga4-fetch.mjs            # GA4 90일 원시 데이터
 node --env-file=.env.local scripts/ctr-verdict.mjs --surgery YYYY-MM-DD --slugs a,b --control c,d
+node --env-file=.env.local scripts/lead-verdict.mjs --from YYYY-MM-DD --pages a,b --control c   # 전환 실험(GA4 랜딩 기준 세션당 리드)
 
 # Hero font subset (LCP)
 # prebuild에서 자동 실행됨. hero h1 텍스트(data/home.ts heroContent,
@@ -481,6 +482,7 @@ node scripts/seo-preflight.mjs        # 최근 커밋·열린 실험·관측창�
    이미 고친 문제가 미해결로 보인다. 최근 상태를 알려면 기간을 좁혀 직접 질의한다.
 3. **두 스냅샷을 빼서 "증분"이라 부르지 않는다.** 창 뒤끝에서 빠져나간 기간이 섞인다.
    실험 판정은 `node --env-file=.env.local scripts/ctr-verdict.mjs`로 — 기간지정 + 대조군 + 노출 정규화.
+   전환 실험(콜아웃·CTA 변경)은 `scripts/lead-verdict.mjs` — GA4 **랜딩 기준** 세션당 리드(규칙 6의 귀속 함정 회피).
 4. **CSV 집계는 `#` 앵커 행 제외 + `/ko/` 정본 필터.** 앵커는 목차 점프링크지 별개 페이지가 아니고
    (노출 ~13% 부풀림), slug로 키잡으면 uz/en 행이 ko 행을 덮어쓴다(mixing19가 9clk→0clk로 뒤집힌 적 있음).
 5. **낮은 CTR·noindex·통합 제외가 전부 결함은 아니다.** 사전형 단일어 쿼리(흉성·더블링·딜레이)는
