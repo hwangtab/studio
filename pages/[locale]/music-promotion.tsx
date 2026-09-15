@@ -623,4 +623,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   );
 };
 
+/**
+ * 히어로가 있는 페이지는 헤더를 투명하게 띄워 사진 위에 얹는다(_app.tsx가
+ * Component.hasHero를 읽어 Layout에 넘긴다). 이 줄이 없으면 헤더가 불투명하게
+ * 남고 본문이 pt-20만큼 밀려, 이 페이지만 히어로가 헤더 아래로 내려간다.
+ * ImageHero를 쓰면서 이 선언을 빠뜨리는 것은 layout/heroHeader.test.ts가 막는다.
+ */
+MusicPromotion.hasHero = true;
+
 export default MusicPromotion;
