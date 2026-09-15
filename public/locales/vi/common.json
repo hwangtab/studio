@@ -1220,7 +1220,7 @@
         },
         {
           "q": "Thu âm xong thì tôi phải tự lo phát hành và quảng bá à?",
-          "a": "Không. Sau khâu lên kế hoạch, thu âm, mix và master, chúng tôi tiếp tục đăng ký phát hành trên Melon, Spotify, Apple Music, YouTube Music và làm PR phát hành — viết thông cáo rồi gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh và người tuyển chọn playlist quốc tế. Bạn có thể chỉ đặt thu âm, hoặc đi cùng chúng tôi tới tận lúc phát hành."
+          "a": "Không. Sau khâu lên kế hoạch, thu âm, mix và master, chúng tôi tiếp tục đăng ký phát hành trên Melon, Spotify, Apple Music, YouTube Music và làm PR phát hành — viết thông cáo rồi gửi tới các kênh truyền thông âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh và người tuyển chọn playlist quốc tế. Bạn có thể chỉ đặt thu âm, hoặc đi cùng chúng tôi tới tận lúc phát hành."
         }
       ]
     },
@@ -1358,7 +1358,7 @@
         },
         {
           "q": "Sau mastering, các bạn có nhận cả phát hành và quảng bá không?",
-          "a": "Có. Chúng tôi dùng bản master hoàn chỉnh để đăng ký phát hành trên Melon, Spotify, Apple Music, YouTube Music, rồi viết thông cáo và gửi tới nhà báo, nhà phê bình âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh và người tuyển chọn playlist quốc tế. Chỉ đặt mix và master cũng được — bước phát hành là tùy chọn."
+          "a": "Có. Chúng tôi dùng bản master hoàn chỉnh để đăng ký phát hành trên Melon, Spotify, Apple Music, YouTube Music, rồi viết thông cáo và gửi tới các kênh truyền thông âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh và người tuyển chọn playlist quốc tế. Chỉ đặt mix và master cũng được — bước phát hành là tùy chọn."
         }
       ]
     },
@@ -1518,8 +1518,8 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Quảng bá phát hành nhạc — chỉ chọn nơi sẽ đưa tin về đĩa nhạc | Studio NOL",
-      "description": "Không phải dịch vụ rải thông cáo tới 908 đầu mối. Chúng tôi chọn các đầu báo âm nhạc Hàn Quốc và truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia thực sự sẽ đưa tin, rồi viết cho từng nơi bằng ngôn ngữ họ đọc. 1.200.000 KRW → 300.000 KRW.",
+      "title": "Quảng bá phát hành nhạc — tìm đúng nơi sẽ đưa tin về đĩa nhạc | Studio NOL",
+      "description": "Không phải dịch vụ rải thông cáo tới 908 đầu mối. Chúng tôi tìm các đầu báo âm nhạc Hàn Quốc và truyền thông, đài phát thanh, cửa hàng đĩa ở 60 quốc gia thực sự sẽ đưa tin, rồi viết cho từng nơi bằng ngôn ngữ họ đọc. 1.200.000 KRW → 300.000 KRW.",
       "keywords": "quảng bá nhạc, quảng bá album, thông cáo báo chí âm nhạc, PR nhạc indie, PR âm nhạc, quảng bá phát hành, viết thông cáo báo chí, quảng bá đĩa nhạc, dịch vụ PR âm nhạc, PR âm nhạc quốc tế, press kit, làm EPK"
     },
     "hero": {
@@ -1649,13 +1649,13 @@
         },
         {
           "title": "Báo cáo gửi đi",
-          "body": "Đã làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào, phản hồi và bài đăng nào đã xác nhận được. Cả thư bị trả lại và yêu cầu ngừng nhận cũng ghi rõ, không giấu."
+          "body": "Đã làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào, phản hồi và bài đăng nào đã xác nhận được. Bài đăng được ghi tách theo loại — bài viết và bài đánh giá, phát sóng trên đài, được đưa vào playlist. Cả thư bị trả lại và yêu cầu ngừng nhận cũng ghi rõ, không giấu."
         }
       ]
     },
     "process": {
       "title": "Quy trình thực hiện",
-      "subtitle": "Từ lúc đặt tới khi có báo cáo là xong trong một lần. Không phải kiểu thu tiền hằng tháng mà không thấy đang làm gì.",
+      "subtitle": "Từ lúc liên hệ tới khi có báo cáo thường mất 4-6 tuần. Xong trong một lần — không phải kiểu thu tiền hằng tháng mà không thấy đang làm gì.",
       "steps": [
         {
           "title": "Liên hệ và gửi bản nhạc",
@@ -1666,12 +1666,16 @@
           "description": "Nhà sản xuất nghe hết các bài rồi quyết định. Nếu khó nhận, chúng tôi sẽ ghi rõ lý do và báo lại."
         },
         {
+          "title": "Thanh toán — sau khi qua vòng duyệt",
+          "description": "Nếu nhận làm, chúng tôi sẽ chốt bằng con số cụ thể sẽ gửi tới bao nhiêu đầu mối thuộc loại nào, và bạn thanh toán sau khi xem con số đó. Tới bước này chưa phát sinh chi phí nào."
+        },
+        {
           "title": "Làm tài liệu — 5 ngày",
           "description": "Chúng tôi làm thông cáo báo chí, trang press kit, các bản thảo phái sinh và video."
         },
         {
           "title": "Bạn xác nhận",
-          "description": "Trước khi gửi, chúng tôi cho bạn xem toàn bộ. Chỉ nghệ sĩ mới biết đúng sai về mặt dữ kiện, nên bước này không thể bỏ qua."
+          "description": "Trước khi gửi, chúng tôi cho bạn xem toàn bộ. Chúng tôi sửa tối đa 2 lần; riêng việc đính chính sai sót về dữ kiện thì không tính vào số lần đó — vì sửa một sự thật sai là trách nhiệm của chúng tôi. Chỉ nghệ sĩ mới biết đúng sai về mặt dữ kiện, nên bước này không thể bỏ qua."
         },
         {
           "title": "Gửi — 1 đến 3 tuần",
@@ -1712,7 +1716,8 @@
           "body": "Viết hay không là do ban biên tập của từng nơi quyết định. Nếu có chỗ nào bảo đảm, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo. Phần chúng tôi chịu trách nhiệm là khối lượng thực thi đã chốt trước khi gửi, và điều đó được chứng minh bằng báo cáo."
         }
       ],
-      "instead": "Thanh toán diễn ra sau khi qua vòng duyệt và chốt khối lượng thực thi. Nếu bạn dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ."
+      "instead": "Thanh toán diễn ra sau khi qua vòng duyệt và chốt khối lượng thực thi. Nếu bạn dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ.",
+      "termsLink": "Xem toàn văn điều khoản hủy và hoàn tiền"
     },
     "pricing": {
       "title": "Giá",
@@ -1743,6 +1748,10 @@
         {
           "q": "Trong báo cáo có những gì?",
           "a": "Chúng tôi thống kê các đầu mối đã gửi theo tính chất, ngôn ngữ và khu vực; các đầu mối là pháp nhân thì ghi theo tên miền. Nhà báo và nhà phê bình cá nhân chỉ ghi số người — vì chúng tôi không thể chuyển tên và địa chỉ của họ cho bên thứ ba. Cùng với phản hồi và bài đăng, thư bị trả lại và yêu cầu ngừng nhận cũng ghi nguyên như vậy."
+        },
+        {
+          "q": "“Đăng tải” trong báo cáo được hiểu là gì?",
+          "a": "Tính tất cả bài viết, bài đánh giá, giới thiệu mà đầu mối tự đăng trên trang hay website của họ, phát sóng trên đài và được đưa vào playlist. Chúng tôi không gộp chung vào một dòng mà ghi tách theo từng loại — vì 3 bài viết và 3 lần vào playlist là hai chuyện khác nhau. Trường hợp đăng lại nguyên văn thông cáo báo chí cũng được đánh dấu tách biệt với bài do đầu mối tự viết."
         },
         {
           "q": "Chúng tôi muốn đặt luôn cả phần sản xuất.",
@@ -2159,7 +2168,7 @@
             },
             {
               "title": "Điểm tiếp xúc truyền thông đầu tiên",
-              "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí qua mạng lưới nhà báo và nhà phê bình âm nhạc đã gây dựng trong 15 năm. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie."
+              "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí qua mạng lưới truyền thông âm nhạc đã gây dựng trong 15 năm. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie."
             }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
@@ -2207,7 +2216,7 @@
             "Mastering (nội bộ)",
             "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
             "Viết thông cáo báo chí",
-            "Gửi thông cáo báo chí đến nhà báo & nhà phê bình",
+            "Gửi thông cáo báo chí đến truyền thông âm nhạc",
             "Giao file master (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Xử lý riêng",
@@ -2356,7 +2365,7 @@
             "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
             "Bao gồm single chủ lực",
             "Viết thông cáo báo chí (single chủ lực + EP, 2 vòng)",
-            "Gửi thông cáo báo chí đến nhà báo & nhà phê bình (2 vòng)",
+            "Gửi thông cáo báo chí đến truyền thông âm nhạc (2 vòng)",
             "Giao file master (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Xử lý riêng",
@@ -2505,7 +2514,7 @@
             "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
             "Bao gồm 1–2 single chủ lực",
             "Viết thông cáo báo chí",
-            "Gửi thông cáo báo chí đến nhà báo & nhà phê bình",
+            "Gửi thông cáo báo chí đến truyền thông âm nhạc",
             "Buổi nghe thử trước phát hành cho nhà phê bình (khi điều kiện cho phép)",
             "Thiết kế gây quỹ & đồng hành hồ sơ tài trợ",
             "Giao file master (24bit / 16bit / MP3)"

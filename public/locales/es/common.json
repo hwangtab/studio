@@ -1220,7 +1220,7 @@
         },
         {
           "q": "¿Tengo que gestionar la distribución y el lanzamiento por mi cuenta después de grabar?",
-          "a": "No. La planificación, la grabación, la mezcla y la masterización continúan hacia la distribución en Melon, Spotify, Apple Music y YouTube Music, y hacia la promoción del lanzamiento: una nota de prensa dirigida a periodistas y críticos musicales coreanos, y a medios, radios y curadores de playlists internacionales. Puedes contratar solo la grabación o llegar con nosotros hasta el lanzamiento."
+          "a": "No. La planificación, la grabación, la mezcla y la masterización continúan hacia la distribución en Melon, Spotify, Apple Music y YouTube Music, y hacia la promoción del lanzamiento: una nota de prensa dirigida a medios musicales coreanos, y a medios, radios y curadores de playlists internacionales. Puedes contratar solo la grabación o llegar con nosotros hasta el lanzamiento."
         }
       ]
     },
@@ -1358,7 +1358,7 @@
         },
         {
           "q": "¿Pueden encargarse de la distribución y el lanzamiento después de la masterización?",
-          "a": "Sí. Registramos el máster terminado para su distribución en Melon, Spotify, Apple Music y YouTube Music, y luego redactamos una nota de prensa dirigida a periodistas y críticos musicales coreanos, y a medios, radios y curadores de playlists internacionales. También puedes contratar solo mezcla y masterización: el paso de lanzamiento es opcional."
+          "a": "Sí. Registramos el máster terminado para su distribución en Melon, Spotify, Apple Music y YouTube Music, y luego redactamos una nota de prensa dirigida a medios musicales coreanos, y a medios, radios y curadores de playlists internacionales. También puedes contratar solo mezcla y masterización: el paso de lanzamiento es opcional."
         }
       ]
     },
@@ -1518,8 +1518,8 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Promoción de lanzamientos — elegimos los medios que lo cubrirían | Studio NOL",
-      "description": "No es un servicio que dispara la nota de prensa a 908 medios. Elegimos los medios musicales coreanos y los medios, radios y tiendas de discos de 60 países que de verdad cubrirían el disco, y escribimos a cada uno en su idioma. 1.200.000 KRW → 300.000 KRW.",
+      "title": "Promoción de lanzamientos — buscamos los medios que lo cubrirían | Studio NOL",
+      "description": "No es un servicio que dispara la nota de prensa a 908 medios. Buscamos los medios musicales coreanos y los medios, radios y tiendas de discos de 60 países que de verdad cubrirían el disco, y escribimos a cada uno en su idioma. 1.200.000 KRW → 300.000 KRW.",
       "keywords": "promoción musical, promoción de álbum, nota de prensa musical, promoción indie, PR musical, promoción de lanzamiento, redacción de nota de prensa, promoción de disco, agencia de PR musical, promoción internacional, press kit, EPK"
     },
     "hero": {
@@ -1649,13 +1649,13 @@
         },
         {
           "title": "Informe de envío",
-          "body": "Qué materiales hicimos, a cuántos medios de qué tipo los enviamos y qué respuestas y publicaciones se confirmaron. Los rebotes y las bajas también se anotan: no los escondemos."
+          "body": "Qué materiales hicimos, a cuántos medios de qué tipo los enviamos y qué respuestas y publicaciones se confirmaron. Las publicaciones se desglosan por tipo: artículos y reseñas, emisión en radio, inclusión en listas de reproducción. Los rebotes y las bajas también se anotan: no los escondemos."
         }
       ]
     },
     "process": {
       "title": "Así lo hacemos",
-      "subtitle": "Desde el encargo hasta el informe, termina de una vez. No es de esos servicios que cobran cada mes sin que se vea qué están haciendo.",
+      "subtitle": "Desde el primer contacto hasta el informe suelen pasar de 4 a 6 semanas. Termina de una vez — no es de esos servicios que cobran cada mes sin que se vea qué están haciendo.",
       "steps": [
         {
           "title": "Contacto y envío de la música",
@@ -1666,12 +1666,16 @@
           "description": "El productor escucha todos los temas y decide. Si no podemos aceptarlo, te lo decimos explicando el motivo."
         },
         {
+          "title": "Pago — tras pasar la escucha previa",
+          "description": "Si aceptamos el encargo, te confirmamos con cifras a cuántos medios de qué tipo se enviará, y pagas después de verlo. Hasta aquí no hay ningún coste."
+        },
+        {
           "title": "Producción de materiales — 5 días",
           "description": "Hacemos la nota de prensa, la página de press kit, los textos derivados y el vídeo."
         },
         {
           "title": "Revisión contigo",
-          "description": "Te lo enseñamos todo antes de enviar nada. Los hechos solo los conoce el artista, así que este paso no se puede saltar."
+          "description": "Te lo enseñamos todo antes de enviar nada. Hacemos hasta dos rondas de correcciones; las correcciones de datos erróneos no cuentan en ese límite — corregir un hecho equivocado es responsabilidad nuestra. Los hechos solo los conoce el artista, así que este paso no se puede saltar."
         },
         {
           "title": "Envío — de 1 a 3 semanas",
@@ -1712,7 +1716,8 @@
           "body": "Escribir o no lo decide la redacción del medio. Si algún sitio lo garantiza, lo que está haciendo es comprar publicidad y disfrazarla de artículo. De lo que respondemos nosotros es del volumen de trabajo que te confirmamos antes del envío, y eso lo demuestra el informe."
         }
       ],
-      "instead": "El pago llega después de pasar la escucha previa y de cerrar el volumen de trabajo. Si lo dejas antes de que empiece la producción, te devolvemos todo."
+      "instead": "El pago llega después de pasar la escucha previa y de cerrar el volumen de trabajo. Si lo dejas antes de que empiece la producción, te devolvemos todo.",
+      "termsLink": "Ver los términos completos de cancelación y reembolso"
     },
     "pricing": {
       "title": "Precio",
@@ -1743,6 +1748,10 @@
         {
           "q": "¿Qué aparece en el informe?",
           "a": "Contabilizamos los medios a los que enviamos por tipo, idioma y región, y los medios que son empresas los anotamos por su dominio. De los periodistas y críticos particulares solo indicamos el número: no podemos entregar sus nombres y direcciones a terceros. Junto con las respuestas y las publicaciones, anotamos tal cual los rebotes y las bajas."
+        },
+        {
+          "q": "¿Qué se entiende por “publicación” en el informe?",
+          "a": "Cuenta cualquier artículo, reseña o nota que el medio publique en sus propias páginas o su web, la emisión en radio y la inclusión en listas de reproducción. No lo mezclamos todo en una sola línea: lo desglosamos por tipo, porque tres artículos y tres inclusiones en playlist no son lo mismo. La reproducción literal de la nota de prensa también se marca aparte de un artículo propio del medio."
         },
         {
           "q": "Queremos encargar también la producción.",
@@ -2159,7 +2168,7 @@
             },
             {
               "title": "Tu primer contacto con los medios",
-              "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de periodistas y críticos musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie."
+              "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de medios musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie."
             }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
@@ -2207,7 +2216,7 @@
             "Masterización (in-house)",
             "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
             "Redacción del comunicado de prensa",
-            "Comunicado de prensa a periodistas y críticos",
+            "Comunicado de prensa a medios musicales",
             "Entrega del archivo master (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Se gestiona por separado",
@@ -2356,7 +2365,7 @@
             "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
             "Single principal incluido",
             "Redacción de comunicado de prensa (single principal + EP, 2 rondas)",
-            "Comunicado de prensa a periodistas y críticos (2 rondas)",
+            "Comunicado de prensa a medios musicales (2 rondas)",
             "Entrega del archivo master (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Se gestiona por separado",
@@ -2505,7 +2514,7 @@
             "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
             "1–2 singles principales incluidos",
             "Redacción del comunicado de prensa",
-            "Comunicado de prensa a periodistas y críticos",
+            "Comunicado de prensa a medios musicales",
             "Sesión de escucha previa al lanzamiento para críticos (cuando sea posible)",
             "Diseño de crowdfunding y apoyo en solicitudes",
             "Entrega del archivo master (24bit / 16bit / MP3)"

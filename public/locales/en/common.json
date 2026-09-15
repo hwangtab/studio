@@ -1248,7 +1248,7 @@
         },
         {
           "q": "Do I have to arrange distribution and release on my own after recording?",
-          "a": "No. Planning, recording, mixing and mastering continue into distribution on Melon, Spotify, Apple Music and YouTube Music, and into release promotion — a written press kit pitched to Korean music journalists and critics as well as international media, radio and playlist curators. You can book recording alone, or go all the way to release with us."
+          "a": "No. Planning, recording, mixing and mastering continue into distribution on Melon, Spotify, Apple Music and YouTube Music, and into release promotion — a written press kit pitched to Korean music outlets as well as international media, radio and playlist curators. You can book recording alone, or go all the way to release with us."
         }
       ]
     },
@@ -1386,7 +1386,7 @@
         },
         {
           "q": "Can you handle distribution and release after mastering?",
-          "a": "Yes. We register the finished master for distribution on Melon, Spotify, Apple Music and YouTube Music, then write a press kit and pitch it to Korean music journalists and critics as well as international media, radio and playlist curators. Mixing and mastering alone is fine too — the release step is optional."
+          "a": "Yes. We register the finished master for distribution on Melon, Spotify, Apple Music and YouTube Music, then write a press kit and pitch it to Korean music outlets as well as international media, radio and playlist curators. Mixing and mastering alone is fine too — the release step is optional."
         }
       ]
     },
@@ -1546,8 +1546,8 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Music Release PR — We Pick the Outlets That Would Cover It | Studio NOL",
-      "description": "Not a service that blasts a press release to 908 outlets. We pick the Korean music outlets and the media, radio and record shops in 60 countries that would actually cover the record, and write to each in the language it reads. 1,200,000 KRW → 300,000 KRW.",
+      "title": "Music Release PR — We Find the Outlets That Would Cover It | Studio NOL",
+      "description": "Not a service that blasts a press release to 908 outlets. We find the Korean music outlets and the media, radio and record shops in 60 countries that would actually cover the record, and write to each in the language it reads. 1,200,000 KRW → 300,000 KRW.",
       "keywords": "music PR, album promotion, music press release, indie music PR, music publicity, release promotion, press release writing, record promotion, music PR agency, international music PR, press kit, EPK"
     },
     "hero": {
@@ -1677,13 +1677,13 @@
         },
         {
           "title": "Send-out report",
-          "body": "What we made, how many outlets of what kind received it, and which replies and placements were confirmed. Bounces and unsubscribes go in as well — we don't hide them."
+          "body": "What we made, how many outlets of what kind received it, and which replies and placements were confirmed. Placements are broken out by kind — articles and reviews, radio airplay, playlist adds. Bounces and unsubscribes go in as well — we don't hide them."
         }
       ]
     },
     "process": {
       "title": "How it runs",
-      "subtitle": "From the first message to the report, it finishes in one go. This isn't the arrangement where you pay every month and never see what's being done.",
+      "subtitle": "From the first message to the report, it usually takes 4 to 6 weeks. It finishes in one go — not the kind of arrangement where you pay every month and never see what's being done.",
       "steps": [
         {
           "title": "Get in touch and send the music",
@@ -1694,12 +1694,16 @@
           "description": "The producer listens to every track and decides. If we can't take it, we write out the reason and tell you."
         },
         {
+          "title": "Payment — after review passes",
+          "description": "If we take it on, we confirm in numbers how many outlets of what kind we'll send to, and you pay only after seeing that. Nothing costs anything up to this point."
+        },
+        {
           "title": "Materials — 5 days",
           "description": "We produce the press release, the press kit page, the derivative copy and the video."
         },
         {
           "title": "Your check",
-          "description": "You see all of it before anything goes out. Only the artist knows whether the facts are right, so this step can't be skipped."
+          "description": "You see all of it before anything goes out. We make up to two rounds of revisions; corrections of factual errors don't count toward that limit — fixing a wrong fact is on us. Only the artist knows whether the facts are right, so this step can't be skipped."
         },
         {
           "title": "Sending — 1 to 3 weeks",
@@ -1740,7 +1744,8 @@
           "body": "Whether to run a piece is the outlet's editorial decision. If somewhere guarantees it, what they're doing is buying advertising and making it look like an article. What we're answerable for is the volume of work we confirm with you before the send-out — and the report proves it."
         }
       ],
-      "instead": "You pay after the music passes review and the volume of work is confirmed. If you stop before production begins, you get all of it back."
+      "instead": "You pay after the music passes review and the volume of work is confirmed. If you stop before production begins, you get all of it back.",
+      "termsLink": "Read the full cancellation and refund terms"
     },
     "pricing": {
       "title": "Price",
@@ -1771,6 +1776,10 @@
         {
           "q": "What goes into the report?",
           "a": "We count the outlets we sent to by type, language and region, and list corporate outlets by domain. For individual journalists and critics we give the number only — we can't hand their names and addresses to a third party. Replies and placements go in, and so do bounces and unsubscribes, exactly as they were."
+        },
+        {
+          "q": "What counts as a “placement” in the report?",
+          "a": "It covers any article, review or feature the outlet ran on its own pages or site, radio airplay, and playlist inclusion. We don't lump them into one line — we break them out by kind, because three articles and three playlist adds are not the same thing. A straight reprint of the press release is also marked separately from an outlet's own article."
         },
         {
           "q": "We'd like to commission the production as well.",
@@ -2187,7 +2196,7 @@
             },
             {
               "title": "Your first media touchpoint",
-              "desc": "At release, we send a press release through our 15-year network of music journalists and critics. Even your first release can reach the indie scene's eyes."
+              "desc": "At release, we send a press release through our 15-year network of music outlets. Even your first release can reach the indie scene's eyes."
             }
           ],
           "journeySectionTitle": "The journey to release",
@@ -2235,7 +2244,7 @@
             "Mastering (in-house)",
             "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
             "Press release writing",
-            "Press release to journalists & critics",
+            "Press release to music outlets",
             "Master file delivery (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Handled separately",
@@ -2384,7 +2393,7 @@
             "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
             "Lead single included",
             "Press release writing (lead single + EP, 2 rounds)",
-            "Press release to journalists & critics (2 rounds)",
+            "Press release to music outlets (2 rounds)",
             "Master file delivery (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Handled separately",
@@ -2533,7 +2542,7 @@
             "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
             "1–2 lead singles included",
             "Press release writing",
-            "Press release to journalists & critics",
+            "Press release to music outlets",
             "Critics pre-release listening session (where possible)",
             "Crowdfunding design & grant application support",
             "Master file delivery (24bit / 16bit / MP3)"

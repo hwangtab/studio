@@ -84,7 +84,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
   const recordingOffers = pricingData.recordingOffers;
 
   const quickAnswers = React.useMemo(
-    () => createTranslatedQaItems(t, 'recording.quickAnswers.items', 3),
+    () => createTranslatedQaItems(t, 'recording.quickAnswers.items', 4),
     [t]
   );
 

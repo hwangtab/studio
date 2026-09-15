@@ -124,12 +124,12 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'musicPromotion.faq.items', 6),
+    () => createTranslatedQaItems(t, 'musicPromotion.faq.items', 7),
     [t]
   );
 
   const howToSteps = React.useMemo(
-    () => createTranslatedHowToSteps(t, 'musicPromotion.process.steps', 6),
+    () => createTranslatedHowToSteps(t, 'musicPromotion.process.steps', 7),
     [t]
   );
 
@@ -535,6 +535,20 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-200">
             {t('musicPromotion.notPromised.instead')}
+            {/* 제작 착수 후 청약철회 제한은 "미리 고지"해야 효력이 생긴다(전자상거래법 제17조
+                제6항). 결제 결정 바로 옆에서 규정 전문으로 가는 경로가 그 고지의 성립 조건이다.
+                terms 페이지는 ko 전용이라 ko에서만 건다. */}
+            {locale === 'ko' && (
+              <>
+                {' '}
+                <Link
+                  href="/ko/terms"
+                  className="underline underline-offset-2 transition hover:text-primary dark:hover:text-primary-lighter"
+                >
+                  {t('musicPromotion.notPromised.termsLink')}
+                </Link>
+              </>
+            )}
           </p>
         </div>
       </Section>

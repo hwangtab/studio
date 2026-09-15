@@ -1220,7 +1220,7 @@
         },
         {
           "q": "Yozuvdan keyin tarqatish va PRni o'zim hal qilishim kerakmi?",
-          "a": "Yo'q. Reja, yozuv, miks va masteringdan so'ng Melon, Spotify, Apple Music va YouTube Music'da tarqatishni ro'yxatdan o'tkazamiz hamda chiqarish PRini olib boramiz — press-reliz yozib, Koreya musiqa jurnalistlari va tanqidchilariga, shuningdek xalqaro nashrlar, radiolar va pleylist kuratorlariga yuboramiz. Faqat yozuvga buyurtma berishingiz yoki chiqarishgacha birga borishingiz mumkin."
+          "a": "Yo'q. Reja, yozuv, miks va masteringdan so'ng Melon, Spotify, Apple Music va YouTube Music'da tarqatishni ro'yxatdan o'tkazamiz hamda chiqarish PRini olib boramiz — press-reliz yozib, Koreya musiqa nashrlariga, shuningdek xalqaro nashrlar, radiolar va pleylist kuratorlariga yuboramiz. Faqat yozuvga buyurtma berishingiz yoki chiqarishgacha birga borishingiz mumkin."
         }
       ]
     },
@@ -1358,7 +1358,7 @@
         },
         {
           "q": "Masteringdan keyin tarqatish va PRni ham olasizmi?",
-          "a": "Ha. Tayyor masterni Melon, Spotify, Apple Music va YouTube Music'da tarqatish uchun ro'yxatdan o'tkazamiz, so'ng press-reliz yozib Koreya musiqa jurnalistlari va tanqidchilariga, xalqaro nashrlar, radiolar va pleylist kuratorlariga yuboramiz. Faqat miks va mastering ham mumkin — chiqarish bosqichi ixtiyoriy."
+          "a": "Ha. Tayyor masterni Melon, Spotify, Apple Music va YouTube Music'da tarqatish uchun ro'yxatdan o'tkazamiz, so'ng press-reliz yozib Koreya musiqa nashrlariga, xalqaro nashrlar, radiolar va pleylist kuratorlariga yuboramiz. Faqat miks va mastering ham mumkin — chiqarish bosqichi ixtiyoriy."
         }
       ]
     },
@@ -1518,8 +1518,8 @@
   },
   "musicPromotion": {
     "seo": {
-      "title": "Chiqarish PRi — faqat shu musiqani yoritadigan nashrlarni tanlaymiz | Studio NOL",
-      "description": "Press-relizni 908 ta manzilga ommaviy tarqatadigan xizmat emas. Shu albomni haqiqatan yoritadigan Koreya musiqa nashrlarini hamda 60 ta mamlakatdagi nashr, radio va plastinka do'konlarini tanlab, har biriga o'zi o'qiydigan tilda yozamiz. 1 200 000 → 300 000 KRW.",
+      "title": "Chiqarish PRi — shu musiqani yoritadigan nashrlarni topamiz | Studio NOL",
+      "description": "Press-relizni 908 ta manzilga ommaviy tarqatadigan xizmat emas. Shu albomni haqiqatan yoritadigan Koreya musiqa nashrlarini hamda 60 ta mamlakatdagi nashr, radio va plastinka do'konlarini topib, har biriga o'zi o'qiydigan tilda yozamiz. 1 200 000 → 300 000 KRW.",
       "keywords": "musiqa PRi, albom reklamasi, musiqa press-relizi, indi musiqa PRi, musiqiy PR, chiqarish PRi, press-reliz yozish, plastinka reklamasi, musiqa PR agentligi, xalqaro musiqa PRi, press-kit, EPK tayyorlash"
     },
     "hero": {
@@ -1649,13 +1649,13 @@
         },
         {
           "title": "Yuborish hisoboti",
-          "body": "Qanday materiallar tayyorlangani, qanday turdagi nechta manzilga yuborilgani, qaysi javob va chop etishlar tasdiqlangani. Qaytib kelgan xatlar va obunadan chiqishlar ham yashirilmay yoziladi."
+          "body": "Qanday materiallar tayyorlangani, qanday turdagi nechta manzilga yuborilgani, qaysi javob va chop etishlar tasdiqlangani. Chop etishlar turi bo'yicha ajratib yoziladi — maqola va sharhlar, radio eshittirish, pleylistga qo'shilish. Qaytib kelgan xatlar va obunadan chiqishlar ham yashirilmay yoziladi."
         }
       ]
     },
     "process": {
       "title": "Ish shunday boradi",
-      "subtitle": "Buyurtmadan hisobotgacha bir yo'la tugaydi. Bu har oy pul olib, nima qilayotgani ko'rinmaydigan usul emas.",
+      "subtitle": "Murojaatdan hisobotgacha odatda 4-6 hafta ketadi. Bir yo'la tugaydi — bu har oy pul olib, nima qilayotgani ko'rinmaydigan usul emas.",
       "steps": [
         {
           "title": "Murojaat va musiqani yuborish",
@@ -1666,12 +1666,16 @@
           "description": "Prodyuser barcha treklarni eshitib, qaror qiladi. Ololmaydigan bo'lsak, sababini yozib bildiramiz."
         },
         {
+          "title": "To'lov — saralashdan o'tgandan keyin",
+          "description": "Qabul qilishga qaror qilsak, qanday turdagi nechta nashrga yuborilishini raqamlar bilan aniqlab bildiramiz, siz buni ko'rgandan keyin to'lov qilasiz. Shu bosqichgacha hech qanday xarajat bo'lmaydi."
+        },
+        {
           "title": "Materiallar — 5 kun",
           "description": "Press-reliz, press-kit sahifasi, qo'shimcha matnlar va videoni tayyorlaymiz."
         },
         {
           "title": "Tasdiqlash",
-          "description": "Yuborishdan oldin hammasini ko'rsatamiz. Faktlarni faqat ijodkorning o'zi biladi, shuning uchun bu bosqichni o'tkazib yuborib bo'lmaydi."
+          "description": "Yuborishdan oldin hammasini ko'rsatamiz. Tahrirni 2 martagacha kiritamiz, faktik xatolarni to'g'irlash esa shu songa kirmaydi — chunki noto'g'ri faktni tuzatish bizning mas'uliyatimiz. Faktlarni faqat ijodkorning o'zi biladi, shuning uchun bu bosqichni o'tkazib yuborib bo'lmaydi."
         },
         {
           "title": "Yuborish — 1–3 hafta",
@@ -1712,7 +1716,8 @@
           "body": "Yozish-yozmaslikni nashr tahririyati hal qiladi. Kafolatlaydigan joy bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi. Biz javob beradigan narsa — yuborishdan oldin aniqlab aytilgan ish hajmi, va buni hisobot isbotlaydi."
         }
       ],
-      "instead": "To'lov saralashdan o'tib, ish hajmi aniqlangandan keyin bo'ladi. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz."
+      "instead": "To'lov saralashdan o'tib, ish hajmi aniqlangandan keyin bo'ladi. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz.",
+      "termsLink": "Bekor qilish va pul qaytarish shartlarini to'liq o'qish"
     },
     "pricing": {
       "title": "Narx",
@@ -1743,6 +1748,10 @@
         {
           "q": "Hisobotda nimalar yoziladi?",
           "a": "Yuborilgan nashrlarni turi, tili va mintaqasi bo'yicha jamlaymiz, yuridik shaxs bo'lgan nashrlarni domeni bilan yozamiz. Yakka jurnalist va tanqidchilar bo'yicha esa faqat sonini yozamiz — ularning ismi va manzilini uchinchi shaxsga bera olmaymiz. Javoblar va chop etishlar bilan birga qaytib kelgan xatlar hamda obunadan chiqishlar ham borligicha yoziladi."
+        },
+        {
+          "q": "Hisobotdagi “chop etish” nimani anglatadi?",
+          "a": "Nashr o'z sahifasi yoki saytida chiqargan maqola, sharh, tanishtiruv, radio orqali eshittirish va pleylistga qo'shishning barchasi hisoblanadi. Buni bitta qatorga jamlamaymiz — turi bo'yicha alohida-alohida yozamiz, chunki 3 ta maqola va 3 ta pleylist qo'shilishi boshqa-boshqa narsa. Press-relizni o'zgarishsiz qayta chop etish ham nashrning o'z maqolasidan alohida belgilanadi."
         },
         {
           "q": "Ishlab chiqarishni ham birga topshirmoqchimiz.",
@@ -2159,7 +2168,7 @@
             },
             {
               "title": "Birinchi media aloqa nuqtasi",
-              "desc": "Chiqarishda 15 yillik musiqa jurnalistlari va tanqidchilar tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin."
+              "desc": "Chiqarishda 15 yillik musiqa nashrlari tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin."
             }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
@@ -2207,7 +2216,7 @@
             "Mastering (ichki)",
             "Raqamli tarqatish (Melon · Spotify · Apple Music · YouTube Music)",
             "Press-reliz yozish",
-            "Jurnalistlar va tanqidchilarga press-reliz yuborish",
+            "Musiqa nashrlariga press-reliz yuborish",
             "Master fayl topshirish (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Alohida hal qilinadi",
@@ -2356,7 +2365,7 @@
             "Raqamli tarqatish (Melon · Spotify · Apple Music · YouTube Music)",
             "Bosh singl kiritilgan",
             "Press-reliz yozish (bosh singl + EP, 2 raund)",
-            "Jurnalistlar va tanqidchilarga press-reliz yuborish (2 raund)",
+            "Musiqa nashrlariga press-reliz yuborish (2 raund)",
             "Master fayl topshirish (24bit / 16bit / MP3)"
           ],
           "deliverablesExcludedTitle": "Alohida hal qilinadi",
@@ -2505,7 +2514,7 @@
             "Raqamli tarqatish (Melon · Spotify · Apple Music · YouTube Music)",
             "1–2 ta bosh singl kiritilgan",
             "Press-reliz yozish",
-            "Jurnalistlar va tanqidchilarga press-reliz yuborish",
+            "Musiqa nashrlariga press-reliz yuborish",
             "Tanqidchilar uchun chiqarishdan oldingi tinglash sessiyasi (imkon bo'lganda)",
             "Crowdfunding dizayni va grant arizasida hamrohlik",
             "Master fayl topshirish (24bit / 16bit / MP3)"
