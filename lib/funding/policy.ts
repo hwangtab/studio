@@ -27,7 +27,7 @@ export const isRefundPendingStatus = (status: string): boolean =>
 
 export type CancelEligibility =
   | { ok: true }
-  | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' | 'offline_payment' };
+  | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' | 'offline_payment' | 'downloaded' };
 
 /**
  * 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다.
@@ -46,11 +46,19 @@ export const assessSelfCancel = (input: {
   projectState: ProjectState;
   fulfillmentStatus: string;
   paymentMethod: string;
+  /**
+   * 디지털 리워드를 처음 내려받은 시각. **필수 인자로 둔다** — 위 주석과 같은 이유다.
+   * 선택 인자면 호출부에서 빼먹어도 컴파일이 통과하고, 그 순간 이 규칙이 조용히 사라진다.
+   */
+  downloadedAt: Date | null;
 }): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
   if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
   if (input.projectState !== 'live') return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
+  // 약관 제8조 2항 — 내려받기가 시작된 뒤에는 청약철회가 제한된다(전자상거래법 제17조 2항 5호).
+  // 배송 리워드의 `fulfilling`에 해당하는, 디지털 리워드의 '이미 건네준 상태'다.
+  if (input.downloadedAt !== null) return { ok: false, code: 'downloaded' };
   return { ok: true };
 };
 
@@ -58,6 +66,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
   not_paid: '결제가 확정된 후원만 취소할 수 있습니다.',
   project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
+  downloaded: '음원을 내려받은 뒤에는 청약철회가 제한됩니다(약관 제8조 2항). 문의해 주세요.',
   // 운영자가 계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
   // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다.
   offline_payment: '계좌로 받은 후원은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',

@@ -159,13 +159,14 @@ export default function FundingManagePage(p: Props) {
               {p.downloads.map((d) => (
                 <a
                   key={d.url}
-                  href={d.url}
+                  href={`/api/funding/download?orderNo=${encodeURIComponent(p.orderNo)}&token=${encodeURIComponent(p.token)}&file=${encodeURIComponent(d.url)}`}
                   rel="noreferrer"
                   className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
                 >
                   {d.label} 내려받기
                 </a>
               ))}
+              <p className="typo-card-meta">내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).</p>
             </div>
           )}
 
@@ -207,7 +208,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (context) => 
   if (!order?.fundingPledge || !isTokenMatch(order.manageToken, token)) return { notFound: true };
   const pl = order.fundingPledge;
   const project = getFundingProject(pl.projectSlug);
-  const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod });
+  const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod, downloadedAt: pl.downloadedAt ?? null });
   /**
    * 내려받기 주소는 **결제가 살아 있을 때만** 내려보낸다. 환불·만료된 건에 링크를 남기면
    * 돈을 돌려받고도 리워드를 계속 받는 화면이 된다. 상태 판정은 셀프 취소와 같은 집합을

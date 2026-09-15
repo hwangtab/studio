@@ -1,14 +1,14 @@
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 describe('assessSelfCancel', () => {
   it('paid + live + 발송 전이면 가능', () => {
-    expect(assessSelfCancel({ orderStatus: 'paid', projectState: 'live', fulfillmentStatus: 'none', paymentMethod: 'toss' })).toEqual({ ok: true });
+    expect(assessSelfCancel({ orderStatus: 'paid', projectState: 'live', fulfillmentStatus: 'none', paymentMethod: 'toss', downloadedAt: null })).toEqual({ ok: true });
   });
   it.each([
     ['pending', 'live', 'none', 'not_paid'],
     ['paid', 'closed', 'none', 'project_not_live'],
     ['paid', 'live', 'preparing', 'fulfilling'],
   ])('%s/%s/%s → %s', (orderStatus, projectState, fulfillmentStatus, code) => {
-    expect(assessSelfCancel({ orderStatus, projectState: projectState as never, fulfillmentStatus, paymentMethod: 'toss' })).toEqual({ ok: false, code });
+    expect(assessSelfCancel({ orderStatus, projectState: projectState as never, fulfillmentStatus, paymentMethod: 'toss', downloadedAt: null })).toEqual({ ok: false, code });
   });
 });
 
@@ -22,11 +22,11 @@ describe('assessSelfCancel — 결제수단', () => {
 
 
   it('토스 결제는 종전대로 셀프 취소를 허용한다', () => {
-    expect(assessSelfCancel({ ...live, paymentMethod: 'toss' })).toEqual({ ok: true });
+    expect(assessSelfCancel({ ...live, paymentMethod: 'toss', downloadedAt: null })).toEqual({ ok: true });
   });
 
   it('토스가 아니면 offline_payment로 막는다', () => {
-    expect(assessSelfCancel({ ...live, paymentMethod: 'bank_transfer' }))
+    expect(assessSelfCancel({ ...live, paymentMethod: 'bank_transfer', downloadedAt: null }))
       .toEqual({ ok: false, code: 'offline_payment' });
   });
 
@@ -35,5 +35,40 @@ describe('assessSelfCancel — 결제수단', () => {
       expect(typeof CANCEL_BLOCK_MESSAGES[code]).toBe('string');
       expect(CANCEL_BLOCK_MESSAGES[code].length).toBeGreaterThan(0);
     }
+  });
+});
+
+/**
+ * 약관 제8조 2항은 "내려받는 형태의 리워드는 내려받기가 시작된 뒤에는 청약철회가
+ * 제한됩니다"(전자상거래법 제17조 2항 5호)라고 고지하고 동의까지 받는다. 그런데 판정
+ * 근거가 서버에 없어 **고지만 있고 구현이 없었다** — 1.8GB 원본을 받고 전액 환불이 됐다.
+ * 배송 리워드의 `fulfilling`에 해당하는, 디지털 리워드의 '이미 건네준 상태'다.
+ */
+describe('내려받기 뒤 청약철회 제한', () => {
+  const base = {
+    orderStatus: 'paid',
+    projectState: 'live' as const,
+    fulfillmentStatus: 'none',
+    paymentMethod: 'toss',
+  };
+
+  it('내려받기 전에는 셀프 취소가 된다', () => {
+    expect(assessSelfCancel({ ...base, downloadedAt: null })).toEqual({ ok: true });
+  });
+
+  it('내려받기가 시작됐으면 막는다', () => {
+    const v = assessSelfCancel({ ...base, downloadedAt: new Date('2026-09-15T00:00:00Z') });
+    expect(v).toEqual({ ok: false, code: 'downloaded' });
+  });
+
+  it('막는 이유를 후원자에게 설명한다 — 약관 조항을 짚는다', () => {
+    expect(CANCEL_BLOCK_MESSAGES.downloaded).toContain('청약철회');
+    expect(CANCEL_BLOCK_MESSAGES.downloaded).toContain('제8조');
+  });
+
+  it('다른 차단 사유가 먼저인 경우에는 그쪽을 알린다', () => {
+    // 이미 환불된 건에 "내려받았다"를 이유로 대면 엉뚱한 안내가 된다.
+    expect(assessSelfCancel({ ...base, orderStatus: 'refunded', downloadedAt: new Date() }))
+      .toEqual({ ok: false, code: 'not_paid' });
   });
 });

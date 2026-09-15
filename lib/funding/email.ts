@@ -97,11 +97,17 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
   // `downloads`가 없는 리워드가 들어와도 여기서 터지면 안 된다 — 이 함수는 결제 확정
   // 메일 경로 안이라, 던지면 결제는 됐는데 안내 메일이 통째로 실패한다.
   if (!reward?.downloads?.length) return [];
+  // 저장소 주소를 그대로 싣지 않고 내려받기 경로를 거친다 — 서버가 **최초 접근을 기록**해야
+  // 약관 제8조 2항("내려받기가 시작된 뒤 청약철회 제한")을 판정할 수 있다.
+  const link = (url: string): string =>
+    `${SITE_URL}/api/funding/download?orderNo=${encodeURIComponent(order.orderNo)}`
+    + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(url)}`;
   return [
     '',
     '[음원 내려받기]',
-    ...reward.downloads.map((d) => `${d.label}: ${d.url}`),
+    ...reward.downloads.map((d) => `${d.label}: ${link(d.url)}`),
     '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.',
+    '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
 };
 
