@@ -25,6 +25,14 @@ export interface FundingReward {
 }
 export interface FundingProject {
   slug: string; title: string; summary: string; cover: string; ogImage: string | null;
+  /**
+   * 히어로 배경. 없으면 `cover`를 쓴다.
+   *
+   * `cover`는 목록 카드·OG 이미지가 함께 쓰는 16:9 표지라 **작품 표지에 맞춰** 고른다.
+   * 히어로는 흰 글씨를 얹는 자리라 요구가 다르다 — 어둡고, 글씨가 앉는 쪽이 비어 있어야
+   * 한다. 둘을 한 파일로 겸하면 한쪽이 반드시 진다.
+   */
+  heroImage: string | null;
   goalAmount: number; startAt: string; endAt: string; status: FundingStatus;
   hidden: boolean; lastmod: string; rewards: FundingReward[]; content: string;
 }
@@ -122,6 +130,7 @@ export const parseFundingProject = (raw: string, slug: string): FundingProject =
     summary: str(d.summary, 'summary'),
     cover: str(d.cover, 'cover'),
     ogImage: typeof d.ogImage === 'string' && d.ogImage !== '' ? d.ogImage : null,
+    heroImage: typeof d.heroImage === 'string' && d.heroImage !== '' ? d.heroImage : null,
     goalAmount: posInt(d.goalAmount, 'goalAmount'),
     startAt, endAt, status,
     hidden: bool(d.hidden, 'hidden', false),
