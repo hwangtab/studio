@@ -15,7 +15,7 @@ describe('내려받기 주소는 공개 화면 props에 실리지 않는다', ()
   it('벗기는 함수가 모든 리워드의 주소를 지운다', () => {
     const withUrl = {
       ...live[0],
-      rewards: [{ ...live[0].rewards[0], downloads: [{ label: 'MP3', url: 'https://cdn.example/a.zip' }] }],
+      rewards: [{ ...live[0].rewards[0], downloads: [{ label: 'MP3', key: 'demo/a.zip' }] }],
     };
     expect(stripRewardDownloads(withUrl).rewards.every((r) => r.downloads.length === 0)).toBe(true);
   });
@@ -30,7 +30,7 @@ describe('내려받기 주소는 공개 화면 props에 실리지 않는다', ()
     };
     const serialized = JSON.stringify(result.props);
     for (const r of getFundingProject(target!.slug)!.rewards) {
-      for (const d of r.downloads) expect(serialized).not.toContain(d.url);
+      for (const d of r.downloads) expect(serialized).not.toContain(d.key);
     }
     expect(serialized).not.toContain('r2.dev');
   });

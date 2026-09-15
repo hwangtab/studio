@@ -292,7 +292,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   const downloads = (reward?.downloads ?? []).map((d) => ({
     label: d.label,
     url: `/api/funding/download?orderNo=${encodeURIComponent(order.orderNo)}`
-      + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(d.url)}`,
+      + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(d.key)}`,
   }));
 
   return {

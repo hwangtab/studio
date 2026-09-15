@@ -3,6 +3,7 @@ import path from 'node:path';
 import matter from 'gray-matter';
 
 import { computeProjectState, type ProjectState } from './projectState';
+import { isSafeObjectKey } from './objectKey';
 
 export { computeProjectState };
 export type { ProjectState };
@@ -22,16 +23,18 @@ export interface FundingReward {
    * `label`은 메일과 화면에 그대로 보인다. 주소 세 줄을 이름 없이 늘어놓으면 어느 것이
    * 무엇인지 알 수 없다.
    *
-   * 공개 주소라 아는 사람은 누구나 받을 수 있다. 그래서 경로에 추측하기 어려운 세그먼트를
-   * 넣는다(스토리지 쪽 규칙이라 코드가 강제하지는 않는다). 이 자리에 접근 제어가 필요해지면
-   * 이 필드가 아니라 발급 함수가 들어와야 한다.
+   * `key`는 저장소(R2) 안의 객체 경로이지 주소가 아니다. **밖으로 나가는 것은 이 키뿐**이고,
+   * 실제 내려받기 주소는 요청 시점에 서명해 만든다(lib/funding/r2.ts). 예전에 공개 주소를
+   * 그대로 실어 보내던 시절에는 게이트를 건너뛰고 받을 수 있어, 파일을 전부 받은 뒤
+   * 전액 셀프 환불이 성립했다.
    */
   downloads: FundingDownload[];
 }
 
 export interface FundingDownload {
   label: string;
-  url: string;
+  /** 저장소 객체 키. 주소가 아니다 — 서명 주소는 발급 시점에 만든다. */
+  key: string;
 }
 export interface FundingProject {
   slug: string; title: string; summary: string; cover: string; ogImage: string | null;
@@ -109,7 +112,12 @@ const parseDownloads = (raw: unknown, where: string): FundingDownload[] => {
   return raw.map((entry, i) => {
     if (typeof entry !== 'object' || entry === null) throw new Error(`funding frontmatter: ${where}[${i}] 형식 오류`);
     const e = entry as Record<string, unknown>;
-    return { label: str(e.label, `${where}[${i}].label`), url: str(e.url, `${where}[${i}].url`) };
+    const key = str(e.key, `${where}[${i}].key`);
+    // 주소를 적어 두던 시절의 값이 남아 있으면 조용히 통과시키지 않는다 — 그대로 두면
+    // 게이트가 매칭에 실패해 후원자가 리워드를 못 받는다.
+    if (!isSafeObjectKey(key))
+      throw new Error(`funding frontmatter: ${where}[${i}].key는 저장소 객체 키여야 합니다(주소가 아닙니다) — 받은 값: ${JSON.stringify(key)}`);
+    return { label: str(e.label, `${where}[${i}].label`), key };
   });
 };
 

@@ -21,7 +21,7 @@ rewards:
     estimatedDelivery: 2026-09
     downloads:
       - label: MP3 320kbps
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-mp3-320.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
   - id: wav-cd
     title: 음원 후원 — MP3 + CD 음질, 두 가지 모두
     description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.
@@ -30,9 +30,9 @@ rewards:
     estimatedDelivery: 2026-09
     downloads:
       - label: MP3 320kbps
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-mp3-320.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
       - label: WAV 16bit 44.1kHz (CD 음질)
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-16-44.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-16-44.zip
   - id: wav-hires
     title: 음원 후원 — 24bit 96kHz까지 세 가지 모두
     description: 세 가지 음질을 모두 보내 드립니다. MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)입니다.
@@ -41,11 +41,11 @@ rewards:
     estimatedDelivery: 2026-09
     downloads:
       - label: MP3 320kbps
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-mp3-320.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
       - label: WAV 16bit 44.1kHz (CD 음질)
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-16-44.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-16-44.zip
       - label: WAV 24bit 96kHz (스튜디오 마스터)
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-24-96.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-24-96.zip
   - id: wav-hires-plus
     title: 든든한 후원 — 세 가지 모두 + 후원자 명단
     description: 세 가지 음질을 모두 보내 드리고, 원하시면 후원자 명단에 이름을 올려 드립니다. 이름 공개 여부는 후원 확인 페이지에서 언제든 바꾸실 수 있습니다.
@@ -54,11 +54,11 @@ rewards:
     estimatedDelivery: 2026-09
     downloads:
       - label: MP3 320kbps
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-mp3-320.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
       - label: WAV 16bit 44.1kHz (CD 음질)
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-16-44.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-16-44.zip
       - label: WAV 24bit 96kHz (스튜디오 마스터)
-        url: https://pub-f90fa9dd39f5479289b32ecaa4055633.r2.dev/kspf-2026/5bfeba0a5096a012/album-wav-24-96.zip
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-24-96.zip
 ---
 
 ## 표를 팔던 사람들이 표를 물러 주기로 했다
