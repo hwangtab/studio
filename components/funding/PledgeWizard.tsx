@@ -121,9 +121,17 @@ const clampAdditional = (raw: string): number => {
   return Math.min(MAX_ADDITIONAL_AMOUNT, stepped);
 };
 
-function StepHeader({ n, title, hint }: { n: number; title: string; hint?: string }) {
+/**
+ * `<legend>`를 쓰지 않는다. legend는 브라우저가 **fieldset의 테두리 위에** 얹어 그리는
+ * 요소라 패딩 박스 밖으로 빠져나간다. 카드에 rounded-2xl과 패딩을 준 이 화면에서는 제목이
+ * 카드 위 경계에 걸쳐 떠 보였다 — "텍스트가 카드를 벗어난다"의 정체다.
+ *
+ * 대신 평범한 div로 그리고, fieldset에는 `aria-labelledby`로 같은 이름을 준다. 접근성
+ * 이름은 그대로 유지되고 배치만 정상으로 돌아온다.
+ */
+function StepHeader({ id, n, title, hint }: { id: string; n: number; title: string; hint?: string }) {
   return (
-    <legend className="mb-4 flex w-full items-center gap-3">
+    <div id={id} className="mb-4 flex w-full items-center gap-3">
       <span
         aria-hidden="true"
         className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-white"
@@ -134,7 +142,7 @@ function StepHeader({ n, title, hint }: { n: number; title: string; hint?: strin
         <span className="typo-card-subtitle block text-gray-900 dark:text-white">{title}</span>
         {hint && <span className="typo-card-meta block">{hint}</span>}
       </span>
-    </legend>
+    </div>
   );
 }
 
@@ -366,7 +374,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
 
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
-      <fieldset className={cardClass}>
+      <fieldset className={cardClass} aria-labelledby={lockedReward ? undefined : `${uid}-step-reward`}>
         {lockedReward ? (
           <div className="mb-5 rounded-xl border border-primary bg-primary/5 p-4 dark:border-primary-light dark:bg-primary-light/10">
             <p className="typo-card-meta">고르신 리워드</p>
@@ -374,7 +382,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
             <p className="typo-card-meta">{reward.title}</p>
           </div>
         ) : (
-          <StepHeader n={1} title="리워드" hint="후원 금액에 따라 돌려드릴 구성입니다." />
+          <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="후원 금액에 따라 돌려드릴 구성입니다." />
         )}
         {!lockedReward && (
         <div className="space-y-2">
@@ -413,8 +421,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
         </div>
       </fieldset>
 
-      <fieldset className={cardClass}>
-        <StepHeader n={lockedReward ? 1 : 2} title="후원자 정보" hint="후원 확인 메일과 리워드 발송에 씁니다." />
+      <fieldset className={cardClass} aria-labelledby={`${uid}-step-backer`}>
+        <StepHeader id={`${uid}-step-backer`} n={lockedReward ? 1 : 2} title="후원자 정보" hint="후원 확인 메일과 리워드 발송에 씁니다." />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-name`} label="이름" required>
