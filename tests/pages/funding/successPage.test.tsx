@@ -34,6 +34,27 @@ it('확정 화면에서 전환 이벤트가 발화한다', () => {
   expect(screen.getByRole('link', { name: /후원 확인·취소 페이지 열기/ })).toHaveAttribute('href', confirmed.manageUrl);
 });
 
+/**
+ * 결제가 확정된 뒤에는 PledgeWizard가 남긴 이름·연락처·주소 임시 저장(lib/formDraft.ts)이
+ * 세션에 남아 있을 이유가 없다. `projectSlug`를 아는 정상 경로에서는 그 프로젝트 것만 지운다
+ * — 다른 프로젝트를 동시에 후원 중이었다면 그 초안까지 지우면 안 된다.
+ */
+it('확정되면 그 프로젝트의 후원 폼 임시 저장을 지운다', () => {
+  window.sessionStorage.setItem('studionol:funding-draft:demo', JSON.stringify({ customerName: '홍길동' }));
+  window.sessionStorage.setItem('studionol:funding-draft:other', JSON.stringify({ customerName: '다른후원' }));
+  render(<FundingSuccessPage {...confirmed} />);
+  expect(window.sessionStorage.getItem('studionol:funding-draft:demo')).toBeNull();
+  expect(window.sessionStorage.getItem('studionol:funding-draft:other')).toBe(JSON.stringify({ customerName: '다른후원' }));
+});
+
+// 주문에 fundingPledge 연결이 비어 projectSlug를 모르는 예외적인 경우 — 특정할 수 없으니
+// 흐름 전체를 지운다. 결제가 끝난 세션에 어느 프로젝트의 것이든 배송지를 남겨 둘 이유는 없다.
+it('projectSlug를 모르면 펀딩 임시 저장 전체를 지운다', () => {
+  window.sessionStorage.setItem('studionol:funding-draft:demo', JSON.stringify({ customerName: '홍길동' }));
+  render(<FundingSuccessPage {...confirmed} projectSlug="" />);
+  expect(window.sessionStorage.getItem('studionol:funding-draft:demo')).toBeNull();
+});
+
 // 쿠키가 살아 있는 30분 동안 몇 번이고 열릴 수 있다 — 새로고침마다 세면 결제 수가 부풀려진다.
 it('같은 주문을 다시 열면 이벤트를 또 보내지 않는다', () => {
   const { unmount } = render(<FundingSuccessPage {...confirmed} />);

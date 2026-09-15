@@ -7,9 +7,12 @@
  */
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
+import { useEffect } from 'react';
 
 import { confirmBookingPayment } from '../../../lib/booking/confirm';
+import { BOOKING_CUSTOMER_DRAFT_KEY, MIXING_CUSTOMER_DRAFT_KEY } from '../../../lib/booking/customerDraft';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { clearStoredDraft } from '../../../lib/formDraft';
 
 interface SuccessProps {
   outcome: 'confirmed' | 'error';
@@ -26,6 +29,18 @@ interface SuccessProps {
 export default function BookingSuccessPage({ outcome, message, orderNo, manageUrl, emailSent, orderType }: SuccessProps) {
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   const isMixing = orderType === 'mixing';
+
+  /**
+   * 결제가 확정된 순간 이름·연락처가 담긴 초안을 지운다.
+   *
+   * 이 화면은 결제 흐름의 끝이라, 여기서 안 지우면 위저드로 다시 들어가지 않는 한
+   * sessionStorage에 이름·전화가 그 탭이 닫힐 때까지 남는다. orderType으로 예약(session)과
+   * 믹싱 초안 중 이번 결제가 어느 쪽인지 알 수 있다 — 다른 흐름의 초안은 건드리지 않는다.
+   */
+  useEffect(() => {
+    if (outcome !== 'confirmed') return;
+    clearStoredDraft(isMixing ? MIXING_CUSTOMER_DRAFT_KEY : BOOKING_CUSTOMER_DRAFT_KEY);
+  }, [outcome, isMixing]);
 
   return (
     <>
