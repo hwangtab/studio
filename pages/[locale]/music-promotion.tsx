@@ -515,28 +515,30 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       </Section>
 
       <Section>
-        <div className="mx-auto max-w-3xl">
-          <SectionHeading title={t('musicPromotion.review.title')} />
-          <p className="mt-6 text-lg leading-relaxed text-gray-700 dark:text-gray-200">
-            {t('musicPromotion.review.lead')}
-          </p>
-          <div className="mt-8 space-y-5">
-            {criteria.map((item) => (
-              <div key={item.title} className="flex gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
-                <div>
-                  <h3 className="font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                    {item.body}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="mt-8 rounded-xl bg-gray-50 p-5 text-sm leading-relaxed text-gray-600 dark:bg-gray-900/40 dark:text-gray-300">
+        {/* 이 섹션만 단일 컬럼이라 제목은 가운데, 본문은 왼쪽으로 축이 둘이었다.
+            나머지 섹션(outcome·deliverables·process)과 같은 3열 카드로 맞춘다. */}
+        <SectionHeading
+          title={t('musicPromotion.review.title')}
+          subtitle={t('musicPromotion.review.lead')}
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {criteria.map((item, index) => (
+            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.06 })}>
+              <BaseCard className="h-full p-6">
+                <CheckCircle2 className="h-6 w-6 text-primary dark:text-primary-lighter" aria-hidden="true" />
+                <h3 className="mt-3 font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                  {item.body}
+                </p>
+              </BaseCard>
+            </m.div>
+          ))}
+        </div>
+        <div className="mx-auto mt-8 max-w-3xl space-y-4 text-center">
+          <p className="rounded-xl bg-gray-50 p-5 text-sm leading-relaxed text-gray-600 dark:bg-gray-900/40 dark:text-gray-300">
             {t('musicPromotion.review.rejection')}
           </p>
-          <p className="mt-4 text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+          <p className="text-sm leading-relaxed text-gray-500 dark:text-gray-400">
             {t('musicPromotion.review.why')}
           </p>
         </div>
