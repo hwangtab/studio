@@ -550,3 +550,39 @@ describe('모달에서 여는 경우 (lockedReward · stickySummary)', () => {
     expect(summary!.className).toContain('sticky');
   });
 });
+
+/**
+ * `<legend>`는 브라우저가 fieldset **테두리 위에** 얹어 그려서 패딩 박스를 빠져나간다.
+ * 카드에 rounded와 패딩을 준 이 화면에서는 단계 제목이 카드 밖으로 떠 보였다.
+ * div + aria-labelledby로 바꿨고, 되돌아가지 않게 고정한다.
+ */
+describe('단계 제목이 카드를 벗어나지 않는다', () => {
+  const remaining = { cd: 5, mail: null } as Record<string, number | null>;
+
+  it('legend를 쓰지 않는다', () => {
+    const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    expect(container.querySelectorAll('legend').length).toBe(0);
+  });
+
+  it('fieldset의 접근성 이름이 유지된다', () => {
+    const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    const sets = [...container.querySelectorAll('fieldset')];
+    expect(sets.length).toBeGreaterThan(0);
+    for (const fs of sets) {
+      const id = fs.getAttribute('aria-labelledby');
+      expect(id).toBeTruthy();
+      expect(container.querySelector(`#${CSS.escape(id!)}`)).not.toBeNull();
+    }
+  });
+
+  it('잠긴 모달에서도 제목과 fieldset이 어긋나지 않는다', () => {
+    const { container } = render(
+      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
+    );
+    expect(container.querySelectorAll('legend').length).toBe(0);
+    const labelled = [...container.querySelectorAll('fieldset[aria-labelledby]')];
+    for (const fs of labelled) {
+      expect(container.querySelector(`#${CSS.escape(fs.getAttribute('aria-labelledby')!)}`)).not.toBeNull();
+    }
+  });
+});
