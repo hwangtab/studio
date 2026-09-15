@@ -1596,8 +1596,8 @@
       "rowHeader": "Aspecto comparado"
     },
     "evidence": {
-      "title": "Así lo enviamos en la práctica",
-      "subtitle": "El registro es más preciso que las palabras. Estas son cifras medidas de campañas que hicimos nosotros mismos. El tamaño del envío va de unos cientos a más de mil según el género y la zona lingüística: un género estrecho debe salir estrecho.",
+      "title": "El tamaño del envío lo decide la música",
+      "subtitle": "Enviar a más no es lo mismo que hacerlo bien. Según el género y la zona lingüística, la cifra va de los cientos a los miles. Estas son las cifras medidas de dos campañas que hicimos nosotros mismos, para mostrar ese rango.",
       "cases": [
         {
           "title": "Mariko & Yukie, «Namsan Tower Lights»",
@@ -1608,7 +1608,8 @@
             "8 idiomas",
             "repartido a lo largo de 12 días"
           ],
-          "note": "Quince canciones en coreano de un matrimonio japonés que vive en Seúl. Studio NOL se encargó desde la mezcla hasta la planificación, la producción y la promoción del lanzamiento."
+          "note": "Quince canciones en coreano interpretadas por un matrimonio japonés que vive en Seúl. Es una música que conecta con el público de habla coreana y japonesa, y también con el de habla inglesa, así que se envió en 8 idiomas. Studio NOL se encargó de todo, desde la mezcla hasta la planificación, la producción y la promoción del lanzamiento.",
+          "label": "Mayor alcance"
         },
         {
           "title": "HWA, «HWA»",
@@ -1618,10 +1619,12 @@
             "concentrado en prensa especializada en metal",
             "Corea y el extranjero a la vez"
           ],
-          "note": "Si el género es estrecho, la lista también va estrecha. Para este disco reunimos desde cero medios especializados en metal."
+          "note": "El grindcore simplemente tiene menos medios que lo cubran. 125 no es que falte: es el número que corresponde a este tipo de música, y reunimos desde cero una lista de medios especializados en metal para este disco. Forzar el envío a destinatarios que no encajan solo genera más rebotes y bajas.",
+          "label": "Género estrecho"
         }
       ],
-      "linkLabel": "Ver una página de press kit que hicimos de verdad"
+      "linkLabel": "Ver una página de press kit que hicimos de verdad",
+      "priorWork": "Solo lo ofrecemos como servicio independiente desde este año. Antes, era parte de nuestros paquetes de proyecto de lanzamiento, y en esa época no llevábamos un registro por campaña — por eso estos dos son los únicos casos que podemos mostrar con cifras."
     },
     "deliverables": {
       "title": "Qué incluye",

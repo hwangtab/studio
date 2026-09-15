@@ -1596,8 +1596,8 @@
       "rowHeader": "Taqqoslash mezoni"
     },
     "evidence": {
-      "title": "Amalda mana shunday yuborganmiz",
-      "subtitle": "Yozuv gapdan aniqroq. Bular o'zimiz olib borgan kampaniyalarning o'lchangan raqamlari. Yuborish hajmi janr va til hududiga qarab bir necha yuz manzildan ming nafardan ortig'igacha o'zgaradi — tor janr tor ro'yxat bilan ketgani to'g'ri.",
+      "title": "Yuborish hajmini musiqa belgilaydi",
+      "subtitle": "Ko'p yuborish yaxshi qilish degani emas. Janr va til hududiga qarab, raqam bir necha yuzdan minglabgacha o'zgaradi. Bu o'zimiz olib borgan ikkita kampaniyaning o'lchangan raqamlari — shu farqni ko'rsatish uchun.",
       "cases": [
         {
           "title": "Mariko & Yukie «Namsan Tower Lights»",
@@ -1608,7 +1608,8 @@
             "8 til",
             "12 kunga taqsimlab"
           ],
-          "note": "Seulda yashaydigan yapon er-xotin koreys tilida kuylagan 15 ta qo'shiq. Studio NOL mikslashdan tortib loyihalash, ishlab chiqarish va chiqarish PRigacha bo'lgan ishni o'z zimmasiga oldi."
+          "note": "Seulda yashaydigan yapon er-xotin koreys tilida kuylagan 15 ta qo'shiq. Bu musiqa koreys va yapon tilidagi tinglovchilarga, shuningdek ingliz tilidagilarga ham yetib boradigan hikoya bo'lgani uchun 8 tilda yuborildi. Studio NOL mikslashdan tortib loyihalash, ishlab chiqarish va chiqarish PRigacha bo'lgan barcha ishni o'z zimmasiga oldi.",
+          "label": "Eng keng qamrov"
         },
         {
           "title": "HWA «HWA»",
@@ -1618,10 +1619,12 @@
             "metal nashrlariga qaratilgan",
             "ichkarida va chet elda bir vaqtda"
           ],
-          "note": "Janr tor bo'lsa, ro'yxat ham tor bo'ladi. Shu albom uchun metalga ixtisoslashgan nashrlarni yangidan yig'ib chiqdik."
+          "note": "Grindcore janrini yorituvchi nashrlarning o'zi kam. 125 ta yetarli emasligidan emas, balki bu musiqaga mos son — va shu albom uchun metalga ixtisoslashgan nashrlar ro'yxatini yangidan yig'ib chiqdik. Mos kelmaydigan manzillarga zo'rma-zo'raki ko'proq yuborish faqat qaytgan xatlar va obunani bekor qilishni ko'paytiradi.",
+          "label": "Janr tor"
         }
       ],
-      "linkLabel": "Haqiqatda tayyorlagan press-kit sahifamizni ko'rish"
+      "linkLabel": "Haqiqatda tayyorlagan press-kit sahifamizni ko'rish",
+      "priorWork": "Buni alohida xizmat sifatida faqat shu yildan taqdim eta boshladik. Undan oldin bu chiqarish loyihasi paketining bir qismi edi va o'sha paytda kampaniya bo'yicha alohida yozuv yuritmagandik — shuning uchun raqamlar bilan ko'rsata oladiganimiz yuqoridagi ikkita holat, xolos."
     },
     "deliverables": {
       "title": "Nimalar kiradi",

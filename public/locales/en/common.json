@@ -1624,8 +1624,8 @@
       "rowHeader": "What we compare"
     },
     "evidence": {
-      "title": "This is how we actually sent it",
-      "subtitle": "Records are more precise than claims. These are measured figures from campaigns we ran ourselves. The size of a send-out swings from the low hundreds to the low thousands depending on genre and language — a narrow genre should go out narrow.",
+      "title": "The Music Decides the Send Size",
+      "subtitle": "Sending to more outlets isn't the same as doing it well. Depending on genre and language, the number ranges anywhere from the low hundreds to the low thousands. These are the measured figures from two campaigns we ran ourselves, showing that range firsthand.",
       "cases": [
         {
           "title": "Mariko & Yukie, Namsan Tower Lights",
@@ -1636,7 +1636,8 @@
             "8 languages",
             "spread over 12 days"
           ],
-          "note": "Fifteen songs sung in Korean by a Japanese couple living in Seoul. Studio NOL took it from the mix through planning, production and release PR."
+          "note": "Fifteen songs sung in Korean by a Japanese couple living in Seoul — a story that reaches Korean and Japanese speakers as well as English speakers, so it went out in 8 languages. Studio NOL handled everything from mixing to planning, production, and release PR.",
+          "label": "Widest reach"
         },
         {
           "title": "HWA, HWA",
@@ -1646,10 +1647,12 @@
             "concentrated on metal press",
             "Korea and abroad at once"
           ],
-          "note": "A narrow genre gets a narrow list. We gathered metal-specialist outlets from scratch for this record."
+          "note": "Grindcore simply has fewer outlets that cover it. 125 isn't a shortfall — it's the right number for this kind of music, and we built a new list of metal-specialist outlets just for this record. Padding the list with outlets that don't fit only adds bounces and unsubscribes.",
+          "label": "Narrow genre"
         }
       ],
-      "linkLabel": "See a press kit page we actually built"
+      "linkLabel": "See a press kit page we actually built",
+      "priorWork": "We've only offered this as a standalone service since this year. Before that, it was one part of our release-project bundles, and we didn't keep campaign-level records back then — so these two are the only ones we can show you numbers for."
     },
     "deliverables": {
       "title": "What's included",

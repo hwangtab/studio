@@ -156,6 +156,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
     meta: string;
     stats: string[];
     note: string;
+    label: string;
   }[];
   const criteria = t('musicPromotion.review.criteria', { returnObjects: true }) as {
     title: string;
@@ -269,7 +270,13 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           {cases.map((item, index) => (
             <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.1 })}>
               <BaseCard variant="glass" className="h-full p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                {/* 사례가 둘뿐인 것은 실적 목록이 짧아서가 아니라 규모의 양 끝을 보여주는
+                    구성이기 때문이다. 라벨이 그 축을 드러낸다 — 빼면 다시 "2건짜리 실적
+                    목록"으로 읽힌다. */}
+                <span className="inline-block rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary dark:text-primary-lighter">
+                  {item.label}
+                </span>
+                <h3 className="mt-3 text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.meta}</p>
                 <ul className="mt-4 flex flex-wrap gap-2">
                   {item.stats.map((stat) => (
@@ -299,6 +306,9 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             </m.div>
           ))}
         </div>
+        <p className="mx-auto mt-8 max-w-3xl text-center text-sm leading-relaxed text-gray-500 dark:text-gray-400">
+          {t('musicPromotion.evidence.priorWork')}
+        </p>
       </Section>
 
       <Section>
