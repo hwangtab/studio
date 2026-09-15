@@ -136,8 +136,34 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     paymentMethod: payment!.method,
   });
   if (!toss.ok) {
+    /**
+     * 되돌리기 전에 **그 사이 진짜 환불이 기록됐는지**를 본다.
+     *
+     * 토스 호출은 12초에 타임아웃하는데(booking/toss.ts), 그 실패는 "취소가 거절됐다"와
+     * "취소는 됐는데 응답만 늦었다"를 구분하지 못한다. 후자라면 토스가 보낸 CANCELED 웹훅이
+     * 먼저 도착해 `syncFundingCancelledFromToss`가 done 환불 행을 남긴다. 그 상태에서
+     * 되돌리면 **환불이 끝난 건이 paid로 살아난다** — 공개 모금액에 환불된 돈이 남고,
+     * 그 사람이 음원을 계속 받고, 재취소는 잔액 0이라 막힌다. 스스로 낫지 않는다.
+     *
+     * 선점 WHERE의 `status = 'refunded'`만으로는 내가 찍은 refunded와 웹훅이 찍은 refunded를
+     * 구분할 수 없다 — 둘이 같은 값이다. 그래서 **done 환불 건수가 그대로인지**를 함께 본다.
+     * 건수로 보는 이유: 부분 환불이 이미 있던 건도 정상적으로 되돌아가야 한다.
+     */
+    const doneRefundsBefore = order.payments.reduce(
+      (n, p) => n + (p.refunds ?? []).filter((r) => r.status === 'done').length,
+      0,
+    );
     try {
-      await db.run(sql`UPDATE orders SET status = ${order.status}, updated_at = unixepoch() WHERE id = ${order.id} AND status = 'refunded'`);
+      const reverted = await db.run(
+        sql`UPDATE orders SET status = ${order.status}, updated_at = unixepoch()
+            WHERE id = ${order.id} AND status = 'refunded'
+              AND (SELECT COUNT(*) FROM refunds WHERE payment_id IN (SELECT id FROM payments WHERE order_id = ${order.id}) AND status = 'done') = ${doneRefundsBefore}`,
+      );
+      if (Number(reverted.rowsAffected) === 0) {
+        console.error('[funding-cancel] 선점을 되돌리지 않았다 — 그 사이 환불이 기록됐다(웹훅 대사로 추정)', {
+          orderNo: order.orderNo, doneRefundsBefore,
+        });
+      }
     } catch (revertError) {
       console.error('[funding-cancel] 선점 revert 실패 — 수동 복구 필요', { orderNo: order.orderNo, error: revertError });
     }

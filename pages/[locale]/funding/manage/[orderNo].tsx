@@ -156,15 +156,20 @@ export default function FundingManagePage(p: Props) {
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
           {p.downloads.length > 0 && (
             <div className="mt-6 space-y-2">
+              {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 메일
+                  링크를 긁는 봇이 후원자의 청약철회권을 없애지 못한다. */}
               {p.downloads.map((d) => (
-                <a
-                  key={d.key}
-                  href={`/api/funding/download?orderNo=${encodeURIComponent(p.orderNo)}&token=${encodeURIComponent(p.token)}&file=${encodeURIComponent(d.key)}`}
-                  rel="noreferrer"
-                  className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-                >
-                  {d.label} 내려받기
-                </a>
+                <form key={d.key} method="post" action="/api/funding/download">
+                  <input type="hidden" name="orderNo" value={p.orderNo} />
+                  <input type="hidden" name="token" value={p.token} />
+                  <input type="hidden" name="file" value={d.key} />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
+                  >
+                    {d.label} 내려받기
+                  </button>
+                </form>
               ))}
               <p className="typo-card-meta">내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).</p>
             </div>

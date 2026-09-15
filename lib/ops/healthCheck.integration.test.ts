@@ -47,8 +47,9 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  // subscription_payments가 orders·subscriptions를 참조하므로 그 둘보다 먼저 지운다.
-  for (const table of ['payments', 'bookings', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts']) {
+  // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
+  // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
+  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -324,6 +325,52 @@ describe('운영 점검', () => {
     await insertFundingPledge({ refund_requested_at: EPOCH('2026-09-01T00:00:00Z') });
     await insertOrder({ id: 'o2', order_no: 'FND-2', status: 'paid', manage_token: 'tok2' });
     await insertFundingPledge({ id: 'fp2', order_id: 'o2' });
+    expect(await titles()).toEqual([]);
+  });
+
+  /**
+   * 환불 기록은 결제액에 닿았는데 주문은 아직 살아 있는 상태. 셀프 취소의 선점 되돌림과
+   * 웹훅 대사가 엇갈리거나, 토스 콘솔에서 손으로 취소하면 생긴다. 어긋난 채 두면 공개
+   * 모금액에 환불된 돈이 남고 그 후원자가 음원을 계속 받는데, 관리자 목록의 불일치 배지는
+   * 이걸 못 본다(허용 목록에 paid가 있다).
+   */
+  const insertDoneRefund = async (amount: number, id = 'rf1', paymentId = 'p1', orderId = 'o1') => {
+    await client.execute({ sql: "INSERT INTO payments (id, order_id, payment_key) VALUES (?, ?, ?)", args: [paymentId, orderId, `pk_${paymentId}`] });
+    await client.execute({
+      sql: "INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES (?, ?, ?, '취소', 'customer', 'done')",
+      args: [id, paymentId, amount],
+    });
+  };
+
+  it('전액 환불됐는데 주문이 살아 있으면 긴급으로 보고한다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'paid', total_amount: 30000 });
+    await insertFundingPledge();
+    await insertDoneRefund(30000);
+    const issues = (await runHealthCheck(NOW)).issues;
+    expect(issues[0].severity).toBe('high');
+    expect(issues[0].title).toContain('전액 환불됐는데 주문이 살아 있는 후원 1건');
+    expect(issues[0].detail).toContain('FND-1');
+  });
+
+  it('잔액이 남은 부분환불은 정상이다 — 리워드 의무가 남아 있는 상태다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'partially_refunded', total_amount: 30000 });
+    await insertFundingPledge();
+    await insertDoneRefund(10000);
+    expect(await titles()).toEqual([]);
+  });
+
+  it('상태가 이미 refunded면 보고하지 않는다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'refunded', total_amount: 30000 });
+    await insertFundingPledge();
+    await insertDoneRefund(30000);
+    expect(await titles()).toEqual([]);
+  });
+
+  it('실패한 환불 기록은 세지 않는다 — 돈이 나가지 않았다', async () => {
+    await insertOrder({ order_no: 'FND-1', status: 'paid', total_amount: 30000 });
+    await insertFundingPledge();
+    await client.execute("INSERT INTO payments (id, order_id, payment_key) VALUES ('p1','o1','pk_p1')");
+    await client.execute("INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('rf1','p1',30000,'취소','customer','failed')");
     expect(await titles()).toEqual([]);
   });
 
