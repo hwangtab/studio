@@ -136,7 +136,26 @@ function collectHeroChars() {
     for (const m of withoutOperator.matchAll(/name\s*:\s*(["'`])([\s\S]*?)\1/g)) addStr(m[2]);
   } catch {}
 
-  // 5) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)
+  // 5) 펀딩 프로젝트 제목 — `content/funding/<slug>.md`의 frontmatter title이
+  //    `/ko/funding/<slug>`의 ImageHero h1으로 그대로 나간다.
+  //
+  //    이 소스가 없던 동안은 프로젝트를 추가할 때마다 그 제목의 낯선 글자가 서브셋에서
+  //    빠졌고, --check는 "커밋된 woff2가 현재 글자집합을 덮는가"만 보므로 아무도 못 잡았다.
+  //    실제로 'Keep Singing for Palestine — 9·19 거리집회 후원'에서 `거`·`회` 두 글자가
+  //    빠져, 한 단어 안에서 두 글자만 폴백 서체로 그려질 뻔했다.
+  try {
+    const fundingDir = path.join(ROOT, 'content', 'funding');
+    for (const f of fs.readdirSync(fundingDir).filter((n) => n.endsWith('.md'))) {
+      const raw = fs.readFileSync(path.join(fundingDir, f), 'utf8');
+      // frontmatter의 최상위 title 한 줄만 본다 — 리워드 title은 h1이 아니다(들여쓰기로 구분).
+      const m = raw.match(/^title:\s*(.+)$/m);
+      if (m) addStr(m[1].trim().replace(/^["']|["']$/g, ''));
+    }
+  } catch (e) {
+    console.warn(`skip funding titles: ${e.message}`);
+  }
+
+  // 6) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)
   const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/';
   addStr(safety);
 

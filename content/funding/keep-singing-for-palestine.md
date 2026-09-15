@@ -3,6 +3,7 @@ slug: keep-singing-for-palestine
 title: Keep Singing for Palestine — 9·19 거리집회 후원
 summary: 팔레스타인 해방을 위한 거리집회에 함께합니다. 후원해 주시면 앨범 〈이름을 모르는 먼 곳의 그대에게〉 13곡을 보내 드립니다.
 cover: /images/funding/keep-singing-for-palestine/cover.webp
+heroImage: /images/funding/keep-singing-for-palestine/hero.webp
 goalAmount: 1000000
 startAt: 2026-09-14T00:00:00+09:00
 endAt: 2026-10-19T23:59:59+09:00

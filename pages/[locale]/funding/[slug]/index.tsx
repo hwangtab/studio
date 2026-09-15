@@ -3,6 +3,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import MarkdownRenderer from '../../../../components/MarkdownRenderer';
 import ResponsiveImage from '../../../../components/ResponsiveImage';
+import ImageHero from '../../../../components/common/ImageHero';
 import { Section } from '../../../../components/ui/Section';
 import FundingProgress from '../../../../components/funding/FundingProgress';
 import RewardCard from '../../../../components/funding/RewardCard';
@@ -13,6 +14,7 @@ import RewardModal from '../../../../components/funding/RewardModal';
 import { useFundingStatus } from '../../../../components/funding/useFundingStatus';
 import { buildPageStaticProps } from '../../../../lib/getStatic';
 import { defaultLocale } from '../../../../lib/i18n';
+import { formatPriceAmount } from '../../../../data/pricing';
 import { computeProjectState, getAllFundingProjects, getFundingProject, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
 
 interface Props {
@@ -57,50 +59,67 @@ export default function FundingProjectPage({ project, initialState }: Props) {
         robots={project.hidden ? 'noindex, nofollow' : undefined}
       />
       {/*
-        제목·본문(왼쪽)과 후원 패널(오른쪽)을 **페이지 맨 위부터** 나란히 둔다. 히어로를 따로
-        띄우면 첫 화면이 그림과 제목으로만 차고 진행률·리워드는 스크롤해야 나온다 — 후원
-        의사가 가장 높은 순간에 후원할 수단이 화면에 없는 셈이다. 패널은 데스크톱에서
-        sticky라 본문을 읽는 내내 모금 현황과 리워드가 남는다.
+        히어로는 사이트 공용 `ImageHero`를 그대로 쓴다(스크림 2단계·font-hero·투명 헤더가
+        여기 묶여 있다). 배경은 `heroImage` — 흰 글씨가 앉는 왼쪽을 **이미지 안에서** 눌러
+        뒀다. 컴포넌트의 스크림은 `bg-gradient-to-b` 세로 한 방향이라 좌우를 가르지 못한다.
+
+        스크림은 기본값(HERO_SCRIM). 짐작이 아니라 실측이다 — 왼쪽 글씨 자리의 평균 휘도가
+        37/255이라 흰 글씨 대비 17.3:1이 나온다(목표 6:1). 배경을 갈아 끼우면 다시 잴 것.
       */}
-      <Section className="pb-28 pt-24 md:pt-28 lg:pb-16">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
-          <div className="min-w-0">
-            {/*
-              커버는 목록 카드·OG 이미지와 같은 16:9 파일 하나를 공유하지만, 여기서는
-              **정사각으로 잘라** 쓴다. 원본이 정사각 앨범아트면 16:9 파일의 좌우는 바탕색
-              여백일 뿐이라, 넓게 펴 놓으면 큰 회색 판이 먼저 보이고 그림이 작아진다.
-              가운데를 정사각으로 따면 여백이 통째로 빠져 작품만 남는다.
-            */}
-            <div className="grid items-center gap-6 sm:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] sm:gap-8">
-              <ResponsiveImage
-                src={project.cover}
-                alt=""
-                containerClassName="relative block aspect-square w-full max-w-[15rem] overflow-hidden rounded-2xl shadow-lg sm:max-w-none"
-                className="object-cover"
-                priority
-              />
-              <div>
-                <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary dark:bg-primary-light/15 dark:text-violet-300">
+      <ImageHero
+        locale="ko"
+        priority
+        textAlign="left"
+        backgroundImage={project.heroImage ?? project.cover}
+        imageAlt=""
+        title={project.title}
+        subtitle={
+          <>
+            {project.summary}
+            <span className="mt-6 flex flex-wrap gap-2">
+              {STATE_LABEL[state] && (
+                <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
                   {STATE_LABEL[state]}
                 </span>
-                <h1 className="typo-card-title mt-3 text-gray-900 dark:text-white">{project.title}</h1>
-                <p className="typo-card-body mt-3">{project.summary}</p>
-              </div>
-            </div>
-
-            <div className="mt-12">
-              {statusError && (
-                <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
-                  현황을 불러오지 못했습니다. 새로고침해 주세요.
-                </p>
               )}
-              <article className="prose prose-lg max-w-none dark:prose-invert">
-                <MarkdownRenderer content={project.content} locale="ko" />
-              </article>
-              <div className="mt-12 space-y-8">
-                <BackerNameRoll names={data?.publicBackers ?? []} />
-                <FundingTrustNotice />
-              </div>
+              <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
+                목표 {formatPriceAmount(project.goalAmount)}원
+              </span>
+            </span>
+          </>
+        }
+        ctaButtons={
+          canPledge ? (
+            // 카카오가 아닌 목적지이므로 옐로를 쓰지 않는다(CLAUDE.md 카카오 CTA 규칙).
+            // <lg에서는 FundingMobileCta가 상시 떠 있어 같은 버튼이 한 화면에 둘이 된다.
+            <a
+              href="#rewards"
+              className="hidden h-14 lg:inline-flex items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
+            >
+              후원하기
+            </a>
+          ) : null
+        }
+      />
+
+      {/*
+        본문(왼쪽)과 후원 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라 본문을
+        읽는 내내 모금 현황과 리워드가 화면에 남는다.
+      */}
+      <Section className="pb-28 pt-16 lg:pb-16">
+        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+          <div className="min-w-0">
+            {statusError && (
+              <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+                현황을 불러오지 못했습니다. 새로고침해 주세요.
+              </p>
+            )}
+            <article className="prose prose-lg max-w-none dark:prose-invert">
+              <MarkdownRenderer content={project.content} locale="ko" />
+            </article>
+            <div className="mt-12 space-y-8">
+              <BackerNameRoll names={data?.publicBackers ?? []} />
+              <FundingTrustNotice />
             </div>
           </div>
 
@@ -113,8 +132,21 @@ export default function FundingProjectPage({ project, initialState }: Props) {
                 data={data ? { raisedAmount: data.raisedAmount, backerCount: data.backerCount, percent: data.percent, state } : null}
               />
             </div>
-            <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
-            <p className="typo-card-meta mt-2">후원 금액에 따라 돌려드릴 구성입니다.</p>
+            {/* 표지를 여기 두는 이유: 이 앨범이 곧 리워드다. 16:9 파일의 가운데를 정사각으로
+                따서 바탕색 여백이 보이지 않게 한다. */}
+            <div className="mt-8 flex items-center gap-3">
+              <ResponsiveImage
+                src={project.cover}
+                alt=""
+                containerClassName="relative block aspect-square w-16 shrink-0 overflow-hidden rounded-lg"
+                className="object-cover"
+                loading="lazy"
+              />
+              <div className="min-w-0">
+                <h2 className="typo-card-title text-gray-900 dark:text-white">리워드</h2>
+                <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
+              </div>
+            </div>
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
                 <RewardCard
@@ -136,6 +168,12 @@ export default function FundingProjectPage({ project, initialState }: Props) {
     </>
   );
 }
+
+/**
+ * 히어로가 헤더 밑까지 풀블리드로 깔리고 헤더가 투명해진다(Layout.tsx의 `hasHero` 분기).
+ * 이 플래그가 없으면 main에 pt-20이 붙어 히어로 위에 흰 띠가 생긴다.
+ */
+FundingProjectPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: getAllFundingProjects()

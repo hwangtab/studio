@@ -23,7 +23,7 @@ const SITE = 'https://studionol.co.kr';
 const NOW = new Date('2026-10-15T12:00:00+09:00');
 
 const project = (over: Partial<FundingProject>): FundingProject => ({
-  slug: 'demo', title: '데모 1집', summary: '요약', cover: '/c.webp', ogImage: null,
+  slug: 'demo', title: '데모 1집', summary: '요약', cover: '/c.webp', ogImage: null, heroImage: null,
   goalAmount: 3_000_000,
   startAt: '2026-10-01T00:00:00+09:00', endAt: '2026-11-01T00:00:00+09:00',
   status: 'auto', hidden: false, lastmod: '2026-10-01', rewards: [], content: '',
