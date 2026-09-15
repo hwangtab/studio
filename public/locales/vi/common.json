@@ -1525,8 +1525,8 @@
     "hero": {
       "title": "Quảng bá phát hành nhạc",
       "subtitleLine1": "Tới các đầu báo âm nhạc Hàn Quốc và truyền thông 60 quốc gia sẽ đưa tin, bằng ngôn ngữ từng nơi đọc",
-      "subtitleLine2": "{{intro}} · 3 nghệ sĩ mỗi tháng · Chỉ nhận nhạc qua được vòng duyệt",
-      "badge": "Giá gốc {{list}} → {{intro}} (giá đối tác sớm, đến hết {{until}})",
+      "subtitleLine2": "Từ viết thông cáo đến gửi đi và báo cáo — {{intro}} · qua vòng duyệt rồi mới thanh toán",
+      "badge": "Thuộc gói phát hành với {{list}} · giá đối tác sớm {{intro}} (đến {{until}})",
       "alt": "Toàn cảnh trung tâm Seoul về đêm, thành phố trải dài dưới ánh đèn"
     },
     "quickAnswers": {
@@ -1535,19 +1535,19 @@
       "items": [
         {
           "q": "Giá bao nhiêu?",
-          "a": "{{intro}} (chưa gồm VAT). Giá gốc là {{list}}, và đến hết {{until}} chúng tôi nhận theo giá đối tác sớm. Không có phụ phí — mọi thứ ghi bên dưới đều đã bao gồm."
+          "a": "{{intro}} (chưa gồm VAT). Không có phụ phí — mọi thứ ghi bên dưới đều đã bao gồm. Bạn thanh toán sau khi bản nhạc qua vòng duyệt và chúng tôi đã chốt quy mô gửi đi với bạn. Nếu dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ."
         },
         {
           "q": "Các bạn làm những gì?",
-          "a": "Chúng tôi viết thông cáo bằng năm thứ tiếng, dựng trang press kit, và chỉ gửi tới các đầu báo âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa, lễ hội nước ngoài sẽ đưa tin. Chúng tôi cũng làm video nghe trọn album."
+          "a": "Chúng tôi viết thông cáo bằng năm thứ tiếng, dựng trang press kit, rồi đi tìm các đầu báo âm nhạc Hàn Quốc cùng truyền thông, đài phát thanh, cửa hàng đĩa và lễ hội nước ngoài có đưa tin về dòng nhạc này để gửi. Chúng tôi cũng làm video nghe trọn album."
         },
         {
           "q": "Mất bao lâu?",
-          "a": "5 ngày để làm tài liệu, 1-3 tuần để gửi đi. Lý do không gửi hết trong một ngày là uy tín tên miền — bắn hơn 1.000 email cùng lúc thì tất cả bị xếp vào thư rác, và mọi thứ thành vô nghĩa."
+          "a": "5 ngày để làm tài liệu, 1-3 tuần để gửi đi. Không gửi hết trong một ngày vì mỗi nơi nhận một bản viết khác nhau — ban biên tập, webzine nước ngoài, đài phát thanh, cửa hàng đĩa đều muốn một dạng riêng. Chúng tôi chia theo khu vực và ngôn ngữ để gửi lần lượt. 〈Namsan Tower Lights〉 đã đi tới 1.218 nơi trong 12 ngày."
         },
         {
-          "q": "Các bạn có bảo đảm bài báo sẽ được đăng không?",
-          "a": "Chúng tôi không bảo đảm. Vì đó không phải việc có thể bảo đảm. Nếu có nơi nào nói bảo đảm được, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo. Thứ chúng tôi hứa là khối lượng thực thi — làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào, tất cả được chứng minh bằng báo cáo."
+          "q": "Các bạn hứa điều gì?",
+          "a": "Khi bản nhạc qua vòng duyệt, trước lúc gửi chúng tôi chốt bằng con số: sẽ làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào. Xong việc, báo cáo chứng minh đã làm đúng con số đó. Có đăng bài hay không là quyết định của ban biên tập từng nơi, không ai hứa được điều đó — phần chúng tôi nhận là đưa bản nhạc đến đúng các ban biên tập ấy."
         }
       ]
     },
@@ -1565,7 +1565,7 @@
           "Gửi tới đâu",
           "908 đầu mối cùng lúc",
           "Đầu báo âm nhạc",
-          "Chỉ nơi sẽ đưa tin"
+          "Đi tìm nơi sẽ đưa tin về dòng nhạc này — 〈Namsan Tower Lights〉 1.218 nơi, 60 nước"
         ],
         [
           "Bản thảo",
@@ -1589,7 +1589,7 @@
           "Giá",
           "77.000–660.000 KRW",
           "830.000–3.490.000 KRW",
-          "{{intro}}"
+          "{{intro}} (tương đương {{list}} trong gói)"
         ]
       ],
       "note": "Trong phạm vi khảo sát không có hãng PR chuyên về âm nhạc ở Hàn Quốc công bố giá (tháng 9/2026). Nhiều nơi rải thông cáo, nhưng danh sách của họ không phải đầu báo âm nhạc; còn các hãng nước ngoài bán đúng thứ này thì ở một bậc giá khác.",
@@ -1597,7 +1597,7 @@
     },
     "evidence": {
       "title": "Chúng tôi đã gửi thực tế như thế này",
-      "subtitle": "Ghi chép chính xác hơn lời nói. Đây là số liệu đo được từ các chiến dịch chúng tôi tự thực hiện.",
+      "subtitle": "Ghi chép chính xác hơn lời nói. Đây là số liệu đo được từ các chiến dịch chúng tôi tự thực hiện. Quy mô gửi dao động từ vài trăm đến hơn một nghìn nơi, tùy thể loại và vùng ngôn ngữ — thể loại hẹp thì danh sách hẹp mới đúng.",
       "cases": [
         {
           "title": "Mariko & Yukie 〈Namsan Tower Lights〉",
@@ -1674,8 +1674,8 @@
           "description": "Trước khi gửi, chúng tôi cho bạn xem toàn bộ. Chỉ nghệ sĩ mới biết đúng sai về mặt dữ kiện, nên bước này không thể bỏ qua."
         },
         {
-          "title": "Gửi đi — 1-3 tuần",
-          "description": "Chúng tôi chia nhỏ để giữ uy tín tên miền. Bắn hết một lần thì chỉ vào hòm thư rác."
+          "title": "Gửi — 1 đến 3 tuần",
+          "description": "Chúng tôi gửi theo đợt, theo tính chất đầu báo và theo khu vực — đó là cách thư vào được hộp thư đến."
         },
         {
           "title": "Báo cáo",
@@ -1684,8 +1684,8 @@
       ]
     },
     "review": {
-      "title": "Chúng tôi không nhận mọi bản nhạc",
-      "lead": "Chúng tôi chỉ quảng bá âm nhạc hay. Nói chính xác hơn — chúng tôi xem những nơi mình gửi tới có nghe hết bản nhạc này không.",
+      "title": "Trước hết xem có nơi nào để gửi không",
+      "lead": "Chúng tôi không nhận mọi bản nhạc. Chúng tôi không chấm nhạc hay hay dở, mà xem trong số các đầu mối mình tiếp cận được có nơi nào sẽ đón nhận bản nhạc này không. Không có thì không nhận — cầm tiền rồi làm việc chắc chắn không thành là điều tệ nhất cho cả hai bên.",
       "criteria": [
         {
           "title": "Có đầu mối nào để đến được không",
@@ -1696,37 +1696,29 @@
           "body": "Thông cáo báo chí không phải bài giới thiệu mà là nguyên liệu để nhà báo dựng thành bài. Chỉ mỗi câu \"vừa ra bài mới\" thì không ai viết cả."
         },
         {
-          "title": "Chúng tôi có thích không",
-          "body": "Không thể giới thiệu cho người khác thứ âm nhạc mà mình không thích. Email kiểu đó, người đọc nhận ra ngay."
+          "title": "Chúng tôi có nghe hết không",
+          "body": "Không thể giới thiệu cho người khác bản nhạc mà mình chưa nghe hết. Email kiểu đó, người đọc nhận ra ngay."
         }
       ],
-      "rejection": "Khi khó nhận, chúng tôi sẽ ghi rõ lý do và gửi lại cho bạn. Phần lớn không phải là \"nhạc dở\" mà là \"trong số các đầu mối chúng tôi tiếp cận được, không tìm ra nơi nào sẽ đón nhận bản nhạc này\". Trong trường hợp đó, chúng tôi ghi lại cho bạn những nơi nên gửi, trong phạm vi hiểu biết của mình.",
+      "rejection": "Vòng duyệt miễn phí và chúng tôi trả lời trong 3 ngày làm việc. Khi khó nhận, chúng tôi ghi rõ lý do, kèm theo những nơi bạn nên gửi trong phạm vi hiểu biết của mình.",
       "why": "Có hai lý do để duyệt. Đối tượng chúng tôi gửi mỗi lần đều là cùng những con người ấy, nên cứ gửi đi gửi lại tài liệu không phù hợp thì chính mối quan hệ đó bị bào mòn. Và lòng tin một khi đã đốt thì không lấy lại được."
     },
     "notPromised": {
-      "title": "Những điều chúng tôi không hứa",
+      "title": "Nói trước cho rõ",
       "subtitle": "Chúng tôi sẽ không nói là làm được điều mình không làm được.",
       "items": [
         {
           "title": "Chúng tôi không bảo đảm bài báo được đăng",
-          "body": "Viết hay không là do nhà báo quyết định. Nếu có nơi nào bảo đảm, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo."
-        },
-        {
-          "title": "Chúng tôi không bảo đảm vào playlist hay các con số streaming",
-          "body": "Chúng tôi làm việc khác với những dịch vụ bán lượt xem, lượt đăng ký, lượt nghe. Những con số đó mua thì tăng, nhưng chẳng để lại gì."
-        },
-        {
-          "title": "Chúng tôi không hứa xuất hiện trên một đầu mối cụ thể nào",
-          "body": "Thứ chúng tôi kiểm soát được chỉ tới mức \"đến tay ai, dưới hình thức nào\". Phần sau đó là phần của âm nhạc."
+          "body": "Viết hay không là do ban biên tập của từng nơi quyết định. Nếu có chỗ nào bảo đảm, thì đó là mua quảng cáo rồi làm cho nó trông giống bài báo. Phần chúng tôi chịu trách nhiệm là khối lượng thực thi đã chốt trước khi gửi, và điều đó được chứng minh bằng báo cáo."
         }
       ],
-      "instead": "Thay vào đó, chúng tôi hứa khối lượng thực thi. Khi bản nhạc qua vòng duyệt, chúng tôi chốt bằng con số và báo cho bạn biết sẽ làm những tài liệu gì, gửi tới bao nhiêu đầu mối thuộc loại nào; kết thúc thì chứng minh bằng báo cáo."
+      "instead": "Thanh toán diễn ra sau khi qua vòng duyệt và chốt khối lượng thực thi. Nếu bạn dừng trước khi bắt tay vào làm, chúng tôi hoàn lại toàn bộ."
     },
     "pricing": {
       "title": "Giá",
       "subtitle": "Một gói duy nhất. Chúng tôi không chia hạng.",
-      "note": "Đến hết {{until}}, chúng tôi nhận theo giá đối tác sớm. Vì mới bắt đầu tích lũy hồ sơ bài đăng nên chưa có căn cứ để lấy giá gốc. Hết thời hạn sẽ trở lại giá gốc {{list}}.",
-      "capacity": "Mỗi tháng chúng tôi chỉ nhận 3 nghệ sĩ. Mỗi ca chiếm trọn năm ngày tập trung, nhiều hơn thế thì không giữ được lời hứa."
+      "note": "Phần việc này lâu nay là một hạng mục cố định của gói dự án phát hành, trị giá {{list}}. Lần đầu tách ra bán riêng, đến hết {{until}} chúng tôi nhận theo giá đối tác sớm — đổi lại, bạn cho phép chúng tôi công bố hồ sơ và báo cáo của ca này.",
+      "capacity": "Mỗi tháng chúng tôi chỉ nhận 3 nghệ sĩ. Mỗi ca chiếm trọn năm ngày tập trung, nhiều hơn thế thì không giữ được lời hứa. Thanh toán sau khi qua vòng duyệt, và trước khi bắt tay vào làm thì hoàn lại toàn bộ."
     },
     "faq": {
       "title": "Câu hỏi thường gặp",
@@ -1741,8 +1733,8 @@
           "a": "Vẫn đặt được. Làm ở đâu cũng được, miễn là bản nhạc đã hoàn thiện. Tuy nhiên vòng duyệt thì vẫn như nhau."
         },
         {
-          "q": "Vì sao gửi đi lại mất tới 1-3 tuần?",
-          "a": "Dồn email gửi hết trong một ngày thì tên miền gửi bị xếp vào thư rác. Khi đó cả chiến dịch kết thúc mà không tới được hòm thư đến. Đó cũng là lý do các công ty bắn hết trong một ngày không có hiệu quả."
+          "q": "Vì sao việc gửi mất một đến ba tuần?",
+          "a": "Mỗi loại đầu báo nhận một bản viết khác nhau, và thư gửi dồn một lúc thì không vào được hộp thư đến. Gửi lần lượt theo khu vực và ngôn ngữ thì số lượng thực sự được đọc nhiều hơn. 〈Namsan Tower Lights〉 đã đến 1.218 nơi trong mười hai ngày."
         },
         {
           "q": "Chúng tôi cần chuẩn bị những gì?",
@@ -1765,7 +1757,7 @@
       "titleLine1": "Vẫn còn những nơi",
       "titleHighlight": "mà âm nhạc có thể chạm tới",
       "subtitleLine1": "Gửi bản nhạc qua KakaoTalk, chúng tôi trả lời trong 3 ngày làm việc.",
-      "subtitleLine2": "Ngay cả khi khó nhận, chúng tôi cũng ghi rõ lý do và trả lời bạn.",
+      "subtitleLine2": "Vòng duyệt miễn phí, qua rồi mới thanh toán.",
       "imageAlt": "Phòng làm việc của Studio NOL"
     }
   },

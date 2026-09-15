@@ -1525,8 +1525,8 @@
     "hero": {
       "title": "Chiqarish PRi",
       "subtitleLine1": "Shu albomni yoritadigan Koreya musiqa nashrlariga va 60 ta mamlakat nashrlariga — har biri o'qiydigan tilda",
-      "subtitleLine2": "{{intro}} · oyiga 3 ta ijodkor · faqat saralashdan o'tgan musiqa",
-      "badge": "To'liq narx {{list}} → {{intro}} ({{until}} gacha dastlabki hamkor narxi)",
+      "subtitleLine2": "Press-reliz yozishdan tortib yuborish va hisobotgacha — {{intro}} · saralashdan o'tgach to'laysiz",
+      "badge": "Chiqarish to'plamida {{list}} evaziga taqdim etilgan ish · dastlabki hamkor narxi {{intro}} ({{until}} gacha)",
       "alt": "Tungi Seul markazi manzarasi — chiroqlar ostida yoyilgan shahar"
     },
     "quickAnswers": {
@@ -1535,19 +1535,19 @@
       "items": [
         {
           "q": "Narxi qancha?",
-          "a": "{{intro}} (VATsiz). To'liq narx {{list}}, {{until}} gacha esa dastlabki hamkor narxida olamiz. Qo'shimcha to'lov yo'q — quyida yozilganlarning hammasi shunga kiradi."
+          "a": "{{intro}} (VATsiz). Qo'shimcha to'lov yo'q — quyida yozilganlarning hammasi shunga kiradi. Musiqa saralashdan o'tib, yuborish hajmini siz bilan aniqlab olganimizdan keyin to'laysiz. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz."
         },
         {
           "q": "Nima qilib berasiz?",
-          "a": "Press-relizni besh tilda yozamiz, press-kit sahifasini tayyorlaymiz va faqat shu albomni yoritadigan Koreya musiqa nashrlari hamda chet eldagi nashr, radio, plastinka do'koni va festivallarga yuboramiz. Butun albomni tinglash videosini ham tayyorlaymiz."
+          "a": "Press-relizni besh tilda yozamiz, press-kit sahifasini tayyorlaymiz va shunday musiqani yoritadigan Koreya musiqa nashrlari hamda chet eldagi nashr, radio, plastinka do'koni va festivallarni topib yuboramiz. Butun albomni tinglash videosini ham tayyorlaymiz."
         },
         {
           "q": "Qancha vaqt oladi?",
-          "a": "Materiallarni tayyorlashga 5 kun, yuborishga 1-3 hafta. Yuborishni bir kunda tugatmasligimizning sababi — domen obro'si. 1,000 dan ortiq xatni bir yo'la otsangiz, hammasi spamga tushadi va butun ish behuda ketadi."
+          "a": "Materiallarni tayyorlashga 5 kun, yuborishga 1-3 hafta. Yuborish bir kunda tugamaydi, chunki har bir manzilga yoziladigan matn boshqacha — tahririyat, chet el vebzinlari, radio va plastinka do'konlari har biri o'z shaklini kutadi. Hududlar va tillar tartibida bo'lib yuboramiz. «Namsan Tower Lights» 1,218 manzilga 12 kun davomida yetib bordi."
         },
         {
-          "q": "Maqola chiqishini kafolatlaysizmi?",
-          "a": "Kafolatlamaymiz. Chunki buni kafolatlab bo'lmaydi. Kafolatlayman degan kompaniya bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi. Biz va'da qiladigan narsa — bajarilgan ish hajmi. Qanday materiallar tayyorlanib, qanday turdagi nechta manzilga yuborilganini hisobot bilan isbotlaymiz."
+          "q": "Nimani va'da qilasiz?",
+          "a": "Musiqa saralashdan o'tsa, yuborishdan oldin qanday materiallar tayyorlanishini va qanday turdagi nechta manzilga yuborilishini raqamlar bilan aniq aytamiz. Ish tugagach, o'sha raqam bo'yicha bajarilganini hisobotda ko'rsatamiz. Maqola chiqishi esa nashr tahririyatining qarori — buni hech kim va'da qila olmaydi. Bizning zimmamizdagi ish — musiqani o'sha tahririyatlarga joyida yetkazish."
         }
       ]
     },
@@ -1565,7 +1565,7 @@
           "Kimga boradi",
           "908 manzilga bir yo'la",
           "Musiqa nashrlari",
-          "Faqat yoritadiganlarga"
+          "Shunday musiqani yoritadigan joylarni topib — «Namsan Tower Lights» 60 mamlakat, 1,218 manzil"
         ],
         [
           "Matn",
@@ -1589,7 +1589,7 @@
           "Narx",
           "77 000–660 000 KRW",
           "830 000–3 490 000 KRW",
-          "{{intro}}"
+          "{{intro}} (to'plamda {{list}} ga teng)"
         ]
       ],
       "note": "So'rov doirasida narxini e'lon qilgan koreyalik musiqaga ixtisoslashgan PR agentligi topilmadi (2026-yil sentyabr). Press-reliz tarqatadiganlar ko'p, ammo ularning ro'yxati musiqa nashrlari emas; xuddi shu xizmatni sotadigan chet el agentliklari esa boshqa narx darajasida.",
@@ -1597,7 +1597,7 @@
     },
     "evidence": {
       "title": "Amalda mana shunday yuborganmiz",
-      "subtitle": "Yozuv gapdan aniqroq. Bular o'zimiz olib borgan kampaniyalarning o'lchangan raqamlari.",
+      "subtitle": "Yozuv gapdan aniqroq. Bular o'zimiz olib borgan kampaniyalarning o'lchangan raqamlari. Yuborish hajmi janr va til hududiga qarab bir necha yuz manzildan ming nafardan ortig'igacha o'zgaradi — tor janr tor ro'yxat bilan ketgani to'g'ri.",
       "cases": [
         {
           "title": "Mariko & Yukie «Namsan Tower Lights»",
@@ -1674,8 +1674,8 @@
           "description": "Yuborishdan oldin hammasini ko'rsatamiz. Faktlarni faqat ijodkorning o'zi biladi, shuning uchun bu bosqichni o'tkazib yuborib bo'lmaydi."
         },
         {
-          "title": "Yuborish — 1-3 hafta",
-          "description": "Domen obro'sini saqlash uchun bo'lib-bo'lib yuboramiz. Bir yo'la otilsa, spam papkasiga tushadi."
+          "title": "Yuborish — 1–3 hafta",
+          "description": "Nashr turiga va hududga qarab to'lqinlar bilan yuboramiz — xat kiruvchi qutiga shunday yetib boradi."
         },
         {
           "title": "Hisobot",
@@ -1684,8 +1684,8 @@
       ]
     },
     "review": {
-      "title": "Har qanday musiqani olavermaymiz",
-      "lead": "Biz faqat yaxshi musiqani targ'ib qilamiz. Aniqrog'i — biz yozadigan nashrlar uni oxirigacha tinglaydimi, shuni ko'ramiz.",
+      "title": "Avval yuboradigan joy bor-yo'qligini ko'ramiz",
+      "lead": "Har qanday musiqani olavermaymiz. Biz musiqa yaxshi ishlanganmi degan savolga baho bermaymiz — biz yetib boradigan nashrlar orasida bu musiqani oladigan joy bormi, shuni ko'ramiz. Bo'lmasa olmaymiz — pul olib, chiqmasligi aniq ishni qilish ikkala tomon uchun ham eng yomoni.",
       "criteria": [
         {
           "title": "Yetib boradigan nashr bormi",
@@ -1696,37 +1696,29 @@
           "body": "Press-reliz tanishtiruv matni emas, jurnalist maqola qiladigan xomashyo. Faqat \"yangi qo'shiq chiqardi\" degani bilan hech kim yozmaydi."
         },
         {
-          "title": "O'zimizga yoqadimi",
-          "body": "Yoqmagan musiqani boshqaga tavsiya qilib bo'lmaydi. Bunday xat o'qiganga bilinib qoladi."
+          "title": "O'zimiz oxirigacha tinglaymizmi",
+          "body": "Oxirigacha tinglamagan musiqani boshqaga tavsiya qilib bo'lmaydi. Bunday xat o'qiganga bilinib qoladi."
         }
       ],
-      "rejection": "Ololmaydigan bo'lsak, sababini yozib yuboramiz. Ko'p hollarda bu \"musiqa yomon\" emas, balki \"biz yetib boradigan nashrlar orasidan bu musiqani oladigan joyni topa olmadik\" degani bo'ladi. Bunday paytda qayerga yuborganingiz ma'qulligini bilganimizcha yozib beramiz.",
+      "rejection": "Saralash bepul va 3 ish kuni ichida javob beramiz. Ololmaydigan bo'lsak, sababini yozamiz va qayerga yuborganingiz ma'qulligini bilganimizcha qo'shib beramiz.",
       "why": "Saralashning ikkita sababi bor. Har safar yuboradigan manzillarimiz o'sha-o'sha odamlar, shuning uchun mos kelmaydigan materialni qayta-qayta yuborsak, munosabatning o'zi sarflanib bitadi. Va bir marta kuydirilgan ishonch qayta tiklanmaydi."
     },
     "notPromised": {
-      "title": "Va'da qilmaydigan narsalarimiz",
+      "title": "Oldindan aytib qo'yadiganimiz",
       "subtitle": "Qo'limizdan kelmaydigan ishni keladi deb aytmaymiz.",
       "items": [
         {
           "title": "Maqola chiqishini kafolatlamaymiz",
-          "body": "Yozish-yozmaslikni jurnalistning o'zi hal qiladi. Kafolatlaydigan joy bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi."
-        },
-        {
-          "title": "Pleylistga kirish yoki striming raqamlarini kafolatlamaymiz",
-          "body": "Ko'rishlar, obunachilar va eshitishlar sonini sotadigan xizmatlardan boshqa ish qilamiz. U raqamlar sotib olsangiz ko'tariladi, lekin ortidan hech narsa qoldirmaydi."
-        },
-        {
-          "title": "Muayyan nashrda chiqishni va'da qilmaymiz",
-          "body": "Biz nazorat qiladigan narsa \"kimga, qanday shaklda yetib borishi\" bilan tugaydi. Undan keyingisi musiqaning o'ziga bog'liq."
+          "body": "Yozish-yozmaslikni nashr tahririyati hal qiladi. Kafolatlaydigan joy bo'lsa, u reklama sotib olib, uni maqolaga o'xshatib ko'rsatadi. Biz javob beradigan narsa — yuborishdan oldin aniqlab aytilgan ish hajmi, va buni hisobot isbotlaydi."
         }
       ],
-      "instead": "Buning o'rniga bajarilgan ish hajmini va'da qilamiz. Saralashdan o'tganda, qanday materiallar tayyorlab, qanday turdagi nechta manzilga yuborishimizni raqamlar bilan aniq aytamiz, ish tugagach esa hisobot bilan isbotlaymiz."
+      "instead": "To'lov saralashdan o'tib, ish hajmi aniqlangandan keyin bo'ladi. Ishga kirishishdan oldin to'xtatsangiz, hammasini qaytaramiz."
     },
     "pricing": {
       "title": "Narx",
       "subtitle": "Yagona xizmat. Darajalarga bo'lmaymiz.",
-      "note": "{{until}} gacha dastlabki hamkor narxida olamiz. Chop etilish tarixini endigina yig'a boshlaganimiz uchun to'liq narx so'rashga hali asos yo'q. Muddat tugagach, to'liq narx {{list}} ga qaytadi.",
-      "capacity": "Oyiga atigi 3 ta ijodkorni olamiz. Bitta ishga besh kun to'liq sarflanadi, undan ortig'ida bergan so'zimizda tura olmaymiz."
+      "note": "Bu ish reliz loyihasi to'plamining doimiy qismi sifatida {{list}} evaziga taqdim etib kelingan. Endi uni birinchi marta alohida xizmat sifatida chiqarayotganimiz uchun {{until}} gacha dastlabki hamkor narxida olamiz — buning evaziga ish tajribasi va hisobotni ommaga ko'rsatishga ruxsat berasiz.",
+      "capacity": "Oyiga atigi 3 ta ijodkorni olamiz. Bitta ishga besh kun to'liq sarflanadi, undan ortig'ida bergan so'zimizda tura olmaymiz. To'lov saralashdan o'tgandan keyin, ishga kirishishdan oldin esa pul to'liq qaytariladi."
     },
     "faq": {
       "title": "Ko'p so'raladigan savollar",
@@ -1741,8 +1733,8 @@
           "a": "Bera olasiz. Qayerda tayyorlangan bo'lsa ham, tugallangan musiqa bo'lsa bo'ldi. Faqat saralash baribir o'tkaziladi."
         },
         {
-          "q": "Nega yuborish 1-3 hafta oladi?",
-          "a": "Xatlarni bir kunda jamlab yuborsangiz, yuboruvchi domen spam deb belgilanadi. Shunda butun kampaniya kiruvchi xatlar qutisiga yetib bormay tugaydi. Hammasini bir kunda otadigan kompaniyalarning samarasi yo'qligining sababi ham shu."
+          "q": "Nega yuborish bir-uch hafta davom etadi?",
+          "a": "Har bir nashr turiga boshqacha matn ketadi, bir yo'la yuborilgan xat esa kiruvchi qutiga yetib bormaydi. Hudud va til bo'yicha navbat bilan yuborilganda albom haqiqatan ko'proq o'qiladi. «Namsan Tower Lights» o'n ikki kun ichida 1 218 joyga yetdi."
         },
         {
           "q": "Nima tayyorlashimiz kerak?",
@@ -1765,7 +1757,7 @@
       "titleLine1": "Musiqangiz yetib boradigan joylar",
       "titleHighlight": "hali bor",
       "subtitleLine1": "KakaoTalk orqali musiqani yuboring, 3 ish kuni ichida javob beramiz.",
-      "subtitleLine2": "Ololmaydigan bo'lsak ham, sababini yozib yuboramiz.",
+      "subtitleLine2": "Saralash bepul, o'tgandan keyingina to'laysiz.",
       "imageAlt": "Studio NOL ish xonasi"
     }
   },

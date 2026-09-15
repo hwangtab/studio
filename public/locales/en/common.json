@@ -1553,8 +1553,8 @@
     "hero": {
       "title": "Music Release PR",
       "subtitleLine1": "To the Korean music outlets and media in 60 countries that would cover it — in the language each one reads",
-      "subtitleLine2": "{{intro}} · 3 acts a month · Only music that passes our review",
-      "badge": "List price {{list}} → {{intro}} (early-partner price until {{until}})",
+      "subtitleLine2": "From writing the press release to the send-out and the report — {{intro}} · you pay after the review",
+      "badge": "Part of our release bundle at {{list}} · early-partner price {{intro}} (through {{until}})",
       "alt": "Seoul at night, the city spread out under its lights"
     },
     "quickAnswers": {
@@ -1563,19 +1563,19 @@
       "items": [
         {
           "q": "How much is it?",
-          "a": "{{intro}}, excluding VAT. The list price is {{list}}, and until {{until}} we take it at the early-partner price. There are no extras — everything listed below is included."
+          "a": "{{intro}}, excluding VAT. There are no extras — everything listed below is included. You pay after the music passes review and we've confirmed the size of the send-out with you. If you stop before production begins, you get all of it back."
         },
         {
           "q": "What do you actually do?",
-          "a": "We write the press release in five languages, build a press-kit page, and send it to the Korean music outlets and the overseas media, radio, record shops and festivals that would cover the record. We also make a full-album listening video."
+          "a": "We write the press release in five languages, build a press-kit page, and go find the Korean music outlets and the overseas media, radio stations, record shops and festivals that cover music like this. We also make a full-album listening video."
         },
         {
           "q": "How long does it take?",
-          "a": "Five days to produce the materials, one to three weeks to send them out. We don't finish the send-out in a single day because of domain reputation — fire off more than a thousand emails at once and they all get filed as spam, which makes the whole thing pointless."
+          "a": "Five days to produce the materials, one to three weeks to send them out. The send-out doesn't finish in a day because what we write differs from outlet to outlet — newsdesks, overseas webzines, radio stations and record shops each want a different form. We work through them region by region, language by language. Namsan Tower Lights went out to 1,218 outlets over twelve days."
         },
         {
-          "q": "Do you guarantee coverage?",
-          "a": "We don't. It isn't something anyone can guarantee. If a company says it can, what it is really doing is buying advertising and making it look like an article. What we promise is the work itself — the report proves what we made and how many outlets of what kind received it."
+          "q": "What do you actually promise?",
+          "a": "Once the music passes review, we tell you in numbers — before anything goes out — what materials we'll make and how many outlets of what kind will receive them. When it's done, the report shows we did exactly that. Whether a piece runs is the outlet's editorial decision, and nobody can promise that. What we take on is making sure the music arrives at those desks properly."
         }
       ]
     },
@@ -1593,7 +1593,7 @@
           "Who it goes to",
           "908 outlets, all at once",
           "Music outlets",
-          "Only the ones that would cover it"
+          "We go find the ones that cover it — 1,218 outlets in 60 countries for Namsan Tower Lights"
         ],
         [
           "The copy",
@@ -1617,7 +1617,7 @@
           "Price",
           "77,000–660,000 KRW",
           "830,000–3,490,000 KRW",
-          "{{intro}}"
+          "{{intro}} (worth {{list}} in the bundle)"
         ]
       ],
       "note": "We found no Korean music-specialist PR agency publishing its prices (September 2026). Plenty of firms will blast a press release, but their lists are not music outlets — and the overseas agencies selling the same thing are an order of magnitude more.",
@@ -1625,7 +1625,7 @@
     },
     "evidence": {
       "title": "This is how we actually sent it",
-      "subtitle": "Records are more precise than claims. These are measured figures from campaigns we ran ourselves.",
+      "subtitle": "Records are more precise than claims. These are measured figures from campaigns we ran ourselves. The size of a send-out swings from the low hundreds to the low thousands depending on genre and language — a narrow genre should go out narrow.",
       "cases": [
         {
           "title": "Mariko & Yukie, Namsan Tower Lights",
@@ -1702,8 +1702,8 @@
           "description": "You see all of it before anything goes out. Only the artist knows whether the facts are right, so this step can't be skipped."
         },
         {
-          "title": "Send-out — 1 to 3 weeks",
-          "description": "We spread it out to protect our sending domain. Fire it all at once and it lands in the spam folder."
+          "title": "Sending — 1 to 3 weeks",
+          "description": "We send in waves, by the kind of outlet and by region — that is what gets the mail into inboxes."
         },
         {
           "title": "Report",
@@ -1712,8 +1712,8 @@
       ]
     },
     "review": {
-      "title": "We don't take every record",
-      "lead": "We only promote music we think is good. To put it precisely — we ask whether the outlets we write to would listen to it all the way through.",
+      "title": "First we look at whether there's anywhere to send it",
+      "lead": "We don't take every record. We're not judging whether the music is well made — we're asking whether, among the outlets we reach, there is anywhere that would take it. If there isn't, we don't take the job. Taking money for something that won't work is the worst outcome for both of us.",
       "criteria": [
         {
           "title": "Is there an outlet it can reach",
@@ -1724,37 +1724,29 @@
           "body": "A press release isn't a blurb, it's the raw material a journalist turns into an article. \"They put out a new song\" alone gets written up by nobody."
         },
         {
-          "title": "Do we like it",
-          "body": "You can't recommend music you don't like to someone else. The person reading that email can tell."
+          "title": "Do we listen to it all the way through",
+          "body": "You can't recommend music you didn't finish listening to. The person reading that email can tell."
         }
       ],
-      "rejection": "When we can't take it, we write out the reason and send it back. Most of the time it isn't \"the music is bad\" but \"we couldn't find anywhere among the outlets we reach that would take this music.\" In that case we write down whatever we know about where you'd do better to send it.",
+      "rejection": "The review is free and you'll hear back within three business days. When we can't take it, we write out the reason, and we add whatever we know about where you'd do better to send it.",
       "why": "There are two reasons we review. We send to the same people every time, so repeatedly sending them material that doesn't fit burns that relationship itself. And trust, once burned, does not come back."
     },
     "notPromised": {
-      "title": "What we don't promise",
+      "title": "What we'll tell you up front",
       "subtitle": "We won't tell you we can do what we can't.",
       "items": [
         {
           "title": "We do not guarantee coverage",
-          "body": "Whether to write the piece is the journalist's call. If somewhere guarantees it, what they're doing is buying advertising and making it look like an article."
-        },
-        {
-          "title": "We do not guarantee playlist placements or streaming numbers",
-          "body": "We do a different job from the services that sell views, followers and plays. Those numbers rise when you buy them and leave nothing behind."
-        },
-        {
-          "title": "We do not promise exposure in any particular outlet",
-          "body": "What we control ends at \"who it reaches, and in what form.\" What comes after that is down to the music."
+          "body": "Whether to run a piece is the outlet's editorial decision. If somewhere guarantees it, what they're doing is buying advertising and making it look like an article. What we're answerable for is the volume of work we confirm with you before the send-out — and the report proves it."
         }
       ],
-      "instead": "What we promise instead is the work. When the music passes review, we tell you in numbers what we'll make and how many outlets of what kind we'll send it to, and when it's over the report proves it."
+      "instead": "You pay after the music passes review and the volume of work is confirmed. If you stop before production begins, you get all of it back."
     },
     "pricing": {
       "title": "Price",
       "subtitle": "One single product. We don't split it into tiers.",
-      "note": "Until {{until}} we take it at the early-partner price. We've only just begun building a record of placements, so we don't yet have grounds to charge the list price. Once the period ends it returns to the list price of {{list}}.",
-      "capacity": "We take only three acts a month. Each one takes five days of concentrated work, so beyond that we couldn't keep our word."
+      "note": "We've been providing this work at {{list}} as a fixed part of the release-project bundle. Now that we're offering it on its own for the first time, we take it at the early-partner price until {{until}} — in return for letting us publish the case and the report.",
+      "capacity": "We take only three acts a month. Each one takes five days of concentrated work, so beyond that we couldn't keep our word. You pay after the review passes, and before production begins you can get all of it back."
     },
     "faq": {
       "title": "Frequently asked",
@@ -1769,8 +1761,8 @@
           "a": "You can. Wherever it was made, a finished record is enough. The review is exactly the same, though."
         },
         {
-          "q": "Why does the send-out take 1-3 weeks?",
-          "a": "Sending the mail all in one day gets the sending domain classified as spam. Then the entire campaign ends without ever reaching an inbox. It's also why the companies that blast it in a day get no results."
+          "q": "Why does sending take one to three weeks?",
+          "a": "Each kind of outlet gets a different piece of writing, and mail sent all at once does not reach inboxes. Going region by region and language by language gets the record actually read more often. Namsan Tower Lights went to 1,218 places over twelve days."
         },
         {
           "q": "What do we need to prepare?",
@@ -1793,7 +1785,7 @@
       "titleLine1": "There are still places",
       "titleHighlight": "your music can reach",
       "subtitleLine1": "Send us the music on KakaoTalk and we'll answer within 3 business days.",
-      "subtitleLine2": "Even when we can't take it, we write out the reason and send it back.",
+      "subtitleLine2": "The review is free, and you pay only once it passes.",
       "imageAlt": "The Studio NOL workroom"
     }
   },

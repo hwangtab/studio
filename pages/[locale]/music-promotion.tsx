@@ -260,6 +260,47 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       />
 
       {/* 이 페이지의 핵심 논거 — 우리 가격이 비싼 게 아니라 다른 물건이라는 것 */}
+      <Section className="bg-gray-50 dark:bg-gray-900/40">
+        <SectionHeading
+          title={t('musicPromotion.evidence.title')}
+          subtitle={t('musicPromotion.evidence.subtitle')}
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-2">
+          {cases.map((item, index) => (
+            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.1 })}>
+              <BaseCard variant="glass" className="h-full p-6">
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.meta}</p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {item.stats.map((stat) => (
+                    <li
+                      key={stat}
+                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary dark:text-primary-lighter"
+                    >
+                      {stat}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                  {item.note}
+                </p>
+                {CASE_LINKS[index] && (
+                  <a
+                    href={CASE_LINKS[index]}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline"
+                  >
+                    {t('musicPromotion.evidence.linkLabel')}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                )}
+              </BaseCard>
+            </m.div>
+          ))}
+        </div>
+      </Section>
+
       <Section>
         <SectionHeading
           title={t('musicPromotion.comparison.title')}
@@ -373,48 +414,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         </p>
       </Section>
 
-      {/* 게재 실적 기록이 아직 얇으므로 실행량으로 증명한다 */}
-      <Section className="bg-gray-50 dark:bg-gray-900/40">
-        <SectionHeading
-          title={t('musicPromotion.evidence.title')}
-          subtitle={t('musicPromotion.evidence.subtitle')}
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {cases.map((item, index) => (
-            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.1 })}>
-              <BaseCard variant="glass" className="h-full p-6">
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.meta}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {item.stats.map((stat) => (
-                    <li
-                      key={stat}
-                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary dark:text-primary-lighter"
-                    >
-                      {stat}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                  {item.note}
-                </p>
-                {CASE_LINKS[index] && (
-                  <a
-                    href={CASE_LINKS[index]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline"
-                  >
-                    {t('musicPromotion.evidence.linkLabel')}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                )}
-              </BaseCard>
-            </m.div>
-          ))}
-        </div>
-      </Section>
-
       <Section>
         <SectionHeading
           title={t('musicPromotion.deliverables.title')}
@@ -458,7 +457,36 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         </ol>
       </Section>
 
-      {/* 심사 — 가격이 낮을수록 "싸서 대충 하는 게 아니다"를 말해야 한다 */}
+      <Section id="pricing" className="scroll-mt-32">
+        <SectionHeading
+          title={t('musicPromotion.pricing.title')}
+          subtitle={t('musicPromotion.pricing.subtitle')}
+        />
+        {pressOffer && (
+          <div className="mx-auto mt-8 max-w-md">
+            <PricingCard
+              id={pressOffer.id}
+              title={pressOffer.title}
+              price={pressOffer.priceDisplay}
+              description={pressOffer.description}
+              features={deliverables.map((item) => item.title)}
+              recommended
+              locale={locale}
+              /* ctaLabel이 없으면 PricingCard가 버튼을 통째로 그리지 않는다. */
+              ctaLabel={t('musicPromotion.cta.inquiry')}
+              ctaHref={siteConfig.contact.kakaoUrl}
+              trackingComponent="MusicPromotionPricing"
+            />
+          </div>
+        )}
+        <div className="mx-auto mt-6 max-w-2xl space-y-3 text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>{t('musicPromotion.pricing.note', priceVars)}</p>
+          <p className="font-medium text-gray-600 dark:text-gray-300">
+            {t('musicPromotion.pricing.capacity')}
+          </p>
+        </div>
+      </Section>
+
       <Section>
         <div className="mx-auto max-w-3xl">
           <SectionHeading title={t('musicPromotion.review.title')} />
@@ -487,7 +515,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         </div>
       </Section>
 
-      {/* 약속하지 않는 것을 먼저 말하는 것이 이 바닥에서는 신뢰 신호다 */}
       <Section className="bg-gray-50 dark:bg-gray-900/40">
         <SectionHeading
           title={t('musicPromotion.notPromised.title')}
@@ -508,36 +535,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
           <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-200">
             {t('musicPromotion.notPromised.instead')}
-          </p>
-        </div>
-      </Section>
-
-      <Section id="pricing" className="scroll-mt-32">
-        <SectionHeading
-          title={t('musicPromotion.pricing.title')}
-          subtitle={t('musicPromotion.pricing.subtitle')}
-        />
-        {pressOffer && (
-          <div className="mx-auto mt-8 max-w-md">
-            <PricingCard
-              id={pressOffer.id}
-              title={pressOffer.title}
-              price={pressOffer.priceDisplay}
-              description={pressOffer.description}
-              features={deliverables.map((item) => item.title)}
-              recommended
-              locale={locale}
-              /* ctaLabel이 없으면 PricingCard가 버튼을 통째로 그리지 않는다. */
-              ctaLabel={t('musicPromotion.cta.inquiry')}
-              ctaHref={siteConfig.contact.kakaoUrl}
-              trackingComponent="MusicPromotionPricing"
-            />
-          </div>
-        )}
-        <div className="mx-auto mt-6 max-w-2xl space-y-3 text-center text-sm text-gray-500 dark:text-gray-400">
-          <p>{t('musicPromotion.pricing.note', priceVars)}</p>
-          <p className="font-medium text-gray-600 dark:text-gray-300">
-            {t('musicPromotion.pricing.capacity')}
           </p>
         </div>
       </Section>
