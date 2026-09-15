@@ -102,10 +102,18 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   // 스토리 상세는 스크롤 시 StickyBottomCTA(하단 바)가 상시 카카오 CTA 역할을 하므로
   // 전역 KakaoFab을 숨겨 우하단 요소 중복·시각 충돌을 제거한다.
   const isStoryDetail = router.pathname === '/[locale]/stories/[id]';
-  // 펀딩 후원 페이지는 모바일에서 FundingMobileCta(전폭 하단 고정 바)가 항상 떠 있다.
-  // 전역 KakaoFab·ScrollToTop과 같은 우하단 자리라 겹친다 — 계약 서명 화면과 같은 이유로
-  // 이 페이지에서는 떠 있는 버튼을 전부 치운다. 카카오 문의는 헤더 버튼으로 계속 갈 수 있다.
+  // 펀딩 후원 페이지는 결제 한 건만 하러 오는 화면이다. 계약 서명 화면과 같은 이유로
+  // 떠 있는 버튼을 전부 치운다 — 폼과 결제 위젯이 화면 아래까지 차서 손가락이 닿는 자리가
+  // 겹친다. 카카오 문의는 헤더 버튼으로 계속 갈 수 있다.
   const isFundingPledge = router.pathname === '/[locale]/funding/[slug]/pledge';
+  /**
+   * 전폭 하단 고정 바(FundingMobileCta)가 뜨는 건 후원 페이지가 아니라 **펀딩 상세**다.
+   * 이 주석이 한동안 위 후원 페이지에 붙어 있었는데 사실이 아니었고(그 페이지는 바를 쓰지
+   * 않는다), 그래서 정작 겹치는 상세 화면은 아무도 막지 않아 카카오 FAB이 「후원하기」
+   * 버튼의 오른쪽 절반을 덮고 있었다. 바는 `lg:hidden`이라 데스크톱에는 없으므로 FAB도
+   * 그 폭에서만 숨긴다.
+   */
+  const isFundingDetail = router.pathname === '/[locale]/funding/[slug]';
   /**
    * 계약 화면에서는 떠 있는 버튼을 전부 치운다.
    *
@@ -198,7 +206,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       {!isBareLayout && <Footer locale={locale} />}
-      {!isStoryDetail && !isFundingPledge && !isBareLayout && <KakaoFab locale={locale} />}
+      {!isStoryDetail && !isFundingPledge && !isBareLayout && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail} />}
       {!isFundingPledge && !isBareLayout && <ScrollToTop locale={locale} />}
     </div>
   );
