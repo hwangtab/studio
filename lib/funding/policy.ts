@@ -82,7 +82,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-14-r2';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-15';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -95,7 +95,7 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
   '필수 — 후원자 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
-  '선택 — 응원 메시지, 후원자 명단 이름 공개 동의 여부',
+  '선택 — 응원 메시지, 후원자 명단 공개(이름·응원 메시지) 동의 여부',
   '자동 생성 — 주문번호, 후원 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
 
@@ -104,7 +104,7 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
   '후원(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
   '후원 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
-  '후원자 명단 공개에 동의한 경우 프로젝트 페이지에 이름 표시',
+  '후원자 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시',
 ];
 
 /**

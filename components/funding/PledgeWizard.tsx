@@ -487,7 +487,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
         )}
 
         <div className="mt-5">
-          <Field id={`${uid}-msg`} label="응원 메시지" hint="선택 항목이며 운영자에게만 보입니다.">
+          <Field id={`${uid}-msg`} label="응원 메시지" hint="선택 항목입니다. 아래 공개에 동의하시면 프로젝트 페이지에 이름과 함께 표시됩니다.">
             <TextArea rows={3} className="min-h-0" maxLength={500} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
           </Field>
         </div>
@@ -495,7 +495,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
         <div className="mt-5 space-y-2">
           <label className={choiceRow}>
             <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-            <span className="text-sm text-gray-700 dark:text-gray-200">후원자 명단에 이름 공개</span>
+            <span className="text-sm text-gray-700 dark:text-gray-200">후원자 명단에 이름과 응원 메시지 공개</span>
           </label>
           <label className={choiceRow}>
             <input type="checkbox" className={radioClass} checked={form.termsAgreed} onChange={(e) => setForm({ ...form, termsAgreed: e.target.checked })} />

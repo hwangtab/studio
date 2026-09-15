@@ -204,7 +204,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
     await expireStalePledges(NOW);
     expect((await findFundingOrderByOrderNo(stale.ok ? stale.orderNo : ''))?.status).toBe('expired');
     const s = await aggregateProjectStatus(PROJECT, NOW);
-    expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, backerPersonCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'] });
+    expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, backerPersonCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'], publicMessages: [] });
   });
 
   it('partially_refunded도 paid와 같이 센다 — 후원은 살아 있고 재고도 나간 상태다', async () => {
@@ -269,5 +269,54 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.backerCount).toBe(2);
     expect(s.backerPersonCount).toBe(2);
+  });
+});
+
+/**
+ * 응원 메시지 공개는 **동의한 판본**에 묶인다. 옛 동의 문서는 메시지를 "운영자에게만
+ * 보입니다"라고 약속했으므로, 문구를 바꿨다고 해서 이미 받은 메시지를 소급해 공개하면
+ * 동의하지 않은 처리를 하는 것이 된다.
+ */
+describe('응원 메시지 공개', () => {
+  const paidWith = async (over: Partial<CreatePledgePayload>, termsVersion?: string) => {
+    const c = await createFundingPledge(payloadFor(over), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error('생성 실패');
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
+    if (termsVersion) {
+      await client.execute({
+        sql: 'UPDATE funding_pledges SET terms_version=? WHERE order_id=(SELECT id FROM orders WHERE order_no=?)',
+        args: [termsVersion, c.orderNo],
+      });
+    }
+    return c.orderNo;
+  };
+
+  it('현재 판본에 동의했고 공개에 동의했으면 메시지가 나간다', async () => {
+    await paidWith({ customerEmail: 'm1@example.com', customerPhone: '010-9001', supporterMessage: '끝까지 함께합니다' });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicMessages.map((m) => m.message)).toContain('끝까지 함께합니다');
+  });
+
+  it('옛 판본에 동의한 건의 메시지는 나가지 않는다 — 이름은 그대로 나간다', async () => {
+    await paidWith(
+      { customerEmail: 'm2@example.com', customerPhone: '010-9002', customerName: '옛동의자', supporterMessage: '옛 문서로 남긴 말' },
+      'funding-terms-2026-01-01'
+    );
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicMessages.map((m) => m.message)).not.toContain('옛 문서로 남긴 말');
+    expect(s.publicBackers).toContain('옛동의자');
+  });
+
+  it('공개에 동의하지 않으면 이름도 메시지도 나가지 않는다', async () => {
+    await paidWith({ customerEmail: 'm3@example.com', customerPhone: '010-9003', customerName: '비공개', displayNamePublic: false, supporterMessage: '조용히 응원' });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).not.toContain('비공개');
+    expect(s.publicMessages.map((m) => m.message)).not.toContain('조용히 응원');
+  });
+
+  it('공백만 남긴 메시지는 목록에 넣지 않는다', async () => {
+    await paidWith({ customerEmail: 'm4@example.com', customerPhone: '010-9004', customerName: '공백', supporterMessage: '   ' });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicMessages.find((m) => m.name === '공백')).toBeUndefined();
   });
 });

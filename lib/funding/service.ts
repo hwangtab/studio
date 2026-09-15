@@ -228,6 +228,7 @@ export interface ProjectStatus {
   backerPersonCount: number;
   remaining: Record<string, number | null>;
   publicBackers: string[];
+  publicMessages: Array<{ name: string; message: string; at: number }>;
 }
 
 /**
@@ -261,8 +262,19 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   for (const r of project.rewards) {
     remaining[r.id] = r.totalQuantity === null ? null : Math.max(0, r.totalQuantity - (claimedBy.get(r.id) ?? 0));
   }
-  const names = await db.all<{ customer_name: string }>(sql`
-    SELECT o.customer_name FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+  /**
+   * 공개 명단. `display_name_public = 1`이 공개 동의다.
+   *
+   * **메시지는 새 판본(FUNDING_TERMS_VERSION) 이후 동의한 건만 싣는다.** 그 전 동의 문서는
+   * 응원 메시지를 "운영자에게만 보입니다"라고 약속했으므로, 문구를 바꿨다고 해서 이미 받은
+   * 메시지를 소급해 공개하면 동의하지 않은 처리를 하는 것이 된다. 이름 공개는 옛 문서도
+   * 고지하고 있어 그대로 둔다.
+   */
+  const names = await db.all<{ customer_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
+    SELECT o.customer_name,
+           CASE WHEN fp.terms_version = ${FUNDING_TERMS_VERSION} THEN fp.supporter_message ELSE NULL END AS supporter_message,
+           fp.paid_at, o.created_at
+    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
@@ -272,5 +284,13 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     backerPersonCount: Number(totals[0]?.persons ?? 0),
     remaining,
     publicBackers: names.map((n) => n.customer_name),
+    publicMessages: names
+      .map((n) => ({
+        name: n.customer_name,
+        // 공백만 남은 값은 메시지가 아니다.
+        message: (n.supporter_message ?? '').trim(),
+        at: Number(n.paid_at ?? n.created_at),
+      }))
+      .filter((m) => m.message !== ''),
   };
 };

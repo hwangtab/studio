@@ -6,7 +6,7 @@ import ImageHero, { HERO_SCRIM_STRONG } from '../../../../components/common/Imag
 import { Section } from '../../../../components/ui/Section';
 import FundingProgress from '../../../../components/funding/FundingProgress';
 import RewardCard from '../../../../components/funding/RewardCard';
-import BackerNameRoll from '../../../../components/funding/BackerNameRoll';
+import BackerWall from '../../../../components/funding/BackerWall';
 import FundingTrustNotice from '../../../../components/funding/FundingTrustNotice';
 import FundingMobileCta from '../../../../components/funding/FundingMobileCta';
 import RewardModal from '../../../../components/funding/RewardModal';
@@ -171,7 +171,7 @@ export default function FundingProjectPage({ project, initialState }: Props) {
               <MarkdownRenderer content={project.content} locale="ko" />
             </article>
             <div className="mt-12 space-y-8">
-              <BackerNameRoll names={data?.publicBackers ?? []} />
+              <BackerWall names={data?.publicBackers ?? []} messages={data?.publicMessages ?? []} />
               <FundingTrustNotice />
             </div>
           </div>
