@@ -120,7 +120,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
   const { mixingOffers, masteringOffers } = pricingData;
 
   const quickAnswers = React.useMemo(
-    () => createTranslatedQaItems(t, 'mixingMastering.quickAnswers.items', 3),
+    () => createTranslatedQaItems(t, 'mixingMastering.quickAnswers.items', 4),
     [t]
   );
 

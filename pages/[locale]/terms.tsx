@@ -7,6 +7,7 @@ import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../lib/getStatic';
 import {
   MIXING_REFUND_POLICY_LINES,
+  PRESS_REFUND_POLICY_LINES,
   REFUND_POLICY_LINES,
   SUBSCRIPTION_REFUND_POLICY_LINES,
 } from '../../lib/booking/refund-policy';
@@ -40,13 +41,20 @@ const TERMS_SECTIONS: TermsSection[] = [
     heading: '3. 취소 및 환불',
     body: '예약 취소는 예약 확인 페이지에서 직접 진행할 수 있으며, 취소 시점에 따라 아래 환불 규정이 적용됩니다.',
   },
+  {
+    heading: '4. 음원 발매 홍보',
+    body:
+      '음원 발매 홍보는 심사를 거쳐 수주 여부를 정하며, 심사를 통과한 뒤 어떤 성격의 매체 몇 곳에 발송할지를 확정해 안내드린 시점에 계약이 성립합니다. ' +
+      '자료 확인 단계에서 수정은 2회까지 반영하고, 사실 관계 정정은 횟수에 포함하지 않습니다. ' +
+      '기사 게재·라디오 송출·플레이리스트 수록은 매체가 정하는 일이므로 보장하지 않으며, 스튜디오 놀이 책임지는 범위는 발송 전에 확정해 안내한 실행량과 그 결과를 담은 리포트입니다.',
+  },
 ];
 
 const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const title = '이용약관';
-  const subtitle = '스튜디오 놀 온라인 예약의 예약 성립, 이용, 취소·환불 규정과 사업자 정보를 안내합니다.';
+  const subtitle = '스튜디오 놀 온라인 예약과 음원 발매 홍보의 계약 성립, 이용, 취소·환불 규정과 사업자 정보를 안내합니다.';
 
   return (
     <>
@@ -66,7 +74,7 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
         <div className="max-w-4xl mx-auto">
           <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{title}</h1>
           <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-2">{subtitle}</p>
-          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">시행일: 2026년 8월 25일</p>
+          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">시행일: 2026년 9월 15일</p>
 
           <div className="space-y-6">
             {TERMS_SECTIONS.map((section) => (
@@ -86,6 +94,12 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
               <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">믹싱·마스터링 주문</h3>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {MIXING_REFUND_POLICY_LINES.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">음원 발매 홍보</h3>
+              <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
+                {PRESS_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
