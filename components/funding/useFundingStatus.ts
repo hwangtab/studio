@@ -15,6 +15,8 @@ export interface FundingTiming {
 }
 
 const POLL_MS = 5 * 60 * 1000;
+/** 탭 복귀 시 다시 읽는 최소 간격 — 이보다 자주는 부르지 않는다. */
+const FOCUS_REFETCH_MIN_MS = 20 * 1000;
 /** setTimeout이 즉시 발화로 뭉개지 않는 상한(약 24.8일). 오픈이 더 먼 프로젝트는 여러 번에 나눠 잰다. */
 const MAX_TIMEOUT_MS = 2 ** 31 - 1;
 /**
@@ -58,6 +60,7 @@ export const useFundingStatus = (slug: string, initialState: ProjectState, timin
   useEffect(() => {
     let alive = true;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let lastRunAt = 0;
     const readClock = (): ProjectState | null =>
       status && startAt && endAt ? computeProjectState({ status, startAt, endAt }, new Date()) : null;
 
@@ -79,6 +82,7 @@ export const useFundingStatus = (slug: string, initialState: ProjectState, timin
 
     const run = async () => {
       if (!alive) return;
+      lastRunAt = Date.now();
       setLocalState(readClock());
       let serverState: ProjectState | null = null;
       try {
@@ -97,8 +101,27 @@ export const useFundingStatus = (slug: string, initialState: ProjectState, timin
     };
 
     void run();
+
+    /**
+     * 탭으로 돌아오면 바로 다시 읽는다.
+     *
+     * 폴링은 5분 간격이라, 그 사이에 후원이 취소되면 열어 둔 탭은 내려간 이름·메시지를
+     * 최대 5분간 계속 보여 준다. 취소한 사람이 자기 이름이 아직 떠 있는 것을 보게 되는
+     * 자리다 — 데이터는 맞는데 화면만 늦다.
+     *
+     * 돌아온 직후 한 번만 당긴다. 마지막 조회에서 충분히 지났을 때만 부르므로, 탭을
+     * 자주 오가도 요청이 몰리지 않는다.
+     */
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      if (Date.now() - lastRunAt < FOCUS_REFETCH_MIN_MS) return;
+      void run();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+
     return () => {
       alive = false;
+      document.removeEventListener('visibilitychange', onVisible);
       if (timer) clearTimeout(timer);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

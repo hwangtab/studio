@@ -324,3 +324,54 @@ describe('응원 메시지 공개', () => {
     expect(s.publicMessages.find((m) => m.name === '공백')).toBeUndefined();
   });
 });
+
+/**
+ * 후원을 취소하면 공개했던 이름과 응원 메시지도 함께 내려가야 한다. 돈을 돌려받은 사람이
+ * 계속 후원자 명단에 남아 있으면 페이지가 사실과 다른 말을 하는 셈이다.
+ */
+describe('취소하면 공개 명단에서 내려간다', () => {
+  const paidPublic = async (over: Partial<CreatePledgePayload>) => {
+    const c = await createFundingPledge(payloadFor(over), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error('생성 실패');
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
+    return c.orderNo;
+  };
+
+  it('전액 환불되면 이름과 메시지가 모두 빠진다', async () => {
+    const orderNo = await paidPublic({
+      customerEmail: 'c1@example.com', customerPhone: '010-7001',
+      customerName: '취소한사람', supporterMessage: '취소 전 남긴 말',
+    });
+    const before = await aggregateProjectStatus(PROJECT, NOW);
+    expect(before.publicBackers).toContain('취소한사람');
+    expect(before.publicMessages.map((m) => m.message)).toContain('취소 전 남긴 말');
+
+    await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE order_no=?", args: [orderNo] });
+
+    const after = await aggregateProjectStatus(PROJECT, NOW);
+    expect(after.publicBackers).not.toContain('취소한사람');
+    expect(after.publicMessages.map((m) => m.message)).not.toContain('취소 전 남긴 말');
+  });
+
+  it('부분 환불은 남는다 — 후원은 살아 있고 재고도 나간 상태다', async () => {
+    const orderNo = await paidPublic({
+      customerEmail: 'c2@example.com', customerPhone: '010-7002',
+      customerName: '부분환불', supporterMessage: '일부만 돌려받음',
+    });
+    await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [orderNo] });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).toContain('부분환불');
+    expect(s.publicMessages.map((m) => m.message)).toContain('일부만 돌려받음');
+  });
+
+  it('결제 전(pending)에는 아직 나가지 않는다', async () => {
+    const c = await createFundingPledge(
+      payloadFor({ customerEmail: 'c3@example.com', customerPhone: '010-7003', customerName: '대기중', supporterMessage: '아직 결제 전' }),
+      PROJECT, reward('mail'), NOW,
+    );
+    if (!c.ok) throw new Error('생성 실패');
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).not.toContain('대기중');
+    expect(s.publicMessages.map((m) => m.message)).not.toContain('아직 결제 전');
+  });
+});
