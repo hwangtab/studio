@@ -9,6 +9,12 @@ import { trackLeadEvent } from '../../utils/analytics';
 
 interface KakaoFabProps {
   locale: Locale;
+  /**
+   * 모바일·태블릿(<lg)에서만 숨긴다. 전폭 하단 고정 바가 뜨는 화면에서 같은 우하단 자리를
+   * 두고 겹치기 때문이다. 데스크톱에는 그 바가 없으므로(바가 `lg:hidden`) FAB을 그대로 둔다
+   * — 카카오는 GA4 기준 검증된 유일 전환 채널이라 필요 없는 화면에서까지 걷어내지 않는다.
+   */
+  suppressBelowLg?: boolean;
 }
 
 /**
@@ -28,7 +34,7 @@ interface KakaoFabProps {
  * 수직 stack을 건드리지 않기 위해서다. 두 버튼 모두 솔리드라 blur 예산(상시 고정 레이어
  * ≤2)에도 영향이 없다.
  */
-const KakaoFab = ({ locale }: KakaoFabProps) => {
+const KakaoFab = ({ locale, suppressBelowLg = false }: KakaoFabProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
@@ -59,7 +65,7 @@ const KakaoFab = ({ locale }: KakaoFabProps) => {
   return (
     <div
       style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
-      className="fixed right-6 z-40 flex items-center gap-2"
+      className={`fixed right-6 z-40 items-center gap-2 ${suppressBelowLg ? 'hidden lg:flex' : 'flex'}`}
     >
       <a
         href={telHref}
