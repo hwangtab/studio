@@ -8,6 +8,7 @@ import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../
 import { DEFAULT_FUNDING_PAYMENT_CHOICE, FUNDING_PAYMENT_CHOICES, findFundingPaymentChoice } from '../../lib/funding/paymentChoices';
 import type { FundingProject } from '../../lib/funding/projects';
 import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import { useApplePaySupport } from '../../utils/useApplePaySupport';
 import { Field, TextArea, TextInput } from '../ui/Field';
 
 /**
@@ -127,6 +128,15 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
   const [paymentChoiceId, setPaymentChoiceId] = useState<string>(DEFAULT_FUNDING_PAYMENT_CHOICE);
+  /**
+   * 애플페이는 되는 기기에서만 목록에 넣는다. 안드로이드·윈도우에서 고르면 결제창이 아예
+   * 열리지 않아, 후원자는 자기가 뭘 잘못한 줄 안다.
+   */
+  const applePaySupported = useApplePaySupport();
+  const paymentChoices = useMemo(
+    () => FUNDING_PAYMENT_CHOICES.filter((c) => !c.requiresApplePay || applePaySupported),
+    [applePaySupported],
+  );
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
   /**
@@ -446,7 +456,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         <div className="mt-5">
           <p className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">결제수단</p>
           <div className="space-y-2">
-            {FUNDING_PAYMENT_CHOICES.map((c) => (
+            {paymentChoices.map((c) => (
               <label key={c.id} className={choiceRow}>
                 <input
                   type="radio" name="paymentChoice" value={c.id} className={radioClass}
