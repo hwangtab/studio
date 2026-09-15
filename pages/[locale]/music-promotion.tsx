@@ -57,9 +57,14 @@ const DELIVERABLE_ICONS: LucideIcon[] = [Newspaper, Globe2, Megaphone, Mic, Vide
  * 카피의 cases 배열과 순서가 맞아야 한다. 사례를 늘릴 때 여기를 빠뜨리면
  * 새 사례가 남의 프레스킷을 가리키게 되므로, 링크가 없으면 아예 안 그린다.
  */
-const CASE_LINKS: readonly string[] = [
-  'https://marikoyukie.vercel.app/ko/press',
-  'https://ggac.kr/ko/press/hwa',
+/** 실제로 만들어 운영 중인 프레스킷 페이지. 경쟁사가 못 보여주는 실물 증거라
+ *  "포함되는 것"의 프레스킷 항목에서 바로 열 수 있게 둔다. */
+/** deliverables.items에서 프레스킷 페이지 항목의 자리(0-based). 순서가 바뀌면 함께 옮길 것. */
+const PRESS_KIT_ITEM_INDEX = 1;
+
+const PRESS_KIT_SAMPLES: readonly { href: string; key: string }[] = [
+  { href: 'https://marikoyukie.vercel.app/ko/press', key: 'namsanTower' },
+  { href: 'https://ggac.kr/ko/press/hwa', key: 'hwa' },
 ];
 
 // 컴포넌트 밖에서 한 번만 계산한다. 항목이 없으면 null(가짜 날짜 금지, lib/pageLastmod.ts).
@@ -160,13 +165,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   const deliverables = t('musicPromotion.deliverables.items', { returnObjects: true }) as {
     title: string;
     body: string;
-  }[];
-  const cases = t('musicPromotion.evidence.cases', { returnObjects: true }) as {
-    title: string;
-    meta: string;
-    stats: string[];
-    note: string;
-    label: string;
   }[];
   const criteria = t('musicPromotion.review.criteria', { returnObjects: true }) as {
     title: string;
@@ -290,57 +288,6 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         subtitle={t('musicPromotion.quickAnswers.subtitle')}
         items={quickAnswers}
       />
-
-      {/* 이 페이지의 핵심 논거 — 우리 가격이 비싼 게 아니라 다른 물건이라는 것 */}
-      <Section className="bg-gray-50 dark:bg-gray-900/40">
-        <SectionHeading
-          title={t('musicPromotion.evidence.title')}
-          subtitle={t('musicPromotion.evidence.subtitle')}
-        />
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          {cases.map((item, index) => (
-            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.1 })}>
-              <BaseCard variant="glass" className="h-full p-6">
-                {/* 사례가 둘뿐인 것은 실적 목록이 짧아서가 아니라 규모의 양 끝을 보여주는
-                    구성이기 때문이다. 라벨이 그 축을 드러낸다 — 빼면 다시 "2건짜리 실적
-                    목록"으로 읽힌다. */}
-                <span className="inline-block rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-semibold text-primary dark:text-primary-lighter">
-                  {item.label}
-                </span>
-                <h3 className="mt-3 text-lg font-bold text-gray-900 dark:text-white">{item.title}</h3>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{item.meta}</p>
-                <ul className="mt-4 flex flex-wrap gap-2">
-                  {item.stats.map((stat) => (
-                    <li
-                      key={stat}
-                      className="rounded-full bg-primary/10 px-3 py-1 text-sm font-semibold text-primary dark:text-primary-lighter"
-                    >
-                      {stat}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-4 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                  {item.note}
-                </p>
-                {CASE_LINKS[index] && (
-                  <a
-                    href={CASE_LINKS[index]}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline"
-                  >
-                    {t('musicPromotion.evidence.linkLabel')}
-                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                  </a>
-                )}
-              </BaseCard>
-            </m.div>
-          ))}
-        </div>
-        <p className="mx-auto mt-8 max-w-3xl text-center text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-          {t('musicPromotion.evidence.priorWork', priceVars)}
-        </p>
-      </Section>
 
       <Section>
         <SectionHeading
@@ -471,6 +418,24 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
                   <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                     {item.body}
                   </p>
+                  {/* 프레스킷 항목에서만 실물을 연다. 말로 설명하는 것보다
+                      실제로 운영 중인 페이지를 여는 쪽이 강하고, 경쟁사는 못 하는 일이다. */}
+                  {index === PRESS_KIT_ITEM_INDEX && (
+                    <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                      {PRESS_KIT_SAMPLES.map((sample) => (
+                        <a
+                          key={sample.href}
+                          href={sample.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline"
+                        >
+                          {t(`musicPromotion.deliverables.samples.${sample.key}`)}
+                          <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                        </a>
+                      ))}
+                    </div>
+                  )}
                 </BaseCard>
               </m.div>
             );

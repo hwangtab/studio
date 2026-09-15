@@ -1661,36 +1661,6 @@
       "note": "We found no Korean music-specialist PR agency publishing its prices (September 2026). Plenty of firms will blast a press release, but their lists are not music outlets — and the overseas agencies selling the same thing are an order of magnitude more.",
       "rowHeader": "What we compare"
     },
-    "evidence": {
-      "title": "This Is How We Actually Sent It",
-      "subtitle": "Whatever the music is, we first find the outlets that specialise in that genre, then add international music press on top. These are measured figures from two campaigns we ran ourselves.",
-      "cases": [
-        {
-          "title": "Mariko & Yukie, Namsan Tower Lights",
-          "meta": "Debut full-length album · released September 2026",
-          "stats": [
-            "1,270 outlets",
-            "60 countries",
-            "9 languages",
-            "spread over 13 days"
-          ],
-          "note": "Fifteen songs sung in Korean by a Japanese couple living in Seoul — a story that reaches Korean and Japanese speakers as well as English speakers, so it went out in 9 languages. Studio NOL handled everything from mixing to planning, production, and release PR. Send figures are as of 14 September 2026.",
-          "label": "Send size"
-        },
-        {
-          "title": "HWA, HWA",
-          "meta": "Grindcore EP · released August 2026",
-          "stats": [
-            "116 metal-specialist outlets newly gathered",
-            "Korea and abroad at once"
-          ],
-          "note": "Almost nothing on our existing list covered grindcore. So for this record we went and found 116 metal-specialist outlets, radio shows and record shops, and added them to the list. Once a list is built, the next metal artist gets it as it is.",
-          "label": "List built from scratch"
-        }
-      ],
-      "linkLabel": "See a press kit page we actually built",
-      "priorWork": "It became a service you can buy on its own this year, but the work itself isn't new. Before that we did the same thing as one component of a release project; these two are simply the first campaigns where we kept the numbers."
-    },
     "deliverables": {
       "title": "What's included",
       "subtitle": "All six are inside the {{intro}}. Nothing here is sold separately, so there is nothing for the quote to grow by.",
@@ -1719,7 +1689,11 @@
           "title": "Send-out report",
           "body": "What we made, how many outlets of what kind received it, and which replies and placements were confirmed. Placements are broken out by kind — articles and reviews, radio airplay, playlist adds. Bounces and unsubscribes go in exactly as they were: that is where you learn what to drop and what to widen for the next album."
         }
-      ]
+      ],
+      "samples": {
+        "namsanTower": "See the Namsan Tower press kit",
+        "hwa": "See the HWA press kit"
+      }
     },
     "process": {
       "title": "How it runs",
@@ -1795,7 +1769,7 @@
         },
         {
           "q": "Why does sending take one to three weeks?",
-          "a": "Each kind of outlet gets a different piece of writing, and mail sent all at once does not reach inboxes. Going region by region and language by language gets the record actually read more often. Namsan Tower Lights went to 1,270 places over thirteen days."
+          "a": "Each kind of outlet gets a different piece of writing, and mail sent all at once does not reach inboxes. Going region by region and language by language gets the record actually read more often. Namsan Tower Lights went to 1,270 places over thirteen days (figures as of 14 September 2026)."
         },
         {
           "q": "What do we need to prepare?",

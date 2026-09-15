@@ -1633,36 +1633,6 @@
       "note": "So'rov doirasida narxini e'lon qilgan koreyalik musiqaga ixtisoslashgan PR agentligi topilmadi (2026-yil sentyabr). Press-reliz tarqatadiganlar ko'p, ammo ularning ro'yxati musiqa nashrlari emas; xuddi shu xizmatni sotadigan chet el agentliklari esa boshqa narx darajasida.",
       "rowHeader": "Taqqoslash mezoni"
     },
-    "evidence": {
-      "title": "Biz aynan shunday yubordik",
-      "subtitle": "Qanday musiqa bo'lmasin, avval o'sha janrni yorituvchi ixtisoslashgan nashrlarni topamiz, ustiga xalqaro musiqa nashrlarini qo'shib yuboramiz. Quyida o'zimiz olib borgan ikkita kampaniyaning o'lchangan raqamlari.",
-      "cases": [
-        {
-          "title": "Mariko & Yukie «Namsan Tower Lights»",
-          "meta": "Debyut to'liq albom · 2026-yil sentyabrda chiqdi",
-          "stats": [
-            "1,270 manzilga yuborildi",
-            "60 mamlakat",
-            "9 til",
-            "13 kunga taqsimlab"
-          ],
-          "note": "Seulda yashaydigan yapon er-xotin koreys tilida kuylagan 15 ta qo'shiq. Bu musiqa koreys va yapon tilidagi tinglovchilarga, shuningdek ingliz tilidagilarga ham yetib boradigan hikoya bo'lgani uchun 9 tilda yuborildi. Studio NOL mikslashdan tortib loyihalash, ishlab chiqarish va chiqarish PRigacha bo'lgan barcha ishni o'z zimmasiga oldi. Yuborish ko'rsatkichlari 2026-yil 14-sentabr holatiga ko'ra.",
-          "label": "Yuborish hajmi"
-        },
-        {
-          "title": "HWA «HWA»",
-          "meta": "Grindcore EP · 2026-yil avgustda chiqdi",
-          "stats": [
-            "Metalga ixtisoslashgan 116 nashr yangidan yig'ildi",
-            "ichkarida va chet elda bir vaqtda"
-          ],
-          "note": "Mavjud ro'yxatimizda grindcore janrini yorituvchi nashrlar deyarli yo'q edi. Shuning uchun shu albom uchun metalga ixtisoslashgan 116 ta nashr, radio va plastinka do'konini yangidan topib, ro'yxatga qo'shdik. Bir marta tuzilgan ro'yxat keyingi metal ijrochisiga o'shaligicha ishlatiladi.",
-          "label": "Ro'yxat yangidan tuzilgan holat"
-        }
-      ],
-      "linkLabel": "Haqiqatda tayyorlagan press-kit sahifamizni ko'rish",
-      "priorWork": "Alohida xizmatga aylangani shu yildan, lekin bu yangi ish emas. Undan oldin ham xuddi shu ishni chiqarish loyihasi to'plamining bir qismi sifatida qilib kelganmiz; yuqoridagi ikki holat esa kampaniya bo'yicha raqam yuritishni boshlagan paytimiz."
-    },
     "deliverables": {
       "title": "Nimalar kiradi",
       "subtitle": "Oltitasi ham {{intro}} ichida. Alohida sotiladigan band yo'q, shuning uchun smeta oshib ketmaydi.",
@@ -1691,7 +1661,11 @@
           "title": "Yuborish hisoboti",
           "body": "Qanday materiallar tayyorlangani, qanday turdagi nechta manzilga yuborilgani, qaysi javob va chop etishlar tasdiqlangani. Chop etishlar turi bo'yicha ajratib yoziladi — maqola va sharhlar, radio eshittirish, pleylistga qo'shilish. Qaytib kelgan xatlar va obunadan chiqishlar ham borligicha yoziladi — keyingi albomda qayerni olib tashlash va qayerni ko'paytirish kerakligi o'shandan chiqadi."
         }
-      ]
+      ],
+      "samples": {
+        "namsanTower": "Namsan Tower press-kitini koʻrish",
+        "hwa": "HWA press-kitini koʻrish"
+      }
     },
     "process": {
       "title": "Ish shunday boradi",
@@ -1767,7 +1741,7 @@
         },
         {
           "q": "Nega yuborish bir-uch hafta davom etadi?",
-          "a": "Har bir nashr turiga boshqacha matn ketadi, bir yo'la yuborilgan xat esa kiruvchi qutiga yetib bormaydi. Hudud va til bo'yicha navbat bilan yuborilganda albom haqiqatan ko'proq o'qiladi. «Namsan Tower Lights» o'n uch kun ichida 1,270 joyga yetdi."
+          "a": "Har bir nashr turiga boshqacha matn ketadi, bir yo'la yuborilgan xat esa kiruvchi qutiga yetib bormaydi. Hudud va til bo'yicha navbat bilan yuborilganda albom haqiqatan ko'proq o'qiladi. «Namsan Tower Lights» o'n uch kun ichida 1,270 joyga yetdi (ma'lumot 2026-yil 14-sentabr holatiga)."
         },
         {
           "q": "Nima tayyorlashimiz kerak?",
