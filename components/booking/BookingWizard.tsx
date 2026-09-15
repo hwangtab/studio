@@ -5,11 +5,13 @@ import PriceBreakdown from './PriceBreakdown';
 import TossPaymentWidget from './TossPaymentWidget';
 import { Button } from '../ui/Button';
 import { computeAmounts, type OrderAmounts } from '../../lib/booking/amounts';
+import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
 import { kstDateString } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
 import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
+import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
 
 interface BookingWizardProps {
@@ -190,11 +192,45 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerNote, setCustomerNote] = useState('');
+  // 환불 규정 동의는 임시 저장 대상이 아니다 — 복원된 체크는 사람이 그 자리에서 한
+  // 의사표시가 아니라서 매번 새로 눌러야 한다(CLAUDE.md 약관 판본 절과 같은 판단).
   const [refundPolicyAgreed, setRefundPolicyAgreed] = useState(false);
   const [agreeError, setAgreeError] = useState(false);
   const agreeRef = React.useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  /**
+   * 이름·연락처·이메일·요청사항만 새로고침·뒤로가기에도 살린다.
+   *
+   * 날짜·시간대·상품·시간은 일부러 담지 않는다 — 예약 가능 시간은 그 사이 바뀌고,
+   * 되살린 시간대가 지금도 비어 있다는 보장이 없다. 되살렸다가 결제 직전에 409를 보여
+   * 주는 쪽이, 탭 한 번으로 다시 고르게 하는 쪽보다 나쁘다(고르는 값은 타이핑이 아니다).
+   *
+   * `draftRestored`는 마운트 후 복원이 끝났는지를 가리키는 게이트다 — 아래 저장 effect가
+   * 복원 effect보다 먼저 "아직 빈 폼"으로 한 번 실행되면 방금 불러온 초안을 그 빈 값으로
+   * 덮어써 지워 버린다. 이 게이트가 없으면 새로고침 직후 초안이 사라진다.
+   */
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  useEffect(() => {
+    const draft = readStringDraft(BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS);
+    if (draft.customerName) setCustomerName(draft.customerName);
+    if (draft.customerPhone) setCustomerPhone(draft.customerPhone);
+    if (draft.customerEmail) setCustomerEmail(draft.customerEmail);
+    if (draft.customerNote) setCustomerNote(draft.customerNote);
+    setDraftRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftRestored) return;
+    writeStringDraft(BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS, {
+      customerName,
+      customerPhone,
+      customerEmail,
+      customerNote,
+    });
+  }, [draftRestored, customerName, customerPhone, customerEmail, customerNote]);
 
   // Step 4: 결제 — 표시 금액은 서버가 POST 응답으로 돌려준 값(SSOT)만 쓴다.
   // step 1의 amounts(클라이언트 재계산)는 진행 중 미리보기용일 뿐, 실제 청구액과

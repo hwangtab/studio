@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import PriceBreakdown from './PriceBreakdown';
@@ -6,8 +6,10 @@ import TossPaymentWidget from './TossPaymentWidget';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
 import type { OrderAmounts } from '../../lib/booking/amounts';
+import { CUSTOMER_DRAFT_FIELDS, MIXING_CUSTOMER_DRAFT_KEY } from '../../lib/booking/customerDraft';
 import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingProduct } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
+import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
 
 interface MixingOrderWizardProps {
@@ -83,11 +85,44 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   const [customerPhone, setCustomerPhone] = useState('');
   const [customerEmail, setCustomerEmail] = useState('');
   const [customerNote, setCustomerNote] = useState('');
+  // 환불 규정 동의는 임시 저장 대상이 아니다 — 복원된 체크는 사람이 그 자리에서 한
+  // 의사표시가 아니라서 매번 새로 눌러야 한다(CLAUDE.md 약관 판본 절과 같은 판단).
   const [refundPolicyAgreed, setRefundPolicyAgreed] = useState(false);
   const [agreeError, setAgreeError] = useState(false);
   const agreeRef = React.useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  /**
+   * 이름·연락처·이메일·요청사항만 새로고침·뒤로가기에도 살린다.
+   *
+   * 상품·곡 수·보컬 튜닝은 일부러 담지 않는다 — 고르는 값이라 되살리지 않아도 탭 한
+   * 번이고, BookingWizard와 같은 판단이다(lib/booking/customerDraft.ts).
+   *
+   * `draftRestored`는 마운트 후 복원이 끝났는지를 가리키는 게이트다 — 아래 저장 effect가
+   * 복원 effect보다 먼저 "아직 빈 폼"으로 한 번 실행되면 방금 불러온 초안을 그 빈 값으로
+   * 덮어써 지워 버린다. 이 게이트가 없으면 새로고침 직후 초안이 사라진다.
+   */
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  useEffect(() => {
+    const draft = readStringDraft(MIXING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS);
+    if (draft.customerName) setCustomerName(draft.customerName);
+    if (draft.customerPhone) setCustomerPhone(draft.customerPhone);
+    if (draft.customerEmail) setCustomerEmail(draft.customerEmail);
+    if (draft.customerNote) setCustomerNote(draft.customerNote);
+    setDraftRestored(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftRestored) return;
+    writeStringDraft(MIXING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS, {
+      customerName,
+      customerPhone,
+      customerEmail,
+      customerNote,
+    });
+  }, [draftRestored, customerName, customerPhone, customerEmail, customerNote]);
 
   // Step 3: 결제 — 표시 금액은 서버가 POST 응답으로 돌려준 값(SSOT)만 쓴다(BookingWizard와 동일 원칙).
   const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; amounts: OrderAmounts } | null>(null);

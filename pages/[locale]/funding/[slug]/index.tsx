@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import MarkdownRenderer from '../../../../components/MarkdownRenderer';
-import ResponsiveImage from '../../../../components/ResponsiveImage';
 import ImageHero, { HERO_SCRIM_STRONG } from '../../../../components/common/ImageHero';
 import { Section } from '../../../../components/ui/Section';
 import FundingProgress from '../../../../components/funding/FundingProgress';
@@ -15,6 +14,10 @@ import { useFundingStatus } from '../../../../components/funding/useFundingStatu
 import { buildPageStaticProps } from '../../../../lib/getStatic';
 import { defaultLocale } from '../../../../lib/i18n';
 import { formatPriceAmount } from '../../../../data/pricing';
+import imageMetadata from '../../../../utils/imageMetadata.json';
+
+const SITE_URL = 'https://studionol.co.kr';
+const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
 import { computeProjectState, getAllFundingProjects, getFundingProject, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
 
 interface Props {
@@ -49,13 +52,60 @@ export default function FundingProjectPage({ project, initialState }: Props) {
     const fallback = Object.fromEntries(project.rewards.map((r) => [r.id, r.totalQuantity]));
     return { ...fallback, ...(data?.remaining ?? {}) };
   }, [data?.remaining, project.rewards]);
+  /**
+   * 후원은 리워드가 딸린 **선주문 판매**다(기부가 아니다 — 약관·신뢰 고지와 같은 입장).
+   * 그래서 Product + Offer로 적는다. 가격은 티어마다 달라 `lowPrice`로 최저가를 알린다.
+   *
+   * 마감일(`priceValidUntil`)을 넣는 이유: 없으면 구글이 오래된 오퍼로 보고 리치 결과에서
+   * 내린다. `endAt`이 그대로 그 날짜다.
+   */
+  const fundingSchema = useMemo(() => {
+    const amounts = project.rewards.map((r) => r.amount);
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'Product',
+      name: project.title,
+      description: project.summary,
+      image: toAbsolute(project.ogImage ?? project.cover),
+      brand: { '@type': 'Organization', name: '스튜디오 놀' },
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'KRW',
+        lowPrice: Math.min(...amounts),
+        highPrice: Math.max(...amounts),
+        offerCount: amounts.length,
+        availability: canPledge ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
+        priceValidUntil: project.endAt.slice(0, 10),
+        url: `${SITE_URL}/ko/funding/${project.slug}`,
+      },
+    };
+  }, [canPledge, project]);
+
+  // OG 이미지의 실제 치수. 목록에 없으면 넘기지 않는다 — 틀린 값을 주느니 비우는 게 낫다.
+  const ogImageSize = imageMetadata[(project.ogImage ?? project.cover) as keyof typeof imageMetadata] as
+    | { width: number; height: number }
+    | undefined;
+
   return (
     <>
       <SEO
-        title={`${project.title} — 펀딩 | 스튜디오 놀`}
+        // 제목에 구분자를 두 번 겹치지 않는다 — 프로젝트 제목이 이미 '… 후원'으로 끝나는데
+        // `— 펀딩 | 스튜디오 놀`을 붙이면 `—`와 `|`가 함께 나와 검색 결과에서 지저분하다.
+        title={`${project.title} | 스튜디오 놀`}
         description={project.summary}
         canonical={`/ko/funding/${project.slug}`}
         ogImage={project.ogImage ?? project.cover}
+        // 치수를 함께 주지 않으면 카카오·페이스북이 비율을 스스로 재협상한다.
+        ogImageWidth={ogImageSize?.width}
+        ogImageHeight={ogImageSize?.height}
+        // includeSchema 기본값이 false라, 켜지 않으면 schema·breadcrumbs를 넘겨도 조용히 버려진다.
+        includeSchema
+        schema={fundingSchema}
+        breadcrumbs={[
+          { name: '홈', path: '/ko' },
+          { name: '펀딩', path: '/ko/funding' },
+          { name: project.title, path: `/ko/funding/${project.slug}` },
+        ]}
         robots={project.hidden ? 'noindex, nofollow' : undefined}
       />
       {/*
@@ -135,21 +185,10 @@ export default function FundingProjectPage({ project, initialState }: Props) {
                 data={data ? { raisedAmount: data.raisedAmount, backerCount: data.backerCount, percent: data.percent, state } : null}
               />
             </div>
-            {/* 표지를 여기 두는 이유: 이 앨범이 곧 리워드다. 16:9 파일의 가운데를 정사각으로
-                따서 바탕색 여백이 보이지 않게 한다. */}
-            <div className="mt-8 flex items-center gap-3">
-              <ResponsiveImage
-                src={project.cover}
-                alt=""
-                containerClassName="relative block aspect-square w-16 shrink-0 overflow-hidden rounded-lg"
-                className="object-cover"
-                loading="lazy"
-              />
-              <div className="min-w-0">
-                <h2 className="typo-card-title text-gray-900 dark:text-white">리워드</h2>
-                <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
-              </div>
-            </div>
+            {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
+                리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
+            <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
+            <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
                 <RewardCard

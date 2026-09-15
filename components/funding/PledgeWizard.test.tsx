@@ -38,6 +38,9 @@ rewards:
 afterEach(() => jest.restoreAllMocks());
 
 beforeEach(() => {
+  // 임시 저장(lib/formDraft.ts)이 sessionStorage에 쓴다 — 안 지우면 이 파일의 다른
+  // 테스트가 남긴 이름·연락처·주소가 다음 테스트에서 되살아나 서로 간섭한다.
+  window.sessionStorage.clear();
   global.fetch = jest.fn().mockResolvedValue({
     ok: true, status: 201, headers: { get: () => 'application/json' },
     json: async () => ({
@@ -338,10 +341,20 @@ describe('기기 시계가 서버보다 빠를 때', () => {
  * 본인 홀드가 15분간 한정 재고를 붙들고 본인이 "품절"을 본다.
  */
 describe('자기 홀드 해제 증명 보관', () => {
+  // clear 후 입력 — "페이지가 새로 떠도" 테스트는 같은 테스트 안에서 두 번째로 마운트한
+  // 인스턴스가 첫 제출의 임시 저장(lib/formDraft.ts)을 그대로 복원해 온다. 지우지 않고
+  // type만 하면 값이 뒤에 이어붙어(예: 이메일이 `a@b.coma@b.com`) 브라우저 native
+  // 제약 검증(type=email)에 걸려 제출 자체가 안 된다.
   const submitOnce = async () => {
-    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
-    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
-    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    const name = screen.getByLabelText(/^이름\*$/);
+    await userEvent.clear(name);
+    await userEvent.type(name, '김후원');
+    const phone = screen.getByLabelText(/^연락처\*$/);
+    await userEvent.clear(phone);
+    await userEvent.type(phone, '010-1111-2222');
+    const email = screen.getByLabelText(/^이메일\*$/);
+    await userEvent.clear(email);
+    await userEvent.type(email, 'a@b.com');
     await userEvent.click(screen.getByLabelText(/약관/));
     await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
     await screen.findByTestId('toss-widget');
@@ -385,5 +398,155 @@ describe('자기 홀드 해제 증명 보관', () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await submitOnce();
     expect(screen.getByTestId('toss-widget')).toBeInTheDocument();
+  });
+});
+
+/**
+ * 임시 저장(lib/formDraft.ts) — 리워드 모달 백드롭을 잘못 눌러 `RewardModal`이
+ * `if (!reward) return null`로 PledgeWizard를 통째로 언마운트해도, 새로고침·뒤로가기와
+ * 같은 방식으로 다시 채워져야 한다.
+ */
+describe('임시 저장', () => {
+  beforeEach(() => window.sessionStorage.clear());
+
+  it('입력 후 언마운트했다가 다시 마운트하면 10칸이 복원된다', async () => {
+    const { unmount } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.type(screen.getByLabelText(/응원 메시지/), '화이팅');
+    await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '박수령');
+    await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-3333-4444');
+    await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
+    await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
+    await userEvent.type(screen.getByLabelText(/상세주소/), '101호');
+    await userEvent.type(screen.getByLabelText(/배송 메모/), '문 앞');
+    unmount();
+
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    expect(await screen.findByLabelText(/^이름\*$/)).toHaveValue('김후원');
+    expect(screen.getByLabelText(/^연락처\*$/)).toHaveValue('010-1111-2222');
+    expect(screen.getByLabelText(/^이메일\*$/)).toHaveValue('a@b.com');
+    expect(screen.getByLabelText(/응원 메시지/)).toHaveValue('화이팅');
+    expect(screen.getByLabelText(/^받는 분\*$/)).toHaveValue('박수령');
+    expect(screen.getByLabelText(/^받는 분 연락처\*$/)).toHaveValue('010-3333-4444');
+    expect(screen.getByLabelText(/^우편번호\*$/)).toHaveValue('12345');
+    expect(screen.getByLabelText(/^주소\*$/)).toHaveValue('서울시 어딘가');
+    expect(screen.getByLabelText(/상세주소/)).toHaveValue('101호');
+    expect(screen.getByLabelText(/배송 메모/)).toHaveValue('문 앞');
+  });
+
+  // 복원된 체크는 사람이 한 의사표시가 아니다 — funding_pledges.terms_version이 "그때 이
+  // 내용에 동의했다"의 증거인데, 되살린 체크가 그 증거를 받치지 못한다.
+  it('약관 동의는 복원되지 않는다', async () => {
+    const { unmount } = render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.click(screen.getByLabelText(/약관/));
+    unmount();
+
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(await screen.findByLabelText(/^이름\*$/)).toHaveValue('김후원');
+    expect(screen.getByLabelText(/약관/)).not.toBeChecked();
+  });
+
+  // 재고는 그 사이 바뀐다 — 되살린 리워드·수량·추가금이 지금도 유효하다고 보장할 수 없다.
+  // 이름 공개는 체크 한 번이라 잃어도 손해가 없고, 문자열만 담는 계약을 깰 이유가 아니다.
+  it('리워드·수량·추가금·이름 공개는 복원되지 않는다', async () => {
+    const { unmount } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByLabelText(/감사 메일/));
+    const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
+    await typeInto(quantityInput, '2');
+    await userEvent.tab();
+    const additionalInput = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
+    await typeInto(additionalInput, '2000');
+    await userEvent.tab();
+    await userEvent.click(screen.getByLabelText(/이름 공개/));
+    unmount();
+
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    // initialRewardId가 그대로 다시 주어지므로 첫 리워드(cd)로 되돌아온다 — "감사 메일" 선택은 안 남는다.
+    expect(await screen.findByLabelText(/CD/)).toBeChecked();
+    expect(screen.getByLabelText('수량')).toHaveValue(1);
+    expect(screen.getByLabelText(/추가 후원금/)).toHaveValue(0);
+    expect(screen.getByLabelText(/이름 공개/)).not.toBeChecked();
+  });
+
+  /**
+   * 복원 effect보다 저장 effect가 먼저 "빈 폼"으로 실행되면 방금 읽은 초안을 지워 버린다
+   * — `draftRestored` 게이트가 없으면 나는 함정이다. 컴포넌트 로직만으로는 재현하기
+   * 어려우므로(React가 두 effect를 한 커밋에서 순서대로 돌린다는 사실 자체가 회귀 지점),
+   * 여기서는 결과로 확인한다: 마운트 직후 세션에 남아 있던 초안이 사라지지 않아야 한다.
+   */
+  it('마운트 직후에도 저장소의 기존 초안이 지워지지 않는다', () => {
+    window.sessionStorage.setItem('studionol:funding-draft:demo', JSON.stringify({ customerName: '홍길동' }));
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(window.sessionStorage.getItem('studionol:funding-draft:demo')).toBe(JSON.stringify({ customerName: '홍길동' }));
+  });
+
+  // holdProofKey와 같은 이유 — 갈지 않으면 다른 펀딩의 이름·연락처·주소가 새어 들어온다.
+  it('다른 프로젝트의 초안은 새지 않는다', async () => {
+    const { unmount } = render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    unmount();
+
+    const other = { ...project, slug: 'other' };
+    render(<PledgeWizard project={other} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(await screen.findByLabelText(/^이름\*$/)).toHaveValue('');
+  });
+
+  // 사생활 보호 모드 등에서는 접근 자체가 throw한다 — 임시 저장은 편의 기능이라 폼 자체가
+  // 막히면 안 된다.
+  it('저장소가 막힌 환경에서도 폼이 정상 동작한다', async () => {
+    jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
+    jest.spyOn(Storage.prototype, 'setItem').mockImplementation(() => { throw new Error('blocked'); });
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    expect(screen.getByLabelText(/^이름\*$/)).toHaveValue('김후원');
+  });
+});
+
+/**
+ * 리워드 카드를 눌러 연 모달은 **이미 고르고 들어온** 화면이다. 거기서 네 개를 다시
+ * 보여 주면 방금 고른 것이 반영됐는지 의심하게 된다. 그리고 모달 본문은 자체 스크롤
+ * 컨테이너라, sticky 요약이 컨테이너 바닥에 붙으면서 폼 위로 떠 내용과 겹친다.
+ * 둘 다 실제로 그렇게 배포됐다가 잡았다.
+ */
+describe('모달에서 여는 경우 (lockedReward · stickySummary)', () => {
+  const remaining = { cd: 5, mail: null } as Record<string, number | null>;
+
+  it('잠그면 리워드 라디오를 보여 주지 않는다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />);
+    expect(screen.queryByRole('radio')).toBeNull();
+    const picked = screen.getByText('고르신 리워드').parentElement!;
+    expect(picked.textContent).toContain('30,000원');
+    expect(picked.textContent).toContain('CD');
+  });
+
+  it('잠그지 않으면 종전대로 고를 수 있다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    expect(screen.getAllByRole('radio').length).toBeGreaterThan(1);
+    expect(screen.queryByText('고르신 리워드')).toBeNull();
+  });
+
+  it('잠그면 후원자 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
+    const { container } = render(
+      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
+    );
+    expect(container.textContent).toContain('후원자 정보');
+    expect(screen.queryByText('리워드', { selector: 'h2,h3' })).toBeNull();
+  });
+
+  it('stickySummary=false면 요약 줄이 sticky가 아니다', () => {
+    const { container } = render(
+      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} stickySummary={false} />
+    );
+    const summary = [...container.querySelectorAll('div')].find((d) => d.textContent?.includes('예상 합계'));
+    expect(summary!.className).not.toContain('sticky');
+  });
+
+  it('기본값에서는 요약 줄이 sticky다 — 페이지에서는 붙는 게 맞다', () => {
+    const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    const summary = [...container.querySelectorAll('div')].find((d) => d.className.includes('bottom-0'));
+    expect(summary!.className).toContain('sticky');
   });
 });

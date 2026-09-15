@@ -100,7 +100,9 @@ if (!fs.existsSync(logPath)) {
     console.log(`  ${slug.padEnd(30)} 리뷰일 ${review}  (${state})`);
   }
   warn('측정 중(🔒) 페이지의 타이틀·summary·본문을 수정하면 실험이 무효가 된다.');
-  warn('판정은 반드시 scripts/ctr-verdict.mjs로 — 90일 CSV 스냅샷 차분은 판정을 뒤집는다.');
+  warn('판정은 반드시 스크립트로 — 90일 CSV 스냅샷 차분은 판정을 뒤집는다. '
+    + 'CTR 실험은 scripts/ctr-verdict.mjs, 전환 실험(비고에 "전환 실험"·"리드")은 scripts/lead-verdict.mjs. '
+    + 'ctr-verdict --from-log는 전환 실험 행에도 CTR 판정을 찍어 내니 그 숫자는 버릴 것.');
 }
 
 // ─────────────────────────────────────────────────────────────────

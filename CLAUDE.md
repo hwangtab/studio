@@ -40,6 +40,7 @@ node scripts/seo-preflight.mjs                              # 데이터 열기 �
 node --env-file=.env.local scripts/gsc-fetch-detail.mjs     # GSC 90일 원시 데이터
 node --env-file=.env.local scripts/ga4-fetch.mjs            # GA4 90일 원시 데이터
 node --env-file=.env.local scripts/ctr-verdict.mjs --surgery YYYY-MM-DD --slugs a,b --control c,d
+node --env-file=.env.local scripts/lead-verdict.mjs --from YYYY-MM-DD --pages a,b --control c   # 전환 실험(GA4 랜딩 기준 세션당 리드)
 
 # Hero font subset (LCP)
 # prebuild에서 자동 실행됨. hero h1 텍스트(data/home.ts heroContent,
@@ -267,6 +268,21 @@ CI에 넣었다 — 섹션 해시가 파일 간 같으면 잡는다.
 판정에 직접 들어가서, 과대 계상하면 thin 페이지가 색인 대상으로 잘못 분류된다(실제로
 session-checklist가 실측 160자인데 420으로 잡혀 있었다).
 
+### OG 이미지를 바꾸면 파일명도 바꾼다 (카카오톡 썸네일)
+
+카카오톡 스크랩 서버는 `og:image`를 **URL 단위로 캐시**한다. 같은 경로에 그림만 갈아
+끼우면 공유 디버거로 다시 긁어도 옛 썸네일이 계속 나간다. 바꿀 때는 파일명에 날짜나
+판을 박아 새 URL로 만든다(예: `og-20260915.webp`).
+
+**포맷은 원인이 아니다.** 이 저장소는 "WebP를 카카오가 못 읽는다"는 진단으로 OG를 JPEG로
+바꾼 적이 있고(`d51e9e2113`), 운영자 확인 결과 시간이 지나자 WebP로도 정상 표시돼
+되돌렸다(`85178f14ad`). 2026-05의 `397eea2930`까지 합치면 같은 오진이 두 번이다.
+최초 공유 직후 안 뜨는 것은 **카카오의 수집 지연**이지 포맷 미지원이 아니다.
+
+또 하나: **이미 보낸 카카오톡 메시지의 카드는 영영 바뀌지 않는다.** 그건 메시지에 박힌
+스냅샷이라 다시 공유해야 새 카드가 만들어진다. "디버거에는 새 이미지가 보이는데 채팅방은
+그대로"라면 대개 이 경우다.
+
 ### lastmod 정책 (사이트맵 freshness)
 
 `<lastmod>`는 **절대 파일 mtime에서 오면 안 된다.** git은 mtime을 보존하지 않고 Vercel은
@@ -466,6 +482,7 @@ node scripts/seo-preflight.mjs        # 최근 커밋·열린 실험·관측창�
    이미 고친 문제가 미해결로 보인다. 최근 상태를 알려면 기간을 좁혀 직접 질의한다.
 3. **두 스냅샷을 빼서 "증분"이라 부르지 않는다.** 창 뒤끝에서 빠져나간 기간이 섞인다.
    실험 판정은 `node --env-file=.env.local scripts/ctr-verdict.mjs`로 — 기간지정 + 대조군 + 노출 정규화.
+   전환 실험(콜아웃·CTA 변경)은 `scripts/lead-verdict.mjs` — GA4 **랜딩 기준** 세션당 리드(규칙 6의 귀속 함정 회피).
 4. **CSV 집계는 `#` 앵커 행 제외 + `/ko/` 정본 필터.** 앵커는 목차 점프링크지 별개 페이지가 아니고
    (노출 ~13% 부풀림), slug로 키잡으면 uz/en 행이 ko 행을 덮어쓴다(mixing19가 9clk→0clk로 뒤집힌 적 있음).
 5. **낮은 CTR·noindex·통합 제외가 전부 결함은 아니다.** 사전형 단일어 쿼리(흉성·더블링·딜레이)는
