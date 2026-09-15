@@ -82,7 +82,11 @@ const withoutUndeliverableCustomer = (
   isManualPlaceholderRecipient(order) ? pairs.filter((p) => p.key !== 'customer') : pairs;
 
 /**
- * 디지털 리워드 내려받기 안내 — 후원한 리워드에 downloadUrl이 있을 때만 붙는다.
+ * 디지털 리워드 내려받기 안내 — 후원한 리워드에 내려받을 파일이 있을 때만 붙는다.
+ *
+ * 파일이 여럿이면 전부 싣는다. 상위 티어는 하위 티어가 주는 것을 포함하므로 한 줄만
+ * 보내면 약속한 것을 덜 주게 된다. 레이블을 앞에 붙이는 이유도 같다 — 주소만 나열하면
+ * 어느 것이 MP3이고 어느 것이 원본인지 알 수 없다.
  *
  * 주소는 후원 확인 페이지에도 뜬다. 메일을 지우거나 못 받아도 받을 길이 남아야 하기
  * 때문이다(그 화면 주소는 바로 아래 줄에 함께 나간다).
@@ -90,8 +94,15 @@ const withoutUndeliverableCustomer = (
 const downloadLines = (order: FundingOrder, project: FundingProject | null): string[] => {
   const rewardId = order.fundingPledge?.rewardId;
   const reward = project?.rewards.find((r) => r.id === rewardId);
-  if (!reward?.downloadUrl) return [];
-  return ['', '[음원 내려받기]', reward.downloadUrl, '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.'];
+  // `downloads`가 없는 리워드가 들어와도 여기서 터지면 안 된다 — 이 함수는 결제 확정
+  // 메일 경로 안이라, 던지면 결제는 됐는데 안내 메일이 통째로 실패한다.
+  if (!reward?.downloads?.length) return [];
+  return [
+    '',
+    '[음원 내려받기]',
+    ...reward.downloads.map((d) => `${d.label}: ${d.url}`),
+    '· 이 주소는 후원 확인 페이지에서도 다시 볼 수 있습니다.',
+  ];
 };
 
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>

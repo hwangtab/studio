@@ -11,17 +11,27 @@ export interface FundingReward {
   id: string; title: string; description: string; amount: number;
   totalQuantity: number | null; requiresShipping: boolean; estimatedDelivery: string; image: string | null;
   /**
-   * 디지털 리워드 다운로드 주소. 값이 있으면 결제 확정 메일과 후원 확인 페이지에 내려받기
-   * 줄이 붙는다(lib/funding/email.ts · pages/[locale]/funding/manage/[orderNo].tsx).
+   * 디지털 리워드로 내려받을 파일들. 비어 있지 않으면 결제 확정 메일과 후원 확인 페이지에
+   * 내려받기 줄이 붙는다(lib/funding/email.ts · pages/[locale]/funding/manage/[orderNo].tsx).
    *
-   * **리워드마다 다르게 둘 수 있다** — 후원 금액에 따라 음질을 가르는 식이다. 프로젝트에
-   * 하나만 두면 그게 안 된다.
+   * **목록인 이유**: 예전엔 리워드당 주소가 하나였는데, 그러면 상위 티어가 상위 음질
+   * *하나만* 받는다. 5만원을 낸 사람이 1.8GB짜리 24bit 원본만 받아 휴대폰에서는 들을 수가
+   * 없었고, 3만원 티어는 설명이 "MP3에 더해 WAV"라고 약속해 놓고 WAV 하나만 줬다.
+   * 상위 티어는 하위 티어가 주는 것을 전부 포함해야 한다.
+   *
+   * `label`은 메일과 화면에 그대로 보인다. 주소 세 줄을 이름 없이 늘어놓으면 어느 것이
+   * 무엇인지 알 수 없다.
    *
    * 공개 주소라 아는 사람은 누구나 받을 수 있다. 그래서 경로에 추측하기 어려운 세그먼트를
    * 넣는다(스토리지 쪽 규칙이라 코드가 강제하지는 않는다). 이 자리에 접근 제어가 필요해지면
-   * 서명 URL로 바꿔야 하는데, 그때는 이 필드가 아니라 발급 함수가 들어와야 한다.
+   * 이 필드가 아니라 발급 함수가 들어와야 한다.
    */
-  downloadUrl: string | null;
+  downloads: FundingDownload[];
+}
+
+export interface FundingDownload {
+  label: string;
+  url: string;
 }
 export interface FundingProject {
   slug: string; title: string; summary: string; cover: string; ogImage: string | null;
@@ -40,7 +50,7 @@ export interface FundingProject {
 /**
  * 공개 화면으로 내려보낼 프로젝트에서 **내려받기 주소를 벗긴다.**
  *
- * 리워드의 `downloadUrl`은 후원자에게만 가야 하는 값이다. 그런데 상세·후원 화면은
+ * 리워드의 `downloads`는 후원자에게만 가야 하는 값이다. 그런데 상세·후원 화면은
  * 프로젝트 객체를 통째로 props로 직렬화해 내려보내므로, 벗기지 않으면 **페이지 소스에
  * 그대로 실린다** — 후원하지 않고도 원본을 받을 수 있고, 그 순간 리워드가 리워드가
  * 아니게 된다. 실제로 그렇게 배포됐다가 잡았다(2026-09-14).
@@ -50,7 +60,7 @@ export interface FundingProject {
  */
 export const stripRewardDownloads = (project: FundingProject): FundingProject => ({
   ...project,
-  rewards: project.rewards.map((r) => ({ ...r, downloadUrl: null })),
+  rewards: project.rewards.map((r) => ({ ...r, downloads: [] })),
 });
 
 export const FUNDING_DIR = path.join(process.cwd(), 'content', 'funding');
@@ -93,6 +103,16 @@ const bool = (v: unknown, name: string, fallback: boolean): boolean => {
 };
 
 const parseReward = (raw: unknown, index: number): FundingReward => {
+const parseDownloads = (raw: unknown, where: string): FundingDownload[] => {
+  if (raw === undefined || raw === null) return [];
+  if (!Array.isArray(raw)) throw new Error(`funding frontmatter: ${where}는 목록이어야 합니다`);
+  return raw.map((entry, i) => {
+    if (typeof entry !== 'object' || entry === null) throw new Error(`funding frontmatter: ${where}[${i}] 형식 오류`);
+    const e = entry as Record<string, unknown>;
+    return { label: str(e.label, `${where}[${i}].label`), url: str(e.url, `${where}[${i}].url`) };
+  });
+};
+
   if (typeof raw !== 'object' || raw === null) throw new Error(`funding frontmatter: rewards[${index}] 형식 오류`);
   const r = raw as Record<string, unknown>;
   return {
@@ -104,7 +124,7 @@ const parseReward = (raw: unknown, index: number): FundingReward => {
     requiresShipping: bool(r.requiresShipping, `rewards[${index}].requiresShipping`, false),
     estimatedDelivery: str(r.estimatedDelivery, `rewards[${index}].estimatedDelivery`),
     image: typeof r.image === 'string' && r.image !== '' ? r.image : null,
-    downloadUrl: typeof r.downloadUrl === 'string' && r.downloadUrl !== '' ? r.downloadUrl : null,
+    downloads: parseDownloads(r.downloads, `rewards[${index}].downloads`),
   };
 };
 
