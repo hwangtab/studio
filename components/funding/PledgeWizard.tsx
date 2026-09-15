@@ -8,7 +8,25 @@ import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
+import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, TextArea, TextInput } from '../ui/Field';
+
+/**
+ * 임시 저장에 담는 문자열 10칸. 배송 리워드는 이름·전화·이메일 + 배송 6칸 + 응원 메시지로
+ * 채워야 할 칸이 많아, 모달 백드롭을 잘못 눌러 언마운트되면 전부 다시 쳐야 했다.
+ *
+ * 여기 없는 것이 계약이다(lib/formDraft.ts "지켜야 할 선"):
+ * - `termsAgreed` — 복원된 체크는 의사표시가 아니다. `funding_pledges.terms_version`이
+ *   "그때 이 내용에 동의했다"의 증거인데, 되살린 체크가 그 증거를 받치지 못한다.
+ * - `displayNamePublic` — 체크 한 번뿐이라 잃어도 타이핑 손해가 없고, 문자열만 담는
+ *   모듈 계약을 깨면서까지 살릴 값이 아니다.
+ * - `rewardId`·`quantityText`·`additionalText` — 재고는 그 사이 바뀐다. 되살린 선택이
+ *   지금도 유효한 재고인지 이 모듈은 알 수 없다.
+ */
+const DRAFT_FIELDS = [
+  'customerName', 'customerPhone', 'customerEmail', 'supporterMessage',
+  'shipName', 'shipPhone', 'shipPostcode', 'shipAddress1', 'shipAddress2', 'shipMemo',
+] as const;
 
 interface Props {
   project: FundingProject;
@@ -166,6 +184,68 @@ export default function PledgeWizard({ project, initialRewardId, remaining, onPa
       /* 위와 같다 — 기억하지 못해도 결제 자체는 진행된다. */
     }
   };
+  /**
+   * 임시 저장 키. 프로젝트별로 가른다 — 갈지 않으면 다른 펀딩의 이름·연락처·주소가
+   * 새어 들어온다(`holdProofKey`와 같은 이유).
+   */
+  const draftKey = draftStorageKey('funding', project.slug);
+  /**
+   * 복원이 끝났는지. **저장 effect가 이 값을 게이트로 삼는다** — 없으면 마운트 시
+   * 저장 effect가 복원 effect보다 먼저 "빈 폼"으로 한 번 실행돼 방금 읽은 초안을
+   * 지워 버린다. `useRef`로는 못 막는다: ref는 같은 커밋 안에서 곧바로 true가 될 뿐
+   * 리렌더를 일으키지 않아, 저장 effect가 여전히 복원 이전(빈 폼) 렌더의 클로저 값을
+   * 들고 실행된다. `useState`로 둬야 복원 effect의 `setForm`·`setShip`과 함께 커밋되는
+   * 다음 렌더에서만 저장 effect가 (이미 복원된) 값으로 재실행된다.
+   */
+  const [draftRestored, setDraftRestored] = useState(false);
+
+  // 마운트 시 한 번 읽어 온다(SSR에는 window가 없어 초기값으로 쓰면 하이드레이션이 어긋난다
+  // — 서명 화면 `pages/[locale]/contracts/[id]/sign.tsx`와 같은 판단). 복원된 필드만 덮고
+  // 빈 칸은 그대로 둔다.
+  useEffect(() => {
+    const draft = readStringDraft(draftKey, DRAFT_FIELDS);
+    setForm((prev) => ({
+      ...prev,
+      customerName: draft.customerName ?? prev.customerName,
+      customerPhone: draft.customerPhone ?? prev.customerPhone,
+      customerEmail: draft.customerEmail ?? prev.customerEmail,
+      supporterMessage: draft.supporterMessage ?? prev.supporterMessage,
+    }));
+    setShip((prev) => ({
+      ...prev,
+      name: draft.shipName ?? prev.name,
+      phone: draft.shipPhone ?? prev.phone,
+      postcode: draft.shipPostcode ?? prev.postcode,
+      address1: draft.shipAddress1 ?? prev.address1,
+      address2: draft.shipAddress2 ?? prev.address2,
+      memo: draft.shipMemo ?? prev.memo,
+    }));
+    setDraftRestored(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [draftKey]);
+
+  // 값이 바뀔 때마다 담는다. `draftRestored`가 false인 동안은(복원 전) 아무것도 쓰지
+  // 않는다 — 위 주석의 함정.
+  useEffect(() => {
+    if (!draftRestored) return;
+    writeStringDraft(draftKey, DRAFT_FIELDS, {
+      customerName: form.customerName,
+      customerPhone: form.customerPhone,
+      customerEmail: form.customerEmail,
+      supporterMessage: form.supporterMessage,
+      shipName: ship.name,
+      shipPhone: ship.phone,
+      shipPostcode: ship.postcode,
+      shipAddress1: ship.address1,
+      shipAddress2: ship.address2,
+      shipMemo: ship.memo,
+    });
+  }, [
+    draftRestored, draftKey,
+    form.customerName, form.customerPhone, form.customerEmail, form.supporterMessage,
+    ship.name, ship.phone, ship.postcode, ship.address1, ship.address2, ship.memo,
+  ]);
+
   const [remainingMs, setRemainingMs] = useState<number | null>(null);
 
   // 위젯이 실제로 렌더되는 조건(아래 `if (created)` 분기와 같은 식)을 한 곳에서 판정해

@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
+import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
 
 interface SuccessProps {
@@ -95,6 +96,12 @@ const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, projectSlug, emailSent }: SuccessProps) {
   useEffect(() => {
     if (outcome !== 'confirmed' || !orderNo) return;
+    // 결제가 확정됐으니 후원 폼에 남아 있던 이름·연락처·주소 임시 저장을 지운다
+    // (lib/formDraft.ts). projectSlug를 알면 그 프로젝트 것만, 모르면(주문에
+    // fundingPledge 연결이 비는 예외적인 경우) 펀딩 흐름 전체를 지운다 — 결제가 끝난
+    // 세션에 배송지를 남겨 둘 이유가 없다.
+    if (projectSlug) clearStoredDraft(draftStorageKey('funding', projectSlug));
+    else clearDraftsByPrefix('studionol:funding-draft:');
     // 새로고침마다 다시 세지 않는다 — 이 화면은 쿠키가 살아 있는 30분 동안 몇 번이고
     // 열릴 수 있고, 그때마다 발화하면 결제 수가 부풀려진다.
     try {
