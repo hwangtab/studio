@@ -77,29 +77,37 @@ rewards:
 
 다섯이 나옵니다. 그중 넷은 후원 리워드인 앨범에도 목소리를 남겼습니다.
 
-![왼쪽부터 모레도토요일, 모모, 이서영, 이형주, 남수](/images/funding/keep-singing-for-palestine/lineup-strip.webp)
-
 ### 모레도토요일
+
+![모레도토요일](/images/funding/keep-singing-for-palestine/lineup/moredo-saturday.webp "240")
 
 
 모레도토요일은 제주 강정마을 평화운동 현장에서 만난 두 사람이 결성한 포크 듀오입니다. 모레와 도토, 두 이름이 그대로 팀 이름이 됐습니다. 바람에 흔들리는 나뭇잎 같은 소리라는 말이 이들에게 자주 붙습니다. 앨범에 두 곡을 남겼는데, 가자로 향하던 여성들의 노래 〈We will sail for your freedom〉과 강정에서의 4년을 적은 〈모르는〉입니다. 이 앨범에서 두 곡을 부른 유일한 팀입니다. ([인스타그램](https://www.instagram.com/saturday_moredo/))
 
 ### 모모
 
+![모모](/images/funding/keep-singing-for-palestine/lineup/momo.webp "240")
+
 
 모모는 예진 안젤라 박과 황슬기의 재즈 듀오입니다. 즉흥과 실험을 밑천으로 삼되, 그 소리가 향하는 곳은 분쟁지역의 평범한 하루와 그 안에 깔린 긴장입니다. 앨범에 실은 〈If this can be tolerated, what can't be?〉는 단 한 줄의 가사를 끝없이 되풀이하며 우리의 무감각을 묻습니다. ([인스타그램](https://www.instagram.com/momoismothermother/))
 
 ### 이서영
+
+![이서영](/images/funding/keep-singing-for-palestine/lineup/lee-seoyoung.webp "240")
 
 
 이서영은 숲해설가이면서 노래를 만듭니다. 나무를 설명하는 일과 노래를 만드는 일이 그에게는 같은 일인 듯합니다. 포크에 앰비언트와 일렉트로닉을 섞고, 맑고 서늘한 음색으로 고독과 공존을 노래합니다. 앨범에 실은 〈우리〉는 대학 시절에 쓴 곡을 10년 만에 다시 꺼내 고쳐 쓴 것입니다. ([인스타그램](https://www.instagram.com/leesyoung.kr/))
 
 ### 이형주
 
+![이형주](/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp "240")
+
 
 이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다. 앨범에는 참여하지 않았지만 이날 거리에는 함께 섭니다.
 
 ### 남수
+
+![남수](/images/funding/keep-singing-for-palestine/lineup/namsu.webp "240")
 
 남수는 인디와 포크, 블루스와 재즈를 오가며 노래하고, 〈딱따구리 책방〉이라는 문화공간을 꾸립니다. 앨범 네 번째 곡 〈안녕 (먼 곳의 그대에게)〉이 그의 노래입니다. 가사에 "나의 이름을 모르는 그대에게"라는 구절이 있는데, 앨범 제목과 같은 자리에서 나온 말처럼 들립니다. 남수는 이 곡을 두고 "멀리에 있지만 같은 마음과 소망을 품은 우리, 이름을 모르지만 서로의 안녕을 바라는 우리"라고 했습니다. 본래 같은 날 낮 집회의 연대 공연자였다가, 행사가 통째로 거리로 나오면서 낮과 저녁의 구분이 사라져 한 무대에 서게 됐습니다. ([인스타그램](https://www.instagram.com/namsu_ggu/))
 
