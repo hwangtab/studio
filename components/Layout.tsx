@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Header } from './layout/Header';
 import { Footer } from './layout/Footer';
+import { PaymentBrandBar } from './layout/PaymentBrandBar';
 import { type Locale, defaultLocale } from '../lib/i18n';
 import { isPrivatePageRoute } from '../lib/analytics/privatePaths';
 
@@ -152,6 +153,13 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   /** 한 가지 일만 하러 온 화면 — 사이트 헤더·푸터·플로팅 버튼을 두르지 않는다. */
   const isBareLayout = isContractPage || isAdminPage || isPrivatePaymentPage;
+  /**
+   * 결제 결과·후원 확인 화면에는 **브랜드 바만** 되돌린다. 내비게이션을 걷어낸 것까지는
+   * 맞았는데 그 결과가 '흰 바탕에 카드 하나'라, 결제를 막 마친 사람에게 결제대행사 화면처럼
+   * 보여 그대로 닫고 나가게 된다. 계약 서명·관리자 화면은 그대로 둔다 — 거기는 외부에서
+   * 들어오는 자리가 아니다.
+   */
+  const showPaymentBrandBar = isPrivatePaymentPage && !isContractPage && !isAdminPage;
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
   const skipLabel = t('actions.skipToContent');
 
@@ -175,6 +183,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         브랜드는 계약 화면이 자기 상단에 직접 밝힌다 — 피싱과 구별되어야 하는 화면이라
         "어디서 온 문서인가"는 남아 있어야 한다.
       */}
+      {showPaymentBrandBar && <PaymentBrandBar locale={locale} isDarkMode={isDarkMode} />}
       {!isBareLayout && (
         <Header
           ref={headerRef}
