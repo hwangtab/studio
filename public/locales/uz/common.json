@@ -1565,7 +1565,7 @@
       "items": [
         {
           "q": "Buni qilsam, musiqamga nima bo'ladi?",
-          "a": "Sizni tanimaydigan odamlar eshitadi. Musiqa, ular o'qiydigan tilda yozilgan matn bilan birga, kasbi musiqa izlash bo'lgan ichki va xorijiy tahririyat, radio hamda plastinka do'konlarining kiruvchi qutisiga yetib boradi. Nechta manzilga yuborilishini yuborishdan oldin raqam bilan aniqlab aytamiz, ish tugagach esa o'sha raqam bo'yicha bajarilganini va nima qaytganini hisobotda ko'rsatamiz. Beshta press-reliz va press-kit sahifasi kampaniya tugagach ham qoladi."
+          "a": "Musiqa sizni tanimaydigan odamlarning ish stoliga qo'yiladi. Musiqa, ular o'qiydigan tilda yozilgan matn bilan birga, kasbi musiqa izlash bo'lgan ichki va xorijiy tahririyat, radio hamda plastinka do'konlarining kiruvchi qutisiga yetib boradi. Nechta manzilga yuborilishini yuborishdan oldin raqam bilan aniqlab aytamiz, ish tugagach esa o'sha raqam bo'yicha bajarilganini va nima qaytganini hisobotda ko'rsatamiz. Beshta press-reliz va press-kit sahifasi kampaniya tugagach ham qoladi."
         },
         {
           "q": "Nima qilib berasiz?",
@@ -1621,7 +1621,7 @@
           "Chet el",
           "Yo'q",
           "Asosan ingliz tilida",
-          "60 mamlakat · 9 til"
+          "60 mamlakat · press-reliz 5 tilda"
         ],
         [
           "Narx",
@@ -1703,7 +1703,7 @@
     },
     "review": {
       "title": "Avval yuboriladigan manzillarni sanab beramiz",
-      "lead": "Prodyuser albomni oxirigacha tinglaydi va bu musiqani olishi mumkin bo'lgan nashrlar ichkarida hamda chet elda qayerda va taxminan nechta ekanini sanab aytadi. 3 ish kuni, bepul. Bu musiqa yaxshi ishlanganmi degan savolga baho qo'yiladigan joy emas — bu musiqa qaysi kanallarga to'g'ri kelishini topadigan joy. Raqamni ko'rib qaror qilasiz.",
+      "lead": "Prodyuser albomni oxirigacha tinglaydi va bu musiqani olishi mumkin bo'lgan nashrlar ichkarida hamda chet elda qayerda va taxminan nechta ekanini sanab aytadi. 3 ish kuni, bepul. Biz faqat olishga rozi bo'lgan musiqani yuboramiz, shuning uchun na yuboruvchi, na qabul qiluvchi tomon bekorga ovora bo'ladi. Raqamni ko'rib qaror qilasiz.",
       "criteria": [
         {
           "title": "Bu musiqani qayerda yoritishadi",
@@ -1715,11 +1715,12 @@
         },
         {
           "title": "Prodyuser oxirigacha tinglaydi",
-          "body": "Musiqa sahnasida 15 yil ishlagan prodyuser albomni boshidan oxirigacha tinglaydi. Oxirigacha tinglagan odam yozgan xat bilan tinglamagani yozgan xatni qabul qiluvchi tomon ajratadi."
+          "body": "Prodyuser Hwang Kyungha albomni boshidan oxirigacha tinglaydi. U o'n besh yildan beri indi albomlarni loyihalab, ishlab kelgan odam. Oxirigacha tinglagan odam yozgan xat bilan tinglamagani yozgan xatni qabul qiluvchi tomon ajratadi."
         }
       ],
       "rejection": "3 ish kuni ichida, bepul javob beramiz. Javobda qanday turdagi nechta nashrga yuborish mumkinligi raqam bilan yoziladi. Agar mos kanal biz tomonda emas deb hisoblasak, buni ham borligicha yozamiz va qayerga yuborganingiz ma'qulligini bilganimizcha qo'shib beramiz.",
-      "why": "Ro'yxat bir marta ishlatib tashlanadigan narsa emas. O'sha janr haqida yozadigan eshiklar keyingi albomingizda ham o'sha eshiklar bo'ladi, mos kelmaydigan materialni qayta-qayta yuboraversangiz esa o'sha eshik yopiladi. Siz sotib olayotgan narsa manzillar ro'yxati emas, ishonch hali tirik turgan eshiklar."
+      "why": "Bu ilgari ko'rilmagan manzilga birinchi marta yozilayotgan xat emas. O'sha tahririyatlarga, o'sha radiolarga, o'sha plastinka do'konlariga o'n besh yildan beri yuborib kelamiz va o'sha eshiklar hanuzgacha yopilgani yo'q. Chunki qabul qiluvchi tomon biz nima bo'lsa shuni yubormasligimizni biladi — shu bois o'sha eshiklar qabul qilishi qiyin musiqani biz ham olmaymiz. Siz sotib olayotgan narsa manzillar ro'yxati emas, ana shunday saqlab kelingan eshiklardir.",
+      "producerLink": "Prodyuser haqida"
     },
     "pricing": {
       "title": "Narx",
@@ -1742,6 +1743,10 @@
         {
           "q": "Nega yuborish bir-uch hafta davom etadi?",
           "a": "Har bir nashr turiga boshqacha matn ketadi, bir yo'la yuborilgan xat esa kiruvchi qutiga yetib bormaydi. Hudud va til bo'yicha navbat bilan yuborilganda albom haqiqatan ko'proq o'qiladi. «Namsan Tower Lights» o'n uch kun ichida 1,270 joyga yetdi (ma'lumot 2026-yil 14-sentabr holatiga)."
+        },
+        {
+          "q": "O'sha manzillar qayerdan olingan?",
+          "a": "Bular ommaviy axborot vositalari, nashrlar, teleradio va tarqatuvchilarning o'zi ochiq e'lon qilgan ish manzillari — tahririyat, xabar va maqola qabul qiladigan manzillar kabi. Shaxsiy foydalanishdagi manzillarni yig'maymiz va yuboradigan har bir xatimizda o'sha manzilni qayerdan topganimizni ham yozib qo'yamiz. Obunani bekor qilish xatning o'zida bir bosqichda hal bo'ladi va manzil o'sha zahoti ro'yxatdan o'chiriladi. Buni qila olishimizning sababi — bu sotib olinadigan ro'yxat emas, o'zimiz yig'ib, o'zimiz yuritadigan ro'yxat."
         },
         {
           "q": "Nima tayyorlashimiz kerak?",

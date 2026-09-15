@@ -1593,7 +1593,7 @@
       "items": [
         {
           "q": "What actually happens to my music if I do this?",
-          "a": "People who don't know you get to hear it. The music arrives in the inboxes of Korean and overseas editors, radio stations and record shops whose job is finding music, together with copy written in the language they read. We fix the number of outlets in writing before anything goes out, and when it's over the report shows we sent to exactly that number and what came back. The five press releases and the press-kit page stay with you after the campaign ends."
+          "a": "Your music lands on the desks of people who don't know you. The music arrives in the inboxes of Korean and overseas editors, radio stations and record shops whose job is finding music, together with copy written in the language they read. We fix the number of outlets in writing before anything goes out, and when it's over the report shows we sent to exactly that number and what came back. The five press releases and the press-kit page stay with you after the campaign ends."
         },
         {
           "q": "What do you actually do?",
@@ -1649,7 +1649,7 @@
           "Overseas",
           "None",
           "Mostly English-speaking",
-          "60 countries · 9 languages"
+          "60 countries · press release in 5 languages"
         ],
         [
           "Price",
@@ -1731,7 +1731,7 @@
     },
     "review": {
       "title": "First we count the outlets for you",
-      "lead": "The producer listens to every track, then tells you where — and roughly how many outlets in Korea and abroad — would take this music. Three business days, free. This isn't a place where the music gets graded on how well it's made; it's where we work out which channels it fits. You decide once you've seen the number.",
+      "lead": "The producer listens to every track, then tells you where — and roughly how many outlets in Korea and abroad — would take this music. Three business days, free. We only send out music we've agreed to take on, so nobody wastes their time — not the side sending it, not the side receiving it. You decide once you've seen the number.",
       "criteria": [
         {
           "title": "Which outlets cover this music",
@@ -1743,11 +1743,12 @@
         },
         {
           "title": "The producer listens all the way through",
-          "body": "A producer with fifteen years in the music scene listens to the album from the first track to the last. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell."
+          "body": "Producer Hwang Kyungha listens to the album from the first track to the last. He has spent fifteen years planning and making independent records. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell."
         }
       ],
       "rejection": "You get an answer within three business days, free. It says in numbers how many outlets of what kind we can send to. If we judge that our channels aren't the right fit for it, we write that plainly too, and add whatever we know about where you'd do better to send it.",
-      "why": "A list is not something you use once and throw away. The desks that cover a given genre are the same desks for your next album, and sending them material that doesn't fit, over and over, is how those doors close. What you're buying is not a list of addresses but a set of doors where the trust is still intact."
+      "why": "This is not a first email to an address we've never written to. The same desks, the same radio shows, the same record shops have been hearing from us for fifteen years, and those doors have not closed. It's because the people on the other end know we don't send just anything — which is why we turn down music those desks would have no room for. What you're buying is not a list of addresses; it's the doors we kept open that way.",
+      "producerLink": "Meet the producer"
     },
     "pricing": {
       "title": "Price",
@@ -1770,6 +1771,10 @@
         {
           "q": "Why does sending take one to three weeks?",
           "a": "Each kind of outlet gets a different piece of writing, and mail sent all at once does not reach inboxes. Going region by region and language by language gets the record actually read more often. Namsan Tower Lights went to 1,270 places over thirteen days (figures as of 14 September 2026)."
+        },
+        {
+          "q": "Where did those addresses come from?",
+          "a": "They are working contact points that news outlets, publications, broadcasters and distributors published themselves — editorial desks, tip lines, submission addresses and the like. We do not collect addresses that individuals use privately, and every email we send states where we found the address. Unsubscribing is handled in a single step inside the email, and the address comes off the list the moment it happens. We can work this way because it is a list we gathered and maintain ourselves, not one that is bought and sold."
         },
         {
           "q": "What do we need to prepare?",
