@@ -1701,7 +1701,7 @@
       "steps": [
         {
           "title": "Get in touch and send the music",
-          "description": "Message us on KakaoTalk with the audio and the basic details. Whether it's still unreleased or already out, either is fine."
+          "description": "Message us on KakaoTalk and send the music. A single streaming link is enough to start. Artwork, press photos, credits and lyrics help if you have them, but you don't need them right now. Whether the record is still unreleased or already out, either is fine."
         },
         {
           "title": "We listen to every track and count the outlets — 3 business days, free",
@@ -1713,7 +1713,7 @@
         },
         {
           "title": "Materials — 5 days",
-          "description": "We produce the press release, the press kit page, the derivative copy and the video."
+          "description": "We write the Korean press release first, and the other four languages branch off from it. Not run through a translation engine — each one is written again in that language and checked by back-translation. Over the same stretch we build the press kit page and prepare the short versions cut for radio, record shops and newsroom tip forms, along with the full-album listening video. These five days are the time spent focused on one act, and that is why it's three acts a month."
         },
         {
           "title": "The artist's final approval",
@@ -1721,11 +1721,11 @@
         },
         {
           "title": "Sending — 1 to 3 weeks",
-          "description": "We send in waves, by the kind of outlet and by region. More of it actually reaches inboxes that way than if it all went at once."
+          "description": "We send in waves, by the kind of outlet and by region. More of it actually reaches inboxes that way than if it all went at once. While the sending runs, we check which addresses bounced and who unsubscribed and clear them off the list — that is what leaves somewhere to send to for the next artist."
         },
         {
           "title": "Report",
-          "description": "We write up the send-out record and the responses for you."
+          "description": "When the sending is done, you get a document: where it went, how many outlets, and what came back. Beside it we put the numbers we confirmed with you before the sending started, so you can check on the spot whether we did what we said. Bounces and unsubscribes are not left out. The promotion for your next album starts from this document."
         }
       ]
     },

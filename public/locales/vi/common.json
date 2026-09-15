@@ -1673,7 +1673,7 @@
       "steps": [
         {
           "title": "Liên hệ và gửi bản nhạc",
-          "description": "Hãy nhắn cho chúng tôi qua KakaoTalk kèm bản nhạc và thông tin cơ bản. Chưa phát hành hay đã phát hành rồi đều được."
+          "description": "Hãy nhắn cho chúng tôi qua KakaoTalk và gửi bản nhạc. Chỉ một đường link nghe nhạc trực tuyến là đã bắt đầu được. Ảnh bìa, ảnh chân dung, credit và lời bài hát có thì tốt, nhưng lúc này chưa có cũng không sao. Chưa phát hành hay đã phát hành rồi đều được."
         },
         {
           "title": "Nghe trọn album và đếm quy mô gửi đi — 3 ngày làm việc · miễn phí",
@@ -1685,7 +1685,7 @@
         },
         {
           "title": "Làm tài liệu — 5 ngày",
-          "description": "Chúng tôi làm thông cáo báo chí, trang press kit, các bản thảo phái sinh và video."
+          "description": "Chúng tôi viết thông cáo báo chí tiếng Hàn trước, rồi từ đó tách ra bốn thứ tiếng còn lại. Không chạy qua máy dịch — mỗi bản được viết lại bằng chính ngôn ngữ đó rồi kiểm tra bằng cách dịch ngược. Cùng khoảng thời gian ấy, chúng tôi dựng trang press kit và chuẩn bị luôn các bản rút gọn vừa khớp với đài phát thanh, cửa hàng đĩa và biểu mẫu gửi tin của tòa soạn, cùng video nghe trọn album. Năm ngày này là thời gian dồn hết cho một nghệ sĩ, nên mỗi tháng chỉ nhận 3 nghệ sĩ."
         },
         {
           "title": "Nghệ sĩ duyệt lần cuối",
@@ -1693,11 +1693,11 @@
         },
         {
           "title": "Gửi — 1 đến 3 tuần",
-          "description": "Chúng tôi gửi theo đợt, theo tính chất đầu báo và theo khu vực. Cách này khiến số thư thực sự vào được hộp thư đến nhiều hơn so với gửi dồn một lúc."
+          "description": "Chúng tôi gửi theo đợt, theo tính chất đầu báo và theo khu vực. Cách này khiến số thư thực sự vào được hộp thư đến nhiều hơn so với gửi dồn một lúc. Trong lúc gửi, chúng tôi kiểm tra các địa chỉ bị trả lại và những nơi xin ngừng nhận rồi dọn khỏi danh sách — nhờ vậy nghệ sĩ tiếp theo mới còn nơi để gửi."
         },
         {
           "title": "Báo cáo",
-          "description": "Chúng tôi tổng hợp danh mục đã gửi và các phản hồi rồi gửi bạn."
+          "description": "Gửi xong, chúng tôi giao cho bạn một tài liệu: đã gửi tới đâu, bao nhiêu nơi, và nhận lại được những gì. Chúng tôi đặt cạnh đó con số đã chốt và báo bạn trước khi gửi, để bạn đối chiếu ngay tại chỗ xem có làm đúng như đã nói không. Thư bị trả lại và yêu cầu ngừng nhận cũng không bị bỏ ra. Việc quảng bá cho album sau bắt đầu từ tài liệu này."
         }
       ]
     },

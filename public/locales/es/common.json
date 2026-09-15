@@ -1673,7 +1673,7 @@
       "steps": [
         {
           "title": "Contacto y envío de la música",
-          "description": "Escríbenos por KakaoTalk y mándanos la música y los datos básicos. Da igual si aún no ha salido o si ya está publicada."
+          "description": "Escríbenos por KakaoTalk y mándanos la música. Con un solo enlace de streaming ya podemos empezar. La portada, las fotos de promoción, los créditos y las letras vienen bien si los tienes, pero ahora mismo no hacen falta. Da igual si aún no ha salido o si ya está publicada."
         },
         {
           "title": "Escuchamos el disco entero y contamos los destinatarios — 3 días hábiles · gratis",
@@ -1685,7 +1685,7 @@
         },
         {
           "title": "Producción de materiales — 5 días",
-          "description": "Hacemos la nota de prensa, la página de press kit, los textos derivados y el vídeo."
+          "description": "Primero escribimos la nota de prensa en coreano, y de ahí se ramifican los otros cuatro idiomas. No la pasamos por un traductor automático: se vuelve a escribir en cada idioma y se revisa con retrotraducción. En esos mismos días montamos la página de press kit y preparamos las versiones reducidas ajustadas a la radio, las tiendas y los formularios de contacto de los medios, junto con el vídeo del álbum completo. Estos cinco días son el tiempo que se dedica en exclusiva a un artista, y por eso son tres artistas al mes."
         },
         {
           "title": "Aprobación final del artista",
@@ -1693,11 +1693,11 @@
         },
         {
           "title": "Envío — de 1 a 3 semanas",
-          "description": "Enviamos por tandas, según el tipo de medio y la región. Así llega a más bandejas de entrada que mandándolo todo de golpe."
+          "description": "Enviamos por tandas, según el tipo de medio y la región. Así llega a más bandejas de entrada que mandándolo todo de golpe. Mientras dura el envío revisamos las direcciones que rebotan y las bajas, y las quitamos de la lista: es lo que hace que al siguiente artista le queden sitios a los que enviar."
         },
         {
           "title": "Informe",
-          "description": "Te preparamos el detalle de los envíos y las reacciones."
+          "description": "Cuando termina el envío te entregamos un documento: adónde fue, a cuántos medios y qué volvió. Al lado ponemos las cifras que te confirmamos antes de empezar a enviar, para que puedas comprobar ahí mismo si hicimos lo que dijimos. Los rebotes y las bajas tampoco se omiten. La promoción del próximo álbum empieza en este documento."
         }
       ]
     },

@@ -1673,7 +1673,7 @@
       "steps": [
         {
           "title": "Murojaat va musiqani yuborish",
-          "description": "KakaoTalk orqali yozing va musiqa bilan asosiy ma'lumotlarni yuboring. Hali chiqmagan bo'lsa ham, allaqachon chiqqan bo'lsa ham bo'laveradi."
+          "description": "KakaoTalk orqali yozing va musiqani yuboring. Bitta striming havolasining o'zi bilan ham boshlash mumkin. Muqova, portret surat, kredit va qo'shiq matnlari bo'lsa yaxshi, lekin hozir yo'q bo'lsa ham zarari yo'q. Hali chiqmagan bo'lsa ham, allaqachon chiqqan bo'lsa ham bo'laveradi."
         },
         {
           "title": "Albomni oxirigacha tinglash va yuborish hajmini sanash — 3 ish kuni · bepul",
@@ -1685,7 +1685,7 @@
         },
         {
           "title": "Materiallar — 5 kun",
-          "description": "Press-reliz, press-kit sahifasi, qo'shimcha matnlar va videoni tayyorlaymiz."
+          "description": "Avval koreys tilidagi press-relizni yozamiz, qolgan to'rt til o'shandan tarmoqlanadi. Tarjimon dasturdan o'tkazilmaydi — har biri o'sha tilda qaytadan yoziladi va teskari tarjima bilan tekshiriladi. Shu kunlarning o'zida press-kit sahifasini tayyorlaymiz, radio, do'kon va tahririyat shakllariga moslangan qisqartma variantlar bilan butun albom videosini ham birga tayyorlaymiz. Shu besh kun bitta ijodkorga jamlanib sarflanadigan vaqt, shuning uchun oyiga 3 ta ijodkor olamiz."
         },
         {
           "title": "Ijodkorning yakuniy tasdig'i",
@@ -1693,11 +1693,11 @@
         },
         {
           "title": "Yuborish — 1–3 hafta",
-          "description": "Nashr turiga va hudud tartibiga qarab bo'lib yuboramiz. Bir yo'la yuborishdan ko'ra shunday qilinganda kiruvchi qutiga haqiqatan yetib boradigan xatlar ko'proq bo'ladi."
+          "description": "Nashr turiga va hudud tartibiga qarab bo'lib yuboramiz. Bir yo'la yuborishdan ko'ra shunday qilinganda kiruvchi qutiga haqiqatan yetib boradigan xatlar ko'proq bo'ladi. Yuborish davomida qaytib kelgan manzillar va obunadan chiqqanlarni tekshirib, ro'yxatdan chiqaramiz — shunda keyingi ijodkorga yuboradigan joy qoladi."
         },
         {
           "title": "Hisobot",
-          "description": "Yuborilganlar ro'yxati va kelgan javoblarni jamlab beramiz."
+          "description": "Yuborish tugagach, qayerlarga va nechta manzilga yuborilgani hamda nima javob kelgani hujjat qilib beriladi. Yuborishdan oldin aniqlab bildirgan raqamlarni yonma-yon qo'yamiz — aytganimizdek qilinganini o'sha yerda solishtira olasiz. Qaytib kelgan xatlar va obunadan chiqishlar ham chiqarib tashlanmaydi. Keyingi albom targ'ibi shu hujjatdan boshlanadi."
         }
       ]
     },
