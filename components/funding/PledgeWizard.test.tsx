@@ -169,7 +169,7 @@ it('제출하면 결제수단이 toss로 나간다', async () => {
 // 실명 공개는 옵트인이어야 한다 — 기본 체크는 후원자가 모르는 사이에 이름이 명단에 올라간다.
 it('후원자 명단 이름 공개는 기본 해제', () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  expect(screen.getByLabelText(/이름 공개/)).not.toBeChecked();
+  expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
 });
 
 // 상한 없이 두면 5,000,000원을 넘긴 값이 그대로 서버로 가서 400으로 튕긴다 —
@@ -414,7 +414,7 @@ describe('임시 저장', () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
     await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-    await userEvent.type(screen.getByLabelText(/응원 메시지/), '화이팅');
+    await userEvent.type(screen.getByLabelText(/^응원 메시지$/), '화이팅');
     await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '박수령');
     await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-3333-4444');
     await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
@@ -427,7 +427,7 @@ describe('임시 저장', () => {
     expect(await screen.findByLabelText(/^이름\*$/)).toHaveValue('김후원');
     expect(screen.getByLabelText(/^연락처\*$/)).toHaveValue('010-1111-2222');
     expect(screen.getByLabelText(/^이메일\*$/)).toHaveValue('a@b.com');
-    expect(screen.getByLabelText(/응원 메시지/)).toHaveValue('화이팅');
+    expect(screen.getByLabelText(/^응원 메시지$/)).toHaveValue('화이팅');
     expect(screen.getByLabelText(/^받는 분\*$/)).toHaveValue('박수령');
     expect(screen.getByLabelText(/^받는 분 연락처\*$/)).toHaveValue('010-3333-4444');
     expect(screen.getByLabelText(/^우편번호\*$/)).toHaveValue('12345');
@@ -460,7 +460,7 @@ describe('임시 저장', () => {
     const additionalInput = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
     await typeInto(additionalInput, '2000');
     await userEvent.tab();
-    await userEvent.click(screen.getByLabelText(/이름 공개/));
+    await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
     unmount();
 
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
@@ -468,7 +468,7 @@ describe('임시 저장', () => {
     expect(await screen.findByLabelText(/CD/)).toBeChecked();
     expect(screen.getByLabelText('수량')).toHaveValue(1);
     expect(screen.getByLabelText(/추가 후원금/)).toHaveValue(0);
-    expect(screen.getByLabelText(/이름 공개/)).not.toBeChecked();
+    expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
   });
 
   /**

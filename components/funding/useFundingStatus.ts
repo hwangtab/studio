@@ -4,6 +4,7 @@ import { computeProjectState, type ProjectState } from '../../lib/funding/projec
 export interface FundingStatusResponse {
   state: ProjectState; goalAmount: number; endAt: string; raisedAmount: number; backerCount: number; percent: number;
   remaining: Record<string, number | null>; publicBackers: string[];
+  publicMessages: Array<{ name: string; message: string; at: number }>;
 }
 
 /** 프로젝트 파일이 가진 시각 정보 — 브라우저 시계로 상태를 다시 판정하는 데만 쓴다. */

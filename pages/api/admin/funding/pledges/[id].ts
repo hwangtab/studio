@@ -178,6 +178,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }
+    case 'unpublish': {
+      /**
+       * 공개 명단에서 내린다 — 이름과 응원 메시지가 함께 빠진다(공개 동의가 그 둘을 한
+       * 단위로 받는다). 타인의 권리를 침해하거나 프로젝트와 무관한 메시지를 내리기 위한
+       * 수단이고, 약관 제13조가 그럴 수 있다고 고지한다.
+       *
+       * 메시지 본문은 지우지 않는다. 표시만 내리고 기록은 남겨 둔다 — 왜 내렸는지 나중에
+       * 확인할 수 있어야 하고, 후원자가 이의를 제기할 수도 있다.
+       */
+      await db
+        .update(fundingPledges)
+        .set({ displayNamePublic: false, updatedAt: now })
+        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      return res.status(200).json({ ok: true });
+    }
+
     case 'set_memo': {
       // 주의: 메모 전체를 덮어쓰는 액션이라 웹훅 표식도 함께 지워질 수 있다. 재고 확인을
       // '닫는' 의도라면 clear_stock_review를 쓸 것 — 그쪽은 원문을 남기고 사유를 강제한다.
