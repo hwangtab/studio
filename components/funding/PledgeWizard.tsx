@@ -1,14 +1,14 @@
 import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 
+import TossPaymentWidget from '../booking/TossPaymentWidget';
+import PriceBreakdown from '../booking/PriceBreakdown';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
-import { DEFAULT_FUNDING_PAYMENT_CHOICE, FUNDING_PAYMENT_CHOICES, findFundingPaymentChoice } from '../../lib/funding/paymentChoices';
 import type { FundingProject } from '../../lib/funding/projects';
 import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
-import { useApplePaySupport } from '../../utils/useApplePaySupport';
 import { Field, TextArea, TextInput } from '../ui/Field';
 
 /**
@@ -33,6 +33,12 @@ interface Props {
   initialRewardId: string | null;
   remaining: Record<string, number | null>;
   /**
+   * 결제 위젯(토스 iframe)이 화면에 있는 동안 true. 모달이 이 값을 받아 **포커스 트랩을
+   * 끈다** — 트랩의 포커스 대상 목록에 iframe이 없어서, 켜 둔 채로는 키보드 사용자가
+   * 카드번호 칸에 Tab으로 못 들어가고 첫 요소로 되감긴다.
+   */
+  onPaymentActiveChange?: (active: boolean) => void;
+  /**
    * 리워드를 이미 고르고 들어온 화면에서 선택 단계를 감춘다. 리워드 카드를 눌러 연 모달이
    * 그런 경우다 — 방금 고른 것을 네 개 중에서 또 고르게 하면 무엇을 고른 건지 의심하게 된다.
    * 고른 티어는 읽기 전용으로 보여 주고, 바꾸려면 모달을 닫고 다른 카드를 누른다.
@@ -44,6 +50,37 @@ interface Props {
    */
   stickySummary?: boolean;
 }
+interface Created {
+  orderNo: string; totalAmount: number; itemAmount: number; vatAmount: number;
+  holdExpiresAt: string;
+  /** 서버가 홀드를 만든 시각. 있으면 기기 시계와 무관하게 남은 시간을 잴 수 있다. */
+  serverNow?: string;
+  /** 응답을 받은 순간의 **기기** 시계. 이후 경과 시간은 전부 이 값과의 차이로만 잰다. */
+  receivedAt: number;
+}
+
+/**
+ * 결제 대기 시간의 총량(ms). `null`이면 "알 수 없음"이고, 그때는 만료로 단정하지 않는다.
+ *
+ * 예전엔 서버가 준 절대 시각(`holdExpiresAt`)을 기기의 `Date.now()`와 직접 비교했다. 기기
+ * 시계가 15분 이상 빨리 가면 방금 만든 홀드가 **생성 직후 만료**로 판정돼 결제 위젯이 영영
+ * 뜨지 않았고, "다시 신청"을 눌러도 같은 결과였다(새 주문의 holdExpiresAt도 같은 이유로
+ * 과거가 된다). 지금은 서버 시각(`serverNow`)과의 차이로 총량을 구하고, 남은 시간은
+ * **응답 수신 이후 경과분**만 빼서 잰다 — 두 시계를 섞지 않는다.
+ */
+const holdDurationMs = (c: Created): number | null => {
+  const end = new Date(c.holdExpiresAt).getTime();
+  if (!Number.isFinite(end)) return null;
+  if (c.serverNow) {
+    const server = new Date(c.serverNow).getTime();
+    if (Number.isFinite(server)) return end - server;
+  }
+  // serverNow가 없는 응답(구버전)에는 기기 시계로 폴백하되, 음수는 "시계가 어긋났다"는
+  // 신호로 읽고 만료로 단정하지 않는다 — 방금 만든 홀드가 이미 지났을 리는 없다.
+  const local = end - c.receivedAt;
+  return local > 0 ? local : null;
+};
+
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
@@ -113,7 +150,7 @@ function StepHeader({ id, n, title, hint }: { id: string; n: number; title: stri
 const isSoldOut = (remaining: Record<string, number | null>, rewardId: string): boolean =>
   (remaining[rewardId] ?? 1) <= 0;
 
-export default function PledgeWizard({ project, initialRewardId, remaining, lockedReward = false, stickySummary = true }: Props) {
+export default function PledgeWizard({ project, initialRewardId, remaining, onPaymentActiveChange, lockedReward = false, stickySummary = true }: Props) {
   const uid = useId();
   // 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해, 후원자가 폼을 다 채우고
   // 제출한 뒤에야 409를 봤다. 고를 수 있는 첫 리워드를 기본값으로 둔다(전부 품절이면
@@ -127,18 +164,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
   const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false, termsAgreed: false });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
-  const [paymentChoiceId, setPaymentChoiceId] = useState<string>(DEFAULT_FUNDING_PAYMENT_CHOICE);
-  /**
-   * 애플페이는 되는 기기에서만 목록에 넣는다. 안드로이드·윈도우에서 고르면 결제창이 아예
-   * 열리지 않아, 후원자는 자기가 뭘 잘못한 줄 안다.
-   */
-  const applePaySupported = useApplePaySupport();
-  const paymentChoices = useMemo(
-    () => FUNDING_PAYMENT_CHOICES.filter((c) => !c.requiresApplePay || applePaySupported),
-    [applePaySupported],
-  );
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
+  const [created, setCreated] = useState<Created | null>(null);
   /**
    * 직전에 만든 **자기** 주문번호. 재제출 시 서버에 함께 보내 그 주문 하나만 만료시킨다
    * (자기 홀드 해제의 소유 증명 — lib/funding/service.ts createFundingPledge 주석).
@@ -238,6 +266,17 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
     ship.name, ship.phone, ship.postcode, ship.address1, ship.address2, ship.memo,
   ]);
 
+  const [remainingMs, setRemainingMs] = useState<number | null>(null);
+
+  // 위젯이 실제로 렌더되는 조건(아래 `if (created)` 분기와 같은 식)을 한 곳에서 판정해
+  // 부모에게 알린다. 만료 화면에는 iframe이 없으므로 트랩을 유지한다.
+  const paymentActive = created !== null && !(remainingMs !== null && remainingMs <= 0);
+  useEffect(() => {
+    onPaymentActiveChange?.(paymentActive);
+  }, [onPaymentActiveChange, paymentActive]);
+  // 언마운트(모달 닫기)될 때 켜진 상태가 남지 않도록 되돌린다.
+  useEffect(() => () => onPaymentActiveChange?.(false), [onPaymentActiveChange]);
+
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
   const allSoldOut = project.rewards.every((r) => isSoldOut(remaining, r.id));
   // 화면 요약·서버 전송에 쓰는 값은 언제나 정규화본이다 — 입력 칸의 문자열은 건드리지 않는다.
@@ -245,6 +284,18 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
   const quantity = clampQuantity(quantityText, quantityCap);
   const additional = clampAdditional(additionalText);
   const preview = useMemo(() => computeFundingAmounts(reward.amount, quantity, additional), [reward.amount, quantity, additional]);
+
+  useEffect(() => {
+    if (!created) return;
+    const total = holdDurationMs(created);
+    // 총량을 못 구하면 카운트다운도, 만료 판정도 하지 않는다 — 결제 위젯은 그대로 뜬다.
+    // 실제 만료는 서버가 판정한다(confirm이 hold_expired로 거절).
+    if (total === null) { setRemainingMs(null); return; }
+    const tick = () => setRemainingMs(Math.max(0, total - (Date.now() - created.receivedAt)));
+    tick();
+    const t = setInterval(tick, 1000);
+    return () => clearInterval(t);
+  }, [created]);
 
   const submit = async () => {
     // 재진입 가드는 **ref**여야 한다. `submitting` 상태는 비동기로 갱신돼서, 같은 tick에
@@ -275,50 +326,14 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '후원 신청에 실패했습니다.'); return; }
+      // 남은 시간은 이 시각 기준으로만 잰다 — 서버가 준 절대 시각을 기기 시계와 직접
+      // 비교하지 않는다(holdDurationMs 주석).
+      const receivedAt = Date.now();
       if (typeof json.orderNo === 'string') rememberOrderNo(json.orderNo);
-
-      /**
-       * 주문을 만들자마자 **고른 결제수단의 창으로 바로 보낸다.**
-       *
-       * 예전에는 여기서 결제 화면을 하나 더 그렸다 — 토스 결제위젯이 수단 목록을 다시
-       * 보여 주고, 후원자가 고른 뒤 「결제하기」를 또 눌러야 했다. 수단은 이미 위 폼에서
-       * 골랐으므로 그 화면은 같은 질문을 두 번 하는 자리였다.
-       *
-       * 홀드 카운트다운도 함께 없앴다. 이 화면에 머무르지 않으니 보여 줄 자리가 없고,
-       * 만료 판정은 원래부터 서버가 한다(confirm이 hold_expired로 거절).
-       */
-      const choice = findFundingPaymentChoice(paymentChoiceId);
-      if (!choice) { setError('결제수단을 선택해 주세요.'); return; }
-      const origin = window.location.origin;
-      const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
-      if (!clientKey) { setError('결제 설정이 없습니다. 문의해 주세요.'); return; }
-      const { loadTossPayments, ANONYMOUS } = await import('@tosspayments/tosspayments-sdk');
-      const toss = await loadTossPayments(clientKey);
-      const payment = toss.payment({ customerKey: ANONYMOUS });
-      // SDK 타입이 method별 오버로드라 union을 그대로 넘기면 맞는 시그니처가 없다. 공통
-      // 필드를 만들어 두고 분기한다 — 페이로드 차이는 method와 card뿐이다.
-      const base = {
-        amount: { currency: 'KRW' as const, value: json.totalAmount as number },
-        orderId: json.orderNo as string,
-        orderName: `[펀딩] ${project.title} · ${reward.title}`.slice(0, 100),
-        customerName: form.customerName,
-        ...(form.customerEmail ? { customerEmail: form.customerEmail } : {}),
-        successUrl: `${origin}/ko/funding/success`,
-        failUrl: `${origin}/ko/funding/fail?slug=${encodeURIComponent(project.slug)}`,
-      };
-      await (choice.tossMethod === 'TRANSFER'
-        ? payment.requestPayment({ ...base, method: 'TRANSFER' })
-        // 간편결제는 통합 결제창을 거치지 않고 그 브랜드 창으로 직행한다.
-        : payment.requestPayment({ ...base, method: 'CARD', ...(choice.card ? { card: choice.card } : {}) }));
-    } catch (err) {
-      /**
-       * 후원자가 결제창을 닫으면 여기로 온다 — 오류가 아니다. 주문은 pending으로 남고,
-       * 다시 제출하면 `previousOrderNo`가 그 홀드를 풀어 준다(한정 재고를 본인이 붙들고
-       * 품절을 보는 일이 없게).
-       */
-      const code = (err as { code?: string } | null)?.code;
-      if (code !== 'USER_CANCEL') setError('결제를 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.');
-    }
+      // router.push가 아니라 전체 페이지 이동 — 클라이언트 전환이면 이미 로드된 gtag가
+      // ?token=이 붙은 URL로 page_view를 보낸다(_app의 측정 스크립트 제외는 mount 시점 판정).
+      setCreated({ ...json, receivedAt });
+    } catch { setError('네트워크 오류가 발생했습니다.'); }
     finally { submittingRef.current = false; setSubmitting(false); }
   };
 
@@ -336,6 +351,32 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
     e.preventDefault();
     void submit();
   };
+
+  if (created) {
+    const expired = !paymentActive;
+    return (
+      <div className={`${cardClass} space-y-5`}>
+        <div>
+          <h2 className="typo-card-title text-gray-900 dark:text-white">결제</h2>
+          <p className="typo-card-meta mt-1">{reward.title} × {quantity}</p>
+        </div>
+        <PriceBreakdown amounts={{ itemAmount: created.itemAmount, vatAmount: created.vatAmount, totalAmount: created.totalAmount }} />
+        {remainingMs !== null && !expired && (
+          <p className="typo-card-meta">결제 대기 {Math.floor(remainingMs / 60000)}:{String(Math.floor((remainingMs % 60000) / 1000)).padStart(2, '0')}</p>
+        )}
+        {expired ? (
+          <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
+            결제 대기 시간이 지났습니다. <button type="button" className="font-semibold underline" onClick={() => { setCreated(null); setRemainingMs(null); }}>다시 신청</button>
+          </p>
+        ) : (
+          <TossPaymentWidget orderNo={created.orderNo} amount={created.totalAmount}
+            orderName={`[펀딩] ${project.title} · ${reward.title}`.slice(0, 100)}
+            customerName={form.customerName} customerEmail={form.customerEmail} service="funding"
+            successUrl="/ko/funding/success" failUrl={`/ko/funding/fail?slug=${encodeURIComponent(project.slug)}`} />
+        )}
+      </div>
+    );
+  }
 
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
@@ -451,26 +492,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           </Field>
         </div>
 
-        {/* 결제수단을 여기서 고른다 — 고르고 나면 다음 화면 없이 그 결제창으로 바로 간다.
-            예전에는 제출 뒤에 위젯이 같은 질문을 한 번 더 했다. */}
-        <div className="mt-5">
-          <p className="mb-2 text-sm font-semibold text-gray-900 dark:text-white">결제수단</p>
-          <div className="space-y-2">
-            {paymentChoices.map((c) => (
-              <label key={c.id} className={choiceRow}>
-                <input
-                  type="radio" name="paymentChoice" value={c.id} className={radioClass}
-                  checked={paymentChoiceId === c.id} onChange={() => setPaymentChoiceId(c.id)}
-                />
-                <span className="min-w-0">
-                  <span className="block font-medium text-gray-900 dark:text-white">{c.label}</span>
-                  <span className={helpClass}>{c.hint}</span>
-                </span>
-              </label>
-            ))}
-          </div>
-        </div>
-
         <div className="mt-5 space-y-2">
           <label className={choiceRow}>
             <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
@@ -503,7 +524,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
             <dd className="text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(preview.totalAmount)}원</dd>
           </div>
         </dl>
-        <p className={helpClass}>VAT 포함. 실제 청구액은 서버가 확정합니다.</p>
+        <p className={helpClass}>VAT 포함. 실제 청구액은 다음 단계에서 서버가 확정합니다.</p>
         {allSoldOut && (
           <p role="status" className="mt-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
         )}
@@ -511,8 +532,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
         )}
         <Button type="submit" size="lg" fullWidth className="mt-4" disabled={submitting || allSoldOut}>
-          {/* 무엇이 다음에 열리는지 버튼이 말한다 — 누르면 바로 그 결제창이다. */}
-          {submitting ? '처리 중…' : `${findFundingPaymentChoice(paymentChoiceId)?.label ?? ''}로 결제하기`}
+          {submitting ? '처리 중…' : '결제로 이동'}
         </Button>
       </div>
     </form>
