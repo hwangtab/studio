@@ -3,7 +3,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import MarkdownRenderer from '../../../../components/MarkdownRenderer';
 import ResponsiveImage from '../../../../components/ResponsiveImage';
-import ImageHero from '../../../../components/common/ImageHero';
+import ImageHero, { HERO_SCRIM_STRONG } from '../../../../components/common/ImageHero';
 import { Section } from '../../../../components/ui/Section';
 import FundingProgress from '../../../../components/funding/FundingProgress';
 import RewardCard from '../../../../components/funding/RewardCard';
@@ -60,23 +60,26 @@ export default function FundingProjectPage({ project, initialState }: Props) {
       />
       {/*
         히어로는 사이트 공용 `ImageHero`를 그대로 쓴다(스크림 2단계·font-hero·투명 헤더가
-        여기 묶여 있다). 배경은 `heroImage` — 흰 글씨가 앉는 왼쪽을 **이미지 안에서** 눌러
-        뒀다. 컴포넌트의 스크림은 `bg-gradient-to-b` 세로 한 방향이라 좌우를 가르지 못한다.
+        여기 묶여 있다). **정렬도 기본값(가운데)을 따른다** — `textAlign`을 넘기는 페이지는
+        이 사이트에 하나도 없다.
 
-        스크림은 기본값(HERO_SCRIM). 짐작이 아니라 실측이다 — 왼쪽 글씨 자리의 평균 휘도가
-        37/255이라 흰 글씨 대비 17.3:1이 나온다(목표 6:1). 배경을 갈아 끼우면 다시 잴 것.
+        스크림만 STRONG으로 올린다. 짐작이 아니라 실측이다(ImageHero.tsx:27 — "짐작하지
+        말고 재 볼 것"): 가운데 글씨 자리의 평균 휘도가 128/255이고, 그 안을 가로지르는
+        LP의 밝은 띠는 167/255다. 기본 HERO_SCRIM으로는 그 띠가 3.8:1까지 떨어져 AA(4.5:1)
+        에도 못 미친다. STRONG이면 글씨 자리 8.7:1, 밝은 띠 5.9:1로 둘 다 목표(6:1) 위다.
+        배경을 갈아 끼우면 다시 잴 것.
       */}
       <ImageHero
         locale="ko"
         priority
-        textAlign="left"
+        overlayGradient={HERO_SCRIM_STRONG}
         backgroundImage={project.heroImage ?? project.cover}
         imageAlt=""
         title={project.title}
         subtitle={
           <>
             {project.summary}
-            <span className="mt-6 flex flex-wrap gap-2">
+            <span className="mt-6 flex flex-wrap justify-center gap-2">
               {STATE_LABEL[state] && (
                 <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
                   {STATE_LABEL[state]}
