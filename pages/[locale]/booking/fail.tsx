@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
 import { getSiteConfig } from '../../../data/siteConfig';
@@ -96,7 +96,7 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
   );
 }
 
-export const getServerSideProps: GetServerSideProps<FailProps> = async ({ query, res, params }) => {
+export const getServerSideProps = withI18nServerProps<FailProps>(async ({ query, res, params }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
 
@@ -122,4 +122,4 @@ export const getServerSideProps: GetServerSideProps<FailProps> = async ({ query,
       orderNo: safeOrderNo,
     },
   };
-};
+});

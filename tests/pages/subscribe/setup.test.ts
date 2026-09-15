@@ -21,14 +21,14 @@ beforeEach(() => jest.clearAllMocks());
 
 it('토큰 없이 접근하면 not_found 에러 화면', async () => {
   const r = await run({});
-  expect(r.props).toEqual({ outcome: 'error', code: 'not_found' });
+  expect(r.props).toMatchObject({ outcome: 'error', code: 'not_found' });
   expect(mockFind).not.toHaveBeenCalled();
 });
 
 it('만료된 링크는 expired 코드를 그대로 전달', async () => {
   mockFind.mockResolvedValue({ ok: false, code: 'expired' });
   const r = await run({ token: 'tok' });
-  expect(r.props).toEqual({ outcome: 'error', code: 'expired' });
+  expect(r.props).toMatchObject({ outcome: 'error', code: 'expired' });
 });
 
 it('유효한 링크면 구독 정보를 화면에 내려준다(빌링키·시크릿은 노출하지 않는다)', async () => {

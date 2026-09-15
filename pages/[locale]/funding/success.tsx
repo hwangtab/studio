@@ -6,7 +6,7 @@
  * tests/pages/privateLinkNavigation.test.ts
  */
 import { useEffect } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
 import { isTokenMatch } from '../../../lib/booking/token';
@@ -224,7 +224,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
  *    뒤로가기로 1의 URL에 돌아가면 confirm이 다시 돌지만, `confirmFundingPledge`가 paid
  *    주문에 **올바른 paymentKey**를 요구하므로 진짜 고객만 통과해 같은 자리로 되돌아온다.
  */
-export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ query, req, res, params }) => {
+export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ query, req, res, params }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko/funding', permanent: false } };
 
@@ -266,4 +266,4 @@ export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ que
       emailSent: order.notificationError === null,
     },
   };
-};
+});

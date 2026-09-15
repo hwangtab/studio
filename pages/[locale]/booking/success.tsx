@@ -5,7 +5,7 @@
  * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
  * tests/pages/privateLinkNavigation.test.ts
  */
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 import { useEffect } from 'react';
 
@@ -125,7 +125,7 @@ export default function BookingSuccessPage({ outcome, message, orderNo, manageUr
   );
 }
 
-export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ query, res, params }) => {
+export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ query, res, params }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
   const { paymentKey, orderId, amount } = query;
@@ -143,4 +143,4 @@ export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ que
       orderType: result.orderType,
     },
   };
-};
+});

@@ -5,7 +5,7 @@
  * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
  * tests/pages/privateLinkNavigation.test.ts
  */
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
 /**
@@ -75,7 +75,7 @@ export default function SubscribeFailPage({ id, setupToken, code, message }: Fai
   );
 }
 
-export const getServerSideProps: GetServerSideProps<FailProps> = async ({ query, res, params }) => {
+export const getServerSideProps = withI18nServerProps<FailProps>(async ({ query, res, params }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
 
@@ -96,4 +96,4 @@ export const getServerSideProps: GetServerSideProps<FailProps> = async ({ query,
       message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE,
     },
   };
-};
+});

@@ -5,7 +5,7 @@
  * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
  * tests/pages/privateLinkNavigation.test.ts
  */
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 
 import { formatPriceAmount } from '../../../../data/pricing';
@@ -101,7 +101,7 @@ export default function SubscribeSuccessPage({ outcome, message, amount, billing
   );
 }
 
-export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ query, res, params }) => {
+export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ query, res, params }) => {
   denyContractPageCaching(res);
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
 
@@ -160,4 +160,4 @@ export const getServerSideProps: GetServerSideProps<SuccessProps> = async ({ que
       manageUrl,
     },
   };
-};
+});

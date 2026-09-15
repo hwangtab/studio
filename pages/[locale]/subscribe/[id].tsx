@@ -6,7 +6,7 @@
  * tests/pages/privateLinkNavigation.test.ts
  */
 import { useState } from 'react';
-import type { GetServerSideProps } from 'next';
+import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
 import BillingAuthButton from '../../../components/billing/BillingAuthButton';
@@ -166,7 +166,7 @@ export default function SubscribeSetupPage(props: SubscribeSetupProps) {
   return <SubscribeSetupOk {...props} />;
 }
 
-export const getServerSideProps: GetServerSideProps<SubscribeSetupProps> = async ({ query, res, params }) => {
+export const getServerSideProps = withI18nServerProps<SubscribeSetupProps>(async ({ query, res, params }) => {
   denyContractPageCaching(res);
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
 
@@ -199,4 +199,4 @@ export const getServerSideProps: GetServerSideProps<SubscribeSetupProps> = async
       setupMode: sub.setupMode,
     },
   };
-};
+});

@@ -149,7 +149,7 @@ describe('리다이렉트된 화면(?o=)', () => {
 
 it('쿼리가 없으면 잘못된 접근', async () => {
   const result = (await ctx({}).run()) as { props: { outcome: string; message: string } };
-  expect(result.props).toEqual({ outcome: 'error', message: '잘못된 접근입니다.' });
+  expect(result.props).toMatchObject({ outcome: 'error', message: '잘못된 접근입니다.' });
 });
 
 it('비-ko locale은 펀딩 목록으로 보낸다', async () => {
