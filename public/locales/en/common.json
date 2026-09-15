@@ -1547,49 +1547,79 @@
   "musicPromotion": {
     "seo": {
       "title": "Music Release PR — We Find the Outlets That Would Cover It | Studio NOL",
-      "description": "Not a service that blasts a press release to 908 outlets. We find the Korean music outlets and the media, radio and record shops in 60 countries that would actually cover the record, and write to each in the language it reads. 1,200,000 KRW → 300,000 KRW.",
+      "description": "We find the Korean music outlets and the media, radio stations and record shops across 60 countries that would cover your music, and write to each in the language it reads. Press release in 5 languages, press kit and send-out report included. 1,200,000 KRW → 300,000 KRW.",
       "keywords": "music PR, album promotion, music press release, indie music PR, music publicity, release promotion, press release writing, record promotion, music PR agency, international music PR, press kit, EPK"
     },
     "hero": {
       "title": "Music Release PR",
-      "subtitleLine1": "To the Korean music outlets and media in 60 countries that would cover it — in the language each one reads",
-      "subtitleLine2": "From writing the press release to the send-out and the report — {{intro}} · you pay after the review",
+      "subtitleLine1": "It reaches people who don't know you — Korean music outlets and 60 countries abroad, each in the language it reads",
+      "subtitleLine2": "From writing the press release to the send-out and the report — {{intro}} · we listen to the whole record and count the outlets first, then you pay",
       "badge": "Part of our release bundle at {{list}} · early-partner price {{intro}} (through {{until}})",
       "alt": "Seoul at night, the city spread out under its lights"
+    },
+    "outcome": {
+      "title": "What you're left with when this is done",
+      "subtitle": "Whether a piece runs is the editor's decision. Getting the music onto that editor's desk is ours — and along the way, six things stay with the artist.",
+      "items": [
+        {
+          "title": "It lands in front of people who don't know you",
+          "body": "The people who open your streaming link the day after release are mostly people who already know you. This work puts the music in the inboxes of people whose job is finding music — editors, radio, record shops, festivals. Namsan Tower Lights reached 1,270 of them."
+        },
+        {
+          "title": "Your music, explained, in five languages",
+          "body": "Writing about your own music for someone else is the hardest piece of writing an artist ever has to do. We write it for you in five languages, in a form a journalist can lift straight into an article. It outlives the campaign — use it as it is for the next interview, grant application or booking email."
+        },
+        {
+          "title": "A press kit that is one link",
+          "body": "Every track playable, lyrics, credits, high-resolution cover art and a ZIP, all on one page. Booking, festival applications, label contacts — this one link covers them. No more gathering files and zipping them up every time."
+        },
+        {
+          "title": "You find out how far the music travelled",
+          "body": "Few artists know where their record actually went after release. The report sets down how many outlets of what kind received what, and what came back. The promotion for your next album starts from that document."
+        },
+        {
+          "title": "Nothing untrue goes out under your name",
+          "body": "An award that was never won, a connection that isn't there, the wrong affiliation — those are the most common accidents in a press release. The only facts that go into the copy are the ones the artist has confirmed, and you see all of it before it's sent. Nor do we push past the submission rules an outlet has set."
+        },
+        {
+          "title": "Meanwhile, you get to write the next song",
+          "body": "Finding the outlets, rewriting for each language, splitting the sends by region, tracking the replies. Done yourself, that is enough work to stop writing music for. Namsan Tower Lights went out in 9 languages over 13 days."
+        }
+      ]
     },
     "quickAnswers": {
       "title": "What you're probably wondering first",
       "subtitle": "Answered up front, so you don't have to read far",
       "items": [
         {
-          "q": "How much is it?",
-          "a": "{{intro}}, excluding VAT. There are no extras — everything listed below is included. You pay after the music passes review and we've confirmed the size of the send-out with you."
+          "q": "What actually happens to my music if I do this?",
+          "a": "People who don't know you get to hear it. The music arrives in the inboxes of Korean and overseas editors, radio stations and record shops whose job is finding music, together with copy written in the language they read. We fix the number of outlets in writing before anything goes out, and when it's over the report shows we sent to exactly that number and what came back. The five press releases and the press-kit page stay with you after the campaign ends."
         },
         {
           "q": "What do you actually do?",
           "a": "We write the press release in five languages, build a press-kit page, and go find the Korean music outlets and the overseas media, radio stations, record shops and festivals that cover music like this. We also make a full-album listening video."
         },
         {
-          "q": "How long does it take?",
-          "a": "Five days to produce the materials, one to three weeks to send them out. The send-out doesn't finish in a day because what we write differs from outlet to outlet — newsdesks, overseas webzines, radio stations and record shops each want a different form. We work through them region by region, language by language. Namsan Tower Lights went out to 1,218 outlets over twelve days."
+          "q": "How much is it?",
+          "a": "{{intro}}, excluding VAT. There is one price — all six things below are inside it. We listen to the whole record and tell you how many outlets we can send to; you pay after that."
         },
         {
-          "q": "What do you actually promise?",
-          "a": "Once the music passes review, we tell you in numbers — before anything goes out — what materials we'll make and how many outlets of what kind will receive them. When it's done, the report shows we did exactly that. Whether a piece runs is the outlet's editorial decision, and nobody can promise that. What we take on is making sure the music arrives at those desks properly."
+          "q": "How long does it take?",
+          "a": "Five days to produce the materials, one to three weeks to send them out. The send-out doesn't finish in a day because what we write differs from outlet to outlet — newsdesks, overseas webzines, radio stations and record shops each want a different form. We work through them region by region, language by language. Namsan Tower Lights went out to 1,270 outlets over thirteen days."
         },
         {
           "q": "Does it matter if the genre is niche?",
-          "a": "It's fine. The send-out just gets smaller, and that's not a loss — a grindcore EP still went out to 125 outlets. Forcing it on outlets that don't cover that kind of music just gets you bounced emails and unsubscribes. If there's genuinely nowhere to send it, we'll tell you that at the review stage."
+          "a": "A niche genre does not mean a smaller send. We find the outlets that specialise in that genre, add them to the list, and combine them with international music press. For HWA's grindcore EP we gathered 116 metal-specialist outlets from scratch — if they aren't on the list, we build the list. We listen to the whole record and count where and how many first."
         },
         {
-          "q": "What if I want to stop partway through?",
-          "a": "You pay only after the music passes review and we've confirmed the send-out size with you, so nothing costs you anything before that. Even after you pay, if you stop before production begins, you get it all back. Once production has started, it's non-refundable — but we hand over the press release, press kit, and video files made up to that point, and you're free to use them elsewhere."
+          "q": "Can you do this for music that's already out?",
+          "a": "We can. It's actually the common case — most people only start thinking about promotion after the release. Overseas PR firms usually want 6-8 weeks before release; we don't. The release date only changes the angle of the press release."
         }
       ]
     },
     "comparison": {
       "title": "Compare us with the people selling the same thing",
-      "subtitle": "Press-release blasters are cheap but their lists are not music outlets; the overseas agencies selling what we sell are an order of magnitude more.",
+      "subtitle": "Put the prices and the destinations side by side and it becomes clear what you are actually buying.",
       "columns": [
         "",
         "Press-release platforms",
@@ -1601,7 +1631,7 @@
           "Who it goes to",
           "908 outlets, all at once",
           "Music outlets",
-          "We go find the ones that cover it — 1,218 outlets in 60 countries for Namsan Tower Lights"
+          "We go find the ones that cover it — 1,270 outlets in 60 countries for Namsan Tower Lights"
         ],
         [
           "The copy",
@@ -1619,7 +1649,7 @@
           "Overseas",
           "None",
           "Mostly English-speaking",
-          "60 countries · 8 languages"
+          "60 countries · 9 languages"
         ],
         [
           "Price",
@@ -1632,93 +1662,92 @@
       "rowHeader": "What we compare"
     },
     "evidence": {
-      "title": "The Music Decides the Send Size",
-      "subtitle": "Sending to more outlets isn't the same as doing it well. Depending on genre and language, the number ranges anywhere from the low hundreds to the low thousands. These are the measured figures from two campaigns we ran ourselves, showing that range firsthand.",
+      "title": "This Is How We Actually Sent It",
+      "subtitle": "Whatever the music is, we first find the outlets that specialise in that genre, then add international music press on top. These are measured figures from two campaigns we ran ourselves.",
       "cases": [
         {
           "title": "Mariko & Yukie, Namsan Tower Lights",
           "meta": "Debut full-length album · released September 2026",
           "stats": [
-            "1,218 outlets",
+            "1,270 outlets",
             "60 countries",
-            "8 languages",
-            "spread over 12 days"
+            "9 languages",
+            "spread over 13 days"
           ],
-          "note": "Fifteen songs sung in Korean by a Japanese couple living in Seoul — a story that reaches Korean and Japanese speakers as well as English speakers, so it went out in 8 languages. Studio NOL handled everything from mixing to planning, production, and release PR.",
-          "label": "Widest reach"
+          "note": "Fifteen songs sung in Korean by a Japanese couple living in Seoul — a story that reaches Korean and Japanese speakers as well as English speakers, so it went out in 9 languages. Studio NOL handled everything from mixing to planning, production, and release PR. Send figures are as of 14 September 2026.",
+          "label": "Send size"
         },
         {
           "title": "HWA, HWA",
           "meta": "Grindcore EP · released August 2026",
           "stats": [
-            "125 outlets",
-            "concentrated on metal press",
+            "116 metal-specialist outlets newly gathered",
             "Korea and abroad at once"
           ],
-          "note": "Grindcore simply has fewer outlets that cover it. 125 isn't a shortfall — it's the right number for this kind of music, and we built a new list of metal-specialist outlets just for this record. Padding the list with outlets that don't fit only adds bounces and unsubscribes.",
-          "label": "Narrow genre"
+          "note": "Almost nothing on our existing list covered grindcore. So for this record we went and found 116 metal-specialist outlets, radio shows and record shops, and added them to the list. Once a list is built, the next metal artist gets it as it is.",
+          "label": "List built from scratch"
         }
       ],
       "linkLabel": "See a press kit page we actually built",
-      "priorWork": "We've only offered this as a standalone service since this year. Before that, it was one part of our release-project bundles, and we didn't keep campaign-level records back then — so these two are the only ones we can show you numbers for."
+      "priorWork": "It became a service you can buy on its own this year, but the work itself isn't new. Before that we did the same thing as one component of a release project; these two are simply the first campaigns where we kept the numbers."
     },
     "deliverables": {
       "title": "What's included",
-      "subtitle": "All of it. Nothing here is sold separately as an option.",
+      "subtitle": "All six are inside the {{intro}}. Nothing here is sold separately, so there is nothing for the quote to grow by.",
       "items": [
         {
           "title": "Press release in 5 languages",
-          "body": "Korean and English, plus three regional languages chosen to suit the music and the artist. Not run through a translation engine — written in that language and checked by back-translation."
+          "body": "Korean and English, plus three regional languages chosen to suit the music and the artist. Not run through a translation engine — written in that language and checked by back-translation. This copy outlives the campaign: use it as it is for the next interview, grant application or booking email."
         },
         {
           "title": "Press kit page",
-          "body": "Inline playback of every track, lyrics, credits, high-resolution cover art and a press kit ZIP, all on one page. When a journalist opens it to write a piece, everything they need has to be there."
+          "body": "Inline playback of every track, lyrics, credits, high-resolution cover art and a press kit ZIP, all on one page. When a journalist opens it to write a piece, everything they need is there. Booking, festival applications and label contacts take the same single link."
         },
         {
           "title": "Send-out to outlets at home and abroad",
-          "body": "Music outlets and their desks, radio, record shops, festivals. The body differs by the kind of outlet — a desk gets copy it can run, radio gets a line to read before the track."
+          "body": "Music outlets and their desks, radio, record shops, festivals. The body differs by the kind of outlet — a desk gets copy it can run, radio gets a line to read before the track. It arrives in a form the person reading it can use as it stands."
         },
         {
           "title": "Derivative copy",
-          "body": "Radio DJ links, an introduction for record shops, and short versions cut to fit newsroom tip forms. Every channel wants a different format, so we write them in advance instead of rewriting each time."
+          "body": "Radio DJ links, an introduction for record shops, and short versions cut to fit newsroom tip forms. Every channel wants a different format, so we write them in advance. Whenever a request comes in later, you can answer it on the spot."
         },
         {
           "title": "Full-album listening video",
-          "body": "One video with a chapter per track. Send us the lyrics and we'll time the subtitles to them too. There's no limit on the number of songs."
+          "body": "One video with a chapter per track. Send us the lyrics and we'll time the subtitles to them too. There's no limit on the number of songs. It also gives you something to put up on release day."
         },
         {
           "title": "Send-out report",
-          "body": "What we made, how many outlets of what kind received it, and which replies and placements were confirmed. Placements are broken out by kind — articles and reviews, radio airplay, playlist adds. Bounces and unsubscribes go in as well — we don't hide them."
+          "body": "What we made, how many outlets of what kind received it, and which replies and placements were confirmed. Placements are broken out by kind — articles and reviews, radio airplay, playlist adds. Bounces and unsubscribes go in exactly as they were: that is where you learn what to drop and what to widen for the next album."
         }
       ]
     },
     "process": {
       "title": "How it runs",
-      "subtitle": "From the first message to the report, it usually takes 4 to 6 weeks. It finishes in one go — not the kind of arrangement where you pay every month and never see what's being done.",
+      "subtitle": "From the first message to the report, it usually takes 4 to 6 weeks. It finishes in one go, and when it does, the report accounts for everything that was done.",
       "steps": [
         {
           "title": "Get in touch and send the music",
           "description": "Message us on KakaoTalk with the audio and the basic details. Whether it's still unreleased or already out, either is fine."
         },
         {
-          "title": "Review — 3 business days",
-          "description": "The producer listens to every track and decides. If we can't take it, we write out the reason and tell you."
+          "title": "We listen to every track and count the outlets — 3 business days, free",
+          "description": "The producer listens to the album all the way through and sends you the count: how many outlets of what kind we can send to. It costs nothing."
         },
         {
-          "title": "Payment — after review passes",
-          "description": "If we take it on, we confirm in numbers how many outlets of what kind we'll send to, and you pay only after seeing that. Nothing costs anything up to this point."
+          "title": "Payment — after you've seen the numbers",
+          "description": "We confirm the number of outlets and how the list is made up. You decide once you've seen it. Everything up to here is free."
         },
         {
           "title": "Materials — 5 days",
           "description": "We produce the press release, the press kit page, the derivative copy and the video."
         },
         {
-          "title": "Your check",
-          "description": "You see all of it before anything goes out. We make up to two rounds of revisions; corrections of factual errors don't count toward that limit — fixing a wrong fact is on us. Only the artist knows whether the facts are right, so this step can't be skipped."
+          "title": "The artist's final approval",
+          "description": "You see every piece of copy and the page before anything goes out. Nothing is sent until the artist approves it. We make two rounds of revisions, and correcting a wrong fact doesn't count against that — as many times as it takes, because it goes out under your name."
         },
         {
           "title": "Sending — 1 to 3 weeks",
-          "description": "We send in waves, by the kind of outlet and by region — that is what gets the mail into inboxes."
+          "description": "We send in waves, by the kind of outlet and by region. More of it actually reaches inboxes that way than if it all went at once."
         },
         {
           "title": "Report",
@@ -1727,46 +1756,46 @@
       ]
     },
     "review": {
-      "title": "First we look at whether there's anywhere to send it",
-      "lead": "We don't take every record. We're not judging whether the music is well made — we're asking whether, among the outlets we reach, there is anywhere that would take it. If there isn't, we don't take the job. Taking money for something that won't work is the worst outcome for both of us.",
+      "title": "First we count the outlets for you",
+      "lead": "The producer listens to every track, then tells you where — and roughly how many outlets in Korea and abroad — would take this music. Three business days, free. This isn't a place where the music gets graded on how well it's made; it's where we work out which channels it fits. You decide once you've seen the number.",
       "criteria": [
         {
-          "title": "Is there an outlet it can reach",
-          "body": "We're strongest in indie, alternative, world music, city pop, metal and folk. Even good music has nowhere to go if it has no point of contact with the outlets we reach."
+          "title": "Which outlets cover this music",
+          "body": "Our channels run deepest in indie, alternative, world music, city pop, metal and folk. We work out which of them your music belongs to and count how many there are. If the genre isn't on our existing list, we go and find it — that is how we gathered 116 metal-specialist outlets for HWA."
         },
         {
-          "title": "Is there a story in it",
-          "body": "A press release isn't a blurb, it's the raw material a journalist turns into an article. \"They put out a new song\" alone gets written up by nobody."
+          "title": "Where the story a journalist can write is",
+          "body": "A press release isn't a blurb, it's the raw material a journalist turns into an article. Listening through the record, we look for the point that could open the piece. The angle we find here is where all five press releases start."
         },
         {
-          "title": "Do we listen to it all the way through",
-          "body": "You can't recommend music you didn't finish listening to. The person reading that email can tell."
+          "title": "The producer listens all the way through",
+          "body": "A producer with fifteen years in the music scene listens to the album from the first track to the last. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell."
         }
       ],
-      "rejection": "The review is free and you'll hear back within three business days. When we can't take it, we write out the reason, and we add whatever we know about where you'd do better to send it.",
-      "why": "There are two reasons we review. We send to the same people every time, so repeatedly sending them material that doesn't fit burns that relationship itself. And trust, once burned, does not come back."
+      "rejection": "You get an answer within three business days, free. It says in numbers how many outlets of what kind we can send to. If we judge that our channels aren't the right fit for it, we write that plainly too, and add whatever we know about where you'd do better to send it.",
+      "why": "A list is not something you use once and throw away. The desks that cover a given genre are the same desks for your next album, and sending them material that doesn't fit, over and over, is how those doors close. What you're buying is not a list of addresses but a set of doors where the trust is still intact."
     },
     "pricing": {
       "title": "Price",
       "subtitle": "One single product. We don't split it into tiers.",
-      "note": "We've been providing this work at {{list}} as a fixed part of the release-project bundle. Now that we're offering it on its own for the first time, we take it at the early-partner price until {{until}} — in return for letting us publish the case and the report.",
-      "capacity": "We take only three acts a month. Each one takes five days of concentrated work, so beyond that we couldn't keep our word."
+      "note": "We've been providing this work at {{list}} as a fixed part of the release-project bundle. Now that we're offering it on its own for the first time, we take it at the early-partner price until {{until}} — in return for letting us publish the case and the report. The price does not apply to contracts made after {{until}}.",
+      "capacity": "Three acts a month. Each one takes five focused days, so we don't take on more than that."
     },
     "faq": {
       "title": "Frequently asked",
       "subtitle": "",
       "items": [
         {
-          "q": "Can you do this for music that's already out?",
-          "a": "We can. It's actually the common case — most people only start thinking about promotion after the release. Overseas PR firms usually want 6-8 weeks before release; we don't. The release date only changes the angle of the press release."
+          "q": "Do you guarantee coverage?",
+          "a": "Whether a piece runs is decided by the outlet's editors. Nobody can sell that, and if someone says they can, ask them how it's guaranteed. What we sell is everything up to that point — before anything goes out, we fix in numbers how many outlets of what kind will receive what, and when it's done the report shows we did exactly that and what came back. All of that is a promise."
         },
         {
           "q": "We didn't record at your studio. Can we still commission this?",
-          "a": "You can. Wherever it was made, a finished record is enough. The review is exactly the same, though."
+          "a": "You can. Wherever it was made, a finished record is enough. The step where we count the outlets is exactly the same."
         },
         {
           "q": "Why does sending take one to three weeks?",
-          "a": "Each kind of outlet gets a different piece of writing, and mail sent all at once does not reach inboxes. Going region by region and language by language gets the record actually read more often. Namsan Tower Lights went to 1,218 places over twelve days."
+          "a": "Each kind of outlet gets a different piece of writing, and mail sent all at once does not reach inboxes. Going region by region and language by language gets the record actually read more often. Namsan Tower Lights went to 1,270 places over thirteen days."
         },
         {
           "q": "What do we need to prepare?",
@@ -1783,6 +1812,10 @@
         {
           "q": "We'd like to commission the production as well.",
           "a": "Take it on as a release project and recording, mixing, mastering and distribution come with it. In that case this promotion is included in the package."
+        },
+        {
+          "q": "What if I want to stop partway through?",
+          "a": "You pay only after it passes the review and we've confirmed the size of the send-out with you, so nothing costs you anything before that. Even after you pay, if you stop before production begins, you get it all back. Once production has started, it's non-refundable — but we hand over the press release, press kit, and video files made up to that point, and you're free to use them elsewhere."
         }
       ]
     },
@@ -1792,12 +1825,12 @@
       "inquiry": "Ask about music release PR",
       "titleLine1": "There are still places",
       "titleHighlight": "your music can reach",
-      "subtitleLine1": "Send us the music on KakaoTalk and we'll answer within 3 business days.",
-      "subtitleLine2": "The review is free, and you pay only once it passes.",
+      "subtitleLine1": "Send us the music on KakaoTalk, and the producer listens to all of it and answers within 3 business days.",
+      "subtitleLine2": "Counting the outlets for you costs nothing. Payment comes after you've seen that number.",
       "imageAlt": "The Studio NOL workroom"
     },
     "payment": {
-      "assurance": "You pay after the music passes review and the volume of work is confirmed. If you stop before production begins, you get all of it back.",
+      "assurance": "You pay after seeing the number of outlets and how the list is made up. If you stop before production begins, you get all of it back. Once production has started there is no refund, but we hand over every press release, press kit and video file made up to that point, and you may use them anywhere.",
       "termsLink": "Read the full cancellation and refund terms"
     }
   },

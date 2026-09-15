@@ -112,6 +112,11 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
     [locale]
   );
 
+  const outcomes = t('musicPromotion.outcome.items', { returnObjects: true }) as {
+    title: string;
+    body: string;
+  }[];
+
   // 가격을 말하는 답이 섞여 있어 보간을 넘겨 렌더한다.
   // 개수는 3열 그리드에 맞춰 6이다 — 4면 마지막 줄에 한 장만 남는다.
   // 이 숫자와 ko 배열 길이의 일치는 utils/translatedList.counts.test.ts가 지킨다.
@@ -125,7 +130,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'musicPromotion.faq.items', 7),
+    () => createTranslatedQaItems(t, 'musicPromotion.faq.items', 8),
     [t]
   );
 
@@ -142,7 +147,11 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
   const comparisonRows = React.useMemo(
     () =>
       (t('musicPromotion.comparison.rows', { returnObjects: true }) as string[][]).map((row) =>
-        row.map((cell) => cell.replace('{{intro}}', priceVars.intro))
+        // 셀에 어떤 가격 변수가 올지 모르므로 전부 치환한다. {{intro}}만 치환하던 동안
+        // 번들 열의 "{{list}} 상당"이 화면에 그대로 찍히고 있었다.
+        row.map((cell) =>
+          Object.entries(priceVars).reduce((acc, [key, value]) => acc.split(`{{${key}}}`).join(value), cell)
+        )
       ),
     [t, priceVars]
   );
@@ -251,6 +260,31 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         }
       />
 
+      {/* 이 페이지의 가장 큰 구멍을 메우는 섹션. 이 자리에 오기 전까지 페이지는
+          "저희는 ~합니다"만 139문장 중 137문장이었고, 아티스트에게 무엇이 생기는지를
+          말하는 문장이 둘뿐이었다. 게재를 약속하지 않고도 100% 이행할 수 있는 것만 적는다. */}
+      <Section>
+        <SectionHeading
+          title={t('musicPromotion.outcome.title')}
+          subtitle={t('musicPromotion.outcome.subtitle')}
+        />
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          {outcomes.map((item, index) => (
+            <m.div key={item.title} {...createInViewEnterAnimation({ delay: index * 0.05 })}>
+              <BaseCard className="h-full p-6">
+                <span className="text-sm font-bold text-primary dark:text-primary-lighter">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-2 font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                  {item.body}
+                </p>
+              </BaseCard>
+            </m.div>
+          ))}
+        </div>
+      </Section>
+
       <QuickAnswers
         title={t('musicPromotion.quickAnswers.title')}
         subtitle={t('musicPromotion.quickAnswers.subtitle')}
@@ -304,7 +338,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           ))}
         </div>
         <p className="mx-auto mt-8 max-w-3xl text-center text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-          {t('musicPromotion.evidence.priorWork')}
+          {t('musicPromotion.evidence.priorWork', priceVars)}
         </p>
       </Section>
 
@@ -424,7 +458,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
       <Section>
         <SectionHeading
           title={t('musicPromotion.deliverables.title')}
-          subtitle={t('musicPromotion.deliverables.subtitle')}
+          subtitle={t('musicPromotion.deliverables.subtitle', priceVars)}
         />
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {deliverables.map((item, index) => {
