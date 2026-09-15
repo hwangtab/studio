@@ -121,6 +121,15 @@ module.exports = {
         // /ko/booking/은 예약 퍼널(결제 진행 중 상태 등)이라 크롤 대상이 아니다.
         disallow: [
           '/api/', '/admin', '/ko/contracts/', '/en/contracts/', '/ko/booking/',
+          // Next의 클라이언트 전환용 데이터 엔드포인트. 색인 대상이 아니고 렌더에도
+          // 불필요하다(초기 HTML의 __NEXT_DATA__에 같은 데이터가 이미 있다). 그런데
+          // Googlebot이 JS를 실행하며 <Link> prefetch를 따라가 90일 크롤 요청의 28%를
+          // 여기에 쓰고 있었다(2026-09-15 GSC 크롤 통계: JSON 28% · JS 34% · HTML 32%).
+          // HTML 32%를 URL 수로 나누면 URL당 재크롤 간격이 36일이고, 실제로 /ko/pricing이
+          // 7주·/ko/recording이 5주 만에 긁혔다. 2026-09-08 코드리뷰 #17이 "크롤 예산이
+          // 부족하다는 GSC 근거가 없으면 두라"고 보류한 건인데, 그 근거가 나와서 넣는다.
+          // 실사용자 내비게이션은 영향 없다 — robots.txt는 크롤러에만 적용된다.
+          '/_next/data/',
           // 펀딩 트랜잭셔널 경로 — 결제 진행 중 상태 등이라 크롤 대상이 아니다.
           '/ko/funding/success', '/ko/funding/fail', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
         ],
