@@ -12,6 +12,7 @@ import Head from 'next/head';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
+import { getFundingProject } from '../../../lib/funding/projects';
 import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
 
@@ -25,6 +26,15 @@ interface SuccessProps {
   projectSlug?: string;
   /** 확인 메일이 실제로 나갔는지(orders.notificationError 기준). */
   emailSent?: boolean;
+  /**
+   * 후원한 리워드의 내려받기 링크. **이 화면에 직접 둔다** — 예전엔 확정 화면에서 후원
+   * 확인 페이지로 한 번 더 들어가야 음원을 받을 수 있었다. 결제를 막 마친 사람에게
+   * 필요한 것은 "확정되었습니다"가 아니라 파일이다.
+   *
+   * 주소는 저장소 원본이 아니라 게이트 경로다(pages/api/funding/download.ts) — 서버가
+   * 최초 접근을 기록해야 약관 제8조 2항(내려받기 뒤 청약철회 제한)을 판정할 수 있다.
+   */
+  downloads?: Array<{ label: string; url: string }>;
 }
 
 /**
@@ -93,7 +103,7 @@ const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
 const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
 const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 
-export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, projectSlug, emailSent }: SuccessProps) {
+export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, projectSlug, emailSent, downloads }: SuccessProps) {
   useEffect(() => {
     if (outcome !== 'confirmed' || !orderNo) return;
     // 결제가 확정됐으니 후원 폼에 남아 있던 이름·연락처·주소 임시 저장을 지운다
@@ -138,6 +148,24 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
                 ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
                 : ' 후원 확인 메일을 보내드렸습니다.'}
             </p>
+            {downloads && downloads.length > 0 && (
+              <div className="mt-6 space-y-2 text-left">
+                <p className="typo-card-meta text-center">지금 바로 받으실 수 있습니다.</p>
+                {downloads.map((d) => (
+                  <a
+                    key={d.url}
+                    href={d.url}
+                    rel="noreferrer"
+                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
+                  >
+                    {d.label} 내려받기
+                  </a>
+                ))}
+                <p className="typo-card-meta text-center">
+                  내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).
+                </p>
+              </div>
+            )}
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
                 실패하면 고객이 후원을 스스로 취소할 방법이 아예 없었다. */}
             {manageUrl && (
@@ -255,10 +283,23 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   if (!cookie || cookie.orderNo.toUpperCase() !== requested) return unknown;
   const order = await findFundingOrderByOrderNo(requested);
   if (!order || !isTokenMatch(order.manageToken, cookie.token)) return unknown;
+  /**
+   * 후원한 리워드의 내려받기 링크를 이 화면에서 바로 만든다. 여기까지 온 요청은 쿠키의
+   * 토큰이 DB의 manageToken과 맞는 것이 이미 확인됐으므로(위 분기), 링크를 세울 근거가 있다.
+   */
+  const project = order.fundingPledge ? getFundingProject(order.fundingPledge.projectSlug) : null;
+  const reward = project?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
+  const downloads = (reward?.downloads ?? []).map((d) => ({
+    label: d.label,
+    url: `/api/funding/download?orderNo=${encodeURIComponent(order.orderNo)}`
+      + `&token=${encodeURIComponent(order.manageToken)}&file=${encodeURIComponent(d.url)}`,
+  }));
+
   return {
     props: {
       outcome: 'confirmed',
       orderNo: order.orderNo,
+      downloads,
       manageUrl: `/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`,
       projectSlug: order.fundingPledge?.projectSlug ?? '',
       // notificationError는 확정 메일 결과다 — null이면 발송 성공, 문자열이면 실패이거나

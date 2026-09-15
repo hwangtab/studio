@@ -86,3 +86,48 @@ it('확인 메일이 실패했으면 링크를 저장하라고 안내한다', ()
   render(<FundingSuccessPage {...confirmed} emailSent={false} />);
   expect(screen.getByText(/확인 메일을 보내지 못했습니다/)).toBeInTheDocument();
 });
+
+/**
+ * 결제를 막 마친 사람에게 필요한 것은 "확정되었습니다"가 아니라 파일이다. 예전엔 이 화면에서
+ * 후원 확인 페이지로 한 번 더 들어가야 음원을 받을 수 있었다 — 쓸데없는 한 단계였다.
+ */
+describe('확정 화면의 내려받기', () => {
+  it('내려받기 링크가 있으면 화면에 바로 띄운다', () => {
+    render(
+      <FundingSuccessPage
+        {...confirmed}
+        downloads={[
+          { label: 'MP3 320kbps', url: '/api/funding/download?orderNo=X&token=t&file=a' },
+          { label: 'WAV 24bit 96kHz', url: '/api/funding/download?orderNo=X&token=t&file=b' },
+        ]}
+      />
+    );
+    expect(screen.getByRole('link', { name: /MP3 320kbps 내려받기/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /WAV 24bit 96kHz 내려받기/ })).toBeInTheDocument();
+  });
+
+  it('저장소 원본이 아니라 기록되는 경로를 가리킨다', () => {
+    render(
+      <FundingSuccessPage {...confirmed} downloads={[{ label: 'MP3', url: '/api/funding/download?orderNo=X&token=t&file=a' }]} />
+    );
+    expect(screen.getByRole('link', { name: /MP3 내려받기/ })).toHaveAttribute(
+      'href',
+      expect.stringContaining('/api/funding/download?')
+    );
+  });
+
+  it('내려받기와 함께 청약철회 제한을 고지한다', () => {
+    render(<FundingSuccessPage {...confirmed} downloads={[{ label: 'MP3', url: '/x' }]} />);
+    expect(screen.getByText(/청약철회가 제한됩니다/)).toBeInTheDocument();
+  });
+
+  it('내려받을 것이 없으면 아무것도 띄우지 않는다 — 배송 리워드 후원자에게 빈 영역을 보이지 않는다', () => {
+    render(<FundingSuccessPage {...confirmed} downloads={[]} />);
+    expect(screen.queryByText(/내려받기/)).toBeNull();
+  });
+
+  it('확정되지 않은 화면에는 내려받기가 나가지 않는다', () => {
+    render(<FundingSuccessPage outcome="unknown" orderNo="FND-1" />);
+    expect(screen.queryByText(/내려받기/)).toBeNull();
+  });
+});
