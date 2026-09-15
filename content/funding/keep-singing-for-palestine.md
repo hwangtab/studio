@@ -3,6 +3,9 @@ slug: keep-singing-for-palestine
 title: Keep Singing for Palestine — 9·19 거리집회 후원
 summary: 팔레스타인 해방을 위한 거리집회에 함께합니다. 후원해 주시면 앨범 〈이름을 모르는 먼 곳의 그대에게〉 13곡을 보내 드립니다.
 cover: /images/funding/keep-singing-for-palestine/cover.webp
+# 카카오톡은 og:image를 URL 단위로 캐시한다. 그림만 갈아 끼우고 경로를 두면 옛 썸네일이
+# 계속 나간다. 바꿀 때는 파일명을 함께 바꿀 것(포맷은 원인이 아니다 — 커밋 85178f14ad).
+ogImage: /images/funding/keep-singing-for-palestine/og-20260915.webp
 goalAmount: 1000000
 startAt: 2026-09-14T00:00:00+09:00
 endAt: 2026-10-19T23:59:59+09:00
