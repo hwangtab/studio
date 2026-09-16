@@ -45,6 +45,13 @@ export default function FundingIndexPage({ items }: Props) {
         title="펀딩 — 스튜디오 놀"
         description="스튜디오 놀이 제작하는 음반의 제작비를 리워드 펀딩으로 함께 만듭니다."
         canonical="/ko/funding"
+        // includeSchema 기본값이 false — 빠뜨리면 Organization·LocalBusiness·FAQPage가 조용히 버려진다.
+        // 2026-09-16 감사에서 이 페이지만 SiteNavigationElement 하나로 나가고 있었다.
+        includeSchema
+        breadcrumbs={[
+          { name: '홈', path: '/ko' },
+          { name: '펀딩', path: '/ko/funding' },
+        ]}
       />
       <ImageHero
         locale="ko"

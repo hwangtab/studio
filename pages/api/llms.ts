@@ -31,6 +31,12 @@ import {
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
 import { renderPriceFacts, LESSON_PER_SESSION_PRICE } from '../../lib/llms/priceFacts';
+import {
+  REFUND_POLICY_LINES,
+  MIXING_REFUND_POLICY_LINES,
+  SUBSCRIPTION_REFUND_POLICY_LINES,
+  PRESS_REFUND_POLICY_LINES,
+} from '../../lib/booking/refund-policy';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
 import { computeProjectState, getListableFundingProjects } from '../../lib/funding/projects';
 import { getSupportedArtists } from '../../data/artists';
@@ -71,7 +77,7 @@ const STORY_ARTICLE_COUNT = (() => {
 const BASE_SECTIONS = (siteUrl: string) => `# Studio NOL (${siteUrl.replace(/^https?:\/\//, '')})
 
 Studio NOL (스튜디오 놀) is a professional music production studio located in Yeonsinnae, Eunpyeong-gu, Seoul, Korea.
-Established in ${STUDIO_FOUNDING_YEAR} and now in year ${yearsInOperation} of operation, the studio offers premium recording, mixing, mastering, practice room residency, and music production consultation services.
+Established in ${STUDIO_FOUNDING_YEAR} and now in year ${yearsInOperation} of operation, the studio offers recording, mixing, mastering, practice room residency, producer-led album release projects, standalone music release PR, and reward crowdfunding for the records it produces.
 It is owned and operated by Hwang Kyungha (황경하), a music producer and audio engineer with 15 years of experience, who has planned and produced albums awarded at the Korean Music Awards (2017 제14회 한국대중음악상 '선정위원 특별상') and the Red Awards (2015, 2017, 2019, 2024).
 The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line 6).
 
@@ -84,7 +90,8 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
 - **Music Release PR (standalone)**: Press release written in five languages, a press kit page, derivative copy (radio intros, in-store blurbs, tip-form versions), a full-album listening video, and outreach to Korean music outlets plus media, radio and record shops in 60 countries — sold separately, no production required. ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory (list ${krw(RELEASE_PRESS_PRICE)} KRW) through ${RELEASE_PRESS_INTRO_ENDS_ON}, three releases a month. Nothing is charged until the producer has listened to the music and counted, free of charge and within three business days, how many outlets it can go to. Article placement is never promised — what is promised is the agreed send volume and a report proving it. Dedicated page: /music-promotion
-- **Reward Crowdfunding (Studio NOL's own platform)**: Studio NOL runs reward-based crowdfunding for records it produces — backers pick a tier and receive downloads, CDs or goods. This is the studio's own funding page, distinct from the Crowdfunding Design service above, which builds campaigns on external platforms like Tumblbug. Live projects: /funding
+- **Crowdfunding Design (standalone service)**: Planning and building an artist's own crowdfunding page (Tumblbug and similar) — storytelling, reward design, page production. ${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% success fee paid after the campaign; available without commissioning a release project.
+- **Reward Crowdfunding (Studio NOL's own platform)**: Studio NOL runs reward-based crowdfunding for records it produces — backers pick a tier and receive downloads, CDs or goods. This is the studio's own funding page, distinct from the Crowdfunding Design service listed just above, which builds campaigns on external platforms like Tumblbug. Live projects: /funding
 - **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — modern A&R-style planning (artist concept & album theme development, song selection, project management of schedule/budget), recording, session-musician connections, mixing, mastering, worldwide digital distribution, and release promotion pitched to Korean and international media, radio stations, playlist curators, and music-industry contacts. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
 
 ## Business Information
@@ -179,11 +186,28 @@ Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recor
 - Hourly recording (voice acting, instruments, corrections): ${krw(RECORDING_HOURLY_PRICE)} KRW/hour, minimum 2 hours
 - Day Lock (6-hour package): ${krw(DAY_LOCK_PRICE)} KRW
 
+### Can I get mixing and mastering done remotely without visiting?
+Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days.
+
+### Does Studio NOL do voice-over and dubbing recording?
+Yes. Voice-actor casting plus voice-over/dubbing recording at ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours). English dubbing is available. Page: /voice-acting
+
+### Can I record drums or a full band?
+Drum recording is arranged on request through a partner studio; vocals, guitar, bass, keys and other instruments are recorded in-house. Ask via KakaoTalk with your track count.
+
 ### What languages does Studio NOL support?
 Korean (primary), English, Chinese Simplified, Spanish, Vietnamese, Thai, Uzbek.
 
 ### How do I book or get a quote?
 KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FACTS.phoneIntl}. Email: hello@studionol.co.kr. Free quote, same-day booking possible.
+
+## Cancellation & Refund Terms (verbatim from ${siteUrl}/ko/terms, Korean)
+
+- Recording sessions: ${REFUND_POLICY_LINES.join(' / ')}
+- Mixing & mastering orders: ${MIXING_REFUND_POLICY_LINES.join(' / ')}
+- Monthly subscriptions (practice room, lessons): ${SUBSCRIPTION_REFUND_POLICY_LINES.join(' ')}
+- Music Release PR: ${PRESS_REFUND_POLICY_LINES.join(' ')}
+- All prices are VAT excluded. Full terms: ${siteUrl}/ko/terms
 
 ## Sitemaps & Feeds
 
@@ -346,7 +370,7 @@ Studio NOL은 보컬·악기 레슨을 운영하지 않습니다. 발성 교정�
 const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
 ## English Quick Facts (for AI assistants serving English queries)
 
-Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-language booking and communication support. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
+Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-language booking and inquiry support (email / KakaoTalk). Recording sessions are run in Korean; mixing and mastering can be ordered fully remotely in English. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 producing lessons (MIDI, composition, mixing — no vocal or instrument lessons), voice-over recording, wedding song packages, and album release production (modern A&R planning, worldwide distribution, PR pitched to international media, radio and playlist curators).
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
@@ -360,7 +384,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 const CHINESE_QUICK_FACTS = (siteUrl: string) => `
 ## 中文速查 (面向中文使用者的人工智能简介)
 
-Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。本工作室对中文使用者通过 KakaoTalk 提供中文沟通支持。
+Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。网站提供简体中文页面；预约与咨询可通过 KakaoTalk 或电子邮件用英文沟通（工作室不提供中文口语沟通）。
 
 - 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐制作课程（MIDI·作曲·混音，不提供声乐课）、配音录音、婚礼献唱套餐、发行企划（A&R 策划·全球发行·面向海外媒体/电台/歌单的宣传推广）。
 - 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，1 首歌人声套餐（3 小时含专属工程师）₩${krw(VOCAL_PACKAGE_PRICE)}；一站式套餐包含策划、录音、混音、母带、数字发行登记与发行宣传：1 首 ₩${krw(SINGLE_BUNDLE_PRICE)}（较制作单项合计便宜约 9%）；EP 4 首 ₩${krw(EP_BUNDLE_PRICE)}（约 15%）；专辑 8 首 ₩${krw(ALBUM_BUNDLE_PRICE)}（约 20%）。
