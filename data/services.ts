@@ -91,13 +91,13 @@ export const getServicesData = (locale: Locale) => {
     {
       title: t(locale, { ko: "홍보/마케팅", en: "PR/Marketing", zh: "宣传/营销", es: "RP/Marketing", vi: "PR/Marketing", th: "ประชาสัมพันธ์/การตลาด", uz: "PR/Marketing" }),
       description: t(locale, {
-        ko: "보도자료를 쓰고 음악 매체·평론가에게 배포합니다.",
-        en: "We write the press release and send it to music press and critics.",
-        zh: "撰写新闻稿并发送给音乐媒体与乐评人。",
-        es: "Redactamos la nota de prensa y la enviamos a medios y críticos musicales.",
-        vi: "Viết thông cáo báo chí và gửi tới báo chí, nhà phê bình âm nhạc.",
-        th: "เขียนข่าวประชาสัมพันธ์และส่งให้สื่อและนักวิจารณ์ดนตรี",
-        uz: "Press-relizni yozamiz va musiqa nashrlari hamda tanqidchilarga yuboramiz."
+        ko: "보도자료를 쓰고 국내외 음악 매체에 보냅니다.",
+        en: "We write the press release and send it to music outlets in Korea and abroad.",
+        zh: "撰写新闻稿并寄给国内外音乐媒体。",
+        es: "Redactamos la nota de prensa y la enviamos a medios musicales de Corea y del extranjero.",
+        vi: "Viết thông cáo báo chí và gửi tới các đơn vị truyền thông âm nhạc trong và ngoài nước.",
+        th: "เขียนข่าวประชาสัมพันธ์และส่งให้สื่อดนตรีทั้งในและต่างประเทศ",
+        uz: "Press-relizni yozamiz va mamlakat ichidagi hamda xorijiy musiqa nashrlariga yuboramiz."
       }),
       icon: 'Megaphone'
     },
