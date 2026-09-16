@@ -1,7 +1,13 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
 
+/**
+ * `iframe`이 들어 있는 이유: 결제위젯이 모달 안에 iframe으로 뜬다. 목록에 없으면 마지막
+ * 요소에서 Tab을 누를 때 첫 요소로 되감기며 **결제 iframe을 영영 건너뛴다** — 키보드만
+ * 쓰는 사람은 카드번호를 입력할 방법이 없어진다. 예전에는 그 화면에서 트랩을 통째로
+ * 껐는데, 그러면 Tab이 모달 뒤 배경으로 새어 나간다. 끄는 대신 여기서 인정한다.
+ */
 const FOCUSABLE_SELECTOR =
-  'button, a[href], input, textarea, select, [tabindex]:not([tabindex="-1"])';
+  'button, a[href], input, textarea, select, iframe, [tabindex]:not([tabindex="-1"])';
 
 interface UseFocusTrapDialogOptions {
   isOpen: boolean;

@@ -7,7 +7,20 @@ import { parseFundingProject } from '../../lib/funding/projects';
 import { trackMicroEvent } from '../../utils/analytics';
 import { MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
 
-jest.mock('../booking/TossPaymentWidget', () => function MockTossPaymentWidget() { return <div data-testid="toss-widget" />; });
+/**
+ * 결제위젯은 폼 안에 떠 있고, 제출은 그 위젯의 `requestPayment`를 부른다. 테스트에서는
+ * 무엇을 어떤 금액으로 여는지를 본다 — 그게 이 폼의 계약이다.
+ */
+const requestPayment = jest.fn().mockResolvedValue(undefined);
+const retryPayment = jest.fn();
+let widgetReady = true;
+let widgetError: string | null = null;
+jest.mock('../booking/useTossPaymentWidgets', () => ({
+  useTossPaymentWidgets: () => ({
+    methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
+    ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
+  }),
+}));
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 
 const project = parseFundingProject(`---
@@ -55,15 +68,18 @@ it('배송 리워드는 배송지 입력이 보인다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
   expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
 });
-it('제출하면 서버 금액으로 결제 단계가 뜬다', async () => {
+it('제출하면 곧바로 결제창을 연다 — 중간 화면이 없다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   await userEvent.click(screen.getByLabelText(/약관/));
-  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
-  expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
-  expect(screen.getByText(/합계 30,000원/)).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+  await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+  // 청구는 **서버가 확정한 금액**으로 연다 — 화면 추정치로 열면 청구액이 어긋난다.
+  expect(requestPayment).toHaveBeenCalledWith(expect.objectContaining({
+    orderId: 'FND-1', amount: 30000,
+  }));
   // funding_pledge_start는 페이지 진입 시 pledge.tsx에서 발화한다 — 제출에서는 발화하지 않는다.
   expect(trackMicroEvent).not.toHaveBeenCalled();
 });
@@ -160,8 +176,8 @@ it('제출하면 결제수단이 toss로 나간다', async () => {
   await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
   await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
   await userEvent.click(screen.getByLabelText(/약관/));
-  await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
-  await screen.findByTestId('toss-widget');
+  await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+  await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
   expect(body.paymentMethod).toBe('toss');
 });
@@ -203,7 +219,7 @@ it('숫자 칸에서 Enter로 바로 제출해도 서버에는 정규화된 수�
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
   await userEvent.type(quantityInput, '{selectall}12{Enter}');
   // 수량 칸은 blur 없이 Enter로 끝나 `12`가 그대로 남은 상태에서 제출됐다.
-  await screen.findByTestId('toss-widget');
+  await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
   expect(body.quantity).toBe(MAX_QUANTITY);
   expect(body.additionalAmount).toBe(5000);
@@ -227,35 +243,6 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
   expect(additionalInput).toHaveValue(5000);
 });
 
-// 만료 뒤 "다시 신청"을 누르면 remainingMs가 0으로 남아, 새로 만든 주문의 결제 화면이
-// 뜨자마자 다시 "시간이 지났습니다"로 보였다.
-it('"다시 신청"은 남은 시간을 초기화한다 — 재제출이 곧바로 만료로 보이지 않는다', async () => {
-  jest.useFakeTimers();
-  try {
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true, status: 201, headers: { get: () => 'application/json' },
-      // serverNow를 함께 준다 — 남은 시간은 (holdExpiresAt − serverNow)로 잰다. 기기 시계와
-      // 직접 비교하지 않으므로, 진짜로 만료된 홀드임을 서버 시각 한 쌍으로 말해야 한다.
-      json: async () => ({ ok: true, orderNo: 'FND-1', holdExpiresAt: new Date(Date.now() - 1000).toISOString(), serverNow: new Date().toISOString(), itemAmount: 4545, vatAmount: 455, totalAmount: 5000 }),
-    });
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    fireEvent.change(screen.getByLabelText(/^이름\*$/), { target: { value: '김후원' } });
-    fireEvent.change(screen.getByLabelText(/^연락처\*$/), { target: { value: '010-1111-2222' } });
-    fireEvent.change(screen.getByLabelText(/^이메일\*$/), { target: { value: 'a@b.com' } });
-    fireEvent.click(screen.getByLabelText(/약관/));
-    fireEvent.submit(screen.getByRole('button', { name: /결제로 이동/ }).closest('form')!);
-    await act(async () => { await Promise.resolve(); });
-    expect(screen.getByRole('alert')).toHaveTextContent('결제 대기 시간이 지났습니다');
-
-    fireEvent.click(screen.getByRole('button', { name: '다시 신청' }));
-    // 폼으로 돌아오고, 남은 시간 표시도 만료 상태가 아니다.
-    expect(screen.getByLabelText(/^이름\*$/)).toBeInTheDocument();
-    expect(screen.queryByText(/결제 대기 시간이 지났습니다/)).toBeNull();
-  } finally {
-    jest.useRealTimers();
-  }
-});
-
 /**
  * 품절 리워드 초기 선택 회귀 — 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해서,
  * 후원자는 폼을 전부 채우고 제출한 **뒤에야** 409를 봤다.
@@ -271,66 +258,13 @@ it('첫 리워드가 품절이면 고를 수 있는 리워드가 선택된 채�
 
 it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () => {
   render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: 0 }} />);
-  const submit = screen.getByRole('button', { name: /결제로 이동/ });
+  const submit = screen.getByRole('button', { name: /결제하기/ });
   expect(submit).toBeDisabled();
   expect(screen.getByRole('status')).toHaveTextContent('모든 리워드가 품절되었습니다');
   // 폼 자체를 제출해도(Enter 등) 서버를 부르지 않는다.
   fireEvent.submit(submit.closest('form')!);
   await act(async () => { await Promise.resolve(); });
   expect(global.fetch).not.toHaveBeenCalled();
-});
-
-/**
- * 기기 시계 스큐 회귀 — 예전에는 서버가 준 절대 시각(holdExpiresAt)을 기기의 Date.now()와
- * 직접 비교했다. 기기 시계가 15분 이상 빠르면 방금 만든 홀드가 **생성 직후 만료**로 판정돼
- * 결제 위젯이 영영 뜨지 않았고, "다시 신청"을 눌러도 새 주문이 같은 이유로 또 만료였다.
- */
-describe('기기 시계가 서버보다 빠를 때', () => {
-  const SERVER_NOW = new Date('2026-10-15T03:00:00Z');
-  const submitAll = async () => {
-    fireEvent.change(screen.getByLabelText(/^이름\*$/), { target: { value: '김후원' } });
-    fireEvent.change(screen.getByLabelText(/^연락처\*$/), { target: { value: '010-1111-2222' } });
-    fireEvent.change(screen.getByLabelText(/^이메일\*$/), { target: { value: 'a@b.com' } });
-    fireEvent.click(screen.getByLabelText(/약관/));
-    fireEvent.submit(screen.getByRole('button', { name: /결제로 이동/ }).closest('form')!);
-    await act(async () => { await Promise.resolve(); });
-  };
-
-  it('20분 빨라도 결제 위젯이 뜨고 남은 시간은 서버 기준으로 센다', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true, status: 201, headers: { get: () => 'application/json' },
-      json: async () => ({
-        ok: true, orderNo: 'FND-1',
-        holdExpiresAt: new Date(SERVER_NOW.getTime() + 15 * 60 * 1000).toISOString(),
-        serverNow: SERVER_NOW.toISOString(),
-        itemAmount: 4545, vatAmount: 455, totalAmount: 5000,
-      }),
-    });
-    // 기기 시계만 20분 앞선다 — 서버가 준 두 시각은 그대로다.
-    jest.spyOn(Date, 'now').mockReturnValue(SERVER_NOW.getTime() + 20 * 60 * 1000);
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await submitAll();
-    expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
-    expect(screen.queryByText(/결제 대기 시간이 지났습니다/)).toBeNull();
-    expect(screen.getByText(/결제 대기 15:00/)).toBeInTheDocument();
-  });
-
-  it('serverNow가 없는 응답이면 만료로 단정하지 않는다 — 카운트다운만 감춘다', async () => {
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true, status: 201, headers: { get: () => 'application/json' },
-      json: async () => ({
-        ok: true, orderNo: 'FND-1',
-        holdExpiresAt: new Date(SERVER_NOW.getTime() + 15 * 60 * 1000).toISOString(),
-        itemAmount: 4545, vatAmount: 455, totalAmount: 5000,
-      }),
-    });
-    jest.spyOn(Date, 'now').mockReturnValue(SERVER_NOW.getTime() + 20 * 60 * 1000);
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await submitAll();
-    expect(await screen.findByTestId('toss-widget')).toBeInTheDocument();
-    expect(screen.queryByText(/결제 대기 시간이 지났습니다/)).toBeNull();
-    expect(screen.queryByText(/결제 대기 \d/)).toBeNull();
-  });
 });
 
 /**
@@ -356,8 +290,8 @@ describe('자기 홀드 해제 증명 보관', () => {
     await userEvent.clear(email);
     await userEvent.type(email, 'a@b.com');
     await userEvent.click(screen.getByLabelText(/약관/));
-    await userEvent.click(screen.getByRole('button', { name: /결제로 이동/ }));
-    await screen.findByTestId('toss-widget');
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   };
 
   const lastBody = () => JSON.parse((global.fetch as jest.Mock).mock.calls.at(-1)![1].body);
@@ -397,7 +331,7 @@ describe('자기 홀드 해제 증명 보관', () => {
     jest.spyOn(Storage.prototype, 'getItem').mockImplementation(() => { throw new Error('blocked'); });
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await submitOnce();
-    expect(screen.getByTestId('toss-widget')).toBeInTheDocument();
+    expect(requestPayment).toHaveBeenCalled();
   });
 });
 
@@ -613,4 +547,79 @@ it('수량 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', a
   const pledgeCalls = (global.fetch as jest.Mock).mock.calls
     .filter((c) => String(c[0]).includes('/api/funding/pledges'));
   expect(pledgeCalls.length).toBe(1);
+});
+
+/**
+ * 결제위젯을 **폼 안에** 두는 구조가 지키는 것들.
+ *
+ * 예전에는 제출하면 화면이 하나 더 떴다 — 위젯이 수단 목록을 보여 주고, 고른 뒤
+ * 「결제하기」를 또 눌러야 했다. 위젯이 폼 안에 있으니 그 화면은 같은 것을 두 번 보여
+ * 주는 자리였다.
+ */
+describe('폼 안의 결제위젯', () => {
+  afterEach(() => { widgetReady = true; widgetError = null; });
+
+  const fill = async () => {
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.click(screen.getByLabelText(/약관/));
+  };
+
+  it('수단 목록과 약관 동의를 붙일 자리가 폼 안에 있다', () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(document.getElementById('toss-methods-test')).not.toBeNull();
+    expect(document.getElementById('toss-agreement-test')).not.toBeNull();
+  });
+
+  /**
+   * 위젯이 아직 안 떴는데 제출되면 **주문만 만들어지고 결제창은 안 열린다** — 후원자는
+   * 아무 일도 안 일어난 줄 알고, 한정 리워드면 본인이 재고를 붙든 채 품절을 본다.
+   */
+  it('위젯이 준비되기 전에는 제출할 수 없다', () => {
+    widgetReady = false;
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+  });
+
+  it('위젯을 못 불러오면 이유와 다시 시도를 준다', async () => {
+    widgetError = '결제 모듈을 불러오지 못했습니다.';
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByRole('alert')).toHaveTextContent('결제 모듈을 불러오지 못했습니다.');
+    await userEvent.click(screen.getByRole('button', { name: '다시 시도' }));
+    expect(retryPayment).toHaveBeenCalled();
+  });
+
+  it('성공·실패 주소와 주문 이름을 함께 넘긴다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    const payload = requestPayment.mock.calls.at(-1)![0];
+    expect(payload.successUrl).toContain('/ko/funding/success');
+    expect(payload.failUrl).toContain('/ko/funding/fail?slug=demo');
+    expect(payload.orderName).toContain('데모');
+  });
+
+  /**
+   * 결제창을 닫은 것은 오류가 아니다. 빨간 경고를 띄우면 "결제가 실패했다"로 읽혀,
+   * 실제로는 멀쩡한 주문을 두고 이탈한다.
+   */
+  it('결제창을 닫으면 오류를 띄우지 않고, 다시 누를 수 있다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
+  });
+
+  it('약관 동의를 빠뜨리면 고칠 것을 알려 준다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('동의 필요'), { code: 'NEED_AGREEMENT' }));
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('약관 동의를 확인해 주세요');
+  });
 });
