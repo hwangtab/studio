@@ -25,7 +25,7 @@ beforeEach(() => {
 
 const nav = () => screen.getByRole('navigation', { name: '관리자 구역' });
 
-it('어느 화면에서든 다섯 구역과 로그아웃에 닿는다', () => {
+it('어느 화면에서든 여섯 구역과 로그아웃에 닿는다', () => {
   pathname = '/admin/contracts/[id]/edit';
   render(<AdminShell title="계약 수정">본문</AdminShell>);
 

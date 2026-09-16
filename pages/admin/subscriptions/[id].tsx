@@ -17,7 +17,7 @@ import { listSubscriptionRefundSummary, type SubscriptionRefundSummary } from '.
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
-import { subscriptionOrderName } from '../../../lib/billing/amounts';
+import { artistSupportTierLabel, subscriptionOrderName } from '../../../lib/billing/amounts';
 import {
   serializeBillingKey,
   serializeSubscription,
@@ -80,6 +80,7 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionDetailPageP
 const KIND_LABELS: Record<string, string> = {
   'practice-room': '연습실',
   lesson: '레슨',
+  'artist-support': '아티스트',
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -301,7 +302,26 @@ export default function AdminSubscriptionDetailPage({
               <div>
                 <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">구독 정보</h2>
                 <dl className="space-y-2 text-sm">
-                  <DescriptionRow label="상품" value={subscriptionOrderName(subscription.kind as 'practice-room' | 'lesson')} />
+                  <DescriptionRow label="상품" value={subscriptionOrderName(subscription)} />
+                  {subscription.kind === 'artist-support' && (
+                    <>
+                      <DescriptionRow
+                        label="아티스트"
+                        value={
+                          subscription.artistSlug ? (
+                            <Link href={`/admin/artists`} className="text-primary hover:underline">
+                              {subscription.artistSlug}
+                            </Link>
+                          ) : '-'
+                        }
+                      />
+                      <DescriptionRow label="등급" value={artistSupportTierLabel(subscription.tierId) ?? subscription.tierId ?? '-'} />
+                      <DescriptionRow
+                        label="명단 표시"
+                        value={subscription.displayConsent ? `동의 · ${subscription.displayName || subscription.customerName}` : '비공개'}
+                      />
+                    </>
+                  )}
                   <DescriptionRow label="월 청구액" value={`${formatPriceAmount(subscription.totalAmount)}원 (VAT 포함)`} />
                   <DescriptionRow label="결제일" value={`매월 ${subscription.billingDay}일`} />
                   <DescriptionRow

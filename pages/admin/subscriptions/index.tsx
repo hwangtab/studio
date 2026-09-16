@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
+import { artistSupportTierLabel, subscriptionOrderName } from '../../../lib/billing/amounts';
 import { getDb } from '../../../db/client';
 import { subscriptionPayments } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
@@ -59,6 +60,7 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionsPageProps>
 const KIND_LABELS: Record<string, string> = {
   'practice-room': '연습실',
   lesson: '레슨',
+  'artist-support': '아티스트',
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -88,7 +90,17 @@ const nextBillingLabel = (sub: SerializedSubscription): string => {
   return sub.nextBillingAt ? formatKstDateTimeFull(sub.nextBillingAt) : '-';
 };
 
-export default function AdminSubscriptionsPage({ subscriptions, truncated }: AdminSubscriptionsPageProps) {
+const KIND_FILTERS = [
+  { key: 'all', label: '전체' },
+  { key: 'practice-room', label: '연습실' },
+  { key: 'lesson', label: '레슨' },
+  { key: 'artist-support', label: '아티스트' },
+] as const;
+
+export default function AdminSubscriptionsPage({ subscriptions: allSubscriptions, truncated }: AdminSubscriptionsPageProps) {
+  const [kindFilter, setKindFilter] = useState<(typeof KIND_FILTERS)[number]['key']>('all');
+  const subscriptions = kindFilter === 'all' ? allSubscriptions : allSubscriptions.filter((s) => s.kind === kindFilter);
+  const countOf = (key: string) => (key === 'all' ? allSubscriptions.length : allSubscriptions.filter((s) => s.kind === key).length);
   return (
     <>
       <Head>
@@ -110,6 +122,21 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
             최근 {LIST_LIMIT}건만 표시됩니다. 오래된 구독은 목록에서 잘렸습니다.
           </div>
         )}
+
+        <div className="mb-4 flex flex-wrap gap-2">
+          {KIND_FILTERS.map((f) => (
+            <button
+              key={f.key}
+              type="button"
+              onClick={() => setKindFilter(f.key)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                kindFilter === f.key ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {f.label} ({countOf(f.key)})
+            </button>
+          ))}
+        </div>
 
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           <div className="overflow-x-auto">
@@ -134,7 +161,13 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
                     </td>
                     <td className="px-4 py-3">
                       <div className="font-medium text-gray-900">{sub.customerName}</div>
-                      <div className="text-gray-500 text-xs">{sub.customerPhone}</div>
+                      <div className="text-gray-500 text-xs">{sub.customerPhone || sub.customerEmail}</div>
+                      {sub.kind === 'artist-support' && (
+                        <div className="text-xs text-primary mt-0.5">
+                          {subscriptionOrderName(sub)}
+                          {artistSupportTierLabel(sub.tierId) ? ` · ${artistSupportTierLabel(sub.tierId)}` : ''}
+                        </div>
+                      )}
                     </td>
                     <td className="px-4 py-3">
                       <span
