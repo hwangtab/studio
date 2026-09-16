@@ -82,7 +82,7 @@ it('전액 환불하면 refunds에 done이 남고 주문은 refunded, 구독·�
 
   const result = await refundSubscriptionPayment({ subscriptionId: 'sub1', subscriptionPaymentId: 'sp1', reason: '해지 후 뒤늦은 승인', now: NOW });
 
-  expect(result).toEqual({ ok: true, refundAmount: 385000, orderNo: 'SNB-1' });
+  expect(result).toEqual({ ok: true, refundAmount: 385000, orderNo: 'SNB-1', cycleYm: '2026-09', isFull: true });
   expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ paymentKey: 'pay_1', cancelAmount: 385000, cancelReason: '해지 후 뒤늦은 승인' }));
 
   const order = (await client.execute("SELECT status FROM orders WHERE id = 'o_sp1'")).rows[0];

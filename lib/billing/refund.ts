@@ -28,7 +28,7 @@ export type RefundSubscriptionPaymentInput = {
 };
 
 export type RefundSubscriptionPaymentOutcome =
-  | { ok: true; refundAmount: number; orderNo: string }
+  | { ok: true; refundAmount: number; orderNo: string; cycleYm: string; isFull: boolean }
   | CancelFailure;
 
 export const refundSubscriptionPayment = async (
@@ -73,7 +73,7 @@ export const refundSubscriptionPayment = async (
   });
   if (failure) return failure;
 
-  return { ok: true, refundAmount, orderNo: order.orderNo };
+  return { ok: true, refundAmount, orderNo: order.orderNo, cycleYm: cycle.cycleYm, isFull: refundAmount >= remaining };
 };
 
 /** 관리자 상세의 회차 표에 붙는 환불 요약 — 회차 id → 환불 합계·주문 상태. */
