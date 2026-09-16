@@ -186,9 +186,6 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   const [customerNote, setCustomerNote] = useState('');
   // 환불 규정 동의는 임시 저장 대상이 아니다 — 복원된 체크는 사람이 그 자리에서 한
   // 의사표시가 아니라서 매번 새로 눌러야 한다(CLAUDE.md 약관 판본 절과 같은 판단).
-  const [refundPolicyAgreed, setRefundPolicyAgreed] = useState(false);
-  const [agreeError, setAgreeError] = useState(false);
-  const agreeRef = React.useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -247,15 +244,6 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
     e.preventDefault();
     if (selectedStartHour === null) {
       setStep(2);
-      return;
-    }
-    if (!refundPolicyAgreed) {
-      setAgreeError(true);
-      // scrollIntoView를 먼저 부르고 focus는 스크롤 없이 준다. `focus()`만 쓰면 브라우저가
-      // 최소한으로만 스크롤해서, 화면 밖이나 하단 고정 요소에 가려진 채 초점만 옮겨 간다 —
-      // 동의 안 했다는 말은 보이는데 어디를 눌러야 하는지는 안 보이는 상태가 된다.
-      agreeRef.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
-      agreeRef.current?.focus({ preventScroll: true });
       return;
     }
     /**
@@ -560,30 +548,19 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
               </ul>
             </div>
 
-            <div className="flex items-start gap-2.5">
-              <input
-                ref={agreeRef}
-                type="checkbox"
-                id="refund-agree"
-                checked={refundPolicyAgreed}
-                onChange={(e) => {
-                  setRefundPolicyAgreed(e.target.checked);
-                  if (e.target.checked) setAgreeError(false);
-                }}
-                aria-required="true"
-                aria-invalid={agreeError}
-                aria-describedby={agreeError ? 'refund-agree-error' : undefined}
-                className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
-              />
-              <label htmlFor="refund-agree" className="text-sm text-gray-600 dark:text-gray-400 leading-snug">
-                위 환불 규정에 동의합니다 (필수)
-              </label>
-            </div>
-            {agreeError && (
-              <p id="refund-agree-error" role="alert" className="text-xs text-red-600">
-                환불 규정에 동의해 주세요.
-              </p>
-            )}
+            {/*
+              동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다 —
+              같은 화면에 결제위젯이 그리는 [필수] 결제 서비스 약관 체크가 이미 있고,
+              위젯은 자기 영역 안에 들여쓰여 그리므로 정렬도 배경도 맞출 수 없다. 거의 같은
+              말을 하는 체크가 어긋난 자리에 둘이면 중복으로 읽힌다(2026-09-16 실사용 확인).
+
+              법적으로도 체크박스가 요구되는 항목이 아니다 — 청약철회·환불 조건은
+              전자상거래법 제13조상 **고지** 의무이고, 규정 전문을 바로 위에 펼쳐 두었다.
+              서버 검증(refundPolicyAgreed)은 그대로다.
+            */}
+            <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+              결제하기를 누르면 위 환불 규정에 동의하는 것으로 봅니다.
+            </p>
 
             {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
                 계약된 수단이 늘면 그대로 따라오고, 갈라지면 화면과 실제가 어긋난다. */}

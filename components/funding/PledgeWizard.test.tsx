@@ -83,7 +83,6 @@ it('제출하면 곧바로 결제창을 연다 — 중간 화면이 없다', asy
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
   await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   // 청구는 **서버가 확정한 금액**으로 연다 — 화면 추정치로 열면 청구액이 어긋난다.
@@ -185,11 +184,23 @@ it('제출하면 결제수단이 toss로 나간다', async () => {
   await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
   await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
-  await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
   await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
   expect(body.paymentMethod).toBe('toss');
+});
+
+// 체크박스가 사라져도 서버로는 계속 동의를 보내야 한다 — 결제하기를 누르는 행위가 곧
+// 동의이므로, 이 값이 조용히 빠지면 서버 검증(termsAgreed)과 terms_version 기록이 깨진다.
+it('결제하기를 누르면 서버로 termsAgreed: true가 나간다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+  await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+  const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+  expect(body.termsAgreed).toBe(true);
 });
 
 // 실명 공개는 옵트인이어야 한다 — 기본 체크는 후원자가 모르는 사이에 이름이 명단에 올라간다.
@@ -224,7 +235,6 @@ it('숫자 칸에서 Enter로 바로 제출해도 서버에는 정규화된 수�
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.click(screen.getByLabelText(/약관/));
   await userEvent.type(screen.getByLabelText(/추가 후원금/), '{selectall}5500');
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
   await userEvent.type(quantityInput, '{selectall}12{Enter}');
@@ -246,7 +256,6 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.click(screen.getByLabelText(/약관/));
   const additionalInput = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
   await userEvent.type(additionalInput, '{selectall}5500{Enter}');
   expect(await screen.findByRole('alert')).toHaveTextContent('후원 신청에 실패했습니다.');
@@ -299,7 +308,6 @@ describe('자기 홀드 해제 증명 보관', () => {
     const email = screen.getByLabelText(/^이메일\*$/);
     await userEvent.clear(email);
     await userEvent.type(email, 'a@b.com');
-    await userEvent.click(screen.getByLabelText(/약관/));
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
     await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   };
@@ -380,17 +388,20 @@ describe('임시 저장', () => {
     expect(screen.getByLabelText(/배송 메모/)).toHaveValue('문 앞');
   });
 
-  // 복원된 체크는 사람이 한 의사표시가 아니다 — funding_pledges.terms_version이 "그때 이
-  // 내용에 동의했다"의 증거인데, 되살린 체크가 그 증거를 받치지 못한다.
-  it('약관 동의는 복원되지 않는다', async () => {
+  // 동의는 이제 체크박스가 아니라 결제하기를 누르는 행위다 — 되살릴 체크 자체가 없다.
+  // 대신 임시 저장이 담는 값이 여전히 DRAFT_FIELDS 10칸뿐인지, 동의 관련 값이 저장소에
+  // 섞여 들어가지 않는지를 직접 확인한다(lib/formDraft.ts "지켜야 할 선").
+  it('임시 저장에는 동의 관련 값이 들어가지 않는다', async () => {
     const { unmount } = render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
-    await userEvent.click(screen.getByLabelText(/약관/));
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
     unmount();
 
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(await screen.findByLabelText(/^이름\*$/)).toHaveValue('김후원');
-    expect(screen.getByLabelText(/약관/)).not.toBeChecked();
+    const raw = window.sessionStorage.getItem('studionol:funding-draft:demo');
+    expect(raw).not.toBeNull();
+    const saved = JSON.parse(raw as string) as Record<string, unknown>;
+    expect(Object.keys(saved).sort()).toEqual(['customerEmail', 'customerName', 'customerPhone']);
   });
 
   // 재고는 그 사이 바뀐다 — 되살린 리워드·수량·추가금이 지금도 유효하다고 보장할 수 없다.
@@ -542,7 +553,6 @@ it('수량 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', a
   await user.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await user.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await user.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await user.click(screen.getByLabelText(/약관/));
 
   // **같은 tick에** 세 번 — userEvent.keyboard는 키 사이에 await가 들어가 상태가 갱신되므로
   // 이 버그(비동기 setState를 재진입 가드로 쓴 것)를 재현하지 못한다.
@@ -576,7 +586,6 @@ describe('폼 안의 결제위젯', () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
     await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-    await userEvent.click(screen.getByLabelText(/약관/));
   };
 
   it('수단 목록과 약관 동의를 붙일 자리가 폼 안에 있다', () => {
@@ -688,98 +697,37 @@ describe('폼 안의 결제위젯', () => {
  * 두 약관은 겹치지 않는다(위젯 쪽은 토스와 이용자 사이의 결제 서비스 약관, 이쪽은 우리와
  * 후원자 사이의 거래 약관·개인정보 수집 동의). 줄일 수 없으므로 자리와 문구로 구분한다.
  */
+/**
+ * 동의는 이제 체크박스가 아니라 **결제하기를 누르는 행위 자체**로 받는다
+ * (2026-09-16, PledgeWizard.tsx 결제하기 버튼 위 고지 주석 참고). 여기서는 그 계약이
+ * 실제로 화면에 그렇게 나와 있는지를 본다 — 우리 쪽 필수 체크박스가 없는 것, 고지 문구와
+ * 약관·처리방침 링크가 버튼 앞에 있는 것.
+ */
 describe('약관 동의 찾기', () => {
-  beforeEach(() => {
-    // jsdom에는 scrollIntoView가 없다. 호출 여부를 보려면 직접 심어야 한다.
-    Element.prototype.scrollIntoView = jest.fn();
-    // requestPayment는 파일 전체가 공유하는 모의라 앞선 테스트의 호출이 쌓여 있다.
-    requestPayment.mockClear();
-  });
-
   const renderForm = () =>
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
 
-  const submitWithoutAgreeing = async () => {
-    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
-    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
-    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-  };
-
-  /** 체크박스가 위젯 **뒤에** 와야 에러 문구와 같은 자리에 붙는다. */
-  it('약관 체크박스가 결제수단 위젯보다 아래에 있다', () => {
+  it('우리 쪽 동의 체크박스가 없다 — 화면의 체크박스는 이름 공개뿐이다', () => {
     renderForm();
-    const widget = document.getElementById('toss-methods-test') as HTMLElement;
-    const terms = screen.getByLabelText(/약관/);
-
-    // DOCUMENT_POSITION_FOLLOWING(4) — terms가 widget보다 문서 순서상 뒤.
-    expect(widget.compareDocumentPosition(terms) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const checkboxes = screen.getAllByRole('checkbox');
+    expect(checkboxes).toHaveLength(1);
+    expect(checkboxes[0]).toHaveAccessibleName(/후원자 명단에 이름과 응원 메시지 공개/);
+    expect(screen.queryByLabelText(/약관/)).toBeNull();
   });
 
-  /**
-   * 필수 동의 두 개(위젯의 결제 약관 · 우리 펀딩 약관)가 붙어 있어야 한다.
-   *
-   * 예전엔 요약 dl이 둘 사이에 끼어 "체크할 곳이 세 군데"로 퍼져 보였다. 위젯 약관 자리
-   * 바로 다음, 요약보다 앞에 오는 것이 이 배치의 계약이다.
-   */
-  it('위젯 약관 바로 다음, 요약보다 앞에 온다', () => {
+  it('결제하기 버튼 위에 동의 고지와 약관·처리방침 링크 두 개가 있다', () => {
     renderForm();
-    const widgetAgreement = document.getElementById('toss-agreement-test') as HTMLElement;
-    const terms = screen.getByLabelText(/약관/);
-    const summary = screen.getByText('예상 합계');
-
-    expect(widgetAgreement.compareDocumentPosition(terms) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(terms.compareDocumentPosition(summary) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(screen.getByText(/결제하기를 누르면/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '펀딩 약관(청약철회·환불)' })).toHaveAttribute('href', '/ko/funding/terms');
+    expect(screen.getByRole('link', { name: '개인정보 처리방침' })).toHaveAttribute('href', '/ko/privacy-policy');
   });
 
-  it('미동의로 제출하면 어느 약관인지 밝힌다', async () => {
+  it('동의 고지는 결제하기 버튼보다 앞(문서 순서상 위)에 온다', () => {
     renderForm();
-    await submitWithoutAgreeing();
+    const notice = screen.getByText(/결제하기를 누르면/);
+    const button = screen.getByRole('button', { name: /결제하기/ });
 
-    expect(await screen.findByRole('alert')).toHaveTextContent('펀딩 약관과 개인정보 처리방침 동의에 체크해 주세요');
-    expect(requestPayment).not.toHaveBeenCalled();
-  });
-
-  /**
-   * `focus()`만 쓰면 브라우저가 최소한으로만 스크롤해 sticky 요약 블록에 가려진 채 초점만
-   * 옮겨 간다 — 동의하라는 말은 보이는데 어디를 눌러야 하는지는 안 보이는 상태.
-   */
-  it('미동의로 제출하면 그 체크박스로 스크롤하고 초점을 준다', async () => {
-    renderForm();
-    await submitWithoutAgreeing();
-    const terms = screen.getByLabelText(/약관/);
-
-    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
-    expect(terms).toHaveFocus();
-  });
-
-  it('미동의 상태를 체크박스에 표시한다', async () => {
-    renderForm();
-    await submitWithoutAgreeing();
-    const terms = screen.getByLabelText(/약관/);
-
-    expect(terms).toHaveAttribute('aria-invalid', 'true');
-    expect(terms).toHaveAttribute('aria-describedby');
-  });
-
-  it('체크하면 표시가 사라진다', async () => {
-    renderForm();
-    await submitWithoutAgreeing();
-    await userEvent.click(screen.getByLabelText(/약관/));
-
-    expect(screen.getByLabelText(/약관/)).toHaveAttribute('aria-invalid', 'false');
-    expect(screen.queryByText(/체크해 주세요/)).toBeNull();
-  });
-
-  /** 이름 공개는 선택이라 필수 동의와 같은 모양으로 나란히 두지 않는다. */
-  it('이름 공개 선택은 약관 동의와 다른 자리에 있다', () => {
-    renderForm();
-    const publicOption = screen.getByLabelText(/후원자 명단에 이름/);
-    const terms = screen.getByLabelText(/약관/);
-
-    expect(publicOption.closest('label')).not.toBe(terms.closest('label'));
-    const widget = document.getElementById('toss-methods-test') as HTMLElement;
-    // 이름 공개는 위젯보다 위(후원자 정보 안), 약관은 아래(제출 옆).
-    expect(widget.compareDocumentPosition(publicOption) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+    // DOCUMENT_POSITION_FOLLOWING(4) — button이 notice보다 문서 순서상 뒤.
+    expect(notice.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });

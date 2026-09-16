@@ -15,8 +15,6 @@ import { Field, TextArea, TextInput } from '../ui/Field';
  * 채워야 할 칸이 많아, 모달 백드롭을 잘못 눌러 언마운트되면 전부 다시 쳐야 했다.
  *
  * 여기 없는 것이 계약이다(lib/formDraft.ts "지켜야 할 선"):
- * - `termsAgreed` — 복원된 체크는 의사표시가 아니다. `funding_pledges.terms_version`이
- *   "그때 이 내용에 동의했다"의 증거인데, 되살린 체크가 그 증거를 받치지 못한다.
  * - `displayNamePublic` — 체크 한 번뿐이라 잃어도 타이핑 손해가 없고, 문자열만 담는
  *   모듈 계약을 깨면서까지 살릴 값이 아니다.
  * - `rewardId`·`quantityText`·`additionalText` — 재고는 그 사이 바뀐다. 되살린 선택이
@@ -46,14 +44,6 @@ interface Props {
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
 
-/**
- * 미동의로 제출했을 때의 문구.
- *
- * "약관에 동의해 주세요"로는 부족하다 — 이 화면에는 약관 동의가 두 벌 있다(우리 것과
- * 결제위젯이 그리는 토스 결제 약관). 어느 쪽인지 밝히지 않으면 이미 체크한 토스 약관을
- * 보고 "했는데 왜"가 된다.
- */
-const TERMS_REQUIRED_MESSAGE = '펀딩 약관과 개인정보 처리방침 동의에 체크해 주세요.';
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
 // 선택 가능한 행(리워드·결제수단)은 탭 타깃이 카드 전체가 되도록.
 const choiceRow =
@@ -132,16 +122,10 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
   const [quantityText, setQuantityText] = useState('1');
   const [additionalText, setAdditionalText] = useState('0');
-  const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false, termsAgreed: false });
+  const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  /**
-   * 약관 미동의 표시. 제출 버튼 옆 체크박스를 붉게 띄우고 그 아래에 이유를 적는다 —
-   * 공용 `error` 배너로만 알리면 어느 칸을 고쳐야 하는지 화면이 말해 주지 않는다.
-   */
-  const [termsError, setTermsError] = useState(false);
-  const termsRef = useRef<HTMLInputElement>(null);
   const submittingRef = useRef(false);
   /**
    * 직전에 만든 **자기** 주문번호. 재제출 시 서버에 함께 보내 그 주문 하나만 만료시킨다
@@ -269,15 +253,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
     submittingRef.current = true;
     setError(null);
     if (allSoldOut) { submittingRef.current = false; setError(ALL_SOLD_OUT_MESSAGE); return; }
-    if (!form.termsAgreed) {
-      submittingRef.current = false;
-      setTermsError(true);
-      // scrollIntoView를 먼저 부르고 focus는 스크롤 없이 준다. `focus()`만 쓰면 브라우저가
-      // 최소한으로만 스크롤해서, sticky 요약 블록에 가려진 채 초점만 옮겨 갈 수 있다.
-      termsRef.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
-      termsRef.current?.focus({ preventScroll: true });
-      return;
-    }
     /**
      * 위젯 약관도 제출 **전에** 본다.
      *
@@ -303,6 +278,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           projectSlug: project.slug, rewardId: reward.id, quantity, additionalAmount: additional, paymentMethod: 'toss',
           ...(previousOrderNo ? { previousOrderNo } : {}),
           ...form, supporterMessage: form.supporterMessage || undefined,
+          // 동의는 **결제하기를 누르는 행위**로 받는다(버튼 위 고지). 서버 검증과
+          // terms_version 기록은 그대로라, 누른 시점의 판본이 증거로 남는다.
+          termsAgreed: true,
           shipping: reward.requiresShipping ? ship : undefined,
         }),
       });
@@ -513,46 +491,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           <>
             <div id={methodsId} />
             <div id={agreementId} />
-            {/*
-              우리 약관 동의를 **결제수단 카드 안**, 위젯 약관 바로 아래에 둔다.
-
-              카드 밖에 두면 필수 동의 두 개가 카드 경계로 갈린다 — 들여쓰기도 배경도
-              달라서 "붙여 놨다"가 화면에서는 전혀 안 보였다(2026-09-16 실사용 확인).
-              같은 패딩 안에 같은 결로 놓아야 한 묶음으로 읽힌다.
-
-              두 약관은 없앨 수 없다: 위젯 쪽은 토스와 이용자 사이의 결제 서비스 약관,
-              이쪽은 우리와 후원자 사이의 거래 약관(청약철회·환불)과 개인정보 수집 동의다.
-              배송지는 토스에 넘기지 않으므로(lib/funding/policy.ts
-              FUNDING_DATA_PROCESSORS) 그 수집 동의를 받아 줄 수 있는 것은 이쪽뿐이다.
-              테두리 박스를 두르지 않는 것도 위젯 약관 행과 같은 결을 맞추기 위해서다.
-            */}
-            <label
-              className={`mt-3 flex cursor-pointer items-start gap-3 rounded-xl px-1 py-2 transition-colors ${
-                termsError ? 'bg-red-50 dark:bg-red-950/40' : ''
-              }`}
-            >
-              <input
-                ref={termsRef}
-                type="checkbox"
-                className={radioClass}
-                checked={form.termsAgreed}
-                onChange={(e) => {
-                  setForm({ ...form, termsAgreed: e.target.checked });
-                  if (e.target.checked) setTermsError(false);
-                }}
-                aria-invalid={termsError}
-                aria-describedby={termsError ? `${uid}-terms-error` : undefined}
-              />
-              <span className="text-sm text-gray-700 dark:text-gray-200">
-                <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
-                <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의합니다 <span className="text-red-600 dark:text-red-400">(필수)</span>
-              </span>
-            </label>
-            {termsError && (
-              <p id={`${uid}-terms-error`} role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
-                {TERMS_REQUIRED_MESSAGE}
-              </p>
-            )}
           </>
         )}
       </fieldset>
@@ -582,6 +520,29 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         {error && (
           <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
         )}
+        {/*
+          약관 동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다.
+
+          화면에는 결제위젯이 그리는 [필수] 결제 서비스 약관 체크가 이미 있고, 그 바로
+          아래에 거의 같은 말을 하는 체크를 하나 더 두면 — 위젯은 자기 회색 영역 안에
+          들여쓰여 그리므로 정렬도 배경도 맞출 수 없다 — 중복으로 읽히고 어느 쪽을 눌러야
+          하는지 헷갈린다(2026-09-16 실사용 확인).
+
+          법적으로도 체크박스가 요구되는 항목이 아니다. 청약철회 등에 관한 사항은
+          전자상거래법 제13조상 **고지** 의무이고, 개인정보 처리방침은 개인정보보호법
+          제30조상 **공개** 대상이다. 이름·연락처·배송지는 리워드 이행에 필요한 정보라
+          제15조 제1항 제4호(계약 이행)로 동의 없이 수집할 수 있다. 계약 이행에 필요하지
+          않은 **선택** 항목(이름·응원 메시지 공개)만 위에서 따로 동의를 받는다.
+
+          서버 검증(termsAgreed)과 판본 기록(funding_pledges.terms_version)은 그대로다 —
+          누른 시점의 판본이 증거로 남는다.
+        */}
+        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+          결제하기를 누르면{' '}
+          <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
+          <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는 것으로 봅니다.
+        </p>
+
         {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. */}
         <Button type="submit" size="lg" fullWidth className="mt-4" disabled={submitting || allSoldOut || !paymentReady}>
           {submitting ? '처리 중…' : '결제하기'}

@@ -87,20 +87,23 @@ describe('MixingOrderWizard 임시 저장', () => {
     expect(screen.getByLabelText('요청사항 (선택)')).toHaveValue('https://drive.google.com/파일링크');
   });
 
-  it('환불 규정 동의는 복원되지 않는다', async () => {
+  // 동의는 이제 체크박스가 아니라 결제하기를 누르는 행위다 — 되살릴 체크 자체가 없다.
+  // 대신 임시 저장이 담는 값이 여전히 이름·연락처·이메일·요청사항 네 칸뿐인지, 동의
+  // 관련 값이 저장소에 섞여 들어가지 않는지를 직접 확인한다.
+  it('임시 저장에는 동의 관련 값이 들어가지 않는다', async () => {
     const user = userEvent.setup();
     const { unmount } = render(<MixingOrderWizard />);
 
     await goToStep2(user);
-    await user.click(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ }));
-    expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toBeChecked();
-
+    await user.type(screen.getByLabelText(/^이름/), '김믹싱');
+    await user.type(screen.getByLabelText(/^휴대폰 번호/), '01055556666');
+    await user.type(screen.getByLabelText(/^이메일/), 'mix@example.com');
     unmount();
 
-    render(<MixingOrderWizard />);
-    await goToStep2(user);
-
-    expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).not.toBeChecked();
+    const raw = window.sessionStorage.getItem(MIXING_CUSTOMER_DRAFT_KEY);
+    expect(raw).not.toBeNull();
+    const saved = JSON.parse(raw as string) as Record<string, unknown>;
+    expect(Object.keys(saved).sort()).toEqual(['customerEmail', 'customerName', 'customerPhone']);
   });
 
   it('상품·곡 수·보컬 튜닝 선택은 복원되지 않는다', async () => {
@@ -198,7 +201,6 @@ describe('폼 안의 결제위젯', () => {
     await user.type(screen.getByLabelText(/^이름/), '김고객');
     await user.type(screen.getByLabelText(/휴대폰/), '010-1111-2222');
     await user.type(screen.getByLabelText(/이메일/), 'a@b.com');
-    await user.click(screen.getByLabelText(/환불 규정에 동의/));
     await user.click(screen.getByRole('button', { name: /결제하기/ }));
   };
 
@@ -223,6 +225,18 @@ describe('폼 안의 결제위젯', () => {
     expect(payload).toEqual(expect.objectContaining({ orderId: 'SNM-20260915-TEST0001', amount: 275000 }));
     expect(payload.failUrl).toContain('service=mixing-mastering');
     expect(payload.successUrl).toContain('/ko/booking/success');
+  });
+
+  // 체크박스가 사라져도 서버로는 계속 동의를 보내야 한다 — 결제하기를 누르는 행위가 곧
+  // 동의이므로, 이 값이 조용히 빠지면 서버 검증(refundPolicyAgreed)이 깨진다.
+  it('결제하기를 누르면 서버로 refundPolicyAgreed: true가 나간다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    const orderCall = (global.fetch as jest.Mock).mock.calls.find((c) => c[0] === '/api/orders/mixing');
+    const body = JSON.parse(orderCall![1].body);
+    expect(body.refundPolicyAgreed).toBe(true);
   });
 
   /**
@@ -259,35 +273,31 @@ describe('폼 안의 결제위젯', () => {
 });
 
 /** BookingWizard와 같은 계약 — 동의를 빠뜨리면 그 체크박스로 데려간다. */
+/**
+ * 동의는 이제 체크박스가 아니라 **결제하기를 누르는 행위 자체**로 받는다
+ * (2026-09-16, MixingOrderWizard.tsx 결제하기 버튼 위 고지 주석 참고). 여기서는 환불 규정
+ * 전문이 펼쳐져 있고 그 아래 고지 문구가 실제로 붙어 있는지를 본다.
+ */
 describe('MixingOrderWizard 동의 안내', () => {
-  beforeEach(() => {
-    Element.prototype.scrollIntoView = jest.fn();
-  });
-
-  const submitWithoutAgreeing = async (user: ReturnType<typeof userEvent.setup>) => {
+  it('환불 규정 2줄이 펼쳐져 있고, 그 아래 결제하기 고지가 붙는다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
     await goToStep2(user);
-    await user.type(screen.getByLabelText(/^이름/), '김믹싱');
-    await user.type(screen.getByLabelText(/^휴대폰 번호/), '01055556666');
-    await user.type(screen.getByLabelText(/^이메일/), 'mix@example.com');
-    await user.click(screen.getByRole('button', { name: /결제하기/ }));
-  };
 
-  it('미동의로 제출하면 그 체크박스로 스크롤하고 초점을 준다', async () => {
-    const user = userEvent.setup();
-    render(<MixingOrderWizard />);
-    await submitWithoutAgreeing(user);
+    const heading = screen.getByText('환불 규정');
+    expect(screen.getByText('작업 착수 전 취소: 전액 환불')).toBeInTheDocument();
+    expect(screen.getByText('작업 착수 후: 온라인 취소 불가 (환불 문의는 010-4255-7893)')).toBeInTheDocument();
 
-    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
-    expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toHaveFocus();
+    const notice = screen.getByText('결제하기를 누르면 위 환불 규정에 동의하는 것으로 봅니다.');
+    expect(heading.compareDocumentPosition(notice) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it('미동의 상태를 체크박스에 표시하고 제출하지 않는다', async () => {
+  it('우리 쪽 동의 체크박스가 없다', async () => {
     const user = userEvent.setup();
     render(<MixingOrderWizard />);
-    await submitWithoutAgreeing(user);
+    await goToStep2(user);
 
-    expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toHaveAttribute('aria-invalid', 'true');
-    expect(await screen.findByRole('alert')).toBeInTheDocument();
+    expect(screen.queryByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toBeNull();
   });
 });
 
@@ -304,7 +314,6 @@ describe('MixingOrderWizard 위젯 약관 가드', () => {
     await user.type(screen.getByLabelText(/^이름/), '김믹싱');
     await user.type(screen.getByLabelText(/^휴대폰 번호/), '01055556666');
     await user.type(screen.getByLabelText(/^이메일/), 'mix@example.com');
-    await user.click(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ }));
     await user.click(screen.getByRole('button', { name: /결제하기/ }));
   };
 
