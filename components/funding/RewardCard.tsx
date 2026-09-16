@@ -3,6 +3,7 @@ import type { MouseEvent } from 'react';
 import BaseCard from '../ui/BaseCard';
 import ResponsiveImage from '../ResponsiveImage';
 import { formatPriceAmount } from '../../data/pricing';
+import { imageAspectRatio } from '../../lib/funding/imageAspect';
 import type { FundingReward } from '../../lib/funding/projects';
 
 interface Props {
@@ -31,11 +32,14 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
 
   const body = (
     <>
+      {/* 그림의 실제 비율을 그대로 쓴다 — 정사각 앨범 표지를 16:9로 자르면 위아래가 잘려
+          무엇인지 알 수 없게 된다. 비율을 모르면 예전대로 16:9로 떨어진다. */}
       {reward.image && (
         <ResponsiveImage
           src={reward.image}
           alt=""
-          containerClassName="relative mb-4 block aspect-[16/9] w-full overflow-hidden rounded-lg"
+          containerClassName="relative mb-4 block w-full overflow-hidden rounded-lg"
+          containerStyle={{ aspectRatio: imageAspectRatio(reward.image) ?? '16 / 9' }}
           className="object-cover"
           loading="lazy"
         />

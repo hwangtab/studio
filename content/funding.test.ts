@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { FUNDING_DIR, getAllFundingProjects, parseFundingProject } from '../lib/funding/projects';
 import { isSafeObjectKey } from '../lib/funding/objectKey';
+import { imageAspectRatio } from '../lib/funding/imageAspect';
 
 describe('content/funding', () => {
   const files = fs.existsSync(FUNDING_DIR) ? fs.readdirSync(FUNDING_DIR).filter((f) => f.endsWith('.md')) : [];
@@ -75,4 +76,29 @@ describe('디지털 리워드는 금액이 오를수록 누적된다', () => {
       }
     });
   }
+});
+
+
+/**
+ * 리워드 썸네일이 **있어야 할 곳에 있는지**.
+ *
+ * 카드·모달에 썸네일 자리를 만들어 두고 정작 어느 리워드에도 `image`를 넣지 않은 채로
+ * 배포된 적이 있다. 자리는 코드에, 그림은 콘텐츠에 있어서 둘이 갈라져도 아무 검사에
+ * 걸리지 않았다.
+ */
+describe('리워드 이미지', () => {
+  const live = getAllFundingProjects().filter((p) => !p.hidden && p.status !== 'draft');
+
+  it.each(live.map((p) => [p.slug, p] as const))('%s: 모든 리워드에 썸네일이 있다', (_slug, project) => {
+    const missing = project.rewards.filter((r) => !r.image).map((r) => r.id);
+    expect(missing).toEqual([]);
+  });
+
+  it.each(live.map((p) => [p.slug, p] as const))('%s: 썸네일 비율을 알 수 있다 — 모르면 16:9로 잘린다', (_slug, project) => {
+    for (const reward of project.rewards) {
+      if (!reward.image) continue;
+      // imageMetadata.json에 없으면 카드가 16:9로 떨어져 정사각 그림이 잘린다.
+      expect([reward.id, imageAspectRatio(reward.image)]).not.toEqual([reward.id, null]);
+    }
+  });
 });
