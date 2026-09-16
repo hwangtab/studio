@@ -135,6 +135,9 @@ describe('가격 SSOT 정합', () => {
       MIXING_LEVEL1_PRICE,
       PRODUCTION_OFFER_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
+      // 2026-09-16 추가 — 홈 OfferCatalog가 pricing 페이지의 19개 오퍼 중 홍보·펀딩 설계를 빼고 있었다
+      RELEASE_PRESS_INTRO_PRICE,
+      FUNDING_DESIGN_PRICE,
     ];
     expect(biz.makesOffer.map((o) => o.price)).toEqual(expected);
     expect(biz.hasOfferCatalog.itemListElement.map((o) => o.price)).toEqual(expected);
