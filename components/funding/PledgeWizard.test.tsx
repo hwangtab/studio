@@ -15,11 +15,18 @@ const requestPayment = jest.fn().mockResolvedValue(undefined);
 const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
+// 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
+// `agreementStatusChange`가 알려 준다. null은 "아직 모름".
+let widgetAgreed: boolean | null = null;
 jest.mock('../booking/useTossPaymentWidgets', () => ({
   useTossPaymentWidgets: () => ({
     methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
     ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
+    agreedRequiredTerms: widgetAgreed,
   }),
+  // 모듈을 통째로 대체하므로 상수도 함께 내보내야 한다 — 빠뜨리면 호출부가 undefined를
+  // setError에 넣어 경고가 조용히 사라진다(2026-09-16에 실제로 그랬다).
+  TOSS_TERMS_REQUIRED_MESSAGE: '결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.',
 }));
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 
@@ -557,7 +564,10 @@ it('수량 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', a
  * 주는 자리였다.
  */
 describe('폼 안의 결제위젯', () => {
-  afterEach(() => { widgetReady = true; widgetError = null; });
+  // requestPayment는 파일 전체가 공유하는 모의라 앞선 테스트의 호출이 쌓인다 —
+  // "부르지 않았다"를 보려면 매번 비워야 한다.
+  beforeEach(() => { requestPayment.mockClear(); });
+  afterEach(() => { widgetReady = true; widgetError = null; widgetAgreed = null; });
 
   const fill = async () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
@@ -615,12 +625,34 @@ describe('폼 안의 결제위젯', () => {
     expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
   });
 
-  it('약관 동의를 빠뜨리면 고칠 것을 알려 준다', async () => {
-    requestPayment.mockRejectedValueOnce(Object.assign(new Error('동의 필요'), { code: 'NEED_AGREEMENT' }));
+  /**
+   * 위젯 약관을 빼먹은 경우.
+   *
+   * 예전엔 그냥 보내고 `requestPayment`가 실패하게 두고 `code === 'NEED_AGREEMENT'`로
+   * 사유를 가리려 했는데 **그 코드는 SDK에 없다**. 그래서 약관만 빼먹은 사람이 "결제를
+   * 시작하지 못했습니다. 잠시 후 다시 시도해 주세요"를 봤고, 그 시점엔 한정 재고 홀드가
+   * 잡힌 주문이 이미 만들어져 있었다. 지금은 제출 전에 막는다.
+   */
+  it('위젯 약관을 빼먹으면 주문을 만들지 않고 어느 약관인지 알려 준다', async () => {
+    widgetAgreed = false;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await fill();
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
-    expect(await screen.findByRole('alert')).toHaveTextContent('약관 동의를 확인해 주세요');
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
+    expect(requestPayment).not.toHaveBeenCalled();
+    // 주문 생성 요청도 나가지 않는다 — 실패가 홀드를 남기지 않는다.
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  /** 동의 상태를 못 받은 채(null) 결제가 실패하면, 원인을 모르니 동의 쪽을 먼저 의심한다. */
+  it('동의 상태를 모르는데 실패하면 약관을 먼저 의심하는 문구를 낸다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('알 수 없음'), { code: 'UNKNOWN' }));
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
   });
 });
 
