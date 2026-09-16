@@ -53,7 +53,7 @@ const homeData = {
       },
       {
         title: '음원 발매 홍보',
-        description: '보도자료를 5개 언어로 쓰고, 그 음악을 다루는 국내 음악 매체와 해외 60개국에 보냅니다. 보낼 곳이 몇 곳인지는 전곡을 듣고 먼저 무료로 세어 알려드립니다.',
+        description: '보도자료를 5개 언어로 쓰고, 그 음악을 다루는 국내 음악 매체와 해외 60개국에 보냅니다. 보낼 곳이 몇 곳인지는 음원을 듣고 먼저 무료로 세어 알려드립니다.',
         link: '/music-promotion',
         icon: 'Globe',
       },
@@ -181,7 +181,7 @@ const homeData = {
       },
       {
         title: 'Music Release PR',
-        description: 'We write your press release in five languages and send it to Korean music outlets and media in 60 countries that would cover the record. We listen to the whole album and count those outlets for you first, free of charge.',
+        description: 'We write your press release in five languages and send it to Korean music outlets and media in 60 countries that would cover the record. We listen to your music and count those outlets for you first, free of charge.',
         link: '/music-promotion',
         icon: 'Globe',
       },
@@ -277,7 +277,7 @@ const homeData = {
       },
       {
         title: '音源发行宣传',
-        description: '用5种语言撰写新闻稿，寄给会报导这张作品的韩国音乐媒体与60个国家的海外媒体。能寄往几家，我们先听完整张专辑再免费数给你看。',
+        description: '用5种语言撰写新闻稿，寄给会报导这张作品的韩国音乐媒体与60个国家的海外媒体。能寄往几家，我们先听过音源再免费数给你看。',
         link: '/music-promotion',
         icon: 'Globe',
       },
@@ -373,7 +373,7 @@ const homeData = {
       },
       {
         title: 'Promoción de lanzamientos',
-        description: 'Escribimos tu nota de prensa en cinco idiomas y la enviamos a medios musicales coreanos y a medios de 60 países que podrían cubrir el disco. Primero escuchamos el álbum entero y contamos gratis a cuántos se puede enviar.',
+        description: 'Escribimos tu nota de prensa en cinco idiomas y la enviamos a medios musicales coreanos y a medios de 60 países que podrían cubrir el disco. Primero escuchamos tu música y contamos gratis a cuántos se puede enviar.',
         link: '/music-promotion',
         icon: 'Globe',
       },
@@ -469,7 +469,7 @@ const homeData = {
       },
       {
         title: 'Quảng bá phát hành nhạc',
-        description: 'Chúng tôi viết thông cáo báo chí bằng 5 ngôn ngữ và gửi tới các đơn vị truyền thông âm nhạc Hàn Quốc cùng truyền thông ở 60 quốc gia có thể đưa tin. Trước hết chúng tôi nghe trọn album và đếm miễn phí xem gửi được tới bao nhiêu nơi.',
+        description: 'Chúng tôi viết thông cáo báo chí bằng 5 ngôn ngữ và gửi tới các đơn vị truyền thông âm nhạc Hàn Quốc cùng truyền thông ở 60 quốc gia có thể đưa tin. Trước hết chúng tôi nghe nhạc của bạn và đếm miễn phí xem gửi được tới bao nhiêu nơi.',
         link: '/music-promotion',
         icon: 'Globe',
       },
@@ -565,7 +565,7 @@ const homeData = {
       },
       {
         title: 'ประชาสัมพันธ์การปล่อยเพลง',
-        description: 'เราเขียนข่าวประชาสัมพันธ์ 5 ภาษา แล้วส่งถึงสื่อดนตรีเกาหลีและสื่อใน 60 ประเทศที่น่าจะเขียนถึงงานนี้ ก่อนอื่นเราฟังทั้งอัลบั้มแล้วนับให้ฟรีว่าส่งได้กี่แห่ง',
+        description: 'เราเขียนข่าวประชาสัมพันธ์ 5 ภาษา แล้วส่งถึงสื่อดนตรีเกาหลีและสื่อใน 60 ประเทศที่น่าจะเขียนถึงงานนี้ ก่อนอื่นเราฟังเพลงของคุณแล้วนับให้ฟรีว่าส่งได้กี่แห่ง',
         link: '/music-promotion',
         icon: 'Globe',
       },
@@ -661,7 +661,7 @@ const homeData = {
       },
       {
         title: 'Reliz uchun press-kampaniya',
-        description: "Press-relizni besh tilda yozamiz va uni shu albomni yoritishi mumkin bo'lgan Koreya musiqa nashrlari hamda 60 ta mamlakat OAVlariga yuboramiz. Avval butun albomni tinglab, nechta joyga yuborish mumkinligini bepul sanab beramiz.",
+        description: "Press-relizni besh tilda yozamiz va uni shu albomni yoritishi mumkin bo'lgan Koreya musiqa nashrlari hamda 60 ta mamlakat OAVlariga yuboramiz. Avval musiqangizni tinglab, nechta joyga yuborish mumkinligini bepul sanab beramiz.",
         link: '/music-promotion',
         icon: 'Globe',
       },

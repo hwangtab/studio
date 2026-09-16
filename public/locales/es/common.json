@@ -1525,7 +1525,7 @@
     "hero": {
       "title": "Promoción de lanzamientos",
       "subtitleLine1": "Llega a gente que aún no te conoce: medios musicales coreanos y 60 países, cada uno en el idioma que lee",
-      "subtitleLine2": "Desde la redacción de la nota de prensa hasta el envío y el informe: {{intro}} · escuchamos el disco entero y contamos los destinatarios; pagas después",
+      "subtitleLine2": "Desde la redacción de la nota de prensa hasta el envío y el informe: {{intro}} · escuchamos la música y contamos los destinatarios; pagas después",
       "badge": "Incluido en el paquete de lanzamiento por {{list}} · precio de socio inicial {{intro}} (hasta {{until}})",
       "alt": "Vista nocturna de Seúl, la ciudad extendida bajo sus luces"
     },
@@ -1573,7 +1573,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "{{intro}} (IVA no incluido). Hay una sola tarifa: las seis cosas de abajo van todas dentro. Escuchamos el disco entero, te decimos a cuántos medios podemos enviarlo, y pagas después de eso."
+          "a": "{{intro}} (IVA no incluido). Hay una sola tarifa: las seis cosas de abajo van todas dentro. Escuchamos la música, te decimos a cuántos medios podemos enviarla, y pagas después de eso."
         },
         {
           "q": "¿Cuánto tarda?",
@@ -1581,7 +1581,7 @@
         },
         {
           "q": "¿Importa si el género es muy de nicho?",
-          "a": "Un género de nicho no significa un envío más pequeño. Buscamos los medios especializados que cubren ese género, los añadimos a la lista y los combinamos con la prensa musical internacional. Para el EP de grindcore de HWA reunimos desde cero 116 medios especializados en metal: si no están en la lista, la creamos. Escuchamos el disco entero y te decimos primero adónde y cuántos son."
+          "a": "Un género de nicho no significa un envío más pequeño. Buscamos los medios especializados que cubren ese género, los añadimos a la lista y los combinamos con la prensa musical internacional. Para el EP de grindcore de HWA reunimos desde cero 116 medios especializados en metal: si no están en la lista, la creamos. Escuchamos la música y te decimos primero adónde y cuántos son."
         },
         {
           "q": "¿Sirve también para música ya publicada?",
@@ -1676,8 +1676,8 @@
           "description": "Escríbenos por KakaoTalk y mándanos la música. Con un solo enlace de streaming ya podemos empezar. La portada, las fotos de promoción, los créditos y las letras vienen bien si los tienes, pero ahora mismo no hacen falta. Da igual si aún no ha salido o si ya está publicada."
         },
         {
-          "title": "Escuchamos el disco entero y contamos los destinatarios — 3 días hábiles · gratis",
-          "description": "El productor escucha el álbum de principio a fin y te manda la cuenta: a cuántos medios de qué tipo podemos enviarlo. No cuesta nada."
+          "title": "Escuchamos la música y contamos los destinatarios — 3 días hábiles · gratis",
+          "description": "El productor escucha la música y te manda la cuenta: a cuántos medios de qué tipo podemos enviarla. No cuesta nada."
         },
         {
           "title": "Pago — después de ver las cifras",
@@ -1703,7 +1703,7 @@
     },
     "review": {
       "title": "Primero contamos a cuántos se puede enviar",
-      "lead": "El productor escucha el disco de principio a fin y te dice dónde, y aproximadamente a cuántos medios de Corea y del extranjero, se puede enviar esta música. Tres días hábiles, gratis. Solo enviamos la música que hemos aceptado, así que no se trabaja en balde ni de un lado ni del otro. Decides después de ver la cifra.",
+      "lead": "El productor escucha la música y te dice dónde, y aproximadamente a cuántos medios de Corea y del extranjero, se puede enviar. Tres días hábiles, gratis. Eso sí, solo llevamos tres artistas al mes, así que puede haber espera. Solo enviamos la música que hemos aceptado, así que no se trabaja en balde ni de un lado ni del otro. Decides después de ver la cifra.",
       "criteria": [
         {
           "title": "Qué medios cubren esta música",
@@ -1711,11 +1711,11 @@
         },
         {
           "title": "Dónde está la historia que se puede escribir",
-          "body": "Una nota de prensa no es una presentación, es el material con el que un periodista construye un artículo. Escuchando el disco buscamos qué punto puede ser el primer párrafo. El enfoque que encontramos aquí es el arranque de las cinco notas de prensa."
+          "body": "Una nota de prensa no es una presentación, es el material con el que un periodista construye un artículo. Escuchando la música miramos qué punto puede ser el primer párrafo. El enfoque que encontramos aquí es el arranque de las cinco notas de prensa."
         },
         {
           "title": "El productor lo escucha hasta el final",
-          "body": "El productor Hwang Kyungha escucha el álbum del primer tema al último. Lleva quince años ideando y produciendo discos independientes. Un correo escrito por alguien que lo escuchó entero no se parece a uno que no, y quien lo recibe lo nota."
+          "body": "La música que aceptamos, el productor Hwang Kyungha la escucha del primer tema al último. Lleva quince años ideando y produciendo discos independientes. Un correo escrito por alguien que lo escuchó entero no se parece a uno que no, y quien lo recibe lo nota."
         }
       ],
       "rejection": "Respondemos en tres días hábiles y gratis. En la respuesta va escrito, en cifras, a cuántos medios de qué tipo se puede enviar. Si vemos que la ventanilla adecuada no es la nuestra, también lo escribimos tal cual y añadimos, hasta donde sepamos, adónde te conviene enviarlo.",
@@ -1776,7 +1776,7 @@
       "inquiry": "Consultar sobre promoción de lanzamientos",
       "titleLine1": "Todavía quedan sitios",
       "titleHighlight": "a los que tu música puede llegar",
-      "subtitleLine1": "Mándanos la música por KakaoTalk: el productor la escucha entera y te responde en 3 días hábiles.",
+      "subtitleLine1": "Mándanos la música por KakaoTalk: el productor la escucha y te responde en 3 días hábiles.",
       "subtitleLine2": "Contarte a cuántos se puede enviar es gratis. El pago viene después de ver esa cifra.",
       "imageAlt": "El taller de Studio NOL"
     },
