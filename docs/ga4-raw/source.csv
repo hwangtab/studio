@@ -1,63 +1,58 @@
 source,medium,sessions,bounce_rate,lead_events,qualified_leads,form_errors
-"google","organic",14090,0.195,114,96,15
-"m.search.naver.com","referral",860,0.119,24,24,0
-"(direct)","(none)",853,0.304,18,15,0
-"chatgpt.com","ai-assistant",463,0.197,17,17,0
-"bing","organic",399,0.203,1,1,0
-"naver","organic",313,0.112,3,3,0
-"(not set)","(not set)",135,1.000,1,1,0
-"gemini.google.com","ai-assistant",94,0.277,3,3,0
+"google","organic",16870,0.295,123,123,0
+"(direct)","(none)",1101,0.440,31,29,0
+"m.search.naver.com","referral",681,0.131,20,20,0
+"chatgpt.com","ai-assistant",578,0.329,25,25,0
+"bing","organic",539,0.299,2,2,0
+"naver","organic",252,0.179,4,4,0
+"gemini.google.com","ai-assistant",168,0.446,4,4,0
+"(not set)","(not set)",116,1.000,0,0,0
 "dogdrip.net","referral",70,0.643,0,0,0
-"perplexity.ai","ai-assistant",47,0.170,0,0,0
-"perplexity","(not set)",39,0.256,2,2,0
-"chatgpt.com","(not set)",36,0.722,2,2,0
-"copilot.com","ai-assistant",35,0.343,0,0,0
-"search.google.com","referral",28,0.071,4,4,0
-"chatgpt.com","referral",27,0.556,0,0,0
-"yahoo","organic",27,0.148,0,0,0
-"notebooklm.google.com","referral",21,0.095,0,0,0
-"youtube.com","referral",21,0.381,2,2,0
-"t.co","referral",18,0.056,0,0,0
-"copilot.com","(not set)",16,0.438,0,0,0
-"claude.ai","ai-assistant",15,0.333,0,0,0
-"facebook.com","referral",15,0.133,0,0,0
+"l.threads.com","referral",46,0.717,0,0,0
+"youtube.com","referral",37,0.459,2,2,0
+"copilot.com","ai-assistant",34,0.353,0,0,0
+"perplexity.ai","ai-assistant",34,0.235,0,0,0
+"yahoo","organic",33,0.364,0,0,0
+"perplexity","(not set)",31,0.258,2,2,0
+"copilot.com","(not set)",27,0.519,0,0,0
+"t.co","referral",19,0.105,0,0,0
 "ig","social",15,0.267,0,0,0
-"mule.co.kr","referral",13,0.077,0,0,0
-"(data not available)","(data not available)",7,1.000,0,0,0
-"duckduckgo","organic",6,0.000,0,0,0
-"m.place.naver.com","referral",6,0.333,0,0,0
-"gemini.google.com","referral",5,1.000,0,0,0
-"copilot.com","referral",4,0.250,1,1,0
-"nextgeeker.com","referral",4,0.000,0,0,0
-"perplexity.ai","referral",4,0.250,0,0,0
-"google","cpc",3,0.000,0,0,0
-"l.threads.com","referral",3,0.333,0,0,0
-"manus.im","referral",3,0.000,0,0,0
-"notebook.google.com","referral",3,0.333,0,0,0
-"cn.bing.com","referral",2,1.000,0,0,0
-"ecosia.org","organic",2,0.000,0,0,0
+"facebook.com","referral",14,0.214,0,0,0
+"claude.ai","ai-assistant",13,0.385,0,0,0
+"notebooklm.google.com","referral",12,0.083,0,0,0
+"payment-gateway-sandbox.tosspayments.com","referral",12,0.000,2,2,0
+"mule.co.kr","referral",11,0.091,1,1,0
+"notebook.google.com","referral",9,0.222,0,0,0
+"payment-gateway.tosspayments.com","referral",9,0.333,0,0,0
+"duckduckgo","organic",8,0.125,0,0,0
+"l.instagram.com","referral",6,0.333,0,0,0
+"nextgeeker.com","referral",6,0.167,0,0,0
+"pcmap.place.naver.com","referral",6,0.333,0,0,0
+"m.place.naver.com","referral",5,0.200,0,0,0
+"search.google.com","referral",5,0.000,0,0,0
+"cn.bing.com","referral",4,0.250,0,0,0
+"ecosia.org","organic",3,0.000,0,0,0
+"blog.naver.com","referral",2,0.500,0,0,0
+"dailytodaily.com","referral",2,1.000,0,0,0
 "instagram.com","referral",2,1.000,0,0,0
-"l.instagram.com","referral",2,1.000,0,0,0
 "localhost:3000","referral",2,0.000,0,0,0
 "m.baidu.com","referral",2,1.000,0,0,0
 "m.facebook.com","referral",2,1.000,0,0,0
+"manus.im","referral",2,0.000,0,0,0
 "openai","(not set)",2,0.000,0,0,0
 "tumblbug.com","referral",2,0.500,0,0,0
-"blog.naver.com","referral",1,1.000,0,0,0
 "cafe.naver.com","referral",1,1.000,0,0,0
-"chat.beai.kr","referral",1,1.000,0,0,0
-"claude.ai","referral",1,0.000,0,0,0
-"gpt.k-university.ai","referral",1,0.000,0,0,0
+"chatgpt.com","(none)",1,1.000,0,0,0
+"en.wikipedia.org","referral",1,0.000,0,0,0
+"gemini","(not set)",1,1.000,0,0,0
+"gemini","ai-assistant",1,0.000,0,0,0
 "hyesung.riroschool.kr","referral",1,0.000,0,0,0
-"linktr.ee","referral",1,0.000,0,0,0
-"m.blog.naver.com","referral",1,0.000,0,0,0
+"lego-builder.tmapadmin.com","referral",1,1.000,0,0,0
 "m.youtube.com","referral",1,1.000,0,0,0
 "memo.naver.com","referral",1,0.000,0,0,0
 "odiasearch.com","referral",1,0.000,0,0,0
-"padlet.com","referral",1,0.000,0,0,0
-"pcmap.place.naver.com","referral",1,0.000,1,1,0
+"perplexity","",1,1.000,0,0,0
 "polymeta.com","referral",1,0.000,0,0,0
 "threads","social",1,0.000,0,0,0
 "tiktok.com","referral",1,0.000,0,0,0
-"wad.sentinel.navercorp.com","referral",1,0.000,0,0,0
-"webhwp.hancomdocs.com","referral",1,0.000,0,0,0
+"yandex","organic",1,0.000,0,0,0
