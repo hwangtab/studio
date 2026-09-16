@@ -1,7 +1,6 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
+import { getSiteConfig } from '../../data/siteConfig';
 import { getSchemaLanguage } from './shared';
-import { getOperatorAwards, getOperatorKnowsAbout } from './person';
 import {
   RELEASE_SINGLE_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
@@ -90,26 +89,13 @@ export const generateReleaseProjectSchema = (
   const personId = `${siteUrl}/#person-hwang`;
   const schemaLanguage = getSchemaLanguage(locale);
 
-  // 스튜디오 SNS + 운영자 본인 권위 프로필(ggac·Bugs) 병합 — generateArticleSchema와 동일 규칙.
-  const personSameAs = [
-    ...Object.values(socialProfiles),
-    ...(studioOperator.sameAs ?? []),
-  ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
-
-  const operatorAwards = getOperatorAwards();
-
+  // 완전한 Person 노드는 generateDefaultSchema가 전 페이지에 이미 내보낸다. 같은 @id로
+  // 완전 노드를 한 번 더 내면 award·sameAs 배열이 물리적으로 중복된다(person.ts 주석 참조).
+  // /author와 같은 방식으로 @id 참조 + 이 페이지 고유 description만 붙인다.
   const person = {
     '@type': 'Person',
     '@id': personId,
-    name: studioOperator.name,
-    jobTitle: studioOperator.jobTitleByLocale[locale] || studioOperator.jobTitleByLocale.ko,
     description: RELEASE_PERSON_DESCRIPTIONS[locale],
-    // Person 권위 프로필 홈 — /author 프로필 페이지·generateArticleSchema와 일치 (단일 entity url).
-    url: `${siteUrl}/${locale}/author`,
-    ...(operatorAwards.length > 0 && { award: operatorAwards }),
-    knowsAbout: getOperatorKnowsAbout(locale),
-    ...(personSameAs.length > 0 && { sameAs: personSameAs }),
-    worksFor: { '@type': 'Organization', '@id': organizationId, name: config.name },
   };
 
   const baseServiceName = tier ? RELEASE_TIER_LABELS[tier][locale] : RELEASE_SERVICE_NAMES[locale];
