@@ -20,8 +20,11 @@ const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
 // 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
-// `agreementStatusChange`가 알려 준다. null은 "아직 모름".
-let widgetAgreed: boolean | null = null;
+// `agreementStatusChange`가 알려 준다. null은 "아직 모름"(= 한 번도 건드리지 않음).
+//
+// 기본값을 `true`로 두는 이유: 대부분의 테스트는 결제까지 가는 정상 경로를 본다.
+// 가드를 확인하는 테스트만 `false`·`null`로 내려 쓴다.
+let widgetAgreed: boolean | null = true;
 jest.mock('./useTossPaymentWidgets', () => ({
   useTossPaymentWidgets: () => ({
     methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
@@ -339,7 +342,7 @@ describe('BookingWizard 위젯 약관 가드', () => {
     Element.prototype.scrollIntoView = jest.fn();
     requestPayment.mockClear();
   });
-  afterEach(() => { widgetAgreed = null; });
+  afterEach(() => { widgetAgreed = true; });
 
   const fillAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
     await goToStep3(user);
@@ -349,6 +352,17 @@ describe('BookingWizard 위젯 약관 가드', () => {
     await user.click(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ }));
     await user.click(screen.getByRole('button', { name: /결제하기/ }));
   };
+
+  /** 위젯을 한 번도 건드리지 않은 경로(null)가 약관을 빼먹는 가장 흔한 경우다. */
+  it('동의 상태를 모르면 주문을 만들지 않는다', async () => {
+    widgetAgreed = null;
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fillAndSubmit(user);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
+    expect(requestPayment).not.toHaveBeenCalled();
+  });
 
   it('위젯 약관을 빼먹으면 예약을 만들지 않고 어느 약관인지 알려 준다', async () => {
     widgetAgreed = false;
@@ -362,6 +376,8 @@ describe('BookingWizard 위젯 약관 가드', () => {
 
   /** 결제창을 닫은 것은 오류가 아니다 — 약관 문구를 띄우면 오진이다. */
   it('결제창을 닫으면 약관 문구를 띄우지 않는다', async () => {
+    // 결제까지 가야 취소를 재현할 수 있으니 동의된 상태로 둔다.
+    widgetAgreed = true;
     requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
