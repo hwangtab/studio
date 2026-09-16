@@ -203,7 +203,11 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
         title={t('musicPromotion.seo.title')}
         description={t('musicPromotion.seo.description')}
         keywords={t('musicPromotion.seo.keywords')}
-        ogImage="/images/og-hardware1.webp"
+        /* 히어로와 같은 사진이어야 한다 — 히어로를 믹싱 콘솔에서 서울 야경으로 바꿀 때
+           OG를 안 따라 바꿔, 공유 썸네일에는 콘솔이 나가는데 og:image:alt는 "밤의 서울
+           도심 전경"을 말하고 있었다. 카카오톡은 og:image를 URL 단위로 캐시하므로
+           그림만 갈아 끼우지 말고 파일명을 바꿀 것(커밋 85178f14ad). */
+        ogImage="/images/og-music-promotion.webp"
         ogImageAlt={t('musicPromotion.hero.alt')}
         ogImageWidth={1200}
         ogImageHeight={630}
