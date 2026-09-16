@@ -23,11 +23,37 @@ import type { HealthIssue } from './healthCheck';
 /** 감시 대상 페이지. 카카오 CTA가 있고 트래픽이 충분한 두 상업 페이지. */
 const WATCHED_PAGES = ['/ko/practice-room', '/ko/pricing'] as const;
 
-/** 표본 부족 기준 — 최근 3일 조회수가 이보다 적으면 판정을 유보한다. */
-const MIN_RECENT_VIEWS = 30;
-
-/** 급락 판정 배수 — 최근 클릭률이 기준선의 이 비율 미만이면 이상. */
+/** 급락 판정 배수 — 최근 클릭률이 기준선의 이 비율 미만이면 '실질적으로' 급락. */
 const DROP_THRESHOLD_RATIO = 0.4;
+
+/**
+ * 유의수준 — 기준선이 그대로였는데도 이만큼 적게 나올 확률이 이보다 낮아야 알린다.
+ *
+ * 실질적 급락(위 배수)만으로는 부족하다. 이 페이지들은 하루 클릭이 0~3건이라 클릭 0인 날이
+ * 흔하고, 창이 짧으면 클릭 0 → 클릭률 0 → 무조건 배수 미만이 되어 검사가 늘 발화한다.
+ * 2026-09-16이 그 사고였다: 기준선 4.39%에서 조회 42건에 클릭 0이 나왔는데 그건 우연히도
+ * 15.2% 확률로 일어나는 일이었고, 환불처럼 해소할 대상이 없어 매일 아침 같은 메일이 나갔다.
+ */
+const ALPHA = 0.05;
+
+/**
+ * 이항분포 하한 꼬리 P(X ≤ k) — 클릭률이 p인 페이지를 n번 보여줬을 때 클릭이 k번 이하일 확률.
+ *
+ * 계승을 쓰지 않고 항을 이어 붙여 계산한다: t₀ = (1-p)ⁿ, tᵢ = tᵢ₋₁ · (n-i+1)/i · p/(1-p).
+ * n이 커서 t₀가 0으로 언더플로하면 합도 0이 되는데, 그 구간은 어차피 유의한 쪽이라 방향이 맞다.
+ */
+const binomialAtMost = (k: number, n: number, p: number): number => {
+  if (p <= 0) return 1;
+  if (p >= 1) return k >= n ? 1 : 0;
+  const odds = p / (1 - p);
+  let term = (1 - p) ** n;
+  let sum = term;
+  for (let i = 1; i <= k; i += 1) {
+    term *= ((n - i + 1) / i) * odds;
+    sum += term;
+  }
+  return Math.min(sum, 1);
+};
 
 // scripts/ga4-fetch.mjs의 BOT_EXCLUSION과 동일한 필터.
 const BOT_EXCLUSION = {
@@ -174,9 +200,13 @@ export const runLeadRateCheck = async (
 
   const [recent, baseline] = await Promise.all([
     // 창 끝을 '어제'로 둔다. GA4 Data API는 당일·전일 데이터가 미완성이라(처리 지연 24~48h)
-    // 오늘을 넣으면 최근 3일 표본이 늘 깎여 판정이 흔들린다. 최근 = D-4~D-1, 기준선 = D-32~D-5.
-    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(4, 1)),
-    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(32, 5)),
+    // 오늘을 넣으면 최근 표본이 늘 깎여 판정이 흔들린다. 최근 = D-8~D-1, 기준선 = D-36~D-9.
+    //
+    // 최근 창이 7일인 이유: 연습실은 하루 약 12뷰이고 기준선 클릭률이 4~7%라, 3일(약 40뷰)
+    // 로는 클릭 0이 우연인지 사고인지 가릴 수 없다. 클릭 0이 유의해지려면 약 67뷰가 필요하고
+    // 그건 6일치다. 창을 7일로 잡아야 판정이 성립한다.
+    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(8, 1)),
+    fetchPageStats(client, GA4_PROPERTY_ID, dateRange(36, 9)),
   ]);
 
   const issues: HealthIssue[] = [];
@@ -185,22 +215,29 @@ export const runLeadRateCheck = async (
     const r = recent.get(page)!;
     const b = baseline.get(page)!;
 
-    if (r.views < MIN_RECENT_VIEWS) continue; // 표본 부족 — 판정 유보, 알리지 않음.
+    if (r.views === 0 || b.views === 0) continue;
 
     const recentRate = r.kakaoClicks / r.views;
-    const baselineRate = b.views > 0 ? b.kakaoClicks / b.views : 0;
+    const baselineRate = b.kakaoClicks / b.views;
+    if (baselineRate <= 0) continue; // 기준선에 클릭이 없으면 비교할 것이 없다.
 
-    if (baselineRate > 0 && recentRate < baselineRate * DROP_THRESHOLD_RATIO) {
-      issues.push({
-        severity: 'high',
-        title: `${page} 카카오 전환율 급락 (최근 3일)`,
-        detail:
-          `페이지: ${page}\n` +
-          `최근 3일: 클릭 ${r.kakaoClicks} / 조회 ${r.views} (${(recentRate * 100).toFixed(2)}%)\n` +
-          `기준선(그 이전 28일): 클릭 ${b.kakaoClicks} / 조회 ${b.views} (${(baselineRate * 100).toFixed(2)}%)\n` +
-          '의심 원인: 카카오 CTA 렌더(배경·글자색 등 스타일 누락)·GA4 추적 스니펫 누락·최근 카피 변경 여부를 먼저 확인해 주세요.',
-      });
-    }
+    // ① 실질적으로 큰 하락인가.
+    if (recentRate >= baselineRate * DROP_THRESHOLD_RATIO) continue;
+
+    // ② 우연으로 설명되지 않는가 — 기준선이 그대로였다면 이만큼 적게 나올 확률.
+    const pValue = binomialAtMost(r.kakaoClicks, r.views, baselineRate);
+    if (pValue >= ALPHA) continue;
+
+    issues.push({
+      severity: 'high',
+      title: `${page} 카카오 전환율 급락 (최근 7일)`,
+      detail:
+        `페이지: ${page}\n` +
+        `최근 7일: 클릭 ${r.kakaoClicks} / 조회 ${r.views} (${(recentRate * 100).toFixed(2)}%)\n` +
+        `기준선(그 이전 28일): 클릭 ${b.kakaoClicks} / 조회 ${b.views} (${(baselineRate * 100).toFixed(2)}%)\n` +
+        `기준선이 유지됐다면 이만큼 적게 나올 확률: ${(pValue * 100).toFixed(2)}%\n` +
+        '의심 원인: 카카오 CTA 렌더(배경·글자색 등 스타일 누락)·GA4 추적 스니펫 누락·최근 카피 변경 여부를 먼저 확인해 주세요.',
+    });
   }
 
   return { issues };
