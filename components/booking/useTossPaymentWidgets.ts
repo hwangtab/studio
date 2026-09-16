@@ -1,0 +1,114 @@
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { loadTossPayments, ANONYMOUS } from '@tosspayments/tosspayments-sdk';
+
+type Widgets = Awaited<ReturnType<Awaited<ReturnType<typeof loadTossPayments>>['widgets']>>;
+
+export interface TossRequestPaymentParams {
+  orderId: string;
+  orderName: string;
+  customerName: string;
+  customerEmail?: string;
+  /** origin을 포함한 전체 주소. */
+  successUrl: string;
+  failUrl: string;
+  /**
+   * 청구할 금액. 넘기면 결제창을 열기 **직전에** 위젯 금액을 이 값으로 맞춘다.
+   *
+   * 폼 안에 위젯을 띄우는 화면에서는 후원자가 수량을 고치는 동안 금액이 계속 움직인다.
+   * 서버가 확정한 금액으로 한 번 더 맞춰 두지 않으면 화면의 추정치로 결제창이 열린다.
+   */
+  amount?: number;
+}
+
+/**
+ * 토스 **결제위젯**(수단 목록 + 약관 동의)을 붙이고 결제창을 여는 훅.
+ *
+ * 왜 컴포넌트가 아니라 훅인가: 위젯을 결제 전용 화면이 아니라 **신청 폼 안에** 두는
+ * 화면이 생겼다(펀딩). 그 화면의 제출 버튼은 폼이 들고 있어야 하므로, 마운트 지점과
+ * `requestPayment`만 넘겨주고 버튼은 쓰는 쪽이 그린다.
+ *
+ * **마운트와 금액 갱신을 갈라 놓은 것이 이 훅의 핵심이다.** 예전에는 `amount`가 effect의
+ * 의존성이라 금액이 바뀔 때마다 위젯을 통째로 다시 그렸다. 결제 전용 화면에서는 금액이
+ * 고정이라 드러나지 않았지만, 폼 안에 두면 수량을 한 번 고칠 때마다 iframe이 사라졌다
+ * 다시 붙는다. 지금은 한 번만 붙이고 금액은 `setAmount`로만 갱신한다.
+ */
+export const useTossPaymentWidgets = (amount: number) => {
+  const widgetsRef = useRef<Widgets | null>(null);
+  /**
+   * 마운트 지점은 **인스턴스마다 유일한 id**여야 한다. 예전엔 `#toss-payment-methods`라는
+   * 전역 고정 id였는데, 그건 "한 페이지에 위젯이 평생 하나"라는 전제에 기대고 있었다.
+   * 펀딩 리워드 모달처럼 열고 닫으며 위젯을 여러 번 만드는 화면에서는 이전 인스턴스가
+   * 남긴 노드와 새 렌더가 같은 셀렉터를 두고 부딪힌다. useId는 SSR과 클라이언트가 같은
+   * 값을 내므로 하이드레이션도 어긋나지 않는다.
+   */
+  // useId는 React 판본에 따라 `:r0:`·`«r0»` 등 CSS 선택자에 못 쓰는 문자를 포함한다.
+  const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
+  const methodsId = `toss-payment-methods-${uid}`;
+  const agreementId = `toss-agreement-${uid}`;
+
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  // 위젯 로드 실패 시 "다시 시도"가 이 값을 증가시켜 아래 effect를 재실행한다.
+  const [retryKey, setRetryKey] = useState(0);
+
+  // 첫 렌더 금액은 ref로 읽는다 — 의존성에 넣으면 금액이 바뀔 때마다 재마운트된다.
+  const amountRef = useRef(amount);
+  amountRef.current = amount;
+
+  useEffect(() => {
+    let cancelled = false;
+    // 노드는 **effect 본문에서** 붙잡는다. React는 언마운트 때 passive effect cleanup보다
+    // 먼저 ref를 떼므로, cleanup에서 ref.current를 읽으면 이미 null이라 아무것도 못 지운다.
+    const methodsEl = document.getElementById(methodsId);
+    const agreementEl = document.getElementById(agreementId);
+    (async () => {
+      try {
+        const clientKey = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
+        if (!clientKey) throw new Error('결제 설정이 없습니다.');
+        const toss = await loadTossPayments(clientKey);
+        const widgets = toss.widgets({ customerKey: ANONYMOUS });
+        await widgets.setAmount({ currency: 'KRW', value: amountRef.current });
+        await Promise.all([
+          widgets.renderPaymentMethods({ selector: `#${methodsId}` }),
+          widgets.renderAgreement({ selector: `#${agreementId}` }),
+        ]);
+        if (!cancelled) { widgetsRef.current = widgets; setReady(true); }
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : '결제 모듈을 불러오지 못했습니다.');
+      }
+    })();
+    return () => {
+      cancelled = true;
+      // 위젯이 심어 둔 iframe을 직접 걷어낸다. SDK에 파기 API가 없어서, 컨테이너를 비우지
+      // 않으면 재마운트 때 옛 iframe이 남은 채 새 iframe이 덧붙는다.
+      widgetsRef.current = null;
+      setReady(false);
+      if (methodsEl) methodsEl.innerHTML = '';
+      if (agreementEl) agreementEl.innerHTML = '';
+    };
+  }, [agreementId, methodsId, retryKey]);
+
+  // 금액이 움직이면 위젯에만 알린다 — 다시 그리지 않는다.
+  useEffect(() => {
+    const widgets = widgetsRef.current;
+    if (!ready || !widgets) return;
+    // Promise.resolve로 감싼다 — 실패해도 화면을 흔들지 않는다(결제 직전에 다시 맞춘다).
+    void Promise.resolve(widgets.setAmount({ currency: 'KRW', value: amount })).catch(() => {});
+  }, [amount, ready]);
+
+  const requestPayment = useCallback(async ({ amount: finalAmount, ...params }: TossRequestPaymentParams) => {
+    const widgets = widgetsRef.current;
+    if (!widgets) throw new Error('결제 모듈이 준비되지 않았습니다.');
+    // 서버가 확정한 금액으로 맞춘 뒤 연다. 화면의 추정치로 열면 청구액이 어긋난다.
+    if (finalAmount !== undefined) await widgets.setAmount({ currency: 'KRW', value: finalAmount });
+    await widgets.requestPayment(params);
+  }, []);
+
+  const retry = useCallback(() => {
+    setError(null);
+    setReady(false);
+    setRetryKey((k) => k + 1);
+  }, []);
+
+  return { methodsId, agreementId, ready, error, retry, requestPayment };
+};
