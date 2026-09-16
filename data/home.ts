@@ -52,9 +52,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: '홍보 & 마케팅',
-        description: '어떤 매체와 플레이리스트에 닿아야 할지 뮤지션과 같이 정하고, 국내외 기자·라디오·큐레이터에게 피칭합니다. 쇼케이스 준비도 함께합니다.',
-        link: '/portfolio',
+        title: '음원 발매 홍보',
+        description: '보도자료를 5개 언어로 쓰고, 그 음악을 다루는 국내 음악 매체와 해외 60개국에 보냅니다. 보낼 곳이 몇 곳인지는 전곡을 듣고 먼저 무료로 세어 알려드립니다.',
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
@@ -180,9 +180,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: 'PR & Marketing',
-        description: 'We decide together which media and playlists your music should reach, then pitch it to journalists, radio and curators in Korea and abroad. Showcase support included.',
-        link: '/portfolio',
+        title: 'Music Release PR',
+        description: 'We write your press release in five languages and send it to Korean music outlets and media in 60 countries that would cover the record. We listen to the whole album and count those outlets for you first, free of charge.',
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
@@ -276,9 +276,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: '宣传 & 营销',
-        description: '和你一起决定音乐该触达哪些媒体与歌单，再向国内外记者、电台与策展人推介。showcase 的准备也一同进行。',
-        link: '/portfolio',
+        title: '音源发行宣传',
+        description: '用5种语言撰写新闻稿，寄给会报导这张作品的韩国音乐媒体与60个国家的海外媒体。能寄往几家，我们先听完整张专辑再免费数给你看。',
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
@@ -372,9 +372,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: 'RP y Marketing',
-        description: 'Decidimos contigo a qué medios y playlists debe llegar tu música, y la presentamos a periodistas, radios y curadores de Corea y del extranjero. Incluye apoyo para showcases.',
-        link: '/portfolio',
+        title: 'Promoción de lanzamientos',
+        description: 'Escribimos tu nota de prensa en cinco idiomas y la enviamos a medios musicales coreanos y a medios de 60 países que podrían cubrir el disco. Primero escuchamos el álbum entero y contamos gratis a cuántos se puede enviar.',
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
@@ -468,9 +468,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: 'PR & Marketing',
-        description: 'Cùng bạn chọn những media và playlist cần chạm tới, rồi pitch tới nhà báo, đài radio và curator trong và ngoài nước. Hỗ trợ cả chuẩn bị showcase.',
-        link: '/portfolio',
+        title: 'Quảng bá phát hành nhạc',
+        description: 'Chúng tôi viết thông cáo báo chí bằng 5 ngôn ngữ và gửi tới các đơn vị truyền thông âm nhạc Hàn Quốc cùng truyền thông ở 60 quốc gia có thể đưa tin. Trước hết chúng tôi nghe trọn album và đếm miễn phí xem gửi được tới bao nhiêu nơi.',
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
@@ -564,9 +564,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: 'ประชาสัมพันธ์ & การตลาด',
-        description: 'ตัดสินใจร่วมกับคุณว่าเพลงควรไปถึงสื่อและเพลย์ลิสต์ไหน แล้วพิตช์ให้นักข่าว วิทยุ และคิวเรเตอร์ทั้งในและต่างประเทศ พร้อมช่วยเตรียมโชว์เคส',
-        link: '/portfolio',
+        title: 'ประชาสัมพันธ์การปล่อยเพลง',
+        description: 'เราเขียนข่าวประชาสัมพันธ์ 5 ภาษา แล้วส่งถึงสื่อดนตรีเกาหลีและสื่อใน 60 ประเทศที่น่าจะเขียนถึงงานนี้ ก่อนอื่นเราฟังทั้งอัลบั้มแล้วนับให้ฟรีว่าส่งได้กี่แห่ง',
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
@@ -660,9 +660,9 @@ const homeData = {
         icon: 'Upload',
       },
       {
-        title: 'PR & Marketing',
-        description: "Musiqangiz qaysi OAV va pleylistlarga yetishi kerakligini siz bilan birga hal qilamiz, so'ng mahalliy va xalqaro jurnalistlar, radio va kuratorlarga taqdim etamiz. Showcase tayyorlashda ham yordam beramiz.",
-        link: '/portfolio',
+        title: 'Reliz uchun press-kampaniya',
+        description: "Press-relizni besh tilda yozamiz va uni shu albomni yoritishi mumkin bo'lgan Koreya musiqa nashrlari hamda 60 ta mamlakat OAVlariga yuboramiz. Avval butun albomni tinglab, nechta joyga yuborish mumkinligini bepul sanab beramiz.",
+        link: '/music-promotion',
         icon: 'Globe',
       },
       {
