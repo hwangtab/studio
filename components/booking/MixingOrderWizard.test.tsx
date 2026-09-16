@@ -247,3 +247,36 @@ describe('폼 안의 결제위젯', () => {
     expect(requestPayment).not.toHaveBeenCalled();
   });
 });
+
+/** BookingWizard와 같은 계약 — 동의를 빠뜨리면 그 체크박스로 데려간다. */
+describe('MixingOrderWizard 동의 안내', () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = jest.fn();
+  });
+
+  const submitWithoutAgreeing = async (user: ReturnType<typeof userEvent.setup>) => {
+    await goToStep2(user);
+    await user.type(screen.getByLabelText(/^이름/), '김믹싱');
+    await user.type(screen.getByLabelText(/^휴대폰 번호/), '01055556666');
+    await user.type(screen.getByLabelText(/^이메일/), 'mix@example.com');
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+  };
+
+  it('미동의로 제출하면 그 체크박스로 스크롤하고 초점을 준다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await submitWithoutAgreeing(user);
+
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
+    expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toHaveFocus();
+  });
+
+  it('미동의 상태를 체크박스에 표시하고 제출하지 않는다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await submitWithoutAgreeing(user);
+
+    expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toHaveAttribute('aria-invalid', 'true');
+    expect(await screen.findByRole('alert')).toBeInTheDocument();
+  });
+});
