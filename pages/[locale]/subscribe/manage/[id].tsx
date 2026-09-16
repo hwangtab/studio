@@ -261,7 +261,7 @@ export const getServerSideProps = withI18nServerProps<ManageProps>(async ({ quer
     props: {
       id: subscription.id,
       token,
-      productName: subscriptionOrderName(subscription.kind),
+      productName: subscriptionOrderName(subscription),
       status: subscription.status,
       nextBillingAt: subscription.nextBillingAt ? subscription.nextBillingAt.toISOString() : null,
       endsAt: subscription.endsAt ? subscription.endsAt.toISOString() : null,

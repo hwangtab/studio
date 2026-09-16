@@ -14,9 +14,9 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
-import { subscriptionAmounts } from './amounts';
+import { fixedSubscriptionAmounts } from './amounts';
 
-const LESSON_TOTAL = subscriptionAmounts('lesson').totalAmount;
+const LESSON_TOTAL = fixedSubscriptionAmounts('lesson').totalAmount;
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));

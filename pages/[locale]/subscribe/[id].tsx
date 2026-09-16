@@ -13,7 +13,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { subscriptionOrderName } from '../../../lib/billing/amounts';
 import { findSubscriptionForSetup } from '../../../lib/billing/service';
 import { denyContractPageCaching } from '../../../lib/contracts/page-cache';
-import { SUBSCRIPTION_REFUND_POLICY_LINES } from '../../../lib/booking/refund-policy';
+import { subscriptionRefundPolicyLines } from '../../../lib/booking/refund-policy';
 
 type SetupErrorCode = 'not_found' | 'used' | 'expired' | 'invalid_state';
 
@@ -36,6 +36,8 @@ interface OkProps {
   billingDay: number;
   /** 'initial'이면 등록과 동시에 첫 달치가 결제된다, 'change'면 카드만 교체된다(스펙 §6). */
   setupMode: 'initial' | 'change';
+  /** 규정 문구를 고르는 기준 — 아티스트 구독은 7일 청약철회·지급률 안내가 다르다. */
+  kind: string;
 }
 
 type SubscribeSetupProps = ErrorProps | OkProps;
@@ -61,7 +63,7 @@ function PriceBreakdown({ itemAmount, vatAmount, totalAmount }: { itemAmount: nu
 }
 
 function SubscribeSetupOk(props: OkProps) {
-  const { id, setupToken, customerKey, customerName, customerEmail, productName, itemAmount, vatAmount, totalAmount, billingDay, setupMode } = props;
+  const { id, setupToken, customerKey, customerName, customerEmail, productName, itemAmount, vatAmount, totalAmount, billingDay, setupMode, kind } = props;
 
   return (
     <>
@@ -102,7 +104,7 @@ function SubscribeSetupOk(props: OkProps) {
           <div className="mt-6 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
             <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">해지·환불 규정</p>
             <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
-              {SUBSCRIPTION_REFUND_POLICY_LINES.map((line) => (
+              {subscriptionRefundPolicyLines(kind).map((line) => (
                 <li key={line}>{line}</li>
               ))}
             </ul>
@@ -192,12 +194,13 @@ export const getServerSideProps = withI18nServerProps<SubscribeSetupProps>(async
       customerKey: sub.customerKey,
       customerName: sub.customerName,
       customerEmail: sub.customerEmail,
-      productName: subscriptionOrderName(sub.kind),
+      productName: subscriptionOrderName(sub),
       itemAmount: sub.itemAmount,
       vatAmount: sub.vatAmount,
       totalAmount: sub.totalAmount,
       billingDay: sub.billingDay,
       setupMode: sub.setupMode,
+      kind: sub.kind,
     },
   };
 });

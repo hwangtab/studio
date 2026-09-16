@@ -32,6 +32,23 @@ export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 export const LESSON_MONTHLY_PRICE = 350000;
 export const PRACTICE_ROOM_MONTHLY_PRICE = 360000;
+
+/**
+ * 아티스트 구독 등급 — 월 정액, **VAT 포함 표시가**(스펙 §7.3). 연습실·레슨과 반대로
+ * 소비자에게 "월 1만원"으로 말하는 상품이라 포함액이 정본이고, 공급가·VAT는
+ * splitInclusiveAmount(lib/booking/amounts.ts)로 역산한다. 전 아티스트 공통.
+ */
+export const ARTIST_SUPPORT_TIERS = [
+  { id: 'light', monthlyTotal: 5000, label: '가볍게' },
+  { id: 'standard', monthlyTotal: 10000, label: '꾸준히' },
+  { id: 'patron', monthlyTotal: 30000, label: '든든하게' },
+] as const;
+export type ArtistSupportTierId = (typeof ARTIST_SUPPORT_TIERS)[number]['id'];
+export const getArtistSupportTier = (id: string) => ARTIST_SUPPORT_TIERS.find((t) => t.id === id) ?? null;
+/** 아티스트에게 지급하는 비율 — 공급가(VAT 제외) 기준. 아티스트 페이지에 그대로 공개한다(스펙 §10). */
+export const ARTIST_SUPPORT_SHARE_PERCENT = 90;
+/** 사업소득 원천징수율(소득세 3% + 지방소득세 0.3%). taxType='withholding' 아티스트에만 적용. */
+export const ARTIST_SUPPORT_WITHHOLDING_PERCENT = 3.3;
 /** schema.org '음반 기획(Album Production)' 오퍼 앵커 — 별개 오퍼(레슨·축가와 값만 동일). */
 export const PRODUCTION_OFFER_PRICE = 350000;
 /** 부가 서비스 '기획/컨설팅' 시간당 단가(service-consulting). */

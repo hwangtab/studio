@@ -32,7 +32,7 @@ const amountLine = (sub: Pick<Subscription, 'totalAmount'>): string =>
  * 등록 화면(pages/[locale]/subscribe/[id].tsx)도 같은 값으로 같은 분기를 한다.
  */
 export const sendSubscriptionSetupEmail = (
-  sub: Pick<Subscription, 'id' | 'kind' | 'customerEmail' | 'customerName' | 'totalAmount' | 'billingDay' | 'setupMode' | 'status'>,
+  sub: Pick<Subscription, 'id' | 'kind' | 'artistSlug' | 'customerEmail' | 'customerName' | 'totalAmount' | 'billingDay' | 'setupMode' | 'status'>,
   setupUrl: string,
 ): Promise<string | null> => {
   const isChange = sub.setupMode === 'change';
@@ -44,12 +44,12 @@ export const sendSubscriptionSetupEmail = (
   return sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} 정기결제 ${isChange ? '카드 변경' : '카드 등록'} 안내`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제 ${isChange ? '카드 변경' : '카드 등록'} 안내`,
     text: [
       isChange
-        ? `${sub.customerName}님, ${subscriptionOrderName(sub.kind)} 정기결제에 사용할 카드 변경을 안내드립니다.`
-        : `${sub.customerName}님, ${subscriptionOrderName(sub.kind)} 정기결제를 위한 카드 등록을 안내드립니다.`,
-      `상품: ${subscriptionOrderName(sub.kind)}`,
+        ? `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제에 사용할 카드 변경을 안내드립니다.`
+        : `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제를 위한 카드 등록을 안내드립니다.`,
+      `상품: ${subscriptionOrderName(sub)}`,
       `${amountLine(sub)}`,
       `결제일: 매월 ${sub.billingDay}일`,
       '',
@@ -68,13 +68,13 @@ export const sendSubscriptionSetupEmail = (
 
 /** 카드 등록 + 첫 결제 성공 확정. */
 export const sendSubscriptionActivatedEmail = (
-  sub: Pick<Subscription, 'kind' | 'customerEmail' | 'customerName' | 'billingDay'>,
+  sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName' | 'billingDay'>,
   input: { manageUrl: string; amount: number },
 ): Promise<string | null> =>
   sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} 정기결제가 시작되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 시작되었습니다`,
     text: [
       `${sub.customerName}님, 카드 등록과 첫 결제가 완료되어 정기결제가 시작되었습니다.`,
       `이번 결제: ${formatPriceAmount(input.amount)}원 (VAT 포함)`,
@@ -87,15 +87,15 @@ export const sendSubscriptionActivatedEmail = (
 
 /** 매월 결제 완료. */
 export const sendSubscriptionChargedEmail = (
-  sub: Pick<Subscription, 'kind' | 'customerEmail' | 'customerName'>,
+  sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: { amount: number; cycleYm: string; paymentKey?: string; manageUrl: string },
 ): Promise<string | null> =>
   sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} ${input.cycleYm} 결제가 완료되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 완료되었습니다`,
     text: [
-      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub.kind)}가 결제되었습니다.`,
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)}가 결제되었습니다.`,
       `결제 금액: ${formatPriceAmount(input.amount)}원 (VAT 포함)`,
       '',
       `구독 조회·해지: ${input.manageUrl}`,
@@ -105,7 +105,7 @@ export const sendSubscriptionChargedEmail = (
 
 /** 결제 실패 — 재시도 예정 또는 정지 안내(마지막 재시도까지 소진하면 nextRetryAt이 null). */
 export const sendSubscriptionChargeFailedEmail = (
-  sub: Pick<Subscription, 'kind' | 'customerEmail' | 'customerName'>,
+  sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: {
     amount: number;
     cycleYm: string;
@@ -121,9 +121,9 @@ export const sendSubscriptionChargeFailedEmail = (
   return sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} ${input.cycleYm} 결제에 실패했습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제에 실패했습니다`,
     text: [
-      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub.kind)} 결제(${formatPriceAmount(input.amount)}원)에 실패했습니다.`,
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)} 결제(${formatPriceAmount(input.amount)}원)에 실패했습니다.`,
       statusLine,
       '',
       input.cardChangeHint,
@@ -135,15 +135,15 @@ export const sendSubscriptionChargeFailedEmail = (
 
 /** 해지 확인. 즉시 환불 없이 이미 결제한 기간까지 이용 가능함을 안내한다. */
 export const sendSubscriptionCancelledEmail = (
-  sub: Pick<Subscription, 'kind' | 'customerEmail' | 'customerName'>,
+  sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: { endsAt: Date },
 ): Promise<string | null> =>
   sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} 정기결제가 해지되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 해지되었습니다`,
     text: [
-      `${sub.customerName}님, ${subscriptionOrderName(sub.kind)} 정기결제 해지가 접수되었습니다.`,
+      `${sub.customerName}님, ${subscriptionOrderName(sub)} 정기결제 해지가 접수되었습니다.`,
       `${input.endsAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}까지는 계속 이용하실 수 있고, 이후 청구는 없습니다.`,
       '',
       '문의: 010-4255-7893',
@@ -158,15 +158,15 @@ export const sendSubscriptionCancelledEmail = (
  * 환불로 바뀌지 않으므로(lib/billing/refund.ts) 그 사실을 함께 적는다.
  */
 export const sendSubscriptionRefundedEmail = (
-  sub: Pick<Subscription, 'kind' | 'customerEmail' | 'customerName'>,
+  sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: { amount: number; cycleYm: string; orderNo: string; isFull: boolean; manageUrl: string },
 ): Promise<string | null> =>
   sendEmail({
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
-    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} ${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불되었습니다`,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불되었습니다`,
     text: [
-      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub.kind)} 결제(${input.orderNo})에서 ${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불되었습니다.`,
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub)} 결제(${input.orderNo})에서 ${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불되었습니다.`,
       '카드사에 따라 취소 반영까지 3~7영업일이 걸릴 수 있습니다.',
       '',
       '정기결제 자체는 이번 환불로 바뀌지 않습니다. 해지나 정지가 함께 필요하면 아래 링크나 문의로 알려 주세요.',
@@ -179,7 +179,7 @@ export type SubscriptionAlertKind = 'paused' | 'first_charge_failed' | 'cancelle
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
 export const sendSubscriptionOperatorAlert = (
-  sub: Pick<Subscription, 'id' | 'kind' | 'customerName' | 'customerPhone'>,
+  sub: Pick<Subscription, 'id' | 'kind' | 'artistSlug' | 'customerName' | 'customerPhone'>,
   kind: SubscriptionAlertKind,
   detail: string,
 ): Promise<string | null> => {
@@ -194,9 +194,9 @@ export const sendSubscriptionOperatorAlert = (
 
   return sendEmail({
     to: OPERATOR_EMAIL,
-    subject: `[구독] ${titleByKind[kind]} — ${subscriptionOrderName(sub.kind)} · ${sub.customerName}`,
+    subject: `[구독] ${titleByKind[kind]} — ${subscriptionOrderName(sub)} · ${sub.customerName}`,
     text: [
-      `구독 ${sub.id} (${subscriptionOrderName(sub.kind)}) — ${titleByKind[kind]}`,
+      `구독 ${sub.id} (${subscriptionOrderName(sub)}) — ${titleByKind[kind]}`,
       `고객: ${sub.customerName} / ${sub.customerPhone}`,
       detail,
       `관리자: ${SITE_URL}/admin/subscriptions/${sub.id}`,
