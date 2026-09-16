@@ -129,7 +129,7 @@ it('이미 done으로 기록된 금액은 다시 환불되지 않는다 — 잔�
   const second = await refund(100_000);
   expect(second).toMatchObject({ ok: false, code: 'invalid_state' });
   // 잔액이 막아 준 것이 아니라 **선점**이 막았다는 것을 분명히 한다.
-  expect(second.ok === false && second.message).toContain('이미 환불되어');
+  expect(second.ok === false && second.message).toContain('같은 금액의 환불이 이미 기록');
   expect((await doneRefunds()).map((r) => r.amount)).toEqual([100_000]);
 });
 

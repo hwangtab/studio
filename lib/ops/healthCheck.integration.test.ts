@@ -428,6 +428,11 @@ describe('해지된 구독에 남은 결제', () => {
     expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(false);
   });
 
+  it('부분 환불로는 꺼지지 않는다 — 잔액이 남아 있는 한 고객 돈은 아직 우리에게 있다', async () => {
+    await seed('cancelled', 'partially_refunded');
+    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(true);
+  });
+
   it('살아 있는 구독은 세지 않는다', async () => {
     await seed('active');
     expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(false);

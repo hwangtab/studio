@@ -30,6 +30,8 @@ export interface HealthIssue {
   detail: string;
   /** 높을수록 먼저 보여준다. */
   severity: 'high' | 'medium';
+  /** 관리자 화면에서 이 항목을 처리하러 갈 곳. 메일 본문에는 싣지 않는다. */
+  href?: string;
 }
 
 export interface HealthReport {
@@ -66,20 +68,16 @@ const checkCalendar = async (now: Date): Promise<HealthIssue | null> => {
   }
 };
 
-export const runHealthCheck = async (now: Date = new Date()): Promise<HealthReport> => {
+/**
+ * DB에 흔적이 남는 점검 전부 — 크론 메일과 관리자 첫 화면이 **같은 판정식**을 쓴다.
+ *
+ * 화면에는 캘린더·GA4 같은 외부 호출을 붙이지 않는다. 첫 화면을 열 때마다 구글을 찌르면
+ * 느리고, 그쪽 장애가 관리자 화면까지 막는다. 그 둘은 하루 한 번 크론(runHealthCheck)이 본다.
+ */
+export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   const db = getDb();
   const issues: HealthIssue[] = [];
 
-  const calendar = await checkCalendar(now);
-  if (calendar) issues.push(calendar);
-
-  /**
-   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
-   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상), GA4 호출 자체가
-   * 죽으면 "점검이 죽은 것"이므로 throw해 기존 catch 경로가 운영자에게 알리게 둔다.
-   */
-  const leadRate = await runLeadRateCheck();
-  issues.push(...leadRate.issues);
 
   /**
    * 결제·확정은 정상인데 구글 캘린더에 이벤트가 없는 예약. 운영자 캘린더에는 그 시간이
@@ -114,6 +112,7 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
     const failed = gcalGap.length - untried.length;
     issues.push({
       severity: 'high',
+      href: '/admin/bookings',
       title: `구글 캘린더에 등록되지 않은 확정 예약 ${gcalGap.length}건`,
       detail: [
         '결제는 정상이지만 캘린더에는 이 시간이 비어 있습니다. 같은 시간에 전화 예약을 받으면 겹칩니다.',
@@ -177,7 +176,7 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
    * 있다. 이 저장소가 PR #59에서 이미 배운 것이 그것이다 — 되돌림 경로가 한 겹뿐이면
    * 조용히 새고, 전자상거래법상 환불 기한은 그 사이에도 돈다. 여기가 두 번째 겹이다.
    *
-   * 해소 조건: 환불하면 orders.status가 refunded/partially_refunded로 바뀌어 빠진다.
+   * 해소 조건: 전액 환불하면 orders.status가 refunded로 바뀌어 빠진다(부분환불은 잔액이 남아 계속 뜬다).
    * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다 — 영구히 켜지지 않는다.
    */
   const lateApproval = await db
@@ -185,16 +184,19 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
     .from(subscriptionPayments)
     .innerJoin(orders, eq(orders.id, subscriptionPayments.orderId))
     .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
-    .where(and(eq(orders.status, 'paid'), inArray(subscriptions.status, ['cancelled', 'ended'])));
+    // partially_refunded도 본다 — 관리자가 회차를 임의 금액으로 환불할 수 있게 되면서, 1원만 환불해도
+    // paid에서 벗어나 경보가 꺼지는 구멍이 생겼다. 잔액이 남아 있는 한 고객 돈은 아직 우리에게 있다.
+    .where(and(inArray(orders.status, ['paid', 'partially_refunded']), inArray(subscriptions.status, ['cancelled', 'ended'])));
 
   if (lateApproval.length > 0) {
     issues.push({
       severity: 'high',
+      href: '/admin/subscriptions',
       title: `해지된 구독에 결제가 남아 있는 건 ${lateApproval.length}건 — 환불 판단 필요`,
       detail:
         `주문번호: ${sample(lateApproval.map((row) => row.orderNo))}\n` +
-        '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 토스 콘솔에서 취소하고 관리자 > 구독에서 확인해 주세요.\n' +
-        '환불하면 이 항목은 자동으로 사라집니다.',
+        '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 관리자 > 구독 상세의 회차 이력에서 환불할 수 있습니다.\n' +
+        '전액 환불하면 이 항목은 자동으로 사라집니다.',
     });
   }
 
@@ -207,6 +209,7 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   if (contractMailFailed.length > 0) {
     issues.push({
       severity: 'medium',
+      href: '/admin/contracts',
       title: `알림이 나가지 않은 계약 ${contractMailFailed.length}건`,
       detail:
         `대상: ${sample(contractMailFailed.map((row) => row.customerName))}\n` +
@@ -267,6 +270,7 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
     );
     issues.push({
       severity: overdue.length > 0 ? 'high' : 'medium',
+      href: '/admin/funding',
       title:
         overdue.length > 0
           ? `환불 기한이 임박한 취소 요청 ${overdue.length}건 (대기 ${refundPending.length}건)`
@@ -305,6 +309,7 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   if (refundedButLive.length > 0) {
     issues.push({
       severity: 'high',
+      href: '/admin/funding',
       title: `전액 환불됐는데 주문이 살아 있는 후원 ${refundedButLive.length}건`,
       detail:
         `주문번호: ${sample(refundedButLive.map((row) => row.orderNo))}\n` +
@@ -326,6 +331,7 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   if (staleUnsigned.length > 0) {
     issues.push({
       severity: 'medium',
+      href: '/admin/contracts',
       title: `서명 기한이 지난 계약 ${staleUnsigned.length}건`,
       detail:
         `대상: ${sample(staleUnsigned.map((row) => row.customerName))}\n` +
@@ -333,10 +339,31 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
     });
   }
 
-  const order = { high: 0, medium: 1 };
-  issues.sort((a, b) => order[a.severity] - order[b.severity]);
+  return sortBySeverity(issues);
+};
 
-  return { issues, checkedAt: now };
+const sortBySeverity = (issues: HealthIssue[]): HealthIssue[] => {
+  const order = { high: 0, medium: 1 };
+  return issues.sort((a, b) => order[a.severity] - order[b.severity]);
+};
+
+export const runHealthCheck = async (now: Date = new Date()): Promise<HealthReport> => {
+  const issues: HealthIssue[] = [];
+
+  const calendar = await checkCalendar(now);
+  if (calendar) issues.push(calendar);
+
+  /**
+   * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
+   * 붕괴, 원인 불명·무알림) 재발 방지. GA4 env가 없으면 skip(정상), GA4 호출 자체가
+   * 죽으면 "점검이 죽은 것"이므로 throw해 기존 catch 경로가 운영자에게 알리게 둔다.
+   */
+  const leadRate = await runLeadRateCheck();
+  issues.push(...leadRate.issues);
+
+  issues.push(...(await collectDbIssues(now)));
+
+  return { issues: sortBySeverity(issues), checkedAt: now };
 };
 
 /** 메일 본문. 이상이 없으면 호출하지 않는다. */

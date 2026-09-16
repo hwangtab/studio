@@ -50,7 +50,7 @@ const MIXING_STARTED_MESSAGE =
  * 타입 검사를 통과한 채 "환불 이력 0건"으로 잘못 계산해 잔액 상한을 총액까지 열어 버린다 —
  * 조용한 과다 환불이라 컴파일 에러로 걸리는 편이 낫다.
  */
-type PaymentWithRefunds = Payment & { refunds: Refund[] };
+export type PaymentWithRefunds = Payment & { refunds: Refund[] };
 
 /**
  * 아직 환불하지 않고 남은 금액.
@@ -60,7 +60,7 @@ type PaymentWithRefunds = Payment & { refunds: Refund[] };
  * 총액 기준 티어 금액을 그대로 돌려주고, 그 합이 결제액을 넘어 토스 취소가 거절되거나
  * (잔액이 남아 있으면) 과다 환불로 나간다.
  */
-const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): number => {
+export const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): number => {
   const refunded = payments.reduce(
     (sum, p) => sum + p.refunds.filter((r) => r.status === 'done').reduce((s, r) => s + r.amount, 0),
     0,
@@ -71,7 +71,7 @@ const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]): numb
 const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
 
 const ALREADY_REFUNDED_AMOUNT_MESSAGE =
-  '이 금액은 이미 환불되어 기록까지 끝났습니다. 환불 이력을 확인해 주세요.';
+  '같은 금액의 환불이 이미 기록되어 있습니다. 한 번 더 환불하려면 금액을 다르게 나눠 입력해 주세요(잔액 안에서만 나갑니다).';
 const CLAIM_LOOKUP_FAILED_MESSAGE =
   '환불 이력을 확인하지 못했습니다. 잠시 후 같은 금액으로 다시 시도해 주세요.';
 const ZERO_REMAINDER_REFUND_MESSAGE = '추가로 환불할 금액을 입력해 주세요(0원은 처리할 것이 없습니다).';
@@ -144,7 +144,7 @@ const tossFailureMessage = (
 };
 
 /** cancelSessionBooking·cancelMixingOrder가 공유하는 실패 결과 타입. */
-type CancelFailure = Extract<CancelOutcome, { ok: false }>;
+export type CancelFailure = Extract<CancelOutcome, { ok: false }>;
 
 /**
  * 돈을 움직이고 그 사실을 기록하는 구간 — 세션과 믹싱이 완전히 같다.
@@ -171,7 +171,7 @@ type CancelFailure = Extract<CancelOutcome, { ok: false }>;
  * nextOrderStatus는 그 아래(성공 경로)에서만 계산·기록된다. 즉 실패한 쪽이 성공한 쪽의
  * orders 상태를 덮어쓰지 않고, remainingRefundable도 done 행만 세므로 잔액 계산도 그대로다.
  */
-const settleRefund = async (args: {
+export const settleRefund = async (args: {
   order: Order;
   payment: PaymentWithRefunds;
   refundAmount: number;
