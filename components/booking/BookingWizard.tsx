@@ -250,7 +250,11 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
     }
     if (!refundPolicyAgreed) {
       setAgreeError(true);
-      agreeRef.current?.focus();
+      // scrollIntoView를 먼저 부르고 focus는 스크롤 없이 준다. `focus()`만 쓰면 브라우저가
+      // 최소한으로만 스크롤해서, 화면 밖이나 하단 고정 요소에 가려진 채 초점만 옮겨 간다 —
+      // 동의 안 했다는 말은 보이는데 어디를 눌러야 하는지는 안 보이는 상태가 된다.
+      agreeRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      agreeRef.current?.focus({ preventScroll: true });
       return;
     }
 

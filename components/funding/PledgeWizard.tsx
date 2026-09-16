@@ -45,11 +45,20 @@ interface Props {
 }
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
+
+/**
+ * 미동의로 제출했을 때의 문구.
+ *
+ * "약관에 동의해 주세요"로는 부족하다 — 이 화면에는 약관 동의가 두 벌 있다(우리 것과
+ * 결제위젯이 그리는 토스 결제 약관). 어느 쪽인지 밝히지 않으면 이미 체크한 토스 약관을
+ * 보고 "했는데 왜"가 된다.
+ */
+const TERMS_REQUIRED_MESSAGE = '펀딩 약관과 개인정보 처리방침 동의에 체크해 주세요.';
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
 // 선택 가능한 행(리워드·결제수단)은 탭 타깃이 카드 전체가 되도록.
 const choiceRow =
   'flex items-start gap-3 rounded-xl border p-4 transition-colors cursor-pointer border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary-light/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:border-primary-light dark:has-[:checked]:bg-primary-light/10';
-const radioClass = 'mt-0.5 h-4 w-4 shrink-0 accent-primary';
+const radioClass = 'mt-0.5 h-5 w-5 shrink-0 accent-primary';
 
 /**
  * 수량·추가 후원금은 **문자열 상태로 자유 입력**받고, 정규화는 blur와 제출 직전에만 한다.
@@ -127,6 +136,12 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  /**
+   * 약관 미동의 표시. 제출 버튼 옆 체크박스를 붉게 띄우고 그 아래에 이유를 적는다 —
+   * 공용 `error` 배너로만 알리면 어느 칸을 고쳐야 하는지 화면이 말해 주지 않는다.
+   */
+  const [termsError, setTermsError] = useState(false);
+  const termsRef = useRef<HTMLInputElement>(null);
   const submittingRef = useRef(false);
   /**
    * 직전에 만든 **자기** 주문번호. 재제출 시 서버에 함께 보내 그 주문 하나만 만료시킨다
@@ -252,7 +267,15 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
     submittingRef.current = true;
     setError(null);
     if (allSoldOut) { submittingRef.current = false; setError(ALL_SOLD_OUT_MESSAGE); return; }
-    if (!form.termsAgreed) { submittingRef.current = false; setError('약관에 동의해 주세요.'); return; }
+    if (!form.termsAgreed) {
+      submittingRef.current = false;
+      setTermsError(true);
+      // scrollIntoView를 먼저 부르고 focus는 스크롤 없이 준다. `focus()`만 쓰면 브라우저가
+      // 최소한으로만 스크롤해서, sticky 요약 블록에 가려진 채 초점만 옮겨 갈 수 있다.
+      termsRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      termsRef.current?.focus({ preventScroll: true });
+      return;
+    }
     // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
     setQuantityText(String(quantity));
     setAdditionalText(String(additional));
@@ -443,18 +466,13 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           </Field>
         </div>
 
-        <div className="mt-5 space-y-2">
-          <label className={choiceRow}>
-            <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-            <span className="text-sm text-gray-700 dark:text-gray-200">후원자 명단에 이름과 응원 메시지 공개</span>
-          </label>
-          <label className={choiceRow}>
-            <input type="checkbox" className={radioClass} checked={form.termsAgreed} onChange={(e) => setForm({ ...form, termsAgreed: e.target.checked })} />
-            <span className="text-sm text-gray-700 dark:text-gray-200">
-              <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관·청약철회·환불 규정</Link>과 <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의합니다
-            </span>
-          </label>
-        </div>
+        {/* 이름 공개는 **선택**이라 테두리 박스를 두르지 않는다. 필수 약관 동의와 같은
+            모양으로 나란히 두면 동의 체크가 두 개인 것처럼 읽혀, 화면 아래 토스 위젯의
+            결제 약관 동의까지 셋이 비슷해 보인다. 약관 동의는 제출 버튼 옆으로 옮겼다. */}
+        <label className="mt-5 flex cursor-pointer items-start gap-3">
+          <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
+          <span className="text-sm text-gray-700 dark:text-gray-200">후원자 명단에 이름과 응원 메시지 공개</span>
+        </label>
       </fieldset>
 
       {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
@@ -492,6 +510,50 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           </div>
         </dl>
         <p className={helpClass}>VAT 포함. 실제 청구액은 서버가 확정합니다.</p>
+
+        {/*
+          우리 약관 동의는 **제출 버튼 바로 위**에 둔다.
+
+          예전엔 '후원자 정보' 안, 결제수단 위젯보다 위에 있었다. 미동의로 제출하면 에러는
+          버튼 옆(이 블록 안)에 뜨는데 체크박스는 위젯 하나를 건너뛴 위쪽이라, 모바일에서
+          화면 몇 개를 거슬러 올라가야 찾을 수 있었다. 게다가 위젯이 그리는 결제 약관 동의가
+          에러 바로 위에 보여서, "약관에 동의해 주세요"를 본 사람이 그쪽을 먼저 본다.
+
+          두 약관은 겹치지 않는다 — 위젯 쪽은 토스와 이용자 사이의 결제 서비스 약관이고,
+          이쪽은 우리와 후원자 사이의 거래 약관(청약철회·환불)과 개인정보 수집 동의다.
+          배송지는 토스에 넘기지 않으므로(lib/funding/policy.ts FUNDING_DATA_PROCESSORS)
+          그 수집 동의를 받아 줄 수 있는 것은 이 체크박스뿐이다. 그래서 줄일 수 없고,
+          대신 라벨에 "펀딩"을 넣어 위젯 쪽 "결제 서비스 이용 약관"과 구분되게 한다.
+        */}
+        {/* 하단 고정 블록 안이라 테두리 박스를 또 두르지 않는다 — 모바일에서 요약·버튼과
+            합쳐 화면을 너무 많이 먹는다. 미동의일 때만 붉은 바탕으로 눈에 걸리게 한다. */}
+        <label
+          className={`mt-3 flex cursor-pointer items-start gap-3 rounded-xl px-1 py-2 transition-colors ${
+            termsError ? 'bg-red-50 dark:bg-red-950/40' : ''
+          }`}
+        >
+          <input
+            ref={termsRef}
+            type="checkbox"
+            className={radioClass}
+            checked={form.termsAgreed}
+            onChange={(e) => {
+              setForm({ ...form, termsAgreed: e.target.checked });
+              if (e.target.checked) setTermsError(false);
+            }}
+            aria-invalid={termsError}
+            aria-describedby={termsError ? `${uid}-terms-error` : undefined}
+          />
+          <span className="text-sm text-gray-700 dark:text-gray-200">
+            <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
+            <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의합니다 <span className="text-red-600 dark:text-red-400">(필수)</span>
+          </span>
+        </label>
+        {termsError && (
+          <p id={`${uid}-terms-error`} role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+            {TERMS_REQUIRED_MESSAGE}
+          </p>
+        )}
         {allSoldOut && (
           <p role="status" className="mt-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
         )}

@@ -623,3 +623,102 @@ describe('폼 안의 결제위젯', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('약관 동의를 확인해 주세요');
   });
 });
+
+/**
+ * 약관 체크박스를 **찾을 수 있는가**.
+ *
+ * 예전에는 체크박스가 '후원자 정보' 안, 결제수단 위젯보다 위에 있었다. 미동의로 제출하면
+ * 에러는 제출 버튼 옆에 뜨는데 체크박스는 위젯 하나를 건너뛴 위쪽이라, 모바일에서 화면
+ * 몇 개를 거슬러 올라가야 찾을 수 있었다. 게다가 위젯이 그리는 **결제 약관 동의**가 에러
+ * 바로 위에 보여서, "약관에 동의해 주세요"를 본 사람이 그쪽을 먼저 본다.
+ *
+ * 두 약관은 겹치지 않는다(위젯 쪽은 토스와 이용자 사이의 결제 서비스 약관, 이쪽은 우리와
+ * 후원자 사이의 거래 약관·개인정보 수집 동의). 줄일 수 없으므로 자리와 문구로 구분한다.
+ */
+describe('약관 동의 찾기', () => {
+  beforeEach(() => {
+    // jsdom에는 scrollIntoView가 없다. 호출 여부를 보려면 직접 심어야 한다.
+    Element.prototype.scrollIntoView = jest.fn();
+    // requestPayment는 파일 전체가 공유하는 모의라 앞선 테스트의 호출이 쌓여 있다.
+    requestPayment.mockClear();
+  });
+
+  const renderForm = () =>
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+
+  const submitWithoutAgreeing = async () => {
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+  };
+
+  /** 체크박스가 위젯 **뒤에** 와야 에러 문구와 같은 자리에 붙는다. */
+  it('약관 체크박스가 결제수단 위젯보다 아래에 있다', () => {
+    renderForm();
+    const widget = document.getElementById('toss-methods-test') as HTMLElement;
+    const terms = screen.getByLabelText(/약관/);
+
+    // DOCUMENT_POSITION_FOLLOWING(4) — terms가 widget보다 문서 순서상 뒤.
+    expect(widget.compareDocumentPosition(terms) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('제출 버튼과 같은 블록 안에 있다', () => {
+    renderForm();
+    const submit = screen.getByRole('button', { name: /결제하기/ });
+    const terms = screen.getByLabelText(/약관/);
+
+    expect(submit.closest('div')?.contains(terms) || terms.closest('div')?.parentElement?.contains(submit)).toBeTruthy();
+  });
+
+  it('미동의로 제출하면 어느 약관인지 밝힌다', async () => {
+    renderForm();
+    await submitWithoutAgreeing();
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('펀딩 약관과 개인정보 처리방침 동의에 체크해 주세요');
+    expect(requestPayment).not.toHaveBeenCalled();
+  });
+
+  /**
+   * `focus()`만 쓰면 브라우저가 최소한으로만 스크롤해 sticky 요약 블록에 가려진 채 초점만
+   * 옮겨 간다 — 동의하라는 말은 보이는데 어디를 눌러야 하는지는 안 보이는 상태.
+   */
+  it('미동의로 제출하면 그 체크박스로 스크롤하고 초점을 준다', async () => {
+    renderForm();
+    await submitWithoutAgreeing();
+    const terms = screen.getByLabelText(/약관/);
+
+    expect(Element.prototype.scrollIntoView).toHaveBeenCalledWith({ block: 'center', behavior: 'smooth' });
+    expect(terms).toHaveFocus();
+  });
+
+  it('미동의 상태를 체크박스에 표시한다', async () => {
+    renderForm();
+    await submitWithoutAgreeing();
+    const terms = screen.getByLabelText(/약관/);
+
+    expect(terms).toHaveAttribute('aria-invalid', 'true');
+    expect(terms).toHaveAttribute('aria-describedby');
+  });
+
+  it('체크하면 표시가 사라진다', async () => {
+    renderForm();
+    await submitWithoutAgreeing();
+    await userEvent.click(screen.getByLabelText(/약관/));
+
+    expect(screen.getByLabelText(/약관/)).toHaveAttribute('aria-invalid', 'false');
+    expect(screen.queryByText(/체크해 주세요/)).toBeNull();
+  });
+
+  /** 이름 공개는 선택이라 필수 동의와 같은 모양으로 나란히 두지 않는다. */
+  it('이름 공개 선택은 약관 동의와 다른 자리에 있다', () => {
+    renderForm();
+    const publicOption = screen.getByLabelText(/후원자 명단에 이름/);
+    const terms = screen.getByLabelText(/약관/);
+
+    expect(publicOption.closest('label')).not.toBe(terms.closest('label'));
+    const widget = document.getElementById('toss-methods-test') as HTMLElement;
+    // 이름 공개는 위젯보다 위(후원자 정보 안), 약관은 아래(제출 옆).
+    expect(widget.compareDocumentPosition(publicOption) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  });
+});
