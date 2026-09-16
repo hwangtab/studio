@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { createBlock, deleteBlock } from '../../../components/admin/bookingActions';
-import { logoutAdmin } from '../../../components/admin/contractActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -198,11 +198,6 @@ export default function AdminBookingsPage({
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
-  const handleLogout = async () => {
-    await logoutAdmin();
-    await router.replace('/admin/login');
-  };
-
   const handleDeleteBlock = async (block: AdminBlockItem) => {
     if (!window.confirm('이 블록을 삭제할까요? 해당 시간대가 다시 예약 가능해집니다.')) return;
 
@@ -250,12 +245,18 @@ export default function AdminBookingsPage({
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h1>
-          <p className="text-gray-600">{error}</p>
-        </div>
-      </div>
+      <>
+        <Head>
+          <title>예약 관리 | Studio NOL</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
+          <div className="bg-white rounded-2xl shadow-sm p-8 text-center">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h2>
+            <p className="text-gray-600">{error}</p>
+          </div>
+        </AdminShell>
+      </>
     );
   }
 
@@ -266,28 +267,9 @@ export default function AdminBookingsPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-6xl mx-auto px-4 space-y-6">
+      <AdminShell title="예약 관리" description="세션 예약 현황을 확인하고 관리합니다." width="wide">
+        <div className="space-y-6">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-primary p-6 md:p-8 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">예약 관리</h1>
-                <p className="text-white/80 mt-2">세션 예약 현황을 확인하고 관리합니다.</p>
-              </div>
-              <div className="flex gap-2">
-                <Link href="/admin/contracts" passHref>
-                  <Button light variant="secondary">계약 관리</Button>
-                </Link>
-                <Button
-                  variant="outline"
-                  className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40"
-                  onClick={handleLogout}
-                >
-                  로그아웃
-                </Button>
-              </div>
-            </div>
-
             <div className="p-6 md:p-8">
               {notice && (
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
@@ -547,7 +529,7 @@ export default function AdminBookingsPage({
             )}
           </div>
         </div>
-      </main>
+      </AdminShell>
     </>
   );
 }

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -187,16 +187,13 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">펀딩 상세</h1>
-            <Link href="/admin/funding" passHref>
-              <Button light variant="outline">목록으로</Button>
-            </Link>
-          </div>
-
-          {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+      <AdminShell
+        title="펀딩 상세"
+        description={`${pledge.customerName} · ${pledge.orderNo}`}
+        backHref="/admin/funding"
+        backLabel="펀딩 목록"
+      >
+        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
 
           {pledge.mismatch && (
             <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
@@ -358,8 +355,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               </div>
             </div>
           </div>
-        </div>
-      </main>
+      </AdminShell>
     </>
   );
 }

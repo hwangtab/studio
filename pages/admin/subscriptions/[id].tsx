@@ -9,6 +9,7 @@ import {
   mutateSubscription,
   type SubscriptionActionResult,
 } from '../../../components/admin/subscriptionActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -237,275 +238,271 @@ export default function AdminSubscriptionDetailPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">구독 상세</h1>
-            <Link href="/admin/subscriptions" passHref>
-              <Button light variant="outline">목록으로</Button>
-            </Link>
+      <AdminShell
+        title="구독 상세"
+        description={`${subscription.customerName}님 · ${KIND_LABELS[subscription.kind] ?? subscription.kind}`}
+        backHref="/admin/subscriptions"
+        backLabel="구독 목록"
+      >
+        {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+
+        {linkNotice && (
+          <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-900 rounded-lg text-sm">
+            <strong className="block mb-2">고객에게 보낼 링크</strong>
+            <div className="flex items-center gap-2">
+              <code className="flex-1 min-w-0 truncate bg-white border border-green-200 rounded px-2 py-1 text-xs">
+                {linkNotice}
+              </code>
+              <Button light
+                variant="outline"
+                onClick={async () => {
+                  const ok = await copyToClipboard(linkNotice);
+                  setNotice(ok ? '링크를 복사했습니다.' : '복사에 실패했습니다.');
+                }}
+              >
+                복사
+              </Button>
+            </div>
+            <p className="mt-2 text-green-700">카톡으로 보내는 것이 주 채널입니다.</p>
           </div>
+        )}
 
-          {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
+        {subscription.notificationError && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+            <strong className="block mb-1">메일 발송에 실패했습니다</strong>
+            {subscription.notificationError}
+          </div>
+        )}
 
-          {linkNotice && (
-            <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-900 rounded-lg text-sm">
-              <strong className="block mb-2">고객에게 보낼 링크</strong>
-              <div className="flex items-center gap-2">
-                <code className="flex-1 min-w-0 truncate bg-white border border-green-200 rounded px-2 py-1 text-xs">
-                  {linkNotice}
-                </code>
-                <Button light
-                  variant="outline"
-                  onClick={async () => {
-                    const ok = await copyToClipboard(linkNotice);
-                    setNotice(ok ? '링크를 복사했습니다.' : '복사에 실패했습니다.');
-                  }}
-                >
-                  복사
-                </Button>
-              </div>
-              <p className="mt-2 text-green-700">카톡으로 보내는 것이 주 채널입니다.</p>
-            </div>
-          )}
-
-          {subscription.notificationError && (
-            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              <strong className="block mb-1">메일 발송에 실패했습니다</strong>
-              {subscription.notificationError}
-            </div>
-          )}
-
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-            <div className="p-6 md:p-8 border-b border-gray-200">
-              <div className="flex flex-wrap items-center gap-3 mb-5">
-                <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
-                  {KIND_LABELS[subscription.kind] ?? subscription.kind}
-                </span>
-                <span
-                  className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${STATUS_CLASS[subscription.status]}`}
-                >
-                  {STATUS_LABELS[subscription.status] ?? subscription.status}
-                </span>
-                <span className="text-gray-500 text-xs font-mono">{subscription.id}</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">고객 정보</h2>
-                  <dl className="space-y-2 text-sm">
-                    <DescriptionRow label="이름" value={subscription.customerName} />
-                    <DescriptionRow label="전화번호" value={subscription.customerPhone} />
-                    <DescriptionRow label="이메일" value={subscription.customerEmail} />
-                  </dl>
-                </div>
-
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">구독 정보</h2>
-                  <dl className="space-y-2 text-sm">
-                    <DescriptionRow label="상품" value={subscriptionOrderName(subscription.kind as 'practice-room' | 'lesson')} />
-                    <DescriptionRow label="월 청구액" value={`${formatPriceAmount(subscription.totalAmount)}원 (VAT 포함)`} />
-                    <DescriptionRow label="결제일" value={`매월 ${subscription.billingDay}일`} />
-                    <DescriptionRow
-                      label="다음 결제일"
-                      value={subscription.nextBillingAt ? formatKstDateTimeFull(subscription.nextBillingAt) : '-'}
-                    />
-                    {contract && (
-                      <DescriptionRow
-                        label="연결 계약"
-                        value={
-                          <Link href={`/admin/contracts/${contract.id}`} className="text-primary hover:underline">
-                            {contract.roomNumber}호 계약
-                          </Link>
-                        }
-                      />
-                    )}
-                    {subscription.cancelledAt && (
-                      <DescriptionRow label="해지 접수일" value={formatKstDateTimeFull(subscription.cancelledAt)} />
-                    )}
-                    {subscription.endsAt && <DescriptionRow label="이용 종료일" value={formatKstDateTimeFull(subscription.endsAt)} />}
-                    {subscription.cancelReason && <DescriptionRow label="해지 사유" value={subscription.cancelReason} />}
-                  </dl>
-                </div>
-              </div>
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+          <div className="p-6 md:p-8 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-3 mb-5">
+              <span className="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
+                {KIND_LABELS[subscription.kind] ?? subscription.kind}
+              </span>
+              <span
+                className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${STATUS_CLASS[subscription.status]}`}
+              >
+                {STATUS_LABELS[subscription.status] ?? subscription.status}
+              </span>
+              <span className="text-gray-500 text-xs font-mono">{subscription.id}</span>
             </div>
 
-            <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">카드</h2>
-              {billingKey ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">고객 정보</h2>
                 <dl className="space-y-2 text-sm">
-                  <DescriptionRow label="카드사" value={billingKey.cardCompany ?? '-'} />
-                  <DescriptionRow label="카드번호" value={billingKey.cardNumberMasked ?? '-'} />
-                  <DescriptionRow label="등록일" value={formatKstDateTimeFull(billingKey.issuedAt)} />
+                  <DescriptionRow label="이름" value={subscription.customerName} />
+                  <DescriptionRow label="전화번호" value={subscription.customerPhone} />
+                  <DescriptionRow label="이메일" value={subscription.customerEmail} />
                 </dl>
-              ) : (
-                <p className="text-sm text-gray-500">등록된 카드가 없습니다.</p>
-              )}
-            </div>
+              </div>
 
-            <div className="p-6 md:p-8">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">회차 이력</h2>
-              {payments.length === 0 ? (
-                <p className="text-sm text-gray-500">아직 결제 시도가 없습니다.</p>
-              ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
-                    <thead className="text-gray-500 text-xs uppercase">
-                      <tr>
-                        <th className="px-2 py-2 text-left">회차</th>
-                        <th className="px-2 py-2 text-left">시도</th>
-                        <th className="px-2 py-2 text-left">상태</th>
-                        <th className="px-2 py-2 text-right">금액</th>
-                        <th className="px-2 py-2 text-right">환불</th>
-                        <th className="px-2 py-2 text-left">토스 코드</th>
-                        <th className="px-2 py-2 text-left">시도 일시</th>
-                        <th className="px-2 py-2" />
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-gray-100">
-                      {payments.map((p) => (
-                        <tr key={p.id}>
-                          <td className="px-2 py-2">{p.cycleYm}</td>
-                          <td className="px-2 py-2">{p.attempt}</td>
-                          <td className="px-2 py-2">
-                            <span
-                              className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${PAYMENT_STATUS_CLASS[p.status]}`}
-                            >
-                              {PAYMENT_STATUS_LABELS[p.status] ?? p.status}
-                            </span>
-                          </td>
-                          <td className="px-2 py-2 text-right">{formatPriceAmount(p.amount)}원</td>
-                          <td className="px-2 py-2 text-right text-gray-500">
-                            {(() => {
-                              const r = refundByCycle.get(p.id);
-                              return r && r.refundedAmount > 0 ? `${formatPriceAmount(r.refundedAmount)}원` : '-';
-                            })()}
-                          </td>
-                          <td className="px-2 py-2 text-gray-500">
-                            {p.tossCode ? `${p.tossCode}${p.tossMessage ? ` — ${p.tossMessage}` : ''}` : '-'}
-                          </td>
-                          <td className="px-2 py-2 text-gray-500">{formatKstDateTimeFull(p.attemptedAt)}</td>
-                          <td className="px-2 py-2 text-right">
-                            {(() => {
-                              const r = refundByCycle.get(p.id);
-                              if (!r || r.remainingAmount <= 0) return null;
-                              return (
-                                <Button light variant="outline" size="sm" disabled={busy} onClick={() => openRefund(p.id)}>
-                                  환불
-                                </Button>
-                              );
-                            })()}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              )}
-              {refundTarget && (() => {
-                const r = refundByCycle.get(refundTarget);
-                return (
-                  <form onSubmit={handleRefund} className="mt-4 p-4 bg-gray-50 rounded-lg space-y-3 max-w-md">
-                    <p className="text-sm font-medium text-gray-900">
-                      {r?.orderNo} 회차 환불 (잔액 {r ? formatPriceAmount(r.remainingAmount) : '-'}원)
-                    </p>
-                    <p className="text-xs text-gray-500">
-                      고객 카드로 되돌립니다. 구독과 회차 상태는 바뀌지 않습니다 — 이용을 끝내려면 해지를 따로 처리해 주세요.
-                    </p>
-                    <Field id="refund-amount" label="환불 금액(원)" className={lightOnlyField}>
-                      <TextInput
-                        type="number"
-                        inputMode="numeric"
-                        min={1}
-                        max={r?.remainingAmount}
-                        value={refundAmount}
-                        onChange={(e) => setRefundAmount(e.target.value)}
-                        light className="text-sm"
-                      />
-                    </Field>
-                    <Field id="refund-reason" label="환불 사유" error={refundError ?? undefined} className={lightOnlyField}>
-                      <TextArea
-                        value={refundReason}
-                        onChange={(e) => setRefundReason(e.target.value)}
-                        rows={2}
-                        placeholder="예: 해지 후 뒤늦게 승인된 회차"
-                        light className="min-h-0 text-sm"
-                      />
-                    </Field>
-                    <div className="flex gap-2">
-                      <Button light type="submit" disabled={busy}>
-                        환불 실행
-                      </Button>
-                      <Button light type="button" variant="ghost" disabled={busy} onClick={() => setRefundTarget(null)}>
-                        닫기
-                      </Button>
-                    </div>
-                  </form>
-                );
-              })()}
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">구독 정보</h2>
+                <dl className="space-y-2 text-sm">
+                  <DescriptionRow label="상품" value={subscriptionOrderName(subscription.kind as 'practice-room' | 'lesson')} />
+                  <DescriptionRow label="월 청구액" value={`${formatPriceAmount(subscription.totalAmount)}원 (VAT 포함)`} />
+                  <DescriptionRow label="결제일" value={`매월 ${subscription.billingDay}일`} />
+                  <DescriptionRow
+                    label="다음 결제일"
+                    value={subscription.nextBillingAt ? formatKstDateTimeFull(subscription.nextBillingAt) : '-'}
+                  />
+                  {contract && (
+                    <DescriptionRow
+                      label="연결 계약"
+                      value={
+                        <Link href={`/admin/contracts/${contract.id}`} className="text-primary hover:underline">
+                          {contract.roomNumber}호 계약
+                        </Link>
+                      }
+                    />
+                  )}
+                  {subscription.cancelledAt && (
+                    <DescriptionRow label="해지 접수일" value={formatKstDateTimeFull(subscription.cancelledAt)} />
+                  )}
+                  {subscription.endsAt && <DescriptionRow label="이용 종료일" value={formatKstDateTimeFull(subscription.endsAt)} />}
+                  {subscription.cancelReason && <DescriptionRow label="해지 사유" value={subscription.cancelReason} />}
+                </dl>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
-              <div className="flex flex-wrap gap-3">
-                {canCharge && (
-                  <Button light disabled={busy} onClick={handleCharge}>
-                    수동 결제
-                  </Button>
-                )}
-                {canPause && (
-                  <Button light variant="secondary" disabled={busy} onClick={handlePause}>
-                    일시정지
-                  </Button>
-                )}
-                {canResume && (
-                  <Button light disabled={busy} onClick={handleResume}>
-                    재개
-                  </Button>
-                )}
-                {canCardChangeLink && (
-                  <Button light variant="outline" disabled={busy} onClick={handleCardChangeLink}>
-                    카드 변경 링크 발급
-                  </Button>
-                )}
-                {canResendSetup && (
-                  <Button light variant="outline" disabled={busy} onClick={handleResendSetup}>
-                    등록 링크 재발송
-                  </Button>
-                )}
-                {!canCharge && !canPause && !canResume && !canCardChangeLink && !canResendSetup && (
-                  <p className="text-sm text-gray-500">지금 상태에서는 가능한 작업이 없습니다.</p>
-                )}
-              </div>
-            </div>
+          <div className="p-6 md:p-8 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">카드</h2>
+            {billingKey ? (
+              <dl className="space-y-2 text-sm">
+                <DescriptionRow label="카드사" value={billingKey.cardCompany ?? '-'} />
+                <DescriptionRow label="카드번호" value={billingKey.cardNumberMasked ?? '-'} />
+                <DescriptionRow label="등록일" value={formatKstDateTimeFull(billingKey.issuedAt)} />
+              </dl>
+            ) : (
+              <p className="text-sm text-gray-500">등록된 카드가 없습니다.</p>
+            )}
+          </div>
 
-            {canCancel && (
-              <div className="pt-6 border-t border-gray-100">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">해지</h2>
-                <p className="text-sm text-gray-500 mb-4">
-                  해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.
-                </p>
-                <form onSubmit={handleCancel} className="space-y-3 max-w-md">
-                  <Field id="cancel-reason" label="해지 사유" error={cancelError ?? undefined} className={lightOnlyField}>
+          <div className="p-6 md:p-8">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">회차 이력</h2>
+            {payments.length === 0 ? (
+              <p className="text-sm text-gray-500">아직 결제 시도가 없습니다.</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="text-gray-500 text-xs uppercase">
+                    <tr>
+                      <th className="px-2 py-2 text-left">회차</th>
+                      <th className="px-2 py-2 text-left">시도</th>
+                      <th className="px-2 py-2 text-left">상태</th>
+                      <th className="px-2 py-2 text-right">금액</th>
+                      <th className="px-2 py-2 text-right">환불</th>
+                      <th className="px-2 py-2 text-left">토스 코드</th>
+                      <th className="px-2 py-2 text-left">시도 일시</th>
+                      <th className="px-2 py-2" />
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100">
+                    {payments.map((p) => (
+                      <tr key={p.id}>
+                        <td className="px-2 py-2">{p.cycleYm}</td>
+                        <td className="px-2 py-2">{p.attempt}</td>
+                        <td className="px-2 py-2">
+                          <span
+                            className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${PAYMENT_STATUS_CLASS[p.status]}`}
+                          >
+                            {PAYMENT_STATUS_LABELS[p.status] ?? p.status}
+                          </span>
+                        </td>
+                        <td className="px-2 py-2 text-right">{formatPriceAmount(p.amount)}원</td>
+                        <td className="px-2 py-2 text-right text-gray-500">
+                          {(() => {
+                            const r = refundByCycle.get(p.id);
+                            return r && r.refundedAmount > 0 ? `${formatPriceAmount(r.refundedAmount)}원` : '-';
+                          })()}
+                        </td>
+                        <td className="px-2 py-2 text-gray-500">
+                          {p.tossCode ? `${p.tossCode}${p.tossMessage ? ` — ${p.tossMessage}` : ''}` : '-'}
+                        </td>
+                        <td className="px-2 py-2 text-gray-500">{formatKstDateTimeFull(p.attemptedAt)}</td>
+                        <td className="px-2 py-2 text-right">
+                          {(() => {
+                            const r = refundByCycle.get(p.id);
+                            if (!r || r.remainingAmount <= 0) return null;
+                            return (
+                              <Button light variant="outline" size="sm" disabled={busy} onClick={() => openRefund(p.id)}>
+                                환불
+                              </Button>
+                            );
+                          })()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+            {refundTarget && (() => {
+              const r = refundByCycle.get(refundTarget);
+              return (
+                <form onSubmit={handleRefund} className="mt-4 p-4 bg-gray-50 rounded-lg space-y-3 max-w-md">
+                  <p className="text-sm font-medium text-gray-900">
+                    {r?.orderNo} 회차 환불 (잔액 {r ? formatPriceAmount(r.remainingAmount) : '-'}원)
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    고객 카드로 되돌립니다. 구독과 회차 상태는 바뀌지 않습니다 — 이용을 끝내려면 해지를 따로 처리해 주세요.
+                  </p>
+                  <Field id="refund-amount" label="환불 금액(원)" className={lightOnlyField}>
+                    <TextInput
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      max={r?.remainingAmount}
+                      value={refundAmount}
+                      onChange={(e) => setRefundAmount(e.target.value)}
+                      light className="text-sm"
+                    />
+                  </Field>
+                  <Field id="refund-reason" label="환불 사유" error={refundError ?? undefined} className={lightOnlyField}>
                     <TextArea
-                      value={cancelReason}
-                      onChange={(e) => setCancelReason(e.target.value)}
+                      value={refundReason}
+                      onChange={(e) => setRefundReason(e.target.value)}
                       rows={2}
-                      placeholder="예: 고객 요청 — 개인 사정으로 해지"
+                      placeholder="예: 해지 후 뒤늦게 승인된 회차"
                       light className="min-h-0 text-sm"
                     />
                   </Field>
-                  <Button light type="submit" variant="outline" disabled={busy}>
-                    해지 처리
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button light type="submit" disabled={busy}>
+                      환불 실행
+                    </Button>
+                    <Button light type="button" variant="ghost" disabled={busy} onClick={() => setRefundTarget(null)}>
+                      닫기
+                    </Button>
+                  </div>
                 </form>
-              </div>
-            )}
+              );
+            })()}
           </div>
         </div>
-      </main>
+
+        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
+            <div className="flex flex-wrap gap-3">
+              {canCharge && (
+                <Button light disabled={busy} onClick={handleCharge}>
+                  수동 결제
+                </Button>
+              )}
+              {canPause && (
+                <Button light variant="secondary" disabled={busy} onClick={handlePause}>
+                  일시정지
+                </Button>
+              )}
+              {canResume && (
+                <Button light disabled={busy} onClick={handleResume}>
+                  재개
+                </Button>
+              )}
+              {canCardChangeLink && (
+                <Button light variant="outline" disabled={busy} onClick={handleCardChangeLink}>
+                  카드 변경 링크 발급
+                </Button>
+              )}
+              {canResendSetup && (
+                <Button light variant="outline" disabled={busy} onClick={handleResendSetup}>
+                  등록 링크 재발송
+                </Button>
+              )}
+              {!canCharge && !canPause && !canResume && !canCardChangeLink && !canResendSetup && (
+                <p className="text-sm text-gray-500">지금 상태에서는 가능한 작업이 없습니다.</p>
+              )}
+            </div>
+          </div>
+
+          {canCancel && (
+            <div className="pt-6 border-t border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">해지</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.
+              </p>
+              <form onSubmit={handleCancel} className="space-y-3 max-w-md">
+                <Field id="cancel-reason" label="해지 사유" error={cancelError ?? undefined} className={lightOnlyField}>
+                  <TextArea
+                    value={cancelReason}
+                    onChange={(e) => setCancelReason(e.target.value)}
+                    rows={2}
+                    placeholder="예: 고객 요청 — 개인 사정으로 해지"
+                    light className="min-h-0 text-sm"
+                  />
+                </Field>
+                <Button light type="submit" variant="outline" disabled={busy}>
+                  해지 처리
+                </Button>
+              </form>
+            </div>
+          )}
+        </div>
+      </AdminShell>
     </>
   );
 }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import {
@@ -11,6 +10,7 @@ import {
   setWorkOrderStage,
   type BookingActionResult,
 } from '../../../components/admin/bookingActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -278,357 +278,353 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">예약 상세</h1>
-            <Link href="/admin/bookings" passHref>
-              <Button light variant="outline">목록으로</Button>
-            </Link>
+      <AdminShell
+        title="예약 상세"
+        description={`${booking.customerName}님 · ${booking.productName}`}
+        backHref="/admin/bookings"
+        backLabel="예약 목록"
+      >
+        {notice && (
+          <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+        )}
+
+        {booking.virtualAccountPayment && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+            <strong className="block mb-1">가상계좌 결제 — 화면에서 환불할 수 없습니다</strong>
+            토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
+            받는 화면이 없습니다. 아래 환불 폼을 써도 실패합니다.
+            <span className="block mt-2">
+              고객에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 취소하면 웹훅 대사가
+              이 화면의 상태를 맞춥니다.
+            </span>
           </div>
+        )}
 
-          {notice && (
-            <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
-          )}
+        {/* 결제 기록과 주문 상태의 불일치는 돈이 걸린 문제라 맨 위에 둔다(스펙 §10). */}
+        {booking.mismatch && (
+          <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
+            <strong className="block mb-1">결제 기록과 주문 상태 불일치 — 토스 콘솔 확인 필요</strong>
+            주문 상태는 “{ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}”인데 결제
+            기록은 {booking.paymentCount}건입니다
+            {booking.latestPaymentKeyPrefix && ` (최신 결제 ${booking.latestPaymentKeyPrefix}…)`}.
+            <span className="block mt-2 text-red-700">
+              토스 콘솔에서 실제 승인·취소 상태를 확인한 뒤, 필요하면 환불 또는 수동 정정을 진행해
+              주세요.
+            </span>
+          </div>
+        )}
 
-          {booking.virtualAccountPayment && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
-              <strong className="block mb-1">가상계좌 결제 — 화면에서 환불할 수 없습니다</strong>
-              토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
-              받는 화면이 없습니다. 아래 환불 폼을 써도 실패합니다.
-              <span className="block mt-2">
-                고객에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 취소하면 웹훅 대사가
-                이 화면의 상태를 맞춥니다.
-              </span>
-            </div>
-          )}
+        {/* gcalError·notificationError는 결제·환불은 정상 처리됐지만 후속 처리(캘린더 등록,
+            메일 발송)만 남은 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 보여준다.
 
-          {/* 결제 기록과 주문 상태의 불일치는 돈이 걸린 문제라 맨 위에 둔다(스펙 §10). */}
-          {booking.mismatch && (
-            <div className="mb-4 p-4 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
-              <strong className="block mb-1">결제 기록과 주문 상태 불일치 — 토스 콘솔 확인 필요</strong>
-              주문 상태는 “{ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}”인데 결제
-              기록은 {booking.paymentCount}건입니다
-              {booking.latestPaymentKeyPrefix && ` (최신 결제 ${booking.latestPaymentKeyPrefix}…)`}.
-              <span className="block mt-2 text-red-700">
-                토스 콘솔에서 실제 승인·취소 상태를 확인한 뒤, 필요하면 환불 또는 수동 정정을 진행해
-                주세요.
-              </span>
-            </div>
-          )}
+            notificationError는 자유 문자열이 아니다. 확정 후처리 소유권을 CAS로 정하면서
+            `send_pending`·`send_inflight` 두 예약어가 같은 칸에 들어온다. 원문을 그대로
+            찍으면 "알림 발송에 실패했습니다 send_inflight"가 되어, 정상 진행 중인 주문을
+            사고로 읽게 만든다 — describeNotificationError가 그 해석을 맡는다. */}
+        {notificationCopy && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+            <strong className="block mb-1">{notificationCopy.title}</strong>
+            {notificationCopy.detail}
+            <span className="block mt-2 text-amber-700">
+              {notificationCopy.kind === 'failure'
+                ? '고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. '
+                : ''}
+              {/* 믹싱·마스터링 주문에는 재발송 버튼이 없다(bookings 행이 없어 API도 409를
+                  준다). 없는 버튼을 가리키면 운영자가 화면을 뒤지게 되므로 안내를 가른다. */}
+              {canResend
+                ? '아래 “알림 재발송”을 눌러 다시 보내 주세요.'
+                : '이 주문에는 재발송 버튼이 없습니다 — 고객에게 직접 연락해 주세요.'}
+            </span>
+          </div>
+        )}
 
-          {/* gcalError·notificationError는 결제·환불은 정상 처리됐지만 후속 처리(캘린더 등록,
-              메일 발송)만 남은 경우다 — 미정합을 발견하려고 넣은 필드라 여기서 보여준다.
-
-              notificationError는 자유 문자열이 아니다. 확정 후처리 소유권을 CAS로 정하면서
-              `send_pending`·`send_inflight` 두 예약어가 같은 칸에 들어온다. 원문을 그대로
-              찍으면 "알림 발송에 실패했습니다 send_inflight"가 되어, 정상 진행 중인 주문을
-              사고로 읽게 만든다 — describeNotificationError가 그 해석을 맡는다. */}
-          {notificationCopy && (
-            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              <strong className="block mb-1">{notificationCopy.title}</strong>
-              {notificationCopy.detail}
-              <span className="block mt-2 text-amber-700">
-                {notificationCopy.kind === 'failure'
-                  ? '고객이 예약 확정 또는 취소 메일을 받지 못했을 수 있습니다. '
-                  : ''}
-                {/* 믹싱·마스터링 주문에는 재발송 버튼이 없다(bookings 행이 없어 API도 409를
-                    준다). 없는 버튼을 가리키면 운영자가 화면을 뒤지게 되므로 안내를 가른다. */}
-                {canResend
-                  ? '아래 “알림 재발송”을 눌러 다시 보내 주세요.'
-                  : '이 주문에는 재발송 버튼이 없습니다 — 고객에게 직접 연락해 주세요.'}
-              </span>
-            </div>
-          )}
-
-          {/* 캘린더 구멍은 두 모습으로 온다 — 배너를 하나로 두고 제목·본문만 가른다.
-              (1) 등록을 시도했다가 실패: gcalError에 사유가 남는다.
-              (2) 등록 시도 자체가 없음: gcalEventId·gcalError가 둘 다 NULL(gcalMissing).
-              확정 직후 후처리가 죽은 경우라 오류 기록조차 없다. 예전엔 (1)만 배너를 띄워서
-              (2)는 화면 어디에도 안 보였고, 운영자가 알림 배너를 보고 “알림 재발송”을 누르면
-              남은 신호까지 지워져 빈 캘린더로 confirmed 예약만 남았다. */}
-          {(booking.gcalError || booking.gcalMissing) && (
-            <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
-              {booking.gcalError ? (
-                <>
-                  <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
-                  {booking.gcalError}
-                </>
-              ) : (
-                <strong className="block mb-1">
-                  구글 캘린더에 등록되지 않았습니다 — 등록 시도 기록이 없습니다
-                </strong>
-              )}
-              <span className="block mt-2 text-amber-700">
-                운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
-                비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
-                {canRetryGcal
-                  ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
-                  : '캘린더에 직접 넣어 주세요.'}
-              </span>
-              {canRetryGcal && (
-                <Button light
-                  variant="secondary"
-                  disabled={busy}
-                  onClick={handleRetryGcal}
-                  className="mt-3"
-                >
-                  캘린더 재시도
-                </Button>
-              )}
-            </div>
-          )}
-
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
-            <div className="p-6 md:p-8 border-b border-gray-200">
-              <div className="flex flex-wrap items-center gap-3 mb-5">
-                <span
-                  className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                    isMixing ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
-                  }`}
-                >
-                  {isMixing ? '믹싱·마스터링' : '세션 예약'}
-                </span>
-                {isMixing
-                  ? workOrder && (
-                      <span
-                        className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${WORK_ORDER_STATUS_CLASS[workOrder.status]}`}
-                      >
-                        {WORK_ORDER_STATUS_LABELS[workOrder.status]}
-                      </span>
-                    )
-                  : booking.bookingStatus && (
-                      <span
-                        className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${BOOKING_STATUS_CLASS[booking.bookingStatus]}`}
-                      >
-                        {BOOKING_STATUS_LABELS[booking.bookingStatus]}
-                      </span>
-                    )}
-                <span className="text-gray-500 text-sm">
-                  {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
-                </span>
-                <span className="text-gray-400 text-xs font-mono">{booking.orderNo}</span>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">고객 정보</h2>
-                  <dl className="space-y-2 text-sm">
-                    <DescriptionRow label="이름" value={booking.customerName} />
-                    <DescriptionRow label="전화번호" value={booking.customerPhone} />
-                    <DescriptionRow label="이메일" value={booking.customerEmail} />
-                  </dl>
-                </div>
-
-                <div>
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">
-                    {isMixing ? '주문 정보' : '예약 정보'}
-                  </h2>
-                  <dl className="space-y-2 text-sm">
-                    <DescriptionRow label="상품" value={booking.productName} />
-                    {isMixing ? (
-                      <>
-                        <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
-                        <DescriptionRow
-                          label="보컬 튜닝"
-                          value={workOrder?.vocalTuning ? '포함' : '미포함'}
-                        />
-                        {workOrder?.startedAt && (
-                          <DescriptionRow
-                            label="착수일시"
-                            value={formatKstDateTimeFull(workOrder.startedAt)}
-                          />
-                        )}
-                        {workOrder?.deliveredAt && (
-                          <DescriptionRow
-                            label="납품일시"
-                            value={formatKstDateTimeFull(workOrder.deliveredAt)}
-                          />
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <DescriptionRow label="일시" value={formatKstDateTime(booking.startAt)} />
-                        <DescriptionRow
-                          label="이용 시간"
-                          value={booking.durationHours ? `${booking.durationHours}시간` : '-'}
-                        />
-                      </>
-                    )}
-                    {booking.cancelledAt && (
-                      <DescriptionRow
-                        label="취소일시"
-                        value={formatKstDateTimeFull(booking.cancelledAt)}
-                      />
-                    )}
-                  </dl>
-                </div>
-              </div>
-
-              {booking.customerNote && (
-                <div className="mt-6 pt-6 border-t border-gray-100 text-sm">
-                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">요청사항</h2>
-                  <p className="text-gray-700 whitespace-pre-wrap">{booking.customerNote}</p>
-                </div>
-              )}
-            </div>
-
-            <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">결제 금액</h2>
-              <dl className="space-y-2 text-sm">
-                <DescriptionRow label="상품가" value={`${formatPriceAmount(booking.itemAmount)}원`} />
-                <DescriptionRow label="VAT" value={`${formatPriceAmount(booking.vatAmount)}원`} />
-                <DescriptionRow
-                  label="합계"
-                  value={<span className="text-base">{formatPriceAmount(booking.totalAmount)}원</span>}
-                />
-              </dl>
-
-              {booking.payment && (
-                <dl className="mt-4 pt-4 border-t border-gray-100 space-y-2 text-sm">
-                  <DescriptionRow label="결제 수단" value={booking.payment.method ?? '-'} />
-                  <DescriptionRow
-                    label="승인일시"
-                    value={formatKstDateTimeFull(booking.payment.approvedAt)}
-                  />
-                  {booking.payment.receiptUrl && (
-                    <DescriptionRow
-                      label="영수증"
-                      value={
-                        <a
-                          href={booking.payment.receiptUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-primary hover:underline"
-                        >
-                          보기
-                        </a>
-                      }
-                    />
-                  )}
-                </dl>
-              )}
-            </div>
-
-            {booking.refunds.length > 0 && (
-              <div className="p-6 md:p-8">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">환불 내역</h2>
-                <div className="space-y-2">
-                  {booking.refunds.map((refund) => (
-                    <div
-                      key={refund.id}
-                      className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"
-                    >
-                      <span>
-                        {formatKstDateTimeFull(refund.createdAt)} ·{' '}
-                        {REFUND_REQUESTER_LABELS[refund.requestedBy] ?? refund.requestedBy} ·{' '}
-                        {refund.reason}
-                      </span>
-                      <span
-                        className={`shrink-0 font-medium ${refund.status === 'done' ? 'text-green-600' : 'text-red-600'}`}
-                      >
-                        {formatPriceAmount(refund.amount)}원 (
-                        {REFUND_STATUS_LABELS[refund.status] ?? refund.status})
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+        {/* 캘린더 구멍은 두 모습으로 온다 — 배너를 하나로 두고 제목·본문만 가른다.
+            (1) 등록을 시도했다가 실패: gcalError에 사유가 남는다.
+            (2) 등록 시도 자체가 없음: gcalEventId·gcalError가 둘 다 NULL(gcalMissing).
+            확정 직후 후처리가 죽은 경우라 오류 기록조차 없다. 예전엔 (1)만 배너를 띄워서
+            (2)는 화면 어디에도 안 보였고, 운영자가 알림 배너를 보고 “알림 재발송”을 누르면
+            남은 신호까지 지워져 빈 캘린더로 confirmed 예약만 남았다. */}
+        {(booking.gcalError || booking.gcalMissing) && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+            {booking.gcalError ? (
+              <>
+                <strong className="block mb-1">구글 캘린더 동기화에 실패했습니다</strong>
+                {booking.gcalError}
+              </>
+            ) : (
+              <strong className="block mb-1">
+                구글 캘린더에 등록되지 않았습니다 — 등록 시도 기록이 없습니다
+              </strong>
+            )}
+            <span className="block mt-2 text-amber-700">
+              운영자는 구글 캘린더에 직접 일정을 넣지 않으므로, 이 예약 시간이 캘린더에
+              비어 있으면 다른 일정이 겹칠 수 있습니다.{' '}
+              {canRetryGcal
+                ? '아래 “캘린더 재시도”를 눌러 다시 등록해 주세요.'
+                : '캘린더에 직접 넣어 주세요.'}
+            </span>
+            {canRetryGcal && (
+              <Button light
+                variant="secondary"
+                disabled={busy}
+                onClick={handleRetryGcal}
+                className="mt-3"
+              >
+                캘린더 재시도
+              </Button>
             )}
           </div>
+        )}
 
-          <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
-            <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
-              <div className="flex flex-wrap gap-3">
-                {canChangeStatus && (
-                  <>
-                    <Button light disabled={busy} onClick={handleComplete}>
-                      완료 처리
-                    </Button>
-                    <Button light variant="outline" disabled={busy} onClick={handleNoShow}>
-                      노쇼 처리
-                    </Button>
-                  </>
-                )}
-
-                {canStartWork && (
-                  <Button light disabled={busy} onClick={handleStartWork}>
-                    작업 시작
-                  </Button>
-                )}
-                {canDeliver && (
-                  <Button light disabled={busy} onClick={handleDeliver}>
-                    납품 완료
-                  </Button>
-                )}
-
-                {canResend && (
-                  <Button light variant="secondary" disabled={busy} onClick={handleResend}>
-                    알림 재발송
-                  </Button>
-                )}
-
-                {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
-                  <p className="text-sm text-gray-500">
-                    {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
-                  </p>
-                )}
-              </div>
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden mb-6">
+          <div className="p-6 md:p-8 border-b border-gray-200">
+            <div className="flex flex-wrap items-center gap-3 mb-5">
+              <span
+                className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                  isMixing ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
+                }`}
+              >
+                {isMixing ? '믹싱·마스터링' : '세션 예약'}
+              </span>
+              {isMixing
+                ? workOrder && (
+                    <span
+                      className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${WORK_ORDER_STATUS_CLASS[workOrder.status]}`}
+                    >
+                      {WORK_ORDER_STATUS_LABELS[workOrder.status]}
+                    </span>
+                  )
+                : booking.bookingStatus && (
+                    <span
+                      className={`inline-flex px-3 py-1 rounded-full text-sm font-medium ${BOOKING_STATUS_CLASS[booking.bookingStatus]}`}
+                    >
+                      {BOOKING_STATUS_LABELS[booking.bookingStatus]}
+                    </span>
+                  )}
+              <span className="text-gray-500 text-sm">
+                {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
+              </span>
+              <span className="text-gray-400 text-xs font-mono">{booking.orderNo}</span>
             </div>
 
-            {canRefund && (
-              <div className="pt-6 border-t border-gray-100">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
-                <p className="text-sm text-gray-500 mb-4">
-                  {isRemainderRefund ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">고객 정보</h2>
+                <dl className="space-y-2 text-sm">
+                  <DescriptionRow label="이름" value={booking.customerName} />
+                  <DescriptionRow label="전화번호" value={booking.customerPhone} />
+                  <DescriptionRow label="이메일" value={booking.customerEmail} />
+                </dl>
+              </div>
+
+              <div>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">
+                  {isMixing ? '주문 정보' : '예약 정보'}
+                </h2>
+                <dl className="space-y-2 text-sm">
+                  <DescriptionRow label="상품" value={booking.productName} />
+                  {isMixing ? (
                     <>
-                      이미 취소된 {isMixing ? '주문' : '예약'}의 남은 금액을 더 돌려줍니다. 취소 안내는 이미 나갔으므로
-                      메일·캘린더 후처리 없이 환불만 처리합니다.
+                      <DescriptionRow label="곡 수" value={workOrder ? `${workOrder.songCount}곡` : '-'} />
+                      <DescriptionRow
+                        label="보컬 튜닝"
+                        value={workOrder?.vocalTuning ? '포함' : '미포함'}
+                      />
+                      {workOrder?.startedAt && (
+                        <DescriptionRow
+                          label="착수일시"
+                          value={formatKstDateTimeFull(workOrder.startedAt)}
+                        />
+                      )}
+                      {workOrder?.deliveredAt && (
+                        <DescriptionRow
+                          label="납품일시"
+                          value={formatKstDateTimeFull(workOrder.deliveredAt)}
+                        />
+                      )}
                     </>
                   ) : (
                     <>
-                      {isMixing ? '주문을 취소하고' : '예약을 취소하고'} 지정한 금액을 환불합니다. 처리하면{' '}
-                      {isMixing ? '주문은' : '예약은'} 즉시 취소 상태가 되며 되돌릴 수 없습니다.
+                      <DescriptionRow label="일시" value={formatKstDateTime(booking.startAt)} />
+                      <DescriptionRow
+                        label="이용 시간"
+                        value={booking.durationHours ? `${booking.durationHours}시간` : '-'}
+                      />
                     </>
                   )}
-                </p>
+                  {booking.cancelledAt && (
+                    <DescriptionRow
+                      label="취소일시"
+                      value={formatKstDateTimeFull(booking.cancelledAt)}
+                    />
+                  )}
+                </dl>
+              </div>
+            </div>
 
-                <form onSubmit={handleRefund} className="space-y-3 max-w-md">
-                  <Field
-                    id="refund-amount"
-                    label={`환불 금액 (원, 잔액 ${formatPriceAmount(booking.refundableAmount)})`}
-                    error={refundError ?? undefined}
-                    className={lightOnlyField}
-                  >
-                    <TextInput
-                      type="number"
-                      min={isRemainderRefund ? 1 : 0}
-                      max={booking.refundableAmount}
-                      step={1}
-                      value={refundAmount}
-                      onChange={(e) => setRefundAmount(Number(e.target.value))}
-                      light className="text-sm"
-                    />
-                  </Field>
-                  <Field id="refund-reason" label="환불 사유" className={lightOnlyField}>
-                    <TextArea
-                      value={refundReason}
-                      onChange={(e) => setRefundReason(e.target.value)}
-                      rows={2}
-                      placeholder="예: 고객 요청 — 개인 사정으로 취소"
-                      light className="min-h-0 text-sm"
-                    />
-                  </Field>
-                  <Button light type="submit" variant="outline" disabled={busy}>
-                    환불 처리
-                  </Button>
-                </form>
+            {booking.customerNote && (
+              <div className="mt-6 pt-6 border-t border-gray-100 text-sm">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">요청사항</h2>
+                <p className="text-gray-700 whitespace-pre-wrap">{booking.customerNote}</p>
               </div>
             )}
           </div>
+
+          <div className="p-6 md:p-8 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">결제 금액</h2>
+            <dl className="space-y-2 text-sm">
+              <DescriptionRow label="상품가" value={`${formatPriceAmount(booking.itemAmount)}원`} />
+              <DescriptionRow label="VAT" value={`${formatPriceAmount(booking.vatAmount)}원`} />
+              <DescriptionRow
+                label="합계"
+                value={<span className="text-base">{formatPriceAmount(booking.totalAmount)}원</span>}
+              />
+            </dl>
+
+            {booking.payment && (
+              <dl className="mt-4 pt-4 border-t border-gray-100 space-y-2 text-sm">
+                <DescriptionRow label="결제 수단" value={booking.payment.method ?? '-'} />
+                <DescriptionRow
+                  label="승인일시"
+                  value={formatKstDateTimeFull(booking.payment.approvedAt)}
+                />
+                {booking.payment.receiptUrl && (
+                  <DescriptionRow
+                    label="영수증"
+                    value={
+                      <a
+                        href={booking.payment.receiptUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary hover:underline"
+                      >
+                        보기
+                      </a>
+                    }
+                  />
+                )}
+              </dl>
+            )}
+          </div>
+
+          {booking.refunds.length > 0 && (
+            <div className="p-6 md:p-8">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">환불 내역</h2>
+              <div className="space-y-2">
+                {booking.refunds.map((refund) => (
+                  <div
+                    key={refund.id}
+                    className="flex items-center justify-between gap-4 p-3 bg-gray-50 rounded-lg text-sm"
+                  >
+                    <span>
+                      {formatKstDateTimeFull(refund.createdAt)} ·{' '}
+                      {REFUND_REQUESTER_LABELS[refund.requestedBy] ?? refund.requestedBy} ·{' '}
+                      {refund.reason}
+                    </span>
+                    <span
+                      className={`shrink-0 font-medium ${refund.status === 'done' ? 'text-green-600' : 'text-red-600'}`}
+                    >
+                      {formatPriceAmount(refund.amount)}원 (
+                      {REFUND_STATUS_LABELS[refund.status] ?? refund.status})
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      </main>
+
+        <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
+            <div className="flex flex-wrap gap-3">
+              {canChangeStatus && (
+                <>
+                  <Button light disabled={busy} onClick={handleComplete}>
+                    완료 처리
+                  </Button>
+                  <Button light variant="outline" disabled={busy} onClick={handleNoShow}>
+                    노쇼 처리
+                  </Button>
+                </>
+              )}
+
+              {canStartWork && (
+                <Button light disabled={busy} onClick={handleStartWork}>
+                  작업 시작
+                </Button>
+              )}
+              {canDeliver && (
+                <Button light disabled={busy} onClick={handleDeliver}>
+                  납품 완료
+                </Button>
+              )}
+
+              {canResend && (
+                <Button light variant="secondary" disabled={busy} onClick={handleResend}>
+                  알림 재발송
+                </Button>
+              )}
+
+              {!canChangeStatus && !canResend && !canStartWork && !canDeliver && (
+                <p className="text-sm text-gray-500">
+                  {isMixing ? '지금 상태에서는 가능한 작업이 없습니다.' : '결제 대기 중인 예약에는 가능한 작업이 없습니다.'}
+                </p>
+              )}
+            </div>
+          </div>
+
+          {canRefund && (
+            <div className="pt-6 border-t border-gray-100">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
+              <p className="text-sm text-gray-500 mb-4">
+                {isRemainderRefund ? (
+                  <>
+                    이미 취소된 {isMixing ? '주문' : '예약'}의 남은 금액을 더 돌려줍니다. 취소 안내는 이미 나갔으므로
+                    메일·캘린더 후처리 없이 환불만 처리합니다.
+                  </>
+                ) : (
+                  <>
+                    {isMixing ? '주문을 취소하고' : '예약을 취소하고'} 지정한 금액을 환불합니다. 처리하면{' '}
+                    {isMixing ? '주문은' : '예약은'} 즉시 취소 상태가 되며 되돌릴 수 없습니다.
+                  </>
+                )}
+              </p>
+
+              <form onSubmit={handleRefund} className="space-y-3 max-w-md">
+                <Field
+                  id="refund-amount"
+                  label={`환불 금액 (원, 잔액 ${formatPriceAmount(booking.refundableAmount)})`}
+                  error={refundError ?? undefined}
+                  className={lightOnlyField}
+                >
+                  <TextInput
+                    type="number"
+                    min={isRemainderRefund ? 1 : 0}
+                    max={booking.refundableAmount}
+                    step={1}
+                    value={refundAmount}
+                    onChange={(e) => setRefundAmount(Number(e.target.value))}
+                    light className="text-sm"
+                  />
+                </Field>
+                <Field id="refund-reason" label="환불 사유" className={lightOnlyField}>
+                  <TextArea
+                    value={refundReason}
+                    onChange={(e) => setRefundReason(e.target.value)}
+                    rows={2}
+                    placeholder="예: 고객 요청 — 개인 사정으로 취소"
+                    light className="min-h-0 text-sm"
+                  />
+                </Field>
+                <Button light type="submit" variant="outline" disabled={busy}>
+                  환불 처리
+                </Button>
+              </form>
+            </div>
+          )}
+        </div>
+      </AdminShell>
     </>
   );
 }

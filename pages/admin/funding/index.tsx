@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 
 import { createManualPledge } from '../../../components/admin/fundingActions';
-import { logoutAdmin } from '../../../components/admin/contractActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
@@ -150,11 +150,6 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
-  const handleLogout = async () => {
-    await logoutAdmin();
-    await router.replace('/admin/login');
-  };
-
   const selectedProject = projects.find((p) => p.slug === formProjectSlug);
 
   const handleCreateManual = async (e: React.FormEvent) => {
@@ -212,12 +207,12 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
   // 무관한 사고까지 여기서 막으면, 멀쩡히 조회된 후원 목록을 관리자가 못 보게 된다.
   if (pledgesError) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <AdminShell title="펀딩 관리" width="wide">
         <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
           <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h1>
           <p className="text-gray-600">{[pledgesError, error].filter(Boolean).join(' ')}</p>
         </div>
-      </div>
+      </AdminShell>
     );
   }
 
@@ -230,28 +225,8 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-6xl mx-auto px-4 space-y-6">
+      <AdminShell title="펀딩 관리" description="펀딩 현황을 확인하고 관리합니다." width="wide">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-primary p-6 md:p-8 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">펀딩 관리</h1>
-                <p className="text-white/80 mt-2">펀딩 현황을 확인하고 관리합니다.</p>
-              </div>
-              <div className="flex gap-2">
-                <Link href="/admin" passHref>
-                  <Button light variant="secondary">관리자 홈</Button>
-                </Link>
-                <Button
-                  variant="outline"
-                  className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40"
-                  onClick={handleLogout}
-                >
-                  로그아웃
-                </Button>
-              </div>
-            </div>
-
             <div className="p-6 md:p-8">
               {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}
 
@@ -502,8 +477,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               )}
             </div>
           </div>
-        </div>
-      </main>
+      </AdminShell>
     </>
   );
 }

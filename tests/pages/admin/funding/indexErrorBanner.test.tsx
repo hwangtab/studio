@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/funding' }) }));
+jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/funding', pathname: '/admin/funding' }) }));
 // admin-auth·DB는 ESM(iron-session·uncrypto)을 끌고 들어온다 — getServerSideProps는 이 테스트 대상이 아니다.
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/admin-list', () => ({ listFundingOrders: jest.fn() }));

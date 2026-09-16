@@ -7,6 +7,7 @@ import ContractForm, {
   toContractPayload,
   type ContractFormValues,
 } from '../../../components/admin/ContractForm';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { getDb } from '../../../db/client';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { contractToFormValues } from '../../../lib/contracts/form-values';
@@ -104,16 +105,14 @@ export default function NewContractPage({ initialValues, copiedFrom }: NewContra
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-primary p-6 md:p-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-white">새 계약 작성</h1>
-              <p className="text-white/80 mt-2">
-                저장하면 작성중 상태로 보관됩니다. 내용을 확인한 뒤 발송하세요.
-              </p>
-            </div>
-
+      <AdminShell
+        title="새 계약 작성"
+        description="저장하면 작성중 상태로 보관됩니다. 내용을 확인한 뒤 발송하세요."
+        width="narrow"
+        backHref="/admin/contracts"
+        backLabel="계약 목록"
+      >
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 md:p-8">
               {copiedFrom && (
                 <div className="mb-6 p-3 bg-blue-50 border border-blue-200 text-blue-900 rounded-lg text-sm">
@@ -133,8 +132,7 @@ export default function NewContractPage({ initialValues, copiedFrom }: NewContra
               />
             </div>
           </div>
-        </div>
-      </main>
+      </AdminShell>
     </>
   );
 }
