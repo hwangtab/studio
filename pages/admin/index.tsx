@@ -101,7 +101,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">관리자</h1>

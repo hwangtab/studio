@@ -278,10 +278,10 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">예약 상세</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">예약 상세</h1>
             <Link href="/admin/bookings" passHref>
               <Button light variant="outline">목록으로</Button>
             </Link>
@@ -412,7 +412,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">고객 정보</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">고객 정보</h2>
                   <dl className="space-y-2 text-sm">
                     <DescriptionRow label="이름" value={booking.customerName} />
                     <DescriptionRow label="전화번호" value={booking.customerPhone} />
@@ -421,7 +421,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                 </div>
 
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">
                     {isMixing ? '주문 정보' : '예약 정보'}
                   </h2>
                   <dl className="space-y-2 text-sm">
@@ -467,14 +467,14 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
               {booking.customerNote && (
                 <div className="mt-6 pt-6 border-t border-gray-100 text-sm">
-                  <h2 className="text-lg font-bold text-gray-900 mb-2">요청사항</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-2">요청사항</h2>
                   <p className="text-gray-700 whitespace-pre-wrap">{booking.customerNote}</p>
                 </div>
               )}
             </div>
 
             <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">결제 금액</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">결제 금액</h2>
               <dl className="space-y-2 text-sm">
                 <DescriptionRow label="상품가" value={`${formatPriceAmount(booking.itemAmount)}원`} />
                 <DescriptionRow label="VAT" value={`${formatPriceAmount(booking.vatAmount)}원`} />
@@ -512,7 +512,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
             {booking.refunds.length > 0 && (
               <div className="p-6 md:p-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">환불 내역</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">환불 내역</h2>
                 <div className="space-y-2">
                   {booking.refunds.map((refund) => (
                     <div
@@ -539,7 +539,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
           <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-4">작업</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
               <div className="flex flex-wrap gap-3">
                 {canChangeStatus && (
                   <>
@@ -579,7 +579,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
             {canRefund && (
               <div className="pt-6 border-t border-gray-100">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
                 <p className="text-sm text-gray-500 mb-4">
                   {isRemainderRefund ? (
                     <>

@@ -96,10 +96,10 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-6xl mx-auto px-4">
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">구독 관리</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">구독 관리</h1>
             <div className="flex gap-2">
               <Link href="/admin/subscriptions/new" passHref>
                 <Button light>레슨 구독 만들기</Button>

@@ -235,7 +235,7 @@ export default function ContractForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <section>
-        <h2 className="text-lg font-bold text-gray-900 mb-4">이용자 정보</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">이용자 정보</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="성명" id="customerName" error={errorMap.customerName} required className={ADMIN_FIELD}>
             <TextInput
@@ -281,7 +281,7 @@ export default function ContractForm({
       </section>
 
       <section>
-        <h2 className="text-lg font-bold text-gray-900 mb-4">이용 대상 및 기간</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">이용 대상 및 기간</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="호실" id="roomNumber" error={errorMap.roomNumber} required hint="예: A, 201" className={ADMIN_FIELD}>
             <TextInput
@@ -348,7 +348,7 @@ export default function ContractForm({
       </section>
 
       <section>
-        <h2 className="text-lg font-bold text-gray-900 mb-4">이용료</h2>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">이용료</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Field label="월 이용료" id="monthlyRent" error={errorMap.monthlyRent} required hint="원 단위 숫자" className={ADMIN_FIELD}>
             <TextInput
@@ -407,7 +407,7 @@ export default function ContractForm({
 
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-bold text-gray-900">특약사항</h2>
+          <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">특약사항</h2>
           <Button light
             type="button"
             size="sm"

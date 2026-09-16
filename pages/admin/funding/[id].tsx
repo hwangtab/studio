@@ -187,10 +187,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">후원 상세</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">후원 상세</h1>
             <Link href="/admin/funding" passHref>
               <Button light variant="outline">목록으로</Button>
             </Link>
@@ -257,7 +257,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
           <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-3">기본 정보</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-3">기본 정보</h2>
               <dl className="space-y-2 text-sm">
                 <DescriptionRow label="주문번호" value={pledge.orderNo} />
                 <DescriptionRow label="프로젝트" value={pledge.projectSlug} />
@@ -300,7 +300,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             </div>
 
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-3">발송 상태</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-3">발송 상태</h2>
               <div className="flex flex-wrap items-end gap-3 p-4 bg-gray-50 rounded-xl">
                 <Field id="fulfillment-status" label="상태" className={lightOnlyField}>
                   <Select
@@ -345,7 +345,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
             </div>
 
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-3">관리자 메모</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-3">관리자 메모</h2>
               <div className="flex flex-col gap-3">
                 <TextArea
                   value={memo}
