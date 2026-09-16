@@ -46,6 +46,8 @@ export interface AdminDashboard {
     contractsAwaitingSignature: number;
   };
   socialTokens: SocialTokenStatus[];
+  /** upcomingSessions의 창 길이(일). 화면 문구용 — 페이지가 이 모듈을 값으로 import하지 않게 데이터에 싣는다. */
+  upcomingWindowDays: number;
   checkedAt: string;
 }
 
@@ -123,6 +125,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       expiresAt: new Date(row.expiresAt * 1000).toISOString(),
       daysLeft: Math.floor((row.expiresAt * 1000 - now.getTime()) / DAY_MS),
     })),
+    upcomingWindowDays: UPCOMING_WINDOW_DAYS,
     checkedAt: now.toISOString(),
   };
 };

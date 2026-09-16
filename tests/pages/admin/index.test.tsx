@@ -29,6 +29,7 @@ const DASHBOARD: AdminDashboard = {
   ],
   queues: { mixingReceived: 3, mixingInProgress: 1, subscriptionsPendingCard: 0, subscriptionsPastDue: 2, subscriptionsPaused: 0, contractsAwaitingSignature: 1 },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
+  upcomingWindowDays: 7,
   checkedAt: '2026-09-16T03:00:00.000Z',
 };
 
@@ -70,6 +71,8 @@ it('현황 로딩이 실패하면 오류를 알리되 관리 화면 링크는 �
   expect(screen.getByText(/불러오지 못했습니다/)).toBeInTheDocument();
   expect(screen.getByRole('link', { name: '구독' })).toHaveAttribute('href', '/admin/subscriptions');
   expect(screen.queryByText('처리할 일')).not.toBeInTheDocument();
+  // 장부는 현황과 무관하다 — 점검이 죽어도 정산 CSV는 받을 수 있어야 한다.
+  expect(screen.getByLabelText('시작일')).toHaveValue(result.props.ledgerFrom);
 });
 
 it('getServerSideProps는 KST 기준 이번 달 1일부터 오늘까지를 장부 기본 기간으로 넘긴다', async () => {

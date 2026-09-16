@@ -11,7 +11,13 @@ import { lightOnlyField } from '../../components/ui/adminFieldClass';
 import { formatKstDateTime } from '../../lib/booking/format';
 import { kstDateString } from '../../lib/booking/kst';
 import { authenticateAdminRequest } from '../../lib/contracts/admin-auth';
-import { loadAdminDashboard, UPCOMING_WINDOW_DAYS, type AdminDashboard } from '../../lib/ops/adminDashboard';
+/**
+ * 값이 아니라 타입만 가져온다. loadAdminDashboard는 getServerSideProps 안에서만 쓰여 서버 번들에
+ * 남지만, 컴포넌트 본문에서 이 모듈의 상수를 하나라도 쓰면 모듈 전체가 클라이언트 번들로
+ * 끌려가고, 그 끝에 건강 점검의 googleapis(net·worker_threads)가 있어 페이지가 500이 된다.
+ */
+import type { AdminDashboard } from '../../lib/ops/adminDashboard';
+import { loadAdminDashboard } from '../../lib/ops/adminDashboard';
 
 /**
  * 관리자 첫 화면 = 오늘 처리할 일.
@@ -98,7 +104,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
       <main className="min-h-screen bg-gray-50 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4 space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-2xl font-bold text-gray-900">관리자</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">관리자</h1>
             <nav className="flex flex-wrap gap-2">
               <Link href="/admin/contracts" passHref>
                 <Button light variant="outline" size="sm">계약</Button>
@@ -123,7 +129,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
           {dashboard && (
             <>
               <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">처리할 일</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">처리할 일</h2>
                 <p className="text-xs text-gray-500 mb-4">
                   매일 23시 운영 점검 메일과 같은 기준입니다. 처리하면 다음 새로고침에서 사라집니다.
                 </p>
@@ -157,7 +163,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               </section>
 
               <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-4">대기 중</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">대기 중</h2>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   <QueueCard label="믹싱 착수 대기" count={dashboard.queues.mixingReceived} href="/admin/bookings" alert />
                   <QueueCard label="믹싱 작업 중" count={dashboard.queues.mixingInProgress} href="/admin/bookings" />
@@ -169,8 +175,8 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               </section>
 
               <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">이번 주 세션</h2>
-                <p className="text-xs text-gray-500 mb-4">오늘부터 {UPCOMING_WINDOW_DAYS}일 안의 확정 예약입니다.</p>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">이번 주 세션</h2>
+                <p className="text-xs text-gray-500 mb-4">오늘부터 {dashboard.upcomingWindowDays}일 안의 확정 예약입니다.</p>
                 {dashboard.upcomingSessions.length === 0 ? (
                   <p className="text-sm text-gray-600">예정된 세션이 없습니다.</p>
                 ) : (
@@ -190,28 +196,9 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
                 )}
               </section>
 
-              <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">토스 결제 장부</h2>
-                <p className="text-xs text-gray-500 mb-4">
-                  기간 안에 승인된 카드 결제 전부를 한 CSV로 내려받습니다(예약·믹싱·펀딩·구독). 환불은 같은
-                  행에 합산됩니다. 무통장 후원과 수기 등록은 펀딩 CSV에 있습니다.
-                </p>
-                <form method="GET" action="/api/admin/orders/export" className="flex flex-wrap items-end gap-3">
-                  <Field id="ledger-from" label="시작일" className={lightOnlyField}>
-                    <TextInput type="date" name="from" defaultValue={ledgerFrom} required light className="text-sm" />
-                  </Field>
-                  <Field id="ledger-to" label="종료일" className={lightOnlyField}>
-                    <TextInput type="date" name="to" defaultValue={ledgerTo} required light className="text-sm" />
-                  </Field>
-                  <Button light type="submit" variant="outline">
-                    CSV 내려받기
-                  </Button>
-                </form>
-              </section>
-
               {dashboard.socialTokens.length > 0 && (
                 <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-                  <h2 className="text-lg font-bold text-gray-900 mb-1">소셜 발행 토큰</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">소셜 발행 토큰</h2>
                   <p className="text-xs text-gray-500 mb-3">매주 월요일 크론이 갱신합니다. 만료가 가까우면 갱신 실패 메일을 확인해 주세요.</p>
                   <ul className="text-sm text-gray-700 space-y-1">
                     {dashboard.socialTokens.map((token) => (
@@ -224,6 +211,26 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               )}
             </>
           )}
+
+          {/* 장부는 현황 데이터를 쓰지 않는다 — 건강 점검이 죽어도 정산 CSV는 받을 수 있어야 한다. */}
+            <section className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">토스 결제 장부</h2>
+              <p className="text-xs text-gray-500 mb-4">
+                기간 안에 승인된 카드 결제 전부를 한 CSV로 내려받습니다(예약·믹싱·펀딩·구독). 환불은 같은
+                행에 합산됩니다. 무통장 후원과 수기 등록은 펀딩 CSV에 있습니다.
+              </p>
+              <form method="GET" action="/api/admin/orders/export" className="flex flex-wrap items-end gap-3">
+                <Field id="ledger-from" label="시작일" className={lightOnlyField}>
+                  <TextInput type="date" name="from" defaultValue={ledgerFrom} required light className="text-sm" />
+                </Field>
+                <Field id="ledger-to" label="종료일" className={lightOnlyField}>
+                  <TextInput type="date" name="to" defaultValue={ledgerTo} required light className="text-sm" />
+                </Field>
+                <Button light type="submit" variant="outline">
+                  CSV 내려받기
+                </Button>
+              </form>
+            </section>
         </div>
       </main>
     </>

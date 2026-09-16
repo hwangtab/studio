@@ -84,8 +84,22 @@ it('환불은 done만, 기간 밖 환불도 같은 행에 합산하고 순액을
 
   const [row] = await listSalesLedgerRows({ from: '2026-09-01', to: '2026-09-30' });
 
-  expect(row).toMatchObject({ totalAmount: 275000, refundedAmount: 150000, netAmount: 125000, orderStatus: 'partially_refunded' });
+  expect(row).toMatchObject({
+    totalAmount: 275000, refundedAmount: 150000, netAmount: 125000, orderStatus: 'partially_refunded',
+    // 순액 125,000을 공급가·부가세 10:1로 다시 나눈다 — 부가세 열만 합산해도 환불분이 빠져 있어야 한다.
+    netItemAmount: 113636, netVatAmount: 11364,
+  });
   expect(row.lastRefundAt).toBe('2026.10.05 (월) 12:00');
+});
+
+it('전액 환불된 결제는 순 공급가·순 부가세가 0이다', async () => {
+  await insertOrder('a', 'session', 'refunded');
+  await insertPayment('pa', 'a', '2026-09-10T03:00:00Z');
+  await insertRefund('r1', 'pa', 275000, 'done', '2026-09-12T03:00:00Z');
+
+  const [row] = await listSalesLedgerRows({ from: '2026-09-01', to: '2026-09-30' });
+
+  expect(row).toMatchObject({ itemAmount: 250000, vatAmount: 25000, netAmount: 0, netItemAmount: 0, netVatAmount: 0 });
 });
 
 it('설명은 서비스별 상품·일시·곡수·리워드·회차로 만든다', async () => {

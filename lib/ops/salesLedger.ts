@@ -29,6 +29,10 @@ import { getProduct } from '../booking/products';
  * 환불은 **행을 나누지 않고** 같은 행의 refundedAmount에 합산한다. 기간 밖에서 환불된 것도
  * 합산된다 — 이 표는 "그 결제가 지금 얼마로 남았는가"를 보는 것이라, 기간 안 환불만 세면
  * 지난달 결제를 이번 달에 환불한 건이 어느 달에도 안 잡힌다. 환불 시각은 lastRefundAt에 남긴다.
+ *
+ * itemAmount·vatAmount는 승인 당시 원액이다. 부가세 신고에 쓰는 열은 **netItemAmount·netVatAmount**
+ * — 환불을 뺀 순액을 공급가·부가세로 다시 나눈 값이다. 원액 열만 합산하면 환불 건의 부가세가
+ * 그대로 남아 매출세액이 과다하게 나온다.
  */
 export const SALES_LEDGER_COLUMNS = [
   'approvedAt',
@@ -44,6 +48,8 @@ export const SALES_LEDGER_COLUMNS = [
   'totalAmount',
   'refundedAmount',
   'netAmount',
+  'netItemAmount',
+  'netVatAmount',
   'orderStatus',
   'lastRefundAt',
 ] as const;
@@ -108,6 +114,9 @@ export const listSalesLedgerRows = async (range: LedgerRange): Promise<SalesLedg
       (latest, r) => (latest === null || r.createdAt.getTime() > latest.getTime() ? r.createdAt : latest),
       null,
     );
+    const netAmount = order.totalAmount - refundedAmount;
+    // 순액을 원래 비율로 공급가·부가세에 나눈다 — 부가세는 반올림, 공급가는 나머지(합이 순액과 정확히 맞도록).
+    const netVatAmount = order.totalAmount > 0 ? Math.round((order.vatAmount * netAmount) / order.totalAmount) : 0;
     return {
       approvedAt: formatKstDateTimeFull(payment.approvedAt?.toISOString() ?? null),
       orderNo: order.orderNo,
@@ -121,7 +130,9 @@ export const listSalesLedgerRows = async (range: LedgerRange): Promise<SalesLedg
       vatAmount: order.vatAmount,
       totalAmount: order.totalAmount,
       refundedAmount,
-      netAmount: order.totalAmount - refundedAmount,
+      netAmount,
+      netItemAmount: netAmount - netVatAmount,
+      netVatAmount,
       orderStatus: order.status,
       lastRefundAt: lastRefund ? formatKstDateTimeFull(lastRefund.toISOString()) : null,
     };

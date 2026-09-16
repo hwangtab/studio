@@ -71,7 +71,7 @@ export const remainingRefundable = (order: Order, payments: PaymentWithRefunds[]
 const FULLY_REFUNDED_MESSAGE = '이미 전액 환불된 주문입니다.';
 
 const ALREADY_REFUNDED_AMOUNT_MESSAGE =
-  '이 금액은 이미 환불되어 기록까지 끝났습니다. 환불 이력을 확인해 주세요.';
+  '같은 금액의 환불이 이미 기록되어 있습니다. 한 번 더 환불하려면 금액을 다르게 나눠 입력해 주세요(잔액 안에서만 나갑니다).';
 const CLAIM_LOOKUP_FAILED_MESSAGE =
   '환불 이력을 확인하지 못했습니다. 잠시 후 같은 금액으로 다시 시도해 주세요.';
 const ZERO_REMAINDER_REFUND_MESSAGE = '추가로 환불할 금액을 입력해 주세요(0원은 처리할 것이 없습니다).';
