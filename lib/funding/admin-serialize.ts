@@ -22,6 +22,14 @@ export interface AdminPledgeItem {
   shipping: string | null;
   supporterMessage: string | null;
   refundRequestedAt: string | null;
+  /**
+   * 내려받기를 시작한 시각. 값이 있으면 셀프 취소가 막힌다(약관 제8조 2항).
+   *
+   * 관리자 화면이 이 값을 봐야 하는 이유: 후원자가 "받지도 못했는데 취소가 안 된다"고
+   * 문의했을 때, 기록이 있는지 없는지를 여기서 바로 확인하고 필요하면 지울 수 있어야 한다.
+   * 실제로 CSP가 내려받기 리디렉트를 막아 **파일은 못 받고 기록만 남는** 사고가 났다.
+   */
+  downloadedAt: string | null;
   paidAt: string | null;
   holdExpiresAt: string;
   createdAt: string;
@@ -145,6 +153,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
       : null,
     supporterMessage: p.supporterMessage,
     refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
+    downloadedAt: p.downloadedAt?.toISOString() ?? null,
     paidAt: p.paidAt?.toISOString() ?? null,
     holdExpiresAt: p.holdExpiresAt.toISOString(),
     createdAt: o.createdAt.toISOString(),

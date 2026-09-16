@@ -33,7 +33,8 @@ const ITEM: AdminPledgeItem = {
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
   rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
   trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null,
-  refundRequestedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
+  refundRequestedAt: null,
+  downloadedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
   adminMemo: null, notificationError: null, hasPayment: true, mismatch: false, virtualAccountPayment: false,
   refundRequested: false, needsReview: false,
 };

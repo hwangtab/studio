@@ -178,6 +178,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }
+    /**
+     * '내려받기 기록 초기화' — 셀프 취소를 되살리는 유일한 경로.
+     *
+     * `downloaded_at`은 약관 제8조 2항(전자상거래법 제17조 2항 5호)의 청약철회 제한 판정
+     * 근거다. 그런데 **파일을 못 받았는데 기록만 남는** 상태가 실제로 생겼다 — CSP가
+     * 내려받기 리디렉트를 막는 동안 서버는 그 전에 기록을 찍고 있었다(#153). 원인은
+     * 고쳤지만, 되돌릴 수단이 없으면 같은 형태의 사고가 다시 났을 때 운영자가 DB를 직접
+     * 만지는 수밖에 없다.
+     *
+     * clear_refund_request·clear_stock_review와 같은 모양을 쓴다(사유 필수, 관리자 메모에
+     * 날짜와 함께 덧붙임). 후원자에게 메일은 보내지 않는다 — 이건 고객이 남긴 의사를
+     * 지우는 조작이 아니라 **잘못 남은 기록을 바로잡아 권리를 되돌려 주는** 일이고,
+     * 대개 고객 문의에 대한 답으로 이뤄지므로 그 답신이 안내를 대신한다.
+     */
+    case 'clear_download_record': {
+      const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
+      if (!reason) {
+        return res.status(400).json({ ok: false, message: '내려받기 기록을 지우려면 사유를 입력해야 합니다.' });
+      }
+      if (!order.fundingPledge.downloadedAt) {
+        return res.status(409).json({ ok: false, message: '내려받기 기록이 없는 후원입니다.' });
+      }
+      const entry = `[${kstDateString(now)}] 내려받기 기록 초기화 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
+      const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
+      await db
+        .update(fundingPledges)
+        .set({ downloadedAt: null, adminMemo: memo, updatedAt: now })
+        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      return res.status(200).json({ ok: true });
+    }
     case 'unpublish': {
       /**
        * 공개 명단에서 내린다 — 이름과 응원 메시지가 함께 빠진다(공개 동의가 그 둘을 한

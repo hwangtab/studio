@@ -152,6 +152,27 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     return run(() => patchPledge(pledge.id, { action: 'clear_stock_review', reason: reason.trim() }));
   };
 
+  /**
+   * 내려받기 기록을 지운다 — 막혀 있던 셀프 취소가 되살아난다.
+   *
+   * "파일은 못 받았는데 기록만 남은" 건을 바로잡는 자리다. 실제로 CSP가 내려받기
+   * 리디렉트를 막는 동안 그 상태가 만들어졌다(#153). 원인은 고쳤지만 되돌릴 수단이
+   * 없으면 같은 형태의 사고에서 운영자가 DB를 직접 만져야 한다.
+   *
+   * 다른 해제 조작과 같은 모양 — 사유 필수, 관리자 메모에 날짜와 함께 남는다.
+   */
+  const handleClearDownloadRecord = () => {
+    const reason = window.prompt(
+      '후원자가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
+    );
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('내려받기 기록을 지우려면 사유를 입력해야 합니다.');
+      return;
+    }
+    return run(() => patchPledge(pledge.id, { action: 'clear_download_record', reason: reason.trim() }));
+  };
+
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
   //
@@ -252,6 +273,11 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />
+                {/* 값이 있으면 셀프 취소가 막혀 있다는 뜻이다 — 문의를 받았을 때 먼저 볼 자리다. */}
+                <DescriptionRow
+                  label="내려받기 시작"
+                  value={pledge.downloadedAt ? `${formatKstDateTimeFull(pledge.downloadedAt)} (셀프 취소 불가)` : '없음'}
+                />
                 <DescriptionRow label="결제 홀드 만료" value={formatKstDateTimeFull(pledge.holdExpiresAt)} />
                 <DescriptionRow label="접수 시각" value={formatKstDateTime(pledge.createdAt)} />
               </dl>
@@ -266,6 +292,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               )}
               {pledge.needsReview && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearStockReview}>재고 확인 완료</Button>
+              )}
+              {pledge.downloadedAt && (
+                <Button light variant="outline" disabled={busy} onClick={handleClearDownloadRecord}>내려받기 기록 초기화</Button>
               )}
               <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>

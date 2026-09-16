@@ -387,3 +387,57 @@ it('clear_stock_review: 사유에 마커 문구를 인용해도 배지가 꺼진
   });
   expect(hasReviewMarker(set.mock.calls[0][0].adminMemo as string)).toBe(false);
 });
+
+/**
+ * '내려받기 기록 초기화' — 막혀 있던 셀프 취소를 되살리는 유일한 경로.
+ *
+ * `downloaded_at`은 약관 제8조 2항의 청약철회 제한 판정 근거인데, **파일을 못 받았는데
+ * 기록만 남는** 상태가 실제로 생겼다(CSP가 내려받기 리디렉트를 막는 동안, #153). 원인은
+ * 고쳤지만 되돌릴 수단이 없으면 같은 형태의 사고에서 운영자가 DB를 직접 만져야 한다.
+ */
+const withDownload = (downloadedAt: Date | null = new Date('2026-09-20T01:00:00Z'), adminMemo: string | null = null) => ({
+  ...BASE_ORDER,
+  fundingPledge: { ...BASE_ORDER.fundingPledge, downloadedAt, adminMemo },
+});
+
+it('clear_download_record: 사유가 없으면 400이고 아무것도 안 바꾼다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload());
+  for (const body of [{ action: 'clear_download_record' }, { action: 'clear_download_record', reason: '  ' }]) {
+    expect((await call('PATCH', { id: 'order-1' }, body)).status).toBe(400);
+  }
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('clear_download_record: 기록이 없으면 409 — 지울 것이 없다', async () => {
+  (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload(null));
+  expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: 'x' })).status).toBe(409);
+  expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께 메모에 남긴다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload(new Date('2026-09-20T01:00:00Z'), '기존 메모'));
+
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '후원자가 파일을 못 받았다고 확인' });
+
+  expect(r.status).toBe(200);
+  const values = set.mock.calls[0][0];
+  // 기록이 비어야 assessSelfCancel이 다시 통과한다 — 이 액션의 존재 이유다.
+  expect(values.downloadedAt).toBeNull();
+  // 기존 메모를 덮어쓰지 않는다. 왜 지웠는지가 남아야 나중에 확인할 수 있다.
+  expect(String(values.adminMemo)).toContain('기존 메모');
+  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 후원자가 파일을 못 받았다고 확인');
+});
+
+it('clear_download_record: 사유의 개행을 접어 한 줄로 남긴다 — 메모 판정이 줄 단위다', async () => {
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  mockUpdate.mockReturnValueOnce({ set } as never);
+  (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload());
+
+  await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '첫 줄\n둘째 줄' });
+
+  const memo = String(set.mock.calls[0][0].adminMemo);
+  expect(memo.split('\n')).toHaveLength(1);
+  expect(memo).toContain('첫 줄 둘째 줄');
+});
