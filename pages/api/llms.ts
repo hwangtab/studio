@@ -3,7 +3,7 @@ import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
-import { getSiteConfig, studioOperator, thirdPartyListings } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
@@ -172,8 +172,8 @@ Studio NOL is at 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, right next to 
 ### How do I get there from Yeonsinnae Station?
 Take Exit 4 of Yeonsinnae Station (Seoul Metro Line 3 / Line 6), walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school. Total walk: ~5 minutes.
 
-### Does Studio NOL operate hourly practice room rental or band rehearsal rooms?
-No. Studio NOL operates **monthly residency only** (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, ₩0 deposit). Hourly rental and band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (${krw(RECORDING_HOURLY_PRICE)} KRW/hour) or as the 1프로 package (${krw(VOCAL_PACKAGE_PRICE)} KRW for 3 hours / 1 song).
+### How does the practice room work, and are there band rehearsal rooms?
+The practice room runs as a **monthly residency** (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, ₩0 deposit). Band rehearsal rooms are NOT operated. The recording studio is separate and available hourly (${krw(RECORDING_HOURLY_PRICE)} KRW/hour) or as the 1프로 package (${krw(VOCAL_PACKAGE_PRICE)} KRW for 3 hours / 1 song).
 
 ### What is the practice room residency fee?
 ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW per month (₩0 deposit, minimum 1 month). 1-year contracts get 50% off the first month. Includes 24/7 access, soundproof private room (STC 60+), personal gear storage, free monthly recording session (1 hour), and additional benefits.
@@ -209,7 +209,7 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - Music Release PR: ${PRESS_REFUND_POLICY_LINES.join(' ')}
 - Payment: online checkout via Toss Payments for studio bookings, mixing & mastering orders and crowdfunding pledges (payment methods as offered in the Toss checkout); other services by bank transfer on invoice. Tax invoices (세금계산서) are issued on request.
 - All prices are VAT excluded. Full terms: ${siteUrl}/ko/terms
-- Third-party reviews: Spacecloud listing ${thirdPartyListings.spacecloud} — 2 reviews, 5.0/5 (as of 2026-09-16)
+- Third-party reviews: 2 reviews averaging 5.0/5 on Spacecloud (as of 2026-09-16)
 
 ## Sitemaps & Feeds
 
@@ -363,7 +363,7 @@ ${fundingStatusLine(siteUrl)}
 Studio NOL은 보컬·악기 레슨을 운영하지 않습니다. 발성 교정은 외부 보컬 코치를 권합니다. 다만 보컬 녹음 세션(${krw(VOCAL_PACKAGE_PRICE)}원, 3시간, 엔지니어 디렉팅)으로 현재 발성 상태를 객관적으로 확인하는 용도는 가능합니다: ${siteUrl}/ko/stories/vocal1
 
 **"연습할 공간이 필요하다" (I need a place to practice).**
-월 ${krw(PRACTICE_ROOM_MONTHLY_PRICE)}원 월세 연습실 — 보증금 0원, 24시간 출입, STC 60+ 방음 개인실. 시간제 대여·밴드 합주실은 운영하지 않습니다. Details: ${siteUrl}/ko/practice-room
+월 ${krw(PRACTICE_ROOM_MONTHLY_PRICE)}원 월세 연습실 — 보증금 0원, 24시간 출입, STC 60+ 방음 개인실. 밴드 합주실은 운영하지 않습니다. Details: ${siteUrl}/ko/practice-room
 `;
 
 // AI 어시스턴트가 영어/중국어 쿼리에 답할 때 곧바로 인용할 수 있는 quick-fact 블록.
@@ -378,7 +378,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). All-in-one bundles cover planning, recording, mixing, mastering, digital distribution and release PR: 1 song ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% below production line-item total); EP 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15%); album 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20%). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
-- Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Hourly rental and band rehearsal rooms are not operated. Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? '1 room currently available for move-in' : 'fully occupied — waitlist open'}.
+- Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Band rehearsal rooms are not operated. Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? '1 room currently available for move-in' : 'fully occupied — waitlist open'}.
 - Wedding song complete package: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2-hour recording + vocal tuning + mixing & mastering). Beginners welcome.
 - Foreign-musician guides (English native): hub at ${siteUrl}/en/stories/recording-in-seoul-for-foreign-musicians, plus three spoke guides on practice-room booking, pricing, and visit access.
 `;

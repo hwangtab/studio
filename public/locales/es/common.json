@@ -326,7 +326,7 @@
         },
         {
           "q": "¿Cuánto cuesta la sala de práctica?",
-          "a": "Cuesta {{practiceRoom}} al mes sin depósito (mantenimiento incluido, IVA aparte). Tiene acceso 24/7 y puede pernoctar, y con contrato de un año el primer mes es 50% más barato. No ofrecemos alquiler por horas ni a corto plazo."
+          "a": "Cuesta {{practiceRoom}} al mes sin depósito (mantenimiento incluido, IVA aparte). Tiene acceso 24/7 y puede pernoctar, y con contrato de un año el primer mes es 50% más barato."
         },
         {
           "q": "¿Cómo reservo o pido presupuesto?",

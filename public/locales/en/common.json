@@ -354,7 +354,7 @@
         },
         {
           "q": "How much does the practice room cost?",
-          "a": "It is {{practiceRoom}} per month with no deposit (maintenance included, VAT excluded). You get 24/7 access and can stay overnight, and a one-year contract takes 50% off the first month. We do not offer hourly or short-term rentals."
+          "a": "It is {{practiceRoom}} per month with no deposit (maintenance included, VAT excluded). You get 24/7 access and can stay overnight, and a one-year contract takes 50% off the first month."
         },
         {
           "q": "How do I book or request a quote?",

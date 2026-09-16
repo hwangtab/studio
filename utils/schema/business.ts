@@ -1,5 +1,5 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig, socialProfiles, thirdPartyListings } from '../../data/siteConfig';
+import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
 import {
   MIXING_LEVEL1_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
@@ -58,7 +58,6 @@ export const generateDefaultSchema = (
     config.contact.naverPlaceUrl,
     config.contact.googleBusinessUrl,
     ...socialLinks,
-    ...Object.values(thirdPartyListings),
   ].filter(url => typeof url === 'string' && url.trim() !== '');
 
   const organizationId = `${siteUrl}/#organization`;

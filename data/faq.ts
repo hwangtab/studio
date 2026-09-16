@@ -52,8 +52,8 @@ const faqData = {
       answer: '네, 전문가가 아니어도 누구나 환영합니다. 모든 녹음 세션에 전담 엔지니어가 동반해 마이크 세팅부터 보컬 디렉팅, 완성 파일 전달까지 전 과정을 지원하므로 처음 녹음하시는 분도 편안하게 고품질 결과물을 얻으실 수 있습니다. (셀프 녹음·시간 대여는 운영하지 않습니다.)',
     },
     {
-      question: '연습실 단기 대여도 가능한가요?',
-      answer: '연습실은 월정액 입주 프로그램(월 36만원~) 전용으로 운영하며 시간제·단기 대여는 운영하지 않습니다. 시간 단위로 연습 공간이 필요하시면 인근 시간 대여 운영사를 이용해주세요.',
+      question: '연습실은 어떻게 이용하나요?',
+      answer: '월정액 입주 프로그램(월 36만원~)으로 안내드립니다. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 밴드 합주실은 운영하지 않습니다.',
     },
 
   ],
@@ -107,8 +107,8 @@ const faqData = {
       answer: 'Absolutely. Everyone is welcome regardless of experience. Our dedicated engineer accompanies every session — mic setup, vocal direction, and finished file delivery — first-timers consistently achieve professional-quality results. (Self-recording and hourly rental are not offered.)',
     },
     {
-      question: 'Is short-term rental of the practice room available?',
-      answer: 'Our practice room primarily operates on a monthly residency program (from 360,000 KRW/month) only. We do not offer short-term or hourly rentals.',
+      question: 'How does the practice room work?',
+      answer: 'It runs as a monthly residency program (from 360,000 KRW/month) — a soundproof private room with 24/7 access and no deposit. Band rehearsal rooms are not operated.',
     },
 
   ],
