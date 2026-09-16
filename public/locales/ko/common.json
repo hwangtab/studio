@@ -2836,7 +2836,25 @@
       "supportPending": "구독 오픈을 준비하고 있습니다",
       "supportPendingBody": "정기 구독이 열리면 알려드릴게요. 미리 카카오톡으로 관심을 남겨 주세요.",
       "supportPendingLabel": "카카오톡으로 소식 받기",
-      "shareTitle": "{{name}} 구독하기 — 스튜디오 놀"
+      "shareTitle": "{{name}} 구독하기 — 스튜디오 놀",
+      "tierTitle": "매월 얼마를 구독할까요",
+      "shareNote": "구독료 공급가의 {{percent}}%가 아티스트에게 매월 지급됩니다. 판매자는 스튜디오 놀입니다.",
+      "perMonth": "월 {{amount}}원",
+      "form": {
+        "name": "이름",
+        "email": "이메일",
+        "phone": "휴대폰 (선택)",
+        "displayName": "구독자 명단에 표시할 이름",
+        "displayNameHint": "비우면 이름을 씁니다. 명단 공개에 동의한 경우에만 보입니다.",
+        "consent": "아티스트 페이지의 구독자 명단에 제 이름을 올려도 됩니다",
+        "submit": "구독 시작하기 — 카드 등록으로",
+        "submitting": "잠시만요...",
+        "agreeNote": "다음 화면에서 카드를 등록하면 첫 달치가 바로 결제되고, 이후 매월 같은 날 자동 결제됩니다. 해지는 언제든 관리 링크에서 할 수 있습니다.",
+        "errorGeneric": "신청을 처리하지 못했습니다. 잠시 후 다시 시도해 주세요."
+      },
+      "supportersTitle": "함께 구독하는 사람들",
+      "supportersCount": "{{count}}명",
+      "supportersEmpty": "첫 구독자가 되어 주세요."
     }
   }
 }

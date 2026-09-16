@@ -2840,7 +2840,25 @@
       "supportPending": "Support Is Coming Soon",
       "supportPendingBody": "We'll let you know when monthly support opens. Leave your interest via KakaoTalk in the meantime.",
       "supportPendingLabel": "Get Updates via KakaoTalk",
-      "shareTitle": "Support {{name}} — Studio NOL"
+      "shareTitle": "Support {{name}} — Studio NOL",
+      "tierTitle": "How much per month?",
+      "shareNote": "{{percent}}% of the subscription fee (ex-VAT) goes to the artist every month. The seller is Studio NOL.",
+      "perMonth": "₩{{amount}}/month",
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone (optional)",
+        "displayName": "Name shown on the supporter list",
+        "displayNameHint": "Leave blank to use your name. Shown only if you agree to be listed.",
+        "consent": "You may list my name on the artist's supporter list",
+        "submit": "Start subscribing — register a card",
+        "submitting": "One moment...",
+        "agreeNote": "On the next screen, registering a card charges the first month right away, then the same day every month. Cancel anytime from your manage link.",
+        "errorGeneric": "We couldn't process your request. Please try again shortly."
+      },
+      "supportersTitle": "Subscribing together",
+      "supportersCount": "{{count}} people",
+      "supportersEmpty": "Be the first subscriber."
     }
   }
 }

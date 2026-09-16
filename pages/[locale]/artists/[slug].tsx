@@ -14,6 +14,7 @@ import ArtistSupportCallout from '../../../components/artists/ArtistSupportCallo
 import { buildPageStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
 import type { Locale } from '../../../lib/i18n';
 import { getSiteConfig } from '../../../data/siteConfig';
+import { isArtistSupportOpen } from '../../../lib/artistSupport/open';
 import {
   SUPPORTED_ARTISTS,
   getSupportedArtist,
@@ -29,13 +30,15 @@ interface ArtistPageProps {
   locale: Locale;
   artist: ArtistPageData;
   works: PortfolioItem[];
+  /** 빌드 시점의 오픈 여부(lib/artistSupport/open.ts). 정적 페이지라 값이 박히며, 플래그를 바꾸면 재배포로 반영된다. */
+  supportOpen: boolean;
 }
 
 const LINK_LABELS: Record<ArtistLinkKey, string> = {
   instagram: 'Instagram', youtube: 'YouTube', spotify: 'Spotify', melon: '멜론', bandcamp: 'Bandcamp', site: '공식 사이트',
 };
 
-const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works }) => {
+const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works, supportOpen }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const links = Object.entries(artist.links) as [ArtistLinkKey, string][];
@@ -122,11 +125,28 @@ const ArtistPage: NextPageWithLayout<ArtistPageProps> = ({ locale, artist, works
               artist={artist}
               locale={locale}
               kakaoUrl={siteConfig.contact.kakaoUrl}
+              supportOpen={supportOpen}
               labels={{
                 title: t('artists.detail.supportTitle'),
                 pending: t('artists.detail.supportPending'),
                 pendingBody: t('artists.detail.supportPendingBody'),
                 pendingLabel: t('artists.detail.supportPendingLabel'),
+                tierTitle: t('artists.detail.tierTitle'),
+                shareNote: t('artists.detail.shareNote'),
+                perMonth: t('artists.detail.perMonth'),
+                nameLabel: t('artists.detail.form.name'),
+                emailLabel: t('artists.detail.form.email'),
+                phoneLabel: t('artists.detail.form.phone'),
+                displayNameLabel: t('artists.detail.form.displayName'),
+                displayNameHint: t('artists.detail.form.displayNameHint'),
+                consentLabel: t('artists.detail.form.consent'),
+                submit: t('artists.detail.form.submit'),
+                submitting: t('artists.detail.form.submitting'),
+                agreeNote: t('artists.detail.form.agreeNote'),
+                supportersTitle: t('artists.detail.supportersTitle'),
+                supportersCount: t('artists.detail.supportersCount'),
+                supportersEmpty: t('artists.detail.supportersEmpty'),
+                errorGeneric: t('artists.detail.form.errorGeneric'),
               }}
             />
           </div>
@@ -165,7 +185,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   });
   return buildPageStaticProps(
     locale,
-    { artist: toArtistPageData(artist), works },
+    { artist: toArtistPageData(artist), works, supportOpen: isArtistSupportOpen() },
     { revalidate: 86400, i18nSections: ['artists', 'portfolio'] },
   );
 };
