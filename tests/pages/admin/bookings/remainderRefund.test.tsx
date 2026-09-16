@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/bookings/o1' }) }));
+jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/bookings/o1', pathname: '/admin/bookings/[id]' }) }));
 jest.mock('../../../../components/admin/bookingActions', () => ({
   refundBooking: jest.fn(),
   resendBookingNotification: jest.fn(),

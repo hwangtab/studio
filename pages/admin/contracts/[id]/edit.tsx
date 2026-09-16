@@ -7,6 +7,7 @@ import ContractForm, {
   toContractPayload,
   type ContractFormValues,
 } from '../../../../components/admin/ContractForm';
+import { AdminShell } from '../../../../components/admin/AdminShell';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { contractToFormValues } from '../../../../lib/contracts/form-values';
@@ -121,16 +122,14 @@ export default function EditContractPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-3xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-primary p-6 md:p-8">
-              <h1 className="text-2xl md:text-3xl font-bold text-white">계약 수정</h1>
-              <p className="text-white/80 mt-2">
-                저장하면 계약 본문이 새로 작성됩니다. 발송 전에만 수정할 수 있습니다.
-              </p>
-            </div>
-
+      <AdminShell
+        title="계약 수정"
+        description="저장하면 계약 본문이 새로 작성됩니다. 발송 전에만 수정할 수 있습니다."
+        width="narrow"
+        backHref={`/admin/contracts/${contractId}`}
+        backLabel="계약 상세"
+      >
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 md:p-8">
               {specialTermsUnreadable && (
                 <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
@@ -150,8 +149,7 @@ export default function EditContractPage({
               />
             </div>
           </div>
-        </div>
-      </main>
+      </AdminShell>
     </>
   );
 }

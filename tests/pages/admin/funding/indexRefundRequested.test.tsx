@@ -6,7 +6,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/funding' }) }));
+jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), asPath: '/admin/funding', pathname: '/admin/funding' }) }));
 jest.mock('../../../../components/admin/fundingActions', () => ({ createManualPledge: jest.fn() }));
 jest.mock('../../../../components/admin/contractActions', () => ({ logoutAdmin: jest.fn() }));
 // admin-auth는 iron-session(ESM)을 끌고 들어온다.

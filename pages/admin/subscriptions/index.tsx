@@ -3,7 +3,7 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
-import { logoutAdmin } from '../../../components/admin/contractActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { getDb } from '../../../db/client';
 import { subscriptionPayments } from '../../../db/schema';
@@ -96,87 +96,78 @@ export default function AdminSubscriptionsPage({ subscriptions, truncated }: Adm
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">구독 관리</h1>
-            <div className="flex gap-2">
-              <Link href="/admin/subscriptions/new" passHref>
-                <Button light>레슨 구독 만들기</Button>
-              </Link>
-              <Link href="/admin" passHref>
-                <Button light variant="outline">관리자 홈</Button>
-              </Link>
-              <Button light variant="ghost" onClick={() => logoutAdmin()}>
-                로그아웃
-              </Button>
-            </div>
+      <AdminShell
+        title="구독 관리"
+        width="wide"
+        actions={
+          <Link href="/admin/subscriptions/new" passHref>
+            <Button light>레슨 구독 만들기</Button>
+          </Link>
+        }
+      >
+        {truncated && (
+          <div className="mb-4 p-3 bg-amber-50 text-amber-800 rounded-lg text-sm">
+            최근 {LIST_LIMIT}건만 표시됩니다. 오래된 구독은 목록에서 잘렸습니다.
           </div>
+        )}
 
-          {truncated && (
-            <div className="mb-4 p-3 bg-amber-50 text-amber-800 rounded-lg text-sm">
-              최근 {LIST_LIMIT}건만 표시됩니다. 오래된 구독은 목록에서 잘렸습니다.
-            </div>
-          )}
-
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
-                  <tr>
-                    <th className="px-4 py-3 text-left">종류</th>
-                    <th className="px-4 py-3 text-left">고객</th>
-                    <th className="px-4 py-3 text-left">상태</th>
-                    <th className="px-4 py-3 text-left">다음 결제일</th>
-                    <th className="px-4 py-3 text-right">미납 회차</th>
-                    <th className="px-4 py-3 text-right">금액</th>
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 text-gray-500 text-xs uppercase">
+                <tr>
+                  <th className="px-4 py-3 text-left">종류</th>
+                  <th className="px-4 py-3 text-left">고객</th>
+                  <th className="px-4 py-3 text-left">상태</th>
+                  <th className="px-4 py-3 text-left">다음 결제일</th>
+                  <th className="px-4 py-3 text-right">미납 회차</th>
+                  <th className="px-4 py-3 text-right">금액</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {subscriptions.map((sub) => (
+                  <tr key={sub.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3">
+                      <Link href={`/admin/subscriptions/${sub.id}`} className="text-primary hover:underline">
+                        {KIND_LABELS[sub.kind] ?? sub.kind}
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="font-medium text-gray-900">{sub.customerName}</div>
+                      <div className="text-gray-500 text-xs">{sub.customerPhone}</div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_CLASS[sub.status]}`}
+                      >
+                        {STATUS_LABELS[sub.status] ?? sub.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600">{nextBillingLabel(sub)}</td>
+                    <td className="px-4 py-3 text-right">
+                      {sub.failedCount > 0 ? (
+                        <span className="text-red-600 font-medium">{sub.failedCount}</span>
+                      ) : (
+                        <span className="text-gray-500">-</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right font-medium">
+                      {formatPriceAmount(sub.totalAmount)}원
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {subscriptions.map((sub) => (
-                    <tr key={sub.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3">
-                        <Link href={`/admin/subscriptions/${sub.id}`} className="text-primary hover:underline">
-                          {KIND_LABELS[sub.kind] ?? sub.kind}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-gray-900">{sub.customerName}</div>
-                        <div className="text-gray-500 text-xs">{sub.customerPhone}</div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span
-                          className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_CLASS[sub.status]}`}
-                        >
-                          {STATUS_LABELS[sub.status] ?? sub.status}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-gray-600">{nextBillingLabel(sub)}</td>
-                      <td className="px-4 py-3 text-right">
-                        {sub.failedCount > 0 ? (
-                          <span className="text-red-600 font-medium">{sub.failedCount}</span>
-                        ) : (
-                          <span className="text-gray-500">-</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-right font-medium">
-                        {formatPriceAmount(sub.totalAmount)}원
-                      </td>
-                    </tr>
-                  ))}
-                  {subscriptions.length === 0 && (
-                    <tr>
-                      <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
-                        구독이 없습니다.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                ))}
+                {subscriptions.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                      구독이 없습니다.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
-      </main>
+      </AdminShell>
     </>
   );
 }

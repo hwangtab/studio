@@ -7,9 +7,9 @@ import { useRouter } from 'next/router';
 import {
   copyToClipboard,
   downloadContractPdf,
-  logoutAdmin,
   mutateContract,
 } from '../../../components/admin/contractActions';
+import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { TextInput } from '../../../components/ui/Field';
 import { getDb } from '../../../db/client';
@@ -203,19 +203,20 @@ export default function AdminContractsPage({
     setNotice(copied ? '서명 링크를 복사했습니다.' : '링크 복사에 실패했습니다.');
   };
 
-  const handleLogout = async () => {
-    await logoutAdmin();
-    await router.replace('/admin/login');
-  };
-
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
-        <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
-          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h1>
-          <p className="text-gray-600">{error}</p>
-        </div>
-      </div>
+      <>
+        <Head>
+          <title>계약 관리 | Studio NOL</title>
+          <meta name="robots" content="noindex, nofollow" />
+        </Head>
+        <AdminShell title="계약 관리" width="wide">
+          <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md mx-auto text-center">
+            <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h1>
+            <p className="text-gray-600">{error}</p>
+          </div>
+        </AdminShell>
+      </>
     );
   }
 
@@ -226,24 +227,17 @@ export default function AdminContractsPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-            <div className="bg-primary p-6 md:p-8 flex flex-wrap items-start justify-between gap-4">
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold text-white">계약 관리</h1>
-                <p className="text-white/80 mt-2">전자계약 현황을 확인하고 관리합니다.</p>
-              </div>
-              <div className="flex gap-2">
-                <Link href="/admin/contracts/new" passHref>
-                  <Button light variant="secondary">새 계약 작성</Button>
-                </Link>
-                <Button variant="outline" className="border-white/40 text-white hover:bg-white/10 dark:border-white/40 dark:text-white dark:hover:border-white/40" onClick={handleLogout}>
-                  로그아웃
-                </Button>
-              </div>
-            </div>
-
+      <AdminShell
+        title="계약 관리"
+        description="전자계약 현황을 확인하고 관리합니다."
+        width="wide"
+        actions={
+          <Link href="/admin/contracts/new" passHref>
+            <Button light>새 계약 작성</Button>
+          </Link>
+        }
+      >
+        <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 md:p-8">
               {notice && (
                 <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
@@ -451,8 +445,7 @@ export default function AdminContractsPage({
               )}
             </div>
           </div>
-        </div>
-      </main>
+      </AdminShell>
     </>
   );
 }

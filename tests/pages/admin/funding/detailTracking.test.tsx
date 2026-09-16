@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn() }) }));
+jest.mock('next/router', () => ({ useRouter: () => ({ replace: jest.fn(), pathname: '/admin/funding/[id]' }) }));
 jest.mock('../../../../components/admin/fundingActions', () => ({ patchPledge: jest.fn() }));
 // admin-auth는 iron-session(ESM)을 끌고 들어온다 — getServerSideProps는 이 테스트 대상이 아니다.
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminRequest: jest.fn() }));
