@@ -2,9 +2,9 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import PriceBreakdown from './PriceBreakdown';
-import TossPaymentWidget from './TossPaymentWidget';
+import { useTossPaymentWidgets } from './useTossPaymentWidgets';
 import { Button } from '../ui/Button';
-import { computeAmounts, type OrderAmounts } from '../../lib/booking/amounts';
+import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
 import { kstDateString } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
@@ -19,7 +19,7 @@ interface BookingWizardProps {
   products: SessionProduct[];
 }
 
-type Step = 1 | 2 | 3 | 4;
+type Step = 1 | 2 | 3;
 
 
 /** 예약 API 페이로드 — 서버에 금액을 절대 보내지 않는다(서버가 SSOT로 재계산). */
@@ -57,14 +57,6 @@ const formatOrderName = (nameKo: string, date: string, startHour: number): strin
   const [, monthStr, dayStr] = date.split('-');
   const hh = String(startHour).padStart(2, '0');
   return `${nameKo} (${Number(monthStr)}/${Number(dayStr)} ${hh}:00)`;
-};
-
-/** 남은 선점 시간을 "12분 3초"로. 1분 미만이면 초만 보여 촉박함이 드러나게 한다. */
-const formatHoldLeft = (ms: number): string => {
-  const total = Math.ceil(ms / 1000);
-  const m = Math.floor(total / 60);
-  const sec = total % 60;
-  return m > 0 ? `${m}분 ${sec}초` : `${sec}초`;
 };
 
 export default function BookingWizard({ service, products }: BookingWizardProps) {
@@ -235,19 +227,19 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   // Step 4: 결제 — 표시 금액은 서버가 POST 응답으로 돌려준 값(SSOT)만 쓴다.
   // step 1의 amounts(클라이언트 재계산)는 진행 중 미리보기용일 뿐, 실제 청구액과
   // 드리프트가 생길 수 있어(예: 서버 반올림 규칙 변경) 결제 단계엔 쓰지 않는다.
-  const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; amounts: OrderAmounts } | null>(null);
   /**
-   * 선점이 풀리는 시각(클라이언트 기준 epoch ms).
+   * 결제위젯을 **예약자 정보 폼 안에** 띄운다. 예전에는 주문을 만든 뒤 4단계 결제 화면을
+   * 따로 그렸고, 거기서 선점 카운트다운을 보여 줬다.
    *
-   * 주문을 만들면 서버가 그 슬롯을 PENDING_HOLD_SECONDS 동안만 잡아 둔다. 고객이 결제창을
-   * 오래 열어두면 토스 인증까지 마친 뒤 confirm에서 거부당하고, 카드에는 승인 대기만 남은
-   * 채 이유를 알 수 없었다 — 화면에 타이머도 문구도 없었기 때문이다.
+   * 카운트다운이 하던 말은 그대로 남긴다 — 다만 **시작하기 전에** 한다. 결제창을 열고 나면
+   * 고객은 토스 화면에 있어서 우리 타이머를 볼 수 없다. "이 시간대를 15분간 잡아 둡니다"는
+   * 누르기 전에 알아야 행동이 달라지는 정보다.
    *
-   * 주문 생성 직후 클라이언트 시계로 기한을 잡고 같은 시계로 남은 시간을 센다. 두 값이
-   * 한 시계에서 나오므로 기기 시계가 어긋나 있어도 카운트다운은 정확하다.
+   * 초기 금액은 화면의 추정치이고, **청구는 서버가 돌려준 금액으로** 연다(handleSubmit).
    */
-  const [holdExpiresAt, setHoldExpiresAt] = useState<number | null>(null);
-  const [holdRemainingMs, setHoldRemainingMs] = useState<number | null>(null);
+  const {
+    methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
+  } = useTossPaymentWidgets(amounts.totalAmount);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -290,12 +282,17 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
         typeof data.vatAmount === 'number' &&
         typeof data.totalAmount === 'number'
       ) {
-        setConfirmedOrder({
-          orderNo: data.orderNo,
-          amounts: { itemAmount: data.itemAmount, vatAmount: data.vatAmount, totalAmount: data.totalAmount },
+        // 슬롯을 잡아 둔 채로 곧바로 결제창을 연다. 금액은 **서버가 돌려준 값**으로 맞춘다.
+        const origin = window.location.origin;
+        await requestPayment({
+          orderId: data.orderNo,
+          orderName: formatOrderName(selectedProduct.nameKo, date, selectedStartHour),
+          customerName: customerName.trim(),
+          customerEmail: customerEmail.trim(),
+          amount: data.totalAmount,
+          successUrl: `${origin}/ko/booking/success`,
+          failUrl: `${origin}/ko/booking/fail?service=${encodeURIComponent(service)}`,
         });
-        setHoldExpiresAt(Date.now() + PENDING_HOLD_SECONDS * 1000);
-        setStep(4);
         return;
       }
 
@@ -308,24 +305,22 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
 
       // 400(입력 오류) · 429(요청 과다) 등 — 현재 단계(정보 입력)에 메시지로 표시.
       setSubmitError(data.message ?? '예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
-    } catch {
-      setSubmitError('네트워크 오류로 예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+    } catch (err) {
+      /**
+       * 결제창을 닫은 것은 오류가 아니다. 주문은 pending으로 남고 슬롯도 잡혀 있는데,
+       * 다시 제출하면 서버가 **같은 고객의 세션 pending을 먼저 만료시키고** 새로 만든다
+       * (lib/booking/service.ts의 자가 선점 해제) — 자기 홀드에 자기가 막히지 않는다.
+       */
+      const code = (err as { code?: string } | null)?.code;
+      if (code === 'NEED_AGREEMENT' || code === 'NEED_CARD_PAYMENT_DETAIL') {
+        setSubmitError('결제 수단과 약관 동의를 확인해 주세요.');
+      } else if (code !== 'USER_CANCEL' && code !== 'PAY_PROCESS_CANCELED') {
+        setSubmitError('네트워크 오류로 예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      }
     } finally {
       setSubmitting(false);
     }
   };
-
-  // 선점 카운트다운. 4단계에 있을 때만 돌리고, 0에 닿으면 멈춘다.
-  useEffect(() => {
-    if (step !== 4 || holdExpiresAt === null) {
-      setHoldRemainingMs(null);
-      return;
-    }
-    const tick = () => setHoldRemainingMs(Math.max(0, holdExpiresAt - Date.now()));
-    tick();
-    const id = window.setInterval(tick, 1000);
-    return () => window.clearInterval(id);
-  }, [step, holdExpiresAt]);
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
@@ -335,7 +330,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
       <h1 className="mt-3 typo-page-title">
         {selectedProduct.nameKo} 온라인 예약
       </h1>
-      <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 4</p>
+      <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 3</p>
 
       {step === 1 && (
         <section aria-labelledby="booking-step1-heading">
@@ -562,6 +557,33 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
               </p>
             )}
 
+            {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
+                계약된 수단이 늘면 그대로 따라오고, 갈라지면 화면과 실제가 어긋난다. */}
+            <div className="pt-2">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
+              {paymentError ? (
+                <div className="mt-2">
+                  <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                  <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+                </div>
+              ) : (
+                <>
+                  <div id={methodsId} />
+                  <div id={agreementId} />
+                </>
+              )}
+            </div>
+
+            {/* 예전에는 결제 화면에서 남은 시간을 세어 보여 줬다. 결제창을 열고 나면 고객은
+                토스 화면에 있어서 그 타이머를 볼 수 없다 — 누르기 전에 말해야 행동이 달라진다. */}
+            <p
+              role="status"
+              className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
+            >
+              결제를 시작하면 이 시간대를 <strong>{Math.round(PENDING_HOLD_SECONDS / 60)}분간</strong> 잡아 둡니다.
+              그 안에 결제를 마치지 않으면 다시 열려 다른 분이 예약할 수 있습니다.
+            </p>
+
             {submitError && (
               <p role="alert" className="text-sm text-red-600 dark:text-red-400">
                 {submitError}
@@ -572,65 +594,15 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
               <Button type="button" variant="outline" onClick={() => setStep(2)}>
                 이전
               </Button>
-              <Button type="submit" disabled={submitting} fullWidth>
-                {submitting ? '처리 중…' : '예약 신청'}
+              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 슬롯만 잡히고 결제창은 안 열린다. */}
+              <Button type="submit" disabled={submitting || !paymentReady} fullWidth>
+                {submitting ? '처리 중…' : '결제하기'}
               </Button>
             </div>
           </form>
         </section>
       )}
 
-      {step === 4 && confirmedOrder && selectedStartHour !== null && (
-        <section aria-labelledby="booking-step4-heading">
-          <h2 id="booking-step4-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
-            4. 결제
-          </h2>
-
-          {holdRemainingMs !== null && (
-            holdRemainingMs > 0 ? (
-              <p
-                className="mb-4 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
-                role="status"
-              >
-                결제까지 <strong>{formatHoldLeft(holdRemainingMs)}</strong> 남았습니다.
-                시간이 지나면 이 시간대가 다시 열려 다른 분이 예약할 수 있습니다.
-              </p>
-            ) : (
-              <div
-                className="mb-4 rounded-lg border border-red-300 bg-red-50 p-3 text-sm text-red-900 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200"
-                role="alert"
-              >
-                <strong>자리를 잡아둔 시간이 지났습니다.</strong> 다른 분이 먼저 예약했을 수
-                있으니, 시간대를 다시 선택해 주세요.
-                <span className="mt-2 block">
-                  <Button type="button" variant="outline" onClick={() => { setConfirmedOrder(null); setHoldExpiresAt(null); setStep(2); }}>
-                    시간대 다시 선택
-                  </Button>
-                </span>
-              </div>
-            )
-          )}
-
-          <div className="mb-4">
-            <PriceBreakdown amounts={confirmedOrder.amounts} />
-          </div>
-
-          <TossPaymentWidget
-            orderNo={confirmedOrder.orderNo}
-            amount={confirmedOrder.amounts.totalAmount}
-            orderName={formatOrderName(selectedProduct.nameKo, date, selectedStartHour)}
-            customerName={customerName}
-            customerEmail={customerEmail}
-            service={service}
-          />
-
-          <div className="mt-4">
-            <Button type="button" variant="outline" onClick={() => setStep(3)}>
-              ← 정보 수정
-            </Button>
-          </div>
-        </section>
-      )}
     </main>
   );
 }
