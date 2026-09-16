@@ -378,3 +378,51 @@ describe('middleware bracket path rejection (non-production)', () => {
     expect(response.headers.get('location')).toBeNull();
   });
 });
+
+/**
+ * 리워드 내려받기는 우리 API로 POST한 뒤 **R2 서명 주소로 302**한다. 폼 제출의 리디렉트
+ * 목적지도 `form-action`에 걸리기 때문에(크롬·사파리는 막고 파이어폭스는 통과시킨다),
+ * `'self'`만 두면 후원자가 파일을 못 받는다. 그런데 서버는 그 전에 `downloaded_at`을 찍은
+ * 뒤라 **셀프 취소까지 함께 잃는다** — 링크를 폼으로 바꾸면서 생긴 구멍이다.
+ *
+ * 열되 **정확히 우리 버킷 오리진 하나만** 연다. 와일드카드로 R2 전체를 열면 이 지시자가
+ * 막으려던 것(폼을 남의 주소로 보내기)이 다시 열린다.
+ */
+describe('form-action — 내려받기 302 목적지', () => {
+  const originalEnv = process.env;
+  afterAll(() => { process.env = originalEnv; });
+
+  const cspFor = async (env: Record<string, string | undefined>): Promise<string> => {
+    const { middleware, NextRequest } = await loadMiddleware({
+      NEXT_PUBLIC_SITE_URL: 'https://www.studionol.co.kr',
+      ...env,
+    });
+    const res = middleware(new NextRequest('https://www.studionol.co.kr/ko/funding/success', {
+      headers: { 'accept-language': 'ko' },
+    }));
+    return res.headers.get('Content-Security-Policy') ?? '';
+  };
+
+  it('저장소 오리진을 form-action에 넣는다 — 경로 없이 오리진만', async () => {
+    const csp = await cspFor({ R2_ACCOUNT_ENDPOINT: 'https://acct123.r2.cloudflarestorage.com' });
+    expect(csp).toContain("form-action 'self' https://acct123.r2.cloudflarestorage.com");
+    // 버킷 경로까지 붙이지 않는다 — 오리진 단위 지시자다.
+    expect(csp).not.toContain('r2.cloudflarestorage.com/');
+  });
+
+  it('와일드카드로 R2 전체를 열지 않는다', async () => {
+    const csp = await cspFor({ R2_ACCOUNT_ENDPOINT: 'https://acct123.r2.cloudflarestorage.com' });
+    expect(csp).not.toContain('*.r2.cloudflarestorage.com');
+  });
+
+  it('설정이 없으면 예전대로 self만 — 빈 값을 흘리지 않는다', async () => {
+    const csp = await cspFor({ R2_ACCOUNT_ENDPOINT: undefined });
+    expect(csp).toContain("form-action 'self';");
+  });
+
+  it('주소가 망가져 있어도 CSP를 깨뜨리지 않는다', async () => {
+    const csp = await cspFor({ R2_ACCOUNT_ENDPOINT: '이건 주소가 아니다' });
+    expect(csp).toContain("form-action 'self';");
+    expect(csp).toContain("default-src 'self'");
+  });
+});
