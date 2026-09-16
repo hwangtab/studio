@@ -45,12 +45,19 @@ export const createSubscription = async (
   }
 };
 
-export type SubscriptionMutation = 'charge' | 'cancel' | 'pause' | 'resume' | 'card_change_link' | 'resend_setup';
+export type SubscriptionMutation =
+  | 'charge'
+  | 'cancel'
+  | 'pause'
+  | 'resume'
+  | 'card_change_link'
+  | 'resend_setup'
+  | 'refund_payment';
 
 export const mutateSubscription = async (
   id: string,
   action: SubscriptionMutation,
-  payload?: { reason?: string },
+  payload?: { reason?: string; paymentId?: string; amount?: number },
 ): Promise<SubscriptionActionResult & { url?: string }> => {
   try {
     const response = await fetch(`/api/admin/subscriptions/${id}`, {
@@ -83,6 +90,8 @@ const readMessageFallback = (action: SubscriptionMutation): string => {
       return '카드 변경 링크 발급에 실패했습니다.';
     case 'resend_setup':
       return '등록 링크 재발송에 실패했습니다.';
+    case 'refund_payment':
+      return '회차 환불에 실패했습니다.';
     default:
       return '요청을 처리하지 못했습니다.';
   }

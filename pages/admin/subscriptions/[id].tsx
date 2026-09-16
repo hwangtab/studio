@@ -10,8 +10,9 @@ import {
   type SubscriptionActionResult,
 } from '../../../components/admin/subscriptionActions';
 import { Button } from '../../../components/ui/Button';
-import { Field, TextArea } from '../../../components/ui/Field';
+import { Field, TextArea, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
+import { listSubscriptionRefundSummary, type SubscriptionRefundSummary } from '../../../lib/billing/refund';
 import { getSubscriptionWithDetails } from '../../../lib/billing/service';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
@@ -31,6 +32,8 @@ interface AdminSubscriptionDetailPageProps {
   subscription: SerializedSubscription;
   billingKey: SerializedBillingKey | null;
   payments: SerializedSubscriptionPayment[];
+  /** 결제 완료 회차의 환불 합계·잔액. 회차 표의 환불 칸과 환불 폼의 상한이 여기서 온다. */
+  refundSummary: SubscriptionRefundSummary[];
   contract: SerializedSubscriptionContract | null;
 }
 
@@ -56,11 +59,18 @@ export const getServerSideProps: GetServerSideProps<AdminSubscriptionDetailPageP
     return { notFound: true };
   }
 
+  const refundSummary = await listSubscriptionRefundSummary(id).catch((error: unknown) => {
+    // 요약이 없어도 상세는 열려야 한다 — 환불 칸만 '-'로 비고 환불 폼은 잔액을 모른 채 숨긴다.
+    console.error('[admin/subscriptions/[id]] Failed to load refund summary:', error);
+    return [] as SubscriptionRefundSummary[];
+  });
+
   return {
     props: {
       subscription: serializeSubscription(details.subscription),
       billingKey: details.billingKey ? serializeBillingKey(details.billingKey) : null,
       payments: details.payments.map(serializeSubscriptionPayment),
+      refundSummary,
       contract: details.contract,
     },
   };
@@ -112,6 +122,7 @@ export default function AdminSubscriptionDetailPage({
   subscription,
   billingKey,
   payments,
+  refundSummary,
   contract,
 }: AdminSubscriptionDetailPageProps) {
   const router = useRouter();
@@ -169,6 +180,43 @@ export default function AdminSubscriptionDetailPage({
     }
     if (!window.confirm('이 구독을 해지할까요? 다음 결제일부터 청구가 멈춥니다.')) return;
     await run(() => mutateSubscription(subscription.id, 'cancel', { reason }));
+  };
+
+  const refundByCycle = new Map(refundSummary.map((r) => [r.subscriptionPaymentId, r]));
+  const [refundTarget, setRefundTarget] = useState<string | null>(null);
+  const [refundAmount, setRefundAmount] = useState('');
+  const [refundReason, setRefundReason] = useState('');
+  const [refundError, setRefundError] = useState<string | null>(null);
+
+  const openRefund = (paymentId: string) => {
+    const summary = refundByCycle.get(paymentId);
+    setRefundTarget(paymentId);
+    setRefundAmount(summary ? String(summary.remainingAmount) : '');
+    setRefundReason('');
+    setRefundError(null);
+  };
+
+  const handleRefund = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setRefundError(null);
+    if (!refundTarget) return;
+    const summary = refundByCycle.get(refundTarget);
+    const amount = Number(refundAmount);
+    if (!Number.isInteger(amount) || amount <= 0 || (summary && amount > summary.remainingAmount)) {
+      setRefundError(`환불 금액은 1원 이상 ${summary ? formatPriceAmount(summary.remainingAmount) : ''}원 이하의 정수여야 합니다.`);
+      return;
+    }
+    const reason = refundReason.trim();
+    if (reason === '') {
+      setRefundError('환불 사유를 입력해 주세요.');
+      return;
+    }
+    if (!window.confirm(`${formatPriceAmount(amount)}원을 고객 카드로 환불합니다. 구독 상태는 바뀌지 않습니다. 계속할까요?`)) return;
+    await run(async () => {
+      const result = await mutateSubscription(subscription.id, 'refund_payment', { paymentId: refundTarget, amount, reason });
+      if (result.ok) setRefundTarget(null);
+      return result;
+    });
   };
 
   const canCharge = subscription.status === 'active' || subscription.status === 'past_due' || subscription.status === 'paused';
@@ -308,8 +356,10 @@ export default function AdminSubscriptionDetailPage({
                         <th className="px-2 py-2 text-left">시도</th>
                         <th className="px-2 py-2 text-left">상태</th>
                         <th className="px-2 py-2 text-right">금액</th>
+                        <th className="px-2 py-2 text-right">환불</th>
                         <th className="px-2 py-2 text-left">토스 코드</th>
                         <th className="px-2 py-2 text-left">시도 일시</th>
+                        <th className="px-2 py-2" />
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -325,19 +375,74 @@ export default function AdminSubscriptionDetailPage({
                             </span>
                           </td>
                           <td className="px-2 py-2 text-right">{formatPriceAmount(p.amount)}원</td>
+                          <td className="px-2 py-2 text-right text-gray-500">
+                            {(() => {
+                              const r = refundByCycle.get(p.id);
+                              return r && r.refundedAmount > 0 ? `${formatPriceAmount(r.refundedAmount)}원` : '-';
+                            })()}
+                          </td>
                           <td className="px-2 py-2 text-gray-500">
                             {p.tossCode ? `${p.tossCode}${p.tossMessage ? ` — ${p.tossMessage}` : ''}` : '-'}
                           </td>
                           <td className="px-2 py-2 text-gray-500">{formatKstDateTimeFull(p.attemptedAt)}</td>
+                          <td className="px-2 py-2 text-right">
+                            {(() => {
+                              const r = refundByCycle.get(p.id);
+                              if (!r || r.remainingAmount <= 0) return null;
+                              return (
+                                <Button light variant="outline" size="sm" disabled={busy} onClick={() => openRefund(p.id)}>
+                                  환불
+                                </Button>
+                              );
+                            })()}
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               )}
-              <p className="mt-4 text-xs text-gray-500">
-                회차 환불은 토스 콘솔에서 직접 취소해 주세요. 웹훅이 취소 상태를 자동으로 동기화합니다.
-              </p>
+              {refundTarget && (() => {
+                const r = refundByCycle.get(refundTarget);
+                return (
+                  <form onSubmit={handleRefund} className="mt-4 p-4 bg-gray-50 rounded-lg space-y-3 max-w-md">
+                    <p className="text-sm font-medium text-gray-900">
+                      {r?.orderNo} 회차 환불 (잔액 {r ? formatPriceAmount(r.remainingAmount) : '-'}원)
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      고객 카드로 되돌립니다. 구독과 회차 상태는 바뀌지 않습니다 — 이용을 끝내려면 해지를 따로 처리해 주세요.
+                    </p>
+                    <Field id="refund-amount" label="환불 금액(원)" className={lightOnlyField}>
+                      <TextInput
+                        type="number"
+                        inputMode="numeric"
+                        min={1}
+                        max={r?.remainingAmount}
+                        value={refundAmount}
+                        onChange={(e) => setRefundAmount(e.target.value)}
+                        light className="text-sm"
+                      />
+                    </Field>
+                    <Field id="refund-reason" label="환불 사유" error={refundError ?? undefined} className={lightOnlyField}>
+                      <TextArea
+                        value={refundReason}
+                        onChange={(e) => setRefundReason(e.target.value)}
+                        rows={2}
+                        placeholder="예: 해지 후 뒤늦게 승인된 회차"
+                        light className="min-h-0 text-sm"
+                      />
+                    </Field>
+                    <div className="flex gap-2">
+                      <Button light type="submit" disabled={busy}>
+                        환불 실행
+                      </Button>
+                      <Button light type="button" variant="ghost" disabled={busy} onClick={() => setRefundTarget(null)}>
+                        닫기
+                      </Button>
+                    </div>
+                  </form>
+                );
+              })()}
             </div>
           </div>
 

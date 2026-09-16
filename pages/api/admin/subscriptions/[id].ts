@@ -22,9 +22,10 @@ import {
   subscriptionManageUrl,
   subscriptionSetupUrl,
 } from '../../../../lib/billing/email';
+import { refundSubscriptionPayment } from '../../../../lib/billing/refund';
 import { generateSetupToken, SETUP_TOKEN_TTL_SECONDS } from '../../../../lib/billing/token';
 
-const ACTIONS = ['charge', 'cancel', 'pause', 'resume', 'card_change_link', 'resend_setup'] as const;
+const ACTIONS = ['charge', 'cancel', 'pause', 'resume', 'card_change_link', 'resend_setup', 'refund_payment'] as const;
 type Action = (typeof ACTIONS)[number];
 
 const isAction = (value: unknown): value is Action =>
@@ -143,6 +144,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await getDb().update(subscriptions).set({ notificationError }).where(eq(subscriptions.id, id));
       }
       return res.status(200).json({ ok: true, endsAt: endsAt.toISOString() });
+    }
+
+    if (action === 'refund_payment') {
+      const { paymentId, reason, amount } = body;
+      if (typeof paymentId !== 'string' || paymentId.trim() === '') {
+        return res.status(400).json({ ok: false, message: '환불할 회차를 지정해 주세요.' });
+      }
+      const reasonText = typeof reason === 'string' ? reason.trim() : '';
+      if (reasonText === '') {
+        return res.status(400).json({ ok: false, message: '환불 사유를 입력해 주세요.' });
+      }
+      // 금액을 생략하면 잔액 전액. 넘겼으면 정수여야 하고, 상한(잔액)은 서비스가 검사한다.
+      if (amount !== undefined && (typeof amount !== 'number' || !Number.isInteger(amount) || amount <= 0)) {
+        return res.status(400).json({ ok: false, message: '환불 금액은 1원 이상의 정수여야 합니다.' });
+      }
+
+      const result = await refundSubscriptionPayment({
+        subscriptionId: id,
+        subscriptionPaymentId: paymentId,
+        reason: reasonText,
+        amount: typeof amount === 'number' ? amount : undefined,
+        now,
+      });
+      if (!result.ok) {
+        const status = result.code === 'not_found' ? 404 : result.code === 'toss_failed' ? 502 : 409;
+        return res.status(status).json({ ok: false, code: result.code, message: result.message });
+      }
+      return res.status(200).json({ ok: true, refundAmount: result.refundAmount, orderNo: result.orderNo });
     }
 
     if (action === 'pause') {
