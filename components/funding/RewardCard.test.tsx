@@ -62,3 +62,4 @@ describe('모달 연동', () => {
     expect(click.defaultPrevented).toBe(false);
   });
 });
+

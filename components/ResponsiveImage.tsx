@@ -13,6 +13,11 @@ interface ResponsiveImageProps extends React.ImgHTMLAttributes<HTMLImageElement>
   alt: string;
   className?: string;
   containerClassName?: string;
+  /**
+   * 컨테이너에 직접 얹는 스타일. **비율을 그림에서 읽어 넣을 때** 쓴다 — Tailwind의
+   * `aspect-[…]`는 빌드 때 클래스를 보고 만들므로 값이 런타임에 정해지면 적용되지 않는다.
+   */
+  containerStyle?: React.CSSProperties;
   pictureClassName?: string;
   fill?: boolean;
   width?: number;
@@ -29,6 +34,7 @@ const ResponsiveImage = React.memo(({
   alt,
   className = '',
   containerClassName = 'relative block w-full h-full',
+  containerStyle,
   pictureClassName,
   fill = false,
   width,
@@ -62,7 +68,7 @@ const ResponsiveImage = React.memo(({
 
   if (useFill) {
     return (
-      <div className={wrapperClass}>
+      <div className={wrapperClass} style={containerStyle}>
         <div className={`relative w-full h-full ${error ? 'p-8 bg-gray-50 dark:bg-gray-800 flex items-center justify-center' : ''}`}>
           <Image
             src={error ? fallbackSrc : normalizedSrc}

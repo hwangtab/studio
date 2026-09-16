@@ -6,6 +6,7 @@ import { formatPriceAmount } from '../../data/pricing';
 import type { FundingProject, FundingReward } from '../../lib/funding/projects';
 import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
 import { useFocusTrapDialog } from '../../utils/useFocusTrapDialog';
+import { imageAspectRatio } from '../../lib/funding/imageAspect';
 
 interface Props {
   project: FundingProject;
@@ -114,7 +115,8 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 <ResponsiveImage
                   src={reward.image}
                   alt=""
-                  containerClassName="relative mb-5 block aspect-[4/3] w-full overflow-hidden rounded-xl"
+                  containerClassName="relative mb-5 block w-full overflow-hidden rounded-xl"
+                  containerStyle={{ aspectRatio: imageAspectRatio(reward.image) ?? '4 / 3' }}
                   className="object-cover"
                 />
               )}
