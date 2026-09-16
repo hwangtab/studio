@@ -2,10 +2,9 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import PriceBreakdown from './PriceBreakdown';
-import TossPaymentWidget from './TossPaymentWidget';
+import { useTossPaymentWidgets } from './useTossPaymentWidgets';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
-import type { OrderAmounts } from '../../lib/booking/amounts';
 import { CUSTOMER_DRAFT_FIELDS, MIXING_CUSTOMER_DRAFT_KEY } from '../../lib/booking/customerDraft';
 import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingProduct } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
@@ -17,7 +16,7 @@ interface MixingOrderWizardProps {
   initialProductId?: string;
 }
 
-type Step = 1 | 2 | 3;
+type Step = 1 | 2;
 
 
 interface CreateMixingOrderBody {
@@ -124,8 +123,16 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
     });
   }, [draftRestored, customerName, customerPhone, customerEmail, customerNote]);
 
-  // Step 3: 결제 — 표시 금액은 서버가 POST 응답으로 돌려준 값(SSOT)만 쓴다(BookingWizard와 동일 원칙).
-  const [confirmedOrder, setConfirmedOrder] = useState<{ orderNo: string; amounts: OrderAmounts } | null>(null);
+  /**
+   * 결제위젯을 **주문자 정보 폼 안에** 띄운다. 예전에는 주문을 만든 뒤 3단계 결제 화면을
+   * 따로 그렸는데, 거기서 하는 일이 금액 확인과 위젯 렌더뿐이라 화면 하나와 클릭 하나가
+   * 더 있는 셈이었다. 잡아 둘 슬롯도 없어(주문은 24시간 유지) 그 화면이 알려 줄 시한도 없다.
+   *
+   * 초기 금액은 화면의 추정치이고, **청구는 서버가 돌려준 금액으로** 연다(handleSubmit).
+   */
+  const {
+    methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
+  } = useTossPaymentWidgets(amounts.totalAmount);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -163,18 +170,34 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
         typeof data.vatAmount === 'number' &&
         typeof data.totalAmount === 'number'
       ) {
-        setConfirmedOrder({
-          orderNo: data.orderNo,
-          amounts: { itemAmount: data.itemAmount, vatAmount: data.vatAmount, totalAmount: data.totalAmount },
+        // 주문이 만들어졌으면 곧바로 결제창을 연다. 금액은 **서버가 돌려준 값**으로 맞춘다.
+        const origin = window.location.origin;
+        await requestPayment({
+          orderId: data.orderNo,
+          orderName: formatOrderName(selectedProduct.nameKo, songCount),
+          customerName: customerName.trim(),
+          customerEmail: customerEmail.trim(),
+          amount: data.totalAmount,
+          successUrl: `${origin}/ko/booking/success`,
+          failUrl: `${origin}/ko/booking/fail?service=${encodeURIComponent('mixing-mastering')}`,
         });
-        setStep(3);
         return;
       }
 
       // 400(입력 오류) · 429(요청 과다) 등 — 현재 단계(정보 입력)에 메시지로 표시.
       setSubmitError(data.message ?? '주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
-    } catch {
-      setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+    } catch (err) {
+      /**
+       * 결제창을 닫은 것은 오류가 아니다 — 주문은 pending으로 24시간 남고, 다시 누르면
+       * 새로 만들어진다. 빨간 경고를 띄우면 "주문이 실패했다"로 읽혀 멀쩡한 주문을 두고
+       * 이탈한다. 그 밖의 실패만 메시지로 알린다.
+       */
+      const code = (err as { code?: string } | null)?.code;
+      if (code === 'NEED_AGREEMENT' || code === 'NEED_CARD_PAYMENT_DETAIL') {
+        setSubmitError('결제 수단과 약관 동의를 확인해 주세요.');
+      } else if (code !== 'USER_CANCEL' && code !== 'PAY_PROCESS_CANCELED') {
+        setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -186,7 +209,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
         ← 서비스 소개로 돌아가기
       </Link>
       <h1 className="mt-3 typo-page-title">믹싱·마스터링 온라인 주문</h1>
-      <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 3</p>
+      <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 2</p>
 
       {step === 1 && (
         <section aria-labelledby="mixing-step1-heading">
@@ -356,6 +379,27 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               </p>
             )}
 
+            {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
+                계약된 수단이 늘면 그대로 따라오고, 갈라지면 화면과 실제가 어긋난다. */}
+            <div className="pt-2">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
+              {paymentError ? (
+                <div className="mt-2">
+                  <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                  <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+                </div>
+              ) : (
+                <>
+                  <div id={methodsId} />
+                  <div id={agreementId} />
+                </>
+              )}
+            </div>
+
+            <p className="text-sm text-gray-600 dark:text-gray-300">
+              결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.
+            </p>
+
             {submitError && (
               <p role="alert" className="text-sm text-red-600 dark:text-red-400">
                 {submitError}
@@ -366,47 +410,15 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               <Button type="button" variant="outline" onClick={() => setStep(1)}>
                 이전
               </Button>
-              <Button type="submit" disabled={submitting} fullWidth>
-                {submitting ? '처리 중…' : '주문 신청'}
+              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. */}
+              <Button type="submit" disabled={submitting || !paymentReady} fullWidth>
+                {submitting ? '처리 중…' : '결제하기'}
               </Button>
             </div>
           </form>
         </section>
       )}
 
-      {step === 3 && confirmedOrder && (
-        <section aria-labelledby="mixing-step3-heading">
-          <h2 id="mixing-step3-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
-            3. 결제
-          </h2>
-
-          {/* 카운트다운 없음 — 믹싱 주문은 잡아 둘 슬롯이 없어 서버가 pending을 24시간
-              (MIXING_PENDING_TTL_SECONDS) 유지한다. 세션 위저드의 15분 안내를 그대로 두면
-              사실과 어긋나 멀쩡한 주문을 "만료됐다"며 다시 신청하게 만든다. */}
-          <p className="mb-4 text-sm text-gray-600 dark:text-gray-300">
-            결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.
-          </p>
-
-          <div className="mb-4">
-            <PriceBreakdown amounts={confirmedOrder.amounts} />
-          </div>
-
-          <TossPaymentWidget
-            orderNo={confirmedOrder.orderNo}
-            amount={confirmedOrder.amounts.totalAmount}
-            orderName={formatOrderName(selectedProduct.nameKo, songCount)}
-            customerName={customerName}
-            customerEmail={customerEmail}
-            service="mixing-mastering"
-          />
-
-          <div className="mt-4">
-            <Button type="button" variant="outline" onClick={() => setStep(2)}>
-              ← 정보 수정
-            </Button>
-          </div>
-        </section>
-      )}
     </main>
   );
 }

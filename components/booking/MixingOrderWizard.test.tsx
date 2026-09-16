@@ -12,6 +12,21 @@ import { MIXING_CUSTOMER_DRAFT_KEY } from '../../lib/booking/customerDraft';
  * 예약은 요청사항, 믹싱은 파일 링크).
  */
 
+/**
+ * 결제위젯은 주문자 정보 폼 안에 떠 있고, 제출은 그 위젯의 `requestPayment`를 부른다.
+ * 무엇을 어떤 금액으로 여는지가 이 화면의 계약이다.
+ */
+const requestPayment = jest.fn().mockResolvedValue(undefined);
+const retryPayment = jest.fn();
+let widgetReady = true;
+let widgetError: string | null = null;
+jest.mock('./useTossPaymentWidgets', () => ({
+  useTossPaymentWidgets: () => ({
+    methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
+    ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
+  }),
+}));
+
 const createOrderResponse = {
   ok: true,
   orderNo: 'SNM-20260915-TEST0001',
@@ -155,5 +170,80 @@ describe('MixingOrderWizard 임시 저장', () => {
     } finally {
       Object.defineProperty(window, 'sessionStorage', { value: original, configurable: true });
     }
+  });
+});
+
+/**
+ * 결제위젯을 **주문자 정보 폼 안에** 두는 구조.
+ *
+ * 예전에는 주문을 만든 뒤 3단계 결제 화면을 따로 그렸는데, 거기서 하는 일이 금액 확인과
+ * 위젯 렌더뿐이라 화면 하나와 클릭 하나가 더 있는 셈이었다. 예약과 달리 잡아 둘 슬롯이
+ * 없어(주문은 24시간 유지) 그 화면이 알려 줄 시한도 없다.
+ */
+describe('폼 안의 결제위젯', () => {
+  afterEach(() => { widgetReady = true; widgetError = null; requestPayment.mockClear(); });
+
+  const fillAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
+    await goToStep2(user);
+    await user.type(screen.getByLabelText(/^이름/), '김고객');
+    await user.type(screen.getByLabelText(/휴대폰/), '010-1111-2222');
+    await user.type(screen.getByLabelText(/이메일/), 'a@b.com');
+    await user.click(screen.getByLabelText(/환불 규정에 동의/));
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+  };
+
+  it('단계가 둘로 줄었다 — 결제 전용 화면이 없다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    expect(screen.getByText('STEP 1 / 2')).toBeInTheDocument();
+    await goToStep2(user);
+    expect(screen.getByText('STEP 2 / 2')).toBeInTheDocument();
+    // 수단 목록·약관 동의를 붙일 자리가 폼 안에 있다.
+    expect(document.getElementById('toss-methods-test')).not.toBeNull();
+    expect(document.getElementById('toss-agreement-test')).not.toBeNull();
+  });
+
+  it('제출하면 서버가 돌려준 금액으로 결제창을 연다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    const payload = requestPayment.mock.calls.at(-1)![0];
+    // 화면 추정치가 아니라 서버 응답(275,000원)으로 연다.
+    expect(payload).toEqual(expect.objectContaining({ orderId: 'SNM-20260915-TEST0001', amount: 275000 }));
+    expect(payload.failUrl).toContain('service=mixing-mastering');
+    expect(payload.successUrl).toContain('/ko/booking/success');
+  });
+
+  /**
+   * 위젯이 아직 안 떴는데 제출되면 **주문만 만들어지고 결제창은 안 열린다** — 고객은
+   * 아무 일도 안 일어난 줄 알고, 우리 쪽에는 결제 없는 pending 주문만 쌓인다.
+   */
+  it('위젯이 준비되기 전에는 제출할 수 없다', async () => {
+    widgetReady = false;
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await goToStep2(user);
+    expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+  });
+
+  it('결제창을 닫으면 오류를 띄우지 않는다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('주문 생성이 실패하면 결제창을 열지 않고 이유를 말한다', async () => {
+    (global.fetch as jest.Mock).mockResolvedValue({
+      ok: false, status: 400, json: async () => ({ ok: false, message: '입력을 확인해 주세요.' }),
+    });
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+    expect(await screen.findByRole('alert')).toHaveTextContent('입력을 확인해 주세요.');
+    expect(requestPayment).not.toHaveBeenCalled();
   });
 });
