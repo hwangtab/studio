@@ -127,7 +127,7 @@ it('환불 요청이 없으면 배지도 배너도 없다', () => {
 it('재고 초과 가능 건은 상태 칸에 배지가, 상단에 배너가 뜬다', () => {
   render(<AdminFundingPage {...baseProps} items={[{ ...ITEM, needsReview: true }]} />);
   expect(screen.getByText('재고확인')).toBeInTheDocument();
-  expect(screen.getByText('웹훅이 되살려 확정한 후원이 1건 있습니다')).toBeInTheDocument();
+  expect(screen.getByText('웹훅이 되살려 확정한 펀딩이 1건 있습니다')).toBeInTheDocument();
   expect(screen.getByText(/재고를 초과했을 수 있습니다/)).toBeInTheDocument();
 });
 

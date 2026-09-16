@@ -71,7 +71,7 @@ describe('토스 승인 URL', () => {
    * 뒀다 승인하거나(hold_expired) 카드사가 거절하면(toss_rejected) 실제 paymentKey가 남는다.
    */
   it('확정 실패도 비밀값 없는 ?e= 로 리다이렉트하고 쿠키를 세우지 않는다', async () => {
-    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'hold_expired', message: '결제 대기 시간이 만료된 후원입니다.' });
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'hold_expired', message: '결제 대기 시간이 만료된 펀딩입니다.' });
     const c = ctx({ paymentKey: 'pk_live_abc', orderId: ORDER_NO, amount: '1' });
     const result = (await c.run()) as { redirect: { destination: string } };
     expect(result.redirect.destination).toBe('/ko/funding/success?e=hold_expired');
@@ -85,7 +85,7 @@ describe('리다이렉트된 실패 화면(?e=)', () => {
   it('코드를 우리 문구로 옮긴다', async () => {
     const result = (await ctx({ e: 'hold_expired' }).run()) as { props: { outcome: string; message: string } };
     expect(result.props.outcome).toBe('error');
-    expect(result.props.message).toBe('결제 대기 시간이 만료된 후원입니다. 다시 후원해 주세요.');
+    expect(result.props.message).toBe('결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.');
   });
 
   it('모르는 코드·형식 밖 코드는 일반 문구 — 쿼리 문자열을 그대로 뿌리지 않는다', async () => {

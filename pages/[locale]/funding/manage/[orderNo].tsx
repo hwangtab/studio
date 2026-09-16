@@ -19,7 +19,7 @@ interface Props {
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
   displayNamePublic: boolean; canEditDisplayName: boolean;
 }
-const STATUS_LABEL: Record<string, string> = { pending: '결제 대기', paid: '후원 확정', partially_refunded: '일부 환불', refunded: '환불 완료', expired: '만료', failed: '결제 실패' };
+const STATUS_LABEL: Record<string, string> = { pending: '결제 대기', paid: '펀딩 확정', partially_refunded: '일부 환불', refunded: '환불 완료', expired: '만료', failed: '결제 실패' };
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
 
 export default function FundingManagePage(p: Props) {
@@ -54,15 +54,15 @@ export default function FundingManagePage(p: Props) {
       // 여기서 즉답해도 화면에는 최대 몇 분 뒤 반영된다 — 그걸 말하지 않으면
       // "철회가 안 됐다"는 문의가 온다.
       setConfirmMessage(json.displayNamePublic
-        ? '후원자 명단에 이름을 공개합니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
-        : '후원자 명단에서 이름을 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
+        ? '서포터 명단에 이름을 공개합니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
+        : '서포터 명단에서 이름을 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
     } catch {
       setDisplayNamePublic(previous); setError('네트워크 오류가 발생했습니다.');
     } finally { setNameBusy(false); }
   };
 
   const cancel = async () => {
-    const confirmText = `후원을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
+    const confirmText = `펀딩을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
     if (!window.confirm(confirmText)) return;
     setBusy(true); setError(null);
     try {
@@ -87,14 +87,14 @@ export default function FundingManagePage(p: Props) {
   };
   return (
     <>
-      <Head><title>후원 확인 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
+      <Head><title>펀딩 확인 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
       <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
             화면인지 알 수 있어야 한다. */}
         <p className="typo-card-meta">스튜디오 놀</p>
-        <h1 className="typo-section-title mt-1">후원 확인</h1>
-        <p className="typo-section-lead mt-3">후원 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있습니다.</p>
+        <h1 className="typo-section-title mt-1">펀딩 확인</h1>
+        <p className="typo-section-lead mt-3">펀딩 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있습니다.</p>
 
         <div className="glass-card mt-8 rounded-2xl p-6 sm:p-8">
           <div className="flex flex-wrap items-center gap-3">
@@ -120,7 +120,7 @@ export default function FundingManagePage(p: Props) {
           <dl className="mt-5 space-y-3">
             {[
               { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">{p.projectTitle}</a> },
-              { k: '리워드', v: `${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 후원 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
+              { k: '리워드', v: `${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 펀딩 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),
               ...(p.shipping ? [{ k: '배송지', v: p.shipping }] : []),
@@ -133,7 +133,7 @@ export default function FundingManagePage(p: Props) {
                       className="h-4 w-4 accent-primary"
                       checked={displayNamePublic}
                       disabled={nameBusy}
-                      aria-label="후원자 명단에 이름 공개"
+                      aria-label="서포터 명단에 이름 공개"
                       onChange={(e) => void updateDisplayName(e.target.checked)}
                     />
                     <span>{displayNamePublic ? '공개' : '비공개'}</span>
@@ -157,7 +157,7 @@ export default function FundingManagePage(p: Props) {
           {p.downloads.length > 0 && (
             <div className="mt-6 space-y-2">
               {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 메일
-                  링크를 긁는 봇이 후원자의 청약철회권을 없애지 못한다. */}
+                  링크를 긁는 봇이 서포터의 청약철회권을 없애지 못한다. */}
               {p.downloads.map((d) => (
                 <form key={d.key} method="post" action="/api/funding/download">
                   <input type="hidden" name="orderNo" value={p.orderNo} />
@@ -176,7 +176,7 @@ export default function FundingManagePage(p: Props) {
           )}
 
           {status === 'paid' && !refundRequested && (p.canCancel
-            ? <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>후원 취소 (전액 환불)</Button>
+            ? <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>펀딩 취소 (전액 환불)</Button>
             : <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>)}
           {confirmMessage && (
             <p role="status" className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-900/60 dark:bg-green-950/40 dark:text-green-300">{confirmMessage}</p>
@@ -186,7 +186,7 @@ export default function FundingManagePage(p: Props) {
           )}
         </div>
 
-        {/* 전자상거래법 제13조 2항 — 계약 성립 뒤 후원자가 도달하는 문서에는 청약철회·환불 조건에
+        {/* 전자상거래법 제13조 2항 — 계약 성립 뒤 서포터가 도달하는 문서에는 청약철회·환불 조건에
             닿는 경로가 있어야 한다. 이 화면은 FundingTrustNotice를 두르지 않아 링크가 없었다.
             공개 목적지라 rel="noreferrer" — 이 URL에는 관리 토큰이 실린다(위 주석 참조). */}
         <p className="typo-card-meta mt-6">

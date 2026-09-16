@@ -49,12 +49,12 @@ const notifyCancelled = async (
 
 export const cancelFundingPledge = async (input: { orderNo: string; requestedBy: 'customer' | 'admin'; reason: string; now: Date }): Promise<FundingCancelOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
-  if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '후원을 찾을 수 없습니다.' };
+  if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
   const pledge = order.fundingPledge;
   const project = getFundingProject(pledge.projectSlug);
   // 부분환불 건은 관리자만 다룰 수 있다 — 남은 금액 계산이 걸려 있어 고객 셀프 취소에 맡기지 않는다.
   if (order.status === 'partially_refunded' && input.requestedBy !== 'admin') {
-    return { ok: false, code: 'invalid_state', message: '일부 환불된 후원은 문의해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '일부 환불된 펀딩은 문의해 주세요.' };
   }
   if (order.status !== 'paid' && !(order.status === 'partially_refunded' && input.requestedBy === 'admin')) {
     return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES.not_paid };
@@ -83,7 +83,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const refundAmount = remainingRefundable(order);
 
   if (pledge.paymentMethod === 'toss' && !payment) {
-    return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 후원입니다. 관리자에게 문의해 주세요.' };
+    return { ok: false, code: 'invalid_state', message: '결제 기록이 없는 펀딩입니다. 관리자에게 문의해 주세요.' };
   }
 
   /**
@@ -106,7 +106,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
     const claim = await db.run(
       sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
     );
-    if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 후원입니다.' };
+    if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 펀딩입니다.' };
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
     return { ok: true, mode: 'recorded', refundAmount };
   }
@@ -127,7 +127,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const claim = await db.run(
     sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}${selfCancelGuard}`,
   );
-  if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 후원입니다.' };
+  if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 펀딩입니다.' };
   const toss = await cancelPayment({
     paymentKey: payment!.paymentKey, cancelReason: input.reason, cancelAmount: refundAmount,
     idempotencyKey: refundIdempotencyKey(order.orderNo, refundAmount),

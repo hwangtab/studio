@@ -167,7 +167,7 @@ it('읽은 뒤 주문이 환불되면 UPDATE가 0행 — 409', async () => {
  * 리워드가 영구히 '미발송'으로 남아 다음 회차 중복 발송 후보가 됐고 delivered_at도 안 찍혀
  * 약관 제13조의 파기 기산점이 생기지 않았다.
  */
-it('partially_refunded 후원도 발송 상태·운송장을 기록할 수 있다', async () => {
+it('partially_refunded 펀딩도 발송 상태·운송장을 기록할 수 있다', async () => {
   await client.execute("UPDATE orders SET status = 'partially_refunded' WHERE id = 'order-1'");
   const r = await call({ action: 'set_fulfillment', fulfillmentStatus: 'delivered', trackingCompany: 'CJ대한통운', trackingNumber: '777' });
   expect(r.status).toBe(200);

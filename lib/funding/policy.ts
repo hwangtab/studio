@@ -63,13 +63,13 @@ export const assessSelfCancel = (input: {
 };
 
 export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true }>['code'], string> = {
-  not_paid: '결제가 확정된 후원만 취소할 수 있습니다.',
+  not_paid: '결제가 확정된 펀딩만 취소할 수 있습니다.',
   project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
   downloaded: '음원을 내려받은 뒤에는 청약철회가 제한됩니다(약관 제8조 2항). 문의해 주세요.',
   // 운영자가 계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
   // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다.
-  offline_payment: '계좌로 받은 후원은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
+  offline_payment: '계좌로 받은 펀딩은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
 };
 
 /**
@@ -91,7 +91,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-15';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-16';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -102,18 +102,18 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
-  '필수 — 후원자 이름, 연락처(휴대전화), 이메일 주소',
+  '필수 — 서포터 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
-  '선택 — 응원 메시지, 후원자 명단 공개(이름·응원 메시지) 동의 여부',
-  '자동 생성 — 주문번호, 후원 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
+  '선택 — 응원 메시지, 서포터 명단 공개(이름·응원 메시지) 동의 여부',
+  '자동 생성 — 주문번호, 펀딩 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
 
 /** 후원 처리 목적 — 수집한 항목을 쓰는 범위. */
 export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
-  '후원(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
-  '후원 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
+  '펀딩(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
+  '펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
-  '후원자 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시',
+  '서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시',
 ];
 
 /**
@@ -121,10 +121,10 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
  * Resend REST API(lib/email/resend.ts), Vercel 호스팅, Turso(libsql, db/client.ts).
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
-  { name: '토스페이먼츠', purpose: '결제 승인·취소·환불 처리', items: '후원자 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
-  { name: 'Resend', purpose: '후원 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 후원 내역' },
+  { name: '토스페이먼츠', purpose: '결제 승인·취소·환불 처리', items: '서포터 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
+  { name: 'Resend', purpose: '펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
   { name: 'Vercel', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
-  { name: 'Turso', purpose: '후원 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
+  { name: 'Turso', purpose: '펀딩 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
 ];
 
 /**

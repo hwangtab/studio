@@ -72,7 +72,7 @@ afterAll(() => client.close());
 const reward = (id: string) => PROJECT.rewards.find((r) => r.id === id)!;
 
 describe('createFundingPledge', () => {
-  it('주문·후원을 만들고 금액을 서버가 계산한다', async () => {
+  it('주문·펀딩을 만들고 금액을 서버가 계산한다', async () => {
     const r = await createFundingPledge(payloadFor({ additionalAmount: 1000 }), PROJECT, reward('mail'), NOW);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
@@ -97,7 +97,7 @@ describe('createFundingPledge', () => {
     expect(pledge?.deliveredAt).toBeNull();
   });
 
-  it('한정 수량 1개에 두 번 후원하면 두 번째는 sold_out', async () => {
+  it('한정 수량 1개에 두 번 펀딩하면 두 번째는 sold_out', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
     const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'x@example.com' }), PROJECT, reward('cd'), NOW);
     const second = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'y@example.com', customerPhone: '010-9' }), PROJECT, reward('cd'), NOW);
@@ -107,7 +107,7 @@ describe('createFundingPledge', () => {
 
   // 재고 조건이 paid만 보던 시절엔, 부분환불된 한정 리워드가 재고를 놓아준 것처럼 보여
   // 화면(aggregateProjectStatus 기준 품절)과 서버 판정이 어긋나 초과 판매가 났다.
-  it('partially_refunded 후원도 한정 재고를 잡는다 — 다음 후원은 sold_out', async () => {
+  it('partially_refunded 펀딩도 한정 재고를 잡는다 — 다음 펀딩은 sold_out', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
     const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p1@example.com' }), PROJECT, reward('cd'), NOW);
     if (!first.ok) throw new Error();
@@ -173,7 +173,7 @@ describe('createFundingPledge', () => {
     expect((await findFundingOrderByOrderNo(victim.ok ? victim.orderNo : ''))?.status).toBe('pending');
   });
 
-  it('다른 프로젝트에 후원해도 이 프로젝트의 기존 pending은 만료시키지 않는다', async () => {
+  it('다른 프로젝트에 펀딩해도 이 프로젝트의 기존 pending은 만료시키지 않는다', async () => {
     const a = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     const otherProject = { ...PROJECT, slug: 'other' };
     await createFundingPledge(payloadFor({ projectSlug: 'other' }), otherProject, reward('mail'), NOW, {
@@ -207,7 +207,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
     expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, backerPersonCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'], publicMessages: [] });
   });
 
-  it('partially_refunded도 paid와 같이 센다 — 후원은 살아 있고 재고도 나간 상태다', async () => {
+  it('partially_refunded도 paid와 같이 센다 — 펀딩은 살아 있고 재고도 나간 상태다', async () => {
     const partial = await createFundingPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [partial.ok ? partial.orderNo : ''] });
     const s = await aggregateProjectStatus(PROJECT, NOW);
@@ -224,7 +224,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
  * 수를 그리므로, 인원은 **별도 필드**로 더한다.
  */
 describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
-  it('같은 고객(이메일+전화)이 여러 번 후원하면 건수만 늘고 인원은 그대로다', async () => {
+  it('같은 고객(이메일+전화)이 여러 번 펀딩하면 건수만 늘고 인원은 그대로다', async () => {
     for (const email of ['dup@example.com', 'dup@example.com', 'solo@example.com']) {
       const c = await createFundingPledge(
         payloadFor({ customerEmail: email, customerPhone: email === 'dup@example.com' ? '010-111' : '010-222' }),
@@ -244,7 +244,7 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
       await client.execute({
         sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
               item_amount, vat_amount, total_amount, manage_token)
-              VALUES (?,?,'funding','paid','현장후원','-','manual@studionol.co.kr',4545,455,5000,?)`,
+              VALUES (?,?,'funding','paid','현장펀딩','-','manual@studionol.co.kr',4545,455,5000,?)`,
         args: [`mo${i}`, `FND-M-${i}`, `mtok-${i}`],
       });
       await client.execute({
@@ -353,7 +353,7 @@ describe('취소하면 공개 명단에서 내려간다', () => {
     expect(after.publicMessages.map((m) => m.message)).not.toContain('취소 전 남긴 말');
   });
 
-  it('부분 환불은 남는다 — 후원은 살아 있고 재고도 나간 상태다', async () => {
+  it('부분 환불은 남는다 — 펀딩은 살아 있고 재고도 나간 상태다', async () => {
     const orderNo = await paidPublic({
       customerEmail: 'c2@example.com', customerPhone: '010-7002',
       customerName: '부분환불', supporterMessage: '일부만 돌려받음',

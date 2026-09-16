@@ -50,7 +50,7 @@ describe('validateCreatePledgePayload', () => {
   it('배송 리워드는 배송지 필수', () => {
     expect(validateCreatePledgePayload({ ...base, rewardId: 'cd' }, project, NOW).ok).toBe(false);
   });
-  it('수량·추가 후원금 범위·약관·이메일', () => {
+  it('수량·추가 펀딩 금액 범위·약관·이메일', () => {
     expect(validateCreatePledgePayload({ ...base, quantity: 11 }, project, NOW).ok).toBe(false);
     expect(validateCreatePledgePayload({ ...base, additionalAmount: 1500 }, project, NOW).ok).toBe(false);
     expect(validateCreatePledgePayload({ ...base, additionalAmount: 6_000_000 }, project, NOW).ok).toBe(false);

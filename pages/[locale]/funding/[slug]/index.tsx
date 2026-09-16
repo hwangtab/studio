@@ -149,14 +149,14 @@ export default function FundingProjectPage({ project, initialState }: Props) {
               href="#rewards"
               className="hidden h-14 lg:inline-flex items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
             >
-              후원하기
+              펀딩하기
             </a>
           ) : null
         }
       />
 
       {/*
-        본문(왼쪽)과 후원 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라 본문을
+        본문(왼쪽)과 펀딩 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라 본문을
         읽는 내내 모금 현황과 리워드가 화면에 남는다.
       */}
       <Section className="pb-28 pt-16 lg:pb-16">
@@ -188,7 +188,7 @@ export default function FundingProjectPage({ project, initialState }: Props) {
             {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
                 리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
             <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
-            <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
+            <p className="typo-card-meta mt-1">펀딩 금액에 따라 돌려드릴 구성입니다.</p>
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
                 <RewardCard

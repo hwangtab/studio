@@ -101,7 +101,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
         projects,
         slug,
         ...(projectsError ? { error: projectsError } : {}),
-        pledgesError: '후원 목록을 불러오는 중 오류가 발생했습니다.',
+        pledgesError: '펀딩 목록을 불러오는 중 오류가 발생했습니다.',
       },
     };
   }
@@ -170,7 +170,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       return;
     }
     if (!Number.isInteger(formAdditionalAmount) || formAdditionalAmount < 0 || formAdditionalAmount > 5_000_000) {
-      setFormError('추가 후원금은 0~5,000,000원 사이여야 합니다.');
+      setFormError('추가 펀딩 금액은 0~5,000,000원 사이여야 합니다.');
       return;
     }
     if (!formCustomerName.trim()) {
@@ -236,7 +236,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
             <div className="bg-primary p-6 md:p-8 flex flex-wrap items-start justify-between gap-4">
               <div>
                 <h1 className="text-2xl md:text-3xl font-bold text-white">펀딩 관리</h1>
-                <p className="text-white/80 mt-2">후원 현황을 확인하고 관리합니다.</p>
+                <p className="text-white/80 mt-2">펀딩 현황을 확인하고 관리합니다.</p>
               </div>
               <div className="flex gap-2">
                 <Link href="/admin" passHref>
@@ -263,7 +263,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
 
               {mismatched.length > 0 && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-300 text-red-900 rounded-lg text-sm">
-                  <strong>결제 기록과 주문 상태가 어긋난 후원이 {mismatched.length}건 있습니다</strong> (
+                  <strong>결제 기록과 주문 상태가 어긋난 펀딩이 {mismatched.length}건 있습니다</strong> (
                   {mismatched.map((m) => m.orderNo).join(', ')}). 토스 콘솔에서 확인해 주세요.
                 </div>
               )}
@@ -271,14 +271,14 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               {refundRequested.length > 0 && (
                 <div className="mb-4 p-3 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
                   <strong>{refundRequested.length}건이 계좌 환불 대기 중입니다</strong> (
-                  {refundRequested.map((m) => m.orderNo).join(', ')}). 후원자가 취소를 요청했지만 돈은 아직
+                  {refundRequested.map((m) => m.orderNo).join(', ')}). 서포터가 취소를 요청했지만 돈은 아직
                   나가지 않았습니다. 약관상 접수일부터 3영업일 이내에 환불해야 하며, 이 건들은 발송하면 안 됩니다.
                 </div>
               )}
 
               {needsReview.length > 0 && (
                 <div className="mb-4 p-3 bg-purple-50 border border-purple-300 text-purple-900 rounded-lg text-sm">
-                  <strong>웹훅이 되살려 확정한 후원이 {needsReview.length}건 있습니다</strong> (
+                  <strong>웹훅이 되살려 확정한 펀딩이 {needsReview.length}건 있습니다</strong> (
                   {needsReview.map((m) => m.orderNo).join(', ')}). 홀드가 만료된(또는 실패 처리된) 뒤 결제가
                   승인된 건이라 <strong>한정 리워드 재고를 초과했을 수 있습니다.</strong> 남은 수량을 확인한 뒤
                   발송해 주세요.
@@ -312,8 +312,8 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               </div>
 
               {/*
-                후원 '건수'와 '인원'을 나란히 둔다 — COUNT(*)는 건수이고, 같은 사람이 두 번
-                후원하면 2다. 예전엔 그 값을 '후원자 수 N명'으로 적어 인원을 부풀렸다.
+                펀딩 '건수'와 '인원'을 나란히 둔다 — COUNT(*)는 건수이고, 같은 사람이 두 번
+                펀딩하면 2다. 예전엔 그 값을 '서포터 수 N명'으로 적어 인원을 부풀렸다.
               */}
               <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-2">
                 <div className="p-4 bg-gray-50 rounded-xl">
@@ -321,11 +321,11 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                   <div className="text-lg font-bold text-gray-900">{formatPriceAmount(totals.confirmedAmount)}원</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">확정 후원 건수</div>
+                  <div className="text-xs text-gray-500">확정 펀딩 건수</div>
                   <div className="text-lg font-bold text-gray-900">{totals.confirmedCount}건</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">후원자 수(중복 제외)</div>
+                  <div className="text-xs text-gray-500">서포터 수(중복 제외)</div>
                   <div className="text-lg font-bold text-gray-900">{totals.confirmedPersonCount}명</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
@@ -390,7 +390,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                         light className="text-sm"
                       />
                     </Field>
-                    <Field id="form-additional-amount" label="추가 후원금(원)" className={lightOnlyField}>
+                    <Field id="form-additional-amount" label="추가 펀딩 금액(원)" className={lightOnlyField}>
                       <TextInput
                         type="number"
                         min={0}
@@ -498,7 +498,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               </div>
 
               {items.length === 0 && (
-                <div className="text-center py-12 text-gray-500">아직 접수된 후원이 없습니다.</div>
+                <div className="text-center py-12 text-gray-500">아직 접수된 펀딩이 없습니다.</div>
               )}
             </div>
           </div>

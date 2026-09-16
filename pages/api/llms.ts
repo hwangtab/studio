@@ -253,7 +253,7 @@ const LOCALE_LABELS: Record<Locale, string> = {
  * 목록 링크만 남긴다(없다고 단언하지 않는 것이 안전한 방향).
  */
 export const fundingStatusLine = (siteUrl: string, now: Date = new Date()): string => {
-  const lead = '펀딩: 스튜디오 놀이 제작하는 음반의 제작비를 리워드(CD·굿즈·음원) 후원으로 모읍니다.';
+  const lead = '펀딩: 스튜디오 놀이 제작하는 음반의 제작비를 리워드(CD·굿즈·음원) 펀딩으로 모읍니다.';
   let live;
   try {
     live = getListableFundingProjects(now).filter((p) => computeProjectState(p, now) === 'live');

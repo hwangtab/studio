@@ -173,7 +173,7 @@ describe('funding manage getServerSideProps', () => {
  * 판정 자체는 policy.test.ts가 덮고, 여기서는 **배선**을 고정한다.
  */
 describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
-  it('토스가 아닌 후원은 canCancel=false + 문의 안내를 내려보낸다', async () => {
+  it('토스가 아닌 펀딩은 canCancel=false + 문의 안내를 내려보낸다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
@@ -192,7 +192,7 @@ describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
 
   // 토스 후원은 결제수단 때문에 막히지 않는다. canCancel 자체는 프로젝트 진행 상태(실시간
   // 기준)에 좌우되므로 단언하지 않고, **차단 사유가 offline_payment가 아니라는 것**만 본다.
-  it('토스 후원은 결제수단 때문에 막히지 않는다', async () => {
+  it('토스 펀딩은 결제수단 때문에 막히지 않는다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
@@ -201,7 +201,7 @@ describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
       params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
     } as never)) as { props: { cancelBlockedReason: string | null } };
 
-    expect(result.props.cancelBlockedReason ?? '').not.toContain('계좌로 받은 후원');
+    expect(result.props.cancelBlockedReason ?? '').not.toContain('계좌로 받은 펀딩');
   });
 });
 

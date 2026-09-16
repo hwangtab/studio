@@ -57,7 +57,7 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
           <h1 className="typo-page-title">결제가 완료되지 않았습니다</h1>
           <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
           <p className="typo-card-meta mx-auto mt-3 max-w-md">
-            결제가 이뤄지지 않았으므로 청구되지 않습니다. 15분 뒤 신청이 자동 해제되며 다시 후원할 수 있습니다.
+            결제가 이뤄지지 않았으므로 청구되지 않습니다. 15분 뒤 신청이 자동 해제되며 다시 펀딩할 수 있습니다.
           </p>
           {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
               가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다. */}

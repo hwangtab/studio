@@ -43,7 +43,7 @@ export default function FundingIndexPage({ items }: Props) {
     <>
       <SEO
         title="펀딩 — 스튜디오 놀"
-        description="스튜디오 놀이 제작하는 음반의 제작비를 리워드 후원으로 함께 만듭니다."
+        description="스튜디오 놀이 제작하는 음반의 제작비를 리워드 펀딩으로 함께 만듭니다."
         canonical="/ko/funding"
       />
       <ImageHero
@@ -53,7 +53,7 @@ export default function FundingIndexPage({ items }: Props) {
         backgroundImage={pickHeroImage(items)}
         imageAlt=""
         title="펀딩"
-        subtitle="음반 제작비를 후원자와 함께 만듭니다. 리워드를 고르면 CD·굿즈·음원으로 돌려드립니다."
+        subtitle="음반 제작비를 서포터와 함께 만듭니다. 리워드를 고르면 CD·굿즈·음원으로 돌려드립니다."
       />
       <Section>
         {items.length === 0 ? (

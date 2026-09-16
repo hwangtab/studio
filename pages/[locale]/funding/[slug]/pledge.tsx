@@ -17,15 +17,15 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
   useEffect(() => { trackMicroEvent('funding_pledge_start', { component: 'funding_pledge', landing_slug: project.slug }); }, []);
   return (
     <>
-      <Head><title>{project.title} 후원하기 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
+      <Head><title>{project.title} 펀딩하기 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
       <main className="mx-auto max-w-2xl px-4 pb-24 pt-28 sm:pt-32">
         <p className="typo-card-meta">
           <Link href={`/ko/funding/${project.slug}`} className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
             ← {project.title}
           </Link>
         </p>
-        <h1 className="typo-section-title mt-3">후원하기</h1>
-        <p className="typo-section-lead mt-3">리워드를 고르고 후원자 정보를 입력하면 결제로 이어집니다.</p>
+        <h1 className="typo-section-title mt-3">펀딩하기</h1>
+        <p className="typo-section-lead mt-3">리워드를 고르고 서포터 정보를 입력하면 결제로 이어집니다.</p>
         <div className="mt-10"><PledgeWizard project={project} initialRewardId={initialRewardId} remaining={remaining} /></div>
         <div className="mt-12"><FundingTrustNotice /></div>
       </main>

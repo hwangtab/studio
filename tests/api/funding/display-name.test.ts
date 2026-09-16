@@ -70,7 +70,7 @@ it.each(['paid', 'pending', 'partially_refunded'])('%s 상태에서는 철회할
   expect(set).toHaveBeenCalledWith(expect.objectContaining({ displayNamePublic: false }));
 });
 
-it.each(['refunded', 'expired', 'failed'])('%s 상태는 409 — 끝난 후원의 기록은 바꾸지 않는다', async (status) => {
+it.each(['refunded', 'expired', 'failed'])('%s 상태는 409 — 끝난 펀딩의 기록은 바꾸지 않는다', async (status) => {
   (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
   const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false });
   expect(r.status).toBe(409);

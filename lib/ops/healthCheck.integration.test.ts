@@ -348,7 +348,7 @@ describe('운영 점검', () => {
     await insertDoneRefund(30000);
     const issues = (await runHealthCheck(NOW)).issues;
     expect(issues[0].severity).toBe('high');
-    expect(issues[0].title).toContain('전액 환불됐는데 주문이 살아 있는 후원 1건');
+    expect(issues[0].title).toContain('전액 환불됐는데 주문이 살아 있는 펀딩 1건');
     expect(issues[0].detail).toContain('FND-1');
   });
 

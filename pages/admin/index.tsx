@@ -217,7 +217,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">토스 결제 장부</h2>
               <p className="text-xs text-gray-500 mb-4">
                 기간 안에 승인된 카드 결제 전부를 한 CSV로 내려받습니다(예약·믹싱·펀딩·구독). 환불은 같은
-                행에 합산됩니다. 무통장 후원과 수기 등록은 펀딩 CSV에 있습니다.
+                행에 합산됩니다. 무통장 펀딩과 수기 등록은 펀딩 CSV에 있습니다.
               </p>
               <form method="GET" action="/api/admin/orders/export" className="flex flex-wrap items-end gap-3">
                 <Field id="ledger-from" label="시작일" className={lightOnlyField}>
