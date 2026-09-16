@@ -492,41 +492,25 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         )}
       </fieldset>
 
-      {/* 선택 내용과 합계를 제출 버튼 바로 위에 붙여 둔다 — 모바일에서 폼을 다시
-          위로 스크롤하지 않고도 무엇을 얼마에 사는지 확인할 수 있어야 한다. */}
-      <div className={`${stickySummary ? 'sticky bottom-0 z-10 -mx-4 px-4 backdrop-blur sm:mx-0 sm:px-6' : 'px-4 sm:px-6'} border-t border-gray-200 bg-white/95 pb-4 pt-4 sm:rounded-2xl sm:border dark:border-gray-700 dark:bg-gray-900/95`}>
-        <dl className="space-y-1.5">
-          <div className="flex items-baseline justify-between gap-4">
-            <dt className="typo-card-meta">선택 리워드</dt>
-            <dd className="min-w-0 truncate text-sm font-medium text-gray-900 dark:text-white">{reward.title}</dd>
-          </div>
-          <div className="flex items-baseline justify-between gap-4">
-            <dt className="typo-card-meta">수량</dt>
-            <dd className="text-sm font-medium text-gray-900 dark:text-white">{quantity}개{additional > 0 ? ` · 추가 후원 ${formatPriceAmount(additional)}원` : ''}</dd>
-          </div>
-          <div className="flex items-baseline justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
-            <dt className="text-sm font-semibold text-gray-900 dark:text-white">예상 합계</dt>
-            <dd className="text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(preview.totalAmount)}원</dd>
-          </div>
-        </dl>
-        <p className={helpClass}>VAT 포함. 실제 청구액은 서버가 확정합니다.</p>
+      {/*
+        우리 약관 동의는 **결제위젯이 그리는 결제 약관 바로 아래**에 둔다.
 
-        {/*
-          우리 약관 동의는 **제출 버튼 바로 위**에 둔다.
+        이 화면에는 필수 동의가 두 벌 있다 — 위젯 쪽은 토스와 이용자 사이의 결제 서비스
+        약관이고, 이쪽은 우리와 후원자 사이의 거래 약관(청약철회·환불)과 개인정보 수집
+        동의다. 배송지는 토스에 넘기지 않으므로(lib/funding/policy.ts
+        FUNDING_DATA_PROCESSORS) 그 수집 동의를 받아 줄 수 있는 것은 이 체크박스뿐이다.
+        즉 둘 중 하나를 없앨 수 없다.
 
-          예전엔 '후원자 정보' 안, 결제수단 위젯보다 위에 있었다. 미동의로 제출하면 에러는
-          버튼 옆(이 블록 안)에 뜨는데 체크박스는 위젯 하나를 건너뛴 위쪽이라, 모바일에서
-          화면 몇 개를 거슬러 올라가야 찾을 수 있었다. 게다가 위젯이 그리는 결제 약관 동의가
-          에러 바로 위에 보여서, "약관에 동의해 주세요"를 본 사람이 그쪽을 먼저 본다.
+        없앨 수 없으니 **한 자리에 모은다.** 예전엔 이 체크가 '후원자 정보' 안(위젯보다
+        위)에 있다가, 다음엔 요약 블록 안(요약 dl 아래)으로 내려갔다. 어느 쪽이든 필수
+        동의 두 개가 화면에서 갈라져 "체크할 곳이 세 군데"가 됐다. 결제 약관 바로 아래에
+        붙이면 필수는 한 군데, 나머지는 응원 메시지의 선택 옵션(이름 공개) 하나뿐이다.
 
-          두 약관은 겹치지 않는다 — 위젯 쪽은 토스와 이용자 사이의 결제 서비스 약관이고,
-          이쪽은 우리와 후원자 사이의 거래 약관(청약철회·환불)과 개인정보 수집 동의다.
-          배송지는 토스에 넘기지 않으므로(lib/funding/policy.ts FUNDING_DATA_PROCESSORS)
-          그 수집 동의를 받아 줄 수 있는 것은 이 체크박스뿐이다. 그래서 줄일 수 없고,
-          대신 라벨에 "펀딩"을 넣어 위젯 쪽 "결제 서비스 이용 약관"과 구분되게 한다.
-        */}
-        {/* 하단 고정 블록 안이라 테두리 박스를 또 두르지 않는다 — 모바일에서 요약·버튼과
-            합쳐 화면을 너무 많이 먹는다. 미동의일 때만 붉은 바탕으로 눈에 걸리게 한다. */}
+        라벨에 "펀딩"을 넣어 위젯 쪽 "결제 서비스 이용 약관"과 구분되게 한다.
+      */}
+      <div className="px-4 sm:px-6">
+        {/* 테두리 박스를 두르지 않는다 — 바로 위 위젯 약관 행과 같은 결로 보이게 한다.
+            미동의일 때만 붉은 바탕으로 눈에 걸리게 한다. */}
         <label
           className={`mt-3 flex cursor-pointer items-start gap-3 rounded-xl px-1 py-2 transition-colors ${
             termsError ? 'bg-red-50 dark:bg-red-950/40' : ''
@@ -554,6 +538,27 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
             {TERMS_REQUIRED_MESSAGE}
           </p>
         )}
+      </div>
+
+      {/* 선택 내용과 합계를 제출 버튼 바로 위에 붙여 둔다 — 모바일에서 폼을 다시
+          위로 스크롤하지 않고도 무엇을 얼마에 사는지 확인할 수 있어야 한다. */}
+      <div className={`${stickySummary ? 'sticky bottom-0 z-10 -mx-4 px-4 backdrop-blur sm:mx-0 sm:px-6' : 'px-4 sm:px-6'} border-t border-gray-200 bg-white/95 pb-4 pt-4 sm:rounded-2xl sm:border dark:border-gray-700 dark:bg-gray-900/95`}>
+        <dl className="space-y-1.5">
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="typo-card-meta">선택 리워드</dt>
+            <dd className="min-w-0 truncate text-sm font-medium text-gray-900 dark:text-white">{reward.title}</dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="typo-card-meta">수량</dt>
+            <dd className="text-sm font-medium text-gray-900 dark:text-white">{quantity}개{additional > 0 ? ` · 추가 후원 ${formatPriceAmount(additional)}원` : ''}</dd>
+          </div>
+          <div className="flex items-baseline justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
+            <dt className="text-sm font-semibold text-gray-900 dark:text-white">예상 합계</dt>
+            <dd className="text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(preview.totalAmount)}원</dd>
+          </div>
+        </dl>
+        <p className={helpClass}>VAT 포함. 실제 청구액은 서버가 확정합니다.</p>
+
         {allSoldOut && (
           <p role="status" className="mt-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
         )}

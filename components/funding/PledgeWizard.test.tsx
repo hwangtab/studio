@@ -663,12 +663,20 @@ describe('약관 동의 찾기', () => {
     expect(widget.compareDocumentPosition(terms) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it('제출 버튼과 같은 블록 안에 있다', () => {
+  /**
+   * 필수 동의 두 개(위젯의 결제 약관 · 우리 펀딩 약관)가 붙어 있어야 한다.
+   *
+   * 예전엔 요약 dl이 둘 사이에 끼어 "체크할 곳이 세 군데"로 퍼져 보였다. 위젯 약관 자리
+   * 바로 다음, 요약보다 앞에 오는 것이 이 배치의 계약이다.
+   */
+  it('위젯 약관 바로 다음, 요약보다 앞에 온다', () => {
     renderForm();
-    const submit = screen.getByRole('button', { name: /결제하기/ });
+    const widgetAgreement = document.getElementById('toss-agreement-test') as HTMLElement;
     const terms = screen.getByLabelText(/약관/);
+    const summary = screen.getByText('예상 합계');
 
-    expect(submit.closest('div')?.contains(terms) || terms.closest('div')?.parentElement?.contains(submit)).toBeTruthy();
+    expect(widgetAgreement.compareDocumentPosition(terms) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(terms.compareDocumentPosition(summary) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it('미동의로 제출하면 어느 약관인지 밝힌다', async () => {
