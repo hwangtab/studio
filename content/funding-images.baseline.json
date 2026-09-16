@@ -1,0 +1,18 @@
+{
+  "keep-singing-for-palestine": {
+    "cover": {
+      "file": "/images/funding/keep-singing-for-palestine/cover-20260916.webp",
+      "sha256": "2af46b61a936922cf94c811680a144381dcac5360d0188760cadcc7cc20c9ff6"
+    },
+    "ogImage": {
+      "file": "/images/funding/keep-singing-for-palestine/og-20260915.webp",
+      "sha256": "537fd8511302b8b74dea38961276ddc34b086fdeff808a871df7628c4cef0a26"
+    }
+  },
+  "smoke-test": {
+    "cover": {
+      "file": "/images/funding/smoke-test/cover.webp",
+      "sha256": "a86e707cf49acdbef9dd4a269bf4f59e151c87345b98d9857c27741bfb777fbd"
+    }
+  }
+}

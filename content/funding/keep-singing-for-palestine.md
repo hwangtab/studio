@@ -2,7 +2,7 @@
 slug: keep-singing-for-palestine
 title: 파병 반대·팔레스타인 해방 — 9·19 거리집회 후원
 summary: 한국군 파병에 반대하고 팔레스타인 해방을 노래하는 9월 19일 거리집회에 함께합니다. 후원해 주시면 앨범 〈이름을 모르는 먼 곳의 그대에게〉 13곡을 보내 드립니다.
-cover: /images/funding/keep-singing-for-palestine/cover.webp
+cover: /images/funding/keep-singing-for-palestine/cover-20260916.webp
 # 카카오톡은 og:image를 URL 단위로 캐시한다. 그림만 갈아 끼우고 경로를 두면 옛 썸네일이
 # 계속 나간다. 바꿀 때는 파일명을 함께 바꿀 것(포맷은 원인이 아니다 — 커밋 85178f14ad).
 ogImage: /images/funding/keep-singing-for-palestine/og-20260915.webp
