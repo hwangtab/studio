@@ -32,7 +32,14 @@ export interface TossRequestPaymentParams {
  * 고정이라 드러나지 않았지만, 폼 안에 두면 수량을 한 번 고칠 때마다 iframe이 사라졌다
  * 다시 붙는다. 지금은 한 번만 붙이고 금액은 `setAmount`로만 갱신한다.
  */
-export const useTossPaymentWidgets = (amount: number) => {
+/**
+ * @param enabled 마운트 지점(`methodsId`·`agreementId` div)이 **화면에 있을 때만** true.
+ *
+ * 위저드가 단계별로 화면을 갈아 끼우는 경우, 훅은 컴포넌트가 붙는 순간 한 번 돌지만 붙일
+ * div는 마지막 단계에만 있다. 그대로 두면 `renderPaymentMethods`가 없는 선택자를 받아
+ * 실패하고, 고객이 결제 단계에 닿았을 때 "결제 모듈을 불러오지 못했습니다"만 본다.
+ */
+export const useTossPaymentWidgets = (amount: number, enabled = true) => {
   const widgetsRef = useRef<Widgets | null>(null);
   /**
    * 마운트 지점은 **인스턴스마다 유일한 id**여야 한다. 예전엔 `#toss-payment-methods`라는
@@ -56,6 +63,7 @@ export const useTossPaymentWidgets = (amount: number) => {
   amountRef.current = amount;
 
   useEffect(() => {
+    if (!enabled) return;
     let cancelled = false;
     // 노드는 **effect 본문에서** 붙잡는다. React는 언마운트 때 passive effect cleanup보다
     // 먼저 ref를 떼므로, cleanup에서 ref.current를 읽으면 이미 null이라 아무것도 못 지운다.
@@ -86,7 +94,7 @@ export const useTossPaymentWidgets = (amount: number) => {
       if (methodsEl) methodsEl.innerHTML = '';
       if (agreementEl) agreementEl.innerHTML = '';
     };
-  }, [agreementId, methodsId, retryKey]);
+  }, [agreementId, enabled, methodsId, retryKey]);
 
   // 금액이 움직이면 위젯에만 알린다 — 다시 그리지 않는다.
   useEffect(() => {
