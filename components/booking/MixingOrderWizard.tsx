@@ -132,7 +132,8 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
    */
   const {
     methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-  } = useTossPaymentWidgets(amounts.totalAmount);
+    // 마운트 지점이 2단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
+  } = useTossPaymentWidgets(amounts.totalAmount, step === 2);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
