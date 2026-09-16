@@ -19,6 +19,7 @@ import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
 import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
+import { isAdminRoute } from '../lib/adminRoute';
 
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -33,6 +34,13 @@ const localeLoadingMessage: Record<Locale, string> = {
 
 function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
+  /**
+   * 관리자 화면은 번역을 한 줄도 쓰지 않는다(Layout의 건너뛰기 링크가 유일한 예외이고,
+   * 그건 기본값을 들고 있다). 그런데 아래 로케일 게이트가 모든 페이지에 걸려 있어서,
+   * 관리자 페이지도 ko/common.json 154KB를 받을 때까지 스피너만 내보내고 있었다 —
+   * 서버가 보내는 HTML에 관리자 내용이 한 글자도 없었다는 뜻이다.
+   */
+  const isAdmin = isAdminRoute(router.pathname);
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
   const routeLocale = router.asPath.split('?')[0].split('/')[1];
@@ -47,7 +55,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     locale in (i18nResources as Record<string, unknown>)
   );
 
-  const [isLocaleReady, setIsLocaleReady] = useState(() => hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
+  const [isLocaleReady, setIsLocaleReady] = useState(() => isAdmin || hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
   // SSR initial을 'always'로 두는 이유: 'user'였을 때 모바일 첫 paint에서 framer-motion이
   // 작동해 m.x의 initial prop(opacity:0 등)이 SSR HTML에 박히고, hydration 직후 jump-cut으로
@@ -135,6 +143,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   // preload=false라 첫 paint 영향 0, hero micro-subset만 preload=true로 critical.
 
   useEffect(() => {
+    // 관리자 화면은 사전을 받지 않는다 — 쓰지도 않는 154KB를 위해 화면을 붙잡지 않는다.
+    if (isAdmin) return;
+
     let isCancelled = false;
 
     const ensureLocaleReady = async () => {
@@ -180,7 +191,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     return () => {
       isCancelled = true;
     };
-  }, [hasServerResourceForLocale, i18nResources, locale]);
+  }, [hasServerResourceForLocale, i18nResources, isAdmin, locale]);
 
   // 정적 nav 라벨 매핑을 사용해 SSR/SSG에서도 JSON-LD가 보장되도록 한다.
   // i18n.t()는 useEffect 내 applyI18nResources 이후에만 안정적이라 SSR 시 빈 값 위험.
@@ -215,7 +226,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     };
   }, [locale]);
 
-  if (!hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
+  if (!isAdmin && !hasServerResourceForLocale && !isLocaleReady && !i18n.hasResourceBundle(locale, 'common')) {
     return (
       <>
         <Head>

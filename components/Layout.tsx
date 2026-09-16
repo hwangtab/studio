@@ -7,12 +7,15 @@ import { Footer } from './layout/Footer';
 import { PaymentBrandBar } from './layout/PaymentBrandBar';
 import { type Locale, defaultLocale } from '../lib/i18n';
 import { isPrivatePageRoute } from '../lib/analytics/privatePaths';
+import { isAdminRoute } from '../lib/adminRoute';
 
 // 스크롤 인터랙션 보조 컴포넌트들은 첫 paint에 시각적 영향이 없어 hydration 후 lazy load.
 // LCP/FCP 측정 창에서 빠지면서 _app/Layout 청크에서 분리.
 const ScrollToTop = dynamic(() => import('./ui/ScrollToTop').then(m => m.ScrollToTop), { ssr: false });
 // 전 페이지 상시 카카오 진입점. 검증된 유일 전환 채널을 모든 페이지에 노출.
 const KakaoFab = dynamic(() => import('./common/KakaoFab'), { ssr: false });
+// 관리자 화면 전용 라우트 전환 표시. dynamic + ssr:false라 다른 페이지는 청크를 받지 않는다.
+const AdminRouteProgress = dynamic(() => import('./admin/RouteProgress'), { ssr: false });
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -133,7 +136,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    * 더해져, 화면보다 80px + 푸터 높이만큼 길어져 있었다. 로그인 카드가 화면 정중앙이 아니라
    * 40px쯤 아래로 밀려 보이던 것이 그 때문이다.
    */
-  const isAdminPage = router.pathname.startsWith('/admin');
+  const isAdminPage = isAdminRoute(router.pathname);
 
   /**
    * 결제·관리 화면도 사이트 껍데기를 두르지 않는다.
@@ -161,12 +164,18 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    */
   const showPaymentBrandBar = isPrivatePaymentPage && !isContractPage && !isAdminPage;
   const textBreakClass = locale === 'ko' ? 'break-keep' : 'break-words';
-  const skipLabel = t('actions.skipToContent');
+  /**
+   * 기본값을 들고 t()를 부른다. 관리자 화면은 사전을 받지 않으므로(_app의 isAdmin 분기)
+   * 기본값이 없으면 이 자리에 키 문자열 'actions.skipToContent'가 그대로 찍힌다.
+   * 사전을 받는 다른 페이지에서는 종전대로 번역이 이긴다.
+   */
+  const skipLabel = t('actions.skipToContent', { defaultValue: '본문 바로가기' });
 
   return (
     <div
       className={`flex flex-col min-h-screen bg-white dark:bg-gray-900 ${textBreakClass} overflow-x-hidden w-full`}
     >
+      {isAdminPage && <AdminRouteProgress />}
       <a
         href="#main-content"
         className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:rounded-md focus:bg-white dark:focus:bg-gray-800 focus:text-gray-900 dark:focus:text-white focus:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
