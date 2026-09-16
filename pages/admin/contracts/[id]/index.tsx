@@ -187,10 +187,10 @@ export default function AdminContractDetailPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">계약 상세</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">계약 상세</h1>
             <Link href="/admin/contracts" passHref>
               <Button light variant="outline">목록으로</Button>
             </Link>
@@ -293,7 +293,7 @@ export default function AdminContractDetailPage({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">이용자 정보</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">이용자 정보</h2>
                   <dl className="space-y-2 text-sm">
                     <DescriptionRow label="성명" value={contract.customerName} />
                     <DescriptionRow label="생년월일" value={contract.customerBirthdate || '-'} />
@@ -304,7 +304,7 @@ export default function AdminContractDetailPage({
                 </div>
 
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">계약 정보</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약 정보</h2>
                   <dl className="space-y-2 text-sm">
                     <DescriptionRow
                       label="호실"
@@ -343,7 +343,7 @@ export default function AdminContractDetailPage({
             </div>
 
             <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">동의 항목</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">동의 항목</h2>
               <div className="space-y-2">
                 {clauses.map((clause) => (
                   <div
@@ -377,7 +377,7 @@ export default function AdminContractDetailPage({
             </div>
 
             <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">서명 기록</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">서명 기록</h2>
               {customerSignature?.status === 'signed' ? (
                 <div className="flex flex-wrap items-center gap-4">
                   {customerSignature.signatureData && (
@@ -414,7 +414,7 @@ export default function AdminContractDetailPage({
             <AuditTrail trail={auditTrail} />
 
             <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">계약서 본문</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">계약서 본문</h2>
               <ContractContent content={contract.content} size="sm" />
             </div>
 
@@ -433,7 +433,7 @@ export default function AdminContractDetailPage({
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">작업</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
             <div className="flex flex-wrap gap-3">
               {isActionAllowed(contract.status, 'send') && (
                 <Button light

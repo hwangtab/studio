@@ -214,7 +214,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
-          <h1 className="text-xl font-bold text-gray-900 mb-2">오류</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h1>
           <p className="text-gray-600">{[pledgesError, error].filter(Boolean).join(' ')}</p>
         </div>
       </div>
@@ -230,7 +230,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-6xl mx-auto px-4 space-y-6">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-primary p-6 md:p-8 flex flex-wrap items-start justify-between gap-4">

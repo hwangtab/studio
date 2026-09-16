@@ -23,6 +23,9 @@ jest.mock('../../../../lib/booking/toss', () => ({
   cancelPayment: (...args: unknown[]) => cancelPayment(...args),
 }));
 
+const sendEmail = jest.fn().mockResolvedValue({ ok: true });
+jest.mock('../../../../lib/email/resend', () => ({ sendEmail: (...args: unknown[]) => sendEmail(...args) }));
+
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';
 // eslint-disable-next-line import/first
@@ -44,6 +47,8 @@ afterAll(() => client.close());
 
 beforeEach(async () => {
   cancelPayment.mockReset();
+  sendEmail.mockClear();
+  sendEmail.mockResolvedValue({ ok: true });
   for (const t of ['refunds', 'payments', 'subscription_payments', 'subscriptions', 'orders']) {
     await client.execute(`DELETE FROM ${t}`);
   }
@@ -80,6 +85,26 @@ it('금액을 생략하면 잔액 전액을 환불하고 주문번호·금액을
   const r = await post({ action: 'refund_payment', paymentId: 'sp1', reason: '이중 청구' });
   expect(r.status).toBe(200);
   expect(r.body).toEqual({ ok: true, refundAmount: 385000, orderNo: 'SNB-1' });
+  // 고객에게 어느 달치가 얼마나 돌아가는지, 구독은 그대로인지 알린다.
+  expect(sendEmail).toHaveBeenCalledTimes(1);
+  const mail = sendEmail.mock.calls[0][0];
+  expect(mail.to).toBe('s@example.com');
+  expect(mail.subject).toContain('2026-09 결제가 환불되었습니다');
+  expect(mail.text).toContain('385,000원');
+  expect(mail.text).toContain('정기결제 자체는 이번 환불로 바뀌지 않습니다');
+});
+
+it('메일이 실패해도 환불 결과는 그대로이고 notificationError에 남는다', async () => {
+  cancelPayment.mockResolvedValue({
+    ok: true,
+    payment: { paymentKey: 'pay_1', orderId: 'SNB-1', status: 'PARTIAL_CANCELED', totalAmount: 385000, cancels: [{ transactionKey: 'tx', cancelAmount: 1000 }] },
+  });
+  sendEmail.mockResolvedValue({ ok: false, errorCode: 'resend_down' });
+  const r = await post({ action: 'refund_payment', paymentId: 'sp1', reason: 'x', amount: 1000 });
+  expect(r.status).toBe(200);
+  expect(sendEmail.mock.calls[0][0].subject).toContain('일부 환불');
+  const row = (await client.execute("SELECT notification_error FROM subscriptions WHERE id = 'sub1'")).rows[0];
+  expect(row.notification_error).toBe('refunded:resend_down');
 });
 
 it('토스가 거절하면 502로 사유를 그대로 전달한다', async () => {

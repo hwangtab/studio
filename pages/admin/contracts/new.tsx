@@ -104,7 +104,7 @@ export default function NewContractPage({ initialValues, copiedFrom }: NewContra
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-primary p-6 md:p-8">

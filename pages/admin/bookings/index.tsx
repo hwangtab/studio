@@ -250,7 +250,7 @@ export default function AdminBookingsPage({
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full text-center">
-          <h1 className="text-xl font-bold text-gray-900 mb-2">오류</h1>
+          <h1 className="text-xl font-bold text-gray-900 dark:text-gray-900 mb-2">오류</h1>
           <p className="text-gray-600">{error}</p>
         </div>
       </div>
@@ -264,7 +264,7 @@ export default function AdminBookingsPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-6xl mx-auto px-4 space-y-6">
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="bg-primary p-6 md:p-8 flex flex-wrap items-start justify-between gap-4">
@@ -454,7 +454,7 @@ export default function AdminBookingsPage({
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-1">예약 불가 블록</h2>
+            <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">예약 불가 블록</h2>
             <p className="text-sm text-gray-500 mb-6">
               점검·휴무 등으로 예약을 받지 않을 시간대를 등록합니다. 이 시간대와 겹치는 새 예약은
               슬롯 조회에서부터 제외됩니다.

@@ -18,6 +18,7 @@ import {
   sendSubscriptionChargedEmail,
   sendSubscriptionChargeFailedEmail,
   sendSubscriptionOperatorAlert,
+  sendSubscriptionRefundedEmail,
   sendSubscriptionSetupEmail,
   subscriptionManageUrl,
   subscriptionSetupUrl,
@@ -170,6 +171,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!result.ok) {
         const status = result.code === 'not_found' ? 404 : result.code === 'toss_failed' ? 502 : 409;
         return res.status(status).json({ ok: false, code: result.code, message: result.message });
+      }
+
+      // 돈은 이미 나갔다 — 메일 실패는 환불 결과를 뒤집지 않고 notificationError로만 남긴다(charge와 같은 원칙).
+      const subscription = await findSubscriptionById(id);
+      if (subscription) {
+        const notificationError = await sendSubscriptionRefundedEmail(subscription, {
+          amount: result.refundAmount,
+          cycleYm: result.cycleYm,
+          orderNo: result.orderNo,
+          isFull: result.isFull,
+          manageUrl: subscriptionManageUrl(subscription),
+        });
+        if (notificationError) {
+          await getDb().update(subscriptions).set({ notificationError }).where(eq(subscriptions.id, id));
+        }
       }
       return res.status(200).json({ ok: true, refundAmount: result.refundAmount, orderNo: result.orderNo });
     }

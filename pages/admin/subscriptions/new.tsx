@@ -72,10 +72,10 @@ export default function NewLessonSubscriptionPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-lg mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">레슨 구독 만들기</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">레슨 구독 만들기</h1>
             <Link href="/admin/subscriptions" passHref>
               <Button light variant="outline">목록으로</Button>
             </Link>

@@ -44,9 +44,9 @@ export default function AdminLoginPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 flex items-center justify-center px-4">
         <div className="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">관리자 로그인</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900 mb-2">관리자 로그인</h1>
           <p className="text-gray-600 mb-6">비밀번호를 입력하세요.</p>
 
           <form onSubmit={handleSubmit} className="space-y-4">

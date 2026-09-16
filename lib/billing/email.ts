@@ -150,6 +150,31 @@ export const sendSubscriptionCancelledEmail = (
     ].join('\n'),
   }).then((result) => (result.ok ? null : `cancelled:${result.errorCode}`));
 
+/**
+ * 회차 환불 안내. 관리자가 구독 상세에서 회차를 환불했을 때 보낸다.
+ *
+ * 토스가 카드 취소 문자를 따로 보내지만, 그 문자에는 "왜"가 없다 — 어느 달치가 얼마나
+ * 돌아가는지, 구독은 그대로인지를 우리가 말해야 고객이 문의 없이 이해한다. 구독 상태는
+ * 환불로 바뀌지 않으므로(lib/billing/refund.ts) 그 사실을 함께 적는다.
+ */
+export const sendSubscriptionRefundedEmail = (
+  sub: Pick<Subscription, 'kind' | 'customerEmail' | 'customerName'>,
+  input: { amount: number; cycleYm: string; orderNo: string; isFull: boolean; manageUrl: string },
+): Promise<string | null> =>
+  sendEmail({
+    to: sub.customerEmail,
+    replyTo: CUSTOMER_REPLY_TO,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub.kind)} ${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불되었습니다`,
+    text: [
+      `${sub.customerName}님, ${input.cycleYm}분 ${subscriptionOrderName(sub.kind)} 결제(${input.orderNo})에서 ${formatPriceAmount(input.amount)}원이 결제하신 카드로 환불되었습니다.`,
+      '카드사에 따라 취소 반영까지 3~7영업일이 걸릴 수 있습니다.',
+      '',
+      '정기결제 자체는 이번 환불로 바뀌지 않습니다. 해지나 정지가 함께 필요하면 아래 링크나 문의로 알려 주세요.',
+      `구독 조회·해지: ${input.manageUrl}`,
+      '문의: 010-4255-7893',
+    ].join('\n'),
+  }).then((result) => (result.ok ? null : `refunded:${result.errorCode}`));
+
 export type SubscriptionAlertKind = 'paused' | 'first_charge_failed' | 'cancelled' | 'late_approval';
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */

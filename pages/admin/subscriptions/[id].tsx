@@ -237,10 +237,10 @@ export default function AdminSubscriptionDetailPage({
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <main className="min-h-screen bg-gray-50 py-8 md:py-12">
+      <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">구독 상세</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">구독 상세</h1>
             <Link href="/admin/subscriptions" passHref>
               <Button light variant="outline">목록으로</Button>
             </Link>
@@ -292,7 +292,7 @@ export default function AdminSubscriptionDetailPage({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">고객 정보</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">고객 정보</h2>
                   <dl className="space-y-2 text-sm">
                     <DescriptionRow label="이름" value={subscription.customerName} />
                     <DescriptionRow label="전화번호" value={subscription.customerPhone} />
@@ -301,7 +301,7 @@ export default function AdminSubscriptionDetailPage({
                 </div>
 
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900 mb-4">구독 정보</h2>
+                  <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">구독 정보</h2>
                   <dl className="space-y-2 text-sm">
                     <DescriptionRow label="상품" value={subscriptionOrderName(subscription.kind as 'practice-room' | 'lesson')} />
                     <DescriptionRow label="월 청구액" value={`${formatPriceAmount(subscription.totalAmount)}원 (VAT 포함)`} />
@@ -331,7 +331,7 @@ export default function AdminSubscriptionDetailPage({
             </div>
 
             <div className="p-6 md:p-8 border-b border-gray-200">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">카드</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">카드</h2>
               {billingKey ? (
                 <dl className="space-y-2 text-sm">
                   <DescriptionRow label="카드사" value={billingKey.cardCompany ?? '-'} />
@@ -344,7 +344,7 @@ export default function AdminSubscriptionDetailPage({
             </div>
 
             <div className="p-6 md:p-8">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">회차 이력</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">회차 이력</h2>
               {payments.length === 0 ? (
                 <p className="text-sm text-gray-500">아직 결제 시도가 없습니다.</p>
               ) : (
@@ -448,7 +448,7 @@ export default function AdminSubscriptionDetailPage({
 
           <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-6">
             <div>
-              <h2 className="text-lg font-bold text-gray-900 mb-4">작업</h2>
+              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-4">작업</h2>
               <div className="flex flex-wrap gap-3">
                 {canCharge && (
                   <Button light disabled={busy} onClick={handleCharge}>
@@ -483,7 +483,7 @@ export default function AdminSubscriptionDetailPage({
 
             {canCancel && (
               <div className="pt-6 border-t border-gray-100">
-                <h2 className="text-lg font-bold text-gray-900 mb-1">해지</h2>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">해지</h2>
                 <p className="text-sm text-gray-500 mb-4">
                   해지하면 다음 결제일부터 청구가 멈춥니다. 이미 결제한 기간은 끝까지 이용할 수 있습니다.
                 </p>
