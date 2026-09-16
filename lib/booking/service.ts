@@ -194,18 +194,23 @@ export const expireStaleOrders = async (now: Date): Promise<void> => {
   const db = getDb();
   const sessionCutoff = toEpoch(now) - PENDING_HOLD_SECONDS;
   const mixingCutoff = toEpoch(now) - MIXING_PENDING_TTL_SECONDS;
-  await db.run(sql`
-    UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
-    WHERE status = 'pending' AND created_at < ${sessionCutoff}
-  `);
-  await db.run(sql`
-    UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
-    WHERE status = 'pending' AND created_at < ${mixingCutoff}
-  `);
-  await db.run(sql`
-    UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE status = 'pending'
-      AND ((type = 'session' AND created_at < ${sessionCutoff})
-           OR (type = 'mixing' AND created_at < ${mixingCutoff}))
-  `);
+  // 한 번에 보낸다 — 세 문장을 따로 await하면 Turso 왕복이 3회다. 이 정리는 슬롯 조회와
+  // 관리자 목록이 열릴 때마다 돌아서, 그 왕복이 곧 두 화면의 대기 시간이 된다.
+  // 원자성이 필요해서가 아니라(위 주석) 왕복을 줄이려는 것이고, batch가 덤으로 원자성도 준다.
+  await db.batch([
+    db.run(sql`
+      UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+      WHERE status = 'pending' AND created_at < ${sessionCutoff}
+    `),
+    db.run(sql`
+      UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+      WHERE status = 'pending' AND created_at < ${mixingCutoff}
+    `),
+    db.run(sql`
+      UPDATE orders SET status = 'expired', updated_at = unixepoch()
+      WHERE status = 'pending'
+        AND ((type = 'session' AND created_at < ${sessionCutoff})
+             OR (type = 'mixing' AND created_at < ${mixingCutoff}))
+    `),
+  ]);
 };
