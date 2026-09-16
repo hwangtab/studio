@@ -1525,7 +1525,7 @@
     "hero": {
       "title": "Chiqarish PRi",
       "subtitleLine1": "Sizni tanimaydigan odamlarga yetib boradi — Koreya musiqa nashrlariga va 60 ta mamlakatga, har biri o'qiydigan tilda",
-      "subtitleLine2": "Press-reliz yozishdan tortib yuborish va hisobotgacha — {{intro}} · albomni oxirigacha tinglab, nechta manzilga yuborish mumkinligini sanab beramiz, keyin to'laysiz",
+      "subtitleLine2": "Press-reliz yozishdan tortib yuborish va hisobotgacha — {{intro}} · musiqani tinglab, nechta manzilga yuborish mumkinligini sanab beramiz, keyin to'laysiz",
       "badge": "Chiqarish to'plamida {{list}} evaziga taqdim etilgan ish · dastlabki hamkor narxi {{intro}} ({{until}} gacha)",
       "alt": "Tungi Seul markazi manzarasi — chiroqlar ostida yoyilgan shahar"
     },
@@ -1573,7 +1573,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "{{intro}} (VATsiz). Narxlar jadvali bitta — quyidagi oltita narsaning hammasi shunga kiradi. Albomni oxirigacha tinglab, nechta manzilga yuborish mumkinligini sanab aytganimizdan keyin to'laysiz."
+          "a": "{{intro}} (VATsiz). Narxlar jadvali bitta — quyidagi oltita narsaning hammasi shunga kiradi. Musiqani tinglab, nechta manzilga yuborish mumkinligini sanab aytganimizdan keyin to'laysiz."
         },
         {
           "q": "Qancha vaqt oladi?",
@@ -1581,7 +1581,7 @@
         },
         {
           "q": "Janr juda tor bo'lsa ham bo'ladimi?",
-          "a": "Janr tor bo'lgani uchun kamroq yubormaymiz. O'sha janrni yorituvchi ixtisoslashgan nashrlarni topib ro'yxatga qo'shamiz va ustiga xalqaro musiqa nashrlarini qo'shib yuboramiz. HWAning grindcore EPsi uchun metalga ixtisoslashgan 116 nashrni yangidan yig'dik — yo'q bo'lsa, o'zimiz tuzamiz. Albomni oxirigacha tinglab, qayerga va nechta manzilga yuborilishini avval sanab aytamiz."
+          "a": "Janr tor bo'lgani uchun kamroq yubormaymiz. O'sha janrni yorituvchi ixtisoslashgan nashrlarni topib ro'yxatga qo'shamiz va ustiga xalqaro musiqa nashrlarini qo'shib yuboramiz. HWAning grindcore EPsi uchun metalga ixtisoslashgan 116 nashrni yangidan yig'dik — yo'q bo'lsa, o'zimiz tuzamiz. Musiqani tinglab, qayerga va nechta manzilga yuborilishini avval sanab aytamiz."
         },
         {
           "q": "Allaqachon chiqqan musiqa ham bo'ladimi?",
@@ -1676,8 +1676,8 @@
           "description": "KakaoTalk orqali yozing va musiqani yuboring. Bitta striming havolasining o'zi bilan ham boshlash mumkin. Muqova, portret surat, kredit va qo'shiq matnlari bo'lsa yaxshi, lekin hozir yo'q bo'lsa ham zarari yo'q. Hali chiqmagan bo'lsa ham, allaqachon chiqqan bo'lsa ham bo'laveradi."
         },
         {
-          "title": "Albomni oxirigacha tinglash va yuborish hajmini sanash — 3 ish kuni · bepul",
-          "description": "Prodyuser albomni oxirigacha tinglaydi va qanday turdagi nechta nashrga yuborish mumkinligini sanab yuboradi. Buning uchun to'lov olinmaydi."
+          "title": "Musiqani tinglash va yuborish hajmini sanash — 3 ish kuni · bepul",
+          "description": "Prodyuser musiqani tinglaydi va qanday turdagi nechta nashrga yuborish mumkinligini sanab yuboradi. Buning uchun to'lov olinmaydi."
         },
         {
           "title": "To'lov — raqamni ko'rganingizdan keyin",
@@ -1703,7 +1703,7 @@
     },
     "review": {
       "title": "Avval yuboriladigan manzillarni sanab beramiz",
-      "lead": "Prodyuser albomni oxirigacha tinglaydi va bu musiqani olishi mumkin bo'lgan nashrlar ichkarida hamda chet elda qayerda va taxminan nechta ekanini sanab aytadi. 3 ish kuni, bepul. Biz faqat olishga rozi bo'lgan musiqani yuboramiz, shuning uchun na yuboruvchi, na qabul qiluvchi tomon bekorga ovora bo'ladi. Raqamni ko'rib qaror qilasiz.",
+      "lead": "Prodyuser musiqani tinglaydi va bu musiqani olishi mumkin bo'lgan nashrlar ichkarida hamda chet elda qayerda va taxminan nechta ekanini sanab aytadi. 3 ish kuni, bepul. Ammo oyiga atigi 3 ta ijodkorni olamiz, shuning uchun navbat kutishga to'g'ri kelishi mumkin. Biz faqat olishga rozi bo'lgan musiqani yuboramiz, shuning uchun na yuboruvchi, na qabul qiluvchi tomon bekorga ovora bo'ladi. Raqamni ko'rib qaror qilasiz.",
       "criteria": [
         {
           "title": "Bu musiqani qayerda yoritishadi",
@@ -1711,11 +1711,11 @@
         },
         {
           "title": "Maqola bo'ladigan hikoya qayerda",
-          "body": "Press-reliz tanishtiruv matni emas, jurnalist maqola qiladigan xomashyo. Albomni tinglar ekanmiz, qaysi nuqta maqolaning birinchi xatboshisi bo'lishini qidiramiz. Shu yerda topilgan burchak beshta press-relizning boshlanish nuqtasi bo'ladi."
+          "body": "Press-reliz tanishtiruv matni emas, jurnalist maqola qiladigan xomashyo. Musiqani tinglar ekanmiz, qaysi nuqta maqolaning birinchi xatboshisi bo'lishini ko'rib chiqamiz. Shu yerda topilgan burchak beshta press-relizning boshlanish nuqtasi bo'ladi."
         },
         {
           "title": "Prodyuser oxirigacha tinglaydi",
-          "body": "Prodyuser Hwang Kyungha albomni boshidan oxirigacha tinglaydi. U o'n besh yildan beri indi albomlarni loyihalab, ishlab kelgan odam. Oxirigacha tinglagan odam yozgan xat bilan tinglamagani yozgan xatni qabul qiluvchi tomon ajratadi."
+          "body": "Olishga rozi bo'lgan musiqani prodyuser Hwang Kyungha boshidan oxirigacha tinglaydi. U o'n besh yildan beri indi albomlarni loyihalab, ishlab kelgan odam. Oxirigacha tinglagan odam yozgan xat bilan tinglamagani yozgan xatni qabul qiluvchi tomon ajratadi."
         }
       ],
       "rejection": "3 ish kuni ichida, bepul javob beramiz. Javobda qanday turdagi nechta nashrga yuborish mumkinligi raqam bilan yoziladi. Agar mos kanal biz tomonda emas deb hisoblasak, buni ham borligicha yozamiz va qayerga yuborganingiz ma'qulligini bilganimizcha qo'shib beramiz.",
@@ -1776,7 +1776,7 @@
       "inquiry": "Chiqarish PRi bo'yicha murojaat",
       "titleLine1": "Musiqangiz yetib boradigan joylar",
       "titleHighlight": "hali bor",
-      "subtitleLine1": "KakaoTalk orqali musiqani yuboring — prodyuser albomni oxirigacha tinglab, 3 ish kuni ichida javob beradi.",
+      "subtitleLine1": "KakaoTalk orqali musiqani yuboring — prodyuser uni tinglab, 3 ish kuni ichida javob beradi.",
       "subtitleLine2": "Nechta manzilga yuborish mumkinligini sanab berishgacha bepul. To'lov o'sha raqamni ko'rganingizdan keyin.",
       "imageAlt": "Studio NOL ish xonasi"
     },

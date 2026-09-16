@@ -1525,7 +1525,7 @@
     "hero": {
       "title": "Quảng bá phát hành nhạc",
       "subtitleLine1": "Đến được với những người chưa biết bạn — tới các đầu báo âm nhạc Hàn Quốc và 60 quốc gia, bằng ngôn ngữ từng nơi đọc",
-      "subtitleLine2": "Từ viết thông cáo đến gửi đi và báo cáo — {{intro}} · chúng tôi nghe trọn album rồi đếm cho bạn số nơi sẽ gửi, sau đó bạn mới thanh toán",
+      "subtitleLine2": "Từ viết thông cáo đến gửi đi và báo cáo — {{intro}} · chúng tôi nghe bản nhạc rồi đếm cho bạn số nơi sẽ gửi, sau đó bạn mới thanh toán",
       "badge": "Thuộc gói phát hành với {{list}} · giá đối tác sớm {{intro}} (đến {{until}})",
       "alt": "Toàn cảnh trung tâm Seoul về đêm, thành phố trải dài dưới ánh đèn"
     },
@@ -1573,7 +1573,7 @@
         },
         {
           "q": "Giá bao nhiêu?",
-          "a": "{{intro}} (chưa gồm VAT). Chỉ có một bảng giá — sáu hạng mục bên dưới đều đã nằm trong đó. Chúng tôi nghe trọn album, đếm và báo bạn số nơi sẽ gửi, sau đó bạn mới thanh toán."
+          "a": "{{intro}} (chưa gồm VAT). Chỉ có một bảng giá — sáu hạng mục bên dưới đều đã nằm trong đó. Chúng tôi nghe bản nhạc, đếm và báo bạn số nơi sẽ gửi, sau đó bạn mới thanh toán."
         },
         {
           "q": "Mất bao lâu?",
@@ -1581,7 +1581,7 @@
         },
         {
           "q": "Thể loại nhạc kén người nghe thì có sao không?",
-          "a": "Thể loại hẹp không có nghĩa là gửi ít hơn. Chúng tôi tìm các đầu mối chuyên đưa tin về dòng nhạc đó để bổ sung vào danh sách, rồi cộng thêm báo chí âm nhạc quốc tế để gửi. Riêng cho EP grindcore của HWA, chúng tôi đã thu thập mới 116 đầu mối chuyên về metal — không có thì chúng tôi lập ra. Chúng tôi nghe trọn album rồi đếm trước xem gửi tới đâu, bao nhiêu nơi và báo bạn."
+          "a": "Thể loại hẹp không có nghĩa là gửi ít hơn. Chúng tôi tìm các đầu mối chuyên đưa tin về dòng nhạc đó để bổ sung vào danh sách, rồi cộng thêm báo chí âm nhạc quốc tế để gửi. Riêng cho EP grindcore của HWA, chúng tôi đã thu thập mới 116 đầu mối chuyên về metal — không có thì chúng tôi lập ra. Chúng tôi nghe bản nhạc rồi đếm trước xem gửi tới đâu, bao nhiêu nơi và báo bạn."
         },
         {
           "q": "Nhạc đã phát hành rồi có làm được không?",
@@ -1676,8 +1676,8 @@
           "description": "Hãy nhắn cho chúng tôi qua KakaoTalk và gửi bản nhạc. Chỉ một đường link nghe nhạc trực tuyến là đã bắt đầu được. Ảnh bìa, ảnh chân dung, credit và lời bài hát có thì tốt, nhưng lúc này chưa có cũng không sao. Chưa phát hành hay đã phát hành rồi đều được."
         },
         {
-          "title": "Nghe trọn album và đếm quy mô gửi đi — 3 ngày làm việc · miễn phí",
-          "description": "Nhà sản xuất nghe album từ đầu đến cuối, rồi đếm và gửi bạn con số: có thể gửi tới bao nhiêu đầu mối thuộc những loại nào. Bước này không mất phí."
+          "title": "Nghe bản nhạc và đếm quy mô gửi đi — 3 ngày làm việc · miễn phí",
+          "description": "Nhà sản xuất nghe bản nhạc, rồi đếm và gửi bạn con số: có thể gửi tới bao nhiêu đầu mối thuộc những loại nào. Bước này không mất phí."
         },
         {
           "title": "Thanh toán — sau khi bạn đã xem con số",
@@ -1703,7 +1703,7 @@
     },
     "review": {
       "title": "Chúng tôi đếm trước số nơi sẽ gửi",
-      "lead": "Nhà sản xuất nghe trọn album, rồi đếm và cho bạn biết trong nước lẫn ngoài nước có khoảng bao nhiêu đầu mối xứng đáng nhận bản nhạc này và là những nơi nào. 3 ngày làm việc, miễn phí. Chúng tôi chỉ gửi bản nhạc đã nhận lời làm, nên cả bên gửi lẫn bên nhận đều không mất công vô ích. Bạn xem con số rồi quyết định.",
+      "lead": "Nhà sản xuất nghe bản nhạc, rồi đếm và cho bạn biết trong nước lẫn ngoài nước có khoảng bao nhiêu đầu mối xứng đáng nhận bản nhạc này và là những nơi nào. 3 ngày làm việc, miễn phí. Tuy nhiên mỗi tháng chúng tôi chỉ nhận 3 nghệ sĩ, nên có thể phải chờ đến lượt. Chúng tôi chỉ gửi bản nhạc đã nhận lời làm, nên cả bên gửi lẫn bên nhận đều không mất công vô ích. Bạn xem con số rồi quyết định.",
       "criteria": [
         {
           "title": "Những nơi nào đưa tin về dòng nhạc này",
@@ -1711,11 +1711,11 @@
         },
         {
           "title": "Câu chuyện thành bài báo nằm ở đâu",
-          "body": "Thông cáo báo chí không phải bài giới thiệu mà là nguyên liệu để nhà báo dựng thành bài. Vừa nghe trọn album chúng tôi vừa tìm xem chỗ nào sẽ thành đoạn mở đầu của bài viết. Góc tiếp cận bắt được ở đây chính là điểm xuất phát của năm bản thông cáo."
+          "body": "Thông cáo báo chí không phải bài giới thiệu mà là nguyên liệu để nhà báo dựng thành bài. Vừa nghe bản nhạc chúng tôi vừa xem chỗ nào sẽ thành đoạn mở đầu của bài viết. Góc tiếp cận bắt được ở đây chính là điểm xuất phát của năm bản thông cáo."
         },
         {
           "title": "Nhà sản xuất nghe đến hết",
-          "body": "Nhà sản xuất Hwang Kyungha nghe album từ đầu đến cuối. Anh đã mười lăm năm lên kế hoạch và làm ra những đĩa nhạc indie. Email của người đã nghe hết và email của người chưa nghe hết, bên nhận phân biệt được."
+          "body": "Bản nhạc đã nhận lời làm thì nhà sản xuất Hwang Kyungha nghe từ đầu đến cuối. Anh đã mười lăm năm lên kế hoạch và làm ra những đĩa nhạc indie. Email của người đã nghe hết và email của người chưa nghe hết, bên nhận phân biệt được."
         }
       ],
       "rejection": "Chúng tôi trả lời trong 3 ngày làm việc và không tính phí. Trong câu trả lời có con số: có thể gửi tới bao nhiêu đầu mối thuộc những loại nào. Nếu thấy cửa phù hợp không nằm ở chỗ chúng tôi, chúng tôi cũng ghi đúng như vậy, kèm theo những nơi bạn nên gửi trong phạm vi hiểu biết của mình.",
@@ -1776,7 +1776,7 @@
       "inquiry": "Hỏi về quảng bá phát hành nhạc",
       "titleLine1": "Vẫn còn những nơi",
       "titleHighlight": "mà âm nhạc có thể chạm tới",
-      "subtitleLine1": "Gửi bản nhạc qua KakaoTalk, nhà sản xuất sẽ nghe trọn album và trả lời trong 3 ngày làm việc.",
+      "subtitleLine1": "Gửi bản nhạc qua KakaoTalk, nhà sản xuất sẽ nghe và trả lời trong 3 ngày làm việc.",
       "subtitleLine2": "Đếm cho bạn số nơi sẽ gửi — bước đó miễn phí. Thanh toán diễn ra sau khi bạn đã xem con số.",
       "imageAlt": "Phòng làm việc của Studio NOL"
     },

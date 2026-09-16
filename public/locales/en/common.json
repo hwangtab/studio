@@ -1553,7 +1553,7 @@
     "hero": {
       "title": "Music Release PR",
       "subtitleLine1": "It reaches people who don't know you — Korean music outlets and 60 countries abroad, each in the language it reads",
-      "subtitleLine2": "From writing the press release to the send-out and the report — {{intro}} · we listen to the whole record and count the outlets first, then you pay",
+      "subtitleLine2": "From writing the press release to the send-out and the report — {{intro}} · we listen to the music and count the outlets first, then you pay",
       "badge": "Part of our release bundle at {{list}} · early-partner price {{intro}} (through {{until}})",
       "alt": "Seoul at night, the city spread out under its lights"
     },
@@ -1601,7 +1601,7 @@
         },
         {
           "q": "How much is it?",
-          "a": "{{intro}}, excluding VAT. There is one price — all six things below are inside it. We listen to the whole record and tell you how many outlets we can send to; you pay after that."
+          "a": "{{intro}}, excluding VAT. There is one price — all six things below are inside it. We listen to the music and tell you how many outlets we can send to; you pay after that."
         },
         {
           "q": "How long does it take?",
@@ -1609,7 +1609,7 @@
         },
         {
           "q": "Does it matter if the genre is niche?",
-          "a": "A niche genre does not mean a smaller send. We find the outlets that specialise in that genre, add them to the list, and combine them with international music press. For HWA's grindcore EP we gathered 116 metal-specialist outlets from scratch — if they aren't on the list, we build the list. We listen to the whole record and count where and how many first."
+          "a": "A niche genre does not mean a smaller send. We find the outlets that specialise in that genre, add them to the list, and combine them with international music press. For HWA's grindcore EP we gathered 116 metal-specialist outlets from scratch — if they aren't on the list, we build the list. We listen to the music and count where and how many first."
         },
         {
           "q": "Can you do this for music that's already out?",
@@ -1704,8 +1704,8 @@
           "description": "Message us on KakaoTalk and send the music. A single streaming link is enough to start. Artwork, press photos, credits and lyrics help if you have them, but you don't need them right now. Whether the record is still unreleased or already out, either is fine."
         },
         {
-          "title": "We listen to every track and count the outlets — 3 business days, free",
-          "description": "The producer listens to the album all the way through and sends you the count: how many outlets of what kind we can send to. It costs nothing."
+          "title": "We listen to the music and count the outlets — 3 business days, free",
+          "description": "The producer listens to the music and sends you the count: how many outlets of what kind we can send to. It costs nothing."
         },
         {
           "title": "Payment — after you've seen the numbers",
@@ -1731,7 +1731,7 @@
     },
     "review": {
       "title": "First we count the outlets for you",
-      "lead": "The producer listens to every track, then tells you where — and roughly how many outlets in Korea and abroad — would take this music. Three business days, free. We only send out music we've agreed to take on, so nobody wastes their time — not the side sending it, not the side receiving it. You decide once you've seen the number.",
+      "lead": "The producer listens to the music, then tells you where — and roughly how many outlets in Korea and abroad — would take it. Three business days, free. We only take three acts a month, though, so there may be a wait for your turn. We only send out music we've agreed to take on, so nobody wastes their time — not the side sending it, not the side receiving it. You decide once you've seen the number.",
       "criteria": [
         {
           "title": "Which outlets cover this music",
@@ -1739,11 +1739,11 @@
         },
         {
           "title": "Where the story a journalist can write is",
-          "body": "A press release isn't a blurb, it's the raw material a journalist turns into an article. Listening through the record, we look for the point that could open the piece. The angle we find here is where all five press releases start."
+          "body": "A press release isn't a blurb, it's the raw material a journalist turns into an article. Listening to the music, we look at which point could open the piece. The angle we find here is where all five press releases start."
         },
         {
           "title": "The producer listens all the way through",
-          "body": "Producer Hwang Kyungha listens to the album from the first track to the last. He has spent fifteen years planning and making independent records. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell."
+          "body": "Once we've agreed to take a record on, producer Hwang Kyungha listens to it from the first track to the last. He has spent fifteen years planning and making independent records. An email from someone who finished the record reads differently from one that didn't, and the people receiving it can tell."
         }
       ],
       "rejection": "You get an answer within three business days, free. It says in numbers how many outlets of what kind we can send to. If we judge that our channels aren't the right fit for it, we write that plainly too, and add whatever we know about where you'd do better to send it.",
@@ -1804,7 +1804,7 @@
       "inquiry": "Ask about music release PR",
       "titleLine1": "There are still places",
       "titleHighlight": "your music can reach",
-      "subtitleLine1": "Send us the music on KakaoTalk, and the producer listens to all of it and answers within 3 business days.",
+      "subtitleLine1": "Send us the music on KakaoTalk, and the producer listens to it and answers within 3 business days.",
       "subtitleLine2": "Counting the outlets for you costs nothing. Payment comes after you've seen that number.",
       "imageAlt": "The Studio NOL workroom"
     },
