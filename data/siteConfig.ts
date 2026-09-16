@@ -14,12 +14,6 @@ import { CANONICAL_FACTS } from '../lib/factTokens';
 export const hostingProvider = { name: 'Vercel Inc.' } as const;
 
 // Social profiles — 계정 개설 시 URL 추가 (schema.org sameAs에 자동 반영됨)
-// 제3자 플랫폼의 우리 리스팅 — 후기가 실제로 쌓이는 곳. Organization.sameAs로 가리킨다
-// (business.ts의 aggregateRating 미발행 결정과 짝: 자사 집계 대신 외부 출처를 가리키는 형태).
-export const thirdPartyListings = {
-  spacecloud: 'https://www.spacecloud.kr/space/68725',
-};
-
 export const socialProfiles = {
   instagram: 'https://www.instagram.com/studio_nol_',
   threads: 'https://www.threads.com/@studio_nol_',
