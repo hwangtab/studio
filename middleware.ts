@@ -47,6 +47,23 @@ const shouldEnforceCanonicalHost =
 // production 검증은 `next build && next start`로 별도로 수행한다.
 const isCspEnabled = process.env.NODE_ENV === 'production';
 
+/**
+ * 리워드 내려받기가 302로 보내는 저장소 오리진. 서명 주소는 `R2_ACCOUNT_ENDPOINT`가 가리키는
+ * 호스트라, 설정에서 읽어 정확히 그 한 곳만 연다 — 와일드카드로 R2 전체를 열지 않는다.
+ *
+ * 값이 없으면(로컬·프리뷰에서 env 누락) 아무것도 더하지 않는다. 그 환경에서는 서명 발급
+ * 자체가 503으로 끝나므로 폼이 리디렉트에 닿지 않는다.
+ */
+const R2_FORM_ACTION_ORIGIN = (() => {
+  const raw = process.env.R2_ACCOUNT_ENDPOINT;
+  if (!raw) return '';
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return '';
+  }
+})();
+
 function buildContentSecurityPolicy(): string {
     // GA4 초기화를 /scripts/ga4-init.js로 외부화해 'unsafe-inline'이 불필요해졌다.
     // JSON-LD(<script type="application/ld+json">)는 실행되지 않는 데이터 블록이므로
@@ -55,7 +72,11 @@ function buildContentSecurityPolicy(): string {
     // 'script-src-attr none'으로 별도 차단.
     //
     // 추가 보호:
-    // - form-action 'self': 폼 제출이 외부로 hijack되지 않도록 self로 한정
+    // - form-action: 폼 제출이 외부로 hijack되지 않도록 한정. 다만 **저장소 한 곳은 열어야
+    //   한다** — 리워드 내려받기는 우리 API로 POST한 뒤 R2 서명 주소로 302하는데, 폼 제출의
+    //   리디렉트 목적지도 이 지시자에 걸린다(크롬·사파리는 막고 파이어폭스는 통과시킨다).
+    //   막히면 후원자는 파일을 못 받는데 서버는 이미 downloaded_at을 찍은 뒤라 셀프 취소까지
+    //   잃는다. 링크를 폼으로 바꾸면서 생긴 구멍이라 여기 예외를 둔다(scripts 없음, 우리 버킷뿐).
     // - manifest-src 'self': PWA manifest는 /api/manifest 자체 호스팅
     // - frame-ancestors 'self': clickjacking 방어 (X-Frame-Options 보강)
     // - base-uri 'self': <base> 태그 주입 통한 상대경로 redirect 차단
@@ -73,7 +94,7 @@ function buildContentSecurityPolicy(): string {
         "connect-src 'self' https://*.tosspayments.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
-        "form-action 'self'",
+        `form-action 'self'${R2_FORM_ACTION_ORIGIN ? ` ${R2_FORM_ACTION_ORIGIN}` : ''}`,
         "frame-ancestors 'self'",
         "manifest-src 'self'",
         "upgrade-insecure-requests",
