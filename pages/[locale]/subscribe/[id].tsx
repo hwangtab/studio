@@ -5,7 +5,6 @@
  * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
  * tests/pages/privateLinkNavigation.test.ts
  */
-import { useState } from 'react';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
@@ -63,7 +62,6 @@ function PriceBreakdown({ itemAmount, vatAmount, totalAmount }: { itemAmount: nu
 
 function SubscribeSetupOk(props: OkProps) {
   const { id, setupToken, customerKey, customerName, customerEmail, productName, itemAmount, vatAmount, totalAmount, billingDay, setupMode } = props;
-  const [agreed, setAgreed] = useState(false);
 
   return (
     <>
@@ -110,15 +108,19 @@ function SubscribeSetupOk(props: OkProps) {
             </ul>
           </div>
 
-          <label className="mt-6 flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-            <input
-              type="checkbox"
-              className="mt-0.5 h-4 w-4 shrink-0"
-              checked={agreed}
-              onChange={(e) => setAgreed(e.target.checked)}
-            />
-            <span>위 결제 조건과 해지·환불 규정에 동의합니다.</span>
-          </label>
+          {/*
+            동의는 **카드 등록하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다 —
+            예약·믹싱·펀딩 결제 화면과 같은 방식이다(#162).
+
+            해지·환불 조건은 전자상거래법 제13조상 **고지** 의무이고, 규정 전문을 바로 위에
+            펼쳐 두었다. 매월 자동 청구라는 사실과 첫 결제 시점도 그 위에 이미 적혀 있다 —
+            체크 한 번이 더해 주는 것은 없고, 누르기 전에 읽어야 할 것이 화면에 다 있다.
+
+            서버는 등록 토큰으로 이 화면을 통해 온 요청만 받는다(findSubscriptionForSetup).
+          */}
+          <p className="mt-6 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+            카드 등록하기를 누르면 위 결제 조건과 해지·환불 규정에 동의하는 것으로 봅니다.
+          </p>
 
           <div className="mt-6">
             <BillingAuthButton
@@ -127,7 +129,6 @@ function SubscribeSetupOk(props: OkProps) {
               customerKey={customerKey}
               customerName={customerName}
               customerEmail={customerEmail}
-              disabled={!agreed}
             />
           </div>
         </section>
