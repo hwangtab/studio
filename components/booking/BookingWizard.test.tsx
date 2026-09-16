@@ -19,11 +19,18 @@ const requestPayment = jest.fn().mockResolvedValue(undefined);
 const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
+// 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
+// `agreementStatusChange`가 알려 준다. null은 "아직 모름".
+let widgetAgreed: boolean | null = null;
 jest.mock('./useTossPaymentWidgets', () => ({
   useTossPaymentWidgets: () => ({
     methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
     ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
+    agreedRequiredTerms: widgetAgreed,
   }),
+  // 모듈을 통째로 대체하므로 상수도 함께 내보내야 한다 — 빠뜨리면 호출부가 undefined를
+  // setError에 넣어 경고가 조용히 사라진다(2026-09-16에 실제로 그랬다).
+  TOSS_TERMS_REQUIRED_MESSAGE: '결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.',
 }));
 
 const PRODUCT: SessionProduct = {
@@ -316,5 +323,51 @@ describe('BookingWizard 동의 안내', () => {
 
     expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toHaveAttribute('aria-invalid', 'true');
     expect(await screen.findByRole('alert')).toBeInTheDocument();
+  });
+});
+
+/**
+ * 위젯이 그리는 결제 약관을 빼먹은 경우.
+ *
+ * 예전엔 그냥 보내고 `requestPayment`가 실패하게 두고 `code === 'NEED_AGREEMENT'`로 사유를
+ * 가리려 했는데 **그 코드는 SDK에 없다**. 그래서 약관만 빼먹은 사람이 "결제를 시작하지
+ * 못했습니다. 잠시 후 다시 시도해 주세요"를 봤다 — 다시 시도해도 같고 무엇을 고쳐야
+ * 하는지도 알 수 없다. 게다가 그 시점엔 주문이 이미 만들어져 있었다.
+ */
+describe('BookingWizard 위젯 약관 가드', () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = jest.fn();
+    requestPayment.mockClear();
+  });
+  afterEach(() => { widgetAgreed = null; });
+
+  const fillAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
+    await goToStep3(user);
+    await user.type(screen.getByLabelText(/^이름/), '홍길동');
+    await user.type(screen.getByLabelText(/^휴대폰 번호/), '01012345678');
+    await user.type(screen.getByLabelText(/^이메일/), 'hong@example.com');
+    await user.click(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ }));
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+  };
+
+  it('위젯 약관을 빼먹으면 예약을 만들지 않고 어느 약관인지 알려 준다', async () => {
+    widgetAgreed = false;
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fillAndSubmit(user);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
+    expect(requestPayment).not.toHaveBeenCalled();
+  });
+
+  /** 결제창을 닫은 것은 오류가 아니다 — 약관 문구를 띄우면 오진이다. */
+  it('결제창을 닫으면 약관 문구를 띄우지 않는다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fillAndSubmit(user);
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+
+    expect(screen.queryByText(/결제 서비스 이용 약관/)).toBeNull();
   });
 });

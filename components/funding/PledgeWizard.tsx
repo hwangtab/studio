@@ -1,7 +1,7 @@
 import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 
-import { useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
+import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
@@ -256,8 +256,10 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
    *
    * 금액은 후원자가 수량·추가 후원금을 고칠 때마다 위젯에 알린다. 다시 그리지는 않는다.
    */
-  const { methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment } =
-    useTossPaymentWidgets(preview.totalAmount);
+  const {
+    methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
+    agreedRequiredTerms,
+  } = useTossPaymentWidgets(preview.totalAmount);
 
   const submit = async () => {
     // 재진입 가드는 **ref**여야 한다. `submitting` 상태는 비동기로 갱신돼서, 같은 tick에
@@ -272,8 +274,22 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
       setTermsError(true);
       // scrollIntoView를 먼저 부르고 focus는 스크롤 없이 준다. `focus()`만 쓰면 브라우저가
       // 최소한으로만 스크롤해서, sticky 요약 블록에 가려진 채 초점만 옮겨 갈 수 있다.
-      termsRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      termsRef.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
       termsRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    /**
+     * 위젯 약관도 제출 **전에** 본다.
+     *
+     * 예전에는 그냥 보내고 `requestPayment`가 실패하게 뒀다. 그 시점엔 주문이 이미
+     * 만들어져 있어서 한정 재고 홀드가 잡힌 채 실패했고, 문구도 "잠시 후 다시 시도해
+     * 주세요"라 무엇을 고쳐야 하는지 알 수 없었다. 동의 상태를 못 받았을 때(null)는
+     * 막지 않는다 — 동의했는데 결제가 안 되는 쪽이 더 나쁘다.
+     */
+    if (agreedRequiredTerms === false) {
+      submittingRef.current = false;
+      setError(TOSS_TERMS_REQUIRED_MESSAGE);
+      document.getElementById(agreementId)?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
       return;
     }
     // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
@@ -328,9 +344,18 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
        * 고쳐야 하는 것이라 문구를 띄운다.
        */
       const code = (err as { code?: string } | null)?.code;
-      if (code === 'NEED_AGREEMENT' || code === 'NEED_CARD_PAYMENT_DETAIL') {
+      // **취소를 가장 먼저 걸러낸다.** 결제창을 닫은 것은 오류가 아니라서 아무 문구도
+      // 띄우지 않는다 — 여기서 아래 약관 분기가 먼저 걸리면 창을 닫은 사람에게 "약관에
+      // 동의해 주세요"를 띄우는 오진이 된다.
+      if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
+      // `NEED_AGREEMENT`는 SDK에 없는 코드였다 — 그 분기는 한 번도 타지 않았고, 약관만
+      // 빼먹은 사람이 "잠시 후 다시 시도해 주세요"를 봤다. 이제는 제출 전에 막지만(위),
+      // 동의 상태를 못 받은 경우(null)까지 대비해 여기서도 동의 쪽을 먼저 의심한다.
+      if (agreedRequiredTerms !== true) {
+        setError(TOSS_TERMS_REQUIRED_MESSAGE);
+      } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
         setError('결제 수단과 약관 동의를 확인해 주세요.');
-      } else if (code !== 'USER_CANCEL' && code !== 'PAY_PROCESS_CANCELED') {
+      } else {
         setError('결제를 시작하지 못했습니다. 잠시 후 다시 시도해 주세요.');
       }
     }
@@ -488,57 +513,49 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           <>
             <div id={methodsId} />
             <div id={agreementId} />
+            {/*
+              우리 약관 동의를 **결제수단 카드 안**, 위젯 약관 바로 아래에 둔다.
+
+              카드 밖에 두면 필수 동의 두 개가 카드 경계로 갈린다 — 들여쓰기도 배경도
+              달라서 "붙여 놨다"가 화면에서는 전혀 안 보였다(2026-09-16 실사용 확인).
+              같은 패딩 안에 같은 결로 놓아야 한 묶음으로 읽힌다.
+
+              두 약관은 없앨 수 없다: 위젯 쪽은 토스와 이용자 사이의 결제 서비스 약관,
+              이쪽은 우리와 후원자 사이의 거래 약관(청약철회·환불)과 개인정보 수집 동의다.
+              배송지는 토스에 넘기지 않으므로(lib/funding/policy.ts
+              FUNDING_DATA_PROCESSORS) 그 수집 동의를 받아 줄 수 있는 것은 이쪽뿐이다.
+              테두리 박스를 두르지 않는 것도 위젯 약관 행과 같은 결을 맞추기 위해서다.
+            */}
+            <label
+              className={`mt-3 flex cursor-pointer items-start gap-3 rounded-xl px-1 py-2 transition-colors ${
+                termsError ? 'bg-red-50 dark:bg-red-950/40' : ''
+              }`}
+            >
+              <input
+                ref={termsRef}
+                type="checkbox"
+                className={radioClass}
+                checked={form.termsAgreed}
+                onChange={(e) => {
+                  setForm({ ...form, termsAgreed: e.target.checked });
+                  if (e.target.checked) setTermsError(false);
+                }}
+                aria-invalid={termsError}
+                aria-describedby={termsError ? `${uid}-terms-error` : undefined}
+              />
+              <span className="text-sm text-gray-700 dark:text-gray-200">
+                <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
+                <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의합니다 <span className="text-red-600 dark:text-red-400">(필수)</span>
+              </span>
+            </label>
+            {termsError && (
+              <p id={`${uid}-terms-error`} role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
+                {TERMS_REQUIRED_MESSAGE}
+              </p>
+            )}
           </>
         )}
       </fieldset>
-
-      {/*
-        우리 약관 동의는 **결제위젯이 그리는 결제 약관 바로 아래**에 둔다.
-
-        이 화면에는 필수 동의가 두 벌 있다 — 위젯 쪽은 토스와 이용자 사이의 결제 서비스
-        약관이고, 이쪽은 우리와 후원자 사이의 거래 약관(청약철회·환불)과 개인정보 수집
-        동의다. 배송지는 토스에 넘기지 않으므로(lib/funding/policy.ts
-        FUNDING_DATA_PROCESSORS) 그 수집 동의를 받아 줄 수 있는 것은 이 체크박스뿐이다.
-        즉 둘 중 하나를 없앨 수 없다.
-
-        없앨 수 없으니 **한 자리에 모은다.** 예전엔 이 체크가 '후원자 정보' 안(위젯보다
-        위)에 있다가, 다음엔 요약 블록 안(요약 dl 아래)으로 내려갔다. 어느 쪽이든 필수
-        동의 두 개가 화면에서 갈라져 "체크할 곳이 세 군데"가 됐다. 결제 약관 바로 아래에
-        붙이면 필수는 한 군데, 나머지는 응원 메시지의 선택 옵션(이름 공개) 하나뿐이다.
-
-        라벨에 "펀딩"을 넣어 위젯 쪽 "결제 서비스 이용 약관"과 구분되게 한다.
-      */}
-      <div className="px-4 sm:px-6">
-        {/* 테두리 박스를 두르지 않는다 — 바로 위 위젯 약관 행과 같은 결로 보이게 한다.
-            미동의일 때만 붉은 바탕으로 눈에 걸리게 한다. */}
-        <label
-          className={`mt-3 flex cursor-pointer items-start gap-3 rounded-xl px-1 py-2 transition-colors ${
-            termsError ? 'bg-red-50 dark:bg-red-950/40' : ''
-          }`}
-        >
-          <input
-            ref={termsRef}
-            type="checkbox"
-            className={radioClass}
-            checked={form.termsAgreed}
-            onChange={(e) => {
-              setForm({ ...form, termsAgreed: e.target.checked });
-              if (e.target.checked) setTermsError(false);
-            }}
-            aria-invalid={termsError}
-            aria-describedby={termsError ? `${uid}-terms-error` : undefined}
-          />
-          <span className="text-sm text-gray-700 dark:text-gray-200">
-            <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
-            <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의합니다 <span className="text-red-600 dark:text-red-400">(필수)</span>
-          </span>
-        </label>
-        {termsError && (
-          <p id={`${uid}-terms-error`} role="alert" className="mt-1.5 text-sm text-red-600 dark:text-red-400">
-            {TERMS_REQUIRED_MESSAGE}
-          </p>
-        )}
-      </div>
 
       {/* 선택 내용과 합계를 제출 버튼 바로 위에 붙여 둔다 — 모바일에서 폼을 다시
           위로 스크롤하지 않고도 무엇을 얼마에 사는지 확인할 수 있어야 한다. */}

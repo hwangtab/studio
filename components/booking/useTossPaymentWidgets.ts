@@ -3,6 +3,15 @@ import { loadTossPayments, ANONYMOUS } from '@tosspayments/tosspayments-sdk';
 
 type Widgets = Awaited<ReturnType<Awaited<ReturnType<typeof loadTossPayments>>['widgets']>>;
 
+/**
+ * 위젯이 그리는 필수 결제 약관을 빼먹었을 때의 문구.
+ *
+ * 화면에 약관 동의가 두 벌이라 "약관에 동의해 주세요"로는 어느 쪽인지 알 수 없다 —
+ * 우리 것은 이미 체크한 사람이 이 문구를 본다. 위젯 약관의 실제 라벨을 그대로 인용해
+ * 찾아갈 수 있게 한다.
+ */
+export const TOSS_TERMS_REQUIRED_MESSAGE = '결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.';
+
 export interface TossRequestPaymentParams {
   orderId: string;
   orderName: string;
@@ -55,6 +64,22 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
 
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /**
+   * 위젯이 그리는 **필수 결제 약관**에 동의했는가. `null`은 아직 모른다는 뜻이다.
+   *
+   * 이걸 추적하지 않으면 미동의 상태로 제출을 막을 방법이 없다. 예전에는 그냥 제출시켜
+   * `requestPayment`가 실패하게 두고 `code === 'NEED_AGREEMENT'`로 사유를 가리려 했는데,
+   * **그 코드는 SDK에 없다**(types/index.d.ts의 requestPayment throws 목록에 약관 관련
+   * 항목이 없다). 그래서 약관만 빼먹은 사람도 "결제를 시작하지 못했습니다. 잠시 후 다시
+   * 시도해 주세요"를 봤다 — 다시 시도해도 같고, 무엇을 고쳐야 하는지도 알 수 없다.
+   * 게다가 그 시점엔 주문이 이미 만들어져 있어(펀딩은 한정 재고 홀드까지) 실패가 흔적을
+   * 남긴다. 제출 전에 막는 것이 맞다.
+   *
+   * `null`을 false로 취급하지 않는 이유: 위젯이 렌더 직후 초기 상태를 이벤트로 주는지가
+   * 판본에 따라 다르다. 못 받은 상태에서 막으면 동의를 했는데도 결제가 안 된다 —
+   * 모를 때는 종전대로 보내고, 실패 문구만 정확하게 바꾼다.
+   */
+  const [agreedRequiredTerms, setAgreedRequiredTerms] = useState<boolean | null>(null);
   // 위젯 로드 실패 시 "다시 시도"가 이 값을 증가시켜 아래 effect를 재실행한다.
   const [retryKey, setRetryKey] = useState(0);
 
@@ -76,10 +101,19 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
         const toss = await loadTossPayments(clientKey);
         const widgets = toss.widgets({ customerKey: ANONYMOUS });
         await widgets.setAmount({ currency: 'KRW', value: amountRef.current });
-        await Promise.all([
+        const [, agreementWidget] = await Promise.all([
           widgets.renderPaymentMethods({ selector: `#${methodsId}` }),
           widgets.renderAgreement({ selector: `#${agreementId}` }),
         ]);
+        // 동의 상태를 구독한다. 위젯 안의 체크는 iframe 안에서 일어나므로 이 이벤트가
+        // 아니면 밖에서 알 방법이 없다.
+        //
+        // 옵셔널 호출인 이유: 구독이 안 되면 상태는 `null`로 남고, 호출부는 `null`을
+        // "모름"으로 보고 종전대로 제출시킨다. 즉 구독 실패가 결제를 막지 않는다 —
+        // SDK 판본이 반환 형태를 바꿔도 결제 경로는 그대로 산다.
+        agreementWidget?.on?.('agreementStatusChange', (status) => {
+          if (!cancelled) setAgreedRequiredTerms(status.agreedRequiredTerms);
+        });
         if (!cancelled) { widgetsRef.current = widgets; setReady(true); }
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : '결제 모듈을 불러오지 못했습니다.');
@@ -91,6 +125,8 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
       // 않으면 재마운트 때 옛 iframe이 남은 채 새 iframe이 덧붙는다.
       widgetsRef.current = null;
       setReady(false);
+      // 새로 그린 위젯의 체크는 풀린 상태로 시작한다 — 옛 동의를 물려주면 안 된다.
+      setAgreedRequiredTerms(null);
       if (methodsEl) methodsEl.innerHTML = '';
       if (agreementEl) agreementEl.innerHTML = '';
     };
@@ -118,5 +154,5 @@ export const useTossPaymentWidgets = (amount: number, enabled = true) => {
     setRetryKey((k) => k + 1);
   }, []);
 
-  return { methodsId, agreementId, ready, error, retry, requestPayment };
+  return { methodsId, agreementId, ready, error, retry, requestPayment, agreedRequiredTerms };
 };

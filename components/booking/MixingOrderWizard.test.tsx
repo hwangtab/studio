@@ -20,11 +20,18 @@ const requestPayment = jest.fn().mockResolvedValue(undefined);
 const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
+// 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
+// `agreementStatusChange`가 알려 준다. null은 "아직 모름".
+let widgetAgreed: boolean | null = null;
 jest.mock('./useTossPaymentWidgets', () => ({
   useTossPaymentWidgets: () => ({
     methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
     ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
+    agreedRequiredTerms: widgetAgreed,
   }),
+  // 모듈을 통째로 대체하므로 상수도 함께 내보내야 한다 — 빠뜨리면 호출부가 undefined를
+  // setError에 넣어 경고가 조용히 사라진다(2026-09-16에 실제로 그랬다).
+  TOSS_TERMS_REQUIRED_MESSAGE: '결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.',
 }));
 
 const createOrderResponse = {
@@ -278,5 +285,43 @@ describe('MixingOrderWizard 동의 안내', () => {
 
     expect(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ })).toHaveAttribute('aria-invalid', 'true');
     expect(await screen.findByRole('alert')).toBeInTheDocument();
+  });
+});
+
+/** BookingWizard와 같은 계약 — 위젯 약관을 빼먹으면 주문을 만들기 전에 막는다. */
+describe('MixingOrderWizard 위젯 약관 가드', () => {
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = jest.fn();
+    requestPayment.mockClear();
+  });
+  afterEach(() => { widgetAgreed = null; });
+
+  const fillAndSubmit = async (user: ReturnType<typeof userEvent.setup>) => {
+    await goToStep2(user);
+    await user.type(screen.getByLabelText(/^이름/), '김믹싱');
+    await user.type(screen.getByLabelText(/^휴대폰 번호/), '01055556666');
+    await user.type(screen.getByLabelText(/^이메일/), 'mix@example.com');
+    await user.click(screen.getByRole('checkbox', { name: /환불 규정에 동의합니다/ }));
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+  };
+
+  it('위젯 약관을 빼먹으면 주문을 만들지 않고 어느 약관인지 알려 준다', async () => {
+    widgetAgreed = false;
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
+    expect(requestPayment).not.toHaveBeenCalled();
+  });
+
+  it('결제창을 닫으면 약관 문구를 띄우지 않는다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+
+    expect(screen.queryByText(/결제 서비스 이용 약관/)).toBeNull();
   });
 });

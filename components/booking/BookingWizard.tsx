@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
 import PriceBreakdown from './PriceBreakdown';
-import { useTossPaymentWidgets } from './useTossPaymentWidgets';
+import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from './useTossPaymentWidgets';
 import { Button } from '../ui/Button';
 import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
@@ -239,6 +239,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
    */
   const {
     methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
+    agreedRequiredTerms,
     // 마운트 지점이 3단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
   } = useTossPaymentWidgets(amounts.totalAmount, step === 3);
 
@@ -253,8 +254,21 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
       // scrollIntoView를 먼저 부르고 focus는 스크롤 없이 준다. `focus()`만 쓰면 브라우저가
       // 최소한으로만 스크롤해서, 화면 밖이나 하단 고정 요소에 가려진 채 초점만 옮겨 간다 —
       // 동의 안 했다는 말은 보이는데 어디를 눌러야 하는지는 안 보이는 상태가 된다.
-      agreeRef.current?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      agreeRef.current?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
       agreeRef.current?.focus({ preventScroll: true });
+      return;
+    }
+    /**
+     * 위젯이 그리는 결제 약관도 제출 **전에** 본다.
+     *
+     * 예전에는 그냥 보내고 `requestPayment`가 실패하게 뒀다. 그 시점엔 주문이 이미
+     * 만들어져 있고, 문구도 "잠시 후 다시 시도해 주세요"라 무엇을 고쳐야 하는지 알 수
+     * 없었다(가리려던 `NEED_AGREEMENT` 코드는 SDK에 없다). 동의 상태를 못 받았을 때
+     * (null)는 막지 않는다 — 동의했는데 결제가 안 되는 쪽이 더 나쁘다.
+     */
+    if (agreedRequiredTerms === false) {
+      setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
+      document.getElementById(agreementId)?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
       return;
     }
 
@@ -317,9 +331,18 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
        * (lib/booking/service.ts의 자가 선점 해제) — 자기 홀드에 자기가 막히지 않는다.
        */
       const code = (err as { code?: string } | null)?.code;
-      if (code === 'NEED_AGREEMENT' || code === 'NEED_CARD_PAYMENT_DETAIL') {
+      // **취소를 가장 먼저 걸러낸다.** 결제창을 닫은 것은 오류가 아니라서 아무 문구도
+      // 띄우지 않는다 — 여기서 아래 약관 분기가 먼저 걸리면 창을 닫은 사람에게 "약관에
+      // 동의해 주세요"를 띄우는 오진이 된다.
+      if (code === 'USER_CANCEL' || code === 'PAY_PROCESS_CANCELED') return;
+      // `NEED_AGREEMENT`는 SDK에 없는 코드였다 — 그 분기는 한 번도 타지 않았고, 약관만
+      // 빼먹은 사람이 "잠시 후 다시 시도해 주세요"를 봤다. 이제는 제출 전에 막지만(위),
+      // 동의 상태를 못 받은 경우(null)까지 대비해 여기서도 동의 쪽을 먼저 의심한다.
+      if (agreedRequiredTerms !== true) {
+        setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
+      } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
         setSubmitError('결제 수단과 약관 동의를 확인해 주세요.');
-      } else if (code !== 'USER_CANCEL' && code !== 'PAY_PROCESS_CANCELED') {
+      } else {
         setSubmitError('네트워크 오류로 예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
       }
     } finally {
