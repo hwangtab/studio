@@ -35,6 +35,14 @@ export const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
   es: 'Programa de Residencia de Sala Premium', vi: 'Chương trình thuê phòng tập cao cấp',
   th: 'โปรแกรมเช่าห้องซ้อมระดับพรีเมียม', uz: "Premium mashg'ulot xonasi dasturi",
 };
+export const RELEASE_PRESS_OFFER_NAMES: Record<Locale, string> = {
+  ko: '음원 발매 홍보', en: 'Release Press Campaign', zh: '音乐发行宣传',
+  es: 'Campaña de Prensa', vi: 'Chiến dịch PR phát hành', th: 'แคมเปญข่าวประชาสัมพันธ์', uz: 'Reliz uchun press-kampaniya',
+};
+export const FUNDING_DESIGN_OFFER_NAMES: Record<Locale, string> = {
+  ko: '펀딩 설계 대행', en: 'Crowdfunding Design', zh: '众筹设计代理',
+  es: 'Diseño de Crowdfunding', vi: 'Thiết kế crowdfunding', th: 'ออกแบบคราวด์ฟันดิง', uz: 'Crowdfunding dizayni',
+};
 export const ITEM_LIST_NAMES: Record<Locale, string> = {
   ko: '포트폴리오', en: 'Portfolio', zh: '作品集',
   es: 'Portafolio', vi: 'Danh mục tác phẩm', th: 'ผลงาน', uz: 'Portfolio',
