@@ -52,7 +52,7 @@ it('무통장 환불 기록 메일도 환불액을 말한다', async () => {
 describe('제목 꼬리표 · 결제수단 라벨', () => {
   it('프로젝트를 못 찾으면 제목이 em dash로 끝나지 않는다', async () => {
     await sendFundingConfirmedEmails(order, null);
-    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 후원이 확정되었습니다');
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 펀딩이 확정되었습니다');
 
     (sendEmail as jest.Mock).mockClear();
     await sendFundingCancelledEmails(order, null, 'refunded', 5000);
@@ -61,7 +61,7 @@ describe('제목 꼬리표 · 결제수단 라벨', () => {
 
   it('프로젝트가 있으면 제목에 붙는다', async () => {
     await sendFundingConfirmedEmails(order, project);
-    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 후원이 확정되었습니다 — 데모 앨범');
+    expect((sendEmail as jest.Mock).mock.calls[0][0].subject).toBe('[스튜디오 놀] 펀딩이 확정되었습니다 — 데모 앨범');
   });
 
   it('운영자 메일의 결제수단은 한글 라벨로 나간다 — enum 원문을 보이지 않는다', async () => {
@@ -94,7 +94,7 @@ describe('청약철회 고지 (전자상거래법 제13조 2항)', () => {
     expect(text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
   });
 
-  it('운영자 메일에는 청약철회 고지를 넣지 않는다 — 수신자가 후원자가 아니다', async () => {
+  it('운영자 메일에는 청약철회 고지를 넣지 않는다 — 수신자가 서포터가 아니다', async () => {
     await sendFundingConfirmedEmails(order, project);
     expect((sendEmail as jest.Mock).mock.calls[1][0].text as string).not.toContain('[청약철회 안내]');
   });
@@ -105,13 +105,13 @@ describe('청약철회 고지 (전자상거래법 제13조 2항)', () => {
  * 고객은 취소가 접수된 줄 알고 기다리다가 리워드를 받는다.
  */
 it('취소 요청 철회 메일은 고객·운영자 두 통, 사유와 다시 요청하는 방법이 들어간다', async () => {
-  expect(await sendFundingRefundRequestClearedEmails(order, project, '후원자 전화 철회')).toBeNull();
+  expect(await sendFundingRefundRequestClearedEmails(order, project, '서포터 전화 철회')).toBeNull();
   expect(sendEmail).toHaveBeenCalledTimes(2);
   const customer = (sendEmail as jest.Mock).mock.calls[0][0];
   expect(customer.to).toBe('a@b.com');
   expect(customer.replyTo).toBe(CUSTOMER_REPLY_TO);
   expect(customer.subject).toBe('[스튜디오 놀] 취소 요청이 철회 처리되었습니다 — 데모 앨범');
-  expect(customer.text).toContain('사유: 후원자 전화 철회');
+  expect(customer.text).toContain('사유: 서포터 전화 철회');
   expect(customer.text).toContain('다시 취소를 요청');
   expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
   expect((sendEmail as jest.Mock).mock.calls[1][0].to).toBe(OPERATOR_EMAIL);

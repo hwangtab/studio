@@ -34,11 +34,11 @@ it('md 파싱이 실패해도 500이 아니라 빈 프로젝트 목록 + 에러 
   expect(result.props.pledgesError).toBeUndefined();
 });
 
-it('후원 목록 조회가 실패했을 때만 pledgesError가 붙는다', async () => {
+it('펀딩 목록 조회가 실패했을 때만 pledgesError가 붙는다', async () => {
   (getAllFundingProjects as jest.Mock).mockReturnValue([]);
   (listFundingOrders as jest.Mock).mockRejectedValueOnce(new Error('db down'));
   const result = (await getServerSideProps(context)) as { props: { pledgesError?: string } };
-  expect(result.props.pledgesError).toContain('후원 목록을 불러오는 중 오류');
+  expect(result.props.pledgesError).toContain('펀딩 목록을 불러오는 중 오류');
 });
 
 it('정상일 때는 에러 없이 프로젝트를 내려준다', async () => {

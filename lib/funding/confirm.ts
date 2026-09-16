@@ -122,8 +122,8 @@ const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean 
 };
 
 const GENERIC = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
-const EXPIRED = '결제 대기 시간이 만료된 후원입니다. 다시 후원해 주세요.';
-const RECORDING_FAILED = '결제는 완료되었으나 후원 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
+const EXPIRED = '결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.';
+const RECORDING_FAILED = '결제는 완료되었으나 펀딩 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
 
 const success = (order: FundingOrder, emailSent?: boolean): FundingConfirmOutcome => ({
   ok: true,
@@ -138,7 +138,7 @@ export const confirmFundingPledge = async (
   options: { trustedByWebhook?: boolean } = {},
 ): Promise<FundingConfirmOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
-  if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '후원을 찾을 수 없습니다.' };
+  if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
 
   // 무통장 후원은 토스 승인 경로를 애초에 타지 않는다 — 결제창도, paymentKey도 없다.
   // 그런데 주문번호는 비밀이 아니라서(확정·입금안내 메일, 화면, fail URL에 평문) 제3자가
@@ -146,8 +146,8 @@ export const confirmFundingPledge = async (
   // failed로 낙인해 고객이 실제로 입금해도 관리자 입금 확인이 막힌다.
   // 웹훅은 무통장 주문번호로 오지 않지만(토스에 결제 자체가 없다), 신뢰 경로는 건드리지 않는다.
   if (!options.trustedByWebhook && order.fundingPledge.paymentMethod === 'bank_transfer') {
-    console.error('[funding-confirm] 무통장 후원에 토스 승인 요청 — 주문 상태를 건드리지 않고 거부', { orderNo: order.orderNo });
-    return { ok: false, code: 'invalid_state', message: '무통장 입금 후원은 결제 승인 대상이 아닙니다.' };
+    console.error('[funding-confirm] 무통장 펀딩에 토스 승인 요청 — 주문 상태를 건드리지 않고 거부', { orderNo: order.orderNo });
+    return { ok: false, code: 'invalid_state', message: '무통장 입금 펀딩은 결제 승인 대상이 아닙니다.' };
   }
 
   if (order.status === 'paid') {
@@ -170,10 +170,10 @@ export const confirmFundingPledge = async (
     const provesOwnership =
       input.amount === order.totalAmount && order.payments.some((p) => p.paymentKey === input.paymentKey);
     if (!provesOwnership) {
-      console.error('[funding-confirm] 확정된 후원에 소유 증명 없는 접근 — 관리 토큰을 발급하지 않는다', {
+      console.error('[funding-confirm] 확정된 펀딩에 소유 증명 없는 접근 — 관리 토큰을 발급하지 않는다', {
         orderNo: order.orderNo, paymentKey: input.paymentKey,
       });
-      return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' };
+      return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 펀딩입니다.' };
     }
     return success(order);
   }
@@ -190,7 +190,7 @@ export const confirmFundingPledge = async (
         orderNo: order.orderNo, paymentKey: input.paymentKey, status: order.status,
       });
     }
-    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 후원입니다.' };
+    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 펀딩입니다.' };
   }
 
   // 서버가 저장한 금액이 유일한 진실 — 다르면 토스를 부르지도 않는다(위변조 차단).
@@ -200,7 +200,7 @@ export const confirmFundingPledge = async (
         orderNo: order.orderNo, paymentKey: input.paymentKey, status: order.status,
       });
     }
-    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 후원 내용과 일치하지 않습니다.' };
+    return { ok: false, code: 'amount_mismatch', message: '결제 금액이 펀딩 내용과 일치하지 않습니다.' };
   }
 
   // 홀드 만료도 스스로 적용한다 — expireStalePledges는 lazy 호출이라 만료 후에도 pending으로
@@ -363,7 +363,7 @@ export const syncFundingCancelledFromToss = async (payment: TossPayment): Promis
   const order = await findFundingOrderByOrderNo(payment.orderId);
   if (!order) {
     // 예약 경로(lib/booking/webhook.ts)와 같은 규칙 — 조용한 조기 반환은 대사 단서를 지운다.
-    console.error('[funding-confirm] 취소 동기화 스킵 — 후원 주문을 찾지 못함', {
+    console.error('[funding-confirm] 취소 동기화 스킵 — 펀딩 주문을 찾지 못함', {
       orderId: payment.orderId, paymentKey: payment.paymentKey,
     });
     return;

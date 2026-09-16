@@ -29,7 +29,7 @@ const EDITABLE_STATUSES = new Set([
   'partially_refunded',
 ]);
 
-const NOT_FOUND = { ok: false, message: '후원을 찾을 수 없습니다.' } as const;
+const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없습니다.' } as const;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json(NOT_FOUND);
   if (!order.fundingPledge) return res.status(404).json(NOT_FOUND);
   if (!EDITABLE_STATUSES.has(order.status))
-    return res.status(409).json({ ok: false, code: 'invalid_state', message: '이 후원은 이름 공개 설정을 바꿀 수 없습니다.' });
+    return res.status(409).json({ ok: false, code: 'invalid_state', message: '이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.' });
 
   await getDb()
     .update(fundingPledges)

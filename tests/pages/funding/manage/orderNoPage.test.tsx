@@ -21,7 +21,7 @@ it('토스 결제 취소 성공 → 환불 금액 확인 문구', async () => {
     json: async () => ({ ok: true, mode: 'refunded', refundAmount: 30000 }),
   }) as never;
   render(<FundingManagePage {...baseProps} paymentMethod="toss" />);
-  await userEvent.click(screen.getByRole('button', { name: /후원 취소/ }));
+  await userEvent.click(screen.getByRole('button', { name: /펀딩 취소/ }));
   expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('환불받을까요'));
   expect(await screen.findByText('취소되었습니다. 30,000원이 환불됩니다.')).toBeInTheDocument();
 });
@@ -32,7 +32,7 @@ it('비JSON 응답이면 서버 오류 문구', async () => {
     json: async () => { throw new Error('should not be called'); },
   }) as never;
   render(<FundingManagePage {...baseProps} paymentMethod="toss" />);
-  await userEvent.click(screen.getByRole('button', { name: /후원 취소/ }));
+  await userEvent.click(screen.getByRole('button', { name: /펀딩 취소/ }));
   expect(await screen.findByText('서버 오류가 발생했습니다.')).toBeInTheDocument();
 });
 
@@ -62,33 +62,33 @@ describe('이름 공개 철회', () => {
     });
     global.fetch = fetchMock as never;
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
-    const toggle = screen.getByLabelText('후원자 명단에 이름 공개');
+    const toggle = screen.getByLabelText('서포터 명단에 이름 공개');
     expect(toggle).toBeChecked();
     await userEvent.click(toggle);
     // 공개 명단은 상태 API 캐시(s-maxage=60 · SWR 300)를 통해 나가므로 즉시 반영되지 않는다 —
     // 그걸 말하지 않으면 "철회가 안 됐다"는 문의가 온다.
-    expect(await screen.findByText(/후원자 명단에서 이름을 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
+    expect(await screen.findByText(/서포터 명단에서 이름을 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/funding/display-name');
     expect(init.method).toBe('PATCH');
     expect(JSON.parse(init.body)).toEqual({ orderNo: 'FND-1', token: 'tok', displayNamePublic: false });
-    expect(screen.getByLabelText('후원자 명단에 이름 공개')).not.toBeChecked();
+    expect(screen.getByLabelText('서포터 명단에 이름 공개')).not.toBeChecked();
   });
 
   it('실패하면 토글이 원래 값으로 되돌아간다 — 화면이 서버보다 앞서지 않는다', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: false, headers: { get: () => 'application/json' },
-      json: async () => ({ ok: false, message: '이 후원은 이름 공개 설정을 바꿀 수 없습니다.' }),
+      json: async () => ({ ok: false, message: '이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.' }),
     }) as never;
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
-    await userEvent.click(screen.getByLabelText('후원자 명단에 이름 공개'));
-    expect(await screen.findByText('이 후원은 이름 공개 설정을 바꿀 수 없습니다.')).toBeInTheDocument();
-    expect(screen.getByLabelText('후원자 명단에 이름 공개')).toBeChecked();
+    await userEvent.click(screen.getByLabelText('서포터 명단에 이름 공개'));
+    expect(await screen.findByText('이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.')).toBeInTheDocument();
+    expect(screen.getByLabelText('서포터 명단에 이름 공개')).toBeChecked();
   });
 
   it('바꿀 수 없는 상태면 토글 대신 현재 값만 보인다', () => {
     render(<FundingManagePage {...baseProps} status="refunded" canCancel={false} canEditDisplayName={false} displayNamePublic paymentMethod="toss" />);
-    expect(screen.queryByLabelText('후원자 명단에 이름 공개')).toBeNull();
+    expect(screen.queryByLabelText('서포터 명단에 이름 공개')).toBeNull();
     expect(screen.getByText('공개')).toBeInTheDocument();
   });
 });
@@ -100,17 +100,17 @@ describe('이름 공개 철회', () => {
  * 화면은 "후원 취소 (전액 환불)" 버튼을 띄웠는데, 누르면 서버가 거절하는 죽은 버튼이었다.
  * 약관 제8조가 약속한 "후원 확인 페이지에서 바로 취소"와도 어긋났다.
  */
-describe('토스 결제가 아닌 후원', () => {
+describe('토스 결제가 아닌 펀딩', () => {
   it('셀프 취소 버튼 대신 문의 안내를 보여준다', () => {
     render(
       <FundingManagePage
         {...baseProps}
         paymentMethod="bank_transfer"
         canCancel={false}
-        cancelBlockedReason="계좌로 받은 후원은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다."
+        cancelBlockedReason="계좌로 받은 펀딩은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다."
       />,
     );
-    expect(screen.queryByRole('button', { name: /후원 취소/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /펀딩 취소/ })).not.toBeInTheDocument();
     expect(screen.getByText(/문의로 접수해 주시면 계좌로 환불/)).toBeInTheDocument();
   });
 });

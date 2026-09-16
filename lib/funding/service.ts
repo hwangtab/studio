@@ -242,10 +242,10 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   const db = getDb();
   const totals = await db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
     SELECT SUM(o.total_amount) AS raised,
-           -- 후원 '건수'. 인원이 아니다.
+           -- 펀딩 '건수'. 인원이 아니다.
            COUNT(*) AS backers,
-           -- 후원 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로
-           -- 떨어뜨린다(연락처 없는 후원끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
+           -- 펀딩 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로
+           -- 떨어뜨린다(연락처 없는 펀딩끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
            COUNT(DISTINCT ${backerIdentitySql()}) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()})

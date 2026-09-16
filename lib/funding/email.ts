@@ -29,8 +29,8 @@ const summaryLines = (order: FundingOrder, project: FundingProject | null): stri
   const reward = project?.rewards.find((r) => r.id === p.rewardId);
   return [
     `프로젝트: ${project?.title ?? p.projectSlug}`,
-    `리워드: ${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 후원 ${formatPriceAmount(p.additionalAmount)}원` : ''}`,
-    `후원 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
+    `리워드: ${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 펀딩 ${formatPriceAmount(p.additionalAmount)}원` : ''}`,
+    `펀딩 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
     ...(reward ? [`예상 전달 시기: ${reward.estimatedDelivery}`] : []),
     `주문번호: ${order.orderNo}`,
   ];
@@ -47,7 +47,7 @@ const withdrawalLines = (order: FundingOrder): string[] => [
   '',
   '[청약철회 안내]',
   '· 기한: 프로젝트 마감 전이고 리워드 발송 준비가 시작되기 전이면 언제든 취소하고 전액 환불받을 수 있습니다. 리워드를 받은 뒤에는 받은 날부터 7일 이내에 청약철회할 수 있습니다(표시·광고와 다르거나 계약 내용과 다르게 이행된 경우에는 받은 날부터 3개월 이내, 그 사실을 안 날부터 30일 이내).',
-  `· 방법: 후원 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
+  `· 방법: 펀딩 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
   `· 약관 전문(청약철회·환불 규정 포함): ${SITE_URL}/ko/funding/terms`,
 ];
 
@@ -105,7 +105,7 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
     '',
     '[음원 내려받기]',
     ...reward.downloads.map((d) => `· ${d.label}`),
-    `아래 후원 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
+    `아래 펀딩 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
     '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
 };
@@ -114,12 +114,12 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
   send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
-      subject: `[스튜디오 놀] 후원이 확정되었습니다${titleSuffix(project)}`,
-      text: [`${order.customerName}님, 후원해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...downloadLines(order, project), ...withdrawalLines(order), '', `후원 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
+      subject: `[스튜디오 놀] 펀딩이 확정되었습니다${titleSuffix(project)}`,
+      text: [`${order.customerName}님, 함께해 주셔서 고맙습니다.`, ...summaryLines(order, project), ...downloadLines(order, project), ...withdrawalLines(order), '', `펀딩 확인·취소: ${manageUrl(order)}`, PHONE].join('\n'),
     } },
     { key: 'operator', params: {
       to: OPERATOR_EMAIL,
-      subject: `[펀딩] 후원 확정 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
+      subject: `[펀딩] 펀딩 확정 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
       text: [...summaryLines(order, project), `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `결제수단: ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`, `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
     } },
@@ -133,7 +133,7 @@ const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_req
  */
 const CANCEL_BODY = {
   refunded: (amount: number) => `${formatPriceAmount(amount)}원이 결제 수단으로 환불됩니다(카드사에 따라 3~7일).`,
-  refund_requested: () => '무통장 후원은 운영자가 확인 후 계좌로 환불합니다. 환불받을 계좌(은행·계좌번호·예금주)를 이 메일에 회신해 주세요.',
+  refund_requested: () => '무통장 펀딩은 운영자가 확인 후 계좌로 환불합니다. 환불받을 계좌(은행·계좌번호·예금주)를 이 메일에 회신해 주세요.',
   recorded: (amount: number) => `${formatPriceAmount(amount)}원 환불 처리가 완료되었습니다.`,
 } as const;
 
@@ -167,13 +167,13 @@ export const sendFundingRefundRequestClearedEmails = (
       subject: `[스튜디오 놀] 취소 요청이 철회 처리되었습니다${titleSuffix(project)}`,
       text: [
         `${order.customerName}님,`,
-        '접수해 두었던 후원 취소 요청을 철회 처리했습니다. 이 후원은 다시 정상 진행됩니다.',
+        '접수해 두었던 펀딩 취소 요청을 철회 처리했습니다. 이 펀딩은 다시 정상 진행됩니다.',
         `사유: ${reason}`,
         '',
         '취소를 원하지 않으셨다면 아래 링크에서 다시 취소를 요청하시거나 이 메일에 회신해 주세요.',
         ...summaryLines(order, project),
         '',
-        `후원 확인·취소: ${manageUrl(order)}`,
+        `펀딩 확인·취소: ${manageUrl(order)}`,
         PHONE,
       ].join('\n'),
     } },

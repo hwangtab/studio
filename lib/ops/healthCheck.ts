@@ -160,7 +160,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
                 + `(${sample(stuck.map((row) => row.orderNo))})`,
             ]
           : []),
-        '관리자 > 예약·후원 상세에서 재발송할 수 있습니다.',
+        '관리자 > 예약·펀딩 상세에서 재발송할 수 있습니다.',
       ].join('\n'),
     });
   }
@@ -278,7 +278,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       detail:
         `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
         '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
-        '처리 전까지 이 후원은 발송 대상이 아닙니다 — 배송 CSV의 shipHold 칸에 "발송금지"로 나오고, ' +
+        '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 배송 CSV의 shipHold 칸에 "발송금지"로 나오고, ' +
         '발송 상태 변경은 API에서 막힙니다.',
     });
   }
@@ -310,11 +310,11 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     issues.push({
       severity: 'high',
       href: '/admin/funding',
-      title: `전액 환불됐는데 주문이 살아 있는 후원 ${refundedButLive.length}건`,
+      title: `전액 환불됐는데 주문이 살아 있는 펀딩 ${refundedButLive.length}건`,
       detail:
         `주문번호: ${sample(refundedButLive.map((row) => row.orderNo))}\n` +
         '환불 기록은 결제액에 닿았는데 주문 상태가 아직 paid/partially_refunded입니다. ' +
-        '이 상태로 두면 공개 모금액에 환불된 돈이 남고, 그 후원자가 음원을 계속 받으며, 발송 명단에도 남습니다.\n' +
+        '이 상태로 두면 공개 모금액에 환불된 돈이 남고, 그 서포터가 음원을 계속 받으며, 발송 명단에도 남습니다.\n' +
         '토스 콘솔에서 실제 취소 여부를 확인한 뒤 관리자 > 펀딩 상세에서 상태를 맞춰 주세요.',
     });
   }

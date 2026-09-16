@@ -116,7 +116,7 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     expect(totals.confirmedAmount).not.toBe(200 * 5000);
   });
 
-  it('후원 건수와 후원 인원을 따로 센다 — 중복 후원자가 인원을 부풀리지 않는다', async () => {
+  it('펀딩 건수와 펀딩 인원을 따로 센다 — 중복 서포터가 인원을 부풀리지 않는다', async () => {
     // 같은 사람(이메일+전화 동일)이 3번 후원하고, 다른 사람이 1번.
     for (let i = 0; i < 3; i += 1) await seedPaid(i, 'a', 'paid', 5000, 'same@example.com', '010-9999');
     await seedPaid(9, 'a', 'paid', 5000, 'other@example.com', '010-1234');
@@ -202,7 +202,7 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     expect((await aggregateAdminFundingTotals(null)).confirmedCount).toBe(3);
   });
 
-  it('후원이 하나도 없으면 0으로 떨어진다 (SUM의 NULL이 새지 않는다)', async () => {
+  it('펀딩이 하나도 없으면 0으로 떨어진다 (SUM의 NULL이 새지 않는다)', async () => {
     const totals = await aggregateAdminFundingTotals(null);
     expect(totals).toEqual({
       confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,

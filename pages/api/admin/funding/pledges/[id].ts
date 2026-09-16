@@ -27,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method !== 'PATCH') return res.status(405).json({ ok: false });
   const id = String(req.query.id ?? '');
   const order = await findFundingOrderById(id);
-  if (!order?.fundingPledge) return res.status(404).json({ ok: false, message: '후원을 찾을 수 없습니다.' });
+  if (!order?.fundingPledge) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
   const b = (typeof req.body === 'object' && req.body) || {};
   const now = new Date();
   const db = getDb();
@@ -52,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 수 없었다 — 목록·CSV에는 영구 '미발송'으로 떠 다음 회차 중복 발송 후보가 됐고,
       // delivered_at이 안 찍혀 아래 주석이 말하는 파기 기산점 자체가 생기지 않았다.
       if (!isLiveFundingOrderStatus(order.status)) {
-        return res.status(409).json({ ok: false, message: '확정된 후원만 발송 상태를 바꿀 수 있습니다.' });
+        return res.status(409).json({ ok: false, message: '확정된 펀딩만 발송 상태를 바꿀 수 있습니다.' });
       }
       // 무통장 청약철회는 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로
       // 남는다. 그 상태를 '발송 완료'로 바꿀 수 있게 두면, 청약철회한 사람에게 실물이
@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (order.fundingPledge.refundRequestedAt) {
         return res.status(409).json({
           ok: false,
-          message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+          message: '환불 요청된 펀딩입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
         });
       }
       // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다.
@@ -127,10 +127,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '환불 요청을 취소하려면 사유를 입력해야 합니다.' });
       }
       if (!order.fundingPledge.refundRequestedAt) {
-        return res.status(409).json({ ok: false, message: '환불 요청이 없는 후원입니다.' });
+        return res.status(409).json({ ok: false, message: '환불 요청이 없는 펀딩입니다.' });
       }
       if (!isRefundPendingStatus(order.status)) {
-        return res.status(409).json({ ok: false, message: '확정 상태인 후원만 환불 요청을 취소할 수 있습니다.' });
+        return res.status(409).json({ ok: false, message: '확정 상태인 펀딩만 환불 요청을 취소할 수 있습니다.' });
       }
       const entry = `[${kstDateString(now)}] 환불 요청 취소 — ${reason}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
@@ -164,7 +164,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '재고 확인을 닫으려면 확인 내용을 입력해야 합니다.' });
       }
       if (!hasReviewMarker(order.fundingPledge.adminMemo)) {
-        return res.status(409).json({ ok: false, message: '재고 확인이 필요한 후원이 아닙니다.' });
+        return res.status(409).json({ ok: false, message: '재고 확인이 필요한 펀딩이 아닙니다.' });
       }
       // 해제 항목은 **반드시 한 줄**이어야 한다 — 판정이 줄 단위라, 사유에 개행이 들어가면
       // 둘째 줄부터는 해제 항목으로 분류되지 않는다. 운영자가 웹훅 원문을 그대로 붙여 넣어
@@ -198,7 +198,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(400).json({ ok: false, message: '내려받기 기록을 지우려면 사유를 입력해야 합니다.' });
       }
       if (!order.fundingPledge.downloadedAt) {
-        return res.status(409).json({ ok: false, message: '내려받기 기록이 없는 후원입니다.' });
+        return res.status(409).json({ ok: false, message: '내려받기 기록이 없는 펀딩입니다.' });
       }
       const entry = `[${kstDateString(now)}] 내려받기 기록 초기화 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
@@ -281,7 +281,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         err = await sendFundingCancelledEmails(order, project, isTossRefund ? 'refunded' : 'recorded', refundedAmount);
       } else {
-        return res.status(409).json({ ok: false, message: '결제가 완료되었거나 환불된 후원만 메일을 재발송할 수 있습니다.' });
+        return res.status(409).json({ ok: false, message: '결제가 완료되었거나 환불된 펀딩만 메일을 재발송할 수 있습니다.' });
       }
       await db.update(orders).set({ notificationError: err, updatedAt: now }).where(eq(orders.id, order.id));
       return err ? res.status(502).json({ ok: false, message: err }) : res.status(200).json({ ok: true });

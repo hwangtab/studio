@@ -41,7 +41,7 @@ jest.mock('./PledgeWizard', () => ({
   }) => {
     return (
       <div>
-        <p>후원 폼 대역 · {initialRewardId}</p>
+        <p>펀딩 폼 대역 · {initialRewardId}</p>
         <button type="button" onClick={() => onPaymentActiveChange?.(true)}>결제 단계로</button>
       </div>
     );
@@ -78,17 +78,17 @@ describe('RewardModal', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('상세부터 보여 주고, 후원 버튼을 눌러야 폼으로 넘어간다', async () => {
+  it('상세부터 보여 주고, 펀딩 버튼을 눌러야 폼으로 넘어간다', async () => {
     const user = userEvent.setup();
     renderModal();
 
     expect(screen.getByRole('heading', { name: 'MP3 320kbps' })).toBeInTheDocument();
     expect(screen.getByText('10,000원')).toBeInTheDocument();
-    expect(screen.queryByText(/후원 폼 대역/)).toBeNull();
+    expect(screen.queryByText(/펀딩 폼 대역/)).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
     // 폼은 페이지와 같은 PledgeWizard이고, 고른 리워드가 그대로 넘어간다.
-    expect(screen.getByText('후원 폼 대역 · mp3')).toBeInTheDocument();
+    expect(screen.getByText('펀딩 폼 대역 · mp3')).toBeInTheDocument();
   });
 
   it('Escape로 닫힌다', async () => {
@@ -105,7 +105,7 @@ describe('RewardModal', () => {
     const onClose = jest.fn();
     renderModal(REWARD, onClose);
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     await user.keyboard('{Escape}');
@@ -126,7 +126,7 @@ describe('RewardModal', () => {
     renderModal();
     expect(lastTrapState()).toBe(true);
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     expect(lastTrapState()).toBe(true);
@@ -137,19 +137,19 @@ describe('RewardModal', () => {
     const onClose = jest.fn();
     const { rerender } = renderModal();
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
-    expect(screen.getByText(/후원 폼 대역/)).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
+    expect(screen.getByText(/펀딩 폼 대역/)).toBeInTheDocument();
 
     const other: FundingReward = { ...REWARD, id: 'wav', title: 'WAV 16bit', amount: 30000 };
     rerender(
       <RewardModal project={PROJECT} reward={other} remaining={{ wav: null }} onClose={onClose} />
     );
 
-    expect(screen.queryByText(/후원 폼 대역/)).toBeNull();
+    expect(screen.queryByText(/펀딩 폼 대역/)).toBeNull();
     expect(screen.getByRole('heading', { name: 'WAV 16bit' })).toBeInTheDocument();
   });
 
-  it('품절이면 후원으로 넘어갈 수 없다', () => {
+  it('품절이면 펀딩으로 넘어갈 수 없다', () => {
     render(
       <RewardModal
         project={PROJECT}
@@ -177,7 +177,7 @@ describe('포커스 복원 시점', () => {
     trigger.focus();
 
     renderModal();
-    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     expect(document.activeElement).not.toBe(trigger);

@@ -35,7 +35,7 @@ describe('내려받기 주소는 공개 화면 props에 실리지 않는다', ()
     expect(serialized).not.toContain('r2.dev');
   });
 
-  it('서버는 원본 값을 그대로 본다 — 메일·후원 확인 페이지가 그 값을 쓴다', () => {
+  it('서버는 원본 값을 그대로 본다 — 메일·펀딩 확인 페이지가 그 값을 쓴다', () => {
     const target = live.find((p) => p.rewards.some((r) => r.downloads.length > 0));
     expect(getFundingProject(target!.slug)!.rewards.some((r) => r.downloads.length > 0)).toBe(true);
   });

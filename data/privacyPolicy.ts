@@ -87,7 +87,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '3. 보유 및 이용 기간',
-        body: `문의·상담으로 수집한 개인정보는 상담 완료 후 지체 없이 파기합니다. 예약·결제 기록은 ${PRIVACY_LEGAL_RETENTION_TEXT} 펀딩 후원으로 수집한 개인정보의 보유 기간은 아래 8항을 따릅니다.`,
+        body: `문의·상담으로 수집한 개인정보는 상담 완료 후 지체 없이 파기합니다. 예약·결제 기록은 ${PRIVACY_LEGAL_RETENTION_TEXT} 펀딩 펀딩으로 수집한 개인정보의 보유 기간은 아래 8항을 따릅니다.`,
       },
       {
         heading: '4. 제3자 제공 및 처리위탁',
@@ -103,21 +103,21 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       // 보유기간·법정 보존 문구는 lib/funding/policy.ts의 상수를 약관(제13조)과 함께 쓴다(복제 금지).
       {
         heading: '6. 펀딩(리워드 선주문) 수집 항목',
-        body: '펀딩 후원은 통신판매 계약이라 문의·상담과 수집 항목이 다릅니다. 후원 신청 화면에서 다음 항목을 수집합니다.',
+        body: '펀딩 펀딩은 통신판매 계약이라 문의·상담과 수집 항목이 다릅니다. 펀딩 신청 화면에서 다음 항목을 수집합니다.',
         items: FUNDING_COLLECTED_ITEMS,
       },
       {
         heading: '7. 펀딩 개인정보의 이용 목적',
-        body: '후원으로 수집한 개인정보는 아래 목적으로만 이용합니다.',
+        body: '펀딩으로 수집한 개인정보는 아래 목적으로만 이용합니다.',
         items: FUNDING_COLLECTION_PURPOSES,
       },
       {
         heading: '8. 펀딩 개인정보의 보유·이용 기간',
-        body: `후원으로 수집한 개인정보는 ${PRIVACY_RETENTION_TEXT} 보관한 뒤 지체 없이 파기합니다. 다만 ${PRIVACY_LEGAL_RETENTION_TEXT} 후원자가 후원을 취소해 환불이 완료된 경우에도 이 거래기록 보존 의무는 그대로 적용됩니다.`,
+        body: `펀딩으로 수집한 개인정보는 ${PRIVACY_RETENTION_TEXT} 보관한 뒤 지체 없이 파기합니다. 다만 ${PRIVACY_LEGAL_RETENTION_TEXT} 서포터가 펀딩을 취소해 환불이 완료된 경우에도 이 거래기록 보존 의무는 그대로 적용됩니다.`,
       },
       {
         heading: '9. 펀딩 개인정보의 처리위탁',
-        body: '후원 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다.',
+        body: '펀딩 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다.',
         processors: FUNDING_DATA_PROCESSORS,
       },
       // 10~12항은 음원 발매 홍보 업무 전용이다. 이 업무는 정보주체(기자·매체)가 아닌

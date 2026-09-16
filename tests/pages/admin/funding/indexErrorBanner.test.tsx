@@ -29,7 +29,7 @@ const item = (over: Partial<AdminPledgeItem> = {}): AdminPledgeItem => ({
 
 // md 파싱 실패는 표와 무관한 사고다 — 예전엔 이 하나로 전체 화면이 오류 카드로 바뀌어
 // 멀쩡히 조회된 후원 목록을 관리자가 못 봤다.
-it('projects 로더 에러는 배너로만 뜨고 후원 표는 그대로 렌더된다', () => {
+it('projects 로더 에러는 배너로만 뜨고 펀딩 표는 그대로 렌더된다', () => {
   render(
     <AdminFundingPage
       items={[item()]}
@@ -45,9 +45,9 @@ it('projects 로더 에러는 배너로만 뜨고 후원 표는 그대로 렌더
   expect(screen.queryByRole('heading', { name: '오류' })).not.toBeInTheDocument();
 });
 
-it('후원 목록 조회 자체가 실패하면 전체 화면 오류', () => {
+it('펀딩 목록 조회 자체가 실패하면 전체 화면 오류', () => {
   render(
-    <AdminFundingPage items={[]} totals={TOTALS} truncated={false} projects={[]} slug={null} pledgesError="후원 목록을 불러오는 중 오류가 발생했습니다." />,
+    <AdminFundingPage items={[]} totals={TOTALS} truncated={false} projects={[]} slug={null} pledgesError="펀딩 목록을 불러오는 중 오류가 발생했습니다." />,
   );
   expect(screen.getByRole('heading', { name: '오류' })).toBeInTheDocument();
 });

@@ -31,7 +31,7 @@ beforeEach(() => {
 it('확정 화면에서 전환 이벤트가 발화한다', () => {
   render(<FundingSuccessPage {...confirmed} />);
   expect(trackMicroEvent).toHaveBeenCalledWith('funding_pledge_paid', { component: 'funding_success', landing_slug: 'demo' });
-  expect(screen.getByRole('link', { name: /후원 확인·취소 페이지 열기/ })).toHaveAttribute('href', confirmed.manageUrl);
+  expect(screen.getByRole('link', { name: /펀딩 확인·취소 페이지 열기/ })).toHaveAttribute('href', confirmed.manageUrl);
 });
 
 /**
@@ -39,12 +39,12 @@ it('확정 화면에서 전환 이벤트가 발화한다', () => {
  * 세션에 남아 있을 이유가 없다. `projectSlug`를 아는 정상 경로에서는 그 프로젝트 것만 지운다
  * — 다른 프로젝트를 동시에 후원 중이었다면 그 초안까지 지우면 안 된다.
  */
-it('확정되면 그 프로젝트의 후원 폼 임시 저장을 지운다', () => {
+it('확정되면 그 프로젝트의 펀딩 폼 임시 저장을 지운다', () => {
   window.sessionStorage.setItem('studionol:funding-draft:demo', JSON.stringify({ customerName: '홍길동' }));
-  window.sessionStorage.setItem('studionol:funding-draft:other', JSON.stringify({ customerName: '다른후원' }));
+  window.sessionStorage.setItem('studionol:funding-draft:other', JSON.stringify({ customerName: '다른펀딩' }));
   render(<FundingSuccessPage {...confirmed} />);
   expect(window.sessionStorage.getItem('studionol:funding-draft:demo')).toBeNull();
-  expect(window.sessionStorage.getItem('studionol:funding-draft:other')).toBe(JSON.stringify({ customerName: '다른후원' }));
+  expect(window.sessionStorage.getItem('studionol:funding-draft:other')).toBe(JSON.stringify({ customerName: '다른펀딩' }));
 });
 
 // 주문에 fundingPledge 연결이 비어 projectSlug를 모르는 예외적인 경우 — 특정할 수 없으니
@@ -71,15 +71,15 @@ it('확정을 되살릴 수 없는 화면(unknown)에는 주문번호·문의처
   render(<FundingSuccessPage outcome="unknown" orderNo="FND-20261015-ABCD1234" />);
   expect(trackMicroEvent).not.toHaveBeenCalled();
   expect(screen.getByText(/FND-20261015-ABCD1234/)).toBeInTheDocument();
-  expect(screen.getByText(/후원 확인 메일에/)).toBeInTheDocument();
+  expect(screen.getByText(/펀딩 확인 메일에/)).toBeInTheDocument();
   expect(screen.getByText(/010-4255-7893/)).toBeInTheDocument();
   expect(screen.getByText(/hello@studionol.co.kr/)).toBeInTheDocument();
 });
 
 it('오류 화면에서도 이벤트를 보내지 않는다', () => {
-  render(<FundingSuccessPage outcome="error" message="이미 처리되었거나 만료된 후원입니다." />);
+  render(<FundingSuccessPage outcome="error" message="이미 처리되었거나 만료된 펀딩입니다." />);
   expect(trackMicroEvent).not.toHaveBeenCalled();
-  expect(screen.getByText('이미 처리되었거나 만료된 후원입니다.')).toBeInTheDocument();
+  expect(screen.getByText('이미 처리되었거나 만료된 펀딩입니다.')).toBeInTheDocument();
 });
 
 it('확인 메일이 실패했으면 링크를 저장하라고 안내한다', () => {
@@ -131,7 +131,7 @@ describe('확정 화면의 내려받기', () => {
     expect(screen.getByText(/청약철회가 제한됩니다/)).toBeInTheDocument();
   });
 
-  it('내려받을 것이 없으면 아무것도 띄우지 않는다 — 배송 리워드 후원자에게 빈 영역을 보이지 않는다', () => {
+  it('내려받을 것이 없으면 아무것도 띄우지 않는다 — 배송 리워드 서포터에게 빈 영역을 보이지 않는다', () => {
     render(<FundingSuccessPage {...confirmed} downloads={[]} />);
     expect(screen.queryByText(/내려받기/)).toBeNull();
   });

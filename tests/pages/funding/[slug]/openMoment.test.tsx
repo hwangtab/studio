@@ -43,7 +43,7 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
-it('탭을 띄워 둔 채 오픈 시각이 지나면 새로고침 없이 후원 CTA가 나타난다', async () => {
+it('탭을 띄워 둔 채 오픈 시각이 지나면 새로고침 없이 펀딩 CTA가 나타난다', async () => {
   jest.useFakeTimers({ now: OPEN_AT.getTime() - 30 * 60 * 1000 });
   global.fetch = jest.fn().mockResolvedValue({
     ok: true,
@@ -55,11 +55,11 @@ it('탭을 띄워 둔 채 오픈 시각이 지나면 새로고침 없이 후원 
 
   render(<FundingProjectPage project={project} initialState="upcoming" />);
   await waitFor(() => expect(screen.getByText('오픈 예정')).toBeInTheDocument());
-  expect(screen.queryAllByRole('link', { name: '후원하기' })).toHaveLength(0);
+  expect(screen.queryAllByRole('link', { name: '펀딩하기' })).toHaveLength(0);
 
   await act(async () => { jest.advanceTimersByTime(30 * 60 * 1000 + 5000); });
 
   // 히어로 CTA와 모바일 고정 CTA 둘 다 나타난다.
-  await waitFor(() => expect(screen.getAllByRole('link', { name: '후원하기' }).length).toBeGreaterThan(0));
+  await waitFor(() => expect(screen.getAllByRole('link', { name: '펀딩하기' }).length).toBeGreaterThan(0));
   expect(screen.getByText('진행 중')).toBeInTheDocument();
 });

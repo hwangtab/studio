@@ -161,7 +161,7 @@ it('resend_email: pending(결제 전, toss)이면 재발송할 메일이 없어 
   });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
-  expect(r.body).toEqual({ ok: false, message: '결제가 완료되었거나 환불된 후원만 메일을 재발송할 수 있습니다.' });
+  expect(r.body).toEqual({ ok: false, message: '결제가 완료되었거나 환불된 펀딩만 메일을 재발송할 수 있습니다.' });
   expect(mockUpdate).not.toHaveBeenCalled();
 });
 
@@ -204,7 +204,7 @@ it('resend_email: 수기 등록이어도 실제 고객 이메일이면 발송한
  * '발송 완료'로 바꿀 수 있어서, 취소를 요청한 사람에게 실물이 나간 뒤 시스템 안에서는
  * 정상 발송으로 굳었다.
  */
-it('set_fulfillment: 환불 요청된 후원은 409이고 DB를 건드리지 않는다', async () => {
+it('set_fulfillment: 환불 요청된 펀딩은 409이고 DB를 건드리지 않는다', async () => {
   (findFundingOrderById as jest.Mock).mockResolvedValue({
     ...BASE_ORDER, status: 'paid',
     fundingPledge: { ...BASE_ORDER.fundingPledge, refundRequestedAt: new Date('2026-10-16T02:00:00Z') },
@@ -213,7 +213,7 @@ it('set_fulfillment: 환불 요청된 후원은 409이고 DB를 건드리지 않
   expect(r.status).toBe(409);
   expect(r.body).toEqual({
     ok: false,
-    message: '환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
+    message: '환불 요청된 펀딩입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
   });
   expect(mockRun).not.toHaveBeenCalled();
 });
@@ -258,20 +258,20 @@ it('clear_refund_request: 사유가 없으면 400이고 아무것도 안 바꾼�
   expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
 });
 
-it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 후원자에게 메일을 보낸다', async () => {
+it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 서포터에게 메일을 보낸다', async () => {
   const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested('paid', '기존 메모'));
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '후원자 전화 철회' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '서포터 전화 철회' });
   expect(r.status).toBe(200);
   const written = set.mock.calls[0][0];
   expect(written.refundRequestedAt).toBeNull();
   // 덮어쓰지 않는다 — 기존 메모가 사라지면 그것도 기록 손실이다.
-  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 후원자 전화 철회$/);
+  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 서포터 전화 철회$/);
   const mailArgs = (sendFundingRefundRequestClearedEmails as jest.Mock).mock.calls[0];
   expect(mailArgs[0]).toMatchObject({ orderNo: 'FND-1' });
-  expect(mailArgs[2]).toBe('후원자 전화 철회');
+  expect(mailArgs[2]).toBe('서포터 전화 철회');
 });
 
 it('clear_refund_request: 메모가 없던 건은 항목 하나로 시작한다', async () => {
@@ -419,7 +419,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload(new Date('2026-09-20T01:00:00Z'), '기존 메모'));
 
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '후원자가 파일을 못 받았다고 확인' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '서포터가 파일을 못 받았다고 확인' });
 
   expect(r.status).toBe(200);
   const values = set.mock.calls[0][0];
@@ -427,7 +427,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
   expect(values.downloadedAt).toBeNull();
   // 기존 메모를 덮어쓰지 않는다. 왜 지웠는지가 남아야 나중에 확인할 수 있다.
   expect(String(values.adminMemo)).toContain('기존 메모');
-  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 후원자가 파일을 못 받았다고 확인');
+  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 서포터가 파일을 못 받았다고 확인');
 });
 
 it('clear_download_record: 사유의 개행을 접어 한 줄로 남긴다 — 메모 판정이 줄 단위다', async () => {

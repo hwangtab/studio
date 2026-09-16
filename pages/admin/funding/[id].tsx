@@ -106,7 +106,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   // 부분환불 건도 잔액이 남아 있으면 관리자가 마저 환불할 수 있어야 한다.
   const canRefund = isLiveFundingOrderStatus(pledge.status);
 
-  const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 후원의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
+  const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
   const handleSaveFulfillment = () =>
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
@@ -118,7 +118,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   const handleResendEmail = () =>
     run(
       () => patchPledge(pledge.id, { action: 'resend_email' }),
-      `${pledge.customerEmail}로 ${isLiveFundingOrderStatus(pledge.status) ? '후원 확정' : '환불'} 안내 메일을 다시 보낼까요?`,
+      `${pledge.customerEmail}로 ${isLiveFundingOrderStatus(pledge.status) ? '펀딩 확정' : '환불'} 안내 메일을 다시 보낼까요?`,
     );
   /**
    * 고객이 남긴 청약철회 의사를 지우는 조작이라 사유를 반드시 받는다(API도 없으면 400).
@@ -126,7 +126,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
    */
   const handleClearRefundRequest = () => {
     const reason = window.prompt(
-      '후원자가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 후원자에게 확인 메일이 나갑니다).',
+      '서포터가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 서포터에게 확인 메일이 나갑니다).',
     );
     if (reason === null) return;
     if (!reason.trim()) {
@@ -163,7 +163,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
    */
   const handleClearDownloadRecord = () => {
     const reason = window.prompt(
-      '후원자가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
+      '서포터가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
     );
     if (reason === null) return;
     if (!reason.trim()) {
@@ -183,14 +183,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   return (
     <>
       <Head>
-        <title>{pledge.customerName}님 후원 상세 | Studio NOL</title>
+        <title>{pledge.customerName}님 펀딩 상세 | Studio NOL</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
       <main className="min-h-screen bg-gray-50 dark:text-gray-900 py-8 md:py-12">
         <div className="max-w-4xl mx-auto px-4">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">후원 상세</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-900">펀딩 상세</h1>
             <Link href="/admin/funding" passHref>
               <Button light variant="outline">목록으로</Button>
             </Link>
@@ -211,7 +211,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
               받는 화면이 없습니다. 아래 “환불”을 눌러도 실패합니다.
               <span className="block mt-2">
-                후원자에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 약관 제10조에 따라
+                서포터에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 약관 제10조에 따라
                 접수일부터 3영업일 이내입니다. 취소하면 웹훅 대사가 이 화면의 상태를 맞춥니다.
               </span>
             </div>
@@ -219,21 +219,21 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
           {pledge.refundRequested && (
             <div className="mb-4 p-4 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
-              <strong className="block mb-1">후원자가 취소를 요청했습니다 — 계좌 환불 대기</strong>
+              <strong className="block mb-1">서포터가 취소를 요청했습니다 — 계좌 환불 대기</strong>
               {pledge.refundRequestedAt ? `${formatKstDateTimeFull(pledge.refundRequestedAt)}에 접수되었습니다. ` : ''}
               무통장은 자동 환불이 되지 않아 운영자가 계좌로 직접 송금해야 합니다.
               약관 제10조에 따라 접수일부터 3영업일 이내에 처리해 주세요.
               <span className="block mt-2">
-                <strong>이 후원은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
+                <strong>이 펀딩은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 서포터가 요청을 철회했다면
                 “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다. 철회 처리에는 사유가 필요하며,
-                사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.
+                사유는 관리자 메모에 남고 서포터에게 확인 메일이 나갑니다.
               </span>
             </div>
           )}
 
           {pledge.needsReview && (
             <div className="mb-4 p-4 bg-purple-50 border border-purple-300 text-purple-900 rounded-lg text-sm">
-              <strong className="block mb-1">웹훅이 되살려 확정한 후원 — 재고 확인 필요</strong>
+              <strong className="block mb-1">웹훅이 되살려 확정한 펀딩 — 재고 확인 필요</strong>
               홀드가 만료된(또는 실패 처리된) 뒤 결제가 승인된 건이라 <strong>한정 리워드 재고를
               초과했을 수 있습니다.</strong> 아래 관리자 메모에 웹훅이 남긴 원문이 있습니다.
               <span className="block mt-2">
@@ -245,7 +245,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
           {/* notificationError는 자유 문자열이 아니다 — 확정 후처리 소유권 CAS가 쓰는
               `send_pending`·`send_inflight`가 같은 칸에 들어온다. 원문을 그대로 찍으면
-              "알림 발송에 실패했습니다 send_inflight"가 되어 정상 진행 중인 후원을 사고로
+              "알림 발송에 실패했습니다 send_inflight"가 되어 정상 진행 중인 펀딩을 사고로
               읽게 만든다(lib/ops/notificationSentinel.ts). */}
           {notificationCopy && (
             <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
@@ -266,7 +266,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="등록 경로" value={pledge.entrySource === 'manual' ? '수기 등록' : '온라인'} />
                 <DescriptionRow label="고객" value={`${pledge.customerName} / ${pledge.customerPhone} / ${pledge.customerEmail}`} />
                 <DescriptionRow label="리워드" value={`${pledge.rewardTitle} × ${pledge.quantity}`} />
-                <DescriptionRow label="추가 후원금" value={`${formatPriceAmount(pledge.additionalAmount)}원`} />
+                <DescriptionRow label="추가 펀딩 금액" value={`${formatPriceAmount(pledge.additionalAmount)}원`} />
                 <DescriptionRow label="합계" value={`${formatPriceAmount(pledge.totalAmount)}원`} />
                 <DescriptionRow label="발송 상태" value={FULFILLMENT_LABELS[pledge.fulfillmentStatus] ?? pledge.fulfillmentStatus} />
                 <DescriptionRow label="배송지" value={pledge.shipping ?? '없음'} />
@@ -335,11 +335,11 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <Button light disabled={busy || fulfillmentLocked} onClick={handleSaveFulfillment}>저장</Button>
               </div>
               {!isLiveFundingOrderStatus(pledge.status) && (
-                <p className="mt-2 text-xs text-gray-500">확정된 후원만 발송 상태를 바꿀 수 있습니다.</p>
+                <p className="mt-2 text-xs text-gray-500">확정된 펀딩만 발송 상태를 바꿀 수 있습니다.</p>
               )}
               {isLiveFundingOrderStatus(pledge.status) && pledge.refundRequested && (
                 <p className="mt-2 text-xs text-orange-700">
-                  환불 요청된 후원입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿀 수 있습니다.
+                  환불 요청된 펀딩입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿀 수 있습니다.
                 </p>
               )}
             </div>

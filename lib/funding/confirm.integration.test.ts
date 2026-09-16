@@ -117,7 +117,7 @@ describe('confirmFundingPledge', () => {
    * 아니므로 제3자가 남의 후원을 망가뜨릴 수 있다 — confirm.ts가 그 요청을 상태를 건드리지
    * 않고 거부하는지 고정한다(그 가드를 덮던 테스트가 결제수단 제거 때 함께 지워졌다).
    */
-  it('토스 결제가 아닌 후원에 승인 요청이 오면 주문 상태를 건드리지 않고 거부한다', async () => {
+  it('토스 결제가 아닌 펀딩에 승인 요청이 오면 주문 상태를 건드리지 않고 거부한다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await client.execute({
@@ -156,7 +156,7 @@ describe('confirmFundingPledge', () => {
     expect(mockConfirm).not.toHaveBeenCalled();
   });
 
-  describe('확정된 후원의 관리 토큰은 소유 증명 없이 나오지 않는다', () => {
+  describe('확정된 펀딩의 관리 토큰은 소유 증명 없이 나오지 않는다', () => {
     /** 주문번호는 비밀이 아니다 — 확정 메일·화면·토스 영수증·fail URL에 평문으로 실린다. */
     const paidPledge = async (email: string) => {
       const c = await createFundingPledge(payloadFor({ customerEmail: email, customerPhone: '010-3' }), PROJECT, reward('mail'), NOW);
@@ -558,7 +558,7 @@ describe('confirmFundingPledge', () => {
     }
   });
 
-  it('거절 계열 밖 코드는 주문을 건드리지 않는다 — 제3자가 남의 후원을 failed로 만들 수 없다', async () => {
+  it('거절 계열 밖 코드는 주문을 건드리지 않는다 — 제3자가 남의 펀딩을 failed로 만들 수 없다', async () => {
     // 예전 denylist(NOT_FOUND_PAYMENT 계열만 제외)에서는 이 코드들이 전부 낙인으로 이어졌다.
     for (const code of ['INVALID_REQUEST', 'UNAUTHORIZED_KEY', 'FORBIDDEN_REQUEST', 'PROVIDER_ERROR']) {
       const c = await createFundingPledge(payloadFor({ customerEmail: `${code}@example.com` }), PROJECT, reward('mail'), NOW);

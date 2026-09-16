@@ -40,11 +40,11 @@ import { presignFundingDownload } from '../../../lib/funding/r2';
  * 확정 화면의 버튼(form POST)에서만 시작된다 — 사람이 누른 것만 기록에 남는다.
  */
 
-const NOT_FOUND = { ok: false, message: '후원을 찾을 수 없습니다.' } as const;
+const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없습니다.' } as const;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, message: '내려받기는 후원 확인 페이지의 버튼으로 시작해 주세요.' });
+  if (req.method !== 'POST') return res.status(405).json({ ok: false, message: '내려받기는 펀딩 확인 페이지의 버튼으로 시작해 주세요.' });
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_download:ip:${ip}`, 60, 3600)))
@@ -63,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 환불·취소된 건에는 내려주지 않는다. 화면 쪽 판정과 같은 집합을 쓴다.
   if (!isLiveFundingOrderStatus(order.status))
-    return res.status(409).json({ ok: false, message: '결제가 살아 있는 후원만 내려받을 수 있습니다.' });
+    return res.status(409).json({ ok: false, message: '결제가 살아 있는 펀딩만 내려받을 수 있습니다.' });
 
   const project = getFundingProject(pledge.projectSlug);
   const reward = project?.rewards.find((r) => r.id === pledge.rewardId);

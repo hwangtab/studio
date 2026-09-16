@@ -213,7 +213,7 @@ describe('cancelFundingPledge', () => {
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
     await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r1','p1',2000,'부분','admin','done')");
     expect(await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW }))
-      .toMatchObject({ ok: false, code: 'invalid_state', message: '일부 환불된 후원은 문의해 주세요.' });
+      .toMatchObject({ ok: false, code: 'invalid_state', message: '일부 환불된 펀딩은 문의해 주세요.' });
     (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx2', cancelAmount: 3000 }] } });
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
     expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 3000 });
@@ -345,7 +345,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
  * 도메인 평판이 깎여 진짜 고객 메일이 스팸함으로 간다. 메일 재발송 쪽에는 가드가 있었는데
  * 환불 경로에는 없어서, 관리자 환불 한 번이 그대로 반송을 만들었다.
  */
-it('플레이스홀더 주소의 수기 후원도 환불 안내를 발송 계층에 넘긴다 — 운영자 사본이 필요하다', async () => {
+it('플레이스홀더 주소의 수기 펀딩도 환불 안내를 발송 계층에 넘긴다 — 운영자 사본이 필요하다', async () => {
   const { id, orderNo } = await insertLegacyBankPledge('FND-M-PLACEHOLDER');
   await client.execute({ sql: "UPDATE orders SET customer_email='manual@studionol.co.kr' WHERE id=?", args: [id] });
 
@@ -387,7 +387,7 @@ describe('가상계좌 취소 거절 문구', () => {
     return orderNo;
   };
 
-  it('후원자 셀프 취소에는 운영 지시가 아니라 연락 안내가 나간다', async () => {
+  it('서포터 셀프 취소에는 운영 지시가 아니라 연락 안내가 나간다', async () => {
     const orderNo = await seedVirtualAccountPledge('FND-20261015-VA000001');
     const r = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 취소', now: NOW });
     expect(r).toMatchObject({ ok: false, code: 'toss_failed' });

@@ -66,7 +66,7 @@ it('pending + toss는 만료 경로가 아니라 cancelFundingPledge로 간다',
   (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue({
     manageToken: 'correct-token', status: 'pending', fundingPledge: { paymentMethod: 'toss' },
   });
-  (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'not_paid', message: '결제가 확정된 후원만 취소할 수 있습니다.' });
+  (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'not_paid', message: '결제가 확정된 펀딩만 취소할 수 있습니다.' });
   const r = await call({ orderNo: 'FND-1', token: 'correct-token' });
   expect(r.status).toBe(409);
   expect(cancelFundingPledge).toHaveBeenCalled();

@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (typeof orderNo !== 'string' || typeof token !== 'string' || !orderNo || !token)
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
   const order = await findFundingOrderByOrderNo(orderNo);
-  if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json({ ok: false, message: '후원을 찾을 수 없습니다.' });
+  if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
 
   const result = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 셀프 취소', now: new Date() });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: result.message });

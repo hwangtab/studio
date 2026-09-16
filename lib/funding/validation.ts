@@ -20,7 +20,7 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   if (typeof body !== 'object' || body === null || Array.isArray(body)) return { ok: false, message: '요청 형식이 올바르지 않습니다.' };
   const b = body as Record<string, unknown>;
   if (!project) return { ok: false, message: '프로젝트를 찾을 수 없습니다.' };
-  if (computeProjectState(project, now) !== 'live') return { ok: false, message: '지금은 후원을 받지 않는 프로젝트입니다.' };
+  if (computeProjectState(project, now) !== 'live') return { ok: false, message: '지금은 펀딩을 받지 않는 프로젝트입니다.' };
   const reward = typeof b.rewardId === 'string' ? findReward(project, b.rewardId) : undefined;
   if (!reward) return { ok: false, message: '리워드를 찾을 수 없습니다.' };
   const quantity = b.quantity;
@@ -29,7 +29,7 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   const additionalAmount = b.additionalAmount ?? 0;
   if (typeof additionalAmount !== 'number' || !Number.isInteger(additionalAmount) || additionalAmount < 0
     || additionalAmount > MAX_ADDITIONAL_AMOUNT || additionalAmount % ADDITIONAL_AMOUNT_STEP !== 0)
-    return { ok: false, message: '추가 후원금은 1,000원 단위로 500만원까지 가능합니다.' };
+    return { ok: false, message: '추가 펀딩 금액은 1,000원 단위로 500만원까지 가능합니다.' };
   // 무통장입금은 중단했다. 예전 클라이언트나 손으로 만든 요청이 'bank_transfer'를 보내도
   // 여기서 끊는다 — 받아들이면 운영자가 입금을 손으로 대조해야 하는 주문이 다시 생긴다.
   if (b.paymentMethod !== 'toss') return { ok: false, message: '결제수단을 선택해 주세요.' };

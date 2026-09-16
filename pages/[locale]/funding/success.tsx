@@ -96,12 +96,12 @@ const EMAIL = 'hello@studionol.co.kr';
  * 키는 `FundingConfirmOutcome`의 실패 코드다(lib/funding/confirm.ts).
  */
 const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
-  not_found: '후원을 찾을 수 없습니다. 주문번호를 확인해 주세요.',
-  amount_mismatch: '결제 금액이 후원 내용과 일치하지 않습니다.',
-  invalid_state: '이미 처리되었거나 만료된 후원입니다.',
-  hold_expired: '결제 대기 시간이 만료된 후원입니다. 다시 후원해 주세요.',
+  not_found: '펀딩 내역을 찾을 수 없습니다. 주문번호를 확인해 주세요.',
+  amount_mismatch: '결제 금액이 펀딩 내용과 일치하지 않습니다.',
+  invalid_state: '이미 처리되었거나 만료된 펀딩입니다.',
+  hold_expired: '결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.',
   toss_rejected: '결제 승인이 거절되었습니다. 다시 시도하시거나 다른 결제수단을 이용해 주세요.',
-  recording_failed: '결제는 완료되었으나 후원 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정됩니다.',
+  recording_failed: '결제는 완료되었으나 펀딩 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정됩니다.',
 };
 const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
 const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
@@ -133,7 +133,7 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
   return (
     <>
       <Head>
-        <title>후원 결제 완료 | 스튜디오 놀</title>
+        <title>펀딩 결제 완료 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
@@ -144,12 +144,12 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
         <p className="typo-card-meta mb-2">스튜디오 놀</p>
         {outcome === 'confirmed' ? (
           <>
-            <h1 className="typo-page-title">후원이 확정되었습니다</h1>
+            <h1 className="typo-page-title">펀딩이 확정되었습니다</h1>
             <p className="typo-card-body mx-auto mt-3 max-w-md">
               주문번호 {orderNo}.
               {emailSent === false
                 ? ' 확인 메일을 보내지 못했습니다 — 아래 링크를 저장해 주세요.'
-                : ' 후원 확인 메일을 보내드렸습니다.'}
+                : ' 펀딩 확인 메일을 보내드렸습니다.'}
             </p>
             {downloads && downloads.length > 0 && (
               <div className="mt-6 space-y-2 text-left">
@@ -174,14 +174,14 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
               </div>
             )}
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
-                실패하면 고객이 후원을 스스로 취소할 방법이 아예 없었다. */}
+                실패하면 고객이 펀딩을 스스로 취소할 방법이 아예 없었다. */}
             {manageUrl && (
               <p className="mt-6">
                 <a
                   href={manageUrl}
                   className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
                 >
-                  후원 확인·취소 페이지 열기
+                  펀딩 확인·취소 페이지 열기
                 </a>
               </p>
             )}
@@ -202,15 +202,15 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
           </>
         ) : outcome === 'unknown' ? (
           <>
-            <h1 className="typo-page-title">후원 내역을 확인해 주세요</h1>
+            <h1 className="typo-page-title">펀딩 내역을 확인해 주세요</h1>
             {/* 쿠키가 없으면(브라우저 차단·30분 경과·다른 기기) 관리 링크를 만들 근거가 없다.
                 그래도 결제한 사람이 빈손으로 나가면 안 된다 — 주문번호와 문의처, 그리고
                 "관리 링크는 메일에 있다"까지는 반드시 남긴다. 토큰을 URL에 실어 폴백을
                 만드는 방법은 쓰지 않는다: 그 순간 이 경로가 다시 비밀값을 달게 되고,
                 주문번호만 알면 열리는 화면이 되어 confirm이 막아 둔 구멍이 되살아난다. */}
             <p className="typo-card-body mx-auto mt-3 max-w-md">
-              {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 후원 상세를 다시 열 수 없습니다.
-              결제가 끝났다면 후원 확인 메일에 후원 확인·취소 링크가 들어 있습니다.
+              {orderNo ? `주문번호 ${orderNo}. ` : ''}이 화면에서는 펀딩 상세를 다시 열 수 없습니다.
+              결제가 끝났다면 펀딩 확인 메일에 펀딩 확인·취소 링크가 들어 있습니다.
             </p>
             <p className="typo-card-meta mx-auto mt-3 max-w-md">
               메일이 보이지 않거나 취소를 원하시면 주문번호와 함께 연락해 주세요: {PHONE} · {EMAIL}

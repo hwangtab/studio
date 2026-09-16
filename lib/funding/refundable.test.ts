@@ -20,7 +20,7 @@ describe('remainingRefundable', () => {
   });
 });
 
-describe('살아 있는 후원 판정', () => {
+describe('살아 있는 펀딩 판정', () => {
   it('paid·partially_refunded만 참', () => {
     expect(isLiveFundingOrderStatus('paid')).toBe(true);
     expect(isLiveFundingOrderStatus('partially_refunded')).toBe(true);

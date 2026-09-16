@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import FundingProgress from './FundingProgress';
 
-it('모금액·달성률·후원 건수·D-day', () => {
+it('모금액·달성률·펀딩 건수·D-day', () => {
   render(<FundingProgress goalAmount={1000000} endAt="2026-10-31T23:59:59+09:00" now={new Date('2026-10-20T00:00:00Z')}
     data={{ raisedAmount: 450000, backerCount: 12, percent: 45, state: 'live' }} />);
   expect(screen.getByText('450,000원')).toBeInTheDocument();
@@ -14,10 +14,10 @@ it('모금액·달성률·후원 건수·D-day', () => {
   expect(screen.getByText(/D-11/)).toBeInTheDocument();
 });
 
-it('D-day가 없으면 건수 뒤에 후원을 붙여 무엇의 건수인지 밝힌다', () => {
+it('D-day가 없으면 건수 뒤에 펀딩을 붙여 무엇의 건수인지 밝힌다', () => {
   render(<FundingProgress goalAmount={1000000} endAt="2026-10-31T23:59:59+09:00" now={null}
     data={{ raisedAmount: 450000, backerCount: 12, percent: 45, state: 'live' }} />);
-  expect(screen.getByText(/12건 후원/)).toBeInTheDocument();
+  expect(screen.getByText(/12건 펀딩/)).toBeInTheDocument();
 });
 it('progressbar에 aria-label이 있다', () => {
   render(<FundingProgress goalAmount={1000000} endAt="2026-10-31T23:59:59+09:00" now={new Date('2026-10-20T00:00:00Z')}
@@ -37,7 +37,7 @@ it('now가 null이면 D-day를 비우되 높이는 예약한다', () => {
       data={{ raisedAmount: 450000, backerCount: 12, percent: 45, state: 'live' }} />,
   );
   expect(screen.queryByText(/D-/)).not.toBeInTheDocument();
-  expect(screen.getByText(/12건 후원/)).toBeInTheDocument();
+  expect(screen.getByText(/12건 펀딩/)).toBeInTheDocument();
   expect(container.querySelector('.min-h-\\[120px\\]')).toBeInTheDocument();
 });
 it('now가 null이고 데이터도 없으면 집계 중만 보인다', () => {
