@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { bookings, contracts, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
 import { collectDbIssues, type HealthIssue } from './healthCheck';
+import { countPendingArtistPayouts } from '../artistSupport/payout';
 
 /**
  * 관리자 첫 화면의 데이터.
@@ -44,6 +45,8 @@ export interface AdminDashboard {
     subscriptionsPastDue: number;
     subscriptionsPaused: number;
     contractsAwaitingSignature: number;
+    /** 기록됐지만 아직 이체하지 않은 아티스트 정산. */
+    artistPayoutsPending: number;
   };
   socialTokens: SocialTokenStatus[];
   /** upcomingSessions의 창 길이(일). 화면 문구용 — 페이지가 이 모듈을 값으로 import하지 않게 데이터에 싣는다. */
@@ -67,7 +70,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const from = startOfTodayKst(now);
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
-  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens] = await Promise.all([
+  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending] = await Promise.all([
     collectDbIssues(now),
     db
       .select({
@@ -97,6 +100,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       .from(contracts)
       .where(and(eq(contracts.status, 'sent'), gt(contracts.expiresAt, now))),
     db.select({ platform: socialTokens.platform, expiresAt: socialTokens.expiresAt }).from(socialTokens),
+    countPendingArtistPayouts(),
   ]);
 
   const countOf = (rows: Array<{ status: string; count: number }>, status: string): number =>
@@ -119,6 +123,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
       subscriptionsPastDue: countOf(subscriptionCounts, 'past_due'),
       subscriptionsPaused: countOf(subscriptionCounts, 'paused'),
       contractsAwaitingSignature: Number(contractRows[0]?.count ?? 0),
+      artistPayoutsPending,
     },
     socialTokens: tokens.map((row) => ({
       platform: row.platform,

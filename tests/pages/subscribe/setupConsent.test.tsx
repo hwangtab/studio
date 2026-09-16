@@ -36,6 +36,7 @@ const OK_PROPS = {
   totalAmount: 396000,
   billingDay: 10,
   setupMode: 'initial' as const,
+  kind: 'practice-room',
 };
 
 describe('구독 카드 등록 화면의 동의', () => {

@@ -19,7 +19,8 @@ import {
   type Subscription,
   type SubscriptionPayment,
 } from '../../db/schema';
-import { formatPriceAmount } from '../../data/pricing';
+import { formatPriceAmount, getArtistSupportTier } from '../../data/pricing';
+import { getSupportedArtist } from '../../data/artists';
 import { rowsAffectedOf } from '../booking/confirm';
 import { subscriptionAmounts, subscriptionOrderName, type SubscriptionKind } from './amounts';
 import {
@@ -93,11 +94,20 @@ export interface CreateSubscriptionInput {
   customerPhone: string;
   customerEmail: string;
   billingDay: number;
+  /** 아티스트 구독(kind='artist-support')에서만. 둘 다 필수다. */
+  artistSlug?: string;
+  tierId?: string;
+  /** 후원자 명단 표시명·동의. 동의 없으면 명단에 싣지 않는다. */
+  displayName?: string;
+  displayConsent?: boolean;
 }
 
 export type CreateSubscriptionResult =
   | { ok: true; id: string; setupToken: string; manageToken: string }
-  | { ok: false; code: 'already_exists' | 'contract_required' | 'invalid_billing_day' };
+  | {
+      ok: false;
+      code: 'already_exists' | 'contract_required' | 'invalid_billing_day' | 'artist_required' | 'artist_not_open' | 'invalid_tier';
+    };
 
 export const createSubscription = async (
   input: CreateSubscriptionInput,
@@ -110,6 +120,17 @@ export const createSubscription = async (
   // 출처가 사라지고, 아래 중복 검사도 무력해진다("한 계약에 구독 하나"를 셀 대상이 없다).
   if (input.kind === 'practice-room' && !input.contractId) return { ok: false, code: 'contract_required' };
 
+  // 아티스트 구독은 "누구를, 얼마에"가 없으면 성립하지 않는다. 아티스트가 목록에 없거나
+  // 후원을 닫아 둔 팀(supportActive=false)이면 페이지에 카드가 없으니 정상 경로로는 못 오지만,
+  // API를 직접 부르면 올 수 있다 — 서버가 다시 거른다.
+  if (input.kind === 'artist-support') {
+    if (!input.artistSlug) return { ok: false, code: 'artist_required' };
+    const artist = getSupportedArtist(input.artistSlug);
+    if (!artist) return { ok: false, code: 'artist_required' };
+    if (!artist.supportActive) return { ok: false, code: 'artist_not_open' };
+    if (!input.tierId || !getArtistSupportTier(input.tierId)) return { ok: false, code: 'invalid_tier' };
+  }
+
   const db = getDb();
 
   if (input.contractId) {
@@ -120,7 +141,9 @@ export const createSubscription = async (
     if (existing) return { ok: false, code: 'already_exists' };
   }
 
-  const amounts = subscriptionAmounts(input.kind);
+  const amounts = subscriptionAmounts(input.kind, input.tierId);
+  // 위 검증을 통과했으면 null이 나올 수 없다 — 나온다면 등급 목록과 검증이 어긋난 것이라 멈춘다.
+  if (!amounts) return { ok: false, code: 'invalid_tier' };
   const setupToken = generateSetupToken();
   const manageToken = generateManageToken();
 
@@ -142,6 +165,10 @@ export const createSubscription = async (
       setupTokenExpiresAt: new Date(now.getTime() + SETUP_TOKEN_TTL_SECONDS * 1000),
       setupMode: 'initial',
       manageToken,
+      artistSlug: input.kind === 'artist-support' ? input.artistSlug! : null,
+      tierId: input.kind === 'artist-support' ? input.tierId! : null,
+      displayName: input.displayName?.trim() || null,
+      displayConsent: input.kind === 'artist-support' ? Boolean(input.displayConsent) : false,
     })
     .returning({ id: subscriptions.id });
 
@@ -398,7 +425,7 @@ export const chargeCycle = async (
 
   const attempt = prior.length + 1;
   const orderNo = generateOrderNo(now);
-  const orderName = subscriptionOrderName(subscription.kind);
+  const orderName = subscriptionOrderName(subscription);
 
   const [order] = await db
     .insert(orders)

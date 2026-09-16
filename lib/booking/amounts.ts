@@ -14,3 +14,12 @@ export const computeAmounts = (product: SessionProduct, hours: number): OrderAmo
   const vatAmount = Math.round(itemAmount * VAT_RATE);
   return { itemAmount, vatAmount, totalAmount: itemAmount + vatAmount };
 };
+
+/**
+ * VAT 포함액 → 공급가·VAT. 아티스트 구독처럼 소비자 표기가 포함액인 상품용.
+ * 공급가를 반올림하고 VAT를 나머지로 두어 합이 정확히 포함액과 같게 한다.
+ */
+export const splitInclusiveAmount = (totalAmount: number): OrderAmounts => {
+  const itemAmount = Math.round(totalAmount / (1 + VAT_RATE));
+  return { itemAmount, vatAmount: totalAmount - itemAmount, totalAmount };
+};

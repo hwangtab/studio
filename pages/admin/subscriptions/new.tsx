@@ -10,7 +10,7 @@ import { Field, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
-import { subscriptionAmounts } from '../../../lib/billing/amounts';
+import { fixedSubscriptionAmounts } from '../../../lib/billing/amounts';
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const auth = await authenticateAdminRequest(context);
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 // 청구액은 subscriptionAmounts 하나에서만 온다. 여기서 VAT를 다시 계산하면
 // 규칙이 바뀔 때 화면과 실제 청구액이 조용히 어긋난다.
-const lessonAmounts = subscriptionAmounts('lesson');
+const lessonAmounts = fixedSubscriptionAmounts('lesson');
 
 export default function NewLessonSubscriptionPage() {
   const router = useRouter();

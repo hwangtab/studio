@@ -499,7 +499,13 @@ export type NewContractAttachment = typeof contractAttachments.$inferInsert;
 // 연습실 월 이용료·프로듀싱 레슨 월정액. 회차마다 orders 1건 + payments 1건을 남겨
 // 기존 관리자·웹훅·환불 도구가 그대로 붙는다(구독 전용 정산 경로를 새로 만들지 않는다).
 
-export const subscriptionKindEnum = ['practice-room', 'lesson'] as const;
+/**
+ * 'artist-support'는 아티스트 구독(Patreon형 월 후원, 스펙 docs/superpowers/specs/2026-09-08-artist-support-design.md).
+ * 후원자는 스튜디오 놀의 멤버십을 사고(계약 상대는 스튜디오), 아티스트에게는 스튜디오가 월 1회
+ * 지급한다. 연습실·레슨과 같은 빌링 엔진(빌링키·회차·cron·환불)을 그대로 타며, 다른 점은
+ * 금액이 상품 고정가가 아니라 후원자가 고른 등급(tierId)에서 온다는 것과 artistSlug·표시명이 붙는 것뿐이다.
+ */
+export const subscriptionKindEnum = ['practice-room', 'lesson', 'artist-support'] as const;
 export const subscriptionStatusEnum = [
   'pending_card', // 생성됨, 카드 등록 전 (첫 결제까지 성공해야 active)
   'active',
@@ -552,6 +558,14 @@ export const subscriptions = sqliteTable('subscriptions', {
   setupMode: text('setup_mode', { enum: subscriptionSetupModeEnum }).notNull().default('initial'),
   /** 고객 조회·해지 링크 토큰 (orders.manageToken과 같은 성질의 상시 토큰). */
   manageToken: text('manage_token').notNull().unique(),
+  // ── 아티스트 구독(kind='artist-support')에서만 채워진다 ──
+  /** data/artists/index.ts의 slug. 아티스트 페이지 후원자 명단·정산 집계의 키. */
+  artistSlug: text('artist_slug'),
+  /** data/pricing.ts ARTIST_SUPPORT_TIERS의 id. 금액은 생성 시점에 itemAmount 등으로 고정되므로 표시·통계용. */
+  tierId: text('tier_id'),
+  /** 후원자 명단에 실을 이름. displayConsent가 참일 때만 공개한다. */
+  displayName: text('display_name'),
+  displayConsent: integer('display_consent', { mode: 'boolean' }).notNull().default(false),
   cancelledAt: integer('cancelled_at', { mode: 'timestamp' }),
   cancelReason: text('cancel_reason'),
   /** 해지 예정일 = 이미 결제한 기간의 끝. 이 시각이 지나면 ended로 넘어간다. */
@@ -620,6 +634,48 @@ export const subscriptionPaymentsRelations = relations(subscriptionPayments, ({ 
   subscription: one(subscriptions, { fields: [subscriptionPayments.subscriptionId], references: [subscriptions.id] }),
   order: one(orders, { fields: [subscriptionPayments.orderId], references: [orders.id] }),
 }));
+
+// ─── 아티스트 구독 정산 ───────────────────────────────────────────────────────
+// 월 단위·아티스트별 지급 기록. 금액은 subscription_payments·refunds에서 계산해 **기록 시점에
+// 고정**한다 — 나중에 환불이 더 들어와도 이미 지급한 달의 숫자는 바뀌지 않아야 한다.
+// 계산식은 lib/artistSupport/payout.ts(스펙 §10).
+
+export const artistPayoutStatusEnum = ['pending', 'paid'] as const;
+
+export const artistPayouts = sqliteTable(
+  'artist_payouts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    artistSlug: text('artist_slug').notNull(),
+    /** 'YYYY-MM' (KST). subscription_payments.cycle_ym과 같은 기준. */
+    period: text('period').notNull(),
+    /** 그 달 결제 완료 회차 합계(VAT 포함). */
+    grossAmount: integer('gross_amount').notNull(),
+    /** 그 회차들에 대한 환불 합계. */
+    refundAmount: integer('refund_amount').notNull(),
+    /** gross − refund − VAT. */
+    supplyAmount: integer('supply_amount').notNull(),
+    /** supply × 지급률. */
+    shareAmount: integer('share_amount').notNull(),
+    /** 원천징수(사업소득 3.3%). 세금계산서 아티스트는 0. */
+    withholdingAmount: integer('withholding_amount').notNull(),
+    /** 실제 이체액 = share − withholding. */
+    netAmount: integer('net_amount').notNull(),
+    subscriberCount: integer('subscriber_count').notNull(),
+    status: text('status', { enum: artistPayoutStatusEnum }).notNull().default('pending'),
+    paidAt: integer('paid_at', { mode: 'timestamp' }),
+    memo: text('memo'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    // 한 아티스트의 한 달은 한 번만 정산한다 — 두 번 기록되면 두 번 지급된다.
+    artistPeriodUnique: uniqueIndex('artist_payouts_artist_period_unique').on(t.artistSlug, t.period),
+  }),
+);
+
+export type ArtistPayout = typeof artistPayouts.$inferSelect;
+export type NewArtistPayout = typeof artistPayouts.$inferInsert;
 
 export type Subscription = typeof subscriptions.$inferSelect;
 export type NewSubscription = typeof subscriptions.$inferInsert;

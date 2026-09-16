@@ -35,9 +35,9 @@ import listHandler from '../../../../pages/api/admin/subscriptions/index';
 import detailHandler from '../../../../pages/api/admin/subscriptions/[id]';
 // eslint-disable-next-line import/first
 import { completeCardSetup, createSubscription } from '../../../../lib/billing/service';
-import { subscriptionAmounts } from '../../../../lib/billing/amounts';
+import { fixedSubscriptionAmounts } from '../../../../lib/billing/amounts';
 
-const LESSON_TOTAL = subscriptionAmounts('lesson').totalAmount;
+const LESSON_TOTAL = fixedSubscriptionAmounts('lesson').totalAmount;
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;

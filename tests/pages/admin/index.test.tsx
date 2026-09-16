@@ -27,7 +27,7 @@ const DASHBOARD: AdminDashboard = {
   upcomingSessions: [
     { orderId: 'o1', orderNo: 'SNB-2', customerName: '홍길동', productName: '보컬 녹음 1프로', startAt: '2026-09-17T05:00:00.000Z', endAt: '2026-09-17T08:00:00.000Z' },
   ],
-  queues: { mixingReceived: 3, mixingInProgress: 1, subscriptionsPendingCard: 0, subscriptionsPastDue: 2, subscriptionsPaused: 0, contractsAwaitingSignature: 1 },
+  queues: { mixingReceived: 3, mixingInProgress: 1, subscriptionsPendingCard: 0, subscriptionsPastDue: 2, subscriptionsPaused: 0, contractsAwaitingSignature: 1, artistPayoutsPending: 0 },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
   upcomingWindowDays: 7,
   checkedAt: '2026-09-16T03:00:00.000Z',

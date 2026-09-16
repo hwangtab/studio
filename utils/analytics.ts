@@ -42,7 +42,9 @@ export type MicroEventName =
   | 'micro_click_contact'
   | 'micro_click_booking_entry'
   | 'funding_pledge_start'
-  | 'funding_pledge_paid';
+  | 'funding_pledge_paid'
+  // 아티스트 구독 신청 시작(등급 고르고 제출). key event로 올리지 않는다(스펙 §11.3).
+  | 'artist_support_start';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
 

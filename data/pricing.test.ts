@@ -41,6 +41,7 @@ import {
   VOCAL_PACKAGE_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
+  ARTIST_SUPPORT_TIERS,
 } from './pricing';
 import { generateDefaultSchema } from '../utils/schema/business';
 import { generatePracticeRoomMonthlyRentSchema } from '../utils/schema/commerce';
@@ -373,6 +374,7 @@ describe('가격 SSOT 정합', () => {
       CONSULTING_HOURLY_PRICE,
       RELEASE_PRESS_PRICE,
       RELEASE_PRESS_INTRO_PRICE,
+      ...ARTIST_SUPPORT_TIERS.map((t) => t.monthlyTotal),
     ]);
 
     // data/ 아래 전체를 훑는다 — data/portfolio/처럼 하위 디렉터리에 가격이
