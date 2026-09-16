@@ -32,7 +32,7 @@
     "releaseEp": "EP",
     "releaseAlbum": "To'liq albom",
     "funding": "Crowdfunding",
-    "artists": "Support Artists"
+    "artists": "Artist Subscriptions"
   },
   "footer": {
     "rights": "Barcha huquqlar himoyalangan.",
@@ -2773,12 +2773,12 @@
   },
   "artists": {
     "seo": {
-      "title": "Support Artists | Studio NOL",
+      "title": "Artist Subscriptions | Studio NOL",
       "description": "Support artists who have worked with Studio NOL with a small monthly contribution. Your support goes toward the artist's activities, and supporters receive updates from the artist.",
       "keywords": "support artists, support indie musicians, monthly support, Studio NOL"
     },
     "hero": {
-      "title": "Support an Artist Every Month",
+      "title": "Subscribe to an Artist Every Month",
       "subtitle": "These are the artists behind the music made together at Studio NOL. A small amount becomes time for the next song.",
       "imageAlt": "Artist recording in the Studio NOL live room"
     },

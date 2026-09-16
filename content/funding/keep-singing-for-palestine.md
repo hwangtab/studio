@@ -93,14 +93,7 @@ rewards:
 
 ## 그날 노래하는 사람들
 
-다섯이 거리에 섭니다.
-
-### 모레도토요일
-
-![모레도토요일](/images/funding/keep-singing-for-palestine/lineup/moredo-saturday.webp "560")
-
-
-모레도토요일은 제주 강정마을 평화운동 현장에서 만난 두 사람이 결성한 포크 듀오입니다. 모레와 도토, 두 사람이 함께합니다. 바람에 흔들리는 나뭇잎처럼 섬세하고 유연한 음악이라고 소개됩니다. 앨범에 두 곡을 남겼는데, 가자로 향하던 여성들의 노래 〈We will sail for your freedom〉과 강정에서의 4년을 적은 〈모르는〉입니다. 이 앨범에서 두 곡을 부른 유일한 팀입니다. ([인스타그램](https://www.instagram.com/saturday_moredo/))
+넷이 거리에 섭니다.
 
 ### 모모
 
