@@ -16,8 +16,11 @@ const retryPayment = jest.fn();
 let widgetReady = true;
 let widgetError: string | null = null;
 // 위젯 약관 동의 상태. 위젯이 iframe 안에서 체크를 받으므로 실제로는 SDK의
-// `agreementStatusChange`가 알려 준다. null은 "아직 모름".
-let widgetAgreed: boolean | null = null;
+// `agreementStatusChange`가 알려 준다. null은 "아직 모름"(= 한 번도 건드리지 않음).
+//
+// 기본값을 `true`로 두는 이유: 대부분의 테스트는 결제까지 가는 정상 경로를 본다.
+// 가드를 확인하는 테스트만 `false`·`null`로 내려 쓴다.
+let widgetAgreed: boolean | null = true;
 jest.mock('../booking/useTossPaymentWidgets', () => ({
   useTossPaymentWidgets: () => ({
     methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
@@ -567,7 +570,7 @@ describe('폼 안의 결제위젯', () => {
   // requestPayment는 파일 전체가 공유하는 모의라 앞선 테스트의 호출이 쌓인다 —
   // "부르지 않았다"를 보려면 매번 비워야 한다.
   beforeEach(() => { requestPayment.mockClear(); });
-  afterEach(() => { widgetReady = true; widgetError = null; widgetAgreed = null; });
+  afterEach(() => { widgetReady = true; widgetError = null; widgetAgreed = true; });
 
   const fill = async () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
@@ -645,14 +648,32 @@ describe('폼 안의 결제위젯', () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
-  /** 동의 상태를 못 받은 채(null) 결제가 실패하면, 원인을 모르니 동의 쪽을 먼저 의심한다. */
-  it('동의 상태를 모르는데 실패하면 약관을 먼저 의심하는 문구를 낸다', async () => {
-    requestPayment.mockRejectedValueOnce(Object.assign(new Error('알 수 없음'), { code: 'UNKNOWN' }));
+  /**
+   * 동의 상태를 **모를 때도** 막는다.
+   *
+   * 위젯은 체크를 한 번이라도 건드릴 때만 이벤트를 준다 — 한 번도 건드리지 않은 경로가
+   * 정확히 `null`이고, 그게 약관을 빼먹는 가장 흔한 경우다. 여기를 열어 두면 가드가
+   * 실사용에서 아무것도 막지 못한다(2026-09-16 프로덕션 실측으로 확인).
+   */
+  it('동의 상태를 모르면(위젯을 건드리지 않았으면) 주문을 만들지 않는다', async () => {
+    widgetAgreed = null;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await fill();
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
 
     expect(await screen.findByRole('alert')).toHaveTextContent('결제 서비스 이용 약관');
+    expect(requestPayment).not.toHaveBeenCalled();
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  /** 체크하면 이벤트가 true로 오고, 그때는 막지 않는다. */
+  it('위젯 약관에 동의했으면 정상 진행한다', async () => {
+    widgetAgreed = true;
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   });
 });
 

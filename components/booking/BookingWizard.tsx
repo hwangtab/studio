@@ -266,7 +266,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
      * 없었다(가리려던 `NEED_AGREEMENT` 코드는 SDK에 없다). 동의 상태를 못 받았을 때
      * (null)는 막지 않는다 — 동의했는데 결제가 안 되는 쪽이 더 나쁘다.
      */
-    if (agreedRequiredTerms === false) {
+    if (agreedRequiredTerms !== true) {
       setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
       document.getElementById(agreementId)?.scrollIntoView?.({ block: 'center', behavior: 'smooth' });
       return;
