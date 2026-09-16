@@ -12,6 +12,20 @@ import type { SessionProduct } from '../../lib/booking/products';
  * 담을 것은 문자열 네 칸뿐, 동의 체크·날짜·시간대·상품·시간은 절대 되살리지 않는다.
  */
 
+/**
+ * 결제위젯은 예약자 정보 폼 안에 떠 있고, 제출은 그 위젯의 `requestPayment`를 부른다.
+ */
+const requestPayment = jest.fn().mockResolvedValue(undefined);
+const retryPayment = jest.fn();
+let widgetReady = true;
+let widgetError: string | null = null;
+jest.mock('./useTossPaymentWidgets', () => ({
+  useTossPaymentWidgets: () => ({
+    methodsId: 'toss-methods-test', agreementId: 'toss-agreement-test',
+    ready: widgetReady, error: widgetError, retry: retryPayment, requestPayment,
+  }),
+}));
+
 const PRODUCT: SessionProduct = {
   id: 'recording-pro',
   service: 'recording',
@@ -175,5 +189,93 @@ describe('BookingWizard 임시 저장', () => {
     } finally {
       Object.defineProperty(window, 'sessionStorage', { value: original, configurable: true });
     }
+  });
+});
+
+/**
+ * 결제위젯을 **예약자 정보 폼 안에** 두는 구조.
+ *
+ * 예전에는 주문을 만든 뒤 4단계 결제 화면을 따로 그렸고, 거기서 선점 카운트다운을
+ * 보여 줬다. 그 말은 없애지 않고 **시작 전으로 옮겼다** — 결제창을 열고 나면 고객은 토스
+ * 화면에 있어서 우리 타이머를 볼 수 없다.
+ */
+describe('폼 안의 결제위젯', () => {
+  afterEach(() => { widgetReady = true; widgetError = null; requestPayment.mockClear(); });
+
+  const fill = async (user: ReturnType<typeof userEvent.setup>) => {
+    await goToStep3(user);
+    await user.type(screen.getByLabelText(/^이름/), '김고객');
+    await user.type(screen.getByLabelText(/휴대폰/), '010-1111-2222');
+    await user.type(screen.getByLabelText(/이메일/), 'a@b.com');
+    await user.click(screen.getByLabelText(/환불 규정에 동의/));
+  };
+
+  it('단계가 셋으로 줄었고, 수단·약관 자리가 폼 안에 있다', async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    expect(screen.getByText('STEP 1 / 3')).toBeInTheDocument();
+    await goToStep3(user);
+    expect(document.getElementById('toss-methods-test')).not.toBeNull();
+    expect(document.getElementById('toss-agreement-test')).not.toBeNull();
+  });
+
+  /**
+   * 선점 안내가 사라지면, 고객은 자기가 잡아 둔 시간대에 시한이 있다는 것을 모른 채
+   * 결제창에서 오래 머문다 — 토스 인증까지 마치고 confirm에서 거부당한다.
+   */
+  it('결제를 시작하기 전에 선점 시한을 알려 준다', async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await goToStep3(user);
+    const notice = screen.getByRole('status');
+    expect(notice).toHaveTextContent('15분간');
+    expect(notice).toHaveTextContent('다른 분이 예약할 수 있습니다');
+  });
+
+  it('제출하면 서버가 돌려준 금액으로 결제창을 연다', async () => {
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    const payload = requestPayment.mock.calls.at(-1)![0];
+    expect(payload).toEqual(expect.objectContaining({ orderId: 'SNB-20260915-TEST0001', amount: 275000 }));
+    expect(payload.failUrl).toContain('service=recording');
+  });
+
+  it('위젯이 준비되기 전에는 제출할 수 없다', async () => {
+    widgetReady = false;
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await goToStep3(user);
+    expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+  });
+
+  /**
+   * 슬롯을 다른 사람이 먼저 잡은 경우(409)는 결제창을 열면 안 되고, 시간대를 다시 고르게
+   * 2단계로 돌려보내야 한다.
+   */
+  it('다른 예약이 먼저 잡히면 결제창을 열지 않고 시간대 선택으로 돌린다', async () => {
+    (global.fetch as jest.Mock).mockImplementation(async (input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      if (url.startsWith('/api/bookings/slots')) return { ok: true, status: 200, json: async () => slotsResponse } as Response;
+      return { ok: false, status: 409, json: async () => ({ ok: false, message: '방금 다른 예약이 먼저 잡혔습니다.' }) } as Response;
+    });
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(screen.getByText(/방금 다른 예약이 먼저 잡혔습니다/)).toBeInTheDocument());
+    expect(requestPayment).not.toHaveBeenCalled();
+  });
+
+  it('결제창을 닫으면 오류를 띄우지 않는다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(screen.queryByRole('alert')).toBeNull();
   });
 });
