@@ -10,6 +10,12 @@
  * 펀딩 개설자가 본문 마크다운에 외부 이미지 주소를 붙여넣는 경로가 생기면서, 등록되지
  * 않은 호스트가 저장 시점이 아니라 렌더 시점에 처음 나타날 수 있게 됐다. `MarkdownImage`는
  * 이 목록 밖의 절대 URL을 평범한 `<img>`로 강등해서 그 경로를 막는다.
+ *
+ * 아래 호스트는 전부 `next.config.mjs`에서 `protocol: 'https'`로 등록돼 있고,
+ * `MarkdownImage.isSafeForNextImage`는 이를 전제로 프로토콜 검사를 `https:` 하드코딩으로
+ * 단축한다. 이 목록에 `http`로만 등록된 호스트를 추가하게 되면 그 단축 검사가 깨지니,
+ * 그때는 `allowedRemoteImageHosts.consistency.test.ts`와 `isSafeForNextImage`를
+ * 프로토콜까지 함께 대조하도록 같이 고칠 것.
  */
 export const ALLOWED_REMOTE_IMAGE_HOSTS: readonly string[] = [
   'image.bugsm.co.kr',

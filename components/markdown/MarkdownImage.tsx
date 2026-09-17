@@ -67,11 +67,19 @@ const parseDimensionQueryHint = (src: string): { width: number; height: number }
  * 때문에 저장 자체가 막히면 나머지 본문도 못 지킨다), 여기 렌더 쪽에서 등록 안 된 호스트만
  * 골라 평범한 `<img>`로 강등한다 — 스토리 1,000편이 쓰는 로컬 이미지·등록된 호스트 경로는
  * 이 함수를 그대로 통과해 지금까지의 `next/image` 동작이 하나도 바뀌지 않는다.
+ *
+ * 프로토콜도 본다 — `next.config.mjs`의 `remotePatterns` 항목은 전부 `protocol: 'https'`를
+ * 명시하고, `next/image`의 매칭은 호스트뿐 아니라 프로토콜까지 본다. 호스트만 맞다고
+ * 통과시키면 `http://i.ytimg.com/...`처럼 등록된 호스트의 `http://` 주소가 여기를
+ * 통과해 `next/image`에서 그대로 throw한다(2026-09-17 재리뷰).
  */
 const isSafeForNextImage = (src: string): boolean => {
   if (src.startsWith('/')) return true;
   try {
-    return ALLOWED_REMOTE_IMAGE_HOSTS.includes(new URL(src).hostname);
+    const url = new URL(src);
+    // ALLOWED_REMOTE_IMAGE_HOSTS 전부가 https인 동안만 유효한 단축 검사다 — 그 목록에
+    // http 항목이 생기면 이 프로토콜 하드코딩도 같이 바뀌어야 한다.
+    return url.protocol === 'https:' && ALLOWED_REMOTE_IMAGE_HOSTS.includes(url.hostname);
   } catch {
     return false;
   }

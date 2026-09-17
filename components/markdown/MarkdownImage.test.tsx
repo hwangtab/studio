@@ -158,4 +158,20 @@ describe('등록 안 된 원격 호스트는 <img>로 강등', () => {
     expect(img).toHaveAttribute('width', '800');
     expect(img).toHaveAttribute('height', '600');
   });
+
+  // remotePatterns 항목은 전부 protocol: 'https'로 등록돼 있고 next/image 매칭은
+  // 프로토콜까지 본다. 호스트만 보고 통과시키면 등록된 호스트의 http:// 주소가
+  // next/image로 가서 "hostname is not configured"로 throw한다(2026-09-17 재리뷰).
+  it('등록된 호스트라도 http://면 next/image 대신 img로 강등한다', () => {
+    render(<MarkdownImage src="http://img.tumblbug.com/x.jpg" alt="http텀블벅" />);
+    const img = screen.getByAltText('http텀블벅');
+    expect(img.tagName).toBe('IMG');
+    expect(img).not.toHaveAttribute('data-fill');
+  });
+
+  it('등록된 호스트의 https://는 여전히 next/image를 쓴다', () => {
+    render(<MarkdownImage src="https://img.tumblbug.com/x.jpg" alt="https텀블벅" />);
+    const img = screen.getByAltText('https텀블벅');
+    expect(img).toHaveAttribute('data-fill', 'true');
+  });
 });
