@@ -27,6 +27,13 @@ const parseWidthHint = (title?: string): number | null => {
 };
 
 /**
+ * 치수 힌트 상한. 실제 업로드 이미지의 가로 상한은 1600px(대표 이미지는 1200px)이라
+ * 정상 값은 여기 한참 못 미친다 — `parseWidthHint`가 title에 `<= 1200` 상한을 두는 것과
+ * 같은 이유로, 주소를 손으로 조작해 극단적인 width/height를 넣는 경우를 막는다.
+ */
+const MAX_DIMENSION_HINT = 10_000;
+
+/**
  * 주소 쿼리(`?w=`·`?h=`)로 실린 치수 힌트를 읽는다.
  *
  * 업로드 이미지(펀딩 개설자 등)는 `utils/imageMetadata.json`에 없다 — 그 파일은 저장소의
@@ -41,7 +48,8 @@ const parseDimensionQueryHint = (src: string): { width: number; height: number }
   }
   const w = Number(url.searchParams.get('w'));
   const h = Number(url.searchParams.get('h'));
-  if (!Number.isInteger(w) || w <= 0 || !Number.isInteger(h) || h <= 0) return null;
+  if (!Number.isInteger(w) || w <= 0 || w > MAX_DIMENSION_HINT) return null;
+  if (!Number.isInteger(h) || h <= 0 || h > MAX_DIMENSION_HINT) return null;
   return { width: w, height: h };
 };
 

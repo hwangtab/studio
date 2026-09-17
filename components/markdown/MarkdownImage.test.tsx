@@ -104,6 +104,11 @@ describe('MarkdownImage 치수 힌트', () => {
     expect(screen.getByAltText('이상한값')).toHaveAttribute('data-fill', 'true');
   });
 
+  it('치수가 상한(10000)을 넘으면 무시한다 — 주소 조작으로 극단값을 넣는 경우', () => {
+    render(<MarkdownImage src="/api/funding/media/d.webp?w=1&h=999999999" alt="극단값" />);
+    expect(screen.getByAltText('극단값')).toHaveAttribute('data-fill', 'true');
+  });
+
   it('치수 쿼리가 없으면 기존 폴백 그대로다', () => {
     render(<MarkdownImage src="/api/funding/media/c.webp" alt="무치수" />);
     expect(screen.getByAltText('무치수')).toHaveAttribute('data-fill', 'true');

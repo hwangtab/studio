@@ -13,6 +13,17 @@ export const UPLOAD_LIMITS = {
 const COVER_SIZE = { width: 1200, height: 675 } as const;
 
 /**
+ * 디코드 후 픽셀 수 상한.
+ *
+ * 8MB 파일 상한 안에서도 단색에 가까운 PNG는 가로세로가 커도 잘 압축돼, sharp 기본 상한
+ * (약 2.68억 픽셀) 근처의 입력이 쉽게 만들어진다. 그런 입력을 디코드하면 버퍼만 800MB
+ * 안팎이라 서버리스 함수 메모리를 넘겨 500으로 죽는다(이 저장소의 첫 런타임 sharp 사용
+ * 자리라 전례가 없었다). 4천만 픽셀은 8000×5000 — 우리가 실제로 받을 사진(휴대폰 사진·
+ * 포스터)의 상한을 넉넉히 넘는 값이라 정상 입력은 걸리지 않는다.
+ */
+const MAX_INPUT_PIXELS = 40_000_000;
+
+/**
  * 받은 바이트를 **다시 인코딩해서** 저장한다.
  *
  * 원본을 그대로 두지 않는 이유가 둘이다. 하나, sharp가 디코드하지 못하면 그림이 아니므로
@@ -24,7 +35,7 @@ export const processCreatorImage = async (
   input: Buffer,
   kind: 'cover' | 'body',
 ): Promise<{ buffer: Buffer; width: number; height: number }> => {
-  const pipeline = sharp(input, { failOn: 'error' }).rotate();
+  const pipeline = sharp(input, { failOn: 'error', limitInputPixels: MAX_INPUT_PIXELS }).rotate();
   const resized = kind === 'cover'
     ? pipeline.resize(COVER_SIZE.width, COVER_SIZE.height, { fit: 'cover' })
     : pipeline.resize({ width: UPLOAD_LIMITS.maxWidth, withoutEnlargement: true });

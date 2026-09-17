@@ -5,10 +5,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
+import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator } from '../../../../lib/funding/creatorProjectWrite';
 import { buildFundingMediaUrl, processCreatorImage, UPLOAD_LIMITS } from '../../../../lib/funding/creatorUpload';
 import { FUNDING_MEDIA_PREFIX } from '../../../../lib/funding/mediaPath';
+import { canCreatorEdit, type FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
 /**
  * 개설자 이미지 업로드.
@@ -70,6 +72,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const project = await loadProjectForCreator(auth.creatorId, projectId);
   if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
 
+  // 심사 중이거나 이미 판정 난 프로젝트는 saveStorySection 등 저장 경로가 guard로 막지만,
+  // 업로드 자체(Blob에 파일이 쌓이는 것)는 그 검사를 타지 않아 계정만 있으면 편집 가능
+  // 여부와 무관하게 저장소를 채울 수 있었다. 여기서 같은 조건을 본다.
+  // CreatorProjectDetail.reviewStatus는 string으로 넓혀 있다(DB 컬럼은 enum이지만
+  // loadProjectForCreator의 반환 타입이 좁히지 않는다) — canCreatorEdit이 기대하는
+  // FundingReviewStatus로 다시 좁힌다.
+  if (!canCreatorEdit(project.reviewStatus as FundingReviewStatus)) {
+    return res.status(409).json({ ok: false, message: '심사 중이거나 이미 판정이 난 프로젝트에는 이미지를 올릴 수 없습니다.' });
+  }
+
+  // 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 메일 주소만 있으면 누구나 개설자
+  // 계정을 만들 수 있다. creatorId 하나로만 제한하면 메일함 N개로 N배가 되므로,
+  // login.ts(IP+이메일 두 겹)와 같은 이유로 IP 한 겹을 더한다.
+  const ip = getClientIp(req) ?? 'unknown';
+  if (!(await consumeRateLimit(`creator_upload:ip:${ip}`, 120, 3600))) {
+    return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
+  }
   if (!(await consumeRateLimit(`creator_upload:${auth.creatorId}`, 60, 3600))) {
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
   }
@@ -91,10 +110,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const filename = `${randomUUID()}.webp`;
-  await put(`${FUNDING_MEDIA_PREFIX}${filename}`, processed.buffer, {
-    access: 'private',
-    contentType: 'image/webp',
-  });
+  try {
+    await put(`${FUNDING_MEDIA_PREFIX}${filename}`, processed.buffer, {
+      access: 'private',
+      contentType: 'image/webp',
+    });
+  } catch (error: unknown) {
+    // 다른 실패는 전부 { ok: false, message } JSON이다 — 여기서 throw를 그대로 흘리면
+    // Next 기본 500 HTML이 나가 클라이언트 파싱 계약이 깨진다.
+    console.error('[funding/creator/upload] Blob 저장 실패:', error);
+    return res.status(500).json({ ok: false, message: '이미지를 저장하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+  }
 
   return res.status(200).json({ ok: true, url: buildFundingMediaUrl(filename, processed.width, processed.height) });
 }

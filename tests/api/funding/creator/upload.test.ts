@@ -44,6 +44,7 @@ const PROJECT = {
   id: 'p1',
   content: '기존 이미지 <img src="/api/funding/media/a.webp" />',
   coverUrl: '/api/funding/media/cover.webp',
+  reviewStatus: 'draft',
 } as unknown as Awaited<ReturnType<typeof loadProjectForCreator>>;
 
 beforeEach(() => {
@@ -91,8 +92,43 @@ it('남의 프로젝트거나 없는 프로젝트면 404', async () => {
   expect(r.status).toBe(404);
 });
 
+it('심사 중이거나 판정 난 프로젝트에는 409 — canCreatorEdit(draft·changes_requested 외)', async () => {
+  for (const reviewStatus of ['submitted', 'approved', 'rejected']) {
+    (loadProjectForCreator as jest.Mock).mockResolvedValue({ ...PROJECT, reviewStatus });
+    const r = await call([], { projectId: 'p1', kind: 'body' });
+    expect(r.status).toBe(409);
+  }
+  expect(put).not.toHaveBeenCalled();
+});
+
+it('changes_requested 상태는 편집 가능이라 통과한다', async () => {
+  (loadProjectForCreator as jest.Mock).mockResolvedValue({ ...PROJECT, reviewStatus: 'changes_requested' });
+  const r = await call([await makePng(400, 300)], { projectId: 'p1', kind: 'body' });
+  expect(r.status).toBe(200);
+});
+
 it('요청 제한을 넘으면 429', async () => {
   (consumeRateLimit as jest.Mock).mockResolvedValue(false);
+  const r = await call([], { projectId: 'p1', kind: 'body' });
+  expect(r.status).toBe(429);
+  expect(put).not.toHaveBeenCalled();
+});
+
+it('IP 요청 제한도 따로 본다 — 계정은 로그인 시 이메일만으로 자동 생성되므로 creatorId 하나로는 부족하다', async () => {
+  const seenKeys: string[] = [];
+  (consumeRateLimit as jest.Mock).mockImplementation((key: string) => {
+    seenKeys.push(key);
+    return Promise.resolve(true);
+  });
+  await call([await makePng(400, 300)], { projectId: 'p1', kind: 'body' });
+
+  expect(seenKeys.some((k) => k.startsWith('creator_upload:ip:'))).toBe(true);
+  expect(seenKeys.some((k) => k === 'creator_upload:c1')).toBe(true);
+});
+
+it('IP 요청 제한 초과만으로도 429 — creatorId 쪽은 별도로 통과했더라도', async () => {
+  (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+    Promise.resolve(!key.startsWith('creator_upload:ip:')));
   const r = await call([], { projectId: 'p1', kind: 'body' });
   expect(r.status).toBe(429);
   expect(put).not.toHaveBeenCalled();
@@ -137,6 +173,15 @@ it('정상 업로드 → 200, private로 저장하고 프록시 주소를 돌려
   expect(filename).toMatch(/^funding\/[0-9a-f-]+\.webp$/);
   expect(Buffer.isBuffer(buffer)).toBe(true);
   expect(options).toEqual({ access: 'private', contentType: 'image/webp' });
+});
+
+it('Blob 저장이 실패하면 500 JSON — 다른 실패와 같은 모양(throw를 그대로 흘리지 않는다)', async () => {
+  put.mockRejectedValueOnce(new Error('blob down'));
+  const png = await makePng(400, 300);
+  const r = await call([png], { projectId: 'p1', kind: 'body' });
+
+  expect(r.status).toBe(500);
+  expect(r.body).toEqual({ ok: false, message: expect.any(String) });
 });
 
 it('대표 이미지(kind=cover)는 16:9로 저장된다', async () => {
