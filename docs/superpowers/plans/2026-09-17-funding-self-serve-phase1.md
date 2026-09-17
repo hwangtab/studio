@@ -906,13 +906,14 @@ import type { FundingProject } from './shape';
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
-const mdProjects: FundingProject[] = [];
+// jest.mock 팩토리는 `mock` 접두사가 붙은 변수만 참조할 수 있다(babel-plugin-jest-hoist).
+const mockMdProjects: FundingProject[] = [];
 jest.mock('./projects', () => {
   const actual = jest.requireActual('./projects');
   return {
     ...actual,
-    getFundingProject: (slug: string) => mdProjects.find((p) => p.slug === slug) ?? null,
-    getAllFundingProjects: () => mdProjects,
+    getFundingProject: (slug: string) => mockMdProjects.find((p) => p.slug === slug) ?? null,
+    getAllFundingProjects: () => mockMdProjects,
   };
 });
 
@@ -957,7 +958,7 @@ const seedDb = async (slug: string, title: string, over: Partial<schema.NewFundi
 };
 
 beforeEach(async () => {
-  mdProjects.length = 0;
+  mockMdProjects.length = 0;
   client = createClient({ url: ':memory:' });
   for (const file of readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()) {
     for (const stmt of readFileSync(path.join(MIGRATIONS, file), 'utf-8').split('--> statement-breakpoint')) {
@@ -971,7 +972,7 @@ afterEach(() => client.close());
 
 describe('repository', () => {
   it('md에 있으면 md를 쓴다', async () => {
-    mdProjects.push(md('both', '파일 제목'));
+    mockMdProjects.push(md('both', '파일 제목'));
     await seedDb('both', 'DB 제목');
     const p = await getFundingProjectAsync('both');
     expect(p!.title).toBe('파일 제목');
@@ -984,7 +985,7 @@ describe('repository', () => {
   });
 
   it('목록은 둘을 합치고 slug가 겹치면 md만 남긴다', async () => {
-    mdProjects.push(md('both', '파일 제목'));
+    mockMdProjects.push(md('both', '파일 제목'));
     await seedDb('both', 'DB 제목');
     await seedDb('only-db', 'DB 제목2');
     const all = await getAllFundingProjectsAsync();
@@ -1001,7 +1002,7 @@ describe('repository', () => {
   });
 
   it('DB가 죽어도 md는 계속 읽힌다', async () => {
-    mdProjects.push(md('file-only', '파일 제목'));
+    mockMdProjects.push(md('file-only', '파일 제목'));
     client.close(); // 이후 모든 DB 호출이 던진다
     await expect(getFundingProjectAsync('file-only')).resolves.not.toBeNull();
     await expect(getFundingProjectAsync('missing')).resolves.toBeNull();
@@ -1930,11 +1931,10 @@ export const sendCreatorLoginEmail = async (email: string, loginUrl: string): Pr
     subject: '[스튜디오 놀] 펀딩 개설 로그인 링크',
     text: buildCreatorLoginText(loginUrl),
   });
-  return result.success ? null : (result.error ?? '메일 발송 실패');
+  // SendEmailResult는 { ok, status?, errorCode?, errorDetail? }다(lib/email/resend.ts:27).
+  return result.ok ? null : (result.errorDetail ?? result.errorCode ?? '메일 발송 실패');
 };
 ```
-
-`lib/email/resend.ts`의 `SendEmailResult` 필드 이름이 `success`/`error`가 아니면 그 파일을 열어 실제 필드에 맞춘다.
 
 - [ ] **Step 4: 로그인 API를 만든다**
 
@@ -2190,7 +2190,7 @@ export default function CreatorAuth() {
 
 ```tsx
 import Head from 'next/head';
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
 import { buildPageStaticProps } from '../../../lib/getStatic';
@@ -2202,7 +2202,7 @@ export default function FundingApply() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const submit = async (e: React.FormEvent) => {
+  const submit = async (e: FormEvent) => {
     e.preventDefault();
     setBusy(true);
     setError(null);
@@ -2280,7 +2280,6 @@ export const getStaticProps: GetStaticProps = async () =>
 ```tsx
 import Head from 'next/head';
 import Link from 'next/link';
-import type { GetServerSideProps } from 'next';
 
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
@@ -2335,7 +2334,9 @@ export default function CreatorHome({ projects }: Props) {
   );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = withI18nServerProps<Props>(async (context) => {
+// 주석을 달지 않는다 — withI18nServerProps는 Props에 locale·i18nResources를 더한 타입을 돌려준다
+// (pages/[locale]/funding/[slug]/pledge.tsx:36과 같은 모양).
+export const getServerSideProps = withI18nServerProps<Props>(async (context) => {
   context.res.setHeader('Cache-Control', 'no-store');
   const auth = await authenticateCreatorRequest(context);
   if (!auth.ok) return { redirect: { destination: '/ko/funding/apply', permanent: false } };
