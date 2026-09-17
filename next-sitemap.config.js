@@ -105,6 +105,8 @@ module.exports = {
     ...NOINDEX_STATIC_ROUTES.map((route) => `/*/${route}`),
     // 펀딩 트랜잭셔널 경로 — noindex + Cache-Control: no-store 페이지라 사이트맵 등재 대상이 아니다.
     '/*/funding/success', '/*/funding/fail', '/*/funding/manage/*', '/*/funding/*/pledge', '/*/funding/terms',
+    // 개설자 전용 화면 — 로그인해야 의미가 있고 색인 대상이 아니다.
+    '/*/funding/creator', '/*/funding/creator/*',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
@@ -161,7 +163,7 @@ module.exports = {
         ...NAMED_BOTS.map((userAgent) => ({ userAgent, ...RULES })),
       ];
     })(),
-    additionalSitemaps: [],
+    additionalSitemaps: [`${SITE_URL}/sitemap-funding.xml`],
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
       const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${SITE_URL}/llms.txt\n# llms-full.txt: ${SITE_URL}/llms-full.txt\n# llms-full (locale-scoped): ${SITE_URL}/llms-full-ko.txt ${SITE_URL}/llms-full-en.txt ${SITE_URL}/llms-full-zh.txt\n`;
