@@ -38,6 +38,15 @@ export default function CreatorAuth({ token }: Props) {
 
   const login = async () => {
     if (!token) return;
+    // 이 URL에는 15분 유효한 원문 토큰이 실려 있다. 아래에서 어떤 결과가 나오든(성공 시
+    // 대시보드로 이동, 실패 시 fetch·catch 어느 쪽이든) location.href 대입에는
+    // rel="noreferrer"를 붙일 수 없고, 사이트 Referrer-Policy(strict-origin-when-cross-origin)는
+    // 동일 출처 이동에 전체 URL을 리퍼러로 보낸다 — 세션 API가 401(소진 실패) 말고도
+    // 403(Origin 불허)·400·500을 낼 수 있고 그 경우들에서는 토큰이 소진되지 않은 채
+    // 살아 있으므로, 지우지 않으면 도착지 gtag의 page_referrer에 원문이 그대로 실린다.
+    // fetch를 부르기 전에 지워 둔다 — 응답을 기다리는 동안에도 주소창에 토큰이 남아
+    // 있을 이유가 없다. **지우지 말 것**: 없어 보여도 이게 유일한 방어선이다.
+    window.history.replaceState(null, '', '/ko/funding/creator/auth');
     setBusy(true);
     setError(null);
     try {
@@ -51,8 +60,11 @@ export default function CreatorAuth({ token }: Props) {
         return;
       }
       // 링크가 만료됐는지 이미 쓰였는지는 구분해 알리지 않는다(consumeCreatorLoginToken과
-      // 같은 이유) — 신청 페이지가 e=link 쿼리를 보고 안내 문구를 띄운다.
-      window.location.href = '/ko/funding/apply?e=link';
+      // 같은 이유). 그리고 여기서는 아예 페이지를 떠나지 않는다 — 위 replaceState로 URL은
+      // 이미 안전하지만, 이동하지 않으면 리퍼러 노출면 자체가 생기지 않는다. 다시 받고
+      // 싶으면 아래 "펀딩 신청 페이지로" 링크(이미 e=link를 달고 있다)를 사람이 직접 누른다.
+      setError('링크가 만료됐거나 이미 사용되었습니다. 아래 링크로 다시 받아 주세요.');
+      setBusy(false);
     } catch {
       setError('연결에 실패했습니다. 잠시 후 다시 시도해 주세요.');
       setBusy(false);
