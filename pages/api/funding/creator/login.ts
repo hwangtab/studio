@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
@@ -21,6 +23,15 @@ const WINDOW_SECONDS = 600;
  */
 const OK = { ok: true, message: '로그인 링크를 보냈습니다. 메일함을 확인해 주세요.' };
 
+/**
+ * rate_limits.key에 평문 이메일을 남기지 않는다. 이 테이블은 10분 창이 지나도 즉시
+ * 지워지지 않고(만료 스윕은 다음 호출에서 lazy하게 일어난다) 개설자 이메일 주소가
+ * 그대로 남는 걸 막기 위해 해시로 키를 만든다. 같은 주소는 항상 같은 해시로 가므로
+ * 한도 판정 동작은 그대로다.
+ */
+const emailRateLimitKey = (email: string): string =>
+  `creator_login:email:${createHash('sha256').update(email).digest('hex').slice(0, 16)}`;
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'POST') return res.status(405).json({ ok: false });
@@ -41,7 +52,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!(await consumeRateLimit(`creator_login:ip:${ip}`, IP_LIMIT, WINDOW_SECONDS))) {
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
   }
-  if (!(await consumeRateLimit(`creator_login:email:${email}`, EMAIL_LIMIT, WINDOW_SECONDS))) {
+  if (!(await consumeRateLimit(emailRateLimitKey(email), EMAIL_LIMIT, WINDOW_SECONDS))) {
     // 한 주소로 링크를 퍼붓는 것을 막는다. 여기서도 같은 200을 돌려준다 — 429를 주면
     // "그 주소는 존재한다"를 알려 주는 셈이다.
     return res.status(200).json(OK);
