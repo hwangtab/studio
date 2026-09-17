@@ -85,3 +85,93 @@ describe('title로 폭 제한', () => {
     }
   });
 });
+
+/**
+ * 업로드 이미지(펀딩 개설자 등)는 utils/imageMetadata.json에 없다 — 그 파일은 저장소의
+ * 정적 이미지만 안다. 주소 쿼리(?w=·?h=)로 치수를 실어 보내면 16:9 fill 폴백 대신 실제
+ * 치수로 렌더한다.
+ */
+describe('MarkdownImage 치수 힌트', () => {
+  it('src의 w·h 쿼리를 치수로 쓴다', () => {
+    render(<MarkdownImage src="/api/funding/media/a.webp?w=800&h=1200" alt="포스터" />);
+    const img = screen.getByAltText('포스터');
+    expect(img).toHaveAttribute('width', '800');
+    expect(img).toHaveAttribute('height', '1200');
+  });
+
+  it('치수가 양의 정수가 아니면 무시한다', () => {
+    render(<MarkdownImage src="/api/funding/media/b.webp?w=0&h=-5" alt="이상한값" />);
+    expect(screen.getByAltText('이상한값')).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('치수가 상한(10000)을 넘으면 무시한다 — 주소 조작으로 극단값을 넣는 경우', () => {
+    render(<MarkdownImage src="/api/funding/media/d.webp?w=1&h=999999999" alt="극단값" />);
+    expect(screen.getByAltText('극단값')).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('치수 쿼리가 없으면 기존 폴백 그대로다', () => {
+    render(<MarkdownImage src="/api/funding/media/c.webp" alt="무치수" />);
+    expect(screen.getByAltText('무치수')).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('로컬 메타데이터가 있으면 그쪽이 이긴다', () => {
+    // utils/imageMetadata.json에 실제로 있는 /images/album1.jpg(512x512)로 확인한다.
+    // 쿼리 힌트가 기존 동작을 덮어쓰면 안 된다 — 스토리 1,000편이 그 경로로 렌더된다.
+    render(<MarkdownImage src="/images/album1.jpg?w=800&h=1200" alt="앨범아트" />);
+    const img = screen.getByAltText('앨범아트');
+    expect(img).toHaveAttribute('width', '512');
+    expect(img).toHaveAttribute('height', '512');
+  });
+});
+
+/**
+ * 펀딩 개설자가 본문 마크다운에 등록 안 된 외부 호스트 이미지를 붙여넣을 수 있게 되면서,
+ * next/image에 그대로 넘기면 렌더 중 throw한다(next.config.mjs의 remotePatterns 밖).
+ * 등록 안 된 호스트는 next/image 대신 평범한 <img>로 강등한다.
+ */
+describe('등록 안 된 원격 호스트는 <img>로 강등', () => {
+  it('알 수 없는 절대 URL은 next/image 대신 평범한 img를 렌더한다', () => {
+    render(<MarkdownImage src="https://evil.example.com/x.jpg" alt="외부" />);
+    const img = screen.getByAltText('외부');
+    expect(img.tagName).toBe('IMG');
+    expect(img).not.toHaveAttribute('data-fill');
+    expect(img).toHaveAttribute('loading', 'lazy');
+    expect(img).toHaveAttribute('decoding', 'async');
+  });
+
+  it('등록된 호스트(remotePatterns)의 절대 URL은 next/image를 그대로 쓴다', () => {
+    render(<MarkdownImage src="https://img.tumblbug.com/x.jpg" alt="텀블벅" />);
+    const img = screen.getByAltText('텀블벅');
+    expect(img).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('/로 시작하는 같은 출처 경로는 등록 목록과 무관하게 next/image를 쓴다', () => {
+    render(<MarkdownImage src="/api/funding/media/x.webp" alt="같은출처" />);
+    const img = screen.getByAltText('같은출처');
+    expect(img).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('알 수 없는 호스트라도 로컬 메타데이터/치수 힌트가 있으면 그 치수로 img를 렌더한다', () => {
+    render(<MarkdownImage src="https://evil.example.com/x.jpg?w=800&h=600" alt="외부치수" />);
+    const img = screen.getByAltText('외부치수');
+    expect(img.tagName).toBe('IMG');
+    expect(img).toHaveAttribute('width', '800');
+    expect(img).toHaveAttribute('height', '600');
+  });
+
+  // remotePatterns 항목은 전부 protocol: 'https'로 등록돼 있고 next/image 매칭은
+  // 프로토콜까지 본다. 호스트만 보고 통과시키면 등록된 호스트의 http:// 주소가
+  // next/image로 가서 "hostname is not configured"로 throw한다(2026-09-17 재리뷰).
+  it('등록된 호스트라도 http://면 next/image 대신 img로 강등한다', () => {
+    render(<MarkdownImage src="http://img.tumblbug.com/x.jpg" alt="http텀블벅" />);
+    const img = screen.getByAltText('http텀블벅');
+    expect(img.tagName).toBe('IMG');
+    expect(img).not.toHaveAttribute('data-fill');
+  });
+
+  it('등록된 호스트의 https://는 여전히 next/image를 쓴다', () => {
+    render(<MarkdownImage src="https://img.tumblbug.com/x.jpg" alt="https텀블벅" />);
+    const img = screen.getByAltText('https텀블벅');
+    expect(img).toHaveAttribute('data-fill', 'true');
+  });
+});

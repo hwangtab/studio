@@ -1,21 +1,50 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
+import { createProject, logoutCreator } from '../../../../components/funding/creator/api';
+import { REVIEW_STATUS_LABEL } from '../../../../components/funding/creator/types';
+import { Button } from '../../../../components/ui/Button';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 import { listProjectsForCreator, type CreatorProjectSummary } from '../../../../lib/funding/creatorProjectList';
 
-const REVIEW_LABEL: Record<string, string> = {
-  draft: '작성 중',
-  submitted: '심사 중',
-  changes_requested: '보완 요청',
-  approved: '공개',
-  rejected: '반려',
-};
-
 interface Props { projects: CreatorProjectSummary[] }
 
 export default function CreatorHome({ projects }: Props) {
+  const router = useRouter();
+  const [creating, setCreating] = useState(false);
+  const [createError, setCreateError] = useState<string | null>(null);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState<string | null>(null);
+
+  const handleCreate = async () => {
+    setCreating(true);
+    setCreateError(null);
+    const result = await createProject();
+    if (result.ok) {
+      router.push(`/ko/funding/creator/${result.id}`);
+      return;
+    }
+    setCreateError(result.message);
+    setCreating(false);
+  };
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    setLogoutError(null);
+    // 실패를 무시하고 이동하면 세션이 실제로는 남아 있는데 로그아웃된 것처럼 보인다
+    // (2026-09-17 리뷰 지적) — 성공했을 때만 이동한다.
+    const result = await logoutCreator();
+    if (result.ok) {
+      router.push('/ko/funding/apply');
+      return;
+    }
+    setLogoutError(result.message);
+    setLoggingOut(false);
+  };
+
   return (
     <>
       <Head>
@@ -23,7 +52,22 @@ export default function CreatorHome({ projects }: Props) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-3xl px-4 py-16">
-        <h1 className="text-3xl font-bold">내 펀딩 프로젝트</h1>
+        <div className="flex items-baseline justify-between gap-3">
+          <h1 className="text-3xl font-bold">내 펀딩 프로젝트</h1>
+          <div className="flex flex-col items-end gap-1">
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="typo-caption text-gray-500 underline underline-offset-2 disabled:opacity-50 dark:text-gray-400"
+            >
+              {loggingOut ? '로그아웃 중…' : '로그아웃'}
+            </button>
+            {logoutError && (
+              <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{logoutError}</span>
+            )}
+          </div>
+        </div>
         {projects.length === 0 ? (
           <p className="mt-8 text-gray-600 dark:text-gray-400">아직 만든 프로젝트가 없습니다.</p>
         ) : (
@@ -31,24 +75,32 @@ export default function CreatorHome({ projects }: Props) {
             {projects.map((p) => (
               <li key={p.id} className="glass-card rounded-2xl p-5">
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="font-semibold">{p.title}</span>
-                  <span className="text-sm text-gray-500">{REVIEW_LABEL[p.reviewStatus] ?? p.reviewStatus}</span>
+                  <span className="font-semibold">{p.title || '(제목 없음)'}</span>
+                  <span className="text-sm text-gray-500">{REVIEW_STATUS_LABEL[p.reviewStatus] ?? p.reviewStatus}</span>
                 </div>
                 {p.reviewNote && (
                   <p className="mt-2 text-sm text-amber-700 dark:text-amber-400">운영자 메모: {p.reviewNote}</p>
                 )}
-                {p.reviewStatus === 'approved' && (
-                  <Link href={`/ko/funding/${p.slug}`} className="mt-3 inline-block text-sm underline">
-                    공개된 페이지 보기
+                <div className="mt-3 flex gap-4">
+                  <Link href={`/ko/funding/creator/${p.id}`} className="text-sm underline underline-offset-2">
+                    편집하기
                   </Link>
-                )}
+                  {p.reviewStatus === 'approved' && (
+                    <Link href={`/ko/funding/${p.slug}`} className="text-sm underline underline-offset-2">
+                      공개된 페이지 보기
+                    </Link>
+                  )}
+                </div>
               </li>
             ))}
           </ul>
         )}
-        <p className="mt-10 text-sm text-gray-500">
-          프로젝트 만들기·편집은 다음 배포에서 열립니다. 문의는 메일로 주세요.
-        </p>
+        <div className="mt-10 flex items-center gap-3">
+          <Button onClick={handleCreate} disabled={creating}>
+            {creating ? '만드는 중…' : '새 프로젝트 만들기'}
+          </Button>
+          {createError && <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{createError}</span>}
+        </div>
       </main>
     </>
   );
