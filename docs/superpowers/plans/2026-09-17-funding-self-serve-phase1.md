@@ -1228,7 +1228,9 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
 
 `getAllFundingProjects`(동기, 파일 전용)는 계속 `./projects`에서 가져온다. `getFundingProjectAsync`만 `./repository`에서 가져온다.
 
-⚠️ `fallback: 'blocking'`은 **목록에 없는 경로만** 지연 생성한다. 목록에 넣은 경로는 빌드 때 전부 만들어진다(CLAUDE.md의 스토리 프리렌더 절과 같은 이야기). 그리고 존재하지 않는 slug 요청은 `notFound: true`로 404가 되며, 이 404도 `revalidate` 주기로 다시 확인된다.
+⚠️ `fallback: 'blocking'`은 **목록에 없는 경로만** 지연 생성한다. 목록에 넣은 경로는 빌드 때 전부 만들어진다(CLAUDE.md의 스토리 프리렌더 절과 같은 이야기).
+
+⚠️ **`notFound: true`에는 `revalidate`를 함께 준다.** `revalidate` 없는 `notFound`는 ISR 캐시에 **영구히** 남아 다음 배포까지 풀리지 않는다. 승인 전 상세 주소를 누가 한 번 열어 보면 그 404가 고정되고, 승인해도 페이지가 계속 404다 — 이 태스크가 지키려는 목표("승인이 배포를 기다리지 않게")를 정확히 깨는 자리다. 단 **로케일 가드 분기는 예외**다: 비-ko는 영원히 404가 맞으므로 `revalidate`를 주지 않는다.
 
 - [ ] **Step 3: SSR 페이지 세 곳에 `await`를 붙인다**
 
