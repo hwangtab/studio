@@ -468,6 +468,10 @@ export const fundingCreators = sqliteTable('funding_creators', {
   /** 운영자 연락용. 공개하지 않는다. */
   contactName: text('contact_name'),
   phone: text('phone'),
+  /** 공개 소개. 개설자 구획(2차)이 채운다 — 비어 있을 수 있다. */
+  bio: text('bio'),
+  /** http(s) 링크 배열의 JSON 문자열. 개설자 구획(2차)이 채운다 — 비어 있을 수 있다. */
+  links: text('links'),
   /**
    * 정산 시 세금 처리. 승인 전에는 비어 있다 — 반려될 신청서에 계좌·주민번호 성격의
    * 정보를 미리 받지 않는다(스펙 §6.2).
