@@ -1544,7 +1544,7 @@ Expected: FAIL — 모듈 없음.
 
 ```ts
 import { createHash, randomBytes } from 'node:crypto';
-import { and, eq, isNull, lt } from 'drizzle-orm';
+import { and, eq, isNull, lt, or } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingCreators, fundingCreatorTokens } from '../../db/schema';
@@ -1567,7 +1567,8 @@ const hash = (raw: string): string => createHash('sha256').update(raw).digest('h
 
 /**
  * 로그인 토큰 발급. 처음 보는 이메일이면 개설자 행을 만든다 — 가입과 로그인을 나누지 않는다.
- * (아무나 행을 만들 수 있지만 행 하나가 전부이고, 만드는 경로에는 요청 제한이 걸린다.)
+ * (아무나 행을 만들 수 있지만 행 하나가 전부다. 요청 제한은 API 계층에서 건다 —
+ * pages/api/funding/creator/login.ts.)
  *
  * **발급하면 그 사람의 기존 미사용 토큰을 죽인다.** 링크를 다시 받는 흔한 이유가 "먼저 온
  * 메일이 남의 손에 있을지도 모른다"이기 때문이다.
@@ -1580,14 +1581,25 @@ export const issueCreatorLoginToken = async (
   if (!normalized) return null;
 
   const db = getDb();
-  const [existing] = await db.select().from(fundingCreators)
+  // 확인-후-쓰기를 하지 않는다. select → insert 사이에 같은 이메일의 다른 요청이 끼면 둘 다
+  // INSERT를 시도하고 email UNIQUE가 한쪽을 거부해 그 사용자에게 500이 간다(서버리스라
+  // 인스턴스도 갈린다). 먼저 넣어 보고 충돌은 무시한 뒤 읽는다.
+  await db.insert(fundingCreators)
+    .values({ email: normalized, name: normalized.split('@')[0] })
+    .onConflictDoNothing({ target: fundingCreators.email });
+  const [creator] = await db.select().from(fundingCreators)
     .where(eq(fundingCreators.email, normalized)).limit(1);
-  const creator = existing
-    ?? (await db.insert(fundingCreators).values({ email: normalized, name: normalized.split('@')[0] }).returning())[0];
+  if (!creator) {
+    // 있어서는 안 되는 경우다. 던지면 상위 API가 500을 내므로 기록만 남기고 조용히 접는다.
+    console.error(`[funding] 개설자 행을 만들지도 찾지도 못했다 — ${normalized}`);
+    return null;
+  }
 
-  // 만료된 토큰은 쌓일 이유가 없다. 발급 경로에 얹어 따로 배치를 두지 않는다.
-  await db.delete(fundingCreatorTokens).where(lt(fundingCreatorTokens.expiresAt, now));
-  await db.delete(fundingCreatorTokens).where(eq(fundingCreatorTokens.creatorId, creator.id));
+  // 만료분 정리와 재발급 무효화, 새 토큰 삽입을 한 묶음으로 보낸다. 따로 보내면 마지막
+  // 삽입이 실패했을 때 방금까지 쓸 수 있던 링크까지 사라진다.
+  await db.delete(fundingCreatorTokens).where(
+    or(lt(fundingCreatorTokens.expiresAt, now), eq(fundingCreatorTokens.creatorId, creator.id)),
+  );
 
   const rawToken = randomBytes(32).toString('base64url');
   await db.insert(fundingCreatorTokens).values({
