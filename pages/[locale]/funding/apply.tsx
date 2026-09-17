@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useState, type FormEvent } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
@@ -6,6 +7,11 @@ import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 
 export default function FundingApply() {
+  const router = useRouter();
+  // 개설자 매직링크 착지(auth.tsx)가 로그인 API 실패 뒤 여기로 보내며 붙이는 쿼리다.
+  // 만료됐는지 이미 쓰였는지는 구분하지 않는다(캐물을 여지를 주지 않으려는 의도가
+  // creatorToken.ts부터 일관된다) — 할 일은 "다시 받기" 하나뿐이다.
+  const linkExpired = router.query.e === 'link';
   const [email, setEmail] = useState('');
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +45,11 @@ export default function FundingApply() {
       </Head>
       <main className="mx-auto max-w-2xl px-4 py-16">
         <h1 className="text-3xl font-bold">펀딩 개설 신청</h1>
+        {linkExpired && (
+          <p className="mt-4 rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-300">
+            링크가 만료됐거나 이미 사용되었습니다. 이메일을 다시 넣어 새 링크를 받아 주세요.
+          </p>
+        )}
         <div className="mt-6 space-y-3 text-gray-700 dark:text-gray-300">
           <p>앨범·공연·굿즈를 만들 비용을 후원으로 모읍니다. 페이지는 직접 쓰고, 결제·환불·정산은 스튜디오 놀이 맡습니다.</p>
           <ul className="list-disc space-y-1 pl-5">
