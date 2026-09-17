@@ -547,6 +547,12 @@ export const CREATOR_LIMITS = {
   maxDurationDays: 60,
   bioMax: 600,
   linksMax: 5,
+  /**
+   * 계정당 초안 개수. 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 계정 자체가
+   * 사실상 무료다. 상한이 없으면 한 계정으로 하루 수만 행을 만들어 운영 DB와 관리자
+   * 목록을 침수시킬 수 있다.
+   */
+  draftsMax: 10,
 } as const;
 
 type Fail = { ok: false; message: string };
@@ -1304,6 +1310,12 @@ EOF
 4. `authenticateCreatorApi(req, res)` 실패 → 401
 5. 입력 검증 → 실패면 400 + 사용자에게 보여 줄 한국어 메시지
 6. 쓰기 서비스 호출 → `WriteResult`의 `code`를 상태 코드로 옮긴다: `not_found`→404, `locked`·`not_editable`→409, `duplicate_slug`·`duplicate_reward`·`too_many`→400
+
+⚠️ **`mode: 'create'`는 기존 id를 덮어쓰지 않는다.** 서비스의 `upsertReward`는 같은 `(projectId, rewardId)` 행이 있으면 UPDATE한다. 라우트가 그대로 내려보내면, 개설자가 "새 리워드 추가"에서 이미 쓰는 id를 적었을 때 새 티어가 생기는 대신 **기존 티어의 제목·설명·금액이 통째로 교체된다.** 오류도 나지 않아 추가된 줄 안다. `create`면 선조회로 막고 `duplicate_reward`를 돌려준다.
+
+⚠️ **제출 시점에 시작일을 다시 본다.** `validateBasicSection`은 저장 순간의 `now`로만 "시작일은 오늘 + 3일 뒤부터"를 본다. 날짜는 시간이 지나면 저절로 무효가 되는 값이라 "저장이 성공했으면 유효하다"는 전제 밖이다. 3일 뒤로 잡아 저장한 뒤 일주일 묵혀 제출하면, 운영자가 승인하는 순간 `upcoming`을 건너뛰고 곧바로 `live`가 되어 개설자가 고른 시작일도 심사 리드타임도 없던 일이 된다. `endAt`까지 지났으면 승인 직후 `closed`인 프로젝트가 공개된다.
+
+⚠️ **심사 상태 갱신은 compare-and-set이다.** 읽고 나서 조건 없이 UPDATE하면, 그 사이 운영자가 승인한 행이 `submitted`로 되돌아간다 — 전이표가 "승인은 끝"이라고 못박은 규칙이 표를 우회해 깨진다. `where`에 읽은 시점의 `reviewStatus`를 함께 걸고, 영향 행이 0이면 409.
 
 ⚠️ **리워드 편집 요청은 `previousRewardId`를 필수로 받는다.** 서비스는 그 인자가 없으면 "새 리워드 추가"로 해석하므로, 화면이 빠뜨리면 개설자가 id를 고칠 때마다 티어가 하나씩 늘어난다. 서비스 함수만으로는 막을 수 없는 계약이니 **라우트 스키마가 강제한다**: 바디에 `mode: 'create' | 'update' | 'delete' | 'reorder'`를 두고 `update`면 `previousRewardId`를 요구한다. 없으면 400.
 7. 성공 → 200 `{ ok: true }` (새 프로젝트는 `{ ok: true, id }`)
