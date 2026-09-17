@@ -451,6 +451,177 @@ export const fundingPledgesRelations = relations(fundingPledges, ({ one }) => ({
 export type FundingPledge = typeof fundingPledges.$inferSelect;
 export type NewFundingPledge = typeof fundingPledges.$inferInsert;
 
+// ─── 펀딩 셀프 개설 (아티스트가 직접 신청·등록) ────────────────────────────────
+// 1차 스펙은 "프로젝트 정본 = content/funding/<slug>.md"였다. 그 설계는 편집자가 운영자
+// 한 명이라는 전제 위에 서 있었고, 개설 주체가 아티스트로 바뀌면서 그 전제가 깨졌다.
+// 아래 테이블이 새 정본이며, md는 진행 중 프로젝트가 끝날 때까지만 공존한다(스펙 D5).
+// 읽을 때는 항상 md가 먼저다 — lib/funding/repository.ts.
+
+export const fundingCreatorTaxTypeEnum = ['withholding', 'invoice'] as const;
+
+export const fundingCreators = sqliteTable('funding_creators', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  /** 로그인 식별자. 저장 전에 소문자로 정규화한다(lib/funding/creatorToken.ts). */
+  email: text('email').notNull().unique(),
+  /** 공개되는 이름 — 팀·아티스트 이름. */
+  name: text('name').notNull(),
+  /** 운영자 연락용. 공개하지 않는다. */
+  contactName: text('contact_name'),
+  phone: text('phone'),
+  /**
+   * 정산 시 세금 처리. 승인 전에는 비어 있다 — 반려될 신청서에 계좌·주민번호 성격의
+   * 정보를 미리 받지 않는다(스펙 §6.2).
+   */
+  taxType: text('tax_type', { enum: fundingCreatorTaxTypeEnum }),
+  payoutBankName: text('payout_bank_name'),
+  payoutAccount: text('payout_account'),
+  payoutHolder: text('payout_holder'),
+  lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+/**
+ * 매직링크 토큰.
+ *
+ * **원문은 저장하지 않는다.** 이 테이블을 읽을 수 있는 쪽이 곧바로 남의 계정으로 들어갈 수
+ * 있으면 저장의 의미가 없다. 원문은 메일에만 실리고 우리는 sha256만 갖는다.
+ */
+export const fundingCreatorTokens = sqliteTable('funding_creator_tokens', {
+  tokenHash: text('token_hash').primaryKey(),
+  creatorId: text('creator_id').notNull().references(() => fundingCreators.id, { onDelete: 'cascade' }),
+  expiresAt: integer('expires_at', { mode: 'timestamp' }).notNull(),
+  /** 소진 시각. 값이 있으면 다시 쓸 수 없다 — 메일이 전달·보관되는 경로를 감안한 1회용. */
+  usedAt: integer('used_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+/** 심사 상태. 공개 여부(status)와는 다른 축이다 — 승인된 뒤에야 status가 의미를 갖는다. */
+export const fundingReviewStatusEnum = ['draft', 'submitted', 'changes_requested', 'approved', 'rejected'] as const;
+/** 공개 상태. md frontmatter의 status와 같은 값 집합이다(lib/funding/shape.ts). */
+export const fundingProjectStatusEnum = ['auto', 'draft', 'closed'] as const;
+
+export const fundingProjects = sqliteTable('funding_projects', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  /**
+   * 공개 주소이자 후원 행(funding_pledges.project_slug)이 문자열로 참조하는 키.
+   * 승인 시 확정하고 그 뒤에는 바꾸지 않는다 — 바꾸면 진행 중 모금액이 공개적으로 0원이
+   * 되고 기존 후원자가 관리 페이지에서 프로젝트를 찾지 못한다(CLAUDE.md).
+   */
+  slug: text('slug').notNull().unique(),
+  creatorId: text('creator_id').notNull().references(() => fundingCreators.id),
+  title: text('title').notNull(),
+  summary: text('summary').notNull(),
+  /** 마크다운 본문. 렌더는 MarkdownRenderer가 하되 개설자 모드로 숏코드를 벗긴다(2차). */
+  content: text('content').notNull(),
+  coverUrl: text('cover_url').notNull(),
+  ogImageUrl: text('og_image_url'),
+  heroImageUrl: text('hero_image_url'),
+  goalAmount: integer('goal_amount').notNull(),
+  startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
+  endAt: integer('end_at', { mode: 'timestamp' }).notNull(),
+  reviewStatus: text('review_status', { enum: fundingReviewStatusEnum }).notNull().default('draft'),
+  /**
+   * 승인 전에는 항상 'draft'다 — 심사를 통과하지 않은 프로젝트가 공개 경로에 나타나는 일이
+   * 없도록 두 축이 모두 잠겨 있어야 한다.
+   */
+  status: text('status', { enum: fundingProjectStatusEnum }).notNull().default('draft'),
+  hidden: integer('hidden', { mode: 'boolean' }).notNull().default(false),
+  /** 운영자 → 개설자 메시지. 보완 요청·반려 사유. */
+  reviewNote: text('review_note'),
+  submittedAt: integer('submitted_at', { mode: 'timestamp' }),
+  approvedAt: integer('approved_at', { mode: 'timestamp' }),
+  rejectedAt: integer('rejected_at', { mode: 'timestamp' }),
+  /** 개설자가 동의한 개설자 약관 판본과 시각. 후원자 쪽 terms_version과 같은 취지의 증거다. */
+  creatorTermsVersion: text('creator_terms_version'),
+  creatorTermsAgreedAt: integer('creator_terms_agreed_at', { mode: 'timestamp' }),
+  /** 사이트맵 lastmod (YYYY-MM-DD). 공개 필드가 바뀔 때만 갱신한다 — 파일 mtime을 쓰지 않는 것과 같은 이유. */
+  lastmod: text('lastmod'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const fundingRewards = sqliteTable(
+  'funding_rewards',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    projectId: text('project_id').notNull().references(() => fundingProjects.id, { onDelete: 'cascade' }),
+    /**
+     * md의 rewards[].id와 같은 것. 후원 행(funding_pledges.reward_id)이 이 문자열을 참조하고,
+     * 재고 집계 조건이 `fp.reward_id = <이 값>`이다. 승인 뒤 바꾸면 그 순간 기존 후원이
+     * 안 세어져 한정 100개짜리가 200개 팔린다(CLAUDE.md).
+     */
+    rewardId: text('reward_id').notNull(),
+    title: text('title').notNull(),
+    description: text('description').notNull(),
+    /** VAT 포함가. */
+    amount: integer('amount').notNull(),
+    /** null = 무제한. */
+    totalQuantity: integer('total_quantity'),
+    requiresShipping: integer('requires_shipping', { mode: 'boolean' }).notNull().default(false),
+    estimatedDelivery: text('estimated_delivery').notNull(),
+    imageUrl: text('image_url'),
+    /** [{label, key}] JSON. key는 R2 객체 키이지 주소가 아니다. 1차에서는 운영자만 채운다. */
+    downloads: text('downloads'),
+    sortOrder: integer('sort_order').notNull().default(0),
+    /**
+     * 승인 시각. **null이 아니면 rewardId·amount·totalQuantity 유무를 바꿀 수 없고 행을
+     * 지울 수도 없다** — 운영자에게도 예외가 없다. md 시절 이 규칙을 지키던 것은
+     * content/funding.baseline.json이었고, 정본이 옮겨 온 만큼 자물쇠도 함께 옮긴다.
+     * 가격을 바꿔야 하면 기존 행을 두고 새 rewardId로 티어를 추가한다.
+     */
+    lockedAt: integer('locked_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    projectRewardUnique: uniqueIndex('funding_rewards_project_reward_unique').on(t.projectId, t.rewardId),
+  }),
+);
+
+export const fundingProjectPayoutStatusEnum = ['pending', 'paid'] as const;
+
+/**
+ * 프로젝트 정산. artist_payouts와 같은 꼴이다 — 기록 시점의 숫자를 고정해, 나중에 환불이
+ * 더 들어와도 이미 지급한 금액이 뒤늦게 달라지지 않게 한다.
+ */
+export const fundingProjectPayouts = sqliteTable('funding_project_payouts', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  projectId: text('project_id').notNull().unique().references(() => fundingProjects.id),
+  grossAmount: integer('gross_amount').notNull(),
+  refundAmount: integer('refund_amount').notNull(),
+  supplyAmount: integer('supply_amount').notNull(),
+  /** 플랫폼 수수료 = supply − share. 기록해 두지 않으면 세금계산서·장부에서 역산해야 한다. */
+  feeAmount: integer('fee_amount').notNull(),
+  shareAmount: integer('share_amount').notNull(),
+  withholdingAmount: integer('withholding_amount').notNull(),
+  netAmount: integer('net_amount').notNull(),
+  backerCount: integer('backer_count').notNull(),
+  status: text('status', { enum: fundingProjectPayoutStatusEnum }).notNull().default('pending'),
+  paidAt: integer('paid_at', { mode: 'timestamp' }),
+  memo: text('memo'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export const fundingProjectsRelations = relations(fundingProjects, ({ one, many }) => ({
+  creator: one(fundingCreators, { fields: [fundingProjects.creatorId], references: [fundingCreators.id] }),
+  rewards: many(fundingRewards),
+}));
+
+export const fundingRewardsRelations = relations(fundingRewards, ({ one }) => ({
+  project: one(fundingProjects, { fields: [fundingRewards.projectId], references: [fundingProjects.id] }),
+}));
+
+export type FundingCreator = typeof fundingCreators.$inferSelect;
+export type NewFundingCreator = typeof fundingCreators.$inferInsert;
+export type FundingCreatorToken = typeof fundingCreatorTokens.$inferSelect;
+export type FundingProjectRow = typeof fundingProjects.$inferSelect;
+export type NewFundingProjectRow = typeof fundingProjects.$inferInsert;
+export type FundingRewardRow = typeof fundingRewards.$inferSelect;
+export type NewFundingRewardRow = typeof fundingRewards.$inferInsert;
+export type FundingProjectPayout = typeof fundingProjectPayouts.$inferSelect;
+
 /**
  * 요청 제한 카운터. 서버리스는 인스턴스가 여러 개라 프로세스 메모리로는 제한이 새기
  * 때문에, 이미 붙어 있는 Turso를 공유 저장소로 쓴다(관리자 로그인은 빈도가 매우 낮아
