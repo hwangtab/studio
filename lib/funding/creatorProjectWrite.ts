@@ -9,7 +9,11 @@ import { stripTrustedDirectives } from './creatorContent';
 
 export type WriteResult =
   | { ok: true }
-  | { ok: false; code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many'; message: string };
+  | {
+      ok: false;
+      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward';
+      message: string;
+    };
 
 const deny = (code: Exclude<WriteResult, { ok: true }>['code'], message: string): WriteResult => ({ ok: false, code, message });
 
@@ -136,13 +140,23 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
   return { ok: true };
 };
 
-export const saveCreatorSection = async (creatorId: string, projectId: string, value: CreatorSection): Promise<WriteResult> => {
-  const { denial } = await guard(creatorId, projectId);
-  if (denial) return denial;
+/**
+ * 개설자 프로필(소개·연락처·링크)은 프로젝트가 아니라 **계정**(fundingCreators) 소속이다.
+ *
+ * `guard(creatorId, projectId)`를 타지 않는다 — 프로필은 그 개설자의 모든 프로젝트에
+ * 공유되므로, 아무 프로젝트 하나(초안이든 뭐든)의 편집 가능 여부로 막는 것 자체가 잘못된
+ * 조건이다. 개설자가 승인된 프로젝트 A와 초안 B를 함께 갖고 있을 때 B를 편집 중이라는
+ * 이유로 A에서도 보이는 프로필을 심사 없이 바꿀 수 있으면 안 되는데, projectId를 받아
+ * guard를 태우면 정확히 그 구멍이 생긴다.
+ *
+ * "프로필 변경이 이미 공개된 프로젝트 화면에 그대로 반영되는 것을 심사로 막을지"는 3차
+ * (관리자 심사) 범위에서 정할 문제다 — 여기서는 계정 소유(session의 creatorId)만 본다.
+ */
+export const saveCreatorSection = async (creatorId: string, value: CreatorSection): Promise<WriteResult> => {
+  const [existing] = await getDb().select({ id: fundingCreators.id }).from(fundingCreators)
+    .where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
 
-  // 개설자 프로필은 프로젝트가 아니라 계정(fundingCreators) 소속이다 — 같은 개설자의
-  // 다른 프로젝트에도 그대로 반영된다. guard가 이미 이 프로젝트가 creatorId 소유임을
-  // 확인했으므로 여기서 다시 소유를 묻지 않는다.
   await getDb().update(fundingCreators).set({
     name: value.name,
     contactName: value.contactName,
@@ -159,7 +173,9 @@ export const saveCreatorSection = async (creatorId: string, projectId: string, v
  *
  * `rewardId`가 바뀌면 재고 집계 조건(`fp.reward_id = ?`)이 기존 후원을 세지 못해 한정
  * 100개짜리가 200개 팔린다. `amount`가 바뀌면 DB의 단가와 화면·CSV·환불 금액이 어긋난다.
- * 한정 여부가 바뀌면 재고 계산 자체가 다른 길로 간다.
+ * 한정 여부가 바뀌면 재고 계산 자체가 다른 길로 간다. `requiresShipping`이 바뀌면 이미
+ * 결제를 마친 후원자에게 사후로 배송지 제출 의무가 생기거나(반대로 배송 준비 중인 리워드가
+ * 갑자기 배송 불필요로 바뀌거나) 하는 이행 조건 변경이 된다.
  *
  * 제목·설명·이미지·예상 전달 시기는 고칠 수 있다 — 오타 수정까지 막으면 운영이 안 된다.
  * 수량은 **늘리는 것만** 허용한다(재고 추가). 줄이면 이미 팔린 것보다 적어질 수 있다.
@@ -173,12 +189,47 @@ const lockedViolation = (existing: FundingRewardRow, next: RewardInput): string 
   if (existing.totalQuantity !== null && next.totalQuantity !== null && next.totalQuantity < existing.totalQuantity) {
     return '수량은 늘릴 수만 있습니다.';
   }
+  if (existing.requiresShipping !== next.requiresShipping) return '공개된 리워드의 배송 여부는 바꿀 수 없습니다.';
   return null;
 };
 
-export const upsertReward = async (creatorId: string, projectId: string, value: RewardInput): Promise<WriteResult> => {
+export const upsertReward = async (
+  creatorId: string,
+  projectId: string,
+  value: RewardInput,
+  previousRewardId?: string,
+): Promise<WriteResult> => {
   const { denial } = await guard(creatorId, projectId);
   if (denial) return denial;
+
+  // 개명 경로. rewardId로만 기존 행을 찾으면 id를 바꿔 제출한 입력이 "없는 리워드"로
+  // 보여 lockedViolation을 타지 않고 새 행이 insert된다 — 재고는 안 깨지지만(옛 행과 그
+  // 후원이 그대로 남아서) 공개 화면에는 티어가 하나 더 생기고, 옛 id는 고칠 방법이 없어진다.
+  if (previousRewardId !== undefined && previousRewardId !== value.rewardId) {
+    const [previous] = await getDb().select().from(fundingRewards)
+      .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, previousRewardId))).limit(1);
+    if (!previous) return deny('not_found', '리워드를 찾을 수 없습니다.');
+    if (previous.lockedAt) {
+      return deny('locked', '공개된 리워드의 주소는 바꿀 수 없습니다. 새 리워드를 추가해 주세요.');
+    }
+
+    const [taken] = await getDb().select({ id: fundingRewards.id }).from(fundingRewards)
+      .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, value.rewardId))).limit(1);
+    if (taken) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
+
+    await getDb().update(fundingRewards).set({
+      rewardId: value.rewardId,
+      title: value.title,
+      description: value.description,
+      amount: value.amount,
+      totalQuantity: value.totalQuantity,
+      requiresShipping: value.requiresShipping,
+      estimatedDelivery: value.estimatedDelivery,
+      imageUrl: value.imageUrl,
+      updatedAt: new Date(),
+    }).where(eq(fundingRewards.id, previous.id));
+    return { ok: true };
+  }
 
   const [existing] = await getDb().select().from(fundingRewards)
     .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, value.rewardId))).limit(1);

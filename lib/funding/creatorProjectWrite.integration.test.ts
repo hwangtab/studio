@@ -85,6 +85,27 @@ describe('createDraftProject / loadProjectForCreator', () => {
   });
 });
 
+describe('saveStorySection — 저장 시점 stripTrustedDirectives 배선', () => {
+  it('신뢰 숏코드가 든 줄은 저장 전에 지워진다', async () => {
+    // 이 태스크가 stripTrustedDirectives의 첫 호출처다. 렌더 시점이 아니라 저장 시점에
+    // 지운다는 것을 확인하려면 응답이 아니라 DB에 실제로 저장된 값을 다시 읽어야 한다 —
+    // set({ content: value.content })로 되돌려도 saveStorySection 자체의 반환값은
+    // { ok: true }로 똑같기 때문이다.
+    const creator = await seedCreator('story-strip@example.com');
+    const { id } = await createDraftProject(creator);
+
+    const r = await saveStorySection(creator, id, {
+      content: '안녕하세요\n%%price:mixing-level1%%\n계속되는 본문',
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, id));
+    expect(row.content).not.toContain('%%price:mixing-level1%%');
+    expect(row.content).toContain('안녕하세요');
+    expect(row.content).toContain('계속되는 본문');
+  });
+});
+
 describe('소유권', () => {
   it('남의 프로젝트는 없는 것으로 보인다', async () => {
     const mine = await seedCreator('mine@example.com');
@@ -212,6 +233,92 @@ describe('리워드 잠금', () => {
     const rows = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, id));
     expect(rows.map((row) => row.rewardId).sort()).toEqual(['cd', 'cd-v2']);
   });
+
+  it('잠긴 리워드의 배송 필요 여부를 바꿀 수 없다', async () => {
+    const creator = await seedCreator('e2@example.com');
+    const { id } = await createDraftProject(creator);
+    await upsertReward(creator, id, rewardInput({ rewardId: 'cd', requiresShipping: false }));
+    await lockIt(id, 'cd');
+
+    const r = await upsertReward(creator, id, rewardInput({ rewardId: 'cd', requiresShipping: true }));
+    expect(r).toMatchObject({ ok: false, code: 'locked' });
+
+    const [row] = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.rewardId, 'cd'));
+    expect(row.requiresShipping).toBe(false);
+  });
+
+  it('previousRewardId 없이 다른 rewardId로 제출하면 개명이 아니라 별개의 신규 리워드로 취급된다', async () => {
+    // 이것이 발견 1의 원인이었다 — previousRewardId를 명시하지 않는 한 id가 다른 입력은
+    // "없는 리워드"로 보여 lockedViolation을 타지 않고 새 행이 insert된다. 옛 잠긴 행은
+    // 그대로 남는다. 개명을 하려면 반드시 previousRewardId를 함께 넘겨야 한다(아래
+    // '리워드 개명' 블록).
+    const creator = await seedCreator('e3@example.com');
+    const { id } = await createDraftProject(creator);
+    await upsertReward(creator, id, rewardInput({ rewardId: 'cd', amount: 30000 }));
+    await lockIt(id, 'cd');
+
+    const r = await upsertReward(creator, id, rewardInput({ rewardId: 'cd-renamed-without-flag', amount: 30000 }));
+    expect(r).toMatchObject({ ok: true });
+
+    const rows = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, id));
+    expect(rows.map((row) => row.rewardId).sort()).toEqual(['cd', 'cd-renamed-without-flag']);
+  });
+
+  describe('리워드 개명(previousRewardId)', () => {
+    it('잠기지 않은 리워드는 rewardId를 포함해 전부 바뀐다', async () => {
+      const creator = await seedCreator('rename1@example.com');
+      const { id } = await createDraftProject(creator);
+      await upsertReward(creator, id, rewardInput({ rewardId: 'oldd-id', amount: 30000, title: '원래 제목' }));
+
+      const r = await upsertReward(
+        creator, id,
+        rewardInput({ rewardId: 'fixed-id', amount: 30000, title: '고친 제목' }),
+        'oldd-id',
+      );
+      expect(r).toMatchObject({ ok: true });
+
+      const rows = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, id));
+      expect(rows).toHaveLength(1);
+      expect(rows[0].rewardId).toBe('fixed-id');
+      expect(rows[0].title).toBe('고친 제목');
+    });
+
+    it('잠긴 리워드는 개명이 거부되고 행이 그대로 남는다', async () => {
+      const creator = await seedCreator('rename2@example.com');
+      const { id } = await createDraftProject(creator);
+      await upsertReward(creator, id, rewardInput({ rewardId: 'cd', amount: 30000 }));
+      await lockIt(id, 'cd');
+
+      const r = await upsertReward(creator, id, rewardInput({ rewardId: 'cd2', amount: 30000 }), 'cd');
+      expect(r).toMatchObject({ ok: false, code: 'locked' });
+
+      const rows = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, id));
+      expect(rows.map((row) => row.rewardId)).toEqual(['cd']);
+    });
+
+    it('새 rewardId가 이미 다른 행이 쓰고 있으면 duplicate_reward', async () => {
+      const creator = await seedCreator('rename3@example.com');
+      const { id } = await createDraftProject(creator);
+      await upsertReward(creator, id, rewardInput({ rewardId: 'a-id', amount: 10000 }));
+      await upsertReward(creator, id, rewardInput({ rewardId: 'b-id', amount: 20000 }));
+
+      const r = await upsertReward(creator, id, rewardInput({ rewardId: 'b-id', amount: 10000 }), 'a-id');
+      expect(r).toMatchObject({ ok: false, code: 'duplicate_reward' });
+
+      const rows = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, id));
+      expect(rows.map((row) => row.rewardId).sort()).toEqual(['a-id', 'b-id']);
+      const [aRow] = rows.filter((row) => row.rewardId === 'a-id');
+      expect(aRow.amount).toBe(10000);
+    });
+
+    it('previousRewardId가 존재하지 않는 리워드를 가리키면 not_found', async () => {
+      const creator = await seedCreator('rename4@example.com');
+      const { id } = await createDraftProject(creator);
+
+      const r = await upsertReward(creator, id, rewardInput({ rewardId: 'new-id' }), 'never-existed');
+      expect(r).toMatchObject({ ok: false, code: 'not_found' });
+    });
+  });
 });
 
 describe('편집 가능 상태', () => {
@@ -228,18 +335,39 @@ describe('편집 가능 상태', () => {
     expect(row.title).not.toBe('제목');
   });
 
-  it('심사 중에는 스토리·개설자 정보·리워드 저장도 거부된다', async () => {
+  it('심사 중에는 스토리·리워드 저장도 거부된다', async () => {
     const creator = await seedCreator('f2@example.com');
     const { id } = await createDraftProject(creator);
     await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
       .where(eq(schema.fundingProjects.id, id));
 
     expect(await saveStorySection(creator, id, { content: '본문' })).toMatchObject({ ok: false, code: 'not_editable' });
-    expect(await saveCreatorSection(creator, id, {
-      name: '이름', contactName: null, phone: null, bio: null, links: null,
-    })).toMatchObject({ ok: false, code: 'not_editable' });
     expect(await upsertReward(creator, id, rewardInput())).toMatchObject({ ok: false, code: 'not_editable' });
     expect(await deleteReward(creator, id, 'basic')).toMatchObject({ ok: false, code: 'not_editable' });
+  });
+
+  it('개설자 프로필은 프로젝트 편집 가능 여부와 무관하게 저장된다', async () => {
+    // saveCreatorSection은 계정(fundingCreators) 소속이라 어떤 프로젝트의 심사 상태로도
+    // 막히지 않는다 — projectId 자체를 받지 않는다.
+    const creator = await seedCreator('f3@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '이름', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('이름');
+  });
+
+  it('개설자 계정 자체가 없으면 not_found', async () => {
+    const r = await saveCreatorSection('없는-id', {
+      name: '이름', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: false, code: 'not_found' });
   });
 });
 
@@ -300,7 +428,7 @@ describe('개설자 정보 저장', () => {
     const creator = await seedCreator('k@example.com');
     const { id } = await createDraftProject(creator);
 
-    const r = await saveCreatorSection(creator, id, {
+    const r = await saveCreatorSection(creator, {
       name: '스튜디오 놀',
       contactName: '황경하',
       phone: '010-0000-0000',
@@ -317,5 +445,10 @@ describe('개설자 정보 저장', () => {
       bio: '소개 문구',
       links: ['https://example.com'],
     });
+
+    // 계정 소속이므로 같은 개설자의 다른 프로젝트에서도 같은 값이 보인다.
+    const { id: secondProject } = await createDraftProject(creator);
+    const secondDetail = await loadProjectForCreator(creator, secondProject);
+    expect(secondDetail?.creator.name).toBe('스튜디오 놀');
   });
 });
