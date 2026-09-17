@@ -154,7 +154,7 @@ export const getAllFundingProjectsAsync = async (): Promise<FundingProject[]>;
 | pledge · manage · success | SSR | 그대로, 로더만 비동기 |
 | `/api/funding/[slug]/status`, `pledges`, `download` | 동기 로더 | 비동기 로더 |
 | `pages/api/llms.ts` | md만 | md + DB(런타임이라 그냥 비동기 로더) |
-| 사이트맵 | postbuild `next-sitemap`이 md를 읽어 정적 생성 | 빌드는 DB에 접근하지 않는다(다른 정적 페이지도 그렇다). DB 프로젝트는 동적 라우트 `pages/sitemap-funding.xml.ts`(`s-maxage=600`)로 내보내고, `next-sitemap.config.js`의 `additionalSitemaps`로 인덱스에 싣는다. `normalize-sitemap-hreflang.js`의 "sitemap 0개" 게이트는 정적 파일 기준이라 영향 없음 |
+| 사이트맵 | postbuild `next-sitemap`이 md를 읽어 정적 생성 | `next-sitemap`은 여전히 파일만 읽는다 — TURSO 환경변수 없이도 빌드가 성공해야 하므로(조회 실패는 `safeDb`가 삼킨다) 사이트맵 생성기 자체는 DB를 보지 않는다. 단 `/ko/funding` 목록은 `getStaticProps`가 빌드 타임에 `getListableFundingProjectsAsync`를 부르므로, TURSO 환경변수가 있는 실제 배포 빌드에서는 그 페이지가 빌드 때 DB를 한 번 읽는다. DB 프로젝트는 사이트맵 인덱스에 동적 라우트 `pages/sitemap-funding.xml.ts`(`s-maxage=600`)로 내보내고, `next-sitemap.config.js`의 `additionalSitemaps`로 싣는다 — 즉 DB 프로젝트의 사이트맵 등재는 빌드가 아니라 런타임 라우트가 맡는다. `normalize-sitemap-hreflang.js`의 "sitemap 0개" 게이트는 정적 파일 기준이라 영향 없음 |
 
 상세 페이지가 공개 화면에 **개설자**를 표시한다: "개설자 {creator.name} · 판매자 스튜디오 놀
 (통신판매업 신고 {번호})". 판매자·개설자를 구분해 보여주는 것이 전자상거래법상 필요하고
