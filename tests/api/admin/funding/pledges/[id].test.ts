@@ -8,7 +8,7 @@ jest.mock('../../../../../lib/funding/service', () => ({
 }));
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingCancelledEmails: jest.fn(), sendFundingConfirmedEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
-jest.mock('../../../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
+jest.mock('../../../../../lib/funding/repository', () => ({ getFundingProjectAsync: jest.fn() }));
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
 // set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
 const mockRun = jest.fn().mockResolvedValue({ rowsAffected: 1 });
