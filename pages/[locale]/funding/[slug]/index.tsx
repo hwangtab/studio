@@ -11,7 +11,7 @@ import imageMetadata from '../../../../utils/imageMetadata.json';
 
 const SITE_URL = 'https://studionol.co.kr';
 const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
-import { computeProjectState, getAllFundingProjects, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
+import { computeProjectState, getAllFundingProjects, mergeRewardRemaining, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../lib/funding/repository';
 
 interface Props {
@@ -39,11 +39,9 @@ export default function FundingProjectPage({ project, initialState }: Props) {
   // 살아 있을 수 있다.
   const [openReward, setOpenReward] = useState<FundingReward | null>(null);
   const closeModal = useCallback(() => setOpenReward(null), []);
-  // 상태 API가 아직 안 왔으면 파일의 한정 수량을 그대로 쓴다(/pledge 페이지와 같은 폴백).
-  const remaining = useMemo<Record<string, number | null>>(() => {
-    const fallback = Object.fromEntries(project.rewards.map((r) => [r.id, r.totalQuantity]));
-    return { ...fallback, ...(data?.remaining ?? {}) };
-  }, [data?.remaining, project.rewards]);
+  // ProjectDetailView(리워드 카드)와 같은 폴백 계산이다 — 한쪽만 고치면 카드에 보이는
+  // 잔여 수량과 모달이 실제로 거는 제한이 갈린다(lib/funding/projects.ts 주석 참조).
+  const remaining = useMemo(() => mergeRewardRemaining(project.rewards, data?.remaining), [data?.remaining, project.rewards]);
   /**
    * 후원은 리워드가 딸린 **선주문 판매**다(기부가 아니다 — 약관·신뢰 고지와 같은 입장).
    * 그래서 Product + Offer로 적는다. 가격은 티어마다 달라 `lowPrice`로 최저가를 알린다.

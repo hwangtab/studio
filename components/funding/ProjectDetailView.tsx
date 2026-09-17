@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 import MarkdownRenderer from '../MarkdownRenderer';
 import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
 import { Section } from '../ui/Section';
@@ -8,16 +6,21 @@ import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
 import FundingTrustNotice from './FundingTrustNotice';
 import { formatPriceAmount } from '../../data/pricing';
-import type { FundingProject, FundingReward, ProjectState } from '../../lib/funding/projects';
+import { mergeRewardRemaining, type FundingProject, type FundingReward, type ProjectState } from '../../lib/funding/projects';
 
 const STATE_LABEL: Record<ProjectState, string> = { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' };
 
 export interface ProjectDetailViewProps {
   project: FundingProject;
   state: ProjectState;
-  /** 미리보기는 실제 모금액이 없다. 없으면 진행률 대신 "미리보기" 표시를 낸다. */
+  /**
+   * 공개 페이지의 폴링 결과. 마운트 직후(fetch 응답 전)에는 null일 수 있다 — 그때는
+   * `FundingProgress`가 "모금 현황 집계 중…"을 보여준다. **미리보기 표시 여부는 이 값이
+   * 아니라 `interactive`로 갈린다** — status만으로 가르면 공개 페이지의 정적 HTML(SSG,
+   * fetch 전)에 "미리보기" 문구가 그대로 박힌다.
+   */
   status?: { pledgedAmount: number; backerCount: number } | null;
-  /** 후원 버튼을 그릴지. 미리보기는 false. */
+  /** 후원 버튼과 실제 모금 현황을 그릴지. 미리보기는 false — 진행률 자리에 "미리보기" 표시를 낸다. */
   interactive: boolean;
   /**
    * 마운트 후에만 값을 준다(D-day). 렌더 본문에서 `new Date()`를 부르면 서버(빌드·요청
@@ -58,17 +61,13 @@ export default function ProjectDetailView({
   messages = [],
 }: ProjectDetailViewProps) {
   const canPledge = interactive && state === 'live';
+  const rewardRemaining = mergeRewardRemaining(project.rewards, remaining);
 
-  // 상태 API가 아직 안 왔으면(또는 미리보기라 애초에 없으면) 파일의 한정 수량을 그대로
-  // 쓴다(/pledge 페이지와 같은 폴백).
-  const rewardRemaining = useMemo<Record<string, number | null>>(() => {
-    const fallback = Object.fromEntries(project.rewards.map((r) => [r.id, r.totalQuantity]));
-    return { ...fallback, ...(remaining ?? {}) };
-  }, [project.rewards, remaining]);
-
-  // pages/api/funding/[slug]/status.ts와 같은 식(Math.floor)이어야 공개 페이지의 숫자가
-  // 폴링 응답의 percent와 한 픽셀도 어긋나지 않는다.
-  const percent = status ? Math.min(100, Math.floor((status.pledgedAmount / project.goalAmount) * 100)) : 0;
+  // pages/api/funding/[slug]/status.ts와 같은 식(Math.floor, 클램프 없음)이어야 공개
+  // 페이지의 숫자가 폴링 응답의 percent와 한 픽셀도 어긋나지 않는다 — 목표 초과 달성이면
+  // 100을 넘는 값을 그대로 보여야 "137%"가 "100%"로 잘리지 않는다(막대 폭만 FundingProgress가
+  // 안에서 100으로 클램프한다).
+  const percent = status ? Math.floor((status.pledgedAmount / project.goalAmount) * 100) : 0;
 
   return (
     <>
@@ -142,12 +141,17 @@ export default function ProjectDetailView({
 
           <aside id="rewards" className="scroll-mt-20 lg:sticky lg:top-24">
             <div className="glass-card rounded-2xl p-5 sm:p-6">
-              {status ? (
+              {interactive ? (
+                // 공개 페이지는 status가 아직 null이어도(마운트 직후, fetch 응답 전) 항상
+                // FundingProgress를 그린다 — 폴링 대기·실패는 그 컴포넌트가 이미
+                // "모금 현황 집계 중…"으로 다룬다. 여기서 status===null을 "미리보기"로
+                // 잘못 읽으면 정적 HTML(SSG)에 "미리보기" 문구가 그대로 박힌다(마운트 전에는
+                // status가 항상 null이다).
                 <FundingProgress
                   goalAmount={project.goalAmount}
                   endAt={project.endAt}
                   now={now}
-                  data={{ raisedAmount: status.pledgedAmount, backerCount: status.backerCount, percent, state }}
+                  data={status ? { raisedAmount: status.pledgedAmount, backerCount: status.backerCount, percent, state } : null}
                 />
               ) : (
                 // 미리보기는 실제 모금액이 없다 — "모금 현황 집계 중…"(폴링 실패/대기)과

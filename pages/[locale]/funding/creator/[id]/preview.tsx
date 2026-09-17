@@ -5,7 +5,7 @@ import ProjectDetailView from '../../../../../components/funding/ProjectDetailVi
 import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator } from '../../../../../lib/funding/creatorProjectWrite';
 import { rowsToFundingProject } from '../../../../../lib/funding/dbProjects';
-import { computeProjectState, type FundingProject, type ProjectState } from '../../../../../lib/funding/projects';
+import { computeProjectState, stripRewardDownloads, type FundingProject, type ProjectState } from '../../../../../lib/funding/projects';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
 
 import type { FundingProjectRow } from '../../../../../db/schema';
@@ -38,8 +38,15 @@ export default function FundingCreatorPreviewPage(props: Props) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      {/* 상단 고정 띠 — 아직 아무에게도 공개되지 않았다는 것을 개설자 본인에게도 분명히 한다. */}
-      <div className="sticky top-0 z-40 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-400 px-4 py-2.5 text-center text-sm font-semibold text-amber-950">
+      {/*
+        상단 고정 띠 — 아직 아무에게도 공개되지 않았다는 것을 개설자 본인에게도 분명히
+        한다. `top-16`으로 헤더(fixed, z-50, 모바일 h-16/데스크톱 pt-2+h-14 — 둘 다 64px)
+        바로 아래에 둔다. `top-0`이면 헤더보다 아래 z(z-40 < z-50)라 항상 헤더 뒤로 들어가
+        가려진다 — hasHero라 헤더가 투명한 순간에는 헤더의 흰 글씨가 이 띠 위에 겹쳐 뜨고,
+        스크롤로 헤더가 불투명해지면 이 화면에서 유일하게 항상 보여야 할 문장이 통째로
+        사라진다.
+      */}
+      <div className="sticky top-16 z-40 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-400 px-4 py-2.5 text-center text-sm font-semibold text-amber-950">
         <span>미리보기입니다. 아직 공개되지 않았습니다.</span>
         <Link href={editHref} className="underline underline-offset-2">
           편집으로 돌아가기
@@ -100,17 +107,21 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   if (!detail) return { notFound: true };
 
   /**
-   * rowToShapeInput(lib/funding/dbProjects.ts)이 실제로 읽는 필드만 채운다. loadProjectForCreator는
-   * 화면이 쓰는 다섯 필드만 골라 담은 좁은 투영이라(pages/[locale]/funding/creator/[id].tsx의
-   * toEditorProject 주석과 같은 자리) og·hero 이미지·hidden·lastmod가 없다 — 전부 미리보기
-   * 렌더에 영향이 없는 값이라 기본값을 준다: og·hero는 `??` 폴백으로 cover를 그대로 쓰고
-   * (validateFundingProjectShape와 같은 동작), hidden은 승인 전 프로젝트에 의미가 없는
-   * 축이며, lastmod은 사이트맵 전용이라 이 화면이 아예 읽지 않는다.
+   * rowsToFundingProject(lib/funding/dbProjects.ts)이 실제로 읽는 필드만 채운다 —
+   * `rowToShapeInput`이 쓰는 필드에 더해 `content`도 필요하다(그건 `row.content`로 따로
+   * 읽는다, rowToShapeInput에는 없다 — 처음 구현에서 빠뜨려 완성된 프로젝트에서 항상
+   * `undefined`가 섞여 터졌었다). loadProjectForCreator는 화면이 쓰는 필드만 골라 담은
+   * 좁은 투영이라(pages/[locale]/funding/creator/[id].tsx의 toEditorProject 주석과 같은
+   * 자리) og·hero 이미지·hidden·lastmod가 없다 — 전부 미리보기 렌더에 영향이 없는 값이라
+   * 기본값을 준다: og·hero는 `??` 폴백으로 cover를 그대로 쓰고(validateFundingProjectShape와
+   * 같은 동작), hidden은 승인 전 프로젝트에 의미가 없는 축이며, lastmod은 사이트맵 전용이라
+   * 이 화면이 아예 읽지 않는다.
    */
   const projectRow = {
     slug: detail.slug,
     title: detail.title,
     summary: detail.summary,
+    content: detail.content,
     coverUrl: detail.coverUrl,
     ogImageUrl: null,
     heroImageUrl: null,
@@ -130,7 +141,10 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
       props: {
         incomplete: false,
         projectId: id,
-        project,
+        // 리워드의 내려받기 주소를 벗긴다 — 승인 전이라 후원 자체가 성립하지 않지만,
+        // "공개로 나가는 값은 무조건 벗긴다"가 규칙이다(렌더 경로가 여럿이라 한 곳을
+        // 빠뜨리면 그 경로로만 샌다, lib/funding/shape.ts 주석과 같은 이유).
+        project: stripRewardDownloads(project),
         state: computeProjectState(project, new Date()),
       },
     };
