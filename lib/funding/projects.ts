@@ -7,16 +7,12 @@ import { validateFundingProjectShape, type FundingProject, type FundingReward } 
 
 export { computeProjectState, validateFundingProjectShape };
 export type { ProjectState };
-export {
-  FUNDING_STATUSES,
-  stripRewardDownloads,
-  // 클라이언트 컴포넌트는 이 재export가 아니라 './shape'에서 직접 가져올 것 — 이 모듈은
-  // 최상위에서 node:fs·node:path를 실행해(FUNDING_DIR) 서버 전용이다. 재export만으로도
-  // 타입 체크는 통과하지만 webpack이 이 파일 전체를 클라이언트 번들에 끌고 들어가
-  // 빌드가 깨진다(2026-09-17 재리뷰 지적 — components/funding/ProjectDetailView.tsx가
-  // 그렇게 깼었다).
-  mergeRewardRemaining,
-} from './shape';
+// mergeRewardRemaining은 여기서 재export하지 않는다 — 이 모듈은 최상위에서
+// node:fs·node:path를 실행해(FUNDING_DIR) 서버 전용이다. 누군가 이 재export를 통해
+// 가져가면 타입 체크는 통과해도 webpack이 이 파일 전체를 클라이언트 번들에 끌고 들어가
+// 빌드가 깨진다(2026-09-17 실제로 이렇게 한 번 났다). 클라이언트 컴포넌트는 항상
+// './shape'에서 mergeRewardRemaining을 직접 가져온다.
+export { FUNDING_STATUSES, stripRewardDownloads } from './shape';
 export type { FundingDownload, FundingProject, FundingReward, FundingStatus } from './shape';
 
 export const FUNDING_DIR = path.join(process.cwd(), 'content', 'funding');

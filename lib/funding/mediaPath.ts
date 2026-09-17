@@ -11,6 +11,16 @@ const FILENAME = /^[A-Za-z0-9._-]+$/;
 
 export const FUNDING_MEDIA_PREFIX = 'funding/';
 
+/**
+ * 개설자 업로드 이미지가 이 도메인에서 노출되는 공개 주소의 접두사.
+ *
+ * `creatorUpload.ts`(주소를 만드는 쪽)와 `creatorValidation.ts`(개설자가 보낸 coverUrl·
+ * imageUrl이 실제로 우리 업로드 경로에서 왔는지 확인하는 쪽)가 이 상수 하나를 같이 쓴다.
+ * 손으로 문자열을 다시 적으면 정본이 둘이 되어, 한쪽만 바뀌었을 때 가드가 조용히
+ * 무력화된다.
+ */
+export const FUNDING_MEDIA_URL_PREFIX = '/api/funding/media/';
+
 /** 통과하면 Blob pathname, 아니면 null. */
 export function resolveFundingBlobPath(input: string | string[] | undefined): string | null {
   const segments = ([] as string[]).concat(input ?? []);

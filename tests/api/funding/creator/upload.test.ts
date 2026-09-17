@@ -45,6 +45,7 @@ const PROJECT = {
   content: '기존 이미지 <img src="/api/funding/media/a.webp" />',
   coverUrl: '/api/funding/media/cover.webp',
   reviewStatus: 'draft',
+  rewards: [],
 } as unknown as Awaited<ReturnType<typeof loadProjectForCreator>>;
 
 beforeEach(() => {
@@ -137,6 +138,14 @@ it('IP 요청 제한 초과만으로도 429 — creatorId 쪽은 별도로 통�
 it('프로젝트당 누적 장수를 넘으면 400 — 별도 테이블 없이 content·coverUrl에서 센다', async () => {
   const many = Array.from({ length: 30 }, (_, i) => `<img src="/api/funding/media/${i}.webp" />`).join('');
   (loadProjectForCreator as jest.Mock).mockResolvedValue({ ...PROJECT, content: many, coverUrl: '' });
+  const r = await call([], { projectId: 'p1', kind: 'body' });
+  expect(r.status).toBe(400);
+  expect(put).not.toHaveBeenCalled();
+});
+
+it('리워드 이미지(funding_rewards.imageUrl)도 상한에 센다 — content·coverUrl 밖의 컬럼이라 빠뜨리기 쉽다', async () => {
+  const rewards = Array.from({ length: 30 }, (_, i) => ({ imageUrl: `/api/funding/media/r${i}.webp` }));
+  (loadProjectForCreator as jest.Mock).mockResolvedValue({ ...PROJECT, content: '', coverUrl: '', rewards });
   const r = await call([], { projectId: 'p1', kind: 'body' });
   expect(r.status).toBe(400);
   expect(put).not.toHaveBeenCalled();

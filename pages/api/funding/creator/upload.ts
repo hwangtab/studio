@@ -9,7 +9,7 @@ import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator } from '../../../../lib/funding/creatorProjectWrite';
 import { buildFundingMediaUrl, processCreatorImage, UPLOAD_LIMITS } from '../../../../lib/funding/creatorUpload';
-import { FUNDING_MEDIA_PREFIX } from '../../../../lib/funding/mediaPath';
+import { FUNDING_MEDIA_PREFIX, FUNDING_MEDIA_URL_PREFIX } from '../../../../lib/funding/mediaPath';
 import { canCreatorEdit, type FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
 /**
@@ -42,13 +42,20 @@ const readBodyWithLimit = async (req: NextApiRequest, maxBytes: number): Promise
 /**
  * 프로젝트당 누적 업로드 장수.
  *
- * 별도 테이블을 두지 않는다 — 본문(`content`)과 대표 이미지(`coverUrl`)에 실제로 쓰이고
- * 있는 `/api/funding/media/` 주소 개수를 그때그때 센다. 저장하지 않고 지운 임시 업로드는
- * 세지 않으므로, 이 상한은 "실려 있는 이미지 수"이지 "업로드해 본 횟수"가 아니다.
+ * 별도 테이블을 두지 않는다 — 본문(`content`)·대표 이미지(`coverUrl`)·리워드 이미지
+ * (`rewards[].imageUrl`)에 실제로 쓰이고 있는 `/api/funding/media/` 주소 개수를 그때그때
+ * 센다. 저장하지 않고 지운 임시 업로드는 세지 않으므로, 이 상한은 "실려 있는 이미지 수"이지
+ * "업로드해 본 횟수"가 아니다.
+ *
+ * 리워드 이미지를 빠뜨리면 이 상한이 rate limit 하나에만 기대게 된다 — `funding_rewards.
+ * image_url`은 content·coverUrl과 다른 컬럼이라 정규식이 안 훑는다.
  */
-const MEDIA_URL_PATTERN = /\/api\/funding\/media\//g;
-const countProjectMedia = (content: string, coverUrl: string): number =>
-  ((content.match(MEDIA_URL_PATTERN) ?? []).length) + ((coverUrl.match(MEDIA_URL_PATTERN) ?? []).length);
+const MEDIA_URL_PATTERN = new RegExp(FUNDING_MEDIA_URL_PREFIX.replace(/\//g, '\\/'), 'g');
+const countMediaRefs = (text: string): number => (text.match(MEDIA_URL_PATTERN) ?? []).length;
+const countProjectMedia = (content: string, coverUrl: string, rewardImageUrls: (string | null)[]): number =>
+  countMediaRefs(content)
+  + countMediaRefs(coverUrl)
+  + rewardImageUrls.reduce((sum, url) => sum + countMediaRefs(url ?? ''), 0);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -93,7 +100,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
   }
 
-  if (countProjectMedia(project.content, project.coverUrl) >= UPLOAD_LIMITS.maxPerProject) {
+  const rewardImageUrls = project.rewards.map((reward) => reward.imageUrl);
+  if (countProjectMedia(project.content, project.coverUrl, rewardImageUrls) >= UPLOAD_LIMITS.maxPerProject) {
     return res.status(400).json({ ok: false, message: `이미지는 프로젝트당 최대 ${UPLOAD_LIMITS.maxPerProject}장까지 올릴 수 있습니다.` });
   }
 

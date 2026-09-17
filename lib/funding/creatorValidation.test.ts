@@ -8,7 +8,7 @@ const basic = () => ({
   goalAmount: 3000000,
   startAt: '2026-10-10T00:00:00+09:00',
   endAt: '2026-11-10T23:59:59+09:00',
-  coverUrl: 'https://x.public.blob.vercel-storage.com/a.webp',
+  coverUrl: '/api/funding/media/a.webp?w=1200&h=675',
 });
 
 describe('validateBasicSection', () => {
@@ -50,6 +50,15 @@ describe('validateBasicSection', () => {
     expect(validateBasicSection({ ...basic(), title: 'a'.repeat(CREATOR_LIMITS.titleMax + 1) }, NOW).ok).toBe(false);
     expect(validateBasicSection({ ...basic(), summary: 'a'.repeat(CREATOR_LIMITS.summaryMax + 1) }, NOW).ok).toBe(false);
   });
+
+  // 우리 업로드 경로에서 온 것만 받는다 — 외부 호스트를 넣으면 next/image가 렌더 중
+  // throw하고, 승인 뒤에는 상세 페이지와 /ko/funding 목록 전체가 함께 죽는다.
+  it('대표 이미지는 우리 업로드 경로(/api/funding/media/)에서 온 것만 받는다', () => {
+    expect(validateBasicSection({ ...basic(), coverUrl: 'https://evil.example/a.webp' }, NOW).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: '/images/a.webp' }, NOW).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: '' }, NOW).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: '/api/funding/media/a.webp?w=1200&h=675' }, NOW).ok).toBe(true);
+  });
 });
 
 describe('validateStorySection', () => {
@@ -89,5 +98,13 @@ describe('validateRewardInput', () => {
   it('수량이 있으면 양의 정수여야 한다', () => {
     expect(validateRewardInput({ ...reward(), totalQuantity: 0 }).ok).toBe(false);
     expect(validateRewardInput({ ...reward(), totalQuantity: null }).ok).toBe(true);
+  });
+
+  it('imageUrl은 값이 있을 때만 우리 업로드 경로인지 본다', () => {
+    expect(validateRewardInput({ ...reward(), imageUrl: null }).ok).toBe(true);
+    expect(validateRewardInput({ ...reward(), imageUrl: 'https://evil.example/a.webp' }).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), imageUrl: '/images/a.webp' }).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), imageUrl: '' }).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), imageUrl: '/api/funding/media/r.webp?w=800&h=600' }).ok).toBe(true);
   });
 });

@@ -1,4 +1,18 @@
+import { FUNDING_MEDIA_URL_PREFIX } from './mediaPath';
 import { slugRejectionReason } from './reservedSlugs';
+
+/**
+ * coverUrl·리워드 imageUrl이 실제로 우리 업로드 경로에서 온 것인지 본다.
+ *
+ * 화면은 항상 업로드 API가 돌려준 주소만 이 필드에 넣지만, 서버는 그것을 강제할 수
+ * 없다 — 클라이언트가 보낸 문자열이면 무엇이든 여기까지 온다. 두 필드 모두 `next/image`로
+ * 흘러가는데, `next.config.mjs`의 `remotePatterns`에 없는 외부 호스트를 넣으면 렌더
+ * 중간에 throw한다. 오늘은 개설자 본인의 미리보기가 죽고, 승인 뒤에는 그 상세 페이지와
+ * `/ko/funding` 목록 페이지 전체가 ISR 렌더에서 함께 죽는다 — 다른 프로젝트까지 끌고
+ * 들어간다. 쓰기 경로가 생기는 이 계획에서 가드도 함께 넣는다 — 나중에 붙이면 그 사이에
+ * 만들어진 데이터가 규칙 밖에 남는다.
+ */
+const isOwnUploadedMedia = (value: string): boolean => value.startsWith(FUNDING_MEDIA_URL_PREFIX);
 
 export const CREATOR_LIMITS = {
   titleMax: 60,
@@ -73,6 +87,7 @@ export const validateBasicSection = (
 
   const coverUrl = str(d.coverUrl);
   if (!coverUrl) return fail('대표 이미지를 올려 주세요.');
+  if (!isOwnUploadedMedia(coverUrl)) return fail('대표 이미지를 다시 올려 주세요.');
 
   const startAt = new Date(str(d.startAt) ?? '');
   const endAt = new Date(str(d.endAt) ?? '');
@@ -224,7 +239,7 @@ export const validateRewardInput = (input: unknown): { ok: true; value: RewardIn
   let imageUrl: string | null = null;
   if (d.imageUrl !== null && d.imageUrl !== undefined) {
     const v = str(d.imageUrl);
-    if (!v) return fail('리워드 이미지 주소를 확인해 주세요.');
+    if (!v || !isOwnUploadedMedia(v)) return fail('리워드 이미지를 다시 올려 주세요.');
     imageUrl = v;
   }
 

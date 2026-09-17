@@ -123,3 +123,39 @@ describe('MarkdownImage 치수 힌트', () => {
     expect(img).toHaveAttribute('height', '512');
   });
 });
+
+/**
+ * 펀딩 개설자가 본문 마크다운에 등록 안 된 외부 호스트 이미지를 붙여넣을 수 있게 되면서,
+ * next/image에 그대로 넘기면 렌더 중 throw한다(next.config.mjs의 remotePatterns 밖).
+ * 등록 안 된 호스트는 next/image 대신 평범한 <img>로 강등한다.
+ */
+describe('등록 안 된 원격 호스트는 <img>로 강등', () => {
+  it('알 수 없는 절대 URL은 next/image 대신 평범한 img를 렌더한다', () => {
+    render(<MarkdownImage src="https://evil.example.com/x.jpg" alt="외부" />);
+    const img = screen.getByAltText('외부');
+    expect(img.tagName).toBe('IMG');
+    expect(img).not.toHaveAttribute('data-fill');
+    expect(img).toHaveAttribute('loading', 'lazy');
+    expect(img).toHaveAttribute('decoding', 'async');
+  });
+
+  it('등록된 호스트(remotePatterns)의 절대 URL은 next/image를 그대로 쓴다', () => {
+    render(<MarkdownImage src="https://img.tumblbug.com/x.jpg" alt="텀블벅" />);
+    const img = screen.getByAltText('텀블벅');
+    expect(img).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('/로 시작하는 같은 출처 경로는 등록 목록과 무관하게 next/image를 쓴다', () => {
+    render(<MarkdownImage src="/api/funding/media/x.webp" alt="같은출처" />);
+    const img = screen.getByAltText('같은출처');
+    expect(img).toHaveAttribute('data-fill', 'true');
+  });
+
+  it('알 수 없는 호스트라도 로컬 메타데이터/치수 힌트가 있으면 그 치수로 img를 렌더한다', () => {
+    render(<MarkdownImage src="https://evil.example.com/x.jpg?w=800&h=600" alt="외부치수" />);
+    const img = screen.getByAltText('외부치수');
+    expect(img.tagName).toBe('IMG');
+    expect(img).toHaveAttribute('width', '800');
+    expect(img).toHaveAttribute('height', '600');
+  });
+});

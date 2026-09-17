@@ -1,5 +1,7 @@
 import sharp from 'sharp';
 
+import { FUNDING_MEDIA_URL_PREFIX } from './mediaPath';
+
 export const UPLOAD_LIMITS = {
   /** 장당 8MB. 휴대폰 사진 한 장이 넉넉히 들어온다. */
   maxBytes: 8 * 1024 * 1024,
@@ -55,4 +57,4 @@ export const processCreatorImage = async (
  * 세로 포스터가 작게 박힌다.
  */
 export const buildFundingMediaUrl = (filename: string, width: number, height: number): string =>
-  `/api/funding/media/${filename}?w=${width}&h=${height}`;
+  `${FUNDING_MEDIA_URL_PREFIX}${filename}?w=${width}&h=${height}`;

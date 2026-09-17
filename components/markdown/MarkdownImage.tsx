@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
+
+import { ALLOWED_REMOTE_IMAGE_HOSTS } from '../../lib/markdown/allowedRemoteImageHosts';
 import imageMetadata from '../../utils/imageMetadata.json';
 
 const imageMetadataMap = imageMetadata as Record<string, { width: number; height: number }>;
@@ -53,6 +55,28 @@ const parseDimensionQueryHint = (src: string): { width: number; height: number }
   return { width: w, height: h };
 };
 
+/**
+ * `next/image`에 넘겨도 안전한 주소인지 본다.
+ *
+ * `/`로 시작하는 경로는 우리 도메인이라 항상 안전하다. 절대 URL은 `next.config.mjs`의
+ * `images.remotePatterns`에 등록된 호스트일 때만 안전하다 — 등록되지 않은 호스트를
+ * `next/image`에 넘기면 렌더 중간에 throw한다.
+ *
+ * 펀딩 개설자가 본문 마크다운에 `![](https://외부/x.jpg)`처럼 등록 안 된 호스트를 붙여
+ * 넣을 수 있는 경로가 생겼다. 저장 시점에 막기엔 마크다운 본문이라 과하므로(사진 한 장
+ * 때문에 저장 자체가 막히면 나머지 본문도 못 지킨다), 여기 렌더 쪽에서 등록 안 된 호스트만
+ * 골라 평범한 `<img>`로 강등한다 — 스토리 1,000편이 쓰는 로컬 이미지·등록된 호스트 경로는
+ * 이 함수를 그대로 통과해 지금까지의 `next/image` 동작이 하나도 바뀌지 않는다.
+ */
+const isSafeForNextImage = (src: string): boolean => {
+  if (src.startsWith('/')) return true;
+  try {
+    return ALLOWED_REMOTE_IMAGE_HOSTS.includes(new URL(src).hostname);
+  } catch {
+    return false;
+  }
+};
+
 export const MarkdownImage = ({
   alt,
   src,
@@ -71,19 +95,33 @@ export const MarkdownImage = ({
   const hasDimensions = metadata?.width && metadata?.height;
   const altText = getMarkdownImageAlt(src, alt);
   const widthHint = parseWidthHint(title);
+  const useNextImage = isSafeForNextImage(src);
 
   // markdown-to-jsx가 <img>를 <p> 내부에 배치하므로 래퍼는 유효한 inline 태그여야 한다.
   if (hasDimensions) {
     return (
       <span className="block my-6" style={widthHint ? { maxWidth: `${widthHint}px` } : undefined}>
-        <Image
-          src={src}
-          alt={altText}
-          width={Number(metadata.width)}
-          height={Number(metadata.height)}
-          sizes={widthHint ? `${widthHint}px` : '(max-width: 768px) 100vw, 768px'}
-          className="w-full h-auto rounded-lg shadow-md"
-        />
+        {useNextImage ? (
+          <Image
+            src={src}
+            alt={altText}
+            width={Number(metadata.width)}
+            height={Number(metadata.height)}
+            sizes={widthHint ? `${widthHint}px` : '(max-width: 768px) 100vw, 768px'}
+            className="w-full h-auto rounded-lg shadow-md"
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element -- 등록 안 된 원격 호스트라 next/image가 렌더 중 throw한다.
+          <img
+            src={src}
+            alt={altText}
+            width={Number(metadata.width)}
+            height={Number(metadata.height)}
+            loading="lazy"
+            decoding="async"
+            className="w-full h-auto rounded-lg shadow-md"
+          />
+        )}
       </span>
     );
   }
@@ -91,13 +129,24 @@ export const MarkdownImage = ({
   return (
     <span className="block my-6">
       <span className="relative w-full overflow-hidden rounded-lg shadow-md block" style={{ aspectRatio: '16 / 9' }}>
-        <Image
-          src={src}
-          alt={altText}
-          fill
-          sizes="(max-width: 768px) 100vw, 768px"
-          className="object-contain"
-        />
+        {useNextImage ? (
+          <Image
+            src={src}
+            alt={altText}
+            fill
+            sizes="(max-width: 768px) 100vw, 768px"
+            className="object-contain"
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element -- 등록 안 된 원격 호스트라 next/image가 렌더 중 throw한다.
+          <img
+            src={src}
+            alt={altText}
+            loading="lazy"
+            decoding="async"
+            className="absolute inset-0 w-full h-full object-contain"
+          />
+        )}
       </span>
     </span>
   );
