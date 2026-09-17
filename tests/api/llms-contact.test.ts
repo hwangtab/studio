@@ -46,10 +46,10 @@ const createResponse = () => {
 };
 
 describe('LLM contact metadata', () => {
-  it('uses the current mobile number in llms.txt', () => {
+  it('uses the current mobile number in llms.txt', async () => {
     const { res, getBody } = createResponse();
 
-    llmsHandler(createRequest(), res);
+    await llmsHandler(createRequest(), res);
 
     expect(getBody()).toContain('+82-10-4255-7893');
     expect(getBody()).not.toContain('+82-507-1384-3144');
@@ -91,10 +91,10 @@ describe('curated evergreen guides', () => {
     }
   });
 
-  it('renders every curated guide link and the award credential in llms.txt', () => {
+  it('renders every curated guide link and the award credential in llms.txt', async () => {
     const { res, getBody } = createResponse();
 
-    llmsHandler(createRequest(), res);
+    await llmsHandler(createRequest(), res);
     const body = getBody();
 
     for (const slug of curatedSlugs) {
@@ -111,10 +111,10 @@ describe('llms.txt spec compliance (llmstxt.org)', () => {
   it.each([
     ['llms.txt', llmsHandler],
     ['llms-full.txt', llmsFullHandler],
-  ])('starts %s with an H1 heading', (_name, handler) => {
+  ])('starts %s with an H1 heading', async (_name, handler) => {
     const { res, getBody } = createResponse();
 
-    handler(createRequest(), res);
+    await handler(createRequest(), res);
 
     const firstLine = getBody().split('\n')[0];
     expect(firstLine).toMatch(/^# \S/);
@@ -123,10 +123,10 @@ describe('llms.txt spec compliance (llmstxt.org)', () => {
   it.each([
     ['llms.txt', llmsHandler],
     ['llms-full.txt', llmsFullHandler],
-  ])('answers HEAD %s with 200 so crawlers can probe it', (_name, handler) => {
+  ])('answers HEAD %s with 200 so crawlers can probe it', async (_name, handler) => {
     const { res, getStatus, getHeader } = createResponse();
 
-    handler(createRequest({}, 'HEAD'), res);
+    await handler(createRequest({}, 'HEAD'), res);
 
     expect(getStatus()).toBe(200);
     expect(getHeader('content-type')).toBe('text/plain; charset=utf-8');
@@ -135,10 +135,10 @@ describe('llms.txt spec compliance (llmstxt.org)', () => {
   it.each([
     ['llms.txt', llmsHandler],
     ['llms-full.txt', llmsFullHandler],
-  ])('still rejects unsafe methods on %s with 405', (_name, handler) => {
+  ])('still rejects unsafe methods on %s with 405', async (_name, handler) => {
     const { res, getStatus, getHeader } = createResponse();
 
-    handler(createRequest({}, 'POST'), res);
+    await handler(createRequest({}, 'POST'), res);
 
     expect(getStatus()).toBe(405);
     expect(getHeader('allow')).toBe('GET, HEAD');
@@ -192,10 +192,10 @@ describe('external content index policy', () => {
 // 없으면 없다고 말해야 한다 — 어느 쪽이든 **파일의 실제 상태를 따라간다**.
 // (분기 단위 테스트는 tests/api/llms-funding.test.ts)
 describe('llms.txt 펀딩 안내는 실제 프로젝트 목록을 따른다', () => {
-  it('실제 목록과 같은 것을 말한다', () => {
+  it('실제 목록과 같은 것을 말한다', async () => {
     const { res, getBody } = createResponse();
 
-    llmsHandler(createRequest(), res);
+    await llmsHandler(createRequest(), res);
     const body = getBody();
 
     const live = getListableFundingProjects().filter(

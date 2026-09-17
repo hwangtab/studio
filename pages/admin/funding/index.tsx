@@ -14,7 +14,7 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { aggregateAdminFundingTotals, listFundingOrders, type AdminFundingTotals } from '../../../lib/funding/admin-list';
 import { formatKstDateTime } from '../../../lib/booking/format';
-import { getAllFundingProjects } from '../../../lib/funding/projects';
+import { getAllFundingProjectsAsync } from '../../../lib/funding/repository';
 import { expireStalePledges } from '../../../lib/funding/service';
 
 const LIST_LIMIT = 200;
@@ -66,7 +66,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
   let projects: ProjectOption[] = [];
   let projectsError: string | undefined;
   try {
-    projects = getAllFundingProjects().map((p) => ({
+    projects = (await getAllFundingProjectsAsync()).map((p) => ({
       slug: p.slug,
       title: p.title,
       rewards: p.rewards.map((r) => ({ id: r.id, title: r.title, amount: r.amount })),

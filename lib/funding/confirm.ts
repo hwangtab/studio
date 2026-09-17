@@ -4,7 +4,7 @@ import { getDb } from '../../db/client';
 import { fundingPledges, orders, payments, refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from '../booking/toss';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
-import { getFundingProject } from './projects';
+import { getFundingProjectAsync } from './repository';
 import { liveFundingOrderStatusList } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
@@ -79,7 +79,7 @@ const rowsAffectedOf = (result: unknown): number | undefined => {
 /** 확정 메일 발송. 예외를 삼켜 문자열로 바꾼다 — 결제는 이미 끝났으므로 confirm 결과를 뒤집으면 안 된다. */
 const deliverConfirmedEmails = async (order: FundingOrder): Promise<string | null> => {
   try {
-    return await sendFundingConfirmedEmails(order, getFundingProject(order.fundingPledge?.projectSlug ?? ''));
+    return await sendFundingConfirmedEmails(order, await getFundingProjectAsync(order.fundingPledge?.projectSlug ?? ''));
   } catch (error) {
     console.error('[funding-confirm] 확정 메일 발송 중 예외', { orderNo: order.orderNo, error });
     return error instanceof Error ? error.message : String(error);
@@ -418,7 +418,7 @@ export const syncFundingCancelledFromToss = async (payment: TossPayment): Promis
   try {
     emailError = await sendFundingCancelledEmails(
       order,
-      getFundingProject(order.fundingPledge?.projectSlug ?? ''),
+      await getFundingProjectAsync(order.fundingPledge?.projectSlug ?? ''),
       'recorded',
       cancelledTotal,
     );

@@ -271,6 +271,14 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 개설자 매직링크 착지 화면 — `?token=<원문>`이 15분 유효 원문 그대로 쿼리에 실린다.
+      // funding/creator 전체가 아니라 이 착지 경로 하나만 좁힌다(목록 페이지는 공개).
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/creator/auth',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/:slug/pledge',
         headers: [

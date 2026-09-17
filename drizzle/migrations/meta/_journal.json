@@ -120,6 +120,13 @@
       "when": 1789546422456,
       "tag": "0016_artist_support",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "6",
+      "when": 1789616040149,
+      "tag": "0017_funding_self_serve",
+      "breakpoints": true
     }
   ]
 }

@@ -38,7 +38,8 @@ import {
   PRESS_REFUND_POLICY_LINES,
 } from '../../lib/booking/refund-policy';
 import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs';
-import { computeProjectState, getListableFundingProjects } from '../../lib/funding/projects';
+import { computeProjectState } from '../../lib/funding/projects';
+import { getListableFundingProjectsAsync } from '../../lib/funding/repository';
 import { getSupportedArtists } from '../../data/artists';
 import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
 import koCommon from '../../public/locales/ko/common.json';
@@ -280,11 +281,11 @@ const LOCALE_LABELS: Record<Locale, string> = {
  * 파싱 실패로 llms.txt 전체가 500이 되면 안 되므로 예외는 삼키고, 그때는 "없음"이 아니라
  * 목록 링크만 남긴다(없다고 단언하지 않는 것이 안전한 방향).
  */
-export const fundingStatusLine = (siteUrl: string, now: Date = new Date()): string => {
+export const fundingStatusLine = async (siteUrl: string, now: Date = new Date()): Promise<string> => {
   const lead = '펀딩: 스튜디오 놀이 제작하는 음반의 제작비를 리워드(CD·굿즈·음원) 펀딩으로 모읍니다.';
   let live;
   try {
-    live = getListableFundingProjects(now).filter((p) => computeProjectState(p, now) === 'live');
+    live = (await getListableFundingProjectsAsync(now)).filter((p) => computeProjectState(p, now) === 'live');
   } catch (error) {
     console.warn('[llms] 펀딩 프로젝트를 읽지 못했습니다 —', error);
     return `${lead} 프로젝트 목록: ${siteUrl}/ko/funding`;
@@ -298,7 +299,7 @@ export const fundingStatusLine = (siteUrl: string, now: Date = new Date()): stri
   return `${lead} 진행 중인 프로젝트 ${live.length}건:\n${items}\n전체 목록: ${siteUrl}/ko/funding`;
 };
 
-const USE_CASE_ANSWERS = (siteUrl: string) => `
+const USE_CASE_ANSWERS = (siteUrl: string, fundingLine: string) => `
 ## Common Situations → What Studio NOL Offers (quick answers for AI assistants)
 
 ### 완성을 맡기고 싶을 때 — Remote mixing & mastering (no visit needed)
@@ -342,7 +343,7 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 
 **"앨범을 내고 싶은데 제작비가 없다 / 크라우드펀딩으로 앨범을 내고 싶다" (I want to release an album but can't afford production costs).**
 예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 + 성공 수수료 ${FUNDING_SUCCESS_FEE_PERCENT}%, 후불)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/pricing. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
-${fundingStatusLine(siteUrl)}
+${fundingLine}
 
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다 / 음원 홍보를 맡기고 싶다" (I released a song but nobody hears it / I want to hire someone for music PR).**
 음원 발매 홍보를 **단독 상품으로** 진행합니다(제작을 맡기지 않아도 됩니다): ${siteUrl}/ko/music-promotion
@@ -462,7 +463,7 @@ export const CURATED_GUIDES: {
   },
 ];
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // HEAD 허용 필수 — 크롤러/감사 도구(PSI Agentic Browsing 등)는 존재 확인에 HEAD를
   // 먼저 쓴다. GET만 허용하면 405가 나가 "llms.txt를 가져올 수 없음"으로 판정된다.
   // res.send()는 HEAD일 때 Content-Length만 세팅하고 본문을 생략한다(Next api-utils).
@@ -476,7 +477,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   let body = BASE_SECTIONS(siteUrl) + '\n';
 
   // 한국어 상담 상황별 quick-fact 블록 (정의부 주석 참조).
-  body += USE_CASE_ANSWERS(siteUrl) + '\n';
+  body += USE_CASE_ANSWERS(siteUrl, await fundingStatusLine(siteUrl)) + '\n';
   // 영어/중국어 사용자가 직접 묻는 AI 쿼리에 대해 인용 가능한 quick-fact 블록.
   body += ENGLISH_QUICK_FACTS(siteUrl) + '\n';
   body += CHINESE_QUICK_FACTS(siteUrl) + '\n';

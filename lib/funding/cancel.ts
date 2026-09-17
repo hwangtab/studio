@@ -5,7 +5,8 @@ import { orders, refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
-import { computeProjectState, getFundingProject } from './projects';
+import { computeProjectState } from './projects';
+import { getFundingProjectAsync } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
@@ -51,7 +52,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const order = await findFundingOrderByOrderNo(input.orderNo);
   if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
   const pledge = order.fundingPledge;
-  const project = getFundingProject(pledge.projectSlug);
+  const project = await getFundingProjectAsync(pledge.projectSlug);
   // 부분환불 건은 관리자만 다룰 수 있다 — 남은 금액 계산이 걸려 있어 고객 셀프 취소에 맡기지 않는다.
   if (order.status === 'partially_refunded' && input.requestedBy !== 'admin') {
     return { ok: false, code: 'invalid_state', message: '일부 환불된 펀딩은 문의해 주세요.' };

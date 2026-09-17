@@ -7,7 +7,7 @@ import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
-import { getFundingProject } from '../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { isLiveFundingOrderStatus } from '../../../lib/funding/refundable';
 import { presignFundingDownload } from '../../../lib/funding/r2';
 
@@ -65,7 +65,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!isLiveFundingOrderStatus(order.status))
     return res.status(409).json({ ok: false, message: '결제가 살아 있는 펀딩만 내려받을 수 있습니다.' });
 
-  const project = getFundingProject(pledge.projectSlug);
+  const project = await getFundingProjectAsync(pledge.projectSlug);
   const reward = project?.rewards.find((r) => r.id === pledge.rewardId);
   // `file`은 **이 후원자의 리워드가 주는 키**와 일치해야 한다. 목록에 없는 값을 넘겨
   // 다른 티어의 파일이나 버킷의 다른 객체에 서명을 받아 내지 못하게 한다.

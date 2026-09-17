@@ -18,6 +18,8 @@ describe('isPrivateAnalyticsPath', () => {
       '/ko/subscribe/sub_abc/success?token=s&customerKey=sub_abc&authKey=ak',
       '/ko/subscribe/sub_abc/fail?token=setup_secret',
       '/ko/subscribe/manage/sub_abc?token=manage_secret',
+      // 개설자 매직링크 착지 화면 — `?token=`이 15분 유효 원문 그대로 실린다.
+      '/ko/funding/creator/auth?token=magic_secret',
     ]) {
       expect(isPrivateAnalyticsPath(path)).toBe(true);
     }
@@ -34,6 +36,9 @@ describe('isPrivateAnalyticsPath', () => {
       '/ko/pricing',
       // 로케일 세그먼트가 아닌 경로는 이 규칙의 대상이 아니다.
       '/funding/manage/FND-1',
+      // funding/creator 아래라도 착지 경로(auth)가 아니면 공개다 — 목록 페이지까지
+      // 함께 좁혀지면 측정에서 조용히 빠진다.
+      '/ko/funding/creator',
     ]) {
       expect(isPrivateAnalyticsPath(path)).toBe(false);
     }
@@ -86,6 +91,7 @@ describe('isPrivateAnalyticsPath', () => {
       '/:locale(ko|en|zh|es|vi|th|uz)/contracts/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/funding/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/funding/manage/:path*',
+      '/:locale(ko|en|zh|es|vi|th|uz)/funding/creator/auth',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/(success|fail)',
       '/:locale(ko|en|zh|es|vi|th|uz)/booking/manage/:path*',
       '/:locale(ko|en|zh|es|vi|th|uz)/subscribe/:path*',

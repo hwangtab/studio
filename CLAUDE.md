@@ -116,6 +116,21 @@ npm run indexnow:changed -- --dry-run
 게이트가 금액을 안 보고 있었다. 의도한 변경이면 `npm run check:funding-baseline -- --update`
 후 **같은 커밋에 왜 바뀌는지를 적을 것** — 이유 없는 갱신은 게이트를 무력화한다.
 
+### 펀딩 프로젝트의 정본은 둘이다 — 파일이 먼저, 그다음 DB
+
+`content/funding/<slug>.md`와 `funding_projects` 테이블이 공존한다. 읽는 입구는
+`lib/funding/repository.ts` 하나뿐이고 **같은 slug가 양쪽에 있으면 파일이 이긴다.**
+새 코드에서 `lib/funding/projects.ts`의 동기 함수(`getFundingProject` 등)를 직접 부르지 말 것 —
+그 함수들은 파일만 보므로 DB 프로젝트가 조용히 404가 된다.
+
+검증은 `lib/funding/shape.ts`의 `validateFundingProjectShape` 하나다. md 파서와 DB 변환이
+같은 함수를 지난다 — 한쪽에만 검증을 두면 다른 쪽은 `status: Draft` 오타로 초안을 공개한다.
+
+DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌드는 `TURSO_*` 없이 성공해야 한다**
+(CI·로컬). 공개 페이지는 ISR(60초)이고 상세는 `fallback: 'blocking'`이라 DB 프로젝트가 첫
+요청에 생성된다. 사이트맵은 `next-sitemap`이 파일만 싣고, DB 프로젝트는 런타임 라우트
+`/sitemap-funding.xml`이 맡는다.
+
 ### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
 
 `NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는

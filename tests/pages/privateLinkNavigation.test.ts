@@ -19,6 +19,8 @@ import { MEASURED_PRIVATE_PAGE_ROUTES, PRIVATE_PAGE_ROUTES, isPrivateAnalyticsPa
  */
 const PRIVATE_PAGE_FILES = [
   'pages/[locale]/funding/manage/[orderNo].tsx',
+  // 개설자 매직링크 착지 화면 — `?token=`이 원문 그대로 실려 렌더되므로 같은 규칙 대상.
+  'pages/[locale]/funding/creator/auth.tsx',
   'pages/[locale]/funding/success.tsx',
   'pages/[locale]/funding/fail.tsx',
   'pages/[locale]/booking/manage/[orderNo].tsx',
@@ -59,6 +61,22 @@ describe('private 페이지의 이탈 링크', () => {
     const publicAnchors = openingAnchorTags(read(file)).filter(needsNoReferrer);
     expect(publicAnchors.length).toBeGreaterThan(0);
     for (const tag of publicAnchors) expect(tag).toContain('rel="noreferrer"');
+  });
+
+  /**
+   * `<a>` 앵커가 아니라 JS(`location.href = ...`)로 이탈하는 자리는 위 두 검사가 못 본다
+   * (2026-09-17 재리뷰 지적 — funding/creator/auth.tsx). JS 대입에는 `rel="noreferrer"`를
+   * 붙일 방법이 없고, 사이트 Referrer-Policy(strict-origin-when-cross-origin)는 동일
+   * 출처 이동에 전체 URL을 리퍼러로 보낸다 — 도착지가 측정 대상이면 토큰이 실린 이 URL이
+   * 그대로 page_referrer에 적재된다. 유일한 방어는 이동 전에 `history.replaceState`로
+   * 주소창의 비밀값을 지우는 것이므로, `location.href =` 대입이 있는 파일은 반드시
+   * `history.replaceState`도 함께 가져야 한다. 이 검사가 없으면 새 JS 이동을 추가할 때
+   * (또는 성공 경로 하나만 고치고 실패 경로를 빠뜨릴 때) 같은 유출이 조용히 재발한다.
+   */
+  it.each(PRIVATE_PAGE_FILES)('%s 가 location.href로 이동하면 그 전에 history.replaceState로 URL을 비운다', (file) => {
+    const source = read(file);
+    if (!/location\.href\s*=/.test(source)) return; // 이 페이지는 JS 이동을 쓰지 않는다 — 대상 아님
+    expect(source).toContain('history.replaceState');
   });
 
   /**
