@@ -4,22 +4,8 @@ import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
 import { validateBasicSection, validateCreatorSection, validateStorySection } from '../../../../../lib/funding/creatorValidation';
-import { saveBasicSection, saveCreatorSection, saveStorySection, type WriteResult } from '../../../../../lib/funding/creatorProjectWrite';
-
-/** WriteResult.code → HTTP 상태. 네 라우트가 공유하는 매핑(형제 라우트 관례). */
-const STATUS_BY_CODE: Record<Exclude<WriteResult, { ok: true }>['code'], number> = {
-  not_found: 404,
-  locked: 409,
-  not_editable: 409,
-  duplicate_slug: 400,
-  duplicate_reward: 400,
-  too_many: 400,
-};
-
-const respondWriteResult = (res: NextApiResponse, result: WriteResult) => {
-  if (result.ok) return res.status(200).json({ ok: true });
-  return res.status(STATUS_BY_CODE[result.code]).json({ ok: false, message: result.message });
-};
+import { saveBasicSection, saveCreatorSection, saveStorySection } from '../../../../../lib/funding/creatorProjectWrite';
+import { respondWriteResult } from '../../../../../lib/funding/creatorWriteHttp';
 
 /**
  * 구획별 저장 — 기본정보·스토리·개설자 프로필 세 구획을 한 라우트가 받는다.

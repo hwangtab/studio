@@ -141,6 +141,27 @@ describe('POST /api/funding/creator/projects (초안 생성)', () => {
     expect(r.status).toBe(429);
   });
 
+  it('요청 제한은 IP와 계정 두 겹 — creator_save:ip:*와 creator_save:<creatorId>를 각각 분당 30회로 부른다', async () => {
+    const seen: Array<[string, number, number]> = [];
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string, limit: number, windowSeconds: number) => {
+      seen.push([key, limit, windowSeconds]);
+      return Promise.resolve(true);
+    });
+    await call(createHandler);
+    expect(seen).toEqual(
+      expect.arrayContaining([
+        ['creator_save:ip:unknown', 30, 60],
+        [`creator_save:${CREATOR_A}`, 30, 60],
+      ]),
+    );
+  });
+
+  it('IP 요청 제한만 초과해도 429 — 계정 쪽이 통과했더라도', async () => {
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) => Promise.resolve(!key.startsWith('creator_save:ip:')));
+    const r = await call(createHandler);
+    expect(r.status).toBe(429);
+  });
+
   it('성공 → 200, id를 돌려주고 draft 행이 만들어진다', async () => {
     const r = await call(createHandler);
     expect(r.status).toBe(200);
@@ -150,6 +171,28 @@ describe('POST /api/funding/creator/projects (초안 생성)', () => {
     const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, r.body.id));
     expect(row?.creatorId).toBe(CREATOR_A);
     expect(row?.reviewStatus).toBe('draft');
+  });
+
+  it('계정당 프로젝트 상한(draftsMax)을 넘으면 400 — 승인·반려된 것도 함께 센다', async () => {
+    for (let i = 0; i < 10; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await seedDraftProject(CREATOR_A, { reviewStatus: i % 2 === 0 ? 'approved' : 'draft' });
+    }
+    const r = await call(createHandler);
+    expect(r.status).toBe(400);
+    expect(r.body.message).toEqual(expect.stringContaining('프로젝트'));
+
+    const rows = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.creatorId, CREATOR_A));
+    expect(rows).toHaveLength(10);
+  });
+
+  it('다른 개설자의 프로젝트 수는 상한에 영향을 주지 않는다', async () => {
+    for (let i = 0; i < 10; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await seedDraftProject(CREATOR_B);
+    }
+    const r = await call(createHandler);
+    expect(r.status).toBe(200);
   });
 
   it('Cache-Control: no-store가 실린다', async () => {
@@ -205,6 +248,18 @@ describe('POST /api/funding/creator/projects/[id] (구획별 저장)', () => {
     const project = await seedDraftProject(CREATOR_A);
     const r = await call(sectionHandler, { query: { id: project.id }, body: { section: 'nope', value: {} } });
     expect(r.status).toBe(400);
+  });
+
+  it('요청 제한을 넘으면 429 — creator_save:<creatorId> 분당 30회', async () => {
+    const project = await seedDraftProject(CREATOR_A);
+    const seen: Array<[string, number, number]> = [];
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string, limit: number, windowSeconds: number) => {
+      seen.push([key, limit, windowSeconds]);
+      return Promise.resolve(false);
+    });
+    const r = await call(sectionHandler, { query: { id: project.id }, body: { section: 'basic', value: VALID_BASIC } });
+    expect(r.status).toBe(429);
+    expect(seen).toEqual(expect.arrayContaining([[`creator_save:${CREATOR_A}`, 30, 60]]));
   });
 
   it('기본정보 저장 성공 → 200, DB에 반영', async () => {
@@ -286,6 +341,18 @@ describe('POST /api/funding/creator/projects/[id]/rewards (리워드 CRUD)', () 
     expect(r.status).toBe(400);
   });
 
+  it('요청 제한을 넘으면 429 — creator_save:<creatorId> 분당 30회', async () => {
+    const project = await seedDraftProject(CREATOR_A);
+    const seen: Array<[string, number, number]> = [];
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string, limit: number, windowSeconds: number) => {
+      seen.push([key, limit, windowSeconds]);
+      return Promise.resolve(false);
+    });
+    const r = await call(rewardsHandler, { query: { id: project.id }, body: { mode: 'create', value: VALID_REWARD } });
+    expect(r.status).toBe(429);
+    expect(seen).toEqual(expect.arrayContaining([[`creator_save:${CREATOR_A}`, 30, 60]]));
+  });
+
   it('리워드 값이 올바르지 않으면 400 — 한국어 메시지', async () => {
     const project = await seedDraftProject(CREATOR_A);
     const r = await call(rewardsHandler, {
@@ -306,20 +373,64 @@ describe('POST /api/funding/creator/projects/[id]/rewards (리워드 CRUD)', () 
     expect(rewards[0]?.rewardId).toBe('basic');
   });
 
-  it('mode: update인데 previousRewardId가 없으면 400 — 서비스가 "새 리워드 추가"로 오인하지 않는다', async () => {
+  it('mode: create인데 같은 rewardId가 이미 있으면 400 — upsertReward가 조용히 덮어쓰지 않는다', async () => {
     const project = await seedDraftProject(CREATOR_A);
     await call(rewardsHandler, { query: { id: project.id }, body: { mode: 'create', value: VALID_REWARD } });
 
     const r = await call(rewardsHandler, {
       query: { id: project.id },
-      body: { mode: 'update', value: { ...VALID_REWARD, rewardId: 'renamed' } },
+      body: { mode: 'create', value: { ...VALID_REWARD, title: '덮어쓰기 시도', amount: 99_000 } },
     });
     expect(r.status).toBe(400);
 
     const rewards = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, project.id));
     expect(rewards).toHaveLength(1);
-    expect(rewards[0]?.rewardId).toBe('basic');
+    // 기존 행이 덮이지 않았다.
+    expect(rewards[0]?.title).toBe(VALID_REWARD.title);
+    expect(rewards[0]?.amount).toBe(VALID_REWARD.amount);
   });
+
+  it('mode: create의 중복 검사는 프로젝트 소유자 기준이다 — 남의 프로젝트에 같은 rewardId가 있어도 내 프로젝트 생성엔 영향 없다', async () => {
+    const other = await seedDraftProject(CREATOR_B);
+    await mockDb.insert(schema.fundingRewards).values({
+      projectId: other.id,
+      rewardId: 'basic',
+      title: '남의 리워드',
+      description: 'd',
+      amount: 5_000,
+      requiresShipping: false,
+      estimatedDelivery: '2026-12',
+    });
+
+    const mine = await seedDraftProject(CREATOR_A);
+    const r = await call(rewardsHandler, { query: { id: mine.id }, body: { mode: 'create', value: VALID_REWARD } });
+    expect(r.status).toBe(200);
+  });
+
+  it.each<[string, unknown]>([
+    ['빠뜨림', undefined],
+    ['빈 문자열', ''],
+    ['공백만', '   '],
+    ['null', null],
+    ['숫자', 123],
+    ['배열', ['basic']],
+  ])(
+    'mode: update인데 previousRewardId가 %s(%s)면 400 — 서비스가 "새 리워드 추가"로 오인하지 않는다',
+    async (_label, previousRewardId) => {
+      const project = await seedDraftProject(CREATOR_A);
+      await call(rewardsHandler, { query: { id: project.id }, body: { mode: 'create', value: VALID_REWARD } });
+
+      const r = await call(rewardsHandler, {
+        query: { id: project.id },
+        body: { mode: 'update', previousRewardId, value: { ...VALID_REWARD, rewardId: 'renamed' } },
+      });
+      expect(r.status).toBe(400);
+
+      const rewards = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, project.id));
+      expect(rewards).toHaveLength(1);
+      expect(rewards[0]?.rewardId).toBe('basic');
+    },
+  );
 
   it('mode: update + previousRewardId → 개명 성공(행이 늘지 않는다)', async () => {
     const project = await seedDraftProject(CREATOR_A);
@@ -354,6 +465,17 @@ describe('POST /api/funding/creator/projects/[id]/rewards (리워드 CRUD)', () 
       body: { mode: 'update', previousRewardId: 'basic', value: { ...VALID_REWARD, amount: 20_000 } },
     });
     expect(r.status).toBe(409);
+  });
+
+  it('삭제 rewardId가 공백만이면 400', async () => {
+    const project = await seedDraftProject(CREATOR_A);
+    await call(rewardsHandler, { query: { id: project.id }, body: { mode: 'create', value: VALID_REWARD } });
+
+    const r = await call(rewardsHandler, { query: { id: project.id }, body: { mode: 'delete', rewardId: '   ' } });
+    expect(r.status).toBe(400);
+
+    const rewards = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, project.id));
+    expect(rewards).toHaveLength(1);
   });
 
   it('삭제 성공 → 200, 행이 지워진다', async () => {

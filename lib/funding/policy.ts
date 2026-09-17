@@ -110,8 +110,11 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * 이 값이 빈 문자열이면 `agreedTermsVersion`을 요구하지 않고 화면도 동의 체크박스를 렌더하지
  * 않는다. 3차에서 본문과 함께 실제 판본 문자열(`funding-creator-terms-YYYY-MM-DD` 형식)을
  * 채우면 그 순간 두 쪽 다 동의를 요구하기 시작한다.
+ *
+ * `: string` 타입 주석을 명시로 둔다 — 리터럴 `''`로 좁혀 두면 3차에서 실제 판본 문자열을
+ * 대입하는 순간 타입 에러가 난다(리터럴 타입은 다른 문자열을 받지 않는다).
  */
-export const FUNDING_CREATOR_TERMS_VERSION = '';
+export const FUNDING_CREATOR_TERMS_VERSION: string = '';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [

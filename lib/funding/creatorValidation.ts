@@ -23,6 +23,14 @@ export const CREATOR_LIMITS = {
   phoneMax: 40,
   rewardIdMax: 40,
   estimatedDeliveryMax: 40,
+  /**
+   * 개설자 한 명이 동시에 가질 수 있는 프로젝트(초안 포함) 수.
+   *
+   * 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 계정 자체가 사실상 무료다.
+   * `creator_save:<creatorId>` 요청 제한(분당 30회)만으로는 한 계정으로 하루 최대
+   * 4.3만 개 초안 행을 만들 수 있다 — 초안 생성 API가 이 값을 별도로 세어 막는다.
+   */
+  draftsMax: 10,
 } as const;
 
 type Fail = { ok: false; message: string };

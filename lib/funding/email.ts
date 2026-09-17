@@ -4,6 +4,7 @@ import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
 import { isManualPlaceholderRecipient } from './service';
 
+import type { CreatorProjectDetail } from './creatorProjectWrite';
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
 
@@ -188,3 +189,26 @@ export const sendFundingRefundRequestClearedEmails = (
       ].join('\n'),
     } },
   ]));
+
+/**
+ * 개설자 심사 신청 알림 — 운영자에게만 보낸다(개설자는 화면 응답으로 이미 안다).
+ *
+ * 링크는 `/admin/funding`(목록)이지 `/admin/funding/<project.id>`가 아니다 — 그 동적
+ * 라우트(`pages/admin/funding/[id].tsx`)는 **후원 건(주문/pledge) 상세**이지 프로젝트
+ * 심사 화면이 아니다(`findFundingOrderById`로 연다). 개설자 프로젝트를 심사하는 관리자
+ * 화면은 아직 없다(3차 범위) — 그게 생기기 전까지는 이 목록 링크가 맞는 목적지다.
+ */
+export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail): Promise<string | null> => {
+  const contact = [project.creator.contactName, project.creator.phone].filter(Boolean).join(' / ') || '연락처 미기재';
+  return send([
+    { key: 'operator', params: {
+      to: OPERATOR_EMAIL,
+      subject: `[펀딩] 심사 요청 — ${project.title}`,
+      text: [
+        `개설자: ${project.creator.name} (${contact})`,
+        `프로젝트: ${project.title}`,
+        `관리자: ${SITE_URL}/admin/funding`,
+      ].join('\n'),
+    } },
+  ]);
+};
