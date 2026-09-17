@@ -31,6 +31,10 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
   const [linksText, setLinksText] = useState((initial.links ?? []).join('\n'));
   const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
 
+  // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 그 뒤 입력이 바뀌면 낡은
+  // 안내로 남는다(2026-09-17 리뷰 지적).
+  const clearSaveStatus = () => setSave((s) => (s.status === 'idle' ? s : IDLE_SAVE_STATE));
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setSave({ status: 'saving' });
@@ -62,7 +66,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
       <Field id="creator-name" label="공개 이름" required>
         <TextInput
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => { setName(e.target.value); clearSaveStatus(); }}
           maxLength={CREATOR_LIMITS.nameMax}
           disabled={readOnly}
           required
@@ -71,7 +75,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
       <Field id="creator-contact-name" label="담당자 이름" hint="운영자만 볼 수 있습니다.">
         <TextInput
           value={contactName}
-          onChange={(e) => setContactName(e.target.value)}
+          onChange={(e) => { setContactName(e.target.value); clearSaveStatus(); }}
           maxLength={CREATOR_LIMITS.contactNameMax}
           disabled={readOnly}
         />
@@ -79,7 +83,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
       <Field id="creator-phone" label="연락처" hint="운영자만 볼 수 있습니다.">
         <TextInput
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => { setPhone(e.target.value); clearSaveStatus(); }}
           maxLength={CREATOR_LIMITS.phoneMax}
           disabled={readOnly}
         />
@@ -87,7 +91,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
       <Field id="creator-bio" label="소개" hint={`${CREATOR_LIMITS.bioMax}자 이내`}>
         <TextArea
           value={bio}
-          onChange={(e) => setBio(e.target.value)}
+          onChange={(e) => { setBio(e.target.value); clearSaveStatus(); }}
           maxLength={CREATOR_LIMITS.bioMax}
           disabled={readOnly}
         />
@@ -95,7 +99,7 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
       <Field id="creator-links" label="링크" hint={`한 줄에 하나씩, http(s)로 시작하는 주소만. 최대 ${CREATOR_LIMITS.linksMax}개`}>
         <TextArea
           value={linksText}
-          onChange={(e) => setLinksText(e.target.value)}
+          onChange={(e) => { setLinksText(e.target.value); clearSaveStatus(); }}
           disabled={readOnly}
           placeholder="https://..."
         />

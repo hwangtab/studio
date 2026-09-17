@@ -83,7 +83,13 @@ export const loadProjectForCreator = async (
   if (!row) return null;
 
   const [creator] = await getDb().select().from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
-  const rewards = await getDb().select().from(fundingRewards).where(eq(fundingRewards.projectId, projectId));
+  // sortOrder로 정렬한다 — ORDER BY 없이는 순서가 sqlite의 내부 저장 순서에 좌우돼,
+  // 리워드를 지웠다 다시 만들면 화면의 카드 순서가 예고 없이 바뀔 수 있다(2026-09-17
+  // 리뷰 지적). 순서를 바꾸는 쓰기 경로(mode: 'reorder')는 아직 없어 sortOrder는 지금
+  // 전부 0(삽입 기본값)이지만, 그 경로가 생기면 이 조회가 바로 반영한다.
+  const rewards = await getDb().select().from(fundingRewards)
+    .where(eq(fundingRewards.projectId, projectId))
+    .orderBy(fundingRewards.sortOrder);
 
   return {
     id: row.id,

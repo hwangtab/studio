@@ -35,7 +35,13 @@ export interface EditorProject {
   content: string;
   coverUrl: string;
   goalAmount: number;
-  /** ISO 문자열. `<input type="date">`용 변환은 각 폼이 담당한다. */
+  /**
+   * KST(UTC+9) 달력 날짜 `YYYY-MM-DD` — 전체 ISO 타임스탬프가 아니다.
+   * `<input type="date">`가 그대로 받는 값이라 변환이 없다. 서버로 보낼 때만
+   * `lib/funding/creatorDateInput.ts`의 `kstStartOfDayIso`/`kstEndOfDayIso`로 시각을
+   * 붙인다 — 예전엔 로컬 자정으로 보내고 UTC 문자열을 잘라 읽어(왕복 방향이 서로 달라)
+   * 저장할 때마다 날짜가 하루씩 밀렸다(2026-09-17 리뷰 지적).
+   */
   startAt: string;
   endAt: string;
   reviewStatus: string;

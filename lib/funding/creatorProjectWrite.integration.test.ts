@@ -83,6 +83,31 @@ describe('createDraftProject / loadProjectForCreator', () => {
     expect(detail?.reviewStatus).toBe('draft');
     expect(detail?.rewards).toEqual([]);
   });
+
+  // 개설자 편집 화면(pages/[locale]/funding/creator/[id].tsx)의 실제 방어선은 여기다 —
+  // 화면 쪽 테스트의 목 creator는 손으로 채운 값이라 "실제로 이 컬럼들이 select()에
+  // 잡혀도 여기서 걸러지는가"를 증명하지 못한다(2026-09-17 리뷰 지적). 정산·세금 컬럼을
+  // 실제로 seed한 뒤 loadProjectForCreator의 반환값에 없는지 직접 본다.
+  it('정산·세금 컬럼(taxType 등)을 seed해도 결과의 creator에는 실리지 않는다', async () => {
+    const creator = await seedCreator('me@example.com');
+    await mockDb.update(schema.fundingCreators).set({
+      taxType: 'withholding',
+      payoutBankName: '국민은행',
+      payoutAccount: '123-456-789012',
+      payoutHolder: '개설자',
+    }).where(eq(schema.fundingCreators.id, creator));
+
+    const { id } = await createDraftProject(creator);
+    const detail = await loadProjectForCreator(creator, id);
+    expect(detail).not.toBeNull();
+    expect(Object.keys(detail!.creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone'].sort());
+    const serialized = JSON.stringify(detail!.creator);
+    expect(serialized).not.toContain('taxType');
+    expect(serialized).not.toContain('payoutBankName');
+    expect(serialized).not.toContain('payoutAccount');
+    expect(serialized).not.toContain('payoutHolder');
+    expect(serialized).not.toContain('email');
+  });
 });
 
 describe('saveStorySection — 저장 시점 stripTrustedDirectives 배선', () => {

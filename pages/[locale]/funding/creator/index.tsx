@@ -17,6 +17,7 @@ export default function CreatorHome({ projects }: Props) {
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
   const [loggingOut, setLoggingOut] = useState(false);
+  const [logoutError, setLogoutError] = useState<string | null>(null);
 
   const handleCreate = async () => {
     setCreating(true);
@@ -32,8 +33,16 @@ export default function CreatorHome({ projects }: Props) {
 
   const handleLogout = async () => {
     setLoggingOut(true);
-    await logoutCreator();
-    router.push('/ko/funding/apply');
+    setLogoutError(null);
+    // 실패를 무시하고 이동하면 세션이 실제로는 남아 있는데 로그아웃된 것처럼 보인다
+    // (2026-09-17 리뷰 지적) — 성공했을 때만 이동한다.
+    const result = await logoutCreator();
+    if (result.ok) {
+      router.push('/ko/funding/apply');
+      return;
+    }
+    setLogoutError(result.message);
+    setLoggingOut(false);
   };
 
   return (
@@ -45,14 +54,19 @@ export default function CreatorHome({ projects }: Props) {
       <main className="mx-auto max-w-3xl px-4 py-16">
         <div className="flex items-baseline justify-between gap-3">
           <h1 className="text-3xl font-bold">내 펀딩 프로젝트</h1>
-          <button
-            type="button"
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="typo-caption text-gray-500 underline underline-offset-2 disabled:opacity-50 dark:text-gray-400"
-          >
-            {loggingOut ? '로그아웃 중…' : '로그아웃'}
-          </button>
+          <div className="flex flex-col items-end gap-1">
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="typo-caption text-gray-500 underline underline-offset-2 disabled:opacity-50 dark:text-gray-400"
+            >
+              {loggingOut ? '로그아웃 중…' : '로그아웃'}
+            </button>
+            {logoutError && (
+              <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{logoutError}</span>
+            )}
+          </div>
         </div>
         {projects.length === 0 ? (
           <p className="mt-8 text-gray-600 dark:text-gray-400">아직 만든 프로젝트가 없습니다.</p>

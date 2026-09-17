@@ -67,6 +67,14 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
   const editingReward = editingRewardId ? rewards.find((r) => r.rewardId === editingRewardId) ?? null : null;
   const locked = editingReward?.locked ?? false;
   const showForm = creating || editingReward !== null;
+  // 잠긴 한정 리워드는 수량을 "늘리는 것만" 허용한다(서버 lockedViolation과 같은 규칙) —
+  // 편집 시작 시점의 수량을 하한으로 둔다. 브라우저 min은 안내일 뿐이고 최종 판정은
+  // 항상 서버다.
+  const minQuantity = locked ? editingReward?.totalQuantity ?? 1 : 1;
+
+  // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 입력을 고치기 시작하면 낡은
+  // 안내로 남는다(2026-09-17 리뷰 지적).
+  const clearSaveStatus = () => setSave((s) => (s.status === 'idle' ? s : IDLE_SAVE_STATE));
 
   const startCreate = () => {
     setCreating(true);
@@ -132,6 +140,12 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
     onSaved(nextRewards);
   };
 
+  const confirmAndRemove = (rewardId: string, title: string) => {
+    // 되돌릴 경로가 없다 — 한 번의 오클릭으로 지워지면 안 된다(2026-09-17 리뷰 지적).
+    if (!window.confirm(`"${title}" 리워드를 삭제할까요? 되돌릴 수 없습니다.`)) return;
+    void remove(rewardId);
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <ul className="flex flex-col gap-3">
@@ -157,7 +171,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
                   variant="outline"
                   size="sm"
                   className="text-red-600 dark:text-red-400"
-                  onClick={() => remove(r.rewardId)}
+                  onClick={() => confirmAndRemove(r.rewardId, r.title)}
                   disabled={readOnly || r.locked || deletingId === r.rewardId}
                 >
                   {deletingId === r.rewardId ? '삭제 중…' : '삭제'}
@@ -186,7 +200,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
           >
             <TextInput
               value={form.rewardId}
-              onChange={(e) => setForm((f) => ({ ...f, rewardId: e.target.value }))}
+              onChange={(e) => { setForm((f) => ({ ...f, rewardId: e.target.value })); clearSaveStatus(); }}
               maxLength={CREATOR_LIMITS.rewardIdMax}
               disabled={readOnly || locked}
               required
@@ -195,7 +209,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
           <Field id="reward-title" label="이름" required>
             <TextInput
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) => { setForm((f) => ({ ...f, title: e.target.value })); clearSaveStatus(); }}
               maxLength={CREATOR_LIMITS.rewardTitleMax}
               disabled={readOnly}
               required
@@ -204,7 +218,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
           <Field id="reward-description" label="설명" required hint={`${CREATOR_LIMITS.rewardDescriptionMax}자 이내`}>
             <TextArea
               value={form.description}
-              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              onChange={(e) => { setForm((f) => ({ ...f, description: e.target.value })); clearSaveStatus(); }}
               maxLength={CREATOR_LIMITS.rewardDescriptionMax}
               disabled={readOnly}
               required
@@ -219,7 +233,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
             <TextInput
               type="number"
               value={form.amount}
-              onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
+              onChange={(e) => { setForm((f) => ({ ...f, amount: e.target.value })); clearSaveStatus(); }}
               min={CREATOR_LIMITS.amountMin}
               max={CREATOR_LIMITS.amountMax}
               step={CREATOR_LIMITS.amountStep}
@@ -232,20 +246,25 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
               id="reward-limited"
               type="checkbox"
               checked={form.limited}
-              onChange={(e) => setForm((f) => ({ ...f, limited: e.target.checked }))}
+              onChange={(e) => { setForm((f) => ({ ...f, limited: e.target.checked })); clearSaveStatus(); }}
               disabled={readOnly || locked}
               className="h-4 w-4 accent-primary"
             />
             <label htmlFor="reward-limited" className="typo-body">수량 한정</label>
           </div>
           {form.limited && (
-            <Field id="reward-quantity" label="수량" required>
+            <Field
+              id="reward-quantity"
+              label="수량"
+              required
+              hint={locked ? '공개된 리워드는 수량을 늘릴 수만 있습니다.' : undefined}
+            >
               <TextInput
                 type="number"
                 value={form.totalQuantity}
-                onChange={(e) => setForm((f) => ({ ...f, totalQuantity: e.target.value }))}
-                min={1}
-                disabled={readOnly || locked}
+                onChange={(e) => { setForm((f) => ({ ...f, totalQuantity: e.target.value })); clearSaveStatus(); }}
+                min={minQuantity}
+                disabled={readOnly}
                 required
               />
             </Field>
@@ -255,7 +274,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
               id="reward-shipping"
               type="checkbox"
               checked={form.requiresShipping}
-              onChange={(e) => setForm((f) => ({ ...f, requiresShipping: e.target.checked }))}
+              onChange={(e) => { setForm((f) => ({ ...f, requiresShipping: e.target.checked })); clearSaveStatus(); }}
               disabled={readOnly || locked}
               className="h-4 w-4 accent-primary"
             />
@@ -263,13 +282,14 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
           </div>
           {locked && (
             <p className="typo-caption text-amber-700 dark:text-amber-400">
-              공개된 리워드는 주소·금액·수량 제한 여부·배송 여부를 바꿀 수 없습니다. 새 리워드를 추가해 주세요.
+              공개된 리워드는 주소·금액·수량 제한 여부·배송 여부를 바꿀 수 없습니다(수량은 늘릴 수만
+              있습니다). 그 밖의 변경은 새 리워드를 추가해 주세요.
             </p>
           )}
           <Field id="reward-delivery" label="예상 전달 시기" required hint="예: 2026년 12월">
             <TextInput
               value={form.estimatedDelivery}
-              onChange={(e) => setForm((f) => ({ ...f, estimatedDelivery: e.target.value }))}
+              onChange={(e) => { setForm((f) => ({ ...f, estimatedDelivery: e.target.value })); clearSaveStatus(); }}
               maxLength={CREATOR_LIMITS.estimatedDeliveryMax}
               disabled={readOnly}
               required
@@ -279,7 +299,7 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
             projectId={projectId}
             kind="body"
             value={form.imageUrl ?? ''}
-            onChange={(url) => setForm((f) => ({ ...f, imageUrl: url }))}
+            onChange={(url) => { setForm((f) => ({ ...f, imageUrl: url })); clearSaveStatus(); }}
             disabled={readOnly}
             label="리워드 이미지(선택)"
           />

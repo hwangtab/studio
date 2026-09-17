@@ -12,22 +12,34 @@ import {
   type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
 } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
+import { computeEarliestStartDate, toKstDateString } from '../../../../lib/funding/creatorDateInput';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
+import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 
-interface Props { project: EditorProject }
+interface Props {
+  project: EditorProject;
+  /**
+   * GSSP가 요청 시각(서버의 `now`) 기준으로 미리 계산한, 시작일로 고를 수 있는 가장 이른
+   * KST 날짜. 브라우저 시계로 다시 계산하면 SSR과 CSR의 `now`가 갈려 하이드레이션
+   * 불일치가 나고, 그 값이 서버 검증(`validateBasicSection`)이 실제로 쓰는 `now`와도
+   * 어긋난다(2026-09-17 리뷰 지적).
+   */
+  earliestStartDate: string;
+}
 
 /**
  * `CreatorProjectDetail` → 화면이 실제로 쓰는 `EditorProject`.
  *
  * `loadProjectForCreator`가 `fundingCreators`를 `select()`(전 컬럼)로 읽지만 화면에는
  * `{ name, contactName, phone, bio, links }` 다섯 필드만 골라 넣은 채로 돌려준다 — 이 함수는
- * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`는 애초에
- * `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와 같은
- * 자리, 같은 이유). 날짜는 `Date` 그대로면 `__NEXT_DATA__` 직렬화에서 문제가 되므로 ISO
- * 문자열로 바꾸고, 리워드는 `lockedAt`(승인 시각) 대신 화면이 필요로 하는 `locked` 불리언
- * 하나만 남긴다.
+ * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`·`email`은
+ * 애초에 `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와
+ * 같은 자리, 같은 이유). 날짜는 KST 달력 날짜 문자열로 바꾼다(`lib/funding/creatorDateInput.ts`
+ * 참조 — `Date` 그대로면 `__NEXT_DATA__` 직렬화도 안 되고, ISO 타임스탬프 그대로 두면
+ * 폼이 다시 저장할 때 하루가 밀린다). 리워드는 `lockedAt`(승인 시각) 대신 화면이
+ * 필요로 하는 `locked` 불리언 하나만 남긴다.
  */
 const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
   id: p.id,
@@ -37,8 +49,8 @@ const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
   content: p.content,
   coverUrl: p.coverUrl,
   goalAmount: p.goalAmount,
-  startAt: p.startAt.toISOString(),
-  endAt: p.endAt.toISOString(),
+  startAt: toKstDateString(p.startAt),
+  endAt: toKstDateString(p.endAt),
   reviewStatus: p.reviewStatus,
   reviewNote: p.reviewNote,
   creator: {
@@ -65,7 +77,7 @@ const TABS = ['basic', 'story', 'rewards', 'creator'] as const;
 type Tab = (typeof TABS)[number];
 const TAB_LABEL: Record<Tab, string> = { basic: '기본정보', story: '스토리', rewards: '리워드', creator: '개설자 정보' };
 
-export default function CreatorProjectEditor({ project: initial }: Props) {
+export default function CreatorProjectEditor({ project: initial, earliestStartDate }: Props) {
   const [project, setProject] = useState<EditorProject>(initial);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
@@ -113,11 +125,15 @@ export default function CreatorProjectEditor({ project: initial }: Props) {
           </p>
         )}
 
-        <nav className="mt-8 flex gap-2 border-b border-gray-200 dark:border-gray-700">
+        <nav role="tablist" aria-label="편집 구획" className="mt-8 flex gap-2 border-b border-gray-200 dark:border-gray-700">
           {TABS.map((t) => (
             <button
               key={t}
               type="button"
+              role="tab"
+              id={`tab-${t}`}
+              aria-selected={tab === t}
+              aria-controls={`panel-${t}`}
               onClick={() => setTab(t)}
               className={`px-4 py-2 typo-body font-medium ${
                 tab === t
@@ -130,8 +146,14 @@ export default function CreatorProjectEditor({ project: initial }: Props) {
           ))}
         </nav>
 
+        {/*
+          네 폼을 전부 항상 마운트해 두고 hidden으로만 감춘다. 예전엔 `{tab === 'x' && <Form/>}`
+          조건 렌더라 탭을 옮기면 언마운트되어 로컬 상태(저장하지 않은 입력)가 그대로
+          사라졌다 — 구획별 부분 저장이 이 화면의 핵심 설계인데 탭 전환이 경고 없이 그
+          단위를 파괴했다(2026-09-17 리뷰 지적).
+        */}
         <div className="mt-8">
-          {tab === 'basic' && (
+          <div id="panel-basic" role="tabpanel" aria-labelledby="tab-basic" hidden={tab !== 'basic'}>
             <BasicSectionForm
               projectId={project.id}
               initial={{
@@ -139,11 +161,12 @@ export default function CreatorProjectEditor({ project: initial }: Props) {
                 coverUrl: project.coverUrl, goalAmount: project.goalAmount,
                 startAt: project.startAt, endAt: project.endAt,
               }}
+              earliestStartDate={earliestStartDate}
               readOnly={readOnly}
               onSaved={(value: BasicSectionValue) => setProject((p) => ({ ...p, ...value }))}
             />
-          )}
-          {tab === 'story' && (
+          </div>
+          <div id="panel-story" role="tabpanel" aria-labelledby="tab-story" hidden={tab !== 'story'}>
             <StorySectionForm
               projectId={project.id}
               slug={project.slug}
@@ -152,23 +175,23 @@ export default function CreatorProjectEditor({ project: initial }: Props) {
               readOnly={readOnly}
               onSaved={(content: string) => setProject((p) => ({ ...p, content }))}
             />
-          )}
-          {tab === 'rewards' && (
+          </div>
+          <div id="panel-rewards" role="tabpanel" aria-labelledby="tab-rewards" hidden={tab !== 'rewards'}>
             <RewardSectionForm
               projectId={project.id}
               initial={project.rewards}
               readOnly={readOnly}
               onSaved={(rewards: EditorReward[]) => setProject((p) => ({ ...p, rewards }))}
             />
-          )}
-          {tab === 'creator' && (
+          </div>
+          <div id="panel-creator" role="tabpanel" aria-labelledby="tab-creator" hidden={tab !== 'creator'}>
             <CreatorSectionForm
               projectId={project.id}
               initial={project.creator}
               readOnly={readOnly}
               onSaved={(value: EditorCreatorProfile) => setProject((p) => ({ ...p, creator: value }))}
             />
-          )}
+          </div>
         </div>
 
         <div className="mt-12 flex items-center gap-3 border-t border-gray-200 pt-6 dark:border-gray-700">
@@ -204,5 +227,11 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   const project = await loadProjectForCreator(auth.creatorId, id);
   if (!project) return { notFound: true };
 
-  return { props: { project: toEditorProject(project) } };
+  return {
+    props: {
+      project: toEditorProject(project),
+      // 서버의 now로 계산한다 — 브라우저 시계로 다시 계산하지 않는 이유는 위 Props 주석 참조.
+      earliestStartDate: computeEarliestStartDate(Date.now(), CREATOR_LIMITS.leadDays),
+    },
+  };
 });

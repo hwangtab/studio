@@ -30,7 +30,12 @@ export function StorySectionForm({ projectId, slug, reviewStatus, initial, readO
   const [uploadError, setUploadError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
+  // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 그 뒤 본문이 바뀌면 낡은
+  // 안내로 남는다(2026-09-17 리뷰 지적).
+  const clearSaveStatus = () => setSave((s) => (s.status === 'idle' ? s : IDLE_SAVE_STATE));
+
   const insertAtCursor = (text: string) => {
+    clearSaveStatus();
     const el = textareaRef.current;
     if (!el) {
       setContent((c) => `${c}\n${text}\n`);
@@ -126,7 +131,7 @@ export function StorySectionForm({ projectId, slug, reviewStatus, initial, readO
         ref={textareaRef}
         id={textareaId}
         value={content}
-        onChange={(e) => setContent(e.target.value)}
+        onChange={(e) => { setContent(e.target.value); clearSaveStatus(); }}
         disabled={readOnly}
         maxLength={CREATOR_LIMITS.contentMax}
         rows={20}

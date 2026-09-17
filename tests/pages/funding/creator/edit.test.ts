@@ -14,10 +14,20 @@ import { getServerSideProps } from '../../../../pages/[locale]/funding/creator/[
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 // eslint-disable-next-line import/first
 import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
+// eslint-disable-next-line import/first
+import { computeEarliestStartDate } from '../../../../lib/funding/creatorDateInput';
+// eslint-disable-next-line import/first
+import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
 
 const resStub = () => ({ setHeader: jest.fn() }) as unknown as import('http').ServerResponse;
 
-const PROJECT: CreatorProjectDetail = {
+/**
+ * 실제 DB 행처럼 개설자의 비공개 필드(taxType 등)까지 채운 목이다. `CreatorProjectDetail.creator`
+ * 타입은 5필드뿐이지만, `toEditorProject`가 실수로 `creator: p.creator`처럼 통째 스프레드하는
+ * 회귀를 잡으려면 애초에 그 필드들이 객체에 실려 있어야 한다 — 타입에 없는 필드만 골라
+ * 뺀 목으로는(이전 버전처럼) 그 회귀가 조용히 통과한다(2026-09-17 리뷰 지적).
+ */
+const PROJECT = {
   id: 'proj-1',
   slug: 'my-project',
   title: '제목',
@@ -36,9 +46,22 @@ const PROJECT: CreatorProjectDetail = {
     phone: '010-0000-0000',
     bio: '소개',
     links: ['https://example.com'],
+    // 아래 다섯은 EditorCreatorProfile에 없어야 하는 필드다.
+    email: 'creator@example.com',
+    taxType: 'individual',
+    payoutBankName: '국민은행',
+    payoutAccount: '123-456-789012',
+    payoutHolder: '개설자',
   },
   rewards: [],
-};
+} as unknown as CreatorProjectDetail;
+
+// EditorProject(components/funding/creator/types.ts)가 실제로 선언한 필드 전체 — 새 필드가
+// `toEditorProject`에 추가됐는데 여기를 안 고치면 이 화이트리스트 자체가 실패해 드러난다.
+const EDITOR_PROJECT_KEYS = [
+  'id', 'slug', 'title', 'summary', 'content', 'coverUrl', 'goalAmount',
+  'startAt', 'endAt', 'reviewStatus', 'reviewNote', 'creator', 'rewards',
+].sort();
 
 describe('funding creator 편집 화면 getServerSideProps', () => {
   beforeEach(() => {
@@ -80,7 +103,7 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
     expect(loadProjectForCreator).toHaveBeenCalledWith('creator-a', 'proj-1');
   });
 
-  it('본인 프로젝트 → props에 담고, 개설자 비공개 필드(taxType·payoutAccount)는 없다', async () => {
+  it('본인 프로젝트 → props에 담고, 개설자 비공개 필드(taxType 등)는 없다', async () => {
     (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
     (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
     const res = resStub();
@@ -91,14 +114,24 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
     const props = (result as unknown as { props: { project: Record<string, unknown> } }).props;
     expect(props.project.id).toBe('proj-1');
     expect(props.project.slug).toBe('my-project');
-    // 날짜는 __NEXT_DATA__ 직렬화를 위해 ISO 문자열이어야 한다.
-    expect(props.project.startAt).toBe('2026-10-01T00:00:00.000Z');
+    // KST 달력 날짜 문자열이어야 한다(<input type="date">가 그대로 받는 형식) — 전체
+    // ISO 타임스탬프였을 때는 저장→재저장을 반복할 때마다 날짜가 하루씩 밀렸다
+    // (lib/funding/creatorDateInput.ts 주석 참조).
+    expect(props.project.startAt).toBe('2026-10-01');
+    expect(props.project.endAt).toBe('2026-11-01');
 
-    const serialized = JSON.stringify(props);
+    // 블랙리스트(특정 단어가 없다)만으로는 `creator: p.creator` 통째 스프레드 회귀를
+    // 못 잡는다 — 화이트리스트로 project 레벨 키 집합 자체를 고정한다.
+    expect(Object.keys(props.project).sort()).toEqual(EDITOR_PROJECT_KEYS);
+
+    // props.project만 본다 — props 전체(i18nResources)에는 로케일 카피용
+    // "email"(연락처 라벨) 같은 무관한 동음이 섞여 있어 오탐이 난다.
+    const serialized = JSON.stringify(props.project);
     expect(serialized).not.toContain('taxType');
     expect(serialized).not.toContain('payoutAccount');
     expect(serialized).not.toContain('payoutBankName');
     expect(serialized).not.toContain('payoutHolder');
+    expect(serialized).not.toContain('email');
 
     const creator = props.project.creator as Record<string, unknown>;
     expect(Object.keys(creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone'].sort());
@@ -126,5 +159,23 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       totalQuantity: null, requiresShipping: false, estimatedDelivery: '2026년 12월',
       imageUrl: null, locked: true,
     }]);
+  });
+
+  describe('earliestStartDate', () => {
+    afterEach(() => jest.useRealTimers());
+
+    it('서버의 now로 계산해 props에 담는다(브라우저 시계를 다시 쓰지 않는다)', async () => {
+      const fixedNow = new Date('2026-09-17T05:00:00.000Z'); // = 2026-09-17T14:00+09:00
+      jest.useFakeTimers().setSystemTime(fixedNow);
+
+      (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+      (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
+      const res = resStub();
+      const result = await getServerSideProps({
+        params: { locale: 'ko', id: 'proj-1' }, query: {}, req: { headers: {}, cookies: {} }, res,
+      } as never);
+      const props = (result as unknown as { props: { earliestStartDate: string } }).props;
+      expect(props.earliestStartDate).toBe(computeEarliestStartDate(fixedNow.getTime(), CREATOR_LIMITS.leadDays));
+    });
   });
 });
