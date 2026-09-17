@@ -131,6 +131,34 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 요청에 생성된다. 사이트맵은 `next-sitemap`이 파일만 싣고, DB 프로젝트는 런타임 라우트
 `/sitemap-funding.xml`이 맡는다.
 
+### 개설자가 쓴 것은 우리가 쓴 것과 다르게 다룬다
+
+펀딩 프로젝트를 아티스트가 직접 등록한다. 그래서 세 가지가 코드로 강제된다.
+
+- **본문의 신뢰 숏코드를 저장 시점에 벗긴다**(`lib/funding/creatorContent.ts`).
+  `%%price:...%%`·`%%studio-services%%`는 스튜디오가 자기 글에 쓰라고 만든 장치라, 개설자
+  글에 뜨면 읽는 쪽이 그 프로젝트에 대한 우리 보증으로 읽는다. 렌더 시점이 아니라 저장
+  시점에 벗기는 이유는 렌더 경로가 여럿이라(상세·미리보기·OG·llms) 한 곳을 빠뜨리면 그
+  경로로만 새어 나가기 때문이다.
+- **승인된 리워드는 id·금액·한정 여부를 바꿀 수 없다**(`lib/funding/creatorProjectWrite.ts`의
+  `lockedViolation`). md 시절 `content/funding.baseline.json`이 하던 일이고, 운영자에게도
+  예외가 없다. 가격을 바꿔야 하면 새 id로 티어를 추가한다.
+- **slug는 예약어를 피한다**(`lib/funding/reservedSlugs.ts`). 리터럴 라우트가 `[slug]`를
+  이기므로 프로젝트를 `apply`로 지으면 그 상세는 어떤 주소로도 안 열린다. 오류도 안 난다.
+  `pages/[locale]/funding/` 아래 리터럴 라우트를 추가하면 그 목록에도 넣어야 한다.
+
+업로드 이미지는 sharp로 다시 인코딩해 **private** Blob에 올리고 `/api/funding/media/`가
+대신 내보낸다 — 그 저장소에는 계약서 PDF가 있어 공개 업로드를 섞을 수 없다(소셜 이미지가
+이미 같은 길을 간다). 치수는 주소 쿼리(`?w=&h=`)로 실어 보낸다. `utils/imageMetadata.json`은
+저장소의 정적 이미지만 알기 때문이다.
+
+`lib/funding/projects.ts`는 `node:fs`·`gray-matter`를 물고 있고 **모듈 최상위에서
+`process.cwd()`를 실행**한다. 그래서 클라이언트 컴포넌트는 이 모듈에서 **타입만** 가져와야
+한다 — 런타임 값을 하나라도 가져가면 순수하지 않은 최상위 호출이 트리셰이킹을 버티고
+클라이언트 번들에 끌려 들어가 빌드가 깨진다(2026-09-17에 실제로 났다). 클라이언트와
+공유해야 하는 순수 함수는 `lib/funding/shape.ts`에 둔다. **`components/` 아래를 건드린
+변경은 `npm run build`까지 돌려야 이 파손이 드러난다** — 타입 검사·테스트는 통과한다.
+
 ### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
 
 `NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는
