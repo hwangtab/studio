@@ -12,7 +12,7 @@ import Head from 'next/head';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
-import { getFundingProject } from '../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
 
@@ -294,7 +294,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
    * 후원한 리워드의 내려받기 링크를 이 화면에서 바로 만든다. 여기까지 온 요청은 쿠키의
    * 토큰이 DB의 manageToken과 맞는 것이 이미 확인됐으므로(위 분기), 링크를 세울 근거가 있다.
    */
-  const project = order.fundingPledge ? getFundingProject(order.fundingPledge.projectSlug) : null;
+  const project = order.fundingPledge ? await getFundingProjectAsync(order.fundingPledge.projectSlug) : null;
   const reward = project?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
   const downloads = (reward?.downloads ?? []).map((d) => ({ label: d.label, key: d.key }));
 

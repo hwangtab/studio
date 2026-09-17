@@ -30,7 +30,7 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
   });
 
   it.each(KO_ONLY_ROUTE_RULES.map((r) => r.segment))(
-    '%s: ko 전용 정적 페이지가 전부 ko 단일 + fallback:false다',
+    '%s: ko 전용 정적 페이지가 전부 ko 단일 + (fallback:false 또는 blocking+로케일 notFound 가드)다',
     (segment) => {
       const files = KO_ONLY_STATIC_PAGE_FILES[segment];
       expect(files).toBeDefined();
@@ -38,7 +38,15 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
         const source = fs.readFileSync(path.join(process.cwd(), relPath), 'utf-8');
         const staticPathsMatch = source.match(/getStaticPaths[\s\S]*?fallback:\s*(true|false|'blocking')/);
         expect(staticPathsMatch).not.toBeNull();
-        expect(staticPathsMatch![1]).toBe('false');
+        const fallbackValue = staticPathsMatch![1];
+        if (fallbackValue === "'blocking'") {
+          // blocking은 paths에 없는 로케일 요청도 렌더를 시도한다 — getStaticProps가
+          // params.locale을 직접 확인해 notFound로 막아야 fallback:false와 같은 보장이
+          // 유지된다(funding [slug]/index.tsx, 2026-09-17 ISR 전환에서 처음 생김).
+          expect(source).toMatch(/params\?\.locale\s*!==\s*defaultLocale[\s\S]*?notFound:\s*true/);
+        } else {
+          expect(fallbackValue).toBe('false');
+        }
 
         const staticPathsBlock = staticPathsMatch![0];
         // params에 로케일이 고정 리터럴('ko') 또는 defaultLocale 상수로만 등록돼야 한다.
@@ -181,8 +189,13 @@ describe('isKoOnlyRoutePath ↔ pages/[locale] 실태 전수 대조 (디렉터�
     if (hasLocalesIterator || hasNonKoLocaleLiteral) return 'multi-locale-static';
 
     const hasFallbackFalse = /fallback:\s*false/.test(block);
+    // blocking은 paths에 없는 로케일도 렌더를 시도하므로, getStaticProps가 params.locale을
+    // 직접 확인해 notFound로 막는 경우에만 fallback:false와 같은 보장으로 본다
+    // (funding [slug]/index.tsx, 2026-09-17 ISR 전환).
+    const hasFallbackBlockingWithLocaleGuard =
+      /fallback:\s*'blocking'/.test(block) && /params\?\.locale\s*!==\s*defaultLocale[\s\S]*?notFound:\s*true/.test(source);
     const hasKoOrDefaultLocaleOnly = /locale:\s*(defaultLocale|'ko')/.test(block);
-    if (hasFallbackFalse && hasKoOrDefaultLocaleOnly) return 'ko-only-fallback-false';
+    if ((hasFallbackFalse || hasFallbackBlockingWithLocaleGuard) && hasKoOrDefaultLocaleOnly) return 'ko-only-fallback-false';
 
     return 'other-static';
   };

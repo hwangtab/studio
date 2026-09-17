@@ -7,7 +7,8 @@ import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from '../../../../lib/funding/policy';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
-import { computeProjectState, getFundingProject } from '../../../../lib/funding/projects';
+import { computeProjectState } from '../../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../../lib/funding/repository';
 import { expireStalePledges, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
 
 interface Props {
@@ -212,7 +213,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   const order = await findFundingOrderByOrderNo(orderNo);
   if (!order?.fundingPledge || !isTokenMatch(order.manageToken, token)) return { notFound: true };
   const pl = order.fundingPledge;
-  const project = getFundingProject(pl.projectSlug);
+  const project = await getFundingProjectAsync(pl.projectSlug);
   const verdict = assessSelfCancel({ orderStatus: order.status, projectState: project ? computeProjectState(project, now) : 'closed', fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod, downloadedAt: pl.downloadedAt ?? null });
   /**
    * 내려받기 주소는 **결제가 살아 있을 때만** 내려보낸다. 환불·만료된 건에 링크를 남기면

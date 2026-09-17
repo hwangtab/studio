@@ -7,7 +7,8 @@ import { Section } from '../../../components/ui/Section';
 import FundingProjectCard from '../../../components/funding/FundingProjectCard';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
-import { computeProjectState, getListableFundingProjects, type ProjectState } from '../../../lib/funding/projects';
+import { computeProjectState, type ProjectState } from '../../../lib/funding/projects';
+import { getListableFundingProjectsAsync } from '../../../lib/funding/repository';
 
 interface Item {
   slug: string;
@@ -100,7 +101,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const now = new Date();
-  const items = getListableFundingProjects(now).map((p) => ({
+  const items = (await getListableFundingProjectsAsync(now)).map((p) => ({
     slug: p.slug,
     title: p.title,
     summary: p.summary,
@@ -111,5 +112,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
     startAt: p.startAt,
     endAt: p.endAt,
   }));
-  return buildPageStaticProps(defaultLocale, { items }, { i18nSections: [] });
+  // 승인은 관리자 화면에서 나므로 배포 없이 목록에 나타나야 한다. 60초는 승인 직후
+  // 개설자가 새로고침해 확인할 수 있을 만큼 짧고, 목록 조회가 DB를 때리지 않을 만큼 길다.
+  return buildPageStaticProps(defaultLocale, { items }, { i18nSections: [], revalidate: 60 });
 };

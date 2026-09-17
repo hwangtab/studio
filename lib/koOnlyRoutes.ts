@@ -3,6 +3,11 @@
  * fallback:false라, 다른 로케일로는 정적 파일 자체가 없어 404가 난다
  * (2026-09-14 적발: /ko/funding·/ko/artists. 2026-09-14 추가 적발: /ko/guides/<slug>).
  *
+ * funding/[slug]/index.tsx만 예외다 — DB 프로젝트를 첫 요청에 만들려고
+ * fallback:'blocking'을 쓰는데(2026-09-17 ISR 전환), blocking은 paths에 없는
+ * 로케일 요청도 렌더를 시도한다. 그래서 getStaticProps가 params.locale을 직접
+ * 확인해 notFound로 막아 같은 보장을 유지한다 — 아래 규칙·판정 함수는 그대로다.
+ *
  * LanguageSwitcher가 이 목록에 걸리는 경로에서는 로케일 세그먼트만 치환한 링크를
  * 만들지 않고 해당 로케일 홈으로 탈출시킨다 — isRoutePatternPath 예외와 같은 자리,
  * 같은 방식(components/LanguageSwitcher.tsx).

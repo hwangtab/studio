@@ -4,7 +4,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import PledgeWizard from '../../../../components/funding/PledgeWizard';
 import FundingTrustNotice from '../../../../components/funding/FundingTrustNotice';
-import { computeProjectState, getFundingProject, stripRewardDownloads, type FundingProject } from '../../../../lib/funding/projects';
+import { computeProjectState, stripRewardDownloads, type FundingProject } from '../../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../../lib/funding/repository';
 import { aggregateProjectStatus, expireStalePledges } from '../../../../lib/funding/service';
 import { trackMicroEvent } from '../../../../utils/analytics';
 
@@ -36,7 +37,7 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
 export const getServerSideProps = withI18nServerProps<Props>(async ({ params, query, res }) => {
   res.setHeader('Cache-Control', 'no-store');
   if (params?.locale !== 'ko') return { redirect: { destination: `/ko/funding/${String(params?.slug ?? '')}/pledge`, permanent: false } };
-  const project = getFundingProject(String(params.slug ?? ''));
+  const project = await getFundingProjectAsync(String(params.slug ?? ''));
   const now = new Date();
   if (!project) return { notFound: true };
   if (computeProjectState(project, now) !== 'live') return { redirect: { destination: `/ko/funding/${project.slug}`, permanent: false } };

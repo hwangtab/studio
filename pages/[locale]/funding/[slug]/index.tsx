@@ -18,7 +18,8 @@ import imageMetadata from '../../../../utils/imageMetadata.json';
 
 const SITE_URL = 'https://studionol.co.kr';
 const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
-import { computeProjectState, getAllFundingProjects, getFundingProject, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
+import { computeProjectState, getAllFundingProjects, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../../lib/funding/repository';
 
 interface Props {
   project: FundingProject;
@@ -218,19 +219,26 @@ export default function FundingProjectPage({ project, initialState }: Props) {
 FundingProjectPage.hasHero = true;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
+  // 빌드 때는 파일 프로젝트만 만든다 — 빌드가 DB에 닿지 않게 하려는 것이다.
+  // DB 프로젝트는 첫 요청에 생성돼 ISR로 캐시된다(blocking).
   paths: getAllFundingProjects()
     .filter((p) => p.status !== 'draft')
     .map((p) => ({ params: { locale: defaultLocale, slug: p.slug } })),
-  fallback: false,
+  fallback: 'blocking',
 });
 
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
-  const project = getFundingProject(String(params?.slug ?? ''));
+  // fallback:'blocking'은 paths에 없는 요청(다른 로케일 포함)도 렌더를 시도한다.
+  // 이 페이지는 ko 전용(하드코딩된 locale="ko")이라 다른 로케일 세그먼트로 들어오면
+  // 404로 막아야 한다 — 안 막으면 /en/funding/<slug> 같은 주소가 그대로 생성돼 ISR로
+  // 캐시된다(lib/koOnlyRoutes.ts가 지키는 불변식, koOnlyRoutes.test.ts가 대조).
+  if (params?.locale !== defaultLocale) return { notFound: true };
+  const project = await getFundingProjectAsync(String(params?.slug ?? ''));
   if (!project || project.status === 'draft') return { notFound: true };
   return buildPageStaticProps(
     defaultLocale,
-    // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/projects.ts 주석).
+    // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/shape.ts 주석).
     { project: stripRewardDownloads(project), initialState: computeProjectState(project, new Date()) },
-    { i18nSections: ['stories'] },
+    { i18nSections: ['stories'], revalidate: 60 },
   );
 };
