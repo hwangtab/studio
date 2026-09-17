@@ -107,6 +107,9 @@ module.exports = {
     '/*/funding/success', '/*/funding/fail', '/*/funding/manage/*', '/*/funding/*/pledge', '/*/funding/terms',
     // 개설자 전용 화면 — 로그인해야 의미가 있고 색인 대상이 아니다.
     '/*/funding/creator', '/*/funding/creator/*',
+    // 개설자 신청 폼 — noindex 페이지라 사이트맵에 실으면 "제출된 URL이 noindex로
+    // 표시됨" GSC 오류가 쌓인다(위 /artists와 같은 조합, 2026-09-17 리뷰 지적).
+    '/*/funding/apply',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.

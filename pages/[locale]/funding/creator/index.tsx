@@ -58,6 +58,13 @@ export default function CreatorHome({ projects }: Props) {
 // (pages/[locale]/funding/[slug]/pledge.tsx:36과 같은 모양).
 export const getServerSideProps = withI18nServerProps<Props>(async (context) => {
   context.res.setHeader('Cache-Control', 'no-store');
+  // funding의 다른 SSR 형제 페이지(success·manage/[orderNo])와 같은 자리, 같은 방식 —
+  // 펀딩은 ko 전용이라 비-ko 경로는 같은 화면을 ko로 되돌린다. 이 가드가 없으면 세션
+  // 쿠키가 path=/라 로케일을 안 가려서 /en/funding/creator가 같은 목록을 그대로 렌더해
+  // 같은 화면이 7개 URL로 존재하게 된다.
+  if (context.params?.locale !== 'ko') {
+    return { redirect: { destination: '/ko/funding/creator', permanent: false } };
+  }
   const auth = await authenticateCreatorRequest(context);
   if (!auth.ok) return { redirect: { destination: '/ko/funding/apply', permanent: false } };
   const projects = await listProjectsForCreator(auth.creatorId);
