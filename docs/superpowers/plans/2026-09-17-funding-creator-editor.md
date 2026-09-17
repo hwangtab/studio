@@ -1303,7 +1303,9 @@ EOF
 3. `isAllowedContactRequestOrigin(req)` 실패 → 403
 4. `authenticateCreatorApi(req, res)` 실패 → 401
 5. 입력 검증 → 실패면 400 + 사용자에게 보여 줄 한국어 메시지
-6. 쓰기 서비스 호출 → `WriteResult`의 `code`를 상태 코드로 옮긴다: `not_found`→404, `locked`·`not_editable`→409, `duplicate_slug`·`too_many`→400
+6. 쓰기 서비스 호출 → `WriteResult`의 `code`를 상태 코드로 옮긴다: `not_found`→404, `locked`·`not_editable`→409, `duplicate_slug`·`duplicate_reward`·`too_many`→400
+
+⚠️ **리워드 편집 요청은 `previousRewardId`를 필수로 받는다.** 서비스는 그 인자가 없으면 "새 리워드 추가"로 해석하므로, 화면이 빠뜨리면 개설자가 id를 고칠 때마다 티어가 하나씩 늘어난다. 서비스 함수만으로는 막을 수 없는 계약이니 **라우트 스키마가 강제한다**: 바디에 `mode: 'create' | 'update' | 'delete' | 'reorder'`를 두고 `update`면 `previousRewardId`를 요구한다. 없으면 400.
 7. 성공 → 200 `{ ok: true }` (새 프로젝트는 `{ ok: true, id }`)
 
 **요청 제한을 건다.** 저장은 `creator_save:<creatorId>` 키로 분당 30회, 업로드는 `creator_upload:<creatorId>` 키로 시간당 60회. `consumeRateLimit`(`lib/booking/rate-limit.ts`)을 쓴다.
