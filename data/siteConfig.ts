@@ -169,14 +169,17 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
     contact: {
       phone: CANONICAL_FACTS.phone,
       email: 'hello@studionol.co.kr',
+      // 사업자등록증의 도로명 주소 그대로. 카드사 가맹점 심사(토스 온보딩, 2026-09-17)가
+      // 푸터 주소를 등록증과 문자열로 대조한다 — 지번(대조동 84-3)으로 적었다가 "상이"로
+      // 반려됐다. 찾아오는 길 안내(동명여고 옆·1층 카센터)는 faq·llms.txt가 맡는다.
       address: t(locale, {
-        ko: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)',
-        en: '3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul',
-        zh: '首尔特别市恩平区大枣洞 84-3 3层',
-        es: '3er piso, 84-3 Daejo-dong, Eunpyeong-gu, Seúl',
-        vi: 'Tầng 3, 84-3 Daejo-dong, Eunpyeong-gu, Seoul',
-        th: 'ชั้น 3, 84-3 Daejo-dong, Eunpyeong-gu, Seoul',
-        uz: 'Seul sh., Eunpyeong-gu, Daejo-dong 84-3, 3-qavat'
+        ko: '서울특별시 은평구 통일로71길 2-1, 3층(대조동, 대조빌딩)',
+        en: '3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo Bldg.)',
+        zh: '首尔特别市恩平区统一路71街 2-1, 3层(大枣大厦)',
+        es: '3er piso, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seúl (Edificio Daejo)',
+        vi: 'Tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Tòa nhà Daejo)',
+        th: 'ชั้น 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (อาคาร Daejo)',
+        uz: 'Seul sh., Eunpyeong-gu, Tongil-ro 71-gil 2-1, 3-qavat (Daejo binosi)'
       }),
       kakaoUrl: 'https://open.kakao.com/me/nol',
       // 사람이 클릭하는 링크(Footer·about·ContactInfoCard). 단축 URL이라 네이버앱 딥링크가 붙는다.

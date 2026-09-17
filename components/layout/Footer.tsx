@@ -72,6 +72,14 @@ export const Footer = ({ locale }: FooterProps) => {
                   이용약관
                 </Link>
               )}
+              {locale === 'ko' && (
+                <Link
+                  href="/ko/terms#refund"
+                  className="inline-block text-xs text-gray-200/70 hover:text-white transition-colors duration-300 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-primary"
+                >
+                  취소·환불 규정
+                </Link>
+              )}
             </div>
             {/* 사업자 정보 — 통신판매업 신고번호는 신고 완료 후에만 표기.
                 대표자명은 전자상거래법 제10조의 표시의무이자, 본인확인 대행사 심사에서

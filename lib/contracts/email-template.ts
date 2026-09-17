@@ -29,7 +29,7 @@ const BRAND = {
 
 const STUDIO = {
   name: '스튜디오 놀',
-  address: '서울특별시 은평구 대조동 84-3, 대조빌딩 3층',
+  address: '서울특별시 은평구 통일로71길 2-1, 3층(대조동, 대조빌딩)',
   phone: '010-4255-7893',
 } as const;
 
