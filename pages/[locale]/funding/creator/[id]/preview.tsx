@@ -40,13 +40,16 @@ export default function FundingCreatorPreviewPage(props: Props) {
 
       {/*
         상단 고정 띠 — 아직 아무에게도 공개되지 않았다는 것을 개설자 본인에게도 분명히
-        한다. `top-16`으로 헤더(fixed, z-50, 모바일 h-16/데스크톱 pt-2+h-14 — 둘 다 64px)
-        바로 아래에 둔다. `top-0`이면 헤더보다 아래 z(z-40 < z-50)라 항상 헤더 뒤로 들어가
-        가려진다 — hasHero라 헤더가 투명한 순간에는 헤더의 흰 글씨가 이 띠 위에 겹쳐 뜨고,
-        스크롤로 헤더가 불투명해지면 이 화면에서 유일하게 항상 보여야 할 문장이 통째로
-        사라진다.
+        한다. `fixed`(sticky가 아니다)로 헤더(fixed, z-50, 모바일 h-16/데스크톱
+        pt-2+h-14 — 둘 다 64px) 바로 아래 `top-16`에 둔다.
+        `sticky top-16`은 스크롤 0에서도 제약이 걸려 정적 위치에서 64px 아래로 밀리고,
+        원래 자리는 흐름 공간으로 남아 페이지 배경(라이트 모드는 흰색)이 그대로 보인다 —
+        hasHero라 그 자리를 덮는 헤더가 투명해 흰 네비 글씨가 흰 배경 위에 놓인다
+        (2026-09-17 재리뷰 지적, `top-0` 시절 "흰 글씨가 앰버 위"였던 것과 같은 대비
+        사고가 자리만 옮겨 재발했었다). `fixed`는 흐름 공간을 만들지 않으므로 상단
+        64px가 히어로(완성)나 `bg-gray-900`(미완성) 배경으로 항상 채워진다.
       */}
-      <div className="sticky top-16 z-40 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-400 px-4 py-2.5 text-center text-sm font-semibold text-amber-950">
+      <div className="fixed inset-x-0 top-16 z-40 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 bg-amber-400 px-4 py-2.5 text-center text-sm font-semibold text-amber-950">
         <span>미리보기입니다. 아직 공개되지 않았습니다.</span>
         <Link href={editHref} className="underline underline-offset-2">
           편집으로 돌아가기

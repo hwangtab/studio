@@ -33,7 +33,11 @@ const COMPLETE_PROJECT = {
   rewards: [{
     id: 'r1', projectId: 'proj-1', rewardId: 'basic', title: '리워드', description: '설명',
     amount: 10_000, totalQuantity: null, requiresShipping: false, estimatedDelivery: '2026년 12월',
-    imageUrl: null, downloads: null, sortOrder: 0, lockedAt: null,
+    imageUrl: null,
+    // 실제 다운로드 항목을 채운다 — `null`이면 파서(parseDownloads)가 애초에 `[]`를 내놓아
+    // stripRewardDownloads를 지워도 아래 단언이 그대로 통과한다(2026-09-17 재리뷰 지적).
+    downloads: JSON.stringify([{ label: '고음질 원본(WAV)', key: 'funding/proj-1/basic/master.wav' }]),
+    sortOrder: 0, lockedAt: null,
     createdAt: new Date(), updatedAt: new Date(),
   }],
 } as unknown as CreatorProjectDetail;

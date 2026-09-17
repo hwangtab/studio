@@ -58,6 +58,29 @@ export const stripRewardDownloads = (project: FundingProject): FundingProject =>
   rewards: project.rewards.map((r) => ({ ...r, downloads: [] })),
 });
 
+/**
+ * 리워드별 남은 수량. 상태 API가 아직 안 왔으면(또는 폴링 자체가 없으면) 파일의 한정
+ * 수량을 그대로 쓴다(/pledge 페이지·공개 상세·미리보기가 전부 같은 폴백을 쓴다).
+ *
+ * 공개 상세 페이지(리워드 모달용)와 `ProjectDetailView`(리워드 카드용)가 각자 이 계산을
+ * 다시 적으면, 한쪽만 고쳤을 때 카드에 보이는 잔여 수량과 모달이 실제로 거는 제한이
+ * 갈릴 수 있다 — 한 벌로 둔다.
+ *
+ * `lib/funding/projects.ts`가 아니라 여기(`shape.ts`)에 둔다 — `projects.ts`는 최상위에서
+ * `node:fs`·`node:path`를 실행하는(`FUNDING_DIR`) 서버 전용 모듈이라, 클라이언트
+ * 컴포넌트(`ProjectDetailView`)가 값을 가져오면 그 모듈 전체가 웹팩 클라이언트 번들에
+ * 끌려 들어가 빌드가 깨진다(2026-09-17 재리뷰 지적 — 이 저장소의 다른 클라이언트
+ * 컴포넌트는 전부 `projects.ts`에서 **타입만** 가져오던 관례를 이 함수가 처음 깼다).
+ * `shape.ts`는 순수 함수·타입만 있는 리프 모듈이라 안전하다.
+ */
+export const mergeRewardRemaining = (
+  rewards: FundingReward[],
+  remaining?: Record<string, number | null>,
+): Record<string, number | null> => {
+  const fallback = Object.fromEntries(rewards.map((r) => [r.id, r.totalQuantity]));
+  return { ...fallback, ...(remaining ?? {}) };
+};
+
 const str = (v: unknown, name: string): string => {
   if (typeof v !== 'string' || v.trim() === '') throw new Error(`funding frontmatter: ${name}은(는) 비어 있지 않은 문자열이어야 합니다`);
   return v;

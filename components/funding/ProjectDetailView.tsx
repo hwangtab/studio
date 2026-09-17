@@ -6,7 +6,12 @@ import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
 import FundingTrustNotice from './FundingTrustNotice';
 import { formatPriceAmount } from '../../data/pricing';
-import { mergeRewardRemaining, type FundingProject, type FundingReward, type ProjectState } from '../../lib/funding/projects';
+// `mergeRewardRemaining`은 `shape.ts`에서 직접 가져온다 — `lib/funding/projects.ts`는
+// 최상위에서 node:fs·node:path를 실행하는 서버 전용 모듈이라(FUNDING_DIR), 이 컴포넌트가
+// 거기서 런타임 값을 가져가면 그 모듈 전체가 클라이언트 번들에 끌려 들어가 빌드가
+// 깨진다(2026-09-17 재리뷰 지적). 타입만 쓰는 아래 import는 컴파일 시 지워지므로 안전하다.
+import { mergeRewardRemaining } from '../../lib/funding/shape';
+import type { FundingProject, FundingReward, ProjectState } from '../../lib/funding/projects';
 
 const STATE_LABEL: Record<ProjectState, string> = { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' };
 

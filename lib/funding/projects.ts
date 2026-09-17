@@ -10,6 +10,12 @@ export type { ProjectState };
 export {
   FUNDING_STATUSES,
   stripRewardDownloads,
+  // 클라이언트 컴포넌트는 이 재export가 아니라 './shape'에서 직접 가져올 것 — 이 모듈은
+  // 최상위에서 node:fs·node:path를 실행해(FUNDING_DIR) 서버 전용이다. 재export만으로도
+  // 타입 체크는 통과하지만 webpack이 이 파일 전체를 클라이언트 번들에 끌고 들어가
+  // 빌드가 깨진다(2026-09-17 재리뷰 지적 — components/funding/ProjectDetailView.tsx가
+  // 그렇게 깼었다).
+  mergeRewardRemaining,
 } from './shape';
 export type { FundingDownload, FundingProject, FundingReward, FundingStatus } from './shape';
 
@@ -56,19 +62,3 @@ export const getListableFundingProjects = (now: Date = new Date()): FundingProje
 
 export const findReward = (project: FundingProject, rewardId: string): FundingReward | undefined =>
   project.rewards.find((r) => r.id === rewardId);
-
-/**
- * 리워드별 남은 수량. 상태 API가 아직 안 왔으면(또는 폴링 자체가 없으면) 파일의 한정
- * 수량을 그대로 쓴다(/pledge 페이지·공개 상세·미리보기가 전부 같은 폴백을 쓴다).
- *
- * 공개 상세 페이지(리워드 모달용)와 `ProjectDetailView`(리워드 카드용)가 각자 이 계산을
- * 다시 적으면, 한쪽만 고쳤을 때 카드에 보이는 잔여 수량과 모달이 실제로 거는 제한이
- * 갈릴 수 있다 — 한 벌로 둔다.
- */
-export const mergeRewardRemaining = (
-  rewards: FundingReward[],
-  remaining?: Record<string, number | null>,
-): Record<string, number | null> => {
-  const fallback = Object.fromEntries(rewards.map((r) => [r.id, r.totalQuantity]));
-  return { ...fallback, ...(remaining ?? {}) };
-};

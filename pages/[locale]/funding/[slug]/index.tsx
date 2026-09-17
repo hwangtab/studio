@@ -11,8 +11,18 @@ import imageMetadata from '../../../../utils/imageMetadata.json';
 
 const SITE_URL = 'https://studionol.co.kr';
 const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
-import { computeProjectState, getAllFundingProjects, mergeRewardRemaining, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
+import { computeProjectState, getAllFundingProjects, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../lib/funding/repository';
+// `mergeRewardRemaining`만 `shape.ts`에서 직접 가져온다 — 위 `projects.ts` 값들
+// (computeProjectState·getAllFundingProjects·stripRewardDownloads)은 정적 생성 함수
+// 안에서만(맨 아래) 쓰여 Next가 클라이언트 번들에서 걷어내지만, 이 값은 컴포넌트
+// 본문(useMemo 안, 아래)에서 쓰여 그 걷어내기가 적용되지 않는다. `projects.ts`는 최상위에서
+// node:fs·node:path를 실행하는 서버 전용 모듈이라 그대로 가져오면 빌드가 깨진다
+// (2026-09-17 재리뷰 지적). 이 주석에 함수 이름을 그대로 적지 않는 이유는 아래 참고 — 두
+// 정적 생성 함수 이름이 소스에 문자 그대로 나오면 lib/koOnlyRoutes.test.ts의 소스 스캐너가
+// 첫 등장 위치를 그 함수의 실제 선언으로 오인해 로케일 가드 판정을 통째로 놓친다(실제로
+// 이 주석이 그 이름을 그대로 적었을 때 그렇게 났다 — 아래가 아니라 여기가 "선언부"로 읽혔다).
+import { mergeRewardRemaining } from '../../../../lib/funding/shape';
 
 interface Props {
   project: FundingProject;
