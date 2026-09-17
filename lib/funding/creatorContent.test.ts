@@ -30,8 +30,18 @@ describe('stripTrustedDirectives', () => {
     expect(stripTrustedDirectives(src)).toBe(src);
   });
 
-  it('코드 펜스 안은 건드리지 않는다', () => {
-    const src = '```\n%%studio-services%%\n```';
+  it('코드 펜스 안도 지운다 — 렌더러가 펜스를 보지 않으므로 그것이 곧 우회다', () => {
+    const out = stripTrustedDirectives('```\n%%studio-services%%\n```');
+    expect(out).not.toContain('studio-services');
+  });
+
+  it('줄 앞뒤에 공백이 있으면 건드리지 않는다 — 렌더러도 그것은 안 그린다', () => {
+    const src = ' %%price:mixing-level1%%';
+    expect(stripTrustedDirectives(src)).toBe(src);
+  });
+
+  it('빈 줄을 정리하지 않는다 — 코드 블록 안의 의도한 빈 줄이 뭉개진다', () => {
+    const src = '앞\n\n\n\n뒤';
     expect(stripTrustedDirectives(src)).toBe(src);
   });
 
