@@ -100,6 +100,19 @@ export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-16';
 export const PRIVACY_LEGAL_RETENTION_TEXT =
   '전자상거래 등에서의 소비자보호에 관한 법률에 따라 계약·청약철회 기록과 대금 결제·재화 공급 기록은 5년, 소비자 불만·분쟁 처리 기록은 3년 동안 보관합니다.';
 
+/**
+ * 개설자 약관 판본. 후원자 쪽 `FUNDING_TERMS_VERSION`과 같은 취지지만 대상이 다르다 —
+ * 이건 "펀딩을 개설하는" 아티스트가 동의하는 약관이다.
+ *
+ * **지금은 빈 문자열이다.** 약관 본문은 셀프 개설 3차(관리자 심사) 범위에서 쓴다. 본문 없는
+ * 동의는 "그때 이 내용에 동의했다"는 증거가 될 수 없으므로(FUNDING_TERMS_VERSION 위 주석과
+ * 같은 이유), 본문이 붙기 전까지 동의를 받지 않는다 — 심사 신청 API(`projects/[id]/submit.ts`)는
+ * 이 값이 빈 문자열이면 `agreedTermsVersion`을 요구하지 않고 화면도 동의 체크박스를 렌더하지
+ * 않는다. 3차에서 본문과 함께 실제 판본 문자열(`funding-creator-terms-YYYY-MM-DD` 형식)을
+ * 채우면 그 순간 두 쪽 다 동의를 요구하기 시작한다.
+ */
+export const FUNDING_CREATOR_TERMS_VERSION = '';
+
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
   '필수 — 서포터 이름, 연락처(휴대전화), 이메일 주소',
