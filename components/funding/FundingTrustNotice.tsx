@@ -7,15 +7,17 @@ export default function FundingTrustNotice() {
   return (
     <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50">
       <div className="flex items-start gap-3">
-        <ResponsiveImage
-          src="/icons/icon-192.png"
-          alt="스튜디오 놀 로고"
-          width={40}
-          height={40}
-          sizes="40px"
-          containerClassName="w-10 h-10 shrink-0 rounded-full overflow-hidden ring-1 ring-black/10 dark:ring-white/15"
-          className="w-full h-full object-cover"
-        />
+        <div className="flex h-10 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 ring-1 ring-black/10 dark:ring-white/15">
+          <ResponsiveImage
+            src="/images/email-logo.webp"
+            alt="스튜디오 놀 로고"
+            width={280}
+            height={72}
+            sizes="56px"
+            containerClassName="w-full h-full"
+            className="w-full h-full object-contain"
+          />
+        </div>
         <div className="space-y-2 text-xs leading-6 text-gray-600 dark:text-gray-300">
           <p>
             판매자: 스튜디오 놀 (대표 {studioOperator.name}) · 사업자등록번호 {cfg.businessRegistrationNumber}
