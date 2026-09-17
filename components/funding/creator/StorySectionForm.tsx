@@ -7,8 +7,6 @@ import { IDLE_SAVE_STATE, type SaveState } from './types';
 
 interface Props {
   projectId: string;
-  slug: string;
-  reviewStatus: string;
   initial: string;
   readOnly: boolean;
   onSaved: (content: string) => void;
@@ -17,11 +15,11 @@ interface Props {
 /**
  * 스토리 구획 — 마크다운 textarea + 이미지 삽입 + 미리보기.
  *
- * 미리보기는 아직 개설자 전용 렌더가 없다(다음 태스크 범위) — 승인된 프로젝트만 실제
- * 공개 페이지로 열어 확인할 수 있고, 그 전에는 "승인 후 확인할 수 있다"는 안내만 둔다.
- * 없는 화면으로 링크를 걸어 두는 것보다 정직하다.
+ * 미리보기는 개설자 전용 렌더(`pages/[locale]/funding/creator/[id]/preview.tsx`)로 연다 —
+ * 승인 전에도 확인할 수 있다(2차: 승인 전에는 이것이 개설자가 자기 페이지를 보는 유일한
+ * 수단이다). 필수값이 비어 있으면 그 화면이 무엇을 채워야 하는지 안내한다.
  */
-export function StorySectionForm({ projectId, slug, reviewStatus, initial, readOnly, onSaved }: Props) {
+export function StorySectionForm({ projectId, initial, readOnly, onSaved }: Props) {
   const textareaId = useId();
   const fileInputId = useId();
   const [content, setContent] = useState(initial);
@@ -111,20 +109,14 @@ export function StorySectionForm({ projectId, slug, reviewStatus, initial, readO
               if (file) void handleImagePick(file);
             }}
           />
-          {reviewStatus === 'approved' ? (
-            <a
-              href={`/ko/funding/${slug}`}
-              target="_blank"
-              rel="noreferrer"
-              className="typo-caption text-primary underline underline-offset-2 dark:text-primary-lighter"
-            >
-              미리보기
-            </a>
-          ) : (
-            <span className="typo-caption text-gray-400 dark:text-gray-500" title="승인된 뒤 공개 페이지에서 확인할 수 있습니다.">
-              미리보기(승인 후)
-            </span>
-          )}
+          <a
+            href={`/ko/funding/creator/${encodeURIComponent(projectId)}/preview`}
+            target="_blank"
+            rel="noreferrer"
+            className="typo-caption text-primary underline underline-offset-2 dark:text-primary-lighter"
+          >
+            미리보기
+          </a>
         </div>
       </div>
       <textarea

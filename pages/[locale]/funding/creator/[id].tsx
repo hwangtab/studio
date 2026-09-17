@@ -169,8 +169,6 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
           <div id="panel-story" role="tabpanel" aria-labelledby="tab-story" hidden={tab !== 'story'}>
             <StorySectionForm
               projectId={project.id}
-              slug={project.slug}
-              reviewStatus={project.reviewStatus}
               initial={project.content}
               readOnly={readOnly}
               onSaved={(content: string) => setProject((p) => ({ ...p, content }))}
