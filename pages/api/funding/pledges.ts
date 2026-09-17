@@ -5,7 +5,7 @@ import { getDb } from '../../../db/client';
 import { orders } from '../../../db/schema';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
-import { getFundingProject } from '../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
 import { validateCreatePledgePayload } from '../../../lib/funding/validation';
@@ -33,7 +33,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 자격이 있는 요청에만 쓴다.
   const now = new Date();
   const slug = typeof req.body?.projectSlug === 'string' ? req.body.projectSlug : '';
-  const project = getFundingProject(slug);
+  const project = await getFundingProjectAsync(slug);
   const validated = validateCreatePledgePayload(req.body, project, now);
   if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
 

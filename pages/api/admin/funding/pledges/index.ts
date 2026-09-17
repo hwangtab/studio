@@ -11,7 +11,8 @@ import { listFundingOrders } from '../../../../../lib/funding/admin-list';
 import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
 import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
-import { findReward, getFundingProject } from '../../../../../lib/funding/projects';
+import { findReward } from '../../../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
 import {
   MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
   aggregateProjectStatus, expireStalePledges, fundingStockCondition, generateFundingOrderNo,
@@ -35,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (req.method === 'POST') {
     const b = (typeof req.body === 'object' && req.body) || {};
-    const project = getFundingProject(String(b.projectSlug ?? ''));
+    const project = await getFundingProjectAsync(String(b.projectSlug ?? ''));
     const reward = project && typeof b.rewardId === 'string' ? findReward(project, b.rewardId) : undefined;
     const quantity = Number(b.quantity ?? 1);
     const additionalAmount = Number(b.additionalAmount ?? 0);

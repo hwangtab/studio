@@ -8,7 +8,7 @@ import { REVIEW_CLEARED_MARKER, hasReviewMarker } from '../../../../../lib/fundi
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
-import { getFundingProject } from '../../../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
 import {
   isLiveFundingOrderStatus,
   isRefundedFundingOrderStatus,
@@ -143,7 +143,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 플레이스홀더 주소로는 보내지 않는다 — 반송이 발신 도메인 평판을 깎는다(cancel.ts와 같은 가드).
       const mailError = isManualPlaceholderRecipient(order)
         ? null
-        : await sendFundingRefundRequestClearedEmails(order, getFundingProject(order.fundingPledge.projectSlug), reason);
+        : await sendFundingRefundRequestClearedEmails(order, await getFundingProjectAsync(order.fundingPledge.projectSlug), reason);
       await db.update(orders).set({ notificationError: mailError, updatedAt: now }).where(eq(orders.id, order.id));
       return res.status(200).json({ ok: true, ...(mailError ? { message: `기록은 되었으나 메일 발송에 실패했습니다: ${mailError}` } : {}) });
     }
@@ -250,7 +250,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
        * 경로도 없어 헬스체크의 '확인 메일이 나가지 않은 주문 N건' 알람이 매일 영원히 울렸다.
        * 경보 피로로 신호가 죽는 것이 이 저장소가 반복해서 막아 온 실패 모드다.
        */
-      const project = getFundingProject(order.fundingPledge.projectSlug);
+      const project = await getFundingProjectAsync(order.fundingPledge.projectSlug);
       let err: string | null;
       if (order.status === 'paid') {
         err = await sendFundingConfirmedEmails(order, project);

@@ -1,12 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { computeProjectState, getFundingProject } from '../../../../lib/funding/projects';
+import { computeProjectState } from '../../../../lib/funding/projects';
+import { getFundingProjectAsync } from '../../../../lib/funding/repository';
 import { aggregateProjectStatus, expireStalePledges } from '../../../../lib/funding/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ ok: false });
   const slug = typeof req.query.slug === 'string' ? req.query.slug : '';
-  const project = getFundingProject(slug);
+  const project = await getFundingProjectAsync(slug);
   const now = new Date();
   const state = project ? computeProjectState(project, now) : null;
   if (!project || state === 'draft') return res.status(404).json({ ok: false });
