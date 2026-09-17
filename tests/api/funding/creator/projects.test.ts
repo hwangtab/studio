@@ -173,17 +173,39 @@ describe('POST /api/funding/creator/projects (초안 생성)', () => {
     expect(row?.reviewStatus).toBe('draft');
   });
 
-  it('계정당 프로젝트 상한(draftsMax)을 넘으면 400 — 승인·반려된 것도 함께 센다', async () => {
+  it('계정당 미심사 프로젝트 상한(draftsMax)을 넘으면 400 — draft·submitted·changes_requested만 센다', async () => {
+    const statuses = ['draft', 'submitted', 'changes_requested'] as const;
     for (let i = 0; i < 10; i += 1) {
       // eslint-disable-next-line no-await-in-loop
-      await seedDraftProject(CREATOR_A, { reviewStatus: i % 2 === 0 ? 'approved' : 'draft' });
+      await seedDraftProject(CREATOR_A, { reviewStatus: statuses[i % statuses.length] });
     }
     const r = await call(createHandler);
     expect(r.status).toBe(400);
-    expect(r.body.message).toEqual(expect.stringContaining('프로젝트'));
+    expect(r.body.message).toEqual(expect.stringContaining('심사'));
 
     const rows = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.creatorId, CREATOR_A));
     expect(rows).toHaveLength(10);
+  });
+
+  it('승인·반려는 세지 않는다 — 펀딩을 여러 번 성공(또는 반려)시킨 개설자도 새 프로젝트를 만들 수 있다', async () => {
+    for (let i = 0; i < 10; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await seedDraftProject(CREATOR_A, { reviewStatus: i % 2 === 0 ? 'approved' : 'rejected' });
+    }
+    const r = await call(createHandler);
+    expect(r.status).toBe(200);
+  });
+
+  it('미심사(draft·submitted·changes_requested) 10개가 섞여 있으면 상한에 걸린다', async () => {
+    await seedDraftProject(CREATOR_A, { reviewStatus: 'approved' });
+    await seedDraftProject(CREATOR_A, { reviewStatus: 'rejected' });
+    const statuses = ['draft', 'submitted', 'changes_requested'] as const;
+    for (let i = 0; i < 10; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      await seedDraftProject(CREATOR_A, { reviewStatus: statuses[i % statuses.length] });
+    }
+    const r = await call(createHandler);
+    expect(r.status).toBe(400);
   });
 
   it('다른 개설자의 프로젝트 수는 상한에 영향을 주지 않는다', async () => {

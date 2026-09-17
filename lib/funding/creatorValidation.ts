@@ -24,11 +24,16 @@ export const CREATOR_LIMITS = {
   rewardIdMax: 40,
   estimatedDeliveryMax: 40,
   /**
-   * 개설자 한 명이 동시에 가질 수 있는 프로젝트(초안 포함) 수.
+   * 개설자 한 명이 동시에 가질 수 있는 **미심사** 프로젝트(draft·submitted·
+   * changes_requested) 수. `approved`·`rejected`는 세지 않는다 — 둘 다 운영자가
+   * 사람 손으로 심사를 끝낸 행이라 스팸 벡터가 아니다. 이 이름·주석·실제로 세는
+   * 조건(`pages/api/funding/creator/projects.ts`의 `UNREVIEWED_STATUSES`)은 항상
+   * 같이 맞춰 둘 것 — 어긋나면 "펀딩을 여러 번 성공시킨 개설자가 다음 프로젝트를
+   * 영영 못 만드는" 것 같은, 상한의 목적과 반대로 움직이는 버그가 조용히 생긴다.
    *
    * 로그인이 "처음 보는 이메일이면 계정 자동 생성"이라 계정 자체가 사실상 무료다.
    * `creator_save:<creatorId>` 요청 제한(분당 30회)만으로는 한 계정으로 하루 최대
-   * 4.3만 개 초안 행을 만들 수 있다 — 초안 생성 API가 이 값을 별도로 세어 막는다.
+   * 4.3만 개 미심사 행을 만들 수 있다 — 초안 생성 API가 이 값을 별도로 세어 막는다.
    */
   draftsMax: 10,
 } as const;

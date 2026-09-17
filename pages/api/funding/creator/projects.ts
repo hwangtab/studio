@@ -1,4 +1,4 @@
-import { count, eq } from 'drizzle-orm';
+import { and, count, eq, inArray } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../../db/client';
@@ -9,6 +9,19 @@ import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 import { createDraftProject } from '../../../../lib/funding/creatorProjectWrite';
 import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
+import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
+
+/**
+ * 상한이 세는 상태 — `CREATOR_LIMITS.draftsMax` 주석 참조.
+ *
+ * `approved`·`rejected`는 뺀다. 둘 다 운영자가 사람 손으로 심사를 끝낸 행이라 스팸
+ * 벡터가 아니다 — 포함하면 펀딩을 여러 번 성공시킨 개설자가, 또는 반려를 몇 번 받은
+ * 개설자가 같은 막다른 길에 갇힌다(성공할수록·거절당할수록 더 못 만드는 상한은
+ * 상한의 목적과 반대로 움직인다). `draft`·`submitted`·`changes_requested`는 아직
+ * 운영자 검토를 안 거쳤거나 다시 손봐야 하는 행 — 계정 자동 생성(로그인 시 이메일만
+ * 있으면 됨)과 결합하면 이 세 상태만 무한정 쌓는 것이 실제 스팸 벡터다.
+ */
+const UNREVIEWED_STATUSES: readonly FundingReviewStatus[] = ['draft', 'submitted', 'changes_requested'];
 
 /**
  * 초안 프로젝트 생성.
@@ -38,17 +51,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
   }
 
-  // 초안도 계정당 상한이 있다 — CREATOR_LIMITS.draftsMax 주석 참조. 승인·반려된 것까지
-  // 포함해 그 개설자의 전체 프로젝트 수를 센다(심사를 통과한 프로젝트도 계정 자원을
-  // 차지하는 것은 같다).
+  // 초안도 계정당 상한이 있다 — CREATOR_LIMITS.draftsMax와 UNREVIEWED_STATUSES 주석 참조.
+  // 심사를 거치지 않은(또는 다시 손봐야 하는) 행만 센다.
   const [{ value: existingCount }] = await getDb()
     .select({ value: count() })
     .from(fundingProjects)
-    .where(eq(fundingProjects.creatorId, auth.creatorId));
+    .where(and(eq(fundingProjects.creatorId, auth.creatorId), inArray(fundingProjects.reviewStatus, UNREVIEWED_STATUSES)));
   if (existingCount >= CREATOR_LIMITS.draftsMax) {
     return res.status(400).json({
       ok: false,
-      message: '만들 수 있는 프로젝트 수를 넘었습니다. 쓰지 않는 초안을 정리한 뒤 다시 시도해 주세요.',
+      // "정리해 달라"고 하지 않는다 — 개설자에게도 운영자에게도 프로젝트를 지우는
+      // 경로가 아직 없다(할 수 없는 일을 시키지 않는다). submitted도 이 상한에 걸리는
+      // 상태라 "제출하면 풀린다"도 아니다 — 실제로 풀리는 계기는 운영자 심사(승인·반려)
+      // 뿐이라 그대로 안내한다.
+      message: '아직 심사되지 않은 프로젝트가 너무 많습니다. 운영자 심사(승인 또는 반려)가 끝난 뒤 새 프로젝트를 만들 수 있습니다.',
     });
   }
 
