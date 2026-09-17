@@ -33,7 +33,8 @@ const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedS
 
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
-import { getSiteConfig } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
+import ResponsiveImage from '../../components/ResponsiveImage';
 import {
   getPricingData,
   formatPriceLabel,
@@ -523,8 +524,17 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
           ))}
         </div>
         {/* 이 페이지 전체가 한 사람의 판단에 걸려 있는데 그 사람이 끝까지 익명이었다.
-            수상 이력은 쓰지 않고(운영자 톤) 이름과 소개 경로만 연다. */}
-        <p className="mx-auto mt-6 max-w-3xl text-center">
+            수상 이력은 쓰지 않고(운영자 톤) 얼굴·이름과 소개 경로만 연다. */}
+        <div className="mx-auto mt-6 flex max-w-3xl items-center justify-center gap-3">
+          <ResponsiveImage
+            src={studioOperator.portrait.src}
+            alt={`스튜디오 놀 프로듀서 ${studioOperator.name}`}
+            width={48}
+            height={48}
+            sizes="48px"
+            containerClassName="h-12 w-12 shrink-0 overflow-hidden rounded-full ring-1 ring-black/10 dark:ring-white/15"
+            className="h-full w-full object-cover"
+          />
           <Link
             href={`/${locale}/author`}
             className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline dark:text-primary-lighter"
@@ -532,7 +542,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             {t('musicPromotion.review.producerLink')}
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </Link>
-        </p>
+        </div>
         <div className="mx-auto mt-8 max-w-3xl space-y-4 text-center">
           <p className="rounded-xl bg-gray-50 p-5 text-sm leading-relaxed text-gray-600 dark:bg-gray-900/40 dark:text-gray-300">
             {t('musicPromotion.review.rejection')}
