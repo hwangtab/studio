@@ -99,6 +99,19 @@ it('이메일 한도 초과 → 429가 아니라 200 + 같은 문구(존재 여�
   expect(issueCreatorLoginToken).not.toHaveBeenCalled();
 });
 
+it('이메일 요청 제한 키는 접두사만이 아니라 평문 이메일 자체도 담지 않는다(해시 처리 고정)', async () => {
+  const seenKeys: string[] = [];
+  (consumeRateLimit as jest.Mock).mockImplementation((key: string) => {
+    seenKeys.push(key);
+    return Promise.resolve(true);
+  });
+  await call({ email: 'a@b.com' });
+
+  const emailKey = seenKeys.find((key) => key.startsWith('creator_login:email:'));
+  expect(emailKey).toBeDefined();
+  expect(emailKey).not.toContain('a@b.com');
+});
+
 it('Cache-Control: no-store가 실린다', async () => {
   const r = await call({ email: 'a@b.com' });
   expect(r.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');

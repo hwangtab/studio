@@ -1,3 +1,10 @@
+/* eslint-disable @next/next/no-html-link-for-pages --
+ * 이 페이지의 URL에는 관리 토큰(`?token=`)이 원문 그대로 실린다. 이탈 링크는 next/link가
+ * 아니라 문서 이동이어야 한다 — 클라 전환으로 공개 페이지에 나갔다 뒤로가기 하면 그 사이
+ * mount된 gtag가 살아 있는 채로 돌아와 토큰이 실린 이 URL을 다시 측정한다.
+ * 근거·경로 목록: lib/analytics/privatePaths.ts, 회귀 테스트:
+ * tests/pages/privateLinkNavigation.test.ts
+ */
 import Head from 'next/head';
 import { useState } from 'react';
 
@@ -59,6 +66,10 @@ export default function CreatorAuth({ token }: Props) {
         <meta name="robots" content="noindex, nofollow" />
       </Head>
       <main className="mx-auto max-w-md px-4 py-16 text-center">
+        {/* 헤더·푸터가 없는 bare 화면이라(Layout의 isPrivatePaymentPage) 상호를 본문에서
+            직접 밝힌다 — 탭 제목은 화면에 안 보이고, 메일 링크로 들어온 사람이 피싱과
+            구별할 수 있어야 한다. */}
+        <p className="typo-card-meta mb-2">스튜디오 놀</p>
         <h1 className="text-2xl font-bold">개설자 로그인</h1>
         {token ? (
           <>
@@ -80,6 +91,16 @@ export default function CreatorAuth({ token }: Props) {
             로그인 링크가 없습니다. 이메일로 다시 받아 주세요.
           </p>
         )}
+        {/* 이 페이지는 no-store·측정 제외 대상이라 next/link를 쓰지 않는다(문서 이동만
+            허용 — lib/analytics/privatePaths.ts 주석 참조). 목적지는 측정 대상인 공개
+            페이지라 rel="noreferrer"로 Referrer-Policy가 보내는 전체 URL 유출을 막는다. */}
+        <a
+          href="/ko/funding/apply?e=link"
+          rel="noreferrer"
+          className="mt-8 inline-block text-sm underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter"
+        >
+          펀딩 신청 페이지로
+        </a>
       </main>
     </>
   );

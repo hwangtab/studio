@@ -19,6 +19,8 @@ import { MEASURED_PRIVATE_PAGE_ROUTES, PRIVATE_PAGE_ROUTES, isPrivateAnalyticsPa
  */
 const PRIVATE_PAGE_FILES = [
   'pages/[locale]/funding/manage/[orderNo].tsx',
+  // 개설자 매직링크 착지 화면 — `?token=`이 원문 그대로 실려 렌더되므로 같은 규칙 대상.
+  'pages/[locale]/funding/creator/auth.tsx',
   'pages/[locale]/funding/success.tsx',
   'pages/[locale]/funding/fail.tsx',
   'pages/[locale]/booking/manage/[orderNo].tsx',

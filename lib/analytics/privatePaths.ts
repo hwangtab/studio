@@ -22,6 +22,12 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   ['funding/(success|fail)', false],
   // 무통장입금(deposit)은 2026-09-11에 결제수단에서 빠지며 페이지도 함께 삭제됐다.
   ['funding/manage', true],
+  // 개설자 매직링크 착지 화면(pages/[locale]/funding/creator/auth.tsx). 이제 화면을
+  // 그린다(예전엔 항상 redirect라 mount된 적이 없었다) — `?token=<원문>`이 15분 유효
+  // 원문 그대로 쿼리에 실린 채 렌더되므로 다른 토큰 경로와 같은 이유로 뺀다. `funding/creator`
+  // 전체를 넣으면 목록 페이지(`/ko/funding/creator`)까지 함께 no-store·측정 제외로 빠지므로
+  // 이 착지 경로 하나만 좁힌다(hasSubPath: false — 하위 경로 없음).
+  ['funding/creator/auth', false],
   ['booking/(success|fail)', false],
   ['booking/manage', true],
   // 정기결제(구독). 카드 등록 링크 `?token=<setupToken>`과 관리 링크 `?token=<manageToken>`이
@@ -103,6 +109,7 @@ export const PRIVATE_NO_STORE_SOURCES: readonly string[] = PRIVATE_ROUTE_BODIES.
  */
 export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/funding/manage/[orderNo]',
+  '/[locale]/funding/creator/auth',
   '/[locale]/funding/success',
   '/[locale]/funding/fail',
   '/[locale]/booking/manage/[orderNo]',
