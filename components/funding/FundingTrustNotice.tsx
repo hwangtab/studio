@@ -8,8 +8,8 @@ export default function FundingTrustNotice() {
     <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50">
       <div className="flex items-start gap-3">
         <ResponsiveImage
-          src={studioOperator.portrait.src}
-          alt={`스튜디오 놀 대표 ${studioOperator.name}`}
+          src="/icons/icon-192.png"
+          alt="스튜디오 놀 로고"
           width={40}
           height={40}
           sizes="40px"
