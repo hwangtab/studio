@@ -26,6 +26,25 @@ const parseWidthHint = (title?: string): number | null => {
   return Number.isInteger(n) && n > 0 && n <= 1200 ? n : null;
 };
 
+/**
+ * 주소 쿼리(`?w=`·`?h=`)로 실린 치수 힌트를 읽는다.
+ *
+ * 업로드 이미지(펀딩 개설자 등)는 `utils/imageMetadata.json`에 없다 — 그 파일은 저장소의
+ * 정적 이미지만 안다. 쿼리 힌트가 없거나 값이 이상하면 기존 16:9 fill 폴백으로 떨어진다.
+ */
+const parseDimensionQueryHint = (src: string): { width: number; height: number } | null => {
+  let url: URL;
+  try {
+    url = new URL(src, 'https://placeholder.invalid');
+  } catch {
+    return null;
+  }
+  const w = Number(url.searchParams.get('w'));
+  const h = Number(url.searchParams.get('h'));
+  if (!Number.isInteger(w) || w <= 0 || !Number.isInteger(h) || h <= 0) return null;
+  return { width: w, height: h };
+};
+
 export const MarkdownImage = ({
   alt,
   src,
@@ -37,7 +56,10 @@ export const MarkdownImage = ({
 } & React.ImgHTMLAttributes<HTMLImageElement>) => {
   if (!src) return null;
 
-  const metadata = imageMetadataMap[src];
+  // 로컬 메타데이터가 있으면 그쪽이 이긴다 — 스토리 1,000편이 그 경로로 렌더되므로
+  // 쿼리 힌트가 기존 동작을 덮어쓰면 안 된다. 메타데이터 키는 쿼리가 없는 경로이므로
+  // 조회 전에 쿼리를 떼어 낸다.
+  const metadata = imageMetadataMap[src.split('?')[0]] ?? parseDimensionQueryHint(src);
   const hasDimensions = metadata?.width && metadata?.height;
   const altText = getMarkdownImageAlt(src, alt);
   const widthHint = parseWidthHint(title);

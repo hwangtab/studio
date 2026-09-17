@@ -33,6 +33,9 @@ const nextConfig = {
     '/[locale]/funding/**': ['./content/funding/*.md'],
     '/admin/funding/**': ['./content/funding/*.md'],
     '/api/admin/funding/**': ['./content/funding/*.md'],
+    // 개설자 라우트도 같은 이유로 repository.ts를 지나 content/funding/*.md를 읽는다.
+    '/api/funding/creator/**': ['./content/funding/*.md'],
+    '/[locale]/funding/creator/**': ['./content/funding/*.md'],
   },
 
   // Optimized image configuration
