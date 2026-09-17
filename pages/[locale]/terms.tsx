@@ -85,7 +85,7 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
               </article>
             ))}
 
-            <article className="glass-card rounded-xl p-6">
+            <article id="refund" className="glass-card scroll-mt-24 rounded-xl p-6">
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {REFUND_POLICY_LINES.map((line) => (

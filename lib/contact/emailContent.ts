@@ -111,7 +111,7 @@ export const buildContactEmailHtml = (sanitized: SanitizedContactPayload): strin
                        padding:20px 32px;text-align:center;">
               <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;line-height:1.6;">
                 <strong style="color:#6b7280;">스튜디오 놀</strong>
-                &nbsp;·&nbsp; 서울특별시 은평구 대조동 84-3 3층
+                &nbsp;·&nbsp; 서울특별시 은평구 통일로71길 2-1, 3층(대조동, 대조빌딩)
               </p>
               <p style="margin:0;font-size:12px;color:#9ca3af;">
                 <a href="tel:${CANONICAL_FACTS.phone.replace(/-/g, '')}" style="color:#9ca3af;text-decoration:none;">
