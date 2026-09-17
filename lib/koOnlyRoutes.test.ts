@@ -68,6 +68,8 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
     'pages/[locale]/funding/fail.tsx',
     'pages/[locale]/funding/manage/[orderNo].tsx',
     'pages/[locale]/funding/[slug]/pledge.tsx',
+    'pages/[locale]/funding/creator/index.tsx',
+    'pages/[locale]/funding/creator/auth.tsx',
   ])('funding 형제 SSR 페이지 %s는 getServerSideProps를 쓰고 getStaticPaths가 없다', (relPath) => {
     const source = fs.readFileSync(path.join(process.cwd(), relPath), 'utf-8');
     expect(source).toMatch(/getServerSideProps/);
@@ -91,16 +93,23 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
     expect(isKoOnlyRoutePath('/guides')).toBe(false);
   });
 
-  // 회귀 방지: funding의 리터럴 형제 라우트(terms·success·fail·manage)는 슬러그가
-  // 아니라 실제 파일명이라, [slug]/index.tsx가 아니라 자기 자신의 SSR 페이지로
-  // 라우팅된다(Next.js는 정적 파일명을 동적 세그먼트보다 우선한다) — 즉 404가
-  // 아니므로 ko 전용 취급해 홈으로 탈출시키면 오히려 회귀다(예: 주문 확인
+  // 회귀 방지: funding의 리터럴 형제 라우트(terms·success·fail·manage·creator)는
+  // 슬러그가 아니라 실제 파일명이라, [slug]/index.tsx가 아니라 자기 자신의 SSR
+  // 페이지로 라우팅된다(Next.js는 정적 파일명을 동적 세그먼트보다 우선한다) — 즉
+  // 404가 아니므로 ko 전용 취급해 홈으로 탈출시키면 오히려 회귀다(예: 주문 확인
   // 쿼리를 지닌 success 경로가 맥락 없이 홈으로 튕긴다).
   it('funding의 리터럴 형제 라우트는 ko 전용이 아니다(SSR + 런타임 리다이렉트)', () => {
     expect(isKoOnlyRoutePath('/funding/terms')).toBe(false);
     expect(isKoOnlyRoutePath('/funding/success')).toBe(false);
     expect(isKoOnlyRoutePath('/funding/fail')).toBe(false);
     expect(isKoOnlyRoutePath('/funding/manage')).toBe(false);
+    expect(isKoOnlyRoutePath('/funding/creator')).toBe(false);
+  });
+
+  // /funding/apply는 리터럴 형제가 아니라 진짜 ko 전용 정적 페이지다(getStaticPaths가
+  // ko 하나만 등록, fallback:false) — [slug]/index.tsx와 같은 자리에서 true가 나와야 한다.
+  it('funding/apply는 ko 전용 정적 페이지다', () => {
+    expect(isKoOnlyRoutePath('/funding/apply')).toBe(true);
   });
 
   // 회귀 방지: /funding/<slug>/pledge는 SSR 페이지(getServerSideProps)라 404가

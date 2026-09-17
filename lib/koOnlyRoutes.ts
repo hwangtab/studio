@@ -13,13 +13,15 @@
  * 같은 방식(components/LanguageSwitcher.tsx).
  *
  * **세그먼트 전체가 ko 전용은 아니다.** funding 세그먼트에는 진짜 ko 전용 정적
- * 페이지(index, [slug]/index)와, getServerSideProps로 모든 로케일 경로를 받아
- * 런타임에 /ko/funding으로 307 리다이렉트하는 SSR 페이지(terms·success·fail·
+ * 페이지(index, apply, [slug]/index)와, getServerSideProps로 모든 로케일 경로를
+ * 받아 런타임에 /ko/funding으로 307 리다이렉트하는 SSR 페이지(terms·success·fail·
  * manage/[orderNo]·[slug]/pledge)가 섞여 있다. 후자는 404가 아니므로 홈으로
  * 탈출시키면 오히려 회귀다 — 특히 success·manage·pledge는 쿼리(주문번호 등)를
  * 지닌 채 리다이렉트돼야 하는데 홈으로 보내면 그 맥락을 잃는다. 그래서 세그먼트
  * 문자열 하나가 아니라 규칙(KoOnlyRouteRule)으로 깊이와 리터럴 형제 라우트를
- * 구분한다.
+ * 구분한다. `creator`(개설자 로그인·목록, 2026-09-17)도 같은 이유로 리터럴
+ * 형제다 — getServerSideProps로 세션을 확인해 리다이렉트하는 페이지라
+ * [slug]/index.tsx로 잘못 넘겨받으면 안 된다.
  *
  * 정본은 각 페이지의 getStaticPaths다. 이 규칙이 실제 페이지 구현과 갈리지 않도록
  * lib/koOnlyRoutes.test.ts가 각 규칙의 ko 전용 페이지 소스를 읽어 getStaticPaths가
@@ -41,7 +43,7 @@ export interface KoOnlyRouteRule {
 
 export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
   { segment: 'artists', hasIndexPage: true, literalSiblings: [] },
-  { segment: 'funding', hasIndexPage: true, literalSiblings: ['terms', 'success', 'fail', 'manage'] },
+  { segment: 'funding', hasIndexPage: true, literalSiblings: ['terms', 'success', 'fail', 'manage', 'creator'] },
   { segment: 'guides', hasIndexPage: false, literalSiblings: [] },
 ];
 
