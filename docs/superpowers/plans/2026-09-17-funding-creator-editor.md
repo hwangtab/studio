@@ -780,8 +780,8 @@ EOF
   - `loadProjectForCreator(creatorId: string, projectId: string): Promise<CreatorProjectDetail | null>`
   - `saveBasicSection(creatorId, projectId, value: BasicSection): Promise<WriteResult>`
   - `saveStorySection(creatorId, projectId, value: StorySection): Promise<WriteResult>`
-  - `saveCreatorSection(creatorId, projectId, value: CreatorSection): Promise<WriteResult>`
-  - `upsertReward(creatorId, projectId, value: RewardInput): Promise<WriteResult>`
+  - `saveCreatorSection(creatorId, value: CreatorSection): Promise<WriteResult>` — **projectId를 받지 않는다.** 개설자 프로필은 계정 소속이라, 어떤 프로젝트의 편집 가능 여부로 막으면 초안 하나로 승인된 프로젝트의 공개 소개를 바꾸는 경로가 생긴다
+  - `upsertReward(creatorId, projectId, value: RewardInput, previousRewardId?: string): Promise<WriteResult>` — `previousRewardId`가 있고 다르면 **개명**이다. 없으면 rewardId로 찾아 없으면 추가, 있으면 수정
   - `deleteReward(creatorId, projectId, rewardId: string): Promise<WriteResult>`
   - `type WriteResult = { ok: true } | { ok: false; code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many'; message: string }`
 
@@ -957,6 +957,9 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * `rewardId`가 바뀌면 재고 집계 조건(`fp.reward_id = ?`)이 기존 후원을 세지 못해 한정
  * 100개짜리가 200개 팔린다. `amount`가 바뀌면 DB의 단가와 화면·CSV·환불 금액이 어긋난다.
  * 한정 여부가 바뀌면 재고 계산 자체가 다른 길로 간다.
+ *
+ * `requiresShipping`도 바꿀 수 없다. 결제를 마친 후원자가 배송지를 낸 적 없는 티어를 사후에
+ * 배송 필요로 바꾸는 것은 이행 조건 변경이다.
  *
  * 제목·설명·이미지·예상 전달 시기는 고칠 수 있다 — 오타 수정까지 막으면 운영이 안 된다.
  * 수량은 **늘리는 것만** 허용한다(재고 추가). 줄이면 이미 팔린 것보다 적어질 수 있다.
