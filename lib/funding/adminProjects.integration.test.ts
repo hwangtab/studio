@@ -183,6 +183,17 @@ describe('loadProjectForAdmin', () => {
 
     const detail = await loadProjectForAdmin(projectId);
     expect(detail?.rewards.map((r) => r.rewardId)).toEqual(['first', 'second']);
+
+    // 리워드도 fundingRewards를 통째로 넘기지 않고 필드를 하나씩 골라 담는다 — id·projectId·
+    // downloads·createdAt·updatedAt 같은 내부/무관 컬럼이 새지 않는지 화이트리스트로 본다.
+    for (const reward of detail!.rewards) {
+      expect(Object.keys(reward).sort()).toEqual(
+        [
+          'rewardId', 'title', 'description', 'amount', 'totalQuantity',
+          'requiresShipping', 'estimatedDelivery', 'imageUrl', 'sortOrder', 'lockedAt',
+        ].sort(),
+      );
+    }
   });
 
   it('리워드의 lockedAt을 그대로 싣는다', async () => {
@@ -209,5 +220,43 @@ describe('loadProjectForAdmin', () => {
 
   it('없는 id는 null', async () => {
     expect(await loadProjectForAdmin('없는-id')).toBeNull();
+  });
+
+  it('비공개 정산 필드는 상세에도 없다', async () => {
+    // listProjectsForAdmin의 화이트리스트 테스트와 달리, 정산 필드를 실제로 채워서
+    // seed한다 — 값이 비어 있으면 통째로 스프레드해도 통과해 버린다.
+    const creator = await seedCreator('payout-detail@example.com', {
+      taxType: 'withholding',
+      payoutBankName: '국민은행',
+      payoutAccount: '123-456-789012',
+      payoutHolder: '개설자',
+    });
+    const projectId = await seedProject(creator, {
+      reviewStatus: 'submitted',
+      submittedAt: new Date('2026-09-10T00:00:00Z'),
+    });
+
+    const detail = await loadProjectForAdmin(projectId);
+    expect(detail).not.toBeNull();
+
+    expect(Object.keys(detail!).sort()).toEqual(
+      [
+        'id', 'slug', 'title', 'reviewStatus', 'status', 'hidden',
+        'submittedAt', 'approvedAt', 'creatorName', 'creatorEmail',
+        'goalAmount', 'startAt', 'endAt',
+        'summary', 'content', 'coverUrl', 'reviewNote', 'creator', 'rewards',
+      ].sort(),
+    );
+    expect(Object.keys(detail!.creator).sort()).toEqual(
+      ['contactName', 'phone', 'bio', 'links'].sort(),
+    );
+
+    const serialized = JSON.stringify(detail);
+    expect(serialized).not.toContain('taxType');
+    expect(serialized).not.toContain('payoutBankName');
+    expect(serialized).not.toContain('payoutAccount');
+    expect(serialized).not.toContain('payoutHolder');
+    expect(serialized).not.toContain('국민은행');
+    expect(serialized).not.toContain('123-456-789012');
   });
 });

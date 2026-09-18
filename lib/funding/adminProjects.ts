@@ -1,7 +1,7 @@
 import { desc, eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingProjects, fundingRewards, type FundingRewardRow } from '../../db/schema';
+import { fundingCreators, fundingProjects, fundingRewards } from '../../db/schema';
 import type { FundingReviewStatus } from './reviewTransition';
 
 /**
@@ -28,6 +28,24 @@ export interface AdminProjectSummary {
   endAt: string;
 }
 
+/**
+ * 심사 화면이 보는 리워드. `fundingRewards`를 통째로(`FundingRewardRow`) 넘기지 않는다 —
+ * `downloads`는 R2 객체 키라 심사 화면이 볼 이유가 없고, 앞으로 컬럼이 늘어도 이 조회가
+ * 그것을 화면 props로 실어 나르는 유일한 경로가 되지 않게 여기서도 필드를 하나씩 고른다.
+ */
+export interface AdminRewardSummary {
+  rewardId: string;
+  title: string;
+  description: string;
+  amount: number;
+  totalQuantity: number | null;
+  requiresShipping: boolean;
+  estimatedDelivery: string;
+  imageUrl: string | null;
+  sortOrder: number;
+  lockedAt: Date | null;
+}
+
 export interface AdminProjectDetail extends AdminProjectSummary {
   summary: string;
   content: string;
@@ -39,7 +57,7 @@ export interface AdminProjectDetail extends AdminProjectSummary {
     bio: string | null;
     links: string[] | null;
   };
-  rewards: FundingRewardRow[];
+  rewards: AdminRewardSummary[];
 }
 
 const toSummary = (
@@ -91,9 +109,22 @@ export const loadProjectForAdmin = async (projectId: string): Promise<AdminProje
     .limit(1);
   if (!row) return null;
 
-  const rewards = await getDb().select().from(fundingRewards)
+  const rewardRows = await getDb().select().from(fundingRewards)
     .where(eq(fundingRewards.projectId, projectId))
     .orderBy(fundingRewards.sortOrder);
+
+  const rewards: AdminRewardSummary[] = rewardRows.map((r) => ({
+    rewardId: r.rewardId,
+    title: r.title,
+    description: r.description,
+    amount: r.amount,
+    totalQuantity: r.totalQuantity,
+    requiresShipping: r.requiresShipping,
+    estimatedDelivery: r.estimatedDelivery,
+    imageUrl: r.imageUrl,
+    sortOrder: r.sortOrder,
+    lockedAt: r.lockedAt,
+  }));
 
   return {
     ...toSummary(row.project, row.creator),
