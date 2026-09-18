@@ -27,7 +27,16 @@ const DASHBOARD: AdminDashboard = {
   upcomingSessions: [
     { orderId: 'o1', orderNo: 'SNB-2', customerName: '홍길동', productName: '보컬 녹음 1프로', startAt: '2026-09-17T05:00:00.000Z', endAt: '2026-09-17T08:00:00.000Z' },
   ],
-  queues: { mixingReceived: 3, mixingInProgress: 1, subscriptionsPendingCard: 0, subscriptionsPastDue: 2, subscriptionsPaused: 0, contractsAwaitingSignature: 1, artistPayoutsPending: 0 },
+  queues: {
+    mixingReceived: 3,
+    mixingInProgress: 1,
+    subscriptionsPendingCard: 0,
+    subscriptionsPastDue: 2,
+    subscriptionsPaused: 0,
+    contractsAwaitingSignature: 1,
+    artistPayoutsPending: 0,
+    fundingProjectsAwaitingReview: 4,
+  },
   socialTokens: [{ platform: 'ig', expiresAt: '2026-09-26T03:00:00.000Z', daysLeft: 10 }],
   upcomingWindowDays: 7,
   checkedAt: '2026-09-16T03:00:00.000Z',
@@ -47,6 +56,7 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
 
   expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toHaveAttribute('href', '/admin/bookings');
   expect(screen.getByRole('link', { name: /결제 재시도 중 구독\s*2/ })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /심사 대기 펀딩 프로젝트\s*4/ })).toHaveAttribute('href', '/admin/funding/projects');
 
   expect(screen.getByText('2026.09.17 (목) 14:00')).toBeInTheDocument();
   expect(screen.getByText('홍길동 · 보컬 녹음 1프로')).toBeInTheDocument();
