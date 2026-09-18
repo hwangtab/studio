@@ -104,17 +104,23 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * 개설자 약관 판본. 후원자 쪽 `FUNDING_TERMS_VERSION`과 같은 취지지만 대상이 다르다 —
  * 이건 "펀딩을 개설하는" 아티스트가 동의하는 약관이다.
  *
- * **지금은 빈 문자열이다.** 약관 본문은 셀프 개설 3차(관리자 심사) 범위에서 쓴다. 본문 없는
- * 동의는 "그때 이 내용에 동의했다"는 증거가 될 수 없으므로(FUNDING_TERMS_VERSION 위 주석과
- * 같은 이유), 본문이 붙기 전까지 동의를 받지 않는다 — 심사 신청 API(`projects/[id]/submit.ts`)는
- * 이 값이 빈 문자열이면 `agreedTermsVersion`을 요구하지 않고 화면도 동의 체크박스를 렌더하지
- * 않는다. 3차에서 본문과 함께 실제 판본 문자열(`funding-creator-terms-YYYY-MM-DD` 형식)을
- * 채우면 그 순간 두 쪽 다 동의를 요구하기 시작한다.
+ * 본문은 `pages/[locale]/funding/creator-terms.tsx`의 `FUNDING_CREATOR_TERMS_SECTIONS`다.
+ * 이 값이 빈 문자열이 아니게 되는 순간부터 심사 신청 API(`projects/[id]/submit.ts`)가
+ * `agreedTermsVersion`을 요구하고, 개설자 편집 화면도 동의 체크박스와 약관 링크를 렌더한다.
+ * 본문 없는 동의는 "그때 이 내용에 동의했다"는 증거가 될 수 없으므로(FUNDING_TERMS_VERSION
+ * 위 주석과 같은 이유), 본문이 붙기 전까지는 동의를 받지 않았다.
  *
- * `: string` 타입 주석을 명시로 둔다 — 리터럴 `''`로 좁혀 두면 3차에서 실제 판본 문자열을
- * 대입하는 순간 타입 에러가 난다(리터럴 타입은 다른 문자열을 받지 않는다).
+ * **이 규칙도 후원자 쪽과 같은 방식으로 테스트가 강제한다** —
+ * `content/creatorTerms.baseline.test.ts`가 조항 전체를 직렬화해 해시하고
+ * `content/creator-terms.baseline.json`의 해시와 대조한다. 내용이 바뀌었는데 이 문자열이
+ * 그대로면 CI가 선다. 갱신 경로도 같은 규칙을 지킨다(`assertCreatorTermsBaselineUpdateAllowed`).
+ *
+ * 형식은 `funding-creator-terms-YYYY-MM-DD`이고, 같은 날 두 번째 개정부터 `-r2`·`-r3` 접미사를 붙인다.
+ *
+ * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
+ * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = '';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-18';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
