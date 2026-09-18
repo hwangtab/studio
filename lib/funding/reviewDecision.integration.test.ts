@@ -375,6 +375,60 @@ describe('보완 요청·반려', () => {
   });
 });
 
+describe('보관(archive)', () => {
+  it('메모 없이는 보관할 수 없다', async () => {
+    const creator = await seedCreator('u@example.com');
+    const projectId = await seedProject(creator, { reviewStatus: 'draft', submittedAt: null });
+    const before = await readProject(projectId);
+
+    const result = await decideProject(projectId, 'archive', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toEqual({ ok: false, code: 'incomplete', message: expect.any(String) });
+
+    const after = await readProject(projectId);
+    expect(after.reviewStatus).toBe(before.reviewStatus);
+    expect(after.rejectedAt).toBeNull();
+  });
+
+  it.each(['draft', 'submitted', 'changes_requested'] as const)(
+    '%s 프로젝트를 보관하면 rejected로 옮기고 rejectedAt·reviewNote를 남긴다',
+    async (reviewStatus) => {
+      const creator = await seedCreator(`v-${reviewStatus}@example.com`);
+      const projectId = await seedProject(creator, {
+        reviewStatus,
+        submittedAt: reviewStatus === 'draft' ? null : new Date('2026-09-10T00:00:00Z'),
+      });
+      const now = new Date('2026-09-18T06:00:00Z');
+
+      const result = await decideProject(projectId, 'archive', { note: '오래 방치되어 정리합니다.' }, now);
+      expect(result).toEqual({ ok: true, slug: expect.any(String) });
+
+      const after = await readProject(projectId);
+      expect(after.reviewStatus).toBe('rejected');
+      expect(after.rejectedAt?.getTime()).toBe(now.getTime());
+      expect(after.reviewNote).toBe('오래 방치되어 정리합니다.');
+      // status는 건드리지 않는다 — 반려와 같은 불변식.
+      expect(after.status).toBe('draft');
+    },
+  );
+
+  it('승인된 프로젝트는 보관할 수 없다', async () => {
+    const creator = await seedCreator('w@example.com');
+    const projectId = await seedProject(creator, {
+      reviewStatus: 'approved',
+      status: 'auto',
+      approvedAt: new Date('2026-09-01T00:00:00Z'),
+    });
+    const before = await readProject(projectId);
+
+    const result = await decideProject(projectId, 'archive', { note: '정리 사유' }, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toEqual({ ok: false, code: 'conflict', message: expect.any(String) });
+
+    const after = await readProject(projectId);
+    expect(after.reviewStatus).toBe(before.reviewStatus);
+    expect(after.status).toBe(before.status);
+  });
+});
+
 describe('경합과 전이', () => {
   it.each(['draft', 'approved', 'rejected'] as const)('%s 프로젝트는 판정할 수 없다', async (reviewStatus) => {
     const creator = await seedCreator(`n-${reviewStatus}@example.com`);

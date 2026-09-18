@@ -33,6 +33,10 @@ const REVIEW_SUBJECT: Record<ReviewDecisionAction, string> = {
   approve: '펀딩 프로젝트가 승인되었습니다',
   request_changes: '펀딩 프로젝트 보완 요청',
   reject: '펀딩 프로젝트 심사 결과',
+  // DB상 reject와 완전히 같은 처리(reviewStatus: rejected)이지만, 개설자가 받는 메일
+  // 제목·본문은 "반려"가 아니라 "보관"이라고 정직하게 말한다 — 심사에서 떨어진 것이
+  // 아니라 방치를 정리한 것이라는 사실이 사유(reviewNote)와 함께 그대로 전달돼야 한다.
+  archive: '펀딩 프로젝트가 보관 처리되었습니다',
 };
 
 /**
@@ -93,6 +97,19 @@ export const sendReviewDecisionEmail = async (
       '',
       '[운영자 메모]',
       note ?? '',
+      '',
+      `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
+    ],
+    // archive는 심사에서 떨어진 것이 아니라 오래 방치된 프로젝트를 운영자가 정리한
+    // 것이다 — reject와 같은 문구를 쓰면 "심사에 떨어졌다"로 오해한다. 새 프로젝트를
+    // 다시 만들 수 있다는 것도 함께 알린다(보관 처리는 미심사 상한에서 빠지므로).
+    archive: [
+      '작성 중이던 펀딩 프로젝트가 운영자에 의해 보관 처리되었습니다.',
+      '',
+      '[운영자 메모]',
+      note ?? '',
+      '',
+      '이 프로젝트는 더 이상 편집·재제출할 수 없습니다. 다시 개설하고 싶으시면 새 프로젝트를 만들어 주세요.',
       '',
       `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
     ],

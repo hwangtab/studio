@@ -227,7 +227,34 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
       '메모를 저장했습니다.',
     );
 
+  const handleArchive = () => {
+    const reason = window.prompt(
+      '보관 사유를 적어 주세요 (개설자에게 메일로 전달되며, 개설자 화면에도 그대로 노출됩니다).',
+    );
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('보관은 사유가 있어야 합니다.');
+      return;
+    }
+    if (
+      !window.confirm(
+        '보관하면 이 프로젝트는 되돌릴 수 없이 반려와 같은 상태가 되고, 개설자는 더 이상 편집·재제출할 수 없습니다. 보관할까요?',
+      )
+    ) {
+      return;
+    }
+    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim() }), '보관 처리했습니다.');
+  };
+
   const canDecide = project.reviewStatus === 'submitted';
+  // 보관은 심사 대기중뿐 아니라 작성중·보완요청 상태의 방치된 프로젝트를 치우는 것이
+  // 목적이라 세 상태 모두에서 가능하다. 승인된 프로젝트는 공개된 것이라 status를
+  // closed로 닫아야지 심사 상태를 되감지 않는다(reviewTransition.ts) — 반려된 프로젝트도
+  // 이미 종결 상태라 다시 보관할 수 없다.
+  const canArchive =
+    project.reviewStatus === 'draft' ||
+    project.reviewStatus === 'submitted' ||
+    project.reviewStatus === 'changes_requested';
 
   return (
     <>
@@ -404,6 +431,24 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                 반려
               </Button>
             </div>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-bold text-gray-900 mb-3">보관</h2>
+            <p className="mb-3 text-sm text-gray-500">
+              작성중·심사대기·보완요청 상태에서 방치된 프로젝트를 정리합니다. 되돌릴 수 없고, 사유는 개설자
+              화면과 메일에 그대로 노출됩니다. 승인된 프로젝트는 공개를 닫는 것(종료)이 필요하지 여기서 보관할 수
+              없습니다.
+            </p>
+            {!canArchive && (
+              <p className="mb-3 text-sm text-gray-500">
+                이 프로젝트는 현재 &ldquo;{REVIEW_STATUS_LABELS[project.reviewStatus]}&rdquo; 상태라 보관할 수
+                없습니다.
+              </p>
+            )}
+            <Button light variant="outline" disabled={!canArchive || busy} onClick={handleArchive}>
+              보관
+            </Button>
           </div>
 
           <div>

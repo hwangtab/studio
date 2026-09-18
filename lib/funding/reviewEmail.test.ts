@@ -66,6 +66,17 @@ it('반려 메일 — 제목·운영자 메모 전문·문의 경로, 공개 주
   expect(call.text).not.toContain('/ko/funding/old-slug');
 });
 
+it('보관 메일 — 제목이 반려와 다르고("심사에서 게재가 어렵다"가 아니다), 운영자 메모·재개설 안내가 들어간다', async () => {
+  await sendReviewDecisionEmail(project, 'archive', '오래 방치되어 정리합니다.', 'old-slug');
+  const call = (sendEmail as jest.Mock).mock.calls[0][0];
+  expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 보관 처리되었습니다 — 강정피스앤뮤직캠프');
+  expect(call.text).toContain('오래 방치되어 정리합니다.');
+  expect(call.text).not.toContain('이번 심사에서는 게재가 어렵습니다');
+  expect(call.text).toContain('새 프로젝트를 만들어 주세요');
+  expect(call.text).not.toContain('/ko/funding/creator/proj-1');
+  expect(call.text).not.toContain('/ko/funding/old-slug');
+});
+
 it('메일 발송 실패는 실패 사유 문자열을 돌려준다', async () => {
   (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });
   expect(await sendReviewDecisionEmail(project, 'approve', null, 'new-slug')).toBe('creator:API_ERROR');

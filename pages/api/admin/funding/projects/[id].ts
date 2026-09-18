@@ -20,7 +20,7 @@ const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], num
   terms_not_agreed: 400,
 };
 
-const REVIEW_ACTIONS: readonly AdminReviewAction[] = ['approve', 'request_changes', 'reject'];
+const REVIEW_ACTIONS: readonly AdminReviewAction[] = ['approve', 'request_changes', 'reject', 'archive'];
 const isReviewAction = (value: unknown): value is AdminReviewAction =>
   typeof value === 'string' && (REVIEW_ACTIONS as readonly string[]).includes(value);
 

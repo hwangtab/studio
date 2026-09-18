@@ -2,7 +2,7 @@ import { canCreatorEdit, nextReviewStatus, type ReviewAction } from './reviewTra
 import { fundingReviewStatusEnum } from '../../db/schema';
 
 const ALL = fundingReviewStatusEnum;
-const ACTIONS: ReviewAction[] = ['submit', 'request_changes', 'approve', 'reject', 'withdraw'];
+const ACTIONS: ReviewAction[] = ['submit', 'request_changes', 'approve', 'reject', 'withdraw', 'archive'];
 
 describe('nextReviewStatus', () => {
   it('개설자는 draft와 changes_requested에서만 제출할 수 있다', () => {
@@ -28,6 +28,16 @@ describe('nextReviewStatus', () => {
 
   it('승인된 프로젝트는 어떤 행동으로도 상태가 되돌아가지 않는다', () => {
     for (const action of ACTIONS) expect(nextReviewStatus('approved', action)).toBeNull();
+  });
+
+  it('보관은 미심사 상태(draft·submitted·changes_requested)에서만 되고 rejected로 간다', () => {
+    expect(nextReviewStatus('draft', 'archive')).toBe('rejected');
+    expect(nextReviewStatus('submitted', 'archive')).toBe('rejected');
+    expect(nextReviewStatus('changes_requested', 'archive')).toBe('rejected');
+    // approved는 공개된 프로젝트라 status: closed로 닫아야지 심사 상태를 되감지 않는다.
+    expect(nextReviewStatus('approved', 'archive')).toBeNull();
+    // rejected는 이미 종결 상태라 다시 보관할 수 없다.
+    expect(nextReviewStatus('rejected', 'archive')).toBeNull();
   });
 
   it('전이표가 모든 조합을 명시한다', () => {

@@ -8,8 +8,8 @@ import { getFundingProject } from './projects';
 import { nextReviewStatus, type ReviewAction } from './reviewTransition';
 import { normalizeFundingSlug, slugRejectionReason } from './reservedSlugs';
 
-/** 관리자 심사 화면이 실제로 실행하는 판정. `nextReviewStatus`의 전체 액션 중 이 셋만 쓴다. */
-export type AdminReviewAction = Extract<ReviewAction, 'approve' | 'request_changes' | 'reject'>;
+/** 관리자 심사 화면이 실제로 실행하는 판정. `nextReviewStatus`의 전체 액션 중 이 넷만 쓴다. */
+export type AdminReviewAction = Extract<ReviewAction, 'approve' | 'request_changes' | 'reject' | 'archive'>;
 
 export type DecisionResult =
   | { ok: true; slug: string; warnings?: string[] }
@@ -56,25 +56,51 @@ export const decideProject = async (
   if (!next) return deny('conflict', '지금 상태에서는 그 판정을 할 수 없습니다.');
 
   const note = input.note?.trim() || null;
-  // 보완 요청·반려 둘 다 "왜"를 개설자에게 알리는 것이 약관 §2의 약속이다(승인은 사유라는
-  // 개념이 없어 제외). 메모 없는 반려는 개설자를 원인도 모른 채 끝난 상태로 돌려보낸다 —
-  // 반려는 되돌릴 수 없는 종착 상태라(reviewTransition.ts) 보완 요청보다 오히려 더 절실하다.
-  if ((action === 'request_changes' || action === 'reject') && !note) {
-    return deny(
-      'incomplete',
-      action === 'reject' ? '반려에는 사유 메모가 필요합니다.' : '보완 요청에는 안내 메모가 필요합니다.',
-    );
+  // 보완 요청·반려·보관 셋 다 "왜"를 개설자에게 알리는 것이 약관 §2의 약속이다(승인은
+  // 사유라는 개념이 없어 제외). 메모 없는 반려·보관은 개설자를 원인도 모른 채 끝난
+  // 상태로 돌려보낸다 — 반려·보관은 되돌릴 수 없는 종착 상태라(reviewTransition.ts)
+  // 보완 요청보다 오히려 더 절실하다.
+  const NOTE_REQUIRED_MESSAGE: Record<'request_changes' | 'reject' | 'archive', string> = {
+    reject: '반려에는 사유 메모가 필요합니다.',
+    archive: '보관에는 사유 메모가 필요합니다.',
+    request_changes: '보완 요청에는 안내 메모가 필요합니다.',
+  };
+  if ((action === 'request_changes' || action === 'reject' || action === 'archive') && !note) {
+    return deny('incomplete', NOTE_REQUIRED_MESSAGE[action]);
   }
 
   if (action !== 'approve') {
-    // 반려·보완 요청 — status는 건드리지 않는다. 승인 전 프로젝트는 schema 주석대로
-    // 항상 status='draft'이고, 반려·보완 요청은 그 불변식을 유지한 채 reviewStatus만 옮긴다.
+    // 반려·보완 요청·보관 — status는 건드리지 않는다. 승인 전 프로젝트는 schema 주석대로
+    // 항상 status='draft'이고, 이 셋은 그 불변식을 유지한 채 reviewStatus만 옮긴다.
+    //
+    // switch + never 소진 검사를 쓴다 — 예전엔 `action !== 'approve'`라는 부정 조건 하나로
+    // "approve가 아닌 모든 액션"을 뭉뚱그리고 그 안에서 `action === 'reject' ? ... : ...`처럼
+    // 액션별 분기를 하나씩 덧붙였다. `AdminReviewAction`에 액션이 느는데(Task 11의 archive가
+    // 실제로 그랬다) 이 방식은 새 액션을 조용히 "reject 아님" 취급해 버려도 컴파일이 통과한다.
+    // 아래 `default`의 `never` 할당은 새 액션이 여기 case에 없으면 타입 에러로 막는다 —
+    // archive를 빠뜨리고 rejectedAt을 안 찍는 실수를 다음 액션이 늘 때 다시 반복하지 않기 위함.
+    let setRejectedAt = false;
+    switch (action) {
+      case 'reject':
+      case 'archive':
+        // 보관도 reviewStatus가 'rejected'로 옮겨가므로(reviewTransition.ts) rejectedAt을
+        // 같이 찍는다 — "언제 이 프로젝트가 종결됐는가"는 사유와 무관하게 하나의 사실이다.
+        setRejectedAt = true;
+        break;
+      case 'request_changes':
+        break;
+      default: {
+        const exhaustive: never = action;
+        throw new Error(`처리되지 않은 심사 액션: ${exhaustive}`);
+      }
+    }
+
     const result = await getDb()
       .update(fundingProjects)
       .set({
         reviewStatus: next,
         reviewNote: note,
-        ...(action === 'reject' ? { rejectedAt: now } : {}),
+        ...(setRejectedAt ? { rejectedAt: now } : {}),
         updatedAt: now,
       })
       .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus)));
