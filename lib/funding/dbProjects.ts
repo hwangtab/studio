@@ -87,7 +87,10 @@ export const listDbFundingProjects = async (): Promise<FundingProject[]> => {
   const rows = await getDb()
     .select({ project: fundingProjects, creatorName: fundingCreators.name })
     .from(fundingProjects)
-    .innerJoin(fundingCreators, eq(fundingProjects.creatorId, fundingCreators.id))
+    // leftJoin이다 — innerJoin이면 개설자 행이 없는 프로젝트가 목록에서 조용히 사라진다.
+    // creatorId는 notNull + FK지만 SQLite는 FK 강제가 기본으로 꺼져 있을 수 있어, 상세는
+    // 보이는데 목록에는 없는 비대칭이 생길 수 있다(상세 쪽은 이미 null을 허용한다).
+    .leftJoin(fundingCreators, eq(fundingProjects.creatorId, fundingCreators.id))
     .where(APPROVED);
   if (rows.length === 0) return [];
   const allRewards = await getDb().select().from(fundingRewards).orderBy(asc(fundingRewards.sortOrder));
