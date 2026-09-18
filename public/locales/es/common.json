@@ -304,7 +304,7 @@
     "practiceRoom": {
       "title": "Residencia en Sala de Práctica",
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
-      "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: hay salas disponibles ahora mismo.",
+      "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: disponible para mudarse ahora mismo.",
       "detailLink": "Ver instalaciones y beneficios para residentes",
       "priceNote": "Servicios incluidos · sin depósito · contrato mensual"
     },
@@ -560,11 +560,11 @@
         }
       ],
       "note": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Lista de espera disponible cuando esté completo.",
-      "noteVacant": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Hay salas disponibles ahora mismo."
+      "noteVacant": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Disponible para mudarse ahora mismo."
     },
     "midCta": {
       "note": "Las salas suelen estar completas, por lo que mantenemos una lista de espera. Escríbenos y te avisaremos por orden en cuanto se libere una sala.",
-      "noteVacant": "Hay salas disponibles ahora mismo. Puedes visitar antes de decidir. Escríbenos y te responderemos enseguida."
+      "noteVacant": "Disponible para mudarse ahora mismo. Puedes visitar antes de decidir. Escríbenos y te responderemos enseguida."
     },
     "painPoints": {
       "title": "¿Tienes estos problemas?",

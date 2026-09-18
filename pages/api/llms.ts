@@ -7,7 +7,7 @@ import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
-import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_AVAILABILITY_UPDATED_ON } from '../../data/practiceRoomAvailability';
+import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_AVAILABILITY_UPDATED_ON, PRACTICE_ROOM_VACANT_ROOMS } from '../../data/practiceRoomAvailability';
 import {
   DAY_LOCK_PRICE,
   FUNDING_DESIGN_PRICE,
@@ -86,7 +86,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 
 - **Recording Studio**: Professional vocal and instrument recording in a fully treated acoustic space
 - **Mixing & Mastering**: Professional mixing and mastering, available fully remotely — send stems from anywhere (KakaoTalk / Google Drive / WeTransfer), delivery in 3–7 business days. Dedicated page: /mixing-mastering
-- **Practice Room Residency**: Premium private practice room residency program (monthly subscription). Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? '1 room currently available for move-in' : 'fully occupied — waitlist open'}.
+- **Practice Room Residency**: Premium private practice room residency program (monthly subscription). Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? `${PRACTICE_ROOM_VACANT_ROOMS} room(s) currently available for move-in` : 'fully occupied — waitlist open'}.
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
 - **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
