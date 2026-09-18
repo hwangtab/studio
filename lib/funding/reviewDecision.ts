@@ -15,7 +15,14 @@ export type DecisionResult =
   | { ok: true; slug: string; warnings?: string[] }
   | {
       ok: false;
-      code: 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'expired';
+      code:
+        | 'not_found'
+        | 'conflict'
+        | 'invalid_slug'
+        | 'duplicate_slug'
+        | 'incomplete'
+        | 'expired'
+        | 'terms_not_agreed';
       message: string;
     };
 
@@ -49,10 +56,14 @@ export const decideProject = async (
   if (!next) return deny('conflict', '지금 상태에서는 그 판정을 할 수 없습니다.');
 
   const note = input.note?.trim() || null;
-  // 보완 요청은 무엇을 고쳐야 하는지 개설자에게 알려주는 것이 목적이라, 메모 없이는
-  // 의미가 없다 — 빈 보완 요청은 개설자를 "왜 반려됐는지 모르는" 상태로 되돌려보낸다.
-  if (action === 'request_changes' && !note) {
-    return deny('incomplete', '보완 요청에는 안내 메모가 필요합니다.');
+  // 보완 요청·반려 둘 다 "왜"를 개설자에게 알리는 것이 약관 §2의 약속이다(승인은 사유라는
+  // 개념이 없어 제외). 메모 없는 반려는 개설자를 원인도 모른 채 끝난 상태로 돌려보낸다 —
+  // 반려는 되돌릴 수 없는 종착 상태라(reviewTransition.ts) 보완 요청보다 오히려 더 절실하다.
+  if ((action === 'request_changes' || action === 'reject') && !note) {
+    return deny(
+      'incomplete',
+      action === 'reject' ? '반려에는 사유 메모가 필요합니다.' : '보완 요청에는 안내 메모가 필요합니다.',
+    );
   }
 
   if (action !== 'approve') {
@@ -133,6 +144,24 @@ export const decideProject = async (
   });
   if (missing.length > 0) {
     return deny('incomplete', `다음 항목이 비어 있어 승인할 수 없습니다: ${missing.join(', ')}`);
+  }
+
+  /**
+   * 동의 기록 재확인.
+   *
+   * `submit.ts`가 `creatorTermsVersion`을 기록하는 게이트는 이 배포(3차) 이후에 생겼다 —
+   * 그 전에 이미 `submitted` 상태로 남아 있던 프로젝트는 동의 기록 없이 제출됐다. 승인이
+   * 이걸 안 보면 "그때 이 내용에 동의했다"는 증거가 없는 채로 공개된다.
+   *
+   * 막다른 길이 아니다 — `request_changes`로 돌려보내면 개설자가 `canCreatorEdit`
+   * (changes_requested)로 다시 접근해 재제출할 수 있고, 재제출은 지금의 `submit.ts`를
+   * 거치므로 이번엔 반드시 판본이 찍힌다.
+   */
+  if (!project.creatorTermsVersion) {
+    return deny(
+      'terms_not_agreed',
+      '개설자 약관 동의 기록이 없어 승인할 수 없습니다. 보완 요청으로 돌려보내 다시 제출하게 해 주세요.',
+    );
   }
 
   const db = getDb();

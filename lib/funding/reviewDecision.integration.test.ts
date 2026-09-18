@@ -74,6 +74,9 @@ const seedProject = async (
     endAt: new Date('2026-10-31T00:00:00Z'),
     reviewStatus: 'submitted',
     submittedAt: new Date('2026-09-10T00:00:00Z'),
+    // 기본값은 "정상적으로 제출된" 프로젝트 — submit.ts가 항상 이 값을 함께 찍는다.
+    // 동의 기록 부재를 보는 테스트만 명시적으로 null을 override한다.
+    creatorTermsVersion: 'funding-creator-terms-2026-09-18',
     ...overrides,
   }).returning();
   return project.id;
@@ -264,6 +267,32 @@ describe('승인', () => {
     for (const reward of rewards) expect(reward.lockedAt).toBeNull();
   });
 
+  it('동의 기록(creatorTermsVersion)이 없는 프로젝트는 승인되지 않는다', async () => {
+    const creator = await seedCreator('s@example.com');
+    // 이 게이트가 생기기 전(3차 배포 이전)에 이미 submitted로 남아 있던 프로젝트를 흉내낸다.
+    const projectId = await seedProject(creator, { creatorTermsVersion: null });
+    await seedReward(projectId);
+    const before = await readProject(projectId);
+
+    const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toEqual({ ok: false, code: 'terms_not_agreed', message: expect.any(String) });
+
+    const after = await readProject(projectId);
+    expect(after.reviewStatus).toBe(before.reviewStatus);
+    expect(after.approvedAt).toBeNull();
+    const rewards = await readRewards(projectId);
+    for (const reward of rewards) expect(reward.lockedAt).toBeNull();
+  });
+
+  it('동의 기록이 있으면 승인된다', async () => {
+    const creator = await seedCreator('t@example.com');
+    const projectId = await seedProject(creator, { creatorTermsVersion: 'funding-creator-terms-2026-09-18' });
+    await seedReward(projectId);
+
+    const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result.ok).toBe(true);
+  });
+
   it('시작일만 지난 프로젝트는 승인되지만 경고를 함께 돌려준다', async () => {
     const creator = await seedCreator('r@example.com');
     // 시작일은 지났지만 종료일은 아직 남아 있다 — 거부할 이유가 없다.
@@ -305,6 +334,19 @@ describe('보완 요청·반려', () => {
     const after = await readProject(projectId);
     expect(after.reviewStatus).toBe('changes_requested');
     expect(after.reviewNote).toBe('표지 이미지를 다시 올려 주세요.');
+  });
+
+  it('메모 없이는 반려할 수 없다', async () => {
+    const creator = await seedCreator('j2@example.com');
+    const projectId = await seedProject(creator);
+    const before = await readProject(projectId);
+
+    const result = await decideProject(projectId, 'reject', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toEqual({ ok: false, code: 'incomplete', message: expect.any(String) });
+
+    const after = await readProject(projectId);
+    expect(after.reviewStatus).toBe(before.reviewStatus);
+    expect(after.rejectedAt).toBeNull();
   });
 
   it('반려는 rejected로 보내고 rejectedAt을 남긴다', async () => {
