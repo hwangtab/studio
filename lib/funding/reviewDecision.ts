@@ -213,6 +213,11 @@ export const decideProject = async (
    * 프로젝트 UPDATE를 배치의 앞에 두는 이유는 그대로다 — 같은 트랜잭션 안에서 리워드
    * UPDATE의 EXISTS가 방금 그 UPDATE가 반영한 값을 보게 하기 위해서다.
    */
+  // 승인 화면의 승인 버튼은 note를 보내지 않는다(input.note === undefined) — 그런데도
+  // 이 자리에서 무조건 `note`(= null)를 쓰면 운영자가 "개설자에게 보이는 메모"에 미리
+  // 적어 둔 문장이 승인과 동시에 조용히 사라진다. note가 실제로 전달됐을 때만 갈아 끼우고,
+  // 그렇지 않으면 기존 값을 보존한다.
+  const approveReviewNote = input.note !== undefined ? note : project.reviewNote;
   const batchResult = await db.batch([
     db
       .update(fundingProjects)
@@ -221,7 +226,7 @@ export const decideProject = async (
         status: 'auto',
         slug,
         approvedAt: now,
-        reviewNote: note,
+        reviewNote: approveReviewNote,
         updatedAt: now,
       })
       .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus))),

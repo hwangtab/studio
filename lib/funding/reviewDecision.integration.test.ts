@@ -151,6 +151,35 @@ describe('승인', () => {
     expect(after.approvedAt?.getTime()).toBe(now.getTime());
   });
 
+  /**
+   * 승인 화면의 승인 버튼은 note를 보내지 않는다(input.note === undefined). 예전엔 그때마다
+   * `note ?? null`을 그대로 써서, 운영자가 "개설자에게 보이는 메모"에 미리 적어 둔 문장이
+   * 승인과 동시에 조용히 사라졌다. note를 안 보내면 기존 reviewNote를 그대로 보존해야 한다.
+   */
+  it('note 없이 승인하면 기존 reviewNote를 지우지 않고 그대로 둔다', async () => {
+    const creator = await seedCreator('preserve-note@example.com');
+    const projectId = await seedProject(creator, { reviewNote: '개설자에게 미리 남겨 둔 메모' });
+    await seedReward(projectId);
+
+    const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result.ok).toBe(true);
+
+    const after = await readProject(projectId);
+    expect(after.reviewNote).toBe('개설자에게 미리 남겨 둔 메모');
+  });
+
+  it('note를 명시적으로 보내면(빈 문자열 포함) 승인 시 그 값으로 갈아 끼운다', async () => {
+    const creator = await seedCreator('overwrite-note@example.com');
+    const projectId = await seedProject(creator, { reviewNote: '예전 메모' });
+    await seedReward(projectId);
+
+    const result = await decideProject(projectId, 'approve', { note: '새 메모' }, new Date('2026-09-18T00:00:00Z'));
+    expect(result.ok).toBe(true);
+
+    const after = await readProject(projectId);
+    expect(after.reviewNote).toBe('새 메모');
+  });
+
   it('이미 잠긴 리워드의 lockedAt을 덮어쓰지 않는다', async () => {
     const creator = await seedCreator('d@example.com');
     // approved에서 시작 — 재승인 같은 경로가 생겨도 최초 잠금 시각이 남아야 한다는 것을
