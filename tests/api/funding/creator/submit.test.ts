@@ -37,6 +37,8 @@ import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
 // eslint-disable-next-line import/first
 import { OPERATOR_EMAIL } from '../../../../lib/operatorContact';
+// eslint-disable-next-line import/first
+import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../lib/funding/policy';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -235,7 +237,7 @@ it('개설자 이름이 비어 있으면 개설자 정보 항목이 메시지에
 
 it('정상 → 200이고 reviewStatus가 submitted, submittedAt이 채워진다', async () => {
   const project = await seedCompleteProject();
-  const r = await call({ id: project.id });
+  const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
   expect(r.status).toBe(200);
   expect(r.body).toEqual({ ok: true });
 
@@ -246,7 +248,7 @@ it('정상 → 200이고 reviewStatus가 submitted, submittedAt이 채워진다'
 
 it('운영자 메일 — 수신자는 OPERATOR_EMAIL, 제목은 "[펀딩] 심사 요청 — {제목}" 형식', async () => {
   const project = await seedCompleteProject();
-  await call({ id: project.id });
+  await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
 
   expect(sendEmail).toHaveBeenCalledTimes(1);
   const params = sendEmail.mock.calls[0][0];
@@ -292,7 +294,7 @@ it('읽은 뒤(경합) 운영자가 먼저 승인해 버리면 409 — approved�
   await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved', approvedAt: new Date() })
     .where(eq(schema.fundingProjects.id, project.id));
 
-  const r = await call({ id: project.id });
+  const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
   expect(r.status).toBe(409);
 
   const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
@@ -302,14 +304,14 @@ it('읽은 뒤(경합) 운영자가 먼저 승인해 버리면 409 — approved�
 
 it('changes_requested 상태에서는 다시 제출할 수 있다', async () => {
   const project = await seedCompleteProject({ reviewStatus: 'changes_requested' });
-  const r = await call({ id: project.id });
+  const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
   expect(r.status).toBe(200);
 });
 
 it('메일 발송이 실패해도 200이고 상태는 바뀐다', async () => {
   sendEmail.mockResolvedValue({ ok: false, errorCode: 'API_ERROR' });
   const project = await seedCompleteProject();
-  const r = await call({ id: project.id });
+  const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
   expect(r.status).toBe(200);
 
   const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
@@ -319,17 +321,41 @@ it('메일 발송이 실패해도 200이고 상태는 바뀐다', async () => {
 it('메일 발송이 예외를 던져도 200이고 상태는 바뀐다', async () => {
   sendEmail.mockRejectedValue(new Error('network down'));
   const project = await seedCompleteProject();
-  const r = await call({ id: project.id });
+  const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
   expect(r.status).toBe(200);
 
   const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
   expect(row?.reviewStatus).toBe('submitted');
 });
 
-it('FUNDING_CREATOR_TERMS_VERSION이 빈 문자열인 동안은 agreedTermsVersion을 요구하지 않는다', async () => {
+it('FUNDING_CREATOR_TERMS_VERSION이 채워진 뒤에는 agreedTermsVersion 없이 호출하면 400', async () => {
   const project = await seedCompleteProject();
   const r = await call({ id: project.id }, {}); // agreedTermsVersion 없이 호출
+  expect(r.status).toBe(400);
+  expect(r.body.message).toEqual(expect.stringContaining('개설자 약관'));
+
+  const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
+  expect(row?.reviewStatus).toBe('draft');
+});
+
+it('agreedTermsVersion이 현재 판본과 다르면 400 — 미동의와 다른 문구(약관 개정 안내)를 준다', async () => {
+  const project = await seedCompleteProject();
+  const r = await call({ id: project.id }, { agreedTermsVersion: 'funding-creator-terms-2026-01-01' });
+  expect(r.status).toBe(400);
+  // 체크박스를 안 켠 경우('개설자 약관에 동의해 주세요')와 문구를 갈라야, 이미 동의를 마친
+  // 개설자가 판본만 바뀐 상황에서 원인을 알 수 있다.
+  expect(r.body.message).toEqual(expect.stringContaining('개정'));
+  expect(r.body.message).not.toEqual(expect.stringContaining('동의해 주세요'));
+});
+
+it('agreedTermsVersion이 현재 판본과 같으면 200이고 creator_terms_version·creator_terms_agreed_at이 채워진다', async () => {
+  const project = await seedCompleteProject();
+  const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
   expect(r.status).toBe(200);
+
+  const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
+  expect(row?.creatorTermsVersion).toBe(FUNDING_CREATOR_TERMS_VERSION);
+  expect(row?.creatorTermsAgreedAt).not.toBeNull();
 });
 
 it('Cache-Control: no-store가 실린다', async () => {

@@ -14,8 +14,8 @@
  *
  * **세그먼트 전체가 ko 전용은 아니다.** funding 세그먼트에는 진짜 ko 전용 정적
  * 페이지(index, apply, [slug]/index)와, getServerSideProps로 모든 로케일 경로를
- * 받아 런타임에 /ko/funding으로 307 리다이렉트하는 SSR 페이지(terms·success·fail·
- * manage/[orderNo]·[slug]/pledge)가 섞여 있다. 후자는 404가 아니므로 홈으로
+ * 받아 런타임에 /ko/funding으로 307 리다이렉트하는 SSR 페이지(terms·creator-terms·
+ * success·fail·manage/[orderNo]·[slug]/pledge)가 섞여 있다. 후자는 404가 아니므로 홈으로
  * 탈출시키면 오히려 회귀다 — 특히 success·manage·pledge는 쿼리(주문번호 등)를
  * 지닌 채 리다이렉트돼야 하는데 홈으로 보내면 그 맥락을 잃는다. 그래서 세그먼트
  * 문자열 하나가 아니라 규칙(KoOnlyRouteRule)으로 깊이와 리터럴 형제 라우트를
@@ -43,7 +43,7 @@ export interface KoOnlyRouteRule {
 
 export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
   { segment: 'artists', hasIndexPage: true, literalSiblings: [] },
-  { segment: 'funding', hasIndexPage: true, literalSiblings: ['terms', 'success', 'fail', 'manage', 'creator'] },
+  { segment: 'funding', hasIndexPage: true, literalSiblings: ['terms', 'creator-terms', 'success', 'fail', 'manage', 'creator'] },
   { segment: 'guides', hasIndexPage: false, literalSiblings: [] },
 ];
 

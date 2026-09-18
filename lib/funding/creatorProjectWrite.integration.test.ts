@@ -396,6 +396,53 @@ describe('편집 가능 상태', () => {
   });
 });
 
+describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', () => {
+  it('approved 프로젝트가 하나라도 있으면 이름 변경이 거부된다', async () => {
+    const creator = await seedCreator('locked-name@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '바뀐 이름', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: false, code: 'locked' });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('가나'); // seedCreator의 기본값 그대로
+  });
+
+  it('같은 이름으로 "바꾸려는" 저장(변화 없음)은 approved가 있어도 통과한다', async () => {
+    const creator = await seedCreator('locked-name-same@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '가나', contactName: '담당자', phone: null, bio: '소개', links: null,
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.bio).toBe('소개');
+  });
+
+  it('approved 프로젝트가 없으면(submitted뿐이면) 이름을 바꿀 수 있다', async () => {
+    const creator = await seedCreator('unlocked-name@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '새 이름', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('새 이름');
+  });
+});
+
 describe('slug 중복', () => {
   it('다른 프로젝트가 쓰는 slug는 거부한다', async () => {
     const creator = await seedCreator('g@example.com');

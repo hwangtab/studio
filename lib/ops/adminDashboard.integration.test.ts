@@ -37,7 +37,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 beforeEach(async () => {
-  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'social_tokens']) {
+  for (const t of ['refunds', 'payments', 'bookings', 'work_orders', 'funding_pledges', 'funding_projects', 'funding_creators', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'social_tokens']) {
     await client.execute(`DELETE FROM ${t}`);
   }
 });
@@ -85,6 +85,19 @@ const insertContract = async (id: string, status: string, expiresIso: string) =>
   });
 };
 
+const insertFundingProject = async (id: string, reviewStatus: string) => {
+  await client.execute({
+    sql: `INSERT INTO funding_creators (id, email, name) VALUES (?, ?, '아티스트')`,
+    args: [`fc-${id}`, `${id}@x.y`],
+  });
+  await client.execute({
+    sql: `INSERT INTO funding_projects (id, slug, creator_id, title, summary, content, cover_url,
+            goal_amount, start_at, end_at, review_status)
+          VALUES (?, ?, ?, '제목', '요약', '본문', 'https://x/cover.webp', 1000000, ?, ?, ?)`,
+    args: [`fp-${id}`, `slug-${id}`, `fc-${id}`, EPOCH('2026-09-01T00:00:00Z'), EPOCH('2026-10-01T00:00:00Z'), reviewStatus],
+  });
+};
+
 it('이번 주 세션은 KST 오늘 0시부터 7일 안의 확정 예약만, 시작 시각순으로 싣는다', async () => {
   await insertBooking('today-morning', '2026-09-16T01:00:00Z'); // KST 10:00 — 이미 지났지만 오늘이라 싣는다
   await insertBooking('tomorrow', '2026-09-17T05:00:00Z');
@@ -110,6 +123,10 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
   await insertContract('c1', 'sent', '2026-09-20T00:00:00Z');
   await insertContract('c2', 'sent', '2026-09-10T00:00:00Z'); // 기한 지남 — 서명 대기가 아니라 점검 항목
   await insertContract('c3', 'signed', '2026-09-20T00:00:00Z');
+  await insertFundingProject('f1', 'submitted');
+  await insertFundingProject('f2', 'submitted');
+  await insertFundingProject('f3', 'draft');
+  await insertFundingProject('f4', 'approved');
 
   const dash = await loadAdminDashboard(NOW);
 
@@ -121,6 +138,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     subscriptionsPaused: 1,
     contractsAwaitingSignature: 1,
     artistPayoutsPending: 0,
+    fundingProjectsAwaitingReview: 2,
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });

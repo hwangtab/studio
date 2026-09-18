@@ -139,7 +139,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   try {
     // 검증에 걸리면 404가 아니다 — 초안은 필수값이 비어 있는 것이 정상이라, 무엇을
     // 채워야 하는지 알려 주는 화면을 대신 띄운다(아래 catch).
-    const project = rowsToFundingProject(projectRow, detail.rewards);
+    const project = rowsToFundingProject(projectRow, detail.rewards, detail.creator.name);
     return {
       props: {
         incomplete: false,

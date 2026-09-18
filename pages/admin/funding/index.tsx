@@ -225,7 +225,16 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
-      <AdminShell title="펀딩 관리" description="펀딩 현황을 확인하고 관리합니다." width="wide">
+      <AdminShell
+        title="펀딩 관리"
+        description="펀딩 현황을 확인하고 관리합니다."
+        width="wide"
+        actions={
+          <Link href="/admin/funding/projects" passHref>
+            <Button light variant="outline">프로젝트 심사</Button>
+          </Link>
+        }
+      >
           <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
             <div className="p-6 md:p-8">
               {notice && <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>}

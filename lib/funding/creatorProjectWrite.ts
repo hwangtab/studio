@@ -156,12 +156,25 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * guard를 태우면 정확히 그 구멍이 생긴다.
  *
  * "프로필 변경이 이미 공개된 프로젝트 화면에 그대로 반영되는 것을 심사로 막을지"는 3차
- * (관리자 심사) 범위에서 정할 문제다 — 여기서는 계정 소유(session의 creatorId)만 본다.
+ * (관리자 심사)에서 정했다: **이름만 잠근다.** Task 10이 공개 상세의 판매자 표시 옆에
+ * `creator.name`을 그리기 시작하면서, 승인된 프로젝트를 가진 개설자가 이름을 아무
+ * 문자열로 바꾸면 ISR 60초 안에 공개 페이지에 그대로 뜨게 됐다(심사도 알림도 없이). 그래서
+ * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 거부한다. `bio`·연락처·
+ * `links`는 공개 화면에 실리지 않으므로 계속 자유롭게 고칠 수 있다. 새 컬럼 없이
+ * `funding_projects`를 그때그때 조회해 판정한다.
  */
 export const saveCreatorSection = async (creatorId: string, value: CreatorSection): Promise<WriteResult> => {
-  const [existing] = await getDb().select({ id: fundingCreators.id }).from(fundingCreators)
+  const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name }).from(fundingCreators)
     .where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
+
+  if (value.name !== existing.name) {
+    const [approvedProject] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
+      .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
+    if (approvedProject) {
+      return deny('locked', '승인된 프로젝트가 있어 이름은 더 이상 바꿀 수 없습니다. 소개·연락처·링크는 계속 고칠 수 있습니다.');
+    }
+  }
 
   await getDb().update(fundingCreators).set({
     name: value.name,

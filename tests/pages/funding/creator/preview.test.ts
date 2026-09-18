@@ -123,4 +123,21 @@ describe('funding creator 미리보기 getServerSideProps', () => {
     expect(props.project.content).toBe(COMPLETE_PROJECT.content);
     expect(props.project.rewards[0].downloads).toEqual([]);
   });
+
+  /**
+   * rowsToFundingProject의 세 번째 인자(creatorName)를 빠뜨리면 미리보기에는 개설자 줄이
+   * 영영 없다가 승인되는 순간(공개 상세는 이 인자를 넘긴다) 갑자기 생긴다 — "공개 상세와
+   * 같은 컴포넌트로 그린다"는 이 페이지 자신의 전제가 합성 단계에서 깨지는 사고다.
+   * 컴포넌트 테스트(ProjectDetailView)는 주입값만 보므로 이 GSSP 배선 누락을 못 잡는다.
+   */
+  it('project.creator.name에 개설자 이름이 채워진다', async () => {
+    (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+    (loadProjectForCreator as jest.Mock).mockResolvedValue(COMPLETE_PROJECT);
+    const res = resStub();
+    const result = await getServerSideProps({
+      params: { locale: 'ko', id: 'proj-1' }, query: {}, req: { headers: {}, cookies: {} }, res,
+    } as never);
+    const props = (result as unknown as { props: { project: { creator: { name: string } | null } } }).props;
+    expect(props.project.creator).toEqual({ name: '개설자' });
+  });
 });

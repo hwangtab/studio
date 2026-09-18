@@ -6,6 +6,7 @@ import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
 import FundingTrustNotice from './FundingTrustNotice';
 import { formatPriceAmount } from '../../data/pricing';
+import { getSiteConfig } from '../../data/siteConfig';
 // `mergeRewardRemaining`은 `shape.ts`에서 직접 가져온다 — `lib/funding/projects.ts`는
 // 최상위에서 node:fs·node:path를 실행하는 서버 전용 모듈이라(FUNDING_DIR), 이 컴포넌트가
 // 거기서 런타임 값을 가져가면 그 모듈 전체가 클라이언트 번들에 끌려 들어가 빌드가
@@ -67,6 +68,7 @@ export default function ProjectDetailView({
 }: ProjectDetailViewProps) {
   const canPledge = interactive && state === 'live';
   const rewardRemaining = mergeRewardRemaining(project.rewards, remaining);
+  const mailOrderSalesNumber = getSiteConfig('ko').mailOrderSalesNumber;
 
   // pages/api/funding/[slug]/status.ts와 같은 식(Math.floor, 클램프 없음)이어야 공개
   // 페이지의 숫자가 폴링 응답의 percent와 한 픽셀도 어긋나지 않는다 — 목표 초과 달성이면
@@ -138,6 +140,18 @@ export default function ProjectDetailView({
             <article className="prose prose-lg max-w-none dark:prose-invert">
               <MarkdownRenderer content={project.content} locale="ko" />
             </article>
+            {/*
+              전자상거래법상 판매자(스튜디오 놀)와 개설자를 구분해 표시한다(펀딩 약관
+              제4조 — "개설자가 있는 프로젝트는 그 사실과 개설자를 프로젝트 페이지에
+              함께 표시합니다"). 마크다운 프로젝트(project.creator === null, 스튜디오가
+              직접 연 것)는 아무것도 표시하지 않는다 — 지금 화면 그대로다.
+            */}
+            {project.creator && (
+              <p className="typo-card-meta mt-4 text-gray-600 dark:text-gray-300">
+                개설자 {project.creator.name} · 판매자 스튜디오 놀
+                {mailOrderSalesNumber ? ` (통신판매업 신고 ${mailOrderSalesNumber})` : ''}
+              </p>
+            )}
             <div className="mt-12 space-y-8">
               <BackerWall names={backers} messages={messages} />
               <FundingTrustNotice />
