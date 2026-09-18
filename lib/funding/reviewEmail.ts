@@ -1,5 +1,5 @@
 import { sendEmail } from '../email/resend';
-import { CUSTOMER_REPLY_TO } from '../operatorContact';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
 import { PHONE, PHONE_NUMBER, SITE_URL } from './email';
 
@@ -97,4 +97,40 @@ export const sendReviewDecisionEmail = async (
     text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
   });
   return result.ok ? null : `creator:${result.errorCode}`;
+};
+
+/**
+ * 개설자 알림 메일이 실패했을 때의 폴백 — 운영자에게 직접 연락하라고 알린다.
+ *
+ * 이 태스크가 막으려던 상태는 "판정은 됐는데 개설자는 통보를 못 받는데 아무도 모르는 것"이다.
+ * `sendReviewDecisionEmail` 실패는 지금 심사 API 응답의 `warnings`에만 남고, 운영자가 그
+ * 응답 화면을 닫거나 새로고침하면 사실 자체가 사라진다(판정은 프로젝트당 사실상 한 번이라
+ * 다시 눌러도 `conflict`만 돌아온다). DB 컬럼을 추가해 영속 기록·재발송 액션을 만드는 것이
+ * 정공법이지만 이 계획(Task 5)은 마이그레이션이 범위 밖이다 — 그래서 **마이그레이션 없이
+ * 되는 것**만 한다: 운영자 개인 메일함으로 즉시 알린다. 영속 기록·재발송 UI는 4차로 넘긴다.
+ *
+ * 이 폴백 자체가 실패해도(Resend 장애 등) 판정을 실패시키지 않는다 — 호출부가 그 사유도
+ * `warnings`에 추가로 쌓고 `console.error`로 남긴다.
+ */
+export const sendReviewDecisionOperatorFallback = async (
+  project: AdminProjectDetail,
+  action: ReviewDecisionAction,
+  slug: string,
+  failureReason: string,
+): Promise<string | null> => {
+  const subject = `[펀딩] 심사 알림 메일 실패 — ${project.title}`;
+  const text = [
+    '개설자에게 심사 결과 메일을 보내지 못했습니다. 아래 정보로 직접 연락해 주세요.',
+    '',
+    `프로젝트: ${project.title} (id: ${project.id})`,
+    `판정: ${REVIEW_SUBJECT[action]}`,
+    `개설자: ${project.creatorName} <${project.creatorEmail}>`,
+    `공개 주소: ${publicUrl(slug)}`,
+    `실패 사유: ${failureReason}`,
+    '',
+    `심사 화면: ${editUrl(project.id)}`,
+  ].join('\n');
+
+  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text });
+  return result.ok ? null : `operator:${result.errorCode}`;
 };
