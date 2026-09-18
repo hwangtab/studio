@@ -242,6 +242,44 @@ describe('승인', () => {
     expect(after.status).toBe(before.status);
     expect(after.approvedAt).toBeNull();
   });
+
+  it('종료일이 이미 지난 프로젝트는 승인되지 않는다', async () => {
+    const creator = await seedCreator('q@example.com');
+    // leadDays(3일)보다 심사가 오래 걸려 startAt·endAt이 모두 과거가 된 경우를 흉내낸다.
+    const projectId = await seedProject(creator, {
+      startAt: new Date('2026-09-01T00:00:00Z'),
+      endAt: new Date('2026-09-10T00:00:00Z'),
+    });
+    await seedReward(projectId);
+    const before = await readProject(projectId);
+
+    const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toEqual({ ok: false, code: 'expired', message: expect.any(String) });
+
+    const after = await readProject(projectId);
+    expect(after.reviewStatus).toBe(before.reviewStatus);
+    expect(after.status).toBe(before.status);
+    expect(after.approvedAt).toBeNull();
+    const rewards = await readRewards(projectId);
+    for (const reward of rewards) expect(reward.lockedAt).toBeNull();
+  });
+
+  it('시작일만 지난 프로젝트는 승인되지만 경고를 함께 돌려준다', async () => {
+    const creator = await seedCreator('r@example.com');
+    // 시작일은 지났지만 종료일은 아직 남아 있다 — 거부할 이유가 없다.
+    const projectId = await seedProject(creator, {
+      startAt: new Date('2026-09-10T00:00:00Z'),
+      endAt: new Date('2026-10-31T00:00:00Z'),
+    });
+    await seedReward(projectId);
+
+    const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toEqual({ ok: true, slug: expect.any(String), warnings: ['시작일이 이미 지나 승인 즉시 모금이 시작됩니다.'] });
+
+    const after = await readProject(projectId);
+    expect(after.reviewStatus).toBe('approved');
+    expect(after.status).toBe('auto');
+  });
 });
 
 describe('보완 요청·반려', () => {
@@ -306,7 +344,11 @@ describe('경합과 전이', () => {
 
   it('읽은 뒤 상태가 바뀌면 409다', async () => {
     const creator = await seedCreator('o@example.com');
-    // 실제 행: 이미 다른 관리자가 승인까지 마쳤다.
+    // 실제 행: 이미 다른 관리자(또는 중복 클릭)가 승인까지 마쳤다. 리워드는 **일부러
+    // 안 잠근 채로** 둔다 — 잠가 두면 아래 lockedAt 단언이 "이미 잠겨 있어서 그런지,
+    // 이 호출이 안 건드려서 그런지" 구분이 안 된다. 여기서 확인하려는 것은 후자다:
+    // review_status='approved'만으로는 이 호출이 쓴 것인지 남이 이미 써 놓은 것인지
+    // EXISTS가 구분 못 하면, 0행짜리(=conflict) 이 호출이 그래도 리워드를 잠가 버린다.
     const approvedAt = new Date('2026-09-15T00:00:00Z');
     const projectId = await seedProject(creator, {
       reviewStatus: 'approved',
@@ -314,7 +356,7 @@ describe('경합과 전이', () => {
       approvedAt,
       slug: 'already-approved-elsewhere',
     });
-    await seedReward(projectId, { lockedAt: approvedAt });
+    await seedReward(projectId, { lockedAt: null });
 
     // 이 호출이 읽은 시점의 스냅샷은 낡았다 — 아직 submitted로 보인다.
     const stale = await realAdminProjects.loadProjectForAdmin(projectId);
@@ -328,6 +370,12 @@ describe('경합과 전이', () => {
     expect(after.reviewStatus).toBe('approved');
     expect(after.approvedAt?.getTime()).toBe(approvedAt.getTime());
     expect(after.slug).toBe('already-approved-elsewhere');
+
+    // 가장 위험한 단언 — review_status가 이미 'approved'라는 사실만으로 이 호출의
+    // 리워드 UPDATE가 통과해 버리면 안 된다. EXISTS가 "이 호출이 방금 그 값을 썼다"까지
+    // 확인해야 이 값이 null로 남는다.
+    const [reward] = await readRewards(projectId);
+    expect(reward.lockedAt).toBeNull();
   });
 
   it('승인 실패 시 lockedAt이 하나도 안 찍힌다', async () => {

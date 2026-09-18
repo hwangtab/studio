@@ -12,10 +12,10 @@ import { normalizeFundingSlug, slugRejectionReason } from './reservedSlugs';
 export type AdminReviewAction = Extract<ReviewAction, 'approve' | 'request_changes' | 'reject'>;
 
 export type DecisionResult =
-  | { ok: true; slug: string }
+  | { ok: true; slug: string; warnings?: string[] }
   | {
       ok: false;
-      code: 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete';
+      code: 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'expired';
       message: string;
     };
 
@@ -76,6 +76,29 @@ export const decideProject = async (
 
   // --- 승인 경로 ---
 
+  /**
+   * 모금 기간 재검사.
+   *
+   * `submit.ts`가 제출 시점에 startAt이 "오늘 + leadDays일 뒤"인지 본 것과 같은 이유로,
+   * 승인 시점에도 다시 봐야 한다 — 심사가 leadDays(3일)보다 오래 걸리면 그 사이에 날짜가
+   * 저절로 무효해진다. `submitted` 상태에서는 `canCreatorEdit`이 false라 개설자가 직접
+   * 고칠 수 없으므로, 이 재검사가 유일한 안전망이다.
+   *
+   * 둘을 다르게 다룬다: **종료일이 지났으면 거부한다** — 이미 끝난 모금을 여는 것은
+   * 항상 틀렸고 되돌릴 방법도 없다. **시작일만 지났으면 통과시키되 경고한다** — 막으면
+   * 개설자도 운영자도 날짜를 고칠 길이 없는 막다른 상태가 된다(보완 요청으로 돌려보내면
+   * 개설자가 직접 고칠 수 있으니, 그 판단은 운영자에게 맡긴다).
+   */
+  const startAt = new Date(project.startAt);
+  const endAt = new Date(project.endAt);
+  if (endAt.getTime() <= now.getTime()) {
+    return deny('expired', '모금 종료일이 이미 지났습니다. 보완 요청으로 돌려보내 기간을 다시 잡게 해 주세요.');
+  }
+  const warnings: string[] = [];
+  if (startAt.getTime() < now.getTime()) {
+    warnings.push('시작일이 이미 지나 승인 즉시 모금이 시작됩니다.');
+  }
+
   // 슬러그 확정: 운영자가 새 값을 넣었으면 그것을, 아니면 개설자가 고른 기존 값을 쓴다.
   const slugRaw = input.slug?.trim() || project.slug;
   const slugReason = slugRejectionReason(slugRaw);
@@ -120,11 +143,20 @@ export const decideProject = async (
    *
    * `db.batch`는 실패 시 전부 롤백되지만, 프로젝트 UPDATE가 경합으로 0행이어도 리워드
    * UPDATE는 그 자체로 유효한 SQL이라 성공해 버린다 — 그러면 "잠겼는데 공개는 안 된"
-   * 프로젝트가 남는다. 막는 방법은 리워드 UPDATE의 WHERE에도 "프로젝트가 이미
-   * approved"라는 EXISTS 조건을 함께 거는 것이다. 프로젝트 UPDATE를 배치의 앞에 두면
-   * 그 EXISTS는 (같은 트랜잭션 안에서) 방금 그 UPDATE가 반영한 값을 본다 — 프로젝트
-   * UPDATE가 0행이었다면 review_status는 그대로 승인 전 값이므로 EXISTS가 거짓이 되어
-   * 리워드도 함께 안 잠긴다.
+   * 프로젝트가 남는다.
+   *
+   * `p.review_status = 'approved'`만으로는 이걸 못 막는다 — 다른 관리자(또는 중복 클릭)가
+   * 이 함수보다 먼저 같은 프로젝트를 승인해 놓았다면, **이 호출의 프로젝트 UPDATE가
+   * 0행이어도** review_status는 이미 'approved'이므로 EXISTS가 참이 되어 리워드가
+   * 잠긴다 — 정작 이 호출은 rowsAffected===0을 보고 `conflict`를 돌려주면서 실제로는
+   * 썼다는 모순이 생긴다. 그래서 "review_status가 approved"뿐 아니라 **이 배치가 방금
+   * 그 값을 썼다는 증거**까지 요구한다 — 프로젝트 UPDATE가 같은 `updatedAt`(epoch)을
+   * 쓰므로, 리워드 UPDATE의 EXISTS에 `p.updated_at = ${epoch}`를 더하면 "이 호출이
+   * approved로 만든 바로 그 행"만 통과한다. 남이 먼저 승인한 경우 그 행의 updated_at은
+   * 그 남의 호출이 쓴 값이라 이 epoch와 다르므로 EXISTS가 거짓이 되어 리워드는 안 잠긴다.
+   *
+   * 프로젝트 UPDATE를 배치의 앞에 두는 이유는 그대로다 — 같은 트랜잭션 안에서 리워드
+   * UPDATE의 EXISTS가 방금 그 UPDATE가 반영한 값을 보게 하기 위해서다.
    */
   const batchResult = await db.batch([
     db
@@ -143,7 +175,7 @@ export const decideProject = async (
       WHERE project_id = ${projectId} AND locked_at IS NULL
         AND EXISTS (
           SELECT 1 FROM funding_projects p
-          WHERE p.id = funding_rewards.project_id AND p.review_status = 'approved'
+          WHERE p.id = funding_rewards.project_id AND p.review_status = 'approved' AND p.updated_at = ${epoch}
         )
     `),
   ]);
@@ -152,5 +184,5 @@ export const decideProject = async (
     return deny('conflict', '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');
   }
 
-  return { ok: true, slug };
+  return { ok: true, slug, ...(warnings.length > 0 ? { warnings } : {}) };
 };
