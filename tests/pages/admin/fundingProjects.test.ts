@@ -36,6 +36,7 @@ const baseDetail: AdminProjectDetail = {
   content: '본문',
   coverUrl: '/images/cover.jpg',
   reviewNote: null,
+  creatorTermsVersion: 'funding-creator-terms-2026-09-18',
   creator: { contactName: '담당자', phone: '010-0000-0000', bio: null, links: null },
   rewards: [
     {

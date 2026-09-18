@@ -17,6 +17,7 @@ const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], num
   duplicate_slug: 400,
   incomplete: 400,
   expired: 400,
+  terms_not_agreed: 400,
 };
 
 const REVIEW_ACTIONS: readonly AdminReviewAction[] = ['approve', 'request_changes', 'reject'];

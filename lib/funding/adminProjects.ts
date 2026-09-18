@@ -51,6 +51,12 @@ export interface AdminProjectDetail extends AdminProjectSummary {
   content: string;
   coverUrl: string;
   reviewNote: string | null;
+  /**
+   * 개설자가 심사 신청 시 동의한 약관 판본(`submit.ts`가 기록). 승인 판정
+   * (`reviewDecision.ts`)이 이 값을 재확인한다 — 이 컬럼이 나오기 전(3차 배포 이전)에
+   * `submitted`로 남아 있던 프로젝트는 동의 기록 없이 제출됐을 수 있어 null일 수 있다.
+   */
+  creatorTermsVersion: string | null;
   creator: {
     contactName: string | null;
     phone: string | null;
@@ -132,6 +138,7 @@ export const loadProjectForAdmin = async (projectId: string): Promise<AdminProje
     content: row.project.content,
     coverUrl: row.project.coverUrl,
     reviewNote: row.project.reviewNote,
+    creatorTermsVersion: row.project.creatorTermsVersion,
     creator: {
       contactName: row.creator.contactName,
       phone: row.creator.phone,
