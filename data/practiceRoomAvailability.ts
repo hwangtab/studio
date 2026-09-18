@@ -12,4 +12,4 @@ export const PRACTICE_ROOM_HAS_VACANCY = true;
  * 0이면 PRACTICE_ROOM_HAS_VACANCY를 false로 두는 것이 정본이다(카피가 만실 문구로 바뀐다).
  */
 export const PRACTICE_ROOM_VACANT_ROOMS = 1;
-export const PRACTICE_ROOM_AVAILABILITY_UPDATED_ON = '2026-09-16';
+export const PRACTICE_ROOM_AVAILABILITY_UPDATED_ON = '2026-09-18';
