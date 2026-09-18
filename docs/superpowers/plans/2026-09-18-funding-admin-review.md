@@ -429,7 +429,7 @@ WHERE project_id = ? AND locked_at IS NULL
 1. `res.setHeader('Cache-Control', 'no-store')`
 2. `authenticateAdminApi` 실패 → 401
 3. `req.method !== 'PATCH'` → 405
-4. `switch (body.action)`: `approve` · `request_changes` · `reject` · `set_note` · default 400
+4. `switch (body.action)`: `approve` · `request_changes` · `reject` · `set_review_note` · default 400
 5. `decideProject` 호출 → `DecisionResult.code`를 상태로: `not_found`→404, `conflict`→409, `invalid_slug`·`duplicate_slug`·`incomplete`·`expired`→400
    - 성공이면 `DecisionResult.warnings`를 응답의 `warnings`에 **합친다**(재검증·메일 경고와 같은 배열)
 6. **승인 성공이면** `revalidateFundingPaths(res, result.slug)` → 실패해도 200이되 응답에 경고를 싣는다
@@ -437,7 +437,7 @@ WHERE project_id = ? AND locked_at IS NULL
 
 응답은 `{ ok: true, warnings?: string[] }`. 경고가 있으면 화면이 그대로 보여 준다 — 재검증이나 메일이 실패했는데 조용히 성공으로 보이면 운영자가 개설자에게 연락했다고 착각한다.
 
-`set_note`는 판정 없이 메모만 저장한다(심사 중 메모).
+`set_review_note`는 판정 없이 `reviewNote`만 저장한다. **이 값은 개설자 화면에 그대로 보인다** — `pages/[locale]/funding/creator/[id].tsx`와 그 목록이 "운영자 메모"로 렌더한다. 그리고 보완 요청 사유와 **같은 컬럼**이라 덮어쓸 수 있다. 화면 라벨을 "내부 메모"라고 붙이면 안 된다. 진짜 내부 메모는 별도 컬럼이 필요하므로 4차다(후원 쪽 `adminMemo` 선례를 따른다).
 
 - [ ] **Step 2: 테스트**
 
