@@ -16,9 +16,12 @@ import { getDbFundingProject, listDbFundingProjects } from './dbProjects';
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
 
-const seed = async (over: Partial<schema.NewFundingProjectRow> = {}) => {
+const seed = async (
+  over: Partial<schema.NewFundingProjectRow> = {},
+  creatorOver: Partial<schema.NewFundingCreator> = {},
+) => {
   const [creator] = await mockDb.insert(schema.fundingCreators)
-    .values({ email: `${Math.random()}@example.com`, name: '가나다' }).returning();
+    .values({ email: `${Math.random()}@example.com`, name: '가나다', ...creatorOver }).returning();
   const [project] = await mockDb.insert(schema.fundingProjects).values({
     slug: 'demo', creatorId: creator.id, title: '제목', summary: '요약', content: '본문',
     coverUrl: '/images/funding/demo/cover.webp',
@@ -58,6 +61,7 @@ describe('dbProjects', () => {
     // ISO 문자열이어야 한다 — 화면·상태 판정이 문자열을 파싱한다.
     expect(p!.startAt).toBe('2026-10-01T01:00:00.000Z');
     expect(p!.ogImage).toBeNull();
+    expect(p!.creator).toEqual({ name: '가나다' });
   });
 
   it('리워드를 sortOrder 순으로 싣는다', async () => {
@@ -98,5 +102,49 @@ describe('dbProjects', () => {
     expect(p!.rewards.find((r) => r.id === 'mp3')!.downloads).toEqual([
       { label: 'MP3 320kbps', key: 'demo/abc/album.zip' },
     ]);
+  });
+
+  it('목록도 개설자 이름을 싣는다', async () => {
+    await seed({ slug: 'list-demo' }, { name: '목록개설자' });
+    const list = await listDbFundingProjects();
+    expect(list.find((p) => p.slug === 'list-demo')?.creator).toEqual({ name: '목록개설자' });
+  });
+
+  it('비공개 개설자 필드(이메일·연락처·정산)는 공개 프로젝트에 실리지 않는다', async () => {
+    // adminProjects.integration.test.ts의 화이트리스트 테스트와 같은 이유로 값이 있는
+    // mock을 쓴다 — 목이 비어 있으면 스프레드 회귀(...creator)를 못 잡는다.
+    const project = await seed({ slug: 'creator-fields' }, {
+      email: 'creator-fields@example.com',
+      name: '민감정보개설자',
+      contactName: '연락용이름',
+      phone: '010-0000-0000',
+      bio: '소개',
+      links: JSON.stringify(['https://example.com']),
+      taxType: 'withholding',
+      payoutBankName: '국민은행',
+      payoutAccount: '123-456-789012',
+      payoutHolder: '정산예금주',
+    });
+
+    const single = await getDbFundingProject('creator-fields');
+    expect(single).not.toBeNull();
+    expect(Object.keys(single!.creator!).sort()).toEqual(['name']);
+
+    const list = await listDbFundingProjects();
+    const listed = list.find((p) => p.slug === 'creator-fields');
+    expect(listed).toBeDefined();
+    expect(Object.keys(listed!.creator!).sort()).toEqual(['name']);
+
+    // __NEXT_DATA__로 그대로 나가는 값이므로, 직렬화 결과에 다른 필드가 없는지도 확인한다.
+    const serialized = JSON.stringify([single, listed]);
+    expect(serialized).not.toContain('creator-fields@example.com');
+    expect(serialized).not.toContain('연락용이름');
+    expect(serialized).not.toContain('010-0000-0000');
+    expect(serialized).not.toContain('withholding');
+    expect(serialized).not.toContain('국민은행');
+    expect(serialized).not.toContain('123-456-789012');
+    expect(serialized).not.toContain('정산예금주');
+    expect(serialized).toContain('민감정보개설자'); // name만은 정상적으로 실린다.
+    void project;
   });
 });

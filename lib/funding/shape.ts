@@ -40,6 +40,15 @@ export interface FundingProject {
   heroImage: string | null;
   goalAmount: number; startAt: string; endAt: string; status: FundingStatus;
   hidden: boolean; lastmod: string; rewards: FundingReward[]; content: string;
+  /**
+   * 개설자 표시(전자상거래법상 판매자·개설자 구분, CLAUDE.md "개설자가 쓴 것은 우리가
+   * 쓴 것과 다르게 다룬다"). **마크다운 프로젝트는 항상 null**이다(스튜디오가 직접 연
+   * 것이라 개설자가 없다) — frontmatter에 `creator`를 안 써도 그대로 통과한다.
+   *
+   * `bio`·`links`는 여기 싣지 않는다. 공개 화면에 개설자 소개를 띄우는 것은 별개
+   * 결정이고, 지금 필요한 것은 "누가 개설했는가" 한 줄뿐이다.
+   */
+  creator: { name: string } | null;
 }
 
 /**
@@ -118,6 +127,18 @@ const bool = (v: unknown, name: string, fallback: boolean): boolean => {
   return v;
 };
 
+/**
+ * 개설자 표시. md frontmatter는 이 키를 쓰지 않으므로 항상 undefined → null이다.
+ * DB 경로만 `rowToShapeInput`(dbProjects.ts)이 `{ name }`을 채워 넣는다.
+ */
+const parseCreator = (v: unknown): { name: string } | null => {
+  if (v === undefined || v === null) return null;
+  if (typeof v !== 'object') throw new Error('funding frontmatter: creator는 객체여야 합니다');
+  const name = (v as Record<string, unknown>).name;
+  if (typeof name !== 'string' || name.trim() === '') throw new Error('funding frontmatter: creator.name은(는) 비어 있지 않은 문자열이어야 합니다');
+  return { name };
+};
+
 const parseDownloads = (raw: unknown, where: string): FundingDownload[] => {
   if (raw === undefined || raw === null) return [];
   if (!Array.isArray(raw)) throw new Error(`funding frontmatter: ${where}는 목록이어야 합니다`);
@@ -191,5 +212,6 @@ export const validateFundingProjectShape = (
     hidden: bool(d.hidden, 'hidden', false),
     lastmod: d.lastmod instanceof Date ? d.lastmod.toISOString().slice(0, 10) : typeof d.lastmod === 'string' ? d.lastmod : startAt.slice(0, 10),
     rewards, content,
+    creator: parseCreator(d.creator),
   };
 };

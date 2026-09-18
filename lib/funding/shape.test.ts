@@ -59,4 +59,24 @@ describe('validateFundingProjectShape', () => {
     };
     expect(() => validateFundingProjectShape(d, 'demo', '')).toThrow(/객체 키/);
   });
+
+  describe('creator', () => {
+    it('frontmatter에 creator가 없으면(마크다운 프로젝트) null이다', () => {
+      const p = validateFundingProjectShape({ ...base(), slug: 'demo' }, 'demo', '');
+      expect(p.creator).toBeNull();
+    });
+
+    it('creator.name이 있으면 그대로 싣는다', () => {
+      const p = validateFundingProjectShape({ ...base(), slug: 'demo', creator: { name: '아무개' } }, 'demo', '');
+      expect(p.creator).toEqual({ name: '아무개' });
+    });
+
+    it('creator는 있는데 name이 비어 있으면 던진다', () => {
+      expect(() => validateFundingProjectShape({ ...base(), slug: 'demo', creator: { name: '' } }, 'demo', '')).toThrow(/creator\.name/);
+    });
+
+    it('creator가 객체가 아니면 던진다', () => {
+      expect(() => validateFundingProjectShape({ ...base(), slug: 'demo', creator: '아무개' }, 'demo', '')).toThrow(/creator/);
+    });
+  });
 });

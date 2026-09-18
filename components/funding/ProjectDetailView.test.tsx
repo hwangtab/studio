@@ -90,4 +90,22 @@ describe('ProjectDetailView', () => {
     // Math.floor(1370000 / 1000000 * 100) = 137
     expect(screen.getByText(/137%/)).toBeInTheDocument();
   });
+
+  // 전자상거래법상 판매자·개설자 구분 표시 (펀딩 약관 제4조). 마크다운 프로젝트는
+  // frontmatter에 creator가 없으므로 project.creator는 항상 null이고, 이 표시가
+  // 없어야 진행 중인 keep-singing-for-palestine 같은 기존 화면이 그대로 유지된다.
+  describe('개설자 표시', () => {
+    it('마크다운 프로젝트(creator: null)는 개설자 줄을 그리지 않는다', () => {
+      expect(project.creator).toBeNull();
+      render(<ProjectDetailView project={project} state="live" status={null} interactive={false} />);
+      expect(screen.queryByText(/개설자/)).toBeNull();
+    });
+
+    it('개설자가 있으면 이름과 판매자·통신판매업 신고번호를 함께 보여준다', () => {
+      const withCreator = { ...project, creator: { name: '아무개' } };
+      render(<ProjectDetailView project={withCreator} state="live" status={null} interactive={false} />);
+      expect(screen.getByText(/개설자 아무개 · 판매자 스튜디오 놀/)).toBeInTheDocument();
+      expect(screen.getByText(/통신판매업 신고/)).toBeInTheDocument();
+    });
+  });
 });
