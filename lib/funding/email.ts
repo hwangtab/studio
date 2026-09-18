@@ -8,10 +8,10 @@ import type { CreatorProjectDetail } from './creatorProjectWrite';
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
 
-const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;
-const PHONE_NUMBER = '010-4255-7893';
-const PHONE = `문의: ${PHONE_NUMBER}`;
+export const PHONE_NUMBER = '010-4255-7893';
+export const PHONE = `문의: ${PHONE_NUMBER}`;
 
 /**
  * 제목 꼬리표. 프로젝트를 못 찾으면(슬러그 오타·비공개 전환) `project?.title ?? ''`가
@@ -52,7 +52,7 @@ const withdrawalLines = (order: FundingOrder): string[] => [
   `· 약관 전문(청약철회·환불 규정 포함): ${SITE_URL}/ko/funding/terms`,
 ];
 
-const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>): Promise<string | null> => {
+export const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>): Promise<string | null> => {
   const failures: string[] = [];
   for (const { key, params } of pairs) {
     const r = await sendEmail(params);
@@ -193,10 +193,9 @@ export const sendFundingRefundRequestClearedEmails = (
 /**
  * 개설자 심사 신청 알림 — 운영자에게만 보낸다(개설자는 화면 응답으로 이미 안다).
  *
- * 링크는 `/admin/funding`(목록)이지 `/admin/funding/<project.id>`가 아니다 — 그 동적
- * 라우트(`pages/admin/funding/[id].tsx`)는 **후원 건(주문/pledge) 상세**이지 프로젝트
- * 심사 화면이 아니다(`findFundingOrderById`로 연다). 개설자 프로젝트를 심사하는 관리자
- * 화면은 아직 없다(3차 범위) — 그게 생기기 전까지는 이 목록 링크가 맞는 목적지다.
+ * 링크는 프로젝트별 심사 화면(`/admin/funding/projects/{id}`)이다 — `/admin/funding`
+ * 목록은 후원 건(주문/pledge)을 다루는 다른 화면(`pages/admin/funding/[id].tsx`,
+ * `findFundingOrderById`)이라 프로젝트 심사와는 별개다.
  */
 export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail): Promise<string | null> => {
   const contact = [project.creator.contactName, project.creator.phone].filter(Boolean).join(' / ') || '연락처 미기재';
@@ -207,7 +206,7 @@ export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail)
       text: [
         `개설자: ${project.creator.name} (${contact})`,
         `프로젝트: ${project.title}`,
-        `관리자: ${SITE_URL}/admin/funding`,
+        `심사 화면: ${SITE_URL}/admin/funding/projects/${project.id}`,
       ].join('\n'),
     } },
   ]);
