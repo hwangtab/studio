@@ -52,7 +52,7 @@ const withdrawalLines = (order: FundingOrder): string[] => [
   `· 약관 전문(청약철회·환불 규정 포함): ${SITE_URL}/ko/funding/terms`,
 ];
 
-export const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>): Promise<string | null> => {
+const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>): Promise<string | null> => {
   const failures: string[] = [];
   for (const { key, params } of pairs) {
     const r = await sendEmail(params);

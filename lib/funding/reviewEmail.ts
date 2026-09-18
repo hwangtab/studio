@@ -1,11 +1,22 @@
+import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO } from '../operatorContact';
 
-import { PHONE, PHONE_NUMBER, SITE_URL, send } from './email';
+import { PHONE, PHONE_NUMBER, SITE_URL } from './email';
 
 import type { AdminProjectDetail } from './adminProjects';
+import type { AdminReviewAction } from './reviewDecision';
 
-/** 관리자 심사 화면이 실제로 보낼 수 있는 판정 세 가지(`AdminReviewAction`과 동일하게 유지). */
-export type ReviewDecisionAction = 'approve' | 'request_changes' | 'reject';
+/**
+ * 판정 메일이 다루는 세 가지. 독립 정의하지 않고 `reviewDecision.ts`의 `AdminReviewAction`을
+ * 그대로 쓴다 — 한 번 따로 적었다가(2026-09-18) 리뷰에서 지적받았다. "이 파일이 Task 5에서
+ * `reviewDecision.ts`를 부르게 되면 순환 import가 생긴다"는 판단으로 독립 정의했는데 틀렸다.
+ * 실제 계획(Task 5)은 API 라우트가 `reviewDecision.ts`와 `reviewEmail.ts`를 각각 따로
+ * import해 순서대로 호출하는 구조라 의존 방향이 `reviewEmail → reviewDecision` 한쪽뿐이고,
+ * 게다가 타입 전용 import는 컴파일 시 지워져 애초에 순환이 성립하지 않는다. 독립 정의를
+ * 남겨 뒀다면 Task 11이 `AdminReviewAction`에 `'archive'`를 추가할 때 이 목록만 낡은 채
+ * 남았을 것이다.
+ */
+export type ReviewDecisionAction = AdminReviewAction;
 
 const editUrl = (projectId: string): string => `${SITE_URL}/ko/funding/creator/${projectId}`;
 const publicUrl = (slug: string): string => `${SITE_URL}/ko/funding/${slug}`;
@@ -41,7 +52,7 @@ const APPROVAL_LOCK_NOTICE = [
  * **메일 실패는 판정을 실패시키지 않는다** — 실패 사유 문자열을 돌려줄 뿐이고, 호출부
  * (심사 API)가 그 값을 화면에 보여준다.
  */
-export const sendReviewDecisionEmail = (
+export const sendReviewDecisionEmail = async (
   project: AdminProjectDetail,
   action: ReviewDecisionAction,
   note: string | null,
@@ -79,12 +90,11 @@ export const sendReviewDecisionEmail = (
     ],
   };
 
-  return send([
-    { key: 'creator', params: {
-      to: project.creatorEmail,
-      replyTo: CUSTOMER_REPLY_TO,
-      subject,
-      text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
-    } },
-  ]);
+  const result = await sendEmail({
+    to: project.creatorEmail,
+    replyTo: CUSTOMER_REPLY_TO,
+    subject,
+    text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
+  });
+  return result.ok ? null : `creator:${result.errorCode}`;
 };
