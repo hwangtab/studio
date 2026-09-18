@@ -16,6 +16,7 @@ import { computeEarliestStartDate, toKstDateString } from '../../../../lib/fundi
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
 import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
+import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../lib/funding/policy';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 
 interface Props {
@@ -81,13 +82,17 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
   const [project, setProject] = useState<EditorProject>(initial);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
+  const [agreedTerms, setAgreedTerms] = useState(false);
 
   const readOnly = !canEditInBrowser(project.reviewStatus);
   const notice = REVIEW_STATUS_NOTICE[project.reviewStatus];
+  // 본문이 3차 범위라 판본이 빈 문자열인 동안은 화면도 동의를 요구하지 않는다 —
+  // lib/funding/policy.ts의 FUNDING_CREATOR_TERMS_VERSION 주석과 같은 조건이다.
+  const requiresTerms = FUNDING_CREATOR_TERMS_VERSION !== '';
 
   const handleSubmitReview = async () => {
     setSubmit({ status: 'saving' });
-    const result = await submitProject(project.id);
+    const result = await submitProject(project.id, requiresTerms ? FUNDING_CREATOR_TERMS_VERSION : undefined);
     if (result.ok) {
       setSubmit({ status: 'success' });
       setProject((p) => ({ ...p, reviewStatus: 'submitted' }));
@@ -192,16 +197,38 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
           </div>
         </div>
 
-        <div className="mt-12 flex items-center gap-3 border-t border-gray-200 pt-6 dark:border-gray-700">
-          <Button onClick={handleSubmitReview} disabled={readOnly || submit.status === 'saving'}>
-            {submit.status === 'saving' ? '신청 중…' : '심사 신청'}
-          </Button>
-          {submit.status === 'success' && (
-            <span className="typo-caption text-green-600 dark:text-green-400">심사를 신청했습니다.</span>
+        <div className="mt-12 border-t border-gray-200 pt-6 dark:border-gray-700">
+          {requiresTerms && (
+            <label className="mb-4 flex items-start gap-2 typo-caption text-gray-700 dark:text-gray-300">
+              <input
+                type="checkbox"
+                className="mt-0.5"
+                checked={agreedTerms}
+                disabled={readOnly}
+                onChange={(e) => setAgreedTerms(e.target.checked)}
+              />
+              <span>
+                <Link href="/ko/funding/creator-terms" target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+                  개설자 약관
+                </Link>
+                에 동의합니다.
+              </span>
+            </label>
           )}
-          {submit.status === 'error' && (
-            <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{submit.message}</span>
-          )}
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleSubmitReview}
+              disabled={readOnly || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
+            >
+              {submit.status === 'saving' ? '신청 중…' : '심사 신청'}
+            </Button>
+            {submit.status === 'success' && (
+              <span className="typo-caption text-green-600 dark:text-green-400">심사를 신청했습니다.</span>
+            )}
+            {submit.status === 'error' && (
+              <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{submit.message}</span>
+            )}
+          </div>
         </div>
       </main>
     </>

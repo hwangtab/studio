@@ -12,6 +12,7 @@
 export const RESERVED_FUNDING_SLUGS: ReadonlySet<string> = new Set([
   'apply',
   'creator',
+  'creator-terms',
   'terms',
   'success',
   'fail',
