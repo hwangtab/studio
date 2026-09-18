@@ -19,7 +19,7 @@ import {
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
-import { PRACTICE_ROOM_HAS_VACANCY } from '../../data/practiceRoomAvailability';
+import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_VACANT_ROOMS } from '../../data/practiceRoomAvailability';
 import { getHubLocaleContent } from '../../data/faq';
 import { Section } from '../../components/ui/Section';
 import SectionAnchorNav from '../../components/ui/SectionAnchorNav';
@@ -483,7 +483,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <SectionHeading
           icon={Building}
           title={t('pricing.practiceRoom.title')}
-          subtitle={t(PRACTICE_ROOM_HAS_VACANCY ? 'pricing.practiceRoom.subtitleVacant' : 'pricing.practiceRoom.subtitle')}
+          subtitle={t(PRACTICE_ROOM_HAS_VACANCY ? 'pricing.practiceRoom.subtitleVacant' : 'pricing.practiceRoom.subtitle', { rooms: PRACTICE_ROOM_VACANT_ROOMS })}
         />
         {/* 연습실만 페이지 공통 VAT_NOTICE를 쓰지 않는다. 월 이용료는 표시 금액이 곧
             납부 금액이라(대부분 계좌입금 36만원) "VAT 별도"를 덧붙이면 홍보 문구의

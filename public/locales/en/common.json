@@ -332,7 +332,7 @@
     "practiceRoom": {
       "title": "Practice Room Residency",
       "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
-      "subtitleVacant": "A 24/7 soundproof workspace rented by the month — rooms are currently available for move-in.",
+      "subtitleVacant": "A 24/7 soundproof workspace rented by the month — open for move-in right now.",
       "detailLink": "See practice room facilities and resident perks",
       "priceNote": "Utilities included · no deposit · month-to-month"
     },
@@ -588,11 +588,11 @@
         }
       ],
       "note": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Waitlist available when rooms are full.",
-      "noteVacant": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Rooms are currently available for move-in."
+      "noteVacant": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Open for move-in right now."
     },
     "midCta": {
       "note": "Rooms are often fully booked, so we keep a waitlist. Reach out and we'll contact you in order as soon as a room opens.",
-      "noteVacant": "Rooms are available right now. You're welcome to visit before deciding — leave a message and we'll get back to you promptly."
+      "noteVacant": "Open for move-in right now. You're welcome to visit before deciding — leave a message and we'll get back to you promptly."
     },
     "painPoints": {
       "title": "Are you having these troubles?",
