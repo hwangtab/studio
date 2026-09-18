@@ -27,12 +27,14 @@ const STATUS_PRIORITY: Record<FundingReviewStatus, number> = {
   rejected: 4,
 };
 
+// rejected는 보관(archive)도 같은 DB 값이라(reviewTransition.ts), 개설자 화면과 같은
+// 라벨로 맞춘다 — 구분은 reviewNote뿐이라 운영자도 배지만 보고 반려로 단정하면 안 된다.
 const STATUS_LABELS: Record<FundingReviewStatus, string> = {
   draft: '작성중',
   submitted: '심사대기',
   changes_requested: '보완요청',
   approved: '승인',
-  rejected: '반려',
+  rejected: '반려·보관',
 };
 
 const STATUS_BADGE_CLASS: Record<FundingReviewStatus, string> = {
