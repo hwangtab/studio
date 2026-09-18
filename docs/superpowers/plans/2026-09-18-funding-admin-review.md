@@ -257,7 +257,9 @@ export const revalidateFundingPaths = async (
 **Interfaces:**
 - Consumes: Task 1의 `loadProjectForAdmin`, `lib/funding/reviewTransition.ts`의 `nextReviewStatus`, `lib/funding/reservedSlugs.ts`의 `slugRejectionReason`, `lib/funding/projects.ts`의 `getFundingProject`
 - Produces:
-  - `type DecisionResult = { ok: true; slug: string } | { ok: false; code: 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete'; message: string }`
+  - `type DecisionResult = { ok: true; slug: string; warnings?: string[] } | { ok: false; code: 'not_found' | 'conflict' | 'invalid_slug' | 'duplicate_slug' | 'incomplete' | 'expired'; message: string }`
+    - `expired` — 종료일이 이미 지난 프로젝트는 승인하지 않는다. 이미 끝난 것을 공개하는 것은 언제나 틀렸다.
+    - `warnings` — 시작일만 지난 경우는 통과시키되 경고를 담는다. 막으면 `submitted` 상태의 개설자가 스스로 못 고쳐 막다른 길이 된다. Task 5의 API가 이것을 응답에 실어 화면이 보여 준다.
   - `decideProject(projectId: string, action: AdminReviewAction, input: { note?: string; slug?: string }, now?: Date): Promise<DecisionResult>`
   - `type AdminReviewAction = 'approve' | 'request_changes' | 'reject'` — **Task 11이 여기에 `'archive'`를 더한다.** 그때 `reviewTransition.ts`의 표도 함께 늘어나므로 이 태스크의 전수 조합 테스트가 그 시점에 바뀐다
 
@@ -428,7 +430,8 @@ WHERE project_id = ? AND locked_at IS NULL
 2. `authenticateAdminApi` 실패 → 401
 3. `req.method !== 'PATCH'` → 405
 4. `switch (body.action)`: `approve` · `request_changes` · `reject` · `set_note` · default 400
-5. `decideProject` 호출 → `DecisionResult.code`를 상태로: `not_found`→404, `conflict`→409, `invalid_slug`·`duplicate_slug`·`incomplete`→400
+5. `decideProject` 호출 → `DecisionResult.code`를 상태로: `not_found`→404, `conflict`→409, `invalid_slug`·`duplicate_slug`·`incomplete`·`expired`→400
+   - 성공이면 `DecisionResult.warnings`를 응답의 `warnings`에 **합친다**(재검증·메일 경고와 같은 배열)
 6. **승인 성공이면** `revalidateFundingPaths(res, result.slug)` → 실패해도 200이되 응답에 경고를 싣는다
 7. 판정 성공이면 알림 메일 → 실패해도 200이되 경고를 싣는다
 
