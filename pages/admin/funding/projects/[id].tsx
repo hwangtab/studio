@@ -12,6 +12,7 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
+import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
 /** 화면이 쓰는 리워드 모양. `lockedAt`은 `Date | null`이라 GSSP props로 그대로 못 내려서
@@ -177,7 +178,10 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
 
   // 슬러그 입력칸을 비우면 API도 개설자가 고른 기존 값을 그대로 쓴다 — 확인창·화면 모두
   // 같은 계산을 써야 "무슨 주소로 공개되는지" 표시가 실제 결과와 어긋나지 않는다.
-  const effectiveSlug = slug.trim() || project.slug;
+  // API는 받은 값을 normalizeFundingSlug로 소문자화해 확정하므로 여기서도 같은 함수를 통과시킨다.
+  // 형식이 틀려 null이면 서버가 400으로 돌려보낼 값이라, 입력을 그대로 보여 주는 편이 정직하다.
+  const slugInput = slug.trim();
+  const effectiveSlug = slugInput ? normalizeFundingSlug(slugInput) ?? slugInput : project.slug;
 
   const handleApprove = () => {
     if (

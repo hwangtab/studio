@@ -135,6 +135,15 @@ describe('승인 확인창', () => {
     // 판정 뒤 setSuccess 등 상태 갱신이 act 밖에서 일어나지 않도록 완료까지 기다린다.
     expect(await screen.findByText(/승인했습니다/)).toBeInTheDocument();
   });
+
+  it('대문자를 넣어도 API가 확정할 소문자 주소를 보여 준다', () => {
+    window.confirm = jest.fn().mockReturnValue(false);
+    render(<AdminFundingProjectDetailPage project={PROJECT} />);
+    fireEvent.change(screen.getByDisplayValue('demo-project'), { target: { value: 'New-Slug' } });
+    expect(screen.getByText('확정될 주소: /funding/new-slug')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '승인' }));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('/funding/new-slug'));
+  });
 });
 
 describe('사유 필수(보완 요청·반려)', () => {
