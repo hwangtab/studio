@@ -139,8 +139,11 @@ describe('개설자 약관 판본 게이트', () => {
   it('6조(수수료와 정산)에 수수료율·정산 시점 숫자가 없다', () => {
     const feeSection = serialized.split('제6조')[1]?.split('제7조')[0] ?? '';
     expect(feeSection).toContain('별도');
-    expect(feeSection).not.toMatch(/\d+\s*%/);
-    expect(feeSection).not.toMatch(/영업일/);
+    // '10%'·'영업일' 두 표기만 보면 '10퍼센트'·'익월 15일 정산' 같은 다른 표기가 새나간다 —
+    // 숫자 자체를 전부 막고(퍼센트·일수 어느 쪽이든 숫자가 붙는다), 숫자 없이도 정산
+    // 시점을 특정하는 낱말(익월·익일·영업일)까지 함께 막는다.
+    expect(feeSection).not.toMatch(/\d/);
+    expect(feeSection).not.toMatch(/영업일|익월|익일|퍼센트/);
   });
 
   it('조항 본문이 한 글자만 바뀌어도 해시가 달라진다', () => {
