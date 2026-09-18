@@ -66,14 +66,16 @@ export const REVIEW_STATUS_LABEL: Record<string, string> = {
   submitted: '심사 중',
   changes_requested: '보완 요청',
   approved: '공개',
-  rejected: '반려',
+  // 보관(archive)도 DB에서는 같은 rejected다 — 둘을 가르는 것은 reviewNote뿐이라
+  // 배지 한 단어로는 구분할 수 없다. 어느 쪽인지는 아래 운영자 메모가 말한다.
+  rejected: '반려·보관',
 };
 
 /** 읽기 전용 상태에서 상단에 띄우는 안내. draft·changes_requested는 여기 없다(편집 가능이라 안내가 필요 없다). */
 export const REVIEW_STATUS_NOTICE: Record<string, string> = {
   submitted: '심사 중입니다. 심사가 끝날 때까지는 내용을 고칠 수 없습니다.',
   approved: '이미 공개된 프로젝트입니다. 내용을 고치려면 운영자에게 문의해 주세요.',
-  rejected: '반려되었습니다. 이 프로젝트는 더 이상 고칠 수 없습니다. 새 프로젝트를 만들어 다시 신청해 주세요.',
+  rejected: '이 프로젝트는 종결되어 더 이상 고칠 수 없습니다. 사유는 아래 운영자 메모를 확인해 주세요. 다시 진행하시려면 새 프로젝트를 만들어 주세요.',
 };
 
 export type SaveStatus = 'idle' | 'saving' | 'success' | 'error';
