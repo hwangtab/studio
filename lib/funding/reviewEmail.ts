@@ -20,6 +20,14 @@ export type ReviewDecisionAction = AdminReviewAction;
 
 const editUrl = (projectId: string): string => `${SITE_URL}/ko/funding/creator/${projectId}`;
 const publicUrl = (slug: string): string => `${SITE_URL}/ko/funding/${slug}`;
+/**
+ * 운영자용 심사 상세 화면. `editUrl`(개설자 인증 페이지, `/ko/funding/creator/{id}`)과는
+ * 완전히 다른 경로다 — 개설자에게 보내는 메일에서만 `editUrl`을 쓰고, 운영자에게 보내는
+ * 메일은 전부 이 링크를 쓴다. `lib/funding/email.ts`의 `sendFundingCreatorSubmissionEmail`이
+ * 이미 같은 경로(`/admin/funding/projects/{id}`)로 심사 요청 알림을 보낸다 — 두 메일이
+ * 같은 프로젝트를 가리키는 주소가 갈라지면 운영자가 헷갈린다.
+ */
+const adminReviewUrl = (projectId: string): string => `${SITE_URL}/admin/funding/projects/${projectId}`;
 
 const REVIEW_SUBJECT: Record<ReviewDecisionAction, string> = {
   approve: '펀딩 프로젝트가 승인되었습니다',
@@ -111,6 +119,12 @@ export const sendReviewDecisionEmail = async (
  *
  * 이 폴백 자체가 실패해도(Resend 장애 등) 판정을 실패시키지 않는다 — 호출부가 그 사유도
  * `warnings`에 추가로 쌓고 `console.error`로 남긴다.
+ *
+ * 링크는 `editUrl`이 아니라 `adminReviewUrl`이다 — 수신자가 운영자이기 때문이다. `editUrl`은
+ * 개설자 인증 페이지(`/ko/funding/creator/{id}`)라 `authenticateCreatorRequest`가 실패하면
+ * `/ko/funding/apply`로 돌려보낸다. 리뷰에서 처음엔 이 함수도 `editUrl`을 "심사 화면"이라는
+ * 라벨로 썼는데, 개설자 메일(`sendReviewDecisionEmail`)에서 같은 함수를 쓰는 것은 맞지만(수신자가
+ * 개설자니까) 이 함수의 수신자는 운영자라 라벨과 대상이 둘 다 틀려 있었다.
  */
 export const sendReviewDecisionOperatorFallback = async (
   project: AdminProjectDetail,
@@ -128,7 +142,7 @@ export const sendReviewDecisionOperatorFallback = async (
     `공개 주소: ${publicUrl(slug)}`,
     `실패 사유: ${failureReason}`,
     '',
-    `심사 화면: ${editUrl(project.id)}`,
+    `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
   ].join('\n');
 
   const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text });
