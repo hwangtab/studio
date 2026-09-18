@@ -89,7 +89,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (requiresTerms) {
     const agreedTermsVersion = typeof req.body?.agreedTermsVersion === 'string' ? req.body.agreedTermsVersion : '';
     if (agreedTermsVersion !== FUNDING_CREATOR_TERMS_VERSION) {
-      return res.status(400).json({ ok: false, message: '개설자 약관에 동의해 주세요.' });
+      // 체크박스를 안 켠 것(빈 문자열)과 판본이 갱신된 것(값은 왔지만 지금 판본과 다름)은
+      // 원인이 다르다 — 둘 다 같은 문구로 답하면 체크박스를 이미 켠 개설자는 이유를 알 길이
+      // 없다(배포 직후 옛 번들을 들고 있거나, 화면을 오래 열어 둔 사이 약관이 개정된 경우).
+      return res.status(400).json({
+        ok: false,
+        message: agreedTermsVersion
+          ? '약관이 개정되었습니다. 새로고침 후 다시 신청해 주세요.'
+          : '개설자 약관에 동의해 주세요.',
+      });
     }
   }
 

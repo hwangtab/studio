@@ -338,11 +338,14 @@ it('FUNDING_CREATOR_TERMS_VERSION이 채워진 뒤에는 agreedTermsVersion 없�
   expect(row?.reviewStatus).toBe('draft');
 });
 
-it('agreedTermsVersion이 현재 판본과 다르면 400 (옛 판본에 동의한 경우)', async () => {
+it('agreedTermsVersion이 현재 판본과 다르면 400 — 미동의와 다른 문구(약관 개정 안내)를 준다', async () => {
   const project = await seedCompleteProject();
   const r = await call({ id: project.id }, { agreedTermsVersion: 'funding-creator-terms-2026-01-01' });
   expect(r.status).toBe(400);
-  expect(r.body.message).toEqual(expect.stringContaining('개설자 약관'));
+  // 체크박스를 안 켠 경우('개설자 약관에 동의해 주세요')와 문구를 갈라야, 이미 동의를 마친
+  // 개설자가 판본만 바뀐 상황에서 원인을 알 수 있다.
+  expect(r.body.message).toEqual(expect.stringContaining('개정'));
+  expect(r.body.message).not.toEqual(expect.stringContaining('동의해 주세요'));
 });
 
 it('agreedTermsVersion이 현재 판본과 같으면 200이고 creator_terms_version·creator_terms_agreed_at이 채워진다', async () => {
