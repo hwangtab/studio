@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -39,11 +39,14 @@ interface AdminFundingProjectDetailPageProps {
     content: string;
     coverUrl: string;
     reviewNote: string | null;
+    /**
+     * 화면이 렌더하는 필드만 담는다 — `creator.bio`·`creator.links`는 이 화면 어디에도
+     * 그리지 않으므로 props에도 싣지 않는다(화이트리스트 원칙, 안 쓰는 개인정보를 굳이
+     * 클라이언트로 내보낼 이유가 없다).
+     */
     creator: {
       contactName: string | null;
       phone: string | null;
-      bio: string | null;
-      links: string[] | null;
     };
     rewards: DetailReward[];
   };
@@ -81,7 +84,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
         content: project.content,
         coverUrl: project.coverUrl,
         reviewNote: project.reviewNote,
-        creator: project.creator,
+        creator: { contactName: project.creator.contactName, phone: project.creator.phone },
         rewards: project.rewards.map((r) => ({
           rewardId: r.rewardId,
           title: r.title,
@@ -105,10 +108,16 @@ const REVIEW_STATUS_LABELS: Record<FundingReviewStatus, string> = {
   rejected: '반려',
 };
 
+/** 공개 상태(`status`) 라벨. `approved`가 아닐 때는 항상 `draft`라 화면에 큰 의미는 없지만,
+ * 승인 직후 `hidden`이 켜져 있으면 "승인했는데 안 보인다"의 원인이 여기 있다는 것을
+ * 운영자가 이 화면에서 바로 알아야 한다. */
+const PROJECT_STATUS_LABELS: Record<string, string> = { auto: '공개중', draft: '비공개(작성중)', closed: '종료' };
+
 export default function AdminFundingProjectDetailPage({ project }: AdminFundingProjectDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [warnings, setWarnings] = useState<string[]>([]);
   const [slug, setSlug] = useState(project.slug);
   const [reviewNote, setReviewNote] = useState(project.reviewNote ?? '');
@@ -118,31 +127,70 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
   useEffect(() => setSlug(project.slug), [project.slug]);
   useEffect(() => setReviewNote(project.reviewNote ?? ''), [project.reviewNote]);
 
-  const run = async (task: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>) => {
+  /**
+   * 결과 배너(오류·성공·경고)로 스크롤·포커스를 옮긴다.
+   *
+   * 이 화면은 판정 버튼이 대표 이미지·본문 전문·리워드 카드·연락처 아래, 문서 한참
+   * 아래에 있다. `router.replace`는 `scroll: false`라 스크롤 위치가 그대로 유지되므로,
+   * 배너를 문서 맨 위에 그리기만 하면 운영자는 버튼을 누른 자리에 남아 있고 "메일 발송에
+   * 실패했습니다" 같은 배너는 뷰포트 밖에서 조용히 렌더된다 — 경고를 띄우는 것이 이
+   * 화면의 존재 이유인데 띄운 자리가 안 보이면 의미가 없다. 최초 렌더(서버에서 내려온
+   * 빈 상태)에는 스크롤하지 않는다.
+   */
+  const feedbackRef = useRef<HTMLDivElement>(null);
+  const mountedRef = useRef(false);
+  useEffect(() => {
+    if (!mountedRef.current) {
+      mountedRef.current = true;
+      return;
+    }
+    if ((notice || success || warnings.length > 0) && feedbackRef.current) {
+      feedbackRef.current.scrollIntoView({ block: 'start' });
+      feedbackRef.current.focus();
+    }
+  }, [notice, success, warnings]);
+
+  const run = async (
+    task: () => Promise<{ ok: boolean; message?: string; warnings?: string[] }>,
+    successMessage: string,
+  ) => {
     setBusy(true);
     setNotice(null);
+    setSuccess(null);
     setWarnings([]);
     const result = await task();
     setBusy(false);
     if (!result.ok) {
       setNotice(result.message ?? '요청을 처리하지 못했습니다.');
-    } else if (result.warnings && result.warnings.length > 0) {
-      // 판정 자체는 성공했지만 재검증·메일 같은 후속 처리가 실패했을 수 있다 — 조용히
-      // 넘기면 운영자가 개설자에게 통보가 갔다고 착각하게 되므로 그대로 노출한다.
-      setWarnings(result.warnings);
+    } else {
+      // 성공 신호가 상태 배지뿐이면 운영자는 버튼이 실제로 먹혔는지 화면 밖 정보로만
+      // 확인해야 한다 — 경고가 없어도 짧게 알린다.
+      setSuccess(successMessage);
+      if (result.warnings && result.warnings.length > 0) {
+        // 판정 자체는 성공했지만 재검증·메일 같은 후속 처리가 실패했을 수 있다 — 조용히
+        // 넘기면 운영자가 개설자에게 통보가 갔다고 착각하게 되므로 그대로 노출한다.
+        setWarnings(result.warnings);
+      }
     }
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
+  // 슬러그 입력칸을 비우면 API도 개설자가 고른 기존 값을 그대로 쓴다 — 확인창·화면 모두
+  // 같은 계산을 써야 "무슨 주소로 공개되는지" 표시가 실제 결과와 어긋나지 않는다.
+  const effectiveSlug = slug.trim() || project.slug;
+
   const handleApprove = () => {
     if (
       !window.confirm(
-        '승인하면 리워드 주소·금액·수량 제한 여부·배송 여부를 더는 바꿀 수 없습니다. 승인할까요?',
+        `승인하면 이 프로젝트가 /funding/${effectiveSlug} 주소로 공개되고, 리워드 주소·금액·수량 제한 여부·배송 여부를 더는 바꿀 수 없습니다. 승인할까요?`,
       )
     ) {
       return;
     }
-    return run(() => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined }));
+    return run(
+      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined }),
+      `/funding/${effectiveSlug} 주소로 승인했습니다.`,
+    );
   };
 
   const handleRequestChanges = () => {
@@ -152,7 +200,10 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
       setNotice('보완 요청은 사유가 있어야 합니다.');
       return;
     }
-    return run(() => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim() }));
+    return run(
+      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim() }),
+      '보완 요청을 보냈습니다.',
+    );
   };
 
   const handleReject = () => {
@@ -163,11 +214,14 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
       return;
     }
     if (!window.confirm('반려하면 개설자에게 반려 사실과 사유가 메일로 전달됩니다. 반려할까요?')) return;
-    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim() }));
+    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim() }), '반려 처리했습니다.');
   };
 
   const handleSaveNote = () =>
-    run(() => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined }));
+    run(
+      () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined }),
+      '메모를 저장했습니다.',
+    );
 
   const canDecide = project.reviewStatus === 'submitted';
 
@@ -184,18 +238,32 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
         backHref="/admin/funding/projects"
         backLabel="심사 목록"
       >
-        {notice && <div className="mb-4 p-3 bg-red-50 text-red-800 rounded-lg text-sm">{notice}</div>}
+        {/* tabIndex=-1 + ref: 판정 버튼이 이 배너보다 한참 아래에 있어, 결과가 나온 뒤
+            스크롤·포커스를 여기로 옮기지 않으면 운영자는 누른 자리에 그대로 남는다. */}
+        <div ref={feedbackRef} tabIndex={-1} className="outline-none">
+          {notice && (
+            <div role="alert" className="mb-4 p-3 bg-red-50 text-red-800 rounded-lg text-sm">
+              {notice}
+            </div>
+          )}
 
-        {warnings.length > 0 && (
-          <div role="alert" className="mb-4 p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-sm">
-            <strong className="block mb-1">판정은 처리됐지만 후속 처리에 문제가 있었습니다</strong>
-            <ul className="list-disc list-inside space-y-1">
-              {warnings.map((w, i) => (
-                <li key={i}>{w}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+          {success && (
+            <div role="status" className="mb-4 p-3 bg-green-50 text-green-800 rounded-lg text-sm">
+              {success}
+            </div>
+          )}
+
+          {warnings.length > 0 && (
+            <div role="alert" className="mb-4 p-4 bg-amber-50 border border-amber-300 text-amber-900 rounded-lg text-sm">
+              <strong className="block mb-1">판정은 처리됐지만 후속 처리에 문제가 있었습니다</strong>
+              <ul className="list-disc list-inside space-y-1">
+                {warnings.map((w, i) => (
+                  <li key={i}>{w}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
           <div>
@@ -225,6 +293,19 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                 <dt className="text-gray-500 shrink-0">개설자가 고른 주소</dt>
                 <dd className="font-medium text-right">{project.slug}</dd>
               </div>
+              {/* 승인해서 status가 열려도 hidden이면 공개되지 않는다 — "승인했는데 안
+                  보인다"의 원인을 이 화면에서 바로 알 수 있어야 한다. */}
+              <div className="flex justify-between gap-4">
+                <dt className="text-gray-500 shrink-0">공개 상태</dt>
+                <dd className="font-medium text-right">
+                  {PROJECT_STATUS_LABELS[project.status] ?? project.status}
+                  {project.hidden && (
+                    <span className="ml-2 inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                      숨김
+                    </span>
+                  )}
+                </dd>
+              </div>
             </dl>
             <div className="p-4 bg-gray-50 rounded-xl text-sm whitespace-pre-wrap">{project.content}</div>
           </div>
@@ -238,10 +319,7 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                     <span className="font-semibold text-gray-900">{r.title}</span>
                     <span>{formatPriceAmount(r.amount)}원</span>
                     {r.locked && (
-                      <span
-                        className="inline-flex px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-xs font-semibold"
-                        title="승인된 리워드는 주소·금액·수량 제한·배송 여부를 바꿀 수 없습니다."
-                      >
+                      <span className="inline-flex px-2 py-0.5 rounded-full bg-gray-200 text-gray-700 text-xs font-semibold">
                         잠김
                       </span>
                     )}
@@ -251,6 +329,12 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                     {r.totalQuantity !== null ? `한정 ${r.totalQuantity}개` : '수량 제한 없음'} ·{' '}
                     {r.requiresShipping ? '배송 필요' : '배송 없음'} · {r.estimatedDelivery}
                   </p>
+                  {/* title 툴팁은 터치·키보드 사용자에게 안 보인다 — 배지 옆 텍스트로 뺀다. */}
+                  {r.locked && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      승인된 리워드라 주소·금액·수량 제한·배송 여부를 바꿀 수 없습니다.
+                    </p>
+                  )}
                 </div>
               ))}
               {project.rewards.length === 0 && <p className="text-sm text-gray-500">등록된 리워드가 없습니다.</p>}
@@ -304,6 +388,7 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                 />
               </Field>
             </div>
+            <p className="mb-3 text-xs text-gray-500">확정될 주소: /funding/{effectiveSlug}</p>
             <div className="flex flex-wrap gap-2">
               <Button light disabled={!canDecide || busy} onClick={handleApprove}>
                 승인

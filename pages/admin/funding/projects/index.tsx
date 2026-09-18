@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { AdminShell } from '../../../../components/admin/AdminShell';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
-import { formatKstDateTime } from '../../../../lib/booking/format';
+import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { listProjectsForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
@@ -100,7 +100,7 @@ export default function AdminFundingProjectsPage({ projects }: AdminFundingProje
                       </span>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      {p.submittedAt ? formatKstDateTime(p.submittedAt) : '미제출'}
+                      {p.submittedAt ? formatKstDateTimeFull(p.submittedAt) : '미제출'}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(p.goalAmount)}원</td>
                   </tr>
