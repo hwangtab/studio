@@ -87,7 +87,7 @@ rewards:
 
 ## 9월 19일 토요일, 저녁 다섯 시 반, 경복궁역 서십자각터
 
-![Keep Singing for Peace 포스터 — 팔레스타인 국기색이 반사되는 CD, 일시·장소·낮 일정이 적혀 있다](/images/funding/keep-singing-for-palestine/poster-20260917.webp)
+![Keep Singing for Peace 포스터 — 팔레스타인 국기색이 반사되는 CD, 일시·장소·낮 일정이 적혀 있다](/images/funding/keep-singing-for-palestine/poster-20260918.webp)
 
 거리 집회 〈Keep Singing for Peace〉를 오후 5시 30분부터 7시 20분까지 경복궁역 서십자각터에서 엽니다. 남수, 이서영, 이형주, 모모, 임정득이 무대에 섭니다.
 
