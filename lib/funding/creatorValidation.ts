@@ -55,6 +55,42 @@ export const CREATOR_LIMITS = {
 type Fail = { ok: false; message: string };
 const fail = (message: string): Fail => ({ ok: false, message });
 
+/** 제출·승인이 함께 보는 본문 최소 길이. */
+export const STORY_MIN_LENGTH = 200;
+
+/**
+ * "다 채워졌는가"를 묻는 공용 검사.
+ *
+ * 개설자 제출 API(`pages/api/funding/creator/projects/[id]/submit.ts`)와 운영자 승인
+ * (`lib/funding/reviewDecision.ts`)이 같은 정의를 쓴다 — 각자 조건문을 새로 쓰면 "제출은
+ * 통과했는데 승인 시점엔 불완전"으로 보이는 경우의 판정이 두 곳에서 갈라지고, 언젠가
+ * 한쪽만 고쳐 기준이 어긋난다.
+ *
+ * `slug`·`creatorName`은 선택 입력이다 — 승인 쪽은 slug를 별도 트랙(`slugRejectionReason`
+ * → 파일 충돌 → DB 충돌)으로 검사하고 개설자 이름을 다시 묻지 않으므로, 넘기지 않으면 그
+ * 항목은 이 함수의 판정에서 빠진다.
+ */
+export interface RequiredSectionsInput {
+  title: string;
+  summary: string;
+  slug?: string;
+  coverUrl: string;
+  content: string;
+  rewardsCount: number;
+  creatorName?: string;
+}
+
+export const findMissingRequiredSections = (input: RequiredSectionsInput): string[] => {
+  const missing: string[] = [];
+  const basicFilled = Boolean(input.title) && Boolean(input.summary) && Boolean(input.coverUrl)
+    && (input.slug === undefined || Boolean(input.slug));
+  if (!basicFilled) missing.push('기본정보');
+  if (input.content.trim().length < STORY_MIN_LENGTH) missing.push(`스토리(본문 ${STORY_MIN_LENGTH}자 이상)`);
+  if (input.rewardsCount < 1) missing.push('리워드(최소 1개)');
+  if (input.creatorName !== undefined && !input.creatorName) missing.push('개설자 정보(이름)');
+  return missing;
+};
+
 const str = (v: unknown): string | null => (typeof v === 'string' ? v.trim() : null);
 
 /** http(s)만. 개설자가 넣는 링크라 스킴을 좁게 잡는다. */

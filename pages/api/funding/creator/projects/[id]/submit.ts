@@ -7,36 +7,40 @@ import { consumeRateLimit } from '../../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../../lib/funding/creatorAuth';
 import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../../../lib/funding/creatorProjectWrite';
-import { CREATOR_LIMITS } from '../../../../../../lib/funding/creatorValidation';
+import { CREATOR_LIMITS, findMissingRequiredSections } from '../../../../../../lib/funding/creatorValidation';
 import { sendFundingCreatorSubmissionEmail } from '../../../../../../lib/funding/email';
 import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../../../lib/funding/policy';
 import { nextReviewStatus, type FundingReviewStatus } from '../../../../../../lib/funding/reviewTransition';
-
-const STORY_MIN_LENGTH = 200;
 
 /**
  * "다 채워졌는가"를 처음으로 묻는 자리 — 구획별 저장(basic·story·creator)은 각자 빈 값을
  * 허용하므로 여기서 모아서 본다.
  *
- * 기본정보는 네 필드(title·summary·slug·coverUrl)만 truthy 검사한다. goalAmount까지 다시
- * 검증하지 않는 이유: 저 넷 중 하나라도 채워지지 않았다는 것은 곧 기본정보 구획을 한 번도
- * 저장한 적이 없다는 뜻이다(createDraftProject의 초안 기본값은 coverUrl=''이고,
- * saveBasicSection은 저 네 필드를 항상 non-empty로 검증한 뒤에만 통과시켜 목표금액까지
- * 함께 유효한 값으로 만들어 둔다) — 즉 이 네 필드가 채워져 있다는 것은 saveBasicSection이
- * 최소 한 번 성공했다는 뜻이고, 그러면 goalAmount도 이미 유효하다.
+ * 실제 판정은 `findMissingRequiredSections`(creatorValidation.ts)가 정본이다 — 운영자
+ * 승인(reviewDecision.ts)도 같은 함수를 쓴다. 여기서는 그 함수가 보지 않는 slug·개설자
+ * 이름까지 함께 넘긴다.
+ *
+ * goalAmount까지 다시 검증하지 않는 이유: title·summary·slug·coverUrl 중 하나라도
+ * 채워지지 않았다는 것은 곧 기본정보 구획을 한 번도 저장한 적이 없다는 뜻이다
+ * (createDraftProject의 초안 기본값은 coverUrl=''이고, saveBasicSection은 저 네 필드를
+ * 항상 non-empty로 검증한 뒤에만 통과시켜 목표금액까지 함께 유효한 값으로 만들어 둔다) —
+ * 즉 이 네 필드가 채워져 있다는 것은 saveBasicSection이 최소 한 번 성공했다는 뜻이고,
+ * 그러면 goalAmount도 이미 유효하다.
  *
  * **날짜(startAt)는 예외다** — 아래 별도 재검사 참조. 저장 순간엔 유효했어도 시간이
  * 지나면 저절로 무효가 되는 값이라, "저장이 성공했으면 계속 유효하다"는 이 함수의 전제가
  * 통하지 않는다.
  */
-const findMissingSections = (project: CreatorProjectDetail): string[] => {
-  const missing: string[] = [];
-  if (!project.title || !project.summary || !project.slug || !project.coverUrl) missing.push('기본정보');
-  if (project.content.trim().length < STORY_MIN_LENGTH) missing.push(`스토리(본문 ${STORY_MIN_LENGTH}자 이상)`);
-  if (project.rewards.length < 1) missing.push('리워드(최소 1개)');
-  if (!project.creator.name) missing.push('개설자 정보(이름)');
-  return missing;
-};
+const findMissingSections = (project: CreatorProjectDetail): string[] =>
+  findMissingRequiredSections({
+    title: project.title,
+    summary: project.summary,
+    slug: project.slug,
+    coverUrl: project.coverUrl,
+    content: project.content,
+    rewardsCount: project.rewards.length,
+    creatorName: project.creator.name,
+  });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
