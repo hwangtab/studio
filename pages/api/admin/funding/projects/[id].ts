@@ -48,6 +48,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 개설자가 아직 못 본 사유를 실수로 지우면 개설자는 무엇을 고쳐야 하는지 알 길이
    * 없어진다 — 그래서 여기서 막지는 않되(다듬기는 정당하다) 이름과 주석을 사실에 맞춘다.
    *
+   * 단, `reviewStatus === 'rejected'`일 때는 빈 값을 거부한다. 보관(archive)과 반려(reject)는
+   * DB에서 정확히 같은 값이고 `reviewNote`만이 그 둘을 가르는 유일한 증거다
+   * (`lib/funding/reviewTransition.ts`) — 여기서 메모를 비우면 그 구분이 영영 사라지고,
+   * 개설자 화면의 "사유는 아래 운영자 메모를 확인해 주세요" 안내도 없는 곳을 가리키게 된다.
+   *
    * 판정과 무관한 "진짜" 운영자 전용 메모가 필요하면 별도 컬럼이 있어야 하므로(현재
    * `fundingProjects`엔 그런 컬럼이 없다) 마이그레이션이 필요하고, 이 계획(Task 5)의
    * 범위 밖이라 4차로 넘긴다.
@@ -56,6 +61,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const project = await loadProjectForAdmin(id);
     if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
     const note = typeof b.note === 'string' ? b.note.trim() || null : null;
+    if (project.reviewStatus === 'rejected' && !note) {
+      return res.status(400).json({
+        ok: false,
+        message: '반려·보관 사유는 비울 수 없습니다. reviewNote가 둘을 가르는 유일한 근거입니다.',
+      });
+    }
     await getDb().update(fundingProjects).set({ reviewNote: note, updatedAt: now }).where(eq(fundingProjects.id, id));
     return res.status(200).json({ ok: true });
   }

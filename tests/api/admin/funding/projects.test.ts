@@ -278,6 +278,32 @@ describe('set_review_note', () => {
     await call('PATCH', { id: 'proj-1' }, { action: 'set_review_note', note: '' });
     expect(mockSet).toHaveBeenCalledWith(expect.objectContaining({ reviewNote: null }));
   });
+
+  /**
+   * 보관과 반려는 DB에서 정확히 같은 reviewStatus('rejected')이고, 이 둘을 가르는 유일한
+   * 증거가 reviewNote다(reviewTransition.ts). 여기서 메모를 비우면 그 증거가 사라지고,
+   * 개설자 화면의 "사유는 아래 운영자 메모를 확인해 주세요" 안내도 없는 곳을 가리키게 된다.
+   */
+  it('rejected 프로젝트에서 빈 메모는 400으로 거부한다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, reviewStatus: 'rejected', reviewNote: '기존 사유' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_review_note', note: '' });
+    expect(r.status).toBe(400);
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('rejected 프로젝트에서 note를 아예 안 보내도(undefined) 400으로 거부한다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, reviewStatus: 'rejected', reviewNote: '기존 사유' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_review_note' });
+    expect(r.status).toBe(400);
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('rejected 프로젝트라도 사유가 있는 메모는 저장된다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, reviewStatus: 'rejected', reviewNote: '기존 사유' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_review_note', note: '수정된 사유' });
+    expect(r.status).toBe(200);
+    expect(mockSet).toHaveBeenCalledWith(expect.objectContaining({ reviewNote: '수정된 사유' }));
+  });
 });
 
 /** 옛 이름은 더 이상 유효한 action이 아니다 — 이름 변경이 실제로 반영됐는지 확인. */
