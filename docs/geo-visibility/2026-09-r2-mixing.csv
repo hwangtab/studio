@@ -1,0 +1,13 @@
+month,query_id,engine,cited(yes/no),cited_url,position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes
+2026-09,Q09,chatgpt,yes,https://studionol.co.kr/,1,Studio7; 한국스마트협동조합 레코딩 스튜디오; Fiverr; SoundBetter,positive,"web search used; 2회차(9/18) 메모리 off·새 대화. 지도 결과+웹 링크. 우리를 1순위로 두고 온라인 의뢰·3~7일 납기·포트폴리오를 강점으로 설명. 경쟁자에 '한국스마트협동조합 레코딩 스튜디오'가 별개 업체로 등장 — kosmart.co.kr/recording 엔티티 혼동. 답변 말미에 계정 닉네임을 부르는 문구 잔존(개인화 완전 차단 안 됐을 가능성)"
+2026-09,Q10,chatgpt,no,,,,absent,"no web search; 2회차(9/18). 검색·출처 없이 국내 마스터링 가격 범위만 일반 안내"
+2026-09,Q11,chatgpt,yes,https://studionol.co.kr/ko/stories/mixing-mastering-price-by-track-count,1,MUIT,neutral,"web search used; 2회차(9/18). 우리 가격표를 그대로 인용 — 10트랙 이하 20만원·11~30트랙 35만원·31트랙 이상 50만원·마스터링 10만원. 트랙 수보다 편집량·보컬 튠이 중요하다고 설명"
+2026-09,Q12,chatgpt,no,,,,absent,"no web search; 2회차(9/18). WAV 익스포트·파일 정렬·러프믹스·레퍼런스 동봉 일반 안내"
+2026-09,Q13,chatgpt,no,,,,absent,"no web search; 2회차(9/18). 수정 1~2회 포함·초과 시 추가비용 일반 안내"
+2026-09,Q14,chatgpt,yes,https://studionol.co.kr/ko/stories/mastering1,1,MixingArt; Q1 Sound Lab; 크몽,neutral,"web search used; 2회차(9/18). 우리 단독 마스터링 1곡 10만원을 첫 사례로 제시. 시장 범위 5만~15만원"
+2026-09,Q09,gemini,no,,,크몽; 숨고; Sound 360; 821 Sound; BK Studio; Fiverr; SoundBetter,absent,"no web search; 2회차(9/21) 임시 채팅. 소스·구글검색·각주 없음. 검색 없이 업체 7곳을 국내 플랫폼/전문 스튜디오/해외 플랫폼으로 분류 제시. 우리 언급 없음"
+2026-09,Q10,gemini,no,,,,absent,"no web search; 2회차(9/21). 최초 생성 중지, 재실행은 '텍스트 기반 AI라 능력 밖'이라며 실질 답변 없음"
+2026-09,Q11,gemini,no,,,,absent,"no web search; 2회차(9/21). '믹싱비는 트랙 수 영향, 마스터링은 무관'까지 답한 뒤 생성 중지"
+2026-09,Q12,gemini,no,,,,absent,"no web search; 2회차(9/21). WAV/AIFF·24bit·동일 시작점·BPM/Key·레퍼런스 동봉 일반 체크리스트"
+2026-09,Q13,gemini,no,,,크몽; 숨고,absent,"no web search; 2회차(9/21). 무료 수정 2~3회·초과 시 회당 1~3만원 일반 안내"
+2026-09,Q14,gemini,no,,,,absent,"no web search; 2회차(9/21). '마스터링만 따로 가능'까지 답한 뒤 생성 중지"
