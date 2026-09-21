@@ -108,4 +108,27 @@ describe('ProjectDetailView', () => {
       expect(screen.getByText(/통신판매업 신고/)).toBeInTheDocument();
     });
   });
+
+  /**
+   * 응원 메시지는 두 자리에 나온다 — 히어로 아래 순환 카드와 본문 아래 전체 목록.
+   * 순서가 뒤집히면 순환 카드의 존재 이유가 사라진다: 본문이 길어서, 아래쪽 목록만으로는
+   * 리워드를 고르는 순간 응원이 한 글자도 보이지 않는다.
+   */
+  it('응원 메시지 순환 카드는 서포터 명단보다 앞에 온다', () => {
+    render(
+      <ProjectDetailView
+        project={project}
+        state="live"
+        status={{ pledgedAmount: 0, backerCount: 0 }}
+        interactive
+        backers={['김정곤']}
+        messages={[{ name: '김정곤', message: '침략전쟁 반대한다!', at: 1758000000 }]}
+      />,
+    );
+
+    const ticker = screen.getByRole('region', { name: '응원 메시지' });
+    const wall = screen.getByRole('region', { name: '함께한 서포터' });
+    // eslint-disable-next-line no-bitwise
+    expect(ticker.compareDocumentPosition(wall) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });

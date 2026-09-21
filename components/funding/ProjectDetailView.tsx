@@ -4,6 +4,7 @@ import { Section } from '../ui/Section';
 import FundingProgress from './FundingProgress';
 import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
+import SupporterTicker from './SupporterTicker';
 import FundingTrustNotice from './FundingTrustNotice';
 import { formatPriceAmount } from '../../data/pricing';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -130,7 +131,14 @@ export default function ProjectDetailView({
         읽는 내내 모금 현황과 리워드가 화면에 남는다.
       */}
       <Section className="pb-28 pt-16 lg:pb-16">
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
+        {/*
+          space-y-10이 순환 카드와 본문 사이 간격을 준다. 메시지가 없으면 SupporterTicker가
+          DOM에 아무것도 남기지 않으므로 grid가 첫 자식이 되어 빈 여백조차 생기지 않는다
+          (래퍼에 mb를 주면 그 경우 빈 간격만 남는다).
+        */}
+        <div className="space-y-10">
+          <SupporterTicker messages={messages} />
+          <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
             {statusError && (
               <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
@@ -207,6 +215,7 @@ export default function ProjectDetailView({
               ))}
             </div>
           </aside>
+          </div>
         </div>
       </Section>
     </>
