@@ -8,6 +8,7 @@ import {
   CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type RewardInput, type StorySection,
 } from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
+import { toKstDateString } from './creatorDateInput';
 
 export type WriteResult =
   | { ok: true }
@@ -167,7 +168,9 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
   const now = new Date();
   // 승인된 뒤의 저장만 찍는다. updated_at으로는 알 수 없다 — 관리자 쓰기도 그 값을
   // 갱신하므로 운영자가 메모만 달아도 "개설자가 고쳤다"로 보인다.
-  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now } : {};
+  // 같은 조건에서 사이트맵 lastmod도 함께 찍는다 — 공개 필드(제목·요약·표지 등)가
+  // 실제로 바뀌는 시점이 정확히 여기다.
+  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now, lastmod: toKstDateString(now) } : {};
 
   await getDb().update(fundingProjects).set({
     title: value.title, summary: value.summary, slug: value.slug,
@@ -182,7 +185,7 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
   if (denial) return denial;
 
   const now = new Date();
-  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now } : {};
+  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now, lastmod: toKstDateString(now) } : {};
 
   // 렌더 시점이 아니라 저장 시점에 벗긴다 — 렌더 경로가 여럿(상세·미리보기·OG·llms)이라
   // 한 곳을 빠뜨리면 그 경로로만 새어 나간다. 저장된 값 자체를 깨끗하게 둔다.

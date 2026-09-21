@@ -624,6 +624,25 @@ describe('승인 뒤 편집 (Task 5)', () => {
     expect(row.creatorEditedAt).toBeNull();
   });
 
+  it('승인된 프로젝트의 본문 저장은 lastmod를 갱신한다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await mockDb.update(schema.fundingProjects).set({ lastmod: '2026-01-01' })
+      .where(eq(schema.fundingProjects.id, projectId));
+
+    await saveStorySection(creatorId, projectId, { content: '고친 본문' });
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(row.lastmod).not.toBe('2026-01-01');
+  });
+
+  it('초안 저장은 lastmod를 찍지 않는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await saveStorySection(creatorId, projectId, { content: '초안 본문' });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.lastmod).toBeNull();
+  });
+
   it('승인된 프로젝트의 제목·표지는 고칠 수 있다', async () => {
     const { creatorId, projectId, basic } = await seedApprovedWithBasic();
     const result = await saveBasicSection(creatorId, projectId, { ...basic, title: '고친 제목' });

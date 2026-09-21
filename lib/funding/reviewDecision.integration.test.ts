@@ -151,6 +151,20 @@ describe('승인', () => {
     expect(after.approvedAt?.getTime()).toBe(now.getTime());
   });
 
+  it('승인 시점에 사이트맵 lastmod를 KST 날짜로 찍는다', async () => {
+    const creator = await seedCreator('lastmod@example.com');
+    const projectId = await seedProject(creator);
+    await seedReward(projectId);
+    // UTC 15:30 = KST 00:30(다음날) — 날짜 경계를 실제로 넘겨서 KST 변환이 적용됐는지 본다.
+    const now = new Date('2026-09-18T15:30:00Z');
+
+    const result = await decideProject(projectId, 'approve', {}, now);
+    expect(result.ok).toBe(true);
+
+    const after = await readProject(projectId);
+    expect(after.lastmod).toBe('2026-09-19');
+  });
+
   /**
    * 승인 화면의 승인 버튼은 note를 보내지 않는다(input.note === undefined). 예전엔 그때마다
    * `note ?? null`을 그대로 써서, 운영자가 "개설자에게 보이는 메모"에 미리 적어 둔 문장이
