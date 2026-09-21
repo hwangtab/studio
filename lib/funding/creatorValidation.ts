@@ -66,9 +66,13 @@ export const STORY_MIN_LENGTH = 200;
  * 통과했는데 승인 시점엔 불완전"으로 보이는 경우의 판정이 두 곳에서 갈라지고, 언젠가
  * 한쪽만 고쳐 기준이 어긋난다.
  *
- * `slug`·`creatorName`은 선택 입력이다 — 승인 쪽은 slug를 별도 트랙(`slugRejectionReason`
- * → 파일 충돌 → DB 충돌)으로 검사하고 개설자 이름을 다시 묻지 않으므로, 넘기지 않으면 그
- * 항목은 이 함수의 판정에서 빠진다.
+ * `slug`는 선택 입력이다 — 승인 쪽은 slug를 별도 트랙(`slugRejectionReason` → 파일 충돌
+ * → DB 충돌)으로 검사하므로, 넘기지 않으면 그 항목은 이 함수의 판정에서 빠진다.
+ *
+ * `creatorName`도 선택 입력이지만 지금은 제출·승인 둘 다 넘긴다(승인은 `reviewDecision.ts`가
+ * `AdminProjectSummary`의 `creatorName`·`creatorEmail`을 그대로 넘긴다) — 넘기지 않을 때만
+ * 이 항목이 판정에서 빠진다. `creatorEmail`을 함께 넘기면 이름이 가입 기본값(이메일
+ * 로컬파트, `creatorToken.ts` 참조)인지까지 보고, 안 넘기면 빈 이름만 보는 옛 동작이 남는다.
  */
 export interface RequiredSectionsInput {
   title: string;
