@@ -129,11 +129,21 @@ export const loadProjectForCreator = async (
 };
 
 /**
- * `basicLockedViolation`이 승인 뒤 잠그는 필드 이름 — 화면(`BasicSectionForm`)이 실제로
- * 비활성화하는 입력 집합과 일치해야 한다. `components/funding/creator/basicLockedFields.test.tsx`가
- * 이 배열을 화면이 DOM에서 잠그는 필드 집합과 대조한다 — 여기 필드를 추가·제거하면
- * 아래 `basicLockedViolation`의 실제 조건과 `BasicSectionForm.tsx`의 `disabled={readOnly ||
- * lockedFields}` 배선도 함께 고쳐야 그 테스트가 계속 초록이다.
+ * `basicLockedViolation`이 승인 뒤 잠그는 필드 이름.
+ *
+ * 이 배열은 아래 `basicLockedViolation`에서 파생된 값이 아니라 옆에 손으로 다시 적은
+ * 리터럴이다 — 두 자리가 갈리지 않게 두 테스트가 각각 다른 절반을 지킨다:
+ *
+ * - `creatorProjectWrite.integration.test.ts`의 `BASIC_LOCKED_FIELD_NAMES` 구동 `it.each`가
+ *   이 배열을 실제로 순회하며 각 필드를 하나씩 바꿔 `basicLockedViolation`이 정말 잠그는지
+ *   확인한다(+ 배열 길이 단언으로 "원소가 조용히 빠지는 것"까지 잡는다) — **이 배열과
+ *   서버 로직 본문 사이**를 지킨다.
+ * - `components/funding/creator/basicLockedFields.test.tsx`가 `BasicSectionForm`을 렌더해
+ *   DOM에서 실제로 비활성화된 입력 집합을 이 배열과 대조한다 — **이 배열과 화면
+ *   배선(`disabled={readOnly || lockedFields}`) 사이**를 지킨다.
+ *
+ * 필드를 추가·제거하면 이 배열, 아래 `basicLockedViolation`의 조건, `BasicSectionForm.tsx`의
+ * 배선을 셋 다 함께 고쳐야 두 테스트가 계속 초록이다.
  */
 export const BASIC_LOCKED_FIELD_NAMES = ['slug', 'goalAmount', 'startAt', 'endAt'] as const;
 

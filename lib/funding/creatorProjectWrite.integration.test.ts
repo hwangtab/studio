@@ -21,6 +21,7 @@ jest.mock('./projects', () => ({
 import { CREATOR_LIMITS, type RewardInput } from './creatorValidation';
 // eslint-disable-next-line import/first
 import {
+  BASIC_LOCKED_FIELD_NAMES,
   createDraftProject,
   deleteReward,
   loadProjectForCreator,
@@ -653,15 +654,50 @@ describe('승인 뒤 편집 (Task 5)', () => {
     expect(row.creatorEditedAt).not.toBeNull();
   });
 
-  it.each([
-    ['slug', { slug: 'other-slug' }, '주소는 바꿀 수 없습니다'],
-    ['goalAmount', { goalAmount: 9_999_999 }, '목표 금액은 바꿀 수 없습니다'],
-    ['endAt', { endAt: new Date('2027-01-01T00:00:00+09:00') }, '모금 기간은 바꿀 수 없습니다'],
-  ])('승인된 프로젝트의 %s는 잠긴다', async (_label, patch, expected) => {
+  /**
+   * `BASIC_LOCKED_FIELD_NAMES`(creatorProjectWrite.ts)를 실제로 하중을 받는 값으로
+   * 만드는 테스트. 그 상수는 `basicLockedViolation`에서 파생된 값이 아니라 옆에 손으로
+   * 다시 적은 리터럴이라, 상수와 DOM만 대조하는 `basicLockedFields.test.tsx`는 화면이
+   * 상수와 갈리는 것만 잡고 **`basicLockedViolation` 본문이 상수와 갈리는 것은 못
+   * 잡는다**(리뷰 지적, 2026-09-21). 여기서는 그 배열을 실제로 순회해 각 필드를 하나씩
+   * 바꿔 저장을 시도한다 — `basicLockedViolation`에서 비교 하나를 지우면 그 필드의
+   * 케이스가 `ok: true`로 나와 여기서 빨개진다.
+   *
+   * 배열 길이도 함께 단언한다 — 원소를 하나 빼면 `it.each`가 그 케이스를 아예 안 도니,
+   * 길이 확인 없이는 "필드가 조용히 빠졌다"를 놓친다.
+   */
+  const MUTATE_LOCKED_FIELD: Record<
+    (typeof BASIC_LOCKED_FIELD_NAMES)[number],
+    { patch: (basic: ReturnType<typeof basicSection>) => Partial<ReturnType<typeof basicSection>>; message: string }
+  > = {
+    slug: { patch: () => ({ slug: 'other-slug' }), message: '주소는 바꿀 수 없습니다' },
+    goalAmount: { patch: (b) => ({ goalAmount: b.goalAmount + 10_000 }), message: '목표 금액은 바꿀 수 없습니다' },
+    startAt: { patch: (b) => ({ startAt: new Date(b.startAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없습니다' },
+    endAt: { patch: (b) => ({ endAt: new Date(b.endAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없습니다' },
+  };
+
+  it('BASIC_LOCKED_FIELD_NAMES는 정확히 4개다 — 원소가 빠지면 아래 it.each가 그 케이스를 안 돈다', () => {
+    expect(BASIC_LOCKED_FIELD_NAMES.length).toBe(4);
+  });
+
+  it.each(BASIC_LOCKED_FIELD_NAMES)('승인된 프로젝트의 %s는 잠긴다 (BASIC_LOCKED_FIELD_NAMES 구동)', async (field) => {
     const { creatorId, projectId, basic } = await seedApprovedWithBasic();
-    const result = await saveBasicSection(creatorId, projectId, { ...basic, ...patch });
+    const { patch, message } = MUTATE_LOCKED_FIELD[field];
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, ...patch(basic) });
     expect(result).toMatchObject({ ok: false, code: 'locked' });
-    expect((result as { message: string }).message).toContain(expected);
+    expect((result as { message: string }).message).toContain(message);
+  });
+
+  /**
+   * 반대 방향 — `basicLockedViolation`이 잠그면 안 되는 필드에 잠금을 더하는 회귀를
+   * 잡는다. 누가 실수로(또는 "일관성을 위해") `title`까지 잠그는 조건을 추가하면 이
+   * 테스트가 `ok: false`를 받아 빨개진다.
+   */
+  it.each(['title', 'summary', 'coverUrl'] as const)('승인된 프로젝트의 %s는 잠기지 않는다(대조군)', async (field) => {
+    const { creatorId, projectId, basic } = await seedApprovedWithBasic();
+    const value = field === 'coverUrl' ? '/new-cover.webp' : `바뀐 ${field}`;
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, [field]: value });
+    expect(result).toMatchObject({ ok: true });
   });
 
   it('승인된 프로젝트의 리워드는 설명글도 잠긴다', async () => {
