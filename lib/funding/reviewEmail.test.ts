@@ -24,6 +24,7 @@ const project = {
   content: '본문',
   coverUrl: '/cover.webp',
   reviewNote: null,
+  internalNote: null,
   creatorTermsVersion: 'funding-creator-terms-2026-09-18',
   creator: { contactName: '김개설', phone: '010', bio: null, links: null },
   rewards: [],

@@ -71,6 +71,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ ok: true });
   }
 
+  /**
+   * 운영자 전용 메모. `set_review_note`와 달리 개설자에게 보이지 않으므로 빈 값을 막지
+   * 않는다 — 여기 적힌 것은 증거가 아니라 운영 메모다.
+   */
+  if (b.action === 'set_internal_note') {
+    const project = await loadProjectForAdmin(id);
+    if (!project) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+    const note = typeof b.note === 'string' ? b.note.trim() || null : null;
+    await getDb().update(fundingProjects).set({ internalNote: note, updatedAt: now }).where(eq(fundingProjects.id, id));
+    return res.status(200).json({ ok: true });
+  }
+
   if (isReviewAction(b.action)) {
     const action = b.action;
     const note = typeof b.note === 'string' ? b.note : undefined;

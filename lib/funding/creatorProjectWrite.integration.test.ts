@@ -110,6 +110,20 @@ describe('createDraftProject / loadProjectForCreator', () => {
     expect(serialized).not.toContain('payoutAccount');
     expect(serialized).not.toContain('payoutHolder');
   });
+
+  it('내부 메모는 개설자 조회에 실리지 않는다', async () => {
+    // 운영자가 내부 기록이라 믿고 적은 문장이다. 개설자 화면 props로 나가면
+    // __NEXT_DATA__에 그대로 실린다.
+    const creator = await seedCreator('me@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects)
+      .set({ internalNote: '이 개설자는 지난번에 연락이 끊겼음' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const detail = await loadProjectForCreator(creator, id);
+
+    expect(JSON.stringify(detail)).not.toContain('연락이 끊겼음');
+  });
 });
 
 describe('saveStorySection — 저장 시점 stripTrustedDirectives 배선', () => {

@@ -40,6 +40,8 @@ interface AdminFundingProjectDetailPageProps {
     content: string;
     coverUrl: string;
     reviewNote: string | null;
+    /** 운영자 전용. 개설자에게 보이지 않는다 — `reviewNote`와 헷갈리지 말 것. */
+    internalNote: string | null;
     /**
      * 화면이 렌더하는 필드만 담는다 — `creator.bio`·`creator.links`는 이 화면 어디에도
      * 그리지 않으므로 props에도 싣지 않는다(화이트리스트 원칙, 안 쓰는 개인정보를 굳이
@@ -85,6 +87,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
         content: project.content,
         coverUrl: project.coverUrl,
         reviewNote: project.reviewNote,
+        internalNote: project.internalNote,
         creator: { contactName: project.creator.contactName, phone: project.creator.phone },
         rewards: project.rewards.map((r) => ({
           rewardId: r.rewardId,
@@ -124,11 +127,13 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
   const [warnings, setWarnings] = useState<string[]>([]);
   const [slug, setSlug] = useState(project.slug);
   const [reviewNote, setReviewNote] = useState(project.reviewNote ?? '');
+  const [internalNote, setInternalNote] = useState(project.internalNote ?? '');
 
   // 서버 값이 바뀌면(판정 뒤 router.replace가 이 컴포넌트를 remount하지 않으므로) 입력을
   // 따라가게 한다 — pages/admin/funding/[id].tsx의 메모 textarea와 같은 이유·같은 패턴.
   useEffect(() => setSlug(project.slug), [project.slug]);
   useEffect(() => setReviewNote(project.reviewNote ?? ''), [project.reviewNote]);
+  useEffect(() => setInternalNote(project.internalNote ?? ''), [project.internalNote]);
 
   /**
    * 결과 배너(오류·성공·경고)로 스크롤·포커스를 옮긴다.
@@ -227,6 +232,12 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
     run(
       () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined }),
       '메모를 저장했습니다.',
+    );
+
+  const handleSaveInternalNote = () =>
+    run(
+      () => patchFundingProject(project.id, { action: 'set_internal_note', note: internalNote.trim() || undefined }),
+      '내부 기록을 저장했습니다.',
     );
 
   const handleArchive = () => {
@@ -453,11 +464,11 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
             </Button>
           </div>
 
-          <div>
-            <h2 className="text-lg font-bold text-gray-900 mb-3">개설자에게 보이는 메모</h2>
-            <p className="mb-2 text-xs text-gray-500">
-              여기 적는 내용은 개설자 화면에 &ldquo;운영자 메모&rdquo;로 그대로 노출됩니다 — 내부 기록이 아닙니다.
-              보완 요청·반려 사유와 같은 자리라, 저장하면 방금 보낸 사유를 덮어쓸 수 있습니다.
+          <div className="mb-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-1">개설자에게 보이는 메모</h2>
+            <p className="mb-2 text-sm text-amber-700">
+              개설자 화면과 메일에 그대로 나갑니다. 보완 요청·반려·보관 사유도 이 칸을 씁니다 —
+              저장하면 방금 보낸 사유를 덮어쓸 수 있습니다.
             </p>
             <div className="flex flex-col gap-3">
               <TextArea
@@ -471,6 +482,25 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
               />
               <Button light disabled={busy} onClick={handleSaveNote} className="self-start">
                 메모 저장
+              </Button>
+            </div>
+          </div>
+
+          <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">
+            <h2 className="text-lg font-bold text-gray-900 mb-1">내부 기록</h2>
+            <p className="mb-2 text-sm text-gray-600">개설자에게 보이지 않습니다.</p>
+            <div className="flex flex-col gap-3">
+              <TextArea
+                value={internalNote}
+                onChange={(e) => setInternalNote(e.target.value)}
+                rows={3}
+                aria-label="내부 기록"
+                light
+                className="min-h-0 text-sm"
+                disabled={busy}
+              />
+              <Button light disabled={busy} onClick={handleSaveInternalNote} className="self-start">
+                내부 기록 저장
               </Button>
             </div>
           </div>

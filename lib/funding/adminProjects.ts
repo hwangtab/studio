@@ -51,6 +51,8 @@ export interface AdminProjectDetail extends AdminProjectSummary {
   content: string;
   coverUrl: string;
   reviewNote: string | null;
+  /** 운영자 전용. 개설자에게 보이지 않는다 — `reviewNote`와 헷갈리지 말 것. */
+  internalNote: string | null;
   /**
    * 개설자가 심사 신청 시 동의한 약관 판본(`submit.ts`가 기록). 승인 판정
    * (`reviewDecision.ts`)이 이 값을 재확인한다 — 이 컬럼이 나오기 전(3차 배포 이전)에
@@ -138,6 +140,7 @@ export const loadProjectForAdmin = async (projectId: string): Promise<AdminProje
     content: row.project.content,
     coverUrl: row.project.coverUrl,
     reviewNote: row.project.reviewNote,
+    internalNote: row.project.internalNote,
     creatorTermsVersion: row.project.creatorTermsVersion,
     creator: {
       contactName: row.creator.contactName,

@@ -306,6 +306,33 @@ describe('set_review_note', () => {
   });
 });
 
+describe('set_internal_note', () => {
+  it('없는 프로젝트 → 404', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue(null);
+    const r = await call('PATCH', { id: 'ghost' }, { action: 'set_internal_note', note: '내부 기록' });
+    expect(r.status).toBe(404);
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('set_internal_note는 개설자에게 보이는 메모를 건드리지 않는다', async () => {
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_internal_note', note: '내부 기록' });
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true });
+    expect(mockSet).toHaveBeenCalledWith(expect.objectContaining({ internalNote: '내부 기록' }));
+    expect(mockSet).not.toHaveBeenCalledWith(expect.objectContaining({ reviewNote: expect.anything() }));
+    expect(decideProject).not.toHaveBeenCalled();
+    expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
+    expect(revalidateFundingPaths).not.toHaveBeenCalled();
+  });
+
+  it('set_internal_note는 반려 상태에서도 빈 값을 받는다 — 증거가 아니라 메모다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...BASE_PROJECT, reviewStatus: 'rejected', reviewNote: '기존 사유' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_internal_note', note: '' });
+    expect(r.status).toBe(200);
+    expect(mockSet).toHaveBeenCalledWith(expect.objectContaining({ internalNote: null }));
+  });
+});
+
 /** 옛 이름은 더 이상 유효한 action이 아니다 — 이름 변경이 실제로 반영됐는지 확인. */
 it('옛 action 이름 set_note는 더 이상 통하지 않는다 → 400', async () => {
   const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_note', note: '메모' });
