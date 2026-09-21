@@ -6,12 +6,14 @@ jest.mock('../../../../lib/funding/creatorToken', () => ({
   issueCreatorLoginToken: jest.fn(),
   normalizeCreatorEmail: jest.requireActual('../../../../lib/funding/creatorToken').normalizeCreatorEmail,
 }));
+jest.mock('../../../../lib/funding/email', () => ({ sendCreatorLoginCapAlert: jest.fn().mockResolvedValue(null) }));
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/funding/creator/login';
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
 import { issueCreatorLoginToken } from '../../../../lib/funding/creatorToken';
+import { sendCreatorLoginCapAlert } from '../../../../lib/funding/email';
 
 const call = async (body: unknown, method = 'POST') => {
   const json = jest.fn();
@@ -28,6 +30,7 @@ beforeEach(() => {
   (isAllowedContactRequestOrigin as jest.Mock).mockReturnValue(true);
   (sendCreatorLoginEmail as jest.Mock).mockResolvedValue(null);
   (issueCreatorLoginToken as jest.Mock).mockResolvedValue({ creatorId: 'c1', rawToken: 'raw-token-abc' });
+  (sendCreatorLoginCapAlert as jest.Mock).mockResolvedValue(null);
 });
 
 it('POST가 아니면 405', async () => {
@@ -115,4 +118,36 @@ it('이메일 요청 제한 키는 접두사만이 아니라 평문 이메일 �
 it('Cache-Control: no-store가 실린다', async () => {
   const r = await call({ email: 'a@b.com' });
   expect(r.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
+});
+
+describe('전역 일일 캡', () => {
+  it('전역 캡은 주소별 제한을 통과한 뒤에만 소비된다', async () => {
+    // 한 주소를 두드리는 것만으로 전체를 잠글 수 있으면 안 된다 — 주소별 제한에 걸린
+    // 요청은 메일을 보내지 않으므로 전역 예산도 쓰면 안 된다.
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(!key.startsWith('creator_login:email')));
+    await call({ email: 'a@b.com' });
+
+    const keys = (consumeRateLimit as jest.Mock).mock.calls.map((c) => c[0] as string);
+    expect(keys).not.toContain('creator_login:global');
+  });
+
+  it('전역 캡에 걸리면 메일을 보내지 않고 운영자에게 알린다', async () => {
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(key !== 'creator_login:global'));
+    const r = await call({ email: 'a@b.com' });
+
+    expect(sendCreatorLoginEmail).not.toHaveBeenCalled();
+    expect(sendCreatorLoginCapAlert).toHaveBeenCalledTimes(1);
+    // 화면은 성공이라고 답한다 — 주소 존재 여부를 숨기려면 그래야 한다.
+    expect(r.status).toBe(200);
+  });
+
+  it('캡에 걸린 상태가 이어져도 알림은 창당 한 번만 나간다', async () => {
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(key !== 'creator_login:global' && key !== 'creator_login:global_alert'));
+    await call({ email: 'a@b.com' });
+
+    expect(sendCreatorLoginCapAlert).not.toHaveBeenCalled();
+  });
 });
