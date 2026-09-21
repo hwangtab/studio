@@ -129,6 +129,15 @@ export const loadProjectForCreator = async (
 };
 
 /**
+ * `basicLockedViolation`이 승인 뒤 잠그는 필드 이름 — 화면(`BasicSectionForm`)이 실제로
+ * 비활성화하는 입력 집합과 일치해야 한다. `components/funding/creator/basicLockedFields.test.tsx`가
+ * 이 배열을 화면이 DOM에서 잠그는 필드 집합과 대조한다 — 여기 필드를 추가·제거하면
+ * 아래 `basicLockedViolation`의 실제 조건과 `BasicSectionForm.tsx`의 `disabled={readOnly ||
+ * lockedFields}` 배선도 함께 고쳐야 그 테스트가 계속 초록이다.
+ */
+export const BASIC_LOCKED_FIELD_NAMES = ['slug', 'goalAmount', 'startAt', 'endAt'] as const;
+
+/**
  * 승인된 프로젝트의 기본정보에서 바뀌면 안 되는 것.
  *
  * 구획 자체는 열려 있다(제목·요약·표지를 고칠 수 있어야 한다 — 잘못 올라간 표지가 영영
