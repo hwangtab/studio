@@ -11,6 +11,12 @@
 // 대부분은 이미 이 목록에 있어 교체해도 같은 링크가 38번 반복될 뿐이다. 허브가 7주에
 // 한 번 크롤되는 처지에(2026-09-15 실측) 126개 308을 따라가게 둘 이유가 없다.
 // practiceRoomRelatedGuides.test.ts가 재발을 막는다.
+//
+// 걷어낼 때 **승자가 목록에 남는지 확인할 것.** 2026-09-21에 126개를 빼면서
+// practice-room-drum1(27개 링크의 목적지)과 seoul1(19개)이 목록에 없다는 걸 놓쳤다 —
+// 308이라도 있던 경로가 아예 끊겼다. drum1은 연습실 클러스터 글이라 되살렸고,
+// seoul1은 넣지 않는다: 받는 쿼리가 "녹음실"·"서울 녹음실"뿐이고 연습실계가 0종이라
+// (2026-09-21 GSC 실측) 연습실 허브의 관련 가이드로는 주제가 맞지 않는다.
 // 타이틀은 한국어 전용 — ko 허브에서만 렌더된다 (pages/[locale]/practice-room.tsx).
 
 export interface PracticeRoomRelatedGuide {
@@ -25,6 +31,7 @@ export const PRACTICE_ROOM_RELATED_GUIDES: PracticeRoomRelatedGuide[] = [
   { slug: 'practice-room-monthly1', title: '음악연습실 월세 입주 가이드' },
   { slug: 'practice-room-soundproof1', title: '방음 음악연습실 선택' },
   { slug: 'practice-room-vocal1', title: '보컬 연습실 활용법' },
+  { slug: 'practice-room-drum1', title: '드럼 연습실 고르는 법' },
   { slug: 'practice-room-startup1', title: '음악연습실 창업 가이드' },
   { slug: 'practice-room-transfer1', title: '음악연습실 양도·인수' },
   { slug: 'practice-room-piano1', title: '피아노 연습실 가이드' },
