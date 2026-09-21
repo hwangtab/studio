@@ -1383,7 +1383,29 @@ MSG
 
 PR 본문에 반드시 적을 것:
 
-1. **마이그레이션을 적용해야 한다.** `drizzle/` 아래 새 SQL 파일(`internal_note`, `creator_edited_at`). 적용 전에는 관리자 심사 화면이 500으로 깨진다 — 배포와 적용 순서를 맞춰야 한다.
+1. **마이그레이션(`drizzle/migrations/0019_breezy_pride.sql`, `internal_note`·`creator_edited_at` 컬럼 추가)을 배포보다 먼저 적용한다.** 컬럼 추가는 옛 코드에 무해하므로 먼저 적용해도 아무것도 안 깨진다 — 반대 순서(배포 먼저)로 하면 문제가 생긴다.
+
+   drizzle의 인자 없는 `select()`는 스키마의 전 컬럼을 SQL에 나열하므로, 이 두 컬럼이 추가된
+   코드가 마이그레이션 없이 배포되면 `funding_projects`를 읽는 모든 경로가 `no such column`으로
+   실패한다. 경로별 영향은 이렇다(실제 코드로 대조):
+
+   - **공개 상세**(`lib/funding/repository.ts`의 `getFundingProjectAsync` → `dbProjects.ts`의
+     `getDbFundingProject`)와 **공개 목록**(`getAllFundingProjectsAsync`)은 `repository.ts`의
+     `safeDb`가 DB 오류를 삼키고 `null`/빈 배열로 떨어진다 — **조용히 "없는 프로젝트"가 된다.**
+     로그(`console.error`)에만 남고 화면·응답은 정상처럼 보인다.
+   - **`/sitemap-funding.xml`**(`pages/sitemap-funding.xml.ts`)도 `listDbFundingProjects` 호출을
+     try/catch로 감싸 실패 시 빈 목록으로 200을 낸다 — **DB 프로젝트가 조용히 사이트맵에서
+     빠진다.**
+   - **개설자 화면 전부**(`lib/funding/creatorProjectList.ts`의 `listProjectsForCreator`,
+     `creatorProjectWrite.ts`의 `guard`·`loadProjectForCreator` 등)는 이 오류를 잡는 try/catch가
+     없어 그대로 위로 던져지고, 호출하는 API 라우트(`pages/api/funding/creator/projects/*.ts`)도
+     감싸지 않으므로 Next.js 기본 처리로 **500이 난다.**
+   - **관리자 화면**(`lib/funding/adminProjects.ts`의 조회, `pages/api/admin/funding/projects/[id].ts`)도
+     같은 이유로 **500이 난다** — `[id].ts`의 try/catch는 `decideProject`의 슬러그 경합만 잡고
+     스키마 오류는 잡지 않는다.
+
+   즉 공개 페이지 쪽은 로그를 보지 않으면 며칠이 지나도 못 알아채고, 개설자·관리자 쪽은
+   즉시 500으로 드러난다.
 2. **기존 개설자 중 이름이 이메일 로컬파트인 사람은 심사 신청·승인이 막힌다.** 의도된 동작이다(이름을 한 번 저장하면 풀린다). 배포 전 확인:
    ```sql
    SELECT id, email, name FROM funding_creators
