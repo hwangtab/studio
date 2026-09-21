@@ -4,6 +4,7 @@ import { Section } from '../ui/Section';
 import FundingProgress from './FundingProgress';
 import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
+import SupporterTicker from './SupporterTicker';
 import FundingTrustNotice from './FundingTrustNotice';
 import { formatPriceAmount } from '../../data/pricing';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -137,9 +138,21 @@ export default function ProjectDetailView({
                 현황을 불러오지 못했습니다. 새로고침해 주세요.
               </p>
             )}
-            <article className="prose prose-lg max-w-none dark:prose-invert">
-              <MarkdownRenderer content={project.content} locale="ko" />
-            </article>
+            {/*
+              순환 카드는 본문 컬럼 안 맨 위에 둔다 — 히어로 바로 아래이되 본문 폭이다.
+              Section 전체 폭으로 빼면 데스크톱에서 오른쪽 모금 패널이 카드 높이만큼
+              아래로 밀려, 첫 화면에서 모금액·달성률이 보이지 않는다(실측 확인).
+
+              space-y-10이 카드와 본문 사이 간격을 준다. 메시지가 없으면 SupporterTicker가
+              DOM에 아무것도 남기지 않으므로 article이 첫 자식이 되어 빈 여백조차 생기지
+              않는다 — 래퍼에 mb를 주면 그 경우 빈 간격만 남는다.
+            */}
+            <div className="space-y-10">
+              <SupporterTicker messages={messages} />
+              <article className="prose prose-lg max-w-none dark:prose-invert">
+                <MarkdownRenderer content={project.content} locale="ko" />
+              </article>
+            </div>
             {/*
               전자상거래법상 판매자(스튜디오 놀)와 개설자를 구분해 표시한다(펀딩 약관
               제4조 — "개설자가 있는 프로젝트는 그 사실과 개설자를 프로젝트 페이지에
