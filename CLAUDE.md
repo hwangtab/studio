@@ -188,6 +188,56 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 (마이그레이션 없이 넣은 기능이다) 둘을 가르는 것은 `reviewNote`뿐이다. 나중에 "반려율"
 같은 통계를 내려는 사람은 이 사실을 먼저 알아야 한다.
 
+### 승인 뒤에 열리는 것과 잠기는 것
+
+`lib/funding/reviewTransition.ts`의 `EDITABLE_SECTIONS`가 상태별로 개설자가 고칠 수 있는
+구획(`basic`·`story`·`rewards`)을 정한다. 승인 뒤에는 **본문(story)과 기본정보(basic)만**
+열리고, 기본정보 안에서도 `basicLockedViolation`(`lib/funding/creatorProjectWrite.ts`)이
+주소(slug)·목표 금액·모금 기간을 잠근다. 리워드는 승인 뒤 구획 자체가 닫혀 **설명글까지**
+통째로 잠긴다 — 후원자가 보고 결제한 약속이라, 바뀌면 후원자 약관 제8조의 "표시·광고와
+다르게 이행"에 걸리고 판매자인 스튜디오가 3개월짜리 청약철회를 받는다.
+
+이 표는 **두 군데에 있다.** `components/funding/creator/types.ts`의 `EDITABLE_SECTIONS`가
+같은 표를 리터럴로 복제한다 — `reviewTransition.ts`는 `db/schema`를 값으로 import해
+클라이언트 번들에 DB 스키마를 끌어들이기 때문이다. `components/funding/creator/types.test.ts`가
+상태 × 구획 전수 조합을 대조하므로 한쪽만 고치면 CI가 선다.
+
+승인 뒤 편집은 **심사를 거치지 않는다.** 그래서 `saveBasicSection`·`saveStorySection`이
+저장 시점의 상태가 `approved`일 때만 `creator_edited_at`을 찍고, 운영자에게 메일을 보낸다
+(`sendCreatorEditedNotice`, 관리자 화면은 `pages/admin/funding/projects/[id].tsx`에서
+"승인 뒤 개설자가 수정했습니다"로 표시). `updated_at`으로는 알 수 없다 — 관리자 쓰기
+(`set_internal_note` 등)도 그 값을 갱신하므로 운영자가 메모만 달아도 "개설자가 고쳤다"로
+보인다.
+
+**개설자 저장 라우트(`pages/api/funding/creator/projects/[id].ts`)는 검증을 우회하는
+장치를 하나 갖고 있다.** 화면(`BasicSectionForm`)은 승인 뒤 잠긴 시작일·종료일 필드도
+매번 폼 값에 실어 함께 보내는데, `validateBasicSection`은 상태와 무관하게
+`startAt >= now + leadDays`를 요구한다. 그래서 모금이 이미 시작된(startAt이 과거인) 승인
+프로젝트를 그대로 검증하면 **항상** 400이 난다 — `basicLockedViolation`에 닿기도 전에
+막힌다. 이 라우트는 승인된 프로젝트에 한해 요청의 날짜를 검증 전에 DB의 기존 값으로
+강제 치환하고, 리드타임 검사의 기준 시각도 `now` 대신 epoch(`new Date(0)`)로 넘겨 이
+검사를 우회한다 — 치환한 값이 곧 기존 값이라 이후 `basicLockedViolation`은 항상 무위반이
+된다. 이 우회가 없으면 모금이 시작된 프로젝트는 제목 한 글자도 저장할 수 없다. 2026-09-21
+리뷰에서 재현된 회귀이고, `validateBasicSection`을 고칠 때 이 호출부의 전제(승인 프로젝트는
+검증기에 실제 `now`가 아니라 epoch가 들어온다)를 모르면 되살아난다.
+
+### `review_note`와 `internal_note`는 다른 칸이다
+
+`review_note`는 **개설자에게 보인다** — 개설자 프로젝트 목록(`pages/[locale]/funding/creator/index.tsx`)과
+편집 화면(`pages/[locale]/funding/creator/[id].tsx`) 두 곳, 그리고 심사 결과 메일
+(`lib/funding/reviewEmail.ts`)이 이 값을 그대로 렌더한다. 보완 요청 사유·반려 사유·보관
+사유가 전부 이 칸을 쓰고 서로 덮어쓴다. `internal_note`(`set_internal_note` 액션,
+`db/schema.ts`의 `internalNote` 컬럼)는 운영자 전용이고 개설자 조회에 어떤 경로로도 실리지
+않는다 — `lib/funding/creatorProjectWrite.integration.test.ts`가 그것을 고정한다.
+
+### 개설자 이름 기본값은 "미설정"이다
+
+가입은 `name: email.split('@')[0]`으로 이름을 **채운다**(`lib/funding/creatorToken.ts`).
+채워져 있어 미설정을 감지할 수 없었고, 3차가 그 값을 공개 상세의 판매자 표시 옆에 그리고
+동시에 잠그면서 "개설자 hwangtab"이 영영 남는 경로가 생겼다. `isDefaultCreatorName`
+(`lib/funding/creatorValidation.ts`)이 그 값을 미설정으로 판정하고, 심사 신청·승인이 막고,
+이름 잠금도 걸리지 않는다(설정한 적 없는 값을 잠그는 것은 잠금이 아니라 사고다).
+
 ### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
 
 `NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는
