@@ -8,10 +8,11 @@
  * 난다. 이 테스트가 실제 진리표(다섯 상태 × 세 구획 전수)에 대해 두 함수가 항상 같은
  * 답을 내는지 대조한다.
  */
+import { fundingReviewStatusEnum } from '../../../db/schema';
 import { canCreatorEditSection, type CreatorSectionName } from '../../../lib/funding/reviewTransition';
 import { canEditSectionInBrowser } from './types';
 
-const STATUSES = ['draft', 'submitted', 'changes_requested', 'approved', 'rejected'] as const;
+const STATUSES = fundingReviewStatusEnum;
 const SECTIONS: CreatorSectionName[] = ['basic', 'story', 'rewards'];
 
 describe('canEditSectionInBrowser ↔ canCreatorEditSection 진리표 대조', () => {

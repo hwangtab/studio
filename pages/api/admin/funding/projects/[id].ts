@@ -53,9 +53,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * (`lib/funding/reviewTransition.ts`) — 여기서 메모를 비우면 그 구분이 영영 사라지고,
    * 개설자 화면의 "사유는 아래 운영자 메모를 확인해 주세요" 안내도 없는 곳을 가리키게 된다.
    *
-   * 판정과 무관한 "진짜" 운영자 전용 메모가 필요하면 별도 컬럼이 있어야 하므로(현재
-   * `fundingProjects`엔 그런 컬럼이 없다) 마이그레이션이 필요하고, 이 계획(Task 5)의
-   * 범위 밖이라 4차로 넘긴다.
+   * 판정과 무관한 "진짜" 운영자 전용 메모는 별도 컬럼(`internal_note`)에 담는다 —
+   * 아래 `set_internal_note` 액션이 그 칸을 쓴다.
    */
   if (b.action === 'set_review_note') {
     const project = await loadProjectForAdmin(id);
