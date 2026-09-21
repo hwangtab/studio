@@ -85,7 +85,7 @@ export default function SupporterTicker({ messages }: { messages: Message[] }) {
                 type="button"
                 onClick={() => setPaused((p) => !p)}
                 aria-label={paused ? '응원 메시지 자동 넘김 재생' : '응원 메시지 자동 넘김 일시정지'}
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
+                className="inline-flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-400 dark:focus-visible:ring-primary-lighter/70 dark:hover:bg-gray-800 dark:hover:text-white"
               >
                 <span aria-hidden="true" className="text-xs leading-none">
                   {paused ? '▶' : '❙❙'}
@@ -100,7 +100,7 @@ export default function SupporterTicker({ messages }: { messages: Message[] }) {
                   onClick={() => setIndex(i)}
                   aria-label={`${i + 1}번째 응원 메시지 보기`}
                   aria-current={i === index ? 'true' : undefined}
-                  className={`h-1.5 rounded-full transition-all ${
+                  className={`h-1.5 rounded-full transition-[width,background-color] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 dark:focus-visible:ring-primary-lighter/70 ${
                     i === index
                       ? 'w-4 bg-primary dark:bg-primary-lighter'
                       : 'w-1.5 bg-gray-300 hover:bg-gray-400 dark:bg-gray-600 dark:hover:bg-gray-500'
