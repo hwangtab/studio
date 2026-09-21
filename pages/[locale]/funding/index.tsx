@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight } from '@/lib/lucide-icons';
 import { Section } from '../../../components/ui/Section';
 import FundingProjectCard from '../../../components/funding/FundingProjectCard';
+import { buildPublicStatusOrNull } from '../../../lib/funding/publicStatus';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 import { computeProjectState, type ProjectState } from '../../../lib/funding/projects';
@@ -101,17 +102,24 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const now = new Date();
-  const items = (await getListableFundingProjectsAsync(now)).map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    summary: p.summary,
-    cover: p.cover,
-    goalAmount: p.goalAmount,
-    state: computeProjectState(p, now),
-    status: p.status,
-    startAt: p.startAt,
-    endAt: p.endAt,
-  }));
+  const projects = await getListableFundingProjectsAsync(now);
+  // 모금 현황을 함께 싣는다. 예전에는 클라이언트 폴링만으로 채워서, 첫 화면에 "목표
+  // 1,000,000원"만 떠 아직 0원인 것처럼 읽혔고 진행바가 뒤늦게 생기며 그 아래가 밀렸다.
+  // DB가 없으면 null이 오고(빌드는 DB 없이도 성공해야 한다) 화면은 예전 동작으로 돌아간다.
+  const items = await Promise.all(
+    projects.map(async (p) => ({
+      slug: p.slug,
+      title: p.title,
+      summary: p.summary,
+      cover: p.cover,
+      goalAmount: p.goalAmount,
+      state: computeProjectState(p, now),
+      status: p.status,
+      startAt: p.startAt,
+      endAt: p.endAt,
+      initialStatus: await buildPublicStatusOrNull(p, now),
+    })),
+  );
   // 승인은 관리자 화면에서 나므로 배포 없이 목록에 나타나야 한다. 60초는 승인 직후
   // 개설자가 새로고침해 확인할 수 있을 만큼 짧고, 목록 조회가 DB를 때리지 않을 만큼 길다.
   return buildPageStaticProps(defaultLocale, { items }, { i18nSections: [], revalidate: 60 });

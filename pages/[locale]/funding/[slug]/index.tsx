@@ -4,7 +4,7 @@ import SEO from '../../../../components/SEO';
 import ProjectDetailView from '../../../../components/funding/ProjectDetailView';
 import FundingMobileCta from '../../../../components/funding/FundingMobileCta';
 import RewardModal from '../../../../components/funding/RewardModal';
-import { useFundingStatus } from '../../../../components/funding/useFundingStatus';
+import { useFundingStatus, type FundingStatusResponse } from '../../../../components/funding/useFundingStatus';
 import { buildPageStaticProps } from '../../../../lib/getStatic';
 import { defaultLocale } from '../../../../lib/i18n';
 import imageMetadata from '../../../../utils/imageMetadata.json';
@@ -13,6 +13,7 @@ const SITE_URL = 'https://studionol.co.kr';
 const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
 import { computeProjectState, getAllFundingProjects, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../lib/funding/repository';
+import { buildPublicStatusOrNull } from '../../../../lib/funding/publicStatus';
 // `mergeRewardRemaining`만 `shape.ts`에서 직접 가져온다 — 위 `projects.ts` 값들
 // (computeProjectState·getAllFundingProjects·stripRewardDownloads)은 정적 생성 함수
 // 안에서만(맨 아래) 쓰여 Next가 클라이언트 번들에서 걷어내지만, 이 값은 컴포넌트
@@ -27,9 +28,14 @@ import { mergeRewardRemaining } from '../../../../lib/funding/shape';
 interface Props {
   project: FundingProject;
   initialState: ProjectState;
+  /**
+   * 서버가 정적 생성 시점에 집계한 현황. 없으면(빌드에 DB가 없는 CI 등) 예전처럼
+   * "모금 현황 집계 중…"을 보여주고 폴링을 기다린다.
+   */
+  initialStatus?: FundingStatusResponse | null;
 }
 
-export default function FundingProjectPage({ project, initialState }: Props) {
+export default function FundingProjectPage({ project, initialState, initialStatus = null }: Props) {
   // timing을 함께 넘긴다 — 훅이 오픈 시각에 맞춰 1회 재조회하고, 마운트 뒤로는 브라우저
   // 시계로도 상태를 다시 판정한다(FundingProjectCard와 같은 이유: 정적 생성된 initialState는
   // 빌드 시각에 고정돼 있고 상태 API 응답도 CDN 캐시라 최대 몇 분 뒤처진다). 오픈을 기다리며
@@ -38,7 +44,7 @@ export default function FundingProjectPage({ project, initialState }: Props) {
     status: project.status,
     startAt: project.startAt,
     endAt: project.endAt,
-  });
+  }, initialStatus);
   const canPledge = state === 'live';
   // 렌더 본문에서 new Date()를 부르면 서버(빌드 시각)와 클라이언트 값이 달라 D-day 텍스트가
   // 하이드레이션 불일치를 낸다 — 마운트 후에만 시계를 읽는다.
@@ -163,7 +169,13 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   return buildPageStaticProps(
     defaultLocale,
     // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/shape.ts 주석).
-    { project: stripRewardDownloads(project), initialState: computeProjectState(project, new Date()) },
+    {
+      project: stripRewardDownloads(project),
+      initialState: computeProjectState(project, new Date()),
+      // 모금 현황을 함께 싣는다 — 없으면 첫 화면에 "모금 현황 집계 중…"이 스친다.
+      // DB가 없으면 null이 오고(빌드는 DB 없이도 성공해야 한다) 예전 동작으로 돌아간다.
+      initialStatus: await buildPublicStatusOrNull(project, new Date()),
+    },
     { i18nSections: ['stories'], revalidate: 60 },
   );
 };
