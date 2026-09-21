@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState, type FormEvent } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -76,6 +77,16 @@ export default function FundingApply() {
           {sent && <p className="text-sm text-green-700 dark:text-green-400">로그인 링크를 보냈습니다. 메일함을 확인해 주세요.</p>}
           {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
           <p className="text-sm text-gray-500">비밀번호는 없습니다. 메일로 받은 링크로 들어옵니다.</p>
+          {/*
+            이 버튼 한 번에 개설자 계정(funding_creators 행)이 만들어진다 — lib/funding/creatorToken.ts가
+            이메일을 받는 즉시 행을 넣는다. 그래서 "로그인 링크를 받는다"가 곧 수집 시점이고, 그 사실과
+            처리방침을 누르기 전에 보여야 한다(2026-09-21 문서·코드 대조에서 링크가 0건이었다).
+          */}
+          <p className="text-sm text-gray-500">
+            이 버튼을 누르면 입력하신 이메일로 개설자 계정이 만들어집니다. 수집·이용·보관은{' '}
+            <Link href="/ko/privacy-policy" className="underline">개인정보 처리방침</Link>을, 개설 조건은{' '}
+            <Link href="/ko/funding/creator-terms" className="underline">개설자 약관</Link>을 확인해 주세요.
+          </p>
         </form>
       </main>
     </>
