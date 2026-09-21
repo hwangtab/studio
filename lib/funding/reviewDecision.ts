@@ -7,6 +7,7 @@ import { findMissingRequiredSections } from './creatorValidation';
 import { getFundingProject } from './projects';
 import { nextReviewStatus, type ReviewAction } from './reviewTransition';
 import { normalizeFundingSlug, slugRejectionReason } from './reservedSlugs';
+import { toKstDateString } from './creatorDateInput';
 
 /** 관리자 심사 화면이 실제로 실행하는 판정. `nextReviewStatus`의 전체 액션 중 이 넷만 쓴다. */
 export type AdminReviewAction = Extract<ReviewAction, 'approve' | 'request_changes' | 'reject' | 'archive'>;
@@ -167,6 +168,8 @@ export const decideProject = async (
     coverUrl: project.coverUrl,
     content: project.content,
     rewardsCount: project.rewards.length,
+    creatorName: project.creatorName,
+    creatorEmail: project.creatorEmail,
   });
   if (missing.length > 0) {
     return deny('incomplete', `다음 항목이 비어 있어 승인할 수 없습니다: ${missing.join(', ')}`);
@@ -227,6 +230,9 @@ export const decideProject = async (
         slug,
         approvedAt: now,
         reviewNote: approveReviewNote,
+        // 승인이 이 프로젝트를 처음 공개하는 순간이다 — 사이트맵 lastmod를 여기서 찍는다
+        // (db/schema.ts의 lastmod 컬럼 주석: "공개 필드가 바뀔 때만 갱신").
+        lastmod: toKstDateString(now),
         updatedAt: now,
       })
       .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus))),

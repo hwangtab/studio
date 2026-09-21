@@ -211,3 +211,32 @@ export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail)
     } },
   ]);
 };
+
+/**
+ * 개설자 로그인 메일 전역 일일 캡에 걸렸을 때의 운영자 알림.
+ *
+ * 캡에 걸린 정상 사용자는 메일을 못 받는데 화면은 성공이라고 답한다(주소 존재 여부를
+ * 숨기려면 그래야 한다). 운영자가 모르면 아무도 모른다 — "로그인이 안 된다"는 문의가
+ * 들어와야 비로소 알게 되는 상태를 막는다.
+ *
+ * 링크는 `/admin/funding/projects` 목록이다 — 이 화면이 프로젝트마다 `creatorEmail`을
+ * 나란히 보여주므로(`pages/admin/funding/projects/index.tsx`), 캡을 두드린 주소가 실제
+ * 등록된 개설자인지 운영자가 바로 대조할 수 있다. `/admin/funding`(주문·pledge 목록)에는
+ * 개설자 이메일이 없어 이 판단에 쓸 수 없다.
+ */
+export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | null> => {
+  const result = await sendEmail({
+    to: OPERATOR_EMAIL,
+    subject: '[펀딩] 개설자 로그인 메일 일일 한도에 걸렸습니다',
+    text: [
+      `오늘 개설자 로그인 메일이 일일 한도(${cap}통)에 도달했습니다.`,
+      '지금부터 24시간 창이 지날 때까지 로그인 링크가 발송되지 않습니다.',
+      '',
+      '정상 사용자도 함께 막히므로, 남용이 아니라면 한도를 올려야 합니다',
+      '(pages/api/funding/creator/login.ts의 GLOBAL_DAILY_CAP).',
+      '',
+      `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
+    ].join('\n'),
+  });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};

@@ -93,13 +93,19 @@ it('남의 프로젝트거나 없는 프로젝트면 404', async () => {
   expect(r.status).toBe(404);
 });
 
-it('심사 중이거나 판정 난 프로젝트에는 409 — canCreatorEdit(draft·changes_requested 외)', async () => {
-  for (const reviewStatus of ['submitted', 'approved', 'rejected']) {
+it('심사 중이거나 반려된 프로젝트에는 409 — canCreatorEdit(구획이 하나도 안 열림)', async () => {
+  for (const reviewStatus of ['submitted', 'rejected']) {
     (loadProjectForCreator as jest.Mock).mockResolvedValue({ ...PROJECT, reviewStatus });
     const r = await call([], { projectId: 'p1', kind: 'body' });
     expect(r.status).toBe(409);
   }
   expect(put).not.toHaveBeenCalled();
+});
+
+it('승인된 프로젝트는 통과한다 — 승인 뒤에도 본문·표지 이미지는 고칠 수 있다', async () => {
+  (loadProjectForCreator as jest.Mock).mockResolvedValue({ ...PROJECT, reviewStatus: 'approved' });
+  const r = await call([await makePng(400, 300)], { projectId: 'p1', kind: 'body' });
+  expect(r.status).toBe(200);
 });
 
 it('changes_requested 상태는 편집 가능이라 통과한다', async () => {

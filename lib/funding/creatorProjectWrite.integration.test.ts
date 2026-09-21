@@ -21,6 +21,7 @@ jest.mock('./projects', () => ({
 import { CREATOR_LIMITS, type RewardInput } from './creatorValidation';
 // eslint-disable-next-line import/first
 import {
+  BASIC_LOCKED_FIELD_NAMES,
   createDraftProject,
   deleteReward,
   loadProjectForCreator,
@@ -46,8 +47,8 @@ beforeEach(async () => {
 
 afterEach(() => client.close());
 
-const seedCreator = async (email: string): Promise<string> => {
-  const [creator] = await mockDb.insert(schema.fundingCreators).values({ email, name: '가나' }).returning();
+const seedCreator = async (email: string, name = '가나'): Promise<string> => {
+  const [creator] = await mockDb.insert(schema.fundingCreators).values({ email, name }).returning();
   return creator.id;
 };
 
@@ -73,6 +74,41 @@ const basicSection = (overrides: Partial<Parameters<typeof saveBasicSection>[2]>
   coverUrl: '/cover.webp',
   ...overrides,
 });
+
+let seedCounter = 0;
+
+/** 개설자 계정 + 초안 프로젝트 하나를 만들고, 필요하면 심사 상태를 바로 옮긴다. */
+const seedProject = async (overrides: { reviewStatus?: string } = {}) => {
+  seedCounter += 1;
+  const creatorId = await seedCreator(`seed-${seedCounter}@example.com`);
+  const { id: projectId } = await createDraftProject(creatorId);
+  if (overrides.reviewStatus) {
+    await mockDb.update(schema.fundingProjects)
+      .set({ reviewStatus: overrides.reviewStatus as (typeof schema.fundingReviewStatusEnum)[number] })
+      .where(eq(schema.fundingProjects.id, projectId));
+  }
+  return { creatorId, projectId };
+};
+
+/** 승인 전에 기본정보를 실제로 저장해 둔 뒤 승인시킨다 — basicLockedViolation이 비교할 "기존 값"이 필요하다. */
+const seedApprovedWithBasic = async () => {
+  const { creatorId, projectId } = await seedProject();
+  const basic = basicSection();
+  await saveBasicSection(creatorId, projectId, basic);
+  await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+    .where(eq(schema.fundingProjects.id, projectId));
+  return { creatorId, projectId, basic };
+};
+
+/** 승인 전에 리워드를 실제로 저장해 둔 뒤 승인시킨다. */
+const seedApprovedWithReward = async () => {
+  const { creatorId, projectId } = await seedProject();
+  const reward = rewardInput();
+  await upsertReward(creatorId, projectId, reward);
+  await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+    .where(eq(schema.fundingProjects.id, projectId));
+  return { creatorId, projectId, reward };
+};
 
 describe('createDraftProject / loadProjectForCreator', () => {
   it('초안을 만들고 본인 계정으로 불러올 수 있다', async () => {
@@ -100,13 +136,29 @@ describe('createDraftProject / loadProjectForCreator', () => {
     const { id } = await createDraftProject(creator);
     const detail = await loadProjectForCreator(creator, id);
     expect(detail).not.toBeNull();
-    expect(Object.keys(detail!.creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone'].sort());
+    // email은 이 태스크에서 의도적으로 추가됐다 — submit.ts의 isDefaultCreatorName 판정이
+    // 서버 안에서만 쓰려고 필요하다. 화면 props로는 안 나간다는 것은 여기가 아니라
+    // toEditorProject를 보는 tests/pages/funding/creator/edit.test.ts가 고정한다.
+    expect(Object.keys(detail!.creator).sort()).toEqual(['bio', 'contactName', 'email', 'links', 'name', 'phone'].sort());
     const serialized = JSON.stringify(detail!.creator);
     expect(serialized).not.toContain('taxType');
     expect(serialized).not.toContain('payoutBankName');
     expect(serialized).not.toContain('payoutAccount');
     expect(serialized).not.toContain('payoutHolder');
-    expect(serialized).not.toContain('email');
+  });
+
+  it('내부 메모는 개설자 조회에 실리지 않는다', async () => {
+    // 운영자가 내부 기록이라 믿고 적은 문장이다. 개설자 화면 props로 나가면
+    // __NEXT_DATA__에 그대로 실린다.
+    const creator = await seedCreator('me@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects)
+      .set({ internalNote: '이 개설자는 지난번에 연락이 끊겼음' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const detail = await loadProjectForCreator(creator, id);
+
+    expect(JSON.stringify(detail)).not.toContain('연락이 끊겼음');
   });
 });
 
@@ -441,6 +493,35 @@ describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', ()
     const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
     expect(row.name).toBe('새 이름');
   });
+
+  it('이름이 가입 기본값이면 승인된 프로젝트가 있어도 바꿀 수 있다', async () => {
+    // 설정한 적 없는 값을 잠그는 것은 잠금이 아니라 사고다. 기존 행(로컬파트 이름)도
+    // 이 예외로 스스로 풀린다 — DB를 손댈 필요가 없다.
+    const creator = await seedCreator('hwangtab@gmail.com', 'hwangtab');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '황경하', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('황경하');
+  });
+
+  it('이름을 이미 골랐으면 승인된 프로젝트가 있을 때 잠긴다', async () => {
+    const creator = await seedCreator('hwangtab2@gmail.com', '황경하');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '다른 이름', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: false, code: 'locked' });
+  });
 });
 
 describe('slug 중복', () => {
@@ -522,5 +603,115 @@ describe('개설자 정보 저장', () => {
     const { id: secondProject } = await createDraftProject(creator);
     const secondDetail = await loadProjectForCreator(creator, secondProject);
     expect(secondDetail?.creator.name).toBe('스튜디오 놀');
+  });
+});
+
+describe('승인 뒤 편집 (Task 5)', () => {
+  it('승인된 프로젝트의 본문은 고칠 수 있고 creatorEditedAt이 찍힌다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+
+    const result = await saveStorySection(creatorId, projectId, { content: '고친 본문' });
+
+    expect(result).toMatchObject({ ok: true });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.content).toBe('고친 본문');
+    expect(row.creatorEditedAt).not.toBeNull();
+  });
+
+  it('초안 저장은 creatorEditedAt을 찍지 않는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await saveStorySection(creatorId, projectId, { content: '초안 본문' });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.creatorEditedAt).toBeNull();
+  });
+
+  it('승인된 프로젝트의 본문 저장은 lastmod를 갱신한다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await mockDb.update(schema.fundingProjects).set({ lastmod: '2026-01-01' })
+      .where(eq(schema.fundingProjects.id, projectId));
+
+    await saveStorySection(creatorId, projectId, { content: '고친 본문' });
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(row.lastmod).not.toBe('2026-01-01');
+  });
+
+  it('초안 저장은 lastmod를 찍지 않는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await saveStorySection(creatorId, projectId, { content: '초안 본문' });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.lastmod).toBeNull();
+  });
+
+  it('승인된 프로젝트의 제목·표지는 고칠 수 있다', async () => {
+    const { creatorId, projectId, basic } = await seedApprovedWithBasic();
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, title: '고친 제목' });
+    expect(result).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.title).toBe('고친 제목');
+    expect(row.creatorEditedAt).not.toBeNull();
+  });
+
+  /**
+   * `BASIC_LOCKED_FIELD_NAMES`(creatorProjectWrite.ts)를 실제로 하중을 받는 값으로
+   * 만드는 테스트. 그 상수는 `basicLockedViolation`에서 파생된 값이 아니라 옆에 손으로
+   * 다시 적은 리터럴이라, 상수와 DOM만 대조하는 `basicLockedFields.test.tsx`는 화면이
+   * 상수와 갈리는 것만 잡고 **`basicLockedViolation` 본문이 상수와 갈리는 것은 못
+   * 잡는다**(리뷰 지적, 2026-09-21). 여기서는 그 배열을 실제로 순회해 각 필드를 하나씩
+   * 바꿔 저장을 시도한다 — `basicLockedViolation`에서 비교 하나를 지우면 그 필드의
+   * 케이스가 `ok: true`로 나와 여기서 빨개진다.
+   *
+   * 배열 길이도 함께 단언한다 — 원소를 하나 빼면 `it.each`가 그 케이스를 아예 안 도니,
+   * 길이 확인 없이는 "필드가 조용히 빠졌다"를 놓친다.
+   */
+  const MUTATE_LOCKED_FIELD: Record<
+    (typeof BASIC_LOCKED_FIELD_NAMES)[number],
+    { patch: (basic: ReturnType<typeof basicSection>) => Partial<ReturnType<typeof basicSection>>; message: string }
+  > = {
+    slug: { patch: () => ({ slug: 'other-slug' }), message: '주소는 바꿀 수 없습니다' },
+    goalAmount: { patch: (b) => ({ goalAmount: b.goalAmount + 10_000 }), message: '목표 금액은 바꿀 수 없습니다' },
+    startAt: { patch: (b) => ({ startAt: new Date(b.startAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없습니다' },
+    endAt: { patch: (b) => ({ endAt: new Date(b.endAt.getTime() + 86_400_000) }), message: '모금 기간은 바꿀 수 없습니다' },
+  };
+
+  it('BASIC_LOCKED_FIELD_NAMES는 정확히 4개다 — 원소가 빠지면 아래 it.each가 그 케이스를 안 돈다', () => {
+    expect(BASIC_LOCKED_FIELD_NAMES.length).toBe(4);
+  });
+
+  it.each(BASIC_LOCKED_FIELD_NAMES)('승인된 프로젝트의 %s는 잠긴다 (BASIC_LOCKED_FIELD_NAMES 구동)', async (field) => {
+    const { creatorId, projectId, basic } = await seedApprovedWithBasic();
+    const { patch, message } = MUTATE_LOCKED_FIELD[field];
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, ...patch(basic) });
+    expect(result).toMatchObject({ ok: false, code: 'locked' });
+    expect((result as { message: string }).message).toContain(message);
+  });
+
+  /**
+   * 반대 방향 — `basicLockedViolation`이 잠그면 안 되는 필드에 잠금을 더하는 회귀를
+   * 잡는다. 누가 실수로(또는 "일관성을 위해") `title`까지 잠그는 조건을 추가하면 이
+   * 테스트가 `ok: false`를 받아 빨개진다.
+   */
+  it.each(['title', 'summary', 'coverUrl'] as const)('승인된 프로젝트의 %s는 잠기지 않는다(대조군)', async (field) => {
+    const { creatorId, projectId, basic } = await seedApprovedWithBasic();
+    const value = field === 'coverUrl' ? '/new-cover.webp' : `바뀐 ${field}`;
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, [field]: value });
+    expect(result).toMatchObject({ ok: true });
+  });
+
+  it('승인된 프로젝트의 리워드는 설명글도 잠긴다', async () => {
+    const { creatorId, projectId, reward } = await seedApprovedWithReward();
+    const result = await upsertReward(creatorId, projectId, { ...reward, description: '바뀐 설명' });
+    expect(result).toMatchObject({ ok: false, code: 'not_editable' });
+  });
+
+  it('제출·반려 상태에서는 여전히 아무 구획도 못 고친다', async () => {
+    for (const reviewStatus of ['submitted', 'rejected']) {
+      const { creatorId, projectId } = await seedProject({ reviewStatus });
+      expect(await saveBasicSection(creatorId, projectId, basicSection())).toMatchObject({ ok: false, code: 'not_editable' });
+      expect(await saveStorySection(creatorId, projectId, { content: '본문' })).toMatchObject({ ok: false, code: 'not_editable' });
+      expect(await upsertReward(creatorId, projectId, rewardInput())).toMatchObject({ ok: false, code: 'not_editable' });
+    }
   });
 });

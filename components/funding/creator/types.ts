@@ -50,16 +50,27 @@ export interface EditorProject {
   rewards: EditorReward[];
 }
 
-/**
- * 개설자가 지금 고칠 수 있는 상태. `lib/funding/reviewTransition.ts`의 `canCreatorEdit`과
- * 같은 규칙이지만, 그 파일은 `db/schema`를 값으로 import해 클라이언트 번들에 DB 스키마
- * 코드를 끌어들이므로 여기서는 리터럴로 다시 적는다 — 두 자리가 갈리지 않도록
- * `lib/funding/reviewTransition.test.ts`가 이미 그 파일 쪽 진리표를 고정하고 있고,
- * 여기 값은 그 표에서 편집 가능한 두 상태(draft·changes_requested)를 그대로 옮긴 것이다.
- */
-export const EDITABLE_REVIEW_STATUSES: ReadonlySet<string> = new Set(['draft', 'changes_requested']);
+/** 개설자 편집 화면의 프로젝트 구획. `lib/funding/reviewTransition.ts`의 `CreatorSectionName`과 같다. */
+export type CreatorSectionName = 'basic' | 'story' | 'rewards';
 
-export const canEditInBrowser = (reviewStatus: string): boolean => EDITABLE_REVIEW_STATUSES.has(reviewStatus);
+/**
+ * 상태별로 개설자가 고칠 수 있는 구획. `lib/funding/reviewTransition.ts`의
+ * `EDITABLE_SECTIONS`를 리터럴로 옮긴 것이다.
+ *
+ * 그 파일은 `db/schema`를 값으로 import해 클라이언트 번들에 DB 스키마 코드를 끌어들이므로
+ * 여기서 다시 적는다. 두 자리가 갈리지 않도록 `types.test.ts`가 상태 × 구획 전수 조합을
+ * 대조한다.
+ */
+const EDITABLE_SECTIONS: Record<string, readonly CreatorSectionName[]> = {
+  draft: ['basic', 'story', 'rewards'],
+  changes_requested: ['basic', 'story', 'rewards'],
+  approved: ['basic', 'story'],
+  submitted: [],
+  rejected: [],
+};
+
+export const canEditSectionInBrowser = (reviewStatus: string, section: CreatorSectionName): boolean =>
+  EDITABLE_SECTIONS[reviewStatus]?.includes(section) ?? false;
 
 export const REVIEW_STATUS_LABEL: Record<string, string> = {
   draft: '작성 중',
@@ -71,10 +82,14 @@ export const REVIEW_STATUS_LABEL: Record<string, string> = {
   rejected: '반려·보관',
 };
 
-/** 읽기 전용 상태에서 상단에 띄우는 안내. draft·changes_requested는 여기 없다(편집 가능이라 안내가 필요 없다). */
+/**
+ * 상단에 띄우는 상태 안내. draft·changes_requested는 여기 없다(구획이 전부 열려 있어
+ * 안내가 필요 없다). `approved`는 구획별로는 일부(basic·story) 편집 가능하지만 — 완전한
+ * 읽기 전용은 아니다 — 무엇이 열리고 무엇이 막히는지를 안내가 직접 설명한다.
+ */
 export const REVIEW_STATUS_NOTICE: Record<string, string> = {
   submitted: '심사 중입니다. 심사가 끝날 때까지는 내용을 고칠 수 없습니다.',
-  approved: '이미 공개된 프로젝트입니다. 내용을 고치려면 운영자에게 문의해 주세요.',
+  approved: '공개된 프로젝트입니다. 본문과 제목·요약·표지는 지금도 고칠 수 있고, 고치면 운영자에게 알림이 갑니다. 주소·목표 금액·모금 기간과 리워드는 후원자와의 약속이라 바꿀 수 없습니다.',
   rejected: '이 프로젝트는 종결되어 더 이상 고칠 수 없습니다. 사유는 아래 운영자 메모를 확인해 주세요. 다시 진행하시려면 새 프로젝트를 만들어 주세요.',
 };
 

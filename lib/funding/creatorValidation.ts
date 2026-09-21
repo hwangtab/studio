@@ -66,9 +66,13 @@ export const STORY_MIN_LENGTH = 200;
  * 통과했는데 승인 시점엔 불완전"으로 보이는 경우의 판정이 두 곳에서 갈라지고, 언젠가
  * 한쪽만 고쳐 기준이 어긋난다.
  *
- * `slug`·`creatorName`은 선택 입력이다 — 승인 쪽은 slug를 별도 트랙(`slugRejectionReason`
- * → 파일 충돌 → DB 충돌)으로 검사하고 개설자 이름을 다시 묻지 않으므로, 넘기지 않으면 그
- * 항목은 이 함수의 판정에서 빠진다.
+ * `slug`는 선택 입력이다 — 승인 쪽은 slug를 별도 트랙(`slugRejectionReason` → 파일 충돌
+ * → DB 충돌)으로 검사하므로, 넘기지 않으면 그 항목은 이 함수의 판정에서 빠진다.
+ *
+ * `creatorName`도 선택 입력이지만 지금은 제출·승인 둘 다 넘긴다(승인은 `reviewDecision.ts`가
+ * `AdminProjectSummary`의 `creatorName`·`creatorEmail`을 그대로 넘긴다) — 넘기지 않을 때만
+ * 이 항목이 판정에서 빠진다. `creatorEmail`을 함께 넘기면 이름이 가입 기본값(이메일
+ * 로컬파트, `creatorToken.ts` 참조)인지까지 보고, 안 넘기면 빈 이름만 보는 옛 동작이 남는다.
  */
 export interface RequiredSectionsInput {
   title: string;
@@ -78,7 +82,21 @@ export interface RequiredSectionsInput {
   content: string;
   rewardsCount: number;
   creatorName?: string;
+  /** 넘기면 이름이 가입 기본값(이메일 로컬파트)인지까지 본다. 안 넘기면 빈 이름만 본다. */
+  creatorEmail?: string;
 }
+
+/**
+ * 가입 시 채워 넣는 이메일 로컬파트(`creatorToken.ts`의 `name: normalized.split('@')[0]`)는
+ * "개설자가 고른 이름"이 아니다. 이름 칸이 비어 있지 않아 미설정을 감지할 수 없었고,
+ * 3차가 그 값을 공개 상세의 판매자 표시 옆에 그리면서(그리고 승인 뒤 잠그면서) 문제가 됐다.
+ *
+ * 로컬파트와 같은 글자를 일부러 고른 개설자는 기본값으로 오판되지만, 결과는 "이름을 한 번
+ * 더 저장해야 하고 잠기지 않는다"라 안전한 방향이다. 반대 방향(설정 안 한 이름이 공개되고
+ * 잠기는 것)이 실제로 난 사고다.
+ */
+export const isDefaultCreatorName = (name: string, email: string): boolean =>
+  name.trim() === email.split('@')[0];
 
 export const findMissingRequiredSections = (input: RequiredSectionsInput): string[] => {
   const missing: string[] = [];
@@ -87,7 +105,11 @@ export const findMissingRequiredSections = (input: RequiredSectionsInput): strin
   if (!basicFilled) missing.push('기본정보');
   if (input.content.trim().length < STORY_MIN_LENGTH) missing.push(`스토리(본문 ${STORY_MIN_LENGTH}자 이상)`);
   if (input.rewardsCount < 1) missing.push('리워드(최소 1개)');
-  if (input.creatorName !== undefined && !input.creatorName) missing.push('개설자 정보(이름)');
+  if (input.creatorName !== undefined) {
+    const unset = !input.creatorName
+      || (input.creatorEmail !== undefined && isDefaultCreatorName(input.creatorName, input.creatorEmail));
+    if (unset) missing.push('개설자 정보(이름)');
+  }
   return missing;
 };
 

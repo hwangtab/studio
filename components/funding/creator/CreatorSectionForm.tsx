@@ -11,6 +11,13 @@ interface Props {
   projectId: string;
   initial: EditorCreatorProfile;
   readOnly: boolean;
+  /**
+   * 지금 이름이 잠겨 있는지 — `lib/funding/creatorProjectWrite.ts`의 `isCreatorNameLocked`가
+   * 편집 화면 로드 시점에 판정해 내려준 값이다. 저장을 눌러야 비로소 `locked` 오류로
+   * 아는 대신, 칸 자체를 비활성화하고 이유를 미리 보여준다. 서버(`saveCreatorSection`)가
+   * 여전히 유일한 집행자다 — 이 값은 안내일 뿐이다.
+   */
+  nameLocked: boolean;
   onSaved: (value: EditorCreatorProfile) => void;
 }
 
@@ -23,7 +30,7 @@ interface Props {
  * 프로젝트 상태로 판단해 내려준다) — 심사 중인 프로젝트를 보면서 계정 프로필을 태연히
  * 바꾸는 것은 "무엇을 고치는 화면인지" 헷갈리게 만든다.
  */
-export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, onSaved }: Props) {
+export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, nameLocked, onSaved }: Props) {
   const [name, setName] = useState(initial.name);
   const [contactName, setContactName] = useState(initial.contactName ?? '');
   const [phone, setPhone] = useState(initial.phone ?? '');
@@ -68,10 +75,16 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, o
           value={name}
           onChange={(e) => { setName(e.target.value); clearSaveStatus(); }}
           maxLength={CREATOR_LIMITS.nameMax}
-          disabled={readOnly}
+          disabled={readOnly || nameLocked}
           required
         />
       </Field>
+      {nameLocked && (
+        <p className="-mt-3 text-xs text-gray-600">
+          승인된 프로젝트가 있어 이름은 바꿀 수 없습니다. 프로젝트 상세 화면에 판매자 표시로
+          그대로 노출되는 값이기 때문입니다. 소개·연락처·링크는 계속 고칠 수 있습니다.
+        </p>
+      )}
       <Field id="creator-contact-name" label="담당자 이름" hint="운영자만 볼 수 있습니다.">
         <TextInput
           value={contactName}

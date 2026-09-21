@@ -7,6 +7,7 @@ import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
 import { issueCreatorLoginToken, normalizeCreatorEmail } from '../../../../lib/funding/creatorToken';
+import { sendCreatorLoginCapAlert } from '../../../../lib/funding/email';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 
@@ -14,6 +15,16 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr')
 const IP_LIMIT = 5;
 const EMAIL_LIMIT = 3;
 const WINDOW_SECONDS = 600;
+
+/**
+ * 하루에 나갈 수 있는 개설자 로그인 메일의 총량.
+ *
+ * IP별·주소별 제한은 키가 요청자마다 달라 천장이 없다 — 주소와 IP를 흩뿌리면 얼마든지
+ * 보낼 수 있다. 개설자 수가 두 자리인 동안 하루 수십 통이 정상 상한이라 넉넉히 잡았다.
+ * 이 값에 닿으면 운영자에게 메일이 가고, 그때 올릴지 남용인지 판단한다.
+ */
+const GLOBAL_DAILY_CAP = 100;
+const DAY_SECONDS = 86_400;
 
 /**
  * 응답은 언제나 같다.
@@ -55,6 +66,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!(await consumeRateLimit(emailRateLimitKey(email), EMAIL_LIMIT, WINDOW_SECONDS))) {
     // 한 주소로 링크를 퍼붓는 것을 막는다. 여기서도 같은 200을 돌려준다 — 429를 주면
     // "그 주소는 존재한다"를 알려 주는 셈이다.
+    return res.status(200).json(OK);
+  }
+
+  // 전역 캡은 메일을 실제로 보내기 직전에만 소비한다 — 위 주소별 제한에 걸려 이미
+  // 돌아가는 요청이 전역 예산을 태우면, 한 주소를 두드리는 것만으로 전체를 잠글 수 있다.
+  if (!(await consumeRateLimit('creator_login:global', GLOBAL_DAILY_CAP, DAY_SECONDS))) {
+    // 알림도 레이트리밋을 탄다 — 캡에 걸린 상태에서 알림이 쏟아지면 그것이 두 번째 사고다.
+    if (await consumeRateLimit('creator_login:global_alert', 1, DAY_SECONDS)) {
+      const alertError = await sendCreatorLoginCapAlert(GLOBAL_DAILY_CAP);
+      if (alertError) console.error('[funding] 개설자 로그인 캡 알림 실패:', alertError);
+    }
+    console.error('[funding] 개설자 로그인 메일 일일 한도 도달 — 발송을 건너뜁니다.');
     return res.status(200).json(OK);
   }
 

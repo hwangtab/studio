@@ -8,13 +8,13 @@ import { RewardSectionForm } from '../../../../components/funding/creator/Reward
 import { StorySectionForm } from '../../../../components/funding/creator/StorySectionForm';
 import { submitProject } from '../../../../components/funding/creator/api';
 import {
-  IDLE_SAVE_STATE, REVIEW_STATUS_LABEL, REVIEW_STATUS_NOTICE, canEditInBrowser,
-  type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
+  IDLE_SAVE_STATE, REVIEW_STATUS_LABEL, REVIEW_STATUS_NOTICE, canEditSectionInBrowser,
+  type CreatorSectionName, type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
 } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
 import { computeEarliestStartDate, toKstDateString } from '../../../../lib/funding/creatorDateInput';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
-import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
+import { isCreatorNameLocked, loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
 import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
 import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../lib/funding/policy';
 import { withI18nServerProps } from '../../../../lib/getStatic';
@@ -28,6 +28,13 @@ interface Props {
    * 어긋난다(2026-09-17 리뷰 지적).
    */
   earliestStartDate: string;
+  /**
+   * 지금 개설자 이름이 잠겨 있는지 — `lib/funding/creatorProjectWrite.ts`의
+   * `isCreatorNameLocked`가 편집 화면 로드 시점에 한 번 판정한 결과다. 판정에 쓰인
+   * 이메일·현재 이름 같은 원자료는 화면에 내려보내지 않는다(결과 불리언 하나만).
+   * 저장 시점의 실제 집행은 여전히 `saveCreatorSection`이 한다 — 이 값은 안내일 뿐이다.
+   */
+  nameLocked: boolean;
 }
 
 /**
@@ -35,14 +42,17 @@ interface Props {
  *
  * `loadProjectForCreator`가 `fundingCreators`를 `select()`(전 컬럼)로 읽지만 화면에는
  * `{ name, contactName, phone, bio, links }` 다섯 필드만 골라 넣은 채로 돌려준다 — 이 함수는
- * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`·`email`은
- * 애초에 `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와
- * 같은 자리, 같은 이유). 날짜는 KST 달력 날짜 문자열로 바꾼다(`lib/funding/creatorDateInput.ts`
+ * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`는 애초에
+ * `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와 같은
+ * 자리, 같은 이유). `email`은 `CreatorProjectDetail.creator`에 있지만(심사 신청이
+ * `isDefaultCreatorName` 판정에 쓴다) 이 함수가 옮겨 담지 않으므로 화면 props로는 나가지
+ * 않는다 — `tests/pages/funding/creator/edit.test.ts`가 이 누수를 테스트로 고정한다. 날짜는
+ * KST 달력 날짜 문자열로 바꾼다(`lib/funding/creatorDateInput.ts`
  * 참조 — `Date` 그대로면 `__NEXT_DATA__` 직렬화도 안 되고, ISO 타임스탬프 그대로 두면
  * 폼이 다시 저장할 때 하루가 밀린다). 리워드는 `lockedAt`(승인 시각) 대신 화면이
  * 필요로 하는 `locked` 불리언 하나만 남긴다.
  */
-const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
+export const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
   id: p.id,
   slug: p.slug,
   title: p.title,
@@ -78,13 +88,20 @@ const TABS = ['basic', 'story', 'rewards', 'creator'] as const;
 type Tab = (typeof TABS)[number];
 const TAB_LABEL: Record<Tab, string> = { basic: '기본정보', story: '스토리', rewards: '리워드', creator: '개설자 정보' };
 
-export default function CreatorProjectEditor({ project: initial, earliestStartDate }: Props) {
+export default function CreatorProjectEditor({ project: initial, earliestStartDate, nameLocked }: Props) {
   const [project, setProject] = useState<EditorProject>(initial);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
   const [agreedTerms, setAgreedTerms] = useState(false);
 
-  const readOnly = !canEditInBrowser(project.reviewStatus);
+  // 구획별 판정 — 서버(lib/funding/reviewTransition.ts의 canCreatorEditSection)와 같은 단위다.
+  // 승인 뒤에는 basic·story만 열리고 rewards는 통째로 닫힌다.
+  const ro = (section: CreatorSectionName) => !canEditSectionInBrowser(project.reviewStatus, section);
+  // 심사 신청은 draft·changes_requested에서만 가능하다(reviewTransition.ts의 TABLE에
+  // approved → submit 전이가 없다). approved도 basic 구획 자체는 열려 있어 `ro('basic')`만
+  // 보면 이미 공개된 프로젝트에서도 버튼이 활성화된다 — 서버가 409로 막아 기능은
+  // 안전하지만, 상단 "공개된 프로젝트입니다" 안내와 모순되는 버튼·체크박스가 남는다.
+  const canSubmitForReview = !ro('basic') && project.reviewStatus !== 'approved';
   const notice = REVIEW_STATUS_NOTICE[project.reviewStatus];
   // 본문이 3차 범위라 판본이 빈 문자열인 동안은 화면도 동의를 요구하지 않는다 —
   // lib/funding/policy.ts의 FUNDING_CREATOR_TERMS_VERSION 주석과 같은 조건이다.
@@ -167,7 +184,8 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
                 startAt: project.startAt, endAt: project.endAt,
               }}
               earliestStartDate={earliestStartDate}
-              readOnly={readOnly}
+              readOnly={ro('basic')}
+              lockedFields={project.reviewStatus === 'approved'}
               onSaved={(value: BasicSectionValue) => setProject((p) => ({ ...p, ...value }))}
             />
           </div>
@@ -175,7 +193,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
             <StorySectionForm
               projectId={project.id}
               initial={project.content}
-              readOnly={readOnly}
+              readOnly={ro('story')}
               onSaved={(content: string) => setProject((p) => ({ ...p, content }))}
             />
           </div>
@@ -183,7 +201,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
             <RewardSectionForm
               projectId={project.id}
               initial={project.rewards}
-              readOnly={readOnly}
+              readOnly={ro('rewards')}
               onSaved={(rewards: EditorReward[]) => setProject((p) => ({ ...p, rewards }))}
             />
           </div>
@@ -191,7 +209,8 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
             <CreatorSectionForm
               projectId={project.id}
               initial={project.creator}
-              readOnly={readOnly}
+              readOnly={false}
+              nameLocked={nameLocked}
               onSaved={(value: EditorCreatorProfile) => setProject((p) => ({ ...p, creator: value }))}
             />
           </div>
@@ -204,7 +223,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
                 type="checkbox"
                 className="mt-0.5"
                 checked={agreedTerms}
-                disabled={readOnly}
+                disabled={!canSubmitForReview}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
               />
               <span>
@@ -218,7 +237,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
           <div className="flex items-center gap-3">
             <Button
               onClick={handleSubmitReview}
-              disabled={readOnly || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
+              disabled={!canSubmitForReview || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
             >
               {submit.status === 'saving' ? '신청 중…' : '심사 신청'}
             </Button>
@@ -257,6 +276,10 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
       project: toEditorProject(project),
       // 서버의 now로 계산한다 — 브라우저 시계로 다시 계산하지 않는 이유는 위 Props 주석 참조.
       earliestStartDate: computeEarliestStartDate(Date.now(), CREATOR_LIMITS.leadDays),
+      // 편집 화면 로드 시점에 한 번만 조회한다 — 저장 경로(saveCreatorSection)는 이 값을
+      // 쓰지 않고 자신의 조건을 그대로 재확인하므로, 여기서 조회를 늘려도 집행 경로의
+      // 쿼리 횟수는 늘지 않는다.
+      nameLocked: await isCreatorNameLocked(auth.creatorId),
     },
   };
 });

@@ -39,6 +39,8 @@ const PROJECT = {
   content: '본문',
   coverUrl: '/images/cover.jpg',
   reviewNote: null,
+  internalNote: null,
+  creatorEditedAt: null,
   creator: { contactName: '담당자', phone: '010-0000-0000' },
   rewards: [
     {
@@ -178,4 +180,29 @@ it('잠긴 리워드는 배지 옆에 텍스트로 이유를 보여준다(툴팁
   );
   expect(screen.getByText('잠김')).toBeInTheDocument();
   expect(screen.getByText(/승인된 리워드라 주소·금액·수량 제한·배송 여부를 바꿀 수 없습니다/)).toBeInTheDocument();
+});
+
+it('두 메모 칸은 개설자에게 보이는지를 서로 다르게 말한다', () => {
+  render(<AdminFundingProjectDetailPage project={PROJECT} />);
+  expect(screen.getByText('개설자에게 보이는 메모')).toBeInTheDocument();
+  expect(screen.getByText('개설자에게 보이지 않습니다.')).toBeInTheDocument();
+});
+
+it('승인 뒤 수정된 프로젝트는 심사 화면이 그 사실을 말한다', () => {
+  render(<AdminFundingProjectDetailPage project={{ ...PROJECT, creatorEditedAt: '2026-09-21T05:00:00.000Z' }} />);
+  expect(screen.getByText(/승인 뒤 개설자가 수정했습니다/)).toBeInTheDocument();
+});
+
+it('수정된 적 없으면 그 표시가 없다', () => {
+  render(<AdminFundingProjectDetailPage project={{ ...PROJECT, creatorEditedAt: null }} />);
+  expect(screen.queryByText(/승인 뒤 개설자가 수정했습니다/)).not.toBeInTheDocument();
+});
+
+it('내부 기록 저장은 set_internal_note로 나간다', async () => {
+  (patchFundingProject as jest.Mock).mockResolvedValue({ ok: true });
+  render(<AdminFundingProjectDetailPage project={PROJECT} />);
+  fireEvent.change(screen.getByLabelText('내부 기록'), { target: { value: '메모' } });
+  fireEvent.click(screen.getByRole('button', { name: '내부 기록 저장' }));
+  expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_internal_note', note: '메모' });
+  expect(await screen.findByText(/저장했습니다/)).toBeInTheDocument();
 });

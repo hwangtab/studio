@@ -244,7 +244,8 @@ describe('loadProjectForAdmin', () => {
         'id', 'slug', 'title', 'reviewStatus', 'status', 'hidden',
         'submittedAt', 'approvedAt', 'creatorName', 'creatorEmail',
         'goalAmount', 'startAt', 'endAt',
-        'summary', 'content', 'coverUrl', 'reviewNote', 'creatorTermsVersion', 'creator', 'rewards',
+        'summary', 'content', 'coverUrl', 'reviewNote', 'internalNote', 'creatorTermsVersion', 'creatorEditedAt',
+        'creator', 'rewards',
       ].sort(),
     );
     expect(Object.keys(detail!.creator).sort()).toEqual(

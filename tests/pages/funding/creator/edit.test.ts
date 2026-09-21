@@ -6,14 +6,17 @@
  * (lib/funding/creatorAuth.test.ts와 같은 사유 — 이 페이지가 creatorAuth를 임포트한다).
  */
 jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorRequest: jest.fn() }));
-jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({ loadProjectForCreator: jest.fn() }));
+jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({
+  loadProjectForCreator: jest.fn(),
+  isCreatorNameLocked: jest.fn().mockResolvedValue(false),
+}));
 
 // eslint-disable-next-line import/first
-import { getServerSideProps } from '../../../../pages/[locale]/funding/creator/[id]';
+import { getServerSideProps, toEditorProject } from '../../../../pages/[locale]/funding/creator/[id]';
 // eslint-disable-next-line import/first
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 // eslint-disable-next-line import/first
-import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
+import { isCreatorNameLocked, loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
 // eslint-disable-next-line import/first
 import { computeEarliestStartDate } from '../../../../lib/funding/creatorDateInput';
 // eslint-disable-next-line import/first
@@ -62,6 +65,17 @@ const EDITOR_PROJECT_KEYS = [
   'id', 'slug', 'title', 'summary', 'content', 'coverUrl', 'goalAmount',
   'startAt', 'endAt', 'reviewStatus', 'reviewNote', 'creator', 'rewards',
 ].sort();
+
+describe('toEditorProject', () => {
+  // 이메일은 findMissingRequiredSections(isDefaultCreatorName 판정)가 쓰려고
+  // loadProjectForCreator에 추가된 값이라 서버 안에서만 돌아야 한다. props에 실리면
+  // __NEXT_DATA__로 페이지 소스에 나간다.
+  it('개설자 화면 props에 이메일이 실리지 않는다', () => {
+    const editor = toEditorProject(PROJECT);
+    expect(JSON.stringify(editor)).not.toContain('creator@example.com');
+    expect(Object.keys(editor.creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone']);
+  });
+});
 
 describe('funding creator 편집 화면 getServerSideProps', () => {
   beforeEach(() => {
@@ -135,6 +149,33 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
 
     const creator = props.project.creator as Record<string, unknown>;
     expect(Object.keys(creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone'].sort());
+  });
+
+  describe('nameLocked', () => {
+    it('isCreatorNameLocked가 true면 props.nameLocked도 true다', async () => {
+      (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+      (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
+      (isCreatorNameLocked as jest.Mock).mockResolvedValue(true);
+      const res = resStub();
+      const result = await getServerSideProps({
+        params: { locale: 'ko', id: 'proj-1' }, query: {}, req: { headers: {}, cookies: {} }, res,
+      } as never);
+      const props = (result as unknown as { props: { nameLocked: boolean } }).props;
+      expect(props.nameLocked).toBe(true);
+      expect(isCreatorNameLocked).toHaveBeenCalledWith('creator-a');
+    });
+
+    it('isCreatorNameLocked가 false면 props.nameLocked도 false다', async () => {
+      (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+      (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
+      (isCreatorNameLocked as jest.Mock).mockResolvedValue(false);
+      const res = resStub();
+      const result = await getServerSideProps({
+        params: { locale: 'ko', id: 'proj-1' }, query: {}, req: { headers: {}, cookies: {} }, res,
+      } as never);
+      const props = (result as unknown as { props: { nameLocked: boolean } }).props;
+      expect(props.nameLocked).toBe(false);
+    });
   });
 
   it('리워드는 lockedAt 대신 locked 불리언만 담는다', async () => {

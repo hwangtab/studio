@@ -40,6 +40,7 @@ const findMissingSections = (project: CreatorProjectDetail): string[] =>
     content: project.content,
     rewardsCount: project.rewards.length,
     creatorName: project.creator.name,
+    creatorEmail: project.creator.email,
   });
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

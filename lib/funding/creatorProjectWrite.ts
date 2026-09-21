@@ -1,11 +1,14 @@
 import { and, count, eq, ne } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingProjects, fundingRewards, type FundingRewardRow } from '../../db/schema';
+import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRow, type FundingRewardRow } from '../../db/schema';
 import { getFundingProject } from './projects';
-import { canCreatorEdit } from './reviewTransition';
-import { CREATOR_LIMITS, type BasicSection, type CreatorSection, type RewardInput, type StorySection } from './creatorValidation';
+import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
+import {
+  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type RewardInput, type StorySection,
+} from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
+import { toKstDateString } from './creatorDateInput';
 
 export type WriteResult =
   | { ok: true }
@@ -32,6 +35,12 @@ export interface CreatorProjectDetail {
   reviewNote: string | null;
   creator: {
     name: string;
+    /**
+     * 심사 신청(`submit.ts`)이 `isDefaultCreatorName` 판정에 쓰려고만 필요하다 — 서버
+     * 안에서만 돌아야 한다. 화면 props로 흘리지 않는다(`toEditorProject`가 이 필드를
+     * 고르지 않는다. `tests/pages/funding/creator/edit.test.ts`가 누수를 고정한다).
+     */
+    email: string;
     contactName: string | null;
     phone: string | null;
     bio: string | null;
@@ -46,13 +55,16 @@ export interface CreatorProjectDetail {
  * **모든 쓰기 함수가 이것을 먼저 부른다.** 함수마다 조건을 다시 쓰면 언젠가 한 곳이
  * 빠지고, 그 하나가 남의 프로젝트를 여는 문이 된다. 남의 것이면 'not_found'다 —
  * '권한 없음'이라고 답하면 그 id가 존재한다는 사실을 알려 주는 셈이다.
+ *
+ * `section`은 구획별로 다르다 — 승인 뒤에는 basic·story만 열리고 rewards는 통째로
+ * 닫힌다(`reviewTransition.ts`의 `EDITABLE_SECTIONS`). 호출부마다 자신의 구획을 넘긴다.
  */
-const guard = async (creatorId: string, projectId: string) => {
+const guard = async (creatorId: string, projectId: string, section: CreatorSectionName) => {
   const [row] = await getDb().select().from(fundingProjects)
     .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.creatorId, creatorId))).limit(1);
   if (!row) return { row: null, denial: deny('not_found', '프로젝트를 찾을 수 없습니다.') };
-  if (!canCreatorEdit(row.reviewStatus)) {
-    return { row, denial: deny('not_editable', '심사 중이거나 이미 판정이 난 프로젝트는 고칠 수 없습니다.') };
+  if (!canCreatorEditSection(row.reviewStatus, section)) {
+    return { row, denial: deny('not_editable', '지금 상태에서는 이 항목을 고칠 수 없습니다.') };
   }
   return { row, denial: null };
 };
@@ -106,6 +118,7 @@ export const loadProjectForCreator = async (
     reviewNote: row.reviewNote,
     creator: {
       name: creator?.name ?? '',
+      email: creator?.email ?? '',
       contactName: creator?.contactName ?? null,
       phone: creator?.phone ?? null,
       bio: creator?.bio ?? null,
@@ -115,9 +128,53 @@ export const loadProjectForCreator = async (
   };
 };
 
+/**
+ * `basicLockedViolation`이 승인 뒤 잠그는 필드 이름.
+ *
+ * 이 배열은 아래 `basicLockedViolation`에서 파생된 값이 아니라 옆에 손으로 다시 적은
+ * 리터럴이다 — 두 자리가 갈리지 않게 두 테스트가 각각 다른 절반을 지킨다:
+ *
+ * - `creatorProjectWrite.integration.test.ts`의 `BASIC_LOCKED_FIELD_NAMES` 구동 `it.each`가
+ *   이 배열을 실제로 순회하며 각 필드를 하나씩 바꿔 `basicLockedViolation`이 정말 잠그는지
+ *   확인한다(+ 배열 길이 단언으로 "원소가 조용히 빠지는 것"까지 잡는다) — **이 배열과
+ *   서버 로직 본문 사이**를 지킨다.
+ * - `components/funding/creator/basicLockedFields.test.tsx`가 `BasicSectionForm`을 렌더해
+ *   DOM에서 실제로 비활성화된 입력 집합을 이 배열과 대조한다 — **이 배열과 화면
+ *   배선(`disabled={readOnly || lockedFields}`) 사이**를 지킨다.
+ *
+ * 필드를 추가·제거하면 이 배열, 아래 `basicLockedViolation`의 조건, `BasicSectionForm.tsx`의
+ * 배선을 셋 다 함께 고쳐야 두 테스트가 계속 초록이다.
+ */
+export const BASIC_LOCKED_FIELD_NAMES = ['slug', 'goalAmount', 'startAt', 'endAt'] as const;
+
+/**
+ * 승인된 프로젝트의 기본정보에서 바뀌면 안 되는 것.
+ *
+ * 구획 자체는 열려 있다(제목·요약·표지를 고칠 수 있어야 한다 — 잘못 올라간 표지가 영영
+ * 남는 것을 막는다). 하지만 아래 셋은 후원자와의 약속이거나 이미 공개된 주소다.
+ */
+const basicLockedViolation = (
+  existing: FundingProjectRow,
+  next: BasicSection,
+): string | null => {
+  if (existing.reviewStatus !== 'approved') return null;
+  if (existing.slug !== next.slug) {
+    return '공개된 프로젝트의 주소는 바꿀 수 없습니다. 후원자가 후원 확인 페이지에서 이 주소로 프로젝트를 찾습니다.';
+  }
+  if (existing.goalAmount !== next.goalAmount) return '공개된 프로젝트의 목표 금액은 바꿀 수 없습니다.';
+  if (existing.startAt.getTime() !== next.startAt.getTime()
+    || existing.endAt.getTime() !== next.endAt.getTime()) {
+    return '공개된 프로젝트의 모금 기간은 바꿀 수 없습니다.';
+  }
+  return null;
+};
+
 export const saveBasicSection = async (creatorId: string, projectId: string, value: BasicSection): Promise<WriteResult> => {
-  const { row, denial } = await guard(creatorId, projectId);
+  const { row, denial } = await guard(creatorId, projectId, 'basic');
   if (denial) return denial;
+
+  const locked = basicLockedViolation(row!, value);
+  if (locked) return deny('locked', locked);
 
   // 파일 프로젝트가 이긴다(lib/funding/repository.ts). 파일과 같은 slug로 승인되면
   // 그 DB 프로젝트는 어떤 주소로도 열리지 않는다 — 여기서 막는 편이 훨씬 싸다.
@@ -127,21 +184,32 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
     .where(and(eq(fundingProjects.slug, value.slug), ne(fundingProjects.id, projectId))).limit(1);
   if (taken) return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
 
+  const now = new Date();
+  // 승인된 뒤의 저장만 찍는다. updated_at으로는 알 수 없다 — 관리자 쓰기도 그 값을
+  // 갱신하므로 운영자가 메모만 달아도 "개설자가 고쳤다"로 보인다.
+  // 같은 조건에서 사이트맵 lastmod도 함께 찍는다 — 공개 필드(제목·요약·표지 등)가
+  // 실제로 바뀌는 시점이 정확히 여기다.
+  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now, lastmod: toKstDateString(now) } : {};
+
   await getDb().update(fundingProjects).set({
     title: value.title, summary: value.summary, slug: value.slug,
     goalAmount: value.goalAmount, startAt: value.startAt, endAt: value.endAt,
-    coverUrl: value.coverUrl, updatedAt: new Date(),
+    coverUrl: value.coverUrl, updatedAt: now, ...editedAt,
   }).where(eq(fundingProjects.id, row!.id));
   return { ok: true };
 };
 
 export const saveStorySection = async (creatorId: string, projectId: string, value: StorySection): Promise<WriteResult> => {
-  const { row, denial } = await guard(creatorId, projectId);
+  const { row, denial } = await guard(creatorId, projectId, 'story');
   if (denial) return denial;
+
+  const now = new Date();
+  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now, lastmod: toKstDateString(now) } : {};
+
   // 렌더 시점이 아니라 저장 시점에 벗긴다 — 렌더 경로가 여럿(상세·미리보기·OG·llms)이라
   // 한 곳을 빠뜨리면 그 경로로만 새어 나간다. 저장된 값 자체를 깨끗하게 둔다.
   await getDb().update(fundingProjects)
-    .set({ content: stripTrustedDirectives(value.content), updatedAt: new Date() })
+    .set({ content: stripTrustedDirectives(value.content), updatedAt: now, ...editedAt })
     .where(eq(fundingProjects.id, row!.id));
   return { ok: true };
 };
@@ -162,16 +230,42 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 거부한다. `bio`·연락처·
  * `links`는 공개 화면에 실리지 않으므로 계속 자유롭게 고칠 수 있다. 새 컬럼 없이
  * `funding_projects`를 그때그때 조회해 판정한다.
+ *
+ * **예외: 지금 이름이 가입 시 채워진 기본값(이메일 로컬파트)이면 잠그지 않는다.** 설정한
+ * 적 없는 값을 잠그는 것은 잠금이 아니라 사고다(`isDefaultCreatorName` 주석 참조). 기존에
+ * 이미 로컬파트 이름으로 남아 있던 행도 이 예외로 스스로 풀린다.
  */
+/** `saveCreatorSection`의 이름 잠금 조건과 `isCreatorNameLocked`가 공유하는 조회 — 승인된 프로젝트가 하나라도 있는지. */
+const hasApprovedProject = async (creatorId: string): Promise<boolean> => {
+  const [approvedProject] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
+    .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
+  return Boolean(approvedProject);
+};
+
+/**
+ * 지금 이 개설자의 이름이 잠겨 있는지 — 편집 화면이 이름 칸을 비활성화하고 이유를
+ * 보여줄지 판단하는 힌트다. 판정 조건은 `saveCreatorSection`이 실제로 거부하는 조건과
+ * 정확히 같아야 한다(`hasApprovedProject`를 함께 쓰는 이유) — 둘이 갈리면 화면은 열려
+ * 있는데 저장은 막히거나, 화면은 잠겨 있는데 저장은 되는 모순이 생긴다.
+ *
+ * **이 힌트는 집행자가 아니다.** 서버는 여전히 `saveCreatorSection`이 유일하게 막는다 —
+ * 이 함수는 편집 화면 로드 시점에 한 번만 불러 안내 문구를 미리 보여주는 용도다.
+ */
+export const isCreatorNameLocked = async (creatorId: string): Promise<boolean> => {
+  const [existing] = await getDb().select({ name: fundingCreators.name, email: fundingCreators.email })
+    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!existing) return false;
+  if (isDefaultCreatorName(existing.name, existing.email)) return false;
+  return hasApprovedProject(creatorId);
+};
+
 export const saveCreatorSection = async (creatorId: string, value: CreatorSection): Promise<WriteResult> => {
-  const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name }).from(fundingCreators)
-    .where(eq(fundingCreators.id, creatorId)).limit(1);
+  const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name, email: fundingCreators.email })
+    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
 
-  if (value.name !== existing.name) {
-    const [approvedProject] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
-      .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
-    if (approvedProject) {
+  if (value.name !== existing.name && !isDefaultCreatorName(existing.name, existing.email)) {
+    if (await hasApprovedProject(creatorId)) {
       return deny('locked', '승인된 프로젝트가 있어 이름은 더 이상 바꿀 수 없습니다. 소개·연락처·링크는 계속 고칠 수 있습니다.');
     }
   }
@@ -218,7 +312,7 @@ export const upsertReward = async (
   value: RewardInput,
   previousRewardId?: string,
 ): Promise<WriteResult> => {
-  const { denial } = await guard(creatorId, projectId);
+  const { denial } = await guard(creatorId, projectId, 'rewards');
   if (denial) return denial;
 
   // 개명 경로. rewardId로만 기존 행을 찾으면 id를 바꿔 제출한 입력이 "없는 리워드"로
@@ -291,7 +385,7 @@ export const upsertReward = async (
 };
 
 export const deleteReward = async (creatorId: string, projectId: string, rewardId: string): Promise<WriteResult> => {
-  const { denial } = await guard(creatorId, projectId);
+  const { denial } = await guard(creatorId, projectId, 'rewards');
   if (denial) return denial;
 
   const [existing] = await getDb().select().from(fundingRewards)
