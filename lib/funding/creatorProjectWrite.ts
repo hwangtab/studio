@@ -1,9 +1,9 @@
 import { and, count, eq, ne } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingProjects, fundingRewards, type FundingRewardRow } from '../../db/schema';
+import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRow, type FundingRewardRow } from '../../db/schema';
 import { getFundingProject } from './projects';
-import { canCreatorEdit } from './reviewTransition';
+import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
   CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type RewardInput, type StorySection,
 } from './creatorValidation';
@@ -54,13 +54,16 @@ export interface CreatorProjectDetail {
  * **모든 쓰기 함수가 이것을 먼저 부른다.** 함수마다 조건을 다시 쓰면 언젠가 한 곳이
  * 빠지고, 그 하나가 남의 프로젝트를 여는 문이 된다. 남의 것이면 'not_found'다 —
  * '권한 없음'이라고 답하면 그 id가 존재한다는 사실을 알려 주는 셈이다.
+ *
+ * `section`은 구획별로 다르다 — 승인 뒤에는 basic·story만 열리고 rewards는 통째로
+ * 닫힌다(`reviewTransition.ts`의 `EDITABLE_SECTIONS`). 호출부마다 자신의 구획을 넘긴다.
  */
-const guard = async (creatorId: string, projectId: string) => {
+const guard = async (creatorId: string, projectId: string, section: CreatorSectionName) => {
   const [row] = await getDb().select().from(fundingProjects)
     .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.creatorId, creatorId))).limit(1);
   if (!row) return { row: null, denial: deny('not_found', '프로젝트를 찾을 수 없습니다.') };
-  if (!canCreatorEdit(row.reviewStatus)) {
-    return { row, denial: deny('not_editable', '심사 중이거나 이미 판정이 난 프로젝트는 고칠 수 없습니다.') };
+  if (!canCreatorEditSection(row.reviewStatus, section)) {
+    return { row, denial: deny('not_editable', '지금 상태에서는 이 항목을 고칠 수 없습니다.') };
   }
   return { row, denial: null };
 };
@@ -124,9 +127,34 @@ export const loadProjectForCreator = async (
   };
 };
 
+/**
+ * 승인된 프로젝트의 기본정보에서 바뀌면 안 되는 것.
+ *
+ * 구획 자체는 열려 있다(제목·요약·표지를 고칠 수 있어야 한다 — 잘못 올라간 표지가 영영
+ * 남는 것을 막는다). 하지만 아래 셋은 후원자와의 약속이거나 이미 공개된 주소다.
+ */
+const basicLockedViolation = (
+  existing: FundingProjectRow,
+  next: BasicSection,
+): string | null => {
+  if (existing.reviewStatus !== 'approved') return null;
+  if (existing.slug !== next.slug) {
+    return '공개된 프로젝트의 주소는 바꿀 수 없습니다. 후원자가 후원 확인 페이지에서 이 주소로 프로젝트를 찾습니다.';
+  }
+  if (existing.goalAmount !== next.goalAmount) return '공개된 프로젝트의 목표 금액은 바꿀 수 없습니다.';
+  if (existing.startAt.getTime() !== next.startAt.getTime()
+    || existing.endAt.getTime() !== next.endAt.getTime()) {
+    return '공개된 프로젝트의 모금 기간은 바꿀 수 없습니다.';
+  }
+  return null;
+};
+
 export const saveBasicSection = async (creatorId: string, projectId: string, value: BasicSection): Promise<WriteResult> => {
-  const { row, denial } = await guard(creatorId, projectId);
+  const { row, denial } = await guard(creatorId, projectId, 'basic');
   if (denial) return denial;
+
+  const locked = basicLockedViolation(row!, value);
+  if (locked) return deny('locked', locked);
 
   // 파일 프로젝트가 이긴다(lib/funding/repository.ts). 파일과 같은 slug로 승인되면
   // 그 DB 프로젝트는 어떤 주소로도 열리지 않는다 — 여기서 막는 편이 훨씬 싸다.
@@ -136,21 +164,30 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
     .where(and(eq(fundingProjects.slug, value.slug), ne(fundingProjects.id, projectId))).limit(1);
   if (taken) return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
 
+  const now = new Date();
+  // 승인된 뒤의 저장만 찍는다. updated_at으로는 알 수 없다 — 관리자 쓰기도 그 값을
+  // 갱신하므로 운영자가 메모만 달아도 "개설자가 고쳤다"로 보인다.
+  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now } : {};
+
   await getDb().update(fundingProjects).set({
     title: value.title, summary: value.summary, slug: value.slug,
     goalAmount: value.goalAmount, startAt: value.startAt, endAt: value.endAt,
-    coverUrl: value.coverUrl, updatedAt: new Date(),
+    coverUrl: value.coverUrl, updatedAt: now, ...editedAt,
   }).where(eq(fundingProjects.id, row!.id));
   return { ok: true };
 };
 
 export const saveStorySection = async (creatorId: string, projectId: string, value: StorySection): Promise<WriteResult> => {
-  const { row, denial } = await guard(creatorId, projectId);
+  const { row, denial } = await guard(creatorId, projectId, 'story');
   if (denial) return denial;
+
+  const now = new Date();
+  const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now } : {};
+
   // 렌더 시점이 아니라 저장 시점에 벗긴다 — 렌더 경로가 여럿(상세·미리보기·OG·llms)이라
   // 한 곳을 빠뜨리면 그 경로로만 새어 나간다. 저장된 값 자체를 깨끗하게 둔다.
   await getDb().update(fundingProjects)
-    .set({ content: stripTrustedDirectives(value.content), updatedAt: new Date() })
+    .set({ content: stripTrustedDirectives(value.content), updatedAt: now, ...editedAt })
     .where(eq(fundingProjects.id, row!.id));
   return { ok: true };
 };
@@ -231,7 +268,7 @@ export const upsertReward = async (
   value: RewardInput,
   previousRewardId?: string,
 ): Promise<WriteResult> => {
-  const { denial } = await guard(creatorId, projectId);
+  const { denial } = await guard(creatorId, projectId, 'rewards');
   if (denial) return denial;
 
   // 개명 경로. rewardId로만 기존 행을 찾으면 id를 바꿔 제출한 입력이 "없는 리워드"로
@@ -304,7 +341,7 @@ export const upsertReward = async (
 };
 
 export const deleteReward = async (creatorId: string, projectId: string, rewardId: string): Promise<WriteResult> => {
-  const { denial } = await guard(creatorId, projectId);
+  const { denial } = await guard(creatorId, projectId, 'rewards');
   if (denial) return denial;
 
   const [existing] = await getDb().select().from(fundingRewards)

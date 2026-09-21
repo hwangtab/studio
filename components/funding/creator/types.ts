@@ -55,9 +55,15 @@ export interface EditorProject {
  * 같은 규칙이지만, 그 파일은 `db/schema`를 값으로 import해 클라이언트 번들에 DB 스키마
  * 코드를 끌어들이므로 여기서는 리터럴로 다시 적는다 — 두 자리가 갈리지 않도록
  * `lib/funding/reviewTransition.test.ts`가 이미 그 파일 쪽 진리표를 고정하고 있고,
- * 여기 값은 그 표에서 편집 가능한 두 상태(draft·changes_requested)를 그대로 옮긴 것이다.
+ * 여기 값은 그 표에서 "구획이 하나라도 열린" 상태(`canCreatorEdit`)를 그대로 옮긴 것이다.
+ *
+ * `approved`가 들어 있는 것은 4차(Task 5)에서 서버가 승인 뒤 본문·기본정보 구획을 열어서다.
+ * 이 화면은 아직 상태 하나로 네 구획을 통째로 열고 닫으므로, 지금은 승인된 프로젝트를 열면
+ * 네 구획이 다 편집 가능해 **보인다** — 실제로는 서버의 `canCreatorEditSection`이 구획별로
+ * 막으므로(예: 리워드 저장은 여전히 거부된다) 구멍은 아니지만, 화면 안내는 부정확하다.
+ * Task 6이 이 Set을 상태×구획 표로 교체해 화면도 서버와 같은 단위로 판정하게 만든다.
  */
-export const EDITABLE_REVIEW_STATUSES: ReadonlySet<string> = new Set(['draft', 'changes_requested']);
+export const EDITABLE_REVIEW_STATUSES: ReadonlySet<string> = new Set(['draft', 'changes_requested', 'approved']);
 
 export const canEditInBrowser = (reviewStatus: string): boolean => EDITABLE_REVIEW_STATUSES.has(reviewStatus);
 

@@ -38,6 +38,39 @@ const TABLE: Record<FundingReviewStatus, Partial<Record<ReviewAction, FundingRev
 export const nextReviewStatus = (from: FundingReviewStatus, action: ReviewAction): FundingReviewStatus | null =>
   TABLE[from]?.[action] ?? null;
 
-/** 개설자가 내용을 고칠 수 있는 상태. 심사 중에 바뀌면 운영자가 본 것과 다른 것이 승인된다. */
+/** 개설자 편집 화면의 프로젝트 구획. 개설자 계정 프로필은 프로젝트가 아니라 계정 소속이라 빠진다. */
+export type CreatorSectionName = 'basic' | 'story' | 'rewards';
+
+/**
+ * 상태별로 개설자가 고칠 수 있는 구획.
+ *
+ * 승인 뒤 본문을 여는 이유: 3차까지는 승인되면 오탈자 하나도 못 고쳤고, 개설자 화면은
+ * "운영자에게 문의해 주세요"라고 안내하는데 운영자에게도 경로가 없었다. 재심사 대기열을
+ * 만들지 않는다 — 오탈자 하나에 심사를 기다리게 하는 것이 더 나쁘다. 대신 고칠 때마다
+ * `creatorEditedAt`을 찍고 운영자에게 알린다.
+ *
+ * 리워드는 승인 뒤 통째로 잠긴다. **설명글까지** 잠그는 이유는 그것이 후원자가 보고
+ * 결제한 약속이기 때문이다 — "CD 1장 + 포스터"가 후원 뒤에 "CD 1장"이 되면 후원자 약관
+ * 제8조의 "표시·광고와 다르게 이행"에 걸리고, 판매자인 스튜디오가 3개월짜리 청약철회를
+ * 받는다.
+ *
+ * `basic`이 승인 뒤에도 열려 있는 것은 구획 단위 판정일 뿐이다 — 그 안에서 slug·목표금액·
+ * 모금 기간은 `basicLockedViolation`이 따로 잠근다.
+ */
+const EDITABLE_SECTIONS: Record<FundingReviewStatus, readonly CreatorSectionName[]> = {
+  draft: ['basic', 'story', 'rewards'],
+  changes_requested: ['basic', 'story', 'rewards'],
+  approved: ['basic', 'story'],
+  submitted: [],
+  rejected: [],
+};
+
+export const canCreatorEditSection = (status: FundingReviewStatus, section: CreatorSectionName): boolean =>
+  EDITABLE_SECTIONS[status]?.includes(section) ?? false;
+
+/**
+ * 구획이 하나라도 열려 있는가. 업로드 라우트처럼 "지금 이 프로젝트를 편집 중인가"만
+ * 알면 되는 자리가 쓴다. 구획별 판정이 필요하면 `canCreatorEditSection`을 쓸 것.
+ */
 export const canCreatorEdit = (status: FundingReviewStatus): boolean =>
-  status === 'draft' || status === 'changes_requested';
+  (EDITABLE_SECTIONS[status]?.length ?? 0) > 0;

@@ -85,6 +85,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // CreatorProjectDetail.reviewStatus는 string으로 넓혀 있다(DB 컬럼은 enum이지만
   // loadProjectForCreator의 반환 타입이 좁히지 않는다) — canCreatorEdit이 기대하는
   // FundingReviewStatus로 다시 좁힌다.
+  //
+  // 승인 뒤에도 본문·표지는 고칠 수 있으므로(reviewTransition.ts의 EDITABLE_SECTIONS)
+  // 업로드도 열려 있어야 한다. 구획 단위 판정이 필요한 자리가 아니다 — 업로드는
+  // "지금 이 프로젝트를 편집 중인가"만 알면 된다.
   if (!canCreatorEdit(project.reviewStatus as FundingReviewStatus)) {
     return res.status(409).json({ ok: false, message: '심사 중이거나 이미 판정이 난 프로젝트에는 이미지를 올릴 수 없습니다.' });
   }

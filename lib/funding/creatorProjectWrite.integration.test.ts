@@ -74,6 +74,41 @@ const basicSection = (overrides: Partial<Parameters<typeof saveBasicSection>[2]>
   ...overrides,
 });
 
+let seedCounter = 0;
+
+/** 개설자 계정 + 초안 프로젝트 하나를 만들고, 필요하면 심사 상태를 바로 옮긴다. */
+const seedProject = async (overrides: { reviewStatus?: string } = {}) => {
+  seedCounter += 1;
+  const creatorId = await seedCreator(`seed-${seedCounter}@example.com`);
+  const { id: projectId } = await createDraftProject(creatorId);
+  if (overrides.reviewStatus) {
+    await mockDb.update(schema.fundingProjects)
+      .set({ reviewStatus: overrides.reviewStatus as (typeof schema.fundingReviewStatusEnum)[number] })
+      .where(eq(schema.fundingProjects.id, projectId));
+  }
+  return { creatorId, projectId };
+};
+
+/** 승인 전에 기본정보를 실제로 저장해 둔 뒤 승인시킨다 — basicLockedViolation이 비교할 "기존 값"이 필요하다. */
+const seedApprovedWithBasic = async () => {
+  const { creatorId, projectId } = await seedProject();
+  const basic = basicSection();
+  await saveBasicSection(creatorId, projectId, basic);
+  await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+    .where(eq(schema.fundingProjects.id, projectId));
+  return { creatorId, projectId, basic };
+};
+
+/** 승인 전에 리워드를 실제로 저장해 둔 뒤 승인시킨다. */
+const seedApprovedWithReward = async () => {
+  const { creatorId, projectId } = await seedProject();
+  const reward = rewardInput();
+  await upsertReward(creatorId, projectId, reward);
+  await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+    .where(eq(schema.fundingProjects.id, projectId));
+  return { creatorId, projectId, reward };
+};
+
 describe('createDraftProject / loadProjectForCreator', () => {
   it('초안을 만들고 본인 계정으로 불러올 수 있다', async () => {
     const creator = await seedCreator('me@example.com');
@@ -567,5 +602,61 @@ describe('개설자 정보 저장', () => {
     const { id: secondProject } = await createDraftProject(creator);
     const secondDetail = await loadProjectForCreator(creator, secondProject);
     expect(secondDetail?.creator.name).toBe('스튜디오 놀');
+  });
+});
+
+describe('승인 뒤 편집 (Task 5)', () => {
+  it('승인된 프로젝트의 본문은 고칠 수 있고 creatorEditedAt이 찍힌다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+
+    const result = await saveStorySection(creatorId, projectId, { content: '고친 본문' });
+
+    expect(result).toMatchObject({ ok: true });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.content).toBe('고친 본문');
+    expect(row.creatorEditedAt).not.toBeNull();
+  });
+
+  it('초안 저장은 creatorEditedAt을 찍지 않는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await saveStorySection(creatorId, projectId, { content: '초안 본문' });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.creatorEditedAt).toBeNull();
+  });
+
+  it('승인된 프로젝트의 제목·표지는 고칠 수 있다', async () => {
+    const { creatorId, projectId, basic } = await seedApprovedWithBasic();
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, title: '고친 제목' });
+    expect(result).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.title).toBe('고친 제목');
+    expect(row.creatorEditedAt).not.toBeNull();
+  });
+
+  it.each([
+    ['slug', { slug: 'other-slug' }, '주소는 바꿀 수 없습니다'],
+    ['goalAmount', { goalAmount: 9_999_999 }, '목표 금액은 바꿀 수 없습니다'],
+    ['endAt', { endAt: new Date('2027-01-01T00:00:00+09:00') }, '모금 기간은 바꿀 수 없습니다'],
+  ])('승인된 프로젝트의 %s는 잠긴다', async (_label, patch, expected) => {
+    const { creatorId, projectId, basic } = await seedApprovedWithBasic();
+    const result = await saveBasicSection(creatorId, projectId, { ...basic, ...patch });
+    expect(result).toMatchObject({ ok: false, code: 'locked' });
+    expect((result as { message: string }).message).toContain(expected);
+  });
+
+  it('승인된 프로젝트의 리워드는 설명글도 잠긴다', async () => {
+    const { creatorId, projectId, reward } = await seedApprovedWithReward();
+    const result = await upsertReward(creatorId, projectId, { ...reward, description: '바뀐 설명' });
+    expect(result).toMatchObject({ ok: false, code: 'not_editable' });
+  });
+
+  it('제출·반려 상태에서는 여전히 아무 구획도 못 고친다', async () => {
+    for (const reviewStatus of ['submitted', 'rejected']) {
+      const { creatorId, projectId } = await seedProject({ reviewStatus });
+      expect(await saveBasicSection(creatorId, projectId, basicSection())).toMatchObject({ ok: false, code: 'not_editable' });
+      expect(await saveStorySection(creatorId, projectId, { content: '본문' })).toMatchObject({ ok: false, code: 'not_editable' });
+      expect(await upsertReward(creatorId, projectId, rewardInput())).toMatchObject({ ok: false, code: 'not_editable' });
+    }
   });
 });

@@ -1,8 +1,10 @@
-import { canCreatorEdit, nextReviewStatus, type ReviewAction } from './reviewTransition';
+import { canCreatorEdit, canCreatorEditSection, nextReviewStatus, type CreatorSectionName, type ReviewAction } from './reviewTransition';
 import { fundingReviewStatusEnum } from '../../db/schema';
 
 const ALL = fundingReviewStatusEnum;
 const ACTIONS: ReviewAction[] = ['submit', 'request_changes', 'approve', 'reject', 'withdraw', 'archive'];
+const STATUSES = ['draft', 'submitted', 'changes_requested', 'approved', 'rejected'] as const;
+const SECTIONS: CreatorSectionName[] = ['basic', 'story', 'rewards'];
 
 describe('nextReviewStatus', () => {
   it('개설자는 draft와 changes_requested에서만 제출할 수 있다', () => {
@@ -50,13 +52,27 @@ describe('nextReviewStatus', () => {
   });
 });
 
+describe('canCreatorEditSection 전수 조합', () => {
+  const EXPECTED: Record<string, CreatorSectionName[]> = {
+    draft: ['basic', 'story', 'rewards'],
+    changes_requested: ['basic', 'story', 'rewards'],
+    // 승인 뒤에는 본문과 기본정보만. 기본정보 안에서 무엇이 잠기는지는 필드 가드가 본다
+    // (slug·목표금액·모금 기간은 잠기고 제목·요약·표지는 열린다).
+    approved: ['basic', 'story'],
+    submitted: [],
+    rejected: [],
+  };
+
+  it.each(STATUSES)('%s의 열린 구획이 표와 같다', (status) => {
+    const open = SECTIONS.filter((s) => canCreatorEditSection(status, s));
+    expect(open).toEqual(EXPECTED[status]);
+  });
+});
+
 describe('canCreatorEdit', () => {
-  it('심사 중과 반려·승인 뒤에는 개설자가 고칠 수 없다', () => {
-    expect(canCreatorEdit('draft')).toBe(true);
-    expect(canCreatorEdit('changes_requested')).toBe(true);
+  it('구획이 하나라도 열려 있으면 true다', () => {
+    expect(canCreatorEdit('approved')).toBe(true);
     expect(canCreatorEdit('submitted')).toBe(false);
     expect(canCreatorEdit('rejected')).toBe(false);
-    // 승인 뒤 스토리 편집은 3차에서 따로 연다(스펙 §6.4). 지금은 전부 잠근다.
-    expect(canCreatorEdit('approved')).toBe(false);
   });
 });
