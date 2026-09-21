@@ -1,4 +1,7 @@
-import { CREATOR_LIMITS, validateBasicSection, validateRewardInput, validateStorySection } from './creatorValidation';
+import {
+  CREATOR_LIMITS, findMissingRequiredSections, isDefaultCreatorName, validateBasicSection, validateRewardInput,
+  validateStorySection,
+} from './creatorValidation';
 
 const NOW = new Date('2026-10-01T00:00:00+09:00');
 const basic = () => ({
@@ -106,5 +109,51 @@ describe('validateRewardInput', () => {
     expect(validateRewardInput({ ...reward(), imageUrl: '/images/a.webp' }).ok).toBe(false);
     expect(validateRewardInput({ ...reward(), imageUrl: '' }).ok).toBe(false);
     expect(validateRewardInput({ ...reward(), imageUrl: '/api/funding/media/r.webp?w=800&h=600' }).ok).toBe(true);
+  });
+});
+
+describe('isDefaultCreatorName', () => {
+  it('가입 시 채워 넣는 이메일 로컬파트는 개설자가 고른 이름이 아니다', () => {
+    expect(isDefaultCreatorName('hwangtab', 'hwangtab@gmail.com')).toBe(true);
+  });
+
+  it('앞뒤 공백은 이름으로 치지 않는다', () => {
+    expect(isDefaultCreatorName('  hwangtab  ', 'hwangtab@gmail.com')).toBe(true);
+  });
+
+  it('개설자가 실제로 고른 이름은 기본값이 아니다', () => {
+    expect(isDefaultCreatorName('황경하', 'hwangtab@gmail.com')).toBe(false);
+  });
+
+  it('로컬파트와 같은 글자를 일부러 이름으로 골라도 기본값으로 본다 — 구분할 방법이 없다', () => {
+    // 이 경우 개설자는 이름을 다시 저장해야 하고, 잠금도 걸리지 않는다. 안전한 방향이다.
+    expect(isDefaultCreatorName('studio', 'studio@example.com')).toBe(true);
+  });
+});
+
+describe('findMissingRequiredSections — 개설자 이름', () => {
+  const filled = {
+    title: '제목',
+    summary: '요약',
+    coverUrl: 'https://example.com/a.webp',
+    content: 'x'.repeat(400),
+    rewardsCount: 1,
+  };
+
+  it('이름이 이메일 로컬파트뿐이면 미비로 잡는다', () => {
+    expect(
+      findMissingRequiredSections({ ...filled, creatorName: 'hwangtab', creatorEmail: 'hwangtab@gmail.com' }),
+    ).toContain('개설자 정보(이름)');
+  });
+
+  it('이름을 실제로 골랐으면 미비가 아니다', () => {
+    expect(
+      findMissingRequiredSections({ ...filled, creatorName: '황경하', creatorEmail: 'hwangtab@gmail.com' }),
+    ).not.toContain('개설자 정보(이름)');
+  });
+
+  it('creatorEmail을 안 넘기면 기본값 판정을 건너뛴다 — 빈 이름만 본다', () => {
+    expect(findMissingRequiredSections({ ...filled, creatorName: 'hwangtab' })).not.toContain('개설자 정보(이름)');
+    expect(findMissingRequiredSections({ ...filled, creatorName: '' })).toContain('개설자 정보(이름)');
   });
 });

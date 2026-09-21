@@ -46,8 +46,8 @@ beforeEach(async () => {
 
 afterEach(() => client.close());
 
-const seedCreator = async (email: string): Promise<string> => {
-  const [creator] = await mockDb.insert(schema.fundingCreators).values({ email, name: '가나' }).returning();
+const seedCreator = async (email: string, name = '가나'): Promise<string> => {
+  const [creator] = await mockDb.insert(schema.fundingCreators).values({ email, name }).returning();
   return creator.id;
 };
 
@@ -100,13 +100,15 @@ describe('createDraftProject / loadProjectForCreator', () => {
     const { id } = await createDraftProject(creator);
     const detail = await loadProjectForCreator(creator, id);
     expect(detail).not.toBeNull();
-    expect(Object.keys(detail!.creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone'].sort());
+    // email은 이 태스크에서 의도적으로 추가됐다 — submit.ts의 isDefaultCreatorName 판정이
+    // 서버 안에서만 쓰려고 필요하다. 화면 props로는 안 나간다는 것은 여기가 아니라
+    // toEditorProject를 보는 tests/pages/funding/creator/edit.test.ts가 고정한다.
+    expect(Object.keys(detail!.creator).sort()).toEqual(['bio', 'contactName', 'email', 'links', 'name', 'phone'].sort());
     const serialized = JSON.stringify(detail!.creator);
     expect(serialized).not.toContain('taxType');
     expect(serialized).not.toContain('payoutBankName');
     expect(serialized).not.toContain('payoutAccount');
     expect(serialized).not.toContain('payoutHolder');
-    expect(serialized).not.toContain('email');
   });
 });
 
@@ -440,6 +442,35 @@ describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', ()
 
     const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
     expect(row.name).toBe('새 이름');
+  });
+
+  it('이름이 가입 기본값이면 승인된 프로젝트가 있어도 바꿀 수 있다', async () => {
+    // 설정한 적 없는 값을 잠그는 것은 잠금이 아니라 사고다. 기존 행(로컬파트 이름)도
+    // 이 예외로 스스로 풀린다 — DB를 손댈 필요가 없다.
+    const creator = await seedCreator('hwangtab@gmail.com', 'hwangtab');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '황경하', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('황경하');
+  });
+
+  it('이름을 이미 골랐으면 승인된 프로젝트가 있을 때 잠긴다', async () => {
+    const creator = await seedCreator('hwangtab2@gmail.com', '황경하');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    const r = await saveCreatorSection(creator, {
+      name: '다른 이름', contactName: null, phone: null, bio: null, links: null,
+    });
+    expect(r).toMatchObject({ ok: false, code: 'locked' });
   });
 });
 

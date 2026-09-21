@@ -167,6 +167,8 @@ export const decideProject = async (
     coverUrl: project.coverUrl,
     content: project.content,
     rewardsCount: project.rewards.length,
+    creatorName: project.creatorName,
+    creatorEmail: project.creatorEmail,
   });
   if (missing.length > 0) {
     return deny('incomplete', `다음 항목이 비어 있어 승인할 수 없습니다: ${missing.join(', ')}`);

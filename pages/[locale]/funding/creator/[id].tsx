@@ -35,14 +35,17 @@ interface Props {
  *
  * `loadProjectForCreator`가 `fundingCreators`를 `select()`(전 컬럼)로 읽지만 화면에는
  * `{ name, contactName, phone, bio, links }` 다섯 필드만 골라 넣은 채로 돌려준다 — 이 함수는
- * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`·`email`은
- * 애초에 `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와
- * 같은 자리, 같은 이유). 날짜는 KST 달력 날짜 문자열로 바꾼다(`lib/funding/creatorDateInput.ts`
+ * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`는 애초에
+ * `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와 같은
+ * 자리, 같은 이유). `email`은 `CreatorProjectDetail.creator`에 있지만(심사 신청이
+ * `isDefaultCreatorName` 판정에 쓴다) 이 함수가 옮겨 담지 않으므로 화면 props로는 나가지
+ * 않는다 — `tests/pages/funding/creator/edit.test.ts`가 이 누수를 테스트로 고정한다. 날짜는
+ * KST 달력 날짜 문자열로 바꾼다(`lib/funding/creatorDateInput.ts`
  * 참조 — `Date` 그대로면 `__NEXT_DATA__` 직렬화도 안 되고, ISO 타임스탬프 그대로 두면
  * 폼이 다시 저장할 때 하루가 밀린다). 리워드는 `lockedAt`(승인 시각) 대신 화면이
  * 필요로 하는 `locked` 불리언 하나만 남긴다.
  */
-const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
+export const toEditorProject = (p: CreatorProjectDetail): EditorProject => ({
   id: p.id,
   slug: p.slug,
   title: p.title,

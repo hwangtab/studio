@@ -4,7 +4,9 @@ import { getDb } from '../../db/client';
 import { fundingCreators, fundingProjects, fundingRewards, type FundingRewardRow } from '../../db/schema';
 import { getFundingProject } from './projects';
 import { canCreatorEdit } from './reviewTransition';
-import { CREATOR_LIMITS, type BasicSection, type CreatorSection, type RewardInput, type StorySection } from './creatorValidation';
+import {
+  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type RewardInput, type StorySection,
+} from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
 
 export type WriteResult =
@@ -32,6 +34,12 @@ export interface CreatorProjectDetail {
   reviewNote: string | null;
   creator: {
     name: string;
+    /**
+     * 심사 신청(`submit.ts`)이 `isDefaultCreatorName` 판정에 쓰려고만 필요하다 — 서버
+     * 안에서만 돌아야 한다. 화면 props로 흘리지 않는다(`toEditorProject`가 이 필드를
+     * 고르지 않는다. `tests/pages/funding/creator/edit.test.ts`가 누수를 고정한다).
+     */
+    email: string;
     contactName: string | null;
     phone: string | null;
     bio: string | null;
@@ -106,6 +114,7 @@ export const loadProjectForCreator = async (
     reviewNote: row.reviewNote,
     creator: {
       name: creator?.name ?? '',
+      email: creator?.email ?? '',
       contactName: creator?.contactName ?? null,
       phone: creator?.phone ?? null,
       bio: creator?.bio ?? null,
@@ -162,13 +171,17 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 거부한다. `bio`·연락처·
  * `links`는 공개 화면에 실리지 않으므로 계속 자유롭게 고칠 수 있다. 새 컬럼 없이
  * `funding_projects`를 그때그때 조회해 판정한다.
+ *
+ * **예외: 지금 이름이 가입 시 채워진 기본값(이메일 로컬파트)이면 잠그지 않는다.** 설정한
+ * 적 없는 값을 잠그는 것은 잠금이 아니라 사고다(`isDefaultCreatorName` 주석 참조). 기존에
+ * 이미 로컬파트 이름으로 남아 있던 행도 이 예외로 스스로 풀린다.
  */
 export const saveCreatorSection = async (creatorId: string, value: CreatorSection): Promise<WriteResult> => {
-  const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name }).from(fundingCreators)
-    .where(eq(fundingCreators.id, creatorId)).limit(1);
+  const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name, email: fundingCreators.email })
+    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
 
-  if (value.name !== existing.name) {
+  if (value.name !== existing.name && !isDefaultCreatorName(existing.name, existing.email)) {
     const [approvedProject] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
       .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
     if (approvedProject) {

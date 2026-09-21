@@ -235,6 +235,17 @@ it('개설자 이름이 비어 있으면 개설자 정보 항목이 메시지에
   expect(r.body.message).toEqual(expect.stringContaining('개설자'));
 });
 
+it('이름이 가입 기본값(이메일 로컬파트)이면 400 — 채워져 보이지만 개설자가 고른 적 없는 이름이다', async () => {
+  // 승인되면 공개 페이지에 "개설자 hwangtab"이 뜨고, 그때는 잠겨서 못 고친다.
+  await mockDb.update(schema.fundingCreators)
+    .set({ name: 'hwangtab', email: 'hwangtab@gmail.com' })
+    .where(eq(schema.fundingCreators.id, CREATOR_A));
+  const project = await seedCompleteProject();
+  const r = await call({ id: project.id });
+  expect(r.status).toBe(400);
+  expect(r.body.message).toEqual(expect.stringContaining('개설자 정보(이름)'));
+});
+
 it('정상 → 200이고 reviewStatus가 submitted, submittedAt이 채워진다', async () => {
   const project = await seedCompleteProject();
   const r = await call({ id: project.id }, { agreedTermsVersion: FUNDING_CREATOR_TERMS_VERSION });
@@ -280,7 +291,7 @@ it('읽은 뒤(경합) 운영자가 먼저 승인해 버리면 409 — approved�
     reviewStatus: 'draft',
     status: project.status,
     reviewNote: project.reviewNote,
-    creator: { name: '개설자A', contactName: null, phone: null, bio: null, links: null },
+    creator: { name: '개설자A', email: 'a@example.com', contactName: null, phone: null, bio: null, links: null },
     rewards: [
       {
         id: 'r1', projectId: project.id, rewardId: 'basic', title: '기본 리워드', description: '설명',

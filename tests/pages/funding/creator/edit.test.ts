@@ -9,7 +9,7 @@ jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorReq
 jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({ loadProjectForCreator: jest.fn() }));
 
 // eslint-disable-next-line import/first
-import { getServerSideProps } from '../../../../pages/[locale]/funding/creator/[id]';
+import { getServerSideProps, toEditorProject } from '../../../../pages/[locale]/funding/creator/[id]';
 // eslint-disable-next-line import/first
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 // eslint-disable-next-line import/first
@@ -62,6 +62,17 @@ const EDITOR_PROJECT_KEYS = [
   'id', 'slug', 'title', 'summary', 'content', 'coverUrl', 'goalAmount',
   'startAt', 'endAt', 'reviewStatus', 'reviewNote', 'creator', 'rewards',
 ].sort();
+
+describe('toEditorProject', () => {
+  // 이메일은 findMissingRequiredSections(isDefaultCreatorName 판정)가 쓰려고
+  // loadProjectForCreator에 추가된 값이라 서버 안에서만 돌아야 한다. props에 실리면
+  // __NEXT_DATA__로 페이지 소스에 나간다.
+  it('개설자 화면 props에 이메일이 실리지 않는다', () => {
+    const editor = toEditorProject(PROJECT);
+    expect(JSON.stringify(editor)).not.toContain('creator@example.com');
+    expect(Object.keys(editor.creator).sort()).toEqual(['bio', 'contactName', 'links', 'name', 'phone']);
+  });
+});
 
 describe('funding creator 편집 화면 getServerSideProps', () => {
   beforeEach(() => {

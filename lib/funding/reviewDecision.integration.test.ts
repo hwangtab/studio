@@ -53,8 +53,8 @@ beforeEach(async () => {
 
 afterEach(() => client.close());
 
-const seedCreator = async (email: string): Promise<string> => {
-  const [creator] = await mockDb.insert(schema.fundingCreators).values({ email, name: '개설자' }).returning();
+const seedCreator = async (email: string, name = '개설자'): Promise<string> => {
+  const [creator] = await mockDb.insert(schema.fundingCreators).values({ email, name }).returning();
   return creator.id;
 };
 
@@ -273,6 +273,19 @@ describe('승인', () => {
     expect(after.reviewStatus).toBe(before.reviewStatus);
     expect(after.status).toBe(before.status);
     expect(after.approvedAt).toBeNull();
+  });
+
+  it('이름이 가입 기본값이면 승인이 incomplete로 거부된다', async () => {
+    // 채워져 있어 보이지만 개설자가 고른 적 없는 이름이다(creatorToken.ts가 가입 시
+    // 이메일 로컬파트를 채워 넣는다). 승인되면 공개 페이지에 "개설자 hwangtab"이 뜨고,
+    // 그때는 잠겨서 못 고친다.
+    const creator = await seedCreator('hwangtab@gmail.com', 'hwangtab');
+    const projectId = await seedProject(creator);
+    await seedReward(projectId);
+
+    const result = await decideProject(projectId, 'approve', {}, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toMatchObject({ ok: false, code: 'incomplete' });
+    expect((result as { message: string }).message).toContain('개설자 정보(이름)');
   });
 
   it('종료일이 이미 지난 프로젝트는 승인되지 않는다', async () => {
