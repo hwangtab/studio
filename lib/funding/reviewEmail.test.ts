@@ -45,6 +45,11 @@ it('승인 메일 — 제목·공개 주소·잠금 안내·편집 링크', asyn
   expect(call.text).toContain('/ko/funding/creator/proj-1');
   expect(call.text).toContain('통째로 잠깁니다');
   expect(call.text).toContain('제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기');
+  // 승인 뒤에는 개설자도 관리자 API도 리워드를 추가할 경로가 없다(creatorProjectWrite.ts의
+  // guard가 upsertReward를 맨 앞에서 거부, 관리자 쪽엔 애초에 리워드 라우트가 없다).
+  // "기존 리워드는 두고 새 리워드를 추가하라"는 존재하지 않는 경로를 안내하면 안 된다.
+  expect(call.text).not.toContain('새 리워드를 추가');
+  expect(call.text).toContain('새 프로젝트로 다시 신청');
 });
 
 it('보완 요청 메일 — 제목·운영자 메모 전문·편집 링크, 공개 주소는 없다', async () => {

@@ -25,24 +25,29 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { purgeExpiredFundingPersonalData } from './retention';
+import { purgeExpiredFundingPersonalData, REWARD_RETENTION_YEARS } from './retention';
+// eslint-disable-next-line import/first
+import { PRIVACY_RETENTION_TEXT } from './policy';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
 
 const d = (iso: string) => new Date(`${iso}T00:00:00.000Z`);
 
-// 파기 판정의 기준 시각. 1년 boundary = 2025-08-24, 5년 boundary = 2021-08-24.
+// 파기 판정의 기준 시각. 1년 boundary = 2025-08-24T18:00:00Z, 5년 boundary = 2021-08-24T18:00:00Z.
 const NOW = new Date('2026-08-24T18:00:00.000Z');
+/** 경계 테스트에서 법정 보존(5년)이 항상 이미 지난 것으로 두기 위한 고정 결제일. */
+const WELL_BEYOND_LEGAL_HOLD = '2000-01-01';
 
 let seq = 0;
 const addPledge = async (opts: {
   id: string;
-  deliveredAt?: string | null;
+  deliveredAt?: string | Date | null;
   paidAt?: string | null;
   createdAt?: string;
   shippingName?: string | null;
   adminMemo?: string | null;
+  supporterMessage?: string | null;
 }) => {
   seq += 1;
   const orderNo = `SNB-TEST-${String(seq).padStart(6, '0')}`;
@@ -71,12 +76,13 @@ const addPledge = async (opts: {
     paymentMethod: 'toss',
     holdExpiresAt: d('2020-01-01'),
     paidAt: opts.paidAt === undefined ? d('2020-01-01') : opts.paidAt ? d(opts.paidAt) : null,
-    deliveredAt: opts.deliveredAt ? d(opts.deliveredAt) : null,
+    deliveredAt: opts.deliveredAt == null ? null : (opts.deliveredAt instanceof Date ? opts.deliveredAt : d(opts.deliveredAt)),
     shippingName: opts.shippingName === undefined ? '김후원' : opts.shippingName,
     shippingPhone: opts.shippingName === null ? null : '010-1234-5678',
     shippingPostcode: opts.shippingName === null ? null : '12345',
     shippingAddress1: opts.shippingName === null ? null : '서울시 은평구',
     adminMemo: opts.adminMemo === undefined ? null : opts.adminMemo,
+    supporterMessage: opts.supporterMessage === undefined ? '함께해 주셔서 고맙습니다' : opts.supporterMessage,
     createdAt: opts.createdAt ? d(opts.createdAt) : d('2020-01-01'),
     updatedAt: d('2020-01-01'),
   });
@@ -135,6 +141,7 @@ describe('파기 대상 판정', () => {
     expect(row.shippingPostcode).toBeNull();
     expect(row.shippingAddress1).toBeNull();
     expect(row.adminMemo).toBeNull();
+    expect(row.supporterMessage).toBeNull();
     // 운영 기록으로 남기는 값은 보존 — 모금액 집계에 쓰이는 금액·리워드 정보는 안 건드린다.
     expect(row.unitAmount).toBe(10000);
     expect(row.rewardId).toBe('cd');
@@ -184,16 +191,36 @@ describe('파기 대상 판정', () => {
     expect(second.purged).toBe(0);
   });
 
-  it('배송지도 admin_memo도 이미 비어 있던 행(디지털 리워드)은 파기 대상에서 자연히 빠진다', async () => {
+  it('배송지·admin_memo·응원 메시지가 이미 비어 있던 행은 파기 대상에서 자연히 빠진다', async () => {
     await addPledge({
       id: 'digital',
       deliveredAt: '2024-01-01',
       paidAt: '2020-01-01',
       shippingName: null,
       adminMemo: null,
+      supporterMessage: null,
     });
     const r = await purgeExpiredFundingPersonalData(NOW);
     expect(r.purged).toBe(0);
+  });
+
+  /**
+   * 응원 메시지도 파기 대상이다 — 처리방침 6항이 "선택" 수집 항목으로 명시하고, 8항의
+   * "1년 뒤 파기" 약속은 6항 나열 항목 전부에 걸린다(예외 문구 없음). 서포터 명단 공개
+   * 화면이 아직 없어(코드에 확인됨) "공개 게시물이라 보존해야 한다"는 반례도 없다.
+   */
+  it('응원 메시지도 배송지·admin_memo와 함께 파기한다', async () => {
+    await addPledge({
+      id: 'has-message',
+      deliveredAt: '2024-01-01',
+      paidAt: '2020-01-01',
+      shippingName: null,
+      adminMemo: null,
+      supporterMessage: '집회에 함께하지 못해 마음으로 응원합니다',
+    });
+    const r = await purgeExpiredFundingPersonalData(NOW);
+    expect(r.purged).toBe(1);
+    expect((await pledgeOf('has-message')).supporterMessage).toBeNull();
   });
 
   it('orders.customer_name 등 공유 테이블 컬럼은 건드리지 않는다', async () => {
@@ -202,5 +229,49 @@ describe('파기 대상 판정', () => {
     const [order] = await mockDb.select().from(orders).where(eq(orders.manageToken, 'tok_shared-table'));
     expect(order.customerName).toBe('김후원');
     expect(order.customerEmail).toBe('a@example.com');
+  });
+
+  /**
+   * REWARD_RETENTION_YEARS를 1 → 2로 바꿔도 위 케이스들은 전부 초록으로 남는다(시드가
+   * 경계에서 너무 멀다). 아래는 정확히 1년 경계를 초 단위로 찌른다 — 이 값이 실제로
+   * "1년"을 재는지, 다른 값으로 바뀌면 빨개지는지를 보장한다.
+   */
+  describe('1년 경계(초 단위)', () => {
+    const boundary = new Date(NOW);
+    boundary.setFullYear(boundary.getFullYear() - REWARD_RETENTION_YEARS); // 2025-08-24T18:00:00Z
+
+    it('경계 1초 전에 전달된 후원은 파기한다', async () => {
+      await addPledge({
+        id: 'just-before',
+        deliveredAt: new Date(boundary.getTime() - 1000),
+        paidAt: WELL_BEYOND_LEGAL_HOLD,
+      });
+      const r = await purgeExpiredFundingPersonalData(NOW);
+      expect(r.purged).toBe(1);
+    });
+
+    it('경계와 정확히 같은 시각에 전달된 후원은 아직 보관한다(lt는 미만이지 이하가 아니다)', async () => {
+      await addPledge({ id: 'exact', deliveredAt: new Date(boundary.getTime()), paidAt: WELL_BEYOND_LEGAL_HOLD });
+      const r = await purgeExpiredFundingPersonalData(NOW);
+      expect(r.purged).toBe(0);
+    });
+
+    it('경계 1초 후에 전달된 후원은 아직 보관한다', async () => {
+      await addPledge({
+        id: 'just-after',
+        deliveredAt: new Date(boundary.getTime() + 1000),
+        paidAt: WELL_BEYOND_LEGAL_HOLD,
+      });
+      const r = await purgeExpiredFundingPersonalData(NOW);
+      expect(r.purged).toBe(0);
+    });
+  });
+
+  /**
+   * REWARD_RETENTION_YEARS와 처리방침 문구(PRIVACY_RETENTION_TEXT)가 같은 값을 말해야
+   * 한다는 규칙을 주석이 아니라 테스트로 고정한다. 둘 중 하나만 바꾸면 이 테스트가 빨개진다.
+   */
+  it('REWARD_RETENTION_YEARS는 PRIVACY_RETENTION_TEXT가 말하는 기간과 같다', () => {
+    expect(PRIVACY_RETENTION_TEXT).toContain(`${REWARD_RETENTION_YEARS}년`);
   });
 });

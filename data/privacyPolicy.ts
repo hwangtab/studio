@@ -16,6 +16,7 @@
 import {
   FUNDING_COLLECTED_ITEMS,
   FUNDING_COLLECTION_PURPOSES,
+  FUNDING_CREATOR_DATA_PROCESSORS,
   FUNDING_DATA_PROCESSORS,
   PRIVACY_LEGAL_RETENTION_TEXT,
   PRIVACY_RETENTION_TEXT,
@@ -75,7 +76,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '개인정보 처리방침',
     subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 9월 11일',
+    lastUpdatedValue: '2026년 9월 21일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
@@ -177,7 +178,10 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '기간이 지나면 자동으로 지우는 절차는 두고 있지 않습니다. 삭제를 요청하시면 위 5항에 ' +
           '따라 조치하되, 이미 승인·공개된 프로젝트에 연결된 개설자 이름과 연락처는 그 프로젝트의 ' +
           '거래기록을 확인할 수 있어야 하므로 아래 보존 기간에는 지우지 못합니다. ' +
-          PRIVACY_LEGAL_RETENTION_TEXT,
+          PRIVACY_LEGAL_RETENTION_TEXT +
+          ' 개설자 정보 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 ' +
+          '이 처리방침으로 알립니다.',
+        processors: FUNDING_CREATOR_DATA_PROCESSORS,
       },
       // 15항은 펀딩만의 것이 아니다 — 문의·예약·결제 웹훅·개설자 로그인이 같은 카운터를 쓴다
       // (lib/booking/rate-limit.ts). 같은 파일이 이메일은 해시로 바꾸면서 IP는 그대로 남기므로,

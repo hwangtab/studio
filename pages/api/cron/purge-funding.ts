@@ -23,6 +23,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    // purge-contracts와 달리 result.failed 분기가 없다 — 계약서 쪽은 계약마다 Blob 삭제 +
+    // 두 테이블 업데이트를 순회해서 일부만 실패할 수 있지만, 여기는 한 번의 UPDATE...WHERE뿐이라
+    // 외부 API 호출이 없고 부분 실패라는 상태 자체가 없다(전부 성공하거나 catch로 떨어진다).
     const result = await purgeExpiredFundingPersonalData();
     return res.status(200).json({ ok: true, ...result });
   } catch (error: unknown) {

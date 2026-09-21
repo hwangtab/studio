@@ -91,7 +91,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-21';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-21-r2';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -151,6 +151,22 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
   // 후원자의 브라우저가 Cloudflare에 직접 붙는다(lib/funding/r2.ts). 파일 자체에 개인정보는
   // 없지만 그 요청의 접속 정보가 Cloudflare를 지난다 — 그래서 수탁자 표에 싣는다.
   { name: 'Cloudflare', purpose: '디지털 리워드 파일 보관 및 내려받기 제공', items: '내려받기 요청 시 전송되는 접속 정보(IP 주소, 브라우저 정보)' },
+];
+
+/**
+ * 개설자(아티스트) 계정 정보의 처리위탁 현황 — 위 FUNDING_DATA_PROCESSORS(서포터)와 대상이
+ * 다르다. 처리방침 4항이 "개설자 계정 정보는 아래 13~14항이 [처리위탁을] 따로 정합니다"라고
+ * 가리키는데, 13~14항이 신설됐을 때 수집 항목·이용 목적만 적고 이 표를 빠뜨려 참조가 빈 곳을
+ * 가리키고 있었다(2026-09-21 문서·코드 대조).
+ *
+ * lib/funding/creatorEmail.ts(sendEmail → Resend)로 로그인 링크·심사 결과 메일을 보내고,
+ * db/client.ts(Turso)에 개설자 계정·프로젝트 행이 저장되며, Vercel이 그 화면을 호스팅한다 —
+ * 셋 다 서포터 쪽과 같은 수탁자이지만 다루는 개인정보가 다르므로 표를 따로 둔다.
+ */
+export const FUNDING_CREATOR_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
+  { name: 'Resend', purpose: '로그인 링크·심사 결과 메일 발송', items: '이메일 주소, 메일 본문에 담기는 로그인 링크·심사 결과' },
+  { name: 'Turso', purpose: '개설자 계정·프로젝트 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부' },
+  { name: 'Vercel', purpose: '개설자 화면 서버 호스팅', items: '개설자 화면 이용 과정에서 전송되는 위 항목 전부' },
 ];
 
 /**

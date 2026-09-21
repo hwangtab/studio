@@ -17,6 +17,19 @@ export const REWARD_RETENTION_YEARS = 1;
  *
  * 이 기간이 지나기 전에는 리워드 전달 후 1년이 지났어도 파기하지 않는다. 법정 보존이
  * 프라이버시 파기 약속보다 우선한다(계약서 쪽 `lib/contracts/retention.ts`와 같은 원칙).
+ *
+ * **이 파일의 핵심 전제(법률 판단, 변호사 확인 필요): 배송지·응원 메시지를 이 5년 보존의
+ * 대상인 "재화 등의 공급에 관한 기록"으로 분류했다.** 근거: 배송 리워드는 실물 재화이고,
+ * 배송지는 그 공급이 어디로 이뤄졌는지를 증명하는 기록의 일부다. 이 분류가 틀렸다면(즉
+ * 배송지가 법정 보존 대상이 아니라면), 아래 판정 로직은 실제로는 파기해도 되는 개인정보를
+ * 5년 동안 붙잡아 두는 셈이 되어 처리방침 8항의 "1년 뒤 파기" 약속을 지키지 못한다.
+ * 반대로 이 분류가 맞는다면, 아래 로직이 하는 그대로가 옳다 — 법정 보존이 먼저다.
+ *
+ * 실제 영향: 펀딩 기능은 2026년에 시작했고 첫 파기 대상은 결제일로부터 5년 뒤(2031년
+ * 이후)에나 나온다. 그때까지 이 크론은 매달 0건을 돌려주는 것이 정상 동작이다 — 장식이
+ * 아니라 법정 보존 우선 원칙이 실제로 적용되고 있는 것이다. 이 전제를 재검토하려면
+ * (예: 배송지는 5년 대상이 아니고 1년 뒤 바로 파기해야 한다는 결론이 나오면) 아래 WHERE의
+ * 법정 보존 조건 자체를 다시 설계해야 한다.
  */
 export const LEGAL_RETENTION_YEARS = 5;
 
@@ -34,9 +47,19 @@ const yearsAgo = (now: Date, years: number): Date => {
  * 보관 기간이 지난 후원의 배송지·연락 관련 개인정보를 파기한다.
  *
  * **행은 지우지 않는다.** `funding_pledges`를 통째로 지우면 모금액·후원 통계·법정 보존
- * 대상(대금결제·재화공급 기록)까지 함께 사라진다. 지우는 것은 이 프로젝트의 리워드
- * 이행에만 쓰이는 배송지 필드(shipping*)와 운영자가 자유롭게 적는 admin_memo뿐이다 —
- * 후자는 이름·연락처 조각이 들어갈 수 있다(계약서 쪽 title·terminationReason과 같은 이유).
+ * 대상(대금결제·재화공급 기록)까지 함께 사라진다. 지우는 것은 배송지 필드(shipping*),
+ * 운영자가 자유롭게 적는 admin_memo(이름·연락처 조각이 들어갈 수 있다 — 계약서 쪽
+ * title·terminationReason과 같은 이유), 그리고 supporterMessage(응원 메시지)다.
+ *
+ * **supporterMessage를 지우는 이유**: 처리방침 6항(`FUNDING_COLLECTED_ITEMS`)이 이것을
+ * "선택" 수집 항목으로 명시하고, 8항의 "1년 뒤 파기" 약속은 6항이 나열한 항목 전부에
+ * 걸린다 — 응원 메시지만 빼는 예외가 어디에도 쓰여 있지 않다. 7항(`FUNDING_COLLECTION_PURPOSES`)이
+ * "서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시"를 목적으로
+ * 들지만, 이 저장소를 확인한 시점(2026-09-21)에 그 공개 표시를 실제로 구현한 화면은
+ * 없다(`displayNamePublic`은 관리자 화면·CSV export에서만 읽힌다) — 즉 "공개 게시물이라
+ * 영구 보존해야 한다"는 반례가 아직 코드에 없다. 이후 서포터 명단 공개 화면이 실제로
+ * 생기면 이 판단을 다시 봐야 한다 — 그 화면이 배포 후 1년 넘은 메시지까지 보여줘야
+ * 한다면, 이 함수가 그 메시지를 먼저 지워 화면이 깨질 수 있다.
  *
  * **여기서 다루지 않는 것: `orders.customer_name`·`customer_phone`·`customer_email`.**
  * 이 값은 `orders` 테이블에 있고, 그 테이블은 예약·레슨 등 펀딩이 아닌 주문도 함께 쓴다.
@@ -65,6 +88,7 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
       shippingAddress2: null,
       shippingMemo: null,
       adminMemo: null,
+      supporterMessage: null,
       updatedAt: now,
     })
     .where(
@@ -83,7 +107,8 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
           and(isNotNull(fundingPledges.paidAt), lt(fundingPledges.paidAt, legalBoundary)),
           and(isNull(fundingPledges.paidAt), lt(fundingPledges.createdAt, legalBoundary)),
         ),
-        // 파기할 것이 남아 있는 행만 — 이미 파기됐거나 애초에 배송/메모가 없던 행은 건너뛴다.
+        // 파기할 것이 남아 있는 행만 — 이미 파기됐거나 애초에 배송지·메모·응원 메시지가
+        // 없던 행은 건너뛴다.
         or(
           isNotNull(fundingPledges.shippingName),
           isNotNull(fundingPledges.shippingPhone),
@@ -92,6 +117,7 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
           isNotNull(fundingPledges.shippingAddress2),
           isNotNull(fundingPledges.shippingMemo),
           isNotNull(fundingPledges.adminMemo),
+          isNotNull(fundingPledges.supporterMessage),
         ),
       ),
     );
