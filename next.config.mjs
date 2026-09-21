@@ -36,6 +36,12 @@ const nextConfig = {
     // 개설자 라우트도 같은 이유로 repository.ts를 지나 content/funding/*.md를 읽는다.
     '/api/funding/creator/**': ['./content/funding/*.md'],
     '/[locale]/funding/creator/**': ['./content/funding/*.md'],
+    // 마이그레이션 드리프트 판정(lib/ops/migrationDrift.ts)이 런타임에 fs로 읽는다 —
+    // content/funding/*.md와 같은 이유로 이 목록에 없으면 서버리스 번들에서 빠져
+    // 배포판에서만 "판정 불가"가 조용히 뜬다. 크론(하루 한 번 점검)과 관리자 첫 화면
+    // (collectDbIssues 경유) 양쪽에서 이 판정을 쓴다.
+    '/api/cron/health-check': ['./drizzle/migrations/meta/_journal.json'],
+    '/admin': ['./drizzle/migrations/meta/_journal.json'],
   },
 
   // Optimized image configuration

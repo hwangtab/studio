@@ -21,6 +21,13 @@ import * as schema from '../../db/schema';
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../booking/gcal', () => ({ fetchBusyRanges: jest.fn() }));
+// 이 파일은 마이그레이션 드리프트가 아니라 나머지 점검을 검증한다. 별도로 목킹하지
+// 않으면 in-memory DB에 __drizzle_migrations 테이블이 없어 "판정 불가"가 아니라
+// "0개 적용"으로 읽혀 로컬 .env.local의 TURSO 값 유무에 따라 이 파일의 건수 assertion이
+// 흔들린다(migrationDrift 자체의 동작은 migrationDrift.test.ts가 별도로 검증한다).
+jest.mock('./migrationDrift', () => ({
+  checkMigrationDrift: jest.fn().mockResolvedValue({ status: 'unknown', localCount: 0, appliedCount: null, pendingCount: 0, pendingTags: [] }),
+}));
 
 // eslint-disable-next-line import/first
 import { fetchBusyRanges } from '../booking/gcal';
