@@ -7,6 +7,7 @@ import { fetchBusyRanges } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { runLeadRateCheck } from './leadRateCheck';
+import { checkMigrationDrift } from './migrationDrift';
 
 /**
  * 조용히 실패한 것들을 하루 한 번 훑어 운영자에게 알린다.
@@ -78,6 +79,29 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   const db = getDb();
   const issues: HealthIssue[] = [];
 
+  /**
+   * 로컬에 커밋된 마이그레이션이 운영 DB에 아직 적용되지 않은 경우 — 2026-09-21
+   * 사고(셀프 개설 0017~0019가 사흘간 미적용 배포) 재발 방지. 판정 자체는
+   * lib/ops/migrationDrift.ts. env가 없으면 'unknown'을 돌려주는데, 이 화면·크론이
+   * 실행되는 시점엔 이미 getDb() 위 줄이 같은 env로 성공했으므로 여기서 'unknown'이
+   * 나올 일은 없다 — 그래도 값으로 구분해 오해를 막는다.
+   *
+   * 밀린 상태는 이미 공개 경로가 조용히 깨져 있다는 뜻이라(폴백이 있는 경로는 옛 동작으로,
+   * 없는 경로는 500으로) severity는 high로 둔다.
+   */
+  const migrationDrift = await checkMigrationDrift();
+  if (migrationDrift.status === 'drift') {
+    issues.push({
+      severity: 'high',
+      title: `운영 DB에 적용되지 않은 마이그레이션 ${migrationDrift.pendingCount}건`,
+      detail:
+        `로컬 저장소에 커밋된 마이그레이션이 운영 DB보다 ${migrationDrift.pendingCount}개 앞서 있습니다: ` +
+        `${migrationDrift.pendingTags.join(', ')}\n` +
+        '이 스키마 변경을 전제로 코드가 이미 배포돼 있다면, 해당 기능의 관리자·API 경로가 500을 내거나 ' +
+        '(safeDb류 폴백이 있는 경로는) 조용히 옛 동작으로 돌아가 있을 수 있습니다.\n' +
+        '`npm run db:migrate`로 적용해 주세요.',
+    });
+  }
 
   /**
    * 결제·확정은 정상인데 구글 캘린더에 이벤트가 없는 예약. 운영자 캘린더에는 그 시간이
