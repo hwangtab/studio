@@ -104,4 +104,18 @@ describe('펀딩 셀프 개설 스키마', () => {
     await db.insert(schema.fundingProjectPayouts).values(payout);
     await expect(db.insert(schema.fundingProjectPayouts).values(payout)).rejects.toThrow();
   });
+
+  it('운영자 전용 메모와 개설자 수정 시각은 기본이 null이다', async () => {
+    const [creator] = await db.insert(schema.fundingCreators)
+      .values({ email: 'f@example.com', name: '가나' }).returning();
+    const [project] = await db.insert(schema.fundingProjects).values({
+      slug: 'demo5', creatorId: creator.id, title: '제목', summary: '요약',
+      content: '본문', coverUrl: '/c.webp', goalAmount: 1000000,
+      startAt: new Date('2026-10-01T01:00:00Z'), endAt: new Date('2026-10-31T14:59:59Z'),
+    }).returning();
+    const [row] = await db.select().from(schema.fundingProjects)
+      .where(eq(schema.fundingProjects.id, project.id)).limit(1);
+    expect(row.internalNote).toBeNull();
+    expect(row.creatorEditedAt).toBeNull();
+  });
 });

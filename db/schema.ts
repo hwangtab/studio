@@ -539,6 +539,21 @@ export const fundingProjects = sqliteTable('funding_projects', {
   /** 개설자가 동의한 개설자 약관 판본과 시각. 후원자 쪽 terms_version과 같은 취지의 증거다. */
   creatorTermsVersion: text('creator_terms_version'),
   creatorTermsAgreedAt: integer('creator_terms_agreed_at', { mode: 'timestamp' }),
+  /**
+   * 운영자 전용 메모. `review_note`와 달리 개설자에게 **어떤 경로로도 보이지 않는다**.
+   *
+   * 3차까지는 `review_note` 한 칸을 네 가지가 공유했고(보완 요청 사유·반려 사유·보관 사유·
+   * set_review_note) 그 전부가 개설자 화면 두 곳에 렌더됐다 — 운영자가 내부 기록이라 믿고
+   * 적은 문장이 개설자에게 즉시 보였다.
+   */
+  internalNote: text('internal_note'),
+  /**
+   * 개설자가 **승인된 뒤에** 내용을 고친 마지막 시각.
+   *
+   * `updated_at`으로는 알 수 없다 — 관리자 쓰기(`set_review_note` 등)도 그 값을 갱신하므로
+   * 운영자가 메모만 달아도 "개설자가 고쳤다"로 보인다. 개설자의 승인 후 저장에서만 찍는다.
+   */
+  creatorEditedAt: integer('creator_edited_at', { mode: 'timestamp' }),
   /** 사이트맵 lastmod (YYYY-MM-DD). 공개 필드가 바뀔 때만 갱신한다 — 파일 mtime을 쓰지 않는 것과 같은 이유. */
   lastmod: text('lastmod'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
