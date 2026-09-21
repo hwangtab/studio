@@ -9,6 +9,10 @@
       "schedule": "0 18 1 * *"
     },
     {
+      "path": "/api/cron/purge-funding",
+      "schedule": "0 18 2 * *"
+    },
+    {
       "path": "/api/cron/backup-contracts",
       "schedule": "0 17 * * 0"
     },

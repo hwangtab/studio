@@ -433,8 +433,8 @@ export const fundingPledges = sqliteTable('funding_pledges', {
   /**
    * 리워드 전달 완료 시각. 약관 제13조가 약속한 '리워드 전달 완료 후 1년 파기'의 기산점이라,
    * 이 값이 없으면 그 파기 의무를 이행할 수단 자체가 없다.
-   * TODO(후속): fulfillment_status가 'delivered'로 바뀌는 경로에서 이 값을 채운다
-   * (pages/api/admin/funding/pledges/[id].ts — 다른 작업이 잡고 있어 이번 범위 밖).
+   * fulfillment_status가 'delivered'로 바뀌는 경로(pages/api/admin/funding/pledges/[id].ts)가
+   * COALESCE로 첫 전달 시각을 채우고, 'delivered'에서 되돌리면 NULL로 되돌린다.
    */
   deliveredAt: integer('delivered_at', { mode: 'timestamp' }),
   /** 무통장 후원자의 셀프 취소 요청 시각. 운영자가 계좌 환불 후 orders를 refunded로 바꾼다. */
