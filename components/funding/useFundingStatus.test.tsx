@@ -160,3 +160,32 @@ describe('탭 복귀 시 다시 읽기', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 });
+
+/**
+ * 목록·상세 모두 정적 생성이라, 폴링 응답이 오기 전까지는 모금 현황이 비어 있었다.
+ * 목록 카드는 그 사이 "목표 1,000,000원"만 보여줘서 아직 0원인 것처럼 읽혔고, 진행바가
+ * 뒤늦게 생기며 레이아웃도 밀렸다. 서버가 실어 보낸 값으로 첫 렌더부터 채운다.
+ */
+it('초기 데이터를 주면 폴링 응답 전에도 그 값을 내놓는다', () => {
+  jest.useFakeTimers();
+  global.fetch = jest.fn(() => new Promise(() => {})) as never; // 영원히 응답하지 않는 폴링
+  const initial = {
+    state: 'live' as const, goalAmount: 1000000, endAt: '2036-01-01T00:00:00+09:00',
+    raisedAmount: 240000, backerCount: 7, percent: 24,
+    remaining: {}, publicBackers: ['김정곤'], publicMessages: [],
+  };
+
+  const { result } = renderHook(() => useFundingStatus('demo', 'live', undefined, initial));
+
+  expect(result.current.data?.raisedAmount).toBe(240000);
+  expect(result.current.data?.backerCount).toBe(7);
+});
+
+it('초기 데이터가 없으면 폴링 전까지 비어 있다', () => {
+  jest.useFakeTimers();
+  global.fetch = jest.fn(() => new Promise(() => {})) as never;
+
+  const { result } = renderHook(() => useFundingStatus('demo', 'live'));
+
+  expect(result.current.data).toBeNull();
+});

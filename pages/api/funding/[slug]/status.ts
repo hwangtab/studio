@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { computeProjectState } from '../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../lib/funding/repository';
-import { aggregateProjectStatus, expireStalePledges } from '../../../../lib/funding/service';
+import { buildPublicStatus } from '../../../../lib/funding/publicStatus';
+import { expireStalePledges } from '../../../../lib/funding/service';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') return res.status(405).json({ ok: false });
@@ -12,12 +13,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const state = project ? computeProjectState(project, now) : null;
   if (!project || state === 'draft') return res.status(404).json({ ok: false });
   await expireStalePledges(now);
-  const s = await aggregateProjectStatus(project, now);
+  // 조립은 buildPublicStatus 하나가 맡는다 — 정적 생성이 실어 보내는 초기값과 같은 모양이어야
+  // 하고, 두 곳에서 각자 만들면 한쪽만 고쳤을 때 조용히 갈린다.
+  const s = await buildPublicStatus(project, now);
   res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
-  return res.status(200).json({
-    ok: true, state, goalAmount: project.goalAmount, endAt: project.endAt,
-    raisedAmount: s.raisedAmount, backerCount: s.backerCount,
-    percent: Math.floor((s.raisedAmount / project.goalAmount) * 100),
-    remaining: s.remaining, publicBackers: s.publicBackers, publicMessages: s.publicMessages,
-  });
+  return res.status(200).json({ ok: true, ...s });
 }

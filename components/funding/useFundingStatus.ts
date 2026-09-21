@@ -49,8 +49,21 @@ const laterState = (a: ProjectState | null | undefined, b: ProjectState): Projec
  * 초기 렌더는 언제나 서버가 준 `initialState`다(하이드레이션 불일치 방지). 로컬 판정은
  * 마운트 이후에만 섞인다.
  */
-export const useFundingStatus = (slug: string, initialState: ProjectState, timing?: FundingTiming) => {
-  const [data, setData] = useState<FundingStatusResponse | null>(null);
+/**
+ * `initialData` — 서버가 정적 생성 시점에 집계해 실어 보낸 현황.
+ *
+ * 없으면 폴링 응답이 올 때까지 화면에 모금 현황이 비어 있다. 목록 카드는 그 사이
+ * "목표 1,000,000원"만 보여줘 아직 0원인 것처럼 읽혔고, 상세는 "집계 중…"이 스쳤으며,
+ * 진행바가 뒤늦게 생기면서 레이아웃도 밀렸다. ISR revalidate가 60초라 이 값은 최대
+ * 1분 낡은 수이고, 마운트 직후의 첫 폴링이 곧바로 최신값으로 덮는다.
+ */
+export const useFundingStatus = (
+  slug: string,
+  initialState: ProjectState,
+  timing?: FundingTiming,
+  initialData?: FundingStatusResponse | null,
+) => {
+  const [data, setData] = useState<FundingStatusResponse | null>(initialData ?? null);
   const [error, setError] = useState(false);
   const [localState, setLocalState] = useState<ProjectState | null>(null);
   const status = timing?.status;

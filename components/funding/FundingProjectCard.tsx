@@ -5,7 +5,7 @@ import ResponsiveImage from '../ResponsiveImage';
 import { formatPriceAmount } from '../../data/pricing';
 import { daysUntilKst } from '../../lib/booking/kst';
 import { computeProjectState, type ProjectState } from '../../lib/funding/projectState';
-import { useFundingStatus } from './useFundingStatus';
+import { useFundingStatus, type FundingStatusResponse } from './useFundingStatus';
 
 const STATE_LABEL: Record<ProjectState, string> = { live: '진행 중', upcoming: '오픈 예정', closed: '마감', draft: '' };
 
@@ -19,9 +19,14 @@ interface Props {
   status: 'auto' | 'draft' | 'closed';
   startAt: string;
   endAt: string;
+  /**
+   * 서버가 정적 생성 시점에 집계한 현황. 없으면(빌드에 DB가 없는 CI 등) 예전처럼
+   * 목표액을 두고 폴링을 기다린다.
+   */
+  initialStatus?: FundingStatusResponse | null;
 }
 
-export default function FundingProjectCard({ slug, title, summary, cover, goalAmount, state: initialState, status, startAt, endAt }: Props) {
+export default function FundingProjectCard({ slug, title, summary, cover, goalAmount, state: initialState, status, startAt, endAt, initialStatus = null }: Props) {
   // 목록은 정적 생성이라 서버가 계산한 배지가 빌드 시각에 고정된다 — 마감이 지난 프로젝트가
   // 며칠씩 '진행 중'으로 보인다. 초기 렌더는 서버 값을 그대로 써(하이드레이션 불일치 방지)
   // 마운트 후 브라우저 시계로 다시 판정한다. 정렬은 서버 순서를 유지한다.
@@ -35,7 +40,7 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
   // 목록에서도 모금 현황을 보여준다. 목표액만 있으면 "얼마나 모였나"를 보려고
   // 상세로 들어가야 하는데, 그 숫자가 후원을 결정하는 정보다.
   // 상세와 같은 훅·같은 API(s-maxage=60 CDN 캐시)라 카드가 늘어도 부담이 작다.
-  const { data } = useFundingStatus(slug, initialState, { status, startAt, endAt });
+  const { data } = useFundingStatus(slug, initialState, { status, startAt, endAt }, initialStatus);
   // 마운트 전에는 D-day를 비운다 — 서버/클라이언트 시계 차이로 인한 하이드레이션 불일치 방지.
   const days = now ? daysUntilKst(now, new Date(endAt)) : 0;
   // 무엇의 D-day인지 밝힌다. 이 프로젝트처럼 행사일(9/19 집회)과 후원 마감일(10/19)이
