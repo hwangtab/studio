@@ -12,6 +12,24 @@ export interface FundingProjectActionResult {
   warnings?: string[];
 }
 
+/**
+ * `pages/api/admin/funding/projects/[id].ts`가 실제로 받는 액션 집합 — 그 라우트를 읽고
+ * 맞췄다. 예전엔 `body: Record<string, unknown>`이라 `set_internal_note`를
+ * `set_internal_not`처럼 오타 내도 컴파일이 통과하고 런타임 400으로만 드러났다.
+ *
+ * - `approve`는 슬러그를 새로 넣을 수 있고(운영자가 개설자 입력을 고쳐 승인), 메모는
+ *   선택이다(안 보내면 기존 reviewNote를 보존한다 — `reviewDecision.ts`의
+ *   `approveReviewNote` 참고).
+ * - `request_changes`·`reject`·`archive`는 서버가 빈 메모를 거부한다(`NOTE_REQUIRED_MESSAGE`)
+ *   — 타입에서는 문자열이라는 것만 강제하고, 빈 문자열 거부는 여전히 서버 몫이다.
+ * - `set_review_note`·`set_internal_note`는 메모만 갈아 끼운다. 둘 다 빈 값을 보낼 수
+ *   있다(메모를 지우는 경로).
+ */
+export type FundingProjectPatchBody =
+  | { action: 'approve'; slug?: string; note?: string }
+  | { action: 'request_changes' | 'reject' | 'archive'; note: string }
+  | { action: 'set_review_note' | 'set_internal_note'; note?: string };
+
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
   try {
     return await r.json();
@@ -22,7 +40,7 @@ const readJson = async (r: Response): Promise<{ message?: string; warnings?: str
 
 export const patchFundingProject = async (
   id: string,
-  body: Record<string, unknown>,
+  body: FundingProjectPatchBody,
 ): Promise<FundingProjectActionResult> => {
   try {
     const r = await fetch(`/api/admin/funding/projects/${id}`, {
