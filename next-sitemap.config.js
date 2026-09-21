@@ -110,6 +110,10 @@ module.exports = {
     // 개설자 신청 폼 — noindex 페이지라 사이트맵에 실으면 "제출된 URL이 noindex로
     // 표시됨" GSC 오류가 쌓인다(위 /artists와 같은 조합, 2026-09-17 리뷰 지적).
     '/*/funding/apply',
+    // 런타임 사이트맵 라우트(pages/sitemap-funding.xml.ts)는 페이지가 아니라 사이트맵이다.
+    // next-sitemap이 페이지 라우트로 보고 <url>로 실었다(2026-09-21 프로덕션 적발) —
+    // 사이트맵 인덱스(robotsTxtOptions.additionalSitemaps)에서만 참조돼야 한다.
+    '/sitemap-funding.xml',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
