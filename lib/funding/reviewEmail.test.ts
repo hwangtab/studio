@@ -43,10 +43,8 @@ it('승인 메일 — 제목·공개 주소·잠금 안내·편집 링크', asyn
   expect(call.text).toContain('/ko/funding/new-slug');
   expect(call.text).not.toContain('/ko/funding/old-slug');
   expect(call.text).toContain('/ko/funding/creator/proj-1');
-  expect(call.text).toContain('리워드 주소(id)');
-  expect(call.text).toContain('리워드 금액');
-  expect(call.text).toContain('리워드 수량 제한 여부');
-  expect(call.text).toContain('리워드 배송 필요 여부');
+  expect(call.text).toContain('통째로 잠깁니다');
+  expect(call.text).toContain('제목·설명·이미지·금액·수량 제한 여부·배송 필요 여부·예상 전달 시기');
 });
 
 it('보완 요청 메일 — 제목·운영자 메모 전문·편집 링크, 공개 주소는 없다', async () => {

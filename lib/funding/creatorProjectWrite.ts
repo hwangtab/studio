@@ -290,7 +290,12 @@ export const saveCreatorSection = async (creatorId: string, value: CreatorSectio
  * 결제를 마친 후원자에게 사후로 배송지 제출 의무가 생기거나(반대로 배송 준비 중인 리워드가
  * 갑자기 배송 불필요로 바뀌거나) 하는 이행 조건 변경이 된다.
  *
- * 제목·설명·이미지·예상 전달 시기는 고칠 수 있다 — 오타 수정까지 막으면 운영이 안 된다.
+ * 제목·설명·이미지·예상 전달 시기는 이 함수 안에서는 막지 않는다 — 다만 개설자는 이 코드에
+ * 도달할 수 없다. `EDITABLE_SECTIONS`(reviewTransition.ts)가 `approved` 상태에서 'rewards'
+ * 구획 자체를 막아 개설자 쪽 upsertReward 호출은 그 앞에서 이미 거부된다. 개설자 약관 제3조가
+ * 실제로 약속하는 것도 "승인 뒤에는 어떤 항목도 고치거나 지울 수 없다"이다. 이 아래 필드별
+ * 검사는 구획 가드를 우회할 수 있는 서비스 계층 직접 호출(관리자 스크립트 등)에 대한 2차
+ * 방어선으로만 남겨 둔다.
  * 수량은 **늘리는 것만** 허용한다(재고 추가). 줄이면 이미 팔린 것보다 적어질 수 있다.
  */
 const lockedViolation = (existing: FundingRewardRow, next: RewardInput): string | null => {
