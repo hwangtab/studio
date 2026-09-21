@@ -159,6 +159,10 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 공유해야 하는 순수 함수는 `lib/funding/shape.ts`에 둔다. **`components/` 아래를 건드린
 변경은 `npm run build`까지 돌려야 이 파손이 드러난다** — 타입 검사·테스트는 통과한다.
 
+**`npx jest`도 디렉터리를 좁히지 말 것.** 포커스 링 대비·다크 짝·`transition-all` 금지 같은
+디자인 시스템 가드는 `tailwind.config.test.ts`에 있어서, `jest components/…`로 좁히면
+통째로 건너뛴다. 실제로 그렇게 CI를 두 번 빨갛게 했다.
+
 ### 승인은 세 가지를 한 묶음으로 한다
 
 `lib/funding/reviewDecision.ts`의 승인은 slug 확정 · 리워드 `lockedAt` · `status` 열기를
@@ -425,6 +429,20 @@ CI에 넣었다 — 섹션 해시가 파일 간 같으면 잡는다.
 화이트리스트. 추정치는 **컴포넌트가 실제 렌더하는 분량 실측값**으로 넣을 것: 이 값이 thin
 판정에 직접 들어가서, 과대 계상하면 thin 페이지가 색인 대상으로 잘못 분류된다(실제로
 session-checklist가 실측 160자인데 420으로 잡혀 있었다).
+
+### 로컬 프로덕션 빌드로 화면을 확인하려면 VERCEL_ENV가 필요하다
+
+`npx next start`만 하면 미들웨어의 canonical host 강제가 걸려 studionol.co.kr로 **308**
+한다. 그대로 스크린샷을 찍으면 내 코드가 아니라 프로덕션을 보게 된다(2026-09-21에 한참
+헤맸다 — 화면이 안 바뀌는 것이 아니라 다른 사이트를 보고 있었다).
+
+```bash
+VERCEL_ENV=preview npx next start -p 3100
+```
+
+모금 현황·응원 메시지처럼 DB가 채우는 화면은 playwright의 `page.route`로
+`**/api/funding/**`를 가로채 실제 응답 모양을 주입한다. **CORS 헤더를 함께 줄 것** —
+페이지가 절대 URL(`https://studionol.co.kr/api/...`)로 부르므로 없으면 브라우저가 막는다.
 
 ### 그림을 바꾸면 **파일명도 바꾼다** (OG·썸네일 공통)
 
