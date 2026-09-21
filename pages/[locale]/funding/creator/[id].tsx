@@ -14,7 +14,7 @@ import {
 import { Button } from '../../../../components/ui/Button';
 import { computeEarliestStartDate, toKstDateString } from '../../../../lib/funding/creatorDateInput';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
-import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
+import { isCreatorNameLocked, loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
 import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
 import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../lib/funding/policy';
 import { withI18nServerProps } from '../../../../lib/getStatic';
@@ -28,6 +28,13 @@ interface Props {
    * 어긋난다(2026-09-17 리뷰 지적).
    */
   earliestStartDate: string;
+  /**
+   * 지금 개설자 이름이 잠겨 있는지 — `lib/funding/creatorProjectWrite.ts`의
+   * `isCreatorNameLocked`가 편집 화면 로드 시점에 한 번 판정한 결과다. 판정에 쓰인
+   * 이메일·현재 이름 같은 원자료는 화면에 내려보내지 않는다(결과 불리언 하나만).
+   * 저장 시점의 실제 집행은 여전히 `saveCreatorSection`이 한다 — 이 값은 안내일 뿐이다.
+   */
+  nameLocked: boolean;
 }
 
 /**
@@ -81,7 +88,7 @@ const TABS = ['basic', 'story', 'rewards', 'creator'] as const;
 type Tab = (typeof TABS)[number];
 const TAB_LABEL: Record<Tab, string> = { basic: '기본정보', story: '스토리', rewards: '리워드', creator: '개설자 정보' };
 
-export default function CreatorProjectEditor({ project: initial, earliestStartDate }: Props) {
+export default function CreatorProjectEditor({ project: initial, earliestStartDate, nameLocked }: Props) {
   const [project, setProject] = useState<EditorProject>(initial);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
@@ -203,6 +210,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               projectId={project.id}
               initial={project.creator}
               readOnly={false}
+              nameLocked={nameLocked}
               onSaved={(value: EditorCreatorProfile) => setProject((p) => ({ ...p, creator: value }))}
             />
           </div>
@@ -268,6 +276,10 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
       project: toEditorProject(project),
       // 서버의 now로 계산한다 — 브라우저 시계로 다시 계산하지 않는 이유는 위 Props 주석 참조.
       earliestStartDate: computeEarliestStartDate(Date.now(), CREATOR_LIMITS.leadDays),
+      // 편집 화면 로드 시점에 한 번만 조회한다 — 저장 경로(saveCreatorSection)는 이 값을
+      // 쓰지 않고 자신의 조건을 그대로 재확인하므로, 여기서 조회를 늘려도 집행 경로의
+      // 쿼리 횟수는 늘지 않는다.
+      nameLocked: await isCreatorNameLocked(auth.creatorId),
     },
   };
 });

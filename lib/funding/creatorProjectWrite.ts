@@ -216,15 +216,37 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * 적 없는 값을 잠그는 것은 잠금이 아니라 사고다(`isDefaultCreatorName` 주석 참조). 기존에
  * 이미 로컬파트 이름으로 남아 있던 행도 이 예외로 스스로 풀린다.
  */
+/** `saveCreatorSection`의 이름 잠금 조건과 `isCreatorNameLocked`가 공유하는 조회 — 승인된 프로젝트가 하나라도 있는지. */
+const hasApprovedProject = async (creatorId: string): Promise<boolean> => {
+  const [approvedProject] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
+    .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
+  return Boolean(approvedProject);
+};
+
+/**
+ * 지금 이 개설자의 이름이 잠겨 있는지 — 편집 화면이 이름 칸을 비활성화하고 이유를
+ * 보여줄지 판단하는 힌트다. 판정 조건은 `saveCreatorSection`이 실제로 거부하는 조건과
+ * 정확히 같아야 한다(`hasApprovedProject`를 함께 쓰는 이유) — 둘이 갈리면 화면은 열려
+ * 있는데 저장은 막히거나, 화면은 잠겨 있는데 저장은 되는 모순이 생긴다.
+ *
+ * **이 힌트는 집행자가 아니다.** 서버는 여전히 `saveCreatorSection`이 유일하게 막는다 —
+ * 이 함수는 편집 화면 로드 시점에 한 번만 불러 안내 문구를 미리 보여주는 용도다.
+ */
+export const isCreatorNameLocked = async (creatorId: string): Promise<boolean> => {
+  const [existing] = await getDb().select({ name: fundingCreators.name, email: fundingCreators.email })
+    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!existing) return false;
+  if (isDefaultCreatorName(existing.name, existing.email)) return false;
+  return hasApprovedProject(creatorId);
+};
+
 export const saveCreatorSection = async (creatorId: string, value: CreatorSection): Promise<WriteResult> => {
   const [existing] = await getDb().select({ id: fundingCreators.id, name: fundingCreators.name, email: fundingCreators.email })
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
 
   if (value.name !== existing.name && !isDefaultCreatorName(existing.name, existing.email)) {
-    const [approvedProject] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
-      .where(and(eq(fundingProjects.creatorId, creatorId), eq(fundingProjects.reviewStatus, 'approved'))).limit(1);
-    if (approvedProject) {
+    if (await hasApprovedProject(creatorId)) {
       return deny('locked', '승인된 프로젝트가 있어 이름은 더 이상 바꿀 수 없습니다. 소개·연락처·링크는 계속 고칠 수 있습니다.');
     }
   }
