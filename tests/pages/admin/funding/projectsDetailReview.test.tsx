@@ -40,6 +40,7 @@ const PROJECT = {
   coverUrl: '/images/cover.jpg',
   reviewNote: null,
   internalNote: null,
+  creatorEditedAt: null,
   creator: { contactName: '담당자', phone: '010-0000-0000' },
   rewards: [
     {
@@ -185,6 +186,16 @@ it('두 메모 칸은 개설자에게 보이는지를 서로 다르게 말한다
   render(<AdminFundingProjectDetailPage project={PROJECT} />);
   expect(screen.getByText('개설자에게 보이는 메모')).toBeInTheDocument();
   expect(screen.getByText('개설자에게 보이지 않습니다.')).toBeInTheDocument();
+});
+
+it('승인 뒤 수정된 프로젝트는 심사 화면이 그 사실을 말한다', () => {
+  render(<AdminFundingProjectDetailPage project={{ ...PROJECT, creatorEditedAt: '2026-09-21T05:00:00.000Z' }} />);
+  expect(screen.getByText(/승인 뒤 개설자가 수정했습니다/)).toBeInTheDocument();
+});
+
+it('수정된 적 없으면 그 표시가 없다', () => {
+  render(<AdminFundingProjectDetailPage project={{ ...PROJECT, creatorEditedAt: null }} />);
+  expect(screen.queryByText(/승인 뒤 개설자가 수정했습니다/)).not.toBeInTheDocument();
 });
 
 it('내부 기록 저장은 set_internal_note로 나간다', async () => {

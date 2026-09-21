@@ -26,13 +26,15 @@ interface Props {
   /** GSSP가 요청 시각 기준으로 미리 계산해 내려준 값 — 브라우저 시계로 다시 계산하지 않는다. */
   earliestStartDate: string;
   readOnly: boolean;
+  /** 승인 뒤에는 구획은 열려 있지만 주소·목표 금액·모금 기간은 잠긴다(서버의 basicLockedViolation과 같은 규칙). */
+  lockedFields?: boolean;
   onSaved: (value: BasicSectionValue) => void;
 }
 
 /** 초안 생성 직후의 임시 주소(`createDraftProject`가 붙인 `draft-<uuid>`)는 실제 주소가 아니다. */
 const isDraftPlaceholderSlug = (slug: string): boolean => slug.startsWith('draft-');
 
-export function BasicSectionForm({ projectId, initial, earliestStartDate, readOnly, onSaved }: Props) {
+export function BasicSectionForm({ projectId, initial, earliestStartDate, readOnly, lockedFields, onSaved }: Props) {
   const [title, setTitle] = useState(initial.title);
   const [summary, setSummary] = useState(initial.summary);
   // 임시 주소를 폼에 그대로 채우지 않는다 — 개설자가 손대지 않으면 그 임시값이 영구
@@ -104,10 +106,16 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
         <TextInput
           value={slug}
           onChange={(e) => { setSlug(e.target.value); clearSaveStatus(); }}
-          disabled={readOnly}
+          disabled={readOnly || lockedFields}
           required
         />
       </Field>
+      {lockedFields && (
+        <p className="-mt-3 text-xs text-gray-600">
+          공개된 뒤에는 바꿀 수 없습니다 — 후원자가 이 주소로 프로젝트를 찾고, 모금 기간과 목표
+          금액은 후원자와의 약속입니다.
+        </p>
+      )}
       <ImageUploadField
         projectId={projectId}
         kind="cover"
@@ -129,7 +137,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
           min={CREATOR_LIMITS.goalMin}
           max={CREATOR_LIMITS.goalMax}
           step={10_000}
-          disabled={readOnly}
+          disabled={readOnly || lockedFields}
           required
         />
       </Field>
@@ -145,7 +153,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
             value={startAt}
             min={earliestStartDate}
             onChange={(e) => { setStartAt(e.target.value); clearSaveStatus(); }}
-            disabled={readOnly}
+            disabled={readOnly || lockedFields}
             required
           />
         </Field>
@@ -155,7 +163,7 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
             value={endAt}
             min={startAt || earliestStartDate}
             onChange={(e) => { setEndAt(e.target.value); clearSaveStatus(); }}
-            disabled={readOnly}
+            disabled={readOnly || lockedFields}
             required
           />
         </Field>

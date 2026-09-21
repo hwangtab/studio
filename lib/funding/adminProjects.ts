@@ -59,6 +59,8 @@ export interface AdminProjectDetail extends AdminProjectSummary {
    * `submitted`로 남아 있던 프로젝트는 동의 기록 없이 제출됐을 수 있어 null일 수 있다.
    */
   creatorTermsVersion: string | null;
+  /** 개설자가 승인 뒤에 마지막으로 고친 시각. null이면 승인 후 고친 적이 없다. */
+  creatorEditedAt: string | null;
   creator: {
     contactName: string | null;
     phone: string | null;
@@ -142,6 +144,7 @@ export const loadProjectForAdmin = async (projectId: string): Promise<AdminProje
     reviewNote: row.project.reviewNote,
     internalNote: row.project.internalNote,
     creatorTermsVersion: row.project.creatorTermsVersion,
+    creatorEditedAt: row.project.creatorEditedAt?.toISOString() ?? null,
     creator: {
       contactName: row.creator.contactName,
       phone: row.creator.phone,

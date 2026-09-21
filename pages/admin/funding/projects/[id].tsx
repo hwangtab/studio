@@ -42,6 +42,8 @@ interface AdminFundingProjectDetailPageProps {
     reviewNote: string | null;
     /** 운영자 전용. 개설자에게 보이지 않는다 — `reviewNote`와 헷갈리지 말 것. */
     internalNote: string | null;
+    /** 개설자가 승인 뒤에 마지막으로 고친 시각. null이면 승인 후 고친 적이 없다. */
+    creatorEditedAt: string | null;
     /**
      * 화면이 렌더하는 필드만 담는다 — `creator.bio`·`creator.links`는 이 화면 어디에도
      * 그리지 않으므로 props에도 싣지 않는다(화이트리스트 원칙, 안 쓰는 개인정보를 굳이
@@ -88,6 +90,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
         coverUrl: project.coverUrl,
         reviewNote: project.reviewNote,
         internalNote: project.internalNote,
+        creatorEditedAt: project.creatorEditedAt,
         creator: { contactName: project.creator.contactName, phone: project.creator.phone },
         rewards: project.rewards.map((r) => ({
           rewardId: r.rewardId,
@@ -308,6 +311,12 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
             </div>
           )}
         </div>
+
+        {project.creatorEditedAt && (
+          <p className="mb-3 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900">
+            승인 뒤 개설자가 수정했습니다 — 마지막 수정 {formatKstDateTimeFull(project.creatorEditedAt)}
+          </p>
+        )}
 
         <div className="bg-white rounded-2xl shadow-sm p-6 md:p-8 space-y-8">
           <div>

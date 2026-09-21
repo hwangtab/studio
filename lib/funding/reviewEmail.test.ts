@@ -2,7 +2,7 @@ jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ o
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
-import { sendReviewDecisionEmail, sendReviewDecisionOperatorFallback } from './reviewEmail';
+import { sendCreatorEditedNotice, sendReviewDecisionEmail, sendReviewDecisionOperatorFallback } from './reviewEmail';
 
 import type { AdminProjectDetail } from './adminProjects';
 
@@ -26,6 +26,7 @@ const project = {
   reviewNote: null,
   internalNote: null,
   creatorTermsVersion: 'funding-creator-terms-2026-09-18',
+  creatorEditedAt: null,
   creator: { contactName: '김개설', phone: '010', bio: null, links: null },
   rewards: [],
 } as AdminProjectDetail;
@@ -81,6 +82,29 @@ it('보관 메일 — 제목이 반려와 다르고("심사에서 게재가 어�
 it('메일 발송 실패는 실패 사유 문자열을 돌려준다', async () => {
   (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });
   expect(await sendReviewDecisionEmail(project, 'approve', null, 'new-slug')).toBe('creator:API_ERROR');
+});
+
+describe('sendCreatorEditedNotice', () => {
+  it('수정 알림은 관리자 심사 화면으로 링크한다', async () => {
+    await sendCreatorEditedNotice(project);
+    const text = (sendEmail as jest.Mock).mock.calls[0][0].text as string;
+    expect(text).toContain('/admin/funding/projects/proj-1');
+    expect(text).not.toContain('/ko/funding/creator/proj-1');
+  });
+
+  it('수신자는 운영자이고, 제목·본문에 프로젝트·개설자·공개 주소가 들어간다', async () => {
+    expect(await sendCreatorEditedNotice(project)).toBeNull();
+    const call = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(call.to).toBe(OPERATOR_EMAIL);
+    expect(call.subject).toContain('강정피스앤뮤직캠프');
+    expect(call.text).toContain('creator@example.com');
+    expect(call.text).toContain('/ko/funding/old-slug');
+  });
+
+  it('메일 발송 실패는 실패 사유 문자열을 돌려준다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });
+    expect(await sendCreatorEditedNotice(project)).toBe('operator:API_ERROR');
+  });
 });
 
 describe('sendReviewDecisionOperatorFallback', () => {

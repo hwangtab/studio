@@ -4,8 +4,10 @@ import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
 import { validateBasicSection, validateCreatorSection, validateStorySection } from '../../../../../lib/funding/creatorValidation';
-import { saveBasicSection, saveCreatorSection, saveStorySection } from '../../../../../lib/funding/creatorProjectWrite';
+import { loadProjectForCreator, saveBasicSection, saveCreatorSection, saveStorySection } from '../../../../../lib/funding/creatorProjectWrite';
 import { respondWriteResult } from '../../../../../lib/funding/creatorWriteHttp';
+import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
+import { sendCreatorEditedNotice } from '../../../../../lib/funding/reviewEmail';
 
 /**
  * 구획별 저장 — 기본정보·스토리·개설자 프로필 세 구획을 한 라우트가 받는다.
@@ -40,16 +42,45 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
   }
 
+  /**
+   * 승인된 프로젝트가 저장으로 고쳐졌을 때 운영자에게 알린다.
+   *
+   * 매 저장마다 보내면 메일이 쏟아진다. 창 안의 나머지 저장은 보내지 않는다 — 합쳐서
+   * 보내는 것이 아니라 억제한다. 운영자가 놓치면 안 되는 것은 메일이 아니라 심사 화면의
+   * "승인 뒤 수정됨" 표시이고, 메일은 그 화면을 보러 가라는 신호일 뿐이다.
+   *
+   * `loadProjectForAdmin`은 관리자 조회라 정산 필드(`taxType` 등)와 `internalNote`를
+   * 담고 있다 — 그 결과를 이 라우트의 응답에 싣지 않는다. 메일 함수에만 넘긴다.
+   */
+  const notifyIfApprovedEdit = async (wasApproved: boolean): Promise<void> => {
+    if (!wasApproved) return;
+    if (!(await consumeRateLimit(`funding_creator_edit:${projectId}`, 1, 3600))) return;
+    const detail = await loadProjectForAdmin(projectId);
+    if (!detail) return;
+    const error = await sendCreatorEditedNotice(detail);
+    if (error) console.error('[funding] 개설자 수정 알림 실패:', error);
+  };
+
   if (section === 'basic') {
     const validated = validateBasicSection(req.body?.value, new Date());
     if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
-    return respondWriteResult(res, await saveBasicSection(auth.creatorId, projectId, validated.value));
+    // wasApproved는 저장 전 상태를 봐야 한다 — saveBasicSection이 상태를 바꾸지는 않지만
+    // 읽는 순서를 분명히 해 둔다.
+    const before = await loadProjectForCreator(auth.creatorId, projectId);
+    const wasApproved = before?.reviewStatus === 'approved';
+    const result = await saveBasicSection(auth.creatorId, projectId, validated.value);
+    if (result.ok) await notifyIfApprovedEdit(wasApproved);
+    return respondWriteResult(res, result);
   }
 
   if (section === 'story') {
     const validated = validateStorySection(req.body?.value);
     if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
-    return respondWriteResult(res, await saveStorySection(auth.creatorId, projectId, validated.value));
+    const before = await loadProjectForCreator(auth.creatorId, projectId);
+    const wasApproved = before?.reviewStatus === 'approved';
+    const result = await saveStorySection(auth.creatorId, projectId, validated.value);
+    if (result.ok) await notifyIfApprovedEdit(wasApproved);
+    return respondWriteResult(res, result);
   }
 
   const validated = validateCreatorSection(req.body?.value);

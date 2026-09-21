@@ -143,6 +143,37 @@ export const sendReviewDecisionEmail = async (
  * 라벨로 썼는데, 개설자 메일(`sendReviewDecisionEmail`)에서 같은 함수를 쓰는 것은 맞지만(수신자가
  * 개설자니까) 이 함수의 수신자는 운영자라 라벨과 대상이 둘 다 틀려 있었다.
  */
+/**
+ * 승인된 프로젝트를 개설자가 고쳤을 때의 운영자 알림.
+ *
+ * 승인 뒤 본문 편집은 심사를 거치지 않는다(재심사 대기열을 만들지 않기로 했다) — 그래서
+ * 운영자가 "무엇이 바뀌었는지"를 알 유일한 경로가 이 메일과 심사 화면의 표시
+ * (`AdminProjectDetail.creatorEditedAt`)다.
+ *
+ * 마지막 안내는 "심사 화면의 개설자에게 보이는 메모로 연락"까지만 적는다 — 관리자
+ * 화면에는 공개된 프로젝트를 종료(status: closed)로 바꾸는 버튼이 아직 없다
+ * (`pages/admin/funding/projects/[id].tsx`, 보관은 미심사 상태에서만 가능하다). 없는
+ * 경로를 안내하면 운영자가 화면에서 찾아 헤매게 된다.
+ */
+export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Promise<string | null> => {
+  const result = await sendEmail({
+    to: OPERATOR_EMAIL,
+    subject: `[펀딩] 공개된 프로젝트가 수정되었습니다 — ${project.title}`,
+    text: [
+      '개설자가 공개된 프로젝트의 내용을 고쳤습니다. 심사를 거치지 않는 경로입니다.',
+      '',
+      `프로젝트: ${project.title} (id: ${project.id})`,
+      `개설자: ${project.creatorName} <${project.creatorEmail}>`,
+      `공개 주소: ${publicUrl(project.slug)}`,
+      '',
+      `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
+      '',
+      '고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락해 주세요.',
+    ].join('\n'),
+  });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
+
 export const sendReviewDecisionOperatorFallback = async (
   project: AdminProjectDetail,
   action: ReviewDecisionAction,

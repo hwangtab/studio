@@ -8,8 +8,8 @@ import { RewardSectionForm } from '../../../../components/funding/creator/Reward
 import { StorySectionForm } from '../../../../components/funding/creator/StorySectionForm';
 import { submitProject } from '../../../../components/funding/creator/api';
 import {
-  IDLE_SAVE_STATE, REVIEW_STATUS_LABEL, REVIEW_STATUS_NOTICE, canEditInBrowser,
-  type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
+  IDLE_SAVE_STATE, REVIEW_STATUS_LABEL, REVIEW_STATUS_NOTICE, canEditSectionInBrowser,
+  type CreatorSectionName, type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
 } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
 import { computeEarliestStartDate, toKstDateString } from '../../../../lib/funding/creatorDateInput';
@@ -87,7 +87,9 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
   const [agreedTerms, setAgreedTerms] = useState(false);
 
-  const readOnly = !canEditInBrowser(project.reviewStatus);
+  // 구획별 판정 — 서버(lib/funding/reviewTransition.ts의 canCreatorEditSection)와 같은 단위다.
+  // 승인 뒤에는 basic·story만 열리고 rewards는 통째로 닫힌다.
+  const ro = (section: CreatorSectionName) => !canEditSectionInBrowser(project.reviewStatus, section);
   const notice = REVIEW_STATUS_NOTICE[project.reviewStatus];
   // 본문이 3차 범위라 판본이 빈 문자열인 동안은 화면도 동의를 요구하지 않는다 —
   // lib/funding/policy.ts의 FUNDING_CREATOR_TERMS_VERSION 주석과 같은 조건이다.
@@ -170,7 +172,8 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
                 startAt: project.startAt, endAt: project.endAt,
               }}
               earliestStartDate={earliestStartDate}
-              readOnly={readOnly}
+              readOnly={ro('basic')}
+              lockedFields={project.reviewStatus === 'approved'}
               onSaved={(value: BasicSectionValue) => setProject((p) => ({ ...p, ...value }))}
             />
           </div>
@@ -178,7 +181,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
             <StorySectionForm
               projectId={project.id}
               initial={project.content}
-              readOnly={readOnly}
+              readOnly={ro('story')}
               onSaved={(content: string) => setProject((p) => ({ ...p, content }))}
             />
           </div>
@@ -186,7 +189,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
             <RewardSectionForm
               projectId={project.id}
               initial={project.rewards}
-              readOnly={readOnly}
+              readOnly={ro('rewards')}
               onSaved={(rewards: EditorReward[]) => setProject((p) => ({ ...p, rewards }))}
             />
           </div>
@@ -194,7 +197,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
             <CreatorSectionForm
               projectId={project.id}
               initial={project.creator}
-              readOnly={readOnly}
+              readOnly={false}
               onSaved={(value: EditorCreatorProfile) => setProject((p) => ({ ...p, creator: value }))}
             />
           </div>
@@ -207,7 +210,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
                 type="checkbox"
                 className="mt-0.5"
                 checked={agreedTerms}
-                disabled={readOnly}
+                disabled={ro('basic')}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
               />
               <span>
@@ -221,7 +224,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
           <div className="flex items-center gap-3">
             <Button
               onClick={handleSubmitReview}
-              disabled={readOnly || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
+              disabled={ro('basic') || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
             >
               {submit.status === 'saving' ? '신청 중…' : '심사 신청'}
             </Button>
