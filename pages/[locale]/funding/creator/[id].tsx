@@ -90,6 +90,11 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
   // 구획별 판정 — 서버(lib/funding/reviewTransition.ts의 canCreatorEditSection)와 같은 단위다.
   // 승인 뒤에는 basic·story만 열리고 rewards는 통째로 닫힌다.
   const ro = (section: CreatorSectionName) => !canEditSectionInBrowser(project.reviewStatus, section);
+  // 심사 신청은 draft·changes_requested에서만 가능하다(reviewTransition.ts의 TABLE에
+  // approved → submit 전이가 없다). approved도 basic 구획 자체는 열려 있어 `ro('basic')`만
+  // 보면 이미 공개된 프로젝트에서도 버튼이 활성화된다 — 서버가 409로 막아 기능은
+  // 안전하지만, 상단 "공개된 프로젝트입니다" 안내와 모순되는 버튼·체크박스가 남는다.
+  const canSubmitForReview = !ro('basic') && project.reviewStatus !== 'approved';
   const notice = REVIEW_STATUS_NOTICE[project.reviewStatus];
   // 본문이 3차 범위라 판본이 빈 문자열인 동안은 화면도 동의를 요구하지 않는다 —
   // lib/funding/policy.ts의 FUNDING_CREATOR_TERMS_VERSION 주석과 같은 조건이다.
@@ -210,7 +215,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
                 type="checkbox"
                 className="mt-0.5"
                 checked={agreedTerms}
-                disabled={ro('basic')}
+                disabled={!canSubmitForReview}
                 onChange={(e) => setAgreedTerms(e.target.checked)}
               />
               <span>
@@ -224,7 +229,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
           <div className="flex items-center gap-3">
             <Button
               onClick={handleSubmitReview}
-              disabled={ro('basic') || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
+              disabled={!canSubmitForReview || submit.status === 'saving' || (requiresTerms && !agreedTerms)}
             >
               {submit.status === 'saving' ? '신청 중…' : '심사 신청'}
             </Button>

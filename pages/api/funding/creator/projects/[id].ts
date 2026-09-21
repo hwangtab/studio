@@ -52,22 +52,60 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * `loadProjectForAdmin`은 관리자 조회라 정산 필드(`taxType` 등)와 `internalNote`를
    * 담고 있다 — 그 결과를 이 라우트의 응답에 싣지 않는다. 메일 함수에만 넘긴다.
    */
+  // 메일 실패(또는 예기치 않은 예외)가 이미 성공한 저장 응답까지 끌고 내려가면 안 된다 —
+  // 저장은 커밋됐는데 핸들러가 던져 500이 나가는 것은 이 라우트가 막으려던 바로 그 종류의
+  // 상태 불일치다(리뷰 지적, 2026-09-21).
   const notifyIfApprovedEdit = async (wasApproved: boolean): Promise<void> => {
     if (!wasApproved) return;
-    if (!(await consumeRateLimit(`funding_creator_edit:${projectId}`, 1, 3600))) return;
-    const detail = await loadProjectForAdmin(projectId);
-    if (!detail) return;
-    const error = await sendCreatorEditedNotice(detail);
-    if (error) console.error('[funding] 개설자 수정 알림 실패:', error);
+    try {
+      if (!(await consumeRateLimit(`funding_creator_edit:${projectId}`, 1, 3600))) return;
+      const detail = await loadProjectForAdmin(projectId);
+      if (!detail) return;
+      const error = await sendCreatorEditedNotice(detail);
+      if (error) console.error('[funding] 개설자 수정 알림 실패:', error);
+    } catch (error: unknown) {
+      console.error('[funding] 개설자 수정 알림 처리 중 오류:', error);
+    }
   };
 
   if (section === 'basic') {
-    const validated = validateBasicSection(req.body?.value, new Date());
-    if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
     // wasApproved는 저장 전 상태를 봐야 한다 — saveBasicSection이 상태를 바꾸지는 않지만
-    // 읽는 순서를 분명히 해 둔다.
+    // 읽는 순서를 분명히 해 둔다. 검증보다 먼저 읽는 이유는 아래 참조.
     const before = await loadProjectForCreator(auth.creatorId, projectId);
     const wasApproved = before?.reviewStatus === 'approved';
+
+    /**
+     * 승인된 프로젝트는 모금 기간이 후원자와의 약속이라 바꿀 수 없다
+     * (`creatorProjectWrite.ts`의 `basicLockedViolation`). 그런데 화면(`BasicSectionForm`)은
+     * 잠긴 날짜 필드도 폼 값에 실어 **매번 함께** 보낸다 — 저장 자체를 막는 것이 아니라
+     * 입력을 비활성화만 해 두었기 때문이다. `validateBasicSection`은 상태와 무관하게
+     * `startAt >= now + leadDays`를 요구하므로, 모금이 이미 시작된(startAt이 과거인)
+     * 승인 프로젝트는 이 검증에서 **항상** 400을 받는다 — `guard()`도 `basicLockedViolation`도
+     * 닿기 전에 막힌다. 리뷰에서 재현된 회귀다(2026-09-21): 승인 뒤에는 기본정보를 영원히
+     * 저장할 수 없었다.
+     *
+     * 요청의 날짜를 검증 전에 DB의 실제 값으로 강제 치환한다 — 이러면 승인된 프로젝트의
+     * 날짜가 검증 단계에서 구조적으로 절대 바뀔 수 없다(치환한 값이 곧 기존 값이니 이후
+     * `basicLockedViolation`도 항상 무위반).
+     *
+     * **치환만으로는 부족하다** — 치환한 값이 기존 시작일 그대로라도, 그 값 자체가 이미
+     * 지난 날짜(모금이 시작된 뒤)일 수 있고, `leadDays` 검사는 "누가 왜 보냈는지"가 아니라
+     * "값이 미래인지"만 본다. 그래서 이미 확정된 날짜를 다시 검증할 필요가 없는 이
+     * 경로에서만 리드타임 기준 시각을 실제 `now`가 아니라 epoch로 넘긴다 — 실제 연도의
+     * 어떤 시작일도 `1970-01-04`(`leadDays`만큼 뒤)보다는 뒤이므로 이 검사가 항상
+     * 통과한다. `validateBasicSection`은 고치지 않는다 — 이미 있는 `now` 매개변수를 호출부가
+     * 다르게 넘길 뿐이라, 승인 여부를 아는 별도 플래그를 검증기 시그니처에 추가하지 않고도
+     * 된다. `saveBasicSection`의 `basicLockedViolation`은 그대로 둔다 — 서비스 계층을 직접
+     * 부르는 경로(예: 다른 API·스크립트)에 대한 방어가 남아야 한다.
+     */
+    const rawValue = (req.body?.value ?? {}) as Record<string, unknown>;
+    const value = wasApproved && before
+      ? { ...rawValue, startAt: before.startAt.toISOString(), endAt: before.endAt.toISOString() }
+      : rawValue;
+    const validationNow = wasApproved ? new Date(0) : new Date();
+
+    const validated = validateBasicSection(value, validationNow);
+    if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
     const result = await saveBasicSection(auth.creatorId, projectId, validated.value);
     if (result.ok) await notifyIfApprovedEdit(wasApproved);
     return respondWriteResult(res, result);

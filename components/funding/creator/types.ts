@@ -82,7 +82,11 @@ export const REVIEW_STATUS_LABEL: Record<string, string> = {
   rejected: '반려·보관',
 };
 
-/** 읽기 전용 상태에서 상단에 띄우는 안내. draft·changes_requested는 여기 없다(편집 가능이라 안내가 필요 없다). */
+/**
+ * 상단에 띄우는 상태 안내. draft·changes_requested는 여기 없다(구획이 전부 열려 있어
+ * 안내가 필요 없다). `approved`는 구획별로는 일부(basic·story) 편집 가능하지만 — 완전한
+ * 읽기 전용은 아니다 — 무엇이 열리고 무엇이 막히는지를 안내가 직접 설명한다.
+ */
 export const REVIEW_STATUS_NOTICE: Record<string, string> = {
   submitted: '심사 중입니다. 심사가 끝날 때까지는 내용을 고칠 수 없습니다.',
   approved: '공개된 프로젝트입니다. 본문과 제목·요약·표지는 지금도 고칠 수 있고, 고치면 운영자에게 알림이 갑니다. 주소·목표 금액·모금 기간과 리워드는 후원자와의 약속이라 바꿀 수 없습니다.',

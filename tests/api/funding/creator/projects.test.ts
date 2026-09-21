@@ -16,6 +16,10 @@ jest.mock('../../../../lib/funding/projects', () => ({
   ...jest.requireActual('../../../../lib/funding/projects'),
   getFundingProject: jest.fn().mockReturnValue(null),
 }));
+// 승인 뒤 저장 알림(sendCreatorEditedNotice)을 목으로 대체한다 — 실제 메일 발송(Resend)을
+// 타지 않고, "호출됐는가/무엇을 받았는가"만 본다. reviewEmail.ts의 다른 export는 이
+// 라우트가 쓰지 않으므로 목에 없어도 된다.
+jest.mock('../../../../lib/funding/reviewEmail', () => ({ sendCreatorEditedNotice: jest.fn().mockResolvedValue(null) }));
 
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -31,6 +35,8 @@ import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 // eslint-disable-next-line import/first
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
+// eslint-disable-next-line import/first
+import { sendCreatorEditedNotice } from '../../../../lib/funding/reviewEmail';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -54,6 +60,7 @@ beforeEach(async () => {
   (isAllowedContactRequestOrigin as jest.Mock).mockReturnValue(true);
   (consumeRateLimit as jest.Mock).mockResolvedValue(true);
   (authenticateCreatorApi as jest.Mock).mockResolvedValue({ ok: true, creatorId: CREATOR_A });
+  (sendCreatorEditedNotice as jest.Mock).mockResolvedValue(null);
 
   await client.execute('DELETE FROM funding_rewards');
   await client.execute('DELETE FROM funding_projects');
@@ -327,6 +334,129 @@ describe('POST /api/funding/creator/projects/[id] (구획별 저장)', () => {
   it('Cache-Control: no-store가 실린다', async () => {
     const r = await call(sectionHandler, { method: 'GET', query: { id: 'x' } });
     expect(r.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
+  });
+});
+
+describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 우회·알림)', () => {
+  /**
+   * 모금이 이미 시작된(startAt이 과거인) 승인 프로젝트를 심는다. `validateBasicSection`은
+   * 상태와 무관하게 `startAt >= now + leadDays(3일)`를 요구하므로, 이 시드로 회귀를 재현할
+   * 수 있다 — startAt을 미래로 두면 지금 코드도 통과해 회귀를 못 잡는다(리뷰 지적).
+   */
+  const seedLiveApprovedProject = (overrides: Partial<typeof schema.fundingProjects.$inferInsert> = {}) =>
+    seedDraftProject(CREATOR_A, {
+      reviewStatus: 'approved',
+      status: 'auto',
+      slug: 'live-project',
+      title: '기존 제목',
+      summary: '기존 요약',
+      content: '본문',
+      coverUrl: '/api/funding/media/cover.webp',
+      goalAmount: 1_000_000,
+      startAt: new Date(Date.now() - 10 * 86_400_000),
+      endAt: new Date(Date.now() + 10 * 86_400_000),
+      ...overrides,
+    });
+
+  it('모금이 이미 시작된 승인 프로젝트에서 제목만 바꾸면 200이고 제목이 실제로 바뀐다', async () => {
+    const project = await seedLiveApprovedProject();
+    // 화면(BasicSectionForm)은 잠긴 날짜 필드도 폼 값에 실어 매번 함께 보낸다 — 여기서도
+    // 미래 날짜를 그대로 보낸다. 서버가 이 값을 무시하고 DB의 기존 날짜로 강제 치환해야
+    // (validateBasicSection의 leadDays 검사를 우회해야) 저장이 통과한다.
+    const r = await call(sectionHandler, {
+      query: { id: project.id },
+      body: {
+        section: 'basic',
+        value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000, title: '새 제목' },
+      },
+    });
+    expect(r.status).toBe(200);
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
+    expect(row?.title).toBe('새 제목');
+    // 날짜는 그대로다 — 요청이 보낸 미래 날짜가 아니라 시드된 기존 값(초 단위로 저장되므로
+    // Date.now()를 여기서 다시 계산하지 않고 시드 자체의 startAt과 비교한다)이 유지됐다.
+    expect(row?.startAt.getTime()).toBe(project.startAt.getTime());
+  });
+
+  it('초안 저장에는 운영자 메일이 가지 않는다', async () => {
+    const project = await seedDraftProject(CREATOR_A);
+    const r = await call(sectionHandler, { query: { id: project.id }, body: { section: 'basic', value: VALID_BASIC } });
+    expect(r.status).toBe(200);
+    expect(sendCreatorEditedNotice).not.toHaveBeenCalled();
+  });
+
+  it('승인 뒤 저장에는 운영자 메일이 간다', async () => {
+    const project = await seedLiveApprovedProject();
+    const r = await call(sectionHandler, {
+      query: { id: project.id },
+      body: { section: 'basic', value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000 } },
+    });
+    expect(r.status).toBe(200);
+    expect(sendCreatorEditedNotice).toHaveBeenCalledTimes(1);
+  });
+
+  it('알림 레이트리밋 키는 프로젝트별이다 — funding_creator_edit:<projectId>를 1시간에 1회로 부른다', async () => {
+    const project = await seedLiveApprovedProject();
+    const seen: Array<[string, number, number]> = [];
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string, limit: number, windowSeconds: number) => {
+      seen.push([key, limit, windowSeconds]);
+      return Promise.resolve(true);
+    });
+    await call(sectionHandler, {
+      query: { id: project.id },
+      body: { section: 'basic', value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000 } },
+    });
+    expect(seen).toEqual(expect.arrayContaining([[`funding_creator_edit:${project.id}`, 1, 3600]]));
+  });
+
+  it('창 안의 두 번째 저장은 알림을 억제한다 — 레이트리밋이 막으면 메일을 부르지 않는다', async () => {
+    const project = await seedLiveApprovedProject();
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(!key.startsWith('funding_creator_edit:')));
+    const r = await call(sectionHandler, {
+      query: { id: project.id },
+      body: { section: 'basic', value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000 } },
+    });
+    expect(r.status).toBe(200); // 알림 억제는 저장 자체를 막지 않는다.
+    expect(sendCreatorEditedNotice).not.toHaveBeenCalled();
+  });
+
+  it('loadProjectForAdmin의 정산·내부 메모 필드가 저장 응답에 새지 않는다', async () => {
+    await mockDb.update(schema.fundingCreators).set({
+      taxType: 'withholding',
+      payoutBankName: '국민은행',
+      payoutAccount: '123-456-789012',
+      payoutHolder: '개설자',
+    }).where(eq(schema.fundingCreators.id, CREATOR_A));
+    const project = await seedLiveApprovedProject();
+    await mockDb.update(schema.fundingProjects).set({ internalNote: '운영자 전용 메모' })
+      .where(eq(schema.fundingProjects.id, project.id));
+
+    const r = await call(sectionHandler, {
+      query: { id: project.id },
+      body: { section: 'basic', value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000 } },
+    });
+    expect(r.status).toBe(200);
+    const serialized = JSON.stringify(r.body);
+    expect(serialized).not.toContain('taxType');
+    expect(serialized).not.toContain('payoutBankName');
+    expect(serialized).not.toContain('국민은행');
+    expect(serialized).not.toContain('123-456-789012');
+    expect(serialized).not.toContain('운영자 전용 메모');
+  });
+
+  it('알림 메일 처리가 던져도(throw) 저장은 실패하지 않는다', async () => {
+    (sendCreatorEditedNotice as jest.Mock).mockRejectedValueOnce(new Error('resend 장애'));
+    const project = await seedLiveApprovedProject();
+    const r = await call(sectionHandler, {
+      query: { id: project.id },
+      body: { section: 'basic', value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000, title: '던져도 저장됨' } },
+    });
+    expect(r.status).toBe(200);
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
+    expect(row?.title).toBe('던져도 저장됨');
   });
 });
 
