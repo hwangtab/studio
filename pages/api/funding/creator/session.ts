@@ -1,8 +1,17 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
+import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { loginCreatorSession } from '../../../../lib/funding/creatorAuth';
 import { consumeCreatorLoginToken } from '../../../../lib/funding/creatorToken';
+import { sendCreatorSessionFailureAlert } from '../../../../lib/funding/email';
+
+/**
+ * 세션 생성 실패 알림의 창. login.ts의 전역 캡 알림과 같은 이유로 레이트리밋을 태운다 —
+ * 이 경로가 계속 실패하는 동안 알림이 실패 횟수만큼 쏟아지면 그것이 두 번째 사고다.
+ * 원인(Turso 순간 장애 등)이 오래가도 운영자는 한 시간에 한 통이면 충분히 알아챈다.
+ */
+const SESSION_FAILURE_ALERT_WINDOW_SECONDS = 3600;
 
 /**
  * 매직링크 토큰을 소진해 개설자 세션을 심는다.
@@ -35,6 +44,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ ok: false, message: '링크가 만료됐거나 이미 사용되었습니다.' });
   }
 
-  await loginCreatorSession(req, res, consumed.creatorId);
+  try {
+    await loginCreatorSession(req, res, consumed.creatorId);
+  } catch (error: unknown) {
+    // 토큰은 이미 소진됐다 — 되돌릴 수 없다(위 주석 참조). 화면에는 401과 다른 응답을
+    // 줘서 "만료됐거나 이미 사용됨"이라는, 여기서는 사실이 아닌 문구를 반복하지 않게 한다.
+    console.error('[funding] 개설자 세션 생성 실패:', error);
+    if (await consumeRateLimit('creator_session_failure:alert', 1, SESSION_FAILURE_ALERT_WINDOW_SECONDS)) {
+      const alertError = await sendCreatorSessionFailureAlert();
+      if (alertError) console.error('[funding] 개설자 세션 실패 알림 오류:', alertError);
+    }
+    return res.status(500).json({
+      ok: false,
+      message: '일시적인 오류로 로그인하지 못했습니다. 잠시 후 새 링크로 다시 시도해 주세요.',
+    });
+  }
   return res.status(200).json({ ok: true });
 }

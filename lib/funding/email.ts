@@ -240,3 +240,30 @@ export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | nu
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
+
+/**
+ * 매직링크 토큰은 소진됐는데 세션 생성이 던졌을 때의 운영자 알림.
+ *
+ * `pages/api/funding/creator/session.ts`는 토큰을 먼저 소진하고 나서 세션을 만든다(순서를
+ * 바꾸면 세션 생성 실패 시 "유효한 세션 + 안 쓴 토큰"이 남는 더 나쁜 상태가 된다). 그래서
+ * 이 실패는 개설자에게는 새 링크를 받아도 반복되는 장애로 보이는데 화면에는 원인이 없다 —
+ * 운영자가 모르면 "로그인이 안 된다"는 문의가 들어와야 비로소 알게 된다.
+ *
+ * 무엇이 잘못됐는지는 여기서 지어내지 않는다 — 서버 로그(console.error)에 실제 에러가
+ * 남으므로, 메일은 "이 경로가 실패하고 있다"는 신호만 전달한다.
+ */
+export const sendCreatorSessionFailureAlert = async (): Promise<string | null> => {
+  const result = await sendEmail({
+    to: OPERATOR_EMAIL,
+    subject: '[펀딩] 개설자 로그인 세션 생성이 실패했습니다',
+    text: [
+      '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났습니다.',
+      '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막힙니다.',
+      '',
+      '원인은 서버 로그에서 확인해야 합니다(이 메일은 "실패하고 있다"는 신호만 전달합니다).',
+      '',
+      `개설자 목록: ${SITE_URL}/admin/funding/projects`,
+    ].join('\n'),
+  });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
