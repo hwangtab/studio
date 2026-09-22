@@ -53,14 +53,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 판정이 끝난 행을 draft로 되돌려 reviewTransition.ts의 표를 우회한다. 영향 행이 0이면
   // 그 사이 상태가 바뀐 것이므로 409로 되돌린다.
   //
+  // submittedAt을 같은 UPDATE에서 비운다 — 남겨 두면 review_status='draft'인데
+  // submitted_at은 옛 값 그대로라 /admin/funding/projects가 "제출 시각"에 옛 날짜를
+  // 보여주고 submittedAt DESC 정렬에서 미제출 초안보다 위로 올라간다. 재제출하면
+  // submit.ts가 다시 찍는다.
+  //
   // creator_terms_version은 건드리지 않는다 — 재제출 때 submit.ts가 다시 찍는다.
   const result = await getDb().update(fundingProjects).set({
     reviewStatus: next,
+    submittedAt: null,
     updatedAt: now,
   }).where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus as FundingReviewStatus)));
 
   if (Number(result.rowsAffected) === 0) {
-    return res.status(409).json({ ok: false, message: '지금 상태에서는 철회할 수 없습니다.' });
+    // reviewDecision.ts(운영자 승인·반려 경로)의 같은 상황과 같은 문구다 — 여기서만 다르게
+    // 말하면 "왜 갑자기 안 되지"에 대한 답이 화면마다 달라진다. 이 409는 위(!next)와
+    // 달리 경합(그 사이 운영자가 먼저 확정)이라 새로고침하면 최신 상태가 보인다.
+    return res.status(409).json({ ok: false, message: '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.' });
   }
 
   try {

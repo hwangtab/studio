@@ -113,6 +113,12 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
     const result = await submitProject(project.id, requiresTerms ? FUNDING_CREATOR_TERMS_VERSION : undefined);
     if (result.ok) {
       setSubmit({ status: 'success' });
+      // handleWithdraw가 성공 시 setSubmit(IDLE_SAVE_STATE)로 반대 상태를 지우는 것과
+      // 대칭이다. 없으면: 철회(withdraw.status='success') → 같은 화면에서 오타 고쳐
+      // 재제출 → reviewStatus는 'submitted'로 바뀌는데 withdraw.status는 'success'로
+      // 남아, 철회 버튼이 (withdraw.status !== 'success' 조건에 걸려) 다시 나타나지
+      // 않는다. 상단 안내는 "철회할 수 있다"고 말하는데 버튼이 없는 거짓 상태가 된다.
+      setWithdraw(IDLE_SAVE_STATE);
       setProject((p) => ({ ...p, reviewStatus: 'submitted' }));
     } else {
       setSubmit({ status: 'error', message: result.message });

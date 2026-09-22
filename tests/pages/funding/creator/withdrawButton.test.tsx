@@ -70,6 +70,37 @@ it('철회 버튼을 누르면 withdraw API를 부르고, 성공하면 draft로 
   expect(screen.queryByRole('button', { name: /심사 신청 철회/ })).not.toBeInTheDocument();
 });
 
+it('철회 후 같은 화면에서 재제출하면 철회 버튼이 다시 나타나고, "철회했습니다" 문구는 사라진다 (I1 회귀)', async () => {
+  // handleSubmitReview가 handleWithdraw와 대칭으로 withdraw 상태를 초기화하지 않으면:
+  // 철회(withdraw.status='success') → 재제출(reviewStatus='submitted') 뒤에도
+  // withdraw.status가 'success'로 남아 철회 버튼 블록이 (withdraw.status !== 'success'
+  // 조건에 걸려) 다시 그려지지 않고, "심사 신청을 철회했습니다"와 "심사를 신청했습니다"가
+  // 동시에 뜬다. 상단 안내("아래에서 철회할 수 있습니다")가 거짓이 되는 상태다.
+  global.fetch = jest.fn()
+    .mockResolvedValueOnce({ ok: true, json: async () => ({ ok: true }) }) // withdraw
+    .mockResolvedValueOnce({ ok: true, json: async () => ({ ok: true }) }); // submit
+
+  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+
+  fireEvent.click(screen.getByRole('button', { name: /심사 신청 철회/ }));
+  await waitFor(() => {
+    expect(screen.getByText(/심사 신청을 철회했습니다/)).toBeInTheDocument();
+  });
+
+  // draft로 돌아왔으니 재제출할 수 있다 — 약관 동의 체크 후 심사 신청.
+  fireEvent.click(screen.getByRole('checkbox'));
+  fireEvent.click(screen.getByRole('button', { name: '심사 신청' }));
+
+  await waitFor(() => {
+    expect(screen.getByText('심사를 신청했습니다.')).toBeInTheDocument();
+  });
+  // "철회했습니다" 문구는 남아 있으면 안 된다 — 방금 다시 제출했다.
+  expect(screen.queryByText(/심사 신청을 철회했습니다/)).not.toBeInTheDocument();
+  // 다시 submitted 상태이므로 철회 버튼이 되돌아와야 한다 — 안내가 "철회할 수 있다"고
+  // 말하는 상태에서 버튼이 없으면 그 안내가 거짓이 된다.
+  expect(screen.getByRole('button', { name: /심사 신청 철회/ })).toBeInTheDocument();
+});
+
 it('철회가 실패하면 서버 메시지를 그대로 보여주고 버튼은 그대로 남는다', async () => {
   global.fetch = jest.fn().mockResolvedValue({
     ok: false,

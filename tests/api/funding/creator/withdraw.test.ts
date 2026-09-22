@@ -164,6 +164,15 @@ it('정상 → 200이고 reviewStatus가 draft로 돌아간다', async () => {
   expect(row?.reviewStatus).toBe('draft');
 });
 
+it('철회하면 submitted_at이 비워진다 — 남으면 관리자 목록에서 "제출 시각"이 옛 값으로 남고 정렬이 뒤틀린다', async () => {
+  const project = await seedProject();
+  expect(project.submittedAt).not.toBeNull();
+  await call({ id: project.id });
+
+  const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
+  expect(row?.submittedAt).toBeNull();
+});
+
 it('철회하면 다시 편집·재제출할 수 있는 상태(draft)가 된다 — creator_terms_version은 건드리지 않는다', async () => {
   const project = await seedProject({ creatorTermsVersion: 'funding-creator-terms-2026-09-01', creatorTermsAgreedAt: new Date() });
   await call({ id: project.id });
@@ -209,6 +218,9 @@ it('읽은 뒤(경합) 운영자가 먼저 승인해 버리면 409 — approved�
 
   const r = await call({ id: project.id });
   expect(r.status).toBe(409);
+  // reviewDecision.ts(운영자 승인·반려 경로)의 같은 경합 상황과 같은 문구다 — 위
+  // "approved에서는 철회할 수 없다"(전이표가 애초에 막는 경우)와는 다른 메시지다.
+  expect(r.body.message).toBe('그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');
 
   const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
   expect(row?.reviewStatus).toBe('approved');
