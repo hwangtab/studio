@@ -293,7 +293,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         return;
       }
       const json = await res.json();
-      if (!res.ok) { setError(json.message ?? '펀딩 신청에 실패했습니다.'); return; }
+      if (!res.ok) { setError(json.message ?? '후원 신청에 실패했습니다.'); return; }
       if (typeof json.orderNo === 'string') rememberOrderNo(json.orderNo);
 
       /**
@@ -378,7 +378,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
             <p className="typo-card-meta">{reward.title}</p>
           </div>
         ) : (
-          <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="펀딩 금액에 따라 돌려드릴 구성입니다." />
+          <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="후원 금액에 따라 돌려드릴 구성입니다." />
         )}
         {!lockedReward && (
         <div className="space-y-2">
@@ -407,7 +407,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
             </Field>
           </div>
           <div>
-            <Field id={`${uid}-add`} label="추가 펀딩 금액" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
+            <Field id={`${uid}-add`} label="추가 후원금" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
               <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
                 onChange={(e) => setAdditionalText(e.target.value)}
                 onKeyDown={handleNumericEnter}
@@ -418,7 +418,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
       </fieldset>
 
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-backer`}>
-        <StepHeader id={`${uid}-step-backer`} n={lockedReward ? 1 : 2} title="서포터 정보" hint="펀딩 확인 메일과 리워드 발송에 씁니다." />
+        <StepHeader id={`${uid}-step-backer`} n={lockedReward ? 1 : 2} title="후원자 정보" hint="펀딩 확인 메일과 리워드 발송에 씁니다." />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-name`} label="이름" required>
@@ -487,7 +487,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
             결제 약관 동의까지 셋이 비슷해 보인다. 약관 동의는 제출 버튼 옆으로 옮겼다. */}
         <label className="mt-5 flex cursor-pointer items-start gap-3">
           <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-          <span className="text-sm text-gray-700 dark:text-gray-200">서포터 명단에 이름과 응원 메시지 공개</span>
+          <span className="text-sm text-gray-700 dark:text-gray-200">후원자 명단에 이름과 응원 메시지 공개</span>
         </label>
       </fieldset>
 

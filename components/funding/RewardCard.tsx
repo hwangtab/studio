@@ -80,7 +80,7 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
       >
         {body}
         <span className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 font-semibold text-white shadow-md transition-colors group-hover:bg-primary-dark">
-          이 리워드로 펀딩하기
+          이 리워드로 후원하기
         </span>
       </Link>
     </BaseCard>

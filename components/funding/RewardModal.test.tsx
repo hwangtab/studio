@@ -86,7 +86,7 @@ describe('RewardModal', () => {
     expect(screen.getByText('10,000원')).toBeInTheDocument();
     expect(screen.queryByText(/펀딩 폼 대역/)).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
     // 폼은 페이지와 같은 PledgeWizard이고, 고른 리워드가 그대로 넘어간다.
     expect(screen.getByText('펀딩 폼 대역 · mp3')).toBeInTheDocument();
   });
@@ -105,7 +105,7 @@ describe('RewardModal', () => {
     const onClose = jest.fn();
     renderModal(REWARD, onClose);
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     await user.keyboard('{Escape}');
@@ -126,7 +126,7 @@ describe('RewardModal', () => {
     renderModal();
     expect(lastTrapState()).toBe(true);
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     expect(lastTrapState()).toBe(true);
@@ -137,7 +137,7 @@ describe('RewardModal', () => {
     const onClose = jest.fn();
     const { rerender } = renderModal();
 
-    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
     expect(screen.getByText(/펀딩 폼 대역/)).toBeInTheDocument();
 
     const other: FundingReward = { ...REWARD, id: 'wav', title: 'WAV 16bit', amount: 30000 };
@@ -177,7 +177,7 @@ describe('포커스 복원 시점', () => {
     trigger.focus();
 
     renderModal();
-    await user.click(screen.getByRole('button', { name: '이 리워드로 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: '이 리워드로 후원하기' }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     expect(document.activeElement).not.toBe(trigger);

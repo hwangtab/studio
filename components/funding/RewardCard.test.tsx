@@ -8,7 +8,7 @@ it('금액·남은 수량·배송·전달 시기와 펀딩 링크를 보여준�
   expect(screen.getByText('30,000원')).toBeInTheDocument();
   expect(screen.getByText(/3개 남음/)).toBeInTheDocument();
   expect(screen.getByText(/배송/)).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /이 리워드로 펀딩하기/ })).toHaveAttribute('href', '/ko/funding/demo/pledge?reward=cd');
+  expect(screen.getByRole('link', { name: /이 리워드로 후원하기/ })).toHaveAttribute('href', '/ko/funding/demo/pledge?reward=cd');
 });
 it('품절이면 링크 대신 품절 배지', () => {
   render(<RewardCard reward={reward} remaining={0} pledgeHref="/x" canPledge />);

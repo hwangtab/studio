@@ -258,20 +258,20 @@ it('clear_refund_request: 사유가 없으면 400이고 아무것도 안 바꾼�
   expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
 });
 
-it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 서포터에게 메일을 보낸다', async () => {
+it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 후원자에게 메일을 보낸다', async () => {
   const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested('paid', '기존 메모'));
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '서포터 전화 철회' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '후원자 전화 철회' });
   expect(r.status).toBe(200);
   const written = set.mock.calls[0][0];
   expect(written.refundRequestedAt).toBeNull();
   // 덮어쓰지 않는다 — 기존 메모가 사라지면 그것도 기록 손실이다.
-  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 서포터 전화 철회$/);
+  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 후원자 전화 철회$/);
   const mailArgs = (sendFundingRefundRequestClearedEmails as jest.Mock).mock.calls[0];
   expect(mailArgs[0]).toMatchObject({ orderNo: 'FND-1' });
-  expect(mailArgs[2]).toBe('서포터 전화 철회');
+  expect(mailArgs[2]).toBe('후원자 전화 철회');
 });
 
 it('clear_refund_request: 메모가 없던 건은 항목 하나로 시작한다', async () => {
@@ -419,7 +419,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload(new Date('2026-09-20T01:00:00Z'), '기존 메모'));
 
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '서포터가 파일을 못 받았다고 확인' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '후원자가 파일을 못 받았다고 확인' });
 
   expect(r.status).toBe(200);
   const values = set.mock.calls[0][0];
@@ -427,7 +427,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
   expect(values.downloadedAt).toBeNull();
   // 기존 메모를 덮어쓰지 않는다. 왜 지웠는지가 남아야 나중에 확인할 수 있다.
   expect(String(values.adminMemo)).toContain('기존 메모');
-  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 서포터가 파일을 못 받았다고 확인');
+  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 후원자가 파일을 못 받았다고 확인');
 });
 
 it('clear_download_record: 사유의 개행을 접어 한 줄로 남긴다 — 메모 판정이 줄 단위다', async () => {

@@ -126,7 +126,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
    */
   const handleClearRefundRequest = () => {
     const reason = window.prompt(
-      '서포터가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 서포터에게 확인 메일이 나갑니다).',
+      '후원자가 직접 철회 의사를 밝힌 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 남고 후원자에게 확인 메일이 나갑니다).',
     );
     if (reason === null) return;
     if (!reason.trim()) {
@@ -163,7 +163,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
    */
   const handleClearDownloadRecord = () => {
     const reason = window.prompt(
-      '서포터가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
+      '후원자가 파일을 받지 못했다고 확인된 경우에만 사용하세요. 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다).',
     );
     if (reason === null) return;
     if (!reason.trim()) {
@@ -208,7 +208,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               토스는 가상계좌 취소에 환불받을 계좌(은행·계좌번호·예금주)를 필수로 요구하는데, 우리는 그 값을
               받는 화면이 없습니다. 아래 “환불”을 눌러도 실패합니다.
               <span className="block mt-2">
-                서포터에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 약관 제10조에 따라
+                후원자에게 환불 계좌를 받아 <strong>토스 콘솔에서 직접 취소</strong>해 주세요. 약관 제10조에 따라
                 접수일부터 3영업일 이내입니다. 취소하면 웹훅 대사가 이 화면의 상태를 맞춥니다.
               </span>
             </div>
@@ -216,14 +216,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
 
           {pledge.refundRequested && (
             <div className="mb-4 p-4 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
-              <strong className="block mb-1">서포터가 취소를 요청했습니다 — 계좌 환불 대기</strong>
+              <strong className="block mb-1">후원자가 취소를 요청했습니다 — 계좌 환불 대기</strong>
               {pledge.refundRequestedAt ? `${formatKstDateTimeFull(pledge.refundRequestedAt)}에 접수되었습니다. ` : ''}
               무통장은 자동 환불이 되지 않아 운영자가 계좌로 직접 송금해야 합니다.
               약관 제10조에 따라 접수일부터 3영업일 이내에 처리해 주세요.
               <span className="block mt-2">
-                <strong>이 펀딩은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 서포터가 요청을 철회했다면
+                <strong>이 펀딩은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
                 “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다. 철회 처리에는 사유가 필요하며,
-                사유는 관리자 메모에 남고 서포터에게 확인 메일이 나갑니다.
+                사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.
               </span>
             </div>
           )}
@@ -263,7 +263,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="등록 경로" value={pledge.entrySource === 'manual' ? '수기 등록' : '온라인'} />
                 <DescriptionRow label="고객" value={`${pledge.customerName} / ${pledge.customerPhone} / ${pledge.customerEmail}`} />
                 <DescriptionRow label="리워드" value={`${pledge.rewardTitle} × ${pledge.quantity}`} />
-                <DescriptionRow label="추가 펀딩 금액" value={`${formatPriceAmount(pledge.additionalAmount)}원`} />
+                <DescriptionRow label="추가 후원금" value={`${formatPriceAmount(pledge.additionalAmount)}원`} />
                 <DescriptionRow label="합계" value={`${formatPriceAmount(pledge.totalAmount)}원`} />
                 <DescriptionRow label="발송 상태" value={FULFILLMENT_LABELS[pledge.fulfillmentStatus] ?? pledge.fulfillmentStatus} />
                 <DescriptionRow label="배송지" value={pledge.shipping ?? '없음'} />

@@ -32,14 +32,14 @@ rewards:
 describe('ProjectDetailView', () => {
   it('interactive가 false이면 후원 버튼(리워드 카드의 펀딩 링크)을 그리지 않는다', () => {
     render(<ProjectDetailView project={project} state="live" status={null} interactive={false} />);
-    expect(screen.queryByRole('link', { name: /이 리워드로 펀딩하기/ })).toBeNull();
-    // 히어로의 "펀딩하기" 스크롤 CTA도 마찬가지로 없어야 한다.
-    expect(screen.queryByRole('link', { name: '펀딩하기' })).toBeNull();
+    expect(screen.queryByRole('link', { name: /이 리워드로 후원하기/ })).toBeNull();
+    // 히어로의 "후원하기" 스크롤 CTA도 마찬가지로 없어야 한다.
+    expect(screen.queryByRole('link', { name: '후원하기' })).toBeNull();
   });
 
   it('interactive가 true이고 상태가 live면 후원 버튼을 그린다', () => {
     render(<ProjectDetailView project={project} state="live" status={{ pledgedAmount: 0, backerCount: 0 }} interactive />);
-    expect(screen.getByRole('link', { name: /이 리워드로 펀딩하기/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /이 리워드로 후원하기/ })).toBeInTheDocument();
   });
 
   // 미리보기 표시는 `interactive`로 갈린다 — `status`로 가르면 공개 페이지가 마운트 직후
@@ -114,7 +114,7 @@ describe('ProjectDetailView', () => {
    * 순서가 뒤집히면 순환 카드의 존재 이유가 사라진다: 본문이 길어서, 아래쪽 목록만으로는
    * 리워드를 고르는 순간 응원이 한 글자도 보이지 않는다.
    */
-  it('응원 메시지 순환 카드는 서포터 명단보다 앞에 온다', () => {
+  it('응원 메시지 순환 카드는 후원자 명단보다 앞에 온다', () => {
     render(
       <ProjectDetailView
         project={project}
@@ -127,7 +127,7 @@ describe('ProjectDetailView', () => {
     );
 
     const ticker = screen.getByRole('region', { name: '응원 메시지' });
-    const wall = screen.getByRole('region', { name: '함께한 서포터' });
+    const wall = screen.getByRole('region', { name: '함께한 후원자' });
     // eslint-disable-next-line no-bitwise
     expect(ticker.compareDocumentPosition(wall) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });

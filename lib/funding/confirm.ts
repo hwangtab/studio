@@ -122,7 +122,7 @@ const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean 
 };
 
 const GENERIC = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
-const EXPIRED = '결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.';
+const EXPIRED = '결제 대기 시간이 만료된 펀딩입니다. 다시 후원해 주세요.';
 const RECORDING_FAILED = '결제는 완료되었으나 펀딩 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
 
 const success = (order: FundingOrder, emailSent?: boolean): FundingConfirmOutcome => ({

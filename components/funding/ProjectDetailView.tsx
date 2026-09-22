@@ -120,7 +120,7 @@ export default function ProjectDetailView({
               href="#rewards"
               className="hidden h-14 lg:inline-flex items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
             >
-              펀딩하기
+              후원하기
             </a>
           ) : null
         }
@@ -193,7 +193,7 @@ export default function ProjectDetailView({
                   <div
                     className="mt-4 h-2.5 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700"
                     role="progressbar"
-                    aria-label="펀딩 달성률"
+                    aria-label="후원 달성률"
                     aria-valuenow={0}
                     aria-valuemin={0}
                     aria-valuemax={100}
@@ -206,7 +206,7 @@ export default function ProjectDetailView({
             {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
                 리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
             <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
-            <p className="typo-card-meta mt-1">펀딩 금액에 따라 돌려드릴 구성입니다.</p>
+            <p className="typo-card-meta mt-1">후원 금액에 따라 돌려드릴 구성입니다.</p>
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
                 <RewardCard

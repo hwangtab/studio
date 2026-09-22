@@ -58,6 +58,6 @@ describe('하단 고정 바 ↔ 카카오 FAB 겹침', () => {
   it('바가 안 보이는 상태면 아무것도 렌더하지 않는다', () => {
     const { container } = render(<FundingMobileCta visible={false} />);
     expect(container.querySelector('div.fixed')).toBeNull();
-    expect(screen.queryByText('펀딩하기')).toBeNull();
+    expect(screen.queryByText('후원하기')).toBeNull();
   });
 });

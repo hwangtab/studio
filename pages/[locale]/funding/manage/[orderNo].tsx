@@ -55,8 +55,8 @@ export default function FundingManagePage(p: Props) {
       // 여기서 즉답해도 화면에는 최대 몇 분 뒤 반영된다 — 그걸 말하지 않으면
       // "철회가 안 됐다"는 문의가 온다.
       setConfirmMessage(json.displayNamePublic
-        ? '서포터 명단에 이름을 공개합니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
-        : '서포터 명단에서 이름을 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
+        ? '후원자 명단에 이름을 공개합니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
+        : '후원자 명단에서 이름을 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
     } catch {
       setDisplayNamePublic(previous); setError('네트워크 오류가 발생했습니다.');
     } finally { setNameBusy(false); }
@@ -134,7 +134,7 @@ export default function FundingManagePage(p: Props) {
                       className="h-4 w-4 accent-primary"
                       checked={displayNamePublic}
                       disabled={nameBusy}
-                      aria-label="서포터 명단에 이름 공개"
+                      aria-label="후원자 명단에 이름 공개"
                       onChange={(e) => void updateDisplayName(e.target.checked)}
                     />
                     <span>{displayNamePublic ? '공개' : '비공개'}</span>
@@ -158,7 +158,7 @@ export default function FundingManagePage(p: Props) {
           {p.downloads.length > 0 && (
             <div className="mt-6 space-y-2">
               {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 메일
-                  링크를 긁는 봇이 서포터의 청약철회권을 없애지 못한다. */}
+                  링크를 긁는 봇이 후원자의 청약철회권을 없애지 못한다. */}
               {p.downloads.map((d) => (
                 <form key={d.key} method="post" action="/api/funding/download">
                   <input type="hidden" name="orderNo" value={p.orderNo} />
@@ -187,7 +187,7 @@ export default function FundingManagePage(p: Props) {
           )}
         </div>
 
-        {/* 전자상거래법 제13조 2항 — 계약 성립 뒤 서포터가 도달하는 문서에는 청약철회·환불 조건에
+        {/* 전자상거래법 제13조 2항 — 계약 성립 뒤 후원자가 도달하는 문서에는 청약철회·환불 조건에
             닿는 경로가 있어야 한다. 이 화면은 FundingTrustNotice를 두르지 않아 링크가 없었다.
             공개 목적지라 rel="noreferrer" — 이 URL에는 관리 토큰이 실린다(위 주석 참조). */}
         <p className="typo-card-meta mt-6">

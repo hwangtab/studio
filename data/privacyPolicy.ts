@@ -114,7 +114,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '8. 펀딩 개인정보의 보유·이용 기간',
-        body: `펀딩으로 수집한 개인정보는 ${PRIVACY_RETENTION_TEXT} 보관한 뒤 지체 없이 파기합니다. 다만 ${PRIVACY_LEGAL_RETENTION_TEXT} 서포터가 펀딩을 취소해 환불이 완료된 경우에도 이 거래기록 보존 의무는 그대로 적용됩니다.`,
+        body: `펀딩으로 수집한 개인정보는 ${PRIVACY_RETENTION_TEXT} 보관한 뒤 지체 없이 파기합니다. 다만 ${PRIVACY_LEGAL_RETENTION_TEXT} 후원자가 펀딩을 취소해 환불이 완료된 경우에도 이 거래기록 보존 의무는 그대로 적용됩니다.`,
       },
       {
         heading: '9. 펀딩 개인정보의 처리위탁',
@@ -146,10 +146,10 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '드리는 결과 보고서에도 개인의 이름과 이메일 주소는 싣지 않으며, 법인·단체 매체는 공개 ' +
           '도메인으로, 개인 기자·평론가는 인원 집계로만 적습니다.',
       },
-      // 13~14항은 펀딩 프로젝트를 **개설하는** 아티스트 전용이다. 6~9항(서포터)과 대상이 다르다.
+      // 13~14항은 펀딩 프로젝트를 **개설하는** 아티스트 전용이다. 6~9항(후원자)과 대상이 다르다.
       // 항 제목을 '펀딩'으로 시작하지 않게 두는 것이 중요하다 — 약관 §13이 참조하는 목록
-      // (FUNDING_PRIVACY_SECTION_HEADINGS)은 `/^\d+\. 펀딩/`으로 뽑히는 서포터 절이고,
-      // 개설자 절이 거기 섞이면 서포터 약관이 개설자 항을 가리키게 된다.
+      // (FUNDING_PRIVACY_SECTION_HEADINGS)은 `/^\d+\. 펀딩/`으로 뽑히는 후원자 절이고,
+      // 개설자 절이 거기 섞이면 후원자 약관이 개설자 항을 가리키게 된다.
       {
         heading: '13. 개설자(아티스트) 계정 정보의 수집 항목과 수집 시점',
         body:

@@ -44,7 +44,7 @@ const NOT_FOUND = { ok: false, message: '펀딩 내역을 찾을 수 없습니�
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
-  if (req.method !== 'POST') return res.status(405).json({ ok: false, message: '내려받기는 펀딩 확인 페이지의 버튼으로 시작해 주세요.' });
+  if (req.method !== 'POST') return res.status(405).json({ ok: false, message: '내려받기는 후원 확인 페이지의 버튼으로 시작해 주세요.' });
 
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_download:ip:${ip}`, 60, 3600)))

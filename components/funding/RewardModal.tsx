@@ -93,7 +93,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
       >
         <div className="glass-bar sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-100 px-5 py-4 dark:border-gray-700">
           <p className="typo-card-meta truncate">
-            {step === 'detail' ? '리워드' : '펀딩하기'} · {project.title}
+            {step === 'detail' ? '리워드' : '후원하기'} · {project.title}
           </p>
           <button
             ref={closeButtonRef}
@@ -138,13 +138,13 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 onClick={() => setStep('pledge')}
                 className="mt-6 inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
               >
-                {soldOut ? '품절' : '이 리워드로 펀딩하기'}
+                {soldOut ? '품절' : '이 리워드로 후원하기'}
               </button>
             </div>
           ) : (
             <>
               <h2 id="reward-modal-title" className="sr-only">
-                {reward.title} 펀딩하기
+                {reward.title} 후원하기
               </h2>
               <PledgeWizard
                 project={project}

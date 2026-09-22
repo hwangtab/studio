@@ -104,27 +104,27 @@ const typeInto = async (input: HTMLInputElement, value: string) => {
   await userEvent.type(input, value);
 };
 
-it('추가 펀딩 금액을 한 글자씩 타이핑할 수 있다 — 중간 글자에서 0으로 깎이지 않는다', async () => {
+it('추가 후원금을 한 글자씩 타이핑할 수 있다 — 중간 글자에서 0으로 깎이지 않는다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  const input = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
   await typeInto(input, '5000');
   expect(input.value).toBe('5000');
   await userEvent.tab();
   expect(input.value).toBe('5000');
 });
 
-it('추가 펀딩 금액은 blur 때 1,000원 단위로 내림된다', async () => {
+it('추가 후원금은 blur 때 1,000원 단위로 내림된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  const input = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
   await typeInto(input, '5500');
   expect(input.value).toBe('5500');
   await userEvent.tab();
   expect(input.value).toBe('5000');
 });
 
-it('추가 펀딩 금액을 비우면 0으로 폴백된다', async () => {
+it('추가 후원금을 비우면 0으로 폴백된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  const input = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
   await userEvent.clear(input);
   expect(input.value).toBe('');
   await userEvent.tab();
@@ -204,16 +204,16 @@ it('결제하기를 누르면 서버로 termsAgreed: true가 나간다', async (
 });
 
 // 실명 공개는 옵트인이어야 한다 — 기본 체크는 후원자가 모르는 사이에 이름이 명단에 올라간다.
-it('서포터 명단 이름 공개는 기본 해제', () => {
+it('후원자 명단 이름 공개는 기본 해제', () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
 });
 
 // 상한 없이 두면 5,000,000원을 넘긴 값이 그대로 서버로 가서 400으로 튕긴다 —
 // 입력 단계에서 잘라내야 후원자가 이유 없이 실패를 본다는 느낌을 받지 않는다.
-it('추가 펀딩 금액은 blur에서 MAX_ADDITIONAL_AMOUNT로 클램프된다', async () => {
+it('추가 후원금은 blur에서 MAX_ADDITIONAL_AMOUNT로 클램프된다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  const input = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
+  const input = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
   await typeInto(input, '99999999');
   await userEvent.tab();
   expect(Number(input.value)).toBe(MAX_ADDITIONAL_AMOUNT);
@@ -235,7 +235,7 @@ it('숫자 칸에서 Enter로 바로 제출해도 서버에는 정규화된 수�
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.type(screen.getByLabelText(/추가 펀딩 금액/), '{selectall}5500');
+  await userEvent.type(screen.getByLabelText(/추가 후원금/), '{selectall}5500');
   const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
   await userEvent.type(quantityInput, '{selectall}12{Enter}');
   // 수량 칸은 blur 없이 Enter로 끝나 `12`가 그대로 남은 상태에서 제출됐다.
@@ -250,15 +250,15 @@ it('숫자 칸에서 Enter로 바로 제출해도 서버에는 정규화된 수�
 it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남는다', async () => {
   (global.fetch as jest.Mock).mockResolvedValue({
     ok: false, status: 400, headers: { get: () => 'application/json' },
-    json: async () => ({ ok: false, message: '펀딩 신청에 실패했습니다.' }),
+    json: async () => ({ ok: false, message: '후원 신청에 실패했습니다.' }),
   });
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
+  const additionalInput = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
   await userEvent.type(additionalInput, '{selectall}5500{Enter}');
-  expect(await screen.findByRole('alert')).toHaveTextContent('펀딩 신청에 실패했습니다.');
+  expect(await screen.findByRole('alert')).toHaveTextContent('후원 신청에 실패했습니다.');
   expect(additionalInput).toHaveValue(5000);
 });
 
@@ -412,7 +412,7 @@ describe('임시 저장', () => {
     const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
     await typeInto(quantityInput, '2');
     await userEvent.tab();
-    const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
+    const additionalInput = screen.getByLabelText(/추가 후원금/) as HTMLInputElement;
     await typeInto(additionalInput, '2000');
     await userEvent.tab();
     await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
@@ -422,7 +422,7 @@ describe('임시 저장', () => {
     // initialRewardId가 그대로 다시 주어지므로 첫 리워드(cd)로 되돌아온다 — "감사 메일" 선택은 안 남는다.
     expect(await screen.findByLabelText(/CD/)).toBeChecked();
     expect(screen.getByLabelText('수량')).toHaveValue(1);
-    expect(screen.getByLabelText(/추가 펀딩 금액/)).toHaveValue(0);
+    expect(screen.getByLabelText(/추가 후원금/)).toHaveValue(0);
     expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
   });
 
@@ -483,11 +483,11 @@ describe('모달에서 여는 경우 (lockedReward · stickySummary)', () => {
     expect(screen.queryByText('고르신 리워드')).toBeNull();
   });
 
-  it('잠그면 서포터 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
+  it('잠그면 후원자 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
     const { container } = render(
       <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
     );
-    expect(container.textContent).toContain('서포터 정보');
+    expect(container.textContent).toContain('후원자 정보');
     expect(screen.queryByText('리워드', { selector: 'h2,h3' })).toBeNull();
   });
 
@@ -711,7 +711,7 @@ describe('약관 동의 찾기', () => {
     renderForm();
     const checkboxes = screen.getAllByRole('checkbox');
     expect(checkboxes).toHaveLength(1);
-    expect(checkboxes[0]).toHaveAccessibleName(/서포터 명단에 이름과 응원 메시지 공개/);
+    expect(checkboxes[0]).toHaveAccessibleName(/후원자 명단에 이름과 응원 메시지 공개/);
     expect(screen.queryByLabelText(/약관/)).toBeNull();
   });
 

@@ -31,7 +31,7 @@ const summaryLines = (order: FundingOrder, project: FundingProject | null): stri
   return [
     `프로젝트: ${project?.title ?? p.projectSlug}`,
     `리워드: ${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 펀딩 ${formatPriceAmount(p.additionalAmount)}원` : ''}`,
-    `펀딩 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
+    `후원 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
     ...(reward ? [`예상 전달 시기: ${reward.estimatedDelivery}`] : []),
     `주문번호: ${order.orderNo}`,
   ];
@@ -48,7 +48,7 @@ const withdrawalLines = (order: FundingOrder): string[] => [
   '',
   '[청약철회 안내]',
   '· 기한: 프로젝트 마감 전이고 리워드 발송 준비가 시작되기 전이면 언제든 취소하고 전액 환불받을 수 있습니다. 리워드를 받은 뒤에는 받은 날부터 7일 이내에 청약철회할 수 있습니다(표시·광고와 다르거나 계약 내용과 다르게 이행된 경우에는 받은 날부터 3개월 이내, 그 사실을 안 날부터 30일 이내).',
-  `· 방법: 펀딩 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
+  `· 방법: 후원 확인 페이지(${manageUrl(order)})에서 직접 취소하거나, 이 메일에 회신 또는 ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}으로 알려 주세요. 환불은 접수일부터 3영업일 이내에 처리합니다.`,
   `· 약관 전문(청약철회·환불 규정 포함): ${SITE_URL}/ko/funding/terms`,
 ];
 
@@ -106,7 +106,7 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
     '',
     '[음원 내려받기]',
     ...reward.downloads.map((d) => `· ${d.label}`),
-    `아래 펀딩 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
+    `아래 후원 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
     '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];
 };

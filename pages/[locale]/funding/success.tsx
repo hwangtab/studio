@@ -99,7 +99,7 @@ const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
   not_found: '펀딩 내역을 찾을 수 없습니다. 주문번호를 확인해 주세요.',
   amount_mismatch: '결제 금액이 펀딩 내용과 일치하지 않습니다.',
   invalid_state: '이미 처리되었거나 만료된 펀딩입니다.',
-  hold_expired: '결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.',
+  hold_expired: '결제 대기 시간이 만료된 펀딩입니다. 다시 후원해 주세요.',
   toss_rejected: '결제 승인이 거절되었습니다. 다시 시도하시거나 다른 결제수단을 이용해 주세요.',
   recording_failed: '결제는 완료되었으나 펀딩 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정됩니다.',
 };

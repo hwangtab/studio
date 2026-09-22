@@ -588,7 +588,7 @@ export const assessSelfCancel = (input: { orderStatus: string; projectState: Pro
 
 export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true }>['code'], string> = {
   not_paid: '결제가 확정된 후원만 취소할 수 있습니다.',
-  project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
+  project_not_live: '후원 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
 };
 ```
