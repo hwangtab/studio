@@ -24,11 +24,16 @@ export interface FundingProjectActionResult {
  *   — 타입에서는 문자열이라는 것만 강제하고, 빈 문자열 거부는 여전히 서버 몫이다.
  * - `set_review_note`·`set_internal_note`는 메모만 갈아 끼운다. 둘 다 빈 값을 보낼 수
  *   있다(메모를 지우는 경로).
+ * - `close`·`reopen`·`hide`·`unhide`는 승인된 프로젝트의 공개 상태(status)·목록 노출
+ *   (hidden)을 바꾼다. 심사 판정과 다른 축이라 별도 액션이다(`lib/funding/publicStatusDecision.ts`).
+ *   `close`만 서버가 빈 메모를 거부한다 — 개설자가 "왜 멈췄는지" 알아야 하기 때문이다.
  */
 export type FundingProjectPatchBody =
   | { action: 'approve'; slug?: string; note?: string }
   | { action: 'request_changes' | 'reject' | 'archive'; note: string }
-  | { action: 'set_review_note' | 'set_internal_note'; note?: string };
+  | { action: 'set_review_note' | 'set_internal_note'; note?: string }
+  | { action: 'close'; note: string }
+  | { action: 'reopen' | 'hide' | 'unhide'; note?: string };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
   try {

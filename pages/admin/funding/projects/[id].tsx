@@ -262,6 +262,44 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
     return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim() }), '보관 처리했습니다.');
   };
 
+  const handleClose = () => {
+    const reason = window.prompt('종료 사유를 적어 주세요 (개설자에게 메일로 전달됩니다).');
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('종료는 사유가 있어야 합니다.');
+      return;
+    }
+    if (
+      !window.confirm(
+        `종료하면 /funding/${project.slug} 페이지는 그대로 남지만 더 이상 새 후원을 받지 않습니다. 나중에 다시 열 수 있습니다. 종료할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(() => patchFundingProject(project.id, { action: 'close', note: reason.trim() }), '종료했습니다.');
+  };
+
+  const handleReopen = () => {
+    if (!window.confirm(`다시 열면 /funding/${project.slug}에서 즉시 새 후원을 받습니다. 다시 열까요?`)) return;
+    return run(() => patchFundingProject(project.id, { action: 'reopen' }), '다시 열었습니다.');
+  };
+
+  const handleHide = () => {
+    if (
+      !window.confirm(
+        `숨기면 /funding 목록과 사이트맵에서 빠지지만, /funding/${project.slug} 주소를 아는 사람은 여전히 볼 수 있고 후원도 계속 받습니다. 숨길까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(() => patchFundingProject(project.id, { action: 'hide' }), '목록에서 숨겼습니다.');
+  };
+
+  const handleUnhide = () => {
+    if (!window.confirm('다시 노출하면 /funding 목록과 사이트맵에 다시 나타납니다. 다시 노출할까요?')) return;
+    return run(() => patchFundingProject(project.id, { action: 'unhide' }), '다시 노출했습니다.');
+  };
+
   const canDecide = project.reviewStatus === 'submitted';
   // 보관은 심사 대기중뿐 아니라 작성중·보완요청 상태의 방치된 프로젝트를 치우는 것이
   // 목적이라 세 상태 모두에서 가능하다. 승인된 프로젝트는 공개된 것이라 status를
@@ -472,6 +510,36 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
               보관
             </Button>
           </div>
+
+          {project.reviewStatus === 'approved' && (
+            <div>
+              <h2 className="text-lg font-bold text-gray-900 mb-3">공개 상태</h2>
+              <p className="mb-3 text-sm text-gray-500">
+                종료는 &ldquo;모금을 멈춘다&rdquo;이고 숨김은 &ldquo;목록·사이트맵에서 뺀다&rdquo;입니다 — 서로
+                다른 조작이라 둘 다 필요할 수도, 하나만 필요할 수도 있습니다. 둘 다 되돌릴 수 있습니다.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {project.status === 'closed' ? (
+                  <Button light disabled={busy} onClick={handleReopen}>
+                    다시 열기
+                  </Button>
+                ) : (
+                  <Button light variant="outline" disabled={busy} onClick={handleClose}>
+                    종료
+                  </Button>
+                )}
+                {project.hidden ? (
+                  <Button light variant="secondary" disabled={busy} onClick={handleUnhide}>
+                    목록에 다시 노출
+                  </Button>
+                ) : (
+                  <Button light variant="secondary" disabled={busy} onClick={handleHide}>
+                    목록에서 숨기기
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="mb-6">
             <h2 className="text-lg font-bold text-gray-900 mb-1">개설자에게 보이는 메모</h2>

@@ -2,7 +2,13 @@ jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ o
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
-import { sendCreatorEditedNotice, sendReviewDecisionEmail, sendReviewDecisionOperatorFallback } from './reviewEmail';
+import {
+  sendCreatorEditedNotice,
+  sendReviewDecisionEmail,
+  sendReviewDecisionOperatorFallback,
+  sendPublicStatusEmail,
+  sendPublicStatusOperatorFallback,
+} from './reviewEmail';
 
 import type { AdminProjectDetail } from './adminProjects';
 
@@ -133,6 +139,68 @@ describe('sendReviewDecisionOperatorFallback', () => {
     (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'TIMEOUT' });
     expect(
       await sendReviewDecisionOperatorFallback(project, 'reject', 'old-slug', 'creator:API_ERROR'),
+    ).toBe('operator:TIMEOUT');
+  });
+});
+
+describe('sendPublicStatusEmail', () => {
+  it('종료 메일 — 제목·페이지가 남는다는 안내·운영자 메모, 승인 메일과 제목이 다르다', async () => {
+    expect(await sendPublicStatusEmail(project, 'close', '가격 표기 오류 발견', 'old-slug')).toBeNull();
+    const call = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(call.to).toBe('creator@example.com');
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 종료되었습니다 — 강정피스앤뮤직캠프');
+    expect(call.subject).not.toBe('[스튜디오 놀] 펀딩 프로젝트가 승인되었습니다 — 강정피스앤뮤직캠프');
+    expect(call.text).toContain('/ko/funding/old-slug');
+    expect(call.text).toContain('가격 표기 오류 발견');
+    expect(call.text).toContain('더 이상 후원을 받지 않습니다');
+  });
+
+  it('다시 열기 메일 — 제목·공개 주소, 메모가 없으면 [운영자 메모] 섹션이 없다', async () => {
+    await sendPublicStatusEmail(project, 'reopen', null, 'old-slug');
+    const call = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 다시 공개되었습니다 — 강정피스앤뮤직캠프');
+    expect(call.text).toContain('/ko/funding/old-slug');
+    expect(call.text).not.toContain('[운영자 메모]');
+  });
+
+  it('숨김 메일 — 목록·사이트맵에서 빠진다는 것과 주소를 아는 사람은 여전히 볼 수 있다는 것을 함께 말한다', async () => {
+    await sendPublicStatusEmail(project, 'hide', null, 'old-slug');
+    const call = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 목록에서 숨겨졌습니다 — 강정피스앤뮤직캠프');
+    expect(call.text).toContain('목록·사이트맵에서 숨겨졌습니다');
+    expect(call.text).toContain('여전히 페이지를 볼 수 있습니다');
+  });
+
+  it('노출 메일 — 제목·공개 주소', async () => {
+    await sendPublicStatusEmail(project, 'unhide', null, 'old-slug');
+    const call = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(call.subject).toBe('[스튜디오 놀] 펀딩 프로젝트가 다시 목록에 노출됩니다 — 강정피스앤뮤직캠프');
+    expect(call.text).toContain('/ko/funding/old-slug');
+  });
+
+  it('메일 발송 실패는 실패 사유 문자열을 돌려준다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'API_ERROR' });
+    expect(await sendPublicStatusEmail(project, 'close', '사유', 'old-slug')).toBe('creator:API_ERROR');
+  });
+});
+
+describe('sendPublicStatusOperatorFallback', () => {
+  it('수신자는 운영자이고, 본문에 개설자 이메일·변경 종류·실패 사유·관리자 심사 링크가 들어간다', async () => {
+    expect(
+      await sendPublicStatusOperatorFallback(project, 'close', 'old-slug', 'creator:API_ERROR'),
+    ).toBeNull();
+    const call = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(call.to).toBe(OPERATOR_EMAIL);
+    expect(call.text).toContain('creator@example.com');
+    expect(call.text).toContain('펀딩 프로젝트가 종료되었습니다');
+    expect(call.text).toContain('creator:API_ERROR');
+    expect(call.text).toContain(`/admin/funding/projects/${project.id}`);
+  });
+
+  it('폴백 메일 발송도 실패하면 operator: 접두 실패 사유 문자열을 돌려준다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'TIMEOUT' });
+    expect(
+      await sendPublicStatusOperatorFallback(project, 'hide', 'old-slug', 'creator:API_ERROR'),
     ).toBe('operator:TIMEOUT');
   });
 });

@@ -6,8 +6,14 @@ import { fundingProjects } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
 import { decideProject, type AdminReviewAction, type DecisionResult } from '../../../../../lib/funding/reviewDecision';
+import { decidePublicStatus, type PublicStatusAction, type PublicStatusResult } from '../../../../../lib/funding/publicStatusDecision';
 import { revalidateFundingPaths } from '../../../../../lib/funding/revalidate';
-import { sendReviewDecisionEmail, sendReviewDecisionOperatorFallback } from '../../../../../lib/funding/reviewEmail';
+import {
+  sendReviewDecisionEmail,
+  sendReviewDecisionOperatorFallback,
+  sendPublicStatusEmail,
+  sendPublicStatusOperatorFallback,
+} from '../../../../../lib/funding/reviewEmail';
 
 /** DecisionResult의 실패 code → HTTP 상태. Step 1 규약 그대로. */
 const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], number> = {
@@ -23,6 +29,17 @@ const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], num
 const REVIEW_ACTIONS: readonly AdminReviewAction[] = ['approve', 'request_changes', 'reject', 'archive'];
 const isReviewAction = (value: unknown): value is AdminReviewAction =>
   typeof value === 'string' && (REVIEW_ACTIONS as readonly string[]).includes(value);
+
+/** `publicStatusDecision.ts`의 실패 code → HTTP 상태. */
+const PUBLIC_STATUS_HTTP: Record<Exclude<PublicStatusResult, { ok: true }>['code'], number> = {
+  not_found: 404,
+  conflict: 409,
+  incomplete: 400,
+};
+
+const PUBLIC_STATUS_ACTIONS: readonly PublicStatusAction[] = ['close', 'reopen', 'hide', 'unhide'];
+const isPublicStatusAction = (value: unknown): value is PublicStatusAction =>
+  typeof value === 'string' && (PUBLIC_STATUS_ACTIONS as readonly string[]).includes(value);
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -167,6 +184,56 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (error: unknown) {
       console.error(`[funding] 판정 후속 처리(재검증·메일) 실패 (id=${id}, action=${action}):`, error);
       warnings.push('판정 후 재검증·메일 처리 중 오류가 발생했습니다. 상태를 직접 확인해 주세요.');
+    }
+
+    return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+  }
+
+  /**
+   * 승인된 프로젝트의 공개 상태(status: closed/auto)·목록 노출(hidden)을 바꾼다.
+   * `decideProject`와 다른 함수(`decidePublicStatus`)를 쓴다 — 심사 상태(reviewStatus)
+   * 전이표와는 다른 축이고, approved는 그 표에서 되감을 수 없는 종결 상태이기 때문이다.
+   * 후속 처리(재검증·메일) 구조는 위 판정 블록과 동일하게 맞춘다 — 실패해도 200 + warnings.
+   */
+  if (isPublicStatusAction(b.action)) {
+    const action = b.action;
+    const note = typeof b.note === 'string' ? b.note : undefined;
+
+    let result: PublicStatusResult;
+    try {
+      result = await decidePublicStatus(id, action, { note }, now);
+    } catch (error: unknown) {
+      console.error(`[funding] decidePublicStatus 예외 (id=${id}, action=${action}):`, error);
+      return res.status(500).json({ ok: false, message: '처리 중 오류가 났습니다. 잠시 후 다시 시도해 주세요.' });
+    }
+
+    if (!result.ok) {
+      return res.status(PUBLIC_STATUS_HTTP[result.code]).json({ ok: false, message: result.message });
+    }
+
+    const warnings: string[] = [];
+    try {
+      // 넷 다 목록(hidden)·상세(status 배지) 어느 한쪽은 반드시 바꾸므로 매번 둘 다 재검증한다.
+      const revalidateError = await revalidateFundingPaths(res, result.slug);
+      if (revalidateError) warnings.push(revalidateError);
+
+      const project = await loadProjectForAdmin(id);
+      if (project) {
+        const mailError = await sendPublicStatusEmail(project, action, note?.trim() || null, result.slug);
+        if (mailError) {
+          warnings.push(mailError);
+          const fallbackError = await sendPublicStatusOperatorFallback(project, action, result.slug, mailError);
+          if (fallbackError) {
+            console.error(`[funding] 운영자 폴백 알림도 실패 (id=${id}, action=${action}):`, fallbackError);
+            warnings.push(`운영자 폴백 알림도 실패했습니다: ${fallbackError}`);
+          }
+        }
+      } else {
+        warnings.push('개설자 정보를 다시 읽지 못해 알림 메일을 보내지 못했습니다.');
+      }
+    } catch (error: unknown) {
+      console.error(`[funding] 공개 상태 변경 후속 처리(재검증·메일) 실패 (id=${id}, action=${action}):`, error);
+      warnings.push('공개 상태 변경 후 재검증·메일 처리 중 오류가 발생했습니다. 상태를 직접 확인해 주세요.');
     }
 
     return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });

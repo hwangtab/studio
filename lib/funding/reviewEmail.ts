@@ -147,10 +147,9 @@ export const sendReviewDecisionEmail = async (
  * 운영자가 "무엇이 바뀌었는지"를 알 유일한 경로가 이 메일과 심사 화면의 표시
  * (`AdminProjectDetail.creatorEditedAt`)다.
  *
- * 마지막 안내는 "심사 화면의 개설자에게 보이는 메모로 연락"까지만 적는다 — 관리자
- * 화면에는 공개된 프로젝트를 종료(status: closed)로 바꾸는 버튼이 아직 없다
- * (`pages/admin/funding/projects/[id].tsx`, 보관은 미심사 상태에서만 가능하다). 없는
- * 경로를 안내하면 운영자가 화면에서 찾아 헤매게 된다.
+ * 마지막 안내는 심사 화면의 "공개 상태" 조작을 가리킨다 — 공개된 프로젝트를 종료
+ * (status: closed)하거나 목록에서 숨기는 것은 그 조작이지 심사 판정(승인·반려·보관)이
+ * 아니다.
  */
 export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Promise<string | null> => {
   const result = await sendEmail({
@@ -165,7 +164,8 @@ export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Prom
       '',
       `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
       '',
-      '고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락해 주세요.',
+      '고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락하거나, 필요하면',
+      '같은 화면의 "공개 상태"에서 종료·숨김으로 대응해 주세요.',
     ].join('\n'),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
@@ -183,6 +183,101 @@ export const sendReviewDecisionOperatorFallback = async (
     '',
     `프로젝트: ${project.title} (id: ${project.id})`,
     `판정: ${REVIEW_SUBJECT[action]}`,
+    `개설자: ${project.creatorName} <${project.creatorEmail}>`,
+    `공개 주소: ${publicUrl(slug)}`,
+    `실패 사유: ${failureReason}`,
+    '',
+    `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
+  ].join('\n');
+
+  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
+
+/**
+ * 승인 뒤 공개 상태(`status`)·목록 노출(`hidden`)을 바꿨을 때의 개설자 알림
+ * (`publicStatusDecision.ts`). 심사 판정(`AdminReviewAction`)과는 별도 축이라 제목·본문을
+ * 공유하지 않는다 — "종료"를 "반려"와 같은 문구로 보내면 개설자가 심사에서 떨어졌다고
+ * 오해한다.
+ */
+export type PublicStatusAction = 'close' | 'reopen' | 'hide' | 'unhide';
+
+const PUBLIC_STATUS_SUBJECT: Record<PublicStatusAction, string> = {
+  close: '펀딩 프로젝트가 종료되었습니다',
+  reopen: '펀딩 프로젝트가 다시 공개되었습니다',
+  hide: '펀딩 프로젝트가 목록에서 숨겨졌습니다',
+  unhide: '펀딩 프로젝트가 다시 목록에 노출됩니다',
+};
+
+/**
+ * `sendReviewDecisionEmail`과 이름·구조를 맞췄다. 메일 실패는 판정을 실패시키지 않고
+ * 실패 사유 문자열만 돌려준다 — 호출부(심사 API)가 화면에 보여준다.
+ */
+export const sendPublicStatusEmail = async (
+  project: AdminProjectDetail,
+  action: PublicStatusAction,
+  note: string | null,
+  slug: string,
+): Promise<string | null> => {
+  const subject = `[스튜디오 놀] ${PUBLIC_STATUS_SUBJECT[action]} — ${project.title}`;
+
+  const bodyByAction: Record<PublicStatusAction, string[]> = {
+    close: [
+      '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않습니다.',
+      '',
+      `프로젝트 페이지는 그대로 남아 있습니다: ${publicUrl(slug)}`,
+      '',
+      '[운영자 메모]',
+      note ?? '',
+      '',
+      `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
+    ],
+    reopen: [
+      '펀딩 프로젝트가 다시 공개되어 후원을 받습니다.',
+      '',
+      `공개 주소: ${publicUrl(slug)}`,
+      ...(note ? ['', '[운영자 메모]', note] : []),
+    ],
+    hide: [
+      '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌습니다. 주소를 아는 사람은 여전히 페이지를 볼 수 있습니다.',
+      '',
+      `페이지 주소: ${publicUrl(slug)}`,
+      ...(note ? ['', '[운영자 메모]', note] : []),
+    ],
+    unhide: [
+      '펀딩 프로젝트가 다시 목록·사이트맵에 노출됩니다.',
+      '',
+      `공개 주소: ${publicUrl(slug)}`,
+      ...(note ? ['', '[운영자 메모]', note] : []),
+    ],
+  };
+
+  const result = await sendEmail({
+    to: project.creatorEmail,
+    replyTo: CUSTOMER_REPLY_TO,
+    subject,
+    text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
+  });
+  return result.ok ? null : `creator:${result.errorCode}`;
+};
+
+/**
+ * 개설자 알림이 실패했을 때의 운영자 폴백 — `sendReviewDecisionOperatorFallback`과 같은
+ * 이유다: 판정은 프로젝트당 한 번뿐이 아니라 되돌릴 수 있는 조작이라도, 실패 사실이 이번
+ * HTTP 응답의 warnings에만 남으면 운영자가 새로고침하는 순간 사라진다.
+ */
+export const sendPublicStatusOperatorFallback = async (
+  project: AdminProjectDetail,
+  action: PublicStatusAction,
+  slug: string,
+  failureReason: string,
+): Promise<string | null> => {
+  const subject = `[펀딩] 공개 상태 변경 알림 메일 실패 — ${project.title}`;
+  const text = [
+    '개설자에게 공개 상태 변경 메일을 보내지 못했습니다. 아래 정보로 직접 연락해 주세요.',
+    '',
+    `프로젝트: ${project.title} (id: ${project.id})`,
+    `변경: ${PUBLIC_STATUS_SUBJECT[action]}`,
     `개설자: ${project.creatorName} <${project.creatorEmail}>`,
     `공개 주소: ${publicUrl(slug)}`,
     `실패 사유: ${failureReason}`,
