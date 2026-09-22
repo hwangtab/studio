@@ -1,7 +1,7 @@
 {
  "note": "개설자가 심사를 신청할 때 동의하는 개설자 약관(FUNDING_CREATOR_TERMS_SECTIONS)의 내용 해시. 내용이 바뀌면 FUNDING_CREATOR_TERMS_VERSION을 먼저 올린 뒤 UPDATE_CREATOR_TERMS_BASELINE=1 로 갱신할 것.",
- "version": "funding-creator-terms-2026-09-21-r3",
- "hash": "3cdd718cd06974237f1c1950d6791627bec0edec6d5d9e3e823a57f06496e92c",
+ "version": "funding-creator-terms-2026-09-22",
+ "hash": "32c3bceb5f98d86a9f7830da26f77696cf3ee559027e07881fd85ba0e7852883",
  "covers": [
   "pages/[locale]/funding/creator-terms.tsx — FUNDING_CREATOR_TERMS_SECTIONS"
  ]
