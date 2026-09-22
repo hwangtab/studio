@@ -112,6 +112,7 @@ export const sendCreatorEmailChangedEmails = async (
  */
 export const sendCreatorAccountOperatorFallback = async (
   what: '이름' | '로그인 이메일',
+  creatorEmail: string,
   previousValue: string,
   nextValue: string,
   reason: string,
@@ -123,6 +124,10 @@ export const sendCreatorAccountOperatorFallback = async (
     text: [
       `개설자에게 계정 ${what} 변경 메일을 보내지 못했습니다. 직접 연락해 주세요.`,
       '',
+      // 수신 주소를 따로 받는다 — 이름 변경이면 이전 값·새 값이 둘 다 이름이라
+      // 본문 어디에도 연락할 주소가 안 나온다. "직접 연락해 주세요"라고 쓰면서
+      // 주소를 빠뜨리면 이 메일이 할 일을 못 한다.
+      `대상 개설자: ${creatorEmail}`,
       `이전 값: ${previousValue}`,
       `새 값: ${nextValue}`,
       `사유: ${reason}`,

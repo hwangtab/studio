@@ -43,7 +43,11 @@ export interface CreatorAccountSuccess {
    * 최대 60초 동안 옛 이름을 보여 준다. 이메일 변경은 공개 화면에 드러나지 않아 빈 배열.
    */
   revalidateSlugs: string[];
-  /** 이메일 변경으로 죽인 살아 있는 로그인 토큰 수. 이름 변경이면 0. */
+  /**
+   * 이메일 변경으로 지운 로그인 토큰 **행** 수. DELETE는 `creator_id`만 보므로 아직 쓸 수
+   * 있는 링크뿐 아니라 이미 만료·소진된 행까지 함께 센다 — "살아 있는 링크가 몇 개였다"로
+   * 읽으면 안 된다. 이름 변경이면 0.
+   */
   revokedTokens: number;
 }
 

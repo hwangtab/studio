@@ -180,6 +180,28 @@ describe('decideCreatorAccount — 이메일', () => {
     expect(result.creatorEmail).toBe('new@example.com');
   });
 
+  it('경합(읽은 뒤 다른 주체가 먼저 바꿈)이면 409이고 토큰도 죽이지 않는다', async () => {
+    const creatorId = await seedCreator('creator@example.com');
+    const projectId = await seedProject(creatorId);
+    await seedToken(creatorId, 'hash-a');
+    // 이름 경로와 깨지는 방식이 다르다 — 여기는 UPDATE와 토큰 DELETE가 한 배치이고,
+    // DELETE는 `updated_at = epoch` EXISTS로 "이 호출이 방금 쓴 행"만 지운다. 경합으로
+    // UPDATE가 0행이면 그 EXISTS가 거짓이라 옛 링크가 그대로 살아 있어야 한다.
+    const stale = await readCreator(creatorId);
+    await mockDb.update(schema.fundingCreators).set({ email: 'someone-else-changed@example.com' })
+      .where(eq(schema.fundingCreators.id, creatorId));
+
+    jest.spyOn(mockDb, 'select').mockImplementationOnce((() => ({
+      from: () => ({ innerJoin: () => ({ where: () => ({ limit: async () => [{ creator: stale }] }) }) }),
+    })) as never);
+
+    const result = await decideCreatorAccount(projectId, 'set_creator_email', { value: 'new@example.com', reason: REASON });
+
+    expect(result).toMatchObject({ ok: false, code: 'conflict' });
+    expect((await readCreator(creatorId)).email).toBe('someone-else-changed@example.com');
+    expect(await countTokens(creatorId)).toBe(1);
+  });
+
   it('형식이 틀리면 거부한다', async () => {
     const creatorId = await seedCreator('creator@example.com');
     const projectId = await seedProject(creatorId);

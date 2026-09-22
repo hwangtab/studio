@@ -312,6 +312,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         warnings.push(mailError);
         const fallbackError = await sendCreatorAccountOperatorFallback(
           action === 'set_creator_name' ? '이름' : '로그인 이메일',
+          result.creatorEmail,
           result.previousValue,
           action === 'set_creator_name' ? result.creatorName : result.creatorEmail,
           reason.trim(),
