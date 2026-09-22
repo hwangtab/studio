@@ -274,6 +274,37 @@ export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | nu
  * 무엇이 잘못됐는지는 여기서 지어내지 않는다 — 서버 로그(console.error)에 실제 에러가
  * 남으므로, 메일은 "이 경로가 실패하고 있다"는 신호만 전달한다.
  */
+/**
+ * 개설자 로그인 링크 메일 자체의 발송 실패를 운영자에게 알린다.
+ *
+ * `sendCreatorLoginEmail`이 실패해도 화면은 그대로 "로그인 링크를 보냈습니다"라고 답한다
+ * (열거 방지). 그래서 이 실패는 개설자에게는 "링크가 안 온다"는 문의로만 드러나고, 문의가
+ * 오기 전까지 운영자는 알 길이 없다. 어느 주소로 보내려다 실패했는지 본문에 그대로 적어야
+ * 운영자가 그 사람에게 직접 연락할 수 있다.
+ *
+ * 창당 한 번만 보낸다 — 발송 실패는 보통 메일 발송사 쪽 장애라 짧은 시간에 여러 개설자에게
+ * 동시에 나므로, 개설자마다 알림을 보내면 그 자체가 쏟아진다. 전역 일일 캡 알림
+ * (`creator_login:global_alert`)과는 겹치는 상황이 다르므로(캡은 "너무 많이 보냈다", 이건
+ * "보내려 했는데 실패했다") 레이트리밋 키를 다르게 둔다 — 같으면 한쪽이 다른 쪽의 하루
+ * 예산을 먹는다.
+ */
+export const sendCreatorLoginMailFailureAlert = async (email: string, reason: string): Promise<string | null> => {
+  const result = await sendEmail({
+    to: OPERATOR_EMAIL,
+    subject: '[펀딩] 개설자 로그인 메일 발송이 실패했습니다',
+    text: [
+      '개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했습니다.',
+      `수신 시도 주소: ${email}`,
+      `실패 사유: ${reason}`,
+      '',
+      '이 개설자는 로그인 링크를 받지 못했을 수 있습니다. 위 주소로 직접 연락해 안내해 주세요.',
+      '',
+      `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
+    ].join('\n'),
+  });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
+
 export const sendCreatorSessionFailureAlert = async (): Promise<string | null> => {
   const result = await sendEmail({
     to: OPERATOR_EMAIL,

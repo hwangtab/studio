@@ -7,7 +7,7 @@ import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
 import { issueCreatorLoginToken, normalizeCreatorEmail } from '../../../../lib/funding/creatorToken';
-import { sendCreatorLoginCapAlert } from '../../../../lib/funding/email';
+import { sendCreatorLoginCapAlert, sendCreatorLoginMailFailureAlert } from '../../../../lib/funding/email';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 
@@ -85,8 +85,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (issued) {
     const url = `${SITE_URL}/ko/funding/creator/auth?token=${encodeURIComponent(issued.rawToken)}`;
     const error = await sendCreatorLoginEmail(email, url);
-    // 메일 실패는 사용자에게 드러내지 않는다(위와 같은 이유). 기록만 남긴다.
-    if (error) console.error('[funding] 개설자 로그인 메일 실패:', error);
+    // 메일 실패는 사용자에게 드러내지 않는다(위와 같은 이유). 기록만 남긴다 + 운영자에게 알린다.
+    if (error) {
+      console.error('[funding] 개설자 로그인 메일 실패:', error);
+      // 알림도 레이트리밋을 탄다(창당 한 번) — 발송사 장애로 여러 개설자가 동시에 실패하면
+      // 그만큼 알림이 쏟아지는 것을 막는다. 키는 전역 캡 알림과 다르다(위 주석 참조).
+      if (await consumeRateLimit('creator_login:mail_failure_alert', 1, DAY_SECONDS)) {
+        const alertError = await sendCreatorLoginMailFailureAlert(email, error);
+        if (alertError) console.error('[funding] 개설자 로그인 메일 실패 알림도 실패:', alertError);
+      }
+    }
   }
   return res.status(200).json(OK);
 }
