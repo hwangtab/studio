@@ -518,7 +518,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           </div>
           <div className="flex items-baseline justify-between gap-4">
             <dt className="typo-card-meta">수량</dt>
-            <dd className="text-sm font-medium text-gray-900 dark:text-white">{quantity}개{additional > 0 ? ` · 추가 펀딩 ${formatPriceAmount(additional)}원` : ''}</dd>
+            <dd className="text-sm font-medium text-gray-900 dark:text-white">{quantity}개{additional > 0 ? ` · 추가 후원금 ${formatPriceAmount(additional)}원` : ''}</dd>
           </div>
           <div className="flex items-baseline justify-between gap-4 border-t border-gray-200 pt-2 dark:border-gray-700">
             <dt className="text-sm font-semibold text-gray-900 dark:text-white">예상 합계</dt>
