@@ -89,11 +89,15 @@ export const setFulfillment = async (input: {
     };
   }
 
-  // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다.
-  const trackingCompany = typeof input.trackingCompany === 'string'
-    ? (input.trackingCompany || null) : pledge.trackingCompany;
-  const trackingNumber = typeof input.trackingNumber === 'string'
-    ? (input.trackingNumber || null) : pledge.trackingNumber;
+  // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다. 명시적
+  // null도 "지우기"로 다룬다 — undefined("이 필드는 안 건드린다")와 null("이 필드를 비워라")을
+  // 구분해야 개설자 폼처럼 값을 갖고 있다가 사용자가 지운 경우를 표현할 수 있다. 관리자
+  // 라우트는 지금 undefined만 넘기므로(문자열이 아니면 무조건 undefined로 변환) 이 분기는
+  // 영향받지 않는다 — null을 실제로 보내는 것은 개설자 경로(다음 태스크)뿐이다.
+  const trackingCompany = input.trackingCompany === undefined
+    ? pledge.trackingCompany : (input.trackingCompany || null);
+  const trackingNumber = input.trackingNumber === undefined
+    ? pledge.trackingNumber : (input.trackingNumber || null);
 
   /**
    * delivered_at은 약관 제13조가 약속한 '리워드 전달 완료 후 1년 파기'의 기산점이다.

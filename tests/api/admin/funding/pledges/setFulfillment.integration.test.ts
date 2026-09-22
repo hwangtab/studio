@@ -172,7 +172,14 @@ it('읽은 뒤 환불 요청이 들어오면 사전 검사가 먼저 잡는다 �
 });
 
 // 같은 경합이 주문 상태 쪽에서도 난다 — 관리자 환불이 먼저 커밋되면 발송은 성립하면 안 된다.
-it('읽은 뒤 주문이 환불되면 UPDATE가 0행 — 409', async () => {
+//
+// 위 환불 요청 테스트와 같은 이유로, 여기서 409를 내는 것도 이제 WHERE가 아니라 setFulfillment의
+// 신선한 not_live 사전 검사다 — 라우트 최상단의 findFundingOrderById만 낡게 만들 수 있고,
+// setFulfillment는 pledgeId로 스스로 다시 읽으므로 그 낡은 스냅샷을 보지 않는다. 원자적
+// UPDATE의 WHERE(EXISTS ... o.status IN (...))는 사전 검사와 UPDATE 사이의 좁은 경합 창을
+// 막는 2차 방어선으로 fulfillment.ts에 남아 있다 — 진짜로 지키는 불변식(409, DB 행 불변)은
+// 그대로다.
+it('읽은 뒤 주문이 환불되면 사전 검사가 먼저 잡는다 — 409', async () => {
   const stale = await jest.requireActual('../../../../../lib/funding/service').findFundingOrderById('order-1');
   expect(stale.status).toBe('paid');
   await client.execute("UPDATE orders SET status = 'refunded' WHERE id = 'order-1'");

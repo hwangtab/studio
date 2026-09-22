@@ -8,6 +8,7 @@
  * 을 확인한다.
  */
 import { createClient, type Client } from '@libsql/client';
+import { eq } from 'drizzle-orm';
 import { drizzle } from 'drizzle-orm/libsql';
 import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -106,12 +107,12 @@ const seedPledgeRow = async (
 /** creatorId가 개설한 프로젝트에 후원 1건을 심는다. */
 const seedPledge = async (
   opts: { creatorId: string; refundRequestedAt?: Date },
-): Promise<{ pledgeId: string }> => {
+): Promise<{ pledgeId: string; slug: string }> => {
   const slug = await seedProject(opts.creatorId);
   const pledgeId = await seedPledgeRow(slug, {
     refundRequestedAt: opts.refundRequestedAt,
   });
-  return { pledgeId };
+  return { pledgeId, slug };
 };
 
 /** 대응하는 funding_projects 행이 없는(=md 정본) 프로젝트의 후원. */
@@ -125,6 +126,16 @@ const readDeliveredAt = async (pledgeId: string): Promise<number | null> => {
   return (r.rows[0] as unknown as { delivered_at: number | null }).delivered_at;
 };
 
+const readPledgeRow = async (pledgeId: string) => {
+  const r = await client.execute({
+    sql: 'SELECT fulfillment_status, tracking_company, tracking_number FROM funding_pledges WHERE id = ?',
+    args: [pledgeId],
+  });
+  return r.rows[0] as unknown as {
+    fulfillment_status: string; tracking_company: string | null; tracking_number: string | null;
+  };
+};
+
 it('개설자는 자기 프로젝트의 후원만 바꿀 수 있다', async () => {
   const creatorA = await seedCreator();
   const creatorB = await seedCreator();
@@ -133,6 +144,60 @@ it('개설자는 자기 프로젝트의 후원만 바꿀 수 있다', async () =
     pledgeId, status: 'shipped', actor: { kind: 'creator', creatorId: creatorB },
   });
   expect(result).toMatchObject({ ok: false, code: 'forbidden' });
+});
+
+/**
+ * 개설자 성공 경로. 지금까지 creator actor를 쓰는 테스트 셋(위 forbidden 둘 +
+ * refund_requested 하나)이 전부 UPDATE 앞에서 반환돼, `${ownerCondition}`이 실린 UPDATE
+ * 문장 자체가 한 번도 실행되지 않고 있었다 — 그 SQL이 깨져도(예: `AND` 누락, 컬럼명 오타로
+ * SQLite 런타임 에러) 이 파일의 어떤 테스트도 못 잡았을 것이다. 이 테스트가 그 문장을
+ * 실제로 실행시킨다.
+ */
+it('개설자는 자기 프로젝트의 후원을 실제로 발송 처리할 수 있다', async () => {
+  const creatorA = await seedCreator();
+  const { pledgeId } = await seedPledge({ creatorId: creatorA });
+  const result = await setFulfillment({
+    pledgeId, status: 'shipped', trackingCompany: 'CJ대한통운', trackingNumber: '111222333',
+    actor: { kind: 'creator', creatorId: creatorA },
+  });
+  expect(result).toEqual({ ok: true });
+  const row = await readPledgeRow(pledgeId);
+  expect(row.fulfillment_status).toBe('shipped');
+  expect(row.tracking_company).toBe('CJ대한통운');
+  expect(row.tracking_number).toBe('111222333');
+});
+
+/**
+ * `${ownerCondition}`을 직접 겨냥한다 — 사전 검사(db.query.fundingProjects.findFirst)는
+ * 통과시키되 UPDATE의 EXISTS(실제 DB)만 걸리는 상황을 만든다. 사전 검사 호출을 낡은
+ * 값으로 한 번 스텁해 "그 사이 프로젝트 소유가 넘어갔다"는 좁은 경합 창을 재현했다 —
+ * tests/api/admin/funding/pledges/setFulfillment.integration.test.ts가 findFundingOrderById를
+ * 스텁해 환불/주문 상태 경합을 재현하는 것과 같은 수법이다. 이게 없으면 `${ownerCondition}`을
+ * 통째로 지워도(2차 방어선이 사라져도) 이 파일의 어떤 테스트도 실패하지 않는다.
+ */
+it('사전 검사 뒤 프로젝트 소유가 바뀌면 UPDATE의 WHERE가 막는다', async () => {
+  const creatorA = await seedCreator();
+  const creatorB = await seedCreator();
+  const { pledgeId, slug } = await seedPledge({ creatorId: creatorA });
+
+  // 사전 검사가 보는 조회만 낡게 고정한다 — "아직 creatorA 소유"라고 알려 준다.
+  // findFirst의 실제 반환 타입(쿼리 빌더 겸용 thenable)은 테스트가 흉내 낼 이유가 없어
+  // any로 낮춰 스텁한다.
+  const staleProjectFindFirst = jest.spyOn(mockDb.query.fundingProjects as never, 'findFirst')
+    .mockResolvedValueOnce({ creatorId: creatorA } as never);
+  // 실제 DB에서는 그 사이 소유가 creatorB로 넘어갔다.
+  await mockDb.update(schema.fundingProjects).set({ creatorId: creatorB })
+    .where(eq(schema.fundingProjects.slug, slug));
+
+  const result = await setFulfillment({
+    pledgeId, status: 'shipped', actor: { kind: 'creator', creatorId: creatorA },
+  });
+
+  // 사전 검사는 낡은 값을 보고 통과했지만, UPDATE의 EXISTS는 실제(creatorB) 소유를 보고
+  // 0행을 반환한다 — conflict가 나오는 이유가 ownerCondition 자신이어야 한다.
+  expect(result).toMatchObject({ ok: false, code: 'conflict' });
+  expect((await readPledgeRow(pledgeId)).fulfillment_status).toBe('none');
+  staleProjectFindFirst.mockRestore();
 });
 
 it('개설자도 관리자와 같은 환불 요청 차단을 지난다', async () => {
@@ -171,5 +236,7 @@ it('마크다운 프로젝트의 후원은 개설자 경로로 닿지 않는다'
   const result = await setFulfillment({
     pledgeId, status: 'shipped', actor: { kind: 'creator', creatorId: creatorA },
   });
-  expect(result).toMatchObject({ ok: false });
+  // code까지 못 박는다 — 이 테스트가 지키는 것은 "기존 26건의 동의를 소급해 뒤집지 않는다"라
+  // not_found·not_live 등 다른 이유로 우연히 막힌 것과는 구분해야 한다.
+  expect(result).toMatchObject({ ok: false, code: 'forbidden' });
 });
