@@ -20,9 +20,13 @@ import { IDLE_SAVE_STATE, type SaveState } from './types';
  * 그 상수는 관리자 페이지 로컬이라 여기서 값으로 import할 수 없어(admin 번들과 얽힌다)
  * 같은 문자열을 그대로 옮겨 둔다.
  *
- * 다음 태스크가 이 컴포넌트에 표 전체 CSV 내려받기 버튼을 더 붙인다 — 행 단위 렌더를
- * `ShippingTableRow`로 나눠 둬 그 기능이 헤더 쪽에 독립적으로 붙을 수 있게 한다.
+ * CSV 내려받기는 일반 링크(`<a href download>`)다 — 같은 출처 GET이고 인증은 쿠키
+ * 세션이라 `fetch` + blob으로 우회할 이유가 없다. 서버(`shipping.csv.ts`)가 소유·마감
+ * 게이트를 다시 확인하므로 이 버튼은 마감 뒤(rows가 있을 때)에만 보여 준다 — 마감 전에도
+ * 눌러 봤자 서버가 409를 주지만, 안내 문구가 이미 마감 전임을 말하고 있어 버튼을 또
+ * 보여줄 이유가 없다.
  *
+
  * 저장 성공/실패는 서버 응답으로만 판단한다. 서버는 소유·마감(closed)·requiresShipping
  * 세 게이트를 다시 확인한다(`lib/funding/creatorShipping.ts`의 `loadFulfillmentGate`) —
  * 이 표가 마감 뒤에만 렌더된다는 사실에 기대지 않는다.
@@ -141,25 +145,34 @@ export function ShippingTable({ projectId, rows }: ShippingTableProps) {
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] border-collapse text-left typo-body">
-        <thead>
-          <tr className="border-b border-gray-200 text-gray-500 dark:border-gray-700 dark:text-gray-400">
-            <th className="py-2 pr-4 font-medium">받는 사람</th>
-            <th className="py-2 pr-4 font-medium">연락처</th>
-            <th className="py-2 pr-4 font-medium">배송지</th>
-            <th className="py-2 pr-4 font-medium">리워드</th>
-            <th className="py-2 pr-4 font-medium">수량</th>
-            <th className="py-2 pr-4 font-medium">메모</th>
-            <th className="py-2 pr-4 font-medium">발송 상태</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <ShippingTableRow key={row.pledgeId} projectId={projectId} row={row} />
-          ))}
-        </tbody>
-      </table>
+    <div>
+      <div className="mb-3 flex justify-end">
+        <Button asChild variant="secondary" size="sm">
+          <a href={`/api/funding/creator/projects/${encodeURIComponent(projectId)}/shipping.csv`} download>
+            CSV로 내려받기
+          </a>
+        </Button>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[720px] border-collapse text-left typo-body">
+          <thead>
+            <tr className="border-b border-gray-200 text-gray-500 dark:border-gray-700 dark:text-gray-400">
+              <th className="py-2 pr-4 font-medium">받는 사람</th>
+              <th className="py-2 pr-4 font-medium">연락처</th>
+              <th className="py-2 pr-4 font-medium">배송지</th>
+              <th className="py-2 pr-4 font-medium">리워드</th>
+              <th className="py-2 pr-4 font-medium">수량</th>
+              <th className="py-2 pr-4 font-medium">메모</th>
+              <th className="py-2 pr-4 font-medium">발송 상태</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <ShippingTableRow key={row.pledgeId} projectId={projectId} row={row} />
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
