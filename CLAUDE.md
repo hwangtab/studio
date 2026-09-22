@@ -225,6 +225,44 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 리뷰에서 재현된 회귀이고, `validateBasicSection`을 고칠 때 이 호출부의 전제(승인 프로젝트는
 검증기에 실제 `now`가 아니라 epoch가 들어온다)를 모르면 되살아난다.
 
+### 개설자 배송지 열람은 마감 뒤에만 열린다
+
+`lib/funding/creatorShipping.ts`의 `loadCreatorShipping`은 프로젝트 상태가 `closed`가
+아니면(`upcoming`·`live`) 개인정보를 한 줄도 내보내지 않고 집계(`summary`)만 돌려준다.
+모금 중에는 셀프 취소가 자유로워 주소가 후원마다 들어왔다 나갔다 하고, 물량 준비 단계의
+개설자에게는 집계면 충분하다 — 취소될 수도 있는 주소를 미리 보여줄 이유가 없다.
+
+발송 상태 전환은 `lib/funding/fulfillment.ts`의 `setFulfillment` **한 곳**이고, 관리자
+쓰기 라우트와 개설자 쓰기 라우트(`/api/funding/creator/projects/[id]/fulfillment`)가
+`actor.kind`(`'admin'` | `'creator'`)로만 갈라져 같은 함수를 지난다. 이 함수 안에 이유가
+적힌 규칙이 넷 있다 — 살아 있는 주문 집합(`LIVE_FUNDING_ORDER_STATUSES`, 부분환불도
+포함), 환불 요청된 후원은 발송 상태를 바꿀 수 없게 막는 것, `delivered_at`을 COALESCE로
+첫 전달 시각만 보존하고 되돌릴 때는 NULL로 비우는 기산점 규칙, 그리고 경합을 막는
+UPDATE의 WHERE(사전 검사와 별개로 존재하는 마지막 층). 이 넷을 관리자 경로와 개설자
+경로에 따로 구현하면 두 벌이 갈라져 한쪽만 고쳐지는 사고가 난다 — 그래서 이 함수를
+공유하는 것 자체가 설계다.
+
+**마크다운 프로젝트의 후원은 개설자 경로로 닿지 않는다.** `funding_pledges.project_slug`는
+문자열이고, 개설자 actor 분기는 그 slug로 `funding_projects`(DB 테이블)를 조회해 소유를
+확인한다. `content/funding/*.md` 프로젝트는 이 테이블에 대응 행이 없으므로 조회가 실패해
+`forbidden`이 된다. 지금 운영 DB의 후원은 전부 마크다운 프로젝트
+(`keep-singing-for-palestine`)의 것이고, 그 후원자들은 "배송지는 개설자에게 제공되지
+않는다"에 동의했다 — `project_slug` 문자열 대조가 이 격리를 만들고, 그 동의를 소급해
+뒤집지 않는다.
+
+개설자는 `delivered`로 상태를 바꿀 수 있고, `delivered_at`이 찍히는 순간이 처리방침
+8항·약관 제13조가 약속한 "리워드 전달 완료 후 1년 파기"의 기산점이 된다(`retention.ts`의
+`REWARD_RETENTION_YEARS`). 다만 전자상거래법 5년 법정 보존(`LEGAL_RETENTION_YEARS`)이
+하한을 잡는다 — 리워드 전달 후 1년이 지났어도 결제일로부터 5년이 안 지났으면 파기하지
+않는다.
+
+같은 파일이 파기 대상에서 **일부러 빼는 값**이 하나 있다: `fulfillment_updated_by`
+(발송 상태를 마지막으로 바꾼 주체, `'admin'` 또는 `'creator:<id>'`). 배송지·admin_memo·
+supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지만, 이 컬럼은 운영자·개설자
+쪽 행위자 식별자다. 값에 `creator:<id>`가 들어 있어 "식별자니까 지우자"는 판단이 나올 수
+있는데, 그렇게 하면 "누가 발송 상태를 바꿨는지"에 대한 감사 기록이 배송지와 같은 시점에
+사라진다 — `retention.test.ts`가 이 컬럼이 파기 후에도 남는 것을 고정한다.
+
 ### `review_note`와 `internal_note`는 다른 칸이다
 
 `review_note`는 **개설자에게 보인다** — 개설자 프로젝트 목록(`pages/[locale]/funding/creator/index.tsx`)과
