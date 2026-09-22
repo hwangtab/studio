@@ -77,10 +77,18 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
       // dirty 판정이 "원문 vs 정규화된 initial"을 비교하게 되어 저장에 성공해도 영영
       // dirty가 안 풀린다 — 이탈 경고가 매번 뜨면 사용자가 그 경고를 무시하게 되어
       // 가드 자체가 무력해진다. 저장한 값 그대로 로컬 상태를 되돌린다.
-      setContactName(value.contactName ?? '');
-      setPhone(value.phone ?? '');
-      setBio(value.bio ?? '');
-      setLinksText((value.links ?? []).join('\n'));
+      //
+      // 단, 무조건 덮어쓰면 안 된다 — 저장 요청이 도는 동안(왕복 100~500ms) 입력 칸은
+      // 계속 활성이라(disabled={readOnly}만 걸리고 saving으로 잠기는 건 버튼뿐) 응답이
+      // 오기 전에 이어서 타이핑한 값이 있을 수 있다. 그 값을 응답이 덮어쓰면 이 태스크가
+      // 막으려던 것과 같은 모양의 조용한 입력 유실이 된다(2026-09-22 2차 리뷰 지적).
+      // `contactName`·`phone`·`bio`·`linksText`는 이 submit 클로저가 잡고 있는
+      // "제출 시점의 값"이다 — 지금(cur) 값이 그때와 같을 때만(그 사이 아무도 안
+      // 고쳤을 때만) 정규화된 값으로 되돌린다.
+      setContactName((cur) => (cur === contactName ? (value.contactName ?? '') : cur));
+      setPhone((cur) => (cur === phone ? (value.phone ?? '') : cur));
+      setBio((cur) => (cur === bio ? (value.bio ?? '') : cur));
+      setLinksText((cur) => (cur === linksText ? (value.links ?? []).join('\n') : cur));
       setSave({ status: 'success' });
       onSaved(value);
     } else {

@@ -163,6 +163,60 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
     await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
     await waitFor(() => expect(() => triggerRouteChangeStart()).not.toThrow());
   });
+
+  it('개설자 정보 구획 — 저장 요청이 도는 동안 이어서 친 입력은 응답이 덮어쓰지 않는다', async () => {
+    // 저장 버튼만 saving으로 잠기고 입력 칸은 계속 활성이라(disabled={readOnly}만),
+    // 왕복 100~500ms 사이에 이어서 타이핑하는 것이 실제로 걸린다. 응답이 그 값을
+    // 무조건 덮어쓰면 이 태스크가 막으려던 것과 같은 모양의 조용한 입력 유실이 된다
+    // (2026-09-22 2차 리뷰 지적). fetch를 직접 제어해 "응답 도착 전에 이어서 입력"을
+    // 재현한다.
+    confirmSpy = jest.spyOn(window, 'confirm');
+    let resolveFetch: (v: unknown) => void = () => {};
+    global.fetch = jest.fn().mockImplementation(
+      () => new Promise((resolve) => { resolveFetch = resolve; }),
+    ) as unknown as typeof fetch;
+
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+
+    fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
+    const bioField = screen.getByLabelText('소개', { exact: false });
+    fireEvent.change(bioField, { target: { value: '첫 문장.' } });
+    fireEvent.click(screen.getByRole('button', { name: '개설자 정보 저장' }));
+
+    // 응답이 아직 안 왔다 — 그 사이 이어서 입력한다.
+    fireEvent.change(bioField, { target: { value: '첫 문장. 이어서 쓴 문장.' } });
+
+    resolveFetch({ ok: true, json: async () => ({ ok: true }) });
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    // 이어서 친 입력이 살아 있어야 하고, 그 값은 서버에 보낸(제출 시점) 값과 다르므로
+    // dirty도 열린 채 남아야 한다 — 이탈 가드가 계속 경고해야 한다.
+    expect(bioField).toHaveValue('첫 문장. 이어서 쓴 문장.');
+    expect(() => triggerRouteChangeStart()).toThrow();
+  });
+
+  it('기본정보 구획 — 저장 요청이 도는 동안 이어서 고친 주소(slug)는 응답이 덮어쓰지 않는다', async () => {
+    confirmSpy = jest.spyOn(window, 'confirm');
+    let resolveFetch: (v: unknown) => void = () => {};
+    global.fetch = jest.fn().mockImplementation(
+      () => new Promise((resolve) => { resolveFetch = resolve; }),
+    ) as unknown as typeof fetch;
+
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+
+    const slugField = screen.getByLabelText('주소(slug)', { exact: false });
+    fireEvent.change(slugField, { target: { value: 'New-Slug' } });
+    fireEvent.click(screen.getByRole('button', { name: '기본정보 저장' }));
+
+    // 응답이 아직 안 왔다 — 그 사이 이어서 고친다.
+    fireEvent.change(slugField, { target: { value: 'New-Slug-Continued' } });
+
+    resolveFetch({ ok: true, json: async () => ({ ok: true }) });
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    expect(slugField).toHaveValue('New-Slug-Continued');
+    expect(() => triggerRouteChangeStart()).toThrow();
+  });
 });
 
 describe('저장하지 않은 입력 — 브라우저 이탈(beforeunload) 가드', () => {

@@ -95,7 +95,12 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
       endAt: endAt ? kstEndOfDayIso(endAt) : '',
     });
     if (result.ok) {
-      setSlug(normalizedSlug);
+      // 저장 요청이 도는 동안(왕복 100~500ms) 슬러그 칸은 계속 활성이라, 응답이 오기
+      // 전에 이어서 고친 값이 있을 수 있다. 무조건 덮어쓰면 그 값이 조용히 사라진다 —
+      // `slug`는 이 submit 클로저가 잡고 있는 제출 시점 값이라, 지금(cur) 값이 그때와
+      // 같을 때만(그 사이 아무도 안 고쳤을 때만) 정규화된 값으로 되돌린다
+      // (2026-09-22 2차 리뷰 지적 — CreatorSectionForm.tsx와 같은 처방).
+      setSlug((cur) => (cur === slug ? normalizedSlug : cur));
       setSave({ status: 'success' });
       onSaved(value);
     } else {
