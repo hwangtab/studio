@@ -137,12 +137,18 @@ export const setFulfillment = async (input: {
    * 지킨다** — 사전 검사는 사람에게 이유를 말해 주는 바깥쪽 층, WHERE는 그 사이 좁은 창의
    * 경합을 막는 마지막 층이다. 한쪽이 다른 쪽을 "중복"이라 보고 지우면 안 된다.
    */
+  // 누가 바꿨는지는 admin_memo에 적지 않는다 — admin_memo는 retention.ts가 배송지와
+  // 함께 파기하는 칸이라, 거기 적으면 감사 기록이 개인정보와 같은 시점에 사라진다.
+  // fulfillment_updated_by는 파기 대상이 아닌 별도 컬럼이다(db/schema.ts 주석 참조).
+  const updatedBy = actor.kind === 'admin' ? 'admin' : `creator:${actor.creatorId}`;
+
   const claim = await db.run(sql`
     UPDATE funding_pledges
     SET fulfillment_status = ${status},
         tracking_company = ${trackingCompany},
         tracking_number = ${trackingNumber},
         delivered_at = ${deliveredAt},
+        fulfillment_updated_by = ${updatedBy},
         updated_at = unixepoch()
     WHERE id = ${pledge.id}
       AND refund_requested_at IS NULL

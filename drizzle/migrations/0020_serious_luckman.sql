@@ -1,0 +1,1 @@
+ALTER TABLE `funding_pledges` ADD `fulfillment_updated_by` text;

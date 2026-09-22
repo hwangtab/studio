@@ -1,7 +1,13 @@
+import { useState } from 'react';
+
 import type { CreatorShippingRow } from '../../../lib/funding/creatorShipping';
+import { Button } from '../../ui/Button';
+import { Field, Select, TextInput } from '../../ui/Field';
+import { saveFulfillment } from './api';
+import { IDLE_SAVE_STATE, type SaveState } from './types';
 
 /**
- * 마감 뒤 배송지 표.
+ * 마감 뒤 배송지 표 — 표시 + 발송 상태·송장 저장.
  *
  * ⚠️ 이 파일은 `lib/funding/creatorShipping.ts`에서 **타입만** 가져온다. 그 모듈은
  * `computeProjectState` 계열을 물고 있는 서버 전용 모듈이라, 컴포넌트가 런타임 값을
@@ -14,10 +20,12 @@ import type { CreatorShippingRow } from '../../../lib/funding/creatorShipping';
  * 그 상수는 관리자 페이지 로컬이라 여기서 값으로 import할 수 없어(admin 번들과 얽힌다)
  * 같은 문자열을 그대로 옮겨 둔다.
  *
- * 다음 두 태스크가 이 컴포넌트를 이어서 고친다 — 발송 상태를 여기서 직접 바꾸는 쓰기
- * 폼과, 표 전체를 CSV로 내려받는 버튼이다. 지금은 표시만 하지만 행 단위 렌더를
- * `ShippingTableRow`로 나눠 둬 그 두 기능이 행/헤더 어느 쪽에 붙을지 스스로 고를 수 있게
- * 한다.
+ * 다음 태스크가 이 컴포넌트에 표 전체 CSV 내려받기 버튼을 더 붙인다 — 행 단위 렌더를
+ * `ShippingTableRow`로 나눠 둬 그 기능이 헤더 쪽에 독립적으로 붙을 수 있게 한다.
+ *
+ * 저장 성공/실패는 서버 응답으로만 판단한다. 서버는 소유·마감(closed)·requiresShipping
+ * 세 게이트를 다시 확인한다(`lib/funding/creatorShipping.ts`의 `loadFulfillmentGate`) —
+ * 이 표가 마감 뒤에만 렌더된다는 사실에 기대지 않는다.
  */
 
 const FULFILLMENT_LABELS: Record<string, string> = {
@@ -27,6 +35,8 @@ const FULFILLMENT_LABELS: Record<string, string> = {
   delivered: '수령완료',
 };
 
+const FULFILLMENT_OPTIONS = Object.keys(FULFILLMENT_LABELS);
+
 const formatAddress = (row: CreatorShippingRow): string => {
   const parts = [row.shippingPostcode, row.shippingAddress1, row.shippingAddress2].filter(
     (v): v is string => typeof v === 'string' && v !== '',
@@ -34,11 +44,98 @@ const formatAddress = (row: CreatorShippingRow): string => {
   return parts.length > 0 ? parts.join(' ') : '주소 없음';
 };
 
+interface ShippingTableRowProps {
+  projectId: string;
+  row: CreatorShippingRow;
+}
+
+function ShippingTableRow({ projectId, row }: ShippingTableRowProps) {
+  const [fulfillmentStatus, setFulfillmentStatus] = useState(row.fulfillmentStatus);
+  const [trackingCompany, setTrackingCompany] = useState(row.trackingCompany ?? '');
+  const [trackingNumber, setTrackingNumber] = useState(row.trackingNumber ?? '');
+  const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
+
+  const clearSaveStatus = () => setSave((s) => (s.status === 'idle' ? s : IDLE_SAVE_STATE));
+
+  const submit = async () => {
+    setSave({ status: 'saving' });
+    const result = await saveFulfillment(projectId, {
+      pledgeId: row.pledgeId,
+      fulfillmentStatus,
+      trackingCompany,
+      trackingNumber,
+    });
+    if (result.ok) {
+      setSave({ status: 'success' });
+    } else {
+      setSave({ status: 'error', message: result.message });
+    }
+  };
+
+  const rowId = `fulfillment-${row.pledgeId}`;
+
+  return (
+    <tr className="border-b border-gray-100 align-top dark:border-gray-800">
+      <td className="py-2 pr-4">{row.shippingName ?? '이름 없음'}</td>
+      <td className="py-2 pr-4">{row.shippingPhone ?? '연락처 없음'}</td>
+      <td className="py-2 pr-4">{formatAddress(row)}</td>
+      <td className="py-2 pr-4">{row.rewardTitle}</td>
+      <td className="py-2 pr-4">{row.quantity}</td>
+      <td className="py-2 pr-4 text-gray-500 dark:text-gray-400">{row.shippingMemo ?? ''}</td>
+      <td className="py-2 pr-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <Field id={`${rowId}-status`} label="상태" className="w-auto">
+            <Select
+              value={fulfillmentStatus}
+              onChange={(e) => { setFulfillmentStatus(e.target.value); clearSaveStatus(); }}
+              className="w-auto text-sm"
+            >
+              {FULFILLMENT_OPTIONS.map((s) => (
+                <option key={s} value={s}>{FULFILLMENT_LABELS[s]}</option>
+              ))}
+            </Select>
+          </Field>
+          <Field id={`${rowId}-company`} label="택배사" className="w-auto">
+            <TextInput
+              value={trackingCompany}
+              onChange={(e) => { setTrackingCompany(e.target.value); clearSaveStatus(); }}
+              className="w-24 text-sm"
+            />
+          </Field>
+          <Field id={`${rowId}-number`} label="운송장번호" className="w-auto">
+            <TextInput
+              value={trackingNumber}
+              onChange={(e) => { setTrackingNumber(e.target.value); clearSaveStatus(); }}
+              className="w-32 text-sm"
+            />
+          </Field>
+          <Button
+            type="button"
+            variant="secondary"
+            disabled={save.status === 'saving'}
+            onClick={submit}
+            className="text-sm"
+          >
+            저장
+          </Button>
+        </div>
+        {save.status === 'success' && (
+          <p className="mt-1 typo-caption text-green-600 dark:text-green-400">저장했습니다.</p>
+        )}
+        {save.status === 'error' && (
+          <p className="mt-1 typo-caption text-red-600 dark:text-red-400">{save.message}</p>
+        )}
+      </td>
+    </tr>
+  );
+}
+
 interface ShippingTableProps {
+  projectId: string;
   rows: CreatorShippingRow[];
 }
 
-export function ShippingTable({ rows }: ShippingTableProps) {
+export function ShippingTable({ projectId, rows }: ShippingTableProps) {
   if (rows.length === 0) {
     return <p className="typo-body text-gray-500 dark:text-gray-400">배송이 필요한 후원이 없습니다.</p>;
   }
@@ -59,22 +156,7 @@ export function ShippingTable({ rows }: ShippingTableProps) {
         </thead>
         <tbody>
           {rows.map((row) => (
-            <tr key={row.pledgeId} className="border-b border-gray-100 align-top dark:border-gray-800">
-              <td className="py-2 pr-4">{row.shippingName ?? '이름 없음'}</td>
-              <td className="py-2 pr-4">{row.shippingPhone ?? '연락처 없음'}</td>
-              <td className="py-2 pr-4">{formatAddress(row)}</td>
-              <td className="py-2 pr-4">{row.rewardTitle}</td>
-              <td className="py-2 pr-4">{row.quantity}</td>
-              <td className="py-2 pr-4 text-gray-500 dark:text-gray-400">{row.shippingMemo ?? ''}</td>
-              <td className="py-2 pr-4">
-                {FULFILLMENT_LABELS[row.fulfillmentStatus] ?? row.fulfillmentStatus}
-                {row.trackingCompany && row.trackingNumber && (
-                  <span className="block text-gray-500 dark:text-gray-400">
-                    {row.trackingCompany} {row.trackingNumber}
-                  </span>
-                )}
-              </td>
-            </tr>
+            <ShippingTableRow key={row.pledgeId} projectId={projectId} row={row} />
           ))}
         </tbody>
       </table>

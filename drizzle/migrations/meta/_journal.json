@@ -141,6 +141,13 @@
       "when": 1789964055760,
       "tag": "0019_breezy_pride",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "6",
+      "when": 1790039737875,
+      "tag": "0020_serious_luckman",
+      "breakpoints": true
     }
   ]
 }

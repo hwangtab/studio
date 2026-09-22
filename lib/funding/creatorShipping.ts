@@ -175,3 +175,56 @@ export const loadCreatorShipping = async (
     })),
   };
 };
+
+export interface CreatorFulfillmentGate {
+  /** 이 후원이 실제로 속한 프로젝트. `loadCreatorShipping`과 달리 URL의 :id를 신뢰하지
+   * 않고 pledge에서 직접 되짚는다 — 소유·마감 판정을 URL 값으로 속일 수 없게 하려는
+   * 것이다(아래 `loadFulfillmentGate` 주석 참조). */
+  projectId: string;
+  creatorId: string;
+  state: ReturnType<typeof computeProjectState>;
+  /** 리워드가 배송을 요구하지 않으면(디지털 전용) false — pledge의 reward_id가
+   * funding_rewards에 없는 경우(예: 파일 프로젝트 후원)도 false로 취급한다. */
+  requiresShipping: boolean;
+}
+
+/**
+ * 개설자 쓰기 라우트(`/api/funding/creator/projects/[id]/fulfillment`)가 소유·마감·
+ * requiresShipping 세 게이트를 판정하는 자리.
+ *
+ * **URL의 프로젝트 id는 여기서 쓰지 않는다.** pledgeId → project_slug → 실제 소유 프로젝트
+ * 순으로 되짚는다. 만약 URL id로 마감 여부를 판단하면, 개설자가 자기 소유의 다른(이미
+ * 마감된) 프로젝트 id를 URL에 넣고 아직 진행 중인 자기 프로젝트의 pledgeId를 body에 넣어
+ * 마감 게이트를 우회할 수 있다 — 소유는 두 경우 다 자신이라 그것만으로는 안 걸린다.
+ * pledge가 실제로 속한 프로젝트를 다시 조회해 그 프로젝트의 상태로 판정하면 이 우회가
+ * 애초에 성립하지 않는다.
+ *
+ * `setFulfillment`(fulfillment.ts)도 소유를 다시 확인하지만(actor.kind === 'creator'
+ * 분기), 그건 소유만 본다 — 마감 여부와 requiresShipping은 이 함수가 보탠다.
+ */
+export const loadFulfillmentGate = async (pledgeId: string, now: Date = new Date()): Promise<CreatorFulfillmentGate | null> => {
+  const db = getDb();
+  const pledge = await db.query.fundingPledges.findFirst({
+    where: (t, { eq: eqCol }) => eqCol(t.id, pledgeId),
+  });
+  if (!pledge) return null;
+
+  const project = await db.query.fundingProjects.findFirst({
+    where: (t, { eq: eqCol }) => eqCol(t.slug, pledge.projectSlug),
+  });
+  if (!project) return null;
+
+  const reward = await db.query.fundingRewards.findFirst({
+    where: (t, { and: andCols, eq: eqCol }) => andCols(eqCol(t.projectId, project.id), eqCol(t.rewardId, pledge.rewardId)),
+  });
+
+  return {
+    projectId: project.id,
+    creatorId: project.creatorId,
+    state: computeProjectState(
+      { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },
+      now,
+    ),
+    requiresShipping: reward?.requiresShipping === true,
+  };
+};

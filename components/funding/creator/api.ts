@@ -49,6 +49,11 @@ export const updateReward = (projectId: string, value: RewardInput, previousRewa
 export const deleteReward = (projectId: string, rewardId: string) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/rewards`, { mode: 'delete', rewardId });
 
+export const saveFulfillment = (
+  projectId: string,
+  value: { pledgeId: string; fulfillmentStatus: string; trackingCompany?: string; trackingNumber?: string },
+) => post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/fulfillment`, value);
+
 export const submitProject = (projectId: string, agreedTermsVersion?: string) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/submit`, { agreedTermsVersion });
 

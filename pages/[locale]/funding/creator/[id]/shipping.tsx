@@ -24,7 +24,7 @@ interface Props {
  * 마감 전에는 집계만, 마감 뒤에는 표까지 보인다 — `state`가 `lib/funding/creatorShipping.ts`
  * 주석의 규칙을 그대로 반영한다(모금 중에는 셀프 취소가 자유로워 주소가 들락날락한다).
  */
-export default function CreatorShippingPage({ view, projectTitle }: Props) {
+export default function CreatorShippingPage({ view, projectTitle, projectId }: Props) {
   const { summary } = view;
 
   return (
@@ -77,7 +77,7 @@ export default function CreatorShippingPage({ view, projectTitle }: Props) {
               주소가 그때그때 바뀔 수 있기 때문입니다.
             </p>
           ) : (
-            <ShippingTable rows={view.rows} />
+            <ShippingTable projectId={projectId} rows={view.rows} />
           )}
         </section>
       </main>

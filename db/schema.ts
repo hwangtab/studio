@@ -419,6 +419,15 @@ export const fundingPledges = sqliteTable('funding_pledges', {
   fulfillmentStatus: text('fulfillment_status', { enum: fulfillmentStatusEnum }).notNull().default('none'),
   trackingCompany: text('tracking_company'),
   trackingNumber: text('tracking_number'),
+  /**
+   * 발송 상태를 마지막으로 바꾼 주체 — `'admin'` 또는 `'creator:<creatorId>'`.
+   *
+   * `admin_memo`에 적지 않는다. `admin_memo`는 배송지·응원 메시지와 함께 `retention.ts`의
+   * 파기 대상이라(리워드 전달 후 1년, 법정 보존 5년 뒤), 거기 적으면 감사 기록이 개인정보와
+   * 같은 시점에 사라진다. 이 값은 후원자의 개인정보가 아니라 운영자·개설자 쪽 행위자
+   * 식별자라 같은 파기 사유가 적용되지 않으므로 별도 컬럼에 남겨 파기 대상에서 제외한다.
+   */
+  fulfillmentUpdatedBy: text('fulfillment_updated_by'),
   entrySource: text('entry_source', { enum: fundingEntrySourceEnum }).notNull().default('online'),
   /**
    * 약관·처리방침 동의 시각과 동의한 판본. 지금까지는 동의 사실이 행에 남지 않아, 분쟁이 나면
