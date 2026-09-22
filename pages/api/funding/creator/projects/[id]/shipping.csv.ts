@@ -5,20 +5,7 @@ import { isAllowedContactRequestOrigin } from '../../../../../../lib/contact/ori
 import { authenticateCreatorApi } from '../../../../../../lib/funding/creatorAuth';
 import { loadCreatorShipping, type CreatorShippingRow } from '../../../../../../lib/funding/creatorShipping';
 import { toCsv } from '../../../../../../lib/funding/csv';
-
-/**
- * 발송 상태 라벨. `components/funding/creator/ShippingTable.tsx`의 `FULFILLMENT_LABELS`와
- * 같은 표기를 쓴다. 그 상수를 값으로 import하지 않는 이유는 그 파일이 `useState` 등 React
- * 훅을 문 클라이언트 컴포넌트라서다 — 값으로 가져오면 서버 라우트 번들에 컴포넌트 트리가
- * 끌려 들어간다(CLAUDE.md "개설자가 쓴 것은 우리가 쓴 것과 다르게 다룬다" 절이 경고하는
- * 것과 같은 함정). 표기를 바꾸면 두 곳을 함께 고칠 것.
- */
-const FULFILLMENT_LABELS: Record<string, string> = {
-  none: '미발송',
-  preparing: '준비중',
-  shipped: '발송완료',
-  delivered: '수령완료',
-};
+import { FULFILLMENT_LABELS } from '../../../../../../lib/funding/fulfillmentLabels';
 
 /**
  * CSV 열은 Task 1의 화이트리스트(`CreatorShippingRow`, `lib/funding/creatorShipping.ts`)를

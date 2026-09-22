@@ -225,6 +225,33 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 리뷰에서 재현된 회귀이고, `validateBasicSection`을 고칠 때 이 호출부의 전제(승인 프로젝트는
 검증기에 실제 `now`가 아니라 epoch가 들어온다)를 모르면 되살아난다.
 
+### 마이그레이션 0020(`fulfillment_updated_by`)은 배포보다 먼저 적용한다
+
+`db/schema.ts`의 `fundingPledges.fulfillmentUpdatedBy`(`drizzle/migrations/0020_serious_luckman.sql`,
+`ALTER TABLE funding_pledges ADD fulfillment_updated_by text`)가 이 브랜치에서 새로 생겼다.
+**적용 순서를 뒤집으면(배포 먼저, 마이그레이션 나중) 깨지는 범위는 개설자 배송 화면이
+아니라 후원 결제 전체다** — drizzle의 관계 조회(`with: { fundingPledge: true }`)는 해당
+테이블의 전체 컬럼을 SELECT에 실으므로, 컬럼이 없는 DB에서는 그 조회 자체가
+`no such column: fulfillment_updated_by`로 던진다.
+
+이 조회를 지나는 경로를 직접 열어 확인한 결과:
+
+- `lib/funding/service.ts`의 `findFundingOrderByOrderNo`/`findFundingOrderById` —
+  `with: { fundingPledge: true, payments: { with: { refunds: true } } }`. 이 둘을
+  `lib/funding/confirm.ts`(**토스 결제 승인**), `lib/funding/cancel.ts`(환불),
+  `pages/api/funding/pledges.ts`·`display-name.ts`·`download.ts`·
+  `pages/api/admin/funding/pledges/[id].ts`·`pages/admin/funding/[id].tsx`가 지난다 —
+  즉 **결제 확인 자체**가 이 컬럼에 걸린다.
+- `lib/funding/admin-list.ts` — 관리자 후원 목록(`with: { fundingPledge: true, payments: true }`).
+- `lib/funding/fulfillment.ts`의 `setFulfillment`, `lib/funding/creatorShipping.ts`의
+  `loadCreatorShipping`/`loadFulfillmentGate` — `db.query.fundingPledges.findFirst`로
+  `funding_pledges` 테이블을 직접 조회해 같은 문제를 겪는다.
+
+배포 전 확인: `PRAGMA table_info(funding_pledges);`로 `fulfillment_updated_by` 행이 있는지
+직접 본다. 없으면 마이그레이션을 먼저 적용하고, 적용을 확인한 뒤에 배포한다. 이 저장소는
+마이그레이션을 CI/CD에서 자동 실행하지 않는다(`npm run db:migrate`는 운영자가 수동 실행) —
+그래서 순서를 지키는 것은 배포하는 사람의 책임이고, 그 사람이 보는 문서는 여기다.
+
 ### 개설자 배송지 열람은 마감 뒤에만 열린다
 
 `lib/funding/creatorShipping.ts`의 `loadCreatorShipping`은 프로젝트 상태가 `closed`가
@@ -242,13 +269,26 @@ UPDATE의 WHERE(사전 검사와 별개로 존재하는 마지막 층). 이 넷�
 경로에 따로 구현하면 두 벌이 갈라져 한쪽만 고쳐지는 사고가 난다 — 그래서 이 함수를
 공유하는 것 자체가 설계다.
 
-**마크다운 프로젝트의 후원은 개설자 경로로 닿지 않는다.** `funding_pledges.project_slug`는
-문자열이고, 개설자 actor 분기는 그 slug로 `funding_projects`(DB 테이블)를 조회해 소유를
-확인한다. `content/funding/*.md` 프로젝트는 이 테이블에 대응 행이 없으므로 조회가 실패해
-`forbidden`이 된다. 지금 운영 DB의 후원은 전부 마크다운 프로젝트
-(`keep-singing-for-palestine`)의 것이고, 그 후원자들은 "배송지는 개설자에게 제공되지
-않는다"에 동의했다 — `project_slug` 문자열 대조가 이 격리를 만들고, 그 동의를 소급해
-뒤집지 않는다.
+**마크다운 프로젝트의 후원은 개설자 경로로 닿지 않는다 — 단, 그 이유는 "행이 없어서"가
+아니라 "slug가 겹치지 않아서"다.** `funding_pledges.project_slug`는 문자열이고, 개설자
+actor 분기는 그 slug로 `funding_projects`(DB 테이블)를 조회해 소유를 확인한다. 지금은
+`content/funding/*.md` 프로젝트의 slug와 같은 slug를 가진 DB 행이 없으므로 조회가 실패해
+`forbidden`이 되는 것이지, md 프로젝트라서 원천적으로 막히는 것이 아니다. 지금 운영 DB의
+후원은 전부 마크다운 프로젝트(`keep-singing-for-palestine`)의 것이고, 그 후원자들은
+"배송지는 개설자에게 제공되지 않는다"에 동의했다 — 지금의 slug 불일치가 이 격리를 만들고,
+그 동의를 소급해 뒤집지 않는다.
+
+**`content/funding/`에 새 md를 추가할 때는 승인된 DB 프로젝트와 slug가 겹치면 안 된다.**
+`lib/funding/reviewDecision.ts`의 승인 로직은 md가 이미 쓰고 있는 slug로 DB 프로젝트를
+승인하는 것만 막는다(`getFundingProject(slug)` 검사) — **반대 방향은 아무 데도 막혀 있지
+않다.** 이미 승인된 DB 프로젝트와 같은 slug로 나중에 `content/funding/<slug>.md`를 추가하면
+`lib/funding/repository.ts`의 "파일이 이긴다" 규칙 때문에 공개 상세는 그 순간부터 md가 되고,
+거기 새로 들어오는 후원의 `project_slug`도 그 slug와 같아진다 — 그러면 개설자 actor 분기의
+slug 대조가 통과해, **그 DB 프로젝트를 만든 개설자의 배송 화면·CSV에 실제로는 자기
+프로젝트가 아닌(md 쪽) 후원자의 이름·연락처·주소가 실린다.** 열람만이 아니라 발송 상태
+쓰기까지 그 개설자에게 열린다. 코드 가드는 없다 — 빌드가 `TURSO_*` 없이 성공해야 해서
+빌드 시점에 DB slug를 볼 수 없다. md를 새로 추가하기 전에 그 slug가 승인 프로젝트 목록에
+없는지 직접 확인할 것.
 
 개설자는 `delivered`로 상태를 바꿀 수 있고, `delivered_at`이 찍히는 순간이 처리방침
 8항·약관 제13조가 약속한 "리워드 전달 완료 후 1년 파기"의 기산점이 된다(`retention.ts`의

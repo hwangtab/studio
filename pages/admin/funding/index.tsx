@@ -13,6 +13,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { aggregateAdminFundingTotals, listFundingOrders, type AdminFundingTotals } from '../../../lib/funding/admin-list';
+import { FULFILLMENT_LABELS } from '../../../lib/funding/fulfillmentLabels';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { getAllFundingProjectsAsync } from '../../../lib/funding/repository';
 import { expireStalePledges } from '../../../lib/funding/service';
@@ -117,7 +118,6 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '무통장' };
-const FULFILLMENT_LABELS: Record<string, string> = { none: '미발송', preparing: '준비중', shipped: '발송완료', delivered: '수령완료' };
 
 export default function AdminFundingPage({ items, totals, truncated, projects, slug, error, pledgesError }: AdminFundingPageProps) {
   const router = useRouter();

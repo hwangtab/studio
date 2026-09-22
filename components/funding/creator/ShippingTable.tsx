@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import type { CreatorShippingRow } from '../../../lib/funding/creatorShipping';
+import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/funding/fulfillmentLabels';
 import { Button } from '../../ui/Button';
 import { Field, Select, TextInput } from '../../ui/Field';
 import { saveFulfillment } from './api';
@@ -15,10 +16,10 @@ import { IDLE_SAVE_STATE, type SaveState } from './types';
  * 것은 우리가 쓴 것과 다르게 다룬다" 절, `lib/funding/projects.ts`와 같은 함정). 이 화면을
  * 부르는 GSSP(`pages/[locale]/funding/creator/[id]/shipping.tsx`)만 그 모듈을 값으로 부른다.
  *
- * 발송 상태 라벨은 관리자 화면(`pages/admin/funding/[id].tsx`의 `FULFILLMENT_LABELS`)과
- * 같은 한국어 표기를 쓴다 — 다른 이름을 쓰면 개설자와 운영자가 같은 값을 다른 말로 본다.
- * 그 상수는 관리자 페이지 로컬이라 여기서 값으로 import할 수 없어(admin 번들과 얽힌다)
- * 같은 문자열을 그대로 옮겨 둔다.
+ * 발송 상태 라벨은 `lib/funding/fulfillmentLabels.ts`에서 값으로 가져온다 — 그 모듈은
+ * `db/schema`·`node:fs`를 물지 않는 순수 상수라 클라이언트 컴포넌트에서 값으로 import해도
+ * 안전하다. 관리자 화면(`pages/admin/funding/[id].tsx`)·CSV 내려받기 라우트도 같은 모듈을
+ * 쓴다 — 다른 이름을 쓰면 개설자와 운영자가 같은 값을 다른 말로 본다.
  *
  * CSV 내려받기는 일반 링크(`<a href download>`)다 — 같은 출처 GET이고 인증은 쿠키
  * 세션이라 `fetch` + blob으로 우회할 이유가 없다. 서버(`shipping.csv.ts`)가 소유·마감
@@ -32,14 +33,7 @@ import { IDLE_SAVE_STATE, type SaveState } from './types';
  * 이 표가 마감 뒤에만 렌더된다는 사실에 기대지 않는다.
  */
 
-const FULFILLMENT_LABELS: Record<string, string> = {
-  none: '미발송',
-  preparing: '준비중',
-  shipped: '발송완료',
-  delivered: '수령완료',
-};
-
-const FULFILLMENT_OPTIONS = Object.keys(FULFILLMENT_LABELS);
+const FULFILLMENT_OPTIONS: readonly string[] = FULFILLMENT_STATUS_ORDER;
 
 const formatAddress = (row: CreatorShippingRow): string => {
   const parts = [row.shippingPostcode, row.shippingAddress1, row.shippingAddress2].filter(

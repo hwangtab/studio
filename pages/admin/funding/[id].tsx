@@ -12,6 +12,7 @@ import { formatPriceAmount } from '../../../data/pricing';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
+import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
@@ -54,8 +55,7 @@ const STATUS_LABELS: Record<string, string> = {
 };
 
 const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '무통장' };
-const FULFILLMENT_OPTIONS = ['none', 'preparing', 'shipped', 'delivered'] as const;
-const FULFILLMENT_LABELS: Record<string, string> = { none: '미발송', preparing: '준비중', shipped: '발송완료', delivered: '수령완료' };
+const FULFILLMENT_OPTIONS = FULFILLMENT_STATUS_ORDER;
 
 const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
   <div className="flex justify-between gap-4">
