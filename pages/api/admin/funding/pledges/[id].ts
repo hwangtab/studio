@@ -1,24 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../../../../db/client';
-import { fulfillmentStatusEnum, fundingPledges, orders } from '../../../../../db/schema';
+import { fundingPledges, orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { REVIEW_CLEARED_MARKER, hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
+import { setFulfillment } from '../../../../../lib/funding/fulfillment';
 import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
-import {
-  isLiveFundingOrderStatus,
-  isRefundedFundingOrderStatus,
-  liveFundingOrderStatusList,
-  remainingRefundable,
-} from '../../../../../lib/funding/refundable';
+import { isRefundedFundingOrderStatus, remainingRefundable } from '../../../../../lib/funding/refundable';
 import { findFundingOrderById, isManualPlaceholderRecipient } from '../../../../../lib/funding/service';
 import { kstDateString } from '../../../../../lib/booking/kst';
 
 const CANCEL_STATUS: Record<string, number> = { not_found: 404, invalid_state: 409, toss_failed: 502, recording_failed: 500 };
+// setFulfillment의 code → HTTP. forbidden(403)은 관리자 actor에서는 나오지 않지만
+// 매핑은 함수 계약 전체를 다룬다(CANCEL_STATUS와 같은 관례).
+const FULFILLMENT_STATUS: Record<string, number> = {
+  not_found: 404, invalid_status: 400, not_live: 409, refund_requested: 409, conflict: 409, forbidden: 403,
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -43,71 +44,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return r.ok ? res.status(200).json({ ok: true, mode: r.mode }) : res.status(CANCEL_STATUS[r.code] ?? 500).json({ ok: false, message: r.message });
     }
     case 'set_fulfillment': {
-      const status = b.fulfillmentStatus;
-      if (!(fulfillmentStatusEnum as readonly string[]).includes(status)) {
-        return res.status(400).json({ ok: false, message: '발송 상태가 올바르지 않습니다.' });
-      }
-      // 상태 게이트는 CSV·집계·관리자 환불과 **같은 집합**을 본다(LIVE_FUNDING_ORDER_STATUSES).
-      // 예전엔 여기만 'paid' 하나로 굳어 있어, 부분환불된 후원이 실제로 발송돼도 기록을 남길
-      // 수 없었다 — 목록·CSV에는 영구 '미발송'으로 떠 다음 회차 중복 발송 후보가 됐고,
-      // delivered_at이 안 찍혀 아래 주석이 말하는 파기 기산점 자체가 생기지 않았다.
-      if (!isLiveFundingOrderStatus(order.status)) {
-        return res.status(409).json({ ok: false, message: '확정된 펀딩만 발송 상태를 바꿀 수 있습니다.' });
-      }
-      // 무통장 청약철회는 자동 환불 경로가 없어 refundRequestedAt만 찍히고 주문은 paid로
-      // 남는다. 그 상태를 '발송 완료'로 바꿀 수 있게 두면, 청약철회한 사람에게 실물이
-      // 나간 기록이 시스템 안에서 정상 발송으로 굳는다. 예외는 두지 않는다 — 되돌리려면
-      // 환불을 처리하거나(주문이 refunded가 되어 이 분기 앞에서 걸린다) 아래
-      // clear_refund_request로 요청을 취소하는 두 경로뿐이다. 후자는 사유를 필수로 받아
-      // 관리자 메모에 날짜와 함께 덧붙이고 후원자에게 메일을 보낸다 — 즉 둘 다 흔적이 남고
-      // 고객도 알게 된다.
-      if (order.fundingPledge.refundRequestedAt) {
-        return res.status(409).json({
-          ok: false,
-          message: '환불 요청된 펀딩입니다. 환불을 처리하거나 요청을 취소한 뒤에 발송 상태를 바꿔 주세요.',
-        });
-      }
-      // 빈 문자열은 "지우기"다 — null로 저장해야 잘못 입력한 운송장을 비울 수 있다.
-      const trackingCompany = typeof b.trackingCompany === 'string'
-        ? (b.trackingCompany || null) : order.fundingPledge.trackingCompany;
-      const trackingNumber = typeof b.trackingNumber === 'string'
-        ? (b.trackingNumber || null) : order.fundingPledge.trackingNumber;
-
-      /**
-       * delivered_at은 약관 제13조가 약속한 '리워드 전달 완료 후 1년 파기'의 기산점이다.
-       *
-       * delivered로 갈 때: COALESCE로 **첫 전달 시각을 보존**한다. 운송장만 고쳐 다시 저장하는
-       * 흔한 실무에서 기산점이 계속 밀리면 파기 시점도 함께 밀린다.
-       * delivered에서 되돌릴 때(오조작 정정·반송): **NULL로 되돌린다.** 기산점은 '실제로
-       * 전달이 끝난 시각'이어야 하는데, 잘못 눌러 찍힌 시각을 남겨 두면 아직 배송 중인 건의
-       * 배송지가 1년 뒤 파기 대상이 된다. 기산점은 항상 현재 fulfillment_status와 일치시킨다.
-       */
-      const deliveredAt = status === 'delivered'
-        ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`
-        : sql`NULL`;
-
-      /**
-       * 위 두 검사는 사람에게 이유를 알려 주기 위한 것이고, **경합을 막는 것은 이 WHERE다.**
-       * 읽고-검사-쓰기 사이에 환불이 들어오면 두 요청이 모두 검사를 통과해 청약철회한 건이
-       * '발송완료'로 굳는다. 조건을 UPDATE에 실으면 진 쪽이 rowsAffected 0을 받는다.
-       * (lib/booking/cancel.ts의 선점 패턴과 같다.)
-       */
-      const claim = await db.run(sql`
-        UPDATE funding_pledges
-        SET fulfillment_status = ${status},
-            tracking_company = ${trackingCompany},
-            tracking_number = ${trackingNumber},
-            delivered_at = ${deliveredAt},
-            updated_at = unixepoch()
-        WHERE id = ${order.fundingPledge.id}
-          AND refund_requested_at IS NULL
-          AND EXISTS (SELECT 1 FROM orders o WHERE o.id = funding_pledges.order_id AND o.status IN (${liveFundingOrderStatusList()}))
-      `);
-      if (Number(claim.rowsAffected) === 0) {
-        return res.status(409).json({
-          ok: false,
-          message: '그 사이 환불 요청이나 주문 상태 변경이 있었습니다. 새로고침 후 다시 확인해 주세요.',
-        });
+      // 규칙 넷(살아 있는 주문 집합·환불 요청 차단·delivered_at의 COALESCE/NULL·경합을
+      // 막는 UPDATE ... WHERE)은 lib/funding/fulfillment.ts로 옮겼다 — 개설자 경로가
+      // 이 로직을 다시 구현하면 두 벌이 갈라져 한쪽만 고쳐지는 사고가 난다.
+      const result = await setFulfillment({
+        pledgeId: order.fundingPledge.id,
+        status: b.fulfillmentStatus,
+        trackingCompany: typeof b.trackingCompany === 'string' ? b.trackingCompany : undefined,
+        trackingNumber: typeof b.trackingNumber === 'string' ? b.trackingNumber : undefined,
+        actor: { kind: 'admin' },
+        now,
+      });
+      if (!result.ok) {
+        return res.status(FULFILLMENT_STATUS[result.code] ?? 500).json({ ok: false, message: result.message });
       }
       return res.status(200).json({ ok: true });
     }
