@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { CREATOR_LIMITS } from '../../../lib/funding/creatorValidation';
@@ -10,6 +10,8 @@ interface Props {
   initial: string;
   readOnly: boolean;
   onSaved: (content: string) => void;
+  /** BasicSectionForm과 같은 계약 — 저장 안 한 입력이 있으면 부모에 알린다. */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 /**
@@ -19,7 +21,7 @@ interface Props {
  * 승인 전에도 확인할 수 있다(2차: 승인 전에는 이것이 개설자가 자기 페이지를 보는 유일한
  * 수단이다). 필수값이 비어 있으면 그 화면이 무엇을 채워야 하는지 안내한다.
  */
-export function StorySectionForm({ projectId, initial, readOnly, onSaved }: Props) {
+export function StorySectionForm({ projectId, initial, readOnly, onSaved, onDirtyChange }: Props) {
   const textareaId = useId();
   const fileInputId = useId();
   const [content, setContent] = useState(initial);
@@ -27,6 +29,10 @@ export function StorySectionForm({ projectId, initial, readOnly, onSaved }: Prop
   const [uploadBusy, setUploadBusy] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // BasicSectionForm과 같은 이유·같은 방식(파생값, 별도 state 없음).
+  const dirty = content !== initial;
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
 
   // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 그 뒤 본문이 바뀌면 낡은
   // 안내로 남는다(2026-09-17 리뷰 지적).

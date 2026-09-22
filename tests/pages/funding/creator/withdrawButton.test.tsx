@@ -6,6 +6,14 @@ import '@testing-library/jest-dom';
 jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({ loadProjectForCreator: jest.fn() }));
 
+// editSections.test.tsx와 같은 이유·같은 처방 — 이 페이지가 이탈 가드용 useRouter()를 부른다.
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    asPath: '/ko/funding/creator/proj-1',
+    events: { on: jest.fn(), off: jest.fn(), emit: jest.fn() },
+  }),
+}));
+
 // eslint-disable-next-line import/first
 import CreatorProjectEditor from '../../../../pages/[locale]/funding/creator/[id]';
 // eslint-disable-next-line import/first

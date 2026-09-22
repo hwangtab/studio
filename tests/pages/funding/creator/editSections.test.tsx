@@ -8,6 +8,16 @@ import '@testing-library/jest-dom';
 jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({ loadProjectForCreator: jest.fn() }));
 
+// 이 페이지는 이탈 가드(routeChangeStart)를 걸려고 useRouter()를 부른다 — RouterContext
+// provider 없이 렌더하면 next/router가 "NextRouter was not mounted"를 던진다
+// (components/layout/Header.test.tsx와 같은 처방).
+jest.mock('next/router', () => ({
+  useRouter: () => ({
+    asPath: '/ko/funding/creator/proj-1',
+    events: { on: jest.fn(), off: jest.fn(), emit: jest.fn() },
+  }),
+}));
+
 // eslint-disable-next-line import/first
 import CreatorProjectEditor from '../../../../pages/[locale]/funding/creator/[id]';
 // eslint-disable-next-line import/first

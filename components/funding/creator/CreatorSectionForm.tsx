@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, TextArea, TextInput } from '../../ui/Field';
@@ -19,6 +19,8 @@ interface Props {
    */
   nameLocked: boolean;
   onSaved: (value: EditorCreatorProfile) => void;
+  /** BasicSectionForm과 같은 계약 — 저장 안 한 입력이 있으면 부모에 알린다. */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 /**
@@ -30,13 +32,21 @@ interface Props {
  * 프로젝트 상태로 판단해 내려준다) — 심사 중인 프로젝트를 보면서 계정 프로필을 태연히
  * 바꾸는 것은 "무엇을 고치는 화면인지" 헷갈리게 만든다.
  */
-export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, nameLocked, onSaved }: Props) {
+export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, nameLocked, onSaved, onDirtyChange }: Props) {
   const [name, setName] = useState(initial.name);
   const [contactName, setContactName] = useState(initial.contactName ?? '');
   const [phone, setPhone] = useState(initial.phone ?? '');
   const [bio, setBio] = useState(initial.bio ?? '');
   const [linksText, setLinksText] = useState((initial.links ?? []).join('\n'));
   const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
+
+  // BasicSectionForm과 같은 이유·같은 방식(파생값, 별도 state 없음).
+  const dirty = name !== initial.name
+    || contactName !== (initial.contactName ?? '')
+    || phone !== (initial.phone ?? '')
+    || bio !== (initial.bio ?? '')
+    || linksText !== (initial.links ?? []).join('\n');
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
 
   // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 그 뒤 입력이 바뀌면 낡은
   // 안내로 남는다(2026-09-17 리뷰 지적).
