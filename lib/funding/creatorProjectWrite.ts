@@ -227,9 +227,17 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * (관리자 심사)에서 정했다: **이름만 잠근다.** Task 10이 공개 상세의 판매자 표시 옆에
  * `creator.name`을 그리기 시작하면서, 승인된 프로젝트를 가진 개설자가 이름을 아무
  * 문자열로 바꾸면 ISR 60초 안에 공개 페이지에 그대로 뜨게 됐다(심사도 알림도 없이). 그래서
- * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 거부한다. `bio`·연락처·
+ * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 **무시한다**. `bio`·연락처·
  * `links`는 공개 화면에 실리지 않으므로 계속 자유롭게 고칠 수 있다. 새 컬럼 없이
  * `funding_projects`를 그때그때 조회해 판정한다.
+ *
+ * **거부가 아니라 무시인 이유.** 화면이 이름 칸을 `disabled`로 두므로(`nameLocked`) 개설자가
+ * 이름을 직접 고쳐 보낼 길이 없다. 그래도 불일치는 생긴다 — 운영자가
+ * `creatorAccountDecision.ts`로 이름을 A→B로 고치는 동안 개설자가 편집 화면을 열어 두고
+ * 있으면, 그 화면은 계속 A를 들고 제출한다. 거부하면 개설자가 건드린 적 없는 칸 때문에
+ * 소개·연락처·링크가 통째로 저장되지 않고, 화면 안내("소개·연락처·링크는 계속 고칠 수
+ * 있습니다")와도 어긋난다. 잠금의 목적은 이름이 안 바뀌는 것이지 나머지 저장을 막는 것이
+ * 아니므로, 들어온 이름을 버리고 기존 이름을 유지한 채 나머지를 저장한다.
  *
  * **예외: 지금 이름이 가입 시 채워진 기본값(이메일 로컬파트)이면 잠그지 않는다.** 설정한
  * 적 없는 값을 잠그는 것은 잠금이 아니라 사고다(`isDefaultCreatorName` 주석 참조). 기존에
@@ -244,11 +252,11 @@ const hasApprovedProject = async (creatorId: string): Promise<boolean> => {
 
 /**
  * 지금 이 개설자의 이름이 잠겨 있는지 — 편집 화면이 이름 칸을 비활성화하고 이유를
- * 보여줄지 판단하는 힌트다. 판정 조건은 `saveCreatorSection`이 실제로 거부하는 조건과
- * 정확히 같아야 한다(`hasApprovedProject`를 함께 쓰는 이유) — 둘이 갈리면 화면은 열려
- * 있는데 저장은 막히거나, 화면은 잠겨 있는데 저장은 되는 모순이 생긴다.
+ * 보여줄지 판단하는 힌트다. 판정 조건은 `saveCreatorSection`이 실제로 이름 변경을 무시하는
+ * 조건과 정확히 같아야 한다(`hasApprovedProject`를 함께 쓰는 이유) — 둘이 갈리면 화면은
+ * 열려 있는데 이름이 저장되지 않거나, 화면은 잠겨 있는데 저장은 되는 모순이 생긴다.
  *
- * **이 힌트는 집행자가 아니다.** 서버는 여전히 `saveCreatorSection`이 유일하게 막는다 —
+ * **이 힌트는 집행자가 아니다.** 서버는 여전히 `saveCreatorSection`이 유일하게 집행한다 —
  * 이 함수는 편집 화면 로드 시점에 한 번만 불러 안내 문구를 미리 보여주는 용도다.
  */
 export const isCreatorNameLocked = async (creatorId: string): Promise<boolean> => {
@@ -264,14 +272,13 @@ export const saveCreatorSection = async (creatorId: string, value: CreatorSectio
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
 
-  if (value.name !== existing.name && !isDefaultCreatorName(existing.name, existing.email)) {
-    if (await hasApprovedProject(creatorId)) {
-      return deny('locked', '승인된 프로젝트가 있어 이름은 더 이상 바꿀 수 없습니다. 소개·연락처·링크는 계속 고칠 수 있습니다.');
-    }
-  }
+  // 잠겨 있으면 들어온 이름을 버리고 기존 이름을 그대로 쓴다(거부하지 않는다 — 위 주석).
+  const nameLocked = value.name !== existing.name
+    && !isDefaultCreatorName(existing.name, existing.email)
+    && await hasApprovedProject(creatorId);
 
   await getDb().update(fundingCreators).set({
-    name: value.name,
+    name: nameLocked ? existing.name : value.name,
     contactName: value.contactName,
     phone: value.phone,
     bio: value.bio,
