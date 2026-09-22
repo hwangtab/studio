@@ -254,6 +254,22 @@ export const orders = sqliteTable('orders', {
   manageToken: text('manage_token').notNull().unique(),
   /** 마지막 알림 발송 실패 사유. 성공 시 비움 (contracts notificationError 패턴). */
   notificationError: text('notification_error'),
+  /**
+   * 결제창에서 승인이 안 난 사유. 승인 성공 경로(confirm)는 절대 여기 쓰지 않는다.
+   *
+   * 토스는 결제가 거절되면 `failUrl`로 `?code=&message=`를 붙여 돌려보내고, 그 경로는
+   * confirm 라우트에 도달하지 않는다 — 즉 실패 사유가 우리 쪽에는 한 글자도 남지 않았다.
+   * 2026-09-19에 한 후원자가 3분 동안 세 번 시도하고 떠났는데(FND-20260919-784A01D6·
+   * 4D2ED6A4·05D892DD, 각 2만원) 왜 실패했는지 확인할 방법이 없었다. 토스 대시보드가
+   * 유일한 기록이고 우리 로그·DB·메일 어디에도 없었다.
+   *
+   * 덮어쓰기다 — 재시도하면 마지막 사유만 남는다. 시도 이력이 필요하면 그때 별도 테이블을
+   * 만든다(지금은 주문 자체가 시도마다 새로 생기므로 주문 행이 곧 시도 이력이다).
+   */
+  paymentFailCode: text('payment_fail_code'),
+  /** 토스가 준 원문 메시지. 화면에는 쓰지 않는다(우리 문구로 옮겨 보여준다). */
+  paymentFailMessage: text('payment_fail_message'),
+  paymentFailedAt: integer('payment_failed_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });
