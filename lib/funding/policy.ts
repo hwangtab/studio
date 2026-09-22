@@ -91,7 +91,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-21-r2';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-22';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -120,7 +120,7 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-21-r3';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-22';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
@@ -151,6 +151,17 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
   // 후원자의 브라우저가 Cloudflare에 직접 붙는다(lib/funding/r2.ts). 파일 자체에 개인정보는
   // 없지만 그 요청의 접속 정보가 Cloudflare를 지난다 — 그래서 수탁자 표에 싣는다.
   { name: 'Cloudflare', purpose: '디지털 리워드 파일 보관 및 내려받기 제공', items: '내려받기 요청 시 전송되는 접속 정보(IP 주소, 브라우저 정보)' },
+  // 유형으로 적는다 — 개설자는 프로젝트마다 다른 개인·팀이라 회사 이름처럼 미리 열거할 수
+  // 없다. 위탁 업무는 실제로 하는 일만 적는다: 배송 리워드의 발송과 그에 따른 문의 응대
+  // (lib/funding/fulfillment.ts가 개설자에게 여는 쓰기는 발송 상태·택배사·운송장뿐이다).
+  // 항목은 CreatorShippingRow(lib/funding/creatorShipping.ts)의 화이트리스트 그대로다 —
+  // 이메일·결제 금액·결제수단·주문번호·응원 메시지는 그 행에 담기지 않으므로 여기에도 없다.
+  // 제공 시점은 모금 마감 뒤다(같은 파일 loadCreatorShipping의 state !== 'closed' 분기).
+  {
+    name: '프로젝트 개설자(펀딩 프로젝트를 직접 등록한 아티스트)',
+    purpose: '배송 리워드의 발송과 배송 문의 응대',
+    items: '모금 마감 뒤, 배송 리워드를 선택한 후원 건의 받는 분 이름, 연락처, 우편번호, 주소, 상세주소, 배송 메모와 그 후원의 리워드 이름·수량·발송 상태·택배사·운송장번호',
+  },
 ];
 
 /**
