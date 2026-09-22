@@ -71,6 +71,16 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
     // 때문) — 지금 열려 있는 프로젝트의 id를 그대로 쓴다.
     const result = await saveCreatorSection(_projectId, value);
     if (result.ok) {
+      // BasicSectionForm의 setSlug(normalizedSlug)와 같은 이유·같은 처방(2026-09-22
+      // 리뷰 지적). submit이 trim·빈 값→null·줄 필터링으로 정규화한 값을 서버로
+      // 보내는데, 로컬 입력(contactName·phone·bio·linksText)은 원문 그대로 남아 있으면
+      // dirty 판정이 "원문 vs 정규화된 initial"을 비교하게 되어 저장에 성공해도 영영
+      // dirty가 안 풀린다 — 이탈 경고가 매번 뜨면 사용자가 그 경고를 무시하게 되어
+      // 가드 자체가 무력해진다. 저장한 값 그대로 로컬 상태를 되돌린다.
+      setContactName(value.contactName ?? '');
+      setPhone(value.phone ?? '');
+      setBio(value.bio ?? '');
+      setLinksText((value.links ?? []).join('\n'));
       setSave({ status: 'success' });
       onSaved(value);
     } else {

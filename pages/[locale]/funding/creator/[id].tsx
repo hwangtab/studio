@@ -137,8 +137,11 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
   // 경로다. Pages Router에는 이동을 취소하는 공식 API가 없어, routeChangeStart에서
   // 확인 후 거부하면 이동을 강제로 중단시키는 표준 우회(Next.js 이슈 트래커에 오래
   // 정착된 패턴)를 쓴다: 라우터 이벤트에 routeChangeError를 emit하고 예외를 던진다.
-  // 콘솔에 "Abort fetching component for route..." 로그가 남는 것은 이 우회의 알려진
-  // 부작용이지 버그가 아니다.
+  // 이 우회의 알려진 부작용은 콘솔에 `Uncaught (in promise) routeChange aborted (...)`가
+  // 남는 것이다(next/dist/client/link.js의 linkClicked가 router.push()에 .catch를
+  // 안 달아서다) — "Abort fetching component for route..."가 아니다. 그 메시지는
+  // 진행 중이던 다른 이동이 취소될 때 나는 것이라 여기서는 뜨지 않는다(2026-09-22
+  // 리뷰 지적 — 실제로 안 나는 로그를 적어 두면 다음 사람이 그 로그를 찾다가 헤맨다).
   useEffect(() => {
     const handleRouteChangeStart = (url: string) => {
       if (!hasUnsavedChanges) return;
@@ -151,6 +154,28 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
     };
     router.events.on('routeChangeStart', handleRouteChangeStart);
     return () => router.events.off('routeChangeStart', handleRouteChangeStart);
+  }, [hasUnsavedChanges, router]);
+
+  // 브라우저 뒤로/앞으로가기(popstate) 경고 — routeChangeStart만으로는 안 잡힌다.
+  // Next 내부(onPopState)는 브라우저가 **이미 히스토리를 옮긴 뒤** changeState를 불러
+  // 그 안에서 routeChangeStart를 emit한다. 그래서 위 핸들러에서 throw해도 주소창은
+  // 이미 목적지로 바뀐 채 남고, 화면(getServerSideProps 결과)만 안 바뀌어 주소와 화면이
+  // 어긋난다 — 그 뒤 뒤로가기 히스토리도 한 칸씩 밀린다(2026-09-22 리뷰 지적).
+  // beforePopState는 그 changeState보다 앞서 불려 이동 자체를 취소(false 반환)할 수
+  // 있고, 취소하면 routeChangeStart 자체가 안 나므로 confirm이 두 번 뜨지도 않는다.
+  useEffect(() => {
+    router.beforePopState(() => {
+      if (!hasUnsavedChanges) return true;
+      // eslint-disable-next-line no-alert
+      if (window.confirm(UNSAVED_CHANGES_MESSAGE)) return true;
+      // 브라우저가 이미 옮겨 둔 히스토리 엔트리를 제자리로 되돌린다 — 안 하면 주소창만
+      // 목적지로 남고 화면은 편집기 그대로인 상태가 된다.
+      window.history.forward();
+      return false;
+    });
+    return () => {
+      router.beforePopState(() => true);
+    };
   }, [hasUnsavedChanges, router]);
 
   // 구획별 판정 — 서버(lib/funding/reviewTransition.ts의 canCreatorEditSection)와 같은 단위다.

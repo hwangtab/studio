@@ -15,6 +15,7 @@ jest.mock('next/router', () => ({
   useRouter: () => ({
     asPath: '/ko/funding/creator/proj-1',
     events: { on: jest.fn(), off: jest.fn(), emit: jest.fn() },
+    beforePopState: jest.fn(),
   }),
 }));
 
