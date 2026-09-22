@@ -241,6 +241,9 @@ describe('개설자 발송 상태 저장 라우트', () => {
     expect(row.tracking_company).toBe('CJ');
     expect(row.tracking_number).toBe('1234');
     expect(row.fulfillment_updated_by).toBe(`creator:${CREATOR_A}`);
+    // 구획 저장의 `creator_save:` 키를 공유하지 않는다 — 공유하면 후원 31건째부터
+    // 정상적인 연속 저장이 429로 막힌다(리뷰 지적 M1).
+    expect(consumeRateLimit).toHaveBeenCalledWith(`creator_fulfillment:${CREATOR_A}`, 300, 600);
   });
 
   it('응답에 다른 후원의 정보가 실리지 않는다', async () => {

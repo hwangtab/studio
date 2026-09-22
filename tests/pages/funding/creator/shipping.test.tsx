@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // 이 페이지 모듈은 최상위에서 `lib/funding/creatorAuth`를 import한다(getServerSideProps용) —
@@ -7,6 +7,11 @@ import '@testing-library/jest-dom';
 jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorRequest: jest.fn() }));
 jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({ loadProjectForCreator: jest.fn() }));
 jest.mock('../../../../lib/funding/creatorShipping', () => ({ loadCreatorShipping: jest.fn() }));
+// ShippingTable이 부르는 클라이언트 API. 리뷰 지적(I3): 저장 버튼이 실제로 이 함수를
+// **올바른 projectId로** 부르는지 확인하는 테스트가 없었다 — GSSP의 `projectId: id`가
+// 리팩터에서 빠지면(또는 다른 값으로 바뀌면) 요청 URL이 깨져 전 행의 저장이 실패하는데,
+// 타입 검사도(선택적 prop이 되는 순간) 렌더 스냅샷도 이걸 못 잡는다.
+jest.mock('../../../../components/funding/creator/api', () => ({ saveFulfillment: jest.fn() }));
 
 // eslint-disable-next-line import/first
 import CreatorShippingPage, { getServerSideProps } from '../../../../pages/[locale]/funding/creator/[id]/shipping';
@@ -16,6 +21,8 @@ import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth'
 import { loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
 // eslint-disable-next-line import/first
 import { loadCreatorShipping, type CreatorShippingRow, type CreatorShippingSummary } from '../../../../lib/funding/creatorShipping';
+// eslint-disable-next-line import/first
+import { saveFulfillment } from '../../../../components/funding/creator/api';
 
 const resStub = () => ({ setHeader: jest.fn() }) as unknown as import('http').ServerResponse;
 
@@ -77,6 +84,47 @@ describe('개설자 배송 화면', () => {
     );
     expect(screen.getByText('홍길동')).toBeInTheDocument();
     expect(screen.getByText(/서울시 은평구/)).toBeInTheDocument();
+  });
+
+  describe('발송 상태 저장', () => {
+    it('저장 버튼을 누르면 올바른 인자로 API를 부른다', async () => {
+      (saveFulfillment as jest.Mock).mockResolvedValue({ ok: true });
+      render(
+        <CreatorShippingPage
+          view={{ state: 'open', summary: SUMMARY, rows: [ROW] }}
+          projectTitle="제목"
+          projectId="proj-1"
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: '저장' }));
+
+      expect(saveFulfillment).toHaveBeenCalledTimes(1);
+      // projectId는 GSSP가 내려준 값(props.projectId) 그대로여야 한다 — 이게 빠지거나
+      // 다른 값으로 바뀌면 요청 URL이 깨져 저장이 조용히 실패한다.
+      expect(saveFulfillment).toHaveBeenCalledWith('proj-1', {
+        pledgeId: 'pledge-1',
+        fulfillmentStatus: 'none',
+        trackingCompany: '',
+        trackingNumber: '',
+      });
+      expect(await screen.findByText('저장했습니다.')).toBeInTheDocument();
+    });
+
+    it('저장 실패 시 서버가 준 한국어 오류 메시지를 행 아래에 보여준다', async () => {
+      (saveFulfillment as jest.Mock).mockResolvedValue({ ok: false, message: '모금이 끝난 뒤에만 발송 상태를 바꿀 수 있습니다.' });
+      render(
+        <CreatorShippingPage
+          view={{ state: 'open', summary: SUMMARY, rows: [ROW] }}
+          projectTitle="제목"
+          projectId="proj-1"
+        />,
+      );
+
+      fireEvent.click(screen.getByRole('button', { name: '저장' }));
+
+      expect(await screen.findByText('모금이 끝난 뒤에만 발송 상태를 바꿀 수 있습니다.')).toBeInTheDocument();
+    });
   });
 
   describe('getServerSideProps', () => {

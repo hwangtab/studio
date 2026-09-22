@@ -48,6 +48,7 @@ const addPledge = async (opts: {
   shippingName?: string | null;
   adminMemo?: string | null;
   supporterMessage?: string | null;
+  fulfillmentUpdatedBy?: string | null;
 }) => {
   seq += 1;
   const orderNo = `SNB-TEST-${String(seq).padStart(6, '0')}`;
@@ -83,6 +84,7 @@ const addPledge = async (opts: {
     shippingAddress1: opts.shippingName === null ? null : '서울시 은평구',
     adminMemo: opts.adminMemo === undefined ? null : opts.adminMemo,
     supporterMessage: opts.supporterMessage === undefined ? '함께해 주셔서 고맙습니다' : opts.supporterMessage,
+    fulfillmentUpdatedBy: opts.fulfillmentUpdatedBy === undefined ? null : opts.fulfillmentUpdatedBy,
     createdAt: opts.createdAt ? d(opts.createdAt) : d('2020-01-01'),
     updatedAt: d('2020-01-01'),
   });
@@ -146,6 +148,29 @@ describe('파기 대상 판정', () => {
     expect(row.unitAmount).toBe(10000);
     expect(row.rewardId).toBe('cd');
     expect(row.deliveredAt).not.toBeNull();
+  });
+
+  /**
+   * `fulfillment_updated_by`(발송 상태를 마지막으로 바꾼 주체)는 **일부러** 파기하지
+   * 않는다(retention.ts 주석 참조) — 후원자의 개인정보가 아니라 운영자·개설자 행위자
+   * 식별자라 파기 사유(리워드 전달 후 1년, 처리방침 8항)가 적용되지 않는다.
+   *
+   * 이 테스트가 없으면, 누군가 `.set()`에 `fulfillmentUpdatedBy: null`을 한 줄 더해도
+   * (예: "creator:<id>가 식별자니까 지우자"는 그럴듯한 판단으로) 다른 파기 테스트는
+   * 전부 초록으로 남고 이 컬럼만 조용히 사라진다.
+   */
+  it('파기 후에도 fulfillment_updated_by는 남는다', async () => {
+    await addPledge({
+      id: 'audit-trail',
+      deliveredAt: '2024-01-01',
+      paidAt: '2020-01-01',
+      fulfillmentUpdatedBy: 'creator:some-creator-id',
+    });
+    const r = await purgeExpiredFundingPersonalData(NOW);
+    expect(r.purged).toBe(1);
+    const row = await pledgeOf('audit-trail');
+    expect(row.shippingName).toBeNull();
+    expect(row.fulfillmentUpdatedBy).toBe('creator:some-creator-id');
   });
 
   /**

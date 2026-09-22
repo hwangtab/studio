@@ -42,7 +42,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
   }
 
-  if (!(await consumeRateLimit(`creator_save:${auth.creatorId}`, 30, 60))) {
+  /**
+   * `creator_save:<creatorId>`(구획 저장이 쓰는 키, 30회/60초)를 공유하지 않는다.
+   *
+   * 발송 처리는 구획 저장과 성격이 다르다 — 개설자가 한 자리에서 후원 건마다 행 하나씩
+   * 연속으로 저장한다. 30/60초를 공유하면 후원 31건째부터 429가 뜨는데, 이건 남용이 아니라
+   * 정상적인 작업 흐름이다. 별도 키 `creator_fulfillment:<creatorId>`로 300회/600초(10분)를
+   * 준다 — 지금 유일한 실사례(강정피스앤뮤직캠프)가 26건이고, 몇백 건 규모의 캠페인이
+   * 생겨도 한 세션에서 다 처리할 수 있을 만큼 넉넉하게 잡았다. 그래도 무한은 아니다 —
+   * 스크립트로 무한 반복 호출하는 경로는 여전히 막는다.
+   */
+  if (!(await consumeRateLimit(`creator_fulfillment:${auth.creatorId}`, 300, 600))) {
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
   }
 

@@ -128,11 +128,12 @@ const readDeliveredAt = async (pledgeId: string): Promise<number | null> => {
 
 const readPledgeRow = async (pledgeId: string) => {
   const r = await client.execute({
-    sql: 'SELECT fulfillment_status, tracking_company, tracking_number FROM funding_pledges WHERE id = ?',
+    sql: 'SELECT fulfillment_status, tracking_company, tracking_number, fulfillment_updated_by FROM funding_pledges WHERE id = ?',
     args: [pledgeId],
   });
   return r.rows[0] as unknown as {
     fulfillment_status: string; tracking_company: string | null; tracking_number: string | null;
+    fulfillment_updated_by: string | null;
   };
 };
 
@@ -165,6 +166,23 @@ it('개설자는 자기 프로젝트의 후원을 실제로 발송 처리할 수
   expect(row.fulfillment_status).toBe('shipped');
   expect(row.tracking_company).toBe('CJ대한통운');
   expect(row.tracking_number).toBe('111222333');
+  // 누가 바꿨는지는 admin_memo가 아니라 fulfillment_updated_by에 남는다(retention.ts가
+  // admin_memo만 파기하므로, 감사 기록이 개인정보와 같이 사라지지 않게 하려는 것이다).
+  expect(row.fulfillment_updated_by).toBe(`creator:${creatorA}`);
+});
+
+/**
+ * 관리자 actor가 남기는 값도 단언한다 — 이게 없으면 `fulfillment.ts`의
+ * `actor.kind === 'admin' ? 'admin' : ...`을 누가 `actor.kind === 'creator' ? ... : null`로
+ * 뒤집어도 이 파일의 어떤 테스트도 못 잡는다. 그러면 관리자 변경만 기록이 비어 "누가
+ * 바꿨나"가 절반만 남는다.
+ */
+it('관리자 actor는 fulfillment_updated_by에 admin을 남긴다', async () => {
+  const creatorA = await seedCreator();
+  const { pledgeId } = await seedPledge({ creatorId: creatorA });
+  const result = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin' } });
+  expect(result).toEqual({ ok: true });
+  expect((await readPledgeRow(pledgeId)).fulfillment_updated_by).toBe('admin');
 });
 
 /**
