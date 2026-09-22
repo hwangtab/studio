@@ -1,6 +1,8 @@
 import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 
+import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
+
 import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
@@ -271,6 +273,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
     setQuantityText(String(quantity));
     setAdditionalText(String(additional));
     setSubmitting(true);
+    // 결제창 실패를 서버에 알릴 때 쓴다 — catch에서 주문번호가 보여야 한다.
+    let createdOrderNo: string | null = null;
     try {
       const res = await fetch('/api/funding/pledges', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -303,6 +307,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
        * 수량을 반영하지만, 청구되는 것은 서버가 계산한 값이다.
        */
       const origin = window.location.origin;
+      createdOrderNo = json.orderNo;
       await requestPayment({
         orderId: json.orderNo,
         orderName: `[펀딩] ${project.title} · ${reward.title}`.slice(0, 100),
@@ -313,6 +318,14 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         failUrl: `${origin}/ko/funding/fail?slug=${encodeURIComponent(project.slug)}`,
       });
     } catch (err) {
+      /**
+       * 결제창이 열리기 전에 SDK가 던진 경우 실패 사유는 여기서만 알 수 있다 —
+       * 토스의 failUrl 리다이렉트를 안 타므로 실패 화면(서버)도 모른다. 2026-09-19에
+       * 한 후원자가 세 번 실패하고 떠났는데 이유가 어디에도 없었던 것이 이 구멍이다.
+       * 취소(USER_CANCEL 등)도 코드가 오지만 아래 분기에서 조용히 빠지므로, 기록은
+       * 분기보다 먼저 한다 — "창을 닫았다"도 알아야 할 사실이다.
+       */
+      reportPaymentFailure(createdOrderNo, err);
       /**
        * 결제창을 닫으면 여기로 온다 — 오류가 아니다. 주문은 pending으로 남고, 다시
        * 제출하면 `previousOrderNo`가 그 홀드를 풀어 준다(본인이 한정 재고를 붙들고
