@@ -219,7 +219,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const project = await loadProjectForAdmin(id);
       if (project) {
-        const mailError = await sendPublicStatusEmail(project, action, note?.trim() || null, result.slug);
+        const mailError = await sendPublicStatusEmail(project, action, note?.trim() || null, result.slug, now);
         if (mailError) {
           warnings.push(mailError);
           const fallbackError = await sendPublicStatusOperatorFallback(project, action, result.slug, mailError);

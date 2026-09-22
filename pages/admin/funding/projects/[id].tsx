@@ -12,6 +12,7 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
+import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
@@ -279,12 +280,31 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
     return run(() => patchFundingProject(project.id, { action: 'close', note: reason.trim() }), '종료했습니다.');
   };
 
+  // 다시 열어도 status만 auto가 될 뿐 모금 기간(startAt·endAt)은 승인 뒤 잠겨 있어
+  // 바뀌지 않는다(basicLockedViolation) — computeProjectState로 실제 어떤 상태가 되는지
+  // 미리 보고 확인창 문구를 거기 맞춘다. "다시 열면 즉시 후원을 받습니다"는 기간이
+  // 이미 지났거나 아직 시작 전이면 사실이 아니다.
+  const reopenState = computeProjectState({ status: 'auto', startAt: project.startAt, endAt: project.endAt }, new Date());
+
   const handleReopen = () => {
-    if (!window.confirm(`다시 열면 /funding/${project.slug}에서 즉시 새 후원을 받습니다. 다시 열까요?`)) return;
+    const message =
+      reopenState === 'live'
+        ? `다시 열면 /funding/${project.slug}에서 즉시 새 후원을 받습니다. 다시 열까요?`
+        : reopenState === 'upcoming'
+          ? `다시 열어도 모금 시작일(${formatKstDateTimeFull(project.startAt)})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다. 다시 열까요?`
+          : `다시 열어도 모금 종료일(${formatKstDateTimeFull(project.endAt)})이 이미 지나 지금은 후원을 받지 않습니다. 그래도 다시 열까요?`;
+    if (!window.confirm(message)) return;
     return run(() => patchFundingProject(project.id, { action: 'reopen' }), '다시 열었습니다.');
   };
 
   const handleHide = () => {
+    // 숨김은 종료와 달리 페이지·결제가 그대로 열려 있는 조치라 사유를 강제하지 않는다
+    // (decidePublicStatus도 hide에는 note를 요구하지 않는다) — 하지만 신고 대응처럼
+    // 개설자가 "무엇을 고쳐야 하는지" 알아야 하는 경우가 있으므로 적을 수는 있게 한다.
+    const reason = window.prompt(
+      '숨김 사유를 적어 주세요 (선택 — 적으면 개설자에게 메일로 전달됩니다. 비워 두고 진행할 수도 있습니다).',
+    );
+    if (reason === null) return;
     if (
       !window.confirm(
         `숨기면 /funding 목록과 사이트맵에서 빠지지만, /funding/${project.slug} 주소를 아는 사람은 여전히 볼 수 있고 후원도 계속 받습니다. 숨길까요?`,
@@ -292,7 +312,10 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
     ) {
       return;
     }
-    return run(() => patchFundingProject(project.id, { action: 'hide' }), '목록에서 숨겼습니다.');
+    return run(
+      () => patchFundingProject(project.id, { action: 'hide', note: reason.trim() || undefined }),
+      '목록에서 숨겼습니다.',
+    );
   };
 
   const handleUnhide = () => {
@@ -512,7 +535,7 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
           </div>
 
           {project.reviewStatus === 'approved' && (
-            <div>
+            <div className="mb-6">
               <h2 className="text-lg font-bold text-gray-900 mb-3">공개 상태</h2>
               <p className="mb-3 text-sm text-gray-500">
                 종료는 &ldquo;모금을 멈춘다&rdquo;이고 숨김은 &ldquo;목록·사이트맵에서 뺀다&rdquo;입니다 — 서로

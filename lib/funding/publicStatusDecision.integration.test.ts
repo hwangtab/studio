@@ -12,6 +12,10 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
 import { decidePublicStatus } from './publicStatusDecision';
+// eslint-disable-next-line import/first
+import { getDbFundingProject } from './dbProjects';
+// eslint-disable-next-line import/first
+import { validateCreatePledgePayload, type CreatePledgePayload } from './validation';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -53,9 +57,35 @@ const seedProject = async (
   return project.id;
 };
 
+const seedReward = async (
+  projectId: string,
+  overrides: Partial<typeof schema.fundingRewards.$inferInsert> = {},
+) => {
+  await mockDb.insert(schema.fundingRewards).values({
+    projectId,
+    rewardId: 'basic',
+    title: '기본 리워드',
+    description: '설명',
+    amount: 30_000,
+    estimatedDelivery: '2026-11-01',
+    ...overrides,
+  });
+};
+
 const readProject = async (id: string) => {
   const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, id));
   return row;
+};
+
+const PLEDGE_PAYLOAD: Omit<CreatePledgePayload, 'projectSlug' | 'rewardId'> = {
+  quantity: 1,
+  additionalAmount: 0,
+  paymentMethod: 'toss',
+  customerName: '후원자',
+  customerPhone: '010-0000-0000',
+  customerEmail: 'supporter@example.com',
+  displayNamePublic: false,
+  termsAgreed: true,
 };
 
 describe('승인 전 프로젝트', () => {
@@ -186,7 +216,7 @@ describe('숨김(hide)·노출(unhide)', () => {
     if (!result.ok) expect(result.code).toBe('conflict');
   });
 
-  it('hide·unhide는 reviewNote를 건드리지 않는다', async () => {
+  it('사유 없이 hide하면 기존 reviewNote를 보존한다', async () => {
     const creator = await seedCreator('hide-note@example.com');
     const projectId = await seedProject(creator, {
       reviewStatus: 'approved',
@@ -197,5 +227,63 @@ describe('숨김(hide)·노출(unhide)', () => {
     await decidePublicStatus(projectId, 'hide', {});
     const after = await readProject(projectId);
     expect(after.reviewNote).toBe('기존 메모');
+  });
+});
+
+/**
+ * 이 작업의 존재 이유 — "종료하면 정말 후원이 막히는가"를 한 줄로 꿴다. 기존
+ * `validation.test.ts`는 `computeProjectState`가 'live'가 아니면 거부한다는 것만 보고,
+ * 그 앞단인 `decidePublicStatus`(DB에 실제로 status를 쓰는 코드)와는 이어져 있지 않았다.
+ * 여기서는 승인된 프로젝트를 실제로 종료한 뒤, 공개 조회 경로(`getDbFundingProject`)가
+ * 만든 `FundingProject`로 결제 검증까지 그대로 통과시킨다.
+ */
+describe('종료 → 결제 거부까지 한 줄로', () => {
+  it('종료 전에는 결제가 통과하고, 종료 후에는 같은 프로젝트가 거부된다', async () => {
+    const creator = await seedCreator('e2e-close@example.com');
+    const projectId = await seedProject(creator, {
+      reviewStatus: 'approved',
+      status: 'auto',
+      startAt: new Date('2026-10-01T00:00:00Z'),
+      endAt: new Date('2026-10-31T00:00:00Z'),
+    });
+    await seedReward(projectId);
+    const project = await readProject(projectId);
+    const now = new Date('2026-10-15T00:00:00Z'); // 모금 기간(10/1~10/31) 한가운데 — 'live'
+
+    const before = await getDbFundingProject(project.slug);
+    expect(before).not.toBeNull();
+    const beforeResult = validateCreatePledgePayload(
+      { ...PLEDGE_PAYLOAD, projectSlug: project.slug, rewardId: 'basic' },
+      before,
+      now,
+    );
+    expect(beforeResult.ok).toBe(true);
+
+    const closeResult = await decidePublicStatus(projectId, 'close', { note: '가격 표기 오류' }, now);
+    expect(closeResult.ok).toBe(true);
+
+    const after = await getDbFundingProject(project.slug);
+    expect(after?.status).toBe('closed');
+    const afterResult = validateCreatePledgePayload(
+      { ...PLEDGE_PAYLOAD, projectSlug: project.slug, rewardId: 'basic' },
+      after,
+      now,
+    );
+    expect(afterResult.ok).toBe(false);
+    if (!afterResult.ok) expect(afterResult.message).toBe('지금은 펀딩을 받지 않는 프로젝트입니다.');
+  });
+});
+
+describe('hide에 담은 사유는 서버가 실제로 저장한다', () => {
+  it('note를 보내면 reviewNote에 저장된다 — 메일에만 싣고 DB에는 안 남기는 비대칭이 없다', async () => {
+    const creator = await seedCreator('hide-persist@example.com');
+    const projectId = await seedProject(creator, { reviewStatus: 'approved', status: 'auto', hidden: false });
+
+    const result = await decidePublicStatus(projectId, 'hide', { note: '신고 접수 — 확인 중' });
+    expect(result.ok).toBe(true);
+
+    const after = await readProject(projectId);
+    expect(after.hidden).toBe(true);
+    expect(after.reviewNote).toBe('신고 접수 — 확인 중');
   });
 });

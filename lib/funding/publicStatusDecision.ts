@@ -86,13 +86,20 @@ export const decidePublicStatus = async (
     return { ok: true, slug: project.slug };
   }
 
-  // hide / unhide — reviewNote는 건드리지 않는다. 개설자에게 보이는 그 메모는 심사
-  // 판정·종료 사유를 담는 칸이지 목록 노출 여부와는 무관하다.
+  // hide / unhide — 사유는 강제하지 않지만(개설자 화면 프롬프트는 선택), 운영자가
+  // 적었으면(예: 신고 대응) close·reopen과 같은 규칙으로 reviewNote에 남긴다. 여기서만
+  // 저장하고 메일에는 안 싣는 비대칭이 생기면 개설자는 이유를 알 방법이 메일뿐인데
+  // 그 메일과 DB 기록이 어긋난다.
   const fromHidden = action === 'hide' ? false : true;
   const toHidden = action === 'hide';
   const result = await db
     .update(fundingProjects)
-    .set({ hidden: toHidden, lastmod, updatedAt: now })
+    .set({
+      hidden: toHidden,
+      ...(input.note !== undefined ? { reviewNote: note } : {}),
+      lastmod,
+      updatedAt: now,
+    })
     .where(
       and(
         eq(fundingProjects.id, projectId),

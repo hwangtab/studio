@@ -382,7 +382,7 @@ describe('공개 상태(close/reopen/hide/unhide)', () => {
     expect(r.body).toEqual({ ok: true });
     expect(decidePublicStatus).toHaveBeenCalledWith('proj-1', 'close', { note: '가격 오류' }, expect.any(Date));
     expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
-    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'close', '가격 오류', 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'close', '가격 오류', 'demo', expect.any(Date));
   });
 
   it('다시 열기(reopen) 성공 → 200, revalidate·메일 호출, 메모 없이도 된다', async () => {
@@ -390,7 +390,7 @@ describe('공개 상태(close/reopen/hide/unhide)', () => {
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'reopen' });
     expect(r.status).toBe(200);
     expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
-    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'reopen', null, 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'reopen', null, 'demo', expect.any(Date));
   });
 
   it('숨기기(hide) 성공 → 200, revalidate·메일 호출', async () => {
@@ -398,14 +398,27 @@ describe('공개 상태(close/reopen/hide/unhide)', () => {
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'hide' });
     expect(r.status).toBe(200);
     expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
-    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'hide', null, 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'hide', null, 'demo', expect.any(Date));
+  });
+
+  /**
+   * hide는 사유를 강제하지 않지만(decidePublicStatus), UI가 보낸 사유가 있으면
+   * decidePublicStatus·메일 양쪽에 그대로 전달돼야 한다 — 메일에만 싣고 DB엔 안 남기는
+   * 비대칭이 생기면 안 된다(DB 쪽 저장은 publicStatusDecision.integration.test.ts가 확인).
+   */
+  it('숨기기에 사유를 보내면 decidePublicStatus와 메일 양쪽에 그대로 전달된다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'hide', note: '신고 접수 — 확인 중' });
+    expect(r.status).toBe(200);
+    expect(decidePublicStatus).toHaveBeenCalledWith('proj-1', 'hide', { note: '신고 접수 — 확인 중' }, expect.any(Date));
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'hide', '신고 접수 — 확인 중', 'demo', expect.any(Date));
   });
 
   it('노출(unhide) 성공 → 200, revalidate·메일 호출', async () => {
     (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'unhide' });
     expect(r.status).toBe(200);
-    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'unhide', null, 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'unhide', null, 'demo', expect.any(Date));
   });
 
   it('재검증이 실패해도 200이고 warnings에 사유가 있다', async () => {

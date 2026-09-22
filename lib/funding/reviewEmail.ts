@@ -2,9 +2,11 @@ import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
 import { PHONE, PHONE_NUMBER, SITE_URL } from './email';
+import { computeProjectState } from './projectState';
 
 import type { AdminProjectDetail } from './adminProjects';
 import type { AdminReviewAction } from './reviewDecision';
+import type { FundingStatus } from './shape';
 
 /**
  * 판정 메일이 다루는 세 가지. 독립 정의하지 않고 `reviewDecision.ts`의 `AdminReviewAction`을
@@ -212,14 +214,30 @@ const PUBLIC_STATUS_SUBJECT: Record<PublicStatusAction, string> = {
 /**
  * `sendReviewDecisionEmail`과 이름·구조를 맞췄다. 메일 실패는 판정을 실패시키지 않고
  * 실패 사유 문자열만 돌려준다 — 호출부(심사 API)가 화면에 보여준다.
+ *
+ * `now`를 받는 이유는 `reopen` 문면 때문이다. `status: auto`로 되돌려도
+ * `computeProjectState`가 `startAt`·`endAt`을 다시 보므로, 모금 기간이 이미 지난 뒤에
+ * 다시 열면 실제로는 후원이 안 들어온다 — "다시 열려 후원을 받습니다"라고 단언하면
+ * 없는 사실이 된다. 호출부(심사 API)가 이미 재조회한 `project`(= 이 함수가 받는
+ * `project`, `status`가 방금 갱신된 값)와 `now`를 그대로 넘긴다.
  */
 export const sendPublicStatusEmail = async (
   project: AdminProjectDetail,
   action: PublicStatusAction,
   note: string | null,
   slug: string,
+  now: Date = new Date(),
 ): Promise<string | null> => {
   const subject = `[스튜디오 놀] ${PUBLIC_STATUS_SUBJECT[action]} — ${project.title}`;
+
+  // reopen 전용 — 되돌린 뒤의 실제 모금 상태(live/upcoming/closed)를 본다. project.status는
+  // 호출부가 decidePublicStatus 성공 뒤 다시 읽은 값이라 이미 'auto'다.
+  const reopenState =
+    action === 'reopen'
+      ? computeProjectState({ status: project.status as FundingStatus, startAt: project.startAt, endAt: project.endAt }, now)
+      : null;
+  const startAtLabel = new Date(project.startAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' });
+  const endAtLabel = new Date(project.endAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' });
 
   const bodyByAction: Record<PublicStatusAction, string[]> = {
     close: [
@@ -233,9 +251,17 @@ export const sendPublicStatusEmail = async (
       `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
     ],
     reopen: [
-      '펀딩 프로젝트가 다시 공개되어 후원을 받습니다.',
+      '펀딩 프로젝트가 다시 공개되었습니다.',
       '',
       `공개 주소: ${publicUrl(slug)}`,
+      '',
+      // 모금 기간(startAt~endAt)은 승인 뒤 잠겨 있어(basicLockedViolation) 다시 여는 것만으로는
+      // 못 바꾼다 — 상태를 사실대로만 말한다.
+      ...(reopenState === 'live'
+        ? ['지금 바로 새 후원을 받습니다.']
+        : reopenState === 'upcoming'
+          ? [`모금 시작일(${startAtLabel})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다.`]
+          : [`모금 종료일(${endAtLabel})이 이미 지나 지금은 새 후원을 받지 않습니다.`]),
       ...(note ? ['', '[운영자 메모]', note] : []),
     ],
     hide: [
