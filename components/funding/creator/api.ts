@@ -52,6 +52,9 @@ export const deleteReward = (projectId: string, rewardId: string) =>
 export const submitProject = (projectId: string, agreedTermsVersion?: string) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/submit`, { agreedTermsVersion });
 
+export const withdrawProject = (projectId: string) =>
+  post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/withdraw`, {});
+
 export const createProject = () => post<{ id: string }>('/api/funding/creator/projects', {});
 
 export const logoutCreator = () => post('/api/funding/creator/logout', {});

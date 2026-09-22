@@ -213,6 +213,28 @@ export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail)
 };
 
 /**
+ * 개설자 심사 철회 알림 — 운영자에게만 보낸다(개설자는 화면 응답으로 이미 안다).
+ *
+ * 심사를 이미 시작했을 수 있다 — 운영자가 화면을 열어 보던 중이었다면 그 작업이 헛수고가
+ * 된 것을 알아야 한다. 링크는 submit 알림과 같은 프로젝트별 심사 화면이다.
+ */
+export const sendFundingCreatorWithdrawalEmail = (project: CreatorProjectDetail): Promise<string | null> => {
+  const contact = [project.creator.contactName, project.creator.phone].filter(Boolean).join(' / ') || '연락처 미기재';
+  return send([
+    { key: 'operator', params: {
+      to: OPERATOR_EMAIL,
+      subject: `[펀딩] 심사 철회 — ${project.title}`,
+      text: [
+        `개설자가 심사 신청을 철회했습니다. 프로젝트는 작성 중(draft) 상태로 돌아갔습니다.`,
+        `개설자: ${project.creator.name} (${contact})`,
+        `프로젝트: ${project.title}`,
+        `심사 화면: ${SITE_URL}/admin/funding/projects/${project.id}`,
+      ].join('\n'),
+    } },
+  ]);
+};
+
+/**
  * 개설자 로그인 메일 전역 일일 캡에 걸렸을 때의 운영자 알림.
  *
  * 캡에 걸린 정상 사용자는 메일을 못 받는데 화면은 성공이라고 답한다(주소 존재 여부를

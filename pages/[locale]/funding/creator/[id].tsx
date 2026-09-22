@@ -6,7 +6,7 @@ import { BasicSectionForm, type BasicSectionValue } from '../../../../components
 import { CreatorSectionForm } from '../../../../components/funding/creator/CreatorSectionForm';
 import { RewardSectionForm } from '../../../../components/funding/creator/RewardSectionForm';
 import { StorySectionForm } from '../../../../components/funding/creator/StorySectionForm';
-import { submitProject } from '../../../../components/funding/creator/api';
+import { submitProject, withdrawProject } from '../../../../components/funding/creator/api';
 import {
   IDLE_SAVE_STATE, REVIEW_STATUS_LABEL, REVIEW_STATUS_NOTICE, canEditSectionInBrowser,
   type CreatorSectionName, type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
@@ -92,6 +92,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
   const [project, setProject] = useState<EditorProject>(initial);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
+  const [withdraw, setWithdraw] = useState<SaveState>(IDLE_SAVE_STATE);
   const [agreedTerms, setAgreedTerms] = useState(false);
 
   // 구획별 판정 — 서버(lib/funding/reviewTransition.ts의 canCreatorEditSection)와 같은 단위다.
@@ -115,6 +116,18 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
       setProject((p) => ({ ...p, reviewStatus: 'submitted' }));
     } else {
       setSubmit({ status: 'error', message: result.message });
+    }
+  };
+
+  const handleWithdraw = async () => {
+    setWithdraw({ status: 'saving' });
+    const result = await withdrawProject(project.id);
+    if (result.ok) {
+      setWithdraw({ status: 'success' });
+      setSubmit(IDLE_SAVE_STATE);
+      setProject((p) => ({ ...p, reviewStatus: 'draft' }));
+    } else {
+      setWithdraw({ status: 'error', message: result.message });
     }
   };
 
@@ -248,6 +261,33 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{submit.message}</span>
             )}
           </div>
+          {/* 심사 신청은 draft·changes_requested에서만 가능해 위 버튼은 submitted에서 항상
+              비활성이다 — 그 자리를 대신해 submitted에서만 철회 버튼을 보여준다
+              (reviewTransition.ts의 submitted --withdraw--> draft).
+              철회 성공 순간 project.reviewStatus는 곧바로 'draft'로 바뀌므로, 버튼만
+              그 조건에 걸면 성공 문구가 뜨기도 전에 이 블록째로 사라진다 — 그래서
+              withdraw.status === 'success'일 때도 블록을 남겨 둔다(버튼만 감춘다). */}
+          {(project.reviewStatus === 'submitted' || withdraw.status === 'success') && (
+            <div className="mt-4 flex items-center gap-3">
+              {withdraw.status !== 'success' && (
+                <Button
+                  variant="outline"
+                  onClick={handleWithdraw}
+                  disabled={withdraw.status === 'saving'}
+                >
+                  {withdraw.status === 'saving' ? '철회 중…' : '심사 신청 철회'}
+                </Button>
+              )}
+              {withdraw.status === 'success' && (
+                <span className="typo-caption text-green-600 dark:text-green-400">
+                  심사 신청을 철회했습니다. 다시 작성한 뒤 제출해 주세요.
+                </span>
+              )}
+              {withdraw.status === 'error' && (
+                <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{withdraw.message}</span>
+              )}
+            </div>
+          )}
         </div>
       </main>
     </>
