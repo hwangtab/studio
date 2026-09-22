@@ -132,12 +132,16 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
   const [slug, setSlug] = useState(project.slug);
   const [reviewNote, setReviewNote] = useState(project.reviewNote ?? '');
   const [internalNote, setInternalNote] = useState(project.internalNote ?? '');
+  const [creatorName, setCreatorName] = useState(project.creatorName);
+  const [creatorEmail, setCreatorEmail] = useState(project.creatorEmail);
 
   // 서버 값이 바뀌면(판정 뒤 router.replace가 이 컴포넌트를 remount하지 않으므로) 입력을
   // 따라가게 한다 — pages/admin/funding/[id].tsx의 메모 textarea와 같은 이유·같은 패턴.
   useEffect(() => setSlug(project.slug), [project.slug]);
   useEffect(() => setReviewNote(project.reviewNote ?? ''), [project.reviewNote]);
   useEffect(() => setInternalNote(project.internalNote ?? ''), [project.internalNote]);
+  useEffect(() => setCreatorName(project.creatorName), [project.creatorName]);
+  useEffect(() => setCreatorEmail(project.creatorEmail), [project.creatorEmail]);
 
   /**
    * 결과 배너(오류·성공·경고)로 스크롤·포커스를 옮긴다.
@@ -243,6 +247,70 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
       () => patchFundingProject(project.id, { action: 'set_internal_note', note: internalNote.trim() || undefined }),
       '내부 기록을 저장했습니다.',
     );
+
+  /**
+   * 개설자 계정 수정. 사유는 서버가 필수로 받고 어느 컬럼에도 저장하지 않는다 — 개설자
+   * 메일과 서버 로그에만 남는다(`lib/funding/creatorAccountDecision.ts`).
+   */
+  const askAccountReason = (what: string): string | null => {
+    const reason = window.prompt(`${what}을(를) 바꾸는 사유를 적어 주세요 (개설자에게 메일로 전달되고 서버 로그에 남습니다).`);
+    if (reason === null) return null;
+    if (!reason.trim()) {
+      setNotice('계정 변경은 사유가 있어야 합니다.');
+      return null;
+    }
+    return reason.trim();
+  };
+
+  const handleSaveCreatorName = () => {
+    const next = creatorName.trim();
+    if (!next) {
+      setNotice('개설자 이름을 적어 주세요.');
+      return;
+    }
+    if (next === project.creatorName) {
+      setNotice('지금 저장된 이름과 같습니다.');
+      return;
+    }
+    const reason = askAccountReason('개설자 이름');
+    if (reason === null) return;
+    if (
+      !window.confirm(
+        `개설자 이름을 "${project.creatorName}" → "${next}"로 바꿉니다. 이 개설자의 승인된 프로젝트 페이지에 표시되는 개설자 이름이 모두 함께 바뀝니다. 진행할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'set_creator_name', value: next, reason }),
+      '개설자 이름을 바꿨습니다.',
+    );
+  };
+
+  const handleSaveCreatorEmail = () => {
+    const next = creatorEmail.trim();
+    if (!next) {
+      setNotice('개설자 이메일을 적어 주세요.');
+      return;
+    }
+    if (next.toLowerCase() === project.creatorEmail) {
+      setNotice('지금 저장된 이메일과 같습니다.');
+      return;
+    }
+    const reason = askAccountReason('로그인 이메일');
+    if (reason === null) return;
+    if (
+      !window.confirm(
+        `로그인 이메일을 "${project.creatorEmail}" → "${next}"로 바꿉니다. 이 계정의 로그인 링크는 모두 무효가 되고, 옛 주소와 새 주소 양쪽에 변경 사실을 알립니다. 진행할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'set_creator_email', value: next, reason }),
+      '로그인 이메일을 바꿨습니다. 기존 로그인 링크는 모두 무효가 됐습니다.',
+    );
+  };
 
   const handleArchive = () => {
     const reason = window.prompt(
@@ -475,6 +543,58 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                 <dd className="font-medium text-right">{project.creator.phone ?? '없음'}</dd>
               </div>
             </dl>
+
+            <div className="mt-5 rounded-lg border border-gray-300 bg-gray-50 p-4">
+              <h3 className="text-base font-bold text-gray-900 mb-1">개설자 계정 수정</h3>
+              <p className="mb-3 text-sm text-gray-600">
+                이름은 승인된 프로젝트 페이지에 개설자로 표시됩니다. 승인 뒤에는 개설자 본인이 바꿀 수 없으므로,
+                잘못 저장된 이름을 고치는 경로는 여기뿐입니다. 이메일은 개설자의 유일한 로그인 수단이라, 바꾸면
+                기존 로그인 링크가 전부 무효가 됩니다.
+              </p>
+              {/* 화면과 보고서에 함께 적어 둘 한계 — 서버가 일방적으로 끊을 수 없는 것이 무엇인지
+                  운영자가 알고 조치해야 한다(탈취 대응이면 그 사람에게 연락해 로그아웃을 요청). */}
+              <p className="mb-4 text-sm text-amber-700">
+                이미 로그인해 있는 브라우저 세션은 이메일을 바꿔도 끊기지 않습니다 — 쿠키 수명(최대 7일)이
+                지나거나 본인이 로그아웃해야 끝납니다.
+              </p>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap items-end gap-3">
+                  <Field id="creator-name" label="개설자 이름" className={lightOnlyField}>
+                    <TextInput
+                      type="text"
+                      value={creatorName}
+                      onChange={(e) => setCreatorName(e.target.value)}
+                      light
+                      className="text-sm"
+                      disabled={busy}
+                    />
+                  </Field>
+                  <Button light variant="outline" disabled={busy} onClick={handleSaveCreatorName}>
+                    이름 저장
+                  </Button>
+                </div>
+                <div className="flex flex-wrap items-end gap-3">
+                  <Field
+                    id="creator-email"
+                    label="로그인 이메일"
+                    hint="이미 다른 개설자가 쓰는 주소는 저장되지 않습니다."
+                    className={lightOnlyField}
+                  >
+                    <TextInput
+                      type="email"
+                      value={creatorEmail}
+                      onChange={(e) => setCreatorEmail(e.target.value)}
+                      light
+                      className="text-sm"
+                      disabled={busy}
+                    />
+                  </Field>
+                  <Button light variant="outline" disabled={busy} onClick={handleSaveCreatorEmail}>
+                    이메일 저장
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>

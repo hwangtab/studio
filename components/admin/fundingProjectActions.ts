@@ -33,7 +33,14 @@ export type FundingProjectPatchBody =
   | { action: 'request_changes' | 'reject' | 'archive'; note: string }
   | { action: 'set_review_note' | 'set_internal_note'; note?: string }
   | { action: 'close'; note: string }
-  | { action: 'reopen' | 'hide' | 'unhide'; note?: string };
+  | { action: 'reopen' | 'hide' | 'unhide'; note?: string }
+  /**
+   * 개설자 계정(이름·로그인 이메일) 수정. 다른 액션과 달리 `note`가 아니라 `value`·`reason`을
+   * 보낸다 — 프로젝트의 `reviewNote`에 남기는 메모가 아니라 계정 변경의 사유이고, 서버는
+   * 그것을 어느 컬럼에도 저장하지 않고 개설자 메일과 서버 로그로만 남긴다
+   * (`lib/funding/creatorAccountDecision.ts`). 둘 다 서버가 빈 값을 거부한다.
+   */
+  | { action: 'set_creator_name' | 'set_creator_email'; value: string; reason: string };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
   try {
