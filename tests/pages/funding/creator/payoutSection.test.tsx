@@ -28,7 +28,11 @@ import CreatorProjectEditor from '../../../../pages/[locale]/funding/creator/[id
 // eslint-disable-next-line import/first
 import type { EditorPayoutSummary, EditorProject } from '../../../../components/funding/creator/types';
 // eslint-disable-next-line import/first
-import { FUNDING_PLATFORM_FEE_PERCENT, FUNDING_WITHHOLDING_PERCENT } from '../../../../data/pricing';
+import {
+  FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
+  FUNDING_WITHHOLDING_PERCENT,
+} from '../../../../data/pricing';
 // eslint-disable-next-line import/first
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../../lib/funding/policy';
 
@@ -106,8 +110,11 @@ describe('정산 정보 구획 — 화면 문구는 상수에서 온다', () => 
     openPayoutTab();
 
     expect(screen.getByText(`영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일`, { exact: false })).toBeInTheDocument();
-    expect(screen.getByText(`${FUNDING_PLATFORM_FEE_PERCENT}%`, { exact: false })).toBeInTheDocument();
-    expect(screen.getByText(`${FUNDING_WITHHOLDING_PERCENT}%`, { exact: false })).toBeInTheDocument();
+    // 결제 수수료율과 원천징수율이 우연히 같은 값(3.3%)이라 단순 `${percent}%` 검색은
+    // 두 문단에 동시에 걸려 "multiple elements" 오류가 난다 — 항목별 접두어로 구분한다.
+    expect(screen.getByText(`플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}%`, { exact: false })).toBeInTheDocument();
+    expect(screen.getByText(`결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%`, { exact: false })).toBeInTheDocument();
+    expect(screen.getByText(`지방소득세 ${FUNDING_WITHHOLDING_PERCENT}%`, { exact: false })).toBeInTheDocument();
   });
 });
 

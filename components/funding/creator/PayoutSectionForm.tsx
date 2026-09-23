@@ -2,7 +2,11 @@ import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, Select, TextInput } from '../../ui/Field';
-import { FUNDING_PLATFORM_FEE_PERCENT, FUNDING_WITHHOLDING_PERCENT } from '../../../data/pricing';
+import {
+  FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
+  FUNDING_WITHHOLDING_PERCENT,
+} from '../../../data/pricing';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { CREATOR_LIMITS } from '../../../lib/funding/creatorValidation';
 import { savePayoutSection } from './api';
@@ -105,8 +109,8 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
         */}
         <p className="mt-2">
           정산금은 결제된 후원금에서 환불된 금액을 먼저 뺀 뒤, 거기서 플랫폼 수수료{' '}
-          {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료를 뺀 금액입니다. 수수료는 환불을
-          뺀 금액을 기준으로 계산하며, 두 수수료 모두 개설자가 부담합니다.
+          {FUNDING_PLATFORM_FEE_PERCENT}%와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%(둘 다 부가세 포함)를
+          뺀 금액입니다. 수수료는 환불을 뺀 금액을 기준으로 계산하며, 둘 다 개설자가 부담합니다.
         </p>
       </div>
 
