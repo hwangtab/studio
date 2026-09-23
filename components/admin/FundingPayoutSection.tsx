@@ -199,7 +199,7 @@ export function FundingPayoutSection({
     <div>
       <h2 className="mb-1 text-lg font-bold text-gray-900">정산</h2>
       <p className="mb-4 text-sm text-gray-500">
-        모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 개설자에게 보냅니다. 플랫폼 수수료{' '}
+        모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 개설자에게 보냅니다. 플랫폼 수수료{' '}
         {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%를 결제액(모금액 −
         환불) 기준으로 각각 떼고, 둘 다 개설자가 부담합니다. 다만 수기 등록분은 결제를 지나지 않았으므로
         결제 수수료 대상에서 빠집니다 — 그만큼 아래 결제 수수료가 {FUNDING_PAYMENT_FEE_PERCENT}%보다 적게 나옵니다.

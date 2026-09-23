@@ -100,7 +100,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
     <form onSubmit={submit} className="flex flex-col gap-5">
       <div className="rounded-lg bg-gray-100 p-4 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300">
         <p>
-          모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 여기 등록하신 계좌로 정산금을 보냅니다.
+          모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 여기 등록하신 계좌로 정산금을 보냅니다.
         </p>
         {/*
           환불 차감을 먼저 적는다. 계산 순서가 실제로 그렇고(`lib/funding/payout.ts`의
