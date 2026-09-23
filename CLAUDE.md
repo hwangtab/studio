@@ -278,27 +278,44 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 
 ### 마이그레이션은 배열 순서가 아니라 `when`으로 걸러진다 — 작은 `when`은 조용히 건너뛴다
 
-drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장 큰 행 하나만 읽고,
-저널 엔트리의 `when`(밀리초)이 그 값보다 **큰 것만** 실행한다
-(`node_modules/drizzle-orm/libsql/migrator.js`). 인덱스(0019·0020)도, 배열 순서도 보지
-않는다. 그래서 **`when`이 더 작은 마이그레이션을 나중에 머지하면 영원히 실행되지 않고
-오류도 나지 않는다.** `npm run db:migrate`는 초록으로 끝나고, 없는 컬럼을 참조하는 코드가
-런타임에서야 깨진다.
+drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장 큰 행 하나만 읽고
+(`ORDER BY created_at DESC LIMIT 1`), 저널 엔트리의 `when`(밀리초)이 그 값보다 **큰 것만**
+실행한다(`node_modules/drizzle-orm/libsql/migrator.js`의 `Number(last[2]) < migration.folderMillis`).
+인덱스(0019·0020)도, 배열 순서도 보지 않는다. 그래서 **이미 적용된 것 중 최대 `when`보다
+작은 마이그레이션은 영원히 실행되지 않고 오류도 나지 않는다.** `npm run db:migrate`는
+초록으로 끝나고, 없는 컬럼을 참조하는 코드가 런타임에서야 깨진다.
 
 이 저장소는 마이그레이션을 코드와 함께 배포하지 않는다(생성·커밋만 하고 적용은 운영자가
 수동으로 `npm run db:migrate`). 그래서 이 함정이 더 오래 숨는다.
 
-**지금 대기 중인 둘의 적용 순서.** PR #211의 `0020_serious_luckman`이 `when: 1790039737875`,
-`feat/funding-payout`의 `0021_loving_microchip`이 `when: 1790126871687`이다. 0021이 더 크므로
-**0020 → 0021 순서로 적용해야 한다.** 0021을 먼저 적용하면 0020은 영영 건너뛰어진다 —
-되돌리려면 그 SQL을 손으로 실행하거나 `__drizzle_migrations`를 손봐야 한다.
+**`when` 오름차순이 곧 적용 순서다.** 지금 관련된 셋:
 
-**병합 뒤의 두 번째 함정.** `drizzle-kit generate`는 저널 **마지막 엔트리**의 스냅샷과
-현재 스키마를 diff한다. 그 스냅샷은 **자기 브랜치의 변경만** 담고 있으므로, 병합 뒤 배열 끝에
-어느 쪽이 오든 **그 스냅샷에 없는 쪽의 DDL이 다시 발행된다** — 이미 적용된 컬럼이라 그 SQL은
-운영 DB에서 `duplicate column name`으로 터진다. idx 순으로 합치면 끝은 0021이 되고
-`0021_snapshot.json`에는 #211의 변경이 없으니 재발행되는 것은 #211의 DDL이다. 병합할 때
-**마지막 엔트리의 스냅샷이 양쪽을 모두 담은 전체 스키마**가 되도록 맞출 것.
+| tag | when | 위치 |
+|---|---|---|
+| `0020_serious_luckman` | 1790039737875 | PR #211 (`feat/creator-shipping`, 미머지) |
+| `0020_payment_failure_reason` | 1790065459500 | main (머지됨) |
+| `0021_cheerful_spencer_smythe` | 1790132266461 | `feat/funding-payout` |
+
+**PR #211의 `0020_serious_luckman`이 셋 중 가장 작다.** main의 `0020_payment_failure_reason`이
+운영 DB에 이미 적용됐다면 #211을 머지해도 그 마이그레이션은 **영영 적용되지 않는다** —
+`db:migrate`는 아무 말 없이 초록으로 끝난다. 이건 `feat/funding-payout`이 만든 문제가
+아니지만 이 절이 그 함정을 적는 유일한 자리다. 되살리는 방법은 둘이다: 머지한 뒤
+마이그레이션을 **재발행해 `when`을 현재 최댓값보다 크게** 만들거나, 그 SQL을 손으로
+실행하고 `__drizzle_migrations`를 맞춰 준다. 앞쪽이 안전하다.
+
+**두 브랜치가 같은 idx를 주장하면 머지에서 저널이 부딪힌다.** 위 두 0020이 그 경우다.
+해결은 엔트리를 **`when` 오름차순으로 합치고 `idx`를 다시 매기는 것** — idx는 표시용이고
+판정은 `when`이 하므로, 순서를 `when`에 맞춰야 읽는 사람과 마이그레이터가 같은 말을 한다.
+
+**병합 뒤의 두 번째 함정 — 스냅샷.** `drizzle-kit generate`는 저널 **마지막 엔트리**의
+스냅샷과 현재 스키마를 diff한다. 브랜치 스냅샷은 자기 쪽 변경만 담고 있으므로, 합친 뒤
+마지막 엔트리의 스냅샷에 **없는 쪽의 DDL이 다시 발행되고**, 그 컬럼은 이미 적용돼 있으니
+운영 DB에서 `duplicate column name`으로 터진다. 어느 쪽이 끝에 오든 성립한다 — 방향을
+한쪽으로 단정하지 말 것. 처방: 머지할 때 **마지막 스냅샷이 양쪽 변경을 모두 담은 전체
+스키마**가 되도록 재발행하고, `prevId` 사슬을 앞 스냅샷의 `id`로 이어 둘 것.
+
+**브랜치 체크아웃에서 `db:migrate`를 돌리지 마라.** 그 브랜치에 없는 마이그레이션이
+`when` 최댓값 아래로 깔려 영영 건너뛰어진다. 적용은 main 병합본에서 한 번에 한다.
 
 밀린 마이그레이션 자체는 `scripts/check-migration-drift.mjs`(CI)와 `lib/ops/migrationDrift.ts`
 (매일 크론 메일)가 저널 엔트리 수와 `__drizzle_migrations` 행 수를 비교해 잡는다. 다만 그
