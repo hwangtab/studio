@@ -559,26 +559,46 @@ export const AVAILABILITY_MEMO_RETENTION_YEARS = 1;
 /**
  * 법정 보존 기간이 지난 결제 승인 응답 원본(`payments.raw_response`)을 파기한다.
  *
- * ## 이 컬럼에 무엇이 들어가는가 (코드로 확인한 것)
+ * ## 이 컬럼에 무엇이 들어가는가
  *
- * 승인·재조회 응답의 **본문 전체**다. `lib/booking/toss.ts`의 `request`가 `await res.json()`을
- * 통째로 `json as TossPayment`로 넘기고(필드를 골라 담지 않는다), 그 객체가 세 곳에서
- * `JSON.stringify` 되어 그대로 저장된다 — `lib/booking/confirm.ts`(예약·믹싱 승인),
- * `lib/funding/confirm.ts`(후원 승인), `lib/billing/service.ts`(회차 결제·웹훅 복구).
- * 즉 우리 타입이 선언한 7개 필드는 저장 범위의 하한일 뿐이고, 실제로 무엇이 들어 있는지는
- * 토스가 그 결제에 무엇을 실어 보냈느냐에 달렸다. 우리 코드가 결제창에 `customerName`·
- * `customerEmail`을 넘기고 있어(`components/booking/TossPaymentWidget.tsx`) 응답에 되돌아올
- * 여지도 있으나, **응답 본문을 읽는 코드가 하나도 없어 실제 키 목록은 코드만으로 확인되지
- * 않는다.**
+ * 승인·재조회 응답(토스 Payment 객체)의 **본문 전체**다. `lib/booking/toss.ts`의 `request`가
+ * `await res.json()`을 통째로 `json as TossPayment`로 넘기고(필드를 골라 담지 않는다), 그
+ * 객체가 세 곳에서 `JSON.stringify` 되어 그대로 저장된다 — `lib/booking/confirm.ts`
+ * (예약·믹싱 승인), `lib/funding/confirm.ts`(후원 승인), `lib/billing/service.ts`
+ * (회차 결제·웹훅 복구). 우리 타입이 선언한 7개 필드는 저장 범위의 하한일 뿐이다.
+ *
+ * **최상위에는 구매자 개인정보 필드가 없다**(토스 레퍼런스 확인) — `customerName`·
+ * `customerEmail`·`customerMobilePhone`은 Payment 객체의 최상위 필드가 아니다. 개인정보는
+ * **결제수단별 하위 객체**에 실린다:
+ *
+ * - `virtualAccount`: `customerName`(구매자명)·`depositorName`(입금자명)·`accountNumber`,
+ *   그리고 환불 계좌를 등록했다면 `refundReceiveAccount.holderName`·`.accountNumber`
+ * - `mobilePhone`: `customerMobilePhone`(결제에 쓴 휴대폰 번호)
+ * - `card`: `number`는 **마스킹된** 값이고 소유자 이름은 없다
+ *
+ * 우리 결제에 그 객체들이 실제로 붙는지는 수단에 달렸다. 위젯은 토스 콘솔에서 개통된 수단을
+ * 그대로 그리므로 코드에 수단 제한이 없고(`lib/booking/toss.ts`), 가상계좌는 승인 단계에서
+ * 거절하지만 그 거절은 `status !== 'DONE'`일 때뿐이라 **입금이 끝나 DONE으로 도착한 건은
+ * 웹훅 복구 경로로 들어와 저장될 수 있다**(`lib/booking/webhook.ts`).
+ *
+ * 우리가 토스에 보내는 값은 `customerName`·`customerEmail`이다
+ * (`components/booking/TossPaymentWidget.tsx`의 `requestPayment`,
+ * `lib/billing/toss-billing.ts`의 `chargeBillingKey`). `metadata`를 보내는 코드는 없다(확인).
+ *
+ * **확인되지 않은 것**: 보낸 `customerEmail`이 응답에 되돌아오는 경로가 있는지, `receipt.url`·
+ * `checkout.url`이 가리키는 문서에 개인정보가 있는지, 현금영수증의 신분확인번호가 응답에
+ * 실리는지 — 셋 다 문서로 확인하지 못했다. 응답 본문을 읽는 코드가 없어 실제 키 목록도
+ * 코드만으로는 특정되지 않는다.
  *
  * ## 판정
  *
  * - **법정 기록이다.** 대금이 실제로 오간 승인의 원본이고, 스키마 주석이 밝히는 보관 목적도
  *   분쟁·대사(reconciliation)다. 전자상거래법이 5년 보존을 요구하는 "대금결제 및 재화등의
  *   공급에 관한 기록"의 근거 자료라 그 전에는 파기하지 않는다.
- * - **다만 5년이 지나면 남길 근거가 없다.** 무엇이 들어 있는지 특정되지 않는 값을 기한 없이
- *   들고 있는 것이 제21조①이 막으려는 상태다. 대사에 필요한 값(`payment_key`·`method`·
- *   `approved_at`·`receipt_url`)은 별도 컬럼에 따로 있어 원본을 비워도 기록은 남는다.
+ * - **다만 5년이 지나면 남길 근거가 없다.** 수단에 따라 이름·계좌번호·휴대폰 번호가 섞여
+ *   들어오는 값을 기한 없이 들고 있는 것이 제21조①이 막으려는 상태다. 대사에 필요한 값
+ *   (`payment_key`·`method`·`approved_at`·`receipt_url`)은 별도 컬럼에 따로 있어 원본을
+ *   비워도 기록은 남는다.
  * - **기산점은 승인 시각(`approved_at`)**, 없으면 행 생성일.
  */
 export const purgeExpiredPaymentRawResponses = async (
@@ -605,15 +625,28 @@ export const purgeExpiredPaymentRawResponses = async (
 /**
  * 더는 쓸 수 없는 카드의 빌링키 발급 응답 원본(`billing_keys.raw_response`)을 파기한다.
  *
- * ## 이 컬럼에 무엇이 들어가는가 (코드로 확인한 것)
+ * ## 이 컬럼에 무엇이 들어가는가
  *
- * 빌링키 발급 응답의 **본문 전체**다(`lib/billing/toss-billing.ts`의 `request`가 응답 JSON을
- * 그대로 `json`으로 돌려주고, `lib/billing/service.ts`가 `JSON.stringify(issued.raw)`로
- * 저장한다). 그 본문에는 **빌링키 문자열 자체**가 들어 있다 — 같은 파일이 `json.billingKey`를
- * 거기서 꺼내 쓰기 때문에 확인된 사실이다. 스키마가 빌링키를 두고 "서버 밖으로 나가지 않는다"고
+ * 빌링키 발급 응답(토스 Billing 객체)의 **본문 전체**다(`lib/billing/toss-billing.ts`의
+ * `request`가 응답 JSON을 그대로 `json`으로 돌려주고, `lib/billing/service.ts`가
+ * `JSON.stringify(issued.raw)`로 저장한다).
+ *
+ * 그 본문에는 **빌링키 문자열 자체**가 들어 있다 — 같은 파일이 `json.billingKey`를 거기서
+ * 꺼내 쓰기 때문에 확인된 사실이다. 스키마가 빌링키를 두고 "서버 밖으로 나가지 않는다"고
  * 적어 둔 그 값이 같은 행에 한 번 더, 이번에는 자유 형식의 JSON 안에 복사돼 있는 셈이다.
- * 카드 정보(`card.company`·`card.number`·`card.cardType`)도 같은 본문에서 꺼내므로 들어 있다.
- * 그 밖에 무엇이 더 실려 오는지는 본문을 읽는 코드가 없어 코드만으로는 확인되지 않는다.
+ * 카드 정보(`card.company`·`card.number`·`card.cardType`)도 같은 본문에서 꺼내므로 들어 있고,
+ * `card.number`는 마스킹된 값이다.
+ *
+ * **이름·생년월일·사업자등록번호는 들어 있지 않다**(토스 레퍼런스 확인). 생년월일 6자리 또는
+ * 사업자등록번호인 `customerIdentityNumber`는 **요청에만** 있는 값이고 응답에 되돌아오지
+ * 않는다. 우리 발급 요청은 `authKey`·`customerKey` 둘뿐이라 애초에 보내지도 않는다
+ * (`issueBillingKey`). 응답에 있는 것은 `billingKey`·`customerKey`·마스킹 카드번호·발급사 코드다.
+ *
+ * `customerKey`도 개인정보가 아니다 — `lib/billing/token.ts`의 `generateCustomerKey()`가
+ * 만드는 `sub_` + UUID 난수이고, 구독 id를 그대로 쓰지 않는 이유도 예측 불가여야 한다는
+ * 토스 규격 때문이다.
+ *
+ * 그래서 이 컬럼에서 실제로 문제가 되는 값은 **빌링키**, 즉 결제수단 자격증명이다.
  *
  * ## 판정
  *
