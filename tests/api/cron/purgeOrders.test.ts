@@ -1,10 +1,11 @@
 /** @jest-environment node */
 
 /**
- * 한 크론이 기준이 다른 열한 가지 파기를 나란히 돌린다.
+ * 한 크론이 기준이 다른 열두 가지 파기를 나란히 돌린다.
  *
  * - 주문 고객 이름·연락처: 전자상거래법 5년(생성일·최종 갱신일 둘 다 기준)
  * - 결제 실패 사유 원문: 실패 시각부터 1년(법정 보존이 아니라 운영 판단)
+ * - 회차 결제 실패 사유 원문: 시도 시각부터 1년(같은 값의 같은 성질이라 같은 기준)
  * - 구독 고객 이름·연락처: **종료(`ended`)** 후 5년
  * - 후원자 표시 이름: 종료 즉시(공개 명단에서 빠지는 순간 목적이 끝난다)
  * - 구독 해지 사유: 해지 시각부터 3년(소비자 불만·분쟁 처리 기록)
@@ -31,6 +32,7 @@ jest.mock('../../../lib/privacy/orderRetention', () => ({
   purgeExpiredBookingCustomerNotes: jest.fn(),
   purgeExpiredWorkOrderCustomerNotes: jest.fn(),
   purgeExpiredAvailabilityBlockMemos: jest.fn(),
+  purgeExpiredSubscriptionPaymentMessages: jest.fn(),
   ORDER_LEGAL_RETENTION_YEARS: 5,
   DISPUTE_RETENTION_YEARS: 3,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS: 1,
@@ -51,6 +53,7 @@ import {
   purgeExpiredRefundReasons,
   purgeExpiredSubscriptionCancelReasons,
   purgeExpiredSubscriptionCustomerData,
+  purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
   purgeUnusableBillingKeyRawResponses,
 } from '../../../lib/privacy/orderRetention';
@@ -68,6 +71,7 @@ const all = [
   purgeExpiredBookingCustomerNotes,
   purgeExpiredWorkOrderCustomerNotes,
   purgeExpiredAvailabilityBlockMemos,
+  purgeExpiredSubscriptionPaymentMessages,
 ] as unknown as jest.Mock[];
 
 const call = async () => {
@@ -96,6 +100,7 @@ beforeEach(() => {
   (purgeExpiredBookingCustomerNotes as jest.Mock).mockResolvedValue({ purged: 9 });
   (purgeExpiredWorkOrderCustomerNotes as jest.Mock).mockResolvedValue({ purged: 10 });
   (purgeExpiredAvailabilityBlockMemos as jest.Mock).mockResolvedValue({ purged: 11 });
+  (purgeExpiredSubscriptionPaymentMessages as jest.Mock).mockResolvedValue({ purged: 12 });
   (sendEmail as jest.Mock).mockResolvedValue(undefined);
 });
 
@@ -107,7 +112,7 @@ it('인증 없으면 401이고 아무것도 지우지 않는다', async () => {
   for (const fn of all) expect(fn).not.toHaveBeenCalled();
 });
 
-it('열한 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
+it('열두 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
   expect(r.body).toEqual({
@@ -123,6 +128,7 @@ it('열한 파기를 각각 돌리고 건수를 따로 돌려준다', async () =
     purgedBookingCustomerNotes: 9,
     purgedWorkOrderCustomerNotes: 10,
     purgedAvailabilityBlockMemos: 11,
+    purgedSubscriptionPaymentMessages: 12,
   });
   for (const fn of all) expect(fn).toHaveBeenCalledTimes(1);
 });

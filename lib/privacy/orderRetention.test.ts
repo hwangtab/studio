@@ -27,6 +27,7 @@ import {
   orders,
   payments,
   refunds,
+  subscriptionPayments,
   subscriptions,
   workOrders,
 } from '../../db/schema';
@@ -46,6 +47,7 @@ import {
   purgeExpiredRefundReasons,
   purgeExpiredSubscriptionCancelReasons,
   purgeExpiredSubscriptionCustomerData,
+  purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
   purgeUnusableBillingKeyRawResponses,
 } from './orderRetention';
@@ -155,6 +157,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // 외래키 순서대로 — refunds → payments → bookings·work_orders → orders,
   // billing_keys → subscriptions.
+  await client.execute('DELETE FROM subscription_payments');
   await client.execute('DELETE FROM refunds');
   await client.execute('DELETE FROM payments');
   await client.execute('DELETE FROM bookings');
@@ -782,5 +785,218 @@ describe('일정 차단 메모 파기 (1년)', () => {
     await addBlock({ endAt: '2024-06-02', memo: null });
     expect((await purgeExpiredAvailabilityBlockMemos(NOW)).purged).toBe(1);
     expect((await purgeExpiredAvailabilityBlockMemos(NOW)).purged).toBe(0);
+  });
+});
+
+const addSubscriptionPayment = async (opts: {
+  subscriptionId: string;
+  orderId: string;
+  attemptedAt: string;
+  tossMessage?: string | null;
+  tossCode?: string | null;
+}) => {
+  seq += 1;
+  const [row] = await mockDb
+    .insert(subscriptionPayments)
+    .values({
+      subscriptionId: opts.subscriptionId,
+      orderId: opts.orderId,
+      cycleYm: '2020-01',
+      attempt: seq,
+      amount: 110000,
+      status: 'failed',
+      tossCode: opts.tossCode === undefined ? 'REJECT_CARD_COMPANY' : opts.tossCode,
+      tossMessage: opts.tossMessage === undefined ? '한도초과 - 김고객님 카드' : opts.tossMessage,
+      attemptedAt: d(opts.attemptedAt),
+      createdAt: d(opts.attemptedAt),
+    })
+    .returning({ id: subscriptionPayments.id });
+  return row.id;
+};
+
+const subscriptionPaymentOf = async (id: string) =>
+  (await mockDb.select().from(subscriptionPayments).where(eq(subscriptionPayments.id, id)))[0];
+
+describe('회차 결제 실패 사유 원문 파기 (1년)', () => {
+  it('시도 1년이 안 지났으면 보관한다', async () => {
+    const orderId = await addOrder({ type: 'subscription' });
+    const subId = await addSubscription({ status: 'active' });
+    const id = await addSubscriptionPayment({
+      subscriptionId: subId,
+      orderId,
+      attemptedAt: '2026-06-01',
+    });
+    expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(0);
+    expect((await subscriptionPaymentOf(id)).tossMessage).toBe('한도초과 - 김고객님 카드');
+  });
+
+  it('1년이 지나면 원문만 비운다 — 코드·금액·상태는 남는다', async () => {
+    const orderId = await addOrder({ type: 'subscription' });
+    const subId = await addSubscription({ status: 'active' });
+    const id = await addSubscriptionPayment({
+      subscriptionId: subId,
+      orderId,
+      attemptedAt: '2024-01-01',
+    });
+    expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(1);
+    const row = await subscriptionPaymentOf(id);
+    expect(row.tossMessage).toBeNull();
+    expect(row.tossCode).toBe('REJECT_CARD_COMPANY');
+    expect(row.amount).toBe(110000);
+    expect(row.status).toBe('failed');
+  });
+
+  it('살아 있는 구독이어도 파기한다 — 실패한 회차의 문장은 구독 상태와 무관하다', async () => {
+    const orderId = await addOrder({ type: 'subscription' });
+    const subId = await addSubscription({ status: 'active' });
+    const id = await addSubscriptionPayment({
+      subscriptionId: subId,
+      orderId,
+      attemptedAt: '2020-01-01',
+    });
+    expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(1);
+    expect((await subscriptionPaymentOf(id)).tossMessage).toBeNull();
+  });
+
+  it('멱등 — 이미 비운 행은 다시 걸리지 않는다', async () => {
+    const orderId = await addOrder({ type: 'subscription' });
+    const subId = await addSubscription({ status: 'active' });
+    await addSubscriptionPayment({ subscriptionId: subId, orderId, attemptedAt: '2020-01-01' });
+    expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(1);
+    expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(0);
+  });
+});
+
+describe('파기가 다른 파기의 시계를 되감지 않는다', () => {
+  it('주문 고객 정보 파기는 updated_at을 그대로 둔다', async () => {
+    const id = await addOrder({ createdAt: '2015-01-01', updatedAt: '2016-03-04' });
+    const before = (await orderOf(id)).updatedAt;
+    expect((await purgeExpiredOrderCustomerData(NOW)).purged).toBe(1);
+    expect((await orderOf(id)).updatedAt).toEqual(before);
+  });
+
+  it('구독 고객 정보 파기는 updated_at을 그대로 둔다', async () => {
+    const id = await addSubscription({ createdAt: '2015-01-01', endsAt: '2016-01-01' });
+    const before = (await subOf(id)).updatedAt;
+    expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(1);
+    expect((await subOf(id)).updatedAt).toEqual(before);
+  });
+
+  it('해지 시각 없이 끝난 구독도 같은 회차에 해지 사유가 파기된다 (크론 순서 그대로)', async () => {
+    // cancelled_at이 없는 행은 updated_at이 해지 사유 파기의 기산점이다. 고객 정보 파기가
+    // updated_at을 지금으로 올리면 이 순서에서 3년 시계가 되감겨 사유가 남는다.
+    const id = await addSubscription({
+      createdAt: '2015-01-01',
+      updatedAt: '2016-01-01',
+      endsAt: '2016-01-01',
+      cancelledAt: null,
+      cancelReason: '이사 갑니다 — 연락처 010-9999-8888',
+    });
+    expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(1);
+    expect((await purgeExpiredSubscriptionCancelReasons(NOW)).purged).toBe(1);
+    expect((await subOf(id)).cancelReason).toBeNull();
+  });
+});
+
+describe('경계값 — 기한이 정확히 차는 순간은 아직 보존한다', () => {
+  /** NOW로부터 정확히 N년 전. 파기 조건이 `lt`라 이 시각은 걸리지 않아야 한다. */
+  const exactly = (years: number): Date => {
+    const b = new Date(NOW);
+    b.setFullYear(b.getFullYear() - years);
+    return b;
+  };
+
+  /** 행을 심은 뒤 시각 컬럼만 정확한 경계로 옮긴다(헬퍼가 날짜 문자열만 받기 때문). */
+  const setTimes = async (table: string, id: string, columns: string[], at: Date) => {
+    const epoch = Math.floor(at.getTime() / 1000);
+    await client.execute({
+      sql: `UPDATE ${table} SET ${columns.map((c) => `${c} = ?`).join(', ')} WHERE id = ?`,
+      args: [...columns.map(() => epoch), id],
+    });
+  };
+
+  it('주문 고객 정보 — 생성·갱신이 정확히 5년 전이면 보관한다', async () => {
+    const id = await addOrder({ createdAt: '2015-01-01' });
+    await setTimes('orders', id, ['created_at', 'updated_at'], exactly(5));
+    expect((await purgeExpiredOrderCustomerData(NOW)).purged).toBe(0);
+    expect((await orderOf(id)).customerName).toBe('김고객');
+  });
+
+  it('결제 실패 사유 — 실패가 정확히 1년 전이면 보관한다', async () => {
+    const id = await addOrder({ paymentFailMessage: '한도초과', paymentFailedAt: '2020-01-01' });
+    await setTimes('orders', id, ['payment_failed_at'], exactly(1));
+    expect((await purgeExpiredPaymentFailMessages(NOW)).purged).toBe(0);
+    expect((await orderOf(id)).paymentFailMessage).toBe('한도초과');
+  });
+
+  it('구독 고객 정보 — 종료가 정확히 5년 전이면 보관한다', async () => {
+    const id = await addSubscription({ createdAt: '2015-01-01', endsAt: '2016-01-01' });
+    await setTimes('subscriptions', id, ['ends_at'], exactly(5));
+    expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(0);
+    expect((await subOf(id)).customerName).toBe('박구독');
+  });
+
+  it('구독 해지 사유 — 해지가 정확히 3년 전이면 보관한다', async () => {
+    const id = await addSubscription({
+      createdAt: '2015-01-01',
+      cancelledAt: '2020-01-01',
+      cancelReason: '가격이 부담됩니다',
+    });
+    await setTimes('subscriptions', id, ['cancelled_at'], exactly(3));
+    expect((await purgeExpiredSubscriptionCancelReasons(NOW)).purged).toBe(0);
+    expect((await subOf(id)).cancelReason).toBe('가격이 부담됩니다');
+  });
+
+  it('결제 승인 응답 원본 — 승인이 정확히 5년 전이면 보관한다', async () => {
+    const orderId = await addOrder({ createdAt: '2015-01-01' });
+    const id = await addPayment({ orderId, approvedAt: '2015-01-01' });
+    await setTimes('payments', id, ['approved_at'], exactly(5));
+    expect((await purgeExpiredPaymentRawResponses(NOW)).purged).toBe(0);
+    expect((await paymentOf(id)).rawResponse).not.toBeNull();
+  });
+
+  it('환불 사유 — 환불이 정확히 5년 전이면 보관한다', async () => {
+    const orderId = await addOrder({ createdAt: '2015-01-01' });
+    const paymentId = await addPayment({ orderId });
+    const id = await addRefund({ paymentId, reason: '관리자 환불 — 김고객' });
+    await setTimes('refunds', id, ['created_at'], exactly(5));
+    expect((await purgeExpiredRefundReasons(NOW)).purged).toBe(0);
+    expect((await refundOf(id)).reason).toBe('관리자 환불 — 김고객');
+  });
+
+  it('예약 요청사항 — 이용일이 정확히 3년 전이면 보관한다', async () => {
+    const orderId = await addOrder({ createdAt: '2015-01-01' });
+    const id = await addBooking({ orderId });
+    await setTimes('bookings', id, ['start_at'], exactly(3));
+    expect((await purgeExpiredBookingCustomerNotes(NOW)).purged).toBe(0);
+    expect((await bookingOf(id)).customerNote).not.toBeNull();
+  });
+
+  it('믹싱 요청사항 — 납품이 정확히 3년 전이면 보관한다', async () => {
+    const orderId = await addOrder({ type: 'mixing', createdAt: '2015-01-01' });
+    const id = await addWorkOrder({ orderId, deliveredAt: '2015-02-01' });
+    await setTimes('work_orders', id, ['delivered_at'], exactly(3));
+    expect((await purgeExpiredWorkOrderCustomerNotes(NOW)).purged).toBe(0);
+    expect((await workOrderOf(id)).customerNote).not.toBeNull();
+  });
+
+  it('일정 차단 메모 — 종료가 정확히 1년 전이면 보관한다', async () => {
+    const id = await addBlock({ endAt: '2024-06-01' });
+    await setTimes('availability_blocks', id, ['end_at'], exactly(1));
+    expect((await purgeExpiredAvailabilityBlockMemos(NOW)).purged).toBe(0);
+    expect((await blockOf(id)).memo).toBe('이수진님 가녹음');
+  });
+
+  it('회차 결제 실패 사유 — 시도가 정확히 1년 전이면 보관한다', async () => {
+    const orderId = await addOrder({ type: 'subscription' });
+    const subId = await addSubscription({ status: 'active' });
+    const id = await addSubscriptionPayment({
+      subscriptionId: subId,
+      orderId,
+      attemptedAt: '2020-01-01',
+    });
+    await setTimes('subscription_payments', id, ['attempted_at'], exactly(1));
+    expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(0);
+    expect((await subscriptionPaymentOf(id)).tossMessage).not.toBeNull();
   });
 });

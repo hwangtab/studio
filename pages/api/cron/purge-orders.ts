@@ -35,6 +35,7 @@ import {
   purgeExpiredRefundReasons,
   purgeExpiredSubscriptionCancelReasons,
   purgeExpiredSubscriptionCustomerData,
+  purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
   purgeUnusableBillingKeyRawResponses,
 } from '../../../lib/privacy/orderRetention';
@@ -50,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 각 파기는 **서로의 실패에 걸리지 않는다**(purge-funding과 같은 구조).
    *
    * 한 try에 나란히 세우면 앞의 것이 던졌을 때 뒤의 것이 그달에 아예 실행되지 않는다.
-   * 열한 가지는 대상도 기산점도 기간도 다른 별개의 파기이고 전부 멱등이라, 실패한 것은
+   * 열두 가지는 대상도 기산점도 기간도 다른 별개의 파기이고 전부 멱등이라, 실패한 것은
    * 다음 달 실행에서 다시 시도된다.
    */
   const failures: { label: string; detail: string }[] = [];
@@ -108,6 +109,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     `납품 후 ${DISPUTE_RETENTION_YEARS}년이 지난 믹싱 주문 요청사항 파기`,
     purgeExpiredWorkOrderCustomerNotes,
   );
+  const subscriptionPaymentMessages = await run(
+    `시도 후 ${PAYMENT_FAIL_MESSAGE_RETENTION_YEARS}년이 지난 회차 결제 실패 사유 원문 파기`,
+    purgeExpiredSubscriptionPaymentMessages,
+  );
   const blockMemos = await run(
     `${AVAILABILITY_MEMO_RETENTION_YEARS}년이 지난 일정 차단 메모 파기`,
     purgeExpiredAvailabilityBlockMemos,
@@ -125,6 +130,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     purgedRefundReasons: refundReasons ? refundReasons.purged : null,
     purgedBookingCustomerNotes: bookingNotes ? bookingNotes.purged : null,
     purgedWorkOrderCustomerNotes: workOrderNotes ? workOrderNotes.purged : null,
+    purgedSubscriptionPaymentMessages: subscriptionPaymentMessages
+      ? subscriptionPaymentMessages.purged
+      : null,
     purgedAvailabilityBlockMemos: blockMemos ? blockMemos.purged : null,
   };
 

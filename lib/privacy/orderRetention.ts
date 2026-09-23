@@ -8,6 +8,7 @@ import {
   orders,
   payments,
   refunds,
+  subscriptionPayments,
   subscriptions,
   workOrders,
 } from '../../db/schema';
@@ -123,11 +124,13 @@ export const purgeExpiredOrderCustomerData = async (
 
   const result = await getDb()
     .update(orders)
+    // `updated_at`은 갱신하지 않는다 — 그 값이 이 파기의 기산점이자 구독 쪽 해지 사유
+    // 파기의 대체 기산점이라, 여기서 지금으로 되감으면 다른 파기가 그만큼 밀린다
+    // (`lib/funding/retention.ts`도 같은 이유로 건드리지 않는다). 멱등은 표식이 맡는다.
     .set({
       customerName: PURGED_MARK,
       customerPhone: PURGED_MARK,
       customerEmail: PURGED_MARK,
-      updatedAt: now,
     })
     .where(
       and(
@@ -180,6 +183,42 @@ export const purgeExpiredPaymentFailMessages = async (
 };
 
 /**
+ * 보관 기간이 지난 회차 결제 실패 사유 원문을 파기한다.
+ *
+ * 대상은 `subscription_payments.toss_message` 하나이고, **`orders.payment_fail_message`와
+ * 같은 값의 같은 성질이다** — 토스가 거절 사유로 준 자유 문장이다
+ * (`lib/billing/service.ts`가 회차 결제 실패 때 `toss.message`를 그대로 넣는다). 그래서
+ * 같은 상수(`PAYMENT_FAIL_MESSAGE_RETENTION_YEARS`)를 쓴다: 승인되지 않은 회차는 계약도
+ * 대금결제도 성립하지 않은 사건이라 전자상거래법이 5년 보존을 요구하는 기록이 아니다.
+ *
+ * **성공한 회차는 이미 비어 있다** — 승인되면 같은 파일이 `toss_message`를 NULL로 지운다.
+ * 즉 여기 남아 있는 것은 실패로 끝난 회차뿐이고, 그 행을 지우는 코드는 어디에도 없어
+ * 관리자 화면(`pages/admin/subscriptions/[id].tsx`)에 기한 없이 노출되고 있었다.
+ *
+ * **`toss_code`는 남긴다.** 토스가 정한 코드값이라 개인을 식별하지 않고 실패 원인을 사후에
+ * 세는 데 쓸 수 있다 — `payment_fail_code`와 같은 판단이다.
+ *
+ * 기산점은 그 회차를 시도한 시각(`attempted_at`). NOT NULL이라 대체 기산점이 필요 없다.
+ */
+export const purgeExpiredSubscriptionPaymentMessages = async (
+  now: Date = new Date(),
+): Promise<OrderPurgeResult> => {
+  const boundary = yearsAgo(now, PAYMENT_FAIL_MESSAGE_RETENTION_YEARS);
+
+  const result = await getDb()
+    .update(subscriptionPayments)
+    .set({ tossMessage: null })
+    .where(
+      and(
+        isNotNull(subscriptionPayments.tossMessage),
+        lt(subscriptionPayments.attemptedAt, boundary),
+      ),
+    );
+
+  return rows(result);
+};
+
+/**
  * 끝난 구독의 고객 이름·연락처·이메일을 파기한다.
  *
  * ## 판정
@@ -205,11 +244,13 @@ export const purgeExpiredSubscriptionCustomerData = async (
 
   const result = await getDb()
     .update(subscriptions)
+    // `updated_at`을 갱신하지 않는 이유는 주문 쪽과 같다. 특히 여기서는 아래 해지 사유
+    // 파기가 `cancelled_at`이 없는 행에 한해 `updated_at`을 기산점으로 쓰므로, 갱신하면
+    // 그 시계가 3년 되감긴다 — 크론이 이 함수를 먼저 돌리기 때문에 같은 회차에 일어난다.
     .set({
       customerName: PURGED_MARK,
       customerPhone: PURGED_MARK,
       customerEmail: PURGED_MARK,
-      updatedAt: now,
     })
     .where(
       and(
