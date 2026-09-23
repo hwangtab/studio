@@ -276,6 +276,35 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 (`creator_login:global_alert`)과 **반드시 달라야 한다.** 같으면 한쪽이 다른 쪽 예산을 먹어
 둘 중 하나가 조용해진다.
 
+### 마이그레이션은 배열 순서가 아니라 `when`으로 걸러진다 — 작은 `when`은 조용히 건너뛴다
+
+drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장 큰 행 하나만 읽고,
+저널 엔트리의 `when`(밀리초)이 그 값보다 **큰 것만** 실행한다
+(`node_modules/drizzle-orm/libsql/migrator.js`). 인덱스(0019·0020)도, 배열 순서도 보지
+않는다. 그래서 **`when`이 더 작은 마이그레이션을 나중에 머지하면 영원히 실행되지 않고
+오류도 나지 않는다.** `npm run db:migrate`는 초록으로 끝나고, 없는 컬럼을 참조하는 코드가
+런타임에서야 깨진다.
+
+이 저장소는 마이그레이션을 코드와 함께 배포하지 않는다(생성·커밋만 하고 적용은 운영자가
+수동으로 `npm run db:migrate`). 그래서 이 함정이 더 오래 숨는다.
+
+**지금 대기 중인 둘의 적용 순서.** PR #211의 `0020_serious_luckman`이 `when: 1790039737875`,
+`feat/funding-payout`의 `0021_loving_microchip`이 `when: 1790126871687`이다. 0021이 더 크므로
+**0020 → 0021 순서로 적용해야 한다.** 0021을 먼저 적용하면 0020은 영영 건너뛰어진다 —
+되돌리려면 그 SQL을 손으로 실행하거나 `__drizzle_migrations`를 손봐야 한다.
+
+**병합 뒤의 두 번째 함정.** `drizzle-kit generate`는 저널 **마지막 엔트리**의 스냅샷과
+현재 스키마를 diff한다. 두 브랜치를 합친 뒤 배열 끝이 0020(스냅샷에 `platform_fee_amount`·
+`payment_fee_amount`가 없다)으로 남으면, 다음 `generate`가 이미 적용된 두 컬럼의 ADD를 다시
+뱉고 그 SQL이 운영 DB에서 `duplicate column name`으로 터진다. 병합할 때 **마지막 엔트리의
+스냅샷이 양쪽을 모두 담은 전체 스키마**가 되도록 맞출 것.
+
+밀린 마이그레이션 자체는 `scripts/check-migration-drift.mjs`(CI)와 `lib/ops/migrationDrift.ts`
+(매일 크론 메일)가 저널 엔트리 수와 `__drizzle_migrations` 행 수를 비교해 잡는다. 다만 그
+판정은 **개수**를 보므로, 가운데 하나가 건너뛰어진 이 함정에서는 밀린 건수는 맞아도 이름은
+저널 뒤쪽 것을 댄다. 개수가 어긋났다면 저널의 `when`과 `__drizzle_migrations.created_at`을
+직접 대조할 것.
+
 ### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
 
 `NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는
