@@ -99,7 +99,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-23-r3';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-23-r5';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -128,7 +128,7 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-23-r3';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-23-r5';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
@@ -174,8 +174,8 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
 
 /**
  * 개설자(아티스트) 계정 정보의 처리위탁 현황 — 위 FUNDING_DATA_PROCESSORS(서포터)와 대상이
- * 다르다. 처리방침 4항이 "개설자 계정 정보는 아래 13~14항이 [처리위탁을] 따로 정합니다"라고
- * 가리키는데, 13~14항이 신설됐을 때 수집 항목·이용 목적만 적고 이 표를 빠뜨려 참조가 빈 곳을
+ * 다르다. 처리방침 4항이 "개설자 계정 정보는 아래 항들이 [처리위탁을] 따로 정합니다"라고
+ * 가리키는데(지금은 13~15항이다), 그 항들이 신설됐을 때 수집 항목·이용 목적만 적고 이 표를 빠뜨려 참조가 빈 곳을
  * 가리키고 있었다(2026-09-21 문서·코드 대조).
  *
  * Resend로 나가는 개설자 대상 메일은 네 갈래다 — 로그인 링크(creatorEmail.ts), 계정 변경 알림

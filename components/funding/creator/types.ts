@@ -82,6 +82,20 @@ export interface EditorPayoutSummary {
    *   보고 정산을 막는 게이트라서 불리언으로 충분하다.
    */
   taxType: EditorTaxType | null;
+  /**
+   * 주민등록번호가 등록돼 있는가. **나가는 것은 이 불리언뿐이다** — 계좌와 달리 뒤 4자리
+   * 같은 조각도 내려보내지 않는다. 암호문을 실으면 키가 유일한 방어가 되고, 평문은 물론
+   * `__NEXT_DATA__`로 페이지 소스에 박힌다(`lib/funding/creatorProjectWrite.ts`의
+   * `CreatorPayoutSummary` 주석).
+   */
+  residentNumberRegistered: boolean;
+  /**
+   * 이 개설자에게 원천징수하고 기록한 정산이 있는가. 참이면 세금 구분을 사업자로 바꿔
+   * 저장해도 주민등록번호가 지워지지 않는다 — 이미 떼어 간 세액의 지급명세서 제출 의무가
+   * 남아 있기 때문이다(`lib/funding/creatorProjectWrite.ts`의 `hasWithheldPayout`).
+   * 화면은 이 값으로 "지워집니다"와 "보관됩니다"를 가른다. 여기서도 불리언뿐이다.
+   */
+  withheldPayoutRecorded: boolean;
 }
 
 /** 개설자 편집 화면의 프로젝트 구획. `lib/funding/reviewTransition.ts`의 `CreatorSectionName`과 같다. */

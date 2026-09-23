@@ -1,7 +1,11 @@
-import { and, count, eq, ne } from 'drizzle-orm';
+import { and, count, eq, gt, ne } from 'drizzle-orm';
 
+import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRow, type FundingRewardRow } from '../../db/schema';
+import {
+  fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards,
+  type FundingProjectRow, type FundingRewardRow,
+} from '../../db/schema';
 import { getFundingProject } from './projects';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
@@ -12,10 +16,20 @@ import { stripTrustedDirectives } from './creatorContent';
 import { toKstDateString } from './creatorDateInput';
 
 export type WriteResult =
-  | { ok: true }
+  | {
+      ok: true;
+      /**
+       * 사업자로 바꿔 저장했지만 주민등록번호를 **지우지 않고 남겼다.** 이미 원천징수한
+       * 정산 기록이 있어 지급명세서 제출 의무가 남아 있을 때만 붙는다(`savePayoutSection`).
+       * 화면이 "지워졌다"고 잘못 말하지 않으려면 이 사실이 응답에 있어야 한다.
+       * **불리언 하나뿐이다** — 값도 암호문도 여기 실리지 않는다.
+       */
+      residentNumberRetained?: true;
+    }
   | {
       ok: false;
-      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward';
+      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward'
+        | 'encryption_unavailable';
       message: string;
     };
 
@@ -306,7 +320,43 @@ export interface CreatorPayoutSummary {
   registered: boolean;
   accountLast4: string | null;
   taxType: PayoutSection['taxType'] | null;
+  /**
+   * 주민등록번호가 등록돼 있는가. **여기서 나가는 것은 이 불리언뿐이다** — 평문은 물론
+   * 암호문도, 뒤 4자리 같은 조각도 넣지 않는다(계좌와 다르다). 암호문이 props로 나가면
+   * 키가 유일한 방어가 된다.
+   */
+  residentNumberRegistered: boolean;
+  /**
+   * 이 개설자에게 **원천징수하고 기록한 정산이 하나라도 있는가**(`withholdingAmount > 0`).
+   *
+   * 화면 문구가 갈리는 자리다. 이 값이 참이면 세금 구분을 사업자로 바꿔 저장해도 주민등록
+   * 번호가 지워지지 않는다 — 이미 떼어 간 세액의 지급명세서 제출 의무가 남아 있기 때문이다
+   * (`savePayoutSection`). 거짓일 때만 "바꾸면 지워진다"가 사실이다.
+   *
+   * 여기서도 나가는 것은 불리언뿐이다 — 정산 금액·날짜는 이 구획이 알 이유가 없다.
+   */
+  withheldPayoutRecorded: boolean;
 }
+
+/**
+ * 이 개설자의 프로젝트 중 **원천징수해 기록한 정산**이 있는가.
+ *
+ * 주민등록번호를 지울 수 있는지의 유일한 판정이다. 근거는 "지금 원천징수 대상인가"가
+ * 아니라 **"이미 지급한 소득에 대한 지급명세서 제출 의무"**라, 지급이 한 번이라도
+ * 일어났으면 그 뒤에 세금 구분을 바꿔도 의무는 남는다. `withholdingAmount === 0`인
+ * 기록(사업자로 정산한 건)은 원천징수가 없었다는 뜻이므로 세지 않는다.
+ *
+ * `funding_project_payouts`는 프로젝트 단위인데 번호는 계정 단위라 프로젝트를 거쳐 조인한다.
+ */
+export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => {
+  const [row] = await getDb()
+    .select({ id: fundingProjectPayouts.id })
+    .from(fundingProjectPayouts)
+    .innerJoin(fundingProjects, eq(fundingProjects.id, fundingProjectPayouts.projectId))
+    .where(and(eq(fundingProjects.creatorId, creatorId), gt(fundingProjectPayouts.withholdingAmount, 0)))
+    .limit(1);
+  return Boolean(row);
+};
 
 /** 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다. */
 const accountLast4 = (account: string): string | null => {
@@ -327,8 +377,14 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     payoutBankName: fundingCreators.payoutBankName,
     payoutAccount: fundingCreators.payoutAccount,
     payoutHolder: fundingCreators.payoutHolder,
+    residentNumberEnc: fundingCreators.residentNumberEnc,
   }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
-  if (!row) return { registered: false, accountLast4: null, taxType: null };
+  if (!row) {
+    return {
+      registered: false, accountLast4: null, taxType: null,
+      residentNumberRegistered: false, withheldPayoutRecorded: false,
+    };
+  }
 
   const account = row.payoutAccount?.trim() ?? '';
   // `recordFundingPayout`이 정산을 거부하는 조건(`hasPayoutAccount`, lib/funding/payout.ts)과
@@ -338,6 +394,9 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     registered,
     accountLast4: registered ? accountLast4(account) : null,
     taxType: row.taxType ?? null,
+    // 값도 암호문도 아니고 "있다/없다"뿐이다.
+    residentNumberRegistered: Boolean(row.residentNumberEnc),
+    withheldPayoutRecorded: await hasWithheldPayout(creatorId),
   };
 };
 
@@ -365,14 +424,65 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
     return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있습니다.');
   }
 
+  /**
+   * 주민등록번호는 세 갈래다.
+   *
+   * 1. **사업자(`invoice`)로 저장하면 지운다 — 단, 원천징수한 정산 기록이 없을 때만.**
+   *    우리가 이 번호를 갖는 근거는 소득세법상 지급명세서 제출 의무뿐이라, 원천징수 대상이
+   *    아니게 되는 순간 근거가 사라진다. 그런데 **이미 원천징수해 기록한 정산이 있으면
+   *    근거는 사라지지 않는다** — 그 의무는 "지금 원천징수 대상인가"가 아니라 "이미 지급한
+   *    소득"에 붙기 때문이다. 정산 게이트(`lib/funding/payout.ts`)는 기록 시점에만 번호를
+   *    보는데 이 구획은 승인된 뒤 계속 열려 있어, 지우고 나면 세액만 떼고 신고할 수단이
+   *    없는 상태가 **복구 불가능하게** 남는다(암호문 자체가 사라진다). 그래서
+   *    `hasWithheldPayout`이 참이면 값을 유지하고, 그 사실을 `residentNumberRetained`로
+   *    응답에 실어 화면이 "지워졌다"고 잘못 말하지 않게 한다.
+   * 2. **빈 값(`null`)이면 기존 값을 유지한다.** 계좌와 일부러 다르게 둔다. 계좌는 매번
+   *    다시 입력해 덮어쓰게 하지만, 주민등록번호까지 그렇게 하면 은행명 한 글자를 고칠
+   *    때마다 평문이 화면과 네트워크를 한 번 더 지난다. 지우는 수단은 세금 구분을
+   *    사업자로 바꾸는 것 하나뿐이고, 그 사실은 화면이 말한다.
+   * 3. 값이 오면 **암호화해서만** 넣는다. `encryptField`는 키가 없거나 형식이 틀리면
+   *    던진다 — 그 예외를 여기서 삼켜 평문을 넣거나 그냥 넘어가면 안 된다. 저장 전체를
+   *    거부하고 `encryption_unavailable`로 알린다.
+   */
+  let residentNumberEnc: string | null | undefined;
+  let residentNumberRetained = false;
+  if (value.taxType === 'invoice') {
+    if (await hasWithheldPayout(creatorId)) {
+      // undefined = SET 목록에서 빠진다(아래 주석). 지우지 않고 그대로 둔다.
+      residentNumberEnc = undefined;
+      residentNumberRetained = true;
+    } else {
+      residentNumberEnc = null;
+    }
+  } else if (value.residentNumber) {
+    try {
+      residentNumberEnc = encryptField(value.residentNumber);
+    } catch (error) {
+      if (error instanceof FieldCryptoError) {
+        // 원본 메시지를 그대로 내보내지 않는다. 평문은 애초에 들어 있지 않지만, 키 설정
+        // 상태를 화면에 적어 줄 이유도 없다. 서버에는 코드만 남긴다.
+        console.error('[funding] resident number encryption failed', { code: error.code });
+        return deny(
+          'encryption_unavailable',
+          '서버의 암호화 설정 문제로 주민등록번호를 저장할 수 없습니다. 이번 저장은 계좌를 포함해 '
+            + '아무것도 반영되지 않았습니다. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 '
+            + '알려 주세요.',
+        );
+      }
+      throw error;
+    }
+  }
+
   await getDb().update(fundingCreators).set({
     taxType: value.taxType,
     payoutBankName: value.bankName,
     payoutAccount: value.account,
     payoutHolder: value.holder,
+    // undefined면 drizzle이 SET 목록에서 빼므로 기존 값이 그대로 남는다(위 2번).
+    ...(residentNumberEnc === undefined ? {} : { residentNumberEnc }),
     updatedAt: new Date(),
   }).where(eq(fundingCreators.id, creatorId));
-  return { ok: true };
+  return residentNumberRetained ? { ok: true, residentNumberRetained: true } : { ok: true };
 };
 
 /**

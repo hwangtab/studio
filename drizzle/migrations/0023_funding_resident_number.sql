@@ -1,0 +1,1 @@
+ALTER TABLE `funding_creators` ADD `resident_number_enc` text;

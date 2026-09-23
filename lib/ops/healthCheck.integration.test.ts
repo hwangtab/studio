@@ -32,7 +32,17 @@ jest.mock('./migrationDrift', () => ({
 // eslint-disable-next-line import/first
 import { fetchBusyRanges } from '../booking/gcal';
 // eslint-disable-next-line import/first
-import { formatHealthReport, runHealthCheck } from './healthCheck';
+import { checkFieldCryptoKey, formatHealthReport, runHealthCheck } from './healthCheck';
+// eslint-disable-next-line import/first
+import { FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
+
+/**
+ * 필드 암호화 키 점검이 이 파일의 다른 건수 assertion을 흔들지 않게 기본값을 깔아 둔다.
+ * (이 테스트 전용 값이고 운영 키와 무관하다 — 32바이트 0을 base64로 적은 것이다.)
+ * 키가 없는 경우는 아래 전용 describe가 env를 지웠다 되돌리며 따로 본다.
+ */
+const TEST_FIELD_KEY = Buffer.alloc(32).toString('base64');
+process.env[FIELD_CRYPTO_KEY_ENV] = TEST_FIELD_KEY;
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-09-10T00:00:00Z');
@@ -388,6 +398,50 @@ describe('운영 점검', () => {
     const issues = (await runHealthCheck(NOW)).issues;
     expect(issues[0].severity).toBe('high');
     expect(issues[issues.length - 1].severity).toBe('medium');
+  });
+
+  /**
+   * 키가 빠진 배포는 DB에 흔적을 남기지 않는다 — 개설자가 "저장이 안 된다"고 연락해 줄
+   * 때까지 아무도 모르는 것이 이 점검을 넣은 이유다. 값이 메일에 새지 않는 것도 함께 본다.
+   */
+  describe('필드 암호화 키 점검', () => {
+    afterEach(() => { process.env[FIELD_CRYPTO_KEY_ENV] = TEST_FIELD_KEY; });
+
+    it('키가 쓸 수 있으면 아무것도 보고하지 않는다', () => {
+      expect(checkFieldCryptoKey()).toBeNull();
+    });
+
+    it('키가 없으면 긴급으로 보고한다', () => {
+      delete process.env[FIELD_CRYPTO_KEY_ENV];
+      const issue = checkFieldCryptoKey()!;
+      expect(issue.severity).toBe('high');
+      expect(issue.title).toContain('없음');
+      expect(issue.detail).toContain(FIELD_CRYPTO_KEY_ENV);
+    });
+
+    it('길이가 32바이트가 아니면 형식 이상으로 보고한다', () => {
+      process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(16).toString('base64');
+      const issue = checkFieldCryptoKey()!;
+      expect(issue.severity).toBe('high');
+      expect(issue.title).toContain('형식 이상');
+    });
+
+    it('키 값도 암호문도 메일 본문에 실리지 않는다', async () => {
+      const secret = Buffer.alloc(31, 7).toString('base64'); // 잘못된 길이 → 형식 이상
+      process.env[FIELD_CRYPTO_KEY_ENV] = secret;
+      await insertOrder();
+      await insertBooking();
+      const text = formatHealthReport(await runHealthCheck(NOW));
+      expect(text).toContain(FIELD_CRYPTO_KEY_ENV);
+      expect(text).not.toContain(secret);
+    });
+
+    it('크론 보고에 섞여 나온다', async () => {
+      delete process.env[FIELD_CRYPTO_KEY_ENV];
+      await insertOrder();
+      await insertBooking();
+      expect((await titles()).join()).toContain('필드 암호화 키');
+    });
   });
 
   it('메일 본문에 무엇을 해야 하는지가 들어간다', async () => {

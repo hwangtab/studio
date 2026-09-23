@@ -9,7 +9,9 @@ jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorReq
 jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({
   loadProjectForCreator: jest.fn(),
   isCreatorNameLocked: jest.fn().mockResolvedValue(false),
-  loadPayoutSummary: jest.fn().mockResolvedValue({ registered: false, accountLast4: null, taxType: null }),
+  loadPayoutSummary: jest.fn().mockResolvedValue({
+    registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+  }),
 }));
 jest.mock('../../../../lib/funding/creatorStats', () => ({ loadCreatorProjectStats: jest.fn().mockResolvedValue(null) }));
 
@@ -194,7 +196,7 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
       (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
       (loadPayoutSummary as jest.Mock).mockResolvedValue({
-        registered: true, accountLast4: '9012', taxType: 'withholding',
+        registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false,
       });
       const res = resStub();
       const result = await getServerSideProps({
@@ -202,8 +204,12 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       } as never);
       const props = (result as unknown as { props: { payout: Record<string, unknown> } }).props;
 
-      expect(props.payout).toEqual({ registered: true, accountLast4: '9012', taxType: 'withholding' });
-      expect(Object.keys(props.payout).sort()).toEqual(['accountLast4', 'registered', 'taxType']);
+      expect(props.payout).toEqual({
+        registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false,
+      });
+      expect(Object.keys(props.payout).sort()).toEqual([
+        'accountLast4', 'registered', 'residentNumberRegistered', 'taxType', 'withheldPayoutRecorded',
+      ]);
       expect(loadPayoutSummary).toHaveBeenCalledWith('creator-a');
 
       // props.project + props.payout을 함께 직렬화해 원본 값이 어느 쪽으로도 새지 않는지 본다
@@ -284,7 +290,9 @@ describe('모금 현황 props', () => {
     (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
     (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
     (isCreatorNameLocked as jest.Mock).mockResolvedValue(false);
-    (loadPayoutSummary as jest.Mock).mockResolvedValue({ registered: false, accountLast4: null, taxType: null });
+    (loadPayoutSummary as jest.Mock).mockResolvedValue({
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
+    });
   });
 
   const run = async () => {

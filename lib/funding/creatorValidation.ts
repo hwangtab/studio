@@ -45,6 +45,8 @@ export const CREATOR_LIMITS = {
   payoutBankNameMax: 30,
   payoutAccountMax: 30,
   payoutHolderMax: 40,
+  /** 주민등록번호 입력 길이 상한 — 13자리 + 하이픈 1개. */
+  residentNumberMax: 14,
   /**
    * 개설자 한 명이 동시에 가질 수 있는 **미심사** 프로젝트(draft·submitted·
    * changes_requested) 수. `approved`·`rejected`는 세지 않는다 — 둘 다 운영자가
@@ -250,7 +252,43 @@ export interface PayoutSection {
   bankName: string;
   account: string;
   holder: string;
+  /**
+   * 하이픈을 뺀 13자리 평문, 또는 `null`.
+   *
+   * `null`은 "이번 저장에서 주민등록번호를 건드리지 않는다"는 뜻이다 — 계좌와 달리
+   * 기존 값이 유지된다(`savePayoutSection` 주석). `taxType === 'invoice'`면 값이 와도
+   * 여기서 이미 `null`로 떨어진다.
+   */
+  residentNumber: string | null;
 }
+
+/**
+ * 주민등록번호 형식 검사 — **형식만** 본다.
+ *
+ * ⚠ **체크섬(가중치 2,3,4,5,6,7,8,9,2,3,4,5) 검증을 넣지 마라.** 뒤 6자리는 2020년 10월
+ * 발급분부터 난수라 그 식이 성립하지 않는다. 검증식을 넣으면 **정상 번호를 거부**한다 —
+ * 등록을 막힌 개설자는 정산을 받을 수 없고, 거부당한 쪽은 자기 번호가 맞다고 알고 있으니
+ * 원인도 찾기 어렵다. `creatorValidation.test.ts`가 체크섬이 안 맞는 번호가 통과하는 것을
+ * 회귀 테스트로 고정한다.
+ *
+ * 그래서 보는 것은 셋뿐이다: 숫자 13자리 / 앞 6자리가 있을 수 있는 날짜(월 01~12,
+ * 일 01~31) / 7번째 자리가 1~8(내국인·외국인, 1900년대·2000년대). 월별 일수와 윤년까지
+ * 따지지 않는 것은 의도다 — 2월 29일의 성립 여부가 성별코드가 말하는 세기에 달려 있어,
+ * 우리가 판정을 더 좁힐수록 정상 번호를 거부할 위험만 커진다.
+ *
+ * 하이픈은 받아들이고 여기서 지운다. 저장되는 것은 숫자 13자리뿐이다.
+ */
+export const normalizeResidentNumber = (raw: string): string | null => {
+  const digits = raw.replace(/-/g, '').trim();
+  if (!/^[0-9]{13}$/.test(digits)) return null;
+  const month = Number(digits.slice(2, 4));
+  const day = Number(digits.slice(4, 6));
+  if (month < 1 || month > 12) return null;
+  if (day < 1 || day > 31) return null;
+  const genderDigit = Number(digits[6]);
+  if (genderDigit < 1 || genderDigit > 8) return null;
+  return digits;
+};
 
 /** 숫자와 하이픈만. 은행마다 자릿수·구분 위치가 달라 그 이상은 보지 않는다. */
 const PAYOUT_ACCOUNT_PATTERN = /^[0-9-]+$/;
@@ -301,7 +339,31 @@ export const validatePayoutSection = (input: unknown): { ok: true; value: Payout
     return fail(`예금주는 1~${CREATOR_LIMITS.payoutHolderMax}자로 적어 주세요.`);
   }
 
-  return { ok: true, value: { taxType, bankName, account, holder } };
+  /**
+   * 주민등록번호는 **원천징수 대상일 때만** 받는다. 우리 법적 근거는 소득세법상
+   * 지급명세서 제출 의무라, 사업자(`invoice`)에게 받으면 근거 없는 수집이 된다
+   * (개인정보 보호법이 주민등록번호를 법령에 구체적인 근거가 있을 때만 처리하도록 정하고
+   * 있다). 사업자가 값을 실어 보내도 거부하지 않고 **버린다** —
+   * 거부 메시지를 돌려주면 그 메시지가 "값을 보냈다"는 사실을 화면·로그에 남긴다.
+   *
+   * 빈 값은 오류가 아니라 `null`(=기존 값 유지)이다. 왜 그렇게 두는지는
+   * `savePayoutSection` 주석에 있다.
+   */
+  let residentNumber: string | null = null;
+  if (taxType === 'withholding' && d.residentNumber !== undefined && d.residentNumber !== null) {
+    const raw = str(d.residentNumber);
+    if (raw) {
+      if (raw.length > CREATOR_LIMITS.residentNumberMax) {
+        return fail('주민등록번호를 13자리로 적어 주세요.');
+      }
+      const normalized = normalizeResidentNumber(raw);
+      // 오류 메시지에 입력값을 넣지 않는다 — 메시지는 응답·화면·브라우저 로그로 흐른다.
+      if (!normalized) return fail('주민등록번호를 13자리 숫자로 정확히 적어 주세요.');
+      residentNumber = normalized;
+    }
+  }
+
+  return { ok: true, value: { taxType, bankName, account, holder, residentNumber } };
 };
 
 export interface RewardInput {

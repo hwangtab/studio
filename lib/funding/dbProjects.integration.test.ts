@@ -124,6 +124,8 @@ describe('dbProjects', () => {
       payoutBankName: '국민은행',
       payoutAccount: '123-456-789012',
       payoutHolder: '정산예금주',
+      // 암호문도 나가면 안 된다 — 나가는 순간 키가 유일한 방어가 된다.
+      residentNumberEnc: 'v1:ZmFrZQ==:ZmFrZQ==:ZmFrZQ==',
     });
 
     const single = await getDbFundingProject('creator-fields');
@@ -144,6 +146,8 @@ describe('dbProjects', () => {
     expect(serialized).not.toContain('국민은행');
     expect(serialized).not.toContain('123-456-789012');
     expect(serialized).not.toContain('정산예금주');
+    expect(serialized).not.toContain('residentNumber');
+    expect(serialized).not.toContain('v1:ZmFrZQ==');
     expect(serialized).toContain('민감정보개설자'); // name만은 정상적으로 실린다.
     void project;
   });

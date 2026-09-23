@@ -1,7 +1,7 @@
 {
  "note": "개설자가 심사를 신청할 때 동의하는 개설자 약관(FUNDING_CREATOR_TERMS_SECTIONS)의 내용 해시. 내용이 바뀌면 FUNDING_CREATOR_TERMS_VERSION을 먼저 올린 뒤 UPDATE_CREATOR_TERMS_BASELINE=1 로 갱신할 것.",
- "version": "funding-creator-terms-2026-09-23-r3",
- "hash": "ffa61725ca5716d54529aa2a61b8b99c7a368fc5a1326b9b8fa9286367bf537d",
+ "version": "funding-creator-terms-2026-09-23-r5",
+ "hash": "2d54dcf6b9871230648130cb5bedf664597875d5535c93aff4f9f22cdd593b5d",
  "covers": [
   "pages/[locale]/funding/creator-terms.tsx — FUNDING_CREATOR_TERMS_SECTIONS",
   "data/pricing.ts · lib/funding/policy.ts — 제6조에 보간되는 수수료율·원천징수율·정산 시점"

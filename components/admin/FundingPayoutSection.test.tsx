@@ -42,6 +42,7 @@ const VIEW: AdminPayoutView = {
   closed: true,
   hasPayoutAccount: true,
   hasTaxType: true,
+  needsResidentNumber: false,
   recorded: null,
 };
 
@@ -119,6 +120,25 @@ describe('기록 버튼과 막는 이유', () => {
    * 정산입니다"였다 — 조건상 절대 보이지 않는 문장이다. 기록 뒤에는 기록 버튼 자체가
    * 사라지고 지급 버튼이 대신 뜬다.
    */
+  /**
+   * 원천징수 대상인데 주민등록번호가 없으면 기록을 막는다 — 서버의 `no_resident_number`와
+   * 같은 조건이다. 세액만 떼고 지급명세서를 못 내는 상태가 되기 때문이다.
+   */
+  it('주민등록번호가 없는 원천징수 대상이면 이유를 적고 버튼을 막는다', () => {
+    renderSection({ ...VIEW, needsResidentNumber: true });
+    const list = screen.getByRole('status');
+    expect(within(list).getAllByRole('listitem')).toHaveLength(1);
+    expect(list).toHaveTextContent('주민등록번호가 등록되지 않았습니다');
+    expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
+  });
+
+  /** 사업자는 원천징수를 하지 않으므로 이 조건에 걸리지 않는다(props가 이미 false로 온다). */
+  it('사업자는 그 게이트에 걸리지 않는다', () => {
+    renderSection({ ...VIEW, needsResidentNumber: false });
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '정산 기록' })).toBeEnabled();
+  });
+
   it('기록 뒤에는 기록 버튼이 사라지고 "이미 기록됐다"는 안내도 뜨지 않는다', () => {
     renderSection({ ...VIEW, recorded: RECORD });
     expect(screen.queryByRole('button', { name: '정산 기록' })).not.toBeInTheDocument();
@@ -178,6 +198,64 @@ describe('입금 계좌', () => {
     renderSection(VIEW);
     await userEvent.click(screen.getByRole('button', { name: '계좌 보기' }));
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('네트워크 오류'));
+  });
+});
+
+describe('주민등록번호 조회', () => {
+  afterEach(() => {
+    delete (global as { fetch?: unknown }).fetch;
+  });
+
+  /** 계좌와 **다른 버튼·다른 라우트**다 — 여는 목적이 다르고 열람 기록도 갈려야 한다. */
+  it('계좌와 별도 버튼이고, 누를 때만 별도 라우트로 가져온다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ ok: true, residentNumber: '9001011234567' }),
+    });
+    (global as { fetch?: unknown }).fetch = fetchMock;
+
+    renderSection(VIEW);
+    expect(screen.queryByText('9001011234567')).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '주민등록번호 보기' }));
+
+    await waitFor(() => expect(screen.getByText('9001011234567')).toBeInTheDocument());
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(fetchMock).toHaveBeenCalledWith('/api/admin/funding/projects/proj-1/resident-number', {
+      credentials: 'same-origin',
+    });
+  });
+
+  it('계좌를 열어도 주민등록번호는 함께 오지 않는다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: true,
+        account: { bankName: '국민은행', account: '123-45-6789', holder: '홍길동', taxType: 'withholding' },
+      }),
+    });
+    (global as { fetch?: unknown }).fetch = fetchMock;
+
+    renderSection(VIEW);
+    await userEvent.click(screen.getByRole('button', { name: '계좌 보기' }));
+    await waitFor(() => expect(screen.getByText('국민은행')).toBeInTheDocument());
+
+    expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('button', { name: '주민등록번호 보기' })).toBeInTheDocument();
+  });
+
+  it('복호화에 실패하면 서버가 준 이유를 그대로 적는다', async () => {
+    (global as { fetch?: unknown }).fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({
+        ok: false,
+        code: 'missing_key',
+        message: '이 환경에 복호화 키(FUNDING_FIELD_KEY)가 없습니다.',
+      }),
+    });
+
+    renderSection(VIEW);
+    await userEvent.click(screen.getByRole('button', { name: '주민등록번호 보기' }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('복호화 키'));
   });
 });
 

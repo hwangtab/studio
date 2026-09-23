@@ -17,9 +17,15 @@ const STATUS_BY_CODE: Record<Exclude<WriteResult, { ok: true }>['code'], number>
   duplicate_slug: 400,
   duplicate_reward: 400,
   too_many: 400,
+  // 서버 설정(암호화 키) 문제라 개설자가 고칠 수 있는 것이 없다 — 4xx가 아니다.
+  encryption_unavailable: 503,
 };
 
 export const respondWriteResult = (res: NextApiResponse, result: WriteResult) => {
-  if (result.ok) return res.status(200).json({ ok: true });
+  // `residentNumberRetained`는 붙을 때만 싣는다 — 다른 구획의 응답 모양(`{ ok: true }`)을
+  // 바꾸지 않는다. 불리언 하나이고 값·암호문은 담기지 않는다.
+  if (result.ok) {
+    return res.status(200).json(result.residentNumberRetained ? { ok: true, residentNumberRetained: true } : { ok: true });
+  }
   return res.status(STATUS_BY_CODE[result.code]).json({ ok: false, message: result.message });
 };

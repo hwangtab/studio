@@ -505,6 +505,18 @@ export const fundingCreators = sqliteTable('funding_creators', {
   payoutBankName: text('payout_bank_name'),
   payoutAccount: text('payout_account'),
   payoutHolder: text('payout_holder'),
+  /**
+   * 주민등록번호 — **암호화한 문자열만** 들어간다(`lib/crypto/fieldCrypto.ts`,
+   * `v1:<iv>:<tag>:<ct>`). 평문 컬럼도, 생년월일만 떼어 둔 표시용 컬럼도 만들지 않는다 —
+   * 일부를 평문으로 두면 암호화의 의미가 준다. 화면은 등록 여부만 안다.
+   *
+   * 근거는 소득세법상 원천징수의무자의 지급명세서 제출 의무이고, 그래서
+   * `taxType === 'withholding'`인 개설자에게만 받는다(개인정보 보호법은 법령에 구체적인
+   * 근거가 있을 때만 주민등록번호 처리를 허용한다). 사업자로 바꾸면 근거가 사라지므로
+   * `savePayoutSection`이 이 값을 지운다 — **다만 이미 원천징수해 기록한 정산이 있으면
+   * 지우지 않는다.** 그때는 이미 지급한 소득의 지급명세서 제출 의무가 근거로 남는다.
+   */
+  residentNumberEnc: text('resident_number_enc'),
   lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

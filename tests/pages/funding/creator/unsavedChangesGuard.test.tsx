@@ -82,7 +82,7 @@ afterEach(() => {
  * 정산 정보 구획이 화면에 받는 전부 — 미등록 상태. 이 테스트들은 정산 구획을 보지 않으므로
  * 가장 조용한 값을 넣는다(구획 자체의 동작은 payoutSection.test.tsx가 본다).
  */
-const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null } as const;
+const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false } as const;
 
 describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가드', () => {
   it('아무것도 안 바꿨으면 이동을 막지 않는다', () => {
