@@ -259,6 +259,53 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
     expect(s.backerPersonCount).toBe(4);
   });
 
+  /**
+   * 5년이 지나 이름·연락처·이메일이 표식으로 덮인 주문. 표식을 신원 키에 그대로 쓰면
+   * 파기된 건이 전부 `(개인정보 파기됨)|(개인정보 파기됨)` 한 키로 뭉쳐, 확정 3건짜리
+   * 프로젝트가 "후원자 1명"이 된다 — 수기 등록 플레이스홀더가 일으키던 붕괴와 같다.
+   */
+  it('파기된 주문은 서로 같은 사람이 아니다', async () => {
+    for (let i = 0; i < 3; i += 1) {
+      await client.execute({
+        sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+              item_amount, vat_amount, total_amount, manage_token)
+              VALUES (?,?,'funding','paid','(개인정보 파기됨)','(개인정보 파기됨)','(개인정보 파기됨)',4545,455,5000,?)`,
+        args: [`po${i}`, `FND-P-${i}`, `ptok-${i}`],
+      });
+      await client.execute({
+        sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+              quantity, additional_amount, payment_method, hold_expires_at, display_name_public)
+              VALUES (?,?,?,'mail','감사 메일',5000,1,0,'toss',9999999999,1)`,
+        args: [`pfp${i}`, `po${i}`, PROJECT.slug],
+      });
+    }
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(3);
+    expect(s.backerPersonCount).toBe(3);
+  });
+
+  it('파기된 주문이 살아 있는 후원과 섞여도 인원이 맞는다', async () => {
+    const c = await createFundingPledge(payloadFor({ customerEmail: 'live@example.com' }), PROJECT, reward('mail'), NOW);
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
+    for (let i = 0; i < 2; i += 1) {
+      await client.execute({
+        sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+              item_amount, vat_amount, total_amount, manage_token)
+              VALUES (?,?,'funding','paid','(개인정보 파기됨)','(개인정보 파기됨)','(개인정보 파기됨)',4545,455,5000,?)`,
+        args: [`mix${i}`, `FND-X-${i}`, `xtok-${i}`],
+      });
+      await client.execute({
+        sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+              quantity, additional_amount, payment_method, hold_expires_at, display_name_public)
+              VALUES (?,?,?,'mail','감사 메일',5000,1,0,'toss',9999999999,1)`,
+        args: [`mixfp${i}`, `mix${i}`, PROJECT.slug],
+      });
+    }
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(3);
+    expect(s.backerPersonCount).toBe(3);
+  });
+
   it('이메일이 같아도 전화가 다르면 다른 사람으로 센다', async () => {
     for (const phone of ['010-1', '010-2']) {
       const c = await createFundingPledge(
@@ -362,6 +409,29 @@ describe('취소하면 공개 명단에서 내려간다', () => {
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.publicBackers).toContain('부분환불');
     expect(s.publicMessages.map((m) => m.message)).toContain('일부만 돌려받음');
+  });
+
+  /**
+   * 펀딩 주문은 영구히 `paid`라 5년이 지나 이름이 표식으로 덮인 뒤에도 이 조회에 계속
+   * 걸린다. 걸러 내지 않으면 BackerWall·SupporterTicker에 "(개인정보 파기됨)"이 최대
+   * 100번 늘어서고, 리워드 전달 표시를 안 한 프로젝트는 응원 메시지까지 그 이름에 붙는다.
+   */
+  it('파기된 주문은 공개 명단에도 응원 메시지에도 나오지 않는다', async () => {
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+            item_amount, vat_amount, total_amount, manage_token)
+            VALUES ('pub1','FND-PUB-1','funding','paid','(개인정보 파기됨)','(개인정보 파기됨)','(개인정보 파기됨)',4545,455,5000,'pubtok-1')`,
+      args: [],
+    });
+    await client.execute({
+      sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+            quantity, additional_amount, payment_method, hold_expires_at, display_name_public, supporter_message)
+            VALUES ('pubfp1','pub1',?,'mail','감사 메일',5000,1,0,'toss',9999999999,1,'파기 전에 남긴 말')`,
+      args: [PROJECT.slug],
+    });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).toEqual([]);
+    expect(s.publicMessages).toEqual([]);
   });
 
   it('결제 전(pending)에는 아직 나가지 않는다', async () => {

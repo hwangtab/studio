@@ -5,6 +5,7 @@ import { getDb } from '../../db/client';
 import { orders, type FundingPledge, type Order, type Payment, type Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
+import { PURGED_MARK } from '../privacy/orderRetention';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
 import { FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import { liveFundingOrderStatusList } from './refundable';
@@ -48,12 +49,21 @@ export const isManualPlaceholderRecipient = (order: { customerEmail: string }): 
  * 뜻이지 "같은 사람"이라는 뜻이 아니므로, 합칠 근거가 없을 때는 합치지 않는다.
  *
  * 빈 문자열 전화도 같이 본다 — customerPhone은 `?? '-'`라 빈 문자열을 통과시킨다.
+ *
+ * **파기 표식도 같은 근거로 떨어뜨린다.** 보존 기간이 지난 주문은 이름·연락처·이메일이
+ * `PURGED_MARK`로 덮이므로(`lib/privacy/orderRetention.ts`), 그대로 두면 파기된 300건이
+ * 전부 `(개인정보 파기됨)|(개인정보 파기됨)` 한 키로 뭉쳐 인원이 1로 붕괴한다 — 이 주석이
+ * 막으려던 수기 등록 붕괴와 글자 그대로 같은 사고다. 표식은 "신원 불명"이지 "같은 사람"이
+ * 아니므로, 합칠 근거가 없을 때는 합치지 않는다.
+ *
  * 호출할 때마다 새 조각을 만든다(하나를 여러 쿼리에 돌려 쓰지 않는다).
  */
 export const backerIdentitySql = () => sql`CASE
   WHEN o.customer_email = ${MANUAL_PLACEHOLDER_EMAIL}
     OR o.customer_phone = ${MANUAL_PLACEHOLDER_PHONE}
     OR o.customer_phone = ''
+    OR o.customer_email = ${PURGED_MARK}
+    OR o.customer_phone = ${PURGED_MARK}
   THEN o.id
   ELSE o.customer_email || '|' || o.customer_phone
 END`;
@@ -273,6 +283,14 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
    *
    * 옛 문서로 동의한 후원이 다시 생길 일이 있다면(과거 데이터 이관 등) 그때는 이 자리에
    * 판본 조건을 되살려야 한다.
+   *
+   * **파기된 건은 아예 뺀다.** 5년이 지나 이름이 `PURGED_MARK`로 덮이면, 펀딩 주문은 영구히
+   * `paid`라 그 행이 계속 이 조회에 걸린다 — BackerWall·SupporterTicker에 "(개인정보 파기됨)"이
+   * 최대 100번 늘어서고, 리워드 전달 표시를 안 한 프로젝트는 응원 메시지까지 그 이름에
+   * 붙는다. 계약 서명 완료 화면(`pages/[locale]/contracts/[id]/complete.tsx`)은 이름 자리를
+   * 다른 문장으로 갈아 끼우는데, 거기는 **한 사람에게 말을 거는 자리**라 대체 문장이 성립한다.
+   * 여기는 사람을 세워 놓는 명단이라 갈아 끼울 문장이 없다 — 표식은 그 자리에 아무도 없다는
+   * 뜻이므로 명단에서 내린다. LIMIT 앞에서 걸러야 남은 100자리가 실제 이름으로 채워진다.
    */
   const names = await db.all<{ customer_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
     SELECT o.customer_name,
@@ -280,6 +298,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
            fp.paid_at, o.created_at
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
+      AND o.customer_name <> ${PURGED_MARK}
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
   return {

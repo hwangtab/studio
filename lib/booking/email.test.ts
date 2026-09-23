@@ -55,3 +55,31 @@ describe('고객 메일의 replyTo', () => {
     expect(customerCall().replyTo).toBe('hello@studionol.co.kr');
   });
 });
+
+/**
+ * 보관 기간이 지난 주문은 이메일 칸이 파기 표식으로 덮인다. 발송을 막는 것만으로는
+ * 부족하다 — 실패로 세면 그 문자열이 orders.notificationError에 남고, 헬스체크의
+ * '확인 메일이 나가지 않은 주문' 경보가 매일 영원히 울린다. 나이 게이트가 없는 관리자
+ * 알림 재발송이 그 경로다.
+ */
+describe('파기된 주문의 고객 메일', () => {
+  const purged = { ...order, customerEmail: '(개인정보 파기됨)' } as unknown as Order;
+
+  it.each([
+    ['세션 확정', () => sendBookingConfirmedEmails(purged, booking)],
+    ['세션 취소', () => sendBookingCancelledEmails(purged, booking, 220000)],
+    ['믹싱 확정', () => sendMixingOrderConfirmedEmails(purged, workOrder)],
+    ['믹싱 취소', () => sendMixingOrderCancelledEmails(purged, workOrder, 220000)],
+  ])('%s — 고객에게 보내지 않고 실패로도 세지 않는다', async (_label, run) => {
+    expect(await run()).toBeNull();
+    // 운영자 사본 한 통만 나간다 — 파기된 주문이라도 무슨 일이 있었는지는 알아야 한다.
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect(customerCall().to).not.toBe('(개인정보 파기됨)');
+  });
+
+  // 표식만 가른다. 잘못된 주소가 들어온 것은 보낼 곳이 사라진 것과 다른 사건이라 센다.
+  it('RFC 2606 시험용 주소의 실패는 여전히 센다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'UNDELIVERABLE_ADDRESS' });
+    expect(await sendBookingConfirmedEmails(order, booking)).toBe('customer:UNDELIVERABLE_ADDRESS');
+  });
+});

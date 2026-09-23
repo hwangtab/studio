@@ -182,6 +182,15 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     expect((await aggregateAdminFundingTotals('a')).confirmedPersonCount).toBe(3);
   });
 
+  // 보관 기간이 지나 이름·연락처·이메일이 표식으로 덮인 주문. 표식은 "신원 불명"이지
+  // "같은 사람"이 아니다 — 합치면 확정 4건이 "후원자 1명"이 된다.
+  it('파기된 주문도 주문 단위로 센다', async () => {
+    for (let i = 0; i < 4; i += 1) await seedPaid(i, 'a', 'paid', 5000, '(개인정보 파기됨)', '(개인정보 파기됨)');
+    const totals = await aggregateAdminFundingTotals('a');
+    expect(totals.confirmedCount).toBe(4);
+    expect(totals.confirmedPersonCount).toBe(4);
+  });
+
   // 반대로 진짜 연락처를 적어 준 수기 등록은 평소대로 중복이 합쳐져야 한다.
   it('연락처가 있는 건은 여전히 이메일+전화로 중복을 제거한다', async () => {
     await seedPaid(1, 'a', 'paid', 5000, 'real@example.com', '010-7777');

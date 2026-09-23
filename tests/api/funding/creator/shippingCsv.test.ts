@@ -171,7 +171,8 @@ const call = async (projectIdInUrl: string) => {
   const status = jest.fn().mockReturnValue({ send, json });
   const setHeader = jest.fn();
   await handler(
-    { method: 'GET', query: { id: projectIdInUrl }, headers: {} } as unknown as NextApiRequest,
+    // socket은 접속기록이 IP를 뽑는 데 쓴다(lib/contracts/client-ip.ts) — 실제 요청에는 늘 있다.
+    { method: 'GET', query: { id: projectIdInUrl }, headers: {}, socket: {} } as unknown as NextApiRequest,
     { setHeader, status } as unknown as NextApiResponse,
   );
   return {

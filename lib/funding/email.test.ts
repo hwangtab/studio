@@ -153,6 +153,35 @@ describe('플레이스홀더 주소', () => {
 });
 
 /**
+ * 보관 기간이 지난 주문은 이메일 칸이 파기 표식으로 덮인다. resend.ts가 발송은 막지만,
+ * 그 실패(UNDELIVERABLE_ADDRESS)를 세면 문자열만 바뀐 채 같은 영구 경보가 남는다.
+ * 플레이스홀더와 같은 자리에서 같은 이유로 조용히 뺀다.
+ */
+describe('파기된 주문의 고객 메일', () => {
+  const purgedOrder = { ...(order as object), customerEmail: '(개인정보 파기됨)' } as never;
+
+  it.each([
+    ['확정', () => sendFundingConfirmedEmails(purgedOrder, project)],
+    ['취소', () => sendFundingCancelledEmails(purgedOrder, project, 'recorded', 5000)],
+    ['환불요청 철회', () => sendFundingRefundRequestClearedEmails(purgedOrder, project, '사유')],
+  ])('%s 메일: 고객 항목만 빠지고 운영자 사본은 나간다', async (_label, call) => {
+    await call();
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect((sendEmail as jest.Mock).mock.calls[0][0].to).toBe(OPERATOR_EMAIL);
+  });
+
+  it('건너뛴 고객 항목을 실패로 세지 않는다 — notificationError가 비어 있다', async () => {
+    expect(await sendFundingConfirmedEmails(purgedOrder, project)).toBeNull();
+  });
+
+  // 표식만 가른다. 잘못된 주소가 들어온 것은 보낼 곳이 사라진 것과 다른 사건이라 센다.
+  it('RFC 2606 시험용 주소의 실패는 여전히 센다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValueOnce({ ok: false, errorCode: 'UNDELIVERABLE_ADDRESS' });
+    expect(await sendFundingConfirmedEmails(order, project)).toBe('customer:UNDELIVERABLE_ADDRESS');
+  });
+});
+
+/**
  * 고객이 **보는** 주소는 운영자 개인 Gmail이 아니라 사이트 주소여야 한다.
  *
  * 청약철회 접수 주소가 특히 중요하다 — 이 문구는 전자상거래법 제13조 2항의 계약 내용

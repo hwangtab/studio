@@ -5,6 +5,7 @@ import { listFundingOrdersForExport } from '../../../../lib/funding/admin-list';
 import { hasReviewMarker } from '../../../../lib/funding/admin-serialize';
 import { toCsv } from '../../../../lib/funding/csv';
 import { isRefundPendingStatus } from '../../../../lib/funding/policy';
+import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../lib/privacy/accessLog';
 
 /**
  * shipHold는 사람이 읽는 칸이다. refundRequestedAt만으로는 부족하다 — 주소로 정렬해
@@ -34,6 +35,12 @@ const SLUG_PATTERN = /^[a-z0-9-]+$/;
 /**
  * 개인정보(연락처·배송지)가 실리는 다운로드라 확정 건(paid·partially_refunded)만,
  * 관리자 세션 필수, no-store. 건수 상한은 두지 않는다 — 발송 실무용 전량 다운로드다.
+ *
+ * 상한이 없다는 바로 그 이유로 **내려받은 사실을 접속기록에 남긴다**
+ * (`privacy_access_logs`, 「개인정보의 안전성 확보조치 기준」 제8조①). 25열 중 11열이
+ * 개인정보라, 한 번의 클릭이 주민등록번호 한 건 조회보다 훨씬 넓게 개인정보를 꺼낸다.
+ * 기록에 담는 것은 **대상(프로젝트 slug)과 건수**뿐이다 — 내보낸 값을 적으면 접속기록이
+ * CSV의 사본이 된다. 인증 전(401)에는 남기지 않는다(스키마의 result 주석).
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -43,7 +50,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (slug !== null && !SLUG_PATTERN.test(slug)) {
     return res.status(400).json({ ok: false, message: '프로젝트 slug 형식이 올바르지 않습니다.' });
   }
-  const items = await listFundingOrdersForExport(slug);
+  /**
+   * 기록 경로의 예외가 다운로드를 끊지 않게 한 겹 더 받는다(payout-account.ts와 같은 이유).
+   *
+   * **실패한 시도도 남긴다.** 처리방침 19항이 이 기록을 "성공·실패를 가리지 않고" 남긴다고
+   * 고지한다. 조회가 던졌을 때 500만 나가고 행이 안 남으면, 누가 목록 전체를 꺼내려 했다는
+   * 사실이 어디에도 안 보인다.
+   */
+  const log = (result: PrivacyAccessResult, rowCount?: number) =>
+    recordAdminPrivacyAccess(req, 'funding_pledge_export', slug ?? 'all', result, rowCount).catch(
+      (error: unknown) => {
+        console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
+      },
+    );
+
+  let items: Awaited<ReturnType<typeof listFundingOrdersForExport>>;
+  try {
+    items = await listFundingOrdersForExport(slug);
+  } catch (error: unknown) {
+    await log('error');
+    console.error('[API/admin/funding/export] 후원 목록 조회 실패:', error);
+    return res.status(500).json({ ok: false, message: '목록을 만들지 못했습니다.' });
+  }
   const rows = items.map((o) => {
     const p = o.fundingPledge!;
     return {
@@ -77,6 +105,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       adminMemo: p.adminMemo,
     };
   });
+  await log('success', rows.length);
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="funding-${slug ?? 'all'}.csv"`);
   return res.status(200).send(toCsv(rows, COLUMNS));

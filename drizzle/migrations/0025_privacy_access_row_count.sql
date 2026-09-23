@@ -1,0 +1,1 @@
+ALTER TABLE `privacy_access_logs` ADD `row_count` integer;

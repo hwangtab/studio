@@ -241,3 +241,43 @@ describe('보존 2년', () => {
     expect(await rows()).toHaveLength(1);
   });
 });
+
+/**
+ * 목록 다운로드는 같은 대상이라도 그날 몇 사람분이 나갔는지가 매번 다르다. 그 숫자가
+ * 실제 컬럼에 남는지, 그리고 **숫자 말고는 아무것도 늘지 않았는지**를 본다.
+ */
+describe('다운로드 건수', () => {
+  it('내보낸 건수가 행에 남는다', async () => {
+    await recordAdminPrivacyAccess(
+      { headers: {}, socket: {} },
+      'funding_pledge_export',
+      'demo',
+      'success',
+      42,
+    );
+    const [row] = await rows();
+    expect(row).toMatchObject({ action: 'funding_pledge_export', targetId: 'demo', rowCount: 42 });
+  });
+
+  it('한 건을 여는 조회에는 건수가 없다 — 0이 아니라 null이다', async () => {
+    await recordAdminPrivacyAccess({ headers: {}, socket: {} }, 'funding_payout_account_view', 'proj-9', 'success');
+    expect((await rows())[0].rowCount).toBeNull();
+  });
+
+  /** 건수만 담는다는 규칙을 행 자체로 못 박는다 — CSV에 실리는 값은 한 글자도 없다. */
+  it('내보낸 행을 직렬화해도 이름·연락처가 없다', async () => {
+    await recordPrivacyAccess({
+      actor: PRIVACY_ACTOR_ADMIN,
+      action: 'sales_ledger_export',
+      targetId: '2026-09-01_2026-09-30',
+      result: 'success',
+      rowCount: 3,
+      ip: '203.0.113.7',
+      at: NOW,
+    });
+    const dump = JSON.stringify(await rows());
+    expect(dump).not.toContain('김후원');
+    expect(dump).not.toContain('010-1111-2222');
+    expect(dump).toContain('"rowCount":3');
+  });
+});

@@ -1,3 +1,5 @@
+import { isPurgedValue } from '../privacy/orderRetention';
+
 const RESEND_API_ENDPOINT = 'https://api.resend.com/emails';
 const EMAIL_REQUEST_TIMEOUT_MS = 12000;
 const DEFAULT_FROM = 'Studio NOL <noreply@studionol.co.kr>';
@@ -59,7 +61,16 @@ export const buildEmailHtml = (parts: { title: string; body: string; footer?: st
 const UNDELIVERABLE_DOMAIN = /@(?:example\.(?:com|net|org)|test|invalid|localhost)$/i;
 
 export function isUndeliverableAddress(address: string): boolean {
-    return UNDELIVERABLE_DOMAIN.test(address.trim());
+    const trimmed = address.trim();
+    /**
+     * 보관 기간이 지난 주문·구독은 이메일 칸이 파기 표식으로 덮인다
+     * (`lib/privacy/orderRetention.ts`). 주소 형태가 아니므로 보내면 Resend가 422로 거절하고,
+     * 그 실패 문자열이 `orders.notificationError`에 박혀 헬스체크의 '확인 메일이 나가지 않은
+     * 주문' 경보가 영영 꺼지지 않는다(`lib/ops/healthCheck.ts`). 나이 게이트가 없는 예약 알림
+     * 재발송(`pages/api/admin/bookings/[id].ts`)이 실제로 그 경로다.
+     */
+    if (isPurgedValue(trimmed)) return true;
+    return UNDELIVERABLE_DOMAIN.test(trimmed);
 }
 
 export async function sendEmail(params: SendEmailParams): Promise<SendEmailResult> {
