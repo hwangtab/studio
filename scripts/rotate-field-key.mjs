@@ -2,8 +2,8 @@
 /**
  * 필드 암호화 키 회전 — 옛 키로 열어 새 키로 다시 잠근다.
  *
- *   npx tsx scripts/rotate-field-key.mjs             # dry-run (기본)
- *   npx tsx scripts/rotate-field-key.mjs --apply     # 실제로 쓴다
+ *   node --env-file=.env.local node_modules/.bin/tsx scripts/rotate-field-key.mjs
+ *   node --env-file=.env.local node_modules/.bin/tsx scripts/rotate-field-key.mjs --apply
  *
  * tsx로 도는 이유: 판정과 쓰기는 `lib/crypto/fieldKeyRotation.ts`에 있고(테스트가 인메모리
  * libsql로 그 모듈을 그대로 돌린다), 이 파일은 env·플래그를 읽어 넘기고 개수를 찍는
@@ -33,8 +33,10 @@ if (args.includes('--help') || args.includes('-h')) {
     [
       '필드 암호화 키 회전',
       '',
-      '  npx tsx scripts/rotate-field-key.mjs           dry-run — 무엇이 바뀔지 개수만 본다 (기본)',
-      '  npx tsx scripts/rotate-field-key.mjs --apply   실제로 쓴다',
+      '  node --env-file=.env.local node_modules/.bin/tsx scripts/rotate-field-key.mjs',
+      '      dry-run — 무엇이 바뀔지 개수만 본다 (기본)',
+      '  node --env-file=.env.local node_modules/.bin/tsx scripts/rotate-field-key.mjs --apply',
+      '      실제로 쓴다',
       '',
       `env: ${NEW_KEY_ENV}(새 키) · ${OLD_KEY_ENV}(옛 키) · TURSO_DATABASE_URL · TURSO_AUTH_TOKEN`,
       '',
