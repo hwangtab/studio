@@ -15,6 +15,11 @@ interface KakaoFabProps {
    * — 카카오는 GA4 기준 검증된 유일 전환 채널이라 필요 없는 화면에서까지 걷어내지 않는다.
    */
   suppressBelowLg?: boolean;
+  /**
+   * Layout의 우하단 플로팅 행 안에 들어갈 때 켠다. 자기 고정 위치를 버리고 버튼만 남긴다 —
+   * 「맨 위로」와 한 행에 묶어 고정 영역이 세로로 두 밴드를 차지하지 않게 한다.
+   */
+  inline?: boolean;
 }
 
 /**
@@ -25,8 +30,9 @@ interface KakaoFabProps {
  * 가격 등 핵심 전환 페이지에서 진입점이 비어 있었다. 검증된 유일 전환 채널을
  * 모든 페이지·항상 노출해 전환 누수를 막는다.
  *
- * 위치: 우하단. ScrollToTop(bottom-24로 상향 조정됨)과 stack. z-40으로 두어
- * 스토리 페이지의 StickyBottomCTA(z-50 하단 바)가 뜰 때 그 아래에 위치.
+ * 위치: 우하단. 하단 고정 바가 없는 화면에서는 Layout이 「맨 위로」와 한 행으로 묶고
+ * (inline), 그 행이 위치를 정한다. z-40으로 두어 스토리 페이지의 StickyBottomCTA
+ * (z-50 하단 바)가 뜰 때 그 아래에 위치.
  *
  * 첫 화면에서는 띄우지 않는다(2026-09). 홈·pricing·recording 히어로는 CTA 블록이
  * 뷰포트 하단에 놓이는데 FAB이 정확히 그 자리라, 모바일에서 히어로 CTA 두 개를 통째로
@@ -44,7 +50,7 @@ interface KakaoFabProps {
 /** 히어로 CTA 블록이 FAB 자리를 벗어나는 지점. ScrollToTop과 같은 값을 쓴다. */
 const REVEAL_AFTER_PX = 300;
 
-const KakaoFab = ({ locale, suppressBelowLg = false }: KakaoFabProps) => {
+const KakaoFab = ({ locale, suppressBelowLg = false, inline = false }: KakaoFabProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
 
@@ -100,8 +106,8 @@ const KakaoFab = ({ locale, suppressBelowLg = false }: KakaoFabProps) => {
 
   return (
     <div
-      style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
-      className={`fixed right-6 z-40 items-center gap-2 transition-opacity duration-200 ${suppressBelowLg ? 'hidden lg:flex' : 'flex'} ${revealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      style={inline ? undefined : { bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
+      className={`${inline ? '' : 'fixed right-6 z-40 '}items-center gap-2 transition-opacity duration-200 ${suppressBelowLg ? 'hidden lg:flex' : 'flex'} ${revealed ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
       aria-hidden={!revealed}
     >
       <a
