@@ -437,8 +437,22 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: 'We do not provide personal data to third parties. We do entrust processing: Resend (sending inquiry notifications to the studio, booking/order confirmation and cancellation emails, and forwarding messages sent to hello@) and Vercel (website and server hosting) receive the name, phone number, email address, and message you submit. Bookings and payments (offered on our Korean pages only) additionally involve Turso (booking and order database), Google LLC (calendar event for a confirmed booking) and Toss Payments (payment approval, cancellation, refund). Outsourcing for crowdfunding (reward pre-orders) is listed in section 9 of the Korean privacy policy, and media contact handling for press outreach in sections 6 to 8 below.',
       },
       {
-        heading: '5. Your rights',
-        body: 'You may request access, correction, or deletion of your personal data at any time, and we will respond without undue delay.',
+        heading: '5. Your rights and how to exercise them',
+        body:
+          'You may ask us at any time to access, correct, or delete your personal data or to stop ' +
+          'processing it, and where we process data on the basis of consent you may withdraw that ' +
+          'consent. A legal representative may exercise the same rights on your behalf. Send your ' +
+          'request to the privacy officer named in section 10 below; we check it without undue delay, ' +
+          'act on it, and tell you what we did, including our reasons if we decline. Two limits apply. ' +
+          'Data that another law names as data we must collect cannot be deleted on request, which ' +
+          'covers the transaction records described in section 3 - those are destroyed once their ' +
+          'retention period ends. And we may refuse a request to stop processing where stopping would ' +
+          'make it impossible to perform a contract you hold with us and you have not clearly stated ' +
+          'that you wish to end it; if we refuse, we tell you why. Withdrawing consent stops the ' +
+          'processing that rested on it, but it does not undo a contract already formed or erase ' +
+          'records we are required to keep. If you disagree with the outcome, you may apply to the ' +
+          'Personal Information Dispute Mediation Committee or report the matter to the Privacy ' +
+          'Infringement Report Centre in Korea.',
       },
       {
         heading: '6. Media contact details for press outreach',
@@ -451,6 +465,51 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '8. Third-party sharing of media contact details',
         body: 'We never provide collected media contact details to third parties under any circumstances. The result reports we give to clients who commission publicity do not carry individual names or email addresses either: outlets that are companies or organisations are listed by their public domain, and individual reporters and critics are recorded only as a headcount.',
+      },
+      {
+        heading: '9. How personal data is destroyed',
+        body:
+          'Personal data is destroyed without delay once its purpose has been met or its retention ' +
+          'period has passed. Records that another law requires us to keep are destroyed once that ' +
+          'period ends. Destruction is not left to anyone remembering to do it: an automated clean-up ' +
+          'runs once a month and erases the stored value in our database. Where a field cannot be left ' +
+          'empty we overwrite it with the mark "(personal data destroyed)", and data held encrypted is ' +
+          'destroyed as ciphertext, so the decryption key cannot bring it back. Because the clean-up ' +
+          'runs monthly, data is erased within a month of becoming eligible. Inquiry data is destroyed ' +
+          'once the consultation is finished. For orders, bookings and recurring payments (offered on ' +
+          'our Korean pages only), the name, phone number and email address are overwritten with that ' +
+          'mark five years after the order was placed or the subscription ended; free-text notes, the ' +
+          'raw responses returned by the payment provider and the reasons it gave for declining a ' +
+          'payment are erased on shorter schedules, because they are not part of what the law requires ' +
+          'us to keep. What remains after that is the transaction record itself - order number, ' +
+          'product, amounts, times, payment method and processing status.',
+      },
+      {
+        heading: '10. Privacy officer',
+        body:
+          'Studio NOL has a privacy officer who is responsible overall for how personal data is ' +
+          'handled and who deals with questions, complaints and remedies from data subjects. Studio ' +
+          'NOL is run by one person, so there is no separate department, and requests under section 5 ' +
+          `reach the same contact. Name: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), ` +
+          `operator of Studio NOL. Email: ${PRIVACY_OFFICER.email}. Phone: ${CANONICAL_FACTS.phoneIntl}.`,
+      },
+      {
+        heading: '11. Cookies and other automatic collection',
+        body:
+          'Studio NOL uses Google Analytics 4 and Vercel\'s visit and performance measurement to see ' +
+          'which pages are read and how they perform. The scripts do not start when a page opens: they ' +
+          'load after you first move or tap (or after five seconds), and only on the studionol.co.kr ' +
+          'domain. They record the page address and how you arrived, browser, device and operating ' +
+          'system details, the time of the visit, performance figures, and actions such as pressing an ' +
+          'inquiry button. We do not send names, phone numbers or anything else that identifies you ' +
+          'directly to them, and screens whose address carries a payment identifier or a management ' +
+          'token, along with the admin screens, are left out of measurement entirely. Google Analytics ' +
+          '4 stores an identifier cookie in your browser so that repeat visits can be told apart; we ' +
+          'use it for visit statistics and for improving pages, not for advertising. The site has no ' +
+          'opt-out switch of its own - block or delete cookies in your browser settings and you have ' +
+          'refused; the site works the same either way. Settings such as dark mode, a banner you have ' +
+          'dismissed and a form you were part-way through stay in your browser and are not sent to our ' +
+          'servers.',
       },
     ],
   },
@@ -477,8 +536,15 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: '我们不向第三方提供个人信息。但我们委托处理如下：Resend（向工作室发送咨询提醒邮件、发送预约/订单确认与取消邮件，并转发发送至 hello@ 的邮件）与 Vercel（网站及服务器托管）会接收您提交的姓名、联系电话、电子邮箱和咨询内容。预约与支付（仅在韩语页面提供）另外涉及 Turso（预约与订单数据库）、Google LLC（为已确认预约创建日历日程）和 Toss Payments（支付授权、取消与退款）。众筹（回报预购）相关的委托情况请参阅韩语版隐私政策第 9 项，新闻宣传的媒体联系方式处理请见下方第 6 至 8 项。',
       },
       {
-        heading: '5. 用户权利',
-        body: '您可随时请求查阅、更正或删除个人信息，我们将及时处理。',
+        heading: '5. 用户权利及行使方法',
+        body:
+          '您可随时要求查阅、更正、删除个人信息或停止处理；基于同意而处理的信息，您也可以随时撤回同意。' +
+          '法定代理人可代为行使同样的权利。请向下方第 10 项的个人信息保护负责人提出，我们会及时核实并采取措施，' +
+          '并将结果告知您；无法照办时也会说明理由。有两项限制：其他法律明确规定必须收集的信息不能应要求删除，' +
+          '第 3 项所述的交易记录即属此类，这些记录在保存期限届满后销毁；此外，若停止处理将导致与您之间已成立的' +
+          '合同无法履行，而您并未明确表示要解除该合同，我们可以拒绝停止处理，并会说明理由。撤回同意后，' +
+          '以该同意为依据的处理将会停止，但已成立的合同与依法须保存的记录不会因此消失。' +
+          '若您对处理结果有异议，可向韩国个人信息纠纷调解委员会申请调解，或向个人信息侵害举报中心举报。',
       },
       {
         heading: '6. 为新闻宣传业务处理媒体联系方式',
@@ -491,6 +557,39 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '8. 媒体联系方式向第三方提供',
         body: '所收集的媒体联系方式在任何情况下都不会向第三方提供。向委托宣传的客户提交的结果报告中也不会载明个人姓名与电子邮箱；法人及团体媒体仅以公开域名记载，个人记者与评论人仅以人数统计记载。',
+      },
+      {
+        heading: '9. 个人信息的销毁程序与方法',
+        body:
+          '处理目的已达成或保存期限已过的个人信息将及时销毁；其他法律要求保存的记录，则在该期限届满后销毁。' +
+          '销毁不依赖人工记忆：每月运行一次的自动清理作业会删除数据库中相应的值。无法留空的字段以' +
+          '“(个人信息已销毁)”的标记覆盖；加密保存的值连同密文一并删除，即使持有解密密钥也无法复原。' +
+          '由于清理作业每月运行一次，自满足销毁条件之日起最迟一个月内删除。咨询信息在咨询结束后销毁。' +
+          '预约、订单与定期付款（仅在韩语页面提供）中的姓名、联系电话与电子邮箱，在下单之日或订阅结束之日起' +
+          '满五年后以上述标记覆盖；自由填写的备注、支付机构返回的响应原文以及支付被拒的事由原文并非法律' +
+          '要求保存的记录，因此保存期限更短。此后留下的只是交易记录本身——订单编号、商品、金额、时间、' +
+          '支付方式与处理状态。',
+      },
+      {
+        heading: '10. 个人信息保护负责人',
+        body:
+          'Studio NOL 设有个人信息保护负责人，全面负责个人信息处理事务，并负责受理信息主体的咨询、投诉与救济。' +
+          'Studio NOL 由一人运营，因此不另设专门部门，第 5 项的权利行使请求也由同一窗口受理。' +
+          `姓名 — ${PRIVACY_OFFICER.name}（Studio NOL 运营者）／电子邮箱 — ${PRIVACY_OFFICER.email}／` +
+          `电话 — ${CANONICAL_FACTS.phoneIntl}。`,
+      },
+      {
+        heading: '11. Cookie 等自动收集装置的安装、运行及拒绝',
+        body:
+          'Studio NOL 使用 Google Analytics 4 与 Vercel 的访问及性能测量功能，以了解页面的阅读情况与显示性能。' +
+          '该脚本并非在页面打开时立即启动，而是在访客首次移动或点击之后（或经过 5 秒后）才加载，' +
+          '且仅在 studionol.co.kr 域名下运行。所收集的信息包括访问的页面地址与来源、浏览器与设备及操作系统信息、' +
+          '访问时间与页面性能指标，以及点击咨询按钮等使用行为。我们不会将姓名、联系电话等可直接识别访客的信息' +
+          '发送给测量脚本；地址中含有支付识别值或管理令牌的页面以及管理页面，则完全不加载测量脚本。' +
+          'Google Analytics 4 会在浏览器中存储识别码 Cookie，用于区分同一访客的再次访问；其用途为访问统计与页面改进，' +
+          '不用于广告。本网站未另设收集拒绝按钮：您可在所用浏览器的设置中阻止 Cookie 或删除已保存的 Cookie 予以拒绝，' +
+          '阻止后网站使用亦不受限制。深色模式设置、关闭提示横幅的记录、正在填写的表单临时保存等，' +
+          '仅保存在访客的浏览器中，不会发送至 Studio NOL 的服务器。',
       },
     ],
   },
@@ -517,8 +616,24 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: 'No cedemos datos personales a terceros. Sí encargamos el tratamiento: Resend (envío de notificaciones de consulta al estudio, correos de confirmación y cancelación de reservas/pedidos, y reenvío de los mensajes enviados a hello@) y Vercel (alojamiento del sitio y del servidor) reciben el nombre, teléfono, correo electrónico y contenido del mensaje. Las reservas y pagos (disponibles solo en nuestras páginas en coreano) implican además a Turso (base de datos de reservas y pedidos), Google LLC (evento de calendario de una reserva confirmada) y Toss Payments (autorización, cancelación y reembolso del pago). El encargo relativo al crowdfunding (pedidos anticipados de recompensas) figura en el apartado 9 de la política de privacidad en coreano, y el tratamiento de contactos de prensa en los apartados 6 a 8 siguientes.',
       },
       {
-        heading: '5. Derechos del usuario',
-        body: 'Puede solicitar en cualquier momento acceso, corrección o eliminación de sus datos personales, y responderemos sin demoras indebidas.',
+        heading: '5. Derechos del usuario y cómo ejercerlos',
+        body:
+          'Puede solicitar en cualquier momento el acceso, la corrección o la eliminación de sus datos ' +
+          'personales, así como la suspensión de su tratamiento, y puede retirar el consentimiento ' +
+          'cuando el tratamiento se base en él. El representante legal puede ejercer los mismos ' +
+          'derechos en su nombre. Dirija la solicitud a la persona responsable de protección de datos ' +
+          'del apartado 10; la comprobamos sin demora, adoptamos la medida que corresponda y le ' +
+          'comunicamos el resultado, incluidos los motivos si no podemos atenderla. Hay dos límites. ' +
+          'Los datos que otra ley exige recopilar no pueden eliminarse a petición: es el caso de los ' +
+          'registros de la transacción descritos en el apartado 3, que se destruyen cuando vence su ' +
+          'plazo de conservación. Y podemos denegar la suspensión del tratamiento cuando esta impida ' +
+          'cumplir un contrato celebrado con usted y usted no haya manifestado con claridad su ' +
+          'voluntad de resolverlo; en ese caso le explicamos el motivo. La retirada del consentimiento ' +
+          'detiene el tratamiento que se apoyaba en él, pero no deshace un contrato ya celebrado ni ' +
+          'borra los registros de conservación obligatoria. Si no está de acuerdo con el resultado, ' +
+          'puede solicitar mediación ante el Comité de Mediación de Conflictos sobre Información ' +
+          'Personal de Corea o presentar una denuncia ante el Centro de Denuncias de Vulneraciones de ' +
+          'la Privacidad.',
       },
       {
         heading: '6. Tratamiento de contactos de medios para labores de prensa',
@@ -531,6 +646,55 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '8. Cesión a terceros de los contactos de medios',
         body: 'Los contactos de medios recopilados no se ceden a terceros en ningún caso. Los informes de resultados que entregamos al cliente que encarga la promoción tampoco incluyen nombres ni correos electrónicos de personas: los medios que son empresas o entidades se indican por su dominio público y los periodistas y críticos individuales, solo como recuento de personas.',
+      },
+      {
+        heading: '9. Procedimiento y método de destrucción',
+        body:
+          'Los datos personales se destruyen sin demora cuando se cumple su finalidad o vence su plazo ' +
+          'de conservación. Los registros que otra ley obliga a conservar se destruyen al vencer ese ' +
+          'plazo. La destrucción no depende de que alguien la recuerde: una tarea de limpieza ' +
+          'automática se ejecuta una vez al mes y borra el valor guardado en la base de datos. Cuando ' +
+          'un campo no puede quedar vacío, lo sobrescribimos con la marca «(datos personales ' +
+          'destruidos)», y los datos guardados cifrados se destruyen junto con su texto cifrado, de ' +
+          'modo que ni con la clave de descifrado pueden recuperarse. Como la limpieza se ejecuta una ' +
+          'vez al mes, el borrado se produce como máximo un mes después de cumplirse la condición. Los ' +
+          'datos de consultas se destruyen al terminar la atención. En reservas, pedidos y pagos ' +
+          'recurrentes (disponibles solo en nuestras páginas en coreano), el nombre, el teléfono y el ' +
+          'correo electrónico se sobrescriben con esa marca cinco años después del pedido o del fin de ' +
+          'la suscripción; las notas de texto libre, las respuestas originales de la entidad de pago y ' +
+          'los motivos con que esta rechaza un cobro se borran en plazos más cortos, porque no forman ' +
+          'parte de lo que la ley obliga a conservar. Después solo queda el registro de la transacción ' +
+          'en sí: número de pedido, producto, importes, fechas, medio de pago y estado del trámite.',
+      },
+      {
+        heading: '10. Responsable de protección de datos personales',
+        body:
+          'Studio NOL cuenta con una persona responsable de la protección de datos personales, ' +
+          'encargada del conjunto del tratamiento y de atender consultas, reclamaciones y reparaciones ' +
+          'de los interesados. Studio NOL lo lleva una sola persona, por lo que no existe un ' +
+          'departamento aparte y las solicitudes del apartado 5 se reciben por la misma vía. ' +
+          `Nombre: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), responsable de Studio NOL. ` +
+          `Correo electrónico: ${PRIVACY_OFFICER.email}. Teléfono: ${CANONICAL_FACTS.phoneIntl}.`,
+      },
+      {
+        heading: '11. Cookies y otros dispositivos de recogida automática',
+        body:
+          'Studio NOL utiliza Google Analytics 4 y la medición de visitas y rendimiento de Vercel para ' +
+          'conocer qué páginas se leen y cómo se muestran. Estos scripts no se activan al abrir la ' +
+          'página: se cargan después de que el visitante se mueva o toque por primera vez (o pasados ' +
+          'cinco segundos) y solo funcionan en el dominio studionol.co.kr. Recogen la dirección de la ' +
+          'página y la vía de entrada, datos del navegador, el dispositivo y el sistema operativo, la ' +
+          'hora de acceso, indicadores de rendimiento y acciones de uso como pulsar el botón de ' +
+          'consulta. No enviamos a esos scripts el nombre, el teléfono ni ningún dato que identifique ' +
+          'directamente al visitante, y las pantallas cuya dirección lleva un identificador de pago o ' +
+          'un token de gestión, así como las pantallas de administración, quedan fuera de la medición. ' +
+          'Google Analytics 4 guarda una cookie identificadora en el navegador para distinguir las ' +
+          'visitas repetidas; la usamos para estadísticas de visita y mejora de las páginas, no con ' +
+          'fines publicitarios. El sitio no tiene un botón propio de rechazo: puede rechazarla ' +
+          'bloqueando o eliminando las cookies en la configuración de su navegador, y el uso del sitio ' +
+          'no queda limitado por ello. Ajustes como el modo oscuro, el aviso que ya ha cerrado o el ' +
+          'borrador del formulario que estaba rellenando se guardan solo en su navegador y no se ' +
+          'envían a los servidores de Studio NOL.',
       },
     ],
   },
@@ -557,8 +721,21 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: 'Chúng tôi không cung cấp dữ liệu cá nhân cho bên thứ ba. Chúng tôi có ủy quyền xử lý: Resend (gửi email thông báo yêu cầu liên hệ đến studio, email xác nhận và hủy đặt lịch/đơn hàng, và chuyển tiếp email gửi đến hello@) và Vercel (lưu trữ website và máy chủ) nhận họ tên, số điện thoại, email và nội dung yêu cầu của bạn. Việc đặt lịch và thanh toán (chỉ có trên trang tiếng Hàn) còn liên quan tới Turso (cơ sở dữ liệu đặt lịch và đơn hàng), Google LLC (tạo sự kiện lịch cho lịch hẹn đã xác nhận) và Toss Payments (duyệt, hủy và hoàn tiền thanh toán). Việc ủy quyền xử lý cho gây quỹ (đặt trước phần thưởng) được nêu tại mục 9 của chính sách bảo mật bản tiếng Hàn, còn xử lý liên hệ báo chí ở mục 6 đến 8 bên dưới.',
       },
       {
-        heading: '5. Quyền của người dùng',
-        body: 'Bạn có thể yêu cầu truy cập, chỉnh sửa hoặc xóa thông tin cá nhân bất cứ lúc nào, và chúng tôi sẽ xử lý sớm nhất có thể.',
+        heading: '5. Quyền của người dùng và cách thực hiện',
+        body:
+          'Bạn có thể yêu cầu xem, chỉnh sửa, xóa thông tin cá nhân hoặc dừng việc xử lý bất cứ lúc ' +
+          'nào; với thông tin được xử lý dựa trên sự đồng ý, bạn có thể rút lại sự đồng ý đó. Người ' +
+          'đại diện theo pháp luật cũng có thể thực hiện các quyền này thay bạn. Yêu cầu xin gửi tới ' +
+          'người phụ trách bảo vệ thông tin cá nhân nêu ở mục 10 bên dưới; chúng tôi sẽ kiểm tra và xử ' +
+          'lý không chậm trễ, đồng thời thông báo kết quả, kèm lý do nếu không thể đáp ứng. Có hai ' +
+          'giới hạn. Thông tin mà luật khác quy định phải thu thập thì không thể xóa theo yêu cầu - đó ' +
+          'là các hồ sơ giao dịch nêu ở mục 3, và chúng được hủy khi hết thời hạn lưu trữ. Ngoài ra, ' +
+          'nếu việc dừng xử lý khiến hợp đồng đã ký với bạn không thể thực hiện được mà bạn chưa nêu ' +
+          'rõ ý định chấm dứt hợp đồng đó, chúng tôi có thể từ chối và sẽ giải thích lý do. Việc rút ' +
+          'lại sự đồng ý làm dừng phần xử lý dựa trên sự đồng ý ấy, nhưng không làm mất hiệu lực hợp ' +
+          'đồng đã hình thành và không xóa những hồ sơ buộc phải lưu theo luật. Nếu không đồng ý với ' +
+          'kết quả, bạn có thể đề nghị Ủy ban Hòa giải Tranh chấp Thông tin Cá nhân Hàn Quốc hòa giải ' +
+          'hoặc trình báo tới Trung tâm Tiếp nhận Trình báo Xâm phạm Thông tin Cá nhân.',
       },
       {
         heading: '6. Xử lý thông tin liên hệ của báo chí cho hoạt động truyền thông',
@@ -571,6 +748,51 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '8. Cung cấp thông tin liên hệ của báo chí cho bên thứ ba',
         body: 'Thông tin liên hệ của báo chí đã thu thập không được cung cấp cho bên thứ ba trong bất kỳ trường hợp nào. Báo cáo kết quả gửi cho khách hàng đặt hàng truyền thông cũng không ghi tên và địa chỉ email của cá nhân; cơ quan báo chí là pháp nhân hoặc tổ chức chỉ được ghi bằng tên miền công khai, còn phóng viên và nhà phê bình cá nhân chỉ được ghi theo số lượng người.',
+      },
+      {
+        heading: '9. Trình tự và phương pháp hủy thông tin cá nhân',
+        body:
+          'Thông tin cá nhân đã đạt mục đích xử lý hoặc hết thời hạn lưu trữ sẽ được hủy không chậm ' +
+          'trễ; hồ sơ mà luật khác yêu cầu lưu giữ thì được hủy sau khi hết thời hạn đó. Việc hủy ' +
+          'không dựa vào trí nhớ của con người: một tác vụ dọn dẹp tự động chạy mỗi tháng một lần và ' +
+          'xóa giá trị tương ứng trong cơ sở dữ liệu. Với ô không thể để trống, chúng tôi ghi đè bằng ' +
+          'dấu “(đã hủy thông tin cá nhân)”; dữ liệu lưu ở dạng mã hóa được xóa cả phần bản mã nên dù ' +
+          'có khóa giải mã cũng không khôi phục được. Vì tác vụ chạy mỗi tháng một lần, dữ liệu được ' +
+          'xóa chậm nhất trong vòng một tháng kể từ khi đủ điều kiện hủy. Thông tin thu thập qua tư ' +
+          'vấn được hủy sau khi hoàn tất tư vấn. Với đặt lịch, đơn hàng và thanh toán định kỳ (chỉ có ' +
+          'trên trang tiếng Hàn), họ tên, số điện thoại và email được ghi đè bằng dấu nói trên sau năm ' +
+          'năm kể từ ngày đặt hoặc ngày kết thúc thuê bao; còn ghi chú tự do, nội dung phản hồi gốc ' +
+          'của đơn vị thanh toán và lý do từ chối thanh toán được xóa theo thời hạn ngắn hơn vì không ' +
+          'thuộc phần luật buộc phải lưu. Sau đó chỉ còn lại chính hồ sơ giao dịch: mã đơn hàng, sản ' +
+          'phẩm, số tiền, thời điểm, phương thức thanh toán và trạng thái xử lý.',
+      },
+      {
+        heading: '10. Người phụ trách bảo vệ thông tin cá nhân',
+        body:
+          'Studio NOL có người phụ trách bảo vệ thông tin cá nhân, chịu trách nhiệm chung về việc xử ' +
+          'lý thông tin cá nhân và tiếp nhận thắc mắc, khiếu nại cũng như yêu cầu khắc phục của chủ ' +
+          'thể thông tin. Studio NOL do một người vận hành nên không có bộ phận riêng, và các yêu cầu ' +
+          `theo mục 5 cũng được tiếp nhận qua cùng đầu mối. Họ tên: ${PRIVACY_OFFICER.name} ` +
+          `(${studioOperator.alternateName[0]}), người vận hành Studio NOL. Email: ${PRIVACY_OFFICER.email}. ` +
+          `Điện thoại: ${CANONICAL_FACTS.phoneIntl}.`,
+      },
+      {
+        heading: '11. Cookie và các thiết bị thu thập tự động: cài đặt, vận hành và từ chối',
+        body:
+          'Studio NOL dùng Google Analytics 4 và tính năng đo lường lượt truy cập, hiệu năng của ' +
+          'Vercel để nắm được trang nào được đọc và hiển thị ra sao. Các tập lệnh này không chạy ngay ' +
+          'khi mở trang mà chỉ được tải sau khi người truy cập di chuyển hoặc chạm lần đầu (hoặc sau ' +
+          'năm giây), và chỉ hoạt động trên tên miền studionol.co.kr. Chúng ghi nhận địa chỉ trang và ' +
+          'nguồn truy cập, thông tin trình duyệt - thiết bị - hệ điều hành, thời điểm truy cập, chỉ số ' +
+          'hiệu năng và các hành vi như bấm nút liên hệ. Chúng tôi không gửi cho các tập lệnh này họ ' +
+          'tên, số điện thoại hay bất kỳ thông tin nào nhận dạng trực tiếp người truy cập; những màn ' +
+          'hình có địa chỉ chứa mã định danh thanh toán hoặc mã quản lý, cùng với màn hình quản trị, ' +
+          'hoàn toàn không được đo lường. Google Analytics 4 lưu một cookie định danh trong trình ' +
+          'duyệt để phân biệt lượt quay lại; chúng tôi dùng cho thống kê truy cập và cải thiện trang, ' +
+          'không dùng cho quảng cáo. Trang web không có nút từ chối riêng: bạn có thể chặn hoặc xóa ' +
+          'cookie trong cài đặt trình duyệt để từ chối, và việc sử dụng trang vẫn không bị hạn chế. ' +
+          'Những thiết lập như chế độ tối, việc đã đóng thông báo hay nội dung form đang soạn dở chỉ ' +
+          'được lưu trong trình duyệt của bạn và không gửi về máy chủ của Studio NOL.',
       },
     ],
   },
@@ -597,8 +819,19 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: 'เราไม่เปิดเผยข้อมูลส่วนบุคคลให้บุคคลที่สาม แต่เราว่าจ้างประมวลผลดังนี้ Resend (ส่งอีเมลแจ้งเตือนคําถามถึงสตูดิโอ อีเมลยืนยันและยกเลิกการจอง/คําสั่งซื้อ และส่งต่ออีเมลที่ส่งไปยัง hello@) และ Vercel (โฮสติงเว็บไซต์และเซิร์ฟเวอร์) จะได้รับชื่อ เบอร์โทร อีเมล และเนื้อหาคําสอบถามของคุณ ส่วนการจองและการชําระเงิน (มีเฉพาะหน้าภาษาเกาหลี) ยังเกี่ยวข้องกับ Turso (ฐานข้อมูลการจองและคําสั่งซื้อ) Google LLC (สร้างกําหนดการในปฏิทินสําหรับการจองที่ยืนยันแล้ว) และ Toss Payments (อนุมัติ ยกเลิก และคืนเงิน) การว่าจ้างประมวลผลที่เกี่ยวกับการระดมทุน (การสั่งจองของตอบแทนล่วงหน้า) ระบุไว้ในข้อ 9 ของนโยบายฉบับภาษาเกาหลี และการจัดการข้อมูลติดต่อสื่อมวลชนอยู่ในข้อ 6 ถึง 8 ด้านล่าง',
       },
       {
-        heading: '5. สิทธิของผู้ใช้',
-        body: 'คุณสามารถขอเข้าถึง แก้ไข หรือลบข้อมูลส่วนบุคคลได้ทุกเมื่อ และเราจะดําเนินการโดยเร็ว',
+        heading: '5. สิทธิของผู้ใช้และวิธีใช้สิทธิ',
+        body:
+          'คุณสามารถขอเข้าถึง แก้ไข ลบข้อมูลส่วนบุคคล หรือขอให้ระงับการประมวลผลได้ทุกเมื่อ และสําหรับข้อมูลที่ประมวลผล' +
+          'โดยอาศัยความยินยอม คุณสามารถถอนความยินยอมได้ ผู้แทนโดยชอบด้วยกฎหมายก็ใช้สิทธิเดียวกันแทนคุณได้ ' +
+          'กรุณายื่นคําขอไปยังผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคลในข้อ 10 ด้านล่าง เราจะตรวจสอบและดําเนินการโดยไม่ชักช้า ' +
+          'พร้อมแจ้งผลให้ทราบ และหากไม่อาจดําเนินการตามคําขอได้ก็จะแจ้งเหตุผลด้วย ทั้งนี้มีข้อจํากัดสองประการ ' +
+          'ข้อมูลที่กฎหมายอื่นกําหนดให้ต้องเก็บรวบรวมไม่อาจลบได้ตามคําขอ ซึ่งได้แก่บันทึกธุรกรรมที่กล่าวไว้ในข้อ 3 ' +
+          'โดยบันทึกเหล่านั้นจะถูกทําลายเมื่อพ้นระยะเวลาเก็บรักษา และหากการระงับการประมวลผลจะทําให้ไม่สามารถปฏิบัติ' +
+          'ตามสัญญาที่ทําไว้กับคุณได้ โดยที่คุณยังไม่ได้แสดงเจตนาเลิกสัญญานั้นอย่างชัดเจน เราอาจปฏิเสธคําขอระงับ ' +
+          'พร้อมแจ้งเหตุผลให้ทราบ การถอนความยินยอมจะทําให้การประมวลผลที่อาศัยความยินยอมนั้นยุติลง ' +
+          'แต่ไม่ทําให้สัญญาที่เกิดขึ้นแล้วสิ้นผลและไม่ลบบันทึกที่ต้องเก็บตามกฎหมาย ' +
+          'หากไม่เห็นด้วยกับผลการดําเนินการ คุณสามารถยื่นขอไกล่เกลี่ยต่อคณะกรรมการไกล่เกลี่ยข้อพิพาทข้อมูลส่วนบุคคล' +
+          'ของเกาหลี หรือแจ้งเรื่องต่อศูนย์รับแจ้งการละเมิดข้อมูลส่วนบุคคลได้',
       },
       {
         heading: '6. การประมวลผลข้อมูลติดต่อของสื่อมวลชนเพื่องานประชาสัมพันธ์',
@@ -611,6 +844,46 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '8. การเปิดเผยข้อมูลติดต่อของสื่อมวลชนต่อบุคคลที่สาม',
         body: 'ข้อมูลติดต่อของสื่อมวลชนที่เก็บรวบรวมไว้จะไม่ถูกเปิดเผยต่อบุคคลที่สามไม่ว่ากรณีใด ๆ รายงานผลที่ส่งให้ลูกค้าผู้ว่าจ้างงานประชาสัมพันธ์ก็จะไม่ระบุชื่อและอีเมลของบุคคล โดยสื่อที่เป็นนิติบุคคลหรือองค์กรจะระบุเป็นโดเมนสาธารณะ ส่วนนักข่าวและนักวิจารณ์ที่เป็นบุคคลจะระบุเพียงจํานวนคนเท่านั้น',
+      },
+      {
+        heading: '9. ขั้นตอนและวิธีการทําลายข้อมูลส่วนบุคคล',
+        body:
+          'ข้อมูลส่วนบุคคลที่บรรลุวัตถุประสงค์ในการประมวลผลแล้วหรือพ้นระยะเวลาเก็บรักษาแล้วจะถูกทําลายโดยไม่ชักช้า ' +
+          'ส่วนบันทึกที่กฎหมายอื่นกําหนดให้เก็บรักษาจะถูกทําลายเมื่อพ้นระยะเวลานั้น การทําลายไม่ได้อาศัยความทรงจําของคน ' +
+          'แต่มีงานจัดระเบียบอัตโนมัติที่ทํางานเดือนละหนึ่งครั้งคอยลบค่าที่เก็บไว้ในฐานข้อมูล ช่องที่เว้นว่างไม่ได้จะถูกเขียนทับ' +
+          'ด้วยเครื่องหมาย “(ทําลายข้อมูลส่วนบุคคลแล้ว)” ส่วนค่าที่เก็บไว้ในรูปแบบเข้ารหัสจะถูกลบทั้งตัวข้อความเข้ารหัส ' +
+          'จึงไม่อาจกู้คืนได้แม้มีกุญแจถอดรหัส เนื่องจากงานดังกล่าวทํางานเดือนละครั้ง ข้อมูลจึงถูกลบอย่างช้าที่สุดภายในหนึ่งเดือน' +
+          'นับแต่วันที่เข้าเงื่อนไขการทําลาย ข้อมูลที่เก็บจากการสอบถามจะถูกทําลายหลังเสร็จสิ้นการให้คําปรึกษา ' +
+          'สําหรับการจอง คําสั่งซื้อ และการชําระเงินแบบต่อเนื่อง (มีเฉพาะหน้าภาษาเกาหลี) ชื่อ เบอร์โทร และอีเมล ' +
+          'จะถูกเขียนทับด้วยเครื่องหมายข้างต้นเมื่อครบห้าปีนับแต่วันสั่งซื้อหรือวันสิ้นสุดการสมัครสมาชิก ' +
+          'ส่วนบันทึกข้อความอิสระ เนื้อหาการตอบกลับต้นฉบับจากผู้ให้บริการชําระเงิน และเหตุผลการปฏิเสธการชําระเงิน ' +
+          'จะถูกลบในระยะเวลาที่สั้นกว่า เพราะไม่ใช่ส่วนที่กฎหมายกําหนดให้เก็บ หลังจากนั้นสิ่งที่เหลืออยู่คือบันทึกธุรกรรมเอง ' +
+          'ได้แก่ หมายเลขคําสั่งซื้อ สินค้า จํานวนเงิน เวลา วิธีชําระเงิน และสถานะการดําเนินการ',
+      },
+      {
+        heading: '10. ผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคล',
+        body:
+          'Studio NOL จัดให้มีผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคล ซึ่งรับผิดชอบงานด้านการประมวลผลข้อมูลส่วนบุคคลโดยรวม ' +
+          'รวมถึงการรับเรื่องสอบถาม ข้อร้องเรียน และการเยียวยาของเจ้าของข้อมูล Studio NOL ดําเนินงานโดยบุคคลเพียงคนเดียว ' +
+          `จึงไม่มีแผนกแยกต่างหาก และคําขอใช้สิทธิตามข้อ 5 ก็รับเรื่องผ่านช่องทางเดียวกัน ชื่อ — ${PRIVACY_OFFICER.name} ` +
+          `(${studioOperator.alternateName[0]}) ผู้ดําเนินงาน Studio NOL / อีเมล — ${PRIVACY_OFFICER.email} / ` +
+          `โทรศัพท์ — ${CANONICAL_FACTS.phoneIntl}`,
+      },
+      {
+        heading: '11. การติดตั้ง การใช้งาน และการปฏิเสธคุกกี้และอุปกรณ์เก็บข้อมูลอัตโนมัติ',
+        body:
+          'Studio NOL ใช้ Google Analytics 4 และฟังก์ชันวัดการเข้าชมและประสิทธิภาพของ Vercel เพื่อดูว่าหน้าใดถูกอ่าน' +
+          'และแสดงผลอย่างไร สคริปต์เหล่านี้ไม่ได้ทํางานทันทีที่เปิดหน้า แต่จะโหลดหลังจากผู้เข้าชมขยับหรือแตะครั้งแรก ' +
+          '(หรือเมื่อผ่านไปห้าวินาที) และทํางานเฉพาะบนโดเมน studionol.co.kr เท่านั้น ข้อมูลที่เก็บได้แก่ ที่อยู่ของหน้า' +
+          'และช่องทางที่เข้ามา ข้อมูลเบราว์เซอร์ อุปกรณ์ และระบบปฏิบัติการ เวลาที่เข้าชม ตัวชี้วัดประสิทธิภาพ ' +
+          'และพฤติกรรมการใช้งาน เช่น การกดปุ่มสอบถาม เราไม่ส่งชื่อ เบอร์โทร หรือข้อมูลอื่นที่ระบุตัวผู้เข้าชมได้โดยตรง' +
+          'ไปยังสคริปต์วัดผล และหน้าที่มีค่าระบุการชําระเงินหรือโทเคนจัดการอยู่ในที่อยู่ รวมถึงหน้าผู้ดูแลระบบ ' +
+          'จะไม่ถูกวัดผลเลย Google Analytics 4 จะบันทึกคุกกี้ตัวระบุไว้ในเบราว์เซอร์เพื่อแยกการกลับมาเยี่ยมชมซ้ํา ' +
+          'โดยใช้เพื่อสถิติการเข้าชมและการปรับปรุงหน้าเว็บ ไม่ได้ใช้เพื่อการโฆษณา เว็บไซต์ไม่มีปุ่มปฏิเสธการเก็บข้อมูล' +
+          'แยกต่างหาก คุณสามารถปฏิเสธได้โดยบล็อกคุกกี้หรือลบคุกกี้ที่บันทึกไว้ในการตั้งค่าเบราว์เซอร์ที่ใช้อยู่ ' +
+          'และแม้บล็อกคุกกี้ก็ยังใช้งานเว็บไซต์ได้ตามปกติ ส่วนค่าที่ช่วยความสะดวกในการแสดงผล เช่น การตั้งค่าโหมดมืด ' +
+          'การปิดแบนเนอร์แจ้งเตือน หรือการบันทึกแบบฟอร์มที่กรอกค้างไว้ จะถูกเก็บไว้ในเบราว์เซอร์ของผู้เข้าชมเท่านั้น ' +
+          'และไม่ถูกส่งไปยังเซิร์ฟเวอร์ของ Studio NOL',
       },
     ],
   },
@@ -637,8 +910,24 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body: 'Shaxsiy ma\'lumotlar uchinchi tomonlarga berilmaydi. Biroq qayta ishlash topshirilgan: Resend (studiyaga murojaat haqida xabarnoma, bron/buyurtma tasdiqlash va bekor qilish xatlarini yuborish, hamda hello@ ga yuborilgan xatlarni yo\'naltirish) hamda Vercel (veb-sayt va server hostingi) siz yuborgan ism, telefon raqami, email manzili va murojaat mazmunini oladi. Bron va to\'lov (faqat koreys tilidagi sahifalarda) qo\'shimcha ravishda Turso (bron va buyurtma ma\'lumotlar bazasi), Google LLC (tasdiqlangan bron uchun kalendar tadbiri) va Toss Payments (to\'lovni tasdiqlash, bekor qilish, qaytarish) ishtirokida kechadi. Kraudfanding (mukofotlarni oldindan buyurtma qilish) bo\'yicha topshirish koreyscha maxfiylik siyosatining 9-bandida, matbuot aloqalari esa quyidagi 6-8-bandlarda keltirilgan.',
       },
       {
-        heading: '5. Foydalanuvchi huquqlari',
-        body: 'Siz istalgan vaqtda shaxsiy ma\'lumotlaringizni ko\'rish, tuzatish yoki o\'chirishni so\'rashingiz mumkin va biz buni tezkor ko\'rib chiqamiz.',
+        heading: '5. Foydalanuvchi huquqlari va ularni amalga oshirish tartibi',
+        body:
+          'Siz istalgan vaqtda shaxsiy ma\'lumotlaringizni ko\'rish, tuzatish, o\'chirish yoki ularni ' +
+          'qayta ishlashni to\'xtatishni so\'rashingiz mumkin; rozilik asosida qayta ishlanadigan ' +
+          'ma\'lumotlar bo\'yicha rozilikni qaytarib olishingiz ham mumkin. Qonuniy vakil ham siz uchun ' +
+          'xuddi shu huquqlardan foydalana oladi. So\'rovni quyidagi 10-banddagi shaxsiy ma\'lumotlarni ' +
+          'himoya qilish uchun mas\'ul shaxsga yuboring: biz uni kechiktirmasdan tekshirib chora ' +
+          'ko\'ramiz va natijani, agar so\'rovni bajara olmasak esa sababini ham bildiramiz. Ikkita ' +
+          'cheklov bor. Boshqa qonun yig\'ish shart deb belgilagan ma\'lumotlarni so\'rov bo\'yicha ' +
+          'o\'chirib bo\'lmaydi - bu 3-bandda aytilgan tranzaksiya yozuvlariga taalluqli bo\'lib, ular ' +
+          'saqlash muddati tugagach yo\'q qilinadi. Shuningdek, qayta ishlashni to\'xtatish siz bilan ' +
+          'tuzilgan shartnomani bajarishni imkonsiz qilsa va siz o\'sha shartnomani bekor qilish ' +
+          'niyatini aniq bildirmagan bo\'lsangiz, biz to\'xtatishni rad etishimiz va sababini ' +
+          'tushuntirishimiz mumkin. Rozilikni qaytarib olish o\'sha rozilikka asoslangan qayta ishlashni ' +
+          'to\'xtatadi, lekin allaqachon tuzilgan shartnomani bekor qilmaydi va qonun bo\'yicha ' +
+          'saqlanishi shart yozuvlarni o\'chirmaydi. Natijadan norozi bo\'lsangiz, Koreyaning Shaxsiy ' +
+          'ma\'lumotlar bo\'yicha nizolarni murosaga keltirish qo\'mitasiga murojaat qilishingiz yoki ' +
+          'Shaxsiy hayotga tajovuz haqida xabar berish markaziga xabar berishingiz mumkin.',
       },
       {
         heading: '6. Matbuot targ\'iboti uchun ommaviy axborot vositalari aloqa ma\'lumotlarini qayta ishlash',
@@ -651,6 +940,57 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '8. Ommaviy axborot vositalari aloqa ma\'lumotlarini uchinchi tomonga berish',
         body: 'Yig\'ilgan ommaviy axborot vositalari aloqa ma\'lumotlari hech qanday holatda uchinchi tomonlarga berilmaydi. Targ\'ibotni buyurtma qilgan mijozga beriladigan natija hisobotida ham shaxslarning ismi va email manzili ko\'rsatilmaydi; yuridik shaxs va tashkilot bo\'lgan nashrlar ommaviy domen bilan, alohida jurnalist va tanqidchilar esa faqat kishilar soni bilan qayd etiladi.',
+      },
+      {
+        heading: '9. Shaxsiy ma\'lumotlarni yo\'q qilish tartibi va usuli',
+        body:
+          'Qayta ishlash maqsadi bajarilgan yoki saqlash muddati o\'tgan shaxsiy ma\'lumotlar ' +
+          'kechiktirmasdan yo\'q qilinadi; boshqa qonun saqlashni talab qiladigan yozuvlar esa o\'sha ' +
+          'muddat tugagach yo\'q qilinadi. Yo\'q qilish odamning esida turishiga tashlab qo\'yilmagan: ' +
+          'oyiga bir marta ishlaydigan avtomatik tozalash vazifasi ma\'lumotlar bazasidagi tegishli ' +
+          'qiymatni o\'chiradi. Bo\'sh qoldirib bo\'lmaydigan maydonlar “(shaxsiy ma\'lumot yo\'q ' +
+          'qilindi)” belgisi bilan qoplanadi; shifrlangan holda saqlanadigan qiymatlar esa shifrmatni ' +
+          'bilan birga o\'chiriladi, shuning uchun kalit bo\'lsa ham tiklab bo\'lmaydi. Vazifa oyiga bir ' +
+          'marta ishlagani uchun ma\'lumot yo\'q qilish shartlari bajarilgan kundan eng kechi bir oy ' +
+          'ichida o\'chiriladi. Murojaat orqali yig\'ilgan ma\'lumotlar maslahat yakunlangach yo\'q ' +
+          'qilinadi. Bron, buyurtma va muntazam to\'lovlarda (faqat koreys tilidagi sahifalarda) ism, ' +
+          'telefon raqami va email manzili buyurtma berilgan yoki obuna tugagan kundan besh yil ' +
+          'o\'tgach yuqoridagi belgi bilan qoplanadi; erkin yoziladigan izohlar, to\'lov tashkiloti ' +
+          'javobining asl matni va to\'lovni rad etish sabablari esa qisqaroq muddatlarda o\'chiriladi, ' +
+          'chunki ular qonun saqlashni talab qiladigan yozuvlar tarkibiga kirmaydi. Shundan keyin ' +
+          'qoladigani tranzaksiya yozuvining o\'zi: buyurtma raqami, mahsulot, summalar, vaqtlar, ' +
+          'to\'lov usuli va ishlov holati.',
+      },
+      {
+        heading: '10. Shaxsiy ma\'lumotlarni himoya qilish uchun mas\'ul shaxs',
+        body:
+          'Studio NOL shaxsiy ma\'lumotlarni qayta ishlash ishlariga umumiy javob beradigan hamda ' +
+          'ma\'lumotlar subyektining savollari, shikoyatlari va huquqlarini tiklash masalalari bilan ' +
+          'shug\'ullanadigan mas\'ul shaxsni belgilagan. Studio NOL bir kishi tomonidan yuritilgani ' +
+          'uchun alohida bo\'lim yo\'q va 5-banddagi so\'rovlar ham shu manzilga keladi. ' +
+          `Ismi: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), Studio NOL rahbari. ` +
+          `Email: ${PRIVACY_OFFICER.email}. Telefon: ${CANONICAL_FACTS.phoneIntl}.`,
+      },
+      {
+        heading: '11. Cookie va boshqa avtomatik yig\'ish vositalarini o\'rnatish, ishlatish va rad etish',
+        body:
+          'Studio NOL qaysi sahifalar o\'qilayotganini va ular qanday ishlayotganini bilish uchun ' +
+          'Google Analytics 4 va Vercel\'ning tashrif hamda unumdorlik o\'lchash vositalaridan ' +
+          'foydalanadi. Bu skriptlar sahifa ochilishi bilan ishga tushmaydi: tashrifchi birinchi marta ' +
+          'harakat qilgani yoki bosgani (yoxud besh soniya o\'tgani) dan keyin yuklanadi va faqat ' +
+          'studionol.co.kr domenida ishlaydi. Ular sahifa manzili va qayerdan kelinganini, brauzer, ' +
+          'qurilma va operatsion tizim ma\'lumotlarini, tashrif vaqti va unumdorlik ko\'rsatkichlarini, ' +
+          'shuningdek murojaat tugmasini bosish kabi harakatlarni qayd etadi. Ism, telefon raqami yoki ' +
+          'tashrifchini bevosita tanib olishga imkon beradigan boshqa ma\'lumotlar bu skriptlarga ' +
+          'yuborilmaydi; manzilida to\'lov identifikatori yoki boshqaruv tokeni bo\'lgan sahifalar va ' +
+          'administrator sahifalari esa umuman o\'lchanmaydi. Google Analytics 4 takroriy tashriflarni ' +
+          'ajratish uchun brauzerda identifikator cookie saqlaydi; biz undan tashrif statistikasi va ' +
+          'sahifalarni yaxshilash uchun foydalanamiz, reklama uchun emas. Saytda alohida rad etish ' +
+          'tugmasi yo\'q: brauzeringiz sozlamalarida cookie\'ni bloklasangiz yoki saqlanganlarini ' +
+          'o\'chirsangiz rad etgan bo\'lasiz va bundan saytdan foydalanish cheklanmaydi. Qorong\'i ' +
+          'rejim sozlamasi, yopilgan banner haqidagi yozuv yoki to\'ldirilayotgan formaning vaqtinchalik ' +
+          'nusxasi kabi qulaylik qiymatlari faqat tashrifchining brauzerida saqlanadi va Studio NOL ' +
+          'serveriga yuborilmaydi.',
       },
     ],
   },
