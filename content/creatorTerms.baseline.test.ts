@@ -150,7 +150,11 @@ describe('개설자 약관 판본 게이트', () => {
     const feeSection = serialized.split('제6조')[1]?.split('제7조')[0] ?? '';
     expect(feeSection).toContain(`${FUNDING_PLATFORM_FEE_PERCENT}%`);
     expect(feeSection).toContain(`${FUNDING_PAYMENT_FEE_PERCENT}%`);
-    expect(feeSection).toContain(`${FUNDING_WITHHOLDING_PERCENT}%`);
+    // 문장까지 함께 본다 — FUNDING_WITHHOLDING_PERCENT와 FUNDING_PAYMENT_FEE_PERCENT가 둘 다
+    // 3.3이라, 요율 숫자만 찾으면 원천징수 문장을 통째로 지워도 결제 수수료 문장이 통과시킨다.
+    expect(feeSection).toContain(`원천징수세액 ${FUNDING_WITHHOLDING_PERCENT}%`);
+    expect(feeSection).toContain(`플랫폼 수수료는 ${FUNDING_PLATFORM_FEE_PERCENT}%`);
+    expect(feeSection).toContain(`결제 수수료는 ${FUNDING_PAYMENT_FEE_PERCENT}%`);
     expect(feeSection).toContain(`영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일`);
     // 실제로 체결하지 않는 "별도 정산 계약"을 다시 들여놓지 않는다 — 없는 계약을 가리키는
     // 조항은 요율을 안 적는 것보다 나쁘다.
@@ -165,15 +169,41 @@ describe('개설자 약관 판본 게이트', () => {
     expect(feeSection).toContain('환불을 먼저 뺀 금액을 기준으로 계산합니다');
   });
 
-  it('조항 본문을 그대로 두고 요율 상수만 바꿔도 해시가 달라진다', () => {
-    // 상수를 해시 대상에 넣기 전에는 이 경우가 통과해 버렸다 — 6조가 상수를 보간하므로
-    // 개설자가 읽는 문장이 달라지는데도 직렬화 결과가 그대로였다.
-    const tampered = serialized.replace(
+  // 요율이 움직이면 해시도 움직여야 한다. 지금 직렬화에는 그 값이 **두 경로**로 실린다 —
+  // 6조 본문의 보간과 상수 블록. 둘 중 하나만 있어도 해시는 달라지므로, 두 경로를 각각
+  // 확인한다. 상수 블록이 있는 이유는 본문 경로가 사라지는 개정(요율을 표로 빼거나 숫자를
+  // 리터럴로 적는 경우)에 대비한 것이다(content/creatorTermsHash.ts 머리주석).
+  it('요율이 바뀌면 본문 경로로도 상수 블록 경로로도 해시가 달라진다', () => {
+    const viaBody = serialized.replace(
+      `플랫폼 수수료는 ${FUNDING_PLATFORM_FEE_PERCENT}%`,
+      '플랫폼 수수료는 10%',
+    );
+    expect(viaBody).not.toBe(serialized);
+    expect(sha256(viaBody)).not.toBe(hash);
+
+    const viaConstants = serialized.replace(
       `FUNDING_PLATFORM_FEE_PERCENT=${FUNDING_PLATFORM_FEE_PERCENT}`,
       'FUNDING_PLATFORM_FEE_PERCENT=10',
     );
-    expect(tampered).not.toBe(serialized);
-    expect(sha256(tampered)).not.toBe(hash);
+    expect(viaConstants).not.toBe(serialized);
+    expect(sha256(viaConstants)).not.toBe(hash);
+  });
+
+  // 3번 지적(적대적 검토) — 정산 시점을 조건 없이 단정하면 바로 다음 문장의 선행조건과
+  // 갈린다. recordFundingPayout은 계좌(no_payout_account)와 세금 처리 구분(no_tax_type)이
+  // 둘 다 있어야 기록한다.
+  it('6조의 정산 시점이 정산 정보 등록을 전제로 걸려 있다', () => {
+    const feeSection = serialized.split('제6조')[1]?.split('제7조')[0] ?? '';
+    expect(feeSection).toContain('위 정산 정보가 모두 등록되어 있는 경우');
+    expect(feeSection).toContain('세금 처리 구분을 모두 등록해야 합니다');
+  });
+
+  // 1번 지적 — payoutEmail.ts breakdownLines는 환불액·원천징수세액을 각각 금액이 0보다 클
+  // 때만 넣는다. 그 둘을 무조건 담긴다고 적으면 환불 없는 프로젝트·사업자 개설자의 메일이
+  // 약관과 다르다.
+  it('6조가 메일 내역의 조건부 항목을 조건부로 적는다', () => {
+    const feeSection = serialized.split('제6조')[1]?.split('제7조')[0] ?? '';
+    expect(feeSection).toContain('환불이나 원천징수가 있으면 그 금액도 함께 적습니다');
   });
 
   it('조항 본문이 한 글자만 바뀌어도 해시가 달라진다', () => {
