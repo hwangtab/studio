@@ -98,7 +98,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '개인정보 처리방침',
     subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 9월 23일',
+    lastUpdatedValue: '2026년 9월 24일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
@@ -106,11 +106,14 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '문의 양식을 통해 이름, 연락처, 이메일, 문의 내용을 수집할 수 있습니다. 예약·결제 ' +
           '신청 화면에서는 이름, 연락처, 이메일 주소, 예약 일시·상품, 요청사항과 결제 처리 ' +
           '기록(주문번호, 결제 금액·결제수단)을 수집합니다. 결제 처리 기록에는 결제사가 보낸 ' +
-          '승인 응답 원문이 함께 저장되며, 그 원문에는 결제수단에 따라 다음이 실릴 수 ' +
-          '있습니다 — 가상계좌로 결제하면 구매자명·입금자명과 입금 계좌번호가, 환불 계좌를 ' +
-          '등록하셨다면 그 예금주명과 계좌번호가 들어오고, 휴대폰으로 결제하면 결제에 사용한 ' +
-          '휴대폰 번호가 들어옵니다. 카드로 결제한 경우 카드번호는 일부가 가려진 값으로 ' +
-          '들어오며 카드 소유자의 이름은 들어오지 않습니다. 연습실 이용 계약을 맺을 때는 ' +
+          '승인 응답 원문이 함께 저장되며, 그 원문에 무엇이 실리는지는 결제수단에 따라 ' +
+          '다릅니다. 카드로 결제한 경우 카드번호는 일부가 가려진 값으로 들어오고 카드 ' +
+          '소유자의 이름은 들어오지 않습니다. 가상계좌는 이용하실 수 없는 결제수단이지만 ' +
+          '입금이 끝난 뒤에 도착하는 건이 있어 그 응답이 저장될 수 있으며, 그때는 ' +
+          '구매자명·입금자명과 입금 계좌번호가, 환불 계좌를 등록하셨다면 그 예금주명과 ' +
+          '계좌번호가 함께 들어옵니다. 휴대폰으로 결제한 경우에는 결제에 사용한 휴대폰 ' +
+          '번호가 들어옵니다. 그 밖에도 이용하신 결제수단에 따라 결제사가 함께 보내는 ' +
+          '항목이 저장될 수 있습니다. 연습실 이용 계약을 맺을 때는 ' +
           '계약서에 이름, 연락처, 이메일 주소와 이용 호실·기간·이용료를 적고, 계약 당사자가 ' +
           '서명 화면에서 생년월일과 주소를 직접 채웁니다. 서명하면 서명 이미지와 그 접속의 ' +
           'IP 주소·브라우저 정보가 함께 기록됩니다. 펀딩(리워드 선주문)의 수집 항목은 아래 ' +
@@ -371,7 +374,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '자동 파기 ⑩ 환불 사유 — 환불 기록을 만든 날부터 5년이 지나면 표시로 덮어씁니다. 관리자가 자유롭게 적는 칸이라 사람을 가리키는 조각이 들어갈 수 있어 파기 대상이며, 환불이 있었다는 사실과 금액·요청자·결제사 거래키는 그대로 남습니다',
           '자동 파기 ⑪ 운영 일정 메모 — 예약을 받지 않도록 막아 둔 시간대에 운영자가 적는 메모는 그 시간대가 끝나고 1년이 지나면 지웁니다. 막아 둔 시각 자체는 운영 기록으로 남습니다',
           '자동 파기 ⑫ 계약서에 적힌 개인정보 — 연습실 계약은 해지·만료 처리가 끝난 계약에 한해, 계약이 끝난 날부터 3년이 지나면 계약 상대방의 이름·생년월일·연락처·주소와 계약 본문, 서명 이미지와 서명자의 IP·단말 정보, 그리고 보관하던 계약서 PDF를 지우거나 표시로 덮습니다. 관리자가 자유롭게 적는 계약 제목과 해지 사유도 이름이 들어갈 수 있어 함께 덮습니다. 기산점은 실제로 종료 처리한 날이고, 그 기록이 없으면 계약서에 적힌 종료일입니다. 서명만 되어 있고 아직 끝나지 않은 계약은 대상이 아닙니다 — 자동 갱신으로 계약서의 종료일이 지나도 이용이 이어질 수 있기 때문입니다. 계약이 있었다는 사실과 기간·금액·호실, 계약을 언제 몇 번 열어 봤는지는 남습니다',
-          '자동 파기 ⑬ 방치된 정기결제 — 카드 등록을 마치지 않은 채 멈춘 정기결제와 결제 실패로 정지된 정기결제는 그대로 두면 끝나는 날이 오지 않아, 위 ⑤~⑦의 기산점이 영영 생기지 않습니다. 그래서 마지막 활동(카드 등록·결제 시도·카드 변경과 그 밖의 구독 기록 갱신)으로부터 1년이 지나도록 아무 활동이 없으면 종료된 것으로 봅니다. 그때까지 결제가 한 번도 없었던 정기결제는 계약이 성립하지 않았고 오간 대금도 없어 보존할 거래기록이 아니므로, 종료로 넘기면서 이름·연락처·이메일 주소를 표시로 덮고 후원자 명단에 실을 표시 이름을 지체 없이 함께 지웁니다. 결제 이력이 있는 정기결제는 거래기록이라 종료로 넘기기만 하고, 그 뒤는 위 ⑤의 5년과 ⑦의 3년이 이어받습니다. 이용 중이거나 결제를 다시 시도하는 중인 정기결제, 해지를 예약해 둔 정기결제는 대상이 아닙니다 — 앞의 둘은 살아 있고, 마지막 것은 예약한 날이 지나면 종료로 넘어가는 경로가 이미 있습니다',
+          '자동 파기 ⑬ 방치된 정기결제 — 카드 등록을 마치지 않은 채 멈춘 정기결제, 그리고 결제 실패로 정지되었거나 운영자가 청구를 멈춰 둔 정기결제는 그대로 두면 끝나는 날이 오지 않아, 위 ⑤~⑦의 기산점이 영영 생기지 않습니다. 그래서 마지막 활동(카드 등록·결제 시도·카드 변경과 그 밖의 구독 기록 갱신)으로부터 1년이 지나도록 아무 활동이 없으면 종료된 것으로 봅니다. 그때까지 결제가 한 번도 없었던 정기결제는 계약이 성립하지 않았고 오간 대금도 없어 보존할 거래기록이 아니므로, 종료로 넘기면서 이름·연락처·이메일 주소를 표시로 덮고 후원자 명단에 실을 표시 이름을 지체 없이 함께 지웁니다. 결제 이력이 있는 정기결제는 거래기록이라 종료로 넘기기만 하고, 그 뒤는 위 ⑤의 5년과 ⑦의 3년이 이어받습니다. 결제를 시도했으나 그 결과가 아직 확인되지 않은 회차가 남아 있는 정기결제도 종료로만 넘깁니다 — 뒤늦게 승인이 확인되면 환불을 안내해 드려야 하므로, 연락처를 지울 수 없기 때문입니다. 이용 중이거나 결제를 다시 시도하는 중인 정기결제, 해지를 예약해 둔 정기결제는 대상이 아닙니다 — 앞의 둘은 살아 있고, 마지막 것은 예약한 날이 지나면 종료로 넘어가는 경로가 이미 있습니다',
           '그 밖의 파기 — 요청 제한 기록은 제한 창(길어도 한 시간)이 지나면 다음 요청이 들어올 때 함께 지우고(위 16항), 개설자 로그인 링크는 15분이 지나거나 한 번 쓰이면 다시 쓸 수 없게 됩니다',
           '보존하는 개인정보의 근거 — 전자상거래 등에서의 소비자보호에 관한 법률이 정한 거래기록 보존 의무입니다. 위 3항·8항의 기간 동안 보존합니다',
           '보존하는 개인정보의 항목 — 보존 기간이 지나기 전에는 주문자 이름·연락처·이메일 주소, 주문번호와 주문 유형, 예약 일시·상품 또는 펀딩 리워드 이름·수량·단가·추가 후원금, 결제수단과 결제·취소·환불 처리 기록(결제 식별값·승인 시각·영수증 주소·환불 금액·환불 요청자), 동의한 약관 판본과 동의 시각, 리워드 발송 상태·택배사·운송장번호가 남고, 개설자 쪽으로는 개설자 이름·연락처와 정산 기록(모금액·환불액·수수료·원천징수액·실지급액·확정 후원 건수·지급 시각)이 남습니다',
@@ -438,7 +441,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Privacy Policy',
     subtitle: 'Studio NOL collects only the minimum personal data required for inquiries and consultation support.',
     lastUpdatedLabel: 'Effective date',
-    lastUpdatedValue: 'September 23, 2026',
+    lastUpdatedValue: 'September 24, 2026',
     sections: [
       {
         heading: '1. Personal data we collect',
@@ -501,7 +504,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'phone number and email address are overwritten with that mark five years after the order ' +
           'was placed or last changed, whichever is later - a refund or a cancellation counts as a ' +
           'change - or, for a subscription, five years after it ended. A recurring payment that ' +
-          'never got as far as a registered card, or that stopped after repeated failed charges, has ' +
+          'never got as far as a registered card, or that we stopped - because charges kept failing, ' +
+          'or because we suspended the billing ourselves - has ' +
           'no end date of its own, so we treat it as ended once a year has passed with no activity ' +
           'of any kind - no charge attempted, no card registered or changed, nothing else recorded ' +
           'against it. If no payment was ever taken, no contract was formed and no money changed ' +
@@ -550,7 +554,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '隐私政策',
     subtitle: 'Studio NOL 仅收集处理咨询与沟通所需的最少个人信息，并进行安全管理。',
     lastUpdatedLabel: '生效日期',
-    lastUpdatedValue: '2026年9月23日',
+    lastUpdatedValue: '2026年9月24日',
     sections: [
       {
         heading: '1. 我们收集的个人信息',
@@ -601,7 +605,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '由于清理作业每月运行一次，自满足销毁条件之日起最迟一个月内删除。咨询信息在咨询结束后销毁。' +
           '预约、订单与定期付款（仅在韩语页面提供）中的姓名、联系电话与电子邮箱，自下单之日与该订单最后一次' +
           '变更之日（退款或取消也算一次变更）中较晚的一天起满五年后，以上述标记覆盖；订阅则自结束之日起算。' +
-          '未完成银行卡登记即中断的定期付款，以及因多次扣款失败而停止的定期付款，本身不会迎来结束之日；' +
+          '未完成银行卡登记即中断的定期付款，以及因多次扣款失败而停止或由我们暂停扣款的定期付款，本身不会迎来结束之日；' +
           '若满一年没有任何活动——未尝试扣款，未登记或更换银行卡，也没有其他记录变动——我们即视为已结束。' +
           '其间从未扣款成功的，既未成立合同也无款项往来，没有须保存的交易记录，' +
           '因此在视为结束的同时一并销毁姓名、联系电话、电子邮箱以及支持者名单所用的公示名。' +
@@ -640,7 +644,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Política de privacidad',
     subtitle: 'Studio NOL recopila solo los datos personales mínimos necesarios para responder consultas y brindar orientación.',
     lastUpdatedLabel: 'Fecha de entrada en vigor',
-    lastUpdatedValue: '23 de septiembre de 2026',
+    lastUpdatedValue: '24 de septiembre de 2026',
     sections: [
       {
         heading: '1. Datos personales que recopilamos',
@@ -708,7 +712,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'modificación, la que sea posterior (una devolución o una cancelación cuenta como ' +
           'modificación), o cinco años después del fin de la suscripción. Un pago recurrente que ' +
           'nunca llegó a tener una tarjeta registrada, o que quedó detenido tras varios cobros ' +
-          'fallidos, no tiene fecha de fin propia: lo damos por terminado cuando ha pasado un año ' +
+          'fallidos o porque nosotros mismos suspendimos el cobro, no tiene fecha de fin propia: lo ' +
+          'damos por terminado cuando ha pasado un año ' +
           'sin actividad alguna, sin intentos de cobro, sin alta ni cambio de tarjeta y sin ningún ' +
           'otro movimiento registrado. Si nunca llegó a cobrarse nada, no se formó contrato ni hubo ' +
           'movimiento de dinero, de modo que no hay registro de la transacción que conservar: en ese ' +
@@ -759,7 +764,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Chính sách bảo mật',
     subtitle: 'Studio NOL chỉ thu thập tối thiểu thông tin cá nhân cần thiết để tiếp nhận và phản hồi tư vấn.',
     lastUpdatedLabel: 'Ngày hiệu lực',
-    lastUpdatedValue: '23 tháng 9, 2026',
+    lastUpdatedValue: '24 tháng 9, 2026',
     sections: [
       {
         heading: '1. Thông tin cá nhân được thu thập',
@@ -822,7 +827,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'năm, tính từ ngày đặt hoặc ngày đơn hàng thay đổi lần cuối, lấy mốc muộn hơn (hoàn tiền hay ' +
           'hủy đơn cũng là một lần thay đổi); với thuê bao thì tính từ ngày kết thúc. Khoản thanh ' +
           'toán định kỳ dừng lại khi chưa kịp đăng ký thẻ, hoặc bị ngưng sau nhiều lần trừ tiền thất ' +
-          'bại, tự nó không có ngày kết thúc; vì vậy nếu suốt một năm không có bất kỳ hoạt động nào - ' +
+          'bại hay do chính chúng tôi tạm dừng việc trừ tiền, ' +
+          'tự nó không có ngày kết thúc; vì vậy nếu suốt một năm không có bất kỳ hoạt động nào - ' +
           'không lần trừ tiền nào được thử, không đăng ký hay đổi thẻ, cũng không ghi nhận thay đổi ' +
           'nào khác - chúng tôi coi như đã kết thúc. Nếu trong suốt thời gian đó chưa lần nào trừ ' +
           'tiền thành công thì hợp đồng chưa hình thành và cũng không có tiền chuyển đi, nên không ' +
@@ -873,7 +879,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'นโยบายความเป็นส่วนตัว',
     subtitle: 'Studio NOL เก็บข้อมูลส่วนบุคคลเท่าที่จําเป็นสําหรับการรับและตอบคําสอบถามเท่านั้น',
     lastUpdatedLabel: 'วันที่มีผลบังคับใช้',
-    lastUpdatedValue: '23 กันยายน 2026',
+    lastUpdatedValue: '24 กันยายน 2026',
     sections: [
       {
         heading: '1. ข้อมูลส่วนบุคคลที่เราเก็บรวบรวม',
@@ -931,6 +937,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'จะถูกเขียนทับด้วยเครื่องหมายข้างต้นเมื่อครบห้าปี โดยนับจากวันสั่งซื้อหรือวันที่คําสั่งซื้อนั้นเปลี่ยนแปลงครั้งล่าสุด ' +
           'แล้วแต่วันใดจะช้ากว่า (การคืนเงินหรือการยกเลิกก็นับเป็นการเปลี่ยนแปลง) ส่วนการสมัครสมาชิกให้นับจากวันสิ้นสุด ' +
           'ทั้งนี้ การชําระเงินแบบต่อเนื่องที่หยุดไปตั้งแต่ยังไม่ได้ผูกบัตร หรือที่ถูกระงับเพราะเรียกเก็บเงินไม่สําเร็จหลายครั้ง ' +
+          'หรือเพราะเราเป็นฝ่ายพักการเรียกเก็บเงินเอง ' +
           'ย่อมไม่มีวันสิ้นสุดของตัวเอง ดังนั้นหากครบหนึ่งปีโดยไม่มีความเคลื่อนไหวใด ๆ คือไม่มีการพยายามเรียกเก็บเงิน ' +
           'ไม่มีการผูกหรือเปลี่ยนบัตร และไม่มีการบันทึกการเปลี่ยนแปลงอื่นใด เราจะถือว่าสิ้นสุดแล้ว ' +
           'หากตลอดช่วงเวลานั้นไม่เคยเรียกเก็บเงินได้สําเร็จเลย ย่อมไม่เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
@@ -974,7 +981,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Maxfiylik siyosati',
     subtitle: 'Studio NOL faqat murojaatlarni qabul qilish va javob berish uchun zarur bo\'lgan eng kam shaxsiy ma\'lumotlarni yig\'adi.',
     lastUpdatedLabel: 'Kuchga kirish sanasi',
-    lastUpdatedValue: '2026-yil 23-sentabr',
+    lastUpdatedValue: '2026-yil 24-sentabr',
     sections: [
       {
         heading: '1. Yig\'iladigan shaxsiy ma\'lumotlar',
@@ -1042,7 +1049,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'kun bilan o\'sha buyurtma oxirgi marta o\'zgargan kundan qaysi biri kechroq bo\'lsa, o\'shandan ' +
           'besh yil o\'tgach yuqoridagi belgi bilan qoplanadi (pul qaytarish yoki bekor qilish ham ' +
           'o\'zgarish hisoblanadi); obuna uchun esa tugagan kundan hisoblanadi. Karta biriktirilmay ' +
-          'to\'xtab qolgan yoki to\'lov bir necha marta o\'tmagani uchun to\'xtatilgan muntazam ' +
+          'to\'xtab qolgan yoki to\'lov bir necha marta o\'tmagani uchun, yoxud biz o\'zimiz ' +
+          'to\'lovni vaqtincha to\'xtatganimiz uchun to\'xtab turgan muntazam ' +
           'to\'lovning o\'z tugash sanasi bo\'lmaydi. Shuning uchun bir yil davomida hech qanday ' +
           'harakat bo\'lmasa - na to\'lov urinishi, na karta biriktirish yoki almashtirish, na boshqa ' +
           'biror yozuv o\'zgarishi - uni tugagan deb hisoblaymiz. Agar shu vaqt ichida birorta to\'lov ' +
