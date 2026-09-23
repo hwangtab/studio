@@ -22,7 +22,8 @@ const CRYPTO_ERROR_MESSAGE: Record<FieldCryptoError['code'], string> = {
   invalid_key: `복호화 키(${FIELD_CRYPTO_KEY_ENV})의 형식이 맞지 않습니다(base64 32바이트여야 합니다). 값은 그대로 있습니다 — 환경 변수를 고친 뒤 다시 시도해 주세요.`,
   malformed: '저장된 값이 암호화 형식이 아닙니다. 개설자에게 주민등록번호를 다시 등록해 달라고 요청해 주세요.',
   unsupported_version: '저장된 값의 암호화 판본을 이 배포가 모릅니다. 배포 판본을 확인해 주세요 — 값을 지우거나 덮어쓰지 마세요.',
-  auth_failed: `복호화에 실패했습니다. 키(${FIELD_CRYPTO_KEY_ENV})가 저장 당시와 다르거나 값이 손상됐습니다. 다른 개설자의 번호가 정상적으로 열리면 값 손상, 전부 안 열리면 키가 바뀐 것입니다 — 키가 바뀐 경우 옛 키를 되돌려야 하고, 되돌릴 수 없으면 개설자에게 다시 등록을 요청해야 합니다.`,
+  key_mismatch: `이 값은 지금 이 배포의 키(${FIELD_CRYPTO_KEY_ENV})가 아니라 다른 키로 저장됐습니다. 값은 손상되지 않았습니다 — 저장 당시의 키를 되돌리거나, 키 회전이 중간에 멈춘 것이라면 scripts/rotate-field-key.mjs를 이어서 돌리면 열립니다. 값을 지우거나 덮어쓰지 마세요.`,
+  auth_failed: `복호화에 실패했습니다. 키(${FIELD_CRYPTO_KEY_ENV})가 저장 당시와 다르거나 값이 손상됐습니다. 키가 다른 경우는 보통 위의 key_mismatch로 갈리므로(저장 형식 v2는 키 식별자를 함께 싣습니다), 이 코드는 **판본 v1로 저장된 옛 값**이거나 값 자체가 손상된 경우입니다. 다른 개설자의 번호가 정상적으로 열리면 값 손상, 전부 안 열리면 키가 바뀐 것입니다 — 키가 바뀐 경우 옛 키를 되돌려야 하고, 되돌릴 수 없으면 개설자에게 다시 등록을 요청해야 합니다.`,
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
