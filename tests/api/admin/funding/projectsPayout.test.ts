@@ -125,7 +125,7 @@ describe('record_payout', () => {
   });
 
   /**
-   * 실패 코드 여섯은 운영자가 할 일이 서로 다르다 — 전부 같은 400으로 뭉개면 화면이 이유를
+   * 실패 코드 일곱은 운영자가 할 일이 서로 다르다 — 전부 같은 400으로 뭉개면 화면이 이유를
    * 구분해 보여줄 수 없다.
    */
   it.each([
@@ -135,6 +135,7 @@ describe('record_payout', () => {
     ['not_closed', 409],
     ['no_payout_account', 409],
     ['no_tax_type', 409],
+    ['no_resident_number', 409],
   ])('%s → %i', async (code, expected) => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: false, code });
     const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });

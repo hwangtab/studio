@@ -134,6 +134,12 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
   closed: boolean;
   /** 개설자의 은행·계좌·예금주가 모두 있는가. **값은 싣지 않는다**(props가 __NEXT_DATA__로 나간다). */
   hasPayoutAccount: boolean;
+  /**
+   * 개설자의 주민등록번호가 등록돼 있는가. **암호문이 있는가만 본다** — 이 함수는 복호화하지
+   * 않는다(키 없이도 미리보기가 떠야 하고, 값이 여기서 나가면 props로 새어 나간다).
+   * 원천징수 대상인데 이 값이 없으면 기록이 `no_resident_number`로 거부된다.
+   */
+  hasResidentNumber: boolean;
   /** 이미 기록된 정산. 있으면 그 값이 정본이고 미리보기는 참고용이다. */
   recorded: FundingProjectPayout | null;
 }
@@ -211,6 +217,7 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
     hasPayoutAccount: Boolean(
       creator.payoutBankName?.trim() && creator.payoutAccount?.trim() && creator.payoutHolder?.trim(),
     ),
+    hasResidentNumber: Boolean(creator.residentNumberEnc?.trim()),
     recorded,
     ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType: assumedTaxType }),
   };
@@ -220,7 +227,14 @@ export type RecordFundingPayoutResult =
   | { ok: true; payout: FundingProjectPayout }
   | {
       ok: false;
-      code: 'not_found' | 'already_recorded' | 'nothing_to_pay' | 'not_closed' | 'no_payout_account' | 'no_tax_type';
+      code:
+        | 'not_found'
+        | 'already_recorded'
+        | 'nothing_to_pay'
+        | 'not_closed'
+        | 'no_payout_account'
+        | 'no_tax_type'
+        | 'no_resident_number';
     }
   /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
   | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
@@ -237,6 +251,9 @@ export type RecordFundingPayoutResult =
  * - `no_tax_type` — 개설자의 세금 처리 구분이 없다. 계좌만 있고 이 값이 비는 행이 실제로
  *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
  *   이 표는 불변이라 되돌릴 경로가 없다.
+ * - `no_resident_number` — 원천징수 대상(`withholding`)인데 주민등록번호가 없다. 세액을 떼고
+ *   보내 놓고 신고는 못 하는 상태가 된다 — 간이지급명세서가 소득자별 주민등록번호를 요구하기
+ *   때문이다. 사업자(`invoice`)는 원천징수 자체를 하지 않으므로 이 조건에 걸리지 않는다.
  * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
  * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
  *
@@ -258,6 +275,9 @@ export const recordFundingPayout = async (
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
+  if (preview.taxType === 'withholding' && !preview.hasResidentNumber) {
+    return { ok: false, code: 'no_resident_number' };
+  }
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {
     return { ok: false, code: 'amount_changed', expectedNetAmount, netAmount: preview.netAmount };

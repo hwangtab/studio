@@ -180,6 +180,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     backerCount: 12,
     closed: true,
     hasPayoutAccount: true,
+    hasResidentNumber: true,
     grossAmount: 1_000_000,
     refundAmount: 0,
     supplyAmount: 909_091,
@@ -216,10 +217,12 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'grossAmount', 'refundAmount', 'manualGrossAmount', 'supplyAmount',
         'platformFeeAmount', 'paymentFeeAmount', 'feeAmount', 'shareAmount',
         'withholdingAmount', 'netAmount', 'backerCount', 'closed',
-        'hasPayoutAccount', 'hasTaxType', 'recorded',
+        'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'recorded',
       ].sort(),
     );
     expect(payout.netAmount).toBe(880_937);
+    // 주민등록번호는 등록 여부조차 아니고 **게이트 판정 하나**만 내려간다.
+    expect(payout.needsResidentNumber).toBe(false);
 
     const serialized = JSON.stringify(result.props);
     expect(serialized).not.toContain('taxType');
@@ -227,6 +230,28 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     expect(serialized).not.toContain('payoutBankName');
     expect(serialized).not.toContain('payoutAccount');
     expect(serialized).not.toContain('payoutHolder');
+    expect(serialized).not.toContain('residentNumberEnc');
+    expect(serialized).not.toContain('hasResidentNumber');
+  });
+
+  it('원천징수 대상인데 주민등록번호가 없으면 게이트 판정만 true로 내려간다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({ ...PREVIEW, hasResidentNumber: false });
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
+      props: { payout: Record<string, unknown> };
+    };
+    expect(result.props.payout.needsResidentNumber).toBe(true);
+  });
+
+  it('사업자는 주민등록번호가 없어도 게이트에 걸리지 않는다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({
+      ...PREVIEW, taxType: 'invoice' as const, hasResidentNumber: false,
+    });
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
+      props: { payout: Record<string, unknown> };
+    };
+    expect(result.props.payout.needsResidentNumber).toBe(false);
   });
 
   it('기록된 정산의 Date는 ISO 문자열로 좁혀진다', async () => {

@@ -99,6 +99,11 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
       // 같은 값을 그대로 싣는다. 거기는 본인 인증된 자기 정보를 고치는 폼이라, 불리언으로
       // 좁히면 열 때마다 선택이 '미선택'으로 되돌아간다. 한쪽을 다른 쪽에 맞추지 말 것.
       hasTaxType: preview.taxType !== null,
+      // 주민등록번호도 값이 아니라 **게이트 판정 하나만** 싣는다. 등록 여부 자체가 아니라
+      // "원천징수 대상인데 없다"로 접는 이유: 화면이 하는 일이 정산 기록을 막고 왜 막혔는지
+      // 적는 것뿐이고, 사업자에게는 애초에 해당이 없는 조건이라서다. 서버 게이트
+      // (`recordFundingPayout`의 no_resident_number)와 같은 식이어야 화면과 기록이 갈리지 않는다.
+      needsResidentNumber: preview.taxType === 'withholding' && !preview.hasResidentNumber,
       recorded: r
         ? {
             id: r.id,

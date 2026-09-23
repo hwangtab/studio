@@ -23,6 +23,13 @@ let client: Client;
 
 const PAYOUT_ACCOUNT = { payoutBankName: '국민은행', payoutAccount: '123-45-6789', payoutHolder: '홍길동' };
 
+/**
+ * 원천징수 개설자의 기본 상태는 "주민등록번호가 등록돼 있다"이다 — 안 그러면 기록 경로를
+ * 보는 테스트가 전부 `no_resident_number`에서 멈춘다. 이 모듈은 값을 복호화하지 않고
+ * 있고 없고만 보므로(`hasResidentNumber`), 형식만 흉내 낸 문자열로 충분하다.
+ */
+const RESIDENT_NUMBER_ENC = 'v1:not-a-real-value';
+
 let seq = 0;
 
 const seedProject = async (
@@ -32,7 +39,14 @@ const seedProject = async (
   seq += 1;
   const [creator] = await mockDb
     .insert(schema.fundingCreators)
-    .values({ email: `c${seq}@example.com`, name: '개설자', taxType: 'withholding', ...PAYOUT_ACCOUNT, ...creatorOver })
+    .values({
+      email: `c${seq}@example.com`,
+      name: '개설자',
+      taxType: 'withholding',
+      residentNumberEnc: RESIDENT_NUMBER_ENC,
+      ...PAYOUT_ACCOUNT,
+      ...creatorOver,
+    })
     .returning();
   const [project] = await mockDb
     .insert(schema.fundingProjects)
@@ -236,6 +250,34 @@ describe('recordFundingPayout', () => {
     await seedPledge(project.slug, 1_000_000);
     expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_tax_type' });
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  /**
+   * 세액만 떼고 지급명세서를 못 내는 상태를 만들지 않는다 — 간이지급명세서가 소득자별
+   * 주민등록번호를 요구한다. 이 표는 불변이라 기록한 뒤에는 되돌릴 경로가 없다.
+   */
+  it('원천징수 대상인데 주민등록번호가 없으면 거부한다', async () => {
+    const { project } = await seedProject({}, { residentNumberEnc: null });
+    await seedPledge(project.slug, 1_000_000);
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_resident_number' });
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  it('사업자는 주민등록번호가 없어도 기록된다 — 원천징수를 하지 않으므로 해당이 없다', async () => {
+    const { project } = await seedProject({}, { taxType: 'invoice', residentNumberEnc: null });
+    await seedPledge(project.slug, 1_000_000);
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.payout.withholdingAmount).toBe(0);
+  });
+
+  it('미리보기는 등록 여부만 드러낸다 — 암호문도 평문도 싣지 않는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview!.hasResidentNumber).toBe(true);
+    expect(JSON.stringify(preview)).not.toContain(RESIDENT_NUMBER_ENC);
   });
 
   it('세금 처리 구분이 없어도 미리보기는 나온다 — taxType은 null로 드러난다', async () => {

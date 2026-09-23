@@ -126,6 +126,7 @@ describe('listProjectsForAdmin', () => {
       payoutBankName: '국민은행',
       payoutAccount: '123-456-789012',
       payoutHolder: '개설자',
+      residentNumberEnc: 'v1:ZmFrZQ==:ZmFrZQ==:ZmFrZQ==',
     }).where(eq(schema.fundingCreators.id, creator));
     await seedProject(creator, { reviewStatus: 'submitted', submittedAt: new Date('2026-09-10T00:00:00Z') });
 
@@ -146,6 +147,9 @@ describe('listProjectsForAdmin', () => {
     expect(serialized).not.toContain('payoutAccount');
     expect(serialized).not.toContain('payoutHolder');
     expect(serialized).not.toContain('국민은행');
+    // 주민등록번호는 평문도 암호문도 어느 목록에도 실리지 않는다.
+    expect(serialized).not.toContain('residentNumber');
+    expect(serialized).not.toContain('v1:ZmFrZQ==');
   });
 });
 
@@ -230,6 +234,7 @@ describe('loadProjectForAdmin', () => {
       payoutBankName: '국민은행',
       payoutAccount: '123-456-789012',
       payoutHolder: '개설자',
+      residentNumberEnc: 'v1:ZmFrZQ==:ZmFrZQ==:ZmFrZQ==',
     });
     const projectId = await seedProject(creator, {
       reviewStatus: 'submitted',
@@ -259,5 +264,7 @@ describe('loadProjectForAdmin', () => {
     expect(serialized).not.toContain('payoutHolder');
     expect(serialized).not.toContain('국민은행');
     expect(serialized).not.toContain('123-456-789012');
+    expect(serialized).not.toContain('residentNumber');
+    expect(serialized).not.toContain('v1:ZmFrZQ==');
   });
 });

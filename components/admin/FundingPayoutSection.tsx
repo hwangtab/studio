@@ -56,6 +56,12 @@ export interface AdminPayoutView {
   hasPayoutAccount: boolean;
   /** 세금 처리 구분이 등록돼 있는가. 구분 자체(개인/사업자)는 계좌와 함께 별도 라우트로만 나간다. */
   hasTaxType: boolean;
+  /**
+   * 원천징수 대상인데 주민등록번호가 등록되지 않았는가. 값도 등록 여부도 아니고 **게이트
+   * 판정 하나**다 — 서버의 `no_resident_number`와 같은 식이다. 번호 자체는 운영자가 버튼을
+   * 눌렀을 때만 별도 라우트로 가져와 이 컴포넌트의 state에만 둔다.
+   */
+  needsResidentNumber: boolean;
   recorded: AdminPayoutRecordView | null;
 }
 
@@ -129,6 +135,9 @@ export function FundingPayoutSection({
   const [account, setAccount] = useState<RevealedAccount | null>(null);
   const [accountError, setAccountError] = useState<string | null>(null);
   const [loadingAccount, setLoadingAccount] = useState(false);
+  const [residentNumber, setResidentNumber] = useState<string | null>(null);
+  const [residentNumberError, setResidentNumberError] = useState<string | null>(null);
+  const [loadingResidentNumber, setLoadingResidentNumber] = useState(false);
 
   const revealAccount = async () => {
     setLoadingAccount(true);
@@ -147,6 +156,30 @@ export function FundingPayoutSection({
       setAccountError('네트워크 오류');
     }
     setLoadingAccount(false);
+  };
+
+  /**
+   * 주민등록번호는 **계좌와 다른 버튼**이다. 계좌는 이체할 때마다, 이 번호는 지급명세서를
+   * 낼 때만 연다 — 한 버튼에 묶으면 계좌만 보려던 조회에서도 번호가 복호화돼 응답에 실린다.
+   * 서버가 조회 사실을 따로 기록한다.
+   */
+  const revealResidentNumber = async () => {
+    setLoadingResidentNumber(true);
+    setResidentNumberError(null);
+    try {
+      const r = await fetch(`/api/admin/funding/projects/${projectId}/resident-number`, {
+        credentials: 'same-origin',
+      });
+      const body = (await r.json()) as { ok: boolean; message?: string; residentNumber?: string };
+      if (!r.ok || !body.ok || !body.residentNumber) {
+        setResidentNumberError(body.message ?? '주민등록번호를 읽지 못했습니다.');
+      } else {
+        setResidentNumber(body.residentNumber);
+      }
+    } catch {
+      setResidentNumberError('네트워크 오류');
+    }
+    setLoadingResidentNumber(false);
   };
 
   if (!payout) {
@@ -187,6 +220,11 @@ export function FundingPayoutSection({
   if (!payout.hasTaxType) {
     blockers.push(
       '개설자의 세금 처리 구분(개인 원천징수 / 사업자 세금계산서)이 등록되지 않았습니다. 추측해서 기록하면 실이체액이 틀리고 기록은 되돌릴 수 없습니다 — 개설자에게 정산 정보 저장을 요청해 주세요.',
+    );
+  }
+  if (payout.needsResidentNumber) {
+    blockers.push(
+      '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 등록을 요청해 주세요.',
     );
   }
   if (payout.grossAmount <= 0) blockers.push('결제된 후원이 없어 정산할 것이 없습니다.');
@@ -318,6 +356,32 @@ export function FundingPayoutSection({
         {accountError && (
           <p role="alert" className="mt-2 text-sm text-red-700">
             {accountError}
+          </p>
+        )}
+      </div>
+
+      {/*
+        주민등록번호 — 원천징수 신고(지급명세서)에 쓴다. 계좌와 한 버튼으로 묶지 않는다:
+        여는 목적과 빈도가 다르고, 열람 기록도 무엇을 열었는지로 갈려야 사후에 의미가 있다.
+      */}
+      <div className="mt-4 rounded-lg border border-gray-300 bg-white p-4">
+        <h3 className="mb-2 text-base font-bold text-gray-900">주민등록번호 (원천징수 신고용)</h3>
+        <p className="mb-3 text-xs text-gray-500">
+          암호화해 저장돼 있습니다. 이 화면의 데이터에는 담겨 있지 않고, 누르면 그때 복호화해 가져오며 조회
+          사실이 서버 로그에 남습니다. 지급명세서를 낼 때만 열어 주세요.
+        </p>
+        {residentNumber ? (
+          <dl className="text-sm">
+            <Row label="주민등록번호" value={residentNumber} />
+          </dl>
+        ) : (
+          <Button light variant="outline" size="sm" disabled={loadingResidentNumber} onClick={revealResidentNumber}>
+            {loadingResidentNumber ? '불러오는 중…' : '주민등록번호 보기'}
+          </Button>
+        )}
+        {residentNumberError && (
+          <p role="alert" className="mt-2 text-sm text-red-700">
+            {residentNumberError}
           </p>
         )}
       </div>
