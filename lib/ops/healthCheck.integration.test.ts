@@ -466,17 +466,29 @@ describe('구독이 끝난 뒤에 들어온 결제', () => {
   const seed = async (
     subStatus: string,
     orderStatus = 'paid',
-    times: { cancelledAt?: string | null; endsAt?: string | null; paidAt?: string | null } = {},
+    times: {
+      cancelledAt?: string | null;
+      endsAt?: string | null;
+      paidAt?: string | null;
+      /** 마지막 활동 시각. 방치 종료 구독에서는 이 값이 곧 "끝난 시각"이다. */
+      updatedAt?: string;
+    } = {},
   ) => {
     const cancelledAt = times.cancelledAt === undefined ? '2026-09-05T00:00:00Z' : times.cancelledAt;
     const endsAt = times.endsAt === undefined ? '2026-09-05T00:00:00Z' : times.endsAt;
     const paidAt = times.paidAt === undefined ? '2026-09-06T00:00:00Z' : times.paidAt;
+    const updatedAt = times.updatedAt ?? '2026-09-05T00:00:00Z';
     await client.execute({
       sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
               customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status,
               cancelled_at, ends_at, created_at, updated_at)
-            VALUES ('s1','lesson','김수강','010-1','a@b.c','sub_k','mtok',360000,36000,396000,5,?,?,?,unixepoch(),unixepoch())`,
-      args: [subStatus, cancelledAt ? EPOCH(cancelledAt) : null, endsAt ? EPOCH(endsAt) : null],
+            VALUES ('s1','lesson','김수강','010-1','a@b.c','sub_k','mtok',360000,36000,396000,5,?,?,?,unixepoch(),?)`,
+      args: [
+        subStatus,
+        cancelledAt ? EPOCH(cancelledAt) : null,
+        endsAt ? EPOCH(endsAt) : null,
+        EPOCH(updatedAt),
+      ],
     });
     await insertOrder({ id: 'o9', order_no: 'SUB-1', manage_token: 't9', status: orderStatus });
     await client.execute({
@@ -517,10 +529,24 @@ describe('구독이 끝난 뒤에 들어온 결제', () => {
 
   /**
    * 방치로 종료된 구독(closeDormantSubscriptions)은 cancelled_at·ends_at을 채우지 않는다.
-   * 비교 기준이 없으므로 세지 않는다 — 그 결제는 정의상 1년 넘게 전의 것이다.
+   * 예전에는 `coalesce(cancelled_at, ends_at)`가 NULL이 되어 비교식 전체가 NULL이 되고,
+   * 이 픽스처가 그 동작을 "세지 않는다"로 고정하고 있었다 — 그런데 이 픽스처가 곧 사고
+   * 형태다. 뒤늦은 승인에서 `paid_at`은 **지금**이라 "결제가 1년 넘게 전"이 성립하지 않는다.
+   * 지금은 `updated_at`이 셋째 폴백으로 들어와 마지막 활동 뒤에 들어온 돈을 잡는다.
    */
-  it('종료 시각이 없는 구독은 세지 않는다', async () => {
+  it('방치로 종료된 구독(종료 시각 없음)도 마지막 활동 뒤에 들어온 결제면 센다', async () => {
     await seed('ended', 'paid', { cancelledAt: null, endsAt: null });
+    expect(await flagged()).toBe(true);
+  });
+
+  /** 마지막 활동보다 앞선 결제는 세지 않는다 — 폴백이 오탐을 만들지 않는지 확인한다. */
+  it('방치로 종료된 구독이라도 마지막 활동 전의 결제는 세지 않는다', async () => {
+    await seed('ended', 'paid', {
+      cancelledAt: null,
+      endsAt: null,
+      updatedAt: '2026-09-07T00:00:00Z',
+      paidAt: '2026-09-06T00:00:00Z',
+    });
     expect(await flagged()).toBe(false);
   });
 

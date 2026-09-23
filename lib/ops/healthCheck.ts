@@ -342,8 +342,20 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * (closeDormantSubscriptions, lib/privacy/orderRetention.ts) 그런 건이 계속 늘어난다.
    * 그래서 결제 시각(paid_at, 없으면 attempted_at)이 **구독이 끝난 시각보다 뒤**인 건만 센다.
    *
-   * 끝난 시각은 `cancelled_at`, 없으면 `ends_at`이다. 둘 다 비어 있으면(방치 종료는 둘 다
-   * 채우지 않는다) 비교할 기준이 없고, 그 구독의 결제는 정의상 1년 넘게 전의 것이라 세지 않는다.
+   * 끝난 시각은 `cancelled_at`, 없으면 `ends_at`, 그것도 없으면 `updated_at`이다. 셋째 폴백이
+   * 필요한 이유: `closeDormantSubscriptions`는 앞의 둘을 **일부러 채우지 않는다**. 예전에는
+   * `coalesce(cancelled_at, ends_at)`가 NULL이 되어 비교식 전체가 NULL이 되고, 방치로 종료한
+   * 구독은 이 검사에서 **영구히** 빠졌다. "그 구독의 결제는 1년 넘게 전의 것"이라는 정당화는
+   * 비교하는 값과 맞지 않았다 — 왼쪽은 `paid_at`이고, 뒤늦은 승인에서 그 값은 **지금**이다.
+   * 실제 경로: `paused` 구독이 NETWORK_ERROR로 `pending` 회차를 남긴 채 방치 → `ended`로 전이
+   * → 뒤늦은 토스 DONE 도착 → `reconcileSubscriptionPaymentFromToss`가 `paid_at = now`로 쓴다.
+   * 구독 되살리기는 가드에 막혀 0행이라, 남는 것은 묻힐 수 있는 메일 한 통뿐이었다 —
+   * 이 검사가 두 번째 겹으로 존재하는 이유가 바로 그 메일을 못 믿어서다.
+   *
+   * `updated_at`이 올바른 "끝난 시각"인 이유: `closeDormantSubscriptions`가 그 값을 갱신하지
+   * 않으므로 마지막 활동 시각 그대로 남는다. 오탐도 늘지 않는다 — 정상 해지는 `cancelled_at`이
+   * 있어 셋째 폴백에 닿지 않고, 정상 청구는 같은 `now`로 `subscriptions.updated_at`을 함께
+   * 쓰므로 `paid_at > updated_at`이 성립하지 않는다.
    *
    * 해소 조건: 전액 환불하면 orders.status가 refunded로 바뀌어 빠진다(부분환불은 잔액이 남아 계속 뜬다).
    * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다.
@@ -358,8 +370,9 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     .where(and(
       inArray(orders.status, ['paid', 'partially_refunded']),
       inArray(subscriptions.status, ['cancelled', 'ended']),
-      // 종료 시각이 없으면(coalesce가 NULL) 비교 자체가 NULL이 되어 행이 빠진다 — 의도한 동작이다.
-      sql`coalesce(${subscriptionPayments.paidAt}, ${subscriptionPayments.attemptedAt}) > coalesce(${subscriptions.cancelledAt}, ${subscriptions.endsAt})`,
+      // 셋째 폴백 `updated_at`이 방치 종료 구독을 받는다(위 주석). 세 값이 모두 NULL인 구독은
+      // 없다 — `updated_at`은 NOT NULL에 기본값이 있다(db/schema.ts).
+      sql`coalesce(${subscriptionPayments.paidAt}, ${subscriptionPayments.attemptedAt}) > coalesce(${subscriptions.cancelledAt}, ${subscriptions.endsAt}, ${subscriptions.updatedAt})`,
     ));
 
   if (lateApproval.length > 0) {
