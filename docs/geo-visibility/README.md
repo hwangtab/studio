@@ -115,6 +115,9 @@ Gemini 유입은 90일 107세션으로 Perplexity(9세션)의 열 배다. **유�
 최소한 이 셋은 적는다: ① 웹 검색/근거 표시가 있었는가 ② 우리 대신 무엇을 인용했는가
 ③ 답변이 일반론이었는가 업체 추천이었는가.
 
+①은 2026-09-23부터 `search_triggered` **칸**이다 — 자유 텍스트로 두었더니 한 엔진이
+통째로 비었다. 모르면 `unknown`을 적는다.
+
 ## ⚠ 1회차(2026-09) 측정은 절차를 지키지 않았다
 
 `notes`를 보면 ChatGPT 20건 전부 `memory on`이고, 3건은 `referenced prior Q01 via memory`처럼
@@ -132,7 +135,19 @@ Gemini 유입은 90일 107세션으로 Perplexity(9세션)의 열 배다. **유�
   않는다 — 매달 같은 쿼리를 넣어야 추세 비교가 된다. 실제 답변이 특정 서비스를 새로
   다루게 되는 등 명백한 사유가 있을 때만, 바꾼 이유를 커밋 메시지에 남기고 바꾼다.
 - `template.csv` — 매달 이 파일을 복사해 `YYYY-MM.csv`로 이름 붙이고 채운다.
-  헤더: `month,query_id,engine,cited(yes/no),cited_url,position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes`
+  헤더: `month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,cited_section,source_content_type(table/faq/price-card/prose/other/na),position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes`
+
+  **2026-09-23에 칸 셋을 늘렸다.** 앞선 두 회차가 이 셋을 `notes` 자유 텍스트로 적다가
+  제미나이 20행이 통째로 비어 원인 불명이 됐다(아래 "Gemini는 notes를 반드시 채운다").
+  칸으로 올리면 비워 둔 것이 눈에 보인다.
+
+  - `search_triggered` — 웹 검색·근거 표시가 있었는가. **주 지표의 분모다.** 모르면
+    비우지 말고 `unknown`이라고 적는다. 비움과 모름은 다르다.
+  - `cited_section` — 페이지의 어느 블록을 옮겼는가(`FAQ 3번`·`가격표 2행`·`히어로 문단`).
+    URL만으로는 무엇이 먹혔는지 알 수 없어 다음 처방을 못 고른다.
+  - `source_content_type` — 그 블록의 형태. 표·FAQ의 숫자만 옮겨지고 산문 형용은 한 번도
+    안 옮겨졌다는 관찰(memory `project_geo_citation_pattern`)을 실제 인용 데이터로
+    검증하려면 이 칸이 필요하다. 인용이 없으면 `na`.
 
 ## 집계 방법
 

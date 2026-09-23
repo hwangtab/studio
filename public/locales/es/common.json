@@ -562,6 +562,22 @@
       "note": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Lista de espera disponible cuando esté completo.",
       "noteVacant": "Operado directamente por Studio NOL · Insonorización de nivel superior · Comience con solo un mes · Disponible para mudarse ahora mismo."
     },
+    "factsTable": {
+      "title": "Datos clave de la sala de práctica",
+      "serviceCol": "Concepto",
+      "priceCol": "Detalle",
+      "monthlyLabel": "Tarifa mensual",
+      "depositLabel": "Depósito",
+      "depositValue": "₩0",
+      "minContractLabel": "Duración mínima",
+      "minContractValue": "1 mes",
+      "hoursLabel": "Horario de acceso",
+      "hoursValue": "24/7",
+      "vacancyLabel": "Disponibilidad actual",
+      "vacancyValue": "Disponible ahora",
+      "vacancyFull": "Completo",
+      "asOf": "Actualizado el {{date}}"
+    },
     "midCta": {
       "note": "Las salas suelen estar completas, por lo que mantenemos una lista de espera. Escríbenos y te avisaremos por orden en cuanto se libere una sala.",
       "noteVacant": "Disponible para mudarse ahora mismo. Puedes visitar antes de decidir. Escríbenos y te responderemos enseguida."
@@ -1121,6 +1137,13 @@
     },
     "package": {
       "title": "Paquete Completo Canción de Boda"
+    },
+    "factsTable": {
+      "title": "Datos clave del paquete de canción de boda",
+      "serviceCol": "Concepto",
+      "priceCol": "Detalle",
+      "packageLabel": "Precio del paquete",
+      "includedValue": "Incluido"
     },
     "process": {
       "title": "Cómo Funciona",

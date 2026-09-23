@@ -2,13 +2,14 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { m } from 'framer-motion';
-import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, Gift } from '@/lib/lucide-icons';
+import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, Gift, Info } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
+import ServicePriceTable from '../../components/service/ServicePriceTable';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
 // ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
@@ -20,7 +21,12 @@ import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_VACANT_ROOMS } from '../../data/practiceRoomAvailability';
+import { getPricingData } from '../../data/pricing';
+import {
+  PRACTICE_ROOM_HAS_VACANCY,
+  PRACTICE_ROOM_VACANT_ROOMS,
+  PRACTICE_ROOM_AVAILABILITY_UPDATED_ON,
+} from '../../data/practiceRoomAvailability';
 import { generatePracticeRoomMonthlyRentSchema } from '../../utils/schema';
 import { createFadeInAnimation, HOVER_SCALE, TRANSITION_STANDARD } from '../../utils/animationUtils';
 import type { NextPageWithLayout } from '../../types';
@@ -61,6 +67,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
+  const practiceRoomOffer = React.useMemo(
+    () => getPricingData(locale).practiceRoomOffers[0],
+    [locale]
+  );
   const practiceRoomFaqs = React.useMemo(
     () =>
       Array.from({ length: 9 }, (_, i) => ({
@@ -173,6 +183,59 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
           locale={locale}
         />
       )}
+
+      {/* 위 PriceLeader와 같은 사실을 시맨틱 <table>로 한 번 더 —
+          AI 검색·스크린리더 추출성용. recording·mixing-mastering과 같은 시각 언어.
+          가격은 data/pricing.ts practiceRoomOffers[0], 공실은 data/practiceRoomAvailability.ts SSOT. */}
+      <Section variant="default" spacing="tight">
+        <SectionHeading
+          icon={Info}
+          title={t('practiceRoom.factsTable.title')}
+          as="h3"
+          className="mb-6"
+        />
+        <ServicePriceTable
+          caption={t('practiceRoom.factsTable.title')}
+          serviceColLabel={t('practiceRoom.factsTable.serviceCol')}
+          priceColLabel={t('practiceRoom.factsTable.priceCol')}
+          groups={[
+            {
+              id: 'practice-room-facts',
+              rows: [
+                {
+                  id: 'monthly',
+                  label: t('practiceRoom.factsTable.monthlyLabel'),
+                  price: practiceRoomOffer.priceDisplay,
+                  unit: practiceRoomOffer.unit,
+                },
+                {
+                  id: 'deposit',
+                  label: t('practiceRoom.factsTable.depositLabel'),
+                  price: t('practiceRoom.factsTable.depositValue'),
+                },
+                {
+                  id: 'min-contract',
+                  label: t('practiceRoom.factsTable.minContractLabel'),
+                  price: t('practiceRoom.factsTable.minContractValue'),
+                },
+                {
+                  id: 'hours',
+                  label: t('practiceRoom.factsTable.hoursLabel'),
+                  price: t('practiceRoom.factsTable.hoursValue'),
+                },
+                {
+                  id: 'vacancy',
+                  label: t('practiceRoom.factsTable.vacancyLabel'),
+                  subLabel: t('practiceRoom.factsTable.asOf', { date: PRACTICE_ROOM_AVAILABILITY_UPDATED_ON }),
+                  price: PRACTICE_ROOM_HAS_VACANCY
+                    ? t('practiceRoom.factsTable.vacancyValue', { rooms: PRACTICE_ROOM_VACANT_ROOMS })
+                    : t('practiceRoom.factsTable.vacancyFull'),
+                },
+              ],
+            },
+          ]}
+        />
+      </Section>
 
       <QuickAnswers
         title={t('practiceRoom.faq.title')}
