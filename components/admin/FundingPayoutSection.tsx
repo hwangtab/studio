@@ -224,8 +224,8 @@ export function FundingPayoutSection({
             {/*
               결제 수수료 라벨에는 요율을 적지 않는다. 수기 등록분은 토스를 지나지 않아
               과세표준에서 빠지므로(`computeFundingPayoutForProject`), 요율을 적어 두면
-              모금 100만 중 수기 20만일 때 라벨은 3.4%인데 값은 27,200원이라 눈으로 계산한
-              34,000원과 어긋난다. 요율은 구획 상단 안내문이 예외와 함께 적는다.
+              모금 100만 중 수기 20만일 때 라벨은 3.3%인데 값은 26,400원이라 눈으로 계산한
+              33,000원과 어긋난다. 요율은 구획 상단 안내문이 예외와 함께 적는다.
             */}
             <Row label="결제 수수료" value={minus(payout.paymentFeeAmount)} negative />
             <Row
@@ -345,8 +345,8 @@ export function FundingPayoutSection({
         </div>
         {!recorded && (
           <p className="mt-2 text-xs text-amber-700">
-            결제 수수료율 {FUNDING_PAYMENT_FEE_PERCENT}%는 운영자가 토스 계약서와 대조해 확정해야 하는 가안입니다.
-            기록하면 그 시점의 값이 영구히 고정되고, 나중에 요율을 바꿔도 이 기록은 바뀌지 않습니다.
+            기록하면 지금 요율(플랫폼 {FUNDING_PLATFORM_FEE_PERCENT}% · 결제 {FUNDING_PAYMENT_FEE_PERCENT}%)로 계산한
+            금액이 영구히 고정됩니다. 나중에 요율을 바꿔도 이 기록은 바뀌지 않고, 되돌릴 경로도 없습니다.
           </p>
         )}
       </div>

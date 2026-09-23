@@ -25,8 +25,8 @@ export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
  * withholdingAmount = 원천징수 개설자면 round(shareAmount × 3.3%), 사업자(세금계산서)면 0
  * netAmount    = shareAmount − withholdingAmount      ← 실제 이체액
  *
- * 100만원 모금·환불 0·원천징수 개설자: platformFee 55,000 · paymentFee 34,000 →
- * feeAmount 89,000 → shareAmount 911,000 → withholdingAmount 30,063 → netAmount 880,937.
+ * 100만원 모금·환불 0·원천징수 개설자: platformFee 55,000 · paymentFee 33,000 →
+ * feeAmount 88,000 → shareAmount 912,000 → withholdingAmount 30,096 → netAmount 881,904.
  */
 export interface FundingPayoutBreakdown {
   grossAmount: number;

@@ -287,7 +287,7 @@ describe('recordFundingPayout', () => {
 
     // 운영자가 화면에서 본 숫자.
     const shown = await buildFundingPayoutPreview(project.id);
-    expect(shown!.netAmount).toBe(880_937);
+    expect(shown!.netAmount).toBe(881_904);
 
     // 확인창을 띄워 둔 사이에 환불 한 건이 done이 됐다.
     const payment = await mockDb.query.payments.findFirst({ where: (t, { eq }) => eq(t.orderId, order.id) });
@@ -300,10 +300,10 @@ describe('recordFundingPayout', () => {
     expect(result).toEqual({
       ok: false,
       code: 'amount_changed',
-      expectedNetAmount: 880_937,
+      expectedNetAmount: 881_904,
       netAmount: now.netAmount,
     });
-    expect(now.netAmount).not.toBe(880_937);
+    expect(now.netAmount).not.toBe(881_904);
     // 가장 중요한 부분 — 아무것도 굳지 않았다.
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });

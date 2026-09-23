@@ -9,12 +9,12 @@ describe('computeFundingPayout', () => {
       grossAmount: 1_000_000,
       refundAmount: 0,
       supplyAmount: 909_091,
-      feeAmount: 89_000,
+      feeAmount: 88_000,
       platformFeeAmount: 55_000,
-      paymentFeeAmount: 34_000,
-      shareAmount: 911_000,
-      withholdingAmount: 30_063,
-      netAmount: 880_937,
+      paymentFeeAmount: 33_000,
+      shareAmount: 912_000,
+      withholdingAmount: 30_096,
+      netAmount: 881_904,
     });
   });
 
@@ -22,7 +22,7 @@ describe('computeFundingPayout', () => {
     const p = computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 0, taxType: 'invoice' });
     expect(p.withholdingAmount).toBe(0);
     expect(p.netAmount).toBe(p.shareAmount);
-    expect(p.netAmount).toBe(911_000);
+    expect(p.netAmount).toBe(912_000);
   });
 
   it('환불이 모금액을 넘으면 전 항목이 0', () => {
@@ -45,8 +45,8 @@ describe('computeFundingPayout', () => {
     expect(p.grossAmount).toBe(2_000_000);
     expect(p.refundAmount).toBe(1_000_000);
     // netGross는 1,000,000 — 위 첫 케이스와 같은 수수료·정산액이 나와야 한다.
-    expect(p.feeAmount).toBe(89_000);
-    expect(p.netAmount).toBe(880_937);
+    expect(p.feeAmount).toBe(88_000);
+    expect(p.netAmount).toBe(881_904);
   });
 
   it('반올림이 음수를 만들지 않는다 — 작은 금액도 전 항목이 0 이상', () => {

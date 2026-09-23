@@ -58,11 +58,12 @@ export const ARTIST_SUPPORT_WITHHOLDING_PERCENT = 3.3;
  */
 export const FUNDING_PLATFORM_FEE_PERCENT = 5.5; // 부가세 포함
 /**
- * 개설자에게 청구하는 결제 수수료 계약 요율. ⚠ 운영자가 토스 계약서와 대조해
- * 확정해야 한다 — 결제 수단마다 실제 요율이 다르고 우리는 그 값을 모른다.
- * 이 상수는 "토스가 실제로 떼는 요율"이 아니라 개설자에게 청구하는 계약상 요율이다.
+ * 개설자에게 청구하는 결제 수수료 계약 요율(운영자 확정, 2026-09-23). 부가세 포함이다 —
+ * 3% × 1.1 = 3.3, 플랫폼 수수료 5% × 1.1 = 5.5와 같은 셈법이다.
+ * 이 상수는 "토스가 실제로 떼는 요율"이 아니라 개설자에게 청구하는 계약상 요율이다 —
+ * 실제 요율은 결제 수단마다 다르고 그 차액은 스튜디오가 안는다.
  */
-export const FUNDING_PAYMENT_FEE_PERCENT = 3.4;
+export const FUNDING_PAYMENT_FEE_PERCENT = 3.3; // 부가세 포함
 /** 펀딩 정산 원천징수율. ARTIST_SUPPORT_WITHHOLDING_PERCENT와 값은 같지만 별도
  * 상품의 별도 상수다 — 한쪽 요율이 바뀌어도 다른 쪽이 딸려가면 안 된다. */
 export const FUNDING_WITHHOLDING_PERCENT = 3.3;

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useState, type FormEvent } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
-import { FUNDING_PLATFORM_FEE_PERCENT } from '../../../data/pricing';
+import { FUNDING_PAYMENT_FEE_PERCENT, FUNDING_PLATFORM_FEE_PERCENT } from '../../../data/pricing';
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
@@ -62,7 +62,8 @@ export default function FundingApply() {
                 (data/pricing.ts · lib/funding/policy.ts). 문자열로 박으면 정산 계산과 갈라진다. */}
             <li>
               정산은 모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 보내 드립니다.
-              플랫폼 수수료 {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료는 개설자가 부담합니다.
+              플랫폼 수수료 {FUNDING_PLATFORM_FEE_PERCENT}%와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%(둘 다 부가세 포함)를
+              개설자가 부담합니다.
             </li>
             <li>제출하시면 운영자가 확인하고 승인 또는 보완 요청을 메일로 알려 드립니다.</li>
           </ul>
