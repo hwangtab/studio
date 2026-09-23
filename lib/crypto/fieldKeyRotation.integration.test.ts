@@ -65,8 +65,40 @@ afterEach(() => {
   client.close();
 });
 
-it('대상 목록에 주민등록번호 컬럼이 들어 있다 — 목록에 없으면 회전되지 않는다', () => {
-  expect(ENCRYPTED_FIELD_TARGETS.map((t) => t.label)).toContain('funding_creators.resident_number_enc');
+/**
+ * **대상 목록의 모든 타깃을 실제로 한 행씩 회전시킨다.**
+ *
+ * label만 확인하는 테스트로는 `valueColumn`(읽는 컬럼)과 `valueField`(쓰는 SET 키)가
+ * 갈린 것을 못 잡는다 — 갈리면 A를 읽어 B에 쓰고, 값 두 개를 한 번에 잃는다.
+ * 새 암호화 필드를 목록에 더하면 여기 seeder도 함께 더해야 한다(없으면 아래 테스트가 선다).
+ */
+const SEEDERS: Record<string, (enc: string) => Promise<string>> = {
+  'funding_creators.resident_number_enc': (enc) => seedCreator(enc),
+};
+
+it('모든 타깃에 seeder가 있다 — 목록에 더하고 검증을 빠뜨리면 여기서 선다', () => {
+  expect(ENCRYPTED_FIELD_TARGETS.map((t) => t.label).sort()).toEqual(Object.keys(SEEDERS).sort());
+});
+
+describe.each(ENCRYPTED_FIELD_TARGETS.map((t) => [t.label, t] as const))('대상 %s', (label, target) => {
+  it('읽은 컬럼과 쓰는 컬럼이 같다', () => {
+    const table = target.table as unknown as Record<string, unknown>;
+    expect(table[target.valueField]).toBe(target.valueColumn);
+  });
+
+  it('실제로 한 행이 새 키로 다시 잠긴다', async () => {
+    const secret = `target-${label}`;
+    const id = await SEEDERS[label](encryptFieldWithKey(secret, OLD_KEY));
+
+    const summary = await rotateFieldKey({ oldKey: OLD_KEY, newKey: NEW_KEY, apply: true, targets: [target] });
+    expect(summary).toMatchObject({ rotated: 1, skipped: 0, failed: 0 });
+
+    const [row] = await mockDb
+      .select({ value: target.valueColumn })
+      .from(target.table)
+      .where(eq(target.idColumn, id));
+    expect(decryptFieldWithKey(String(row.value), NEW_KEY)).toBe(secret);
+  });
 });
 
 describe('dry-run', () => {
