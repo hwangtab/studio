@@ -117,7 +117,12 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
   projectId: string;
   projectSlug: string;
   projectTitle: string;
-  taxType: FundingCreatorTaxType;
+  /**
+   * 개설자의 세금 처리 구분. 아직 없으면(승인 전에는 비어 있다 — 스펙 §6.2) null이고,
+   * 그 상태에서는 기록이 `no_tax_type`으로 거부된다. 위 금액들은 null일 때 **원천징수로
+   * 가정해** 계산한 참고값이다 — 그 가정이 기록으로 남는 경로는 없다.
+   */
+  taxType: FundingCreatorTaxType | null;
   /** grossAmount 중 수기 등록 몫 — 결제 수수료에서 빠진 금액이라 화면이 이유를 적을 수 있어야 한다. */
   manualGrossAmount: number;
   /**
@@ -182,12 +187,14 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
       where: (t, { eq: is }) => is(t.projectId, projectId),
     })) ?? null;
 
+  const taxType: FundingCreatorTaxType | null = creator.taxType ?? null;
   /**
-   * 세금 처리 구분이 아직 없으면(승인 전에는 비어 있다 — 스펙 §6.2) 원천징수 쪽으로 본다.
-   * 개인이 기본값이고, 그쪽이 실이체액을 **적게** 잡는다 — 모르는 상태에서 많이 보내는 것보다
-   * 적게 잡아 두는 편이 되돌리기 쉽다. 기록은 어차피 계좌 정보가 없으면 거부된다.
+   * 구분이 아직 없으면(승인 전에는 비어 있다 — 스펙 §6.2) **미리보기만** 원천징수로 가정해
+   * 계산한다. 개인이 기본값이고 그쪽이 실이체액을 적게 잡는다 — 화면에 숫자를 아예 못
+   * 띄우는 것보다 낫다. 기록은 `no_tax_type`으로 거부되므로 이 가정이
+   * `funding_project_payouts`에 남을 수는 없다. 기록은 `preview.taxType`(null 가능)만 본다.
    */
-  const taxType: FundingCreatorTaxType = creator.taxType ?? 'withholding';
+  const assumedTaxType: FundingCreatorTaxType = taxType ?? 'withholding';
 
   return {
     projectId,
@@ -205,23 +212,29 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
       creator.payoutBankName?.trim() && creator.payoutAccount?.trim() && creator.payoutHolder?.trim(),
     ),
     recorded,
-    ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType }),
+    ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType: assumedTaxType }),
   };
 };
 
 export type RecordFundingPayoutResult =
   | { ok: true; payout: FundingProjectPayout }
-  | { ok: false; code: 'not_found' | 'already_recorded' | 'nothing_to_pay' | 'not_closed' | 'no_payout_account' };
+  | {
+      ok: false;
+      code: 'not_found' | 'already_recorded' | 'nothing_to_pay' | 'not_closed' | 'no_payout_account' | 'no_tax_type';
+    };
 
 /**
  * 미리보기 숫자를 그 시점에 고정해 기록한다. 프로젝트당 한 번 — `project_id` UNIQUE가 두 번째
  * INSERT를 막고, 그 실패를 already_recorded로 돌려준다(경합에서도 안전).
  *
- * 거부 사유를 셋으로 가른다. 셋은 운영자가 할 일이 서로 다르다:
+ * 거부 사유를 넷으로 가른다. 넷은 운영자가 할 일이 서로 다르다:
  * - `not_closed` — **모금이 아직 안 끝났다.** 진행 중에 기록하면 그 뒤 들어온 후원이 정산에서
  *   통째로 빠진다. 기다렸다 다시 누르면 된다.
  * - `no_payout_account` — 개설자의 계좌 정보가 없다. 보낼 곳 없는 정산을 기록하면 "기록은
  *   됐는데 돈은 안 갔다"가 영영 남는다. 개설자에게 계좌 등록을 요청해야 한다.
+ * - `no_tax_type` — 개설자의 세금 처리 구분이 없다. 계좌만 있고 이 값이 비는 행이 실제로
+ *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
+ *   이 표는 불변이라 되돌릴 경로가 없다.
  * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
  */
 export const recordFundingPayout = async (projectId: string, now: Date): Promise<RecordFundingPayoutResult> => {
@@ -230,6 +243,7 @@ export const recordFundingPayout = async (projectId: string, now: Date): Promise
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
+  if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
 
   try {

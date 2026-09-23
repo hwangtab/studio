@@ -220,6 +220,26 @@ describe('recordFundingPayout', () => {
     expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'no_payout_account' });
   });
 
+  it('세금 처리 구분이 없으면 거부한다 — 추측해서 기록하지 않는다', async () => {
+    // 회귀: 게이트가 계좌 세 칸만 보고 taxType은 `?? 'withholding'`으로 메우던 시절엔,
+    // 사업자 개설자에게도 원천징수를 뗀 금액이 기록됐다. 이 표는 불변이라 되돌릴 수 없다.
+    const { project } = await seedProject({}, { taxType: null });
+    await seedPledge(project.slug, 1_000_000);
+    expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'no_tax_type' });
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  it('세금 처리 구분이 없어도 미리보기는 나온다 — taxType은 null로 드러난다', async () => {
+    const { project } = await seedProject({}, { taxType: null });
+    await seedPledge(project.slug, 1_000_000);
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview!.taxType).toBeNull();
+    // 가정은 원천징수(실이체액을 적게 잡는 쪽)다.
+    expect(preview!.withholdingAmount).toBe(
+      computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 0, taxType: 'withholding' }).withholdingAmount,
+    );
+  });
+
   it('받은 돈이 없으면 nothing_to_pay', async () => {
     const { project } = await seedProject();
     expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'nothing_to_pay' });

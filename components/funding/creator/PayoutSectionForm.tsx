@@ -136,7 +136,7 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       </Field>
       <ul className="-mt-3 list-disc space-y-1 pl-5 text-xs text-gray-600 dark:text-gray-400">
         <li>
-          개인: 정산금에서 소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수하고 나머지를 보내 드립니다.
+          개인: 정산금에서 소득세·지방소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수하고 나머지를 보내 드립니다.
         </li>
         <li>
           사업자: 원천징수 없이 정산금 전액을 보내 드립니다. 대신 그 금액에 대한 세금계산서를

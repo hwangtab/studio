@@ -424,7 +424,7 @@ export const fundingPledges = sqliteTable('funding_pledges', {
    * 약관·처리방침 동의 시각과 동의한 판본. 지금까지는 동의 사실이 행에 남지 않아, 분쟁이 나면
    * "그때 무엇에 동의했는가"를 git 이력으로 손수 대조해야 했다.
    *
-   * nullable로 두는 이유: 관리자 수기 등록(entry_source='offline')처럼 온라인 동의 절차를
+   * nullable로 두는 이유: 관리자 수기 등록(entry_source='manual')처럼 온라인 동의 절차를
    * 거치지 않은 행이 있고, 그런 행을 빈 문자열로 채우면 "동의했는데 값이 비었다"와
    * "동의 절차가 없었다"를 구분할 수 없다. 온라인 후원(createFundingPledge)은 항상 채운다.
    */

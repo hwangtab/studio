@@ -216,7 +216,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'grossAmount', 'refundAmount', 'manualGrossAmount', 'supplyAmount',
         'platformFeeAmount', 'paymentFeeAmount', 'feeAmount', 'shareAmount',
         'withholdingAmount', 'netAmount', 'backerCount', 'closed',
-        'hasPayoutAccount', 'recorded',
+        'hasPayoutAccount', 'hasTaxType', 'recorded',
       ].sort(),
     );
     expect(payout.netAmount).toBe(880_937);

@@ -256,6 +256,16 @@ export interface PayoutSection {
 const PAYOUT_ACCOUNT_PATTERN = /^[0-9-]+$/;
 
 /**
+ * 하이픈을 뺀 숫자 최소 자릿수.
+ *
+ * 패턴만으로는 `-`·`--`도 통과한다. 그러면 `loadPayoutSummary`의 `registered`와
+ * `buildFundingPayoutPreview`의 `hasPayoutAccount`가 둘 다 true인데 뒤 4자리
+ * (`accountLast4`)는 null이다 — 화면은 "등록됨", 정산은 기록까지 간다. 그 두 곳이 이미
+ * 숫자 4자리를 암묵적으로 요구하고 있으므로 입력 시점에 같은 기준으로 막는다.
+ */
+const PAYOUT_ACCOUNT_MIN_DIGITS = 4;
+
+/**
  * 정산 정보 검증 — **최소한만** 본다.
  *
  * 빈 값, 과도한 길이, 계좌번호에 숫자·하이픈 외 문자. 그 이상(은행명 대조, 실명 확인,
@@ -281,6 +291,9 @@ export const validatePayoutSection = (input: unknown): { ok: true; value: Payout
   }
   if (!PAYOUT_ACCOUNT_PATTERN.test(account)) {
     return fail('계좌번호는 숫자와 하이픈(-)만 넣어 주세요.');
+  }
+  if (account.replace(/[^0-9]/g, '').length < PAYOUT_ACCOUNT_MIN_DIGITS) {
+    return fail(`계좌번호에 숫자를 ${PAYOUT_ACCOUNT_MIN_DIGITS}자리 이상 넣어 주세요.`);
   }
 
   const holder = str(d.holder);

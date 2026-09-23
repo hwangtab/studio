@@ -54,6 +54,8 @@ export interface AdminPayoutView {
   backerCount: number;
   closed: boolean;
   hasPayoutAccount: boolean;
+  /** 세금 처리 구분이 등록돼 있는가. 구분 자체(개인/사업자)는 계좌와 함께 별도 라우트로만 나간다. */
+  hasTaxType: boolean;
   recorded: AdminPayoutRecordView | null;
 }
 
@@ -169,6 +171,11 @@ export function FundingPayoutSection({
   if (!payout.hasPayoutAccount) {
     blockers.push('개설자의 정산 계좌가 등록되지 않았습니다. 개설자 편집 화면의 정산 정보 구획에서 등록을 요청해 주세요.');
   }
+  if (!payout.hasTaxType) {
+    blockers.push(
+      '개설자의 세금 처리 구분(개인 원천징수 / 사업자 세금계산서)이 등록되지 않았습니다. 추측해서 기록하면 실이체액이 틀리고 기록은 되돌릴 수 없습니다 — 개설자에게 정산 정보 저장을 요청해 주세요.',
+    );
+  }
   if (payout.grossAmount <= 0) blockers.push('결제된 후원이 없어 정산할 것이 없습니다.');
 
   const drift = recorded
@@ -205,7 +212,12 @@ export function FundingPayoutSection({
               value={minus(payout.paymentFeeAmount)}
               negative
             />
-            <Row label={`원천징수 (${FUNDING_WITHHOLDING_PERCENT}%)`} value={minus(payout.withholdingAmount)} negative />
+            <Row
+              label={`원천징수 (${FUNDING_WITHHOLDING_PERCENT}%)`}
+              hint={payout.hasTaxType ? undefined : '세금 처리 구분이 없어 원천징수로 가정한 값입니다'}
+              value={minus(payout.withholdingAmount)}
+              negative
+            />
             <Row label="실이체액" value={won(payout.netAmount)} strong />
             <Row label="확정 후원" value={`${payout.backerCount}건`} />
           </dl>

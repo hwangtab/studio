@@ -196,6 +196,16 @@ describe('validatePayoutSection', () => {
     }
   });
 
+  it('하이픈만 있고 숫자가 없거나 4자리에 못 미치면 거부한다', () => {
+    // 회귀: /^[0-9-]+$/만 보던 시절엔 '-'·'--'가 통과했다. 그러면 편집 화면의 registered와
+    // 정산의 hasPayoutAccount는 둘 다 true인데 뒤 4자리는 null이라, 화면은 "등록됨"인데
+    // 보낼 계좌가 없는 상태로 정산 기록까지 간다.
+    for (const bad of ['-', '--', '-1-2-3-', '123']) {
+      expect(validatePayoutSection({ ...payout(), account: bad }).ok).toBe(false);
+    }
+    expect(validatePayoutSection({ ...payout(), account: '1234' }).ok).toBe(true);
+  });
+
   it('은행 목록은 검사하지 않는다 — 우리가 모르는 은행도 받는다', () => {
     expect(validatePayoutSection({ ...payout(), bankName: '토스뱅크' }).ok).toBe(true);
   });

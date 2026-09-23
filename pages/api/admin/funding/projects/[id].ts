@@ -77,13 +77,18 @@ const CREATOR_ACCOUNT_ACTIONS: readonly CreatorAccountAction[] = ['set_creator_n
 const isCreatorAccountAction = (value: unknown): value is CreatorAccountAction =>
   typeof value === 'string' && (CREATOR_ACCOUNT_ACTIONS as readonly string[]).includes(value);
 
-/** `recordFundingPayout`의 실패 code → HTTP. 셋은 운영자가 할 일이 서로 다르므로 문구도 가른다. */
+/** `recordFundingPayout`의 실패 code → HTTP. 사유마다 운영자가 할 일이 다르므로 문구도 가른다. */
 const PAYOUT_RECORD_ERROR: Record<Exclude<RecordFundingPayoutResult, { ok: true }>['code'], { status: number; message: string }> = {
   not_found: { status: 404, message: '프로젝트를 찾을 수 없습니다.' },
   already_recorded: { status: 409, message: '이미 기록된 정산입니다. 정산은 프로젝트당 한 번만 기록합니다.' },
   nothing_to_pay: { status: 409, message: '결제된 후원이 없어 정산할 것이 없습니다.' },
   not_closed: { status: 409, message: '모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 빠집니다.' },
   no_payout_account: { status: 409, message: '개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 등록을 요청해 주세요.' },
+  no_tax_type: {
+    status: 409,
+    message:
+      '개설자의 세금 처리 구분(개인 원천징수 / 사업자 세금계산서)이 등록되지 않았습니다. 추측해서 기록하면 실이체액이 틀리고 되돌릴 수 없으니, 개설자에게 정산 정보 저장을 요청해 주세요.',
+  },
 };
 
 /**
