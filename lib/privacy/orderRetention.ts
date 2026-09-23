@@ -47,6 +47,21 @@ import {
 export const PURGED_MARK = '(개인정보 파기됨)';
 
 /**
+ * 이 칸에 들어 있는 것이 파기 표식인가.
+ *
+ * **파기는 값을 지우는 것이지 값을 채우는 것이 아니다.** 그런데 NOT NULL 컬럼은 비울 수
+ * 없어 표식이 들어가고, 그 순간부터 표식은 읽는 쪽 눈에 **평범한 문자열**로 보인다 —
+ * 이름 자리에 있으면 사람 이름처럼, 이메일 자리에 있으면 주소처럼, 신원 키 안에 있으면
+ * "같은 사람"처럼 읽힌다. 그 오독을 막는 자리마다 문자열을 다시 적지 않도록 판정을 여기
+ * 하나로 모은다.
+ *
+ * 이미 이 판정이 필요한 곳: 공개 후원자 명단과 후원 인원 집계(`lib/funding/service.ts`),
+ * 발송 불가 주소(`lib/email/resend.ts`), 계약 서명 완료 화면
+ * (`pages/[locale]/contracts/[id]/complete.tsx`).
+ */
+export const isPurgedValue = (value: string | null | undefined): boolean => value === PURGED_MARK;
+
+/**
  * 전자상거래법이 정한 계약·청약철회 기록과 대금결제·재화등의 공급 기록의 보존 기간.
  * `lib/funding/retention.ts`의 `LEGAL_RETENTION_YEARS`와 같은 값이고 같은 근거다.
  */

@@ -6,7 +6,7 @@ import { authenticateCreatorApi } from '../../../../../../lib/funding/creatorAut
 import { loadCreatorShipping, type CreatorShippingRow } from '../../../../../../lib/funding/creatorShipping';
 import { toCsv } from '../../../../../../lib/funding/csv';
 import { FULFILLMENT_LABELS } from '../../../../../../lib/funding/fulfillmentLabels';
-import { privacyCreatorActor, recordPrivacyAccess } from '../../../../../../lib/privacy/accessLog';
+import { privacyCreatorActor, recordPrivacyAccess, type PrivacyAccessResult } from '../../../../../../lib/privacy/accessLog';
 import { getClientIp } from '../../../../../../lib/contracts/client-ip';
 
 /**
@@ -48,6 +48,7 @@ const toCsvRow = (row: CreatorShippingRow): Record<string, string | number | nul
  * 내려받은 사실은 관리자 CSV와 같은 표(`privacy_access_logs`)에 남긴다. 다른 점은
  * 수행자다 — 개설자는 계정이 사람별로 갈려 있어 `creator:<creatorId>`로 특정된다. 담는
  * 것은 프로젝트 id와 건수뿐이고, 404·409처럼 아무것도 조회되지 않은 경로는 남기지 않는다.
+ * 조회가 예외로 끝난 경우는 남긴다 — 그때는 이미 목록을 열려고 한 시도가 있었다.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -79,7 +80,33 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const projectId = typeof req.query.id === 'string' ? req.query.id : '';
   if (!projectId) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
 
-  const view = await loadCreatorShipping(auth.creatorId, projectId);
+  /**
+   * 기록 경로의 예외가 다운로드를 끊지 않게 한 겹 더 받는다(payout-account.ts와 같은 이유).
+   *
+   * **실패한 시도도 남긴다.** 처리방침 19항이 이 기록을 "성공·실패를 가리지 않고" 남긴다고
+   * 고지한다. 조회가 던졌을 때 500만 나가고 행이 안 남으면, 개설자가 배송 목록을 열려고
+   * 시도한 사실 자체가 어디에도 안 보인다 — 접속기록이 막으려는 것이 바로 그 공백이다.
+   */
+  const log = (result: PrivacyAccessResult, rowCount?: number) =>
+    recordPrivacyAccess({
+      actor: privacyCreatorActor(auth.creatorId),
+      action: 'funding_creator_shipping_export',
+      targetId: projectId,
+      result,
+      rowCount,
+      ip: getClientIp(req),
+    }).catch((error: unknown) => {
+      console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
+    });
+
+  let view: Awaited<ReturnType<typeof loadCreatorShipping>>;
+  try {
+    view = await loadCreatorShipping(auth.creatorId, projectId);
+  } catch (error: unknown) {
+    await log('error');
+    console.error('[API/funding/creator/shipping.csv] 배송 목록 조회 실패:', error);
+    return res.status(500).json({ ok: false, message: '배송 목록을 만들지 못했습니다.' });
+  }
   if (!view) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
 
   if (view.state !== 'open') {
@@ -87,16 +114,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const csv = toCsv(view.rows.map(toCsvRow), COLUMNS);
-  await recordPrivacyAccess({
-    actor: privacyCreatorActor(auth.creatorId),
-    action: 'funding_creator_shipping_export',
-    targetId: projectId,
-    result: 'success',
-    rowCount: view.rows.length,
-    ip: getClientIp(req),
-  }).catch((error: unknown) => {
-    console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
-  });
+  await log('success', view.rows.length);
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   // projectId는 DB가 randomblob(16)의 hex로 생성한다(db/schema.ts) — 영숫자뿐이라
   // 헤더 인젝션·경로 조작 소재가 없다. slug와 달리 별도 형식 검증을 두지 않는다.

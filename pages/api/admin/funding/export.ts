@@ -5,7 +5,7 @@ import { listFundingOrdersForExport } from '../../../../lib/funding/admin-list';
 import { hasReviewMarker } from '../../../../lib/funding/admin-serialize';
 import { toCsv } from '../../../../lib/funding/csv';
 import { isRefundPendingStatus } from '../../../../lib/funding/policy';
-import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
+import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../lib/privacy/accessLog';
 
 /**
  * shipHold는 사람이 읽는 칸이다. refundRequestedAt만으로는 부족하다 — 주소로 정렬해
@@ -50,7 +50,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (slug !== null && !SLUG_PATTERN.test(slug)) {
     return res.status(400).json({ ok: false, message: '프로젝트 slug 형식이 올바르지 않습니다.' });
   }
-  const items = await listFundingOrdersForExport(slug);
+  /**
+   * 기록 경로의 예외가 다운로드를 끊지 않게 한 겹 더 받는다(payout-account.ts와 같은 이유).
+   *
+   * **실패한 시도도 남긴다.** 처리방침 19항이 이 기록을 "성공·실패를 가리지 않고" 남긴다고
+   * 고지한다. 조회가 던졌을 때 500만 나가고 행이 안 남으면, 누가 목록 전체를 꺼내려 했다는
+   * 사실이 어디에도 안 보인다.
+   */
+  const log = (result: PrivacyAccessResult, rowCount?: number) =>
+    recordAdminPrivacyAccess(req, 'funding_pledge_export', slug ?? 'all', result, rowCount).catch(
+      (error: unknown) => {
+        console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
+      },
+    );
+
+  let items: Awaited<ReturnType<typeof listFundingOrdersForExport>>;
+  try {
+    items = await listFundingOrdersForExport(slug);
+  } catch (error: unknown) {
+    await log('error');
+    console.error('[API/admin/funding/export] 후원 목록 조회 실패:', error);
+    return res.status(500).json({ ok: false, message: '목록을 만들지 못했습니다.' });
+  }
   const rows = items.map((o) => {
     const p = o.fundingPledge!;
     return {
@@ -84,11 +105,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       adminMemo: p.adminMemo,
     };
   });
-  await recordAdminPrivacyAccess(req, 'funding_pledge_export', slug ?? 'all', 'success', rows.length).catch(
-    (error: unknown) => {
-      console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
-    },
-  );
+  await log('success', rows.length);
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', `attachment; filename="funding-${slug ?? 'all'}.csv"`);
   return res.status(200).send(toCsv(rows, COLUMNS));
