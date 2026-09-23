@@ -562,6 +562,22 @@
       "note": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Xonalar to'la bo'lsa, navbatga yozilish mumkin.",
       "noteVacant": "Studio NOL tomonidan bevosita boshqariladi · Yuqori darajadagi tovush izolyatsiyasi · Atigi 1 oydan boshlang · Hozir ko'chib kirish mumkin."
     },
+    "factsTable": {
+      "title": "Mashg'ulot xonasi asosiy ma'lumotlari",
+      "serviceCol": "Band",
+      "priceCol": "Tafsilot",
+      "monthlyLabel": "Oylik to'lov",
+      "depositLabel": "Depozit",
+      "depositValue": "0 KRW",
+      "minContractLabel": "Minimal muddat",
+      "minContractValue": "1 oy",
+      "hoursLabel": "Foydalanish vaqti",
+      "hoursValue": "24/7",
+      "vacancyLabel": "Hozirgi bo'sh xonalar",
+      "vacancyValue": "Bo'sh xona bor",
+      "vacancyFull": "To'la",
+      "asOf": "{{date}} holatiga"
+    },
     "midCta": {
       "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz.",
       "noteVacant": "Hozir ko'chib kirish mumkin. Qaror qilishdan oldin xonani ko'rib chiqishingiz mumkin. Murojaat qoldiring, tez orada javob beramiz."
@@ -1121,6 +1137,13 @@
     },
     "package": {
       "title": "To'y qo'shig'i to'liq paketi"
+    },
+    "factsTable": {
+      "title": "To'y qo'shig'i paketi asosiy ma'lumotlari",
+      "serviceCol": "Band",
+      "priceCol": "Tafsilot",
+      "packageLabel": "Paket narxi",
+      "includedValue": "Kiritilgan"
     },
     "process": {
       "title": "Qanday ishlaydi",
