@@ -440,7 +440,7 @@ export const fundingPledges = sqliteTable('funding_pledges', {
    * 약관·처리방침 동의 시각과 동의한 판본. 지금까지는 동의 사실이 행에 남지 않아, 분쟁이 나면
    * "그때 무엇에 동의했는가"를 git 이력으로 손수 대조해야 했다.
    *
-   * nullable로 두는 이유: 관리자 수기 등록(entry_source='offline')처럼 온라인 동의 절차를
+   * nullable로 두는 이유: 관리자 수기 등록(entry_source='manual')처럼 온라인 동의 절차를
    * 거치지 않은 행이 있고, 그런 행을 빈 문자열로 채우면 "동의했는데 값이 비었다"와
    * "동의 절차가 없었다"를 구분할 수 없다. 온라인 후원(createFundingPledge)은 항상 채운다.
    */
@@ -626,8 +626,22 @@ export const fundingProjectPayouts = sqliteTable('funding_project_payouts', {
   grossAmount: integer('gross_amount').notNull(),
   refundAmount: integer('refund_amount').notNull(),
   supplyAmount: integer('supply_amount').notNull(),
-  /** 플랫폼 수수료 = supply − share. 기록해 두지 않으면 세금계산서·장부에서 역산해야 한다. */
+  /**
+   * 플랫폼 수수료. 상품마다 계산 축이 다르다 —
+   * 아티스트 정산(공급가 기준): feeAmount = supply − share.
+   * 펀딩 정산(결제액 기준): feeAmount = platformFee + paymentFee(둘 다 netGross 기준),
+   * supply는 장부용 부가세 제외 표시값일 뿐이라 supply − share와 값이 다르다.
+   * 기록해 두지 않으면 세금계산서·장부에서 역산해야 한다.
+   */
   feeAmount: integer('fee_amount').notNull(),
+  /**
+   * feeAmount의 항목별 내역. 합계만 남기면 플랫폼 수수료(스튜디오 매출 — 부가세 대상이고
+   * 개설자에게 세금계산서를 발행한다)와 결제 수수료(토스로 통과하는 몫)를 기록에서 가를 수
+   * 없고, 요율이 바뀐 뒤에는 역산도 안 된다. 이 표의 존재 이유가 "기록 시점의 숫자를
+   * 고정"하는 것이므로 항목도 그때 함께 고정한다.
+   */
+  platformFeeAmount: integer('platform_fee_amount').notNull().default(0),
+  paymentFeeAmount: integer('payment_fee_amount').notNull().default(0),
   shareAmount: integer('share_amount').notNull(),
   withholdingAmount: integer('withholding_amount').notNull(),
   netAmount: integer('net_amount').notNull(),

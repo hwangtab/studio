@@ -5,7 +5,8 @@ import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRo
 import { getFundingProject } from './projects';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
-  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type RewardInput, type StorySection,
+  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type PayoutSection,
+  type RewardInput, type StorySection,
 } from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
 import { toKstDateString } from './creatorDateInput';
@@ -283,6 +284,92 @@ export const saveCreatorSection = async (creatorId: string, value: CreatorSectio
     phone: value.phone,
     bio: value.bio,
     links: value.links ? JSON.stringify(value.links) : null,
+    updatedAt: new Date(),
+  }).where(eq(fundingCreators.id, creatorId));
+  return { ok: true };
+};
+
+/**
+ * 정산 정보 구획이 화면에 돌려받는 **전부** — 등록 여부, 계좌번호 뒤 4자리, 세금 유형.
+ *
+ * 은행명·예금주·계좌번호 전체는 여기 없고, 앞으로도 넣으면 안 된다. 이 값은 편집 화면의
+ * `getServerSideProps` props로 나가고, Pages Router는 props를 `__NEXT_DATA__` JSON으로
+ * 페이지 HTML에 그대로 싣는다 — 담는 순간 계좌번호가 페이지 소스에 평문으로 박힌다.
+ * **개설자 본인 화면이라는 것은 예외 사유가 아니다**(어깨너머·브라우저 캐시·화면 공유).
+ * 같은 이유로 `lib/funding/dbProjects.ts`와 `lib/funding/adminProjects.ts`도 이 네 컬럼을
+ * 일부러 빼고 있고, 각자의 integration 테스트가 그 사실을 고정한다.
+ *
+ * 그래서 개설자는 계좌를 "고치는" 것이 아니라 **다시 입력해 덮어쓴다.** 불편을 이유로
+ * 값을 실어 보내고 싶어지면 이 주석이 그 이유를 말한다.
+ */
+export interface CreatorPayoutSummary {
+  registered: boolean;
+  accountLast4: string | null;
+  taxType: PayoutSection['taxType'] | null;
+}
+
+/** 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다. */
+const accountLast4 = (account: string): string | null => {
+  const digits = account.replace(/[^0-9]/g, '');
+  return digits.length >= 4 ? digits.slice(-4) : null;
+};
+
+/**
+ * 편집 화면이 정산 구획을 그리는 데 필요한 것만 읽는다.
+ *
+ * `select()`(전 컬럼)를 쓰지 않는다 — 전 컬럼을 읽어 오면 호출부가 실수로 통째 스프레드할
+ * 여지가 생긴다. 네 컬럼만 고르고, 그중 셋은 이 함수 안에서 불리언·뒤 4자리로 접혀 밖으로
+ * 나가지 않는다.
+ */
+export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayoutSummary> => {
+  const [row] = await getDb().select({
+    taxType: fundingCreators.taxType,
+    payoutBankName: fundingCreators.payoutBankName,
+    payoutAccount: fundingCreators.payoutAccount,
+    payoutHolder: fundingCreators.payoutHolder,
+  }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!row) return { registered: false, accountLast4: null, taxType: null };
+
+  const account = row.payoutAccount?.trim() ?? '';
+  // `recordFundingPayout`이 정산을 거부하는 조건(`hasPayoutAccount`, lib/funding/payout.ts)과
+  // 같은 판정이어야 한다 — 갈리면 화면은 "등록됨"인데 정산은 no_payout_account로 막힌다.
+  const registered = Boolean(row.payoutBankName?.trim() && account && row.payoutHolder?.trim());
+  return {
+    registered,
+    accountLast4: registered ? accountLast4(account) : null,
+    taxType: row.taxType ?? null,
+  };
+};
+
+/**
+ * 정산 정보(세금 유형·계좌) 저장.
+ *
+ * `saveCreatorSection`과 같은 축이다 — 값이 `funding_creators`에 붙어 있으므로 프로젝트
+ * 단위 `guard()`를 타지 않는다. 대신 **승인된 프로젝트가 하나라도 있을 때만** 받는다:
+ * 반려될 신청서에 계좌 정보를 미리 받지 않는다는 것이 이 구획의 존재 조건이고(설계 스펙
+ * §6.2), 값이 계정 소속인 이상 판정도 계정 단위여야 한다. 특정 프로젝트의 심사 상태로
+ * 막으면, 승인된 프로젝트 A를 가진 개설자가 초안 B를 열어 둔 채로는 정산 계좌를 못 고치는
+ * — 목적과 무관한 — 잠금이 된다.
+ *
+ * 화면 쪽 판정(`EDITABLE_SECTIONS`의 `payout`)은 지금 보고 있는 **그 프로젝트**가
+ * 승인됐는지를 본다. 둘이 어긋나는 경우는 하나뿐이고(승인된 A + 초안 B를 함께 가진
+ * 개설자가 B 화면을 볼 때) 그때 화면이 더 엄하다 — 정산이 실제로 일어나는 A의 화면에서
+ * 고치면 된다. 반대 방향(화면은 열렸는데 서버가 막는 것)은 생기지 않는다.
+ */
+export const savePayoutSection = async (creatorId: string, value: PayoutSection): Promise<WriteResult> => {
+  const [existing] = await getDb().select({ id: fundingCreators.id })
+    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
+
+  if (!(await hasApprovedProject(creatorId))) {
+    return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있습니다.');
+  }
+
+  await getDb().update(fundingCreators).set({
+    taxType: value.taxType,
+    payoutBankName: value.bankName,
+    payoutAccount: value.account,
+    payoutHolder: value.holder,
     updatedAt: new Date(),
   }).where(eq(fundingCreators.id, creatorId));
   return { ok: true };

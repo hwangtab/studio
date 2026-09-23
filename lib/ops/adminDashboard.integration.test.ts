@@ -145,6 +145,7 @@ it('대기열 건수 — 믹싱 착수 대기·작업 중, 구독 카드 대기�
     contractsAwaitingSignature: 1,
     artistPayoutsPending: 0,
     fundingProjectsAwaitingReview: 2,
+    fundingPayoutsPending: 0,
   });
   expect(dash.issues.map((i) => i.title)).toContain('서명 기한이 지난 계약 1건');
 });

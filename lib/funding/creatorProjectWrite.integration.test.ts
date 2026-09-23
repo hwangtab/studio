@@ -24,7 +24,9 @@ import {
   BASIC_LOCKED_FIELD_NAMES,
   createDraftProject,
   deleteReward,
+  loadPayoutSummary,
   loadProjectForCreator,
+  savePayoutSection,
   saveBasicSection,
   saveCreatorSection,
   saveStorySection,
@@ -745,5 +747,90 @@ describe('승인 뒤 편집 (Task 5)', () => {
       expect(await saveStorySection(creatorId, projectId, { content: '본문' })).toMatchObject({ ok: false, code: 'not_editable' });
       expect(await upsertReward(creatorId, projectId, rewardInput())).toMatchObject({ ok: false, code: 'not_editable' });
     }
+  });
+});
+
+describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
+  const payout = { taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' } as const;
+
+  it('승인된 프로젝트가 하나도 없으면 거부한다 — 반려될 신청서에 계좌를 미리 받지 않는다', async () => {
+    const { creatorId } = await seedProject();
+    const r = await savePayoutSection(creatorId, { ...payout });
+    expect(r).toEqual({ ok: false, code: 'not_editable', message: expect.any(String) });
+
+    const summary = await loadPayoutSummary(creatorId);
+    expect(summary).toEqual({ registered: false, accountLast4: null, taxType: null });
+  });
+
+  it('승인된 프로젝트가 있으면 저장된다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    expect(await savePayoutSection(creatorId, { ...payout })).toEqual({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators)
+      .where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.taxType).toBe('withholding');
+    expect(row.payoutBankName).toBe('국민은행');
+    expect(row.payoutAccount).toBe('123-456-789012');
+    expect(row.payoutHolder).toBe('황경하');
+  });
+
+  it('승인 뒤에도 계속 고칠 수 있다 — 계좌는 바뀐다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, { ...payout });
+    expect(await savePayoutSection(creatorId, {
+      taxType: 'invoice', bankName: '토스뱅크', account: '1000-0000-0000', holder: '스튜디오놀',
+    })).toEqual({ ok: true });
+
+    expect(await loadPayoutSummary(creatorId)).toEqual({
+      registered: true, accountLast4: '0000', taxType: 'invoice',
+    });
+  });
+
+  it('없는 계정은 not_found다', async () => {
+    expect((await savePayoutSection('없는-id', { ...payout })).ok).toBe(false);
+  });
+
+  it('계정 단위라 다른 프로젝트(초안)를 열어 둔 상태에서도 저장된다', async () => {
+    // saveCreatorSection과 같은 축 — 값이 funding_creators에 붙어 있으므로 판정도 계정
+    // 단위여야 한다. 승인된 A를 가진 개설자가 초안 B 때문에 계좌를 못 고치면 안 된다.
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await createDraftProject(creatorId);
+    expect(await savePayoutSection(creatorId, { ...payout })).toEqual({ ok: true });
+  });
+});
+
+describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다', () => {
+  it('등록 여부·뒤 4자리·세금 유형뿐이고, 직렬화에 은행명·예금주·계좌 전체가 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, {
+      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주',
+    });
+
+    const summary = await loadPayoutSummary(creatorId);
+    expect(Object.keys(summary).sort()).toEqual(['accountLast4', 'registered', 'taxType']);
+
+    // lib/funding/dbProjects.integration.test.ts의 같은 모양 단언 — 이 값이 그대로
+    // getServerSideProps props가 되어 __NEXT_DATA__로 페이지 소스에 실린다.
+    const serialized = JSON.stringify(summary);
+    expect(serialized).not.toContain('123-456-789012');
+    expect(serialized).not.toContain('국민은행');
+    expect(serialized).not.toContain('정산예금주');
+  });
+
+  it('세 칸 중 하나라도 비어 있으면 미등록이다 — 정산 기록의 hasPayoutAccount와 같은 판정', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await mockDb.update(schema.fundingCreators)
+      .set({ taxType: 'withholding', payoutBankName: '국민은행', payoutAccount: '123-456', payoutHolder: '   ' })
+      .where(eq(schema.fundingCreators.id, creatorId));
+
+    expect(await loadPayoutSummary(creatorId)).toEqual({
+      registered: false, accountLast4: null, taxType: 'withholding',
+    });
+  });
+
+  it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {
+    expect(await loadPayoutSummary('없는-id')).toEqual({
+      registered: false, accountLast4: null, taxType: null,
+    });
   });
 });

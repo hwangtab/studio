@@ -298,3 +298,24 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
       .filter((m) => m.message !== ''),
   };
 };
+
+/**
+ * 리워드별 **확정 판매 수량**. 개설자 모금 현황이 쓴다.
+ *
+ * 집계 대상은 `aggregateProjectStatus`의 모금액·건수와 **같은 집합**이다 — 같은
+ * `orders ⋈ funding_pledges` 조인, 같은 `liveFundingOrderStatusList()`. 기준이 갈리면
+ * 개설자가 보는 판매 수량과 모금액이 서로 설명되지 않는다.
+ *
+ * 같은 함수의 `claimed`(재고 표시용)와는 **일부러 다르다.** 그쪽은 아직 결제 전인 pending
+ * 홀드까지 세어 한정 수량 초과 판매를 막지만, 여기는 "몇 개 팔렸나"를 말하는 자리라
+ * 결제가 끝나지 않은 홀드를 세면 실제보다 많게 보인다(홀드는 대부분 만료된다).
+ */
+export const aggregateRewardSales = async (projectSlug: string): Promise<Record<string, number>> => {
+  const rows = await getDb().all<{ reward_id: string; qty: number }>(sql`
+    SELECT fp.reward_id, SUM(fp.quantity) AS qty
+    FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
+    WHERE fp.project_slug = ${projectSlug} AND o.status IN (${liveFundingOrderStatusList()})
+    GROUP BY fp.reward_id
+  `);
+  return Object.fromEntries(rows.map((r) => [r.reward_id, Number(r.qty)]));
+};

@@ -38,8 +38,13 @@ const TABLE: Record<FundingReviewStatus, Partial<Record<ReviewAction, FundingRev
 export const nextReviewStatus = (from: FundingReviewStatus, action: ReviewAction): FundingReviewStatus | null =>
   TABLE[from]?.[action] ?? null;
 
-/** 개설자 편집 화면의 프로젝트 구획. 개설자 계정 프로필은 프로젝트가 아니라 계정 소속이라 빠진다. */
-export type CreatorSectionName = 'basic' | 'story' | 'rewards';
+/**
+ * 개설자 편집 화면의 프로젝트 구획. 개설자 계정 프로필은 프로젝트가 아니라 계정 소속이라 빠진다.
+ *
+ * `payout`(정산 정보)은 예외적으로 계정 소속인데도 이 표에 들어 있다 — 값이 계정에 붙어
+ * 있을 뿐, **언제 받아도 되는지**는 심사 상태가 정하기 때문이다(승인 전에는 안 받는다).
+ */
+export type CreatorSectionName = 'basic' | 'story' | 'rewards' | 'payout';
 
 /**
  * 상태별로 개설자가 고칠 수 있는 구획.
@@ -56,11 +61,16 @@ export type CreatorSectionName = 'basic' | 'story' | 'rewards';
  *
  * `basic`이 승인 뒤에도 열려 있는 것은 구획 단위 판정일 뿐이다 — 그 안에서 slug·목표금액·
  * 모금 기간은 `basicLockedViolation`이 따로 잠근다.
+ *
+ * `payout`(정산 정보)만 **승인 뒤에 비로소 열린다.** 반려될 신청서에 계좌·주민번호 성격의
+ * 정보를 미리 받지 않는다(설계 스펙 §6.2) — 받아 두면 반려된 계정의 계좌를 우리가 이유
+ * 없이 보관하게 된다. 승인 뒤에는 계속 열려 있다: 계좌는 바뀌고, 바꿀 길이 없으면 정산이
+ * 막힌다.
  */
 const EDITABLE_SECTIONS: Record<FundingReviewStatus, readonly CreatorSectionName[]> = {
   draft: ['basic', 'story', 'rewards'],
   changes_requested: ['basic', 'story', 'rewards'],
-  approved: ['basic', 'story'],
+  approved: ['basic', 'story', 'payout'],
   submitted: [],
   rejected: [],
 };
