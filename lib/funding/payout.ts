@@ -250,7 +250,8 @@ export type RecordFundingPayoutResult =
  * 미리보기(`buildFundingPayoutPreview`)는 일부러 복호화하지 않는다 — 그 결과는 관리자 화면
  * props로 나가고, 그 자리가 평문이 샐 자리다. 대신 기록 직전에 여기서 한 번만 열어 보고
  * **성공 여부만** 돌려준다. 평문은 반환하지도 담지도 않고, 실패해도 로그에는 오류 코드만
- * 남긴다(`FieldCryptoError.code`는 missing_key·auth_failed 같은 분류값이다).
+ * 남긴다(`FieldCryptoError.code`는 missing_key·key_mismatch·auth_failed 같은 분류값이다 —
+ * 키가 회전 중이라 아직 옛 키인 값은 `key_mismatch`로, 손상된 값은 `auth_failed`로 갈린다).
  */
 const residentNumberReadable = async (projectId: string): Promise<boolean> => {
   const [row] = await getDb()

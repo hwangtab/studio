@@ -80,10 +80,11 @@ it('없는 프로젝트도 null', async () => {
   expect(await loadFundingResidentNumber('없는-id')).toBeNull();
 });
 
-it('키가 바뀌었으면 auth_failed로 던진다 — 조용히 null로 접지 않는다', async () => {
+it('키가 바뀌었으면 key_mismatch로 던진다 — 조용히 null로 접지 않는다', async () => {
   const project = await seed({ residentNumberEnc: encryptField(RRN) });
   process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 9).toString('base64');
-  await expect(loadFundingResidentNumber(project.id)).rejects.toMatchObject({ code: 'auth_failed' });
+  // v2가 keyId를 싣기 때문에 "키가 다르다"와 "값이 손상됐다"(auth_failed)가 갈린다.
+  await expect(loadFundingResidentNumber(project.id)).rejects.toMatchObject({ code: 'key_mismatch' });
 });
 
 it('키가 없으면 missing_key로 던진다', async () => {

@@ -507,7 +507,7 @@ export const fundingCreators = sqliteTable('funding_creators', {
   payoutHolder: text('payout_holder'),
   /**
    * 주민등록번호 — **암호화한 문자열만** 들어간다(`lib/crypto/fieldCrypto.ts`,
-   * `v1:<iv>:<tag>:<ct>`). 평문 컬럼도, 생년월일만 떼어 둔 표시용 컬럼도 만들지 않는다 —
+   * 새로 쓰는 것은 `v2:<keyId>:<iv>:<tag>:<ct>`, 이미 저장된 `v1:<iv>:<tag>:<ct>`도 읽는다). 평문 컬럼도, 생년월일만 떼어 둔 표시용 컬럼도 만들지 않는다 —
    * 일부를 평문으로 두면 암호화의 의미가 준다. 화면은 등록 여부만 안다.
    *
    * 근거는 소득세법상 원천징수의무자의 지급명세서 제출 의무이고, 그래서

@@ -83,6 +83,7 @@ describe('복호화 오류별 응답', () => {
     ['invalid_key', 'base64'],
     ['malformed', '다시 등록'],
     ['unsupported_version', '판본'],
+    ['key_mismatch', '다른 키로 저장'],
     ['auth_failed', '저장 당시와 다르거나'],
   ];
 

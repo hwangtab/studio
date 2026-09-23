@@ -8,7 +8,11 @@ import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
-import { FieldCryptoError, FIELD_CRYPTO_KEY_ENV, decryptField, encryptField } from '../crypto/fieldCrypto';
+import {
+  FIELD_CRYPTO_KEY_ENV, FIELD_CRYPTO_VERSION, FieldCryptoError,
+  decryptField, deriveKeyId, encryptField, parseFieldKey,
+} from '../crypto/fieldCrypto';
+import { ENCRYPTED_FIELD_TARGETS } from '../crypto/fieldKeyRotation';
 
 /**
  * 조용히 실패한 것들을 하루 한 번 훑어 운영자에게 알린다.
@@ -117,6 +121,87 @@ export const checkFieldCryptoKey = (): HealthIssue | null => {
   }
 };
 
+/** 옛 키 자리. 이 값이 있으면 회전이 진행 중이라는 뜻으로 읽는다. */
+const FIELD_CRYPTO_OLD_KEY_ENV = 'FUNDING_FIELD_KEY_OLD';
+
+/**
+ * **지금 키로 열리지 않는 행이 몇 개인가.**
+ *
+ * `checkFieldCryptoKey`는 같은 키로 왕복만 찔러 본다 — 절반만 회전된 DB에서도 통과한다.
+ * 그런데 회전이 멈춘 채 방치되면 결국 누군가 `FUNDING_FIELD_KEY_OLD`를 지우고, 그 행들은
+ * 영구히 잠긴다. 회전 스크립트가 "아무것도 안 했는데 끝난 것처럼" 보이는 경로를 막아 놨어도
+ * 이쪽이 열려 있으면 같은 사고가 난다.
+ *
+ * **복호화하지 않는다.** 저장 형식 v2가 `v2:<keyId>:...`이므로 앞 11글자만 비교하면 된다 —
+ * 크론이 평문을 만들 일도, 평문을 어딘가에 흘릴 일도 없다. 쿼리는 대상당 `count(*)` 하나이고
+ * 값은 서버로 나오지 않는다. v1 값은 접두사가 `v1:`이라 자연히 "열리지 않는 쪽"으로 센다
+ * (v1은 지금 키로 열릴 수도 있지만, 어차피 회전 대상이라 남아 있으면 안 된다).
+ *
+ * 키가 없거나 형식이 틀리면 **비교 기준 자체가 없으므로** 이 집계는 건너뛴다 —
+ * 그 상태는 `checkFieldCryptoKey`가 이미 high로 보고하고 있다.
+ */
+export const checkFieldKeyRotationPending = async (): Promise<HealthIssue | null> => {
+  let expectedPrefix: string;
+  try {
+    expectedPrefix = `${FIELD_CRYPTO_VERSION}:${deriveKeyId(parseFieldKey(process.env[FIELD_CRYPTO_KEY_ENV]))}`;
+  } catch {
+    return null;
+  }
+
+  const db = getDb();
+  const counts: Array<{ label: string; count: number }> = [];
+  for (const target of ENCRYPTED_FIELD_TARGETS) {
+    const [row] = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(target.table)
+      .where(
+        and(
+          isNotNull(target.valueColumn),
+          sql`substr(${target.valueColumn}, 1, ${expectedPrefix.length}) <> ${expectedPrefix}`,
+        ),
+      );
+    const count = Number(row?.count ?? 0);
+    if (count > 0) counts.push({ label: target.label, count });
+  }
+
+  const total = counts.reduce((sum, c) => sum + c.count, 0);
+  if (total === 0) return null;
+
+  const breakdown = counts.map((c) => `${c.label}: ${c.count}건`).join('\n');
+  const rotating = Boolean(process.env[FIELD_CRYPTO_OLD_KEY_ENV]?.trim());
+
+  /**
+   * 두 경우는 운영자가 할 일이 정반대라 문구를 가른다.
+   * - 옛 키가 환경에 있다 → 회전이 **진행 중**이다. 정상 경과이고, 남은 건수를 0으로 만들면 된다.
+   * - 옛 키가 없다 → 옛 키로 잠긴 값이 있는데 **그 키가 환경에 없다.** 사고이고, 옛 키를
+   *   되찾는 것이 먼저다. 이 상태에서 그 값들을 지우면 복구 경로가 사라진다.
+   */
+  return rotating
+    ? {
+        severity: 'medium',
+        title: `필드 암호화 키 회전이 진행 중입니다 — 아직 옛 키로 잠긴 값 ${total}건`,
+        detail: [
+          breakdown,
+          `${FIELD_CRYPTO_OLD_KEY_ENV}가 설정돼 있어 회전 중으로 읽었습니다. 남은 건수가 0이 되면 이 알림은 사라집니다.`,
+          '회전을 마저 돌려 주세요 — scripts/rotate-field-key.mjs (CLAUDE.md "키 회전 절차").',
+          `**건수가 0이 되기 전에 ${FIELD_CRYPTO_OLD_KEY_ENV}를 지우지 마세요.** 지우면 이 값들을 열 수단이 사라집니다.`,
+        ].join('\n'),
+      }
+    : {
+        severity: 'high',
+        title: `지금 키로 열리지 않는 암호화 값 ${total}건 — 옛 키가 환경에 없습니다`,
+        detail: [
+          breakdown,
+          `${FIELD_CRYPTO_KEY_ENV}가 아닌 다른 키로 잠긴 값입니다. 조회는 key_mismatch로 막히고, `
+            + '원천징수 대상 개설자의 정산 기록은 resident_number_unreadable로 막힙니다.',
+          `${FIELD_CRYPTO_OLD_KEY_ENV}가 비어 있습니다 — 회전이 중간에 멈춘 채 옛 키가 지워졌거나, `
+            + `${FIELD_CRYPTO_KEY_ENV}가 의도치 않게 바뀐 것입니다.`,
+          '**값을 지우거나 개설자에게 재등록을 요청하기 전에 옛 키를 되찾을 수 있는지부터 확인해 주세요.** '
+            + `되찾으면 ${FIELD_CRYPTO_OLD_KEY_ENV}에 넣고 회전을 돌리면 그대로 복구됩니다.`,
+        ].join('\n'),
+      };
+};
+
 /**
  * DB에 흔적이 남는 점검 전부 — 크론 메일과 관리자 첫 화면이 **같은 판정식**을 쓴다.
  *
@@ -137,6 +222,9 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 밀린 상태는 이미 공개 경로가 조용히 깨져 있다는 뜻이라(폴백이 있는 경로는 옛 동작으로,
    * 없는 경로는 500으로) severity는 high로 둔다.
    */
+  const rotationPending = await checkFieldKeyRotationPending();
+  if (rotationPending) issues.push(rotationPending);
+
   const migrationDrift = await checkMigrationDrift();
   if (migrationDrift.status === 'drift') {
     issues.push({
