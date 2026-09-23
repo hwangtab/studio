@@ -49,12 +49,16 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
                   </ul>
                 )}
                 {section.processors && (
-                  /* 표는 좁은 화면에서 가로 스크롤로 넘긴다 — 본문이 가로로 밀리면 안 된다. */
+                  /* 표는 좁은 화면에서 가로 스크롤로 넘긴다 — 본문이 가로로 밀리면 안 된다.
+                     국가 열은 그 값을 가진 표에만 붙인다(지금은 ko 표 전부). */
                   <div className="mt-3 overflow-x-auto">
                     <table className="typo-card-body w-full min-w-[32rem] border-collapse text-left text-gray-700 dark:text-gray-300">
                       <thead>
                         <tr className="border-b border-gray-300 dark:border-gray-600">
                           <th scope="col" className="py-2 pr-4 font-semibold">수탁자</th>
+                          {section.processors.some((row) => row.country) && (
+                            <th scope="col" className="py-2 pr-4 font-semibold">사업자 소재 국가</th>
+                          )}
                           <th scope="col" className="py-2 pr-4 font-semibold">위탁 업무</th>
                           <th scope="col" className="py-2 font-semibold">위탁 항목</th>
                         </tr>
@@ -63,6 +67,9 @@ const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
                         {section.processors.map((row) => (
                           <tr key={row.name} className="border-b border-gray-200/70 last:border-0 dark:border-gray-700/70">
                             <td className="py-2 pr-4 align-top font-medium text-gray-900 dark:text-white">{row.name}</td>
+                            {section.processors!.some((r) => r.country) && (
+                              <td className="py-2 pr-4 align-top">{row.country ?? '—'}</td>
+                            )}
                             <td className="py-2 pr-4 align-top">{row.purpose}</td>
                             <td className="py-2 align-top">{row.items}</td>
                           </tr>

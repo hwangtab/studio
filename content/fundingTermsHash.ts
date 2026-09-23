@@ -40,7 +40,11 @@ export const serializeAgreedDocuments = (): string => {
   for (const section of ko.sections) {
     lines.push(section.heading, `  ${section.body}`);
     for (const item of section.items ?? []) lines.push(`  - ${item}`);
-    for (const p of section.processors ?? []) lines.push(`  | ${p.name} | ${p.purpose} | ${p.items}`);
+    // 국가를 함께 싣는다 — 수탁자 표의 한 열이라 후원자가 읽는 내용이고, 빠뜨리면 국가만
+    // 바뀐 개정이 해시를 움직이지 않아 옛 판본으로 기록된다.
+    for (const p of section.processors ?? []) {
+      lines.push(`  | ${p.name} | ${p.country ?? '-'} | ${p.purpose} | ${p.items}`);
+    }
   }
 
   lines.push('## 공유 상수 (lib/funding/policy.ts)');
@@ -49,7 +53,9 @@ export const serializeAgreedDocuments = (): string => {
   lines.push(`TOSS_HOLD_SECONDS=${TOSS_HOLD_SECONDS}`);
   for (const item of FUNDING_COLLECTED_ITEMS) lines.push(`COLLECTED=${item}`);
   for (const item of FUNDING_COLLECTION_PURPOSES) lines.push(`PURPOSE=${item}`);
-  for (const p of FUNDING_DATA_PROCESSORS) lines.push(`PROCESSOR=${p.name}|${p.purpose}|${p.items}`);
+  for (const p of FUNDING_DATA_PROCESSORS) {
+    lines.push(`PROCESSOR=${p.name}|${p.country ?? '-'}|${p.purpose}|${p.items}`);
+  }
 
   return lines.join('\n');
 };
