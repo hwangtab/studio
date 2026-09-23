@@ -421,3 +421,64 @@ describe('markFundingPayoutPaid', () => {
     expect(await countPendingFundingPayouts()).toBe(0);
   });
 });
+
+/**
+ * 정산 기록은 주민등록번호를 **실제로 한 번 복호화한다**(`residentNumberReadable`).
+ * 평문을 화면에 내보내지 않을 뿐 고유식별정보 처리라, 관리자 화면의 조회 버튼과 같은
+ * 무게로 접속기록에 남아야 한다 — 이 경로가 기록되지 않던 것이 Task 1이 닫은 구멍이다.
+ */
+describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
+  const accessLogs = () => mockDb.select().from(schema.privacyAccessLogs);
+
+  it('복호화에 성공하면 성공으로 남는다 — 값은 담기지 않는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+
+    const preview = await buildFundingPayoutPreview(project.id);
+    const result = await recordFundingPayout(
+      project.id,
+      new Date('2026-02-20T00:00:00Z'),
+      preview?.netAmount ?? 0,
+      '203.0.113.7',
+    );
+    expect(result.ok).toBe(true);
+
+    const rows = await accessLogs();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      actor: 'admin',
+      action: 'funding_resident_number_decrypt_check',
+      targetId: project.id,
+      result: 'success',
+      ip: '203.0.113.7',
+    });
+    expect(JSON.stringify(rows)).not.toContain('9901011234567');
+    expect(JSON.stringify(rows)).not.toContain(RESIDENT_NUMBER_ENC);
+  });
+
+  it('복호화에 실패하면 실패로 남고 정산은 거부된다', async () => {
+    const { project } = await seedProject({}, { residentNumberEnc: 'v1:deadbeef:deadbeef:deadbeef' });
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    expect(result).toEqual({ ok: false, code: 'resident_number_unreadable' });
+
+    const rows = await accessLogs();
+    expect(rows).toHaveLength(1);
+    expect(rows[0].result).toBe('decrypt_failed');
+    // 요청 밖에서 부른 경로라 IP가 없다 — 지어내지 않는다.
+    expect(rows[0].ip).toBeNull();
+    error.mockRestore();
+  });
+
+  /** 사업자(`invoice`)는 주민등록번호를 열지 않는다 — 열지 않은 것을 기록하면 거짓이다. */
+  it('원천징수 대상이 아니면 복호화도 기록도 없다', async () => {
+    const { project } = await seedProject({}, { taxType: 'invoice' });
+    await seedPledge(project.slug, 1_000_000);
+
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    expect(result.ok).toBe(true);
+    expect(await accessLogs()).toHaveLength(0);
+  });
+});

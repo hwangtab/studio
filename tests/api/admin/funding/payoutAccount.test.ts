@@ -1,11 +1,13 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
 jest.mock('../../../../lib/funding/payoutAccount', () => ({ loadFundingPayoutAccount: jest.fn() }));
+jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/admin/funding/projects/[id]/payout-account';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { loadFundingPayoutAccount } from '../../../../lib/funding/payoutAccount';
+import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
 const call = async (method = 'GET', id: unknown = 'proj-1') => {
   // 주의: 기본값 인자라 undefined를 넘기면 기본값이 살아난다 — 비문자열 검증은 null로 한다.
@@ -31,6 +33,7 @@ beforeEach(() => {
   jest.spyOn(console, 'error').mockImplementation(() => {});
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
   (loadFundingPayoutAccount as jest.Mock).mockResolvedValue(ACCOUNT);
+  (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -75,4 +78,47 @@ it('계좌를 응답으로 돌려주고, 조회 사실을 서버 로그에 남�
 it('조회가 던지면 500', async () => {
   (loadFundingPayoutAccount as jest.Mock).mockRejectedValue(new Error('DB 장애'));
   expect((await call()).status).toBe(500);
+});
+
+
+/**
+ * 계좌번호는 고유식별정보가 아니지만 주민등록번호와 같은 개인정보처리시스템이라 같은 표에
+ * 남고, 따라서 2년 보관 기준이 함께 걸린다.
+ */
+describe('접속기록', () => {
+  it('성공한 조회를 남긴다 — 계좌번호는 넘기지 않는다', async () => {
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(),
+      'funding_payout_account_view',
+      'proj-1',
+      'success',
+    );
+    expect(JSON.stringify((recordAdminPrivacyAccess as jest.Mock).mock.calls)).not.toContain('123-456-789012');
+  });
+
+  it('등록된 계좌가 없던 조회도 남는다', async () => {
+    (loadFundingPayoutAccount as jest.Mock).mockResolvedValue(null);
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_payout_account_view', 'proj-1', 'not_found');
+  });
+
+  it('실패한 조회도 남는다', async () => {
+    (loadFundingPayoutAccount as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_payout_account_view', 'proj-1', 'error');
+  });
+
+  it('인증 전에는 기록하지 않는다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
+    await call();
+    expect(recordAdminPrivacyAccess).not.toHaveBeenCalled();
+  });
+
+  it('기록이 실패해도 조회 응답은 정상이다', async () => {
+    (recordAdminPrivacyAccess as jest.Mock).mockRejectedValue(new Error('기록 실패'));
+    const r = await call();
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true, account: ACCOUNT });
+  });
 });
