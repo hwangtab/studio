@@ -1,1 +1,1 @@
-month,query_id,engine,cited(yes/no),cited_url,position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes
+month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,cited_section,source_content_type(table/faq/price-card/prose/other/na),position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes

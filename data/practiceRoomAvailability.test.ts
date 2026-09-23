@@ -46,6 +46,10 @@ describe('남은 방 수 — 카피와 상수가 같은 값을 말한다', () =>
     ['pricing.practiceRoom.subtitleVacant', ['pricing', 'practiceRoom', 'subtitleVacant']],
     ['practiceRoom.pricing.noteVacant', ['practiceRoom', 'pricing', 'noteVacant']],
     ['practiceRoom.midCta.noteVacant', ['practiceRoom', 'midCta', 'noteVacant']],
+    // 2026-09-23에 추가한 사실 표의 공실 칸. 목록에 넣지 않았더니 비-ko 여섯 언어가
+    // "{{rooms}} room(s) open"·"空{{rooms}}间"으로 수량을 말하는데도 초록이었다 —
+    // 가드가 경로를 열거하는 구조라, 공실을 말하는 키를 새로 만들면 여기에 함께 넣어야 한다.
+    ['practiceRoom.factsTable.vacancyValue', ['practiceRoom', 'factsTable', 'vacancyValue']],
   ];
   const at = (o: unknown, keys: string[]): string =>
     keys.reduce<unknown>((a, k) => (a as Record<string, unknown> | undefined)?.[k], o) as string;

@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import ProjectDetailView from '../../../../components/funding/ProjectDetailView';
@@ -7,7 +8,11 @@ import RewardModal from '../../../../components/funding/RewardModal';
 import { useFundingStatus, type FundingStatusResponse } from '../../../../components/funding/useFundingStatus';
 import { buildPageStaticProps } from '../../../../lib/getStatic';
 import { defaultLocale } from '../../../../lib/i18n';
+import { FUNDING_PROJECT_FAQ_ITEMS } from '../../../../lib/funding/faq';
 import imageMetadata from '../../../../utils/imageMetadata.json';
+
+// Below-fold — 다른 상업 페이지(recording 등)와 같은 code-splitting.
+const FAQSection = dynamic(() => import('../../../../components/ui/FAQSection'));
 
 const SITE_URL = 'https://studionol.co.kr';
 const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
@@ -107,6 +112,9 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         // includeSchema 기본값이 false라, 켜지 않으면 schema·breadcrumbs를 넘겨도 조용히 버려진다.
         includeSchema
         schema={fundingSchema}
+        // 아래 FAQSection과 같은 배열(lib/funding/faq.ts) — 화면에 보이는 질문·답과
+        // FAQPage 구조화 데이터가 어긋나면 안 된다.
+        faqItems={FUNDING_PROJECT_FAQ_ITEMS}
         breadcrumbs={[
           { name: '홈', path: '/ko' },
           { name: '펀딩', path: '/ko/funding' },
@@ -130,6 +138,13 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         onSelectReward={setOpenReward}
         backers={data?.publicBackers ?? []}
         messages={data?.publicMessages ?? []}
+      />
+
+      {/* 위 SEO의 faqItems와 같은 배열 — 화면과 FAQPage 스키마가 같은 소스를 읽는다. */}
+      <FAQSection
+        items={FUNDING_PROJECT_FAQ_ITEMS}
+        title="자주 묻는 질문"
+        subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문입니다."
       />
 
       <RewardModal project={project} reward={openReward} remaining={remaining} onClose={closeModal} />

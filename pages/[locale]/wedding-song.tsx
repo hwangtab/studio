@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { m } from 'framer-motion';
-import { Heart, Package, ListChecks, CheckCircle2 } from '@/lib/lucide-icons';
+import { Heart, Package, ListChecks, CheckCircle2, Info } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import ServiceQuickLinksSection from '../../components/service/ServiceQuickLinksSection';
@@ -13,6 +13,7 @@ import BookingEntryButton from '../../components/booking/BookingEntryButton';
 import SectionHeading from '../../components/ui/SectionHeading';
 import { Section } from '../../components/ui/Section';
 import PricingCard from '../../components/ui/PricingCard';
+import ServicePriceTable from '../../components/service/ServicePriceTable';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
@@ -240,6 +241,42 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
                   cta_id: 'wedding_song_package_kakao',
                 })
               }
+            />
+          </div>
+        )}
+
+        {/* 위 카드와 같은 데이터(package-wedding)를 시맨틱 <table>로 한 번 더 —
+            AI 검색·스크린리더 추출성용. recording·mixing-mastering과 같은 시각 언어. */}
+        {weddingPackage && (
+          <div className="mt-10">
+            <SectionHeading
+              icon={Info}
+              title={t('weddingSong.factsTable.title')}
+              as="h3"
+              className="mb-6"
+            />
+            <ServicePriceTable
+              caption={t('weddingSong.factsTable.title')}
+              serviceColLabel={t('weddingSong.factsTable.serviceCol')}
+              priceColLabel={t('weddingSong.factsTable.priceCol')}
+              groups={[
+                {
+                  id: 'wedding-package-facts',
+                  rows: [
+                    {
+                      id: 'package-price',
+                      label: t('weddingSong.factsTable.packageLabel'),
+                      price: weddingPackage.priceDisplay,
+                      unit: weddingPackage.unit,
+                    },
+                    ...weddingPackage.features.map((feature, i) => ({
+                      id: `feature-${i}`,
+                      label: feature,
+                      price: t('weddingSong.factsTable.includedValue'),
+                    })),
+                  ],
+                },
+              ]}
             />
           </div>
         )}

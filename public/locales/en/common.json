@@ -590,6 +590,22 @@
       "note": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Waitlist available when rooms are full.",
       "noteVacant": "Run directly by Studio NOL · Top-tier soundproofing · Start with just one month · Open for move-in right now."
     },
+    "factsTable": {
+      "title": "Practice Room Key Facts",
+      "serviceCol": "Item",
+      "priceCol": "Detail",
+      "monthlyLabel": "Monthly rate",
+      "depositLabel": "Deposit",
+      "depositValue": "₩0",
+      "minContractLabel": "Minimum term",
+      "minContractValue": "1 month",
+      "hoursLabel": "Access hours",
+      "hoursValue": "24/7",
+      "vacancyLabel": "Current vacancy",
+      "vacancyValue": "Open for move-in",
+      "vacancyFull": "Fully booked",
+      "asOf": "As of {{date}}"
+    },
     "midCta": {
       "note": "Rooms are often fully booked, so we keep a waitlist. Reach out and we'll contact you in order as soon as a room opens.",
       "noteVacant": "Open for move-in right now. You're welcome to visit before deciding — leave a message and we'll get back to you promptly."
@@ -1149,6 +1165,13 @@
     },
     "package": {
       "title": "Wedding Song Complete Package"
+    },
+    "factsTable": {
+      "title": "Wedding Song Package Key Facts",
+      "serviceCol": "Item",
+      "priceCol": "Detail",
+      "packageLabel": "Package price",
+      "includedValue": "Included"
     },
     "process": {
       "title": "How It Works",

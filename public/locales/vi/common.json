@@ -562,6 +562,22 @@
       "note": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Có danh sách chờ khi hết phòng.",
       "noteVacant": "Do Studio NOL trực tiếp vận hành · Cách âm đỉnh cao · Bắt đầu chỉ với 1 tháng · Có thể vào ở ngay bây giờ."
     },
+    "factsTable": {
+      "title": "Thông tin chính phòng tập",
+      "serviceCol": "Mục",
+      "priceCol": "Nội dung",
+      "monthlyLabel": "Phí hàng tháng",
+      "depositLabel": "Tiền cọc",
+      "depositValue": "0 KRW",
+      "minContractLabel": "Thời hạn tối thiểu",
+      "minContractValue": "1 tháng",
+      "hoursLabel": "Giờ sử dụng",
+      "hoursValue": "24/7",
+      "vacancyLabel": "Phòng trống hiện tại",
+      "vacancyValue": "Còn phòng trống",
+      "vacancyFull": "Đã kín phòng",
+      "asOf": "Cập nhật {{date}}"
+    },
     "midCta": {
       "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự.",
       "noteVacant": "Có thể vào ở ngay bây giờ. Bạn có thể xem phòng trực tiếp trước khi quyết định. Hãy liên hệ, chúng tôi sẽ phản hồi ngay."
@@ -1121,6 +1137,13 @@
     },
     "package": {
       "title": "Gói Hoàn Chỉnh Bài Chúc Mừng"
+    },
+    "factsTable": {
+      "title": "Thông tin chính gói nhạc cưới",
+      "serviceCol": "Mục",
+      "priceCol": "Nội dung",
+      "packageLabel": "Giá gói",
+      "includedValue": "Đã bao gồm"
     },
     "process": {
       "title": "Quy Trình",

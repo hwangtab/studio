@@ -156,6 +156,9 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
 
   /** 한 가지 일만 하러 온 화면 — 사이트 헤더·푸터·플로팅 버튼을 두르지 않는다. */
   const isBareLayout = isContractPage || isAdminPage || isPrivatePaymentPage;
+
+  // 하단 고정 바가 없는 화면에서만 「맨 위로」와 카카오 FAB을 한 행으로 묶는다.
+  const hasFloatingRow = !isStoryDetail && !isFundingDetail && !isFundingPledge && !isBareLayout;
   /**
    * 결제 결과·후원 확인 화면에는 **브랜드 바만** 되돌린다. 내비게이션을 걷어낸 것까지는
    * 맞았는데 그 결과가 '흰 바탕에 카드 하나'라, 결제를 막 마친 사람에게 결제대행사 화면처럼
@@ -224,8 +227,33 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
       </main>
 
       {!isBareLayout && <Footer locale={locale} />}
-      {!isStoryDetail && !isFundingPledge && !isBareLayout && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail} />}
-      {!isFundingPledge && !isBareLayout && <ScrollToTop locale={locale} />}
+      {/*
+        우하단 플로팅 컨트롤은 한 행에 묶는다. 예전에는 「맨 위로」가 bottom-24, FAB이
+        bottom-6에 따로 떠서 고정 영역이 세로로 140px 두 밴드를 차지했고, 두 덩어리가
+        본문 위에서 L자로 흩어져 보였다. 한 행이면 52px 한 밴드로 줄고 하나의 컨트롤
+        묶음으로 읽힌다.
+
+        단, **전폭 하단 고정 바가 뜨는 화면은 묶지 않는다.** 스토리 상세의
+        StickyBottomCTA와 펀딩 상세의 FundingMobileCta는 화면 아래를 가로로 채우므로,
+        행을 bottom-6에 두면 「맨 위로」가 바 뒤로 숨는다. 그 두 화면은 예전처럼
+        bottom-24에 홀로 띄워 바 위로 비켜서게 한다.
+      */}
+      {!isFundingPledge && !isBareLayout && (
+        hasFloatingRow ? (
+          <div
+            style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom))' }}
+            className="fixed right-6 z-40 flex items-center gap-2"
+          >
+            <ScrollToTop locale={locale} inline />
+            <KakaoFab locale={locale} inline />
+          </div>
+        ) : (
+          <>
+            {!isStoryDetail && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail} />}
+            <ScrollToTop locale={locale} />
+          </>
+        )
+      )}
     </div>
   );
 };
