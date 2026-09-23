@@ -1,5 +1,6 @@
-import { sendEmail } from '../email/resend';
+import { sendEmail, type SendEmailError } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { isPurgedValue } from '../privacy/orderRetention';
 import type { Booking, Order, WorkOrder } from '../../db/schema';
 import { formatPriceAmount } from '../../data/pricing';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -18,12 +19,41 @@ const kstTimeLabel = (d: Date): string => {
 const manageUrl = (order: Order): string =>
   `${SITE_URL}/ko/booking/manage/${order.orderNo}?token=${order.manageToken}`;
 
+/**
+ * 고객에게 가는 한 통. 실패하면 errorCode를, 성공하면 null을 돌려준다.
+ *
+ * **보관 기간이 지나 파기된 주문은 보내지도, 실패로 세지도 않는다.** 그 주문은 이메일 칸이
+ * `PURGED_MARK`로 덮여 있어(`lib/privacy/orderRetention.ts`) 보낼 곳이 아예 없다.
+ * resend.ts가 발송 자체는 막지만 그것만으로는 부족하다 — `UNDELIVERABLE_ADDRESS`를 실패로
+ * 세면 그 문자열이 `orders.notificationError`에 남고, 헬스체크의 '확인 메일이 나가지 않은
+ * 주문' 경보가 매일 영원히 울린다(`lib/ops/healthCheck.ts`). 그 경보가 안내하는 해소 방법이
+ * 알림 재발송인데, 재발송은 같은 문자열을 다시 쓴다. 나이 게이트가 없는 관리자 재발송
+ * (`pages/api/admin/bookings/[id].ts`)이 실제로 그 경로다.
+ *
+ * **RFC 2606 시험용 주소는 여기서 가르지 않는다** — 그쪽 실패는 세는 편이 맞다. 보낼 곳이
+ * 사라진 것과 잘못된 주소가 들어온 것은 다른 사건이다. 펀딩 쪽
+ * (`lib/funding/email.ts`의 `withoutUndeliverableCustomer`)과 같은 판정이다.
+ *
+ * 운영자 사본은 이 함수를 지나지 않는다 — 주소가 우리 것이라 파기와 무관하고, 파기된
+ * 주문이라도 운영자가 무슨 일이 있었는지는 알아야 한다.
+ */
+const sendCustomerEmail = async (
+  order: Order, params: Parameters<typeof sendEmail>[0],
+): Promise<SendEmailError | null> => {
+  if (isPurgedValue(order.customerEmail)) return null;
+  const r = await sendEmail(params);
+  if (r.ok) return null;
+  // 지금은 모든 실패 경로가 errorCode를 싣지만, 없더라도 실패는 실패로 센다 —
+  // null을 돌려주면 파기 건과 구분되지 않고 조용히 성공으로 기록된다.
+  return r.errorCode ?? 'API_ERROR';
+};
+
 /** 두 통 중 하나라도 실패하면 요약을 돌려준다 — 성공 null (notificationError 패턴). */
 export const sendBookingConfirmedEmails = async (order: Order, booking: Booking): Promise<string | null> => {
   const when = kstTimeLabel(booking.startAt);
   const failures: string[] = [];
 
-  const customer = await sendEmail({
+  const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 예약이 확정되었습니다 — ${when}`,
     text: [
@@ -36,7 +66,7 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
       '문의: 010-4255-7893',
     ].join('\n'),
   });
-  if (!customer.ok) failures.push(`customer:${customer.errorCode}`);
+  if (customerError) failures.push(`customer:${customerError}`);
 
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
@@ -60,7 +90,7 @@ export const sendBookingCancelledEmails = async (
 ): Promise<string | null> => {
   const when = kstTimeLabel(booking.startAt);
   const failures: string[] = [];
-  const customer = await sendEmail({
+  const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 예약이 취소되었습니다 — ${when}`,
     text: [
@@ -69,7 +99,7 @@ export const sendBookingCancelledEmails = async (
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
   });
-  if (!customer.ok) failures.push(`customer:${customer.errorCode}`);
+  if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
     subject: `[예약 취소] ${when} — ${order.customerName} (환불 ${formatPriceAmount(refundAmount)}원)`,
@@ -95,7 +125,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   const failures: string[] = [];
 
-  const customer = await sendEmail({
+  const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 주문이 접수되었습니다 — ${productName}`,
     text: [
@@ -121,7 +151,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
       '문의: 010-4255-7893',
     ].join('\n'),
   });
-  if (!customer.ok) failures.push(`customer:${customer.errorCode}`);
+  if (customerError) failures.push(`customer:${customerError}`);
 
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
@@ -147,7 +177,7 @@ export const sendMixingOrderCancelledEmails = async (
   const productName = product?.nameKo ?? workOrder.serviceType;
   const failures: string[] = [];
 
-  const customer = await sendEmail({
+  const customerError = await sendCustomerEmail(order, {
     to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] 주문이 취소되었습니다 — ${productName}`,
     text: [
@@ -156,7 +186,7 @@ export const sendMixingOrderCancelledEmails = async (
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
   });
-  if (!customer.ok) failures.push(`customer:${customer.errorCode}`);
+  if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
     subject: `[믹싱 주문 취소] ${productName} — ${order.customerName} (환불 ${formatPriceAmount(refundAmount)}원)`,

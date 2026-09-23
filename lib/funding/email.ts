@@ -1,6 +1,7 @@
 import { formatPriceAmount } from '../../data/pricing';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { isPurgedValue } from '../privacy/orderRetention';
 
 import { isManualPlaceholderRecipient } from './service';
 
@@ -75,12 +76,23 @@ const send = async (pairs: Array<{ key: string; params: Parameters<typeof sendEm
  * 여기(발송 계층)에 두면 취소·환불요청 해제·확정 등 모든 경로가 같은 규칙을 따른다.
  * `errorCode`를 만들지 않고 **조용히 빼는** 것도 의도다 — 실패로 세면 그 문자열이
  * orders.notificationError에 남아 헬스체크가 영구히 울린다.
+ *
+ * **보관 기간이 지나 파기된 주문도 같은 자리에서 뺀다.** 그 주문은 이메일 칸이
+ * `PURGED_MARK`로 덮여 있고(`lib/privacy/orderRetention.ts`), 보낼 곳이 아예 없다.
+ * resend.ts가 발송은 막지만 그것만으로는 부족하다 — `UNDELIVERABLE_ADDRESS`가 실패로
+ * 세어지면 위 문단이 말한 영구 경보가 문자열만 바꿔 그대로 남는다. 나이 게이트가 없는
+ * 관리자 재발송(`pages/api/admin/funding/pledges/[id].ts`)이 실제로 그 경로다.
+ *
+ * **RFC 2606 시험용 주소는 여기서 가르지 않는다** — 그쪽 실패는 세는 편이 맞다.
+ * 보낼 곳이 사라진 것과 잘못된 주소가 들어온 것은 다른 사건이다.
  */
 const withoutUndeliverableCustomer = (
   order: FundingOrder,
   pairs: Array<{ key: string; params: Parameters<typeof sendEmail>[0] }>,
 ): Array<{ key: string; params: Parameters<typeof sendEmail>[0] }> =>
-  isManualPlaceholderRecipient(order) ? pairs.filter((p) => p.key !== 'customer') : pairs;
+  isManualPlaceholderRecipient(order) || isPurgedValue(order.customerEmail)
+    ? pairs.filter((p) => p.key !== 'customer')
+    : pairs;
 
 /**
  * 디지털 리워드 내려받기 안내 — 후원한 리워드에 내려받을 파일이 있을 때만 붙는다.
