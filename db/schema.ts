@@ -1,5 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const contractStatusEnum = [
   'draft',
@@ -947,3 +947,88 @@ export const pressOptouts = sqliteTable('press_optouts', {
   source: text('source', { enum: pressOptoutSourceEnum }).notNull(),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
 });
+
+// ─── 고유식별정보 접속기록 ────────────────────────────────────────────────────
+/**
+ * 「개인정보의 안전성 확보조치 기준」 제8조①이 요구하는 접속기록.
+ *
+ * 개인정보 보호법 제29조 + 시행령 제30조①5호가 접속기록의 보관·점검을 의무로 두고,
+ * 위 고시 제8조①이 기간을 정한다 — 일반은 1년 이상, **고유식별정보를 처리하는
+ * 개인정보처리시스템은 2년 이상.** 개설자의 주민등록번호(`funding_creators.
+ * resident_number_enc`)가 고유식별정보이므로 이 표는 2년 기준이다
+ * (`lib/privacy/accessLog.ts`의 `PRIVACY_ACCESS_LOG_RETENTION_YEARS`).
+ *
+ * 전에는 조회 사실이 라우트의 `console.warn` 한 줄뿐이었다. Vercel 런타임 로그는 며칠
+ * 뒤 사라지고 Log Drain도 없으니 2년은커녕 한 달도 남지 않았고, 수행자도 적히지 않았다.
+ *
+ * **열람한 값 자체는 절대 담지 않는다.** 무엇을 열었는지(`action` + `targetId`)까지다.
+ * 접속기록이 새면 필드 암호화가 통째로 무의미해진다 — 이 표는 감사 대상이지 사본이 아니다.
+ */
+export const privacyAccessActionEnum = [
+  /** 관리자 화면의 주민등록번호 조회 버튼 (pages/api/admin/funding/projects/[id]/resident-number.ts). */
+  'funding_resident_number_view',
+  /**
+   * 정산 기록 직전의 복호화 점검 (lib/funding/payout.ts의 residentNumberReadable).
+   * 평문을 화면에 내보내지는 않지만 **복호화는 실제로 일어난다** — 고시가 말하는
+   * 처리이므로 조회 버튼과 같은 무게로 남긴다.
+   */
+  'funding_resident_number_decrypt_check',
+  /**
+   * 정산 계좌 조회 (pages/api/admin/funding/projects/[id]/payout-account.ts).
+   * 계좌번호는 고유식별정보가 아니지만 **같은 개인정보처리시스템**이라 이 표에 함께
+   * 남는다. 표 전체가 2년 기준을 따르므로 계좌 조회 기록도 2년 보관된다.
+   */
+  'funding_payout_account_view',
+] as const;
+
+/**
+ * 조회의 결과. 실패도 반드시 남긴다 — 열지 못한 시도의 흔적이 없으면 "누가 무엇을
+ * 열려고 했는가"를 사후에 재구성할 수 없다.
+ *
+ * 인증 실패(401)는 여기 없다. 세션이 없으면 수행자를 특정할 수 없고 대상 id도 아직
+ * 읽기 전이라, 남겨 봐야 "누군가 눌렀다"가 전부이면서 외부에서 마음대로 늘릴 수 있는
+ * 행이 된다. 인증을 통과한 뒤의 시도만 기록한다.
+ */
+export const privacyAccessResultEnum = [
+  'success',
+  /** 대상에 등록된 값이 없었다(404). 복호화는 일어나지 않았다. */
+  'not_found',
+  /** 암호문은 있는데 열지 못했다. 사유 코드는 서버 로그의 FieldCryptoError.code에 있다. */
+  'decrypt_failed',
+  /** 그 밖의 실패(DB 장애 등). */
+  'error',
+] as const;
+
+export const privacyAccessLogs = sqliteTable(
+  'privacy_access_logs',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    /**
+     * 수행자.
+     *
+     * **이 저장소에는 관리자 개인을 가리키는 식별자가 없다.** 관리자 인증은
+     * `lib/contracts/admin-auth.ts`의 단일 비밀번호(`ADMIN_PASSWORD`) 하나뿐이고,
+     * `authenticateAdminApi`는 `{ ok: true }`만 돌려준다 — 계정도, 사용자 id도, 이름도
+     * 없다. 그래서 관리자 경로의 이 값은 고정 문자열 `admin`이다(`PRIVACY_ACTOR_ADMIN`).
+     * 여러 사람이 같은 비밀번호를 쓰면 이 기록으로는 누구인지 가릴 수 없다는 뜻이며,
+     * 그것을 아는 척하지 않으려고 컬럼을 비워 두는 대신 사실대로 한 값을 적는다.
+     * 관리자 계정이 사람별로 갈리면 그때 그 식별자를 여기에 넣는다.
+     */
+    actor: text('actor').notNull(),
+    action: text('action', { enum: privacyAccessActionEnum }).notNull(),
+    /** 무엇에 대한 조회였는지 — 펀딩 프로젝트 id. 값이 아니라 대상만 적는다. */
+    targetId: text('target_id').notNull(),
+    result: text('result', { enum: privacyAccessResultEnum }).notNull(),
+    /** `lib/contracts/client-ip.ts`의 getClientIp. 얻지 못하면 null이다(모르는 것을 지어내지 않는다). */
+    ip: text('ip'),
+    at: integer('at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    // 2년 경과분 삭제(cron/purge-funding)와 기간별 열람이 전부 at 기준이다.
+    atIdx: index('privacy_access_logs_at_idx').on(t.at),
+    targetIdx: index('privacy_access_logs_target_idx').on(t.targetId),
+  }),
+);
+
+export type PrivacyAccessLog = typeof privacyAccessLogs.$inferSelect;
+export type NewPrivacyAccessLog = typeof privacyAccessLogs.$inferInsert;

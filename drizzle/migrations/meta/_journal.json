@@ -169,6 +169,13 @@
       "when": 1790152326369,
       "tag": "0023_funding_resident_number",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "6",
+      "when": 1790160180943,
+      "tag": "0024_privacy_access_logs",
+      "breakpoints": true
     }
   ]
 }
