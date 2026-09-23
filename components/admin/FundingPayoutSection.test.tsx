@@ -3,7 +3,8 @@
  * 이 구획의 버튼 하나가 되돌릴 수 없는 기록을 만들기 때문에, 운영자가 눈으로 하는 검산이
  * 마지막 방어선이다.
  */
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
 import { FundingPayoutSection, type AdminPayoutRecordView, type AdminPayoutView } from './FundingPayoutSection';
@@ -92,5 +93,103 @@ describe('기록된 값 패널', () => {
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('환불: 기록 0 → 지금 100,000');
     expect(alert).toHaveTextContent('실이체액: 기록 880,937 → 지금 792,782');
+  });
+});
+
+describe('기록 버튼과 막는 이유', () => {
+  it('막을 이유가 없으면 버튼이 살아 있고 이유 목록도 없다', () => {
+    renderSection(VIEW);
+    expect(screen.getByRole('button', { name: '정산 기록' })).toBeEnabled();
+    expect(screen.queryByRole('status')).not.toBeInTheDocument();
+  });
+
+  it('모금 진행 중·계좌 없음·세금 구분 없음·후원 없음을 모두 적고 버튼을 막는다', () => {
+    renderSection({ ...VIEW, closed: false, hasPayoutAccount: false, hasTaxType: false, grossAmount: 0 });
+    const list = screen.getByRole('status');
+    expect(within(list).getAllByRole('listitem')).toHaveLength(4);
+    expect(list).toHaveTextContent('모금이 아직 끝나지 않았습니다');
+    expect(list).toHaveTextContent('정산 계좌가 등록되지 않았습니다');
+    expect(list).toHaveTextContent('세금 처리 구분');
+    expect(list).toHaveTextContent('결제된 후원이 없어');
+    expect(screen.getByRole('button', { name: '정산 기록' })).toBeDisabled();
+  });
+
+  /**
+   * 회귀: 막는 이유 목록은 `!recorded`일 때만 렌더되는데, 그 목록 첫 항목이 "이미 기록된
+   * 정산입니다"였다 — 조건상 절대 보이지 않는 문장이다. 기록 뒤에는 기록 버튼 자체가
+   * 사라지고 지급 버튼이 대신 뜬다.
+   */
+  it('기록 뒤에는 기록 버튼이 사라지고 "이미 기록됐다"는 안내도 뜨지 않는다', () => {
+    renderSection({ ...VIEW, recorded: RECORD });
+    expect(screen.queryByRole('button', { name: '정산 기록' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '지급 완료로 표시' })).toBeInTheDocument();
+    expect(screen.queryByText(/이미 기록된 정산입니다/)).not.toBeInTheDocument();
+  });
+
+  it('지급까지 끝나면 버튼이 둘 다 없다', () => {
+    renderSection({ ...VIEW, recorded: { ...RECORD, status: 'paid' } });
+    expect(screen.queryByRole('button', { name: '정산 기록' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '지급 완료로 표시' })).not.toBeInTheDocument();
+    expect(screen.getByText(/되돌릴 수 없습니다/)).toBeInTheDocument();
+  });
+});
+
+describe('입금 계좌', () => {
+  afterEach(() => {
+    delete (global as { fetch?: unknown }).fetch;
+  });
+
+  /** 계좌는 props에 실리지 않는다 — 누를 때만 별도 라우트로 가져온다. */
+  it('버튼을 눌러야 서버에서 가져온다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        ok: true,
+        account: { bankName: '국민은행', account: '123-45-6789', holder: '홍길동', taxType: 'withholding' },
+      }),
+    });
+    (global as { fetch?: unknown }).fetch = fetchMock;
+
+    renderSection(VIEW);
+    expect(screen.queryByText('국민은행')).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: '계좌 보기' }));
+
+    await waitFor(() => expect(screen.getByText('국민은행')).toBeInTheDocument());
+    expect(fetchMock).toHaveBeenCalledWith('/api/admin/funding/projects/proj-1/payout-account', {
+      credentials: 'same-origin',
+    });
+    expect(screen.getByText('123-45-6789')).toBeInTheDocument();
+    expect(screen.getByText(/개인 — 원천징수/)).toBeInTheDocument();
+  });
+
+  it('읽지 못하면 서버가 준 이유를 적는다', async () => {
+    (global as { fetch?: unknown }).fetch = jest
+      .fn()
+      .mockResolvedValue({ ok: false, json: async () => ({ ok: false, message: '권한이 없습니다.' }) });
+
+    renderSection(VIEW);
+    await userEvent.click(screen.getByRole('button', { name: '계좌 보기' }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('권한이 없습니다.'));
+  });
+
+  it('네트워크가 끊겨도 빈 칸으로 두지 않는다', async () => {
+    (global as { fetch?: unknown }).fetch = jest.fn().mockRejectedValue(new Error('offline'));
+
+    renderSection(VIEW);
+    await userEvent.click(screen.getByRole('button', { name: '계좌 보기' }));
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('네트워크 오류'));
+  });
+});
+
+describe('집계를 못 읽었을 때', () => {
+  /**
+   * 이 구획은 승인된 프로젝트에서만 렌더된다(`pages/admin/funding/projects/[id].tsx`).
+   * 그래서 payout이 null인 유일한 경우는 집계 질의가 실패한 것이다 — 승인 여부를 이유로
+   * 대면 운영자는 멀쩡한 프로젝트를 의심하게 된다.
+   */
+  it('실패 사실만 적는다 — 승인 상태를 이유로 대지 않는다', () => {
+    renderSection(null);
+    expect(screen.getByText(/정산 현황을 불러오지 못했습니다/)).toBeInTheDocument();
+    expect(screen.queryByText(/승인된 프로젝트에서만/)).not.toBeInTheDocument();
   });
 });

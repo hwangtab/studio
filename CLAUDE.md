@@ -294,10 +294,11 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 되돌리려면 그 SQL을 손으로 실행하거나 `__drizzle_migrations`를 손봐야 한다.
 
 **병합 뒤의 두 번째 함정.** `drizzle-kit generate`는 저널 **마지막 엔트리**의 스냅샷과
-현재 스키마를 diff한다. 두 브랜치를 합친 뒤 배열 끝이 0020(스냅샷에 `platform_fee_amount`·
-`payment_fee_amount`가 없다)으로 남으면, 다음 `generate`가 이미 적용된 두 컬럼의 ADD를 다시
-뱉고 그 SQL이 운영 DB에서 `duplicate column name`으로 터진다. 병합할 때 **마지막 엔트리의
-스냅샷이 양쪽을 모두 담은 전체 스키마**가 되도록 맞출 것.
+현재 스키마를 diff한다. 그 스냅샷은 **자기 브랜치의 변경만** 담고 있으므로, 병합 뒤 배열 끝에
+어느 쪽이 오든 **그 스냅샷에 없는 쪽의 DDL이 다시 발행된다** — 이미 적용된 컬럼이라 그 SQL은
+운영 DB에서 `duplicate column name`으로 터진다. idx 순으로 합치면 끝은 0021이 되고
+`0021_snapshot.json`에는 #211의 변경이 없으니 재발행되는 것은 #211의 DDL이다. 병합할 때
+**마지막 엔트리의 스냅샷이 양쪽을 모두 담은 전체 스키마**가 되도록 맞출 것.
 
 밀린 마이그레이션 자체는 `scripts/check-migration-drift.mjs`(CI)와 `lib/ops/migrationDrift.ts`
 (매일 크론 메일)가 저널 엔트리 수와 `__drizzle_migrations` 행 수를 비교해 잡는다. 다만 그

@@ -153,8 +153,14 @@ export function FundingPayoutSection({
     return (
       <div>
         <h2 className="mb-3 text-lg font-bold text-gray-900">정산</h2>
+        {/*
+          이 구획은 승인된 프로젝트에서만 렌더된다(`pages/admin/funding/projects/[id].tsx`).
+          그래서 payout이 null인 경우는 하나뿐이다 — 집계 질의가 실패했다. 승인 여부를
+          이유로 대면 운영자는 멀쩡한 프로젝트를 의심하며 심사 상태만 다시 들여다본다.
+        */}
         <p className="text-sm text-gray-500">
-          정산 현황을 불러오지 못했습니다. 승인된 프로젝트에서만 정산을 계산합니다.
+          정산 현황을 불러오지 못했습니다. 잠시 뒤 새로고침해 주세요 — 계속 같다면 서버 로그에 집계
+          실패 이유가 남아 있습니다. 다른 조작(판정·메모·공개 상태)은 그대로 쓸 수 있습니다.
         </p>
       </div>
     );
@@ -163,8 +169,10 @@ export function FundingPayoutSection({
   const recorded = payout.recorded;
   // 기록 버튼이 막히는 이유를 전부 적는다 — 버튼만 비활성으로 두면 운영자는 왜 안 되는지
   // 모른 채 새로고침만 반복한다. 서버(`recordFundingPayout`)의 거부 조건과 같은 순서다.
+  //
+  // 목록 자체가 `!recorded`일 때만 뜨므로 "이미 기록됐다"는 항목은 두지 않는다 — 기록 뒤에는
+  // 기록 버튼이 사라지고 지급 버튼이 대신 뜬다.
   const blockers: string[] = [];
-  if (recorded) blockers.push('이미 기록된 정산입니다. 정산은 프로젝트당 한 번만 기록합니다.');
   if (!payout.closed) {
     blockers.push('모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 통째로 빠집니다.');
   }
@@ -188,7 +196,8 @@ export function FundingPayoutSection({
       <p className="mb-4 text-sm text-gray-500">
         모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 개설자에게 보냅니다. 플랫폼 수수료{' '}
         {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%를 결제액(모금액 −
-        환불) 기준으로 각각 떼고, 둘 다 개설자가 부담합니다.
+        환불) 기준으로 각각 떼고, 둘 다 개설자가 부담합니다. 다만 수기 등록분은 결제를 지나지 않았으므로
+        결제 수수료 대상에서 빠집니다 — 그만큼 아래 결제 수수료가 {FUNDING_PAYMENT_FEE_PERCENT}%보다 적게 나옵니다.
       </p>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -207,11 +216,13 @@ export function FundingPayoutSection({
               value={minus(payout.platformFeeAmount)}
               negative
             />
-            <Row
-              label={`결제 수수료 (${FUNDING_PAYMENT_FEE_PERCENT}%)`}
-              value={minus(payout.paymentFeeAmount)}
-              negative
-            />
+            {/*
+              결제 수수료 라벨에는 요율을 적지 않는다. 수기 등록분은 토스를 지나지 않아
+              과세표준에서 빠지므로(`computeFundingPayoutForProject`), 요율을 적어 두면
+              모금 100만 중 수기 20만일 때 라벨은 3.4%인데 값은 27,200원이라 눈으로 계산한
+              34,000원과 어긋난다. 요율은 구획 상단 안내문이 예외와 함께 적는다.
+            */}
+            <Row label="결제 수수료" value={minus(payout.paymentFeeAmount)} negative />
             <Row
               label={`원천징수 (${FUNDING_WITHHOLDING_PERCENT}%)`}
               hint={payout.hasTaxType ? undefined : '세금 처리 구분이 없어 원천징수로 가정한 값입니다'}
