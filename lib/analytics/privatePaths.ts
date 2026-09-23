@@ -49,6 +49,25 @@ const PRIVATE_PATH_PATTERN = new RegExp(
 );
 
 /**
+ * 관리자 화면(`/admin`, `/admin/**`).
+ *
+ * 빼는 이유는 위 목록과 같다 — 관리자 주소에는 프로젝트 id·주문번호·계약 id가 경로와
+ * 쿼리에 그대로 실리고(`/admin/funding/<projectId>`, `/admin/bookings?orderNo=…`), GA4는
+ * `page_location`에 그 주소를 통째로 담아 보낸다. 게다가 방문 통계로서의 가치도 없다:
+ * 운영자 한 사람이 여는 화면이라 측정해 봐야 방문자 통계를 오염시킬 뿐이다.
+ *
+ * **`PRIVATE_ROUTE_BODIES`에 넣지 않는 이유**: 그 목록은 정규식과 no-store 헤더
+ * `source`(`PRIVATE_NO_STORE_SOURCES`)를 **한 벌로** 만들고, 둘 다 `/<locale>/<body>` 꼴을
+ * 전제한다. `/admin`은 `pages/admin/`이라 로케일 접두사가 없으므로 그 목록에 끼우면
+ * `/ko/admin` 같은 없는 주소의 헤더 규칙이 생긴다. 그래서 여기는 **측정 제외만** 맡는
+ * 별도 정규식으로 둔다(관리자 화면은 getServerSideProps 인증을 통과해야 열리는
+ * SSR 페이지라 공유 캐시 문제가 로케일 쪽과 결이 다르다 — 캐시 헤더는 이 파일의 범위 밖).
+ *
+ * `/administrator` 같은 다른 경로까지 먹지 않도록 경계(`/` 또는 끝)를 명시한다.
+ */
+const ADMIN_PATH_PATTERN = /^\/admin(?:\/|$)/;
+
+/**
  * 위 목록에서 **측정만** 되돌리는 예외. no-store는 그대로 유지된다(HTML에 관리 토큰이 실린다).
  *
  * 펀딩 success는 토스가 돌려보내는 승인 URL(paymentKey·orderId·amount)에서 확정을 끝낸 뒤
@@ -129,6 +148,8 @@ export const isPrivateAnalyticsPath = (pathOrUrl: string): boolean => {
   const queryAt = withoutHash.indexOf('?');
   const path = queryAt === -1 ? withoutHash : withoutHash.slice(0, queryAt);
   const query = queryAt === -1 ? '' : withoutHash.slice(queryAt + 1);
+  // 관리자 화면에는 예외가 없다 — 위 MEASURED_EXCEPTION_PATTERN보다 먼저 판정한다.
+  if (ADMIN_PATH_PATTERN.test(path)) return true;
   if (MEASURED_EXCEPTION_PATTERN.test(path) && !SECRET_QUERY_PATTERN.test(query)) return false;
   return PRIVATE_PATH_PATTERN.test(path);
 };

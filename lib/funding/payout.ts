@@ -8,6 +8,7 @@ import {
   type FundingProjectPayout, type fundingCreatorTaxTypeEnum,
 } from '../../db/schema';
 import { decryptField, FieldCryptoError } from '../crypto/fieldCrypto';
+import { PRIVACY_ACTOR_ADMIN, recordPrivacyAccess } from '../privacy/accessLog';
 import { computeProjectState } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
 
@@ -252,20 +253,55 @@ export type RecordFundingPayoutResult =
  * **성공 여부만** 돌려준다. 평문은 반환하지도 담지도 않고, 실패해도 로그에는 오류 코드만
  * 남긴다(`FieldCryptoError.code`는 missing_key·key_mismatch·auth_failed 같은 분류값이다 —
  * 키가 회전 중이라 아직 옛 키인 값은 `key_mismatch`로, 손상된 값은 `auth_failed`로 갈린다).
+ *
+ * **여기서도 접속기록을 남긴다.** 평문을 화면에 내보내지 않을 뿐 복호화는 실제로 일어나므로,
+ * 관리자 화면의 조회 버튼과 같은 무게의 처리다. 이 경로가 기록되지 않던 동안 "조회 버튼을
+ * 누른 그 순간에만 복호화한다"는 처리방침 설명이 사실과 달랐다.
  */
-const residentNumberReadable = async (projectId: string): Promise<boolean> => {
-  const [row] = await getDb()
-    .select({ enc: fundingCreators.residentNumberEnc })
-    .from(fundingProjects)
-    .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
-    .where(eq(fundingProjects.id, projectId))
-    .limit(1);
+const residentNumberReadable = async (projectId: string, ip: string | null): Promise<boolean> => {
+  const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
+    recordPrivacyAccess({
+      actor: PRIVACY_ACTOR_ADMIN,
+      action: 'funding_resident_number_decrypt_check',
+      targetId: projectId,
+      result,
+      ip,
+    }).catch((error: unknown) => {
+      // 기록 실패가 정산 기록 자체를 막지 않는다(recordPrivacyAccess도 삼키지만,
+      // 이 경로의 보증은 여기가 진다).
+      console.error('[privacy] 접속기록 호출 실패 — 정산 기록은 계속됩니다', error);
+    });
+
+  /**
+   * 조회 자체가 실패하는 갈래도 **기록한다.** 처리방침 19항이 이 점검을 "성공·실패를
+   * 가리지 않고" 남긴다고 적었는데, 예전엔 이 select가 던지면 `log()`가 한 번도 불리지
+   * 않고 예외가 그대로 위로 올라갔다 — 호출하는 라우트 둘은 catch에서 `'error'`를 남기지만
+   * 이 경로만 비어 있었다. 기록한 뒤 예외는 그대로 다시 던진다(정산 기록은 실패해야 한다 —
+   * 번호를 열 수 있는지 확인하지 못한 채 원천징수를 기록할 수는 없다).
+   */
+  let row: { enc: string | null } | undefined;
+  try {
+    [row] = await getDb()
+      .select({ enc: fundingCreators.residentNumberEnc })
+      .from(fundingProjects)
+      .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
+      .where(eq(fundingProjects.id, projectId))
+      .limit(1);
+  } catch (error: unknown) {
+    await log('error');
+    throw error;
+  }
   const enc = row?.enc?.trim();
-  if (!enc) return false;
+  if (!enc) {
+    await log('not_found');
+    return false;
+  }
   try {
     decryptField(enc);
+    await log('success');
     return true;
   } catch (error: unknown) {
+    await log('decrypt_failed');
     console.error('[funding] 주민등록번호 복호화 점검 실패', {
       projectId,
       code: error instanceof FieldCryptoError ? error.code : 'unknown',
@@ -287,8 +323,8 @@ const residentNumberReadable = async (projectId: string): Promise<boolean> => {
  *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
  *   이 표는 불변이라 되돌릴 경로가 없다.
  * - `no_resident_number` — 원천징수 대상(`withholding`)인데 주민등록번호가 없다. 세액을 떼고
- *   보내 놓고 신고는 못 하는 상태가 된다 — 간이지급명세서가 소득자별 주민등록번호를 요구하기
- *   때문이다. 사업자(`invoice`)는 원천징수 자체를 하지 않으므로 이 조건에 걸리지 않는다.
+ *   보내 놓고 신고는 못 하는 상태가 된다 — 소득세법 시행령 제147조의7제1항제1호 가목이
+ *   지급명세서에 소득자의 주민등록번호를 적도록 하기 때문이다. 사업자(`invoice`)는 원천징수 자체를 하지 않으므로 이 조건에 걸리지 않는다.
  * - `resident_number_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다**(키가 없거나
  *   바뀌었다). 암호문 존재만 보면 이 상태에서도 기록 버튼이 살아 있어, 세액을 떼고 불변으로
  *   기록한 **뒤에야** 조회에서 실패를 만난다. 그래서 기록 직전에 한 번 열어 보고 **성공
@@ -307,6 +343,12 @@ export const recordFundingPayout = async (
   projectId: string,
   now: Date,
   expectedNetAmount: number,
+  /**
+   * 이 기록을 요청한 쪽의 IP(`getClientIp`). 주민등록번호 복호화 점검이 남기는 접속기록에
+   * 들어간다. 요청 밖에서 부르는 경로(테스트·스크립트)는 넘기지 않아도 되고, 그때는 IP가
+   * null로 남는다 — 모르는 것을 지어내지 않는다.
+   */
+  ip: string | null = null,
 ): Promise<RecordFundingPayoutResult> => {
   const preview = await buildFundingPayoutPreview(projectId);
   if (!preview) return { ok: false, code: 'not_found' };
@@ -316,7 +358,7 @@ export const recordFundingPayout = async (
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };
-    if (!(await residentNumberReadable(projectId))) return { ok: false, code: 'resident_number_unreadable' };
+    if (!(await residentNumberReadable(projectId, ip))) return { ok: false, code: 'resident_number_unreadable' };
   }
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {

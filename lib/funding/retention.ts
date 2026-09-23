@@ -1,7 +1,7 @@
-import { and, isNotNull, isNull, lt, or } from 'drizzle-orm';
+import { and, eq, exists, gt, gte, inArray, isNotNull, isNull, lt, notExists, or, sql, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingPledges } from '../../db/schema';
+import { fundingCreators, fundingPledges, fundingProjectPayouts, fundingProjects } from '../../db/schema';
 
 /**
  * 후원자 약관 제13조·처리방침 8항이 약속한 보관 기간 — 리워드 전달 완료 후 이 기간이
@@ -127,6 +127,175 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
           isNotNull(fundingPledges.shippingMemo),
           isNotNull(fundingPledges.adminMemo),
           isNotNull(fundingPledges.supporterMessage),
+        ),
+      ),
+    );
+
+  return { purged: Number(result.rowsAffected ?? 0) };
+};
+
+/**
+ * 원천징수한 정산의 지급일로부터 개설자 주민등록번호를 보관하는 기간.
+ *
+ * **이 값은 법이 정한 것이 아니라 운영 판단이다.** 이 작업에 근거로 주어진 법령이 정하는
+ * 것은 *제출 기한*뿐이다 — 간이지급명세서는 지급일이 속하는 달의 다음 달 말일
+ * (소득세법 제164조의3①), 지급명세서는 사업소득의 경우 다음 연도 3월 10일(같은 법 제164조①).
+ * 둘 다 지급일로부터 길어야 1년 3개월 안에 끝나므로, 아래 5년은 그 기한을 훨씬 넘는다.
+ *
+ * 왜 제출 기한에 딱 맞추지 않는가: 제출한 뒤에도 수정신고·경정으로 같은 지급건을 다시
+ * 신고해야 하는 일이 생기고, 그때 주민등록번호가 없으면 이미 떼어 간 세액을 신고할 수단이
+ * 사라진다(암호문 자체가 없어지므로 복구가 불가능하다). 그 여지를 얼마나 길게 볼지가
+ * 이 상수의 값이다.
+ *
+ * **5라는 숫자의 출처는 국세 관련 보존기간으로 알려진 기간이지만, 그 근거 법령은 이 작업에
+ * 확인된 범위 밖이다 — 법이 5년을 정했다고 단정하지 않는다.** 세무 확인 뒤 값이 바뀔 수
+ * 있고, 바뀌면 이 상수 하나만 고치면 된다. 함께 고쳐야 하는 문서는 처리방침의 파기 항이다.
+ *
+ * 접속기록 2년(`lib/privacy/accessLog.ts`)·후원 배송지 1년/법정 5년(이 파일 위쪽)과는
+ * **대상도 기산점도 다른 별개의 기준이다.** 섞지 마라.
+ */
+export const RESIDENT_NUMBER_RETENTION_YEARS = 5;
+
+/**
+ * 원천징수 기록이 **한 번도 없는** 주민등록번호를 지우기까지 기다리는 기간(계정 최종 활동
+ * 기준). **법이 정한 것이 아니라 운영 판단이다.**
+ *
+ * 원천징수가 한 번도 없었다면 이 번호로 제출할 지급명세서도 없다 — 즉 수집 목적이 아직
+ * 발생하지 않았고, 계정이 잠들어 있다면 앞으로도 발생하지 않는다. 개인정보 보호법 제21조①이
+ * 말하는 "불필요하게 되었을 때"가 그 상태다.
+ *
+ * 그런데 이 경우에는 기산점으로 쓸 지급 시각이 없다. 계정 생성일은 쓰지 않는다 — 지금
+ * 활발히 준비 중인 개설자의 번호까지 나이만으로 지워 버린다. 대신 `updatedAt`(로그인과
+ * 정산 정보 저장이 모두 갱신한다. `lib/funding/creatorToken.ts`·`creatorProjectWrite.ts`)을
+ * 써서 **마지막으로 계정이 살아 있던 시각**부터 센다. 아래 `hasLiveProject` 조건이 함께
+ * 걸리므로, 심사 중이거나 정산이 남은 프로젝트를 가진 개설자는 이 경로로 지워지지 않는다.
+ */
+export const RESIDENT_NUMBER_DORMANT_YEARS = 1;
+
+/**
+ * 목적이 끝난 개설자 주민등록번호를 파기한다.
+ *
+ * 개인정보 보호법 제21조①은 보유기간이 지나거나 처리 목적을 달성해 **불필요하게 되었을 때**
+ * 지체 없이 파기하라고 하고, 단서의 예외는 "다른 법령에 따라 보존하여야 하는 경우"다.
+ * "계정이 남아 있는 동안"은 그 예외가 아니다 — 그래서 자동 파기가 필요하다.
+ *
+ * **지우는 것은 `funding_creators.resident_number_enc` 하나뿐이다.** 계좌·세금 구분·연락처는
+ * 이 함수의 대상이 아니다. 그 값들은 근거도 보존기간도 다르다.
+ *
+ * ## 파기 규칙 (전부 AND)
+ *
+ * 1. `resident_number_enc`가 남아 있다 — 이미 NULL이면 대상이 아니다(멱등).
+ * 2. **정산이 남은 프로젝트가 없다.** 심사 중(`submitted`·`changes_requested`)이거나
+ *    승인된(`approved`) 프로젝트 중에 아직 지급 완료된 정산 기록이 없는 것이 하나라도 있으면
+ *    지우지 않는다 — 곧 원천징수에 쓸 값이다. 지워 버리면 개설자가 번호를 다시 입력해야
+ *    정산이 진행된다.
+ * 3. 그리고 아래 둘 중 하나:
+ *    - **(A) 원천징수 기록이 있는 경우** — `withholding_amount > 0`인 정산 행 가운데
+ *      아직 지급되지 않았거나(`paid_at IS NULL`) 지급일이 `RESIDENT_NUMBER_RETENTION_YEARS`
+ *      안에 드는 것이 **하나도 없어야** 한다. 즉 기산점은 계정 생성일이 아니라 **원천징수한
+ *      정산의 지급 시각**이고, 여러 건이면 가장 나중 지급이 기준이 된다.
+ *    - **(B) 원천징수 기록이 한 번도 없는 경우** — 계정 최종 활동(`updated_at`)이
+ *      `RESIDENT_NUMBER_DORMANT_YEARS`보다 오래됐어야 한다.
+ *
+ * ## 여기서 일부러 하지 않는 것
+ *
+ * - **행을 지우지 않는다.** 개설자 계정에는 프로젝트·정산이 매달려 있다.
+ * - **다른 컬럼을 건드리지 않는다.** `updated_at`도 갱신하지 않는다 — 그 값이 (B)의
+ *   기산점이라 파기가 스스로 시계를 되감는 꼴이 되고, 무엇보다 이 함수가 약속한 것은
+ *   "그 컬럼만 NULL"이다.
+ * - **후원자 개인정보(`purgeExpiredFundingPersonalData`)와 섞지 않는다.** 그쪽은 대상이
+ *   `funding_pledges`이고 기산점은 리워드 전달 완료, 기간은 1년(법정 보존 5년 우선)이다.
+ *   대상도 기산점도 기간도 다르므로 한 함수에 합치면 어느 한쪽이 틀린 시점에 지워진다.
+ *
+ * 실제 영향: 펀딩 정산은 2026년에 시작했으므로 (A)로 걸리는 첫 대상은 2031년 이후에 나온다.
+ * 그때까지 이 함수가 0을 돌려주는 것은 정상 동작이다.
+ */
+export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promise<FundingPurgeResult> => {
+  const db = getDb();
+  const reportingBoundary = yearsAgo(now, RESIDENT_NUMBER_RETENTION_YEARS);
+  const dormantBoundary = yearsAgo(now, RESIDENT_NUMBER_DORMANT_YEARS);
+
+  /**
+   * 이 개설자의 원천징수 정산 행. 추가 조건을 붙여 재사용한다.
+   *
+   * **경계(알고 남겨 둔다): `withholding_amount > 0`이라, 세금 구분이 원천징수인데 계산된
+   * 세액이 0원인 정산은 (A)가 아니라 (B)로 떨어진다.** 지급명세서 제출 의무는 세액이 아니라
+   * *지급 사실*에서 나오므로, 엄밀히는 그런 행도 (A)로 보는 것이 맞다.
+   *
+   * 그런데 `funding_project_payouts`에는 **세금 구분 컬럼이 없다.** 그래서 "원천징수인데
+   * 세액 0"과 "사업자로 정산해 원천징수가 없음"이 기록상 똑같은 `withholding_amount = 0`이다.
+   * 둘을 가르려면 컬럼을 하나 더 두는 마이그레이션이 필요하고, 그것 없이 기준을 `>= 0`으로
+   * 넓히면 **사업자 정산만 있는 개설자의 주민등록번호가 영영 (A)에 붙잡혀** 파기되지 않는다 —
+   * 개인정보 보호법 제21조①이 말하는 "불필요하게 되었을 때 지체 없이 파기"에 정면으로
+   * 어긋나는 쪽이다. 두 오류 중 이쪽이 더 크다.
+   *
+   * 실현 가능성도 사실상 없다: 세액은 지급액의 3.3%이고 `grossAmount <= 0`인 정산은
+   * `nothing_to_pay`로 거부되므로(`payout.ts`), 0이 나오려면 지급액이 수십 원 수준이어야 한다.
+   *
+   * 기준을 바꾸려거든 **`lib/funding/creatorProjectWrite.ts`의 `hasWithheldPayout`도 함께
+   * 바꿔야 한다** — 그쪽은 "세금 구분을 바꿔도 번호를 지우지 않는다"의 판정이라, 두 곳이
+   * 갈리면 한 화면은 "지워진다"고 안내하고 크론은 지우지 않는(또는 그 반대) 상태가 된다.
+   */
+  const withheldPayouts = (extra?: SQL) =>
+    db
+      .select({ ok: sql`1` })
+      .from(fundingProjectPayouts)
+      .innerJoin(fundingProjects, eq(fundingProjects.id, fundingProjectPayouts.projectId))
+      .where(
+        and(
+          eq(fundingProjects.creatorId, fundingCreators.id),
+          gt(fundingProjectPayouts.withholdingAmount, 0),
+          extra,
+        ),
+      );
+
+  /**
+   * 아직 신고 의무가 살아 있는 원천징수 — 지급 전이거나, 지급일이 보관 기간 안이다.
+   * 하나라도 있으면 파기하지 않는다.
+   */
+  const withholdingStillInScope = withheldPayouts(
+    or(isNull(fundingProjectPayouts.paidAt), gte(fundingProjectPayouts.paidAt, reportingBoundary)),
+  );
+
+  /**
+   * 아직 정산이 끝나지 않은, 살아 있는 프로젝트. 지급 완료(`paid_at IS NOT NULL`)된 정산
+   * 기록이 붙지 않은 심사 중·승인 프로젝트가 여기 걸린다. `draft`·`rejected`는 정산으로
+   * 이어질 수 없으므로 제외한다.
+   */
+  const liveProjects = db
+    .select({ ok: sql`1` })
+    .from(fundingProjects)
+    .where(
+      and(
+        eq(fundingProjects.creatorId, fundingCreators.id),
+        inArray(fundingProjects.reviewStatus, ['submitted', 'changes_requested', 'approved']),
+        notExists(
+          db
+            .select({ ok: sql`1` })
+            .from(fundingProjectPayouts)
+            .where(
+              and(
+                eq(fundingProjectPayouts.projectId, fundingProjects.id),
+                isNotNull(fundingProjectPayouts.paidAt),
+              ),
+            ),
+        ),
+      ),
+    );
+
+  const result = await db
+    .update(fundingCreators)
+    // 이 컬럼 하나만. 계좌·세금 구분·연락처는 근거도 보존기간도 다르다.
+    .set({ residentNumberEnc: null })
+    .where(
+      and(
+        isNotNull(fundingCreators.residentNumberEnc),
+        notExists(liveProjects),
+        or(
+          // (A) 원천징수 기록이 있고, 그중 신고 의무가 살아 있는 것이 없다.
+          and(exists(withheldPayouts()), notExists(withholdingStillInScope)),
+          // (B) 원천징수 기록이 한 번도 없고, 계정이 잠들어 있다.
+          and(notExists(withheldPayouts()), lt(fundingCreators.updatedAt, dormantBoundary)),
         ),
       ),
     );

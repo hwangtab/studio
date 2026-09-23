@@ -99,4 +99,36 @@ describe('isPrivateAnalyticsPath', () => {
     // pledge 폼은 no-store 전용 예외라 측정 제외 목록에는 없어야 한다.
     expect(isPrivateAnalyticsPath('/ko/funding/demo/pledge')).toBe(false);
   });
+
+  /**
+   * 관리자 화면은 `/[locale]/` 밖이라 로케일 정규식에 걸리지 않아, 처리방침 20항이
+   * "관리자 화면에는 측정 스크립트를 싣지 않는다"고 적는 동안 실제로는 실리고 있었다.
+   * 그 주소에는 프로젝트 id·주문번호·계약 id가 그대로 들어간다.
+   */
+  it('관리자 화면은 측정 대상에서 뺀다 — 로케일 접두사가 없어 위 목록에 안 걸린다', () => {
+    for (const path of [
+      '/admin',
+      '/admin/login',
+      '/admin/funding',
+      '/admin/funding/01H8ZP?tab=payout',
+      '/admin/bookings?orderNo=SNB-1',
+      '/admin/contracts/abc123',
+      '/admin/subscriptions',
+      '/admin/artists',
+      '/admin#top',
+    ]) {
+      expect(isPrivateAnalyticsPath(path)).toBe(true);
+    }
+  });
+
+  it('`/admin`으로 시작하는 다른 단어의 공개 경로까지 먹지 않는다', () => {
+    expect(isPrivateAnalyticsPath('/administrator')).toBe(false);
+    expect(isPrivateAnalyticsPath('/ko/stories/admin-guide')).toBe(false);
+  });
+
+  // 관리자 화면은 no-store `source` 목록의 대상이 아니다 — 그 목록은 `/<locale>/<body>`
+  // 꼴만 만들 수 있어 `/admin`을 넣으면 `/ko/admin`이라는 없는 주소의 규칙이 생긴다.
+  it('관리자 화면을 빼도 no-store source 목록은 그대로다', () => {
+    expect(PRIVATE_NO_STORE_SOURCES.some((source) => source.includes('admin'))).toBe(false);
+  });
 });

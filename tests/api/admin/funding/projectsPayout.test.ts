@@ -50,12 +50,12 @@ import {
   sendFundingPayoutRecordedEmail,
 } from '../../../../lib/funding/payoutEmail';
 
-const call = async (body: unknown, method = 'PATCH') => {
+const call = async (body: unknown, method = 'PATCH', headers: Record<string, string> = {}) => {
   const json = jest.fn();
   const status = jest.fn().mockReturnValue({ json });
   const res = { setHeader: jest.fn(), status, revalidate: jest.fn() } as unknown as NextApiResponse;
   await handler(
-    { method, query: { id: 'proj-1' }, body, headers: {}, socket: {} } as unknown as NextApiRequest,
+    { method, query: { id: 'proj-1' }, body, headers, socket: {} } as unknown as NextApiRequest,
     res,
   );
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] as Record<string, unknown> };
@@ -148,7 +148,19 @@ describe('record_payout', () => {
   it('확인 금액을 그대로 recordFundingPayout에 넘긴다 — 서버가 임의로 정하지 않는다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     await call({ action: 'record_payout', expectedNetAmount: 777_000 });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000);
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, null);
+  });
+
+  /**
+   * 네 번째 인자는 접속기록용 IP다 — 정산 기록은 주민등록번호를 한 번 복호화하고
+   * (`residentNumberReadable`), 그 처리가 `privacy_access_logs`에 남는다.
+   */
+  it('요청 IP를 recordFundingPayout에 함께 넘긴다 — 접속기록에 들어간다', async () => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
+    await call({ action: 'record_payout', expectedNetAmount: 777_000 }, 'PATCH', {
+      'x-vercel-forwarded-for': '203.0.113.7',
+    });
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, '203.0.113.7');
   });
 
   /**

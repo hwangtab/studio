@@ -99,7 +99,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-23-r5';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-23-r7';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -128,7 +128,7 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-23-r5';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-23-r6';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
@@ -147,18 +147,33 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
 ];
 
 /**
+ * 수탁자 표 한 줄 — 개인정보보호법 제26조 고지 형식(수탁자·업무·항목)에 **국가**를 더했다.
+ *
+ * `country`는 수탁자가 어느 나라 사업자인지다. 국외이전 고지(시행령 제31조①2호)가 필요한지는
+ * 이 값만으로 단정하지 않는다 — 여기 적는 것은 사실 기재이고, 실제 데이터가 저장되는 리전은
+ * 이 저장소에서 확인할 수 없다. 모르는 곳은 적지 말고, 미리 정할 수 없는 곳(개설자)은
+ * 그 사실을 적는다.
+ */
+export type DataProcessorRow = {
+  name: string;
+  purpose: string;
+  items: string;
+  country?: string;
+};
+
+/**
  * 처리위탁 현황. 실제 구성에서 온다 — 토스 결제 위젯(components TossPaymentWidget),
  * Resend REST API(lib/email/resend.ts), Vercel 호스팅, Turso(libsql, db/client.ts).
  */
-export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
-  { name: '토스페이먼츠', purpose: '결제 승인·취소·환불 처리', items: '서포터 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
-  { name: 'Resend', purpose: '펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
-  { name: 'Vercel', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
-  { name: 'Turso', purpose: '펀딩 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
+export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
+  { name: '토스페이먼츠', country: '대한민국', purpose: '결제 승인·취소·환불 처리', items: '서포터 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
+  { name: 'Resend', country: '미국', purpose: '펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
+  { name: 'Vercel', country: '미국', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
+  { name: 'Turso', country: '미국', purpose: '펀딩 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
   // 내려받기 게이트(pages/api/funding/download.ts)가 서명된 주소로 302 리디렉션을 보내므로,
   // 후원자의 브라우저가 Cloudflare에 직접 붙는다(lib/funding/r2.ts). 파일 자체에 개인정보는
   // 없지만 그 요청의 접속 정보가 Cloudflare를 지난다 — 그래서 수탁자 표에 싣는다.
-  { name: 'Cloudflare', purpose: '디지털 리워드 파일 보관 및 내려받기 제공', items: '내려받기 요청 시 전송되는 접속 정보(IP 주소, 브라우저 정보)' },
+  { name: 'Cloudflare', country: '미국', purpose: '디지털 리워드 파일 보관 및 내려받기 제공', items: '내려받기 요청 시 전송되는 접속 정보(IP 주소, 브라우저 정보)' },
   // 유형으로 적는다 — 개설자는 프로젝트마다 다른 개인·팀이라 회사 이름처럼 미리 열거할 수
   // 없다. 위탁 업무는 실제로 하는 일만 적는다: 배송 리워드의 발송과 그에 따른 문의 응대
   // (lib/funding/fulfillment.ts가 개설자에게 여는 쓰기는 발송 상태·택배사·운송장뿐이다).
@@ -167,6 +182,9 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
   // 제공 시점은 모금 마감 뒤다(같은 파일 loadCreatorShipping의 state !== 'closed' 분기).
   {
     name: '프로젝트 개설자(펀딩 프로젝트를 직접 등록한 아티스트)',
+    // 개설자는 프로젝트마다 다른 개인·팀이라 국가를 미리 적을 수 없다. 모르는 것을 적는 대신
+    // 그 사실을 적는다.
+    country: '프로젝트마다 다름',
     purpose: '배송 리워드의 발송과 배송 문의 응대',
     items: '모금 마감 뒤, 배송 리워드를 선택한 후원 건의 받는 분 이름, 연락처, 우편번호, 주소, 상세주소, 배송 메모와 그 후원의 리워드 이름·수량·발송 상태·택배사·운송장번호',
   },
@@ -185,16 +203,17 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
  * db/client.ts(Turso)에 개설자 계정·프로젝트·정산 기록 행이 저장되며, Vercel이 그 화면을 호스팅한다 —
  * 셋 다 서포터 쪽과 같은 수탁자이지만 다루는 개인정보가 다르므로 표를 따로 둔다.
  */
-export const FUNDING_CREATOR_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
+export const FUNDING_CREATOR_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
   {
     name: 'Resend',
+    country: '미국',
     purpose: '로그인 링크·심사 결과·공개 상태 변경·계정 변경·정산 안내 메일 발송',
     items:
       '이메일 주소, 메일 본문에 담기는 로그인 링크·심사 결과·공개 상태 변경 안내와 운영자 메모·바뀐 계정 정보(이름 또는 로그인 이메일)와 ' +
       '정산 금액 내역(모금액·환불액·수수료·원천징수액·실지급액·확정 후원 건수), 입금 계좌의 은행명·예금주·계좌번호 뒤 4자리',
   },
-  { name: 'Turso', purpose: '개설자 계정·프로젝트·정산 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부' },
-  { name: 'Vercel', purpose: '개설자 화면 서버 호스팅', items: '개설자 화면 이용 과정에서 전송되는 위 항목 전부' },
+  { name: 'Turso', country: '미국', purpose: '개설자 계정·프로젝트·정산 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부' },
+  { name: 'Vercel', country: '미국', purpose: '개설자 화면 서버 호스팅', items: '개설자 화면 이용 과정에서 전송되는 위 항목 전부' },
 ];
 
 /**

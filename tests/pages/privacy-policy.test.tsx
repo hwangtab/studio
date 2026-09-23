@@ -1,7 +1,10 @@
-import { POLICY_COPY_BY_LOCALE, SERVICE_DATA_PROCESSORS } from '../../data/privacyPolicy';
+import fs from 'fs';
+import path from 'path';
+import { POLICY_COPY_BY_LOCALE, PRIVACY_OFFICER, SERVICE_DATA_PROCESSORS } from '../../data/privacyPolicy';
 import {
   FUNDING_COLLECTED_ITEMS,
   FUNDING_COLLECTION_PURPOSES,
+  FUNDING_CREATOR_DATA_PROCESSORS,
   FUNDING_DATA_PROCESSORS,
   PRIVACY_LEGAL_RETENTION_TEXT,
   PRIVACY_RETENTION_TEXT,
@@ -113,11 +116,19 @@ describe('처리방침 4항 — 문의·예약의 처리위탁 고지', () => {
     expect(ko4.body).not.toContain('원칙적으로');
   });
 
-  it('ko 4항이 9항과 같은 3열 형식(수탁자·업무·항목)을 쓴다', () => {
+  it('ko 4항이 9항과 같은 4열 형식(수탁자·국가·업무·항목)을 쓴다', () => {
     for (const row of SERVICE_DATA_PROCESSORS) {
-      expect(Object.keys(row).sort()).toEqual(['items', 'name', 'purpose']);
+      expect(Object.keys(row).sort()).toEqual(['country', 'items', 'name', 'purpose']);
       expect(row.purpose.length).toBeGreaterThan(0);
       expect(row.items.length).toBeGreaterThan(0);
+    }
+  });
+
+  // 국가는 국외이전 판단의 재료이지 판단 자체가 아니다 — 여기서는 "빈칸이 없다"만 고정한다.
+  // 빈칸이 있으면 표가 "국내 사업자"라고 읽히므로, 모르는 곳은 비우는 대신 그 사실을 적는다.
+  it('모든 수탁자 표에 국가가 채워져 있다', () => {
+    for (const rows of [SERVICE_DATA_PROCESSORS, FUNDING_DATA_PROCESSORS, FUNDING_CREATOR_DATA_PROCESSORS]) {
+      for (const row of rows) expect(row.country && row.country.length > 0).toBe(true);
     }
   });
 
@@ -136,5 +147,67 @@ describe('처리방침 4항 — 문의·예약의 처리위탁 고지', () => {
       expect(section.body).toContain(name);
     }
     expect(section.body).toMatch(/9/);
+  });
+});
+
+/**
+ * 개인정보 보호법 제30조①의 필수 기재사항 가운데 이 문서에 빠져 있던 것들 — 보호책임자는
+ * 아예 없어서 위반이었고(6호), 파기절차·방법(3의2호), 권리 행사방법(5호), 자동수집장치(7호),
+ * 안전성 확보 조치(시행령 제31조①3호)는 항이 없거나 한 줄이었다. 아래 단언이 그 상태로
+ * 되돌아가는 것을 막는다. **문구가 아니라 "그 항이 있고 사실을 담고 있는가"를 본다.**
+ */
+describe('ko 처리방침의 법정 필수 기재사항', () => {
+  const ko = POLICY_COPY_BY_LOCALE.ko;
+  const section = (prefix: string) => ko.sections.find((s) => s.heading.startsWith(prefix))!;
+  const textOf = (prefix: string) => {
+    const s = section(prefix);
+    return [s.heading, s.body, ...(s.items ?? [])].join('\n');
+  };
+
+  it('보호책임자 항이 있고, 값은 상수에서 온다 (문자열 박기 금지)', () => {
+    const text = textOf('17.');
+    expect(text).toContain('개인정보 보호책임자');
+    expect(text).toContain(PRIVACY_OFFICER.name);
+    expect(text).toContain(PRIVACY_OFFICER.email);
+    expect(text).toContain(PRIVACY_OFFICER.phone);
+    // 연락처를 리터럴로 박으면 정본이 바뀌어도 이 항만 옛 값을 말하게 된다.
+    const source = fs.readFileSync(path.join(process.cwd(), 'data/privacyPolicy.ts'), 'utf-8');
+    expect(source).not.toContain('010-4255-7893');
+  });
+
+  it('파기절차 항이 방법·주기와 보존 항목을 함께 적는다', () => {
+    const text = textOf('18.');
+    for (const token of ['파기절차', '월 1회', '복호화 키', '보존하는 개인정보의 항목']) {
+      expect(text).toContain(token);
+    }
+  });
+
+  it('안전성 확보 조치 항이 실제로 하는 조치만 적는다', () => {
+    const text = textOf('19.');
+    for (const token of ['AES-256-GCM', '2년', 'HTTPS']) expect(text).toContain(token);
+    // 이 저장소가 하지 않는 것 — 적히면 그 순간 거짓 고지가 된다.
+    for (const token of ['침입탐지', '모의훈련', '접근통제시스템 설치']) expect(text).not.toContain(token);
+  });
+
+  it('자동수집장치 항이 수집 내용과 거부 방법을 적는다', () => {
+    const text = textOf('20.');
+    expect(text).toContain('Google Analytics 4');
+    expect(text).toContain('쿠키');
+    expect(text).toContain('브라우저');
+  });
+
+  it('권리 행사 항이 처리정지·동의 철회와 예외를 담는다', () => {
+    const text = textOf('5.');
+    for (const token of ['처리정지', '동의', '제36조', '제37조']) expect(text).toContain(token);
+  });
+
+  // 주민등록번호 수집 근거는 대통령령까지 적어야 한다 — 개인정보 보호법 제24조의2①1호의
+  // 열거에 부령(지급명세서 서식)은 없다. "서식이 그렇게 생겨서"로 되돌아가면 근거가 사라진다.
+  it('주민등록번호 항이 대통령령 조문을 근거로 든다', () => {
+    const text = textOf('15.');
+    expect(text).toContain('소득세법 시행령 제147조의7제1항제1호 가목');
+    expect(text).toContain('제24조의2');
+    // 열람 경로는 둘이다(조회 버튼 + 정산 기록 직전의 복호화 점검).
+    expect(text).toContain('복호화되는 경로는 둘');
   });
 });

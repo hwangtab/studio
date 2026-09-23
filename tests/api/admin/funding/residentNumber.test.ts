@@ -1,12 +1,14 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
 jest.mock('../../../../lib/funding/residentNumber', () => ({ loadFundingResidentNumber: jest.fn() }));
+jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/admin/funding/projects/[id]/resident-number';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { loadFundingResidentNumber } from '../../../../lib/funding/residentNumber';
 import { FieldCryptoError } from '../../../../lib/crypto/fieldCrypto';
+import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
 const call = async (method = 'GET', id: unknown = 'proj-1') => {
   // payoutAccount.test.ts와 같은 호출 껍데기 — 기본값 인자라 비문자열 검증은 null로 한다.
@@ -34,6 +36,7 @@ beforeEach(() => {
   error = jest.spyOn(console, 'error').mockImplementation(() => {});
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
   (loadFundingResidentNumber as jest.Mock).mockResolvedValue(RESIDENT_NUMBER);
+  (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -106,4 +109,54 @@ describe('복호화 오류별 응답', () => {
 it('복호화 외의 실패도 500으로 접는다', async () => {
   (loadFundingResidentNumber as jest.Mock).mockRejectedValue(new Error('DB 장애'));
   expect((await call()).status).toBe(500);
+});
+
+
+/**
+ * 「개인정보의 안전성 확보조치 기준」 제8조①의 접속기록. 서버 로그는 며칠이면 사라지므로
+ * 2년을 버티는 것은 `privacy_access_logs` 쪽이다 — 성공도 실패도 남아야 한다.
+ */
+describe('접속기록', () => {
+  it('성공한 조회를 남긴다 — 대상 id만 적고 값은 넘기지 않는다', async () => {
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(),
+      'funding_resident_number_view',
+      'proj-1',
+      'success',
+    );
+    expect(JSON.stringify((recordAdminPrivacyAccess as jest.Mock).mock.calls)).not.toContain(RESIDENT_NUMBER);
+  });
+
+  it('등록된 번호가 없던 조회도 남는다', async () => {
+    (loadFundingResidentNumber as jest.Mock).mockResolvedValue(null);
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_resident_number_view', 'proj-1', 'not_found');
+  });
+
+  it('복호화에 실패한 조회도 남는다', async () => {
+    (loadFundingResidentNumber as jest.Mock).mockRejectedValue(new FieldCryptoError('key_mismatch', '내부 메시지'));
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_resident_number_view', 'proj-1', 'decrypt_failed');
+  });
+
+  it('그 밖의 실패도 남는다', async () => {
+    (loadFundingResidentNumber as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_resident_number_view', 'proj-1', 'error');
+  });
+
+  it('인증 전에는 기록하지 않는다 — 수행자도 대상도 모르는 행이 남을 자리가 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
+    await call();
+    expect(recordAdminPrivacyAccess).not.toHaveBeenCalled();
+  });
+
+  /** 법을 지키려고 넣은 장치가 업무를 멈추면 안 된다. */
+  it('기록이 실패해도 조회 응답은 정상이다', async () => {
+    (recordAdminPrivacyAccess as jest.Mock).mockRejectedValue(new Error('기록 실패'));
+    const r = await call();
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true, residentNumber: RESIDENT_NUMBER });
+  });
 });
