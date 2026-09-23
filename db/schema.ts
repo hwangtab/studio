@@ -980,6 +980,42 @@ export const privacyAccessActionEnum = [
    * 남는다. 표 전체가 2년 기준을 따르므로 계좌 조회 기록도 2년 보관된다.
    */
   'funding_payout_account_view',
+  /**
+   * 관리자 펀딩 주문 CSV 내려받기 (pages/api/admin/funding/export.ts).
+   * 25열 중 11열이 개인정보(이름·연락처·이메일·배송지 6열·응원 메시지)이고 건수 상한이
+   * 없어 **한 번에 프로젝트 전체가 파일로 빠져나간다.** 한 건을 여는 조회보다 노출 범위가
+   * 큰데 기록이 없었다. 대상은 프로젝트 slug(전체 내려받기는 `all`).
+   */
+  'funding_pledge_export',
+  /**
+   * 관리자 매출장부 CSV 내려받기 (pages/api/admin/orders/export.ts).
+   * 기간 안에 승인된 결제 전부이므로 서비스 구분 없이 이름·연락처·이메일이 실린다.
+   * 대상은 기간(`YYYY-MM-DD_YYYY-MM-DD`) — 이 다운로드가 가리키는 것은 한 사람이 아니다.
+   */
+  'sales_ledger_export',
+  /**
+   * 관리자 아티스트 후원자 연락처 CSV 내려받기
+   * (pages/api/admin/artists/[slug]/supporters-export.ts). 이름·이메일이 실린다.
+   * 대상은 아티스트 slug.
+   */
+  'artist_supporter_export',
+  /**
+   * 개설자의 배송 목록 CSV 내려받기
+   * (pages/api/funding/creator/projects/[id]/shipping.csv.ts).
+   * 관리자가 아니라 **개설자**가 후원자의 배송지·연락처를 통째로 받아 가는 경로라 수행자가
+   * `creator:<creatorId>`다(`privacyCreatorActor`). 관리자 경로와 달리 사람이 특정된다.
+   */
+  'funding_creator_shipping_export',
+  /**
+   * 관리자 계약서 PDF 내려받기 (pages/api/contracts/[id]/pdf.ts).
+   * 성명·생년월일·주소·서명 이미지가 한 파일에 담긴다. CSV는 아니지만 개인정보가 파일로
+   * 빠져나가는 같은 동작이다. 대상은 계약 id.
+   *
+   * 이용자가 **자기** 계약서를 받는 경로(pages/api/contracts/[id]/download.ts)는 여기
+   * 없다 — 접속기록은 개인정보취급자의 접속을 남기는 것이고, 정보주체 본인의 열람은
+   * 그 대상이 아니다.
+   */
+  'contract_pdf_download',
 ] as const;
 
 /**
@@ -1020,6 +1056,17 @@ export const privacyAccessLogs = sqliteTable(
     /** 무엇에 대한 조회였는지 — 펀딩 프로젝트 id. 값이 아니라 대상만 적는다. */
     targetId: text('target_id').notNull(),
     result: text('result', { enum: privacyAccessResultEnum }).notNull(),
+    /**
+     * 내보낸 **건수**. 파일로 빠져나가는 다운로드에만 채운다.
+     *
+     * 한 건을 여는 조회(주민등록번호·계좌)는 `action`과 `targetId`만으로 범위가 정해지지만,
+     * 목록 다운로드는 같은 대상에 대해서도 그날 몇 사람분이 나갔는지가 매번 다르다. 사후에
+     * "무엇이 얼마나 나갔는가"를 재구성하려면 이 숫자가 있어야 한다.
+     *
+     * **건수뿐이다 — 내보낸 값은 한 글자도 담지 않는다.** 이 표를 사본으로 만들지 않는다는
+     * 규칙은 여기에도 그대로 걸린다. 한 건 조회에는 값이 없으므로 null이다.
+     */
+    rowCount: integer('row_count'),
     /** `lib/contracts/client-ip.ts`의 getClientIp. 얻지 못하면 null이다(모르는 것을 지어내지 않는다). */
     ip: text('ip'),
     at: integer('at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

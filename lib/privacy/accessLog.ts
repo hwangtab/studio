@@ -21,6 +21,15 @@ export type PrivacyAccessResult = (typeof privacyAccessResultEnum)[number];
 export const PRIVACY_ACTOR_ADMIN = 'admin';
 
 /**
+ * 개설자 경로의 수행자 값.
+ *
+ * 관리자와 달리 개설자는 계정이 사람별로 갈려 있어(`funding_creators`) 누가 받아 갔는지
+ * 실제로 특정된다. 기록에 담는 것은 id뿐이다 — 이름·이메일을 여기 적으면 접속기록이
+ * 개인정보 사본이 된다.
+ */
+export const privacyCreatorActor = (creatorId: string): string => `creator:${creatorId}`;
+
+/**
  * 「개인정보의 안전성 확보조치 기준」 제8조① 단서 — 고유식별정보를 처리하는
  * 개인정보처리시스템의 접속기록은 **2년 이상.** 일반 접속기록의 1년과 다른 값이며,
  * 이 표에는 주민등록번호 조회 기록이 섞여 있으므로 표 전체가 긴 쪽을 따른다.
@@ -36,6 +45,11 @@ export interface PrivacyAccessEntry {
   targetId: string;
   result: PrivacyAccessResult;
   ip: string | null;
+  /**
+   * 목록 다운로드가 내보낸 건수. 한 건을 여는 조회에는 없다.
+   * **숫자 하나다** — 내보낸 값을 담을 자리는 여기에도 없다.
+   */
+  rowCount?: number | null;
   at?: Date;
 }
 
@@ -58,6 +72,7 @@ export const recordPrivacyAccess = async (entry: PrivacyAccessEntry): Promise<vo
         action: entry.action,
         targetId: entry.targetId,
         result: entry.result,
+        rowCount: entry.rowCount ?? null,
         ip: entry.ip,
         at: entry.at ?? new Date(),
       });
@@ -66,6 +81,7 @@ export const recordPrivacyAccess = async (entry: PrivacyAccessEntry): Promise<vo
       action: entry.action,
       targetId: entry.targetId,
       result: entry.result,
+      rowCount: entry.rowCount ?? null,
       detail: error instanceof Error ? error.message : String(error),
     });
   }
@@ -77,12 +93,14 @@ export const recordAdminPrivacyAccess = async (
   action: PrivacyAccessAction,
   targetId: string,
   result: PrivacyAccessResult,
+  rowCount?: number,
 ): Promise<void> =>
   recordPrivacyAccess({
     actor: PRIVACY_ACTOR_ADMIN,
     action,
     targetId,
     result,
+    rowCount: rowCount ?? null,
     ip: getClientIp(req),
   });
 

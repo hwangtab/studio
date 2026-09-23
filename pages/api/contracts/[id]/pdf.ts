@@ -3,6 +3,16 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { loadOrRenderContractPdf } from '../../../../lib/contracts/pdf-storage';
+import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../lib/privacy/accessLog';
+
+/**
+ * 성명·생년월일·주소·서명 이미지가 한 파일로 나가는 경로라, 내려받은 사실을
+ * 접속기록에 남긴다(`privacy_access_logs`). CSV는 아니지만 개인정보가 파일로 빠져나가는
+ * 같은 동작이다. 담는 것은 계약 id뿐 — 이름도 본문도 적지 않는다.
+ *
+ * 이용자가 자기 계약서를 받는 경로(`download.ts`)는 남기지 않는다. 접속기록은
+ * 개인정보취급자의 접속을 남기는 것이고, 정보주체 본인의 열람은 그 대상이 아니다.
+ */
 
 /**
  * PDF 생성은 Chromium을 띄운다. 콜드 스타트에서는 64MB짜리 바이너리를 풀어 쓰므로
@@ -28,6 +38,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '잘못된 계약 ID입니다.' });
   }
 
+  /** 기록 경로의 예외가 다운로드를 끊지 않게 한 겹 더 받는다(payout-account.ts와 같은 이유). */
+  const log = (result: PrivacyAccessResult) =>
+    recordAdminPrivacyAccess(req, 'contract_pdf_download', id, result).catch((error: unknown) => {
+      console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
+    });
+
   try {
     const contract = await getDb().query.contracts.findFirst({
       where: (contractsTable, { eq }) => eq(contractsTable.id, id),
@@ -35,6 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     if (!contract) {
+      await log('not_found');
       return res.status(404).json({ ok: false, message: '계약을 찾을 수 없습니다.' });
     }
 
@@ -58,6 +75,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 한글 파일명은 RFC 5987 filename*로 넘긴다. filename만 쓰면 일부 브라우저가 깨뜨린다.
     const filename = `${contract.customerName}_이용계약서.pdf`;
 
+    await log('success');
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Length', pdfBuffer.length);
     res.setHeader(
@@ -66,6 +84,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
     return res.status(200).send(pdfBuffer);
   } catch (error: unknown) {
+    await log('error');
     console.error('[API/contracts/[id]/pdf] Failed to generate PDF:', error);
     return res.status(500).json({ ok: false, message: 'PDF 생성에 실패했습니다.' });
   }

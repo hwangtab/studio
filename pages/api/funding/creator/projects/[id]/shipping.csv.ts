@@ -6,6 +6,8 @@ import { authenticateCreatorApi } from '../../../../../../lib/funding/creatorAut
 import { loadCreatorShipping, type CreatorShippingRow } from '../../../../../../lib/funding/creatorShipping';
 import { toCsv } from '../../../../../../lib/funding/csv';
 import { FULFILLMENT_LABELS } from '../../../../../../lib/funding/fulfillmentLabels';
+import { privacyCreatorActor, recordPrivacyAccess } from '../../../../../../lib/privacy/accessLog';
+import { getClientIp } from '../../../../../../lib/contracts/client-ip';
 
 /**
  * CSV 열은 Task 1의 화이트리스트(`CreatorShippingRow`, `lib/funding/creatorShipping.ts`)를
@@ -42,6 +44,10 @@ const toCsvRow = (row: CreatorShippingRow): Record<string, string | number | nul
  * 소유·마감 게이트는 이 라우트가 직접 판정하지 않는다 — `loadCreatorShipping`이 소유를
  * SQL JOIN으로 대조하고(남의 프로젝트면 null), 마감 전이면 `state: 'before_close'`를
  * 돌려주므로 이 라우트는 그 두 상태를 HTTP 상태로 옮기기만 한다.
+ *
+ * 내려받은 사실은 관리자 CSV와 같은 표(`privacy_access_logs`)에 남긴다. 다른 점은
+ * 수행자다 — 개설자는 계정이 사람별로 갈려 있어 `creator:<creatorId>`로 특정된다. 담는
+ * 것은 프로젝트 id와 건수뿐이고, 404·409처럼 아무것도 조회되지 않은 경로는 남기지 않는다.
  */
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -81,6 +87,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const csv = toCsv(view.rows.map(toCsvRow), COLUMNS);
+  await recordPrivacyAccess({
+    actor: privacyCreatorActor(auth.creatorId),
+    action: 'funding_creator_shipping_export',
+    targetId: projectId,
+    result: 'success',
+    rowCount: view.rows.length,
+    ip: getClientIp(req),
+  }).catch((error: unknown) => {
+    console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
+  });
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   // projectId는 DB가 randomblob(16)의 hex로 생성한다(db/schema.ts) — 영숫자뿐이라
   // 헤더 인젝션·경로 조작 소재가 없다. slug와 달리 별도 형식 검증을 두지 않는다.
