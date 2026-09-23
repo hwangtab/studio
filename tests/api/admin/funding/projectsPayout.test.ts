@@ -106,14 +106,14 @@ afterEach(() => jest.restoreAllMocks());
 describe('record_payout', () => {
   it('인증 없으면 401이고 기록을 시도하지 않는다', async () => {
     (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
-    const r = await call({ action: 'record_payout' });
+    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
     expect(r.status).toBe(401);
     expect(recordFundingPayout).not.toHaveBeenCalled();
   });
 
   it('기록 성공 → 201, 개설자에게 메일', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
-    const r = await call({ action: 'record_payout' });
+    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
     expect(r.status).toBe(201);
     expect(r.body).toEqual({ ok: true });
     expect(sendFundingPayoutRecordedEmail).toHaveBeenCalledWith(
@@ -137,10 +137,41 @@ describe('record_payout', () => {
     ['no_tax_type', 409],
   ])('%s → %i', async (code, expected) => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: false, code });
-    const r = await call({ action: 'record_payout' });
+    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
     expect(r.status).toBe(expected);
     expect(r.body.code).toBe(code);
     expect(r.body.message).toEqual(expect.any(String));
+    expect(sendFundingPayoutRecordedEmail).not.toHaveBeenCalled();
+  });
+
+  it('확인 금액을 그대로 recordFundingPayout에 넘긴다 — 서버가 임의로 정하지 않는다', async () => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
+    await call({ action: 'record_payout', expectedNetAmount: 777_000 });
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000);
+  });
+
+  /**
+   * 회귀: 이 값이 안 실려 오면 낙관적 잠금을 우회하는 경로가 다시 생긴다 — 서버가 뭐라도
+   * 기본값을 골라 넣으면 화면이 승인한 금액과 대조할 것이 없어진다.
+   */
+  it('확인 금액이 안 오면 400 — 기록을 시도하지 않는다', async () => {
+    const r = await call({ action: 'record_payout' });
+    expect(r.status).toBe(400);
+    expect(recordFundingPayout).not.toHaveBeenCalled();
+  });
+
+  it('그 사이에 금액이 바뀌면 409와 두 금액을 문구로 돌려준다', async () => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({
+      ok: false,
+      code: 'amount_changed',
+      expectedNetAmount: 880_937,
+      netAmount: 792_782,
+    });
+    const r = await call({ action: 'record_payout', expectedNetAmount: 880_937 });
+    expect(r.status).toBe(409);
+    expect(r.body.code).toBe('amount_changed');
+    expect(r.body.message).toContain('880,937');
+    expect(r.body.message).toContain('792,782');
     expect(sendFundingPayoutRecordedEmail).not.toHaveBeenCalled();
   });
 
@@ -148,8 +179,8 @@ describe('record_payout', () => {
     (recordFundingPayout as jest.Mock)
       .mockResolvedValueOnce({ ok: true, payout: PAYOUT })
       .mockResolvedValueOnce({ ok: false, code: 'already_recorded' });
-    expect((await call({ action: 'record_payout' })).status).toBe(201);
-    expect((await call({ action: 'record_payout' })).status).toBe(409);
+    expect((await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount })).status).toBe(201);
+    expect((await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount })).status).toBe(409);
   });
 
   /**
@@ -159,7 +190,7 @@ describe('record_payout', () => {
   it('메일이 실패해도 201 — warnings로만 알린다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     (sendFundingPayoutRecordedEmail as jest.Mock).mockResolvedValue('creator:send_failed');
-    const r = await call({ action: 'record_payout' });
+    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
     expect(r.status).toBe(201);
     expect(r.body.warnings).toEqual(['creator:send_failed']);
     expect(sendFundingPayoutOperatorFallback).toHaveBeenCalled();
@@ -168,7 +199,7 @@ describe('record_payout', () => {
   it('메일 경로가 통째로 던져도 201 — 기록은 살아 있다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     (loadProjectForAdmin as jest.Mock).mockRejectedValue(new Error('DB 장애'));
-    const r = await call({ action: 'record_payout' });
+    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
     expect(r.status).toBe(201);
     expect(r.body.warnings).toHaveLength(1);
   });
