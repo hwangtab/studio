@@ -8,6 +8,7 @@ import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
+import { FieldCryptoError, FIELD_CRYPTO_KEY_ENV, decryptField, encryptField } from '../crypto/fieldCrypto';
 
 /**
  * 조용히 실패한 것들을 하루 한 번 훑어 운영자에게 알린다.
@@ -65,6 +66,51 @@ const checkCalendar = async (now: Date): Promise<HealthIssue | null> => {
         '고객이 날짜를 골라도 시간대가 뜨지 않습니다(전 슬롯 503). ' +
         'BOOKING_GCAL_ID·GOOGLE_SA_EMAIL·GOOGLE_SA_PRIVATE_KEY와 캘린더 공유 설정을 확인해 주세요.\n' +
         `사유: ${error instanceof Error ? error.message : String(error)}`,
+    };
+  }
+};
+
+/**
+ * 필드 암호화 키가 실제로 쓸 수 있는 상태인지 — 주민등록번호를 저장·조회하는 유일한 수단이다.
+ *
+ * 키가 없거나 형식이 틀리면 원천징수 대상 개설자의 정산 정보 저장이 `encryption_unavailable`로
+ * 통째로 거부되고(`savePayoutSection`), 이미 저장된 번호는 운영자가 조회해도 안 열린다.
+ * **그 사실이 DB 어디에도 남지 않는다** — 개설자가 "저장이 안 된다"고 연락해 줄 때까지
+ * 아무도 모른다. 캘린더 점검과 같은 이유로 여기서 직접 찔러 본다.
+ *
+ * 찌르는 방법은 고정 문자열 왕복이다. env 길이만 재면 키가 base64로는 32바이트인데 암호
+ * 모듈이 거부하는 경우를 놓친다 — 실제 경로를 그대로 지나야 "쓸 수 있는 키"를 확인한 것이다.
+ *
+ * **값은 어디에도 적지 않는다.** 키도, 왕복에 쓴 문자열도, 암호문도 메일에 넣지 않는다 —
+ * 운영자가 알아야 하는 것은 "설정됨 / 없음 / 형식 이상" 셋뿐이다.
+ */
+const FIELD_KEY_PROBE = 'health-check';
+
+export const checkFieldCryptoKey = (): HealthIssue | null => {
+  try {
+    if (decryptField(encryptField(FIELD_KEY_PROBE)) !== FIELD_KEY_PROBE) {
+      return {
+        severity: 'high',
+        title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV})로 암호화한 값이 원래대로 돌아오지 않습니다`,
+        detail:
+          '주민등록번호 저장·조회가 정상 동작한다고 볼 수 없는 상태입니다. 배포 판본과 환경 변수를 확인해 주세요.',
+      };
+    }
+    return null;
+  } catch (error: unknown) {
+    const code = error instanceof FieldCryptoError ? error.code : 'unknown';
+    const state = code === 'missing_key' ? '없음' : code === 'invalid_key' ? '형식 이상' : '확인 실패';
+    return {
+      severity: 'high',
+      title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV}) ${state} — 주민등록번호를 저장·조회할 수 없습니다`,
+      detail: [
+        `상태: ${state} (code=${code})`,
+        '원천징수 대상 개설자가 정산 정보를 저장하면 계좌를 포함해 전부 거부되고, 이미 저장된 번호는 ' +
+          '운영자 조회에서도 열리지 않습니다. 정산 기록도 no_resident_number로 막힙니다.',
+        `Vercel 환경 변수와 로컬 .env.local의 ${FIELD_CRYPTO_KEY_ENV}(base64 32바이트)를 확인해 주세요.`,
+        '**이미 저장된 값이 있다면 키를 새로 만들지 마세요** — 옛 키로만 복호화됩니다. ' +
+          '옛 키를 되찾을 수 없으면 개설자에게 다시 등록을 요청하는 것 외에 방법이 없습니다.',
+      ].join('\n'),
     };
   }
 };
@@ -376,6 +422,9 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
 
   const calendar = await checkCalendar(now);
   if (calendar) issues.push(calendar);
+
+  const fieldKey = checkFieldCryptoKey();
+  if (fieldKey) issues.push(fieldKey);
 
   /**
    * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
