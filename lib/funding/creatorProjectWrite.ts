@@ -347,6 +347,11 @@ export interface CreatorPayoutSummary {
  * 기록(사업자로 정산한 건)은 원천징수가 없었다는 뜻이므로 세지 않는다.
  *
  * `funding_project_payouts`는 프로젝트 단위인데 번호는 계정 단위라 프로젝트를 거쳐 조인한다.
+ *
+ * **경계: 세금 구분이 원천징수인데 계산된 세액이 0원인 정산은 여기서 세지 않는다.** 이 표에
+ * 세금 구분 컬럼이 없어 그런 행과 "사업자로 정산한 건"을 기록만으로 가를 수 없기 때문이다.
+ * 판단 근거 전문은 `lib/funding/retention.ts`의 `withheldPayouts` 주석에 있다 — 그쪽이 같은
+ * `> 0` 기준으로 주민등록번호 자동 파기를 판정하므로 **둘은 함께 바꿔야 한다.**
  */
 export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => {
   const [row] = await getDb()

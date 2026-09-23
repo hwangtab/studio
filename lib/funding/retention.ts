@@ -215,7 +215,27 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
   const reportingBoundary = yearsAgo(now, RESIDENT_NUMBER_RETENTION_YEARS);
   const dormantBoundary = yearsAgo(now, RESIDENT_NUMBER_DORMANT_YEARS);
 
-  /** 이 개설자의 원천징수 정산 행. 추가 조건을 붙여 재사용한다. */
+  /**
+   * 이 개설자의 원천징수 정산 행. 추가 조건을 붙여 재사용한다.
+   *
+   * **경계(알고 남겨 둔다): `withholding_amount > 0`이라, 세금 구분이 원천징수인데 계산된
+   * 세액이 0원인 정산은 (A)가 아니라 (B)로 떨어진다.** 지급명세서 제출 의무는 세액이 아니라
+   * *지급 사실*에서 나오므로, 엄밀히는 그런 행도 (A)로 보는 것이 맞다.
+   *
+   * 그런데 `funding_project_payouts`에는 **세금 구분 컬럼이 없다.** 그래서 "원천징수인데
+   * 세액 0"과 "사업자로 정산해 원천징수가 없음"이 기록상 똑같은 `withholding_amount = 0`이다.
+   * 둘을 가르려면 컬럼을 하나 더 두는 마이그레이션이 필요하고, 그것 없이 기준을 `>= 0`으로
+   * 넓히면 **사업자 정산만 있는 개설자의 주민등록번호가 영영 (A)에 붙잡혀** 파기되지 않는다 —
+   * 개인정보 보호법 제21조①이 말하는 "불필요하게 되었을 때 지체 없이 파기"에 정면으로
+   * 어긋나는 쪽이다. 두 오류 중 이쪽이 더 크다.
+   *
+   * 실현 가능성도 사실상 없다: 세액은 지급액의 3.3%이고 `grossAmount <= 0`인 정산은
+   * `nothing_to_pay`로 거부되므로(`payout.ts`), 0이 나오려면 지급액이 수십 원 수준이어야 한다.
+   *
+   * 기준을 바꾸려거든 **`lib/funding/creatorProjectWrite.ts`의 `hasWithheldPayout`도 함께
+   * 바꿔야 한다** — 그쪽은 "세금 구분을 바꿔도 번호를 지우지 않는다"의 판정이라, 두 곳이
+   * 갈리면 한 화면은 "지워진다"고 안내하고 크론은 지우지 않는(또는 그 반대) 상태가 된다.
+   */
   const withheldPayouts = (extra?: SQL) =>
     db
       .select({ ok: sql`1` })

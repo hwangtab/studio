@@ -259,7 +259,7 @@ export type RecordFundingPayoutResult =
  * 누른 그 순간에만 복호화한다"는 처리방침 설명이 사실과 달랐다.
  */
 const residentNumberReadable = async (projectId: string, ip: string | null): Promise<boolean> => {
-  const log = (result: 'success' | 'not_found' | 'decrypt_failed') =>
+  const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
       actor: PRIVACY_ACTOR_ADMIN,
       action: 'funding_resident_number_decrypt_check',
@@ -272,12 +272,25 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
       console.error('[privacy] 접속기록 호출 실패 — 정산 기록은 계속됩니다', error);
     });
 
-  const [row] = await getDb()
-    .select({ enc: fundingCreators.residentNumberEnc })
-    .from(fundingProjects)
-    .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
-    .where(eq(fundingProjects.id, projectId))
-    .limit(1);
+  /**
+   * 조회 자체가 실패하는 갈래도 **기록한다.** 처리방침 19항이 이 점검을 "성공·실패를
+   * 가리지 않고" 남긴다고 적었는데, 예전엔 이 select가 던지면 `log()`가 한 번도 불리지
+   * 않고 예외가 그대로 위로 올라갔다 — 호출하는 라우트 둘은 catch에서 `'error'`를 남기지만
+   * 이 경로만 비어 있었다. 기록한 뒤 예외는 그대로 다시 던진다(정산 기록은 실패해야 한다 —
+   * 번호를 열 수 있는지 확인하지 못한 채 원천징수를 기록할 수는 없다).
+   */
+  let row: { enc: string | null } | undefined;
+  try {
+    [row] = await getDb()
+      .select({ enc: fundingCreators.residentNumberEnc })
+      .from(fundingProjects)
+      .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
+      .where(eq(fundingProjects.id, projectId))
+      .limit(1);
+  } catch (error: unknown) {
+    await log('error');
+    throw error;
+  }
   const enc = row?.enc?.trim();
   if (!enc) {
     await log('not_found');

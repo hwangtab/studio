@@ -42,36 +42,79 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(401).json({ ok: false, message: 'Unauthorized' });
   }
 
-  try {
-    // 접속기록 삭제는 배송지 파기가 성공한 뒤에 돈다. 한쪽이 던지면 catch로 떨어져 메일이
-    // 가고, 다음 달 실행에서 남은 쪽이 다시 시도된다(둘 다 멱등이다).
-    // purge-contracts와 달리 result.failed 분기가 없다 — 계약서 쪽은 계약마다 Blob 삭제 +
-    // 두 테이블 업데이트를 순회해서 일부만 실패할 수 있지만, 여기는 한 번의 UPDATE...WHERE뿐이라
-    // 외부 API 호출이 없고 부분 실패라는 상태 자체가 없다(전부 성공하거나 catch로 떨어진다).
-    const result = await purgeExpiredFundingPersonalData();
-    const accessLogs = await purgeExpiredPrivacyAccessLogs();
-    const residentNumbers = await purgeExpiredResidentNumbers();
-    return res.status(200).json({
-      ok: true,
-      ...result,
-      purgedAccessLogs: accessLogs.purged,
-      purgedResidentNumbers: residentNumbers.purged,
-    });
-  } catch (error: unknown) {
-    const detail = error instanceof Error ? error.message : String(error);
-    console.error('[cron/purge-funding] Failed:', error);
+  /**
+   * 세 파기는 **서로의 실패에 걸리지 않는다.**
+   *
+   * 예전엔 셋을 한 try에 나란히 세워 두어, 앞의 것이 던지면 뒤의 것이 그달에 아예 실행되지
+   * 않았다. 실제로 일어날 수 있는 형태가 있다: 운영 DB에 마이그레이션이 적용되기 전에 코드가
+   * 먼저 배포되면 `privacy_access_logs` 조회가 `no such table`을 던지고, 그 뒤에 서 있던
+   * 주민등록번호 파기가 한 번도 돌지 않는다 — 처리방침이 약속한 월 1회 자동 파기가 표 하나
+   * 때문에 통째로 멈춘다. 배포 순서(마이그레이션 먼저)가 정답인 것은 그대로지만, 그 실수
+   * 하나에 다른 약속까지 무너질 이유는 없다.
+   *
+   * 셋은 대상도 기산점도 기간도 다른 별개의 파기다(머리주석 참조). 전부 멱등이라 실패한
+   * 것은 다음 달 실행에서 다시 시도된다.
+   */
+  const failures: { label: string; detail: string }[] = [];
 
+  const run = async <T>(label: string, task: () => Promise<T>): Promise<T | null> => {
+    try {
+      return await task();
+    } catch (error: unknown) {
+      const detail = error instanceof Error ? error.message : String(error);
+      console.error(`[cron/purge-funding] ${label} 실패:`, error);
+      failures.push({ label, detail });
+      return null;
+    }
+  };
+
+  // purge-contracts와 달리 result.failed 분기가 없다 — 계약서 쪽은 계약마다 Blob 삭제 +
+  // 두 테이블 업데이트를 순회해서 일부만 실패할 수 있지만, 여기는 각각 한 번의
+  // UPDATE...WHERE·DELETE...WHERE뿐이라 외부 API 호출이 없고 부분 실패라는 상태가 없다
+  // (하나하나는 전부 성공하거나 던진다).
+  const result = await run(
+    `리워드 전달 후 ${REWARD_RETENTION_YEARS}년이 지난 후원의 배송지 개인정보 파기`,
+    purgeExpiredFundingPersonalData,
+  );
+  const accessLogs = await run(
+    `보관 ${PRIVACY_ACCESS_LOG_RETENTION_YEARS}년이 지난 고유식별정보 접속기록 삭제`,
+    purgeExpiredPrivacyAccessLogs,
+  );
+  const residentNumbers = await run(
+    `원천징수 정산 지급 후 ${RESIDENT_NUMBER_RETENTION_YEARS}년이 지난 개설자 주민등록번호 파기`,
+    purgeExpiredResidentNumbers,
+  );
+
+  // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
+  const body = {
+    purged: result ? result.purged : null,
+    purgedAccessLogs: accessLogs ? accessLogs.purged : null,
+    purgedResidentNumbers: residentNumbers ? residentNumbers.purged : null,
+  };
+
+  if (failures.length > 0) {
     await sendEmail({
       to: OPERATOR_EMAIL,
-      subject: '[Studio NOL] 펀딩 개인정보 파기 실패',
+      subject: `[Studio NOL] 펀딩 개인정보 파기 실패 (${failures.length}건)`,
       text:
-        `리워드 전달 후 ${REWARD_RETENTION_YEARS}년이 지난 후원의 배송지 개인정보 파기, 또는 ` +
-        `보관 ${PRIVACY_ACCESS_LOG_RETENTION_YEARS}년이 지난 고유식별정보 접속기록 삭제, 또는 ` +
-        `원천징수 정산 지급 후 ${RESIDENT_NUMBER_RETENTION_YEARS}년이 지난 개설자 주민등록번호 파기가 실패했습니다.\n\n` +
-        `사유: ${detail}\n\n` +
-        '펀딩 약관 제13조로 약속한 파기이므로 확인이 필요합니다.',
+        `아래 파기 작업이 실패했습니다.\n\n${failures
+          .map(({ label, detail }) => `· ${label}\n  사유: ${detail}`)
+          .join('\n\n')}\n\n` +
+        `함께 돌린 작업 중 성공한 것: ${
+          [
+            result ? `배송지 ${result.purged}건` : null,
+            accessLogs ? `접속기록 ${accessLogs.purged}건` : null,
+            residentNumbers ? `주민등록번호 ${residentNumbers.purged}건` : null,
+          ]
+            .filter(Boolean)
+            .join(', ') || '없음'
+        }\n\n` +
+        '펀딩 약관 제13조·처리방침으로 약속한 파기이므로 확인이 필요합니다. ' +
+        '표가 없다는 사유라면 운영 DB에 마이그레이션이 적용됐는지 먼저 확인해 주세요.',
     }).catch(() => {});
 
-    return res.status(500).json({ ok: false, message: '개인정보 파기 작업에 실패했습니다.' });
+    return res.status(500).json({ ok: false, message: '개인정보 파기 작업에 실패했습니다.', ...body });
   }
+
+  return res.status(200).json({ ok: true, ...body });
 }

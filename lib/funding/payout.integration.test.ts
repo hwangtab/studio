@@ -472,6 +472,43 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     error.mockRestore();
   });
 
+  /**
+   * 조회 자체가 실패하는 갈래도 남아야 한다. 예전엔 이 select가 던지면 기록 호출이 한 번도
+   * 일어나지 않고 예외만 위로 올라가, 처리방침 15·19항의 "성공·실패를 가리지 않고 남긴다"가
+   * 이 경로에서만 거짓이었다(호출하는 라우트 둘은 catch에서 'error'를 남긴다).
+   */
+  it('조회가 실패하면 error로 남고 예외는 그대로 올라간다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    const healthy = mockDb;
+    // 복호화 점검의 select만 골라 던지게 한다 — `{ enc }` 한 컬럼만 고르는 조회는 이것뿐이다.
+    mockDb = new Proxy(healthy, {
+      get(target, prop, receiver) {
+        if (prop !== 'select') return Reflect.get(target, prop, receiver);
+        return (fields?: Record<string, unknown>) => {
+          if (fields && Object.keys(fields).join() === 'enc') throw new Error('DB 장애');
+          return (target as unknown as { select: (f?: unknown) => unknown }).select(fields);
+        };
+      },
+    }) as typeof mockDb;
+
+    try {
+      await expect(recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'))).rejects.toThrow('DB 장애');
+    } finally {
+      mockDb = healthy;
+    }
+
+    const rows = await accessLogs();
+    expect(rows).toHaveLength(1);
+    expect(rows[0]).toMatchObject({
+      action: 'funding_resident_number_decrypt_check',
+      targetId: project.id,
+      result: 'error',
+    });
+    // 기록은 남되 정산은 기록되지 않는다 — 번호를 열 수 있는지 확인하지 못했다.
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
   /** 사업자(`invoice`)는 주민등록번호를 열지 않는다 — 열지 않은 것을 기록하면 거짓이다. */
   it('원천징수 대상이 아니면 복호화도 기록도 없다', async () => {
     const { project } = await seedProject({}, { taxType: 'invoice' });

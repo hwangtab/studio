@@ -81,3 +81,43 @@ it('접속기록 삭제가 실패하면 500이고 운영자에게 메일이 간�
   expect(r.status).toBe(500);
   expect(sendEmail).toHaveBeenCalledTimes(1);
 });
+
+/**
+ * 셋이 한 try 안에 나란히 서 있던 동안, 앞의 것이 던지면 뒤의 것이 그달에 아예 돌지
+ * 않았다. 운영 DB에 마이그레이션이 적용되기 전 코드가 먼저 배포되면 접속기록 표 조회가
+ * `no such table`을 던지고 주민등록번호 파기가 그대로 멈춘다 — 처리방침이 약속한 월 1회
+ * 자동 파기가 표 하나 때문에 정지하는 형태다.
+ */
+it('접속기록 삭제가 실패해도 나머지 두 파기는 그대로 돈다', async () => {
+  (purgeExpiredPrivacyAccessLogs as jest.Mock).mockRejectedValue(new Error('no such table: privacy_access_logs'));
+  const r = await call();
+  expect(purgeExpiredFundingPersonalData).toHaveBeenCalledTimes(1);
+  expect(purgeExpiredResidentNumbers).toHaveBeenCalledTimes(1);
+  // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
+  expect(r.body).toMatchObject({ ok: false, purged: 3, purgedAccessLogs: null, purgedResidentNumbers: 2 });
+});
+
+it('배송지 파기가 실패해도 나머지 두 파기는 그대로 돈다', async () => {
+  (purgeExpiredFundingPersonalData as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+  const r = await call();
+  expect(purgeExpiredPrivacyAccessLogs).toHaveBeenCalledTimes(1);
+  expect(purgeExpiredResidentNumbers).toHaveBeenCalledTimes(1);
+  expect(r.body).toMatchObject({ purged: null, purgedAccessLogs: 7, purgedResidentNumbers: 2 });
+});
+
+it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () => {
+  (purgeExpiredPrivacyAccessLogs as jest.Mock).mockRejectedValue(new Error('no such table: privacy_access_logs'));
+  (purgeExpiredResidentNumbers as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+  await call();
+  expect(sendEmail).toHaveBeenCalledTimes(1);
+  const mail = (sendEmail as jest.Mock).mock.calls[0][0] as { subject: string; text: string };
+  expect(mail.subject).toContain('2건');
+  expect(mail.text).toContain('접속기록');
+  expect(mail.text).toContain('no such table: privacy_access_logs');
+  expect(mail.text).toContain('주민등록번호');
+  expect(mail.text).toContain('DB 장애');
+  // 성공한 것도 함께 적는다 — 무엇이 돌았는지 알아야 다음 달을 기다릴지 판단한다.
+  expect(mail.text).toContain('배송지 3건');
+  // 실패한 것을 "또는"으로 뭉뚱그리지 않는다.
+  expect(mail.text).not.toContain('또는');
+});
