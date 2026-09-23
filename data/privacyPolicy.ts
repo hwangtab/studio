@@ -424,7 +424,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Privacy Policy',
     subtitle: 'Studio NOL collects only the minimum personal data required for inquiries and consultation support.',
     lastUpdatedLabel: 'Effective date',
-    lastUpdatedValue: 'September 11, 2026',
+    lastUpdatedValue: 'September 23, 2026',
     sections: [
       {
         heading: '1. Personal data we collect',
@@ -477,18 +477,22 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body:
           'Personal data is destroyed without delay once its purpose has been met or its retention ' +
           'period has passed. Records that another law requires us to keep are destroyed once that ' +
-          'period ends. Destruction is not left to anyone remembering to do it: an automated clean-up ' +
-          'runs once a month and erases the stored value in our database. Where a field cannot be left ' +
-          'empty we overwrite it with the mark "(personal data destroyed)", and data held encrypted is ' +
-          'destroyed as ciphertext, so the decryption key cannot bring it back. Because the clean-up ' +
-          'runs monthly, data is erased within a month of becoming eligible. Inquiry data is destroyed ' +
-          'once the consultation is finished. For orders, bookings and recurring payments (offered on ' +
-          'our Korean pages only), the name, phone number and email address are overwritten with that ' +
-          'mark five years after the order was placed or the subscription ended; free-text notes, the ' +
-          'raw responses returned by the payment provider and the reasons it gave for declining a ' +
-          'payment are erased on shorter schedules, because they are not part of what the law requires ' +
-          'us to keep. What remains after that is the transaction record itself - order number, ' +
-          'product, amounts, times, payment method and processing status.',
+          'period ends. An automated clean-up runs once a month and erases the stored value in our ' +
+          'database, so no deletion waits on someone noticing that it is due. Where a field cannot be ' +
+          'left empty we overwrite it with the mark "(personal data destroyed)". Where we store data ' +
+          'encrypted, we erase the encrypted text itself, so holding the decryption key makes no ' +
+          'difference. Because the clean-up runs monthly, data is erased within a month of becoming ' +
+          'eligible. Inquiry data is destroyed once the consultation is finished. For orders, bookings ' +
+          'and recurring payments (offered on our Korean pages only), the name, phone number and email ' +
+          'address are overwritten with that mark five years after the order was placed or last ' +
+          'changed, whichever is later - a refund or a cancellation counts as a change - or five years ' +
+          'after the subscription ended. The raw response the payment provider returned when it ' +
+          'approved a payment is erased five years after that approval, because the law requires us to ' +
+          'keep the payment record for that long. Free-text notes and the reasons the provider gave for ' +
+          'declining a payment are erased on shorter schedules: a declined payment forms no contract ' +
+          'and moves no money, so it is not a record the law tells us to keep. What remains after that ' +
+          'is the transaction record itself - order number, product, amounts, times, payment method and ' +
+          'processing status.',
       },
       {
         heading: '10. Privacy officer',
@@ -523,7 +527,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '隐私政策',
     subtitle: 'Studio NOL 仅收集处理咨询与沟通所需的最少个人信息，并进行安全管理。',
     lastUpdatedLabel: '生效日期',
-    lastUpdatedValue: '2026年9月11日',
+    lastUpdatedValue: '2026年9月23日',
     sections: [
       {
         heading: '1. 我们收集的个人信息',
@@ -568,12 +572,14 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '9. 个人信息的销毁程序与方法',
         body:
           '处理目的已达成或保存期限已过的个人信息将及时销毁；其他法律要求保存的记录，则在该期限届满后销毁。' +
-          '销毁不依赖人工记忆：每月运行一次的自动清理作业会删除数据库中相应的值。无法留空的字段以' +
-          '“(个人信息已销毁)”的标记覆盖；加密保存的值连同密文一并删除，即使持有解密密钥也无法复原。' +
+          '每月运行一次的自动清理作业会删除数据库中相应的值，因此销毁不必等人想起来。无法留空的字段以' +
+          '“(个人信息已销毁)”的标记覆盖；加密保存的值，我们删除的是密文本身，所以即使持有解密密钥也无从还原。' +
           '由于清理作业每月运行一次，自满足销毁条件之日起最迟一个月内删除。咨询信息在咨询结束后销毁。' +
-          '预约、订单与定期付款（仅在韩语页面提供）中的姓名、联系电话与电子邮箱，在下单之日或订阅结束之日起' +
-          '满五年后以上述标记覆盖；自由填写的备注、支付机构返回的响应原文以及支付被拒的事由原文并非法律' +
-          '要求保存的记录，因此保存期限更短。此后留下的只是交易记录本身——订单编号、商品、金额、时间、' +
+          '预约、订单与定期付款（仅在韩语页面提供）中的姓名、联系电话与电子邮箱，自下单之日与该订单最后一次' +
+          '变更之日（退款或取消也算一次变更）中较晚的一天起满五年后，以上述标记覆盖；订阅则自结束之日起算。' +
+          '支付机构在批准付款时返回的响应原文，自该批准之日起满五年后删除——法律要求付款记录保存这么久。' +
+          '自由填写的备注与支付被拒的事由原文保存期限更短：付款被拒既未成立合同也未发生款项往来，' +
+          '不属于法律要求保存的记录。此后留下的只是交易记录本身——订单编号、商品、金额、时间、' +
           '支付方式与处理状态。',
       },
       {
@@ -581,7 +587,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body:
           'Studio NOL 设有个人信息保护负责人，全面负责个人信息处理事务，并负责受理信息主体的咨询、投诉与救济。' +
           'Studio NOL 由一人运营，因此不另设专门部门，第 5 项的权利行使请求也由同一窗口受理。' +
-          `姓名 — ${PRIVACY_OFFICER.name}（Studio NOL 运营者）／电子邮箱 — ${PRIVACY_OFFICER.email}／` +
+          `姓名 — ${PRIVACY_OFFICER.name}（${studioOperator.alternateName[0]}，Studio NOL 运营者）／` +
+          `电子邮箱 — ${PRIVACY_OFFICER.email}／` +
           `电话 — ${CANONICAL_FACTS.phoneIntl}。`,
       },
       {
@@ -603,7 +610,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Política de privacidad',
     subtitle: 'Studio NOL recopila solo los datos personales mínimos necesarios para responder consultas y brindar orientación.',
     lastUpdatedLabel: 'Fecha de entrada en vigor',
-    lastUpdatedValue: '11 de septiembre de 2026',
+    lastUpdatedValue: '23 de septiembre de 2026',
     sections: [
       {
         heading: '1. Datos personales que recopilamos',
@@ -658,19 +665,23 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body:
           'Los datos personales se destruyen sin demora cuando se cumple su finalidad o vence su plazo ' +
           'de conservación. Los registros que otra ley obliga a conservar se destruyen al vencer ese ' +
-          'plazo. La destrucción no depende de que alguien la recuerde: una tarea de limpieza ' +
-          'automática se ejecuta una vez al mes y borra el valor guardado en la base de datos. Cuando ' +
-          'un campo no puede quedar vacío, lo sobrescribimos con la marca «(datos personales ' +
-          'destruidos)», y los datos guardados cifrados se destruyen junto con su texto cifrado, de ' +
-          'modo que ni con la clave de descifrado pueden recuperarse. Como la limpieza se ejecuta una ' +
-          'vez al mes, el borrado se produce como máximo un mes después de cumplirse la condición. Los ' +
-          'datos de consultas se destruyen al terminar la atención. En reservas, pedidos y pagos ' +
-          'recurrentes (disponibles solo en nuestras páginas en coreano), el nombre, el teléfono y el ' +
-          'correo electrónico se sobrescriben con esa marca cinco años después del pedido o del fin de ' +
-          'la suscripción; las notas de texto libre, las respuestas originales de la entidad de pago y ' +
-          'los motivos con que esta rechaza un cobro se borran en plazos más cortos, porque no forman ' +
-          'parte de lo que la ley obliga a conservar. Después solo queda el registro de la transacción ' +
-          'en sí: número de pedido, producto, importes, fechas, medio de pago y estado del trámite.',
+          'plazo. Una tarea de limpieza automática se ejecuta una vez al mes y borra el valor guardado ' +
+          'en la base de datos, de modo que ningún borrado queda a la espera de que alguien se acuerde. ' +
+          'Cuando un campo no puede quedar vacío, lo sobrescribimos con la marca «(datos personales ' +
+          'destruidos)». De lo que guardamos cifrado borramos el propio texto cifrado, así que tener la ' +
+          'clave de descifrado no sirve de nada. Como la limpieza se ejecuta una vez al mes, el borrado ' +
+          'se produce como máximo un mes después de cumplirse la condición. Los datos de consultas se ' +
+          'destruyen al terminar la atención. En reservas, pedidos y pagos recurrentes (disponibles solo ' +
+          'en nuestras páginas en coreano), el nombre, el teléfono y el correo electrónico se ' +
+          'sobrescriben con esa marca cinco años después de la fecha del pedido o de su última ' +
+          'modificación, la que sea posterior (una devolución o una cancelación cuenta como ' +
+          'modificación), o cinco años después del fin de la suscripción. La respuesta original que la ' +
+          'entidad de pago devuelve al aprobar un cobro se borra cinco años después de esa aprobación, ' +
+          'porque la ley nos obliga a conservar el registro del pago durante ese tiempo. Las notas de ' +
+          'texto libre y los motivos con que la entidad rechaza un cobro se borran en plazos más ' +
+          'cortos: un cobro rechazado no forma contrato ni mueve dinero, así que no es un registro que ' +
+          'la ley mande conservar. Después solo queda el registro de la transacción en sí: número de ' +
+          'pedido, producto, importes, fechas, medio de pago y estado del trámite.',
       },
       {
         heading: '10. Responsable de protección de datos personales',
@@ -708,7 +719,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Chính sách bảo mật',
     subtitle: 'Studio NOL chỉ thu thập tối thiểu thông tin cá nhân cần thiết để tiếp nhận và phản hồi tư vấn.',
     lastUpdatedLabel: 'Ngày hiệu lực',
-    lastUpdatedValue: '11 tháng 9, 2026',
+    lastUpdatedValue: '23 tháng 9, 2026',
     sections: [
       {
         heading: '1. Thông tin cá nhân được thu thập',
@@ -759,18 +770,22 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '9. Trình tự và phương pháp hủy thông tin cá nhân',
         body:
           'Thông tin cá nhân đã đạt mục đích xử lý hoặc hết thời hạn lưu trữ sẽ được hủy không chậm ' +
-          'trễ; hồ sơ mà luật khác yêu cầu lưu giữ thì được hủy sau khi hết thời hạn đó. Việc hủy ' +
-          'không dựa vào trí nhớ của con người: một tác vụ dọn dẹp tự động chạy mỗi tháng một lần và ' +
-          'xóa giá trị tương ứng trong cơ sở dữ liệu. Với ô không thể để trống, chúng tôi ghi đè bằng ' +
-          'dấu “(đã hủy thông tin cá nhân)”; dữ liệu lưu ở dạng mã hóa được xóa cả phần bản mã nên dù ' +
-          'có khóa giải mã cũng không khôi phục được. Vì tác vụ chạy mỗi tháng một lần, dữ liệu được ' +
+          'trễ; hồ sơ mà luật khác yêu cầu lưu giữ thì được hủy sau khi hết thời hạn đó. Một tác vụ ' +
+          'dọn dẹp tự động chạy mỗi tháng một lần và xóa giá trị tương ứng trong cơ sở dữ liệu, nên ' +
+          'không việc xóa nào phải chờ ai đó nhớ ra. Với ô không thể để trống, chúng tôi ghi đè bằng ' +
+          'dấu “(đã hủy thông tin cá nhân)”. Dữ liệu lưu ở dạng mã hóa thì chính bản mã bị xóa, nên có ' +
+          'khóa giải mã cũng không lấy lại được gì. Vì tác vụ chạy mỗi tháng một lần, dữ liệu được ' +
           'xóa chậm nhất trong vòng một tháng kể từ khi đủ điều kiện hủy. Thông tin thu thập qua tư ' +
           'vấn được hủy sau khi hoàn tất tư vấn. Với đặt lịch, đơn hàng và thanh toán định kỳ (chỉ có ' +
           'trên trang tiếng Hàn), họ tên, số điện thoại và email được ghi đè bằng dấu nói trên sau năm ' +
-          'năm kể từ ngày đặt hoặc ngày kết thúc thuê bao; còn ghi chú tự do, nội dung phản hồi gốc ' +
-          'của đơn vị thanh toán và lý do từ chối thanh toán được xóa theo thời hạn ngắn hơn vì không ' +
-          'thuộc phần luật buộc phải lưu. Sau đó chỉ còn lại chính hồ sơ giao dịch: mã đơn hàng, sản ' +
-          'phẩm, số tiền, thời điểm, phương thức thanh toán và trạng thái xử lý.',
+          'năm, tính từ ngày đặt hoặc ngày đơn hàng thay đổi lần cuối, lấy mốc muộn hơn (hoàn tiền hay ' +
+          'hủy đơn cũng là một lần thay đổi); với thuê bao thì tính từ ngày kết thúc. Nội dung phản ' +
+          'hồi gốc mà đơn vị thanh toán trả về khi duyệt một khoản thanh toán được xóa sau năm năm kể ' +
+          'từ lần duyệt đó, vì luật buộc chúng tôi giữ hồ sơ thanh toán trong chừng ấy thời gian. Còn ' +
+          'ghi chú tự do và lý do đơn vị thanh toán từ chối một khoản thanh toán thì được xóa theo ' +
+          'thời hạn ngắn hơn: thanh toán bị từ chối không hình thành hợp đồng và cũng không có tiền ' +
+          'chuyển đi, nên không thuộc phần luật buộc phải lưu. Sau đó chỉ còn lại chính hồ sơ giao ' +
+          'dịch: mã đơn hàng, sản phẩm, số tiền, thời điểm, phương thức thanh toán và trạng thái xử lý.',
       },
       {
         heading: '10. Người phụ trách bảo vệ thông tin cá nhân',
@@ -806,7 +821,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'นโยบายความเป็นส่วนตัว',
     subtitle: 'Studio NOL เก็บข้อมูลส่วนบุคคลเท่าที่จําเป็นสําหรับการรับและตอบคําสอบถามเท่านั้น',
     lastUpdatedLabel: 'วันที่มีผลบังคับใช้',
-    lastUpdatedValue: '11 กันยายน 2026',
+    lastUpdatedValue: '23 กันยายน 2026',
     sections: [
       {
         heading: '1. ข้อมูลส่วนบุคคลที่เราเก็บรวบรวม',
@@ -855,15 +870,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '9. ขั้นตอนและวิธีการทําลายข้อมูลส่วนบุคคล',
         body:
           'ข้อมูลส่วนบุคคลที่บรรลุวัตถุประสงค์ในการประมวลผลแล้วหรือพ้นระยะเวลาเก็บรักษาแล้วจะถูกทําลายโดยไม่ชักช้า ' +
-          'ส่วนบันทึกที่กฎหมายอื่นกําหนดให้เก็บรักษาจะถูกทําลายเมื่อพ้นระยะเวลานั้น การทําลายไม่ได้อาศัยความทรงจําของคน ' +
-          'แต่มีงานจัดระเบียบอัตโนมัติที่ทํางานเดือนละหนึ่งครั้งคอยลบค่าที่เก็บไว้ในฐานข้อมูล ช่องที่เว้นว่างไม่ได้จะถูกเขียนทับ' +
-          'ด้วยเครื่องหมาย “(ทําลายข้อมูลส่วนบุคคลแล้ว)” ส่วนค่าที่เก็บไว้ในรูปแบบเข้ารหัสจะถูกลบทั้งตัวข้อความเข้ารหัส ' +
-          'จึงไม่อาจกู้คืนได้แม้มีกุญแจถอดรหัส เนื่องจากงานดังกล่าวทํางานเดือนละครั้ง ข้อมูลจึงถูกลบอย่างช้าที่สุดภายในหนึ่งเดือน' +
+          'ส่วนบันทึกที่กฎหมายอื่นกําหนดให้เก็บรักษาจะถูกทําลายเมื่อพ้นระยะเวลานั้น งานจัดระเบียบอัตโนมัติจะทํางาน' +
+          'เดือนละหนึ่งครั้งและลบค่าที่เก็บไว้ในฐานข้อมูล การลบจึงไม่ต้องรอให้ใครนึกขึ้นได้ ช่องที่เว้นว่างไม่ได้จะถูกเขียนทับ' +
+          'ด้วยเครื่องหมาย “(ทําลายข้อมูลส่วนบุคคลแล้ว)” ส่วนค่าที่เก็บไว้ในรูปแบบเข้ารหัส เราจะลบตัวข้อความเข้ารหัสนั้นเอง ' +
+          'ต่อให้มีกุญแจถอดรหัสก็ไม่เหลืออะไรให้ถอด เนื่องจากงานดังกล่าวทํางานเดือนละครั้ง ข้อมูลจึงถูกลบอย่างช้าที่สุดภายในหนึ่งเดือน' +
           'นับแต่วันที่เข้าเงื่อนไขการทําลาย ข้อมูลที่เก็บจากการสอบถามจะถูกทําลายหลังเสร็จสิ้นการให้คําปรึกษา ' +
           'สําหรับการจอง คําสั่งซื้อ และการชําระเงินแบบต่อเนื่อง (มีเฉพาะหน้าภาษาเกาหลี) ชื่อ เบอร์โทร และอีเมล ' +
-          'จะถูกเขียนทับด้วยเครื่องหมายข้างต้นเมื่อครบห้าปีนับแต่วันสั่งซื้อหรือวันสิ้นสุดการสมัครสมาชิก ' +
-          'ส่วนบันทึกข้อความอิสระ เนื้อหาการตอบกลับต้นฉบับจากผู้ให้บริการชําระเงิน และเหตุผลการปฏิเสธการชําระเงิน ' +
-          'จะถูกลบในระยะเวลาที่สั้นกว่า เพราะไม่ใช่ส่วนที่กฎหมายกําหนดให้เก็บ หลังจากนั้นสิ่งที่เหลืออยู่คือบันทึกธุรกรรมเอง ' +
+          'จะถูกเขียนทับด้วยเครื่องหมายข้างต้นเมื่อครบห้าปี โดยนับจากวันสั่งซื้อหรือวันที่คําสั่งซื้อนั้นเปลี่ยนแปลงครั้งล่าสุด ' +
+          'แล้วแต่วันใดจะช้ากว่า (การคืนเงินหรือการยกเลิกก็นับเป็นการเปลี่ยนแปลง) ส่วนการสมัครสมาชิกให้นับจากวันสิ้นสุด ' +
+          'เนื้อหาการตอบกลับต้นฉบับที่ผู้ให้บริการชําระเงินส่งกลับมาเมื่ออนุมัติการชําระเงินจะถูกลบเมื่อครบห้าปีนับแต่วันอนุมัตินั้น ' +
+          'เพราะกฎหมายกําหนดให้เก็บบันทึกการชําระเงินไว้นานเท่านั้น ส่วนบันทึกข้อความอิสระและเหตุผลที่ผู้ให้บริการปฏิเสธ' +
+          'การชําระเงินจะถูกลบในระยะเวลาที่สั้นกว่า เพราะการชําระเงินที่ถูกปฏิเสธไม่ก่อให้เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
+          'จึงไม่ใช่บันทึกที่กฎหมายกําหนดให้เก็บ หลังจากนั้นสิ่งที่เหลืออยู่คือบันทึกธุรกรรมเอง ' +
           'ได้แก่ หมายเลขคําสั่งซื้อ สินค้า จํานวนเงิน เวลา วิธีชําระเงิน และสถานะการดําเนินการ',
       },
       {
@@ -897,7 +915,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Maxfiylik siyosati',
     subtitle: 'Studio NOL faqat murojaatlarni qabul qilish va javob berish uchun zarur bo\'lgan eng kam shaxsiy ma\'lumotlarni yig\'adi.',
     lastUpdatedLabel: 'Kuchga kirish sanasi',
-    lastUpdatedValue: '2026-yil 11-sentabr',
+    lastUpdatedValue: '2026-yil 23-sentabr',
     sections: [
       {
         heading: '1. Yig\'iladigan shaxsiy ma\'lumotlar',
@@ -952,20 +970,25 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body:
           'Qayta ishlash maqsadi bajarilgan yoki saqlash muddati o\'tgan shaxsiy ma\'lumotlar ' +
           'kechiktirmasdan yo\'q qilinadi; boshqa qonun saqlashni talab qiladigan yozuvlar esa o\'sha ' +
-          'muddat tugagach yo\'q qilinadi. Yo\'q qilish odamning esida turishiga tashlab qo\'yilmagan: ' +
-          'oyiga bir marta ishlaydigan avtomatik tozalash vazifasi ma\'lumotlar bazasidagi tegishli ' +
-          'qiymatni o\'chiradi. Bo\'sh qoldirib bo\'lmaydigan maydonlar “(shaxsiy ma\'lumot yo\'q ' +
-          'qilindi)” belgisi bilan qoplanadi; shifrlangan holda saqlanadigan qiymatlar esa shifrmatni ' +
-          'bilan birga o\'chiriladi, shuning uchun kalit bo\'lsa ham tiklab bo\'lmaydi. Vazifa oyiga bir ' +
-          'marta ishlagani uchun ma\'lumot yo\'q qilish shartlari bajarilgan kundan eng kechi bir oy ' +
-          'ichida o\'chiriladi. Murojaat orqali yig\'ilgan ma\'lumotlar maslahat yakunlangach yo\'q ' +
-          'qilinadi. Bron, buyurtma va muntazam to\'lovlarda (faqat koreys tilidagi sahifalarda) ism, ' +
-          'telefon raqami va email manzili buyurtma berilgan yoki obuna tugagan kundan besh yil ' +
-          'o\'tgach yuqoridagi belgi bilan qoplanadi; erkin yoziladigan izohlar, to\'lov tashkiloti ' +
-          'javobining asl matni va to\'lovni rad etish sabablari esa qisqaroq muddatlarda o\'chiriladi, ' +
-          'chunki ular qonun saqlashni talab qiladigan yozuvlar tarkibiga kirmaydi. Shundan keyin ' +
-          'qoladigani tranzaksiya yozuvining o\'zi: buyurtma raqami, mahsulot, summalar, vaqtlar, ' +
-          'to\'lov usuli va ishlov holati.',
+          'muddat tugagach yo\'q qilinadi. Oyiga bir marta ishlaydigan avtomatik tozalash vazifasi ' +
+          'ma\'lumotlar bazasidagi tegishli qiymatni o\'chiradi, shuning uchun hech bir o\'chirish ' +
+          'kimningdir yodiga tushishini kutmaydi. Bo\'sh qoldirib bo\'lmaydigan maydonlar “(shaxsiy ' +
+          'ma\'lumot yo\'q qilindi)” belgisi bilan qoplanadi. Shifrlangan holda saqlanadigan ' +
+          'qiymatlarning shifrmatnining o\'zi o\'chiriladi, shuning uchun kalit qo\'lda bo\'lsa ham ' +
+          'ochadigan narsa qolmaydi. Vazifa oyiga bir marta ishlagani uchun ma\'lumot yo\'q qilish ' +
+          'shartlari bajarilgan kundan eng kechi bir oy ichida o\'chiriladi. Murojaat orqali yig\'ilgan ' +
+          'ma\'lumotlar maslahat yakunlangach yo\'q qilinadi. Bron, buyurtma va muntazam to\'lovlarda ' +
+          '(faqat koreys tilidagi sahifalarda) ism, telefon raqami va email manzili buyurtma berilgan ' +
+          'kun bilan o\'sha buyurtma oxirgi marta o\'zgargan kundan qaysi biri kechroq bo\'lsa, o\'shandan ' +
+          'besh yil o\'tgach yuqoridagi belgi bilan qoplanadi (pul qaytarish yoki bekor qilish ham ' +
+          'o\'zgarish hisoblanadi); obuna uchun esa tugagan kundan hisoblanadi. To\'lov tashkiloti ' +
+          'to\'lovni tasdiqlaganda qaytargan javobning asl matni o\'sha tasdiqdan besh yil o\'tgach ' +
+          'o\'chiriladi, chunki qonun to\'lov yozuvini shuncha muddat saqlashni talab qiladi. Erkin ' +
+          'yoziladigan izohlar va to\'lov tashkiloti to\'lovni rad etish sabablari esa qisqaroq ' +
+          'muddatlarda o\'chiriladi: rad etilgan to\'lovda na shartnoma tuziladi, na pul harakatlanadi, ' +
+          'shuning uchun u qonun saqlashni talab qiladigan yozuv emas. Shundan keyin qoladigani ' +
+          'tranzaksiya yozuvining o\'zi: buyurtma raqami, mahsulot, summalar, vaqtlar, to\'lov usuli va ' +
+          'ishlov holati.',
       },
       {
         heading: '10. Shaxsiy ma\'lumotlarni himoya qilish uchun mas\'ul shaxs',
@@ -974,7 +997,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'ma\'lumotlar subyektining savollari, shikoyatlari va huquqlarini tiklash masalalari bilan ' +
           'shug\'ullanadigan mas\'ul shaxsni belgilagan. Studio NOL bir kishi tomonidan yuritilgani ' +
           'uchun alohida bo\'lim yo\'q va 5-banddagi so\'rovlar ham shu manzilga keladi. ' +
-          `Ismi: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), Studio NOL rahbari. ` +
+          `Ismi: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), Studio NOLni yurituvchi shaxs. ` +
           `Email: ${PRIVACY_OFFICER.email}. Telefon: ${CANONICAL_FACTS.phoneIntl}.`,
       },
       {
