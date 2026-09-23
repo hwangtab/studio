@@ -3,6 +3,7 @@
  * 전부 실패 요약(string) 또는 null(성공)을 돌려주고, notificationError로 저장된다.
  */
 import { sendEmail } from '../email/resend';
+import { isPurgedValue } from '../privacy/orderRetention';
 import { CUSTOMER_REPLY_TO } from '../operatorContact';
 import { OPERATOR_EMAIL } from '../operatorContact';
 import type { Subscription } from '../../db/schema';
@@ -18,6 +19,29 @@ export const subscriptionSetupUrl = (sub: Pick<Subscription, 'id'>, setupToken: 
 
 export const subscriptionManageUrl = (sub: Pick<Subscription, 'id' | 'manageToken'>): string =>
   `${SITE_URL}/ko/subscribe/manage/${sub.id}?token=${sub.manageToken}`;
+
+/**
+ * 고객 메일 한 통. **파기된 주소에는 보내지 않고, 실패로도 세지 않는다.**
+ *
+ * 보관 기간이 지난 구독은 이메일 칸이 파기 표식으로 덮인다
+ * (`lib/privacy/orderRetention.ts`). 그 값을 그대로 `sendEmail`에 넘기면 발송은 어차피
+ * 막히지만(`isUndeliverableAddress`) 실패 문자열이 돌아와 `notificationError`에 박히고,
+ * 그 칸은 관리자 화면에 "고객이 메일을 못 받았다"로 뜬다 — 파기했으니 못 받는 것이 맞는데
+ * 영영 꺼지지 않는 경보가 된다. 예약 쪽 `lib/booking/email.ts`의 `sendCustomerEmail`,
+ * 펀딩 쪽 `lib/funding/email.ts`의 `withoutUndeliverableCustomer`와 같은 판정이다.
+ *
+ * 운영자 사본(`sendSubscriptionOperatorAlert`)은 이 함수를 지나지 않는다 — 주소가 우리
+ * 것이라 파기와 무관하고, 파기된 구독이라도 운영자는 무슨 일이 있었는지 알아야 한다.
+ */
+const sendCustomerEmail = (
+  sub: Pick<Subscription, 'customerEmail'>,
+  prefix: string,
+  params: Parameters<typeof sendEmail>[0],
+): Promise<string | null> => {
+  if (isPurgedValue(sub.customerEmail)) return Promise.resolve(null);
+  // errorCode가 없더라도 실패는 실패로 센다 — null을 돌려주면 파기 건과 구분되지 않는다.
+  return sendEmail(params).then((r) => (r.ok ? null : `${prefix}:${r.errorCode ?? 'API_ERROR'}`));
+};
 
 const amountLine = (sub: Pick<Subscription, 'totalAmount'>): string =>
   `월 ${formatPriceAmount(sub.totalAmount)}원 (VAT 포함)`;
@@ -41,7 +65,7 @@ export const sendSubscriptionSetupEmail = (
   // "다음 결제일부터 새 카드로 청구됩니다"라고 쓰면 **오지 않을 청구를 예고**하는 것이라,
   // 바로 위 주석이 말하는 'change' 거짓 안내와 같은 종류의 거짓이 된다.
   const isPaused = sub.status === 'paused';
-  return sendEmail({
+  return sendCustomerEmail(sub, 'setup', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제 ${isChange ? '카드 변경' : '카드 등록'} 안내`,
@@ -63,7 +87,7 @@ export const sendSubscriptionSetupEmail = (
       '링크는 발급일로부터 7일간 유효합니다.',
       '문의: 010-4255-7893',
     ].join('\n'),
-  }).then((result) => (result.ok ? null : `setup:${result.errorCode}`));
+  });
 };
 
 /** 카드 등록 + 첫 결제 성공 확정. */
@@ -71,7 +95,7 @@ export const sendSubscriptionActivatedEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName' | 'billingDay'>,
   input: { manageUrl: string; amount: number },
 ): Promise<string | null> =>
-  sendEmail({
+  sendCustomerEmail(sub, 'activated', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 시작되었습니다`,
@@ -83,14 +107,14 @@ export const sendSubscriptionActivatedEmail = (
       `구독 조회·해지: ${input.manageUrl}`,
       '문의: 010-4255-7893',
     ].join('\n'),
-  }).then((result) => (result.ok ? null : `activated:${result.errorCode}`));
+  });
 
 /** 매월 결제 완료. */
 export const sendSubscriptionChargedEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: { amount: number; cycleYm: string; paymentKey?: string; manageUrl: string },
 ): Promise<string | null> =>
-  sendEmail({
+  sendCustomerEmail(sub, 'charged', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 완료되었습니다`,
@@ -101,7 +125,7 @@ export const sendSubscriptionChargedEmail = (
       `구독 조회·해지: ${input.manageUrl}`,
       '문의: 010-4255-7893',
     ].join('\n'),
-  }).then((result) => (result.ok ? null : `charged:${result.errorCode}`));
+  });
 
 /** 결제 실패 — 재시도 예정 또는 정지 안내(마지막 재시도까지 소진하면 nextRetryAt이 null). */
 export const sendSubscriptionChargeFailedEmail = (
@@ -118,7 +142,7 @@ export const sendSubscriptionChargeFailedEmail = (
     ? `${input.nextRetryAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}에 다시 결제를 시도합니다.`
     : '재시도 한도를 넘어 정기결제가 정지되었습니다. 카드를 재등록해야 이용이 계속됩니다.';
 
-  return sendEmail({
+  return sendCustomerEmail(sub, 'charge_failed', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제에 실패했습니다`,
@@ -130,7 +154,7 @@ export const sendSubscriptionChargeFailedEmail = (
       `구독 조회·카드 변경: ${input.manageUrl}`,
       '문의: 010-4255-7893',
     ].join('\n'),
-  }).then((result) => (result.ok ? null : `charge_failed:${result.errorCode}`));
+  });
 };
 
 /** 해지 확인. 즉시 환불 없이 이미 결제한 기간까지 이용 가능함을 안내한다. */
@@ -138,7 +162,7 @@ export const sendSubscriptionCancelledEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: { endsAt: Date },
 ): Promise<string | null> =>
-  sendEmail({
+  sendCustomerEmail(sub, 'cancelled', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 해지되었습니다`,
@@ -148,7 +172,7 @@ export const sendSubscriptionCancelledEmail = (
       '',
       '문의: 010-4255-7893',
     ].join('\n'),
-  }).then((result) => (result.ok ? null : `cancelled:${result.errorCode}`));
+  });
 
 /**
  * 회차 환불 안내. 관리자가 구독 상세에서 회차를 환불했을 때 보낸다.
@@ -161,7 +185,7 @@ export const sendSubscriptionRefundedEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
   input: { amount: number; cycleYm: string; orderNo: string; isFull: boolean; manageUrl: string },
 ): Promise<string | null> =>
-  sendEmail({
+  sendCustomerEmail(sub, 'refunded', {
     to: sub.customerEmail,
     replyTo: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} ${input.cycleYm} 결제가 ${input.isFull ? '' : '일부 '}환불되었습니다`,
@@ -173,7 +197,7 @@ export const sendSubscriptionRefundedEmail = (
       `구독 조회·해지: ${input.manageUrl}`,
       '문의: 010-4255-7893',
     ].join('\n'),
-  }).then((result) => (result.ok ? null : `refunded:${result.errorCode}`));
+  });
 
 export type SubscriptionAlertKind = 'paused' | 'first_charge_failed' | 'cancelled' | 'late_approval';
 

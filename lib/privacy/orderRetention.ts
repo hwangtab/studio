@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, lt, ne, or } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNotNull, isNull, lt, ne, notExists, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
@@ -360,6 +360,249 @@ export const purgeExpiredSubscriptionCancelReasons = async (
 };
 
 /**
+ * 끝나지 못한 채 방치된 구독을 "방치"로 판정하는 기간.
+ *
+ * **법이 정한 것이 아니라 운영 판단이다.** 아래 `closeDormantSubscriptions`의 대상은
+ * `pending_card`(카드 등록 전)와 `paused`(재시도 한도 소진 **또는 운영자가 청구를 멈춰 둔 것**)
+ * 인데, 이 둘은 **어떤 코드도 `ended`로 넘기지 않는다** — 유일한 전이 경로인 `lib/billing/service.ts`의
+ * `endExpiredSubscriptions`가 `status = 'cancelled' AND ends_at <= now`에서만 돈다.
+ * 즉 고객이 카드 등록 링크를 열지 않고 사라지거나 카드가 계속 거절되어 멈춘 구독은
+ * 영영 `ended`가 되지 않고, `ended`를 요구하는 구독 파기 셋이 전부 비켜 가 이름·연락처·
+ * 이메일이 기한 없이 남는다. 제21조①이 말하는 "불필요하게 되었을 때"가 그 상태다.
+ *
+ * 1년으로 잡은 이유는 되돌아올 여지다. 카드를 다시 등록하면 `pending_card`·`paused` 모두
+ * 그 자리에서 이어지므로(`SETUP_ALLOWED_STATUSES`), 몇 달 쉬었다 돌아오는 고객을
+ * 끊지 않을 만큼은 둬야 한다. 값을 바꾸려면 이 상수 하나만 고치면 되고, 함께 고쳐야 하는
+ * 문서는 처리방침의 파기 항이다.
+ */
+export const SUBSCRIPTION_DORMANCY_YEARS = 1;
+
+/**
+ * 방치 판정의 대상 상태.
+ *
+ * **`active`·`past_due`·`cancelled`는 대상이 아니다.** `active`는 청구가 돌고 있고,
+ * `past_due`는 재시도 대기 중이라 둘 다 살아 있다. `cancelled`는 해지 예약이라
+ * `endExpiredSubscriptions`가 `ends_at`이 지나면 `ended`로 넘긴다 — 이미 경로가 있는 것을
+ * 여기서 또 건드리면 두 개의 종료 규칙이 생긴다. `ended`는 이미 끝났다.
+ *
+ * ## ⚠ `paused`는 두 가지인데 구분하는 컬럼이 없다
+ *
+ * 재시도 한도를 소진해 시스템이 세운 것과, 운영자가 청구만 멈춘 것(`pauseSubscription`,
+ * `lib/billing/service.ts`)이 **같은 `paused`를 쓴다.** 뒤쪽은 카드가 그대로 살아 있는
+ * 정상 구독이다. 그래서 운영자가 1년 넘게 세워 둔 구독이 여기서 방치로 판정돼 `ended`가
+ * 되면 **되돌릴 길이 없다** — `resumeSubscription`은 `paused`만 받고, 관리자 화면의 '결제'
+ * 버튼도 `ended`를 제외한다. 알림도 나가지 않는다. 이 함수가 "살아 있는 구독을 닫는"
+ * 조합은 지금 이것 하나뿐이다.
+ *
+ * 제대로 고치려면 두 `paused`를 가르는 컬럼이 필요하다(예: `paused_by`). 컬럼을 더하는 것은
+ * 마이그레이션이라 여기서 하지 않았고, 그 전까지는 **운영자가 구독을 1년 넘게 세워 두지
+ * 않는 것**이 유일한 방어다. 처리방침 18항 ⑬도 이 사실대로 "결제 실패로 정지되었거나
+ * 운영자가 청구를 멈춰 둔 정기결제"라고 적는다 — 문서가 한쪽만 말하면 고지가 거짓이 된다.
+ */
+const DORMANT_STATUSES = ['pending_card', 'paused'] as const;
+
+export interface DormantSubscriptionResult {
+  /** 결제 이력이 없어 이번에 이름·연락처·이메일을 파기한 구독 수. */
+  purged: number;
+  /** 방치로 판정해 `ended`로 넘긴 구독 수(파기한 것과 5년 대기로 넘긴 것을 합한 수). */
+  ended: number;
+}
+
+/**
+ * 끝나지 못한 채 방치된 구독을 닫고, 계약이 성립하지 않은 것은 그 자리에서 파기한다.
+ *
+ * ## "방치"를 무엇으로 봤는가
+ *
+ * **마지막 활동으로부터 `SUBSCRIPTION_DORMANCY_YEARS`년이 지났고, 그동안 어떤 활동의
+ * 증거도 없는 것.** 구체적으로 네 가지를 전부 요구한다.
+ *
+ * - `updated_at`이 기준선보다 이전 — 청구·정지·카드 등록·해지·알림 오류 기록이 전부 이
+ *   값을 올린다(`lib/billing/service.ts`). 사실상 마지막 활동 시각이다.
+ * - `created_at`도 기준선보다 이전 — 날짜를 잘못 적어 만든 구독이 만들자마자 대상이 되는
+ *   것을 막는다(`lib/contracts/retention.ts`·위 구독 고객 정보 파기와 같은 이유).
+ * - 기준선 이후에 시도된 회차 결제가 없다(`subscription_payments.attempted_at`).
+ * - 기준선 이후에 발급되거나 폐기된 빌링키가 없다(`billing_keys.issued_at`·`revoked_at`).
+ *
+ * 뒤의 둘은 `updated_at`과 겹칠 가능성이 높지만, **겹치는 쪽이 안전한 방향이다** — 활동의
+ * 증거가 한 군데라도 있으면 살아 있는 것으로 보고 파기하지 않는다. `updated_at` 하나에
+ * 기대면 그 갱신을 빠뜨린 경로가 생기는 순간 살아 있는 구독이 조용히 닫힌다.
+ *
+ * ## 결제 이력으로 갈린다
+ *
+ * - **`paid` 회차가 한 건도 없는 구독**: 계약이 성립하지 않았고 오간 대금도 없다.
+ *   전자상거래법이 5년 보존을 요구하는 "계약 또는 청약철회 등에 관한 기록"도 "대금결제 및
+ *   재화등의 공급에 관한 기록"도 아니다 — 위 `PAYMENT_FAIL_MESSAGE_RETENTION_YEARS`의
+ *   주석과 같은 판정이다. 그래서 **그 자리에서 이름·연락처·이메일을 파기한다.**
+ *   후원자 표시 이름도 함께 지운다 — `pending_card`·`paused`는 공개 명단에서 이미 빠져
+ *   있어(`lib/artistSupport/supporters.ts`) 목적이 남아 있지 않다.
+ * - **`pending` 회차가 남아 있는 구독**: 결판나지 않은 결제다. 파기 분기에서만 빼고 전이는
+ *   시킨다 — 자세한 이유는 아래 `neverPaid`의 주석에 적었다.
+ * - **`paid` 회차가 있는 구독**: 계약과 대금결제 기록이 있어 5년 보존 대상이다. 여기서는
+ *   **종료로 판정만 하고 고객 정보는 건드리지 않는다.** `ended`가 되는 순간부터
+ *   `purgeExpiredSubscriptionCustomerData`(5년)·`purgeExpiredSubscriptionCancelReasons`(3년)·
+ *   `purgeEndedSubscriptionDisplayNames`·`purgeUnusableBillingKeyRawResponses`가 이 행을
+ *   맡는다.
+ *
+ * ## 왜 파기가 아니라 상태 전이인가
+ *
+ * 결제 이력이 있는 쪽은 **전이 말고는 길이 없다.** 기존 구독 파기 셋이 전부
+ * `status = 'ended'`를 요구하므로, 상태를 그대로 두고 파기 조건만 넓히면 같은 5년 판정이
+ * 두 벌로 갈라져 한쪽이 먼저 낡는다. 결제 이력이 없는 쪽도 같이 넘기는 이유는 **파기만
+ * 하면 "고객 정보 없는 pending_card"가 남기 때문이다** — 관리자 상세 화면의 '카드 등록
+ * 링크 재발급' 버튼은 `pending_card`에서만 뜨고(`pages/admin/subscriptions/[id].tsx`),
+ * 그 버튼은 파기 표식이 들어간 주소로 메일을 보내려 든다.
+ *
+ * ## 전이가 건드리는 것 (전수 확인)
+ *
+ * - `SETUP_ALLOWED_STATUSES`: 카드 등록·변경 링크가 막힌다. 링크 자체가 7일 만료라
+ *   1년 방치 구독에는 이미 유효한 토큰이 없다.
+ * - `OCCUPYING_STATUSES`: 같은 계약에 구독을 새로 만들 수 있게 된다. 방치된 행이 계약
+ *   하나를 영구히 점유하던 상태가 풀린다.
+ * - `REACTIVATABLE_STATUSES`: 뒤늦은 승인이 이 구독을 되살리지 못한다. 대신 회차 기록은
+ *   그대로 남고 운영자에게 `late_approval` 메일이 간다(`lib/billing/service.ts`) —
+ *   1년 방치 뒤 도착한 승인은 되살릴 것이 아니라 환불 판단 대상이라 이 쪽이 맞다.
+ * - `listDueSubscriptions`는 `active`·`past_due`만 집어 가므로 청구에는 변화가 없다.
+ * - 관리자 대시보드의 '주의' 집계(`lib/ops/adminDashboard.ts`)에서 빠진다.
+ * - 고객 관리 화면(`pages/[locale]/subscribe/manage/[id].tsx`)은 '종료'로 표시하고
+ *   해지 버튼을 감춘다 — 청구가 돌지 않는 행이라 맞는 표시다.
+ * - 헬스체크의 '구독이 끝난 뒤에 들어온 결제'(`lib/ops/healthCheck.ts`)는 결제 시각이
+ *   `cancelled_at`(없으면 `ends_at`)보다 뒤인 건만 센다. 여기서 넘기는 구독은 둘 다
+ *   비워 두므로 그 항목에 잡히지 않는다 — 과거의 정상 회차 때문에 매일 뜨는 경보가
+ *   되지 않는다. 뒤늦은 승인이 실제로 도착하면 그때는 `late_approval` 메일이 맡는다.
+ *
+ * ## `ends_at`을 채우지 않는 이유
+ *
+ * 그 칸의 뜻은 "이미 결제한 기간의 끝"이다(`db/schema.ts`). 방치 구독에 지금 시각을 적으면
+ * 결제하지도 않은 기간을 이용한 것으로 기록하는 셈이다. 비워 두면 5년 파기가 `updated_at`을
+ * 대체 기산점으로 쓰므로(`purgeExpiredSubscriptionCustomerData`), 법정 5년은 **마지막 활동
+ * 시각**부터 센다 — 전자상거래법이 세는 대상이 그 기록이라 기산점으로도 맞다.
+ *
+ * ## 순서
+ *
+ * 파기가 먼저, 전이가 나중이다. 전이가 먼저 돌면 상태가 `ended`로 바뀌어 같은 실행의
+ * 파기 조건(`DORMANT_STATUSES`)에서 빠져나가고, 결제 이력이 없는 구독이 5년을 더 기다리게
+ * 된다. 한 함수에 묶어 둔 이유도 그것이다 — 크론에서 둘로 갈라 각자 try/catch에 넣으면
+ * 파기만 실패하고 전이가 성공하는 조합이 생긴다. **한 함수에 두는 것만으로는 부족해서**
+ * 두 UPDATE를 `db.batch`(libsql 트랜잭션)로 묶는다 — 따로 보내면 함수 안에서도 그 사이에
+ * 죽을 수 있고, 그러면 "고객 정보 없는 pending_card"가 그대로 남는다.
+ *
+ * `updated_at`은 갱신하지 않는다 — 위 파기들과 같은 이유이고, 여기서는 특히 그 값이 이
+ * 함수가 넘긴 행의 법정 5년 기산점이 된다. 갱신하면 그 시계가 통째로 되감긴다.
+ */
+export const closeDormantSubscriptions = async (
+  now: Date = new Date(),
+): Promise<DormantSubscriptionResult> => {
+  const db = getDb();
+  const boundary = yearsAgo(now, SUBSCRIPTION_DORMANCY_YEARS);
+
+  const dormant = and(
+    inArray(subscriptions.status, [...DORMANT_STATUSES]),
+    lt(subscriptions.createdAt, boundary),
+    lt(subscriptions.updatedAt, boundary),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            gte(subscriptionPayments.attemptedAt, boundary),
+          ),
+        ),
+    ),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(billingKeys)
+        .where(
+          and(
+            eq(billingKeys.subscriptionId, subscriptions.id),
+            or(
+              gte(billingKeys.issuedAt, boundary),
+              and(isNotNull(billingKeys.revokedAt), gte(billingKeys.revokedAt, boundary)),
+            ),
+          ),
+        ),
+    ),
+  );
+
+  /**
+   * 결제 이력이 없고 **결판나지 않은 회차도 없는** 구독.
+   *
+   * `paid`가 0건인지만 보면 부족하다. 회차 결제가 NETWORK_ERROR로 끝나면 회차는 `pending`으로
+   * 남고, 그 대사(對査)는 **다음 청구 때** 도는데 `paused`·`pending_card`는 영원히 청구되지
+   * 않는다. `payments` 행도 없어 `paymentMismatch` 헬스체크에도 걸리지 않는다. 그 상태로
+   * 1년이 지나면 "계약 미성립"으로 판정해 연락처를 덮게 되고, 뒤늦게 승인이 확인돼도
+   * **환불 연락을 보낼 수단이 남지 않는다.**
+   *
+   * 그래서 `pending` 회차가 하나라도 있으면 **파기 분기에서만** 뺀다. `dormant` 자체에서
+   * 빼면 그 구독은 영영 닫히지 않아 이 함수가 메우려던 구멍으로 되돌아간다 — 전이는 시키고,
+   * 뒤는 `purgeExpiredSubscriptionCustomerData`의 법정 5년이 받는다.
+   */
+  const neverPaid = and(
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            eq(subscriptionPayments.status, 'paid'),
+          ),
+        ),
+    ),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            eq(subscriptionPayments.status, 'pending'),
+          ),
+        ),
+    ),
+  );
+
+  /**
+   * 파기와 전이는 **한 트랜잭션**이어야 한다.
+   *
+   * 두 UPDATE를 따로 보내면 그 사이에서 죽었을 때 `customer_email = '(개인정보 파기됨)'`인
+   * `pending_card`가 남는다. 관리자 상세의 '카드 등록 링크 재발급' 버튼은 `pending_card`에서만
+   * 뜨고, 그 버튼은 파기 표식이 든 주소로 메일을 보내려 든다 — 이 함수가 "파기만 하면
+   * 안 되는 이유"로 적어 둔 상태 그대로다. `db.batch`는 libsql이 트랜잭션으로 실행한다.
+   *
+   * 순서는 파기가 먼저다. 전이가 먼저 돌면 상태가 `ended`로 바뀌어 같은 배치의 파기 조건
+   * (`DORMANT_STATUSES`)에서 빠져나간다.
+   */
+  const [purgeResult, endResult] = await db.batch([
+    db
+      .update(subscriptions)
+      .set({
+        customerName: PURGED_MARK,
+        customerPhone: PURGED_MARK,
+        customerEmail: PURGED_MARK,
+        displayName: null,
+      })
+      .where(
+        and(
+          dormant,
+          neverPaid,
+          or(
+            ne(subscriptions.customerName, PURGED_MARK),
+            ne(subscriptions.customerPhone, PURGED_MARK),
+            ne(subscriptions.customerEmail, PURGED_MARK),
+            isNotNull(subscriptions.displayName),
+          ),
+        ),
+      ),
+    db.update(subscriptions).set({ status: 'ended' }).where(dormant),
+  ]);
+
+  return { purged: Number(purgeResult.rowsAffected ?? 0), ended: Number(endResult.rowsAffected ?? 0) };
+};
+
+/**
  * 지난 일정의 운영 메모(`availability_blocks.memo`)를 붙들어 두는 기간.
  *
  * **법이 정한 것이 아니라 운영 판단이다.** 그 표에는 고객도 주문도 매달려 있지 않고
@@ -372,26 +615,46 @@ export const AVAILABILITY_MEMO_RETENTION_YEARS = 1;
 /**
  * 법정 보존 기간이 지난 결제 승인 응답 원본(`payments.raw_response`)을 파기한다.
  *
- * ## 이 컬럼에 무엇이 들어가는가 (코드로 확인한 것)
+ * ## 이 컬럼에 무엇이 들어가는가
  *
- * 승인·재조회 응답의 **본문 전체**다. `lib/booking/toss.ts`의 `request`가 `await res.json()`을
- * 통째로 `json as TossPayment`로 넘기고(필드를 골라 담지 않는다), 그 객체가 세 곳에서
- * `JSON.stringify` 되어 그대로 저장된다 — `lib/booking/confirm.ts`(예약·믹싱 승인),
- * `lib/funding/confirm.ts`(후원 승인), `lib/billing/service.ts`(회차 결제·웹훅 복구).
- * 즉 우리 타입이 선언한 7개 필드는 저장 범위의 하한일 뿐이고, 실제로 무엇이 들어 있는지는
- * 토스가 그 결제에 무엇을 실어 보냈느냐에 달렸다. 우리 코드가 결제창에 `customerName`·
- * `customerEmail`을 넘기고 있어(`components/booking/TossPaymentWidget.tsx`) 응답에 되돌아올
- * 여지도 있으나, **응답 본문을 읽는 코드가 하나도 없어 실제 키 목록은 코드만으로 확인되지
- * 않는다.**
+ * 승인·재조회 응답(토스 Payment 객체)의 **본문 전체**다. `lib/booking/toss.ts`의 `request`가
+ * `await res.json()`을 통째로 `json as TossPayment`로 넘기고(필드를 골라 담지 않는다), 그
+ * 객체가 세 곳에서 `JSON.stringify` 되어 그대로 저장된다 — `lib/booking/confirm.ts`
+ * (예약·믹싱 승인), `lib/funding/confirm.ts`(후원 승인), `lib/billing/service.ts`
+ * (회차 결제·웹훅 복구). 우리 타입이 선언한 7개 필드는 저장 범위의 하한일 뿐이다.
+ *
+ * **최상위에는 구매자 개인정보 필드가 없다**(토스 레퍼런스 확인) — `customerName`·
+ * `customerEmail`·`customerMobilePhone`은 Payment 객체의 최상위 필드가 아니다. 개인정보는
+ * **결제수단별 하위 객체**에 실린다:
+ *
+ * - `virtualAccount`: `customerName`(구매자명)·`depositorName`(입금자명)·`accountNumber`,
+ *   그리고 환불 계좌를 등록했다면 `refundReceiveAccount.holderName`·`.accountNumber`
+ * - `mobilePhone`: `customerMobilePhone`(결제에 쓴 휴대폰 번호)
+ * - `card`: `number`는 **마스킹된** 값이고 소유자 이름은 없다
+ *
+ * 우리 결제에 그 객체들이 실제로 붙는지는 수단에 달렸다. 위젯은 토스 콘솔에서 개통된 수단을
+ * 그대로 그리므로 코드에 수단 제한이 없고(`lib/booking/toss.ts`), 가상계좌는 승인 단계에서
+ * 거절하지만 그 거절은 `status !== 'DONE'`일 때뿐이라 **입금이 끝나 DONE으로 도착한 건은
+ * 웹훅 복구 경로로 들어와 저장될 수 있다**(`lib/booking/webhook.ts`).
+ *
+ * 우리가 토스에 보내는 값은 `customerName`·`customerEmail`이다
+ * (`components/booking/TossPaymentWidget.tsx`의 `requestPayment`,
+ * `lib/billing/toss-billing.ts`의 `chargeBillingKey`). `metadata`를 보내는 코드는 없다(확인).
+ *
+ * **확인되지 않은 것**: 보낸 `customerEmail`이 응답에 되돌아오는 경로가 있는지, `receipt.url`·
+ * `checkout.url`이 가리키는 문서에 개인정보가 있는지, 현금영수증의 신분확인번호가 응답에
+ * 실리는지 — 셋 다 문서로 확인하지 못했다. 응답 본문을 읽는 코드가 없어 실제 키 목록도
+ * 코드만으로는 특정되지 않는다.
  *
  * ## 판정
  *
  * - **법정 기록이다.** 대금이 실제로 오간 승인의 원본이고, 스키마 주석이 밝히는 보관 목적도
  *   분쟁·대사(reconciliation)다. 전자상거래법이 5년 보존을 요구하는 "대금결제 및 재화등의
  *   공급에 관한 기록"의 근거 자료라 그 전에는 파기하지 않는다.
- * - **다만 5년이 지나면 남길 근거가 없다.** 무엇이 들어 있는지 특정되지 않는 값을 기한 없이
- *   들고 있는 것이 제21조①이 막으려는 상태다. 대사에 필요한 값(`payment_key`·`method`·
- *   `approved_at`·`receipt_url`)은 별도 컬럼에 따로 있어 원본을 비워도 기록은 남는다.
+ * - **다만 5년이 지나면 남길 근거가 없다.** 수단에 따라 이름·계좌번호·휴대폰 번호가 섞여
+ *   들어오는 값을 기한 없이 들고 있는 것이 제21조①이 막으려는 상태다. 대사에 필요한 값
+ *   (`payment_key`·`method`·`approved_at`·`receipt_url`)은 별도 컬럼에 따로 있어 원본을
+ *   비워도 기록은 남는다.
  * - **기산점은 승인 시각(`approved_at`)**, 없으면 행 생성일.
  */
 export const purgeExpiredPaymentRawResponses = async (
@@ -418,15 +681,28 @@ export const purgeExpiredPaymentRawResponses = async (
 /**
  * 더는 쓸 수 없는 카드의 빌링키 발급 응답 원본(`billing_keys.raw_response`)을 파기한다.
  *
- * ## 이 컬럼에 무엇이 들어가는가 (코드로 확인한 것)
+ * ## 이 컬럼에 무엇이 들어가는가
  *
- * 빌링키 발급 응답의 **본문 전체**다(`lib/billing/toss-billing.ts`의 `request`가 응답 JSON을
- * 그대로 `json`으로 돌려주고, `lib/billing/service.ts`가 `JSON.stringify(issued.raw)`로
- * 저장한다). 그 본문에는 **빌링키 문자열 자체**가 들어 있다 — 같은 파일이 `json.billingKey`를
- * 거기서 꺼내 쓰기 때문에 확인된 사실이다. 스키마가 빌링키를 두고 "서버 밖으로 나가지 않는다"고
+ * 빌링키 발급 응답(토스 Billing 객체)의 **본문 전체**다(`lib/billing/toss-billing.ts`의
+ * `request`가 응답 JSON을 그대로 `json`으로 돌려주고, `lib/billing/service.ts`가
+ * `JSON.stringify(issued.raw)`로 저장한다).
+ *
+ * 그 본문에는 **빌링키 문자열 자체**가 들어 있다 — 같은 파일이 `json.billingKey`를 거기서
+ * 꺼내 쓰기 때문에 확인된 사실이다. 스키마가 빌링키를 두고 "서버 밖으로 나가지 않는다"고
  * 적어 둔 그 값이 같은 행에 한 번 더, 이번에는 자유 형식의 JSON 안에 복사돼 있는 셈이다.
- * 카드 정보(`card.company`·`card.number`·`card.cardType`)도 같은 본문에서 꺼내므로 들어 있다.
- * 그 밖에 무엇이 더 실려 오는지는 본문을 읽는 코드가 없어 코드만으로는 확인되지 않는다.
+ * 카드 정보(`card.company`·`card.number`·`card.cardType`)도 같은 본문에서 꺼내므로 들어 있고,
+ * `card.number`는 마스킹된 값이다.
+ *
+ * **이름·생년월일·사업자등록번호는 들어 있지 않다**(토스 레퍼런스 확인). 생년월일 6자리 또는
+ * 사업자등록번호인 `customerIdentityNumber`는 **요청에만** 있는 값이고 응답에 되돌아오지
+ * 않는다. 우리 발급 요청은 `authKey`·`customerKey` 둘뿐이라 애초에 보내지도 않는다
+ * (`issueBillingKey`). 응답에 있는 것은 `billingKey`·`customerKey`·마스킹 카드번호·발급사 코드다.
+ *
+ * `customerKey`도 개인정보가 아니다 — `lib/billing/token.ts`의 `generateCustomerKey()`가
+ * 만드는 `sub_` + UUID 난수이고, 구독 id를 그대로 쓰지 않는 이유도 예측 불가여야 한다는
+ * 토스 규격 때문이다.
+ *
+ * 그래서 이 컬럼에서 실제로 문제가 되는 값은 **빌링키**, 즉 결제수단 자격증명이다.
  *
  * ## 판정
  *

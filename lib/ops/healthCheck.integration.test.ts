@@ -458,20 +458,50 @@ describe('운영 점검', () => {
  * 승인 시점에 운영자 메일이 한 통 나가지만(alertLateApproval) 메일은 실패하거나 묻힐 수
  * 있어, 두 번째 겹으로 여기서도 센다. 환불하면 자동으로 사라져야 한다(영구 알람 금지).
  */
-describe('해지된 구독에 남은 결제', () => {
-  const seed = async (subStatus: string, orderStatus = 'paid') => {
+describe('구독이 끝난 뒤에 들어온 결제', () => {
+  /**
+   * 종료 시각과 결제 시각을 따로 받는다 — 이 점검의 판정이 "상태"가 아니라 "순서"이기
+   * 때문이다. 기본값은 사고 형태 그대로다: 해지한 뒤에 결제가 반영된 건.
+   */
+  const seed = async (
+    subStatus: string,
+    orderStatus = 'paid',
+    times: {
+      cancelledAt?: string | null;
+      endsAt?: string | null;
+      paidAt?: string | null;
+      /** 마지막 활동 시각. 방치 종료 구독에서는 이 값이 곧 "끝난 시각"이다. */
+      updatedAt?: string;
+    } = {},
+  ) => {
+    const cancelledAt = times.cancelledAt === undefined ? '2026-09-05T00:00:00Z' : times.cancelledAt;
+    const endsAt = times.endsAt === undefined ? '2026-09-05T00:00:00Z' : times.endsAt;
+    const paidAt = times.paidAt === undefined ? '2026-09-06T00:00:00Z' : times.paidAt;
+    const updatedAt = times.updatedAt ?? '2026-09-05T00:00:00Z';
     await client.execute({
       sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
-              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status, created_at, updated_at)
-            VALUES ('s1','lesson','김수강','010-1','a@b.c','sub_k','mtok',360000,36000,396000,5,?,unixepoch(),unixepoch())`,
-      args: [subStatus],
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day, status,
+              cancelled_at, ends_at, created_at, updated_at)
+            VALUES ('s1','lesson','김수강','010-1','a@b.c','sub_k','mtok',360000,36000,396000,5,?,?,?,unixepoch(),?)`,
+      args: [
+        subStatus,
+        cancelledAt ? EPOCH(cancelledAt) : null,
+        endsAt ? EPOCH(endsAt) : null,
+        EPOCH(updatedAt),
+      ],
     });
     await insertOrder({ id: 'o9', order_no: 'SUB-1', manage_token: 't9', status: orderStatus });
-    await client.execute(`INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status)
-      VALUES ('sp1','s1','o9','2026-09',1,396000,'paid')`);
+    await client.execute({
+      sql: `INSERT INTO subscription_payments (id, subscription_id, order_id, cycle_ym, attempt, amount, status, attempted_at, paid_at)
+            VALUES ('sp1','s1','o9','2026-09',1,396000,'paid',?,?)`,
+      args: [EPOCH('2026-09-04T00:00:00Z'), paidAt ? EPOCH(paidAt) : null],
+    });
   };
 
-  it('해지된 구독에 paid 주문이 남아 있으면 환불 판단 필요로 보고한다', async () => {
+  const flagged = async () =>
+    (await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'));
+
+  it('해지한 뒤에 들어온 결제는 환불 판단 필요로 보고한다', async () => {
     await seed('cancelled');
     const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('환불 판단 필요'))!;
     expect(issue).toBeDefined();
@@ -481,21 +511,63 @@ describe('해지된 구독에 남은 결제', () => {
 
   it('종료된 구독도 같이 센다', async () => {
     await seed('ended');
-    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(true);
+    expect(await flagged()).toBe(true);
   });
 
-  it('환불하면 사라진다 — 영구히 켜지지 않는다', async () => {
+  /**
+   * 이 점검의 회귀 지점. 조건이 상태만 볼 때는 정상적으로 끝난 구독이 과거의 성공 회차
+   * 때문에 매일 다시 잡혔다 — 환불할 것이 없는데 꺼지지 않는 경보였다.
+   */
+  it('종료 전에 정상 청구된 회차만 있으면 세지 않는다', async () => {
+    await seed('ended', 'paid', {
+      cancelledAt: '2026-09-05T00:00:00Z',
+      endsAt: '2026-09-05T00:00:00Z',
+      paidAt: '2026-09-01T00:00:00Z',
+    });
+    expect(await flagged()).toBe(false);
+  });
+
+  /**
+   * 방치로 종료된 구독(closeDormantSubscriptions)은 cancelled_at·ends_at을 채우지 않는다.
+   * 예전에는 `coalesce(cancelled_at, ends_at)`가 NULL이 되어 비교식 전체가 NULL이 되고,
+   * 이 픽스처가 그 동작을 "세지 않는다"로 고정하고 있었다 — 그런데 이 픽스처가 곧 사고
+   * 형태다. 뒤늦은 승인에서 `paid_at`은 **지금**이라 "결제가 1년 넘게 전"이 성립하지 않는다.
+   * 지금은 `updated_at`이 셋째 폴백으로 들어와 마지막 활동 뒤에 들어온 돈을 잡는다.
+   */
+  it('방치로 종료된 구독(종료 시각 없음)도 마지막 활동 뒤에 들어온 결제면 센다', async () => {
+    await seed('ended', 'paid', { cancelledAt: null, endsAt: null });
+    expect(await flagged()).toBe(true);
+  });
+
+  /** 마지막 활동보다 앞선 결제는 세지 않는다 — 폴백이 오탐을 만들지 않는지 확인한다. */
+  it('방치로 종료된 구독이라도 마지막 활동 전의 결제는 세지 않는다', async () => {
+    await seed('ended', 'paid', {
+      cancelledAt: null,
+      endsAt: null,
+      updatedAt: '2026-09-07T00:00:00Z',
+      paidAt: '2026-09-06T00:00:00Z',
+    });
+    expect(await flagged()).toBe(false);
+  });
+
+  /** cancelled_at이 비어도 ends_at이 있으면 그것을 기준으로 본다. */
+  it('cancelled_at이 없으면 ends_at을 기준으로 본다', async () => {
+    await seed('ended', 'paid', { cancelledAt: null, endsAt: '2026-09-05T00:00:00Z' });
+    expect(await flagged()).toBe(true);
+  });
+
+  it('환불하면 사라진다', async () => {
     await seed('cancelled', 'refunded');
-    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(false);
+    expect(await flagged()).toBe(false);
   });
 
   it('부분 환불로는 꺼지지 않는다 — 잔액이 남아 있는 한 고객 돈은 아직 우리에게 있다', async () => {
     await seed('cancelled', 'partially_refunded');
-    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(true);
+    expect(await flagged()).toBe(true);
   });
 
   it('살아 있는 구독은 세지 않는다', async () => {
-    await seed('active');
-    expect((await runHealthCheck(NOW)).issues.some((i) => i.title.includes('환불 판단 필요'))).toBe(false);
+    await seed('active', 'paid', { cancelledAt: null, endsAt: null });
+    expect(await flagged()).toBe(false);
   });
 });

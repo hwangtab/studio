@@ -84,3 +84,26 @@ describe('sendSubscriptionSetupEmail — 일시정지 구독', () => {
     expect(lastCall().text).toContain('다음 결제일부터');
   });
 });
+
+/**
+ * 보관 기간이 지난 구독은 이메일 칸이 파기 표식으로 덮인다
+ * (`lib/privacy/orderRetention.ts`). 그 주소로 보내려 들면 실패 문자열이
+ * `notificationError`에 박혀 꺼지지 않는 경보가 된다 — 예약·펀딩 쪽과 같은 방어다.
+ */
+describe('파기된 주소에는 고객 메일을 보내지 않는다', () => {
+  const PURGED = '(개인정보 파기됨)';
+
+  it('발송을 시도하지 않고, 실패로도 세지 않는다', async () => {
+    const result = await sendSubscriptionSetupEmail(
+      sub({ customerEmail: PURGED }),
+      'https://studionol.co.kr/ko/subscribe/sub-1?token=t',
+    );
+    expect(sendEmail).not.toHaveBeenCalled();
+    expect(result).toBeNull();
+  });
+
+  it('운영자 알림은 그대로 나간다 — 주소가 우리 것이라 파기와 무관하다', async () => {
+    await sendSubscriptionOperatorAlert(sub({ customerEmail: PURGED }), 'paused', '방치 종료');
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+  });
+});

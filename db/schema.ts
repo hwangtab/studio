@@ -282,7 +282,15 @@ export const payments = sqliteTable('payments', {
   method: text('method'),
   approvedAt: integer('approved_at', { mode: 'timestamp' }),
   receiptUrl: text('receipt_url'),
-  /** 토스 응답 원본 JSON — 분쟁·대사(reconciliation) 근거. */
+  /**
+   * 토스 응답 원본 JSON — 분쟁·대사(reconciliation) 근거. 응답 본문을 통째로 싣는다.
+   *
+   * 최상위에는 구매자 개인정보 필드가 없지만(`customerName`·`customerEmail`·
+   * `customerMobilePhone`은 Payment 객체의 최상위 필드가 아니다), 결제수단별 하위 객체에는
+   * 실린다 — `virtualAccount`의 구매자명·입금자명·계좌번호·환불계좌 예금주,
+   * `mobilePhone`의 휴대폰 번호. 그래서 전자상거래법 5년이 지나면 비운다
+   * (`purgeExpiredPaymentRawResponses`, 무엇이 들어 있는지는 그 주석이 자세히 적는다).
+   */
   rawResponse: text('raw_response'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });
@@ -828,6 +836,15 @@ export const billingKeys = sqliteTable('billing_keys', {
   issuedAt: integer('issued_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   /** 카드 교체·해지로 더는 쓰지 않는 키. 행을 지우지 않는 이유는 과거 회차의 결제 수단 근거이기 때문. */
   revokedAt: integer('revoked_at', { mode: 'timestamp' }),
+  /**
+   * 빌링키 발급 응답 원본 JSON. **빌링키 문자열 자체**와 카드 정보(발급사·마스킹 번호·종류)가
+   * 들어 있다. 이름·생년월일·사업자등록번호는 없다 — `customerIdentityNumber`는 요청에만
+   * 있는 값이고 응답에 되돌아오지 않으며, 우리 발급 요청은 `authKey`·`customerKey`뿐이다.
+   * `customerKey`는 난수라 개인정보가 아니다(`lib/billing/token.ts`).
+   *
+   * 대금이 오간 기록이 아니라 결제수단 자격증명이라 5년 보존 대상이 아니다 — 쓸 수 없게 된
+   * 순간 비운다(`purgeUnusableBillingKeyRawResponses`).
+   */
   rawResponse: text('raw_response'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });

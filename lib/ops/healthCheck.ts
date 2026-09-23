@@ -336,8 +336,29 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 있다. 이 저장소가 PR #59에서 이미 배운 것이 그것이다 — 되돌림 경로가 한 겹뿐이면
    * 조용히 새고, 전자상거래법상 환불 기한은 그 사이에도 돈다. 여기가 두 번째 겹이다.
    *
+   * **판정은 "종료 뒤에 들어온 돈"이다.** 상태만 보면(해지·종료 + paid 회차) 정상적으로
+   * 끝난 구독도 종료 전에 정상 청구된 과거 회차 때문에 매일 다시 잡힌다 — 환불할 것이
+   * 없는데 꺼지지 않는 경보이고, 방치 구독을 ended로 넘기는 경로가 생긴 뒤로는
+   * (closeDormantSubscriptions, lib/privacy/orderRetention.ts) 그런 건이 계속 늘어난다.
+   * 그래서 결제 시각(paid_at, 없으면 attempted_at)이 **구독이 끝난 시각보다 뒤**인 건만 센다.
+   *
+   * 끝난 시각은 `cancelled_at`, 없으면 `ends_at`, 그것도 없으면 `updated_at`이다. 셋째 폴백이
+   * 필요한 이유: `closeDormantSubscriptions`는 앞의 둘을 **일부러 채우지 않는다**. 예전에는
+   * `coalesce(cancelled_at, ends_at)`가 NULL이 되어 비교식 전체가 NULL이 되고, 방치로 종료한
+   * 구독은 이 검사에서 **영구히** 빠졌다. "그 구독의 결제는 1년 넘게 전의 것"이라는 정당화는
+   * 비교하는 값과 맞지 않았다 — 왼쪽은 `paid_at`이고, 뒤늦은 승인에서 그 값은 **지금**이다.
+   * 실제 경로: `paused` 구독이 NETWORK_ERROR로 `pending` 회차를 남긴 채 방치 → `ended`로 전이
+   * → 뒤늦은 토스 DONE 도착 → `reconcileSubscriptionPaymentFromToss`가 `paid_at = now`로 쓴다.
+   * 구독 되살리기는 가드에 막혀 0행이라, 남는 것은 묻힐 수 있는 메일 한 통뿐이었다 —
+   * 이 검사가 두 번째 겹으로 존재하는 이유가 바로 그 메일을 못 믿어서다.
+   *
+   * `updated_at`이 올바른 "끝난 시각"인 이유: `closeDormantSubscriptions`가 그 값을 갱신하지
+   * 않으므로 마지막 활동 시각 그대로 남는다. 오탐도 늘지 않는다 — 정상 해지는 `cancelled_at`이
+   * 있어 셋째 폴백에 닿지 않고, 정상 청구는 같은 `now`로 `subscriptions.updated_at`을 함께
+   * 쓰므로 `paid_at > updated_at`이 성립하지 않는다.
+   *
    * 해소 조건: 전액 환불하면 orders.status가 refunded로 바뀌어 빠진다(부분환불은 잔액이 남아 계속 뜬다).
-   * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다 — 영구히 켜지지 않는다.
+   * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다.
    */
   const lateApproval = await db
     .select({ orderNo: orders.orderNo, customerName: subscriptions.customerName, status: subscriptions.status })
@@ -346,13 +367,19 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
     // partially_refunded도 본다 — 관리자가 회차를 임의 금액으로 환불할 수 있게 되면서, 1원만 환불해도
     // paid에서 벗어나 경보가 꺼지는 구멍이 생겼다. 잔액이 남아 있는 한 고객 돈은 아직 우리에게 있다.
-    .where(and(inArray(orders.status, ['paid', 'partially_refunded']), inArray(subscriptions.status, ['cancelled', 'ended'])));
+    .where(and(
+      inArray(orders.status, ['paid', 'partially_refunded']),
+      inArray(subscriptions.status, ['cancelled', 'ended']),
+      // 셋째 폴백 `updated_at`이 방치 종료 구독을 받는다(위 주석). 세 값이 모두 NULL인 구독은
+      // 없다 — `updated_at`은 NOT NULL에 기본값이 있다(db/schema.ts).
+      sql`coalesce(${subscriptionPayments.paidAt}, ${subscriptionPayments.attemptedAt}) > coalesce(${subscriptions.cancelledAt}, ${subscriptions.endsAt}, ${subscriptions.updatedAt})`,
+    ));
 
   if (lateApproval.length > 0) {
     issues.push({
       severity: 'high',
       href: '/admin/subscriptions',
-      title: `해지된 구독에 결제가 남아 있는 건 ${lateApproval.length}건 — 환불 판단 필요`,
+      title: `구독이 끝난 뒤에 들어온 결제 ${lateApproval.length}건 — 환불 판단 필요`,
       detail:
         `주문번호: ${sample(lateApproval.map((row) => row.orderNo))}\n` +
         '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 관리자 > 구독 상세의 회차 이력에서 환불할 수 있습니다.\n' +

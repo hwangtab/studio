@@ -37,6 +37,7 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
 import {
+  closeDormantSubscriptions,
   PURGED_MARK,
   purgeEndedSubscriptionDisplayNames,
   purgeExpiredAvailabilityBlockMemos,
@@ -794,6 +795,8 @@ const addSubscriptionPayment = async (opts: {
   attemptedAt: string;
   tossMessage?: string | null;
   tossCode?: string | null;
+  status?: (typeof schema.subscriptionPaymentStatusEnum)[number];
+  paidAt?: string | null;
 }) => {
   seq += 1;
   const [row] = await mockDb
@@ -804,7 +807,8 @@ const addSubscriptionPayment = async (opts: {
       cycleYm: '2020-01',
       attempt: seq,
       amount: 110000,
-      status: 'failed',
+      status: opts.status ?? 'failed',
+      paidAt: opts.paidAt ? d(opts.paidAt) : null,
       tossCode: opts.tossCode === undefined ? 'REJECT_CARD_COMPANY' : opts.tossCode,
       tossMessage: opts.tossMessage === undefined ? '한도초과 - 김고객님 카드' : opts.tossMessage,
       attemptedAt: d(opts.attemptedAt),
@@ -864,6 +868,261 @@ describe('회차 결제 실패 사유 원문 파기 (1년)', () => {
     await addSubscriptionPayment({ subscriptionId: subId, orderId, attemptedAt: '2020-01-01' });
     expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(1);
     expect((await purgeExpiredSubscriptionPaymentMessages(NOW)).purged).toBe(0);
+  });
+});
+
+describe('방치된 구독 종료·파기 (1년)', () => {
+  /** 방치 구독 하나 + (원하면) 회차 결제 하나. */
+  const addDormant = async (opts: {
+    status?: (typeof schema.subscriptionStatusEnum)[number];
+    createdAt?: string;
+    updatedAt?: string;
+    displayName?: string | null;
+    paid?: { attemptedAt: string } | null;
+    failed?: { attemptedAt: string } | null;
+    /** 결판나지 않은 회차 — NETWORK_ERROR로 끝나 pending으로 남은 것. */
+    pending?: { attemptedAt: string } | null;
+  }) => {
+    const subId = await addSubscription({
+      status: opts.status ?? 'pending_card',
+      kind: 'artist-support',
+      createdAt: opts.createdAt ?? '2020-01-01',
+      updatedAt: opts.updatedAt ?? opts.createdAt ?? '2020-01-01',
+      displayName: opts.displayName ?? null,
+    });
+    if (opts.paid) {
+      const orderId = await addOrder({ type: 'subscription' });
+      await addSubscriptionPayment({
+        subscriptionId: subId,
+        orderId,
+        attemptedAt: opts.paid.attemptedAt,
+        status: 'paid',
+        paidAt: opts.paid.attemptedAt,
+      });
+    }
+    if (opts.failed) {
+      const orderId = await addOrder({ type: 'subscription' });
+      await addSubscriptionPayment({
+        subscriptionId: subId,
+        orderId,
+        attemptedAt: opts.failed.attemptedAt,
+      });
+    }
+    if (opts.pending) {
+      const orderId = await addOrder({ type: 'subscription' });
+      await addSubscriptionPayment({
+        subscriptionId: subId,
+        orderId,
+        attemptedAt: opts.pending.attemptedAt,
+        status: 'pending',
+        tossCode: null,
+        tossMessage: null,
+      });
+    }
+    return subId;
+  };
+
+  it.each(['active', 'past_due', 'cancelled'] as const)(
+    '%s는 대상이 아니다 — 살아 있거나 이미 종료 경로가 있다',
+    async (status) => {
+      const id = await addDormant({ status, createdAt: '2015-01-01' });
+      expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+      const row = await subOf(id);
+      expect(row.status).toBe(status);
+      expect(row.customerName).toBe('박구독');
+    },
+  );
+
+  it('1년이 안 지난 pending_card는 건드리지 않는다', async () => {
+    const id = await addDormant({ createdAt: '2026-06-01' });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    expect((await subOf(id)).status).toBe('pending_card');
+  });
+
+  it('마지막 활동이 정확히 1년 전이면 아직 보존한다 (경계값)', async () => {
+    const id = await addDormant({ createdAt: '2015-01-01' });
+    const boundary = new Date(NOW);
+    boundary.setFullYear(boundary.getFullYear() - 1);
+    const epoch = Math.floor(boundary.getTime() / 1000);
+    await client.execute({
+      sql: 'UPDATE subscriptions SET updated_at = ? WHERE id = ?',
+      args: [epoch, id],
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    expect((await subOf(id)).status).toBe('pending_card');
+  });
+
+  it('1년 안에 회차 결제를 시도했으면 방치가 아니다 — updated_at이 낡아도 살린다', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2015-01-01',
+      failed: { attemptedAt: '2026-06-01' },
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    expect((await subOf(id)).status).toBe('paused');
+  });
+
+  /**
+   * 생성일 가드. `created_at`이 최근이면 `updated_at`이 아무리 낡아도 대상이 아니다 —
+   * 날짜를 잘못 적어 만든 구독이 만들자마자 닫히는 것을 막는 조건이다.
+   */
+  it('만든 지 1년이 안 됐으면 updated_at이 낡아도 대상이 아니다', async () => {
+    const id = await addDormant({ createdAt: '2026-06-01', updatedAt: '2015-01-01' });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    const row = await subOf(id);
+    expect(row.status).toBe('pending_card');
+    expect(row.customerName).toBe('박구독');
+  });
+
+  it('1년 안에 빌링키를 발급했으면 방치가 아니다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01' });
+    await mockDb.insert(billingKeys).values({
+      subscriptionId: id,
+      billingKey: 'bkey_recent',
+      issuedAt: d('2026-07-01'),
+      createdAt: d('2026-07-01'),
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    expect((await subOf(id)).status).toBe('paused');
+  });
+
+  /** 폐기도 활동이다 — 카드를 끊은 것이 1년 안이면 그 구독은 아직 손이 닿은 것이다. */
+  it('1년 안에 빌링키를 폐기했으면 방치가 아니다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01' });
+    await mockDb.insert(billingKeys).values({
+      subscriptionId: id,
+      billingKey: 'bkey_revoked',
+      issuedAt: d('2015-02-01'),
+      revokedAt: d('2026-07-01'),
+      createdAt: d('2015-02-01'),
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    expect((await subOf(id)).status).toBe('paused');
+  });
+
+  it('발급·폐기가 모두 1년보다 앞선 빌링키는 방치 판정을 막지 못한다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01' });
+    await mockDb.insert(billingKeys).values({
+      subscriptionId: id,
+      billingKey: 'bkey_old',
+      issuedAt: d('2015-02-01'),
+      revokedAt: d('2016-02-01'),
+      createdAt: d('2015-02-01'),
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 1, ended: 1 });
+  });
+
+  /**
+   * NETWORK_ERROR로 끝난 회차는 `pending`으로 남고, 그 대사는 다음 청구 때 도는데
+   * `paused`·`pending_card`는 영원히 청구되지 않는다. "계약 미성립"으로 보고 연락처를
+   * 덮으면 뒤늦게 승인이 확인돼도 환불 연락을 보낼 수단이 없다.
+   */
+  it('결판나지 않은 회차가 남아 있으면 파기하지 않는다 — 전이는 시킨다', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2020-01-01',
+      displayName: '익명의 후원자',
+      pending: { attemptedAt: '2020-02-01' },
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 1 });
+    const row = await subOf(id);
+    // 영영 안 닫히면 이 함수가 메우려던 구멍으로 되돌아간다 — 닫되 파기만 미룬다.
+    expect(row.status).toBe('ended');
+    expect(row.customerName).toBe('박구독');
+    expect(row.customerEmail).toBe('sub@example.com');
+    expect(row.displayName).toBe('익명의 후원자');
+  });
+
+  it('결과를 못 받은 회차 뒤에는 법정 5년이 받는다', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2015-01-01',
+      pending: { attemptedAt: '2015-02-01' },
+    });
+    expect((await closeDormantSubscriptions(NOW)).ended).toBe(1);
+    expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(1);
+    expect((await subOf(id)).customerName).toBe(PURGED_MARK);
+  });
+
+  it('결제 이력이 없으면 종료로 넘기고 그 자리에서 고객 정보를 파기한다', async () => {
+    const id = await addDormant({ createdAt: '2020-01-01', displayName: '익명의 후원자' });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 1, ended: 1 });
+    const row = await subOf(id);
+    expect(row.status).toBe('ended');
+    expect(row.customerName).toBe(PURGED_MARK);
+    expect(row.customerPhone).toBe(PURGED_MARK);
+    expect(row.customerEmail).toBe(PURGED_MARK);
+    expect(row.displayName).toBeNull();
+  });
+
+  it('실패한 회차만 있으면 계약이 성립하지 않은 것이다 — 파기 대상', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2020-01-01',
+      failed: { attemptedAt: '2020-02-01' },
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 1, ended: 1 });
+    expect((await subOf(id)).customerName).toBe(PURGED_MARK);
+  });
+
+  it('결제 이력이 있으면 종료로만 넘기고 고객 정보는 남긴다 (법정 5년)', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2024-01-01',
+      paid: { attemptedAt: '2024-02-01' },
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 1 });
+    const row = await subOf(id);
+    expect(row.status).toBe('ended');
+    expect(row.customerName).toBe('박구독');
+    expect(row.customerEmail).toBe('sub@example.com');
+  });
+
+  it('결제 이력이 있으면 5년이 더 지나야 파기된다 — 기산점은 마지막 활동', async () => {
+    const recent = await addDormant({
+      status: 'paused',
+      createdAt: '2024-01-01',
+      paid: { attemptedAt: '2024-02-01' },
+    });
+    const old = await addDormant({
+      status: 'paused',
+      createdAt: '2015-01-01',
+      paid: { attemptedAt: '2015-02-01' },
+    });
+    expect((await closeDormantSubscriptions(NOW)).ended).toBe(2);
+    // 넘긴 뒤 기존 5년 파기가 그대로 받는다 (크론의 호출 순서와 같다).
+    expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(1);
+    expect((await subOf(old)).customerName).toBe(PURGED_MARK);
+    expect((await subOf(recent)).customerName).toBe('박구독');
+  });
+
+  it('멱등 — 다시 돌려도 아무것도 걸리지 않는다', async () => {
+    await addDormant({ createdAt: '2020-01-01', displayName: '익명의 후원자' });
+    await addDormant({ status: 'paused', createdAt: '2020-01-01', paid: { attemptedAt: '2020-02-01' } });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 1, ended: 2 });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+  });
+
+  it('updated_at을 갱신하지 않는다 — 법정 5년 기산점이 되감기면 안 된다', async () => {
+    const id = await addDormant({ createdAt: '2020-01-01', updatedAt: '2021-03-04' });
+    const before = (await subOf(id)).updatedAt;
+    await closeDormantSubscriptions(NOW);
+    expect((await subOf(id)).updatedAt).toEqual(before);
+  });
+
+  it('다른 컬럼은 그대로 둔다 — ends_at도 채우지 않는다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2020-01-01' });
+    const before = await subOf(id);
+    await closeDormantSubscriptions(NOW);
+    const after = await subOf(id);
+    expect(after.endsAt).toBeNull();
+    expect(after.cancelledAt).toBeNull();
+    expect(after.customerKey).toBe(before.customerKey);
+    expect(after.manageToken).toBe(before.manageToken);
+    expect(after.totalAmount).toBe(before.totalAmount);
+    expect(after.billingDay).toBe(before.billingDay);
+    expect(after.displayConsent).toBe(before.displayConsent);
+    expect(after.createdAt).toEqual(before.createdAt);
   });
 });
 

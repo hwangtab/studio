@@ -98,11 +98,27 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '개인정보 처리방침',
     subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 9월 23일',
+    lastUpdatedValue: '2026년 9월 24일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
-        body: '문의 양식을 통해 이름, 연락처, 이메일, 문의 내용을 수집할 수 있습니다. 예약·결제 신청 화면에서는 이름, 연락처, 이메일 주소, 예약 일시·상품, 요청사항과 결제 처리 기록(주문번호, 결제 금액·결제수단)을 수집합니다. 펀딩(리워드 선주문)의 수집 항목은 아래 6항이, 펀딩 프로젝트를 개설하는 아티스트(이하 “개설자”)의 수집 항목은 아래 13항이 따로 정합니다.',
+        body:
+          '문의 양식을 통해 이름, 연락처, 이메일, 문의 내용을 수집할 수 있습니다. 예약·결제 ' +
+          '신청 화면에서는 이름, 연락처, 이메일 주소, 예약 일시·상품, 요청사항과 결제 처리 ' +
+          '기록(주문번호, 결제 금액·결제수단)을 수집합니다. 결제 처리 기록에는 결제사가 보낸 ' +
+          '승인 응답 원문이 함께 저장되며, 그 원문에 무엇이 실리는지는 결제수단에 따라 ' +
+          '다릅니다. 카드로 결제한 경우 카드번호는 일부가 가려진 값으로 들어오고 카드 ' +
+          '소유자의 이름은 들어오지 않습니다. 가상계좌는 이용하실 수 없는 결제수단이지만 ' +
+          '입금이 끝난 뒤에 도착하는 건이 있어 그 응답이 저장될 수 있으며, 그때는 ' +
+          '구매자명·입금자명과 입금 계좌번호가, 환불 계좌를 등록하셨다면 그 예금주명과 ' +
+          '계좌번호가 함께 들어옵니다. 휴대폰으로 결제한 경우에는 결제에 사용한 휴대폰 ' +
+          '번호가 들어옵니다. 그 밖에도 이용하신 결제수단에 따라 결제사가 함께 보내는 ' +
+          '항목이 저장될 수 있습니다. 연습실 이용 계약을 맺을 때는 ' +
+          '계약서에 이름, 연락처, 이메일 주소와 이용 호실·기간·이용료를 적고, 계약 당사자가 ' +
+          '서명 화면에서 생년월일과 주소를 직접 채웁니다. 서명하면 서명 이미지와 그 접속의 ' +
+          'IP 주소·브라우저 정보가 함께 기록됩니다. 펀딩(리워드 선주문)의 수집 항목은 아래 ' +
+          '6항이, 펀딩 프로젝트를 개설하는 아티스트(이하 “개설자”)의 수집 항목은 아래 13항이 ' +
+          '따로 정합니다.',
       },
       {
         heading: '2. 개인정보 이용 목적',
@@ -350,14 +366,15 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '자동 파기 ② 개설자 주민등록번호 — 위 15항이 정한 요건을 갖추면 암호문을 지웁니다',
           '자동 파기 ③ 고유식별정보 접속기록 — 기록한 때로부터 2년이 지난 행을 지웁니다(아래 19항)',
           '자동 파기 ④ 주문자의 이름·연락처·이메일 주소 — 문의가 아니라 주문(예약·믹싱·펀딩·정기결제)으로 받은 세 항목은 아래 법정 보존 기간인 5년이 지나면 표시로 덮어씁니다. 기산점은 주문한 날과 그 주문이 마지막으로 바뀐 날(환불·취소 포함) 가운데 나중 쪽이라, 결제한 지 한참 뒤에 환불된 건도 그 사건을 기준으로 셉니다. 주문 기록의 행 자체는 남습니다',
-          '자동 파기 ⑤ 정기결제(구독)의 이름·연락처·이메일 주소 — 구독 이용이 실제로 끝난 날부터 5년이 지나면 표시로 덮어씁니다. 아직 이용 중이거나 해지를 예약만 해 둔 구독은 대상이 아닙니다 — 다음 회차 청구와 안내를 보낼 수 없게 되기 때문입니다',
+          '자동 파기 ⑤ 정기결제(구독)의 이름·연락처·이메일 주소 — 구독 이용이 실제로 끝난 날부터 5년이 지나면 표시로 덮어씁니다. 끝난 날을 따로 기록하지 않은 구독은 마지막 활동일부터 셉니다 — 아래 ⑬으로 종료된 구독이 여기에 해당합니다. 아직 이용 중이거나 해지를 예약만 해 둔 구독은 대상이 아닙니다 — 다음 회차 청구와 안내를 보낼 수 없게 되기 때문입니다',
           '자동 파기 ⑥ 후원자 명단에 실을 표시 이름 — 아티스트 정기후원에서 명단 공개용으로 받은 이름은 구독이 끝나면 어느 화면에도 쓰이지 않으므로 추가 보관 기간 없이 지웁니다',
-          '자동 파기 ⑦ 구독 해지 사유 — 이용이 끝난 구독에서, 해지한 날부터 3년이 지나면 지웁니다. 해지를 예약만 해 둔 구독은 대상이 아닙니다 — 아직 진행 중인 해지 건의 경위를 설명할 수 없게 되기 때문입니다. 해지 사유에는 서비스에 대한 불만이 적힐 수 있어, 소비자의 불만·분쟁 처리 기록에 정해진 기간과 같은 3년으로 둡니다',
+          '자동 파기 ⑦ 구독 해지 사유 — 이용이 끝난 구독에서, 해지한 날(그 시각을 기록하지 않은 구독은 마지막 활동일)부터 3년이 지나면 지웁니다. 해지를 예약만 해 둔 구독은 대상이 아닙니다 — 아직 진행 중인 해지 건의 경위를 설명할 수 없게 되기 때문입니다. 해지 사유에는 서비스에 대한 불만이 적힐 수 있어, 소비자의 불만·분쟁 처리 기록에 정해진 기간과 같은 3년으로 둡니다',
           '자동 파기 ⑧ 예약·믹싱 신청의 요청사항 — 자유롭게 적는 칸이라 계약 내용을 특정하는 항목이 아니므로 5년이 아니라 3년입니다. 기산점은 예약 이용일(취소했으면 취소일)이고, 믹싱은 납품일(취소했으면 취소일, 둘 다 없으면 신청일)입니다',
           '자동 파기 ⑨ 결제사가 보낸 응답 원문 — 결제 승인 응답 원본은 승인일부터 5년이 지나면 지웁니다. 대사(對査)에 필요한 결제 식별값·결제수단·승인 시각·영수증 주소는 별도 항목으로 남습니다. 결제가 거절된 사유의 원문은 주문 결제와 정기결제 회차 모두 1년이 지나면 지우며, 결제사가 정한 사유 코드는 남깁니다. 정기결제 카드 등록 응답 원본은 그 카드를 더 쓸 수 없게 된 때(등록 해지 또는 구독 종료)에 지웁니다 — 카드사 이름과 마스킹된 카드번호, 등록 시각, 그리고 결제사가 발급한 카드 등록 식별값은 과거 회차의 결제 근거로 남습니다',
           '자동 파기 ⑩ 환불 사유 — 환불 기록을 만든 날부터 5년이 지나면 표시로 덮어씁니다. 관리자가 자유롭게 적는 칸이라 사람을 가리키는 조각이 들어갈 수 있어 파기 대상이며, 환불이 있었다는 사실과 금액·요청자·결제사 거래키는 그대로 남습니다',
           '자동 파기 ⑪ 운영 일정 메모 — 예약을 받지 않도록 막아 둔 시간대에 운영자가 적는 메모는 그 시간대가 끝나고 1년이 지나면 지웁니다. 막아 둔 시각 자체는 운영 기록으로 남습니다',
           '자동 파기 ⑫ 계약서에 적힌 개인정보 — 연습실 계약은 해지·만료 처리가 끝난 계약에 한해, 계약이 끝난 날부터 3년이 지나면 계약 상대방의 이름·생년월일·연락처·주소와 계약 본문, 서명 이미지와 서명자의 IP·단말 정보, 그리고 보관하던 계약서 PDF를 지우거나 표시로 덮습니다. 관리자가 자유롭게 적는 계약 제목과 해지 사유도 이름이 들어갈 수 있어 함께 덮습니다. 기산점은 실제로 종료 처리한 날이고, 그 기록이 없으면 계약서에 적힌 종료일입니다. 서명만 되어 있고 아직 끝나지 않은 계약은 대상이 아닙니다 — 자동 갱신으로 계약서의 종료일이 지나도 이용이 이어질 수 있기 때문입니다. 계약이 있었다는 사실과 기간·금액·호실, 계약을 언제 몇 번 열어 봤는지는 남습니다',
+          '자동 파기 ⑬ 방치된 정기결제 — 카드 등록을 마치지 않은 채 멈춘 정기결제, 그리고 결제 실패로 정지되었거나 운영자가 청구를 멈춰 둔 정기결제는 그대로 두면 끝나는 날이 오지 않아, 위 ⑤~⑦의 기산점이 영영 생기지 않습니다. 그래서 마지막 활동(카드 등록·결제 시도·카드 변경과 그 밖의 구독 기록 갱신)으로부터 1년이 지나도록 아무 활동이 없으면 종료된 것으로 봅니다. 그때까지 결제가 한 번도 없었던 정기결제는 계약이 성립하지 않았고 오간 대금도 없어 보존할 거래기록이 아니므로, 종료로 넘기면서 이름·연락처·이메일 주소를 표시로 덮고 후원자 명단에 실을 표시 이름을 지체 없이 함께 지웁니다. 결제 이력이 있는 정기결제는 거래기록이라 종료로 넘기기만 하고, 그 뒤는 위 ⑤의 5년과 ⑦의 3년이 이어받습니다. 결제를 시도했으나 그 결과가 아직 확인되지 않은 회차가 남아 있는 정기결제도 종료로만 넘깁니다 — 뒤늦게 승인이 확인되면 환불을 안내해 드려야 하므로, 연락처를 지울 수 없기 때문입니다. 이용 중이거나 결제를 다시 시도하는 중인 정기결제, 해지를 예약해 둔 정기결제는 대상이 아닙니다 — 앞의 둘은 살아 있고, 마지막 것은 예약한 날이 지나면 종료로 넘어가는 경로가 이미 있습니다',
           '그 밖의 파기 — 요청 제한 기록은 제한 창(길어도 한 시간)이 지나면 다음 요청이 들어올 때 함께 지우고(위 16항), 개설자 로그인 링크는 15분이 지나거나 한 번 쓰이면 다시 쓸 수 없게 됩니다',
           '보존하는 개인정보의 근거 — 전자상거래 등에서의 소비자보호에 관한 법률이 정한 거래기록 보존 의무입니다. 위 3항·8항의 기간 동안 보존합니다',
           '보존하는 개인정보의 항목 — 보존 기간이 지나기 전에는 주문자 이름·연락처·이메일 주소, 주문번호와 주문 유형, 예약 일시·상품 또는 펀딩 리워드 이름·수량·단가·추가 후원금, 결제수단과 결제·취소·환불 처리 기록(결제 식별값·승인 시각·영수증 주소·환불 금액·환불 요청자), 동의한 약관 판본과 동의 시각, 리워드 발송 상태·택배사·운송장번호가 남고, 개설자 쪽으로는 개설자 이름·연락처와 정산 기록(모금액·환불액·수수료·원천징수액·실지급액·확정 후원 건수·지급 시각)이 남습니다',
@@ -424,7 +441,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Privacy Policy',
     subtitle: 'Studio NOL collects only the minimum personal data required for inquiries and consultation support.',
     lastUpdatedLabel: 'Effective date',
-    lastUpdatedValue: 'September 23, 2026',
+    lastUpdatedValue: 'September 24, 2026',
     sections: [
       {
         heading: '1. Personal data we collect',
@@ -445,20 +462,20 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '5. Your rights and how to exercise them',
         body:
-          'You may ask us at any time to access, correct, or delete your personal data or to stop ' +
-          'processing it, and where we process data on the basis of consent you may withdraw that ' +
-          'consent. A legal representative may exercise the same rights on your behalf. Send your ' +
-          'request to the privacy officer named in section 10 below; we check it without undue delay, ' +
-          'act on it, and tell you what we did, including our reasons if we decline. Two limits apply. ' +
-          'Data that another law names as data we must collect cannot be deleted on request, which ' +
-          'covers the transaction records described in section 3 - those are destroyed once their ' +
-          'retention period ends. And we may refuse a request to stop processing where stopping would ' +
-          'make it impossible to perform a contract you hold with us and you have not clearly stated ' +
+          'You may ask us at any time to access, correct or delete your personal data, or to stop ' +
+          'processing it, and where we rely on your consent you may withdraw it. A legal ' +
+          'representative may exercise the same rights on your behalf. Send your request to the ' +
+          'privacy officer named in section 10 below; we look into it without undue delay, act on ' +
+          'it, and tell you the outcome, with our reasons if we cannot do what you asked. Two limits ' +
+          'apply. Data that another law requires us to collect cannot be deleted on request - the ' +
+          'transaction records described in section 3 are of that kind, and they are destroyed once ' +
+          'their retention period ends. And we may refuse a request to stop processing if that would ' +
+          'make it impossible to perform a contract you hold with us and you have not clearly said ' +
           'that you wish to end it; if we refuse, we tell you why. Withdrawing consent stops the ' +
-          'processing that rested on it, but it does not undo a contract already formed or erase ' +
-          'records we are required to keep. If you disagree with the outcome, you may apply to the ' +
-          'Personal Information Dispute Mediation Committee or report the matter to the Privacy ' +
-          'Infringement Report Centre in Korea.',
+          'processing that rested on it, but it does not undo a contract already made or erase ' +
+          'records we are required to keep. If you disagree with the outcome, you may apply for ' +
+          'mediation to Korea\'s Personal Information Dispute Mediation Committee or report the ' +
+          'matter to the Privacy Infringement Report Centre.',
       },
       {
         heading: '6. Media contact details for press outreach',
@@ -476,50 +493,63 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '9. How personal data is destroyed',
         body:
           'Personal data is destroyed without delay once its purpose has been met or its retention ' +
-          'period has passed. Records that another law requires us to keep are destroyed once that ' +
+          'period has passed; records that another law requires us to keep are destroyed once that ' +
           'period ends. An automated clean-up runs once a month and erases the stored value in our ' +
-          'database, so no deletion waits on someone noticing that it is due. Where a field cannot be ' +
-          'left empty we overwrite it with the mark "(personal data destroyed)". Where we store data ' +
-          'encrypted, we erase the encrypted text itself, so holding the decryption key makes no ' +
-          'difference. Because the clean-up runs monthly, data is erased within a month of becoming ' +
-          'eligible. Inquiry data is destroyed once the consultation is finished. For orders, bookings ' +
-          'and recurring payments (offered on our Korean pages only), the name, phone number and email ' +
-          'address are overwritten with that mark five years after the order was placed or last ' +
-          'changed, whichever is later - a refund or a cancellation counts as a change - or five years ' +
-          'after the subscription ended. The raw response the payment provider returned when it ' +
-          'approved a payment is erased five years after that approval, because the law requires us to ' +
-          'keep the payment record for that long. Free-text notes and the reasons the provider gave for ' +
-          'declining a payment are erased on shorter schedules: a declined payment forms no contract ' +
-          'and moves no money, so it is not a record the law tells us to keep. What remains after that ' +
-          'is the transaction record itself - order number, product, amounts, times, payment method and ' +
+          'database, so no deletion waits on someone remembering that it is due. Where a field ' +
+          'cannot be left empty we overwrite it with the mark "(personal data destroyed)". Where we ' +
+          'hold data encrypted, we erase the encrypted text itself, so holding the decryption key ' +
+          'makes no difference. Because the clean-up runs monthly, data is erased within a month of ' +
+          'falling due for destruction. Inquiry data is destroyed once the consultation is finished. ' +
+          'For orders, bookings and recurring payments (offered on our Korean pages only), the name, ' +
+          'phone number and email address are overwritten with that mark five years after the order ' +
+          'was placed or last changed, whichever is later - a refund or a cancellation counts as a ' +
+          'change - or, for a subscription, five years after it ended. A recurring payment that ' +
+          'never got as far as a registered card, or that we stopped - because charges kept failing, ' +
+          'or because we suspended the billing ourselves - has ' +
+          'no end date of its own, so we treat it as ended once a year has passed with no activity ' +
+          'of any kind - no charge attempted, no card registered or changed, nothing else recorded ' +
+          'against it. If no payment was ever taken, no contract was formed and no money changed ' +
+          'hands, so there is no transaction record to keep: we erase the name, phone number, email ' +
+          'address and any supporter display name at the same time. If payments were taken, we only ' +
+          'mark the subscription as ended, and the five-year rule above then runs from that last ' +
+          'activity. The same goes for a subscription left with a charge whose outcome we never ' +
+          'heard back on: we mark it as ended but keep the contact details, because if that charge ' +
+          'turns out to have gone through we have to be able to reach you about a refund. ' +
+          'The raw response the payment provider returned when it approved a payment is ' +
+          'erased five years after that approval, because the law requires us to keep the payment ' +
+          'record for that long. Free-text notes and the reasons the provider gave for declining a ' +
+          'payment are erased on shorter schedules: a declined payment forms no contract and moves ' +
+          'no money, so it is not a record the law tells us to keep. What remains afterwards is the ' +
+          'transaction record itself - order number, product, amounts, times, payment method and ' +
           'processing status.',
       },
       {
         heading: '10. Privacy officer',
         body:
-          'Studio NOL has a privacy officer who is responsible overall for how personal data is ' +
-          'handled and who deals with questions, complaints and remedies from data subjects. Studio ' +
-          'NOL is run by one person, so there is no separate department, and requests under section 5 ' +
-          `reach the same contact. Name: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), ` +
+          'Studio NOL has named a privacy officer - gaeinjeongbo boho chaegimja, the role Korean ' +
+          'privacy law provides for - who is responsible overall for how personal data is handled ' +
+          'and who deals with questions, complaints and requests for redress from data subjects. ' +
+          'Studio NOL is run by one person, so there is no separate department, and requests under ' +
+          `section 5 reach the same contact. Name: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), ` +
           `operator of Studio NOL. Email: ${PRIVACY_OFFICER.email}. Phone: ${CANONICAL_FACTS.phoneIntl}.`,
       },
       {
         heading: '11. Cookies and other automatic collection',
         body:
           'Studio NOL uses Google Analytics 4 and Vercel\'s visit and performance measurement to see ' +
-          'which pages are read and how they perform. The scripts do not start when a page opens: they ' +
-          'load after you first move or tap (or after five seconds), and only on the studionol.co.kr ' +
-          'domain. They record the page address and how you arrived, browser, device and operating ' +
-          'system details, the time of the visit, performance figures, and actions such as pressing an ' +
-          'inquiry button. We do not send names, phone numbers or anything else that identifies you ' +
-          'directly to them, and screens whose address carries a payment identifier or a management ' +
-          'token, along with the admin screens, are left out of measurement entirely. Google Analytics ' +
-          '4 stores an identifier cookie in your browser so that repeat visits can be told apart; we ' +
-          'use it for visit statistics and for improving pages, not for advertising. The site has no ' +
-          'opt-out switch of its own - block or delete cookies in your browser settings and you have ' +
-          'refused; the site works the same either way. Settings such as dark mode, a banner you have ' +
-          'dismissed and a form you were part-way through stay in your browser and are not sent to our ' +
-          'servers.',
+          'which pages are read and how well they load. The scripts do not start as soon as a page ' +
+          'opens; they load after you first move or tap, or after five seconds, and only on the ' +
+          'studionol.co.kr domain. They record the page address and how you arrived, your browser, ' +
+          'device and operating system, the time of the visit, performance figures, and actions such ' +
+          'as pressing an inquiry button. We do not send them your name, phone number or anything ' +
+          'else that identifies you directly, and pages whose address carries a payment identifier ' +
+          'or a management token, along with the admin pages, are left out of measurement ' +
+          'altogether. Google Analytics 4 stores an identifier cookie in your browser so that repeat ' +
+          'visits can be told apart; we use it for visit statistics and for improving pages, not for ' +
+          'advertising. The site has no opt-out switch of its own: blocking cookies in your browser ' +
+          'settings, or deleting the ones already stored, is how you refuse, and the site works the ' +
+          'same either way. Settings such as dark mode, a banner you have dismissed and a form you ' +
+          'were part-way through stay in your browser and are never sent to our servers.',
       },
     ],
   },
@@ -527,7 +557,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '隐私政策',
     subtitle: 'Studio NOL 仅收集处理咨询与沟通所需的最少个人信息，并进行安全管理。',
     lastUpdatedLabel: '生效日期',
-    lastUpdatedValue: '2026年9月23日',
+    lastUpdatedValue: '2026年9月24日',
     sections: [
       {
         heading: '1. 我们收集的个人信息',
@@ -548,13 +578,14 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '5. 用户权利及行使方法',
         body:
-          '您可随时要求查阅、更正、删除个人信息或停止处理；基于同意而处理的信息，您也可以随时撤回同意。' +
-          '法定代理人可代为行使同样的权利。请向下方第 10 项的个人信息保护负责人提出，我们会及时核实并采取措施，' +
-          '并将结果告知您；无法照办时也会说明理由。有两项限制：其他法律明确规定必须收集的信息不能应要求删除，' +
-          '第 3 项所述的交易记录即属此类，这些记录在保存期限届满后销毁；此外，若停止处理将导致与您之间已成立的' +
-          '合同无法履行，而您并未明确表示要解除该合同，我们可以拒绝停止处理，并会说明理由。撤回同意后，' +
-          '以该同意为依据的处理将会停止，但已成立的合同与依法须保存的记录不会因此消失。' +
-          '若您对处理结果有异议，可向韩国个人信息纠纷调解委员会申请调解，或向个人信息侵害举报中心举报。',
+          '您可以随时要求查阅、更正、删除您的个人信息，或要求停止处理；对于基于同意而处理的信息，' +
+          '您也可以撤回该同意。法定代理人可以代您行使同样的权利。请向下方第 10 项所列的个人信息保护负责人提出，' +
+          '我们会及时核实并采取相应措施，随后将结果告知您；无法照办时，也会一并说明理由。' +
+          '其中有两项限制。其他法律明确规定必须收集的信息，不能因您的要求而删除——第 3 项所述的交易记录即属此类，' +
+          '这些记录在保存期限届满后销毁。另外，若停止处理会导致与您之间已成立的合同无法履行，' +
+          '而您又未明确表示要解除该合同，我们可以拒绝停止处理，并会说明理由。撤回同意后，' +
+          '以该同意为依据的处理即行停止，但已成立的合同与依法须保存的记录不会因此消失。' +
+          '若您对处理结果有异议，可以向韩国个人信息纠纷调解委员会申请调解，或向个人信息侵害举报中心举报。',
       },
       {
         heading: '6. 为新闻宣传业务处理媒体联系方式',
@@ -572,11 +603,18 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '9. 个人信息的销毁程序与方法',
         body:
           '处理目的已达成或保存期限已过的个人信息将及时销毁；其他法律要求保存的记录，则在该期限届满后销毁。' +
-          '每月运行一次的自动清理作业会删除数据库中相应的值，因此销毁不必等人想起来。无法留空的字段以' +
+          '每月运行一次的自动清理作业会删除数据库中相应的值，因此任何一项销毁都不必等人想起来。无法留空的字段以' +
           '“(个人信息已销毁)”的标记覆盖；加密保存的值，我们删除的是密文本身，所以即使持有解密密钥也无从还原。' +
           '由于清理作业每月运行一次，自满足销毁条件之日起最迟一个月内删除。咨询信息在咨询结束后销毁。' +
           '预约、订单与定期付款（仅在韩语页面提供）中的姓名、联系电话与电子邮箱，自下单之日与该订单最后一次' +
           '变更之日（退款或取消也算一次变更）中较晚的一天起满五年后，以上述标记覆盖；订阅则自结束之日起算。' +
+          '未完成银行卡登记即中断的定期付款，以及因多次扣款失败而停止或由我们暂停扣款的定期付款，本身不会迎来结束之日；' +
+          '若满一年没有任何活动——未尝试扣款，未登记或更换银行卡，也没有其他记录变动——我们即视为已结束。' +
+          '其间从未扣款成功的，既未成立合同也无款项往来，没有须保存的交易记录，' +
+          '因此在视为结束的同时一并销毁姓名、联系电话、电子邮箱以及支持者名单所用的公示名。' +
+          '曾扣款成功的，则仅标记为结束，此后适用上述五年规则，并自最后一次活动之日起算。' +
+          '若仍留有一笔至今未能确认结果的扣款，同样只标记为结束而保留联系方式——' +
+          '万一日后确认该笔扣款已经成功，我们须能联系到您办理退款。' +
           '支付机构在批准付款时返回的响应原文，自该批准之日起满五年后删除——法律要求付款记录保存这么久。' +
           '自由填写的备注与支付被拒的事由原文保存期限更短：付款被拒既未成立合同也未发生款项往来，' +
           '不属于法律要求保存的记录。此后留下的只是交易记录本身——订单编号、商品、金额、时间、' +
@@ -585,8 +623,9 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '10. 个人信息保护负责人',
         body:
-          'Studio NOL 设有个人信息保护负责人，全面负责个人信息处理事务，并负责受理信息主体的咨询、投诉与救济。' +
-          'Studio NOL 由一人运营，因此不另设专门部门，第 5 项的权利行使请求也由同一窗口受理。' +
+          'Studio NOL 指定了个人信息保护负责人（韩国个人信息保护制度所设的职务），由其全面负责个人信息处理事务，' +
+          '并受理信息主体的咨询、投诉与救济请求。Studio NOL 由一人运营，因此不另设专门部门，' +
+          '第 5 项的权利行使请求也由同一窗口受理。' +
           `姓名 — ${PRIVACY_OFFICER.name}（${studioOperator.alternateName[0]}，Studio NOL 运营者）／` +
           `电子邮箱 — ${PRIVACY_OFFICER.email}／` +
           `电话 — ${CANONICAL_FACTS.phoneIntl}。`,
@@ -595,14 +634,14 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         heading: '11. Cookie 等自动收集装置的安装、运行及拒绝',
         body:
           'Studio NOL 使用 Google Analytics 4 与 Vercel 的访问及性能测量功能，以了解页面的阅读情况与显示性能。' +
-          '该脚本并非在页面打开时立即启动，而是在访客首次移动或点击之后（或经过 5 秒后）才加载，' +
+          '这些脚本并非在页面打开时立即启动，而是等访客首次移动或点击之后（或经过 5 秒后）才加载，' +
           '且仅在 studionol.co.kr 域名下运行。所收集的信息包括访问的页面地址与来源、浏览器与设备及操作系统信息、' +
-          '访问时间与页面性能指标，以及点击咨询按钮等使用行为。我们不会将姓名、联系电话等可直接识别访客的信息' +
+          '访问时间与页面性能指标，以及点击咨询按钮等使用行为。我们不会把姓名、联系电话等可直接识别访客的信息' +
           '发送给测量脚本；地址中含有支付识别值或管理令牌的页面以及管理页面，则完全不加载测量脚本。' +
           'Google Analytics 4 会在浏览器中存储识别码 Cookie，用于区分同一访客的再次访问；其用途为访问统计与页面改进，' +
-          '不用于广告。本网站未另设收集拒绝按钮：您可在所用浏览器的设置中阻止 Cookie 或删除已保存的 Cookie 予以拒绝，' +
-          '阻止后网站使用亦不受限制。深色模式设置、关闭提示横幅的记录、正在填写的表单临时保存等，' +
-          '仅保存在访客的浏览器中，不会发送至 Studio NOL 的服务器。',
+          '不用于广告。本网站未另设拒绝收集的按钮：您可在所用浏览器的设置中阻止 Cookie，或删除已保存的 Cookie，' +
+          '即为拒绝；阻止后使用本网站亦不受任何限制。深色模式设置、关闭提示横幅的记录、正在填写的表单草稿等，' +
+          '仅保存在访客自己的浏览器中，不会发送至 Studio NOL 的服务器。',
       },
     ],
   },
@@ -610,7 +649,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Política de privacidad',
     subtitle: 'Studio NOL recopila solo los datos personales mínimos necesarios para responder consultas y brindar orientación.',
     lastUpdatedLabel: 'Fecha de entrada en vigor',
-    lastUpdatedValue: '23 de septiembre de 2026',
+    lastUpdatedValue: '24 de septiembre de 2026',
     sections: [
       {
         heading: '1. Datos personales que recopilamos',
@@ -634,19 +673,20 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'Puede solicitar en cualquier momento el acceso, la corrección o la eliminación de sus datos ' +
           'personales, así como la suspensión de su tratamiento, y puede retirar el consentimiento ' +
           'cuando el tratamiento se base en él. El representante legal puede ejercer los mismos ' +
-          'derechos en su nombre. Dirija la solicitud a la persona responsable de protección de datos ' +
-          'del apartado 10; la comprobamos sin demora, adoptamos la medida que corresponda y le ' +
-          'comunicamos el resultado, incluidos los motivos si no podemos atenderla. Hay dos límites. ' +
-          'Los datos que otra ley exige recopilar no pueden eliminarse a petición: es el caso de los ' +
-          'registros de la transacción descritos en el apartado 3, que se destruyen cuando vence su ' +
-          'plazo de conservación. Y podemos denegar la suspensión del tratamiento cuando esta impida ' +
-          'cumplir un contrato celebrado con usted y usted no haya manifestado con claridad su ' +
-          'voluntad de resolverlo; en ese caso le explicamos el motivo. La retirada del consentimiento ' +
-          'detiene el tratamiento que se apoyaba en él, pero no deshace un contrato ya celebrado ni ' +
-          'borra los registros de conservación obligatoria. Si no está de acuerdo con el resultado, ' +
-          'puede solicitar mediación ante el Comité de Mediación de Conflictos sobre Información ' +
-          'Personal de Corea o presentar una denuncia ante el Centro de Denuncias de Vulneraciones de ' +
-          'la Privacidad.',
+          'derechos en su nombre. Dirija la solicitud a la persona responsable de la protección de ' +
+          'datos personales que se indica en el apartado 10: la comprobamos sin demora, adoptamos la ' +
+          'medida que corresponda y le comunicamos el resultado, con los motivos si no podemos ' +
+          'atenderla. Existen dos límites. Los datos que otra ley nos obliga a recopilar no pueden ' +
+          'eliminarse a petición del interesado: es el caso de los registros de la transacción ' +
+          'descritos en el apartado 3, que se destruyen cuando vence su plazo de conservación. ' +
+          'Además, podemos denegar la suspensión del tratamiento cuando suspenderlo impida cumplir ' +
+          'un contrato celebrado con usted y usted no haya manifestado con claridad su voluntad de ' +
+          'resolverlo; en tal caso le explicamos el motivo. La retirada del consentimiento detiene ' +
+          'el tratamiento que se apoyaba en él, pero no deshace un contrato ya celebrado ni borra ' +
+          'los registros de conservación obligatoria. Si no está de acuerdo con el resultado, puede ' +
+          'solicitar mediación ante el Comité de Mediación de Conflictos sobre Información Personal ' +
+          'de Corea o presentar una denuncia ante el Centro de Denuncias de Vulneraciones de la ' +
+          'Privacidad.',
       },
       {
         heading: '6. Tratamiento de contactos de medios para labores de prensa',
@@ -675,7 +715,20 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'en nuestras páginas en coreano), el nombre, el teléfono y el correo electrónico se ' +
           'sobrescriben con esa marca cinco años después de la fecha del pedido o de su última ' +
           'modificación, la que sea posterior (una devolución o una cancelación cuenta como ' +
-          'modificación), o cinco años después del fin de la suscripción. La respuesta original que la ' +
+          'modificación), o cinco años después del fin de la suscripción. Un pago recurrente que ' +
+          'nunca llegó a tener una tarjeta registrada, o que quedó detenido tras varios cobros ' +
+          'fallidos o porque nosotros mismos suspendimos el cobro, no tiene fecha de fin propia: lo ' +
+          'damos por terminado cuando ha pasado un año ' +
+          'sin actividad alguna, sin intentos de cobro, sin alta ni cambio de tarjeta y sin ningún ' +
+          'otro movimiento registrado. Si nunca llegó a cobrarse nada, no se formó contrato ni hubo ' +
+          'movimiento de dinero, de modo que no hay registro de la transacción que conservar: en ese ' +
+          'mismo momento borramos el nombre, el teléfono, el correo electrónico y el nombre que ' +
+          'figurase en la lista pública de mecenas. Si hubo cobros, solo lo marcamos como terminado ' +
+          'y el plazo de cinco años anterior corre desde esa última actividad. Lo mismo ocurre si ' +
+          'queda un cobro del que nunca llegamos a conocer el resultado: lo marcamos como terminado ' +
+          'pero conservamos los datos de contacto, porque si más adelante se confirma que ese cobro ' +
+          'se realizó tenemos que poder avisarle para devolverle el importe. ' +
+          'La respuesta original que la ' +
           'entidad de pago devuelve al aprobar un cobro se borra cinco años después de esa aprobación, ' +
           'porque la ley nos obliga a conservar el registro del pago durante ese tiempo. Las notas de ' +
           'texto libre y los motivos con que la entidad rechaza un cobro se borran en plazos más ' +
@@ -686,10 +739,11 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '10. Responsable de protección de datos personales',
         body:
-          'Studio NOL cuenta con una persona responsable de la protección de datos personales, ' +
-          'encargada del conjunto del tratamiento y de atender consultas, reclamaciones y reparaciones ' +
-          'de los interesados. Studio NOL lo lleva una sola persona, por lo que no existe un ' +
-          'departamento aparte y las solicitudes del apartado 5 se reciben por la misma vía. ' +
+          'Studio NOL ha designado a una persona responsable de la protección de datos personales ' +
+          '(la figura que prevé la normativa coreana de protección de datos), encargada del ' +
+          'conjunto del tratamiento y de atender las consultas, reclamaciones y peticiones de ' +
+          'reparación de los interesados. Studio NOL lo lleva una sola persona, por lo que no existe ' +
+          'un departamento aparte y las solicitudes del apartado 5 se reciben por la misma vía. ' +
           `Nombre: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), responsable de Studio NOL. ` +
           `Correo electrónico: ${PRIVACY_OFFICER.email}. Teléfono: ${CANONICAL_FACTS.phoneIntl}.`,
       },
@@ -703,15 +757,15 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'página y la vía de entrada, datos del navegador, el dispositivo y el sistema operativo, la ' +
           'hora de acceso, indicadores de rendimiento y acciones de uso como pulsar el botón de ' +
           'consulta. No enviamos a esos scripts el nombre, el teléfono ni ningún dato que identifique ' +
-          'directamente al visitante, y las pantallas cuya dirección lleva un identificador de pago o ' +
-          'un token de gestión, así como las pantallas de administración, quedan fuera de la medición. ' +
-          'Google Analytics 4 guarda una cookie identificadora en el navegador para distinguir las ' +
-          'visitas repetidas; la usamos para estadísticas de visita y mejora de las páginas, no con ' +
-          'fines publicitarios. El sitio no tiene un botón propio de rechazo: puede rechazarla ' +
-          'bloqueando o eliminando las cookies en la configuración de su navegador, y el uso del sitio ' +
-          'no queda limitado por ello. Ajustes como el modo oscuro, el aviso que ya ha cerrado o el ' +
-          'borrador del formulario que estaba rellenando se guardan solo en su navegador y no se ' +
-          'envían a los servidores de Studio NOL.',
+          'directamente al visitante, y las páginas cuya dirección lleva un identificador de pago o ' +
+          'un token de gestión, así como las páginas de administración, quedan enteramente fuera de ' +
+          'la medición. Google Analytics 4 guarda una cookie identificadora en el navegador para ' +
+          'distinguir las visitas repetidas; la usamos para estadísticas de visita y mejora de las ' +
+          'páginas, no con fines publicitarios. El sitio no tiene un botón propio de rechazo: para ' +
+          'rechazarlas basta con bloquear las cookies en la configuración de su navegador o eliminar ' +
+          'las ya guardadas, y el uso del sitio no queda limitado por ello. Ajustes como el modo ' +
+          'oscuro, el aviso que ya ha cerrado o el borrador del formulario que estaba rellenando se ' +
+          'guardan solo en su navegador y nunca se envían a los servidores de Studio NOL.',
       },
     ],
   },
@@ -719,7 +773,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Chính sách bảo mật',
     subtitle: 'Studio NOL chỉ thu thập tối thiểu thông tin cá nhân cần thiết để tiếp nhận và phản hồi tư vấn.',
     lastUpdatedLabel: 'Ngày hiệu lực',
-    lastUpdatedValue: '23 tháng 9, 2026',
+    lastUpdatedValue: '24 tháng 9, 2026',
     sections: [
       {
         heading: '1. Thông tin cá nhân được thu thập',
@@ -743,12 +797,13 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'Bạn có thể yêu cầu xem, chỉnh sửa, xóa thông tin cá nhân hoặc dừng việc xử lý bất cứ lúc ' +
           'nào; với thông tin được xử lý dựa trên sự đồng ý, bạn có thể rút lại sự đồng ý đó. Người ' +
           'đại diện theo pháp luật cũng có thể thực hiện các quyền này thay bạn. Yêu cầu xin gửi tới ' +
-          'người phụ trách bảo vệ thông tin cá nhân nêu ở mục 10 bên dưới; chúng tôi sẽ kiểm tra và xử ' +
-          'lý không chậm trễ, đồng thời thông báo kết quả, kèm lý do nếu không thể đáp ứng. Có hai ' +
-          'giới hạn. Thông tin mà luật khác quy định phải thu thập thì không thể xóa theo yêu cầu - đó ' +
-          'là các hồ sơ giao dịch nêu ở mục 3, và chúng được hủy khi hết thời hạn lưu trữ. Ngoài ra, ' +
-          'nếu việc dừng xử lý khiến hợp đồng đã ký với bạn không thể thực hiện được mà bạn chưa nêu ' +
-          'rõ ý định chấm dứt hợp đồng đó, chúng tôi có thể từ chối và sẽ giải thích lý do. Việc rút ' +
+          'người phụ trách bảo vệ thông tin cá nhân nêu ở mục 10 bên dưới; chúng tôi sẽ kiểm tra và ' +
+          'xử lý không chậm trễ, sau đó thông báo kết quả cho bạn, kèm lý do nếu không thể đáp ứng. ' +
+          'Có hai giới hạn sau đây. Thông tin mà luật khác quy định phải thu thập thì không thể xóa ' +
+          'theo yêu cầu - các hồ sơ giao dịch nêu ở mục 3 thuộc loại này, và chúng được hủy khi hết ' +
+          'thời hạn lưu trữ. Ngoài ra, nếu việc dừng xử lý khiến hợp đồng đã ký với bạn không thể ' +
+          'thực hiện được mà bạn lại chưa nêu rõ ý định chấm dứt hợp đồng đó, chúng tôi có thể từ ' +
+          'chối và sẽ giải thích lý do. Việc rút ' +
           'lại sự đồng ý làm dừng phần xử lý dựa trên sự đồng ý ấy, nhưng không làm mất hiệu lực hợp ' +
           'đồng đã hình thành và không xóa những hồ sơ buộc phải lưu theo luật. Nếu không đồng ý với ' +
           'kết quả, bạn có thể đề nghị Ủy ban Hòa giải Tranh chấp Thông tin Cá nhân Hàn Quốc hòa giải ' +
@@ -779,7 +834,20 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'vấn được hủy sau khi hoàn tất tư vấn. Với đặt lịch, đơn hàng và thanh toán định kỳ (chỉ có ' +
           'trên trang tiếng Hàn), họ tên, số điện thoại và email được ghi đè bằng dấu nói trên sau năm ' +
           'năm, tính từ ngày đặt hoặc ngày đơn hàng thay đổi lần cuối, lấy mốc muộn hơn (hoàn tiền hay ' +
-          'hủy đơn cũng là một lần thay đổi); với thuê bao thì tính từ ngày kết thúc. Nội dung phản ' +
+          'hủy đơn cũng là một lần thay đổi); với thuê bao thì tính từ ngày kết thúc. Khoản thanh ' +
+          'toán định kỳ dừng lại khi chưa kịp đăng ký thẻ, hoặc bị ngưng sau nhiều lần trừ tiền thất ' +
+          'bại hay do chính chúng tôi tạm dừng việc trừ tiền, ' +
+          'tự nó không có ngày kết thúc; vì vậy nếu suốt một năm không có bất kỳ hoạt động nào - ' +
+          'không lần trừ tiền nào được thử, không đăng ký hay đổi thẻ, cũng không ghi nhận thay đổi ' +
+          'nào khác - chúng tôi coi như đã kết thúc. Nếu trong suốt thời gian đó chưa lần nào trừ ' +
+          'tiền thành công thì hợp đồng chưa hình thành và cũng không có tiền chuyển đi, nên không ' +
+          'có hồ sơ giao dịch nào phải lưu: ngay khi coi là kết thúc, chúng tôi xóa luôn họ tên, số ' +
+          'điện thoại, email và tên hiển thị trong danh sách người ủng hộ. Nếu đã từng trừ tiền ' +
+          'thành công thì chúng tôi chỉ đánh dấu là đã kết thúc, và thời hạn năm năm nói trên được ' +
+          'tính từ lần hoạt động cuối cùng ấy. Trường hợp còn một lần trừ tiền mà chúng tôi chưa ' +
+          'từng nhận được kết quả cũng vậy: chúng tôi chỉ đánh dấu là đã kết thúc và vẫn giữ thông ' +
+          'tin liên hệ, vì nếu sau này xác nhận được lần trừ tiền ấy đã thành công thì chúng tôi ' +
+          'phải liên hệ được với bạn để hoàn tiền. Nội dung phản ' +
           'hồi gốc mà đơn vị thanh toán trả về khi duyệt một khoản thanh toán được xóa sau năm năm kể ' +
           'từ lần duyệt đó, vì luật buộc chúng tôi giữ hồ sơ thanh toán trong chừng ấy thời gian. Còn ' +
           'ghi chú tự do và lý do đơn vị thanh toán từ chối một khoản thanh toán thì được xóa theo ' +
@@ -790,7 +858,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '10. Người phụ trách bảo vệ thông tin cá nhân',
         body:
-          'Studio NOL có người phụ trách bảo vệ thông tin cá nhân, chịu trách nhiệm chung về việc xử ' +
+          'Studio NOL đã chỉ định người phụ trách bảo vệ thông tin cá nhân (chức danh mà pháp luật ' +
+          'bảo vệ thông tin cá nhân của Hàn Quốc đặt ra), chịu trách nhiệm chung về việc xử ' +
           'lý thông tin cá nhân và tiếp nhận thắc mắc, khiếu nại cũng như yêu cầu khắc phục của chủ ' +
           'thể thông tin. Studio NOL do một người vận hành nên không có bộ phận riêng, và các yêu cầu ' +
           `theo mục 5 cũng được tiếp nhận qua cùng đầu mối. Họ tên: ${PRIVACY_OFFICER.name} ` +
@@ -806,12 +875,13 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'năm giây), và chỉ hoạt động trên tên miền studionol.co.kr. Chúng ghi nhận địa chỉ trang và ' +
           'nguồn truy cập, thông tin trình duyệt - thiết bị - hệ điều hành, thời điểm truy cập, chỉ số ' +
           'hiệu năng và các hành vi như bấm nút liên hệ. Chúng tôi không gửi cho các tập lệnh này họ ' +
-          'tên, số điện thoại hay bất kỳ thông tin nào nhận dạng trực tiếp người truy cập; những màn ' +
-          'hình có địa chỉ chứa mã định danh thanh toán hoặc mã quản lý, cùng với màn hình quản trị, ' +
-          'hoàn toàn không được đo lường. Google Analytics 4 lưu một cookie định danh trong trình ' +
-          'duyệt để phân biệt lượt quay lại; chúng tôi dùng cho thống kê truy cập và cải thiện trang, ' +
-          'không dùng cho quảng cáo. Trang web không có nút từ chối riêng: bạn có thể chặn hoặc xóa ' +
-          'cookie trong cài đặt trình duyệt để từ chối, và việc sử dụng trang vẫn không bị hạn chế. ' +
+          'tên, số điện thoại hay bất kỳ thông tin nào nhận dạng trực tiếp người truy cập; những ' +
+          'trang có địa chỉ chứa mã định danh thanh toán hoặc mã quản lý, cùng với các trang quản ' +
+          'trị, thì hoàn toàn không được đo lường. Google Analytics 4 lưu một cookie định danh trong ' +
+          'trình duyệt để phân biệt lượt quay lại; chúng tôi dùng cookie này cho thống kê truy cập ' +
+          'và cải thiện trang, không dùng cho quảng cáo. Trang web không có nút từ chối riêng: bạn ' +
+          'chặn cookie trong cài đặt trình duyệt hoặc xóa những cookie đã lưu là đã từ chối, và việc ' +
+          'sử dụng trang vẫn không bị hạn chế. ' +
           'Những thiết lập như chế độ tối, việc đã đóng thông báo hay nội dung form đang soạn dở chỉ ' +
           'được lưu trong trình duyệt của bạn và không gửi về máy chủ của Studio NOL.',
       },
@@ -821,7 +891,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'นโยบายความเป็นส่วนตัว',
     subtitle: 'Studio NOL เก็บข้อมูลส่วนบุคคลเท่าที่จําเป็นสําหรับการรับและตอบคําสอบถามเท่านั้น',
     lastUpdatedLabel: 'วันที่มีผลบังคับใช้',
-    lastUpdatedValue: '23 กันยายน 2026',
+    lastUpdatedValue: '24 กันยายน 2026',
     sections: [
       {
         heading: '1. ข้อมูลส่วนบุคคลที่เราเก็บรวบรวม',
@@ -844,7 +914,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
         body:
           'คุณสามารถขอเข้าถึง แก้ไข ลบข้อมูลส่วนบุคคล หรือขอให้ระงับการประมวลผลได้ทุกเมื่อ และสําหรับข้อมูลที่ประมวลผล' +
           'โดยอาศัยความยินยอม คุณสามารถถอนความยินยอมได้ ผู้แทนโดยชอบด้วยกฎหมายก็ใช้สิทธิเดียวกันแทนคุณได้ ' +
-          'กรุณายื่นคําขอไปยังผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคลในข้อ 10 ด้านล่าง เราจะตรวจสอบและดําเนินการโดยไม่ชักช้า ' +
+          'กรุณายื่นคําขอไปยังผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคลตามข้อ 10 ด้านล่าง เราจะตรวจสอบและดําเนินการโดยไม่ชักช้า ' +
           'พร้อมแจ้งผลให้ทราบ และหากไม่อาจดําเนินการตามคําขอได้ก็จะแจ้งเหตุผลด้วย ทั้งนี้มีข้อจํากัดสองประการ ' +
           'ข้อมูลที่กฎหมายอื่นกําหนดให้ต้องเก็บรวบรวมไม่อาจลบได้ตามคําขอ ซึ่งได้แก่บันทึกธุรกรรมที่กล่าวไว้ในข้อ 3 ' +
           'โดยบันทึกเหล่านั้นจะถูกทําลายเมื่อพ้นระยะเวลาเก็บรักษา และหากการระงับการประมวลผลจะทําให้ไม่สามารถปฏิบัติ' +
@@ -878,6 +948,15 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'สําหรับการจอง คําสั่งซื้อ และการชําระเงินแบบต่อเนื่อง (มีเฉพาะหน้าภาษาเกาหลี) ชื่อ เบอร์โทร และอีเมล ' +
           'จะถูกเขียนทับด้วยเครื่องหมายข้างต้นเมื่อครบห้าปี โดยนับจากวันสั่งซื้อหรือวันที่คําสั่งซื้อนั้นเปลี่ยนแปลงครั้งล่าสุด ' +
           'แล้วแต่วันใดจะช้ากว่า (การคืนเงินหรือการยกเลิกก็นับเป็นการเปลี่ยนแปลง) ส่วนการสมัครสมาชิกให้นับจากวันสิ้นสุด ' +
+          'ทั้งนี้ การชําระเงินแบบต่อเนื่องที่หยุดไปตั้งแต่ยังไม่ได้ผูกบัตร หรือที่ถูกระงับเพราะเรียกเก็บเงินไม่สําเร็จหลายครั้ง ' +
+          'หรือเพราะเราเป็นฝ่ายพักการเรียกเก็บเงินเอง ' +
+          'ย่อมไม่มีวันสิ้นสุดของตัวเอง ดังนั้นหากครบหนึ่งปีโดยไม่มีความเคลื่อนไหวใด ๆ คือไม่มีการพยายามเรียกเก็บเงิน ' +
+          'ไม่มีการผูกหรือเปลี่ยนบัตร และไม่มีการบันทึกการเปลี่ยนแปลงอื่นใด เราจะถือว่าสิ้นสุดแล้ว ' +
+          'หากตลอดช่วงเวลานั้นไม่เคยเรียกเก็บเงินได้สําเร็จเลย ย่อมไม่เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
+          'จึงไม่มีบันทึกธุรกรรมที่ต้องเก็บรักษา เราจึงลบชื่อ เบอร์โทร อีเมล และชื่อที่ใช้แสดงในรายชื่อผู้สนับสนุนไปพร้อมกันในคราวนั้น ' +
+          'ส่วนรายการที่เคยเรียกเก็บเงินได้สําเร็จ เราเพียงทําเครื่องหมายว่าสิ้นสุด แล้วนับกําหนดห้าปีข้างต้นจากวันที่มีความเคลื่อนไหวครั้งสุดท้ายนั้น ' +
+          'รายการที่ยังมีการเรียกเก็บเงินซึ่งเราไม่เคยทราบผลค้างอยู่ก็เช่นกัน คือเราทําเครื่องหมายว่าสิ้นสุดแต่ยังเก็บข้อมูลติดต่อไว้ ' +
+          'เพราะหากภายหลังยืนยันได้ว่าการเรียกเก็บเงินครั้งนั้นสําเร็จ เราต้องติดต่อคุณเพื่อคืนเงินได้ ' +
           'เนื้อหาการตอบกลับต้นฉบับที่ผู้ให้บริการชําระเงินส่งกลับมาเมื่ออนุมัติการชําระเงินจะถูกลบเมื่อครบห้าปีนับแต่วันอนุมัตินั้น ' +
           'เพราะกฎหมายกําหนดให้เก็บบันทึกการชําระเงินไว้นานเท่านั้น ส่วนบันทึกข้อความอิสระและเหตุผลที่ผู้ให้บริการปฏิเสธ' +
           'การชําระเงินจะถูกลบในระยะเวลาที่สั้นกว่า เพราะการชําระเงินที่ถูกปฏิเสธไม่ก่อให้เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
@@ -887,8 +966,9 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '10. ผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคล',
         body:
-          'Studio NOL จัดให้มีผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคล ซึ่งรับผิดชอบงานด้านการประมวลผลข้อมูลส่วนบุคคลโดยรวม ' +
-          'รวมถึงการรับเรื่องสอบถาม ข้อร้องเรียน และการเยียวยาของเจ้าของข้อมูล Studio NOL ดําเนินงานโดยบุคคลเพียงคนเดียว ' +
+          'Studio NOL ได้แต่งตั้งผู้รับผิดชอบคุ้มครองข้อมูลส่วนบุคคล (ตําแหน่งตามกฎหมายคุ้มครองข้อมูลส่วนบุคคลของเกาหลี) ' +
+          'ให้รับผิดชอบงานด้านการประมวลผลข้อมูลส่วนบุคคลโดยรวม ' +
+          'รวมถึงรับเรื่องสอบถาม ข้อร้องเรียน และการเยียวยาของเจ้าของข้อมูล Studio NOL ดําเนินงานโดยบุคคลเพียงคนเดียว ' +
           `จึงไม่มีแผนกแยกต่างหาก และคําขอใช้สิทธิตามข้อ 5 ก็รับเรื่องผ่านช่องทางเดียวกัน ชื่อ — ${PRIVACY_OFFICER.name} ` +
           `(${studioOperator.alternateName[0]}) ผู้ดําเนินงาน Studio NOL / อีเมล — ${PRIVACY_OFFICER.email} / ` +
           `โทรศัพท์ — ${CANONICAL_FACTS.phoneIntl}`,
@@ -901,7 +981,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '(หรือเมื่อผ่านไปห้าวินาที) และทํางานเฉพาะบนโดเมน studionol.co.kr เท่านั้น ข้อมูลที่เก็บได้แก่ ที่อยู่ของหน้า' +
           'และช่องทางที่เข้ามา ข้อมูลเบราว์เซอร์ อุปกรณ์ และระบบปฏิบัติการ เวลาที่เข้าชม ตัวชี้วัดประสิทธิภาพ ' +
           'และพฤติกรรมการใช้งาน เช่น การกดปุ่มสอบถาม เราไม่ส่งชื่อ เบอร์โทร หรือข้อมูลอื่นที่ระบุตัวผู้เข้าชมได้โดยตรง' +
-          'ไปยังสคริปต์วัดผล และหน้าที่มีค่าระบุการชําระเงินหรือโทเคนจัดการอยู่ในที่อยู่ รวมถึงหน้าผู้ดูแลระบบ ' +
+          'ไปยังสคริปต์วัดผล ส่วนหน้าที่มีค่าระบุการชําระเงินหรือโทเคนจัดการอยู่ใน URL รวมถึงหน้าผู้ดูแลระบบ ' +
           'จะไม่ถูกวัดผลเลย Google Analytics 4 จะบันทึกคุกกี้ตัวระบุไว้ในเบราว์เซอร์เพื่อแยกการกลับมาเยี่ยมชมซ้ํา ' +
           'โดยใช้เพื่อสถิติการเข้าชมและการปรับปรุงหน้าเว็บ ไม่ได้ใช้เพื่อการโฆษณา เว็บไซต์ไม่มีปุ่มปฏิเสธการเก็บข้อมูล' +
           'แยกต่างหาก คุณสามารถปฏิเสธได้โดยบล็อกคุกกี้หรือลบคุกกี้ที่บันทึกไว้ในการตั้งค่าเบราว์เซอร์ที่ใช้อยู่ ' +
@@ -915,7 +995,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Maxfiylik siyosati',
     subtitle: 'Studio NOL faqat murojaatlarni qabul qilish va javob berish uchun zarur bo\'lgan eng kam shaxsiy ma\'lumotlarni yig\'adi.',
     lastUpdatedLabel: 'Kuchga kirish sanasi',
-    lastUpdatedValue: '2026-yil 23-sentabr',
+    lastUpdatedValue: '2026-yil 24-sentabr',
     sections: [
       {
         heading: '1. Yig\'iladigan shaxsiy ma\'lumotlar',
@@ -941,9 +1021,10 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'ma\'lumotlar bo\'yicha rozilikni qaytarib olishingiz ham mumkin. Qonuniy vakil ham siz uchun ' +
           'xuddi shu huquqlardan foydalana oladi. So\'rovni quyidagi 10-banddagi shaxsiy ma\'lumotlarni ' +
           'himoya qilish uchun mas\'ul shaxsga yuboring: biz uni kechiktirmasdan tekshirib chora ' +
-          'ko\'ramiz va natijani, agar so\'rovni bajara olmasak esa sababini ham bildiramiz. Ikkita ' +
-          'cheklov bor. Boshqa qonun yig\'ish shart deb belgilagan ma\'lumotlarni so\'rov bo\'yicha ' +
-          'o\'chirib bo\'lmaydi - bu 3-bandda aytilgan tranzaksiya yozuvlariga taalluqli bo\'lib, ular ' +
+          'ko\'ramiz va natijasini sizga xabar qilamiz; so\'rovni bajara olmasak, sababini ham ' +
+          'tushuntiramiz. Bunda ikkita cheklov bor. Boshqa qonun yig\'ish shart deb belgilagan ' +
+          'ma\'lumotlarni so\'rov bo\'yicha o\'chirib bo\'lmaydi - bu 3-bandda aytilgan tranzaksiya ' +
+          'yozuvlariga taalluqli bo\'lib, ular ' +
           'saqlash muddati tugagach yo\'q qilinadi. Shuningdek, qayta ishlashni to\'xtatish siz bilan ' +
           'tuzilgan shartnomani bajarishni imkonsiz qilsa va siz o\'sha shartnomani bekor qilish ' +
           'niyatini aniq bildirmagan bo\'lsangiz, biz to\'xtatishni rad etishimiz va sababini ' +
@@ -981,7 +1062,20 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '(faqat koreys tilidagi sahifalarda) ism, telefon raqami va email manzili buyurtma berilgan ' +
           'kun bilan o\'sha buyurtma oxirgi marta o\'zgargan kundan qaysi biri kechroq bo\'lsa, o\'shandan ' +
           'besh yil o\'tgach yuqoridagi belgi bilan qoplanadi (pul qaytarish yoki bekor qilish ham ' +
-          'o\'zgarish hisoblanadi); obuna uchun esa tugagan kundan hisoblanadi. To\'lov tashkiloti ' +
+          'o\'zgarish hisoblanadi); obuna uchun esa tugagan kundan hisoblanadi. Karta biriktirilmay ' +
+          'to\'xtab qolgan yoki to\'lov bir necha marta o\'tmagani uchun, yoxud biz o\'zimiz ' +
+          'to\'lovni vaqtincha to\'xtatganimiz uchun to\'xtab turgan muntazam ' +
+          'to\'lovning o\'z tugash sanasi bo\'lmaydi. Shuning uchun bir yil davomida hech qanday ' +
+          'harakat bo\'lmasa - na to\'lov urinishi, na karta biriktirish yoki almashtirish, na boshqa ' +
+          'biror yozuv o\'zgarishi - uni tugagan deb hisoblaymiz. Agar shu vaqt ichida birorta to\'lov ' +
+          'o\'tmagan bo\'lsa, shartnoma ham tuzilmagan, pul ham harakatlanmagan: saqlanishi shart ' +
+          'tranzaksiya yozuvi yo\'q, shuning uchun o\'sha zahoti ism, telefon raqami, email manzili va ' +
+          'qo\'llab-quvvatlovchilar ro\'yxatida ko\'rsatiladigan nom ham o\'chiriladi. To\'lov o\'tgan ' +
+          'bo\'lsa, faqat tugagan deb belgilaymiz va yuqoridagi besh yil o\'sha oxirgi harakatdan ' +
+          'boshlab hisoblanadi. Natijasi bizga hech qachon ma\'lum bo\'lmagan to\'lov urinishi qolgan ' +
+          'obunada ham shunday: uni faqat tugagan deb belgilaymiz, aloqa ma\'lumotlarini esa ' +
+          'saqlaymiz - keyinchalik o\'sha to\'lov o\'tgani tasdiqlansa, pulni qaytarish uchun siz ' +
+          'bilan bog\'lana olishimiz kerak. To\'lov tashkiloti ' +
           'to\'lovni tasdiqlaganda qaytargan javobning asl matni o\'sha tasdiqdan besh yil o\'tgach ' +
           'o\'chiriladi, chunki qonun to\'lov yozuvini shuncha muddat saqlashni talab qiladi. Erkin ' +
           'yoziladigan izohlar va to\'lov tashkiloti to\'lovni rad etish sabablari esa qisqaroq ' +
@@ -993,10 +1087,12 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       {
         heading: '10. Shaxsiy ma\'lumotlarni himoya qilish uchun mas\'ul shaxs',
         body:
-          'Studio NOL shaxsiy ma\'lumotlarni qayta ishlash ishlariga umumiy javob beradigan hamda ' +
-          'ma\'lumotlar subyektining savollari, shikoyatlari va huquqlarini tiklash masalalari bilan ' +
-          'shug\'ullanadigan mas\'ul shaxsni belgilagan. Studio NOL bir kishi tomonidan yuritilgani ' +
-          'uchun alohida bo\'lim yo\'q va 5-banddagi so\'rovlar ham shu manzilga keladi. ' +
+          'Studio NOL shaxsiy ma\'lumotlarni himoya qilish uchun mas\'ul shaxsni - Koreya shaxsiy ' +
+          'ma\'lumotlar to\'g\'risidagi qonunchiligi nazarda tutgan lavozimni - belgilagan. U shaxsiy ' +
+          'ma\'lumotlarni qayta ishlash ishlariga umumiy javob beradi hamda ma\'lumotlar subyektining ' +
+          'savollari, shikoyatlari va huquqlarini tiklash masalalari bilan shug\'ullanadi. Studio NOL ' +
+          'bir kishi tomonidan yuritilgani uchun alohida bo\'lim yo\'q va 5-banddagi so\'rovlar ham ' +
+          'shu manzilga keladi. ' +
           `Ismi: ${PRIVACY_OFFICER.name} (${studioOperator.alternateName[0]}), Studio NOLni yurituvchi shaxs. ` +
           `Email: ${PRIVACY_OFFICER.email}. Telefon: ${CANONICAL_FACTS.phoneIntl}.`,
       },
@@ -1016,7 +1112,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'ajratish uchun brauzerda identifikator cookie saqlaydi; biz undan tashrif statistikasi va ' +
           'sahifalarni yaxshilash uchun foydalanamiz, reklama uchun emas. Saytda alohida rad etish ' +
           'tugmasi yo\'q: brauzeringiz sozlamalarida cookie\'ni bloklasangiz yoki saqlanganlarini ' +
-          'o\'chirsangiz rad etgan bo\'lasiz va bundan saytdan foydalanish cheklanmaydi. Qorong\'i ' +
+          'o\'chirsangiz, rad etgan bo\'lasiz; bundan saytdan foydalanish cheklanmaydi. Qorong\'i ' +
           'rejim sozlamasi, yopilgan banner haqidagi yozuv yoki to\'ldirilayotgan formaning vaqtinchalik ' +
           'nusxasi kabi qulaylik qiymatlari faqat tashrifchining brauzerida saqlanadi va Studio NOL ' +
           'serveriga yuborilmaydi.',

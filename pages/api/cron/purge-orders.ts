@@ -23,6 +23,7 @@ import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import {
   AVAILABILITY_MEMO_RETENTION_YEARS,
+  closeDormantSubscriptions,
   DISPUTE_RETENTION_YEARS,
   ORDER_LEGAL_RETENTION_YEARS,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS,
@@ -38,6 +39,7 @@ import {
   purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
   purgeUnusableBillingKeyRawResponses,
+  SUBSCRIPTION_DORMANCY_YEARS,
 } from '../../../lib/privacy/orderRetention';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -51,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 각 파기는 **서로의 실패에 걸리지 않는다**(purge-funding과 같은 구조).
    *
    * 한 try에 나란히 세우면 앞의 것이 던졌을 때 뒤의 것이 그달에 아예 실행되지 않는다.
-   * 열두 가지는 대상도 기산점도 기간도 다른 별개의 파기이고 전부 멱등이라, 실패한 것은
+   * 열세 가지는 대상도 기산점도 기간도 다른 별개의 파기이고 전부 멱등이라, 실패한 것은
    * 다음 달 실행에서 다시 시도된다.
    */
   const failures: { label: string; detail: string }[] = [];
@@ -76,6 +78,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const failMessages = await run(
     `결제 실패 후 ${PAYMENT_FAIL_MESSAGE_RETENTION_YEARS}년이 지난 결제사 실패 사유 원문 파기`,
     purgeExpiredPaymentFailMessages,
+  );
+  // **아래 구독 파기들보다 먼저 돈다.** 이 호출이 `ended`로 넘긴 행은 같은 회차에
+  // 표시 이름·해지 사유·빌링키 원본 파기의 대상이 되고, 마지막 활동이 5년을 넘겼다면
+  // 고객 정보 파기까지 같은 실행에서 끝난다 — 한 달을 더 기다릴 이유가 없다.
+  const dormantSubscriptions = await run(
+    `${SUBSCRIPTION_DORMANCY_YEARS}년 방치된 구독 종료 처리와 결제 이력 없는 구독의 고객 정보 파기`,
+    closeDormantSubscriptions,
   );
   const subscriptionCustomers = await run(
     `구독 종료 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 지난 구독의 고객 이름·연락처 파기`,
@@ -122,6 +131,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const body = {
     purgedOrderCustomers: orderCustomers ? orderCustomers.purged : null,
     purgedPaymentFailMessages: failMessages ? failMessages.purged : null,
+    endedDormantSubscriptions: dormantSubscriptions ? dormantSubscriptions.ended : null,
+    purgedDormantSubscriptionCustomers: dormantSubscriptions ? dormantSubscriptions.purged : null,
     purgedSubscriptionCustomers: subscriptionCustomers ? subscriptionCustomers.purged : null,
     purgedSubscriptionDisplayNames: displayNames ? displayNames.purged : null,
     purgedSubscriptionCancelReasons: cancelReasons ? cancelReasons.purged : null,

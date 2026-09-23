@@ -21,7 +21,7 @@ import { loadAdminDashboard, type AdminDashboard } from '../../../lib/ops/adminD
 
 const DASHBOARD: AdminDashboard = {
   issues: [
-    { severity: 'high', title: '해지된 구독에 결제가 남아 있는 건 1건 — 환불 판단 필요', detail: '주문번호: SNB-1', href: '/admin/subscriptions' },
+    { severity: 'high', title: '구독이 끝난 뒤에 들어온 결제 1건 — 환불 판단 필요', detail: '주문번호: SNB-1', href: '/admin/subscriptions' },
     { severity: 'medium', title: '서명 기한이 지난 계약 2건', detail: '대상: 박연주' },
   ],
   upcomingSessions: [
@@ -52,7 +52,7 @@ it('점검 항목은 심각도 배지와 처리 링크를, 대기열은 건수�
   render(<AdminIndexPage dashboard={DASHBOARD} ledgerFrom="2026-09-01" ledgerTo="2026-09-16" />);
 
   expect(screen.getByText('긴급')).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /해지된 구독에 결제가 남아 있는 건/ })).toHaveAttribute('href', '/admin/subscriptions');
+  expect(screen.getByRole('link', { name: /구독이 끝난 뒤에 들어온 결제/ })).toHaveAttribute('href', '/admin/subscriptions');
   expect(screen.getByText('서명 기한이 지난 계약 2건')).toBeInTheDocument();
 
   expect(screen.getByRole('link', { name: /믹싱 착수 대기\s*3/ })).toHaveAttribute('href', '/admin/bookings');
