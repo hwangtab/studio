@@ -371,9 +371,21 @@ export function FundingPayoutSection({
           사실이 서버 로그에 남습니다. 지급명세서를 낼 때만 열어 주세요.
         </p>
         {residentNumber ? (
-          <dl className="text-sm">
-            <Row label="주민등록번호" value={residentNumber} />
-          </dl>
+          /*
+            한 번 연 번호를 **다시 가릴 수 있어야 한다.** 심사 상세는 운영자가 탭을 띄워 둔 채
+            다른 일을 하는 화면이라, 되돌릴 경로가 없으면 새로고침·이탈 전까지 13자리가 DOM에
+            남아 화면 공유·스크린샷·자리 비움이 그대로 노출이 된다. 가리는 것은 이 컴포넌트의
+            state뿐이고 라우트·열람 기록은 그대로다 — 다시 누르면 다시 조회하고 그 사실이 또
+            기록된다. 계좌는 손대지 않는다(고유식별정보만 이 규칙을 받는다).
+          */
+          <div className="flex flex-wrap items-center gap-3">
+            <dl className="text-sm">
+              <Row label="주민등록번호" value={residentNumber} />
+            </dl>
+            <Button light variant="outline" size="sm" onClick={() => setResidentNumber(null)}>
+              가리기
+            </Button>
+          </div>
         ) : (
           <Button light variant="outline" size="sm" disabled={loadingResidentNumber} onClick={revealResidentNumber}>
             {loadingResidentNumber ? '불러오는 중…' : '주민등록번호 보기'}

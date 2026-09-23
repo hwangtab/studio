@@ -54,7 +54,7 @@ const APPROVED_PROJECT: EditorProject = {
 
 const DRAFT_PROJECT: EditorProject = { ...APPROVED_PROJECT, reviewStatus: 'draft' };
 const UNREGISTERED: EditorPayoutSummary = {
-  registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false,
+  registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
 };
 
 const renderEditor = (project: EditorProject, payout: EditorPayoutSummary = UNREGISTERED) =>
@@ -131,7 +131,7 @@ describe('정산 정보 구획 — 등록 상태 표시', () => {
   });
 
   it('등록됐으면 뒤 4자리만 보여 준다 — 입력 칸은 비어 있다', () => {
-    renderEditor(APPROVED_PROJECT, { registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false });
+    renderEditor(APPROVED_PROJECT, { registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false });
     openPayoutTab();
 
     expect(screen.getByText('9012', { exact: false })).toBeInTheDocument();
@@ -243,7 +243,7 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
 
   it('등록 상태는 등록됨/미등록뿐이다 — 값은 어떤 조각도 오지 않는다', () => {
     renderEditor(APPROVED_PROJECT, {
-      registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true,
+      registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true, withheldPayoutRecorded: false,
     });
     openPayoutTab();
 
@@ -262,7 +262,51 @@ describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만'
     expect(screen.getByText('이미 등록된 번호도 함께 지워집니다', { exact: false })).toBeInTheDocument();
   });
 
-  it('사업자로 저장하면 주민등록번호를 아예 실어 보내지 않는다', async () => {
+  /**
+   * 원천징수한 정산이 이미 기록된 개설자에게는 번호가 지워지지 않는다
+   * (`lib/funding/creatorProjectWrite.ts`의 `hasWithheldPayout`). 화면이 그대로 "지워집니다"라고
+   * 말하면 개설자는 규칙대로 행동했는데 화면이 거짓을 말한 것이 된다.
+   */
+  it('원천징수한 정산 기록이 있으면 "지워집니다"가 아니라 "보관됩니다"라고 말한다', () => {
+    renderEditor(APPROVED_PROJECT, {
+      registered: true, accountLast4: '9012', taxType: 'withholding',
+      residentNumberRegistered: true, withheldPayoutRecorded: true,
+    });
+    openPayoutTab();
+
+    expect(screen.getByText('등록된 번호는 그대로 보관됩니다', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('이미 등록된 번호도 지워집니다', { exact: false })).toBeNull();
+
+    // 사업자로 바꿔도 같은 사실을 말한다 — 이쪽 문단이 개설자가 실제로 보게 되는 자리다.
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    expect(queryRrnField()).toBeNull();
+    expect(screen.getByText('등록된 번호는 그대로 보관됩니다', { exact: false })).toBeInTheDocument();
+    expect(screen.queryByText('이미 등록된 번호도 함께 지워집니다', { exact: false })).toBeNull();
+  });
+
+  it('사업자로 저장했는데 서버가 보관했다고 답하면 등록 표시가 유지된다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true, json: async () => ({ ok: true, residentNumberRetained: true }),
+    }) as unknown as typeof fetch;
+
+    renderEditor(APPROVED_PROJECT, {
+      registered: true, accountLast4: '9012', taxType: 'withholding',
+      residentNumberRegistered: true, withheldPayoutRecorded: true,
+    });
+    openPayoutTab();
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    fireEvent.change(bankField(), { target: { value: '국민은행' } });
+    fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
+    fireEvent.change(holderField(), { target: { value: '황경하' } });
+    fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    // 다시 원천징수로 돌려 보면 등록 상태가 살아 있다 — 지워졌다고 표시했다면 미등록이 된다.
+    fireEvent.change(taxField(), { target: { value: 'withholding' } });
+    expect(screen.getByText('주민등록번호가 등록되어 있습니다', { exact: false })).toBeInTheDocument();
+  });
+
+  it('사업자로 저장하면 주민등록번호 칸을 빈 문자열로 보낸다 — 키는 실리고 값은 비어 있다', async () => {
     const fetchMock = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true }) });
     global.fetch = fetchMock as unknown as typeof fetch;
 

@@ -765,7 +765,7 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
 
     const summary = await loadPayoutSummary(creatorId);
     expect(summary).toEqual({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
     });
   });
 
@@ -789,7 +789,7 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     })).toEqual({ ok: true });
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false,
+      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false, withheldPayoutRecorded: false,
     });
   });
 
@@ -815,7 +815,7 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
 
     const summary = await loadPayoutSummary(creatorId);
     expect(Object.keys(summary).sort()).toEqual([
-      'accountLast4', 'registered', 'residentNumberRegistered', 'taxType',
+      'accountLast4', 'registered', 'residentNumberRegistered', 'taxType', 'withheldPayoutRecorded',
     ]);
 
     // lib/funding/dbProjects.integration.test.ts의 같은 모양 단언 — 이 값이 그대로
@@ -833,13 +833,13 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
       .where(eq(schema.fundingCreators.id, creatorId));
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false,
+      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false, withheldPayoutRecorded: false,
     });
   });
 
   it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {
     expect(await loadPayoutSummary('없는-id')).toEqual({
-      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false,
     });
   });
 });
@@ -915,15 +915,72 @@ describe('주민등록번호 — 암호화해서만 들어간다', () => {
     expect((await loadPayoutSummary(creatorId)).residentNumberRegistered).toBe(true);
   });
 
-  it('사업자로 바꾸면 지워진다 — 수집 근거가 사라지면 보관할 수 없다', async () => {
+  /** 사업자로 저장하는 호출 한 벌 — 세 테스트가 같은 입력으로 결과만 가른다. */
+  const switchToInvoice = (creatorId: string) => savePayoutSection(creatorId, {
+    taxType: 'invoice' as const, bankName: '국민은행', account: '123-456-789012', holder: '황경하',
+    residentNumber: RRN,
+  });
+
+  /** 프로젝트에 정산을 기록해 둔다. 원천징수 여부는 `withholdingAmount`로 가른다. */
+  const recordPayout = async (projectId: string, withholdingAmount: number) => {
+    await mockDb.insert(schema.fundingProjectPayouts).values({
+      projectId,
+      grossAmount: 1_000_000,
+      refundAmount: 0,
+      supplyAmount: 909_091,
+      feeAmount: 88_000,
+      platformFeeAmount: 55_000,
+      paymentFeeAmount: 33_000,
+      shareAmount: 912_000,
+      withholdingAmount,
+      netAmount: 912_000 - withholdingAmount,
+      backerCount: 1,
+    });
+  };
+
+  it('사업자로 바꾸면 지워진다 — 정산 기록이 없으면 수집 근거가 사라진다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, payout(RRN));
-    expect(await savePayoutSection(creatorId, {
-      taxType: 'invoice', bankName: '국민은행', account: '123-456-789012', holder: '황경하', residentNumber: RRN,
-    })).toEqual({ ok: true });
+    expect(await switchToInvoice(creatorId)).toEqual({ ok: true });
 
     expect(await readStored(creatorId)).toBeNull();
     expect((await loadPayoutSummary(creatorId)).residentNumberRegistered).toBe(false);
+  });
+
+  /**
+   * 되돌릴 수 없는 사고를 막는 테스트다. 정산 게이트는 **기록 시점에만** 번호를 보는데
+   * 정산 구획은 승인 뒤 계속 열려 있다. 떼어 간 세액의 지급명세서 제출 의무는 남아 있으므로
+   * 여기서 지우면 신고 수단만 사라진다(암호문 자체가 없어져 복구 경로가 없다).
+   */
+  it('원천징수한 정산 기록이 있으면 사업자로 바꿔도 번호가 남는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    const stored = await readStored(creatorId);
+    await recordPayout(projectId, 30_096);
+
+    expect(await switchToInvoice(creatorId)).toEqual({ ok: true, residentNumberRetained: true });
+
+    // 다시 암호화하지도 않는다 — 저장된 암호문이 그대로 남는다.
+    expect(await readStored(creatorId)).toBe(stored);
+    expect((await loadPayoutSummary(creatorId)).residentNumberRegistered).toBe(true);
+  });
+
+  it('정산 기록이 있어도 원천징수액이 0이면 지워진다 — 사업자로 정산한 건이다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    await recordPayout(projectId, 0);
+
+    expect(await switchToInvoice(creatorId)).toEqual({ ok: true });
+    expect(await readStored(creatorId)).toBeNull();
+  });
+
+  it('요약의 withheldPayoutRecorded는 원천징수한 기록이 있을 때만 참이다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    expect((await loadPayoutSummary(creatorId)).withheldPayoutRecorded).toBe(false);
+
+    await recordPayout(projectId, 30_096);
+    expect((await loadPayoutSummary(creatorId)).withheldPayoutRecorded).toBe(true);
   });
 
   it('암호화 키가 없으면 저장 자체를 거부한다 — 평문이 들어가는 경로는 없다', async () => {

@@ -22,6 +22,10 @@ const STATUS_BY_CODE: Record<Exclude<WriteResult, { ok: true }>['code'], number>
 };
 
 export const respondWriteResult = (res: NextApiResponse, result: WriteResult) => {
-  if (result.ok) return res.status(200).json({ ok: true });
+  // `residentNumberRetained`는 붙을 때만 싣는다 — 다른 구획의 응답 모양(`{ ok: true }`)을
+  // 바꾸지 않는다. 불리언 하나이고 값·암호문은 담기지 않는다.
+  if (result.ok) {
+    return res.status(200).json(result.residentNumberRetained ? { ok: true, residentNumberRetained: true } : { ok: true });
+  }
   return res.status(STATUS_BY_CODE[result.code]).json({ ok: false, message: result.message });
 };

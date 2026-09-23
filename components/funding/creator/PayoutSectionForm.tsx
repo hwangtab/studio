@@ -107,10 +107,13 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
         accountLast4: last4(value.account),
         taxType: value.taxType,
         // 서버와 같은 규칙(`savePayoutSection`): 사업자로 저장하면 지워지고, 빈 값이면
-        // 기존 값이 남고, 값을 넣었으면 등록된다.
+        // 기존 값이 남고, 값을 넣었으면 등록된다. 사업자인데 서버가
+        // `residentNumberRetained`를 돌려줬으면 지우지 않은 것이므로 등록 상태가 유지된다
+        // — 여기서 추측하지 않고 서버가 실제로 한 일을 그대로 따른다.
         residentNumberRegistered: value.taxType === 'invoice'
-          ? false
+          ? Boolean(result.residentNumberRetained) && initial.residentNumberRegistered
           : value.residentNumber.length > 0 || initial.residentNumberRegistered,
+        withheldPayoutRecorded: initial.withheldPayoutRecorded,
       });
     } else {
       setSave({ status: 'error', message: result.message });
@@ -185,8 +188,10 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       {/*
         주민등록번호 — **원천징수 대상일 때만 보이고, 그때만 받는다.**
         근거는 소득세법상 원천징수의무자의 지급명세서 제출 의무 하나뿐이라, 사업자에게
-        받으면 근거 없는 수집이 된다(개인정보보호법 §24의2). 그래서 칸 자체가 사라지고
-        서버도 그때 기존 값을 지운다(`savePayoutSection`).
+        받으면 근거 없는 수집이 된다 — 개인정보 보호법이 주민등록번호를 법령에 구체적인
+        근거가 있을 때만 처리하도록 정하고 있기 때문이다. 그래서 칸 자체가 사라지고 서버도
+        그때 기존 값을 지운다(`savePayoutSection`). **이미 원천징수한 정산이 기록돼 있으면
+        지우지 않는다** — 그때는 이미 지급한 소득의 지급명세서 제출 의무가 근거로 남는다.
       */}
       {taxType === 'withholding' ? (
         <>
@@ -219,16 +224,20 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
               암호화해 보관하며, 등록한 번호는 계좌와 마찬가지로 화면에 다시 띄우지 않습니다.
             </p>
             <p>
-              세금 유형을 사업자로 바꾸면 이 칸이 사라지고, 이미 등록된 번호도 지워집니다 — 원천징수
-              대상이 아니면 저희가 이 번호를 보관할 근거가 없기 때문입니다.
+              {initial.withheldPayoutRecorded
+                ? '세금 유형을 사업자로 바꾸면 이 칸이 사라지지만, 이미 원천징수한 정산이 있어 지급명세서 제출을 위해 등록된 번호는 그대로 보관됩니다 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문입니다.'
+                : '세금 유형을 사업자로 바꾸면 이 칸이 사라지고, 이미 등록된 번호도 지워집니다 — 원천징수 대상이 아니면 저희가 이 번호를 보관할 근거가 없기 때문입니다.'}
             </p>
           </div>
         </>
       ) : (
         <p className="-mt-2 text-xs text-gray-600 dark:text-gray-400">
           사업자는 주민등록번호를 받지 않습니다. 원천징수를 하지 않으므로 지급명세서 제출 대상이
-          아니고, 그러면 저희가 그 번호를 보관할 근거가 없습니다. 개인으로 등록해 두셨다가 사업자로
-          바꿔 저장하시면 이미 등록된 번호도 함께 지워집니다.
+          아니고, 그러면 저희가 그 번호를 보관할 근거가 없습니다.
+          {' '}
+          {initial.withheldPayoutRecorded
+            ? '다만 이미 원천징수한 정산이 있어, 사업자로 바꿔 저장하셔도 지급명세서 제출을 위해 등록된 번호는 그대로 보관됩니다 — 이미 떼어 간 세액을 신고할 의무가 남아 있기 때문입니다.'
+            : '개인으로 등록해 두셨다가 사업자로 바꿔 저장하시면 이미 등록된 번호도 함께 지워집니다.'}
         </p>
       )}
 

@@ -3,7 +3,11 @@ import { and, eq, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { FUNDING_PLATFORM_FEE_PERCENT, FUNDING_PAYMENT_FEE_PERCENT, FUNDING_WITHHOLDING_PERCENT } from '../../data/pricing';
 import { VAT_RATE } from '../booking/amounts';
-import { fundingProjectPayouts, type FundingProjectPayout, type fundingCreatorTaxTypeEnum } from '../../db/schema';
+import {
+  fundingCreators, fundingProjectPayouts, fundingProjects,
+  type FundingProjectPayout, type fundingCreatorTaxTypeEnum,
+} from '../../db/schema';
+import { decryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { computeProjectState } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
 
@@ -234,10 +238,40 @@ export type RecordFundingPayoutResult =
         | 'not_closed'
         | 'no_payout_account'
         | 'no_tax_type'
-        | 'no_resident_number';
+        | 'no_resident_number'
+        | 'resident_number_unreadable';
     }
   /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
   | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
+
+/**
+ * 저장된 주민등록번호를 **지금 이 서버가 열 수 있는가.**
+ *
+ * 미리보기(`buildFundingPayoutPreview`)는 일부러 복호화하지 않는다 — 그 결과는 관리자 화면
+ * props로 나가고, 그 자리가 평문이 샐 자리다. 대신 기록 직전에 여기서 한 번만 열어 보고
+ * **성공 여부만** 돌려준다. 평문은 반환하지도 담지도 않고, 실패해도 로그에는 오류 코드만
+ * 남긴다(`FieldCryptoError.code`는 missing_key·auth_failed 같은 분류값이다).
+ */
+const residentNumberReadable = async (projectId: string): Promise<boolean> => {
+  const [row] = await getDb()
+    .select({ enc: fundingCreators.residentNumberEnc })
+    .from(fundingProjects)
+    .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
+    .where(eq(fundingProjects.id, projectId))
+    .limit(1);
+  const enc = row?.enc?.trim();
+  if (!enc) return false;
+  try {
+    decryptField(enc);
+    return true;
+  } catch (error: unknown) {
+    console.error('[funding] 주민등록번호 복호화 점검 실패', {
+      projectId,
+      code: error instanceof FieldCryptoError ? error.code : 'unknown',
+    });
+    return false;
+  }
+};
 
 /**
  * 미리보기 숫자를 그 시점에 고정해 기록한다. 프로젝트당 한 번 — `project_id` UNIQUE가 두 번째
@@ -254,6 +288,10 @@ export type RecordFundingPayoutResult =
  * - `no_resident_number` — 원천징수 대상(`withholding`)인데 주민등록번호가 없다. 세액을 떼고
  *   보내 놓고 신고는 못 하는 상태가 된다 — 간이지급명세서가 소득자별 주민등록번호를 요구하기
  *   때문이다. 사업자(`invoice`)는 원천징수 자체를 하지 않으므로 이 조건에 걸리지 않는다.
+ * - `resident_number_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다**(키가 없거나
+ *   바뀌었다). 암호문 존재만 보면 이 상태에서도 기록 버튼이 살아 있어, 세액을 떼고 불변으로
+ *   기록한 **뒤에야** 조회에서 실패를 만난다. 그래서 기록 직전에 한 번 열어 보고 **성공
+ *   여부만** 본다 — 평문은 변수에 담지도, 응답·로그·화면에 싣지도 않는다.
  * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
  * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
  *
@@ -275,8 +313,9 @@ export const recordFundingPayout = async (
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
-  if (preview.taxType === 'withholding' && !preview.hasResidentNumber) {
-    return { ok: false, code: 'no_resident_number' };
+  if (preview.taxType === 'withholding') {
+    if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };
+    if (!(await residentNumberReadable(projectId))) return { ok: false, code: 'resident_number_unreadable' };
   }
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {

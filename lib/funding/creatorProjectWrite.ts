@@ -1,8 +1,11 @@
-import { and, count, eq, ne } from 'drizzle-orm';
+import { and, count, eq, gt, ne } from 'drizzle-orm';
 
 import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
-import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRow, type FundingRewardRow } from '../../db/schema';
+import {
+  fundingCreators, fundingProjectPayouts, fundingProjects, fundingRewards,
+  type FundingProjectRow, type FundingRewardRow,
+} from '../../db/schema';
 import { getFundingProject } from './projects';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
@@ -13,7 +16,16 @@ import { stripTrustedDirectives } from './creatorContent';
 import { toKstDateString } from './creatorDateInput';
 
 export type WriteResult =
-  | { ok: true }
+  | {
+      ok: true;
+      /**
+       * 사업자로 바꿔 저장했지만 주민등록번호를 **지우지 않고 남겼다.** 이미 원천징수한
+       * 정산 기록이 있어 지급명세서 제출 의무가 남아 있을 때만 붙는다(`savePayoutSection`).
+       * 화면이 "지워졌다"고 잘못 말하지 않으려면 이 사실이 응답에 있어야 한다.
+       * **불리언 하나뿐이다** — 값도 암호문도 여기 실리지 않는다.
+       */
+      residentNumberRetained?: true;
+    }
   | {
       ok: false;
       code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward'
@@ -314,7 +326,37 @@ export interface CreatorPayoutSummary {
    * 키가 유일한 방어가 된다.
    */
   residentNumberRegistered: boolean;
+  /**
+   * 이 개설자에게 **원천징수하고 기록한 정산이 하나라도 있는가**(`withholdingAmount > 0`).
+   *
+   * 화면 문구가 갈리는 자리다. 이 값이 참이면 세금 구분을 사업자로 바꿔 저장해도 주민등록
+   * 번호가 지워지지 않는다 — 이미 떼어 간 세액의 지급명세서 제출 의무가 남아 있기 때문이다
+   * (`savePayoutSection`). 거짓일 때만 "바꾸면 지워진다"가 사실이다.
+   *
+   * 여기서도 나가는 것은 불리언뿐이다 — 정산 금액·날짜는 이 구획이 알 이유가 없다.
+   */
+  withheldPayoutRecorded: boolean;
 }
+
+/**
+ * 이 개설자의 프로젝트 중 **원천징수해 기록한 정산**이 있는가.
+ *
+ * 주민등록번호를 지울 수 있는지의 유일한 판정이다. 근거는 "지금 원천징수 대상인가"가
+ * 아니라 **"이미 지급한 소득에 대한 지급명세서 제출 의무"**라, 지급이 한 번이라도
+ * 일어났으면 그 뒤에 세금 구분을 바꿔도 의무는 남는다. `withholdingAmount === 0`인
+ * 기록(사업자로 정산한 건)은 원천징수가 없었다는 뜻이므로 세지 않는다.
+ *
+ * `funding_project_payouts`는 프로젝트 단위인데 번호는 계정 단위라 프로젝트를 거쳐 조인한다.
+ */
+export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => {
+  const [row] = await getDb()
+    .select({ id: fundingProjectPayouts.id })
+    .from(fundingProjectPayouts)
+    .innerJoin(fundingProjects, eq(fundingProjects.id, fundingProjectPayouts.projectId))
+    .where(and(eq(fundingProjects.creatorId, creatorId), gt(fundingProjectPayouts.withholdingAmount, 0)))
+    .limit(1);
+  return Boolean(row);
+};
 
 /** 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다. */
 const accountLast4 = (account: string): string | null => {
@@ -338,7 +380,10 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     residentNumberEnc: fundingCreators.residentNumberEnc,
   }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!row) {
-    return { registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false };
+    return {
+      registered: false, accountLast4: null, taxType: null,
+      residentNumberRegistered: false, withheldPayoutRecorded: false,
+    };
   }
 
   const account = row.payoutAccount?.trim() ?? '';
@@ -351,6 +396,7 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     taxType: row.taxType ?? null,
     // 값도 암호문도 아니고 "있다/없다"뿐이다.
     residentNumberRegistered: Boolean(row.residentNumberEnc),
+    withheldPayoutRecorded: await hasWithheldPayout(creatorId),
   };
 };
 
@@ -381,9 +427,15 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
   /**
    * 주민등록번호는 세 갈래다.
    *
-   * 1. **사업자(`invoice`)로 저장하면 지운다.** 우리가 이 번호를 갖는 근거는 소득세법상
-   *    지급명세서 제출 의무뿐이라, 원천징수 대상이 아니게 되는 순간 근거가 사라진다 —
-   *    근거 없이는 보관할 수 없으므로 기존 값도 함께 지운다.
+   * 1. **사업자(`invoice`)로 저장하면 지운다 — 단, 원천징수한 정산 기록이 없을 때만.**
+   *    우리가 이 번호를 갖는 근거는 소득세법상 지급명세서 제출 의무뿐이라, 원천징수 대상이
+   *    아니게 되는 순간 근거가 사라진다. 그런데 **이미 원천징수해 기록한 정산이 있으면
+   *    근거는 사라지지 않는다** — 그 의무는 "지금 원천징수 대상인가"가 아니라 "이미 지급한
+   *    소득"에 붙기 때문이다. 정산 게이트(`lib/funding/payout.ts`)는 기록 시점에만 번호를
+   *    보는데 이 구획은 승인된 뒤 계속 열려 있어, 지우고 나면 세액만 떼고 신고할 수단이
+   *    없는 상태가 **복구 불가능하게** 남는다(암호문 자체가 사라진다). 그래서
+   *    `hasWithheldPayout`이 참이면 값을 유지하고, 그 사실을 `residentNumberRetained`로
+   *    응답에 실어 화면이 "지워졌다"고 잘못 말하지 않게 한다.
    * 2. **빈 값(`null`)이면 기존 값을 유지한다.** 계좌와 일부러 다르게 둔다. 계좌는 매번
    *    다시 입력해 덮어쓰게 하지만, 주민등록번호까지 그렇게 하면 은행명 한 글자를 고칠
    *    때마다 평문이 화면과 네트워크를 한 번 더 지난다. 지우는 수단은 세금 구분을
@@ -393,8 +445,15 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
    *    거부하고 `encryption_unavailable`로 알린다.
    */
   let residentNumberEnc: string | null | undefined;
+  let residentNumberRetained = false;
   if (value.taxType === 'invoice') {
-    residentNumberEnc = null;
+    if (await hasWithheldPayout(creatorId)) {
+      // undefined = SET 목록에서 빠진다(아래 주석). 지우지 않고 그대로 둔다.
+      residentNumberEnc = undefined;
+      residentNumberRetained = true;
+    } else {
+      residentNumberEnc = null;
+    }
   } else if (value.residentNumber) {
     try {
       residentNumberEnc = encryptField(value.residentNumber);
@@ -423,7 +482,7 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
     ...(residentNumberEnc === undefined ? {} : { residentNumberEnc }),
     updatedAt: new Date(),
   }).where(eq(fundingCreators.id, creatorId));
-  return { ok: true };
+  return residentNumberRetained ? { ok: true, residentNumberRetained: true } : { ok: true };
 };
 
 /**

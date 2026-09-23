@@ -38,8 +38,16 @@ export const saveStorySection = (projectId: string, value: unknown) =>
 export const saveCreatorSection = (projectId: string, value: unknown) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}`, { section: 'creator', value });
 
+/**
+ * 정산 구획만 응답에 필드가 하나 더 붙을 수 있다 — `residentNumberRetained`. 사업자로
+ * 바꿔 저장했는데 원천징수한 정산 기록이 있어 주민등록번호를 지우지 않았다는 **불리언**이다
+ * (`lib/funding/creatorProjectWrite.ts`). 값이 실려 오는 것이 아니다.
+ */
 export const savePayoutSection = (projectId: string, value: unknown) =>
-  post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}`, { section: 'payout', value });
+  post<{ residentNumberRetained?: true }>(
+    `/api/funding/creator/projects/${encodeURIComponent(projectId)}`,
+    { section: 'payout', value },
+  );
 
 export const createReward = (projectId: string, value: RewardInput) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/rewards`, { mode: 'create', value });

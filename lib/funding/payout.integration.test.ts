@@ -10,6 +10,8 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
+import { encryptField, FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
+// eslint-disable-next-line import/first
 import {
   buildFundingPayoutPreview,
   computeFundingPayout,
@@ -25,10 +27,15 @@ const PAYOUT_ACCOUNT = { payoutBankName: '국민은행', payoutAccount: '123-45-
 
 /**
  * 원천징수 개설자의 기본 상태는 "주민등록번호가 등록돼 있다"이다 — 안 그러면 기록 경로를
- * 보는 테스트가 전부 `no_resident_number`에서 멈춘다. 이 모듈은 값을 복호화하지 않고
- * 있고 없고만 보므로(`hasResidentNumber`), 형식만 흉내 낸 문자열로 충분하다.
+ * 보는 테스트가 전부 `no_resident_number`에서 멈춘다.
+ *
+ * **형식만 흉내 낸 문자열로는 안 된다.** `recordFundingPayout`이 기록 직전에 실제로 한 번
+ * 열어 보고 성공 여부만 확인하기 때문이다(`resident_number_unreadable`). 그래서 테스트 전용
+ * 키로 진짜 암호화한 값을 쓴다. 아래 번호는 형식만 맞춘 임의의 값이다.
  */
-const RESIDENT_NUMBER_ENC = 'v1:not-a-real-value';
+const TEST_KEY = Buffer.alloc(32, 7).toString('base64');
+process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
+const RESIDENT_NUMBER_ENC = encryptField('9901011234567');
 
 let seq = 0;
 
@@ -260,6 +267,34 @@ describe('recordFundingPayout', () => {
     const { project } = await seedProject({}, { residentNumberEnc: null });
     await seedPledge(project.slug, 1_000_000);
     expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_resident_number' });
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  /**
+   * 암호문 존재만 보면 키를 잃은 환경에서도 기록 버튼이 살아 있어, 세액을 떼고 **불변으로
+   * 기록한 뒤에야** 조회에서 실패를 만난다. 되돌릴 경로가 없는 표라 그 순서는 감수할 수 없다.
+   */
+  it('암호문은 있는데 지금 키로 열리지 않으면 거부한다 — 기록은 남지 않는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 9).toString('base64');
+    try {
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'resident_number_unreadable' });
+    } finally {
+      process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
+    }
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  it('키가 아예 없어도 거부한다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    delete process.env[FIELD_CRYPTO_KEY_ENV];
+    try {
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'resident_number_unreadable' });
+    } finally {
+      process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
+    }
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });
 

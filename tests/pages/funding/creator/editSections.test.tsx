@@ -65,7 +65,7 @@ const DRAFT_PROJECT: EditorProject = {
  * 정산 정보 구획이 화면에 받는 전부 — 미등록 상태. 이 테스트들은 정산 구획을 보지 않으므로
  * 가장 조용한 값을 넣는다(구획 자체의 동작은 payoutSection.test.tsx가 본다).
  */
-const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false } as const;
+const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false, withheldPayoutRecorded: false } as const;
 
 describe('승인된 프로젝트 — 구획별·필드별 잠금이 화면에 배선됐다', () => {
   it('기본정보: 제목은 활성, 주소(slug)는 비활성이고 잠금 사유가 보인다', () => {

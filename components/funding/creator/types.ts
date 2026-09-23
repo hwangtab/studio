@@ -89,6 +89,13 @@ export interface EditorPayoutSummary {
    * `CreatorPayoutSummary` 주석).
    */
   residentNumberRegistered: boolean;
+  /**
+   * 이 개설자에게 원천징수하고 기록한 정산이 있는가. 참이면 세금 구분을 사업자로 바꿔
+   * 저장해도 주민등록번호가 지워지지 않는다 — 이미 떼어 간 세액의 지급명세서 제출 의무가
+   * 남아 있기 때문이다(`lib/funding/creatorProjectWrite.ts`의 `hasWithheldPayout`).
+   * 화면은 이 값으로 "지워집니다"와 "보관됩니다"를 가른다. 여기서도 불리언뿐이다.
+   */
+  withheldPayoutRecorded: boolean;
 }
 
 /** 개설자 편집 화면의 프로젝트 구획. `lib/funding/reviewTransition.ts`의 `CreatorSectionName`과 같다. */
