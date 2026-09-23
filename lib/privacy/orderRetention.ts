@@ -1,7 +1,16 @@
-import { and, eq, isNotNull, isNull, lt, ne, or } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, lt, ne, or } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, subscriptions } from '../../db/schema';
+import {
+  availabilityBlocks,
+  billingKeys,
+  bookings,
+  orders,
+  payments,
+  refunds,
+  subscriptions,
+  workOrders,
+} from '../../db/schema';
 
 /**
  * 주문·구독에 남는 고객 개인정보의 파기.
@@ -293,3 +302,273 @@ export const purgeExpiredSubscriptionCancelReasons = async (
 
   return rows(result);
 };
+
+/**
+ * 지난 일정의 운영 메모(`availability_blocks.memo`)를 붙들어 두는 기간.
+ *
+ * **법이 정한 것이 아니라 운영 판단이다.** 그 표에는 고객도 주문도 매달려 있지 않고
+ * (`db/schema.ts` — 컬럼은 시작·종료 시각과 메모뿐), 계약도 결제도 아니라 전자상거래법이
+ * 보존을 요구하는 기록이 아니다. 막아 둔 시간이 지나면 메모의 목적은 끝나지만, 지난 일정을
+ * 되짚는 운영상의 쓰임이 한동안 남아 1년을 둔다.
+ */
+export const AVAILABILITY_MEMO_RETENTION_YEARS = 1;
+
+/**
+ * 법정 보존 기간이 지난 결제 승인 응답 원본(`payments.raw_response`)을 파기한다.
+ *
+ * ## 이 컬럼에 무엇이 들어가는가 (코드로 확인한 것)
+ *
+ * 승인·재조회 응답의 **본문 전체**다. `lib/booking/toss.ts`의 `request`가 `await res.json()`을
+ * 통째로 `json as TossPayment`로 넘기고(필드를 골라 담지 않는다), 그 객체가 세 곳에서
+ * `JSON.stringify` 되어 그대로 저장된다 — `lib/booking/confirm.ts`(예약·믹싱 승인),
+ * `lib/funding/confirm.ts`(후원 승인), `lib/billing/service.ts`(회차 결제·웹훅 복구).
+ * 즉 우리 타입이 선언한 7개 필드는 저장 범위의 하한일 뿐이고, 실제로 무엇이 들어 있는지는
+ * 토스가 그 결제에 무엇을 실어 보냈느냐에 달렸다. 우리 코드가 결제창에 `customerName`·
+ * `customerEmail`을 넘기고 있어(`components/booking/TossPaymentWidget.tsx`) 응답에 되돌아올
+ * 여지도 있으나, **응답 본문을 읽는 코드가 하나도 없어 실제 키 목록은 코드만으로 확인되지
+ * 않는다.**
+ *
+ * ## 판정
+ *
+ * - **법정 기록이다.** 대금이 실제로 오간 승인의 원본이고, 스키마 주석이 밝히는 보관 목적도
+ *   분쟁·대사(reconciliation)다. 전자상거래법이 5년 보존을 요구하는 "대금결제 및 재화등의
+ *   공급에 관한 기록"의 근거 자료라 그 전에는 파기하지 않는다.
+ * - **다만 5년이 지나면 남길 근거가 없다.** 무엇이 들어 있는지 특정되지 않는 값을 기한 없이
+ *   들고 있는 것이 제21조①이 막으려는 상태다. 대사에 필요한 값(`payment_key`·`method`·
+ *   `approved_at`·`receipt_url`)은 별도 컬럼에 따로 있어 원본을 비워도 기록은 남는다.
+ * - **기산점은 승인 시각(`approved_at`)**, 없으면 행 생성일.
+ */
+export const purgeExpiredPaymentRawResponses = async (
+  now: Date = new Date(),
+): Promise<OrderPurgeResult> => {
+  const boundary = yearsAgo(now, ORDER_LEGAL_RETENTION_YEARS);
+
+  const result = await getDb()
+    .update(payments)
+    .set({ rawResponse: null })
+    .where(
+      and(
+        isNotNull(payments.rawResponse),
+        or(
+          and(isNotNull(payments.approvedAt), lt(payments.approvedAt, boundary)),
+          and(isNull(payments.approvedAt), lt(payments.createdAt, boundary)),
+        ),
+      ),
+    );
+
+  return rows(result);
+};
+
+/**
+ * 더는 쓸 수 없는 카드의 빌링키 발급 응답 원본(`billing_keys.raw_response`)을 파기한다.
+ *
+ * ## 이 컬럼에 무엇이 들어가는가 (코드로 확인한 것)
+ *
+ * 빌링키 발급 응답의 **본문 전체**다(`lib/billing/toss-billing.ts`의 `request`가 응답 JSON을
+ * 그대로 `json`으로 돌려주고, `lib/billing/service.ts`가 `JSON.stringify(issued.raw)`로
+ * 저장한다). 그 본문에는 **빌링키 문자열 자체**가 들어 있다 — 같은 파일이 `json.billingKey`를
+ * 거기서 꺼내 쓰기 때문에 확인된 사실이다. 스키마가 빌링키를 두고 "서버 밖으로 나가지 않는다"고
+ * 적어 둔 그 값이 같은 행에 한 번 더, 이번에는 자유 형식의 JSON 안에 복사돼 있는 셈이다.
+ * 카드 정보(`card.company`·`card.number`·`card.cardType`)도 같은 본문에서 꺼내므로 들어 있다.
+ * 그 밖에 무엇이 더 실려 오는지는 본문을 읽는 코드가 없어 코드만으로는 확인되지 않는다.
+ *
+ * ## 판정
+ *
+ * - **행을 남기는 것은 여전히 옳다.** 스키마 주석이 말하는 이유("과거 회차의 결제 수단
+ *   근거")는 지금도 유효하고, 그 근거는 `card_company`·`card_number_masked`·`issued_at`이
+ *   감당한다. 이 함수는 행도, 그 컬럼들도 건드리지 않는다.
+ * - **응답 원본은 그 근거가 아니다.** 결제 자체의 기록은 `payments`에 있고(위 함수), 빌링키
+ *   발급 시점에는 대금이 오가지 않는다 — 전자상거래법이 5년 보존을 요구하는 대금결제 기록에
+ *   해당하지 않는다. 읽는 코드도 없다.
+ * - **그래서 쓸 수 없게 된 순간이 곧 "불필요하게 되었을 때"다**(제21조①). 별도 기간을 두지
+ *   않는다 — 못 쓰는 결제수단 자격증명을 더 들고 있을 근거가 없다.
+ * - 대상은 **폐기된 키**(`revoked_at`)와 **끝난 구독에 매달린 키** 둘 다다. 카드 교체만
+ *   `revoked_at`을 남기고(`lib/billing/service.ts`) 구독 종료는 키를 폐기하지 않기 때문에,
+ *   폐기 표시만 보면 해지된 구독의 마지막 카드가 영영 대상에서 빠진다.
+ */
+export const purgeUnusableBillingKeyRawResponses = async (): Promise<OrderPurgeResult> => {
+  const db = getDb();
+  const endedSubscriptions = db
+    .select({ id: subscriptions.id })
+    .from(subscriptions)
+    .where(eq(subscriptions.status, 'ended'));
+
+  const result = await db
+    .update(billingKeys)
+    .set({ rawResponse: null })
+    .where(
+      and(
+        isNotNull(billingKeys.rawResponse),
+        or(
+          isNotNull(billingKeys.revokedAt),
+          inArray(billingKeys.subscriptionId, endedSubscriptions),
+        ),
+      ),
+    );
+
+  return rows(result);
+};
+
+/**
+ * 법정 보존 기간이 지난 환불 사유(`refunds.reason`)를 파기한다.
+ *
+ * ## 판정
+ *
+ * - **법정 기록이다.** 환불은 청약철회·계약해제의 이행이고, 그 사유는 "계약 또는 청약철회
+ *   등에 관한 기록"의 내용 그 자체다. 같은 문자열이 토스에 `cancelReason`으로 나가 결제사
+ *   쪽 취소 기록에도 남는다(`lib/booking/toss.ts`). 5년 전에는 파기하지 않는다.
+ * - **그래도 파기 대상인 이유는 자유 입력이기 때문이다.** 고객 셀프 취소는 고정 문구
+ *   ('고객 셀프 취소')지만 관리자 환불은 500자까지 자유 서술이라
+ *   (`pages/api/admin/bookings/[id].ts`) 이름·연락처 조각이 들어갈 수 있다. 계약서 쪽
+ *   `title`·`termination_reason`을 파기 대상에 넣은 것과 같은 이유다
+ *   (`lib/contracts/retention.ts`).
+ * - **NOT NULL이라 표식으로 덮는다**(`db/schema.ts`). 환불이 있었다는 사실·금액·요청자·
+ *   토스 거래키는 다른 컬럼에 그대로 남는다.
+ * - 기산점은 환불 기록의 생성일. 환불 행은 만들어진 뒤 사유가 바뀌지 않는다.
+ */
+export const purgeExpiredRefundReasons = async (
+  now: Date = new Date(),
+): Promise<OrderPurgeResult> => {
+  const boundary = yearsAgo(now, ORDER_LEGAL_RETENTION_YEARS);
+
+  const result = await getDb()
+    .update(refunds)
+    .set({ reason: PURGED_MARK })
+    .where(and(lt(refunds.createdAt, boundary), ne(refunds.reason, PURGED_MARK)));
+
+  return rows(result);
+};
+
+/**
+ * 보관 기간이 지난 예약 요청사항(`bookings.customer_note`)을 파기한다.
+ *
+ * ## 판정
+ *
+ * - **법정 기록이 아니다.** 계약·청약철회 기록으로 보존해야 하는 것은 누가·무엇을·언제·
+ *   얼마에 계약했는가이고, 그것은 `orders`와 `bookings`의 상품·시각·금액 컬럼이 담는다.
+ *   요청사항은 그 위에 고객이 자유롭게 적는 500자다(`lib/booking/validation.ts`) — 계약
+ *   내용을 특정하는 항목이 아니다. **전자상거래법의 5년은 보존 의무이지 보존 항목을 넓히는
+ *   근거가 아니므로**, 이 컬럼을 5년 붙들 근거로 쓰지 않는다.
+ * - **무엇이 적히는지 알 수 없다.** 확인 메일과 관리자 화면에 "요청사항"으로 그대로 실리는
+ *   자유 입력이라(`lib/booking/email.ts`, `pages/admin/bookings/[id].tsx`) 다른 사람의
+ *   이름·연락처는 물론 건강 상태 같은 사정도 적힐 수 있다.
+ * - **기간은 3년으로 둔다.** "요청한 대로 작업했는가"는 소비자 분쟁의 내용이 될 수 있어,
+ *   전자상거래법이 소비자의 불만·분쟁처리 기록에 정한 기간과 같은 값을 쓴다.
+ * - **기산점은 이용일(`start_at`)**, 취소된 예약은 취소 시각. 여기에 더해 생성일도 그만큼
+ *   지났을 것을 요구한다 — 날짜를 잘못 잡은 예약이 만들자마자 대상이 되는 것을 막는다.
+ */
+export const purgeExpiredBookingCustomerNotes = async (
+  now: Date = new Date(),
+): Promise<OrderPurgeResult> => {
+  const boundary = yearsAgo(now, DISPUTE_RETENTION_YEARS);
+
+  const result = await getDb()
+    .update(bookings)
+    .set({ customerNote: null })
+    .where(
+      and(
+        isNotNull(bookings.customerNote),
+        or(
+          and(isNotNull(bookings.cancelledAt), lt(bookings.cancelledAt, boundary)),
+          and(isNull(bookings.cancelledAt), lt(bookings.startAt, boundary)),
+        ),
+        lt(bookings.createdAt, boundary),
+      ),
+    );
+
+  return rows(result);
+};
+
+/**
+ * 보관 기간이 지난 믹싱 주문의 요청사항(`work_orders.customer_note`)을 파기한다.
+ *
+ * ## 판정
+ *
+ * 예약 쪽과 같은 이유로 법정 기록이 아니고 같은 3년을 쓴다. 다만 **적히는 내용이 다르다** —
+ * 믹싱 주문에서 이 칸은 고객이 음원 파일을 올려 둔 링크가 들어가는 자리다
+ * (`lib/booking/customerDraft.ts`: "예약은 요청사항, 믹싱은 파일 링크"). 남의 개인 저장소로
+ * 들어가는 주소이므로 작업이 끝난 뒤 들고 있을 이유는 더 적다.
+ *
+ * 기산점은 납품 시각(`delivered_at`), 취소됐으면 취소 시각, 둘 다 없으면 생성일. 예약과 달리
+ * 이용일이 없어(`db/schema.ts` workOrders 주석 — 상태 전이로만 진행을 표현한다) 상태가
+ * 끝난 시각을 기산점으로 쓴다. 생성일 조건은 같은 이유로 함께 건다.
+ */
+export const purgeExpiredWorkOrderCustomerNotes = async (
+  now: Date = new Date(),
+): Promise<OrderPurgeResult> => {
+  const boundary = yearsAgo(now, DISPUTE_RETENTION_YEARS);
+
+  const result = await getDb()
+    .update(workOrders)
+    .set({ customerNote: null })
+    .where(
+      and(
+        isNotNull(workOrders.customerNote),
+        or(
+          and(isNotNull(workOrders.deliveredAt), lt(workOrders.deliveredAt, boundary)),
+          and(
+            isNull(workOrders.deliveredAt),
+            isNotNull(workOrders.cancelledAt),
+            lt(workOrders.cancelledAt, boundary),
+          ),
+          and(
+            isNull(workOrders.deliveredAt),
+            isNull(workOrders.cancelledAt),
+            lt(workOrders.createdAt, boundary),
+          ),
+        ),
+        lt(workOrders.createdAt, boundary),
+      ),
+    );
+
+  return rows(result);
+};
+
+/**
+ * 지난 일정의 운영 메모(`availability_blocks.memo`)를 파기한다.
+ *
+ * ## 판정
+ *
+ * - **법정 기록이 아니다.** 그 표는 운영자가 예약을 막아 두는 시간대이고, 고객도 주문도
+ *   결제도 매달려 있지 않다. 보존해야 할 계약·결제 기록의 일부가 아니다.
+ * - **그래도 파기한다 — 개인정보가 들어갈 수 있는 자유 입력이기 때문이다.** 관리자 화면의
+ *   "메모 (선택)" 칸에 제한 없이 적는 값이라(`pages/admin/bookings/index.tsx`,
+ *   `pages/api/admin/blocks/index.ts`) 누구 때문에 비워 둔 시간인지를 이름으로 적어 두는
+ *   것이 가장 자연스럽다. 계약서 제목(`lib/contracts/retention.ts`의 `title`)을 파기 대상에
+ *   넣은 것과 같은 판단이다.
+ * - 시각(`start_at`·`end_at`)은 남긴다 — 개인을 식별하지 않고, 지난 일정이 있었다는 사실은
+ *   운영 기록으로 쓸 수 있다.
+ * - 기산점은 그 시간대의 끝(`end_at`), 기간은 `AVAILABILITY_MEMO_RETENTION_YEARS`.
+ */
+export const purgeExpiredAvailabilityBlockMemos = async (
+  now: Date = new Date(),
+): Promise<OrderPurgeResult> => {
+  const boundary = yearsAgo(now, AVAILABILITY_MEMO_RETENTION_YEARS);
+
+  const result = await getDb()
+    .update(availabilityBlocks)
+    .set({ memo: null })
+    .where(and(isNotNull(availabilityBlocks.memo), lt(availabilityBlocks.endAt, boundary)));
+
+  return rows(result);
+};
+
+/**
+ * 여기서 **일부러 파기하지 않는 것**: 정산 메모
+ * (`funding_project_payouts.memo` · `artist_payouts.memo`).
+ *
+ * 두 컬럼 모두 운영자가 **이체를 마친 뒤** 그 지급 건에 붙이는 메모다
+ * (`lib/funding/payout.ts`의 `markFundingPayoutPaid`, `lib/artistSupport/payout.ts`의
+ * `markArtistPayoutPaid` — 둘 다 `status: 'paid'`로 올리면서 함께 쓴다). 상대는 소비자가
+ * 아니라 정산을 받는 개설자·아티스트이고, 행 자체가 지급액·수수료·원천징수액을 담은 정산
+ * 기록이다.
+ *
+ * 파기 대상에서 빼는 이유는 두 가지다. 첫째, **메모가 새로 드러내는 개인정보가 없다** —
+ * 누구에게 얼마를 지급했는가는 같은 행의 금액 컬럼과 개설자·아티스트 식별자가 이미 담고
+ * 있고, 그쪽은 정산·세무 기록으로 보존한다. 둘째, **지급 경위가 곧 그 기록의 내용이다**
+ * (재이체·상계·보류 사유가 적히는 자리라 지우면 장부의 숫자를 설명할 수 없다).
+ *
+ * 그래서 이 판단은 "개인정보가 아니다"가 아니라 "그 행의 보존 근거 안에 있다"에 가깝다.
+ * 정산 기록 자체의 보존 기간을 정하게 되면 이 메모도 같은 기간을 따라야 한다 — 그때 이
+ * 주석을 다시 읽고 판단할 것.
+ */

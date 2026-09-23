@@ -1,16 +1,21 @@
 /** @jest-environment node */
 
 /**
- * 한 크론이 기준이 다른 다섯 파기를 나란히 돌린다.
+ * 한 크론이 기준이 다른 열한 가지 파기를 나란히 돌린다.
  *
  * - 주문 고객 이름·연락처: 전자상거래법 5년(생성일·최종 갱신일 둘 다 기준)
  * - 결제 실패 사유 원문: 실패 시각부터 1년(법정 보존이 아니라 운영 판단)
  * - 구독 고객 이름·연락처: **종료(`ended`)** 후 5년
  * - 후원자 표시 이름: 종료 즉시(공개 명단에서 빠지는 순간 목적이 끝난다)
  * - 구독 해지 사유: 해지 시각부터 3년(소비자 불만·분쟁 처리 기록)
+ * - 결제 승인 응답 원본: 승인 후 5년(대금결제 기록의 근거)
+ * - 빌링키 발급 응답 원본: 키를 못 쓰게 된 즉시(폐기됐거나 구독이 끝났을 때)
+ * - 환불 사유: 환불 후 5년(청약철회 기록의 내용)
+ * - 예약·믹싱 요청사항: 이용·납품 후 3년(법정 기록이 아니다)
+ * - 일정 차단 메모: 그 시간대가 끝난 뒤 1년(운영 판단)
  *
  * 기준이 한 함수로 합쳐지면 법정 보존 대상이 먼저 지워지거나 자유기재 메모가 5년을 더
- * 남는다. 이 테스트는 호출이 **다섯으로 갈려 있고 서로의 실패에 걸리지 않는다**는 사실을
+ * 남는다. 이 테스트는 호출이 **갈려 있고 서로의 실패에 걸리지 않는다**는 사실을
  * 고정한다(purge-funding과 같은 구조·같은 이유).
  */
 jest.mock('../../../lib/cron/auth', () => ({ isCronAuthorized: jest.fn() }));
@@ -20,9 +25,16 @@ jest.mock('../../../lib/privacy/orderRetention', () => ({
   purgeExpiredSubscriptionCustomerData: jest.fn(),
   purgeEndedSubscriptionDisplayNames: jest.fn(),
   purgeExpiredSubscriptionCancelReasons: jest.fn(),
+  purgeExpiredPaymentRawResponses: jest.fn(),
+  purgeUnusableBillingKeyRawResponses: jest.fn(),
+  purgeExpiredRefundReasons: jest.fn(),
+  purgeExpiredBookingCustomerNotes: jest.fn(),
+  purgeExpiredWorkOrderCustomerNotes: jest.fn(),
+  purgeExpiredAvailabilityBlockMemos: jest.fn(),
   ORDER_LEGAL_RETENTION_YEARS: 5,
   DISPUTE_RETENTION_YEARS: 3,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS: 1,
+  AVAILABILITY_MEMO_RETENTION_YEARS: 1,
 }));
 jest.mock('../../../lib/email/resend', () => ({ sendEmail: jest.fn() }));
 
@@ -31,10 +43,16 @@ import handler from '../../../pages/api/cron/purge-orders';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import {
   purgeEndedSubscriptionDisplayNames,
+  purgeExpiredAvailabilityBlockMemos,
+  purgeExpiredBookingCustomerNotes,
   purgeExpiredOrderCustomerData,
   purgeExpiredPaymentFailMessages,
+  purgeExpiredPaymentRawResponses,
+  purgeExpiredRefundReasons,
   purgeExpiredSubscriptionCancelReasons,
   purgeExpiredSubscriptionCustomerData,
+  purgeExpiredWorkOrderCustomerNotes,
+  purgeUnusableBillingKeyRawResponses,
 } from '../../../lib/privacy/orderRetention';
 import { sendEmail } from '../../../lib/email/resend';
 
@@ -44,6 +62,12 @@ const all = [
   purgeExpiredSubscriptionCustomerData,
   purgeEndedSubscriptionDisplayNames,
   purgeExpiredSubscriptionCancelReasons,
+  purgeExpiredPaymentRawResponses,
+  purgeUnusableBillingKeyRawResponses,
+  purgeExpiredRefundReasons,
+  purgeExpiredBookingCustomerNotes,
+  purgeExpiredWorkOrderCustomerNotes,
+  purgeExpiredAvailabilityBlockMemos,
 ] as unknown as jest.Mock[];
 
 const call = async () => {
@@ -66,6 +90,12 @@ beforeEach(() => {
   (purgeExpiredSubscriptionCustomerData as jest.Mock).mockResolvedValue({ purged: 2 });
   (purgeEndedSubscriptionDisplayNames as jest.Mock).mockResolvedValue({ purged: 1 });
   (purgeExpiredSubscriptionCancelReasons as jest.Mock).mockResolvedValue({ purged: 4 });
+  (purgeExpiredPaymentRawResponses as jest.Mock).mockResolvedValue({ purged: 6 });
+  (purgeUnusableBillingKeyRawResponses as jest.Mock).mockResolvedValue({ purged: 7 });
+  (purgeExpiredRefundReasons as jest.Mock).mockResolvedValue({ purged: 8 });
+  (purgeExpiredBookingCustomerNotes as jest.Mock).mockResolvedValue({ purged: 9 });
+  (purgeExpiredWorkOrderCustomerNotes as jest.Mock).mockResolvedValue({ purged: 10 });
+  (purgeExpiredAvailabilityBlockMemos as jest.Mock).mockResolvedValue({ purged: 11 });
   (sendEmail as jest.Mock).mockResolvedValue(undefined);
 });
 
@@ -77,7 +107,7 @@ it('인증 없으면 401이고 아무것도 지우지 않는다', async () => {
   for (const fn of all) expect(fn).not.toHaveBeenCalled();
 });
 
-it('다섯 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
+it('열한 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
   expect(r.body).toEqual({
@@ -87,11 +117,17 @@ it('다섯 파기를 각각 돌리고 건수를 따로 돌려준다', async () =
     purgedSubscriptionCustomers: 2,
     purgedSubscriptionDisplayNames: 1,
     purgedSubscriptionCancelReasons: 4,
+    purgedPaymentRawResponses: 6,
+    purgedBillingKeyRawResponses: 7,
+    purgedRefundReasons: 8,
+    purgedBookingCustomerNotes: 9,
+    purgedWorkOrderCustomerNotes: 10,
+    purgedAvailabilityBlockMemos: 11,
   });
   for (const fn of all) expect(fn).toHaveBeenCalledTimes(1);
 });
 
-it('한 파기가 실패해도 나머지 넷은 그대로 돈다', async () => {
+it('한 파기가 실패해도 나머지는 그대로 돈다', async () => {
   (purgeExpiredOrderCustomerData as jest.Mock).mockRejectedValue(new Error('no such column'));
   const r = await call();
   expect(r.status).toBe(500);
@@ -102,7 +138,18 @@ it('한 파기가 실패해도 나머지 넷은 그대로 돈다', async () => {
     purgedOrderCustomers: null,
     purgedPaymentFailMessages: 5,
     purgedSubscriptionCustomers: 2,
+    purgedRefundReasons: 8,
+    purgedBookingCustomerNotes: 9,
   });
+});
+
+it('법정 보존 기록의 파기가 실패해도 자유기재 메모 파기는 그대로 돈다', async () => {
+  (purgeExpiredRefundReasons as jest.Mock).mockRejectedValue(new Error('no such table: refunds'));
+  const r = await call();
+  expect(r.status).toBe(500);
+  expect(purgeExpiredBookingCustomerNotes).toHaveBeenCalledTimes(1);
+  expect(purgeExpiredAvailabilityBlockMemos).toHaveBeenCalledTimes(1);
+  expect(r.body).toMatchObject({ purgedRefundReasons: null, purgedAvailabilityBlockMemos: 11 });
 });
 
 it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () => {

@@ -7,7 +7,7 @@
  * 호출한다 — 매월 3일 18시(purge-contracts 1일, purge-funding 2일과 겹치지 않게).
  *
  * 판정(무엇을 법정 기록으로 보고 무엇을 아니라고 봤는지)은 `lib/privacy/orderRetention.ts`의
- * 각 함수 주석에 있다. 기준이 다섯 가지로 갈려 있으므로 여기서 요약하지 않는다 —
+ * 각 함수 주석에 있다. 기준이 여럿으로 갈려 있으므로 여기서 요약하지 않는다 —
  * 두 곳에 적으면 한쪽이 먼저 낡는다.
  *
  * **후원 배송지·주민등록번호·접속기록 파기(`/api/cron/purge-funding`)와 섞지 않는다.**
@@ -22,14 +22,21 @@ import { isCronAuthorized } from '../../../lib/cron/auth';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import {
+  AVAILABILITY_MEMO_RETENTION_YEARS,
   DISPUTE_RETENTION_YEARS,
   ORDER_LEGAL_RETENTION_YEARS,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS,
   purgeEndedSubscriptionDisplayNames,
+  purgeExpiredAvailabilityBlockMemos,
+  purgeExpiredBookingCustomerNotes,
   purgeExpiredOrderCustomerData,
   purgeExpiredPaymentFailMessages,
+  purgeExpiredPaymentRawResponses,
+  purgeExpiredRefundReasons,
   purgeExpiredSubscriptionCancelReasons,
   purgeExpiredSubscriptionCustomerData,
+  purgeExpiredWorkOrderCustomerNotes,
+  purgeUnusableBillingKeyRawResponses,
 } from '../../../lib/privacy/orderRetention';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -40,11 +47,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   /**
-   * 다섯 파기는 **서로의 실패에 걸리지 않는다**(purge-funding과 같은 구조).
+   * 각 파기는 **서로의 실패에 걸리지 않는다**(purge-funding과 같은 구조).
    *
    * 한 try에 나란히 세우면 앞의 것이 던졌을 때 뒤의 것이 그달에 아예 실행되지 않는다.
-   * 다섯은 대상도 기산점도 기간도 다른 별개의 파기이고 전부 멱등이라, 실패한 것은 다음 달
-   * 실행에서 다시 시도된다.
+   * 열한 가지는 대상도 기산점도 기간도 다른 별개의 파기이고 전부 멱등이라, 실패한 것은
+   * 다음 달 실행에서 다시 시도된다.
    */
   const failures: { label: string; detail: string }[] = [];
 
@@ -81,6 +88,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     `해지 후 ${DISPUTE_RETENTION_YEARS}년이 지난 구독 해지 사유 파기`,
     purgeExpiredSubscriptionCancelReasons,
   );
+  const paymentRawResponses = await run(
+    `승인 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 지난 결제 승인 응답 원본 파기`,
+    purgeExpiredPaymentRawResponses,
+  );
+  const billingKeyRawResponses = await run(
+    '폐기됐거나 구독이 끝난 빌링키의 발급 응답 원본 파기',
+    purgeUnusableBillingKeyRawResponses,
+  );
+  const refundReasons = await run(
+    `환불 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 지난 환불 사유 파기`,
+    purgeExpiredRefundReasons,
+  );
+  const bookingNotes = await run(
+    `이용 후 ${DISPUTE_RETENTION_YEARS}년이 지난 예약 요청사항 파기`,
+    purgeExpiredBookingCustomerNotes,
+  );
+  const workOrderNotes = await run(
+    `납품 후 ${DISPUTE_RETENTION_YEARS}년이 지난 믹싱 주문 요청사항 파기`,
+    purgeExpiredWorkOrderCustomerNotes,
+  );
+  const blockMemos = await run(
+    `${AVAILABILITY_MEMO_RETENTION_YEARS}년이 지난 일정 차단 메모 파기`,
+    purgeExpiredAvailabilityBlockMemos,
+  );
 
   // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
   const body = {
@@ -89,6 +120,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     purgedSubscriptionCustomers: subscriptionCustomers ? subscriptionCustomers.purged : null,
     purgedSubscriptionDisplayNames: displayNames ? displayNames.purged : null,
     purgedSubscriptionCancelReasons: cancelReasons ? cancelReasons.purged : null,
+    purgedPaymentRawResponses: paymentRawResponses ? paymentRawResponses.purged : null,
+    purgedBillingKeyRawResponses: billingKeyRawResponses ? billingKeyRawResponses.purged : null,
+    purgedRefundReasons: refundReasons ? refundReasons.purged : null,
+    purgedBookingCustomerNotes: bookingNotes ? bookingNotes.purged : null,
+    purgedWorkOrderCustomerNotes: workOrderNotes ? workOrderNotes.purged : null,
+    purgedAvailabilityBlockMemos: blockMemos ? blockMemos.purged : null,
   };
 
   if (failures.length > 0) {
