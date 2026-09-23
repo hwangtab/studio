@@ -279,3 +279,56 @@ describe('저장하지 않은 입력 — 브라우저 뒤로/앞으로가기(bef
     expect(forwardSpy).not.toHaveBeenCalled();
   });
 });
+
+/**
+ * 모금 현황은 **읽기 전용 구획**이라 이탈 가드와 무관해야 한다. 탭(TABS·dirtyTabs) 바깥에
+ * 두었으므로 구획이 떠 있어도 dirty가 되지 않고, 구획이 있든 없든 가드는 같게 동작한다.
+ */
+describe('모금 현황 구획은 이탈 가드를 건드리지 않는다', () => {
+  const STATS = {
+    raisedAmount: 100_000,
+    goalAmount: 1_000_000,
+    percent: 10,
+    backerCount: 3,
+    rewards: [{ rewardId: 'cd', title: 'CD', quantity: 3, totalQuantity: 100 }],
+  };
+
+  it('현황 구획이 떠 있어도 아무것도 안 바꿨으면 이동을 막지 않는다', () => {
+    confirmSpy = jest.spyOn(window, 'confirm');
+    render(
+      <CreatorProjectEditor
+        project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false}
+        payout={UNREGISTERED_PAYOUT} stats={STATS}
+      />,
+    );
+
+    expect(screen.getByRole('heading', { name: '모금 현황' })).toBeInTheDocument();
+    expect(() => triggerRouteChangeStart()).not.toThrow();
+    expect(confirmSpy).not.toHaveBeenCalled();
+  });
+
+  it('현황 구획이 떠 있어도 입력을 바꾸면 가드는 그대로 걸린다', () => {
+    confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+    render(
+      <CreatorProjectEditor
+        project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false}
+        payout={UNREGISTERED_PAYOUT} stats={STATS}
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
+
+    expect(() => triggerRouteChangeStart()).toThrow();
+    expect(confirmSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('승인 전(stats 없음)에는 구획 자체가 없다', () => {
+    render(
+      <CreatorProjectEditor
+        project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false}
+        payout={UNREGISTERED_PAYOUT} stats={null}
+      />,
+    );
+    expect(screen.queryByRole('heading', { name: '모금 현황' })).not.toBeInTheDocument();
+  });
+});

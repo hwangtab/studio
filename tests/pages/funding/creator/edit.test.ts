@@ -11,6 +11,7 @@ jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({
   isCreatorNameLocked: jest.fn().mockResolvedValue(false),
   loadPayoutSummary: jest.fn().mockResolvedValue({ registered: false, accountLast4: null, taxType: null }),
 }));
+jest.mock('../../../../lib/funding/creatorStats', () => ({ loadCreatorProjectStats: jest.fn().mockResolvedValue(null) }));
 
 // eslint-disable-next-line import/first
 import { getServerSideProps, toEditorProject } from '../../../../pages/[locale]/funding/creator/[id]';
@@ -20,6 +21,8 @@ import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth'
 import {
   isCreatorNameLocked, loadPayoutSummary, loadProjectForCreator, type CreatorProjectDetail,
 } from '../../../../lib/funding/creatorProjectWrite';
+// eslint-disable-next-line import/first
+import { loadCreatorProjectStats } from '../../../../lib/funding/creatorStats';
 // eslint-disable-next-line import/first
 import { computeEarliestStartDate } from '../../../../lib/funding/creatorDateInput';
 // eslint-disable-next-line import/first
@@ -258,5 +261,58 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       const props = (result as unknown as { props: { earliestStartDate: string } }).props;
       expect(props.earliestStartDate).toBe(computeEarliestStartDate(fixedNow.getTime(), CREATOR_LIMITS.leadDays));
     });
+  });
+});
+
+/**
+ * 모금 현황은 **집계만** props로 나간다. 개설자 약관 제8조가 "서포터의 개인정보는 스튜디오가
+ * 보유하며, 개설자에게 제공하지 않습니다"라고 적고 있고, props는 `__NEXT_DATA__`로 페이지
+ * 소스에 그대로 실린다 — 집계 함수 쪽 방어는 `lib/funding/creatorStats.integration.test.ts`가,
+ * 이 화면까지 그대로 오는지는 여기가 본다.
+ */
+describe('모금 현황 props', () => {
+  const STATS = {
+    raisedAmount: 100_000,
+    goalAmount: 1_000_000,
+    percent: 10,
+    backerCount: 3,
+    rewards: [{ rewardId: 'cd', title: 'CD', quantity: 3, totalQuantity: 100 }],
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+    (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
+    (isCreatorNameLocked as jest.Mock).mockResolvedValue(false);
+    (loadPayoutSummary as jest.Mock).mockResolvedValue({ registered: false, accountLast4: null, taxType: null });
+  });
+
+  const run = async () => {
+    const result = await getServerSideProps({
+      params: { locale: 'ko', id: 'proj-1' }, query: {}, req: { headers: {}, cookies: {} }, res: resStub(),
+    } as never);
+    return (result as unknown as { props: { stats: unknown } }).props;
+  };
+
+  it('본인 id와 프로젝트 id로만 조회하고, 집계를 props에 담는다', async () => {
+    (loadCreatorProjectStats as jest.Mock).mockResolvedValue(STATS);
+    const props = await run();
+    expect(loadCreatorProjectStats).toHaveBeenCalledWith('creator-a', 'proj-1');
+    expect(props.stats).toEqual(STATS);
+    // 집계 외의 것이 섞여 들어오면 여기서 드러난다.
+    expect(Object.keys(props.stats as object).sort())
+      .toEqual(['backerCount', 'goalAmount', 'percent', 'raisedAmount', 'rewards']);
+  });
+
+  it('승인 전이면(집계 함수가 null) props도 null이다 — 화면이 구획을 감춘다', async () => {
+    (loadCreatorProjectStats as jest.Mock).mockResolvedValue(null);
+    expect((await run()).stats).toBeNull();
+  });
+
+  it('집계 조회가 실패해도 편집 화면은 열린다', async () => {
+    (loadCreatorProjectStats as jest.Mock).mockRejectedValue(new Error('DB 없음'));
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect((await run()).stats).toBeNull();
+    spy.mockRestore();
   });
 });

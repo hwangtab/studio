@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { BasicSectionForm, type BasicSectionValue } from '../../../../components/funding/creator/BasicSectionForm';
 import { CreatorSectionForm } from '../../../../components/funding/creator/CreatorSectionForm';
 import { PayoutSectionForm } from '../../../../components/funding/creator/PayoutSectionForm';
+import { ProjectStatsPanel } from '../../../../components/funding/creator/ProjectStatsPanel';
 import { RewardSectionForm } from '../../../../components/funding/creator/RewardSectionForm';
 import { StorySectionForm } from '../../../../components/funding/creator/StorySectionForm';
 import { submitProject, withdrawProject } from '../../../../components/funding/creator/api';
@@ -20,6 +21,7 @@ import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth'
 import {
   isCreatorNameLocked, loadPayoutSummary, loadProjectForCreator, type CreatorProjectDetail,
 } from '../../../../lib/funding/creatorProjectWrite';
+import { loadCreatorProjectStats, type CreatorProjectStats } from '../../../../lib/funding/creatorStats';
 import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
 import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../lib/funding/policy';
 import { withI18nServerProps } from '../../../../lib/getStatic';
@@ -48,6 +50,15 @@ interface Props {
    * 들면 `lib/funding/creatorProjectWrite.ts`의 `CreatorPayoutSummary` 주석을 읽을 것.
    */
   payout: EditorPayoutSummary;
+  /**
+   * 모금 현황(집계만). 승인 전 프로젝트와 집계를 못 읽은 경우는 null이고 화면은 구획을
+   * 통째로 감춘다 — `lib/funding/creatorStats.ts`의 `loadCreatorProjectStats` 주석 참조.
+   * 후원자 이름·응원 메시지·연락처·배송지는 이 값에 들어 있지 않다(개설자 약관 제8조).
+   *
+   * 선택적이다 — 현황 구획은 편집기의 부가 정보라, 없으면 그 구획만 빠지고 나머지는
+   * 그대로 동작한다.
+   */
+  stats?: CreatorProjectStats | null;
 }
 
 /**
@@ -107,7 +118,7 @@ const TAB_LABEL: Record<Tab, string> = {
 const UNSAVED_CHANGES_MESSAGE = '저장하지 않은 변경이 있습니다. 지금 나가면 그 내용이 사라집니다. 계속하시겠습니까?';
 
 export default function CreatorProjectEditor({
-  project: initial, earliestStartDate, nameLocked, payout: initialPayout,
+  project: initial, earliestStartDate, nameLocked, payout: initialPayout, stats,
 }: Props) {
   const router = useRouter();
   const [project, setProject] = useState<EditorProject>(initial);
@@ -265,6 +276,10 @@ export default function CreatorProjectEditor({
             {notice}
           </p>
         )}
+
+        {/* 읽기 전용 구획이다 — 탭 바깥에 두어 저장 안 한 입력 이탈 가드(TABS·dirtyTabs)와
+            섞이지 않게 한다. */}
+        {stats && <ProjectStatsPanel stats={stats} />}
 
         <nav role="tablist" aria-label="편집 구획" className="mt-8 flex gap-2 border-b border-gray-200 dark:border-gray-700">
           {TABS.map((t) => (
@@ -442,6 +457,15 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
       // 등록 여부·뒤 4자리·세금 유형만 돌아온다 — 원본 계좌 값은 이 함수 밖으로 나오지
       // 않는다(lib/funding/creatorProjectWrite.ts의 loadPayoutSummary).
       payout: await loadPayoutSummary(auth.creatorId),
+      /**
+       * 모금 현황은 이 화면의 부가 정보다 — 집계 조회가 실패했다고 편집 자체를 막지
+       * 않는다(빌드·런타임 모두 DB 없이 동작해야 한다는 저장소 규칙과 같은 방향).
+       * 실패하면 구획만 사라진다.
+       */
+      stats: await loadCreatorProjectStats(auth.creatorId, id).catch((error: unknown) => {
+        console.error('[funding] 개설자 모금 현황 조회 실패:', error);
+        return null;
+      }),
     },
   };
 });
