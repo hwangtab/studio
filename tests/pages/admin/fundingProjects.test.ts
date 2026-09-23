@@ -4,12 +4,14 @@ jest.mock('../../../lib/funding/adminProjects', () => ({
   listProjectsForAdmin: jest.fn(),
   loadProjectForAdmin: jest.fn(),
 }));
+jest.mock('../../../lib/funding/payout', () => ({ buildFundingPayoutPreview: jest.fn() }));
 
 import type { GetServerSidePropsContext } from 'next';
 import { getServerSideProps as getListProps } from '../../../pages/admin/funding/projects/index';
 import { getServerSideProps as getDetailProps } from '../../../pages/admin/funding/projects/[id]';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { listProjectsForAdmin, loadProjectForAdmin, type AdminProjectDetail } from '../../../lib/funding/adminProjects';
+import { buildFundingPayoutPreview } from '../../../lib/funding/payout';
 
 const listContext = { query: {} } as unknown as GetServerSidePropsContext;
 const detailContext = (id: unknown) => ({ query: { id } }) as unknown as GetServerSidePropsContext;
@@ -158,5 +160,117 @@ describe('심사 상세 getServerSideProps', () => {
       props: { project: { creator: Record<string, unknown> } };
     };
     expect(Object.keys(result.props.project.creator).sort()).toEqual(['contactName', 'phone']);
+  });
+});
+
+/**
+ * 정산 미리보기는 계좌·세금 처리 구분을 들고 있다. 그것을 props로 내려보내면 Pages Router가
+ * `__NEXT_DATA__` JSON으로 페이지 HTML에 실어 계좌 정보가 소스에 박힌다 —
+ * `lib/funding/adminProjects.integration.test.ts`의 "비공개 정산 필드는 싣지 않는다"와 같은
+ * 것을 화면 쪽 경계에서 한 번 더 고정한다. 계좌는 별도 라우트
+ * (`/api/admin/funding/projects/[id]/payout-account`)로만 나간다.
+ */
+describe('심사 상세 getServerSideProps — 정산', () => {
+  const PREVIEW = {
+    projectId: 'proj-1',
+    projectSlug: 'demo-project',
+    projectTitle: '데모 프로젝트',
+    taxType: 'withholding' as const,
+    manualGrossAmount: 0,
+    backerCount: 12,
+    closed: true,
+    hasPayoutAccount: true,
+    grossAmount: 1_000_000,
+    refundAmount: 0,
+    supplyAmount: 909_091,
+    feeAmount: 89_000,
+    platformFeeAmount: 55_000,
+    paymentFeeAmount: 34_000,
+    shareAmount: 911_000,
+    withholdingAmount: 30_063,
+    netAmount: 880_937,
+    recorded: null,
+  };
+
+  beforeEach(() => {
+    (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
+    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue(PREVIEW);
+  });
+
+  it('승인 전 프로젝트는 정산을 계산하지 않는다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue(baseDetail);
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as { props: { payout: unknown } };
+    expect(result.props.payout).toBeNull();
+    expect(buildFundingPayoutPreview).not.toHaveBeenCalled();
+  });
+
+  it('승인된 프로젝트의 정산 props에 계좌·세금 처리 구분이 없다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
+      props: { payout: Record<string, unknown> };
+    };
+    const { payout } = result.props;
+
+    expect(Object.keys(payout).sort()).toEqual(
+      [
+        'grossAmount', 'refundAmount', 'manualGrossAmount', 'supplyAmount',
+        'platformFeeAmount', 'paymentFeeAmount', 'feeAmount', 'shareAmount',
+        'withholdingAmount', 'netAmount', 'backerCount', 'closed',
+        'hasPayoutAccount', 'recorded',
+      ].sort(),
+    );
+    expect(payout.netAmount).toBe(880_937);
+
+    const serialized = JSON.stringify(result.props);
+    expect(serialized).not.toContain('taxType');
+    expect(serialized).not.toContain('withholding\"');
+    expect(serialized).not.toContain('payoutBankName');
+    expect(serialized).not.toContain('payoutAccount');
+    expect(serialized).not.toContain('payoutHolder');
+  });
+
+  it('기록된 정산의 Date는 ISO 문자열로 좁혀진다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({
+      ...PREVIEW,
+      recorded: {
+        id: 'pay-1',
+        projectId: 'proj-1',
+        grossAmount: 1_000_000,
+        refundAmount: 0,
+        supplyAmount: 909_091,
+        feeAmount: 89_000,
+        platformFeeAmount: 55_000,
+        paymentFeeAmount: 34_000,
+        shareAmount: 911_000,
+        withholdingAmount: 30_063,
+        netAmount: 880_937,
+        backerCount: 12,
+        status: 'paid',
+        paidAt: new Date('2026-11-05T00:00:00.000Z'),
+        memo: null,
+        createdAt: new Date('2026-11-01T00:00:00.000Z'),
+        updatedAt: new Date('2026-11-05T00:00:00.000Z'),
+      },
+    });
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
+      props: { payout: { recorded: Record<string, unknown> } };
+    };
+    expect(result.props.payout.recorded.paidAt).toBe('2026-11-05T00:00:00.000Z');
+    expect(result.props.payout.recorded.createdAt).toBe('2026-11-01T00:00:00.000Z');
+    // projectId·updatedAt은 화면이 쓰지 않으므로 담지 않는다.
+    expect(result.props.payout.recorded.updatedAt).toBeUndefined();
+  });
+
+  it('정산 집계가 실패해도 심사 화면은 열린다', async () => {
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue({ ...baseDetail, reviewStatus: 'approved' });
+    (buildFundingPayoutPreview as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as {
+      props: { payout: unknown; project: { id: string } };
+    };
+    expect(result.props.payout).toBeNull();
+    expect(result.props.project.id).toBe('proj-1');
+    jest.restoreAllMocks();
   });
 });

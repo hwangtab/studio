@@ -40,7 +40,14 @@ export type FundingProjectPatchBody =
    * 그것을 어느 컬럼에도 저장하지 않고 개설자 메일과 서버 로그로만 남긴다
    * (`lib/funding/creatorAccountDecision.ts`). 둘 다 서버가 빈 값을 거부한다.
    */
-  | { action: 'set_creator_name' | 'set_creator_email'; value: string; reason: string };
+  | { action: 'set_creator_name' | 'set_creator_email'; value: string; reason: string }
+  /**
+   * 정산. `record_payout`은 미리보기 숫자를 그 시점에 고정하고(프로젝트당 한 번),
+   * `mark_payout_paid`는 pending → paid 한 방향이다. 정산 id를 보내지 않는다 —
+   * 프로젝트당 하나뿐이라 서버가 찾는다.
+   */
+  | { action: 'record_payout' }
+  | { action: 'mark_payout_paid'; memo?: string };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
   try {

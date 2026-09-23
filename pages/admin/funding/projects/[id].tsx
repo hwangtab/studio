@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 
 import { patchFundingProject } from '../../../../components/admin/fundingProjectActions';
 import { AdminShell } from '../../../../components/admin/AdminShell';
+import { FundingPayoutSection, type AdminPayoutView } from '../../../../components/admin/FundingPayoutSection';
 import { Button } from '../../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../../components/ui/Field';
 import { lightOnlyField } from '../../../../components/ui/adminFieldClass';
@@ -12,6 +13,7 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
+import { buildFundingPayoutPreview } from '../../../../lib/funding/payout';
 import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -56,7 +58,67 @@ interface AdminFundingProjectDetailPageProps {
     };
     rewards: DetailReward[];
   };
+  /**
+   * 정산 미리보기. `project`와 **형제 필드로 둔다** — `project` 안에 넣으면 그 객체가
+   * "심사 화면이 보는 프로젝트"라는 화이트리스트의 의미를 잃는다.
+   *
+   * 계좌·세금 처리 구분은 여기 없다(`AdminPayoutView` 주석 참고). 승인 전 프로젝트와
+   * 조회 실패 시 null이다 — 정산 계산이 죽어도 심사 화면 자체는 열려야 한다.
+   */
+  payout: AdminPayoutView | null;
 }
+
+/**
+ * 정산 미리보기를 props로 좁힌다. `FundingPayoutPreview`를 그대로 스프레드하지 않는다 —
+ * 그 타입에는 `taxType`이 있고, Pages Router는 props를 `__NEXT_DATA__`로 페이지 HTML에
+ * 싣는다. 여기서 필드를 하나씩 고르는 것이 그 유출을 막는 자리다.
+ */
+const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null> => {
+  try {
+    const preview = await buildFundingPayoutPreview(projectId);
+    if (!preview) return null;
+    const r = preview.recorded;
+    return {
+      grossAmount: preview.grossAmount,
+      refundAmount: preview.refundAmount,
+      manualGrossAmount: preview.manualGrossAmount,
+      supplyAmount: preview.supplyAmount,
+      platformFeeAmount: preview.platformFeeAmount,
+      paymentFeeAmount: preview.paymentFeeAmount,
+      feeAmount: preview.feeAmount,
+      shareAmount: preview.shareAmount,
+      withholdingAmount: preview.withholdingAmount,
+      netAmount: preview.netAmount,
+      backerCount: preview.backerCount,
+      closed: preview.closed,
+      hasPayoutAccount: preview.hasPayoutAccount,
+      recorded: r
+        ? {
+            id: r.id,
+            grossAmount: r.grossAmount,
+            refundAmount: r.refundAmount,
+            supplyAmount: r.supplyAmount,
+            feeAmount: r.feeAmount,
+            platformFeeAmount: r.platformFeeAmount,
+            paymentFeeAmount: r.paymentFeeAmount,
+            shareAmount: r.shareAmount,
+            withholdingAmount: r.withholdingAmount,
+            netAmount: r.netAmount,
+            backerCount: r.backerCount,
+            status: r.status,
+            paidAt: r.paidAt?.toISOString() ?? null,
+            memo: r.memo,
+            createdAt: r.createdAt.toISOString(),
+          }
+        : null,
+    };
+  } catch (error: unknown) {
+    // 정산 집계가 실패해도 심사 화면은 열려야 한다 — 판정·메모 같은 다른 조작까지 막히면
+    // 운영자가 할 수 있는 일이 사라진다.
+    console.error(`[admin] 정산 미리보기 실패 (id=${projectId}):`, error);
+    return null;
+  }
+};
 
 export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPageProps> = async (context) => {
   const auth = await authenticateAdminRequest(context);
@@ -70,8 +132,12 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
   const project = await loadProjectForAdmin(id);
   if (!project) return { notFound: true };
 
+  // 승인 전에는 후원도 정산도 있을 수 없다 — 쓸모없는 집계 질의를 돌리지 않는다.
+  const payout = project.reviewStatus === 'approved' ? await loadPayoutView(id) : null;
+
   return {
     props: {
+      payout,
       project: {
         id: project.id,
         slug: project.slug,
@@ -123,7 +189,7 @@ const REVIEW_STATUS_LABELS: Record<FundingReviewStatus, string> = {
  * 운영자가 이 화면에서 바로 알아야 한다. */
 const PROJECT_STATUS_LABELS: Record<string, string> = { auto: '공개중', draft: '비공개(작성중)', closed: '종료' };
 
-export default function AdminFundingProjectDetailPage({ project }: AdminFundingProjectDetailPageProps) {
+export default function AdminFundingProjectDetailPage({ project, payout }: AdminFundingProjectDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -383,6 +449,43 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
     return run(
       () => patchFundingProject(project.id, { action: 'hide', note: reason.trim() || undefined }),
       '목록에서 숨겼습니다.',
+    );
+  };
+
+  /**
+   * 정산 기록. 확인창에 실이체액을 그대로 적는다 — 이 버튼은 그 시점 숫자를 영구히
+   * 고정하므로, 누르기 전 마지막으로 눈으로 검산하는 자리가 여기다.
+   */
+  const handleRecordPayout = () => {
+    if (!payout) return;
+    if (
+      !window.confirm(
+        `실이체액 ${formatPriceAmount(payout.netAmount)}원으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 진행할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'record_payout' }),
+      '정산을 기록하고 개설자에게 알렸습니다.',
+    );
+  };
+
+  const handleMarkPayoutPaid = () => {
+    const recorded = payout?.recorded;
+    if (!recorded) return;
+    const memo = window.prompt('이체 메모를 적어 주세요 (선택 — 개설자에게 가는 메일에 함께 나갑니다).');
+    if (memo === null) return;
+    if (
+      !window.confirm(
+        `${formatPriceAmount(recorded.netAmount)}원을 실제로 이체하셨나요? 지급 완료로 기록하면 되돌릴 수 없습니다.`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'mark_payout_paid', memo: memo.trim() || undefined }),
+      '지급 완료로 기록하고 개설자에게 알렸습니다.',
     );
   };
 
@@ -682,6 +785,16 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                 )}
               </div>
             </div>
+          )}
+
+          {project.reviewStatus === 'approved' && (
+            <FundingPayoutSection
+              projectId={project.id}
+              payout={payout}
+              busy={busy}
+              onRecord={handleRecordPayout}
+              onMarkPaid={handleMarkPayoutPaid}
+            />
           )}
 
           <div className="mb-6">

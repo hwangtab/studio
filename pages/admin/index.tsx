@@ -143,6 +143,7 @@ export default function AdminIndexPage({ dashboard, ledgerFrom, ledgerTo, error 
                 <QueueCard label="정지된 구독" count={dashboard.queues.subscriptionsPaused} href="/admin/subscriptions" alert />
                 <QueueCard label="이체 대기 아티스트 정산" count={dashboard.queues.artistPayoutsPending} href="/admin/artists" alert />
                 <QueueCard label="심사 대기 펀딩 프로젝트" count={dashboard.queues.fundingProjectsAwaitingReview} href="/admin/funding/projects" alert />
+                <QueueCard label="이체 대기 펀딩 정산" count={dashboard.queues.fundingPayoutsPending} href="/admin/funding/projects" alert />
               </div>
             </section>
 
