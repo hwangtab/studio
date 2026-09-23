@@ -880,6 +880,8 @@ describe('방치된 구독 종료·파기 (1년)', () => {
     displayName?: string | null;
     paid?: { attemptedAt: string } | null;
     failed?: { attemptedAt: string } | null;
+    /** 결판나지 않은 회차 — NETWORK_ERROR로 끝나 pending으로 남은 것. */
+    pending?: { attemptedAt: string } | null;
   }) => {
     const subId = await addSubscription({
       status: opts.status ?? 'pending_card',
@@ -904,6 +906,17 @@ describe('방치된 구독 종료·파기 (1년)', () => {
         subscriptionId: subId,
         orderId,
         attemptedAt: opts.failed.attemptedAt,
+      });
+    }
+    if (opts.pending) {
+      const orderId = await addOrder({ type: 'subscription' });
+      await addSubscriptionPayment({
+        subscriptionId: subId,
+        orderId,
+        attemptedAt: opts.pending.attemptedAt,
+        status: 'pending',
+        tossCode: null,
+        tossMessage: null,
       });
     }
     return subId;
@@ -949,6 +962,18 @@ describe('방치된 구독 종료·파기 (1년)', () => {
     expect((await subOf(id)).status).toBe('paused');
   });
 
+  /**
+   * 생성일 가드. `created_at`이 최근이면 `updated_at`이 아무리 낡아도 대상이 아니다 —
+   * 날짜를 잘못 적어 만든 구독이 만들자마자 닫히는 것을 막는 조건이다.
+   */
+  it('만든 지 1년이 안 됐으면 updated_at이 낡아도 대상이 아니다', async () => {
+    const id = await addDormant({ createdAt: '2026-06-01', updatedAt: '2015-01-01' });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    const row = await subOf(id);
+    expect(row.status).toBe('pending_card');
+    expect(row.customerName).toBe('박구독');
+  });
+
   it('1년 안에 빌링키를 발급했으면 방치가 아니다', async () => {
     const id = await addDormant({ status: 'paused', createdAt: '2015-01-01' });
     await mockDb.insert(billingKeys).values({
@@ -959,6 +984,64 @@ describe('방치된 구독 종료·파기 (1년)', () => {
     });
     expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
     expect((await subOf(id)).status).toBe('paused');
+  });
+
+  /** 폐기도 활동이다 — 카드를 끊은 것이 1년 안이면 그 구독은 아직 손이 닿은 것이다. */
+  it('1년 안에 빌링키를 폐기했으면 방치가 아니다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01' });
+    await mockDb.insert(billingKeys).values({
+      subscriptionId: id,
+      billingKey: 'bkey_revoked',
+      issuedAt: d('2015-02-01'),
+      revokedAt: d('2026-07-01'),
+      createdAt: d('2015-02-01'),
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 0 });
+    expect((await subOf(id)).status).toBe('paused');
+  });
+
+  it('발급·폐기가 모두 1년보다 앞선 빌링키는 방치 판정을 막지 못한다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01' });
+    await mockDb.insert(billingKeys).values({
+      subscriptionId: id,
+      billingKey: 'bkey_old',
+      issuedAt: d('2015-02-01'),
+      revokedAt: d('2016-02-01'),
+      createdAt: d('2015-02-01'),
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 1, ended: 1 });
+  });
+
+  /**
+   * NETWORK_ERROR로 끝난 회차는 `pending`으로 남고, 그 대사는 다음 청구 때 도는데
+   * `paused`·`pending_card`는 영원히 청구되지 않는다. "계약 미성립"으로 보고 연락처를
+   * 덮으면 뒤늦게 승인이 확인돼도 환불 연락을 보낼 수단이 없다.
+   */
+  it('결판나지 않은 회차가 남아 있으면 파기하지 않는다 — 전이는 시킨다', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2020-01-01',
+      displayName: '익명의 후원자',
+      pending: { attemptedAt: '2020-02-01' },
+    });
+    expect(await closeDormantSubscriptions(NOW)).toEqual({ purged: 0, ended: 1 });
+    const row = await subOf(id);
+    // 영영 안 닫히면 이 함수가 메우려던 구멍으로 되돌아간다 — 닫되 파기만 미룬다.
+    expect(row.status).toBe('ended');
+    expect(row.customerName).toBe('박구독');
+    expect(row.customerEmail).toBe('sub@example.com');
+    expect(row.displayName).toBe('익명의 후원자');
+  });
+
+  it('결과를 못 받은 회차 뒤에는 법정 5년이 받는다', async () => {
+    const id = await addDormant({
+      status: 'paused',
+      createdAt: '2015-01-01',
+      pending: { attemptedAt: '2015-02-01' },
+    });
+    expect((await closeDormantSubscriptions(NOW)).ended).toBe(1);
+    expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(1);
+    expect((await subOf(id)).customerName).toBe(PURGED_MARK);
   });
 
   it('결제 이력이 없으면 종료로 넘기고 그 자리에서 고객 정보를 파기한다', async () => {

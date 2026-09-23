@@ -363,8 +363,8 @@ export const purgeExpiredSubscriptionCancelReasons = async (
  * 끝나지 못한 채 방치된 구독을 "방치"로 판정하는 기간.
  *
  * **법이 정한 것이 아니라 운영 판단이다.** 아래 `closeDormantSubscriptions`의 대상은
- * `pending_card`(카드 등록 전)와 `paused`(재시도 한도 소진)인데, 이 둘은 **어떤 코드도
- * `ended`로 넘기지 않는다** — 유일한 전이 경로인 `lib/billing/service.ts`의
+ * `pending_card`(카드 등록 전)와 `paused`(재시도 한도 소진 **또는 운영자가 청구를 멈춰 둔 것**)
+ * 인데, 이 둘은 **어떤 코드도 `ended`로 넘기지 않는다** — 유일한 전이 경로인 `lib/billing/service.ts`의
  * `endExpiredSubscriptions`가 `status = 'cancelled' AND ends_at <= now`에서만 돈다.
  * 즉 고객이 카드 등록 링크를 열지 않고 사라지거나 카드가 계속 거절되어 멈춘 구독은
  * 영영 `ended`가 되지 않고, `ended`를 요구하는 구독 파기 셋이 전부 비켜 가 이름·연락처·
@@ -384,6 +384,20 @@ export const SUBSCRIPTION_DORMANCY_YEARS = 1;
  * `past_due`는 재시도 대기 중이라 둘 다 살아 있다. `cancelled`는 해지 예약이라
  * `endExpiredSubscriptions`가 `ends_at`이 지나면 `ended`로 넘긴다 — 이미 경로가 있는 것을
  * 여기서 또 건드리면 두 개의 종료 규칙이 생긴다. `ended`는 이미 끝났다.
+ *
+ * ## ⚠ `paused`는 두 가지인데 구분하는 컬럼이 없다
+ *
+ * 재시도 한도를 소진해 시스템이 세운 것과, 운영자가 청구만 멈춘 것(`pauseSubscription`,
+ * `lib/billing/service.ts`)이 **같은 `paused`를 쓴다.** 뒤쪽은 카드가 그대로 살아 있는
+ * 정상 구독이다. 그래서 운영자가 1년 넘게 세워 둔 구독이 여기서 방치로 판정돼 `ended`가
+ * 되면 **되돌릴 길이 없다** — `resumeSubscription`은 `paused`만 받고, 관리자 화면의 '결제'
+ * 버튼도 `ended`를 제외한다. 알림도 나가지 않는다. 이 함수가 "살아 있는 구독을 닫는"
+ * 조합은 지금 이것 하나뿐이다.
+ *
+ * 제대로 고치려면 두 `paused`를 가르는 컬럼이 필요하다(예: `paused_by`). 컬럼을 더하는 것은
+ * 마이그레이션이라 여기서 하지 않았고, 그 전까지는 **운영자가 구독을 1년 넘게 세워 두지
+ * 않는 것**이 유일한 방어다. 처리방침 18항 ⑬도 이 사실대로 "결제 실패로 정지되었거나
+ * 운영자가 청구를 멈춰 둔 정기결제"라고 적는다 — 문서가 한쪽만 말하면 고지가 거짓이 된다.
  */
 const DORMANT_STATUSES = ['pending_card', 'paused'] as const;
 
@@ -421,6 +435,8 @@ export interface DormantSubscriptionResult {
  *   주석과 같은 판정이다. 그래서 **그 자리에서 이름·연락처·이메일을 파기한다.**
  *   후원자 표시 이름도 함께 지운다 — `pending_card`·`paused`는 공개 명단에서 이미 빠져
  *   있어(`lib/artistSupport/supporters.ts`) 목적이 남아 있지 않다.
+ * - **`pending` 회차가 남아 있는 구독**: 결판나지 않은 결제다. 파기 분기에서만 빼고 전이는
+ *   시킨다 — 자세한 이유는 아래 `neverPaid`의 주석에 적었다.
  * - **`paid` 회차가 있는 구독**: 계약과 대금결제 기록이 있어 5년 보존 대상이다. 여기서는
  *   **종료로 판정만 하고 고객 정보는 건드리지 않는다.** `ended`가 되는 순간부터
  *   `purgeExpiredSubscriptionCustomerData`(5년)·`purgeExpiredSubscriptionCancelReasons`(3년)·
@@ -466,7 +482,9 @@ export interface DormantSubscriptionResult {
  * 파기가 먼저, 전이가 나중이다. 전이가 먼저 돌면 상태가 `ended`로 바뀌어 같은 실행의
  * 파기 조건(`DORMANT_STATUSES`)에서 빠져나가고, 결제 이력이 없는 구독이 5년을 더 기다리게
  * 된다. 한 함수에 묶어 둔 이유도 그것이다 — 크론에서 둘로 갈라 각자 try/catch에 넣으면
- * 파기만 실패하고 전이가 성공하는 조합이 생긴다.
+ * 파기만 실패하고 전이가 성공하는 조합이 생긴다. **한 함수에 두는 것만으로는 부족해서**
+ * 두 UPDATE를 `db.batch`(libsql 트랜잭션)로 묶는다 — 따로 보내면 함수 안에서도 그 사이에
+ * 죽을 수 있고, 그러면 "고객 정보 없는 pending_card"가 그대로 남는다.
  *
  * `updated_at`은 갱신하지 않는다 — 위 파기들과 같은 이유이고, 여기서는 특히 그 값이 이
  * 함수가 넘긴 행의 법정 5년 기산점이 된다. 갱신하면 그 시계가 통째로 되감긴다.
@@ -508,40 +526,78 @@ export const closeDormantSubscriptions = async (
     ),
   );
 
-  const neverPaid = notExists(
-    db
-      .select({ one: sql`1` })
-      .from(subscriptionPayments)
-      .where(
-        and(
-          eq(subscriptionPayments.subscriptionId, subscriptions.id),
-          eq(subscriptionPayments.status, 'paid'),
+  /**
+   * 결제 이력이 없고 **결판나지 않은 회차도 없는** 구독.
+   *
+   * `paid`가 0건인지만 보면 부족하다. 회차 결제가 NETWORK_ERROR로 끝나면 회차는 `pending`으로
+   * 남고, 그 대사(對査)는 **다음 청구 때** 도는데 `paused`·`pending_card`는 영원히 청구되지
+   * 않는다. `payments` 행도 없어 `paymentMismatch` 헬스체크에도 걸리지 않는다. 그 상태로
+   * 1년이 지나면 "계약 미성립"으로 판정해 연락처를 덮게 되고, 뒤늦게 승인이 확인돼도
+   * **환불 연락을 보낼 수단이 남지 않는다.**
+   *
+   * 그래서 `pending` 회차가 하나라도 있으면 **파기 분기에서만** 뺀다. `dormant` 자체에서
+   * 빼면 그 구독은 영영 닫히지 않아 이 함수가 메우려던 구멍으로 되돌아간다 — 전이는 시키고,
+   * 뒤는 `purgeExpiredSubscriptionCustomerData`의 법정 5년이 받는다.
+   */
+  const neverPaid = and(
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            eq(subscriptionPayments.status, 'paid'),
+          ),
         ),
-      ),
+    ),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            eq(subscriptionPayments.status, 'pending'),
+          ),
+        ),
+    ),
   );
 
-  const purgeResult = await db
-    .update(subscriptions)
-    .set({
-      customerName: PURGED_MARK,
-      customerPhone: PURGED_MARK,
-      customerEmail: PURGED_MARK,
-      displayName: null,
-    })
-    .where(
-      and(
-        dormant,
-        neverPaid,
-        or(
-          ne(subscriptions.customerName, PURGED_MARK),
-          ne(subscriptions.customerPhone, PURGED_MARK),
-          ne(subscriptions.customerEmail, PURGED_MARK),
-          isNotNull(subscriptions.displayName),
+  /**
+   * 파기와 전이는 **한 트랜잭션**이어야 한다.
+   *
+   * 두 UPDATE를 따로 보내면 그 사이에서 죽었을 때 `customer_email = '(개인정보 파기됨)'`인
+   * `pending_card`가 남는다. 관리자 상세의 '카드 등록 링크 재발급' 버튼은 `pending_card`에서만
+   * 뜨고, 그 버튼은 파기 표식이 든 주소로 메일을 보내려 든다 — 이 함수가 "파기만 하면
+   * 안 되는 이유"로 적어 둔 상태 그대로다. `db.batch`는 libsql이 트랜잭션으로 실행한다.
+   *
+   * 순서는 파기가 먼저다. 전이가 먼저 돌면 상태가 `ended`로 바뀌어 같은 배치의 파기 조건
+   * (`DORMANT_STATUSES`)에서 빠져나간다.
+   */
+  const [purgeResult, endResult] = await db.batch([
+    db
+      .update(subscriptions)
+      .set({
+        customerName: PURGED_MARK,
+        customerPhone: PURGED_MARK,
+        customerEmail: PURGED_MARK,
+        displayName: null,
+      })
+      .where(
+        and(
+          dormant,
+          neverPaid,
+          or(
+            ne(subscriptions.customerName, PURGED_MARK),
+            ne(subscriptions.customerPhone, PURGED_MARK),
+            ne(subscriptions.customerEmail, PURGED_MARK),
+            isNotNull(subscriptions.displayName),
+          ),
         ),
       ),
-    );
-
-  const endResult = await db.update(subscriptions).set({ status: 'ended' }).where(dormant);
+    db.update(subscriptions).set({ status: 'ended' }).where(dormant),
+  ]);
 
   return { purged: Number(purgeResult.rowsAffected ?? 0), ended: Number(endResult.rowsAffected ?? 0) };
 };
