@@ -61,6 +61,15 @@ const yearsAgo = (now: Date, years: number): Date => {
  * 생기면 이 판단을 다시 봐야 한다 — 그 화면이 배포 후 1년 넘은 메시지까지 보여줘야
  * 한다면, 이 함수가 그 메시지를 먼저 지워 화면이 깨질 수 있다.
  *
+ * **여기서 일부러 빼는 것: `fulfillment_updated_by`.** 발송 상태를 마지막으로 바꾼 주체
+ * (`'admin'` 또는 `'creator:<id>'`, `lib/funding/fulfillment.ts`가 채운다)는 후원자의
+ * 개인정보가 아니라 운영자·개설자 쪽 행위자 식별자다 — 이 함수가 지우는 배송지·admin_memo·
+ * supporterMessage는 전부 "후원자가 우리에게 준 개인정보"라 처리방침 8항의 파기 약속이
+ * 걸리지만, 이 컬럼은 그 대상이 아니다. 값에 `creator:<id>`가 들어 있어 "식별자니까 지우자"는
+ * 판단이 나올 수 있는데, 그렇게 하면 "누가 발송 상태를 바꿨는지"에 대한 감사 기록이 배송지와
+ * 같은 시점에 사라진다 — `retention.test.ts`의 "파기 후에도 fulfillment_updated_by는
+ * 남는다"가 이 컬럼이 `.set()`에 실수로 섞여 들어가는 것을 잡는다.
+ *
  * **여기서 다루지 않는 것: `orders.customer_name`·`customer_phone`·`customer_email`.**
  * 이 값은 `orders` 테이블에 있고, 그 테이블은 예약·레슨 등 펀딩이 아닌 주문도 함께 쓴다.
  * 전자상거래법이 정한 "계약 또는 청약철회 등에 관한 기록"(5년) 자체가 이 값이라, 펀딩

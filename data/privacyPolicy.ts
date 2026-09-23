@@ -76,7 +76,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '개인정보 처리방침',
     subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 9월 21일',
+    lastUpdatedValue: '2026년 9월 22일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
@@ -118,7 +118,12 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '9. 펀딩 개인정보의 처리위탁',
-        body: '펀딩 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 처리방침으로 알립니다.',
+        body:
+          '펀딩 처리를 위해 아래와 같이 개인정보 처리를 위탁하고 있으며, 수탁자가 바뀌면 이 ' +
+          '처리방침으로 알립니다. 프로젝트를 직접 등록한 개설자에게는 모금이 마감된 뒤 배송 ' +
+          '리워드의 발송에 필요한 항목만 제공하며, 개설자는 그 정보를 리워드 발송과 배송 문의 ' +
+          '응대에만 사용하고 발송을 마친 뒤 지체 없이 파기해야 합니다. 스튜디오가 직접 운영하는 ' +
+          '프로젝트는 스튜디오가 발송하므로 개설자에게 제공하는 정보가 없습니다.',
         processors: FUNDING_DATA_PROCESSORS,
       },
       // 10~12항은 음원 발매 홍보 업무 전용이다. 이 업무는 정보주체(기자·매체)가 아닌

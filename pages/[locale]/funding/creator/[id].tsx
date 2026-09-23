@@ -281,6 +281,20 @@ export default function CreatorProjectEditor({
             섞이지 않게 한다. */}
         {stats && <ProjectStatsPanel stats={stats} />}
 
+        {/*
+          승인 전에는 후원이 있을 수 없으니 배송지 화면도 성립하지 않는다 — 링크를
+          숨긴다(canSubmitForReview 등 다른 승인 판정과 같은 조건, reviewTransition.ts의
+          전이표가 approved 이전 상태에서 배송지를 만들 방법을 두지 않는다).
+        */}
+        {project.reviewStatus === 'approved' && (
+          <Link
+            href={`/ko/funding/creator/${encodeURIComponent(project.id)}/shipping`}
+            className="mt-3 inline-block typo-caption text-primary underline underline-offset-2 dark:text-primary-lighter"
+          >
+            배송지 보기
+          </Link>
+        )}
+
         <nav role="tablist" aria-label="편집 구획" className="mt-8 flex gap-2 border-b border-gray-200 dark:border-gray-700">
           {TABS.map((t) => (
             <button

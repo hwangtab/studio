@@ -12,8 +12,21 @@ jest.mock('../../../../../lib/funding/repository', () => ({ getFundingProjectAsy
 const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
 // set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
 const mockRun = jest.fn().mockResolvedValue({ rowsAffected: 1 });
+// setFulfillment(lib/funding/fulfillment.ts)는 pledgeId만 받아 db.query.fundingPledges로
+// 자기 손으로 다시 읽는다. 이 목은 findFundingOrderById가 그때그때 돌려주는 값을 그대로
+// pledge-중심 모양으로 뒤집어 준다 — 두 목이 어긋나면 라우트가 보는 것과 setFulfillment가
+// 보는 것이 달라져 테스트가 실제로 확인하려는 분기와 다른 분기를 타게 된다.
+const mockPledgeFindFirst = jest.fn(async () => {
+  const order = await (findFundingOrderById as unknown as () => Promise<typeof BASE_ORDER | undefined>)();
+  if (!order?.fundingPledge) return undefined;
+  return { ...order.fundingPledge, order: { id: order.id, status: order.status } };
+});
 jest.mock('../../../../../db/client', () => ({
-  getDb: jest.fn(() => ({ update: mockUpdate, run: mockRun })),
+  getDb: jest.fn(() => ({
+    update: mockUpdate,
+    run: mockRun,
+    query: { fundingPledges: { findFirst: mockPledgeFindFirst } },
+  })),
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';

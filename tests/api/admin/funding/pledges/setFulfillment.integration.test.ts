@@ -128,29 +128,58 @@ it('빈 문자열 운송장은 null로 저장된다', async () => {
   expect(row.tracking_number).toBeNull();
 });
 
+// 사전 검사(라우트가 읽은 최신 스냅샷 그대로) 경로. 아래 경합 테스트는 findFundingOrderById를
+// 낡은 스냅샷으로 모킹해 WHERE만 남기므로, 이 사전 검사 분기 자체는 별도로 고정해 둔다.
+it('이미 환불 요청된 펀딩은 사전 검사에서 바로 409', async () => {
+  await client.execute("UPDATE funding_pledges SET refund_requested_at = unixepoch() WHERE id = 'pledge-1'");
+  const r = await call({ action: 'set_fulfillment', fulfillmentStatus: 'delivered' });
+  expect(r.status).toBe(409);
+  expect(r.body.message).toContain('환불 요청된 펀딩');
+  const row = await pledgeRow();
+  expect(row.fulfillment_status).toBe('none');
+  expect(row.delivered_at).toBeNull();
+});
+
 /**
  * 읽고-검사-쓰기 경합의 재현. findFundingOrderById가 돌려준 스냅샷은 여전히
  * refund_requested_at IS NULL이지만, 그 사이 DB에는 환불 요청이 들어와 있다. 가드가
  * WHERE에 없으면 이 UPDATE가 그대로 성립해 청약철회한 건이 '발송완료'로 굳는다.
+ *
+ * 라우트가 set_fulfillment 전체에 공유하는 최상단 findFundingOrderById 호출만 이 모킹으로
+ * 낡게 만들 수 있다. setFulfillment(lib/funding/fulfillment.ts)는 pledgeId만 받아 그 안에서
+ * **스스로 다시** 최신 상태를 읽으므로(자기 손으로 신선하게 읽는 것이 이 함수의 안전장치다),
+ * 이 낡은 스냅샷을 보지 않는다 — 그래서 사전 검사가 먼저 걸려 '환불 요청된 펀딩입니다'
+ * 메시지로 409가 난다. 원자적 UPDATE의 WHERE는 사전 검사와 UPDATE 사이의 아주 좁은 창을
+ * 막는 2차 방어선으로 남아 있고(fulfillment.ts의 해당 주석 참조), 이 테스트는 이제 그 WHERE
+ * 자체가 아니라 사전 검사가 같은 결과를 내는 것을 본다. 진짜로 지키는 불변식(409, DB 행
+ * 불변)은 그대로다 — 메시지가 다르다고 되돌리지 말 것.
  */
-it('읽은 뒤 환불 요청이 들어오면 UPDATE가 0행 — 409, 상태를 바꾸지 않는다', async () => {
+it('읽은 뒤 환불 요청이 들어오면 사전 검사가 먼저 잡는다 — 409, 상태를 바꾸지 않는다', async () => {
   // 라우트가 읽는 시점의 스냅샷(환불 요청 없음)을 그대로 붙잡아 둔다.
   const stale = await jest.requireActual('../../../../../lib/funding/service').findFundingOrderById('order-1');
   expect(stale.fundingPledge.refundRequestedAt).toBeNull();
   await client.execute("UPDATE funding_pledges SET refund_requested_at = unixepoch() WHERE id = 'pledge-1'");
   (findFundingOrderById as jest.Mock).mockResolvedValueOnce(stale);
 
-  // 사전 검사는 낡은 스냅샷을 보고 통과한다 — 여기서 409가 나오는 이유는 WHERE뿐이다.
+  // 라우트 최상단의 findFundingOrderById 호출은 낡은 스냅샷을 본다. 하지만 setFulfillment가
+  // 내부에서 다시 읽으므로 실제로 409를 내는 것은 그 신선한 사전 검사다.
   const r = await call({ action: 'set_fulfillment', fulfillmentStatus: 'delivered' });
   expect(r.status).toBe(409);
-  expect(r.body.message).toContain('새로고침');
+  expect(r.body.message).toContain('환불 요청된 펀딩');
   const row = await pledgeRow();
   expect(row.fulfillment_status).toBe('none');
   expect(row.delivered_at).toBeNull();
 });
 
 // 같은 경합이 주문 상태 쪽에서도 난다 — 관리자 환불이 먼저 커밋되면 발송은 성립하면 안 된다.
-it('읽은 뒤 주문이 환불되면 UPDATE가 0행 — 409', async () => {
+//
+// 위 환불 요청 테스트와 같은 이유로, 여기서 409를 내는 것도 이제 WHERE가 아니라 setFulfillment의
+// 신선한 not_live 사전 검사다 — 라우트 최상단의 findFundingOrderById만 낡게 만들 수 있고,
+// setFulfillment는 pledgeId로 스스로 다시 읽으므로 그 낡은 스냅샷을 보지 않는다. 원자적
+// UPDATE의 WHERE(EXISTS ... o.status IN (...))는 사전 검사와 UPDATE 사이의 좁은 경합 창을
+// 막는 2차 방어선으로 fulfillment.ts에 남아 있다 — 진짜로 지키는 불변식(409, DB 행 불변)은
+// 그대로다.
+it('읽은 뒤 주문이 환불되면 사전 검사가 먼저 잡는다 — 409', async () => {
   const stale = await jest.requireActual('../../../../../lib/funding/service').findFundingOrderById('order-1');
   expect(stale.status).toBe('paid');
   await client.execute("UPDATE orders SET status = 'refunded' WHERE id = 'order-1'");

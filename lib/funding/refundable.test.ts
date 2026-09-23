@@ -57,7 +57,7 @@ const LIVE_STATUS_CONSUMERS = [
   'lib/funding/admin-list.ts',
   'lib/funding/cancel.ts',
   'lib/funding/confirm.ts',
-  'pages/api/admin/funding/pledges/[id].ts',
+  'lib/funding/fulfillment.ts',
   'pages/admin/funding/[id].tsx',
 ];
 
