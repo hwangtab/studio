@@ -1,11 +1,12 @@
 /** @jest-environment node */
 
 /**
- * 한 크론이 기준이 다른 열두 가지 파기를 나란히 돌린다.
+ * 한 크론이 기준이 다른 열세 가지 파기를 나란히 돌린다.
  *
  * - 주문 고객 이름·연락처: 전자상거래법 5년(생성일·최종 갱신일 둘 다 기준)
  * - 결제 실패 사유 원문: 실패 시각부터 1년(법정 보존이 아니라 운영 판단)
  * - 회차 결제 실패 사유 원문: 시도 시각부터 1년(같은 값의 같은 성질이라 같은 기준)
+ * - 방치된 구독: 마지막 활동 1년 뒤 `ended`로 전이(결제 이력이 없으면 그 자리에서 고객 정보 파기)
  * - 구독 고객 이름·연락처: **종료(`ended`)** 후 5년
  * - 후원자 표시 이름: 종료 즉시(공개 명단에서 빠지는 순간 목적이 끝난다)
  * - 구독 해지 사유: 해지 시각부터 3년(소비자 불만·분쟁 처리 기록)
@@ -21,6 +22,7 @@
  */
 jest.mock('../../../lib/cron/auth', () => ({ isCronAuthorized: jest.fn() }));
 jest.mock('../../../lib/privacy/orderRetention', () => ({
+  closeDormantSubscriptions: jest.fn(),
   purgeExpiredOrderCustomerData: jest.fn(),
   purgeExpiredPaymentFailMessages: jest.fn(),
   purgeExpiredSubscriptionCustomerData: jest.fn(),
@@ -37,6 +39,7 @@ jest.mock('../../../lib/privacy/orderRetention', () => ({
   DISPUTE_RETENTION_YEARS: 3,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS: 1,
   AVAILABILITY_MEMO_RETENTION_YEARS: 1,
+  SUBSCRIPTION_DORMANCY_YEARS: 1,
 }));
 jest.mock('../../../lib/email/resend', () => ({ sendEmail: jest.fn() }));
 
@@ -44,6 +47,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/cron/purge-orders';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import {
+  closeDormantSubscriptions,
   purgeEndedSubscriptionDisplayNames,
   purgeExpiredAvailabilityBlockMemos,
   purgeExpiredBookingCustomerNotes,
@@ -60,6 +64,7 @@ import {
 import { sendEmail } from '../../../lib/email/resend';
 
 const all = [
+  closeDormantSubscriptions,
   purgeExpiredOrderCustomerData,
   purgeExpiredPaymentFailMessages,
   purgeExpiredSubscriptionCustomerData,
@@ -89,6 +94,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(console, 'error').mockImplementation(() => {});
   (isCronAuthorized as jest.Mock).mockReturnValue(true);
+  (closeDormantSubscriptions as jest.Mock).mockResolvedValue({ purged: 13, ended: 14 });
   (purgeExpiredOrderCustomerData as jest.Mock).mockResolvedValue({ purged: 3 });
   (purgeExpiredPaymentFailMessages as jest.Mock).mockResolvedValue({ purged: 5 });
   (purgeExpiredSubscriptionCustomerData as jest.Mock).mockResolvedValue({ purged: 2 });
@@ -112,13 +118,15 @@ it('인증 없으면 401이고 아무것도 지우지 않는다', async () => {
   for (const fn of all) expect(fn).not.toHaveBeenCalled();
 });
 
-it('열두 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
+it('열세 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
   expect(r.body).toEqual({
     ok: true,
     purgedOrderCustomers: 3,
     purgedPaymentFailMessages: 5,
+    endedDormantSubscriptions: 14,
+    purgedDormantSubscriptionCustomers: 13,
     purgedSubscriptionCustomers: 2,
     purgedSubscriptionDisplayNames: 1,
     purgedSubscriptionCancelReasons: 4,
@@ -137,7 +145,9 @@ it('한 파기가 실패해도 나머지는 그대로 돈다', async () => {
   (purgeExpiredOrderCustomerData as jest.Mock).mockRejectedValue(new Error('no such column'));
   const r = await call();
   expect(r.status).toBe(500);
-  for (const fn of all.slice(1)) expect(fn).toHaveBeenCalledTimes(1);
+  for (const fn of all.filter((f) => f !== purgeExpiredOrderCustomerData)) {
+    expect(fn).toHaveBeenCalledTimes(1);
+  }
   // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
   expect(r.body).toMatchObject({
     ok: false,
@@ -169,4 +179,29 @@ it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () =
   expect(mail.text).toContain('DB 장애');
   expect(mail.text).toContain('해지 후 3년');
   expect(mail.text).toContain('no such column: cancel_reason');
+});
+
+/**
+ * 방치 종료가 **구독 파기들보다 먼저** 돌아야 한다. 그 호출이 `ended`로 넘긴 행을 같은
+ * 회차의 표시 이름·해지 사유·고객 정보 파기가 받아 가기 때문이다 — 순서가 뒤집히면
+ * 방치 구독의 파기가 매달 한 달씩 밀린다.
+ */
+it('방치 종료가 구독 파기들보다 먼저 돈다', async () => {
+  await call();
+  const order = (fn: unknown) => (fn as jest.Mock).mock.invocationCallOrder[0];
+  expect(order(closeDormantSubscriptions)).toBeLessThan(order(purgeExpiredSubscriptionCustomerData));
+  expect(order(closeDormantSubscriptions)).toBeLessThan(order(purgeEndedSubscriptionDisplayNames));
+  expect(order(closeDormantSubscriptions)).toBeLessThan(order(purgeExpiredSubscriptionCancelReasons));
+  expect(order(closeDormantSubscriptions)).toBeLessThan(order(purgeUnusableBillingKeyRawResponses));
+});
+
+it('방치 종료가 실패해도 나머지 파기는 그대로 돈다', async () => {
+  (closeDormantSubscriptions as jest.Mock).mockRejectedValue(new Error('no such column: status'));
+  const r = await call();
+  expect(r.status).toBe(500);
+  expect(r.body).toMatchObject({
+    endedDormantSubscriptions: null,
+    purgedDormantSubscriptionCustomers: null,
+    purgedSubscriptionCustomers: 2,
+  });
 });

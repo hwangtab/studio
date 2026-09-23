@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, lt, ne, or } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNotNull, isNull, lt, ne, notExists, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
@@ -357,6 +357,193 @@ export const purgeExpiredSubscriptionCancelReasons = async (
     );
 
   return rows(result);
+};
+
+/**
+ * 끝나지 못한 채 방치된 구독을 "방치"로 판정하는 기간.
+ *
+ * **법이 정한 것이 아니라 운영 판단이다.** 아래 `closeDormantSubscriptions`의 대상은
+ * `pending_card`(카드 등록 전)와 `paused`(재시도 한도 소진)인데, 이 둘은 **어떤 코드도
+ * `ended`로 넘기지 않는다** — 유일한 전이 경로인 `lib/billing/service.ts`의
+ * `endExpiredSubscriptions`가 `status = 'cancelled' AND ends_at <= now`에서만 돈다.
+ * 즉 고객이 카드 등록 링크를 열지 않고 사라지거나 카드가 계속 거절되어 멈춘 구독은
+ * 영영 `ended`가 되지 않고, `ended`를 요구하는 구독 파기 셋이 전부 비켜 가 이름·연락처·
+ * 이메일이 기한 없이 남는다. 제21조①이 말하는 "불필요하게 되었을 때"가 그 상태다.
+ *
+ * 1년으로 잡은 이유는 되돌아올 여지다. 카드를 다시 등록하면 `pending_card`·`paused` 모두
+ * 그 자리에서 이어지므로(`SETUP_ALLOWED_STATUSES`), 몇 달 쉬었다 돌아오는 고객을
+ * 끊지 않을 만큼은 둬야 한다. 값을 바꾸려면 이 상수 하나만 고치면 되고, 함께 고쳐야 하는
+ * 문서는 처리방침의 파기 항이다.
+ */
+export const SUBSCRIPTION_DORMANCY_YEARS = 1;
+
+/**
+ * 방치 판정의 대상 상태.
+ *
+ * **`active`·`past_due`·`cancelled`는 대상이 아니다.** `active`는 청구가 돌고 있고,
+ * `past_due`는 재시도 대기 중이라 둘 다 살아 있다. `cancelled`는 해지 예약이라
+ * `endExpiredSubscriptions`가 `ends_at`이 지나면 `ended`로 넘긴다 — 이미 경로가 있는 것을
+ * 여기서 또 건드리면 두 개의 종료 규칙이 생긴다. `ended`는 이미 끝났다.
+ */
+const DORMANT_STATUSES = ['pending_card', 'paused'] as const;
+
+export interface DormantSubscriptionResult {
+  /** 결제 이력이 없어 이번에 이름·연락처·이메일을 파기한 구독 수. */
+  purged: number;
+  /** 방치로 판정해 `ended`로 넘긴 구독 수(파기한 것과 5년 대기로 넘긴 것을 합한 수). */
+  ended: number;
+}
+
+/**
+ * 끝나지 못한 채 방치된 구독을 닫고, 계약이 성립하지 않은 것은 그 자리에서 파기한다.
+ *
+ * ## "방치"를 무엇으로 봤는가
+ *
+ * **마지막 활동으로부터 `SUBSCRIPTION_DORMANCY_YEARS`년이 지났고, 그동안 어떤 활동의
+ * 증거도 없는 것.** 구체적으로 네 가지를 전부 요구한다.
+ *
+ * - `updated_at`이 기준선보다 이전 — 청구·정지·카드 등록·해지·알림 오류 기록이 전부 이
+ *   값을 올린다(`lib/billing/service.ts`). 사실상 마지막 활동 시각이다.
+ * - `created_at`도 기준선보다 이전 — 날짜를 잘못 적어 만든 구독이 만들자마자 대상이 되는
+ *   것을 막는다(`lib/contracts/retention.ts`·위 구독 고객 정보 파기와 같은 이유).
+ * - 기준선 이후에 시도된 회차 결제가 없다(`subscription_payments.attempted_at`).
+ * - 기준선 이후에 발급되거나 폐기된 빌링키가 없다(`billing_keys.issued_at`·`revoked_at`).
+ *
+ * 뒤의 둘은 `updated_at`과 겹칠 가능성이 높지만, **겹치는 쪽이 안전한 방향이다** — 활동의
+ * 증거가 한 군데라도 있으면 살아 있는 것으로 보고 파기하지 않는다. `updated_at` 하나에
+ * 기대면 그 갱신을 빠뜨린 경로가 생기는 순간 살아 있는 구독이 조용히 닫힌다.
+ *
+ * ## 결제 이력으로 갈린다
+ *
+ * - **`paid` 회차가 한 건도 없는 구독**: 계약이 성립하지 않았고 오간 대금도 없다.
+ *   전자상거래법이 5년 보존을 요구하는 "계약 또는 청약철회 등에 관한 기록"도 "대금결제 및
+ *   재화등의 공급에 관한 기록"도 아니다 — 위 `PAYMENT_FAIL_MESSAGE_RETENTION_YEARS`의
+ *   주석과 같은 판정이다. 그래서 **그 자리에서 이름·연락처·이메일을 파기한다.**
+ *   후원자 표시 이름도 함께 지운다 — `pending_card`·`paused`는 공개 명단에서 이미 빠져
+ *   있어(`lib/artistSupport/supporters.ts`) 목적이 남아 있지 않다.
+ * - **`paid` 회차가 있는 구독**: 계약과 대금결제 기록이 있어 5년 보존 대상이다. 여기서는
+ *   **종료로 판정만 하고 고객 정보는 건드리지 않는다.** `ended`가 되는 순간부터
+ *   `purgeExpiredSubscriptionCustomerData`(5년)·`purgeExpiredSubscriptionCancelReasons`(3년)·
+ *   `purgeEndedSubscriptionDisplayNames`·`purgeUnusableBillingKeyRawResponses`가 이 행을
+ *   맡는다.
+ *
+ * ## 왜 파기가 아니라 상태 전이인가
+ *
+ * 결제 이력이 있는 쪽은 **전이 말고는 길이 없다.** 기존 구독 파기 셋이 전부
+ * `status = 'ended'`를 요구하므로, 상태를 그대로 두고 파기 조건만 넓히면 같은 5년 판정이
+ * 두 벌로 갈라져 한쪽이 먼저 낡는다. 결제 이력이 없는 쪽도 같이 넘기는 이유는 **파기만
+ * 하면 "고객 정보 없는 pending_card"가 남기 때문이다** — 관리자 상세 화면의 '카드 등록
+ * 링크 재발급' 버튼은 `pending_card`에서만 뜨고(`pages/admin/subscriptions/[id].tsx`),
+ * 그 버튼은 파기 표식이 들어간 주소로 메일을 보내려 든다.
+ *
+ * ## 전이가 건드리는 것 (전수 확인)
+ *
+ * - `SETUP_ALLOWED_STATUSES`: 카드 등록·변경 링크가 막힌다. 링크 자체가 7일 만료라
+ *   1년 방치 구독에는 이미 유효한 토큰이 없다.
+ * - `OCCUPYING_STATUSES`: 같은 계약에 구독을 새로 만들 수 있게 된다. 방치된 행이 계약
+ *   하나를 영구히 점유하던 상태가 풀린다.
+ * - `REACTIVATABLE_STATUSES`: 뒤늦은 승인이 이 구독을 되살리지 못한다. 대신 회차 기록은
+ *   그대로 남고 운영자에게 `late_approval` 메일이 간다(`lib/billing/service.ts`) —
+ *   1년 방치 뒤 도착한 승인은 되살릴 것이 아니라 환불 판단 대상이라 이 쪽이 맞다.
+ * - `listDueSubscriptions`는 `active`·`past_due`만 집어 가므로 청구에는 변화가 없다.
+ * - 관리자 대시보드의 '주의' 집계(`lib/ops/adminDashboard.ts`)에서 빠진다.
+ * - 고객 관리 화면(`pages/[locale]/subscribe/manage/[id].tsx`)은 '종료'로 표시하고
+ *   해지 버튼을 감춘다 — 청구가 돌지 않는 행이라 맞는 표시다.
+ * - 헬스체크의 '해지된 구독에 결제가 남아 있는 건'(`lib/ops/healthCheck.ts`)은
+ *   `cancelled`·`ended` 구독에 `paid` 주문이 있으면 뜬다. 결제 이력이 있는 쪽을 넘기면
+ *   그 항목에 잡힌다. 방치된 구독을 운영자가 한 번 보는 것 자체는 맞는 방향이지만,
+ *   그 검사에 "종료 이후에 들어온 결제"라는 조건이 없다는 점은 이 함수 밖의 문제다.
+ *
+ * ## `ends_at`을 채우지 않는 이유
+ *
+ * 그 칸의 뜻은 "이미 결제한 기간의 끝"이다(`db/schema.ts`). 방치 구독에 지금 시각을 적으면
+ * 결제하지도 않은 기간을 이용한 것으로 기록하는 셈이다. 비워 두면 5년 파기가 `updated_at`을
+ * 대체 기산점으로 쓰므로(`purgeExpiredSubscriptionCustomerData`), 법정 5년은 **마지막 활동
+ * 시각**부터 센다 — 전자상거래법이 세는 대상이 그 기록이라 기산점으로도 맞다.
+ *
+ * ## 순서
+ *
+ * 파기가 먼저, 전이가 나중이다. 전이가 먼저 돌면 상태가 `ended`로 바뀌어 같은 실행의
+ * 파기 조건(`DORMANT_STATUSES`)에서 빠져나가고, 결제 이력이 없는 구독이 5년을 더 기다리게
+ * 된다. 한 함수에 묶어 둔 이유도 그것이다 — 크론에서 둘로 갈라 각자 try/catch에 넣으면
+ * 파기만 실패하고 전이가 성공하는 조합이 생긴다.
+ *
+ * `updated_at`은 갱신하지 않는다 — 위 파기들과 같은 이유이고, 여기서는 특히 그 값이 이
+ * 함수가 넘긴 행의 법정 5년 기산점이 된다. 갱신하면 그 시계가 통째로 되감긴다.
+ */
+export const closeDormantSubscriptions = async (
+  now: Date = new Date(),
+): Promise<DormantSubscriptionResult> => {
+  const db = getDb();
+  const boundary = yearsAgo(now, SUBSCRIPTION_DORMANCY_YEARS);
+
+  const dormant = and(
+    inArray(subscriptions.status, [...DORMANT_STATUSES]),
+    lt(subscriptions.createdAt, boundary),
+    lt(subscriptions.updatedAt, boundary),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            gte(subscriptionPayments.attemptedAt, boundary),
+          ),
+        ),
+    ),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(billingKeys)
+        .where(
+          and(
+            eq(billingKeys.subscriptionId, subscriptions.id),
+            or(
+              gte(billingKeys.issuedAt, boundary),
+              and(isNotNull(billingKeys.revokedAt), gte(billingKeys.revokedAt, boundary)),
+            ),
+          ),
+        ),
+    ),
+  );
+
+  const neverPaid = notExists(
+    db
+      .select({ one: sql`1` })
+      .from(subscriptionPayments)
+      .where(
+        and(
+          eq(subscriptionPayments.subscriptionId, subscriptions.id),
+          eq(subscriptionPayments.status, 'paid'),
+        ),
+      ),
+  );
+
+  const purgeResult = await db
+    .update(subscriptions)
+    .set({
+      customerName: PURGED_MARK,
+      customerPhone: PURGED_MARK,
+      customerEmail: PURGED_MARK,
+      displayName: null,
+    })
+    .where(
+      and(
+        dormant,
+        neverPaid,
+        or(
+          ne(subscriptions.customerName, PURGED_MARK),
+          ne(subscriptions.customerPhone, PURGED_MARK),
+          ne(subscriptions.customerEmail, PURGED_MARK),
+          isNotNull(subscriptions.displayName),
+        ),
+      ),
+    );
+
+  const endResult = await db.update(subscriptions).set({ status: 'ended' }).where(dormant);
+
+  return { purged: Number(purgeResult.rowsAffected ?? 0), ended: Number(endResult.rowsAffected ?? 0) };
 };
 
 /**
