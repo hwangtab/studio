@@ -105,8 +105,10 @@ export const checkFieldCryptoKey = (): HealthIssue | null => {
       title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV}) ${state} — 주민등록번호를 저장·조회할 수 없습니다`,
       detail: [
         `상태: ${state} (code=${code})`,
-        '원천징수 대상 개설자가 정산 정보를 저장하면 계좌를 포함해 전부 거부되고, 이미 저장된 번호는 ' +
-          '운영자 조회에서도 열리지 않습니다. 정산 기록도 no_resident_number로 막힙니다.',
+        '개설자가 주민등록번호를 실제로 입력해 저장하면 그 저장이 계좌를 포함해 전부 거부됩니다 ' +
+          '(칸을 비운 채 계좌만 고치는 저장은 키 없이도 됩니다). 이미 저장된 번호는 운영자 조회에서 ' +
+          '열리지 않고, 그 개설자의 정산 기록은 resident_number_unreadable로 막힙니다 — 번호가 아예 ' +
+          '없을 때 나오는 no_resident_number와 다른 코드입니다.',
         `Vercel 환경 변수와 로컬 .env.local의 ${FIELD_CRYPTO_KEY_ENV}(base64 32바이트)를 확인해 주세요.`,
         '**이미 저장된 값이 있다면 키를 새로 만들지 마세요** — 옛 키로만 복호화됩니다. ' +
           '옛 키를 되찾을 수 없으면 개설자에게 다시 등록을 요청하는 것 외에 방법이 없습니다.',

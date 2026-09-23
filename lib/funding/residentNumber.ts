@@ -10,7 +10,7 @@ import { fundingCreators, fundingProjects } from '../../db/schema';
  * `payoutAccount.ts`와 같은 자리이되 **경로를 따로 둔다.** 계좌는 이체할 때마다 열고,
  * 이 번호는 지급명세서를 낼 때만 연다 — 같은 버튼에 묶으면 계좌만 보려던 조회에서도
  * 번호가 함께 복호화돼 응답에 실린다. 열람 기록도 "무엇을 열었는지"로 갈려야 사후에
- * 의미가 있다(개인정보보호법 §29 접속기록).
+ * 의미가 있다 — 개인정보 보호법이 요구하는 접속기록이다.
  *
  * 값은 **응답으로만** 나간다. `getServerSideProps`에서 부르지 마라 — Pages Router가 props를
  * `__NEXT_DATA__` JSON으로 페이지 HTML에 싣는다. 평문은 물론 암호문도 담지 않는다
