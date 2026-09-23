@@ -24,11 +24,23 @@ export interface FundingProjectActionResult {
  *   — 타입에서는 문자열이라는 것만 강제하고, 빈 문자열 거부는 여전히 서버 몫이다.
  * - `set_review_note`·`set_internal_note`는 메모만 갈아 끼운다. 둘 다 빈 값을 보낼 수
  *   있다(메모를 지우는 경로).
+ * - `close`·`reopen`·`hide`·`unhide`는 승인된 프로젝트의 공개 상태(status)·목록 노출
+ *   (hidden)을 바꾼다. 심사 판정과 다른 축이라 별도 액션이다(`lib/funding/publicStatusDecision.ts`).
+ *   `close`만 서버가 빈 메모를 거부한다 — 개설자가 "왜 멈췄는지" 알아야 하기 때문이다.
  */
 export type FundingProjectPatchBody =
   | { action: 'approve'; slug?: string; note?: string }
   | { action: 'request_changes' | 'reject' | 'archive'; note: string }
-  | { action: 'set_review_note' | 'set_internal_note'; note?: string };
+  | { action: 'set_review_note' | 'set_internal_note'; note?: string }
+  | { action: 'close'; note: string }
+  | { action: 'reopen' | 'hide' | 'unhide'; note?: string }
+  /**
+   * 개설자 계정(이름·로그인 이메일) 수정. 다른 액션과 달리 `note`가 아니라 `value`·`reason`을
+   * 보낸다 — 프로젝트의 `reviewNote`에 남기는 메모가 아니라 계정 변경의 사유이고, 서버는
+   * 그것을 어느 컬럼에도 저장하지 않고 개설자 메일과 서버 로그로만 남긴다
+   * (`lib/funding/creatorAccountDecision.ts`). 둘 다 서버가 빈 값을 거부한다.
+   */
+  | { action: 'set_creator_name' | 'set_creator_email'; value: string; reason: string };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {
   try {

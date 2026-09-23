@@ -12,6 +12,7 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
+import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
@@ -131,12 +132,16 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
   const [slug, setSlug] = useState(project.slug);
   const [reviewNote, setReviewNote] = useState(project.reviewNote ?? '');
   const [internalNote, setInternalNote] = useState(project.internalNote ?? '');
+  const [creatorName, setCreatorName] = useState(project.creatorName);
+  const [creatorEmail, setCreatorEmail] = useState(project.creatorEmail);
 
   // 서버 값이 바뀌면(판정 뒤 router.replace가 이 컴포넌트를 remount하지 않으므로) 입력을
   // 따라가게 한다 — pages/admin/funding/[id].tsx의 메모 textarea와 같은 이유·같은 패턴.
   useEffect(() => setSlug(project.slug), [project.slug]);
   useEffect(() => setReviewNote(project.reviewNote ?? ''), [project.reviewNote]);
   useEffect(() => setInternalNote(project.internalNote ?? ''), [project.internalNote]);
+  useEffect(() => setCreatorName(project.creatorName), [project.creatorName]);
+  useEffect(() => setCreatorEmail(project.creatorEmail), [project.creatorEmail]);
 
   /**
    * 결과 배너(오류·성공·경고)로 스크롤·포커스를 옮긴다.
@@ -243,6 +248,70 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
       '내부 기록을 저장했습니다.',
     );
 
+  /**
+   * 개설자 계정 수정. 사유는 서버가 필수로 받고 어느 컬럼에도 저장하지 않는다 — 개설자
+   * 메일과 서버 로그에만 남는다(`lib/funding/creatorAccountDecision.ts`).
+   */
+  const askAccountReason = (what: string): string | null => {
+    const reason = window.prompt(`${what}을(를) 바꾸는 사유를 적어 주세요 (개설자에게 메일로 전달되고 서버 로그에 남습니다).`);
+    if (reason === null) return null;
+    if (!reason.trim()) {
+      setNotice('계정 변경은 사유가 있어야 합니다.');
+      return null;
+    }
+    return reason.trim();
+  };
+
+  const handleSaveCreatorName = () => {
+    const next = creatorName.trim();
+    if (!next) {
+      setNotice('개설자 이름을 적어 주세요.');
+      return;
+    }
+    if (next === project.creatorName) {
+      setNotice('지금 저장된 이름과 같습니다.');
+      return;
+    }
+    const reason = askAccountReason('개설자 이름');
+    if (reason === null) return;
+    if (
+      !window.confirm(
+        `개설자 이름을 "${project.creatorName}" → "${next}"로 바꿉니다. 이 개설자의 승인된 프로젝트 페이지에 표시되는 개설자 이름이 모두 함께 바뀝니다. 진행할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'set_creator_name', value: next, reason }),
+      '개설자 이름을 바꿨습니다.',
+    );
+  };
+
+  const handleSaveCreatorEmail = () => {
+    const next = creatorEmail.trim();
+    if (!next) {
+      setNotice('개설자 이메일을 적어 주세요.');
+      return;
+    }
+    if (next.toLowerCase() === project.creatorEmail) {
+      setNotice('지금 저장된 이메일과 같습니다.');
+      return;
+    }
+    const reason = askAccountReason('로그인 이메일');
+    if (reason === null) return;
+    if (
+      !window.confirm(
+        `로그인 이메일을 "${project.creatorEmail}" → "${next}"로 바꿉니다. 이 계정의 로그인 링크는 모두 무효가 되고, 옛 주소와 새 주소 양쪽에 변경 사실을 알립니다. 진행할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'set_creator_email', value: next, reason }),
+      '로그인 이메일을 바꿨습니다. 기존 로그인 링크는 모두 무효가 됐습니다.',
+    );
+  };
+
   const handleArchive = () => {
     const reason = window.prompt(
       '보관 사유를 적어 주세요 (개설자에게 메일로 전달되며, 개설자 화면에도 그대로 노출됩니다).',
@@ -260,6 +329,66 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
       return;
     }
     return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim() }), '보관 처리했습니다.');
+  };
+
+  const handleClose = () => {
+    const reason = window.prompt('종료 사유를 적어 주세요 (개설자에게 메일로 전달됩니다).');
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('종료는 사유가 있어야 합니다.');
+      return;
+    }
+    if (
+      !window.confirm(
+        `종료하면 /funding/${project.slug} 페이지는 그대로 남지만 더 이상 새 후원을 받지 않습니다. 나중에 다시 열 수 있습니다. 종료할까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(() => patchFundingProject(project.id, { action: 'close', note: reason.trim() }), '종료했습니다.');
+  };
+
+  // 다시 열어도 status만 auto가 될 뿐 모금 기간(startAt·endAt)은 승인 뒤 잠겨 있어
+  // 바뀌지 않는다(basicLockedViolation) — computeProjectState로 실제 어떤 상태가 되는지
+  // 미리 보고 확인창 문구를 거기 맞춘다. "다시 열면 즉시 후원을 받습니다"는 기간이
+  // 이미 지났거나 아직 시작 전이면 사실이 아니다.
+  const reopenState = computeProjectState({ status: 'auto', startAt: project.startAt, endAt: project.endAt }, new Date());
+
+  const handleReopen = () => {
+    const message =
+      reopenState === 'live'
+        ? `다시 열면 /funding/${project.slug}에서 즉시 새 후원을 받습니다. 다시 열까요?`
+        : reopenState === 'upcoming'
+          ? `다시 열어도 모금 시작일(${formatKstDateTimeFull(project.startAt)})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다. 다시 열까요?`
+          : `다시 열어도 모금 종료일(${formatKstDateTimeFull(project.endAt)})이 이미 지나 지금은 후원을 받지 않습니다. 그래도 다시 열까요?`;
+    if (!window.confirm(message)) return;
+    return run(() => patchFundingProject(project.id, { action: 'reopen' }), '다시 열었습니다.');
+  };
+
+  const handleHide = () => {
+    // 숨김은 종료와 달리 페이지·결제가 그대로 열려 있는 조치라 사유를 강제하지 않는다
+    // (decidePublicStatus도 hide에는 note를 요구하지 않는다) — 하지만 신고 대응처럼
+    // 개설자가 "무엇을 고쳐야 하는지" 알아야 하는 경우가 있으므로 적을 수는 있게 한다.
+    const reason = window.prompt(
+      '숨김 사유를 적어 주세요 (선택 — 적으면 개설자에게 메일로 전달됩니다. 비워 두고 진행할 수도 있습니다).',
+    );
+    if (reason === null) return;
+    if (
+      !window.confirm(
+        `숨기면 /funding 목록과 사이트맵에서 빠지지만, /funding/${project.slug} 주소를 아는 사람은 여전히 볼 수 있고 후원도 계속 받습니다. 숨길까요?`,
+      )
+    ) {
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'hide', note: reason.trim() || undefined }),
+      '목록에서 숨겼습니다.',
+    );
+  };
+
+  const handleUnhide = () => {
+    if (!window.confirm('다시 노출하면 /funding 목록과 사이트맵에 다시 나타납니다. 다시 노출할까요?')) return;
+    return run(() => patchFundingProject(project.id, { action: 'unhide' }), '다시 노출했습니다.');
   };
 
   const canDecide = project.reviewStatus === 'submitted';
@@ -414,6 +543,58 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
                 <dd className="font-medium text-right">{project.creator.phone ?? '없음'}</dd>
               </div>
             </dl>
+
+            <div className="mt-5 rounded-lg border border-gray-300 bg-gray-50 p-4">
+              <h3 className="text-base font-bold text-gray-900 mb-1">개설자 계정 수정</h3>
+              <p className="mb-3 text-sm text-gray-600">
+                이름은 승인된 프로젝트 페이지에 개설자로 표시됩니다. 승인 뒤에는 개설자 본인이 바꿀 수 없으므로,
+                잘못 저장된 이름을 고치는 경로는 여기뿐입니다. 이메일은 개설자의 유일한 로그인 수단이라, 바꾸면
+                기존 로그인 링크가 전부 무효가 됩니다.
+              </p>
+              {/* 화면과 보고서에 함께 적어 둘 한계 — 서버가 일방적으로 끊을 수 없는 것이 무엇인지
+                  운영자가 알고 조치해야 한다(탈취 대응이면 그 사람에게 연락해 로그아웃을 요청). */}
+              <p className="mb-4 text-sm text-amber-700">
+                이미 로그인해 있는 브라우저 세션은 이메일을 바꿔도 끊기지 않습니다 — 쿠키 수명(최대 7일)이
+                지나거나 본인이 로그아웃해야 끝납니다.
+              </p>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-wrap items-end gap-3">
+                  <Field id="creator-name" label="개설자 이름" className={lightOnlyField}>
+                    <TextInput
+                      type="text"
+                      value={creatorName}
+                      onChange={(e) => setCreatorName(e.target.value)}
+                      light
+                      className="text-sm"
+                      disabled={busy}
+                    />
+                  </Field>
+                  <Button light variant="outline" disabled={busy} onClick={handleSaveCreatorName}>
+                    이름 저장
+                  </Button>
+                </div>
+                <div className="flex flex-wrap items-end gap-3">
+                  <Field
+                    id="creator-email"
+                    label="로그인 이메일"
+                    hint="이미 다른 개설자가 쓰는 주소는 저장되지 않습니다."
+                    className={lightOnlyField}
+                  >
+                    <TextInput
+                      type="email"
+                      value={creatorEmail}
+                      onChange={(e) => setCreatorEmail(e.target.value)}
+                      light
+                      className="text-sm"
+                      disabled={busy}
+                    />
+                  </Field>
+                  <Button light variant="outline" disabled={busy} onClick={handleSaveCreatorEmail}>
+                    이메일 저장
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -472,6 +653,36 @@ export default function AdminFundingProjectDetailPage({ project }: AdminFundingP
               보관
             </Button>
           </div>
+
+          {project.reviewStatus === 'approved' && (
+            <div className="mb-6">
+              <h2 className="text-lg font-bold text-gray-900 mb-3">공개 상태</h2>
+              <p className="mb-3 text-sm text-gray-500">
+                종료는 &ldquo;모금을 멈춘다&rdquo;이고 숨김은 &ldquo;목록·사이트맵에서 뺀다&rdquo;입니다 — 서로
+                다른 조작이라 둘 다 필요할 수도, 하나만 필요할 수도 있습니다. 둘 다 되돌릴 수 있습니다.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {project.status === 'closed' ? (
+                  <Button light disabled={busy} onClick={handleReopen}>
+                    다시 열기
+                  </Button>
+                ) : (
+                  <Button light variant="outline" disabled={busy} onClick={handleClose}>
+                    종료
+                  </Button>
+                )}
+                {project.hidden ? (
+                  <Button light variant="secondary" disabled={busy} onClick={handleUnhide}>
+                    목록에 다시 노출
+                  </Button>
+                ) : (
+                  <Button light variant="secondary" disabled={busy} onClick={handleHide}>
+                    목록에서 숨기기
+                  </Button>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="mb-6">
             <h2 className="text-lg font-bold text-gray-900 mb-1">개설자에게 보이는 메모</h2>

@@ -449,19 +449,48 @@ describe('편집 가능 상태', () => {
 });
 
 describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', () => {
-  it('approved 프로젝트가 하나라도 있으면 이름 변경이 거부된다', async () => {
+  it('approved 프로젝트가 하나라도 있으면 이름 변경이 무시된다(나머지는 저장된다)', async () => {
     const creator = await seedCreator('locked-name@example.com');
     const { id } = await createDraftProject(creator);
     await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
       .where(eq(schema.fundingProjects.id, id));
 
     const r = await saveCreatorSection(creator, {
-      name: '바뀐 이름', contactName: null, phone: null, bio: null, links: null,
+      name: '바뀐 이름', contactName: null, phone: null, bio: '소개', links: null,
     });
-    expect(r).toMatchObject({ ok: false, code: 'locked' });
+    expect(r).toMatchObject({ ok: true });
 
     const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
     expect(row.name).toBe('가나'); // seedCreator의 기본값 그대로
+    expect(row.bio).toBe('소개');
+  });
+
+  it('운영자가 이름을 고친 뒤 들어온 낡은 화면의 저장도 나머지 필드를 저장한다', async () => {
+    // 이 잠금의 실제 사용 시나리오. 개설자가 "이름 고쳐 달라"고 요청하고 운영자가
+    // creatorAccountDecision으로 고치는 동안 개설자는 편집 화면을 열어 두고 있다 —
+    // 그 화면은 로드 시점의 옛 이름을 계속 제출한다. 거부하면 개설자가 건드린 적도
+    // 없는 칸 때문에 소개·연락처·링크가 통째로 저장되지 않는다.
+    const creator = await seedCreator('stale-form@example.com', '옛 이름');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    // 운영자가 이름을 고친다.
+    await mockDb.update(schema.fundingCreators).set({ name: '새 이름' })
+      .where(eq(schema.fundingCreators.id, creator));
+
+    // 개설자의 낡은 화면이 옛 이름을 그대로 실어 보낸다.
+    const r = await saveCreatorSection(creator, {
+      name: '옛 이름', contactName: '담당자', phone: '010-0000-0000', bio: '고친 소개', links: ['https://example.com'],
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('새 이름'); // 운영자가 고친 값 그대로
+    expect(row.bio).toBe('고친 소개');
+    expect(row.contactName).toBe('담당자');
+    expect(row.phone).toBe('010-0000-0000');
+    expect(row.links).toBe(JSON.stringify(['https://example.com']));
   });
 
   it('같은 이름으로 "바꾸려는" 저장(변화 없음)은 approved가 있어도 통과한다', async () => {
@@ -520,7 +549,10 @@ describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', ()
     const r = await saveCreatorSection(creator, {
       name: '다른 이름', contactName: null, phone: null, bio: null, links: null,
     });
-    expect(r).toMatchObject({ ok: false, code: 'locked' });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('황경하');
   });
 });
 

@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, TextArea, TextInput } from '../../ui/Field';
@@ -12,6 +12,13 @@ interface Props {
   initial: EditorReward[];
   readOnly: boolean;
   onSaved: (rewards: EditorReward[]) => void;
+  /**
+   * BasicSectionForm과 같은 계약이지만 이 구획은 뜻이 다르다 — 리워드 목록 자체는
+   * 추가·수정·삭제 각각이 즉시 서버에 저장되므로(onSaved가 그때마다 불린다) 목록은
+   * 절대 dirty가 아니다. 여기서 잃을 수 있는 것은 지금 열려 있는 추가·수정 폼 하나뿐이다
+   * — 그 폼에 입력하다 저장을 누르지 않고 나가면 그 입력만 사라진다.
+   */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 interface FormValues {
@@ -55,7 +62,7 @@ const toFormValues = (r: EditorReward): FormValues => ({
  * 잠긴(승인된) 리워드는 주소·금액·수량 제한 여부·배송 여부 입력을 비활성으로 두고
  * 이유를 한 줄 적는다. 제목·설명·예상 전달 시기·이미지는 그대로 고칠 수 있다.
  */
-export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Props) {
+export function RewardSectionForm({ projectId, initial, readOnly, onSaved, onDirtyChange }: Props) {
   const [rewards, setRewards] = useState<EditorReward[]>(initial);
   const [creating, setCreating] = useState(false);
   const [editingRewardId, setEditingRewardId] = useState<string | null>(null);
@@ -65,6 +72,13 @@ export function RewardSectionForm({ projectId, initial, readOnly, onSaved }: Pro
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const editingReward = editingRewardId ? rewards.find((r) => r.rewardId === editingRewardId) ?? null : null;
+
+  // 열려 있는 폼(추가 중이면 BLANK_FORM, 수정 중이면 그 리워드의 값)과 지금 입력을
+  // 비교한다. 폼이 닫혀 있으면(showForm=false) 잃을 것이 없다.
+  const dirty = creating
+    ? JSON.stringify(form) !== JSON.stringify(BLANK_FORM)
+    : editingReward !== null && JSON.stringify(form) !== JSON.stringify(toFormValues(editingReward));
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
   const locked = editingReward?.locked ?? false;
   const showForm = creating || editingReward !== null;
   // 잠긴 한정 리워드는 수량을 "늘리는 것만" 허용한다(서버 lockedViolation과 같은 규칙) —

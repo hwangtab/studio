@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, TextArea, TextInput } from '../../ui/Field';
@@ -19,6 +19,8 @@ interface Props {
    */
   nameLocked: boolean;
   onSaved: (value: EditorCreatorProfile) => void;
+  /** BasicSectionForm과 같은 계약 — 저장 안 한 입력이 있으면 부모에 알린다. */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 /**
@@ -30,13 +32,21 @@ interface Props {
  * 프로젝트 상태로 판단해 내려준다) — 심사 중인 프로젝트를 보면서 계정 프로필을 태연히
  * 바꾸는 것은 "무엇을 고치는 화면인지" 헷갈리게 만든다.
  */
-export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, nameLocked, onSaved }: Props) {
+export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, nameLocked, onSaved, onDirtyChange }: Props) {
   const [name, setName] = useState(initial.name);
   const [contactName, setContactName] = useState(initial.contactName ?? '');
   const [phone, setPhone] = useState(initial.phone ?? '');
   const [bio, setBio] = useState(initial.bio ?? '');
   const [linksText, setLinksText] = useState((initial.links ?? []).join('\n'));
   const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
+
+  // BasicSectionForm과 같은 이유·같은 방식(파생값, 별도 state 없음).
+  const dirty = name !== initial.name
+    || contactName !== (initial.contactName ?? '')
+    || phone !== (initial.phone ?? '')
+    || bio !== (initial.bio ?? '')
+    || linksText !== (initial.links ?? []).join('\n');
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
 
   // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 그 뒤 입력이 바뀌면 낡은
   // 안내로 남는다(2026-09-17 리뷰 지적).
@@ -61,6 +71,24 @@ export function CreatorSectionForm({ projectId: _projectId, initial, readOnly, n
     // 때문) — 지금 열려 있는 프로젝트의 id를 그대로 쓴다.
     const result = await saveCreatorSection(_projectId, value);
     if (result.ok) {
+      // BasicSectionForm의 setSlug(normalizedSlug)와 같은 이유·같은 처방(2026-09-22
+      // 리뷰 지적). submit이 trim·빈 값→null·줄 필터링으로 정규화한 값을 서버로
+      // 보내는데, 로컬 입력(contactName·phone·bio·linksText)은 원문 그대로 남아 있으면
+      // dirty 판정이 "원문 vs 정규화된 initial"을 비교하게 되어 저장에 성공해도 영영
+      // dirty가 안 풀린다 — 이탈 경고가 매번 뜨면 사용자가 그 경고를 무시하게 되어
+      // 가드 자체가 무력해진다. 저장한 값 그대로 로컬 상태를 되돌린다.
+      //
+      // 단, 무조건 덮어쓰면 안 된다 — 저장 요청이 도는 동안(왕복 100~500ms) 입력 칸은
+      // 계속 활성이라(disabled={readOnly}만 걸리고 saving으로 잠기는 건 버튼뿐) 응답이
+      // 오기 전에 이어서 타이핑한 값이 있을 수 있다. 그 값을 응답이 덮어쓰면 이 태스크가
+      // 막으려던 것과 같은 모양의 조용한 입력 유실이 된다(2026-09-22 2차 리뷰 지적).
+      // `contactName`·`phone`·`bio`·`linksText`는 이 submit 클로저가 잡고 있는
+      // "제출 시점의 값"이다 — 지금(cur) 값이 그때와 같을 때만(그 사이 아무도 안
+      // 고쳤을 때만) 정규화된 값으로 되돌린다.
+      setContactName((cur) => (cur === contactName ? (value.contactName ?? '') : cur));
+      setPhone((cur) => (cur === phone ? (value.phone ?? '') : cur));
+      setBio((cur) => (cur === bio ? (value.bio ?? '') : cur));
+      setLinksText((cur) => (cur === linksText ? (value.links ?? []).join('\n') : cur));
       setSave({ status: 'success' });
       onSaved(value);
     } else {

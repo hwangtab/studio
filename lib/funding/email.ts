@@ -213,6 +213,28 @@ export const sendFundingCreatorSubmissionEmail = (project: CreatorProjectDetail)
 };
 
 /**
+ * 개설자 심사 철회 알림 — 운영자에게만 보낸다(개설자는 화면 응답으로 이미 안다).
+ *
+ * 심사를 이미 시작했을 수 있다 — 운영자가 화면을 열어 보던 중이었다면 그 작업이 헛수고가
+ * 된 것을 알아야 한다. 링크는 submit 알림과 같은 프로젝트별 심사 화면이다.
+ */
+export const sendFundingCreatorWithdrawalEmail = (project: CreatorProjectDetail): Promise<string | null> => {
+  const contact = [project.creator.contactName, project.creator.phone].filter(Boolean).join(' / ') || '연락처 미기재';
+  return send([
+    { key: 'operator', params: {
+      to: OPERATOR_EMAIL,
+      subject: `[펀딩] 심사 철회 — ${project.title}`,
+      text: [
+        `개설자가 심사 신청을 철회했습니다. 프로젝트는 작성 중(draft) 상태로 돌아갔습니다.`,
+        `개설자: ${project.creator.name} (${contact})`,
+        `프로젝트: ${project.title}`,
+        `심사 화면: ${SITE_URL}/admin/funding/projects/${project.id}`,
+      ].join('\n'),
+    } },
+  ]);
+};
+
+/**
  * 개설자 로그인 메일 전역 일일 캡에 걸렸을 때의 운영자 알림.
  *
  * 캡에 걸린 정상 사용자는 메일을 못 받는데 화면은 성공이라고 답한다(주소 존재 여부를
@@ -236,6 +258,64 @@ export const sendCreatorLoginCapAlert = async (cap: number): Promise<string | nu
       '(pages/api/funding/creator/login.ts의 GLOBAL_DAILY_CAP).',
       '',
       `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
+    ].join('\n'),
+  });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
+
+/**
+ * 개설자 로그인 링크 메일 자체의 발송 실패를 운영자에게 알린다.
+ *
+ * `sendCreatorLoginEmail`이 실패해도 화면은 그대로 "로그인 링크를 보냈습니다"라고 답한다
+ * (열거 방지). 그래서 이 실패는 개설자에게는 "링크가 안 온다"는 문의로만 드러나고, 문의가
+ * 오기 전까지 운영자는 알 길이 없다. 어느 주소로 보내려다 실패했는지 본문에 그대로 적어야
+ * 운영자가 그 사람에게 직접 연락할 수 있다.
+ *
+ * 창당 한 번만 보낸다 — 발송 실패는 보통 메일 발송사 쪽 장애라 짧은 시간에 여러 개설자에게
+ * 동시에 나므로, 개설자마다 알림을 보내면 그 자체가 쏟아진다. 전역 일일 캡 알림
+ * (`creator_login:global_alert`)과는 겹치는 상황이 다르므로(캡은 "너무 많이 보냈다", 이건
+ * "보내려 했는데 실패했다") 레이트리밋 키를 다르게 둔다 — 같으면 한쪽이 다른 쪽의 하루
+ * 예산을 먹는다.
+ */
+export const sendCreatorLoginMailFailureAlert = async (email: string, reason: string): Promise<string | null> => {
+  const result = await sendEmail({
+    to: OPERATOR_EMAIL,
+    subject: '[펀딩] 개설자 로그인 메일 발송이 실패했습니다',
+    text: [
+      '개설자 로그인 링크 메일을 보내려 했으나 발송에 실패했습니다.',
+      `수신 시도 주소: ${email}`,
+      `실패 사유: ${reason}`,
+      '',
+      '이 개설자는 로그인 링크를 받지 못했을 수 있습니다. 위 주소로 직접 연락해 안내해 주세요.',
+      '',
+      `개설자 목록(이메일 대조용): ${SITE_URL}/admin/funding/projects`,
+    ].join('\n'),
+  });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
+
+/**
+ * 매직링크 토큰은 소진됐는데 세션 생성이 던졌을 때의 운영자 알림.
+ *
+ * `pages/api/funding/creator/session.ts`는 토큰을 먼저 소진하고 나서 세션을 만든다(순서를
+ * 바꾸면 세션 생성 실패 시 "유효한 세션 + 안 쓴 토큰"이 남는 더 나쁜 상태가 된다). 그래서
+ * 이 실패는 개설자에게는 새 링크를 받아도 반복되는 장애로 보이는데 화면에는 원인이 없다 —
+ * 운영자가 모르면 "로그인이 안 된다"는 문의가 들어와야 비로소 알게 된다.
+ *
+ * 무엇이 잘못됐는지는 여기서 지어내지 않는다 — 서버 로그(console.error)에 실제 에러가
+ * 남으므로, 메일은 "이 경로가 실패하고 있다"는 신호만 전달한다.
+ */
+export const sendCreatorSessionFailureAlert = async (): Promise<string | null> => {
+  const result = await sendEmail({
+    to: OPERATOR_EMAIL,
+    subject: '[펀딩] 개설자 로그인 세션 생성이 실패했습니다',
+    text: [
+      '매직링크 토큰은 정상 소진됐는데, 그 뒤 세션을 만드는 단계에서 오류가 났습니다.',
+      '개설자는 새 링크를 다시 받아도 같은 자리에서 반복해 막힙니다.',
+      '',
+      '원인은 서버 로그에서 확인해야 합니다(이 메일은 "실패하고 있다"는 신호만 전달합니다).',
+      '',
+      `개설자 목록: ${SITE_URL}/admin/funding/projects`,
     ].join('\n'),
   });
   return result.ok ? null : `operator:${result.errorCode}`;

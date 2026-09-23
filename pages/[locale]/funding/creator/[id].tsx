@@ -1,12 +1,13 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
 
 import { BasicSectionForm, type BasicSectionValue } from '../../../../components/funding/creator/BasicSectionForm';
 import { CreatorSectionForm } from '../../../../components/funding/creator/CreatorSectionForm';
 import { RewardSectionForm } from '../../../../components/funding/creator/RewardSectionForm';
 import { StorySectionForm } from '../../../../components/funding/creator/StorySectionForm';
-import { submitProject } from '../../../../components/funding/creator/api';
+import { submitProject, withdrawProject } from '../../../../components/funding/creator/api';
 import {
   IDLE_SAVE_STATE, REVIEW_STATUS_LABEL, REVIEW_STATUS_NOTICE, canEditSectionInBrowser,
   type CreatorSectionName, type EditorCreatorProfile, type EditorProject, type EditorReward, type SaveState,
@@ -88,11 +89,94 @@ const TABS = ['basic', 'story', 'rewards', 'creator'] as const;
 type Tab = (typeof TABS)[number];
 const TAB_LABEL: Record<Tab, string> = { basic: '기본정보', story: '스토리', rewards: '리워드', creator: '개설자 정보' };
 
+/** 이탈 시 잃는 것을 구체적으로 말한다 — beforeunload와 routeChangeStart 양쪽에서 같은 문구를 쓴다. */
+const UNSAVED_CHANGES_MESSAGE = '저장하지 않은 변경이 있습니다. 지금 나가면 그 내용이 사라집니다. 계속하시겠습니까?';
+
 export default function CreatorProjectEditor({ project: initial, earliestStartDate, nameLocked }: Props) {
+  const router = useRouter();
   const [project, setProject] = useState<EditorProject>(initial);
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
+  const [withdraw, setWithdraw] = useState<SaveState>(IDLE_SAVE_STATE);
   const [agreedTerms, setAgreedTerms] = useState(false);
+
+  // 구획별 저장 안 한 입력 여부. 네 폼이 각자 onDirtyChange로 보고한다 — 폼이 하나라도
+  // dirty면 이탈 전에 확인을 건다("저장 안 한 입력이 경고 없이 사라진다" 대응,
+  // 2026-09-22). 콜백을 useMemo로 한 번만 만들어 두는 이유: 매 렌더 새 함수를 내려주면
+  // 각 폼의 `useEffect(() => onDirtyChange?.(dirty), [dirty, onDirtyChange])`가 dirty
+  // 값이 안 바뀌어도 매번 다시 실행된다 — 동작은 맞지만(진 setState는 no-op) 불필요한
+  // 호출이 계속 쌓인다.
+  const [dirtyTabs, setDirtyTabs] = useState<Record<Tab, boolean>>({
+    basic: false, story: false, rewards: false, creator: false,
+  });
+  const onDirtyChangeBySection = useMemo(() => {
+    const handlers = {} as Record<Tab, (dirty: boolean) => void>;
+    for (const t of TABS) {
+      handlers[t] = (dirty: boolean) => {
+        setDirtyTabs((prev) => (prev[t] === dirty ? prev : { ...prev, [t]: dirty }));
+      };
+    }
+    return handlers;
+  }, []);
+  const hasUnsavedChanges = TABS.some((t) => dirtyTabs[t]);
+
+  // 브라우저 이탈(새로고침·닫기·주소창 이동) 경고.
+  useEffect(() => {
+    if (!hasUnsavedChanges) return undefined;
+    const handler = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      // 브라우저는 이 문구를 대개 무시하고 자체 확인창을 띄운다 — 값을 채우는 것
+      // 자체가 신호다(components/admin/ContractForm.tsx와 같은 처방).
+      event.returnValue = '';
+    };
+    window.addEventListener('beforeunload', handler);
+    return () => window.removeEventListener('beforeunload', handler);
+  }, [hasUnsavedChanges]);
+
+  // 앱 내부 이동(상단 "← 내 프로젝트 목록" 등 클라이언트 내비게이션) 경고 — 실제 사고
+  // 경로다. Pages Router에는 이동을 취소하는 공식 API가 없어, routeChangeStart에서
+  // 확인 후 거부하면 이동을 강제로 중단시키는 표준 우회(Next.js 이슈 트래커에 오래
+  // 정착된 패턴)를 쓴다: 라우터 이벤트에 routeChangeError를 emit하고 예외를 던진다.
+  // 이 우회의 알려진 부작용은 콘솔에 `Uncaught (in promise) routeChange aborted (...)`가
+  // 남는 것이다(next/dist/client/link.js의 linkClicked가 router.push()에 .catch를
+  // 안 달아서다) — "Abort fetching component for route..."가 아니다. 그 메시지는
+  // 진행 중이던 다른 이동이 취소될 때 나는 것이라 여기서는 뜨지 않는다(2026-09-22
+  // 리뷰 지적 — 실제로 안 나는 로그를 적어 두면 다음 사람이 그 로그를 찾다가 헤맨다).
+  useEffect(() => {
+    const handleRouteChangeStart = (url: string) => {
+      if (!hasUnsavedChanges) return;
+      if (url === router.asPath) return;
+      // eslint-disable-next-line no-alert
+      if (window.confirm(UNSAVED_CHANGES_MESSAGE)) return;
+      router.events.emit('routeChangeError');
+      // eslint-disable-next-line no-throw-literal
+      throw 'routeChange aborted (저장하지 않은 변경 확인 취소)';
+    };
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    return () => router.events.off('routeChangeStart', handleRouteChangeStart);
+  }, [hasUnsavedChanges, router]);
+
+  // 브라우저 뒤로/앞으로가기(popstate) 경고 — routeChangeStart만으로는 안 잡힌다.
+  // Next 내부(onPopState)는 브라우저가 **이미 히스토리를 옮긴 뒤** changeState를 불러
+  // 그 안에서 routeChangeStart를 emit한다. 그래서 위 핸들러에서 throw해도 주소창은
+  // 이미 목적지로 바뀐 채 남고, 화면(getServerSideProps 결과)만 안 바뀌어 주소와 화면이
+  // 어긋난다 — 그 뒤 뒤로가기 히스토리도 한 칸씩 밀린다(2026-09-22 리뷰 지적).
+  // beforePopState는 그 changeState보다 앞서 불려 이동 자체를 취소(false 반환)할 수
+  // 있고, 취소하면 routeChangeStart 자체가 안 나므로 confirm이 두 번 뜨지도 않는다.
+  useEffect(() => {
+    router.beforePopState(() => {
+      if (!hasUnsavedChanges) return true;
+      // eslint-disable-next-line no-alert
+      if (window.confirm(UNSAVED_CHANGES_MESSAGE)) return true;
+      // 브라우저가 이미 옮겨 둔 히스토리 엔트리를 제자리로 되돌린다 — 안 하면 주소창만
+      // 목적지로 남고 화면은 편집기 그대로인 상태가 된다.
+      window.history.forward();
+      return false;
+    });
+    return () => {
+      router.beforePopState(() => true);
+    };
+  }, [hasUnsavedChanges, router]);
 
   // 구획별 판정 — 서버(lib/funding/reviewTransition.ts의 canCreatorEditSection)와 같은 단위다.
   // 승인 뒤에는 basic·story만 열리고 rewards는 통째로 닫힌다.
@@ -112,9 +196,27 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
     const result = await submitProject(project.id, requiresTerms ? FUNDING_CREATOR_TERMS_VERSION : undefined);
     if (result.ok) {
       setSubmit({ status: 'success' });
+      // handleWithdraw가 성공 시 setSubmit(IDLE_SAVE_STATE)로 반대 상태를 지우는 것과
+      // 대칭이다. 없으면: 철회(withdraw.status='success') → 같은 화면에서 오타 고쳐
+      // 재제출 → reviewStatus는 'submitted'로 바뀌는데 withdraw.status는 'success'로
+      // 남아, 철회 버튼이 (withdraw.status !== 'success' 조건에 걸려) 다시 나타나지
+      // 않는다. 상단 안내는 "철회할 수 있다"고 말하는데 버튼이 없는 거짓 상태가 된다.
+      setWithdraw(IDLE_SAVE_STATE);
       setProject((p) => ({ ...p, reviewStatus: 'submitted' }));
     } else {
       setSubmit({ status: 'error', message: result.message });
+    }
+  };
+
+  const handleWithdraw = async () => {
+    setWithdraw({ status: 'saving' });
+    const result = await withdrawProject(project.id);
+    if (result.ok) {
+      setWithdraw({ status: 'success' });
+      setSubmit(IDLE_SAVE_STATE);
+      setProject((p) => ({ ...p, reviewStatus: 'draft' }));
+    } else {
+      setWithdraw({ status: 'error', message: result.message });
     }
   };
 
@@ -187,6 +289,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               readOnly={ro('basic')}
               lockedFields={project.reviewStatus === 'approved'}
               onSaved={(value: BasicSectionValue) => setProject((p) => ({ ...p, ...value }))}
+              onDirtyChange={onDirtyChangeBySection.basic}
             />
           </div>
           <div id="panel-story" role="tabpanel" aria-labelledby="tab-story" hidden={tab !== 'story'}>
@@ -195,6 +298,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               initial={project.content}
               readOnly={ro('story')}
               onSaved={(content: string) => setProject((p) => ({ ...p, content }))}
+              onDirtyChange={onDirtyChangeBySection.story}
             />
           </div>
           <div id="panel-rewards" role="tabpanel" aria-labelledby="tab-rewards" hidden={tab !== 'rewards'}>
@@ -203,6 +307,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               initial={project.rewards}
               readOnly={ro('rewards')}
               onSaved={(rewards: EditorReward[]) => setProject((p) => ({ ...p, rewards }))}
+              onDirtyChange={onDirtyChangeBySection.rewards}
             />
           </div>
           <div id="panel-creator" role="tabpanel" aria-labelledby="tab-creator" hidden={tab !== 'creator'}>
@@ -212,6 +317,7 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               readOnly={false}
               nameLocked={nameLocked}
               onSaved={(value: EditorCreatorProfile) => setProject((p) => ({ ...p, creator: value }))}
+              onDirtyChange={onDirtyChangeBySection.creator}
             />
           </div>
         </div>
@@ -248,6 +354,33 @@ export default function CreatorProjectEditor({ project: initial, earliestStartDa
               <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{submit.message}</span>
             )}
           </div>
+          {/* 심사 신청은 draft·changes_requested에서만 가능해 위 버튼은 submitted에서 항상
+              비활성이다 — 그 자리를 대신해 submitted에서만 철회 버튼을 보여준다
+              (reviewTransition.ts의 submitted --withdraw--> draft).
+              철회 성공 순간 project.reviewStatus는 곧바로 'draft'로 바뀌므로, 버튼만
+              그 조건에 걸면 성공 문구가 뜨기도 전에 이 블록째로 사라진다 — 그래서
+              withdraw.status === 'success'일 때도 블록을 남겨 둔다(버튼만 감춘다). */}
+          {(project.reviewStatus === 'submitted' || withdraw.status === 'success') && (
+            <div className="mt-4 flex items-center gap-3">
+              {withdraw.status !== 'success' && (
+                <Button
+                  variant="outline"
+                  onClick={handleWithdraw}
+                  disabled={withdraw.status === 'saving'}
+                >
+                  {withdraw.status === 'saving' ? '철회 중…' : '심사 신청 철회'}
+                </Button>
+              )}
+              {withdraw.status === 'success' && (
+                <span className="typo-caption text-green-600 dark:text-green-400">
+                  심사 신청을 철회했습니다. 다시 작성한 뒤 제출해 주세요.
+                </span>
+              )}
+              {withdraw.status === 'error' && (
+                <span role="alert" className="typo-caption text-red-600 dark:text-red-400">{withdraw.message}</span>
+              )}
+            </div>
+          )}
         </div>
       </main>
     </>
