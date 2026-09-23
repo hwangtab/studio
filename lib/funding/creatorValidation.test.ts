@@ -165,7 +165,10 @@ describe('validatePayoutSection', () => {
     const r = validatePayoutSection({ ...payout(), bankName: '  국민은행  ', holder: ' 황경하 ' });
     expect(r).toEqual({
       ok: true,
-      value: { taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' },
+      value: {
+        taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하',
+        residentNumber: null,
+      },
     });
   });
 
@@ -208,5 +211,72 @@ describe('validatePayoutSection', () => {
 
   it('은행 목록은 검사하지 않는다 — 우리가 모르는 은행도 받는다', () => {
     expect(validatePayoutSection({ ...payout(), bankName: '토스뱅크' }).ok).toBe(true);
+  });
+});
+
+/**
+ * 아래 번호는 전부 **형식만 맞춘 임의의 값**이다 — 실제 사람에게 발급된 번호가 아니고,
+ * 그렇게 되지 않도록 뒤 6자리를 아무렇게나 잡았다.
+ */
+describe('주민등록번호 — 형식만 본다', () => {
+  const payout = (residentNumber: unknown) => ({
+    taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하', residentNumber,
+  });
+  const value = (input: unknown) => {
+    const r = validatePayoutSection(input);
+    return r.ok ? r.value : null;
+  };
+
+  it('체크섬이 안 맞는 번호도 통과한다 — 2020년 10월 이후 발급분은 뒤 6자리가 난수다', () => {
+    // ⚠ 이 테스트가 이 절의 핵심이다. 옛 가중치 검증식(2,3,4,5,6,7,8,9,2,3,4,5)을 넣으면
+    // 이 번호의 마지막 자리는 5여야 한다 — 실제 값은 8이다. 검증식을 되살리는 순간
+    // 정상 번호를 가진 개설자가 정산 등록을 못 하게 된다.
+    expect(value(payout('0503132345678'))?.residentNumber).toBe('0503132345678');
+    expect(value(payout('9901011234567'))?.residentNumber).toBe('9901011234567');
+  });
+
+  it('하이픈은 받아들이고 저장 전에 지운다', () => {
+    expect(value(payout('990101-1234567'))?.residentNumber).toBe('9901011234567');
+  });
+
+  it('빈 값·미입력은 null이다 — 기존 값을 유지하라는 뜻이다', () => {
+    expect(value(payout(''))?.residentNumber).toBeNull();
+    expect(value(payout('   '))?.residentNumber).toBeNull();
+    expect(value(payout(undefined))?.residentNumber).toBeNull();
+    expect(value(payout(null))?.residentNumber).toBeNull();
+  });
+
+  it('형식 위반은 거부한다', () => {
+    for (const bad of [
+      '990101123456',      // 12자리
+      '99010112345678',    // 14자리
+      '990101-123456a',    // 숫자가 아닌 글자
+      '991301-1234567',    // 13월
+      '990132-1234567',    // 32일
+      '990100-1234567',    // 0일
+      '990101-9234567',    // 성별코드 9
+      '990101-0234567',    // 성별코드 0
+      '990101 1234567',    // 공백 구분
+    ]) {
+      expect(validatePayoutSection(payout(bad)).ok).toBe(false);
+    }
+  });
+
+  it('과도한 길이는 거부한다', () => {
+    expect(validatePayoutSection(payout('1'.repeat(CREATOR_LIMITS.residentNumberMax + 1))).ok).toBe(false);
+  });
+
+  it('사업자면 값이 와도 버린다 — 거부가 아니라 null이다', () => {
+    // 법적 근거(소득세법상 지급명세서 제출 의무)가 원천징수에만 있으므로 사업자에게는
+    // 애초에 받지 않는다. 거부 메시지를 돌려주면 "값을 보냈다"는 사실만 더 남는다.
+    const r = validatePayoutSection({ ...payout('9901011234567'), taxType: 'invoice' });
+    expect(r.ok).toBe(true);
+    expect(r.ok && r.value.residentNumber).toBeNull();
+  });
+
+  it('거부 메시지에 입력한 번호가 들어가지 않는다', () => {
+    const r = validatePayoutSection(payout('99010112345'));
+    expect(r.ok).toBe(false);
+    expect(r.ok === false && r.message).not.toContain('99010112345');
   });
 });

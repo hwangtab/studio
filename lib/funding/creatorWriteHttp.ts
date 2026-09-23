@@ -17,6 +17,8 @@ const STATUS_BY_CODE: Record<Exclude<WriteResult, { ok: true }>['code'], number>
   duplicate_slug: 400,
   duplicate_reward: 400,
   too_many: 400,
+  // 서버 설정(암호화 키) 문제라 개설자가 고칠 수 있는 것이 없다 — 4xx가 아니다.
+  encryption_unavailable: 503,
 };
 
 export const respondWriteResult = (res: NextApiResponse, result: WriteResult) => {

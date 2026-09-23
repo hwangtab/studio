@@ -1,5 +1,6 @@
 import { and, count, eq, ne } from 'drizzle-orm';
 
+import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
 import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRow, type FundingRewardRow } from '../../db/schema';
 import { getFundingProject } from './projects';
@@ -15,7 +16,8 @@ export type WriteResult =
   | { ok: true }
   | {
       ok: false;
-      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward';
+      code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward'
+        | 'encryption_unavailable';
       message: string;
     };
 
@@ -306,6 +308,12 @@ export interface CreatorPayoutSummary {
   registered: boolean;
   accountLast4: string | null;
   taxType: PayoutSection['taxType'] | null;
+  /**
+   * 주민등록번호가 등록돼 있는가. **여기서 나가는 것은 이 불리언뿐이다** — 평문은 물론
+   * 암호문도, 뒤 4자리 같은 조각도 넣지 않는다(계좌와 다르다). 암호문이 props로 나가면
+   * 키가 유일한 방어가 된다.
+   */
+  residentNumberRegistered: boolean;
 }
 
 /** 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다. */
@@ -327,8 +335,11 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     payoutBankName: fundingCreators.payoutBankName,
     payoutAccount: fundingCreators.payoutAccount,
     payoutHolder: fundingCreators.payoutHolder,
+    residentNumberEnc: fundingCreators.residentNumberEnc,
   }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
-  if (!row) return { registered: false, accountLast4: null, taxType: null };
+  if (!row) {
+    return { registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false };
+  }
 
   const account = row.payoutAccount?.trim() ?? '';
   // `recordFundingPayout`이 정산을 거부하는 조건(`hasPayoutAccount`, lib/funding/payout.ts)과
@@ -338,6 +349,8 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     registered,
     accountLast4: registered ? accountLast4(account) : null,
     taxType: row.taxType ?? null,
+    // 값도 암호문도 아니고 "있다/없다"뿐이다.
+    residentNumberRegistered: Boolean(row.residentNumberEnc),
   };
 };
 
@@ -365,11 +378,44 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
     return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있습니다.');
   }
 
+  /**
+   * 주민등록번호는 세 갈래다.
+   *
+   * 1. **사업자(`invoice`)로 저장하면 지운다.** 우리가 이 번호를 갖는 근거는 소득세법상
+   *    지급명세서 제출 의무뿐이라, 원천징수 대상이 아니게 되는 순간 근거가 사라진다 —
+   *    근거 없이는 보관할 수 없으므로 기존 값도 함께 지운다.
+   * 2. **빈 값(`null`)이면 기존 값을 유지한다.** 계좌와 일부러 다르게 둔다. 계좌는 매번
+   *    다시 입력해 덮어쓰게 하지만, 주민등록번호까지 그렇게 하면 은행명 한 글자를 고칠
+   *    때마다 평문이 화면과 네트워크를 한 번 더 지난다. 지우는 수단은 세금 구분을
+   *    사업자로 바꾸는 것 하나뿐이고, 그 사실은 화면이 말한다.
+   * 3. 값이 오면 **암호화해서만** 넣는다. `encryptField`는 키가 없거나 형식이 틀리면
+   *    던진다 — 그 예외를 여기서 삼켜 평문을 넣거나 그냥 넘어가면 안 된다. 저장 전체를
+   *    거부하고 `encryption_unavailable`로 알린다.
+   */
+  let residentNumberEnc: string | null | undefined;
+  if (value.taxType === 'invoice') {
+    residentNumberEnc = null;
+  } else if (value.residentNumber) {
+    try {
+      residentNumberEnc = encryptField(value.residentNumber);
+    } catch (error) {
+      if (error instanceof FieldCryptoError) {
+        // 원본 메시지를 그대로 내보내지 않는다. 평문은 애초에 들어 있지 않지만, 키 설정
+        // 상태를 화면에 적어 줄 이유도 없다. 서버에는 코드만 남긴다.
+        console.error('[funding] resident number encryption failed', { code: error.code });
+        return deny('encryption_unavailable', '지금은 주민등록번호를 저장할 수 없습니다. 운영자에게 알려 주세요.');
+      }
+      throw error;
+    }
+  }
+
   await getDb().update(fundingCreators).set({
     taxType: value.taxType,
     payoutBankName: value.bankName,
     payoutAccount: value.account,
     payoutHolder: value.holder,
+    // undefined면 drizzle이 SET 목록에서 빼므로 기존 값이 그대로 남는다(위 2번).
+    ...(residentNumberEnc === undefined ? {} : { residentNumberEnc }),
     updatedAt: new Date(),
   }).where(eq(fundingCreators.id, creatorId));
   return { ok: true };

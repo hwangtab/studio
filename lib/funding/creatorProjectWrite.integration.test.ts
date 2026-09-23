@@ -18,6 +18,8 @@ jest.mock('./projects', () => ({
 }));
 
 // eslint-disable-next-line import/first
+import { decryptField, FIELD_CRYPTO_KEY_ENV, isEncryptedField } from '../crypto/fieldCrypto';
+// eslint-disable-next-line import/first
 import { CREATOR_LIMITS, type RewardInput } from './creatorValidation';
 // eslint-disable-next-line import/first
 import {
@@ -751,7 +753,10 @@ describe('승인 뒤 편집 (Task 5)', () => {
 });
 
 describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
-  const payout = { taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' } as const;
+  const payout = {
+    taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하',
+    residentNumber: null,
+  } as const;
 
   it('승인된 프로젝트가 하나도 없으면 거부한다 — 반려될 신청서에 계좌를 미리 받지 않는다', async () => {
     const { creatorId } = await seedProject();
@@ -759,7 +764,9 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     expect(r).toEqual({ ok: false, code: 'not_editable', message: expect.any(String) });
 
     const summary = await loadPayoutSummary(creatorId);
-    expect(summary).toEqual({ registered: false, accountLast4: null, taxType: null });
+    expect(summary).toEqual({
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false,
+    });
   });
 
   it('승인된 프로젝트가 있으면 저장된다', async () => {
@@ -778,11 +785,11 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, { ...payout });
     expect(await savePayoutSection(creatorId, {
-      taxType: 'invoice', bankName: '토스뱅크', account: '1000-0000-0000', holder: '스튜디오놀',
+      taxType: 'invoice', bankName: '토스뱅크', account: '1000-0000-0000', holder: '스튜디오놀', residentNumber: null,
     })).toEqual({ ok: true });
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: true, accountLast4: '0000', taxType: 'invoice',
+      registered: true, accountLast4: '0000', taxType: 'invoice', residentNumberRegistered: false,
     });
   });
 
@@ -803,11 +810,13 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
   it('등록 여부·뒤 4자리·세금 유형뿐이고, 직렬화에 은행명·예금주·계좌 전체가 없다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await savePayoutSection(creatorId, {
-      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주',
+      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주', residentNumber: null,
     });
 
     const summary = await loadPayoutSummary(creatorId);
-    expect(Object.keys(summary).sort()).toEqual(['accountLast4', 'registered', 'taxType']);
+    expect(Object.keys(summary).sort()).toEqual([
+      'accountLast4', 'registered', 'residentNumberRegistered', 'taxType',
+    ]);
 
     // lib/funding/dbProjects.integration.test.ts의 같은 모양 단언 — 이 값이 그대로
     // getServerSideProps props가 되어 __NEXT_DATA__로 페이지 소스에 실린다.
@@ -824,13 +833,120 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
       .where(eq(schema.fundingCreators.id, creatorId));
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
-      registered: false, accountLast4: null, taxType: 'withholding',
+      registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false,
     });
   });
 
   it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {
     expect(await loadPayoutSummary('없는-id')).toEqual({
-      registered: false, accountLast4: null, taxType: null,
+      registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false,
     });
+  });
+});
+
+/**
+ * 주민등록번호 저장.
+ *
+ * 아래 번호는 **형식만 맞춘 임의의 값**이다 — 실제로 발급된 번호가 아니다.
+ * 키도 테스트 전용 더미다(32바이트).
+ */
+describe('주민등록번호 — 암호화해서만 들어간다', () => {
+  const RRN = '9901011234567';
+  const payout = (residentNumber: string | null) => ({
+    taxType: 'withholding' as const,
+    bankName: '국민은행',
+    account: '123-456-789012',
+    holder: '황경하',
+    residentNumber,
+  });
+
+  const readStored = async (creatorId: string): Promise<string | null> => {
+    const [row] = await mockDb.select({ enc: schema.fundingCreators.residentNumberEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    return row.enc ?? null;
+  };
+
+  let previousKey: string | undefined;
+  beforeEach(() => {
+    previousKey = process.env[FIELD_CRYPTO_KEY_ENV];
+    process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 7).toString('base64');
+  });
+  afterEach(() => {
+    if (previousKey === undefined) delete process.env[FIELD_CRYPTO_KEY_ENV];
+    else process.env[FIELD_CRYPTO_KEY_ENV] = previousKey;
+  });
+
+  it('DB에 들어간 값은 평문이 아니다 — 입력한 숫자가 문자열 어디에도 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    expect(await savePayoutSection(creatorId, payout(RRN))).toEqual({ ok: true });
+
+    const stored = await readStored(creatorId);
+    expect(stored).not.toBeNull();
+    expect(stored).not.toContain(RRN);
+    expect(stored).not.toContain('990101');
+    expect(stored).not.toContain('1234567');
+    expect(isEncryptedField(stored)).toBe(true);
+  });
+
+  it('복호화하면 원문이다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    expect(decryptField((await readStored(creatorId))!)).toBe(RRN);
+  });
+
+  it('같은 번호를 두 번 저장해도 저장된 문자열이 다르다 — IV가 매번 새로 나온다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    const first = await readStored(creatorId);
+    await savePayoutSection(creatorId, payout(RRN));
+    expect(await readStored(creatorId)).not.toBe(first);
+  });
+
+  it('빈 값으로 저장하면 기존 값을 유지한다 — 계좌와 다르다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    const first = await readStored(creatorId);
+
+    expect(await savePayoutSection(creatorId, {
+      ...payout(null), bankName: '토스뱅크', account: '1000-0000-0000', holder: '황경하',
+    })).toEqual({ ok: true });
+
+    expect(await readStored(creatorId)).toBe(first);
+    expect((await loadPayoutSummary(creatorId)).residentNumberRegistered).toBe(true);
+  });
+
+  it('사업자로 바꾸면 지워진다 — 수집 근거가 사라지면 보관할 수 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+    expect(await savePayoutSection(creatorId, {
+      taxType: 'invoice', bankName: '국민은행', account: '123-456-789012', holder: '황경하', residentNumber: RRN,
+    })).toEqual({ ok: true });
+
+    expect(await readStored(creatorId)).toBeNull();
+    expect((await loadPayoutSummary(creatorId)).residentNumberRegistered).toBe(false);
+  });
+
+  it('암호화 키가 없으면 저장 자체를 거부한다 — 평문이 들어가는 경로는 없다', async () => {
+    delete process.env[FIELD_CRYPTO_KEY_ENV];
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    const r = await savePayoutSection(creatorId, payout(RRN));
+    expect(r).toEqual({ ok: false, code: 'encryption_unavailable', message: expect.any(String) });
+    expect(r.ok === false && r.message).not.toContain(RRN);
+    expect(await readStored(creatorId)).toBeNull();
+  });
+
+  it('요약에는 등록 여부만 있고 직렬화에 평문도 암호문도 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, payout(RRN));
+
+    const summary = await loadPayoutSummary(creatorId);
+    expect(summary.residentNumberRegistered).toBe(true);
+
+    const serialized = JSON.stringify(summary);
+    expect(serialized).not.toContain(RRN);
+    expect(serialized).not.toContain('1234567');
+    // 암호문이 props로 나가면 키가 유일한 방어가 된다.
+    expect(serialized).not.toContain((await readStored(creatorId))!);
+    expect(serialized).not.toContain('v1:');
   });
 });
