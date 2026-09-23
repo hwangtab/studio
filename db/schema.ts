@@ -610,7 +610,13 @@ export const fundingProjectPayouts = sqliteTable('funding_project_payouts', {
   grossAmount: integer('gross_amount').notNull(),
   refundAmount: integer('refund_amount').notNull(),
   supplyAmount: integer('supply_amount').notNull(),
-  /** 플랫폼 수수료 = supply − share. 기록해 두지 않으면 세금계산서·장부에서 역산해야 한다. */
+  /**
+   * 플랫폼 수수료. 상품마다 계산 축이 다르다 —
+   * 아티스트 정산(공급가 기준): feeAmount = supply − share.
+   * 펀딩 정산(결제액 기준): feeAmount = platformFee + paymentFee(둘 다 netGross 기준),
+   * supply는 장부용 부가세 제외 표시값일 뿐이라 supply − share와 값이 다르다.
+   * 기록해 두지 않으면 세금계산서·장부에서 역산해야 한다.
+   */
   feeAmount: integer('fee_amount').notNull(),
   shareAmount: integer('share_amount').notNull(),
   withholdingAmount: integer('withholding_amount').notNull(),
