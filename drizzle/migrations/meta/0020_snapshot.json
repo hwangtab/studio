@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "5c018f64-2a7f-48df-ae91-d71b644a413e",
-  "prevId": "cbc40b7f-1b25-4a2d-8705-9b565c3e6b1d",
+  "id": "cbc40b7f-1b25-4a2d-8705-9b565c3e6b1d",
+  "prevId": "e9d7c96a-0d87-4ce5-9295-e910be6df321",
   "tables": {
     "artist_payouts": {
       "name": "artist_payouts",
@@ -1353,22 +1353,6 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "platform_fee_amount": {
-          "name": "platform_fee_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
-        },
-        "payment_fee_amount": {
-          "name": "payment_fee_amount",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false,
-          "default": 0
         },
         "share_amount": {
           "name": "share_amount",

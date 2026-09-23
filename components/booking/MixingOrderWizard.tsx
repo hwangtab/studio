@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 
+import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
+
 import PriceBreakdown from './PriceBreakdown';
 import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from './useTossPaymentWidgets';
 import { Button } from '../ui/Button';
@@ -151,6 +153,8 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
     setSubmitting(true);
     setSubmitError(null);
+    // 결제창 실패를 서버에 알릴 때 쓴다 — catch에서 주문번호가 보여야 한다.
+    let createdOrderNo: string | null = null;
     try {
       const body: CreateMixingOrderBody = {
         productId: selectedProduct.id,
@@ -179,6 +183,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       ) {
         // 주문이 만들어졌으면 곧바로 결제창을 연다. 금액은 **서버가 돌려준 값**으로 맞춘다.
         const origin = window.location.origin;
+        createdOrderNo = data.orderNo;
         await requestPayment({
           orderId: data.orderNo,
           orderName: formatOrderName(selectedProduct.nameKo, songCount),
@@ -194,6 +199,14 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       // 400(입력 오류) · 429(요청 과다) 등 — 현재 단계(정보 입력)에 메시지로 표시.
       setSubmitError(data.message ?? '주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
     } catch (err) {
+      /**
+       * 결제창이 열리기 전에 SDK가 던진 경우 실패 사유는 여기서만 알 수 있다 —
+       * 토스의 failUrl 리다이렉트를 안 타므로 실패 화면(서버)도 모른다. 2026-09-19에
+       * 한 후원자가 세 번 실패하고 떠났는데 이유가 어디에도 없었던 것이 이 구멍이다.
+       * 취소(USER_CANCEL 등)도 코드가 오지만 아래 분기에서 조용히 빠지므로, 기록은
+       * 분기보다 먼저 한다 — "창을 닫았다"도 알아야 할 사실이다.
+       */
+      reportPaymentFailure(createdOrderNo, err);
       /**
        * 결제창을 닫은 것은 오류가 아니다 — 주문은 pending으로 24시간 남고, 다시 누르면
        * 새로 만들어진다. 빨간 경고를 띄우면 "주문이 실패했다"로 읽혀 멀쩡한 주문을 두고
