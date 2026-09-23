@@ -512,7 +512,10 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'hands, so there is no transaction record to keep: we erase the name, phone number, email ' +
           'address and any supporter display name at the same time. If payments were taken, we only ' +
           'mark the subscription as ended, and the five-year rule above then runs from that last ' +
-          'activity. The raw response the payment provider returned when it approved a payment is ' +
+          'activity. The same goes for a subscription left with a charge whose outcome we never ' +
+          'heard back on: we mark it as ended but keep the contact details, because if that charge ' +
+          'turns out to have gone through we have to be able to reach you about a refund. ' +
+          'The raw response the payment provider returned when it approved a payment is ' +
           'erased five years after that approval, because the law requires us to keep the payment ' +
           'record for that long. Free-text notes and the reasons the provider gave for declining a ' +
           'payment are erased on shorter schedules: a declined payment forms no contract and moves ' +
@@ -610,6 +613,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '其间从未扣款成功的，既未成立合同也无款项往来，没有须保存的交易记录，' +
           '因此在视为结束的同时一并销毁姓名、联系电话、电子邮箱以及支持者名单所用的公示名。' +
           '曾扣款成功的，则仅标记为结束，此后适用上述五年规则，并自最后一次活动之日起算。' +
+          '若仍留有一笔至今未能确认结果的扣款，同样只标记为结束而保留联系方式——' +
+          '万一日后确认该笔扣款已经成功，我们须能联系到您办理退款。' +
           '支付机构在批准付款时返回的响应原文，自该批准之日起满五年后删除——法律要求付款记录保存这么久。' +
           '自由填写的备注与支付被拒的事由原文保存期限更短：付款被拒既未成立合同也未发生款项往来，' +
           '不属于法律要求保存的记录。此后留下的只是交易记录本身——订单编号、商品、金额、时间、' +
@@ -719,7 +724,11 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'movimiento de dinero, de modo que no hay registro de la transacción que conservar: en ese ' +
           'mismo momento borramos el nombre, el teléfono, el correo electrónico y el nombre que ' +
           'figurase en la lista pública de mecenas. Si hubo cobros, solo lo marcamos como terminado ' +
-          'y el plazo de cinco años anterior corre desde esa última actividad. La respuesta original que la ' +
+          'y el plazo de cinco años anterior corre desde esa última actividad. Lo mismo ocurre si ' +
+          'queda un cobro del que nunca llegamos a conocer el resultado: lo marcamos como terminado ' +
+          'pero conservamos los datos de contacto, porque si más adelante se confirma que ese cobro ' +
+          'se realizó tenemos que poder avisarle para devolverle el importe. ' +
+          'La respuesta original que la ' +
           'entidad de pago devuelve al aprobar un cobro se borra cinco años después de esa aprobación, ' +
           'porque la ley nos obliga a conservar el registro del pago durante ese tiempo. Las notas de ' +
           'texto libre y los motivos con que la entidad rechaza un cobro se borran en plazos más ' +
@@ -835,7 +844,10 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'có hồ sơ giao dịch nào phải lưu: ngay khi coi là kết thúc, chúng tôi xóa luôn họ tên, số ' +
           'điện thoại, email và tên hiển thị trong danh sách người ủng hộ. Nếu đã từng trừ tiền ' +
           'thành công thì chúng tôi chỉ đánh dấu là đã kết thúc, và thời hạn năm năm nói trên được ' +
-          'tính từ lần hoạt động cuối cùng ấy. Nội dung phản ' +
+          'tính từ lần hoạt động cuối cùng ấy. Trường hợp còn một lần trừ tiền mà chúng tôi chưa ' +
+          'từng nhận được kết quả cũng vậy: chúng tôi chỉ đánh dấu là đã kết thúc và vẫn giữ thông ' +
+          'tin liên hệ, vì nếu sau này xác nhận được lần trừ tiền ấy đã thành công thì chúng tôi ' +
+          'phải liên hệ được với bạn để hoàn tiền. Nội dung phản ' +
           'hồi gốc mà đơn vị thanh toán trả về khi duyệt một khoản thanh toán được xóa sau năm năm kể ' +
           'từ lần duyệt đó, vì luật buộc chúng tôi giữ hồ sơ thanh toán trong chừng ấy thời gian. Còn ' +
           'ghi chú tự do và lý do đơn vị thanh toán từ chối một khoản thanh toán thì được xóa theo ' +
@@ -943,6 +955,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'หากตลอดช่วงเวลานั้นไม่เคยเรียกเก็บเงินได้สําเร็จเลย ย่อมไม่เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
           'จึงไม่มีบันทึกธุรกรรมที่ต้องเก็บรักษา เราจึงลบชื่อ เบอร์โทร อีเมล และชื่อที่ใช้แสดงในรายชื่อผู้สนับสนุนไปพร้อมกันในคราวนั้น ' +
           'ส่วนรายการที่เคยเรียกเก็บเงินได้สําเร็จ เราเพียงทําเครื่องหมายว่าสิ้นสุด แล้วนับกําหนดห้าปีข้างต้นจากวันที่มีความเคลื่อนไหวครั้งสุดท้ายนั้น ' +
+          'รายการที่ยังมีการเรียกเก็บเงินซึ่งเราไม่เคยทราบผลค้างอยู่ก็เช่นกัน คือเราทําเครื่องหมายว่าสิ้นสุดแต่ยังเก็บข้อมูลติดต่อไว้ ' +
+          'เพราะหากภายหลังยืนยันได้ว่าการเรียกเก็บเงินครั้งนั้นสําเร็จ เราต้องติดต่อคุณเพื่อคืนเงินได้ ' +
           'เนื้อหาการตอบกลับต้นฉบับที่ผู้ให้บริการชําระเงินส่งกลับมาเมื่ออนุมัติการชําระเงินจะถูกลบเมื่อครบห้าปีนับแต่วันอนุมัตินั้น ' +
           'เพราะกฎหมายกําหนดให้เก็บบันทึกการชําระเงินไว้นานเท่านั้น ส่วนบันทึกข้อความอิสระและเหตุผลที่ผู้ให้บริการปฏิเสธ' +
           'การชําระเงินจะถูกลบในระยะเวลาที่สั้นกว่า เพราะการชําระเงินที่ถูกปฏิเสธไม่ก่อให้เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
@@ -1058,7 +1072,10 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'tranzaksiya yozuvi yo\'q, shuning uchun o\'sha zahoti ism, telefon raqami, email manzili va ' +
           'qo\'llab-quvvatlovchilar ro\'yxatida ko\'rsatiladigan nom ham o\'chiriladi. To\'lov o\'tgan ' +
           'bo\'lsa, faqat tugagan deb belgilaymiz va yuqoridagi besh yil o\'sha oxirgi harakatdan ' +
-          'boshlab hisoblanadi. To\'lov tashkiloti ' +
+          'boshlab hisoblanadi. Natijasi bizga hech qachon ma\'lum bo\'lmagan to\'lov urinishi qolgan ' +
+          'obunada ham shunday: uni faqat tugagan deb belgilaymiz, aloqa ma\'lumotlarini esa ' +
+          'saqlaymiz - keyinchalik o\'sha to\'lov o\'tgani tasdiqlansa, pulni qaytarish uchun siz ' +
+          'bilan bog\'lana olishimiz kerak. To\'lov tashkiloti ' +
           'to\'lovni tasdiqlaganda qaytargan javobning asl matni o\'sha tasdiqdan besh yil o\'tgach ' +
           'o\'chiriladi, chunki qonun to\'lov yozuvini shuncha muddat saqlashni talab qiladi. Erkin ' +
           'yoziladigan izohlar va to\'lov tashkiloti to\'lovni rad etish sabablari esa qisqaroq ' +
