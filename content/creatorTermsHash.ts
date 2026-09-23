@@ -7,10 +7,19 @@
  * 남으므로, "그때 이 내용에 동의했다"는 증거가 되려면 내용이 바뀌면 반드시 문자열도
  * 바뀌어야 한다.
  *
- * 무엇을 해시에 넣는가: 개설자 약관 조항 전부(`FUNDING_CREATOR_TERMS_SECTIONS`)다. 후원자
- * 약관과 달리 이 문서는 공유 상수를 보간하지 않으므로(수수료율·정산 시점을 아직 안 적기로
- * 했다) 조항 본문만으로 충분하다.
+ * 무엇을 해시에 넣는가: 개설자 약관 조항 전부(`FUNDING_CREATOR_TERMS_SECTIONS`)와, **제6조
+ * 본문에 보간되는 공유 상수 네 개**다. 2026-09-23에 6조가 "별도 정산 계약으로 정한다"에서
+ * 확정 요율·정산 시점을 적는 조항으로 바뀌면서 이 문서도 후원자 약관과 같은 모양이 됐다 —
+ * 조항 본문만 해시하면 `FUNDING_PLATFORM_FEE_PERCENT`를 5.5에서 10으로 올려도 직렬화 결과가
+ * 그대로라, 개설자가 동의한 내용이 판본 문자열은 그대로인 채 조용히 달라진다. 이 게이트가
+ * 막으려는 상태 그 자체다. `content/fundingTermsHash.ts`가 공유 상수를 넣는 방식과 같다.
  */
+import {
+  FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
+  FUNDING_WITHHOLDING_PERCENT,
+} from '../data/pricing';
+import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../lib/funding/policy';
 import { FUNDING_CREATOR_TERMS_SECTIONS } from '../pages/[locale]/funding/creator-terms';
 
 /** 해시 대상을 사람이 읽을 수 있는 형태로 직렬화한다 — 실패했을 때 무엇이 바뀌었는지 diff로 보이도록. */
@@ -19,6 +28,16 @@ export const serializeCreatorTerms = (): string => {
   for (const section of FUNDING_CREATOR_TERMS_SECTIONS) {
     lines.push(section.heading, ...section.body.map((b) => `  ${b}`));
   }
+
+  // 조항 본문에 이미 보간된 값이라 중복처럼 보이지만, 본문 문장을 바꾸지 않고 상수만 고치는
+  // 변경(예: 요율 인상)에서는 이 줄들만이 해시를 움직인다. 본문 표현이 바뀌어도 상수는
+  // 그대로인 반대 경우도 있으므로 둘 다 싣는다.
+  lines.push('## 제6조에 보간되는 공유 상수 (data/pricing.ts · lib/funding/policy.ts)');
+  lines.push(`FUNDING_PLATFORM_FEE_PERCENT=${FUNDING_PLATFORM_FEE_PERCENT}`);
+  lines.push(`FUNDING_PAYMENT_FEE_PERCENT=${FUNDING_PAYMENT_FEE_PERCENT}`);
+  lines.push(`FUNDING_WITHHOLDING_PERCENT=${FUNDING_WITHHOLDING_PERCENT}`);
+  lines.push(`FUNDING_PAYOUT_BUSINESS_DAYS=${FUNDING_PAYOUT_BUSINESS_DAYS}`);
+
   return lines.join('\n');
 };
 
