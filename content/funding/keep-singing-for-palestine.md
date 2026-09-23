@@ -140,7 +140,7 @@ rewards:
 
 ### DJ 이브
 
-![DJ 이브](/images/funding/keep-singing-for-palestine/lineup/dj-eve.webp "150")
+![DJ 이브](/images/funding/keep-singing-for-palestine/lineup/dj-eve.webp "560")
 
 DJ 이브(Yves)는 '저항과 소음 Noise For Protest'에서 활동합니다. 저항과 소음은 가자지구 집단학살 종식을 위해 팔레스타인 연대 단체와 DJ들이 모인 프로젝트로, 음악과 춤을 통해 집단학살 반대의 움직임을 가시화합니다. 6월 '팔레스타인을 위한 자긍심, 저항과 소음(Pride Noise for Palestine)'을 비롯해 연대 무대에 꾸준히 서 왔습니다. ([인스타그램](https://www.instagram.com/jinaofyves/))
 
