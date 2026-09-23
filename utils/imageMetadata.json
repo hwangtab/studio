@@ -55,6 +55,14 @@
     "width": 1920,
     "height": 1080
   },
+  "/images/funding/keep-singing-for-palestine/lineup/dj-eve.webp": {
+    "width": 150,
+    "height": 150
+  },
+  "/images/funding/keep-singing-for-palestine/lineup/imjeongdeuk.webp": {
+    "width": 560,
+    "height": 560
+  },
   "/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp": {
     "width": 560,
     "height": 560
@@ -78,6 +86,14 @@
   "/images/funding/keep-singing-for-palestine/og-20260915.webp": {
     "width": 1200,
     "height": 630
+  },
+  "/images/funding/keep-singing-for-palestine/poster-20260917.webp": {
+    "width": 1080,
+    "height": 1350
+  },
+  "/images/funding/keep-singing-for-palestine/poster-20260918.webp": {
+    "width": 1080,
+    "height": 1350
   },
   "/images/funding/smoke-test/cover.webp": {
     "width": 1440,
@@ -220,6 +236,10 @@
     "height": 630
   },
   "/images/og-lesson1.webp": {
+    "width": 1200,
+    "height": 630
+  },
+  "/images/og-music-promotion.webp": {
     "width": 1200,
     "height": 630
   },
