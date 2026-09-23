@@ -32,6 +32,8 @@ interface Baseline {
   account: string;
   holder: string;
   taxType: EditorTaxType;
+  /** 주민등록번호 칸의 기준은 늘 빈 문자열이다 — 서버가 값을 안 주고, 저장 뒤에도 비운다. */
+  residentNumber: string;
 }
 
 const last4 = (account: string): string | null => {
@@ -50,8 +52,9 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
   const [account, setAccount] = useState('');
   const [holder, setHolder] = useState('');
   const [taxType, setTaxType] = useState<EditorTaxType>(initial.taxType ?? 'withholding');
+  const [residentNumber, setResidentNumber] = useState('');
   const [baseline, setBaseline] = useState<Baseline>({
-    bankName: '', account: '', holder: '', taxType: initial.taxType ?? 'withholding',
+    bankName: '', account: '', holder: '', taxType: initial.taxType ?? 'withholding', residentNumber: '',
   });
   const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
 
@@ -61,7 +64,8 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
   const dirty = bankName !== baseline.bankName
     || account !== baseline.account
     || holder !== baseline.holder
-    || taxType !== baseline.taxType;
+    || taxType !== baseline.taxType
+    || residentNumber !== baseline.residentNumber;
   useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
 
   const clearSaveStatus = () => setSave((s) => (s.status === 'idle' ? s : IDLE_SAVE_STATE));
@@ -74,6 +78,9 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       bankName: bankName.trim(),
       account: account.trim(),
       holder: holder.trim(),
+      // 사업자면 아예 실어 보내지 않는다. 서버도 버리지만(`validatePayoutSection`),
+      // 근거가 없는 값을 네트워크에 한 번 더 올릴 이유가 없다.
+      residentNumber: taxType === 'withholding' ? residentNumber.replace(/\s/g, '') : '',
     };
     const result = await savePayoutSection(projectId, value);
     if (result.ok) {
@@ -84,13 +91,27 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       setBankName((cur) => (cur === bankName ? value.bankName : cur));
       setAccount((cur) => (cur === account ? value.account : cur));
       setHolder((cur) => (cur === holder ? value.holder : cur));
+      // 주민등록번호만은 정규화한 값으로 되돌리지 않고 **비운다** — 저장된 뒤에는 이 값이
+      // 화면에 남아 있을 이유가 없다. 같은 조건("제출 시점 값과 지금 값이 같을 때만")을
+      // 지켜야 저장 중에 이어서 친 입력이 사라지지 않는다.
+      setResidentNumber((cur) => (cur === residentNumber ? '' : cur));
       // 기준은 무조건 제출한 값으로 옮긴다 — 그래야 이어서 친 입력이 남아 있을 때
       // dirty가 열린 채로 유지돼 이탈 가드가 계속 경고한다.
-      setBaseline(value);
+      // 주민번호의 기준만 빈 문자열이다 — 위에서 칸을 비웠으므로 그게 저장 직후의 값이다.
+      setBaseline({ ...value, residentNumber: '' });
       setSave({ status: 'success' });
       // 부모에게도 요약만 올린다. 계좌 전체를 올리면 그 값이 페이지 state를 타고
       // 다른 구획으로 번진다.
-      onSaved({ registered: true, accountLast4: last4(value.account), taxType: value.taxType });
+      onSaved({
+        registered: true,
+        accountLast4: last4(value.account),
+        taxType: value.taxType,
+        // 서버와 같은 규칙(`savePayoutSection`): 사업자로 저장하면 지워지고, 빈 값이면
+        // 기존 값이 남고, 값을 넣었으면 등록된다.
+        residentNumberRegistered: value.taxType === 'invoice'
+          ? false
+          : value.residentNumber.length > 0 || initial.residentNumberRegistered,
+      });
     } else {
       setSave({ status: 'error', message: result.message });
     }
@@ -137,7 +158,14 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       >
         <Select
           value={taxType}
-          onChange={(e) => { setTaxType(e.target.value as EditorTaxType); clearSaveStatus(); }}
+          onChange={(e) => {
+            const next = e.target.value as EditorTaxType;
+            setTaxType(next);
+            // 사업자로 바꾸면 주민등록번호 칸이 사라진다. 사라진 칸에 입력이 남아 있으면
+            // 그 값이 보이지 않는 채로 다음 저장까지 브라우저 메모리에 머문다.
+            if (next === 'invoice') setResidentNumber('');
+            clearSaveStatus();
+          }}
           disabled={readOnly}
         >
           <option value="withholding">개인 — 원천징수</option>
@@ -153,6 +181,56 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
           스튜디오 놀 앞으로 발행해 주셔야 합니다.
         </li>
       </ul>
+
+      {/*
+        주민등록번호 — **원천징수 대상일 때만 보이고, 그때만 받는다.**
+        근거는 소득세법상 원천징수의무자의 지급명세서 제출 의무 하나뿐이라, 사업자에게
+        받으면 근거 없는 수집이 된다(개인정보보호법 §24의2). 그래서 칸 자체가 사라지고
+        서버도 그때 기존 값을 지운다(`savePayoutSection`).
+      */}
+      {taxType === 'withholding' ? (
+        <>
+          <Field
+            id="payout-resident-number"
+            label="주민등록번호"
+            hint="하이픈(-)은 넣어도 되고 빼도 됩니다."
+          >
+            <TextInput
+              value={residentNumber}
+              onChange={(e) => { setResidentNumber(e.target.value); clearSaveStatus(); }}
+              maxLength={CREATOR_LIMITS.residentNumberMax}
+              disabled={readOnly}
+              inputMode="numeric"
+              autoComplete="off"
+              placeholder="000000-0000000"
+            />
+          </Field>
+          <div className="-mt-3 space-y-1 text-xs text-gray-600 dark:text-gray-400">
+            <p>
+              개인으로 정산을 받으시면 스튜디오 놀이 원천징수의무자로서 위 세액을 대신 떼어 신고하고,
+              국세청에 지급명세서를 제출해야 합니다. 지급명세서에는 소득을 받는 분의 주민등록번호가
+              들어갑니다 — 그래서 원천징수 대상일 때만 받습니다.
+            </p>
+            <p>
+              {initial.residentNumberRegistered
+                ? '주민등록번호가 등록되어 있습니다. 비워 두고 저장하면 등록된 번호가 그대로 남고, 새로 입력해 저장하면 덮어씁니다.'
+                : '주민등록번호가 아직 등록되어 있지 않습니다. 정산을 보내려면 등록해 주세요.'}
+              {' '}
+              암호화해 보관하며, 등록한 번호는 계좌와 마찬가지로 화면에 다시 띄우지 않습니다.
+            </p>
+            <p>
+              세금 유형을 사업자로 바꾸면 이 칸이 사라지고, 이미 등록된 번호도 지워집니다 — 원천징수
+              대상이 아니면 저희가 이 번호를 보관할 근거가 없기 때문입니다.
+            </p>
+          </div>
+        </>
+      ) : (
+        <p className="-mt-2 text-xs text-gray-600 dark:text-gray-400">
+          사업자는 주민등록번호를 받지 않습니다. 원천징수를 하지 않으므로 지급명세서 제출 대상이
+          아니고, 그러면 저희가 그 번호를 보관할 근거가 없습니다. 개인으로 등록해 두셨다가 사업자로
+          바꿔 저장하시면 이미 등록된 번호도 함께 지워집니다.
+        </p>
+      )}
 
       <Field id="payout-bank-name" label="은행명" required>
         <TextInput

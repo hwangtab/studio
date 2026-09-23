@@ -53,7 +53,9 @@ const APPROVED_PROJECT: EditorProject = {
 };
 
 const DRAFT_PROJECT: EditorProject = { ...APPROVED_PROJECT, reviewStatus: 'draft' };
-const UNREGISTERED: EditorPayoutSummary = { registered: false, accountLast4: null, taxType: null };
+const UNREGISTERED: EditorPayoutSummary = {
+  registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false,
+};
 
 const renderEditor = (project: EditorProject, payout: EditorPayoutSummary = UNREGISTERED) =>
   render(<CreatorProjectEditor project={project} earliestStartDate="2026-09-25" nameLocked={false} payout={payout} />);
@@ -62,6 +64,9 @@ const openPayoutTab = () => fireEvent.click(screen.getByRole('tab', { name: '정
 const bankField = () => screen.getByLabelText('은행명', { exact: false });
 const accountField = () => screen.getByLabelText('계좌번호', { exact: false });
 const holderField = () => screen.getByLabelText('예금주', { exact: false });
+const taxField = () => screen.getByLabelText('세금 유형', { exact: false });
+const rrnField = () => screen.getByLabelText('주민등록번호', { exact: false });
+const queryRrnField = () => screen.queryByLabelText('주민등록번호', { exact: false });
 
 /** 마지막으로 등록된 routeChangeStart 핸들러를 부른다 — 링크 클릭 한 번을 흉내 낸다. */
 const triggerRouteChangeStart = (url = '/ko/funding/creator') => {
@@ -126,7 +131,7 @@ describe('정산 정보 구획 — 등록 상태 표시', () => {
   });
 
   it('등록됐으면 뒤 4자리만 보여 준다 — 입력 칸은 비어 있다', () => {
-    renderEditor(APPROVED_PROJECT, { registered: true, accountLast4: '9012', taxType: 'invoice' });
+    renderEditor(APPROVED_PROJECT, { registered: true, accountLast4: '9012', taxType: 'invoice', residentNumberRegistered: false });
     openPayoutTab();
 
     expect(screen.getByText('9012', { exact: false })).toBeInTheDocument();
@@ -162,7 +167,10 @@ describe('정산 정보 구획 — 저장', () => {
     expect(url).toBe('/api/funding/creator/projects/proj-1');
     expect(JSON.parse((init as { body: string }).body)).toEqual({
       section: 'payout',
-      value: { taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' },
+      value: {
+        taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하',
+        residentNumber: '',
+      },
     });
 
     // 정규화(trim)한 값으로 로컬 상태가 되돌아가 dirty가 풀린다 — 안 그러면 "원문 vs
@@ -217,5 +225,145 @@ describe('정산 정보 구획 — 저장', () => {
     fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
 
     await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('숫자와 하이픈'));
+  });
+});
+
+describe('정산 정보 구획 — 주민등록번호는 원천징수 대상만', () => {
+  it('원천징수면 칸이 보이고 왜 받는지가 적혀 있다', () => {
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+
+    expect(rrnField()).toBeInTheDocument();
+    expect(rrnField()).toHaveAttribute('autocomplete', 'off');
+    expect(rrnField()).toHaveAttribute('inputmode', 'numeric');
+    // 법적 근거를 화면이 말한다 — 근거 없는 수집으로 읽히면 안 된다.
+    expect(screen.getByText('지급명세서', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText('주민등록번호가 아직 등록되어 있지 않습니다', { exact: false })).toBeInTheDocument();
+  });
+
+  it('등록 상태는 등록됨/미등록뿐이다 — 값은 어떤 조각도 오지 않는다', () => {
+    renderEditor(APPROVED_PROJECT, {
+      registered: true, accountLast4: '9012', taxType: 'withholding', residentNumberRegistered: true,
+    });
+    openPayoutTab();
+
+    expect(screen.getByText('주민등록번호가 등록되어 있습니다', { exact: false })).toBeInTheDocument();
+    expect(rrnField()).toHaveValue('');
+  });
+
+  it('사업자를 고르면 칸이 사라지고, 기존 값이 지워진다는 것을 말한다', () => {
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+
+    fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+
+    expect(queryRrnField()).toBeNull();
+    expect(screen.getByText('이미 등록된 번호도 함께 지워집니다', { exact: false })).toBeInTheDocument();
+  });
+
+  it('사업자로 저장하면 주민등록번호를 아예 실어 보내지 않는다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({ ok: true, json: async () => ({ ok: true }) });
+    global.fetch = fetchMock as unknown as typeof fetch;
+
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+    fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
+    fireEvent.change(taxField(), { target: { value: 'invoice' } });
+    fireEvent.change(bankField(), { target: { value: '국민은행' } });
+    fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
+    fireEvent.change(holderField(), { target: { value: '황경하' } });
+    fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    const body = JSON.parse((fetchMock.mock.calls[0][1] as { body: string }).body);
+    expect(body.value.residentNumber).toBe('');
+  });
+
+  it('저장하면 입력 칸이 비고 이탈 가드가 풀린다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true, json: async () => ({ ok: true }),
+    }) as unknown as typeof fetch;
+    jest.spyOn(window, 'confirm').mockReturnValue(false);
+
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+    fireEvent.change(bankField(), { target: { value: '국민은행' } });
+    fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
+    fireEvent.change(holderField(), { target: { value: '황경하' } });
+    fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
+    expect(() => triggerRouteChangeStart()).toThrow();
+
+    fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    expect(rrnField()).toHaveValue('');
+    await waitFor(() => expect(() => triggerRouteChangeStart()).not.toThrow());
+    // 등록 표시가 곧바로 바뀐다 — 바뀌는 것은 불리언 하나다.
+    expect(screen.getByText('주민등록번호가 등록되어 있습니다', { exact: false })).toBeInTheDocument();
+  });
+
+  it('저장이 도는 동안 이어서 친 주민등록번호는 응답이 지우지 않는다', async () => {
+    let resolveFetch: (v: unknown) => void = () => {};
+    global.fetch = jest.fn().mockImplementation(
+      () => new Promise((resolve) => { resolveFetch = resolve; }),
+    ) as unknown as typeof fetch;
+    jest.spyOn(window, 'confirm').mockReturnValue(false);
+
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+    fireEvent.change(bankField(), { target: { value: '국민은행' } });
+    fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
+    fireEvent.change(holderField(), { target: { value: '황경하' } });
+    fireEvent.change(rrnField(), { target: { value: '900101-123' } });
+    fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
+
+    fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
+    resolveFetch({ ok: true, json: async () => ({ ok: true }) });
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    expect(rrnField()).toHaveValue('900101-1234567');
+    // 보낸 값과 지금 값이 다르므로 이탈 가드는 열린 채 남는다.
+    expect(() => triggerRouteChangeStart()).toThrow();
+  });
+
+  it('암호화 키가 없어 503이 오면 서버가 준 문장을 그대로 보여 준다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({
+        ok: false,
+        message: '서버의 암호화 설정 문제로 주민등록번호를 저장할 수 없습니다. 이번 저장은 계좌를 포함해 '
+          + '아무것도 반영되지 않았습니다. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 알려 주세요.',
+      }),
+    }) as unknown as typeof fetch;
+
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+    fireEvent.change(bankField(), { target: { value: '국민은행' } });
+    fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
+    fireEvent.change(holderField(), { target: { value: '황경하' } });
+    fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
+    fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
+
+    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent('아무것도 반영되지 않았습니다'));
+  });
+
+  it('입력한 주민등록번호가 화면 어디에도 남지 않는다 — 저장 뒤 DOM 전체를 본다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true, json: async () => ({ ok: true }),
+    }) as unknown as typeof fetch;
+
+    renderEditor(APPROVED_PROJECT);
+    openPayoutTab();
+    fireEvent.change(bankField(), { target: { value: '국민은행' } });
+    fireEvent.change(accountField(), { target: { value: '123-456-789012' } });
+    fireEvent.change(holderField(), { target: { value: '황경하' } });
+    fireEvent.change(rrnField(), { target: { value: '900101-1234567' } });
+    fireEvent.click(screen.getByRole('button', { name: '정산 정보 저장' }));
+    await waitFor(() => expect(screen.getByText('저장했습니다.')).toBeInTheDocument());
+
+    // 값 자체도, 뒤 7자리·앞 6자리 같은 조각도 남지 않는다.
+    expect(document.body.innerHTML).not.toContain('1234567');
+    expect(document.body.innerHTML).not.toContain('900101');
   });
 });

@@ -54,7 +54,7 @@ afterEach(() => {
  * 정산 정보 구획이 화면에 받는 전부 — 미등록 상태. 이 테스트들은 정산 구획을 보지 않으므로
  * 가장 조용한 값을 넣는다(구획 자체의 동작은 payoutSection.test.tsx가 본다).
  */
-const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null } as const;
+const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null, residentNumberRegistered: false } as const;
 
 it('submitted 상태에서는 철회 버튼과 철회 가능 안내가 보인다', () => {
   render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);

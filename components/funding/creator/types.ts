@@ -82,6 +82,13 @@ export interface EditorPayoutSummary {
    *   보고 정산을 막는 게이트라서 불리언으로 충분하다.
    */
   taxType: EditorTaxType | null;
+  /**
+   * 주민등록번호가 등록돼 있는가. **나가는 것은 이 불리언뿐이다** — 계좌와 달리 뒤 4자리
+   * 같은 조각도 내려보내지 않는다. 암호문을 실으면 키가 유일한 방어가 되고, 평문은 물론
+   * `__NEXT_DATA__`로 페이지 소스에 박힌다(`lib/funding/creatorProjectWrite.ts`의
+   * `CreatorPayoutSummary` 주석).
+   */
+  residentNumberRegistered: boolean;
 }
 
 /** 개설자 편집 화면의 프로젝트 구획. `lib/funding/reviewTransition.ts`의 `CreatorSectionName`과 같다. */

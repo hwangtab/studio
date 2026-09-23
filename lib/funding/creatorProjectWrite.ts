@@ -403,7 +403,12 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
         // 원본 메시지를 그대로 내보내지 않는다. 평문은 애초에 들어 있지 않지만, 키 설정
         // 상태를 화면에 적어 줄 이유도 없다. 서버에는 코드만 남긴다.
         console.error('[funding] resident number encryption failed', { code: error.code });
-        return deny('encryption_unavailable', '지금은 주민등록번호를 저장할 수 없습니다. 운영자에게 알려 주세요.');
+        return deny(
+          'encryption_unavailable',
+          '서버의 암호화 설정 문제로 주민등록번호를 저장할 수 없습니다. 이번 저장은 계좌를 포함해 '
+            + '아무것도 반영되지 않았습니다. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 '
+            + '알려 주세요.',
+        );
       }
       throw error;
     }
