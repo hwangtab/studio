@@ -56,7 +56,7 @@ jobs:
           NEXT_PUBLIC_SITE_URL: https://studionol.co.kr
 
   migration-drift:
-    name: Migration drift check (skip until TURSO secrets are registered)
+    name: Migration drift check
     # main에 들어간 마이그레이션이 아직 운영 DB에 적용되지 않은 것을 잡는다
     # (2026-09-21: 0017~0019가 사흘간 미적용 배포됐던 사고 재발 방지).
     #
@@ -68,8 +68,8 @@ jobs:
     # 아직 운영에 적용 전이라 "밀림"이 정상 상태이고, 그걸 매번 빨갛게 만들면 이 게이트
     # 자체가 곧 무시된다.
     #
-    # 지금 CI에는 TURSO_DATABASE_URL·TURSO_AUTH_TOKEN이 등록돼 있지 않아 이 잡은 매번
-    # skip으로 끝난다. 운영자가 두 값을 GitHub Secrets에 넣어야 실제로 판정을 시작한다.
+    # TURSO_DATABASE_URL·TURSO_AUTH_TOKEN은 2026-09-23에 GitHub Secrets에 등록됐다 —
+    # 이 잡은 실제로 판정한다. 두 값이 사라지면 스크립트가 unknown으로 끝난다.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 5
