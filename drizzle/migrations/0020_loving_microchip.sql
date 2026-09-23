@@ -1,0 +1,2 @@
+ALTER TABLE `funding_project_payouts` ADD `platform_fee_amount` integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE `funding_project_payouts` ADD `payment_fee_amount` integer DEFAULT 0 NOT NULL;

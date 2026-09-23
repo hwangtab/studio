@@ -618,6 +618,14 @@ export const fundingProjectPayouts = sqliteTable('funding_project_payouts', {
    * 기록해 두지 않으면 세금계산서·장부에서 역산해야 한다.
    */
   feeAmount: integer('fee_amount').notNull(),
+  /**
+   * feeAmount의 항목별 내역. 합계만 남기면 플랫폼 수수료(스튜디오 매출 — 부가세 대상이고
+   * 개설자에게 세금계산서를 발행한다)와 결제 수수료(토스로 통과하는 몫)를 기록에서 가를 수
+   * 없고, 요율이 바뀐 뒤에는 역산도 안 된다. 이 표의 존재 이유가 "기록 시점의 숫자를
+   * 고정"하는 것이므로 항목도 그때 함께 고정한다.
+   */
+  platformFeeAmount: integer('platform_fee_amount').notNull().default(0),
+  paymentFeeAmount: integer('payment_fee_amount').notNull().default(0),
   shareAmount: integer('share_amount').notNull(),
   withholdingAmount: integer('withholding_amount').notNull(),
   netAmount: integer('net_amount').notNull(),
