@@ -12,13 +12,23 @@
  * 기간보다 먼저 지워지므로, `purgeExpiredFundingPersonalData`는 이 표를 아예 모른다 —
  * 호출만 나란히 둔다.
  *
+ * **세 번째 파기도 기준이 또 다르다.** 개설자 주민등록번호(`funding_creators.
+ * resident_number_enc`)는 원천징수한 정산의 **지급 시각**이 기산점이고 보관 기간도 따로다
+ * (`purgeExpiredResidentNumbers`). 후원자 배송지 파기와 같은 함수에 넣으면 아직 지급명세서
+ * 제출·수정신고가 남은 번호가 배송지와 함께 지워진다 — 그래서 함수도 기준도 분리한다.
+ *
  * 인증: Vercel Cron이 Authorization: Bearer ${CRON_SECRET} 헤더를 붙인다.
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
 import { isCronAuthorized } from '../../../lib/cron/auth';
-import { purgeExpiredFundingPersonalData, REWARD_RETENTION_YEARS } from '../../../lib/funding/retention';
+import {
+  purgeExpiredFundingPersonalData,
+  purgeExpiredResidentNumbers,
+  RESIDENT_NUMBER_RETENTION_YEARS,
+  REWARD_RETENTION_YEARS,
+} from '../../../lib/funding/retention';
 import {
   purgeExpiredPrivacyAccessLogs,
   PRIVACY_ACCESS_LOG_RETENTION_YEARS,
@@ -40,7 +50,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 외부 API 호출이 없고 부분 실패라는 상태 자체가 없다(전부 성공하거나 catch로 떨어진다).
     const result = await purgeExpiredFundingPersonalData();
     const accessLogs = await purgeExpiredPrivacyAccessLogs();
-    return res.status(200).json({ ok: true, ...result, purgedAccessLogs: accessLogs.purged });
+    const residentNumbers = await purgeExpiredResidentNumbers();
+    return res.status(200).json({
+      ok: true,
+      ...result,
+      purgedAccessLogs: accessLogs.purged,
+      purgedResidentNumbers: residentNumbers.purged,
+    });
   } catch (error: unknown) {
     const detail = error instanceof Error ? error.message : String(error);
     console.error('[cron/purge-funding] Failed:', error);
@@ -50,7 +66,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       subject: '[Studio NOL] 펀딩 개인정보 파기 실패',
       text:
         `리워드 전달 후 ${REWARD_RETENTION_YEARS}년이 지난 후원의 배송지 개인정보 파기, 또는 ` +
-        `보관 ${PRIVACY_ACCESS_LOG_RETENTION_YEARS}년이 지난 고유식별정보 접속기록 삭제가 실패했습니다.\n\n` +
+        `보관 ${PRIVACY_ACCESS_LOG_RETENTION_YEARS}년이 지난 고유식별정보 접속기록 삭제, 또는 ` +
+        `원천징수 정산 지급 후 ${RESIDENT_NUMBER_RETENTION_YEARS}년이 지난 개설자 주민등록번호 파기가 실패했습니다.\n\n` +
         `사유: ${detail}\n\n` +
         '펀딩 약관 제13조로 약속한 파기이므로 확인이 필요합니다.',
     }).catch(() => {});
