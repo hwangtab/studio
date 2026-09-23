@@ -38,6 +38,9 @@ export const saveStorySection = (projectId: string, value: unknown) =>
 export const saveCreatorSection = (projectId: string, value: unknown) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}`, { section: 'creator', value });
 
+export const savePayoutSection = (projectId: string, value: unknown) =>
+  post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}`, { section: 'payout', value });
+
 export const createReward = (projectId: string, value: RewardInput) =>
   post(`/api/funding/creator/projects/${encodeURIComponent(projectId)}/rewards`, { mode: 'create', value });
 

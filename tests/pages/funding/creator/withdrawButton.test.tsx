@@ -49,14 +49,21 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
+
+/**
+ * 정산 정보 구획이 화면에 받는 전부 — 미등록 상태. 이 테스트들은 정산 구획을 보지 않으므로
+ * 가장 조용한 값을 넣는다(구획 자체의 동작은 payoutSection.test.tsx가 본다).
+ */
+const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null } as const;
+
 it('submitted 상태에서는 철회 버튼과 철회 가능 안내가 보인다', () => {
-  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
   expect(screen.getByRole('button', { name: /심사 신청 철회/ })).toBeInTheDocument();
   expect(screen.getByText(/철회하고 다시 작성할 수 있습니다/)).toBeInTheDocument();
 });
 
 it('draft 상태에서는 철회 버튼이 없다', () => {
-  render(<CreatorProjectEditor project={{ ...SUBMITTED_PROJECT, reviewStatus: 'draft' }} earliestStartDate="2026-09-25" nameLocked={false} />);
+  render(<CreatorProjectEditor project={{ ...SUBMITTED_PROJECT, reviewStatus: 'draft' }} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
   expect(screen.queryByRole('button', { name: /심사 신청 철회/ })).not.toBeInTheDocument();
 });
 
@@ -65,7 +72,7 @@ it('철회 버튼을 누르면 withdraw API를 부르고, 성공하면 draft로 
     ok: true,
     json: async () => ({ ok: true }),
   });
-  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
   fireEvent.click(screen.getByRole('button', { name: /심사 신청 철회/ }));
 
@@ -89,7 +96,7 @@ it('철회 후 같은 화면에서 재제출하면 철회 버튼이 다시 나�
     .mockResolvedValueOnce({ ok: true, json: async () => ({ ok: true }) }) // withdraw
     .mockResolvedValueOnce({ ok: true, json: async () => ({ ok: true }) }); // submit
 
-  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
   fireEvent.click(screen.getByRole('button', { name: /심사 신청 철회/ }));
   await waitFor(() => {
@@ -115,7 +122,7 @@ it('철회가 실패하면 서버 메시지를 그대로 보여주고 버튼은 
     ok: false,
     json: async () => ({ ok: false, message: '지금 상태에서는 철회할 수 없습니다.' }),
   });
-  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+  render(<CreatorProjectEditor project={SUBMITTED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
   fireEvent.click(screen.getByRole('button', { name: /심사 신청 철회/ }));
 

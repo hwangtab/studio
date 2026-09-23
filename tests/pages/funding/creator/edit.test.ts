@@ -9,6 +9,7 @@ jest.mock('../../../../lib/funding/creatorAuth', () => ({ authenticateCreatorReq
 jest.mock('../../../../lib/funding/creatorProjectWrite', () => ({
   loadProjectForCreator: jest.fn(),
   isCreatorNameLocked: jest.fn().mockResolvedValue(false),
+  loadPayoutSummary: jest.fn().mockResolvedValue({ registered: false, accountLast4: null, taxType: null }),
 }));
 
 // eslint-disable-next-line import/first
@@ -16,7 +17,9 @@ import { getServerSideProps, toEditorProject } from '../../../../pages/[locale]/
 // eslint-disable-next-line import/first
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 // eslint-disable-next-line import/first
-import { isCreatorNameLocked, loadProjectForCreator, type CreatorProjectDetail } from '../../../../lib/funding/creatorProjectWrite';
+import {
+  isCreatorNameLocked, loadPayoutSummary, loadProjectForCreator, type CreatorProjectDetail,
+} from '../../../../lib/funding/creatorProjectWrite';
 // eslint-disable-next-line import/first
 import { computeEarliestStartDate } from '../../../../lib/funding/creatorDateInput';
 // eslint-disable-next-line import/first
@@ -54,7 +57,7 @@ const PROJECT = {
     taxType: 'individual',
     payoutBankName: '국민은행',
     payoutAccount: '123-456-789012',
-    payoutHolder: '개설자',
+    payoutHolder: '정산예금주',
   },
   rewards: [],
 } as unknown as CreatorProjectDetail;
@@ -175,6 +178,43 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
       } as never);
       const props = (result as unknown as { props: { nameLocked: boolean } }).props;
       expect(props.nameLocked).toBe(false);
+    });
+  });
+
+  /**
+   * 정산 정보는 props로 나가는 순간 `__NEXT_DATA__` JSON에 실려 페이지 소스에 평문으로
+   * 박힌다 — 개설자 본인 화면도 예외가 아니다. `lib/funding/dbProjects.integration.test.ts`의
+   * 같은 모양 테스트(비공개 개설자 필드가 공개 프로젝트에 안 실린다)와 짝이다.
+   */
+  describe('정산 정보 props — 등록 여부·뒤 4자리·세금 유형만 나간다', () => {
+    it('계좌번호 전체·은행명·예금주는 props 어디에도 없다', async () => {
+      (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'creator-a' });
+      (loadProjectForCreator as jest.Mock).mockResolvedValue(PROJECT);
+      (loadPayoutSummary as jest.Mock).mockResolvedValue({
+        registered: true, accountLast4: '9012', taxType: 'withholding',
+      });
+      const res = resStub();
+      const result = await getServerSideProps({
+        params: { locale: 'ko', id: 'proj-1' }, query: {}, req: { headers: {}, cookies: {} }, res,
+      } as never);
+      const props = (result as unknown as { props: { payout: Record<string, unknown> } }).props;
+
+      expect(props.payout).toEqual({ registered: true, accountLast4: '9012', taxType: 'withholding' });
+      expect(Object.keys(props.payout).sort()).toEqual(['accountLast4', 'registered', 'taxType']);
+      expect(loadPayoutSummary).toHaveBeenCalledWith('creator-a');
+
+      // props.project + props.payout을 함께 직렬화해 원본 값이 어느 쪽으로도 새지 않는지 본다
+      // (i18nResources는 로케일 카피에 동음이 섞여 오탐이 나므로 뺀다).
+      const serialized = JSON.stringify({
+        project: (props as unknown as { project: unknown }).project,
+        payout: props.payout,
+      });
+      expect(serialized).not.toContain('123-456-789012');
+      expect(serialized).not.toContain('국민은행');
+      expect(serialized).not.toContain('정산예금주');
+      expect(serialized).not.toContain('payoutAccount');
+      expect(serialized).not.toContain('payoutBankName');
+      expect(serialized).not.toContain('payoutHolder');
     });
   });
 

@@ -50,8 +50,32 @@ export interface EditorProject {
   rewards: EditorReward[];
 }
 
+/** 개설자가 고를 수 있는 세금 처리. `db/schema.ts`의 `fundingCreatorTaxTypeEnum`을 리터럴로 옮긴 것이다. */
+export type EditorTaxType = 'withholding' | 'invoice';
+
+/**
+ * 정산 정보 구획이 화면에 내려받는 **전부**.
+ *
+ * 은행명·예금주·계좌번호 전체는 여기 없다. Pages Router는 `getServerSideProps`가 돌려준
+ * props를 `__NEXT_DATA__` JSON으로 페이지 HTML에 그대로 싣는다 — 담는 순간 계좌번호가
+ * 페이지 소스에 평문으로 박히고, 그 HTML은 어깨너머로도 브라우저 캐시로도 화면 공유로도
+ * 새어 나간다. **본인 화면이라는 것은 예외 사유가 아니다.** 같은 이유로
+ * `lib/funding/dbProjects.ts`·`lib/funding/adminProjects.ts`도 이 네 필드를 일부러 빼고
+ * 있고 각자의 integration 테스트가 그것을 고정한다.
+ *
+ * 그래서 개설자는 계좌를 "고치는" 것이 아니라 **다시 입력해 덮어쓴다.** 등록됐는지와 뒤
+ * 4자리만 보여 주는 것으로 "내가 넣은 그 계좌가 맞나"는 확인된다.
+ */
+export interface EditorPayoutSummary {
+  /** 은행명·계좌번호·예금주가 모두 채워져 있는가. 값 자체는 내려보내지 않는다. */
+  registered: boolean;
+  /** 계좌번호 뒤 4자리. 미등록이면 null. */
+  accountLast4: string | null;
+  taxType: EditorTaxType | null;
+}
+
 /** 개설자 편집 화면의 프로젝트 구획. `lib/funding/reviewTransition.ts`의 `CreatorSectionName`과 같다. */
-export type CreatorSectionName = 'basic' | 'story' | 'rewards';
+export type CreatorSectionName = 'basic' | 'story' | 'rewards' | 'payout';
 
 /**
  * 상태별로 개설자가 고칠 수 있는 구획. `lib/funding/reviewTransition.ts`의
@@ -64,7 +88,7 @@ export type CreatorSectionName = 'basic' | 'story' | 'rewards';
 const EDITABLE_SECTIONS: Record<string, readonly CreatorSectionName[]> = {
   draft: ['basic', 'story', 'rewards'],
   changes_requested: ['basic', 'story', 'rewards'],
-  approved: ['basic', 'story'],
+  approved: ['basic', 'story', 'payout'],
   submitted: [],
   rejected: [],
 };
@@ -89,7 +113,7 @@ export const REVIEW_STATUS_LABEL: Record<string, string> = {
  */
 export const REVIEW_STATUS_NOTICE: Record<string, string> = {
   submitted: '심사 중입니다. 심사가 끝날 때까지는 내용을 고칠 수 없습니다. 오타를 발견했거나 내용을 더 손보고 싶다면 아래에서 심사 신청을 철회하고 다시 작성할 수 있습니다.',
-  approved: '공개된 프로젝트입니다. 본문과 제목·요약·표지는 지금도 고칠 수 있고, 고치면 운영자에게 알림이 갑니다. 주소·목표 금액·모금 기간과 리워드는 후원자와의 약속이라 바꿀 수 없습니다.',
+  approved: '공개된 프로젝트입니다. 본문과 제목·요약·표지는 지금도 고칠 수 있고, 고치면 운영자에게 알림이 갑니다. 주소·목표 금액·모금 기간과 리워드는 후원자와의 약속이라 바꿀 수 없습니다. 정산 정보 구획이 열렸으니 모금이 끝나기 전에 채워 주세요.',
   rejected: '이 프로젝트는 종결되어 더 이상 고칠 수 없습니다. 사유는 아래 운영자 메모를 확인해 주세요. 다시 진행하시려면 새 프로젝트를 만들어 주세요.',
 };
 

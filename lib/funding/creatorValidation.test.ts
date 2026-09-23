@@ -1,6 +1,6 @@
 import {
-  CREATOR_LIMITS, findMissingRequiredSections, isDefaultCreatorName, validateBasicSection, validateRewardInput,
-  validateStorySection,
+  CREATOR_LIMITS, findMissingRequiredSections, isDefaultCreatorName, validateBasicSection, validatePayoutSection,
+  validateRewardInput, validateStorySection,
 } from './creatorValidation';
 
 const NOW = new Date('2026-10-01T00:00:00+09:00');
@@ -155,5 +155,48 @@ describe('findMissingRequiredSections — 개설자 이름', () => {
   it('creatorEmail을 안 넘기면 기본값 판정을 건너뛴다 — 빈 이름만 본다', () => {
     expect(findMissingRequiredSections({ ...filled, creatorName: 'hwangtab' })).not.toContain('개설자 정보(이름)');
     expect(findMissingRequiredSections({ ...filled, creatorName: '' })).toContain('개설자 정보(이름)');
+  });
+});
+
+describe('validatePayoutSection', () => {
+  const payout = () => ({ taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' });
+
+  it('정상 입력은 통과하고 앞뒤 공백을 다듬는다', () => {
+    const r = validatePayoutSection({ ...payout(), bankName: '  국민은행  ', holder: ' 황경하 ' });
+    expect(r).toEqual({
+      ok: true,
+      value: { taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' },
+    });
+  });
+
+  it('사업자(invoice)도 받는다', () => {
+    expect(validatePayoutSection({ ...payout(), taxType: 'invoice' }).ok).toBe(true);
+  });
+
+  it('세금 유형이 없거나 모르는 값이면 거부한다', () => {
+    expect(validatePayoutSection({ ...payout(), taxType: undefined }).ok).toBe(false);
+    expect(validatePayoutSection({ ...payout(), taxType: 'individual' }).ok).toBe(false);
+  });
+
+  it('빈 값은 거부한다', () => {
+    expect(validatePayoutSection({ ...payout(), bankName: '   ' }).ok).toBe(false);
+    expect(validatePayoutSection({ ...payout(), account: '' }).ok).toBe(false);
+    expect(validatePayoutSection({ ...payout(), holder: '' }).ok).toBe(false);
+  });
+
+  it('과도한 길이는 거부한다', () => {
+    expect(validatePayoutSection({ ...payout(), bankName: '가'.repeat(CREATOR_LIMITS.payoutBankNameMax + 1) }).ok).toBe(false);
+    expect(validatePayoutSection({ ...payout(), account: '1'.repeat(CREATOR_LIMITS.payoutAccountMax + 1) }).ok).toBe(false);
+    expect(validatePayoutSection({ ...payout(), holder: '가'.repeat(CREATOR_LIMITS.payoutHolderMax + 1) }).ok).toBe(false);
+  });
+
+  it('계좌번호에 숫자·하이픈 외 문자가 있으면 거부한다', () => {
+    for (const bad of ['123 456 789', '123-456-789012원', 'abc-123', '123.456.789']) {
+      expect(validatePayoutSection({ ...payout(), account: bad }).ok).toBe(false);
+    }
+  });
+
+  it('은행 목록은 검사하지 않는다 — 우리가 모르는 은행도 받는다', () => {
+    expect(validatePayoutSection({ ...payout(), bankName: '토스뱅크' }).ok).toBe(true);
   });
 });

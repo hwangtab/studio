@@ -38,6 +38,14 @@ export const CREATOR_LIMITS = {
   rewardIdMax: 40,
   estimatedDeliveryMax: 40,
   /**
+   * 정산 정보. 은행 목록은 하드코딩하지 않는다 — 인터넷전문은행·증권사 CMA·조합까지
+   * 계속 늘어나는 목록이라, 우리가 들고 있으면 새 은행을 쓰는 개설자가 등록 자체를
+   * 못 한다. 형식만 보고 실제 계좌 유효성은 이체 시점에 운영자가 확인한다.
+   */
+  payoutBankNameMax: 30,
+  payoutAccountMax: 30,
+  payoutHolderMax: 40,
+  /**
    * 개설자 한 명이 동시에 가질 수 있는 **미심사** 프로젝트(draft·submitted·
    * changes_requested) 수. `approved`·`rejected`는 세지 않는다 — 둘 다 운영자가
    * 사람 손으로 심사를 끝낸 행이라 스팸 벡터가 아니다. 이 이름·주석·실제로 세는
@@ -235,6 +243,52 @@ export const validateCreatorSection = (input: unknown): { ok: true; value: Creat
   }
 
   return { ok: true, value: { name, contactName, phone, bio, links } };
+};
+
+export interface PayoutSection {
+  taxType: 'withholding' | 'invoice';
+  bankName: string;
+  account: string;
+  holder: string;
+}
+
+/** 숫자와 하이픈만. 은행마다 자릿수·구분 위치가 달라 그 이상은 보지 않는다. */
+const PAYOUT_ACCOUNT_PATTERN = /^[0-9-]+$/;
+
+/**
+ * 정산 정보 검증 — **최소한만** 본다.
+ *
+ * 빈 값, 과도한 길이, 계좌번호에 숫자·하이픈 외 문자. 그 이상(은행명 대조, 실명 확인,
+ * 계좌 유효성)은 여기서 판정할 수단이 없고, 틀린 판정은 정상 계좌를 막는 쪽으로 튄다.
+ * 실제 확인은 이체 직전 운영자가 한다.
+ */
+export const validatePayoutSection = (input: unknown): { ok: true; value: PayoutSection } | Fail => {
+  const d = (input ?? {}) as Record<string, unknown>;
+
+  const taxType = d.taxType;
+  if (taxType !== 'withholding' && taxType !== 'invoice') {
+    return fail('세금 유형을 골라 주세요.');
+  }
+
+  const bankName = str(d.bankName);
+  if (!bankName || bankName.length > CREATOR_LIMITS.payoutBankNameMax) {
+    return fail(`은행명은 1~${CREATOR_LIMITS.payoutBankNameMax}자로 적어 주세요.`);
+  }
+
+  const account = str(d.account);
+  if (!account || account.length > CREATOR_LIMITS.payoutAccountMax) {
+    return fail(`계좌번호는 1~${CREATOR_LIMITS.payoutAccountMax}자로 적어 주세요.`);
+  }
+  if (!PAYOUT_ACCOUNT_PATTERN.test(account)) {
+    return fail('계좌번호는 숫자와 하이픈(-)만 넣어 주세요.');
+  }
+
+  const holder = str(d.holder);
+  if (!holder || holder.length > CREATOR_LIMITS.payoutHolderMax) {
+    return fail(`예금주는 1~${CREATOR_LIMITS.payoutHolderMax}자로 적어 주세요.`);
+  }
+
+  return { ok: true, value: { taxType, bankName, account, holder } };
 };
 
 export interface RewardInput {

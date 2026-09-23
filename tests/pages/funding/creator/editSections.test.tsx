@@ -60,9 +60,16 @@ const DRAFT_PROJECT: EditorProject = {
   rewards: [{ ...APPROVED_PROJECT.rewards[0], locked: false }],
 };
 
+
+/**
+ * 정산 정보 구획이 화면에 받는 전부 — 미등록 상태. 이 테스트들은 정산 구획을 보지 않으므로
+ * 가장 조용한 값을 넣는다(구획 자체의 동작은 payoutSection.test.tsx가 본다).
+ */
+const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null } as const;
+
 describe('승인된 프로젝트 — 구획별·필드별 잠금이 화면에 배선됐다', () => {
   it('기본정보: 제목은 활성, 주소(slug)는 비활성이고 잠금 사유가 보인다', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     // required 필드 라벨은 텍스트 끝에 "*" 배지가 붙어(<span aria-hidden>) 정확히 일치하지
     // 않는다 — exact: false로 부분 일치시킨다.
     expect(screen.getByLabelText('제목', { exact: false })).toBeEnabled();
@@ -77,30 +84,30 @@ describe('승인된 프로젝트 — 구획별·필드별 잠금이 화면에 �
   });
 
   it('스토리 구획은 열려 있다(승인 뒤에도 편집 가능)', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '스토리' }));
     expect(screen.getByLabelText('본문(마크다운)')).toBeEnabled();
   });
 
   it('리워드 구획은 통째로 읽기 전용이다 — 추가 버튼이 비활성', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '리워드' }));
     expect(screen.getByRole('button', { name: '리워드 추가' })).toBeDisabled();
   });
 
   it('개설자 정보(계정 프로필)는 항상 편집 가능하다 — 이 표를 타지 않는다', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeEnabled();
   });
 
   it('상단 안내가 승인 상태를 사실대로 말한다', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     expect(screen.getByText(/공개된 프로젝트입니다/)).toBeInTheDocument();
   });
 
   it('심사 신청 버튼과 약관 동의 체크박스는 비활성이다 — 이미 공개된 프로젝트는 다시 신청할 수 없다', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     expect(screen.getByRole('button', { name: '심사 신청' })).toBeDisabled();
     // 버튼은 "약관 미동의"만으로도 항상 비활성 상태로 시작해 canSubmitForReview 자체의
     // 회귀를 못 잡는다 — 체크박스는 약관 동의 여부와 무관하게 canSubmitForReview만 본다.
@@ -108,21 +115,21 @@ describe('승인된 프로젝트 — 구획별·필드별 잠금이 화면에 �
   });
 
   it('draft 프로젝트라면 같은 체크박스가 활성이다 — 대조군', () => {
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     expect(screen.getByRole('checkbox')).toBeEnabled();
   });
 });
 
 describe('개설자 이름 잠금 안내 — nameLocked prop 배선', () => {
   it('nameLocked=true면 이름 칸이 비활성이고 이유가 보인다', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeDisabled();
     expect(screen.getByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없습니다/)).toBeInTheDocument();
   });
 
   it('nameLocked=false면 이름 칸이 활성이고 이유 문구가 없다', () => {
-    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={APPROVED_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     expect(screen.getByLabelText('공개 이름', { exact: false })).toBeEnabled();
     expect(screen.queryByText(/승인된 프로젝트가 있어 이름은 바꿀 수 없습니다/)).not.toBeInTheDocument();
@@ -131,7 +138,7 @@ describe('개설자 이름 잠금 안내 — nameLocked prop 배선', () => {
 
 describe('작성 중(draft) 프로젝트 — 대조군, 전부 편집 가능해야 한다', () => {
   it('기본정보 구획의 모든 필드가 활성이다', () => {
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     expect(screen.getByLabelText('제목', { exact: false })).toBeEnabled();
     expect(screen.getByLabelText('주소(slug)', { exact: false })).toBeEnabled();
     expect(screen.getByLabelText('목표 금액', { exact: false })).toBeEnabled();
@@ -141,7 +148,7 @@ describe('작성 중(draft) 프로젝트 — 대조군, 전부 편집 가능해�
   });
 
   it('리워드 추가 버튼이 활성이다', () => {
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-09-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
     fireEvent.click(screen.getByRole('tab', { name: '리워드' }));
     expect(screen.getByRole('button', { name: '리워드 추가' })).toBeEnabled();
   });

@@ -77,10 +77,17 @@ afterEach(() => {
   jest.restoreAllMocks();
 });
 
+
+/**
+ * 정산 정보 구획이 화면에 받는 전부 — 미등록 상태. 이 테스트들은 정산 구획을 보지 않으므로
+ * 가장 조용한 값을 넣는다(구획 자체의 동작은 payoutSection.test.tsx가 본다).
+ */
+const UNREGISTERED_PAYOUT = { registered: false, accountLast4: null, taxType: null } as const;
+
 describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가드', () => {
   it('아무것도 안 바꿨으면 이동을 막지 않는다', () => {
     confirmSpy = jest.spyOn(window, 'confirm');
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     expect(() => triggerRouteChangeStart()).not.toThrow();
     expect(confirmSpy).not.toHaveBeenCalled();
@@ -88,7 +95,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
 
   it('입력을 바꾸면 이동 시 confirm이 뜬다 — 취소하면 이동이 막힌다', () => {
     confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
 
@@ -101,7 +108,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
 
   it('confirm에서 확인을 누르면 이동을 막지 않는다', () => {
     confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
 
@@ -116,7 +123,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
       json: async () => ({ ok: true }),
     }) as unknown as typeof fetch;
 
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
     fireEvent.click(screen.getByRole('button', { name: '기본정보 저장' }));
@@ -132,7 +139,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
 
   it('탭 전환은 막지 않는다 — 폼이 항상 마운트돼 있어 입력이 살아 있다', () => {
     confirmSpy = jest.spyOn(window, 'confirm');
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
     fireEvent.click(screen.getByRole('tab', { name: '스토리' }));
@@ -154,7 +161,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
       json: async () => ({ ok: true }),
     }) as unknown as typeof fetch;
 
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     fireEvent.change(screen.getByLabelText('링크', { exact: false }), { target: { value: 'https://x\n' } });
@@ -176,7 +183,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
       () => new Promise((resolve) => { resolveFetch = resolve; }),
     ) as unknown as typeof fetch;
 
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.click(screen.getByRole('tab', { name: '개설자 정보' }));
     const bioField = screen.getByLabelText('소개', { exact: false });
@@ -202,7 +209,7 @@ describe('저장하지 않은 입력 — 앱 내부 이동(routeChangeStart) 가
       () => new Promise((resolve) => { resolveFetch = resolve; }),
     ) as unknown as typeof fetch;
 
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     const slugField = screen.getByLabelText('주소(slug)', { exact: false });
     fireEvent.change(slugField, { target: { value: 'New-Slug' } });
@@ -225,7 +232,7 @@ describe('저장하지 않은 입력 — 브라우저 이탈(beforeunload) 가�
     const removeSpy = jest.spyOn(window, 'removeEventListener');
 
     const { unmount } = render(
-      <CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />,
+      <CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />,
     );
     expect(addSpy).not.toHaveBeenCalledWith('beforeunload', expect.any(Function));
 
@@ -240,7 +247,7 @@ describe('저장하지 않은 입력 — 브라우저 이탈(beforeunload) 가�
 describe('저장하지 않은 입력 — 브라우저 뒤로/앞으로가기(beforePopState) 가드', () => {
   it('아무것도 안 바꿨으면 popstate를 막지 않는다', () => {
     confirmSpy = jest.spyOn(window, 'confirm');
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     expect(beforePopStateCallback()).toBe(true);
     expect(confirmSpy).not.toHaveBeenCalled();
@@ -249,7 +256,7 @@ describe('저장하지 않은 입력 — 브라우저 뒤로/앞으로가기(bef
   it('입력을 바꾼 뒤 취소하면 popstate를 거부하고 주소창을 제자리로 되돌린다', () => {
     confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
     const forwardSpy = jest.spyOn(window.history, 'forward').mockImplementation(() => {});
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
 
@@ -264,7 +271,7 @@ describe('저장하지 않은 입력 — 브라우저 뒤로/앞으로가기(bef
   it('입력을 바꾼 뒤 확인을 누르면 popstate를 막지 않는다', () => {
     confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(true);
     const forwardSpy = jest.spyOn(window.history, 'forward').mockImplementation(() => {});
-    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} />);
+    render(<CreatorProjectEditor project={DRAFT_PROJECT} earliestStartDate="2026-08-25" nameLocked={false} payout={UNREGISTERED_PAYOUT} />);
 
     fireEvent.change(screen.getByLabelText('제목', { exact: false }), { target: { value: '고친 제목' } });
 
