@@ -1,4 +1,4 @@
-import { FUNDING_PLATFORM_FEE_PERCENT, FUNDING_WITHHOLDING_PERCENT, formatPriceAmount } from '../../data/pricing';
+import { formatPriceAmount } from '../../data/pricing';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
@@ -32,14 +32,18 @@ const accountLine = (account: FundingPayoutAccountMasked | null): string =>
  * 아니라서(`funding_project_payouts`에 컬럼이 없다) 기록 뒤에는 재현할 수 없고, 없는
  * 숫자를 메일에 적을 수는 없다. 결제 수수료가 그 몫만큼 이미 빠져 있으므로 개설자가
  * 손해 보는 방향도 아니다.
+ *
+ * **요율도 적지 않는다.** 같은 이유다 — 기록 행은 금액만 고정하고 요율 컬럼이 없다. 지급 메일은
+ * 기록보다 늦게 나가고, 그 사이에 상수가 바뀌었으면 기록된 금액 옆에 그와 안 맞는 요율이 찍힌다.
+ * 개설자가 받는 문서에 서로 안 맞는 두 숫자를 나란히 적을 수는 없다.
  */
 const breakdownLines = (payout: FundingProjectPayout): string[] => [
   `모금액: ${formatPriceAmount(payout.grossAmount)}원`,
   ...(payout.refundAmount > 0 ? [`환불: −${formatPriceAmount(payout.refundAmount)}원`] : []),
-  `플랫폼 수수료(${FUNDING_PLATFORM_FEE_PERCENT}%, 부가세 포함): −${formatPriceAmount(payout.platformFeeAmount)}원`,
+  `플랫폼 수수료(부가세 포함): −${formatPriceAmount(payout.platformFeeAmount)}원`,
   `결제 수수료: −${formatPriceAmount(payout.paymentFeeAmount)}원`,
   ...(payout.withholdingAmount > 0
-    ? [`원천징수(${FUNDING_WITHHOLDING_PERCENT}%): −${formatPriceAmount(payout.withholdingAmount)}원`]
+    ? [`원천징수: −${formatPriceAmount(payout.withholdingAmount)}원`]
     : []),
   `실지급액: ${formatPriceAmount(payout.netAmount)}원`,
   `확정 후원: ${payout.backerCount}건`,

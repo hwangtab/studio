@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../../../../db/client';
+import { formatPriceAmount } from '../../../../../data/pricing';
 import { fundingProjects, type FundingProjectPayout } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
@@ -78,7 +79,10 @@ const isCreatorAccountAction = (value: unknown): value is CreatorAccountAction =
   typeof value === 'string' && (CREATOR_ACCOUNT_ACTIONS as readonly string[]).includes(value);
 
 /** `recordFundingPayout`의 실패 code → HTTP. 사유마다 운영자가 할 일이 다르므로 문구도 가른다. */
-const PAYOUT_RECORD_ERROR: Record<Exclude<RecordFundingPayoutResult, { ok: true }>['code'], { status: number; message: string }> = {
+const PAYOUT_RECORD_ERROR: Record<
+  Exclude<Exclude<RecordFundingPayoutResult, { ok: true }>['code'], 'amount_changed'>,
+  { status: number; message: string }
+> = {
   not_found: { status: 404, message: '프로젝트를 찾을 수 없습니다.' },
   already_recorded: { status: 409, message: '이미 기록된 정산입니다. 정산은 프로젝트당 한 번만 기록합니다.' },
   nothing_to_pay: { status: 409, message: '결제된 후원이 없어 정산할 것이 없습니다.' },
@@ -403,14 +407,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 프로젝트당 한 번이고, `project_id` UNIQUE가 동시 클릭도 막는다.
    */
   if (b.action === 'record_payout') {
+    /**
+     * 화면이 운영자에게 보여 준 실이체액을 함께 받는다 — 서버는 그 숫자를 기록하는 게 아니라
+     * 다시 계산한 값과 대조만 한다. 안 실려 오면 거절한다: 이 라우트를 부르는 것은 관리자
+     * 화면뿐이고, 기본값을 두면 낙관적 잠금을 우회하는 경로가 다시 생긴다.
+     */
+    if (typeof b.expectedNetAmount !== 'number' || !Number.isFinite(b.expectedNetAmount)) {
+      return res.status(400).json({
+        ok: false,
+        message: '화면이 보여 준 실이체액이 요청에 실리지 않았습니다. 새로고침 후 다시 시도해 주세요.',
+      });
+    }
     let result: RecordFundingPayoutResult;
     try {
-      result = await recordFundingPayout(id, now);
+      result = await recordFundingPayout(id, now, b.expectedNetAmount);
     } catch (error: unknown) {
       console.error(`[funding] recordFundingPayout 예외 (id=${id}):`, error);
       return res.status(500).json({ ok: false, message: '정산을 기록하지 못했습니다.' });
     }
     if (!result.ok) {
+      // 금액이 갈린 경우만 두 숫자를 문구에 넣는다 — 운영자가 무엇이 얼마로 바뀌었는지 보고
+      // 새로고침 뒤 다시 검산할 수 있어야 한다.
+      if (result.code === 'amount_changed') {
+        return res.status(409).json({
+          ok: false,
+          code: result.code,
+          message: `그 사이에 금액이 바뀌었습니다 — 화면은 실이체액 ${formatPriceAmount(
+            result.expectedNetAmount,
+          )}원을 보여 줌는데 지금 다시 계산하면 ${formatPriceAmount(
+            result.netAmount,
+          )}원입니다. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
+        });
+      }
       const mapped = PAYOUT_RECORD_ERROR[result.code];
       return res.status(mapped.status).json({ ok: false, code: result.code, message: mapped.message });
     }

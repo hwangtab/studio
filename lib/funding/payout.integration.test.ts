@@ -105,6 +105,16 @@ const seedPledge = async (
   return order;
 };
 
+/**
+ * 관리자 화면과 같은 순서로 기록한다 — 미리보기로 실이체액을 읽고(화면이 그 숫자를
+ * 확인창에 적는다) 그 값을 그대로 확인 금액으로 보낸다. 그 사이에 아무 일도 안 일어나면
+ * 서버의 재계산과 같으므로 그대로 통과한다.
+ */
+const recordAsAdmin = async (projectId: string, now: Date) => {
+  const preview = await buildFundingPayoutPreview(projectId);
+  return recordFundingPayout(projectId, now, preview?.netAmount ?? 0);
+};
+
 beforeEach(async () => {
   client = createClient({ url: ':memory:' });
   for (const file of readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()) {
@@ -186,7 +196,7 @@ describe('recordFundingPayout', () => {
     const { project } = await seedProject();
     await seedPledge(project.slug, 1_000_000);
 
-    const result = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'));
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     const expected = computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 0, taxType: 'withholding' });
@@ -200,8 +210,8 @@ describe('recordFundingPayout', () => {
   it('프로젝트당 한 번만 — 두 번째는 already_recorded', async () => {
     const { project } = await seedProject();
     await seedPledge(project.slug, 1_000_000);
-    await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'));
-    const second = await recordFundingPayout(project.id, new Date('2026-02-21T00:00:00Z'));
+    await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    const second = await recordAsAdmin(project.id, new Date('2026-02-21T00:00:00Z'));
     expect(second).toEqual({ ok: false, code: 'already_recorded' });
   });
 
@@ -211,13 +221,13 @@ describe('recordFundingPayout', () => {
       endAt: new Date('2999-01-01T00:00:00Z'),
     });
     await seedPledge(project.slug, 1_000_000);
-    expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'not_closed' });
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'not_closed' });
   });
 
   it('개설자 계좌 정보가 없으면 거부한다', async () => {
     const { project } = await seedProject({}, { payoutAccount: null });
     await seedPledge(project.slug, 1_000_000);
-    expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'no_payout_account' });
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_payout_account' });
   });
 
   it('세금 처리 구분이 없으면 거부한다 — 추측해서 기록하지 않는다', async () => {
@@ -225,7 +235,7 @@ describe('recordFundingPayout', () => {
     // 사업자 개설자에게도 원천징수를 뗀 금액이 기록됐다. 이 표는 불변이라 되돌릴 수 없다.
     const { project } = await seedProject({}, { taxType: null });
     await seedPledge(project.slug, 1_000_000);
-    expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'no_tax_type' });
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_tax_type' });
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });
 
@@ -242,17 +252,17 @@ describe('recordFundingPayout', () => {
 
   it('받은 돈이 없으면 nothing_to_pay', async () => {
     const { project } = await seedProject();
-    expect(await recordFundingPayout(project.id, new Date())).toEqual({ ok: false, code: 'nothing_to_pay' });
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'nothing_to_pay' });
   });
 
   it('없는 프로젝트는 not_found', async () => {
-    expect(await recordFundingPayout('nope', new Date())).toEqual({ ok: false, code: 'not_found' });
+    expect(await recordAsAdmin('nope', new Date())).toEqual({ ok: false, code: 'not_found' });
   });
 
   it('기록 뒤에 환불이 들어와도 기록된 숫자는 변하지 않는다', async () => {
     const { project } = await seedProject();
     const order = await seedPledge(project.slug, 1_000_000);
-    const recorded = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'));
+    const recorded = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     expect(recorded.ok).toBe(true);
 
     const payment = await mockDb.query.payments.findFirst({ where: (t, { eq }) => eq(t.orderId, order.id) });
@@ -266,13 +276,63 @@ describe('recordFundingPayout', () => {
     expect(preview!.recorded!.refundAmount).toBe(0);
     expect(preview!.recorded!.grossAmount).toBe(1_000_000);
   });
+
+  /**
+   * 회귀: 확인창은 페이지를 띄운 시점의 실이체액을 말하는데 서버는 누른 시점에 다시
+   * 계산해 INSERT한다. 그 사이에 환불이 한 건 done이 되면 운영자가 승인한 것과 다른
+   * 숫자가 불변 표에 굳어버렸다. 이제는 INSERT 없이 거부한다.
+   */
+  it('페이지를 띄운 뒤 환불이 들어오면 기록하지 않는다 — amount_changed', async () => {
+    const { project } = await seedProject();
+    const order = await seedPledge(project.slug, 1_000_000);
+
+    // 운영자가 화면에서 본 숫자.
+    const shown = await buildFundingPayoutPreview(project.id);
+    expect(shown!.netAmount).toBe(880_937);
+
+    // 확인창을 띄워 둔 사이에 환불 한 건이 done이 됐다.
+    const payment = await mockDb.query.payments.findFirst({ where: (t, { eq }) => eq(t.orderId, order.id) });
+    await mockDb
+      .insert(schema.refunds)
+      .values({ paymentId: payment!.id, amount: 100_000, reason: '후원자 취소', requestedBy: 'customer', status: 'done' });
+
+    const result = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'), shown!.netAmount);
+    const now = computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 100_000, taxType: 'withholding' });
+    expect(result).toEqual({
+      ok: false,
+      code: 'amount_changed',
+      expectedNetAmount: 880_937,
+      netAmount: now.netAmount,
+    });
+    expect(now.netAmount).not.toBe(880_937);
+    // 가장 중요한 부분 — 아무것도 굳지 않았다.
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  it('확인 금액이 맞으면 그대로 기록한다 — 같은 경로를 다시 누르면 통과', async () => {
+    const { project } = await seedProject();
+    const order = await seedPledge(project.slug, 1_000_000);
+    const payment = await mockDb.query.payments.findFirst({ where: (t, { eq }) => eq(t.orderId, order.id) });
+    await mockDb
+      .insert(schema.refunds)
+      .values({ paymentId: payment!.id, amount: 100_000, reason: '후원자 취소', requestedBy: 'customer', status: 'done' });
+
+    // 새로고침 뒤 다시 검산한 상황.
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.payout.refundAmount).toBe(100_000);
+    expect(result.payout.netAmount).toBe(
+      computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 100_000, taxType: 'withholding' }).netAmount,
+    );
+  });
 });
 
 describe('markFundingPayoutPaid', () => {
   it('pending → paid 한 방향, 두 번째는 실패', async () => {
     const { project } = await seedProject();
     await seedPledge(project.slug, 1_000_000);
-    const result = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'));
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     if (!result.ok) throw new Error('기록 실패');
 
     expect(await countPendingFundingPayouts()).toBe(1);

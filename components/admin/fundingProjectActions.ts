@@ -45,8 +45,12 @@ export type FundingProjectPatchBody =
    * 정산. `record_payout`은 미리보기 숫자를 그 시점에 고정하고(프로젝트당 한 번),
    * `mark_payout_paid`는 pending → paid 한 방향이다. 정산 id를 보내지 않는다 —
    * 프로젝트당 하나뿐이라 서버가 찾는다.
+   *
+   * `expectedNetAmount`는 확인창에 적어 운영자가 승인한 실이체액이다. 서버는 이 값을
+   * 기록하지 않고 다시 계산한 값과 대조만 한다 — 페이지를 띄운 뒤 환불이 들어오면 확인창과
+   * 기록이 갈라지므로, 다르면 409로 거부된다(`lib/funding/payout.ts`).
    */
-  | { action: 'record_payout' }
+  | { action: 'record_payout'; expectedNetAmount: number }
   | { action: 'mark_payout_paid'; memo?: string };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {

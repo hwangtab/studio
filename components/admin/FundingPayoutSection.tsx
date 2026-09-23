@@ -227,24 +227,19 @@ export function FundingPayoutSection({
           <h3 className="mb-2 text-base font-bold text-gray-900">기록된 값</h3>
           {recorded ? (
             <>
+              {/*
+                기록 행에는 요율 컬럼이 없다 — `funding_project_payouts`는 금액만 고정한다.
+                그래서 여기 라벨에 현재 상수(`FUNDING_*_PERCENT`)를 붙이면, 운영자가 토스
+                계약서로 결제 수수료율을 확정해 상수를 바꾸는 순간 옛 기록이 "결제 수수료
+                (2.9%) −34,000원"처럼 서로 안 맞는 두 숫자를 나란히 띄운다. 검산하라고 만든
+                패널이 검산을 못 하게 되므로, 기록 쪽 라벨에는 요율을 적지 않는다.
+              */}
               <dl className="divide-y divide-gray-100 text-sm">
                 <Row label="모금액" value={won(recorded.grossAmount)} />
                 <Row label="환불" value={minus(recorded.refundAmount)} negative />
-                <Row
-                  label={`플랫폼 수수료 (${FUNDING_PLATFORM_FEE_PERCENT}%)`}
-                  value={minus(recorded.platformFeeAmount)}
-                  negative
-                />
-                <Row
-                  label={`결제 수수료 (${FUNDING_PAYMENT_FEE_PERCENT}%)`}
-                  value={minus(recorded.paymentFeeAmount)}
-                  negative
-                />
-                <Row
-                  label={`원천징수 (${FUNDING_WITHHOLDING_PERCENT}%)`}
-                  value={minus(recorded.withholdingAmount)}
-                  negative
-                />
+                <Row label="플랫폼 수수료" value={minus(recorded.platformFeeAmount)} negative />
+                <Row label="결제 수수료" value={minus(recorded.paymentFeeAmount)} negative />
+                <Row label="원천징수" value={minus(recorded.withholdingAmount)} negative />
                 <Row label="실이체액" value={won(recorded.netAmount)} strong />
                 <Row label="확정 후원" value={`${recorded.backerCount}건`} />
               </dl>

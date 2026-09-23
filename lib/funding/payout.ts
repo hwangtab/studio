@@ -221,7 +221,9 @@ export type RecordFundingPayoutResult =
   | {
       ok: false;
       code: 'not_found' | 'already_recorded' | 'nothing_to_pay' | 'not_closed' | 'no_payout_account' | 'no_tax_type';
-    };
+    }
+  /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
+  | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
 
 /**
  * 미리보기 숫자를 그 시점에 고정해 기록한다. 프로젝트당 한 번 — `project_id` UNIQUE가 두 번째
@@ -236,8 +238,20 @@ export type RecordFundingPayoutResult =
  *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
  *   이 표는 불변이라 되돌릴 경로가 없다.
  * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
+ * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
+ *
+ * `expectedNetAmount`는 호출부(관리자 화면)가 **운영자에게 보여 주고 확인받은** 실이체액이다.
+ * 이 함수는 미리보기를 다시 돌려 그 결과를 INSERT하므로, 페이지를 띄운 순간과 버튼을
+ * 누른 순간 사이에 환불이 한 건 `done`이 되면 확인창과 기록이 갈라버린다 — 마감 뒤 정산까지
+ * 영업일로 여러 날을 기다렸다 기록하는 설계(`lib/funding/policy.ts`)라 흔한 경로다. 이 표는 불변이라
+ * 그렇게 굳은 숫자를 되돌릴 경로가 없으므로, 다르면 INSERT 없이 `amount_changed`로 거부한다
+ * (`publicStatusDecision.ts`의 낙관적 잠금과 같은 축).
  */
-export const recordFundingPayout = async (projectId: string, now: Date): Promise<RecordFundingPayoutResult> => {
+export const recordFundingPayout = async (
+  projectId: string,
+  now: Date,
+  expectedNetAmount: number,
+): Promise<RecordFundingPayoutResult> => {
   const preview = await buildFundingPayoutPreview(projectId);
   if (!preview) return { ok: false, code: 'not_found' };
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
@@ -245,6 +259,9 @@ export const recordFundingPayout = async (projectId: string, now: Date): Promise
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
+  if (preview.netAmount !== expectedNetAmount) {
+    return { ok: false, code: 'amount_changed', expectedNetAmount, netAmount: preview.netAmount };
+  }
 
   try {
     const [payout] = await getDb()

@@ -457,18 +457,24 @@ export default function AdminFundingProjectDetailPage({ project, payout }: Admin
   /**
    * 정산 기록. 확인창에 실이체액을 그대로 적는다 — 이 버튼은 그 시점 숫자를 영구히
    * 고정하므로, 누르기 전 마지막으로 눈으로 검산하는 자리가 여기다.
+   *
+   * 그래서 확인창이 말한 금액을 그대로 서버에 실어 보낸다. 이 페이지의 `payout`은
+   * 페이지를 띄운 시점의 값이고, 서버는 기록할 때 다시 계산한다 — 그 사이에 환불이 한 건
+   * 들어오면 운영자가 승인한 금액과 다른 숫자가 불변 기록으로 굳어버린다. 서버는 둔 값이 다르면
+   * 기록 없이 409를 돌려준다(`lib/funding/payout.ts`의 `amount_changed`).
    */
   const handleRecordPayout = () => {
     if (!payout) return;
+    const expectedNetAmount = payout.netAmount;
     if (
       !window.confirm(
-        `실이체액 ${formatPriceAmount(payout.netAmount)}원으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 진행할까요?`,
+        `실이체액 ${formatPriceAmount(expectedNetAmount)}원으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 화면을 띄운 뒤 환불이 들어와 금액이 바뀜다면 기록하지 않고 바뀐 금액을 알려 드립니다. 진행할까요?`,
       )
     ) {
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'record_payout' }),
+      () => patchFundingProject(project.id, { action: 'record_payout', expectedNetAmount }),
       '정산을 기록하고 개설자에게 알렸습니다.',
     );
   };
