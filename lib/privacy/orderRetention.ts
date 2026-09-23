@@ -449,10 +449,10 @@ export interface DormantSubscriptionResult {
  * - 관리자 대시보드의 '주의' 집계(`lib/ops/adminDashboard.ts`)에서 빠진다.
  * - 고객 관리 화면(`pages/[locale]/subscribe/manage/[id].tsx`)은 '종료'로 표시하고
  *   해지 버튼을 감춘다 — 청구가 돌지 않는 행이라 맞는 표시다.
- * - 헬스체크의 '해지된 구독에 결제가 남아 있는 건'(`lib/ops/healthCheck.ts`)은
- *   `cancelled`·`ended` 구독에 `paid` 주문이 있으면 뜬다. 결제 이력이 있는 쪽을 넘기면
- *   그 항목에 잡힌다. 방치된 구독을 운영자가 한 번 보는 것 자체는 맞는 방향이지만,
- *   그 검사에 "종료 이후에 들어온 결제"라는 조건이 없다는 점은 이 함수 밖의 문제다.
+ * - 헬스체크의 '구독이 끝난 뒤에 들어온 결제'(`lib/ops/healthCheck.ts`)는 결제 시각이
+ *   `cancelled_at`(없으면 `ends_at`)보다 뒤인 건만 센다. 여기서 넘기는 구독은 둘 다
+ *   비워 두므로 그 항목에 잡히지 않는다 — 과거의 정상 회차 때문에 매일 뜨는 경보가
+ *   되지 않는다. 뒤늦은 승인이 실제로 도착하면 그때는 `late_approval` 메일이 맡는다.
  *
  * ## `ends_at`을 채우지 않는 이유
  *

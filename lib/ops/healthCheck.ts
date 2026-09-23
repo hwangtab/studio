@@ -336,8 +336,17 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 있다. 이 저장소가 PR #59에서 이미 배운 것이 그것이다 — 되돌림 경로가 한 겹뿐이면
    * 조용히 새고, 전자상거래법상 환불 기한은 그 사이에도 돈다. 여기가 두 번째 겹이다.
    *
+   * **판정은 "종료 뒤에 들어온 돈"이다.** 상태만 보면(해지·종료 + paid 회차) 정상적으로
+   * 끝난 구독도 종료 전에 정상 청구된 과거 회차 때문에 매일 다시 잡힌다 — 환불할 것이
+   * 없는데 꺼지지 않는 경보이고, 방치 구독을 ended로 넘기는 경로가 생긴 뒤로는
+   * (closeDormantSubscriptions, lib/privacy/orderRetention.ts) 그런 건이 계속 늘어난다.
+   * 그래서 결제 시각(paid_at, 없으면 attempted_at)이 **구독이 끝난 시각보다 뒤**인 건만 센다.
+   *
+   * 끝난 시각은 `cancelled_at`, 없으면 `ends_at`이다. 둘 다 비어 있으면(방치 종료는 둘 다
+   * 채우지 않는다) 비교할 기준이 없고, 그 구독의 결제는 정의상 1년 넘게 전의 것이라 세지 않는다.
+   *
    * 해소 조건: 전액 환불하면 orders.status가 refunded로 바뀌어 빠진다(부분환불은 잔액이 남아 계속 뜬다).
-   * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다 — 영구히 켜지지 않는다.
+   * 되살릴 이유가 있었다면 구독이 다시 active가 되어 역시 빠진다.
    */
   const lateApproval = await db
     .select({ orderNo: orders.orderNo, customerName: subscriptions.customerName, status: subscriptions.status })
@@ -346,13 +355,18 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     .innerJoin(subscriptions, eq(subscriptions.id, subscriptionPayments.subscriptionId))
     // partially_refunded도 본다 — 관리자가 회차를 임의 금액으로 환불할 수 있게 되면서, 1원만 환불해도
     // paid에서 벗어나 경보가 꺼지는 구멍이 생겼다. 잔액이 남아 있는 한 고객 돈은 아직 우리에게 있다.
-    .where(and(inArray(orders.status, ['paid', 'partially_refunded']), inArray(subscriptions.status, ['cancelled', 'ended'])));
+    .where(and(
+      inArray(orders.status, ['paid', 'partially_refunded']),
+      inArray(subscriptions.status, ['cancelled', 'ended']),
+      // 종료 시각이 없으면(coalesce가 NULL) 비교 자체가 NULL이 되어 행이 빠진다 — 의도한 동작이다.
+      sql`coalesce(${subscriptionPayments.paidAt}, ${subscriptionPayments.attemptedAt}) > coalesce(${subscriptions.cancelledAt}, ${subscriptions.endsAt})`,
+    ));
 
   if (lateApproval.length > 0) {
     issues.push({
       severity: 'high',
       href: '/admin/subscriptions',
-      title: `해지된 구독에 결제가 남아 있는 건 ${lateApproval.length}건 — 환불 판단 필요`,
+      title: `구독이 끝난 뒤에 들어온 결제 ${lateApproval.length}건 — 환불 판단 필요`,
       detail:
         `주문번호: ${sample(lateApproval.map((row) => row.orderNo))}\n` +
         '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 관리자 > 구독 상세의 회차 이력에서 환불할 수 있습니다.\n' +

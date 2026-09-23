@@ -15,7 +15,7 @@ import { remainingRefundable, settleRefund, type CancelFailure } from '../bookin
  *
  * 예전엔 이 경로가 없어 화면이 "토스 콘솔에서 직접 취소하라"고 안내했다. 콘솔에서 취소하면
  * 웹훅이 refunds를 채우긴 하지만, 사유가 남지 않고(refunds.reason이 웹훅 문구가 된다) 운영자가
- * 두 화면을 오가야 했다. 건강 점검의 "해지된 구독에 결제가 남아 있는 건"도 여기서 풀린다 —
+ * 두 화면을 오가야 했다. 건강 점검의 "구독이 끝난 뒤에 들어온 결제"도 여기서 풀린다 —
  * 환불하면 orders.status가 refunded로 바뀌어 그 점검에서 빠진다.
  */
 export type RefundSubscriptionPaymentInput = {
