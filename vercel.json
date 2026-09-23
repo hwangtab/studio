@@ -13,6 +13,10 @@
       "schedule": "0 18 2 * *"
     },
     {
+      "path": "/api/cron/purge-orders",
+      "schedule": "0 18 3 * *"
+    },
+    {
       "path": "/api/cron/backup-contracts",
       "schedule": "0 17 * * 0"
     },
