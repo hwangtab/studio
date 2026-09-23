@@ -7,10 +7,25 @@
  * 남으므로, "그때 이 내용에 동의했다"는 증거가 되려면 내용이 바뀌면 반드시 문자열도
  * 바뀌어야 한다.
  *
- * 무엇을 해시에 넣는가: 개설자 약관 조항 전부(`FUNDING_CREATOR_TERMS_SECTIONS`)다. 후원자
- * 약관과 달리 이 문서는 공유 상수를 보간하지 않으므로(수수료율·정산 시점을 아직 안 적기로
- * 했다) 조항 본문만으로 충분하다.
+ * 무엇을 해시에 넣는가: 개설자 약관 조항 전부(`FUNDING_CREATOR_TERMS_SECTIONS`)와, **제6조
+ * 본문에 보간되는 공유 상수 네 개**다. 2026-09-23에 6조가 "별도 정산 계약으로 정한다"에서
+ * 확정 요율·정산 시점을 적는 조항으로 바뀌면서 이 문서도 후원자 약관과 같은 모양이 됐다.
+ *
+ * **상수 블록은 지금 당장은 중복이다** — 6조 body가 템플릿 리터럴이라 모듈 로드 시점에 값이
+ * 박히고, 직렬화 출력에 `플랫폼 수수료는 5.5%`가 그대로 실린다. 즉 요율을 바꾸면 본문
+ * 경로만으로도 해시가 이미 움직인다. 그런데도 상수를 따로 싣는 이유는, 그 방어가 **6조를
+ * 지금 쓰인 방식 그대로 두는 데 걸려 있기 때문**이다. 다음 사람이 문장을 다듬다 `5.5%`를
+ * 리터럴로 적거나 요율을 표로 빼면서 본문에서 숫자를 걷어내는 순간, 상수만 바꾼 개정이
+ * 조용히 통과한다 — 개설자가 동의한 내용이 판본 문자열은 그대로인 채 달라지는, 이 게이트가
+ * 막으려는 상태다. 상수 블록은 그 경우에도 해시를 움직인다.
+ * `content/fundingTermsHash.ts`가 공유 상수를 넣는 방식과 같다.
  */
+import {
+  FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
+  FUNDING_WITHHOLDING_PERCENT,
+} from '../data/pricing';
+import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../lib/funding/policy';
 import { FUNDING_CREATOR_TERMS_SECTIONS } from '../pages/[locale]/funding/creator-terms';
 
 /** 해시 대상을 사람이 읽을 수 있는 형태로 직렬화한다 — 실패했을 때 무엇이 바뀌었는지 diff로 보이도록. */
@@ -19,6 +34,15 @@ export const serializeCreatorTerms = (): string => {
   for (const section of FUNDING_CREATOR_TERMS_SECTIONS) {
     lines.push(section.heading, ...section.body.map((b) => `  ${b}`));
   }
+
+  // 지금은 6조 본문이 이 값들을 보간하고 있어 중복이다(머리주석 참조). 6조가 숫자를 본문에서
+  // 걷어내는 방향으로 바뀌어도 요율 변경을 잡도록 따로 싣는다.
+  lines.push('## 제6조에 보간되는 공유 상수 (data/pricing.ts · lib/funding/policy.ts)');
+  lines.push(`FUNDING_PLATFORM_FEE_PERCENT=${FUNDING_PLATFORM_FEE_PERCENT}`);
+  lines.push(`FUNDING_PAYMENT_FEE_PERCENT=${FUNDING_PAYMENT_FEE_PERCENT}`);
+  lines.push(`FUNDING_WITHHOLDING_PERCENT=${FUNDING_WITHHOLDING_PERCENT}`);
+  lines.push(`FUNDING_PAYOUT_BUSINESS_DAYS=${FUNDING_PAYOUT_BUSINESS_DAYS}`);
+
   return lines.join('\n');
 };
 

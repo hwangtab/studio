@@ -99,7 +99,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-22-r2';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-23-r3';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -128,7 +128,7 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-22-r2';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-23-r3';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
@@ -178,13 +178,22 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: str
  * 가리키는데, 13~14항이 신설됐을 때 수집 항목·이용 목적만 적고 이 표를 빠뜨려 참조가 빈 곳을
  * 가리키고 있었다(2026-09-21 문서·코드 대조).
  *
- * lib/funding/creatorEmail.ts(sendEmail → Resend)로 로그인 링크·심사 결과 메일을 보내고,
- * db/client.ts(Turso)에 개설자 계정·프로젝트 행이 저장되며, Vercel이 그 화면을 호스팅한다 —
+ * Resend로 나가는 개설자 대상 메일은 네 갈래다 — 로그인 링크(creatorEmail.ts), 계정 변경 알림
+ * (같은 파일, 이름·로그인 이메일이 바뀌면 옛·새 주소 양쪽으로), 심사 결과와 공개 상태 변경
+ * (reviewEmail.ts), 정산 기록·지급 알림(payoutEmail.ts). 목적을 좁게 적어 두면 실제로 나가는
+ * 메일이 고지 범위를 넘어선다 — 정산 알림이 붙었을 때 실제로 그렇게 됐다(2026-09-23).
+ * db/client.ts(Turso)에 개설자 계정·프로젝트·정산 기록 행이 저장되며, Vercel이 그 화면을 호스팅한다 —
  * 셋 다 서포터 쪽과 같은 수탁자이지만 다루는 개인정보가 다르므로 표를 따로 둔다.
  */
 export const FUNDING_CREATOR_DATA_PROCESSORS: ReadonlyArray<{ name: string; purpose: string; items: string }> = [
-  { name: 'Resend', purpose: '로그인 링크·심사 결과 메일 발송', items: '이메일 주소, 메일 본문에 담기는 로그인 링크·심사 결과' },
-  { name: 'Turso', purpose: '개설자 계정·프로젝트 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부' },
+  {
+    name: 'Resend',
+    purpose: '로그인 링크·심사 결과·공개 상태 변경·계정 변경·정산 안내 메일 발송',
+    items:
+      '이메일 주소, 메일 본문에 담기는 로그인 링크·심사 결과·공개 상태 변경 안내와 운영자 메모·바뀐 계정 정보(이름 또는 로그인 이메일)와 ' +
+      '정산 금액 내역(모금액·환불액·수수료·원천징수액·실지급액·확정 후원 건수), 입금 계좌의 은행명·예금주·계좌번호 뒤 4자리',
+  },
+  { name: 'Turso', purpose: '개설자 계정·프로젝트·정산 기록 데이터베이스 보관', items: '위 13항 수집 항목 전부' },
   { name: 'Vercel', purpose: '개설자 화면 서버 호스팅', items: '개설자 화면 이용 과정에서 전송되는 위 항목 전부' },
 ];
 

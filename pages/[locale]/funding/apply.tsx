@@ -61,7 +61,7 @@ export default function FundingApply() {
             {/* 수수료와 정산 시점은 신청 전에 알아야 한다 — 숫자는 상수에서 끌어온다
                 (data/pricing.ts · lib/funding/policy.ts). 문자열로 박으면 정산 계산과 갈라진다. */}
             <li>
-              정산은 모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 보내 드립니다.
+              정산은 모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 보내 드립니다.
               플랫폼 수수료 {FUNDING_PLATFORM_FEE_PERCENT}%와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%(둘 다 부가세 포함)를
               개설자가 부담합니다.
             </li>

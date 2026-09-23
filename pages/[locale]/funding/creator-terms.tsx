@@ -4,7 +4,12 @@ import SEO from '../../../components/SEO';
 import { Section } from '../../../components/ui/Section';
 import { getSiteConfig, hostingProvider, studioOperator } from '../../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../../lib/getStatic';
-import { FUNDING_CREATOR_TERMS_VERSION } from '../../../lib/funding/policy';
+import {
+  FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
+  FUNDING_WITHHOLDING_PERCENT,
+} from '../../../data/pricing';
+import { FUNDING_CREATOR_TERMS_VERSION, FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import type { Locale } from '../../../lib/i18n';
 
 // 펀딩 프로젝트를 직접 개설하는 아티스트(개설자)가 동의하는 약관 — 후원자가 보는
@@ -64,8 +69,20 @@ export const FUNDING_CREATOR_TERMS_SECTIONS: CreatorTermsSection[] = [
   },
   {
     heading: '제6조 (수수료와 정산)',
+    // 숫자는 전부 상수에서 보간한다 — 문자열로 박으면 계산(lib/funding/payout.ts)과 갈라진다.
+    // 보간하는 순간 이 조항은 상수에 의존하므로, content/creatorTermsHash.ts의
+    // serializeCreatorTerms()가 그 상수들도 함께 해시한다.
+    // 문장 순서는 computeFundingPayout의 계산 순서와 같아야 한다:
+    // netGross = gross − refund → 수수료 → 원천징수.
+    // 조건을 단정하지 않는다 — recordFundingPayout이 거부하는 사유가 셋이고
+    // (not_closed·no_payout_account·no_tax_type), 그중 둘이 개설자가 등록해야 풀린다.
     body: [
-      '개설자에게 지급하는 정산 금액과 수수료율, 정산 시기는 스튜디오와 개설자가 별도로 체결하는 정산 계약으로 정합니다.',
+      '모금이 끝나면 스튜디오는 개설자에게 정산금을 보냅니다. 정산금은 서포터가 결제한 후원금에서 환불된 금액을 먼저 뺀 뒤, 그 금액을 기준으로 아래 수수료와 원천징수세액을 뺀 나머지입니다.',
+      `플랫폼 수수료는 ${FUNDING_PLATFORM_FEE_PERCENT}%, 결제 수수료는 ${FUNDING_PAYMENT_FEE_PERCENT}%이며 둘 다 부가가치세를 포함한 요율입니다. 두 수수료 모두 개설자가 부담하며, 환불을 먼저 뺀 금액을 기준으로 계산합니다. 다만 스튜디오가 계좌로 직접 받아 수기로 등록한 후원금에는 결제 대행을 거치지 않았으므로 결제 수수료를 매기지 않습니다.`,
+      `개설자의 세금 처리 구분이 원천징수인 경우, 수수료를 뺀 금액에서 사업소득 원천징수세액 ${FUNDING_WITHHOLDING_PERCENT}%(소득세와 지방소득세)를 떼고 보냅니다. 세금계산서를 발행하는 사업자로 등록한 개설자에게는 원천징수하지 않으며, 그 개설자는 지급받은 정산금에 대한 세금계산서를 스튜디오 앞으로 발행해야 합니다.`,
+      '정산을 받으려면 개설자가 개설자 화면에 은행명·계좌번호·예금주와 세금 처리 구분을 모두 등록해야 합니다. 이 정보는 프로젝트가 승인된 뒤에 등록할 수 있습니다.',
+      `정산금은 위 정산 정보가 모두 등록되어 있는 경우, 모금이 끝난 날부터 영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일 이내에 보내는 것을 원칙으로 합니다. 등록되지 않은 항목이 있으면 스튜디오는 정산을 보낼 수 없으며, 등록이 끝난 뒤에 보냅니다.`,
+      '정산 금액을 확정할 때와 실제로 보낼 때 각각 그 내역을 개설자에게 메일로 알립니다. 내역에는 모금액, 플랫폼 수수료, 결제 수수료, 실지급액과 확정 후원 건수가 담기며, 환불이나 원천징수가 있으면 그 금액도 함께 적습니다.',
     ],
   },
   {
