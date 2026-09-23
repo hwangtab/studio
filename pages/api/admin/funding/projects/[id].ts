@@ -434,7 +434,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           code: result.code,
           message: `그 사이에 금액이 바뀌었습니다 — 화면은 실이체액 ${formatPriceAmount(
             result.expectedNetAmount,
-          )}원을 보여 줌는데 지금 다시 계산하면 ${formatPriceAmount(
+          )}원을 보여 줬는데 지금 다시 계산하면 ${formatPriceAmount(
             result.netAmount,
           )}원입니다. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
         });

@@ -98,9 +98,15 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
         <p>
           모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 여기 등록하신 계좌로 정산금을 보냅니다.
         </p>
+        {/*
+          환불 차감을 먼저 적는다. 계산 순서가 실제로 그렇고(`lib/funding/payout.ts`의
+          netGross = gross − refund, 수수료는 그 뒤에 붙는다), 이 문장에 없으면 환불이 있는
+          프로젝트의 개설자는 정산 메일에서 처음 알게 된다.
+        */}
         <p className="mt-2">
-          정산금은 결제된 후원금에서 플랫폼 수수료 {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와
-          결제 수수료를 뺀 금액입니다. 두 수수료 모두 개설자가 부담합니다.
+          정산금은 결제된 후원금에서 환불된 금액을 먼저 뺀 뒤, 거기서 플랫폼 수수료{' '}
+          {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료를 뺀 금액입니다. 수수료는 환불을
+          뺀 금액을 기준으로 계산하며, 두 수수료 모두 개설자가 부담합니다.
         </p>
       </div>
 

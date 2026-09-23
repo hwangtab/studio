@@ -192,4 +192,11 @@ describe('집계를 못 읽었을 때', () => {
     expect(screen.getByText(/정산 현황을 불러오지 못했습니다/)).toBeInTheDocument();
     expect(screen.queryByText(/승인된 프로젝트에서만/)).not.toBeInTheDocument();
   });
+
+  // 0021 미적용이면 집계는 `no such column`으로 영구히 실패한다. 일시 장애로만 적으면
+  // 운영자는 새로고침만 반복한다.
+  it('마이그레이션 미적용 가능성을 함께 적는다', () => {
+    renderSection(null);
+    expect(screen.getByText(/마이그레이션\(0021\)/)).toBeInTheDocument();
+  });
 });

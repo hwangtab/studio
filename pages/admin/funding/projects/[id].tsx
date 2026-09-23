@@ -92,7 +92,12 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
       backerCount: preview.backerCount,
       closed: preview.closed,
       hasPayoutAccount: preview.hasPayoutAccount,
-      // 값이 아니라 있고 없음만 싣는다 — 이 props는 __NEXT_DATA__로 나간다.
+      // 값이 아니라 있고 없음만 싣는다 — 이 props는 __NEXT_DATA__로 나간다. 이 화면이
+      // taxType으로 하는 일은 "등록됐는가"로 정산 기록을 막는 것뿐이라 불리언으로 충분하다.
+      //
+      // 개설자 편집 화면(`components/funding/creator/types.ts`의 `EditorPayoutSummary`)은
+      // 같은 값을 그대로 싣는다. 거기는 본인 인증된 자기 정보를 고치는 폼이라, 불리언으로
+      // 좁히면 열 때마다 선택이 '미선택'으로 되돌아간다. 한쪽을 다른 쪽에 맞추지 말 것.
       hasTaxType: preview.taxType !== null,
       recorded: r
         ? {
@@ -468,7 +473,7 @@ export default function AdminFundingProjectDetailPage({ project, payout }: Admin
     const expectedNetAmount = payout.netAmount;
     if (
       !window.confirm(
-        `실이체액 ${formatPriceAmount(expectedNetAmount)}원으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 화면을 띄운 뒤 환불이 들어와 금액이 바뀜다면 기록하지 않고 바뀐 금액을 알려 드립니다. 진행할까요?`,
+        `실이체액 ${formatPriceAmount(expectedNetAmount)}원으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 화면을 띄운 뒤 환불이 들어와 금액이 바뀌었다면 기록하지 않고 바뀐 금액을 알려 드립니다. 진행할까요?`,
       )
     ) {
       return;

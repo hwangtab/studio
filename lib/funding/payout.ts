@@ -301,9 +301,6 @@ export const markFundingPayoutPaid = async (id: string, memo: string | null, now
   return result.length > 0;
 };
 
-export const listFundingPayouts = async (limit = 120): Promise<FundingProjectPayout[]> =>
-  getDb().query.fundingProjectPayouts.findMany({ orderBy: (t, { desc }) => [desc(t.createdAt)], limit });
-
 /** 기록된 정산 중 아직 이체 안 한 것 — 관리자 대시보드 대기열용. */
 export const countPendingFundingPayouts = async (): Promise<number> => {
   const [row] = await getDb()

@@ -14,7 +14,6 @@ import {
   buildFundingPayoutPreview,
   computeFundingPayout,
   countPendingFundingPayouts,
-  listFundingPayouts,
   markFundingPayoutPaid,
   recordFundingPayout,
 } from './payout';
@@ -339,7 +338,7 @@ describe('markFundingPayoutPaid', () => {
     expect(await markFundingPayoutPaid(result.payout.id, '이체 완료', new Date('2026-02-21T00:00:00Z'))).toBe(true);
     expect(await markFundingPayoutPaid(result.payout.id, '또 눌렀다', new Date('2026-02-22T00:00:00Z'))).toBe(false);
 
-    const [row] = await listFundingPayouts();
+    const [row] = await mockDb.query.fundingProjectPayouts.findMany();
     expect(row.status).toBe('paid');
     expect(row.memo).toBe('이체 완료');
     expect(await countPendingFundingPayouts()).toBe(0);

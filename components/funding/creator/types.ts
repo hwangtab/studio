@@ -71,6 +71,16 @@ export interface EditorPayoutSummary {
   registered: boolean;
   /** 계좌번호 뒤 4자리. 미등록이면 null. */
   accountLast4: string | null;
+  /**
+   * 세금 처리 구분. **여기만 값을 그대로 싣는다** — 관리자 화면(`pages/admin/funding/projects/[id].tsx`)은
+   * 같은 정보를 `hasTaxType` 불리언으로만 내려보낸다. 두 판단이 다른 이유:
+   *
+   * - 은행명·계좌번호·예금주와 달리 `taxType`은 값이 둘뿐인 분류라 새어 나가도 잃을 것이
+   *   없다. 그리고 이 화면은 개설자 본인이 매직링크로 인증하고 들어온 자기 정보다.
+   * - 여기서 불리언으로 좁히면 폼이 열릴 때마다 선택이 '미선택'으로 되돌아가 개설자가 자기
+   *   설정을 볼 수 없다. 관리자 화면에는 이 문제가 없다 — 그쪽은 폼이 아니라 "등록됐는지"만
+   *   보고 정산을 막는 게이트라서 불리언으로 충분하다.
+   */
   taxType: EditorTaxType | null;
 }
 
