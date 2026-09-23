@@ -4,6 +4,8 @@ import { useRouter } from 'next/router';
 import { useState, type FormEvent } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 
+import { FUNDING_PLATFORM_FEE_PERCENT } from '../../../data/pricing';
+import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 
@@ -56,6 +58,12 @@ export default function FundingApply() {
           <ul className="list-disc space-y-1 pl-5">
             <li>판매자는 스튜디오 놀입니다. 후원금은 스튜디오 놀이 받아 정산으로 보내 드립니다.</li>
             <li>리워드의 제작과 발송은 개설자가 맡습니다. 모금이 마감되면 배송 리워드를 선택한 서포터의 배송지가 개설자 화면에 열리며, 개설자는 그 정보를 발송에만 쓰고 발송을 마친 뒤 파기해야 합니다.</li>
+            {/* 수수료와 정산 시점은 신청 전에 알아야 한다 — 숫자는 상수에서 끌어온다
+                (data/pricing.ts · lib/funding/policy.ts). 문자열로 박으면 정산 계산과 갈라진다. */}
+            <li>
+              정산은 모금이 끝나고 영업일 {FUNDING_PAYOUT_BUSINESS_DAYS}일 뒤에 보내 드립니다.
+              플랫폼 수수료 {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료는 개설자가 부담합니다.
+            </li>
             <li>제출하시면 운영자가 확인하고 승인 또는 보완 요청을 메일로 알려 드립니다.</li>
           </ul>
         </div>

@@ -6,13 +6,24 @@ import { useState } from 'react';
 import { createProject, logoutCreator } from '../../../../components/funding/creator/api';
 import { REVIEW_STATUS_LABEL } from '../../../../components/funding/creator/types';
 import { Button } from '../../../../components/ui/Button';
+import { formatPriceAmount } from '../../../../data/pricing';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import { authenticateCreatorRequest } from '../../../../lib/funding/creatorAuth';
 import { listProjectsForCreator, type CreatorProjectSummary } from '../../../../lib/funding/creatorProjectList';
+import { loadCreatorProjectStats, type CreatorProjectStats } from '../../../../lib/funding/creatorStats';
 
-interface Props { projects: CreatorProjectSummary[] }
+interface Props {
+  projects: CreatorProjectSummary[];
+  /**
+   * 프로젝트 id → 모금 현황(집계만). 승인 전 프로젝트는 아예 키가 없다 — 공개된 적이
+   * 없어 후원이 존재할 수 없으므로 0원·0건을 적으면 없는 실패를 알리게 된다
+   * (`lib/funding/creatorStats.ts` 주석). 후원자 이름·응원 메시지·연락처·배송지는 이 값에
+   * 들어 있지 않다(개설자 약관 제8조).
+   */
+  stats: Record<string, CreatorProjectStats>;
+}
 
-export default function CreatorHome({ projects }: Props) {
+export default function CreatorHome({ projects, stats }: Props) {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState<string | null>(null);
@@ -78,6 +89,15 @@ export default function CreatorHome({ projects }: Props) {
                   <span className="font-semibold">{p.title || '(제목 없음)'}</span>
                   <span className="text-sm text-gray-500">{REVIEW_STATUS_LABEL[p.reviewStatus] ?? p.reviewStatus}</span>
                 </div>
+                {stats[p.id] && (
+                  /* 한 줄 요약이다 — 리워드별 판매 수량 같은 자세한 집계는 편집 화면의
+                     '모금 현황' 구획에 있다. 목록은 "얼마나 모였나"를 훑는 자리다. */
+                  <p className="typo-card-meta mt-2 tabular-nums">
+                    {formatPriceAmount(stats[p.id].raisedAmount)}원 ·{' '}
+                    <span className="font-semibold text-primary dark:text-violet-300">{stats[p.id].percent}%</span> ·{' '}
+                    {stats[p.id].backerCount}건
+                  </p>
+                )}
                 {p.reviewNote && (
                   <p className="mt-2 text-sm text-amber-700 dark:text-amber-400">운영자 메모: {p.reviewNote}</p>
                 )}
@@ -120,5 +140,19 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   const auth = await authenticateCreatorRequest(context);
   if (!auth.ok) return { redirect: { destination: '/ko/funding/apply', permanent: false } };
   const projects = await listProjectsForCreator(auth.creatorId);
-  return { props: { projects } };
+  /**
+   * 승인된 프로젝트만 집계한다 — 그 외에는 `loadCreatorProjectStats`가 어차피 null이고,
+   * 부르지 않으면 질의도 안 나간다. 집계 실패가 목록 자체를 막지 않도록 개별로 삼킨다
+   * (현황은 부가 정보고, 목록은 편집으로 들어가는 유일한 입구다).
+   */
+  const stats: Record<string, CreatorProjectStats> = {};
+  for (const p of projects.filter((x) => x.reviewStatus === 'approved')) {
+    try {
+      const s = await loadCreatorProjectStats(auth.creatorId, p.id);
+      if (s) stats[p.id] = s;
+    } catch (error: unknown) {
+      console.error('[funding] 개설자 모금 현황 조회 실패:', error);
+    }
+  }
+  return { props: { projects, stats } };
 });

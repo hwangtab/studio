@@ -5,10 +5,16 @@ jest.mock('../../../../lib/funding/reviewDecision', () => ({
   ...jest.requireActual('../../../../lib/funding/reviewDecision'),
   decideProject: jest.fn(),
 }));
+jest.mock('../../../../lib/funding/publicStatusDecision', () => ({
+  ...jest.requireActual('../../../../lib/funding/publicStatusDecision'),
+  decidePublicStatus: jest.fn(),
+}));
 jest.mock('../../../../lib/funding/revalidate', () => ({ revalidateFundingPaths: jest.fn() }));
 jest.mock('../../../../lib/funding/reviewEmail', () => ({
   sendReviewDecisionEmail: jest.fn(),
   sendReviewDecisionOperatorFallback: jest.fn(),
+  sendPublicStatusEmail: jest.fn(),
+  sendPublicStatusOperatorFallback: jest.fn(),
 }));
 
 const mockWhere = jest.fn().mockResolvedValue(undefined);
@@ -21,8 +27,14 @@ import handler from '../../../../pages/api/admin/funding/projects/[id]';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { loadProjectForAdmin } from '../../../../lib/funding/adminProjects';
 import { decideProject } from '../../../../lib/funding/reviewDecision';
+import { decidePublicStatus } from '../../../../lib/funding/publicStatusDecision';
 import { revalidateFundingPaths } from '../../../../lib/funding/revalidate';
-import { sendReviewDecisionEmail, sendReviewDecisionOperatorFallback } from '../../../../lib/funding/reviewEmail';
+import {
+  sendReviewDecisionEmail,
+  sendReviewDecisionOperatorFallback,
+  sendPublicStatusEmail,
+  sendPublicStatusOperatorFallback,
+} from '../../../../lib/funding/reviewEmail';
 
 const call = async (method: string, query: unknown, body: unknown) => {
   const json = jest.fn();
@@ -61,6 +73,8 @@ beforeEach(() => {
   (revalidateFundingPaths as jest.Mock).mockResolvedValue(null);
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue(null);
   (sendReviewDecisionOperatorFallback as jest.Mock).mockResolvedValue(null);
+  (sendPublicStatusEmail as jest.Mock).mockResolvedValue(null);
+  (sendPublicStatusOperatorFallback as jest.Mock).mockResolvedValue(null);
 });
 
 it('인증 없음 → 401', async () => {
@@ -338,4 +352,105 @@ it('옛 action 이름 set_note는 더 이상 통하지 않는다 → 400', async
   const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_note', note: '메모' });
   expect(r.status).toBe(400);
   expect(mockUpdate).not.toHaveBeenCalled();
+});
+
+describe('공개 상태(close/reopen/hide/unhide)', () => {
+  it('알 수 없는 code는 다루지 않는다 — decidePublicStatus가 not_found면 404', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: false, code: 'not_found', message: '프로젝트를 찾을 수 없습니다.' });
+    const r = await call('PATCH', { id: 'ghost' }, { action: 'close', note: '사유' });
+    expect(r.status).toBe(404);
+  });
+
+  it('승인 전 프로젝트에 close를 시도하면 decidePublicStatus의 conflict가 409로 옮겨진다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: false, code: 'conflict', message: '승인된 프로젝트만 공개 상태를 바꿀 수 있습니다.' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'close', note: '사유' });
+    expect(r.status).toBe(409);
+    expect(revalidateFundingPaths).not.toHaveBeenCalled();
+    expect(sendPublicStatusEmail).not.toHaveBeenCalled();
+  });
+
+  it('사유 없이 close → decidePublicStatus의 incomplete가 400으로 옮겨진다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: false, code: 'incomplete', message: '종료에는 사유 메모가 필요합니다.' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'close' });
+    expect(r.status).toBe(400);
+  });
+
+  it('종료 성공 → 200, revalidate·메일 호출', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'close', note: '가격 오류' });
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true });
+    expect(decidePublicStatus).toHaveBeenCalledWith('proj-1', 'close', { note: '가격 오류' }, expect.any(Date));
+    expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'close', '가격 오류', 'demo', expect.any(Date));
+  });
+
+  it('다시 열기(reopen) 성공 → 200, revalidate·메일 호출, 메모 없이도 된다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'reopen' });
+    expect(r.status).toBe(200);
+    expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'reopen', null, 'demo', expect.any(Date));
+  });
+
+  it('숨기기(hide) 성공 → 200, revalidate·메일 호출', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'hide' });
+    expect(r.status).toBe(200);
+    expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'hide', null, 'demo', expect.any(Date));
+  });
+
+  /**
+   * hide는 사유를 강제하지 않지만(decidePublicStatus), UI가 보낸 사유가 있으면
+   * decidePublicStatus·메일 양쪽에 그대로 전달돼야 한다 — 메일에만 싣고 DB엔 안 남기는
+   * 비대칭이 생기면 안 된다(DB 쪽 저장은 publicStatusDecision.integration.test.ts가 확인).
+   */
+  it('숨기기에 사유를 보내면 decidePublicStatus와 메일 양쪽에 그대로 전달된다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'hide', note: '신고 접수 — 확인 중' });
+    expect(r.status).toBe(200);
+    expect(decidePublicStatus).toHaveBeenCalledWith('proj-1', 'hide', { note: '신고 접수 — 확인 중' }, expect.any(Date));
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'hide', '신고 접수 — 확인 중', 'demo', expect.any(Date));
+  });
+
+  it('노출(unhide) 성공 → 200, revalidate·메일 호출', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'unhide' });
+    expect(r.status).toBe(200);
+    expect(sendPublicStatusEmail).toHaveBeenCalledWith(BASE_PROJECT, 'unhide', null, 'demo', expect.any(Date));
+  });
+
+  it('재검증이 실패해도 200이고 warnings에 사유가 있다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    (revalidateFundingPaths as jest.Mock).mockResolvedValue('재검증 실패: /ko/funding');
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'close', note: '사유' });
+    expect(r.status).toBe(200);
+    expect(r.body.warnings).toContain('재검증 실패: /ko/funding');
+  });
+
+  it('메일이 실패하면 운영자 폴백을 부르고, 실패 사유가 warnings에 남는다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    (sendPublicStatusEmail as jest.Mock).mockResolvedValue('creator:5xx');
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'close', note: '사유' });
+    expect(r.status).toBe(200);
+    expect(sendPublicStatusOperatorFallback).toHaveBeenCalledWith(BASE_PROJECT, 'close', 'demo', 'creator:5xx');
+    expect(r.body.warnings).toContain('creator:5xx');
+  });
+
+  it('판정 뒤 프로젝트를 다시 읽지 못하면(null) 200이되 경고를 남기고 메일을 보내지 않는다', async () => {
+    (decidePublicStatus as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue(null);
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'hide' });
+    expect(r.status).toBe(200);
+    expect(r.body.warnings).toContain('개설자 정보를 다시 읽지 못해 알림 메일을 보내지 못했습니다.');
+    expect(sendPublicStatusEmail).not.toHaveBeenCalled();
+  });
+
+  it('decidePublicStatus가 예기치 않게 던지면 500', async () => {
+    (decidePublicStatus as jest.Mock).mockRejectedValue(new Error('boom'));
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'close', note: '사유' });
+    expect(r.status).toBe(500);
+    expect(sendPublicStatusEmail).not.toHaveBeenCalled();
+  });
 });

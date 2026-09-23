@@ -5,6 +5,14 @@ export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_AMOUNT = 5_000_000;
 export const ADDITIONAL_AMOUNT_STEP = 1000;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
+/**
+ * 정산 시점 — 모금 마감으로부터 이 영업일 수 뒤. 운영자 결정(2026-09-23).
+ *
+ * 코드가 이 시점을 강제하지는 않는다(운영자가 관리자 화면에서 기록·지급을 누른다).
+ * 개설자에게 안내하는 문구가 이 상수를 읽는다 — 신청 화면과 편집 화면 두 곳에 같은 숫자가
+ * 나가므로 문자열로 박으면 갈라진다.
+ */
+export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
 
 /**
  * "후원자가 취소를 요청했는데 아직 돈이 안 나간" 상태로 볼 orders.status 집합.

@@ -2,12 +2,41 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../../../../db/client';
-import { fundingProjects } from '../../../../../db/schema';
+import { formatPriceAmount } from '../../../../../data/pricing';
+import { fundingProjects, type FundingProjectPayout } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
 import { decideProject, type AdminReviewAction, type DecisionResult } from '../../../../../lib/funding/reviewDecision';
+import { decidePublicStatus, type PublicStatusAction, type PublicStatusResult } from '../../../../../lib/funding/publicStatusDecision';
+import {
+  decideCreatorAccount,
+  type CreatorAccountAction,
+  type CreatorAccountResult,
+} from '../../../../../lib/funding/creatorAccountDecision';
+import {
+  sendCreatorAccountOperatorFallback,
+  sendCreatorEmailChangedEmails,
+  sendCreatorNameChangedEmail,
+} from '../../../../../lib/funding/creatorEmail';
+import {
+  buildFundingPayoutPreview,
+  markFundingPayoutPaid,
+  recordFundingPayout,
+  type RecordFundingPayoutResult,
+} from '../../../../../lib/funding/payout';
+import { loadFundingPayoutAccountMasked } from '../../../../../lib/funding/payoutAccount';
+import {
+  sendFundingPayoutOperatorFallback,
+  sendFundingPayoutPaidEmail,
+  sendFundingPayoutRecordedEmail,
+} from '../../../../../lib/funding/payoutEmail';
 import { revalidateFundingPaths } from '../../../../../lib/funding/revalidate';
-import { sendReviewDecisionEmail, sendReviewDecisionOperatorFallback } from '../../../../../lib/funding/reviewEmail';
+import {
+  sendReviewDecisionEmail,
+  sendReviewDecisionOperatorFallback,
+  sendPublicStatusEmail,
+  sendPublicStatusOperatorFallback,
+} from '../../../../../lib/funding/reviewEmail';
 
 /** DecisionResult의 실패 code → HTTP 상태. Step 1 규약 그대로. */
 const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], number> = {
@@ -23,6 +52,89 @@ const DECISION_STATUS: Record<Exclude<DecisionResult, { ok: true }>['code'], num
 const REVIEW_ACTIONS: readonly AdminReviewAction[] = ['approve', 'request_changes', 'reject', 'archive'];
 const isReviewAction = (value: unknown): value is AdminReviewAction =>
   typeof value === 'string' && (REVIEW_ACTIONS as readonly string[]).includes(value);
+
+/** `publicStatusDecision.ts`의 실패 code → HTTP 상태. */
+const PUBLIC_STATUS_HTTP: Record<Exclude<PublicStatusResult, { ok: true }>['code'], number> = {
+  not_found: 404,
+  conflict: 409,
+  incomplete: 400,
+};
+
+const PUBLIC_STATUS_ACTIONS: readonly PublicStatusAction[] = ['close', 'reopen', 'hide', 'unhide'];
+const isPublicStatusAction = (value: unknown): value is PublicStatusAction =>
+  typeof value === 'string' && (PUBLIC_STATUS_ACTIONS as readonly string[]).includes(value);
+
+/** `creatorAccountDecision.ts`의 실패 code → HTTP 상태. duplicate_email은 duplicate_slug와 같은 400이다 —
+ * 입력값 자체를 고쳐야 하는 상황이라 낙관적 잠금 실패(409)와 성격이 다르다. */
+const CREATOR_ACCOUNT_HTTP: Record<Exclude<CreatorAccountResult, { ok: true }>['code'], number> = {
+  not_found: 404,
+  invalid: 400,
+  incomplete: 400,
+  conflict: 409,
+  duplicate_email: 400,
+};
+
+const CREATOR_ACCOUNT_ACTIONS: readonly CreatorAccountAction[] = ['set_creator_name', 'set_creator_email'];
+const isCreatorAccountAction = (value: unknown): value is CreatorAccountAction =>
+  typeof value === 'string' && (CREATOR_ACCOUNT_ACTIONS as readonly string[]).includes(value);
+
+/** `recordFundingPayout`의 실패 code → HTTP. 사유마다 운영자가 할 일이 다르므로 문구도 가른다. */
+const PAYOUT_RECORD_ERROR: Record<
+  Exclude<Exclude<RecordFundingPayoutResult, { ok: true }>['code'], 'amount_changed'>,
+  { status: number; message: string }
+> = {
+  not_found: { status: 404, message: '프로젝트를 찾을 수 없습니다.' },
+  already_recorded: { status: 409, message: '이미 기록된 정산입니다. 정산은 프로젝트당 한 번만 기록합니다.' },
+  nothing_to_pay: { status: 409, message: '결제된 후원이 없어 정산할 것이 없습니다.' },
+  not_closed: { status: 409, message: '모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 빠집니다.' },
+  no_payout_account: { status: 409, message: '개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 등록을 요청해 주세요.' },
+  no_tax_type: {
+    status: 409,
+    message:
+      '개설자의 세금 처리 구분(개인 원천징수 / 사업자 세금계산서)이 등록되지 않았습니다. 추측해서 기록하면 실이체액이 틀리고 되돌릴 수 없으니, 개설자에게 정산 정보 저장을 요청해 주세요.',
+  },
+};
+
+/**
+ * 기록·지급 뒤 개설자에게 알린다. **메일 실패가 기록·지급을 실패시키지 않는다** — 이미
+ * DB에는 반영됐고, 여기서 500을 내면 운영자가 같은 버튼을 다시 눌러 409만 받는다.
+ * 같은 파일의 판정·공개 상태 블록과 같은 처리다(실패는 warnings로 올리고 운영자 폴백).
+ */
+const notifyPayout = async (
+  projectId: string,
+  payout: FundingProjectPayout,
+  what: '정산 기록' | '정산 지급',
+): Promise<string[]> => {
+  const warnings: string[] = [];
+  try {
+    const project = await loadProjectForAdmin(projectId);
+    if (!project) {
+      warnings.push('개설자 정보를 다시 읽지 못해 알림 메일을 보내지 못했습니다.');
+      return warnings;
+    }
+    const account = await loadFundingPayoutAccountMasked(projectId);
+    const send = what === '정산 기록' ? sendFundingPayoutRecordedEmail : sendFundingPayoutPaidEmail;
+    const mailError = await send(project.creatorEmail, project.title, payout, account);
+    if (mailError) {
+      warnings.push(mailError);
+      const fallbackError = await sendFundingPayoutOperatorFallback(
+        projectId,
+        project.title,
+        what,
+        project.creatorEmail,
+        mailError,
+      );
+      if (fallbackError) {
+        console.error(`[funding] 운영자 폴백 알림도 실패 (id=${projectId}, ${what}):`, fallbackError);
+        warnings.push(`운영자 폴백 알림도 실패했습니다: ${fallbackError}`);
+      }
+    }
+  } catch (error: unknown) {
+    console.error(`[funding] ${what} 후 알림 처리 실패 (id=${projectId}):`, error);
+    warnings.push('처리는 끝났지만 알림 메일 단계에서 오류가 났습니다. 개설자에게 직접 알려 주세요.');
+  }
+  return warnings;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -170,6 +282,193 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+  }
+
+  /**
+   * 승인된 프로젝트의 공개 상태(status: closed/auto)·목록 노출(hidden)을 바꾼다.
+   * `decideProject`와 다른 함수(`decidePublicStatus`)를 쓴다 — 심사 상태(reviewStatus)
+   * 전이표와는 다른 축이고, approved는 그 표에서 되감을 수 없는 종결 상태이기 때문이다.
+   * 후속 처리(재검증·메일) 구조는 위 판정 블록과 동일하게 맞춘다 — 실패해도 200 + warnings.
+   */
+  if (isPublicStatusAction(b.action)) {
+    const action = b.action;
+    const note = typeof b.note === 'string' ? b.note : undefined;
+
+    let result: PublicStatusResult;
+    try {
+      result = await decidePublicStatus(id, action, { note }, now);
+    } catch (error: unknown) {
+      console.error(`[funding] decidePublicStatus 예외 (id=${id}, action=${action}):`, error);
+      return res.status(500).json({ ok: false, message: '처리 중 오류가 났습니다. 잠시 후 다시 시도해 주세요.' });
+    }
+
+    if (!result.ok) {
+      return res.status(PUBLIC_STATUS_HTTP[result.code]).json({ ok: false, message: result.message });
+    }
+
+    const warnings: string[] = [];
+    try {
+      // 넷 다 목록(hidden)·상세(status 배지) 어느 한쪽은 반드시 바꾸므로 매번 둘 다 재검증한다.
+      const revalidateError = await revalidateFundingPaths(res, result.slug);
+      if (revalidateError) warnings.push(revalidateError);
+
+      const project = await loadProjectForAdmin(id);
+      if (project) {
+        const mailError = await sendPublicStatusEmail(project, action, note?.trim() || null, result.slug, now);
+        if (mailError) {
+          warnings.push(mailError);
+          const fallbackError = await sendPublicStatusOperatorFallback(project, action, result.slug, mailError);
+          if (fallbackError) {
+            console.error(`[funding] 운영자 폴백 알림도 실패 (id=${id}, action=${action}):`, fallbackError);
+            warnings.push(`운영자 폴백 알림도 실패했습니다: ${fallbackError}`);
+          }
+        }
+      } else {
+        warnings.push('개설자 정보를 다시 읽지 못해 알림 메일을 보내지 못했습니다.');
+      }
+    } catch (error: unknown) {
+      console.error(`[funding] 공개 상태 변경 후속 처리(재검증·메일) 실패 (id=${id}, action=${action}):`, error);
+      warnings.push('공개 상태 변경 후 재검증·메일 처리 중 오류가 발생했습니다. 상태를 직접 확인해 주세요.');
+    }
+
+    return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+  }
+
+  /**
+   * 개설자 계정(이름·로그인 이메일) 수정. 프로젝트가 아니라 **개설자**를 고치는 유일한
+   * 운영자 경로다 — 입구가 이 라우트인 이유는 운영자가 개설자를 찾는 화면이 심사 상세이기
+   * 때문이고(`lib/funding/creatorAccountDecision.ts`), 판정은 그 순수 모듈이 전부 한다.
+   *
+   * 사유는 어느 컬럼에도 저장하지 않는다(새 컬럼 없이 하는 범위). 남는 곳은 개설자에게
+   * 가는 메일 본문과 **아래 서버 로그** 둘뿐이라, 로그를 조건 없이 남긴다.
+   */
+  if (isCreatorAccountAction(b.action)) {
+    const action = b.action;
+    const value = typeof b.value === 'string' ? b.value : '';
+    const reason = typeof b.reason === 'string' ? b.reason : '';
+
+    let result: CreatorAccountResult;
+    try {
+      result = await decideCreatorAccount(id, action, { value, reason }, now);
+    } catch (error: unknown) {
+      console.error(`[funding] decideCreatorAccount 예외 (id=${id}, action=${action}):`, error);
+      return res.status(500).json({ ok: false, message: '처리 중 오류가 났습니다. 잠시 후 다시 시도해 주세요.' });
+    }
+
+    if (!result.ok) {
+      return res.status(CREATOR_ACCOUNT_HTTP[result.code]).json({ ok: false, message: result.message });
+    }
+
+    // 계정 변경의 유일한 영속 기록. 값을 바꾼 뒤에 남긴다 — 실패한 시도까지 기록으로
+    // 보이면 "바뀐 적 없는 변경"이 로그에 남는다.
+    console.warn(
+      `[funding] 개설자 계정 변경 (creatorId=${result.creatorId}, action=${action}): ` +
+        `"${result.previousValue}" → "${action === 'set_creator_name' ? result.creatorName : result.creatorEmail}" / 사유: ${reason.trim()}`,
+    );
+
+    const warnings: string[] = [];
+    try {
+      // 이름은 공개 상세에 박히므로 이 개설자의 **승인된 프로젝트 전부**를 다시 만든다.
+      // 이메일 변경은 공개 화면에 드러나지 않아 revalidateSlugs가 빈 배열이다.
+      for (const slug of result.revalidateSlugs) {
+        const revalidateError = await revalidateFundingPaths(res, slug);
+        if (revalidateError) warnings.push(revalidateError);
+      }
+
+      const mailError =
+        action === 'set_creator_name'
+          ? await sendCreatorNameChangedEmail(result.creatorEmail, result.previousValue, result.creatorName, reason.trim())
+          : await sendCreatorEmailChangedEmails(result.previousValue, result.creatorEmail, reason.trim());
+      if (mailError) {
+        warnings.push(mailError);
+        const fallbackError = await sendCreatorAccountOperatorFallback(
+          action === 'set_creator_name' ? '이름' : '로그인 이메일',
+          result.creatorEmail,
+          result.previousValue,
+          action === 'set_creator_name' ? result.creatorName : result.creatorEmail,
+          reason.trim(),
+          mailError,
+        );
+        if (fallbackError) {
+          console.error(`[funding] 운영자 폴백 알림도 실패 (id=${id}, action=${action}):`, fallbackError);
+          warnings.push(`운영자 폴백 알림도 실패했습니다: ${fallbackError}`);
+        }
+      }
+    } catch (error: unknown) {
+      console.error(`[funding] 개설자 계정 변경 후속 처리(재검증·메일) 실패 (id=${id}, action=${action}):`, error);
+      warnings.push('계정 변경 후 재검증·메일 처리 중 오류가 발생했습니다. 상태를 직접 확인해 주세요.');
+    }
+
+    return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+  }
+
+  /**
+   * 정산 기록 — 미리보기 숫자를 그 시점에 고정한다(`lib/funding/payout.ts`).
+   * 프로젝트당 한 번이고, `project_id` UNIQUE가 동시 클릭도 막는다.
+   */
+  if (b.action === 'record_payout') {
+    /**
+     * 화면이 운영자에게 보여 준 실이체액을 함께 받는다 — 서버는 그 숫자를 기록하는 게 아니라
+     * 다시 계산한 값과 대조만 한다. 안 실려 오면 거절한다: 이 라우트를 부르는 것은 관리자
+     * 화면뿐이고, 기본값을 두면 낙관적 잠금을 우회하는 경로가 다시 생긴다.
+     */
+    if (typeof b.expectedNetAmount !== 'number' || !Number.isFinite(b.expectedNetAmount)) {
+      return res.status(400).json({
+        ok: false,
+        message: '화면이 보여 준 실이체액이 요청에 실리지 않았습니다. 새로고침 후 다시 시도해 주세요.',
+      });
+    }
+    let result: RecordFundingPayoutResult;
+    try {
+      result = await recordFundingPayout(id, now, b.expectedNetAmount);
+    } catch (error: unknown) {
+      console.error(`[funding] recordFundingPayout 예외 (id=${id}):`, error);
+      return res.status(500).json({ ok: false, message: '정산을 기록하지 못했습니다.' });
+    }
+    if (!result.ok) {
+      // 금액이 갈린 경우만 두 숫자를 문구에 넣는다 — 운영자가 무엇이 얼마로 바뀌었는지 보고
+      // 새로고침 뒤 다시 검산할 수 있어야 한다.
+      if (result.code === 'amount_changed') {
+        return res.status(409).json({
+          ok: false,
+          code: result.code,
+          message: `그 사이에 금액이 바뀌었습니다 — 화면은 실이체액 ${formatPriceAmount(
+            result.expectedNetAmount,
+          )}원을 보여 줬는데 지금 다시 계산하면 ${formatPriceAmount(
+            result.netAmount,
+          )}원입니다. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
+        });
+      }
+      const mapped = PAYOUT_RECORD_ERROR[result.code];
+      return res.status(mapped.status).json({ ok: false, code: result.code, message: mapped.message });
+    }
+    const warnings = await notifyPayout(id, result.payout, '정산 기록');
+    return res.status(201).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+  }
+
+  /**
+   * 지급 표시 — pending → paid 한 방향. 되돌리지 않는다.
+   *
+   * 정산 id를 요청 본문으로 받지 않고 프로젝트에서 찾는다. 정산은 프로젝트당 하나뿐이라
+   * 받을 이유가 없고, 받으면 "다른 프로젝트의 정산 id"를 이 라우트로 보낼 수 있는 경로가
+   * 생긴다.
+   */
+  if (b.action === 'mark_payout_paid') {
+    const memo = typeof b.memo === 'string' && b.memo.trim() ? b.memo.trim() : null;
+    try {
+      const preview = await buildFundingPayoutPreview(id);
+      if (!preview) return res.status(404).json({ ok: false, message: '프로젝트를 찾을 수 없습니다.' });
+      if (!preview.recorded) {
+        return res.status(409).json({ ok: false, message: '아직 기록되지 않은 정산입니다. 먼저 정산을 기록해 주세요.' });
+      }
+      const done = await markFundingPayoutPaid(preview.recorded.id, memo, now);
+      if (!done) return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다.' });
+      const warnings = await notifyPayout(id, { ...preview.recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
+      return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
+    } catch (error: unknown) {
+      console.error(`[funding] markFundingPayoutPaid 예외 (id=${id}):`, error);
+      return res.status(500).json({ ok: false, message: '처리하지 못했습니다.' });
+    }
   }
 
   return res.status(400).json({ ok: false, message: 'action이 올바르지 않습니다.' });

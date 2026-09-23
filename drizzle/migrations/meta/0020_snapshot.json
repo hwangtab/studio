@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "e11822b7-591f-456a-9e44-d6a27045a6e0",
+  "id": "cbc40b7f-1b25-4a2d-8705-9b565c3e6b1d",
   "prevId": "e9d7c96a-0d87-4ce5-9295-e910be6df321",
   "tables": {
     "artist_payouts": {
@@ -1221,13 +1221,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "fulfillment_updated_by": {
-          "name": "fulfillment_updated_by",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "entry_source": {
           "name": "entry_source",
           "type": "text",
@@ -1902,6 +1895,27 @@
         "notification_error": {
           "name": "notification_error",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "payment_fail_code": {
+          "name": "payment_fail_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "payment_fail_message": {
+          "name": "payment_fail_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "payment_failed_at": {
+          "name": "payment_failed_at",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false,
           "autoincrement": false

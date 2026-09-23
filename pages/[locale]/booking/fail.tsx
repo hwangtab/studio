@@ -1,3 +1,4 @@
+import { recordPaymentFailure } from '../../../lib/payments/recordFailure';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
@@ -114,6 +115,13 @@ export const getServerSideProps = withI18nServerProps<FailProps>(async ({ query,
     typeof orderId === 'string' && ORDER_NO_PATTERN.test(orderId.toUpperCase())
       ? orderId.toUpperCase()
       : null;
+  // 사유를 주문에 남긴다 — 이 화면이 실패를 아는 유일한 서버 경로다(confirm은 성공에만
+  // 불린다). best-effort라 화면은 결과와 무관하게 그대로 뜬다.
+  await recordPaymentFailure({
+    orderNo: safeOrderNo ?? '',
+    code: safeCode,
+    message: typeof query.message === 'string' ? query.message : null,
+  });
   return {
     props: {
       service: safeService,

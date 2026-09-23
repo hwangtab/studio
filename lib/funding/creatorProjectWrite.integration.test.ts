@@ -24,7 +24,9 @@ import {
   BASIC_LOCKED_FIELD_NAMES,
   createDraftProject,
   deleteReward,
+  loadPayoutSummary,
   loadProjectForCreator,
+  savePayoutSection,
   saveBasicSection,
   saveCreatorSection,
   saveStorySection,
@@ -449,19 +451,48 @@ describe('편집 가능 상태', () => {
 });
 
 describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', () => {
-  it('approved 프로젝트가 하나라도 있으면 이름 변경이 거부된다', async () => {
+  it('approved 프로젝트가 하나라도 있으면 이름 변경이 무시된다(나머지는 저장된다)', async () => {
     const creator = await seedCreator('locked-name@example.com');
     const { id } = await createDraftProject(creator);
     await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
       .where(eq(schema.fundingProjects.id, id));
 
     const r = await saveCreatorSection(creator, {
-      name: '바뀐 이름', contactName: null, phone: null, bio: null, links: null,
+      name: '바뀐 이름', contactName: null, phone: null, bio: '소개', links: null,
     });
-    expect(r).toMatchObject({ ok: false, code: 'locked' });
+    expect(r).toMatchObject({ ok: true });
 
     const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
     expect(row.name).toBe('가나'); // seedCreator의 기본값 그대로
+    expect(row.bio).toBe('소개');
+  });
+
+  it('운영자가 이름을 고친 뒤 들어온 낡은 화면의 저장도 나머지 필드를 저장한다', async () => {
+    // 이 잠금의 실제 사용 시나리오. 개설자가 "이름 고쳐 달라"고 요청하고 운영자가
+    // creatorAccountDecision으로 고치는 동안 개설자는 편집 화면을 열어 두고 있다 —
+    // 그 화면은 로드 시점의 옛 이름을 계속 제출한다. 거부하면 개설자가 건드린 적도
+    // 없는 칸 때문에 소개·연락처·링크가 통째로 저장되지 않는다.
+    const creator = await seedCreator('stale-form@example.com', '옛 이름');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    // 운영자가 이름을 고친다.
+    await mockDb.update(schema.fundingCreators).set({ name: '새 이름' })
+      .where(eq(schema.fundingCreators.id, creator));
+
+    // 개설자의 낡은 화면이 옛 이름을 그대로 실어 보낸다.
+    const r = await saveCreatorSection(creator, {
+      name: '옛 이름', contactName: '담당자', phone: '010-0000-0000', bio: '고친 소개', links: ['https://example.com'],
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('새 이름'); // 운영자가 고친 값 그대로
+    expect(row.bio).toBe('고친 소개');
+    expect(row.contactName).toBe('담당자');
+    expect(row.phone).toBe('010-0000-0000');
+    expect(row.links).toBe(JSON.stringify(['https://example.com']));
   });
 
   it('같은 이름으로 "바꾸려는" 저장(변화 없음)은 approved가 있어도 통과한다', async () => {
@@ -520,7 +551,10 @@ describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', ()
     const r = await saveCreatorSection(creator, {
       name: '다른 이름', contactName: null, phone: null, bio: null, links: null,
     });
-    expect(r).toMatchObject({ ok: false, code: 'locked' });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('황경하');
   });
 });
 
@@ -713,5 +747,90 @@ describe('승인 뒤 편집 (Task 5)', () => {
       expect(await saveStorySection(creatorId, projectId, { content: '본문' })).toMatchObject({ ok: false, code: 'not_editable' });
       expect(await upsertReward(creatorId, projectId, rewardInput())).toMatchObject({ ok: false, code: 'not_editable' });
     }
+  });
+});
+
+describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
+  const payout = { taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '황경하' } as const;
+
+  it('승인된 프로젝트가 하나도 없으면 거부한다 — 반려될 신청서에 계좌를 미리 받지 않는다', async () => {
+    const { creatorId } = await seedProject();
+    const r = await savePayoutSection(creatorId, { ...payout });
+    expect(r).toEqual({ ok: false, code: 'not_editable', message: expect.any(String) });
+
+    const summary = await loadPayoutSummary(creatorId);
+    expect(summary).toEqual({ registered: false, accountLast4: null, taxType: null });
+  });
+
+  it('승인된 프로젝트가 있으면 저장된다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    expect(await savePayoutSection(creatorId, { ...payout })).toEqual({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators)
+      .where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.taxType).toBe('withholding');
+    expect(row.payoutBankName).toBe('국민은행');
+    expect(row.payoutAccount).toBe('123-456-789012');
+    expect(row.payoutHolder).toBe('황경하');
+  });
+
+  it('승인 뒤에도 계속 고칠 수 있다 — 계좌는 바뀐다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, { ...payout });
+    expect(await savePayoutSection(creatorId, {
+      taxType: 'invoice', bankName: '토스뱅크', account: '1000-0000-0000', holder: '스튜디오놀',
+    })).toEqual({ ok: true });
+
+    expect(await loadPayoutSummary(creatorId)).toEqual({
+      registered: true, accountLast4: '0000', taxType: 'invoice',
+    });
+  });
+
+  it('없는 계정은 not_found다', async () => {
+    expect((await savePayoutSection('없는-id', { ...payout })).ok).toBe(false);
+  });
+
+  it('계정 단위라 다른 프로젝트(초안)를 열어 둔 상태에서도 저장된다', async () => {
+    // saveCreatorSection과 같은 축 — 값이 funding_creators에 붙어 있으므로 판정도 계정
+    // 단위여야 한다. 승인된 A를 가진 개설자가 초안 B 때문에 계좌를 못 고치면 안 된다.
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await createDraftProject(creatorId);
+    expect(await savePayoutSection(creatorId, { ...payout })).toEqual({ ok: true });
+  });
+});
+
+describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다', () => {
+  it('등록 여부·뒤 4자리·세금 유형뿐이고, 직렬화에 은행명·예금주·계좌 전체가 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, {
+      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주',
+    });
+
+    const summary = await loadPayoutSummary(creatorId);
+    expect(Object.keys(summary).sort()).toEqual(['accountLast4', 'registered', 'taxType']);
+
+    // lib/funding/dbProjects.integration.test.ts의 같은 모양 단언 — 이 값이 그대로
+    // getServerSideProps props가 되어 __NEXT_DATA__로 페이지 소스에 실린다.
+    const serialized = JSON.stringify(summary);
+    expect(serialized).not.toContain('123-456-789012');
+    expect(serialized).not.toContain('국민은행');
+    expect(serialized).not.toContain('정산예금주');
+  });
+
+  it('세 칸 중 하나라도 비어 있으면 미등록이다 — 정산 기록의 hasPayoutAccount와 같은 판정', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await mockDb.update(schema.fundingCreators)
+      .set({ taxType: 'withholding', payoutBankName: '국민은행', payoutAccount: '123-456', payoutHolder: '   ' })
+      .where(eq(schema.fundingCreators.id, creatorId));
+
+    expect(await loadPayoutSummary(creatorId)).toEqual({
+      registered: false, accountLast4: null, taxType: 'withholding',
+    });
+  });
+
+  it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {
+    expect(await loadPayoutSummary('없는-id')).toEqual({
+      registered: false, accountLast4: null, taxType: null,
+    });
   });
 });

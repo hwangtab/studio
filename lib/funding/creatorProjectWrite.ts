@@ -5,7 +5,8 @@ import { fundingCreators, fundingProjects, fundingRewards, type FundingProjectRo
 import { getFundingProject } from './projects';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
-  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type RewardInput, type StorySection,
+  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type PayoutSection,
+  type RewardInput, type StorySection,
 } from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
 import { toKstDateString } from './creatorDateInput';
@@ -227,9 +228,17 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
  * (관리자 심사)에서 정했다: **이름만 잠근다.** Task 10이 공개 상세의 판매자 표시 옆에
  * `creator.name`을 그리기 시작하면서, 승인된 프로젝트를 가진 개설자가 이름을 아무
  * 문자열로 바꾸면 ISR 60초 안에 공개 페이지에 그대로 뜨게 됐다(심사도 알림도 없이). 그래서
- * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 거부한다. `bio`·연락처·
+ * 그 개설자에게 `approved` 프로젝트가 하나라도 있으면 이름 변경만 **무시한다**. `bio`·연락처·
  * `links`는 공개 화면에 실리지 않으므로 계속 자유롭게 고칠 수 있다. 새 컬럼 없이
  * `funding_projects`를 그때그때 조회해 판정한다.
+ *
+ * **거부가 아니라 무시인 이유.** 화면이 이름 칸을 `disabled`로 두므로(`nameLocked`) 개설자가
+ * 이름을 직접 고쳐 보낼 길이 없다. 그래도 불일치는 생긴다 — 운영자가
+ * `creatorAccountDecision.ts`로 이름을 A→B로 고치는 동안 개설자가 편집 화면을 열어 두고
+ * 있으면, 그 화면은 계속 A를 들고 제출한다. 거부하면 개설자가 건드린 적 없는 칸 때문에
+ * 소개·연락처·링크가 통째로 저장되지 않고, 화면 안내("소개·연락처·링크는 계속 고칠 수
+ * 있습니다")와도 어긋난다. 잠금의 목적은 이름이 안 바뀌는 것이지 나머지 저장을 막는 것이
+ * 아니므로, 들어온 이름을 버리고 기존 이름을 유지한 채 나머지를 저장한다.
  *
  * **예외: 지금 이름이 가입 시 채워진 기본값(이메일 로컬파트)이면 잠그지 않는다.** 설정한
  * 적 없는 값을 잠그는 것은 잠금이 아니라 사고다(`isDefaultCreatorName` 주석 참조). 기존에
@@ -244,11 +253,11 @@ const hasApprovedProject = async (creatorId: string): Promise<boolean> => {
 
 /**
  * 지금 이 개설자의 이름이 잠겨 있는지 — 편집 화면이 이름 칸을 비활성화하고 이유를
- * 보여줄지 판단하는 힌트다. 판정 조건은 `saveCreatorSection`이 실제로 거부하는 조건과
- * 정확히 같아야 한다(`hasApprovedProject`를 함께 쓰는 이유) — 둘이 갈리면 화면은 열려
- * 있는데 저장은 막히거나, 화면은 잠겨 있는데 저장은 되는 모순이 생긴다.
+ * 보여줄지 판단하는 힌트다. 판정 조건은 `saveCreatorSection`이 실제로 이름 변경을 무시하는
+ * 조건과 정확히 같아야 한다(`hasApprovedProject`를 함께 쓰는 이유) — 둘이 갈리면 화면은
+ * 열려 있는데 이름이 저장되지 않거나, 화면은 잠겨 있는데 저장은 되는 모순이 생긴다.
  *
- * **이 힌트는 집행자가 아니다.** 서버는 여전히 `saveCreatorSection`이 유일하게 막는다 —
+ * **이 힌트는 집행자가 아니다.** 서버는 여전히 `saveCreatorSection`이 유일하게 집행한다 —
  * 이 함수는 편집 화면 로드 시점에 한 번만 불러 안내 문구를 미리 보여주는 용도다.
  */
 export const isCreatorNameLocked = async (creatorId: string): Promise<boolean> => {
@@ -264,18 +273,103 @@ export const saveCreatorSection = async (creatorId: string, value: CreatorSectio
     .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
 
-  if (value.name !== existing.name && !isDefaultCreatorName(existing.name, existing.email)) {
-    if (await hasApprovedProject(creatorId)) {
-      return deny('locked', '승인된 프로젝트가 있어 이름은 더 이상 바꿀 수 없습니다. 소개·연락처·링크는 계속 고칠 수 있습니다.');
-    }
-  }
+  // 잠겨 있으면 들어온 이름을 버리고 기존 이름을 그대로 쓴다(거부하지 않는다 — 위 주석).
+  const nameLocked = value.name !== existing.name
+    && !isDefaultCreatorName(existing.name, existing.email)
+    && await hasApprovedProject(creatorId);
 
   await getDb().update(fundingCreators).set({
-    name: value.name,
+    name: nameLocked ? existing.name : value.name,
     contactName: value.contactName,
     phone: value.phone,
     bio: value.bio,
     links: value.links ? JSON.stringify(value.links) : null,
+    updatedAt: new Date(),
+  }).where(eq(fundingCreators.id, creatorId));
+  return { ok: true };
+};
+
+/**
+ * 정산 정보 구획이 화면에 돌려받는 **전부** — 등록 여부, 계좌번호 뒤 4자리, 세금 유형.
+ *
+ * 은행명·예금주·계좌번호 전체는 여기 없고, 앞으로도 넣으면 안 된다. 이 값은 편집 화면의
+ * `getServerSideProps` props로 나가고, Pages Router는 props를 `__NEXT_DATA__` JSON으로
+ * 페이지 HTML에 그대로 싣는다 — 담는 순간 계좌번호가 페이지 소스에 평문으로 박힌다.
+ * **개설자 본인 화면이라는 것은 예외 사유가 아니다**(어깨너머·브라우저 캐시·화면 공유).
+ * 같은 이유로 `lib/funding/dbProjects.ts`와 `lib/funding/adminProjects.ts`도 이 네 컬럼을
+ * 일부러 빼고 있고, 각자의 integration 테스트가 그 사실을 고정한다.
+ *
+ * 그래서 개설자는 계좌를 "고치는" 것이 아니라 **다시 입력해 덮어쓴다.** 불편을 이유로
+ * 값을 실어 보내고 싶어지면 이 주석이 그 이유를 말한다.
+ */
+export interface CreatorPayoutSummary {
+  registered: boolean;
+  accountLast4: string | null;
+  taxType: PayoutSection['taxType'] | null;
+}
+
+/** 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다. */
+const accountLast4 = (account: string): string | null => {
+  const digits = account.replace(/[^0-9]/g, '');
+  return digits.length >= 4 ? digits.slice(-4) : null;
+};
+
+/**
+ * 편집 화면이 정산 구획을 그리는 데 필요한 것만 읽는다.
+ *
+ * `select()`(전 컬럼)를 쓰지 않는다 — 전 컬럼을 읽어 오면 호출부가 실수로 통째 스프레드할
+ * 여지가 생긴다. 네 컬럼만 고르고, 그중 셋은 이 함수 안에서 불리언·뒤 4자리로 접혀 밖으로
+ * 나가지 않는다.
+ */
+export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayoutSummary> => {
+  const [row] = await getDb().select({
+    taxType: fundingCreators.taxType,
+    payoutBankName: fundingCreators.payoutBankName,
+    payoutAccount: fundingCreators.payoutAccount,
+    payoutHolder: fundingCreators.payoutHolder,
+  }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!row) return { registered: false, accountLast4: null, taxType: null };
+
+  const account = row.payoutAccount?.trim() ?? '';
+  // `recordFundingPayout`이 정산을 거부하는 조건(`hasPayoutAccount`, lib/funding/payout.ts)과
+  // 같은 판정이어야 한다 — 갈리면 화면은 "등록됨"인데 정산은 no_payout_account로 막힌다.
+  const registered = Boolean(row.payoutBankName?.trim() && account && row.payoutHolder?.trim());
+  return {
+    registered,
+    accountLast4: registered ? accountLast4(account) : null,
+    taxType: row.taxType ?? null,
+  };
+};
+
+/**
+ * 정산 정보(세금 유형·계좌) 저장.
+ *
+ * `saveCreatorSection`과 같은 축이다 — 값이 `funding_creators`에 붙어 있으므로 프로젝트
+ * 단위 `guard()`를 타지 않는다. 대신 **승인된 프로젝트가 하나라도 있을 때만** 받는다:
+ * 반려될 신청서에 계좌 정보를 미리 받지 않는다는 것이 이 구획의 존재 조건이고(설계 스펙
+ * §6.2), 값이 계정 소속인 이상 판정도 계정 단위여야 한다. 특정 프로젝트의 심사 상태로
+ * 막으면, 승인된 프로젝트 A를 가진 개설자가 초안 B를 열어 둔 채로는 정산 계좌를 못 고치는
+ * — 목적과 무관한 — 잠금이 된다.
+ *
+ * 화면 쪽 판정(`EDITABLE_SECTIONS`의 `payout`)은 지금 보고 있는 **그 프로젝트**가
+ * 승인됐는지를 본다. 둘이 어긋나는 경우는 하나뿐이고(승인된 A + 초안 B를 함께 가진
+ * 개설자가 B 화면을 볼 때) 그때 화면이 더 엄하다 — 정산이 실제로 일어나는 A의 화면에서
+ * 고치면 된다. 반대 방향(화면은 열렸는데 서버가 막는 것)은 생기지 않는다.
+ */
+export const savePayoutSection = async (creatorId: string, value: PayoutSection): Promise<WriteResult> => {
+  const [existing] = await getDb().select({ id: fundingCreators.id })
+    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
+  if (!existing) return deny('not_found', '개설자 계정을 찾을 수 없습니다.');
+
+  if (!(await hasApprovedProject(creatorId))) {
+    return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있습니다.');
+  }
+
+  await getDb().update(fundingCreators).set({
+    taxType: value.taxType,
+    payoutBankName: value.bankName,
+    payoutAccount: value.account,
+    payoutHolder: value.holder,
     updatedAt: new Date(),
   }).where(eq(fundingCreators.id, creatorId));
   return { ok: true };

@@ -84,3 +84,10 @@ docs/contracts/
 **/*seal*.txt
 **/*인감*
 **/*직인*
+
+# 로컬 전용 산출물 — 공개 저장소에 올라가면 안 된다.
+# .env*.local 패턴은 .env.local.bak-YYYYMMDD 같은 백업본을 못 잡는다(2026-09-22 적발, 시크릿 원본).
+.env.local.bak*
+.env*.bak*
+# 고객명이 들어간 견적서 원본(HTML/PDF). 발행 기록은 docs/oplog에 요약만 남긴다.
+docs/quotes/

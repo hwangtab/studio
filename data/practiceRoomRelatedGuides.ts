@@ -7,10 +7,20 @@
 //
 // 308 대상 슬러그는 넣지 않는다 — 2026-09-21에 126개를 걷어냈다. 4월 지역 통합으로
 // regionRedirectMap에 들어간 패자들이라(강남·마포·송파 등 지역 연습실 글) 클릭하면
-// 308을 거쳐 승자 6개(practice-room-vocal1·drum1·bass1·seoul1 등)로 모인다. 승자
+// 308을 거쳐 승자 6개(practice-room-vocal1·bass1·seoul1 등)로 모인다. 승자
 // 대부분은 이미 이 목록에 있어 교체해도 같은 링크가 38번 반복될 뿐이다. 허브가 7주에
 // 한 번 크롤되는 처지에(2026-09-15 실측) 126개 308을 따라가게 둘 이유가 없다.
 // practiceRoomRelatedGuides.test.ts가 재발을 막는다.
+//
+// 걷어낼 때 **승자가 목록에 남는지 확인할 것** — 단, 승자가 정말 살아 있는 글인지도 본다.
+// 2026-09-21에 126개를 빼면서 practice-room-drum1(27개 링크의 목적지)을 "승자"로 보고
+// 되살렸다가 같은 날 되돌렸다. drum1은 regionRedirectMap에는 없지만 next.config.mjs와
+// middleware.ts(PAGE_REDIRECT_SLUGS)가 /practice-room으로 308시키는 슬러그다(연습실은
+// 드럼 연주가 불가하므로 글 자체가 LP로 접힌 것, 1008eb0f10). 리다이렉트 원천은 셋이다:
+// regionRedirectMap.json · next.config.mjs redirects() · middleware.ts — 하나만 대조하면
+// 이런 구멍이 난다. 테스트가 셋을 모두 읽는다.
+// seoul1(19개)도 넣지 않는다: 받는 쿼리가 "녹음실"·"서울 녹음실"뿐이고 연습실계가 0종이라
+// (2026-09-21 GSC 실측) 연습실 허브의 관련 가이드로는 주제가 맞지 않는다.
 // 타이틀은 한국어 전용 — ko 허브에서만 렌더된다 (pages/[locale]/practice-room.tsx).
 
 export interface PracticeRoomRelatedGuide {

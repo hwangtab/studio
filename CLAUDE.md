@@ -320,6 +320,87 @@ supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지�
 (`lib/funding/creatorValidation.ts`)이 그 값을 미설정으로 판정하고, 심사 신청·승인이 막고,
 이름 잠금도 걸리지 않는다(설정한 적 없는 값을 잠그는 것은 잠금이 아니라 사고다).
 
+### 개설자 계정은 운영자만 되돌릴 수 있다
+
+`funding_creators`에 쓰는 경로는 세 개다 — 가입(`lib/funding/creatorToken.ts`), 개설자 본인
+저장(`saveCreatorSection`), 그리고 운영자(`lib/funding/creatorAccountDecision.ts`). 앞의 둘만
+있던 동안 두 자리가 막다른 길이었다: 잘못 저장된 이름이 승인되면 본인 잠금이 영구히
+거부하는데 그 이름은 공개 상세에 판매자 표시와 함께 박히고, 개설자가 자기 이메일 접근을
+잃으면 매직링크가 유일한 인증이라 로그인 수단 자체가 사라진다.
+
+운영자 경로는 관리자 심사 상세(`pages/admin/funding/projects/[id].tsx`)에 붙어 있다.
+**개설자 본인의 이름 잠금은 그대로 둔다** — 축이 다르다. 알아 둘 것 셋:
+
+- **이름을 바꾸면 그 개설자의 승인된 프로젝트를 전부 재검증해야 한다.** 지금 보고 있는
+  하나만 하면 나머지는 최대 60초 동안 옛 이름을 보여 준다. 판정 모듈이 대상 slug를
+  전부 돌려주고 라우트가 `revalidateFundingPaths`를 그 수만큼 부른다.
+- **이메일 변경은 그 개설자의 로그인 토큰을 전부 지운다.** 토큰 DELETE는 이메일
+  UPDATE와 같은 배치에 있고 `updated_at = epoch` EXISTS를 요구한다 — 경합으로 UPDATE가
+  0행일 때 토큰만 죽는 상태를 막는다.
+- **이미 발급된 `creator_session` 쿠키는 서버가 끊을 수 없다**(iron-session, 최대 7일).
+  이메일을 바꿔도 로그인된 브라우저는 그동안 그대로 들어온다. 관리자 화면에 적혀 있다.
+
+**변경 사유는 어느 컬럼에도 저장되지 않는다.** 메일 본문과 서버 로그가 유일한 기록이다 —
+새 컬럼 없이 넣은 기능이라 그렇고, 분쟁 시 로그 보존 기간 밖이면 증거가 없다. `reviewNote`는
+프로젝트 단위 심사 메모라 여기에 쓰지 않는다.
+
+### 개설자에게 가는 메일이 실패하면 운영자가 알아야 한다
+
+`/api/funding/creator/login`의 응답은 **언제나 같다**(200, "로그인 링크를 보냈습니다").
+다르게 답하면 그 화면이 누가 개설자인지 알려 주는 조회기가 된다. 그래서 발송 실패를
+화면으로 알릴 수 없고, 대신 운영자에게 메일이 간다(`sendCreatorLoginMailFailureAlert`).
+
+알림도 레이트리밋을 탄다 — 키는 `creator_login:mail_failure_alert`이고 전역 캡 알림
+(`creator_login:global_alert`)과 **반드시 달라야 한다.** 같으면 한쪽이 다른 쪽 예산을 먹어
+둘 중 하나가 조용해진다.
+
+### 마이그레이션은 배열 순서가 아니라 `when`으로 걸러진다 — 작은 `when`은 조용히 건너뛴다
+
+drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장 큰 행 하나만 읽고
+(`ORDER BY created_at DESC LIMIT 1`), 저널 엔트리의 `when`(밀리초)이 그 값보다 **큰 것만**
+실행한다(`node_modules/drizzle-orm/libsql/migrator.js`의 `Number(last[2]) < migration.folderMillis`).
+인덱스(0019·0020)도, 배열 순서도 보지 않는다. 그래서 **이미 적용된 것 중 최대 `when`보다
+작은 마이그레이션은 영원히 실행되지 않고 오류도 나지 않는다.** `npm run db:migrate`는
+초록으로 끝나고, 없는 컬럼을 참조하는 코드가 런타임에서야 깨진다.
+
+이 저장소는 마이그레이션을 코드와 함께 배포하지 않는다(생성·커밋만 하고 적용은 운영자가
+수동으로 `npm run db:migrate`). 그래서 이 함정이 더 오래 숨는다.
+
+**`when` 오름차순이 곧 적용 순서다.** 지금 관련된 셋:
+
+| tag | when | 위치 |
+|---|---|---|
+| `0020_serious_luckman` | 1790039737875 | PR #211 (`feat/creator-shipping`, 미머지) |
+| `0020_payment_failure_reason` | 1790065459500 | main (머지됨) |
+| `0021_cheerful_spencer_smythe` | 1790132266461 | `feat/funding-payout` |
+
+**PR #211의 `0020_serious_luckman`이 셋 중 가장 작다.** main의 `0020_payment_failure_reason`이
+운영 DB에 이미 적용됐다면 #211을 머지해도 그 마이그레이션은 **영영 적용되지 않는다** —
+`db:migrate`는 아무 말 없이 초록으로 끝난다. 이건 `feat/funding-payout`이 만든 문제가
+아니지만 이 절이 그 함정을 적는 유일한 자리다. 되살리는 방법은 둘이다: 머지한 뒤
+마이그레이션을 **재발행해 `when`을 현재 최댓값보다 크게** 만들거나, 그 SQL을 손으로
+실행하고 `__drizzle_migrations`를 맞춰 준다. 앞쪽이 안전하다.
+
+**두 브랜치가 같은 idx를 주장하면 머지에서 저널이 부딪힌다.** 위 두 0020이 그 경우다.
+해결은 엔트리를 **`when` 오름차순으로 합치고 `idx`를 다시 매기는 것** — idx는 표시용이고
+판정은 `when`이 하므로, 순서를 `when`에 맞춰야 읽는 사람과 마이그레이터가 같은 말을 한다.
+
+**병합 뒤의 두 번째 함정 — 스냅샷.** `drizzle-kit generate`는 저널 **마지막 엔트리**의
+스냅샷과 현재 스키마를 diff한다. 브랜치 스냅샷은 자기 쪽 변경만 담고 있으므로, 합친 뒤
+마지막 엔트리의 스냅샷에 **없는 쪽의 DDL이 다시 발행되고**, 그 컬럼은 이미 적용돼 있으니
+운영 DB에서 `duplicate column name`으로 터진다. 어느 쪽이 끝에 오든 성립한다 — 방향을
+한쪽으로 단정하지 말 것. 처방: 머지할 때 **마지막 스냅샷이 양쪽 변경을 모두 담은 전체
+스키마**가 되도록 재발행하고, `prevId` 사슬을 앞 스냅샷의 `id`로 이어 둘 것.
+
+**브랜치 체크아웃에서 `db:migrate`를 돌리지 마라.** 그 브랜치에 없는 마이그레이션이
+`when` 최댓값 아래로 깔려 영영 건너뛰어진다. 적용은 main 병합본에서 한 번에 한다.
+
+밀린 마이그레이션 자체는 `scripts/check-migration-drift.mjs`(CI)와 `lib/ops/migrationDrift.ts`
+(매일 크론 메일)가 저널 엔트리 수와 `__drizzle_migrations` 행 수를 비교해 잡는다. 다만 그
+판정은 **개수**를 보므로, 가운데 하나가 건너뛰어진 이 함정에서는 밀린 건수는 맞아도 이름은
+저널 뒤쪽 것을 댄다. 개수가 어긋났다면 저널의 `when`과 `__drizzle_migrations.created_at`을
+직접 대조할 것.
+
 ### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
 
 `NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는

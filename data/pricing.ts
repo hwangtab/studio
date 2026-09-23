@@ -49,6 +49,23 @@ export const getArtistSupportTier = (id: string) => ARTIST_SUPPORT_TIERS.find((t
 export const ARTIST_SUPPORT_SHARE_PERCENT = 90;
 /** 사업소득 원천징수율(소득세 3% + 지방소득세 0.3%). taxType='withholding' 아티스트에만 적용. */
 export const ARTIST_SUPPORT_WITHHOLDING_PERCENT = 3.3;
+
+/**
+ * 펀딩 프로젝트 정산 수수료(운영자 결정, 2026-09-23, 텀블벅 방식) —
+ * 플랫폼 수수료와 결제 수수료를 따로 떼고 둘 다 개설자가 부담한다.
+ * 계산은 결제액(gross − refund) 기준이며 lib/funding/payout.ts의
+ * computeFundingPayout이 정본이다.
+ */
+export const FUNDING_PLATFORM_FEE_PERCENT = 5.5; // 부가세 포함
+/**
+ * 개설자에게 청구하는 결제 수수료 계약 요율. ⚠ 운영자가 토스 계약서와 대조해
+ * 확정해야 한다 — 결제 수단마다 실제 요율이 다르고 우리는 그 값을 모른다.
+ * 이 상수는 "토스가 실제로 떼는 요율"이 아니라 개설자에게 청구하는 계약상 요율이다.
+ */
+export const FUNDING_PAYMENT_FEE_PERCENT = 3.4;
+/** 펀딩 정산 원천징수율. ARTIST_SUPPORT_WITHHOLDING_PERCENT와 값은 같지만 별도
+ * 상품의 별도 상수다 — 한쪽 요율이 바뀌어도 다른 쪽이 딸려가면 안 된다. */
+export const FUNDING_WITHHOLDING_PERCENT = 3.3;
 /** schema.org '음반 기획(Album Production)' 오퍼 앵커 — 별개 오퍼(레슨·축가와 값만 동일). */
 export const PRODUCTION_OFFER_PRICE = 350000;
 /** 부가 서비스 '기획/컨설팅' 시간당 단가(service-consulting). */

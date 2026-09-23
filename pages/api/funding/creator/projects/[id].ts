@@ -3,16 +3,18 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
-import { validateBasicSection, validateCreatorSection, validateStorySection } from '../../../../../lib/funding/creatorValidation';
-import { loadProjectForCreator, saveBasicSection, saveCreatorSection, saveStorySection } from '../../../../../lib/funding/creatorProjectWrite';
+import { validateBasicSection, validateCreatorSection, validatePayoutSection, validateStorySection } from '../../../../../lib/funding/creatorValidation';
+import {
+  loadProjectForCreator, saveBasicSection, saveCreatorSection, savePayoutSection, saveStorySection,
+} from '../../../../../lib/funding/creatorProjectWrite';
 import { respondWriteResult } from '../../../../../lib/funding/creatorWriteHttp';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
 import { sendCreatorEditedNotice } from '../../../../../lib/funding/reviewEmail';
 
 /**
- * 구획별 저장 — 기본정보·스토리·개설자 프로필 세 구획을 한 라우트가 받는다.
+ * 구획별 저장 — 기본정보·스토리·개설자 프로필·정산 정보 네 구획을 한 라우트가 받는다.
  *
- * `section: 'creator'`는 URL의 프로젝트 id를 쓰지 않는다. 개설자 프로필(이름·소개·연락처·
+ * `section: 'creator'`와 `section: 'payout'`은 URL의 프로젝트 id를 쓰지 않는다. 개설자 프로필(이름·소개·연락처·
  * 링크)은 프로젝트가 아니라 계정 소속이라 `saveCreatorSection`이 projectId를 받지 않기
  * 때문이다(lib/funding/creatorProjectWrite.ts 주석). 화면은 프로젝트 편집 페이지 안에서
  * 프로필 탭도 같은 주소로 저장하도록 두되, 서버는 그 id로 프로젝트 소유·편집 가능 여부를
@@ -34,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!projectId) return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
 
   const section = req.body?.section;
-  if (section !== 'basic' && section !== 'story' && section !== 'creator') {
+  if (section !== 'basic' && section !== 'story' && section !== 'creator' && section !== 'payout') {
     return res.status(400).json({ ok: false, message: '구획을 확인해 주세요.' });
   }
 
@@ -119,6 +121,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const result = await saveStorySection(auth.creatorId, projectId, validated.value);
     if (result.ok) await notifyIfApprovedEdit(wasApproved);
     return respondWriteResult(res, result);
+  }
+
+  if (section === 'payout') {
+    // 응답은 `respondWriteResult`의 `{ ok: true }` 한 벌이다 — 저장한 계좌를 되돌려
+    // 보내지 않는다. 화면은 자기가 입력한 값을 이미 들고 있고, 응답에 실으면 그 JSON이
+    // 브라우저 캐시·개발자도구 네트워크 탭·프록시 로그에 그대로 남는다.
+    const validatedPayout = validatePayoutSection(req.body?.value);
+    if (!validatedPayout.ok) return res.status(400).json({ ok: false, message: validatedPayout.message });
+    return respondWriteResult(res, await savePayoutSection(auth.creatorId, validatedPayout.value));
   }
 
   const validated = validateCreatorSection(req.body?.value);

@@ -15,12 +15,28 @@ describe('practiceRoomRelatedGuides', () => {
   const redirectMap: Record<string, string> = JSON.parse(
     fs.readFileSync(path.join(process.cwd(), 'lib/regionRedirectMap.json'), 'utf8')
   );
-  const losers = new Set(Object.keys(redirectMap).map((k) => k.replace('/stories/', '')));
+  // 리다이렉트 원천은 셋이다. regionRedirectMap만 보면 next.config.mjs·middleware.ts가
+  // 상위 페이지로 접는 슬러그(practice-room-drum1 → /practice-room)를 놓친다 —
+  // 2026-09-21에 실제로 그 슬러그를 "승자"로 오인해 되살렸다가 되돌렸다.
+  const readSlugs = (file: string, re: RegExp) =>
+    [...fs.readFileSync(path.join(process.cwd(), file), 'utf8').matchAll(re)].map((m) => m[1]);
+  const pageRedirectSlugs = [
+    ...readSlugs('next.config.mjs', /source:\s*'\/:locale\([^)]*\)\/stories\/([a-z0-9-]+)'/g),
+    ...readSlugs('middleware.ts', /^\s*'([a-z0-9-]+)':\s*'[a-z0-9-]+',\s*$/gm),
+  ];
+  const losers = new Map<string, string>();
+  for (const [k, v] of Object.entries(redirectMap)) losers.set(k.replace('/stories/', ''), `/stories/${v}`);
+  for (const slug of pageRedirectSlugs) losers.set(slug, '(page redirect: next.config.mjs / middleware.ts)');
 
-  it('308 리다이렉트 대상을 가리키지 않는다', () => {
+  it('리다이렉트 원천 셋을 다 읽었다 (파싱이 살아 있는지)', () => {
+    expect(Object.keys(redirectMap).length).toBeGreaterThan(100);
+    expect(pageRedirectSlugs).toContain('practice-room-drum1');
+  });
+
+  it('308 리다이렉트 대상을 가리키지 않는다 (regionRedirectMap · next.config · middleware)', () => {
     const bad = PRACTICE_ROOM_RELATED_GUIDES
       .filter((g) => losers.has(g.slug))
-      .map((g) => `${g.slug} → ${redirectMap[g.slug] ?? redirectMap[`/stories/${g.slug}`]}`);
+      .map((g) => `${g.slug} → ${losers.get(g.slug)}`);
     expect(bad).toEqual([]);
   });
 
@@ -30,6 +46,18 @@ describe('practiceRoomRelatedGuides', () => {
       .filter((g) => !fs.existsSync(path.join(dir, `${g.slug}.md`)))
       .map((g) => g.slug);
     expect(missing).toEqual([]);
+  });
+
+  /**
+   * 308을 걷어낼 때 승자가 목록에서 함께 사라지면 그 글로 가는 경로가 끊긴다.
+   * 연습실 클러스터의 축은 악기별 가이드다. drum1은 여기 없다 — 글 자체가
+   * /practice-room으로 접힌 슬러그라 위 테스트가 금지한다.
+   */
+  it('연습실 클러스터의 핵심 악기별 가이드가 목록에 있다', () => {
+    const slugs = new Set(PRACTICE_ROOM_RELATED_GUIDES.map((g) => g.slug));
+    for (const core of ['practice-room-vocal1', 'practice-room-bass1', 'practice-room-guitar1', 'practice-room-piano1']) {
+      expect(slugs.has(core)).toBe(true);
+    }
   });
 
   it('목록이 비어 있지 않다 (스캔 자체가 살아 있는지)', () => {

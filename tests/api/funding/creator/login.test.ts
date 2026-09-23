@@ -6,14 +6,17 @@ jest.mock('../../../../lib/funding/creatorToken', () => ({
   issueCreatorLoginToken: jest.fn(),
   normalizeCreatorEmail: jest.requireActual('../../../../lib/funding/creatorToken').normalizeCreatorEmail,
 }));
-jest.mock('../../../../lib/funding/email', () => ({ sendCreatorLoginCapAlert: jest.fn().mockResolvedValue(null) }));
+jest.mock('../../../../lib/funding/email', () => ({
+  sendCreatorLoginCapAlert: jest.fn().mockResolvedValue(null),
+  sendCreatorLoginMailFailureAlert: jest.fn().mockResolvedValue(null),
+}));
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/funding/creator/login';
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
 import { issueCreatorLoginToken } from '../../../../lib/funding/creatorToken';
-import { sendCreatorLoginCapAlert } from '../../../../lib/funding/email';
+import { sendCreatorLoginCapAlert, sendCreatorLoginMailFailureAlert } from '../../../../lib/funding/email';
 
 const call = async (body: unknown, method = 'POST') => {
   const json = jest.fn();
@@ -31,6 +34,7 @@ beforeEach(() => {
   (sendCreatorLoginEmail as jest.Mock).mockResolvedValue(null);
   (issueCreatorLoginToken as jest.Mock).mockResolvedValue({ creatorId: 'c1', rawToken: 'raw-token-abc' });
   (sendCreatorLoginCapAlert as jest.Mock).mockResolvedValue(null);
+  (sendCreatorLoginMailFailureAlert as jest.Mock).mockResolvedValue(null);
 });
 
 it('POST가 아니면 405', async () => {
@@ -149,5 +153,55 @@ describe('전역 일일 캡', () => {
     await call({ email: 'a@b.com' });
 
     expect(sendCreatorLoginCapAlert).not.toHaveBeenCalled();
+  });
+});
+
+describe('로그인 메일 발송 실패 알림', () => {
+  it('발송이 실패하면 운영자 알림이 가고, 어느 주소·사유인지 담긴다', async () => {
+    (sendCreatorLoginEmail as jest.Mock).mockResolvedValue('API_ERROR');
+    const r = await call({ email: 'creator@example.com' });
+
+    expect(sendCreatorLoginMailFailureAlert).toHaveBeenCalledWith('creator@example.com', 'API_ERROR');
+    // 화면 응답은 여전히 200과 같은 문구 — 열거 방지는 그대로 유지된다.
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true, message: '로그인 링크를 보냈습니다. 메일함을 확인해 주세요.' });
+  });
+
+  it('발송이 성공하면 알림을 보내지 않는다', async () => {
+    await call({ email: 'a@b.com' });
+    expect(sendCreatorLoginMailFailureAlert).not.toHaveBeenCalled();
+  });
+
+  it('알림은 창당 한 번만 간다 — 두 번째 실패에서는 다시 보내지 않는다', async () => {
+    (sendCreatorLoginEmail as jest.Mock).mockResolvedValue('API_ERROR');
+    let alertWindowConsumed = false;
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) => {
+      if (key === 'creator_login:mail_failure_alert') {
+        if (alertWindowConsumed) return Promise.resolve(false);
+        alertWindowConsumed = true;
+        return Promise.resolve(true);
+      }
+      return Promise.resolve(true);
+    });
+
+    await call({ email: 'a@b.com' });
+    (sendCreatorLoginMailFailureAlert as jest.Mock).mockClear();
+    await call({ email: 'b@c.com' });
+
+    expect(sendCreatorLoginMailFailureAlert).not.toHaveBeenCalled();
+  });
+
+  it('캡 알림 키와 겹치지 않는다', async () => {
+    (sendCreatorLoginEmail as jest.Mock).mockResolvedValue('API_ERROR');
+    const keys: string[] = [];
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) => {
+      keys.push(key);
+      return Promise.resolve(true);
+    });
+
+    await call({ email: 'a@b.com' });
+
+    expect(keys).toContain('creator_login:mail_failure_alert');
+    expect(keys.filter((k) => k === 'creator_login:global_alert')).toHaveLength(0);
   });
 });

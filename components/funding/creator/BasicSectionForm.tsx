@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, TextInput } from '../../ui/Field';
@@ -29,12 +29,19 @@ interface Props {
   /** 승인 뒤에는 구획은 열려 있지만 주소·목표 금액·모금 기간은 잠긴다(서버의 basicLockedViolation과 같은 규칙). */
   lockedFields?: boolean;
   onSaved: (value: BasicSectionValue) => void;
+  /**
+   * 이 구획의 입력이 마지막으로 저장된 값과 달라졌는지를 부모(편집 화면)에 알린다.
+   * 부모는 네 구획 중 하나라도 dirty면 이탈 전 확인을 건다(2026-09-22, "저장 안 한
+   * 입력이 경고 없이 사라진다" 대응). 저장이 아니라 저장 "안 한" 상태를 보고하는
+   * 것이므로 자동 저장으로 이어지지 않는다.
+   */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 /** 초안 생성 직후의 임시 주소(`createDraftProject`가 붙인 `draft-<uuid>`)는 실제 주소가 아니다. */
 const isDraftPlaceholderSlug = (slug: string): boolean => slug.startsWith('draft-');
 
-export function BasicSectionForm({ projectId, initial, earliestStartDate, readOnly, lockedFields, onSaved }: Props) {
+export function BasicSectionForm({ projectId, initial, earliestStartDate, readOnly, lockedFields, onSaved, onDirtyChange }: Props) {
   const [title, setTitle] = useState(initial.title);
   const [summary, setSummary] = useState(initial.summary);
   // 임시 주소를 폼에 그대로 채우지 않는다 — 개설자가 손대지 않으면 그 임시값이 영구
@@ -45,6 +52,20 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
   const [startAt, setStartAt] = useState(initial.startAt);
   const [endAt, setEndAt] = useState(initial.endAt);
   const [save, setSave] = useState<SaveState>(IDLE_SAVE_STATE);
+
+  // 저장된 값(initial)과 지금 입력을 비교한다 — 별도 dirty state를 두지 않고 매 렌더
+  // 파생시킨다. 저장에 성공하면 onSaved가 부모의 project.title 등을 갱신하고, 그 값이
+  // 다음 렌더의 initial로 그대로 내려오므로(같은 구획을 이 폼 말고는 아무도 안 건드린다)
+  // 저장 직후 자연히 dirty=false가 된다 — 따로 리셋 로직이 필요 없다.
+  const initialSlugValue = isDraftPlaceholderSlug(initial.slug) ? '' : initial.slug;
+  const dirty = title !== initial.title
+    || summary !== initial.summary
+    || slug !== initialSlugValue
+    || coverUrl !== initial.coverUrl
+    || Number(goalAmount) !== initial.goalAmount
+    || startAt !== initial.startAt
+    || endAt !== initial.endAt;
+  useEffect(() => { onDirtyChange?.(dirty); }, [dirty, onDirtyChange]);
 
   // 저장 성공/실패 표시는 그 저장 결과에 대한 것이다 — 그 뒤 아무 입력이나 바뀌면
   // "저장했습니다"가 낡은 안내로 남는다(2026-09-17 리뷰 지적). 필드마다 onChange에서
@@ -74,7 +95,12 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
       endAt: endAt ? kstEndOfDayIso(endAt) : '',
     });
     if (result.ok) {
-      setSlug(normalizedSlug);
+      // 저장 요청이 도는 동안(왕복 100~500ms) 슬러그 칸은 계속 활성이라, 응답이 오기
+      // 전에 이어서 고친 값이 있을 수 있다. 무조건 덮어쓰면 그 값이 조용히 사라진다 —
+      // `slug`는 이 submit 클로저가 잡고 있는 제출 시점 값이라, 지금(cur) 값이 그때와
+      // 같을 때만(그 사이 아무도 안 고쳤을 때만) 정규화된 값으로 되돌린다
+      // (2026-09-22 2차 리뷰 지적 — CreatorSectionForm.tsx와 같은 처방).
+      setSlug((cur) => (cur === slug ? normalizedSlug : cur));
       setSave({ status: 'success' });
       onSaved(value);
     } else {

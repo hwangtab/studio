@@ -2,9 +2,11 @@ import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
 import { PHONE, PHONE_NUMBER, SITE_URL } from './email';
+import { computeProjectState } from './projectState';
 
 import type { AdminProjectDetail } from './adminProjects';
 import type { AdminReviewAction } from './reviewDecision';
+import type { FundingStatus } from './shape';
 
 /**
  * 판정 메일이 다루는 세 가지. 독립 정의하지 않고 `reviewDecision.ts`의 `AdminReviewAction`을
@@ -147,10 +149,9 @@ export const sendReviewDecisionEmail = async (
  * 운영자가 "무엇이 바뀌었는지"를 알 유일한 경로가 이 메일과 심사 화면의 표시
  * (`AdminProjectDetail.creatorEditedAt`)다.
  *
- * 마지막 안내는 "심사 화면의 개설자에게 보이는 메모로 연락"까지만 적는다 — 관리자
- * 화면에는 공개된 프로젝트를 종료(status: closed)로 바꾸는 버튼이 아직 없다
- * (`pages/admin/funding/projects/[id].tsx`, 보관은 미심사 상태에서만 가능하다). 없는
- * 경로를 안내하면 운영자가 화면에서 찾아 헤매게 된다.
+ * 마지막 안내는 심사 화면의 "공개 상태" 조작을 가리킨다 — 공개된 프로젝트를 종료
+ * (status: closed)하거나 목록에서 숨기는 것은 그 조작이지 심사 판정(승인·반려·보관)이
+ * 아니다.
  */
 export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Promise<string | null> => {
   const result = await sendEmail({
@@ -165,7 +166,8 @@ export const sendCreatorEditedNotice = async (project: AdminProjectDetail): Prom
       '',
       `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
       '',
-      '고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락해 주세요.',
+      '고친 내용이 문제가 되면 심사 화면의 "개설자에게 보이는 메모"로 연락하거나, 필요하면',
+      '같은 화면의 "공개 상태"에서 종료·숨김으로 대응해 주세요.',
     ].join('\n'),
   });
   return result.ok ? null : `operator:${result.errorCode}`;
@@ -183,6 +185,125 @@ export const sendReviewDecisionOperatorFallback = async (
     '',
     `프로젝트: ${project.title} (id: ${project.id})`,
     `판정: ${REVIEW_SUBJECT[action]}`,
+    `개설자: ${project.creatorName} <${project.creatorEmail}>`,
+    `공개 주소: ${publicUrl(slug)}`,
+    `실패 사유: ${failureReason}`,
+    '',
+    `관리자 심사 화면: ${adminReviewUrl(project.id)}`,
+  ].join('\n');
+
+  const result = await sendEmail({ to: OPERATOR_EMAIL, subject, text });
+  return result.ok ? null : `operator:${result.errorCode}`;
+};
+
+/**
+ * 승인 뒤 공개 상태(`status`)·목록 노출(`hidden`)을 바꿨을 때의 개설자 알림
+ * (`publicStatusDecision.ts`). 심사 판정(`AdminReviewAction`)과는 별도 축이라 제목·본문을
+ * 공유하지 않는다 — "종료"를 "반려"와 같은 문구로 보내면 개설자가 심사에서 떨어졌다고
+ * 오해한다.
+ */
+export type PublicStatusAction = 'close' | 'reopen' | 'hide' | 'unhide';
+
+const PUBLIC_STATUS_SUBJECT: Record<PublicStatusAction, string> = {
+  close: '펀딩 프로젝트가 종료되었습니다',
+  reopen: '펀딩 프로젝트가 다시 공개되었습니다',
+  hide: '펀딩 프로젝트가 목록에서 숨겨졌습니다',
+  unhide: '펀딩 프로젝트가 다시 목록에 노출됩니다',
+};
+
+/**
+ * `sendReviewDecisionEmail`과 이름·구조를 맞췄다. 메일 실패는 판정을 실패시키지 않고
+ * 실패 사유 문자열만 돌려준다 — 호출부(심사 API)가 화면에 보여준다.
+ *
+ * `now`를 받는 이유는 `reopen` 문면 때문이다. `status: auto`로 되돌려도
+ * `computeProjectState`가 `startAt`·`endAt`을 다시 보므로, 모금 기간이 이미 지난 뒤에
+ * 다시 열면 실제로는 후원이 안 들어온다 — "다시 열려 후원을 받습니다"라고 단언하면
+ * 없는 사실이 된다. 호출부(심사 API)가 이미 재조회한 `project`(= 이 함수가 받는
+ * `project`, `status`가 방금 갱신된 값)와 `now`를 그대로 넘긴다.
+ */
+export const sendPublicStatusEmail = async (
+  project: AdminProjectDetail,
+  action: PublicStatusAction,
+  note: string | null,
+  slug: string,
+  now: Date = new Date(),
+): Promise<string | null> => {
+  const subject = `[스튜디오 놀] ${PUBLIC_STATUS_SUBJECT[action]} — ${project.title}`;
+
+  // reopen 전용 — 되돌린 뒤의 실제 모금 상태(live/upcoming/closed)를 본다. project.status는
+  // 호출부가 decidePublicStatus 성공 뒤 다시 읽은 값이라 이미 'auto'다.
+  const reopenState =
+    action === 'reopen'
+      ? computeProjectState({ status: project.status as FundingStatus, startAt: project.startAt, endAt: project.endAt }, now)
+      : null;
+  const startAtLabel = new Date(project.startAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' });
+  const endAtLabel = new Date(project.endAt).toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' });
+
+  const bodyByAction: Record<PublicStatusAction, string[]> = {
+    close: [
+      '펀딩 프로젝트가 운영자에 의해 종료되어 더 이상 후원을 받지 않습니다.',
+      '',
+      `프로젝트 페이지는 그대로 남아 있습니다: ${publicUrl(slug)}`,
+      '',
+      '[운영자 메모]',
+      note ?? '',
+      '',
+      `문의: ${CUSTOMER_REPLY_TO} · ${PHONE_NUMBER}`,
+    ],
+    reopen: [
+      '펀딩 프로젝트가 다시 공개되었습니다.',
+      '',
+      `공개 주소: ${publicUrl(slug)}`,
+      '',
+      // 모금 기간(startAt~endAt)은 승인 뒤 잠겨 있어(basicLockedViolation) 다시 여는 것만으로는
+      // 못 바꾼다 — 상태를 사실대로만 말한다.
+      ...(reopenState === 'live'
+        ? ['지금 바로 새 후원을 받습니다.']
+        : reopenState === 'upcoming'
+          ? [`모금 시작일(${startAtLabel})부터 후원을 받습니다. 그전까지는 페이지만 보이고 후원은 받지 않습니다.`]
+          : [`모금 종료일(${endAtLabel})이 이미 지나 지금은 새 후원을 받지 않습니다.`]),
+      ...(note ? ['', '[운영자 메모]', note] : []),
+    ],
+    hide: [
+      '펀딩 프로젝트가 목록·사이트맵에서 숨겨졌습니다. 주소를 아는 사람은 여전히 페이지를 볼 수 있습니다.',
+      '',
+      `페이지 주소: ${publicUrl(slug)}`,
+      ...(note ? ['', '[운영자 메모]', note] : []),
+    ],
+    unhide: [
+      '펀딩 프로젝트가 다시 목록·사이트맵에 노출됩니다.',
+      '',
+      `공개 주소: ${publicUrl(slug)}`,
+      ...(note ? ['', '[운영자 메모]', note] : []),
+    ],
+  };
+
+  const result = await sendEmail({
+    to: project.creatorEmail,
+    replyTo: CUSTOMER_REPLY_TO,
+    subject,
+    text: [`${project.creatorName}님,`, '', ...bodyByAction[action], '', PHONE].join('\n'),
+  });
+  return result.ok ? null : `creator:${result.errorCode}`;
+};
+
+/**
+ * 개설자 알림이 실패했을 때의 운영자 폴백 — `sendReviewDecisionOperatorFallback`과 같은
+ * 이유다: 판정은 프로젝트당 한 번뿐이 아니라 되돌릴 수 있는 조작이라도, 실패 사실이 이번
+ * HTTP 응답의 warnings에만 남으면 운영자가 새로고침하는 순간 사라진다.
+ */
+export const sendPublicStatusOperatorFallback = async (
+  project: AdminProjectDetail,
+  action: PublicStatusAction,
+  slug: string,
+  failureReason: string,
+): Promise<string | null> => {
+  const subject = `[펀딩] 공개 상태 변경 알림 메일 실패 — ${project.title}`;
+  const text = [
+    '개설자에게 공개 상태 변경 메일을 보내지 못했습니다. 아래 정보로 직접 연락해 주세요.',
+    '',
+    `프로젝트: ${project.title} (id: ${project.id})`,
+    `변경: ${PUBLIC_STATUS_SUBJECT[action]}`,
     `개설자: ${project.creatorName} <${project.creatorEmail}>`,
     `공개 주소: ${publicUrl(slug)}`,
     `실패 사유: ${failureReason}`,
