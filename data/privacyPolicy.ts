@@ -374,7 +374,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '자동 파기 ⑩ 환불 사유 — 환불 기록을 만든 날부터 5년이 지나면 표시로 덮어씁니다. 관리자가 자유롭게 적는 칸이라 사람을 가리키는 조각이 들어갈 수 있어 파기 대상이며, 환불이 있었다는 사실과 금액·요청자·결제사 거래키는 그대로 남습니다',
           '자동 파기 ⑪ 운영 일정 메모 — 예약을 받지 않도록 막아 둔 시간대에 운영자가 적는 메모는 그 시간대가 끝나고 1년이 지나면 지웁니다. 막아 둔 시각 자체는 운영 기록으로 남습니다',
           '자동 파기 ⑫ 계약서에 적힌 개인정보 — 연습실 계약은 해지·만료 처리가 끝난 계약에 한해, 계약이 끝난 날부터 3년이 지나면 계약 상대방의 이름·생년월일·연락처·주소와 계약 본문, 서명 이미지와 서명자의 IP·단말 정보, 그리고 보관하던 계약서 PDF를 지우거나 표시로 덮습니다. 관리자가 자유롭게 적는 계약 제목과 해지 사유도 이름이 들어갈 수 있어 함께 덮습니다. 기산점은 실제로 종료 처리한 날이고, 그 기록이 없으면 계약서에 적힌 종료일입니다. 서명만 되어 있고 아직 끝나지 않은 계약은 대상이 아닙니다 — 자동 갱신으로 계약서의 종료일이 지나도 이용이 이어질 수 있기 때문입니다. 계약이 있었다는 사실과 기간·금액·호실, 계약을 언제 몇 번 열어 봤는지는 남습니다',
-          '자동 파기 ⑬ 방치된 정기결제 — 카드 등록을 마치지 않은 채 멈춘 정기결제, 그리고 결제 실패로 정지되었거나 운영자가 청구를 멈춰 둔 정기결제는 그대로 두면 끝나는 날이 오지 않아, 위 ⑤~⑦의 기산점이 영영 생기지 않습니다. 그래서 마지막 활동(카드 등록·결제 시도·카드 변경과 그 밖의 구독 기록 갱신)으로부터 1년이 지나도록 아무 활동이 없으면 종료된 것으로 봅니다. 그때까지 결제가 한 번도 없었던 정기결제는 계약이 성립하지 않았고 오간 대금도 없어 보존할 거래기록이 아니므로, 종료로 넘기면서 이름·연락처·이메일 주소를 표시로 덮고 후원자 명단에 실을 표시 이름을 지체 없이 함께 지웁니다. 결제 이력이 있는 정기결제는 거래기록이라 종료로 넘기기만 하고, 그 뒤는 위 ⑤의 5년과 ⑦의 3년이 이어받습니다. 결제를 시도했으나 그 결과가 아직 확인되지 않은 회차가 남아 있는 정기결제도 종료로만 넘깁니다 — 뒤늦게 승인이 확인되면 환불을 안내해 드려야 하므로, 연락처를 지울 수 없기 때문입니다. 이용 중이거나 결제를 다시 시도하는 중인 정기결제, 해지를 예약해 둔 정기결제는 대상이 아닙니다 — 앞의 둘은 살아 있고, 마지막 것은 예약한 날이 지나면 종료로 넘어가는 경로가 이미 있습니다',
+          '자동 파기 ⑬ 방치된 정기결제 — 카드 등록을 마치지 않은 채 멈춘 정기결제, 그리고 결제 실패로 정지되었거나 운영자가 청구를 멈춰 둔 정기결제는 그대로 두면 끝나는 날이 오지 않아, 위 ⑤~⑦의 기산점이 영영 생기지 않습니다. 그래서 마지막 활동(카드 등록·결제 시도·카드 변경과 그 밖의 구독 기록 갱신)으로부터 3년이 지나도록 아무 활동이 없으면 종료된 것으로 봅니다. 그때까지 결제가 한 번도 없었던 정기결제는 계약이 성립하지 않았고 오간 대금도 없어 보존할 거래기록이 아니므로, 종료로 넘기면서 이름·연락처·이메일 주소를 표시로 덮고 후원자 명단에 실을 표시 이름을 지체 없이 함께 지웁니다. 결제 이력이 있는 정기결제는 거래기록이라 종료로 넘기기만 하고, 그 뒤는 위 ⑤의 5년과 ⑦의 3년이 이어받습니다. 결제를 시도했으나 그 결과가 아직 확인되지 않은 회차가 남아 있는 정기결제도 종료로만 넘깁니다 — 뒤늦게 승인이 확인되면 환불을 안내해 드려야 하므로, 연락처를 지울 수 없기 때문입니다. 이용 중이거나 결제를 다시 시도하는 중인 정기결제, 해지를 예약해 둔 정기결제는 대상이 아닙니다 — 앞의 둘은 살아 있고, 마지막 것은 예약한 날이 지나면 종료로 넘어가는 경로가 이미 있습니다',
           '그 밖의 파기 — 요청 제한 기록은 제한 창(길어도 한 시간)이 지나면 다음 요청이 들어올 때 함께 지우고(위 16항), 개설자 로그인 링크는 15분이 지나거나 한 번 쓰이면 다시 쓸 수 없게 됩니다',
           '보존하는 개인정보의 근거 — 전자상거래 등에서의 소비자보호에 관한 법률이 정한 거래기록 보존 의무입니다. 위 3항·8항의 기간 동안 보존합니다',
           '보존하는 개인정보의 항목 — 보존 기간이 지나기 전에는 주문자 이름·연락처·이메일 주소, 주문번호와 주문 유형, 예약 일시·상품 또는 펀딩 리워드 이름·수량·단가·추가 후원금, 결제수단과 결제·취소·환불 처리 기록(결제 식별값·승인 시각·영수증 주소·환불 금액·환불 요청자), 동의한 약관 판본과 동의 시각, 리워드 발송 상태·택배사·운송장번호가 남고, 개설자 쪽으로는 개설자 이름·연락처와 정산 기록(모금액·환불액·수수료·원천징수액·실지급액·확정 후원 건수·지급 시각)이 남습니다',
@@ -506,12 +506,12 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'change - or, for a subscription, five years after it ended. A recurring payment that ' +
           'never got as far as a registered card, or that we stopped - because charges kept failing, ' +
           'or because we suspended the billing ourselves - has ' +
-          'no end date of its own, so we treat it as ended once a year has passed with no activity ' +
-          'of any kind - no charge attempted, no card registered or changed, nothing else recorded ' +
-          'against it. If no payment was ever taken, no contract was formed and no money changed ' +
-          'hands, so there is no transaction record to keep: we erase the name, phone number, email ' +
-          'address and any supporter display name at the same time. If payments were taken, we only ' +
-          'mark the subscription as ended, and the five-year rule above then runs from that last ' +
+          'no end date of its own, so we treat it as ended once three years have passed with no ' +
+          'activity of any kind - no charge attempted, no card registered or changed, nothing else ' +
+          'recorded against it. If no payment was ever taken, no contract was formed and no money ' +
+          'changed hands, so there is no transaction record to keep: we erase the name, phone number, ' +
+          'email address and any supporter display name at the same time. If payments were taken, we ' +
+          'only mark the subscription as ended, and the five-year rule above then runs from that last ' +
           'activity. The same goes for a subscription left with a charge whose outcome we never ' +
           'heard back on: we mark it as ended but keep the contact details, because if that charge ' +
           'turns out to have gone through we have to be able to reach you about a refund. ' +
@@ -609,7 +609,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '预约、订单与定期付款（仅在韩语页面提供）中的姓名、联系电话与电子邮箱，自下单之日与该订单最后一次' +
           '变更之日（退款或取消也算一次变更）中较晚的一天起满五年后，以上述标记覆盖；订阅则自结束之日起算。' +
           '未完成银行卡登记即中断的定期付款，以及因多次扣款失败而停止或由我们暂停扣款的定期付款，本身不会迎来结束之日；' +
-          '若满一年没有任何活动——未尝试扣款，未登记或更换银行卡，也没有其他记录变动——我们即视为已结束。' +
+          '若满三年没有任何活动——未尝试扣款，未登记或更换银行卡，也没有其他记录变动——我们即视为已结束。' +
           '其间从未扣款成功的，既未成立合同也无款项往来，没有须保存的交易记录，' +
           '因此在视为结束的同时一并销毁姓名、联系电话、电子邮箱以及支持者名单所用的公示名。' +
           '曾扣款成功的，则仅标记为结束，此后适用上述五年规则，并自最后一次活动之日起算。' +
@@ -718,7 +718,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'modificación), o cinco años después del fin de la suscripción. Un pago recurrente que ' +
           'nunca llegó a tener una tarjeta registrada, o que quedó detenido tras varios cobros ' +
           'fallidos o porque nosotros mismos suspendimos el cobro, no tiene fecha de fin propia: lo ' +
-          'damos por terminado cuando ha pasado un año ' +
+          'damos por terminado cuando han pasado tres años ' +
           'sin actividad alguna, sin intentos de cobro, sin alta ni cambio de tarjeta y sin ningún ' +
           'otro movimiento registrado. Si nunca llegó a cobrarse nada, no se formó contrato ni hubo ' +
           'movimiento de dinero, de modo que no hay registro de la transacción que conservar: en ese ' +
@@ -837,7 +837,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'hủy đơn cũng là một lần thay đổi); với thuê bao thì tính từ ngày kết thúc. Khoản thanh ' +
           'toán định kỳ dừng lại khi chưa kịp đăng ký thẻ, hoặc bị ngưng sau nhiều lần trừ tiền thất ' +
           'bại hay do chính chúng tôi tạm dừng việc trừ tiền, ' +
-          'tự nó không có ngày kết thúc; vì vậy nếu suốt một năm không có bất kỳ hoạt động nào - ' +
+          'tự nó không có ngày kết thúc; vì vậy nếu suốt ba năm không có bất kỳ hoạt động nào - ' +
           'không lần trừ tiền nào được thử, không đăng ký hay đổi thẻ, cũng không ghi nhận thay đổi ' +
           'nào khác - chúng tôi coi như đã kết thúc. Nếu trong suốt thời gian đó chưa lần nào trừ ' +
           'tiền thành công thì hợp đồng chưa hình thành và cũng không có tiền chuyển đi, nên không ' +
@@ -950,7 +950,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'แล้วแต่วันใดจะช้ากว่า (การคืนเงินหรือการยกเลิกก็นับเป็นการเปลี่ยนแปลง) ส่วนการสมัครสมาชิกให้นับจากวันสิ้นสุด ' +
           'ทั้งนี้ การชําระเงินแบบต่อเนื่องที่หยุดไปตั้งแต่ยังไม่ได้ผูกบัตร หรือที่ถูกระงับเพราะเรียกเก็บเงินไม่สําเร็จหลายครั้ง ' +
           'หรือเพราะเราเป็นฝ่ายพักการเรียกเก็บเงินเอง ' +
-          'ย่อมไม่มีวันสิ้นสุดของตัวเอง ดังนั้นหากครบหนึ่งปีโดยไม่มีความเคลื่อนไหวใด ๆ คือไม่มีการพยายามเรียกเก็บเงิน ' +
+          'ย่อมไม่มีวันสิ้นสุดของตัวเอง ดังนั้นหากครบสามปีโดยไม่มีความเคลื่อนไหวใด ๆ คือไม่มีการพยายามเรียกเก็บเงิน ' +
           'ไม่มีการผูกหรือเปลี่ยนบัตร และไม่มีการบันทึกการเปลี่ยนแปลงอื่นใด เราจะถือว่าสิ้นสุดแล้ว ' +
           'หากตลอดช่วงเวลานั้นไม่เคยเรียกเก็บเงินได้สําเร็จเลย ย่อมไม่เกิดสัญญาและไม่มีเงินเคลื่อนไหว ' +
           'จึงไม่มีบันทึกธุรกรรมที่ต้องเก็บรักษา เราจึงลบชื่อ เบอร์โทร อีเมล และชื่อที่ใช้แสดงในรายชื่อผู้สนับสนุนไปพร้อมกันในคราวนั้น ' +
@@ -1065,7 +1065,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           'o\'zgarish hisoblanadi); obuna uchun esa tugagan kundan hisoblanadi. Karta biriktirilmay ' +
           'to\'xtab qolgan yoki to\'lov bir necha marta o\'tmagani uchun, yoxud biz o\'zimiz ' +
           'to\'lovni vaqtincha to\'xtatganimiz uchun to\'xtab turgan muntazam ' +
-          'to\'lovning o\'z tugash sanasi bo\'lmaydi. Shuning uchun bir yil davomida hech qanday ' +
+          'to\'lovning o\'z tugash sanasi bo\'lmaydi. Shuning uchun uch yil davomida hech qanday ' +
           'harakat bo\'lmasa - na to\'lov urinishi, na karta biriktirish yoki almashtirish, na boshqa ' +
           'biror yozuv o\'zgarishi - uni tugagan deb hisoblaymiz. Agar shu vaqt ichida birorta to\'lov ' +
           'o\'tmagan bo\'lsa, shartnoma ham tuzilmagan, pul ham harakatlanmagan: saqlanishi shart ' +
