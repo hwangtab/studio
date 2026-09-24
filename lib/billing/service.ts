@@ -509,7 +509,16 @@ export const chargeCycle = async (
     const nextStatus: SubscriptionStatus = retryAt ? 'past_due' : 'paused';
     await db
       .update(subscriptions)
-      .set({ status: nextStatus, nextBillingAt: retryAt ?? subscription.nextBillingAt, updatedAt: now })
+      .set({
+        status: nextStatus,
+        // 재시도 한도를 소진해 세우는 자리 — 여기가 `payment_failed`의 유일한 출처다.
+        // `past_due`로 갈 때 NULL을 쓰는 것은 "정지가 아니다"를 적는 것이다. 앞선 운영자
+        // 정지가 남긴 값이 그대로 있으면, 뒤에 결제 실패로 세워진 구독이 운영자 정지로
+        // 읽혀 헬스체크가 영영 안 꺼지는 경보를 낸다.
+        pausedReason: retryAt ? null : 'payment_failed',
+        nextBillingAt: retryAt ?? subscription.nextBillingAt,
+        updatedAt: now,
+      })
       .where(eq(subscriptions.id, subscriptionId));
 
     return { ok: false, status: nextStatus, tossCode: toss.code, message: toss.message, cycleYm, attempt };
@@ -538,6 +547,8 @@ export const chargeCycle = async (
       .update(subscriptions)
       .set({
         status: 'active',
+        // 정지가 풀렸으니 사유도 비운다 — 아래 resumeSubscription의 주석과 같은 판정이다.
+        pausedReason: null,
         currentPeriodStart: period.start,
         currentPeriodEnd: period.end,
         nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
@@ -622,7 +633,15 @@ export const cancelSubscription = async (
   return { ok: true, subscription: row };
 };
 
-/** 관리자 일시정지 — 청구만 멈춘다(카드는 그대로). */
+/**
+ * 관리자 일시정지 — 청구만 멈춘다(카드는 그대로).
+ *
+ * 여기서 만드는 `paused`는 **살아 있는 구독**이라 결제 실패로 세워진 것과 취급이 달라야
+ * 한다. 그래서 `pausedReason: 'operator'`를 함께 적는다 — 이 값이 없으면 1년 뒤
+ * `closeDormantSubscriptions`가 이 구독을 방치로 보고 `ended`로 넘기는데, `ended`는
+ * `resumeSubscription`도 관리자 '결제' 버튼도 받지 않아 되돌릴 길이 없다. 값이 있으면
+ * 헬스체크가 닫히기 전에 운영자에게 알린다(`lib/ops/healthCheck.ts`).
+ */
 export const pauseSubscription = async (id: string, now: Date): Promise<MutateResult> => {
   const db = getDb();
   const subscription = await findSubscriptionById(id);
@@ -630,7 +649,7 @@ export const pauseSubscription = async (id: string, now: Date): Promise<MutateRe
   if (subscription.status !== 'active' && subscription.status !== 'past_due') return { ok: false, code: 'invalid_state' };
   const [row] = await db
     .update(subscriptions)
-    .set({ status: 'paused', updatedAt: now })
+    .set({ status: 'paused', pausedReason: 'operator', updatedAt: now })
     .where(eq(subscriptions.id, id))
     .returning();
   return { ok: true, subscription: row };
@@ -647,7 +666,11 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
   if (subscription.status !== 'paused') return { ok: false, code: 'invalid_state' };
   const [row] = await db
     .update(subscriptions)
-    .set({ status: 'active', nextBillingAt: now, updatedAt: now })
+    // 재개는 사유를 **비운다.** 이 컬럼의 뜻은 "지금 왜 정지되어 있는가"이지 정지 이력이
+    // 아니다(이력을 남기는 표는 없다). 비우지 않으면 `active` 행이 옛 사유를 달고 다니고,
+    // 그 구독이 뒤에 결제 실패로 세워질 때 `payment_failed`를 쓰는 자리가 한 군데뿐이라
+    // 어긋난 값이 그대로 읽힌다 — 살아 있지도 않은 운영자 정지 경보가 계속 뜬다.
+    .set({ status: 'active', pausedReason: null, nextBillingAt: now, updatedAt: now })
     .where(eq(subscriptions.id, id))
     .returning();
   return { ok: true, subscription: row };
@@ -823,6 +846,8 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
         .update(subscriptions)
         .set({
           status: 'active',
+          // 뒤늦은 승인으로 되살아나는 자리도 `active`다 — 정지 사유를 남겨 두면 안 된다.
+          pausedReason: null,
           currentPeriodStart: period.start,
           currentPeriodEnd: period.end,
           nextBillingAt: computeNextBillingAt(now, subscription.billingDay),

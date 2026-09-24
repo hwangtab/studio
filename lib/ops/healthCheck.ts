@@ -6,6 +6,10 @@ import { bookings, contracts, fundingPledges, orders, payments, refunds, subscri
 import { fetchBusyRanges } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
+import {
+  SUBSCRIPTION_DORMANCY_YEARS,
+  dormancyWarningBoundary,
+} from '../privacy/orderRetention';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
 import {
@@ -384,6 +388,66 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         `주문번호: ${sample(lateApproval.map((row) => row.orderNo))}\n` +
         '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 관리자 > 구독 상세의 회차 이력에서 환불할 수 있습니다.\n' +
         '전액 환불하면 이 항목은 자동으로 사라집니다.',
+    });
+  }
+
+  /**
+   * 운영자가 세워 둔 구독이 곧 방치로 자동 종료된다 — **되돌릴 수 없는 유일한 전이**다.
+   *
+   * `closeDormantSubscriptions`(`lib/privacy/orderRetention.ts`)는 1년 넘게 아무 활동이 없는
+   * `paused`를 `ended`로 넘긴다. 결제 실패로 세워진 구독에는 맞는 처리지만, 운영자가 청구만
+   * 멈춰 둔 구독은 카드가 살아 있는 정상 구독이다. 한 번 `ended`가 되면 `resumeSubscription`은
+   * `paused`만 받고 관리자 '결제' 버튼도 `ended`를 제외해 **되살릴 길이 없다.**
+   *
+   * 그렇다고 운영자 정지를 방치 대상에서 빼면 그 구독의 개인정보가 기한 없이 남아 개인정보
+   * 보호법 제21조①에 어긋난다. 그래서 대상에서 빼는 대신 **닫히기 전에 알린다** — 이 항목이
+   * 그 알림이고, 여기가 유일한 방어다.
+   *
+   * 판정은 파기 쪽과 같은 함수(`dormancyWarningBoundary`)를 쓴다. 따로 계산하면 한쪽만
+   * 바뀌는 날 경보가 파기보다 늦어져 알림 없이 닫히던 예전 상태로 돌아간다.
+   *
+   * **`paused_reason`이 NULL인 행도 함께 본다.** 컬럼 도입 전에 정지된 행에는 값이 없고 어느
+   * 쪽이었는지 되살릴 방법이 없다(`db/schema.ts`). 틀렸을 때의 대가가 한쪽으로만 크다 —
+   * 놓치면 살아 있는 구독이 경고 없이 닫히고, 반대로 틀리면 이미 죽은 구독의 경보가 한 줄
+   * 더 뜰 뿐이다.
+   *
+   * 파기 크론은 한 달에 한 번(`/api/cron/purge-orders`, 매달 3일) 돌고 이 점검은 매일 도므로,
+   * 경보는 실제 종료보다 최소 `SUBSCRIPTION_DORMANCY_WARNING_DAYS`일 먼저 뜬다. 해소 조건은
+   * 재개·해지 — 어느 쪽이든 `updated_at`이 올라 방치 판정에서 빠진다.
+   *
+   * **고객 이름·연락처는 싣지 않는다.** 운영자가 갈 곳(구독 id)만 있으면 되고, 메일 본문에
+   * 평문 개인정보를 늘릴 이유가 없다.
+   */
+  const dormancyWarning = await db
+    .select({ id: subscriptions.id, pausedReason: subscriptions.pausedReason })
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.status, 'paused'),
+        or(eq(subscriptions.pausedReason, 'operator'), isNull(subscriptions.pausedReason)),
+        lt(subscriptions.createdAt, dormancyWarningBoundary(now)),
+        lt(subscriptions.updatedAt, dormancyWarningBoundary(now)),
+      ),
+    );
+
+  if (dormancyWarning.length > 0) {
+    const unknown = dormancyWarning.filter((row) => row.pausedReason === null).length;
+    issues.push({
+      severity: 'high',
+      href: '/admin/subscriptions',
+      title: `곧 자동 종료되는 정지 구독 ${dormancyWarning.length}건 — 되살릴 수 없습니다`,
+      detail: [
+        `구독 id: ${sample(dormancyWarning.map((row) => row.id))}`,
+        `마지막 활동으로부터 ${SUBSCRIPTION_DORMANCY_YEARS}년이 지나면 방치로 보고 자동 종료합니다 `
+          + `(개인정보 파기 크론, 매달 3일). 종료된 구독은 재개도 수동 결제도 할 수 없습니다.`,
+        ...(unknown > 0
+          ? [
+              `- 이 중 ${unknown}건은 정지 사유가 기록되기 전에 정지된 구독이라 결제 실패인지 `
+                + '운영자 정지인지 알 수 없습니다. 놓치는 쪽이 위험해 함께 알립니다.',
+            ]
+          : []),
+        '계속 쓸 구독이면 관리자 > 구독 상세에서 재개하고, 끝난 구독이면 해지해 주세요. 어느 쪽이든 이 항목은 사라집니다.',
+      ].join('\n'),
     });
   }
 

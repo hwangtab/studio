@@ -92,6 +92,19 @@ const STATUS_LABELS: Record<string, string> = {
   ended: '종료',
 };
 
+/**
+ * 정지 사유 표시 — `paused` 하나로는 "결제가 계속 거절돼 시스템이 세운 것"과 "운영자가
+ * 청구만 멈춰 둔 것"이 구분되지 않는다. 둘은 해야 할 일이 정반대다(카드 재등록 안내 /
+ * 그대로 두기).
+ *
+ * NULL은 컬럼이 생기기 전에 정지된 구독이다 — 어느 쪽이었는지 되살릴 방법이 없어
+ * 모른다고 적는다(`db/schema.ts`의 `pausedReason`).
+ */
+const PAUSED_REASON_LABELS: Record<string, string> = {
+  payment_failed: '결제 재시도 한도 소진',
+  operator: '운영자가 청구를 멈춤',
+};
+
 const STATUS_CLASS: Record<string, string> = {
   pending_card: 'bg-gray-100 text-gray-700',
   active: 'bg-green-100 text-green-700',
@@ -286,6 +299,13 @@ export default function AdminSubscriptionDetailPage({
               >
                 {STATUS_LABELS[subscription.status] ?? subscription.status}
               </span>
+              {subscription.status === 'paused' && (
+                <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-red-50 text-red-700">
+                  {subscription.pausedReason
+                    ? PAUSED_REASON_LABELS[subscription.pausedReason] ?? subscription.pausedReason
+                    : '정지 사유 기록 없음'}
+                </span>
+              )}
               <span className="text-gray-500 text-xs font-mono">{subscription.id}</span>
             </div>
 

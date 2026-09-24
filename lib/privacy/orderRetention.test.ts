@@ -112,6 +112,7 @@ const addSubscription = async (opts: {
   cancelledAt?: string | null;
   cancelReason?: string | null;
   displayName?: string | null;
+  pausedReason?: (typeof schema.subscriptionPausedReasonEnum)[number] | null;
 }) => {
   seq += 1;
   const [row] = await mockDb
@@ -127,6 +128,7 @@ const addSubscription = async (opts: {
       totalAmount: 110000,
       billingDay: 5,
       status: opts.status ?? 'ended',
+      pausedReason: opts.pausedReason ?? null,
       manageToken: `sub_tok_${seq}`,
       displayName: opts.displayName ?? null,
       displayConsent: true,
@@ -882,6 +884,7 @@ describe('방치된 구독 종료·파기 (1년)', () => {
     failed?: { attemptedAt: string } | null;
     /** 결판나지 않은 회차 — NETWORK_ERROR로 끝나 pending으로 남은 것. */
     pending?: { attemptedAt: string } | null;
+    pausedReason?: (typeof schema.subscriptionPausedReasonEnum)[number] | null;
   }) => {
     const subId = await addSubscription({
       status: opts.status ?? 'pending_card',
@@ -889,6 +892,7 @@ describe('방치된 구독 종료·파기 (1년)', () => {
       createdAt: opts.createdAt ?? '2020-01-01',
       updatedAt: opts.updatedAt ?? opts.createdAt ?? '2020-01-01',
       displayName: opts.displayName ?? null,
+      pausedReason: opts.pausedReason ?? null,
     });
     if (opts.paid) {
       const orderId = await addOrder({ type: 'subscription' });
@@ -1094,6 +1098,28 @@ describe('방치된 구독 종료·파기 (1년)', () => {
     expect((await purgeExpiredSubscriptionCustomerData(NOW)).purged).toBe(1);
     expect((await subOf(old)).customerName).toBe(PURGED_MARK);
     expect((await subOf(recent)).customerName).toBe('박구독');
+  });
+
+  /**
+   * 정지 사유가 생겼어도 **방치 종료는 사유를 보지 않는다.** 운영자 정지를 여기서 빼면
+   * 그 구독의 개인정보가 기한 없이 남아 제21조①으로 되돌아간다 — 방어는 파기를 미루는
+   * 것이 아니라 닫히기 전에 알리는 것이다(`lib/ops/healthCheck.ts`).
+   */
+  it.each([
+    ['payment_failed', 'payment_failed'],
+    ['operator', 'operator'],
+    ['사유 없음(컬럼 도입 전)', null],
+  ] as const)('정지 사유가 %s이어도 똑같이 닫는다', async (_label, pausedReason) => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01', pausedReason });
+    expect((await closeDormantSubscriptions(NOW)).ended).toBe(1);
+    expect((await subOf(id)).status).toBe('ended');
+  });
+
+  /** 사유는 종료 뒤에도 그대로 남는다 — 왜 닫혔는지 사람이 되짚을 마지막 단서다. */
+  it('운영자 정지로 닫힌 구독은 사유가 지워지지 않는다', async () => {
+    const id = await addDormant({ status: 'paused', createdAt: '2015-01-01', pausedReason: 'operator' });
+    await closeDormantSubscriptions(NOW);
+    expect((await subOf(id)).pausedReason).toBe('operator');
   });
 
   it('멱등 — 다시 돌려도 아무것도 걸리지 않는다', async () => {
