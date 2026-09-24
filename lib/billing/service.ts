@@ -962,22 +962,49 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
       });
   }
 
-  // 회차는 paid로 반영됐지만 구독은 그대로 둔 경우 — 해지·종료된 구독에 뒤늦은 승인이
-  // 도착한 것이다. 재활성은 하지 않되 돈이 들어온 사실은 남겨 환불 여부를 사람이 정한다.
-  // keepsPause 쪽에서 0행이면 그 사이에 재개·해지가 들어온 것이라 뜻이 다르다 — 아래
-  // '해지·종료' 문구를 그대로 쓰면 사실과 다른 메일이 나간다.
-  if (!keepsPause && rowsAffectedOf(batchResults[3]) === 0) {
-    console.error('[billing] 웹훅 DONE 복구 — 해지·종료된 구독에 뒤늦은 승인 도착, 수동 환불 판단 필요', {
-      orderNo: order.orderNo,
-      paymentKey: payment.paymentKey,
-      subscriptionId: subscription.id,
-      status: subscription.status,
-    });
+  /**
+   * 회차는 paid로 반영됐지만 구독 전이가 0행인 경우 — **두 경우가 섞여 있고 둘 다 알린다.**
+   *
+   * 되살리는 쪽(`!keepsPause`)의 0행은 해지·종료된 구독에 승인이 뒤늦게 도착한 것이다.
+   * 정지를 지키는 쪽(`keepsPause`)의 0행은 읽은 뒤 이 순간 사이에 재개나 해지가 들어와
+   * WHERE의 `status = 'paused'`가 빗나간 것이다 — 재개였다면 대체로 무해하지만, 해지·종료
+   * (`cancelSubscription`도 `closeDormantSubscriptions`도 `paused`를 받는다)였다면 **돈은
+   * 들어왔는데 구독은 끝났고 이용기간도 안 늘어난** 상태이고, 그게 바로 이 알림이 있는
+   * 이유다. 두 경우의 문구가 다르므로 **조건이 아니라 문장을 가른다** — 한쪽을 조건으로
+   * 막으면 사실과 다른 메일 대신 **아무 말도 없는 것**이 되어 원래 잡던 것을 놓친다.
+   *
+   * 지금 상태는 다시 읽는다. 위에서 읽어 둔 `subscription`은 이 창이 열리기 전의 값이라,
+   * 그걸 그대로 적으면 "무엇이 들어왔는지"를 틀리게 알린다.
+   */
+  if (rowsAffectedOf(batchResults[3]) === 0) {
+    const current = await findSubscriptionById(subscription.id);
+    const currentStatus = current?.status ?? '알 수 없음';
+    console.error(
+      keepsPause
+        ? '[billing] 웹훅 DONE 복구 — 정지 구독에 반영하는 사이 재개·해지 유입, 수동 환불 판단 필요'
+        : '[billing] 웹훅 DONE 복구 — 해지·종료된 구독에 뒤늦은 승인 도착, 수동 환불 판단 필요',
+      {
+        orderNo: order.orderNo,
+        paymentKey: payment.paymentKey,
+        subscriptionId: subscription.id,
+        statusBefore: subscription.status,
+        statusNow: currentStatus,
+      },
+    );
     await alertLateApproval(
-      subscription,
+      current ?? subscription,
       [
-        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했지만 구독이 ${subscription.status}라 이용기간을 전진시키지 않았습니다.`,
-        '고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했지만 이용기간을 전진시키지 않았습니다.`,
+        ...(keepsPause
+          ? [
+              `정지된 구독에 반영하는 사이 재개 또는 해지가 들어와(현재 ${currentStatus}) 반영을 건너뛴 것입니다.`,
+              '해지·종료된 것이라면 고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+              '재개된 것이라면 이용기간만 밀리지 않았으니 관리자 > 구독 상세에서 확인해 주세요.',
+            ]
+          : [
+              `구독이 ${currentStatus}라 되살리지 않았습니다.`,
+              '고객은 한 달치를 냈고 이용기간은 늘어나지 않은 상태입니다 — 환불 여부를 판단해 주세요.',
+            ]),
         `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
       ].join('\n'),
       now,

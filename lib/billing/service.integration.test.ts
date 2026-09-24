@@ -853,6 +853,45 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
   });
 
   /**
+   * 정지를 지키는 batch의 WHERE는 `status = 'paused'`라, 읽은 뒤 이 순간 사이에 해지가
+   * 들어오면 0행이 된다. 그 조합에 **아무 알림도 없으면** 돈은 들어왔는데 구독은 끝났고
+   * 이용기간도 안 늘어난 건이 조용히 묻힌다 — `late_approval` 알림이 있는 이유가 그것이다.
+   *
+   * 반영 "도중"의 해지를 db.batch 직전에 끼워 넣어 그대로 재현한다.
+   */
+  it('정지 구독에 반영하는 사이 해지가 들어와 0행이 되면 알린다', async () => {
+    const april = new Date('2026-04-05T00:00:00Z');
+    const created = await pausedWithPendingCycle('operator', april);
+    sendSubscriptionOperatorAlert.mockClear();
+
+    const realBatch = mockDb.batch.bind(mockDb);
+    jest
+      .spyOn(mockDb, 'batch')
+      .mockImplementationOnce((async (stmts: Parameters<typeof realBatch>[0]) => {
+        await cancelSubscription(created.id, { requestedBy: 'customer', reason: '반영 중 해지' }, april);
+        return realBatch(stmts);
+      }) as unknown as typeof realBatch);
+
+    const orderNo = await orderNoOf(created.id, '2026-04');
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_race_paused', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      april,
+    );
+
+    expect((await findSubscriptionById(created.id))!.status).toBe('cancelled');
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining('정지 구독에 반영하는 사이 재개·해지 유입'),
+      expect.objectContaining({ subscriptionId: created.id }),
+    );
+    // 문구는 '정지 구독에 반영하는 사이 재개·해지' 쪽이어야 한다 — 되살리기 쪽 문구가 아니다.
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ id: created.id }),
+      'late_approval',
+      expect.stringContaining('반영하는 사이 재개 또는 해지가 들어와'),
+    );
+  });
+
+  /**
    * `payment_failed` 정지는 되살린다. 그 정지의 뜻이 "카드가 안 된다"인데 승인이 확인된
    * 이상 전제가 사라졌다. 사유를 비우는 세 번째 경로이기도 하다.
    */
