@@ -1,3 +1,5 @@
+import { checkPaymentMethod } from '../payments/methodAlert';
+
 const TOSS_API = 'https://api.tosspayments.com/v1';
 const REQUEST_TIMEOUT_MS = 12000; // resend.ts와 같은 기준
 
@@ -109,6 +111,13 @@ export const isVirtualAccountPayment = (payment: Pick<TossPayment, 'method' | 's
 
 export const confirmPayment = async (input: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult> => {
   const result = await request('/payments/confirm', { method: 'POST', body: input });
+  if (result.ok) {
+    // 처리방침이 설명하지 않는 수단이 열렸는지 본다 — 알릴 뿐 결제는 막지 않는다.
+    await checkPaymentMethod({
+      method: result.payment.method, context: '예약·후원 승인(confirmPayment)',
+      orderId: input.orderId, paymentKey: input.paymentKey, status: result.payment.status,
+    });
+  }
   /**
    * 아직 돈이 움직이지 않은 가상계좌 승인(WAITING_FOR_DEPOSIT)은 여기서 끊는다 — 주문은
    * pending으로 남고 홀드 만료로 정리된다. 호출자(confirm.ts)가 이미 `status !== 'DONE'`을
@@ -174,5 +183,20 @@ export const cancelPayment = (input: {
   });
 };
 
-export const fetchPayment = (paymentKey: string): Promise<TossResult> =>
-  request(`/payments/${encodeURIComponent(paymentKey)}`);
+/**
+ * 결제를 재조회한다.
+ *
+ * 여기서도 결제수단을 점검한다 — 웹훅 복구 경로(`lib/booking/webhook.ts`,
+ * `lib/funding/confirm.ts`의 ALREADY_PROCESSED 재조회)는 승인 응답을 confirm이 아니라
+ * 이 함수로 받는다. 한쪽에만 걸면 그 경로로 들어온 새 수단은 조용히 지나간다.
+ */
+export const fetchPayment = async (paymentKey: string): Promise<TossResult> => {
+  const result = await request(`/payments/${encodeURIComponent(paymentKey)}`);
+  if (result.ok) {
+    await checkPaymentMethod({
+      method: result.payment.method, context: '결제 재조회(fetchPayment)',
+      orderId: result.payment.orderId, paymentKey, status: result.payment.status,
+    });
+  }
+  return result;
+};
