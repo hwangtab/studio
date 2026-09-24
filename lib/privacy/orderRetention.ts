@@ -370,12 +370,12 @@ export const purgeExpiredSubscriptionCancelReasons = async (
  * 영영 `ended`가 되지 않고, `ended`를 요구하는 구독 파기 셋이 전부 비켜 가 이름·연락처·
  * 이메일이 기한 없이 남는다. 제21조①이 말하는 "불필요하게 되었을 때"가 그 상태다.
  *
- * 1년으로 잡은 이유는 되돌아올 여지다. 카드를 다시 등록하면 `pending_card`·`paused` 모두
+ * 3년으로 잡은 이유는 되돌아올 여지다. 카드를 다시 등록하면 `pending_card`·`paused` 모두
  * 그 자리에서 이어지므로(`SETUP_ALLOWED_STATUSES`), 몇 달 쉬었다 돌아오는 고객을
  * 끊지 않을 만큼은 둬야 한다. 값을 바꾸려면 이 상수 하나만 고치면 되고, 함께 고쳐야 하는
  * 문서는 처리방침의 파기 항이다.
  */
-export const SUBSCRIPTION_DORMANCY_YEARS = 1;
+export const SUBSCRIPTION_DORMANCY_YEARS = 3;
 
 /**
  * 방치 종료가 닥치기 며칠 전부터 운영자에게 알릴 것인가 — 운영자 정지(`paused_reason =
@@ -540,12 +540,12 @@ export interface DormantSubscriptionResult {
  * ## 전이가 건드리는 것 (전수 확인)
  *
  * - `SETUP_ALLOWED_STATUSES`: 카드 등록·변경 링크가 막힌다. 링크 자체가 7일 만료라
- *   1년 방치 구독에는 이미 유효한 토큰이 없다.
+ *   3년 방치 구독에는 이미 유효한 토큰이 없다.
  * - `OCCUPYING_STATUSES`: 같은 계약에 구독을 새로 만들 수 있게 된다. 방치된 행이 계약
  *   하나를 영구히 점유하던 상태가 풀린다.
  * - `REACTIVATABLE_STATUSES`: 뒤늦은 승인이 이 구독을 되살리지 못한다. 대신 회차 기록은
  *   그대로 남고 운영자에게 `late_approval` 메일이 간다(`lib/billing/service.ts`) —
- *   1년 방치 뒤 도착한 승인은 되살릴 것이 아니라 환불 판단 대상이라 이 쪽이 맞다.
+ *   3년 방치 뒤 도착한 승인은 되살릴 것이 아니라 환불 판단 대상이라 이 쪽이 맞다.
  * - `listDueSubscriptions`는 `active`·`past_due`만 집어 가므로 청구에는 변화가 없다.
  * - 관리자 대시보드의 '주의' 집계(`lib/ops/adminDashboard.ts`)에서 빠진다.
  * - 고객 관리 화면(`pages/[locale]/subscribe/manage/[id].tsx`)은 '종료'로 표시하고
@@ -591,7 +591,7 @@ export const closeDormantSubscriptions = async (
    * `paid`가 0건인지만 보면 부족하다. 회차 결제가 NETWORK_ERROR로 끝나면 회차는 `pending`으로
    * 남고, 그 대사(對査)는 **다음 청구 때** 도는데 `paused`·`pending_card`는 영원히 청구되지
    * 않는다. `payments` 행도 없어 `paymentMismatch` 헬스체크에도 걸리지 않는다. 그 상태로
-   * 1년이 지나면 "계약 미성립"으로 판정해 연락처를 덮게 되고, 뒤늦게 승인이 확인돼도
+   * 3년이 지나면 "계약 미성립"으로 판정해 연락처를 덮게 되고, 뒤늦게 승인이 확인돼도
    * **환불 연락을 보낼 수단이 남지 않는다.**
    *
    * 그래서 `pending` 회차가 하나라도 있으면 **파기 분기에서만** 뺀다. `dormant` 자체에서

@@ -514,7 +514,7 @@ export const chargeCycle = async (
      * 그 카드를 다시 긁기 시작한다** — 재시도 중 하나가 승인되면 운영자가 멈춰 둔 구독에서
      * 돈이 나간다. 둘째, `pausedReason`이 NULL로 지워지고 재시도가 전부 실패하면
      * `payment_failed`로 다시 앉아 **운영자 정지였다는 사실이 사라진다.** 그러면 종료 경보가
-     * 조용해지고(`lib/ops/healthCheck.ts`는 `operator`와 NULL만 본다) 1년 뒤 되돌릴 수 없이
+     * 조용해지고(`lib/ops/healthCheck.ts`는 `operator`와 NULL만 본다) 3년 뒤 되돌릴 수 없이
      * 닫힌다 — 이 컬럼이 막으려던 사고 그대로다.
      *
      * 그래서 직전 상태가 `paused`면 상태도 사유도 그대로 둔다. 회차 기록(실패)과
@@ -663,7 +663,7 @@ export const cancelSubscription = async (
  * 관리자 일시정지 — 청구만 멈춘다(카드는 그대로).
  *
  * 여기서 만드는 `paused`는 **살아 있는 구독**이라 결제 실패로 세워진 것과 취급이 달라야
- * 한다. 그래서 `pausedReason: 'operator'`를 함께 적는다 — 이 값이 없으면 1년 뒤
+ * 한다. 그래서 `pausedReason: 'operator'`를 함께 적는다 — 이 값이 없으면 3년 뒤
  * `closeDormantSubscriptions`가 이 구독을 방치로 보고 `ended`로 넘기는데, `ended`는
  * `resumeSubscription`도 관리자 '결제' 버튼도 받지 않아 되돌릴 길이 없다. 값이 있으면
  * 헬스체크가 닫히기 전에 운영자에게 알린다(`lib/ops/healthCheck.ts`).

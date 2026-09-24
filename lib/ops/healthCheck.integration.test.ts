@@ -531,7 +531,7 @@ describe('구독이 끝난 뒤에 들어온 결제', () => {
    * 방치로 종료된 구독(closeDormantSubscriptions)은 cancelled_at·ends_at을 채우지 않는다.
    * 예전에는 `coalesce(cancelled_at, ends_at)`가 NULL이 되어 비교식 전체가 NULL이 되고,
    * 이 픽스처가 그 동작을 "세지 않는다"로 고정하고 있었다 — 그런데 이 픽스처가 곧 사고
-   * 형태다. 뒤늦은 승인에서 `paid_at`은 **지금**이라 "결제가 1년 넘게 전"이 성립하지 않는다.
+   * 형태다. 뒤늦은 승인에서 `paid_at`은 **지금**이라 "결제가 3년 넘게 전"이 성립하지 않는다.
    * 지금은 `updated_at`이 셋째 폴백으로 들어와 마지막 활동 뒤에 들어온 돈을 잡는다.
    */
   it('방치로 종료된 구독(종료 시각 없음)도 마지막 활동 뒤에 들어온 결제면 센다', async () => {
@@ -576,11 +576,11 @@ describe('구독이 끝난 뒤에 들어온 결제', () => {
  * 운영자가 세워 둔 구독이 곧 방치로 자동 종료되는 것 — 되돌릴 수 없는 유일한 전이라
  * 경보가 유일한 방어다. 경보가 조용히 고장 나면 살아 있는 구독이 말없이 닫힌다.
  *
- * NOW는 2026-09-10이고 방치는 1년, 경보는 30일 앞서므로 기준선은 2025-10-10이다.
+ * NOW는 2026-09-10이고 방치는 3년, 경보는 30일 앞서므로 기준선은 2023-10-10이다.
  */
 describe('곧 자동 종료되는 정지 구독', () => {
   const seedPaused = async (over: { pausedReason?: string | null; updatedAt?: string; status?: string } = {}) => {
-    const updatedAt = over.updatedAt ?? '2025-09-01T00:00:00Z';
+    const updatedAt = over.updatedAt ?? '2023-09-01T00:00:00Z';
     await client.execute({
       sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
               customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day,
@@ -608,12 +608,12 @@ describe('곧 자동 종료되는 정지 구독', () => {
 
   /** 30일보다 더 남았으면 아직 조용하다 — 늘 떠 있는 항목은 읽히지 않는다. */
   it('경보 시점 전에는 뜨지 않는다', async () => {
-    await seedPaused({ updatedAt: '2025-10-11T00:00:00Z' });
+    await seedPaused({ updatedAt: '2023-10-11T00:00:00Z' });
     expect(await issue()).toBeUndefined();
   });
 
   it('경보 시점을 하루 넘기면 뜬다 — 기준선이 실제로 30일이다', async () => {
-    await seedPaused({ updatedAt: '2025-10-09T00:00:00Z' });
+    await seedPaused({ updatedAt: '2023-10-09T00:00:00Z' });
     expect(await issue()).toBeDefined();
   });
 
