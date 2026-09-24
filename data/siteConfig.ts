@@ -22,6 +22,39 @@ export const socialProfiles = {
   twitter: '',
 };
 
+/**
+ * 제3자 플랫폼의 우리 리스팅 — 후기가 실제로 쌓이는 곳.
+ *
+ * **llms.txt에서 후기 주장 옆에 URL로 붙인다.** 출처 이름만 적고 링크를 빼면 읽는 쪽이
+ * 검증할 수 없다 — 2026-09-24에 Claude가 이 저장소의 "후기 2건·5.0" 문장을 보고 근거 없는
+ * 날조로 의심했다(커밋 이력을 뒤져서야 사실임을 확인했다). 사람이 그러면 AI도 그런다.
+ * 제3자 후기는 검증 가능할 때만 값이 있다.
+ *
+ * ⚠ **Organization.sameAs에는 넣지 않는다.** 2026-09-17(#174)에 "링크를 실으면 그 페이지가
+ * 파는 시간제로 유입이 생긴다"는 이유로 뺐고, 그 판단은 사람 대상 링크에 대해서는 유효하다.
+ * llms.txt는 AI 크롤러가 읽는 곳이라 사람 유입 경로가 아니다.
+ *
+ * 스페이스클라우드는 AI 크롤러를 **명시적으로 허용**한다(2026-09-24 실측, robots.txt에
+ * OAI-SearchBot·Claude-SearchBot·PerplexityBot을 검색·인용 봇으로 갈라 Allow). 네이버가
+ * 전면 차단하는 것과 정반대다 — 즉 링크를 걸면 AI가 실제로 가서 확인할 수 있다.
+ */
+export const thirdPartyListings = {
+  spacecloud: 'https://www.spacecloud.kr/space/68725',
+} as const;
+
+/**
+ * 위 리스팅의 후기 집계. **손으로 확인해 적는 값이고, 확인한 날을 함께 남긴다.**
+ * 자사 후기(data/reviews.ts)는 JSON-LD aggregateRating에 내지 않는다는 결정(utils/schema/business.ts)과
+ * 짝이다 — 우리가 세지 않고 외부 출처를 가리킨다.
+ * 오래 방치되면 siteConfig.test.ts가 CI에서 잡는다.
+ */
+export const spacecloudReviews = {
+  count: 2,
+  rating: 5.0,
+  /** 마지막으로 리스팅을 직접 열어 숫자를 확인한 날. */
+  checkedOn: '2026-09-24',
+} as const;
+
 // 사이트 운영자 정보 — JSON-LD Person.author와 article:author 메타에 사용.
 // GEO에서 AI 엔진(ChatGPT/Claude/Perplexity)은 author.name + sameAs를 entity 단서로
 // 강하게 활용하므로 Organization name이 아닌 실제 운영자 이름을 명시해야 cite 받음.
