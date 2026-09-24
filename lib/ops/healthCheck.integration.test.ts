@@ -571,3 +571,81 @@ describe('구독이 끝난 뒤에 들어온 결제', () => {
     expect(await flagged()).toBe(false);
   });
 });
+
+/**
+ * 운영자가 세워 둔 구독이 곧 방치로 자동 종료되는 것 — 되돌릴 수 없는 유일한 전이라
+ * 경보가 유일한 방어다. 경보가 조용히 고장 나면 살아 있는 구독이 말없이 닫힌다.
+ *
+ * NOW는 2026-09-10이고 방치는 1년, 경보는 30일 앞서므로 기준선은 2025-10-10이다.
+ */
+describe('곧 자동 종료되는 정지 구독', () => {
+  const seedPaused = async (over: { pausedReason?: string | null; updatedAt?: string; status?: string } = {}) => {
+    const updatedAt = over.updatedAt ?? '2025-09-01T00:00:00Z';
+    await client.execute({
+      sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day,
+              status, paused_reason, created_at, updated_at)
+            VALUES ('sp-1','practice-room','박구독','010-2','p@q.r','sub_p','ptok',300000,30000,330000,1,?,?,?,?)`,
+      args: [
+        over.status ?? 'paused',
+        over.pausedReason === undefined ? 'operator' : over.pausedReason,
+        EPOCH(updatedAt),
+        EPOCH(updatedAt),
+      ],
+    });
+  };
+
+  const issue = async () =>
+    (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('곧 자동 종료되는 정지 구독'));
+
+  it('운영자 정지가 기준선을 넘으면 보고한다', async () => {
+    await seedPaused();
+    const found = await issue();
+    expect(found).toBeDefined();
+    expect(found!.severity).toBe('high');
+    expect(found!.detail).toContain('sp-1');
+  });
+
+  /** 30일보다 더 남았으면 아직 조용하다 — 늘 떠 있는 항목은 읽히지 않는다. */
+  it('경보 시점 전에는 뜨지 않는다', async () => {
+    await seedPaused({ updatedAt: '2025-10-11T00:00:00Z' });
+    expect(await issue()).toBeUndefined();
+  });
+
+  it('경보 시점을 하루 넘기면 뜬다 — 기준선이 실제로 30일이다', async () => {
+    await seedPaused({ updatedAt: '2025-10-09T00:00:00Z' });
+    expect(await issue()).toBeDefined();
+  });
+
+  /** 결제 실패로 세워진 정지가 닫히는 것은 설계대로다 — 알릴 일이 아니다. */
+  it('결제 실패로 세워진 정지는 보고하지 않는다', async () => {
+    await seedPaused({ pausedReason: 'payment_failed' });
+    expect(await issue()).toBeUndefined();
+  });
+
+  /**
+   * 컬럼 도입 전에 정지된 행. 어느 쪽이었는지 알 수 없고, 놓쳤을 때의 대가가 한쪽으로만
+   * 크므로 함께 알린다.
+   */
+  it('사유가 기록되지 않은 정지도 함께 보고하고, 그 사실을 본문에 적는다', async () => {
+    await seedPaused({ pausedReason: null });
+    const found = await issue();
+    expect(found).toBeDefined();
+    expect(found!.detail).toContain('정지 사유가 기록되기 전에');
+  });
+
+  it('정지가 아닌 구독은 보고하지 않는다', async () => {
+    await seedPaused({ status: 'active', pausedReason: null });
+    expect(await issue()).toBeUndefined();
+  });
+
+  /**
+   * **닫힌 뒤에는 경보가 멈춰야 한다.** 방치 종료는 사유를 지우지 않으므로
+   * (`ended` + `operator`가 그대로 남는다) 상태를 안 보면 끌 수 없는 경보가 매일 뜬다.
+   * 운영자가 할 수 있는 일이 없는데 꺼지지 않는 항목은 메일 전체를 안 읽게 만든다.
+   */
+  it('이미 종료된 구독은 사유가 남아 있어도 보고하지 않는다', async () => {
+    await seedPaused({ status: 'ended', pausedReason: 'operator' });
+    expect(await issue()).toBeUndefined();
+  });
+});

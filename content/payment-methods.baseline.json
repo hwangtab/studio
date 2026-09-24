@@ -1,0 +1,19 @@
+{
+ "note": "결제수단 목록(lib/payments/knownMethods.ts)과 개인정보 처리방침 ko 1항을 묶어 둔 기준선. 한쪽만 바뀌면 CI가 선다.",
+ "methods": [
+  "카드",
+  "가상계좌",
+  "간편결제",
+  "휴대폰",
+  "계좌이체",
+  "문화상품권",
+  "도서문화상품권",
+  "게임문화상품권"
+ ],
+ "policyDescribedMethods": [
+  "카드",
+  "가상계좌",
+  "휴대폰"
+ ],
+ "policyParagraphSha256": "5970e90ec03cf2da4a3169aa65821c10294de61d180c6af391a897c8434df025"
+}

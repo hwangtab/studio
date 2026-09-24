@@ -183,6 +183,13 @@
       "when": 1790168419153,
       "tag": "0025_privacy_access_row_count",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "6",
+      "when": 1790218093471,
+      "tag": "0026_subscription_paused_reason",
+      "breakpoints": true
     }
   ]
 }

@@ -6,6 +6,7 @@
  * 빌링 중 한쪽이 조용히 죽으므로 `TOSS_BILLING_SECRET_KEY`를 따로 둔다(스펙 §9).
  */
 import type { TossPayment, TossResult } from '../booking/toss';
+import { checkPaymentMethod } from '../payments/methodAlert';
 
 const TOSS_API = 'https://api.tosspayments.com/v1';
 const REQUEST_TIMEOUT_MS = 12000; // booking/toss.ts와 같은 기준
@@ -130,7 +131,14 @@ export const chargeBillingKey = async (input: {
     },
   });
   if (!result.ok) return result;
-  return { ok: true, payment: result.json as unknown as TossPayment };
+  const payment = result.json as unknown as TossPayment;
+  // 정기결제도 같은 점검을 지난다 — 빌링키 결제는 카드뿐이지만, 그 전제가 깨지면
+  // (토스가 다른 수단의 빌링을 열면) 여기서 드러나야 한다.
+  await checkPaymentMethod({
+    method: payment.method, context: '정기결제 회차(chargeBillingKey)',
+    orderId: input.orderId, paymentKey: payment.paymentKey, status: payment.status,
+  });
+  return { ok: true, payment };
 };
 
 /**
@@ -161,7 +169,12 @@ export const fetchPaymentByOrderId = async (orderId: string): Promise<TossResult
     if (!res.ok) {
       return { ok: false, code: String(json.code ?? 'UNKNOWN'), message: String(json.message ?? '결제사 오류') };
     }
-    return { ok: true, payment: json as unknown as TossPayment };
+    const payment = json as unknown as TossPayment;
+    await checkPaymentMethod({
+      method: payment.method, context: '정기결제 재조회(fetchPaymentByOrderId)',
+      orderId, paymentKey: payment.paymentKey, status: payment.status,
+    });
+    return { ok: true, payment };
   } catch (error) {
     return { ok: false, code: 'NETWORK_ERROR', message: error instanceof Error ? error.message : '네트워크 오류' };
   }

@@ -378,6 +378,79 @@ export const purgeExpiredSubscriptionCancelReasons = async (
 export const SUBSCRIPTION_DORMANCY_YEARS = 1;
 
 /**
+ * 방치 종료가 닥치기 며칠 전부터 운영자에게 알릴 것인가 — 운영자 정지(`paused_reason =
+ * 'operator'`)와 사유를 모르는 정지에만 해당한다(`lib/ops/healthCheck.ts`).
+ *
+ * **30일로 잡은 근거는 파기 크론의 주기다.** `/api/cron/purge-orders`는 매달 3일에 한 번
+ * 돈다(`vercel.json`). 즉 어떤 구독이 오늘 방치 기준선을 넘어도 실제로 `ended`가 되는 것은
+ * 다음 달 3일이고, 30일 앞서 알리면 **그 다음 파기 실행이 오기 전에 반드시 한 번은**
+ * 경보를 본다. 헬스체크는 매일 도는데(`0 23 * * *`) 파기는 한 달에 한 번이라, 이보다 짧게
+ * 잡으면 경보와 파기 사이에 운영자가 자리를 비운 주말 하나로 구독이 닫힐 수 있다.
+ * 월 단위 상품(매월 청구)에서 한 청구 주기는 운영자가 "이 구독을 계속 세워 둘 것인가"를
+ * 판단하는 최소 단위이기도 하다.
+ *
+ * 더 길게 잡지 않는 이유: 경보는 매일 다시 뜨므로 앞당길수록 같은 줄이 오래 떠 있고,
+ * 늘 떠 있는 항목은 읽히지 않는다(이 파일이 아니라 `lib/ops/healthCheck.ts` 머리말의 판단).
+ */
+export const SUBSCRIPTION_DORMANCY_WARNING_DAYS = 30;
+
+/**
+ * 방치 판정의 기준선 — 이 시각보다 오래된 구독이 대상이다.
+ *
+ * `closeDormantSubscriptions`와 헬스체크 경보가 **같은 식**을 써야 "닫히기 전에 알린다"가
+ * 성립한다. 따로 계산하면 한쪽만 바뀌는 날 경보가 파기보다 늦어지고, 그때는 알림 없이
+ * 닫히던 예전 상태로 그대로 돌아간다.
+ */
+export const dormancyBoundary = (now: Date): Date => yearsAgo(now, SUBSCRIPTION_DORMANCY_YEARS);
+
+/** 경보 기준선 — 앞으로 `SUBSCRIPTION_DORMANCY_WARNING_DAYS`일 안에 방치가 될 구독까지 잡는다. */
+export const dormancyWarningBoundary = (now: Date): Date =>
+  dormancyBoundary(new Date(now.getTime() + SUBSCRIPTION_DORMANCY_WARNING_DAYS * 24 * 60 * 60 * 1000));
+
+/**
+ * "이 기준선까지 아무 활동이 없었다" — 방치 판정의 **활동 조건 전부**(상태는 부르는 쪽이 건다).
+ *
+ * 파기(`closeDormantSubscriptions`)와 종료 경보(`lib/ops/healthCheck.ts`)가 **같은 식**을
+ * 나눠 쓴다. 기준선 날짜만 같고 조건식이 갈라져 있으면, `updated_at`을 올리지 않는 전이가
+ * 하나 생기는 날 경보와 파기의 집합이 어긋난다 — 파기는 닫는데 경보는 안 뜨거나(경고 없는
+ * 종료), 경보는 뜨는데 파기가 안 돼 **운영자가 끌 수 없는 매일 경보**가 된다.
+ *
+ * 조건 넷의 이유는 `closeDormantSubscriptions`의 "방치를 무엇으로 봤는가" 절에 있다.
+ */
+export const dormantActivityCondition = (boundary: Date) => {
+  const db = getDb();
+  return and(
+    lt(subscriptions.createdAt, boundary),
+    lt(subscriptions.updatedAt, boundary),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            gte(subscriptionPayments.attemptedAt, boundary),
+          ),
+        ),
+    ),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(billingKeys)
+        .where(
+          and(
+            eq(billingKeys.subscriptionId, subscriptions.id),
+            or(
+              gte(billingKeys.issuedAt, boundary),
+              and(isNotNull(billingKeys.revokedAt), gte(billingKeys.revokedAt, boundary)),
+            ),
+          ),
+        ),
+    ),
+  );
+};
+
+/**
  * 방치 판정의 대상 상태.
  *
  * **`active`·`past_due`·`cancelled`는 대상이 아니다.** `active`는 청구가 돌고 있고,
@@ -385,19 +458,31 @@ export const SUBSCRIPTION_DORMANCY_YEARS = 1;
  * `endExpiredSubscriptions`가 `ends_at`이 지나면 `ended`로 넘긴다 — 이미 경로가 있는 것을
  * 여기서 또 건드리면 두 개의 종료 규칙이 생긴다. `ended`는 이미 끝났다.
  *
- * ## ⚠ `paused`는 두 가지인데 구분하는 컬럼이 없다
+ * ## `paused` 두 가지를 여기서 갈라 다루지 **않는** 이유
  *
- * 재시도 한도를 소진해 시스템이 세운 것과, 운영자가 청구만 멈춘 것(`pauseSubscription`,
- * `lib/billing/service.ts`)이 **같은 `paused`를 쓴다.** 뒤쪽은 카드가 그대로 살아 있는
- * 정상 구독이다. 그래서 운영자가 1년 넘게 세워 둔 구독이 여기서 방치로 판정돼 `ended`가
- * 되면 **되돌릴 길이 없다** — `resumeSubscription`은 `paused`만 받고, 관리자 화면의 '결제'
- * 버튼도 `ended`를 제외한다. 알림도 나가지 않는다. 이 함수가 "살아 있는 구독을 닫는"
- * 조합은 지금 이것 하나뿐이다.
+ * `paused`에는 성질이 정반대인 둘이 들어 있다. 재시도 한도를 소진해 시스템이 세운 것과,
+ * 카드가 멀쩡한 정상 구독의 청구만 운영자가 멈춘 것이다(`pauseSubscription`,
+ * `lib/billing/service.ts`). 이제 `subscriptions.paused_reason`이 둘을 가른다
+ * (`payment_failed` / `operator`, 컬럼 도입 전 행은 NULL).
  *
- * 제대로 고치려면 두 `paused`를 가르는 컬럼이 필요하다(예: `paused_by`). 컬럼을 더하는 것은
- * 마이그레이션이라 여기서 하지 않았고, 그 전까지는 **운영자가 구독을 1년 넘게 세워 두지
- * 않는 것**이 유일한 방어다. 처리방침 18항 ⑬도 이 사실대로 "결제 실패로 정지되었거나
- * 운영자가 청구를 멈춰 둔 정기결제"라고 적는다 — 문서가 한쪽만 말하면 고지가 거짓이 된다.
+ * **그래도 이 함수는 사유를 보지 않고 똑같이 닫는다.** 여기서 운영자 정지를 빼면 그 구독의
+ * 이름·연락처·이메일이 기한 없이 남아, 이 파일이 닫으려던 제21조① 위반으로 그대로 되돌아간다.
+ * "운영자가 세워 뒀다"는 것은 **보존의 법적 근거가 아니다** — 단서의 예외는 "다른 법령에
+ * 따라 보존하여야 하는 경우"뿐이고, 결제 이력이 있는 구독은 이미 그 5년을 `ended` 이후의
+ * 파기들이 따로 센다. 사유에 따라 기간을 달리 잡는 것도 같은 이유로 하지 않았다 — 근거가
+ * 되는 법령이 그쪽만 다르게 말하지 않는다.
+ *
+ * 대신 **닫히기 전에 운영자가 알게 한다.** `lib/ops/healthCheck.ts`의 매일 점검이
+ * `paused_reason`이 `operator`이거나 NULL인 구독을 `SUBSCRIPTION_DORMANCY_WARNING_DAYS`일
+ * 앞서 보고한다. 운영자가 재개하거나 해지하면 `updated_at`이 올라 방치 판정에서 빠진다.
+ * 알림을 못 보고 지나 `ended`가 되면 여전히 되돌릴 길은 없다 — `resumeSubscription`은
+ * `paused`만 받고 관리자 '결제' 버튼도 `ended`를 제외한다. 그래서 경보가 유일한 방어다.
+ *
+ * NULL(사유 불명)을 운영자 쪽에 붙이는 것은 틀렸을 때의 대가가 한쪽으로만 크기 때문이다 —
+ * 자세한 판정은 `db/schema.ts`의 `pausedReason` 주석에 있다.
+ *
+ * 처리방침 18항 ⑬은 이 사실대로 "결제 실패로 정지되었거나 운영자가 청구를 멈춰 둔
+ * 정기결제"라고 적는다 — 둘 다 대상이라는 이 절의 판정과 어긋나지 않는다.
  */
 const DORMANT_STATUSES = ['pending_card', 'paused'] as const;
 
@@ -493,37 +578,11 @@ export const closeDormantSubscriptions = async (
   now: Date = new Date(),
 ): Promise<DormantSubscriptionResult> => {
   const db = getDb();
-  const boundary = yearsAgo(now, SUBSCRIPTION_DORMANCY_YEARS);
+  const boundary = dormancyBoundary(now);
 
   const dormant = and(
     inArray(subscriptions.status, [...DORMANT_STATUSES]),
-    lt(subscriptions.createdAt, boundary),
-    lt(subscriptions.updatedAt, boundary),
-    notExists(
-      db
-        .select({ one: sql`1` })
-        .from(subscriptionPayments)
-        .where(
-          and(
-            eq(subscriptionPayments.subscriptionId, subscriptions.id),
-            gte(subscriptionPayments.attemptedAt, boundary),
-          ),
-        ),
-    ),
-    notExists(
-      db
-        .select({ one: sql`1` })
-        .from(billingKeys)
-        .where(
-          and(
-            eq(billingKeys.subscriptionId, subscriptions.id),
-            or(
-              gte(billingKeys.issuedAt, boundary),
-              and(isNotNull(billingKeys.revokedAt), gte(billingKeys.revokedAt, boundary)),
-            ),
-          ),
-        ),
-    ),
+    dormantActivityCondition(boundary),
   );
 
   /**
