@@ -80,10 +80,12 @@ const checkCalendar = async (now: Date): Promise<HealthIssue | null> => {
 };
 
 /**
- * 필드 암호화 키가 실제로 쓸 수 있는 상태인지 — 주민등록번호를 저장·조회하는 유일한 수단이다.
+ * 필드 암호화 키가 실제로 쓸 수 있는 상태인지 — 정산 계좌와 주민등록번호를 저장·조회하는
+ * 유일한 수단이다.
  *
- * 키가 없거나 형식이 틀리면 원천징수 대상 개설자의 정산 정보 저장이 `encryption_unavailable`로
- * 통째로 거부되고(`savePayoutSection`), 이미 저장된 번호는 운영자가 조회해도 안 열린다.
+ * 키가 없거나 형식이 틀리면 개설자의 정산 정보 저장이 `encryption_unavailable`로 통째로
+ * 거부되고(`savePayoutSection` — 계좌만 고치는 저장도 마찬가지다), 이미 저장된 값은 운영자가
+ * 조회해도 안 열린다.
  * **그 사실이 DB 어디에도 남지 않는다** — 개설자가 "저장이 안 된다"고 연락해 줄 때까지
  * 아무도 모른다. 캘린더 점검과 같은 이유로 여기서 직접 찔러 본다.
  *
@@ -102,7 +104,7 @@ export const checkFieldCryptoKey = (): HealthIssue | null => {
         severity: 'high',
         title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV})로 암호화한 값이 원래대로 돌아오지 않습니다`,
         detail:
-          '주민등록번호 저장·조회가 정상 동작한다고 볼 수 없는 상태입니다. 배포 판본과 환경 변수를 확인해 주세요.',
+          '정산 계좌·주민등록번호 저장·조회가 정상 동작한다고 볼 수 없는 상태입니다. 배포 판본과 환경 변수를 확인해 주세요.',
       };
     }
     return null;
@@ -111,13 +113,14 @@ export const checkFieldCryptoKey = (): HealthIssue | null => {
     const state = code === 'missing_key' ? '없음' : code === 'invalid_key' ? '형식 이상' : '확인 실패';
     return {
       severity: 'high',
-      title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV}) ${state} — 주민등록번호를 저장·조회할 수 없습니다`,
+      title: `필드 암호화 키(${FIELD_CRYPTO_KEY_ENV}) ${state} — 정산 계좌·주민등록번호를 저장·조회할 수 없습니다`,
       detail: [
         `상태: ${state} (code=${code})`,
-        '개설자가 주민등록번호를 실제로 입력해 저장하면 그 저장이 계좌를 포함해 전부 거부됩니다 ' +
-          '(칸을 비운 채 계좌만 고치는 저장은 키 없이도 됩니다). 이미 저장된 번호는 운영자 조회에서 ' +
-          '열리지 않고, 그 개설자의 정산 기록은 resident_number_unreadable로 막힙니다 — 번호가 아예 ' +
-          '없을 때 나오는 no_resident_number와 다른 코드입니다.',
+        '개설자의 정산 정보 저장이 전부 거부됩니다 — 계좌(은행명·계좌번호·예금주)도 주민등록번호도 ' +
+          '암호화해서만 저장하므로, 계좌만 고치는 저장도 키 없이는 되지 않습니다. 이미 저장된 값은 ' +
+          '운영자 조회에서 열리지 않고, 그 개설자의 정산 기록은 payout_account_unreadable · ' +
+          'resident_number_unreadable로 막힙니다 — 값이 아예 없을 때 나오는 no_payout_account · ' +
+          'no_resident_number와 다른 코드입니다.',
         `Vercel 환경 변수와 로컬 .env.local의 ${FIELD_CRYPTO_KEY_ENV}(base64 32바이트)를 확인해 주세요.`,
         '**이미 저장된 값이 있다면 키를 새로 만들지 마세요** — 옛 키로만 복호화됩니다. ' +
           '옛 키를 되찾을 수 없으면 개설자에게 다시 등록을 요청하는 것 외에 방법이 없습니다.',

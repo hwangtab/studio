@@ -8,6 +8,7 @@ import handler from '../../../../pages/api/admin/funding/projects/[id]/payout-ac
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { loadFundingPayoutAccount } from '../../../../lib/funding/payoutAccount';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
+import { FieldCryptoError } from '../../../../lib/crypto/fieldCrypto';
 
 const call = async (method = 'GET', id: unknown = 'proj-1') => {
   // 주의: 기본값 인자라 undefined를 넘기면 기본값이 살아난다 — 비문자열 검증은 null로 한다.
@@ -78,6 +79,43 @@ it('계좌를 응답으로 돌려주고, 조회 사실을 서버 로그에 남�
 it('조회가 던지면 500', async () => {
   (loadFundingPayoutAccount as jest.Mock).mockRejectedValue(new Error('DB 장애'));
   expect((await call()).status).toBe(500);
+});
+
+/**
+ * 계좌는 은행명·예금주까지 한 벌로 암호화돼 있어(`payoutAccountCrypto.ts`) 키가 없거나
+ * 바뀌면 열리지 않는다. 그때 운영자가 할 일은 사유마다 다르다 — "없다"와 "못 연다"를
+ * 섞으면 멀쩡한 값을 두고 개설자에게 재등록을 요청하게 된다.
+ */
+describe('복호화 실패', () => {
+  const failWith = (code: FieldCryptoError['code']) => {
+    (loadFundingPayoutAccount as jest.Mock).mockRejectedValue(new FieldCryptoError(code, '테스트'));
+  };
+
+  it('키가 없으면 사유 코드와 함께 500이고, 환경 변수를 확인하라고 적는다', async () => {
+    failWith('missing_key');
+    const r = await call();
+    expect(r.status).toBe(500);
+    expect(r.body).toMatchObject({ ok: false, code: 'missing_key' });
+    expect(String(r.body.message)).toContain('FUNDING_FIELD_KEY');
+  });
+
+  it('키가 다르면 재등록을 요청하지 말라고 적는다 — 값은 멀쩡하다', async () => {
+    failWith('key_mismatch');
+    const r = await call();
+    expect(r.body).toMatchObject({ code: 'key_mismatch' });
+    expect(String(r.body.message)).toContain('재등록을 요청하지 마세요');
+  });
+
+  it('복호화 실패도 접속기록에 남는다 — decrypt_failed', async () => {
+    failWith('auth_failed');
+    await call();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(),
+      'funding_payout_account_view',
+      'proj-1',
+      'decrypt_failed',
+    );
+  });
 });
 
 

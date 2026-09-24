@@ -43,6 +43,16 @@ const seedCreator = async (enc: string | null): Promise<string> => {
   return creator.id;
 };
 
+/** 정산 계좌 암호문 자리. 봉투 모양은 회전과 무관하다 — 회전은 암호문 문자열만 다시 잠근다. */
+const seedPayoutAccount = async (enc: string): Promise<string> => {
+  seq += 1;
+  const [creator] = await mockDb
+    .insert(schema.fundingCreators)
+    .values({ email: `rotpay${seq}@example.com`, name: '개설자', payoutAccountEnc: enc })
+    .returning();
+  return creator.id;
+};
+
 const storedOf = async (id: string): Promise<string | null> => {
   const [row] = await mockDb
     .select({ enc: schema.fundingCreators.residentNumberEnc })
@@ -74,6 +84,7 @@ afterEach(() => {
  */
 const SEEDERS: Record<string, (enc: string) => Promise<string>> = {
   'funding_creators.resident_number_enc': (enc) => seedCreator(enc),
+  'funding_creators.payout_account_enc': (enc) => seedPayoutAccount(enc),
 };
 
 it('모든 타깃에 seeder가 있다 — 목록에 더하고 검증을 빠뜨리면 여기서 선다', () => {

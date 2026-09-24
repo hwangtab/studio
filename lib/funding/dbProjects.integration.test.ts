@@ -121,9 +121,8 @@ describe('dbProjects', () => {
       bio: '소개',
       links: JSON.stringify(['https://example.com']),
       taxType: 'withholding',
-      payoutBankName: '국민은행',
-      payoutAccount: '123-456-789012',
-      payoutHolder: '정산예금주',
+      payoutAccountEnc: 'v2:00000000:aaaa:bbbb:cccc',
+      payoutAccountLast4: '9012',
       // 암호문도 나가면 안 된다 — 나가는 순간 키가 유일한 방어가 된다.
       residentNumberEnc: 'v1:ZmFrZQ==:ZmFrZQ==:ZmFrZQ==',
     });
@@ -143,9 +142,8 @@ describe('dbProjects', () => {
     expect(serialized).not.toContain('연락용이름');
     expect(serialized).not.toContain('010-0000-0000');
     expect(serialized).not.toContain('withholding');
-    expect(serialized).not.toContain('국민은행');
-    expect(serialized).not.toContain('123-456-789012');
-    expect(serialized).not.toContain('정산예금주');
+    expect(serialized).not.toContain('v2:00000000');
+    expect(serialized).not.toContain('9012');
     expect(serialized).not.toContain('residentNumber');
     expect(serialized).not.toContain('v1:ZmFrZQ==');
     expect(serialized).toContain('민감정보개설자'); // name만은 정상적으로 실린다.

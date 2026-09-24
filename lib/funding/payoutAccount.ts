@@ -2,18 +2,25 @@ import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingCreators, fundingProjects, type fundingCreatorTaxTypeEnum } from '../../db/schema';
+import { FieldCryptoError } from '../crypto/fieldCrypto';
+import { decryptPayoutAccount } from './payoutAccountCrypto';
 
 /**
  * 정산 계좌 조회 — **페이지 props가 아닌 별도 경로 전용.**
  *
- * `lib/funding/adminProjects.ts`가 `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`를
+ * `lib/funding/adminProjects.ts`가 `taxType`·`payoutAccountEnc`·`payoutAccountLast4`를
  * 일부러 빼고 있고 `adminProjects.integration.test.ts`가 그 사실을 고정한다. 이유는 Pages
  * Router가 `getServerSideProps`의 props를 `__NEXT_DATA__` JSON으로 페이지 HTML에 그대로
- * 싣기 때문이다 — 심사 화면을 여는 것만으로 계좌번호가 소스에 평문으로 박힌다.
+ * 싣기 때문이다 — 심사 화면을 여는 것만으로 계좌가 소스에 박힌다. **암호문도 담지 않는다:**
+ * 담는 순간 키가 유일한 방어가 된다.
  *
  * 그래서 계좌는 이 모듈로만 읽고, 운영자가 **버튼을 눌렀을 때** API가 응답으로만 내보낸다
  * (`pages/api/admin/funding/projects/[id]/payout-account.ts`). 이 모듈을
  * `getServerSideProps`에서 부르지 마라 — 그 순간 위 보호가 전부 무효가 된다.
+ *
+ * DB에 있는 것은 세 값을 한 벌로 싼 암호문 하나(`payout_account_enc`)와 뒤 4자리 평문이다.
+ * 여기서 여는 것이 그 암호문이고, 실패는 `FieldCryptoError`로 그대로 올린다 — 호출부가
+ * `code`로 "키가 없다"와 "값이 안 열린다"를 갈라 운영자에게 할 일을 말해야 한다.
  */
 export type FundingCreatorTaxTypeValue = (typeof fundingCreatorTaxTypeEnum)[number];
 
@@ -25,31 +32,37 @@ export interface FundingPayoutAccount {
   taxType: FundingCreatorTaxTypeValue | null;
 }
 
-/** 메일·로그에 실어도 되는 판. 계좌번호는 뒤 4자리까지만 남는다. */
+/**
+ * 메일·로그에 실어도 되는 판. 계좌번호는 뒤 4자리까지만 남는다.
+ *
+ * 은행명·예금주가 `null`일 수 있는 이유: 그 둘도 암호문 안에 있어 **키가 있어야 읽힌다.**
+ * 키가 없거나 값이 안 열리면 메일을 못 보내는 것이 아니라 그 두 칸만 비운다 — 이 판을 쓰는
+ * 곳은 이미 기록된 정산을 알리는 메일이라, 여기서 던지면 개설자가 아무 통지도 못 받는다.
+ */
 export interface FundingPayoutAccountMasked {
-  bankName: string;
-  holder: string;
+  bankName: string | null;
+  holder: string | null;
   accountLast4: string | null;
   taxType: FundingCreatorTaxTypeValue | null;
 }
 
-/**
- * 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다.
- * 개설자 편집 화면 쪽 같은 계산이 `creatorProjectWrite.ts`의 `accountLast4`에 있다 —
- * 그 파일은 개설자 세션 경로, 이 파일은 운영자 경로라 의존을 섞지 않고 각자 둔다.
- */
-export const fundingAccountLast4 = (account: string): string | null => {
-  const digits = account.replace(/[^0-9]/g, '');
-  return digits.length >= 4 ? digits.slice(-4) : null;
-};
+interface PayoutAccountRow {
+  taxType: FundingCreatorTaxTypeValue | null;
+  enc: string;
+  last4: string | null;
+}
 
-const loadRow = async (projectId: string): Promise<FundingPayoutAccount | null> => {
+/**
+ * 프로젝트의 개설자 행에서 정산 계좌 암호문을 읽는다. **복호화하지 않는다.**
+ * 암호문이 없으면(등록 전) null — `buildFundingPayoutPreview`의 `hasPayoutAccount`,
+ * 개설자 화면의 `loadPayoutSummary`와 같은 판정이어야 셋이 갈리지 않는다.
+ */
+const loadEncryptedRow = async (projectId: string): Promise<PayoutAccountRow | null> => {
   const [row] = await getDb()
     .select({
       taxType: fundingCreators.taxType,
-      bankName: fundingCreators.payoutBankName,
-      account: fundingCreators.payoutAccount,
-      holder: fundingCreators.payoutHolder,
+      enc: fundingCreators.payoutAccountEnc,
+      last4: fundingCreators.payoutAccountLast4,
     })
     .from(fundingProjects)
     .innerJoin(fundingCreators, eq(fundingProjects.creatorId, fundingCreators.id))
@@ -57,28 +70,45 @@ const loadRow = async (projectId: string): Promise<FundingPayoutAccount | null> 
     .limit(1);
   if (!row) return null;
 
-  const bankName = row.bankName?.trim() ?? '';
-  const account = row.account?.trim() ?? '';
-  const holder = row.holder?.trim() ?? '';
-  // 셋 중 하나라도 비면 "등록 안 됨"이다 — `buildFundingPayoutPreview`의 `hasPayoutAccount`와
-  // 같은 판정이어야 화면의 "등록됨"과 기록 거부(no_payout_account)가 갈리지 않는다.
-  if (!bankName || !account || !holder) return null;
-  return { bankName, account, holder, taxType: row.taxType ?? null };
+  const enc = row.enc?.trim() ?? '';
+  if (!enc) return null;
+  return { taxType: row.taxType ?? null, enc, last4: row.last4?.trim() || null };
 };
 
-/** 운영자가 이체하려고 버튼을 눌렀을 때만 부른다. 호출부가 조회 사실을 서버 로그에 남긴다. */
-export const loadFundingPayoutAccount = loadRow;
+/**
+ * 운영자가 이체하려고 버튼을 눌렀을 때만 부른다. 호출부가 조회 사실을 접속기록에 남긴다.
+ * 복호화 실패는 `FieldCryptoError`로 던진다 — 등록이 없는 것(null)과 못 여는 것은 다른 일이고,
+ * 운영자가 할 일도 다르다.
+ */
+export const loadFundingPayoutAccount = async (projectId: string): Promise<FundingPayoutAccount | null> => {
+  const row = await loadEncryptedRow(projectId);
+  if (!row) return null;
+  const fields = decryptPayoutAccount(row.enc);
+  return { ...fields, taxType: row.taxType };
+};
 
-/** 메일에 넣을 판. 계좌번호 전체는 여기서 이미 잘려 나간다. */
+/**
+ * 메일에 넣을 판. 계좌번호 전체는 여기서 이미 잘려 나간다.
+ *
+ * 뒤 4자리는 평문 컬럼에서 오므로 키가 없어도 나온다. 은행명·예금주는 복호화가 필요한데,
+ * 실패해도 **던지지 않고 null로 비운다** — 이 함수를 부르는 곳은 이미 기록된 정산을 알리는
+ * 메일이고, 여기서 던지면 메일 자체가 나가지 않는다. 대신 사유 코드를 서버 로그에 남긴다.
+ * (정산 기록 자체는 계좌를 열 수 있을 때만 되므로 이 갈래는 그 뒤에 키가 바뀐 경우다.)
+ */
 export const loadFundingPayoutAccountMasked = async (
   projectId: string,
 ): Promise<FundingPayoutAccountMasked | null> => {
-  const row = await loadRow(projectId);
+  const row = await loadEncryptedRow(projectId);
   if (!row) return null;
-  return {
-    bankName: row.bankName,
-    holder: row.holder,
-    accountLast4: fundingAccountLast4(row.account),
-    taxType: row.taxType,
-  };
+
+  try {
+    const fields = decryptPayoutAccount(row.enc);
+    return { bankName: fields.bankName, holder: fields.holder, accountLast4: row.last4, taxType: row.taxType };
+  } catch (error: unknown) {
+    console.error('[funding] 정산 계좌 복호화 실패 — 메일에는 뒤 4자리만 적습니다', {
+      projectId,
+      code: error instanceof FieldCryptoError ? error.code : 'unknown',
+    });
+    return { bankName: null, holder: null, accountLast4: row.last4, taxType: row.taxType };
+  }
 };

@@ -9,6 +9,7 @@ import {
 } from '../../db/schema';
 import { decryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { PRIVACY_ACTOR_ADMIN, recordPrivacyAccess } from '../privacy/accessLog';
+import { decryptPayoutAccount } from './payoutAccountCrypto';
 import { computeProjectState } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
 
@@ -137,7 +138,12 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
   backerCount: number;
   /** 모금이 끝났는가(`computeProjectState`가 'closed'). 기록 버튼의 전제다. */
   closed: boolean;
-  /** 개설자의 은행·계좌·예금주가 모두 있는가. **값은 싣지 않는다**(props가 __NEXT_DATA__로 나간다). */
+  /**
+   * 개설자의 정산 계좌가 등록돼 있는가 — **암호문이 있는가만 본다.** 은행명·계좌번호·예금주는
+   * 한 암호문 안에 한 벌로 들어 있으므로(`payoutAccountCrypto.ts`) 셋 중 일부만 있는 상태는
+   * 생기지 않는다. 이 함수는 복호화하지 않는다 — 값은 싣지 않는다(props가 __NEXT_DATA__로
+   * 나간다). 열 수 있는지는 기록 직전에 `payoutAccountReadable`이 따로 본다.
+   */
   hasPayoutAccount: boolean;
   /**
    * 개설자의 주민등록번호가 등록돼 있는가. **암호문이 있는가만 본다** — 이 함수는 복호화하지
@@ -219,9 +225,7 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
         { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },
         new Date(),
       ) === 'closed',
-    hasPayoutAccount: Boolean(
-      creator.payoutBankName?.trim() && creator.payoutAccount?.trim() && creator.payoutHolder?.trim(),
-    ),
+    hasPayoutAccount: Boolean(creator.payoutAccountEnc?.trim()),
     hasResidentNumber: Boolean(creator.residentNumberEnc?.trim()),
     recorded,
     ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType: assumedTaxType }),
@@ -238,6 +242,7 @@ export type RecordFundingPayoutResult =
         | 'nothing_to_pay'
         | 'not_closed'
         | 'no_payout_account'
+        | 'payout_account_unreadable'
         | 'no_tax_type'
         | 'no_resident_number'
         | 'resident_number_unreadable';
@@ -311,6 +316,64 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
 };
 
 /**
+ * 저장된 정산 계좌를 **지금 이 서버가 열 수 있는가.**
+ *
+ * 주민등록번호 쪽(`residentNumberReadable`)과 같은 이유로 같은 모양이다: 미리보기는 암호문
+ * 존재만 보므로, 키가 없거나 바뀐 상태에서도 기록 버튼이 살아 있다. 그대로 기록하면
+ * `funding_project_payouts`는 불변이라 "기록은 됐는데 보낼 계좌를 읽지 못한다"가 영구히 남는다.
+ *
+ * 그래서 기록 직전에 한 번 열어 보고 **성공 여부만** 돌려준다 — 은행명·계좌번호·예금주는
+ * 변수 밖으로 나가지 않고, 실패해도 로그에는 오류 코드만 남는다.
+ *
+ * **여기서도 접속기록을 남긴다.** 평문을 화면에 내보내지 않을 뿐 복호화는 실제로 일어난다 —
+ * 운영자의 계좌 조회 버튼과 같은 무게의 처리다.
+ */
+const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<boolean> => {
+  const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
+    recordPrivacyAccess({
+      actor: PRIVACY_ACTOR_ADMIN,
+      action: 'funding_payout_account_decrypt_check',
+      targetId: projectId,
+      result,
+      ip,
+    }).catch((error: unknown) => {
+      console.error('[privacy] 접속기록 호출 실패 — 정산 기록은 계속됩니다', error);
+    });
+
+  // 조회 자체가 실패하는 갈래도 기록한 뒤 예외를 그대로 올린다(주민등록번호 쪽과 같은 규약).
+  let row: { enc: string | null } | undefined;
+  try {
+    [row] = await getDb()
+      .select({ enc: fundingCreators.payoutAccountEnc })
+      .from(fundingProjects)
+      .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
+      .where(eq(fundingProjects.id, projectId))
+      .limit(1);
+  } catch (error: unknown) {
+    await log('error');
+    throw error;
+  }
+  const enc = row?.enc?.trim();
+  if (!enc) {
+    // 여기까지 오면 미리보기가 이미 hasPayoutAccount로 걸렀어야 한다. 그래도 기록은 남긴다.
+    await log('not_found');
+    return false;
+  }
+  try {
+    decryptPayoutAccount(enc);
+    await log('success');
+    return true;
+  } catch (error: unknown) {
+    await log('decrypt_failed');
+    console.error('[funding] 정산 계좌 복호화 점검 실패', {
+      projectId,
+      code: error instanceof FieldCryptoError ? error.code : 'unknown',
+    });
+    return false;
+  }
+};
+
+/**
  * 미리보기 숫자를 그 시점에 고정해 기록한다. 프로젝트당 한 번 — `project_id` UNIQUE가 두 번째
  * INSERT를 막고, 그 실패를 already_recorded로 돌려준다(경합에서도 안전).
  *
@@ -319,6 +382,11 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
  *   통째로 빠진다. 기다렸다 다시 누르면 된다.
  * - `no_payout_account` — 개설자의 계좌 정보가 없다. 보낼 곳 없는 정산을 기록하면 "기록은
  *   됐는데 돈은 안 갔다"가 영영 남는다. 개설자에게 계좌 등록을 요청해야 한다.
+ * - `payout_account_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다**(키가 없거나
+ *   바뀌었다). 계좌가 없는 것과 가르는 이유는 운영자가 할 일이 정반대이기 때문이다: 없으면
+ *   개설자에게 등록을 요청해야 하고, 못 여는 것이면 **개설자는 아무 잘못이 없고 키를 되찾는
+ *   것이 먼저다.** 이 상태에서 재등록을 요청하면 멀쩡한 값을 덮어쓰게 된다
+ *   (`resident_number_unreadable`과 같은 판단).
  * - `no_tax_type` — 개설자의 세금 처리 구분이 없다. 계좌만 있고 이 값이 비는 행이 실제로
  *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
  *   이 표는 불변이라 되돌릴 경로가 없다.
@@ -355,6 +423,8 @@ export const recordFundingPayout = async (
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
+  // 계좌는 세금 구분과 무관하게 필요하다 — 원천징수든 사업자든 돈은 계좌로 간다.
+  if (!(await payoutAccountReadable(projectId, ip))) return { ok: false, code: 'payout_account_unreadable' };
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };

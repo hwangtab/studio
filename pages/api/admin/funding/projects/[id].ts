@@ -89,6 +89,12 @@ const PAYOUT_RECORD_ERROR: Record<
   nothing_to_pay: { status: 409, message: '결제된 후원이 없어 정산할 것이 없습니다.' },
   not_closed: { status: 409, message: '모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 빠집니다.' },
   no_payout_account: { status: 409, message: '개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 등록을 요청해 주세요.' },
+  // 계좌가 없는 것과 가른다 — 여기서 재등록을 요청하면 멀쩡한 값을 덮어쓰게 된다.
+  payout_account_unreadable: {
+    status: 503,
+    message:
+      '개설자의 정산 계좌가 저장돼 있지만 지금 이 서버에서는 열리지 않습니다(암호화 키 문제). 보낼 계좌를 읽지 못한 채 기록하면 되돌릴 수 없으므로 아무것도 기록하지 않았습니다 — FUNDING_FIELD_KEY 설정을 확인한 뒤 다시 시도해 주세요. **키 회전을 돌리는 중이라면 아직 옛 키로 잠긴 값입니다** — 값은 멀쩡하니 회전을 끝낸 뒤 다시 시도하시고, 어느 경우에도 개설자에게 재등록을 요청하지 마세요.',
+  },
   no_tax_type: {
     status: 409,
     message:

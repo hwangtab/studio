@@ -34,6 +34,14 @@ import {
   saveStorySection,
   upsertReward,
 } from './creatorProjectWrite';
+// eslint-disable-next-line import/first
+import { decryptPayoutAccount } from './payoutAccountCrypto';
+
+/**
+ * 정산 구획 저장은 계좌를 암호화하므로 **키 없이는 통째로 거부된다.** 그래서 이 파일 전체에
+ * 테스트 키를 깔아 둔다. 키가 없는 경우를 보는 테스트는 그 안에서 지우고 되돌린다.
+ */
+process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 7).toString('base64');
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -132,9 +140,8 @@ describe('createDraftProject / loadProjectForCreator', () => {
     const creator = await seedCreator('me@example.com');
     await mockDb.update(schema.fundingCreators).set({
       taxType: 'withholding',
-      payoutBankName: '국민은행',
-      payoutAccount: '123-456-789012',
-      payoutHolder: '개설자',
+      payoutAccountEnc: 'v2:00000000:aaaa:bbbb:cccc',
+      payoutAccountLast4: '9012',
     }).where(eq(schema.fundingCreators.id, creator));
 
     const { id } = await createDraftProject(creator);
@@ -146,9 +153,10 @@ describe('createDraftProject / loadProjectForCreator', () => {
     expect(Object.keys(detail!.creator).sort()).toEqual(['bio', 'contactName', 'email', 'links', 'name', 'phone'].sort());
     const serialized = JSON.stringify(detail!.creator);
     expect(serialized).not.toContain('taxType');
-    expect(serialized).not.toContain('payoutBankName');
     expect(serialized).not.toContain('payoutAccount');
-    expect(serialized).not.toContain('payoutHolder');
+    // 암호문도 뒤 4자리도 나가지 않는다 — 이 경로는 계좌를 아예 모른다.
+    expect(serialized).not.toContain('v2:');
+    expect(serialized).not.toContain('9012');
   });
 
   it('내부 메모는 개설자 조회에 실리지 않는다', async () => {
@@ -769,16 +777,68 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
     });
   });
 
-  it('승인된 프로젝트가 있으면 저장된다', async () => {
+  it('승인된 프로젝트가 있으면 저장된다 — DB에 들어간 계좌는 평문이 아니다', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     expect(await savePayoutSection(creatorId, { ...payout })).toEqual({ ok: true });
 
     const [row] = await mockDb.select().from(schema.fundingCreators)
       .where(eq(schema.fundingCreators.id, creatorId));
     expect(row.taxType).toBe('withholding');
-    expect(row.payoutBankName).toBe('국민은행');
-    expect(row.payoutAccount).toBe('123-456-789012');
-    expect(row.payoutHolder).toBe('황경하');
+
+    // 저장된 문자열 어디에도 입력한 계좌번호·은행명·예금주가 없다.
+    const stored = row.payoutAccountEnc!;
+    expect(stored).not.toContain('123-456-789012');
+    expect(stored).not.toContain('123456789012');
+    expect(stored).not.toContain('국민은행');
+    expect(stored).not.toContain('황경하');
+    expect(isEncryptedField(stored)).toBe(true);
+
+    // 복호화하면 원문 세 값이 그대로 나온다.
+    expect(decryptPayoutAccount(stored)).toEqual({
+      bankName: '국민은행', account: '123-456-789012', holder: '황경하',
+    });
+
+    // 평문으로 남는 것은 뒤 4자리뿐이다.
+    expect(row.payoutAccountLast4).toBe('9012');
+    expect(row.payoutBankName).toBeNull();
+    expect(row.payoutAccount).toBeNull();
+    expect(row.payoutHolder).toBeNull();
+  });
+
+  it('같은 계좌를 두 번 저장해도 저장된 문자열이 다르다 — IV가 매번 새로 나온다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    const encOf = async () => {
+      const [row] = await mockDb.select({ enc: schema.fundingCreators.payoutAccountEnc })
+        .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+      return row.enc;
+    };
+    await savePayoutSection(creatorId, { ...payout });
+    const first = await encOf();
+    await savePayoutSection(creatorId, { ...payout });
+    expect(await encOf()).not.toBe(first);
+  });
+
+  it('암호화 키가 없으면 계좌만 고치는 저장도 거부한다 — 평문이 들어가는 경로는 없다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    const key = process.env[FIELD_CRYPTO_KEY_ENV];
+    delete process.env[FIELD_CRYPTO_KEY_ENV];
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const r = await savePayoutSection(creatorId, { ...payout });
+      expect(r).toEqual({ ok: false, code: 'encryption_unavailable', message: expect.any(String) });
+      expect(r.ok === false && r.message).not.toContain('123-456-789012');
+    } finally {
+      error.mockRestore();
+      process.env[FIELD_CRYPTO_KEY_ENV] = key;
+    }
+
+    // 아무것도 반영되지 않는다 — 세금 구분도 계좌도.
+    const [row] = await mockDb.select().from(schema.fundingCreators)
+      .where(eq(schema.fundingCreators.id, creatorId));
+    expect(row.payoutAccountEnc).toBeNull();
+    expect(row.payoutAccountLast4).toBeNull();
+    expect(row.taxType).toBeNull();
+    expect(await loadPayoutSummary(creatorId)).toMatchObject({ registered: false, accountLast4: null });
   });
 
   it('승인 뒤에도 계속 고칠 수 있다 — 계좌는 바뀐다', async () => {
@@ -824,17 +884,41 @@ describe('loadPayoutSummary — 계좌 원본은 함수 밖으로 안 나간다'
     expect(serialized).not.toContain('123-456-789012');
     expect(serialized).not.toContain('국민은행');
     expect(serialized).not.toContain('정산예금주');
+    // 암호문도 담지 않는다 — 담는 순간 키가 유일한 방어가 된다.
+    const [row] = await mockDb.select({ enc: schema.fundingCreators.payoutAccountEnc })
+      .from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
+    expect(serialized).not.toContain(row.enc!);
+    expect(serialized).not.toContain('v2:');
   });
 
-  it('세 칸 중 하나라도 비어 있으면 미등록이다 — 정산 기록의 hasPayoutAccount와 같은 판정', async () => {
+  it('암호문이 없으면 미등록이다 — 정산 기록의 hasPayoutAccount와 같은 판정', async () => {
     const { creatorId } = await seedProject({ reviewStatus: 'approved' });
     await mockDb.update(schema.fundingCreators)
-      .set({ taxType: 'withholding', payoutBankName: '국민은행', payoutAccount: '123-456', payoutHolder: '   ' })
+      .set({ taxType: 'withholding', payoutAccountEnc: '   ', payoutAccountLast4: '9012' })
       .where(eq(schema.fundingCreators.id, creatorId));
 
     expect(await loadPayoutSummary(creatorId)).toEqual({
       registered: false, accountLast4: null, taxType: 'withholding', residentNumberRegistered: false, withheldPayoutRecorded: false,
     });
+  });
+
+  /**
+   * 키가 없어도 개설자 화면은 그대로 떠야 한다 — 뒤 4자리를 평문 컬럼에 둔 이유가 이것이다.
+   * 복호화를 하면 이 경로가 통째로 깨지고, 개설자는 자기 계좌의 등록 여부조차 못 본다.
+   */
+  it('키가 없어도 등록 여부와 뒤 4자리는 나온다 — 복호화하지 않는다', async () => {
+    const { creatorId } = await seedProject({ reviewStatus: 'approved' });
+    await savePayoutSection(creatorId, {
+      taxType: 'withholding', bankName: '국민은행', account: '123-456-789012', holder: '정산예금주', residentNumber: null,
+    });
+
+    const key = process.env[FIELD_CRYPTO_KEY_ENV];
+    delete process.env[FIELD_CRYPTO_KEY_ENV];
+    try {
+      expect(await loadPayoutSummary(creatorId)).toMatchObject({ registered: true, accountLast4: '9012' });
+    } finally {
+      process.env[FIELD_CRYPTO_KEY_ENV] = key;
+    }
   });
 
   it('없는 계정은 전부 비어 있는 요약을 돌려준다', async () => {

@@ -19,10 +19,18 @@ import type { FundingPayoutAccountMasked } from './payoutAccount';
  * 호출부(관리자 API)가 그것을 warnings로 화면에 보여주고 운영자 폴백 알림을 보낸다.
  * `reviewEmail.ts`·`creatorEmail.ts`와 같은 규약이다.
  */
-const accountLine = (account: FundingPayoutAccountMasked | null): string =>
-  account
-    ? `입금 계좌: ${account.bankName} ${account.holder} (계좌번호 뒤 4자리 ${account.accountLast4 ?? '확인 필요'})`
-    : '입금 계좌: 등록된 계좌 정보를 읽지 못했습니다.';
+const accountLine = (account: FundingPayoutAccountMasked | null): string => {
+  if (!account) return '입금 계좌: 등록된 계좌 정보를 읽지 못했습니다.';
+  /**
+   * 은행명·예금주는 암호문 안에 있어 서버가 키로 열어야 나온다(`payoutAccount.ts`). 열지
+   * 못하면 그 두 칸만 비는데, 그때 빈 칸을 남기면 "입금 계좌:  (뒤 4자리 1234)"가 되어
+   * 개설자는 무엇이 빠진 것인지 알 수 없다. 읽은 것만 적고 못 읽은 것은 말한다.
+   */
+  const who = account.bankName && account.holder
+    ? `${account.bankName} ${account.holder}`
+    : '등록하신 계좌(은행명·예금주는 이 메일을 만들 때 읽지 못했습니다)';
+  return `입금 계좌: ${who} (계좌번호 뒤 4자리 ${account.accountLast4 ?? '확인 필요'})`;
+};
 
 /**
  * 계산 내역을 항목별로 적는다. 합계만 보내면 개설자는 왜 그 금액인지 알 수 없고,
