@@ -199,7 +199,12 @@ export const sendSubscriptionRefundedEmail = (
     ].join('\n'),
   });
 
-export type SubscriptionAlertKind = 'paused' | 'first_charge_failed' | 'cancelled' | 'late_approval';
+export type SubscriptionAlertKind =
+  | 'paused'
+  | 'first_charge_failed'
+  | 'cancelled'
+  | 'late_approval'
+  | 'paused_late_approval';
 
 /** 운영자 알림. kind는 발생 사건을 나타낸다. */
 export const sendSubscriptionOperatorAlert = (
@@ -214,6 +219,10 @@ export const sendSubscriptionOperatorAlert = (
     // 해지·종료된 구독에 승인이 뒤늦게 도착한 경우. 돈은 들어왔는데 이용기간은 전진하지
     // 않으므로 환불 기한이 도는 건이다 — 로그가 아니라 사람에게 닿아야 한다(PR #59의 교훈).
     late_approval: '해지 구독에 뒤늦은 승인 — 환불 판단 필요',
+    // 정지된 구독에 승인이 뒤늦게 도착한 경우. 돈은 들어왔고 이용기간도 전진했지만 구독은
+    // 정지 그대로다 — 운영자가 세워 둔 것을 웹훅이 말없이 되살리지 않기 위해서다
+    // (`reconcileSubscriptionPaymentFromToss`). 재개할지 환불할지는 사람이 정한다.
+    paused_late_approval: '정지된 구독에 뒤늦은 승인 — 재개 여부 판단 필요',
   };
 
   return sendEmail({

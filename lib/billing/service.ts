@@ -567,12 +567,12 @@ export const chargeCycle = async (
         /**
          * 정지가 풀렸으니 사유도 비운다 — 아래 resumeSubscription의 주석과 같은 판정이다.
          *
-         * **운영자 정지 구독의 수동 결제가 성공한 경우도 여기로 온다.** 실패와 달리 되살리는
-         * 것이 맞다: 이 승인은 이용기간(currentPeriodStart/End)을 전진시키고 nextBillingAt을
-         * 다음 달로 잡는다. 그대로 `paused`로 두면 **돈은 받았는데 멈춰 있다고 적힌 행**이
-         * 남고, 그 상태에서 운영자가 '재개'를 누르면 resumeSubscription이 nextBillingAt을
-         * now로 당겨 방금 결제한 달을 **또 긁는다.** 게다가 이 승인은 운영자가 그 화면에서
-         * 직접 누른 결과이고 상태 변화는 같은 화면에 바로 보인다 — 조용히 일어나는 일이 아니다.
+         * **운영자 정지 구독의 수동 결제가 성공한 경우도 여기로 온다.** 실패와 달리 되살린다:
+         * 이 승인은 **운영자가 그 화면에서 직접 누른 결과**이고, 상태가 `active`로 바뀐 것이
+         * 같은 화면에 바로 보인다 — 막아야 하는 것은 아무도 누르지 않았는데 일어나는 전이다
+         * (그 경로는 `reconcileSubscriptionPaymentFromToss`의 `keepsPause`가 막는다).
+         * 그대로 `paused`로 두면 이용기간이 전진하고 nextBillingAt이 잡힌 채 멈췄다고 적힌
+         * 행이 남아, 화면에 보이는 것과 실제가 어긋난다.
          */
         pausedReason: null,
         currentPeriodStart: period.start,
@@ -847,6 +847,26 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
   }
 
   const period = periodFor(now, subscription.billingDay);
+  /**
+   * **운영자가 세워 둔 구독은 웹훅이 되살리지 않는다.**
+   *
+   * 이 경로는 아무도 누르지 않아도 도는 자리다. 운영자가 정지한 구독에 수동 결제를 눌렀다가
+   * `NETWORK_ERROR`로 응답을 못 받으면 회차가 `pending`에 남고(그때 `chargeCycle`은 상태와
+   * 사유를 지킨다), 실제로는 승인돼 수분~수시간 뒤 DONE 웹훅이 온다. 그 웹훅이 `active`로
+   * 덮어쓰면 **운영자가 세워 둔 구독이 아무도 누르지 않았는데 살아나고 정지였다는 기록까지
+   * 지워진다** — 다음 달부터 `listDueSubscriptions`가 걷어 자동으로 카드를 긁는다.
+   * 위험한 것은 암묵적 전이라는 기준을 여기서만 어길 수 없다.
+   *
+   * 그래서 운영자 정지(그리고 사유를 모르는 정지)는 **상태·사유를 그대로 두고 이용기간만
+   * 전진시킨다.** 돈은 실제로 들어왔으니 그 달을 안 쓴 것으로 적을 수는 없다.
+   * `nextBillingAt`도 함께 잡지만 `listDueSubscriptions`는 `active`·`past_due`만 걷으므로
+   * 정지 상태에서는 청구되지 않는다 — 운영자가 재개하는 순간 바른 날짜가 이미 들어 있다.
+   * 재개할지 환불할지는 사람이 정할 일이라 **메일로 알린다.**
+   *
+   * `payment_failed` 정지는 지금처럼 되살린다. 그 정지의 뜻이 "카드가 안 된다"인데 승인이
+   * 확인된 이상 그 전제가 사라졌고, 되살리는 것이 곧 고객이 낸 돈에 맞는 상태다.
+   */
+  const keepsPause = subscription.status === 'paused' && subscription.pausedReason !== 'payment_failed';
   let batchResults: unknown[];
   try {
     batchResults = await db.batch([
@@ -868,21 +888,33 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
         .update(subscriptionPayments)
         .set({ status: 'paid', paymentKey: payment.paymentKey, paidAt: now, tossCode: null, tossMessage: null })
         .where(and(eq(subscriptionPayments.id, subscriptionPayment.id), inArray(subscriptionPayments.status, ['pending', 'failed']))),
-      db
-        .update(subscriptions)
-        .set({
-          status: 'active',
-          // 뒤늦은 승인으로 되살아나는 자리도 `active`다 — 정지 사유를 남겨 두면 안 된다.
-          pausedReason: null,
-          currentPeriodStart: period.start,
-          currentPeriodEnd: period.end,
-          nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
-          updatedAt: now,
-        })
-        // 해지·종료된 구독은 되살리지 않는다 — 형제 항목(orders·subscriptionPayments)의
-        // 상태 가드와 같은 이유다. 뒤늦은 DONE 웹훅은 수분~수시간 뒤에도 오고, 그 사이
-        // 고객이 결제 실패 메일을 보고 셀프 해지를 누르는 것이 정상 동선이다.
-        .where(and(eq(subscriptions.id, subscription.id), inArray(subscriptions.status, REACTIVATABLE_STATUSES))),
+      keepsPause
+        ? db
+            .update(subscriptions)
+            // 상태도 사유도 건드리지 않는다 — 위 keepsPause 주석.
+            .set({
+              currentPeriodStart: period.start,
+              currentPeriodEnd: period.end,
+              nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
+              updatedAt: now,
+            })
+            // 읽은 뒤 이 순간 사이에 재개·해지가 들어왔으면 그쪽이 맞다 — 여전히 정지일 때만 쓴다.
+            .where(and(eq(subscriptions.id, subscription.id), eq(subscriptions.status, 'paused')))
+        : db
+            .update(subscriptions)
+            .set({
+              status: 'active',
+              // 되살리는 자리는 `active`다 — 정지 사유를 남겨 두면 안 된다.
+              pausedReason: null,
+              currentPeriodStart: period.start,
+              currentPeriodEnd: period.end,
+              nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
+              updatedAt: now,
+            })
+            // 해지·종료된 구독은 되살리지 않는다 — 형제 항목(orders·subscriptionPayments)의
+            // 상태 가드와 같은 이유다. 뒤늦은 DONE 웹훅은 수분~수시간 뒤에도 오고, 그 사이
+            // 고객이 결제 실패 메일을 보고 셀프 해지를 누르는 것이 정상 동선이다.
+            .where(and(eq(subscriptions.id, subscription.id), inArray(subscriptions.status, REACTIVATABLE_STATUSES))),
     ]);
   } catch (error) {
     // paymentKey unique 위반이면 cron chargeCycle이나 형제 웹훅 이벤트가 먼저 반영한 것 —
@@ -910,9 +942,31 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
     });
   }
 
+  // 운영자 정지를 지킨 경우 — 돈은 들어왔고 이용기간도 전진했는데 구독은 정지 그대로다.
+  // 되살릴지 환불할지는 사람이 정할 일이고, 아무도 누르지 않아도 도는 경로라 반드시 알린다.
+  if (keepsPause && rowsAffectedOf(batchResults[3]) !== 0) {
+    const notificationError = await sendSubscriptionOperatorAlert(
+      subscription,
+      'paused_late_approval',
+      [
+        `${subscriptionPayment.cycleYm}분 ${formatPriceAmount(order.totalAmount)}원의 승인이 뒤늦게 도착했습니다.`,
+        '운영자가 세워 둔 구독이라 자동으로 되살리지 않았습니다 — 이용기간만 전진시키고 정지 상태를 그대로 뒀습니다.',
+        '계속 쓸 구독이면 관리자 > 구독 상세에서 재개하고, 아니면 이 회차를 환불해 주세요.',
+        `주문번호 ${order.orderNo} / paymentKey ${payment.paymentKey}`,
+      ].join('\n'),
+    );
+    if (notificationError)
+      console.error('[billing] 정지 구독 뒤늦은 승인 운영자 알림 발송 실패', {
+        subscriptionId: subscription.id,
+        notificationError,
+      });
+  }
+
   // 회차는 paid로 반영됐지만 구독은 그대로 둔 경우 — 해지·종료된 구독에 뒤늦은 승인이
   // 도착한 것이다. 재활성은 하지 않되 돈이 들어온 사실은 남겨 환불 여부를 사람이 정한다.
-  if (rowsAffectedOf(batchResults[3]) === 0) {
+  // keepsPause 쪽에서 0행이면 그 사이에 재개·해지가 들어온 것이라 뜻이 다르다 — 아래
+  // '해지·종료' 문구를 그대로 쓰면 사실과 다른 메일이 나간다.
+  if (!keepsPause && rowsAffectedOf(batchResults[3]) === 0) {
     console.error('[billing] 웹훅 DONE 복구 — 해지·종료된 구독에 뒤늦은 승인 도착, 수동 환불 판단 필요', {
       orderNo: order.orderNo,
       paymentKey: payment.paymentKey,

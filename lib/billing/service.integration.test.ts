@@ -131,9 +131,15 @@ const insertContract = async (id: string): Promise<string> => {
 };
 
 /** 어떤 구독·회차의 orders.orderNo를 찾는다 — 재조회 mock에 orderId를 넣어 줄 때 쓴다. */
-const orderNoForCycle = async (subscriptionId: string, cycleYm: string): Promise<string> => {
+/** 그 회차의 주문번호. 같은 달에 시도가 여러 번이면 `attempt`로 고른다. */
+const orderNoForCycle = async (subscriptionId: string, cycleYm: string, attempt?: number): Promise<string> => {
   const row = await mockDb.query.subscriptionPayments.findFirst({
-    where: (t, { and: is, eq: eq_ }) => is(eq_(t.subscriptionId, subscriptionId), eq_(t.cycleYm, cycleYm)),
+    where: (t, { and: is, eq: eq_ }) =>
+      is(
+        eq_(t.subscriptionId, subscriptionId),
+        eq_(t.cycleYm, cycleYm),
+        ...(attempt === undefined ? [] : [eq_(t.attempt, attempt)]),
+      ),
     with: { order: true },
   });
   return row!.order!.orderNo;
@@ -772,22 +778,91 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
   });
 
   /**
-   * 사유를 비우는 **세 번째 경로**. 정지된 구독의 수동 결제가 NETWORK_ERROR로 끝나 회차가
-   * pending에 남았다가, 뒤늦게 토스 DONE으로 확인되는 길이다. 여기서 사유가 남으면
-   * `active` 행이 옛 정지 사유를 달고 다닌다.
+   * **아무도 누르지 않아도 도는 경로다.** 운영자가 정지한 구독에 수동 결제를 눌렀다가
+   * NETWORK_ERROR로 응답을 못 받으면 회차가 pending에 남고, 실제로는 승인돼 수분~수시간 뒤
+   * DONE 웹훅이 온다. 그 웹훅이 `active`로 덮어쓰면 운영자가 세워 둔 구독이 말없이 살아나고
+   * 정지였다는 기록까지 지워진다 — 다음 달부터 cron이 그 카드를 긁는다.
    */
-  it('뒤늦은 DONE으로 되살아나는 구독도 정지 사유를 비운다', async () => {
+  const pausedWithPendingCycle = async (
+    pausedReason: 'operator' | 'payment_failed',
+    april: Date,
+  ) => {
     const { created } = await activated();
-    await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    if (pausedReason === 'operator') {
+      await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+      chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+      await chargeCycle(created.id, april, { reason: 'manual' });
+    } else {
+      // 재시도 한도를 소진시켜 payment_failed로 세운 뒤, 마지막 시도를 NETWORK_ERROR로 남긴다.
+      chargeBillingKey.mockResolvedValue(chargeFail());
+      await chargeCycle(created.id, april, { reason: 'scheduled' });
+      await chargeCycle(created.id, new Date('2026-04-06T00:00:00Z'), { reason: 'retry' });
+      chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+      await chargeCycle(created.id, new Date('2026-04-09T00:00:00Z'), { reason: 'retry' });
+    }
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedReason).toBe(pausedReason);
+    return created;
+  };
 
+  it('운영자 정지 구독에 뒤늦은 DONE이 와도 되살아나지 않는다 — 기간만 전진한다', async () => {
     const april = new Date('2026-04-05T00:00:00Z');
-    chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
-    await chargeCycle(created.id, april, { reason: 'manual' });
-    expect((await findSubscriptionById(created.id))!.pausedReason).toBe('operator');
+    const created = await pausedWithPendingCycle('operator', april);
 
     const orderNo = await orderNoOf(created.id, '2026-04');
     await reconcileSubscriptionPaymentFromToss(
       { paymentKey: 'pay_recovered_paused', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      april,
+    );
+
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedReason).toBe('operator');
+    // 돈은 실제로 들어왔으므로 그 달을 안 쓴 것으로 적을 수는 없다.
+    expect(sub.currentPeriodEnd).not.toBeNull();
+    const details = (await getSubscriptionWithDetails(created.id))!;
+    expect(details.payments.find((p) => p.cycleYm === '2026-04')).toMatchObject({ status: 'paid' });
+  });
+
+  it('그래서 cron이 그 구독을 다시 긁지 않는다', async () => {
+    const april = new Date('2026-04-05T00:00:00Z');
+    const created = await pausedWithPendingCycle('operator', april);
+    const orderNo = await orderNoOf(created.id, '2026-04');
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_recovered_paused2', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      april,
+    );
+
+    const due = await listDueSubscriptions(new Date('2026-06-01T00:00:00Z'));
+    expect(due.map((d) => d.id)).not.toContain(created.id);
+  });
+
+  it('되살리지 않은 대신 운영자에게 알린다 — 재개할지 환불할지는 사람이 정한다', async () => {
+    const april = new Date('2026-04-05T00:00:00Z');
+    const created = await pausedWithPendingCycle('operator', april);
+    sendSubscriptionOperatorAlert.mockClear();
+    const orderNo = await orderNoOf(created.id, '2026-04');
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_recovered_paused3', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      april,
+    );
+
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledTimes(1);
+    expect(sendSubscriptionOperatorAlert.mock.calls[0][1]).toBe('paused_late_approval');
+  });
+
+  /**
+   * `payment_failed` 정지는 되살린다. 그 정지의 뜻이 "카드가 안 된다"인데 승인이 확인된
+   * 이상 전제가 사라졌다. 사유를 비우는 세 번째 경로이기도 하다.
+   */
+  it('결제 실패로 세워진 정지는 뒤늦은 DONE으로 되살아나고 사유를 비운다', async () => {
+    const april = new Date('2026-04-05T00:00:00Z');
+    const created = await pausedWithPendingCycle('payment_failed', april);
+
+    const orderNo = await orderNoOf(created.id, '2026-04', 3);
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_recovered_failed', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
       april,
     );
 
