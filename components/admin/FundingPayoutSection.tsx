@@ -34,10 +34,10 @@ export interface AdminPayoutRecordView {
 /**
  * 화면이 받는 정산 미리보기.
  *
- * **계좌 정보(`payoutBankName`·`payoutAccount`·`payoutHolder`)와 세금 처리 구분(`taxType`)은
- * 여기 없다.** 이 값은 `getServerSideProps` props로 나가고 Pages Router는 props를
- * `__NEXT_DATA__` JSON으로 페이지 HTML에 그대로 싣는다 — 심사 화면을 여는 것만으로
- * 계좌번호가 소스에 박힌다. 계좌는 운영자가 버튼을 눌렀을 때만 별도 라우트
+ * **계좌 정보(`payout_account_enc`의 은행명·계좌번호·예금주)와 세금 처리 구분(`taxType`)은
+ * 여기 없다 — 암호문도 넣지 않는다.** 이 값은 `getServerSideProps` props로 나가고 Pages
+ * Router는 props를 `__NEXT_DATA__` JSON으로 페이지 HTML에 그대로 싣는다 — 심사 화면을 여는
+ * 것만으로 계좌가 소스에 박히고, 암호문이 박히면 키가 유일한 방어가 된다. 계좌는 운영자가 버튼을 눌렀을 때만 별도 라우트
  * (`/api/admin/funding/projects/[id]/payout-account`)로 가져와 이 컴포넌트의 state에만 둔다.
  */
 export interface AdminPayoutView {

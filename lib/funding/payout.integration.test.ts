@@ -289,7 +289,10 @@ describe('recordFundingPayout', () => {
     process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 9).toString('base64');
     try {
       // 계좌가 먼저 걸린다 — 돈을 보낼 곳을 읽지 못하는 것이 더 앞선 문제다.
-      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'payout_account_unreadable' });
+      // 사유도 함께 온다: 값은 멀쩡하고 키가 다른 것이다.
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({
+        ok: false, code: 'payout_account_unreadable', cryptoCode: 'key_mismatch',
+      });
     } finally {
       process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
     }
@@ -301,7 +304,9 @@ describe('recordFundingPayout', () => {
     await seedPledge(project.slug, 1_000_000);
     delete process.env[FIELD_CRYPTO_KEY_ENV];
     try {
-      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'payout_account_unreadable' });
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({
+        ok: false, code: 'payout_account_unreadable', cryptoCode: 'missing_key',
+      });
     } finally {
       process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
     }
@@ -324,12 +329,31 @@ describe('recordFundingPayout', () => {
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });
 
-  /** 계좌가 안 열리는 것과 아예 없는 것은 다른 코드다 — 운영자가 할 일이 정반대다. */
-  it('계좌가 안 열리는 것과 없는 것을 가른다', async () => {
+  /**
+   * 계좌가 안 열리는 것과 아예 없는 것은 다른 코드다 — 운영자가 할 일이 정반대다.
+   * 저장 형식 자체가 아닌 값은 `malformed`로 온다(조각 길이가 형식과 다르다).
+   */
+  it('계좌가 안 열리는 것과 없는 것을 가른다 — 사유 코드를 함께 돌려준다', async () => {
     const { project } = await seedProject({}, { payoutAccountEnc: 'v1:deadbeef:deadbeef:deadbeef' });
     await seedPledge(project.slug, 1_000_000);
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'payout_account_unreadable' });
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'payout_account_unreadable', cryptoCode: 'malformed',
+    });
+    error.mockRestore();
+  });
+
+  /**
+   * 봉투가 깨진 `malformed`은 **재등록이 정답인 유일한 갈래**다 — 키를 되찾아도 안 열린다.
+   * 화면 문구가 이 코드로 갈리므로(`payoutAccountUnreadableMessage`) 여기서 코드를 고정한다.
+   */
+  it('암호문은 멀쩡한데 봉투 안이 형식과 다른 경우도 malformed다 — 키 문제와 갈린다', async () => {
+    const { project } = await seedProject({}, { payoutAccountEnc: encryptField('은행명만 적힌 평문') });
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'payout_account_unreadable', cryptoCode: 'malformed',
+    });
     error.mockRestore();
   });
 

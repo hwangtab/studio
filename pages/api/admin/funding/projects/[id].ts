@@ -26,6 +26,7 @@ import {
   type RecordFundingPayoutResult,
 } from '../../../../../lib/funding/payout';
 import { loadFundingPayoutAccountMasked } from '../../../../../lib/funding/payoutAccount';
+import { recordAdminPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 import {
   sendFundingPayoutOperatorFallback,
   sendFundingPayoutPaidEmail,
@@ -81,7 +82,10 @@ const isCreatorAccountAction = (value: unknown): value is CreatorAccountAction =
 
 /** `recordFundingPayout`의 실패 code → HTTP. 사유마다 운영자가 할 일이 다르므로 문구도 가른다. */
 const PAYOUT_RECORD_ERROR: Record<
-  Exclude<Exclude<RecordFundingPayoutResult, { ok: true }>['code'], 'amount_changed'>,
+  Exclude<
+    Exclude<RecordFundingPayoutResult, { ok: true }>['code'],
+    'amount_changed' | 'payout_account_unreadable'
+  >,
   { status: number; message: string }
 > = {
   not_found: { status: 404, message: '프로젝트를 찾을 수 없습니다.' },
@@ -89,12 +93,6 @@ const PAYOUT_RECORD_ERROR: Record<
   nothing_to_pay: { status: 409, message: '결제된 후원이 없어 정산할 것이 없습니다.' },
   not_closed: { status: 409, message: '모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 빠집니다.' },
   no_payout_account: { status: 409, message: '개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 등록을 요청해 주세요.' },
-  // 계좌가 없는 것과 가른다 — 여기서 재등록을 요청하면 멀쩡한 값을 덮어쓰게 된다.
-  payout_account_unreadable: {
-    status: 503,
-    message:
-      '개설자의 정산 계좌가 저장돼 있지만 지금 이 서버에서는 열리지 않습니다(암호화 키 문제). 보낼 계좌를 읽지 못한 채 기록하면 되돌릴 수 없으므로 아무것도 기록하지 않았습니다 — FUNDING_FIELD_KEY 설정을 확인한 뒤 다시 시도해 주세요. **키 회전을 돌리는 중이라면 아직 옛 키로 잠긴 값입니다** — 값은 멀쩡하니 회전을 끝낸 뒤 다시 시도하시고, 어느 경우에도 개설자에게 재등록을 요청하지 마세요.',
-  },
   no_tax_type: {
     status: 409,
     message:
@@ -115,11 +113,33 @@ const PAYOUT_RECORD_ERROR: Record<
 };
 
 /**
+ * 계좌를 열지 못한 사유별 안내. **둘로 갈린다.**
+ *
+ * - 키 문제(`missing_key`·`invalid_key`·`key_mismatch`·`auth_failed`·`unsupported_version`)면
+ *   저장된 값은 멀쩡하다. 키를 되찾거나 회전을 끝내면 그대로 열리므로, 재등록을 요청하면
+ *   멀쩡한 값을 덮어쓰게 된다.
+ * - `malformed`이면 저장된 값이 형식이 아니거나 봉투 안이 깨진 것이라 **어떤 키로도 열리지
+ *   않는다.** 이때는 재등록이 유일한 복구 경로다 — 계좌 조회 라우트의
+ *   `CRYPTO_ERROR_MESSAGE.malformed`가 같은 말을 한다.
+ *
+ * 두 경우에 같은 문구를 쓰면 절반은 정반대 지시가 된다.
+ */
+const payoutAccountUnreadableMessage = (cryptoCode: string): string => {
+  const prefix = '개설자의 정산 계좌가 저장돼 있지만 지금 이 서버에서는 열리지 않습니다';
+  const nothingRecorded = '보낼 계좌를 읽지 못한 채 기록하면 되돌릴 수 없으므로 아무것도 기록하지 않았습니다';
+  if (cryptoCode === 'malformed') {
+    return `${prefix}(code=malformed — 저장된 값이 암호화 형식이 아니거나 내용이 형식과 다릅니다). ${nothingRecorded}. 이 값은 키를 되찾아도 열리지 않으니, 개설자에게 정산 계좌를 다시 등록해 달라고 요청해 주세요.`;
+  }
+  return `${prefix}(code=${cryptoCode} — 암호화 키 문제). ${nothingRecorded} — FUNDING_FIELD_KEY 설정을 확인한 뒤 다시 시도해 주세요. **키 회전을 돌리는 중이라면 아직 옛 키로 잠긴 값입니다** — 값은 멀쩡하니 회전을 끝낸 뒤 다시 시도하시고, 이 경우에는 개설자에게 재등록을 요청하지 마세요.`;
+};
+
+/**
  * 기록·지급 뒤 개설자에게 알린다. **메일 실패가 기록·지급을 실패시키지 않는다** — 이미
  * DB에는 반영됐고, 여기서 500을 내면 운영자가 같은 버튼을 다시 눌러 409만 받는다.
  * 같은 파일의 판정·공개 상태 블록과 같은 처리다(실패는 warnings로 올리고 운영자 폴백).
  */
 const notifyPayout = async (
+  req: NextApiRequest,
   projectId: string,
   payout: FundingProjectPayout,
   what: '정산 기록' | '정산 지급',
@@ -132,6 +152,21 @@ const notifyPayout = async (
       return warnings;
     }
     const account = await loadFundingPayoutAccountMasked(projectId);
+    /**
+     * **이 복호화만 값이 서버 밖으로 나간다** — 메일 본문에 은행명과 예금주가 실린다.
+     * 그래서 조회 버튼·기록 직전 점검과 같은 무게로, 별도 행위 이름으로 남긴다. 결과는
+     * 반환값에서 갈린다: 계좌가 아예 없으면 not_found, 있는데 은행명이 비어 있으면
+     * 복호화가 실패해 뒤 4자리만 실린 것이다(payoutAccount.ts).
+     */
+    await recordAdminPrivacyAccess(
+      req,
+      'funding_payout_account_email',
+      projectId,
+      account === null ? 'not_found' : account.bankName === null ? 'decrypt_failed' : 'success',
+    ).catch((error: unknown) => {
+      // 기록 실패가 알림을 막지 않는다 — 정산은 이미 DB에 반영됐다.
+      console.error('[privacy] 접속기록 호출 실패 — 정산 알림은 계속됩니다', error);
+    });
     const send = what === '정산 기록' ? sendFundingPayoutRecordedEmail : sendFundingPayoutPaidEmail;
     const mailError = await send(project.creatorEmail, project.title, payout, account);
     if (mailError) {
@@ -459,10 +494,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           )}원입니다. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
         });
       }
+      if (result.code === 'payout_account_unreadable') {
+        return res.status(503).json({
+          ok: false,
+          code: result.code,
+          cryptoCode: result.cryptoCode,
+          message: payoutAccountUnreadableMessage(result.cryptoCode),
+        });
+      }
       const mapped = PAYOUT_RECORD_ERROR[result.code];
       return res.status(mapped.status).json({ ok: false, code: result.code, message: mapped.message });
     }
-    const warnings = await notifyPayout(id, result.payout, '정산 기록');
+    const warnings = await notifyPayout(req, id, result.payout, '정산 기록');
     return res.status(201).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
   }
 
@@ -483,7 +526,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const done = await markFundingPayoutPaid(preview.recorded.id, memo, now);
       if (!done) return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다.' });
-      const warnings = await notifyPayout(id, { ...preview.recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
+      const warnings = await notifyPayout(req, id, { ...preview.recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
       return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
     } catch (error: unknown) {
       console.error(`[funding] markFundingPayoutPaid 예외 (id=${id}):`, error);

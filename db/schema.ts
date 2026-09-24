@@ -1066,6 +1066,15 @@ export const privacyAccessActionEnum = [
    */
   'funding_payout_account_decrypt_check',
   /**
+   * 정산 안내 메일을 만들면서 계좌를 복호화한 일
+   * (pages/api/admin/funding/projects/[id].ts의 notifyPayout → loadFundingPayoutAccountMasked).
+   *
+   * 조회 버튼·기록 직전 점검과 따로 두는 이유: **여기서만 값이 서버 밖으로 나간다.** 메일
+   * 본문에 은행명과 예금주가 실린다(계좌번호는 뒤 4자리까지만). 같은 행위 이름으로 묶으면
+   * 사후에 "운영자가 화면에서 본 것"과 "개설자 메일함으로 나간 것"을 가릴 수 없다.
+   */
+  'funding_payout_account_email',
+  /**
    * 관리자 펀딩 주문 CSV 내려받기 (pages/api/admin/funding/export.ts).
    * 25열 중 11열이 개인정보(이름·연락처·이메일·배송지 6열·응원 메시지)이고 건수 상한이
    * 없어 **한 번에 프로젝트 전체가 파일로 빠져나간다.** 한 건을 여는 조회보다 노출 범위가

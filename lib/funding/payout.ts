@@ -7,7 +7,7 @@ import {
   fundingCreators, fundingProjectPayouts, fundingProjects,
   type FundingProjectPayout, type fundingCreatorTaxTypeEnum,
 } from '../../db/schema';
-import { decryptField, FieldCryptoError } from '../crypto/fieldCrypto';
+import { decryptField, FieldCryptoError, type FieldCryptoErrorCode } from '../crypto/fieldCrypto';
 import { PRIVACY_ACTOR_ADMIN, recordPrivacyAccess } from '../privacy/accessLog';
 import { decryptPayoutAccount } from './payoutAccountCrypto';
 import { computeProjectState } from './projectState';
@@ -242,11 +242,19 @@ export type RecordFundingPayoutResult =
         | 'nothing_to_pay'
         | 'not_closed'
         | 'no_payout_account'
-        | 'payout_account_unreadable'
         | 'no_tax_type'
         | 'no_resident_number'
         | 'resident_number_unreadable';
     }
+  /**
+   * 계좌 암호문을 지금 이 서버가 열지 못했다. **왜 못 열었는지를 함께 돌려준다.**
+   *
+   * 사유마다 운영자가 할 일이 정반대다: 키 문제(`missing_key`·`key_mismatch` 등)면 값은
+   * 멀쩡하니 키를 되찾아야 하고, 봉투가 깨진 `malformed`이면 그 값은 되살릴 수 없어
+   * 개설자에게 재등록을 요청해야 한다. 코드를 안 돌려주면 화면이 둘 중 하나로 단정하게 되고,
+   * 그 단정이 틀린 절반에서는 멀쩡한 값을 덮어쓰거나 못 고칠 값을 기다리게 만든다.
+   */
+  | { ok: false; code: 'payout_account_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
   /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
   | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
 
@@ -328,7 +336,9 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
  * **여기서도 접속기록을 남긴다.** 평문을 화면에 내보내지 않을 뿐 복호화는 실제로 일어난다 —
  * 운영자의 계좌 조회 버튼과 같은 무게의 처리다.
  */
-const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<boolean> => {
+type PayoutAccountReadResult = { ok: true } | { ok: false; cryptoCode: FieldCryptoErrorCode | 'unknown' };
+
+const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<PayoutAccountReadResult> => {
   const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
       actor: PRIVACY_ACTOR_ADMIN,
@@ -357,19 +367,17 @@ const payoutAccountReadable = async (projectId: string, ip: string | null): Prom
   if (!enc) {
     // 여기까지 오면 미리보기가 이미 hasPayoutAccount로 걸렀어야 한다. 그래도 기록은 남긴다.
     await log('not_found');
-    return false;
+    return { ok: false, cryptoCode: 'unknown' };
   }
   try {
     decryptPayoutAccount(enc);
     await log('success');
-    return true;
+    return { ok: true };
   } catch (error: unknown) {
     await log('decrypt_failed');
-    console.error('[funding] 정산 계좌 복호화 점검 실패', {
-      projectId,
-      code: error instanceof FieldCryptoError ? error.code : 'unknown',
-    });
-    return false;
+    const cryptoCode = error instanceof FieldCryptoError ? error.code : 'unknown';
+    console.error('[funding] 정산 계좌 복호화 점검 실패', { projectId, code: cryptoCode });
+    return { ok: false, cryptoCode };
   }
 };
 
@@ -382,11 +390,12 @@ const payoutAccountReadable = async (projectId: string, ip: string | null): Prom
  *   통째로 빠진다. 기다렸다 다시 누르면 된다.
  * - `no_payout_account` — 개설자의 계좌 정보가 없다. 보낼 곳 없는 정산을 기록하면 "기록은
  *   됐는데 돈은 안 갔다"가 영영 남는다. 개설자에게 계좌 등록을 요청해야 한다.
- * - `payout_account_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다**(키가 없거나
- *   바뀌었다). 계좌가 없는 것과 가르는 이유는 운영자가 할 일이 정반대이기 때문이다: 없으면
- *   개설자에게 등록을 요청해야 하고, 못 여는 것이면 **개설자는 아무 잘못이 없고 키를 되찾는
- *   것이 먼저다.** 이 상태에서 재등록을 요청하면 멀쩡한 값을 덮어쓰게 된다
- *   (`resident_number_unreadable`과 같은 판단).
+ * - `payout_account_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다.** 계좌가 없는
+ *   것과 가르는 이유는 운영자가 할 일이 정반대이기 때문이다: 없으면 개설자에게 등록을
+ *   요청해야 하고, 키 문제로 못 여는 것이면 **개설자는 아무 잘못이 없고 키를 되찾는 것이
+ *   먼저다** — 그 상태에서 재등록을 요청하면 멀쩡한 값을 덮어쓴다. 다만 **봉투가 깨진
+ *   `malformed`은 반대로 재등록이 정답이다**(그 값은 어떤 키로도 안 열린다). 그래서 이 코드는
+ *   `cryptoCode`를 함께 돌려주고, 화면이 그 둘을 갈라 안내한다.
  * - `no_tax_type` — 개설자의 세금 처리 구분이 없다. 계좌만 있고 이 값이 비는 행이 실제로
  *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
  *   이 표는 불변이라 되돌릴 경로가 없다.
@@ -424,7 +433,10 @@ export const recordFundingPayout = async (
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
   // 계좌는 세금 구분과 무관하게 필요하다 — 원천징수든 사업자든 돈은 계좌로 간다.
-  if (!(await payoutAccountReadable(projectId, ip))) return { ok: false, code: 'payout_account_unreadable' };
+  const accountRead = await payoutAccountReadable(projectId, ip);
+  if (!accountRead.ok) {
+    return { ok: false, code: 'payout_account_unreadable', cryptoCode: accountRead.cryptoCode };
+  }
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };

@@ -32,6 +32,7 @@ jest.mock('../../../../lib/funding/payoutEmail', () => ({
   sendFundingPayoutPaidEmail: jest.fn(),
   sendFundingPayoutOperatorFallback: jest.fn(),
 }));
+jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn() }));
 jest.mock('../../../../db/client', () => ({ getDb: jest.fn(() => ({})) }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -49,6 +50,7 @@ import {
   sendFundingPayoutPaidEmail,
   sendFundingPayoutRecordedEmail,
 } from '../../../../lib/funding/payoutEmail';
+import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 
 const call = async (body: unknown, method = 'PATCH', headers: Record<string, string> = {}) => {
   const json = jest.fn();
@@ -99,6 +101,7 @@ beforeEach(() => {
   (sendFundingPayoutRecordedEmail as jest.Mock).mockResolvedValue(null);
   (sendFundingPayoutPaidEmail as jest.Mock).mockResolvedValue(null);
   (sendFundingPayoutOperatorFallback as jest.Mock).mockResolvedValue(null);
+  (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -270,5 +273,93 @@ describe('mark_payout_paid', () => {
     const r = await call({ action: 'mark_payout_paid' });
     expect(r.status).toBe(200);
     expect(r.body.warnings).toContain('creator:send_failed');
+  });
+});
+
+/**
+ * **값이 서버 밖으로 나가는 유일한 복호화**가 이 경로다 — 정산 안내 메일 본문에 은행명과
+ * 예금주가 실린다(계좌번호는 뒤 4자리까지만). 운영자 조회 버튼·기록 직전 점검은 이미
+ * 접속기록에 남는데 여기만 비어 있으면, 사후에 "무엇이 개설자 메일함으로 나갔는가"를
+ * 재구성할 수 없다.
+ */
+describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다', () => {
+  const recordCall = () => call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+
+  beforeEach(() => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
+  });
+
+  it('메일을 만들며 연 사실을 남긴다 — 값은 넘기지 않는다', async () => {
+    expect((await recordCall()).status).toBe(201);
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(),
+      'funding_payout_account_email',
+      'proj-1',
+      'success',
+    );
+    expect(JSON.stringify((recordAdminPrivacyAccess as jest.Mock).mock.calls)).not.toContain('국민은행');
+    expect(JSON.stringify((recordAdminPrivacyAccess as jest.Mock).mock.calls)).not.toContain('9012');
+  });
+
+  it('복호화에 실패해 은행명·예금주가 비면 decrypt_failed로 남는다', async () => {
+    (loadFundingPayoutAccountMasked as jest.Mock).mockResolvedValue({
+      bankName: null, holder: null, accountLast4: '9012', taxType: 'withholding',
+    });
+    await recordCall();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(), 'funding_payout_account_email', 'proj-1', 'decrypt_failed',
+    );
+  });
+
+  it('등록된 계좌가 없으면 not_found로 남는다', async () => {
+    (loadFundingPayoutAccountMasked as jest.Mock).mockResolvedValue(null);
+    await recordCall();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(), 'funding_payout_account_email', 'proj-1', 'not_found',
+    );
+  });
+
+  it('기록이 실패해도 정산 알림은 나간다 — 기록 경로가 업무를 멈추지 않는다', async () => {
+    (recordAdminPrivacyAccess as jest.Mock).mockRejectedValue(new Error('기록 실패'));
+    const r = await recordCall();
+    expect(r.status).toBe(201);
+    expect(sendFundingPayoutRecordedEmail).toHaveBeenCalled();
+  });
+
+  it('지급 표시에서도 남는다', async () => {
+    (buildFundingPayoutPreview as jest.Mock).mockResolvedValue({ recorded: PAYOUT, netAmount: PAYOUT.netAmount });
+    (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
+    await call({ action: 'mark_payout_paid' });
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
+      expect.anything(), 'funding_payout_account_email', 'proj-1', 'success',
+    );
+  });
+});
+
+/**
+ * 계좌를 열지 못한 사유는 운영자가 할 일을 정반대로 가른다. 키 문제면 값이 멀쩡하니
+ * 재등록을 요청하면 안 되고, `malformed`이면 재등록이 유일한 복구 경로다.
+ */
+describe('payout_account_unreadable 문구는 사유로 갈린다', () => {
+  const failWith = (cryptoCode: string) => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({
+      ok: false, code: 'payout_account_unreadable', cryptoCode,
+    });
+    return call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+  };
+
+  it('키 문제면 키를 확인하라고 하고, 재등록을 요청하지 말라고 적는다', async () => {
+    const r = await failWith('key_mismatch');
+    expect(r.status).toBe(503);
+    expect(r.body).toMatchObject({ code: 'payout_account_unreadable', cryptoCode: 'key_mismatch' });
+    expect(String(r.body.message)).toContain('FUNDING_FIELD_KEY');
+    expect(String(r.body.message)).toContain('재등록을 요청하지 마세요');
+  });
+
+  it('malformed면 반대로 재등록을 요청하라고 적는다 — 키를 되찾아도 안 열린다', async () => {
+    const r = await failWith('malformed');
+    expect(r.status).toBe(503);
+    expect(String(r.body.message)).toContain('다시 등록해 달라고 요청해 주세요');
+    expect(String(r.body.message)).not.toContain('재등록을 요청하지 마세요');
   });
 });
