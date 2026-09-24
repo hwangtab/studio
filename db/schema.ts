@@ -510,8 +510,48 @@ export const fundingCreators = sqliteTable('funding_creators', {
    * 정보를 미리 받지 않는다(스펙 §6.2).
    */
   taxType: text('tax_type', { enum: fundingCreatorTaxTypeEnum }),
+  /**
+   * 정산 계좌 한 벌 — 은행명·계좌번호·예금주를 **하나의 암호문으로** 담는다
+   * (`lib/funding/payoutAccountCrypto.ts`가 JSON 봉투로 싸서 `encryptField`에 넘긴다).
+   *
+   * **세 값을 한 컬럼에 묶은 이유.** 셋은 언제나 함께 저장되고(`savePayoutSection`이 한 번에
+   * 덮어쓴다) 함께 쓰인다(셋이 다 있어야 이체가 된다). 컬럼을 셋으로 나누면 키 회전이
+   * 중간에 멈췄을 때 "은행명만 새 키"인 행이 생기고, 조회가 셋 중 몇 개만 열리는 상태를
+   * 화면과 정산 게이트가 각각 해석해야 한다. 한 봉투면 상태가 둘뿐이다 — 열리거나, 안 열리거나.
+   *
+   * **은행명·예금주까지 암호화하는 이유.** 계좌번호만 잠그면 유출된 행에 거래 은행이 그대로
+   * 남는다(예금주는 `name`·`contact_name`이 이미 평문이라 추가 손실이 적지만, 은행은 이
+   * 행에서만 나오는 정보다). 반대로 셋을 다 잠가서 불편해지는 것은 "키가 없으면 은행·예금주도
+   * 못 본다"인데, 그 상태에서는 계좌번호도 못 읽어 어차피 이체를 못 한다 — 업무 영향이 같다.
+   */
+  payoutAccountEnc: text('payout_account_enc'),
+  /**
+   * 계좌번호 뒤 4자리 — **평문이다.** 주민등록번호와 일부러 다르게 판단했다.
+   *
+   * 주민등록번호는 어느 조각도 무해하지 않아(앞 6자리가 생년월일, 뒤 7자리가 고유식별정보)
+   * 표시용 컬럼을 두지 않았다. 계좌 뒤 4자리는 그 자체로 계좌를 특정하지도, 이체를 받지도
+   * 못하는 확인용 조각이고, 이미 정산 안내 메일 본문에 평문으로 나간다
+   * (`lib/funding/payoutEmail.ts`) — DB에서만 감추는 것은 방어가 아니라 불편이다.
+   *
+   * 그 불편이 구체적으로 무엇인가: 개설자 편집 화면과 정산 미리보기는 "계좌가 등록됐는가"와
+   * "뒤 4자리"만 본다. 이 컬럼이 없으면 그 화면들이 매번 복호화를 해야 하고, 키가 없거나
+   * 회전 중이면 개설자가 자기 계좌의 등록 여부조차 확인하지 못한다.
+   */
+  payoutAccountLast4: text('payout_account_last4'),
+  /**
+   * @deprecated 평문 계좌 컬럼. **읽지도 쓰지도 마라** — 위 두 컬럼이 정본이다.
+   *
+   * 남겨 둔 이유는 배포 순서다. 이 저장소는 마이그레이션을 먼저 적용하고 코드를 나중에
+   * 배포하는데(CLAUDE.md), 컬럼을 지우면 그 사이에 도는 옛 코드가 없는 컬럼을 읽어
+   * 개설자 화면과 정산 미리보기가 깨진다. 운영 DB에 `funding_creators`가 0행이라 지켜야 할
+   * 값이 없으므로 마이그레이션이 세 컬럼을 NULL로 비우고, 코드는 더 이상 이 이름들을
+   * 참조하지 않는다(`lib/funding/payoutPlaintextColumns.test.ts`가 그것을 고정한다).
+   * 이 판을 배포한 뒤 별도 마이그레이션으로 지우면 된다.
+   */
   payoutBankName: text('payout_bank_name'),
+  /** @deprecated `payoutAccountEnc`로 대체됐다. 위 주석 참고. */
   payoutAccount: text('payout_account'),
+  /** @deprecated `payoutAccountEnc`로 대체됐다. 위 주석 참고. */
   payoutHolder: text('payout_holder'),
   /**
    * 주민등록번호 — **암호화한 문자열만** 들어간다(`lib/crypto/fieldCrypto.ts`,
@@ -1020,6 +1060,11 @@ export const privacyAccessActionEnum = [
    * 남는다. 표 전체가 2년 기준을 따르므로 계좌 조회 기록도 2년 보관된다.
    */
   'funding_payout_account_view',
+  /**
+   * 정산 기록 직전의 계좌 복호화 점검 (lib/funding/payout.ts의 payoutAccountReadable).
+   * 값을 화면에 내보내지는 않지만 복호화는 실제로 일어난다 — 조회 버튼과 같은 무게로 남긴다.
+   */
+  'funding_payout_account_decrypt_check',
   /**
    * 관리자 펀딩 주문 CSV 내려받기 (pages/api/admin/funding/export.ts).
    * 25열 중 11열이 개인정보(이름·연락처·이메일·배송지 6열·응원 메시지)이고 건수 상한이
