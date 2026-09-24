@@ -12,7 +12,7 @@ jest.mock('../email/resend', () => ({ sendEmail: jest.fn() }));
 
 import { consumeRateLimit } from '../booking/rate-limit';
 import { sendEmail } from '../email/resend';
-import { checkPaymentMethod } from './methodAlert';
+import { checkPaymentMethod, resetPaymentMethodAlertMemo } from './methodAlert';
 
 const mockLimit = consumeRateLimit as jest.Mock;
 const mockSend = sendEmail as jest.Mock;
@@ -20,6 +20,7 @@ const mockSend = sendEmail as jest.Mock;
 describe('checkPaymentMethod', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    resetPaymentMethodAlertMemo();
     mockLimit.mockResolvedValue(true);
     mockSend.mockResolvedValue({ ok: true });
     jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -72,11 +73,32 @@ describe('checkPaymentMethod', () => {
     for (const call of mockLimit.mock.calls) expect(call.slice(1)).toEqual([1, 24 * 60 * 60]);
   });
 
-  it('창 안에서 두 번째 결제는 메일을 보내지 않는다', async () => {
-    mockLimit.mockResolvedValueOnce(true).mockResolvedValueOnce(false);
+  it('창 안의 두 번째 결제는 메일을 보내지 않는다 — 다른 인스턴스가 이미 보낸 경우', async () => {
+    // 인스턴스가 바뀌면 메모리 거름망은 비어 있고, 창 판정은 공유 카운터(Turso)가 한다.
+    mockLimit.mockResolvedValue(false);
+    await checkPaymentMethod({ method: '해외간편결제', context: '테스트' });
+    expect(mockLimit).toHaveBeenCalledTimes(1);
+    expect(mockSend).not.toHaveBeenCalled();
+  });
+
+  it('같은 인스턴스에서는 창 안에 DB도 묻지 않는다 — 승인 경로의 Turso 왕복을 줄인다', async () => {
     await checkPaymentMethod({ method: '해외간편결제', context: '테스트' });
     await checkPaymentMethod({ method: '해외간편결제', context: '테스트' });
+    await checkPaymentMethod({ method: '해외간편결제', context: '테스트' });
+    expect(mockLimit).toHaveBeenCalledTimes(1);
     expect(mockSend).toHaveBeenCalledTimes(1);
+  });
+
+  it('메일이 3초 안에 끝나지 않으면 기다리지 않는다 — 승인 경로에 12초를 얹지 않는다', async () => {
+    jest.useFakeTimers();
+    try {
+      mockSend.mockReturnValue(new Promise(() => {})); // 영영 끝나지 않는 발송
+      const pending = checkPaymentMethod({ method: '해외간편결제', context: '테스트' });
+      await jest.advanceTimersByTimeAsync(3000);
+      await expect(pending).resolves.toBeUndefined();
+    } finally {
+      jest.useRealTimers();
+    }
   });
 
   it('알림이 실패해도 던지지 않는다 — 이미 승인된 결제를 깨뜨리지 않는다', async () => {

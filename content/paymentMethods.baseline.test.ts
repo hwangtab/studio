@@ -9,6 +9,10 @@ import {
   KNOWN_PAYMENT_METHODS,
   POLICY_DESCRIBED_METHODS,
 } from '../lib/payments/knownMethods';
+import {
+  assertPaymentMethodsBaselineUpdateAllowed,
+  type PaymentMethodsBaseline,
+} from './paymentMethodsBaseline';
 
 /**
  * 결제수단 목록 ↔ 개인정보 처리방침 1항의 드리프트 게이트.
@@ -24,14 +28,6 @@ import {
  */
 
 const BASELINE_PATH = path.join(process.cwd(), 'content/payment-methods.baseline.json');
-
-interface PaymentMethodsBaseline {
-  note: string;
-  methods: string[];
-  policyDescribedMethods: string[];
-  /** ko 처리방침 1항 본문의 sha256. */
-  policyParagraphSha256: string;
-}
 
 const sha256 = (text: string): string => crypto.createHash('sha256').update(text, 'utf8').digest('hex');
 
@@ -57,6 +53,9 @@ const HOW_TO_UPDATE = [
   '  2. lib/payments/knownMethods.ts의 목록에 값을 더하고, 그 값을 어디서 확인했는지',
   '     (저장소인지 토스 문서인지) 주석에 적는다.',
   '  3. UPDATE_PAYMENT_METHODS_BASELINE=1 npx jest content/paymentMethods.baseline.test.ts',
+  '     1을 빠뜨리고 3만 실행하면 갱신 경로가 스스로 거부한다',
+  '     (assertPaymentMethodsBaselineUpdateAllowed). 1항의 캐치올 문장으로 충분하다고',
+  '     판단했다면 ALLOW_CATCHALL_ONLY=1을 함께 주고, 같은 커밋에 그 이유를 적는다.',
   '  4. 같은 커밋에 왜 바뀌는지 적는다 — 이유 없는 갱신은 게이트를 무력화한다.',
   '',
   '문구만 다듬은 경우에도 3·4를 거친다. 그때 목록이 여전히 맞는지 한 번 더 보게 하는 것이',
@@ -74,6 +73,16 @@ describe('결제수단 ↔ 처리방침 드리프트 게이트', () => {
 
   if (process.env.UPDATE_PAYMENT_METHODS_BASELINE === '1') {
     it('기준선을 갱신한다 (UPDATE_PAYMENT_METHODS_BASELINE=1)', () => {
+      // 갱신 경로도 같은 규칙을 지킨다 — 검사 모드만 막으면 자물쇠 옆에 열쇠를 걸어 두는 셈이다.
+      // 목록만 바뀌고 처리방침 1항이 그대로면 거부한다(ALLOW_CATCHALL_ONLY=1로만 통과).
+      assertPaymentMethodsBaselineUpdateAllowed(
+        readBaseline(),
+        { methods, policyParagraphSha256: hash },
+        {
+          allowCreate: process.env.ALLOW_BASELINE_CREATE === '1',
+          allowCatchallOnly: process.env.ALLOW_CATCHALL_ONLY === '1',
+        },
+      );
       const payload: PaymentMethodsBaseline = {
         note: '결제수단 목록(lib/payments/knownMethods.ts)과 개인정보 처리방침 ko 1항을 묶어 둔 기준선. 한쪽만 바뀌면 CI가 선다.',
         methods,

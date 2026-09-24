@@ -26,6 +26,59 @@ const ALERT_WINDOW_SECONDS = 24 * 60 * 60;
 const ALERT_LIMIT = 1;
 
 /**
+ * 알림 한 통에 쓸 수 있는 시간.
+ *
+ * 이 점검은 **승인 응답을 받은 직후**, 즉 아직 우리 DB에 아무것도 기록하지 않은 자리에서
+ * 돈다. 승인 진입점(`pages/[locale]/booking/success.tsx`·`pages/[locale]/funding/success.tsx`)은
+ * Pages Router의 `getServerSideProps`라 `maxDuration`을 지정할 수 없고 `vercel.json`에도
+ * `functions` 설정이 없어 계정 기본값으로 돈다. 그런데 토스 승인 타임아웃이 12초,
+ * `sendEmail`도 12초(`lib/email/resend.ts`)다 — 새 수단의 **첫 결제**에서 Resend가 느리면
+ * 둘이 겹쳐 함수 예산을 넘긴다. 그 자리는 토스가 돈을 가져갔는데 우리 기록은 없는 자리라
+ * 고객은 504를 본다(DONE 웹훅이 복구하지만, 하필 가장 확인하고 싶은 건이 실패 화면으로 간다).
+ *
+ * 알림은 best-effort라 못 보내도 잃는 것이 없다. 그래서 3초에서 끊는다 — 무슨 수단이
+ * 열렸는지는 아래 `console.error`가 이미 남겨 두므로 추적은 끊기지 않는다.
+ */
+const ALERT_SEND_TIMEOUT_MS = 3000;
+
+/**
+ * 이 인스턴스에서 이미 알린 수단.
+ *
+ * 레이트리밋이 메일은 막지만 **Turso 왕복(만료 정리 + UPSERT)은 결제마다 그대로** 친다.
+ * 그 왕복이 승인 경로 위에 있으므로, 같은 인스턴스가 살아 있는 동안은 묻지 않는다.
+ * 인스턴스가 바뀌면 다시 한 번 묻게 되므로 이 맵이 창을 대신하지는 않는다 — 진짜 판정은
+ * `consumeRateLimit`이 하고, 이건 그 앞의 값싼 거름망이다.
+ */
+const alertedInThisInstance = new Map<string, number>();
+
+/** 테스트 전용 — 모듈 상태를 비운다. */
+export const resetPaymentMethodAlertMemo = (): void => {
+  alertedInThisInstance.clear();
+};
+
+/**
+ * 알림 발송에 상한을 씌운다. 시간을 넘기면 발송을 기다리지 않고 돌아온다 —
+ * 요청이 끊기는 것이 아니라 **우리가 기다리는 것을 그만두는** 것이다.
+ */
+const sendWithinBudget = async (params: Parameters<typeof sendEmail>[0]): Promise<void> => {
+  const timedOut = Symbol('timeout');
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    const result = await Promise.race([
+      sendEmail(params),
+      new Promise<typeof timedOut>((resolve) => {
+        timer = setTimeout(() => resolve(timedOut), ALERT_SEND_TIMEOUT_MS);
+      }),
+    ]);
+    if (result === timedOut) {
+      console.error(`[payment-method] 알림 발송이 ${ALERT_SEND_TIMEOUT_MS}ms를 넘겨 기다리지 않는다 — 결제는 정상 처리됨`);
+    }
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
+};
+
+/**
  * 레이트리밋 키의 접두사.
  *
  * 기존 키(`webhook:ip:*`, `booking_create:ip:*`, `contact:*`, 계약 다운로드)와 겹치지
@@ -66,9 +119,18 @@ export const checkPaymentMethod = async (input: PaymentMethodAlertInput): Promis
       method, context: input.context, orderId: input.orderId, paymentKey: input.paymentKey, status: input.status,
     });
 
-    if (!(await consumeRateLimit(rateLimitKey(method), ALERT_LIMIT, ALERT_WINDOW_SECONDS))) return;
+    const key = rateLimitKey(method);
+    const lastInThisInstance = alertedInThisInstance.get(key);
+    if (lastInThisInstance !== undefined && Date.now() - lastInThisInstance < ALERT_WINDOW_SECONDS * 1000) return;
 
-    await sendEmail({
+    if (!(await consumeRateLimit(key, ALERT_LIMIT, ALERT_WINDOW_SECONDS))) {
+      // 다른 인스턴스가 이미 보냈다 — 이 인스턴스도 창이 끝날 때까지 DB를 묻지 않는다.
+      alertedInThisInstance.set(key, Date.now());
+      return;
+    }
+    alertedInThisInstance.set(key, Date.now());
+
+    await sendWithinBudget({
       to: OPERATOR_EMAIL,
       subject: `[Studio NOL] 처리방침에 없는 결제수단 — ${method}`,
       text: [

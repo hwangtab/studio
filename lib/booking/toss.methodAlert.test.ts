@@ -10,6 +10,7 @@ jest.mock('./rate-limit', () => ({ consumeRateLimit: jest.fn() }));
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn() }));
 
 import { sendEmail } from '../email/resend';
+import { resetPaymentMethodAlertMemo } from '../payments/methodAlert';
 import { consumeRateLimit } from './rate-limit';
 import { confirmPayment, fetchPayment } from './toss';
 
@@ -25,6 +26,7 @@ describe('승인 응답의 결제수단 점검', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    resetPaymentMethodAlertMemo();
     process.env.TOSS_SECRET_KEY = 'test_sk_abc';
     mockLimit.mockResolvedValue(true);
     mockSend.mockResolvedValue({ ok: true });
