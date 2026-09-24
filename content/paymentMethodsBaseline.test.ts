@@ -22,6 +22,7 @@ describe('assertPaymentMethodsBaselineUpdateAllowed', () => {
     expect(() =>
       assertPaymentMethodsBaselineUpdateAllowed(baseline, {
         methods: ['카드', '가상계좌', '휴대폰'],
+        policyDescribedMethods: ['카드', '가상계좌'],
         policyParagraphSha256: 'aaa',
       }),
     ).toThrow(/추가: 휴대폰/);
@@ -31,6 +32,7 @@ describe('assertPaymentMethodsBaselineUpdateAllowed', () => {
     expect(() =>
       assertPaymentMethodsBaselineUpdateAllowed(baseline, {
         methods: ['카드', '가상계좌', '휴대폰'],
+        policyDescribedMethods: ['카드', '가상계좌'],
         policyParagraphSha256: 'bbb',
       }),
     ).not.toThrow();
@@ -40,6 +42,7 @@ describe('assertPaymentMethodsBaselineUpdateAllowed', () => {
     expect(() =>
       assertPaymentMethodsBaselineUpdateAllowed(baseline, {
         methods: ['카드', '가상계좌'],
+        policyDescribedMethods: ['카드', '가상계좌'],
         policyParagraphSha256: 'bbb',
       }),
     ).not.toThrow();
@@ -49,7 +52,38 @@ describe('assertPaymentMethodsBaselineUpdateAllowed', () => {
     expect(() =>
       assertPaymentMethodsBaselineUpdateAllowed(
         baseline,
-        { methods: ['카드', '가상계좌', '휴대폰'], policyParagraphSha256: 'aaa' },
+        { methods: ['카드', '가상계좌', '휴대폰'], policyDescribedMethods: ['카드', '가상계좌'], policyParagraphSha256: 'aaa' },
+        { allowCatchallOnly: true },
+      ),
+    ).not.toThrow();
+  });
+
+  it('아직 받는 수단인데 1항 설명이 빠지면 거부한다 — 반대 방향의 우회', () => {
+    // 목록은 그대로고 해시만 움직이므로 기존 판정은 그냥 통과시킨다.
+    expect(() =>
+      assertPaymentMethodsBaselineUpdateAllowed(baseline, {
+        methods: ['카드', '가상계좌'],
+        policyDescribedMethods: ['카드'],
+        policyParagraphSha256: 'bbb',
+      }),
+    ).toThrow(/설명이 사라진 수단: 가상계좌/);
+  });
+
+  it('더는 받지 않기로 해 목록에서도 뺐다면 설명이 사라져도 된다', () => {
+    expect(() =>
+      assertPaymentMethodsBaselineUpdateAllowed(baseline, {
+        methods: ['카드'],
+        policyDescribedMethods: ['카드'],
+        policyParagraphSha256: 'bbb',
+      }),
+    ).not.toThrow();
+  });
+
+  it('캐치올로 충분하다고 명시하면 설명 삭제도 통과한다', () => {
+    expect(() =>
+      assertPaymentMethodsBaselineUpdateAllowed(
+        baseline,
+        { methods: ['카드', '가상계좌'], policyDescribedMethods: ['카드'], policyParagraphSha256: 'bbb' },
         { allowCatchallOnly: true },
       ),
     ).not.toThrow();
@@ -57,13 +91,15 @@ describe('assertPaymentMethodsBaselineUpdateAllowed', () => {
 
   it('기준선 파일이 없으면 조용히 새로 만들지 않는다 — 지우고 다시 쓰는 우회를 막는다', () => {
     expect(() =>
-      assertPaymentMethodsBaselineUpdateAllowed(null, { methods: ['카드'], policyParagraphSha256: 'aaa' }),
+      assertPaymentMethodsBaselineUpdateAllowed(null, {
+        methods: ['카드'], policyDescribedMethods: ['카드'], policyParagraphSha256: 'aaa',
+      }),
     ).toThrow(/ALLOW_BASELINE_CREATE=1/);
 
     expect(() =>
       assertPaymentMethodsBaselineUpdateAllowed(
         null,
-        { methods: ['카드'], policyParagraphSha256: 'aaa' },
+        { methods: ['카드'], policyDescribedMethods: ['카드'], policyParagraphSha256: 'aaa' },
         { allowCreate: true },
       ),
     ).not.toThrow();

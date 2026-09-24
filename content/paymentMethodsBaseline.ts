@@ -41,7 +41,7 @@ const sameList = (a: readonly string[], b: readonly string[]): boolean =>
  */
 export const assertPaymentMethodsBaselineUpdateAllowed = (
   existing: PaymentMethodsBaseline | null,
-  next: Pick<PaymentMethodsBaseline, 'methods' | 'policyParagraphSha256'>,
+  next: Pick<PaymentMethodsBaseline, 'methods' | 'policyDescribedMethods' | 'policyParagraphSha256'>,
   options: { allowCreate?: boolean; allowCatchallOnly?: boolean } = {},
 ): void => {
   if (!existing) {
@@ -56,6 +56,36 @@ export const assertPaymentMethodsBaselineUpdateAllowed = (
         '통과하는 새 기준선이 깔린다 — 이 게이트가 막으려던 상태 그 자체다.',
         '',
         '정말 처음 만드는 것이 맞다면 ALLOW_BASELINE_CREATE=1을 함께 줄 것.',
+      ].join('\n'),
+    );
+  }
+
+  /**
+   * 반대 방향의 우회도 막는다 — **1항에서 어느 수단의 설명을 지우고
+   * `POLICY_DESCRIBED_METHODS`에서도 빼는** 조합이다. 목록(`KNOWN_PAYMENT_METHODS`)은
+   * 그대로라 아래 판정에 걸리지 않고, 기준선이 줄어든 설명 목록과 새 해시로 다시 쓰여
+   * 초록이 된다. 그 수단을 여전히 받고 있는데 1항은 그 응답에 무엇이 저장되는지 말하지
+   * 않는 상태 — 이 게이트가 잡으라고 있는 바로 그 상태다.
+   *
+   * 그 수단을 **더는 받지 않기로 해서** 목록에서도 함께 뺐다면 설명이 사라지는 것이 맞다.
+   * 그래서 `next.methods`에 아직 남아 있는 수단의 설명이 빠졌을 때만 거부한다.
+   */
+  const droppedDescription = existing.policyDescribedMethods.filter(
+    (m) => !next.policyDescribedMethods.includes(m) && next.methods.includes(m),
+  );
+  if (droppedDescription.length > 0 && !options.allowCatchallOnly) {
+    throw new Error(
+      [
+        '기준선 갱신을 거부한다 — 아직 받는 수단인데 처리방침 1항의 설명이 빠졌다.',
+        `  설명이 사라진 수단: ${droppedDescription.join(', ')}`,
+        '',
+        '그 수단의 승인 응답에 무엇이 저장되는지 1항이 더는 말하지 않는 상태가 굳는다.',
+        '',
+        '수단을 계속 받는다면 1항의 설명을 되살릴 것(⚠ ko 본문은 후원자 동의 문서다 —',
+        'FUNDING_TERMS_VERSION을 먼저 올린 뒤 약관 기준선도 다시 써야 한다).',
+        '더는 받지 않기로 했다면 lib/payments/knownMethods.ts의 목록에서도 함께 뺄 것.',
+        '1항의 캐치올 문장으로 충분하다고 판단했다면 ALLOW_CATCHALL_ONLY=1을 주고, 같은',
+        '커밋에 그 이유를 적을 것.',
       ].join('\n'),
     );
   }

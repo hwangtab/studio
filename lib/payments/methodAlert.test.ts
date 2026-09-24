@@ -105,8 +105,11 @@ describe('checkPaymentMethod', () => {
     mockSend.mockRejectedValue(new Error('resend down'));
     await expect(checkPaymentMethod({ method: '해외간편결제', context: '테스트' })).resolves.toBeUndefined();
 
+    // 수단을 달리한다 — 같은 값이면 위 호출이 남긴 인스턴스 메모에서 먼저 돌아와
+    // consumeRateLimit 실패 경로를 한 번도 지나지 않는다(빈 단언이 된다).
     mockLimit.mockRejectedValue(new Error('db down'));
-    await expect(checkPaymentMethod({ method: '해외간편결제', context: '테스트' })).resolves.toBeUndefined();
+    await expect(checkPaymentMethod({ method: '또다른新수단', context: '테스트' })).resolves.toBeUndefined();
+    expect(mockLimit).toHaveBeenCalledWith('payment_method_drift:또다른新수단', 1, 24 * 60 * 60);
   });
 
   it('응답 본문을 싣지 않는다 — 가상계좌·휴대폰 응답에는 개인정보가 있다', async () => {

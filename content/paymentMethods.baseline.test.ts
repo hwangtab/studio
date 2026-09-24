@@ -77,7 +77,7 @@ describe('결제수단 ↔ 처리방침 드리프트 게이트', () => {
       // 목록만 바뀌고 처리방침 1항이 그대로면 거부한다(ALLOW_CATCHALL_ONLY=1로만 통과).
       assertPaymentMethodsBaselineUpdateAllowed(
         readBaseline(),
-        { methods, policyParagraphSha256: hash },
+        { methods, policyDescribedMethods: described, policyParagraphSha256: hash },
         {
           allowCreate: process.env.ALLOW_BASELINE_CREATE === '1',
           allowCatchallOnly: process.env.ALLOW_CATCHALL_ONLY === '1',
