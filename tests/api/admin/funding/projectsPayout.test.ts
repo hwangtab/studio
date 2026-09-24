@@ -340,18 +340,23 @@ describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다'
  * 계좌를 열지 못한 사유는 운영자가 할 일을 정반대로 가른다. 키 문제면 값이 멀쩡하니
  * 재등록을 요청하면 안 되고, `malformed`이면 재등록이 유일한 복구 경로다.
  */
-describe('payout_account_unreadable 문구는 사유로 갈린다', () => {
+describe.each([
+  ['payout_account_unreadable', '정산 계좌'],
+  ['resident_number_unreadable', '주민등록번호'],
+] as const)('%s 문구는 사유로 갈린다', (code, what) => {
   const failWith = (cryptoCode: string) => {
-    (recordFundingPayout as jest.Mock).mockResolvedValue({
-      ok: false, code: 'payout_account_unreadable', cryptoCode,
-    });
+    (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: false, code, cryptoCode });
     return call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
   };
+
+  it('어느 값이 안 열렸는지 말한다', async () => {
+    expect(String((await failWith('missing_key')).body.message)).toContain(what);
+  });
 
   it('키 문제면 키를 확인하라고 하고, 재등록을 요청하지 말라고 적는다', async () => {
     const r = await failWith('key_mismatch');
     expect(r.status).toBe(503);
-    expect(r.body).toMatchObject({ code: 'payout_account_unreadable', cryptoCode: 'key_mismatch' });
+    expect(r.body).toMatchObject({ code, cryptoCode: 'key_mismatch' });
     expect(String(r.body.message)).toContain('FUNDING_FIELD_KEY');
     expect(String(r.body.message)).toContain('재등록을 요청하지 마세요');
   });

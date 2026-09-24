@@ -243,8 +243,7 @@ export type RecordFundingPayoutResult =
         | 'not_closed'
         | 'no_payout_account'
         | 'no_tax_type'
-        | 'no_resident_number'
-        | 'resident_number_unreadable';
+        | 'no_resident_number';
     }
   /**
    * 계좌 암호문을 지금 이 서버가 열지 못했다. **왜 못 열었는지를 함께 돌려준다.**
@@ -255,6 +254,8 @@ export type RecordFundingPayoutResult =
    * 그 단정이 틀린 절반에서는 멀쩡한 값을 덮어쓰거나 못 고칠 값을 기다리게 만든다.
    */
   | { ok: false; code: 'payout_account_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
+  /** 주민등록번호 쪽 같은 일. 계좌와 **같은 구조**여야 다음 사람이 한쪽만 고치지 않는다. */
+  | { ok: false; code: 'resident_number_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
   /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
   | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
 
@@ -271,7 +272,10 @@ export type RecordFundingPayoutResult =
  * 관리자 화면의 조회 버튼과 같은 무게의 처리다. 이 경로가 기록되지 않던 동안 "조회 버튼을
  * 누른 그 순간에만 복호화한다"는 처리방침 설명이 사실과 달랐다.
  */
-const residentNumberReadable = async (projectId: string, ip: string | null): Promise<boolean> => {
+const residentNumberReadable = async (
+  projectId: string,
+  ip: string | null,
+): Promise<DecryptCheckResult> => {
   const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
       actor: PRIVACY_ACTOR_ADMIN,
@@ -306,20 +310,19 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
   }
   const enc = row?.enc?.trim();
   if (!enc) {
+    // 여기까지 오면 미리보기가 이미 hasResidentNumber로 걸렀어야 한다. 그래도 기록은 남긴다.
     await log('not_found');
-    return false;
+    return { ok: false, cryptoCode: 'unknown' };
   }
   try {
     decryptField(enc);
     await log('success');
-    return true;
+    return { ok: true };
   } catch (error: unknown) {
     await log('decrypt_failed');
-    console.error('[funding] 주민등록번호 복호화 점검 실패', {
-      projectId,
-      code: error instanceof FieldCryptoError ? error.code : 'unknown',
-    });
-    return false;
+    const cryptoCode = error instanceof FieldCryptoError ? error.code : 'unknown';
+    console.error('[funding] 주민등록번호 복호화 점검 실패', { projectId, code: cryptoCode });
+    return { ok: false, cryptoCode };
   }
 };
 
@@ -336,9 +339,14 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
  * **여기서도 접속기록을 남긴다.** 평문을 화면에 내보내지 않을 뿐 복호화는 실제로 일어난다 —
  * 운영자의 계좌 조회 버튼과 같은 무게의 처리다.
  */
-type PayoutAccountReadResult = { ok: true } | { ok: false; cryptoCode: FieldCryptoErrorCode | 'unknown' };
+/**
+ * 복호화 점검 둘(계좌·주민등록번호)이 **같은 모양으로** 답한다. 열지 못했으면 왜 못 열었는지를
+ * 함께 올린다 — 사유가 `malformed`인지 키 문제인지에 따라 운영자가 할 일이 정반대라,
+ * 한쪽만 코드를 올려 보내면 그쪽 문구만 정확해지고 다른 쪽은 절반이 틀린 채로 남는다.
+ */
+type DecryptCheckResult = { ok: true } | { ok: false; cryptoCode: FieldCryptoErrorCode | 'unknown' };
 
-const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<PayoutAccountReadResult> => {
+const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<DecryptCheckResult> => {
   const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
       actor: PRIVACY_ACTOR_ADMIN,
@@ -402,10 +410,12 @@ const payoutAccountReadable = async (projectId: string, ip: string | null): Prom
  * - `no_resident_number` — 원천징수 대상(`withholding`)인데 주민등록번호가 없다. 세액을 떼고
  *   보내 놓고 신고는 못 하는 상태가 된다 — 소득세법 시행령 제147조의7제1항제1호 가목이
  *   지급명세서에 소득자의 주민등록번호를 적도록 하기 때문이다. 사업자(`invoice`)는 원천징수 자체를 하지 않으므로 이 조건에 걸리지 않는다.
- * - `resident_number_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다**(키가 없거나
- *   바뀌었다). 암호문 존재만 보면 이 상태에서도 기록 버튼이 살아 있어, 세액을 떼고 불변으로
- *   기록한 **뒤에야** 조회에서 실패를 만난다. 그래서 기록 직전에 한 번 열어 보고 **성공
- *   여부만** 본다 — 평문은 변수에 담지도, 응답·로그·화면에 싣지도 않는다.
+ * - `resident_number_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다.** 암호문
+ *   존재만 보면 이 상태에서도 기록 버튼이 살아 있어, 세액을 떼고 불변으로 기록한 **뒤에야**
+ *   조회에서 실패를 만난다. 그래서 기록 직전에 한 번 열어 보고 **성공 여부만** 본다 — 평문은
+ *   변수에 담지도, 응답·로그·화면에 싣지도 않는다. 계좌와 마찬가지로 `cryptoCode`를 함께
+ *   돌려준다: 키 문제면 값이 멀쩡하니 재등록을 요청하면 안 되고, 봉투가 아니라 값 자체가
+ *   형식이 아닌 `malformed`이면 반대로 재등록이 유일한 복구 경로다.
  * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
  * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
  *
@@ -440,7 +450,10 @@ export const recordFundingPayout = async (
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };
-    if (!(await residentNumberReadable(projectId, ip))) return { ok: false, code: 'resident_number_unreadable' };
+    const residentRead = await residentNumberReadable(projectId, ip);
+    if (!residentRead.ok) {
+      return { ok: false, code: 'resident_number_unreadable', cryptoCode: residentRead.cryptoCode };
+    }
   }
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {

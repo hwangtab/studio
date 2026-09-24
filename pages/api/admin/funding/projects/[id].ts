@@ -84,7 +84,7 @@ const isCreatorAccountAction = (value: unknown): value is CreatorAccountAction =
 const PAYOUT_RECORD_ERROR: Record<
   Exclude<
     Exclude<RecordFundingPayoutResult, { ok: true }>['code'],
-    'amount_changed' | 'payout_account_unreadable'
+    'amount_changed' | 'payout_account_unreadable' | 'resident_number_unreadable'
   >,
   { status: number; message: string }
 > = {
@@ -103,35 +103,47 @@ const PAYOUT_RECORD_ERROR: Record<
     message:
       '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 주민등록번호 등록을 요청해 주세요.',
   },
-  // 개설자가 할 수 있는 것이 없다 — 서버의 암호화 키 문제다. 그래서 "등록을 요청하세요"가
-  // 아니라 운영 설정을 보라고 적는다. 아무것도 기록되지 않았다는 사실을 먼저 말한다.
-  resident_number_unreadable: {
-    status: 503,
-    message:
-      '개설자의 주민등록번호가 저장돼 있지만 지금 이 서버에서는 열리지 않습니다(암호화 키 문제). 기록하면 세액만 떼고 지급명세서를 낼 수 없으므로 아무것도 기록하지 않았습니다 — FUNDING_FIELD_KEY 설정을 확인한 뒤 다시 시도해 주세요. **키 회전을 돌리는 중이라면 아직 옛 키로 잠긴 값입니다** — 값은 멀쩡하니 회전을 끝낸 뒤 다시 시도하시고, 어느 경우에도 값을 지우거나 개설자에게 재등록을 요청하지 마세요.',
-  },
 };
 
 /**
- * 계좌를 열지 못한 사유별 안내. **둘로 갈린다.**
+ * 암호문을 열지 못한 사유별 안내. **둘로 갈린다.**
  *
  * - 키 문제(`missing_key`·`invalid_key`·`key_mismatch`·`auth_failed`·`unsupported_version`)면
  *   저장된 값은 멀쩡하다. 키를 되찾거나 회전을 끝내면 그대로 열리므로, 재등록을 요청하면
  *   멀쩡한 값을 덮어쓰게 된다.
- * - `malformed`이면 저장된 값이 형식이 아니거나 봉투 안이 깨진 것이라 **어떤 키로도 열리지
- *   않는다.** 이때는 재등록이 유일한 복구 경로다 — 계좌 조회 라우트의
+ * - `malformed`이면 저장된 값이 암호화 형식이 아니거나 그 안의 내용이 형식과 다른 것이라
+ *   **어떤 키로도 열리지 않는다.** 이때는 재등록이 유일한 복구 경로다 — 조회 라우트 둘의
  *   `CRYPTO_ERROR_MESSAGE.malformed`가 같은 말을 한다.
  *
  * 두 경우에 같은 문구를 쓰면 절반은 정반대 지시가 된다.
+ *
+ * **계좌와 주민등록번호가 한 함수를 쓴다.** 갈리는 것은 무엇이 안 열렸는지와 기록했을 때
+ * 무엇이 어긋나는지뿐이고, 갈라 말해야 하는 판단은 같다 — 따로 두면 한쪽만 고쳐진다
+ * (실제로 계좌 쪽을 먼저 고쳤을 때 주민등록번호 쪽 문구가 정반대로 남아 있었다).
  */
-const payoutAccountUnreadableMessage = (cryptoCode: string): string => {
-  const prefix = '개설자의 정산 계좌가 저장돼 있지만 지금 이 서버에서는 열리지 않습니다';
-  const nothingRecorded = '보낼 계좌를 읽지 못한 채 기록하면 되돌릴 수 없으므로 아무것도 기록하지 않았습니다';
+const unreadableFieldMessage = (
+  field: { what: string; consequence: string; reregister: string },
+  cryptoCode: string,
+): string => {
+  const prefix = `개설자의 ${field.what}이 저장돼 있지만 지금 이 서버에서는 열리지 않습니다`;
   if (cryptoCode === 'malformed') {
-    return `${prefix}(code=malformed — 저장된 값이 암호화 형식이 아니거나 내용이 형식과 다릅니다). ${nothingRecorded}. 이 값은 키를 되찾아도 열리지 않으니, 개설자에게 정산 계좌를 다시 등록해 달라고 요청해 주세요.`;
+    return `${prefix}(code=malformed — 저장된 값이 암호화 형식이 아니거나 내용이 형식과 다릅니다). ${field.consequence} 이 값은 키를 되찾아도 열리지 않으니, 개설자에게 ${field.reregister}을 다시 등록해 달라고 요청해 주세요.`;
   }
-  return `${prefix}(code=${cryptoCode} — 암호화 키 문제). ${nothingRecorded} — FUNDING_FIELD_KEY 설정을 확인한 뒤 다시 시도해 주세요. **키 회전을 돌리는 중이라면 아직 옛 키로 잠긴 값입니다** — 값은 멀쩡하니 회전을 끝낸 뒤 다시 시도하시고, 이 경우에는 개설자에게 재등록을 요청하지 마세요.`;
+  return `${prefix}(code=${cryptoCode} — 암호화 키 문제). ${field.consequence} FUNDING_FIELD_KEY 설정을 확인한 뒤 다시 시도해 주세요. **키 회전을 돌리는 중이라면 아직 옛 키로 잠긴 값입니다** — 값은 멀쩡하니 회전을 끝낸 뒤 다시 시도하시고, 이 경우에는 값을 지우거나 개설자에게 재등록을 요청하지 마세요.`;
 };
+
+const UNREADABLE_FIELD = {
+  payout_account_unreadable: {
+    what: '정산 계좌',
+    consequence: '보낼 계좌를 읽지 못한 채 기록하면 되돌릴 수 없으므로 아무것도 기록하지 않았습니다 —',
+    reregister: '정산 계좌',
+  },
+  resident_number_unreadable: {
+    what: '주민등록번호',
+    consequence: '기록하면 세액만 떼고 지급명세서를 낼 수 없으므로 아무것도 기록하지 않았습니다 —',
+    reregister: '주민등록번호',
+  },
+} as const;
 
 /**
  * 기록·지급 뒤 개설자에게 알린다. **메일 실패가 기록·지급을 실패시키지 않는다** — 이미
@@ -494,12 +506,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           )}원입니다. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
         });
       }
-      if (result.code === 'payout_account_unreadable') {
+      if (result.code === 'payout_account_unreadable' || result.code === 'resident_number_unreadable') {
         return res.status(503).json({
           ok: false,
           code: result.code,
           cryptoCode: result.cryptoCode,
-          message: payoutAccountUnreadableMessage(result.cryptoCode),
+          message: unreadableFieldMessage(UNREADABLE_FIELD[result.code], result.cryptoCode),
         });
       }
       const mapped = PAYOUT_RECORD_ERROR[result.code];

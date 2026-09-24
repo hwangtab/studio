@@ -324,7 +324,25 @@ describe('recordFundingPayout', () => {
     );
     await seedPledge(project.slug, 1_000_000);
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'resident_number_unreadable' });
+    // 계좌와 **같은 구조**로 사유를 함께 돌려준다: 값은 멀쩡하고 키가 다른 것이다.
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'resident_number_unreadable', cryptoCode: 'key_mismatch',
+    });
+    error.mockRestore();
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  /**
+   * 주민등록번호도 `malformed` 갈래가 있다 — 그때는 키를 되찾아도 안 열려 재등록이 정답이다.
+   * 계좌 쪽과 같은 짝의 테스트다(한쪽만 고치는 일을 막는다).
+   */
+  it('주민등록번호가 암호화 형식이 아니면 malformed로 온다 — 키 문제와 갈린다', async () => {
+    const { project } = await seedProject({}, { residentNumberEnc: 'v1:deadbeef:deadbeef:deadbeef' });
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'resident_number_unreadable', cryptoCode: 'malformed',
+    });
     error.mockRestore();
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });
@@ -523,7 +541,7 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
-    expect(result).toEqual({ ok: false, code: 'resident_number_unreadable' });
+    expect(result).toEqual({ ok: false, code: 'resident_number_unreadable', cryptoCode: 'malformed' });
 
     const rows = await accessLogs();
     // 계좌는 열렸고(success) 주민등록번호에서 막혔다(decrypt_failed).
