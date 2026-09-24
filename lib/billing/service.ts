@@ -505,17 +505,34 @@ export const chargeCycle = async (
       return { ok: false, status: subscription.status, tossCode: toss.code, message: toss.message, cycleYm, attempt };
     }
 
-    const retryAt = attempt >= MAX_CHARGE_ATTEMPTS ? null : retryAtFor(now, attempt);
+    /**
+     * **이미 정지된 구독의 실패는 정지를 풀지 않는다.**
+     *
+     * 여기 도달하는 `paused`는 관리자 수동 결제(`reason === 'manual'`)뿐이다. 그때
+     * `attempt < MAX_CHARGE_ATTEMPTS`라는 이유로 `past_due`로 내려보내면 두 가지가 한꺼번에
+     * 일어난다. 첫째, `listDueSubscriptions`가 `past_due`를 걷으므로 **매일 도는 청구 크론이
+     * 그 카드를 다시 긁기 시작한다** — 재시도 중 하나가 승인되면 운영자가 멈춰 둔 구독에서
+     * 돈이 나간다. 둘째, `pausedReason`이 NULL로 지워지고 재시도가 전부 실패하면
+     * `payment_failed`로 다시 앉아 **운영자 정지였다는 사실이 사라진다.** 그러면 종료 경보가
+     * 조용해지고(`lib/ops/healthCheck.ts`는 `operator`와 NULL만 본다) 1년 뒤 되돌릴 수 없이
+     * 닫힌다 — 이 컬럼이 막으려던 사고 그대로다.
+     *
+     * 그래서 직전 상태가 `paused`면 상태도 사유도 그대로 둔다. 회차 기록(실패)과
+     * `updated_at`만 남는다 — 운영자가 누른 결제가 거절됐다는 사실은 관리자 화면의 회차
+     * 이력에 남고, `updated_at`이 올라 방치 시계도 다시 시작한다.
+     */
+    const wasPaused = subscription.status === 'paused';
+    const retryAt = wasPaused || attempt >= MAX_CHARGE_ATTEMPTS ? null : retryAtFor(now, attempt);
     const nextStatus: SubscriptionStatus = retryAt ? 'past_due' : 'paused';
     await db
       .update(subscriptions)
       .set({
         status: nextStatus,
-        // 재시도 한도를 소진해 세우는 자리 — 여기가 `payment_failed`의 유일한 출처다.
-        // `past_due`로 갈 때 NULL을 쓰는 것은 "정지가 아니다"를 적는 것이다. 앞선 운영자
-        // 정지가 남긴 값이 그대로 있으면, 뒤에 결제 실패로 세워진 구독이 운영자 정지로
-        // 읽혀 헬스체크가 영영 안 꺼지는 경보를 낸다.
-        pausedReason: retryAt ? null : 'payment_failed',
+        // 재시도 한도를 소진해 세우는 자리가 `payment_failed`의 유일한 출처다.
+        // `past_due`로 갈 때 NULL을 쓰는 것은 "정지가 아니다"를 적는 것이다 — 앞선 운영자
+        // 정지가 남긴 값이 그대로 있으면 카드가 죽은 구독이 운영자 정지로 읽힌다.
+        // 이미 정지된 구독은 위 주석대로 원래 사유를 지킨다.
+        pausedReason: wasPaused ? subscription.pausedReason : retryAt ? null : 'payment_failed',
         nextBillingAt: retryAt ?? subscription.nextBillingAt,
         updatedAt: now,
       })
@@ -547,7 +564,16 @@ export const chargeCycle = async (
       .update(subscriptions)
       .set({
         status: 'active',
-        // 정지가 풀렸으니 사유도 비운다 — 아래 resumeSubscription의 주석과 같은 판정이다.
+        /**
+         * 정지가 풀렸으니 사유도 비운다 — 아래 resumeSubscription의 주석과 같은 판정이다.
+         *
+         * **운영자 정지 구독의 수동 결제가 성공한 경우도 여기로 온다.** 실패와 달리 되살리는
+         * 것이 맞다: 이 승인은 이용기간(currentPeriodStart/End)을 전진시키고 nextBillingAt을
+         * 다음 달로 잡는다. 그대로 `paused`로 두면 **돈은 받았는데 멈춰 있다고 적힌 행**이
+         * 남고, 그 상태에서 운영자가 '재개'를 누르면 resumeSubscription이 nextBillingAt을
+         * now로 당겨 방금 결제한 달을 **또 긁는다.** 게다가 이 승인은 운영자가 그 화면에서
+         * 직접 누른 결과이고 상태 변화는 같은 화면에 바로 보인다 — 조용히 일어나는 일이 아니다.
+         */
         pausedReason: null,
         currentPeriodStart: period.start,
         currentPeriodEnd: period.end,

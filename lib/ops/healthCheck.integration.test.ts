@@ -638,4 +638,14 @@ describe('곧 자동 종료되는 정지 구독', () => {
     await seedPaused({ status: 'active', pausedReason: null });
     expect(await issue()).toBeUndefined();
   });
+
+  /**
+   * **닫힌 뒤에는 경보가 멈춰야 한다.** 방치 종료는 사유를 지우지 않으므로
+   * (`ended` + `operator`가 그대로 남는다) 상태를 안 보면 끌 수 없는 경보가 매일 뜬다.
+   * 운영자가 할 수 있는 일이 없는데 꺼지지 않는 항목은 메일 전체를 안 읽게 만든다.
+   */
+  it('이미 종료된 구독은 사유가 남아 있어도 보고하지 않는다', async () => {
+    await seedPaused({ status: 'ended', pausedReason: 'operator' });
+    expect(await issue()).toBeUndefined();
+  });
 });

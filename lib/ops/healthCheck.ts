@@ -9,6 +9,7 @@ import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import {
   SUBSCRIPTION_DORMANCY_YEARS,
   dormancyWarningBoundary,
+  dormantActivityCondition,
 } from '../privacy/orderRetention';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
@@ -403,8 +404,11 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 보호법 제21조①에 어긋난다. 그래서 대상에서 빼는 대신 **닫히기 전에 알린다** — 이 항목이
    * 그 알림이고, 여기가 유일한 방어다.
    *
-   * 판정은 파기 쪽과 같은 함수(`dormancyWarningBoundary`)를 쓴다. 따로 계산하면 한쪽만
-   * 바뀌는 날 경보가 파기보다 늦어져 알림 없이 닫히던 예전 상태로 돌아간다.
+   * 판정은 파기 쪽과 **같은 식**을 쓴다 — 기준선은 `dormancyWarningBoundary`, 활동 조건
+   * 넷은 `dormantActivityCondition`이고 둘 다 `lib/privacy/orderRetention.ts`가 준다.
+   * 상태와 사유만 이 검사가 따로 건다(파기는 `pending_card`도 닫지만 그것은 알릴 일이 아니다).
+   * 조건식이 갈라져 있으면 `updated_at`을 올리지 않는 전이가 하나 생기는 날 두 집합이
+   * 어긋난다 — 경보 없는 종료가 되거나, 파기되지 않아 **끌 수 없는 매일 경보**가 된다.
    *
    * **`paused_reason`이 NULL인 행도 함께 본다.** 컬럼 도입 전에 정지된 행에는 값이 없고 어느
    * 쪽이었는지 되살릴 방법이 없다(`db/schema.ts`). 틀렸을 때의 대가가 한쪽으로만 크다 —
@@ -425,8 +429,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       and(
         eq(subscriptions.status, 'paused'),
         or(eq(subscriptions.pausedReason, 'operator'), isNull(subscriptions.pausedReason)),
-        lt(subscriptions.createdAt, dormancyWarningBoundary(now)),
-        lt(subscriptions.updatedAt, dormancyWarningBoundary(now)),
+        dormantActivityCondition(dormancyWarningBoundary(now)),
       ),
     );
 

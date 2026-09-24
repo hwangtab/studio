@@ -408,6 +408,49 @@ export const dormancyWarningBoundary = (now: Date): Date =>
   dormancyBoundary(new Date(now.getTime() + SUBSCRIPTION_DORMANCY_WARNING_DAYS * 24 * 60 * 60 * 1000));
 
 /**
+ * "이 기준선까지 아무 활동이 없었다" — 방치 판정의 **활동 조건 전부**(상태는 부르는 쪽이 건다).
+ *
+ * 파기(`closeDormantSubscriptions`)와 종료 경보(`lib/ops/healthCheck.ts`)가 **같은 식**을
+ * 나눠 쓴다. 기준선 날짜만 같고 조건식이 갈라져 있으면, `updated_at`을 올리지 않는 전이가
+ * 하나 생기는 날 경보와 파기의 집합이 어긋난다 — 파기는 닫는데 경보는 안 뜨거나(경고 없는
+ * 종료), 경보는 뜨는데 파기가 안 돼 **운영자가 끌 수 없는 매일 경보**가 된다.
+ *
+ * 조건 넷의 이유는 `closeDormantSubscriptions`의 "방치를 무엇으로 봤는가" 절에 있다.
+ */
+export const dormantActivityCondition = (boundary: Date) => {
+  const db = getDb();
+  return and(
+    lt(subscriptions.createdAt, boundary),
+    lt(subscriptions.updatedAt, boundary),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(subscriptionPayments)
+        .where(
+          and(
+            eq(subscriptionPayments.subscriptionId, subscriptions.id),
+            gte(subscriptionPayments.attemptedAt, boundary),
+          ),
+        ),
+    ),
+    notExists(
+      db
+        .select({ one: sql`1` })
+        .from(billingKeys)
+        .where(
+          and(
+            eq(billingKeys.subscriptionId, subscriptions.id),
+            or(
+              gte(billingKeys.issuedAt, boundary),
+              and(isNotNull(billingKeys.revokedAt), gte(billingKeys.revokedAt, boundary)),
+            ),
+          ),
+        ),
+    ),
+  );
+};
+
+/**
  * 방치 판정의 대상 상태.
  *
  * **`active`·`past_due`·`cancelled`는 대상이 아니다.** `active`는 청구가 돌고 있고,
@@ -539,33 +582,7 @@ export const closeDormantSubscriptions = async (
 
   const dormant = and(
     inArray(subscriptions.status, [...DORMANT_STATUSES]),
-    lt(subscriptions.createdAt, boundary),
-    lt(subscriptions.updatedAt, boundary),
-    notExists(
-      db
-        .select({ one: sql`1` })
-        .from(subscriptionPayments)
-        .where(
-          and(
-            eq(subscriptionPayments.subscriptionId, subscriptions.id),
-            gte(subscriptionPayments.attemptedAt, boundary),
-          ),
-        ),
-    ),
-    notExists(
-      db
-        .select({ one: sql`1` })
-        .from(billingKeys)
-        .where(
-          and(
-            eq(billingKeys.subscriptionId, subscriptions.id),
-            or(
-              gte(billingKeys.issuedAt, boundary),
-              and(isNotNull(billingKeys.revokedAt), gte(billingKeys.revokedAt, boundary)),
-            ),
-          ),
-        ),
-    ),
+    dormantActivityCondition(boundary),
   );
 
   /**
