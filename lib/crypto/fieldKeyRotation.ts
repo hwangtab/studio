@@ -70,6 +70,12 @@ export const ENCRYPTED_FIELD_TARGETS: readonly EncryptedFieldTarget[] = [
     idField: 'id',
     valueField: 'residentNumberEnc',
   }),
+  defineTarget({
+    label: 'funding_creators.payout_account_enc',
+    table: fundingCreators,
+    idField: 'id',
+    valueField: 'payoutAccountEnc',
+  }),
 ];
 
 /** 회전하지 못한 행. **id와 코드만** 담는다. */

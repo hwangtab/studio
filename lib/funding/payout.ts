@@ -7,8 +7,9 @@ import {
   fundingCreators, fundingProjectPayouts, fundingProjects,
   type FundingProjectPayout, type fundingCreatorTaxTypeEnum,
 } from '../../db/schema';
-import { decryptField, FieldCryptoError } from '../crypto/fieldCrypto';
+import { decryptField, FieldCryptoError, type FieldCryptoErrorCode } from '../crypto/fieldCrypto';
 import { PRIVACY_ACTOR_ADMIN, recordPrivacyAccess } from '../privacy/accessLog';
+import { decryptPayoutAccount } from './payoutAccountCrypto';
 import { computeProjectState } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
 
@@ -137,7 +138,12 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
   backerCount: number;
   /** 모금이 끝났는가(`computeProjectState`가 'closed'). 기록 버튼의 전제다. */
   closed: boolean;
-  /** 개설자의 은행·계좌·예금주가 모두 있는가. **값은 싣지 않는다**(props가 __NEXT_DATA__로 나간다). */
+  /**
+   * 개설자의 정산 계좌가 등록돼 있는가 — **암호문이 있는가만 본다.** 은행명·계좌번호·예금주는
+   * 한 암호문 안에 한 벌로 들어 있으므로(`payoutAccountCrypto.ts`) 셋 중 일부만 있는 상태는
+   * 생기지 않는다. 이 함수는 복호화하지 않는다 — 값은 싣지 않는다(props가 __NEXT_DATA__로
+   * 나간다). 열 수 있는지는 기록 직전에 `payoutAccountReadable`이 따로 본다.
+   */
   hasPayoutAccount: boolean;
   /**
    * 개설자의 주민등록번호가 등록돼 있는가. **암호문이 있는가만 본다** — 이 함수는 복호화하지
@@ -219,9 +225,7 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
         { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },
         new Date(),
       ) === 'closed',
-    hasPayoutAccount: Boolean(
-      creator.payoutBankName?.trim() && creator.payoutAccount?.trim() && creator.payoutHolder?.trim(),
-    ),
+    hasPayoutAccount: Boolean(creator.payoutAccountEnc?.trim()),
     hasResidentNumber: Boolean(creator.residentNumberEnc?.trim()),
     recorded,
     ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType: assumedTaxType }),
@@ -239,9 +243,19 @@ export type RecordFundingPayoutResult =
         | 'not_closed'
         | 'no_payout_account'
         | 'no_tax_type'
-        | 'no_resident_number'
-        | 'resident_number_unreadable';
+        | 'no_resident_number';
     }
+  /**
+   * 계좌 암호문을 지금 이 서버가 열지 못했다. **왜 못 열었는지를 함께 돌려준다.**
+   *
+   * 사유마다 운영자가 할 일이 정반대다: 키 문제(`missing_key`·`key_mismatch` 등)면 값은
+   * 멀쩡하니 키를 되찾아야 하고, 봉투가 깨진 `malformed`이면 그 값은 되살릴 수 없어
+   * 개설자에게 재등록을 요청해야 한다. 코드를 안 돌려주면 화면이 둘 중 하나로 단정하게 되고,
+   * 그 단정이 틀린 절반에서는 멀쩡한 값을 덮어쓰거나 못 고칠 값을 기다리게 만든다.
+   */
+  | { ok: false; code: 'payout_account_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
+  /** 주민등록번호 쪽 같은 일. 계좌와 **같은 구조**여야 다음 사람이 한쪽만 고치지 않는다. */
+  | { ok: false; code: 'resident_number_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
   /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
   | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
 
@@ -258,7 +272,10 @@ export type RecordFundingPayoutResult =
  * 관리자 화면의 조회 버튼과 같은 무게의 처리다. 이 경로가 기록되지 않던 동안 "조회 버튼을
  * 누른 그 순간에만 복호화한다"는 처리방침 설명이 사실과 달랐다.
  */
-const residentNumberReadable = async (projectId: string, ip: string | null): Promise<boolean> => {
+const residentNumberReadable = async (
+  projectId: string,
+  ip: string | null,
+): Promise<DecryptCheckResult> => {
   const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
       actor: PRIVACY_ACTOR_ADMIN,
@@ -293,20 +310,82 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
   }
   const enc = row?.enc?.trim();
   if (!enc) {
+    // 여기까지 오면 미리보기가 이미 hasResidentNumber로 걸렀어야 한다. 그래도 기록은 남긴다.
     await log('not_found');
-    return false;
+    return { ok: false, cryptoCode: 'unknown' };
   }
   try {
     decryptField(enc);
     await log('success');
-    return true;
+    return { ok: true };
   } catch (error: unknown) {
     await log('decrypt_failed');
-    console.error('[funding] 주민등록번호 복호화 점검 실패', {
-      projectId,
-      code: error instanceof FieldCryptoError ? error.code : 'unknown',
+    const cryptoCode = error instanceof FieldCryptoError ? error.code : 'unknown';
+    console.error('[funding] 주민등록번호 복호화 점검 실패', { projectId, code: cryptoCode });
+    return { ok: false, cryptoCode };
+  }
+};
+
+/**
+ * 저장된 정산 계좌를 **지금 이 서버가 열 수 있는가.**
+ *
+ * 주민등록번호 쪽(`residentNumberReadable`)과 같은 이유로 같은 모양이다: 미리보기는 암호문
+ * 존재만 보므로, 키가 없거나 바뀐 상태에서도 기록 버튼이 살아 있다. 그대로 기록하면
+ * `funding_project_payouts`는 불변이라 "기록은 됐는데 보낼 계좌를 읽지 못한다"가 영구히 남는다.
+ *
+ * 그래서 기록 직전에 한 번 열어 보고 **성공 여부만** 돌려준다 — 은행명·계좌번호·예금주는
+ * 변수 밖으로 나가지 않고, 실패해도 로그에는 오류 코드만 남는다.
+ *
+ * **여기서도 접속기록을 남긴다.** 평문을 화면에 내보내지 않을 뿐 복호화는 실제로 일어난다 —
+ * 운영자의 계좌 조회 버튼과 같은 무게의 처리다.
+ */
+/**
+ * 복호화 점검 둘(계좌·주민등록번호)이 **같은 모양으로** 답한다. 열지 못했으면 왜 못 열었는지를
+ * 함께 올린다 — 사유가 `malformed`인지 키 문제인지에 따라 운영자가 할 일이 정반대라,
+ * 한쪽만 코드를 올려 보내면 그쪽 문구만 정확해지고 다른 쪽은 절반이 틀린 채로 남는다.
+ */
+type DecryptCheckResult = { ok: true } | { ok: false; cryptoCode: FieldCryptoErrorCode | 'unknown' };
+
+const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<DecryptCheckResult> => {
+  const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
+    recordPrivacyAccess({
+      actor: PRIVACY_ACTOR_ADMIN,
+      action: 'funding_payout_account_decrypt_check',
+      targetId: projectId,
+      result,
+      ip,
+    }).catch((error: unknown) => {
+      console.error('[privacy] 접속기록 호출 실패 — 정산 기록은 계속됩니다', error);
     });
-    return false;
+
+  // 조회 자체가 실패하는 갈래도 기록한 뒤 예외를 그대로 올린다(주민등록번호 쪽과 같은 규약).
+  let row: { enc: string | null } | undefined;
+  try {
+    [row] = await getDb()
+      .select({ enc: fundingCreators.payoutAccountEnc })
+      .from(fundingProjects)
+      .innerJoin(fundingCreators, eq(fundingCreators.id, fundingProjects.creatorId))
+      .where(eq(fundingProjects.id, projectId))
+      .limit(1);
+  } catch (error: unknown) {
+    await log('error');
+    throw error;
+  }
+  const enc = row?.enc?.trim();
+  if (!enc) {
+    // 여기까지 오면 미리보기가 이미 hasPayoutAccount로 걸렀어야 한다. 그래도 기록은 남긴다.
+    await log('not_found');
+    return { ok: false, cryptoCode: 'unknown' };
+  }
+  try {
+    decryptPayoutAccount(enc);
+    await log('success');
+    return { ok: true };
+  } catch (error: unknown) {
+    await log('decrypt_failed');
+    const cryptoCode = error instanceof FieldCryptoError ? error.code : 'unknown';
+    console.error('[funding] 정산 계좌 복호화 점검 실패', { projectId, code: cryptoCode });
+    return { ok: false, cryptoCode };
   }
 };
 
@@ -319,16 +398,24 @@ const residentNumberReadable = async (projectId: string, ip: string | null): Pro
  *   통째로 빠진다. 기다렸다 다시 누르면 된다.
  * - `no_payout_account` — 개설자의 계좌 정보가 없다. 보낼 곳 없는 정산을 기록하면 "기록은
  *   됐는데 돈은 안 갔다"가 영영 남는다. 개설자에게 계좌 등록을 요청해야 한다.
+ * - `payout_account_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다.** 계좌가 없는
+ *   것과 가르는 이유는 운영자가 할 일이 정반대이기 때문이다: 없으면 개설자에게 등록을
+ *   요청해야 하고, 키 문제로 못 여는 것이면 **개설자는 아무 잘못이 없고 키를 되찾는 것이
+ *   먼저다** — 그 상태에서 재등록을 요청하면 멀쩡한 값을 덮어쓴다. 다만 **봉투가 깨진
+ *   `malformed`은 반대로 재등록이 정답이다**(그 값은 어떤 키로도 안 열린다). 그래서 이 코드는
+ *   `cryptoCode`를 함께 돌려주고, 화면이 그 둘을 갈라 안내한다.
  * - `no_tax_type` — 개설자의 세금 처리 구분이 없다. 계좌만 있고 이 값이 비는 행이 실제로
  *   생긴다(운영자 직접 입력·이관). 추측해서 기록하면 사업자에게 원천징수를 떼고 보내게 되고,
  *   이 표는 불변이라 되돌릴 경로가 없다.
  * - `no_resident_number` — 원천징수 대상(`withholding`)인데 주민등록번호가 없다. 세액을 떼고
  *   보내 놓고 신고는 못 하는 상태가 된다 — 소득세법 시행령 제147조의7제1항제1호 가목이
  *   지급명세서에 소득자의 주민등록번호를 적도록 하기 때문이다. 사업자(`invoice`)는 원천징수 자체를 하지 않으므로 이 조건에 걸리지 않는다.
- * - `resident_number_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다**(키가 없거나
- *   바뀌었다). 암호문 존재만 보면 이 상태에서도 기록 버튼이 살아 있어, 세액을 떼고 불변으로
- *   기록한 **뒤에야** 조회에서 실패를 만난다. 그래서 기록 직전에 한 번 열어 보고 **성공
- *   여부만** 본다 — 평문은 변수에 담지도, 응답·로그·화면에 싣지도 않는다.
+ * - `resident_number_unreadable` — 암호문은 있는데 **지금 이 서버가 열지 못한다.** 암호문
+ *   존재만 보면 이 상태에서도 기록 버튼이 살아 있어, 세액을 떼고 불변으로 기록한 **뒤에야**
+ *   조회에서 실패를 만난다. 그래서 기록 직전에 한 번 열어 보고 **성공 여부만** 본다 — 평문은
+ *   변수에 담지도, 응답·로그·화면에 싣지도 않는다. 계좌와 마찬가지로 `cryptoCode`를 함께
+ *   돌려준다: 키 문제면 값이 멀쩡하니 재등록을 요청하면 안 되고, 봉투가 아니라 값 자체가
+ *   형식이 아닌 `malformed`이면 반대로 재등록이 유일한 복구 경로다.
  * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
  * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
  *
@@ -355,10 +442,18 @@ export const recordFundingPayout = async (
   if (preview.recorded) return { ok: false, code: 'already_recorded' };
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
+  // 계좌는 세금 구분과 무관하게 필요하다 — 원천징수든 사업자든 돈은 계좌로 간다.
+  const accountRead = await payoutAccountReadable(projectId, ip);
+  if (!accountRead.ok) {
+    return { ok: false, code: 'payout_account_unreadable', cryptoCode: accountRead.cryptoCode };
+  }
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };
-    if (!(await residentNumberReadable(projectId, ip))) return { ok: false, code: 'resident_number_unreadable' };
+    const residentRead = await residentNumberReadable(projectId, ip);
+    if (!residentRead.ok) {
+      return { ok: false, code: 'resident_number_unreadable', cryptoCode: residentRead.cryptoCode };
+    }
   }
   if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {

@@ -123,9 +123,8 @@ describe('listProjectsForAdmin', () => {
     const creator = await seedCreator('payout@example.com');
     await mockDb.update(schema.fundingCreators).set({
       taxType: 'withholding',
-      payoutBankName: '국민은행',
-      payoutAccount: '123-456-789012',
-      payoutHolder: '개설자',
+      payoutAccountEnc: 'v2:00000000:aaaa:bbbb:cccc',
+      payoutAccountLast4: '9012',
       residentNumberEnc: 'v1:ZmFrZQ==:ZmFrZQ==:ZmFrZQ==',
     }).where(eq(schema.fundingCreators.id, creator));
     await seedProject(creator, { reviewStatus: 'submitted', submittedAt: new Date('2026-09-10T00:00:00Z') });
@@ -231,9 +230,8 @@ describe('loadProjectForAdmin', () => {
     // seed한다 — 값이 비어 있으면 통째로 스프레드해도 통과해 버린다.
     const creator = await seedCreator('payout-detail@example.com', {
       taxType: 'withholding',
-      payoutBankName: '국민은행',
-      payoutAccount: '123-456-789012',
-      payoutHolder: '개설자',
+      payoutAccountEnc: 'v2:00000000:aaaa:bbbb:cccc',
+      payoutAccountLast4: '9012',
       residentNumberEnc: 'v1:ZmFrZQ==:ZmFrZQ==:ZmFrZQ==',
     });
     const projectId = await seedProject(creator, {

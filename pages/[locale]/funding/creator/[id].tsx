@@ -66,8 +66,8 @@ interface Props {
  *
  * `loadProjectForCreator`가 `fundingCreators`를 `select()`(전 컬럼)로 읽지만 화면에는
  * `{ name, contactName, phone, bio, links }` 다섯 필드만 골라 넣은 채로 돌려준다 — 이 함수는
- * 그 필드만 옮겨 담을 뿐, `taxType`·`payoutBankName`·`payoutAccount`·`payoutHolder`는 애초에
- * `CreatorProjectDetail.creator`에 없다(data/artists/index.ts의 `toArtistCardData`와 같은
+ * 그 필드만 옮겨 담을 뿐, 정산 컬럼(`taxType`·`payout_account_enc`·`payout_account_last4`)은
+ * 애초에 `CreatorProjectDetail.creator`에 없다(암호문도 뒤 4자리도 여기로는 오지 않는다)(data/artists/index.ts의 `toArtistCardData`와 같은
  * 자리, 같은 이유). `email`은 `CreatorProjectDetail.creator`에 있지만(심사 신청이
  * `isDefaultCreatorName` 판정에 쓴다) 이 함수가 옮겨 담지 않으므로 화면 props로는 나가지
  * 않는다 — `tests/pages/funding/creator/edit.test.ts`가 이 누수를 테스트로 고정한다. 날짜는

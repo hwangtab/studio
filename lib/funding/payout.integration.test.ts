@@ -10,7 +10,8 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { encryptField, FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
+import { encryptField, encryptFieldWithKey, FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
+import { encryptPayoutAccount } from './payoutAccountCrypto';
 // eslint-disable-next-line import/first
 import {
   buildFundingPayoutPreview,
@@ -23,7 +24,6 @@ import {
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
 
-const PAYOUT_ACCOUNT = { payoutBankName: '국민은행', payoutAccount: '123-45-6789', payoutHolder: '홍길동' };
 
 /**
  * 원천징수 개설자의 기본 상태는 "주민등록번호가 등록돼 있다"이다 — 안 그러면 기록 경로를
@@ -36,6 +36,15 @@ const PAYOUT_ACCOUNT = { payoutBankName: '국민은행', payoutAccount: '123-45-
 const TEST_KEY = Buffer.alloc(32, 7).toString('base64');
 process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
 const RESIDENT_NUMBER_ENC = encryptField('9901011234567');
+
+/**
+ * 계좌도 같은 이유로 **진짜 암호화한 값**이다 — 기록 직전에 한 번 열어 보고 성공 여부만
+ * 확인하기 때문이다(`payout_account_unreadable`). 뒤 4자리는 평문 컬럼이라 그대로 적는다.
+ */
+const PAYOUT_ACCOUNT = {
+  payoutAccountEnc: encryptPayoutAccount({ bankName: '국민은행', account: '123-45-6789', holder: '홍길동' }),
+  payoutAccountLast4: '6789',
+};
 
 let seq = 0;
 
@@ -245,7 +254,7 @@ describe('recordFundingPayout', () => {
   });
 
   it('개설자 계좌 정보가 없으면 거부한다', async () => {
-    const { project } = await seedProject({}, { payoutAccount: null });
+    const { project } = await seedProject({}, { payoutAccountEnc: null });
     await seedPledge(project.slug, 1_000_000);
     expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'no_payout_account' });
   });
@@ -279,7 +288,11 @@ describe('recordFundingPayout', () => {
     await seedPledge(project.slug, 1_000_000);
     process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 9).toString('base64');
     try {
-      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'resident_number_unreadable' });
+      // 계좌가 먼저 걸린다 — 돈을 보낼 곳을 읽지 못하는 것이 더 앞선 문제다.
+      // 사유도 함께 온다: 값은 멀쩡하고 키가 다른 것이다.
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({
+        ok: false, code: 'payout_account_unreadable', cryptoCode: 'key_mismatch',
+      });
     } finally {
       process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
     }
@@ -291,11 +304,75 @@ describe('recordFundingPayout', () => {
     await seedPledge(project.slug, 1_000_000);
     delete process.env[FIELD_CRYPTO_KEY_ENV];
     try {
-      expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'resident_number_unreadable' });
+      expect(await recordAsAdmin(project.id, new Date())).toEqual({
+        ok: false, code: 'payout_account_unreadable', cryptoCode: 'missing_key',
+      });
     } finally {
       process.env[FIELD_CRYPTO_KEY_ENV] = TEST_KEY;
     }
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  /**
+   * 계좌는 열리는데 주민등록번호만 안 열리는 경우 — 회전이 한쪽만 끝난 상태에서 실제로
+   * 생긴다. 두 코드가 갈려야 운영자가 무엇을 되찾아야 하는지 안다.
+   */
+  it('계좌는 열리고 주민등록번호만 안 열리면 resident_number_unreadable', async () => {
+    const { project } = await seedProject(
+      {},
+      { residentNumberEnc: encryptFieldWithKey('9901011234567', Buffer.alloc(32, 9)) },
+    );
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    // 계좌와 **같은 구조**로 사유를 함께 돌려준다: 값은 멀쩡하고 키가 다른 것이다.
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'resident_number_unreadable', cryptoCode: 'key_mismatch',
+    });
+    error.mockRestore();
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  /**
+   * 주민등록번호도 `malformed` 갈래가 있다 — 그때는 키를 되찾아도 안 열려 재등록이 정답이다.
+   * 계좌 쪽과 같은 짝의 테스트다(한쪽만 고치는 일을 막는다).
+   */
+  it('주민등록번호가 암호화 형식이 아니면 malformed로 온다 — 키 문제와 갈린다', async () => {
+    const { project } = await seedProject({}, { residentNumberEnc: 'v1:deadbeef:deadbeef:deadbeef' });
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'resident_number_unreadable', cryptoCode: 'malformed',
+    });
+    error.mockRestore();
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+  });
+
+  /**
+   * 계좌가 안 열리는 것과 아예 없는 것은 다른 코드다 — 운영자가 할 일이 정반대다.
+   * 저장 형식 자체가 아닌 값은 `malformed`로 온다(조각 길이가 형식과 다르다).
+   */
+  it('계좌가 안 열리는 것과 없는 것을 가른다 — 사유 코드를 함께 돌려준다', async () => {
+    const { project } = await seedProject({}, { payoutAccountEnc: 'v1:deadbeef:deadbeef:deadbeef' });
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'payout_account_unreadable', cryptoCode: 'malformed',
+    });
+    error.mockRestore();
+  });
+
+  /**
+   * 봉투가 깨진 `malformed`은 **재등록이 정답인 유일한 갈래**다 — 키를 되찾아도 안 열린다.
+   * 화면 문구가 이 코드로 갈리므로(`payoutAccountUnreadableMessage`) 여기서 코드를 고정한다.
+   */
+  it('암호문은 멀쩡한데 봉투 안이 형식과 다른 경우도 malformed다 — 키 문제와 갈린다', async () => {
+    const { project } = await seedProject({}, { payoutAccountEnc: encryptField('은행명만 적힌 평문') });
+    await seedPledge(project.slug, 1_000_000);
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({
+      ok: false, code: 'payout_account_unreadable', cryptoCode: 'malformed',
+    });
+    error.mockRestore();
   });
 
   it('사업자는 주민등록번호가 없어도 기록된다 — 원천징수를 하지 않으므로 해당이 없다', async () => {
@@ -423,9 +500,9 @@ describe('markFundingPayoutPaid', () => {
 });
 
 /**
- * 정산 기록은 주민등록번호를 **실제로 한 번 복호화한다**(`residentNumberReadable`).
- * 평문을 화면에 내보내지 않을 뿐 고유식별정보 처리라, 관리자 화면의 조회 버튼과 같은
- * 무게로 접속기록에 남아야 한다 — 이 경로가 기록되지 않던 것이 Task 1이 닫은 구멍이다.
+ * 정산 기록은 정산 계좌와(원천징수 대상이면) 주민등록번호를 **실제로 한 번씩 복호화한다**
+ * (`payoutAccountReadable`·`residentNumberReadable`). 평문을 화면에 내보내지 않을 뿐 실제
+ * 처리라, 관리자 화면의 조회 버튼과 같은 무게로 접속기록에 남아야 한다.
  */
 describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
   const accessLogs = () => mockDb.select().from(schema.privacyAccessLogs);
@@ -444,16 +521,18 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     expect(result.ok).toBe(true);
 
     const rows = await accessLogs();
-    expect(rows).toHaveLength(1);
-    expect(rows[0]).toMatchObject({
-      actor: 'admin',
-      action: 'funding_resident_number_decrypt_check',
-      targetId: project.id,
-      result: 'success',
-      ip: '203.0.113.7',
-    });
+    // 계좌 점검 + 주민등록번호 점검 둘 다 남는다.
+    expect(rows.map((r) => r.action).sort()).toEqual([
+      'funding_payout_account_decrypt_check',
+      'funding_resident_number_decrypt_check',
+    ]);
+    for (const row of rows) {
+      expect(row).toMatchObject({ actor: 'admin', targetId: project.id, result: 'success', ip: '203.0.113.7' });
+    }
     expect(JSON.stringify(rows)).not.toContain('9901011234567');
     expect(JSON.stringify(rows)).not.toContain(RESIDENT_NUMBER_ENC);
+    expect(JSON.stringify(rows)).not.toContain('123-45-6789');
+    expect(JSON.stringify(rows)).not.toContain(PAYOUT_ACCOUNT.payoutAccountEnc);
   });
 
   it('복호화에 실패하면 실패로 남고 정산은 거부된다', async () => {
@@ -462,13 +541,16 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
 
     const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
-    expect(result).toEqual({ ok: false, code: 'resident_number_unreadable' });
+    expect(result).toEqual({ ok: false, code: 'resident_number_unreadable', cryptoCode: 'malformed' });
 
     const rows = await accessLogs();
-    expect(rows).toHaveLength(1);
-    expect(rows[0].result).toBe('decrypt_failed');
+    // 계좌는 열렸고(success) 주민등록번호에서 막혔다(decrypt_failed).
+    expect(rows.map((r) => [r.action, r.result])).toEqual([
+      ['funding_payout_account_decrypt_check', 'success'],
+      ['funding_resident_number_decrypt_check', 'decrypt_failed'],
+    ]);
     // 요청 밖에서 부른 경로라 IP가 없다 — 지어내지 않는다.
-    expect(rows[0].ip).toBeNull();
+    expect(rows[1].ip).toBeNull();
     error.mockRestore();
   });
 
@@ -501,7 +583,8 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     const rows = await accessLogs();
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({
-      action: 'funding_resident_number_decrypt_check',
+      // 계좌 점검이 먼저라 여기서 먼저 터진다 — 두 점검이 같은 `{ enc }` 모양으로 조회한다.
+      action: 'funding_payout_account_decrypt_check',
       targetId: project.id,
       result: 'error',
     });
@@ -509,13 +592,16 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });
 
-  /** 사업자(`invoice`)는 주민등록번호를 열지 않는다 — 열지 않은 것을 기록하면 거짓이다. */
-  it('원천징수 대상이 아니면 복호화도 기록도 없다', async () => {
+  /**
+   * 사업자(`invoice`)는 주민등록번호를 열지 않는다 — 열지 않은 것을 기록하면 거짓이다.
+   * 계좌는 세금 구분과 무관하게 열어 보므로 그쪽 기록은 남는다.
+   */
+  it('원천징수 대상이 아니면 주민등록번호 복호화도 그 기록도 없다', async () => {
     const { project } = await seedProject({}, { taxType: 'invoice' });
     await seedPledge(project.slug, 1_000_000);
 
     const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     expect(result.ok).toBe(true);
-    expect(await accessLogs()).toHaveLength(0);
+    expect((await accessLogs()).map((r) => r.action)).toEqual(['funding_payout_account_decrypt_check']);
   });
 });

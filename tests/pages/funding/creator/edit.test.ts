@@ -60,9 +60,8 @@ const PROJECT = {
     // 아래 다섯은 EditorCreatorProfile에 없어야 하는 필드다.
     email: 'creator@example.com',
     taxType: 'individual',
-    payoutBankName: '국민은행',
-    payoutAccount: '123-456-789012',
-    payoutHolder: '정산예금주',
+    payoutAccountEnc: 'v2:00000000:aaaa:bbbb:cccc',
+    payoutAccountLast4: '9012',
   },
   rewards: [],
 } as unknown as CreatorProjectDetail;

@@ -13,6 +13,7 @@ import {
   type RewardInput, type StorySection,
 } from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
+import { encryptPayoutAccount, payoutAccountLast4 } from './payoutAccountCrypto';
 import { toKstDateString } from './creatorDateInput';
 
 export type WriteResult =
@@ -306,12 +307,14 @@ export const saveCreatorSection = async (creatorId: string, value: CreatorSectio
 /**
  * 정산 정보 구획이 화면에 돌려받는 **전부** — 등록 여부, 계좌번호 뒤 4자리, 세금 유형.
  *
- * 은행명·예금주·계좌번호 전체는 여기 없고, 앞으로도 넣으면 안 된다. 이 값은 편집 화면의
+ * 은행명·예금주·계좌번호 전체는 여기 없고, 앞으로도 넣으면 안 된다(암호문도 마찬가지다 —
+ * 담는 순간 키가 유일한 방어가 된다). 이 값은 편집 화면의
  * `getServerSideProps` props로 나가고, Pages Router는 props를 `__NEXT_DATA__` JSON으로
  * 페이지 HTML에 그대로 싣는다 — 담는 순간 계좌번호가 페이지 소스에 평문으로 박힌다.
  * **개설자 본인 화면이라는 것은 예외 사유가 아니다**(어깨너머·브라우저 캐시·화면 공유).
- * 같은 이유로 `lib/funding/dbProjects.ts`와 `lib/funding/adminProjects.ts`도 이 네 컬럼을
- * 일부러 빼고 있고, 각자의 integration 테스트가 그 사실을 고정한다.
+ * 같은 이유로 `lib/funding/dbProjects.ts`와 `lib/funding/adminProjects.ts`도 정산 컬럼
+ * (`tax_type`·`payout_account_enc`·`payout_account_last4`)을 일부러 빼고 있고, 각자의
+ * integration 테스트가 그 사실을 고정한다.
  *
  * 그래서 개설자는 계좌를 "고치는" 것이 아니라 **다시 입력해 덮어쓴다.** 불편을 이유로
  * 값을 실어 보내고 싶어지면 이 주석이 그 이유를 말한다.
@@ -363,12 +366,6 @@ export const hasWithheldPayout = async (creatorId: string): Promise<boolean> => 
   return Boolean(row);
 };
 
-/** 계좌번호에서 숫자만 남겨 뒤 4자리. 하이픈 위치가 은행마다 달라 자릿수부터 맞춘다. */
-const accountLast4 = (account: string): string | null => {
-  const digits = account.replace(/[^0-9]/g, '');
-  return digits.length >= 4 ? digits.slice(-4) : null;
-};
-
 /**
  * 편집 화면이 정산 구획을 그리는 데 필요한 것만 읽는다.
  *
@@ -379,9 +376,8 @@ const accountLast4 = (account: string): string | null => {
 export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayoutSummary> => {
   const [row] = await getDb().select({
     taxType: fundingCreators.taxType,
-    payoutBankName: fundingCreators.payoutBankName,
-    payoutAccount: fundingCreators.payoutAccount,
-    payoutHolder: fundingCreators.payoutHolder,
+    payoutAccountEnc: fundingCreators.payoutAccountEnc,
+    payoutAccountLast4: fundingCreators.payoutAccountLast4,
     residentNumberEnc: fundingCreators.residentNumberEnc,
   }).from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
   if (!row) {
@@ -391,13 +387,16 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     };
   }
 
-  const account = row.payoutAccount?.trim() ?? '';
-  // `recordFundingPayout`이 정산을 거부하는 조건(`hasPayoutAccount`, lib/funding/payout.ts)과
-  // 같은 판정이어야 한다 — 갈리면 화면은 "등록됨"인데 정산은 no_payout_account로 막힌다.
-  const registered = Boolean(row.payoutBankName?.trim() && account && row.payoutHolder?.trim());
+  /**
+   * **복호화하지 않는다.** 이 함수가 돌려주는 것은 "등록됐는가"와 "뒤 4자리"뿐이고 둘 다
+   * 평문 컬럼으로 답할 수 있다 — 그래서 키가 없거나 회전 중이어도 개설자 화면이 그대로 뜬다.
+   * `recordFundingPayout`이 정산을 거부하는 조건(`hasPayoutAccount`, lib/funding/payout.ts)과
+   * 같은 판정이어야 한다 — 갈리면 화면은 "등록됨"인데 정산은 no_payout_account로 막힌다.
+   */
+  const registered = Boolean(row.payoutAccountEnc?.trim());
   return {
     registered,
-    accountLast4: registered ? accountLast4(account) : null,
+    accountLast4: registered ? row.payoutAccountLast4?.trim() || null : null,
     taxType: row.taxType ?? null,
     // 값도 암호문도 아니고 "있다/없다"뿐이다.
     residentNumberRegistered: Boolean(row.residentNumberEnc),
@@ -427,6 +426,40 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
 
   if (!(await hasApprovedProject(creatorId))) {
     return deny('not_editable', '프로젝트가 승인된 뒤에 정산 정보를 넣을 수 있습니다.');
+  }
+
+  /**
+   * 계좌 한 벌(은행명·계좌번호·예금주)은 **암호화해서만** 넣는다(`payoutAccountCrypto.ts`).
+   * 키가 없으면 저장 전체를 거부한다 — 아래 주민등록번호와 같은 규칙이다.
+   *
+   * "계좌는 정산의 전제이니 평문으로라도 받아 두자"는 판단을 하지 않는다. 평문으로 받아 둔
+   * 계좌는 이 변경이 없애려는 상태 그 자체이고, 한 번 들어가면 누가 언제 암호문으로 옮겨
+   * 담을지가 사람의 기억에 달린다. 거부하면 개설자는 다시 시도해야 하지만, 그 사이에
+   * 키가 없다는 사실은 매일 도는 운영 점검(`checkFieldCryptoKey`)이 이미 high로 알린다.
+   *
+   * 주민등록번호와 다른 점 하나: 그쪽은 **값이 들어왔을 때만** 암호화 경로를 타지만(빈 칸이면
+   * 기존 값을 유지한다) 계좌는 매번 덮어쓰므로 **정산 구획 저장 전부**가 키를 요구한다.
+   * 키 없이도 되던 "계좌만 고치는 저장"이 이제 안 된다 — `checkFieldCryptoKey`의 안내 문구가
+   * 그 사실을 함께 적는다.
+   */
+  let payoutAccountEnc: string;
+  try {
+    payoutAccountEnc = encryptPayoutAccount({
+      bankName: value.bankName,
+      account: value.account,
+      holder: value.holder,
+    });
+  } catch (error) {
+    if (error instanceof FieldCryptoError) {
+      // 계좌번호는 애초에 메시지에 들어 있지 않다. 그래도 코드만 남긴다(주민등록번호 쪽과 같은 규약).
+      console.error('[funding] payout account encryption failed', { code: error.code });
+      return deny(
+        'encryption_unavailable',
+        '서버의 암호화 설정 문제로 정산 정보를 저장할 수 없습니다. 이번 저장은 아무것도 반영되지 '
+          + '않았습니다. 개설자님이 고치실 수 있는 문제가 아니니 스튜디오 놀에 알려 주세요.',
+      );
+    }
+    throw error;
   }
 
   /**
@@ -480,9 +513,9 @@ export const savePayoutSection = async (creatorId: string, value: PayoutSection)
 
   await getDb().update(fundingCreators).set({
     taxType: value.taxType,
-    payoutBankName: value.bankName,
-    payoutAccount: value.account,
-    payoutHolder: value.holder,
+    payoutAccountEnc,
+    // 평문으로 남는 것은 이 4자리뿐이다 — 근거는 db/schema.ts의 컬럼 주석.
+    payoutAccountLast4: payoutAccountLast4(value.account),
     // undefined면 drizzle이 SET 목록에서 빼므로 기존 값이 그대로 남는다(위 2번).
     ...(residentNumberEnc === undefined ? {} : { residentNumberEnc }),
     updatedAt: new Date(),

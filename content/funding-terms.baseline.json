@@ -1,7 +1,7 @@
 {
  "note": "후원자가 동의하는 문서 묶음(펀딩 약관 + ko 개인정보 처리방침 + 공유 상수)의 내용 해시. 내용이 바뀌면 FUNDING_TERMS_VERSION을 먼저 올린 뒤 UPDATE_FUNDING_TERMS_BASELINE=1 로 갱신할 것.",
- "version": "funding-terms-2026-09-24-r2",
- "hash": "95a44afec7336b5427dc25f4d8bd327caae074835e40a894cdff090a3c7ddec6",
+ "version": "funding-terms-2026-09-24-r4",
+ "hash": "e8e83e5f0b34ef5a7b4ef28054ae7acb0828c43c53235fb4e6f504895eed10ef",
  "covers": [
   "pages/[locale]/funding/terms.tsx — FUNDING_TERMS_SECTIONS",
   "pages/[locale]/privacy-policy.tsx — POLICY_COPY_BY_LOCALE.ko",

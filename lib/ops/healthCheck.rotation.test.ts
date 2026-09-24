@@ -98,6 +98,23 @@ it('옛 키로 잠긴 행을 센다 — 개수가 맞는다', async () => {
   expect(issue.detail).toContain('funding_creators.resident_number_enc: 2건');
 });
 
+/**
+ * 회전 대기 집계는 `ENCRYPTED_FIELD_TARGETS`를 그대로 돈다 — 새 암호화 컬럼을 목록에
+ * 더하면 자동으로 여기 잡혀야 한다. 정산 계좌가 그 경로를 실제로 지나는지 본다.
+ */
+it('정산 계좌 암호문도 대상이다 — 컬럼 이름이 내역에 뜬다', async () => {
+  seq += 1;
+  await mockDb.insert(schema.fundingCreators).values({
+    email: `rot-pay${seq}@example.com`,
+    name: '개설자',
+    payoutAccountEnc: encryptFieldWithKey(SECRET, PREVIOUS),
+  });
+
+  const issue = (await checkFieldKeyRotationPending())!;
+  expect(issue.title).toContain('1건');
+  expect(issue.detail).toContain('funding_creators.payout_account_enc: 1건');
+});
+
 it('판본 v1 행도 센다 — 남아 있으면 안 되는 값이다', async () => {
   await seedCreator(makeV1(CURRENT));
   const issue = (await checkFieldKeyRotationPending())!;

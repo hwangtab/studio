@@ -425,9 +425,8 @@ describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 
   it('loadProjectForAdmin의 정산·내부 메모 필드가 저장 응답에 새지 않는다', async () => {
     await mockDb.update(schema.fundingCreators).set({
       taxType: 'withholding',
-      payoutBankName: '국민은행',
-      payoutAccount: '123-456-789012',
-      payoutHolder: '개설자',
+      payoutAccountEnc: 'v2:00000000:aaaa:bbbb:cccc',
+      payoutAccountLast4: '9012',
     }).where(eq(schema.fundingCreators.id, CREATOR_A));
     const project = await seedLiveApprovedProject();
     await mockDb.update(schema.fundingProjects).set({ internalNote: '운영자 전용 메모' })
