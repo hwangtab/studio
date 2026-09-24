@@ -800,9 +800,14 @@ describe('정산 정보 저장 — 승인 뒤에만, 계정 단위로', () => {
 
     // 평문으로 남는 것은 뒤 4자리뿐이다.
     expect(row.payoutAccountLast4).toBe('9012');
-    expect(row.payoutBankName).toBeNull();
-    expect(row.payoutAccount).toBeNull();
-    expect(row.payoutHolder).toBeNull();
+    /**
+     * 옛 평문 컬럼 셋은 비어 있다 — 새 저장 경로가 그 컬럼을 채우지 않는다는 **행동 단위**
+     * 확인이다. `payoutPlaintextColumns.test.ts`의 grep 가드가 "이름을 안 쓴다"를 보는 것과
+     * 겹치지만, 그 가드는 `set({ [name]: v })` 같은 동적 쓰기를 볼 수 없다. 여기서 이름을
+     * 읽어야 하므로 그 줄에 예외 표시를 붙인다(파일을 통째로 예외로 두면 이 파일에서
+     * 평문 컬럼에 **쓰는** 코드까지 가드를 빠져나간다).
+     */
+    expect([row.payoutBankName, row.payoutAccount, row.payoutHolder]).toEqual([null, null, null]); // plaintext-column-guard: 읽기 전용 단언
   });
 
   it('같은 계좌를 두 번 저장해도 저장된 문자열이 다르다 — IV가 매번 새로 나온다', async () => {
