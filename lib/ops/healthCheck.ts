@@ -350,7 +350,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 끝난 시각은 `cancelled_at`, 없으면 `ends_at`, 그것도 없으면 `updated_at`이다. 셋째 폴백이
    * 필요한 이유: `closeDormantSubscriptions`는 앞의 둘을 **일부러 채우지 않는다**. 예전에는
    * `coalesce(cancelled_at, ends_at)`가 NULL이 되어 비교식 전체가 NULL이 되고, 방치로 종료한
-   * 구독은 이 검사에서 **영구히** 빠졌다. "그 구독의 결제는 1년 넘게 전의 것"이라는 정당화는
+   * 구독은 이 검사에서 **영구히** 빠졌다. "그 구독의 결제는 3년 넘게 전의 것"이라는 정당화는
    * 비교하는 값과 맞지 않았다 — 왼쪽은 `paid_at`이고, 뒤늦은 승인에서 그 값은 **지금**이다.
    * 실제 경로: `paused` 구독이 NETWORK_ERROR로 `pending` 회차를 남긴 채 방치 → `ended`로 전이
    * → 뒤늦은 토스 DONE 도착 → `reconcileSubscriptionPaymentFromToss`가 `paid_at = now`로 쓴다.
@@ -395,7 +395,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   /**
    * 운영자가 세워 둔 구독이 곧 방치로 자동 종료된다 — **되돌릴 수 없는 유일한 전이**다.
    *
-   * `closeDormantSubscriptions`(`lib/privacy/orderRetention.ts`)는 1년 넘게 아무 활동이 없는
+   * `closeDormantSubscriptions`(`lib/privacy/orderRetention.ts`)는 3년 넘게 아무 활동이 없는
    * `paused`를 `ended`로 넘긴다. 결제 실패로 세워진 구독에는 맞는 처리지만, 운영자가 청구만
    * 멈춰 둔 구독은 카드가 살아 있는 정상 구독이다. 한 번 `ended`가 되면 `resumeSubscription`은
    * `paused`만 받고 관리자 '결제' 버튼도 `ended`를 제외해 **되살릴 길이 없다.**

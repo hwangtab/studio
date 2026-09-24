@@ -6,7 +6,7 @@
  * - 주문 고객 이름·연락처: 전자상거래법 5년(생성일·최종 갱신일 둘 다 기준)
  * - 결제 실패 사유 원문: 실패 시각부터 1년(법정 보존이 아니라 운영 판단)
  * - 회차 결제 실패 사유 원문: 시도 시각부터 1년(같은 값의 같은 성질이라 같은 기준)
- * - 방치된 구독: 마지막 활동 1년 뒤 `ended`로 전이(결제 이력이 없으면 그 자리에서 고객 정보 파기)
+ * - 방치된 구독: 마지막 활동 3년 뒤 `ended`로 전이(결제 이력이 없으면 그 자리에서 고객 정보 파기)
  * - 구독 고객 이름·연락처: **종료(`ended`)** 후 5년
  * - 후원자 표시 이름: 종료 즉시(공개 명단에서 빠지는 순간 목적이 끝난다)
  * - 구독 해지 사유: 해지 시각부터 3년(소비자 불만·분쟁 처리 기록)
@@ -39,7 +39,7 @@ jest.mock('../../../lib/privacy/orderRetention', () => ({
   DISPUTE_RETENTION_YEARS: 3,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS: 1,
   AVAILABILITY_MEMO_RETENTION_YEARS: 1,
-  SUBSCRIPTION_DORMANCY_YEARS: 1,
+  SUBSCRIPTION_DORMANCY_YEARS: 3,
 }));
 jest.mock('../../../lib/email/resend', () => ({ sendEmail: jest.fn() }));
 
