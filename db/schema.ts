@@ -760,10 +760,19 @@ export const subscriptionStatusEnum = [
   'pending_card', // 생성됨, 카드 등록 전 (첫 결제까지 성공해야 active)
   'active',
   'past_due', // 회차 결제 실패, 재시도 대기
-  'paused', // 재시도 한도 소진 — 카드 재등록 전까지 청구하지 않는다
+  'paused', // 청구 정지. 사유는 pausedReason이 가른다(재시도 한도 소진 / 운영자 정지)
   'cancelled', // 해지 예약. endsAt까지는 이용 가능
   'ended',
 ] as const;
+/**
+ * `paused`가 **왜** paused인가.
+ *
+ * 하나의 `paused`에 성질이 정반대인 둘이 들어 있었다. `payment_failed`는 카드가 계속
+ * 거절돼 시스템이 세운 것이고(`chargeCycle`의 재시도 한도 소진 분기), `operator`는 카드가
+ * 멀쩡한 정상 구독의 청구만 운영자가 멈춰 둔 것이다(`pauseSubscription`). 값이 같으니
+ * 방치 판정(`closeDormantSubscriptions`)도 관리자 화면도 둘을 구분하지 못했다.
+ */
+export const subscriptionPausedReasonEnum = ['payment_failed', 'operator'] as const;
 export const subscriptionPaymentStatusEnum = ['pending', 'paid', 'failed'] as const;
 /**
  * 카드 등록 링크의 용도.
@@ -794,6 +803,20 @@ export const subscriptions = sqliteTable('subscriptions', {
   /** 1~31. 연습실은 계약서 paymentDay. 그 달에 없는 날이면 말일에 청구(계약 제2조 ①). */
   billingDay: integer('billing_day').notNull(),
   status: text('status', { enum: subscriptionStatusEnum }).notNull().default('pending_card'),
+  /**
+   * `status = 'paused'`일 때 그 정지가 어디서 왔는지. 다른 상태에서는 NULL이다.
+   *
+   * **NULL은 "사유를 모른다"이지 "정지가 아니다"가 아니다.** 이 컬럼이 생기기 전에 정지된
+   * 행에는 값이 없고, 그 행이 어느 쪽이었는지는 되살릴 방법이 없다(전이 이력을 남기는 표가
+   * 없다). 읽는 쪽은 NULL을 `operator`와 **같은 쪽으로 다뤄야 한다** — 틀렸을 때의 대가가
+   * 한쪽으로만 크기 때문이다. 운영자 정지를 결제 실패로 착각하면 살아 있는 구독이 경고 없이
+   * `ended`가 되어 되돌릴 길이 없고(`resumeSubscription`은 `paused`만 받는다), 반대로
+   * 착각하면 이미 죽은 구독에 대한 경보가 한 줄 더 뜰 뿐이다.
+   *
+   * 채우는 곳은 `lib/billing/service.ts`의 두 자리뿐이고(`chargeCycle`의 재시도 한도 소진,
+   * `pauseSubscription`), `active`로 돌아가는 전이가 비운다.
+   */
+  pausedReason: text('paused_reason', { enum: subscriptionPausedReasonEnum }),
   /**
    * 현재 유효한 카드. billing_keys가 subscriptions를 참조하므로 여기서 FK를 걸면
    * 순환 참조가 된다 — 값은 billing_keys.id이고 무결성은 서비스 계층이 지킨다.
