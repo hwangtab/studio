@@ -5,7 +5,8 @@
  * 길이었다. 나가는 길을 페이지가 아니라 셸이 책임지게 옮긴 것이 이번 변경이고, 그 보장이
  * 조용히 사라지지 않도록 여기서 고정한다.
  */
-import { render, screen, within } from '@testing-library/react';
+import React from 'react';
+import { act, render, screen, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 const replace = jest.fn();
@@ -30,9 +31,21 @@ beforeEach(() => {
 
 const nav = () => screen.getByRole('navigation', { name: '관리자 구역' });
 
-it('어느 화면에서든 모든 구역과 로그아웃에 닿는다', () => {
+/**
+ * 셸은 마운트 직후 현재 관리자를 묻고 그 응답으로 setState를 한다. 그냥 render하면 그
+ * 갱신이 act 밖에서 일어나 경고가 뜨므로, 렌더와 그 뒤의 마이크로태스크를 함께 감싼다.
+ */
+const renderShell = async (ui: React.ReactElement) => {
+  let result!: ReturnType<typeof render>;
+  await act(async () => {
+    result = render(ui);
+  });
+  return result;
+};
+
+it('어느 화면에서든 모든 구역과 로그아웃에 닿는다', async () => {
   pathname = '/admin/contracts/[id]/edit';
-  render(<AdminShell title="계약 수정">본문</AdminShell>);
+  await renderShell(<AdminShell title="계약 수정">본문</AdminShell>);
 
   for (const item of ADMIN_NAV) {
     expect(within(nav()).getByRole('link', { name: item.label })).toHaveAttribute('href', item.href);
@@ -40,17 +53,17 @@ it('어느 화면에서든 모든 구역과 로그아웃에 닿는다', () => {
   expect(screen.getByRole('button', { name: '로그아웃' })).toBeInTheDocument();
 });
 
-it('지금 있는 구역만 현재 위치로 표시한다 — 상세 화면에서도 그 구역이 켜진다', () => {
+it('지금 있는 구역만 현재 위치로 표시한다 — 상세 화면에서도 그 구역이 켜진다', async () => {
   pathname = '/admin/bookings/[id]';
-  render(<AdminShell title="예약 상세">본문</AdminShell>);
+  await renderShell(<AdminShell title="예약 상세">본문</AdminShell>);
 
   expect(within(nav()).getByRole('link', { name: '예약·믹싱' })).toHaveAttribute('aria-current', 'page');
   // '/admin'은 모든 관리자 경로의 접두사라, 잘못 맞히면 상세에서도 대시보드가 켜진다.
   expect(within(nav()).getByRole('link', { name: '대시보드' })).not.toHaveAttribute('aria-current');
 });
 
-it('되돌아가는 링크는 상단 바와 별개로, 준 곳에만 나온다', () => {
-  const { rerender } = render(<AdminShell title="구독 관리">본문</AdminShell>);
+it('되돌아가는 링크는 상단 바와 별개로, 준 곳에만 나온다', async () => {
+  const { rerender } = await renderShell(<AdminShell title="구독 관리">본문</AdminShell>);
   expect(screen.queryByRole('link', { name: /구독 목록/ })).not.toBeInTheDocument();
 
   rerender(
@@ -61,8 +74,8 @@ it('되돌아가는 링크는 상단 바와 별개로, 준 곳에만 나온다',
   expect(screen.getByRole('link', { name: /구독 목록/ })).toHaveAttribute('href', '/admin/subscriptions');
 });
 
-it('제목·설명·페이지 고유 동작·본문을 그대로 싣는다', () => {
-  render(
+it('제목·설명·페이지 고유 동작·본문을 그대로 싣는다', async () => {
+  await renderShell(
     <AdminShell title="계약 관리" description="계약을 작성하고 발송합니다." actions={<button type="button">새 계약 작성</button>}>
       <p>본문 내용</p>
     </AdminShell>,
@@ -75,7 +88,7 @@ it('제목·설명·페이지 고유 동작·본문을 그대로 싣는다', () 
 });
 
 it('로그아웃하면 세션을 끊고 로그인 화면으로 보낸다', async () => {
-  render(<AdminShell title="대시보드">본문</AdminShell>);
+  await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
 
   screen.getByRole('button', { name: '로그아웃' }).click();
   await Promise.resolve();
@@ -115,14 +128,14 @@ describe('activeAdminNavHref', () => {
  * GSSP prop이 아니라 GET /api/admin/auth 한 번으로 가져온다.
  */
 it('지금 로그인한 사람의 이름을 띄운다', async () => {
-  render(<AdminShell title="대시보드">본문</AdminShell>);
-  expect(await screen.findByTestId('admin-current-user')).toHaveTextContent('황경하');
+  await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
+  expect(screen.getByTestId('admin-current-user')).toHaveTextContent('황경하');
   expect(fetchMock).toHaveBeenCalledWith('/api/admin/auth', { credentials: 'same-origin' });
 });
 
 it('이름을 얻지 못해도 화면은 그대로다', async () => {
   fetchMock.mockResolvedValue({ ok: false, json: async () => ({ ok: false }) });
-  render(<AdminShell title="대시보드">본문</AdminShell>);
-  expect(await screen.findByRole('button', { name: '로그아웃' })).toBeInTheDocument();
+  await renderShell(<AdminShell title="대시보드">본문</AdminShell>);
+  expect(screen.getByRole('button', { name: '로그아웃' })).toBeInTheDocument();
   expect(screen.queryByTestId('admin-current-user')).not.toBeInTheDocument();
 });
