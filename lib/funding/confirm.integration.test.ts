@@ -671,6 +671,22 @@ describe('syncFundingCancelledFromToss', () => {
     expect(refunds).toHaveLength(1);
   });
 
+  /**
+   * 멱등 키는 `paymentKey:status:취소합계`라 같은 이벤트의 재전송만 막는다.
+   * PARTIAL_CANCELED(2,000)와 CANCELED(5,000)는 서로 다른 키라 동시에 도달할 수 있고,
+   * 예전에는 둘 다 기록 합계를 0으로 읽어 2,000 + 5,000을 각각 남겼다 — 실제 취소 5,000원에
+   * 원장 7,000원. 돈이 두 번 나가지는 않지만 remainingRefundable과 정산이 틀어진다.
+   */
+  it('서로 다른 취소 이벤트가 동시에 와도 원장 합계가 취소 합계를 넘지 않는다', async () => {
+    const { orderNo, paymentId } = await paidOrder();
+    await Promise.all([
+      syncFundingCancelledFromToss(cancelPayload(orderNo, 2000, 'ck_1')),
+      syncFundingCancelledFromToss(cancelPayload(orderNo, 5000, 'ck_2')),
+    ]);
+    const refunds = await mockDb.query.refunds.findMany({ where: (t, { eq: e }) => e(t.paymentId, paymentId) });
+    expect(refunds.reduce((sum, r) => sum + r.amount, 0)).toBe(5000);
+  });
+
   it('재조회 응답에 cancels가 없으면 아무것도 기록하지 않는다', async () => {
     const { orderNo, paymentId } = await paidOrder();
     await syncFundingCancelledFromToss({ paymentKey: 'pk_1', orderId: orderNo, status: 'CANCELED', totalAmount: 5000 });
