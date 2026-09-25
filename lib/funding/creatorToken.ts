@@ -21,6 +21,27 @@ export const normalizeCreatorEmail = (email: string): string | null => {
 const hash = (raw: string): string => createHash('sha256').update(raw).digest('hex');
 
 /**
+ * 이 주소로 개설자 행이 이미 있는가 — 로그인 API가 **어느 캡을 소비할지** 가르는 판정.
+ *
+ * 전역 일일 캡(100통)은 기존 개설자만 쓴다. 미가입 주소의 가입 메일에 같은 예산을 태우면,
+ * 매 요청 다른 주소를 보내는 것만으로 그날 모든 개설자의 로그인을 막을 수 있다 —
+ * 매직링크가 유일한 인증이라 우회로가 없다.
+ *
+ * 조회에 실패하면 **미가입으로 본다.** 기존 개설자의 로그인을 막는 쪽보다 더 좁은 캡으로
+ * 떨어지는 쪽이 낫고, 응답은 어느 쪽이든 같다.
+ */
+export const isRegisteredCreatorEmail = async (normalizedEmail: string): Promise<boolean> => {
+  try {
+    const [row] = await getDb().select({ id: fundingCreators.id }).from(fundingCreators)
+      .where(eq(fundingCreators.email, normalizedEmail)).limit(1);
+    return Boolean(row);
+  } catch (error) {
+    console.error('[funding] 개설자 존재 확인 실패', error);
+    return false;
+  }
+};
+
+/**
  * 로그인 토큰 발급. 처음 보는 이메일이면 개설자 행을 만든다 — 가입과 로그인을 나누지 않는다.
  * (아무나 행을 만들 수 있지만 행 하나가 전부이고, 요청 제한은 API 계층
  * (pages/api/funding/creator/login.ts, 다음 태스크)에서 건다.)
