@@ -311,8 +311,14 @@ export const bookings = sqliteTable('bookings', {
   orderId: text('order_id').notNull().references(() => orders.id),
   /** lib/booking/products.ts SESSION_PRODUCTS의 id. */
   productId: text('product_id').notNull(),
-  /** 서비스 그룹 (recording | voice-acting | wedding-song | cover-video). */
+  /** 서비스 그룹 (recording | voice-acting | wedding-song | cover-video | practice-room). */
   serviceType: text('service_type').notNull(),
+  /**
+   * 점유 자원. NULL = 녹음실(스튜디오 하나), 'R02' 같은 값 = 연습실 개별 방.
+   * 겹침 검사는 **같은 room_number끼리만** 한다(`IS` 비교라 NULL도 짝이 맞는다) —
+   * 연습실 예약이 녹음 예약을 막거나 그 반대가 되면 안 된다. lib/booking/service.ts.
+   */
+  roomNumber: text('room_number'),
   startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
   endAt: integer('end_at', { mode: 'timestamp' }).notNull(),
   durationHours: integer('duration_hours').notNull(),
@@ -354,6 +360,12 @@ export const workOrders = sqliteTable('work_orders', {
 
 export const availabilityBlocks = sqliteTable('availability_blocks', {
   id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  /**
+   * 막는 자원. NULL = 녹음실만, 'R02' = 그 연습실 방만. **NULL 블록은 방을 막지 않는다** —
+   * 녹음실 휴무가 24시간 무인 연습실까지 닫을 이유가 없다. 방을 막으려면 방 번호를 적는다
+   * (월세 입주 예정 등).
+   */
+  roomNumber: text('room_number'),
   startAt: integer('start_at', { mode: 'timestamp' }).notNull(),
   endAt: integer('end_at', { mode: 'timestamp' }).notNull(),
   memo: text('memo'),

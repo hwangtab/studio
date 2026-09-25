@@ -13,7 +13,7 @@ import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { getMixingProduct } from '../../../../lib/booking/mixing-products';
 import { getProduct } from '../../../../lib/booking/products';
-import { computeRefund, REFUND_POLICY_LINES } from '../../../../lib/booking/refund-policy';
+import { computeRefund, refundPolicyFor, REFUND_POLICY_LINES } from '../../../../lib/booking/refund-policy';
 import { findOrderByOrderNo } from '../../../../lib/booking/service';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
@@ -43,6 +43,8 @@ interface SessionManageProps {
   /** SSR 시점 기준 "지금 취소 가능"(confirmed && 미래). 취소 성공 이후 화면 전환은 status로만 판단한다. */
   canCancel: boolean;
   refundQuote: RefundQuote | null;
+  /** 상품별 환불 규정 — 위저드·취소 계산과 같은 refundPolicyFor()에서 온다. */
+  refundLines: readonly string[];
 }
 
 interface MixingManageProps {
@@ -167,11 +169,14 @@ function CancelSection({
   cancelling,
   cancelError,
   onCancel,
+  // 상품별 규정. 세션 뷰가 refundPolicyFor()로 넘긴다. 기본값은 예전 동작(세션 규정) 보존용.
+  refundLines = REFUND_POLICY_LINES,
 }: {
   refundQuote: RefundQuote;
   cancelling: boolean;
   cancelError: string | null;
   onCancel: () => void;
+  refundLines?: readonly string[];
 }) {
   return (
     <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
@@ -185,7 +190,7 @@ function CancelSection({
       <div className="mt-3 rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
         <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">환불 규정</p>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
-          {REFUND_POLICY_LINES.map((line) => (
+          {refundLines.map((line) => (
             <li key={line}>{line}</li>
           ))}
         </ul>
@@ -216,7 +221,7 @@ function CancelSection({
 }
 
 function SessionManageView(props: SessionManageProps) {
-  const { orderNo, token, productName, startAt, durationHours, itemAmount, vatAmount, totalAmount, bookingStatus, canCancel, refundQuote } = props;
+  const { orderNo, token, productName, startAt, durationHours, itemAmount, vatAmount, totalAmount, bookingStatus, canCancel, refundQuote, refundLines } = props;
   const [status, setStatus] = useState<BookingStatus>(bookingStatus);
   const { cancelling, cancelError, refundResult, cancel } = useCancelFlow(orderNo, token, refundQuote);
   const showCancelSection = status === 'confirmed' && canCancel;
@@ -279,6 +284,7 @@ function SessionManageView(props: SessionManageProps) {
           {showCancelSection && refundQuote && (
             <CancelSection
               refundQuote={refundQuote}
+              refundLines={refundLines}
               cancelling={cancelling}
               cancelError={cancelError}
               onCancel={() => cancel(() => setStatus('cancelled'))}
@@ -457,7 +463,8 @@ export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (co
 
   const product = getProduct(booking.productId);
   const canCancel = booking.status === 'confirmed' && booking.startAt.getTime() > now.getTime();
-  const refundQuote = canCancel ? computeRefund(order.totalAmount, booking.startAt, now) : null;
+  const refundPolicy = refundPolicyFor(product);
+  const refundQuote = canCancel ? computeRefund(order.totalAmount, booking.startAt, now, refundPolicy.tiers) : null;
 
   return {
     props: {
@@ -473,6 +480,7 @@ export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (co
       bookingStatus: booking.status,
       canCancel,
       refundQuote,
+      refundLines: [...refundPolicy.lines],
     },
   };
 });

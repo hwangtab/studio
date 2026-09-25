@@ -7,7 +7,7 @@ import { orders, type Booking, type Order, type Payment, type Refund, type WorkO
 import { computeAmounts } from './amounts';
 import { kstDateTime } from './kst';
 import { computeMixingAmounts, getMixingProduct } from './mixing-products';
-import { getProduct } from './products';
+import { getProduct, resourceKindOf } from './products';
 import { generateManageToken, generateOrderNo } from './token';
 import { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS, type CreateBookingPayload, type CreateMixingOrderPayload } from './validation';
 
@@ -22,7 +22,7 @@ export const createBookingOrder = async (
   payload: CreateBookingPayload,
   now: Date,
 ): Promise<
-  | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string }
+  | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string; roomNumber: string | null }
   | { ok: false; code: 'slot_taken' }
 > => {
   const db = getDb();
@@ -78,28 +78,44 @@ export const createBookingOrder = async (
     .returning({ id: orders.id });
 
   // 겹침 검사 + INSERT를 한 문장으로 — 동시 요청은 한쪽만 rowsAffected 1.
+  //
+  // **자원 단위로 겹침을 본다.** `room_number IS ?`는 NULL(녹음실)끼리·같은 방끼리만 짝이
+  // 맞는다 — 연습실 예약이 녹음 예약을 막거나 그 반대가 되면 안 된다. 방 자원 상품은
+  // 후보 방을 순서대로 시도해 **처음 비는 방에 배정**한다(R02 → R05 …). 전부 차면 slot_taken.
+  // 녹음실 상품은 후보가 [null] 하나라 예전 동작 그대로다.
+  const candidates: Array<string | null> =
+    resourceKindOf(product) === 'rooms' ? [...(product.rooms ?? [])] : [null];
   const bookingId = randomUUID().replace(/-/g, '');
-  const result = await db.run(sql`
-    INSERT INTO bookings (id, order_id, product_id, service_type, start_at, end_at, duration_hours, status, customer_note)
-    SELECT ${bookingId}, ${order.id}, ${product.id}, ${product.service},
-           ${toEpoch(startAt)}, ${toEpoch(endAt)}, ${hours}, 'pending', ${payload.customerNote ?? null}
-    WHERE NOT EXISTS (
-      SELECT 1 FROM bookings b
-      WHERE b.start_at < ${toEpoch(endAt)} AND b.end_at > ${toEpoch(startAt)}
-        AND (b.status = 'confirmed'
-             OR (b.status = 'pending' AND b.created_at > unixepoch() - ${PENDING_HOLD_SECONDS}))
-    )
-    AND NOT EXISTS (
-      SELECT 1 FROM availability_blocks ab
-      WHERE ab.start_at < ${toEpoch(endAt)} AND ab.end_at > ${toEpoch(startAt)}
-    )
-  `);
+  let assignedRoom: string | null | undefined;
+  for (const room of candidates) {
+    const result = await db.run(sql`
+      INSERT INTO bookings (id, order_id, product_id, service_type, room_number, start_at, end_at, duration_hours, status, customer_note)
+      SELECT ${bookingId}, ${order.id}, ${product.id}, ${product.service}, ${room},
+             ${toEpoch(startAt)}, ${toEpoch(endAt)}, ${hours}, 'pending', ${payload.customerNote ?? null}
+      WHERE NOT EXISTS (
+        SELECT 1 FROM bookings b
+        WHERE b.room_number IS ${room}
+          AND b.start_at < ${toEpoch(endAt)} AND b.end_at > ${toEpoch(startAt)}
+          AND (b.status = 'confirmed'
+               OR (b.status = 'pending' AND b.created_at > unixepoch() - ${PENDING_HOLD_SECONDS}))
+      )
+      AND NOT EXISTS (
+        SELECT 1 FROM availability_blocks ab
+        WHERE ab.room_number IS ${room}
+          AND ab.start_at < ${toEpoch(endAt)} AND ab.end_at > ${toEpoch(startAt)}
+      )
+    `);
+    if (Number(result.rowsAffected) > 0) { assignedRoom = room; break; }
+  }
 
-  if (Number(result.rowsAffected) === 0) {
+  if (assignedRoom === undefined) {
     await db.run(sql`UPDATE orders SET status = 'failed' WHERE id = ${order.id} AND status = 'pending'`);
     return { ok: false, code: 'slot_taken' };
   }
-  return { ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount, bookingId };
+  return {
+    ok: true, orderNo, itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount,
+    bookingId, roomNumber: assignedRoom,
+  };
 };
 
 /**

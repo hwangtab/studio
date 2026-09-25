@@ -1,12 +1,12 @@
-import { and, eq, gt, lt, or } from 'drizzle-orm';
+import { and, eq, gt, isNull, lt, or } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
 import { availabilityBlocks, bookings } from '../../../db/schema';
 import { fetchBusyRanges, type BusyRange } from '../../../lib/booking/gcal';
 import { daysUntilKst, kstDateTime } from '../../../lib/booking/kst';
-import { getProduct, resolveHours } from '../../../lib/booking/products';
-import { buildDaySlots, CLOSE_HOUR, OPEN_HOUR } from '../../../lib/booking/slots';
+import { getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
+import { buildDaySlots, mergeRoomSlots, type DaySlot } from '../../../lib/booking/slots';
 import { expireStaleOrders, PENDING_HOLD_SECONDS } from '../../../lib/booking/service';
 import { MAX_BOOK_DAYS, MIN_LEAD_HOURS } from '../../../lib/booking/validation';
 
@@ -53,16 +53,59 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (typeof date !== 'string' || !DATE_RE.test(date))
     return res.status(400).json({ ok: false, message: '날짜가 올바르지 않습니다.' });
 
-  const dayStart = kstDateTime(date, OPEN_HOUR);
-  const dayEnd = kstDateTime(date, CLOSE_HOUR);
+  const { openHour, closeHour } = productHours(product);
+  const dayStart = kstDateTime(date, openHour);
+  const dayEnd = kstDateTime(date, closeHour);
   if (Number.isNaN(dayStart.getTime())) return res.status(400).json({ ok: false, message: '날짜가 올바르지 않습니다.' });
 
-  // 슬롯 조회는 날짜 단위 — 당일은 영업시간(12h) < 리드타임(24h)이라 모든 슬롯이
-  // 항상 불가하므로 내일부터만 허용한다(Task 4 validateCreateBookingPayload와 같은 창).
+  // 슬롯 조회는 날짜 단위. **당일도 연다** — 지난 시각은 buildDaySlots가 leadOk로 거른다.
+  // 2026-09-25까지 "당일은 조회 불가"로 막고 있었다(리드타임 24h 전제).
   const daysUntil = daysUntilKst(now, dayStart);
-  if (daysUntil < 1) return res.status(400).json({ ok: false, message: '오늘 이전이거나 당일은 조회할 수 없습니다.' });
+  if (daysUntil < 0) return res.status(400).json({ ok: false, message: '지난 날짜는 조회할 수 없습니다.' });
   if (daysUntil > MAX_BOOK_DAYS)
     return res.status(400).json({ ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` });
+
+  const db = getDb();
+  const pendingCutoff = new Date(now.getTime() - PENDING_HOLD_SECONDS * 1000);
+
+  /** 한 자원(녹음실=null 또는 방 번호)의 DB 바쁨 — `room_number IS ?`로 같은 자원만. */
+  const dbBusyFor = async (room: string | null): Promise<BusyRange[]> => {
+    const roomCond = (col: typeof bookings.roomNumber | typeof availabilityBlocks.roomNumber) =>
+      room === null ? isNull(col) : eq(col, room);
+    const [busyBookings, busyBlocks] = await Promise.all([
+      db
+        .select({ start: bookings.startAt, end: bookings.endAt })
+        .from(bookings)
+        .where(
+          and(
+            roomCond(bookings.roomNumber),
+            lt(bookings.startAt, dayEnd),
+            gt(bookings.endAt, dayStart),
+            or(
+              eq(bookings.status, 'confirmed'),
+              and(eq(bookings.status, 'pending'), gt(bookings.createdAt, pendingCutoff)),
+            ),
+          ),
+        ),
+      db
+        .select({ start: availabilityBlocks.startAt, end: availabilityBlocks.endAt })
+        .from(availabilityBlocks)
+        .where(and(roomCond(availabilityBlocks.roomNumber), lt(availabilityBlocks.startAt, dayEnd), gt(availabilityBlocks.endAt, dayStart))),
+    ]);
+    return [...busyBookings, ...busyBlocks];
+  };
+
+  const slotArgs = { date, durationHours: hours, now, minLeadHours: MIN_LEAD_HOURS, openHour, closeHour };
+
+  // 방 자원: 스튜디오 캘린더는 읽지 않는다(그 캘린더의 바쁨은 녹음실 것이고, 연습실
+  // 예약을 거기 올리지도 않는다 — products.ts ResourceKind 주석). 방마다 슬롯을 계산해
+  // 하나라도 비면 가능으로 합친다. 어느 방이 배정되는지는 결제 시점에 정한다(service.ts).
+  if (resourceKindOf(product) === 'rooms') {
+    const perRoom: DaySlot[][] = await Promise.all(
+      (product.rooms ?? []).map(async (room) => buildDaySlots({ ...slotArgs, busy: await dbBusyFor(room) })),
+    );
+    return res.status(200).json({ ok: true, slots: mergeRoomSlots(perRoom) });
+  }
 
   let calendarBusy: BusyRange[];
   try {
@@ -72,29 +115,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(503).json({ ok: false, code: 'calendar_unavailable' });
   }
 
-  const db = getDb();
-  const pendingCutoff = new Date(now.getTime() - PENDING_HOLD_SECONDS * 1000);
-  const [busyBookings, busyBlocks] = await Promise.all([
-    db
-      .select({ start: bookings.startAt, end: bookings.endAt })
-      .from(bookings)
-      .where(
-        and(
-          lt(bookings.startAt, dayEnd),
-          gt(bookings.endAt, dayStart),
-          or(
-            eq(bookings.status, 'confirmed'),
-            and(eq(bookings.status, 'pending'), gt(bookings.createdAt, pendingCutoff)),
-          ),
-        ),
-      ),
-    db
-      .select({ start: availabilityBlocks.startAt, end: availabilityBlocks.endAt })
-      .from(availabilityBlocks)
-      .where(and(lt(availabilityBlocks.startAt, dayEnd), gt(availabilityBlocks.endAt, dayStart))),
-  ]);
-
-  const busy: BusyRange[] = [...calendarBusy, ...busyBookings, ...busyBlocks];
-  const slots = buildDaySlots({ date, durationHours: hours, busy, now, minLeadHours: MIN_LEAD_HOURS });
+  const busy: BusyRange[] = [...calendarBusy, ...(await dbBusyFor(null))];
+  const slots = buildDaySlots({ ...slotArgs, busy });
   return res.status(200).json({ ok: true, slots });
 }

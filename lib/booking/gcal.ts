@@ -39,9 +39,22 @@ const getAccessToken = async (): Promise<string> => {
   return cachedToken.value;
 };
 
-const calendarId = (): string => {
-  const id = process.env.BOOKING_GCAL_ID;
-  if (!id) throw new Error('BOOKING_GCAL_ID가 설정되지 않았습니다.');
+/**
+ * 어느 캘린더에 쓰는가. 기본은 녹음실(BOOKING_GCAL_ID). 연습실은 **다른 캘린더**여야 한다 —
+ * 같은 캘린더에 올리면 녹음 슬롯 조회(freeBusy)가 연습실 예약을 바쁨으로 읽어 녹음을 막는다.
+ * 연습실 캘린더(PRACTICE_ROOM_GCAL_ID)는 선택이다: 없으면 연습실 예약은 캘린더에 안 올리고
+ * 관리자 화면·메일로만 알린다(confirm.ts).
+ */
+export type BookingCalendar = 'studio' | 'practice-room';
+
+export const calendarIdFor = (which: BookingCalendar): string | null => {
+  if (which === 'practice-room') return process.env.PRACTICE_ROOM_GCAL_ID || null;
+  return process.env.BOOKING_GCAL_ID || null;
+};
+
+const calendarId = (which: BookingCalendar = 'studio'): string => {
+  const id = calendarIdFor(which);
+  if (!id) throw new Error(`${which === 'practice-room' ? 'PRACTICE_ROOM_GCAL_ID' : 'BOOKING_GCAL_ID'}가 설정되지 않았습니다.`);
   return id;
 };
 
@@ -68,9 +81,9 @@ export const fetchBusyRanges = async (timeMin: Date, timeMax: Date): Promise<Bus
 };
 
 export const createBookingEvent = async (input: {
-  summary: string; description: string; start: Date; end: Date;
+  summary: string; description: string; start: Date; end: Date; calendar?: BookingCalendar;
 }): Promise<string> => {
-  const id = calendarId();
+  const id = calendarId(input.calendar ?? 'studio');
   const token = await getAccessToken();
   const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events`, {
     method: 'POST',
@@ -87,8 +100,8 @@ export const createBookingEvent = async (input: {
   return (await res.json()).id as string;
 };
 
-export const deleteBookingEvent = async (eventId: string): Promise<void> => {
-  const id = calendarId();
+export const deleteBookingEvent = async (eventId: string, calendar: BookingCalendar = 'studio'): Promise<void> => {
+  const id = calendarId(calendar);
   const token = await getAccessToken();
   const res = await fetch(
     `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,

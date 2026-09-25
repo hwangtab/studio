@@ -244,3 +244,61 @@ describe('expireStaleOrders — 타입별 만료 창', () => {
     expect(booking?.status).toBe('cancelled');
   });
 });
+
+/**
+ * 방 자원 — 연습실 시간제는 녹음실과 **다른 자원**이다. 같은 시각의 연습실 예약과
+ * 녹음 예약이 서로를 막으면 안 되고(그게 옛 전역 겹침 검사의 버그 형태), 방은
+ * 후보 순서대로 비는 첫 방에 배정된다. 블록도 자원별이다 — NULL 블록은 녹음실만,
+ * 방 번호 블록은 그 방만 막는다.
+ */
+describe('createBookingOrder — 방 자원(연습실 시간제)', () => {
+  const room = (over: Partial<CreateBookingPayload> = {}): CreateBookingPayload =>
+    payloadFor({ productId: 'practice-room-hourly', hours: 1, startHour: 14, ...over });
+  const other = { customerName: '박기타', customerPhone: '010-9999-0000', customerEmail: 'guitar@example.com' };
+
+  beforeEach(async () => { await client.execute('DELETE FROM availability_blocks'); });
+
+  it('첫 예약은 R02에 배정되고, 같은 슬롯의 다른 손님은 방이 하나뿐이라 slot_taken', async () => {
+    const a = await createBookingOrder(room(), NOW);
+    expect(a.ok).toBe(true);
+    if (!a.ok) throw new Error('unreachable');
+    expect(a.roomNumber).toBe('R02');
+    const row = await mockDb.query.bookings.findFirst({ where: eq(bookings.id, a.bookingId) });
+    expect(row?.roomNumber).toBe('R02');
+    expect(row?.serviceType).toBe('practice-room');
+
+    const b = await createBookingOrder(room(other), NOW);
+    expect(b).toEqual({ ok: false, code: 'slot_taken' });
+  });
+
+  it('연습실과 녹음실은 같은 시각에 둘 다 잡힌다 — 서로 다른 자원', async () => {
+    const pr = await createBookingOrder(room(), NOW);
+    const rec = await createBookingOrder(payloadFor({ productId: 'recording-hourly', hours: 2, startHour: 14, ...other }), NOW);
+    expect(pr.ok).toBe(true);
+    expect(rec.ok).toBe(true);
+    if (!rec.ok) throw new Error('unreachable');
+    expect(rec.roomNumber).toBeNull();
+  });
+
+  it('녹음실(NULL) 블록은 연습실을 막지 않고, R02 블록은 녹음실을 막지 않는다', async () => {
+    const at = (h: number) => new Date(Date.UTC(2026, 8, 10, h - 9)); // KST h시
+    await mockDb.insert(schema.availabilityBlocks).values({ startAt: at(13), endAt: at(16), roomNumber: null, memo: '녹음실 휴무' });
+    const pr = await createBookingOrder(room(), NOW);
+    expect(pr.ok).toBe(true); // 24시간 무인 연습실은 녹음실 휴무와 무관
+
+    await client.execute('DELETE FROM bookings'); await client.execute('DELETE FROM orders');
+    await client.execute('DELETE FROM availability_blocks');
+    await mockDb.insert(schema.availabilityBlocks).values({ startAt: at(13), endAt: at(16), roomNumber: 'R02', memo: '입주 예정' });
+    const prBlocked = await createBookingOrder(room(), NOW);
+    expect(prBlocked).toEqual({ ok: false, code: 'slot_taken' });
+    const rec = await createBookingOrder(payloadFor({ productId: 'recording-hourly', hours: 2, startHour: 14, ...other }), NOW);
+    expect(rec.ok).toBe(true); // R02 블록은 녹음실과 무관
+  });
+
+  it('24시간 — 새벽 2시 1시간 예약이 잡힌다', async () => {
+    const r = await createBookingOrder(room({ startHour: 2 }), NOW);
+    expect(r.ok).toBe(true);
+    if (!r.ok) throw new Error('unreachable');
+    expect(r.totalAmount).toBe(4400);
+  });
+});

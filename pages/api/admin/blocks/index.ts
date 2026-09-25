@@ -35,7 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
     }
 
-    const { date, startHour, endHour, memo } = req.body as Record<string, unknown>;
+    const { date, startHour, endHour, memo, roomNumber } = req.body as Record<string, unknown>;
+    // 빈 값·비문자는 녹음실(NULL). 'R02' 같은 방 번호면 그 방만 막는다(db/schema.ts 주석).
+    const roomText = typeof roomNumber === 'string' && /^[A-Z0-9-]{1,8}$/i.test(roomNumber.trim())
+      ? roomNumber.trim().toUpperCase() : null;
 
     if (typeof date !== 'string' || !DATE_RE.test(date)) {
       return res.status(400).json({ ok: false, message: '날짜가 올바르지 않습니다.' });
@@ -60,7 +63,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const [block] = await getDb()
         .insert(availabilityBlocks)
-        .values({ startAt: startAtDate, endAt: endAtDate, memo: memoText || null })
+        .values({ startAt: startAtDate, endAt: endAtDate, memo: memoText || null, roomNumber: roomText })
         .returning();
 
       return res.status(201).json({ ok: true, block: serializeBlockForAdmin(block) });

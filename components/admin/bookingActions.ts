@@ -104,6 +104,8 @@ export interface CreateBlockPayload {
   startHour: number;
   endHour: number;
   memo?: string;
+  /** 비우면 녹음실 블록. 'R02'면 그 연습실 방만 막는다. */
+  roomNumber?: string;
 }
 
 export const createBlock = async (payload: CreateBlockPayload): Promise<BookingActionResult> => {

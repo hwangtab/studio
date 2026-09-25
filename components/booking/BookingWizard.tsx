@@ -10,7 +10,7 @@ import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
 import { kstDateString } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
-import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
+import { refundPolicyFor } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
 import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
@@ -89,9 +89,10 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   // Step 2: 날짜 · 슬롯
   const { minDate, maxDate } = useMemo(() => {
     const now = new Date();
-    const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    // 오늘부터 고를 수 있다. 지난 시각은 슬롯 API가 leadOk로 거른다(MIN_LEAD_HOURS = 0).
+    // 2026-09-25까지 '내일부터'로 묶여 있었다 — 당일 예약이 통째로 막혀 있었다.
     const last = new Date(now.getTime() + MAX_BOOK_DAYS * 24 * 60 * 60 * 1000);
-    return { minDate: kstDateString(tomorrow), maxDate: kstDateString(last) };
+    return { minDate: kstDateString(now), maxDate: kstDateString(last) };
   }, []);
 
   const [date, setDate] = useState('');
@@ -555,7 +556,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
             <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">환불 규정</p>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
-                {REFUND_POLICY_LINES.map((line) => (
+                {refundPolicyFor(selectedProduct).lines.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>

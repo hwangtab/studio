@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "78d985e1-1fce-4a6d-add7-becb8e69b109",
-  "prevId": "e869b0f7-e29d-44fd-ab1e-1fe2bc823d67",
+  "id": "e869b0f7-e29d-44fd-ab1e-1fe2bc823d67",
+  "prevId": "d4ed0da1-3568-454b-96e9-070ac318ff43",
   "tables": {
     "artist_payouts": {
       "name": "artist_payouts",
@@ -139,6 +139,13 @@
           "type": "text",
           "primaryKey": true,
           "notNull": true,
+          "autoincrement": false
+        },
+        "room_number": {
+          "name": "room_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "start_at": {
@@ -310,6 +317,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "room_number": {
+          "name": "room_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "start_at": {
@@ -2705,20 +2719,6 @@
           "notNull": false,
           "autoincrement": false
         },
-        "paused_until": {
-          "name": "paused_until",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "resume_notice_pending_at": {
-          "name": "resume_notice_pending_at",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
         "billing_key_id": {
           "name": "billing_key_id",
           "type": "text",
@@ -2848,6 +2848,13 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(unixepoch())"
+        },
+        "paused_until": {
+          "name": "paused_until",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {
