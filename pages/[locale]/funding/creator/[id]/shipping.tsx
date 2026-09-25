@@ -6,6 +6,8 @@ import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAu
 import { loadCreatorShipping, type CreatorShippingView } from '../../../../../lib/funding/creatorShipping';
 import { loadProjectForCreator } from '../../../../../lib/funding/creatorProjectWrite';
 import { withI18nServerProps } from '../../../../../lib/getStatic';
+import { getClientIp } from '../../../../../lib/contracts/client-ip';
+import { privacyCreatorActor, recordPrivacyAccess } from '../../../../../lib/privacy/accessLog';
 
 interface Props {
   view: CreatorShippingView;
@@ -23,6 +25,9 @@ interface Props {
  *
  * 마감 전에는 집계만, 마감 뒤에는 표까지 보인다 — `state`가 `lib/funding/creatorShipping.ts`
  * 주석의 규칙을 그대로 반영한다(모금 중에는 셀프 취소가 자유로워 주소가 들락날락한다).
+ *
+ * 표가 실제로 실리는 경우에는 CSV 내려받기와 **같은 접속기록**을 남긴다 — 자세한 사정은
+ * 아래 getServerSideProps 안의 주석에 적어 뒀다.
  */
 export default function CreatorShippingPage({ view, projectTitle, projectId }: Props) {
   const { summary } = view;
@@ -110,6 +115,42 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
 
   const view = await loadCreatorShipping(auth.creatorId, id);
   if (!view) return { notFound: true };
+
+  /**
+   * 화면으로 보는 것도 접속기록에 남긴다.
+   *
+   * **행이 실릴 때만 남긴다.** 이 화면은 마감 뒤에 CSV와 같은 행·같은 항목을 그대로
+   * `__NEXT_DATA__`에 실어 내려보낸다 — 받는 분 이름·연락처·우편번호·주소·상세주소·배송
+   * 메모가 페이지 소스에 그대로 있다. 나가는 범위가 같으니 action도 같은
+   * `funding_creator_shipping_export`를 쓰고, 별도 action을 새로 만들지 않는다. 같은 일에
+   * 두 이름을 두면 나중에 한쪽만 조회해 "안 봤다"는 잘못된 결론이 나온다.
+   *
+   * 마감 전(`before_close`)에는 남기지 않는다. 그때 내려가는 것은 집계 숫자뿐이라
+   * 개인정보가 한 줄도 나가지 않는데, 기록만 쌓으면 접속기록이 열람 사실을 가리키지 않게
+   * 된다.
+   *
+   * 남의 프로젝트(위쪽 404)도 남기지 않는다 — CSV 라우트가 404·409를 남기지 않는 것과
+   * 같은 판단이다(`pages/api/funding/creator/projects/[id]/shipping.csv.ts`의 주석).
+   * 아무것도 조회되지 않은 경로라 남길 열람이 없다.
+   *
+   * `recordPrivacyAccess`는 절대 던지지 않으므로(`lib/privacy/accessLog.ts`) 실패해도 화면은
+   * 그대로 뜬다. 그래도 `.catch`를 한 겹 더 두는 것은 CSV 라우트와 같은 이유다 — 그 규약이
+   * 깨지는 날 배송 화면이 통째로 500이 되면 안 된다. await하는 것은 서버리스에서 응답 뒤
+   * 실행이 얼어붙어 기록이 통째로 누락될 수 있기 때문이고, insert 한 줄이라 응답 지연은
+   * CSV 라우트와 같은 수준이다.
+   */
+  if (view.state === 'open') {
+    await recordPrivacyAccess({
+      actor: privacyCreatorActor(auth.creatorId),
+      action: 'funding_creator_shipping_export',
+      targetId: id,
+      result: 'success',
+      rowCount: view.rows.length,
+      ip: getClientIp(context.req),
+    }).catch((error: unknown) => {
+      console.error('[privacy] 접속기록 호출 실패 — 배송 화면은 계속됩니다', error);
+    });
+  }
 
   return { props: { view, projectTitle: project.title, projectId: id } };
 });
