@@ -4,6 +4,7 @@ date: 2026-04-06
 lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 녹음 가이드
+cta: recording
 tags:
   - 싱어송라이터 녹음
   - 싱어송라이터 음반

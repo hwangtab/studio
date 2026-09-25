@@ -570,6 +570,7 @@ music-crowdfunding1·music-grants1·selfrecord1)도 미등재다. 그쪽은 "10/
 | 2026-09-08 | /ko/practice-room · /ko/pricing | 연습실 "만실 대기" 문구 3곳 → "지금 입주 가능"(공실 토글, `data/practiceRoomAvailability.ts`) | 05af5b6337 | **연습실 LP 카톡 전환율 기준선이 이날 바뀐다.** 리드 감시(leadRateCheck)의 28일 기준선과 8/24~ 회복 구간 비교 시 9/8을 경계로 둘 것. 타이틀·H1 무변경이라 CTR 실험과는 무관 |
 | 2026-09-08 | llms.txt | 연습실 Availability 줄 추가 | 05af5b6337 | AI 인용 문구가 바뀜. GEO 기준선(2026-09)은 이 변경 **전** 측정값 |
 | 2026-09-25 | /ko/practice-room · /ko/pricing · llms.txt | 연습실 **시간제**(4,400원/시간, VAT 포함)를 처음 알림 — LP 핵심정보 표에 행 + ko 온라인 예약 링크, pricing에 시간제 카드(보조 CTA 온라인 예약), llms·FAQ·전역 OfferCatalog. 그 전엔 스페이스클라우드로만 팔고 사이트엔 없었다(#174) | (이 PR) | **연습실 LP 리드 기준선이 이날 또 바뀐다**(9/08·9/18에 이어 세 번째 단절). 시간제 예약은 카톡이 아니라 `micro_click_booking_entry`(cta_id `practice_room_hourly_booking`·`pricing_practice-room-hourly_booking`)로 잡히므로, 10/13 monthly1·price1 판정에서 LP 카톡 리드가 줄면 시간제로의 이동인지 먼저 볼 것 |
+| 2026-09-25 | 스토리 73편 하단 CTA | 작곡·편곡·MIDI 슬러그와 '음악 제작' 카테고리 폴백을 연습실(practice) → 프로듀싱 레슨(lesson). EP·음반 제작 5편은 발매, ai-music1은 믹싱, 녹음 세션 3편은 녹음으로 frontmatter 지정 | (이 PR) | **이 글들에서 연습실 LP로 가던 하단 CTA 유입이 레슨으로 옮겨 간다.** 연습실 LP 리드 추이를 볼 때 9/25를 경계로 둘 것. 잠긴 실험 글(monthly1·price1·recording-price1)은 목록에 없다 |
 
 ## 실험 결과 판정 (2026-08-14)
 

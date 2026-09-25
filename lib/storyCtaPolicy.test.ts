@@ -9,8 +9,18 @@ describe('resolveStoryCTAType', () => {
     })).toBe('production');
   });
 
-  it('pairs practice-room and songwriting topics with the practice-room CTA', () => {
+  it('pairs practice-room topics with the practice-room CTA', () => {
     expect(resolveStoryCTAType({ slug: 'practice-room-hongdae', categoryKey: 'recording' })).toBe('practice');
+  });
+
+  // 2026-09-25 운영자 결정: 작곡·편곡·MIDI 글의 짝은 연습실이 아니라 프로듀싱 레슨이다.
+  it('pairs composition and MIDI topics with the producing-lesson CTA', () => {
+    expect(resolveStoryCTAType({ slug: 'midi-composition1', categoryKey: 'production' })).toBe('lesson');
+    expect(resolveStoryCTAType({ slug: 'chord-progression1', categoryKey: 'production' })).toBe('lesson');
+    expect(resolveStoryCTAType({ slug: 'songwriting1', categoryKey: 'recording' })).toBe('lesson');
+  });
+
+  it('keeps vocal-category composition topics on the practice-room CTA — the vocal guard would turn lesson into recording', () => {
     expect(resolveStoryCTAType({ slug: 'topline-melody-writing', categoryKey: 'vocal' })).toBe('practice');
   });
 
@@ -30,7 +40,6 @@ describe('resolveStoryCTAType', () => {
   });
 
   it('still pairs producing-lesson topics with the lesson CTA outside the vocal category', () => {
-    // midi-*는 PRACTICE 패턴이 먼저 잡는다(설계) — 연습실 항목이 없는 학습 슬러그로 검증.
     expect(resolveStoryCTAType({ slug: 'beginner-lesson-guide', categoryKey: 'production' })).toBe('lesson');
     expect(resolveStoryCTAType({ slug: 'daw-tutorial1', categoryKey: 'lesson' })).toBe('lesson');
   });
@@ -71,7 +80,7 @@ describe('resolveStoryCTAType', () => {
   });
 
   it('falls back by category when slug keywords are not decisive', () => {
-    expect(resolveStoryCTAType({ slug: 'jazz-harmony-guide', categoryKey: 'production' })).toBe('practice');
+    expect(resolveStoryCTAType({ slug: 'jazz-harmony-guide', categoryKey: 'production' })).toBe('lesson');
     expect(resolveStoryCTAType({ slug: 'music-business-contract', categoryKey: 'business' })).toBe('production');
     expect(resolveStoryCTAType({ slug: 'studio-open-day', categoryKey: 'event' })).toBe('recording');
   });
