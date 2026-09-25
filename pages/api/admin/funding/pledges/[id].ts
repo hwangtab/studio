@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../../../db/client';
 import { fundingPledges, orders } from '../../../../../db/schema';
@@ -13,6 +13,7 @@ import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
 import { isRefundedFundingOrderStatus, remainingRefundable } from '../../../../../lib/funding/refundable';
 import { findFundingOrderById, isManualPlaceholderRecipient } from '../../../../../lib/funding/service';
 import { kstDateString } from '../../../../../lib/booking/kst';
+import { SEND_INFLIGHT, SEND_PENDING } from '../../../../../lib/ops/notificationSentinel';
 
 const CANCEL_STATUS: Record<string, number> = { not_found: 404, invalid_state: 409, toss_failed: 502, recording_failed: 500 };
 // setFulfillment의 code → HTTP. forbidden(403)은 관리자 actor에서는 나오지 않지만
@@ -93,7 +94,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const mailError = isManualPlaceholderRecipient(order)
         ? null
         : await sendFundingRefundRequestClearedEmails(order, await getFundingProjectAsync(order.fundingPledge.projectSlug), reason);
-      await db.update(orders).set({ notificationError: mailError, updatedAt: now }).where(eq(orders.id, order.id));
+      /**
+       * 성공(null)으로 덮을 때 **확정 메일 센티널은 지우지 않는다.** 이 주문은 여전히
+       * paid라, `send_pending`을 지우면 웹훅의 확정 메일 복구 경로
+       * (lib/funding/confirm.ts)가 그대로 닫힌다 — 후원자는 확정 메일도 관리 링크도
+       * 못 받는다. 같은 가드가 lib/funding/cancel.ts에도 있다.
+       */
+      await db.run(
+        mailError === null
+          ? sql`UPDATE orders SET notification_error = NULL, updated_at = unixepoch() WHERE id = ${order.id}
+                AND (notification_error IS NULL OR notification_error NOT IN (${SEND_PENDING}, ${SEND_INFLIGHT}))`
+          : sql`UPDATE orders SET notification_error = ${mailError}, updated_at = unixepoch() WHERE id = ${order.id}`,
+      );
       return res.status(200).json({ ok: true, ...(mailError ? { message: `기록은 되었으나 메일 발송에 실패했습니다: ${mailError}` } : {}) });
     }
     /**
@@ -232,6 +244,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       } else {
         return res.status(409).json({ ok: false, message: '결제가 완료되었거나 환불된 펀딩만 메일을 재발송할 수 있습니다.' });
       }
+      /**
+       * 여기서는 센티널을 **지운다** — 위 두 곳과 반대다. 이 버튼은 운영자가 실제로 메일을
+       * 다시 보낸 경로이고, 센티널을 지울 수 있는 유일한 경로다. 여기까지 가드를 걸면
+       * 발송 도중 중단된 주문의 경보를 끌 방법이 없어져 매일 영원히 울린다(위 주석의
+       * 경보 피로가 정확히 그 사고였다).
+       */
       await db.update(orders).set({ notificationError: err, updatedAt: now }).where(eq(orders.id, order.id));
       return err ? res.status(502).json({ ok: false, message: err }) : res.status(200).json({ ok: true });
     }

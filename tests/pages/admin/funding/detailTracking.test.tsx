@@ -18,6 +18,7 @@ const PLEDGE: AdminPledgeItem = {
   rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'shipped',
   trackingCompany: 'CJ', trackingNumber: '123', shipping: null, supporterMessage: null,
   refundRequestedAt: null,
+  paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,
   downloadedAt: null, paidAt: null, holdExpiresAt: new Date().toISOString(),
   createdAt: new Date().toISOString(), adminMemo: null, notificationError: null,
   hasPayment: true, mismatch: false, virtualAccountPayment: false, refundRequested: false, needsReview: false,
@@ -164,4 +165,31 @@ describe('메일 재발송 확인', () => {
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('환불'));
     expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'resend_email' });
   });
+});
+
+/**
+ * 결제 실패 사유 컬럼은 2026-09-19 사고(세 번 실패하고 떠난 후원자의 이유를 알 방법이
+ * 없었다) 뒤에 생겼는데 **읽는 화면이 없었다.** 토스 대시보드를 열지 않고 문의에 답하려면
+ * 여기 보여야 한다.
+ */
+it('결제 실패 사유가 있으면 코드·시각·원문을 보여준다', () => {
+  render(
+    <AdminFundingDetailPage
+      pledge={{
+        ...PLEDGE,
+        status: 'pending',
+        paymentFailCode: 'REJECT_CARD_COMPANY',
+        paymentFailMessage: '카드사에서 승인을 거절했습니다.',
+        paymentFailedAt: '2026-09-19T05:00:00.000Z',
+      }}
+      refundableAmount={0}
+    />,
+  );
+  expect(screen.getByText(/REJECT_CARD_COMPANY/)).toBeInTheDocument();
+  expect(screen.getByText(/카드사에서 승인을 거절했습니다/)).toBeInTheDocument();
+});
+
+it('실패 기록이 없으면 그 줄을 그리지 않는다', () => {
+  render(<AdminFundingDetailPage pledge={PLEDGE} refundableAmount={30000} />);
+  expect(screen.queryByText('결제 실패')).not.toBeInTheDocument();
 });

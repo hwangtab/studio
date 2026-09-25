@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders } from '../../db/schema';
+import { isRefundedFundingOrderStatus } from '../funding/refundable';
 
 /**
  * 결제창에서 승인이 안 난 사유를 주문에 남긴다.
@@ -73,7 +74,12 @@ export const recordPaymentFailure = async (input: PaymentFailureInput): Promise<
     if (!row) return false;
     // 이미 결제가 끝난 주문이면 되돌린다 — where 절에 status를 넣으면 드라이버마다
     // returning 동작이 갈려, 한 번 읽고 판단하는 대신 쓰고 되돌리는 쪽이 단순하다.
-    if (row.status === 'paid' || row.status === 'refunded') {
+    //
+    // `partially_refunded`도 환불된 주문이다. 목록에서 빠져 있어서, 부분 환불된 주문에
+    // 뒤늦은 실패 비콘이 닿으면 실패 사유가 그대로 박혔다 — 이 함수의 주석이 지키겠다고
+    // 적어 둔 "확정·환불된 주문"에 구멍이 있었다. 판정은 저장소의 다른 곳과 같은 함수를
+    // 쓴다(lib/funding/refundable.ts).
+    if (row.status === 'paid' || isRefundedFundingOrderStatus(row.status)) {
       await getDb()
         .update(orders)
         .set({ paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null })

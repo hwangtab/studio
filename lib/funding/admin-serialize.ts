@@ -31,6 +31,20 @@ export interface AdminPledgeItem {
    */
   downloadedAt: string | null;
   paidAt: string | null;
+  /**
+   * 결제창에서 승인이 안 난 사유 — 토스가 failUrl에 실어 보낸 코드·원문과 그 시각.
+   *
+   * 컬럼은 2026-09-19 사고(한 후원자가 3분 동안 세 번 실패하고 떠났는데 이유를 알 방법이
+   * 없었다) 뒤에 생겼는데, **읽는 화면이 없어 목적이 달성되지 않았다.** 토스 대시보드를
+   * 열지 않고 문의에 답하려면 여기 보여야 한다.
+   *
+   * `__NEXT_DATA__`에 실려도 되는 값이다 — 실패 코드는 토스가 정의한 열거값이고, 메시지는
+   * 그 코드의 설명 문장이다(카드번호·연락처 같은 개인정보가 아니다). 그래도 message는
+   * 후원자가 아니라 **운영자만 보는 화면**에만 싣는다.
+   */
+  paymentFailCode: string | null;
+  paymentFailMessage: string | null;
+  paymentFailedAt: string | null;
   holdExpiresAt: string;
   createdAt: string;
   adminMemo: string | null;
@@ -155,6 +169,9 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
     downloadedAt: p.downloadedAt?.toISOString() ?? null,
     paidAt: p.paidAt?.toISOString() ?? null,
+    paymentFailCode: o.paymentFailCode,
+    paymentFailMessage: o.paymentFailMessage,
+    paymentFailedAt: o.paymentFailedAt?.toISOString() ?? null,
     holdExpiresAt: p.holdExpiresAt.toISOString(),
     createdAt: o.createdAt.toISOString(),
     adminMemo: p.adminMemo,

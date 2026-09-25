@@ -459,3 +459,42 @@ describe('프로젝트 조회 실패', () => {
     expect(r).toMatchObject({ ok: true, mode: 'refunded' });
   });
 });
+
+/**
+ * notification_error 한 칸을 확정 메일 상태(send_pending·send_inflight)와 그 밖의 알림
+ * 결과가 함께 쓴다. 취소 메일이 성공했다고 null을 통째로 쓰면 "확정 메일이 아직 안 나갔다"는
+ * 기록이 사라진다 — 운영 점검도 침묵하고, 그 사실을 아무도 모르게 된다.
+ */
+describe('확정 메일 센티널', () => {
+  it('취소 메일 성공이 센티널을 지우지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET notification_error='send_pending' WHERE order_no=?", args: [c.orderNo] });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+
+    expect((await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW })).ok).toBe(true);
+
+    const row = await client.execute({ sql: 'SELECT notification_error FROM orders WHERE order_no=?', args: [c.orderNo] });
+    expect(row.rows[0].notification_error).toBe('send_pending');
+  });
+
+  it('센티널이 아닌 값은 성공하면 지운다 — 경보가 영원히 켜져 있으면 안 된다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET notification_error='이전 발송 실패' WHERE order_no=?", args: [c.orderNo] });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+
+    await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+
+    const row = await client.execute({ sql: 'SELECT notification_error FROM orders WHERE order_no=?', args: [c.orderNo] });
+    expect(row.rows[0].notification_error).toBeNull();
+  });
+});

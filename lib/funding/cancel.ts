@@ -1,9 +1,10 @@
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, refunds } from '../../db/schema';
+import { refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
+import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 import { isPastFundingEnd } from './projectState';
 import { getFundingProjectOrFailure } from './repository';
@@ -42,7 +43,22 @@ const notifyCancelled = async (
     emailError = error instanceof Error ? error.message : String(error);
   }
   try {
-    await db.update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+    /**
+     * 성공(null)으로 덮을 때 **확정 메일 센티널은 지우지 않는다.**
+     *
+     * notification_error 한 칸을 확정 메일 상태(`send_pending`·`send_inflight`)와 그 밖의
+     * 알림 결과가 함께 쓴다. 취소 메일이 성공했다고 null을 통째로 쓰면 "확정 메일이 아직
+     * 안 나갔다"는 기록이 사라진다 — 운영 점검도 침묵하고, 그 주문에 확정 메일이 한 통도
+     * 안 나갔다는 사실을 아무도 모르게 된다. 같은 가드가 관리자 환불 요청 취소
+     * (pages/api/admin/funding/pledges/[id].ts)에도 있다. 센티널을 지우는 경로는 관리자
+     * 화면의 메일 재발송 하나로 남긴다 — 운영자가 실제로 다시 보낸 뒤에만 지워진다.
+     */
+    await db.run(
+      emailError === null
+        ? sql`UPDATE orders SET notification_error = NULL WHERE id = ${order.id}
+              AND (notification_error IS NULL OR notification_error NOT IN (${SEND_PENDING}, ${SEND_INFLIGHT}))`
+        : sql`UPDATE orders SET notification_error = ${emailError} WHERE id = ${order.id}`,
+    );
   } catch (error) {
     console.error('[funding-cancel] notificationError 기록 실패', { orderNo: order.orderNo, emailError, error });
   }
