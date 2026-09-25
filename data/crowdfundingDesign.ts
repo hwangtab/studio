@@ -9,28 +9,27 @@ import { formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_SUCCESS_FEE_PERCENT } 
  *
  * **여기 적는 것은 정본에 있는 사실뿐이다.** 근거:
  * - 가격·구조: data/pricing.ts FUNDING_DESIGN_PRICE·FUNDING_SUCCESS_FEE_PERCENT,
- *   docs/wiki/entities/services.md("400,000원 선불 + 성공 시 10%")
+ *   docs/wiki/entities/services.md("400,000원 선불 + 성공 시 모금액의 10%" — 기준은 2026-09-25 운영자 확인)
  * - 범위(스토리텔링·리워드 설계·페이지 제작)와 실적(음반 펀딩 수십 건·누적 약 3억원):
  *   data/pricing.ts service-funding, 커밋 6766ec780a
  * - 단독 의뢰 가능·예술지원사업 상담: pages/api/llms.ts 사용 사례
- * 성공 수수료의 산정 기준(모금액 대비 등)은 정본에 없어 적지 않는다. 일정·산출물 수량 같은
- * 약속도 없다 — 생기면 정본에 먼저 적고 여기로 옮길 것.
+ * 일정·산출물 수량 같은 약속은 정본에 없어 적지 않는다 — 생기면 정본에 먼저 적고 여기로 옮길 것.
  */
 
 const designFee = `${formatPriceAmount(FUNDING_DESIGN_PRICE)}원`;
-const successFee = `${FUNDING_SUCCESS_FEE_PERCENT}%`;
+const successFee = `모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%`;
 
 export const crowdfundingDesignCopy = {
   seo: {
     title: '크라우드펀딩 설계 대행 — 텀블벅 앨범 펀딩 기획·페이지 제작 | 스튜디오 놀',
-    description: `텀블벅 등 음반 크라우드펀딩을 기획부터 페이지 구축까지 대행합니다. 스토리텔링·리워드 설계·페이지 제작, ${designFee} 선불 + 펀딩 성공 시 성공 수수료 ${successFee}. 음반 펀딩 수십 건·누적 약 3억원을 진행한 프로듀서가 맡습니다.`,
+    description: `텀블벅 등 음반 크라우드펀딩을 기획부터 페이지 구축까지 대행합니다. 스토리텔링·리워드 설계·페이지 제작, ${designFee} 선불 + 펀딩 성공 시 ${successFee}. 음반 펀딩 수십 건·누적 약 3억원을 진행한 프로듀서가 맡습니다.`,
     keywords: '크라우드펀딩 대행, 텀블벅 대행, 앨범 펀딩, 음반 크라우드펀딩, 펀딩 페이지 제작, 리워드 설계, 인디 앨범 제작비, 스튜디오 놀',
   },
   hero: {
     title: '크라우드펀딩 설계 대행',
     alt: '피아노 앞에서 녹음 중인 뮤지션의 뒷모습',
     line1: '앨범 제작비를 펀딩으로 모으는 일, 기획부터 페이지까지 같이 만듭니다.',
-    line2: `${designFee} 선불 + 펀딩 성공 시 성공 수수료 ${successFee} · 발매 프로젝트 없이 단독 의뢰`,
+    line2: `${designFee} 선불 + 펀딩 성공 시 ${successFee} · 발매 프로젝트 없이 단독 의뢰`,
     badge: '음반 펀딩 수십 건 · 누적 약 3억원',
     cta: '카카오톡으로 펀딩 상담',
   },
@@ -40,7 +39,7 @@ export const crowdfundingDesignCopy = {
     valueCol: '내용',
     rows: [
       { id: 'fee', label: '기본 비용', value: `${designFee} (선불 · 부가세 별도)` },
-      { id: 'success', label: '성공 수수료', value: `${successFee} (펀딩 성공 시)` },
+      { id: 'success', label: '성공 수수료', value: `${successFee} (펀딩 성공 시, 캠페인 종료 후)` },
       { id: 'platform', label: '플랫폼', value: '텀블벅 등 크라우드펀딩 플랫폼' },
       { id: 'scope', label: '범위', value: '스토리텔링 · 리워드 설계 · 페이지 제작' },
       { id: 'standalone', label: '단독 의뢰', value: '가능 — 제작을 맡기지 않아도 됩니다' },
@@ -72,7 +71,7 @@ export const crowdfundingDesignCopy = {
       { title: '상담', body: '카카오톡으로 음반과 예산 상황을 알려 주세요. 펀딩이 맞는지, 예술지원사업이 더 맞는지도 같은 자리에서 봅니다.' },
       { title: '기획', body: '스토리와 리워드 구성을 정합니다.' },
       { title: '페이지 제작', body: '정한 구성대로 펀딩 페이지를 구축합니다.' },
-      { title: '펀딩 종료 후', body: `펀딩이 성공했을 때만 성공 수수료 ${successFee}가 발생합니다.` },
+      { title: '펀딩 종료 후', body: `펀딩이 성공했을 때만 성공 수수료(${successFee})가 발생합니다.` },
     ],
   },
   alternatives: {
@@ -108,11 +107,11 @@ export const crowdfundingDesignCopy = {
       },
       {
         question: '비용은 어떻게 되나요?',
-        answer: `기본 비용 ${designFee}을 선불로 받고, 펀딩이 성공하면 성공 수수료 ${successFee}가 더해집니다. 부가세는 별도입니다.`,
+        answer: `기본 비용 ${designFee}을 선불로 받고, 펀딩이 성공하면 ${successFee}를 성공 수수료로 받습니다. 부가세는 별도입니다.`,
       },
       {
         question: '펀딩이 실패하면 어떻게 되나요?',
-        answer: `성공 수수료는 펀딩이 성공했을 때만 발생합니다. 선불 ${designFee}은 기획과 페이지 제작에 드는 비용입니다.`,
+        answer: `성공 수수료(${successFee})는 펀딩이 성공했을 때만 발생합니다. 선불 ${designFee}은 기획과 페이지 제작에 드는 비용입니다.`,
       },
       {
         question: '어떤 플랫폼에서 진행하나요?',

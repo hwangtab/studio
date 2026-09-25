@@ -167,7 +167,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     title: '크라우드펀딩 설계 대행',
     description: '텀블벅 페이지를 기획부터 구축까지 맡습니다. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행해온 방식 그대로.',
     features: [
-      `${man(FUNDING_DESIGN_PRICE)} 선불 + 펀딩 성공 시 성공 수수료 ${FUNDING_SUCCESS_FEE_PERCENT}%`,
+      `${man(FUNDING_DESIGN_PRICE)} 선불 + 펀딩 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%`,
       '스토리텔링·리워드 구성·페이지 제작',
       '목표액 산정과 제작 예산 역산',
       '발매 제작을 맡기지 않아도 의뢰 가능',
