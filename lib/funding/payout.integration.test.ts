@@ -516,8 +516,8 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
       project.id,
       new Date('2026-02-20T00:00:00Z'),
       preview?.netAmount ?? 0,
-      'kyungha',
       '203.0.113.7',
+      'kyungha',
     );
     expect(result.ok).toBe(true);
 

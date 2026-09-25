@@ -489,7 +489,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let result: RecordFundingPayoutResult;
     try {
       // IP는 접속기록용이다 — 정산 기록은 주민등록번호를 한 번 복호화해 본다(payout.ts).
-      result = await recordFundingPayout(id, now, b.expectedNetAmount, auth.actor, getClientIp(req));
+      result = await recordFundingPayout(id, now, b.expectedNetAmount, getClientIp(req), auth.actor);
     } catch (error: unknown) {
       console.error(`[funding] recordFundingPayout 예외 (id=${id}):`, error);
       return res.status(500).json({ ok: false, message: '정산을 기록하지 못했습니다.' });

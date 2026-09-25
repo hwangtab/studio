@@ -436,17 +436,20 @@ export const recordFundingPayout = async (
   now: Date,
   expectedNetAmount: number,
   /**
-   * 이 기록을 요청한 사람(가드가 돌려준 `auth.actor`). 복호화 점검이 남기는 접속기록의
-   * 수행자다 — 여기서 고정값을 쓰면 정산 경로만 누가 열었는지 모르는 채 남는다.
-   * 요청 밖에서 부르는 경로(테스트·스크립트)는 기본값 `admin`으로 떨어진다.
-   */
-  actor: string = PRIVACY_ACTOR_ADMIN,
-  /**
    * 이 기록을 요청한 쪽의 IP(`getClientIp`). 주민등록번호 복호화 점검이 남기는 접속기록에
    * 들어간다. 요청 밖에서 부르는 경로(테스트·스크립트)는 넘기지 않아도 되고, 그때는 IP가
    * null로 남는다 — 모르는 것을 지어내지 않는다.
    */
   ip: string | null = null,
+  /**
+   * 이 기록을 요청한 사람(가드가 돌려준 `auth.actor`). 복호화 점검이 남기는 접속기록의
+   * 수행자다 — 여기서 고정값을 쓰면 정산 경로만 누가 열었는지 모르는 채 남는다.
+   * 요청 밖에서 부르는 경로(테스트·스크립트)는 기본값 `admin`으로 떨어진다.
+   *
+   * **기존 인자 뒤에 둔다.** 앞에 끼우면 `ip`를 네 번째로 넘기던 코드가 조용히 IP를
+   * 수행자로 적는다 — 타입이 둘 다 문자열이라 컴파일러도 못 잡는다.
+   */
+  actor: string = PRIVACY_ACTOR_ADMIN,
 ): Promise<RecordFundingPayoutResult> => {
   const preview = await buildFundingPayoutPreview(projectId);
   if (!preview) return { ok: false, code: 'not_found' };

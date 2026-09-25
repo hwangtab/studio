@@ -151,7 +151,7 @@ describe('record_payout', () => {
   it('확인 금액을 그대로 recordFundingPayout에 넘긴다 — 서버가 임의로 정하지 않는다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     await call({ action: 'record_payout', expectedNetAmount: 777_000 });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, 'kyungha', null);
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, null, 'kyungha');
   });
 
   /**
@@ -163,7 +163,7 @@ describe('record_payout', () => {
     await call({ action: 'record_payout', expectedNetAmount: 777_000 }, 'PATCH', {
       'x-vercel-forwarded-for': '203.0.113.7',
     });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, 'kyungha', '203.0.113.7');
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, '203.0.113.7', 'kyungha');
   });
 
   /**
