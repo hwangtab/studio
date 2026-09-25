@@ -12,7 +12,7 @@ import { getClientIp } from '../../../../../../lib/contracts/client-ip';
 /**
  * CSV 열은 Task 1의 화이트리스트(`CreatorShippingRow`, `lib/funding/creatorShipping.ts`)를
  * 그대로 옮긴 것이다 — `pledgeId`만 뺐다(발송 라벨을 뽑는 데 필요 없는 내부 id). 결제
- * 금액·결제수단·주문번호·서포터 이메일은 `loadCreatorShipping`이 애초에 그 행에 담지
+ * 금액·결제수단·주문번호·후원자 이메일은 `loadCreatorShipping`이 애초에 그 행에 담지
  * 않으므로 여기서 늘어놓을 수도 없다. 화면(`ShippingTable`)이 보여주는 필드 집합과 여기
  * 열 집합이 갈라지면 한쪽으로만 정보가 새므로, 열을 늘리려면 먼저 Task 1의 화이트리스트를
  * 넓혀야 한다 — 이 파일 혼자 새 필드를 얹지 않는다.

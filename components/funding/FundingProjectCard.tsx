@@ -90,7 +90,7 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
               />
             </div>
             )}
-            {/* 서포터 수가 아니라 건수다 — 집계가 COUNT(*)라 한 사람이 두 번 펀딩하면 2가 된다
+            {/* 후원자 수가 아니라 건수다 — 집계가 COUNT(*)라 한 사람이 두 번 펀딩하면 2가 된다
                 (FundingProgress와 같은 이유). 집계를 바꾸지 말고 라벨을 맞춘다. */}
             <p className={`typo-card-meta ${showProgress ? 'mt-2' : ''}`} aria-live="polite">
               {showProgress && data ? (

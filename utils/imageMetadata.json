@@ -43,10 +43,6 @@
     "width": 280,
     "height": 72
   },
-  "/images/email-logo.webp": {
-    "width": 280,
-    "height": 72
-  },
   "/images/funding/keep-singing-for-palestine/album.webp": {
     "width": 800,
     "height": 800
@@ -151,15 +147,7 @@
     "width": 1280,
     "height": 1280
   },
-  "/images/mariko-yukie-album-cover.webp": {
-    "width": 1280,
-    "height": 1280
-  },
   "/images/mariko-yukie-mariko.jpg": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/mariko-yukie-mariko.webp": {
     "width": 1280,
     "height": 720
   },
@@ -167,15 +155,7 @@
     "width": 1280,
     "height": 720
   },
-  "/images/mariko-yukie-mv-still.webp": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/mariko-yukie-namsan-night.jpg": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/mariko-yukie-namsan-night.webp": {
     "width": 1280,
     "height": 720
   },
@@ -183,15 +163,7 @@
     "width": 1280,
     "height": 720
   },
-  "/images/mariko-yukie-stage.webp": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/mariko-yukie-table.jpg": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/mariko-yukie-table.webp": {
     "width": 1280,
     "height": 720
   },
@@ -199,15 +171,7 @@
     "width": 1280,
     "height": 720
   },
-  "/images/mariko-yukie-walk.webp": {
-    "width": 1280,
-    "height": 720
-  },
   "/images/mariko-yukie-yukie.jpg": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/mariko-yukie-yukie.webp": {
     "width": 1280,
     "height": 720
   },
@@ -332,10 +296,6 @@
     "height": 300
   },
   "/images/producer-hwang-kyungha.jpg": {
-    "width": 864,
-    "height": 864
-  },
-  "/images/producer-hwang-kyungha.webp": {
     "width": 864,
     "height": 864
   },
@@ -472,10 +432,6 @@
     "height": 720
   },
   "/images/seoul-night-skyline.jpg": {
-    "width": 1280,
-    "height": 720
-  },
-  "/images/seoul-night-skyline.webp": {
     "width": 1280,
     "height": 720
   },

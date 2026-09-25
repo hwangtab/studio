@@ -26,7 +26,7 @@ export const PLEDGE_TEXT_LIMITS = {
   customerName: 50,
   customerPhone: 30,
   supporterMessage: 500,
-  /** 서포터 명단에 실명 대신 올릴 닉네임(lib/funding/publicName.ts). */
+  /** 후원자 명단에 실명 대신 올릴 닉네임(lib/funding/publicName.ts). */
   publicNickname: 20,
   shippingName: 50,
   shippingPhone: 30,
@@ -143,7 +143,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-26-r2';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-26-r3';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -172,13 +172,13 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-23-r6';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-26';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
-  '필수 — 서포터 이름, 연락처(휴대전화), 이메일 주소',
+  '필수 — 후원자 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
-  '선택 — 응원 메시지, 서포터 명단 공개(이름·응원 메시지) 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
+  '선택 — 응원 메시지, 후원자 명단 공개(이름·응원 메시지) 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
   '자동 생성 — 주문번호, 펀딩 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
 
@@ -187,7 +187,7 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
   '펀딩(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
   '펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
-  '서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름(가린 이름이나 닉네임을 고른 경우 그 이름)과 응원 메시지 표시',
+  '후원자 명단 공개에 동의한 경우 프로젝트 페이지에 이름(가린 이름이나 닉네임을 고른 경우 그 이름)과 응원 메시지 표시',
 ];
 
 /**
@@ -210,7 +210,7 @@ export type DataProcessorRow = {
  * Resend REST API(lib/email/resend.ts), Vercel 호스팅, Turso(libsql, db/client.ts).
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
-  { name: '토스페이먼츠', country: '대한민국', purpose: '결제 승인·취소·환불 처리', items: '서포터 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
+  { name: '토스페이먼츠', country: '대한민국', purpose: '결제 승인·취소·환불 처리', items: '후원자 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
   { name: 'Resend', country: '미국', purpose: '펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
   { name: 'Vercel', country: '미국', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', country: '미국', purpose: '펀딩 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
@@ -235,7 +235,7 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
 ];
 
 /**
- * 개설자(아티스트) 계정 정보의 처리위탁 현황 — 위 FUNDING_DATA_PROCESSORS(서포터)와 대상이
+ * 개설자(아티스트) 계정 정보의 처리위탁 현황 — 위 FUNDING_DATA_PROCESSORS(후원자)와 대상이
  * 다르다. 처리방침 4항이 "개설자 계정 정보는 아래 항들이 [처리위탁을] 따로 정합니다"라고
  * 가리키는데(지금은 13~15항이다), 그 항들이 신설됐을 때 수집 항목·이용 목적만 적고 이 표를 빠뜨려 참조가 빈 곳을
  * 가리키고 있었다(2026-09-21 문서·코드 대조).
@@ -245,7 +245,7 @@ export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
  * (reviewEmail.ts), 정산 기록·지급 알림(payoutEmail.ts). 목적을 좁게 적어 두면 실제로 나가는
  * 메일이 고지 범위를 넘어선다 — 정산 알림이 붙었을 때 실제로 그렇게 됐다(2026-09-23).
  * db/client.ts(Turso)에 개설자 계정·프로젝트·정산 기록 행이 저장되며, Vercel이 그 화면을 호스팅한다 —
- * 셋 다 서포터 쪽과 같은 수탁자이지만 다루는 개인정보가 다르므로 표를 따로 둔다.
+ * 셋 다 후원자 쪽과 같은 수탁자이지만 다루는 개인정보가 다르므로 표를 따로 둔다.
  */
 export const FUNDING_CREATOR_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
   {

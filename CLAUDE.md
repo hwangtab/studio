@@ -254,7 +254,7 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 
 ### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)도 배포보다 먼저 적용한다
 
-`funding_pledges.public_name`(서포터 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이
+`funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이
 `drizzle/migrations/0035_funding_public_name.sql`로 추가됐다. 위 0020 절과 **같은 이유로** 순서를
 뒤집으면 후원 결제 확인 전체가 `no such column: public_name`으로 깨진다 — 관계 조회가 전체 컬럼을
 SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이그레이션 → 배포.
@@ -263,7 +263,7 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 이 값을 NULL이 아니라 `PURGED_MARK`로 덮고, 명단 조회는 그 표식을 보고 행을 내린다 — NULL로 비우면
 실명을 피해 닉네임을 고른 사람이 파기 시점에 실명으로 공개된다.
 
-0036의 `listing_hidden_at`은 **운영자 숨김**이다(관리자 후원 상세의 "서포터 명단에서 내리기").
+0036의 `listing_hidden_at`은 **운영자 숨김**이다(관리자 후원 상세의 "후원자 명단에서 내리기").
 공개 동의(`display_name_public`)와 별개로 둔다 — 동의를 끄는 것으로 대신하면 후원자가 펀딩
 확인 페이지에서 다시 켜 내린 닉네임이 되살아난다. 0036도 같은 이유로 배포보다 먼저다.
 

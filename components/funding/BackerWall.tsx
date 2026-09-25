@@ -33,7 +33,7 @@ export default function BackerWall({ names, messages }: { names: string[]; messa
   return (
     <section aria-labelledby="backer-wall-heading" className="glass-card rounded-2xl p-6">
       <h2 id="backer-wall-heading" className="typo-card-subtitle text-gray-900 dark:text-white">
-        함께한 서포터
+        함께한 후원자
       </h2>
       <p className="typo-card-body mt-3 break-words leading-7">{names.join(' · ')}</p>
 

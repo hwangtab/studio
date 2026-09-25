@@ -20,7 +20,7 @@ const optionClass =
   'flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors border-gray-200 text-gray-700 dark:border-gray-700 dark:text-gray-200 has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:text-gray-900 dark:has-[:checked]:border-primary-light dark:has-[:checked]:bg-primary-light/10 dark:has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60';
 
 /**
- * 서포터 명단에 **어떤 이름으로** 올릴지 고르는 칸과 미리보기.
+ * 후원자 명단에 **어떤 이름으로** 올릴지 고르는 칸과 미리보기.
  *
  * 공개에 동의한 뒤에만 그린다(호출부가 판단). 후원 폼·결제 완료 화면·펀딩 확인 화면이 같은
  * 컴포넌트를 쓴다 — 세 곳의 선택지와 미리보기가 갈리면 "여기선 닉네임이 됐는데 저기선

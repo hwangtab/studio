@@ -6,7 +6,7 @@
  * 1) **남의 프로젝트는 404다** — `loadCreatorShipping`이 소유를 SQL JOIN으로 대조한다.
  * 2) **마감 전에는 409다** — 모금 중에는 셀프 취소가 자유로워 주소가 들락날락하므로
  *    배송지를 내보내지 않는다(`lib/funding/creatorShipping.ts` 주석).
- * 3) **CSV 열이 화면(ShippingTable)의 화이트리스트와 같다** — 결제 금액·서포터 이메일은
+ * 3) **CSV 열이 화면(ShippingTable)의 화이트리스트와 같다** — 결제 금액·후원자 이메일은
  *    `loadCreatorShipping`이 애초에 담지 않으므로 CSV에도 실릴 수 없다.
  * 4) **레이트리밋을 넘으면 429다.**
  */
@@ -256,7 +256,7 @@ describe('개설자 배송 목록 CSV 내려받기', () => {
     expect(r.csv).toContain('서울시 은평구 어딘가로 1');
     expect(r.csv).toContain('기본 리워드');
     expect(r.csv).toContain('CJ대한통운');
-    // 결제 정보·서포터 이메일은 loadCreatorShipping이 애초에 담지 않는다.
+    // 결제 정보·후원자 이메일은 loadCreatorShipping이 애초에 담지 않는다.
     expect(r.csv).not.toContain('backer-secret@example.com');
     expect(r.csv).not.toContain('30000');
   });

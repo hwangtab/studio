@@ -660,7 +660,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       detail:
         `주문번호: ${sample(refundedButLive.map((row) => row.orderNo))}\n` +
         '환불 기록은 결제액에 닿았는데 주문 상태가 아직 paid/partially_refunded입니다. ' +
-        '이 상태로 두면 공개 모금액에 환불된 돈이 남고, 그 서포터가 음원을 계속 받으며, 발송 명단에도 남습니다.\n' +
+        '이 상태로 두면 공개 모금액에 환불된 돈이 남고, 그 후원자가 음원을 계속 받으며, 발송 명단에도 남습니다.\n' +
         '토스 콘솔에서 실제 취소 여부를 확인한 뒤 관리자 > 펀딩 상세에서 상태를 맞춰 주세요.',
     });
   }

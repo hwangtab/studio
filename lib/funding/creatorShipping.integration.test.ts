@@ -234,7 +234,7 @@ it('환불된 후원은 목록에 없다', async () => {
   expect((view as { rows: CreatorShippingRow[] }).rows).toHaveLength(0);
 });
 
-it('결제 정보와 서포터 이메일은 어떤 경로로도 실리지 않는다', async () => {
+it('결제 정보와 후원자 이메일은 어떤 경로로도 실리지 않는다', async () => {
   // 발송에 필요 없다. props에 실리면 __NEXT_DATA__로 페이지 소스에 나간다.
   const { creatorId, projectId } = await seedClosedProjectWithPledge({
     supporterEmail: 'backer@example.com', orderNo: 'FND-20260921-ABCD1234', unitAmount: 33_000,

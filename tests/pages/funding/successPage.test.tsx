@@ -131,7 +131,7 @@ describe('확정 화면의 내려받기', () => {
     expect(screen.getByText(/청약철회가 제한됩니다/)).toBeInTheDocument();
   });
 
-  it('내려받을 것이 없으면 아무것도 띄우지 않는다 — 배송 리워드 서포터에게 빈 영역을 보이지 않는다', () => {
+  it('내려받을 것이 없으면 아무것도 띄우지 않는다 — 배송 리워드 후원자에게 빈 영역을 보이지 않는다', () => {
     render(<FundingSuccessPage {...confirmed} downloads={[]} />);
     expect(screen.queryByText(/내려받기/)).toBeNull();
   });

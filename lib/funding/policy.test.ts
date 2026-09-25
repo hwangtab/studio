@@ -85,7 +85,7 @@ describe('내려받기 뒤 청약철회 제한', () => {
     expect(v).toEqual({ ok: false, code: 'downloaded' });
   });
 
-  it('막는 이유를 서포터에게 설명한다 — 약관 조항을 짚는다', () => {
+  it('막는 이유를 후원자에게 설명한다 — 약관 조항을 짚는다', () => {
     expect(CANCEL_BLOCK_MESSAGES.downloaded).toContain('청약철회');
     expect(CANCEL_BLOCK_MESSAGES.downloaded).toContain('제8조');
   });

@@ -469,7 +469,7 @@ describe('가상계좌 취소 거절 문구', () => {
     return orderNo;
   };
 
-  it('서포터 셀프 취소에는 운영 지시가 아니라 연락 안내가 나간다', async () => {
+  it('후원자 셀프 취소에는 운영 지시가 아니라 연락 안내가 나간다', async () => {
     const orderNo = await seedVirtualAccountPledge('FND-20261015-VA000001');
     const r = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 취소', now: NOW });
     expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
