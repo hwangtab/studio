@@ -1,7 +1,8 @@
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
+import { useEffect, useRef } from 'react';
 
-import { recordPaymentFailure } from '../../../lib/payments/recordFailure';
+import { reportPaymentFailure } from '../../../utils/reportPaymentFailure';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -47,6 +48,27 @@ interface Props {
 }
 
 export default function FundingFailPage({ slug, code, message, orderNo }: Props) {
+  /**
+   * 실패 사유는 **브라우저가 마운트된 뒤** 비콘으로 남긴다.
+   *
+   * 예전에는 이 화면의 getServerSideProps가 직접 DB에 썼다. 그 주소는 인증도 Origin 검사도
+   * 없는 GET이라, 남의 주문번호를 넣은 링크 한 번(링크 프리뷰 봇 포함)으로 그 주문의
+   * 실패 사유·updated_at이 덮였다 — 문의 대응의 유일한 우리 쪽 근거를 위조할 수 있었다.
+   * 같은 일을 하는 `/api/payments/failed`에는 Origin 검사와 IP 레이트리밋이 걸려 있으므로
+   * 그쪽으로 보낸다. 봇·프리뷰는 자바스크립트를 돌리지 않아 기록하지 못하고, 실제 후원자의
+   * 브라우저는 기록한다.
+   *
+   * 원문 message는 props로 내리지 않는다 — 화면에 쓰지 않는 미검증 문자열을
+   * __NEXT_DATA__에 실을 이유가 없어, 주소에서 직접 읽어 보낸다.
+   */
+  const reported = useRef(false);
+  useEffect(() => {
+    if (reported.current || !orderNo || !code) return;
+    reported.current = true;
+    const raw = new URLSearchParams(window.location.search).get('message');
+    reportPaymentFailure(orderNo, { code, message: raw });
+  }, [orderNo, code]);
+
   return (
     <>
       <Head><title>결제 실패 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
@@ -98,14 +120,8 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   // 토스가 실어 보내는 orderId — 문의용 식별자로만 쓴다(형태를 벗어나면 버린다).
   const orderId = typeof query.orderId === 'string' ? query.orderId.toUpperCase() : null;
   const orderNo = orderId && ORDER_NO_PATTERN.test(orderId) ? orderId : null;
-  // 사유를 주문에 남긴다 — 이 화면이 실패를 아는 유일한 서버 경로다(confirm은 성공에만
-  // 불린다). best-effort라 화면은 결과와 무관하게 그대로 뜬다. 원문 message는 화면에
-  // 쓰지 않지만 기록에는 남긴다(문의 대응·토스 문의에 그 문장이 필요하다).
-  await recordPaymentFailure({
-    orderNo: orderNo ?? '',
-    code,
-    message: typeof query.message === 'string' ? query.message : null,
-  });
+  // 사유 기록은 여기서 하지 않는다 — 인증 없는 GET이 남의 주문을 덮어쓰는 경로가 된다.
+  // 화면이 마운트된 뒤 `/api/payments/failed`(Origin 검사 + IP 레이트리밋)로 보낸다.
   return {
     props: { slug, code, message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE, orderNo },
   };
