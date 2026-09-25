@@ -183,8 +183,10 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         title={story.title}
         subtitle={
           <div className="flex flex-wrap items-center justify-center gap-4 text-lg mt-4 opacity-90">
-            {/* 가시적 바이라인 — JSON-LD Person author와 대응하는 E-E-A-T 신호.
-                운영자 실명(플래그십 스토리)은 /author 프로필 페이지로 링크. */}
+            {/* 가시적 바이라인 — JSON-LD author와 **같은 주체**를 가리킨다.
+                기본값 '스튜디오 놀'은 스키마에서도 Organization으로 나가고(utils/schema/article.ts),
+                운영자 실명(frontmatter author: 황경하)일 때만 Person + /author 링크다.
+                둘이 갈리면 구조화 데이터가 화면을 반영하지 않게 된다(2026-09-08 감사 #4). */}
             {story.author && (
               <>
                 <div className="flex items-center">
