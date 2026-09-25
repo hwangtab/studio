@@ -5,10 +5,20 @@
  * 그대로 돌지만 렌더 쪽은 document가 필요하므로 환경을 jsdom으로 둔다.
  */
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
+jest.mock('../../../lib/payments/recordFailure', () => ({
+  recordPaymentFailure: jest.fn(),
+  isRecordablePaymentFailure: jest.fn(),
+  PAYMENT_FAIL_CODE_PATTERN: /^[A-Z0-9_]{1,60}$/,
+  PAYMENT_ORDER_NO_PATTERN: /^(SNB|FND)-(M-)?\d{8}-[0-9A-F]{8}$/,
+}));
+
+// eslint-disable-next-line import/first
 import BookingFailPage, { getServerSideProps } from '../../../pages/[locale]/booking/fail';
+// eslint-disable-next-line import/first
+import { recordPaymentFailure } from '../../../lib/payments/recordFailure';
 
 /**
  * 결제 실패 화면의 "예약 페이지로 돌아가기"가 상품과 맞아야 한다.
@@ -113,5 +123,41 @@ describe('주문번호 표기', () => {
       const r = await run({ service: 'recording', orderId: bad });
       expect(r.props.orderNo).toBeNull();
     }
+  });
+});
+
+/**
+ * 펀딩 실패 화면과 같은 구멍이 여기에도 있었다 — 인증도 Origin 검사도 없는 GET이
+ * 남의 주문의 실패 사유를 덮어썼다(링크 프리뷰 봇도 재현한다). 기록은 Origin 검사와 IP
+ * 레이트리밋이 걸린 비콘이 맡는다.
+ */
+describe('실패 사유 기록', () => {
+  const originalFetch = global.fetch;
+  beforeEach(() => {
+    (recordPaymentFailure as jest.Mock).mockClear();
+    global.fetch = jest.fn().mockResolvedValue({ ok: true }) as unknown as typeof fetch;
+  });
+  afterAll(() => { global.fetch = originalFetch; });
+
+  it('getServerSideProps는 DB에 쓰지 않는다', async () => {
+    await run({ orderId: 'SNB-20260911-AB12CD34', code: 'REJECT_CARD_COMPANY', message: '카드사 거절' });
+    expect(recordPaymentFailure).not.toHaveBeenCalled();
+  });
+
+  it('화면이 마운트되면 비콘으로 보낸다 — 원문 message는 주소에서 읽는다', async () => {
+    window.history.replaceState({}, '', '/ko/booking/fail?orderId=SNB-20260911-AB12CD34&code=REJECT_CARD_COMPANY&message=%EC%B9%B4%EB%93%9C%EC%82%AC+%EA%B1%B0%EC%A0%88');
+    render(<BookingFailPage service="recording" code="REJECT_CARD_COMPANY" message="카드사에서 결제를 거절했습니다." orderNo="SNB-20260911-AB12CD34" />);
+    await waitFor(() => expect(global.fetch).toHaveBeenCalled());
+    const [url, init] = (global.fetch as jest.Mock).mock.calls[0];
+    expect(url).toBe('/api/payments/failed');
+    expect(JSON.parse((init as RequestInit).body as string)).toEqual({
+      orderNo: 'SNB-20260911-AB12CD34', code: 'REJECT_CARD_COMPANY', message: '카드사 거절',
+    });
+  });
+
+  it('주문번호나 코드가 없으면 아무것도 보내지 않는다', async () => {
+    render(<BookingFailPage service="recording" code={null} message="결제창이 닫혔습니다." orderNo={null} />);
+    await new Promise((r) => setTimeout(r, 0));
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });

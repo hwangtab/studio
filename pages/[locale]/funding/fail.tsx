@@ -1,8 +1,6 @@
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
-import { useEffect, useRef } from 'react';
-
-import { reportPaymentFailure } from '../../../utils/reportPaymentFailure';
+import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFailure';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -48,26 +46,8 @@ interface Props {
 }
 
 export default function FundingFailPage({ slug, code, message, orderNo }: Props) {
-  /**
-   * 실패 사유는 **브라우저가 마운트된 뒤** 비콘으로 남긴다.
-   *
-   * 예전에는 이 화면의 getServerSideProps가 직접 DB에 썼다. 그 주소는 인증도 Origin 검사도
-   * 없는 GET이라, 남의 주문번호를 넣은 링크 한 번(링크 프리뷰 봇 포함)으로 그 주문의
-   * 실패 사유·updated_at이 덮였다 — 문의 대응의 유일한 우리 쪽 근거를 위조할 수 있었다.
-   * 같은 일을 하는 `/api/payments/failed`에는 Origin 검사와 IP 레이트리밋이 걸려 있으므로
-   * 그쪽으로 보낸다. 봇·프리뷰는 자바스크립트를 돌리지 않아 기록하지 못하고, 실제 후원자의
-   * 브라우저는 기록한다.
-   *
-   * 원문 message는 props로 내리지 않는다 — 화면에 쓰지 않는 미검증 문자열을
-   * __NEXT_DATA__에 실을 이유가 없어, 주소에서 직접 읽어 보낸다.
-   */
-  const reported = useRef(false);
-  useEffect(() => {
-    if (reported.current || !orderNo || !code) return;
-    reported.current = true;
-    const raw = new URLSearchParams(window.location.search).get('message');
-    reportPaymentFailure(orderNo, { code, message: raw });
-  }, [orderNo, code]);
+  // 실패 사유는 마운트 뒤 비콘으로 남긴다 — 이유는 훅 주석에 있다(예약 실패 화면과 공용).
+  useReportPaymentFailureOnMount(orderNo, code);
 
   return (
     <>

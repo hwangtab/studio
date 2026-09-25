@@ -14,13 +14,14 @@ import { isRefundedFundingOrderStatus } from '../funding/refundable';
  * 유일한 기록이 토스 대시보드였다.
  *
  * saf-2026이 같은 문제를 `app/api/payments/funding/toss/fail` 비콘으로 풀었다. 이쪽도
- * **펀딩은 비콘으로 보낸다** — 실패 화면의 getServerSideProps에서 곧장 쓰면 자바스크립트가
+ * **전부 비콘으로 보낸다** — 실패 화면의 getServerSideProps에서 곧장 쓰면 자바스크립트가
  * 꺼져 있어도 남지만, 그 주소는 인증도 Origin 검사도 없는 GET이라 남의 주문번호를 넣은
  * 링크 한 번으로(링크 프리뷰 봇 포함) 그 주문의 실패 사유가 덮인다. 비콘
  * (`/api/payments/failed`)에는 Origin 검사와 IP 레이트리밋이 걸려 있다.
  * 결제창이 열리기도 전에 SDK가 던지는 경우도 같은 비콘을 쓴다.
  *
- * 예약(`pages/[locale]/booking/fail.tsx`)은 아직 getServerSideProps에서 쓴다.
+ * 지금 이 함수를 부르는 곳은 그 비콘 하나다. 실패 화면(펀딩·예약)은
+ * `useReportPaymentFailureOnMount`(utils/reportPaymentFailure.ts)로 비콘을 쏜다.
  *
  * **best-effort.** 실패해도 호출한 화면은 그대로 뜬다 — 사유 기록이 실패 안내를 막으면
  * 안 된다.
