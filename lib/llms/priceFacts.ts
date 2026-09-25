@@ -15,7 +15,8 @@ import {
   EP_BUNDLE_PRICE,
   formatPriceAmount,
   FUNDING_DESIGN_PRICE,
-  FUNDING_SUCCESS_FEE_PERCENT,
+  FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
   LESSON_MONTHLY_PRICE,
   MASTERING_PACKAGE_PRICE,
   MASTERING_SINGLE_PRICE,
@@ -65,7 +66,7 @@ export const PRICE_FACTS: string[] = [
   `**Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ${krw(MIXING_LEVEL1_PRICE)} · 11–30 ${krw(MIXING_LEVEL2_PRICE)} · 31+ ${krw(MIXING_LEVEL3_PRICE)}, includes 2 revisions)`,
   `**Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album)`,
   `**Music Release PR (standalone)**: ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW) — press release in five languages, press kit page, outreach to Korean music outlets plus media, radio and record shops in 60 countries, send report. No production required; placement is not guaranteed`,
-  `**Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW upfront + a success fee of ${FUNDING_SUCCESS_FEE_PERCENT}% of the funds raised if the campaign succeeds — available without commissioning a release project`,
+  `**Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW design fee (VAT excluded), **no success fee** — the campaign runs on Studio NOL Funding (this site), and only its platform fee ${FUNDING_PLATFORM_FEE_PERCENT}% and payment fee ${FUNDING_PAYMENT_FEE_PERCENT}% (VAT included) are deducted from the funds raised. Available without commissioning a release project`,
   `**Album Release Project (flagship, from)**: producer-led release production; the all-in-one bundles above are its fixed-scope entry, so the floors are the same numbers: single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs)`,
 ];
 

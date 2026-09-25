@@ -80,9 +80,12 @@ export const CONSULTING_HOURLY_PRICE = 50000;
 
 // 크라우드펀딩 설계 대행 — 발매 프로젝트와 별개로도 의뢰받는 독립 상품이라
 // llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
-export const FUNDING_DESIGN_PRICE = 400000;
-/** 성공 수수료 — 펀딩 성공 시 **모금액**의 이 비율(2026-09-25 운영자 확인). */
-export const FUNDING_SUCCESS_FEE_PERCENT = 10;
+//
+// 구조(운영자 결정 2026-09-25): 설계비 이 금액(부가세 별도) 하나. 성공 수수료는 받지 않는다.
+// 펀딩은 **스튜디오 놀 펀딩(/funding)에서만 연다** — 모금액에서 떼는 것은 자체 플랫폼의
+// FUNDING_PLATFORM_FEE_PERCENT·FUNDING_PAYMENT_FEE_PERCENT(둘 다 부가세 포함)뿐이다.
+// 그 전 구조(선불 설계비 + 성공 시 모금액 비율 수수료, 텀블벅 등 외부 플랫폼)는 폐지됐다.
+export const FUNDING_DESIGN_PRICE = 500000;
 
 /**
  * 음원 발매 홍보 — 제작과 무관하게 단독으로 파는 상품.
@@ -435,26 +438,29 @@ export const getPricingData = (locale: Locale) => {
     {
       id: 'service-funding',
       title: t(locale, { ko: '펀딩 설계 대행', en: 'Crowdfunding Design', zh: '众筹设计代理', es: 'Diseño de Crowdfunding', vi: 'Thiết kế crowdfunding', th: 'ออกแบบคราวด์ฟันดิง', uz: 'Crowdfunding dizayni' }),
-      priceDisplay: t(locale, { ko: '400,000원', en: '₩400,000', zh: '₩400,000', es: '₩400,000', vi: '₩400,000', th: '₩400,000', uz: '₩400,000' }),
+      priceDisplay: t(locale, {
+        ko: `${formatPriceAmount(FUNDING_DESIGN_PRICE)}원`, en: `₩${formatPriceAmount(FUNDING_DESIGN_PRICE)}`, zh: `₩${formatPriceAmount(FUNDING_DESIGN_PRICE)}`,
+        es: `₩${formatPriceAmount(FUNDING_DESIGN_PRICE)}`, vi: `₩${formatPriceAmount(FUNDING_DESIGN_PRICE)}`, th: `₩${formatPriceAmount(FUNDING_DESIGN_PRICE)}`, uz: `₩${formatPriceAmount(FUNDING_DESIGN_PRICE)}`,
+      }),
       priceValue: FUNDING_DESIGN_PRICE,
       description: t(locale, {
-        ko: '텀블벅 등 크라우드 펀딩 페이지를 기획부터 구축까지 — 스토리텔링·리워드 설계·페이지 제작. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행한 경험으로 함께 준비합니다',
-        en: 'Crowdfunding campaigns planned and built end to end (Tumblbug and others) — storytelling, reward design, and page production. Based on dozens of album funding projects totalling roughly ₩300 million.',
-        zh: 'Tumblbug等众筹页面策划、故事讲述、回报设计',
-        es: 'Planificación y narración para proyectos de crowdfunding.',
-        vi: 'Lập kế hoạch trang crowdfunding (Tumblbug, v.v.), storytelling và thiết kế reward.',
-        th: 'วางแผนหน้า crowdfunding (Tumblbug ฯลฯ) การเล่าเรื่อง และออกแบบรีวอร์ด',
-        uz: 'Crowdfunding sahifasini rejalash (Tumblbug va b.), storytelling hamda reward dizayni.'
+        ko: '스튜디오 놀 펀딩에 여는 음반 펀딩을 기획부터 페이지 구축까지 — 스토리텔링·리워드 설계·페이지 제작. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행한 경험으로 함께 준비합니다',
+        en: 'Album crowdfunding on Studio NOL Funding, planned and built end to end — storytelling, reward design, and page production. Based on dozens of album funding projects totalling roughly ₩300 million.',
+        zh: '在 Studio NOL 众筹上开设的唱片众筹，从企划到页面搭建——故事讲述、回报设计、页面制作。',
+        es: 'Crowdfunding de álbumes en Studio NOL Funding, de la planificación a la página: narrativa, recompensas y diseño.',
+        vi: 'Gây quỹ album trên Studio NOL Funding, từ lên kế hoạch đến dựng trang: storytelling, thiết kế reward, làm trang.',
+        th: 'ระดมทุนอัลบั้มบน Studio NOL Funding ตั้งแต่วางแผนจนสร้างหน้า: การเล่าเรื่อง ออกแบบรีวอร์ด และทำหน้า',
+        uz: "Studio NOL Funding'da albom crowdfunding — rejadan sahifagacha: storytelling, reward dizayni, sahifa tayyorlash."
       }),
-      // 성공 수수료 기준 = 모금액(2026-09-25 운영자 확인).
+      // 성공 수수료는 없다(2026-09-25 운영자 결정). 모금액에서 떼는 것은 플랫폼·결제 수수료뿐.
       note: t(locale, {
-        ko: `+ 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}% (후불)`,
-        en: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% of funds raised if successful`,
-        zh: `+ 成功时收取筹款额的 ${FUNDING_SUCCESS_FEE_PERCENT}%`,
-        es: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% de lo recaudado si tiene éxito`,
-        vi: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% số tiền gây quỹ khi thành công (trả sau)`,
-        th: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% ของยอดระดมทุนเมื่อสำเร็จ (ชำระภายหลัง)`,
-        uz: `+ muvaffaqiyatli bo'lsa, yig'ilgan mablag'ning ${FUNDING_SUCCESS_FEE_PERCENT}% (keyin to'lanadi)`,
+        ko: `성공 수수료 없음 · 모금액에서 플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`,
+        en: `No success fee · platform fee ${FUNDING_PLATFORM_FEE_PERCENT}% and payment fee ${FUNDING_PAYMENT_FEE_PERCENT}% (VAT incl.) from funds raised`,
+        zh: `无成功费 · 从筹款额扣除平台费 ${FUNDING_PLATFORM_FEE_PERCENT}%、支付手续费 ${FUNDING_PAYMENT_FEE_PERCENT}%（含税）`,
+        es: `Sin comisión de éxito · comisión de plataforma ${FUNDING_PLATFORM_FEE_PERCENT}% y de pago ${FUNDING_PAYMENT_FEE_PERCENT}% (IVA incl.) sobre lo recaudado`,
+        vi: `Không phí thành công · phí nền tảng ${FUNDING_PLATFORM_FEE_PERCENT}% và phí thanh toán ${FUNDING_PAYMENT_FEE_PERCENT}% (gồm VAT) trừ từ số tiền gây quỹ`,
+        th: `ไม่มีค่าธรรมเนียมความสำเร็จ · หักค่าแพลตฟอร์ม ${FUNDING_PLATFORM_FEE_PERCENT}% และค่าชำระเงิน ${FUNDING_PAYMENT_FEE_PERCENT}% (รวม VAT) จากยอดระดมทุน`,
+        uz: `Muvaffaqiyat komissiyasi yo'q · yig'ilgan mablag'dan platforma ${FUNDING_PLATFORM_FEE_PERCENT}% va to'lov ${FUNDING_PAYMENT_FEE_PERCENT}% (QQS bilan)`,
       }),
     },
     {

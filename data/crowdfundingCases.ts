@@ -35,21 +35,28 @@ export type CrowdfundingCase = {
    * 테이크아웃드로잉은 수상 연도(2015)가 펀딩 마감(2016-02)보다 앞서지만 같은 음반이다(운영자 확인).
    */
   award?: string;
+  /**
+   * 펀딩으로 제작비를 모아 스튜디오 놀이 **기획·제작·음향**까지 맡아 발매한 음반 —
+   * 발매 페이지의 "펀딩으로 시작해 발매까지 간 음반" 카드가 이 필드가 있는 건만 싣는다.
+   * portfolioId는 data/portfolio/items.ts의 id(카드의 "발매작 보기" 링크).
+   * 2026-09-25 운영자 확인: 아래 넷은 기획·제작·음향을 전부 스튜디오가 했다.
+   */
+  release?: { portfolioId: string };
 };
 
 // 종료일 최신순.
 export const CROWDFUNDING_CASES: readonly CrowdfundingCase[] = [
   { title: '멸실 위기의 오윤 구의동 테라코타 부조, 우리가 구합시다', url: 'https://saf2026.com/funding/oh-yoon-terracotta', platform: '씨앗페', kind: '문화유산 보존', raised: 62327000, percent: 62, backers: 843, period: '2026-08', state: 'ongoing' },
-  { title: '마리코 & 유키에 《남산타워》', url: 'https://tumblbug.com/marikoandyukie', platform: '텀블벅', kind: '음반', raised: 5045000, percent: 100, backers: 53, period: '2026-08', state: 'succeeded' },
+  { title: '마리코 & 유키에 《남산타워》', url: 'https://tumblbug.com/marikoandyukie', platform: '텀블벅', kind: '음반', raised: 5045000, percent: 100, backers: 53, period: '2026-08', state: 'succeeded', release: { portfolioId: 'mariko-yukie-namsan-tower' } },
   { title: '베어지기 전에 풍천리 — 청와대 앞 공연 개최 후원', url: 'https://saf2026.com/funding/pungcheonri', platform: '씨앗페', kind: '공연', raised: 7440000, percent: 148, backers: 186, period: '2026-08', state: 'succeeded' },
   { title: '아트만두의 비틀뉴스', url: 'https://tumblbug.com/artmandoo', platform: '텀블벅', kind: '기타', raised: 5555555, percent: 111, backers: 105, period: '2025-12', state: 'succeeded' },
   { title: '삼각전파사 <Dystopia 2025>', url: 'https://tumblbug.com/dystopia2025', platform: '텀블벅', kind: '음반', raised: 3001000, percent: 100, backers: 40, period: '2025-03', state: 'succeeded' },
   { title: '자이 Golden Hour 발매', url: 'https://tumblbug.com/goldenhour', platform: '텀블벅', kind: '음반', raised: 8101000, percent: 115, backers: 75, period: '2025-01', state: 'succeeded' },
   { title: '[침몰10년, 제로썸] 416개 극장에서!', url: 'https://tumblbug.com/sewolzerosum', platform: '텀블벅', kind: '영화 상영', raised: 31564000, percent: 105, backers: 538, period: '2024-12', state: 'succeeded' },
-  { title: '이름을 모르는 먼 곳의 그대에게', url: 'https://tumblbug.com/peaceandmusic', platform: '텀블벅', kind: '음반', raised: 7693000, percent: 128, backers: 150, period: '2024-09', state: 'succeeded', award: '2024 레드어워드 주목할만한 연대' },
+  { title: '이름을 모르는 먼 곳의 그대에게', url: 'https://tumblbug.com/peaceandmusic', platform: '텀블벅', kind: '음반', raised: 7693000, percent: 128, backers: 150, period: '2024-09', state: 'succeeded', award: '2024 레드어워드 주목할만한 연대', release: { portfolioId: 'peace-and-music' } },
   { title: '새벽, 노찾사의 작곡가 류형수의 솔로앨범 제작 프로젝트', url: 'https://tumblbug.com/hsryoo', platform: '텀블벅', kind: '음반', raised: 16106000, percent: 161, backers: 126, period: '2023-06', state: 'succeeded' },
-  { title: '3인조 보이그룹 <엉아들> 데뷔앨범 뮤직북', url: 'https://tumblbug.com/brothers', platform: '텀블벅', kind: '음반', raised: 8496100, percent: 106, backers: 65, period: '2022-07', state: 'succeeded' },
-  { title: '<강호중> 앨범 발매 및 단독공연 프로젝트', url: 'https://tumblbug.com/kanghojoong', platform: '텀블벅', kind: '음반', raised: 14228000, percent: 142, backers: 72, period: '2022-03', state: 'succeeded' },
+  { title: '3인조 보이그룹 <엉아들> 데뷔앨범 뮤직북', url: 'https://tumblbug.com/brothers', platform: '텀블벅', kind: '음반', raised: 8496100, percent: 106, backers: 65, period: '2022-07', state: 'succeeded', release: { portfolioId: 'eongadeul-self-titled' } },
+  { title: '<강호중> 앨범 발매 및 단독공연 프로젝트', url: 'https://tumblbug.com/kanghojoong', platform: '텀블벅', kind: '음반', raised: 14228000, percent: 142, backers: 72, period: '2022-03', state: 'succeeded', release: { portfolioId: 'kang-ho-jung-self-titled' } },
   { title: '새 민중음악 선곡집 - 소성리의 노래들', url: 'https://tumblbug.com/newprotestsong', platform: '텀블벅', kind: '음반', raised: 3531000, percent: 117, backers: 114, period: '2017-09', state: 'succeeded' },
   { title: "30년 맛의 비법, '아현포차 요리책'", url: 'https://tumblbug.com/pocha', platform: '텀블벅', kind: '출판', raised: 8258000, percent: 165, backers: 412, period: '2017-08', state: 'succeeded' },
   { title: '테이크아웃드로잉 컴필레이션 앨범', url: 'https://tumblbug.com/takeoutdrawingalbum', platform: '텀블벅', kind: '음반', raised: 2180000, percent: 121, backers: 99, period: '2016-02', state: 'succeeded', award: '2015 레드어워드 주목할만한 연대' },

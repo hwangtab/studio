@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
-import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, BookOpen } from '@/lib/lucide-icons';
+import { Disc, Clock, CheckCircle, ArrowRight, Lightbulb, Mic, Music, Package, Send, BookOpen, Wallet } from '@/lib/lucide-icons';
 import SEO from '../../../components/SEO';
 import SectionHeading from '../../../components/ui/SectionHeading';
 import ImageHero from '../../../components/common/ImageHero';
@@ -17,6 +17,9 @@ import ReleaseHeroCtas from '../../../components/release/ReleaseHeroCtas';
 import ReleaseProducerIntro from '../../../components/release/ReleaseProducerIntro';
 import ReleaseReviewsSection from '../../../components/release/ReleaseReviewsSection';
 import TierComparisonTable from '../../../components/release/TierComparisonTable';
+import ReleaseFundingPaths from '../../../components/release/ReleaseFundingPaths';
+import ReleasePipelineCases from '../../../components/release/ReleasePipelineCases';
+import { releasePipelineCopy } from '../../../data/releasePipeline';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../../lib/getStatic';
 import { usePortfolioModalLazy } from '../../../hooks/usePortfolioModalLazy';
 import type { Locale } from '../../../lib/i18n';
@@ -30,6 +33,8 @@ import type { StoryCardData } from '../../../types/story';
 import type { NextPageWithLayout } from '../../../types';
 
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
+// 계산기는 상호작용 절이라 초기 번들에서 뺀다(ssr 유지 — 결과 표가 SSR HTML에 남는다).
+const FundingGoalCalculator = dynamic(() => import('../../../components/release/FundingGoalCalculator'));
 const HubLinkCallout = dynamic(() => import('../../../components/guides/HubLinkCallout'));
 const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });
 const RelatedStoriesSection = dynamic(() => import('../../../components/ui/RelatedStoriesSection'));
@@ -52,13 +57,7 @@ interface ReleaseProjectProps {
 
 const TIER_KEYS = ['single', 'ep', 'album'] as const;
 
-const PROCESS_ICONS = [
-  { step: '01', icon: Lightbulb },
-  { step: '02', icon: Mic },
-  { step: '03', icon: Music },
-  { step: '04', icon: Package },
-  { step: '05', icon: Send },
-];
+const PROCESS_ICONS = [Lightbulb, Mic, Music, Package, Send];
 
 const IN_PROGRESS_ITEMS = [
   { artist: '마리코 & 유키에', titleKey: 'namsanTower', typeKey: 'fullAlbum' },
@@ -76,7 +75,27 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
   const consultationSteps = t('releaseProject.consultation.steps', { returnObjects: true }) as { num: string; title: string; desc: string }[];
   const scopeItems = t('releaseProject.scope.items', { returnObjects: true }) as string[];
   const producerStats = t('releaseProject.producer.stats', { returnObjects: true }) as Array<{ value: string; label: string }>;
-  const hubFaqItems = t('releaseProject.hubFaq.items', { returnObjects: true }) as { question: string; answer: string }[];
+  const baseFaqItems = t('releaseProject.hubFaq.items', { returnObjects: true }) as { question: string; answer: string }[];
+  /**
+   * 발매 파이프라인(설계 docs/superpowers/specs/2026-09-25-release-pipeline-design.md) — 펀딩은 ko 전용
+   * 상품이라 제작비 절·계산기·사례·추가 FAQ·프로세스 첫 단계는 ko에서만 붙는다. 비-ko는 예전 구성 그대로.
+   * ko 카피는 data/releasePipeline.ts(7로케일 키 동형 테스트를 건드리지 않으려고 common.json 밖에 둔다).
+   */
+  const isKo = locale === 'ko';
+  const hubFaqItems = isKo && Array.isArray(baseFaqItems)
+    ? [...baseFaqItems, ...releasePipelineCopy.faq.map((f) => ({ question: f.question, answer: f.answer }))]
+    : baseFaqItems;
+  const processSteps = [
+    ...(isKo ? [{ icon: Wallet, title: releasePipelineCopy.process.fundingStep.title, desc: releasePipelineCopy.process.fundingStep.desc }] : []),
+    ...PROCESS_ICONS.map((icon, i) => ({
+      icon,
+      title: t(`releaseProject.process.steps.${i}.title`),
+      desc: t(`releaseProject.process.steps.${i}.desc`),
+    })),
+  ];
+  const consultationStepsShown = isKo && Array.isArray(consultationSteps) && consultationSteps.length > 0
+    ? [{ ...consultationSteps[0], desc: releasePipelineCopy.consultationFirstStepDesc }, ...consultationSteps.slice(1)]
+    : consultationSteps;
   const { selectedItem, categories, open: openModal, close: closeModal, loadError } = usePortfolioModalLazy(
     locale,
     `/${locale}/release-project`
@@ -117,7 +136,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             <span className="text-gray-100 drop-shadow-lg">{t('releaseProject.hero.titleSuffix')}</span>
           </>
         }
-        subtitle={t('releaseProject.hero.subtitle')}
+        subtitle={isKo ? releasePipelineCopy.hero.subtitle : t('releaseProject.hero.subtitle')}
         backgroundImage="/images/studio3.webp"
         imageAlt={t('releaseProject.hero.imageAlt')}
         minHeight="min-h-[70svh]"
@@ -125,7 +144,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
           <ReleaseHeroCtas
             locale={locale}
             kakaoUrl={siteConfig.contact.kakaoUrl}
-            consultLabel={t('releaseProject.hero.ctaConsult')}
+            consultLabel={isKo ? releasePipelineCopy.hero.cta : t('releaseProject.hero.ctaConsult')}
             secondaryHref={getLink('/portfolio')}
             secondaryLabel={t('releaseProject.hero.ctaPortfolio')}
           />
@@ -141,6 +160,9 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         ]}
         stats={Array.isArray(producerStats) ? producerStats : []}
       />
+
+      {isKo && <ReleaseFundingPaths kakaoUrl={siteConfig.contact.kakaoUrl} />}
+      {isKo && <FundingGoalCalculator kakaoUrl={siteConfig.contact.kakaoUrl} />}
 
       {/* 발매 프로젝트 3형태 */}
       <Section variant="default">
@@ -217,20 +239,21 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         </p>
       </Section>
 
-      {/* 프로듀싱 프로세스 5단계 */}
+      {/* 프로듀싱 프로세스 — ko는 제작비 마련 단계를 앞에 붙여 6단계 */}
       <Section variant="default">
         <SectionHeading
           icon={Disc}
           title={t('releaseProject.process.sectionTitle')}
-          subtitle={t('releaseProject.process.sectionSubtitle')}
+          subtitle={isKo ? releasePipelineCopy.process.subtitle : t('releaseProject.process.sectionSubtitle')}
           className="mb-12"
         />
         <div className="max-w-2xl mx-auto">
-          {PROCESS_ICONS.map((s, i) => {
+          {processSteps.map((s, i) => {
             const Icon = s.icon;
-            const isLast = i === PROCESS_ICONS.length - 1;
+            const isLast = i === processSteps.length - 1;
+            const step = String(i + 1).padStart(2, '0');
             return (
-              <div key={s.step} className="flex gap-5">
+              <div key={step} className="flex gap-5">
                 <div className="flex-shrink-0 flex flex-col items-center self-stretch">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                     <Icon size={18} className="text-primary dark:text-primary-lighter" />
@@ -240,15 +263,17 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   )}
                 </div>
                 <div className={`flex-1 pt-1.5 ${!isLast ? 'pb-6' : ''}`}>
-                  <p className="text-xs font-mono text-primary dark:text-primary-lighter mb-1 tracking-wide">{s.step}</p>
-                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">{t(`releaseProject.process.steps.${i}.title`)}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{t(`releaseProject.process.steps.${i}.desc`)}</p>
+                  <p className="text-xs font-mono text-primary dark:text-primary-lighter mb-1 tracking-wide">{step}</p>
+                  <h3 className="text-base font-bold text-gray-900 dark:text-white mb-1">{s.title}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{s.desc}</p>
                 </div>
               </div>
             );
           })}
         </div>
       </Section>
+
+      {isKo && <ReleasePipelineCases />}
 
       {/* 지금 함께 만들고 있는 음반들 */}
       <Section variant="alternate">
@@ -375,7 +400,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
       <ReleaseConsultationSteps
         title={t('releaseProject.consultation.sectionTitle')}
         subtitle={t('releaseProject.consultation.sectionSubtitle')}
-        steps={Array.isArray(consultationSteps) ? consultationSteps : []}
+        steps={Array.isArray(consultationStepsShown) ? consultationStepsShown : []}
       />
 
       {/* 전환 CTA */}

@@ -769,7 +769,7 @@
           "title": "Tư vấn gọi vốn cộng đồng",
           "valueBadge": "~70K KRW/tháng",
           "points": [
-            "Đề xuất nền tảng phù hợp (Tumblbug, Wadiz, v.v.) theo dự án",
+            "Hỗ trợ mở chiến dịch trên Studio NOL Funding và đặt mục tiêu",
             "Lên kế hoạch mục tiêu, phần thưởng và thời gian",
             "Hướng dẫn xây dựng câu chuyện chạm tới người ủng hộ",
             "Tư vấn chiến lược marketing để chiến dịch thành công",
@@ -1037,7 +1037,7 @@
         "funding": "Thiết kế gây quỹ"
       },
       "serviceBody": {
-        "funding": "Chiến dịch gây quỹ album trên Tumblbug và các nền tảng tương tự, trọn gói từ kế hoạch đến dựng trang."
+        "funding": "Chiến dịch gây quỹ album trên Studio NOL Funding, trọn gói từ kế hoạch đến dựng trang."
       }
     },
     "sticky": {
@@ -2520,7 +2520,7 @@
             },
             {
               "title": "Lo ngân sách — gây quỹ & tài trợ",
-              "desc": "Chúng tôi đã lên kế hoạch và vận hành hàng chục chiến dịch gây quỹ album (tổng cộng khoảng ₩300 triệu). Có thể dựng trang Tumblbug trọn gói từ kế hoạch đến hoàn thiện, hoặc cùng bạn định hướng hồ sơ xin tài trợ."
+              "desc": "Chúng tôi đã lên kế hoạch và vận hành hàng chục chiến dịch gây quỹ album (tổng cộng khoảng ₩300 triệu). Có thể dựng trang Studio NOL Funding trọn gói từ kế hoạch đến hoàn thiện, hoặc cùng bạn định hướng hồ sơ xin tài trợ."
             }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
@@ -2686,7 +2686,7 @@
         "Lên ý tưởng album & định hướng A&R",
         "Thu âm giọng hát · Hòa âm · Mastering (nội bộ)",
         "Tuyển dụng nhạc công session · Mạng lưới dàn dựng",
-        "Phân phối nhạc số (Melon · Spotify · Apple Music v.v.)",
+        "Phát hành nhạc số qua nhà phân phối đối tác (Melon · Spotify · Apple Music v.v.)",
         "Gửi thông cáo báo chí đến nhà phê bình & truyền thông",
         "Lên kế hoạch & dựng trang gây quỹ · đồng hành xin tài trợ nghệ thuật"
       ],
@@ -2710,7 +2710,7 @@
         },
         {
           "title": "Hòa âm · Mastering · Phân phối",
-          "desc": "Sau khi hòa âm và mastering nội bộ, âm nhạc được phân phối trên Melon, Spotify, Apple Music và nhiều nền tảng khác."
+          "desc": "Sau khi hòa âm và mastering nội bộ, chúng tôi cùng bạn chọn nhà phân phối đối tác phù hợp nhất và phát hành lên Melon, Spotify, Apple Music và nhiều nền tảng khác."
         },
         {
           "title": "Nhà phê bình · PR Truyền thông",
@@ -2781,7 +2781,7 @@
       "items": [
         {
           "question": "Dự án phát hành là dịch vụ gì?",
-          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL; nhạc cụ session và kết nối phê bình·truyền thông được triển khai qua mạng lưới 15 năm trong cộng đồng indie. Single, EP và album đầy đủ có nhịp độ và ngân sách khác nhau — vui lòng xem từng trang để biết hạng mục cụ thể và cấu trúc giá."
+          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL; nhạc cụ session và kết nối phê bình·truyền thông được triển khai qua mạng lưới 15 năm trong cộng đồng indie. Single, EP và album đầy đủ có nhịp độ và ngân sách khác nhau — vui lòng xem từng trang để biết hạng mục cụ thể và cấu trúc giá. Về phân phối, chúng tôi cùng bạn chọn nhà phân phối phù hợp nhất trong số nhiều đối tác."
         },
         {
           "question": "Nếu giữa dự án tôi đổi ý hoặc lịch trình bị xáo trộn thì sao?",
