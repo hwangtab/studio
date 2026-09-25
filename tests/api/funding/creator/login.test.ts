@@ -4,6 +4,7 @@ jest.mock('../../../../lib/contact/origin', () => ({ isAllowedContactRequestOrig
 jest.mock('../../../../lib/funding/creatorEmail', () => ({ sendCreatorLoginEmail: jest.fn().mockResolvedValue(null) }));
 jest.mock('../../../../lib/funding/creatorToken', () => ({
   issueCreatorLoginToken: jest.fn(),
+  isRegisteredCreatorEmail: jest.fn(),
   normalizeCreatorEmail: jest.requireActual('../../../../lib/funding/creatorToken').normalizeCreatorEmail,
 }));
 jest.mock('../../../../lib/funding/email', () => ({
@@ -15,7 +16,7 @@ import handler from '../../../../pages/api/funding/creator/login';
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
-import { issueCreatorLoginToken } from '../../../../lib/funding/creatorToken';
+import { isRegisteredCreatorEmail, issueCreatorLoginToken } from '../../../../lib/funding/creatorToken';
 import { sendCreatorLoginCapAlert, sendCreatorLoginMailFailureAlert } from '../../../../lib/funding/email';
 
 const call = async (body: unknown, method = 'POST') => {
@@ -33,6 +34,8 @@ beforeEach(() => {
   (isAllowedContactRequestOrigin as jest.Mock).mockReturnValue(true);
   (sendCreatorLoginEmail as jest.Mock).mockResolvedValue(null);
   (issueCreatorLoginToken as jest.Mock).mockResolvedValue({ creatorId: 'c1', rawToken: 'raw-token-abc' });
+  // 기본은 **기존 개설자**다 — 이 파일의 기존 테스트가 전부 그 경로(전역 캡 100통)를 본다.
+  (isRegisteredCreatorEmail as jest.Mock).mockResolvedValue(true);
   (sendCreatorLoginCapAlert as jest.Mock).mockResolvedValue(null);
   (sendCreatorLoginMailFailureAlert as jest.Mock).mockResolvedValue(null);
 });
@@ -203,5 +206,56 @@ describe('로그인 메일 발송 실패 알림', () => {
 
     expect(keys).toContain('creator_login:mail_failure_alert');
     expect(keys.filter((k) => k === 'creator_login:global_alert')).toHaveLength(0);
+  });
+});
+
+/**
+ * M11 — 전역 일일 캡 100통을 **기존 계정**만 소비한다. 한 예산을 공유하던 동안에는, 매
+ * 요청 다른 주소를 보내는 것만으로 그날 100통을 태워 모든 개설자의 로그인을 막을 수
+ * 있었다(매직링크가 유일한 인증이라 우회로가 없다). 부수로 쓰레기 개설자 행이 하루
+ * 100개씩 쌓였다.
+ */
+describe('미가입 주소는 별도 캡을 쓴다', () => {
+  const keysOf = () => (consumeRateLimit as jest.Mock).mock.calls.map((c) => c[0] as string);
+
+  it('미가입 주소는 전역 캡을 태우지 않고 가입 캡을 쓴다', async () => {
+    (isRegisteredCreatorEmail as jest.Mock).mockResolvedValue(false);
+    const r = await call({ email: 'newbie@example.com' });
+    expect(r.status).toBe(200);
+    const keys = keysOf();
+    expect(keys).not.toContain('creator_login:global');
+    expect(keys).toContain('funding_creator_signup:global');
+    expect(keys.some((k) => k.startsWith('funding_creator_signup:ip:'))).toBe(true);
+  });
+
+  it('가입 캡이 찼으면 메일도 계정 행도 만들지 않고 같은 200을 준다', async () => {
+    (isRegisteredCreatorEmail as jest.Mock).mockResolvedValue(false);
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(key !== 'funding_creator_signup:global'));
+    const r = await call({ email: 'newbie@example.com' });
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual({ ok: true, message: '로그인 링크를 보냈습니다. 메일함을 확인해 주세요.' });
+    // issueCreatorLoginToken이 개설자 행을 만드는 유일한 경로다 — 부르지 않으면 행도 없다.
+    expect(issueCreatorLoginToken).not.toHaveBeenCalled();
+    expect(sendCreatorLoginEmail).not.toHaveBeenCalled();
+  });
+
+  it('가입 IP 제한에 걸려도 같은 200이고 행을 만들지 않는다', async () => {
+    (isRegisteredCreatorEmail as jest.Mock).mockResolvedValue(false);
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(!key.startsWith('funding_creator_signup:ip:')));
+    const r = await call({ email: 'newbie@example.com' });
+    expect(r.status).toBe(200);
+    expect(issueCreatorLoginToken).not.toHaveBeenCalled();
+    expect(keysOf()).not.toContain('funding_creator_signup:global');
+  });
+
+  it('가입 캡이 찬 상태에서도 기존 개설자는 로그인 메일을 받는다', async () => {
+    (isRegisteredCreatorEmail as jest.Mock).mockResolvedValue(true);
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(!key.startsWith('funding_creator_signup:')));
+    const r = await call({ email: 'creator@example.com' });
+    expect(r.status).toBe(200);
+    expect(sendCreatorLoginEmail).toHaveBeenCalledTimes(1);
   });
 });

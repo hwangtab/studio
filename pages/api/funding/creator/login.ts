@@ -6,7 +6,7 @@ import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../lib/contact/origin';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { sendCreatorLoginEmail } from '../../../../lib/funding/creatorEmail';
-import { issueCreatorLoginToken, normalizeCreatorEmail } from '../../../../lib/funding/creatorToken';
+import { isRegisteredCreatorEmail, issueCreatorLoginToken, normalizeCreatorEmail } from '../../../../lib/funding/creatorToken';
 import { sendCreatorLoginCapAlert, sendCreatorLoginMailFailureAlert } from '../../../../lib/funding/email';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
@@ -25,6 +25,21 @@ const WINDOW_SECONDS = 600;
  */
 const GLOBAL_DAILY_CAP = 100;
 const DAY_SECONDS = 86_400;
+
+/**
+ * **미가입 주소**의 가입 메일 캡 — 기존 개설자의 예산과 분리한다.
+ *
+ * 한 예산을 공유하던 동안에는, 매 요청 다른 주소를 보내는 것만으로 그날 100통을 태워
+ * **모든 개설자의 로그인을 막을** 수 있었다(IP·주소별 제한은 키가 요청자마다 달라 천장이
+ * 없고, 매직링크가 유일한 인증이라 우회로도 없다). 부수로 쓰레기 개설자 행이 하루 100개씩
+ * 쌓였다 — 지금은 이 캡이 찼으면 행도 만들지 않는다.
+ *
+ * 20통/일은 개설자 수가 두 자리인 동안 신규 가입 정상치를 넉넉히 덮는다. IP당 5회/시간은
+ * 한 곳에서 주소만 바꿔 캡을 태우는 경로를 좁힌다.
+ */
+const SIGNUP_DAILY_CAP = 20;
+const SIGNUP_IP_LIMIT = 5;
+const SIGNUP_IP_WINDOW_SECONDS = 3_600;
 
 /**
  * 응답은 언제나 같다.
@@ -69,16 +84,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json(OK);
   }
 
-  // 전역 캡은 메일을 실제로 보내기 직전에만 소비한다 — 위 주소별 제한에 걸려 이미
-  // 돌아가는 요청이 전역 예산을 태우면, 한 주소를 두드리는 것만으로 전체를 잠글 수 있다.
-  if (!(await consumeRateLimit('creator_login:global', GLOBAL_DAILY_CAP, DAY_SECONDS))) {
-    // 알림도 레이트리밋을 탄다 — 캡에 걸린 상태에서 알림이 쏟아지면 그것이 두 번째 사고다.
-    if (await consumeRateLimit('creator_login:global_alert', 1, DAY_SECONDS)) {
-      const alertError = await sendCreatorLoginCapAlert(GLOBAL_DAILY_CAP);
-      if (alertError) console.error('[funding] 개설자 로그인 캡 알림 실패:', alertError);
+  /**
+   * 캡은 메일을 실제로 보내기 직전에만 소비한다 — 위 주소별 제한에 걸려 이미 돌아가는
+   * 요청이 예산을 태우면, 한 주소를 두드리는 것만으로 전체를 잠글 수 있다.
+   *
+   * **어느 예산을 태우는지는 이 주소가 이미 개설자인가로 갈린다.** 미가입 주소는 훨씬 좁은
+   * 가입 캡을 쓰고, 그 캡이 찼으면 개설자 행조차 만들지 않는다(쓰레기 행 방지). 정상
+   * 개설자는 가입 캡과 무관하게 로그인된다. 응답은 세 경로 모두 같은 200이다.
+   */
+  const registered = await isRegisteredCreatorEmail(email);
+
+  if (registered) {
+    if (!(await consumeRateLimit('creator_login:global', GLOBAL_DAILY_CAP, DAY_SECONDS))) {
+      // 알림도 레이트리밋을 탄다 — 캡에 걸린 상태에서 알림이 쏟아지면 그것이 두 번째 사고다.
+      if (await consumeRateLimit('creator_login:global_alert', 1, DAY_SECONDS)) {
+        const alertError = await sendCreatorLoginCapAlert(GLOBAL_DAILY_CAP);
+        if (alertError) console.error('[funding] 개설자 로그인 캡 알림 실패:', alertError);
+      }
+      console.error('[funding] 개설자 로그인 메일 일일 한도 도달 — 발송을 건너뜁니다.');
+      return res.status(200).json(OK);
     }
-    console.error('[funding] 개설자 로그인 메일 일일 한도 도달 — 발송을 건너뜁니다.');
-    return res.status(200).json(OK);
+  } else {
+    if (!(await consumeRateLimit(`funding_creator_signup:ip:${ip}`, SIGNUP_IP_LIMIT, SIGNUP_IP_WINDOW_SECONDS))) {
+      return res.status(200).json(OK);
+    }
+    if (!(await consumeRateLimit('funding_creator_signup:global', SIGNUP_DAILY_CAP, DAY_SECONDS))) {
+      console.error('[funding] 개설자 가입 메일 일일 한도 도달 — 발송과 계정 생성을 건너뜁니다.');
+      return res.status(200).json(OK);
+    }
   }
 
   const issued = await issueCreatorLoginToken(email);

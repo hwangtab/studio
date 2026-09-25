@@ -421,7 +421,8 @@ const payoutAccountReadable = async (
  *   변수에 담지도, 응답·로그·화면에 싣지도 않는다. 계좌와 마찬가지로 `cryptoCode`를 함께
  *   돌려준다: 키 문제면 값이 멀쩡하니 재등록을 요청하면 안 되고, 봉투가 아니라 값 자체가
  *   형식이 아닌 `malformed`이면 반대로 재등록이 유일한 복구 경로다.
- * - `nothing_to_pay` — 받은 돈이 없다. 할 일이 없다.
+ * - `nothing_to_pay` — **실이체액이 0 이하다**(받은 돈이 없거나, 환불이 모금액을 다 덮었다).
+ *   할 일이 없다.
  * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
  *
  * `expectedNetAmount`는 호출부(관리자 화면)가 **운영자에게 보여 주고 확인받은** 실이체액이다.
@@ -469,7 +470,12 @@ export const recordFundingPayout = async (
       return { ok: false, code: 'resident_number_unreadable', cryptoCode: residentRead.cryptoCode };
     }
   }
-  if (preview.grossAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
+  /**
+   * 판정은 **실이체액**이다. `grossAmount`(환불 전 모금액)를 보면, 부분환불 합이 모금액에
+   * 닿아 실지급액이 0인 프로젝트에 0원 정산이 **불변으로** INSERT되고 "실지급액 0원" 메일이
+   * 나가며, 그 행은 project_id UNIQUE 탓에 영구 pending으로 "이체 대기" 카운터를 올린다.
+   */
+  if (preview.netAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {
     return { ok: false, code: 'amount_changed', expectedNetAmount, netAmount: preview.netAmount };
   }

@@ -48,6 +48,7 @@ const SUMMARY: CreatorShippingSummary = {
 };
 
 const ROW: CreatorShippingRow = {
+  shipHold: '',
   pledgeId: 'pledge-1',
   rewardId: 'basic',
   rewardTitle: '기본 리워드',

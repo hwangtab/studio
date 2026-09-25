@@ -64,7 +64,7 @@ const BASE_ORDER = {
 beforeEach(() => {
   jest.clearAllMocks();
   mockRun.mockResolvedValue({ rowsAffected: 1 });
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha' });
   (findFundingOrderById as jest.Mock).mockResolvedValue(BASE_ORDER);
 });
 
@@ -453,4 +453,56 @@ it('clear_download_record: 사유의 개행을 접어 한 줄로 남긴다 — �
   const memo = String(set.mock.calls[0][0].adminMemo);
   expect(memo.split('\n')).toHaveLength(1);
   expect(memo).toContain('첫 줄 둘째 줄');
+});
+
+/**
+ * L10 — fulfillment_updated_by가 전부 'admin'으로 남아 발송 기록이 누가 눌렀는지 가리키지
+ * 못했다. 가드가 성공에 actor를 실어 주는데 그 값을 넘기지 않고 있었다.
+ */
+it('set_fulfillment은 세션의 운영자를 fulfillment_updated_by로 싣는다', async () => {
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'preparing' });
+  expect(r.status).toBe(200);
+  const written = mockRun.mock.calls.flat().map((arg) => JSON.stringify(arg)).join('');
+  expect(written).toContain('kyungha');
+});
+
+/**
+ * L12 — set_memo는 메모 전체를 덮어쓰는 액션이라, 빈칸 저장 한 번으로 웹훅 재고 경고·그
+ * 해제 기록·청약철회 취소 기록이 사유 없이 흔적 없이 사라졌다.
+ */
+describe('set_memo 빈 값', () => {
+  const withMemo = (adminMemo: string) => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue({
+      ...BASE_ORDER,
+      fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo },
+    });
+  };
+
+  it('재고 확인 표식이 있으면 비울 수 없다 — 409에 clear_stock_review를 안내한다', async () => {
+    withMemo('[웹훅] 재고 초과 가능, 확인 필요');
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' });
+    expect(r.status).toBe(409);
+    expect(String(r.body.message)).toContain('clear_stock_review');
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('재고 확인 해제 기록이 있어도 비울 수 없다', async () => {
+    withMemo('[2026-09-20] 재고 확인 완료 — 실물 대조함');
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '   ' })).status).toBe(409);
+  });
+
+  it('청약철회 취소 기록이 있어도 비울 수 없다', async () => {
+    withMemo('[2026-09-20] 환불 요청 취소 — 고객이 전화로 철회');
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' })).status).toBe(409);
+  });
+
+  it('보호할 기록이 없으면 비울 수 있다', async () => {
+    withMemo('그냥 메모');
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' })).status).toBe(200);
+  });
+
+  it('표식이 있어도 내용을 고치는 저장은 통과한다', async () => {
+    withMemo('[웹훅] 재고 초과 가능, 확인 필요');
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '[웹훅] 재고 초과 가능, 확인 필요\n메모 추가' })).status).toBe(200);
+  });
 });

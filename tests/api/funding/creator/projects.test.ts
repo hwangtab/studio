@@ -111,7 +111,7 @@ const VALID_BASIC = {
   goalAmount: 1_000_000,
   startAt: toKstDateString(new Date(Date.now() + 10 * 86_400_000)),
   endAt: toKstDateString(new Date(Date.now() + 40 * 86_400_000)),
-  coverUrl: '/api/funding/media/cover.webp',
+  coverUrl: '/api/funding/media/creator-a-cover.webp',
 };
 
 const VALID_REWARD = {
@@ -352,7 +352,7 @@ describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 
       title: '기존 제목',
       summary: '기존 요약',
       content: '본문',
-      coverUrl: '/api/funding/media/cover.webp',
+      coverUrl: '/api/funding/media/creator-a-cover.webp',
       goalAmount: 1_000_000,
       startAt: new Date(kstStartOfDayIso(toKstDateString(new Date(Date.now() - 10 * 86_400_000)))),
       endAt: new Date(kstEndOfDayIso(toKstDateString(new Date(Date.now() + 10 * 86_400_000)))),
@@ -362,8 +362,8 @@ describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 
   it('모금이 이미 시작된 승인 프로젝트에서 제목만 바꾸면 200이고 제목이 실제로 바뀐다', async () => {
     const project = await seedLiveApprovedProject();
     // 화면(BasicSectionForm)은 잠긴 날짜 필드도 폼 값에 실어 매번 함께 보낸다 — 여기서도
-    // 미래 날짜를 그대로 보낸다. 서버가 이 값을 무시하고 DB의 기존 날짜로 강제 치환해야
-    // (validateBasicSection의 leadDays 검사를 우회해야) 저장이 통과한다.
+    // 미래 날짜를 그대로 보낸다. 서버가 이 값을 무시하고 DB의 Date를 lockedDates로 넘겨야
+    // (validateBasicSection의 leadDays 검사를 건너뛰어야) 저장이 통과한다.
     const r = await call(sectionHandler, {
       query: { id: project.id },
       body: {
@@ -378,6 +378,31 @@ describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 
     // 날짜는 그대로다 — 요청이 보낸 미래 날짜가 아니라 시드된 기존 값(초 단위로 저장되므로
     // Date.now()를 여기서 다시 계산하지 않고 시드 자체의 startAt과 비교한다)이 유지됐다.
     expect(row?.startAt.getTime()).toBe(project.startAt.getTime());
+  });
+
+  /**
+   * M5 — 잠긴 날짜를 bare `YYYY-MM-DD`로 치환하던 시절의 손실 왕복. `start_at`이 정확히
+   * KST 자정이 아닌 행(2026-09-17 이전에 서버 로컬 자정으로 저장된 것)은 치환값이 원래
+   * 순간으로 돌아오지 않아, 제목 한 글자만 고쳐도 basicLockedViolation이 거부했다.
+   */
+  it('start_at이 KST 자정이 아닌 행에서도 제목만 고치면 200이고 날짜가 그대로다', async () => {
+    const startAt = new Date('2026-09-10T00:00:00Z'); // UTC 자정 = KST 09:00
+    const endAt = new Date('2026-10-10T15:00:00Z');
+    const project = await seedLiveApprovedProject({ startAt, endAt });
+
+    const r = await call(sectionHandler, {
+      query: { id: project.id },
+      body: {
+        section: 'basic',
+        value: { ...VALID_BASIC, slug: 'live-project', goalAmount: 1_000_000, title: '고친 제목' },
+      },
+    });
+    expect(r.status).toBe(200);
+
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, project.id));
+    expect(row?.title).toBe('고친 제목');
+    expect(row?.startAt.getTime()).toBe(startAt.getTime());
+    expect(row?.endAt.getTime()).toBe(endAt.getTime());
   });
 
   it('초안 저장에는 운영자 메일이 가지 않는다', async () => {

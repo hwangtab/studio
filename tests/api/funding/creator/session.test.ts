@@ -25,7 +25,7 @@ const call = async (body: unknown, method = 'POST') => {
 beforeEach(() => {
   jest.clearAllMocks();
   (isAllowedContactRequestOrigin as jest.Mock).mockReturnValue(true);
-  (consumeCreatorLoginToken as jest.Mock).mockResolvedValue({ creatorId: 'c1' });
+  (consumeCreatorLoginToken as jest.Mock).mockResolvedValue({ creatorId: 'c1', sessionVersion: 3 });
   (consumeRateLimit as jest.Mock).mockResolvedValue(true);
   (sendCreatorSessionFailureAlert as jest.Mock).mockResolvedValue(null);
   (loginCreatorSession as jest.Mock).mockResolvedValue(undefined);
@@ -62,7 +62,9 @@ it('정상 토큰이면 200이고 세션이 심긴다', async () => {
   expect(r.status).toBe(200);
   expect(r.body).toEqual({ ok: true });
   expect(consumeCreatorLoginToken).toHaveBeenCalledWith('raw-token');
-  expect(loginCreatorSession).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'c1');
+  // 판본은 consumeCreatorLoginToken이 같은 왕복에서 돌려준 값을 그대로 넘긴다 —
+  // 토큰이 소진된 뒤에 추가 조회가 없어야 한다(실패하면 링크만 죽는다).
+  expect(loginCreatorSession).toHaveBeenCalledWith(expect.anything(), expect.anything(), 'c1', 3);
 });
 
 it('Cache-Control: no-store가 실린다', async () => {

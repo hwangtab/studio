@@ -2,10 +2,11 @@ import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
-import { bookings, contracts, fundingPledges, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
+import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
+import { buildFundingPayoutPreview } from '../funding/payout';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
@@ -622,7 +623,8 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       detail:
         `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
         '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
-        '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 배송 CSV의 shipHold 칸에 "발송금지"로 나오고, ' +
+        '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 관리자 CSV의 shipHold 칸과 개설자 배송 목록·CSV의 ' +
+        '"발송 금지" 칸에 "발송금지"로 나오고, ' +
         '발송 상태 변경은 API에서 막힙니다.',
     });
   }
@@ -736,6 +738,54 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         `결제 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 되면 고객 이름·연락처·이메일이 지워집니다. ` +
         '아직 리워드를 안 보낸 상태로 그 시점이 90일 안으로 다가왔습니다 — ' +
         '지금 발송하거나, 환불하거나, 계속 보관할지 관리자 > 펀딩 상세에서 판단해 주세요.',
+    });
+  }
+
+  /**
+   * **기록된 정산액과 지금 계산한 값이 어긋난 프로젝트.**
+   *
+   * `funding_project_payouts`는 불변이다(기록 시점의 숫자가 이체 근거다). 그런데 기록 뒤에
+   * 환불이 들어오면 실제로 나가야 할 돈이 줄어드는데, 그 차이를 보여 주는 곳이 관리자 상세
+   * 패널 하나뿐이었다 — 이체 대기 중인 정산을 기록값대로 보내면 과다 이체가 된다.
+   *
+   * 판정은 화면과 같은 함수(`buildFundingPayoutPreview`)로 다시 계산한 `netAmount`다. 한
+   * 프로젝트씩 조회하므로 정산이 기록된 프로젝트 수만큼 도는데, 이 표는 프로젝트당 한 행이고
+   * 지금 몇 건 규모다 — 수백 건이 되면 집계 쿼리 한 방으로 바꿀 자리다.
+   *
+   * **`pending`인 정산만 본다.** 이미 이체한(`paid`) 정산 뒤에 환불이 들어오면 이 항목은
+   * 끌 수단이 없어 매일 영구히 울린다 — 경보 피로로 신호가 죽는 것이 이 저장소가 반복해서
+   * 막아 온 실패 모드다. 그리고 그건 다른 문제다: 이체 전이면 "보낼 금액을 고쳐라"이고,
+   * 이체 뒤면 "과다 지급한 몫을 회수하라"다. 후자를 알리려면 회수 진행 상태를 담는 자리가
+   * 먼저 있어야 하는데 그런 컬럼이 없다. 여기서 섞지 않는다.
+   */
+  const recordedPayouts = await db
+    .select({ projectId: fundingProjectPayouts.projectId, netAmount: fundingProjectPayouts.netAmount })
+    .from(fundingProjectPayouts)
+    .where(eq(fundingProjectPayouts.status, 'pending'));
+  const payoutDrift: string[] = [];
+  for (const row of recordedPayouts) {
+    const preview = await buildFundingPayoutPreview(row.projectId);
+    if (!preview) continue;
+    if (preview.netAmount !== row.netAmount) {
+      payoutDrift.push(
+        `${preview.projectSlug}: 기록 ${row.netAmount.toLocaleString('ko-KR')}원 → 현재 ${preview.netAmount.toLocaleString('ko-KR')}원`,
+      );
+    }
+  }
+
+  if (payoutDrift.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/funding',
+      title: `기록된 정산액과 현재 계산값이 다른 프로젝트 ${payoutDrift.length}건`,
+      detail:
+        `${sample(payoutDrift)}
+` +
+        // 원인을 단정하지 않는다 — 환불 말고 세금 유형 변경으로도 갈린다(savePayoutSection은
+        // 원천징수액이 0인 정산만 있는 개설자의 invoice→withholding 전환을 막지 않는다).
+        '기록 뒤 환불 또는 세금 유형 변경으로 계산값이 달라졌습니다. 기록값 그대로 이체하면 ' +
+        '금액이 어긋납니다 — 관리자 > 펀딩 상세의 정산 패널에서 차이를 확인하고 이체 금액을 ' +
+        '판단해 주세요.',
     });
   }
 

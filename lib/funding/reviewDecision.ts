@@ -1,4 +1,4 @@
-import { and, eq, ne, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingProjects } from '../../db/schema';
@@ -7,6 +7,7 @@ import { findMissingRequiredSections } from './creatorValidation';
 import { getFundingProject } from './projects';
 import { nextReviewStatus, type ReviewAction } from './reviewTransition';
 import { normalizeFundingSlug, slugRejectionReason } from './reservedSlugs';
+import { hasApprovedFundingSlug, isFundingSlugTaken, isSlugConflictError } from './slugOccupancy';
 import { toKstDateString } from './creatorDateInput';
 
 /** 관리자 심사 화면이 실제로 실행하는 판정. `nextReviewStatus`의 전체 액션 중 이 넷만 쓴다. */
@@ -152,12 +153,16 @@ export const decideProject = async (
     return deny('duplicate_slug', '이미 사이트가 쓰고 있는 주소라 사용할 수 없습니다. 다른 주소를 적어 주세요.');
   }
 
-  const [taken] = await getDb()
-    .select({ id: fundingProjects.id })
-    .from(fundingProjects)
-    .where(and(eq(fundingProjects.slug, slug), ne(fundingProjects.id, projectId)))
-    .limit(1);
-  if (taken) return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+  // 반려·보관된 프로젝트는 점유로 세지 않는다(lib/funding/slugOccupancy.ts) — 반려된 옛
+  // 신청서가 주소를 영구히 붙들고 있던 자리다.
+  if (await isFundingSlugTaken(slug, projectId)) {
+    return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+  }
+  // 승인 경로의 마지막 확인 — 두 공개 프로젝트가 같은 주소를 갖는 상태는 어느 쪽이 열릴지
+  // 알 수 없고, 승인이 그것을 만드는 유일한 경로다.
+  if (await hasApprovedFundingSlug(slug, projectId)) {
+    return deny('duplicate_slug', '이미 승인된 프로젝트가 쓰고 있는 주소입니다. 다른 주소를 적어 주세요.');
+  }
 
   // 필수값 검사. 제출 시점엔 채워져 있었어도 제출과 승인 사이에 무엇이 바뀌었을 수 있다
   // (이 계획엔 승인된 뒤에만 편집을 막는 가드가 있지만, submitted 상태에서 다시 draft로
@@ -221,7 +226,18 @@ export const decideProject = async (
   // 적어 둔 문장이 승인과 동시에 조용히 사라진다. note가 실제로 전달됐을 때만 갈아 끼우고,
   // 그렇지 않으면 기존 값을 보존한다.
   const approveReviewNote = input.note !== undefined ? note : project.reviewNote;
-  const batchResult = await db.batch([
+  /**
+   * 승인 UPDATE는 **조건 UPDATE**다(WHERE에 진입 시 읽은 reviewStatus를 건다) — 그 사이 다른
+   * 운영자가 먼저 판정하면 0행이라 아래 conflict로 떨어진다.
+   *
+   * 조건만으로 못 막는 것이 하나 남는다: 같은 slug의 **반려 행 둘**이 동시에 재신청·승인되면
+   * 위 두 검사는 양쪽 다 통과한다(둘 다 그 순간 rejected다). 부분 유니크 인덱스
+   * (`funding_projects_slug_live_unique`)가 뒤에서 한쪽을 떨어뜨리고, 여기서 그 예외를
+   * 사람이 읽을 409로 바꾼다. 배치는 통째로 롤백되므로 진 쪽은 아무것도 쓰지 않는다.
+   */
+  let batchResult;
+  try {
+    batchResult = await db.batch([
     db
       .update(fundingProjects)
       .set({
@@ -244,7 +260,13 @@ export const decideProject = async (
           WHERE p.id = funding_rewards.project_id AND p.review_status = 'approved' AND p.updated_at = ${epoch}
         )
     `),
-  ]);
+    ]);
+  } catch (error: unknown) {
+    if (isSlugConflictError(error)) {
+      return deny('duplicate_slug', '그 사이 다른 프로젝트가 같은 주소로 승인됐습니다. 다른 주소를 적어 주세요.');
+    }
+    throw error;
+  }
 
   if (Number(batchResult[0].rowsAffected) === 0) {
     return deny('conflict', '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');

@@ -569,6 +569,17 @@ export const fundingCreators = sqliteTable('funding_creators', {
    * 지우지 않는다.** 그때는 이미 지급한 소득의 지급명세서 제출 의무가 근거로 남는다.
    */
   residentNumberEnc: text('resident_number_enc'),
+  /**
+   * 세션 판본 — 이미 발급된 로그인 쿠키를 끊는 수단.
+   *
+   * iron-session 쿠키는 7일 살아 있고 그 자체로는 DB를 한 번도 보지 않는다. 그래서 운영자가
+   * 탈취 신고를 받아 로그인 주소를 바꿔도(`creatorAccountDecision.ts`), 변경 전에 한 번
+   * 로그인해 둔 쿠키는 정산 계좌와 배송 CSV에 계속 닿는다. 로그인 시점의 이 값을 쿠키에
+   * 싣고 요청마다 DB 값과 대조하면, 이 숫자를 올리는 것만으로 그 쿠키가 죽는다.
+   *
+   * **이메일 변경만 올린다.** 이름 변경은 로그인 수단이 아니므로 세션을 끊을 이유가 없다.
+   */
+  sessionVersion: integer('session_version').notNull().default(1),
   lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
@@ -601,7 +612,7 @@ export const fundingProjects = sqliteTable('funding_projects', {
    * 승인 시 확정하고 그 뒤에는 바꾸지 않는다 — 바꾸면 진행 중 모금액이 공개적으로 0원이
    * 되고 기존 후원자가 관리 페이지에서 프로젝트를 찾지 못한다(CLAUDE.md).
    */
-  slug: text('slug').notNull().unique(),
+  slug: text('slug').notNull(),
   creatorId: text('creator_id').notNull().references(() => fundingCreators.id),
   title: text('title').notNull(),
   summary: text('summary').notNull(),
@@ -647,7 +658,28 @@ export const fundingProjects = sqliteTable('funding_projects', {
   lastmod: text('lastmod'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
-});
+},
+(t) => ({
+  /**
+   * slug 유일성은 **살아 있는 프로젝트끼리만** 본다 — `rejected`만 빠진다.
+   *
+   * 예전엔 `slug` 컬럼에 그냥 `.unique()`를 걸어 전 행에 걸렸다. `delete(fundingProjects)`
+   * 경로가 저장소에 없으므로, 한 번 반려된 신청서가 그 주소를 **영구히** 붙들고 있었다 —
+   * 개설자도 운영자도 되찾는 길이 DB 직접 수정뿐이었다. 반려된 행 자체는 기록으로 그대로
+   * 둔다(slug를 개명하면 그 기록을 고치는 것이다). 유일성 판정에서 빼기만 한다.
+   *
+   * 나머지 넷은 점유한다. `draft`·`submitted`는 남이 심사 신청해 둔 주소를 가로채면 승인
+   * 순간 어느 쪽이 그 주소를 갖는지가 경합으로 갈리기 때문이고, `changes_requested`는
+   * 재제출을 기다리는 살아 있는 신청서라 그 사이 주소를 빼앗기면 개설자가 고쳐 낼 수가
+   * 없다. `approved`는 이미 공개된 주소다.
+   *
+   * 애플리케이션 쪽 판정은 `lib/funding/slugOccupancy.ts`가 같은 규칙으로 한다. 이 인덱스는
+   * 그 검사와 쓰기 사이의 경합을 막는 **최종 방어선**이다.
+   */
+  slugLiveUnique: uniqueIndex('funding_projects_slug_live_unique')
+    .on(t.slug)
+    .where(sql`review_status <> 'rejected'`),
+}));
 
 export const fundingRewards = sqliteTable(
   'funding_rewards',

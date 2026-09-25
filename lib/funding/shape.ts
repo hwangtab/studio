@@ -52,6 +52,24 @@ export interface FundingProject {
 }
 
 /**
+ * 디지털 전용 리워드인가 — `delivered_at`(약관 제13조의 '전달 완료 후 1년 파기' 기산점)의
+ * 정본이 확정 시각인지 발송 시각인지를 가르는 판정.
+ *
+ * 세 경로가 **같은 식**을 써야 한다: 온라인 확정(`lib/funding/confirm.ts`), 발송 상태 저장
+ * (`lib/funding/fulfillment.ts`), 수기 등록(`pages/api/admin/funding/pledges/index.ts`).
+ * 예전엔 앞의 둘이 각자 같은 식을 손으로 적고 수기 등록은 아예 없어, 수기로 등록된 디지털
+ * 후원은 기산점이 영영 생기지 않았다(운영자가 `delivered`를 눌러도 안 찍힌다 — 그 경로는
+ * 디지털이면 값을 건드리지 않는다).
+ *
+ * 프로젝트나 리워드를 못 읽으면 **false**(배송 리워드로 다룬다) — 아직 전달되지 않은 건에
+ * 기산점을 찍는 쪽이 안 찍는 쪽보다 나쁘다. 배송 중인 건의 배송지가 1년 뒤 파기 대상이 된다.
+ */
+export const isDigitalReward = (
+  project: { rewards: Array<Pick<FundingReward, 'id' | 'requiresShipping'>> } | null | undefined,
+  rewardId: string,
+): boolean => project?.rewards.find((r) => r.id === rewardId)?.requiresShipping === false;
+
+/**
  * 공개 화면으로 내려보낼 프로젝트에서 **내려받기 주소를 벗긴다.**
  *
  * 리워드의 `downloads`는 후원자에게만 가야 하는 값이다. 그런데 상세·후원 화면은
@@ -98,9 +116,43 @@ const posInt = (v: unknown, name: string): number => {
   if (typeof v !== 'number' || !Number.isInteger(v) || v <= 0) throw new Error(`funding frontmatter: ${name}은(는) 양의 정수여야 합니다`);
   return v;
 };
+/**
+ * 모금 시작·종료 시각. **시간대를 명시하지 않은 값은 거부한다.**
+ *
+ * 개설자 경로는 KST 달력 날짜만 받고 시각을 서버가 붙이는데(`creatorValidation.ts`), md
+ * 프로젝트는 그 검증기를 지나지 않는다. 그래서 따옴표 없는 `endAt: 2026-10-19`가 오면 YAML이
+ * **UTC 자정**으로 읽어 마감이 그날 09:00 KST가 된다 — 아무 오류도 없이 개설자가 고른
+ * 마지막 날이 사라지는 형태다(개설자 경로에서 고쳤던 것과 같은 버그).
+ *
+ * 두 갈래로 막는다:
+ * - **문자열**: `Z` 또는 `±HH:MM` 오프셋이 있어야 한다.
+ * - **Date**: YAML이 이미 파싱한 값이라 원문을 볼 수 없다. 따옴표 없는 bare 날짜는 정확히
+ *   UTC 자정(`00:00:00.000Z`)으로 떨어지므로 그 값을 거부한다. `+09:00`을 적은 값은
+ *   15:00Z 같은 시각이라 걸리지 않는다. KST 자정을 정말로 UTC로 적고 싶다면
+ *   `2026-10-19T00:00:00Z`가 아니라 `2026-10-18T15:00:00Z`가 맞는 표기다.
+ */
+const TZ_OFFSET = /(?:Z|[+-]\d{2}:\d{2})$/;
+
 const isoDate = (v: unknown, name: string): string => {
-  const s = v instanceof Date ? v.toISOString() : str(v, name);
+  if (v instanceof Date) {
+    if (Number.isNaN(v.getTime())) throw new Error(`funding frontmatter: ${name}이(가) 날짜가 아닙니다`);
+    if (v.toISOString().endsWith('T00:00:00.000Z')) {
+      throw new Error(
+        `funding frontmatter: ${name}에 시간대를 함께 적어야 합니다 — 따옴표 없는 \`2026-10-19\`는 `
+        + 'YAML이 UTC 자정으로 읽어 마감이 09:00 KST로 앞당겨집니다. '
+        + `\`${name}: 2026-10-19T23:59:59+09:00\`처럼 적어 주세요.`,
+      );
+    }
+    return v.toISOString();
+  }
+  const s = str(v, name);
   if (Number.isNaN(new Date(s).getTime())) throw new Error(`funding frontmatter: ${name}이(가) 날짜가 아닙니다`);
+  if (!TZ_OFFSET.test(s)) {
+    throw new Error(
+      `funding frontmatter: ${name}에 시간대를 함께 적어야 합니다(\`+09:00\` 또는 \`Z\`) — `
+      + '없으면 해석이 환경에 따라 갈립니다.',
+    );
+  }
   return s;
 };
 

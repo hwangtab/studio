@@ -80,3 +80,35 @@ describe('validateFundingProjectShape', () => {
     });
   });
 });
+
+/**
+ * L14 — md 프로젝트는 개설자 검증기를 지나지 않는다. 따옴표 없는 `endAt: 2026-10-19`가 오면
+ * YAML이 UTC 자정으로 읽어 마감이 그날 09:00 KST로 앞당겨진다 — 아무 오류도 없이.
+ */
+describe('startAt·endAt의 시간대', () => {
+  const base = {
+    slug: 'tz', title: 'T', summary: 'S', cover: '/c.webp', goalAmount: 1_000_000,
+    rewards: [{ id: 'a', title: 'A', description: 'd', amount: 10_000, estimatedDelivery: '2026-12' }],
+  };
+  const parse = (startAt: unknown, endAt: unknown) =>
+    () => validateFundingProjectShape({ ...base, startAt, endAt }, 'tz', '본'.repeat(210));
+
+  it('+09:00을 적은 값은 통과한다 (현재 content/funding/*.md 두 건의 표기)', () => {
+    expect(parse(new Date('2026-09-14T00:00:00+09:00'), new Date('2026-10-19T23:59:59+09:00'))).not.toThrow();
+  });
+
+  it('YAML이 bare 날짜를 파싱한 UTC 자정 Date는 거부한다', () => {
+    expect(parse(new Date('2026-09-14T00:00:00Z'), new Date('2026-10-19T23:59:59+09:00'))).toThrow(/시간대/);
+    expect(parse(new Date('2026-09-14T00:00:00+09:00'), new Date('2026-10-19T00:00:00Z'))).toThrow(/시간대/);
+  });
+
+  it('오프셋 없는 문자열도 거부한다', () => {
+    expect(parse('2026-09-14T00:00:00', new Date('2026-10-19T23:59:59+09:00'))).toThrow(/시간대/);
+    expect(parse('2026-09-14', new Date('2026-10-19T23:59:59+09:00'))).toThrow(/시간대/);
+  });
+
+  it('오프셋을 적은 문자열은 통과한다', () => {
+    expect(parse('2026-09-14T00:00:00+09:00', '2026-10-19T23:59:59+09:00')).not.toThrow();
+    expect(parse('2026-09-13T15:00:00Z', '2026-10-19T14:59:59Z')).not.toThrow();
+  });
+});

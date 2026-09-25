@@ -444,12 +444,13 @@ describe('편집 가능 상태', () => {
       .where(eq(schema.fundingProjects.id, id));
 
     const r = await saveCreatorSection(creator, {
-      name: '이름', contactName: null, phone: null, bio: null, links: null,
+      name: '가나', contactName: '담당자', phone: null, bio: '소개', links: null,
     });
     expect(r).toMatchObject({ ok: true });
 
     const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
-    expect(row.name).toBe('이름');
+    expect(row.contactName).toBe('담당자');
+    expect(row.bio).toBe('소개');
   });
 
   it('개설자 계정 자체가 없으면 not_found', async () => {
@@ -520,10 +521,33 @@ describe('승인된 프로젝트가 있으면 개설자 이름이 잠긴다', ()
     expect(row.bio).toBe('소개');
   });
 
-  it('approved 프로젝트가 없으면(submitted뿐이면) 이름을 바꿀 수 있다', async () => {
+  /**
+   * M6 — 사양이 바뀌었다. 예전에는 `submitted`뿐이면 이름을 바꿀 수 있었고, 이 테스트가
+   * 그 동작을 초록으로 고정하고 있었다. 그런데 첫 프로젝트가 심사 대기인 동안 이름을
+   * 바꾸면 **심사받지 않은 판매자명이 승인과 함께 공개된다** — 운영자가 검토한 이름과
+   * 공개된 이름이 다를 수 있다는 뜻이다. `submitted`부터 잠근다.
+   */
+  it('심사 대기(submitted) 중에도 이름이 잠긴다 — 심사받지 않은 판매자명이 공개되지 않게', async () => {
     const creator = await seedCreator('unlocked-name@example.com');
     const { id } = await createDraftProject(creator);
     await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, id));
+
+    // 나머지 칸은 저장된다(잠금은 거부가 아니라 무시다).
+    const r = await saveCreatorSection(creator, {
+      name: '새 이름', contactName: null, phone: null, bio: '고친 소개', links: null,
+    });
+    expect(r).toMatchObject({ ok: true });
+
+    const [row] = await mockDb.select().from(schema.fundingCreators).where(eq(schema.fundingCreators.id, creator));
+    expect(row.name).toBe('가나');
+    expect(row.bio).toBe('고친 소개');
+  });
+
+  it('초안·반려만 있으면 이름을 바꿀 수 있다', async () => {
+    const creator = await seedCreator('draft-only-name@example.com');
+    const { id } = await createDraftProject(creator);
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'rejected' })
       .where(eq(schema.fundingProjects.id, id));
 
     const r = await saveCreatorSection(creator, {
@@ -587,6 +611,68 @@ describe('slug 중복', () => {
 
     const rows = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.slug, 'taken-slug'));
     expect(rows).toHaveLength(1);
+  });
+
+  /**
+   * M7 — 반려·보관된 프로젝트는 slug를 점유하지 않는다. 삭제 경로가 저장소에 없어서,
+   * 예전엔 한 번 반려된 신청서가 그 주소를 영구히 붙들고 있었다(되찾는 길이 DB 직접
+   * 수정뿐). 반려된 행 자체는 기록으로 그대로 둔다 — 점유로 세지 않기만 한다.
+   */
+  it('반려된 프로젝트가 쓰던 slug는 다른 개설자도 다시 쓸 수 있다 (주소는 공공재다)', async () => {
+    const creator = await seedCreator('rejected-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'freed-slug' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'rejected' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('rejected-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'freed-slug' }))).toMatchObject({ ok: true });
+
+    // 반려된 옛 행은 그대로 남는다 — 기록이다. 관리자 목록에서 두 행이 같은 slug로 보이되
+    // review_status로 구분된다.
+    const rows = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.slug, 'freed-slug'));
+    expect(rows).toHaveLength(2);
+    expect(rows.map((r) => r.reviewStatus).sort()).toEqual(['draft', 'rejected']);
+  });
+
+  it('수정 요청(changes_requested) 중인 프로젝트의 slug는 놓아주지 않는다 — 재제출을 기다리는 신청서다', async () => {
+    const creator = await seedCreator('changes-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'being-fixed' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'changes_requested' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('changes-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'being-fixed' })))
+      .toMatchObject({ ok: false, code: 'duplicate_slug' });
+  });
+
+  it('승인된 프로젝트가 쓰는 slug는 여전히 거부한다', async () => {
+    const creator = await seedCreator('approved-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'held-slug' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved', status: 'auto' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('approved-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'held-slug' })))
+      .toMatchObject({ ok: false, code: 'duplicate_slug' });
+  });
+
+  it('심사 대기(submitted) 중인 프로젝트의 slug도 거부한다 — 승인 순간을 경합으로 만들지 않는다', async () => {
+    const creator = await seedCreator('submitted-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'pending-slug' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('submitted-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'pending-slug' })))
+      .toMatchObject({ ok: false, code: 'duplicate_slug' });
   });
 
   it('content/funding/*.md의 slug와 겹쳐도 거부한다', async () => {

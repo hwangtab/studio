@@ -16,6 +16,7 @@ import {
 } from '../../../../../lib/funding/policy';
 import { findReward } from '../../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
+import { isDigitalReward } from '../../../../../lib/funding/shape';
 import {
   MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
   aggregateProjectStatus, expireStalePledges, findFundingOrderByOrderNo, fundingStockCondition,
@@ -76,6 +77,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         message: `실수령액은 1원 이상 ${MAX_MANUAL_ACTUAL_AMOUNT.toLocaleString('ko-KR')}원 이하의 정수여야 합니다.`,
       });
     }
+    /**
+     * 하한도 본다 — 상한만 있으면 `30000`을 `3000`으로 잘못 친 오타가 그대로 통과해 공개
+     * 모금액과 정산 grossAmount에 들어간다. 에누리·잔돈을 담는 칸이라 정확히 일치를 요구할
+     * 수는 없으므로, 리워드가 기준의 **절반**을 선으로 잡는다 — 자릿수 하나가 빠지면 반드시
+     * 걸리고(1/10) 실무의 에누리 폭은 걸리지 않는다.
+     */
+    if (hasActualAmount) {
+      const expected = computeFundingAmounts(reward.amount, quantity, additionalAmount).totalAmount;
+      if (actualAmount * 2 < expected) {
+        return res.status(400).json({
+          ok: false,
+          message: '실수령액이 계산 금액(리워드×수량+추가금)의 절반 미만입니다 — 자릿수를 확인해 주세요. '
+            + `(계산 금액 ${expected.toLocaleString('ko-KR')}원)`,
+        });
+      }
+    }
     const now = new Date();
     await expireStalePledges(now);
     // 이 사전 검사는 **사람에게 이유를 알려 주기 위한 것**이고, 초과 판매를 실제로 막는 것은
@@ -111,6 +128,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 둘 다 확정 상태라 자동 취소 대상이 아니고, aggregateProjectStatus의 remaining은
      * Math.max로 하한이 걸려 화면엔 '품절'로만 보여 초과분이 드러나지도 않았다.
      */
+    /**
+     * 디지털 전용 리워드는 **등록 순간이 전달 완료**다 — 확정 경로(lib/funding/confirm.ts)와
+     * 같은 판정(`isDigitalReward`)에 같은 시각(`epoch(now)`, 아래 `paid_at`과 동일)을 쓴다.
+     *
+     * 이 값이 없으면 약관 제13조의 '전달 완료 후 1년 파기' 기산점이 영영 생기지 않는다.
+     * 수기 등록은 confirm을 타지 않고, `setFulfillment`는 디지털이면 delivered_at을 일부러
+     * 건드리지 않기 때문에 운영자가 `delivered`를 눌러도 채워지지 않는다.
+     */
+    const digitalDeliveredAt = isDigitalReward(project, reward.id) ? epoch(now) : null;
     const result = await db.batch([
       // orders·funding_pledges INSERT를 하나의 배치로 묶는다 — 둘 중 하나만 성공하면
       // payments 없이 paid로 남는 고아 주문이 생긴다(예약 confirm.ts의 batch 패턴).
@@ -132,12 +158,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       db.run(sql`
         INSERT INTO funding_pledges (
           id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
-          payment_method, hold_expires_at, paid_at, display_name_public, entry_source,
+          payment_method, hold_expires_at, paid_at, delivered_at, display_name_public, entry_source,
           shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
           admin_memo
         )
         SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
                ${quantity}, ${additionalAmount}, 'bank_transfer', ${epoch(now)}, ${epoch(now)},
+               ${digitalDeliveredAt},
                ${b.displayNamePublic === true ? 1 : 0}, 'manual',
                ${s.name ?? null}, ${s.phone ?? null}, ${s.postcode ?? null},
                ${s.address1 ?? null}, ${s.address2 ?? null}, ${s.memo ?? null},
@@ -155,9 +182,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 목록이 걸러내고(listFundingOrders의 pledge EXISTS) 예약 목록도 안 싣는 상태라 어떤
      * 관리 화면에도 안 보인다. failed 마킹은 UPDATE가 실패해도 흔적이 남고, 무엇보다 같은
      * 상황을 두 경로가 같은 모양으로 남겨야 나중에 세는 사람이 헷갈리지 않는다.
+     *
+     * **`notificationError`도 같이 지운다.** 위 INSERT가 발송권 선점용 센티널(SEND_PENDING)을
+     * 남겨 두는데, 실패 주문에 그게 남으면 지울 경로가 없다 — 헬스체크는 상태를 안 보고
+     * `isNotNull`만 봐서 매일 집계하고, 그 주문은 pledge가 없어 관리자 목록에 안 떠
+     * 센티널을 지우는 유일한 경로(재발송 버튼)에 닿을 수 없다.
      */
     if (rowsAffectedOf(result[1]) === 0) {
-      await db.update(orders).set({ status: 'failed', updatedAt: now }).where(eq(orders.id, orderId));
+      await db.update(orders).set({ status: 'failed', notificationError: null, updatedAt: now })
+        .where(eq(orders.id, orderId));
       return res.status(409).json({ ok: false, message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.' });
     }
     /**

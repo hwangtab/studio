@@ -4,6 +4,8 @@ import {
 } from './creatorValidation';
 
 const NOW = new Date('2026-10-01T00:00:00+09:00');
+/** 업로드 키는 `<creatorId>-<uuid>.webp`다 — 소유 판정이 이 접두사를 본다. */
+const MEDIA = { creatorId: 'c1' };
 const basic = () => ({
   title: '2집 제작 펀딩',
   summary: '두 번째 앨범을 만듭니다',
@@ -11,35 +13,35 @@ const basic = () => ({
   goalAmount: 3000000,
   startAt: '2026-10-10',
   endAt: '2026-11-10',
-  coverUrl: '/api/funding/media/a.webp?w=1200&h=675',
+  coverUrl: '/api/funding/media/c1-a.webp?w=1200&h=675',
 });
 
 describe('validateBasicSection', () => {
   it('정상 입력을 통과시킨다', () => {
-    const r = validateBasicSection(basic(), NOW);
+    const r = validateBasicSection(basic(), NOW, MEDIA);
     expect(r.ok).toBe(true);
   });
 
   it('시작일이 오늘부터 3일 안이면 거부한다 — 심사 시간이 필요하다', () => {
-    const r = validateBasicSection({ ...basic(), startAt: '2026-10-02' }, NOW);
+    const r = validateBasicSection({ ...basic(), startAt: '2026-10-02' }, NOW, MEDIA);
     expect(r).toMatchObject({ ok: false });
     expect((r as { message: string }).message).toMatch(/3일/);
   });
 
   it('기간이 60일을 넘으면 거부한다', () => {
-    const r = validateBasicSection({ ...basic(), endAt: '2026-12-20' }, NOW);
+    const r = validateBasicSection({ ...basic(), endAt: '2026-12-20' }, NOW, MEDIA);
     expect(r).toMatchObject({ ok: false });
     expect((r as { message: string }).message).toMatch(/60일/);
   });
 
   it('종료가 시작보다 앞이면 거부한다', () => {
-    const r = validateBasicSection({ ...basic(), endAt: '2026-10-09' }, NOW);
+    const r = validateBasicSection({ ...basic(), endAt: '2026-10-09' }, NOW, MEDIA);
     expect(r).toMatchObject({ ok: false });
   });
 
   // 서버가 KST 자정·23:59:59을 직접 붙인다 — 클라이언트가 무엇을 보내든 신뢰하지 않는다.
   it('날짜는 KST 자정에 시작해 그날 23:59:59에 끝난다', () => {
-    const r = validateBasicSection(basic(), NOW);
+    const r = validateBasicSection(basic(), NOW, MEDIA);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.value.startAt.toISOString()).toBe('2026-10-09T15:00:00.000Z'); // 2026-10-10 00:00 KST
@@ -49,34 +51,34 @@ describe('validateBasicSection', () => {
   // bare `YYYY-MM-DD`만 받는다. 전체 ISO 문자열이 오면(예전 클라이언트, 다른 호출부의
   // 실수) 애매하게 하루 앞당겨 해석하는 대신 명확히 거부한다.
   it('전체 ISO 문자열은 거부한다 — bare 날짜만 받는다', () => {
-    const r = validateBasicSection({ ...basic(), endAt: '2026-11-10T23:59:59+09:00' }, NOW);
+    const r = validateBasicSection({ ...basic(), endAt: '2026-11-10T23:59:59+09:00' }, NOW, MEDIA);
     expect(r).toMatchObject({ ok: false });
   });
 
   it('목표 금액의 범위와 단위를 본다', () => {
-    expect(validateBasicSection({ ...basic(), goalAmount: 5000 }, NOW).ok).toBe(false);
-    expect(validateBasicSection({ ...basic(), goalAmount: 1234567 }, NOW).ok).toBe(false);
-    expect(validateBasicSection({ ...basic(), goalAmount: 1230000 }, NOW).ok).toBe(true);
+    expect(validateBasicSection({ ...basic(), goalAmount: 5000 }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), goalAmount: 1234567 }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), goalAmount: 1230000 }, NOW, MEDIA).ok).toBe(true);
   });
 
   it('예약 slug를 거부한다', () => {
-    const r = validateBasicSection({ ...basic(), slug: 'apply' }, NOW);
+    const r = validateBasicSection({ ...basic(), slug: 'apply' }, NOW, MEDIA);
     expect(r).toMatchObject({ ok: false });
     expect((r as { message: string }).message).toMatch(/사용할 수 없/);
   });
 
   it('제목·요약 길이 상한을 본다', () => {
-    expect(validateBasicSection({ ...basic(), title: 'a'.repeat(CREATOR_LIMITS.titleMax + 1) }, NOW).ok).toBe(false);
-    expect(validateBasicSection({ ...basic(), summary: 'a'.repeat(CREATOR_LIMITS.summaryMax + 1) }, NOW).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), title: 'a'.repeat(CREATOR_LIMITS.titleMax + 1) }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), summary: 'a'.repeat(CREATOR_LIMITS.summaryMax + 1) }, NOW, MEDIA).ok).toBe(false);
   });
 
   // 우리 업로드 경로에서 온 것만 받는다 — 외부 호스트를 넣으면 next/image가 렌더 중
   // throw하고, 승인 뒤에는 상세 페이지와 /ko/funding 목록 전체가 함께 죽는다.
   it('대표 이미지는 우리 업로드 경로(/api/funding/media/)에서 온 것만 받는다', () => {
-    expect(validateBasicSection({ ...basic(), coverUrl: 'https://evil.example/a.webp' }, NOW).ok).toBe(false);
-    expect(validateBasicSection({ ...basic(), coverUrl: '/images/a.webp' }, NOW).ok).toBe(false);
-    expect(validateBasicSection({ ...basic(), coverUrl: '' }, NOW).ok).toBe(false);
-    expect(validateBasicSection({ ...basic(), coverUrl: '/api/funding/media/a.webp?w=1200&h=675' }, NOW).ok).toBe(true);
+    expect(validateBasicSection({ ...basic(), coverUrl: 'https://evil.example/a.webp' }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: '/images/a.webp' }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: '' }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: '/api/funding/media/c1-a.webp?w=1200&h=675' }, NOW, MEDIA).ok).toBe(true);
   });
 });
 
@@ -103,28 +105,28 @@ describe('validateRewardInput', () => {
   });
 
   it('정상 입력을 통과시킨다', () => {
-    expect(validateRewardInput(reward()).ok).toBe(true);
+    expect(validateRewardInput(reward(), MEDIA).ok).toBe(true);
   });
   it('금액 단위와 범위를 본다', () => {
-    expect(validateRewardInput({ ...reward(), amount: 1234 }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), amount: 0 }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), amount: 20000001 }).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), amount: 1234 }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), amount: 0 }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), amount: 20000001 }, MEDIA).ok).toBe(false);
   });
   it('rewardId 형식을 본다', () => {
-    expect(validateRewardInput({ ...reward(), rewardId: 'CD 한장' }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), rewardId: 'cd-1' }).ok).toBe(true);
+    expect(validateRewardInput({ ...reward(), rewardId: 'CD 한장' }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), rewardId: 'cd-1' }, MEDIA).ok).toBe(true);
   });
   it('수량이 있으면 양의 정수여야 한다', () => {
-    expect(validateRewardInput({ ...reward(), totalQuantity: 0 }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), totalQuantity: null }).ok).toBe(true);
+    expect(validateRewardInput({ ...reward(), totalQuantity: 0 }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), totalQuantity: null }, MEDIA).ok).toBe(true);
   });
 
   it('imageUrl은 값이 있을 때만 우리 업로드 경로인지 본다', () => {
-    expect(validateRewardInput({ ...reward(), imageUrl: null }).ok).toBe(true);
-    expect(validateRewardInput({ ...reward(), imageUrl: 'https://evil.example/a.webp' }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), imageUrl: '/images/a.webp' }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), imageUrl: '' }).ok).toBe(false);
-    expect(validateRewardInput({ ...reward(), imageUrl: '/api/funding/media/r.webp?w=800&h=600' }).ok).toBe(true);
+    expect(validateRewardInput({ ...reward(), imageUrl: null }, MEDIA).ok).toBe(true);
+    expect(validateRewardInput({ ...reward(), imageUrl: 'https://evil.example/a.webp' }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), imageUrl: '/images/a.webp' }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), imageUrl: '' }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward(), imageUrl: '/api/funding/media/c1-r.webp?w=800&h=600' }, MEDIA).ok).toBe(true);
   });
 });
 
@@ -294,5 +296,54 @@ describe('주민등록번호 — 형식만 본다', () => {
     const r = validatePayoutSection(payout('99010112345'));
     expect(r.ok).toBe(false);
     expect(r.ok === false && r.message).not.toContain('99010112345');
+  });
+});
+
+/**
+ * L5·L6 — 접두사만 보던 시절에는 `/api/funding/media/../../…`도, 길이 무제한 문자열도,
+ * 남의 업로드 키도 통과해 그대로 `og:image`에 실렸다.
+ */
+describe('업로드 이미지 주소 검증', () => {
+  const withCover = (coverUrl: string) => validateBasicSection({ ...basic(), coverUrl }, NOW, MEDIA);
+
+  it('접두사 뒤에 경로 조작이 섞이면 거부한다', () => {
+    expect(withCover('/api/funding/media/../../contracts/secret.pdf').ok).toBe(false);
+    expect(withCover('/api/funding/media/c1-a/../b.webp').ok).toBe(false);
+    expect(withCover('/api/funding/media/c1-..webp').ok).toBe(false);
+  });
+
+  it('webp가 아니면 거부한다', () => {
+    expect(withCover('/api/funding/media/c1-a.pdf').ok).toBe(false);
+  });
+
+  it('길이 상한을 넘으면 거부한다', () => {
+    expect(withCover(`/api/funding/media/c1-${'a'.repeat(300)}.webp`).ok).toBe(false);
+  });
+
+  it('치수 말고 다른 쿼리는 거부한다', () => {
+    expect(withCover('/api/funding/media/c1-a.webp?w=1200').ok).toBe(false);
+    expect(withCover('/api/funding/media/c1-a.webp?x=1&w=1200&h=675').ok).toBe(false);
+    expect(withCover('/api/funding/media/c1-a.webp').ok).toBe(true);
+  });
+
+  it('남의 업로드 키는 거부한다', () => {
+    expect(withCover('/api/funding/media/c2-a.webp?w=1200&h=675').ok).toBe(false);
+    expect(withCover('/api/funding/media/a.webp?w=1200&h=675').ok).toBe(false);
+  });
+
+  it('이미 저장돼 있던 값을 그대로 다시 보내면 통과한다 — 개설자 id를 키에 넣기 전 업로드', () => {
+    const legacy = '/api/funding/media/legacy-cover.webp?w=1200&h=675';
+    expect(validateBasicSection({ ...basic(), coverUrl: legacy }, NOW, MEDIA).ok).toBe(false);
+    expect(validateBasicSection({ ...basic(), coverUrl: legacy }, NOW, { creatorId: 'c1', existing: [legacy] }).ok).toBe(true);
+  });
+
+  it('리워드 이미지도 같은 규칙이다', () => {
+    const reward = {
+      rewardId: 'cd', title: 'CD', description: '앨범 CD 한 장', amount: 30000,
+      totalQuantity: 100, requiresShipping: true, estimatedDelivery: '2026-12',
+    };
+    expect(validateRewardInput({ ...reward, imageUrl: '/api/funding/media/c2-r.webp' }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward, imageUrl: '/api/funding/media/../x.webp' }, MEDIA).ok).toBe(false);
+    expect(validateRewardInput({ ...reward, imageUrl: '/api/funding/media/c1-r.webp' }, MEDIA).ok).toBe(true);
   });
 });

@@ -236,7 +236,7 @@ export const purgeExpiredResidentNumbers = async (now: Date = new Date()): Promi
    * 개인정보 보호법 제21조①이 말하는 "불필요하게 되었을 때 지체 없이 파기"에 정면으로
    * 어긋나는 쪽이다. 두 오류 중 이쪽이 더 크다.
    *
-   * 실현 가능성도 사실상 없다: 세액은 지급액의 3.3%이고 `grossAmount <= 0`인 정산은
+   * 실현 가능성도 사실상 없다: 세액은 지급액의 3.3%이고 `netAmount <= 0`인 정산은
    * `nothing_to_pay`로 거부되므로(`payout.ts`), 0이 나오려면 지급액이 수십 원 수준이어야 한다.
    *
    * 기준을 바꾸려거든 **`lib/funding/creatorProjectWrite.ts`의 `hasWithheldPayout`도 함께

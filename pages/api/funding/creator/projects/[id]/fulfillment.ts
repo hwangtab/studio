@@ -68,11 +68,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(404).json({ ok: false, message: '이 프로젝트에서 해당 후원을 찾을 수 없습니다.' });
   }
 
+  // 남의 후원이면 '권한 없음'이 아니라 404다 — 403은 "그 pledge id는 존재한다"를 알려 주는
+  // 셈이다. 다른 개설자 라우트는 전부 404로 통일돼 있다(preview.tsx:105의 원칙).
   if (gate.creatorId !== auth.creatorId) {
-    return res.status(403).json({ ok: false, message: '이 후원의 발송 상태를 바꿀 권한이 없습니다.' });
+    return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
   }
 
-  if (gate.state !== 'closed') {
+  if (!gate.pastFundingEnd) {
     return res.status(409).json({ ok: false, message: '모금이 끝난 뒤에만 발송 상태를 바꿀 수 있습니다.' });
   }
 

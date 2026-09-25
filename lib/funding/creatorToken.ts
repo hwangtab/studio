@@ -21,6 +21,27 @@ export const normalizeCreatorEmail = (email: string): string | null => {
 const hash = (raw: string): string => createHash('sha256').update(raw).digest('hex');
 
 /**
+ * 이 주소로 개설자 행이 이미 있는가 — 로그인 API가 **어느 캡을 소비할지** 가르는 판정.
+ *
+ * 전역 일일 캡(100통)은 기존 개설자만 쓴다. 미가입 주소의 가입 메일에 같은 예산을 태우면,
+ * 매 요청 다른 주소를 보내는 것만으로 그날 모든 개설자의 로그인을 막을 수 있다 —
+ * 매직링크가 유일한 인증이라 우회로가 없다.
+ *
+ * 조회에 실패하면 **미가입으로 본다.** 기존 개설자의 로그인을 막는 쪽보다 더 좁은 캡으로
+ * 떨어지는 쪽이 낫고, 응답은 어느 쪽이든 같다.
+ */
+export const isRegisteredCreatorEmail = async (normalizedEmail: string): Promise<boolean> => {
+  try {
+    const [row] = await getDb().select({ id: fundingCreators.id }).from(fundingCreators)
+      .where(eq(fundingCreators.email, normalizedEmail)).limit(1);
+    return Boolean(row);
+  } catch (error) {
+    console.error('[funding] 개설자 존재 확인 실패', error);
+    return false;
+  }
+};
+
+/**
  * 로그인 토큰 발급. 처음 보는 이메일이면 개설자 행을 만든다 — 가입과 로그인을 나누지 않는다.
  * (아무나 행을 만들 수 있지만 행 하나가 전부이고, 요청 제한은 API 계층
  * (pages/api/funding/creator/login.ts, 다음 태스크)에서 건다.)
@@ -79,7 +100,7 @@ export const issueCreatorLoginToken = async (
 export const consumeCreatorLoginToken = async (
   rawToken: string,
   now: Date = new Date(),
-): Promise<{ creatorId: string } | null> => {
+): Promise<{ creatorId: string; sessionVersion: number } | null> => {
   if (typeof rawToken !== 'string' || rawToken.length < 16) return null;
   const db = getDb();
   const updated = await db.update(fundingCreatorTokens)
@@ -93,7 +114,19 @@ export const consumeCreatorLoginToken = async (
   if (!row) return null;
   if (row.expiresAt.getTime() <= now.getTime()) return null;
 
-  await db.update(fundingCreators).set({ lastLoginAt: now, updatedAt: now })
-    .where(eq(fundingCreators.id, row.creatorId));
-  return { creatorId: row.creatorId };
+  /**
+   * 마지막 로그인 시각을 찍는 **그 문장에서** 세션 판본을 함께 받아 온다.
+   *
+   * 판본을 별도 조회로 읽으면 왕복이 하나 늘고, 그 왕복은 **토큰이 이미 소진된 뒤**에
+   * 일어난다 — 거기서 DB가 흔들리면 링크는 죽었는데 로그인은 안 된 상태가 된다(되돌릴 수
+   * 없다). 어차피 이 행에 쓰고 있으므로 같은 문장에 `returning`을 붙인다.
+   *
+   * 판본을 못 받으면(행이 사라진 경우) 로그인시키지 않는다 — 판본 없는 쿠키는 어차피
+   * 무효이므로(`creatorSession.ts`), 조용히 발급하면 "로그인은 됐는데 모든 요청이 401"이 된다.
+   */
+  const [creatorRow] = await db.update(fundingCreators).set({ lastLoginAt: now, updatedAt: now })
+    .where(eq(fundingCreators.id, row.creatorId))
+    .returning({ sessionVersion: fundingCreators.sessionVersion });
+  if (!creatorRow) return null;
+  return { creatorId: row.creatorId, sessionVersion: creatorRow.sessionVersion };
 };

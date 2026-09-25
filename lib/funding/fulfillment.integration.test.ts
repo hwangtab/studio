@@ -177,12 +177,23 @@ it('개설자는 자기 프로젝트의 후원을 실제로 발송 처리할 수
  * 뒤집어도 이 파일의 어떤 테스트도 못 잡는다. 그러면 관리자 변경만 기록이 비어 "누가
  * 바꿨나"가 절반만 남는다.
  */
-it('관리자 actor는 fulfillment_updated_by에 admin을 남긴다', async () => {
+it('관리자 actor에 사람이 실려 오면 그 이름을 남긴다 (L10)', async () => {
   const creatorA = await seedCreator();
   const { pledgeId } = await seedPledge({ creatorId: creatorA });
-  const result = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin' } });
+  const result = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin', actor: 'kyungha' } });
   expect(result).toEqual({ ok: true });
+  expect((await readPledgeRow(pledgeId)).fulfillment_updated_by).toBe('kyungha');
+});
+
+it('관리자 actor에 사람이 없으면 admin으로 남긴다 — 누구인지 모르는 것이 사실이다', async () => {
+  const creatorA = await seedCreator();
+  const { pledgeId } = await seedPledge({ creatorId: creatorA });
+  expect(await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin' } })).toEqual({ ok: true });
   expect((await readPledgeRow(pledgeId)).fulfillment_updated_by).toBe('admin');
+
+  const { pledgeId: blank } = await seedPledge({ creatorId: creatorA });
+  expect(await setFulfillment({ pledgeId: blank, status: 'shipped', actor: { kind: 'admin', actor: '  ' } })).toEqual({ ok: true });
+  expect((await readPledgeRow(blank)).fulfillment_updated_by).toBe('admin');
 });
 
 /**
@@ -256,6 +267,27 @@ it('디지털 전용 리워드는 발송 상태를 바꿔도 기산점이 남는
     expect(r.ok).toBe(true);
     expect(await readDeliveredAt(pledgeId)).toBe(Math.floor(confirmedAt.getTime() / 1000));
   }
+});
+
+/**
+ * 그 대칭 — **기산점이 없는 디지털 행에는 이 함수가 값을 만들지 않는다.** `delivered`를
+ * 눌러도 NULL로 남는다. 위 테스트가 기산점을 미리 심어 두기만 해서 이 동작은 안 보였다.
+ *
+ * 이게 사양이다. 디지털 리워드의 기산점 정본은 발송 상태가 아니라 **확정·등록 시각**이고,
+ * 그 값을 찍는 자리는 세 곳 전부 막아 뒀다(온라인 확정 `confirm.ts`, 수기 등록
+ * `pages/api/admin/funding/pledges/index.ts` — M4가 그 구멍이었다). 여기서 발송 상태를
+ * 근거로 기산점을 만들면 정본이 둘이 되고, "언제 전달됐나"가 경로마다 달라진다.
+ *
+ * 즉 지금 NULL인 디지털 행이 있다면 그건 M4 이전에 수기 등록된 건이고, 복구 경로는 이
+ * 함수가 아니라 `scripts/backfill-digital-delivered.mjs`(멱등)다.
+ */
+it('기산점이 없는 디지털 행은 delivered를 눌러도 NULL로 남는다 (사양)', async () => {
+  const pledgeId = await seedPledgeRow('keep-singing-for-palestine', { rewardId: 'mp3' });
+  expect(await readDeliveredAt(pledgeId)).toBeNull();
+
+  const r = await setFulfillment({ pledgeId, status: 'delivered', actor: { kind: 'admin' } });
+  expect(r.ok).toBe(true);
+  expect(await readDeliveredAt(pledgeId)).toBeNull();
 });
 
 it('운송장만 고쳐 다시 저장해도 첫 전달 시각이 밀리지 않는다', async () => {

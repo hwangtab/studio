@@ -176,6 +176,32 @@ describe('다시 열기(reopen)', () => {
     expect(after.reviewNote).toBe('종료 사유');
   });
 
+  /**
+   * M8 — `close → record_payout → reopen`이 정산의 `not_closed` 게이트를 무력화한다.
+   * 다시 열린 뒤 들어온 후원은 `project_id` UNIQUE 탓에 `already_recorded`로 거절되어
+   * 영구히 정산에서 빠진다 — 개설자가 받을 돈이 조용히 사라진다.
+   */
+  it('정산이 기록된 프로젝트는 다시 열 수 없다 — conflict이고 status도 그대로', async () => {
+    const creator = await seedCreator('reopen-payout@example.com');
+    const projectId = await seedProject(creator, { reviewStatus: 'approved', status: 'closed' });
+    await mockDb.insert(schema.fundingProjectPayouts).values({
+      projectId,
+      grossAmount: 1_000_000,
+      refundAmount: 0,
+      supplyAmount: 909_091,
+      feeAmount: 100_000,
+      shareAmount: 900_000,
+      withholdingAmount: 0,
+      netAmount: 900_000,
+      backerCount: 10,
+    });
+
+    const result = await decidePublicStatus(projectId, 'reopen', {});
+    expect(result.ok).toBe(false);
+    if (!result.ok) expect(result.code).toBe('conflict');
+    expect((await readProject(projectId)).status).toBe('closed');
+  });
+
   it('이미 auto면 다시 열 수 없다 — conflict', async () => {
     const creator = await seedCreator('reopen-conflict@example.com');
     const projectId = await seedProject(creator, { reviewStatus: 'approved', status: 'auto' });

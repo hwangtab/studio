@@ -74,6 +74,13 @@ function ShippingTableRow({ projectId, row }: ShippingTableRowProps) {
 
   return (
     <tr className="border-b border-gray-100 align-top dark:border-gray-800">
+      <td className="py-2 pr-4">
+        {row.shipHold !== '' && (
+          <span className="rounded bg-red-100 px-1.5 py-0.5 typo-caption font-semibold text-red-700 dark:bg-red-900/40 dark:text-red-300">
+            {row.shipHold}
+          </span>
+        )}
+      </td>
       <td className="py-2 pr-4">{row.shippingName ?? '이름 없음'}</td>
       <td className="py-2 pr-4">{row.shippingPhone ?? '연락처 없음'}</td>
       <td className="py-2 pr-4">{formatAddress(row)}</td>
@@ -151,6 +158,8 @@ export function ShippingTable({ projectId, rows }: ShippingTableProps) {
         <table className="w-full min-w-[720px] border-collapse text-left typo-body">
           <thead>
             <tr className="border-b border-gray-200 text-gray-500 dark:border-gray-700 dark:text-gray-400">
+              {/* 청약철회를 요청했는데 환불이 아직 안 끝난 건 — 관리자 CSV의 shipHold와 같은 판정. */}
+              <th className="py-2 pr-4 font-medium">발송 금지</th>
               <th className="py-2 pr-4 font-medium">받는 사람</th>
               <th className="py-2 pr-4 font-medium">연락처</th>
               <th className="py-2 pr-4 font-medium">배송지</th>

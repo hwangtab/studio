@@ -45,7 +45,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    await loginCreatorSession(req, res, consumed.creatorId);
+    await loginCreatorSession(req, res, consumed.creatorId, consumed.sessionVersion);
   } catch (error: unknown) {
     // 토큰은 이미 소진됐다 — 되돌릴 수 없다(위 주석 참조). 화면에는 401과 다른 응답을
     // 줘서 "만료됐거나 이미 사용됨"이라는, 여기서는 사실이 아닌 문구를 반복하지 않게 한다.

@@ -64,6 +64,12 @@ rewards:
     totalQuantity: 1
     requiresShipping: false
     estimatedDelivery: 2026-12
+  - id: box
+    title: 굿즈 박스
+    description: d
+    amount: 50000
+    requiresShipping: true
+    estimatedDelivery: 2026-12
 ---
 `, 'demo');
 
@@ -187,9 +193,15 @@ it('사전 검사 뒤 재고가 소진되면 409 — 고아 주문도 남기지 
    * 남으면 pledge 없는 확정 주문이 되어 목록·CSV·집계가 서로 다르게 취급한다.
    */
   const orphans = await client.execute(
-    "SELECT status FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
+    "SELECT status, notification_error FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
   );
   expect(orphans.rows.map((r) => String(r.status))).toEqual(['failed']);
+  /**
+   * M3 — 발송권 선점용 센티널(SEND_PENDING)이 실패 주문에 남으면 지울 경로가 없다.
+   * 헬스체크는 상태를 안 보고 isNotNull만 보고, 그 주문은 pledge가 없어 관리자 목록에
+   * 안 떠 재발송 버튼(센티널을 지우는 유일한 경로)에 닿을 수 없다.
+   */
+  expect(orphans.rows.map((r) => r.notification_error)).toEqual([null]);
 
   // 한정 수량도 지켜져야 한다 — CD pledge는 여전히 1건뿐.
   const cd = await client.execute("SELECT COUNT(*) AS c FROM funding_pledges WHERE reward_id='cd'");
@@ -274,5 +286,51 @@ describe('실수령액(actualAmount)', () => {
     expect(r.status).toBe(201);
     const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
     expect(Number(order.rows[0]?.total_amount)).toBe(50_000_000);
+  });
+});
+
+/**
+ * M4 — 수기 등록은 confirm을 타지 않는다. 기산점이 여기서 안 찍히면 setFulfillment도
+ * 디지털이면 delivered_at을 일부러 건드리지 않으므로, 운영자가 `delivered`를 눌러도
+ * 채워지지 않는다(약관 제13조의 '전달 완료 후 1년 파기'가 그 유형에만 구현되지 않는다).
+ */
+it('수기 등록된 디지털 리워드는 delivered_at이 paid_at과 같은 시각으로 찍힌다', async () => {
+  const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0 });
+  expect(r.status).toBe(201);
+  const rows = await client.execute('SELECT paid_at, delivered_at FROM funding_pledges');
+  expect(rows.rows).toHaveLength(1);
+  expect(rows.rows[0].delivered_at).not.toBeNull();
+  expect(Number(rows.rows[0].delivered_at)).toBe(Number(rows.rows[0].paid_at));
+});
+
+it('수기 등록된 배송 리워드는 delivered_at이 NULL이다 (기산점은 실제 발송 시각)', async () => {
+  const r = await call({
+    ...VALID_BODY,
+    rewardId: 'box',
+    quantity: 1,
+    additionalAmount: 0,
+    shipping: { name: '홍길동', phone: '010-1', postcode: '03000', address1: '서울', address2: '101' },
+  });
+  expect(r.status).toBe(201);
+  const rows = await client.execute('SELECT delivered_at FROM funding_pledges');
+  expect(rows.rows[0].delivered_at).toBeNull();
+});
+
+/**
+ * L13 — 상한만 있으면 `30000`을 `3000`으로 잘못 친 오타가 그대로 공개 모금액과 정산
+ * grossAmount에 들어간다. 에누리를 담는 칸이라 일치를 요구할 수는 없어 절반을 선으로 잡는다.
+ */
+describe('실수령액 하한', () => {
+  it('리워드 금액의 절반 미만이면 400 — 자릿수 확인을 요청한다', async () => {
+    // mail 5,000원 × 1 + 추가 0 = 5,000원. 자릿수 하나가 빠진 500원.
+    const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0, actualAmount: 500 });
+    expect(r.status).toBe(400);
+    expect(String(r.body.message)).toContain('절반 미만');
+    expect((await client.execute('SELECT COUNT(*) AS c FROM orders')).rows[0].c).toBe(0);
+  });
+
+  it('절반이면 통과한다 — 에누리 폭은 막지 않는다', async () => {
+    const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0, actualAmount: 2_500 });
+    expect(r.status).toBe(201);
   });
 });

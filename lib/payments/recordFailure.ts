@@ -1,8 +1,7 @@
-import { eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders } from '../../db/schema';
-import { isRefundedFundingOrderStatus } from '../funding/refundable';
 
 /**
  * 결제창에서 승인이 안 난 사유를 주문에 남긴다.
@@ -34,6 +33,13 @@ export const PAYMENT_ORDER_NO_PATTERN = /^(SNB|FND)-(M-)?\d{8}-[0-9A-F]{8}$/;
 
 const MESSAGE_MAX = 300;
 
+/**
+ * 실패 사유를 남겨도 되는 주문 상태. 확정(`paid`)·환불(`refunded`·`partially_refunded`)된
+ * 주문에는 쓰지 않는다 — 뒤늦은 비콘(새로고침·뒤로가기로 같은 실패 URL이 여러 번 열린다)이
+ * 상태를 흐리게 한다. `expired`·`failed`는 결제가 안 된 주문이라 사유가 남을 자리다.
+ */
+const RECORDABLE_ORDER_STATUSES = ['pending', 'failed', 'expired'] as const;
+
 export interface PaymentFailureInput {
   orderNo: string;
   code: string | null;
@@ -61,33 +67,42 @@ export const isRecordablePaymentFailure = ({ orderNo, code }: PaymentFailureInpu
 export const recordPaymentFailure = async (input: PaymentFailureInput): Promise<boolean> => {
   if (!isRecordablePaymentFailure(input)) return false;
   try {
-    const rows = await getDb()
+    /**
+     * **상태를 먼저 읽는다.** 예전엔 무조건 쓰고 `paid` 이상이면 되돌렸는데, 그 왕복이
+     * `orders.updated_at`을 두 번 밀었다 — 그 컬럼은 파기 기준선(`lib/privacy/orderRetention.ts`)이
+     * 읽는 값이라, 남의 주문번호로 비콘을 반복해 쏘면 그 주문의 5년 파기를 무한히 연기할 수
+     * 있었다(방어가 Origin 헤더 하나뿐이다). 되돌림도 `payment_fail_*`만 지우고 밀린
+     * `updated_at`은 되돌리지 못한다.
+     *
+     * 읽고-쓰기 사이의 경합은 쓰기의 WHERE가 막는다 — 그 사이 결제가 확정되면 0행이 되고
+     * 아무것도 바뀌지 않는다. 쓰고-되돌리기와 달리 흔적이 남지 않는다.
+     */
+    const [before] = await getDb()
+      .select({ status: orders.status })
+      .from(orders)
+      .where(eq(orders.orderNo, input.orderNo))
+      .limit(1);
+    if (!before) return false;
+    // 기록 대상은 결제 전(`pending`)과 이미 실패한 주문뿐이다. `paid`·환불된 주문에는
+    // 아예 쓰지 않는다 — `partially_refunded`도 환불된 주문이다(lib/funding/refundable.ts).
+    if (!(RECORDABLE_ORDER_STATUSES as readonly string[]).includes(before.status)) return false;
+
+    /**
+     * `updated_at`을 건드리지 않는다 — 실패 기록은 `payment_failed_at`이 자기 시각을 갖는다.
+     * 여기서 `updated_at`을 밀면 위 주석이 말하는 파기 연기가 그대로 남는다.
+     */
+    const written = await getDb()
       .update(orders)
       .set({
         paymentFailCode: input.code,
         paymentFailMessage: input.message ? String(input.message).slice(0, MESSAGE_MAX) : null,
         paymentFailedAt: new Date(),
-        updatedAt: new Date(),
       })
-      .where(eq(orders.orderNo, input.orderNo))
-      .returning({ status: orders.status });
-    const row = rows[0];
-    if (!row) return false;
-    // 이미 결제가 끝난 주문이면 되돌린다 — where 절에 status를 넣으면 드라이버마다
-    // returning 동작이 갈려, 한 번 읽고 판단하는 대신 쓰고 되돌리는 쪽이 단순하다.
-    //
-    // `partially_refunded`도 환불된 주문이다. 목록에서 빠져 있어서, 부분 환불된 주문에
-    // 뒤늦은 실패 비콘이 닿으면 실패 사유가 그대로 박혔다 — 이 함수의 주석이 지키겠다고
-    // 적어 둔 "확정·환불된 주문"에 구멍이 있었다. 판정은 저장소의 다른 곳과 같은 함수를
-    // 쓴다(lib/funding/refundable.ts).
-    if (row.status === 'paid' || isRefundedFundingOrderStatus(row.status)) {
-      await getDb()
-        .update(orders)
-        .set({ paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null })
-        .where(eq(orders.orderNo, input.orderNo));
-      return false;
-    }
-    return true;
+      .where(and(
+        eq(orders.orderNo, input.orderNo),
+        inArray(orders.status, [...RECORDABLE_ORDER_STATUSES]),
+      ));
+    return Number(written.rowsAffected) > 0;
   } catch (error: unknown) {
     // 컬럼이 아직 운영 DB에 없을 수도 있다(마이그레이션 수동 적용). 그때도 화면은 떠야 한다.
     console.error('[payment-failure] 사유 기록 실패:', input.orderNo, error);

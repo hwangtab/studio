@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { FieldCryptoError, FIELD_CRYPTO_KEY_ENV } from '../../../../../../lib/crypto/fieldCrypto';
 import { authenticateAdminApi } from '../../../../../../lib/contracts/admin-auth';
+import { isApprovedFundingProject } from '../../../../../../lib/funding/payoutAccount';
 import { loadFundingResidentNumber } from '../../../../../../lib/funding/residentNumber';
 import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../../../lib/privacy/accessLog';
 
@@ -56,6 +57,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
   try {
+    // 승인 전 프로젝트(초안 id)로는 열지 않는다 — 자세한 이유는
+    // lib/funding/payoutAccount.ts의 isApprovedFundingProject 주석.
+    if (!(await isApprovedFundingProject(id))) {
+      await log('not_found');
+      return res.status(404).json({ ok: false, message: '승인된 프로젝트의 주민등록번호만 조회할 수 있습니다.' });
+    }
     const residentNumber = await loadFundingResidentNumber(id);
     if (!residentNumber) {
       await log('not_found');

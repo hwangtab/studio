@@ -83,7 +83,7 @@ export const buildCreatorEmailChangedText = (
     `새 주소: ${nextEmail}`,
     `사유: ${reason}`,
     '',
-    '이제부터 로그인 링크는 새 주소로만 발송됩니다. 이전 주소로 보내 둔 로그인 링크는 모두 무효가 됐습니다.',
+    '이제부터 로그인 링크는 새 주소로만 발송됩니다. 이전 주소로 보내 둔 로그인 링크와 기존 로그인 상태가 모두 무효가 됐습니다.',
   ]);
 
 export const sendCreatorEmailChangedEmails = async (
