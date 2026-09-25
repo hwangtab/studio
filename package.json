@@ -59,7 +59,9 @@
     "content-check:ci": "node scripts/content-quality-check.js --korean --ci",
     "audit:thin": "node scripts/audit-thin-content.js --summary",
     "audit:thin:ci": "node scripts/audit-thin-content.js --fail",
-    "indexnow:changed": "node scripts/indexnow-changed.mjs"
+    "indexnow:changed": "node scripts/indexnow-changed.mjs",
+    "visual:golden": "node scripts/visual/golden-html.mjs",
+    "visual:shots": "node scripts/visual/screenshots.mjs"
   },
   "browserslist": {
     "production": [
