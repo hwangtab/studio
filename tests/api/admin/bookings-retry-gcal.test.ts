@@ -100,7 +100,7 @@ it('기존 이벤트가 있으면 새로 만든 뒤 옛 이벤트를 지운다 (
   await insert({ gcal_event_id: 'ev-old', gcal_error: 'retry: 500' });
   const res = await retry();
   expect(res.status).toBe(200);
-  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old', 'studio');
+  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old', 'studio', null);
   expect(await bookingRow()).toMatchObject({ gcal_event_id: 'ev-new', gcal_error: null });
 });
 
@@ -110,7 +110,7 @@ it('연습실 예약은 연습실 캘린더에 만들고 옛 이벤트도 거기
   expect(res.status).toBe(200);
   expect((createBookingEvent as jest.Mock).mock.calls[0][0]).toMatchObject({ calendar: 'practice-room' });
   expect((createBookingEvent as jest.Mock).mock.calls[0][0].summary).toContain('R02');
-  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old', 'practice-room');
+  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old', 'practice-room', 'R02');
 });
 
 it('취소된 예약은 거절한다', async () => {

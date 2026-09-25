@@ -214,6 +214,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       try {
         const eventId = await createBookingEvent({
           calendar,
+          room: booking.roomNumber,
           summary: `[예약] ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
           description: [
             `상품: ${booking.productId} (${booking.durationHours}시간)`,
@@ -232,7 +233,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (previousEventId) {
           try {
-            await deleteBookingEvent(previousEventId, calendar);
+            await deleteBookingEvent(previousEventId, calendar, booking.roomNumber);
           } catch (cleanupError: unknown) {
             // 새 이벤트는 이미 정상 생성·기록됐다 — 옛 이벤트 삭제 실패는 중복 하나가
             // 남는 수준이라 재시도 자체를 실패로 되돌리지 않는다. 로그만 남긴다.

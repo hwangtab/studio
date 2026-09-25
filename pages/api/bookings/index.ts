@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
-import { hasCalendarConflict } from '../../../lib/booking/calendarGuard';
-import { calendarForService } from '../../../lib/booking/gcal';
+import { calendarBlockedRooms } from '../../../lib/booking/calendarGuard';
 import { kstDateTime } from '../../../lib/booking/kst';
 import { getProduct } from '../../../lib/booking/products';
 import { createBookingOrder } from '../../../lib/booking/service';
@@ -28,18 +27,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const { productId, date, startHour } = validated.value;
   const product = getProduct(productId)!; // validation이 보장
   const hours = validated.value.hours!;
+  let excludeRooms: string[] = [];
   try {
-    const conflict = await hasCalendarConflict(
-      calendarForService(product.service), kstDateTime(date, startHour), kstDateTime(date, startHour + hours),
-    );
-    if (conflict)
+    const guard = await calendarBlockedRooms(product, kstDateTime(date, startHour), kstDateTime(date, startHour + hours));
+    if (guard.blocked)
       return res.status(409).json({ ok: false, code: 'slot_taken', message: '해당 시간은 이미 예약돼 있습니다. 다른 시간대를 선택해 주세요.' });
+    excludeRooms = guard.excludeRooms;
   } catch (error) {
     console.error('[booking-create] 캘린더 재확인 실패 — fail-closed 503', { productId, date, startHour, error });
     return res.status(503).json({ ok: false, code: 'calendar_unavailable', message: '예약 캘린더를 확인할 수 없습니다. 잠시 후 다시 시도해 주세요.' });
   }
 
-  const result = await createBookingOrder(validated.value, now);
+  const result = await createBookingOrder(validated.value, now, { excludeRooms });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.' });
   return res.status(201).json({
     ok: true,

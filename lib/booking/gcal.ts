@@ -49,8 +49,21 @@ const getAccessToken = async (): Promise<string> => {
  */
 export type BookingCalendar = 'studio' | 'practice-room';
 
-export const calendarIdFor = (which: BookingCalendar): string | null => {
-  if (which === 'practice-room') return process.env.PRACTICE_ROOM_GCAL_ID || null;
+/** 방별 캘린더 env 키. `R05` → `PRACTICE_ROOM_GCAL_ID_R05`. */
+export const roomCalendarEnvKey = (room: string): string =>
+  `PRACTICE_ROOM_GCAL_ID_${room.toUpperCase().replace(/[^A-Z0-9]/g, '_')}`;
+
+/**
+ * 어느 캘린더 id인가. 연습실은 **방별 캘린더가 있으면 그것**, 없으면 공용
+ * PRACTICE_ROOM_GCAL_ID. 방이 하나뿐이면 공용 하나로 충분하고, 방이 늘어 방마다 따로
+ * 막고 싶으면 그 방의 env만 추가하면 된다 — 공용 캘린더의 일정은 방별 캘린더가 없는
+ * 방에만 걸린다(자원 하나 = 캘린더 하나).
+ */
+export const calendarIdFor = (which: BookingCalendar, room?: string | null): string | null => {
+  if (which === 'practice-room') {
+    const own = room ? process.env[roomCalendarEnvKey(room)] : undefined;
+    return own || process.env.PRACTICE_ROOM_GCAL_ID || null;
+  }
   return process.env.BOOKING_GCAL_ID || null;
 };
 
@@ -63,11 +76,11 @@ export const calendarForService = (serviceType: string): BookingCalendar =>
  * 연습실은 env가 있을 때만 — 읽기(slots·생성 가드)와 쓰기(confirm)가 같은 조건이어야
  * 한쪽만 동작하는 어긋남이 없다.
  */
-export const isCalendarActive = (which: BookingCalendar): boolean =>
-  which === 'studio' || calendarIdFor('practice-room') !== null;
+export const isCalendarActive = (which: BookingCalendar, room?: string | null): boolean =>
+  which === 'studio' || calendarIdFor('practice-room', room) !== null;
 
-const calendarId = (which: BookingCalendar = 'studio'): string => {
-  const id = calendarIdFor(which);
+const calendarId = (which: BookingCalendar, room?: string | null): string => {
+  const id = calendarIdFor(which, room);
   if (!id) throw new Error(`${which === 'practice-room' ? 'PRACTICE_ROOM_GCAL_ID' : 'BOOKING_GCAL_ID'}가 설정되지 않았습니다.`);
   return id;
 };
@@ -76,9 +89,9 @@ export interface BusyRange { start: Date; end: Date }
 
 /** 실패는 throw — 호출부는 해당 시간대를 예약 불가로 처리한다(fail-closed, 스펙 §6). */
 export const fetchBusyRanges = async (
-  timeMin: Date, timeMax: Date, calendar: BookingCalendar,
+  timeMin: Date, timeMax: Date, calendar: BookingCalendar, room?: string | null,
 ): Promise<BusyRange[]> => {
-  const id = calendarId(calendar);
+  const id = calendarId(calendar, room);
   const token = await getAccessToken();
   const res = await fetch(`${CAL_API}/freeBusy`, {
     method: 'POST',
@@ -97,9 +110,9 @@ export const fetchBusyRanges = async (
 };
 
 export const createBookingEvent = async (input: {
-  summary: string; description: string; start: Date; end: Date; calendar: BookingCalendar;
+  summary: string; description: string; start: Date; end: Date; calendar: BookingCalendar; room?: string | null;
 }): Promise<string> => {
-  const id = calendarId(input.calendar);
+  const id = calendarId(input.calendar, input.room);
   const token = await getAccessToken();
   const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events`, {
     method: 'POST',
@@ -116,8 +129,10 @@ export const createBookingEvent = async (input: {
   return (await res.json()).id as string;
 };
 
-export const deleteBookingEvent = async (eventId: string, calendar: BookingCalendar): Promise<void> => {
-  const id = calendarId(calendar);
+export const deleteBookingEvent = async (
+  eventId: string, calendar: BookingCalendar, room?: string | null,
+): Promise<void> => {
+  const id = calendarId(calendar, room);
   const token = await getAccessToken();
   const res = await fetch(
     `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,

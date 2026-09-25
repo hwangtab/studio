@@ -266,10 +266,11 @@ const ensureBookingEvent = async (
   // 전용 캘린더가 설정돼 있을 때만 거기 올리고, 없으면 조용히 건너뛴다. 이 경우
   // gcalEventId·gcalError가 둘 다 null로 남는데, 이는 "실패"가 아니라 "대상 아님"이다.
   const calendar: BookingCalendar = booking.serviceType === 'practice-room' ? 'practice-room' : 'studio';
-  if (calendar === 'practice-room' && !calendarIdFor('practice-room')) return;
+  if (calendar === 'practice-room' && !calendarIdFor('practice-room', booking.roomNumber)) return;
   try {
     const eventId = await createBookingEvent({
       calendar,
+      room: booking.roomNumber,
       summary: `[예약] ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
       description: [
         `상품: ${booking.productId} (${booking.durationHours}시간)${booking.roomNumber ? ` · 방 ${booking.roomNumber}` : ''}`,
