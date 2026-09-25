@@ -19,6 +19,11 @@ interface Props {
    * `manage` — 펀딩 확인 화면. 공개·표시 이름 변경·철회를 모두 한다(약관 제13조 2항).
    */
   variant: 'success' | 'manage';
+  /**
+   * 운영자가 명단에서 내렸는가(`listing_hidden_at`). 공개 동의와 별개라, 이 화면이 "올라가
+   * 있습니다"라고 말하면 사실과 다르다. 후원자가 설정을 바꿔도 운영자 숨김은 풀리지 않는다.
+   */
+  hiddenByOperator?: boolean;
 }
 
 /**
@@ -28,7 +33,7 @@ interface Props {
  * 많았는데, 결제 뒤에는 그걸 바로잡을 자리가 메일 속 펀딩 확인 링크뿐이었다.
  * 누르는 것은 후원자 본인이므로 동의의 형식은 폼의 체크와 같다.
  */
-export default function SupporterListingEditor({ orderNo, token, customerName, initialPublic, initialPublicName, message, variant }: Props) {
+export default function SupporterListingEditor({ orderNo, token, customerName, initialPublic, initialPublicName, message, variant, hiddenByOperator = false }: Props) {
   const initialChoice = inferPublicNameChoice(initialPublicName, customerName);
   const [isPublic, setIsPublic] = useState(initialPublic);
   const [savedName, setSavedName] = useState(initialPublicName);
@@ -75,7 +80,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     </>
   );
 
-  if (variant === 'success' && isPublic) {
+  if (variant === 'success' && isPublic && !hiddenByOperator) {
     return (
       <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
         <p className="text-sm text-gray-900 dark:text-white">
@@ -89,7 +94,12 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
 
   return (
     <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-      {isPublic ? (
+      {hiddenByOperator ? (
+        <p className="text-sm text-gray-900 dark:text-white">
+          운영 기준에 따라 서포터 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
+          다시 올리기를 원하시면 문의해 주세요.
+        </p>
+      ) : isPublic ? (
         <p className="text-sm text-gray-900 dark:text-white">
           서포터 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라가 있습니다.
         </p>

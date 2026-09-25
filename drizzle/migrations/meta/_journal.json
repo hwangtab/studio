@@ -253,6 +253,13 @@
       "when": 1790353635401,
       "tag": "0035_funding_public_name",
       "breakpoints": true
+    },
+    {
+      "idx": 36,
+      "version": "6",
+      "when": 1790356103144,
+      "tag": "0036_funding_listing_hidden",
+      "breakpoints": true
     }
   ]
 }

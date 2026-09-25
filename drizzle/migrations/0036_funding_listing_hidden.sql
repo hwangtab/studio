@@ -1,0 +1,1 @@
+ALTER TABLE `funding_pledges` ADD `listing_hidden_at` integer;
