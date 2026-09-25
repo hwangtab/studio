@@ -33,3 +33,13 @@ export const formatKstDateTimeFull = (isoString: string | null): string => {
   const mm = String(kst.getUTCMinutes()).padStart(2, '0');
   return `${y}.${m}.${d} (${WEEKDAYS[kst.getUTCDay()]}) ${hh}:${mm}`;
 };
+
+/** 시각이 뜻을 갖지 않는 값(정지 종료일 같은 날짜) — 날짜만 찍는다. */
+export const formatKstDate = (isoString: string | null): string => {
+  if (!isoString) return '-';
+  const kst = toKst(isoString);
+  const y = kst.getUTCFullYear();
+  const m = String(kst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(kst.getUTCDate()).padStart(2, '0');
+  return `${y}.${m}.${d} (${WEEKDAYS[kst.getUTCDay()]})`;
+};

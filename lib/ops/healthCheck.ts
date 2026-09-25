@@ -11,6 +11,7 @@ import {
   dormancyWarningBoundary,
   dormantActivityCondition,
 } from '../privacy/orderRetention';
+import { MIN_RESUME_NOTICE_DAYS } from '../billing/service';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
 import {
@@ -392,6 +393,44 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         `주문번호: ${sample(lateApproval.map((row) => row.orderNo))}\n` +
         '고객은 한 달치를 냈는데 구독은 끝나 있습니다. 관리자 > 구독 상세의 회차 이력에서 환불할 수 있습니다.\n' +
         '전액 환불하면 이 항목은 자동으로 사라집니다.',
+    });
+  }
+
+  /**
+   * 자동 재개 안내가 며칠째 나가지 못하고 있다 — **예고 없는 청구로 이어진다.**
+   *
+   * 정지 기한이 끝나 자동 재개된 구독은 다음 정기 청구일에 청구된다. 그 날짜를 적은 안내
+   * 메일이 청구보다 먼저 나가는 것이 "예고 없이 카드를 긁지 않는다"의 전부다
+   * (`lib/billing/service.ts`의 `resumeExpiredPauses`). 발송은 매일 재시도되지만,
+   * 계속 실패하면 첫 청구일이 그대로 온다.
+   *
+   * 기준은 `MIN_RESUME_NOTICE_DAYS`(3일)다 — 재시도가 그 안에 성공하면 예고는 지켜지고,
+   * 넘어가면 지켜지지 않는다. 그래서 하루나 이틀 밀린 것은 알리지 않고 **예고가 실제로
+   * 깨지는 시점부터** 올린다. 심각도가 `high`인 이유는 남은 수습 수단이 사람뿐이기
+   * 때문이다(운영자가 직접 연락하거나 다시 정지한다).
+   */
+  const staleResumeNotices = await db
+    .select({ id: subscriptions.id, nextBillingAt: subscriptions.nextBillingAt })
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.status, 'active'),
+        isNotNull(subscriptions.resumeNoticePendingAt),
+        lt(subscriptions.resumeNoticePendingAt, new Date(now.getTime() - MIN_RESUME_NOTICE_DAYS * 24 * 60 * 60 * 1000)),
+      ),
+    );
+
+  if (staleResumeNotices.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/subscriptions',
+      title: `자동 재개 안내가 나가지 못한 구독 ${staleResumeNotices.length}건 — 예고 없이 청구됩니다`,
+      detail: [
+        `구독 id: ${sample(staleResumeNotices.map((row) => row.id))}`,
+        '정지 기한이 끝나 자동으로 재개됐지만 "다음 결제 예정일" 안내 메일이 계속 실패하고 있습니다. '
+          + '청구 크론이 매일 다시 시도하는데도 남아 있다는 뜻입니다.',
+        '고객에게 직접 알리거나, 지금은 청구하지 않아야 하면 관리자 > 구독 상세에서 다시 정지해 주세요.',
+      ].join('\n'),
     });
   }
 

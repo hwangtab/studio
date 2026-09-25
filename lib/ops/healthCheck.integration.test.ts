@@ -649,3 +649,40 @@ describe('곧 자동 종료되는 정지 구독', () => {
     expect(await issue()).toBeUndefined();
   });
 });
+
+/**
+ * 자동 재개 안내가 나가지 못하면 그 구독은 예고 없이 청구된다 — 발송은 매일 재시도되므로
+ * 하루 이틀 밀린 것은 알리지 않고, **예고가 실제로 깨지는 시점**부터 올린다.
+ */
+describe('자동 재개 안내가 나가지 못한 구독', () => {
+  const seedPendingNotice = async (pendingAt: string, status = 'active') => {
+    await client.execute({
+      sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day,
+              status, next_billing_at, resume_notice_pending_at, created_at, updated_at)
+            VALUES ('rn-1','lesson','최재개','010-3','r@q.r','sub_r','rtok',300000,30000,330000,5,?,?,?,?,?)`,
+      args: [status, EPOCH('2026-10-05T00:00:00Z'), EPOCH(pendingAt), EPOCH(pendingAt), EPOCH(pendingAt)],
+    });
+  };
+
+  const issue = async () =>
+    (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('자동 재개 안내가 나가지 못한'));
+
+  it('3일을 넘겨 밀려 있으면 high로 보고한다', async () => {
+    await seedPendingNotice('2026-09-05T00:00:00Z');
+    const found = await issue();
+    expect(found).toBeDefined();
+    expect(found!.severity).toBe('high');
+    expect(found!.detail).toContain('rn-1');
+  });
+
+  it('어제 밀린 것은 아직 보고하지 않는다 — 오늘 아침 재시도가 남아 있다', async () => {
+    await seedPendingNotice('2026-09-09T00:00:00Z');
+    expect(await issue()).toBeUndefined();
+  });
+
+  it('다시 정지·해지된 구독은 보고하지 않는다 — 청구가 오지 않는다', async () => {
+    await seedPendingNotice('2026-09-05T00:00:00Z', 'paused');
+    expect(await issue()).toBeUndefined();
+  });
+});

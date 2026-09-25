@@ -54,7 +54,10 @@ import {
   getSubscriptionWithDetails,
   issueCardChangeToken,
   listDueSubscriptions,
+  clearResumeNotice,
+  listPendingResumeNotices,
   MAX_PAUSE_DAYS,
+  MIN_RESUME_NOTICE_DAYS,
   pauseSubscription,
   reconcileSubscriptionPaymentFromToss,
   resumeExpiredPauses,
@@ -65,6 +68,8 @@ const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-03-05T00:00:00Z');
 /** 운영자 정지는 기한이 필수다 — 그 기한이 이 테스트들의 관심사가 아닐 때 쓰는 먼 날짜. */
 const PAUSE_UNTIL = { pausedUntil: new Date('2026-12-01T00:00:00Z') };
+/** 정지 전 예약일(4/5)을 확실히 지나친 만료일 — "예약일이 이미 지났다" 분기를 밟는다. */
+const UNTIL_FAR = new Date('2026-07-01T00:00:00Z');
 
 let client: Client;
 
@@ -1206,13 +1211,145 @@ describe('정지 만료일 — pausedUntil / resumeExpiredPauses', () => {
     expect(sub.pausedUntil).toBeNull();
   });
 
-  it('정지 중 수동 결제가 실패해도 정지와 기한은 그대로다', async () => {
+  /**
+   * 운영자가 날짜를 적을 때 전제한 것("카드가 멀쩡하다")이 방금 깨진 자리다. 날짜만 남겨
+   * 두면 기한이 올 때 자동 재개가 거절당한 카드를 다시 긁는다.
+   */
+  it('정지 중 수동 결제가 실패하면 정지는 그대로 두고 기한만 비운다', async () => {
     const created = await pausedWithUntil();
     chargeBillingKey.mockResolvedValue(chargeFail());
     await chargeCycle(created.id, new Date('2026-05-05T00:00:00Z'), { reason: 'manual' });
     const sub = (await findSubscriptionById(created.id))!;
     expect(sub.status).toBe('paused');
+    expect(sub.pausedReason).toBe('operator'); // 경보 대상에서 빠지지 않는다
+    expect(sub.pausedUntil).toBeNull();
+    expect(await resumeExpiredPauses(new Date('2030-01-01T00:00:00Z'))).toEqual({ resumed: [], failed: [] });
+  });
+
+  it('사유를 모르는(NULL) 정지는 연장할 수 없다 — 운영자가 세운 정지가 아니다', async () => {
+    const created = await pausedWithUntil();
+    await client.execute({ sql: 'UPDATE subscriptions SET paused_reason = NULL WHERE id = ?', args: [created.id] });
+    expect(
+      await pauseSubscription(created.id, { pausedUntil: new Date('2026-09-01T00:00:00Z') }, new Date('2026-06-01T00:00:00Z')),
+    ).toEqual({ ok: false, code: 'invalid_state' });
+  });
+
+  it('해지된 행에 기한이 남아 있어도 재개하지 않는다', async () => {
+    const created = await pausedWithUntil();
+    await client.execute({
+      sql: "UPDATE subscriptions SET status = 'cancelled', paused_until = ? WHERE id = ?",
+      args: [Math.floor(UNTIL.getTime() / 1000), created.id],
+    });
+    expect(await resumeExpiredPauses(new Date('2030-01-01T00:00:00Z'))).toEqual({ resumed: [], failed: [] });
+    expect((await findSubscriptionById(created.id))!.status).toBe('cancelled');
+  });
+
+  it('재시도 대기(past_due) 구독도 기한을 받아 정지할 수 있다', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' });
+    expect((await findSubscriptionById(created.id))!.status).toBe('past_due');
+    const paused = await pauseSubscription(created.id, { pausedUntil: UNTIL }, new Date('2026-04-06T00:00:00Z'));
+    expect(paused.ok).toBe(true);
+    const sub = (await findSubscriptionById(created.id))!;
     expect(sub.pausedReason).toBe('operator');
     expect(sub.pausedUntil?.toISOString()).toBe(UNTIL.toISOString());
+  });
+});
+
+/**
+ * 자동 재개가 **어느 날짜를 잡는가.** 여기가 틀리면 한 달치가 조용히 사라지거나
+ * 예고가 하루로 줄어든다.
+ */
+describe('자동 재개 일정 — 예약일 보존 · 최소 예고 · 이용기간', () => {
+  /** 정지 전 예약일(4/5)을 그대로 둔 채 정지만 건다. */
+  const pausedBefore = async (until: Date, pausedAt = new Date('2026-04-01T00:00:00Z')) => {
+    const { created } = await activated(); // billingDay 5, nextBillingAt = 2026-04-05
+    const before = (await findSubscriptionById(created.id))!;
+    expect(before.nextBillingAt?.toISOString()).toBe('2026-04-05T00:00:00.000Z');
+    const paused = await pauseSubscription(created.id, { pausedUntil: until }, pausedAt);
+    if (!paused.ok) throw new Error(`unexpected: ${paused.code}`);
+    return created;
+  };
+
+  it('예약돼 있던 청구일이 아직 오지 않았으면 그 날짜를 지킨다 — 한 달을 건너뛰지 않는다', async () => {
+    // 4/1에 4/2까지 정지 → 4/2 재개. 예약일 4/5는 살아 있고 최소 예고(3일)도 만족한다.
+    const created = await pausedBefore(new Date('2026-04-02T00:00:00Z'));
+    const result = await resumeExpiredPauses(new Date('2026-04-02T00:00:00Z'));
+    expect(result.resumed[0].nextBillingAt.toISOString()).toBe('2026-04-05T00:00:00.000Z');
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.nextBillingAt?.toISOString()).toBe('2026-04-05T00:00:00.000Z');
+    // 이용기간 끝도 그대로 — 예약일을 지켰으니 어긋날 것이 없다.
+    expect(sub.currentPeriodEnd?.toISOString()).toBe('2026-04-05T00:00:00.000Z');
+  });
+
+  it('예약일이 최소 예고보다 가까우면 다음 정기 청구일로 민다', async () => {
+    // 4/3 재개, 예약일 4/5는 이틀 뒤라 MIN_RESUME_NOTICE_DAYS(3일)에 못 미친다.
+    const created = await pausedBefore(new Date('2026-04-03T00:00:00Z'));
+    const resumeAt = new Date('2026-04-03T00:00:00Z');
+    const result = await resumeExpiredPauses(resumeAt);
+    const next = result.resumed[0].nextBillingAt;
+    expect(next.toISOString()).toBe('2026-05-05T00:00:00.000Z');
+    expect(next.getTime() - resumeAt.getTime()).toBeGreaterThanOrEqual(MIN_RESUME_NOTICE_DAYS * 24 * 60 * 60 * 1000);
+    // 이용기간 끝을 함께 밀지 않으면 청구일은 미래인데 기간 끝은 과거인 active 행이 남고,
+    // 그 상태에서 셀프 해지하면 endsAt이 과거라 그날 바로 종료된다.
+    expect((await findSubscriptionById(created.id))!.currentPeriodEnd?.toISOString()).toBe('2026-05-05T00:00:00.000Z');
+  });
+
+  it('예약일이 이미 지났으면 다음 정기 청구일을 잡는다 — 밀린 달은 걷지 않는다', async () => {
+    const created = await pausedBefore(UNTIL_FAR);
+    const result = await resumeExpiredPauses(UNTIL_FAR);
+    expect(result.resumed[0].nextBillingAt.toISOString()).toBe('2026-08-05T00:00:00.000Z');
+    expect((await findSubscriptionById(created.id))!.currentPeriodEnd?.toISOString()).toBe('2026-08-05T00:00:00.000Z');
+  });
+
+  it('재개한 구독은 같은 실행의 청구 대상이 아니다', async () => {
+    await pausedBefore(new Date('2026-04-03T00:00:00Z'));
+    const resumeAt = new Date('2026-04-03T00:00:00Z');
+    await resumeExpiredPauses(resumeAt);
+    expect(await listDueSubscriptions(resumeAt)).toHaveLength(0);
+  });
+});
+
+/**
+ * 안내 메일은 곧 청구 예고다. 한 번 보내고 마는 구조에서는 실패하면 재시도할 길이 없어,
+ * 한 달 뒤 고객이 예고 없이 청구를 맞았다.
+ */
+describe('자동 재개 안내 일감 — resumeNoticePendingAt', () => {
+  const pausedWith = async (until: Date) => {
+    const { created } = await activated();
+    const paused = await pauseSubscription(created.id, { pausedUntil: until }, new Date('2026-04-01T00:00:00Z'));
+    if (!paused.ok) throw new Error('unreachable');
+    return created;
+  };
+
+  it('재개하면서 안내 일감을 남기고, 발송이 성공해야 지워진다', async () => {
+    const created = await pausedWith(UNTIL_FAR);
+    await resumeExpiredPauses(UNTIL_FAR);
+    expect((await findSubscriptionById(created.id))!.resumeNoticePendingAt).not.toBeNull();
+
+    // 발송이 실패한 날은 목록에 그대로 남는다 — 다음 cron이 다시 집는다.
+    expect((await listPendingResumeNotices()).map((s) => s.id)).toEqual([created.id]);
+
+    await clearResumeNotice(created.id, UNTIL_FAR);
+    expect(await listPendingResumeNotices()).toHaveLength(0);
+    expect((await findSubscriptionById(created.id))!.resumeNoticePendingAt).toBeNull();
+  });
+
+  it('다시 정지하면 안내 일감이 사라진다 — 없는 청구를 예고하지 않는다', async () => {
+    const created = await pausedWith(UNTIL_FAR);
+    await resumeExpiredPauses(UNTIL_FAR);
+    const rePause = await pauseSubscription(created.id, { pausedUntil: new Date('2026-09-01T00:00:00Z') }, UNTIL_FAR);
+    expect(rePause.ok).toBe(true);
+    expect((await findSubscriptionById(created.id))!.resumeNoticePendingAt).toBeNull();
+    expect(await listPendingResumeNotices()).toHaveLength(0);
+  });
+
+  it('해지하면 안내 일감이 사라진다', async () => {
+    const created = await pausedWith(UNTIL_FAR);
+    await resumeExpiredPauses(UNTIL_FAR);
+    await cancelSubscription(created.id, { requestedBy: 'customer', reason: 'x' }, UNTIL_FAR);
+    expect((await findSubscriptionById(created.id))!.resumeNoticePendingAt).toBeNull();
+    expect(await listPendingResumeNotices()).toHaveLength(0);
   });
 });

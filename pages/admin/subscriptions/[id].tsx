@@ -27,7 +27,7 @@ import {
   type SerializedSubscriptionContract,
   type SerializedSubscriptionPayment,
 } from '../../../lib/billing/admin-serialize';
-import { formatKstDateTimeFull } from '../../../lib/booking/format';
+import { formatKstDate, formatKstDateTimeFull } from '../../../lib/booking/format';
 
 interface AdminSubscriptionDetailPageProps {
   subscription: SerializedSubscription;
@@ -111,6 +111,10 @@ const kstDateInput = (offsetDays: number): string => {
   return kst.toISOString().slice(0, 10);
 };
 
+/** 저장된 정지 종료일(ISO) → date input이 읽는 KST 'YYYY-MM-DD'. */
+const kstDateInputOf = (isoString: string): string =>
+  new Date(new Date(isoString).getTime() + 9 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
 /**
  * 정지 종료일 기본값 = 3개월 뒤.
  *
@@ -185,13 +189,22 @@ export default function AdminSubscriptionDetailPage({
       '지금 이 구독의 이번 회차를 수동으로 결제할까요?',
     );
 
-  const [pausedUntilInput, setPausedUntilInput] = useState(() => kstDateInput(DEFAULT_PAUSE_DAYS));
+  /**
+   * 이미 정지 중이면 **지금 걸린 기한을 채워 둔다.** 기본값(오늘+90일)을 그대로 두면
+   * 2027-03-01짜리 정지를 연장하려다 그냥 제출했을 때 기한이 앞당겨진다.
+   */
+  const [pausedUntilInput, setPausedUntilInput] = useState(() =>
+    subscription.pausedUntil ? kstDateInputOf(subscription.pausedUntil) : kstDateInput(DEFAULT_PAUSE_DAYS),
+  );
 
   const handlePause = (e: React.FormEvent) => {
     e.preventDefault();
+    const current = subscription.pausedUntil ? kstDateInputOf(subscription.pausedUntil) : null;
     return run(
       () => mutateSubscription(subscription.id, 'pause', { pausedUntil: pausedUntilInput }),
-      `${pausedUntilInput}까지 이 구독의 청구를 멈출까요? 그날 자동으로 재개되고, 다음 정기 결제일에 청구됩니다.`,
+      current
+        ? `정지 기한을 ${current}에서 ${pausedUntilInput}로 바꿀까요? 그날 자동으로 재개되고, 다음 정기 결제일에 청구됩니다.`
+        : `${pausedUntilInput}까지 이 구독의 청구를 멈출까요? 그날 자동으로 재개되고, 다음 정기 결제일에 청구됩니다.`,
     );
   };
 
@@ -334,9 +347,7 @@ export default function AdminSubscriptionDetailPage({
               )}
               {subscription.status === 'paused' && (
                 <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-amber-50 text-amber-800">
-                  {subscription.pausedUntil
-                    ? `${formatKstDateTimeFull(subscription.pausedUntil)}까지`
-                    : '정지 기한 없음'}
+                  {subscription.pausedUntil ? `${formatKstDate(subscription.pausedUntil)}까지` : '정지 기한 없음'}
                 </span>
               )}
               <span className="text-gray-500 text-xs font-mono">{subscription.id}</span>
