@@ -6,6 +6,7 @@ import { fundingPledges } from '../../../db/schema';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
+import { sendFundingListingNicknameAlert } from '../../../lib/funding/email';
 import { isPublicNameStyle, resolvePublicName } from '../../../lib/funding/publicName';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 
@@ -70,5 +71,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .set({ displayNamePublic, ...(publicName !== undefined ? { publicName } : {}), updatedAt: new Date() })
     .where(eq(fundingPledges.orderId, order.id));
   const storedPublicName = publicName !== undefined ? publicName : order.fundingPledge.publicName ?? null;
+  /**
+   * 닉네임으로 **새로** 명단에 오르면 운영자에게 알린다 — 공개를 새로 켰거나 닉네임이 바뀐 경우.
+   * 같은 닉네임을 다시 저장한 것은 알리지 않는다. 알림 실패는 응답을 바꾸지 않는다: 후원자의
+   * 설정은 이미 저장됐고, 메일 실패로 400을 주면 후원자는 저장이 안 된 줄 안다.
+   */
+  if (displayNamePublic && publicNameStyle === 'nickname' && typeof publicName === 'string'
+    && (!order.fundingPledge.displayNamePublic || order.fundingPledge.publicName !== publicName)) {
+    await sendFundingListingNicknameAlert(order, publicName, order.fundingPledge.supporterMessage ?? null)
+      .catch((e) => console.error('[funding/display-name] 닉네임 알림 실패:', e));
+  }
   return res.status(200).json({ ok: true, displayNamePublic, publicName: storedPublicName });
 }

@@ -123,6 +123,18 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
   ];
 };
 
+/**
+ * 운영자 메일에 싣는 명단 표시 한 줄. 운영자가 욕설·사칭 닉네임을 내리려면(관리자 후원 상세의
+ * "서포터 명단에서 내리기") 먼저 **무엇이 올라갔는지** 알아야 하는데, 알림 메일에 메시지만
+ * 있고 표시 이름은 없었다.
+ */
+const listingLine = (order: FundingOrder): string => {
+  const p = order.fundingPledge;
+  if (!p?.displayNamePublic) return '명단: 비공개';
+  return `명단: 공개 · ${p.publicName ?? `${order.customerName} (실명)`}`;
+};
+const adminPledgeUrl = (order: FundingOrder): string => `${SITE_URL}/admin/funding/${order.id}`;
+
 export const sendFundingConfirmedEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> =>
   send(withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
@@ -134,7 +146,7 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
       to: OPERATOR_EMAIL,
       subject: `[펀딩] 펀딩 확정 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
       text: [...summaryLines(order, project), `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
-        `결제수단: ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`, `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
+        `결제수단: ${paymentMethodLabel(order.fundingPledge?.paymentMethod)}`, listingLine(order), `메시지: ${order.fundingPledge?.supporterMessage ?? '없음'}`, `관리자: ${adminPledgeUrl(order)}`].join('\n'),
     } },
   ]));
 
@@ -332,3 +344,25 @@ export const sendCreatorSessionFailureAlert = async (): Promise<string | null> =
   });
   return result.ok ? null : `operator:${result.errorCode}`;
 };
+
+/**
+ * 후원자가 **결제 뒤에** 닉네임으로 명단에 올렸거나 닉네임을 바꿨다는 운영자 알림.
+ *
+ * 확정 메일(위)은 결제 순간의 표시 이름만 싣는다. 그 뒤 펀딩 확인 페이지나 결제 완료 화면에서
+ * 바꾼 닉네임은 운영자가 알 길이 없어, 관리자 화면의 "서포터 명단에서 내리기"가 있어도 누를
+ * 계기가 없었다. 실명·가린 이름은 후원자가 정한 문자열이 아니라 검토할 거리가 없으므로 알리지
+ * 않는다(호출부가 판단).
+ */
+export const sendFundingListingNicknameAlert = (order: FundingOrder, nickname: string, message: string | null): Promise<string | null> =>
+  send([{ key: 'operator', params: {
+    to: OPERATOR_EMAIL,
+    subject: `[펀딩] 서포터 명단 닉네임 — ${nickname}`,
+    text: [
+      `후원자가 서포터 명단 표시 이름을 닉네임으로 정했습니다. 부적절하면 관리자 화면에서 "서포터 명단에서 내리기"를 눌러 주세요.`,
+      '',
+      `닉네임: ${nickname}`,
+      `응원 메시지: ${message ?? '없음'}`,
+      `주문번호: ${order.orderNo} / 결제자: ${order.customerName}`,
+      `관리자: ${adminPledgeUrl(order)}`,
+    ].join('\n'),
+  } }]);
