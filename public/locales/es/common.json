@@ -2272,7 +2272,7 @@
             "Concepto y dirección del álbum",
             "Grabación vocal (Studio NOL in-house)",
             "Dirección vocal",
-            "Búsqueda y coordinación de músicos de sesión (guitarra, bajo, batería, etc.)",
+            "Búsqueda y coordinación de músicos de sesión (guitarra, bajo, batería, etc.; honorarios de los músicos a precio de costo)",
             "Mezcla (in-house)",
             "Masterización (in-house)",
             "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2284,7 +2284,7 @@
           "deliverablesExcluded": [
             "Arte de portada (se puede conectar con diseñador, costo aparte)",
             "Videoclip / video en vivo",
-            "4+ músicos de sesión (cotización aparte)",
+            "Honorarios de músicos de sesión (se cobra solo el costo real, sin comisión de contratación)",
             "Lanzamiento físico (CD / LP)",
             "Presupuesto de publicidad en redes sociales"
           ],
@@ -2299,8 +2299,8 @@
               "detail": "1 pista de base → cada pista adicional +₩300K~500K"
             },
             {
-              "label": "Músicos de sesión",
-              "detail": "1~2 incluidos → 3 o más +₩200K por persona"
+              "label": "Honorarios de músicos de sesión",
+              "detail": "No incluidos en el paquete → solo se suma el costo real de los músicos (sin comisión)"
             },
             {
               "label": "Profundidad del arreglo",
@@ -2322,7 +2322,7 @@
             },
             {
               "question": "¿Qué incluye este precio?",
-              "answer": "La grabación vocal y la mezcla son la base, y a medida que se añaden coordinación de sesiones, arreglos, masterización, distribución y PR de medios, el costo aumenta. No es solo alquiler de estudio — es el costo de acompañarte durante todo el proceso de lanzamiento. Varía según sesión y arreglo; presupuesto personalizado tras consulta."
+              "answer": "La grabación vocal y la mezcla son la base, y a medida que se añaden coordinación de sesiones, arreglos, masterización, distribución y PR de medios, el costo aumenta. No es solo alquiler de estudio — es el costo de acompañarte durante todo el proceso de lanzamiento. Varía según sesión y arreglo; presupuesto personalizado tras consulta. Los honorarios de los músicos de sesión no están incluidos en el paquete: cobramos solo lo que se les paga, sin comisión de contratación."
             },
             {
               "question": "No cambiarán mi canción sin preguntarme, ¿verdad?",
@@ -2420,7 +2420,7 @@
             "Selección y secuenciación de lista de pistas",
             "Grabación vocal (Studio NOL in-house) — todas las pistas",
             "Dirección vocal",
-            "Búsqueda y coordinación de músicos de sesión",
+            "Búsqueda y coordinación de músicos de sesión (honorarios de los músicos a precio de costo)",
             "Mezcla (in-house) — coherencia de tono en todas las pistas",
             "Masterización (in-house)",
             "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2433,13 +2433,13 @@
           "deliverablesExcluded": [
             "Arte de portada (se puede conectar con diseñador, costo aparte)",
             "Videoclip / video en vivo",
-            "5+ músicos de sesión (cotización aparte)",
+            "Honorarios de músicos de sesión (se cobra solo el costo real, sin comisión de contratación)",
             "Lanzamiento físico (CD / LP)",
             "Presupuesto de publicidad en redes sociales"
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "EP desde ~₩1.8M (3-5 temas)",
-          "priceRationale": "El paquete todo-en-uno de 4 temas (planificación, grabación, mezcla, masterización, distribución, prensa) marca el mínimo. La planificación, la distribución y la prensa son costos fijos que no escalan con el número de temas, así que un EP de 3 temas parte del mismo mínimo; la formación de sesión, la profundidad del arreglo y las rondas de PR se suman encima.",
+          "priceRationale": "El paquete todo-en-uno de 4 temas (planificación, grabación, mezcla, masterización, distribución, prensa) marca el mínimo. La planificación, la distribución y la prensa son costos fijos que no escalan con el número de temas, así que un EP de 3 temas parte del mismo mínimo; la profundidad del arreglo y las rondas de PR se suman encima. Los honorarios de los músicos de sesión no están incluidos y se cobran a precio de costo.",
           "priceNote": "Cotización personalizada tras consulta gratuita.",
           "priceFactorsTitle": "Variables que determinan el precio",
           "priceFactors": [
@@ -2448,8 +2448,8 @@
               "detail": "3-4 pistas de base → 5 pistas +₩500K"
             },
             {
-              "label": "Escala de sesión",
-              "detail": "Voz + 1~2 sesiones → grabación de banda en vivo +₩1M~2M"
+              "label": "Honorarios de músicos de sesión",
+              "detail": "No incluidos en el paquete → solo se suma el costo real de los músicos (sin comisión)"
             },
             {
               "label": "Campaña del single principal",
@@ -2569,7 +2569,7 @@
             "Lista de pistas y diseño de secuencia del álbum",
             "Grabación vocal (Studio NOL in-house) — todas las pistas",
             "Dirección vocal",
-            "Búsqueda y coordinación de músicos de sesión",
+            "Búsqueda y coordinación de músicos de sesión (honorarios de los músicos a precio de costo)",
             "Mezcla (in-house) — tono unificado del álbum",
             "Masterización (in-house)",
             "Distribución digital (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2586,7 +2586,7 @@
             "Videoclip / video en vivo",
             "Presupuesto de publicidad en redes sociales",
             "Lanzamiento físico (CD / LP)",
-            "Adiciones grandes de sesión (cotización aparte)"
+            "Honorarios de músicos de sesión (se cobra solo el costo real, sin comisión de contratación)"
           ],
           "priceSectionTitle": "Rango de precio",
           "priceRange": "Desde aprox. ₩3.4M",
@@ -2599,8 +2599,8 @@
               "detail": "8 pistas de base → 10 pistas +₩2M / 12 pistas +₩4M"
             },
             {
-              "label": "Escala de sesión",
-              "detail": "Voz + sesión central → banda completa·cuerdas·coro +₩2M~5M"
+              "label": "Honorarios de músicos de sesión",
+              "detail": "No incluidos en el paquete → solo se suma el costo real de los músicos (sin comisión)"
             },
             {
               "label": "Profundidad A&R",
