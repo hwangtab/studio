@@ -88,8 +88,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (actualAmount * 2 < expected) {
         return res.status(400).json({
           ok: false,
-          message: `실수령액이 리워드 금액의 절반 미만입니다 — 자릿수를 확인해 주세요. `
-            + `(리워드 기준 ${expected.toLocaleString('ko-KR')}원)`,
+          message: '실수령액이 계산 금액(리워드×수량+추가금)의 절반 미만입니다 — 자릿수를 확인해 주세요. '
+            + `(계산 금액 ${expected.toLocaleString('ko-KR')}원)`,
         });
       }
     }

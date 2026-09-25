@@ -52,17 +52,6 @@ export interface FundingProject {
 }
 
 /**
- * 공개 화면으로 내려보낼 프로젝트에서 **내려받기 주소를 벗긴다.**
- *
- * 리워드의 `downloads`는 후원자에게만 가야 하는 값이다. 그런데 상세·후원 화면은
- * 프로젝트 객체를 통째로 props로 직렬화해 내려보내므로, 벗기지 않으면 **페이지 소스에
- * 그대로 실린다** — 후원하지 않고도 원본을 받을 수 있고, 그 순간 리워드가 리워드가
- * 아니게 된다. 실제로 그렇게 배포됐다가 잡았다(2026-09-14).
- *
- * 후원자에게 닿는 경로는 이 함수를 쓰지 않는다 — 확정 메일(lib/funding/email.ts)과
- * 후원 확인 페이지는 서버에서 `getFundingProject`를 직접 읽어 원본 값을 본다.
- */
-/**
  * 디지털 전용 리워드인가 — `delivered_at`(약관 제13조의 '전달 완료 후 1년 파기' 기산점)의
  * 정본이 확정 시각인지 발송 시각인지를 가르는 판정.
  *
@@ -80,6 +69,17 @@ export const isDigitalReward = (
   rewardId: string,
 ): boolean => project?.rewards.find((r) => r.id === rewardId)?.requiresShipping === false;
 
+/**
+ * 공개 화면으로 내려보낼 프로젝트에서 **내려받기 주소를 벗긴다.**
+ *
+ * 리워드의 `downloads`는 후원자에게만 가야 하는 값이다. 그런데 상세·후원 화면은
+ * 프로젝트 객체를 통째로 props로 직렬화해 내려보내므로, 벗기지 않으면 **페이지 소스에
+ * 그대로 실린다** — 후원하지 않고도 원본을 받을 수 있고, 그 순간 리워드가 리워드가
+ * 아니게 된다. 실제로 그렇게 배포됐다가 잡았다(2026-09-14).
+ *
+ * 후원자에게 닿는 경로는 이 함수를 쓰지 않는다 — 확정 메일(lib/funding/email.ts)과
+ * 후원 확인 페이지는 서버에서 `getFundingProject`를 직접 읽어 원본 값을 본다.
+ */
 export const stripRewardDownloads = (project: FundingProject): FundingProject => ({
   ...project,
   rewards: project.rewards.map((r) => ({ ...r, downloads: [] })),

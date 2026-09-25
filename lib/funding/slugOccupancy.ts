@@ -56,23 +56,34 @@ export const hasApprovedFundingSlug = async (slug: string, exceptProjectId: stri
 };
 
 /**
- * 부분 유니크 인덱스가 막아 낸 경합인가 — `creatorAccountDecision.ts`의
- * `isEmailConflictError`와 같은 모양이다.
+ * UNIQUE 제약이 막아 낸 경합인가 — `<table>.<column>`을 받는다.
  *
- * 같은 slug의 반려 행 둘이 **동시에** 재신청·승인되면 위 두 검사는 양쪽 다 통과한다(둘 다
- * 그 순간 rejected다). 인덱스가 뒤에서 한쪽을 떨어뜨리는데, 그 예외를 그대로 흘리면 운영자는
- * 500이나 원문 SQL을 본다. 여기서 사람이 읽을 409로 바꾼다.
+ * 이 저장소에서 두 자리가 같은 모양을 쓴다: slug 경합(아래 `isSlugConflictError`)과
+ * 개설자 이메일 경합(`creatorAccountDecision.ts`의 `isEmailConflictError`). 예외를 그대로
+ * 흘리면 운영자는 500이나 원문 SQL을 보므로, 여기서 사람이 읽을 409로 바꿀 수 있게 판정만
+ * 돌려준다.
  *
  * **`cause`까지 따라간다.** 드라이버가 메시지를 싣는 자리가 경로마다 다르다 — `db.batch`는
  * `LibsqlBatchError.message`에 sqlite 원문을 그대로 담지만, 단일 문장 쿼리는 drizzle이
  * "Failed query: …"로 감싸고 sqlite 원문을 `cause`에 넣는다. `message`만 보면 후자를 놓쳐
  * 운영자가 원문 SQL이 박힌 500을 받는다.
  */
-const SLUG_CONFLICT = /UNIQUE constraint failed: funding_projects\.slug/i;
-
-export const isSlugConflictError = (error: unknown): boolean => {
+export const isUniqueConflictError = (error: unknown, qualifiedColumn: string): boolean => {
+  const pattern = new RegExp(
+    `UNIQUE constraint failed: ${qualifiedColumn.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`,
+    'i',
+  );
   for (let e: unknown = error, depth = 0; e instanceof Error && depth < 5; e = e.cause, depth += 1) {
-    if (SLUG_CONFLICT.test(e.message)) return true;
+    if (pattern.test(e.message)) return true;
   }
   return false;
 };
+
+/**
+ * 부분 유니크 인덱스(`funding_projects_slug_live_unique`)가 막아 낸 경합인가.
+ *
+ * 같은 slug의 반려 행 둘이 **동시에** 재신청·승인되면 위 두 검사는 양쪽 다 통과한다(둘 다
+ * 그 순간 rejected다). 인덱스가 뒤에서 한쪽을 떨어뜨리고, 호출부가 이 판정으로 409를 만든다.
+ */
+export const isSlugConflictError = (error: unknown): boolean =>
+  isUniqueConflictError(error, 'funding_projects.slug');

@@ -228,14 +228,18 @@ export const rotateFieldKey = async (options: RotateFieldKeyOptions): Promise<Fi
      * 기록 실패가 회전을 끊지 않는다 — 회전은 이미 커밋됐고, 여기서 던지면 절반만 회전한
      * 상태로 프로세스가 죽는다.
      */
-    const decrypted = rotated + failed;
+    // 실제로 **열린** 행만 센다. `failed`에는 복호화 자체가 실패한 행(auth_failed·malformed…)이
+    // 섞여 있어 그것까지 더하면 "열어 본 건수"가 부풀려진다. `changed`(낙관적 잠금이 막은
+    // 쓰기)는 복호화가 이미 끝난 뒤라 센다.
+    const changed = failures.filter((f) => f.target === target.label && f.code === 'changed').length;
+    const decrypted = rotated + changed;
     const action = ROTATION_ACCESS_ACTIONS[target.label];
     if (action && decrypted > 0) {
       await recordPrivacyAccess({
         actor: ROTATION_ACTOR,
         action,
         targetId: target.label,
-        result: failed > 0 ? 'error' : 'success',
+        result: failed > changed ? 'error' : 'success',
         rowCount: decrypted,
         ip: null,
       }).catch((error: unknown) => {

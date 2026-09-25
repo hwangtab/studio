@@ -3,6 +3,7 @@ import { and, eq, ne, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { fundingCreators, fundingProjects } from '../../db/schema';
 import { normalizeCreatorEmail } from './creatorToken';
+import { isUniqueConflictError } from './slugOccupancy';
 import { CREATOR_LIMITS } from './creatorValidation';
 
 /**
@@ -64,9 +65,17 @@ const deny = (
   message: string,
 ): CreatorAccountResult => ({ ok: false, code, message });
 
-/** libSQL/SQLite가 실제로 던지는 문구. `reviewDecision` 호출부의 slug 경합 판정과 같은 모양이다. */
+/**
+ * libSQL/SQLite가 실제로 던지는 문구 — slug 경합 판정과 **같은 함수**를 쓴다
+ * (`lib/funding/slugOccupancy.ts`의 `isUniqueConflictError`).
+ *
+ * 예전엔 여기서 `error.message`만 봤다. 이 자리는 `db.batch`라 원문이 message에 실려
+ * 동작했지만, 단일 문장 쿼리에서는 drizzle이 "Failed query: …"로 감싸고 원문을 `cause`에
+ * 넣는다 — 같은 모양이라고 주석에 적어 놓고 실제로는 달랐고, 이 함수를 그런 경로에
+ * 재사용하면 조용히 500이 된다. 공유 함수가 `cause` 사슬까지 따라간다.
+ */
 const isEmailConflictError = (error: unknown): boolean =>
-  error instanceof Error && /UNIQUE constraint failed: funding_creators\.email/i.test(error.message);
+  isUniqueConflictError(error, 'funding_creators.email');
 
 export const decideCreatorAccount = async (
   projectId: string,

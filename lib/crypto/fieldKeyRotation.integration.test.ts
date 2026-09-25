@@ -290,6 +290,19 @@ describe('회전 CLI의 접속기록', () => {
     expect((await logsOf()).map((l) => l.rowCount)).toEqual([1]);
   });
 
+  it('복호화 자체가 실패한 행은 건수에 넣지 않는다 — "열어 본 건수"여야 한다', async () => {
+    await seedCreator(makeV1(secretOf(201), OLD_KEY));
+    // 옛 키로도 열리지 않는 값 — 이 행은 복호화에 실패하므로 센 적이 없다.
+    await seedCreator('v1:not-base64:nope:nope');
+
+    const summary = await rotateFieldKey({ oldKey: OLD_KEY, newKey: NEW_KEY, apply: true });
+    expect(summary).toMatchObject({ rotated: 1, failed: 1 });
+
+    const [log] = await logsOf();
+    expect(log.rowCount).toBe(1);
+    expect(log.result).toBe('error');
+  });
+
   it('열 행이 없으면 아무것도 남기지 않는다', async () => {
     await rotateFieldKey({ oldKey: OLD_KEY, newKey: NEW_KEY, apply: true });
     expect(await logsOf()).toEqual([]);
