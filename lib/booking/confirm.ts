@@ -4,7 +4,7 @@ import { getDb } from '../../db/client';
 import { bookings, orders, payments, refunds, workOrders, type Order } from '../../db/schema';
 import { refundIdempotencyKey } from './cancel';
 import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './email';
-import { createBookingEvent } from './gcal';
+import { calendarIdFor, createBookingEvent, type BookingCalendar } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, cancelPayment, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
@@ -262,11 +262,17 @@ const ensureBookingEvent = async (
   booking: BookingOrder['bookings'][number],
 ): Promise<void> => {
   const db = getDb();
+  // 연습실은 스튜디오 캘린더에 올리지 않는다(녹음 freeBusy를 오염시킨다 — gcal.ts).
+  // 전용 캘린더가 설정돼 있을 때만 거기 올리고, 없으면 조용히 건너뛴다. 이 경우
+  // gcalEventId·gcalError가 둘 다 null로 남는데, 이는 "실패"가 아니라 "대상 아님"이다.
+  const calendar: BookingCalendar = booking.serviceType === 'practice-room' ? 'practice-room' : 'studio';
+  if (calendar === 'practice-room' && !calendarIdFor('practice-room')) return;
   try {
     const eventId = await createBookingEvent({
-      summary: `[예약] ${booking.serviceType} — ${order.customerName}`,
+      calendar,
+      summary: `[예약] ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
       description: [
-        `상품: ${booking.productId} (${booking.durationHours}시간)`,
+        `상품: ${booking.productId} (${booking.durationHours}시간)${booking.roomNumber ? ` · 방 ${booking.roomNumber}` : ''}`,
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `주문번호: ${order.orderNo}`,
         `요청사항: ${booking.customerNote ?? '없음'}`,

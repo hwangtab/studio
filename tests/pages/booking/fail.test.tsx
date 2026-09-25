@@ -48,7 +48,8 @@ describe('결제 실패 페이지 — 돌아갈 예약 페이지', () => {
 
   it('모르는 값은 경로에 그대로 넣지 않는다', async () => {
     // 조작된 쿼리가 링크 목적지가 되면 안 된다.
-    for (const bad of ['../../evil', 'https://evil.example', 'practice-room', '']) {
+    // 'practice-room'은 2026-09-25부터 실제 예약 서비스라 여기 있으면 안 된다 — 모르는 값만 남긴다.
+    for (const bad of ['../../evil', 'https://evil.example', 'lesson', 'nope', '']) {
       expect((await run({ service: bad })).props.service).toBe('recording');
     }
   });

@@ -1,4 +1,5 @@
 import { normalizeKoreanMobile, validateCreateBookingPayload, validateCreateMixingOrderPayload } from './validation';
+import { kstDateTime } from './kst';
 
 const base = {
   productId: 'recording-pro', date: '2026-09-10', startHour: 14,
@@ -23,8 +24,14 @@ describe('validateCreateBookingPayload', () => {
   it('전화번호 형식 거부', () => {
     expect(validateCreateBookingPayload({ ...base, customerPhone: '02-123' }, now).ok).toBe(false);
   });
-  it('리드타임(24h) 미만 날짜 거부', () => {
-    expect(validateCreateBookingPayload({ ...base, date: '2026-09-01' }, now).ok).toBe(false);
+  it('지난 시각은 거부하고, 지금 이후면 당일이라도 받는다 (리드타임 0 — 2026-09-25)', () => {
+    // 2026-09-25까지 24시간 리드타임이라 당일 예약이 통째로 막혀 있었다. 이제 지난 시각만 막는다.
+    const now = kstDateTime('2026-09-10', 13); // KST 9/10 13:00
+    const base = { productId: 'recording-hourly', hours: 2, date: '2026-09-10', customerName: '홍길동',
+      customerPhone: '010-1234-5678', customerEmail: 'a@b.co', refundPolicyAgreed: true };
+    expect(validateCreateBookingPayload({ ...base, startHour: 12 }, now).ok).toBe(false); // 이미 지남
+    expect(validateCreateBookingPayload({ ...base, startHour: 14 }, now).ok).toBe(true);  // 1시간 뒤, 당일
+    expect(validateCreateBookingPayload({ ...base, startHour: 13 }, now).ok).toBe(true);  // 정각 시작 — 경계
   });
   it('60일 밖 날짜 거부', () => {
     expect(validateCreateBookingPayload({ ...base, date: '2026-12-25' }, now).ok).toBe(false);
@@ -105,5 +112,29 @@ describe('validateCreateMixingOrderPayload', () => {
   });
   it('전화번호 형식 거부(세션과 공유하는 고객 검증)', () => {
     expect(validateCreateMixingOrderPayload({ ...mixingBase, customerPhone: '02-123' }, now).ok).toBe(false);
+  });
+});
+
+describe('validateCreateBookingPayload — 상품별 시각 범위 (연습실 24시간)', () => {
+  const now = new Date('2026-09-01T00:00:00Z');
+  const base = {
+    date: '2026-09-10', customerName: '홍길동', customerPhone: '010-1234-5678',
+    customerEmail: 'a@b.co', refundPolicyAgreed: true,
+  };
+  it('연습실은 새벽 2시 시작 1시간이 통과한다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'practice-room-hourly', hours: 1, startHour: 2 }, now);
+    expect(r.ok).toBe(true);
+  });
+  it('연습실은 23시 시작 1시간(자정 종료)도 통과한다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'practice-room-hourly', hours: 1, startHour: 23 }, now);
+    expect(r.ok).toBe(true);
+  });
+  it('연습실 23시 시작 2시간은 24시를 넘어 거절된다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'practice-room-hourly', hours: 2, startHour: 23 }, now);
+    expect(r.ok).toBe(false);
+  });
+  it('녹음은 여전히 새벽 2시 시작이 거절된다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'recording-hourly', hours: 2, startHour: 2 }, now);
+    expect(r.ok).toBe(false);
   });
 });

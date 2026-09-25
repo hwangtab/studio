@@ -204,6 +204,13 @@
       "when": 1790297702533,
       "tag": "0028_funding_drop_plaintext_payout",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "6",
+      "when": 1790299317817,
+      "tag": "0029_practice_room_hourly",
+      "breakpoints": true
     }
   ]
 }

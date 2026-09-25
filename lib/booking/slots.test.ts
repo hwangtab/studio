@@ -1,4 +1,4 @@
-import { buildDaySlots, CLOSE_HOUR, OPEN_HOUR } from './slots';
+import { buildDaySlots, CLOSE_HOUR, mergeRoomSlots, OPEN_HOUR } from './slots';
 import { kstDateTime } from './kst';
 
 const noBusy: Array<{ start: Date; end: Date }> = [];
@@ -25,5 +25,21 @@ describe('buildDaySlots', () => {
     const slots = buildDaySlots({ date: '2026-09-10', durationHours: 2, busy: noBusy, now, minLeadHours: 24 });
     expect(slots.find((s) => s.startHour === 10)!.available).toBe(false);
     expect(slots.find((s) => s.startHour === 20)!.available).toBe(true);
+  });
+});
+
+describe('buildDaySlots — 상품별 시각 범위·방 합치기', () => {
+  it('0~24시를 주면 0시 시작이 첫 슬롯, 23시 시작 1시간이 마지막 슬롯', () => {
+    const slots = buildDaySlots({ date: '2026-09-10', durationHours: 1, busy: noBusy, now: past, minLeadHours: 24, openHour: 0, closeHour: 24 });
+    expect(slots[0].startHour).toBe(0);
+    expect(slots[slots.length - 1].startHour).toBe(23);
+    expect(slots).toHaveLength(24);
+  });
+  it('mergeRoomSlots — 한 방이라도 비면 가능', () => {
+    const r02 = [{ startHour: 10, available: false }, { startHour: 11, available: true }];
+    const r05 = [{ startHour: 10, available: true }, { startHour: 11, available: false }];
+    expect(mergeRoomSlots([r02, r05])).toEqual([{ startHour: 10, available: true }, { startHour: 11, available: true }]);
+    expect(mergeRoomSlots([r02])).toEqual(r02);
+    expect(mergeRoomSlots([])).toEqual([]);
   });
 });
