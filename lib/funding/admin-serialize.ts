@@ -155,20 +155,28 @@ export const hasReviewMarker = (adminMemo: string | null | undefined): boolean =
 export const REFUND_REQUEST_CLEARED_MARKER = '환불 요청 취소';
 
 /**
+ * `unpublish`가 관리자 메모에 남기는 표식 — **왜 명단에서 내렸는가**의 유일한 기록이다.
+ * `listing_hidden_at`은 따로 남으므로, 사유가 지워지면 "영구히 내려가 있는데 왜 내렸는지는
+ * 없는" 상태가 된다. 후원자가 이의를 제기할 수 있어 그 근거는 남아야 한다.
+ */
+export const LISTING_UNPUBLISHED_MARKER = '후원자 명단에서 내림';
+
+/**
  * 이 메모에 **사유 없이 지워서는 안 되는 기록**이 있는가.
  *
- * 세 종류다: 웹훅이 남긴 재고 경고, 그것을 닫은 해제 항목, 그리고 청약철회 취소 기록.
- * `set_memo`는 메모 전체를 덮어쓰는 액션이라 빈 값 한 번으로 이 셋이 흔적 없이 사라졌다 —
- * needsReview 배지가 꺼지고(운영자가 확인했다는 기록도 함께 사라진다), 고객 의사를 지운
- * 사실도 남지 않는다.
+ * 네 종류다: 웹훅이 남긴 재고 경고, 그것을 닫은 해제 항목, 청약철회 취소 기록, 그리고
+ * 명단 숨김 사유. `set_memo`는 메모 전체를 덮어쓰는 액션이라 빈 값 한 번으로 이것들이
+ * 흔적 없이 사라졌다 — needsReview 배지가 꺼지고(운영자가 확인했다는 기록도 함께 사라진다),
+ * 고객 의사를 지운 사실도, 명단에서 내린 이유도 남지 않는다.
  */
+const DATED_MARKERS = [REFUND_REQUEST_CLEARED_MARKER, LISTING_UNPUBLISHED_MARKER] as const;
 export const hasProtectedMemoRecord = (adminMemo: string | null | undefined): boolean => {
   if (typeof adminMemo !== 'string') return false;
   return adminMemo.split('\n').some((line) => {
     const t = line.trim();
     return isReviewWarningLine(t)
       || isReviewClearedLine(t)
-      || new RegExp(`^\\[\\d{4}-\\d{2}-\\d{2}\\]\\s*${REFUND_REQUEST_CLEARED_MARKER}`).test(t);
+      || DATED_MARKERS.some((marker) => new RegExp(`^\\[\\d{4}-\\d{2}-\\d{2}\\]\\s*${marker}`).test(t));
   });
 };
 

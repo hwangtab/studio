@@ -5,7 +5,8 @@ import { getDb } from '../../../../../db/client';
 import { fundingPledges, orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import {
-  REFUND_REQUEST_CLEARED_MARKER, REVIEW_CLEARED_MARKER, hasProtectedMemoRecord, hasReviewMarker,
+  LISTING_UNPUBLISHED_MARKER, REFUND_REQUEST_CLEARED_MARKER, REVIEW_CLEARED_MARKER,
+  hasProtectedMemoRecord, hasReviewMarker,
 } from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
@@ -187,7 +188,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
       if (!reason) return res.status(400).json({ ok: false, message: '명단에서 내리려면 사유를 입력해야 합니다.' });
       if (order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '이미 명단에서 내린 펀딩입니다.' });
-      const entry = `[${kstDateString(now)}] 후원자 명단에서 내림 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
+      const entry = `[${kstDateString(now)}] ${LISTING_UNPUBLISHED_MARKER} — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)
@@ -213,14 +214,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // '닫는' 의도라면 clear_stock_review를 쓸 것 — 그쪽은 원문을 남기고 사유를 강제한다.
       const nextMemo = typeof b.adminMemo === 'string' ? b.adminMemo : '';
       /**
-       * **빈 값으로 지우는 것만 막는다.** 웹훅 재고 경고·그 해제 기록·청약철회 취소 기록은
-       * 사유와 함께 남긴 것이라, 빈칸 저장 한 번으로 흔적 없이 사라지면 안 된다.
+       * **빈 값으로 지우는 것만 막는다.** 웹훅 재고 경고·그 해제 기록·청약철회 취소 기록·
+       * 명단 숨김 사유는 사유와 함께 남긴 것이라, 빈칸 저장 한 번으로 흔적 없이 사라지면 안 된다.
        * 내용을 고치는 저장은 그대로 둔다 — 운영자가 실제로 쓰는 경로다.
        */
       if (nextMemo.trim() === '' && hasProtectedMemoRecord(order.fundingPledge.adminMemo)) {
         return res.status(409).json({
           ok: false,
-          message: '이 메모에는 재고 확인 표식이나 청약철회 취소 기록이 있어 비울 수 없습니다. '
+          message: '이 메모에는 재고 확인 표식·청약철회 취소 기록·명단 숨김 사유가 있어 비울 수 없습니다. '
             + '재고 확인을 닫으려면 clear_stock_review를 쓰세요.',
         });
       }

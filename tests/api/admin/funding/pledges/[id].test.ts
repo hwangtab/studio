@@ -468,7 +468,7 @@ it('set_fulfillment은 세션의 운영자를 fulfillment_updated_by로 싣는�
 
 /**
  * L12 — set_memo는 메모 전체를 덮어쓰는 액션이라, 빈칸 저장 한 번으로 웹훅 재고 경고·그
- * 해제 기록·청약철회 취소 기록이 사유 없이 흔적 없이 사라졌다.
+ * 해제 기록·청약철회 취소 기록·명단 숨김 사유가 사유 없이 흔적 없이 사라졌다.
  */
 describe('set_memo 빈 값', () => {
   const withMemo = (adminMemo: string) => {
@@ -494,6 +494,18 @@ describe('set_memo 빈 값', () => {
   it('청약철회 취소 기록이 있어도 비울 수 없다', async () => {
     withMemo('[2026-09-20] 환불 요청 취소 — 고객이 전화로 철회');
     expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' })).status).toBe(409);
+  });
+
+  /**
+   * `listing_hidden_at`은 따로 남으므로, 사유가 지워지면 "영구히 내려가 있는데 왜 내렸는지는
+   * 없는" 상태가 된다 — 후원자가 이의를 제기할 때 근거가 없다.
+   */
+  it('명단 숨김 사유가 있어도 비울 수 없다', async () => {
+    withMemo('[2026-09-20] 후원자 명단에서 내림 — 타인 사칭 닉네임');
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' });
+    expect(r.status).toBe(409);
+    expect(String(r.body.message)).toContain('명단 숨김 사유');
+    expect(mockUpdate).not.toHaveBeenCalled();
   });
 
   it('보호할 기록이 없으면 비울 수 있다', async () => {
