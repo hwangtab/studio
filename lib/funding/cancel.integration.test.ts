@@ -20,6 +20,14 @@ jest.mock('./email', () => ({
 }));
 jest.mock('./projects', () => ({ ...jest.requireActual('./projects'), getFundingProject: () => PROJECT }));
 jest.mock('./repository', () => ({ ...jest.requireActual('./repository') }));
+// 내려받기 쪽 경합(아래 '양방향')을 같은 하니스에서 보려면 그 라우트가 타는 바깥 의존만
+// 가린다 — R2 서명·객체 확인, IP 레이트리밋, 운영자 알림.
+jest.mock('./r2', () => ({
+  presignFundingDownload: jest.fn().mockResolvedValue('https://r2.example/signed'),
+  fundingDownloadObjectExists: jest.fn().mockResolvedValue(true),
+}));
+jest.mock('./downloadAlert', () => ({ alertMissingDownloadObject: jest.fn().mockResolvedValue(undefined) }));
+jest.mock('../booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 // findFundingOrderByOrderNo를 감싼다 — cancel.ts가 "읽고 → 검사 → 쓰기"를 하는 구조라,
 // 읽기와 쓰기 **사이**에 경쟁 요청이 끼어든 상황을 재현하려면 그 창을 열 수 있어야 한다.
 // 기본 구현은 실제 함수 그대로다.
@@ -40,6 +48,8 @@ import { createFundingPledge, findFundingOrderByOrderNo } from './service';
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import { isLiveFundingOrderStatus, remainingRefundable } from './refundable';
+// eslint-disable-next-line import/first
+import downloadHandler from '../../pages/api/funding/download';
 // eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
 
@@ -69,6 +79,9 @@ rewards:
     amount: 5000
     requiresShipping: false
     estimatedDelivery: 2026-11
+    downloads:
+      - label: MP3
+        key: demo/abc/album.zip
 ---
 `, 'demo');
 
@@ -298,6 +311,19 @@ describe('cancelFundingPledge', () => {
 });
 
 describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () => {
+  /** 내려받기 라우트 호출 — 응답 status·redirect만 본다. */
+  const callDownload = async (body: Record<string, string>) => {
+    const json = jest.fn();
+    const status = jest.fn().mockReturnValue({ json });
+    const redirect = jest.fn();
+    const res = { setHeader: jest.fn(), status, redirect };
+    await downloadHandler({ method: 'POST', body, headers: {}, socket: {} } as never, res as never);
+    return {
+      status: status.mock.calls[0]?.[0] as number | undefined,
+      redirectedTo: redirect.mock.calls[0]?.[1] as string | undefined,
+    };
+  };
+
   const staleRead = (mutate: string, args: unknown[]) => {
     const actual = jest.requireActual('./service').findFundingOrderByOrderNo;
     (findFundingOrderByOrderNo as jest.Mock).mockImplementationOnce(async (orderNo: string) => {
@@ -340,6 +366,42 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
     expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid'); // 선점도 없었다
+  });
+
+  /**
+   * **반대 방향.** 내려받기 라우트도 주문 상태를 읽기 시점에 한 번만 봤고, 기록 UPDATE의
+   * WHERE에는 주문 상태 조건이 없었다. 내려받기가 paid를 읽음 → 취소가 선점(그 시점
+   * downloaded_at은 NULL이라 위 가드도 통과한다) → 토스 전액 취소 → 내려받기가 기록하고
+   * 서명 주소를 내준다. 결과는 H1과 같다. 서명·객체 확인(R2 왕복)이 읽기와 쓰기 사이에
+   * 있어 창이 짧지도 않다.
+   */
+  it('내려받기: 읽은 뒤 주문이 환불되면 기록하지 않고 409로 답한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead("UPDATE orders SET status = 'refunded' WHERE id = ?", [o!.id]);
+    const r = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+
+    expect(r.status).toBe(409);
+    expect(r.redirectedTo).toBeUndefined();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toBeNull();
+  });
+
+  it('내려받기: 주문이 살아 있으면 기록하고 302로 보낸다 — 두 번째도 첫 시각을 지킨다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+
+    const first = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+    expect(first.redirectedTo).toBe('https://r2.example/signed');
+    const at = (await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt;
+    expect(at).toBeInstanceOf(Date);
+
+    const second = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+    expect(second.redirectedTo).toBe('https://r2.example/signed');
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toEqual(at);
   });
 
   it('관리자 취소는 발송 준비 중에도 그대로 환불한다 — 가드는 셀프 취소에만 건다', async () => {

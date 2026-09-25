@@ -29,12 +29,16 @@ const KEY = 'kspf-2026/abc123/album-mp3-320.zip';
 const HIGHER_KEY = 'kspf-2026/abc123/album-wav-24-96.zip';
 const SIGNED = 'https://acct.r2.cloudflarestorage.com/bucket/kspf-2026/abc123/album-mp3-320.zip?X-Amz-Signature=deadbeef';
 
-const updateCall = () => {
-  const where = jest.fn().mockResolvedValue(undefined);
-  const set = jest.fn().mockReturnValue({ where });
-  const update = jest.fn().mockReturnValue({ set });
-  (getDb as jest.Mock).mockReturnValue({ update });
-  return { update, set, where };
+/**
+ * 기록은 raw SQL 한 문장이다 — 주문이 아직 살아 있는지를 같은 WHERE에서 보기 때문이다
+ * (읽기 시점 판정만으로는 취소와의 경합을 못 막는다. 경합 자체는
+ * lib/funding/cancel.integration.test.ts가 실제 DB로 본다). 여기서는 "기록을 시도했는가"와
+ * 0행일 때의 응답만 본다.
+ */
+const updateCall = (rowsAffected = 1) => {
+  const run = jest.fn().mockResolvedValue({ rowsAffected });
+  (getDb as jest.Mock).mockReturnValue({ run });
+  return { run, update: run, set: run };
 };
 
 const call = async (body: Record<string, string>, method = 'POST') => {
@@ -103,11 +107,23 @@ it('정상 → 서명 주소로 302, 저장소 주소를 응답 본문에 담지
   expect(r.redirectedTo).toBe(SIGNED);
 });
 
-it('최초 1회만 기록한다 — downloaded_at이 비어 있을 때만 쓴다', async () => {
-  const { update, set } = updateCall();
+it('첫 시각을 보존하며 기록한다 — 두 번째 내려받기가 기준점을 밀지 않는다', async () => {
+  const { run } = updateCall();
   await call(ok);
-  expect(update).toHaveBeenCalled();
-  expect(set).toHaveBeenCalledWith(expect.objectContaining({ downloadedAt: expect.any(Date) }));
+  expect(run).toHaveBeenCalled();
+  const statement = JSON.stringify(run.mock.calls[0][0]);
+  expect(statement).toContain('COALESCE(downloaded_at');
+});
+
+/**
+ * 읽기와 쓰기 사이에 취소가 끼어들면 0행이 된다 — 그때 서명 주소를 내주면 돈은 돌아가고
+ * 파일은 나간다. 302 대신 409로 끊는다.
+ */
+it('기록이 0행이면(그 사이 취소됨) 서명 주소를 내주지 않고 409', async () => {
+  updateCall(0);
+  const r = await call(ok);
+  expect(r.status).toBe(409);
+  expect(r.redirectedTo).toBeUndefined();
 });
 
 /**
