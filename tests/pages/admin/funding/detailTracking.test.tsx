@@ -193,3 +193,24 @@ it('실패 기록이 없으면 그 줄을 그리지 않는다', () => {
   render(<AdminFundingDetailPage pledge={PLEDGE} refundableAmount={30000} />);
   expect(screen.queryByText('결제 실패')).not.toBeInTheDocument();
 });
+
+/**
+ * `listing_hidden_at`과 공개 동의를 나눈 이유가 "후원자가 토글해도 운영자 판단이 살아 있게"인데,
+ * 화면이 `displayNamePublic &&`로 버튼을 그려 그 이유를 되돌리고 있었다 — 사칭 이름이 뜬 뒤
+ * 후원자가 공개를 껐다 켜면 버튼이 사라졌다 다시 나타난다. unpublish API엔 그 조건이 없다.
+ */
+describe('후원자 명단에서 내리기 버튼', () => {
+  it.each([['공개 동의 없음', false], ['공개 동의 있음', true]])('%s인 후원도 버튼이 뜬다', (_label, displayNamePublic) => {
+    (patchPledge as jest.Mock).mockReset().mockResolvedValue({ ok: true });
+    window.prompt = jest.fn().mockReturnValue('사칭 이름');
+    render(<AdminFundingDetailPage pledge={{ ...PLEDGE, displayNamePublic }} refundableAmount={30000} />);
+    fireEvent.click(screen.getByRole('button', { name: '후원자 명단에서 내리기' }));
+    expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'unpublish', reason: '사칭 이름' });
+  });
+
+  it('이미 내려간 건에는 숨김 해제만 뜬다', () => {
+    render(<AdminFundingDetailPage pledge={{ ...PLEDGE, listingHiddenAt: '2026-09-20T00:00:00.000Z' }} refundableAmount={30000} />);
+    expect(screen.getByRole('button', { name: '명단 숨김 해제' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '후원자 명단에서 내리기' })).not.toBeInTheDocument();
+  });
+});
