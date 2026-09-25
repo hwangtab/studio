@@ -708,7 +708,11 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 이메일을 지운다(펀딩만이 아니라 모든 주문 타입이 쓰는 공용 함수라 펀딩만 예외를 두면
    * booking·contracts에 회귀 위험이 생긴다 — 그래서 그 함수는 건드리지 않는다).
    *
-   * 둘이 만나면 "배송지는 있는데 연락할 방법이 없는" 행이 생긴다 — 보낼 수도, 환불
+   * 그리고 같은 크론의 purgeFundingPersonalDataOfPurgedOrders가 그 결과를 따라 **배송지·응원
+   * 메시지·운영자 메모·명단 표시 이름까지** 같은 실행에서 지운다. 판단 시한이 걸린 유일한
+   * 경보라 무엇이 없어지는지를 정확히 말해야 한다.
+   *
+   * 남는 것은 "보낼 주소도, 연락할 방법도 없는" 행이다 — 보낼 수도, 환불
    * 여부를 물어볼 수도 없다. 결제 후 5년이 다가오도록 안 보낸 리워드가 있다는 뜻이므로,
    * 고객 정보가 지워지기 전에 사람이 판단해야 한다(지금이라도 보내거나, 환불하거나,
    * 손으로 남겨 두거나). 90일 여유를 두는 이유는 이 점검이 하루 한 번만 돌기 때문이다.
@@ -735,7 +739,8 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       title: `아직 발송하지 않은 채 고객 정보 파기가 다가온 펀딩 ${undeliveredNearingPurge.length}건`,
       detail:
         `주문번호: ${sample(undeliveredNearingPurge.map((row) => row.orderNo))}\n` +
-        `결제 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 되면 고객 이름·연락처·이메일이 지워집니다. ` +
+        `결제 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 되면 고객 이름·연락처·이메일이 지워지고, ` +
+        '같은 실행에서 배송지 여섯 칸·응원 메시지·운영자 메모·명단 표시 이름도 함께 지워집니다. ' +
         '아직 리워드를 안 보낸 상태로 그 시점이 90일 안으로 다가왔습니다 — ' +
         '지금 발송하거나, 환불하거나, 계속 보관할지 관리자 > 펀딩 상세에서 판단해 주세요.',
     });
