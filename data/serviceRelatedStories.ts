@@ -11,9 +11,18 @@
  * - 카테고리 분포는 의도적으로 다양하게 (recording/vocal/lesson/business 혼합)
  */
 
-export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering' | 'music-promotion';
+export type ServiceKey = 'recording' | 'wedding-song' | 'voice-acting' | 'lesson' | 'pricing' | 'cover-video' | 'release-project' | 'mixing-mastering' | 'music-promotion' | 'crowdfunding-design';
 
 export const serviceRelatedStorySlugs: Record<ServiceKey, readonly string[]> = {
+  'crowdfunding-design': [
+    // 펀딩을 정면으로 다루는 글이 먼저, 그다음 제작비·지원금·펀딩 리워드와 닿는 글.
+    'music-crowdfunding1',
+    'music-grants1',
+    'album-cost1',
+    'music-merchandise1',
+    'fan-community1',
+    'indie-musician-studio1',
+  ],
   'recording': [
     'recording-price1',
     'studio-compare1',

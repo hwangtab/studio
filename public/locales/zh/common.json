@@ -27,6 +27,7 @@
     "voiceActing": "配音录音",
     "coverVideo": "翻唱视频拍摄",
     "musicPromotion": "音乐发行宣传",
+    "crowdfundingDesign": "众筹设计代理",
     "releaseProject": "发行项目",
     "releaseSingle": "单曲",
     "releaseEp": "EP",
@@ -302,7 +303,7 @@
       "subtitle": "为作品收尾的阶段。对齐 Spotify -14 LUFS 等平台标准，无论用耳机、车载还是音箱聆听，平衡都不会崩。"
     },
     "practiceRoom": {
-      "title": "音乐练习室入住",
+      "title": "音乐练习室 — 月租入住 · 按小时",
       "subtitle": "按月租用的24小时隔音工作室——满室的月份较多，同时接受入住等候登记。",
       "subtitleVacant": "按月租用的24小时隔音工作室——现在即可入住。",
       "detailLink": "查看练习室设施与入住福利",
@@ -340,7 +341,8 @@
       "location": "在线咨询",
       "inquiry": "申请免费咨询",
       "bookingEntry": "在线预约",
-      "orderEntry": "在线下单"
+      "orderEntry": "在线下单",
+      "detail": "了解详情"
     },
     "relatedStoriesTitle": "预约前值得再看一遍的指南",
     "relatedStoriesSubtitle": "提前了解费用·发行·录音流程，让你的首次录音更高效。",

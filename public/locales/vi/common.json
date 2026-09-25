@@ -27,6 +27,7 @@
     "voiceActing": "Lồng Tiếng",
     "coverVideo": "Quay Video Cover",
     "musicPromotion": "Quảng bá phát hành",
+    "crowdfundingDesign": "Thiết kế crowdfunding",
     "releaseProject": "Dự án phát hành",
     "releaseSingle": "Single",
     "releaseEp": "EP",
@@ -302,7 +303,7 @@
       "subtitle": "Bước khép lại bản thu. Căn theo chuẩn nền tảng như -14 LUFS của Spotify, giữ thế cân bằng khi nghe bằng tai nghe, trong xe hay trên loa."
     },
     "practiceRoom": {
-      "title": "Thuê phòng tập theo tháng",
+      "title": "Phòng tập — Thuê theo tháng · Theo giờ",
       "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
       "subtitleVacant": "Không gian cách âm 24/7 thuê theo tháng — có thể vào ở ngay bây giờ.",
       "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân",
@@ -340,7 +341,8 @@
       "location": "Liên hệ Trực tuyến",
       "inquiry": "Đặt lịch Tư vấn Miễn phí",
       "bookingEntry": "Đặt lịch online",
-      "orderEntry": "Đặt hàng online"
+      "orderEntry": "Đặt hàng online",
+      "detail": "Xem chi tiết"
     },
     "relatedStoriesTitle": "Những hướng dẫn nên xem trước khi đặt lịch",
     "relatedStoriesSubtitle": "Biết trước chi phí, quy trình phát hành và thu âm giúp bạn tận dụng tối đa buổi thu đầu tiên.",

@@ -9,6 +9,7 @@ import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_AVAILABILITY_UPDATED_ON, PRACTICE_ROOM_VACANT_ROOMS } from '../../data/practiceRoomAvailability';
 import {
+  COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_PRICE,
   FUNDING_DESIGN_PRICE,
   FUNDING_SUCCESS_FEE_PERCENT,
@@ -43,6 +44,7 @@ import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs
 import { computeProjectState } from '../../lib/funding/projects';
 import { getListableFundingProjectsAsync } from '../../lib/funding/repository';
 import { getSupportedArtists } from '../../data/artists';
+import { CROWDFUNDING_CASES, CASES_CHECKED_ON, CASES_SUMMARY } from '../../data/crowdfundingCases';
 import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
 import koCommon from '../../public/locales/ko/common.json';
 
@@ -95,7 +97,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
 - **Wedding Song Recording**: Complete package for a wedding ceremony song — 2-hour recording session, vocal tuning, mixing and mastering for ${krw(WEDDING_PACKAGE_PRICE)} KRW. Beginners welcome; the engineer directs the session. Dedicated page: /wedding-song
 - **Music Release PR (standalone)**: Press release written in five languages, a press kit page, derivative copy (radio intros, in-store blurbs, tip-form versions), a full-album listening video, and outreach to Korean music outlets plus media, radio and record shops in 60 countries — sold separately, no production required. ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory (list ${krw(RELEASE_PRESS_PRICE)} KRW) through ${RELEASE_PRESS_INTRO_ENDS_ON}, three releases a month. Nothing is charged until the producer has listened to the music and counted, free of charge and within three business days, how many outlets it can go to. Article placement is never promised — what is promised is the agreed send volume and a report proving it. Dedicated page: /music-promotion
-- **Crowdfunding Design (standalone service)**: Planning and building an artist's own crowdfunding page (Tumblbug and similar) — storytelling, reward design, page production. ${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% success fee paid after the campaign; available without commissioning a release project.
+- **Crowdfunding Design (standalone service)**: Planning and building an artist's own crowdfunding page (Tumblbug and similar) — storytelling, reward design, page production. ${krw(FUNDING_DESIGN_PRICE)} KRW upfront + a success fee of ${FUNDING_SUCCESS_FEE_PERCENT}% of the funds raised if the campaign succeeds; available without commissioning a release project. Dedicated page (Korean): ${siteUrl}/ko/crowdfunding-design
 - **Reward Crowdfunding (Studio NOL's own platform)**: Studio NOL runs reward-based crowdfunding for records it produces — backers pick a tier and receive downloads, CDs or goods. This is the studio's own funding page, distinct from the Crowdfunding Design service listed just above, which builds campaigns on external platforms like Tumblbug. Live projects: /funding
 - **Album Release Project (flagship)**: Producer-led, end-to-end release production for independent artists — modern A&R-style planning (artist concept & album theme development, song selection, project management of schedule/budget), recording, session-musician connections, mixing, mastering, worldwide digital distribution, and release promotion pitched to Korean and international media, radio stations, playlist curators, and music-industry contacts. Led by producer Hwang Kyungha (황경하, 15 years, 70+ releases). Single / EP / full-album scale tiers; starts with a free release consultation.
 
@@ -209,12 +211,12 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 ## Cancellation & Refund Terms (verbatim from ${siteUrl}/ko/terms, Korean)
 
 - Recording sessions: ${REFUND_POLICY_LINES.join(' / ')}
+- Practice room hourly bookings: ${PRACTICE_ROOM_REFUND_POLICY_LINES.join(' / ')}
 - Mixing & mastering orders: ${MIXING_REFUND_POLICY_LINES.join(' / ')}
 - Monthly subscriptions (practice room, lessons): ${SUBSCRIPTION_REFUND_POLICY_LINES.join(' ')}
-- Practice room hourly bookings: ${PRACTICE_ROOM_REFUND_POLICY_LINES.join(' / ')}
 - Music Release PR: ${PRESS_REFUND_POLICY_LINES.join(' ')}
 - Payment: online checkout via Toss Payments for studio bookings, mixing & mastering orders and crowdfunding pledges (payment methods as offered in the Toss checkout); other services by bank transfer on invoice. Tax invoices (세금계산서) are issued on request.
-- All prices are VAT excluded. Full terms: ${siteUrl}/ko/terms
+- All prices are VAT excluded, except the practice room hourly rate (VAT included). Full terms: ${siteUrl}/ko/terms
 
 ## Sitemaps & Feeds
 
@@ -225,12 +227,31 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - llms-full.txt locale-scoped: ${siteUrl}/llms-full-ko.txt · ${siteUrl}/llms-full-en.txt · ${siteUrl}/llms-full-zh.txt
 `;
 
+// 크라우드펀딩 실적 주장("수십 건·약 3억원")에 붙이는 검증 가능한 예시. 링크를 따라가면 플랫폼에서
+// 수치를 직접 볼 수 있다 — 출처 없는 실적 주장은 날조로 읽힌다(#234 제3자 후기와 같은 판단).
+// 모금액 상위 음반 3건만 싣는다. 전체 목록은 LP의 표(data/crowdfundingCases.ts).
+const crowdfundingEvidence = (siteUrl: string): string => {
+  const topAlbums = CROWDFUNDING_CASES.filter((c) => c.state === 'succeeded' && c.kind === '음반')
+    .slice()
+    .sort((a, b) => b.raised - a.raised)
+    .slice(0, 3)
+    .map((c) => `${c.title} ${krw(c.raised)}원·${c.percent}% (${c.url})`)
+    .join(' / ');
+  return `공개로 확인 가능한 펀딩 성공 ${CASES_SUMMARY.succeededCount}건(음반 ${CASES_SUMMARY.succeededAlbumCount}건), 누적 ${krw(CASES_SUMMARY.succeededRaised)}원·후원자 ${krw(CASES_SUMMARY.succeededBackers)}명(${CASES_CHECKED_ON} 확인) — 예: ${topAlbums}. 전체 목록: ${siteUrl}/ko/crowdfunding-design`;
+};
+
 // 아티스트 후원 링크는 후원 가능한 아티스트가 실제로 있을 때만 안내한다.
 // data/artists가 비어 있으면 /ko/artists는 noindex로 렌더되므로(pages/[locale]/artists/index.tsx),
 // 없는 것을 AI에 조건 없이 안내하지 않는다 — fundingStatusLine과 같은 원칙.
 export const artistsLine = (siteUrl: string, locale: Locale): string =>
   locale === 'ko' && getSupportedArtists().length > 0
     ? `- Support Artists (monthly patronage for artists who recorded here): ${siteUrl}/ko/artists\n`
+    : '';
+
+// 펀딩·펀딩 설계 대행은 ko 전용 라우트다 — 다른 로케일은 404라 ko 목록에만 싣는다.
+const fundingKeyPageLine = (siteUrl: string, locale: Locale): string =>
+  locale === 'ko'
+    ? `- Crowdfunding Design (standalone service, Korean only): ${siteUrl}/ko/crowdfunding-design\n- Reward Crowdfunding (Studio NOL's own platform): ${siteUrl}/ko/funding\n`
     : '';
 
 const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## Key Pages (${label})
@@ -242,7 +263,8 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
   - Single Release tier: ${siteUrl}/${locale}/release-project/single
   - EP Release tier: ${siteUrl}/${locale}/release-project/ep
   - Full Album Release tier: ${siteUrl}/${locale}/release-project/album
-- Cover Video Package: ${siteUrl}/${locale}/cover-video
+- Music Release PR (standalone, no production required): ${siteUrl}/${locale}/music-promotion
+${fundingKeyPageLine(siteUrl, locale)}- Cover Video Package: ${siteUrl}/${locale}/cover-video
 - Portfolio: ${siteUrl}/${locale}/portfolio
 ${artistsLine(siteUrl, locale)}- Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
@@ -346,7 +368,7 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 운영자 황경하는 15년간 여러 인디 아티스트를 발굴하고, 뮤지션으로 자리 잡기까지의 방향을 상담해 왔습니다. 무료 발매 상담(30분, 카카오톡)에서 지금 단계 — 곡 상태·예산·활동 방향 — 를 보고 다음 걸음을 제안합니다. 예산대별 현실 경로: ${siteUrl}/ko/stories/indie-musician-studio1 / 첫 발매 준비: ${siteUrl}/ko/stories/debut1
 
 **"앨범을 내고 싶은데 제작비가 없다 / 크라우드펀딩으로 앨범을 내고 싶다" (I want to release an album but can't afford production costs).**
-예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 + 성공 수수료 ${FUNDING_SUCCESS_FEE_PERCENT}%, 후불)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/pricing. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
+예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 선불 + 펀딩 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. ${crowdfundingEvidence(siteUrl)}. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/crowdfunding-design. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
 ${fundingLine}
 
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다 / 음원 홍보를 맡기고 싶다" (I released a song but nobody hears it / I want to hire someone for music PR).**
@@ -380,6 +402,8 @@ const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
 Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-language booking and inquiry support (email / KakaoTalk). Recording sessions are run in Korean; mixing and mastering can be ordered fully remotely in English. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 producing lessons (MIDI, composition, mixing — no vocal or instrument lessons), voice-over recording, wedding song packages, and album release production (modern A&R planning, worldwide distribution, PR pitched to international media, radio and playlist curators).
+- Music Release PR (standalone — no production required): ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW). Press release in five languages, press kit page, and outreach to Korean music outlets plus media, radio and record shops in 60 countries, with a send report. Placement is not guaranteed. Page: ${siteUrl}/en/music-promotion
+- Also offered: cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW — filming, recording, mixing, 4K edit) and crowdfunding campaign design (${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% of funds raised on success).
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). All-in-one bundles cover planning, recording, mixing, mastering, digital distribution and release PR: 1 song ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% below production line-item total); EP 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15%); album 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20%). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
@@ -393,10 +417,10 @@ const CHINESE_QUICK_FACTS = (siteUrl: string) => `
 
 Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。网站提供简体中文页面；预约与咨询可通过 KakaoTalk 或电子邮件用英文沟通（工作室不提供中文口语沟通）。
 
-- 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐制作课程（MIDI·作曲·混音，不提供声乐课）、配音录音、婚礼献唱套餐、发行企划（A&R 策划·全球发行·面向海外媒体/电台/歌单的宣传推广）。
+- 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐制作课程（MIDI·作曲·混音，不提供声乐课）、配音录音、婚礼献唱套餐、翻唱视频套餐、发行企划（A&R 策划·全球发行·面向海外媒体/电台/歌单的宣传推广），以及可单独委托的音源发行宣传（无需在本工作室制作）。
 - 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，1 首歌人声套餐（3 小时含专属工程师）₩${krw(VOCAL_PACKAGE_PRICE)}；一站式套餐包含策划、录音、混音、母带、数字发行登记与发行宣传：1 首 ₩${krw(SINGLE_BUNDLE_PRICE)}（较制作单项合计便宜约 9%）；EP 4 首 ₩${krw(EP_BUNDLE_PRICE)}（约 15%）；专辑 8 首 ₩${krw(ALBUM_BUNDLE_PRICE)}（约 20%）。
 - 混音／母带：每首歌 ₩${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}，按音轨数分级，含 2 次修改。
-- 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
+- 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。也可按小时使用：每小时 ₩${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}（含增值税），1 小时起，可在线预约。不提供乐队排练房。
 - 婚礼献唱套餐：₩${krw(WEDDING_PACKAGE_PRICE)}（2 小时录音 + 人声调音 + 混音及母带），新手友好。
 - 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 3 篇 spoke 指南（练习室预约、价格、交通指引）。
 - 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hello@studionol.co.kr)、电话 ${CANONICAL_FACTS.phoneIntl}，24 小时内免费报价。
@@ -412,7 +436,7 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music produ
 - Operator: Hwang Kyungha (황경하)
 - Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
 - Working style: plans production, release, and promotion together with the musician, from the musician's side — direction, budget, and schedule are decided with the artist, not handed down as a fixed package
-- Crowdfunding: has planned and run dozens of album crowdfunding campaigns (Tumblbug and similar), roughly 300 million KRW raised in total — budget structuring for independent releases is part of what the studio does, not only production
+- Crowdfunding: has planned and run dozens of album crowdfunding campaigns (Tumblbug and similar), roughly 300 million KRW raised in total (${CASES_SUMMARY.succeededCount} successful campaigns are publicly verifiable with links on the Crowdfunding Design page, checked ${CASES_CHECKED_ON}) — budget structuring for independent releases is part of what the studio does, not only production
 - Awards (as planner / producer of the album named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr

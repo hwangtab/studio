@@ -1,5 +1,19 @@
 import type { Locale } from '../lib/i18n';
 import { CANONICAL_FACTS } from '../lib/factTokens';
+import {
+  ALBUM_BUNDLE_PRICE,
+  COVER_VIDEO_PACKAGE_PRICE,
+  EP_BUNDLE_PRICE,
+  formatPriceAmount,
+  LESSON_MONTHLY_PRICE,
+  PRACTICE_ROOM_HOURLY_PRICE_INCL,
+  RELEASE_PRESS_INTRO_ENDS_ON,
+  RELEASE_PRESS_INTRO_PRICE,
+  RELEASE_PRESS_PRICE,
+  SINGLE_BUNDLE_PRICE,
+} from './pricing';
+
+const krw = formatPriceAmount;
 
 const faqData = {
   ko: [
@@ -53,7 +67,27 @@ const faqData = {
     },
     {
       question: '연습실은 어떻게 이용하나요?',
-      answer: '월정액 입주 프로그램(월 36만원~)으로 안내드립니다. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 밴드 합주실은 운영하지 않습니다.',
+      answer: `월정액 입주 프로그램(월 36만원~)이 기본입니다. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 한두 시간만 필요하면 시간제(시간당 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있습니다. 밴드 합주실은 운영하지 않습니다.`,
+    },
+    // 2026-09-25 — 홈 FAQ가 녹음·믹싱·연습실·축가만 답하고 있었다. ChatGPT는 홈(/ko)을 직접
+    // 인용한 적이 있다(GEO 1회차 Q17·Q19). 나머지 주력 상품을 한 문항씩 둔다.
+    // getStudioFaqData가 키워드('스튜디오'·'녹음실' 등)로 이 목록을 거르므로 아래 문항에는
+    // 그 단어를 쓰지 않는다 — 쓰면 스튜디오 정보 페이지 FAQ로 샌다.
+    {
+      question: '곡 발매까지 전부 맡길 수 있나요?',
+      answer: `네, 발매 프로젝트로 기획·녹음·믹싱·마스터링·디지털 유통 등록·발매 홍보까지 한 번에 진행합니다. 싱글 ${krw(SINGLE_BUNDLE_PRICE)}원, EP(4곡) ${krw(EP_BUNDLE_PRICE)}원, 정규(8곡) ${krw(ALBUM_BUNDLE_PRICE)}원부터이며, 무료 발매 상담(30분)에서 곡 상태를 듣고 방향을 제안합니다.`,
+    },
+    {
+      question: '이미 발매한 음원의 홍보만 맡길 수도 있나요?',
+      answer: `네, 음원 발매 홍보를 단독 상품으로 진행합니다. 5개 언어 보도자료, 프레스킷 페이지, 국내 음악 매체와 해외 60개국 매체·라디오·레코드숍 발송, 발송 리포트까지 ${krw(RELEASE_PRESS_INTRO_PRICE)}원입니다(${RELEASE_PRESS_INTRO_ENDS_ON}까지 초기 파트너 가격, 정가 ${krw(RELEASE_PRESS_PRICE)}원). 기사 게재나 플레이리스트 등재는 보장하지 않습니다.`,
+    },
+    {
+      question: '작곡·미디 레슨도 하나요?',
+      answer: `네, 1:1 프로듀싱 레슨(미디·작곡·편곡·믹싱·마스터링)을 월 ${krw(LESSON_MONTHLY_PRICE)}원(주 1회 60분, 월 4회)에 진행합니다. 보컬·악기 레슨은 운영하지 않습니다.`,
+    },
+    {
+      question: '커버 영상도 찍을 수 있나요?',
+      answer: `네, 커버 영상 올인원 패키지(${krw(COVER_VIDEO_PACKAGE_PRICE)}원)로 3시간 동안 촬영·녹음·믹싱을 진행하고 4K 영상과 음원을 함께 드립니다.`,
     },
 
   ],
@@ -108,7 +142,23 @@ const faqData = {
     },
     {
       question: 'How does the practice room work?',
-      answer: 'It runs as a monthly residency program (from 360,000 KRW/month) — a soundproof private room with 24/7 access and no deposit. Band rehearsal rooms are not operated.',
+      answer: `It runs mainly as a monthly residency program (from 360,000 KRW/month) — a soundproof private room with 24/7 access and no deposit. For just an hour or two, hourly use is ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour (VAT included, from 1 hour), paid online. Band rehearsal rooms are not operated.`,
+    },
+    {
+      question: 'Can I hand off an entire release, from planning to distribution?',
+      answer: `Yes. The release project covers planning, recording, mixing, mastering, digital distribution and release PR in one package: single from ${krw(SINGLE_BUNDLE_PRICE)} KRW, EP (4 songs) from ${krw(EP_BUNDLE_PRICE)} KRW, full album (8 songs) from ${krw(ALBUM_BUNDLE_PRICE)} KRW. A free 30-minute release consultation comes first.`,
+    },
+    {
+      question: 'Can I order PR only, for a song that is already released?',
+      answer: `Yes. Music release PR is sold on its own: a press release in five languages, a press kit page, outreach to Korean music outlets plus media, radio and record shops in 60 countries, and a send report — ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW). Article placement and playlist adds are not guaranteed.`,
+    },
+    {
+      question: 'Do you teach composition or MIDI production?',
+      answer: `Yes — 1:1 producing lessons (MIDI, composition, arrangement, mixing, mastering) at ${krw(LESSON_MONTHLY_PRICE)} KRW/month (four 60-minute sessions). Vocal and instrument lessons are not offered.`,
+    },
+    {
+      question: 'Can you film a cover video?',
+      answer: `Yes. The cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW) is a 3-hour session of filming, recording and mixing, delivered as a 4K video plus the audio.`,
     },
 
   ],
@@ -154,8 +204,8 @@ const faqData = {
       answer: '当然可以，欢迎所有人。所有录音均由专职工程师全程陪同，从麦克风设置到人声指导、成品交付，第一次录音也能轻松获得高品质成果。（不提供自录及小时租赁服务。）',
     },
     {
-      question: '练习室可以短期租用吗？',
-      answer: '练习室仅提供月费入驻项目（36万韩元/月起）。不提供短期或按小时租赁。',
+      question: '练习室如何使用？',
+      answer: `练习室以月租入驻项目（36万韩元/月起）为主——无押金、24小时出入的隔音独立房间。只需一两个小时也可按小时使用（每小时 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} 韩元，含增值税，1小时起）。不提供乐队排练室。`,
     },
   ],
   es: [
@@ -200,8 +250,8 @@ const faqData = {
       answer: 'Absolutamente. Todos son bienvenidos. Un ingeniero dedicado acompaña cada sesión — configuración del micrófono, dirección vocal y entrega de archivos finales — para que los principiantes logren resultados de calidad profesional. (No ofrecemos auto-grabación ni alquiler por horas.)',
     },
     {
-      question: '¿Está disponible el alquiler a corto plazo de la sala de práctica?',
-      answer: 'Nuestra sala opera únicamente con un programa de residencia mensual (desde 360.000 KRW/mes). No ofrecemos alquiler por horas ni a corto plazo.',
+      question: '¿Cómo funciona la sala de práctica?',
+      answer: `Funciona principalmente como un programa de residencia mensual (desde 360.000 KRW/mes): una sala privada insonorizada con acceso 24/7 y sin depósito. Para una o dos horas también hay uso por horas (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hora, IVA incluido, desde 1 hora). No operamos salas de ensayo para bandas.`,
     },
   ],
   vi: [
@@ -246,8 +296,8 @@ const faqData = {
       answer: 'Hoàn toàn có thể. Tất cả mọi người đều được chào đón. Mọi phiên thu âm đều có kỹ sư chuyên trách đồng hành — cài micro, định hướng giọng hát và bàn giao file hoàn chỉnh, giúp người lần đầu thu âm cũng có kết quả chất lượng cao. (Không cung cấp dịch vụ tự thu âm và thuê theo giờ.)',
     },
     {
-      question: 'Có thể thuê phòng tập ngắn hạn không?',
-      answer: 'Phòng tập chỉ hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng). Không cung cấp thuê ngắn hạn hoặc theo giờ.',
+      question: 'Phòng tập hoạt động như thế nào?',
+      answer: `Phòng tập chủ yếu hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng) — phòng riêng cách âm, ra vào 24/7, không cần đặt cọc. Nếu chỉ cần một vài giờ, có thể thuê theo giờ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/giờ, đã gồm VAT, từ 1 giờ). Không có phòng tập cho ban nhạc.`,
     },
   ],
   th: [
@@ -292,8 +342,8 @@ const faqData = {
       answer: 'ได้แน่นอน ทุกคนยินดีต้อนรับ วิศวกรประจำจะดูแลตั้งแต่เซ็ตอัพไมค์ ชี้แนะการร้อง ไปจนถึงส่งมอบไฟล์สำเร็จ ทำให้แม้แต่มือใหม่ก็ได้ผลลัพธ์ระดับมืออาชีพ',
     },
     {
-      question: 'เช่าห้องซ้อมระยะสั้นได้ไหม?',
-      answer: 'ห้องซ้อมของเราดำเนินการแบบโปรแกรมรายเดือนเท่านั้น (เริ่มต้น 360,000 วอน/เดือน) ไม่ได้ให้บริการเช่าระยะสั้นหรือรายชั่วโมง',
+      question: 'ห้องซ้อมใช้งานอย่างไร?',
+      answer: `ห้องซ้อมให้บริการหลักเป็นโปรแกรมรายเดือน (เริ่มต้น 360,000 วอน/เดือน) — ห้องส่วนตัวเก็บเสียง เข้าออกได้ 24 ชั่วโมง ไม่มีเงินมัดจำ หากต้องการเพียงชั่วโมงหรือสองชั่วโมงก็ใช้แบบรายชั่วโมงได้ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} วอน/ชม. รวม VAT ตั้งแต่ 1 ชม.) ไม่มีห้องซ้อมสำหรับวงดนตรี`,
     },
   ],
   uz: [
@@ -338,8 +388,8 @@ const faqData = {
       answer: "Ha, albatta. Hamma xush kelibsiz. Muhandis mikrofonni sozlashdan vokal yo'naltirishgacha va tayyor fayllarni topshirishgacha barcha jarayonda yordam beradi, birinchi marta yozayotganlar ham yuqori sifatli natija oladi.",
     },
     {
-      question: "Mashg'ulot xonasini qisqa muddatga ijaraga olish mumkinmi?",
-      answer: "Mashgʻulot xonasi faqat oylik rezident dastur (360,000 KRW/oy dan) asosida ishlaydi. Qisqa muddatli yoki soatbay ijara taklif etilmaydi.",
+      question: "Mashg'ulot xonasi qanday ishlaydi?",
+      answer: `Mashgʻulot xonasi asosan oylik rezident dastur (360,000 KRW/oy dan) sifatida ishlaydi — depozitsiz, 24/7 kirish mumkin bo'lgan tovush o'tkazmaydigan shaxsiy xona. Bir-ikki soat kerak bo'lsa, soatbay foydalanish ham bor (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/soat, VAT bilan, 1 soatdan). Guruh repetitsiya xonalari yo'q.`,
     },
   ]
 };

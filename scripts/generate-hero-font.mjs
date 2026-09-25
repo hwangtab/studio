@@ -155,7 +155,21 @@ function collectHeroChars() {
     console.warn(`skip funding titles: ${e.message}`);
   }
 
-  // 6) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)
+  // 6) ko 전용 LP 중 카피를 common.json 밖(data/*.ts)에 두는 페이지의 hero.title.
+  //    /ko/crowdfunding-design(2026-09-25)이 첫 사례다 — 여기 없으면 제목 글자가
+  //    서브셋에서 빠져도 --check가 모른다(5번 펀딩 제목과 같은 구멍).
+  for (const file of ['crowdfundingDesign.ts']) {
+    try {
+      const src = fs.readFileSync(path.join(ROOT, 'data', file), 'utf8');
+      const heroBlock = src.match(/hero\s*:\s*{([\s\S]*?)}/);
+      const title = heroBlock && heroBlock[1].match(/title\s*:\s*(["'`])([\s\S]*?)\1/);
+      if (title) addStr(title[2]);
+    } catch (e) {
+      console.warn(`skip ${file}: ${e.message}`);
+    }
+  }
+
+  // 7) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)
   const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/';
   addStr(safety);
 

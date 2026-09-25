@@ -27,6 +27,7 @@
     "voiceActing": "Voice Acting",
     "coverVideo": "Cover Video",
     "musicPromotion": "Release Press",
+    "crowdfundingDesign": "Crowdfunding Design",
     "releaseProject": "Release Project",
     "releaseSingle": "Single",
     "releaseEp": "EP",
@@ -330,7 +331,7 @@
       "subtitle": "The stage that finishes the record. Matched to platform targets like Spotify's -14 LUFS, so the balance holds up on earbuds, in a car, or on speakers."
     },
     "practiceRoom": {
-      "title": "Practice Room Residency",
+      "title": "Practice Room — Monthly Residency · Hourly",
       "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
       "subtitleVacant": "A 24/7 soundproof workspace rented by the month — open for move-in right now.",
       "detailLink": "See practice room facilities and resident perks",
@@ -368,7 +369,8 @@
       "location": "Contact Online",
       "inquiry": "Book a Free Consultation",
       "bookingEntry": "Book online",
-      "orderEntry": "Order online"
+      "orderEntry": "Order online",
+      "detail": "Learn more"
     },
     "relatedStoriesTitle": "Guides Worth a Look Before You Book",
     "relatedStoriesSubtitle": "Knowing costs, release steps, and the recording process in advance helps you make the most of your first session.",

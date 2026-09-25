@@ -27,6 +27,7 @@
     "voiceActing": "Ovoz yozish",
     "coverVideo": "Cover video suratga olish",
     "musicPromotion": "Reliz press-kampaniyasi",
+    "crowdfundingDesign": "Crowdfunding dizayni",
     "releaseProject": "Reliz loyihasi",
     "releaseSingle": "Singl",
     "releaseEp": "EP",
@@ -302,7 +303,7 @@
       "subtitle": "Yozuvni yakunlaydigan bosqich. Spotify -14 LUFS kabi platforma me'yorlariga moslab, balans quloqchinda ham, mashinada ham, karnayda ham buzilmaydi."
     },
     "practiceRoom": {
-      "title": "Mashg'ulot xonasiga oylik joylashuv",
+      "title": "Mashg'ulot xonasi — oylik · soatbay",
       "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
       "subtitleVacant": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — hozir ko'chib kirish mumkin.",
       "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish",
@@ -340,7 +341,8 @@
       "location": "Onlayn murojaat",
       "inquiry": "Bepul Maslahat Olish",
       "bookingEntry": "Onlayn bron qilish",
-      "orderEntry": "Onlayn buyurtma"
+      "orderEntry": "Onlayn buyurtma",
+      "detail": "Batafsil"
     },
     "relatedStoriesTitle": "Bron qilishdan oldin ko'rib chiqishga arziydigan qo'llanmalar",
     "relatedStoriesSubtitle": "Xarajat, reliz va yozuv jarayonini oldindan bilsangiz, birinchi seansdan ko'proq foyda olasiz.",
