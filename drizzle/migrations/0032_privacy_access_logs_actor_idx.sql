@@ -1,0 +1,1 @@
+CREATE INDEX `privacy_access_logs_actor_idx` ON `privacy_access_logs` (`actor`);
