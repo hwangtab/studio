@@ -16,13 +16,18 @@ jest.mock('../../../lib/contracts/admin-rate-limit', () => ({
   resetAdminLoginRateLimit: jest.fn(),
 }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({
+  authenticateAdminApi: jest.fn(),
   loginAdminSession: jest.fn(),
   logoutAdminSession: jest.fn(),
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { loginAdminSession, logoutAdminSession } from '../../../lib/contracts/admin-auth';
+import {
+  authenticateAdminApi,
+  loginAdminSession,
+  logoutAdminSession,
+} from '../../../lib/contracts/admin-auth';
 import {
   isAdminLoginThrottled,
   recordAdminLoginFailure,
@@ -48,7 +53,8 @@ beforeEach(() => {
   jest.clearAllMocks();
   (isAdminLoginThrottled as jest.Mock).mockResolvedValue(false);
   (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: false });
-  (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
+  (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (logoutAdminSession as jest.Mock).mockResolvedValue(undefined);
 });
 
@@ -133,12 +139,33 @@ describe('DELETE — 로그아웃', () => {
   });
 });
 
+describe('GET — 지금 누구로 들어와 있는가', () => {
+  it('로그인한 세션이면 id와 이름을 돌려준다', async () => {
+    const res = await run('GET');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ ok: true, id: 'kyungha', name: '황경하' });
+  });
+
+  it('로그인하지 않았으면 401이고 아무것도 알려 주지 않는다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
+    const res = await run('GET');
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ ok: false });
+  });
+
+  it('조회일 뿐이라 로그인을 시도하지도, 시도 제한을 세지도 않는다', async () => {
+    await run('GET');
+    expect(loginAdminSession).not.toHaveBeenCalled();
+    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
+  });
+});
+
 describe('그 외 메서드', () => {
-  it.each(['GET', 'PUT', 'PATCH'])('%s는 405이고 로그인을 시도하지 않는다', async (method) => {
+  it.each(['PUT', 'PATCH'])('%s는 405이고 로그인을 시도하지 않는다', async (method) => {
     const res = await run(method);
 
     expect(res.status).toHaveBeenCalledWith(405);
-    expect(res.setHeader).toHaveBeenCalledWith('Allow', 'POST, DELETE');
+    expect(res.setHeader).toHaveBeenCalledWith('Allow', 'GET, POST, DELETE');
     expect(loginAdminSession).not.toHaveBeenCalled();
   });
 });

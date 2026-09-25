@@ -5,10 +5,27 @@ import {
   recordAdminLoginFailure,
   resetAdminLoginRateLimit,
 } from '../../../lib/contracts/admin-rate-limit';
-import { loginAdminSession, logoutAdminSession } from '../../../lib/contracts/admin-auth';
+import {
+  authenticateAdminApi,
+  loginAdminSession,
+  logoutAdminSession,
+} from '../../../lib/contracts/admin-auth';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
+
+  /**
+   * GET — 지금 누구로 들어와 있는가.
+   *
+   * 관리자 화면 상단이 현재 사람 이름을 띄우려고 부른다. 세션에 이미 든 값을 돌려줄 뿐이라
+   * 관리자 페이지 15곳의 GSSP에 prop을 하나씩 내리는 것보다 이 한 경로가 낫다 —
+   * 화면 껍데기(AdminShell)가 마운트 때 한 번 부르고 끝이다.
+   */
+  if (req.method === 'GET') {
+    const auth = await authenticateAdminApi(req, res);
+    if (!auth.ok) return res.status(401).json({ ok: false });
+    return res.status(200).json({ ok: true, id: auth.actor, name: auth.name });
+  }
 
   if (req.method === 'POST') {
     // 1) 이 IP가 이미 창 한도를 넘겼는지만 읽는다(전역은 안 본다 — 전역으로 막으면
@@ -44,6 +61,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(200).json({ ok: true });
   }
 
-  res.setHeader('Allow', 'POST, DELETE');
+  res.setHeader('Allow', 'GET, POST, DELETE');
   return res.status(405).json({ ok: false, message: 'Method not allowed' });
 }
