@@ -5,6 +5,7 @@ import {
   availabilityBlocks,
   billingKeys,
   bookings,
+  fundingPledges,
   orders,
   payments,
   refunds,
@@ -159,6 +160,44 @@ export const purgeExpiredOrderCustomerData = async (
       ),
     );
 
+  return rows(result);
+};
+
+/**
+ * 결제자 이름이 파기된 후원의 **서포터 명단 표시 이름·응원 메시지**를 파기한다.
+ *
+ * 이 둘은 원래 후원 쪽 파기(`lib/funding/retention.ts`, 리워드 전달 후 1년)가 지운다. 그런데
+ * 그 파기는 `delivered_at`이 찍혀야 시작해서, 발송 상태를 한 번도 `delivered`로 바꾸지 않은
+ * 후원은 닉네임과 메시지가 **끝나는 날 없이** 남았다.
+ *
+ * 여기서는 기산점을 새로 만들지 않고 **위 5년 파기의 결과**를 따른다 — 결제자 이름이
+ * `PURGED_MARK`가 된 후원은 공개 명단에서 이미 빠지므로(lib/funding/service.ts) 표시 이름과
+ * 메시지를 쓸 곳이 사라진 상태다(제21조①의 "불필요하게 되었을 때"). 같은 크론에서 위 파기
+ * 바로 뒤에 돌아, 이름이 지워진 그 달에 함께 지워진다.
+ *
+ * 표시 이름은 NULL이 아니라 표식으로 덮는다 — 1년 파기와 같은 이유(schema.ts의 `publicName`).
+ * 배송지는 여기서 다루지 않는다: 배송지의 기산점은 리워드 전달이고, 그 판단은 이 파일의
+ * 범위 밖이다(`lib/funding/retention.ts` 머리 주석).
+ */
+export const purgeFundingListingOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
+  const result = await getDb()
+    .update(fundingPledges)
+    .set({
+      publicName: sql`CASE WHEN ${fundingPledges.publicName} IS NULL THEN NULL ELSE ${PURGED_MARK} END`,
+      supporterMessage: null,
+    })
+    .where(
+      and(
+        inArray(
+          fundingPledges.orderId,
+          getDb().select({ id: orders.id }).from(orders).where(eq(orders.customerName, PURGED_MARK)),
+        ),
+        or(
+          isNotNull(fundingPledges.supporterMessage),
+          and(isNotNull(fundingPledges.publicName), ne(fundingPledges.publicName, PURGED_MARK)),
+        ),
+      ),
+    );
   return rows(result);
 };
 

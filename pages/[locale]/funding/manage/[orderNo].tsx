@@ -28,6 +28,8 @@ interface Props {
   displayNamePublic: boolean; canEditDisplayName: boolean;
   /** 명단 표시 이름 편집에 쓰는 값 — 결제자 이름, 저장된 표시 이름(`public_name`), 응원 메시지. */
   customerName: string; publicName: string | null; supporterMessage: string | null;
+  /** 운영자가 명단에서 내렸는가(`listing_hidden_at`). */
+  listingHidden: boolean;
 }
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
 
@@ -123,6 +125,7 @@ export default function FundingManagePage(p: Props) {
               initialPublic={p.displayNamePublic}
               initialPublicName={p.publicName}
               message={p.supporterMessage}
+              hiddenByOperator={p.listingHidden}
             />
           )}
 
@@ -224,5 +227,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     customerName: order.customerName,
     publicName: pl.publicName ?? null,
     supporterMessage: pl.supporterMessage ?? null,
+    listingHidden: pl.listingHiddenAt != null,
   } };
 });

@@ -453,6 +453,15 @@ export const fundingPledges = sqliteTable('funding_pledges', {
    * NULL로 비우면 명단이 결제자 실명으로 되돌아가, 실명을 피하려던 사람의 이름이 뜬다.
    */
   publicName: text('public_name'),
+  /**
+   * 운영자가 공개 명단에서 내린 시각. 값이 있으면 공개 동의와 무관하게 명단에서 빠진다.
+   *
+   * 공개 동의(`display_name_public`)를 끄는 것으로 대신하지 않는 이유: 그 값은 후원자의
+   * 동의 기록이고 후원자가 펀딩 확인 페이지에서 다시 켤 수 있다 — 운영자가 내린 욕설
+   * 닉네임이 토글 한 번에 되살아난다. 운영자의 판단은 운영자만 되돌린다.
+   * 후원자의 개인정보가 아니라 운영 기록이라 파기 대상이 아니다.
+   */
+  listingHiddenAt: integer('listing_hidden_at', { mode: 'timestamp' }),
   shippingName: text('shipping_name'),
   shippingPhone: text('shipping_phone'),
   shippingPostcode: text('shipping_postcode'),

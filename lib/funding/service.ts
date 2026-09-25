@@ -6,6 +6,7 @@ import type { FundingPledge, Order, Payment, Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { PURGED_MARK } from '../privacy/orderRetention';
+import { stripInvisible } from './publicName';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
 import { FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import { liveFundingOrderStatusList } from './refundable';
@@ -341,6 +342,12 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
    * **표시 이름은 `public_name`이 먼저다**(가린 이름·닉네임, lib/funding/publicName.ts).
    * 1년 파기가 그 값을 `PURGED_MARK`로 덮으면 결제자 이름이 아직 남아 있어도 명단에서
    * 내린다 — 실명을 피하려고 닉네임을 고른 사람을 파기 시점에 실명으로 되돌리면 안 된다.
+   *
+   * **운영자가 내린 행(`listing_hidden_at`)도 뺀다.** 공개 동의와 별개의 축이다(db/schema.ts).
+   *
+   * 이름은 내보내기 전에 보이지 않는 문자를 걷는다(`stripInvisible`). 닉네임은 저장할 때
+   * 이미 걸렀지만 결제자 실명 칸은 거르지 않고 저장되고, 명단은 이름을 한 문단에 이어
+   * 그리므로 방향 재정의 문자 하나가 다른 사람의 이름까지 뒤집는다. 걷고 나서 빈 이름은 뺀다.
    */
   const names = await db.all<{ display_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
     SELECT COALESCE(fp.public_name, o.customer_name) AS display_name,
@@ -350,15 +357,19 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
       AND o.customer_name <> ${PURGED_MARK}
       AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
+      AND fp.listing_hidden_at IS NULL
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
+  const listed = names
+    .map((n) => ({ ...n, display_name: stripInvisible(n.display_name).trim() }))
+    .filter((n) => n.display_name !== '');
   return {
     raisedAmount: Number(totals[0]?.raised ?? 0),
     backerCount: Number(totals[0]?.backers ?? 0),
     backerPersonCount: Number(totals[0]?.persons ?? 0),
     remaining,
-    publicBackers: names.map((n) => n.display_name),
-    publicMessages: names
+    publicBackers: listed.map((n) => n.display_name),
+    publicMessages: listed
       .map((n) => ({
         name: n.display_name,
         // 공백만 남은 값은 메시지가 아니다.

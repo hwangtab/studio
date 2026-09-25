@@ -24,6 +24,8 @@ export interface AdminPledgeItem {
   /** 서포터 명단 공개 여부와 표시 이름. 공개 명단에 뜨는 그대로를 운영자가 확인한다. */
   displayNamePublic: boolean;
   publicName: string | null;
+  /** 운영자가 명단에서 내린 시각(ISO). 공개 동의와 별개다. */
+  listingHiddenAt: string | null;
   refundRequestedAt: string | null;
   /**
    * 내려받기를 시작한 시각. 값이 있으면 셀프 취소가 막힌다(약관 제8조 2항).
@@ -195,6 +197,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     supporterMessage: p.supporterMessage,
     displayNamePublic: p.displayNamePublic,
     publicName: p.publicName ?? null,
+    listingHiddenAt: p.listingHiddenAt?.toISOString() ?? null,
     refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
     downloadedAt: p.downloadedAt?.toISOString() ?? null,
     paidAt: p.paidAt?.toISOString() ?? null,
