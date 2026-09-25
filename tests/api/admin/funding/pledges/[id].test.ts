@@ -271,20 +271,20 @@ it('clear_refund_request: 사유가 없으면 400이고 아무것도 안 바꾼�
   expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
 });
 
-it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 서포터에게 메일을 보낸다', async () => {
+it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 후원자에게 메일을 보낸다', async () => {
   const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested('paid', '기존 메모'));
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '서포터 전화 철회' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '후원자 전화 철회' });
   expect(r.status).toBe(200);
   const written = set.mock.calls[0][0];
   expect(written.refundRequestedAt).toBeNull();
   // 덮어쓰지 않는다 — 기존 메모가 사라지면 그것도 기록 손실이다.
-  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 서포터 전화 철회$/);
+  expect(written.adminMemo as string).toMatch(/^기존 메모\n\[\d{4}-\d{2}-\d{2}\] 환불 요청 취소 — 후원자 전화 철회$/);
   const mailArgs = (sendFundingRefundRequestClearedEmails as jest.Mock).mock.calls[0];
   expect(mailArgs[0]).toMatchObject({ orderNo: 'FND-1' });
-  expect(mailArgs[2]).toBe('서포터 전화 철회');
+  expect(mailArgs[2]).toBe('후원자 전화 철회');
 });
 
 it('clear_refund_request: 메모가 없던 건은 항목 하나로 시작한다', async () => {
@@ -432,7 +432,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload(new Date('2026-09-20T01:00:00Z'), '기존 메모'));
 
-  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '서포터가 파일을 못 받았다고 확인' });
+  const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '후원자가 파일을 못 받았다고 확인' });
 
   expect(r.status).toBe(200);
   const values = set.mock.calls[0][0];
@@ -440,7 +440,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
   expect(values.downloadedAt).toBeNull();
   // 기존 메모를 덮어쓰지 않는다. 왜 지웠는지가 남아야 나중에 확인할 수 있다.
   expect(String(values.adminMemo)).toContain('기존 메모');
-  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 서포터가 파일을 못 받았다고 확인');
+  expect(String(values.adminMemo)).toContain('내려받기 기록 초기화 — 후원자가 파일을 못 받았다고 확인');
 });
 
 it('clear_download_record: 사유의 개행을 접어 한 줄로 남긴다 — 메모 판정이 줄 단위다', async () => {
@@ -508,10 +508,10 @@ describe('set_memo 빈 값', () => {
 });
 
 /**
- * 서포터 명단에서 내리기. 예전에는 이 동작이 후원자의 공개 동의를 껐고, 후원자가 펀딩 확인
+ * 후원자 명단에서 내리기. 예전에는 이 동작이 후원자의 공개 동의를 껐고, 후원자가 펀딩 확인
  * 페이지에서 다시 켜면 내린 닉네임이 그대로 되살아났다. 이제는 운영자 숨김을 따로 건다.
  */
-describe('서포터 명단 숨김', () => {
+describe('후원자 명단 숨김', () => {
   const lastSet = () => {
     const setMock = (mockUpdate.mock.results.at(-1)!.value as { set: jest.Mock }).set;
     return setMock.mock.calls[0][0];
@@ -530,7 +530,7 @@ describe('서포터 명단 숨김', () => {
     const set = lastSet();
     expect(set).not.toHaveProperty('displayNamePublic');
     expect(set.listingHiddenAt).toBeInstanceOf(Date);
-    expect(set.adminMemo).toMatch(/서포터 명단에서 내림 — 욕설 닉네임$/);
+    expect(set.adminMemo).toMatch(/후원자 명단에서 내림 — 욕설 닉네임$/);
   });
 
   it('unpublish: 이미 내렸으면 409', async () => {
@@ -546,6 +546,6 @@ describe('서포터 명단 숨김', () => {
     expect(r.status).toBe(200);
     const set = lastSet();
     expect(set.listingHiddenAt).toBeNull();
-    expect(set.adminMemo).toMatch(/^이전 메모\n\[.*\] 서포터 명단 숨김 해제$/);
+    expect(set.adminMemo).toMatch(/^이전 메모\n\[.*\] 후원자 명단 숨김 해제$/);
   });
 });

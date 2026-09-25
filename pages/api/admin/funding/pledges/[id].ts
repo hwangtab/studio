@@ -187,7 +187,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
       if (!reason) return res.status(400).json({ ok: false, message: '명단에서 내리려면 사유를 입력해야 합니다.' });
       if (order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '이미 명단에서 내린 펀딩입니다.' });
-      const entry = `[${kstDateString(now)}] 서포터 명단에서 내림 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
+      const entry = `[${kstDateString(now)}] 후원자 명단에서 내림 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)
@@ -199,7 +199,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 운영자가 내린 것을 되돌린다. 명단에 실제로 다시 뜨는지는 후원자의 공개 동의가 정한다 —
       // 그 사이 후원자가 동의를 거뒀으면 되돌려도 뜨지 않는다.
       if (!order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '명단에서 내린 적이 없는 펀딩입니다.' });
-      const entry = `[${kstDateString(now)}] 서포터 명단 숨김 해제`;
+      const entry = `[${kstDateString(now)}] 후원자 명단 숨김 해제`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)

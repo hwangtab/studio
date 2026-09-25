@@ -5,7 +5,7 @@ import type { CreatorProjectStats } from '../../../lib/funding/creatorStats';
  * 개설자가 보는 모금 현황 — **집계만** 그린다.
  *
  * 후원자 이름·응원 메시지·연락처·배송지는 이 컴포넌트가 받는 `CreatorProjectStats`에
- * 애초에 없다. 개설자 약관 제8조가 "서포터의 개인정보는 스튜디오가 보유하며, 개설자에게
+ * 애초에 없다. 개설자 약관 제8조가 "후원자의 개인정보는 스튜디오가 보유하며, 개설자에게
  * 제공하지 않습니다"라고 적고 있어 그 문장이 바뀌기 전에는 집계가 한계다 —
  * `lib/funding/creatorStats.ts`의 주석 참조.
  *

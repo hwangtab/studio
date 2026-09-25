@@ -270,7 +270,7 @@ describe('funding creator 편집 화면 getServerSideProps', () => {
 });
 
 /**
- * 모금 현황은 **집계만** props로 나간다. 개설자 약관 제8조가 "서포터의 개인정보는 스튜디오가
+ * 모금 현황은 **집계만** props로 나간다. 개설자 약관 제8조가 "후원자의 개인정보는 스튜디오가
  * 보유하며, 개설자에게 제공하지 않습니다"라고 적고 있고, props는 `__NEXT_DATA__`로 페이지
  * 소스에 그대로 실린다 — 집계 함수 쪽 방어는 `lib/funding/creatorStats.integration.test.ts`가,
  * 이 화면까지 그대로 오는지는 여기가 본다.

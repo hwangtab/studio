@@ -204,7 +204,7 @@ it('결제하기를 누르면 서버로 termsAgreed: true가 나간다', async (
 });
 
 // 실명 공개는 옵트인이어야 한다 — 기본 체크는 후원자가 모르는 사이에 이름이 명단에 올라간다.
-it('서포터 명단 이름 공개는 기본 해제', () => {
+it('후원자 명단 이름 공개는 기본 해제', () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
 });
@@ -213,7 +213,7 @@ it('서포터 명단 이름 공개는 기본 해제', () => {
  * 메시지를 써 놓고 공개 체크를 못 보고 지나가 메시지가 아무 데도 안 뜨는 일이 잦았다
  * (2026-09-25). 미리 체크하지는 않는다 — 선택 동의는 본인이 눌러야 한다. 대신 알려 준다.
  */
-describe('서포터 명단', () => {
+describe('후원자 명단', () => {
   const renderWizard = () => render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
 
   it('메시지를 썼는데 비공개면 알리고, 버튼을 누르면 그때 공개로 바뀐다', async () => {
@@ -527,11 +527,11 @@ describe('모달에서 여는 경우 (lockedReward · stickySummary)', () => {
     expect(screen.queryByText('고르신 리워드')).toBeNull();
   });
 
-  it('잠그면 서포터 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
+  it('잠그면 후원자 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
     const { container } = render(
       <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
     );
-    expect(container.textContent).toContain('서포터 정보');
+    expect(container.textContent).toContain('후원자 정보');
     expect(screen.queryByText('리워드', { selector: 'h2,h3' })).toBeNull();
   });
 
@@ -755,7 +755,7 @@ describe('약관 동의 찾기', () => {
     renderForm();
     const checkboxes = screen.getAllByRole('checkbox');
     expect(checkboxes).toHaveLength(1);
-    expect(checkboxes[0]).toHaveAccessibleName(/서포터 명단에 이름과 응원 메시지 공개/);
+    expect(checkboxes[0]).toHaveAccessibleName(/후원자 명단에 이름과 응원 메시지 공개/);
     expect(screen.queryByLabelText(/약관/)).toBeNull();
   });
 

@@ -56,7 +56,7 @@ const yearsAgo = (now: Date, years: number): Date => {
  * **supporterMessage를 지우는 이유**: 처리방침 6항(`FUNDING_COLLECTED_ITEMS`)이 이것을
  * "선택" 수집 항목으로 명시하고, 8항의 "1년 뒤 파기" 약속은 6항이 나열한 항목 전부에
  * 걸린다 — 응원 메시지만 빼는 예외가 어디에도 쓰여 있지 않다. 7항(`FUNDING_COLLECTION_PURPOSES`)이
- * "서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시"를 목적으로
+ * "후원자 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시"를 목적으로
  * 드는데, 그 화면은 **실제로 있다**(`components/funding/BackerWall.tsx`·`SupporterTicker.tsx`가
  * `aggregateProjectStatus`의 공개 명단·응원 메시지를 그린다). 그래도 8항의 파기 약속이
  * 우선이라 지우는 쪽을 택한다 — 파기 대상이 된 메시지는 그 화면에서도 사라진다. 고지한

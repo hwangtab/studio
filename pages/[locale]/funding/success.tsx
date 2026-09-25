@@ -49,7 +49,7 @@ interface SuccessProps {
    */
   downloads?: Array<{ label: string; key: string }>;
   /**
-   * 서포터 명단 공개 권유에 쓰는 값. 후원 폼에서 공개 체크를 못 보고 지나간 사람이 많아,
+   * 후원자 명단 공개 권유에 쓰는 값. 후원 폼에서 공개 체크를 못 보고 지나간 사람이 많아,
    * 결제 직후 한 번 더 권한다(components/funding/SupporterListingEditor.tsx). 결제자 본인만
    * 여는 화면이라(확정 쿠키의 토큰 대조) 이름·메시지를 실어도 된다.
    */

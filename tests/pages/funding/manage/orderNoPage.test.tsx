@@ -67,11 +67,11 @@ describe('명단 공개 설정', () => {
   it('명단에서 내리면 PATCH를 보내고 결과 문구를 띄운다', async () => {
     const fetchMock = okFetch({ ok: true, displayNamePublic: false, publicName: null });
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
-    expect(screen.getByText(/서포터 명단에/)).toHaveTextContent('홍길동(으)로 올라가 있습니다');
+    expect(screen.getByText(/후원자 명단에/)).toHaveTextContent('홍길동(으)로 올라가 있습니다');
     await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
     // 공개 명단은 상태 API 캐시(s-maxage=60 · SWR 300)를 통해 나가므로 즉시 반영되지 않는다 —
     // 그걸 말하지 않으면 "철회가 안 됐다"는 문의가 온다.
-    expect(await screen.findByText(/서포터 명단에서 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
+    expect(await screen.findByText(/후원자 명단에서 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/funding/display-name');
     expect(init.method).toBe('PATCH');
@@ -88,7 +88,7 @@ describe('명단 공개 설정', () => {
     await userEvent.click(screen.getByLabelText('닉네임'));
     await userEvent.type(screen.getByLabelText('명단에 표시할 닉네임'), '청취자');
     await userEvent.click(save);
-    expect(await screen.findByText(/서포터 명단에 올렸습니다/)).toBeInTheDocument();
+    expect(await screen.findByText(/후원자 명단에 올렸습니다/)).toBeInTheDocument();
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
       orderNo: 'FND-1', token: 'tok', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자',
     });
@@ -113,7 +113,7 @@ describe('명단 공개 설정', () => {
   // 공개 동의가 켜져 있어도 운영자가 내렸으면 "올라가 있습니다"라고 말하면 안 된다.
   it('운영자가 내렸으면 그 사실을 알린다', () => {
     render(<FundingManagePage {...baseProps} displayNamePublic listingHidden paymentMethod="toss" />);
-    expect(screen.getByText(/서포터 명단에서 내려 두었습니다/)).toBeInTheDocument();
+    expect(screen.getByText(/후원자 명단에서 내려 두었습니다/)).toBeInTheDocument();
     expect(screen.queryByText(/올라가 있습니다/)).toBeNull();
   });
 

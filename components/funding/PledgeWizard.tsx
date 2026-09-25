@@ -424,7 +424,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
       </fieldset>
 
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-backer`}>
-        <StepHeader id={`${uid}-step-backer`} n={lockedReward ? 1 : 2} title="서포터 정보" hint="펀딩 확인 메일과 리워드 발송에 씁니다." />
+        <StepHeader id={`${uid}-step-backer`} n={lockedReward ? 1 : 2} title="후원자 정보" hint="펀딩 확인 메일과 리워드 발송에 씁니다." />
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-name`} label="이름" required>
@@ -496,9 +496,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         */}
         <div className="mt-5 rounded-xl bg-gray-50/70 p-4 dark:bg-gray-800/40">
           <p className="text-sm font-semibold text-gray-900 dark:text-white">
-            응원 메시지 · 서포터 명단 <span className="font-normal text-gray-500 dark:text-gray-400">(선택)</span>
+            응원 메시지 · 후원자 명단 <span className="font-normal text-gray-500 dark:text-gray-400">(선택)</span>
           </p>
-          <p className={helpClass}>공개에 동의하시면 프로젝트 페이지 서포터 명단에 이름과 메시지가 올라갑니다. 실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.</p>
+          <p className={helpClass}>공개에 동의하시면 프로젝트 페이지 후원자 명단에 이름과 메시지가 올라갑니다. 실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.</p>
           <div className="mt-3">
             <Field id={`${uid}-msg`} label="응원 메시지">
               <TextArea rows={3} className="min-h-0" maxLength={PLEDGE_TEXT_LIMITS.supporterMessage} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
@@ -507,7 +507,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
 
           <label className="mt-4 flex cursor-pointer items-start gap-3">
             <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-            <span className="text-sm font-medium text-gray-900 dark:text-white">서포터 명단에 이름과 응원 메시지 공개</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-white">후원자 명단에 이름과 응원 메시지 공개</span>
           </label>
 
           {form.displayNamePublic ? (

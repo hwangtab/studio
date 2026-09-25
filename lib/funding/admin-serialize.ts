@@ -21,7 +21,7 @@ export interface AdminPledgeItem {
   trackingNumber: string | null;
   shipping: string | null;
   supporterMessage: string | null;
-  /** 서포터 명단 공개 여부와 표시 이름. 공개 명단에 뜨는 그대로를 운영자가 확인한다. */
+  /** 후원자 명단 공개 여부와 표시 이름. 공개 명단에 뜨는 그대로를 운영자가 확인한다. */
   displayNamePublic: boolean;
   publicName: string | null;
   /** 운영자가 명단에서 내린 시각(ISO). 공개 동의와 별개다. */

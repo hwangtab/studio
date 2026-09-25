@@ -447,7 +447,7 @@ export const fundingPledges = sqliteTable('funding_pledges', {
   supporterMessage: text('supporter_message'),
   displayNamePublic: integer('display_name_public', { mode: 'boolean' }).notNull().default(false),
   /**
-   * 서포터 명단에 실을 이름. NULL이면 결제자 이름(`orders.customer_name`)이 올라간다.
+   * 후원자 명단에 실을 이름. NULL이면 결제자 이름(`orders.customer_name`)이 올라간다.
    * 가린 이름(`홍*동`)이나 닉네임을 고른 경우에만 채운다(lib/funding/publicName.ts).
    * 1년 파기(lib/funding/retention.ts)는 이 값을 NULL이 아니라 `PURGED_MARK`로 덮는다 —
    * NULL로 비우면 명단이 결제자 실명으로 되돌아가, 실명을 피하려던 사람의 이름이 뜬다.

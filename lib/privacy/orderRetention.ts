@@ -165,7 +165,7 @@ export const purgeExpiredOrderCustomerData = async (
 
 /**
  * 결제자 이름이 파기된 후원의 **나머지 개인정보**를 파기한다 — 배송지 여섯 칸, 운영자 메모,
- * 응원 메시지, 서포터 명단 표시 이름. 후원 쪽 1년 파기(`lib/funding/retention.ts`)와 **같은
+ * 응원 메시지, 후원자 명단 표시 이름. 후원 쪽 1년 파기(`lib/funding/retention.ts`)와 **같은
  * 항목**이다.
  *
  * 그 1년 파기는 `delivered_at`이 찍혀야 시작해서, 발송 상태를 한 번도 `delivered`로 바꾸지

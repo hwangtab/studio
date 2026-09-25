@@ -26,7 +26,7 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
           </Link>
         </p>
         <h1 className="typo-section-title mt-3">펀딩하기</h1>
-        <p className="typo-section-lead mt-3">리워드를 고르고 서포터 정보를 입력하면 결제로 이어집니다.</p>
+        <p className="typo-section-lead mt-3">리워드를 고르고 후원자 정보를 입력하면 결제로 이어집니다.</p>
         <div className="mt-10"><PledgeWizard project={project} initialRewardId={initialRewardId} remaining={remaining} /></div>
         <div className="mt-12"><FundingTrustNotice /></div>
       </main>

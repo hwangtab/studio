@@ -114,7 +114,7 @@ describe('ProjectDetailView', () => {
    * 순서가 뒤집히면 순환 카드의 존재 이유가 사라진다: 본문이 길어서, 아래쪽 목록만으로는
    * 리워드를 고르는 순간 응원이 한 글자도 보이지 않는다.
    */
-  it('응원 메시지 순환 카드는 서포터 명단보다 앞에 온다', () => {
+  it('응원 메시지 순환 카드는 후원자 명단보다 앞에 온다', () => {
     render(
       <ProjectDetailView
         project={project}
@@ -127,7 +127,7 @@ describe('ProjectDetailView', () => {
     );
 
     const ticker = screen.getByRole('region', { name: '응원 메시지' });
-    const wall = screen.getByRole('region', { name: '함께한 서포터' });
+    const wall = screen.getByRole('region', { name: '함께한 후원자' });
     // eslint-disable-next-line no-bitwise
     expect(ticker.compareDocumentPosition(wall) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
