@@ -1,20 +1,34 @@
 import { createHash } from 'crypto';
-import { inArray, lte, sql } from 'drizzle-orm';
+import { eq, inArray, lte, sql } from 'drizzle-orm';
 import type { NextApiRequest } from 'next';
 
 import { getDb } from '../../db/client';
 import { getClientIp } from './client-ip';
 import { rateLimits } from '../../db/schema';
 
-/** 관리자 로그인은 비밀번호 한 칸뿐이라 무차별 대입에 특히 취약하다. 창을 좁게 잡는다. */
-const LIMIT = 10;
+/**
+ * IP당 로그인 시도 상한 — **무차별 대입을 막는 실제 벽이다.**
+ *
+ * 그래서 이 한도는 비밀번호 대조보다 **앞에** 있어야 한다(`pages/api/admin/auth.ts`).
+ * 한 번 잠긴 IP는 대조 자체를 건너뛰고 429를 받으므로, 10분에 시도할 수 있는 횟수가
+ * 여기 적힌 숫자로 끝난다. 대조를 앞으로 옮기면 429를 받으면서 무한히 추측할 수 있게
+ * 되고 — 429가 오답에만 나가므로 — 언젠가 맞히면 그대로 들어온다. 전역 상한
+ * (GLOBAL_LIMIT)은 IP 회전 신호를 잡는 **보조** 장치지 이 벽의 대체물이 아니다.
+ *
+ * 10이 아니라 30인 이유: 관리자 비밀번호가 사람별로 갈리면서(`admin-accounts.ts`)
+ * 한 IP 뒤에 여러 사람이 앉는다. 같은 사무실에서 한 사람이 오타를 여러 번 내면 예전
+ * 10회 상한으로는 비밀번호를 정확히 아는 동료까지 10분 막혔다. 30회면 그 겹침을 받아
+ * 주면서도 벽으로는 충분하다 — 13자 이상 비밀번호(MIN_PASSWORD_LENGTH)에 대해
+ * IP당 하루 4,320번은 조합 공간에 비하면 아무것도 아니다.
+ */
+const LIMIT = 30;
 const WINDOW_SECONDS = 10 * 60;
 
 /**
  * 출처와 무관한 전역 상한.
  *
- * 주체별 제한만 두면 프록시 풀로 IP를 돌리는 순간 사실상 사라진다. IP당 10회여도
- * 주소를 100개 쓰면 1,000회고, 그 뒤에 있는 것은 계약 전건의 이름·생년월일·연락처·
+ * 주체별 제한만 두면 프록시 풀로 IP를 돌리는 순간 사실상 사라진다. IP당 30회여도
+ * 주소를 100개 쓰면 3,000회고, 그 뒤에 있는 것은 계약 전건의 이름·생년월일·연락처·
  * 주소·서명 이미지다(로그인 성공 시 /api/contracts GET 한 번이면 끝난다).
  *
  * 관리자는 사람별로 비밀번호가 갈려 여럿일 수 있다(`ADMIN_ACCOUNTS`). 그래도 상한은
@@ -99,31 +113,56 @@ const bumpCounter = async (
  * global을 채워, **정확한 비밀번호를 가진 운영자까지 한 시간 봉쇄**할 수 있었다. 전역 상한이
  * 정당한 사용을 지키려던 것이 공격 상황에서 정확히 그 반대가 됐다.
  *
- * 그래서 두 상한 모두 **비밀번호가 틀렸을 때만** 오른다(recordAdminLoginFailure). 라우트는
- *   1) 비밀번호를 먼저 대조하고,
- *   2) 맞으면 resetAdminLoginRateLimit로 subject·global을 모두 지운 뒤 통과시키고,
- *   3) 틀렸을 때만 recordAdminLoginFailure로 둘 다 올려, 넘긴 쪽이 있으면 429를 준다.
- * 이 순서라서 **올바른 비밀번호는 어떤 상한과도 무관하게 항상 통과**한다.
+ * 그래서 전역 상한은 **비밀번호가 틀렸을 때만** 오른다(recordAdminLoginFailure). 라우트는
+ *   1) isAdminLoginThrottled(req)로 이 IP가 이미 한도를 넘겼는지만 읽고(전역은 안 본다),
+ *   2) 비밀번호를 대조해서
+ *   3) 맞으면 resetAdminLoginRateLimit로 subject·global을 모두 지운다,
+ *   4) 틀리면 recordAdminLoginFailure로 둘 다 올린다.
+ * 이 순서라서 **올바른 비밀번호는 전역 상한과 무관하게 항상 통과**한다 — 운영자는 공격
+ * 중에도 잠기지 않는다. IP 회전 공격은 각 IP가 subject 창에 막히고, 그래도 새는 시도는
+ * 전역 실패 카운터가 세어 상한을 넘긴 뒤의 오답에 429를 준다.
  *
- * ## IP 한도도 대조 뒤로 옮긴 이유 (사무실 공유 IP)
+ * ## IP 한도는 대조 **앞에** 있다 — 옮기지 마라
  *
- * 예전에는 대조 **전에** subject 한도를 읽어 429를 냈다. 관리자가 한 사람일 때는 자기
- * 오타에 자기가 잠기는 것이라 감수할 만했는데, 비밀번호가 사람별로 갈리면서
- * (`admin-accounts.ts`) **같은 사무실 IP에서 한 사람의 오타 열 번이 비밀번호를 정확히
- * 아는 동료를 10분 막는다.** 자기 봉쇄가 상호 봉쇄가 됐다.
+ * 한때 IP 한도도 대조 뒤로 옮긴 적이 있다. "무차별 대입은 전부 틀린 시도이므로 오답에만
+ * 한도를 걸어도 같다"는 것이 근거였는데 **틀렸다.** 그러면 공격자는 429를 받으면서
+ * 계속 추측하고, 맞힌 그 요청은 오답이 아니므로 한도에 걸리지 않고 통과한다. 시도
+ * 횟수를 실제로 끊는 것은 대조를 건너뛰는 이 앞단 하나뿐이다.
  *
- * 무차별 대입은 정의상 전부 **틀린** 시도라, 오답에만 한도를 적용해도 막는 힘은 그대로다.
- * 대조가 먼저 오면서 잠긴 IP의 요청도 SHA-256 두 번과 카운터 증가를 치르지만, 그 비용은
- * 오답 한 번과 같다.
- *
- * 타이밍으로 새는 것은 없다 — 대조는 등록된 계정 전부를 끝까지 도는 상수 시간이고
- * (`matchAdminAccount`), 맞고 틀림에 따라 도는 횟수가 달라지지 않는다.
+ * 공유 IP에서 서로를 막는 문제는 순서가 아니라 **한도 숫자**로 푼다(LIMIT 주석 참조).
  *
  * 카운터는 Turso에 두어 인스턴스 간 공유하고, DB 장애 시에만 인스턴스 로컬로 폴백한다.
  */
 
+/** 이 IP(subject)가 이미 창 한도를 넘겼는지 읽기만 한다 — 카운터를 올리지 않는다. */
+export const isAdminLoginThrottled = async (req: NextApiRequest): Promise<boolean> => {
+  const key = getSubjectKey(req);
+  const nowSeconds = Math.floor(Date.now() / 1000);
+
+  try {
+    const [row] = await getDb()
+      .select({ count: rateLimits.count, expiresAt: rateLimits.expiresAt })
+      .from(rateLimits)
+      .where(eq(rateLimits.key, key));
+
+    if (!row || row.expiresAt <= nowSeconds) return false;
+    return row.count >= LIMIT;
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Throttle check unavailable, allowing:', error);
+    // 셀 수 없다는 이유로 정당한 로그인을 막지 않는다(비밀번호가 방어선으로 남는다).
+    return false;
+  }
+};
+
 export interface AdminLoginFailureVerdict {
-  /** 이 IP(subject)가 창 한도를 넘겼다. */
+  /**
+   * 이 IP(subject)가 창 한도를 넘겼다.
+   *
+   * 라우트는 이 값으로 429를 내지 않는다 — 다음 요청이 `isAdminLoginThrottled`에 걸려
+   * 대조 전에 막히기 때문이다. 이 오답 자체의 응답은 401이 맞다(넘긴 것은 방금 이
+   * 시도이고, 아직 "너무 많이 시도했다"고 돌려줄 단계가 아니다). 호출부가 이 판정을
+   * 쓰고 싶을 때를 위해 값만 돌려준다.
+   */
   subjectExceeded: boolean;
   /** 출처와 무관한 전역 실패 한도를 넘겼다 — IP 회전 대입 신호. */
   globalExceeded: boolean;
@@ -131,7 +170,7 @@ export interface AdminLoginFailureVerdict {
 
 /**
  * **비밀번호가 틀렸을 때만 부른다.** subject·global 카운터를 올리고 각각 상한을 넘겼는지
- * 돌려준다. 둘 중 하나라도 true면 라우트는 오답에 401 대신 429를 준다.
+ * 돌려준다. 전역을 넘겼으면 라우트는 오답에 401 대신 429를 준다(회전 공격 신호).
  *
  * 한도 판정을 여기서 함께 돌려주는 이유: 올린 값을 이미 알고 있으므로 라우트가 같은 행을
  * 다시 읽을 이유가 없다. 그리고 판정이 "올린 직후의 값" 하나로 고정돼, 읽기와 쓰기 사이에
