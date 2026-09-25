@@ -9,7 +9,8 @@ import { isTokenMatch } from '../../../lib/booking/token';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { isLiveFundingOrderStatus } from '../../../lib/funding/refundable';
-import { presignFundingDownload } from '../../../lib/funding/r2';
+import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
+import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
 
 /**
  * 디지털 리워드 내려받기 — **최초 접근을 기록하는** 경로.
@@ -87,6 +88,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error('[funding-download] 서명 주소 발급 실패', { orderNo: order.orderNo, key: target.key, error });
     return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+  }
+
+  /**
+   * 서명이 성공했다고 파일이 있는 것은 아니다 — `client.sign`은 순수 계산이라 키 오타·파일
+   * 교체·삭제 상태에서도 그럴듯한 주소를 만든다. 그대로 302를 보내면 후원자는 R2의
+   * `NoSuchKey` XML을 받는데 `downloaded_at`은 이미 찍혀 있어, 한 바이트도 못 받은 채
+   * "음원을 내려받은 뒤에는 청약철회가 제한됩니다"를 보게 된다. 되돌리는 경로는 관리자
+   * `clear_download_record` 하나뿐이다. 그래서 기록 전에 서명된 HEAD로 한 번 물어본다.
+   */
+  let objectExists: boolean;
+  try {
+    objectExists = await fundingDownloadObjectExists(target.key);
+  } catch (error) {
+    // "없다"가 아니라 "모르겠다" — 헛경보를 보내지 않고 재시도를 안내한다.
+    console.error('[funding-download] 객체 확인 실패', { orderNo: order.orderNo, key: target.key, error });
+    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+  }
+  if (!objectExists) {
+    await alertMissingDownloadObject({ key: target.key, orderNo: order.orderNo });
+    return res.status(503).json({ ok: false, message: '파일을 준비하지 못했습니다. 운영자에게 알렸습니다.' });
   }
 
   await getDb()

@@ -2,14 +2,16 @@
 jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 jest.mock('../../../lib/funding/service', () => ({ findFundingOrderByOrderNo: jest.fn() }));
 jest.mock('../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
-jest.mock('../../../lib/funding/r2', () => ({ presignFundingDownload: jest.fn() }));
+jest.mock('../../../lib/funding/r2', () => ({ presignFundingDownload: jest.fn(), fundingDownloadObjectExists: jest.fn() }));
+jest.mock('../../../lib/funding/downloadAlert', () => ({ alertMissingDownloadObject: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('../../../db/client', () => ({ getDb: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/funding/download';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getFundingProject } from '../../../lib/funding/projects';
-import { presignFundingDownload } from '../../../lib/funding/r2';
+import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
+import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
 import { getDb } from '../../../db/client';
 
 /**
@@ -65,6 +67,7 @@ beforeEach(() => {
   (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(paidOrder);
   (getFundingProject as jest.Mock).mockReturnValue(projectWithTiers);
   (presignFundingDownload as jest.Mock).mockResolvedValue(SIGNED);
+  (fundingDownloadObjectExists as jest.Mock).mockResolvedValue(true);
   updateCall();
 });
 
@@ -154,4 +157,41 @@ it('토큰 불일치는 주문 없음과 같은 404 — 주문의 존재를 흘�
   expect(wrongToken.status).toBe(missing.status);
   expect(wrongToken.body).toEqual(missing.body);
   expect(wrongToken.status).toBe(404);
+});
+
+/**
+ * 서명은 객체 유무를 모른다 — `client.sign`은 순수 계산이다. 키 오타·파일 교체·삭제
+ * 상태에서도 주소가 만들어지고, 302를 받은 후원자는 R2의 NoSuchKey XML을 보는데
+ * `downloaded_at`은 이미 찍혀 청약철회권만 잃는다. 주석이 약속한 "발급 실패면 기록을
+ * 남기지 않는다"가 이 경우에도 사실이어야 한다.
+ */
+describe('저장소에 객체가 없을 때', () => {
+  it('HEAD가 404면 기록하지 않고 503으로 답하며 운영자에게 알린다', async () => {
+    const { update } = updateCall();
+    (fundingDownloadObjectExists as jest.Mock).mockResolvedValue(false);
+    const r = await call(ok);
+    expect(r.status).toBe(503);
+    expect(r.body.message).toContain('파일을 준비하지 못했습니다');
+    expect(update).not.toHaveBeenCalled();
+    expect(r.redirectedTo).toBeUndefined();
+    expect(alertMissingDownloadObject).toHaveBeenCalledWith({ key: KEY, orderNo: 'FND-1' });
+  });
+
+  it('HEAD 자체가 실패하면(네트워크·5xx) 재시도를 안내하고 헛경보를 보내지 않는다', async () => {
+    const { update } = updateCall();
+    (fundingDownloadObjectExists as jest.Mock).mockRejectedValue(new Error('ECONNRESET'));
+    const r = await call(ok);
+    expect(r.status).toBe(503);
+    expect(r.body.message).toContain('잠시 후 다시 시도');
+    expect(update).not.toHaveBeenCalled();
+    expect(alertMissingDownloadObject).not.toHaveBeenCalled();
+  });
+
+  it('객체가 있으면 지금처럼 기록하고 302로 보낸다', async () => {
+    const { update } = updateCall();
+    const r = await call(ok);
+    expect(update).toHaveBeenCalled();
+    expect(r.redirectedTo).toBe(SIGNED);
+    expect(alertMissingDownloadObject).not.toHaveBeenCalled();
+  });
 });
