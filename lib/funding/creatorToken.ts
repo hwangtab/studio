@@ -100,7 +100,7 @@ export const issueCreatorLoginToken = async (
 export const consumeCreatorLoginToken = async (
   rawToken: string,
   now: Date = new Date(),
-): Promise<{ creatorId: string } | null> => {
+): Promise<{ creatorId: string; sessionVersion: number } | null> => {
   if (typeof rawToken !== 'string' || rawToken.length < 16) return null;
   const db = getDb();
   const updated = await db.update(fundingCreatorTokens)
@@ -114,7 +114,19 @@ export const consumeCreatorLoginToken = async (
   if (!row) return null;
   if (row.expiresAt.getTime() <= now.getTime()) return null;
 
-  await db.update(fundingCreators).set({ lastLoginAt: now, updatedAt: now })
-    .where(eq(fundingCreators.id, row.creatorId));
-  return { creatorId: row.creatorId };
+  /**
+   * 마지막 로그인 시각을 찍는 **그 문장에서** 세션 판본을 함께 받아 온다.
+   *
+   * 판본을 별도 조회로 읽으면 왕복이 하나 늘고, 그 왕복은 **토큰이 이미 소진된 뒤**에
+   * 일어난다 — 거기서 DB가 흔들리면 링크는 죽었는데 로그인은 안 된 상태가 된다(되돌릴 수
+   * 없다). 어차피 이 행에 쓰고 있으므로 같은 문장에 `returning`을 붙인다.
+   *
+   * 판본을 못 받으면(행이 사라진 경우) 로그인시키지 않는다 — 판본 없는 쿠키는 어차피
+   * 무효이므로(`creatorSession.ts`), 조용히 발급하면 "로그인은 됐는데 모든 요청이 401"이 된다.
+   */
+  const [creatorRow] = await db.update(fundingCreators).set({ lastLoginAt: now, updatedAt: now })
+    .where(eq(fundingCreators.id, row.creatorId))
+    .returning({ sessionVersion: fundingCreators.sessionVersion });
+  if (!creatorRow) return null;
+  return { creatorId: row.creatorId, sessionVersion: creatorRow.sessionVersion };
 };

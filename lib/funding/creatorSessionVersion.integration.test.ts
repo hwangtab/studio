@@ -30,6 +30,14 @@ import { decideCreatorAccount } from './creatorAccountDecision';
 // eslint-disable-next-line import/first
 import { authenticateCreatorApi, loginCreatorSession } from './creatorAuth';
 
+/**
+ * 실 로그인 경로는 `consumeCreatorLoginToken`이 판본을 함께 돌려주고 그 값을 그대로
+ * 넘긴다(`pages/api/funding/creator/session.ts`). 여기서는 그 자리를 DB 현재값으로 흉내 낸다.
+ */
+const login = async (creatorId: string): Promise<void> => {
+  await loginCreatorSession(req, res, creatorId, await readVersion(creatorId));
+};
+
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
 
@@ -83,7 +91,7 @@ const res = {} as never;
 
 it('이메일 변경은 판본을 올리고, 변경 전에 받은 쿠키는 더 이상 통하지 않는다', async () => {
   const { creatorId, projectId } = await seed();
-  await loginCreatorSession(req, res, creatorId);
+  await login(creatorId);
   expect(await authenticateCreatorApi(req, res)).toEqual({ ok: true, creatorId });
 
   const result = await decideCreatorAccount(projectId, 'set_creator_email', { value: 'new@example.com', reason: REASON });
@@ -97,14 +105,14 @@ it('변경 뒤 새로 로그인하면 통과한다', async () => {
   const { creatorId, projectId } = await seed();
   await decideCreatorAccount(projectId, 'set_creator_email', { value: 'new@example.com', reason: REASON });
 
-  await loginCreatorSession(req, res, creatorId);
+  await login(creatorId);
   expect(fakeSession.sessionVersion).toBe(2);
   expect(await authenticateCreatorApi(req, res)).toEqual({ ok: true, creatorId });
 });
 
 it('이름 변경은 판본을 올리지 않아 세션이 유지된다', async () => {
   const { creatorId, projectId } = await seed();
-  await loginCreatorSession(req, res, creatorId);
+  await login(creatorId);
 
   await decideCreatorAccount(projectId, 'set_creator_name', { value: '새이름', reason: REASON });
 
@@ -120,7 +128,7 @@ it('sessionVersion이 없는 옛 쿠키는 무효다', async () => {
 
 it('개설자 행이 사라졌으면 무효다', async () => {
   const { creatorId } = await seed();
-  await loginCreatorSession(req, res, creatorId);
+  await login(creatorId);
   await mockDb.delete(schema.fundingProjects).where(eq(schema.fundingProjects.creatorId, creatorId));
   await mockDb.delete(schema.fundingCreators).where(eq(schema.fundingCreators.id, creatorId));
   expect(await authenticateCreatorApi(req, res)).toEqual({ ok: false });

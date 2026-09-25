@@ -63,6 +63,23 @@ describe('매직링크 토큰', () => {
     expect(await consumeCreatorLoginToken(issued!.rawToken, NOW)).toBeNull();
   });
 
+  /**
+   * 판본을 별도 조회로 읽으면 왕복이 하나 늘고, 그 왕복은 **토큰이 이미 소진된 뒤**에
+   * 일어난다 — 거기서 DB가 흔들리면 링크는 죽었는데 로그인은 안 된 상태가 된다(되돌릴 수
+   * 없다). 그래서 마지막 로그인 시각을 찍는 그 문장이 판본을 함께 돌려준다.
+   */
+  it('소진과 세션 판본 읽기가 한 왕복이다 — 소진 뒤 추가 조회가 없다', async () => {
+    const issued = await issueCreatorLoginToken('a@example.com', NOW);
+    await mockDb.update(schema.fundingCreators).set({ sessionVersion: 7 });
+
+    const spy = jest.spyOn(mockDb, 'select');
+    const consumed = await consumeCreatorLoginToken(issued!.rawToken, NOW);
+    expect(consumed).toEqual({ creatorId: issued!.creatorId, sessionVersion: 7 });
+    // 소진은 조건 UPDATE(+returning) 둘뿐이다 — select 왕복이 없다.
+    expect(spy).not.toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
   it('15분이 지나면 거부한다', async () => {
     const issued = await issueCreatorLoginToken('a@example.com', NOW);
     const late = new Date(NOW.getTime() + 901 * 1000);

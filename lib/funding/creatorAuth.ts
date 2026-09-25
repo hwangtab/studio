@@ -13,7 +13,7 @@ export const readCreatorId = (session: IronSession<CreatorSessionData>): string 
 
 /**
  * 쿠키 안의 판본. 순수 함수라 DB를 보지 않는다 — 대조는 `verifyCreatorSessionVersion`이 한다.
- * 정수가 아니면 null이고, null은 무효다(위 `CreatorSessionData.sessionVersion` 주석).
+ * 정수가 아니면 null이고, null은 무효다(`creatorSession.ts`의 `CreatorSessionData.sessionVersion` 주석).
  */
 export const readCreatorSessionVersion = (session: IronSession<CreatorSessionData>): number | null =>
   typeof session.sessionVersion === 'number' && Number.isInteger(session.sessionVersion)
@@ -60,23 +60,19 @@ export const authenticateCreatorRequest = async (
 ): Promise<CreatorAuth> => authenticate(await getCreatorSessionFromContext(context));
 
 /**
- * 발급 시점의 DB 판본을 쿠키에 싣는다. 읽지 못하면 로그인시키지 않는다 — 판본 없는 쿠키는
- * 어차피 무효이므로, 조용히 발급하면 "로그인은 됐는데 모든 요청이 401"인 상태가 된다.
+ * 쿠키에 싣는 판본은 **호출부가 넘긴다** — 여기서 다시 조회하지 않는다.
+ *
+ * 로그인 경로는 매직링크 토큰을 소진한 직후이고(`consumeCreatorLoginToken`), 그 함수가
+ * 이미 개설자 행에 쓰면서 판본을 `returning`으로 함께 돌려준다. 여기서 한 번 더 읽으면
+ * **토큰이 이미 소진된 뒤에** 왕복이 하나 더 생기고, 그 왕복이 실패하면 링크는 죽었는데
+ * 로그인은 안 된 상태가 된다(되돌릴 수 없다).
  */
-const readSessionVersion = async (creatorId: string): Promise<number | null> => {
-  const db = getDb();
-  const [row] = await db.select({ sessionVersion: fundingCreators.sessionVersion })
-    .from(fundingCreators).where(eq(fundingCreators.id, creatorId)).limit(1);
-  return row ? row.sessionVersion : null;
-};
-
 export const loginCreatorSession = async (
   req: NextApiRequest,
   res: NextApiResponse,
   creatorId: string,
+  sessionVersion: number,
 ): Promise<void> => {
-  const sessionVersion = await readSessionVersion(creatorId);
-  if (sessionVersion === null) throw new Error(`개설자 행을 찾지 못해 세션을 발급할 수 없다: ${creatorId}`);
   const session = await getCreatorSession(req, res);
   session.creatorId = creatorId;
   session.sessionVersion = sessionVersion;
@@ -92,9 +88,8 @@ export const loginCreatorSession = async (
 export const loginCreatorSessionFromContext = async (
   context: GetServerSidePropsContext,
   creatorId: string,
+  sessionVersion: number,
 ): Promise<void> => {
-  const sessionVersion = await readSessionVersion(creatorId);
-  if (sessionVersion === null) throw new Error(`개설자 행을 찾지 못해 세션을 발급할 수 없다: ${creatorId}`);
   const session = await getCreatorSessionFromContext(context);
   session.creatorId = creatorId;
   session.sessionVersion = sessionVersion;
