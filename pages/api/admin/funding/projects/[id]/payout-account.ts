@@ -47,7 +47,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   /** 기록 경로의 예외가 조회를 끊지 않게 한 겹 더 받는다(resident-number.ts와 같은 이유). */
   const log = (result: PrivacyAccessResult) =>
-    recordAdminPrivacyAccess(req, 'funding_payout_account_view', id, result).catch((error: unknown) => {
+    recordAdminPrivacyAccess(req, auth.actor, 'funding_payout_account_view', id, result).catch((error: unknown) => {
       console.error('[privacy] 접속기록 호출 실패 — 조회는 계속됩니다', error);
     });
 

@@ -34,7 +34,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
   error = jest.spyOn(console, 'error').mockImplementation(() => {});
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loadFundingResidentNumber as jest.Mock).mockResolvedValue(RESIDENT_NUMBER);
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
@@ -121,6 +121,7 @@ describe('접속기록', () => {
     await call();
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'funding_resident_number_view',
       'proj-1',
       'success',
@@ -128,22 +129,29 @@ describe('접속기록', () => {
     expect(JSON.stringify((recordAdminPrivacyAccess as jest.Mock).mock.calls)).not.toContain(RESIDENT_NUMBER);
   });
 
+  /** 기록의 수행자는 **지금 로그인한 사람**이다 — 예전엔 고정값 하나였다. */
+  it('지금 로그인한 사람이 기록된다 — 고정값이 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'jina', name: '지나' });
+    await call();
+    expect((recordAdminPrivacyAccess as jest.Mock).mock.calls[0][1]).toBe('jina');
+  });
+
   it('등록된 번호가 없던 조회도 남는다', async () => {
     (loadFundingResidentNumber as jest.Mock).mockResolvedValue(null);
     await call();
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_resident_number_view', 'proj-1', 'not_found');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_resident_number_view', 'proj-1', 'not_found');
   });
 
   it('복호화에 실패한 조회도 남는다', async () => {
     (loadFundingResidentNumber as jest.Mock).mockRejectedValue(new FieldCryptoError('key_mismatch', '내부 메시지'));
     await call();
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_resident_number_view', 'proj-1', 'decrypt_failed');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_resident_number_view', 'proj-1', 'decrypt_failed');
   });
 
   it('그 밖의 실패도 남는다', async () => {
     (loadFundingResidentNumber as jest.Mock).mockRejectedValue(new Error('DB 장애'));
     await call();
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_resident_number_view', 'proj-1', 'error');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_resident_number_view', 'proj-1', 'error');
   });
 
   it('인증 전에는 기록하지 않는다 — 수행자도 대상도 모르는 행이 남을 자리가 아니다', async () => {

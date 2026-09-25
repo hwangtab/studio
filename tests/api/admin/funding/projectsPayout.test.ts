@@ -86,7 +86,7 @@ const PAYOUT = {
 beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(console, 'error').mockImplementation(() => {});
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loadProjectForAdmin as jest.Mock).mockResolvedValue({
     id: 'proj-1',
     title: '데모 프로젝트',
@@ -151,7 +151,7 @@ describe('record_payout', () => {
   it('확인 금액을 그대로 recordFundingPayout에 넘긴다 — 서버가 임의로 정하지 않는다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     await call({ action: 'record_payout', expectedNetAmount: 777_000 });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, null);
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, 'kyungha', null);
   });
 
   /**
@@ -163,7 +163,7 @@ describe('record_payout', () => {
     await call({ action: 'record_payout', expectedNetAmount: 777_000 }, 'PATCH', {
       'x-vercel-forwarded-for': '203.0.113.7',
     });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, '203.0.113.7');
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, 'kyungha', '203.0.113.7');
   });
 
   /**
@@ -293,6 +293,7 @@ describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다'
     expect((await recordCall()).status).toBe(201);
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'funding_payout_account_email',
       'proj-1',
       'success',
@@ -307,7 +308,7 @@ describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다'
     });
     await recordCall();
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
-      expect.anything(), 'funding_payout_account_email', 'proj-1', 'decrypt_failed',
+      expect.anything(), 'kyungha', 'funding_payout_account_email', 'proj-1', 'decrypt_failed',
     );
   });
 
@@ -315,7 +316,7 @@ describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다'
     (loadFundingPayoutAccountMasked as jest.Mock).mockResolvedValue(null);
     await recordCall();
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
-      expect.anything(), 'funding_payout_account_email', 'proj-1', 'not_found',
+      expect.anything(), 'kyungha', 'funding_payout_account_email', 'proj-1', 'not_found',
     );
   });
 
@@ -331,7 +332,7 @@ describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다'
     (markFundingPayoutPaid as jest.Mock).mockResolvedValue(true);
     await call({ action: 'mark_payout_paid' });
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
-      expect.anything(), 'funding_payout_account_email', 'proj-1', 'success',
+      expect.anything(), 'kyungha', 'funding_payout_account_email', 'proj-1', 'success',
     );
   });
 });

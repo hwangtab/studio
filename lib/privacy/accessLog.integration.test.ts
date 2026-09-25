@@ -91,6 +91,7 @@ describe('기록', () => {
   it('IP를 얻지 못하면 null로 남는다 — 지어내지 않는다', async () => {
     await recordAdminPrivacyAccess(
       { headers: {}, socket: {} },
+      PRIVACY_ACTOR_ADMIN,
       'funding_payout_account_view',
       'proj-2',
       'success',
@@ -100,9 +101,25 @@ describe('기록', () => {
     expect(row.actor).toBe(PRIVACY_ACTOR_ADMIN);
   });
 
+  /**
+   * 이 함수가 존재하는 이유다 — 라우트가 인증한 사람이 그대로 행에 남아야,
+   * 주민등록번호·계좌·CSV를 **누가** 열었는지가 사후에 읽힌다.
+   */
+  it('가드가 돌려준 사람이 그대로 수행자로 남는다', async () => {
+    await recordAdminPrivacyAccess(
+      { headers: {}, socket: {} },
+      'kyungha',
+      'funding_resident_number_view',
+      'proj-2',
+      'success',
+    );
+    expect((await rows())[0].actor).toBe('kyungha');
+  });
+
   it('요청의 x-vercel-forwarded-for에서 IP를 뽑는다', async () => {
     await recordAdminPrivacyAccess(
       { headers: { 'x-vercel-forwarded-for': '198.51.100.9' }, socket: {} },
+      PRIVACY_ACTOR_ADMIN,
       'funding_resident_number_view',
       'proj-3',
       'success',
@@ -250,6 +267,7 @@ describe('다운로드 건수', () => {
   it('내보낸 건수가 행에 남는다', async () => {
     await recordAdminPrivacyAccess(
       { headers: {}, socket: {} },
+      PRIVACY_ACTOR_ADMIN,
       'funding_pledge_export',
       'demo',
       'success',
@@ -260,7 +278,7 @@ describe('다운로드 건수', () => {
   });
 
   it('한 건을 여는 조회에는 건수가 없다 — 0이 아니라 null이다', async () => {
-    await recordAdminPrivacyAccess({ headers: {}, socket: {} }, 'funding_payout_account_view', 'proj-9', 'success');
+    await recordAdminPrivacyAccess({ headers: {}, socket: {} }, PRIVACY_ACTOR_ADMIN, 'funding_payout_account_view', 'proj-9', 'success');
     expect((await rows())[0].rowCount).toBeNull();
   });
 

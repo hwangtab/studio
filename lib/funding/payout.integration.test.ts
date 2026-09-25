@@ -516,6 +516,7 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
       project.id,
       new Date('2026-02-20T00:00:00Z'),
       preview?.netAmount ?? 0,
+      'kyungha',
       '203.0.113.7',
     );
     expect(result.ok).toBe(true);
@@ -527,7 +528,8 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
       'funding_resident_number_decrypt_check',
     ]);
     for (const row of rows) {
-      expect(row).toMatchObject({ actor: 'admin', targetId: project.id, result: 'success', ip: '203.0.113.7' });
+      // 정산 경로의 복호화 점검도 **사람**을 가리킨다 — 화면의 조회 버튼과 같은 무게다.
+      expect(row).toMatchObject({ actor: 'kyungha', targetId: project.id, result: 'success', ip: '203.0.113.7' });
     }
     expect(JSON.stringify(rows)).not.toContain('9901011234567');
     expect(JSON.stringify(rows)).not.toContain(RESIDENT_NUMBER_ENC);

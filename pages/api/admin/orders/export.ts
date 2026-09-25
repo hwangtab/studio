@@ -36,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 기간이 검증을 통과한 뒤에만 부른다 — 형식이 틀린 400은 아무것도 조회하지 않았다.
    */
   const log = (result: PrivacyAccessResult, rowCount?: number) =>
-    recordAdminPrivacyAccess(req, 'sales_ledger_export', `${from}_${to}`, result, rowCount).catch(
+    recordAdminPrivacyAccess(req, auth.actor, 'sales_ledger_export', `${from}_${to}`, result, rowCount).catch(
       (error: unknown) => {
         console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
       },

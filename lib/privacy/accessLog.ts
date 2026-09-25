@@ -12,11 +12,17 @@ export type PrivacyAccessAction = (typeof privacyAccessActionEnum)[number];
 export type PrivacyAccessResult = (typeof privacyAccessResultEnum)[number];
 
 /**
- * 관리자 경로의 수행자 값.
+ * 관리자 경로의 **폴백** 수행자 값 — 누구인지 모를 때만 쓴다.
  *
- * 관리자 인증은 단일 비밀번호(`ADMIN_PASSWORD`) 하나이고 `authenticateAdminApi`는
- * `{ ok: true }`만 돌려준다 — 사람을 가리키는 식별자가 저장소 어디에도 없다. 그래서
- * 고정값이다. 자세한 사정은 `db/schema.ts`의 `privacyAccessLogs.actor` 주석에 적어 뒀다.
+ * 관리자 계정은 이제 사람별로 갈린다(`lib/contracts/admin-accounts.ts`). 가드
+ * (`authenticateAdminApi`·`authenticateAdminRequest`)가 성공에 `actor`를 실어 주고,
+ * 호출부가 그 값을 그대로 이 표에 적는다. 이 고정값이 남는 자리는 둘뿐이다:
+ *
+ * 1. `ADMIN_ACCOUNTS`를 설정하지 않은 배포 — 그때는 `ADMIN_PASSWORD` 한 사람이고 id가 `admin`이다.
+ * 2. 계정을 나누기 전에 발급된 옛 세션 쿠키(TTL 24시간) — 누구인지 모르는 것이 사실이다.
+ *
+ * 즉 **`ADMIN_ACCOUNTS`를 쓰지 않으면 여전히 `admin` 하나다.** 판정은
+ * `lib/contracts/admin-session.ts`의 `adminSessionIdentity` 한 곳에 있다.
  */
 export const PRIVACY_ACTOR_ADMIN = 'admin';
 
@@ -87,16 +93,23 @@ export const recordPrivacyAccess = async (entry: PrivacyAccessEntry): Promise<vo
   }
 };
 
-/** 관리자 API 라우트에서 쓰는 축약판 — 요청에서 IP를 뽑고 수행자를 고정값으로 채운다. */
+/**
+ * 관리자 API 라우트에서 쓰는 축약판 — 요청에서 IP를 뽑아 준다.
+ *
+ * **수행자는 인자로 받는다.** 예전엔 여기서 고정값을 채웠는데, 그러면 라우트가 누구를
+ * 인증했는지와 무관하게 전부 `admin`으로 적힌다. 넘길 값은 가드가 돌려준 `auth.actor`다 —
+ * 세션에서 온 값이라 라우트가 지어낼 여지가 없다.
+ */
 export const recordAdminPrivacyAccess = async (
   req: IpBearingRequest,
+  actor: string,
   action: PrivacyAccessAction,
   targetId: string,
   result: PrivacyAccessResult,
   rowCount?: number,
 ): Promise<void> =>
   recordPrivacyAccess({
-    actor: PRIVACY_ACTOR_ADMIN,
+    actor,
     action,
     targetId,
     result,
