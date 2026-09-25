@@ -116,9 +116,43 @@ const posInt = (v: unknown, name: string): number => {
   if (typeof v !== 'number' || !Number.isInteger(v) || v <= 0) throw new Error(`funding frontmatter: ${name}은(는) 양의 정수여야 합니다`);
   return v;
 };
+/**
+ * 모금 시작·종료 시각. **시간대를 명시하지 않은 값은 거부한다.**
+ *
+ * 개설자 경로는 KST 달력 날짜만 받고 시각을 서버가 붙이는데(`creatorValidation.ts`), md
+ * 프로젝트는 그 검증기를 지나지 않는다. 그래서 따옴표 없는 `endAt: 2026-10-19`가 오면 YAML이
+ * **UTC 자정**으로 읽어 마감이 그날 09:00 KST가 된다 — 아무 오류도 없이 개설자가 고른
+ * 마지막 날이 사라지는 형태다(개설자 경로에서 고쳤던 것과 같은 버그).
+ *
+ * 두 갈래로 막는다:
+ * - **문자열**: `Z` 또는 `±HH:MM` 오프셋이 있어야 한다.
+ * - **Date**: YAML이 이미 파싱한 값이라 원문을 볼 수 없다. 따옴표 없는 bare 날짜는 정확히
+ *   UTC 자정(`00:00:00.000Z`)으로 떨어지므로 그 값을 거부한다. `+09:00`을 적은 값은
+ *   15:00Z 같은 시각이라 걸리지 않는다. KST 자정을 정말로 UTC로 적고 싶다면
+ *   `2026-10-19T00:00:00Z`가 아니라 `2026-10-18T15:00:00Z`가 맞는 표기다.
+ */
+const TZ_OFFSET = /(?:Z|[+-]\d{2}:\d{2})$/;
+
 const isoDate = (v: unknown, name: string): string => {
-  const s = v instanceof Date ? v.toISOString() : str(v, name);
+  if (v instanceof Date) {
+    if (Number.isNaN(v.getTime())) throw new Error(`funding frontmatter: ${name}이(가) 날짜가 아닙니다`);
+    if (v.toISOString().endsWith('T00:00:00.000Z')) {
+      throw new Error(
+        `funding frontmatter: ${name}에 시간대를 함께 적어야 합니다 — 따옴표 없는 \`2026-10-19\`는 `
+        + 'YAML이 UTC 자정으로 읽어 마감이 09:00 KST로 앞당겨집니다. '
+        + `\`${name}: 2026-10-19T23:59:59+09:00\`처럼 적어 주세요.`,
+      );
+    }
+    return v.toISOString();
+  }
+  const s = str(v, name);
   if (Number.isNaN(new Date(s).getTime())) throw new Error(`funding frontmatter: ${name}이(가) 날짜가 아닙니다`);
+  if (!TZ_OFFSET.test(s)) {
+    throw new Error(
+      `funding frontmatter: ${name}에 시간대를 함께 적어야 합니다(\`+09:00\` 또는 \`Z\`) — `
+      + '없으면 해석이 환경에 따라 갈립니다.',
+    );
+  }
   return s;
 };
 

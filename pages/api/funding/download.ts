@@ -6,7 +6,7 @@ import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
-import { getFundingProjectAsync } from '../../../lib/funding/repository';
+import { getFundingProjectOrFailure } from '../../../lib/funding/repository';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from '../../../lib/funding/refundable';
 import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
 import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
@@ -65,18 +65,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!isLiveFundingOrderStatus(order.status))
     return res.status(409).json({ ok: false, message: '결제가 살아 있는 펀딩만 내려받을 수 있습니다.' });
 
-  const project = await getFundingProjectAsync(pledge.projectSlug);
+  /**
+   * 조회 실패와 부재를 구분한다(cancel.ts·manage 화면과 같은 판단). 둘 다 null로 뭉개면
+   * DB가 한 번 흔들린 것이 "펀딩 내역을 찾을 수 없습니다"로 나가는데, 그건 거짓이다 —
+   * 내역은 있고 우리가 지금 못 읽는 것이다. 후원자는 영영 없어진 것으로 읽는다.
+   */
+  const { project, lookupFailed } = await getFundingProjectOrFailure(pledge.projectSlug);
+  if (lookupFailed) {
+    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+  }
   const reward = project?.rewards.find((r) => r.id === pledge.rewardId);
   // `file`은 **이 후원자의 리워드가 주는 키**와 일치해야 한다. 목록에 없는 값을 넘겨
   // 다른 티어의 파일이나 버킷의 다른 객체에 서명을 받아 내지 못하게 한다.
   const target = reward?.downloads.find((d) => d.key === file);
   if (!target) return res.status(404).json(NOT_FOUND);
 
-  /**
-   * 최초 1회만 기록한다. `downloaded_at IS NULL`을 WHERE에 넣어 DB가 판정하게 하므로,
-   * 같은 사람이 동시에 두 파일을 눌러도 먼저 도착한 쪽의 시각만 남는다. 판정 기준은
-   * "언제 시작했는가"이지 "마지막으로 언제 받았는가"가 아니다.
-   */
   /**
    * 서명을 **먼저** 받는다. 발급이 실패하면(자격증명 누락 등) 기록을 남기지 않아야 한다 —
    * 파일을 못 받았는데 `downloaded_at`만 찍히면 후원자가 셀프 취소까지 잃는다.
@@ -134,7 +137,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('[funding-download] 기록 직전에 주문이 살아 있지 않게 됐다 — 서명 주소를 내주지 않는다', {
       orderNo: order.orderNo, key: target.key,
     });
-    return res.status(409).json({ ok: false, message: '이미 취소된 후원입니다. 내려받을 수 없습니다.' });
+    /**
+     * **"이미 취소된"이라고 단정하지 않는다.** 셀프 취소는 주문을 `refunded`로 **먼저
+     * 선점하고** 토스를 부르며, 토스가 실패하면 최대 12초 뒤 되돌린다(`cancel.ts`). 그 창에
+     * 내려받기를 누르면 취소는 결국 실패하고 후원은 살아 있는데 이 문구를 보게 된다.
+     *
+     * 상태를 한 번 더 읽어 가른다 — 환불이 실제로 끝났으면 사실을 말하고, 아니면 "처리
+     * 중"으로 답해 다시 시도하게 한다. 재조회가 실패하면 더 조심스러운 쪽(처리 중)을 쓴다.
+     */
+    let refunded = false;
+    try {
+      const again = await findFundingOrderByOrderNo(orderNo);
+      refunded = again ? !isLiveFundingOrderStatus(again.status) && again.status === 'refunded' : false;
+    } catch (error) {
+      console.error('[funding-download] 0행 뒤 주문 상태 재조회 실패', { orderNo: order.orderNo, error });
+    }
+    return res.status(409).json({
+      ok: false,
+      message: refunded
+        ? '이미 취소된 후원입니다. 내려받을 수 없습니다.'
+        : '취소 처리 중입니다. 잠시 후 다시 시도해 주세요.',
+    });
   }
 
   res.redirect(302, signedUrl);
