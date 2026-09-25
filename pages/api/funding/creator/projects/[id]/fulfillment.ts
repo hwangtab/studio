@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(403).json({ ok: false, message: '이 후원의 발송 상태를 바꿀 권한이 없습니다.' });
   }
 
-  if (gate.state !== 'closed') {
+  if (!gate.pastFundingEnd) {
     return res.status(409).json({ ok: false, message: '모금이 끝난 뒤에만 발송 상태를 바꿀 수 있습니다.' });
   }
 

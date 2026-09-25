@@ -18,11 +18,13 @@ import { getClientIp } from '../../../../../../lib/contracts/client-ip';
  * 넓혀야 한다 — 이 파일 혼자 새 필드를 얹지 않는다.
  */
 const COLUMNS = [
-  '받는사람', '연락처', '우편번호', '배송지1', '배송지2', '배송지메모',
+  '발송금지', '받는사람', '연락처', '우편번호', '배송지1', '배송지2', '배송지메모',
   '리워드', '수량', '발송상태', '택배사', '운송장번호',
 ];
 
 const toCsvRow = (row: CreatorShippingRow): Record<string, string | number | null> => ({
+  // 관리자 CSV와 같은 이유로 맨 앞 — 주소로 정렬해 라벨을 뽑는 실무에서 이 열만 훑으면 걸러진다.
+  발송금지: row.shipHold,
   받는사람: row.shippingName,
   연락처: row.shippingPhone,
   우편번호: row.shippingPostcode,

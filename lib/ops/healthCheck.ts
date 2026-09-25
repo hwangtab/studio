@@ -617,7 +617,8 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       detail:
         `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
         '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
-        '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 배송 CSV의 shipHold 칸에 "발송금지"로 나오고, ' +
+        '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 관리자 CSV의 shipHold 칸과 개설자 배송 목록·CSV의 ' +
+        '"발송 금지" 칸에 "발송금지"로 나오고, ' +
         '발송 상태 변경은 API에서 막힙니다.',
     });
   }

@@ -2,7 +2,8 @@ import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingProjects } from '../../db/schema';
-import { computeProjectState } from './projectState';
+import { isRefundPendingStatus } from './policy';
+import { isPastFundingEnd } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
 
 /**
@@ -15,9 +16,14 @@ import { liveFundingOrderStatusList } from './refundable';
  * 규칙). "전체를 가져와 화면에서 거른다"는 모양의 함수를 이 파일에 두지 않는다 — 한
  * 번이라도 그런 함수가 있으면 언젠가 소유 조건 없이 호출된다.
  *
- * 마감 전(`upcoming`·`live`)에는 개인정보를 한 줄도 내보내지 않는다. 모금 중에는 셀프
- * 취소가 자유로워(`assessSelfCancel`은 마감일이 지나야 막는다) 주소가 들어왔다 나갔다
- * 하고, 물량 준비에는 집계면 충분하다.
+ * 마감 **날짜** 전에는 개인정보를 한 줄도 내보내지 않는다. 모금 중에는 셀프 취소가
+ * 자유로워(`assessSelfCancel`은 마감일이 지나야 막는다) 주소가 들어왔다 나갔다 하고,
+ * 물량 준비에는 집계면 충분하다.
+ *
+ * **판정이 `isPastFundingEnd`(날짜만)인 이유** — 셀프 취소와 같은 선이어야 한다. 운영자가
+ * 누른 `status: 'closed'`까지 마감으로 보면, 조기 종료한 순간 아직 취소가 자유로운 후원의
+ * 이름·전화·주소가 개설자에게 나가고, 개설자가 `preparing`을 한 번 누르면 후원자는 원래
+ * 마감일 전에 취소권을 잃는다. 운영자 종료는 **새 후원**만 막는다.
  *
  * 필드를 하나씩 골라 담는다 — 스프레드를 쓰지 않는다. 결제 금액·결제 수단·주문번호·
  * 서포터 이메일은 발송에 필요 없고, 이 화면의 props는 `__NEXT_DATA__`로 페이지 소스에
@@ -25,7 +31,7 @@ import { liveFundingOrderStatusList } from './refundable';
  * 아니라는 이 설계의 원칙대로면 담을 이유가 없다. 개설자가 읽고 싶어 할 값이라는 것은
  * 맞지만, 그건 별도 화면의 몫이지 배송 목록에 끼워 넣을 이유가 아니다.
  *
- * `computeProjectState`는 `lib/funding/projects.ts`가 재수출하지만, 정의는 fs를 물지 않는
+ * `isPastFundingEnd`는 `lib/funding/projects.ts`가 재수출하지만, 정의는 fs를 물지 않는
  * `./projectState`다 — 여기서는 그 정본에서 바로 값으로 가져온다.
  */
 
@@ -43,6 +49,15 @@ export interface CreatorShippingRow {
   fulfillmentStatus: string;
   trackingCompany: string | null;
   trackingNumber: string | null;
+  /**
+   * 청약철회를 요청했는데 아직 환불이 끝나지 않은 건 — `'발송금지'`, 아니면 빈 문자열.
+   *
+   * 관리자 CSV(`pages/api/admin/funding/export.ts`)의 `shipHold`와 **같은 판정**이다
+   * (`refundRequestedAt && isRefundPendingStatus(status)`). 무통장 청약철회는 orders.status가
+   * paid로 남은 채 `refund_requested_at`만 찍히므로, 이 칸이 없으면 취소를 요청한 사람이
+   * 배송 목록에 그대로 실린다. 물건이 나간 뒤 발송 상태를 저장하면 409라 기록조차 안 남는다.
+   */
+  shipHold: string;
 }
 
 export interface CreatorShippingSummary {
@@ -81,6 +96,8 @@ interface ShippingRowRaw {
   fulfillment_status: string;
   tracking_company: string | null;
   tracking_number: string | null;
+  refund_requested_at: number | null;
+  order_status: string;
 }
 
 const loadSummary = async (projectId: string, projectSlug: string): Promise<CreatorShippingSummary> => {
@@ -124,13 +141,9 @@ export const loadCreatorShipping = async (
     .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.creatorId, creatorId))).limit(1);
   if (!project) return null;
 
-  const state = computeProjectState(
-    { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },
-    now,
-  );
   const summary = await loadSummary(project.id, project.slug);
 
-  if (state !== 'closed') {
+  if (!isPastFundingEnd({ endAt: project.endAt.toISOString() }, now)) {
     return { state: 'before_close', summary };
   }
 
@@ -145,7 +158,8 @@ export const loadCreatorShipping = async (
            fp.shipping_postcode AS shipping_postcode, fp.shipping_address1 AS shipping_address1,
            fp.shipping_address2 AS shipping_address2, fp.shipping_memo AS shipping_memo,
            fp.fulfillment_status AS fulfillment_status,
-           fp.tracking_company AS tracking_company, fp.tracking_number AS tracking_number
+           fp.tracking_company AS tracking_company, fp.tracking_number AS tracking_number,
+           fp.refund_requested_at AS refund_requested_at, o.status AS order_status
     FROM funding_pledges fp
     JOIN orders o ON o.id = fp.order_id
     JOIN funding_rewards r ON r.project_id = ${project.id} AND r.reward_id = fp.reward_id
@@ -172,6 +186,7 @@ export const loadCreatorShipping = async (
       fulfillmentStatus: r.fulfillment_status,
       trackingCompany: r.tracking_company,
       trackingNumber: r.tracking_number,
+      shipHold: r.refund_requested_at !== null && isRefundPendingStatus(r.order_status) ? '발송금지' : '',
     })),
   };
 };
@@ -182,7 +197,8 @@ export interface CreatorFulfillmentGate {
    * 것이다(아래 `loadFulfillmentGate` 주석 참조). */
   projectId: string;
   creatorId: string;
-  state: ReturnType<typeof computeProjectState>;
+  /** 마감 **날짜**가 지났는가. 운영자가 누른 조기 종료는 보지 않는다(위 판정과 같은 선). */
+  pastFundingEnd: boolean;
   /** 리워드가 배송을 요구하지 않으면(디지털 전용) false — pledge의 reward_id가
    * funding_rewards에 없는 경우(예: 파일 프로젝트 후원)도 false로 취급한다. */
   requiresShipping: boolean;
@@ -221,10 +237,7 @@ export const loadFulfillmentGate = async (pledgeId: string, now: Date = new Date
   return {
     projectId: project.id,
     creatorId: project.creatorId,
-    state: computeProjectState(
-      { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },
-      now,
-    ),
+    pastFundingEnd: isPastFundingEnd({ endAt: project.endAt.toISOString() }, now),
     requiresShipping: reward?.requiresShipping === true,
   };
 };

@@ -140,7 +140,9 @@ const seedPledge = async (
 };
 
 /** 마감 뒤, 배송 필요 리워드로 후원 1건이 있는 프로젝트. */
-const seedClosedProjectWithPledge = async (): Promise<{ creatorId: string; projectId: string }> => {
+const seedClosedProjectWithPledge = async (
+  pledgeOverrides: Partial<typeof schema.fundingPledges.$inferInsert> = {},
+): Promise<{ creatorId: string; projectId: string }> => {
   const creatorId = await seedCreator(`creator-${crypto.randomUUID()}@example.com`);
   const { id: projectId, slug } = await seedProject(creatorId, {
     startAt: new Date(Date.now() - 2 * DAY),
@@ -148,7 +150,7 @@ const seedClosedProjectWithPledge = async (): Promise<{ creatorId: string; proje
   });
   const rewardId = await seedReward(projectId);
   const orderId = await seedOrder();
-  await seedPledge(orderId, slug, rewardId);
+  await seedPledge(orderId, slug, rewardId, pledgeOverrides);
   return { creatorId, projectId };
 };
 
@@ -257,6 +259,17 @@ describe('개설자 배송 목록 CSV 내려받기', () => {
     // 결제 정보·서포터 이메일은 loadCreatorShipping이 애초에 담지 않는다.
     expect(r.csv).not.toContain('backer-secret@example.com');
     expect(r.csv).not.toContain('30000');
+  });
+
+  it('청약철회 대기 건은 맨 앞 발송금지 칸에 표시된다 (관리자 CSV의 shipHold와 같은 판정)', async () => {
+    const { creatorId, projectId } = await seedClosedProjectWithPledge({
+      refundRequestedAt: new Date(Date.now() - 60_000),
+    });
+    mockAuth(creatorId);
+    const r = await call(projectId);
+    const [header, first] = r.csv.split('\n');
+    expect(header.trim().split(',')[0]).toBe('발송금지');
+    expect(first.split(',')[0]).toBe('발송금지');
   });
 
   it('CSV 응답에 캐시 금지·다운로드 헤더가 실린다', async () => {

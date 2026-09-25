@@ -23,8 +23,9 @@ interface Props {
  * 다시 대조하므로(`lib/funding/creatorShipping.ts`), 이 화면이 따로 권한 로직을 두지
  * 않는다.
  *
- * 마감 전에는 집계만, 마감 뒤에는 표까지 보인다 — `state`가 `lib/funding/creatorShipping.ts`
- * 주석의 규칙을 그대로 반영한다(모금 중에는 셀프 취소가 자유로워 주소가 들락날락한다).
+ * 마감 **날짜** 전에는 집계만, 지난 뒤에는 표까지 보인다 — `state`가
+ * `lib/funding/creatorShipping.ts` 주석의 규칙을 그대로 반영한다(모금 중에는 셀프 취소가
+ * 자유로워 주소가 들락날락한다). 운영자가 누른 조기 종료는 이 선을 앞당기지 않는다.
  *
  * 표가 실제로 실리는 경우에는 CSV 내려받기와 **같은 접속기록**을 남긴다 — 자세한 사정은
  * 아래 getServerSideProps 안의 주석에 적어 뒀다.

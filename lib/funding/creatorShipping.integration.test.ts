@@ -154,6 +154,8 @@ const seedClosedProjectWithPledge = async (opts: {
   shippingName?: string;
   shippingAddress1?: string;
   requiresShipping?: boolean;
+  refundRequestedAt?: Date;
+  projectStatus?: typeof schema.fundingProjects.$inferInsert['status'];
   orderStatus?: typeof schema.orderStatusEnum[number];
   supporterEmail?: string;
   orderNo?: string;
@@ -164,6 +166,7 @@ const seedClosedProjectWithPledge = async (opts: {
   const { id: projectId, slug } = await seedProject(creatorId, {
     startAt: new Date(Date.now() - 2 * DAY),
     endAt: new Date(Date.now() - DAY),
+    ...(opts.projectStatus ? { status: opts.projectStatus } : {}),
   });
   const rewardId = await seedReward(projectId, { requiresShipping: opts.requiresShipping ?? true });
   const orderId = await seedOrder({
@@ -176,6 +179,7 @@ const seedClosedProjectWithPledge = async (opts: {
     shippingAddress1: opts.shippingAddress1 ?? '기본배송주소1',
     unitAmount: opts.unitAmount ?? 30_000,
     fulfillmentStatus: opts.fulfillmentStatus ?? 'preparing',
+    ...(opts.refundRequestedAt ? { refundRequestedAt: opts.refundRequestedAt } : {}),
   });
   return { creatorId, projectId };
 };
@@ -249,8 +253,50 @@ it('행에 실리는 키가 화이트리스트와 정확히 같다', async () =>
   const view = await loadCreatorShipping(creatorId, projectId);
   const rows = (view as { rows: CreatorShippingRow[] }).rows;
   expect(Object.keys(rows[0]).sort()).toEqual([
-    'fulfillmentStatus', 'pledgeId', 'quantity', 'rewardId', 'rewardTitle',
+    'fulfillmentStatus', 'pledgeId', 'quantity', 'rewardId', 'rewardTitle', 'shipHold',
     'shippingAddress1', 'shippingAddress2', 'shippingMemo', 'shippingName',
     'shippingPhone', 'shippingPostcode', 'trackingCompany', 'trackingNumber',
   ]);
+});
+
+// ── M1·M2 ───────────────────────────────────────────────────────────────────
+
+it('운영자가 조기 종료해도 마감일 전이면 배송지가 나가지 않는다', async () => {
+  // 셀프 취소(assessSelfCancel)는 날짜만 보므로, 여기서 주소를 내보내면 아직 취소가
+  // 자유로운 후원의 이름·전화·주소가 개설자에게 나간다.
+  const creatorId = await seedCreator(`creator-${crypto.randomUUID()}@example.com`);
+  const { id: projectId, slug } = await seedProject(creatorId, {
+    status: 'closed',
+    startAt: new Date(Date.now() - DAY),
+    endAt: new Date(Date.now() + DAY),
+  });
+  const rewardId = await seedReward(projectId);
+  const orderId = await seedOrder({ status: 'paid' });
+  await seedPledge(orderId, slug, rewardId, { shippingName: '홍길동' });
+
+  const view = await loadCreatorShipping(creatorId, projectId);
+
+  expect(view!.state).toBe('before_close');
+  expect(JSON.stringify(view)).not.toContain('홍길동');
+});
+
+it('마감일이 지났으면 운영자 종료 여부와 무관하게 배송지가 나간다', async () => {
+  const { creatorId, projectId } = await seedClosedProjectWithPledge({ projectStatus: 'closed' });
+  const view = await loadCreatorShipping(creatorId, projectId);
+  expect(view!.state).toBe('open');
+  expect((view as { rows: CreatorShippingRow[] }).rows).toHaveLength(1);
+});
+
+it('환불을 기다리는 청약철회 건은 shipHold가 "발송금지"다', async () => {
+  const { creatorId, projectId } = await seedClosedProjectWithPledge({
+    refundRequestedAt: new Date(Date.now() - 60_000),
+  });
+  const view = await loadCreatorShipping(creatorId, projectId);
+  expect((view as { rows: CreatorShippingRow[] }).rows[0].shipHold).toBe('발송금지');
+});
+
+it('청약철회 기록이 없으면 shipHold는 빈 칸이다', async () => {
+  const { creatorId, projectId } = await seedClosedProjectWithPledge({});
+  const view = await loadCreatorShipping(creatorId, projectId);
+  expect((view as { rows: CreatorShippingRow[] }).rows[0].shipHold).toBe('');
 });

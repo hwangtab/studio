@@ -29,11 +29,14 @@ export const computeProjectState = (
  * **날짜상** 모금이 끝났는가. `computeProjectState`와 달리 운영자가 누른
  * `status: 'closed'`·`'draft'`를 보지 않는다.
  *
- * 셀프 취소 판정이 이것을 쓴다(lib/funding/policy.ts). 두 종류의 "마감"을 한 값으로
+ * 셀프 취소 판정(lib/funding/policy.ts)과 개설자 배송지 공개·발송 상태 게이트
+ * (lib/funding/creatorShipping.ts)가 이것을 쓴다. 두 종류의 "마감"을 한 값으로
  * 합치면, 운영자가 문제를 발견해 프로젝트를 종료한 순간 기존 후원자의 셀프 취소가 함께
  * 끊긴다 — 종료 버튼을 누르는 상황(가격 표기 오류 등)이 바로 환불이 필요한 상황이라
  * 환불이 전부 수작업으로 넘어간다. 운영자 종료로 **새 후원**은 막히되, 이미 후원한
- * 사람은 원래 마감일까지 스스로 취소할 수 있어야 한다.
+ * 사람은 원래 마감일까지 스스로 취소할 수 있어야 한다. 같은 이유로 배송지도 날짜 마감
+ * 뒤에만 개설자에게 나간다 — 취소가 아직 자유로운 후원의 주소를 미리 내보내면, 개설자가
+ * 발송 준비를 한 번 누른 것으로 후원자가 원래 마감일 전에 취소권을 잃는다.
  */
 export const isPastFundingEnd = (project: { endAt: string }, now: Date): boolean =>
   now.getTime() >= new Date(project.endAt).getTime();
