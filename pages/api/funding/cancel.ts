@@ -19,6 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
 
   const result = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 셀프 취소', now: new Date() });
-  if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: result.message });
+  // 일시 오류는 409(이미 처리됨)가 아니라 503이다 — 클라이언트가 재시도할 수 있는 상태다.
+  if (!result.ok)
+    return res
+      .status(result.code === 'temporarily_unavailable' ? 503 : 409)
+      .json({ ok: false, code: result.code, message: result.message });
   return res.status(200).json({ ok: true, mode: result.mode, refundAmount: result.refundAmount });
 }

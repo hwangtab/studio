@@ -9,13 +9,18 @@ import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from '../../../../lib/funding
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
 import { isPastFundingEnd } from '../../../../lib/funding/projectState';
-import { getFundingProjectAsync } from '../../../../lib/funding/repository';
+import { getFundingProjectOrFailure } from '../../../../lib/funding/repository';
 import { expireStalePledges, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
 
 interface Props {
   orderNo: string; token: string; projectSlug: string; projectTitle: string; rewardTitle: string; quantity: number; additionalAmount: number;
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean;
+  /**
+   * 프로젝트 조회가 **실패**했는가(부재가 아니다). true면 이 화면은 취소·내려받기 판정을
+   * 할 근거가 없으므로 마감이라고 말하지 않고 일시 오류로 안내한다.
+   */
+  lookupFailed: boolean;
   /** 디지털 리워드 내려받기 주소. 결제가 살아 있는 건에만 내려보낸다. */
   downloads: Array<{ label: string; key: string }>;
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
@@ -176,7 +181,15 @@ export default function FundingManagePage(p: Props) {
             </div>
           )}
 
-          {status === 'paid' && !refundRequested && (p.canCancel
+          {/* 프로젝트 조회가 흔들리면 취소 가능 여부를 판정할 근거가 없다. 예전에는 그것을
+              "마감"으로 읽어 모금 중인 프로젝트의 후원자에게 "펀딩 마감 후에는 온라인
+              취소가 불가합니다"를 보여주고 내려받기 링크까지 없앴다. 사실이 아닌 안내
+              대신 다시 열어 달라고 말한다. */}
+          {p.lookupFailed ? (
+            <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+              지금은 후원 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr
+            </p>
+          ) : status === 'paid' && !refundRequested && (p.canCancel
             ? <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>펀딩 취소 (전액 환불)</Button>
             : <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>)}
           {confirmMessage && (
@@ -213,7 +226,9 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   const order = await findFundingOrderByOrderNo(orderNo);
   if (!order?.fundingPledge || !isTokenMatch(order.manageToken, token)) return { notFound: true };
   const pl = order.fundingPledge;
-  const project = await getFundingProjectAsync(pl.projectSlug);
+  // 조회 실패와 부재를 구분한다 — 실패를 마감으로 읽으면 모금 중인 후원자가 셀프 취소와
+  // 내려받기를 잃는다(getFundingProjectOrFailure 주석).
+  const { project, lookupFailed } = await getFundingProjectOrFailure(pl.projectSlug);
   const verdict = assessSelfCancel({ orderStatus: order.status, fundingEnded: project ? isPastFundingEnd(project, now) : true, fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod, downloadedAt: pl.downloadedAt ?? null });
   /**
    * 내려받기 주소는 **결제가 살아 있을 때만** 내려보낸다. 환불·만료된 건에 링크를 남기면
@@ -227,9 +242,12 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardTitle: pl.rewardTitle,
     quantity: pl.quantity, additionalAmount: pl.additionalAmount, totalAmount: order.totalAmount, status: order.status,
     paymentMethod: pl.paymentMethod, fulfillmentStatus: pl.fulfillmentStatus, shipping,
-    canCancel: verdict.ok, cancelBlockedReason: verdict.ok ? null : CANCEL_BLOCK_MESSAGES[verdict.code],
+    // 조회 실패면 취소·내려받기를 내보내지 않는다. 판정 근거가 없는 것이지 마감이 아니다.
+    canCancel: lookupFailed ? false : verdict.ok,
+    cancelBlockedReason: lookupFailed || verdict.ok ? null : CANCEL_BLOCK_MESSAGES[verdict.code],
+    lookupFailed,
     refundRequested: pl.refundRequestedAt !== null,
-    downloads,
+    downloads: lookupFailed ? [] : downloads,
     displayNamePublic: pl.displayNamePublic,
     // 이름이 공개돼 있거나 앞으로 공개될 수 있는 상태에서만 바꾼다
     // (pages/api/funding/display-name.ts의 EDITABLE_STATUSES와 같은 판정).

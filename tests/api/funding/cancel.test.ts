@@ -81,3 +81,16 @@ it('paid + bank_transfer도 cancelFundingPledge로 간다 — 만료 경로는 p
   expect(r.status).toBe(200);
   expect(r.body).toMatchObject({ mode: 'refund_requested' });
 });
+
+/**
+ * 프로젝트 조회 실패는 "마감"이 아니라 "지금은 모르겠다"다. 409(이미 처리됨)로 답하면
+ * 화면이 다시 시도할 수 없는 결론으로 읽는다.
+ */
+it('일시 오류 → 503, 그 밖의 거절 → 409', async () => {
+  (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue({ manageToken: 'correct-token' });
+  (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'temporarily_unavailable', message: '지금은 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+  expect((await call({ orderNo: 'FND-1', token: 'correct-token' })).status).toBe(503);
+
+  (cancelFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'invalid_state', message: 'x' });
+  expect((await call({ orderNo: 'FND-1', token: 'correct-token' })).status).toBe(409);
+});

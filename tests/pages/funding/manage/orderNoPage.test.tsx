@@ -7,7 +7,7 @@ import FundingManagePage from '../../../../pages/[locale]/funding/manage/[orderN
 const baseProps = {
   orderNo: 'FND-1', token: 'tok', projectSlug: 'demo', projectTitle: '데모', rewardTitle: '감사 메일',
   quantity: 1, additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
-  canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [],
+  canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [], lookupFailed: false,
   displayNamePublic: false, canEditDisplayName: true,
 };
 
@@ -113,4 +113,16 @@ describe('토스 결제가 아닌 펀딩', () => {
     expect(screen.queryByRole('button', { name: /펀딩 취소/ })).not.toBeInTheDocument();
     expect(screen.getByText(/문의로 접수해 주시면 계좌로 환불/)).toBeInTheDocument();
   });
+});
+
+/**
+ * `getFundingProjectAsync`가 DB 오류를 삼켜 null을 주는 것은 공개 페이지를 위한 설계인데,
+ * 이 화면이 그 null을 곧바로 "마감"으로 읽었다. 모금 중인데 "펀딩 마감 후에는 온라인
+ * 취소가 불가합니다"가 뜨고 내려받기 링크도 사라졌다 — 사실이 아닌 안내다.
+ */
+it('프로젝트 조회가 실패하면 마감이 아니라 일시 오류로 안내한다', () => {
+  render(<FundingManagePage {...baseProps} paymentMethod="toss" lookupFailed canCancel={false} cancelBlockedReason={null} />);
+  expect(screen.getByText(/지금은 후원 정보를 불러오지 못했습니다/)).toBeInTheDocument();
+  expect(screen.queryByText(/마감/)).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /펀딩 취소/ })).not.toBeInTheDocument();
 });

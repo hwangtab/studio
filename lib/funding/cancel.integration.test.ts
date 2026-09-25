@@ -19,6 +19,7 @@ jest.mock('./email', () => ({
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
 }));
 jest.mock('./projects', () => ({ ...jest.requireActual('./projects'), getFundingProject: () => PROJECT }));
+jest.mock('./repository', () => ({ ...jest.requireActual('./repository') }));
 // findFundingOrderByOrderNo를 감싼다 — cancel.ts가 "읽고 → 검사 → 쓰기"를 하는 구조라,
 // 읽기와 쓰기 **사이**에 경쟁 요청이 끼어든 상황을 재현하려면 그 창을 열 수 있어야 한다.
 // 기본 구현은 실제 함수 그대로다.
@@ -420,5 +421,41 @@ describe('가상계좌 취소 거절 문구', () => {
     const r = await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
     expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
     expect(r.ok === false && r.message).toBe(toss.VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE);
+  });
+});
+
+/**
+ * `getFundingProjectAsync`가 DB 오류를 삼켜 null을 주는 것은 공개 페이지를 위한 설계인데,
+ * 셀프 취소가 그 null을 곧바로 "마감"으로 읽었다. 모금 중인 프로젝트의 후원자가 조회 한
+ * 번 흔들린 것 때문에 취소 권리를 잃으면 안 된다 — 다시 시도할 수 있는 답을 준다.
+ */
+describe('프로젝트 조회 실패', () => {
+  const repository = jest.requireMock('./repository') as typeof import('./repository');
+
+  it('셀프 취소는 마감이 아니라 일시 오류로 거절한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    jest.spyOn(repository, 'getFundingProjectOrFailure').mockResolvedValueOnce({ project: null, lookupFailed: true });
+
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'temporarily_unavailable' });
+    expect(r.ok === false && r.message).not.toContain('마감');
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid');
+  });
+
+  it('관리자 취소는 그대로 진행한다 — 조회 실패가 운영 복구를 막으면 안 된다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    jest.spyOn(repository, 'getFundingProjectOrFailure').mockResolvedValueOnce({ project: null, lookupFailed: true });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: true, mode: 'refunded' });
   });
 });

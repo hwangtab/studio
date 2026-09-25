@@ -6,14 +6,14 @@ import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cance
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
 import { isPastFundingEnd } from './projectState';
-import { getFundingProjectAsync } from './repository';
+import { getFundingProjectOrFailure } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
 
 export type FundingCancelOutcome =
   | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded'; refundAmount: number }
-  | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed'; message: string };
+  | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
 const GENERIC = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const refundIdempotencyKey = (orderNo: string, amount: number): string => `refund:${orderNo}:${amount}`;
@@ -52,7 +52,15 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const order = await findFundingOrderByOrderNo(input.orderNo);
   if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
   const pledge = order.fundingPledge;
-  const project = await getFundingProjectAsync(pledge.projectSlug);
+  /**
+   * 조회 실패와 부재를 구분한다. 예전에는 둘 다 null이라 `project ? … : 'closed'`가
+   * DB가 한 번 흔들린 것을 "마감"으로 읽었고, 모금 중인 프로젝트의 후원자가 셀프 취소를
+   * 잃었다. 일시 오류는 일시 오류로 답한다 — 잠시 뒤 다시 누르면 된다.
+   */
+  const { project, lookupFailed } = await getFundingProjectOrFailure(pledge.projectSlug);
+  if (lookupFailed && input.requestedBy === 'customer') {
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+  }
   // 부분환불 건은 관리자만 다룰 수 있다 — 남은 금액 계산이 걸려 있어 고객 셀프 취소에 맡기지 않는다.
   if (order.status === 'partially_refunded' && input.requestedBy !== 'admin') {
     return { ok: false, code: 'invalid_state', message: '일부 환불된 펀딩은 문의해 주세요.' };
