@@ -32,9 +32,10 @@ export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 /**
  * 음악연습실 시간제 — **소비자가 4,400원, VAT 포함.** 다른 상수는 전부 VAT 별도인데 이것만
- * 포함액인 이유: 스페이스클라우드가 같은 방을 4,400원(포함)에 팔고 있어서 두 곳의 표시가
- * 같아야 한다(2026-09-24 운영자 결정 "수수료가 아니라 부가세 포함이야"). 공급가·VAT는
- * lib/booking/amounts.ts의 splitInclusiveAmount로 갈라 쓴다 — 4,000 + 400.
+ * 포함액이다. 값의 출처: 2026-09-24까지 스페이스클라우드에 같은 방을 4,400원(포함)에 올려
+ * 두고 있어 거기에 맞췄다(운영자 "수수료가 아니라 부가세 포함이야"). 그 리스팅은 9/25에
+ * 판매 중지했지만 가격은 그대로 둔다. 공급가·VAT는 lib/booking/amounts.ts의
+ * splitInclusiveAmount로 갈라 쓴다 — 4,000 + 400.
  */
 export const PRACTICE_ROOM_HOURLY_PRICE_INCL = 4400;
 export const LESSON_MONTHLY_PRICE = 350000;
