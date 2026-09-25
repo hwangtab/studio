@@ -545,6 +545,9 @@ export const chargeCycle = async (
          * 경보가 받는다). `pausedReason`은 `operator` 그대로라 경보 대상에서 빠지지 않는다.
          */
         pausedUntil: null,
+        // 청구가 실패해 살아 있지 않은 행에 "재개 안내를 보내야 한다"는 일감을 남기지 않는다.
+        // 목록도 헬스체크도 `active`만 보므로 해는 없지만, 표시의 뜻은 "곧 청구된다"이다.
+        resumeNoticePendingAt: null,
         nextBillingAt: retryAt ?? subscription.nextBillingAt,
         updatedAt: now,
       })
@@ -931,8 +934,13 @@ export interface ResumeExpiredPausesResult {
  * `pauseSubscription`은 `nextBillingAt`을 건드리지 않으므로, 정지된 행에는 고객이 알고 있던
  * 청구일이 그대로 남아 있다. 그것이 아직 오지 않았으면 **그 날짜를 그대로 쓴다.** 무조건
  * `computeNextBillingAt(now, …)`으로 다시 계산하면 다음 달로 밀려 **한 달치가 아무 기록 없이
- * 사라진다** — billingDay 5, 청구 예약 4/5인 구독을 4/1에 4/3까지 멈추면, 이틀 멈추려던 것이
- * 한 달 무료가 된다. 기한이 billingDay 앞에 오는 모든 정지가 그 경로였다.
+ * 사라진다** — billingDay 5, 청구 예약 4/5인 구독을 4/1에 4/2까지 멈추면, 하루 멈추려던 것이
+ * 한 달 무료가 됐다. 기한이 billingDay 앞에 오는 **모든** 정지가 그 경로였다.
+ *
+ * **아래 최소 예고 기간에 걸리는 창은 남아 있다.** 같은 구독을 4/3까지 멈추면 예약일 4/5는
+ * 이틀 뒤라 `MIN_RESUME_NOTICE_DAYS`에 못 미쳐 5/5로 밀린다 — 그 한 달은 여전히 청구되지
+ * 않는다. 예고 없는 청구를 피하려고 치르는 값이고, 창이 "기한이 billingDay 앞에 오는 전부"에서
+ * "예약일이 재개로부터 3일 이내"로 줄었다.
  *
  * 예약일이 이미 지났으면(정지가 그 날짜를 넘겼으면) 다음 정기 청구일로 계산한다. 정지 기간의
  * 미청구분은 걷지 않는다 — `resumeSubscription`과 같은 판정이고, 밀린 달을 몰아 긁으면

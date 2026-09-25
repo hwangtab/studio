@@ -1244,16 +1244,38 @@ describe('정지 만료일 — pausedUntil / resumeExpiredPauses', () => {
     expect((await findSubscriptionById(created.id))!.status).toBe('cancelled');
   });
 
-  it('재시도 대기(past_due) 구독도 기한을 받아 정지할 수 있다', async () => {
+  /**
+   * 독스트링이 약속하는 둘을 함께 본다 — 밀린 재시도 예약을 버리고 정기 청구일을 잡는 것,
+   * 그리고 `past_due`가 아니라 `active`로 돌아오는 것.
+   */
+  it('재시도 대기(past_due) 구독도 기한을 받아 정지하고, 기한이 오면 active로 재개된다', async () => {
     const { created } = await activated();
     chargeBillingKey.mockResolvedValue(chargeFail());
     await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' });
-    expect((await findSubscriptionById(created.id))!.status).toBe('past_due');
+    const failed = (await findSubscriptionById(created.id))!;
+    expect(failed.status).toBe('past_due');
+    // D+1 재시도가 예약돼 있다.
+    expect(failed.nextBillingAt?.toISOString()).toBe('2026-04-06T00:00:00.000Z');
+
     const paused = await pauseSubscription(created.id, { pausedUntil: UNTIL }, new Date('2026-04-06T00:00:00Z'));
     expect(paused.ok).toBe(true);
-    const sub = (await findSubscriptionById(created.id))!;
-    expect(sub.pausedReason).toBe('operator');
-    expect(sub.pausedUntil?.toISOString()).toBe(UNTIL.toISOString());
+    const pausedRow = (await findSubscriptionById(created.id))!;
+    expect(pausedRow.pausedReason).toBe('operator');
+    expect(pausedRow.pausedUntil?.toISOString()).toBe(UNTIL.toISOString());
+
+    const result = await resumeExpiredPauses(UNTIL);
+    // 밀린 재시도(4/6)로 돌아가지 않고 다음 정기 청구일을 잡는다.
+    expect(result.resumed[0].nextBillingAt.toISOString()).toBe('2026-08-05T00:00:00.000Z');
+    const resumedRow = (await findSubscriptionById(created.id))!;
+    expect(resumedRow.status).toBe('active');
+    expect(resumedRow.pausedReason).toBeNull();
+    expect(resumedRow.pausedUntil).toBeNull();
+    // 실패한 회차는 기록으로 남는다 — 걷지 않을 뿐 지우지 않는다.
+    const attempts = await client.execute({
+      sql: "SELECT status FROM subscription_payments WHERE subscription_id = ? AND cycle_ym = '2026-04'",
+      args: [created.id],
+    });
+    expect(attempts.rows.map((r) => r.status)).toContain('failed');
   });
 });
 

@@ -11,7 +11,6 @@ import {
   dormancyWarningBoundary,
   dormantActivityCondition,
 } from '../privacy/orderRetention';
-import { MIN_RESUME_NOTICE_DAYS } from '../billing/service';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
 import {
@@ -397,18 +396,30 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
-   * 자동 재개 안내가 며칠째 나가지 못하고 있다 — **예고 없는 청구로 이어진다.**
+   * 자동 재개 안내가 나가지 못하고 있다 — **예고 없는 청구로 이어진다.**
    *
    * 정지 기한이 끝나 자동 재개된 구독은 다음 정기 청구일에 청구된다. 그 날짜를 적은 안내
    * 메일이 청구보다 먼저 나가는 것이 "예고 없이 카드를 긁지 않는다"의 전부다
    * (`lib/billing/service.ts`의 `resumeExpiredPauses`). 발송은 매일 재시도되지만,
    * 계속 실패하면 첫 청구일이 그대로 온다.
    *
-   * 기준은 `MIN_RESUME_NOTICE_DAYS`(3일)다 — 재시도가 그 안에 성공하면 예고는 지켜지고,
-   * 넘어가면 지켜지지 않는다. 그래서 하루나 이틀 밀린 것은 알리지 않고 **예고가 실제로
-   * 깨지는 시점부터** 올린다. 심각도가 `high`인 이유는 남은 수습 수단이 사람뿐이기
-   * 때문이다(운영자가 직접 연락하거나 다시 정지한다).
+   * ## 기준이 하루인 이유 — **크론 두 개의 시각 차까지 계산에 넣는다**
+   *
+   * 처음엔 `MIN_RESUME_NOTICE_DAYS`(3일)로 잡았는데, 그러면 **정작 가장 위험한 경우에만
+   * 안 떴다.** 이 점검은 08:00 KST, 청구는 09:00 KST에 돈다(`vercel.json`). 최소 예고
+   * 바닥에 걸려 첫 청구가 재개 +3일인 구독은 표시가 D+0 09:00에 찍히므로, D+3 08:00
+   * 점검에서 기준선(D+0 08:00)보다 **한 시간 뒤**라 걸리지 않는다. 한 시간 뒤 09:00 청구가
+   * 그대로 긁고, 성공하면 표시가 지워져 경보는 영영 안 뜬다.
+   *
+   * 하루로 잡으면 산수가 닫힌다. 표시 시각을 T라 하면 첫 청구는 아무리 빨라도 T+3일이고
+   * (`MIN_RESUME_NOTICE_DAYS`), 이 점검은 매일 돌므로 T+1일을 넘는 첫 실행은 늦어도
+   * T+2일이다. **청구까지 최소 하루가 남는다.** 그 시점이면 첫 발송과 다음 날 재시도가
+   * 둘 다 실패한 뒤라 일시적 오류로 보기도 어렵다.
+   *
+   * 심각도가 `high`인 이유는 남은 수습 수단이 사람뿐이기 때문이다(운영자가 직접 연락하거나
+   * 다시 정지한다).
    */
+  const RESUME_NOTICE_STALE_DAYS = 1;
   const staleResumeNotices = await db
     .select({ id: subscriptions.id, nextBillingAt: subscriptions.nextBillingAt })
     .from(subscriptions)
@@ -416,7 +427,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       and(
         eq(subscriptions.status, 'active'),
         isNotNull(subscriptions.resumeNoticePendingAt),
-        lt(subscriptions.resumeNoticePendingAt, new Date(now.getTime() - MIN_RESUME_NOTICE_DAYS * 24 * 60 * 60 * 1000)),
+        lt(subscriptions.resumeNoticePendingAt, new Date(now.getTime() - RESUME_NOTICE_STALE_DAYS * 24 * 60 * 60 * 1000)),
       ),
     );
 
