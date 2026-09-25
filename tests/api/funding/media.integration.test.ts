@@ -108,6 +108,29 @@ it('승인 프로젝트 본문에만 있는 이미지도 무인증으로 열린�
   expect((await call(OWNED_KEY)).status).toBe(200);
 });
 
+it('승인 프로젝트 본문에 남의 키를 적어 두어도 공개되지 않는다', async () => {
+  // content는 승인 뒤에도 개설자가 고치는 칸이고 저장 시 URL 문자열을 거르지 않는다.
+  // 문자열 한 줄로 남의 이미지를(한때 공개였다가 닫힌 표지 포함) 되열 수 있으면 안 된다.
+  const owner = await seedCreator(OWNER);
+  const other = await seedCreator('other');
+  const otherKey = 'other-3333.webp';
+  await seedProject(other, { coverUrl: `/api/funding/media/${otherKey}` });
+  await seedProject(owner, {
+    reviewStatus: 'approved',
+    content: `\`\`\`\n/api/funding/media/${otherKey}\n\`\`\``,
+  });
+  expect((await call(otherKey)).status).toBe(404);
+});
+
+it('승인 프로젝트 본문의 옛 형식 키는 소유자를 알 수 없어 공개되지 않는다', async () => {
+  const creatorId = await seedCreator(OWNER);
+  await seedProject(creatorId, {
+    reviewStatus: 'approved',
+    content: `본문 <img src="/api/funding/media/${LEGACY_KEY}" />`,
+  });
+  expect((await call(LEGACY_KEY)).status).toBe(404);
+});
+
 it('초안 표지는 무인증 404, 소유 개설자 200(no-store), 다른 개설자 404, 관리자 200', async () => {
   const creatorId = await seedCreator(OWNER);
   await seedCreator('other');

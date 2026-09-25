@@ -73,6 +73,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.setHeader('Content-Type', 'image/webp');
     // 공개 키는 파일명이 무작위 UUID라 같은 이름이 다른 내용을 가리키지 않는다. 승인 전
     // 이미지는 판정이 바뀔 수 있고(승인·반려) 세션에 따라 응답이 갈리므로 캐시하지 않는다.
+    //
+    // 한계: 공개 뒤에 판정이 닫혀도(반려·철회, 본문에서 그림 삭제) 우리 응답은 즉시
+    // 바뀌지만 **이미 캐싱한 브라우저·CDN에는 그 사실이 닿지 않는다.** 한 번 공개된 키는
+    // 그 사본이 만료될 때까지 계속 보일 수 있다 — 되돌려야 하는 상황이면 파일명을 바꾸는
+    // 것이 유일한 수단이다(CLAUDE.md의 "그림을 바꾸면 파일명도 바꾼다"와 같은 이유).
     res.setHeader(
       'Cache-Control',
       isPublic ? 'public, max-age=31536000, immutable' : 'private, no-store',

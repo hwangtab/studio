@@ -55,7 +55,10 @@ const referencedFilenames = async (): Promise<Set<string>> => {
   const referenced = new Set<string>();
   for (const row of rows) {
     if (!row.text) continue;
-    for (const match of row.text.matchAll(pattern)) referenced.add(match[1]);
+    // Blob pathname과 맞대 볼 것이므로 소문자로 모은다 — 정규식이 대소문자를 가리지
+    // 않는데 Set 조회가 가린다면, `X.WEBP`로 적힌 참조가 `x.webp` 파일과 어긋나 살아
+    // 있는 그림이 지워진다(조회 쪽도 같이 소문자로 내린다).
+    for (const match of row.text.matchAll(pattern)) referenced.add(match[1].toLowerCase());
   }
   return referenced;
 };
@@ -80,7 +83,7 @@ export const purgeOrphanFundingMedia = async (
         result.skippedRecent += 1;
         continue;
       }
-      if (referenced.has(blob.pathname.slice(FUNDING_MEDIA_PREFIX.length))) continue;
+      if (referenced.has(blob.pathname.slice(FUNDING_MEDIA_PREFIX.length).toLowerCase())) continue;
 
       try {
         await del(blob.url);

@@ -58,6 +58,14 @@ it('반려 프로젝트가 참조하는 파일도 남긴다 — 표지·본문·
   expect(result).toEqual({ scanned: 4, deleted: 1, skippedRecent: 0, failed: 0 });
 });
 
+it('참조가 대문자로 적혀 있어도 같은 파일로 본다', async () => {
+  all.mockResolvedValue([{ text: '/api/funding/media/A.WEBP' }]);
+  list.mockResolvedValue({ blobs: [blob('funding/a.webp', OLD)], hasMore: false });
+  const result = await purgeOrphanFundingMedia(NOW);
+  expect(del).not.toHaveBeenCalled();
+  expect(result.deleted).toBe(0);
+});
+
 it('7일이 지나지 않은 파일은 건너뛴다', async () => {
   list.mockResolvedValue({ blobs: [blob('funding/new.webp', RECENT)], hasMore: false });
   const result = await purgeOrphanFundingMedia(NOW);
