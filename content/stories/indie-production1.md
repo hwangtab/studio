@@ -4,6 +4,7 @@ date: 2026-04-06
 lastmod: 2026-07-19
 author: 스튜디오 놀
 category: 음악 제작
+cta: release
 tags:
   - 인디 음악 제작
   - 인디 음반 제작

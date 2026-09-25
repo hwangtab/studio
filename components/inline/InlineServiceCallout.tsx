@@ -1,14 +1,38 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Mic, SlidersHorizontal, Speaker, Sparkles } from '@/lib/lucide-icons';
+import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Megaphone, Mic, SlidersHorizontal, Speaker, Sparkles, Video } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
+import {
+  ALBUM_BUNDLE_PRICE,
+  COVER_VIDEO_PACKAGE_PRICE,
+  DAY_LOCK_PRICE,
+  EP_BUNDLE_PRICE,
+  formatPriceAmount,
+  formatPriceLabel,
+  FUNDING_DESIGN_PRICE,
+  FUNDING_SUCCESS_FEE_PERCENT,
+  LESSON_MONTHLY_PRICE,
+  MASTERING_PACKAGE_PRICE,
+  MASTERING_SINGLE_PRICE,
+  MIXING_LEVEL1_PRICE,
+  PRACTICE_ROOM_HOURLY_PRICE_INCL,
+  PRACTICE_ROOM_MONTHLY_PRICE,
+  RECORDING_HOURLY_PRICE,
+  RELEASE_PRESS_INTRO_ENDS_ON,
+  RELEASE_PRESS_INTRO_PRICE,
+  RELEASE_PRESS_PRICE,
+  SINGLE_BUNDLE_PRICE,
+  VOCAL_PACKAGE_PRICE,
+  VOICEOVER_HOURLY_PRICE,
+  WEDDING_PACKAGE_PRICE,
+} from '../../data/pricing';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
 
-type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding';
+type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion';
 
 interface InlineServiceCalloutProps {
   type: string;
@@ -23,8 +47,10 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   mixing: '/mixing-mastering',
   practice: '/practice-room',
   release: '/release-project',
-  // 펀딩 설계 대행은 단독 페이지가 없고 요금 페이지의 부가 서비스 섹션에 있다.
-  funding: '/pricing#support-services',
+  // 펀딩 설계 대행 전용 LP(2026-09-25, ko 전용). 이 콜아웃도 ko에서만 렌더되므로 그대로 링크한다.
+  funding: '/crowdfunding-design',
+  cover: '/cover-video',
+  promotion: '/music-promotion',
 };
 
 const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
@@ -36,6 +62,8 @@ const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {
   practice: Speaker,
   release: Sparkles,
   funding: HandCoins,
+  cover: Video,
+  promotion: Megaphone,
 };
 
 const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
@@ -47,7 +75,15 @@ const SERVICE_LABEL_KEYS: Record<ServiceType, string> = {
   practice: 'nav.practiceRoom',
   release: 'nav.releaseProject',
   funding: 'stories.inline.serviceLabel.funding',
+  cover: 'nav.coverVideo',
+  promotion: 'nav.musicPromotion',
 };
+
+// 가격은 전부 data/pricing.ts 상수에서 온다. 2026-09-25까지 이 블록은 리터럴이었고
+// data/pricing.test.ts의 리터럴 스캔이 data/만 봐서 드리프트가 조용히 쌓여 있었다: 발매
+// EP·정규 하한이 번들가 조정 전의 옛 값, 연습실 "시간 대여는 운영하지 않음"(시간제 운영 중),
+// 펀딩 "(후불)"(정본은 선불 + 성공 시 수수료). 지금은 그 스캔이 components/inline/도 본다.
+const man = (value: number) => formatPriceLabel(value, 'ko');
 
 // 한국어 풍부 콘텐츠. 다른 locale은 fallback (제목만 + generic body, features 없음).
 // softNote: 고단가 오퍼(레슨 월정액·발매 수백만)는 정보탐색 독자에게 진입 마찰이 크다.
@@ -58,7 +94,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     title: '1:1 프로듀싱 레슨',
     description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 작곡·미디·믹싱 프로듀싱 멘토링.',
     features: [
-      '월 35만원 정액제 (주 1회 60분)',
+      `월 ${man(LESSON_MONTHLY_PRICE)} 정액제 (주 1회 60분)`,
       '본인 곡 기준 1:1 진행',
       '믹싱·마스터링 단계 멘토 효과 큼',
       '첫 상담 무료',
@@ -70,7 +106,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     description: '결혼식 축가·프로포즈·기념일 음원 제작 올인원 패키지.',
     features: [
       '녹음 2시간 + 보컬 튠 + 믹싱·마스터링',
-      '올인원 35만원 / 1곡',
+      `올인원 ${man(WEDDING_PACKAGE_PRICE)} / 1곡`,
       '당일 보정본 수령 가능 (사전 협의)',
       '결혼식·프로포즈 전용 진행 노하우',
     ],
@@ -82,15 +118,15 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       'Neumann U87AI 등 하이엔드 마이크',
       '노이즈 제어 및 톤 보정',
       '실시간 편집 지원',
-      '시간당 10만원 (최소 2시간)',
+      `시간당 ${man(VOICEOVER_HOURLY_PRICE)} (최소 2시간)`,
     ],
   },
   recording: {
     title: '보컬 녹음',
     description: '전담 엔지니어와 함께 단곡부터 앨범까지. 디렉팅·마이크 포지셔닝 포함.',
     features: [
-      '보컬 1프로 25만원 (3시간 기준)',
-      '시간당 10만원 · 6시간 Day Lock 50만원',
+      `보컬 1프로 ${man(VOCAL_PACKAGE_PRICE)} (3시간 기준)`,
+      `시간당 ${man(RECORDING_HOURLY_PRICE)} · 6시간 Day Lock ${man(DAY_LOCK_PRICE)}`,
       '전담 엔지니어 디렉팅 포함',
       'Neumann U87AI 메인 마이크',
     ],
@@ -99,8 +135,8 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     title: '믹싱·마스터링 의뢰',
     description: '파일만 보내면 전국·해외 어디서든 진행. 3~7영업일 안에 완성본을 드립니다.',
     features: [
-      '믹싱 곡당 20만원부터 (트랙 수 기준 3단계)',
-      '마스터링 싱글 10만원 · 4곡 이상 곡당 8만원',
+      `믹싱 곡당 ${man(MIXING_LEVEL1_PRICE)}부터 (트랙 수 기준 3단계)`,
+      `마스터링 싱글 ${man(MASTERING_SINGLE_PRICE)} · 4곡 이상 곡당 ${man(MASTERING_PACKAGE_PRICE)}`,
       '기본 2회 수정 포함',
       '파일 전송 비대면 진행 — 방문 불필요',
     ],
@@ -108,19 +144,19 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
   },
   practice: {
     title: '음악연습실',
-    description: '월세 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물.',
+    description: '월세 입주형 개인·보컬·키보드·작곡 연습실. 녹음실과 같은 건물이고, 한두 시간만 필요하면 시간제로도 쓸 수 있습니다.',
     features: [
-      '월 36만원부터 (1년 계약 첫 달 50% 할인)',
-      '보컬·키보드·작곡 개인 부스',
+      `월 ${man(PRACTICE_ROOM_MONTHLY_PRICE)}부터 (1년 계약 첫 달 50% 할인)`,
+      `시간제 시간당 ${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원 (부가세 포함, 온라인 예약)`,
       '같은 건물에서 녹음 연계 가능',
-      '시간 대여·합주실은 운영하지 않음',
+      '밴드 합주실은 운영하지 않음',
     ],
   },
   release: {
     title: '음원 발매 프로젝트',
-    description: '기획·녹음·믹싱·마스터링·유통까지, 싱글부터 정규 앨범까지 한 팀이 원스톱으로 함께합니다.',
+    description: '기획·녹음·믹싱·마스터링·유통·홍보까지, 싱글부터 정규 앨범까지 한 팀이 원스톱으로 함께합니다.',
     features: [
-      '싱글 약 50만원부터 · EP 150만원부터 · 정규 400만원부터',
+      `싱글 ${man(SINGLE_BUNDLE_PRICE)}부터 · EP ${man(EP_BUNDLE_PRICE)}부터 · 정규 ${man(ALBUM_BUNDLE_PRICE)}부터`,
       '기획 → 녹음 → 믹싱·마스터링 → 유통 원스톱',
       '음원 유통사 등록·발매 대행',
       '아티스트 상황에 맞춘 단계별 진행',
@@ -131,17 +167,39 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     title: '크라우드펀딩 설계 대행',
     description: '텀블벅 페이지를 기획부터 구축까지 맡습니다. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행해온 방식 그대로.',
     features: [
-      '40만원 + 성공 수수료 10% (후불)',
+      `${man(FUNDING_DESIGN_PRICE)} 선불 + 펀딩 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%`,
       '스토리텔링·리워드 구성·페이지 제작',
       '목표액 산정과 제작 예산 역산',
       '발매 제작을 맡기지 않아도 의뢰 가능',
     ],
     softNote: '펀딩을 열지 말지부터 고민 중이어도 괜찮습니다. 목표액이 현실적인지 같이 따져보는 것부터 시작해요.',
   },
+  // 2026-09-25 추가 — 커버 영상·발매 홍보로 가는 본문 동선이 0~2건이었다.
+  cover: {
+    title: '커버 영상 촬영 올인원',
+    description: '노래 커버 영상을 촬영·녹음·믹싱까지 한 번에 진행하고, 4K 영상과 음원을 함께 드립니다.',
+    features: [
+      `올인원 ${man(COVER_VIDEO_PACKAGE_PRICE)} (3시간)`,
+      '촬영 + 보컬 녹음 + 믹싱',
+      '4K 영상 + 음원 파일 납품',
+      '조명을 갖춘 스튜디오 촬영',
+    ],
+  },
+  promotion: {
+    title: '음원 발매 홍보',
+    description: '이미 발매한 음원도 받습니다. 보도자료를 5개 언어로 쓰고 국내외 음악 매체·라디오·레코드숍에 보냅니다.',
+    features: [
+      `${man(RELEASE_PRESS_INTRO_PRICE)} (${RELEASE_PRESS_INTRO_ENDS_ON}까지 도입가 · 정가 ${man(RELEASE_PRESS_PRICE)})`,
+      '보도자료 5개 언어 · 프레스킷 페이지',
+      '국내 음악 매체 + 해외 60개국 매체·라디오·레코드숍 발송',
+      '발송 리포트 제공 — 기사 게재는 보장하지 않습니다',
+    ],
+    softNote: '음원을 들은 뒤 보낼 곳이 몇 곳인지 먼저 무료로 세어 드립니다. 비용은 그 숫자를 보신 다음입니다.',
+  },
 };
 
 const isServiceType = (v: string): v is ServiceType =>
-  v === 'wedding' || v === 'voice' || v === 'lesson' || v === 'recording' || v === 'mixing' || v === 'practice' || v === 'release' || v === 'funding';
+  Object.prototype.hasOwnProperty.call(KO_CONTENT, v);
 
 /**
  * 본문 안 서비스 강조 박스. %%service:<type>%% short-code로 트리거.

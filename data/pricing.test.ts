@@ -26,7 +26,6 @@ import {
   MIXING_LEVEL2_PRICE,
   MIXING_LEVEL3_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
-  PRODUCTION_OFFER_PRICE,
   RECORDING_HOURLY_PRICE,
   RELEASE_ALBUM_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
@@ -137,13 +136,20 @@ describe('가격 SSOT 정합', () => {
       RECORDING_HOURLY_PRICE,
       VOCAL_PACKAGE_PRICE,
       MIXING_LEVEL1_PRICE,
-      PRODUCTION_OFFER_PRICE,
+      // 2026-09-25 — 화면 어디에도 없던 '음반 기획 350,000원'(PRODUCTION_OFFER_PRICE)을
+      // 실제 진입 상품인 싱글 발매 프로젝트(= 싱글 통합 번들)로 교체
+      SINGLE_BUNDLE_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
       // 2026-09-25 추가 — 연습실 시간제(VAT 포함 소비자가). 월세 바로 뒤에 둔다
       PRACTICE_ROOM_HOURLY_PRICE_INCL,
       // 2026-09-16 추가 — 홈 OfferCatalog가 pricing 페이지의 19개 오퍼 중 홍보·펀딩 설계를 빼고 있었다
       RELEASE_PRESS_INTRO_PRICE,
       FUNDING_DESIGN_PRICE,
+      // 2026-09-25 추가 — LP가 있는 상품인데 전역 카탈로그에 없던 넷
+      LESSON_MONTHLY_PRICE,
+      WEDDING_PACKAGE_PRICE,
+      VOICEOVER_HOURLY_PRICE,
+      COVER_VIDEO_PACKAGE_PRICE,
     ];
     expect(biz.makesOffer.map((o) => o.price)).toEqual(expected);
     expect(biz.hasOfferCatalog.itemListElement.map((o) => o.price)).toEqual(expected);
@@ -372,7 +378,6 @@ describe('가격 SSOT 정합', () => {
       RENTAL_HOURLY_PRICE,
       LESSON_MONTHLY_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
-      PRODUCTION_OFFER_PRICE,
       RELEASE_SINGLE_FROM_PRICE,
       RELEASE_EP_FROM_PRICE,
       RELEASE_ALBUM_FROM_PRICE,
@@ -413,8 +418,17 @@ describe('가격 SSOT 정합', () => {
     // 만원 표기만 보던 첫 버전은 faq.ts의 원 단위 단가를 통째로 놓쳤다.
     const AMOUNT = /(\d[\d,]{2,})\s*원|(\d+)\s*만원/g;
 
+    // 본문 인라인 콜아웃(components/inline/*.tsx)도 가격을 말한다. 2026-09-25에 이 디렉터리의
+    // InlineServiceCallout이 발매 EP·정규 하한을 옛 값으로 들고 있던 것이 발견됐다 — data/만
+    // 훑던 이 스캔의 사각지대였다.
+    const INLINE_DIR = path.join(__dirname, '..', 'components', 'inline');
+    const inlineComponents = fs
+      .readdirSync(INLINE_DIR)
+      .filter((name) => name.endsWith('.tsx') && !name.includes('.test.'))
+      .map((name) => path.join(INLINE_DIR, name));
+
     const offenders: string[] = [];
-    for (const file of walk(__dirname)) {
+    for (const file of [...walk(__dirname), ...inlineComponents]) {
       const text = fs.readFileSync(file, 'utf8');
       for (const m of text.matchAll(AMOUNT)) {
         const won = m[1] ? Number(m[1].replace(/,/g, '')) : Number(m[2]) * 10_000;

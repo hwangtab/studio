@@ -91,3 +91,7 @@ docs/contracts/
 .env*.bak*
 # 고객명이 들어간 견적서 원본(HTML/PDF). 발행 기록은 docs/oplog에 요약만 남긴다.
 docs/quotes/
+
+# 레슨 기록 — 레슨생 개인정보가 들어가므로 public 저장소에 올리지 않는다.
+# 로컬에만 둔다. 백업이 필요하면 저장소 밖(드라이브 등)으로.
+docs/lessons/

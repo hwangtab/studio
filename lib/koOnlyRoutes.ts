@@ -43,6 +43,8 @@ export interface KoOnlyRouteRule {
 
 export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
   { segment: 'artists', hasIndexPage: true, literalSiblings: [] },
+  // 텀블벅 등 국내 플랫폼 상품이라 ko 전용(2026-09-25 신설, data/crowdfundingDesign.ts).
+  { segment: 'crowdfunding-design', hasIndexPage: true, literalSiblings: [] },
   { segment: 'funding', hasIndexPage: true, literalSiblings: ['terms', 'creator-terms', 'success', 'fail', 'manage', 'creator'] },
   { segment: 'guides', hasIndexPage: false, literalSiblings: [] },
 ];

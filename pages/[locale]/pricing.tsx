@@ -44,7 +44,7 @@ import type { NextPageWithLayout } from '../../types';
 
 /**
  * ko에서 온라인 결제까지 이어지는 오퍼만 보조 CTA를 받는다(Phase 2 §5).
- * 발매 패키지(single/ep/album 번들)·연습실·레슨·부가서비스(컨설팅 등)는
+ * 발매 패키지(single/ep/album 번들)·연습실 월 입주·레슨·부가서비스(컨설팅 등)는
  * 온라인 결제 상품이 아니므로 여기 없다 — 없으면 PricingCard가 렌더하지 않는다.
  * href는 이미 ko 전용이라 로케일 접두사를 하드코딩한다(비-ko는 아예 호출하지 않음).
  */
@@ -57,11 +57,20 @@ const BOOKING_ENTRY: Record<string, { href: string; kind: 'reserve' | 'order' }>
   'package-wedding': { href: '/ko/booking/wedding-song', kind: 'reserve' },
   'package-cover-video': { href: '/ko/booking/cover-video', kind: 'reserve' },
   'package-voiceover': { href: '/ko/booking/voice-acting', kind: 'reserve' },
+  'practice-room-hourly': { href: '/ko/booking/practice-room', kind: 'reserve' },
   'mixing-level1': { href: '/ko/booking/mixing-mastering?product=mixing-level1', kind: 'order' },
   'mixing-level2': { href: '/ko/booking/mixing-mastering?product=mixing-level2', kind: 'order' },
   'mixing-level3': { href: '/ko/booking/mixing-mastering?product=mixing-level3', kind: 'order' },
   'mastering-single': { href: '/ko/booking/mixing-mastering?product=mastering-single', kind: 'order' },
   'mastering-package': { href: '/ko/booking/mixing-mastering?product=mastering-package', kind: 'order' },
+};
+
+/**
+ * 부가 서비스 중 전용 LP가 있는 것 — 카드에 보조 CTA "자세히 보기"를 단다. ko 전용 LP라
+ * ko에서만 쓴다(예약 퍼널 BOOKING_ENTRY와 같은 이유로 로케일 접두사를 하드코딩).
+ */
+const ADDITIONAL_DETAIL_PAGES: Record<string, string> = {
+  'service-funding': '/ko/crowdfunding-design',
 };
 
 interface PricingProps {
@@ -477,7 +486,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         </div>
       </Section>
 
-      {/* 음악연습실 입주 — <title>·h1이 선두로 약속한 단가의 도착지.
+      {/* 음악연습실 월 입주·시간제 — <title>·h1이 선두로 약속한 단가(월 입주)의 도착지.
           시설·혜택 정본은 /practice-room이고 여기서는 계약 조건만 다룬 뒤 넘긴다. */}
       <Section id="practice-room" variant="alternate" className="scroll-mt-32">
         <SectionHeading
@@ -491,7 +500,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {t('pricing.practiceRoom.priceNote')}
         </p>
-        <div className="max-w-md mx-auto" role="list">
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto" role="list">
           {practiceRoomOffers.map((offer) => (
             <div key={offer.id} role="listitem">
               <PricingCard
@@ -506,6 +515,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingPracticeRoom"
                 locale={locale}
+                {...getBookingEntryProps(offer.id, 'PricingPracticeRoom')}
               />
             </div>
           ))}
@@ -546,6 +556,12 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingAdditional"
                 locale={locale}
+                {...(locale === 'ko' && ADDITIONAL_DETAIL_PAGES[service.id]
+                  ? {
+                      secondaryCtaLabel: t('pricing.cta.detail', { defaultValue: '자세히 보기' }),
+                      secondaryCtaHref: ADDITIONAL_DETAIL_PAGES[service.id],
+                    }
+                  : {})}
               />
             </div>
           ))}

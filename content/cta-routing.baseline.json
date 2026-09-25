@@ -48,7 +48,7 @@
   },
   "ai-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "production",
    "price": null
   },
   "album-art1": {
@@ -78,7 +78,7 @@
   },
   "ambient-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "amp-simulator1": {
@@ -128,12 +128,12 @@
   },
   "arrangement-tips1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "arrangement1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "articulation1": {
@@ -218,7 +218,7 @@
   },
   "ballad-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "ballad-vocal1": {
@@ -238,7 +238,7 @@
   },
   "band-arrangement1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "band-recording-guide1": {
@@ -288,12 +288,12 @@
   },
   "beatmaker1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": null
   },
   "beatmaking1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "belting1": {
@@ -303,7 +303,7 @@
   },
   "blues-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "boeun1": {
@@ -338,7 +338,7 @@
   },
   "brass-arrangement1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "breath-support1": {
@@ -563,17 +563,17 @@
   },
   "chord-progression1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "chord-progressions1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "chordprog1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "chorus-effect1": {
@@ -618,7 +618,7 @@
   },
   "collab-tools1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": null
   },
   "commercial-narration-cost-guide": {
@@ -643,7 +643,7 @@
   },
   "compose1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "compress1": {
@@ -728,7 +728,7 @@
   },
   "creative-block1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": null
   },
   "creative-slump1": {
@@ -973,7 +973,7 @@
   },
   "drum-programming1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "drum-recording1": {
@@ -1013,27 +1013,27 @@
   },
   "edm-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "electronic-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "ep-album1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "release",
    "price": "recording-daylock"
   },
   "ep-making1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "release",
    "price": "recording-daylock"
   },
   "ep-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "release",
    "price": "recording-daylock"
   },
   "ep-release1": {
@@ -1093,7 +1093,7 @@
   },
   "film-scoring1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "flstudio1": {
@@ -1103,7 +1103,7 @@
   },
   "folk-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "folk1": {
@@ -1123,12 +1123,12 @@
   },
   "funk-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-daylock"
   },
   "future-bass1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "gaebong1": {
@@ -1148,7 +1148,7 @@
   },
   "game-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "gangbuk1": {
@@ -1368,7 +1368,7 @@
   },
   "gospel-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "goyang-deokyang1": {
@@ -1698,7 +1698,7 @@
   },
   "hiphop-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "hiphop-vocal1": {
@@ -1898,12 +1898,12 @@
   },
   "indie-pop1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "indie-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "release",
    "price": "recording-daylock"
   },
   "indie-rock1": {
@@ -2003,17 +2003,17 @@
   },
   "jazz-chord1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "jazz-harmony1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "jazz-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-daylock"
   },
   "jazz-vocal1": {
@@ -2173,7 +2173,7 @@
   },
   "kpop-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "kpop-trainee1": {
@@ -2203,7 +2203,7 @@
   },
   "latin-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-daylock"
   },
   "lesson-keyboard-skill1": {
@@ -2253,12 +2253,12 @@
   },
   "lofi-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "lofi-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "logic-pro1": {
@@ -2288,7 +2288,7 @@
   },
   "lyric-writing1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "lyrics-memo1": {
@@ -2298,7 +2298,7 @@
   },
   "lyrics1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "magok1": {
@@ -2353,7 +2353,7 @@
   },
   "melody-writing1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "melodyne1": {
@@ -2413,22 +2413,22 @@
   },
   "midi-arrangement1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "midi-composition1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "midi-groove1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "midirecord1": {
    "category": "recording",
-   "cta": "practice",
+   "cta": "recording",
    "price": "recording-pro"
   },
   "miryang1": {
@@ -2713,7 +2713,7 @@
   },
   "music-crowdfunding1": {
    "category": "business",
-   "cta": "production",
+   "cta": "release",
    "price": null
   },
   "music-distribution1": {
@@ -2773,7 +2773,7 @@
   },
   "music-producer1": {
    "category": "business",
-   "cta": "practice",
+   "cta": "lesson",
    "price": null
   },
   "music-publishing1": {
@@ -2783,7 +2783,7 @@
   },
   "music-scale1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "music-sns1": {
@@ -2798,7 +2798,7 @@
   },
   "music-theory1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "music-touring1": {
@@ -2888,7 +2888,7 @@
   },
   "neo-soul1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "neunggok1": {
@@ -2958,17 +2958,17 @@
   },
   "orchestral-sampling1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "orchestration1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "original-song1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "osan1": {
@@ -3103,7 +3103,7 @@
   },
   "podcast-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": null
   },
   "podcast-vocal1": {
@@ -3123,7 +3123,7 @@
   },
   "pop-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "pop-vocal1": {
@@ -6378,7 +6378,7 @@
   },
   "pre-chorus1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "preamp1": {
@@ -6583,7 +6583,7 @@
   },
   "rnb-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "rnb-vocal1": {
@@ -6598,7 +6598,7 @@
   },
   "rock-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-daylock"
   },
   "rock-vocal1": {
@@ -6643,7 +6643,7 @@
   },
   "sampling-guide1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "sancheong1": {
@@ -6883,7 +6883,7 @@
   },
   "singer-songwriter1": {
    "category": "recording",
-   "cta": "practice",
+   "cta": "recording",
    "price": "recording-pro"
   },
   "singer1": {
@@ -6973,12 +6973,12 @@
   },
   "songstructure1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "songwriting1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "soul-vocal1": {
@@ -6988,7 +6988,7 @@
   },
   "sound-design1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "sound-engineer1": {
@@ -7098,7 +7098,7 @@
   },
   "string-arrangement1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "strings-recording1": {
@@ -7193,7 +7193,7 @@
   },
   "synth-programming1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "taean1": {
@@ -7223,12 +7223,12 @@
   },
   "track-order1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "release",
    "price": "recording-daylock"
   },
   "transcription1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "transient1": {
@@ -7243,17 +7243,17 @@
   },
   "trap-production1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "trap1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "trot-music1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "trot-vocal1": {
@@ -7338,7 +7338,7 @@
   },
   "vintage-sound1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "lesson-monthly"
   },
   "viral-music-marketing1": {
@@ -7353,7 +7353,7 @@
   },
   "vocal-arrangement1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": "recording-pro"
   },
   "vocal-automation1": {
@@ -7513,7 +7513,7 @@
   },
   "vocal-producer1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "recording",
    "price": "recording-pro"
   },
   "vocal-range-extension1": {
@@ -7893,7 +7893,7 @@
   },
   "youtube-bgm1": {
    "category": "production",
-   "cta": "practice",
+   "cta": "lesson",
    "price": null
   },
   "youtube-music-channel1": {

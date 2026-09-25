@@ -4,6 +4,7 @@ date: 2026-04-07
 lastmod: 2026-09-01
 author: 스튜디오 놀
 category: 음악 제작
+cta: production
 tags:
   - AI 음악
   - AI 작곡

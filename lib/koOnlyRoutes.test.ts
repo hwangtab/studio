@@ -19,6 +19,7 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
   // 아님을 스스로 증명한다.
   const KO_ONLY_STATIC_PAGE_FILES: Record<string, string[]> = {
     artists: ['pages/[locale]/artists/index.tsx', 'pages/[locale]/artists/[slug].tsx'],
+    'crowdfunding-design': ['pages/[locale]/crowdfunding-design.tsx'],
     funding: ['pages/[locale]/funding/index.tsx', 'pages/[locale]/funding/[slug]/index.tsx'],
     guides: ['pages/[locale]/guides/[slug].tsx'],
   };
