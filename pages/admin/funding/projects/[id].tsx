@@ -418,7 +418,7 @@ export default function AdminFundingProjectDetailPage({ project, payout }: Admin
     }
     if (
       !window.confirm(
-        `종료하면 /funding/${project.slug} 페이지는 그대로 남지만 더 이상 새 후원을 받지 않습니다. 나중에 다시 열 수 있습니다. 종료할까요?`,
+        `종료하면 /funding/${project.slug} 페이지는 그대로 남지만 더 이상 새 후원을 받지 않습니다. 기존 후원자는 원래 마감일까지 후원 확인 페이지에서 스스로 취소할 수 있습니다. 나중에 다시 열 수 있습니다. 종료할까요?`,
       )
     ) {
       return;

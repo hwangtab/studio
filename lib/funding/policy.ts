@@ -1,4 +1,3 @@
-import type { ProjectState } from './projects';
 
 export const TOSS_HOLD_SECONDS = 900;
 export const MAX_QUANTITY = 10;
@@ -71,7 +70,13 @@ export type CancelEligibility =
  */
 export const assessSelfCancel = (input: {
   orderStatus: string;
-  projectState: ProjectState;
+  /**
+   * **날짜상** 모금이 끝났는가(`isPastFundingEnd`). 운영자가 누른 `status: 'closed'`는
+   * 여기 섞지 않는다 — 예전에는 `projectState !== 'live'`로 둘을 함께 봤고, 그래서
+   * 운영자가 문제를 발견해 종료를 누른 순간 기존 후원자의 셀프 취소가 끊겼다. 종료
+   * 버튼을 누르는 상황이 바로 환불이 필요한 상황이라, 그때 환불이 전부 수작업이 됐다.
+   */
+  fundingEnded: boolean;
   fulfillmentStatus: string;
   paymentMethod: string;
   /**
@@ -82,7 +87,7 @@ export const assessSelfCancel = (input: {
 }): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
   if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
-  if (input.projectState !== 'live') return { ok: false, code: 'project_not_live' };
+  if (input.fundingEnded) return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   // 약관 제8조 2항 — 내려받기가 시작된 뒤에는 청약철회가 제한된다(전자상거래법 제17조 2항 5호).
   // 배송 리워드의 `fulfilling`에 해당하는, 디지털 리워드의 '이미 건네준 상태'다.

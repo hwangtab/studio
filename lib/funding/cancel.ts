@@ -5,7 +5,7 @@ import { orders, refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
-import { computeProjectState } from './projects';
+import { isPastFundingEnd } from './projectState';
 import { getFundingProjectAsync } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
@@ -63,7 +63,8 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   if (input.requestedBy === 'customer') {
     const verdict = assessSelfCancel({
       orderStatus: order.status,
-      projectState: project ? computeProjectState(project, input.now) : 'closed',
+      // 프로젝트를 못 읽으면 마감으로 본다(fail-closed).
+      fundingEnded: project ? isPastFundingEnd(project, input.now) : true,
       fulfillmentStatus: pledge.fulfillmentStatus,
       paymentMethod: pledge.paymentMethod,
       downloadedAt: pledge.downloadedAt ?? null,
