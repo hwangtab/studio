@@ -89,9 +89,10 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   // Step 2: 날짜 · 슬롯
   const { minDate, maxDate } = useMemo(() => {
     const now = new Date();
-    const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    // 오늘부터 고를 수 있다. 지난 시각은 슬롯 API가 leadOk로 거른다(MIN_LEAD_HOURS = 0).
+    // 2026-09-25까지 '내일부터'로 묶여 있었다 — 당일 예약이 통째로 막혀 있었다.
     const last = new Date(now.getTime() + MAX_BOOK_DAYS * 24 * 60 * 60 * 1000);
-    return { minDate: kstDateString(tomorrow), maxDate: kstDateString(last) };
+    return { minDate: kstDateString(now), maxDate: kstDateString(last) };
   }, []);
 
   const [date, setDate] = useState('');

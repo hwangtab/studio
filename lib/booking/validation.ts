@@ -5,7 +5,13 @@ import { getMixingProduct, resolveSongCount } from './mixing-products';
 import { getProduct, resolveHours } from './products';
 import { productHours } from './products';
 
-export const MIN_LEAD_HOURS = 24;
+/**
+ * 예약 리드타임. **0 = 지금 이후면 언제든.** 2026-09-25까지 24였다 — 24시간 전에만 예약을
+ * 받아서 "오늘 밤에 쓰고 싶다"는 손님을 전부 돌려보내고 있었고, 슬롯 조회도 당일을 아예
+ * 막았다. 운영자가 알지 못한 채 깔려 있던 제약이다("예약은 언제든 받을 수 있어야 해").
+ * 녹음 예약도 같다. 지난 시간대만 막는다.
+ */
+export const MIN_LEAD_HOURS = 0;
 export const MAX_BOOK_DAYS = 60;
 
 /**
@@ -127,7 +133,7 @@ export const validateCreateBookingPayload = (body: unknown, now: Date): Result =
   const startAt = kstDateTime(b.date, b.startHour);
   if (Number.isNaN(startAt.getTime())) return { ok: false, message: '날짜가 올바르지 않습니다.' };
   if (startAt.getTime() - now.getTime() < MIN_LEAD_HOURS * 3600 * 1000)
-    return { ok: false, message: `예약은 ${MIN_LEAD_HOURS}시간 이후 시간대부터 가능합니다.` };
+    return { ok: false, message: MIN_LEAD_HOURS > 0 ? `예약은 ${MIN_LEAD_HOURS}시간 이후 시간대부터 가능합니다.` : '이미 지난 시간대입니다.' };
   if (daysUntilKst(now, startAt) > MAX_BOOK_DAYS)
     return { ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` };
 

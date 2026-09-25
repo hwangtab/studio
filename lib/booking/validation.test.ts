@@ -1,4 +1,5 @@
 import { normalizeKoreanMobile, validateCreateBookingPayload, validateCreateMixingOrderPayload } from './validation';
+import { kstDateTime } from './kst';
 
 const base = {
   productId: 'recording-pro', date: '2026-09-10', startHour: 14,
@@ -23,8 +24,14 @@ describe('validateCreateBookingPayload', () => {
   it('전화번호 형식 거부', () => {
     expect(validateCreateBookingPayload({ ...base, customerPhone: '02-123' }, now).ok).toBe(false);
   });
-  it('리드타임(24h) 미만 날짜 거부', () => {
-    expect(validateCreateBookingPayload({ ...base, date: '2026-09-01' }, now).ok).toBe(false);
+  it('지난 시각은 거부하고, 지금 이후면 당일이라도 받는다 (리드타임 0 — 2026-09-25)', () => {
+    // 2026-09-25까지 24시간 리드타임이라 당일 예약이 통째로 막혀 있었다. 이제 지난 시각만 막는다.
+    const now = kstDateTime('2026-09-10', 13); // KST 9/10 13:00
+    const base = { productId: 'recording-hourly', hours: 2, date: '2026-09-10', customerName: '홍길동',
+      customerPhone: '010-1234-5678', customerEmail: 'a@b.co', refundPolicyAgreed: true };
+    expect(validateCreateBookingPayload({ ...base, startHour: 12 }, now).ok).toBe(false); // 이미 지남
+    expect(validateCreateBookingPayload({ ...base, startHour: 14 }, now).ok).toBe(true);  // 1시간 뒤, 당일
+    expect(validateCreateBookingPayload({ ...base, startHour: 13 }, now).ok).toBe(true);  // 정각 시작 — 경계
   });
   it('60일 밖 날짜 거부', () => {
     expect(validateCreateBookingPayload({ ...base, date: '2026-12-25' }, now).ok).toBe(false);

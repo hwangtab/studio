@@ -58,10 +58,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const dayEnd = kstDateTime(date, closeHour);
   if (Number.isNaN(dayStart.getTime())) return res.status(400).json({ ok: false, message: '날짜가 올바르지 않습니다.' });
 
-  // 슬롯 조회는 날짜 단위 — 리드타임(24h)이 하루를 넘으므로 당일은 모든 슬롯이 항상
-  // 불가하다(24시간 연습실도 같다). 내일부터만 허용한다(validateCreateBookingPayload와 같은 창).
+  // 슬롯 조회는 날짜 단위. **당일도 연다** — 지난 시각은 buildDaySlots가 leadOk로 거른다.
+  // 2026-09-25까지 "당일은 조회 불가"로 막고 있었다(리드타임 24h 전제).
   const daysUntil = daysUntilKst(now, dayStart);
-  if (daysUntil < 1) return res.status(400).json({ ok: false, message: '오늘 이전이거나 당일은 조회할 수 없습니다.' });
+  if (daysUntil < 0) return res.status(400).json({ ok: false, message: '지난 날짜는 조회할 수 없습니다.' });
   if (daysUntil > MAX_BOOK_DAYS)
     return res.status(400).json({ ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` });
 
