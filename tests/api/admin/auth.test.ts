@@ -16,13 +16,18 @@ jest.mock('../../../lib/contracts/admin-rate-limit', () => ({
   resetAdminLoginRateLimit: jest.fn(),
 }));
 jest.mock('../../../lib/contracts/admin-auth', () => ({
+  authenticateAdminApi: jest.fn(),
   loginAdminSession: jest.fn(),
   logoutAdminSession: jest.fn(),
 }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { loginAdminSession, logoutAdminSession } from '../../../lib/contracts/admin-auth';
+import {
+  authenticateAdminApi,
+  loginAdminSession,
+  logoutAdminSession,
+} from '../../../lib/contracts/admin-auth';
 import {
   isAdminLoginThrottled,
   recordAdminLoginFailure,
@@ -47,8 +52,9 @@ const run = async (method: string) => {
 beforeEach(() => {
   jest.clearAllMocks();
   (isAdminLoginThrottled as jest.Mock).mockResolvedValue(false);
-  (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: false });
-  (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true });
+  (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: false, globalExceeded: false });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
+  (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (logoutAdminSession as jest.Mock).mockResolvedValue(undefined);
 });
 
@@ -75,15 +81,31 @@ describe('POST — 로그인', () => {
   });
 
   /**
-   * 이 IP가 이미 창 한도를 넘겼으면 비밀번호를 대조하기 전에 막는다 — 단일 IP 대입 차단.
+   * **이 라우트의 실제 벽.** 잠긴 IP는 비밀번호가 맞든 틀리든 대조 자체를 건너뛴다.
+   *
+   * 대조가 한도보다 먼저 오면 공격자는 429를 받으면서 무한히 추측하고, 맞힌 요청은
+   * 오답이 아니라 한도에 걸리지 않고 통과한다. 그래서 여기서 단언하는 것은 상태 코드가
+   * 아니라 **대조가 일어나지 않았다**는 사실이다.
    */
-  it('이 IP가 스로틀되면 비밀번호를 대조하지 않고 429', async () => {
+  it('잠긴 IP는 올바른 비밀번호여도 429이고, 대조 자체가 일어나지 않는다', async () => {
     (isAdminLoginThrottled as jest.Mock).mockResolvedValue(true);
+    // 맞는 비밀번호였더라도 — 이 목이 불리지 않는다는 것이 요점이다.
+    (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
     const res = await run('POST');
 
     expect(res.status).toHaveBeenCalledWith(429);
     expect(loginAdminSession).not.toHaveBeenCalled();
     expect(recordAdminLoginFailure).not.toHaveBeenCalled();
+  });
+
+  /** 오답 자체는 401이다 — 넘긴 것은 방금 이 시도이고, 다음 요청이 위에서 막힌다. */
+  it('오답으로 IP 한도를 막 넘긴 응답은 401이고, 다음 요청이 429가 된다', async () => {
+    (loginAdminSession as jest.Mock).mockResolvedValue({ ok: false });
+    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: true, globalExceeded: false });
+    expect((await run('POST')).status).toHaveBeenCalledWith(401);
+
+    (isAdminLoginThrottled as jest.Mock).mockResolvedValue(true);
+    expect((await run('POST')).status).toHaveBeenCalledWith(429);
   });
 
   /**
@@ -114,7 +136,7 @@ describe('POST — 로그인', () => {
   /** 오답이 전역 상한을 넘기면(IP 회전 신호) 401 대신 429. */
   it('오답이 전역 상한을 넘기면 429', async () => {
     (loginAdminSession as jest.Mock).mockResolvedValue({ ok: false });
-    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: true });
+    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: false, globalExceeded: true });
     const res = await run('POST');
     expect(res.status).toHaveBeenCalledWith(429);
   });
@@ -133,12 +155,33 @@ describe('DELETE — 로그아웃', () => {
   });
 });
 
+describe('GET — 지금 누구로 들어와 있는가', () => {
+  it('로그인한 세션이면 id와 이름을 돌려준다', async () => {
+    const res = await run('GET');
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith({ ok: true, id: 'kyungha', name: '황경하' });
+  });
+
+  it('로그인하지 않았으면 401이고 아무것도 알려 주지 않는다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
+    const res = await run('GET');
+    expect(res.status).toHaveBeenCalledWith(401);
+    expect(res.json).toHaveBeenCalledWith({ ok: false });
+  });
+
+  it('조회일 뿐이라 로그인을 시도하지도, 시도 제한을 보지도 않는다', async () => {
+    await run('GET');
+    expect(loginAdminSession).not.toHaveBeenCalled();
+    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
+  });
+});
+
 describe('그 외 메서드', () => {
-  it.each(['GET', 'PUT', 'PATCH'])('%s는 405이고 로그인을 시도하지 않는다', async (method) => {
+  it.each(['PUT', 'PATCH'])('%s는 405이고 로그인을 시도하지 않는다', async (method) => {
     const res = await run(method);
 
     expect(res.status).toHaveBeenCalledWith(405);
-    expect(res.setHeader).toHaveBeenCalledWith('Allow', 'POST, DELETE');
+    expect(res.setHeader).toHaveBeenCalledWith('Allow', 'GET, POST, DELETE');
     expect(loginAdminSession).not.toHaveBeenCalled();
   });
 });

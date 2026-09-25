@@ -62,7 +62,7 @@ const run = async (overrides: { method?: string; query?: Record<string, unknown>
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loadOrRenderContractPdf as jest.Mock).mockResolvedValue(Buffer.from('%PDF-1.4 fake'));
 });
 

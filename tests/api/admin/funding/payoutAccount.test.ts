@@ -32,7 +32,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
   jest.spyOn(console, 'error').mockImplementation(() => {});
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loadFundingPayoutAccount as jest.Mock).mockResolvedValue(ACCOUNT);
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
@@ -111,6 +111,7 @@ describe('복호화 실패', () => {
     await call();
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'funding_payout_account_view',
       'proj-1',
       'decrypt_failed',
@@ -128,6 +129,7 @@ describe('접속기록', () => {
     await call();
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'funding_payout_account_view',
       'proj-1',
       'success',
@@ -138,13 +140,21 @@ describe('접속기록', () => {
   it('등록된 계좌가 없던 조회도 남는다', async () => {
     (loadFundingPayoutAccount as jest.Mock).mockResolvedValue(null);
     await call();
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_payout_account_view', 'proj-1', 'not_found');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_payout_account_view', 'proj-1', 'not_found');
+  });
+
+
+  /** 기록의 수행자는 **지금 로그인한 사람**이다 — 예전엔 고정값 하나였다. */
+  it('지금 로그인한 사람이 기록된다 — 고정값이 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'jina', name: '지나' });
+    await call();
+    expect((recordAdminPrivacyAccess as jest.Mock).mock.calls[0][1]).toBe('jina');
   });
 
   it('실패한 조회도 남는다', async () => {
     (loadFundingPayoutAccount as jest.Mock).mockRejectedValue(new Error('DB 장애'));
     await call();
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_payout_account_view', 'proj-1', 'error');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_payout_account_view', 'proj-1', 'error');
   });
 
   it('인증 전에는 기록하지 않는다', async () => {

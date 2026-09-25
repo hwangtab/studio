@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 했다는 사실이 어디에도 안 보인다.
    */
   const log = (result: PrivacyAccessResult, rowCount?: number) =>
-    recordAdminPrivacyAccess(req, 'artist_supporter_export', slug, result, rowCount).catch(
+    recordAdminPrivacyAccess(req, auth.actor, 'artist_supporter_export', slug, result, rowCount).catch(
       (error: unknown) => {
         console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
       },

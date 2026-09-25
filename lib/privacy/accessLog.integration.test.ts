@@ -38,6 +38,8 @@ import {
 } from './accessLog';
 // eslint-disable-next-line import/first
 import { purgeExpiredFundingPersonalData } from '../funding/retention';
+// eslint-disable-next-line import/first
+import { listPrivacyAccessActors, listPrivacyAccessLogs } from './accessLogQuery';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -91,6 +93,7 @@ describe('기록', () => {
   it('IP를 얻지 못하면 null로 남는다 — 지어내지 않는다', async () => {
     await recordAdminPrivacyAccess(
       { headers: {}, socket: {} },
+      PRIVACY_ACTOR_ADMIN,
       'funding_payout_account_view',
       'proj-2',
       'success',
@@ -100,9 +103,25 @@ describe('기록', () => {
     expect(row.actor).toBe(PRIVACY_ACTOR_ADMIN);
   });
 
+  /**
+   * 이 함수가 존재하는 이유다 — 라우트가 인증한 사람이 그대로 행에 남아야,
+   * 주민등록번호·계좌·CSV를 **누가** 열었는지가 사후에 읽힌다.
+   */
+  it('가드가 돌려준 사람이 그대로 수행자로 남는다', async () => {
+    await recordAdminPrivacyAccess(
+      { headers: {}, socket: {} },
+      'kyungha',
+      'funding_resident_number_view',
+      'proj-2',
+      'success',
+    );
+    expect((await rows())[0].actor).toBe('kyungha');
+  });
+
   it('요청의 x-vercel-forwarded-for에서 IP를 뽑는다', async () => {
     await recordAdminPrivacyAccess(
       { headers: { 'x-vercel-forwarded-for': '198.51.100.9' }, socket: {} },
+      PRIVACY_ACTOR_ADMIN,
       'funding_resident_number_view',
       'proj-3',
       'success',
@@ -250,6 +269,7 @@ describe('다운로드 건수', () => {
   it('내보낸 건수가 행에 남는다', async () => {
     await recordAdminPrivacyAccess(
       { headers: {}, socket: {} },
+      PRIVACY_ACTOR_ADMIN,
       'funding_pledge_export',
       'demo',
       'success',
@@ -260,7 +280,7 @@ describe('다운로드 건수', () => {
   });
 
   it('한 건을 여는 조회에는 건수가 없다 — 0이 아니라 null이다', async () => {
-    await recordAdminPrivacyAccess({ headers: {}, socket: {} }, 'funding_payout_account_view', 'proj-9', 'success');
+    await recordAdminPrivacyAccess({ headers: {}, socket: {} }, PRIVACY_ACTOR_ADMIN, 'funding_payout_account_view', 'proj-9', 'success');
     expect((await rows())[0].rowCount).toBeNull();
   });
 
@@ -279,5 +299,62 @@ describe('다운로드 건수', () => {
     expect(dump).not.toContain('김후원');
     expect(dump).not.toContain('010-1111-2222');
     expect(dump).toContain('"rowCount":3');
+  });
+});
+
+/**
+ * 읽는 경로. 기록만 쌓이고 볼 길이 없으면 사람별로 나눈 효과를 확인할 수 없다.
+ */
+describe('접속기록 조회', () => {
+  const seed = async () => {
+    const entries = [
+      { actor: 'kyungha', action: 'funding_resident_number_view' as const, at: new Date('2026-09-20T00:00:00Z') },
+      { actor: 'jina', action: 'funding_payout_account_view' as const, at: new Date('2026-09-21T00:00:00Z') },
+      { actor: 'kyungha', action: 'funding_payout_account_view' as const, at: new Date('2026-09-22T00:00:00Z') },
+    ];
+    for (const e of entries) {
+      await recordPrivacyAccess({ ...e, targetId: 'proj-1', result: 'success', ip: null });
+    }
+  };
+
+  it('최신순으로 돌려준다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs();
+    expect(rowsOut.map((r) => r.at)).toEqual([
+      '2026-09-22T00:00:00.000Z',
+      '2026-09-21T00:00:00.000Z',
+      '2026-09-20T00:00:00.000Z',
+    ]);
+  });
+
+  it('수행자로 거른다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs({ actor: 'jina' });
+    expect(rowsOut).toHaveLength(1);
+    expect(rowsOut[0].actor).toBe('jina');
+  });
+
+  it('행위로 거른다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs({ action: 'funding_payout_account_view' });
+    expect(rowsOut.map((r) => r.actor).sort()).toEqual(['jina', 'kyungha']);
+  });
+
+  it('둘을 함께 걸면 둘 다 맞는 행만 남는다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs({ actor: 'kyungha', action: 'funding_payout_account_view' });
+    expect(rowsOut).toHaveLength(1);
+    expect(rowsOut[0].at).toBe('2026-09-22T00:00:00.000Z');
+  });
+
+  it('상한만큼만 돌려준다', async () => {
+    await seed();
+    expect(await listPrivacyAccessLogs({}, 2)).toHaveLength(2);
+  });
+
+  /** 드롭다운 목록은 계정 설정이 아니라 기록에 실제로 있는 값에서 뽑는다. */
+  it('수행자 목록은 기록에 남은 값에서 뽑는다', async () => {
+    await seed();
+    expect(await listPrivacyAccessActors()).toEqual(['jina', 'kyungha']);
   });
 });

@@ -51,7 +51,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 보증이고, 그 보증은 라우트 자신이 지고 있어야 테스트로 고정할 수 있다.
    */
   const log = (result: PrivacyAccessResult) =>
-    recordAdminPrivacyAccess(req, 'funding_resident_number_view', id, result).catch((error: unknown) => {
+    recordAdminPrivacyAccess(req, auth.actor, 'funding_resident_number_view', id, result).catch((error: unknown) => {
       console.error('[privacy] 접속기록 호출 실패 — 조회는 계속됩니다', error);
     });
 

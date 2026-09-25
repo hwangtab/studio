@@ -1,8 +1,14 @@
 import { getIronSession, IronSession, SessionOptions } from 'iron-session';
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
+import { ADMIN_FALLBACK_ID, ADMIN_FALLBACK_NAME } from './admin-accounts';
+
 export interface AdminSessionData {
   isLoggedIn?: boolean;
+  /** 로그인에 쓰인 계정의 id. 접속기록의 actor가 되는 값이다. */
+  adminId?: string;
+  /** 화면 상단에 띄우는 표시 이름. 기록에는 담지 않는다. */
+  adminName?: string;
 }
 
 const SESSION_HOURS = 24;
@@ -61,4 +67,33 @@ export const getAdminSessionFromContext = async (
 
 export const isAdminSessionValid = (session: IronSession<AdminSessionData>): boolean => {
   return Boolean(session.isLoggedIn);
+};
+
+export interface AdminIdentity {
+  /** 접속기록에 남길 값. */
+  actor: string;
+  /** 화면에 띄울 이름. */
+  name: string;
+}
+
+/**
+ * 이 세션이 가리키는 사람. 로그인하지 않았으면 null.
+ *
+ * **옛 세션 호환이 여기 한 곳에 있다.** 계정을 사람별로 나누기 전에 발급된 쿠키는
+ * `isLoggedIn`만 있고 `adminId`가 없다. 봉인 유효기간이 24시간이라 배포 직후 하루 동안은
+ * 그런 쿠키를 든 사람들이 돌아다니는데, 그들을 로그아웃시키면 배포가 곧 전원 재로그인이
+ * 된다. 그래서 유효로 보되 **수행자는 `admin`으로 적는다** — 누구인지 모르는 것이 사실이고,
+ * 모르는 것을 지어내지 않는다. 하루가 지나면 이 갈래로 오는 세션은 사라진다.
+ *
+ * `ADMIN_ACCOUNTS`를 설정하지 않은 배포의 세션도 같은 값으로 떨어진다(그쪽은 로그인
+ * 시점에 id `admin`이 실제로 담긴다).
+ */
+export const adminSessionIdentity = (
+  session: IronSession<AdminSessionData>,
+): AdminIdentity | null => {
+  if (!isAdminSessionValid(session)) return null;
+  return {
+    actor: session.adminId || ADMIN_FALLBACK_ID,
+    name: session.adminName || ADMIN_FALLBACK_NAME,
+  };
 };

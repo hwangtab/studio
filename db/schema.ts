@@ -1168,13 +1168,18 @@ export const privacyAccessLogs = sqliteTable(
     /**
      * 수행자.
      *
-     * **이 저장소에는 관리자 개인을 가리키는 식별자가 없다.** 관리자 인증은
-     * `lib/contracts/admin-auth.ts`의 단일 비밀번호(`ADMIN_PASSWORD`) 하나뿐이고,
-     * `authenticateAdminApi`는 `{ ok: true }`만 돌려준다 — 계정도, 사용자 id도, 이름도
-     * 없다. 그래서 관리자 경로의 이 값은 고정 문자열 `admin`이다(`PRIVACY_ACTOR_ADMIN`).
-     * 여러 사람이 같은 비밀번호를 쓰면 이 기록으로는 누구인지 가릴 수 없다는 뜻이며,
-     * 그것을 아는 척하지 않으려고 컬럼을 비워 두는 대신 사실대로 한 값을 적는다.
-     * 관리자 계정이 사람별로 갈리면 그때 그 식별자를 여기에 넣는다.
+     * 관리자 계정은 사람별로 갈린다(`lib/contracts/admin-accounts.ts` — 환경변수
+     * `ADMIN_ACCOUNTS`에 사람마다 다른 비밀번호를 두고, 맞은 비밀번호가 곧 신원이다).
+     * 가드가 성공에 `actor`를 실어 주고 라우트가 그 값을 그대로 여기에 적으므로,
+     * 주민등록번호·정산 계좌·CSV를 **누가** 열었는지가 남는다. 담는 것은 id뿐이다 —
+     * 이름·이메일을 여기 적으면 접속기록이 개인정보 사본이 된다.
+     *
+     * **한계 하나.** `ADMIN_ACCOUNTS`를 설정하지 않은 배포는 여전히 비밀번호가 하나이고,
+     * 그때 이 값은 고정 문자열 `admin`이다(`PRIVACY_ACTOR_ADMIN`). 계정을 나누기 전에
+     * 발급된 옛 세션 쿠키도 같은 값으로 떨어진다 — 누구인지 모르는 것이 사실이라
+     * 지어내지 않는다.
+     *
+     * 개설자 경로는 `creator:<id>` 꼴이다(`privacyCreatorActor`).
      */
     actor: text('actor').notNull(),
     action: text('action', { enum: privacyAccessActionEnum }).notNull(),
@@ -1200,6 +1205,8 @@ export const privacyAccessLogs = sqliteTable(
     // 2년 경과분 삭제(cron/purge-funding)와 기간별 열람이 전부 at 기준이다.
     atIdx: index('privacy_access_logs_at_idx').on(t.at),
     targetIdx: index('privacy_access_logs_target_idx').on(t.targetId),
+    // 접속기록 화면(/admin/privacy-logs)이 사람별로 걸러 본다 — 없으면 풀스캔이다.
+    actorIdx: index('privacy_access_logs_actor_idx').on(t.actor),
   }),
 );
 

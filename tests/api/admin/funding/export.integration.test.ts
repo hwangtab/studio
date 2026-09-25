@@ -8,7 +8,7 @@ import * as schema from '../../../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn().mockResolvedValue({ ok: true }) }));
+jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn().mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' }) }));
 
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';

@@ -274,11 +274,12 @@ export type RecordFundingPayoutResult =
  */
 const residentNumberReadable = async (
   projectId: string,
+  actor: string,
   ip: string | null,
 ): Promise<DecryptCheckResult> => {
   const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
-      actor: PRIVACY_ACTOR_ADMIN,
+      actor,
       action: 'funding_resident_number_decrypt_check',
       targetId: projectId,
       result,
@@ -346,10 +347,14 @@ const residentNumberReadable = async (
  */
 type DecryptCheckResult = { ok: true } | { ok: false; cryptoCode: FieldCryptoErrorCode | 'unknown' };
 
-const payoutAccountReadable = async (projectId: string, ip: string | null): Promise<DecryptCheckResult> => {
+const payoutAccountReadable = async (
+  projectId: string,
+  actor: string,
+  ip: string | null,
+): Promise<DecryptCheckResult> => {
   const log = (result: 'success' | 'not_found' | 'decrypt_failed' | 'error') =>
     recordPrivacyAccess({
-      actor: PRIVACY_ACTOR_ADMIN,
+      actor,
       action: 'funding_payout_account_decrypt_check',
       targetId: projectId,
       result,
@@ -436,6 +441,15 @@ export const recordFundingPayout = async (
    * null로 남는다 — 모르는 것을 지어내지 않는다.
    */
   ip: string | null = null,
+  /**
+   * 이 기록을 요청한 사람(가드가 돌려준 `auth.actor`). 복호화 점검이 남기는 접속기록의
+   * 수행자다 — 여기서 고정값을 쓰면 정산 경로만 누가 열었는지 모르는 채 남는다.
+   * 요청 밖에서 부르는 경로(테스트·스크립트)는 기본값 `admin`으로 떨어진다.
+   *
+   * **기존 인자 뒤에 둔다.** 앞에 끼우면 `ip`를 네 번째로 넘기던 코드가 조용히 IP를
+   * 수행자로 적는다 — 타입이 둘 다 문자열이라 컴파일러도 못 잡는다.
+   */
+  actor: string = PRIVACY_ACTOR_ADMIN,
 ): Promise<RecordFundingPayoutResult> => {
   const preview = await buildFundingPayoutPreview(projectId);
   if (!preview) return { ok: false, code: 'not_found' };
@@ -443,14 +457,14 @@ export const recordFundingPayout = async (
   if (!preview.closed) return { ok: false, code: 'not_closed' };
   if (!preview.hasPayoutAccount) return { ok: false, code: 'no_payout_account' };
   // 계좌는 세금 구분과 무관하게 필요하다 — 원천징수든 사업자든 돈은 계좌로 간다.
-  const accountRead = await payoutAccountReadable(projectId, ip);
+  const accountRead = await payoutAccountReadable(projectId, actor, ip);
   if (!accountRead.ok) {
     return { ok: false, code: 'payout_account_unreadable', cryptoCode: accountRead.cryptoCode };
   }
   if (!preview.taxType) return { ok: false, code: 'no_tax_type' };
   if (preview.taxType === 'withholding') {
     if (!preview.hasResidentNumber) return { ok: false, code: 'no_resident_number' };
-    const residentRead = await residentNumberReadable(projectId, ip);
+    const residentRead = await residentNumberReadable(projectId, actor, ip);
     if (!residentRead.ok) {
       return { ok: false, code: 'resident_number_unreadable', cryptoCode: residentRead.cryptoCode };
     }

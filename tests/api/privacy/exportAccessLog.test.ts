@@ -110,7 +110,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   jest.spyOn(console, 'error').mockImplementation(() => {});
   jest.spyOn(console, 'warn').mockImplementation(() => {});
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
   (recordPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
@@ -127,6 +127,7 @@ describe('펀딩 주문 CSV (pages/api/admin/funding/export.ts)', () => {
     expect(r.status).toBe(200);
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'funding_pledge_export',
       'demo',
       'success',
@@ -134,9 +135,20 @@ describe('펀딩 주문 CSV (pages/api/admin/funding/export.ts)', () => {
     );
   });
 
+
+  /**
+   * 기록의 수행자는 **지금 로그인한 사람**이어야 한다. 예전엔 `recordAdminPrivacyAccess`가
+   * 고정값을 채워서, 어느 경로든 `admin` 한 값만 남았다.
+   */
+  it('지금 로그인한 사람이 기록된다 — 고정값이 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'jina', name: '지나' });
+    await call(fundingExport, { slug: 'demo' });
+    expect((recordAdminPrivacyAccess as jest.Mock).mock.calls[0][1]).toBe('jina');
+  });
+
   it('전체 내려받기의 대상은 all이다', async () => {
     await call(fundingExport, {});
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'funding_pledge_export', 'all', 'success', 2);
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_pledge_export', 'all', 'success', 2);
   });
 
   it('내보낸 값은 기록에 담기지 않는다', async () => {
@@ -181,11 +193,20 @@ describe('매출장부 CSV (pages/api/admin/orders/export.ts)', () => {
     expect(r.status).toBe(200);
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'sales_ledger_export',
       '2026-09-01_2026-09-30',
       'success',
       3,
     );
+  });
+
+
+  /** 기록의 수행자는 **지금 로그인한 사람**이다 — 예전엔 어느 경로든 고정값 하나였다. */
+  it('지금 로그인한 사람이 기록된다 — 고정값이 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'jina', name: '지나' });
+    await call(salesLedgerExport, RANGE);
+    expect((recordAdminPrivacyAccess as jest.Mock).mock.calls[0][1]).toBe('jina');
   });
 
   it('내보낸 값은 기록에 담기지 않는다', async () => {
@@ -213,6 +234,7 @@ describe('매출장부 CSV (pages/api/admin/orders/export.ts)', () => {
     expect(r.status).toBe(500);
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'sales_ledger_export',
       '2026-09-01_2026-09-30',
       'error',
@@ -239,11 +261,20 @@ describe('아티스트 후원자 CSV (pages/api/admin/artists/[slug]/supporters-
     expect(r.status).toBe(200);
     expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(
       expect.anything(),
+      'kyungha',
       'artist_supporter_export',
       'someone',
       'success',
       1,
     );
+  });
+
+
+  /** 기록의 수행자는 **지금 로그인한 사람**이다 — 예전엔 어느 경로든 고정값 하나였다. */
+  it('지금 로그인한 사람이 기록된다 — 고정값이 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'jina', name: '지나' });
+    await call(supportersExport, { slug: 'someone' });
+    expect((recordAdminPrivacyAccess as jest.Mock).mock.calls[0][1]).toBe('jina');
   });
 
   it('내보낸 값은 기록에 담기지 않는다', async () => {
@@ -410,7 +441,15 @@ describe('관리자 계약서 PDF (pages/api/contracts/[id]/pdf.ts)', () => {
   it('내려받으면 계약 id가 기록에 남는다', async () => {
     const r = await call(contractPdf, { id: 'c1' });
     expect(r.status).toBe(200);
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'contract_pdf_download', 'c1', 'success');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'contract_pdf_download', 'c1', 'success');
+  });
+
+
+  /** 기록의 수행자는 **지금 로그인한 사람**이다 — 예전엔 어느 경로든 고정값 하나였다. */
+  it('지금 로그인한 사람이 기록된다 — 고정값이 아니다', async () => {
+    (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'jina', name: '지나' });
+    await call(contractPdf, { id: 'c1' });
+    expect((recordAdminPrivacyAccess as jest.Mock).mock.calls[0][1]).toBe('jina');
   });
 
   it('이름은 기록에 담기지 않는다', async () => {
@@ -430,14 +469,14 @@ describe('관리자 계약서 PDF (pages/api/contracts/[id]/pdf.ts)', () => {
     mockContract(undefined);
     const r = await call(contractPdf, { id: 'c1' });
     expect(r.status).toBe(404);
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'contract_pdf_download', 'c1', 'not_found');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'contract_pdf_download', 'c1', 'not_found');
   });
 
   it('PDF 생성이 실패하면 실패한 시도로 남는다', async () => {
     (loadOrRenderContractPdf as jest.Mock).mockRejectedValue(new Error('Chromium 실패'));
     const r = await call(contractPdf, { id: 'c1' });
     expect(r.status).toBe(500);
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'contract_pdf_download', 'c1', 'error');
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'contract_pdf_download', 'c1', 'error');
   });
 
   it('기록이 실패해도 다운로드는 정상이다', async () => {

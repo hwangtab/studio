@@ -1,73 +1,90 @@
 import { createHash, timingSafeEqual } from 'crypto';
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
-import { getAdminSession, getAdminSessionFromContext, isAdminSessionValid } from './admin-session';
-
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+import {
+  resolveAdminAccounts,
+  type AdminAccount,
+} from './admin-accounts';
+import {
+  adminSessionIdentity,
+  getAdminSession,
+  getAdminSessionFromContext,
+  type AdminIdentity,
+} from './admin-session';
 
 /**
- * 관리자 비밀번호의 최소 길이.
+ * 기동 시점에 한 번 읽는다 — 설정이 잘못됐으면 여기서 던진다.
  *
- * 이 값 하나가 모든 계약의 개인정보를 지키는 유일한 자물쇠이므로 짧은 값을 허용하지 않는다.
- * 대소문자·숫자·기호를 섞은 13자는 조합이 10^23을 넘고, 로그인은 10분에 10회로 제한되므로
- * 무작위 대입으로는 사실상 뚫리지 않는다. 실제 위험은 길이가 아니라 짐작 가능한 값
- * (사이트명, 연도, 흔한 단어)이며 그것은 길이로 막을 수 없다.
+ * 로그인이 조용히 실패하게 두면 운영자는 자기 비밀번호를 의심하고, 두 사람이 같은
+ * 비밀번호를 쓰는 상태로 계속 돌면 접속기록이 엉뚱한 사람을 가리킨다. 자세한 규칙은
+ * `admin-accounts.ts`에 있다.
  */
-const MIN_PASSWORD_LENGTH = 13;
+const ADMIN_ACCOUNTS: readonly AdminAccount[] = resolveAdminAccounts();
+
+const digest = (value: string): Buffer => createHash('sha256').update(value, 'utf8').digest();
 
 /**
- * 길이가 달라도 상수 시간에 비교하기 위해 양쪽을 SHA-256으로 고정 길이화한 뒤
- * timingSafeEqual로 맞춘다(문자 단위 루프는 길이 차이가 실행 시간에 드러난다).
+ * 맞은 비밀번호의 주인을 찾는다. 없으면 null.
+ *
+ * **일찍 빠져나가지 않는다.** 첫 일치에서 멈추면 목록 앞쪽 계정과 뒤쪽 계정의 응답 시간이
+ * 갈려, 어느 계정이 존재하는지가 시간으로 샌다. 길이가 달라도 상수 시간에 비교하기 위해
+ * 양쪽을 SHA-256으로 고정 길이화한 뒤 timingSafeEqual로 맞춘다(문자 단위 루프는 길이
+ * 차이가 실행 시간에 드러난다).
  */
-export const isAdminPasswordValid = (password: string | string[] | undefined): boolean => {
-  if (!ADMIN_PASSWORD || ADMIN_PASSWORD.length < MIN_PASSWORD_LENGTH) {
-    console.error(
-      `[admin-auth] ADMIN_PASSWORD가 설정되지 않았거나 ${MIN_PASSWORD_LENGTH}자 미만입니다.`,
-    );
-    return false;
-  }
-  if (typeof password !== 'string' || password === '') {
-    return false;
-  }
+export const matchAdminAccount = (password: string | string[] | undefined): AdminAccount | null => {
+  if (ADMIN_ACCOUNTS.length === 0) return null;
+  if (typeof password !== 'string' || password === '') return null;
 
-  const digest = (value: string): Buffer => createHash('sha256').update(value, 'utf8').digest();
-  return timingSafeEqual(digest(ADMIN_PASSWORD), digest(password));
+  const given = digest(password);
+  let matched: AdminAccount | null = null;
+  for (const account of ADMIN_ACCOUNTS) {
+    if (timingSafeEqual(digest(account.password), given)) matched = account;
+  }
+  return matched;
 };
+
+/** 비밀번호가 등록된 계정 중 하나와 맞는가. 누구인지까지 필요하면 matchAdminAccount를 쓴다. */
+export const isAdminPasswordValid = (password: string | string[] | undefined): boolean =>
+  matchAdminAccount(password) !== null;
+
+/**
+ * 인증 결과.
+ *
+ * 성공에 **누구인지**가 실린다 — 접속기록(`privacy_access_logs.actor`)이 이 값을 받는다.
+ * 실패는 예전 그대로다(이유를 돌려주지 않는다).
+ */
+export type AdminAuthResult = ({ ok: true } & AdminIdentity) | { ok: false };
 
 export const authenticateAdminRequest = async (
   context: GetServerSidePropsContext,
-): Promise<{ ok: true } | { ok: false }> => {
-  const session = await getAdminSessionFromContext(context);
-  if (isAdminSessionValid(session)) {
-    return { ok: true };
-  }
-  return { ok: false };
+): Promise<AdminAuthResult> => {
+  const identity = adminSessionIdentity(await getAdminSessionFromContext(context));
+  return identity ? { ok: true, ...identity } : { ok: false };
 };
 
 export const authenticateAdminApi = async (
   req: NextApiRequest,
   res: NextApiResponse,
-): Promise<{ ok: true } | { ok: false }> => {
-  const session = await getAdminSession(req, res);
-  if (isAdminSessionValid(session)) {
-    return { ok: true };
-  }
-  return { ok: false };
+): Promise<AdminAuthResult> => {
+  const identity = adminSessionIdentity(await getAdminSession(req, res));
+  return identity ? { ok: true, ...identity } : { ok: false };
 };
 
 export const loginAdminSession = async (
   req: NextApiRequest,
   res: NextApiResponse,
-): Promise<{ ok: true } | { ok: false }> => {
-  const password = req.headers['x-admin-password'];
-  if (!isAdminPasswordValid(password)) {
+): Promise<AdminAuthResult> => {
+  const account = matchAdminAccount(req.headers['x-admin-password']);
+  if (!account) {
     return { ok: false };
   }
 
   const session = await getAdminSession(req, res);
   session.isLoggedIn = true;
+  session.adminId = account.id;
+  session.adminName = account.name;
   await session.save();
-  return { ok: true };
+  return { ok: true, actor: account.id, name: account.name };
 };
 
 export const logoutAdminSession = async (

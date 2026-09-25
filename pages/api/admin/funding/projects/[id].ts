@@ -152,6 +152,7 @@ const UNREADABLE_FIELD = {
  */
 const notifyPayout = async (
   req: NextApiRequest,
+  actor: string,
   projectId: string,
   payout: FundingProjectPayout,
   what: '정산 기록' | '정산 지급',
@@ -172,6 +173,7 @@ const notifyPayout = async (
      */
     await recordAdminPrivacyAccess(
       req,
+      actor,
       'funding_payout_account_email',
       projectId,
       account === null ? 'not_found' : account.bankName === null ? 'decrypt_failed' : 'success',
@@ -487,7 +489,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let result: RecordFundingPayoutResult;
     try {
       // IP는 접속기록용이다 — 정산 기록은 주민등록번호를 한 번 복호화해 본다(payout.ts).
-      result = await recordFundingPayout(id, now, b.expectedNetAmount, getClientIp(req));
+      result = await recordFundingPayout(id, now, b.expectedNetAmount, getClientIp(req), auth.actor);
     } catch (error: unknown) {
       console.error(`[funding] recordFundingPayout 예외 (id=${id}):`, error);
       return res.status(500).json({ ok: false, message: '정산을 기록하지 못했습니다.' });
@@ -517,7 +519,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const mapped = PAYOUT_RECORD_ERROR[result.code];
       return res.status(mapped.status).json({ ok: false, code: result.code, message: mapped.message });
     }
-    const warnings = await notifyPayout(req, id, result.payout, '정산 기록');
+    const warnings = await notifyPayout(req, auth.actor, id, result.payout, '정산 기록');
     return res.status(201).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
   }
 
@@ -538,7 +540,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const done = await markFundingPayoutPaid(preview.recorded.id, memo, now);
       if (!done) return res.status(409).json({ ok: false, message: '이미 지급 완료로 기록된 정산입니다.' });
-      const warnings = await notifyPayout(req, id, { ...preview.recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
+      const warnings = await notifyPayout(req, auth.actor, id, { ...preview.recorded, status: 'paid', paidAt: now, memo }, '정산 지급');
       return res.status(200).json({ ok: true, ...(warnings.length > 0 ? { warnings } : {}) });
     } catch (error: unknown) {
       console.error(`[funding] markFundingPayoutPaid 예외 (id=${id}):`, error);

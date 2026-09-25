@@ -40,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   /** 기록 경로의 예외가 다운로드를 끊지 않게 한 겹 더 받는다(payout-account.ts와 같은 이유). */
   const log = (result: PrivacyAccessResult) =>
-    recordAdminPrivacyAccess(req, 'contract_pdf_download', id, result).catch((error: unknown) => {
+    recordAdminPrivacyAccess(req, auth.actor, 'contract_pdf_download', id, result).catch((error: unknown) => {
       console.error('[privacy] 접속기록 호출 실패 — 다운로드는 계속됩니다', error);
     });
 
