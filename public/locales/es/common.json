@@ -576,7 +576,10 @@
       "vacancyLabel": "Disponibilidad actual",
       "vacancyValue": "Disponible ahora",
       "vacancyFull": "Completo",
-      "asOf": "Actualizado el {{date}}"
+      "asOf": "Actualizado el {{date}}",
+      "hourlyLabel": "Uso por horas",
+      "hourlyUnit": "/ hora · IVA incluido",
+      "hourlySub": "Desde 1 hora · 24/7 · reserva el mismo día"
     },
     "midCta": {
       "note": "Las salas suelen estar completas, por lo que mantenemos una lista de espera. Escríbenos y te avisaremos por orden en cuanto se libere una sala.",
@@ -830,6 +833,14 @@
         {
           "q": "¿Se puede pernoctar en la sala de ensayo?",
           "a": "Sí — puede quedarse para sesiones largas, preparación de shows o grabaciones nocturnas. Con cerradura individual, climatización, ducha privada 24/7 y servicios del lobby, la pernocta es cómoda. Detalles durante la consulta."
+        },
+        {
+          "q": "¿Se puede alquilar por horas?",
+          "a": "Sí. ₩4.400 por hora (IVA incluido), de 1 a 8 horas. Abierto 24/7 y se puede reservar el mismo día. Elige un horario libre en la página de reservas, paga y queda confirmado."
+        },
+        {
+          "q": "¿Cómo reservo por horas y qué pasa si cancelo?",
+          "a": "Elige fecha y hora en la página de reservas y paga con Toss. Al confirmarse recibirás por correo los datos de puerta, sala y Wi-Fi. Con 2+ días de antelación reembolso total, el día anterior 50%, el mismo día sin reembolso."
         }
       ]
     },
@@ -844,6 +855,16 @@
     },
     "relatedGuides": {
       "title": "Guías relacionadas con salas de práctica"
+    },
+    "hourly": {
+      "title": "También disponible por horas",
+      "subtitle": "Para probar antes de la residencia mensual o cuando solo necesitas unas sesiones. Elige un horario libre en la web y paga al momento.",
+      "points": [
+        "₩{{price}} por hora, IVA incluido",
+        "De 1 a 8 horas · 24/7 · reserva el mismo día",
+        "Los datos de puerta, sala y Wi-Fi llegan por correo al pagar"
+      ],
+      "refund": "Cancelación con 2+ días: reembolso total; el día anterior: 50%; el mismo día: sin reembolso."
     }
   },
   "studioInfo": {

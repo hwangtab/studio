@@ -1,6 +1,6 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { PRACTICE_ROOM_MONTHLY_PRICE } from '../../data/pricing';
+import { PRACTICE_ROOM_HOURLY_PRICE_INCL, PRACTICE_ROOM_MONTHLY_PRICE } from '../../data/pricing';
 import { DEFAULT_SCHEMA_IMAGE, getSchemaLanguage } from './shared';
 
 export const generatePracticeRoomMonthlyRentSchema = (
@@ -15,7 +15,8 @@ export const generatePracticeRoomMonthlyRentSchema = (
   // 유지하고, 그 외 locale은 자연스러운 영어/현지 표현으로 출력해 Google가
   // /en/practice-room 등 외국어 페이지에서 한글 잔재로 인한 페널티를 받지
   // 않도록 한다.
-  type ServiceCopy = { name: string; serviceType: string; description: string; offerName: string };
+  // hourlyOfferName: 시간제 오퍼명(2026-09-25). VAT 포함 소비자가와 짝.
+  type ServiceCopy = { name: string; serviceType: string; description: string; offerName: string; hourlyOfferName: string };
   const copyByLocale: Record<string, ServiceCopy> = {
     ko: {
       name: '음악연습실 월세 입주 — 스튜디오 놀',
@@ -23,6 +24,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         '서울 은평구 연신내역 도보 5분 거리 24시간 음악연습실 월세 입주 프로그램. 보증금 없음, 최소 1개월, 개별 도어록·냉난방·방음 설계 포함.',
       offerName: '음악연습실 월세 입주 (개인 연습실)',
+      hourlyOfferName: '시간제 연습실 (시간당, 부가세 포함)',
     },
     en: {
       name: 'Monthly Practice Room Residency — Studio NOL',
@@ -30,6 +32,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         '24/7 soundproof music practice room in Eunpyeong-gu, Seoul — 5 min from Yeonsinnae Station. No deposit, 1-month minimum, private door lock, climate control, and studio-grade acoustic isolation.',
       offerName: 'Monthly Practice Room Residency (Private Room)',
+      hourlyOfferName: 'Hourly practice room (VAT included)',
     },
     zh: {
       name: '音乐练习室月租入住 — Studio NOL',
@@ -37,6 +40,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         '首尔恩平区延新内站步行5分钟，24小时音乐练习室月租入住。无押金，最短1个月，独立门锁、冷暖空调、专业隔音设计。',
       offerName: '音乐练习室月租入住（个人练习室）',
+      hourlyOfferName: '按小时练习室（含税）',
     },
     es: {
       name: 'Sala de ensayo musical con alquiler mensual — Studio NOL',
@@ -44,6 +48,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         'Sala de ensayo musical 24/7 en Eunpyeong-gu, Seúl, a 5 min de la estación Yeonsinnae. Sin depósito, mínimo 1 mes, cerradura privada, climatización y aislamiento acústico profesional.',
       offerName: 'Alquiler mensual de sala de ensayo (sala privada)',
+      hourlyOfferName: 'Sala de práctica por hora (IVA incluido)',
     },
     vi: {
       name: 'Phòng tập nhạc thuê tháng — Studio NOL',
@@ -51,6 +56,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         'Phòng tập nhạc cách âm 24/7 ở Eunpyeong-gu, Seoul, 5 phút từ ga Yeonsinnae. Không cọc, thuê tối thiểu 1 tháng, khóa riêng, điều hòa và cách âm chuyên nghiệp.',
       offerName: 'Phòng tập nhạc thuê tháng (phòng riêng)',
+      hourlyOfferName: 'Phòng tập theo giờ (đã gồm VAT)',
     },
     th: {
       name: 'ห้องซ้อมดนตรีเช่ารายเดือน — Studio NOL',
@@ -58,6 +64,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         'ห้องซ้อมดนตรีกันเสียง 24 ชม. ใน Eunpyeong-gu กรุงโซล ห่างจากสถานี Yeonsinnae 5 นาที ไม่มีค่ามัดจำ เช่าขั้นต่ำ 1 เดือน มีล็อกประตูส่วนตัว ปรับอุณหภูมิ และกันเสียงระดับสตูดิโอ',
       offerName: 'ห้องซ้อมดนตรีรายเดือน (ห้องส่วนตัว)',
+      hourlyOfferName: 'ห้องซ้อมรายชั่วโมง (รวม VAT)',
     },
     uz: {
       name: 'Oylik musiqa mashq xonasi — Studio NOL',
@@ -65,6 +72,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       description:
         '24/7 tovush izolyatsiyali musiqa mashq xonasi, Eunpyeong-gu, Seul, Yeonsinnae bekatidan 5 daqiqa. Depozitsiz, minimal 1 oy, shaxsiy qulf, iqlim nazorati va professional akustik izolyatsiya.',
       offerName: 'Oylik mashq xonasi (shaxsiy xona)',
+      hourlyOfferName: 'Soatlik mashq xonasi (QQS bilan)',
     },
   };
   const copy = copyByLocale[locale] ?? copyByLocale.ko;
@@ -111,7 +119,7 @@ export const generatePracticeRoomMonthlyRentSchema = (
       { '@type': 'Place', name: '원당', alternateName: 'Wondang' },
       { '@type': 'Place', name: '일산', alternateName: 'Ilsan' },
     ],
-    offers: {
+    offers: [{
       '@type': 'Offer',
       name: copy.offerName,
       price: PRACTICE_ROOM_MONTHLY_PRICE,
@@ -140,6 +148,43 @@ export const generatePracticeRoomMonthlyRentSchema = (
       eligibleRegion: { '@type': 'Country', name: 'KR' },
       // provider와 같은 이유로 참조만 (위 주석 참고).
       seller: { '@id': `${config.url}/#studio` },
+    }, {
+      // 시간제 — 2026-09-25 사이트 예약 오픈. **VAT 포함** 소비자가(월세는 별도) — 두 오퍼의
+      // 과세 표기가 다르다는 것을 여기 남긴다. 예약 액션은 아래 potentialAction.
+      '@type': 'Offer',
+      '@id': `${pageUrl}#practice-room-hourly`,
+      name: copy.hourlyOfferName,
+      price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+      priceCurrency: 'KRW',
+      availability: 'https://schema.org/InStock',
+      // provider와 같은 순수 @id 참조 — @type을 다시 붙이면 #studio가 재타이핑된다(entityGraph.test).
+      seller: { '@id': `${config.url}/#studio` },
+      url: `${config.url}/ko/booking/practice-room`,
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+        priceCurrency: 'KRW',
+        valueAddedTaxIncluded: true,
+        unitCode: 'HUR',
+        unitText: locale === 'ko' ? '시간'
+          : locale === 'zh' ? '小时'
+          : locale === 'es' ? 'hora'
+          : locale === 'vi' ? 'giờ'
+          : locale === 'th' ? 'ชั่วโมง'
+          : locale === 'uz' ? 'soat'
+          : 'hour',
+      },
+    }],
+    // 사이트에서 바로 예약 — AI·검색엔진이 "예약 가능"과 그 주소를 읽게 한다.
+    potentialAction: {
+      '@type': 'ReserveAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${config.url}/ko/booking/practice-room`,
+        inLanguage: 'ko',
+        actionPlatform: ['http://schema.org/DesktopWebPlatform', 'http://schema.org/MobileWebPlatform'],
+      },
+      result: { '@type': 'Reservation', name: copy.hourlyOfferName },
     },
   };
 };

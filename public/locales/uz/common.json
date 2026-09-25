@@ -576,7 +576,10 @@
       "vacancyLabel": "Hozirgi bo'sh xonalar",
       "vacancyValue": "Bo'sh xona bor",
       "vacancyFull": "To'la",
-      "asOf": "{{date}} holatiga"
+      "asOf": "{{date}} holatiga",
+      "hourlyLabel": "Soatlik foydalanish",
+      "hourlyUnit": "/ soat · QQS bilan",
+      "hourlySub": "1 soatdan · 24/7 · shu kuni band qilish"
     },
     "midCta": {
       "note": "Xonalar ko'pincha to'la bo'ladi, shuning uchun navbat ro'yxati yuritamiz. Murojaat qiling — xona bo'shashi bilan tartib bo'yicha xabar beramiz.",
@@ -830,6 +833,14 @@
         {
           "q": "Mashgʻulot xonasida tunab qolish mumkinmi?",
           "a": "Ha — siz uzoq mashg'ulotlar, konsertga tayyorgarlik yoki tungi yozuvlar uchun qolishingiz mumkin. Shaxsiy qulf, iqlim, 24/7 shaxsiy dush va lobbi qulayliklari bilan tunab qolish qulay. Batafsil ma'lumot maslahatda."
+        },
+        {
+          "q": "Soatlik ijaraga olsa bo'ladimi?",
+          "a": "Ha. Soatiga ₩4,400 (QQS bilan), 1 dan 8 soatgacha. 24/7 ochiq, shu kuni ham band qilish mumkin. Band qilish sahifasida bo'sh vaqtni tanlab to'lang — darhol tasdiqlanadi."
+        },
+        {
+          "q": "Soatlik qanday band qilinadi, bekor qilsam pul qaytadimi?",
+          "a": "Band qilish sahifasida sana va vaqtni tanlab Toss orqali to'lang. Tasdiqlangach eshik, xona va Wi-Fi ma'lumoti emailga keladi. 2+ kun oldin to'liq, bir kun oldin 50%, shu kuni qaytarilmaydi."
         }
       ]
     },
@@ -844,6 +855,16 @@
     },
     "relatedGuides": {
       "title": "Mashg‘ulot xonasi bo‘yicha tegishli qo‘llanmalar"
+    },
+    "hourly": {
+      "title": "Soatlik ham foydalanish mumkin",
+      "subtitle": "Oylik ijaradan oldin sinab ko'rish yoki bir necha seans kerak bo'lganda. Saytda bo'sh vaqtni tanlab darhol to'lang.",
+      "points": [
+        "Soatiga ₩{{price}}, QQS bilan",
+        "1 dan 8 soatgacha · 24/7 · shu kuni band qilish",
+        "To'lov bilanoq eshik, xona va Wi-Fi ma'lumoti emailga keladi"
+      ],
+      "refund": "2+ kun oldin to'liq qaytariladi, bir kun oldin 50%, shu kuni qaytarilmaydi."
     }
   },
   "studioInfo": {

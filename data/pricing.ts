@@ -790,6 +790,47 @@ export const getPricingData = (locale: Locale) => {
         uz: ["24/7 foydalanish, tunab qolish mumkin (alohida dush)", "Depozitsiz, xizmat haqi kiritilgan, oylik shartnoma", "1 yillik shartnomada birinchi oy 50% chegirma", "Yozuv chegirmasi kabi 8 ta rezident imtiyozi"]
       }),
     },
+    /**
+     * 시간제 — 유일하게 **VAT 포함** 소비자가다(다른 오퍼는 전부 VAT 별도, 카드 하단 VAT_NOTICE가
+     * 그렇게 말한다). 그래서 제목에 "부가세 포함"을 박아 카드만 보고도 헷갈리지 않게 한다.
+     * 결제는 사이트 예약(/ko/booking/practice-room)으로만 받는다 — 네이버 예약 시간제 상품은
+     * 사이트 오픈과 함께 내린다(더블부킹). 2026-09-25.
+     */
+    {
+      id: 'practice-room-hourly',
+      title: t(locale, {
+        ko: '음악연습실 시간제 (부가세 포함)', en: 'Practice Room Hourly (VAT included)', zh: '练习室按小时（含税）',
+        es: 'Sala de práctica por hora (IVA incluido)', vi: 'Phòng tập theo giờ (đã gồm VAT)', th: 'ห้องซ้อมรายชั่วโมง (รวม VAT)', uz: "Mashq xonasi soatlik (QQS bilan)",
+      }),
+      subtitle: t(locale, {
+        ko: '1시간부터 · 24시간 · 당일 예약 가능', en: 'From 1 hour · 24/7 · same-day booking', zh: '1小时起 · 24小时 · 可当日预约',
+        es: 'Desde 1 hora · 24/7 · reserva el mismo día', vi: 'Từ 1 giờ · 24/7 · đặt trong ngày', th: 'ตั้งแต่ 1 ชม. · 24 ชม. · จองวันเดียวกันได้', uz: "1 soatdan · 24/7 · shu kuni band qilish",
+      }),
+      priceDisplay: t(locale, {
+        ko: `${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원`, en: `₩${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`, zh: `₩${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`,
+        es: `₩${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`, vi: `₩${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`, th: `₩${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`, uz: `₩${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`,
+      }),
+      priceValue: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+      unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
+      description: t(locale, {
+        ko: '월세 입주 전 체험이나 며칠만 필요할 때. 사이트에서 빈 시간을 고르고 결제하면 바로 확정되고, 입장 방법이 메일로 갑니다.',
+        en: 'Try before a monthly residency, or when you only need a few sessions. Pick an open slot on the site, pay, and entry instructions arrive by email.',
+        zh: '入住前体验或只需几天时。在网站上选择空闲时段并付款即确认，入场方式将通过邮件发送。',
+        es: 'Para probar antes de la residencia mensual o cuando solo necesitas unas sesiones. Elige un horario libre, paga y recibirás las instrucciones de acceso por correo.',
+        vi: 'Dùng thử trước khi thuê tháng, hoặc khi chỉ cần vài buổi. Chọn khung giờ trống trên web, thanh toán là xác nhận, hướng dẫn vào phòng gửi qua email.',
+        th: 'ทดลองก่อนเช่ารายเดือน หรือเมื่อต้องการแค่ไม่กี่ครั้ง เลือกช่วงเวลาว่างบนเว็บ ชำระเงินแล้วยืนยันทันที รับวิธีเข้าห้องทางอีเมล',
+        uz: "Oylik ijaradan oldin sinab ko'rish yoki bir necha seans kerak bo'lganda. Saytda bo'sh vaqtni tanlang, to'lang — tasdiqlanadi, kirish yo'riqnomasi emailga keladi.",
+      }),
+      features: tArray(locale, {
+        ko: ['1시간 단위, 최대 8시간 · 24시간 언제든', '지금 이후면 당일도 예약 가능', '결제 즉시 문·방·와이파이 안내 메일', '이용일 2일 전 전액 · 전날 50% · 당일 환불 불가'],
+        en: ['Hourly, up to 8 hours · 24/7', 'Same-day booking for any time after now', 'Door, room and Wi-Fi details emailed on payment', 'Full refund 2+ days before · 50% the day before · none same day'],
+        zh: ['按小时，最多8小时 · 24小时', '当前时间之后可当日预约', '付款后即发送门锁·房间·Wi-Fi邮件', '2天前全额 · 前一天50% · 当日不退'],
+        es: ['Por horas, hasta 8 · 24/7', 'Reserva el mismo día para cualquier hora posterior', 'Datos de puerta, sala y Wi-Fi por correo al pagar', 'Reembolso total 2+ días antes · 50% el día anterior · sin reembolso el mismo día'],
+        vi: ['Theo giờ, tối đa 8 giờ · 24/7', 'Đặt trong ngày cho giờ sau hiện tại', 'Email hướng dẫn cửa, phòng, Wi-Fi ngay khi thanh toán', 'Hoàn 100% trước 2 ngày · 50% hôm trước · không hoàn cùng ngày'],
+        th: ['รายชั่วโมง สูงสุด 8 ชม. · 24 ชม.', 'จองวันเดียวกันได้สำหรับเวลาหลังจากนี้', 'อีเมลรหัสประตู ห้อง Wi-Fi ทันทีเมื่อชำระ', 'คืนเต็มก่อน 2 วัน · 50% วันก่อน · ไม่คืนวันเดียวกัน'],
+        uz: ["Soatlik, 8 soatgacha · 24/7", "Hozirdan keyingi vaqtga shu kuni band qilish", "To'lovdan so'ng eshik, xona, Wi-Fi ma'lumoti emailda", "2+ kun oldin to'liq · bir kun oldin 50% · shu kuni qaytarilmaydi"],
+      }),
+    },
   ];
 
   return {
@@ -804,5 +845,6 @@ export const getPricingData = (locale: Locale) => {
     // 매출 라인 가격을 데이터로 노출한다(SSOT).
     lessonMonthlyPrice: LESSON_MONTHLY_PRICE,
     practiceRoomMonthlyPrice: PRACTICE_ROOM_MONTHLY_PRICE,
+    practiceRoomHourlyPriceIncl: PRACTICE_ROOM_HOURLY_PRICE_INCL,
   };
 };
