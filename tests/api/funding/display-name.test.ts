@@ -2,11 +2,13 @@
 jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 jest.mock('../../../lib/funding/service', () => ({ findFundingOrderByOrderNo: jest.fn() }));
 jest.mock('../../../db/client', () => ({ getDb: jest.fn() }));
+jest.mock('../../../lib/funding/email', () => ({ sendFundingListingNicknameAlert: jest.fn().mockResolvedValue(null) }));
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/funding/display-name';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getDb } from '../../../db/client';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
+import { sendFundingListingNicknameAlert } from '../../../lib/funding/email';
 
 /**
  * 약관 제13조 2항이 약속한 "후원 확인 페이지에서 이름 공개 동의 철회"의 서버 쪽.
@@ -128,5 +130,43 @@ describe('명단 표시 이름', () => {
   it('공개를 끌 때는 방식이 와도 표시 이름을 건드리지 않는다', async () => {
     await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false, publicNameStyle: 'nickname', publicNickname: '새닉' });
     expect(set.mock.calls[0][0]).not.toHaveProperty('publicName');
+  });
+});
+
+/**
+ * 결제 뒤에 바꾼 닉네임은 확정 메일에 없어서, 운영자가 알 길이 없었다. 닉네임으로 새로 명단에
+ * 오르면(공개를 켰거나 닉네임이 바뀌면) 운영자에게 알린다.
+ */
+describe('운영자 닉네임 알림', () => {
+  const pledge = (over: Record<string, unknown>) => order({ fundingPledge: { paymentMethod: 'toss', publicName: null, displayNamePublic: false, supporterMessage: '응원', ...over } });
+
+  it('닉네임으로 새로 공개하면 알린다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(pledge({}));
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자' });
+    expect(sendFundingListingNicknameAlert).toHaveBeenCalledWith(expect.anything(), '청취자', '응원');
+  });
+
+  it('공개 중에 닉네임을 바꾸면 알린다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(pledge({ displayNamePublic: true, publicName: '옛닉' }));
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '새닉' });
+    expect(sendFundingListingNicknameAlert).toHaveBeenCalledTimes(1);
+  });
+
+  it('같은 닉네임 재저장·가린 이름·실명·내리기는 알리지 않는다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(pledge({ displayNamePublic: true, publicName: '같은닉' }));
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '같은닉' });
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'masked' });
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'real' });
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false });
+    expect(sendFundingListingNicknameAlert).not.toHaveBeenCalled();
+  });
+
+  // 설정은 이미 저장됐다 — 메일 실패로 에러를 주면 후원자는 저장이 안 된 줄 안다.
+  it('알림이 실패해도 200', async () => {
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(pledge({}));
+    (sendFundingListingNicknameAlert as jest.Mock).mockRejectedValueOnce(new Error('resend down'));
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자' });
+    expect(r.status).toBe(200);
   });
 });

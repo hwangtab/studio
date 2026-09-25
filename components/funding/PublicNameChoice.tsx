@@ -63,11 +63,16 @@ export default function PublicNameChoice({ customerName, style, nickname, onStyl
       )}
       {/* 동의한 것이 실제로 어떻게 보이는지를 보여 준다. 무엇이 공개되는지 눈으로 확인되면
           동의를 망설일 이유가 줄고, 기대와 다르면 여기서 고칠 수 있다. */}
-      <p className="mt-3 text-sm text-gray-600 dark:text-gray-300" aria-live="polite">
-        <span className="typo-card-meta">이렇게 보입니다 · </span>
-        <span className="font-semibold text-gray-900 dark:text-white">{shown || (style === 'nickname' ? '닉네임을 입력해 주세요' : '이름')}</span>
-        {trimmedMessage && <span className="break-words"> “{trimmedMessage.length > 60 ? `${trimmedMessage.slice(0, 60)}…` : trimmedMessage}”</span>}
-      </p>
+      {/* 이름은 한 덩어리로 보여야 한다. 한 줄에 이어 두면 좁은 화면에서 한글이 글자 단위로
+          끊겨 "홍*" / "동"처럼 이름이 두 줄로 갈렸다(2026-09-26 모바일 실측). 라벨을 윗줄로
+          떼고, 이름은 줄을 바꾸지 않으며, 한글 줄바꿈은 어절 단위(break-keep)로 한다. */}
+      <div className="mt-3 text-sm" aria-live="polite">
+        <p className="typo-card-meta">이렇게 보입니다</p>
+        <p className="mt-1 break-keep text-gray-600 dark:text-gray-300">
+          <span className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">{shown || (style === 'nickname' ? '닉네임을 입력해 주세요' : '이름')}</span>
+          {trimmedMessage && <span className="break-words"> “{trimmedMessage.length > 60 ? `${trimmedMessage.slice(0, 60)}…` : trimmedMessage}”</span>}
+        </p>
+      </div>
     </div>
   );
 }

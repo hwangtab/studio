@@ -1,7 +1,7 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
-import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from './email';
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingListingNicknameAlert, sendFundingRefundRequestClearedEmails } from './email';
 
 const order = {
   id: 'o', orderNo: 'FND-20261015-ABCDEF12', type: 'funding', status: 'paid', manageToken: 'tok',
@@ -259,5 +259,41 @@ describe('확정 메일의 음원 내려받기', () => {
     (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
     await sendFundingConfirmedEmails(orderFor('mp3'), projectWith([{ id: 'mp3', downloads: [] }]));
     expect((sendEmail as jest.Mock).mock.calls[0][0].text).not.toContain('음원 내려받기');
+  });
+});
+
+/**
+ * 운영자가 욕설·사칭 닉네임을 내리려면 무엇이 올라갔는지 먼저 알아야 한다 — 확정 메일에
+ * 명단 표시 줄과 그 후원의 관리자 상세 주소를 싣는다.
+ */
+describe('운영자 메일의 서포터 명단 표시', () => {
+  const withPledge = (over: Record<string, unknown>) =>
+    ({ ...(order as object), fundingPledge: { ...(order as { fundingPledge: object }).fundingPledge, ...over } }) as never;
+  const operatorText = () => (sendEmail as jest.Mock).mock.calls[1][0].text as string;
+
+  it('닉네임이면 그 닉네임, 실명이면 실명 표시, 비공개면 비공개', async () => {
+    await sendFundingConfirmedEmails(withPledge({ publicName: '연대하는 청취자' }), project);
+    expect(operatorText()).toContain('명단: 공개 · 연대하는 청취자');
+    (sendEmail as jest.Mock).mockClear();
+    await sendFundingConfirmedEmails(withPledge({ publicName: null }), project);
+    expect(operatorText()).toContain('명단: 공개 · 김후원 (실명)');
+    (sendEmail as jest.Mock).mockClear();
+    await sendFundingConfirmedEmails(withPledge({ displayNamePublic: false }), project);
+    expect(operatorText()).toContain('명단: 비공개');
+  });
+
+  it('관리자 주소는 목록이 아니라 그 후원의 상세다', async () => {
+    await sendFundingConfirmedEmails(order, project);
+    expect(operatorText()).toContain('/admin/funding/o');
+  });
+
+  it('닉네임 알림은 운영자에게만, 닉네임·메시지·상세 주소를 싣는다', async () => {
+    await sendFundingListingNicknameAlert(order, '연대하는 청취자', '끝까지');
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    const mail = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(mail.to).toBe(OPERATOR_EMAIL);
+    expect(mail.text).toContain('닉네임: 연대하는 청취자');
+    expect(mail.text).toContain('응원 메시지: 끝까지');
+    expect(mail.text).toContain('/admin/funding/o');
   });
 });
