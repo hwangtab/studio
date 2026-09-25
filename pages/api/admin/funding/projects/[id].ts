@@ -90,7 +90,9 @@ const PAYOUT_RECORD_ERROR: Record<
 > = {
   not_found: { status: 404, message: '프로젝트를 찾을 수 없습니다.' },
   already_recorded: { status: 409, message: '이미 기록된 정산입니다. 정산은 프로젝트당 한 번만 기록합니다.' },
-  nothing_to_pay: { status: 409, message: '결제된 후원이 없어 정산할 것이 없습니다.' },
+  // 판정이 실이체액(netAmount)이므로 "결제된 후원이 없다"는 한 가지 경우일 뿐이다 —
+  // 후원은 있었고 환불이 모금액을 다 먹은 경우도 여기로 온다(lib/funding/payout.ts).
+  nothing_to_pay: { status: 409, message: '정산할 금액이 없습니다 — 결제된 후원이 없거나 환불이 모금액에 닿았습니다.' },
   not_closed: { status: 409, message: '모금이 아직 끝나지 않았습니다. 지금 기록하면 이후 들어온 후원이 정산에서 빠집니다.' },
   no_payout_account: { status: 409, message: '개설자의 정산 계좌가 등록되지 않았습니다. 개설자에게 등록을 요청해 주세요.' },
   no_tax_type: {
