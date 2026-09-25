@@ -56,6 +56,10 @@ export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
  *
  * 관리자 목록 배지·배너(admin-serialize), 헬스체크, clear_refund_request가 모두 이
  * 하나를 본다. 셋이 갈리면 화면·메일·API가 서로 다른 사실을 말하게 된다.
+ *
+ * **2026-09-25 확인 (감사 항목 — 확인 후 기각):** 운영 DB에 이 값이 남은 행은 1건뿐이고
+ * 이미 refunded(처리 완료, 위 집합에 안 걸림)다. 쓰는 경로가 없다는 지적은 맞지만, 새
+ * 쓰기 경로를 만들 이유가 없다 — 무통장을 되살리지 않는 한 이 상태는 다시 생기지 않는다.
  */
 export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as const;
 
