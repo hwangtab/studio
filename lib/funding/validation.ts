@@ -1,5 +1,6 @@
 import isEmail from 'validator/lib/isEmail';
 
+import { PURGED_MARK } from '../privacy/orderRetention';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from './policy';
 import { computeProjectState, findReward, type FundingProject, type FundingReward } from './projects';
 import { isPublicNameStyle, resolvePublicName } from './publicName';
@@ -75,6 +76,20 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   const customerEmail =
     typeof b.customerEmail === 'string' && isEmail(b.customerEmail.trim()) ? b.customerEmail.trim().toLowerCase() : null;
   if (!customerName || !customerPhone || !customerEmail) return { ok: false, message: '이름·연락처·이메일을 확인해 주세요.' };
+  /**
+   * **결제자 이름이 파기 표식과 같으면 거부한다.**
+   *
+   * `purgeFundingPersonalDataOfPurgedOrders`(lib/privacy/orderRetention.ts)는 어느 후원이
+   * 이미 파기됐는지를 `orders.customer_name = PURGED_MARK` 하나로 판정하고 날짜를 보지
+   * 않는다. 그래서 이 문자열을 이름 칸에 그대로 적어 후원하면, 다음 파기 실행이 그 후원을
+   * "5년이 지나 이름이 지워진 행"으로 읽어 배송지 여섯 칸·응원 메시지·운영자 메모를 지운다
+   * — 리워드를 보낼 수 없는 상태가 된다. `PLEDGE_TEXT_LIMITS.customerName`(50자)은 이
+   * 문자열을 막지 못하므로 이 검사가 유일한 방어다.
+   *
+   * 판정은 **정확히 같을 때만**이다. 표식을 포함한 더 긴 이름은 파기 WHERE에 걸리지 않아
+   * 위험하지 않고, 부분 일치로 막으면 정상 입력을 오탐한다.
+   */
+  if (customerName === PURGED_MARK) return { ok: false, message: '이름을 확인해 주세요.' };
   if (b.termsAgreed !== true) return { ok: false, message: '약관에 동의해 주세요.' };
   let shipping: PledgeShipping | undefined;
   if (reward.requiresShipping) {

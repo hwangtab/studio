@@ -5,6 +5,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../../../db/client';
 import { orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
+import { PURGED_MARK } from '../../../../../lib/privacy/orderRetention';
 import { generateManageToken } from '../../../../../lib/booking/token';
 import { rowsAffectedOf } from '../../../../../lib/booking/confirm';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
@@ -60,6 +61,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       !b.customerName
     ) {
       return res.status(400).json({ ok: false, message: '프로젝트·리워드·수량·이름을 확인해 주세요.' });
+    }
+    /**
+     * 온라인 경로(lib/funding/validation.ts)와 같은 이유로 파기 표식과 같은 이름을 거부한다 —
+     * 같은 `orders` 테이블이라 위험도 같다. `purgeFundingPersonalDataOfPurgedOrders`가
+     * `customer_name = PURGED_MARK`만 보고 파기 대상을 고르므로, 운영자가 이 문자열을 이름
+     * 칸에 적으면 그 후원의 배송지·응원 메시지·운영자 메모가 다음 파기 실행에 지워진다.
+     */
+    if (b.customerName.trim() === PURGED_MARK) {
+      return res.status(400).json({ ok: false, message: '이름을 확인해 주세요.' });
     }
     /**
      * 실수령액(선택) — 현금으로 실제 받은 금액이 리워드 단가 × 수량 + 추가금과 안 맞을 때
