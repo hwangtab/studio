@@ -3,6 +3,7 @@ import type { SQLiteColumn, SQLiteTable } from 'drizzle-orm/sqlite-core';
 
 import { getDb } from '../../db/client';
 import { fundingCreators } from '../../db/schema';
+import { recordPrivacyAccess, type PrivacyAccessAction } from '../privacy/accessLog';
 import {
   FieldCryptoError,
   decryptFieldWithKey,
@@ -77,6 +78,25 @@ export const ENCRYPTED_FIELD_TARGETS: readonly EncryptedFieldTarget[] = [
     valueField: 'payoutAccountEnc',
   }),
 ];
+
+/**
+ * 회전 CLI가 복호화한 사실을 남길 접속기록 행위 이름 — 대상 컬럼별로 갈린다.
+ *
+ * **새 열거값을 만들지 않았다.** `payout.ts`가 "값이 안 나가도 복호화는 같은 무게"라고
+ * 판단해 둔 `*_decrypt_check`가 정확히 이 성격이고(정산 기록 직전의 복호화 점검), 새
+ * 이름을 만들면 처리방침 19항의 열거도 함께 고쳐야 한다. 수행자(`rotation-cli`)가 CLI
+ * 경로를 구분해 주므로 행위 이름을 나눌 필요가 없다.
+ */
+const ROTATION_ACCESS_ACTIONS: Record<string, PrivacyAccessAction> = {
+  'funding_creators.resident_number_enc': 'funding_resident_number_decrypt_check',
+  'funding_creators.payout_account_enc': 'funding_payout_account_decrypt_check',
+};
+
+/**
+ * 수행자. 사람이 아니라 CLI다 — 누가 돌렸는지는 키를 가진 운영자 한 사람뿐이고, 그
+ * 이름을 여기 적을 수단이 없다(환경변수로 받으면 아무 값이나 들어온다).
+ */
+const ROTATION_ACTOR = 'rotation-cli';
 
 /** 회전하지 못한 행. **id와 코드만** 담는다. */
 export interface FieldRotationFailure {
@@ -196,6 +216,32 @@ export const rotateFieldKey = async (options: RotateFieldKeyOptions): Promise<Fi
     }
 
     byTarget.push({ target: target.label, scanned, rotated, skipped, failed });
+
+    /**
+     * **복호화한 사실을 남긴다.** 이 CLI는 전 개설자의 주민등록번호·계좌를 실제로 열지만
+     * 접속기록이 0건이었다 — `payout.ts`의 "값이 안 나가도 복호화는 같은 무게"라는 판단과
+     * 어긋난다. dry-run도 남긴다(복호화는 apply와 무관하게 일어난다).
+     *
+     * 담는 것은 **건수뿐**이다. `targetId`는 프로젝트 id가 아니라 대상 컬럼이다 — 이 경로는
+     * 한 건을 여는 조회가 아니라 표 전체를 훑는 작업이라 그게 사실이다.
+     *
+     * 기록 실패가 회전을 끊지 않는다 — 회전은 이미 커밋됐고, 여기서 던지면 절반만 회전한
+     * 상태로 프로세스가 죽는다.
+     */
+    const decrypted = rotated + failed;
+    const action = ROTATION_ACCESS_ACTIONS[target.label];
+    if (action && decrypted > 0) {
+      await recordPrivacyAccess({
+        actor: ROTATION_ACTOR,
+        action,
+        targetId: target.label,
+        result: failed > 0 ? 'error' : 'success',
+        rowCount: decrypted,
+        ip: null,
+      }).catch((error: unknown) => {
+        console.error('[crypto] 키 회전 접속기록 실패 — 회전은 계속됩니다', error);
+      });
+    }
   }
 
   return {

@@ -422,7 +422,9 @@ export const loadPayoutSummary = async (creatorId: string): Promise<CreatorPayou
     accountLast4: registered ? row.payoutAccountLast4?.trim() || null : null,
     taxType: row.taxType ?? null,
     // 값도 암호문도 아니고 "있다/없다"뿐이다.
-    residentNumberRegistered: Boolean(row.residentNumberEnc),
+    // `trim()`은 payout.ts의 `hasResidentNumber`와 같은 판정이어야 한다 — 한쪽만 공백을
+    // 다루면 공백뿐인 행에서 화면은 "등록됨", 정산 게이트는 "없음"으로 갈린다.
+    residentNumberRegistered: Boolean(row.residentNumberEnc?.trim()),
     withheldPayoutRecorded: await hasWithheldPayout(creatorId),
   };
 };

@@ -77,6 +77,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         message: `실수령액은 1원 이상 ${MAX_MANUAL_ACTUAL_AMOUNT.toLocaleString('ko-KR')}원 이하의 정수여야 합니다.`,
       });
     }
+    /**
+     * 하한도 본다 — 상한만 있으면 `30000`을 `3000`으로 잘못 친 오타가 그대로 통과해 공개
+     * 모금액과 정산 grossAmount에 들어간다. 에누리·잔돈을 담는 칸이라 정확히 일치를 요구할
+     * 수는 없으므로, 리워드가 기준의 **절반**을 선으로 잡는다 — 자릿수 하나가 빠지면 반드시
+     * 걸리고(1/10) 실무의 에누리 폭은 걸리지 않는다.
+     */
+    if (hasActualAmount) {
+      const expected = computeFundingAmounts(reward.amount, quantity, additionalAmount).totalAmount;
+      if (actualAmount * 2 < expected) {
+        return res.status(400).json({
+          ok: false,
+          message: `실수령액이 리워드 금액의 절반 미만입니다 — 자릿수를 확인해 주세요. `
+            + `(리워드 기준 ${expected.toLocaleString('ko-KR')}원)`,
+        });
+      }
+    }
     const now = new Date();
     await expireStalePledges(now);
     // 이 사전 검사는 **사람에게 이유를 알려 주기 위한 것**이고, 초과 판매를 실제로 막는 것은

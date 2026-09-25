@@ -1,12 +1,15 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
-jest.mock('../../../../lib/funding/payoutAccount', () => ({ loadFundingPayoutAccount: jest.fn() }));
+jest.mock('../../../../lib/funding/payoutAccount', () => ({
+  loadFundingPayoutAccount: jest.fn(),
+  isApprovedFundingProject: jest.fn(),
+}));
 jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/admin/funding/projects/[id]/payout-account';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
-import { loadFundingPayoutAccount } from '../../../../lib/funding/payoutAccount';
+import { isApprovedFundingProject, loadFundingPayoutAccount } from '../../../../lib/funding/payoutAccount';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import { FieldCryptoError } from '../../../../lib/crypto/fieldCrypto';
 
@@ -35,6 +38,7 @@ beforeEach(() => {
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loadFundingPayoutAccount as jest.Mock).mockResolvedValue(ACCOUNT);
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
+  (isApprovedFundingProject as jest.Mock).mockResolvedValue(true);
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -169,4 +173,12 @@ describe('접속기록', () => {
     expect(r.status).toBe(200);
     expect(r.body).toEqual({ ok: true, account: ACCOUNT });
   });
+});
+
+/** L8 — 승인 전 프로젝트(초안 id)로도 그 개설자의 계좌가 열렸다. */
+it('승인되지 않은 프로젝트 id면 404이고 복호화를 시도하지 않는다', async () => {
+  (isApprovedFundingProject as jest.Mock).mockResolvedValue(false);
+  const r = await call();
+  expect(r.status).toBe(404);
+  expect(loadFundingPayoutAccount).not.toHaveBeenCalled();
 });

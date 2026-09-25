@@ -315,3 +315,22 @@ it('수기 등록된 배송 리워드는 delivered_at이 NULL이다 (기산점�
   const rows = await client.execute('SELECT delivered_at FROM funding_pledges');
   expect(rows.rows[0].delivered_at).toBeNull();
 });
+
+/**
+ * L13 — 상한만 있으면 `30000`을 `3000`으로 잘못 친 오타가 그대로 공개 모금액과 정산
+ * grossAmount에 들어간다. 에누리를 담는 칸이라 일치를 요구할 수는 없어 절반을 선으로 잡는다.
+ */
+describe('실수령액 하한', () => {
+  it('리워드 금액의 절반 미만이면 400 — 자릿수 확인을 요청한다', async () => {
+    // mail 5,000원 × 1 + 추가 0 = 5,000원. 자릿수 하나가 빠진 500원.
+    const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0, actualAmount: 500 });
+    expect(r.status).toBe(400);
+    expect(String(r.body.message)).toContain('절반 미만');
+    expect((await client.execute('SELECT COUNT(*) AS c FROM orders')).rows[0].c).toBe(0);
+  });
+
+  it('절반이면 통과한다 — 에누리 폭은 막지 않는다', async () => {
+    const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0, actualAmount: 2_500 });
+    expect(r.status).toBe(201);
+  });
+});

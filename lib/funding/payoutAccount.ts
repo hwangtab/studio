@@ -112,3 +112,24 @@ export const loadFundingPayoutAccountMasked = async (
     return { bankName: null, holder: null, accountLast4: row.last4, taxType: row.taxType };
   }
 };
+
+/**
+ * 이 프로젝트가 **승인된** 것인가 — 계좌·주민등록번호 조회 API가 열기 전에 보는 선.
+ *
+ * 승인 전에는 정산할 일이 없고, 그래서 개설자도 정산 구획을 열 수 없다(스펙 §6.2). 그런데
+ * 조회 API는 프로젝트 id만 보고 개설자 행을 되짚었기 때문에, **초안 id로도** 그 개설자의
+ * 계좌·주민등록번호가 열렸다 — 접속기록의 `targetId`도 초안 id로 남아 사후에 "무엇에 대한
+ * 조회였는지"가 어긋난다. 여기서 막고 404로 답한다.
+ *
+ * 공유 로더(`loadFundingPayoutAccount`·`loadFundingResidentNumber`)에 조건을 넣지 않은 이유:
+ * 정산 기록 직전의 복호화 점검과 정산 안내 메일도 그 로더를 지나는데, 그쪽은 이미
+ * 다른 게이트(마감·기록 여부)를 통과한 자리라 여기서 코드가 바뀌면 오류 문구만 헷갈려진다.
+ */
+export const isApprovedFundingProject = async (projectId: string): Promise<boolean> => {
+  const [row] = await getDb()
+    .select({ reviewStatus: fundingProjects.reviewStatus })
+    .from(fundingProjects)
+    .where(eq(fundingProjects.id, projectId))
+    .limit(1);
+  return row?.reviewStatus === 'approved';
+};

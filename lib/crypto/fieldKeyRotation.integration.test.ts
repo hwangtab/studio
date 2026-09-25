@@ -256,3 +256,42 @@ describe('낙관적 잠금', () => {
     expect(decryptFieldWithKey((await storedOf(untouched)) as string, NEW_KEY)).toBe(secretOf(13));
   });
 });
+
+/**
+ * L7 — 이 CLI는 전 개설자의 주민등록번호·계좌를 실제로 복호화하는데 접속기록이 0건이었다.
+ * `payout.ts`의 "값이 안 나가도 복호화는 같은 무게"라는 판단과 어긋난다.
+ */
+describe('회전 CLI의 접속기록', () => {
+  const logsOf = () => mockDb.select().from(schema.privacyAccessLogs);
+
+  it('복호화한 건수를 rotation-cli 수행자로 남긴다 — 대상 컬럼별로 한 행', async () => {
+    await seedCreator(makeV1(secretOf(101), OLD_KEY));
+    await seedCreator(makeV1(secretOf(102), OLD_KEY));
+    await seedPayoutAccount(makeV1('{"bank":"국민"}', OLD_KEY));
+
+    await rotateFieldKey({ oldKey: OLD_KEY, newKey: NEW_KEY, apply: true });
+
+    const logs = await logsOf();
+    const resident = logs.find((l) => l.action === 'funding_resident_number_decrypt_check');
+    const account = logs.find((l) => l.action === 'funding_payout_account_decrypt_check');
+    expect(resident).toMatchObject({
+      actor: 'rotation-cli',
+      targetId: 'funding_creators.resident_number_enc',
+      result: 'success',
+      rowCount: 2,
+    });
+    // seedPayoutAccount이 만든 행에는 주민번호가 없고, seedCreator가 만든 행에는 계좌가 없다.
+    expect(account).toMatchObject({ actor: 'rotation-cli', result: 'success', rowCount: 1 });
+  });
+
+  it('dry-run도 남긴다 — 복호화는 apply와 무관하게 일어난다', async () => {
+    await seedCreator(makeV1(secretOf(103), OLD_KEY));
+    await rotateFieldKey({ oldKey: OLD_KEY, newKey: NEW_KEY });
+    expect((await logsOf()).map((l) => l.rowCount)).toEqual([1]);
+  });
+
+  it('열 행이 없으면 아무것도 남기지 않는다', async () => {
+    await rotateFieldKey({ oldKey: OLD_KEY, newKey: NEW_KEY, apply: true });
+    expect(await logsOf()).toEqual([]);
+  });
+});
