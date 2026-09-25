@@ -19,7 +19,8 @@ import * as schema from '../../db/schema';
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn() }));
-jest.mock('./gcal', () => ({ createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
+jest.mock('./gcal', () => ({ ...jest.requireActual('./gcal'), createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
+jest.mock('./calendarGuard', () => ({ hasCalendarConflict: jest.fn().mockResolvedValue(false) }));
 jest.mock('./email', () => ({ sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null) }));
 
 // eslint-disable-next-line import/first

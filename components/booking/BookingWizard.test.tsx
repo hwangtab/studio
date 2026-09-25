@@ -390,3 +390,32 @@ describe('BookingWizard 위젯 약관 가드', () => {
     expect(screen.queryByText(/결제 서비스 이용 약관/)).toBeNull();
   });
 });
+
+describe('슬롯 조회 장애 안내', () => {
+  it('503이면 안내와 대안 링크를 띄우고, 다시 불러오기를 누르면 재조회한다', async () => {
+    let calls = 0;
+    (global.fetch as jest.Mock).mockImplementation(async (input: RequestInfo | URL) => {
+      const url = typeof input === 'string' ? input : input.toString();
+      if (url.startsWith('/api/bookings/slots')) {
+        calls += 1;
+        if (calls === 1) return { ok: false, status: 503, json: async () => ({ ok: false }) } as Response;
+        return { ok: true, status: 200, json: async () => slotsResponse } as Response;
+      }
+      throw new Error(`예상하지 못한 fetch: ${url}`);
+    });
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await user.click(screen.getByRole('button', { name: '다음: 날짜·시간 선택' }));
+    fireEvent.change(screen.getByLabelText('날짜'), { target: { value: '2026-10-01' } });
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toHaveTextContent('일시적으로 예약 현황을 불러올 수 없습니다.');
+    expect(screen.getByRole('link', { name: '카카오톡' })).toHaveAttribute('href', 'https://open.kakao.com/me/nol');
+    expect(screen.getByRole('link', { name: '010-4255-7893' })).toHaveAttribute('href', 'tel:+821042557893');
+
+    await user.click(screen.getByRole('button', { name: '다시 불러오기' }));
+    expect(await screen.findByRole('button', { name: '10:00' })).toBeInTheDocument();
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(calls).toBe(2);
+  });
+});

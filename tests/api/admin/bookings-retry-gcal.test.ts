@@ -73,6 +73,8 @@ const insert = async (bookingOver: Record<string, unknown> = {}) => {
   });
 };
 
+afterEach(() => { delete process.env.PRACTICE_ROOM_GCAL_ID; delete process.env.PRACTICE_ROOM_GCAL_ID_R02; });
+
 const retry = async () => {
   const json = jest.fn();
   const status = jest.fn().mockReturnValue({ json });
@@ -105,6 +107,7 @@ it('기존 이벤트가 있으면 새로 만든 뒤 옛 이벤트를 지운다 (
 });
 
 it('연습실 예약은 연습실 캘린더에 만들고 옛 이벤트도 거기서 지운다 (녹음실 캘린더 오염 금지)', async () => {
+  process.env.PRACTICE_ROOM_GCAL_ID = 'shared-cal';
   await insert({ product_id: 'practice-room-hourly', service_type: 'practice-room', room_number: 'R02', gcal_event_id: 'ev-old' });
   const res = await retry();
   expect(res.status).toBe(200);
@@ -115,6 +118,15 @@ it('연습실 예약은 연습실 캘린더에 만들고 옛 이벤트도 거기
 
 it('취소된 예약은 거절한다', async () => {
   await insert({ status: 'cancelled' });
+  const res = await retry();
+  expect(res.status).toBe(409);
+  expect(createBookingEvent).not.toHaveBeenCalled();
+});
+
+it('연습실 캘린더가 비활성이면 재시도는 409로 거절한다 (confirm.ts와 같은 판정)', async () => {
+  delete process.env.PRACTICE_ROOM_GCAL_ID;
+  delete process.env.PRACTICE_ROOM_GCAL_ID_R02;
+  await insert({ product_id: 'practice-room-hourly', service_type: 'practice-room', room_number: 'R02' });
   const res = await retry();
   expect(res.status).toBe(409);
   expect(createBookingEvent).not.toHaveBeenCalled();

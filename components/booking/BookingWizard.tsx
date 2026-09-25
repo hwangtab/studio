@@ -18,6 +18,10 @@ import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { getSiteConfig } from '../../data/siteConfig';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
 
+// 슬롯 조회 장애 안내의 대안 경로 — 위저드는 ko 전용 화면이라 ko 오픈채팅으로 고정한다.
+const KAKAO_URL = getSiteConfig('ko').contact.kakaoUrl;
+const TEL_HREF = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
+
 interface BookingWizardProps {
   service: string;
   products: SessionProduct[];
@@ -105,8 +109,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   const [slotsNotice, setSlotsNotice] = useState<string | null>(null);
   // 슬롯 조회 실패(503 등) 뒤 "다시 불러오기" — 값이 바뀌면 같은 날짜로 재조회한다.
   const [retryTick, setRetryTick] = useState(0);
-  const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
-  const telHref = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
+
   const [selectedStartHour, setSelectedStartHour] = useState<number | null>(null);
 
   const resetSlotState = () => {
@@ -466,15 +469,15 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                     <button
                       type="button"
                       onClick={() => setRetryTick((n) => n + 1)}
-                      className="font-semibold underline underline-offset-2"
+                      className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
                     >
                       다시 불러오기
                     </button>
                     <span className="text-red-600/80 dark:text-red-300/80">
                       계속 안 되면{' '}
-                      <a href={kakaoUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">카카오톡</a>
+                      <a href={KAKAO_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">카카오톡</a>
                       {' '}또는{' '}
-                      <a href={telHref} className="font-semibold underline underline-offset-2">{CANONICAL_FACTS.phone}</a>
+                      <a href={TEL_HREF} className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">{CANONICAL_FACTS.phone}</a>
                       로 예약해 주세요.
                     </span>
                   </div>
