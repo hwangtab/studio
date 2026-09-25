@@ -37,10 +37,12 @@ export interface EditorProject {
   goalAmount: number;
   /**
    * KST(UTC+9) 달력 날짜 `YYYY-MM-DD` — 전체 ISO 타임스탬프가 아니다.
-   * `<input type="date">`가 그대로 받는 값이라 변환이 없다. 서버로 보낼 때만
-   * `lib/funding/creatorDateInput.ts`의 `kstStartOfDayIso`/`kstEndOfDayIso`로 시각을
-   * 붙인다 — 예전엔 로컬 자정으로 보내고 UTC 문자열을 잘라 읽어(왕복 방향이 서로 달라)
-   * 저장할 때마다 날짜가 하루씩 밀렸다(2026-09-17 리뷰 지적).
+   * `<input type="date">`가 그대로 받는 값이라 읽을 때도 보낼 때도 변환이 없다.
+   * KST 자정·23:59:59을 붙이는 일은 **서버**(`validateBasicSection`)가 한다 —
+   * 클라이언트가 그 변환을 대신 하던 시절엔 서버가 결과만 신뢰해서, bare 날짜가
+   * 오는 경로가 하나라도 있으면 하루 가까이 앞당겨 마감될 수 있었다(2026-09-25
+   * 감사 지적). 지금은 클라이언트가 이 문자열을 그대로 보내고, 전체 ISO 문자열이
+   * 오면 서버가 명확히 거부한다.
    */
   startAt: string;
   endAt: string;

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
+import { toKstDateString } from '../../../../../lib/funding/creatorDateInput';
 import { validateBasicSection, validateCreatorSection, validatePayoutSection, validateStorySection } from '../../../../../lib/funding/creatorValidation';
 import {
   loadProjectForCreator, saveBasicSection, saveCreatorSection, savePayoutSection, saveStorySection,
@@ -101,8 +102,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 부르는 경로(예: 다른 API·스크립트)에 대한 방어가 남아야 한다.
      */
     const rawValue = (req.body?.value ?? {}) as Record<string, unknown>;
+    // 치환값도 **KST 달력 날짜**여야 한다 — validateBasicSection은 bare `YYYY-MM-DD`만 받고
+    // 시각은 스스로 붙인다(전체 ISO 문자열은 거부한다). 승인된 프로젝트의 날짜는 그 검증기를
+    // 통과해 저장된 값이라 왕복이 같은 순간으로 돌아온다. 혹시 어긋나면 날짜가 조용히
+    // 바뀌는 대신 basicLockedViolation이 "모금 기간은 바꿀 수 없습니다"로 막는다.
     const value = wasApproved && before
-      ? { ...rawValue, startAt: before.startAt.toISOString(), endAt: before.endAt.toISOString() }
+      ? { ...rawValue, startAt: toKstDateString(before.startAt), endAt: toKstDateString(before.endAt) }
       : rawValue;
     const validationNow = wasApproved ? new Date(0) : new Date();
 
