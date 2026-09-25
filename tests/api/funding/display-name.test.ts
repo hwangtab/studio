@@ -25,7 +25,8 @@ const call = async (body: unknown, method = 'PATCH') => {
 };
 
 const order = (over: Record<string, unknown> = {}) => ({
-  id: 'order-1', manageToken: 'correct-token', status: 'paid', fundingPledge: { paymentMethod: 'toss' }, ...over,
+  id: 'order-1', manageToken: 'correct-token', status: 'paid', customerName: '홍길동',
+  fundingPledge: { paymentMethod: 'toss', publicName: null }, ...over,
 });
 
 beforeEach(() => {
@@ -66,7 +67,7 @@ it.each(['paid', 'pending', 'partially_refunded'])('%s 상태에서는 철회할
   (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
   const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false });
   expect(r.status).toBe(200);
-  expect(r.body).toEqual({ ok: true, displayNamePublic: false });
+  expect(r.body).toEqual({ ok: true, displayNamePublic: false, publicName: null });
   expect(set).toHaveBeenCalledWith(expect.objectContaining({ displayNamePublic: false }));
 });
 
@@ -80,6 +81,52 @@ it.each(['refunded', 'expired', 'failed'])('%s 상태는 409 — 끝난 펀딩�
 it('다시 공개로 되돌릴 수도 있다', async () => {
   (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order());
   const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true });
-  expect(r.body).toEqual({ ok: true, displayNamePublic: true });
+  expect(r.body).toEqual({ ok: true, displayNamePublic: true, publicName: null });
   expect(set).toHaveBeenCalledWith(expect.objectContaining({ displayNamePublic: true }));
+});
+
+/**
+ * 명단 표시 이름(실명·가린 이름·닉네임). 결제 완료 화면의 "명단에 올리기"와 펀딩 확인 화면이
+ * 같은 경로로 보낸다.
+ */
+describe('명단 표시 이름', () => {
+  beforeEach(() => (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order()));
+
+  it('가린 이름은 서버가 결제자 이름에서 만든다 — 클라이언트가 보낸 문자열을 믿지 않는다', async () => {
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'masked', publicNickname: '아무거나' });
+    expect(r.status).toBe(200);
+    expect(r.body.publicName).toBe('홍*동');
+    expect(set).toHaveBeenCalledWith(expect.objectContaining({ displayNamePublic: true, publicName: '홍*동' }));
+  });
+
+  it('닉네임은 앞뒤 공백을 걷어 저장한다', async () => {
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '  연대하는 청취자 ' });
+    expect(r.body.publicName).toBe('연대하는 청취자');
+  });
+
+  it('실명을 고르면 표시 이름을 비운다(NULL = 결제자 이름)', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ fundingPledge: { paymentMethod: 'toss', publicName: '옛닉' } }));
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'real' });
+    expect(set).toHaveBeenCalledWith(expect.objectContaining({ publicName: null }));
+  });
+
+  it('빈 닉네임·모르는 방식은 400이고 아무것도 쓰지 않는다', async () => {
+    expect((await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '  ' })).status).toBe(400);
+    expect((await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'anon' })).status).toBe(400);
+    expect(update).not.toHaveBeenCalled();
+  });
+
+  // 이 기능 전에 열어 둔 화면은 방식 없이 공개만 켠다. 그때 표시 이름을 실명으로 되돌리면
+  // 닉네임을 골라 둔 사람이 토글 한 번에 실명으로 공개된다.
+  it('방식 없이 공개만 켜면 저장된 표시 이름을 건드리지 않는다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ fundingPledge: { paymentMethod: 'toss', publicName: '옛닉' } }));
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true });
+    expect(set.mock.calls[0][0]).not.toHaveProperty('publicName');
+    expect(r.body.publicName).toBe('옛닉');
+  });
+
+  it('공개를 끌 때는 방식이 와도 표시 이름을 건드리지 않는다', async () => {
+    await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false, publicNameStyle: 'nickname', publicNickname: '새닉' });
+    expect(set.mock.calls[0][0]).not.toHaveProperty('publicName');
+  });
 });

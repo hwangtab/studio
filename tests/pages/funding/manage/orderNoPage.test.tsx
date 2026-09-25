@@ -9,6 +9,7 @@ const baseProps = {
   quantity: 1, additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
   canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [], lookupFailed: false,
   displayNamePublic: false, canEditDisplayName: true,
+  customerName: '홍길동', publicName: null, supporterMessage: null,
 };
 
 beforeEach(() => {
@@ -54,41 +55,64 @@ it('partially_refunded 상태는 한국어 라벨로 보인다', () => {
  * 약관 제13조 2항 — "후원자 명단 이름 공개 동의는 후원 확인 페이지에서 철회할 수 있다".
  * 그런데 이 화면에는 공개 여부 표시조차 없었다(약관이 있다고 말한 기능이 코드에 없었다).
  */
-describe('이름 공개 철회', () => {
-  it('토글을 끄면 PATCH를 보내고 결과 문구를 띄운다', async () => {
+describe('명단 공개 설정', () => {
+  const okFetch = (body: Record<string, unknown>) => {
     const fetchMock = jest.fn().mockResolvedValue({
-      ok: true, headers: { get: () => 'application/json' },
-      json: async () => ({ ok: true, displayNamePublic: false }),
+      ok: true, headers: { get: () => 'application/json' }, json: async () => body,
     });
     global.fetch = fetchMock as never;
+    return fetchMock;
+  };
+
+  it('명단에서 내리면 PATCH를 보내고 결과 문구를 띄운다', async () => {
+    const fetchMock = okFetch({ ok: true, displayNamePublic: false, publicName: null });
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
-    const toggle = screen.getByLabelText('서포터 명단에 이름 공개');
-    expect(toggle).toBeChecked();
-    await userEvent.click(toggle);
+    expect(screen.getByText(/서포터 명단에/)).toHaveTextContent('홍길동(으)로 올라가 있습니다');
+    await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
     // 공개 명단은 상태 API 캐시(s-maxage=60 · SWR 300)를 통해 나가므로 즉시 반영되지 않는다 —
     // 그걸 말하지 않으면 "철회가 안 됐다"는 문의가 온다.
-    expect(await screen.findByText(/서포터 명단에서 이름을 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
+    expect(await screen.findByText(/서포터 명단에서 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
     const [url, init] = fetchMock.mock.calls[0];
     expect(url).toBe('/api/funding/display-name');
     expect(init.method).toBe('PATCH');
     expect(JSON.parse(init.body)).toEqual({ orderNo: 'FND-1', token: 'tok', displayNamePublic: false });
-    expect(screen.getByLabelText('서포터 명단에 이름 공개')).not.toBeChecked();
+    expect(screen.getByRole('button', { name: '명단에 올리기' })).toBeInTheDocument();
   });
 
-  it('실패하면 토글이 원래 값으로 되돌아간다 — 화면이 서버보다 앞서지 않는다', async () => {
+  it('닉네임으로 바꿔 저장하면 방식과 닉네임을 함께 보낸다', async () => {
+    const fetchMock = okFetch({ ok: true, displayNamePublic: true, publicName: '청취자' });
+    render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
+    const save = screen.getByRole('button', { name: '표시 이름 저장' });
+    // 바뀐 것이 없으면 저장할 것도 없다.
+    expect(save).toBeDisabled();
+    await userEvent.click(screen.getByLabelText('닉네임'));
+    await userEvent.type(screen.getByLabelText('명단에 표시할 닉네임'), '청취자');
+    await userEvent.click(save);
+    expect(await screen.findByText(/서포터 명단에 올렸습니다/)).toBeInTheDocument();
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
+      orderNo: 'FND-1', token: 'tok', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자',
+    });
+  });
+
+  it('저장된 가린 이름을 선택 상태로 되살린다', () => {
+    render(<FundingManagePage {...baseProps} displayNamePublic publicName="홍*동" paymentMethod="toss" />);
+    expect(screen.getByLabelText(/가린 이름/)).toBeChecked();
+  });
+
+  it('실패하면 서버 문구를 보이고 공개 상태를 바꾸지 않는다 — 화면이 서버보다 앞서지 않는다', async () => {
     global.fetch = jest.fn().mockResolvedValue({
       ok: false, headers: { get: () => 'application/json' },
       json: async () => ({ ok: false, message: '이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.' }),
     }) as never;
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
-    await userEvent.click(screen.getByLabelText('서포터 명단에 이름 공개'));
+    await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
     expect(await screen.findByText('이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.')).toBeInTheDocument();
-    expect(screen.getByLabelText('서포터 명단에 이름 공개')).toBeChecked();
+    expect(screen.getByRole('button', { name: '명단에서 내리기' })).toBeInTheDocument();
   });
 
-  it('바꿀 수 없는 상태면 토글 대신 현재 값만 보인다', () => {
+  it('바꿀 수 없는 상태면 편집 칸 대신 현재 값만 보인다', () => {
     render(<FundingManagePage {...baseProps} status="refunded" canCancel={false} canEditDisplayName={false} displayNamePublic paymentMethod="toss" />);
-    expect(screen.queryByLabelText('서포터 명단에 이름 공개')).toBeNull();
+    expect(screen.queryByRole('button', { name: '명단에서 내리기' })).toBeNull();
     expect(screen.getByText('공개')).toBeInTheDocument();
   });
 });

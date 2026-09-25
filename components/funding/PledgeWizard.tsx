@@ -9,8 +9,10 @@ import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
+import type { PublicNameStyle } from '../../lib/funding/publicName';
 import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, TextArea, TextInput } from '../ui/Field';
+import PublicNameChoice from './PublicNameChoice';
 
 /**
  * 임시 저장에 담는 문자열 10칸. 배송 리워드는 이름·전화·이메일 + 배송 6칸 + 응원 메시지로
@@ -18,7 +20,8 @@ import { Field, TextArea, TextInput } from '../ui/Field';
  *
  * 여기 없는 것이 계약이다(lib/formDraft.ts "지켜야 할 선"):
  * - `displayNamePublic` — 체크 한 번뿐이라 잃어도 타이핑 손해가 없고, 문자열만 담는
- *   모듈 계약을 깨면서까지 살릴 값이 아니다.
+ *   모듈 계약을 깨면서까지 살릴 값이 아니다. 명단 표시 방식·닉네임도 같다 — 공개 동의가
+ *   복원되지 않으니 그 아래 선택만 살려 둘 이유가 없다.
  * - `rewardId`·`quantityText`·`additionalText` — 재고는 그 사이 바뀐다. 되살린 선택이
  *   지금도 유효한 재고인지 이 모듈은 알 수 없다.
  */
@@ -124,7 +127,10 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
   const [quantityText, setQuantityText] = useState('1');
   const [additionalText, setAdditionalText] = useState('0');
-  const [form, setForm] = useState({ customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false });
+  const [form, setForm] = useState({
+    customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false,
+    publicNameStyle: 'real' as PublicNameStyle, publicNickname: '',
+  });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -476,19 +482,52 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           </div>
         )}
 
-        <div className="mt-5">
-          <Field id={`${uid}-msg`} label="응원 메시지" hint="선택 항목입니다. 아래 공개에 동의하시면 프로젝트 페이지에 이름과 함께 표시됩니다.">
-            <TextArea rows={3} className="min-h-0" maxLength={PLEDGE_TEXT_LIMITS.supporterMessage} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
-          </Field>
-        </div>
+        {/*
+          응원 메시지와 명단 공개를 **한 덩어리**로 둔다. 예전에는 공개 체크가 메시지 칸 아래
+          떨어진 회색 한 줄이라, 메시지를 써 놓고도 체크를 못 보고 지나가 메시지가 아무 데도
+          안 뜨는 일이 잦았다(2026-09-25 운영 확인).
 
-        {/* 이름 공개는 **선택**이라 테두리 박스를 두르지 않는다. 필수 약관 동의와 같은
-            모양으로 나란히 두면 동의 체크가 두 개인 것처럼 읽혀, 화면 아래 토스 위젯의
-            결제 약관 동의까지 셋이 비슷해 보인다. 약관 동의는 제출 버튼 옆으로 옮겼다. */}
-        <label className="mt-5 flex cursor-pointer items-start gap-3">
-          <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-          <span className="text-sm text-gray-700 dark:text-gray-200">서포터 명단에 이름과 응원 메시지 공개</span>
-        </label>
+          그래도 **미리 체크해 두지 않는다.** 선택 항목 동의를 기본 체크로 받으면 적법한 동의로
+          보기 어렵다. 대신 메시지를 썼는데 공개가 꺼져 있으면 바로 아래에서 알려 주고, 누르면
+          켜지는 버튼을 둔다 — 누르는 것은 후원자 본인이다.
+
+          테두리 박스는 두르지 않는다 — 필수 약관 동의처럼 보이면 안 된다(토스 위젯의 [필수]
+          체크와 나란히 셋이 비슷해 보였던 이유). 옅은 바탕의 "선택" 구획으로 구분한다.
+        */}
+        <div className="mt-5 rounded-xl bg-gray-50/70 p-4 dark:bg-gray-800/40">
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">
+            응원 메시지 · 서포터 명단 <span className="font-normal text-gray-500 dark:text-gray-400">(선택)</span>
+          </p>
+          <p className={helpClass}>공개에 동의하시면 프로젝트 페이지 서포터 명단에 이름과 메시지가 올라갑니다. 실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.</p>
+          <div className="mt-3">
+            <Field id={`${uid}-msg`} label="응원 메시지">
+              <TextArea rows={3} className="min-h-0" maxLength={PLEDGE_TEXT_LIMITS.supporterMessage} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
+            </Field>
+          </div>
+
+          <label className="mt-4 flex cursor-pointer items-start gap-3">
+            <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
+            <span className="text-sm font-medium text-gray-900 dark:text-white">서포터 명단에 이름과 응원 메시지 공개</span>
+          </label>
+
+          {form.displayNamePublic ? (
+            <PublicNameChoice
+              customerName={form.customerName}
+              style={form.publicNameStyle}
+              nickname={form.publicNickname}
+              onStyleChange={(publicNameStyle) => setForm({ ...form, publicNameStyle })}
+              onNicknameChange={(publicNickname) => setForm({ ...form, publicNickname })}
+              message={form.supporterMessage}
+            />
+          ) : form.supporterMessage.trim() !== '' ? (
+            <div role="status" className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">
+              <span>메시지를 쓰셨지만 지금은 비공개입니다. 공개하지 않으면 프로젝트 페이지에 보이지 않습니다.</span>
+              <Button type="button" size="sm" variant="outline" onClick={() => setForm({ ...form, displayNamePublic: true })}>
+                명단에 공개하기
+              </Button>
+            </div>
+          ) : null}
+        </div>
       </fieldset>
 
       {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —

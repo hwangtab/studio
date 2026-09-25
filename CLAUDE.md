@@ -252,6 +252,17 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 마이그레이션을 CI/CD에서 자동 실행하지 않는다(`npm run db:migrate`는 운영자가 수동 실행) —
 그래서 순서를 지키는 것은 배포하는 사람의 책임이고, 그 사람이 보는 문서는 여기다.
 
+### 마이그레이션 0035(`public_name`)도 배포보다 먼저 적용한다
+
+`funding_pledges.public_name`(서포터 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이
+`drizzle/migrations/0035_funding_public_name.sql`로 추가됐다. 위 0020 절과 **같은 이유로** 순서를
+뒤집으면 후원 결제 확인 전체가 `no such column: public_name`으로 깨진다 — 관계 조회가 전체 컬럼을
+SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이그레이션 → 배포.
+
+명단은 `COALESCE(public_name, customer_name)`을 쓴다. 그래서 1년 파기(`lib/funding/retention.ts`)는
+이 값을 NULL이 아니라 `PURGED_MARK`로 덮고, 명단 조회는 그 표식을 보고 행을 내린다 — NULL로 비우면
+실명을 피해 닉네임을 고른 사람이 파기 시점에 실명으로 공개된다.
+
 ### 개설자 배송지 열람은 마감 뒤에만 열린다
 
 `lib/funding/creatorShipping.ts`의 `loadCreatorShipping`은 프로젝트 상태가 `closed`가

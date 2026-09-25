@@ -268,6 +268,10 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="발송 상태" value={FULFILLMENT_LABELS[pledge.fulfillmentStatus] ?? pledge.fulfillmentStatus} />
                 <DescriptionRow label="배송지" value={pledge.shipping ?? '없음'} />
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
+                <DescriptionRow
+                  label="서포터 명단"
+                  value={pledge.displayNamePublic ? `공개 · ${pledge.publicName ?? `${pledge.customerName} (실명)`}` : '비공개'}
+                />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />
                 {/* 결제창에서 승인이 안 난 사유. 컬럼은 있었는데 읽는 화면이 없어, 문의가

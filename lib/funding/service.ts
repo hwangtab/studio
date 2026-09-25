@@ -240,13 +240,13 @@ export const createFundingPledge = async (
   statements.push(db.run(sql`
     INSERT INTO funding_pledges (
       id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
-      payment_method, hold_expires_at, supporter_message, display_name_public,
+      payment_method, hold_expires_at, supporter_message, display_name_public, public_name,
       shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
       terms_agreed_at, terms_version
     )
     SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
            ${payload.quantity}, ${payload.additionalAmount}, ${payload.paymentMethod}, ${toEpoch(holdExpiresAt)},
-           ${payload.supporterMessage ?? null}, ${payload.displayNamePublic ? 1 : 0},
+           ${payload.supporterMessage ?? null}, ${payload.displayNamePublic ? 1 : 0}, ${payload.publicName ?? null},
            ${s?.name ?? null}, ${s?.phone ?? null}, ${s?.postcode ?? null}, ${s?.address1 ?? null}, ${s?.address2 ?? null}, ${s?.memo ?? null},
            ${toEpoch(now)}, ${FUNDING_TERMS_VERSION}
     WHERE ${stockCondition}
@@ -337,14 +337,19 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
    * 다른 문장으로 갈아 끼우는데, 거기는 **한 사람에게 말을 거는 자리**라 대체 문장이 성립한다.
    * 여기는 사람을 세워 놓는 명단이라 갈아 끼울 문장이 없다 — 표식은 그 자리에 아무도 없다는
    * 뜻이므로 명단에서 내린다. LIMIT 앞에서 걸러야 남은 100자리가 실제 이름으로 채워진다.
+   *
+   * **표시 이름은 `public_name`이 먼저다**(가린 이름·닉네임, lib/funding/publicName.ts).
+   * 1년 파기가 그 값을 `PURGED_MARK`로 덮으면 결제자 이름이 아직 남아 있어도 명단에서
+   * 내린다 — 실명을 피하려고 닉네임을 고른 사람을 파기 시점에 실명으로 되돌리면 안 된다.
    */
-  const names = await db.all<{ customer_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
-    SELECT o.customer_name,
+  const names = await db.all<{ display_name: string; supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
+    SELECT COALESCE(fp.public_name, o.customer_name) AS display_name,
            fp.supporter_message,
            fp.paid_at, o.created_at
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
       AND o.customer_name <> ${PURGED_MARK}
+      AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
   return {
@@ -352,10 +357,10 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     backerCount: Number(totals[0]?.backers ?? 0),
     backerPersonCount: Number(totals[0]?.persons ?? 0),
     remaining,
-    publicBackers: names.map((n) => n.customer_name),
+    publicBackers: names.map((n) => n.display_name),
     publicMessages: names
       .map((n) => ({
-        name: n.customer_name,
+        name: n.display_name,
         // 공백만 남은 값은 메시지가 아니다.
         message: (n.supporter_message ?? '').trim(),
         at: Number(n.paid_at ?? n.created_at),

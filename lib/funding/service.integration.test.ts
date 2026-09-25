@@ -15,6 +15,7 @@ import { aggregateProjectStatus, createFundingPledge, expireStalePledges, findFu
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import { FUNDING_TERMS_VERSION } from './policy';
+import { PURGED_MARK } from '../privacy/orderRetention';
 // eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
 
@@ -50,7 +51,7 @@ rewards:
 export const payloadFor = (over: Partial<CreatePledgePayload> = {}): CreatePledgePayload => ({
   projectSlug: 'demo', rewardId: 'mail', quantity: 1, additionalAmount: 0, paymentMethod: 'toss',
   customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@example.com',
-  displayNamePublic: true, termsAgreed: true, ...over,
+  displayNamePublic: true, publicName: null, termsAgreed: true, ...over,
 });
 
 beforeAll(async () => {
@@ -440,6 +441,24 @@ describe('응원 메시지 공개', () => {
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.publicBackers).not.toContain('비공개');
     expect(s.publicMessages.map((m) => m.message)).not.toContain('조용히 응원');
+  });
+
+  it('가린 이름·닉네임을 고르면 명단에는 그 이름만 나가고 실명은 나가지 않는다', async () => {
+    await paidWith({ customerEmail: 'm5@example.com', customerPhone: '010-9005', customerName: '홍길동', publicName: '홍*동', supporterMessage: '가린 이름으로 응원' });
+    await paidWith({ customerEmail: 'm6@example.com', customerPhone: '010-9006', customerName: '실명숨김', publicName: '연대하는 청취자' });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).toEqual(expect.arrayContaining(['홍*동', '연대하는 청취자']));
+    expect(s.publicBackers).not.toContain('홍길동');
+    expect(s.publicBackers).not.toContain('실명숨김');
+    expect(s.publicMessages.find((m) => m.message === '가린 이름으로 응원')?.name).toBe('홍*동');
+  });
+
+  // 1년 파기가 표시 이름을 표식으로 덮으면, 결제자 이름이 남아 있어도 실명으로 되돌아가지 않고 내린다.
+  it('표시 이름이 파기 표식이면 명단에서 내린다', async () => {
+    await paidWith({ customerEmail: 'm7@example.com', customerPhone: '010-9007', customerName: '파기된닉', publicName: PURGED_MARK });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).not.toContain('파기된닉');
+    expect(s.publicBackers).not.toContain(PURGED_MARK);
   });
 
   it('공백만 남긴 메시지는 목록에 넣지 않는다', async () => {
