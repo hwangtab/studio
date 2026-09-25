@@ -248,6 +248,41 @@ describe('스튜디오 서비스', () => {
     confirmSpy.mockRestore();
   });
 
+  /**
+   * `none`은 행을 지우지 않고 보존한다(lib/funding/projectServices.ts). 그래서 화면은 옛
+   * 약정을 설계비 칸으로 되살리지 않되, 다시 지정하면 무엇으로 돌아가는지는 알려야 한다 —
+   * 모르면 이중 청구·누락이 난다.
+   */
+  it('되돌린 프로젝트는 설계비 칸 대신 보존된 옛 약정을 알린다', () => {
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: '2026-10-03T00:00:00.000Z' } }}
+      />,
+    );
+    expect(screen.getByRole('button', { name: '직접 개설' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText(/직접 개설한 프로젝트입니다/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '입금 확인' })).not.toBeInTheDocument();
+    expect(screen.getByText(/이전 약정 보존/)).toHaveTextContent('400,000원');
+    expect(screen.getByText(/이전 약정 보존/)).toHaveTextContent('입금 확인');
+  });
+
+  it('되돌리기 확인창은 기록이 보존된다고 말한다 — 지워진다고 말하지 않는다', () => {
+    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null } }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '직접 개설' }));
+    expect(confirmSpy.mock.calls[0][0]).toContain('보존');
+    expect(confirmSpy.mock.calls[0][0]).not.toContain('지워집니다');
+    confirmSpy.mockRestore();
+  });
+
   it('0037이 운영 DB에 없으면 버튼 대신 마이그레이션 안내를 띄운다', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'missing_table' }} />);
     expect(screen.getByText(/마이그레이션 0037/)).toBeInTheDocument();

@@ -93,9 +93,41 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
     expect(off.ok && off.service?.designFeePaidAt).toBeNull();
   });
 
-  it('직접 개설로 되돌리면 행이 지워진다', async () => {
+  /**
+   * 예전에는 `none`이 행을 DELETE해서, 되돌렸다 재지정하는 왕복 한 번에 약정가가 그때의
+   * 정가로 재발행되고 입금 확인 시각이 사라졌다 — 정가가 오른 뒤라면 이미 받은 돈이 화면에서
+   * "미입금"이 되고 청구액이 올라간다. 그걸 드러내야 할 "현재 정가와 다름" 배지는 재발행값이
+   * 정의상 현재 정가와 같아서 침묵한다.
+   */
+  it('직접 개설로 되돌려도 약정 설계비·입금 기록은 남는다', async () => {
     const id = await seedProject();
     await setProjectService(id, 'design', new Date(), ACTOR);
+    await client.execute({ sql: 'UPDATE funding_project_services SET design_fee = ? WHERE project_id = ?', args: [400000, id] });
+    const paidAt = new Date('2026-10-03T00:00:00Z');
+    await setDesignFeePaid(id, true, paidAt, ACTOR);
+
+    const reverted = await setProjectService(id, 'none', new Date(), ACTOR);
+    expect(reverted).toEqual({ ok: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: paidAt.toISOString() } });
+    expect(await loadProjectService(id)).toEqual({
+      available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: paidAt.toISOString() },
+    });
+  });
+
+  it('none → design 왕복 뒤에도 최초 약정가와 입금 시각이 그대로다 — 정가로 재발행하지 않는다', async () => {
+    const id = await seedProject();
+    await setProjectService(id, 'design', new Date(), ACTOR);
+    await client.execute({ sql: 'UPDATE funding_project_services SET design_fee = ? WHERE project_id = ?', args: [400000, id] });
+    const paidAt = new Date('2026-10-03T00:00:00Z');
+    await setDesignFeePaid(id, true, paidAt, ACTOR);
+
+    await setProjectService(id, 'none', new Date(), ACTOR);
+    const again = await setProjectService(id, 'design', new Date(), ACTOR);
+    expect(again).toEqual({ ok: true, service: { kind: 'design', designFee: 400000, designFeePaidAt: paidAt.toISOString() } });
+    expect(400000).not.toBe(FUNDING_DESIGN_PRICE);
+  });
+
+  it('행이 없는 프로젝트를 none으로 지정하면 아무것도 만들지 않는다', async () => {
+    const id = await seedProject();
     expect(await setProjectService(id, 'none', new Date(), ACTOR)).toEqual({ ok: true, service: null });
     expect(await loadProjectService(id)).toEqual({ available: true, service: null });
   });

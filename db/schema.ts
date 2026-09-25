@@ -1270,10 +1270,12 @@ export type NewPrivacyAccessLog = typeof privacyAccessLogs.$inferInsert;
 /**
  * 펀딩 프로젝트에 스튜디오가 붙인 서비스 — 운영자 전용(2026-09-26, 발매 파이프라인 설계 3단계).
  *
- * 행이 없으면 **직접 개설**(개설자 셀프, 설계비 없음)이다. 행이 있으면 스튜디오가 설계를 맡은
- * 프로젝트다:
+ * 행이 없으면 **직접 개설**(개설자 셀프, 설계비 없음)이다. `kind`는 셋이다:
  * - `design`  — 펀딩 설계 대행(/ko/crowdfunding-design) 단독
  * - `release` — 발매 프로젝트 연계(펀딩 설계 + 모금액으로 제작·홍보·유통)
+ * - `none`    — 직접 개설로 되돌림. **행은 남긴다** — 지우면 재지정 때 약정 설계비가 그때의
+ *   정가로 재발행되고 입금 확인 시각이 사라진다(아래 design_fee 주석의 약속이 깨진다).
+ *   `none`은 마이그레이션 0037의 `kind`에 CHECK 제약이 없어 스키마 변경 없이 쓸 수 있다.
  *
  * **왜 funding_projects에 칸을 더하지 않고 테이블을 따로 두나.** funding_projects는 컬럼 지정
  * 없는 `select()`와 관계 조회로 읽는 경로가 많아서, 칸을 더한 코드가 마이그레이션보다 먼저
@@ -1285,7 +1287,7 @@ export type NewPrivacyAccessLog = typeof privacyAccessLogs.$inferInsert;
  * 별개로 청구·입금되므로(성공 수수료 없음, data/pricing.ts FUNDING_DESIGN_PRICE) 정산 계산에
  * 섞지 않는다.
  */
-export const fundingProjectServiceKindEnum = ['design', 'release'] as const;
+export const fundingProjectServiceKindEnum = ['design', 'release', 'none'] as const;
 export const fundingProjectServices = sqliteTable('funding_project_services', {
   projectId: text('project_id').primaryKey().references(() => fundingProjects.id),
   kind: text('kind', { enum: fundingProjectServiceKindEnum }).notNull(),

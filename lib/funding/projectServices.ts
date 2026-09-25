@@ -30,7 +30,7 @@ export type ProjectServiceView = {
   designFeePaidAt: string | null;
 };
 
-export const PROJECT_SERVICE_LABELS: Record<FundingProjectServiceKind | 'none', string> = {
+export const PROJECT_SERVICE_LABELS: Record<FundingProjectServiceKind, string> = {
   none: '직접 개설',
   design: '펀딩 설계 대행',
   release: '발매 프로젝트 연계',
@@ -101,15 +101,25 @@ export type ServiceWriteResult =
   | { ok: false; code: 'not_found' | 'unavailable' | 'no_service' };
 
 /**
- * 서비스 종류를 정한다. `none`이면 행을 지운다(직접 개설로 되돌림).
+ * 서비스 종류를 정한다.
  *
  * 이미 행이 있으면 **종류만 바꾸고 약정 설계비·입금 시각은 그대로 둔다** — 설계 대행으로
  * 시작했다가 제작까지 맡기로 해도(design → release) 이미 약정·입금한 설계비는 같은 돈이다.
  * 새로 만들 때만 지금의 FUNDING_DESIGN_PRICE를 약정가로 복사한다.
+ *
+ * **`none`(직접 개설로 되돌림)도 행을 지우지 않는다.** 예전에는 DELETE였는데, 그러면 되돌렸다
+ * 재지정하는 왕복 한 번에 약정가가 **그때의 정가로 재발행**되고 입금 확인 시각이 사라졌다 —
+ * 정가가 50만 → 60만으로 오른 뒤라면 이미 받은 55만원이 화면에서 "미입금"이 되고 청구액이
+ * 66만으로 바뀐다. 게다가 그 어긋남을 드러내라고 만든 "현재 정가와 다름" 배지는 재발행값이
+ * 정의상 현재 정가와 같아서 침묵한다. 행을 남기면 재지정이 위 onConflictDoUpdate를 타고
+ * 금액·입금 시각을 그대로 되살린다.
+ *
+ * 행이 **처음부터 없으면** `none`은 아무것도 만들지 않는다 — 약정한 적 없는 설계비를 적을
+ * 이유가 없다.
  */
 export const setProjectService = async (
   projectId: string,
-  kind: FundingProjectServiceKind | 'none',
+  kind: FundingProjectServiceKind,
   now: Date,
   actor: string,
 ): Promise<ServiceWriteResult> => {
@@ -123,9 +133,13 @@ export const setProjectService = async (
 
   try {
     if (kind === 'none') {
-      await db.delete(fundingProjectServices).where(eq(fundingProjectServices.projectId, projectId));
+      const [reverted] = await db
+        .update(fundingProjectServices)
+        .set({ kind, updatedAt: now })
+        .where(eq(fundingProjectServices.projectId, projectId))
+        .returning();
       console.warn(`[funding] 스튜디오 서비스 지정 (projectId=${projectId}, kind=none, actor=${actor})`);
-      return { ok: true, service: null };
+      return { ok: true, service: reverted ? toView(reverted) : null };
     }
     const [row] = await db
       .insert(fundingProjectServices)

@@ -332,7 +332,9 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
 
   const handleSetService = (kind: 'none' | 'design' | 'release') => {
     if (kind === 'none' && service.available && service.service) {
-      if (!window.confirm('직접 개설로 되돌리면 약정 설계비·입금 기록이 지워집니다. 되돌릴까요?')) return;
+      // 약정가·입금 기록은 지우지 않고 보존한다(lib/funding/projectServices.ts) — 예전 문구는
+      // "지워집니다"였고, 실제로 지우던 동안 재지정이 약정가를 그때의 정가로 재발행했다.
+      if (!window.confirm('직접 개설로 되돌릴까요? 약정 설계비·입금 기록은 보존되고, 다시 지정하면 그 값으로 돌아갑니다.')) return;
     }
     return run(
       () => patchFundingProject(project.id, { action: 'set_studio_service', kind }),
@@ -902,7 +904,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                     );
                   })}
                 </div>
-                {service.service ? (
+                {service.service && service.service.kind !== 'none' ? (
                   <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-gray-700">
                     <dt>약정 설계비</dt>
                     <dd>
@@ -928,7 +930,21 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                     </dd>
                   </dl>
                 ) : (
-                  <p className="text-gray-600">직접 개설한 프로젝트입니다. 설계비가 없습니다.</p>
+                  <>
+                    <p className="text-gray-600">직접 개설한 프로젝트입니다. 설계비가 없습니다.</p>
+                    {/* 되돌린 프로젝트의 옛 약정은 보존돼 있다 — 다시 지정할 때 무엇으로
+                        돌아가는지 알아야 이중 청구·누락을 막을 수 있다. */}
+                    {service.service && (
+                      <p className="text-xs text-gray-500">
+                        이전 약정 보존 — 설계비 {formatPriceAmount(service.service.designFee)}원
+                        {' · '}
+                        {service.service.designFeePaidAt
+                          ? `입금 확인 ${formatKstDateTimeFull(service.service.designFeePaidAt)}`
+                          : '미입금'}
+                        . 다시 지정하면 이 값으로 돌아갑니다.
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             )}
