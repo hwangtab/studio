@@ -2,9 +2,10 @@ import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
-import { bookings, contracts, fundingPledges, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
+import { bookings, contracts, fundingPledges, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarIdFor, fetchBusyRanges, type BookingCalendar } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
+import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import {
   SUBSCRIPTION_DORMANCY_YEARS,
@@ -642,6 +643,40 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         '이 상태로 두면 공개 모금액에 환불된 돈이 남고, 그 서포터가 음원을 계속 받으며, 발송 명단에도 남습니다.\n' +
         '토스 콘솔에서 실제 취소 여부를 확인한 뒤 관리자 > 펀딩 상세에서 상태를 맞춰 주세요.',
     });
+  }
+
+  /**
+   * **같은 slug가 파일과 DB에 둘 다 있는 프로젝트.**
+   *
+   * 읽는 입구(lib/funding/repository.ts)에서 파일이 이긴다. 승인된 DB 프로젝트와 같은
+   * slug의 md가 나중에 추가되면 파일이 그 자리를 가져가는데, 후원 집계는 문자열
+   * `fp.project_slug`로 도므로 기존 후원의 모금액·실명·응원 메시지가 새 파일 프로젝트에
+   * 합산된다. 리워드 id가 다르면 한정 재고가 0에서 재시작해 초과 판매되고, 기존 후원자는
+   * 후원 확인 페이지에서 내려받기를 잃는다. 개설자 저장·관리자 승인의 충돌 가드는
+   * DB→파일 방향뿐이라 이 순서를 막지 못한다.
+   *
+   * **CI에는 DB가 없어 검사할 수 없다** — 그래서 여기서 본다. 오류도 안 나고 화면도
+   * 멀쩡해 보이므로, 알리지 않으면 아무도 모른다.
+   */
+  const fileSlugs = new Set(getAllFundingProjects().map((project) => project.slug));
+  if (fileSlugs.size > 0) {
+    const approvedDbSlugs = await db
+      .select({ slug: fundingProjects.slug })
+      .from(fundingProjects)
+      .where(eq(fundingProjects.reviewStatus, 'approved'));
+    const collided = approvedDbSlugs.map((row) => row.slug).filter((slug) => fileSlugs.has(slug));
+    if (collided.length > 0) {
+      issues.push({
+        severity: 'high',
+        href: '/admin/funding/projects',
+        title: `같은 slug가 파일과 DB에 둘 다 있는 펀딩 프로젝트 ${collided.length}건`,
+        detail:
+          `slug: ${sample(collided)}\n` +
+          '읽는 입구에서 파일이 이깁니다. 기존 후원의 모금액·실명·응원 메시지가 파일 프로젝트에 합산되고, ' +
+          '리워드 id가 다르면 한정 재고가 0에서 재시작해 초과 판매됩니다. 기존 후원자는 내려받기를 잃습니다.\n' +
+          'content/funding/<slug>.md를 지우거나 한쪽 slug를 바꿔 주세요 — 후원이 이미 들어온 쪽의 slug는 바꾸지 마세요.',
+      });
+    }
   }
 
   /**
