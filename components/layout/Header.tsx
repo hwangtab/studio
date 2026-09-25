@@ -107,6 +107,8 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       items: [
         { label: t('nav.releaseProject'), href: `/${locale}/release-project` },
         { label: t('nav.musicPromotion'), href: `/${locale}/music-promotion` },
+        // ko 전용 라우트 — 다른 로케일은 404다(lib/koOnlyRoutes.ts).
+        ...(locale === 'ko' ? [{ label: t('nav.crowdfundingDesign'), href: '/ko/crowdfunding-design' }] : []),
       ]
     },
     /**

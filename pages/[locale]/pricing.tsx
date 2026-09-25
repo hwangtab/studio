@@ -65,6 +65,14 @@ const BOOKING_ENTRY: Record<string, { href: string; kind: 'reserve' | 'order' }>
   'mastering-package': { href: '/ko/booking/mixing-mastering?product=mastering-package', kind: 'order' },
 };
 
+/**
+ * 부가 서비스 중 전용 LP가 있는 것 — 카드에 보조 CTA "자세히 보기"를 단다. ko 전용 LP라
+ * ko에서만 쓴다(예약 퍼널 BOOKING_ENTRY와 같은 이유로 로케일 접두사를 하드코딩).
+ */
+const ADDITIONAL_DETAIL_PAGES: Record<string, string> = {
+  'service-funding': '/ko/crowdfunding-design',
+};
+
 interface PricingProps {
   locale: Locale;
   pricingData: ReturnType<typeof getPricingData>;
@@ -548,6 +556,12 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
                 ctaHref={kakaoUrl}
                 trackingComponent="PricingAdditional"
                 locale={locale}
+                {...(locale === 'ko' && ADDITIONAL_DETAIL_PAGES[service.id]
+                  ? {
+                      secondaryCtaLabel: t('pricing.cta.detail', { defaultValue: '자세히 보기' }),
+                      secondaryCtaHref: ADDITIONAL_DETAIL_PAGES[service.id],
+                    }
+                  : {})}
               />
             </div>
           ))}

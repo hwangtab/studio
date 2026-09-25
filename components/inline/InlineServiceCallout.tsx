@@ -23,8 +23,8 @@ const SERVICE_PATHS: Record<ServiceType, string> = {
   mixing: '/mixing-mastering',
   practice: '/practice-room',
   release: '/release-project',
-  // 펀딩 설계 대행은 단독 페이지가 없고 요금 페이지의 부가 서비스 섹션에 있다.
-  funding: '/pricing#support-services',
+  // 펀딩 설계 대행 전용 LP(2026-09-25, ko 전용). 이 콜아웃도 ko에서만 렌더되므로 그대로 링크한다.
+  funding: '/crowdfunding-design',
 };
 
 const SERVICE_ICONS: Record<ServiceType, React.ElementType> = {

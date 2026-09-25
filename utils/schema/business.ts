@@ -95,7 +95,8 @@ export const generateDefaultSchema = (
     { name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', vatIncluded: true },
     // 홍보 도입가는 종료일이 정해져 있다 — 일반 오퍼처럼 +12개월로 주장하면 표시광고법상 허위가 된다.
     { name: RELEASE_PRESS_OFFER_NAMES[locale], price: RELEASE_PRESS_INTRO_PRICE, path: '/music-promotion', validUntil: RELEASE_PRESS_INTRO_ENDS_ON },
-    { name: FUNDING_DESIGN_OFFER_NAMES[locale], price: FUNDING_DESIGN_PRICE, path: '/pricing' },
+    // 전용 LP는 ko 전용이라 다른 로케일은 요금 페이지를 가리킨다(/en/crowdfunding-design은 404).
+    { name: FUNDING_DESIGN_OFFER_NAMES[locale], price: FUNDING_DESIGN_PRICE, path: locale === 'ko' ? '/crowdfunding-design' : '/pricing' },
     { name: LESSON_OFFER_NAMES[locale], price: LESSON_MONTHLY_PRICE, path: '/lesson' },
     { name: WEDDING_OFFER_NAMES[locale], price: WEDDING_PACKAGE_PRICE, path: '/wedding-song' },
     { name: VOICEOVER_OFFER_NAMES[locale], price: VOICEOVER_HOURLY_PRICE, path: '/voice-acting' },
