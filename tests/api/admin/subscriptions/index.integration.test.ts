@@ -160,9 +160,18 @@ describe('POST /api/admin/subscriptions/[id] (수동 결제)', () => {
     const { status, body } = await call(detailHandler, {
       method: 'POST',
       query: { id: 'nope' },
-      body: { action: 'pause' },
+      // 정지는 종료일이 필수다 — 빼면 구독을 찾기도 전에 400이 나가 이 검사가 무의미해진다.
+      body: { action: 'pause', pausedUntil: '2099-01-01' },
     });
     expect(status).toBe(404);
     expect(body.ok).toBe(false);
+  });
+
+  it('정지 종료일이 없거나 형식이 틀리면 400을 준다', async () => {
+    for (const body of [{ action: 'pause' }, { action: 'pause', pausedUntil: '2026/01/01' }]) {
+      const res = await call(detailHandler, { method: 'POST', query: { id: 'nope' }, body });
+      expect(res.status).toBe(400);
+      expect(res.body.ok).toBe(false);
+    }
   });
 });

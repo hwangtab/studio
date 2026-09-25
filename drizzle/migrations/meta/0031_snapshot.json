@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "d4ed0da1-3568-454b-96e9-070ac318ff43",
-  "prevId": "88d53bb9-4781-4107-a4a9-9f157668808f",
+  "id": "78d985e1-1fce-4a6d-add7-becb8e69b109",
+  "prevId": "e869b0f7-e29d-44fd-ab1e-1fe2bc823d67",
   "tables": {
     "artist_payouts": {
       "name": "artist_payouts",
@@ -2848,6 +2848,20 @@
           "notNull": true,
           "autoincrement": false,
           "default": "(unixepoch())"
+        },
+        "paused_until": {
+          "name": "paused_until",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resume_notice_pending_at": {
+          "name": "resume_notice_pending_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
         }
       },
       "indexes": {

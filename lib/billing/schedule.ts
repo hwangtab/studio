@@ -68,3 +68,26 @@ export const retryAtFor = (failedAt: Date, attempt: number): Date | null => {
   if (offset === undefined) return null; // 한도 소진 — 재시도하지 않는다(paused)
   return new Date(failedAt.getTime() + offset * DAY_MS);
 };
+
+/**
+ * 관리자 화면의 날짜 입력('YYYY-MM-DD') → 그날 00:00 KST의 UTC Date.
+ *
+ * `new Date('2026-10-01')`은 **UTC 자정**으로 읽혀 KST로는 그 전날 09:00이 된다 — 하루
+ * 어긋난 날짜가 그대로 저장된다. 이 파일의 다른 계산이 전부 KST 벽시계 기준이므로 입력도
+ * 같은 기준으로 받는다.
+ *
+ * 00:00을 쓰는 이유: 청구 cron은 09:00 KST(UTC 00:00)에 돌므로, 운영자가 적은 그 날의
+ * 실행에서 정지가 풀린다. 09:00을 쓰면 `<=` 비교가 경계에서 걸리긴 하나 같은 순간이라
+ * 실행 지연 몇 초에 하루가 밀린다.
+ */
+export const parseKstDate = (value: string): Date | null => {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
+  if (!match) return null;
+  const [, y, m, d] = match;
+  const year = Number(y);
+  const month = Number(m);
+  const day = Number(d);
+  if (month < 1 || month > 12) return null;
+  if (day < 1 || day > daysInMonth(year, month)) return null;
+  return fromKst(year, month, day, 0);
+};

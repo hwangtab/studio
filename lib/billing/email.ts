@@ -157,6 +157,32 @@ export const sendSubscriptionChargeFailedEmail = (
   });
 };
 
+/**
+ * 정지 기한이 끝나 자동으로 재개됐다는 안내.
+ *
+ * **이 메일이 곧 청구 예고다.** 자동 재개는 즉시 청구하지 않고 다음 정기 청구일을 잡으므로
+ * (`resumeExpiredPauses`), 그 날짜를 여기 적으면 고객은 돈이 나가기 전에 안다. 날짜를
+ * 빼면 "재개됐습니다"만 남아 언제 얼마가 나가는지 모르는 안내가 된다.
+ */
+export const sendSubscriptionResumedEmail = (
+  sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName' | 'totalAmount'>,
+  input: { nextBillingAt: Date; manageUrl: string },
+): Promise<string | null> =>
+  sendCustomerEmail(sub, 'resumed', {
+    to: sub.customerEmail,
+    replyTo: CUSTOMER_REPLY_TO,
+    subject: `[스튜디오 놀] ${subscriptionOrderName(sub)} 정기결제가 다시 시작됩니다`,
+    text: [
+      `${sub.customerName}님, 잠시 멈춰 두었던 ${subscriptionOrderName(sub)} 정기결제가 다시 시작됩니다.`,
+      `다음 결제 예정일: ${input.nextBillingAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}`,
+      `결제 금액: ${amountLine(sub)}`,
+      '멈춰 있던 동안의 금액은 청구하지 않습니다.',
+      '',
+      `구독 조회·해지: ${input.manageUrl}`,
+      '문의: 010-4255-7893',
+    ].join('\n'),
+  });
+
 /** 해지 확인. 즉시 환불 없이 이미 결제한 기간까지 이용 가능함을 안내한다. */
 export const sendSubscriptionCancelledEmail = (
   sub: Pick<Subscription, 'kind' | 'artistSlug' | 'customerEmail' | 'customerName'>,
@@ -201,6 +227,7 @@ export const sendSubscriptionRefundedEmail = (
 
 export type SubscriptionAlertKind =
   | 'paused'
+  | 'pause_expired'
   | 'first_charge_failed'
   | 'cancelled'
   | 'late_approval'
@@ -214,6 +241,9 @@ export const sendSubscriptionOperatorAlert = (
 ): Promise<string | null> => {
   const titleByKind: Record<SubscriptionAlertKind, string> = {
     paused: '정기결제 정지',
+    // 운영자가 적어 둔 정지 기한이 지나 cron이 자동으로 재개한 경우. 사람이 누른 재개가
+    // 아니므로 운영자도 이 사실을 알아야 한다 — 계속 세워 둬야 했다면 다시 정지하면 된다.
+    pause_expired: '정지 기한 만료 — 자동 재개',
     first_charge_failed: '첫 결제 실패',
     cancelled: '고객 해지',
     // 해지·종료된 구독에 승인이 뒤늦게 도착한 경우. 돈은 들어왔는데 이용기간은 전진하지

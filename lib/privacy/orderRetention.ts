@@ -476,7 +476,12 @@ export const dormantActivityCondition = (boundary: Date) => {
  * `paused_reason`이 `operator`이거나 NULL인 구독을 `SUBSCRIPTION_DORMANCY_WARNING_DAYS`일
  * 앞서 보고한다. 운영자가 재개하거나 해지하면 `updated_at`이 올라 방치 판정에서 빠진다.
  * 알림을 못 보고 지나 `ended`가 되면 여전히 되돌릴 길은 없다 — `resumeSubscription`은
- * `paused`만 받고 관리자 '결제' 버튼도 `ended`를 제외한다. 그래서 경보가 유일한 방어다.
+ * `paused`만 받고 관리자 '결제' 버튼도 `ended`를 제외한다.
+ *
+ * **운영자 정지는 이제 만료일을 필수로 받는다**(`subscriptions.paused_until`). 그날이 오면
+ * `resumeExpiredPauses`가 구독을 되돌리므로 새 정지가 여기까지 오는 일은 사실상 없다.
+ * 그래도 이 함수의 대상에서 빼지 않는다 — 만료일 없이 세워진 옛 행이 남아 있고, 자동 재개가
+ * 실패하면 정지가 그대로 이어진다. 경보도 같은 이유로 그대로 둔다.
  *
  * NULL(사유 불명)을 운영자 쪽에 붙이는 것은 틀렸을 때의 대가가 한쪽으로만 크기 때문이다 —
  * 자세한 판정은 `db/schema.ts`의 `pausedReason` 주석에 있다.
