@@ -1266,3 +1266,40 @@ export const privacyAccessLogs = sqliteTable(
 
 export type PrivacyAccessLog = typeof privacyAccessLogs.$inferSelect;
 export type NewPrivacyAccessLog = typeof privacyAccessLogs.$inferInsert;
+
+/**
+ * 펀딩 프로젝트에 스튜디오가 붙인 서비스 — 운영자 전용(2026-09-26, 발매 파이프라인 설계 3단계).
+ *
+ * 행이 없으면 **직접 개설**(개설자 셀프, 설계비 없음)이다. 행이 있으면 스튜디오가 설계를 맡은
+ * 프로젝트다:
+ * - `design`  — 펀딩 설계 대행(/ko/crowdfunding-design) 단독
+ * - `release` — 발매 프로젝트 연계(펀딩 설계 + 모금액으로 제작·홍보·유통)
+ *
+ * **왜 funding_projects에 칸을 더하지 않고 테이블을 따로 두나.** funding_projects는 컬럼 지정
+ * 없는 `select()`와 관계 조회로 읽는 경로가 많아서, 칸을 더한 코드가 마이그레이션보다 먼저
+ * 배포되면 그 조회 전부가 `no such column`으로 던진다(0020·0023 절과 같은 함정 — 공개 상세·
+ * 개설자 로그인·정산까지). 별도 테이블은 기존 조회가 한 번도 건드리지 않으므로, 순서가
+ * 뒤집혀도 이 기능만 "미적용"으로 꺼지고 나머지는 멀쩡하다(lib/funding/projectServices.ts).
+ *
+ * **개설자에게 어떤 경로로도 보이지 않는다** — internal_note와 같은 원칙. 설계비는 모금 정산과
+ * 별개로 청구·입금되므로(성공 수수료 없음, data/pricing.ts FUNDING_DESIGN_PRICE) 정산 계산에
+ * 섞지 않는다.
+ */
+export const fundingProjectServiceKindEnum = ['design', 'release'] as const;
+export const fundingProjectServices = sqliteTable('funding_project_services', {
+  projectId: text('project_id').primaryKey().references(() => fundingProjects.id),
+  kind: text('kind', { enum: fundingProjectServiceKindEnum }).notNull(),
+  /**
+   * 약정한 설계비(공급가, 부가세 별도). 지정 시점의 FUNDING_DESIGN_PRICE를 **복사**한다 —
+   * 상수가 나중에 바뀌어도 이 프로젝트와 약정한 금액이 바뀌지 않게(후원 행이 결제 당시 단가를
+   * 저장하는 것과 같은 이유).
+   */
+  designFee: integer('design_fee').notNull(),
+  /** 설계비 입금을 운영자가 확인한 시각. null이면 미입금. */
+  designFeePaidAt: integer('design_fee_paid_at', { mode: 'timestamp' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
+export type FundingProjectService = typeof fundingProjectServices.$inferSelect;
+export type FundingProjectServiceKind = (typeof fundingProjectServiceKindEnum)[number];

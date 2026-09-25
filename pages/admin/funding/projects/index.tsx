@@ -8,10 +8,13 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { listProjectsForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
+import { loadProjectServiceMap, PROJECT_SERVICE_LABELS, type LoadServiceMapResult } from '../../../../lib/funding/projectServices';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
 
 interface AdminFundingProjectsPageProps {
   projects: AdminProjectSummary[];
+  /** 스튜디오 서비스(마이그레이션 0037). 운영 DB에 테이블이 없으면 available: false. */
+  services: LoadServiceMapResult;
 }
 
 /**
@@ -54,10 +57,11 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectsPageProp
   const projects = await listProjectsForAdmin();
   const sorted = [...projects].sort((a, b) => STATUS_PRIORITY[a.reviewStatus] - STATUS_PRIORITY[b.reviewStatus]);
 
-  return { props: { projects: sorted } };
+  const services = await loadProjectServiceMap();
+  return { props: { projects: sorted, services } };
 };
 
-export default function AdminFundingProjectsPage({ projects }: AdminFundingProjectsPageProps) {
+export default function AdminFundingProjectsPage({ projects, services }: AdminFundingProjectsPageProps) {
   return (
     <>
       <Head>
@@ -80,6 +84,7 @@ export default function AdminFundingProjectsPage({ projects }: AdminFundingProje
                   <th className="px-4 py-3 rounded-l-lg">제목</th>
                   <th className="px-4 py-3">개설자</th>
                   <th className="px-4 py-3">상태</th>
+                  <th className="px-4 py-3">서비스</th>
                   <th className="px-4 py-3">제출 시각</th>
                   <th className="px-4 py-3 rounded-r-lg">목표액</th>
                 </tr>
@@ -100,6 +105,22 @@ export default function AdminFundingProjectsPage({ projects }: AdminFundingProje
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ${STATUS_BADGE_CLASS[p.reviewStatus]}`}>
                         {STATUS_LABELS[p.reviewStatus]}
                       </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap text-xs">
+                      {!services.available ? (
+                        <span className="text-gray-400">
+                          {services.reason === 'missing_table' ? '미적용(0037)' : '불러오지 못함'}
+                        </span>
+                      ) : services.byProjectId[p.id] ? (
+                        <>
+                          <span className="font-semibold text-gray-800">{PROJECT_SERVICE_LABELS[services.byProjectId[p.id].kind]}</span>
+                          <div className={services.byProjectId[p.id].designFeePaidAt ? 'text-green-700' : 'text-amber-700'}>
+                            {services.byProjectId[p.id].designFeePaidAt ? '설계비 입금' : '설계비 미입금'}
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-gray-500">{PROJECT_SERVICE_LABELS.none}</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
                       {p.submittedAt ? formatKstDateTimeFull(p.submittedAt) : '미제출'}
