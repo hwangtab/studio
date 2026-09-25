@@ -155,9 +155,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 목록이 걸러내고(listFundingOrders의 pledge EXISTS) 예약 목록도 안 싣는 상태라 어떤
      * 관리 화면에도 안 보인다. failed 마킹은 UPDATE가 실패해도 흔적이 남고, 무엇보다 같은
      * 상황을 두 경로가 같은 모양으로 남겨야 나중에 세는 사람이 헷갈리지 않는다.
+     *
+     * **`notificationError`도 같이 지운다.** 위 INSERT가 발송권 선점용 센티널(SEND_PENDING)을
+     * 남겨 두는데, 실패 주문에 그게 남으면 지울 경로가 없다 — 헬스체크는 상태를 안 보고
+     * `isNotNull`만 봐서 매일 집계하고, 그 주문은 pledge가 없어 관리자 목록에 안 떠
+     * 센티널을 지우는 유일한 경로(재발송 버튼)에 닿을 수 없다.
      */
     if (rowsAffectedOf(result[1]) === 0) {
-      await db.update(orders).set({ status: 'failed', updatedAt: now }).where(eq(orders.id, orderId));
+      await db.update(orders).set({ status: 'failed', notificationError: null, updatedAt: now })
+        .where(eq(orders.id, orderId));
       return res.status(409).json({ ok: false, message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.' });
     }
     /**

@@ -187,9 +187,15 @@ it('사전 검사 뒤 재고가 소진되면 409 — 고아 주문도 남기지 
    * 남으면 pledge 없는 확정 주문이 되어 목록·CSV·집계가 서로 다르게 취급한다.
    */
   const orphans = await client.execute(
-    "SELECT status FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
+    "SELECT status, notification_error FROM orders o WHERE o.type='funding' AND NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)",
   );
   expect(orphans.rows.map((r) => String(r.status))).toEqual(['failed']);
+  /**
+   * M3 — 발송권 선점용 센티널(SEND_PENDING)이 실패 주문에 남으면 지울 경로가 없다.
+   * 헬스체크는 상태를 안 보고 isNotNull만 보고, 그 주문은 pledge가 없어 관리자 목록에
+   * 안 떠 재발송 버튼(센티널을 지우는 유일한 경로)에 닿을 수 없다.
+   */
+  expect(orphans.rows.map((r) => r.notification_error)).toEqual([null]);
 
   // 한정 수량도 지켜져야 한다 — CD pledge는 여전히 1건뿐.
   const cd = await client.execute("SELECT COUNT(*) AS c FROM funding_pledges WHERE reward_id='cd'");
