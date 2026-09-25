@@ -17,6 +17,10 @@
  * (`purgeExpiredResidentNumbers`). 후원자 배송지 파기와 같은 함수에 넣으면 아직 지급명세서
  * 제출·수정신고가 남은 번호가 배송지와 함께 지워진다 — 그래서 함수도 기준도 분리한다.
  *
+ * **네 번째 단계는 개인정보 파기가 아니다.** 아무 프로젝트도 참조하지 않는 개설자 업로드
+ * 이미지를 저장소에서 지운다(`purgeOrphanFundingMedia`) — 대상이 파일이고 기준도 다르므로
+ * 함수를 따로 두고 호출만 나란히 둔다.
+ *
  * 인증: Vercel Cron이 Authorization: Bearer ${CRON_SECRET} 헤더를 붙인다.
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -29,6 +33,7 @@ import {
   RESIDENT_NUMBER_RETENTION_YEARS,
   REWARD_RETENTION_YEARS,
 } from '../../../lib/funding/retention';
+import { purgeOrphanFundingMedia } from '../../../lib/funding/mediaRetention';
 import {
   purgeExpiredPrivacyAccessLogs,
   PRIVACY_ACCESS_LOG_RETENTION_YEARS,
@@ -85,11 +90,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     purgeExpiredResidentNumbers,
   );
 
+  /**
+   * 네 번째는 개인정보 파기가 아니라 **저장소 청소**다.
+   *
+   * 아무 프로젝트도 가리키지 않는 업로드 이미지를 지운다(`purgeOrphanFundingMedia`).
+   * 기준이 다른 만큼 함수도 따로 두고, 앞의 셋과 마찬가지로 서로의 실패에 걸리지 않는다.
+   * 월 1회면 충분하다 — 고아 파일은 7일 유예를 지나야 대상이 되고, 며칠 늦게 지워지는
+   * 것에 비용이 없다.
+   */
+  const media = await run(
+    '아무 프로젝트도 참조하지 않는 개설자 업로드 이미지 정리',
+    () => purgeOrphanFundingMedia(),
+  );
+
   // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
   const body = {
     purged: result ? result.purged : null,
     purgedAccessLogs: accessLogs ? accessLogs.purged : null,
     purgedResidentNumbers: residentNumbers ? residentNumbers.purged : null,
+    orphanMedia: media,
   };
 
   if (failures.length > 0) {
@@ -105,6 +124,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             result ? `배송지 ${result.purged}건` : null,
             accessLogs ? `접속기록 ${accessLogs.purged}건` : null,
             residentNumbers ? `주민등록번호 ${residentNumbers.purged}건` : null,
+            media
+              ? `고아 이미지 ${media.deleted}건 삭제(${media.scanned}개 검사, 유예 ${media.skippedRecent}개, 실패 ${media.failed}건)`
+              : null,
           ]
             .filter(Boolean)
             .join(', ') || '없음'

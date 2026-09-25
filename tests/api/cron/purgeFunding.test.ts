@@ -23,6 +23,7 @@ jest.mock('../../../lib/privacy/accessLog', () => ({
   PRIVACY_ACCESS_LOG_RETENTION_YEARS: 2,
 }));
 jest.mock('../../../lib/email/resend', () => ({ sendEmail: jest.fn() }));
+jest.mock('../../../lib/funding/mediaRetention', () => ({ purgeOrphanFundingMedia: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/cron/purge-funding';
@@ -30,6 +31,9 @@ import { isCronAuthorized } from '../../../lib/cron/auth';
 import { purgeExpiredFundingPersonalData, purgeExpiredResidentNumbers } from '../../../lib/funding/retention';
 import { purgeExpiredPrivacyAccessLogs } from '../../../lib/privacy/accessLog';
 import { sendEmail } from '../../../lib/email/resend';
+import { purgeOrphanFundingMedia } from '../../../lib/funding/mediaRetention';
+
+const MEDIA = { scanned: 5, deleted: 2, skippedRecent: 1, failed: 0 };
 
 const call = async () => {
   const json = jest.fn();
@@ -47,6 +51,7 @@ beforeEach(() => {
   (purgeExpiredPrivacyAccessLogs as jest.Mock).mockResolvedValue({ purged: 7 });
   (purgeExpiredResidentNumbers as jest.Mock).mockResolvedValue({ purged: 2 });
   (sendEmail as jest.Mock).mockResolvedValue(undefined);
+  (purgeOrphanFundingMedia as jest.Mock).mockResolvedValue(MEDIA);
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -57,12 +62,16 @@ it('인증 없으면 401이고 아무것도 지우지 않는다', async () => {
   expect(purgeExpiredFundingPersonalData).not.toHaveBeenCalled();
   expect(purgeExpiredPrivacyAccessLogs).not.toHaveBeenCalled();
   expect(purgeExpiredResidentNumbers).not.toHaveBeenCalled();
+  expect(purgeOrphanFundingMedia).not.toHaveBeenCalled();
 });
 
-it('세 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
+it('세 파기와 저장소 청소를 각각 돌리고 건수를 따로 돌려준다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
-  expect(r.body).toEqual({ ok: true, purged: 3, purgedAccessLogs: 7, purgedResidentNumbers: 2 });
+  expect(r.body).toEqual({
+    ok: true, purged: 3, purgedAccessLogs: 7, purgedResidentNumbers: 2, orphanMedia: MEDIA,
+  });
+  expect(purgeOrphanFundingMedia).toHaveBeenCalledTimes(1);
   expect(purgeExpiredFundingPersonalData).toHaveBeenCalledTimes(1);
   expect(purgeExpiredPrivacyAccessLogs).toHaveBeenCalledTimes(1);
   expect(purgeExpiredResidentNumbers).toHaveBeenCalledTimes(1);
@@ -103,6 +112,16 @@ it('배송지 파기가 실패해도 나머지 두 파기는 그대로 돈다', 
   expect(purgeExpiredPrivacyAccessLogs).toHaveBeenCalledTimes(1);
   expect(purgeExpiredResidentNumbers).toHaveBeenCalledTimes(1);
   expect(r.body).toMatchObject({ purged: null, purgedAccessLogs: 7, purgedResidentNumbers: 2 });
+});
+
+/** 이미지 청소는 개인정보 파기가 아니지만, 실패하면 저장소에 고아가 계속 쌓인다. */
+it('이미지 청소가 실패해도 세 파기는 그대로 돌고, 500과 메일로 알린다', async () => {
+  (purgeOrphanFundingMedia as jest.Mock).mockRejectedValue(new Error('blob 장애'));
+  const r = await call();
+  expect(purgeExpiredFundingPersonalData).toHaveBeenCalledTimes(1);
+  expect(r.status).toBe(500);
+  expect(r.body).toMatchObject({ purged: 3, orphanMedia: null });
+  expect(sendEmail).toHaveBeenCalledTimes(1);
 });
 
 it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () => {
