@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import React from 'react';
 
+import { isFundingMediaUrl } from '../../lib/funding/mediaPath';
 import { ALLOWED_REMOTE_IMAGE_HOSTS } from '../../lib/markdown/allowedRemoteImageHosts';
 import imageMetadata from '../../utils/imageMetadata.json';
 
@@ -104,6 +105,8 @@ export const MarkdownImage = ({
   const altText = getMarkdownImageAlt(src, alt);
   const widthHint = parseWidthHint(title);
   const useNextImage = isSafeForNextImage(src);
+  // 개설자 업로드 이미지는 최적화기를 건너뛴다 — 이유는 isFundingMediaUrl 주석에 있다.
+  const unoptimized = isFundingMediaUrl(src);
 
   // markdown-to-jsx가 <img>를 <p> 내부에 배치하므로 래퍼는 유효한 inline 태그여야 한다.
   if (hasDimensions) {
@@ -116,6 +119,7 @@ export const MarkdownImage = ({
             width={Number(metadata.width)}
             height={Number(metadata.height)}
             sizes={widthHint ? `${widthHint}px` : '(max-width: 768px) 100vw, 768px'}
+            unoptimized={unoptimized}
             className="w-full h-auto rounded-lg shadow-md"
           />
         ) : (
@@ -143,6 +147,7 @@ export const MarkdownImage = ({
             alt={altText}
             fill
             sizes="(max-width: 768px) 100vw, 768px"
+            unoptimized={unoptimized}
             className="object-contain"
           />
         ) : (
