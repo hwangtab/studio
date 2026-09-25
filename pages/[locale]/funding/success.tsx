@@ -9,7 +9,9 @@ import { useEffect } from 'react';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
+import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
+import { getClientIp } from '../../../lib/contracts/client-ip';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../lib/funding/refundable';
@@ -92,6 +94,24 @@ const PHONE = '010-4255-7893';
 const EMAIL = 'hello@studionol.co.kr';
 
 /**
+ * 승인 URL은 인증이 없다 — `?paymentKey=아무거나&orderId=<주문번호>&amount=N`을 열면
+ * 응답이 `?e=not_found | invalid_state | amount_mismatch`로 갈린다. amount를 이분 탐색하면
+ * 남의 주문 금액(=고른 리워드 티어)을 정확히 알아낼 수 있다. 다른 후원자 API 셋에는 전부
+ * IP 레이트리밋이 있는데 이 경로에만 없었다.
+ *
+ * **성공 경로에는 걸지 않는다.** 결제 승인이 429로 막히면 돈은 나갔는데 확정이 안 된
+ * 주문이 생긴다 — 오라클을 막자고 만들 위험이 아니다. `toss_rejected`도 세지 않는다:
+ * 그건 우리 상태를 떠보는 것이 아니라 실제로 거절된 결제이고, 카드 여러 장을 번갈아
+ * 시도하는 것은 정상 행동이다.
+ *
+ * 한도를 넘으면 코드를 구분하지 않는 일반 오류로 떨어뜨린다 — 그래야 응답 차이가 사라진다.
+ */
+const CONFIRM_FAIL_PROBE_CODES = ['not_found', 'invalid_state', 'amount_mismatch'] as const;
+const CONFIRM_FAIL_LIMIT = 10;
+const CONFIRM_FAIL_WINDOW_SECONDS = 600;
+const TOO_MANY_CODE = 'too_many';
+
+/**
  * 확정 실패 코드 → 우리가 쓴 문구.
  *
  * 실패도 **비밀값 없는 URL로 리다이렉트**해야 한다. 예전(이 파일의 첫 수정본)에는 실패만
@@ -104,6 +124,7 @@ const EMAIL = 'hello@studionol.co.kr';
  */
 const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
   not_found: '펀딩 내역을 찾을 수 없습니다. 주문번호를 확인해 주세요.',
+  [TOO_MANY_CODE]: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.',
   amount_mismatch: '결제 금액이 펀딩 내용과 일치하지 않습니다.',
   invalid_state: '이미 처리되었거나 만료된 펀딩입니다.',
   hold_expired: '결제 대기 시간이 만료된 펀딩입니다. 다시 펀딩해 주세요.',
@@ -307,7 +328,17 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     const result = await confirmFundingPledge({ orderNo: orderId, paymentKey, amount: Number(amount) });
     // 성공이든 실패든 이 URL에서는 화면을 그리지 않는다 — paymentKey·orderId가 붙은 채로
     // 렌더되는 순간 측정에 적재된다(CONFIRM_ERROR_MESSAGES 주석).
-    if (!result.ok) return { redirect: { destination: `/ko/funding/success?e=${encodeURIComponent(result.code)}`, permanent: false } };
+    if (!result.ok) {
+      // 훑기로만 나오는 실패에만 카운터를 소비한다(CONFIRM_FAIL_PROBE_CODES 주석).
+      let code: string = result.code;
+      if ((CONFIRM_FAIL_PROBE_CODES as readonly string[]).includes(code)) {
+        const ip = getClientIp(req) ?? 'unknown';
+        const allowed = await consumeRateLimit(`funding_confirm_fail:${ip}`, CONFIRM_FAIL_LIMIT, CONFIRM_FAIL_WINDOW_SECONDS)
+          .catch(() => true);
+        if (!allowed) code = TOO_MANY_CODE;
+      }
+      return { redirect: { destination: `/ko/funding/success?e=${encodeURIComponent(code)}`, permanent: false } };
+    }
     res.setHeader('Set-Cookie', buildConfirmCookie(result.orderNo, result.manageToken));
     return { redirect: { destination: `/ko/funding/success?o=${encodeURIComponent(result.orderNo)}`, permanent: false } };
   }
