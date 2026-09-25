@@ -115,6 +115,10 @@ describe('명단 공개 설정', () => {
     render(<FundingManagePage {...baseProps} displayNamePublic listingHidden paymentMethod="toss" />);
     expect(screen.getByText(/후원자 명단에서 내려 두었습니다/)).toBeInTheDocument();
     expect(screen.queryByText(/올라가 있습니다/)).toBeNull();
+    // 내려진 뒤에는 표시 이름을 바꿀 자리가 없다 — 바꿔도 명단에 뜨지 않는다. 동의 철회만 남는다.
+    expect(screen.queryByRole('button', { name: '표시 이름 저장' })).toBeNull();
+    expect(screen.queryByRole('radio')).toBeNull();
+    expect(screen.getByRole('button', { name: '공개 동의 철회' })).toBeInTheDocument();
   });
 
   it('바꿀 수 없는 상태면 편집 칸 대신 현재 값만 보인다', () => {

@@ -83,8 +83,8 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
   if (variant === 'success' && isPublic && !hiddenByOperator) {
     return (
       <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-        <p className="text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라갑니다.
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라갑니다.
         </p>
         <p className="typo-card-meta mt-1">표시 이름을 바꾸거나 내리려면 펀딩 확인 페이지를 이용해 주세요.</p>
         {feedback}
@@ -92,16 +92,33 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     );
   }
 
-  return (
-    <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-      {hiddenByOperator ? (
-        <p className="text-sm text-gray-900 dark:text-white">
+  /**
+   * 운영자가 내린 뒤에는 **안내와 동의 철회만** 둔다. 표시 이름을 바꿔 봐야 명단에 뜨지 않고
+   * (운영자만 되돌린다), "명단에서 내리기"는 이미 내려진 상태라 뜻이 어긋난다. 동의 철회는
+   * 후원자의 권리라(약관 제13조) 남긴다.
+   */
+  if (hiddenByOperator) {
+    return (
+      <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
           운영 기준에 따라 후원자 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
           다시 올리기를 원하시면 문의해 주세요.
         </p>
-      ) : isPublic ? (
-        <p className="text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라가 있습니다.
+        {isPublic && (
+          <div className="mt-4">
+            <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>공개 동의 철회</Button>
+          </div>
+        )}
+        {feedback}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
+      {isPublic ? (
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라가 있습니다.
         </p>
       ) : (
         <>
