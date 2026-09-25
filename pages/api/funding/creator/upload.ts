@@ -121,7 +121,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '이미지 파일이 아닙니다.' });
   }
 
-  const filename = `${randomUUID()}.webp`;
+  /**
+   * 키에 개설자 id를 박는다 — `creatorValidation.ts`의 `isOwnUploadedMedia`가 이 접두사로
+   * "이 개설자의 업로드인가"를 판정한다. 그게 없던 동안에는 남의 공개 표지 주소를 자기
+   * 프로젝트의 표지로 지정할 수 있었다. id는 hex 32자라 `resolveFundingBlobPath`가 받는
+   * 문자 집합(`[A-Za-z0-9._-]`) 안이고, 전체 길이도 상한(128) 안이다.
+   */
+  const filename = `${auth.creatorId}-${randomUUID()}.webp`;
   try {
     await put(`${FUNDING_MEDIA_PREFIX}${filename}`, processed.buffer, {
       access: 'private',

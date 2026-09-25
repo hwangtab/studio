@@ -8,6 +8,7 @@ import {
   loadProjectForCreator, saveBasicSection, saveCreatorSection, savePayoutSection, saveStorySection,
 } from '../../../../../lib/funding/creatorProjectWrite';
 import { respondWriteResult } from '../../../../../lib/funding/creatorWriteHttp';
+import { revalidateFundingPaths } from '../../../../../lib/funding/revalidate';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
 import { sendCreatorEditedNotice } from '../../../../../lib/funding/reviewEmail';
 
@@ -57,6 +58,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 메일 실패(또는 예기치 않은 예외)가 이미 성공한 저장 응답까지 끌고 내려가면 안 된다 —
   // 저장은 커밋됐는데 핸들러가 던져 500이 나가는 것은 이 라우트가 막으려던 바로 그 종류의
   // 상태 불일치다(리뷰 지적, 2026-09-21).
+  /**
+   * 승인된 프로젝트가 고쳐졌으면 ISR을 재검증한다 — 운영자 경로
+   * (`pages/api/admin/funding/projects/[id].ts`)가 부르는 것과 같은 호출이다. 없던 동안에는
+   * 개설자가 저장한 내용이 최대 60초 동안 옛 것으로 보였다.
+   *
+   * 실패는 삼킨다(저장은 이미 커밋됐고 60초 뒤 어차피 갱신된다). 운영자 경로가 경고를
+   * 싣는 것과 달리 여기서는 응답에 담지 않는다 — 개설자에게 보여 줄 문구도, 할 수 있는
+   * 조치도 없다.
+   */
+  const revalidateIfApproved = async (wasApproved: boolean, slug: string | undefined): Promise<void> => {
+    if (!wasApproved || !slug) return;
+    try {
+      const error = await revalidateFundingPaths(res, slug);
+      if (error) console.error('[funding] 개설자 저장 후 ISR 재검증 실패:', error);
+    } catch (error: unknown) {
+      console.error('[funding] 개설자 저장 후 ISR 재검증 중 오류:', error);
+    }
+  };
+
   const notifyIfApprovedEdit = async (wasApproved: boolean): Promise<void> => {
     if (!wasApproved) return;
     try {
@@ -101,10 +121,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       ? { startAt: before.startAt, endAt: before.endAt }
       : undefined;
 
-    const validated = validateBasicSection(rawValue, new Date(), lockedDates);
+    const validated = validateBasicSection(
+      rawValue,
+      new Date(),
+      // 이미 저장된 표지를 그대로 다시 보내온 경우는 통과시킨다 — 개설자 id를 업로드 키에
+      // 넣기 전에 올라간 이미지가 제목만 고치려던 저장을 막으면 안 된다.
+      { creatorId: auth.creatorId, existing: [before?.coverUrl ?? null] },
+      lockedDates,
+    );
     if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
     const result = await saveBasicSection(auth.creatorId, projectId, validated.value);
-    if (result.ok) await notifyIfApprovedEdit(wasApproved);
+    if (result.ok) {
+      // slug는 저장으로 바뀔 수 있지만, 승인된 프로젝트는 basicLockedViolation이 그걸 막으므로
+      // 승인 상태에서는 저장 후 값과 저장 전 값이 같다. 재검증에는 저장된 값을 쓴다.
+      await revalidateIfApproved(wasApproved, validated.value.slug);
+      await notifyIfApprovedEdit(wasApproved);
+    }
     return respondWriteResult(res, result);
   }
 
@@ -114,7 +146,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const before = await loadProjectForCreator(auth.creatorId, projectId);
     const wasApproved = before?.reviewStatus === 'approved';
     const result = await saveStorySection(auth.creatorId, projectId, validated.value);
-    if (result.ok) await notifyIfApprovedEdit(wasApproved);
+    if (result.ok) {
+      await revalidateIfApproved(wasApproved, before?.slug);
+      await notifyIfApprovedEdit(wasApproved);
+    }
     return respondWriteResult(res, result);
   }
 

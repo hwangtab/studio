@@ -111,7 +111,7 @@ const VALID_BASIC = {
   goalAmount: 1_000_000,
   startAt: toKstDateString(new Date(Date.now() + 10 * 86_400_000)),
   endAt: toKstDateString(new Date(Date.now() + 40 * 86_400_000)),
-  coverUrl: '/api/funding/media/cover.webp',
+  coverUrl: '/api/funding/media/creator-a-cover.webp',
 };
 
 const VALID_REWARD = {
@@ -352,7 +352,7 @@ describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 
       title: '기존 제목',
       summary: '기존 요약',
       content: '본문',
-      coverUrl: '/api/funding/media/cover.webp',
+      coverUrl: '/api/funding/media/creator-a-cover.webp',
       goalAmount: 1_000_000,
       startAt: new Date(kstStartOfDayIso(toKstDateString(new Date(Date.now() - 10 * 86_400_000)))),
       endAt: new Date(kstEndOfDayIso(toKstDateString(new Date(Date.now() + 10 * 86_400_000)))),

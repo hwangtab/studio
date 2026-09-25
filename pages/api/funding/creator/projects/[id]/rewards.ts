@@ -7,7 +7,7 @@ import { consumeRateLimit } from '../../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../../lib/funding/creatorAuth';
 import { validateRewardInput } from '../../../../../../lib/funding/creatorValidation';
-import { deleteReward, upsertReward } from '../../../../../../lib/funding/creatorProjectWrite';
+import { deleteReward, loadProjectForCreator, upsertReward } from '../../../../../../lib/funding/creatorProjectWrite';
 import { respondWriteResult } from '../../../../../../lib/funding/creatorWriteHttp';
 
 /**
@@ -69,7 +69,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return respondWriteResult(res, await deleteReward(auth.creatorId, projectId, rewardId));
   }
 
-  const validated = validateRewardInput(req.body?.value);
+  /**
+   * 이미 이 프로젝트에 저장된 리워드 이미지는 그대로 다시 보내와도 통과시킨다 — 개설자
+   * id를 업로드 키에 넣기 전에 올라간 이미지가 설명만 고치려던 저장을 막으면 안 된다.
+   * 소유는 `loadProjectForCreator`가 SQL로 대조하므로 남의 프로젝트 값은 섞일 수 없다.
+   */
+  const existingProject = await loadProjectForCreator(auth.creatorId, projectId);
+  const validated = validateRewardInput(req.body?.value, {
+    creatorId: auth.creatorId,
+    existing: (existingProject?.rewards ?? []).map((reward) => reward.imageUrl),
+  });
   if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
 
   if (mode === 'update') {

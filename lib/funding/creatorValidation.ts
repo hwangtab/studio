@@ -1,5 +1,5 @@
 import { kstEndOfDayIso, kstStartOfDayIso } from './creatorDateInput';
-import { FUNDING_MEDIA_URL_PREFIX } from './mediaPath';
+import { FUNDING_MEDIA_URL_PREFIX, resolveFundingBlobPath } from './mediaPath';
 import { slugRejectionReason } from './reservedSlugs';
 
 /**
@@ -12,8 +12,45 @@ import { slugRejectionReason } from './reservedSlugs';
  * `/ko/funding` 목록 페이지 전체가 ISR 렌더에서 함께 죽는다 — 다른 프로젝트까지 끌고
  * 들어간다. 쓰기 경로가 생기는 이 계획에서 가드도 함께 넣는다 — 나중에 붙이면 그 사이에
  * 만들어진 데이터가 규칙 밖에 남는다.
+ *
+ * **`startsWith` 하나로는 부족했다.** 접두사만 보면 `/api/funding/media/../../…`도, 길이
+ * 무제한 문자열도 통과해 그대로 `og:image`에 실렸다(공유 카드에서 표지가 사라진다).
+ * 그래서 접두사 뒤를 `resolveFundingBlobPath`가 실제로 받는 형태로 검증한다 — 같은 함수를
+ * 쓰므로 그 규칙이 느슨해지거나 조여지면 여기도 함께 움직인다. 쿼리는 업로드가 붙이는
+ * 치수(`?w=&h=`) 한 형태만 허용한다.
+ *
+ * **그리고 "이 개설자의 업로드인가"를 본다.** 업로드 키는 `<creatorId>-<uuid>.webp`이므로
+ * 접두사로 판정할 수 있다. 이게 없던 동안에는 남의 공개 표지 주소를 자기 프로젝트의
+ * 표지로 지정할 수 있었다.
  */
-const isOwnUploadedMedia = (value: string): boolean => value.startsWith(FUNDING_MEDIA_URL_PREFIX);
+export interface MediaOwnership {
+  creatorId: string;
+  /**
+   * 이 프로젝트(또는 이 리워드)에 **이미 저장돼 있는** 이미지 주소. 그대로 다시 보내온
+   * 값은 통과시킨다 — 개설자 id를 키에 넣기 전에 올라간 이미지가 저장 한 번으로 거부되면,
+   * 제목만 고치려던 저장이 "대표 이미지를 다시 올려 주세요"로 막힌다. 새로 지정하는
+   * 주소에는 이 예외가 없다.
+   */
+  existing?: readonly (string | null)[];
+}
+
+/** 접두사를 뺀 이름 뒤에 붙을 수 있는 유일한 쿼리 — 업로드가 붙이는 치수. */
+const MEDIA_QUERY = /^\?w=\d{1,5}&h=\d{1,5}$/;
+const MEDIA_URL_MAX_LENGTH = 256;
+
+const isOwnUploadedMedia = (value: string, media: MediaOwnership): boolean => {
+  if (media.existing?.includes(value)) return true;
+  if (value.length > MEDIA_URL_MAX_LENGTH) return false;
+  if (!value.startsWith(FUNDING_MEDIA_URL_PREFIX)) return false;
+
+  const rest = value.slice(FUNDING_MEDIA_URL_PREFIX.length);
+  const q = rest.indexOf('?');
+  const name = q === -1 ? rest : rest.slice(0, q);
+  if (q !== -1 && !MEDIA_QUERY.test(rest.slice(q))) return false;
+  if (resolveFundingBlobPath(name) === null) return false;
+
+  return name.startsWith(`${media.creatorId}-`);
+};
 
 /** 모금 시작일·종료일이 받는 유일한 형태 — KST 달력 날짜. 시각은 서버가 붙인다. */
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
@@ -157,6 +194,7 @@ export interface LockedFundingDates {
 export const validateBasicSection = (
   input: unknown,
   now: Date,
+  media: MediaOwnership,
   lockedDates?: LockedFundingDates,
 ): { ok: true; value: BasicSection } | Fail => {
   const d = (input ?? {}) as Record<string, unknown>;
@@ -177,7 +215,7 @@ export const validateBasicSection = (
 
   const coverUrl = str(d.coverUrl);
   if (!coverUrl) return fail('대표 이미지를 올려 주세요.');
-  if (!isOwnUploadedMedia(coverUrl)) return fail('대표 이미지를 다시 올려 주세요.');
+  if (!isOwnUploadedMedia(coverUrl, media)) return fail('대표 이미지를 다시 올려 주세요.');
 
   /**
    * 시작일·종료일은 **KST 달력 날짜(`YYYY-MM-DD`)로만 받고, 시각은 서버가 붙인다.**
@@ -428,7 +466,10 @@ export interface RewardInput {
 
 const REWARD_ID_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
-export const validateRewardInput = (input: unknown): { ok: true; value: RewardInput } | Fail => {
+export const validateRewardInput = (
+  input: unknown,
+  media: MediaOwnership,
+): { ok: true; value: RewardInput } | Fail => {
   const d = (input ?? {}) as Record<string, unknown>;
 
   const rewardId = str(d.rewardId);
@@ -475,7 +516,7 @@ export const validateRewardInput = (input: unknown): { ok: true; value: RewardIn
   let imageUrl: string | null = null;
   if (d.imageUrl !== null && d.imageUrl !== undefined) {
     const v = str(d.imageUrl);
-    if (!v || !isOwnUploadedMedia(v)) return fail('리워드 이미지를 다시 올려 주세요.');
+    if (!v || !isOwnUploadedMedia(v, media)) return fail('리워드 이미지를 다시 올려 주세요.');
     imageUrl = v;
   }
 

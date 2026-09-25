@@ -3,8 +3,9 @@
  * 개설자가 자기 프로젝트 후원의 발송 상태·송장을 직접 넣는 라우트를 실 DB(in-memory
  * libSQL)로 본다. 목 객체로는 증명할 수 없는 것 셋:
  *
- * 1) **소유가 다르면 403이다** — pledge가 실제로 속한 프로젝트를 pledgeId에서 되짚어
- *    판정한다(URL의 :id가 아니다).
+ * 1) **소유가 다르면 404다** — pledge가 실제로 속한 프로젝트를 pledgeId에서 되짚어
+ *    판정한다(URL의 :id가 아니다). 403은 그 pledge id가 존재한다는 사실을 알려 주므로
+ *    다른 개설자 라우트와 같은 404로 통일했다.
  * 2) **마감 전에는 409다** — 화면은 마감 뒤에만 표를 보여 주지만 서버가 같은 선을
  *    다시 긋는다. URL에 자기 소유의 다른(이미 마감된) 프로젝트 id를 넣어도 우회되지
  *    않는다(라우트가 URL id로 게이트를 판정하지 않기 때문).
@@ -160,7 +161,7 @@ describe('개설자 발송 상태 저장 라우트', () => {
     expect(r.status).toBe(401);
   });
 
-  it('남의 프로젝트 후원은 403이다', async () => {
+  it('남의 프로젝트 후원은 404다 — 존재 여부를 알려 주지 않는다', async () => {
     // creator-a의 프로젝트(마감됨)에 딸린 pledge를, creator-b가 자기 세션으로 시도한다.
     await insertProject({
       id: 'proj-a', slug: 'proj-a', creatorId: CREATOR_A, status: 'closed',
@@ -171,7 +172,7 @@ describe('개설자 발송 상태 저장 라우트', () => {
 
     mockAuth(CREATOR_B);
     const r = await call('proj-a', { pledgeId: 'pledge-of-a', fulfillmentStatus: 'shipped' });
-    expect(r.status).toBe(403);
+    expect(r.status).toBe(404);
     expect((await pledgeRow('pledge-of-a')).fulfillment_status).toBe('none');
   });
 
