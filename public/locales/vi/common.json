@@ -341,7 +341,8 @@
       "location": "Liên hệ Trực tuyến",
       "inquiry": "Đặt lịch Tư vấn Miễn phí",
       "bookingEntry": "Đặt lịch online",
-      "orderEntry": "Đặt hàng online"
+      "orderEntry": "Đặt hàng online",
+      "detail": "Xem chi tiết"
     },
     "relatedStoriesTitle": "Những hướng dẫn nên xem trước khi đặt lịch",
     "relatedStoriesSubtitle": "Biết trước chi phí, quy trình phát hành và thu âm giúp bạn tận dụng tối đa buổi thu đầu tiên.",

@@ -341,7 +341,8 @@
       "location": "在线咨询",
       "inquiry": "申请免费咨询",
       "bookingEntry": "在线预约",
-      "orderEntry": "在线下单"
+      "orderEntry": "在线下单",
+      "detail": "了解详情"
     },
     "relatedStoriesTitle": "预约前值得再看一遍的指南",
     "relatedStoriesSubtitle": "提前了解费用·发行·录音流程，让你的首次录音更高效。",

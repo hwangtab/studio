@@ -341,7 +341,8 @@
       "location": "Contactar Online",
       "inquiry": "Solicitar Consulta Gratuita",
       "bookingEntry": "Reservar en línea",
-      "orderEntry": "Pedir en línea"
+      "orderEntry": "Pedir en línea",
+      "detail": "Ver más"
     },
     "relatedStoriesTitle": "Guías que conviene revisar antes de reservar",
     "relatedStoriesSubtitle": "Conocer de antemano los costos, el lanzamiento y el proceso de grabación te ayuda a aprovechar al máximo tu primera sesión.",

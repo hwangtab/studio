@@ -341,7 +341,8 @@
       "location": "온라인으로 문의하기",
       "inquiry": "무료 상담 신청",
       "bookingEntry": "온라인 예약",
-      "orderEntry": "온라인 주문"
+      "orderEntry": "온라인 주문",
+      "detail": "자세히 보기"
     },
     "relatedStoriesTitle": "예약 전 한 번 더 살펴보면 좋은 가이드",
     "relatedStoriesSubtitle": "비용·발매·녹음 절차를 미리 알면 첫 세션을 더 알차게 쓸 수 있습니다.",

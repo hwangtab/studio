@@ -341,7 +341,8 @@
       "location": "Onlayn murojaat",
       "inquiry": "Bepul Maslahat Olish",
       "bookingEntry": "Onlayn bron qilish",
-      "orderEntry": "Onlayn buyurtma"
+      "orderEntry": "Onlayn buyurtma",
+      "detail": "Batafsil"
     },
     "relatedStoriesTitle": "Bron qilishdan oldin ko'rib chiqishga arziydigan qo'llanmalar",
     "relatedStoriesSubtitle": "Xarajat, reliz va yozuv jarayonini oldindan bilsangiz, birinchi seansdan ko'proq foyda olasiz.",
