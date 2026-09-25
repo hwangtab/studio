@@ -181,6 +181,25 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
     expect(await setDesignFeePaid('nope', true, new Date(), ACTOR)).toEqual({ ok: false, code: 'not_found' });
   });
 
+  /**
+   * 되돌린 행은 옛 약정을 보존하려고 남겨 둔 것일 뿐 지금 청구할 설계비가 아니다. 행을 지우던
+   * 시절에는 UPDATE가 0행이라 자연히 막혔는데, 보존으로 바꾸면서 그 방어가 사라졌다.
+   */
+  it('직접 개설로 되돌린 행에는 입금 확인이 통하지 않는다', async () => {
+    const id = await seedProject();
+    await setProjectService(id, 'design', new Date(), ACTOR);
+    const paidAt = new Date('2026-10-03T00:00:00Z');
+    await setDesignFeePaid(id, true, paidAt, ACTOR);
+    await setProjectService(id, 'none', new Date(), ACTOR);
+
+    expect(await setDesignFeePaid(id, true, new Date('2026-11-20T00:00:00Z'), ACTOR)).toEqual({ ok: false, code: 'no_service' });
+    expect(await setDesignFeePaid(id, false, new Date('2026-11-20T00:00:00Z'), ACTOR)).toEqual({ ok: false, code: 'no_service' });
+    // 보존된 값은 그대로다 — 거부가 아무것도 건드리지 않는다.
+    expect(await loadProjectService(id)).toEqual({
+      available: true, service: { kind: 'none', designFee: FUNDING_DESIGN_PRICE, designFeePaidAt: paidAt.toISOString() },
+    });
+  });
+
   it('목록용 맵은 서비스가 있는 프로젝트만 싣는다', async () => {
     const a = await seedProject();
     const b = await seedProject();

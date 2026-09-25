@@ -196,8 +196,12 @@ export const setProjectService = async (
 };
 
 /**
- * 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않은 프로젝트면 no_service,
- * 프로젝트 자체가 없으면 not_found.
+ * 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않았거나 **직접 개설로 되돌린**
+ * (`kind: 'none'`) 프로젝트면 no_service, 프로젝트 자체가 없으면 not_found.
+ *
+ * `none`을 거부하는 이유: 그 행은 옛 약정을 보존하려고 남겨 둔 것일 뿐 지금 청구할 설계비가
+ * 아니다. 행을 지우던 시절에는 UPDATE가 0행이라 자연히 막혔는데, 보존으로 바꾸면서 그 방어가
+ * 사라졌다. 화면은 이미 버튼을 감추므로 여기는 API 방어선이다.
  *
  * **`paid: true`는 멱등이다** — 이미 확인 시각이 있으면 덮지 않는다(COALESCE). 예전에는
  * 두 번째 요청이 최초 확인 날짜를 지금 시각으로 밀어냈다: 중복 클릭·뒤로가기 재전송으로
@@ -218,6 +222,28 @@ export const setDesignFeePaid = async (
 ): Promise<ServiceWriteResult> => {
   try {
     const db = getDb();
+    // 컬럼을 좁히지 않는다 — 부분 스키마(컬럼 누락)를 이 조회에서 드러내야 아래 UPDATE 없이도
+    // schema_mismatch로 갈라진다(행이 없으면 UPDATE에 닿지 않아 탐지 기회가 사라진다).
+    const existing = await db
+      .select()
+      .from(fundingProjectServices)
+      .where(eq(fundingProjectServices.projectId, projectId))
+      .limit(1);
+    if (!existing[0] || existing[0].kind === 'none') {
+      /**
+       * 쓸 행이 없는 경우는 둘이다 — 서비스가 아직 지정되지 않았거나(되돌린 것도 포함),
+       * 프로젝트 자체가 없다. 예전에는 둘을 합쳐 no_service로 돌려줘서, 없는 id에도 "먼저
+       * 서비스 종류를 지정해 주세요"가 나갔다(그쪽을 시도하면 setProjectService가 404를 준다 —
+       * 두 액션이 같은 id에 다른 진단을 냈다).
+       */
+      if (existing[0]) return { ok: false, code: 'no_service' };
+      const project = await db
+        .select({ id: fundingProjects.id })
+        .from(fundingProjects)
+        .where(eq(fundingProjects.id, projectId))
+        .limit(1);
+      return { ok: false, code: project[0] ? 'no_service' : 'not_found' };
+    }
     const rows = await db
       .update(fundingProjectServices)
       .set({
@@ -228,20 +254,8 @@ export const setDesignFeePaid = async (
       })
       .where(eq(fundingProjectServices.projectId, projectId))
       .returning();
-    if (!rows[0]) {
-      /**
-       * 0행은 두 가지다 — 서비스가 아직 지정되지 않았거나, 프로젝트 자체가 없다. 예전에는
-       * 둘을 합쳐 no_service로 돌려줘서, 없는 id에도 "먼저 서비스 종류를 지정해 주세요"가
-       * 나갔다(그쪽을 시도하면 setProjectService가 404를 준다 — 두 액션이 같은 id에 다른
-       * 진단을 냈다).
-       */
-      const project = await db
-        .select({ id: fundingProjects.id })
-        .from(fundingProjects)
-        .where(eq(fundingProjects.id, projectId))
-        .limit(1);
-      return { ok: false, code: project[0] ? 'no_service' : 'not_found' };
-    }
+    // 위 조회와 UPDATE 사이에 행이 사라졌다(none으로 되돌림·프로젝트 삭제).
+    if (!rows[0]) return { ok: false, code: 'no_service' };
     console.warn(
       `[funding] 설계비 입금 ${paid ? '확인' : '확인 취소'} `
         + `(projectId=${projectId}, designFee=${rows[0].designFee}, actor=${actor})`,
