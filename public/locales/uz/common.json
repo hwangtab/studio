@@ -769,7 +769,7 @@
           "title": "Crowdfunding bo'yicha konsalting",
           "valueBadge": "Oyiga ~₩70K",
           "points": [
-            "Loyihangizga mos platformalar (Tumblbug, Wadiz va h.k.) tavsiyasi",
+            "Studio NOL Funding'da kampaniya ochish va maqsad belgilashda yordam",
             "Maqsad summasi, mukofotlar va muddatlarni rejalashtirish",
             "Qo'llab-quvvatlovchilarni jalb qiluvchi hikoya tuzish bo'yicha qo'llanma",
             "Muvaffaqiyatli kampaniyaga marketing strategiyasi maslahati",
@@ -1037,7 +1037,7 @@
         "funding": "Crowdfunding dizayni"
       },
       "serviceBody": {
-        "funding": "Tumblbug va shunga o'xshash platformalarda albom crowdfunding kampaniyasi — rejadan sahifa qurilishigacha."
+        "funding": "Studio NOL Funding'da albom crowdfunding kampaniyasi — rejadan sahifa qurilishigacha."
       }
     },
     "sticky": {
@@ -2520,7 +2520,7 @@
             },
             {
               "title": "Byudjetni jamlash — crowdfunding va grantlar",
-              "desc": "Biz o'nlab albom crowdfunding kampaniyalarini rejalashtirib, olib borganmiz (jami taxminan ₩300 mln). Tumblbug sahifasini rejadan qurilishigacha to'liq oling yoki grant arizasi yo'nalishini birga aniqlaymiz."
+              "desc": "Biz o'nlab albom crowdfunding kampaniyalarini rejalashtirib, olib borganmiz (jami taxminan ₩300 mln). Studio NOL Funding sahifasini rejadan qurilishigacha to'liq oling yoki grant arizasi yo'nalishini birga aniqlaymiz."
             }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
@@ -2686,7 +2686,7 @@
         "Albom kontseptsiyasi va A&R yo'nalishi",
         "Vokal yozish · Mikslash · Mastering (ichki)",
         "Sessiya musiqachilarini jalb etish · Arrajman tarmog'i",
-        "Raqamli tarqatish (Melon · Spotify · Apple Music va boshqalar)",
+        "Hamkor distribyutor orqali raqamli reliz (Melon · Spotify · Apple Music va boshqalar)",
         "Tanqidchilar va media uchun press-reliz, sharh so'rash",
         "Crowdfunding rejasi va sahifa qurilishi · san'at grantlari bo'yicha hamrohlik"
       ],
@@ -2710,7 +2710,7 @@
         },
         {
           "title": "Mikslash · Master · Tarqatish",
-          "desc": "Ichki mikslash va masteringdan so'ng musiqa Melon, Spotify, Apple Music va boshqalarga tarqatiladi."
+          "desc": "Ichki miks va masteringdan so'ng, siz bilan birga eng mos hamkor distribyutorni tanlab, Melon, Spotify, Apple Music va boshqalarda chiqaramiz."
         },
         {
           "title": "Tanqidchilar · Media PR",
@@ -2781,7 +2781,7 @@
       "items": [
         {
           "question": "Chiqarish loyihasi qanday xizmat?",
-          "answer": "Bu musiqani chiqarishning har bir bosqichida — rejalashtirish, yozib olish, session musiqachilarini biriktirish, miks, mastering, tarqatish va media PR — siz bilan birga yuradigan loyiha. Vokal yozish, miks va mastering Studio NOL ichida bajariladi; cholg‘u sessiya va tanqidchi·media aloqalari esa indi sahnada 15 yil davomida qurilgan tarmoq orqali olib boriladi. Single, EP va to‘liq albomning sur’ati va byudjeti har xil — har bir sahifada aniq tarkib va narx tuzilmasini ko‘rib chiqing."
+          "answer": "Bu musiqani chiqarishning har bir bosqichida — rejalashtirish, yozib olish, session musiqachilarini biriktirish, miks, mastering, tarqatish va media PR — siz bilan birga yuradigan loyiha. Vokal yozish, miks va mastering Studio NOL ichida bajariladi; cholg‘u sessiya va tanqidchi·media aloqalari esa indi sahnada 15 yil davomida qurilgan tarmoq orqali olib boriladi. Single, EP va to‘liq albomning sur’ati va byudjeti har xil — har bir sahifada aniq tarkib va narx tuzilmasini ko‘rib chiqing. Tarqatish uchun bir nechta hamkor ichidan siz bilan birga eng mosini tanlaymiz."
         },
         {
           "question": "Loyiha davomida fikrim o‘zgarsa yoki jadval buzilsa nima bo‘ladi?",

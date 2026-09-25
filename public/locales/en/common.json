@@ -797,7 +797,7 @@
           "title": "Crowdfunding Consulting",
           "valueBadge": "~₩70K/mo",
           "points": [
-            "Platform recommendations (Tumblbug, Wadiz, etc.) based on your project",
+            "Help opening a campaign on Studio NOL Funding and setting its goal",
             "Goal setting, reward design, and timeline planning",
             "Storytelling guidance to engage backers",
             "Marketing strategy advice for funding success",
@@ -1065,7 +1065,7 @@
         "funding": "Crowdfunding Design"
       },
       "serviceBody": {
-        "funding": "Album crowdfunding campaigns planned and built end to end on Tumblbug and similar platforms."
+        "funding": "Album crowdfunding campaigns on Studio NOL Funding, planned and built end to end."
       }
     },
     "sticky": {
@@ -2548,7 +2548,7 @@
             },
             {
               "title": "Funding the budget — crowdfunding & grants",
-              "desc": "We have planned and run dozens of album crowdfunding campaigns (roughly ₩300M raised in total). We can build your Tumblbug page end to end, or work out a grant application direction with you."
+              "desc": "We have planned and run dozens of album crowdfunding campaigns (roughly ₩300M raised in total). We can build your Studio NOL Funding page end to end, or work out a grant application direction with you."
             }
           ],
           "journeySectionTitle": "The journey to release",
@@ -2714,7 +2714,7 @@
         "Album concept & A&R direction",
         "Vocal recording · Mixing · Mastering (in-house)",
         "Session musician sourcing · Arrangement network",
-        "Digital distribution (Melon · Spotify · Apple Music etc.)",
+        "Digital release via a partner distributor (Melon · Spotify · Apple Music etc.)",
         "Press release to critics & media, review outreach",
         "Crowdfunding planning & page build · arts grant support"
       ],
@@ -2738,7 +2738,7 @@
         },
         {
           "title": "Mix · Master · Distribution",
-          "desc": "After in-house mixing and mastering, the music is distributed to Melon, Spotify, Apple Music and more."
+          "desc": "After in-house mixing and mastering, we choose the best-fit partner distributor with you and release to Melon, Spotify, Apple Music and more."
         },
         {
           "title": "Critics · Media PR",
@@ -2809,7 +2809,7 @@
       "items": [
         {
           "question": "What exactly is the release project?",
-          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and critics/media connections run through the 15-year indie scene network. Single, EP, and full album each have their own pace and budget — check each page for the specific scope and how pricing is determined."
+          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and critics/media connections run through the 15-year indie scene network. Single, EP, and full album each have their own pace and budget — check each page for the specific scope and how pricing is determined. For distribution, we choose the best-fit distributor for your record with you from several partners."
         },
         {
           "question": "What if I change my mind or my schedule shifts mid-project?",

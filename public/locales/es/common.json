@@ -769,7 +769,7 @@
           "title": "Asesoría de crowdfunding",
           "valueBadge": "~₩70K/mes",
           "points": [
-            "Recomendación de plataformas (Tumblbug, Wadiz, etc.) según tu proyecto",
+            "Ayuda para abrir una campaña en Studio NOL Funding y fijar la meta",
             "Definición de meta, recompensas y duración",
             "Guía narrativa para conectar con los mecenas",
             "Estrategia de marketing para el éxito de la campaña",
@@ -1037,7 +1037,7 @@
         "funding": "Diseño de crowdfunding"
       },
       "serviceBody": {
-        "funding": "Campañas de crowdfunding de álbumes planificadas y construidas de principio a fin."
+        "funding": "Campañas de crowdfunding de álbumes en Studio NOL Funding, planificadas y construidas de principio a fin."
       }
     },
     "sticky": {
@@ -2520,7 +2520,7 @@
             },
             {
               "title": "Conseguir el presupuesto — crowdfunding y subvenciones",
-              "desc": "Hemos planificado y gestionado decenas de campañas de crowdfunding de álbumes (unos ₩300M recaudados en total). Construimos tu página de Tumblbug de principio a fin, o definimos contigo la dirección de una solicitud de subvención."
+              "desc": "Hemos planificado y gestionado decenas de campañas de crowdfunding de álbumes (unos ₩300M recaudados en total). Construimos tu página en Studio NOL Funding de principio a fin, o definimos contigo la dirección de una solicitud de subvención."
             }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
@@ -2686,7 +2686,7 @@
         "Concepto de álbum y dirección A&R",
         "Grabación vocal · Mezcla · Masterización (in-house)",
         "Músicos de sesión · Red de arreglos",
-        "Distribución digital (Melon · Spotify · Apple Music etc.)",
+        "Lanzamiento digital con una distribuidora asociada (Melon · Spotify · Apple Music etc.)",
         "Notas de prensa para críticos y medios, gestión de reseñas",
         "Planificación y construcción de crowdfunding · apoyo con subvenciones"
       ],
@@ -2710,7 +2710,7 @@
         },
         {
           "title": "Mezcla · Master · Distribución",
-          "desc": "Tras la mezcla y masterización in-house, la música se distribuye en Melon, Spotify, Apple Music y más."
+          "desc": "Tras la mezcla y masterización in-house, elegimos contigo la distribuidora asociada más adecuada y publicamos en Melon, Spotify, Apple Music y más."
         },
         {
           "title": "Críticos · Medios PR",
@@ -2781,7 +2781,7 @@
       "items": [
         {
           "question": "¿Qué es exactamente el proyecto de lanzamiento?",
-          "answer": "Es un proyecto que te acompaña en cada etapa del lanzamiento musical — planificación, grabación, coordinación de músicos de sesión, mezcla, masterización, distribución y PR de medios. La grabación vocal, la mezcla y la masterización se hacen internamente en Studio NOL, mientras que las sesiones instrumentales y las conexiones con críticos/medios se gestionan a través de la red de 15 años en la escena indie. Single, EP y álbum completo tienen ritmos y presupuestos distintos — consulta cada página para conocer el alcance específico y cómo se determina el precio."
+          "answer": "Es un proyecto que te acompaña en cada etapa del lanzamiento musical — planificación, grabación, coordinación de músicos de sesión, mezcla, masterización, distribución y PR de medios. La grabación vocal, la mezcla y la masterización se hacen internamente en Studio NOL, mientras que las sesiones instrumentales y las conexiones con críticos/medios se gestionan a través de la red de 15 años en la escena indie. Single, EP y álbum completo tienen ritmos y presupuestos distintos — consulta cada página para conocer el alcance específico y cómo se determina el precio. Para la distribución, elegimos contigo la distribuidora más adecuada entre varias asociadas."
         },
         {
           "question": "¿Qué pasa si cambio de opinión o se altera el cronograma a mitad de camino?",
