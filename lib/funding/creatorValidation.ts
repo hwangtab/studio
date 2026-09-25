@@ -137,9 +137,27 @@ export interface BasicSection {
   startAt: Date; endAt: Date; coverUrl: string;
 }
 
+/**
+ * 이미 승인돼 **잠긴** 모금 기간. 있으면 입력의 날짜를 아예 보지 않고 이 Date를 그대로
+ * 결과에 싣는다 — 리드타임·최대기간 검사도 건너뛴다.
+ *
+ * 왜 필요한가: 화면(`BasicSectionForm`)은 잠긴 날짜 필드도 폼 값에 매번 함께 보낸다.
+ * 검증기는 상태와 무관하게 `startAt >= now + leadDays`를 요구하므로, 모금이 이미 시작된
+ * 승인 프로젝트는 제목 한 글자만 고쳐도 400을 받았다. 호출부가 DB 값을 bare `YYYY-MM-DD`로
+ * 치환해 넘기는 방식으로 우회하고 있었는데, 그건 **손실 왕복**이다 — DB의 `start_at`이
+ * 정확히 KST 자정이 아닌 행(2026-09-17 이전에 서버 로컬 자정으로 저장된 것)에서는 치환값이
+ * 원래 순간으로 돌아오지 않아 `basicLockedViolation`이 "모금 기간은 바꿀 수 없습니다"로
+ * 거부한다. Date를 그대로 통과시키면 그 왕복 자체가 없다.
+ */
+export interface LockedFundingDates {
+  startAt: Date;
+  endAt: Date;
+}
+
 export const validateBasicSection = (
   input: unknown,
   now: Date,
+  lockedDates?: LockedFundingDates,
 ): { ok: true; value: BasicSection } | Fail => {
   const d = (input ?? {}) as Record<string, unknown>;
   const title = str(d.title);
@@ -171,21 +189,30 @@ export const validateBasicSection = (
    *
    * 형태가 어긋나면 해석을 시도하지 않고 즉시 거부한다 — 애매하게 잘못 읽는 것보다 낫다.
    */
-  const startStr = str(d.startAt) ?? '';
-  const endStr = str(d.endAt) ?? '';
-  if (!DATE_ONLY.test(startStr) || !DATE_ONLY.test(endStr)) return fail('날짜를 확인해 주세요.');
-  const startAt = new Date(kstStartOfDayIso(startStr));
-  const endAt = new Date(kstEndOfDayIso(endStr));
-  if (Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime())) return fail('날짜를 확인해 주세요.');
+  const dates = ((): { startAt: Date; endAt: Date } | Fail => {
+    // 잠긴 날짜는 이미 이 검증기를 통과해 승인된 값이다. 다시 볼 이유가 없고, 보면 안 된다
+    // (모금이 시작된 뒤면 리드타임 검사가 항상 실패한다).
+    if (lockedDates) return { startAt: lockedDates.startAt, endAt: lockedDates.endAt };
 
-  const earliest = new Date(now.getTime() + CREATOR_LIMITS.leadDays * 86_400_000);
-  if (startAt.getTime() < earliest.getTime()) {
-    return fail(`심사에 시간이 걸립니다. 시작일은 오늘부터 ${CREATOR_LIMITS.leadDays}일 뒤부터 고를 수 있습니다.`);
-  }
-  if (endAt.getTime() <= startAt.getTime()) return fail('종료일이 시작일보다 뒤여야 합니다.');
-  if (endAt.getTime() - startAt.getTime() > CREATOR_LIMITS.maxDurationDays * 86_400_000) {
-    return fail(`모금 기간은 최대 ${CREATOR_LIMITS.maxDurationDays}일입니다.`);
-  }
+    const startStr = str(d.startAt) ?? '';
+    const endStr = str(d.endAt) ?? '';
+    if (!DATE_ONLY.test(startStr) || !DATE_ONLY.test(endStr)) return fail('날짜를 확인해 주세요.');
+    const startAt = new Date(kstStartOfDayIso(startStr));
+    const endAt = new Date(kstEndOfDayIso(endStr));
+    if (Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime())) return fail('날짜를 확인해 주세요.');
+
+    const earliest = new Date(now.getTime() + CREATOR_LIMITS.leadDays * 86_400_000);
+    if (startAt.getTime() < earliest.getTime()) {
+      return fail(`심사에 시간이 걸립니다. 시작일은 오늘부터 ${CREATOR_LIMITS.leadDays}일 뒤부터 고를 수 있습니다.`);
+    }
+    if (endAt.getTime() <= startAt.getTime()) return fail('종료일이 시작일보다 뒤여야 합니다.');
+    if (endAt.getTime() - startAt.getTime() > CREATOR_LIMITS.maxDurationDays * 86_400_000) {
+      return fail(`모금 기간은 최대 ${CREATOR_LIMITS.maxDurationDays}일입니다.`);
+    }
+    return { startAt, endAt };
+  })();
+  if ('ok' in dates) return dates;
+  const { startAt, endAt } = dates;
 
   return { ok: true, value: { title, summary, slug: slugRaw.trim().toLowerCase(), goalAmount, startAt, endAt, coverUrl } };
 };

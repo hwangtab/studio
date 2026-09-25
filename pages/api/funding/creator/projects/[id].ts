@@ -3,7 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { consumeRateLimit } from '../../../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../../../lib/contact/origin';
 import { authenticateCreatorApi } from '../../../../../lib/funding/creatorAuth';
-import { toKstDateString } from '../../../../../lib/funding/creatorDateInput';
 import { validateBasicSection, validateCreatorSection, validatePayoutSection, validateStorySection } from '../../../../../lib/funding/creatorValidation';
 import {
   loadProjectForCreator, saveBasicSection, saveCreatorSection, savePayoutSection, saveStorySection,
@@ -87,31 +86,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 닿기 전에 막힌다. 리뷰에서 재현된 회귀다(2026-09-21): 승인 뒤에는 기본정보를 영원히
      * 저장할 수 없었다.
      *
-     * 요청의 날짜를 검증 전에 DB의 실제 값으로 강제 치환한다 — 이러면 승인된 프로젝트의
-     * 날짜가 검증 단계에서 구조적으로 절대 바뀔 수 없다(치환한 값이 곧 기존 값이니 이후
-     * `basicLockedViolation`도 항상 무위반).
+     * 그래서 검증기에 잠긴 날짜를 **Date 그대로** 넘긴다(`lockedDates`). 검증기는 입력의
+     * 날짜를 보지 않고 이 값을 결과에 싣고, 리드타임·기간 검사도 건너뛴다 — 이미 승인된
+     * 값이라 다시 볼 이유가 없다. 이후 `basicLockedViolation`도 항상 무위반이다.
      *
-     * **치환만으로는 부족하다** — 치환한 값이 기존 시작일 그대로라도, 그 값 자체가 이미
-     * 지난 날짜(모금이 시작된 뒤)일 수 있고, `leadDays` 검사는 "누가 왜 보냈는지"가 아니라
-     * "값이 미래인지"만 본다. 그래서 이미 확정된 날짜를 다시 검증할 필요가 없는 이
-     * 경로에서만 리드타임 기준 시각을 실제 `now`가 아니라 epoch로 넘긴다 — 실제 연도의
-     * 어떤 시작일도 `1970-01-04`(`leadDays`만큼 뒤)보다는 뒤이므로 이 검사가 항상
-     * 통과한다. `validateBasicSection`은 고치지 않는다 — 이미 있는 `now` 매개변수를 호출부가
-     * 다르게 넘길 뿐이라, 승인 여부를 아는 별도 플래그를 검증기 시그니처에 추가하지 않고도
-     * 된다. `saveBasicSection`의 `basicLockedViolation`은 그대로 둔다 — 서비스 계층을 직접
-     * 부르는 경로(예: 다른 API·스크립트)에 대한 방어가 남아야 한다.
+     * **왜 bare `YYYY-MM-DD`로 치환하지 않는가** — 그건 손실 왕복이다. DB의 `start_at`이
+     * 정확히 KST 자정이 아닌 행(2026-09-17 이전에 서버 로컬 자정으로 저장된 것)에서는
+     * 치환값이 원래 순간으로 돌아오지 않아, 제목 한 글자만 고쳐도 "모금 기간은 바꿀 수
+     * 없습니다"로 거부됐다. `saveBasicSection`의 `basicLockedViolation`은 그대로 둔다 —
+     * 서비스 계층을 직접 부르는 경로(예: 다른 API·스크립트)에 대한 방어가 남아야 한다.
      */
     const rawValue = (req.body?.value ?? {}) as Record<string, unknown>;
-    // 치환값도 **KST 달력 날짜**여야 한다 — validateBasicSection은 bare `YYYY-MM-DD`만 받고
-    // 시각은 스스로 붙인다(전체 ISO 문자열은 거부한다). 승인된 프로젝트의 날짜는 그 검증기를
-    // 통과해 저장된 값이라 왕복이 같은 순간으로 돌아온다. 혹시 어긋나면 날짜가 조용히
-    // 바뀌는 대신 basicLockedViolation이 "모금 기간은 바꿀 수 없습니다"로 막는다.
-    const value = wasApproved && before
-      ? { ...rawValue, startAt: toKstDateString(before.startAt), endAt: toKstDateString(before.endAt) }
-      : rawValue;
-    const validationNow = wasApproved ? new Date(0) : new Date();
+    const lockedDates = wasApproved && before
+      ? { startAt: before.startAt, endAt: before.endAt }
+      : undefined;
 
-    const validated = validateBasicSection(value, validationNow);
+    const validated = validateBasicSection(rawValue, new Date(), lockedDates);
     if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
     const result = await saveBasicSection(auth.creatorId, projectId, validated.value);
     if (result.ok) await notifyIfApprovedEdit(wasApproved);
