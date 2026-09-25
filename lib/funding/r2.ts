@@ -36,6 +36,13 @@ const objectClient = (): AwsClient =>
     secretAccessKey: requireEnv('R2_SECRET_ACCESS_KEY'),
     service: 's3',
     region: 'auto',
+    /**
+     * aws4fetch의 `fetch`는 5xx·429에 **기본 10회 지수 백오프**(최악 ~50초)를 한다.
+     * 그 왕복이 내려받기 요청 위에 있으므로, R2가 흔들리면 우리가 준비한 503 안내가
+     * 나가기 전에 서버리스 함수 타임아웃에 먼저 걸린다 — 후원자는 이유 없는 오류를 본다.
+     * 한 번만 다시 시도하고 끝낸다. 재시도로 얻는 것보다 빨리 답하는 쪽이 낫다.
+     */
+    retries: 1,
   });
 
 const objectUrl = (key: string): URL =>
