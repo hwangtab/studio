@@ -35,6 +35,8 @@ jest.mock('./adminProjects', () => ({
 
 // eslint-disable-next-line import/first
 import { decideProject } from './reviewDecision';
+// eslint-disable-next-line import/first
+import { isSlugConflictError } from './slugOccupancy';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -257,6 +259,78 @@ describe('승인', () => {
     const after = await readProject(projectId);
     expect(after.reviewStatus).toBe(before.reviewStatus);
     expect(after.status).toBe(before.status);
+  });
+
+  /**
+   * M7 — 반려는 주소를 점유하지 않는다. 애플리케이션 검사와 DB의 부분 유니크 인덱스
+   * (`funding_projects_slug_live_unique`)가 같은 목록을 본다.
+   */
+  it('반려된 프로젝트가 쓰던 slug로는 승인된다', async () => {
+    const creator = await seedCreator('freed@example.com');
+    await seedProject(creator, { slug: 'freed-slug', reviewStatus: 'rejected' });
+    const projectId = await seedProject(creator, { slug: 'still-mine-2' });
+    await seedReward(projectId);
+
+    const result = await decideProject(projectId, 'approve', { slug: 'freed-slug' }, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toMatchObject({ ok: true });
+    expect((await readProject(projectId)).slug).toBe('freed-slug');
+  });
+
+  /**
+   * 애플리케이션 검사만으로는 못 막는 경합 — 같은 slug의 **반려 행 둘**이 동시에
+   * 재신청·승인되면 양쪽 다 검사를 통과한다(둘 다 그 순간 rejected다). 부분 유니크 인덱스가
+   * 한쪽을 떨어뜨리고, 그 예외가 **사람이 읽을 409(duplicate_slug)**로 떨어져야 한다 —
+   * 원문 SQL이나 500이 운영자에게 나가면 안 된다.
+   */
+  it('같은 slug의 반려 행 둘이 승인되면 하나만 성공하고 다른 쪽은 duplicate_slug다', async () => {
+    const creator = await seedCreator('race@example.com');
+    const a = await seedProject(creator, { slug: 'race-a', reviewStatus: 'rejected' });
+    const b = await seedProject(creator, { slug: 'race-b', reviewStatus: 'rejected' });
+    await seedReward(a);
+    await seedReward(b);
+    // 재신청 — 둘 다 같은 slug를 노린다. draft는 점유하므로 한쪽은 저장 단계에서 이미
+    // 걸린다. 그 검사를 지나친 상태(둘 다 rejected)에서 승인만 동시에 들어오는 상황을 만든다.
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, a));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, b));
+
+    const first = await decideProject(a, 'approve', { slug: 'contested' }, new Date('2026-09-18T00:00:00Z'));
+    expect(first).toMatchObject({ ok: true });
+
+    // 두 번째는 이제 approved가 점유하므로 검사에서 걸린다 — 어느 층이 막든 같은 code다.
+    const second = await decideProject(b, 'approve', { slug: 'contested' }, new Date('2026-09-18T00:00:00Z'));
+    expect(second).toEqual({ ok: false, code: 'duplicate_slug', message: expect.any(String) });
+    expect((await readProject(b)).reviewStatus).toBe('submitted');
+    expect((await readProject(b)).slug).toBe('race-b');
+  });
+
+  /**
+   * 애플리케이션 검사를 건너뛴 경로에서 **인덱스가 실제로 막는지**, 그리고 그 예외가
+   * `isSlugConflictError`로 잡혀 사람이 읽을 409가 되는지를 DB에 직접 대고 본다.
+   *
+   * `decideProject`를 통해서는 검사가 먼저 걸려 이 경로에 닿을 수 없다(모듈 내부 참조라
+   * 함수를 갈아 끼울 수도 없다). 인덱스가 살아 있다는 사실과 예외 문자열이 우리 판정과
+   * 맞는다는 사실을 나눠 고정한다 — 둘이 맞으면 reviewDecision의 catch가 동작한다.
+   */
+  it('부분 유니크 인덱스가 살아 있고, 그 예외를 isSlugConflictError가 알아본다', async () => {
+    const creator = await seedCreator('index-guard@example.com');
+    await seedProject(creator, { slug: 'contested-2', reviewStatus: 'approved', status: 'auto' });
+
+    let caught: unknown;
+    try {
+      await seedProject(creator, { slug: 'contested-2', reviewStatus: 'submitted' });
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeDefined();
+    expect(isSlugConflictError(caught)).toBe(true);
+  });
+
+  it('반려 행끼리는 같은 slug를 가질 수 있다 — 인덱스가 그 둘을 보지 않는다', async () => {
+    const creator = await seedCreator('index-rejected@example.com');
+    await seedProject(creator, { slug: 'twice-rejected', reviewStatus: 'rejected' });
+    await expect(seedProject(creator, { slug: 'twice-rejected', reviewStatus: 'rejected' })).resolves.toBeDefined();
   });
 
   it('다른 DB 프로젝트와 겹치는 slug로는 승인되지 않는다', async () => {

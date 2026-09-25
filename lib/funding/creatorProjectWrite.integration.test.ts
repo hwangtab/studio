@@ -613,6 +613,68 @@ describe('slug 중복', () => {
     expect(rows).toHaveLength(1);
   });
 
+  /**
+   * M7 — 반려·보관된 프로젝트는 slug를 점유하지 않는다. 삭제 경로가 저장소에 없어서,
+   * 예전엔 한 번 반려된 신청서가 그 주소를 영구히 붙들고 있었다(되찾는 길이 DB 직접
+   * 수정뿐). 반려된 행 자체는 기록으로 그대로 둔다 — 점유로 세지 않기만 한다.
+   */
+  it('반려된 프로젝트가 쓰던 slug는 다른 개설자도 다시 쓸 수 있다 (주소는 공공재다)', async () => {
+    const creator = await seedCreator('rejected-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'freed-slug' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'rejected' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('rejected-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'freed-slug' }))).toMatchObject({ ok: true });
+
+    // 반려된 옛 행은 그대로 남는다 — 기록이다. 관리자 목록에서 두 행이 같은 slug로 보이되
+    // review_status로 구분된다.
+    const rows = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.slug, 'freed-slug'));
+    expect(rows).toHaveLength(2);
+    expect(rows.map((r) => r.reviewStatus).sort()).toEqual(['draft', 'rejected']);
+  });
+
+  it('수정 요청(changes_requested) 중인 프로젝트의 slug는 놓아주지 않는다 — 재제출을 기다리는 신청서다', async () => {
+    const creator = await seedCreator('changes-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'being-fixed' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'changes_requested' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('changes-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'being-fixed' })))
+      .toMatchObject({ ok: false, code: 'duplicate_slug' });
+  });
+
+  it('승인된 프로젝트가 쓰는 slug는 여전히 거부한다', async () => {
+    const creator = await seedCreator('approved-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'held-slug' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'approved', status: 'auto' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('approved-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'held-slug' })))
+      .toMatchObject({ ok: false, code: 'duplicate_slug' });
+  });
+
+  it('심사 대기(submitted) 중인 프로젝트의 slug도 거부한다 — 승인 순간을 경합으로 만들지 않는다', async () => {
+    const creator = await seedCreator('submitted-slug@example.com');
+    const { id: first } = await createDraftProject(creator);
+    await saveBasicSection(creator, first, basicSection({ slug: 'pending-slug' }));
+    await mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+      .where(eq(schema.fundingProjects.id, first));
+
+    const other = await seedCreator('submitted-slug-other@example.com');
+    const { id: second } = await createDraftProject(other);
+    expect(await saveBasicSection(other, second, basicSection({ slug: 'pending-slug' })))
+      .toMatchObject({ ok: false, code: 'duplicate_slug' });
+  });
+
   it('content/funding/*.md의 slug와 겹쳐도 거부한다', async () => {
     mockFileSlugs = ['file-project'];
     const creator = await seedCreator('i@example.com');

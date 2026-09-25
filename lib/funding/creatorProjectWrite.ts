@@ -1,4 +1,4 @@
-import { and, count, eq, gt, inArray, ne } from 'drizzle-orm';
+import { and, count, eq, gt, inArray } from 'drizzle-orm';
 
 import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
@@ -7,6 +7,7 @@ import {
   type FundingProjectRow, type FundingRewardRow,
 } from '../../db/schema';
 import { getFundingProject } from './projects';
+import { isFundingSlugTaken, isSlugConflictError } from './slugOccupancy';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
   CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type PayoutSection,
@@ -196,9 +197,10 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
   // 그 DB 프로젝트는 어떤 주소로도 열리지 않는다 — 여기서 막는 편이 훨씬 싸다.
   if (getFundingProject(value.slug)) return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
 
-  const [taken] = await getDb().select({ id: fundingProjects.id }).from(fundingProjects)
-    .where(and(eq(fundingProjects.slug, value.slug), ne(fundingProjects.id, projectId))).limit(1);
-  if (taken) return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+  // 반려·보관된 프로젝트는 점유로 세지 않는다(lib/funding/slugOccupancy.ts).
+  if (await isFundingSlugTaken(value.slug, projectId)) {
+    return deny('duplicate_slug', '이미 쓰이고 있는 주소입니다. 다른 주소를 적어 주세요.');
+  }
 
   const now = new Date();
   // 승인된 뒤의 저장만 찍는다. updated_at으로는 알 수 없다 — 관리자 쓰기도 그 값을
@@ -207,11 +209,20 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
   // 실제로 바뀌는 시점이 정확히 여기다.
   const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now, lastmod: toKstDateString(now) } : {};
 
-  await getDb().update(fundingProjects).set({
-    title: value.title, summary: value.summary, slug: value.slug,
-    goalAmount: value.goalAmount, startAt: value.startAt, endAt: value.endAt,
-    coverUrl: value.coverUrl, updatedAt: now, ...editedAt,
-  }).where(eq(fundingProjects.id, row!.id));
+  try {
+    await getDb().update(fundingProjects).set({
+      title: value.title, summary: value.summary, slug: value.slug,
+      goalAmount: value.goalAmount, startAt: value.startAt, endAt: value.endAt,
+      coverUrl: value.coverUrl, updatedAt: now, ...editedAt,
+    }).where(eq(fundingProjects.id, row!.id));
+  } catch (error: unknown) {
+    // 위 검사와 이 쓰기 사이에 같은 slug가 남에게 넘어간 경합. 부분 유니크 인덱스가 막아
+    // 냈고, 데이터는 안전하다 — 메시지는 검사와 같은 것을 준다.
+    if (isSlugConflictError(error)) {
+      return deny('duplicate_slug', '그 사이 다른 프로젝트가 같은 주소를 쓰기 시작했습니다. 다른 주소를 적어 주세요.');
+    }
+    throw error;
+  }
   return { ok: true };
 };
 
