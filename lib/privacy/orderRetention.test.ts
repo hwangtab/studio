@@ -51,7 +51,7 @@ import {
   purgeExpiredSubscriptionCustomerData,
   purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
-  purgeFundingListingOfPurgedOrders,
+  purgeFundingPersonalDataOfPurgedOrders,
   purgeUnusableBillingKeyRawResponses,
 } from './orderRetention';
 
@@ -233,34 +233,55 @@ describe('주문 고객 정보 파기 (법정 보존 5년)', () => {
 });
 
 /**
- * 후원 쪽 1년 파기는 리워드 전달이 찍혀야 시작해서, 전달 표시가 없는 후원의 닉네임·응원
- * 메시지는 끝나는 날이 없었다. 결제자 이름이 5년 파기로 지워지면(= 명단에서 빠지면) 함께 지운다.
+ * 후원 쪽 1년 파기는 리워드 전달이 찍혀야 시작해서, 전달 표시가 없는 후원은 배송지·닉네임·
+ * 응원 메시지가 끝나는 날이 없었다. 결제자 이름이 5년 파기로 지워지면 함께 지운다.
+ * 5년 안에는 지우지 않는다 — 전달 뒤에도 오배송·민원 대응에 배송지가 필요하다.
  */
-describe('결제자 이름이 파기된 후원의 명단 표시 이름·응원 메시지 파기', () => {
-  const addPledge = async (orderId: string, publicName: string | null, supporterMessage: string | null) => {
+describe('결제자 이름이 파기된 후원의 나머지 개인정보 파기', () => {
+  const SHIPPING = {
+    shippingName: '김받음', shippingPhone: '010-9999-8888', shippingPostcode: '03000',
+    shippingAddress1: '서울시 은평구', shippingAddress2: '101호', shippingMemo: '경비실에 맡겨 주세요',
+  };
+  const addPledge = async (orderId: string, over: Partial<typeof schema.fundingPledges.$inferInsert> = {}) => {
     const [row] = await mockDb.insert(fundingPledges).values({
       orderId, projectSlug: 'demo', rewardId: 'cd', rewardTitle: 'CD', unitAmount: 10000, quantity: 1,
       paymentMethod: 'toss', holdExpiresAt: d('2015-01-01'), paidAt: d('2015-01-01'), deliveredAt: null,
-      displayNamePublic: true, publicName, supporterMessage,
+      displayNamePublic: true, publicName: '청취자', supporterMessage: '응원합니다', adminMemo: '오배송 재발송 처리',
+      ...SHIPPING, ...over,
     }).returning({ id: fundingPledges.id });
     return row.id;
   };
   const pledgeOf = async (id: string) => (await mockDb.select().from(fundingPledges).where(eq(fundingPledges.id, id)))[0];
 
-  it('이름이 파기된 주문의 후원이면 전달 표시가 없어도 표시 이름은 표식으로, 메시지는 NULL로', async () => {
-    const nick = await addPledge(await addOrder({ type: 'funding', customerName: PURGED_MARK }), '청취자', '응원합니다');
-    const real = await addPledge(await addOrder({ type: 'funding', customerName: PURGED_MARK }), null, '실명 후원자의 말');
-    expect((await purgeFundingListingOfPurgedOrders()).purged).toBe(2);
-    expect(await pledgeOf(nick)).toMatchObject({ publicName: PURGED_MARK, supporterMessage: null });
-    // 실명을 고른 행(NULL)은 표식으로 바꾸지 않는다 — 결제자 이름 쪽이 이미 표식이다.
-    expect(await pledgeOf(real)).toMatchObject({ publicName: null, supporterMessage: null });
-    expect((await purgeFundingListingOfPurgedOrders()).purged).toBe(0);
+  it('전달 표시가 없어도 배송지·메모·메시지를 지우고 표시 이름은 표식으로 덮는다', async () => {
+    const id = await addPledge(await addOrder({ type: 'funding', customerName: PURGED_MARK }), {
+      fulfillmentUpdatedBy: 'admin', listingHiddenAt: d('2016-01-01'),
+    });
+    expect((await purgeFundingPersonalDataOfPurgedOrders()).purged).toBe(1);
+    expect(await pledgeOf(id)).toMatchObject({
+      shippingName: null, shippingPhone: null, shippingPostcode: null,
+      shippingAddress1: null, shippingAddress2: null, shippingMemo: null,
+      adminMemo: null, supporterMessage: null, publicName: PURGED_MARK,
+      // 운영 기록은 후원자 개인정보가 아니라 남긴다.
+      fulfillmentUpdatedBy: 'admin', listingHiddenAt: d('2016-01-01'),
+    });
+    expect((await purgeFundingPersonalDataOfPurgedOrders()).purged).toBe(0);
   });
 
-  it('이름이 남아 있는 주문의 후원은 건드리지 않는다', async () => {
-    const alive = await addPledge(await addOrder({ type: 'funding' }), '청취자', '응원합니다');
-    expect((await purgeFundingListingOfPurgedOrders()).purged).toBe(0);
-    expect(await pledgeOf(alive)).toMatchObject({ publicName: '청취자', supporterMessage: '응원합니다' });
+  // 실명을 고른 행(NULL)은 표식으로 바꾸지 않는다 — 결제자 이름 쪽이 이미 표식이다.
+  it('실명을 고른 행의 표시 이름은 NULL 그대로 둔다', async () => {
+    const id = await addPledge(await addOrder({ type: 'funding', customerName: PURGED_MARK }), { publicName: null });
+    await purgeFundingPersonalDataOfPurgedOrders();
+    expect(await pledgeOf(id)).toMatchObject({ publicName: null, shippingAddress1: null });
+  });
+
+  it('결제자 이름이 남아 있으면(5년 전) 전달 여부와 무관하게 하나도 지우지 않는다', async () => {
+    const undelivered = await addPledge(await addOrder({ type: 'funding' }));
+    const delivered = await addPledge(await addOrder({ type: 'funding' }), { deliveredAt: d('2015-02-01') });
+    expect((await purgeFundingPersonalDataOfPurgedOrders()).purged).toBe(0);
+    for (const id of [undelivered, delivered]) {
+      expect(await pledgeOf(id)).toMatchObject({ ...SHIPPING, adminMemo: '오배송 재발송 처리', supporterMessage: '응원합니다', publicName: '청취자' });
+    }
   });
 });
 
