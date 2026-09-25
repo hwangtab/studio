@@ -102,10 +102,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   // 자원별 캘린더의 바쁨. 녹음실과 연습실이 같은 기준이다 — 자기 캘린더를 읽고(여기),
   // 자기 캘린더에 쓴다(confirm.ts). 캘린더에 손으로 넣은 일정도 웹 예약을 막는다.
-  // 연습실 캘린더는 env가 없으면 읽지 않는다. 조회 실패는 fail-closed(503).
+  // 조회 실패는 fail-closed(503). 녹음실 캘린더(BOOKING_GCAL_ID)는 필수라 env가 없어도
+  // 503이다(getCachedBusyRanges 안에서 throw). 연습실 캘린더만 env가 없으면 읽지 않는다 —
+  // confirm.ts가 같은 조건으로 쓰기를 건너뛰므로 읽기도 같이 건너뛰어야 짝이 맞는다.
   const calendar: BookingCalendar = resourceKindOf(product) === 'rooms' ? 'practice-room' : 'studio';
+  const skipCalendar = calendar === 'practice-room' && !calendarIdFor('practice-room');
   let calendarBusy: BusyRange[] = [];
-  if (calendarIdFor(calendar)) {
+  if (!skipCalendar) {
     try {
       calendarBusy = await getCachedBusyRanges(calendar, date, dayStart, dayEnd);
     } catch (error) {
