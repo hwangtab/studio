@@ -196,7 +196,7 @@ it('resend_email: 수기 등록 + 플레이스홀더 이메일이면 409 — 발
   });
   const r = await call('PATCH', { id: 'order-1' }, { action: 'resend_email' });
   expect(r.status).toBe(409);
-  expect(r.body).toEqual({ ok: false, message: '수기 등록 건은 메일을 보내지 않습니다.' });
+  expect(r.body).toEqual({ ok: false, message: '받는 사람 주소가 없는 수기 등록 건입니다. 메일을 보내지 않습니다.' });
   expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
 });
 

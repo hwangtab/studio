@@ -23,6 +23,10 @@ jest.mock('../../../../../lib/funding/projects', () => ({
   ...jest.requireActual('../../../../../lib/funding/projects'),
   getFundingProject: (slug: string) => (slug === 'demo' ? PROJECT : null),
 }));
+jest.mock('../../../../../lib/funding/email', () => ({
+  ...jest.requireActual('../../../../../lib/funding/email'),
+  sendFundingConfirmedEmails: jest.fn().mockResolvedValue(null),
+}));
 
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -32,6 +36,8 @@ import handler from '../../../../../pages/api/admin/funding/pledges/index';
 import { parseFundingProject } from '../../../../../lib/funding/projects';
 // eslint-disable-next-line import/first
 import { aggregateProjectStatus } from '../../../../../lib/funding/service';
+// eslint-disable-next-line import/first
+import { sendFundingConfirmedEmails } from '../../../../../lib/funding/email';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -75,6 +81,8 @@ beforeEach(async () => {
   await client.execute('DELETE FROM funding_pledges');
   await client.execute('DELETE FROM payments');
   await client.execute('DELETE FROM orders');
+  (sendFundingConfirmedEmails as jest.Mock).mockClear();
+  (sendFundingConfirmedEmails as jest.Mock).mockResolvedValue(null);
 });
 
 const call = async (body: unknown) => {
@@ -184,4 +192,47 @@ it('사전 검사 뒤 재고가 소진되면 409 — 고아 주문도 남기지 
   // 한정 수량도 지켜져야 한다 — CD pledge는 여전히 1건뿐.
   const cd = await client.execute("SELECT COUNT(*) AS c FROM funding_pledges WHERE reward_id='cd'");
   expect(Number(cd.rows[0].c)).toBe(1);
+});
+
+/**
+ * 수기 등록도 **등록 그 자리에서** 확정 메일을 보낸다. 예전엔 안 보내서, 운영자가 관리자
+ * 상세의 '메일 재발송'을 따로 눌러야 후원자가 관리 링크(셀프 취소·명단 공개 철회)를 받았다.
+ */
+it('실제 이메일이면 확정 메일이 자동으로 나가고 센티널이 지워진다', async () => {
+  const r = await call({ ...VALID_BODY, customerEmail: 'real@example.com' });
+  expect(r.status).toBe(201);
+  expect(sendFundingConfirmedEmails).toHaveBeenCalledTimes(1);
+
+  const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+  // 발송이 끝나면 센티널은 결과(성공 = NULL)로 덮인다.
+  expect(order.rows[0]?.notification_error).toBeNull();
+});
+
+it('플레이스홀더 이메일이면 확정 메일을 보내지 않고 센티널도 남기지 않는다', async () => {
+  const r = await call({ ...VALID_BODY, customerEmail: '' });
+  expect(r.status).toBe(201);
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+
+  const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+  expect(order.rows[0]?.notification_error).toBeNull();
+});
+
+it('메일 발송이 실패해도 등록은 201이고 사유가 notification_error에 남는다', async () => {
+  (sendFundingConfirmedEmails as jest.Mock).mockResolvedValue('customer:RESEND_5XX');
+  const r = await call({ ...VALID_BODY, customerEmail: 'real@example.com' });
+  expect(r.status).toBe(201);
+
+  const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+  expect(order.rows[0]?.notification_error).toBe('customer:RESEND_5XX');
+  // 등록 자체는 그대로 확정이다 — 메일 실패가 후원 기록을 되돌리지 않는다.
+  expect(order.rows[0]?.status).toBe('paid');
+});
+
+it('메일 발송이 예외를 던져도 등록은 201이고 예외 메시지가 기록된다', async () => {
+  (sendFundingConfirmedEmails as jest.Mock).mockRejectedValue(new Error('resend down'));
+  const r = await call({ ...VALID_BODY, customerEmail: 'real@example.com' });
+  expect(r.status).toBe(201);
+
+  const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+  expect(order.rows[0]?.notification_error).toBe('resend down');
 });

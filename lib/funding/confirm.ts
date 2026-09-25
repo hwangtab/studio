@@ -104,8 +104,12 @@ const recordEmailResult = async (orderId: string, orderNo: string, emailError: s
  * 보고 확정 메일을 한 통 더 보낸다. rowsAffected 1을 받은 쪽만 발송한다.
  *
  * undefined는 "이번 호출이 보내지 않았다"는 뜻이다(success()의 emailSent 의미 그대로).
+ *
+ * 관리자 수기 등록(pages/api/admin/funding/pledges/index.ts)도 이 함수를 그대로 부른다 —
+ * 그쪽은 토스를 타지 않지만 "센티널을 선점한 쪽만 보낸다 → 결과를 notification_error에
+ * 기록한다"는 규약은 같아야 한다. 발송·기록·실패 처리를 복제하면 두 경로의 판정이 갈린다.
  */
-const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean | undefined> => {
+export const deliverConfirmedEmailsOnce = async (order: FundingOrder): Promise<boolean | undefined> => {
   // CAS — send_pending을 send_inflight로 원자적으로 바꾼 쪽만 보낸다. 판정 불가는 보내는
   // 쪽으로 흘린다(rowsAffectedOf의 규약) — 없는 실패를 지어내 확정 메일을 통째로 막는 쪽이
   // 중복 발송보다 나쁘다.

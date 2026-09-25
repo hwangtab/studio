@@ -195,10 +195,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ ok: true });
     }
     case 'resend_email': {
-      // 수기 등록 건은 실제 고객 메일이 없다(플레이스홀더가 들어간다) — 재발송하면
-      // 우리 도메인 주소로 되돌아오거나 반송된다.
+      // 이메일 칸을 비운 수기 등록 건은 customer_email이 플레이스홀더다 — 보내면 우리
+      // 도메인 주소로 되돌아오거나 반송된다. 실제 주소를 넣은 수기 등록은 이 분기를 타지
+      // 않고, 등록 시점에 이미 확정 메일이 한 번 나간다(pledges/index.ts).
       if (isManualPlaceholderRecipient(order)) {
-        return res.status(409).json({ ok: false, message: '수기 등록 건은 메일을 보내지 않습니다.' });
+        return res.status(409).json({ ok: false, message: '받는 사람 주소가 없는 수기 등록 건입니다. 메일을 보내지 않습니다.' });
       }
       /**
        * 무엇을 다시 보낼지는 **주문 상태**가 정한다 — 예약 쪽(pages/api/admin/bookings/[id].ts)의
