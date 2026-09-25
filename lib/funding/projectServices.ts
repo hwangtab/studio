@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { FUNDING_DESIGN_PRICE } from '../../data/pricing';
@@ -196,7 +196,13 @@ export const setProjectService = async (
 };
 
 /**
- * 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않은 프로젝트면 no_service.
+ * 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않은 프로젝트면 no_service,
+ * 프로젝트 자체가 없으면 not_found.
+ *
+ * **`paid: true`는 멱등이다** — 이미 확인 시각이 있으면 덮지 않는다(COALESCE). 예전에는
+ * 두 번째 요청이 최초 확인 날짜를 지금 시각으로 밀어냈다: 중복 클릭·뒤로가기 재전송으로
+ * 충분히 나고, 세금계산서는 공급 시기 기준으로 끊어야 하는데 원래 날짜를 되찾을 방법이
+ * DB에 없다. 확인을 **취소**하면 NULL로 비우므로, 다시 확인하면 그때가 새 기준이다.
  *
  * **수행자를 서버 로그에 남긴다.** 이 자리는 시스템 밖의 돈(55만원 = 공급가 50만 + 부가세)이
  * 통장에 들어온 것을 사람이 눈으로 확인해 기록하는 곳인데, 남는 것이 타임스탬프 하나뿐이라
@@ -211,12 +217,31 @@ export const setDesignFeePaid = async (
   actor: string,
 ): Promise<ServiceWriteResult> => {
   try {
-    const rows = await getDb()
+    const db = getDb();
+    const rows = await db
       .update(fundingProjectServices)
-      .set({ designFeePaidAt: paid ? now : null, updatedAt: now })
+      .set({
+        designFeePaidAt: paid
+          ? sql`COALESCE(${fundingProjectServices.designFeePaidAt}, ${Math.floor(now.getTime() / 1000)})`
+          : null,
+        updatedAt: now,
+      })
       .where(eq(fundingProjectServices.projectId, projectId))
       .returning();
-    if (!rows[0]) return { ok: false, code: 'no_service' };
+    if (!rows[0]) {
+      /**
+       * 0행은 두 가지다 — 서비스가 아직 지정되지 않았거나, 프로젝트 자체가 없다. 예전에는
+       * 둘을 합쳐 no_service로 돌려줘서, 없는 id에도 "먼저 서비스 종류를 지정해 주세요"가
+       * 나갔다(그쪽을 시도하면 setProjectService가 404를 준다 — 두 액션이 같은 id에 다른
+       * 진단을 냈다).
+       */
+      const project = await db
+        .select({ id: fundingProjects.id })
+        .from(fundingProjects)
+        .where(eq(fundingProjects.id, projectId))
+        .limit(1);
+      return { ok: false, code: project[0] ? 'no_service' : 'not_found' };
+    }
     console.warn(
       `[funding] 설계비 입금 ${paid ? '확인' : '확인 취소'} `
         + `(projectId=${projectId}, designFee=${rows[0].designFee}, actor=${actor})`,

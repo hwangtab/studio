@@ -115,7 +115,9 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                         </span>
                       ) : services.byProjectId[p.id] && services.byProjectId[p.id].kind !== 'none' ? (
                         <>
-                          <span className="font-semibold text-gray-800">{PROJECT_SERVICE_LABELS[services.byProjectId[p.id].kind]}</span>
+                          {/* DB에 CHECK 제약이 없어 수기 SQL·다른 세션의 스크립트가 열거값
+                              밖의 kind를 넣을 수 있다. 사전에 없으면 빈칸이 그려졌다. */}
+                          <span className="font-semibold text-gray-800">{PROJECT_SERVICE_LABELS[services.byProjectId[p.id].kind] ?? '알 수 없음'}</span>
                           <div className={services.byProjectId[p.id].designFeePaidAt ? 'text-green-700' : 'text-amber-700'}>
                             {services.byProjectId[p.id].designFeePaidAt ? '설계비 입금' : '설계비 미입금'}
                           </div>

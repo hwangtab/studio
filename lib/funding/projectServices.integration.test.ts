@@ -149,10 +149,36 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
     expect(logged[2]).toContain('설계비 입금 확인 취소');
   });
 
+  /**
+   * 세금계산서는 공급 시기 기준으로 끊는다 — 최초 확인 날짜를 되찾을 방법이 DB에 없으므로
+   * 두 번째 요청이 그 날짜를 밀어내면 안 된다. 중복 클릭·뒤로가기 재전송으로 충분히 난다.
+   */
+  it('입금 확인을 다시 보내도 최초 확인 시각을 덮지 않는다', async () => {
+    const id = await seedProject();
+    await setProjectService(id, 'design', new Date(), ACTOR);
+    await setDesignFeePaid(id, true, new Date('2026-10-03T00:00:00Z'), ACTOR);
+    const again = await setDesignFeePaid(id, true, new Date('2026-11-20T00:00:00Z'), ACTOR);
+    expect(again.ok && again.service?.designFeePaidAt).toBe('2026-10-03T00:00:00.000Z');
+  });
+
+  it('확인을 취소하고 다시 확인하면 그때 시각으로 새로 찍힌다', async () => {
+    const id = await seedProject();
+    await setProjectService(id, 'design', new Date(), ACTOR);
+    await setDesignFeePaid(id, true, new Date('2026-10-03T00:00:00Z'), ACTOR);
+    await setDesignFeePaid(id, false, new Date('2026-11-01T00:00:00Z'), ACTOR);
+    const again = await setDesignFeePaid(id, true, new Date('2026-11-20T00:00:00Z'), ACTOR);
+    expect(again.ok && again.service?.designFeePaidAt).toBe('2026-11-20T00:00:00.000Z');
+  });
+
   it('없는 프로젝트는 not_found, 서비스 없는 프로젝트의 입금 확인은 no_service', async () => {
     expect(await setProjectService('nope', 'design', new Date(), ACTOR)).toEqual({ ok: false, code: 'not_found' });
     const id = await seedProject();
     expect(await setDesignFeePaid(id, true, new Date(), ACTOR)).toEqual({ ok: false, code: 'no_service' });
+  });
+
+  // 두 액션이 같은 id에 다른 진단을 내면 운영자가 있지도 않은 프로젝트에 종류를 지정하려 한다.
+  it('없는 프로젝트의 입금 확인도 not_found다', async () => {
+    expect(await setDesignFeePaid('nope', true, new Date(), ACTOR)).toEqual({ ok: false, code: 'not_found' });
   });
 
   it('목록용 맵은 서비스가 있는 프로젝트만 싣는다', async () => {

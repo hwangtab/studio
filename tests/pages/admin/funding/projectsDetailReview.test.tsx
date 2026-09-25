@@ -289,6 +289,25 @@ describe('스튜디오 서비스', () => {
     expect(screen.queryByRole('button', { name: '펀딩 설계 대행' })).not.toBeInTheDocument();
   });
 
+  /**
+   * 이 화면의 다른 파괴적 조작은 전부 확인을 거친다. 확인 취소만 무확인으로 나가서, 한 번의
+   * 오클릭이 "언제 받았는지"를 지웠다 — 감사 로그도 없어 원래 시각을 복구할 수 없다.
+   */
+  it('입금 확인 취소는 확인창을 거치고, 거절하면 보내지 않는다', () => {
+    (patchFundingProject as jest.Mock).mockReset().mockResolvedValue({ ok: true });
+    window.confirm = jest.fn().mockReturnValue(false);
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: '2026-10-03T00:00:00.000Z' } }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '확인 취소' }));
+    expect((window.confirm as jest.Mock).mock.calls[0][0]).toContain('확인 시각이 지워지고');
+    expect(patchFundingProject).not.toHaveBeenCalled();
+  });
+
   // 새로고침으로 낫지 않는 상태에 새로고침을 시키지 않는다.
   it('부분 스키마는 마이그레이션 적용을 안내하고 새로고침을 권하지 않는다', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'schema_mismatch' }} />);

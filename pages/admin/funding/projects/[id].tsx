@@ -342,11 +342,15 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
     );
   };
 
-  const handleDesignFeePaid = (paid: boolean) =>
-    run(
+  const handleDesignFeePaid = (paid: boolean) => {
+    // 이 화면의 다른 파괴적 조작은 전부 확인을 거친다. 확인 취소만 무확인으로 나가서, 한 번의
+    // 오클릭이 "언제 받았는지"를 지웠다 — 다시 확인해도 그때 시각으로 새로 찍힌다.
+    if (!paid && !window.confirm('설계비 입금 확인을 취소할까요? 확인 시각이 지워지고, 다시 확인하면 그때 시각으로 새로 찍힙니다.')) return;
+    return run(
       () => patchFundingProject(project.id, { action: 'set_design_fee_paid', paid }),
       paid ? '설계비 입금을 확인으로 기록했습니다.' : '설계비 입금 확인을 취소했습니다.',
     );
+  };
 
   const handleSaveInternalNote = () =>
     run(
