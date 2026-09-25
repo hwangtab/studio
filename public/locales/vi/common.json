@@ -576,7 +576,10 @@
       "vacancyLabel": "Phòng trống hiện tại",
       "vacancyValue": "Còn phòng trống",
       "vacancyFull": "Đã kín phòng",
-      "asOf": "Cập nhật {{date}}"
+      "asOf": "Cập nhật {{date}}",
+      "hourlyLabel": "Dùng theo giờ",
+      "hourlyUnit": "/ giờ · đã gồm VAT",
+      "hourlySub": "Từ 1 giờ · 24/7 · đặt trong ngày"
     },
     "midCta": {
       "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự.",
@@ -830,6 +833,14 @@
         {
           "q": "Tôi có thể ở qua đêm tại phòng tập không?",
           "a": "Có — bạn có thể ở lại cho các buổi làm dài, chuẩn bị biểu diễn hoặc thu âm khuya. Với khóa riêng, điều hòa, phòng tắm riêng 24/7 và tiện ích sảnh, ở qua đêm rất thoải mái. Chi tiết giải thích khi tư vấn."
+        },
+        {
+          "q": "Có thuê theo giờ được không?",
+          "a": "Được. ₩4.400 mỗi giờ (đã gồm VAT), từ 1 đến 8 giờ. Mở 24/7 và có thể đặt trong ngày. Chọn khung giờ trống trên trang đặt phòng, thanh toán là xác nhận ngay."
+        },
+        {
+          "q": "Đặt theo giờ thế nào, hủy có được hoàn tiền không?",
+          "a": "Chọn ngày giờ trên trang đặt phòng và thanh toán qua Toss. Sau khi xác nhận, hướng dẫn cửa, phòng và Wi-Fi sẽ gửi qua email. Hủy trước 2 ngày hoàn 100%, hôm trước 50%, cùng ngày không hoàn."
         }
       ]
     },
@@ -844,6 +855,16 @@
     },
     "relatedGuides": {
       "title": "Hướng dẫn liên quan đến phòng tập nhạc"
+    },
+    "hourly": {
+      "title": "Cũng có thể dùng theo giờ",
+      "subtitle": "Dùng thử trước khi thuê tháng, hoặc khi chỉ cần vài buổi. Chọn khung giờ trống trên web và thanh toán ngay.",
+      "points": [
+        "₩{{price}} mỗi giờ, đã gồm VAT",
+        "Từ 1 đến 8 giờ · 24/7 · đặt trong ngày",
+        "Hướng dẫn cửa, phòng và Wi-Fi gửi email ngay khi thanh toán"
+      ],
+      "refund": "Hủy trước 2 ngày hoàn 100%, hôm trước 50%, cùng ngày không hoàn."
     }
   },
   "studioInfo": {

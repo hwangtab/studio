@@ -46,9 +46,11 @@ describe('엔티티 그래프 — @id 유일성', () => {
 
   it('연습실 Service의 provider·seller는 @type 없는 순수 참조다', () => {
     const service = generatePracticeRoomMonthlyRentSchema(`${SITE}/ko/practice-room`, 'ko') as Node;
-    const offer = service.offers as Node;
+    // 2026-09-25부터 offers는 [월세, 시간제] 배열 — 둘 다 seller가 순수 참조여야 한다.
+    const offers = service.offers as Node[];
+    expect(Array.isArray(offers) && offers.length).toBe(2);
     expect(service.provider).toEqual({ '@id': `${SITE}/#studio` });
-    expect(offer.seller).toEqual({ '@id': `${SITE}/#studio` });
+    for (const offer of offers) expect(offer.seller).toEqual({ '@id': `${SITE}/#studio` });
   });
 
   it('페이지 스키마를 합쳐도 #studio가 재타이핑되지 않는다', () => {

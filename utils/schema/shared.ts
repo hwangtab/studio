@@ -35,6 +35,11 @@ export const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
   es: 'Programa de Residencia de Sala Premium', vi: 'Chương trình thuê phòng tập cao cấp',
   th: 'โปรแกรมเช่าห้องซ้อมระดับพรีเมียม', uz: "Premium mashg'ulot xonasi dasturi",
 };
+/** 연습실 시간제(2026-09-25). 월세 입주(PRACTICE_OFFER_NAMES)와 별개 오퍼. VAT 포함 소비자가. */
+export const PRACTICE_HOURLY_OFFER_NAMES: Record<Locale, string> = {
+  ko: '음악연습실 시간제 이용', en: 'Practice Room Hourly Use', zh: '练习室按小时使用',
+  es: 'Sala de práctica por hora', vi: 'Phòng tập theo giờ', th: 'ห้องซ้อมรายชั่วโมง', uz: "Mashq xonasi soatlik",
+};
 export const RELEASE_PRESS_OFFER_NAMES: Record<Locale, string> = {
   ko: '음원 발매 홍보', en: 'Release Press Campaign', zh: '音乐发行宣传',
   es: 'Campaña de Prensa', vi: 'Chiến dịch PR phát hành', th: 'แคมเปญข่าวประชาสัมพันธ์', uz: 'Reliz uchun press-kampaniya',

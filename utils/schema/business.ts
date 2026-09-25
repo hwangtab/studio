@@ -2,6 +2,7 @@ import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
 import {
   MIXING_LEVEL1_PRICE,
+  PRACTICE_ROOM_HOURLY_PRICE_INCL,
   PRACTICE_ROOM_MONTHLY_PRICE,
   PRODUCTION_OFFER_PRICE,
   RECORDING_HOURLY_PRICE,
@@ -16,6 +17,7 @@ import {
   getOfferPriceValidUntil,
   MIXING_OFFER_NAMES,
   OFFER_CATALOG_NAMES,
+  PRACTICE_HOURLY_OFFER_NAMES,
   PRACTICE_OFFER_NAMES,
   RELEASE_PRESS_OFFER_NAMES,
   FUNDING_DESIGN_OFFER_NAMES,
@@ -70,6 +72,7 @@ export const generateDefaultSchema = (
   const mixingOfferName = MIXING_OFFER_NAMES[locale];
   const productionOfferName = PRODUCTION_OFFER_NAMES[locale];
   const practiceOfferName = PRACTICE_OFFER_NAMES[locale];
+  const practiceHourlyOfferName = PRACTICE_HOURLY_OFFER_NAMES[locale];
   const releasePressOfferName = RELEASE_PRESS_OFFER_NAMES[locale];
   const fundingDesignOfferName = FUNDING_DESIGN_OFFER_NAMES[locale];
   const priceValidUntil = getOfferPriceValidUntil();
@@ -307,6 +310,28 @@ export const generateDefaultSchema = (
               },
             },
             {
+              // 시간제 — 2026-09-25 사이트 예약 오픈. VAT 포함 소비자가(월세는 별도).
+              '@type': 'Offer',
+              name: practiceHourlyOfferName,
+              priceCurrency: 'KRW',
+              price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+              priceValidUntil,
+              url: `${siteUrl}/ko/booking/practice-room`,
+              availability: 'https://schema.org/InStock',
+              priceSpecification: {
+                '@type': 'UnitPriceSpecification',
+                price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+                priceCurrency: 'KRW',
+                unitCode: 'HUR',
+                valueAddedTaxIncluded: true,
+              },
+              itemOffered: {
+                '@type': 'Service',
+                name: practiceHourlyOfferName,
+                provider: { '@type': 'Organization', '@id': organizationId },
+              },
+            },
+            {
               '@type': 'Offer',
               priceCurrency: 'KRW',
               price: RELEASE_PRESS_INTRO_PRICE,
@@ -379,6 +404,16 @@ export const generateDefaultSchema = (
             url: `${siteUrl}/${locale}/practice-room`,
             availability: 'https://schema.org/InStock',
             itemOffered: { '@type': 'Service', name: practiceOfferName },
+          },
+          {
+            '@type': 'Offer',
+            priceCurrency: 'KRW',
+            price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+            priceValidUntil,
+            url: `${siteUrl}/ko/booking/practice-room`,
+            availability: 'https://schema.org/InStock',
+            priceSpecification: { '@type': 'UnitPriceSpecification', price: PRACTICE_ROOM_HOURLY_PRICE_INCL, priceCurrency: 'KRW', unitCode: 'HUR', valueAddedTaxIncluded: true },
+            itemOffered: { '@type': 'Service', name: practiceHourlyOfferName },
           },
           {
             '@type': 'Offer',

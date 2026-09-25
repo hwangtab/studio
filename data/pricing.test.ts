@@ -116,10 +116,13 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);
     expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+    // 시간제는 VAT 포함 소비자가가 priceValue다(다른 오퍼는 VAT 별도) — 4,400이 4,000으로 바뀌면 실패
+    expect(byId.get('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
 
     const d = getPricingData('ko');
     expect(d.lessonMonthlyPrice).toBe(LESSON_MONTHLY_PRICE);
     expect(d.practiceRoomMonthlyPrice).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+    expect(d.practiceRoomHourlyPriceIncl).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
   });
 
   it('JSON-LD makesOffer 가격이 SSOT 상수와 순서까지 일치한다', () => {
@@ -136,6 +139,8 @@ describe('가격 SSOT 정합', () => {
       MIXING_LEVEL1_PRICE,
       PRODUCTION_OFFER_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
+      // 2026-09-25 추가 — 연습실 시간제(VAT 포함 소비자가). 월세 바로 뒤에 둔다
+      PRACTICE_ROOM_HOURLY_PRICE_INCL,
       // 2026-09-16 추가 — 홈 OfferCatalog가 pricing 페이지의 19개 오퍼 중 홍보·펀딩 설계를 빼고 있었다
       RELEASE_PRESS_INTRO_PRICE,
       FUNDING_DESIGN_PRICE,
@@ -156,9 +161,18 @@ describe('가격 SSOT 정합', () => {
     const schema = generatePracticeRoomMonthlyRentSchema(
       'https://studionol.co.kr/ko/practice-room',
       'ko'
-    ) as { offers: { price: number; priceSpecification: { price: number } } };
-    expect(schema.offers.price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
-    expect(schema.offers.priceSpecification.price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+    ) as {
+      offers: Array<{ price: number; priceSpecification: { price: number; unitCode?: string; valueAddedTaxIncluded?: boolean } }>;
+      potentialAction: { '@type': string; target: { urlTemplate: string } };
+    };
+    // 2026-09-25부터 offers는 [월세, 시간제] 배열이다.
+    expect(schema.offers[0].price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+    expect(schema.offers[0].priceSpecification.price).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
+    expect(schema.offers[1].price).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
+    expect(schema.offers[1].priceSpecification.unitCode).toBe('HUR');
+    expect(schema.offers[1].priceSpecification.valueAddedTaxIncluded).toBe(true);
+    expect(schema.potentialAction['@type']).toBe('ReserveAction');
+    expect(schema.potentialAction.target.urlTemplate).toContain('/ko/booking/practice-room');
   });
 
   it('pages/[locale]/studio-info.tsx가 가격 리터럴 대신 SSOT 상수를 import한다', () => {

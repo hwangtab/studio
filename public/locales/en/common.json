@@ -604,7 +604,10 @@
       "vacancyLabel": "Current vacancy",
       "vacancyValue": "Open for move-in",
       "vacancyFull": "Fully booked",
-      "asOf": "As of {{date}}"
+      "asOf": "As of {{date}}",
+      "hourlyLabel": "Hourly use",
+      "hourlyUnit": "/ hour · VAT included",
+      "hourlySub": "From 1 hour · 24/7 · same-day booking"
     },
     "midCta": {
       "note": "Rooms are often fully booked, so we keep a waitlist. Reach out and we'll contact you in order as soon as a room opens.",
@@ -858,6 +861,14 @@
         {
           "q": "Can I stay overnight at the practice room?",
           "a": "Yes — residents can stay for long sessions, show prep, or late-night recording. With individual door-lock access, HVAC, 24/7 private shower, and lobby amenities, overnight stays are comfortable. Details explained during the inquiry."
+        },
+        {
+          "q": "Can I rent it by the hour?",
+          "a": "Yes. ₩4,400 per hour (VAT included), from 1 up to 8 hours. Open 24/7 and same-day booking is fine. Pick an open slot on the booking page, pay, and it is confirmed immediately."
+        },
+        {
+          "q": "How do I book hourly, and what if I cancel?",
+          "a": "Choose a date and time on the booking page and pay via Toss. Once confirmed, door, room and Wi-Fi instructions are emailed. Cancel 2+ days before for a full refund, 50% the day before, no refund on the day."
         }
       ]
     },
@@ -872,6 +883,16 @@
     },
     "relatedGuides": {
       "title": "Practice Room Related Guides"
+    },
+    "hourly": {
+      "title": "Also available by the hour",
+      "subtitle": "Try it before a monthly residency, or when you only need a few sessions. Pick an open slot on the site and pay right away.",
+      "points": [
+        "₩{{price}} per hour, VAT included",
+        "From 1 up to 8 hours · 24/7 · same-day booking",
+        "Door, room and Wi-Fi details are emailed the moment you pay"
+      ],
+      "refund": "Cancel 2+ days before for a full refund, 50% the day before, no refund on the day."
     }
   },
   "studioInfo": {

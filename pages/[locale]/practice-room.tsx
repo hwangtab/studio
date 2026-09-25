@@ -10,6 +10,7 @@ import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero'
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 import ServicePriceTable from '../../components/service/ServicePriceTable';
+import BookingEntryButton from '../../components/booking/BookingEntryButton';
 
 // Below-fold 컴포넌트를 코드 스플리팅 — 초기 JS 번들에서 분리해 TBT 감소.
 // ssr:true(기본) 유지로 SSR HTML은 그대로, 클라이언트 청크만 지연 로드.
@@ -21,7 +22,7 @@ import { Section } from '../../components/ui/Section';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData } from '../../data/pricing';
+import { formatPriceAmount, getPricingData, PRACTICE_ROOM_HOURLY_PRICE_INCL } from '../../data/pricing';
 import {
   PRACTICE_ROOM_HAS_VACANCY,
   PRACTICE_ROOM_VACANT_ROOMS,
@@ -73,7 +74,8 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   );
   const practiceRoomFaqs = React.useMemo(
     () =>
-      Array.from({ length: 9 }, (_, i) => ({
+      // 11 = 기존 9 + 시간제 2(2026-09-25). 7개 로케일 items 길이가 같아야 한다(i18n 테스트).
+      Array.from({ length: 11 }, (_, i) => ({
         question: t(`practiceRoom.faq.items.${i}.q`),
         answer: t(`practiceRoom.faq.items.${i}.a`),
       })),
@@ -231,10 +233,39 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
                     ? t('practiceRoom.factsTable.vacancyValue', { rooms: PRACTICE_ROOM_VACANT_ROOMS })
                     : t('practiceRoom.factsTable.vacancyFull'),
                 },
+                {
+                  id: 'hourly',
+                  label: t('practiceRoom.factsTable.hourlyLabel'),
+                  subLabel: t('practiceRoom.factsTable.hourlySub'),
+                  price: `${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원`,
+                  unit: t('practiceRoom.factsTable.hourlyUnit'),
+                },
               ],
             },
           ]}
         />
+      </Section>
+
+      {/* 시간제 — 2026-09-25 사이트 예약 오픈. 월세 카드(PriceLeader)와 별개의 상품이라 자기 절을 갖는다.
+          가격은 부가세 포함 소비자가(PRACTICE_ROOM_HOURLY_PRICE_INCL) — 이 페이지의 다른 금액과 과세 표기가
+          다르므로 문구에 "부가세 포함"을 명시한다. 예약 버튼은 ko에서만 렌더된다(BookingEntryButton). */}
+      <Section variant="alternate" spacing="tight">
+        <SectionHeading
+          icon={Info}
+          title={t('practiceRoom.hourly.title')}
+          subtitle={t('practiceRoom.hourly.subtitle')}
+          as="h2"
+          className="mb-6"
+        />
+        <ul className="mx-auto max-w-2xl space-y-2 text-gray-700 dark:text-gray-300 typo-card-body list-disc pl-6">
+          <li>{t('practiceRoom.hourly.points.0', { price: formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL) })}</li>
+          <li>{t('practiceRoom.hourly.points.1')}</li>
+          <li>{t('practiceRoom.hourly.points.2')}</li>
+        </ul>
+        <p className="mx-auto mt-3 max-w-2xl typo-card-meta text-gray-500 dark:text-gray-400">{t('practiceRoom.hourly.refund')}</p>
+        <div className="mt-6 flex justify-center">
+          <BookingEntryButton service="practice-room" locale={locale} />
+        </div>
       </Section>
 
       <QuickAnswers
