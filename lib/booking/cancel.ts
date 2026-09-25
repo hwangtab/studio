@@ -5,7 +5,8 @@ import { bookings, orders, refunds, type Booking, type Order, type Payment, type
 import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
 import { deleteBookingEvent } from './gcal';
 import { canAdminRefund, isCancelledRemainderRefund } from './admin-serialize';
-import { computeRefund } from './refund-policy';
+import { computeRefund, refundPolicyFor } from './refund-policy';
+import { getProduct } from './products';
 import { findOrderByOrderNo } from './service';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from './toss';
 
@@ -363,7 +364,7 @@ const cancelSessionBooking = async (
   const refundAmount = Math.min(
     input.requestedBy === 'admin' && typeof input.overrideAmount === 'number'
       ? input.overrideAmount
-      : computeRefund(order.totalAmount, booking.startAt, input.now).refundAmount,
+      : computeRefund(order.totalAmount, booking.startAt, input.now, refundPolicyFor(getProduct(booking.productId)).tiers).refundAmount,
     remaining,
   );
 
@@ -419,7 +420,7 @@ const cancelSessionBooking = async (
   // 후처리 — 환불은 끝났으므로 실패를 삼키되 기록 (confirm.ts와 동일 원칙).
   if (booking.gcalEventId) {
     try {
-      await deleteBookingEvent(booking.gcalEventId);
+      await deleteBookingEvent(booking.gcalEventId, booking.serviceType === 'practice-room' ? 'practice-room' : 'studio');
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
       try {

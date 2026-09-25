@@ -16,7 +16,7 @@ import type { AdminBookingDetail } from '../../../../lib/booking/admin-serialize
 const SESSION: AdminBookingDetail = {
   id: 'o1', orderNo: 'SNB-1', orderType: 'session', customerName: '홍길동',
   customerPhone: '010-0000-0000', customerEmail: 'a@b.c', productId: 'recording-pro',
-  productName: '레코딩', serviceType: 'recording',
+  productName: '레코딩', serviceType: 'recording', roomNumber: null,
   startAt: '2026-09-20T05:00:00.000Z', endAt: '2026-09-20T08:00:00.000Z', durationHours: 3,
   itemAmount: 250000, vatAmount: 25000, totalAmount: 275000, orderStatus: 'paid',
   bookingId: 'b1', bookingStatus: 'confirmed', workOrder: null,

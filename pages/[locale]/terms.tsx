@@ -7,6 +7,7 @@ import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { getI18nStaticProps, resolveLocaleParam } from '../../lib/getStatic';
 import {
   MIXING_REFUND_POLICY_LINES,
+  PRACTICE_ROOM_REFUND_POLICY_LINES,
   PRESS_REFUND_POLICY_LINES,
   REFUND_POLICY_LINES,
   SUBSCRIPTION_REFUND_POLICY_LINES,
@@ -89,6 +90,12 @@ const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
               <h2 className="typo-card-title mb-2 text-gray-900 dark:text-white">환불 규정</h2>
               <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
                 {REFUND_POLICY_LINES.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+              <h3 className="typo-card-title mt-4 mb-2 text-base text-gray-900 dark:text-white">음악연습실 시간제 예약</h3>
+              <ul className="typo-card-body text-gray-700 dark:text-gray-300 leading-relaxed list-disc pl-5 space-y-1">
+                {PRACTICE_ROOM_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>

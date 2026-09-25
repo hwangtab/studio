@@ -107,3 +107,27 @@ describe('validateCreateMixingOrderPayload', () => {
     expect(validateCreateMixingOrderPayload({ ...mixingBase, customerPhone: '02-123' }, now).ok).toBe(false);
   });
 });
+
+describe('validateCreateBookingPayload — 상품별 시각 범위 (연습실 24시간)', () => {
+  const now = new Date('2026-09-01T00:00:00Z');
+  const base = {
+    date: '2026-09-10', customerName: '홍길동', customerPhone: '010-1234-5678',
+    customerEmail: 'a@b.co', refundPolicyAgreed: true,
+  };
+  it('연습실은 새벽 2시 시작 1시간이 통과한다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'practice-room-hourly', hours: 1, startHour: 2 }, now);
+    expect(r.ok).toBe(true);
+  });
+  it('연습실은 23시 시작 1시간(자정 종료)도 통과한다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'practice-room-hourly', hours: 1, startHour: 23 }, now);
+    expect(r.ok).toBe(true);
+  });
+  it('연습실 23시 시작 2시간은 24시를 넘어 거절된다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'practice-room-hourly', hours: 2, startHour: 23 }, now);
+    expect(r.ok).toBe(false);
+  });
+  it('녹음은 여전히 새벽 2시 시작이 거절된다', () => {
+    const r = validateCreateBookingPayload({ ...base, productId: 'recording-hourly', hours: 2, startHour: 2 }, now);
+    expect(r.ok).toBe(false);
+  });
+});

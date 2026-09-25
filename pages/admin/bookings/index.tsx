@@ -151,6 +151,8 @@ export default function AdminBookingsPage({
   const [blockStartHour, setBlockStartHour] = useState(10);
   const [blockEndHour, setBlockEndHour] = useState(22);
   const [blockMemo, setBlockMemo] = useState('');
+  // 비우면 녹음실 블록. 연습실 방을 막으려면 'R02'처럼 방 번호를 적는다(월세 입주 예정 등).
+  const [blockRoom, setBlockRoom] = useState('');
   const [blockError, setBlockError] = useState<string | null>(null);
 
   const filteredBookings = useMemo(() => {
@@ -231,6 +233,7 @@ export default function AdminBookingsPage({
       startHour: blockStartHour,
       endHour: blockEndHour,
       memo: blockMemo.trim() || undefined,
+      roomNumber: blockRoom.trim() || undefined,
     });
     setBusy(false);
 
@@ -355,16 +358,24 @@ export default function AdminBookingsPage({
                   <tbody>
                     {filteredBookings.map((booking) => {
                       const isMixing = booking.orderType === 'mixing';
+                      const isPracticeRoom = booking.serviceType === 'practice-room';
                       return (
                         <tr key={booking.id} className="border-b border-gray-100 hover:bg-gray-50">
                           <td className="px-4 py-3 whitespace-nowrap">
                             <span
                               className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
-                                isMixing ? 'bg-purple-100 text-purple-700' : 'bg-indigo-100 text-indigo-700'
+                                isMixing ? 'bg-purple-100 text-purple-700'
+                                  : isPracticeRoom ? 'bg-emerald-100 text-emerald-700'
+                                  : 'bg-indigo-100 text-indigo-700'
                               }`}
                             >
-                              {isMixing ? '믹싱' : '세션'}
+                              {isMixing ? '믹싱' : isPracticeRoom ? '연습실' : '세션'}
                             </span>
+                            {booking.roomNumber && (
+                              <span className="ml-1 inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
+                                {booking.roomNumber}
+                              </span>
+                            )}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap">
                             {isMixing
@@ -483,6 +494,15 @@ export default function AdminBookingsPage({
                   ))}
                 </Select>
               </Field>
+              <Field id="block-room" label="방 (선택)" className={lightOnlyField + ' w-32'}>
+                <TextInput
+                  id="block-room"
+                  value={blockRoom}
+                  onChange={(e) => setBlockRoom(e.target.value)}
+                  placeholder="비우면 녹음실"
+                  light className="text-sm"
+                />
+              </Field>
               <Field id="block-memo" label="메모 (선택)" className={lightOnlyField + ' flex-1 min-w-[160px]'}>
                 <TextInput
                   type="text"
@@ -512,6 +532,7 @@ export default function AdminBookingsPage({
                   >
                     <span>
                       {formatKstDateTime(block.startAt)} ~ {formatKstDateTime(block.endAt)}
+                      {block.roomNumber && <span className="ml-2 inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">{block.roomNumber}</span>}
                       {block.memo && <span className="text-gray-500 ml-2">({block.memo})</span>}
                     </span>
                     <Button light

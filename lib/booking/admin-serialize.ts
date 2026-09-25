@@ -41,6 +41,8 @@ export interface AdminBookingListItem {
   productId: string;
   productName: string;
   serviceType: string;
+  /** 점유 방. 녹음실 상품은 null, 연습실 시간제는 'R02' 등. */
+  roomNumber: string | null;
   startAt: string | null;
   endAt: string | null;
   durationHours: number | null;
@@ -132,6 +134,7 @@ export const serializeBookingForAdmin = (
     productId: isMixing ? (workOrder?.productId ?? '') : (booking?.productId ?? ''),
     productName: isMixing ? (mixingProduct?.nameKo ?? workOrder?.serviceType ?? '-') : (product?.nameKo ?? booking?.serviceType ?? '-'),
     serviceType: isMixing ? (workOrder?.serviceType ?? '') : (booking?.serviceType ?? ''),
+    roomNumber: booking?.roomNumber ?? null,
     startAt: booking ? booking.startAt.toISOString() : null,
     endAt: booking ? booking.endAt.toISOString() : null,
     durationHours: booking?.durationHours ?? null,
@@ -304,6 +307,8 @@ export interface AdminBlockItem {
   startAt: string;
   endAt: string;
   memo: string | null;
+  /** null = 녹음실, 'R02' = 그 연습실 방만 막는 블록. */
+  roomNumber: string | null;
   createdAt: string;
 }
 
@@ -312,5 +317,6 @@ export const serializeBlockForAdmin = (block: AvailabilityBlock): AdminBlockItem
   startAt: block.startAt.toISOString(),
   endAt: block.endAt.toISOString(),
   memo: block.memo,
+  roomNumber: block.roomNumber ?? null,
   createdAt: block.createdAt.toISOString(),
 });

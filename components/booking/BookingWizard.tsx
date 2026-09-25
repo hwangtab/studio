@@ -10,7 +10,7 @@ import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
 import { kstDateString } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
-import { REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
+import { refundPolicyFor } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
 import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
@@ -555,7 +555,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
             <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">환불 규정</p>
               <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
-                {REFUND_POLICY_LINES.map((line) => (
+                {refundPolicyFor(selectedProduct).lines.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>

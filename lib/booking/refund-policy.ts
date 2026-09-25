@@ -1,4 +1,7 @@
 import { daysUntilKst } from './kst';
+import type { SessionProduct } from './products';
+
+export type RefundTier = { readonly minDaysBefore: number; readonly rate: number };
 
 /** 큰 것부터 검사한다. 비율 변경은 이 표만 고치면 화면·계산·약관이 함께 바뀐다. */
 export const REFUND_TIERS = [
@@ -12,6 +15,34 @@ export const REFUND_POLICY_LINES = [
   '이용일 1~2일 전 취소: 50% 환불',
   '이용일 당일 취소: 환불 불가',
 ] as const;
+
+/**
+ * 음악연습실 시간제 환불 정책 — 녹음 세션(3일 전 전액)보다 짧다. 엔지니어 일정을 비우는
+ * 녹음과 달리 무인 방 하나를 여는 일이라 하루 전까지도 다른 손님이 채울 수 있다.
+ * 2026-09-24 운영자 확정: "당일취소 불가, 전일에는 50%, 그 전에는 100% 환불".
+ */
+export const PRACTICE_ROOM_REFUND_TIERS = [
+  { minDaysBefore: 2, rate: 1 },
+  { minDaysBefore: 1, rate: 0.5 },
+  { minDaysBefore: 0, rate: 0 },
+] as const;
+
+export const PRACTICE_ROOM_REFUND_POLICY_LINES = [
+  '이용일 2일 전까지 취소: 전액 환불',
+  '이용일 전날 취소: 50% 환불',
+  '이용일 당일 취소: 환불 불가',
+] as const;
+
+/**
+ * 상품에 맞는 환불 규정 — 예약 위저드·관리 페이지·취소 계산·약관이 **같은 함수**를 쓴다.
+ * 한 곳만 다른 표를 보면 화면에 보여 준 규정과 실제 환불액이 갈린다.
+ */
+export const refundPolicyFor = (
+  product: Pick<SessionProduct, 'service'> | undefined,
+): { tiers: readonly RefundTier[]; lines: readonly string[] } =>
+  product?.service === 'practice-room'
+    ? { tiers: PRACTICE_ROOM_REFUND_TIERS, lines: PRACTICE_ROOM_REFUND_POLICY_LINES }
+    : { tiers: REFUND_TIERS, lines: REFUND_POLICY_LINES };
 
 /**
  * 믹싱·마스터링 주문형 결제 환불 정책. 세션 예약과 달리 날짜 기준 단계별 환불이 아니라
@@ -79,9 +110,11 @@ export interface RefundQuote {
   refundAmount: number;
 }
 
-export const computeRefund = (totalAmount: number, startAt: Date, now: Date): RefundQuote => {
+export const computeRefund = (
+  totalAmount: number, startAt: Date, now: Date, tiers: readonly RefundTier[] = REFUND_TIERS,
+): RefundQuote => {
   const daysBefore = daysUntilKst(now, startAt);
-  const tier = REFUND_TIERS.find((t) => daysBefore >= t.minDaysBefore);
+  const tier = tiers.find((t) => daysBefore >= t.minDaysBefore);
   const rate = tier ? tier.rate : 0; // 음수(지난 예약) 포함 — 환불 없음
   return { daysBefore, rate, refundAmount: Math.floor(totalAmount * rate) };
 };
