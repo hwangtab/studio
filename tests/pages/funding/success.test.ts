@@ -1,8 +1,10 @@
 /** @jest-environment node */
 jest.mock('../../../lib/funding/confirm', () => ({ confirmFundingPledge: jest.fn() }));
 jest.mock('../../../lib/funding/service', () => ({ findFundingOrderByOrderNo: jest.fn() }));
+jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 
 import { getServerSideProps } from '../../../pages/[locale]/funding/success';
+import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 
@@ -21,7 +23,10 @@ const ctx = (query: Record<string, string>, cookies: Record<string, string> = {}
   const res = { setHeader: jest.fn() };
   return {
     res,
-    run: () => getServerSideProps({ params: { locale: 'ko' }, query, req: { cookies }, res } as never),
+    run: () => getServerSideProps({
+      params: { locale: 'ko' }, query, res,
+      req: { cookies, headers: { 'x-vercel-forwarded-for': '203.0.113.9' }, socket: {} },
+    } as never),
   };
 };
 const cookieHeader = (res: { setHeader: jest.Mock }): string | undefined =>
@@ -32,7 +37,10 @@ const order = (over: Record<string, unknown> = {}) => ({
   fundingPledge: { projectSlug: 'demo' }, ...over,
 });
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  (consumeRateLimit as jest.Mock).mockResolvedValue(true);
+});
 
 describe('토스 승인 URL', () => {
   it('확정되면 비밀값 없는 ?o= 로 리다이렉트하고 토큰은 httpOnly 쿠키로 넘긴다', async () => {
@@ -162,4 +170,76 @@ it('언제나 no-store로 내린다 — HTML에 관리 토큰이 들어간다', 
   const c = ctx({});
   await c.run();
   expect(c.res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
+});
+
+/**
+ * 승인 URL은 인증이 없다. `?paymentKey=아무거나&orderId=<주문번호>&amount=N`을 열면 응답이
+ * 오류 코드별로 갈려, amount를 이분 탐색하면 남의 결제 금액(=고른 리워드 티어)을 알아낼 수
+ * 있었다. 다른 후원자 API 셋에는 전부 IP 레이트리밋이 있는데 이 경로에만 없었다.
+ */
+describe('실패 응답 레이트리밋', () => {
+  it('훑기로 나오는 실패에만 카운터를 소비한다', async () => {
+    for (const code of ['not_found', 'invalid_state', 'amount_mismatch']) {
+      (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code, message: 'm' });
+      await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '1' }).run();
+    }
+    expect((consumeRateLimit as jest.Mock).mock.calls).toHaveLength(3);
+    expect((consumeRateLimit as jest.Mock).mock.calls[0][0]).toBe('funding_confirm_fail:203.0.113.9');
+  });
+
+  it('toss_rejected는 세지 않는다 — 실제 결제 실패이고 재시도가 정상 행동이다', async () => {
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'toss_rejected', message: 'm' });
+    const r = (await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '1' }).run()) as { redirect: { destination: string } };
+    expect(r.redirect.destination).toBe('/ko/funding/success?e=toss_rejected');
+    expect(consumeRateLimit).not.toHaveBeenCalled();
+  });
+
+  it('한도를 넘으면 코드를 구분하지 않는 일반 오류로 떨어뜨린다', async () => {
+    (consumeRateLimit as jest.Mock).mockResolvedValue(false);
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: false, code: 'amount_mismatch', message: 'm' });
+    const r = (await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '1' }).run()) as { redirect: { destination: string } };
+    expect(r.redirect.destination).toBe('/ko/funding/success?e=too_many');
+    const shown = (await ctx({ e: 'too_many' }).run()) as { props: { message: string } };
+    expect(shown.props.message).toContain('요청이 너무 잦습니다');
+  });
+
+  it('성공 경로는 한도와 무관하다 — 결제 승인이 429로 막히면 안 된다', async () => {
+    (consumeRateLimit as jest.Mock).mockResolvedValue(false);
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: ORDER_NO, manageToken: TOKEN, projectSlug: 'demo' });
+    const r = (await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '30000' }).run()) as { redirect: { destination: string } };
+    expect(r.redirect.destination).toBe(`/ko/funding/success?o=${ORDER_NO}`);
+    expect(consumeRateLimit).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * 확정 쿠키는 30분 살아 있다. 그 사이 취소하고 새로고침하면 예전에는 "펀딩이
+ * 확정되었습니다"와 내려받기 폼이 그대로 다시 떴다. 판정은 manage 화면과 같은
+ * isLiveFundingOrderStatus를 쓴다.
+ */
+describe('살아 있지 않은 후원(?o=)', () => {
+  it('환불된 건에는 확정 문구도 내려받기 폼도 없다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'refunded' }));
+    const r = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as {
+      props: { outcome: string; statusLabel: string; downloads?: unknown; manageUrl: string };
+    };
+    expect(r.props.outcome).toBe('not_live');
+    expect(r.props.statusLabel).toBe('환불 완료');
+    expect(r.props.downloads).toBeUndefined();
+    expect(r.props.manageUrl).toBe(`/ko/funding/manage/${ORDER_NO}?token=${TOKEN}`);
+  });
+
+  it('만료·실패도 같다', async () => {
+    for (const [status, label] of [['expired', '만료'], ['failed', '결제 실패']]) {
+      (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
+      const r = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as { props: { outcome: string; statusLabel: string } };
+      expect(r.props).toMatchObject({ outcome: 'not_live', statusLabel: label });
+    }
+  });
+
+  it('부분 환불은 아직 살아 있는 후원이라 확정 화면 그대로다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'partially_refunded' }));
+    const r = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as { props: { outcome: string } };
+    expect(r.props.outcome).toBe('confirmed');
+  });
 });

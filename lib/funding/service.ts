@@ -2,7 +2,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { sql, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, type FundingPledge, type Order, type Payment, type Refund } from '../../db/schema';
+import type { FundingPledge, Order, Payment, Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { PURGED_MARK } from '../privacy/orderRetention';
@@ -13,6 +13,17 @@ import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload } from './validation';
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
+
+/**
+ * libSQL batch 결과의 rowsAffected — 판정 불가는 undefined로 돌려 "정상"으로 흘려보낸다.
+ * lib/booking/confirm.ts·lib/funding/confirm.ts의 같은 이름 함수와 같은 규약이다
+ * (모듈 그래프를 섞지 않으려는 의도적 복제).
+ */
+const rowsAffectedOf = (result: unknown): number | undefined => {
+  if (!result || typeof result !== 'object' || !('rowsAffected' in result)) return undefined;
+  const n = Number((result as { rowsAffected: unknown }).rowsAffected);
+  return Number.isFinite(n) ? n : undefined;
+};
 
 /**
  * 수기 등록(오프라인 현금·계좌 후원)에서 연락처 칸이 비었을 때 채워 넣는 플레이스홀더.
@@ -115,6 +126,12 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
  */
 export const fundingStockCondition = (
   projectSlug: string, reward: Pick<FundingReward, 'id' | 'totalQuantity'>, quantity: number, now: Date,
+  /**
+   * 세지 않을 주문번호. 자기 홀드 해제 UPDATE에만 쓴다 — 해제를 같은 batch에 넣으면서
+   * "해제한 뒤에도 자리가 있는가"를 물어야 하는데, 그 시점에는 아직 해제 전이라
+   * 자기 홀드가 그대로 세어진다.
+   */
+  excludeOrderNo?: string | null,
 ): SQL =>
   reward.totalQuantity === null
     ? sql`1 = 1`
@@ -123,6 +140,7 @@ export const fundingStockCondition = (
         JOIN orders o ON o.id = fp.order_id
         WHERE fp.project_slug = ${projectSlug} AND fp.reward_id = ${reward.id}
           AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+          ${excludeOrderNo ? sql`AND o.order_no != ${excludeOrderNo}` : sql.empty()}
       ) + ${quantity} <= ${reward.totalQuantity}`;
 
 export const createFundingPledge = async (
@@ -144,71 +162,93 @@ export const createFundingPledge = async (
   // 결제수단은 토스 하나뿐이다(무통장입금 중단, 2026-09-11) — 홀드도 한 종류다.
   const holdExpiresAt = new Date(now.getTime() + TOSS_HOLD_SECONDS * 1000);
 
-  /**
-   * 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 **자기** pending 주문을 만료시킨다.
-   *
-   * **소유 증명(releaseOrderNo)이 없으면 아무것도 만료시키지 않는다.**
-   *
-   * 예전엔 조건이 `customer_email = ? AND customer_phone = ?`뿐이었다. 두 값은 요청 본문에서
-   * 오는 미검증 문자열이고(validation.ts는 형식만 본다 — 인증 코드가 없다), manageToken 같은
-   * 소유 증명은 어디에도 없었다. 그래서 피해자의 이메일·전화를 아는 제3자가 같은 프로젝트로
-   * 후원 요청 한 번만 보내면 피해자의 pending 주문이 expired가 됐다. 피해자가 결제창 인증을
-   * 마치고 success로 돌아오면 confirm이 `acceptableStatuses = ['pending']`에 걸려
-   * '이미 처리되었거나 만료된 후원입니다'로 거절하고, 풀린 한정 재고는 공격자의 INSERT가
-   * 가져간다. 돈은 안 움직이지만 결제가 실패한다.
-   *
-   * orderNo는 randomBytes(4) 8자리를 포함해 추측할 수 없고 생성 응답으로만 나가므로,
-   * 그 값을 조건에 넣는 것만으로 이 경로가 남의 주문에 닿을 수 없게 된다. 이메일·전화·
-   * 프로젝트 조건은 그대로 함께 건다(방어 깊이).
-   *
-   * 증명이 없는 요청은 자기 홀드가 자연 만료(TOSS_HOLD_SECONDS)될 때까지 기다린다 — 한정
-   * 리워드 재고가 빠듯할 때만 체감되는 비용이고, 남의 결제를 깨뜨릴 수 있는 편보다 낫다.
-   *
-   * 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
-   * (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
-   */
-  if (options.releaseOrderNo) {
-    await db.run(sql`
-      UPDATE orders SET status = 'expired', updated_at = unixepoch()
-      WHERE type = 'funding' AND status = 'pending'
-        AND order_no = ${options.releaseOrderNo.toUpperCase()}
-        AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-        AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
-    `);
-  }
-
-  const [order] = await db.insert(orders).values({
-    orderNo, type: 'funding',
-    customerName: payload.customerName, customerPhone: payload.customerPhone, customerEmail: payload.customerEmail,
-    itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount,
-    manageToken,
-  }).returning({ id: orders.id });
-
+  const orderId = randomUUID().replace(/-/g, '');
   const pledgeId = randomUUID().replace(/-/g, '');
   const s = payload.shipping;
   const stockCondition = fundingStockCondition(project.slug, reward, payload.quantity, now);
+  const releaseOrderNo = options.releaseOrderNo ? options.releaseOrderNo.toUpperCase() : null;
+
+  /**
+   * 홀드 해제 · 주문 INSERT · pledge INSERT를 **한 batch**로 묶는다.
+   *
+   * 예전에는 주문 INSERT와 pledge INSERT를 따로 await했다. pledge INSERT가 품절 외의
+   * 이유로 예외를 던지면 pledge 없는 `pending` 주문이 남는데, expireStalePledges도
+   * 관리자 목록도 healthCheck도 전부 funding_pledges 조인이라 그 행은 닫히지도 보이지도
+   * 않았다.
+   *
+   * libSQL batch는 트랜잭션이지만 **0행 INSERT는 오류가 아니라 정상 커밋**이다. 그래서
+   * 품절(재고 조건 0행)로 고아가 남지 않게, 주문 INSERT에도 같은 재고 조건을 실어
+   * `INSERT ... SELECT ... WHERE`로 쓴다 — 품절이면 세 문장이 전부 0행이라 사후 정리
+   * (status='failed' 마킹)가 아예 필요 없다.
+   *
+   * 자기 홀드 해제도 같은 단위에 넣는다. 해제만 성공하고 재취득이 품절로 떨어지면
+   * 후원자가 멀쩡한 자기 홀드를 잃는다. 해제 UPDATE에는 **자기 홀드를 뺀** 재고 조건을
+   * 건다 — 그래야 "해제해도 다시 잡을 자리가 있을 때만 해제한다"가 된다. 자기 홀드를 뺀
+   * 수량이 모자라면 빼지 않은 수량은 더 모자라므로, 뒤따르는 두 INSERT도 함께 0행이 된다.
+   */
+  const statements = [];
+  if (releaseOrderNo) {
+    /**
+     * 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 **자기** pending 주문을 만료시킨다.
+     *
+     * **소유 증명(releaseOrderNo)이 없으면 아무것도 만료시키지 않는다.**
+     *
+     * 예전엔 조건이 `customer_email = ? AND customer_phone = ?`뿐이었다. 두 값은 요청 본문에서
+     * 오는 미검증 문자열이고(validation.ts는 형식만 본다 — 인증 코드가 없다), manageToken 같은
+     * 소유 증명은 어디에도 없었다. 그래서 피해자의 이메일·전화를 아는 제3자가 같은 프로젝트로
+     * 후원 요청 한 번만 보내면 피해자의 pending 주문이 expired가 됐다. 피해자가 결제창 인증을
+     * 마치고 success로 돌아오면 confirm이 `acceptableStatuses = ['pending']`에 걸려
+     * '이미 처리되었거나 만료된 후원입니다'로 거절하고, 풀린 한정 재고는 공격자의 INSERT가
+     * 가져간다. 돈은 안 움직이지만 결제가 실패한다.
+     *
+     * orderNo는 randomBytes(4) 8자리를 포함해 추측할 수 없고 생성 응답으로만 나가므로,
+     * 그 값을 조건에 넣는 것만으로 이 경로가 남의 주문에 닿을 수 없게 된다. 이메일·전화·
+     * 프로젝트 조건은 그대로 함께 건다(방어 깊이).
+     *
+     * 증명이 없는 요청은 자기 홀드가 자연 만료(TOSS_HOLD_SECONDS)될 때까지 기다린다 — 한정
+     * 리워드 재고가 빠듯할 때만 체감되는 비용이고, 남의 결제를 깨뜨릴 수 있는 편보다 낫다.
+     *
+     * 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
+     * (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
+     */
+    statements.push(db.run(sql`
+      UPDATE orders SET status = 'expired', updated_at = unixepoch()
+      WHERE type = 'funding' AND status = 'pending'
+        AND order_no = ${releaseOrderNo}
+        AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+        AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
+        AND ${fundingStockCondition(project.slug, reward, payload.quantity, now, releaseOrderNo)}
+    `));
+  }
+
+  statements.push(db.run(sql`
+    INSERT INTO orders (id, order_no, type, customer_name, customer_phone, customer_email,
+                        item_amount, vat_amount, total_amount, manage_token)
+    SELECT ${orderId}, ${orderNo}, 'funding', ${payload.customerName}, ${payload.customerPhone}, ${payload.customerEmail},
+           ${amounts.itemAmount}, ${amounts.vatAmount}, ${amounts.totalAmount}, ${manageToken}
+    WHERE ${stockCondition}
+  `));
 
   // terms_agreed_at을 now로 적는 근거: validateCreatePledgePayload가 termsAgreed !== true를
   // 먼저 막으므로(lib/funding/validation.ts), 이 지점에 온 요청은 동의를 마친 요청뿐이다.
-  const result = await db.run(sql`
+  statements.push(db.run(sql`
     INSERT INTO funding_pledges (
       id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
       payment_method, hold_expires_at, supporter_message, display_name_public,
       shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
       terms_agreed_at, terms_version
     )
-    SELECT ${pledgeId}, ${order.id}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
+    SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
            ${payload.quantity}, ${payload.additionalAmount}, ${payload.paymentMethod}, ${toEpoch(holdExpiresAt)},
            ${payload.supporterMessage ?? null}, ${payload.displayNamePublic ? 1 : 0},
            ${s?.name ?? null}, ${s?.phone ?? null}, ${s?.postcode ?? null}, ${s?.address1 ?? null}, ${s?.address2 ?? null}, ${s?.memo ?? null},
            ${toEpoch(now)}, ${FUNDING_TERMS_VERSION}
     WHERE ${stockCondition}
-  `);
+  `));
 
-  if (Number(result.rowsAffected) === 0) {
-    await db.run(sql`UPDATE orders SET status = 'failed', updated_at = unixepoch() WHERE id = ${order.id} AND status = 'pending'`);
-    return { ok: false, code: 'sold_out' };
-  }
+  const results = await db.batch(statements as [typeof statements[number], ...typeof statements]);
+
+  if (rowsAffectedOf(results[results.length - 1]) === 0) return { ok: false, code: 'sold_out' };
   return { ok: true, orderNo, manageToken, holdExpiresAt, amounts };
 };
 

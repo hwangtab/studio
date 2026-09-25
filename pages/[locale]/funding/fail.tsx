@@ -1,7 +1,6 @@
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
-
-import { recordPaymentFailure } from '../../../lib/payments/recordFailure';
+import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFailure';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -47,6 +46,9 @@ interface Props {
 }
 
 export default function FundingFailPage({ slug, code, message, orderNo }: Props) {
+  // 실패 사유는 마운트 뒤 비콘으로 남긴다 — 이유는 훅 주석에 있다(예약 실패 화면과 공용).
+  useReportPaymentFailureOnMount(orderNo, code);
+
   return (
     <>
       <Head><title>결제 실패 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
@@ -98,14 +100,8 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   // 토스가 실어 보내는 orderId — 문의용 식별자로만 쓴다(형태를 벗어나면 버린다).
   const orderId = typeof query.orderId === 'string' ? query.orderId.toUpperCase() : null;
   const orderNo = orderId && ORDER_NO_PATTERN.test(orderId) ? orderId : null;
-  // 사유를 주문에 남긴다 — 이 화면이 실패를 아는 유일한 서버 경로다(confirm은 성공에만
-  // 불린다). best-effort라 화면은 결과와 무관하게 그대로 뜬다. 원문 message는 화면에
-  // 쓰지 않지만 기록에는 남긴다(문의 대응·토스 문의에 그 문장이 필요하다).
-  await recordPaymentFailure({
-    orderNo: orderNo ?? '',
-    code,
-    message: typeof query.message === 'string' ? query.message : null,
-  });
+  // 사유 기록은 여기서 하지 않는다 — 인증 없는 GET이 남의 주문을 덮어쓰는 경로가 된다.
+  // 화면이 마운트된 뒤 `/api/payments/failed`(Origin 검사 + IP 레이트리밋)로 보낸다.
   return {
     props: { slug, code, message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE, orderNo },
   };

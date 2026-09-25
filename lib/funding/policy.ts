@@ -1,9 +1,28 @@
-import type { ProjectState } from './projects';
 
 export const TOSS_HOLD_SECONDS = 900;
 export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_AMOUNT = 5_000_000;
 export const ADDITIONAL_AMOUNT_STEP = 1000;
+
+/**
+ * 후원 폼 텍스트 칸의 글자수 상한 — **서버 검증과 클라이언트 maxLength가 같은 값을 본다.**
+ *
+ * 예전에는 서버가 상한을 넘은 선택 필드를 조용히 버리고 201을 돌려줬고, 상세주소·배송
+ * 메모 칸에는 클라이언트 maxLength도 없었다. 브라우저를 정상적으로 쓰다가 긴 배송 지시를
+ * 적으면 주문은 성공하는데 그 지시만 사라졌다 — 개설자 배송 목록·CSV에서 보이지 않는다.
+ * 두 쪽이 같은 상수를 읽어야 "칸에 들어간 것은 반드시 저장된다"가 성립한다.
+ */
+export const PLEDGE_TEXT_LIMITS = {
+  customerName: 50,
+  customerPhone: 30,
+  supporterMessage: 500,
+  shippingName: 50,
+  shippingPhone: 30,
+  shippingPostcode: 10,
+  shippingAddress1: 200,
+  shippingAddress2: 200,
+  shippingMemo: 200,
+} as const;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
 /**
  * 정산 시점 — 모금 마감으로부터 이 영업일 수 뒤. 운영자 결정(2026-09-23).
@@ -51,7 +70,13 @@ export type CancelEligibility =
  */
 export const assessSelfCancel = (input: {
   orderStatus: string;
-  projectState: ProjectState;
+  /**
+   * **날짜상** 모금이 끝났는가(`isPastFundingEnd`). 운영자가 누른 `status: 'closed'`는
+   * 여기 섞지 않는다 — 예전에는 `projectState !== 'live'`로 둘을 함께 봤고, 그래서
+   * 운영자가 문제를 발견해 종료를 누른 순간 기존 후원자의 셀프 취소가 끊겼다. 종료
+   * 버튼을 누르는 상황이 바로 환불이 필요한 상황이라, 그때 환불이 전부 수작업이 됐다.
+   */
+  fundingEnded: boolean;
   fulfillmentStatus: string;
   paymentMethod: string;
   /**
@@ -62,7 +87,7 @@ export const assessSelfCancel = (input: {
 }): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
   if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
-  if (input.projectState !== 'live') return { ok: false, code: 'project_not_live' };
+  if (input.fundingEnded) return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   // 약관 제8조 2항 — 내려받기가 시작된 뒤에는 청약철회가 제한된다(전자상거래법 제17조 2항 5호).
   // 배송 리워드의 `fulfilling`에 해당하는, 디지털 리워드의 '이미 건네준 상태'다.
@@ -83,8 +108,11 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
 /**
  * 후원자가 동의한 약관·처리방침 묶음의 버전. `funding_pledges.terms_version`에 그대로 들어간다.
  *
- * 같은 체크박스(PledgeWizard)가 **펀딩 약관과 개인정보 처리방침 두 문서**를 함께 동의받으므로,
- * 둘 중 하나라도 내용이 바뀌면 날짜를 올려야 한다. 페이지가 아니라 여기 두는 이유: 이 값을
+ * 후원 폼(PledgeWizard)은 **결제하기를 누르는 행위 자체**로 동의를 받는다 — 체크박스는
+ * 2026-09-16에 없앴다(결제위젯이 그리는 필수 약관 체크와 중복으로 읽혔다). 버튼 바로 위의
+ * 한 줄이 **펀딩 약관과 개인정보 처리방침 두 문서**를 함께 가리키므로, 둘 중 하나라도
+ * 내용이 바뀌면 날짜를 올려야 한다 — 동의를 받는 방식이 바뀌어도 "한 번의 행위로 두 문서에
+ * 동의한다"는 사실은 그대로다. 페이지가 아니라 여기 두는 이유: 이 값을
  * 쓰는 곳이 INSERT 경로(lib/funding/service.ts)라, 페이지 모듈에 두면 서버 함수가 React 페이지를
  * 끌고 들어온다. terms.tsx가 이 상수를 import해 화면에 표시한다.
  *

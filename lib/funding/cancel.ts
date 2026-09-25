@@ -1,19 +1,20 @@
-import { eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { orders, refunds } from '../../db/schema';
+import { refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
+import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
-import { computeProjectState } from './projects';
-import { getFundingProjectAsync } from './repository';
+import { isPastFundingEnd } from './projectState';
+import { getFundingProjectOrFailure } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
 
 export type FundingCancelOutcome =
   | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded'; refundAmount: number }
-  | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed'; message: string };
+  | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
 const GENERIC = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const refundIdempotencyKey = (orderNo: string, amount: number): string => `refund:${orderNo}:${amount}`;
@@ -42,7 +43,22 @@ const notifyCancelled = async (
     emailError = error instanceof Error ? error.message : String(error);
   }
   try {
-    await db.update(orders).set({ notificationError: emailError }).where(eq(orders.id, order.id));
+    /**
+     * 성공(null)으로 덮을 때 **확정 메일 센티널은 지우지 않는다.**
+     *
+     * notification_error 한 칸을 확정 메일 상태(`send_pending`·`send_inflight`)와 그 밖의
+     * 알림 결과가 함께 쓴다. 취소 메일이 성공했다고 null을 통째로 쓰면 "확정 메일이 아직
+     * 안 나갔다"는 기록이 사라진다 — 운영 점검도 침묵하고, 그 주문에 확정 메일이 한 통도
+     * 안 나갔다는 사실을 아무도 모르게 된다. 같은 가드가 관리자 환불 요청 취소
+     * (pages/api/admin/funding/pledges/[id].ts)에도 있다. 센티널을 지우는 경로는 관리자
+     * 화면의 메일 재발송 하나로 남긴다 — 운영자가 실제로 다시 보낸 뒤에만 지워진다.
+     */
+    await db.run(
+      emailError === null
+        ? sql`UPDATE orders SET notification_error = NULL WHERE id = ${order.id}
+              AND (notification_error IS NULL OR notification_error NOT IN (${SEND_PENDING}, ${SEND_INFLIGHT}))`
+        : sql`UPDATE orders SET notification_error = ${emailError} WHERE id = ${order.id}`,
+    );
   } catch (error) {
     console.error('[funding-cancel] notificationError 기록 실패', { orderNo: order.orderNo, emailError, error });
   }
@@ -52,7 +68,15 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   const order = await findFundingOrderByOrderNo(input.orderNo);
   if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
   const pledge = order.fundingPledge;
-  const project = await getFundingProjectAsync(pledge.projectSlug);
+  /**
+   * 조회 실패와 부재를 구분한다. 예전에는 둘 다 null이라 `project ? … : 'closed'`가
+   * DB가 한 번 흔들린 것을 "마감"으로 읽었고, 모금 중인 프로젝트의 후원자가 셀프 취소를
+   * 잃었다. 일시 오류는 일시 오류로 답한다 — 잠시 뒤 다시 누르면 된다.
+   */
+  const { project, lookupFailed } = await getFundingProjectOrFailure(pledge.projectSlug);
+  if (lookupFailed && input.requestedBy === 'customer') {
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 처리할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+  }
   // 부분환불 건은 관리자만 다룰 수 있다 — 남은 금액 계산이 걸려 있어 고객 셀프 취소에 맡기지 않는다.
   if (order.status === 'partially_refunded' && input.requestedBy !== 'admin') {
     return { ok: false, code: 'invalid_state', message: '일부 환불된 펀딩은 문의해 주세요.' };
@@ -63,7 +87,8 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   if (input.requestedBy === 'customer') {
     const verdict = assessSelfCancel({
       orderStatus: order.status,
-      projectState: project ? computeProjectState(project, input.now) : 'closed',
+      // 프로젝트를 못 읽으면 마감으로 본다(fail-closed).
+      fundingEnded: project ? isPastFundingEnd(project, input.now) : true,
       fulfillmentStatus: pledge.fulfillmentStatus,
       paymentMethod: pledge.paymentMethod,
       downloadedAt: pledge.downloadedAt ?? null,
@@ -121,9 +146,13 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   // 셀프 취소는 "발송 준비 전"이라는 조건을 선점 WHERE에 함께 건다 — assessSelfCancel이 읽기
   // 시점에만 보므로, 판정과 선점 사이에 관리자가 발송 준비로 넘기면 환불과 발송이 둘 다
   // 성립한다(돈은 나가고 리워드도 나간다). 관리자 취소는 발송 중에도 허용해야 하므로 제외한다.
+  //
+  // 내려받기도 같은 이유로 함께 건다 — manage 화면이 내려받기 버튼과 취소 버튼을 나란히
+  // 띄우므로, 읽은 뒤 선점 전에 download.ts가 downloaded_at을 찍으면 파일은 나가고 돈도
+  // 전액 돌아간다. assessSelfCancel이 읽기 시점에 보는 두 가드를 둘 다 옮겨야 한다.
   const selfCancelGuard =
     input.requestedBy === 'customer'
-      ? sql` AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND fulfillment_status = 'none')`
+      ? sql` AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND fulfillment_status = 'none' AND downloaded_at IS NULL)`
       : sql.empty();
   const claim = await db.run(
     sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}${selfCancelGuard}`,

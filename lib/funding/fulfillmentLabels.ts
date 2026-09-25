@@ -31,3 +31,22 @@ export const FULFILLMENT_LABELS: Record<string, string> = {
   shipped: '발송완료',
   delivered: '수령완료',
 };
+
+/**
+ * 후원 주문 상태(`orders.status`) 한국어 라벨 — 후원자가 보는 화면의 정본.
+ *
+ * 여기 두는 이유는 위 FULFILLMENT_LABELS와 같다. `lib/funding/refundable.ts`에 두면
+ * 그 모듈이 drizzle을 물고 있어 클라이언트 번들로 끌려 들어간다. 이 파일은 순수 상수뿐이다.
+ *
+ * 소비처: `pages/[locale]/funding/manage/[orderNo].tsx`(후원 확인),
+ * `pages/[locale]/funding/success.tsx`(확정 화면이 살아 있지 않은 건에 띄우는 안내).
+ * 관리자 화면은 별도 라벨을 쓴다 — 보는 사람이 다르고 표기도 다르다(`취소/환불` 등).
+ */
+export const FUNDING_ORDER_STATUS_LABELS: Record<string, string> = {
+  pending: '결제 대기',
+  paid: '펀딩 확정',
+  partially_refunded: '일부 환불',
+  refunded: '환불 완료',
+  expired: '만료',
+  failed: '결제 실패',
+};

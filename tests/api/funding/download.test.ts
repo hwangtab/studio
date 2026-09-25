@@ -2,14 +2,16 @@
 jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 jest.mock('../../../lib/funding/service', () => ({ findFundingOrderByOrderNo: jest.fn() }));
 jest.mock('../../../lib/funding/projects', () => ({ getFundingProject: jest.fn() }));
-jest.mock('../../../lib/funding/r2', () => ({ presignFundingDownload: jest.fn() }));
+jest.mock('../../../lib/funding/r2', () => ({ presignFundingDownload: jest.fn(), fundingDownloadObjectExists: jest.fn() }));
+jest.mock('../../../lib/funding/downloadAlert', () => ({ alertMissingDownloadObject: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('../../../db/client', () => ({ getDb: jest.fn() }));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../pages/api/funding/download';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getFundingProject } from '../../../lib/funding/projects';
-import { presignFundingDownload } from '../../../lib/funding/r2';
+import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
+import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
 import { getDb } from '../../../db/client';
 
 /**
@@ -27,12 +29,16 @@ const KEY = 'kspf-2026/abc123/album-mp3-320.zip';
 const HIGHER_KEY = 'kspf-2026/abc123/album-wav-24-96.zip';
 const SIGNED = 'https://acct.r2.cloudflarestorage.com/bucket/kspf-2026/abc123/album-mp3-320.zip?X-Amz-Signature=deadbeef';
 
-const updateCall = () => {
-  const where = jest.fn().mockResolvedValue(undefined);
-  const set = jest.fn().mockReturnValue({ where });
-  const update = jest.fn().mockReturnValue({ set });
-  (getDb as jest.Mock).mockReturnValue({ update });
-  return { update, set, where };
+/**
+ * 기록은 raw SQL 한 문장이다 — 주문이 아직 살아 있는지를 같은 WHERE에서 보기 때문이다
+ * (읽기 시점 판정만으로는 취소와의 경합을 못 막는다. 경합 자체는
+ * lib/funding/cancel.integration.test.ts가 실제 DB로 본다). 여기서는 "기록을 시도했는가"와
+ * 0행일 때의 응답만 본다.
+ */
+const updateCall = (rowsAffected = 1) => {
+  const run = jest.fn().mockResolvedValue({ rowsAffected });
+  (getDb as jest.Mock).mockReturnValue({ run });
+  return { run, update: run, set: run };
 };
 
 const call = async (body: Record<string, string>, method = 'POST') => {
@@ -65,6 +71,7 @@ beforeEach(() => {
   (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(paidOrder);
   (getFundingProject as jest.Mock).mockReturnValue(projectWithTiers);
   (presignFundingDownload as jest.Mock).mockResolvedValue(SIGNED);
+  (fundingDownloadObjectExists as jest.Mock).mockResolvedValue(true);
   updateCall();
 });
 
@@ -100,11 +107,23 @@ it('정상 → 서명 주소로 302, 저장소 주소를 응답 본문에 담지
   expect(r.redirectedTo).toBe(SIGNED);
 });
 
-it('최초 1회만 기록한다 — downloaded_at이 비어 있을 때만 쓴다', async () => {
-  const { update, set } = updateCall();
+it('첫 시각을 보존하며 기록한다 — 두 번째 내려받기가 기준점을 밀지 않는다', async () => {
+  const { run } = updateCall();
   await call(ok);
-  expect(update).toHaveBeenCalled();
-  expect(set).toHaveBeenCalledWith(expect.objectContaining({ downloadedAt: expect.any(Date) }));
+  expect(run).toHaveBeenCalled();
+  const statement = JSON.stringify(run.mock.calls[0][0]);
+  expect(statement).toContain('COALESCE(downloaded_at');
+});
+
+/**
+ * 읽기와 쓰기 사이에 취소가 끼어들면 0행이 된다 — 그때 서명 주소를 내주면 돈은 돌아가고
+ * 파일은 나간다. 302 대신 409로 끊는다.
+ */
+it('기록이 0행이면(그 사이 취소됨) 서명 주소를 내주지 않고 409', async () => {
+  updateCall(0);
+  const r = await call(ok);
+  expect(r.status).toBe(409);
+  expect(r.redirectedTo).toBeUndefined();
 });
 
 /**
@@ -154,4 +173,41 @@ it('토큰 불일치는 주문 없음과 같은 404 — 주문의 존재를 흘�
   expect(wrongToken.status).toBe(missing.status);
   expect(wrongToken.body).toEqual(missing.body);
   expect(wrongToken.status).toBe(404);
+});
+
+/**
+ * 서명은 객체 유무를 모른다 — `client.sign`은 순수 계산이다. 키 오타·파일 교체·삭제
+ * 상태에서도 주소가 만들어지고, 302를 받은 후원자는 R2의 NoSuchKey XML을 보는데
+ * `downloaded_at`은 이미 찍혀 청약철회권만 잃는다. 주석이 약속한 "발급 실패면 기록을
+ * 남기지 않는다"가 이 경우에도 사실이어야 한다.
+ */
+describe('저장소에 객체가 없을 때', () => {
+  it('HEAD가 404면 기록하지 않고 503으로 답하며 운영자에게 알린다', async () => {
+    const { update } = updateCall();
+    (fundingDownloadObjectExists as jest.Mock).mockResolvedValue(false);
+    const r = await call(ok);
+    expect(r.status).toBe(503);
+    expect(r.body.message).toContain('파일을 준비하지 못했습니다');
+    expect(update).not.toHaveBeenCalled();
+    expect(r.redirectedTo).toBeUndefined();
+    expect(alertMissingDownloadObject).toHaveBeenCalledWith({ key: KEY, orderNo: 'FND-1' });
+  });
+
+  it('HEAD 자체가 실패하면(네트워크·5xx) 재시도를 안내하고 헛경보를 보내지 않는다', async () => {
+    const { update } = updateCall();
+    (fundingDownloadObjectExists as jest.Mock).mockRejectedValue(new Error('ECONNRESET'));
+    const r = await call(ok);
+    expect(r.status).toBe(503);
+    expect(r.body.message).toContain('잠시 후 다시 시도');
+    expect(update).not.toHaveBeenCalled();
+    expect(alertMissingDownloadObject).not.toHaveBeenCalled();
+  });
+
+  it('객체가 있으면 지금처럼 기록하고 302로 보낸다', async () => {
+    const { update } = updateCall();
+    const r = await call(ok);
+    expect(update).toHaveBeenCalled();
+    expect(r.redirectedTo).toBe(SIGNED);
+    expect(alertMissingDownloadObject).not.toHaveBeenCalled();
+  });
 });

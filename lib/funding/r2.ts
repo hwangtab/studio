@@ -30,17 +30,48 @@ const requireEnv = (name: string): string => {
 };
 
 
-export const presignFundingDownload = async (key: string): Promise<string> => {
-  if (!isSafeObjectKey(key)) throw new Error(`내려받기 키 형식이 올바르지 않습니다: ${key}`);
-
-  const client = new AwsClient({
+const objectClient = (): AwsClient =>
+  new AwsClient({
     accessKeyId: requireEnv('R2_ACCESS_KEY_ID'),
     secretAccessKey: requireEnv('R2_SECRET_ACCESS_KEY'),
     service: 's3',
     region: 'auto',
+    /**
+     * aws4fetch의 `fetch`는 5xx·429에 **기본 10회 지수 백오프**(최악 ~50초)를 한다.
+     * 그 왕복이 내려받기 요청 위에 있으므로, R2가 흔들리면 우리가 준비한 503 안내가
+     * 나가기 전에 서버리스 함수 타임아웃에 먼저 걸린다 — 후원자는 이유 없는 오류를 본다.
+     * 한 번만 다시 시도하고 끝낸다. 재시도로 얻는 것보다 빨리 답하는 쪽이 낫다.
+     */
+    retries: 1,
   });
 
-  const url = new URL(`${requireEnv('R2_ACCOUNT_ENDPOINT')}/${requireEnv('R2_BUCKET')}/${key}`);
+const objectUrl = (key: string): URL =>
+  new URL(`${requireEnv('R2_ACCOUNT_ENDPOINT')}/${requireEnv('R2_BUCKET')}/${key}`);
+
+/**
+ * 객체가 실제로 있는가. **서명은 객체 유무를 모른다** — `client.sign`은 순수 계산이라
+ * 키 오타·파일 교체·삭제 상태에서도 그럴듯한 주소를 만들어 준다. 그 주소로 302를 보내면
+ * 후원자는 R2의 `NoSuchKey` XML을 받는데, 그 전에 `downloaded_at`이 이미 찍혀 청약철회권만
+ * 잃는다(약관 제8조 2항). 그래서 기록 전에 한 번 물어본다.
+ *
+ * true = 있다, false = 없다(404). 그 밖의 응답과 네트워크 오류는 **throw한다** — "없다"와
+ * "모르겠다"를 같은 값으로 돌려주면 호출부가 일시 장애를 파일 부재로 오인해 운영자에게
+ * 헛경보를 보낸다.
+ */
+export const fundingDownloadObjectExists = async (key: string): Promise<boolean> => {
+  if (!isSafeObjectKey(key)) throw new Error(`내려받기 키 형식이 올바르지 않습니다: ${key}`);
+  const response = await objectClient().fetch(objectUrl(key).toString(), { method: 'HEAD' });
+  if (response.status === 404) return false;
+  if (!response.ok) throw new Error(`내려받기 객체 확인 실패: HTTP ${response.status}`);
+  return true;
+};
+
+export const presignFundingDownload = async (key: string): Promise<string> => {
+  if (!isSafeObjectKey(key)) throw new Error(`내려받기 키 형식이 올바르지 않습니다: ${key}`);
+
+  const client = objectClient();
+
+  const url = objectUrl(key);
   url.searchParams.set('X-Amz-Expires', String(TTL_SECONDS));
   // 키는 무작위 경로라 그대로 저장되면 파일 이름이 뜻을 잃는다. 받는 쪽에 원래 이름으로
   // 저장되게 지정한다.

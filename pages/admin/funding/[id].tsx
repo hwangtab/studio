@@ -270,6 +270,15 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />
+                {/* 결제창에서 승인이 안 난 사유. 컬럼은 있었는데 읽는 화면이 없어, 문의가
+                    오면 토스 대시보드를 열어야만 확인할 수 있었다. 값이 있을 때만 보인다 —
+                    정상 확정된 건에 빈 줄을 세 개 늘릴 이유가 없다. */}
+                {pledge.paymentFailedAt && (
+                  <DescriptionRow
+                    label="결제 실패"
+                    value={`${pledge.paymentFailCode ?? '코드 없음'} · ${formatKstDateTimeFull(pledge.paymentFailedAt)}${pledge.paymentFailMessage ? ` — ${pledge.paymentFailMessage}` : ''}`}
+                  />
+                )}
                 {/* 값이 있으면 셀프 취소가 막혀 있다는 뜻이다 — 문의를 받았을 때 먼저 볼 자리다. */}
                 <DescriptionRow
                   label="내려받기 시작"

@@ -1,4 +1,4 @@
-import { recordPaymentFailure } from '../../../lib/payments/recordFailure';
+import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFailure';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 
@@ -51,6 +51,8 @@ interface FailProps {
 }
 
 export default function BookingFailPage({ code, message, orderNo, service }: FailProps) {
+  // 실패 사유는 마운트 뒤 비콘으로 남긴다 — 이유는 훅 주석에 있다(펀딩 실패 화면과 공용).
+  useReportPaymentFailureOnMount(orderNo, code);
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
   return (
     <>
@@ -115,13 +117,8 @@ export const getServerSideProps = withI18nServerProps<FailProps>(async ({ query,
     typeof orderId === 'string' && ORDER_NO_PATTERN.test(orderId.toUpperCase())
       ? orderId.toUpperCase()
       : null;
-  // 사유를 주문에 남긴다 — 이 화면이 실패를 아는 유일한 서버 경로다(confirm은 성공에만
-  // 불린다). best-effort라 화면은 결과와 무관하게 그대로 뜬다.
-  await recordPaymentFailure({
-    orderNo: safeOrderNo ?? '',
-    code: safeCode,
-    message: typeof query.message === 'string' ? query.message : null,
-  });
+  // 사유 기록은 여기서 하지 않는다 — 인증 없는 GET이 남의 주문을 덮어쓰는 경로가 된다.
+  // 화면이 마운트된 뒤 `/api/payments/failed`(Origin 검사 + IP 레이트리밋)로 보낸다.
   return {
     props: {
       service: safeService,

@@ -3,6 +3,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { fulfillmentStatusEnum } from '../../db/schema';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from './refundable';
+import { getFundingProjectAsync } from './repository';
 
 /**
  * 발송 상태 전환을 관리자·개설자가 함께 쓰는 서비스로 뽑은 것.
@@ -101,16 +102,31 @@ export const setFulfillment = async (input: {
 
   /**
    * delivered_at은 약관 제13조가 약속한 '리워드 전달 완료 후 1년 파기'의 기산점이다.
+   * 그 값의 정본이 **리워드 종류에 따라 다르다.**
    *
-   * delivered로 갈 때: COALESCE로 **첫 전달 시각을 보존**한다. 운송장만 고쳐 다시 저장하는
+   * **배송 리워드**: 기산점은 발송 상태와 일치시킨다.
+   * delivered로 갈 때 COALESCE로 **첫 전달 시각을 보존**한다 — 운송장만 고쳐 다시 저장하는
    * 흔한 실무에서 기산점이 계속 밀리면 파기 시점도 함께 밀린다.
-   * delivered에서 되돌릴 때(오조작 정정·반송): **NULL로 되돌린다.** 기산점은 '실제로
-   * 전달이 끝난 시각'이어야 하는데, 잘못 눌러 찍힌 시각을 남겨 두면 아직 배송 중인 건의
-   * 배송지가 1년 뒤 파기 대상이 된다. 기산점은 항상 현재 fulfillment_status와 일치시킨다.
+   * delivered에서 되돌릴 때(오조작 정정·반송) **NULL로 되돌린다** — 잘못 눌러 찍힌 시각을
+   * 남겨 두면 아직 배송 중인 건의 배송지가 1년 뒤 파기 대상이 된다.
+   *
+   * **디지털 전용 리워드(requiresShipping: false)**: 이 함수가 delivered_at을 **건드리지
+   * 않는다.** 그 값은 결제가 확정된 시각이고(lib/funding/confirm.ts), 확정 순간 내려받기가
+   * 열리므로 그때가 전달 완료다 — 발송 상태가 아니라 확정이 정본이다. 예전엔 여기서
+   * 무조건 NULL로 되돌려서, 운영자가 디지털 후원의 발송 상태를 한 번만 눌러도 기산점이
+   * 사라지고 **다시 채우는 코드가 없었다**(확정은 이미 지났다).
+   *
+   * 프로젝트를 못 읽으면 배송 리워드로 다룬다 — 지금까지의 동작이고, 아직 전달되지 않은
+   * 건에 기산점을 남기는 쪽보다 안전하다.
    */
-  const deliveredAt = status === 'delivered'
-    ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`
-    : sql`NULL`;
+  const project = await getFundingProjectAsync(pledge.projectSlug);
+  const isDigitalReward =
+    project?.rewards.find((r) => r.id === pledge.rewardId)?.requiresShipping === false;
+  const deliveredAt = isDigitalReward
+    ? sql`delivered_at`
+    : status === 'delivered'
+      ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`
+      : sql`NULL`;
 
   // 개설자 actor는 소유 조건을 UPDATE의 WHERE에도 싣는다 — 읽고-검사-쓰기 사이에 프로젝트
   // 소유가 바뀌는 경로는 없지만(project.creatorId는 운영자만 바꾸는 값이고 그런 경로가

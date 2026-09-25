@@ -1,7 +1,7 @@
 import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingPledges, orders, payments, refunds } from '../../db/schema';
+import { fundingPledges, orders, payments } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from '../booking/toss';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProjectAsync } from './repository';
@@ -263,6 +263,27 @@ export const confirmFundingPledge = async (
   }
 
   const now = new Date();
+  /**
+   * 디지털 전용 리워드는 **확정 순간이 전달 완료**다.
+   *
+   * `delivered_at`은 약관 제13조의 '리워드 전달 완료 후 1년 파기' 기산점인데, 그 값을
+   * 채우는 코드가 발송 상태를 손으로 `delivered`로 바꾸는 경로 하나뿐이었다
+   * (lib/funding/fulfillment.ts). 배송이 없는 리워드는 그 버튼을 누를 실무 계기가 없어서,
+   * 디지털 전용 후원의 응원 메시지·admin_memo·연락 정보가 영영 파기되지 않았다.
+   * 확정되는 즉시 내려받기가 열리므로 그 시각이 곧 전달 완료다.
+   *
+   * **fulfillment_status는 'none' 그대로 둔다.** `delivered`로 바꾸면 assessSelfCancel이
+   * `fulfilling`으로 셀프 취소를 막는다 — 디지털 리워드의 취소 차단 근거는 발송이 아니라
+   * `downloaded_at`(약관 제8조 2항)이다. 지금 `delivered_at`을 읽는 곳은 파기 크론
+   * (lib/funding/retention.ts)과 발송 기록 경로뿐이라, 관리자 화면·CSV가 이 값을
+   * '발송 완료'로 표시하는 자리는 없다.
+   *
+   * 프로젝트를 못 읽으면(조회 실패) 채우지 않는다 — 배송 리워드에 잘못 찍는 것이
+   * 안 찍는 것보다 나쁘다(배송 중인 건의 배송지가 1년 뒤 파기 대상이 된다).
+   */
+  const confirmProject = await getFundingProjectAsync(order.fundingPledge.projectSlug);
+  const confirmReward = confirmProject?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
+  const digitalDeliveredAt = confirmReward?.requiresShipping === false ? now : null;
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
@@ -300,7 +321,9 @@ export const confirmFundingPledge = async (
       db.update(orders)
         .set({ status: 'paid', updatedAt: now, notificationError: SEND_PENDING })
         .where(and(eq(orders.id, order.id), inArray(orders.status, ['pending', 'expired', 'failed']))),
-      db.update(fundingPledges).set({ paidAt: now, updatedAt: now }).where(eq(fundingPledges.orderId, order.id)),
+      db.update(fundingPledges)
+        .set(digitalDeliveredAt ? { paidAt: now, deliveredAt: digitalDeliveredAt, updatedAt: now } : { paidAt: now, updatedAt: now })
+        .where(eq(fundingPledges.orderId, order.id)),
     ]);
     // 그래도 0행이면 paid가 아닌 제3의 상태(failed·refunded 등)로 이미 옮겨간 것 — 결제는
     // 됐는데 기록은 못 한 상태이므로 성공으로 답하지 않는다.
@@ -387,28 +410,40 @@ export const syncFundingCancelledFromToss = async (payment: TossPayment): Promis
 
   const db = getDb();
   const nextStatus = cancelledTotal >= order.totalAmount ? 'refunded' : 'partially_refunded';
-  // 이미 같은 상태거나 그 이상(refunded)으로 전이된 주문은 다시 잡지 않는다 — 원자적이지만
-  // 결과를 좌우하지는 않는다: 아래 환불 대사가 claim 성공 여부와 무관하게 델타로 정확해진다.
+  // 이미 같은 상태거나 그 이상(refunded)으로 전이된 주문은 다시 잡지 않는다. 이 UPDATE의
+  // 성공 여부는 아래 환불 대사를 좌우하지 않는다 — 대사는 그 자체로 원자적이다.
   await db.run(
     sql`UPDATE orders SET status = ${nextStatus}, updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
   );
 
-  const recorded = await db.query.refunds.findMany({
-    where: (t, { eq: equals }) => and(equals(t.paymentId, paymentRow.id), equals(t.status, 'done')),
-  });
-  const refundedSum = recorded.reduce((sum, r) => sum + r.amount, 0);
+  /**
+   * **환불 델타를 한 문장 안에서 계산해 넣는다** — 읽고-빼고-쓰기로 나누지 않는다.
+   *
+   * 멱등 키(`webhook_events.event_key`)는 `paymentKey:status:취소합계`라 같은 이벤트의
+   * 재전송만 막는다. PARTIAL_CANCELED(2,000원)와 CANCELED(5,000원)는 서로 다른 키라
+   * 동시에 여기 도달할 수 있고, 예전에는 둘 다 기록 합계를 0으로 읽어 2,000 + 5,000을
+   * 각각 남겼다 — 실제로 취소된 5,000원에 7,000원의 원장이 붙는다. 돈이 두 번 나가지는
+   * 않지만 `remainingRefundable`과 관리자 화면·정산이 전부 틀어진다.
+   *
+   * 조건과 금액을 INSERT 문에 실으면 SQLite가 쓰기를 직렬화하므로, 두 번째 문장은 첫
+   * 번째가 남긴 행을 반드시 보고 자기 델타를 그만큼 줄인다(품절 조건을 INSERT에 싣는
+   * lib/funding/service.ts와 같은 관례). 진 쪽은 0행을 받는다.
+   *
+   * booking 웹훅은 같은 문제를 bookings 행의 원자적 선점으로 갈랐다. 여기서 그 모양을
+   * 그대로 쓸 수 없는 이유: 펀딩의 선점 대상인 orders는 `partially_refunded`도 살아 있는
+   * 상태라, 선점에 성공해도 그 전에 기록된 부분 환불이 있을 수 있다 — 전액을 새로 적으면
+   * 그 부분 환불이 이중으로 계산된다. 델타 자체가 원자적이어야 한다.
+   */
+  const inserted = await db.run(sql`
+    INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
+    SELECT lower(hex(randomblob(16))), ${paymentRow.id},
+           ${cancelledTotal} - COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${paymentRow.id} AND status = 'done'), 0),
+           '토스 외부 취소 동기화', 'webhook',
+           ${payment.cancels?.[payment.cancels.length - 1]?.transactionKey ?? null}, 'done'
+    WHERE ${cancelledTotal} > COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${paymentRow.id} AND status = 'done'), 0)
+  `);
   // 기록이 토스를 따라잡았다면(같은 이벤트 재도착, 또는 우리 쪽이 더 많은 경우) 할 일이 없다.
-  if (cancelledTotal <= refundedSum) return;
-
-  const delta = cancelledTotal - refundedSum;
-  await db.insert(refunds).values({
-    paymentId: paymentRow.id,
-    amount: delta,
-    reason: '토스 외부 취소 동기화',
-    requestedBy: 'webhook',
-    tossTransactionKey: payment.cancels?.[payment.cancels.length - 1]?.transactionKey ?? null,
-    status: 'done',
-  });
+  if (rowsAffectedOf(inserted) === 0) return;
 
   // 기록이 실제로 늘어난 경우에만(= 여기까지 온 경우에만) 통지한다 — 같은 이벤트 재도착은
   // 위 대사에서 이미 return했으므로 같은 취소로 메일이 반복되지 않는다. 금액은 **누적 취소

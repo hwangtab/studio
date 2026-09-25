@@ -69,7 +69,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts']) {
+  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -738,5 +738,44 @@ describe('자동 재개 안내가 나가지 못한 구독', () => {
   it('다시 정지·해지된 구독은 보고하지 않는다 — 청구가 오지 않는다', async () => {
     await seedFloorCase('paused');
     expect(await issueAt(HEALTH_CRON('2026-09-03'))).toBeUndefined();
+  });
+});
+
+/**
+ * 같은 slug가 파일과 DB에 둘 다 있으면 읽는 입구에서 파일이 이긴다 — 기존 후원의 모금액이
+ * 새 파일 프로젝트에 합산되고, 리워드 id가 다르면 한정 재고가 0에서 재시작한다. 개설자
+ * 저장·관리자 승인의 충돌 가드는 DB→파일 방향뿐이고, CI에는 DB가 없어 검사할 수 없다.
+ */
+describe('파일과 DB의 slug 충돌', () => {
+  const seedApprovedDbProject = async (slug: string) => {
+    await client.execute({
+      sql: `INSERT INTO funding_creators (id, email, name) VALUES ('cr1', 'c@example.com', '개설자')`,
+      args: [],
+    });
+    await client.execute({
+      sql: `INSERT INTO funding_projects (id, slug, creator_id, title, summary, content, cover_url, goal_amount, start_at, end_at, review_status, status)
+            VALUES ('p1', ?, 'cr1', 'T', 'S', 'C', '/c.webp', 100000, unixepoch(), unixepoch(), 'approved', 'auto')`,
+      args: [slug],
+    });
+  };
+
+  it('승인된 DB 프로젝트와 같은 slug의 md가 있으면 긴급으로 알린다', async () => {
+    // content/funding/ 에 실제로 있는 slug를 쓴다 — 파일 쪽 정본을 그대로 읽는 점검이다.
+    await seedApprovedDbProject('smoke-test');
+    const issues = (await runHealthCheck(NOW)).issues;
+    const collision = issues.find((i) => i.title.includes('slug가 파일과 DB에 둘 다'));
+    expect(collision?.severity).toBe('high');
+    expect(collision?.detail).toContain('smoke-test');
+  });
+
+  it('겹치지 않으면 아무 말도 하지 않는다', async () => {
+    await seedApprovedDbProject('db-only-project');
+    expect(await titles()).toEqual([]);
+  });
+
+  it('심사를 통과하지 않은 DB 프로젝트는 세지 않는다 — 공개 경로에 나타나지 않는다', async () => {
+    await seedApprovedDbProject('smoke-test');
+    await client.execute("UPDATE funding_projects SET review_status = 'draft'");
+    expect(await titles()).toEqual([]);
   });
 });

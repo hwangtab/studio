@@ -2,6 +2,7 @@ import { eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { orders } from '../../db/schema';
+import { isRefundedFundingOrderStatus } from '../funding/refundable';
 
 /**
  * 결제창에서 승인이 안 난 사유를 주문에 남긴다.
@@ -12,10 +13,15 @@ import { orders } from '../../db/schema';
  * 3분 동안 세 번 시도하고 떠났는데(각 2만원) 왜 실패했는지 확인할 길이 없었다.
  * 유일한 기록이 토스 대시보드였다.
  *
- * saf-2026이 같은 문제를 `app/api/payments/funding/toss/fail` 비콘으로 풀었다. 이쪽은
- * 실패 화면이 서버 렌더라 **getServerSideProps에서 곧장 쓴다** — 자바스크립트가 꺼져
- * 있어도 남고, 왕복이 한 번 줄어든다. 결제창이 열리기도 전에 SDK가 던지는 경우만
- * 클라이언트가 `/api/payments/failed`로 알린다(그 경로는 리다이렉트가 없다).
+ * saf-2026이 같은 문제를 `app/api/payments/funding/toss/fail` 비콘으로 풀었다. 이쪽도
+ * **전부 비콘으로 보낸다** — 실패 화면의 getServerSideProps에서 곧장 쓰면 자바스크립트가
+ * 꺼져 있어도 남지만, 그 주소는 인증도 Origin 검사도 없는 GET이라 남의 주문번호를 넣은
+ * 링크 한 번으로(링크 프리뷰 봇 포함) 그 주문의 실패 사유가 덮인다. 비콘
+ * (`/api/payments/failed`)에는 Origin 검사와 IP 레이트리밋이 걸려 있다.
+ * 결제창이 열리기도 전에 SDK가 던지는 경우도 같은 비콘을 쓴다.
+ *
+ * 지금 이 함수를 부르는 곳은 그 비콘 하나다. 실패 화면(펀딩·예약)은
+ * `useReportPaymentFailureOnMount`(utils/reportPaymentFailure.ts)로 비콘을 쏜다.
  *
  * **best-effort.** 실패해도 호출한 화면은 그대로 뜬다 — 사유 기록이 실패 안내를 막으면
  * 안 된다.
@@ -69,7 +75,12 @@ export const recordPaymentFailure = async (input: PaymentFailureInput): Promise<
     if (!row) return false;
     // 이미 결제가 끝난 주문이면 되돌린다 — where 절에 status를 넣으면 드라이버마다
     // returning 동작이 갈려, 한 번 읽고 판단하는 대신 쓰고 되돌리는 쪽이 단순하다.
-    if (row.status === 'paid' || row.status === 'refunded') {
+    //
+    // `partially_refunded`도 환불된 주문이다. 목록에서 빠져 있어서, 부분 환불된 주문에
+    // 뒤늦은 실패 비콘이 닿으면 실패 사유가 그대로 박혔다 — 이 함수의 주석이 지키겠다고
+    // 적어 둔 "확정·환불된 주문"에 구멍이 있었다. 판정은 저장소의 다른 곳과 같은 함수를
+    // 쓴다(lib/funding/refundable.ts).
+    if (row.status === 'paid' || isRefundedFundingOrderStatus(row.status)) {
       await getDb()
         .update(orders)
         .set({ paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null })

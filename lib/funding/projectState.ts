@@ -24,3 +24,16 @@ export const computeProjectState = (
   if (t < new Date(project.endAt).getTime()) return 'live';
   return 'closed';
 };
+
+/**
+ * **날짜상** 모금이 끝났는가. `computeProjectState`와 달리 운영자가 누른
+ * `status: 'closed'`·`'draft'`를 보지 않는다.
+ *
+ * 셀프 취소 판정이 이것을 쓴다(lib/funding/policy.ts). 두 종류의 "마감"을 한 값으로
+ * 합치면, 운영자가 문제를 발견해 프로젝트를 종료한 순간 기존 후원자의 셀프 취소가 함께
+ * 끊긴다 — 종료 버튼을 누르는 상황(가격 표기 오류 등)이 바로 환불이 필요한 상황이라
+ * 환불이 전부 수작업으로 넘어간다. 운영자 종료로 **새 후원**은 막히되, 이미 후원한
+ * 사람은 원래 마감일까지 스스로 취소할 수 있어야 한다.
+ */
+export const isPastFundingEnd = (project: { endAt: string }, now: Date): boolean =>
+  now.getTime() >= new Date(project.endAt).getTime();

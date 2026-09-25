@@ -19,6 +19,15 @@ jest.mock('./email', () => ({
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
 }));
 jest.mock('./projects', () => ({ ...jest.requireActual('./projects'), getFundingProject: () => PROJECT }));
+jest.mock('./repository', () => ({ ...jest.requireActual('./repository') }));
+// 내려받기 쪽 경합(아래 '양방향')을 같은 하니스에서 보려면 그 라우트가 타는 바깥 의존만
+// 가린다 — R2 서명·객체 확인, IP 레이트리밋, 운영자 알림.
+jest.mock('./r2', () => ({
+  presignFundingDownload: jest.fn().mockResolvedValue('https://r2.example/signed'),
+  fundingDownloadObjectExists: jest.fn().mockResolvedValue(true),
+}));
+jest.mock('./downloadAlert', () => ({ alertMissingDownloadObject: jest.fn().mockResolvedValue(undefined) }));
+jest.mock('../booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
 // findFundingOrderByOrderNo를 감싼다 — cancel.ts가 "읽고 → 검사 → 쓰기"를 하는 구조라,
 // 읽기와 쓰기 **사이**에 경쟁 요청이 끼어든 상황을 재현하려면 그 창을 열 수 있어야 한다.
 // 기본 구현은 실제 함수 그대로다.
@@ -39,6 +48,8 @@ import { createFundingPledge, findFundingOrderByOrderNo } from './service';
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import { isLiveFundingOrderStatus, remainingRefundable } from './refundable';
+// eslint-disable-next-line import/first
+import downloadHandler from '../../pages/api/funding/download';
 // eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
 
@@ -68,6 +79,9 @@ rewards:
     amount: 5000
     requiresShipping: false
     estimatedDelivery: 2026-11
+    downloads:
+      - label: MP3
+        key: demo/abc/album.zip
 ---
 `, 'demo');
 
@@ -297,6 +311,19 @@ describe('cancelFundingPledge', () => {
 });
 
 describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () => {
+  /** 내려받기 라우트 호출 — 응답 status·redirect만 본다. */
+  const callDownload = async (body: Record<string, string>) => {
+    const json = jest.fn();
+    const status = jest.fn().mockReturnValue({ json });
+    const redirect = jest.fn();
+    const res = { setHeader: jest.fn(), status, redirect };
+    await downloadHandler({ method: 'POST', body, headers: {}, socket: {} } as never, res as never);
+    return {
+      status: status.mock.calls[0]?.[0] as number | undefined,
+      redirectedTo: redirect.mock.calls[0]?.[1] as string | undefined,
+    };
+  };
+
   const staleRead = (mutate: string, args: unknown[]) => {
     const actual = jest.requireActual('./service').findFundingOrderByOrderNo;
     (findFundingOrderByOrderNo as jest.Mock).mockImplementationOnce(async (orderNo: string) => {
@@ -320,6 +347,61 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
     expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid'); // 선점도 없었다
+  });
+
+  /**
+   * manage 화면은 내려받기 버튼과 취소 버튼을 나란히 띄운다. 두 요청의 순서만 맞으면
+   * 파일을 받고도 전액 환불이 성립했다 — 읽기 시점 판정은 통과하고, 선점 WHERE에는
+   * fulfillment_status만 실려 있었다.
+   */
+  it('토스 셀프 취소: 읽은 뒤 내려받기가 기록되면 토스를 부르지 않고 거부한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead('UPDATE funding_pledges SET downloaded_at = unixepoch() WHERE order_id = ?', [o!.id]);
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid'); // 선점도 없었다
+  });
+
+  /**
+   * **반대 방향.** 내려받기 라우트도 주문 상태를 읽기 시점에 한 번만 봤고, 기록 UPDATE의
+   * WHERE에는 주문 상태 조건이 없었다. 내려받기가 paid를 읽음 → 취소가 선점(그 시점
+   * downloaded_at은 NULL이라 위 가드도 통과한다) → 토스 전액 취소 → 내려받기가 기록하고
+   * 서명 주소를 내준다. 결과는 H1과 같다. 서명·객체 확인(R2 왕복)이 읽기와 쓰기 사이에
+   * 있어 창이 짧지도 않다.
+   */
+  it('내려받기: 읽은 뒤 주문이 환불되면 기록하지 않고 409로 답한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead("UPDATE orders SET status = 'refunded' WHERE id = ?", [o!.id]);
+    const r = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+
+    expect(r.status).toBe(409);
+    expect(r.redirectedTo).toBeUndefined();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toBeNull();
+  });
+
+  it('내려받기: 주문이 살아 있으면 기록하고 302로 보낸다 — 두 번째도 첫 시각을 지킨다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+
+    const first = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+    expect(first.redirectedTo).toBe('https://r2.example/signed');
+    const at = (await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt;
+    expect(at).toBeInstanceOf(Date);
+
+    const second = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+    expect(second.redirectedTo).toBe('https://r2.example/signed');
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toEqual(at);
   });
 
   it('관리자 취소는 발송 준비 중에도 그대로 환불한다 — 가드는 셀프 취소에만 건다', async () => {
@@ -401,5 +483,80 @@ describe('가상계좌 취소 거절 문구', () => {
     const r = await cancelFundingPledge({ orderNo, requestedBy: 'admin', reason: '관리자 환불', now: NOW });
     expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
     expect(r.ok === false && r.message).toBe(toss.VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE);
+  });
+});
+
+/**
+ * `getFundingProjectAsync`가 DB 오류를 삼켜 null을 주는 것은 공개 페이지를 위한 설계인데,
+ * 셀프 취소가 그 null을 곧바로 "마감"으로 읽었다. 모금 중인 프로젝트의 후원자가 조회 한
+ * 번 흔들린 것 때문에 취소 권리를 잃으면 안 된다 — 다시 시도할 수 있는 답을 준다.
+ */
+describe('프로젝트 조회 실패', () => {
+  const repository = jest.requireMock('./repository') as typeof import('./repository');
+
+  it('셀프 취소는 마감이 아니라 일시 오류로 거절한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    jest.spyOn(repository, 'getFundingProjectOrFailure').mockResolvedValueOnce({ project: null, lookupFailed: true });
+
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'temporarily_unavailable' });
+    expect(r.ok === false && r.message).not.toContain('마감');
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid');
+  });
+
+  it('관리자 취소는 그대로 진행한다 — 조회 실패가 운영 복구를 막으면 안 된다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    jest.spyOn(repository, 'getFundingProjectOrFailure').mockResolvedValueOnce({ project: null, lookupFailed: true });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: true, mode: 'refunded' });
+  });
+});
+
+/**
+ * notification_error 한 칸을 확정 메일 상태(send_pending·send_inflight)와 그 밖의 알림
+ * 결과가 함께 쓴다. 취소 메일이 성공했다고 null을 통째로 쓰면 "확정 메일이 아직 안 나갔다"는
+ * 기록이 사라진다 — 운영 점검도 침묵하고, 그 사실을 아무도 모르게 된다.
+ */
+describe('확정 메일 센티널', () => {
+  it('취소 메일 성공이 센티널을 지우지 않는다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET notification_error='send_pending' WHERE order_no=?", args: [c.orderNo] });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+
+    expect((await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW })).ok).toBe(true);
+
+    const row = await client.execute({ sql: 'SELECT notification_error FROM orders WHERE order_no=?', args: [c.orderNo] });
+    expect(row.rows[0].notification_error).toBe('send_pending');
+  });
+
+  it('센티널이 아닌 값은 성공하면 지운다 — 경보가 영원히 켜져 있으면 안 된다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET notification_error='이전 발송 실패' WHERE order_no=?", args: [c.orderNo] });
+    (cancelPayment as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] },
+    });
+
+    await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+
+    const row = await client.execute({ sql: 'SELECT notification_error FROM orders WHERE order_no=?', args: [c.orderNo] });
+    expect(row.rows[0].notification_error).toBeNull();
   });
 });

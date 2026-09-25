@@ -115,7 +115,10 @@ describe('private 페이지의 이탈 링크', () => {
     const source = read('pages/[locale]/funding/success.tsx');
     expect(source).toMatch(/redirect:\s*\{\s*destination:\s*`\/ko\/funding\/success\?o=\$\{encodeURIComponent\(result\.orderNo\)\}`/);
     // 확정 **실패**도 그 자리에서 렌더하지 않는다 — 승인 URL이 측정에 적재된다.
-    expect(source).toMatch(/if \(!result\.ok\) return \{ redirect: \{ destination: `\/ko\/funding\/success\?e=/);
+    // (실패 분기 안에서 훑기 레이트리밋을 소비한 뒤 코드를 정하므로, 리다이렉트 한 줄이
+    //  아니라 "!result.ok면 ?e=로 보낸다"는 형태만 못 박는다.)
+    expect(source).toMatch(/if \(!result\.ok\) \{/);
+    expect(source).toMatch(/redirect: \{ destination: `\/ko\/funding\/success\?e=\$\{encodeURIComponent\(code\)\}`/);
     // 관리 토큰은 URL이 아니라 httpOnly 쿠키로 넘어간다.
     expect(source).toContain('HttpOnly');
   });

@@ -1,15 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq, isNull, and } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
-import { fundingPledges } from '../../../db/schema';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getFundingProjectAsync } from '../../../lib/funding/repository';
-import { isLiveFundingOrderStatus } from '../../../lib/funding/refundable';
-import { presignFundingDownload } from '../../../lib/funding/r2';
+import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from '../../../lib/funding/refundable';
+import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
+import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
 
 /**
  * 디지털 리워드 내려받기 — **최초 접근을 기록하는** 경로.
@@ -89,10 +89,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
   }
 
-  await getDb()
-    .update(fundingPledges)
-    .set({ downloadedAt: new Date(), updatedAt: new Date() })
-    .where(and(eq(fundingPledges.id, pledge.id), isNull(fundingPledges.downloadedAt)));
+  /**
+   * 서명이 성공했다고 파일이 있는 것은 아니다 — `client.sign`은 순수 계산이라 키 오타·파일
+   * 교체·삭제 상태에서도 그럴듯한 주소를 만든다. 그대로 302를 보내면 후원자는 R2의
+   * `NoSuchKey` XML을 받는데 `downloaded_at`은 이미 찍혀 있어, 한 바이트도 못 받은 채
+   * "음원을 내려받은 뒤에는 청약철회가 제한됩니다"를 보게 된다. 되돌리는 경로는 관리자
+   * `clear_download_record` 하나뿐이다. 그래서 기록 전에 서명된 HEAD로 한 번 물어본다.
+   */
+  let objectExists: boolean;
+  try {
+    objectExists = await fundingDownloadObjectExists(target.key);
+  } catch (error) {
+    // "없다"가 아니라 "모르겠다" — 헛경보를 보내지 않고 재시도를 안내한다.
+    console.error('[funding-download] 객체 확인 실패', { orderNo: order.orderNo, key: target.key, error });
+    return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
+  }
+  if (!objectExists) {
+    await alertMissingDownloadObject({ key: target.key, orderNo: order.orderNo });
+    return res.status(503).json({ ok: false, message: '파일을 준비하지 못했습니다. 운영자에게 알렸습니다.' });
+  }
+
+  /**
+   * 최초 1회만 기록하고, **그 순간 주문이 아직 살아 있는지도 같은 문장에서 본다.**
+   *
+   * 위 `isLiveFundingOrderStatus` 검사는 읽기 시점 판정이라 그 뒤에 벌어진 일을 모른다.
+   * 셀프 취소와 내려받기는 후원 확인 화면에 나란히 있으므로 순서가 이렇게 잡힐 수 있다:
+   * 내려받기가 `paid`를 읽음 → 취소가 주문을 선점(그 시점 `downloaded_at`은 NULL이라
+   * cancel.ts의 가드도 통과한다) → 토스 전액 취소 → 내려받기가 기록하고 서명 주소를
+   * 내준다. 돈은 돌아가고 파일은 나가는, H1과 같은 결과다. 서명·객체 확인(R2 왕복)이
+   * 읽기와 쓰기 사이에 있어 그 창은 짧지 않다.
+   *
+   * COALESCE로 첫 시각을 보존한다 — 판정 기준은 "언제 시작했는가"이지 "마지막으로 언제
+   * 받았는가"가 아니다. 그래서 두 번째 내려받기도 rowsAffected 1을 받고(같은 값으로 다시
+   * 쓴다) 정상 통과하며, 0행은 **주문이 살아 있지 않다**는 뜻 하나뿐이다.
+   * 상태 목록은 화면·취소와 같은 정본을 쓴다(lib/funding/refundable.ts).
+   */
+  const recorded = await getDb().run(sql`
+    UPDATE funding_pledges
+    SET downloaded_at = COALESCE(downloaded_at, unixepoch()), updated_at = unixepoch()
+    WHERE id = ${pledge.id}
+      AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()}))
+  `);
+  if (Number(recorded.rowsAffected) === 0) {
+    console.error('[funding-download] 기록 직전에 주문이 살아 있지 않게 됐다 — 서명 주소를 내주지 않는다', {
+      orderNo: order.orderNo, key: target.key,
+    });
+    return res.status(409).json({ ok: false, message: '이미 취소된 후원입니다. 내려받을 수 없습니다.' });
+  }
 
   res.redirect(302, signedUrl);
 }

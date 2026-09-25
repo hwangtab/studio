@@ -30,6 +30,30 @@ export const getFundingProjectAsync = async (slug: string): Promise<FundingProje
   return safeDb(() => getDbFundingProject(slug), null, `slug=${slug}`);
 };
 
+/**
+ * `getFundingProjectAsync`와 같은 조회이되 **부재와 조회 실패를 구분한다.**
+ *
+ * 위 함수가 오류를 삼키는 것은 공개 페이지를 위한 설계다 — DB가 흔들려도 파일로 열린
+ * 캠페인은 계속 열려 있어야 한다. 그런데 후원자의 권리를 판정하는 두 자리
+ * (후원 확인 화면·셀프 취소 API)는 `null`을 곧바로 "마감"으로 읽는 바람에, 조회가 한 번
+ * 흔들리면 모금 중인 프로젝트의 후원자가 "펀딩 마감 후에는 온라인 취소가 불가합니다"를
+ * 보고 리워드 내려받기까지 잃었다. 거기서는 "없다"와 "모르겠다"가 달라야 한다.
+ *
+ * `lookupFailed: true`면 프로젝트의 부재를 단정하지 말 것 — 일시 오류로 다뤄야 한다.
+ */
+export const getFundingProjectOrFailure = async (
+  slug: string,
+): Promise<{ project: FundingProject | null; lookupFailed: boolean }> => {
+  const fromFile = getFundingProject(slug);
+  if (fromFile) return { project: fromFile, lookupFailed: false };
+  try {
+    return { project: await getDbFundingProject(slug), lookupFailed: false };
+  } catch (error: unknown) {
+    console.error(`[funding] DB 조회 실패(slug=${slug}) — 부재로 단정하지 않는다:`, error);
+    return { project: null, lookupFailed: true };
+  }
+};
+
 export const getAllFundingProjectsAsync = async (): Promise<FundingProject[]> => {
   const fromFile = getAllFundingProjects();
   const seen = new Set(fromFile.map((p) => p.slug));
