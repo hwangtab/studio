@@ -103,7 +103,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
           <>
             <p className="typo-card-meta mt-1">공개 동의는 아직 켜져 있습니다 — 여기서 거둘 수 있습니다.</p>
             <div className="mt-4">
-              <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>명단에서 내리기</Button>
+              <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>공개 동의 철회</Button>
             </div>
           </>
         )}

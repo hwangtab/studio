@@ -146,7 +146,7 @@ describe('명단 공개 설정', () => {
       json: async () => ({ ok: true, displayNamePublic: false, publicName: null }),
     }) as never;
     render(<FundingManagePage {...baseProps} displayNamePublic listingHidden paymentMethod="toss" />);
-    await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
+    await userEvent.click(screen.getByRole('button', { name: '공개 동의 철회' }));
     expect(JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)).toEqual({
       orderNo: 'FND-1', token: 'tok', displayNamePublic: false,
     });
@@ -155,7 +155,7 @@ describe('명단 공개 설정', () => {
 
   it('공개 동의가 꺼져 있으면 철회 버튼도 없다 — 거둘 것이 없다', () => {
     render(<FundingManagePage {...baseProps} listingHidden paymentMethod="toss" />);
-    expect(screen.queryByRole('button', { name: '명단에서 내리기' })).toBeNull();
+    expect(screen.queryByRole('button', { name: '공개 동의 철회' })).toBeNull();
   });
 
   it('바꿀 수 없는 상태면 편집 칸 대신 현재 값만 보인다', () => {
