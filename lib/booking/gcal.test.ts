@@ -139,3 +139,55 @@ describe('calendarIdFor — 방별 캘린더', () => {
     expect(isCalendarActive('studio')).toBe(true);
   });
 });
+
+describe('deleteBookingEvent — 후보 캘린더 순회', () => {
+  const realFetch = global.fetch;
+  const saved = { shared: process.env.PRACTICE_ROOM_GCAL_ID, r02: process.env.PRACTICE_ROOM_GCAL_ID_R02 };
+  beforeEach(() => {
+    jest.resetModules();
+    const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+    process.env.GOOGLE_SA_EMAIL = 'bot@project.iam.gserviceaccount.com';
+    process.env.GOOGLE_SA_PRIVATE_KEY = privateKey.export({ type: 'pkcs8', format: 'pem' }).toString();
+    process.env.PRACTICE_ROOM_GCAL_ID = 'shared-cal';
+    process.env.PRACTICE_ROOM_GCAL_ID_R02 = 'r02-cal';
+  });
+  afterEach(() => {
+    global.fetch = realFetch;
+    if (saved.shared === undefined) delete process.env.PRACTICE_ROOM_GCAL_ID; else process.env.PRACTICE_ROOM_GCAL_ID = saved.shared;
+    if (saved.r02 === undefined) delete process.env.PRACTICE_ROOM_GCAL_ID_R02; else process.env.PRACTICE_ROOM_GCAL_ID_R02 = saved.r02;
+  });
+
+  it('방별 캘린더에 없으면(404) 공용 캘린더에서 지운다 — 방별 env를 나중에 추가한 경우', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { deleteBookingEvent } = require('./gcal') as typeof import('./gcal');
+    const mock = jest.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: 'tok', expires_in: 3600 }) })
+      .mockResolvedValueOnce({ ok: false, status: 404 })
+      .mockResolvedValueOnce({ ok: true, status: 204 });
+    global.fetch = mock as unknown as typeof fetch;
+    await deleteBookingEvent('ev1', 'practice-room', 'R02');
+    expect(mock.mock.calls[1][0]).toContain('/calendars/r02-cal/events/ev1');
+    expect(mock.mock.calls[2][0]).toContain('/calendars/shared-cal/events/ev1');
+  });
+
+  it('첫 후보에서 지워지면 다음 후보는 부르지 않는다', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { deleteBookingEvent } = require('./gcal') as typeof import('./gcal');
+    const mock = jest.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: 'tok', expires_in: 3600 }) })
+      .mockResolvedValueOnce({ ok: true, status: 204 });
+    global.fetch = mock as unknown as typeof fetch;
+    await deleteBookingEvent('ev1', 'practice-room', 'R02');
+    expect(mock).toHaveBeenCalledTimes(2);
+  });
+
+  it('404가 아닌 실패는 throw', async () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { deleteBookingEvent } = require('./gcal') as typeof import('./gcal');
+    const mock = jest.fn()
+      .mockResolvedValueOnce({ ok: true, json: async () => ({ access_token: 'tok', expires_in: 3600 }) })
+      .mockResolvedValueOnce({ ok: false, status: 500 });
+    global.fetch = mock as unknown as typeof fetch;
+    await expect(deleteBookingEvent('ev1', 'practice-room', 'R02')).rejects.toThrow('캘린더 이벤트 삭제 실패: 500');
+  });
+});

@@ -6,7 +6,7 @@ import { bookings, orders, workOrders } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
-import { calendarForService, createBookingEvent, deleteBookingEvent } from '../../../../lib/booking/gcal';
+import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
 
 const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
@@ -210,6 +210,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const previousEventId = booking.gcalEventId;
       // 자원의 캘린더로 — 연습실을 녹음실 캘린더에 올리면 녹음 슬롯이 막힌다(gcal.ts).
       const calendar = calendarForService(booking.serviceType);
+      // confirm.ts와 같은 판정 — 캘린더가 비활성이면 등록 대상이 아니다(실패가 아니라 대상 아님).
+      if (!isCalendarActive(calendar, booking.roomNumber)) {
+        return res.status(409).json({ ok: false, message: '이 예약의 캘린더가 설정돼 있지 않아 등록 대상이 아닙니다(PRACTICE_ROOM_GCAL_ID).' });
+      }
 
       try {
         const eventId = await createBookingEvent({

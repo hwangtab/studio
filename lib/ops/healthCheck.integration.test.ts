@@ -211,6 +211,28 @@ describe('운영 점검', () => {
     }
   });
 
+  it('방별 env만 있는 구성에서도 그 방의 미등록 확정 예약을 잡는다', async () => {
+    delete process.env.PRACTICE_ROOM_GCAL_ID;
+    process.env.PRACTICE_ROOM_GCAL_ID_R02 = 'r02-cal';
+    try {
+      (fetchBusyRanges as jest.Mock).mockResolvedValue([]);
+      await insertOrder();
+      await insertBooking({ product_id: 'practice-room-hourly', service_type: 'practice-room', room_number: 'R02', gcal_event_id: null, gcal_error: 'create: 500' });
+      expect((await titles()).join()).toContain('구글 캘린더에 등록되지 않은 확정 예약 1건');
+    } finally {
+      delete process.env.PRACTICE_ROOM_GCAL_ID_R02;
+    }
+  });
+
+  it('캘린더가 비활성인 연습실 예약은 미등록으로 세지 않는다', async () => {
+    delete process.env.PRACTICE_ROOM_GCAL_ID;
+    delete process.env.PRACTICE_ROOM_GCAL_ID_R02;
+    (fetchBusyRanges as jest.Mock).mockResolvedValue([]);
+    await insertOrder();
+    await insertBooking({ product_id: 'practice-room-hourly', service_type: 'practice-room', room_number: 'R02', gcal_event_id: null, gcal_error: null });
+    expect((await titles()).join()).not.toContain('구글 캘린더에 등록되지 않은');
+  });
+
   it('연습실 캘린더 env가 없으면 연습실은 점검하지 않는다', async () => {
     delete process.env.PRACTICE_ROOM_GCAL_ID;
     (fetchBusyRanges as jest.Mock).mockResolvedValue([]);

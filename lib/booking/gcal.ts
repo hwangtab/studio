@@ -55,9 +55,11 @@ export const roomCalendarEnvKey = (room: string): string =>
 
 /**
  * 어느 캘린더 id인가. 연습실은 **방별 캘린더가 있으면 그것**, 없으면 공용
- * PRACTICE_ROOM_GCAL_ID. 방이 하나뿐이면 공용 하나로 충분하고, 방이 늘어 방마다 따로
- * 막고 싶으면 그 방의 env만 추가하면 된다 — 공용 캘린더의 일정은 방별 캘린더가 없는
- * 방에만 걸린다(자원 하나 = 캘린더 하나).
+ * PRACTICE_ROOM_GCAL_ID. 방이 하나뿐이면 공용 하나로 충분하다. 방이 둘 이상인데 공용만
+ * 있으면 공용 캘린더의 일정은 **그 방 전부**에 걸린다(방을 구분할 정보가 없다) — 방마다
+ * 따로 막으려면 방을 늘리기 **전에** 그 방의 env를 추가한다. 방별 캘린더가 있는 방은
+ * 공용을 보지 않는다(자원 하나 = 캘린더 하나). 방별 env를 나중에 추가해도 이전에 공용에
+ * 만든 이벤트는 삭제 시 후보 캘린더를 차례로 찾아 지운다(deleteBookingEvent).
  */
 export const calendarIdFor = (which: BookingCalendar, room?: string | null): string | null => {
   if (which === 'practice-room') {
@@ -129,14 +131,31 @@ export const createBookingEvent = async (input: {
   return (await res.json()).id as string;
 };
 
+/**
+ * 이벤트를 만들었을 수 있는 캘린더 id들 — 지금 해석되는 것 먼저, 그다음 같은 자원의 나머지.
+ * bookings는 이벤트 id만 저장하고 캘린더 id는 저장하지 않으므로, 확정 뒤 env가 바뀌면
+ * (방별 캘린더 추가 등) 옛 이벤트가 어디 있는지 재계산으로는 모른다. 삭제는 후보를 차례로
+ * 시도해 404가 아닌 곳에서 지운다.
+ */
+const candidateCalendarIds = (which: BookingCalendar, room?: string | null): string[] => {
+  const ids = [calendarIdFor(which, room)];
+  if (which === 'practice-room') ids.push(process.env.PRACTICE_ROOM_GCAL_ID || null);
+  return [...new Set(ids.filter((id): id is string => !!id))];
+};
+
 export const deleteBookingEvent = async (
   eventId: string, calendar: BookingCalendar, room?: string | null,
 ): Promise<void> => {
-  const id = calendarId(calendar, room);
+  const ids = candidateCalendarIds(calendar, room);
+  if (ids.length === 0) calendarId(calendar, room); // throw — env 없음
   const token = await getAccessToken();
-  const res = await fetch(
-    `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,
-    { method: 'DELETE', headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) },
-  );
-  if (!res.ok && res.status !== 404 && res.status !== 410) throw new Error(`캘린더 이벤트 삭제 실패: ${res.status}`);
+  for (const id of ids) {
+    const res = await fetch(
+      `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,
+      { method: 'DELETE', headers: { Authorization: `Bearer ${token}` }, signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) },
+    );
+    if (res.ok || res.status === 410) return;
+    if (res.status !== 404) throw new Error(`캘린더 이벤트 삭제 실패: ${res.status}`);
+  }
+  // 모든 후보에서 404 — 이미 지워졌거나 처음부터 없던 이벤트. 멱등하게 성공으로 본다.
 };
