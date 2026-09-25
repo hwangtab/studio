@@ -84,6 +84,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
   const { t } = useTranslation('common', { lng: locale });
   const {
     VAT_NOTICE,
+    SUMMARY_VAT_NOTICE,
     recordingOffers,
     mixingOffers,
     masteringOffers,
@@ -327,7 +328,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
               ))}
             </tbody>
           </table>
-          <p className="mt-4 typo-card-meta text-center">{VAT_NOTICE}</p>
+          <p className="mt-4 typo-card-meta text-center">{SUMMARY_VAT_NOTICE}</p>
         </div>
       </Section>
 

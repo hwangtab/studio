@@ -19,7 +19,7 @@ const faqData = {
   ko: [
     {
       question: '스튜디오 놀의 위치는 어디인가요?',
-      answer: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)에 위치해 있습니다. 지하철 6호선 불광역 7번 출구 또는 연신내역에서 도보 5분 거리입니다.',
+      answer: '서울특별시 은평구 대조동 84-3 3층(동명여고 바로 옆)에 위치해 있습니다. 지하철 3·6호선 연신내역 4번 출구에서 도보 5분, 6호선 불광역 7번 출구에서 도보 7분 거리입니다.',
     },
     {
       question: '녹음실 이용 요금은 얼마인가요?',
@@ -94,7 +94,7 @@ const faqData = {
   en: [
     {
       question: 'Where is Studio NOL located?',
-      answer: 'We are located at 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul. It is a 5-minute walk from Bulgwang Station (Exit 7) or Yeonsinnae Station on Line 6.',
+      answer: 'We are located at 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul. It is a 5-minute walk from Yeonsinnae Station (Lines 3 & 6, Exit 4) or a 7-minute walk from Bulgwang Station (Line 6, Exit 7).',
     },
     {
       question: 'How much is the recording studio fee?',
@@ -211,7 +211,7 @@ const faqData = {
   es: [
     {
       question: '¿Dónde está ubicado Studio NOL?',
-      answer: 'Estamos en el 3er piso, 84-3 Daejo-dong, Eunpyeong-gu, Seúl. A 5 minutos a pie de la estación Bulgwang (Salida 7) o la estación Yeonsinnae.',
+      answer: 'Estamos en el 3er piso, 84-3 Daejo-dong, Eunpyeong-gu, Seúl. A 5 minutos a pie de la estación Yeonsinnae (líneas 3 y 6, salida 4) o a 7 minutos de la estación Bulgwang (línea 6, salida 7).',
     },
     {
       question: '¿Cuánto cuesta el estudio de grabación?',
@@ -303,7 +303,7 @@ const faqData = {
   th: [
     {
       question: 'Studio NOL อยู่ที่ไหน?',
-      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 84-3 Daejo-dong, Eunpyeong-gu, Seoul (ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7 หรือสถานี Yeonsinnae',
+      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 84-3 Daejo-dong, Eunpyeong-gu, Seoul (ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Yeonsinnae (สาย 3·6) ทางออก 4 หรือ 7 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7',
     },
     {
       question: 'ค่าห้องอัดเท่าไหร่?',

@@ -106,3 +106,29 @@ describe('buildPricingPageSchema', () => {
     expect(additionalOffer).not.toHaveProperty('price');
   });
 });
+
+describe('per-offer priceValidUntil', () => {
+  it('an offer with its own validity date (intro price) overrides the page-wide default — so pricing and home agree', () => {
+    const schema = buildPricingPageSchema({
+      locale: 'ko',
+      siteUrl: 'https://studionol.co.kr',
+      pricingData: {
+        specialPackages: [],
+        recordingOffers: [],
+        mixingOffers: [],
+        masteringOffers: [],
+        additionalServices: [
+          { id: 'service-release-press', title: '음원 발매 홍보', priceDisplay: '300,000원', priceValue: 300000, priceValidUntil: '2026-12-31' },
+          { id: 'service-consulting', title: '컨설팅', priceDisplay: '50,000원', priceValue: 50000 },
+        ],
+      },
+      t,
+      priceValidUntil: '2027-06-30',
+    });
+    const graph = schema['@graph'] as Record<string, unknown>[];
+    const offerCatalog = graph[1] as { itemListElement: Array<{ itemListElement: Array<{ name: string; priceValidUntil: string }> }> };
+    const offers = offerCatalog.itemListElement.flatMap((c) => c.itemListElement);
+    expect(offers.find((o) => o.name === '음원 발매 홍보')?.priceValidUntil).toBe('2026-12-31');
+    expect(offers.find((o) => o.name === '컨설팅')?.priceValidUntil).toBe('2027-06-30');
+  });
+});

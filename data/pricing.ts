@@ -187,6 +187,19 @@ const tArray = (locale: Locale, dict: { ko: string[]; en: string[]; zh?: string[
 };
 
 export const getPricingData = (locale: Locale) => {
+  /**
+   * 요약 표 하단용 — 표에 연습실 월세(최종가)·시간제(VAT 포함)가 같이 실리므로 "모든 가격"이라
+   * 말하면 같은 표 안에서 모순이 된다(2026-09-25 감사). 상품군 카드 하단은 vatNotice 그대로.
+   */
+  const summaryVatNotice = t(locale, {
+    ko: '연습실(월 이용료·시간제) 외 가격은 VAT(부가가치세) 별도입니다.',
+    en: 'All prices exclude VAT, except the practice room (monthly and hourly).',
+    zh: '除音乐练习室（月费·按小时）外，所有价格均不含增值税 (VAT)。',
+    es: 'Todos los precios excluyen el IVA, salvo la sala de práctica (mensual y por hora).',
+    vi: 'Tất cả giá chưa bao gồm VAT, trừ phòng tập (theo tháng và theo giờ).',
+    th: 'ราคาทั้งหมดไม่รวม VAT ยกเว้นห้องซ้อม (รายเดือนและรายชั่วโมง)',
+    uz: "Mashq xonasi (oylik va soatlik) bundan mustasno, barcha narxlar VATsiz.",
+  });
   const vatNotice = t(locale, {
     ko: '모든 가격은 VAT(부가가치세) 별도입니다.',
     en: 'All prices exclude VAT.',
@@ -481,6 +494,8 @@ export const getPricingData = (locale: Locale) => {
         uz: `₩${formatPriceAmount(RELEASE_PRESS_INTRO_PRICE)}`,
       }),
       priceValue: RELEASE_PRESS_INTRO_PRICE,
+      /** 도입가는 이 날짜까지 — 홈 OfferCatalog(business.ts)와 같은 값. 없으면 +12개월 기본값이 붙어 페이지끼리 어긋난다. */
+      priceValidUntil: RELEASE_PRESS_INTRO_ENDS_ON,
       description: t(locale, {
         ko: '보도자료 5개 언어 작성, 프레스킷 페이지 제작, 국내 음악 매체와 해외 매체·라디오·레코드숍 발송, 전곡 이어듣기 영상, 발송 리포트까지. 심사를 통과한 음원만 진행합니다',
         en: 'Press release in five languages, a press kit page, outreach to Korean music outlets plus overseas press, radio and record shops, a full-album listening video, and a delivery report. We take on releases that pass our review.',
@@ -848,6 +863,7 @@ export const getPricingData = (locale: Locale) => {
 
   return {
     VAT_NOTICE: vatNotice,
+    SUMMARY_VAT_NOTICE: summaryVatNotice,
     recordingOffers,
     mixingOffers,
     masteringOffers,

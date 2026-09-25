@@ -52,7 +52,7 @@ export const LESSON_PER_SESSION_PRICE = LESSON_MONTHLY_PRICE / 4;
  * 항목을 추가/삭제하면 llms.ts·llms-full.ts 양쪽에 자동 반영된다.
  */
 export const PRICE_FACTS: string[] = [
-  `**Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts). Band rehearsal rooms are NOT operated.`,
+  `**Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month — **final price, no VAT added** (₩0 deposit, 50% off first month for 1-year contracts). Band rehearsal rooms are NOT operated.`,
   `**Practice Room Hourly**: ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour, **VAT included** (unlike the other prices here) — 1 to 8 hours, 24/7, self-service, same-day online booking`,
   `**Vocal Recording 1프로 (1-song package)**: ${krw(VOCAL_PACKAGE_PRICE)} KRW (3 hours, dedicated engineer included)`,
   `**Hourly Recording (voice acting / instrument / corrections)**: ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours)`,

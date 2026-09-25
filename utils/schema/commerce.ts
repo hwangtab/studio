@@ -129,6 +129,8 @@ export const generatePracticeRoomMonthlyRentSchema = (
         price: PRACTICE_ROOM_MONTHLY_PRICE,
         priceCurrency: 'KRW',
         unitCode: 'MON',
+        // 월 이용료 36만원은 최종가 — VAT를 따로 붙이지 않는다(#47).
+        valueAddedTaxIncluded: true,
         unitText: locale === 'ko' ? '월'
           : locale === 'zh' ? '月'
           : locale === 'es' ? 'mes'
