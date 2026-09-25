@@ -649,3 +649,66 @@ describe('곧 자동 종료되는 정지 구독', () => {
     expect(await issue()).toBeUndefined();
   });
 });
+
+/**
+ * 자동 재개 안내가 나가지 못하면 그 구독은 예고 없이 청구된다 — 발송은 매일 재시도되므로
+ * 하루 이틀 밀린 것은 알리지 않고, **예고가 실제로 깨지는 시점**부터 올린다.
+ */
+describe('자동 재개 안내가 나가지 못한 구독', () => {
+  /**
+   * 두 크론의 실제 시각을 그대로 쓴다 — 이 경보가 한 번 놓쳤던 것이 **한 시간 차이**였다.
+   * 청구(재개·안내 발송)는 09:00 KST, 이 점검은 08:00 KST에 돈다(`vercel.json`).
+   */
+  const CHARGE_CRON = (day: string) => new Date(`${day}T00:00:00Z`); // 09:00 KST
+  const HEALTH_CRON = (day: string) => new Date(`${day}T23:00:00Z`); // 다음 날 08:00 KST
+
+  /** 정지 기한이 끝나 D+0 09:00에 재개됐고, 최소 예고 바닥이라 첫 청구가 D+3 09:00인 구독. */
+  const seedFloorCase = async (status = 'active') => {
+    await client.execute({
+      sql: `INSERT INTO subscriptions (id, kind, customer_name, customer_phone, customer_email,
+              customer_key, manage_token, item_amount, vat_amount, total_amount, billing_day,
+              status, next_billing_at, resume_notice_pending_at, created_at, updated_at)
+            VALUES ('rn-1','lesson','최재개','010-3','r@q.r','sub_r','rtok',300000,30000,330000,5,?,?,?,?,?)`,
+      args: [
+        status,
+        EPOCH('2026-09-04T00:00:00Z'), // 첫 청구 D+3 09:00 KST
+        EPOCH('2026-09-01T00:00:00Z'), // 재개 D+0 09:00 KST
+        EPOCH('2026-09-01T00:00:00Z'),
+        EPOCH('2026-09-01T00:00:00Z'),
+      ],
+    });
+  };
+
+  const issueAt = async (at: Date) =>
+    (await runHealthCheck(at)).issues.find((i) => i.title.includes('자동 재개 안내가 나가지 못한'));
+
+  /**
+   * **이 경보를 만든 이유가 이 경우다.** 기준을 `MIN_RESUME_NOTICE_DAYS`(3일)로 잡았을 때는
+   * D+3 08:00 점검에서 표시(D+0 09:00)가 기준선(D+0 08:00)보다 한 시간 뒤라 걸리지 않았고,
+   * 한 시간 뒤 09:00 청구가 그대로 긁었다.
+   */
+  it('최소 예고 바닥 구독도 첫 청구 전에 뜬다 — D+2 08:00, 청구는 D+3 09:00', async () => {
+    await seedFloorCase();
+    const found = await issueAt(HEALTH_CRON('2026-09-02')); // D+2 08:00 KST
+    expect(found).toBeDefined();
+    expect(found!.severity).toBe('high');
+    expect(found!.detail).toContain('rn-1');
+    // 경보가 뜬 시각이 청구(D+3 09:00)보다 앞이다.
+    expect(HEALTH_CRON('2026-09-02').getTime()).toBeLessThan(CHARGE_CRON('2026-09-04').getTime());
+  });
+
+  it('D+3 08:00에도 여전히 떠 있다 — 청구 한 시간 전까지 꺼지지 않는다', async () => {
+    await seedFloorCase();
+    expect(await issueAt(HEALTH_CRON('2026-09-03'))).toBeDefined();
+  });
+
+  it('재개 당일 저녁(D+1 08:00)에는 아직 뜨지 않는다 — 그날 아침 재시도가 남아 있다', async () => {
+    await seedFloorCase();
+    expect(await issueAt(HEALTH_CRON('2026-09-01'))).toBeUndefined();
+  });
+
+  it('다시 정지·해지된 구독은 보고하지 않는다 — 청구가 오지 않는다', async () => {
+    await seedFloorCase('paused');
+    expect(await issueAt(HEALTH_CRON('2026-09-03'))).toBeUndefined();
+  });
+});

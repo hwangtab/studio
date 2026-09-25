@@ -396,6 +396,56 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * 자동 재개 안내가 나가지 못하고 있다 — **예고 없는 청구로 이어진다.**
+   *
+   * 정지 기한이 끝나 자동 재개된 구독은 다음 정기 청구일에 청구된다. 그 날짜를 적은 안내
+   * 메일이 청구보다 먼저 나가는 것이 "예고 없이 카드를 긁지 않는다"의 전부다
+   * (`lib/billing/service.ts`의 `resumeExpiredPauses`). 발송은 매일 재시도되지만,
+   * 계속 실패하면 첫 청구일이 그대로 온다.
+   *
+   * ## 기준이 하루인 이유 — **크론 두 개의 시각 차까지 계산에 넣는다**
+   *
+   * 처음엔 `MIN_RESUME_NOTICE_DAYS`(3일)로 잡았는데, 그러면 **정작 가장 위험한 경우에만
+   * 안 떴다.** 이 점검은 08:00 KST, 청구는 09:00 KST에 돈다(`vercel.json`). 최소 예고
+   * 바닥에 걸려 첫 청구가 재개 +3일인 구독은 표시가 D+0 09:00에 찍히므로, D+3 08:00
+   * 점검에서 기준선(D+0 08:00)보다 **한 시간 뒤**라 걸리지 않는다. 한 시간 뒤 09:00 청구가
+   * 그대로 긁고, 성공하면 표시가 지워져 경보는 영영 안 뜬다.
+   *
+   * 하루로 잡으면 산수가 닫힌다. 표시 시각을 T라 하면 첫 청구는 아무리 빨라도 T+3일이고
+   * (`MIN_RESUME_NOTICE_DAYS`), 이 점검은 매일 돌므로 T+1일을 넘는 첫 실행은 늦어도
+   * T+2일이다. **청구까지 최소 하루가 남는다.** 그 시점이면 첫 발송과 다음 날 재시도가
+   * 둘 다 실패한 뒤라 일시적 오류로 보기도 어렵다.
+   *
+   * 심각도가 `high`인 이유는 남은 수습 수단이 사람뿐이기 때문이다(운영자가 직접 연락하거나
+   * 다시 정지한다).
+   */
+  const RESUME_NOTICE_STALE_DAYS = 1;
+  const staleResumeNotices = await db
+    .select({ id: subscriptions.id, nextBillingAt: subscriptions.nextBillingAt })
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.status, 'active'),
+        isNotNull(subscriptions.resumeNoticePendingAt),
+        lt(subscriptions.resumeNoticePendingAt, new Date(now.getTime() - RESUME_NOTICE_STALE_DAYS * 24 * 60 * 60 * 1000)),
+      ),
+    );
+
+  if (staleResumeNotices.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/subscriptions',
+      title: `자동 재개 안내가 나가지 못한 구독 ${staleResumeNotices.length}건 — 예고 없이 청구됩니다`,
+      detail: [
+        `구독 id: ${sample(staleResumeNotices.map((row) => row.id))}`,
+        '정지 기한이 끝나 자동으로 재개됐지만 "다음 결제 예정일" 안내 메일이 계속 실패하고 있습니다. '
+          + '청구 크론이 매일 다시 시도하는데도 남아 있다는 뜻입니다.',
+        '고객에게 직접 알리거나, 지금은 청구하지 않아야 하면 관리자 > 구독 상세에서 다시 정지해 주세요.',
+      ].join('\n'),
+    });
+  }
+
+  /**
    * 운영자가 세워 둔 구독이 곧 방치로 자동 종료된다 — **되돌릴 수 없는 유일한 전이**다.
    *
    * `closeDormantSubscriptions`(`lib/privacy/orderRetention.ts`)는 3년 넘게 아무 활동이 없는
@@ -424,6 +474,15 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    *
    * **고객 이름·연락처는 싣지 않는다.** 운영자가 갈 곳(구독 id)만 있으면 되고, 메일 본문에
    * 평문 개인정보를 늘릴 이유가 없다.
+   *
+   * ## `paused_until`이 생긴 뒤에도 이 경보를 남겨 두는 이유
+   *
+   * 이제 운영자 정지는 만료일을 필수로 받고 그날 `resumeExpiredPauses`가 되돌리므로
+   * (`lib/billing/service.ts`), 새로 만들어지는 정지가 3년 방치에 닿는 일은 사실상 없다.
+   * 그래도 남는 길이 둘이다 — 만료일 없이 세워진 **옛 행**, 그리고 자동 재개가 계속 실패해
+   * 정지가 풀리지 않는 경우(그 실패는 청구 cron 요약 메일로도 뜨지만, 메일 한 통을 놓치면
+   * 여기가 다시 유일한 방어다). 자동화가 생겼다고 마지막 방어를 걷으면 그 자동화가 멈춘
+   * 날에 예전 사고가 그대로 돌아온다.
    */
   const dormancyWarning = await db
     .select({ id: subscriptions.id, pausedReason: subscriptions.pausedReason })

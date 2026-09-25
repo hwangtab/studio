@@ -855,6 +855,40 @@ export const subscriptions = sqliteTable('subscriptions', {
    */
   pausedReason: text('paused_reason', { enum: subscriptionPausedReasonEnum }),
   /**
+   * 운영자 정지가 **언제 끝나는가.** `pausedReason = 'operator'`일 때만 채워진다.
+   *
+   * 이 값이 생긴 이유는 "기한 없는 정지"가 되돌릴 수 없는 종료로 끝나기 때문이다. 운영자가
+   * 세워 둔 구독은 어떤 코드도 깨우지 않아서, 3년이 지나면 `closeDormantSubscriptions`가
+   * 방치로 보고 `ended`로 닫는다 — `resumeSubscription`은 `paused`만 받으므로 그 뒤에는
+   * 되살릴 길이 없다. 날짜를 함께 받으면 그 상태가 애초에 생기지 않는다.
+   *
+   * 이 시각이 지나면 `resumeExpiredPauses`(`lib/billing/service.ts`)가 매일 도는 청구
+   * cron에서 구독을 `active`로 되돌리고 이 칸을 비운다. **비우는 것이 멱등의 근거다** —
+   * 같은 구독이 두 번 재개되지 않는다.
+   *
+   * NULL의 뜻은 둘이다: 정지가 아니거나(대부분의 행), 이 컬럼이 생기기 전에 세워진
+   * 운영자 정지다. 뒤쪽은 예전과 똑같이 방치 경보(`lib/ops/healthCheck.ts`)가 맡는다 —
+   * 새 정지에만 기한을 강제하고 옛 행을 건드리지 않는 쪽이, 운영자가 모르는 사이에
+   * 임의의 날짜가 붙어 자동 재개가 도는 것보다 안전하다.
+   */
+  pausedUntil: integer('paused_until', { mode: 'timestamp' }),
+  /**
+   * 자동 재개 안내를 **아직 보내지 못했다**는 표시. 보낸 시각이 아니라 밀린 일감이다.
+   *
+   * `resumeExpiredPauses`가 재개하면서 그 순간을 적고, 안내 메일이 성공하면 비운다.
+   * 비어 있는 것이 정상이다.
+   *
+   * 이 칸이 없을 때는 재개 UPDATE가 먼저 커밋되고 메일은 한 번만 시도했다 — 실패하면
+   * 다음 날 cron이 그 구독을 후보로 집지 않아(기한은 비었고 상태는 `active`) **재시도 경로가
+   * 통째로 없었다.** 한 달 뒤 고객은 예고 없이 청구를 맞고, 흔적은 `notificationError` 한
+   * 줄뿐이다. 그 한 줄은 운영자가 그날 읽어야 작동하는 방어인데, 이 기능이 없애려던 것이
+   * 바로 그 종류의 방어다.
+   *
+   * 재개와 같은 UPDATE에서 적으므로 "재개는 됐는데 표시가 없다"는 조합은 생기지 않는다.
+   * 며칠째 남아 있으면 헬스체크가 높은 심각도로 올린다(`lib/ops/healthCheck.ts`).
+   */
+  resumeNoticePendingAt: integer('resume_notice_pending_at', { mode: 'timestamp' }),
+  /**
    * 현재 유효한 카드. billing_keys가 subscriptions를 참조하므로 여기서 FK를 걸면
    * 순환 참조가 된다 — 값은 billing_keys.id이고 무결성은 서비스 계층이 지킨다.
    */

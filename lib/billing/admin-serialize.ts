@@ -16,6 +16,8 @@ export type SerializedSubscription = {
 
 export const serializeSubscription = (sub: Subscription): SerializedSubscription => ({
   ...sub,
+  pausedUntil: iso(sub.pausedUntil),
+  resumeNoticePendingAt: iso(sub.resumeNoticePendingAt),
   nextBillingAt: iso(sub.nextBillingAt),
   currentPeriodStart: iso(sub.currentPeriodStart),
   currentPeriodEnd: iso(sub.currentPeriodEnd),

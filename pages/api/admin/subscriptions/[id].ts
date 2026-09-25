@@ -10,9 +10,11 @@ import {
   findSubscriptionById,
   getSubscriptionWithDetails,
   issueCardChangeToken,
+  MAX_PAUSE_DAYS,
   pauseSubscription,
   resumeSubscription,
 } from '../../../../lib/billing/service';
+import { parseKstDate } from '../../../../lib/billing/schedule';
 import {
   sendSubscriptionCancelledEmail,
   sendSubscriptionChargedEmail,
@@ -191,11 +193,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     if (action === 'pause') {
-      const result = await pauseSubscription(id, now);
+      // 정지 기한은 **필수**다 — 기한 없는 정지가 3년 뒤 되돌릴 수 없는 종료로 끝나는 것이
+      // 이 값을 받는 이유다(lib/billing/service.ts의 pauseSubscription 주석).
+      const rawPausedUntil = typeof req.body?.pausedUntil === 'string' ? req.body.pausedUntil : '';
+      const pausedUntil = rawPausedUntil === '' ? null : parseKstDate(rawPausedUntil);
+      if (!pausedUntil) {
+        return res.status(400).json({ ok: false, message: '정지 종료일을 YYYY-MM-DD 형식으로 입력해 주세요.' });
+      }
+      const result = await pauseSubscription(id, { pausedUntil }, now);
       if (!result.ok) {
-        return res
-          .status(result.code === 'not_found' ? 404 : 409)
-          .json({ ok: false, message: result.code === 'not_found' ? '구독을 찾을 수 없습니다.' : '지금 상태에서는 일시정지할 수 없습니다.' });
+        if (result.code === 'not_found') return res.status(404).json({ ok: false, message: '구독을 찾을 수 없습니다.' });
+        if (result.code === 'invalid_pause_until') {
+          return res
+            .status(400)
+            .json({ ok: false, message: `정지 종료일은 내일 이후, ${MAX_PAUSE_DAYS}일 이내로 정해 주세요.` });
+        }
+        return res.status(409).json({ ok: false, message: '지금 상태에서는 일시정지할 수 없습니다.' });
       }
       return res.status(200).json({ ok: true });
     }

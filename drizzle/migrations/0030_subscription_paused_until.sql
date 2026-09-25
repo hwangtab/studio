@@ -1,0 +1,1 @@
+ALTER TABLE `subscriptions` ADD `paused_until` integer;
