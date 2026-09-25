@@ -861,6 +861,22 @@ export const subscriptions = sqliteTable('subscriptions', {
    */
   pausedUntil: integer('paused_until', { mode: 'timestamp' }),
   /**
+   * 자동 재개 안내를 **아직 보내지 못했다**는 표시. 보낸 시각이 아니라 밀린 일감이다.
+   *
+   * `resumeExpiredPauses`가 재개하면서 그 순간을 적고, 안내 메일이 성공하면 비운다.
+   * 비어 있는 것이 정상이다.
+   *
+   * 이 칸이 없을 때는 재개 UPDATE가 먼저 커밋되고 메일은 한 번만 시도했다 — 실패하면
+   * 다음 날 cron이 그 구독을 후보로 집지 않아(기한은 비었고 상태는 `active`) **재시도 경로가
+   * 통째로 없었다.** 한 달 뒤 고객은 예고 없이 청구를 맞고, 흔적은 `notificationError` 한
+   * 줄뿐이다. 그 한 줄은 운영자가 그날 읽어야 작동하는 방어인데, 이 기능이 없애려던 것이
+   * 바로 그 종류의 방어다.
+   *
+   * 재개와 같은 UPDATE에서 적으므로 "재개는 됐는데 표시가 없다"는 조합은 생기지 않는다.
+   * 며칠째 남아 있으면 헬스체크가 높은 심각도로 올린다(`lib/ops/healthCheck.ts`).
+   */
+  resumeNoticePendingAt: integer('resume_notice_pending_at', { mode: 'timestamp' }),
+  /**
    * 현재 유효한 카드. billing_keys가 subscriptions를 참조하므로 여기서 FK를 걸면
    * 순환 참조가 된다 — 값은 billing_keys.id이고 무결성은 서비스 계층이 지킨다.
    */

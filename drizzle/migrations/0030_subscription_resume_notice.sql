@@ -1,0 +1,1 @@
+ALTER TABLE `subscriptions` ADD `resume_notice_pending_at` integer;

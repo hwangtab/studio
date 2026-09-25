@@ -211,6 +211,13 @@
       "when": 1790299677185,
       "tag": "0029_subscription_paused_until",
       "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "6",
+      "when": 1790301239364,
+      "tag": "0030_subscription_resume_notice",
+      "breakpoints": true
     }
   ]
 }
