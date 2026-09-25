@@ -539,21 +539,6 @@ export const fundingCreators = sqliteTable('funding_creators', {
    */
   payoutAccountLast4: text('payout_account_last4'),
   /**
-   * @deprecated 평문 계좌 컬럼. **읽지도 쓰지도 마라** — 위 두 컬럼이 정본이다.
-   *
-   * 남겨 둔 이유는 배포 순서다. 이 저장소는 마이그레이션을 먼저 적용하고 코드를 나중에
-   * 배포하는데(CLAUDE.md), 컬럼을 지우면 그 사이에 도는 옛 코드가 없는 컬럼을 읽어
-   * 개설자 화면과 정산 미리보기가 깨진다. 운영 DB에 `funding_creators`가 0행이라 지켜야 할
-   * 값이 없으므로 마이그레이션이 세 컬럼을 NULL로 비우고, 코드는 더 이상 이 이름들을
-   * 참조하지 않는다(`lib/funding/payoutPlaintextColumns.test.ts`가 그것을 고정한다).
-   * 이 판을 배포한 뒤 별도 마이그레이션으로 지우면 된다.
-   */
-  payoutBankName: text('payout_bank_name'),
-  /** @deprecated `payoutAccountEnc`로 대체됐다. 위 주석 참고. */
-  payoutAccount: text('payout_account'),
-  /** @deprecated `payoutAccountEnc`로 대체됐다. 위 주석 참고. */
-  payoutHolder: text('payout_holder'),
-  /**
    * 주민등록번호 — **암호화한 문자열만** 들어간다(`lib/crypto/fieldCrypto.ts`,
    * 새로 쓰는 것은 `v2:<keyId>:<iv>:<tag>:<ct>`, 이미 저장된 `v1:<iv>:<tag>:<ct>`도 읽는다). 평문 컬럼도, 생년월일만 떼어 둔 표시용 컬럼도 만들지 않는다 —
    * 일부를 평문으로 두면 암호화의 의미가 준다. 화면은 등록 여부만 안다.
