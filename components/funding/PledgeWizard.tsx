@@ -7,7 +7,7 @@ import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/u
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
-import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
+import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
 import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, TextArea, TextInput } from '../ui/Field';
@@ -422,12 +422,12 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Field id={`${uid}-name`} label="이름" required>
-              <TextInput required value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
+              <TextInput required maxLength={PLEDGE_TEXT_LIMITS.customerName} value={form.customerName} onChange={(e) => setForm({ ...form, customerName: e.target.value })} />
             </Field>
           </div>
           <div>
             <Field id={`${uid}-phone`} label="연락처" required>
-              <TextInput required inputMode="tel" value={form.customerPhone} onChange={(e) => setForm({ ...form, customerPhone: e.target.value })} />
+              <TextInput required inputMode="tel" maxLength={PLEDGE_TEXT_LIMITS.customerPhone} value={form.customerPhone} onChange={(e) => setForm({ ...form, customerPhone: e.target.value })} />
             </Field>
           </div>
           <div className="sm:col-span-2">
@@ -444,32 +444,32 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <Field id={`${uid}-sname`} label="받는 분" required>
-                  <TextInput required value={ship.name} onChange={(e) => setShip({ ...ship, name: e.target.value })} />
+                  <TextInput required maxLength={PLEDGE_TEXT_LIMITS.shippingName} value={ship.name} onChange={(e) => setShip({ ...ship, name: e.target.value })} />
                 </Field>
               </div>
               <div>
                 <Field id={`${uid}-sphone`} label="받는 분 연락처" required>
-                  <TextInput required inputMode="tel" value={ship.phone} onChange={(e) => setShip({ ...ship, phone: e.target.value })} />
+                  <TextInput required inputMode="tel" maxLength={PLEDGE_TEXT_LIMITS.shippingPhone} value={ship.phone} onChange={(e) => setShip({ ...ship, phone: e.target.value })} />
                 </Field>
               </div>
               <div>
                 <Field id={`${uid}-post`} label="우편번호" required>
-                  <TextInput required inputMode="numeric" value={ship.postcode} onChange={(e) => setShip({ ...ship, postcode: e.target.value })} />
+                  <TextInput required inputMode="numeric" maxLength={PLEDGE_TEXT_LIMITS.shippingPostcode} value={ship.postcode} onChange={(e) => setShip({ ...ship, postcode: e.target.value })} />
                 </Field>
               </div>
               <div>
                 <Field id={`${uid}-addr1`} label="주소" required>
-                  <TextInput required value={ship.address1} onChange={(e) => setShip({ ...ship, address1: e.target.value })} />
+                  <TextInput required maxLength={PLEDGE_TEXT_LIMITS.shippingAddress1} value={ship.address1} onChange={(e) => setShip({ ...ship, address1: e.target.value })} />
                 </Field>
               </div>
               <div>
                 <Field id={`${uid}-addr2`} label="상세주소">
-                  <TextInput value={ship.address2} onChange={(e) => setShip({ ...ship, address2: e.target.value })} />
+                  <TextInput maxLength={PLEDGE_TEXT_LIMITS.shippingAddress2} value={ship.address2} onChange={(e) => setShip({ ...ship, address2: e.target.value })} />
                 </Field>
               </div>
               <div>
                 <Field id={`${uid}-memo`} label="배송 메모">
-                  <TextInput value={ship.memo} onChange={(e) => setShip({ ...ship, memo: e.target.value })} />
+                  <TextInput maxLength={PLEDGE_TEXT_LIMITS.shippingMemo} value={ship.memo} onChange={(e) => setShip({ ...ship, memo: e.target.value })} />
                 </Field>
               </div>
             </div>
@@ -478,7 +478,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
 
         <div className="mt-5">
           <Field id={`${uid}-msg`} label="응원 메시지" hint="선택 항목입니다. 아래 공개에 동의하시면 프로젝트 페이지에 이름과 함께 표시됩니다.">
-            <TextArea rows={3} className="min-h-0" maxLength={500} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
+            <TextArea rows={3} className="min-h-0" maxLength={PLEDGE_TEXT_LIMITS.supporterMessage} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
           </Field>
         </div>
 

@@ -4,6 +4,26 @@ export const TOSS_HOLD_SECONDS = 900;
 export const MAX_QUANTITY = 10;
 export const MAX_ADDITIONAL_AMOUNT = 5_000_000;
 export const ADDITIONAL_AMOUNT_STEP = 1000;
+
+/**
+ * 후원 폼 텍스트 칸의 글자수 상한 — **서버 검증과 클라이언트 maxLength가 같은 값을 본다.**
+ *
+ * 예전에는 서버가 상한을 넘은 선택 필드를 조용히 버리고 201을 돌려줬고, 상세주소·배송
+ * 메모 칸에는 클라이언트 maxLength도 없었다. 브라우저를 정상적으로 쓰다가 긴 배송 지시를
+ * 적으면 주문은 성공하는데 그 지시만 사라졌다 — 개설자 배송 목록·CSV에서 보이지 않는다.
+ * 두 쪽이 같은 상수를 읽어야 "칸에 들어간 것은 반드시 저장된다"가 성립한다.
+ */
+export const PLEDGE_TEXT_LIMITS = {
+  customerName: 50,
+  customerPhone: 30,
+  supporterMessage: 500,
+  shippingName: 50,
+  shippingPhone: 30,
+  shippingPostcode: 10,
+  shippingAddress1: 200,
+  shippingAddress2: 200,
+  shippingMemo: 200,
+} as const;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
 /**
  * 정산 시점 — 모금 마감으로부터 이 영업일 수 뒤. 운영자 결정(2026-09-23).
