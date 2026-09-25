@@ -116,6 +116,43 @@ describe('createFundingPledge', () => {
     expect(second).toEqual({ ok: false, code: 'sold_out' });
   });
 
+  /**
+   * 품절로 진 요청이 주문 행을 남기면 pledge 없는 pending 주문이 된다 — expireStalePledges도
+   * 관리자 목록도 healthCheck도 funding_pledges 조인이라 그 행은 닫히지도 보이지도 않는다.
+   * 주문 INSERT에도 같은 재고 조건을 실어 세 문장이 함께 0행이 되게 한다.
+   */
+  it('품절로 졌으면 orders에도 행이 남지 않는다', async () => {
+    const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
+    const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'o1@example.com' }), PROJECT, reward('cd'), NOW);
+    expect(first.ok).toBe(true);
+    const second = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'o2@example.com', customerPhone: '010-7' }), PROJECT, reward('cd'), NOW);
+    expect(second).toEqual({ ok: false, code: 'sold_out' });
+
+    const rows = await client.execute('SELECT COUNT(*) AS n FROM orders');
+    expect(Number(rows.rows[0].n)).toBe(1); // 이긴 주문 하나뿐
+    const orphan = await client.execute(
+      'SELECT COUNT(*) AS n FROM orders o WHERE NOT EXISTS (SELECT 1 FROM funding_pledges fp WHERE fp.order_id = o.id)',
+    );
+    expect(Number(orphan.rows[0].n)).toBe(0);
+  });
+
+  /**
+   * 자기 홀드 해제와 재취득이 한 트랜잭션이 아니면, 그 사이 남이 마지막 하나를 가져갔을 때
+   * 후원자가 멀쩡한 자기 홀드까지 잃는다. 해제 UPDATE에 "자기 홀드를 뺀" 재고 조건을 걸어
+   * 셋이 함께 0행이 되게 한다.
+   */
+  it('재취득이 품절이면 기존 홀드가 살아 있다', async () => {
+    const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
+    const mine = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), NOW);
+    if (!mine.ok) throw new Error();
+    // 한정 1개짜리를 내가 잡고 있는 상태에서, 수량을 2로 올려 재제출한다 — 해제해도 자리가 없다.
+    const again = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, quantity: 2 }), PROJECT, reward('cd'), NOW, {
+      releaseOrderNo: mine.orderNo,
+    });
+    expect(again).toEqual({ ok: false, code: 'sold_out' });
+    expect((await findFundingOrderByOrderNo(mine.orderNo))?.status).toBe('pending');
+  });
+
   it('홀드가 지난 pending은 재고를 잡지 않는다', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
     await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), new Date(NOW.getTime() - 1000 * 1000));
