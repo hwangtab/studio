@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
@@ -30,6 +30,7 @@ export interface AdminNavItem {
 /**
  * 상단 바의 구역. 순서는 쓰는 빈도가 아니라 업무 흐름을 따른다 —
  * 계약을 맺고(계약) → 일을 받고(예약·믹싱) → 모으고(펀딩) → 매달 청구한다(구독) → 아티스트에게 지급한다(아티스트).
+ * 접속기록은 업무가 아니라 그 업무를 되돌아보는 자리라 맨 뒤다.
  */
 export const ADMIN_NAV: readonly AdminNavItem[] = [
   { href: '/admin', label: '대시보드' },
@@ -38,6 +39,7 @@ export const ADMIN_NAV: readonly AdminNavItem[] = [
   { href: '/admin/funding', label: '펀딩' },
   { href: '/admin/subscriptions', label: '구독' },
   { href: '/admin/artists', label: '아티스트' },
+  { href: '/admin/privacy-logs', label: '접속기록' },
 ] as const;
 
 /**
@@ -91,6 +93,28 @@ export const AdminShell = ({
     await router.replace('/admin/login');
   };
 
+  /**
+   * 지금 누구로 들어와 있는가.
+   *
+   * 비밀번호가 사람마다 달라졌으니(`lib/contracts/admin-accounts.ts`) 내가 누구로 보이는지가
+   * 화면에 있어야 한다 — 개인정보 조회가 내 이름으로 기록된다는 것을 보는 자리이기도 하다.
+   * 관리자 페이지 15곳의 GSSP에 prop을 하나씩 내리는 대신 껍데기가 한 번 물어본다.
+   * 실패하면 아무것도 띄우지 않는다(이 값 때문에 화면이 깨질 이유가 없다).
+   */
+  const [adminName, setAdminName] = useState<string | null>(null);
+  useEffect(() => {
+    let alive = true;
+    fetch('/api/admin/auth', { credentials: 'same-origin' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body) => {
+        if (alive && body?.ok && typeof body.name === 'string') setAdminName(body.name);
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:text-gray-900">
       {/*
@@ -126,6 +150,12 @@ export const AdminShell = ({
               })}
             </ul>
           </nav>
+
+          {adminName && (
+            <span className="shrink-0 text-sm text-gray-600 hidden sm:inline" data-testid="admin-current-user">
+              {adminName}
+            </span>
+          )}
 
           <Button light variant="ghost" size="sm" className="shrink-0" onClick={handleLogout}>
             로그아웃

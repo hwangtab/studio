@@ -18,14 +18,19 @@ jest.mock('./contractActions', () => ({ logoutAdmin: () => logoutAdmin() }));
 // eslint-disable-next-line import/first
 import { AdminShell, ADMIN_NAV, activeAdminNavHref } from './AdminShell';
 
+const fetchMock = jest.fn();
+
 beforeEach(() => {
   jest.clearAllMocks();
   pathname = '/admin';
+  // 셸이 마운트 때 "지금 누구로 들어와 있는가"를 한 번 묻는다.
+  fetchMock.mockResolvedValue({ ok: true, json: async () => ({ ok: true, id: 'kyungha', name: '황경하' }) });
+  (global as unknown as { fetch: jest.Mock }).fetch = fetchMock;
 });
 
 const nav = () => screen.getByRole('navigation', { name: '관리자 구역' });
 
-it('어느 화면에서든 여섯 구역과 로그아웃에 닿는다', () => {
+it('어느 화면에서든 모든 구역과 로그아웃에 닿는다', () => {
   pathname = '/admin/contracts/[id]/edit';
   render(<AdminShell title="계약 수정">본문</AdminShell>);
 
@@ -102,4 +107,22 @@ describe('activeAdminNavHref', () => {
     // '/admin/contractsX'는 '/admin/contracts'로 시작하지만 다른 경로다.
     expect(activeAdminNavHref('/admin/contractsX')).toBe('/admin');
   });
+});
+
+/**
+ * 비밀번호가 사람마다 달라졌으니(lib/contracts/admin-accounts.ts) 내가 누구로 보이는지가
+ * 화면에 있어야 한다 — 개인정보 조회가 내 이름으로 기록된다는 것을 보는 자리다.
+ * GSSP prop이 아니라 GET /api/admin/auth 한 번으로 가져온다.
+ */
+it('지금 로그인한 사람의 이름을 띄운다', async () => {
+  render(<AdminShell title="대시보드">본문</AdminShell>);
+  expect(await screen.findByTestId('admin-current-user')).toHaveTextContent('황경하');
+  expect(fetchMock).toHaveBeenCalledWith('/api/admin/auth', { credentials: 'same-origin' });
+});
+
+it('이름을 얻지 못해도 화면은 그대로다', async () => {
+  fetchMock.mockResolvedValue({ ok: false, json: async () => ({ ok: false }) });
+  render(<AdminShell title="대시보드">본문</AdminShell>);
+  expect(await screen.findByRole('button', { name: '로그아웃' })).toBeInTheDocument();
+  expect(screen.queryByTestId('admin-current-user')).not.toBeInTheDocument();
 });

@@ -38,6 +38,8 @@ import {
 } from './accessLog';
 // eslint-disable-next-line import/first
 import { purgeExpiredFundingPersonalData } from '../funding/retention';
+// eslint-disable-next-line import/first
+import { listPrivacyAccessActors, listPrivacyAccessLogs } from './accessLogQuery';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -297,5 +299,62 @@ describe('다운로드 건수', () => {
     expect(dump).not.toContain('김후원');
     expect(dump).not.toContain('010-1111-2222');
     expect(dump).toContain('"rowCount":3');
+  });
+});
+
+/**
+ * 읽는 경로. 기록만 쌓이고 볼 길이 없으면 사람별로 나눈 효과를 확인할 수 없다.
+ */
+describe('접속기록 조회', () => {
+  const seed = async () => {
+    const entries = [
+      { actor: 'kyungha', action: 'funding_resident_number_view' as const, at: new Date('2026-09-20T00:00:00Z') },
+      { actor: 'jina', action: 'funding_payout_account_view' as const, at: new Date('2026-09-21T00:00:00Z') },
+      { actor: 'kyungha', action: 'funding_payout_account_view' as const, at: new Date('2026-09-22T00:00:00Z') },
+    ];
+    for (const e of entries) {
+      await recordPrivacyAccess({ ...e, targetId: 'proj-1', result: 'success', ip: null });
+    }
+  };
+
+  it('최신순으로 돌려준다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs();
+    expect(rowsOut.map((r) => r.at)).toEqual([
+      '2026-09-22T00:00:00.000Z',
+      '2026-09-21T00:00:00.000Z',
+      '2026-09-20T00:00:00.000Z',
+    ]);
+  });
+
+  it('수행자로 거른다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs({ actor: 'jina' });
+    expect(rowsOut).toHaveLength(1);
+    expect(rowsOut[0].actor).toBe('jina');
+  });
+
+  it('행위로 거른다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs({ action: 'funding_payout_account_view' });
+    expect(rowsOut.map((r) => r.actor).sort()).toEqual(['jina', 'kyungha']);
+  });
+
+  it('둘을 함께 걸면 둘 다 맞는 행만 남는다', async () => {
+    await seed();
+    const rowsOut = await listPrivacyAccessLogs({ actor: 'kyungha', action: 'funding_payout_account_view' });
+    expect(rowsOut).toHaveLength(1);
+    expect(rowsOut[0].at).toBe('2026-09-22T00:00:00.000Z');
+  });
+
+  it('상한만큼만 돌려준다', async () => {
+    await seed();
+    expect(await listPrivacyAccessLogs({}, 2)).toHaveLength(2);
+  });
+
+  /** 드롭다운 목록은 계정 설정이 아니라 기록에 실제로 있는 값에서 뽑는다. */
+  it('수행자 목록은 기록에 남은 값에서 뽑는다', async () => {
+    await seed();
+    expect(await listPrivacyAccessActors()).toEqual(['jina', 'kyungha']);
   });
 });
