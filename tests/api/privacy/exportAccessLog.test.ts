@@ -1,7 +1,8 @@
 /** @jest-environment node */
 /**
- * 개인정보가 **파일로** 빠져나가는 다운로드는 전부 접속기록(`privacy_access_logs`)에
- * 남는가.
+ * 개인정보가 **한 번에 목록으로** 빠져나가는 경로는 전부 접속기록(`privacy_access_logs`)에
+ * 남는가. 파일 내려받기가 대부분이지만 파일만은 아니다 — 개설자 배송 화면은 CSV와 같은
+ * 행·같은 항목을 `__NEXT_DATA__`에 실어 보내므로 같은 종류로 남아야 한다.
  *
  * 라우트마다 흩어 놓지 않고 한 파일에 모은 이유는, 이 검사의 요점이 "어느 라우트가
  * 기록하는가"가 아니라 **"기록하는 라우트가 빠짐없는가"**이기 때문이다. 새 CSV·PDF
@@ -27,7 +28,8 @@ jest.mock('../../../lib/ops/salesLedger', () => ({
 }));
 jest.mock('../../../lib/artistSupport/supporters', () => ({ listSupporterContacts: jest.fn() }));
 jest.mock('../../../data/artists', () => ({ getSupportedArtist: jest.fn() }));
-jest.mock('../../../lib/funding/creatorAuth', () => ({ authenticateCreatorApi: jest.fn() }));
+jest.mock('../../../lib/funding/creatorAuth', () => ({ authenticateCreatorApi: jest.fn(), authenticateCreatorRequest: jest.fn() }));
+jest.mock('../../../lib/funding/creatorProjectWrite', () => ({ loadProjectForCreator: jest.fn() }));
 jest.mock('../../../lib/funding/creatorShipping', () => ({ loadCreatorShipping: jest.fn() }));
 jest.mock('../../../lib/contact/origin', () => ({ isAllowedContactRequestOrigin: jest.fn().mockReturnValue(true) }));
 jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn().mockResolvedValue(true) }));
@@ -43,7 +45,8 @@ import { listSupporterContacts } from '../../../lib/artistSupport/supporters';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
 import { loadOrRenderContractPdf } from '../../../lib/contracts/pdf-storage';
 import { listFundingOrdersForExport } from '../../../lib/funding/admin-list';
-import { authenticateCreatorApi } from '../../../lib/funding/creatorAuth';
+import { authenticateCreatorApi, authenticateCreatorRequest } from '../../../lib/funding/creatorAuth';
+import { loadProjectForCreator } from '../../../lib/funding/creatorProjectWrite';
 import { loadCreatorShipping } from '../../../lib/funding/creatorShipping';
 import { listSalesLedgerRows } from '../../../lib/ops/salesLedger';
 import { recordAdminPrivacyAccess, recordPrivacyAccess } from '../../../lib/privacy/accessLog';
@@ -52,6 +55,7 @@ import supportersExport from '../../../pages/api/admin/artists/[slug]/supporters
 import salesLedgerExport from '../../../pages/api/admin/orders/export';
 import contractPdf from '../../../pages/api/contracts/[id]/pdf';
 import creatorShippingCsv from '../../../pages/api/funding/creator/projects/[id]/shipping.csv';
+import { getServerSideProps as creatorShippingPage } from '../../../pages/[locale]/funding/creator/[id]/shipping';
 
 type Handler = (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>;
 
@@ -320,6 +324,75 @@ describe('개설자 배송 목록 CSV (pages/api/funding/creator/projects/[id]/s
   it('기록이 실패해도 다운로드는 정상이다', async () => {
     (recordPrivacyAccess as jest.Mock).mockRejectedValue(new Error('기록 실패'));
     expect((await call(creatorShippingCsv, { id: 'proj-1' })).status).toBe(200);
+  });
+});
+
+/**
+ * 파일이 아니라 **화면**이지만 나가는 것이 같다 — 여기 있는 이유가 그것이다. CSV 라우트만
+ * 기록하던 시절에는 개설자가 배송지 전부를 몇 번을 들여다봐도 흔적이 남지 않았다.
+ */
+describe('개설자 배송 화면 (pages/[locale]/funding/creator/[id]/shipping.tsx)', () => {
+  const shippingRow = () => ({
+    pledgeId: 'p1', rewardId: 'mail', rewardTitle: '감사 메일', quantity: 1,
+    shippingName: '김후원', shippingPhone: '010-1111-2222', shippingPostcode: '12345',
+    shippingAddress1: '서울시 어딘가 1', shippingAddress2: null, shippingMemo: null,
+    fulfillmentStatus: 'pending', trackingCompany: null, trackingNumber: null,
+  });
+
+  const open = async () =>
+    (creatorShippingPage as unknown as (c: unknown) => Promise<unknown>)({
+      params: { locale: 'ko', id: 'proj-1' },
+      query: {},
+      req: { headers: {}, cookies: {}, socket: {} },
+      res: { setHeader: jest.fn() },
+    });
+
+  beforeEach(() => {
+    (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: true, creatorId: 'cr-1' });
+    (loadProjectForCreator as jest.Mock).mockResolvedValue({ id: 'proj-1', title: '프로젝트' });
+    (loadCreatorShipping as jest.Mock).mockResolvedValue({ state: 'open', summary: {}, rows: [shippingRow(), shippingRow()] });
+  });
+
+  it('화면으로 열어도 CSV와 같은 action으로 남는다', async () => {
+    await open();
+    expect(recordPrivacyAccess).toHaveBeenCalledWith(
+      expect.objectContaining({
+        actor: 'creator:cr-1',
+        action: 'funding_creator_shipping_export',
+        targetId: 'proj-1',
+        result: 'success',
+        rowCount: 2,
+      }),
+    );
+  });
+
+  it('화면에 실린 값은 기록에 담기지 않는다', async () => {
+    await open();
+    for (const secret of SECRETS) expect(loggedArgs()).not.toContain(secret);
+  });
+
+  it('로그인이 없으면 기록도 조회도 없다', async () => {
+    (authenticateCreatorRequest as jest.Mock).mockResolvedValue({ ok: false });
+    await open();
+    expect(loadCreatorShipping).not.toHaveBeenCalled();
+    expect(recordPrivacyAccess).not.toHaveBeenCalled();
+  });
+
+  it('마감 전에는 집계만 나가므로 기록도 없다', async () => {
+    (loadCreatorShipping as jest.Mock).mockResolvedValue({ state: 'before_close', summary: {} });
+    await open();
+    expect(recordPrivacyAccess).not.toHaveBeenCalled();
+  });
+
+  it('남의 프로젝트(404)는 남기지 않는다', async () => {
+    (loadProjectForCreator as jest.Mock).mockResolvedValue(null);
+    expect(await open()).toEqual({ notFound: true });
+    expect(recordPrivacyAccess).not.toHaveBeenCalled();
+  });
+
+  it('기록이 실패해도 화면은 정상이다', async () => {
+    (recordPrivacyAccess as jest.Mock).mockRejectedValue(new Error('기록 실패'));
+    expect(await open()).toHaveProperty('props');
   });
 });
 

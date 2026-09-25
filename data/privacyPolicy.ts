@@ -98,7 +98,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '개인정보 처리방침',
     subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 9월 24일',
+    lastUpdatedValue: '2026년 9월 25일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
@@ -396,8 +396,9 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       // lib/contracts/admin-auth.ts(단일 비밀번호 + 세션), 접속기록은 lib/privacy/accessLog.ts,
       // 요청 제한은 lib/booking/rate-limit.ts다. 하지 않는 것(침입탐지·모의훈련 등)은 적지 않는다.
       // 접속기록 대상은 privacyAccessActionEnum(db/schema.ts)을 한 줄씩 대조해 적는다 —
-      // 한 건을 여는 조회 셋에 더해 개인정보가 파일로 나가는 내려받기 다섯이 들어 있고,
-      // 그중 하나(개설자 배송 목록)는 수행자가 관리자가 아니라 개설자다.
+      // 한 건을 여는 조회 셋에 더해 개인정보가 한 번에 나가는 목록 다섯이 들어 있고,
+      // 그중 하나(개설자 배송 목록)는 수행자가 관리자가 아니라 개설자다. 그 하나는 파일
+      // 내려받기와 화면 열람이 같은 action을 쓴다 — 나가는 항목도 건수도 같기 때문이다.
       {
         heading: '19. 개인정보의 안전성 확보 조치',
         body:
@@ -408,8 +409,8 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
           '정산 계좌의 암호화 — 개설자 정산 계좌의 은행명·계좌번호·예금주도 한 벌로 묶어 같은 방식(AES-256-GCM)으로 암호화해 저장하며, 같은 키를 씁니다. 평문으로 남는 것은 계좌번호 뒤 4자리뿐이고, 키가 없으면 정산 정보 저장을 거부합니다. 법이 계좌번호에 요구하는 조치는 아니며 스튜디오의 판단으로 하고 있습니다',
           '되돌릴 수 없는 처리 — 개설자 로그인 링크는 원문을 저장하지 않고 해시만 보관하며, 요청 제한에 쓰는 이메일 주소도 해시로만 기록합니다',
           '접근 권한의 제한 — 개인정보를 볼 수 있는 관리자 화면은 비밀번호 인증을 통과한 세션에서만 열립니다. 주민등록번호와 계좌번호 전체는 운영자가 그 값을 보려고 조회를 요청한 응답에만 실리며, 목록·심사 화면과 페이지 소스, 안내 메일, 내려받는 파일에는 담기지 않습니다. 정산 계좌의 은행명과 예금주는 여기서 하나 예외입니다 — 개설자에게 보내는 정산 안내 메일 본문에 어느 계좌로 보내는지 적기 위해 실립니다(위 14항). 그 밖의 목록·심사 화면과 페이지 소스, 내려받는 파일에는 담기지 않습니다',
-          '접속기록의 보관 — 주민등록번호 조회, 정산 계좌 조회, 정산을 기록하기 직전에 주민등록번호와 정산 계좌가 각각 실제로 열리는지 확인하는 두 가지 점검, 정산 안내 메일을 만들며 계좌를 여는 일, 그리고 개인정보가 담긴 파일을 내려받는 일은 성공·실패를 가리지 않고 수행자·행위 종류·대상·결과·IP 주소·시각으로 기록해 2년 동안 보관합니다. 열람하거나 내보낸 값 자체는 기록하지 않습니다. 관리자 인증이 단일 비밀번호 하나여서 관리자 쪽 수행자는 개인이 아니라 "관리자"로 기록되며, 여러 사람이 같은 비밀번호를 쓰면 이 기록으로는 누구인지 가릴 수 없습니다',
-          '파일 내려받기의 기록 — 한 건을 여는 조회보다 한 번에 나가는 범위가 크므로 별도로 남깁니다. 대상은 펀딩 주문 목록, 매출장부, 아티스트 후원자 연락처, 개설자가 받아 가는 배송 목록의 네 가지 파일과 계약서 PDF입니다. 무엇을 몇 건 내보냈는지까지 남기되 내보낸 값은 한 줄도 담지 않습니다. 개설자가 자기 프로젝트의 배송 목록을 받아 간 기록도 같은 표에 남으며, 개설자는 계정이 사람별로 갈려 있어 누가 받아 갔는지 특정됩니다',
+          '접속기록의 보관 — 주민등록번호 조회, 정산 계좌 조회, 정산을 기록하기 직전에 주민등록번호와 정산 계좌가 각각 실제로 열리는지 확인하는 두 가지 점검, 정산 안내 메일을 만들며 계좌를 여는 일, 그리고 개인정보가 담긴 목록을 파일로 내려받거나 화면으로 여는 일은 성공·실패를 가리지 않고 수행자·행위 종류·대상·결과·IP 주소·시각으로 기록해 2년 동안 보관합니다. 열람하거나 내보낸 값 자체는 기록하지 않습니다. 관리자 인증이 단일 비밀번호 하나여서 관리자 쪽 수행자는 개인이 아니라 "관리자"로 기록되며, 여러 사람이 같은 비밀번호를 쓰면 이 기록으로는 누구인지 가릴 수 없습니다',
+          '목록을 한 번에 여는 일의 기록 — 한 건을 여는 조회보다 한 번에 나가는 범위가 크므로 별도로 남깁니다. 대상은 펀딩 주문 목록, 매출장부, 아티스트 후원자 연락처, 개설자가 받아 가는 배송 목록의 네 가지 파일과 계약서 PDF입니다. 무엇을 몇 건 내보냈는지까지 남기되 내보낸 값은 한 줄도 담지 않습니다. 개설자가 자기 프로젝트의 배송 목록을 다루는 일은 파일로 내려받든 화면으로 열어 보든 같은 표에 같은 종류로 남습니다 — 화면에도 파일과 같은 항목이 같은 건수만큼 실리기 때문입니다. 다만 마감 전에는 화면에 집계 숫자만 나오고 배송지가 한 줄도 실리지 않으므로 그 열람은 남기지 않습니다. 개설자는 계정이 사람별로 갈려 있어 누가 보았는지 특정됩니다',
           '요청 제한 — 문의·예약·펀딩 신청·내려받기·개설자 로그인 화면은 같은 곳에서 온 요청 횟수를 세어 한도를 넘으면 잠시 막습니다(위 16항)',
           '전송 구간의 암호화 — 웹사이트의 모든 요청은 HTTPS로 주고받습니다',
         ],
@@ -452,7 +453,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Privacy Policy',
     subtitle: 'Studio NOL collects only the minimum personal data required for inquiries and consultation support.',
     lastUpdatedLabel: 'Effective date',
-    lastUpdatedValue: 'September 24, 2026',
+    lastUpdatedValue: 'September 25, 2026',
     sections: [
       {
         heading: '1. Personal data we collect',
@@ -568,7 +569,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '隐私政策',
     subtitle: 'Studio NOL 仅收集处理咨询与沟通所需的最少个人信息，并进行安全管理。',
     lastUpdatedLabel: '生效日期',
-    lastUpdatedValue: '2026年9月24日',
+    lastUpdatedValue: '2026年9月25日',
     sections: [
       {
         heading: '1. 我们收集的个人信息',
@@ -660,7 +661,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Política de privacidad',
     subtitle: 'Studio NOL recopila solo los datos personales mínimos necesarios para responder consultas y brindar orientación.',
     lastUpdatedLabel: 'Fecha de entrada en vigor',
-    lastUpdatedValue: '24 de septiembre de 2026',
+    lastUpdatedValue: '25 de septiembre de 2026',
     sections: [
       {
         heading: '1. Datos personales que recopilamos',
@@ -784,7 +785,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Chính sách bảo mật',
     subtitle: 'Studio NOL chỉ thu thập tối thiểu thông tin cá nhân cần thiết để tiếp nhận và phản hồi tư vấn.',
     lastUpdatedLabel: 'Ngày hiệu lực',
-    lastUpdatedValue: '24 tháng 9, 2026',
+    lastUpdatedValue: '25 tháng 9, 2026',
     sections: [
       {
         heading: '1. Thông tin cá nhân được thu thập',
@@ -902,7 +903,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'นโยบายความเป็นส่วนตัว',
     subtitle: 'Studio NOL เก็บข้อมูลส่วนบุคคลเท่าที่จําเป็นสําหรับการรับและตอบคําสอบถามเท่านั้น',
     lastUpdatedLabel: 'วันที่มีผลบังคับใช้',
-    lastUpdatedValue: '24 กันยายน 2026',
+    lastUpdatedValue: '25 กันยายน 2026',
     sections: [
       {
         heading: '1. ข้อมูลส่วนบุคคลที่เราเก็บรวบรวม',
@@ -1006,7 +1007,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Maxfiylik siyosati',
     subtitle: 'Studio NOL faqat murojaatlarni qabul qilish va javob berish uchun zarur bo\'lgan eng kam shaxsiy ma\'lumotlarni yig\'adi.',
     lastUpdatedLabel: 'Kuchga kirish sanasi',
-    lastUpdatedValue: '2026-yil 24-sentabr',
+    lastUpdatedValue: '2026-yil 25-sentabr',
     sections: [
       {
         heading: '1. Yig\'iladigan shaxsiy ma\'lumotlar',
