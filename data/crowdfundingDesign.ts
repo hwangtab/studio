@@ -1,4 +1,5 @@
 import { formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_SUCCESS_FEE_PERCENT } from './pricing';
+import { CASES_CHECKED_ON, CASES_SUMMARY } from './crowdfundingCases';
 
 /**
  * 크라우드펀딩 설계 대행 LP(/ko/crowdfunding-design) 카피 — ko 전용.
@@ -13,11 +14,13 @@ import { formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_SUCCESS_FEE_PERCENT } 
  * - 범위(스토리텔링·리워드 설계·페이지 제작)와 실적(음반 펀딩 수십 건·누적 약 3억원):
  *   data/pricing.ts service-funding, 커밋 6766ec780a
  * - 단독 의뢰 가능·예술지원사업 상담: pages/api/llms.ts 사용 사례
+ * - 공개로 확인 가능한 개별 펀딩: data/crowdfundingCases.ts(플랫폼에서 직접 확인한 수치)
  * 일정·산출물 수량 같은 약속은 정본에 없어 적지 않는다 — 생기면 정본에 먼저 적고 여기로 옮길 것.
  */
 
 const designFee = `${formatPriceAmount(FUNDING_DESIGN_PRICE)}원`;
 const successFee = `모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%`;
+const casesLine = `성공 ${CASES_SUMMARY.succeededCount}건 · 누적 ${formatPriceAmount(CASES_SUMMARY.succeededRaised)}원 · 후원자 ${formatPriceAmount(CASES_SUMMARY.succeededBackers)}명`;
 
 export const crowdfundingDesignCopy = {
   seo: {
@@ -44,6 +47,7 @@ export const crowdfundingDesignCopy = {
       { id: 'scope', label: '범위', value: '스토리텔링 · 리워드 설계 · 페이지 제작' },
       { id: 'standalone', label: '단독 의뢰', value: '가능 — 제작을 맡기지 않아도 됩니다' },
       { id: 'record', label: '진행 실적', value: '음반 펀딩 수십 건 · 누적 약 3억원' },
+      { id: 'verifiable', label: '공개로 확인 가능', value: `${casesLine} (텀블벅·씨앗페)` },
     ],
   },
   scope: {
@@ -63,6 +67,14 @@ export const crowdfundingDesignCopy = {
         body: '기획한 구성대로 플랫폼에 올릴 펀딩 페이지를 만듭니다.',
       },
     ],
+  },
+  cases: {
+    title: '진행한 펀딩',
+    subtitle: `텀블벅·씨앗페에서 누구나 확인할 수 있는 펀딩만 실었습니다 — ${casesLine}. 이 밖에도 더 있습니다.`,
+    caption: '운영자가 기획·운영한 크라우드펀딩',
+    columns: { title: '프로젝트', kind: '분야', raised: '모금액', percent: '달성률', backers: '후원자', period: '마감' },
+    ongoing: '진행 중',
+    checkedOn: `${CASES_CHECKED_ON} 확인`,
   },
   process: {
     title: '진행 순서',
@@ -112,6 +124,10 @@ export const crowdfundingDesignCopy = {
       {
         question: '펀딩이 실패하면 어떻게 되나요?',
         answer: `성공 수수료(${successFee})는 펀딩이 성공했을 때만 발생합니다. 선불 ${designFee}은 기획과 페이지 제작에 드는 비용입니다.`,
+      },
+      {
+        question: '실제로 진행한 펀딩을 볼 수 있나요?',
+        answer: `네. 이 페이지의 "진행한 펀딩" 표에 텀블벅·씨앗페에서 공개로 확인할 수 있는 펀딩을 링크와 함께 실었습니다(${casesLine}, ${CASES_CHECKED_ON} 확인). 음반이 가장 많고, 공연·출판·영화 상영 펀딩도 있습니다.`,
       },
       {
         question: '어떤 플랫폼에서 진행하나요?',

@@ -15,7 +15,8 @@ import { buildPageStaticProps } from '../../lib/getStatic';
 import { defaultLocale, type Locale } from '../../lib/i18n';
 import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 import { getSiteConfig } from '../../data/siteConfig';
-import { FUNDING_DESIGN_PRICE } from '../../data/pricing';
+import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../data/pricing';
+import { CROWDFUNDING_CASES } from '../../data/crowdfundingCases';
 import { crowdfundingDesignCopy as copy } from '../../data/crowdfundingDesign';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
@@ -151,7 +152,56 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
         </div>
       </Section>
 
+      {/* 확인 가능한 실적 — 링크를 누르면 플랫폼에서 수치를 직접 볼 수 있다. 검증 가능할 때만 실적이
+          값을 갖는다(#234 제3자 후기와 같은 판단). 수치는 data/crowdfundingCases.ts. */}
       <Section variant="default">
+        <SectionHeading title={copy.cases.title} subtitle={copy.cases.subtitle} />
+        <div className="mx-auto max-w-5xl overflow-x-auto">
+          <table className="w-full min-w-[640px] text-left typo-card-body">
+            <caption className="sr-only">{copy.cases.caption}</caption>
+            <thead>
+              <tr className="border-b border-gray-200 text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
+                <th scope="col" className="py-3 pr-4 font-semibold">{copy.cases.columns.title}</th>
+                <th scope="col" className="py-3 pr-4 font-semibold">{copy.cases.columns.kind}</th>
+                <th scope="col" className="py-3 pr-4 text-right font-semibold">{copy.cases.columns.raised}</th>
+                <th scope="col" className="py-3 pr-4 text-right font-semibold">{copy.cases.columns.percent}</th>
+                <th scope="col" className="py-3 pr-4 text-right font-semibold">{copy.cases.columns.backers}</th>
+                <th scope="col" className="py-3 font-semibold">{copy.cases.columns.period}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {CROWDFUNDING_CASES.map((c) => (
+                <tr key={c.url} className="border-b border-gray-100 align-top dark:border-gray-800">
+                  <th scope="row" className="py-3 pr-4 font-normal">
+                    <a
+                      href={c.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-900 underline decoration-gray-300 underline-offset-4 hover:text-primary dark:text-white dark:decoration-gray-600 dark:hover:text-primary-lighter"
+                    >
+                      {c.title}
+                    </a>
+                    <span className="block text-xs text-gray-500 dark:text-gray-400">
+                      {c.platform}
+                      {c.award ? ` · ${c.award}` : ''}
+                    </span>
+                  </th>
+                  <td className="py-3 pr-4 text-gray-700 dark:text-gray-300">{c.kind}</td>
+                  <td className="py-3 pr-4 text-right tabular-nums text-gray-700 dark:text-gray-300">{formatPriceAmount(c.raised)}원</td>
+                  <td className="py-3 pr-4 text-right tabular-nums text-gray-700 dark:text-gray-300">
+                    {c.percent}%{c.state === 'ongoing' ? ` (${copy.cases.ongoing})` : ''}
+                  </td>
+                  <td className="py-3 pr-4 text-right tabular-nums text-gray-700 dark:text-gray-300">{formatPriceAmount(c.backers)}명</td>
+                  <td className="py-3 tabular-nums text-gray-700 dark:text-gray-300">{c.period}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p className="mt-3 text-right text-xs text-gray-500 dark:text-gray-400">{copy.cases.checkedOn}</p>
+        </div>
+      </Section>
+
+      <Section variant="alternate">
         <SectionHeading title={copy.process.title} subtitle={copy.process.subtitle} />
         <ol className="mx-auto max-w-3xl space-y-4">
           {copy.process.steps.map((step, index) => (
@@ -171,7 +221,7 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
         </ol>
       </Section>
 
-      <Section variant="alternate">
+      <Section variant="default">
         <SectionHeading title={copy.alternatives.title} />
         <div className="mx-auto grid max-w-5xl gap-6 md:grid-cols-3">
           {copy.alternatives.items.map((item) => (

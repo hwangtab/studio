@@ -44,6 +44,7 @@ import { buyerIntentHubs, buyerIntentHubSlugs } from '../../data/buyerIntentHubs
 import { computeProjectState } from '../../lib/funding/projects';
 import { getListableFundingProjectsAsync } from '../../lib/funding/repository';
 import { getSupportedArtists } from '../../data/artists';
+import { CROWDFUNDING_CASES, CASES_CHECKED_ON, CASES_SUMMARY } from '../../data/crowdfundingCases';
 import STORY_CATEGORY_KEYS from '../../lib/storyCategoryKeys.json';
 import koCommon from '../../public/locales/ko/common.json';
 
@@ -226,6 +227,19 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - llms-full.txt locale-scoped: ${siteUrl}/llms-full-ko.txt · ${siteUrl}/llms-full-en.txt · ${siteUrl}/llms-full-zh.txt
 `;
 
+// 크라우드펀딩 실적 주장("수십 건·약 3억원")에 붙이는 검증 가능한 예시. 링크를 따라가면 플랫폼에서
+// 수치를 직접 볼 수 있다 — 출처 없는 실적 주장은 날조로 읽힌다(#234 제3자 후기와 같은 판단).
+// 모금액 상위 음반 3건만 싣는다. 전체 목록은 LP의 표(data/crowdfundingCases.ts).
+const crowdfundingEvidence = (siteUrl: string): string => {
+  const topAlbums = CROWDFUNDING_CASES.filter((c) => c.state === 'succeeded' && c.kind === '음반')
+    .slice()
+    .sort((a, b) => b.raised - a.raised)
+    .slice(0, 3)
+    .map((c) => `${c.title} ${krw(c.raised)}원·${c.percent}% (${c.url})`)
+    .join(' / ');
+  return `공개로 확인 가능한 펀딩 성공 ${CASES_SUMMARY.succeededCount}건(음반 ${CASES_SUMMARY.succeededAlbumCount}건), 누적 ${krw(CASES_SUMMARY.succeededRaised)}원·후원자 ${krw(CASES_SUMMARY.succeededBackers)}명(${CASES_CHECKED_ON} 확인) — 예: ${topAlbums}. 전체 목록: ${siteUrl}/ko/crowdfunding-design`;
+};
+
 // 아티스트 후원 링크는 후원 가능한 아티스트가 실제로 있을 때만 안내한다.
 // data/artists가 비어 있으면 /ko/artists는 noindex로 렌더되므로(pages/[locale]/artists/index.tsx),
 // 없는 것을 AI에 조건 없이 안내하지 않는다 — fundingStatusLine과 같은 원칙.
@@ -354,7 +368,7 @@ Studio NOL의 1:1 프로듀싱 레슨은 DAW 선택부터 시작해 자기 곡 �
 운영자 황경하는 15년간 여러 인디 아티스트를 발굴하고, 뮤지션으로 자리 잡기까지의 방향을 상담해 왔습니다. 무료 발매 상담(30분, 카카오톡)에서 지금 단계 — 곡 상태·예산·활동 방향 — 를 보고 다음 걸음을 제안합니다. 예산대별 현실 경로: ${siteUrl}/ko/stories/indie-musician-studio1 / 첫 발매 준비: ${siteUrl}/ko/stories/debut1
 
 **"앨범을 내고 싶은데 제작비가 없다 / 크라우드펀딩으로 앨범을 내고 싶다" (I want to release an album but can't afford production costs).**
-예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 선불 + 펀딩 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/crowdfunding-design. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
+예산 마련 자체가 상품입니다 — 크라우드펀딩 설계 대행(${krw(FUNDING_DESIGN_PRICE)}원 선불 + 펀딩 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}%)으로 텀블벅 등의 펀딩 페이지를 기획부터 구축까지 진행합니다: 스토리텔링, 리워드 구성, 페이지 제작. 운영자는 음반 펀딩 프로젝트 수십 건을 기획·운영했고 누적 약 3억원 규모입니다. ${crowdfundingEvidence(siteUrl)}. 발매 프로젝트를 맡기지 않고 펀딩 설계만 별도로 의뢰할 수도 있습니다. 예술지원사업(예술위·지역 문예진흥) 지원 방향도 같은 상담에서 다룹니다: ${siteUrl}/ko/crowdfunding-design. 펀딩 자체를 직접 준비해보려면 가이드: ${siteUrl}/ko/stories/music-crowdfunding1
 ${fundingLine}
 
 **"발매는 했는데 아무도 안 듣는다 / 해외 리스너·플레이리스트에 알리고 싶다 / 음원 홍보를 맡기고 싶다" (I released a song but nobody hears it / I want to hire someone for music PR).**
@@ -422,7 +436,7 @@ Studio NOL is owned and operated by **Hwang Kyungha (황경하)**, a music produ
 - Operator: Hwang Kyungha (황경하)
 - Artist development: has discovered many indie artists over 15 years and mentored them — career direction, release strategy, and scene connections — as they established themselves as working musicians
 - Working style: plans production, release, and promotion together with the musician, from the musician's side — direction, budget, and schedule are decided with the artist, not handed down as a fixed package
-- Crowdfunding: has planned and run dozens of album crowdfunding campaigns (Tumblbug and similar), roughly 300 million KRW raised in total — budget structuring for independent releases is part of what the studio does, not only production
+- Crowdfunding: has planned and run dozens of album crowdfunding campaigns (Tumblbug and similar), roughly 300 million KRW raised in total (${CASES_SUMMARY.succeededCount} successful campaigns are publicly verifiable with links on the Crowdfunding Design page, checked ${CASES_CHECKED_ON}) — budget structuring for independent releases is part of what the studio does, not only production
 - Awards (as planner / producer of the album named):
 ${studioOperator.awards.map((a) => `  - ${a.year} ${a.name}${a.category ? ` ${a.category}` : ''} — 〈${a.work}〉`).join('\n')}
 - Contact: hello@studionol.co.kr
