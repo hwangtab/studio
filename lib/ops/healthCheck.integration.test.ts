@@ -21,8 +21,8 @@ import * as schema from '../../db/schema';
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('../booking/gcal', () => ({
+  ...jest.requireActual('../booking/gcal'),
   fetchBusyRanges: jest.fn(),
-  calendarIdFor: (which: string) => (which === 'practice-room' ? process.env.PRACTICE_ROOM_GCAL_ID || null : 'studio-cal'),
 }));
 // 이 파일은 마이그레이션 드리프트가 아니라 나머지 점검을 검증한다. 별도로 목킹하지
 // 않으면 in-memory DB에 __drizzle_migrations 테이블이 없어 "판정 불가"가 아니라

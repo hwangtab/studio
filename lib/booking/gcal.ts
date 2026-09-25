@@ -54,6 +54,18 @@ export const calendarIdFor = (which: BookingCalendar): string | null => {
   return process.env.BOOKING_GCAL_ID || null;
 };
 
+/** 예약 행의 serviceType이 어느 캘린더에 속하는가. 호출처마다 삼항을 되풀이하지 않는다. */
+export const calendarForService = (serviceType: string): BookingCalendar =>
+  serviceType === 'practice-room' ? 'practice-room' : 'studio';
+
+/**
+ * 이 캘린더를 읽고 써야 하는가. 녹음실은 항상(env가 없으면 호출이 throw해 fail-closed).
+ * 연습실은 env가 있을 때만 — 읽기(slots·생성 가드)와 쓰기(confirm)가 같은 조건이어야
+ * 한쪽만 동작하는 어긋남이 없다.
+ */
+export const isCalendarActive = (which: BookingCalendar): boolean =>
+  which === 'studio' || calendarIdFor('practice-room') !== null;
+
 const calendarId = (which: BookingCalendar = 'studio'): string => {
   const id = calendarIdFor(which);
   if (!id) throw new Error(`${which === 'practice-room' ? 'PRACTICE_ROOM_GCAL_ID' : 'BOOKING_GCAL_ID'}가 설정되지 않았습니다.`);
@@ -64,7 +76,7 @@ export interface BusyRange { start: Date; end: Date }
 
 /** 실패는 throw — 호출부는 해당 시간대를 예약 불가로 처리한다(fail-closed, 스펙 §6). */
 export const fetchBusyRanges = async (
-  timeMin: Date, timeMax: Date, calendar: BookingCalendar = 'studio',
+  timeMin: Date, timeMax: Date, calendar: BookingCalendar,
 ): Promise<BusyRange[]> => {
   const id = calendarId(calendar);
   const token = await getAccessToken();
@@ -85,9 +97,9 @@ export const fetchBusyRanges = async (
 };
 
 export const createBookingEvent = async (input: {
-  summary: string; description: string; start: Date; end: Date; calendar?: BookingCalendar;
+  summary: string; description: string; start: Date; end: Date; calendar: BookingCalendar;
 }): Promise<string> => {
-  const id = calendarId(input.calendar ?? 'studio');
+  const id = calendarId(input.calendar);
   const token = await getAccessToken();
   const res = await fetch(`${CAL_API}/calendars/${encodeURIComponent(id)}/events`, {
     method: 'POST',
@@ -104,7 +116,7 @@ export const createBookingEvent = async (input: {
   return (await res.json()).id as string;
 };
 
-export const deleteBookingEvent = async (eventId: string, calendar: BookingCalendar = 'studio'): Promise<void> => {
+export const deleteBookingEvent = async (eventId: string, calendar: BookingCalendar): Promise<void> => {
   const id = calendarId(calendar);
   const token = await getAccessToken();
   const res = await fetch(

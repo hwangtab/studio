@@ -6,7 +6,7 @@ import { bookings, orders, workOrders } from '../../../../db/schema';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
 import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
-import { createBookingEvent, deleteBookingEvent } from '../../../../lib/booking/gcal';
+import { calendarForService, createBookingEvent, deleteBookingEvent } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
 
 const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
@@ -208,10 +208,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 상태가 되고, 그건 이 기능이 막으려는 정확히 그 사고다. 이 순서면 최악의 경우도
       // "잠깐 중복 이벤트가 남는 것"에 그친다(그마저도 아래에서 정리 시도).
       const previousEventId = booking.gcalEventId;
+      // 자원의 캘린더로 — 연습실을 녹음실 캘린더에 올리면 녹음 슬롯이 막힌다(gcal.ts).
+      const calendar = calendarForService(booking.serviceType);
 
       try {
         const eventId = await createBookingEvent({
-          summary: `[예약] ${booking.serviceType} — ${order.customerName}`,
+          calendar,
+          summary: `[예약] ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
           description: [
             `상품: ${booking.productId} (${booking.durationHours}시간)`,
             `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
@@ -229,7 +232,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
         if (previousEventId) {
           try {
-            await deleteBookingEvent(previousEventId);
+            await deleteBookingEvent(previousEventId, calendar);
           } catch (cleanupError: unknown) {
             // 새 이벤트는 이미 정상 생성·기록됐다 — 옛 이벤트 삭제 실패는 중복 하나가
             // 남는 수준이라 재시도 자체를 실패로 되돌리지 않는다. 로그만 남긴다.
