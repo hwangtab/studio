@@ -19,6 +19,9 @@ jest.mock('./email', () => ({
   sendFundingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendFundingCancelledEmails: jest.fn().mockResolvedValue(null),
 }));
+// 이 픽스처 프로젝트는 content/funding에 md 파일이 없다 — 가리지 않으면 null이 돌아와
+// 확정 경로가 리워드의 requiresShipping을 알 수 없다.
+jest.mock('./repository', () => ({ getFundingProjectAsync: jest.fn() }));
 
 // eslint-disable-next-line import/first
 import { confirmFundingPledge, syncFundingCancelledFromToss } from './confirm';
@@ -30,6 +33,8 @@ import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email'
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
+// eslint-disable-next-line import/first
+import { getFundingProjectAsync } from './repository';
 // eslint-disable-next-line import/first
 import type { CreatePledgePayload } from './validation';
 
@@ -100,6 +105,7 @@ beforeEach(async () => {
   jest.clearAllMocks();
   mockEmail.mockResolvedValue(null);
   mockCancelEmail.mockResolvedValue(null);
+  (getFundingProjectAsync as jest.Mock).mockResolvedValue(PROJECT);
   // confirm.ts의 홀드 만료 판정은 Date.now()(실제 벽시계)와 비교한다 — NOW 픽스처가 실행 시점의
   // 실제 시각보다 미래라 고정하지 않으면 "홀드 만료" 케이스가 항상 만료되지 않은 것으로 읽힌다.
   jest.spyOn(Date, 'now').mockReturnValue(NOW.getTime());
@@ -143,6 +149,41 @@ describe('confirmFundingPledge', () => {
     expect(o?.status).toBe('paid');
     expect(o?.payments[0].paymentKey).toBe('pk_1');
     expect(o?.fundingPledge?.paidAt).toBeInstanceOf(Date);
+  });
+
+  /**
+   * 디지털 전용 리워드는 확정 순간 내려받기가 열리므로 그때가 전달 완료다. 이 기산점이
+   * 없으면 약관 제13조의 '전달 완료 후 1년 파기'가 그 유형에 영영 실행되지 않는다 —
+   * 발송 상태를 손으로 delivered로 바꿀 실무 계기가 없기 때문이다.
+   */
+  it('디지털 전용 리워드는 확정 시각을 파기 기산점으로 남긴다 — fulfillment_status는 그대로', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+    await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+    const pledge = (await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge;
+    expect(pledge?.deliveredAt).toBeInstanceOf(Date);
+    // 'delivered'로 바꾸면 assessSelfCancel이 fulfilling으로 셀프 취소를 막는다 —
+    // 디지털 리워드의 취소 차단 근거는 발송이 아니라 downloaded_at이다.
+    expect(pledge?.fulfillmentStatus).toBe('none');
+  });
+
+  it('배송 리워드는 확정만으로 기산점이 생기지 않는다 — 전달은 아직이다', async () => {
+    const shipping = { name: '받는', phone: '010', postcode: '03000', address1: '서울' };
+    const c = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), NOW);
+    if (!c.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 30000));
+    await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 30000 });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.deliveredAt).toBeNull();
+  });
+
+  it('프로젝트를 읽지 못하면 기산점을 찍지 않는다 — 배송 건에 잘못 찍는 쪽이 더 나쁘다', async () => {
+    (getFundingProjectAsync as jest.Mock).mockResolvedValue(null);
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
+    await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.deliveredAt).toBeNull();
   });
 
   it('이미 paid여도 그 주문의 실제 paymentKey면 토스를 부르지 않고 성공(멱등) — 토큰도 돌려준다', async () => {

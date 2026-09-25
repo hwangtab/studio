@@ -55,11 +55,10 @@ const yearsAgo = (now: Date, years: number): Date => {
  * "선택" 수집 항목으로 명시하고, 8항의 "1년 뒤 파기" 약속은 6항이 나열한 항목 전부에
  * 걸린다 — 응원 메시지만 빼는 예외가 어디에도 쓰여 있지 않다. 7항(`FUNDING_COLLECTION_PURPOSES`)이
  * "서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시"를 목적으로
- * 들지만, 이 저장소를 확인한 시점(2026-09-21)에 그 공개 표시를 실제로 구현한 화면은
- * 없다(`displayNamePublic`은 관리자 화면·CSV export에서만 읽힌다) — 즉 "공개 게시물이라
- * 영구 보존해야 한다"는 반례가 아직 코드에 없다. 이후 서포터 명단 공개 화면이 실제로
- * 생기면 이 판단을 다시 봐야 한다 — 그 화면이 배포 후 1년 넘은 메시지까지 보여줘야
- * 한다면, 이 함수가 그 메시지를 먼저 지워 화면이 깨질 수 있다.
+ * 드는데, 그 화면은 **실제로 있다**(`components/funding/BackerWall.tsx`·`SupporterTicker.tsx`가
+ * `aggregateProjectStatus`의 공개 명단·응원 메시지를 그린다). 그래도 8항의 파기 약속이
+ * 우선이라 지우는 쪽을 택한다 — 파기 대상이 된 메시지는 그 화면에서도 사라진다. 고지한
+ * 기간이 지난 개인정보를 "공개 게시물"이라는 이유로 남겨 두면 8항이 거짓이 된다.
  *
  * **여기서 일부러 빼는 것: `fulfillment_updated_by`.** 발송 상태를 마지막으로 바꾼 주체
  * (`'admin'` 또는 `'creator:<id>'`, `lib/funding/fulfillment.ts`가 채운다)는 후원자의
@@ -102,7 +101,15 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
     })
     .where(
       and(
-        // 기산점: 리워드 전달 완료. 아직 전달되지 않았으면(NULL) 파기 대상이 아니다.
+        /**
+         * 기산점: 리워드 전달 완료. 아직 전달되지 않았으면(NULL) 파기 대상이 아니다.
+         *
+         * 배송 리워드는 운영자·개설자가 발송 상태를 `delivered`로 바꿀 때
+         * (lib/funding/fulfillment.ts), 디지털 전용 리워드는 **결제가 확정될 때**
+         * (lib/funding/confirm.ts) 이 값이 찍힌다 — 디지털은 확정 순간 내려받기가 열리므로
+         * 그때가 전달 완료다. 예전에는 후자의 경로가 없어 디지털 전용 후원의 개인정보가
+         * 영영 파기되지 않았다.
+         */
         isNotNull(fundingPledges.deliveredAt),
         lt(fundingPledges.deliveredAt, rewardBoundary),
         /**

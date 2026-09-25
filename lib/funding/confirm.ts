@@ -263,6 +263,27 @@ export const confirmFundingPledge = async (
   }
 
   const now = new Date();
+  /**
+   * 디지털 전용 리워드는 **확정 순간이 전달 완료**다.
+   *
+   * `delivered_at`은 약관 제13조의 '리워드 전달 완료 후 1년 파기' 기산점인데, 그 값을
+   * 채우는 코드가 발송 상태를 손으로 `delivered`로 바꾸는 경로 하나뿐이었다
+   * (lib/funding/fulfillment.ts). 배송이 없는 리워드는 그 버튼을 누를 실무 계기가 없어서,
+   * 디지털 전용 후원의 응원 메시지·admin_memo·연락 정보가 영영 파기되지 않았다.
+   * 확정되는 즉시 내려받기가 열리므로 그 시각이 곧 전달 완료다.
+   *
+   * **fulfillment_status는 'none' 그대로 둔다.** `delivered`로 바꾸면 assessSelfCancel이
+   * `fulfilling`으로 셀프 취소를 막는다 — 디지털 리워드의 취소 차단 근거는 발송이 아니라
+   * `downloaded_at`(약관 제8조 2항)이다. 지금 `delivered_at`을 읽는 곳은 파기 크론
+   * (lib/funding/retention.ts)과 발송 기록 경로뿐이라, 관리자 화면·CSV가 이 값을
+   * '발송 완료'로 표시하는 자리는 없다.
+   *
+   * 프로젝트를 못 읽으면(조회 실패) 채우지 않는다 — 배송 리워드에 잘못 찍는 것이
+   * 안 찍는 것보다 나쁘다(배송 중인 건의 배송지가 1년 뒤 파기 대상이 된다).
+   */
+  const confirmProject = await getFundingProjectAsync(order.fundingPledge.projectSlug);
+  const confirmReward = confirmProject?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
+  const digitalDeliveredAt = confirmReward?.requiresShipping === false ? now : null;
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
@@ -300,7 +321,9 @@ export const confirmFundingPledge = async (
       db.update(orders)
         .set({ status: 'paid', updatedAt: now, notificationError: SEND_PENDING })
         .where(and(eq(orders.id, order.id), inArray(orders.status, ['pending', 'expired', 'failed']))),
-      db.update(fundingPledges).set({ paidAt: now, updatedAt: now }).where(eq(fundingPledges.orderId, order.id)),
+      db.update(fundingPledges)
+        .set(digitalDeliveredAt ? { paidAt: now, deliveredAt: digitalDeliveredAt, updatedAt: now } : { paidAt: now, updatedAt: now })
+        .where(eq(fundingPledges.orderId, order.id)),
     ]);
     // 그래도 0행이면 paid가 아닌 제3의 상태(failed·refunded 등)로 이미 옮겨간 것 — 결제는
     // 됐는데 기록은 못 한 상태이므로 성공으로 답하지 않는다.
