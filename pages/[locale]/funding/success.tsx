@@ -11,15 +11,22 @@ import Head from 'next/head';
 
 import { isTokenMatch } from '../../../lib/booking/token';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
+import { FUNDING_ORDER_STATUS_LABELS } from '../../../lib/funding/fulfillmentLabels';
+import { isLiveFundingOrderStatus } from '../../../lib/funding/refundable';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
 
 interface SuccessProps {
-  /** confirmed = 이 브라우저가 방금 확정한 후원, unknown = 확정 화면을 되살릴 근거가 없음. */
-  outcome: 'confirmed' | 'unknown' | 'error';
+  /**
+   * confirmed = 이 브라우저가 방금 확정한 후원, unknown = 확정 화면을 되살릴 근거가 없음,
+   * not_live = 소유는 증명됐지만 그 후원이 더 이상 살아 있지 않음(취소·환불·만료).
+   */
+  outcome: 'confirmed' | 'unknown' | 'error' | 'not_live';
   message?: string;
+  /** not_live일 때 지금 상태를 후원자 표기로 옮긴 것. manage 화면과 같은 정본을 쓴다. */
+  statusLabel?: string;
   orderNo?: string;
   /** 후원 확인·취소 링크. 메일이 실패해도 고객이 여기서 바로 받을 수 있어야 한다. */
   manageUrl?: string;
@@ -106,7 +113,7 @@ const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
 const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
 const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 
-export default function FundingSuccessPage({ outcome, message, orderNo, manageUrl, manageToken, projectSlug, emailSent, downloads }: SuccessProps) {
+export default function FundingSuccessPage({ outcome, message, statusLabel, orderNo, manageUrl, manageToken, projectSlug, emailSent, downloads }: SuccessProps) {
   useEffect(() => {
     if (outcome !== 'confirmed' || !orderNo) return;
     // 결제가 확정됐으니 후원 폼에 남아 있던 이름·연락처·주소 임시 저장을 지운다
@@ -194,6 +201,38 @@ export default function FundingSuccessPage({ outcome, message, orderNo, manageUr
               <p className="typo-card-meta mt-6">
                 {/* 공개 목적지에는 rel="noreferrer" — 이 URL에 비밀값은 없지만(주문번호뿐),
                     도착지 gtag의 page_referrer에 주문번호까지 실어 보낼 이유는 없다. */}
+                <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
+                  프로젝트로 돌아가기
+                </a>
+              </p>
+            )}
+          </>
+        ) : outcome === 'not_live' ? (
+          <>
+            {/* 확정 쿠키는 30분 살아 있다. 그 사이 취소하고 이 화면을 새로고침하면 예전에는
+                "펀딩이 확정되었습니다"와 내려받기 버튼이 그대로 다시 떴다 — 돈은 돌려받고
+                파일은 계속 받는 것처럼 보이는 화면이다(버튼을 눌러도 download.ts가 409로
+                막지만, 그건 원시 JSON이다). 판정은 manage 화면과 같은
+                isLiveFundingOrderStatus를 쓴다. */}
+            <h1 className="typo-page-title">이 펀딩은 확정 상태가 아닙니다</h1>
+            <p className="typo-card-body mx-auto mt-3 max-w-md">
+              {orderNo ? `주문번호 ${orderNo}. ` : ''}현재 상태는 “{statusLabel}”입니다.
+            </p>
+            <p className="typo-card-meta mx-auto mt-3 max-w-md">
+              자세한 내역은 펀딩 확인 페이지에서 보실 수 있습니다. 문의: {PHONE} · {EMAIL}
+            </p>
+            {manageUrl && (
+              <p className="mt-6">
+                <a
+                  href={manageUrl}
+                  className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
+                >
+                  펀딩 확인 페이지 열기
+                </a>
+              </p>
+            )}
+            {projectSlug && (
+              <p className="typo-card-meta mt-6">
                 <a href={`/ko/funding/${projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">
                   프로젝트로 돌아가기
                 </a>
@@ -294,6 +333,22 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
    * 후원한 리워드의 내려받기 링크를 이 화면에서 바로 만든다. 여기까지 온 요청은 쿠키의
    * 토큰이 DB의 manageToken과 맞는 것이 이미 확인됐으므로(위 분기), 링크를 세울 근거가 있다.
    */
+  /**
+   * 살아 있지 않은 후원(취소·환불·만료·실패)에는 확정 문구도 내려받기 폼도 그리지 않는다.
+   * 확정 쿠키가 30분 살아 있어 취소 직후 새로고침이 이 자리로 돌아온다. 판정은 manage
+   * 화면과 같은 함수를 쓴다 — 두 화면이 갈리면 한쪽만 고쳐 놓고 끝났다고 믿게 된다.
+   */
+  if (!isLiveFundingOrderStatus(order.status)) {
+    return {
+      props: {
+        outcome: 'not_live',
+        orderNo: order.orderNo,
+        statusLabel: FUNDING_ORDER_STATUS_LABELS[order.status] ?? order.status,
+        manageUrl: `/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`,
+        projectSlug: order.fundingPledge?.projectSlug ?? '',
+      },
+    };
+  }
   const project = order.fundingPledge ? await getFundingProjectAsync(order.fundingPledge.projectSlug) : null;
   const reward = project?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
   const downloads = (reward?.downloads ?? []).map((d) => ({ label: d.label, key: d.key }));

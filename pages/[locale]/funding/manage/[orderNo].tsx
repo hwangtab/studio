@@ -6,6 +6,7 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from '../../../../lib/funding/policy';
+import { FUNDING_ORDER_STATUS_LABELS } from '../../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
 import { computeProjectState } from '../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../lib/funding/repository';
@@ -20,7 +21,6 @@ interface Props {
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
   displayNamePublic: boolean; canEditDisplayName: boolean;
 }
-const STATUS_LABEL: Record<string, string> = { pending: '결제 대기', paid: '펀딩 확정', partially_refunded: '일부 환불', refunded: '환불 완료', expired: '만료', failed: '결제 실패' };
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
 
 export default function FundingManagePage(p: Props) {
@@ -104,7 +104,7 @@ export default function FundingManagePage(p: Props) {
                 ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-violet-300'
                 : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
             }`}>
-              {STATUS_LABEL[status] ?? status}
+              {FUNDING_ORDER_STATUS_LABELS[status] ?? status}
             </span>
             {refundRequested && status === 'paid' && (
               <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">환불 요청 접수</span>

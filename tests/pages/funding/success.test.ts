@@ -163,3 +163,35 @@ it('언제나 no-store로 내린다 — HTML에 관리 토큰이 들어간다', 
   await c.run();
   expect(c.res.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
 });
+
+/**
+ * 확정 쿠키는 30분 살아 있다. 그 사이 취소하고 새로고침하면 예전에는 "펀딩이
+ * 확정되었습니다"와 내려받기 폼이 그대로 다시 떴다. 판정은 manage 화면과 같은
+ * isLiveFundingOrderStatus를 쓴다.
+ */
+describe('살아 있지 않은 후원(?o=)', () => {
+  it('환불된 건에는 확정 문구도 내려받기 폼도 없다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'refunded' }));
+    const r = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as {
+      props: { outcome: string; statusLabel: string; downloads?: unknown; manageUrl: string };
+    };
+    expect(r.props.outcome).toBe('not_live');
+    expect(r.props.statusLabel).toBe('환불 완료');
+    expect(r.props.downloads).toBeUndefined();
+    expect(r.props.manageUrl).toBe(`/ko/funding/manage/${ORDER_NO}?token=${TOKEN}`);
+  });
+
+  it('만료·실패도 같다', async () => {
+    for (const [status, label] of [['expired', '만료'], ['failed', '결제 실패']]) {
+      (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status }));
+      const r = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as { props: { outcome: string; statusLabel: string } };
+      expect(r.props).toMatchObject({ outcome: 'not_live', statusLabel: label });
+    }
+  });
+
+  it('부분 환불은 아직 살아 있는 후원이라 확정 화면 그대로다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'partially_refunded' }));
+    const r = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as { props: { outcome: string } };
+    expect(r.props.outcome).toBe('confirmed');
+  });
+});
