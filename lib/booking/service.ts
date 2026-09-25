@@ -21,6 +21,8 @@ const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 export const createBookingOrder = async (
   payload: CreateBookingPayload,
   now: Date,
+  /** 캘린더 가드가 바쁘다고 판정한 방 — 배정 후보에서 뺀다(calendarGuard.ts). */
+  options: { excludeRooms?: readonly string[] } = {},
 ): Promise<
   | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string; roomNumber: string | null }
   | { ok: false; code: 'slot_taken' }
@@ -83,8 +85,9 @@ export const createBookingOrder = async (
   // 맞는다 — 연습실 예약이 녹음 예약을 막거나 그 반대가 되면 안 된다. 방 자원 상품은
   // 후보 방을 순서대로 시도해 **처음 비는 방에 배정**한다(R02 → R05 …). 전부 차면 slot_taken.
   // 녹음실 상품은 후보가 [null] 하나라 예전 동작 그대로다.
+  const excluded = new Set(options.excludeRooms ?? []);
   const candidates: Array<string | null> =
-    resourceKindOf(product) === 'rooms' ? [...(product.rooms ?? [])] : [null];
+    resourceKindOf(product) === 'rooms' ? (product.rooms ?? []).filter((r) => !excluded.has(r)) : [null];
   const bookingId = randomUUID().replace(/-/g, '');
   let assignedRoom: string | null | undefined;
   for (const room of candidates) {

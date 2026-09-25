@@ -19,6 +19,11 @@ jest.mock('../../../lib/booking/gcal', () => ({
   ...jest.requireActual('../../../lib/booking/gcal'),
   fetchBusyRanges: jest.fn(),
 }));
+jest.mock('../../../lib/booking/products', () => {
+  const actual = jest.requireActual('../../../lib/booking/products');
+  const twoRooms = { ...actual.getProduct('practice-room-hourly'), rooms: ['R02', 'R05'] };
+  return { ...actual, getProduct: (id: string) => (id === 'practice-room-hourly' ? twoRooms : actual.getProduct(id)) };
+});
 
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -42,7 +47,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 
-const ENV_KEYS = ['BOOKING_GCAL_ID', 'PRACTICE_ROOM_GCAL_ID'] as const;
+const ENV_KEYS = ['BOOKING_GCAL_ID', 'PRACTICE_ROOM_GCAL_ID', 'PRACTICE_ROOM_GCAL_ID_R02'] as const;
 const saved: Partial<Record<(typeof ENV_KEYS)[number], string | undefined>> = {};
 beforeEach(async () => {
   for (const k of ENV_KEYS) { saved[k] = process.env[k]; delete process.env[k]; }
@@ -111,5 +116,17 @@ describe('POST /api/bookings — 캘린더 재확인', () => {
     const res = await post({ productId: 'practice-room-hourly', hours: 1, date: dateFor(), startHour: 15, ...customer });
     expect(res.status).toBe(201);
     expect(fetchBusyRanges).not.toHaveBeenCalled();
+  });
+
+  it('연습실: 방별 캘린더로 한 방만 막히면 다른 방에 배정한다', async () => {
+    process.env.PRACTICE_ROOM_GCAL_ID = 'shared-cal';
+    process.env.PRACTICE_ROOM_GCAL_ID_R02 = 'r02-cal';
+    const date = dateFor();
+    (fetchBusyRanges as jest.Mock).mockImplementation(async (_a: Date, _b: Date, _c: string, room?: string | null) =>
+      room === 'R02' ? [{ start: new Date(`${date}T15:00:00+09:00`), end: new Date(`${date}T16:00:00+09:00`) }] : []);
+    const res = await post({ productId: 'practice-room-hourly', hours: 1, date, startHour: 15, ...customer });
+    expect(res.status).toBe(201);
+    const row = (await client.execute('SELECT room_number FROM bookings')).rows[0];
+    expect(row.room_number).toBe('R05');
   });
 });

@@ -3,7 +3,8 @@ import { and, eq, inArray, isNotNull, isNull, lt, ne, or, sql } from 'drizzle-or
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
-import { calendarIdFor, fetchBusyRanges, isCalendarActive, type BookingCalendar } from '../booking/gcal';
+import { calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
+import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
@@ -65,17 +66,25 @@ const sample = (values: string[]): string =>
  * 멈추는데**, 그 사실은 아무 데도 기록되지 않는다(고객 화면에 회색 문구 한 줄이 전부다).
  * 다른 점검과 달리 DB에 흔적이 없어서, 여기서 직접 찔러 보는 것 말고는 알 방법이 없다.
  */
-const CALENDARS: ReadonlyArray<{ which: BookingCalendar; label: string; env: string }> = [
-  { which: 'studio', label: '녹음실', env: 'BOOKING_GCAL_ID' },
-  { which: 'practice-room', label: '연습실', env: 'PRACTICE_ROOM_GCAL_ID' },
-];
+/** 점검할 캘린더 목록 — 녹음실, 연습실 공용, 그리고 방별 env가 따로 있는 방. */
+const calendarsToCheck = (): Array<{ which: BookingCalendar; room: string | null; label: string; env: string }> => {
+  const list: Array<{ which: BookingCalendar; room: string | null; label: string; env: string }> = [
+    { which: 'studio', room: null, label: '녹음실', env: 'BOOKING_GCAL_ID' },
+  ];
+  const shared = calendarIdFor('practice-room');
+  if (shared) list.push({ which: 'practice-room', room: null, label: '연습실', env: 'PRACTICE_ROOM_GCAL_ID' });
+  for (const room of PRACTICE_ROOM_HOURLY_ROOMS) {
+    const own = process.env[roomCalendarEnvKey(room)];
+    if (own && own !== shared) list.push({ which: 'practice-room', room, label: `연습실 ${room}`, env: roomCalendarEnvKey(room) });
+  }
+  return list;
+};
 
 const checkCalendar = async (now: Date): Promise<HealthIssue[]> => {
   const issues: HealthIssue[] = [];
-  for (const cal of CALENDARS) {
-    if (cal.which === 'practice-room' && !calendarIdFor('practice-room')) continue;
+  for (const cal of calendarsToCheck()) {
     try {
-      await fetchBusyRanges(now, new Date(now.getTime() + 24 * 60 * 60 * 1000), cal.which);
+      await fetchBusyRanges(now, new Date(now.getTime() + 24 * 60 * 60 * 1000), cal.which, cal.room);
     } catch (error: unknown) {
       issues.push({
         severity: 'high',

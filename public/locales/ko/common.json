@@ -27,6 +27,7 @@
     "voiceActing": "성우 녹음",
     "coverVideo": "커버 영상 촬영",
     "musicPromotion": "음원 발매 홍보",
+    "crowdfundingDesign": "펀딩 설계 대행",
     "releaseProject": "발매 프로젝트",
     "releaseSingle": "싱글 발매",
     "releaseEp": "EP 발매",
@@ -302,7 +303,7 @@
       "subtitle": "음악의 최종 완성도를 책임지는 단계. Spotify -14 LUFS 등 플랫폼 기준에 맞춰, 이어폰·차·스피커 어디서 들어도 밸런스가 무너지지 않게 마감합니다."
     },
     "practiceRoom": {
-      "title": "음악연습실 입주",
+      "title": "음악연습실 — 월 입주 · 시간제",
       "subtitle": "월 단위로 쓰는 24시간 방음 작업실 — 만실인 달이 많아 입주 대기도 함께 받고 있습니다.",
       "subtitleVacant": "월 단위로 쓰는 24시간 방음 작업실 — 지금 {{rooms}}자리 남았습니다.",
       "detailLink": "연습실 시설·입주 혜택 자세히 보기",
@@ -340,7 +341,8 @@
       "location": "온라인으로 문의하기",
       "inquiry": "무료 상담 신청",
       "bookingEntry": "온라인 예약",
-      "orderEntry": "온라인 주문"
+      "orderEntry": "온라인 주문",
+      "detail": "자세히 보기"
     },
     "relatedStoriesTitle": "예약 전 한 번 더 살펴보면 좋은 가이드",
     "relatedStoriesSubtitle": "비용·발매·녹음 절차를 미리 알면 첫 세션을 더 알차게 쓸 수 있습니다.",

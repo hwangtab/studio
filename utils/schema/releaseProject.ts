@@ -43,7 +43,7 @@ const RELEASE_AUDIENCE_TYPES: Record<Locale, string> = {
   th: 'นักร้อง-นักแต่งเพลงอินดี้',
   uz: 'Indie qo‘shiqchi-bastakorlar',
 };
-const RELEASE_TIER_LABELS: Record<'single' | 'ep' | 'album', Record<Locale, string>> = {
+export const RELEASE_TIER_LABELS: Record<'single' | 'ep' | 'album', Record<Locale, string>> = {
   single: {
     ko: '싱글 발매 프로젝트', en: 'Single Release Project', zh: '单曲发行项目',
     es: 'Proyecto de Single', vi: 'Dự án phát hành Single', th: 'โปรเจกต์ปล่อยซิงเกิล', uz: 'Singl reliz loyihasi',

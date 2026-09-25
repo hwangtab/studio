@@ -20,6 +20,12 @@ jest.mock('../../../lib/booking/gcal', () => ({
   ...jest.requireActual('../../../lib/booking/gcal'),
   fetchBusyRanges: jest.fn(),
 }));
+// 방이 둘인 상황을 만든다 — 운영 상수는 R02 하나라 방별 캘린더 분기를 테스트할 수 없다.
+jest.mock('../../../lib/booking/products', () => {
+  const actual = jest.requireActual('../../../lib/booking/products');
+  const twoRooms = { ...actual.getProduct('practice-room-hourly'), rooms: ['R02', 'R05'] };
+  return { ...actual, getProduct: (id: string) => (id === 'practice-room-hourly' ? twoRooms : actual.getProduct(id)) };
+});
 
 // eslint-disable-next-line import/first
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -43,7 +49,7 @@ beforeAll(async () => {
 });
 afterAll(() => client.close());
 
-const ENV_KEYS = ['BOOKING_GCAL_ID', 'PRACTICE_ROOM_GCAL_ID'] as const;
+const ENV_KEYS = ['BOOKING_GCAL_ID', 'PRACTICE_ROOM_GCAL_ID', 'PRACTICE_ROOM_GCAL_ID_R05'] as const;
 const saved: Partial<Record<(typeof ENV_KEYS)[number], string | undefined>> = {};
 beforeEach(() => {
   for (const k of ENV_KEYS) { saved[k] = process.env[k]; delete process.env[k]; }
@@ -106,5 +112,30 @@ describe('slots API — 캘린더 규칙', () => {
     const res = await call({ productId: 'practice-room-hourly', date: dateFor(), hours: '1' });
     expect(res.statusCode).toBe(503);
     expect(res.body).toEqual({ ok: false, code: 'calendar_unavailable' });
+  });
+
+  it('방별 캘린더: R05 캘린더의 일정은 R05만 막고 R02가 비어 있으면 슬롯은 가능', async () => {
+    process.env.PRACTICE_ROOM_GCAL_ID = 'shared-cal';
+    process.env.PRACTICE_ROOM_GCAL_ID_R05 = 'r05-cal';
+    const date = dateFor();
+    (fetchBusyRanges as jest.Mock).mockImplementation(async (_a: Date, _b: Date, _c: string, room?: string | null) =>
+      room === 'R05' ? [{ start: new Date(`${date}T15:00:00+09:00`), end: new Date(`${date}T16:00:00+09:00`) }] : []);
+    const res = await call({ productId: 'practice-room-hourly', date, hours: '1' });
+    expect(res.statusCode).toBe(200);
+    const rooms = (fetchBusyRanges as jest.Mock).mock.calls.map((c) => c[3]).sort();
+    expect(rooms).toEqual(['R02', 'R05']);
+    const slots = (res.body as { slots: Array<{ startHour: number; available: boolean }> }).slots;
+    expect(slots.find((s) => s.startHour === 15)?.available).toBe(true);
+  });
+
+  it('공용 캘린더의 일정은 방별 캘린더가 없는 방 전부를 막는다', async () => {
+    process.env.PRACTICE_ROOM_GCAL_ID = 'shared-cal';
+    const date = dateFor();
+    (fetchBusyRanges as jest.Mock).mockResolvedValue([
+      { start: new Date(`${date}T15:00:00+09:00`), end: new Date(`${date}T16:00:00+09:00`) },
+    ]);
+    const res = await call({ productId: 'practice-room-hourly', date, hours: '1' });
+    const slots = (res.body as { slots: Array<{ startHour: number; available: boolean }> }).slots;
+    expect(slots.find((s) => s.startHour === 15)?.available).toBe(false);
   });
 });

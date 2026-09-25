@@ -27,6 +27,7 @@
     "voiceActing": "Locución",
     "coverVideo": "Video Cover",
     "musicPromotion": "Campaña de Prensa",
+    "crowdfundingDesign": "Diseño de Crowdfunding",
     "releaseProject": "Proyecto de Lanzamiento",
     "releaseSingle": "Single",
     "releaseEp": "EP",
@@ -302,7 +303,7 @@
       "subtitle": "La etapa que remata el disco. Ajustado a objetivos de plataforma como -14 LUFS de Spotify, para que el balance se sostenga en auriculares, en el coche o en altavoces."
     },
     "practiceRoom": {
-      "title": "Residencia en Sala de Práctica",
+      "title": "Sala de Práctica — Residencia Mensual · Por Horas",
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
       "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: disponible para mudarse ahora mismo.",
       "detailLink": "Ver instalaciones y beneficios para residentes",
@@ -340,7 +341,8 @@
       "location": "Contactar Online",
       "inquiry": "Solicitar Consulta Gratuita",
       "bookingEntry": "Reservar en línea",
-      "orderEntry": "Pedir en línea"
+      "orderEntry": "Pedir en línea",
+      "detail": "Ver más"
     },
     "relatedStoriesTitle": "Guías que conviene revisar antes de reservar",
     "relatedStoriesSubtitle": "Conocer de antemano los costos, el lanzamiento y el proceso de grabación te ayuda a aprovechar al máximo tu primera sesión.",

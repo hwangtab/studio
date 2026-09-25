@@ -75,14 +75,13 @@ export const FUNDING_PAYMENT_FEE_PERCENT = 3.3; // 부가세 포함
 /** 펀딩 정산 원천징수율. ARTIST_SUPPORT_WITHHOLDING_PERCENT와 값은 같지만 별도
  * 상품의 별도 상수다 — 한쪽 요율이 바뀌어도 다른 쪽이 딸려가면 안 된다. */
 export const FUNDING_WITHHOLDING_PERCENT = 3.3;
-/** schema.org '음반 기획(Album Production)' 오퍼 앵커 — 별개 오퍼(레슨·축가와 값만 동일). */
-export const PRODUCTION_OFFER_PRICE = 350000;
 /** 부가 서비스 '기획/컨설팅' 시간당 단가(service-consulting). */
 export const CONSULTING_HOURLY_PRICE = 50000;
 
 // 크라우드펀딩 설계 대행 — 발매 프로젝트와 별개로도 의뢰받는 독립 상품이라
 // llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
 export const FUNDING_DESIGN_PRICE = 400000;
+/** 성공 수수료 — 펀딩 성공 시 **모금액**의 이 비율(2026-09-25 운영자 확인). */
 export const FUNDING_SUCCESS_FEE_PERCENT = 10;
 
 /**
@@ -447,7 +446,16 @@ export const getPricingData = (locale: Locale) => {
         th: 'วางแผนหน้า crowdfunding (Tumblbug ฯลฯ) การเล่าเรื่อง และออกแบบรีวอร์ด',
         uz: 'Crowdfunding sahifasini rejalash (Tumblbug va b.), storytelling hamda reward dizayni.'
       }),
-      note: t(locale, { ko: '+ 성공 수수료 10% (후불)', en: '+ 10% success fee', zh: '+ 10% 成功手续费', es: '+ 10% tarifa de éxito', vi: '+ Phí thành công 10% (trả sau)', th: '+ ค่าธรรมเนียมความสำเร็จ 10% (ชำระภายหลัง)', uz: '+ 10% muvaffaqiyat to"lovi (keyin to"lanadi)' }),
+      // 성공 수수료 기준 = 모금액(2026-09-25 운영자 확인).
+      note: t(locale, {
+        ko: `+ 성공 시 모금액의 ${FUNDING_SUCCESS_FEE_PERCENT}% (후불)`,
+        en: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% of funds raised if successful`,
+        zh: `+ 成功时收取筹款额的 ${FUNDING_SUCCESS_FEE_PERCENT}%`,
+        es: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% de lo recaudado si tiene éxito`,
+        vi: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% số tiền gây quỹ khi thành công (trả sau)`,
+        th: `+ ${FUNDING_SUCCESS_FEE_PERCENT}% ของยอดระดมทุนเมื่อสำเร็จ (ชำระภายหลัง)`,
+        uz: `+ muvaffaqiyatli bo'lsa, yig'ilgan mablag'ning ${FUNDING_SUCCESS_FEE_PERCENT}% (keyin to'lanadi)`,
+      }),
     },
     {
       /**

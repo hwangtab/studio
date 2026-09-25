@@ -22,10 +22,14 @@ import {
   MIXING_LEVEL1_PRICE,
   MIXING_LEVEL2_PRICE,
   MIXING_LEVEL3_PRICE,
+  PRACTICE_ROOM_HOURLY_PRICE_INCL,
   PRACTICE_ROOM_MONTHLY_PRICE,
   RECORDING_HOURLY_PRICE,
   RELEASE_ALBUM_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
+  RELEASE_PRESS_INTRO_ENDS_ON,
+  RELEASE_PRESS_INTRO_PRICE,
+  RELEASE_PRESS_PRICE,
   RELEASE_SINGLE_FROM_PRICE,
   SINGLE_BUNDLE_PRICE,
   VOCAL_PACKAGE_PRICE,
@@ -47,7 +51,8 @@ export const LESSON_PER_SESSION_PRICE = LESSON_MONTHLY_PRICE / 4;
  * 항목을 추가/삭제하면 llms.ts·llms-full.ts 양쪽에 자동 반영된다.
  */
 export const PRICE_FACTS: string[] = [
-  `**Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts). Hourly rental and band rehearsal rooms are NOT operated.`,
+  `**Practice Room Monthly Residency**: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month (₩0 deposit, 50% off first month for 1-year contracts). Band rehearsal rooms are NOT operated.`,
+  `**Practice Room Hourly**: ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour, **VAT included** (unlike the other prices here) — 1 to 8 hours, 24/7, self-service, same-day online booking`,
   `**Vocal Recording 1프로 (1-song package)**: ${krw(VOCAL_PACKAGE_PRICE)} KRW (3 hours, dedicated engineer included)`,
   `**Hourly Recording (voice acting / instrument / corrections)**: ${krw(RECORDING_HOURLY_PRICE)} KRW/hour (minimum 2 hours)`,
   `**1-Song Bundle (planning → release)**: ${krw(SINGLE_BUNDLE_PRICE)} KRW (recording, mixing, mastering, digital distribution, release press; ~9% below the production line-item total)`,
@@ -59,7 +64,8 @@ export const PRICE_FACTS: string[] = [
   `**1:1 Producing Lesson (MIDI/composition/mixing)**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each, ${krw(LESSON_PER_SESSION_PRICE)} KRW/session)`,
   `**Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ${krw(MIXING_LEVEL1_PRICE)} · 11–30 ${krw(MIXING_LEVEL2_PRICE)} · 31+ ${krw(MIXING_LEVEL3_PRICE)}, includes 2 revisions)`,
   `**Mastering**: ${krw(MASTERING_SINGLE_PRICE)} KRW/song for a single (1 revision included); ${krw(MASTERING_PACKAGE_PRICE)} KRW/song when mastering 4+ tracks together (EP / full album)`,
-  `**Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% success fee (paid after the campaign) — available without commissioning a release project`,
+  `**Music Release PR (standalone)**: ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW) — press release in five languages, press kit page, outreach to Korean music outlets plus media, radio and record shops in 60 countries, send report. No production required; placement is not guaranteed`,
+  `**Crowdfunding Design (standalone)**: ${krw(FUNDING_DESIGN_PRICE)} KRW upfront + a success fee of ${FUNDING_SUCCESS_FEE_PERCENT}% of the funds raised if the campaign succeeds — available without commissioning a release project`,
   `**Album Release Project (flagship, from)**: producer-led release production; the all-in-one bundles above are its fixed-scope entry, so the floors are the same numbers: single from ~${krw(RELEASE_SINGLE_FROM_PRICE)} KRW; EP from ~${krw(RELEASE_EP_FROM_PRICE)} KRW (3–5 tracks); full album from ~${krw(RELEASE_ALBUM_FROM_PRICE)} KRW (8 songs)`,
 ];
 

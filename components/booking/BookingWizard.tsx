@@ -14,6 +14,8 @@ import { refundPolicyFor } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
 import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import { CANONICAL_FACTS } from '../../lib/factTokens';
+import { getSiteConfig } from '../../data/siteConfig';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
 
 interface BookingWizardProps {
@@ -101,6 +103,10 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
   const [slotsError, setSlotsError] = useState<string | null>(null);
   // 409(다른 예약 선점) 후 슬롯 단계로 되돌아왔을 때 보여주는 안내 — slotsError(조회 실패)와는 다른 채널.
   const [slotsNotice, setSlotsNotice] = useState<string | null>(null);
+  // 슬롯 조회 실패(503 등) 뒤 "다시 불러오기" — 값이 바뀌면 같은 날짜로 재조회한다.
+  const [retryTick, setRetryTick] = useState(0);
+  const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
+  const telHref = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
   const [selectedStartHour, setSelectedStartHour] = useState<number | null>(null);
 
   const resetSlotState = () => {
@@ -172,7 +178,7 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
     const controller = new AbortController();
     void fetchSlots(controller.signal);
     return () => controller.abort();
-  }, [step, date, fetchSlots]);
+  }, [step, date, fetchSlots, retryTick]);
 
   const slotButtonClass = (slot: DaySlot) => {
     if (!slot.available)
@@ -454,9 +460,25 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
               <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">시간 선택</p>
               {slotsLoading && <p className="text-sm text-gray-500 dark:text-gray-400">예약 현황을 불러오는 중…</p>}
               {slotsError && (
-                <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-                  {slotsError}
-                </p>
+                <div role="alert" className="rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300">
+                  <p>{slotsError}</p>
+                  <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
+                    <button
+                      type="button"
+                      onClick={() => setRetryTick((n) => n + 1)}
+                      className="font-semibold underline underline-offset-2"
+                    >
+                      다시 불러오기
+                    </button>
+                    <span className="text-red-600/80 dark:text-red-300/80">
+                      계속 안 되면{' '}
+                      <a href={kakaoUrl} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2">카카오톡</a>
+                      {' '}또는{' '}
+                      <a href={telHref} className="font-semibold underline underline-offset-2">{CANONICAL_FACTS.phone}</a>
+                      로 예약해 주세요.
+                    </span>
+                  </div>
+                </div>
               )}
               {!slotsLoading && !slotsError && slots.length > 0 && (
                 <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">

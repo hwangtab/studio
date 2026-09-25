@@ -122,6 +122,9 @@ export const Footer = ({ locale }: FooterProps) => {
               <FooterLink href={`/${locale}/release-project/single`}>{t('nav.releaseSingle')}</FooterLink>
               <FooterLink href={`/${locale}/release-project/ep`}>{t('nav.releaseEp')}</FooterLink>
               <FooterLink href={`/${locale}/release-project/album`}>{t('nav.releaseAlbum')}</FooterLink>
+              {locale === 'ko' && (
+                <FooterLink href="/ko/crowdfunding-design">{t('nav.crowdfundingDesign')}</FooterLink>
+              )}
             </ul>
             {/* 후원·선구매·예매는 행위가 달라도 대상이 같다 — 함께 만든 아티스트다.
                 헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다.

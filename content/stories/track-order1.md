@@ -4,6 +4,7 @@ date: 2026-04-07
 lastmod: 2026-07-27
 author: 스튜디오 놀
 category: 음악 제작
+cta: release
 tags:
   - 트랙 순서
   - 앨범 구성

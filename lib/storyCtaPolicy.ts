@@ -6,7 +6,10 @@ interface ResolveStoryCTATypeInput {
   override?: StoryCTAOverride;
 }
 
-const PRACTICE_SLUG_PATTERN = /(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody(?!ne)|topline)/i;
+// 작곡·편곡·코드·MIDI·비트메이킹 — 2026-09-25까지 연습실(practice) CTA였다(5월 규칙, 65093cc192).
+// 그땐 레슨이 주력 상품이 아니었다. 지금 이 주제의 짝은 1:1 프로듀싱 레슨(미디·작곡·편곡)이라
+// lesson으로 보낸다(운영자 결정 2026-09-25). 이름은 무엇을 가리키는지로 바꿨다.
+const COMPOSITION_SLUG_PATTERN = /(^|[-_])(compos|songwrit|arrang|chord|midi|beatmak|producer|creative-?block|melody(?!ne)|topline)/i;
 // 프로듀싱 레슨(미디·작곡·믹싱)이 맞는 학습 주제만. 발성 항목(breath·belting·falsetto·
 // vibrato·head/chest/mix-voice·vocal-range·posture·warmup·articulation·ear/pitch/sight…)은
 // 2026-09-04에 걷어냈다 — 스튜디오는 보컬·악기 레슨을 하지 않는다(CLAUDE.md "보컬·악기
@@ -23,8 +26,9 @@ const getCategoryFallbackCTA = (categoryKey: string | undefined): StoryCTAOverri
   switch (categoryKey) {
     case 'instrument':
     case 'region':
-    case 'production':
       return 'practice';
+    // 음악 제작(작곡·DAW) 카테고리 — 2026-09-25에 practice → lesson(위 COMPOSITION 주석과 같은 결정).
+    case 'production':
     case 'lesson':
       return 'lesson';
     case 'mixing':
@@ -64,9 +68,10 @@ const resolveStoryCTATypeUnguarded = ({
   if (override) return override;
   if (slug.startsWith('practice-room-')) return 'practice';
 
-  // 작곡/편곡/코드/MIDI/비트메이킹은 24시간 작업 환경(음악연습실 월세) 페어링.
-  // melody(?!ne)는 Melodyne 같은 mixing 도구를 제외한다.
-  if (PRACTICE_SLUG_PATTERN.test(slug)) return 'practice';
+  // 작곡/편곡/코드/MIDI/비트메이킹 → 프로듀싱 레슨. melody(?!ne)는 Melodyne 같은 mixing 도구를
+  // 제외한다. 보컬 카테고리(topline-* 등)만은 연습실을 유지한다 — lesson을 주면 보컬 가드가
+  // recording으로 바꾸는데, 작곡 글 독자에게 녹음 세션을 권하는 것보다 기존 판정이 맞다.
+  if (COMPOSITION_SLUG_PATTERN.test(slug)) return categoryKey === 'vocal' ? 'practice' : 'lesson';
 
   // 작곡·미디 입문 등 학습 주제 → 프로듀싱 레슨. (vocal 카테고리는 상단 가드가 걸러낸다.)
   if (LESSON_SLUG_PATTERN.test(slug)) return 'lesson';

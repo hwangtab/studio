@@ -106,6 +106,8 @@ howTo:
 
 ---
 
+%%service:promotion%%
+
 ## EPK 제작 플랫폼 비교
 
 | 플랫폼 | 특징 | 비용 |

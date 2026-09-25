@@ -3,7 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, orders, refunds, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
 import { sendBookingCancelledEmails, sendMixingOrderCancelledEmails } from './email';
-import { deleteBookingEvent } from './gcal';
+import { calendarForService, deleteBookingEvent } from './gcal';
 import { canAdminRefund, isCancelledRemainderRefund } from './admin-serialize';
 import { computeRefund, refundPolicyFor } from './refund-policy';
 import { getProduct } from './products';
@@ -420,7 +420,7 @@ const cancelSessionBooking = async (
   // 후처리 — 환불은 끝났으므로 실패를 삼키되 기록 (confirm.ts와 동일 원칙).
   if (booking.gcalEventId) {
     try {
-      await deleteBookingEvent(booking.gcalEventId, booking.serviceType === 'practice-room' ? 'practice-room' : 'studio');
+      await deleteBookingEvent(booking.gcalEventId, calendarForService(booking.serviceType), booking.roomNumber);
     } catch (error) {
       const detail = error instanceof Error ? error.message : String(error);
       try {

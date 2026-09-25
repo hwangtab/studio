@@ -1,30 +1,38 @@
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig, socialProfiles } from '../../data/siteConfig';
 import {
+  COVER_VIDEO_PACKAGE_PRICE,
+  FUNDING_DESIGN_PRICE,
+  LESSON_MONTHLY_PRICE,
   MIXING_LEVEL1_PRICE,
   PRACTICE_ROOM_HOURLY_PRICE_INCL,
   PRACTICE_ROOM_MONTHLY_PRICE,
-  PRODUCTION_OFFER_PRICE,
   RECORDING_HOURLY_PRICE,
-  VOCAL_PACKAGE_PRICE,
-  RELEASE_PRESS_INTRO_PRICE,
   RELEASE_PRESS_INTRO_ENDS_ON,
-  FUNDING_DESIGN_PRICE,
+  RELEASE_PRESS_INTRO_PRICE,
+  SINGLE_BUNDLE_PRICE,
+  VOCAL_PACKAGE_PRICE,
+  VOICEOVER_HOURLY_PRICE,
+  WEDDING_PACKAGE_PRICE,
 } from '../../data/pricing';
 import { buildOperatorPersonNode, getOperatorPersonId } from './person';
 import {
+  COVER_VIDEO_OFFER_NAMES,
   DEFAULT_SCHEMA_IMAGE,
+  FUNDING_DESIGN_OFFER_NAMES,
   getOfferPriceValidUntil,
+  LESSON_OFFER_NAMES,
   MIXING_OFFER_NAMES,
   OFFER_CATALOG_NAMES,
   PRACTICE_HOURLY_OFFER_NAMES,
   PRACTICE_OFFER_NAMES,
-  RELEASE_PRESS_OFFER_NAMES,
-  FUNDING_DESIGN_OFFER_NAMES,
-  PRODUCTION_OFFER_NAMES,
   RECORDING_OFFER_NAMES,
+  RELEASE_PRESS_OFFER_NAMES,
   VOCAL_PACKAGE_OFFER_NAMES,
+  VOICEOVER_OFFER_NAMES,
+  WEDDING_OFFER_NAMES,
 } from './shared';
+import { RELEASE_TIER_LABELS } from './releaseProject';
 
 export const generateDefaultSchema = (
   siteUrl: string,
@@ -67,17 +75,57 @@ export const generateDefaultSchema = (
   const personId = getOperatorPersonId(siteUrl);
 
   const offerCatalogName = OFFER_CATALOG_NAMES[locale];
-  const recordingOfferName = RECORDING_OFFER_NAMES[locale];
-  const vocalPackageOfferName = VOCAL_PACKAGE_OFFER_NAMES[locale];
-  const mixingOfferName = MIXING_OFFER_NAMES[locale];
-  const productionOfferName = PRODUCTION_OFFER_NAMES[locale];
-  const practiceOfferName = PRACTICE_OFFER_NAMES[locale];
-  const practiceHourlyOfferName = PRACTICE_HOURLY_OFFER_NAMES[locale];
-  const releasePressOfferName = RELEASE_PRESS_OFFER_NAMES[locale];
-  const fundingDesignOfferName = FUNDING_DESIGN_OFFER_NAMES[locale];
   const priceValidUntil = getOfferPriceValidUntil();
-  // 홍보 도입가는 종료일이 정해져 있다 — 일반 오퍼처럼 +12개월로 주장하면 표시광고법상 허위가 된다.
-  const pressPriceValidUntil = RELEASE_PRESS_INTRO_ENDS_ON;
+
+  // 스튜디오가 파는 상품 목록 — hasOfferCatalog와 makesOffer가 같은 배열에서 나온다.
+  // 두 목록을 손으로 따로 적던 시절엔 새 상품이 한쪽에만 들어가거나(2026-09-16 #173 이전엔
+  // 홍보·펀딩 설계가 둘 다 없었다) 화면에 없는 가격이 남았다: '음반 기획 350,000원'은 어떤
+  // 페이지에도 없는 상품이었는데, 모든 페이지 @graph에 실려 AI가 "앨범 기획 35만원"으로 답할
+  // 수 있는 상태였다. 발매 상품의 실제 진입가는 싱글 발매 프로젝트(= 싱글 통합 번들)다.
+  //
+  // 가격은 전부 data/pricing.ts 상수, url은 그 가격이 화면에 보이는 페이지다.
+  // 이 목록에 상품을 더하거나 빼면 data/pricing.test.ts의 기대 목록도 함께 고칠 것.
+  // vatIncluded: 연습실 시간제만 소비자가(VAT 포함)로 판다 — 나머지는 전부 VAT 별도.
+  const offers: Array<{ name: string; price: number; path: string; validUntil?: string; vatIncluded?: boolean }> = [
+    { name: RECORDING_OFFER_NAMES[locale], price: RECORDING_HOURLY_PRICE, path: '/pricing' },
+    { name: VOCAL_PACKAGE_OFFER_NAMES[locale], price: VOCAL_PACKAGE_PRICE, path: '/pricing' },
+    { name: MIXING_OFFER_NAMES[locale], price: MIXING_LEVEL1_PRICE, path: '/pricing' },
+    { name: RELEASE_TIER_LABELS.single[locale], price: SINGLE_BUNDLE_PRICE, path: '/release-project/single' },
+    { name: PRACTICE_OFFER_NAMES[locale], price: PRACTICE_ROOM_MONTHLY_PRICE, path: '/practice-room' },
+    { name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', vatIncluded: true },
+    // 홍보 도입가는 종료일이 정해져 있다 — 일반 오퍼처럼 +12개월로 주장하면 표시광고법상 허위가 된다.
+    { name: RELEASE_PRESS_OFFER_NAMES[locale], price: RELEASE_PRESS_INTRO_PRICE, path: '/music-promotion', validUntil: RELEASE_PRESS_INTRO_ENDS_ON },
+    // 전용 LP는 ko 전용이라 다른 로케일은 요금 페이지를 가리킨다(/en/crowdfunding-design은 404).
+    { name: FUNDING_DESIGN_OFFER_NAMES[locale], price: FUNDING_DESIGN_PRICE, path: locale === 'ko' ? '/crowdfunding-design' : '/pricing' },
+    { name: LESSON_OFFER_NAMES[locale], price: LESSON_MONTHLY_PRICE, path: '/lesson' },
+    { name: WEDDING_OFFER_NAMES[locale], price: WEDDING_PACKAGE_PRICE, path: '/wedding-song' },
+    { name: VOICEOVER_OFFER_NAMES[locale], price: VOICEOVER_HOURLY_PRICE, path: '/voice-acting' },
+    { name: COVER_VIDEO_OFFER_NAMES[locale], price: COVER_VIDEO_PACKAGE_PRICE, path: '/cover-video' },
+  ];
+  const toOffer = (offer: (typeof offers)[number], withProvider: boolean) => ({
+    '@type': 'Offer',
+    priceCurrency: 'KRW',
+    price: offer.price,
+    priceValidUntil: offer.validUntil ?? priceValidUntil,
+    url: `${siteUrl}/${locale}${offer.path}`,
+    availability: 'https://schema.org/InStock',
+    ...(offer.vatIncluded
+      ? {
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: offer.price,
+            priceCurrency: 'KRW',
+            unitCode: 'HUR',
+            valueAddedTaxIncluded: true,
+          },
+        }
+      : {}),
+    itemOffered: {
+      '@type': 'Service',
+      name: offer.name,
+      ...(withProvider ? { provider: { '@type': 'Organization', '@id': organizationId } } : {}),
+    },
+  });
 
   return {
     '@context': 'https://schema.org',
@@ -136,7 +184,7 @@ export const generateDefaultSchema = (
         knowsAbout: [
           'Music Recording', 'Audio Mixing', 'Audio Mastering', 'Music Production',
           'Vocal Recording', 'Voice Acting Recording', 'Wedding Song Recording',
-          'Music Lesson', 'Practice Room', 'Home Recording',
+          'Producing Lesson', 'Practice Room', 'Home Recording', 'Music Release PR',
           locale === 'ko' ? '녹음 제작' : 'Sound Engineering',
           locale === 'ko' ? '음반 기획' : 'Album Production',
         ],
@@ -239,201 +287,9 @@ export const generateDefaultSchema = (
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
           name: offerCatalogName,
-          itemListElement: [
-            {
-              '@type': 'Offer',
-              priceCurrency: 'KRW',
-              price: RECORDING_HOURLY_PRICE,
-              priceValidUntil,
-              url: `${siteUrl}/${locale}/pricing`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: recordingOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-            {
-              '@type': 'Offer',
-              priceCurrency: 'KRW',
-              price: VOCAL_PACKAGE_PRICE,
-              priceValidUntil,
-              url: `${siteUrl}/${locale}/pricing`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: vocalPackageOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-            {
-              '@type': 'Offer',
-              priceCurrency: 'KRW',
-              price: MIXING_LEVEL1_PRICE,
-              priceValidUntil,
-              url: `${siteUrl}/${locale}/pricing`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: mixingOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-            {
-              '@type': 'Offer',
-              priceCurrency: 'KRW',
-              price: PRODUCTION_OFFER_PRICE,
-              priceValidUntil,
-              url: `${siteUrl}/${locale}/pricing`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: productionOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-            {
-              '@type': 'Offer',
-              name: practiceOfferName,
-              priceCurrency: 'KRW',
-              price: PRACTICE_ROOM_MONTHLY_PRICE,
-              priceValidUntil,
-              url: `${siteUrl}/${locale}/practice-room`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: practiceOfferName,
-                provider: {
-                  '@type': 'Organization',
-                  '@id': organizationId,
-                },
-              },
-            },
-            {
-              // 시간제 — 2026-09-25 사이트 예약 오픈. VAT 포함 소비자가(월세는 별도).
-              '@type': 'Offer',
-              name: practiceHourlyOfferName,
-              priceCurrency: 'KRW',
-              price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
-              priceValidUntil,
-              url: `${siteUrl}/ko/booking/practice-room`,
-              availability: 'https://schema.org/InStock',
-              priceSpecification: {
-                '@type': 'UnitPriceSpecification',
-                price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
-                priceCurrency: 'KRW',
-                unitCode: 'HUR',
-                valueAddedTaxIncluded: true,
-              },
-              itemOffered: {
-                '@type': 'Service',
-                name: practiceHourlyOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-            {
-              '@type': 'Offer',
-              priceCurrency: 'KRW',
-              price: RELEASE_PRESS_INTRO_PRICE,
-              priceValidUntil: pressPriceValidUntil,
-              url: `${siteUrl}/${locale}/music-promotion`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: releasePressOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-            {
-              '@type': 'Offer',
-              priceCurrency: 'KRW',
-              price: FUNDING_DESIGN_PRICE,
-              priceValidUntil,
-              url: `${siteUrl}/${locale}/pricing`,
-              availability: 'https://schema.org/InStock',
-              itemOffered: {
-                '@type': 'Service',
-                name: fundingDesignOfferName,
-                provider: { '@type': 'Organization', '@id': organizationId },
-              },
-            },
-          ],
+          itemListElement: offers.map((offer) => toOffer(offer, true)),
         },
-        makesOffer: [
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: RECORDING_HOURLY_PRICE,
-            priceValidUntil,
-            url: `${siteUrl}/${locale}/pricing`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: recordingOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: VOCAL_PACKAGE_PRICE,
-            priceValidUntil,
-            url: `${siteUrl}/${locale}/pricing`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: vocalPackageOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: MIXING_LEVEL1_PRICE,
-            priceValidUntil,
-            url: `${siteUrl}/${locale}/pricing`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: mixingOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: PRODUCTION_OFFER_PRICE,
-            priceValidUntil,
-            url: `${siteUrl}/${locale}/pricing`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: productionOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: PRACTICE_ROOM_MONTHLY_PRICE,
-            priceValidUntil,
-            url: `${siteUrl}/${locale}/practice-room`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: practiceOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: PRACTICE_ROOM_HOURLY_PRICE_INCL,
-            priceValidUntil,
-            url: `${siteUrl}/ko/booking/practice-room`,
-            availability: 'https://schema.org/InStock',
-            priceSpecification: { '@type': 'UnitPriceSpecification', price: PRACTICE_ROOM_HOURLY_PRICE_INCL, priceCurrency: 'KRW', unitCode: 'HUR', valueAddedTaxIncluded: true },
-            itemOffered: { '@type': 'Service', name: practiceHourlyOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: RELEASE_PRESS_INTRO_PRICE,
-            priceValidUntil: pressPriceValidUntil,
-            url: `${siteUrl}/${locale}/music-promotion`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: releasePressOfferName },
-          },
-          {
-            '@type': 'Offer',
-            priceCurrency: 'KRW',
-            price: FUNDING_DESIGN_PRICE,
-            priceValidUntil,
-            url: `${siteUrl}/${locale}/pricing`,
-            availability: 'https://schema.org/InStock',
-            itemOffered: { '@type': 'Service', name: fundingDesignOfferName },
-          },
-        ],
+        makesOffer: offers.map((offer) => toOffer(offer, false)),
       },
       // 운영자 Person entity 실체. 위 두 노드의 founder 참조가 가리키는 대상이며,
       // 2017 한국대중음악상 수상(award) + 제3자 보도(subjectOf)를 함께 실어 커머셜
