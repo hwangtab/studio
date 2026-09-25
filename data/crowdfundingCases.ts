@@ -13,6 +13,9 @@
  * 미달 건도 분모에 넣어야 한다.
  *
  * 분야(kind)는 각 프로젝트 소개문에서 옮겼다. 소개문으로 판단이 안 되면 '기타'.
+ *
+ * 역할: 아래 전부 운영자가 기획·운영했다(2026-09-25 운영자 확인). 개설 계정이 한국스마트협동조합·
+ * 아티스트 본인·씨앗페인 것도 마찬가지다 — 계정 명의와 기획·운영 주체는 다를 수 있다.
  */
 export const CASES_CHECKED_ON = '2026-09-25';
 
@@ -27,7 +30,10 @@ export type CrowdfundingCase = {
   /** YYYY-MM — 종료 월. 진행 중이면 시작 월. */
   period: string;
   state: 'succeeded' | 'ongoing';
-  /** 이 음반이 받은 상 — data/siteConfig.ts studioOperator.awards와 같은 음반일 때만. */
+  /**
+   * 이 음반이 받은 상 — data/siteConfig.ts studioOperator.awards와 같은 음반일 때만.
+   * 테이크아웃드로잉은 수상 연도(2015)가 펀딩 마감(2016-02)보다 앞서지만 같은 음반이다(운영자 확인).
+   */
   award?: string;
 };
 
@@ -46,7 +52,7 @@ export const CROWDFUNDING_CASES: readonly CrowdfundingCase[] = [
   { title: '<강호중> 앨범 발매 및 단독공연 프로젝트', url: 'https://tumblbug.com/kanghojoong', platform: '텀블벅', kind: '음반', raised: 14228000, percent: 142, backers: 72, period: '2022-03', state: 'succeeded' },
   { title: '새 민중음악 선곡집 - 소성리의 노래들', url: 'https://tumblbug.com/newprotestsong', platform: '텀블벅', kind: '음반', raised: 3531000, percent: 117, backers: 114, period: '2017-09', state: 'succeeded' },
   { title: "30년 맛의 비법, '아현포차 요리책'", url: 'https://tumblbug.com/pocha', platform: '텀블벅', kind: '출판', raised: 8258000, percent: 165, backers: 412, period: '2017-08', state: 'succeeded' },
-  { title: '테이크아웃드로잉 컴필레이션 앨범', url: 'https://tumblbug.com/takeoutdrawingalbum', platform: '텀블벅', kind: '음반', raised: 2180000, percent: 121, backers: 99, period: '2016-02', state: 'succeeded' },
+  { title: '테이크아웃드로잉 컴필레이션 앨범', url: 'https://tumblbug.com/takeoutdrawingalbum', platform: '텀블벅', kind: '음반', raised: 2180000, percent: 121, backers: 99, period: '2016-02', state: 'succeeded', award: '2015 레드어워드 주목할만한 연대' },
   { title: '자립심 페스티벌', url: 'https://tumblbug.com/jaripsim', platform: '텀블벅', kind: '공연', raised: 4505000, percent: 112, backers: 126, period: '2015-08', state: 'succeeded' },
   { title: 'POPE X POPE의 정규앨범발매 및 단독공연', url: 'https://tumblbug.com/popexpope', platform: '텀블벅', kind: '음반', raised: 2072000, percent: 103, backers: 52, period: '2015-03', state: 'succeeded' },
   { title: '<에고펑션에러> 앨범발매 및 단독공연', url: 'https://tumblbug.com/egofunctionerror', platform: '텀블벅', kind: '음반', raised: 2487000, percent: 124, backers: 88, period: '2014-12', state: 'succeeded' },
