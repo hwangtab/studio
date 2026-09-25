@@ -90,7 +90,6 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
         ]}
         includeSchema={true}
         canonical={`/${locale}/contact`}
-        faqItems={contactFaqData}
         webPageType="ContactPage"
       />
       <ImageHero
