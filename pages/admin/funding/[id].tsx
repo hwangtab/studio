@@ -187,8 +187,16 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     }
     return run(() => patchPledge(pledge.id, { action: 'unpublish', reason: reason.trim() }));
   };
+  /**
+   * 숨긴 뒤에 후원자가 표시 이름을 바꿨을 수 있다 — 그 변경은 어디에도 기록되지 않으므로,
+   * 해제 직전에 **지금 뜨게 될 이름**을 확인창에 보여 준다. 이름만 보고 내린 건이라면 그
+   * 이름이 그대로인지가 해제 판단의 전부다.
+   */
   const handleRestoreListing = () =>
-    run(() => patchPledge(pledge.id, { action: 'restore_listing' }), '운영자 숨김을 해제할까요? 후원자가 공개에 동의해 두었다면 명단에 다시 뜹니다(프로젝트 페이지에는 최대 몇 분 뒤 반영).');
+    run(
+      () => patchPledge(pledge.id, { action: 'restore_listing' }),
+      `운영자 숨김을 해제할까요? 후원자가 공개에 동의해 두었다면 "${pledge.publicName ?? `${pledge.customerName} (실명)`}"(으)로 명단에 다시 뜹니다(프로젝트 페이지에는 캐시 때문에 최대 몇 분 뒤 반영됩니다).`,
+    );
 
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
@@ -323,9 +331,13 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               {pledge.downloadedAt && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearDownloadRecord}>내려받기 기록 초기화</Button>
               )}
+              {/* 내리기는 **공개 동의와 무관하게** 늘 보여준다 — 두 축을 나눈 이유가
+                  "후원자가 토글해도 운영자 판단이 살아 있게"인데, 동의가 켜져 있을 때만 버튼을
+                  그리면 후원자가 공개를 껐다 켜는 사이 버튼이 사라져 선제 차단을 못 한다.
+                  unpublish API 자체엔 그 조건이 없다. */}
               {pledge.listingHiddenAt ? (
                 <Button light variant="outline" disabled={busy} onClick={handleRestoreListing}>명단 숨김 해제</Button>
-              ) : pledge.displayNamePublic && (
+              ) : (
                 <Button light variant="outline" disabled={busy} onClick={handleHideListing}>후원자 명단에서 내리기</Button>
               )}
               <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>

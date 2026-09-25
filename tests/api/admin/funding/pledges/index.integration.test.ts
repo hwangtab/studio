@@ -38,6 +38,8 @@ import { parseFundingProject } from '../../../../../lib/funding/projects';
 import { aggregateProjectStatus } from '../../../../../lib/funding/service';
 // eslint-disable-next-line import/first
 import { sendFundingConfirmedEmails } from '../../../../../lib/funding/email';
+// eslint-disable-next-line import/first
+import { PURGED_MARK } from '../../../../../lib/privacy/orderRetention';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -331,6 +333,30 @@ describe('실수령액 하한', () => {
 
   it('절반이면 통과한다 — 에누리 폭은 막지 않는다', async () => {
     const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0, actualAmount: 2_500 });
+    expect(r.status).toBe(201);
+  });
+});
+
+/**
+ * 파기 판정(lib/privacy/orderRetention.ts)은 `orders.customer_name = PURGED_MARK` 하나만
+ * 보고 날짜를 보지 않는다. 수기 등록도 같은 테이블에 쓰므로, 운영자가 그 문자열을 이름 칸에
+ * 적으면 그 후원의 배송지·응원 메시지·운영자 메모가 다음 파기 실행에 지워진다.
+ */
+describe('파기 표식 이름', () => {
+  it('이름이 파기 표식과 같으면 400이고 주문이 생기지 않는다', async () => {
+    const r = await call({ ...VALID_BODY, customerName: PURGED_MARK });
+    expect(r.status).toBe(400);
+    expect(r.body.message).toBe('이름을 확인해 주세요.');
+    expect((await client.execute('SELECT COUNT(*) AS c FROM orders')).rows[0].c).toBe(0);
+  });
+
+  it('앞뒤 공백을 붙여도 다듬은 뒤 같으면 400', async () => {
+    const r = await call({ ...VALID_BODY, customerName: `  ${PURGED_MARK} ` });
+    expect(r.status).toBe(400);
+  });
+
+  it('표식을 포함하지만 다른 텍스트가 붙은 이름은 등록된다', async () => {
+    const r = await call({ ...VALID_BODY, customerName: `김${PURGED_MARK}후원` });
     expect(r.status).toBe(201);
   });
 });

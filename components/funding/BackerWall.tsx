@@ -23,6 +23,13 @@ const formatDate = (at: number): string => {
  * 메시지는 후원자가 쓴 글이다. `dangerouslySetInnerHTML`을 쓰지 않으므로 React가 텍스트
  * 노드로 이스케이프한다. 그리고 `min-w-0` + `break-words`가 필요하다 — 공백 없는 긴 문자열
  * 하나가 카드를 밀어내 가로 스크롤을 만든다.
+ *
+ * 후원자가 쓴 값이 들어가는 자리에는 `overflow-hidden`도 필요하다. 결합 부호(`\p{M}`)는 폭을
+ * 차지하지 않고 위아래로 쌓이므로, `가` + U+0303 × 19는 닉네임 상한 20자를 통과하면서 한 줄
+ * 높이의 몇 배로 그려져 위쪽 제목을 덮는다(Zalgo). 입력을 막지 않는 이유는 정상적인 발음 구별
+ * 부호까지 오탐하기 때문이다 — SupporterTicker가 고정 높이 + `overflow-hidden`으로 무사한 것과
+ * 같은 방식으로 화면에서 막는다. 이름 세 자리와 **응원 메시지 본문**에 모두 걸어야 한다:
+ * 메시지 상한은 500자라 이름보다 더 높이 쌓을 수 있고, 카드를 넘어가면 위 카드의 글을 덮는다.
  */
 export default function BackerWall({ names, messages }: { names: string[]; messages: Message[] }) {
   const [shown, setShown] = useState(PAGE);
@@ -35,7 +42,7 @@ export default function BackerWall({ names, messages }: { names: string[]; messa
       <h2 id="backer-wall-heading" className="typo-card-subtitle text-gray-900 dark:text-white">
         함께한 후원자
       </h2>
-      <p className="typo-card-body mt-3 break-words leading-7">{names.join(' · ')}</p>
+      <p className="typo-card-body mt-3 overflow-hidden break-words leading-7">{names.join(' · ')}</p>
 
       {visible.length > 0 && (
         <>
@@ -44,13 +51,13 @@ export default function BackerWall({ names, messages }: { names: string[]; messa
             {visible.map((m, i) => (
               <li
                 key={`${m.name}-${m.at}-${i}`}
-                className="rounded-xl border border-gray-200/80 bg-white/60 p-4 dark:border-gray-700/70 dark:bg-gray-800/40"
+                className="overflow-hidden rounded-xl border border-gray-200/80 bg-white/60 p-4 dark:border-gray-700/70 dark:bg-gray-800/40"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <span className="min-w-0 break-words font-semibold text-gray-900 dark:text-white">{m.name}</span>
+                  <span className="min-w-0 overflow-hidden break-words font-semibold text-gray-900 dark:text-white">{m.name}</span>
                   <span className="typo-card-meta shrink-0">{formatDate(m.at)}</span>
                 </div>
-                <blockquote className="typo-card-body mt-2 min-w-0 whitespace-pre-line break-words">
+                <blockquote className="typo-card-body mt-2 min-w-0 overflow-hidden whitespace-pre-line break-words">
                   {m.message}
                 </blockquote>
               </li>

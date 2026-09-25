@@ -826,6 +826,11 @@ describe('발송 안 된 채 고객 정보 파기가 다가오는 펀딩', () =>
     const found = issues.find((i) => i.title.includes('고객 정보 파기가 다가온'));
     expect(found?.severity).toBe('medium');
     expect(found?.detail).toContain('SNB-1');
+    // 판단 시한이 걸린 유일한 경보라 무엇이 없어지는지를 정확히 말해야 한다 — 같은 실행에서
+    // purgeFundingPersonalDataOfPurgedOrders가 배송지·응원 메시지·메모까지 함께 지운다.
+    expect(found?.detail).toContain('배송지');
+    expect(found?.detail).toContain('응원 메시지');
+    expect(found?.detail).toContain('운영자 메모');
   });
 
   it('90일보다 여유가 있으면 알리지 않는다', async () => {

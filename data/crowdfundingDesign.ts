@@ -1,4 +1,7 @@
-import { formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_PAYMENT_FEE_PERCENT, FUNDING_PLATFORM_FEE_PERCENT } from './pricing';
+import {
+  formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_PAYMENT_FEE_PERCENT, FUNDING_PLATFORM_FEE_PERCENT,
+  FUNDING_WITHHOLDING_PERCENT,
+} from './pricing';
 import { CASES_CHECKED_ON, CASES_SUMMARY } from './crowdfundingCases';
 
 /**
@@ -22,12 +25,20 @@ import { CASES_CHECKED_ON, CASES_SUMMARY } from './crowdfundingCases';
 
 const designFee = `${formatPriceAmount(FUNDING_DESIGN_PRICE)}원`;
 const fundingFees = `플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}% · 결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`;
+/**
+ * **우리 수수료만 적고 끝내면 안 된다.** 개인 자격 개설자의 정산은 그 두 수수료 외에
+ * 원천징수를 한 번 더 뗀다(lib/funding/payout.ts, taxType === 'withholding'). 그래서
+ * "수수료만 뗍니다"·"뗀 금액을 정산합니다" 같은 완결성 단정은 실제 이체액과의 차액을 설명
+ * 없이 만든다. 율은 상수에서 읽는다 — 문자열로 박으면 정본과 갈라진다(가격 리터럴 스캔도
+ * 이 파일을 본다: data/pricing.test.ts).
+ */
+const withholdingNote = `개인 자격으로 정산받으면 원천징수 ${FUNDING_WITHHOLDING_PERCENT}%가 별도로 공제됩니다.`;
 const casesLine = `성공 ${CASES_SUMMARY.succeededCount}건 · 누적 ${formatPriceAmount(CASES_SUMMARY.succeededRaised)}원 · 후원자 ${formatPriceAmount(CASES_SUMMARY.succeededBackers)}명`;
 
 export const crowdfundingDesignCopy = {
   seo: {
     title: '크라우드펀딩 설계 대행 — 앨범 펀딩 기획·리워드·페이지 제작 | 스튜디오 놀',
-    description: `음반 크라우드펀딩을 기획부터 페이지 구축까지 대행하고, 스튜디오 놀 펀딩에 엽니다. 설계비 ${designFee}(부가세 별도), 성공 수수료 없음 — 모금액에서는 ${fundingFees}만 뗍니다. 음반 펀딩 수십 건·누적 약 3억원을 진행한 프로듀서가 맡습니다.`,
+    description: `음반 크라우드펀딩을 기획부터 페이지 구축까지 대행하고, 스튜디오 놀 펀딩에 엽니다. 설계비 ${designFee}(부가세 별도), 성공 수수료 없음 — 모금액에서는 ${fundingFees}를 뗍니다. 음반 펀딩 수십 건·누적 약 3억원을 진행한 프로듀서가 맡습니다.`,
     keywords: '크라우드펀딩 대행, 앨범 펀딩, 음반 크라우드펀딩, 펀딩 페이지 제작, 리워드 설계, 인디 앨범 제작비, 음반 제작비 마련, 스튜디오 놀 펀딩',
   },
   hero: {
@@ -86,7 +97,7 @@ export const crowdfundingDesignCopy = {
       { title: '상담', body: '카카오톡으로 음반과 예산 상황을 알려 주세요. 펀딩이 맞는지, 예술지원사업이 더 맞는지도 같은 자리에서 봅니다.' },
       { title: '기획', body: '스토리와 리워드 구성, 목표액을 정합니다. 목표액은 수수료와 리워드 원가까지 넣어 거꾸로 계산합니다.' },
       { title: '페이지 제작', body: '정한 구성대로 스튜디오 놀 펀딩 페이지를 구축합니다.' },
-      { title: '펀딩 종료 후', body: `모금액에서 ${fundingFees}를 뗀 금액을 정산합니다. 성공 수수료는 없습니다.` },
+      { title: '펀딩 종료 후', body: `모금액에서 ${fundingFees}를 뗍니다. 성공 수수료는 없습니다. ${withholdingNote}` },
     ],
   },
   alternatives: {
@@ -100,7 +111,7 @@ export const crowdfundingDesignCopy = {
       },
       {
         title: '직접 개설하고 싶다면',
-        body: `설계를 맡기지 않고 스튜디오 놀 펀딩에 직접 신청할 수도 있습니다. 이때는 설계비 없이 모금액에서 ${fundingFees}만 뗍니다.`,
+        body: `설계를 맡기지 않고 스튜디오 놀 펀딩에 직접 신청할 수도 있습니다. 이때는 설계비 없이 모금액에서 ${fundingFees}를 뗍니다.`,
         href: '/ko/funding/apply',
         label: '펀딩 개설 신청',
       },
@@ -122,7 +133,7 @@ export const crowdfundingDesignCopy = {
       },
       {
         question: '비용은 어떻게 되나요?',
-        answer: `설계비 ${designFee}(부가세 별도)입니다. 성공 수수료는 받지 않습니다. 펀딩이 끝나면 모금액에서 ${fundingFees}를 뗀 금액을 정산해 드립니다.`,
+        answer: `설계비 ${designFee}(부가세 별도)입니다. 성공 수수료는 받지 않습니다. 펀딩이 끝나면 모금액에서 ${fundingFees}를 뗍니다. ${withholdingNote}`,
       },
       {
         question: '펀딩이 목표에 못 미치면 어떻게 되나요?',
@@ -138,7 +149,7 @@ export const crowdfundingDesignCopy = {
       },
       {
         question: '직접 개설하는 것과 무엇이 다른가요?',
-        answer: `스튜디오 놀 펀딩은 누구나 직접 신청할 수 있고, 그때는 설계비 없이 ${fundingFees}만 뗍니다. 설계 대행은 스토리·리워드·목표액·페이지를 기획부터 함께 만드는 일입니다.`,
+        answer: `스튜디오 놀 펀딩은 누구나 직접 신청할 수 있고, 그때는 설계비 없이 ${fundingFees}를 뗍니다. 설계 대행은 스토리·리워드·목표액·페이지를 기획부터 함께 만드는 일입니다.`,
       },
       {
         question: '예술지원사업도 함께 상담할 수 있나요?',

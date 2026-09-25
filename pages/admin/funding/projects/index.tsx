@@ -109,16 +109,23 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                     <td className="px-4 py-3 whitespace-nowrap text-xs">
                       {!services.available ? (
                         <span className="text-gray-400">
-                          {services.reason === 'missing_table' ? '미적용(0037)' : '불러오지 못함'}
+                          {services.reason === 'missing_table'
+                            ? '미적용(0037)'
+                            : services.reason === 'schema_mismatch' ? '스키마 불일치' : '불러오지 못함'}
                         </span>
-                      ) : services.byProjectId[p.id] ? (
+                      ) : services.byProjectId[p.id] && services.byProjectId[p.id].kind !== 'none' ? (
                         <>
-                          <span className="font-semibold text-gray-800">{PROJECT_SERVICE_LABELS[services.byProjectId[p.id].kind]}</span>
+                          {/* DB에 CHECK 제약이 없어 수기 SQL·다른 세션의 스크립트가 열거값
+                              밖의 kind를 넣을 수 있다. 사전에 없으면 빈칸이 그려졌다. */}
+                          <span className="font-semibold text-gray-800">{PROJECT_SERVICE_LABELS[services.byProjectId[p.id].kind] ?? '알 수 없음'}</span>
                           <div className={services.byProjectId[p.id].designFeePaidAt ? 'text-green-700' : 'text-amber-700'}>
                             {services.byProjectId[p.id].designFeePaidAt ? '설계비 입금' : '설계비 미입금'}
                           </div>
                         </>
                       ) : (
+                        // 되돌린 프로젝트는 행이 kind='none'으로 남아 있다(약정가·입금 기록
+                        // 보존). 목록에서는 행이 없는 경우와 같이 보여야 한다 — 직접 개설인데
+                        // "설계비 입금" 줄이 붙으면 지금 청구할 돈이 있는 것처럼 읽힌다.
                         <span className="text-gray-500">{PROJECT_SERVICE_LABELS.none}</span>
                       )}
                     </td>

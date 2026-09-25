@@ -80,22 +80,17 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     </>
   );
 
-  if (variant === 'success' && isPublic && !hiddenByOperator) {
-    return (
-      <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-        <p className="break-keep text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라갑니다.
-        </p>
-        <p className="typo-card-meta mt-1">표시 이름을 바꾸거나 내리려면 펀딩 확인 페이지를 이용해 주세요.</p>
-        {feedback}
-      </div>
-    );
-  }
-
   /**
-   * 운영자가 내린 뒤에는 **안내와 동의 철회만** 둔다. 표시 이름을 바꿔 봐야 명단에 뜨지 않고
-   * (운영자만 되돌린다), "명단에서 내리기"는 이미 내려진 상태라 뜻이 어긋난다. 동의 철회는
-   * 후원자의 권리라(약관 제13조) 남긴다.
+   * **운영자가 내린 뒤에는 올리기·이름 편집을 그리지 않는다. 동의 철회만 남긴다.**
+   *
+   * `/api/funding/display-name`이 이 상태에서 **켜는** 요청만 409로 거부하므로
+   * (pages/api/funding/display-name.ts) 올리기·표시 이름 저장 버튼을 남겨 두면 눌러도 실패만
+   * 한다. 예전에는 그 저장이 200으로 성공해 "명단에 올렸습니다"라는 거짓 성공을 돌려줬다 —
+   * 실제로는 `listing_hidden_at`이 남아 명단에 뜨지 않는다.
+   *
+   * 반면 **철회는 약관 제13조 2항이 이 화면에서 약속한 것**이고 서버도 받아 준다. 운영자가
+   * 내려 뒀다는 사정이 그 권리를 없앨 이유가 없으므로(숨김이 풀리면 저장한 값이 그대로
+   * 적용된다) 공개에 동의해 둔 상태라면 내리기 버튼 하나는 남긴다.
    */
   if (hiddenByOperator) {
     return (
@@ -105,10 +100,25 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
           다시 올리기를 원하시면 문의해 주세요.
         </p>
         {isPublic && (
-          <div className="mt-4">
-            <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>공개 동의 철회</Button>
-          </div>
+          <>
+            <p className="typo-card-meta mt-1">공개 동의는 아직 켜져 있습니다 — 여기서 거둘 수 있습니다.</p>
+            <div className="mt-4">
+              <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>공개 동의 철회</Button>
+            </div>
+          </>
         )}
+        {feedback}
+      </div>
+    );
+  }
+
+  if (variant === 'success' && isPublic) {
+    return (
+      <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라갑니다.
+        </p>
+        <p className="typo-card-meta mt-1">표시 이름을 바꾸거나 내리려면 펀딩 확인 페이지를 이용해 주세요.</p>
         {feedback}
       </div>
     );

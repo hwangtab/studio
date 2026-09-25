@@ -1,3 +1,4 @@
+import { PURGED_MARK } from '../privacy/orderRetention';
 import { PLEDGE_TEXT_LIMITS } from './policy';
 import { parseFundingProject } from './projects';
 import { validateCreatePledgePayload } from './validation';
@@ -192,6 +193,29 @@ describe('경계값 — 감사 probe 24종', () => {
     it('이메일을 소문자로 저장한다', () => {
       const r = ok({ ...base, customerEmail: '  Mixed@Example.COM ' });
       expect(r.ok && r.value.customerEmail).toBe('mixed@example.com');
+    });
+  });
+
+  /**
+   * 파기 판정이 `orders.customer_name = PURGED_MARK` 하나에 걸려 있고 날짜를 보지 않으므로
+   * (lib/privacy/orderRetention.ts), 이름 칸으로 그 문자열이 들어오면 그 후원의 배송지·응원
+   * 메시지·운영자 메모가 다음 파기 실행에 지워진다. 길이 상한(50자)은 이 문자열을 막지 못한다.
+   */
+  describe('파기 표식 이름', () => {
+    it('결제자 이름이 파기 표식과 같으면 거부한다', () => {
+      expect(ok({ ...base, customerName: PURGED_MARK })).toMatchObject({ ok: false, message: '이름을 확인해 주세요.' });
+    });
+    it('앞뒤 공백을 붙여도 다듬은 뒤 같으면 거부한다', () => {
+      expect(ok({ ...base, customerName: `  ${PURGED_MARK}  ` })).toMatchObject({ ok: false, message: '이름을 확인해 주세요.' });
+    });
+    // 부분 일치로 막으면 정상 입력을 오탐한다 — 파기 WHERE는 완전 일치만 본다.
+    it('표식을 포함하지만 다른 텍스트가 붙은 이름은 통과한다', () => {
+      const r = ok({ ...base, customerName: `김${PURGED_MARK}후원` });
+      expect(r.ok).toBe(true);
+      expect(r.ok && r.value.customerName).toBe(`김${PURGED_MARK}후원`);
+    });
+    it('길이 상한이 이 문자열을 막아 주지 않는다', () => {
+      expect(PURGED_MARK.length).toBeLessThanOrEqual(PLEDGE_TEXT_LIMITS.customerName);
     });
   });
 });

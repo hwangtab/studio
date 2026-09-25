@@ -73,7 +73,7 @@ const BASE_PROJECT = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha' });
   (loadProjectForAdmin as jest.Mock).mockResolvedValue(BASE_PROJECT);
   (revalidateFundingPaths as jest.Mock).mockResolvedValue(null);
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue(null);
@@ -467,7 +467,7 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
     (setProjectService as jest.Mock).mockResolvedValue({ ok: true, service: SERVICE });
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'design' });
     expect(r.status).toBe(200);
-    expect(setProjectService).toHaveBeenCalledWith('proj-1', 'design', expect.any(Date));
+    expect(setProjectService).toHaveBeenCalledWith('proj-1', 'design', expect.any(Date), 'kyungha');
     expect(decideProject).not.toHaveBeenCalled();
     expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
     expect(revalidateFundingPaths).not.toHaveBeenCalled();
@@ -488,6 +488,7 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
   it.each([
     ['not_found', 404],
     ['unavailable', 503],
+    ['schema_mismatch', 503],
     ['no_service', 400],
   ])('실패 코드 %s → %i', async (code, expected) => {
     (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: false, code });
@@ -495,10 +496,48 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
     expect(r.status).toBe(expected);
   });
 
+  /**
+   * 55만원(공급가 50만 + 부가세)의 입금을 사람이 눈으로 확인해 기록하는 자리라, 같은 라우트의
+   * 정산·계정 변경처럼 수행자가 남아야 한다 — 통장 대사에서 그 돈이 안 보일 때 누가 무엇을
+   * 보고 눌렀는지 물을 수단이 필요하다.
+   */
+  it('입금 확인에 수행자를 함께 넘긴다', async () => {
+    (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: true, service: { ...SERVICE, designFeePaidAt: '2026-10-03T00:00:00.000Z' } });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
+    expect(r.status).toBe(200);
+    expect(setDesignFeePaid).toHaveBeenCalledWith('proj-1', true, expect.any(Date), 'kyungha');
+  });
+
   it('0037 미적용이면 운영자에게 마이그레이션을 안내한다', async () => {
     (setProjectService as jest.Mock).mockResolvedValue({ ok: false, code: 'unavailable' });
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'release' });
     expect(r.status).toBe(503);
     expect(JSON.stringify(r.body)).toMatch(/0037/);
+  });
+
+  // 새로고침으로 낫지 않는 상태에 새로고침을 시키지 않는다.
+  it('부분 스키마는 마이그레이션 적용을 안내하고 새로고침을 권하지 않는다', async () => {
+    (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: false, code: 'schema_mismatch' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
+    expect(r.status).toBe(503);
+    expect(String(r.body.message)).toContain('db:migrate');
+    expect(String(r.body.message)).toContain('새로고침으로는 해결되지 않습니다');
+  });
+
+  /**
+   * 이 블록만 try/catch가 없어서, 라이브러리가 던지는 오류가 그대로 500이 됐고 운영자가 보는
+   * 것은 "처리에 실패했습니다." 하나뿐이었다 — 서버 로그에 어느 프로젝트인지도 안 남았다.
+   */
+  it.each([
+    ['set_studio_service', { action: 'set_studio_service', kind: 'design' }, () => setProjectService],
+    ['set_design_fee_paid', { action: 'set_design_fee_paid', paid: true }, () => setDesignFeePaid],
+  ])('%s가 예기치 않게 던지면 500과 서버 로그', async (_label, body, target) => {
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    (target() as jest.Mock).mockRejectedValue(new Error('boom'));
+    const r = await call('PATCH', { id: 'proj-1' }, body);
+    expect(r.status).toBe(500);
+    expect(String(r.body.message)).toContain('스튜디오 서비스를 저장하지 못했습니다');
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 });

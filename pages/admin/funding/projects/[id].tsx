@@ -332,7 +332,9 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
 
   const handleSetService = (kind: 'none' | 'design' | 'release') => {
     if (kind === 'none' && service.available && service.service) {
-      if (!window.confirm('직접 개설로 되돌리면 약정 설계비·입금 기록이 지워집니다. 되돌릴까요?')) return;
+      // 약정가·입금 기록은 지우지 않고 보존한다(lib/funding/projectServices.ts) — 예전 문구는
+      // "지워집니다"였고, 실제로 지우던 동안 재지정이 약정가를 그때의 정가로 재발행했다.
+      if (!window.confirm('직접 개설로 되돌릴까요? 약정 설계비·입금 기록은 보존되고, 다시 지정하면 그 값으로 돌아갑니다.')) return;
     }
     return run(
       () => patchFundingProject(project.id, { action: 'set_studio_service', kind }),
@@ -340,11 +342,15 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
     );
   };
 
-  const handleDesignFeePaid = (paid: boolean) =>
-    run(
+  const handleDesignFeePaid = (paid: boolean) => {
+    // 이 화면의 다른 파괴적 조작은 전부 확인을 거친다. 확인 취소만 무확인으로 나가서, 한 번의
+    // 오클릭이 "언제 받았는지"를 지웠다 — 다시 확인해도 그때 시각으로 새로 찍힌다.
+    if (!paid && !window.confirm('설계비 입금 확인을 취소할까요? 확인 시각이 지워지고, 다시 확인하면 그때 시각으로 새로 찍힙니다.')) return;
+    return run(
       () => patchFundingProject(project.id, { action: 'set_design_fee_paid', paid }),
       paid ? '설계비 입금을 확인으로 기록했습니다.' : '설계비 입금 확인을 취소했습니다.',
     );
+  };
 
   const handleSaveInternalNote = () =>
     run(
@@ -881,7 +887,11 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
               <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
                 {service.reason === 'missing_table'
                   ? '운영 DB에 마이그레이션 0037(funding_project_services)이 아직 적용되지 않았습니다. main에서 npm run db:migrate를 실행하면 이 칸이 열립니다. 다른 기능은 영향이 없습니다.'
-                  : '서비스 정보를 불러오지 못했습니다(서버 로그 참조). 심사·정산은 그대로 쓸 수 있습니다. 잠시 뒤 새로고침해 주세요.'}
+                  /* 새로고침으로 낫지 않는 상태에 새로고침을 시키지 않는다 — 테이블은 있고
+                     컬럼이 없으면 마이그레이션을 적용해야 한다. */
+                  : service.reason === 'schema_mismatch'
+                    ? 'funding_project_services 테이블의 스키마가 코드보다 오래되었습니다(컬럼 누락, 서버 로그에 어느 컬럼인지 있습니다). npm run db:migrate로 마이그레이션을 적용해 주세요 — 새로고침으로는 해결되지 않습니다. 심사·정산은 그대로 쓸 수 있습니다.'
+                    : '서비스 정보를 불러오지 못했습니다(서버 로그 참조). 심사·정산은 그대로 쓸 수 있습니다. 잠시 뒤 새로고침해 주세요.'}
               </p>
             ) : (
               <div className="flex flex-col gap-3 text-sm">
@@ -902,7 +912,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                     );
                   })}
                 </div>
-                {service.service ? (
+                {service.service && service.service.kind !== 'none' ? (
                   <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-gray-700">
                     <dt>약정 설계비</dt>
                     <dd>
@@ -928,7 +938,21 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                     </dd>
                   </dl>
                 ) : (
-                  <p className="text-gray-600">직접 개설한 프로젝트입니다. 설계비가 없습니다.</p>
+                  <>
+                    <p className="text-gray-600">직접 개설한 프로젝트입니다. 설계비가 없습니다.</p>
+                    {/* 되돌린 프로젝트의 옛 약정은 보존돼 있다 — 다시 지정할 때 무엇으로
+                        돌아가는지 알아야 이중 청구·누락을 막을 수 있다. */}
+                    {service.service && (
+                      <p className="text-xs text-gray-500">
+                        이전 약정 보존 — 설계비 {formatPriceAmount(service.service.designFee)}원
+                        {' · '}
+                        {service.service.designFeePaidAt
+                          ? `입금 확인 ${formatKstDateTimeFull(service.service.designFeePaidAt)}`
+                          : '미입금'}
+                        . 다시 지정하면 이 값으로 돌아갑니다.
+                      </p>
+                    )}
+                  </>
                 )}
               </div>
             )}

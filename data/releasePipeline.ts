@@ -162,7 +162,10 @@ export const releasePipelineCopy = {
       {
         id: 'self',
         title: '직접 개설',
-        body: `설계비 없이 신청합니다. 모금액에서 ${fundingFees}만 뗍니다.`,
+        // "만"은 공제 항목의 전부를 말하는 완결성 단정이다. 개인 자격 개설자는 정산에서
+        // 원천징수 3.3%가 더 빠지므로(lib/funding/payout.ts, 같은 파일 calculator.rows.withheld)
+        // 사실이 아니다. data/pricing.ts의 같은 취지 카피와 같은 표기로 맞춘다.
+        body: `설계비 없이 신청합니다. 성공 수수료 없음 · 모금액에서 ${fundingFees}를 뗍니다.`,
         href: '/ko/funding/apply',
         label: '개설 신청',
       },

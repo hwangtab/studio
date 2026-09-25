@@ -248,10 +248,71 @@ describe('스튜디오 서비스', () => {
     confirmSpy.mockRestore();
   });
 
+  /**
+   * `none`은 행을 지우지 않고 보존한다(lib/funding/projectServices.ts). 그래서 화면은 옛
+   * 약정을 설계비 칸으로 되살리지 않되, 다시 지정하면 무엇으로 돌아가는지는 알려야 한다 —
+   * 모르면 이중 청구·누락이 난다.
+   */
+  it('되돌린 프로젝트는 설계비 칸 대신 보존된 옛 약정을 알린다', () => {
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: '2026-10-03T00:00:00.000Z' } }}
+      />,
+    );
+    expect(screen.getByRole('button', { name: '직접 개설' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByText(/직접 개설한 프로젝트입니다/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: '입금 확인' })).not.toBeInTheDocument();
+    expect(screen.getByText(/이전 약정 보존/)).toHaveTextContent('400,000원');
+    expect(screen.getByText(/이전 약정 보존/)).toHaveTextContent('입금 확인');
+  });
+
+  it('되돌리기 확인창은 기록이 보존된다고 말한다 — 지워진다고 말하지 않는다', () => {
+    const confirmSpy = jest.spyOn(window, 'confirm').mockReturnValue(false);
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null } }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '직접 개설' }));
+    expect(confirmSpy.mock.calls[0][0]).toContain('보존');
+    expect(confirmSpy.mock.calls[0][0]).not.toContain('지워집니다');
+    confirmSpy.mockRestore();
+  });
+
   it('0037이 운영 DB에 없으면 버튼 대신 마이그레이션 안내를 띄운다', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'missing_table' }} />);
     expect(screen.getByText(/마이그레이션 0037/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '펀딩 설계 대행' })).not.toBeInTheDocument();
+  });
+
+  /**
+   * 이 화면의 다른 파괴적 조작은 전부 확인을 거친다. 확인 취소만 무확인으로 나가서, 한 번의
+   * 오클릭이 "언제 받았는지"를 지웠다 — 감사 로그도 없어 원래 시각을 복구할 수 없다.
+   */
+  it('입금 확인 취소는 확인창을 거치고, 거절하면 보내지 않는다', () => {
+    (patchFundingProject as jest.Mock).mockReset().mockResolvedValue({ ok: true });
+    window.confirm = jest.fn().mockReturnValue(false);
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: '2026-10-03T00:00:00.000Z' } }}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '확인 취소' }));
+    expect((window.confirm as jest.Mock).mock.calls[0][0]).toContain('확인 시각이 지워지고');
+    expect(patchFundingProject).not.toHaveBeenCalled();
+  });
+
+  // 새로고침으로 낫지 않는 상태에 새로고침을 시키지 않는다.
+  it('부분 스키마는 마이그레이션 적용을 안내하고 새로고침을 권하지 않는다', () => {
+    render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'schema_mismatch' }} />);
+    expect(screen.getByText(/컬럼 누락/)).toBeInTheDocument();
+    expect(screen.getByText(/새로고침으로는 해결되지 않습니다/)).toBeInTheDocument();
   });
 
   it('그 밖의 장애는 마이그레이션을 권하지 않는다 — 엉뚱한 조치를 막는다', () => {

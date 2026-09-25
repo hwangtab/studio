@@ -170,3 +170,66 @@ describe('운영자 닉네임 알림', () => {
     expect(r.status).toBe(200);
   });
 });
+
+/**
+ * `listing_hidden_at`은 공개 동의와 별개의 축이고 운영자만 되돌린다. 이 경로가 그 값을 보지
+ * 않던 동안 **켜는** 저장이 200으로 성공해 화면이 "명단에 올렸습니다"라고 답했는데, 명단 조회는
+ * `listing_hidden_at IS NULL`을 요구하므로 실제로는 영영 뜨지 않았다.
+ */
+describe('운영자가 명단에서 내린 펀딩', () => {
+  const hidden = (over: Record<string, unknown> = {}) =>
+    order({ fundingPledge: { paymentMethod: 'toss', publicName: null, displayNamePublic: true, listingHiddenAt: new Date('2026-09-20T00:00:00Z'), ...over } });
+
+  it.each([
+    ['올리기', { displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자' }],
+    ['표시 이름 저장', { displayNamePublic: true, publicNameStyle: 'masked' }],
+  ])('%s처럼 켜는 요청은 409로 거부하고 아무것도 저장하지 않는다', async (_label, body) => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(hidden());
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', ...body });
+    expect(r.status).toBe(409);
+    expect(r.body).toMatchObject({ ok: false, code: 'listing_hidden' });
+    expect(update).not.toHaveBeenCalled();
+    expect(sendFundingListingNicknameAlert).not.toHaveBeenCalled();
+  });
+
+  /**
+   * 약관 제13조 2항이 이 화면에서 약속한 철회다 — 운영자가 내려 뒀다는 사정이 후원자의
+   * 철회권을 없앨 이유는 없고, 끄는 것은 공개를 늘리지 않으므로 새는 정보도 없다.
+   */
+  it('끄는 요청은 통과해 저장한다 — 철회권을 막지 않는다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(hidden());
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false });
+    expect(r.status).toBe(200);
+    expect(r.body).toMatchObject({ ok: true, displayNamePublic: false });
+    expect(set).toHaveBeenCalledWith(expect.objectContaining({ displayNamePublic: false }));
+  });
+});
+
+/**
+ * 위 검사를 통과한 뒤 UPDATE 전까지의 밀리초 창 — 그 사이 운영자가 내리면 조건 없는 UPDATE가
+ * 성공해 다시 거짓 성공을 준다. 켜는 요청의 WHERE에 `listing_hidden_at IS NULL`을 싣는다.
+ */
+describe('조회와 UPDATE 사이에 운영자가 내린 경우', () => {
+  it('켜는 요청이 0행이면 409', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    where.mockResolvedValueOnce({ rowsAffected: 0 });
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자' });
+    expect(r.status).toBe(409);
+    expect(r.body).toMatchObject({ ok: false, code: 'listing_hidden' });
+    expect(sendFundingListingNicknameAlert).not.toHaveBeenCalled();
+  });
+
+  // 끄는 요청에는 그 조건을 걸지 않으므로 0행 판정도 하지 않는다.
+  it('끄는 요청은 0행이어도 200', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    where.mockResolvedValueOnce({ rowsAffected: 0 });
+    expect((await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: false })).status).toBe(200);
+  });
+
+  // 판정 불가(rowsAffected를 못 읽는 드라이버·목)는 성공으로 흘린다 — rowsAffectedOf의 규약.
+  it('rowsAffected를 읽을 수 없으면 성공으로 본다', async () => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(order());
+    where.mockResolvedValueOnce(undefined);
+    expect((await call({ orderNo: 'FND-1', token: 'correct-token', displayNamePublic: true, publicNameStyle: 'masked' })).status).toBe(200);
+  });
+});
