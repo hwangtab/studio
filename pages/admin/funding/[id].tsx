@@ -187,8 +187,16 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     }
     return run(() => patchPledge(pledge.id, { action: 'unpublish', reason: reason.trim() }));
   };
+  /**
+   * 숨긴 뒤에 후원자가 표시 이름을 바꿨을 수 있다 — 그 변경은 어디에도 기록되지 않으므로,
+   * 해제 직전에 **지금 뜨게 될 이름**을 확인창에 보여 준다. 이름만 보고 내린 건이라면 그
+   * 이름이 그대로인지가 해제 판단의 전부다.
+   */
   const handleRestoreListing = () =>
-    run(() => patchPledge(pledge.id, { action: 'restore_listing' }), '운영자 숨김을 해제할까요? 후원자가 공개에 동의해 두었다면 명단에 다시 뜹니다.');
+    run(
+      () => patchPledge(pledge.id, { action: 'restore_listing' }),
+      `운영자 숨김을 해제할까요? 후원자가 공개에 동의해 두었다면 "${pledge.publicName ?? `${pledge.customerName} (실명)`}"(으)로 명단에 다시 뜹니다.`,
+    );
 
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.

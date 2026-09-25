@@ -213,4 +213,25 @@ describe('후원자 명단에서 내리기 버튼', () => {
     expect(screen.getByRole('button', { name: '명단 숨김 해제' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '후원자 명단에서 내리기' })).not.toBeInTheDocument();
   });
+
+  /**
+   * 숨긴 뒤에 후원자가 표시 이름을 바꿨을 수 있고 그 변경은 어디에도 기록되지 않는다 —
+   * 이름만 보고 내린 건이라면 해제 직전에 지금 뜨게 될 이름이 보여야 판단이 된다.
+   */
+  it.each([
+    ['닉네임으로 공개', '바뀐닉', '바뀐닉'],
+    ['실명으로 공개', null, '김후원 (실명)'],
+  ])('숨김 해제 확인창이 지금 뜨게 될 이름을 보여준다 (%s)', (_label, publicName, expected) => {
+    // 이 파일에는 공용 beforeEach가 없고 앞선 케이스가 window.confirm을 갈아 끼운다 —
+    // jest.spyOn은 이미 mock인 속성을 그대로 돌려주므로 옛 호출이 섞인다.
+    window.confirm = jest.fn().mockReturnValue(false);
+    render(
+      <AdminFundingDetailPage
+        pledge={{ ...PLEDGE, listingHiddenAt: '2026-09-20T00:00:00.000Z', displayNamePublic: true, publicName }}
+        refundableAmount={30000}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: '명단 숨김 해제' }));
+    expect((window.confirm as jest.Mock).mock.calls[0][0]).toContain(expected);
+  });
 });

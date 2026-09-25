@@ -25,15 +25,23 @@ export const isPublicNameStyle = (v: unknown): v is PublicNameStyle =>
   typeof v === 'string' && (PUBLIC_NAME_STYLES as readonly string[]).includes(v);
 
 /**
- * 명단에 싣기 전에 **보이지 않는 문자**를 걷어 낸다 — 제어 문자(Cc)와 서식 문자(Cf).
+ * 명단에 싣기 전에 **보이지 않는 문자**를 걷어 낸다 — 제어 문자(Cc)와 서식 문자(Cf),
+ * 그리고 카테고리로는 안 걸리는 공백류 코드포인트 몇 개.
  *
  * 서식 문자에는 폭 없는 공백(U+200B)과 글자 방향 재정의(U+202E 등)가 들어 있다. 앞의 것만
  * 적으면 `trim()`을 통과해 "빈 이름"이 명단에 올라가고, 뒤의 것은 명단이 이름을 ` · `로
  * 이어 한 문단에 그리므로(components/funding/BackerWall.tsx) **뒤에 오는 다른 사람의
  * 이름까지** 거꾸로 뒤집는다. 이모지 결합용 ZWJ(U+200D)도 서식 문자라 함께 빠진다 —
  * 가족 이모지가 낱개로 풀리는 정도는 감수한다.
+ *
+ * **카테고리만으로는 부족하다.** 공백처럼 보이지만 Cc·Cf가 아닌 글자들이 있다 —
+ * 한글 채움 문자 U+3164(`ㅤ`)와 그 반각 U+FFA0, 초·중성 채움 U+115F·U+1160(전부 Lo),
+ * 점자 공백 U+2800(So). JS `\s`도 아니라 `trim()`과 빈 값 판정을 모두 통과해, 닉네임
+ * `"ㅤㅤㅤ"`가 명단에 **빈 항목**으로 올라갔다. 이 다섯은 리터럴로 걸러 낸다.
  */
-export const stripInvisible = (value: string): string => value.replace(/[\p{Cc}\p{Cf}]/gu, '');
+const INVISIBLE_SPACE_LIKE = '\u115F\u1160\u3164\uFFA0\u2800';
+export const stripInvisible = (value: string): string =>
+  value.replace(new RegExp(`[\\p{Cc}\\p{Cf}${INVISIBLE_SPACE_LIKE}]`, 'gu'), '');
 
 /**
  * 가운데를 가린 이름. 공백으로 나뉜 조각마다 첫 글자(3자 이상이면 끝 글자도)만 남긴다.
@@ -69,7 +77,17 @@ export type PublicNameResult = { ok: true; value: string | null } | { ok: false;
  */
 export const resolvePublicName = (style: PublicNameStyle, customerName: string, nickname: string | undefined): PublicNameResult => {
   if (style === 'real') return { ok: true, value: null };
-  if (style === 'masked') return { ok: true, value: maskName(customerName) };
+  if (style === 'masked') {
+    /**
+     * **가릴 이름이 없으면 빈 문자열이 아니라 NULL이다.** `maskName`은 폼 미리보기를 위해
+     * 가릴 것이 없을 때 빈 문자열을 돌려주는데, 그 값을 그대로 저장하면 `COALESCE`가 NULL만
+     * 대체하므로 `''`가 표시 이름이 되고, 명단 조회의 `display_name <> ''` 필터가 그 행을
+     * 버린다 — 공개에 동의하고 미리보기까지 본 후원자가 오류 없이 명단에서 빠진다.
+     * NULL이면 결제자 이름으로 대신 표시된다(real과 같은 자리로 떨어진다).
+     */
+    const masked = maskName(customerName);
+    return { ok: true, value: masked === '' ? null : masked };
+  }
   // 보이지 않는 문자를 먼저 걷고, 남은 것이 공백·결합 부호뿐이면 비어 있는 것으로 본다.
   const trimmed = stripInvisible(nickname ?? '').replace(/\s+/g, ' ').trim();
   if (/^[\s\p{M}]*$/u.test(trimmed)) return { ok: false, message: '명단에 표시할 닉네임을 입력해 주세요.' };
