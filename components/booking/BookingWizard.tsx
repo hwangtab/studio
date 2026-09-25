@@ -469,15 +469,15 @@ export default function BookingWizard({ service, products }: BookingWizardProps)
                     <button
                       type="button"
                       onClick={() => setRetryTick((n) => n + 1)}
-                      className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+                      className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
                     >
                       다시 불러오기
                     </button>
                     <span className="text-red-600/80 dark:text-red-300/80">
                       계속 안 되면{' '}
-                      <a href={KAKAO_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">카카오톡</a>
+                      <a href={KAKAO_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">카카오톡</a>
                       {' '}또는{' '}
-                      <a href={TEL_HREF} className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500">{CANONICAL_FACTS.phone}</a>
+                      <a href={TEL_HREF} className="font-semibold underline underline-offset-2 rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">{CANONICAL_FACTS.phone}</a>
                       로 예약해 주세요.
                     </span>
                   </div>
