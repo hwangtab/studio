@@ -118,20 +118,41 @@ describe('명단 공개 설정', () => {
   });
 
   /**
-   * 서버가 이 상태의 저장을 409로 거부하므로(pages/api/funding/display-name.ts) 버튼을 남기면
-   * 눌러도 실패만 한다. 예전에는 저장이 200으로 성공해 "명단에 올렸습니다"라는 거짓 성공을
-   * 돌려줬다.
+   * 서버가 이 상태에서 **켜는** 저장을 409로 거부하므로(pages/api/funding/display-name.ts)
+   * 올리기·표시 이름 저장 버튼을 남기면 눌러도 실패만 한다. 예전에는 저장이 200으로 성공해
+   * "명단에 올렸습니다"라는 거짓 성공을 돌려줬다.
    */
   it.each([['공개 동의 켜짐', true], ['공개 동의 꺼짐', false]])(
-    '운영자가 내렸으면 편집 UI를 그리지 않는다 (%s)',
+    '운영자가 내렸으면 올리기·이름 편집을 그리지 않는다 (%s)',
     (_label, displayNamePublic) => {
       render(<FundingManagePage {...baseProps} displayNamePublic={displayNamePublic} listingHidden paymentMethod="toss" />);
       expect(screen.queryByRole('button', { name: '명단에 올리기' })).toBeNull();
       expect(screen.queryByRole('button', { name: '표시 이름 저장' })).toBeNull();
-      expect(screen.queryByRole('button', { name: '명단에서 내리기' })).toBeNull();
       expect(screen.queryByLabelText(/가린 이름/)).toBeNull();
     },
   );
+
+  /**
+   * 철회는 약관 제13조 2항이 이 화면에서 약속한 것이고 서버도 받아 준다 — 운영자가 내려 뒀다는
+   * 사정이 그 권리를 없앨 이유가 없다.
+   */
+  it('운영자가 내렸어도 공개에 동의해 둔 상태면 철회 버튼은 남긴다', async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true, headers: { get: () => 'application/json' },
+      json: async () => ({ ok: true, displayNamePublic: false, publicName: null }),
+    }) as never;
+    render(<FundingManagePage {...baseProps} displayNamePublic listingHidden paymentMethod="toss" />);
+    await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
+    expect(JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body)).toEqual({
+      orderNo: 'FND-1', token: 'tok', displayNamePublic: false,
+    });
+    expect(await screen.findByText(/후원자 명단에서 내렸습니다/)).toBeInTheDocument();
+  });
+
+  it('공개 동의가 꺼져 있으면 철회 버튼도 없다 — 거둘 것이 없다', () => {
+    render(<FundingManagePage {...baseProps} listingHidden paymentMethod="toss" />);
+    expect(screen.queryByRole('button', { name: '명단에서 내리기' })).toBeNull();
+  });
 
   it('바꿀 수 없는 상태면 편집 칸 대신 현재 값만 보인다', () => {
     render(<FundingManagePage {...baseProps} status="refunded" canCancel={false} canEditDisplayName={false} displayNamePublic paymentMethod="toss" />);

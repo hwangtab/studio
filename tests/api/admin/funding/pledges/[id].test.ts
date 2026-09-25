@@ -558,6 +558,8 @@ describe('후원자 명단 숨김', () => {
     expect(r.status).toBe(200);
     const set = lastSet();
     expect(set.listingHiddenAt).toBeNull();
+    // 숨김 중에 후원자가 동의를 거뒀으면 그 값이 유지돼야 한다 — 해제가 되살리지 않는다.
+    expect(set).not.toHaveProperty('displayNamePublic');
     expect(set.adminMemo).toMatch(/^이전 메모\n\[.*\] 후원자 명단 숨김 해제$/);
   });
 });

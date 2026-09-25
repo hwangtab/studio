@@ -81,12 +81,16 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
   );
 
   /**
-   * **운영자가 내린 뒤에는 편집 자체를 그리지 않는다.**
+   * **운영자가 내린 뒤에는 올리기·이름 편집을 그리지 않는다. 동의 철회만 남긴다.**
    *
-   * `/api/funding/display-name`이 이 상태의 저장을 409로 거부하므로(pages/api/funding/
-   * display-name.ts) 버튼을 남겨 두면 눌러도 실패만 한다. 예전에는 그 저장이 200으로
-   * 성공해 "명단에 올렸습니다"라는 거짓 성공을 돌려줬다 — 실제로는 `listing_hidden_at`이
-   * 남아 명단에 뜨지 않는다. 후원자가 할 수 있는 일은 문의뿐이라 그것만 말한다.
+   * `/api/funding/display-name`이 이 상태에서 **켜는** 요청만 409로 거부하므로
+   * (pages/api/funding/display-name.ts) 올리기·표시 이름 저장 버튼을 남겨 두면 눌러도 실패만
+   * 한다. 예전에는 그 저장이 200으로 성공해 "명단에 올렸습니다"라는 거짓 성공을 돌려줬다 —
+   * 실제로는 `listing_hidden_at`이 남아 명단에 뜨지 않는다.
+   *
+   * 반면 **철회는 약관 제13조 2항이 이 화면에서 약속한 것**이고 서버도 받아 준다. 운영자가
+   * 내려 뒀다는 사정이 그 권리를 없앨 이유가 없으므로(숨김이 풀리면 저장한 값이 그대로
+   * 적용된다) 공개에 동의해 둔 상태라면 내리기 버튼 하나는 남긴다.
    */
   if (hiddenByOperator) {
     return (
@@ -95,6 +99,15 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
           운영 기준에 따라 후원자 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
           다시 올리기를 원하시면 문의해 주세요.
         </p>
+        {isPublic && (
+          <>
+            <p className="typo-card-meta mt-1">공개 동의는 아직 켜져 있습니다 — 여기서 거둘 수 있습니다.</p>
+            <div className="mt-4">
+              <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>명단에서 내리기</Button>
+            </div>
+          </>
+        )}
+        {feedback}
       </div>
     );
   }

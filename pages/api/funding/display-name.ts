@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq } from 'drizzle-orm';
+import { and, eq, isNull } from 'drizzle-orm';
 
 import { getDb } from '../../../db/client';
 import { fundingPledges } from '../../../db/schema';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
+import { rowsAffectedOf } from '../../../lib/booking/confirm';
 import { sendFundingListingNicknameAlert } from '../../../lib/funding/email';
 import { isPublicNameStyle, resolvePublicName } from '../../../lib/funding/publicName';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
@@ -54,20 +55,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!EDITABLE_STATUSES.has(order.status))
     return res.status(409).json({ ok: false, code: 'invalid_state', message: '이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.' });
   /**
-   * **운영자가 내린 뒤에는 저장하지 않는다.**
+   * **운영자가 내린 뒤에는 공개를 켜지 못한다. 끄는 것은 된다.**
    *
    * `listing_hidden_at`은 공개 동의와 별개의 축이고 운영자만 되돌린다(`unpublish` 주석).
    * 그런데 이 경로가 그 값을 보지 않아, 내려간 후원의 저장이 200으로 성공하며 화면이 "명단에
    * 올렸습니다"라고 답했다 — 명단 조회(lib/funding/service.ts)는 `listing_hidden_at IS NULL`을
-   * 요구하므로 실제로는 영영 뜨지 않는다. 거짓 성공을 주지 않도록 여기서 끊는다.
+   * 요구하므로 실제로는 영영 뜨지 않는다. 그 거짓 성공을 끊는 것이 이 검사다.
    *
-   * 내리는 방향(`displayNamePublic: false`)도 함께 끊는다 — 이미 공개되지 않는 상태라 바꿀
-   * 것이 없고, 방향에 따라 다르게 답하면 후원자가 숨김 여부를 떠볼 수 있다.
+   * **끄는 방향(`displayNamePublic: false`)은 막지 않는다.** 약관 제13조 2항이 후원 확인
+   * 페이지에서의 철회를 약속하는데, 운영자가 내려 뒀다는 사정이 후원자의 철회권을 없앨 이유는
+   * 없다. 끄는 것은 공개를 늘리지 않으므로 새는 정보도 없다. 저장한 값은 운영자가 숨김을
+   * 풀었을 때 그대로 적용된다(`restore_listing` 주석이 이미 그 순서를 전제한다).
+   *
+   * 방향을 가리지 않고 막던 예전 주석은 "다르게 답하면 숨김 여부를 떠볼 수 있다"를 근거로
+   * 들었는데, 성공·409라는 응답 자체가 이미 숨김 여부를 드러내므로 성립하지 않았다.
    */
-  if (order.fundingPledge.listingHiddenAt)
+  if (order.fundingPledge.listingHiddenAt && displayNamePublic)
     return res.status(409).json({
       ok: false, code: 'listing_hidden',
-      message: '운영 기준에 따라 명단에서 내려 둔 펀딩입니다. 설정을 바꿀 수 없습니다.',
+      message: '운영 기준에 따라 명단에서 내려 둔 펀딩입니다. 다시 올리려면 문의해 주세요.',
     });
 
   /**
@@ -82,10 +88,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     publicName = resolved.value;
   }
 
-  await getDb()
+  /**
+   * 켜는 요청은 WHERE에 `listing_hidden_at IS NULL`을 함께 실어 **조회와 UPDATE 사이의 창**을
+   * 닫는다 — 위 검사를 통과한 뒤 밀리초 안에 운영자가 내리면, 조건이 없으면 그 저장이 성공해
+   * 다시 거짓 성공을 준다. 끄는 요청에는 걸지 않는다(내려간 건의 철회를 막지 않는다).
+   *
+   * 0행이면 그 사이에 내려간 것이다. 판정 불가(rowsAffected를 못 읽는 드라이버·목)는 성공으로
+   * 흘린다 — 같은 규약을 쓰는 lib/booking/confirm.ts의 rowsAffectedOf 주석 참조.
+   */
+  const saved = await getDb()
     .update(fundingPledges)
     .set({ displayNamePublic, ...(publicName !== undefined ? { publicName } : {}), updatedAt: new Date() })
-    .where(eq(fundingPledges.orderId, order.id));
+    .where(
+      displayNamePublic
+        ? and(eq(fundingPledges.orderId, order.id), isNull(fundingPledges.listingHiddenAt))
+        : eq(fundingPledges.orderId, order.id),
+    );
+  if (displayNamePublic && rowsAffectedOf(saved) === 0)
+    return res.status(409).json({
+      ok: false, code: 'listing_hidden',
+      message: '운영 기준에 따라 명단에서 내려 둔 펀딩입니다. 다시 올리려면 문의해 주세요.',
+    });
   const storedPublicName = publicName !== undefined ? publicName : order.fundingPledge.publicName ?? null;
   /**
    * 닉네임으로 **새로** 명단에 오르면 운영자에게 알린다 — 공개를 새로 켰거나 닉네임이 바뀐 경우.
