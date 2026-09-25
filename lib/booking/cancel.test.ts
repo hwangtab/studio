@@ -1,6 +1,6 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
 jest.mock('./toss', () => ({ cancelPayment: jest.fn() }));
-jest.mock('./gcal', () => ({ deleteBookingEvent: jest.fn().mockResolvedValue(undefined) }));
+jest.mock('./gcal', () => ({ ...jest.requireActual('./gcal'), deleteBookingEvent: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('./email', () => ({
   sendBookingCancelledEmails: jest.fn().mockResolvedValue(null),
   sendMixingOrderCancelledEmails: jest.fn().mockResolvedValue(null),

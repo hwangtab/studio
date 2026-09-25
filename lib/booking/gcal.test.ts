@@ -110,3 +110,32 @@ describe('fetchBusyRanges', () => {
     expect(mock).toHaveBeenCalledTimes(2);
   });
 });
+
+describe('calendarIdFor — 방별 캘린더', () => {
+  const saved = { shared: process.env.PRACTICE_ROOM_GCAL_ID, r05: process.env.PRACTICE_ROOM_GCAL_ID_R05 };
+  afterEach(() => {
+    if (saved.shared === undefined) delete process.env.PRACTICE_ROOM_GCAL_ID; else process.env.PRACTICE_ROOM_GCAL_ID = saved.shared;
+    if (saved.r05 === undefined) delete process.env.PRACTICE_ROOM_GCAL_ID_R05; else process.env.PRACTICE_ROOM_GCAL_ID_R05 = saved.r05;
+  });
+
+  it('방별 env가 있으면 그것, 없는 방은 공용 캘린더', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { calendarIdFor, isCalendarActive, roomCalendarEnvKey } = require('./gcal') as typeof import('./gcal');
+    process.env.PRACTICE_ROOM_GCAL_ID = 'shared';
+    process.env.PRACTICE_ROOM_GCAL_ID_R05 = 'own-r05';
+    expect(roomCalendarEnvKey('r05')).toBe('PRACTICE_ROOM_GCAL_ID_R05');
+    expect(calendarIdFor('practice-room', 'R05')).toBe('own-r05');
+    expect(calendarIdFor('practice-room', 'R02')).toBe('shared');
+    expect(calendarIdFor('practice-room')).toBe('shared');
+    expect(isCalendarActive('practice-room', 'R02')).toBe(true);
+  });
+
+  it('공용도 방별도 없으면 비활성', () => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { calendarIdFor, isCalendarActive } = require('./gcal') as typeof import('./gcal');
+    delete process.env.PRACTICE_ROOM_GCAL_ID; delete process.env.PRACTICE_ROOM_GCAL_ID_R05;
+    expect(calendarIdFor('practice-room', 'R05')).toBeNull();
+    expect(isCalendarActive('practice-room', 'R05')).toBe(false);
+    expect(isCalendarActive('studio')).toBe(true);
+  });
+});

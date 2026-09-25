@@ -19,7 +19,7 @@ import * as schema from '../../db/schema';
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('./toss', () => ({ ...jest.requireActual('./toss'), cancelPayment: jest.fn() }));
-jest.mock('./gcal', () => ({ deleteBookingEvent: jest.fn().mockResolvedValue(undefined) }));
+jest.mock('./gcal', () => ({ ...jest.requireActual('./gcal'), deleteBookingEvent: jest.fn().mockResolvedValue(undefined) }));
 jest.mock('./email', () => ({
   sendBookingCancelledEmails: jest.fn().mockResolvedValue(null),
   sendMixingOrderCancelledEmails: jest.fn().mockResolvedValue(null),
