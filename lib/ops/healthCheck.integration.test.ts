@@ -889,6 +889,28 @@ describe('기록된 정산액과 현재 계산값의 드리프트', () => {
     expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRIFT_TITLE)]));
   });
 
+  /**
+   * 이미 이체한(`paid`) 정산 뒤의 환불은 이 항목이 아니다 — 끌 수단이 없어 매일 영구히
+   * 울리고(경보 피로), 해야 할 일도 다르다(보낼 금액 정정 vs 과다 지급 회수).
+   */
+  it('이미 이체한(paid) 정산은 뜨지 않는다 — 끌 수 없는 경보를 만들지 않는다', async () => {
+    await seedClosedProjectWithPayout(900_000);
+    await client.execute("UPDATE funding_project_payouts SET status = 'paid'");
+    await client.execute(
+      `INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('rf2', 'pay1', 500000, '고객 요청', 'customer', 'done')`,
+    );
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRIFT_TITLE)]));
+  });
+
+  it('원인을 환불로 단정하지 않는다 — 세금 유형 변경으로도 갈린다', async () => {
+    await seedClosedProjectWithPayout(900_000);
+    await client.execute(
+      `INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('rf3', 'pay1', 500000, '고객 요청', 'customer', 'done')`,
+    );
+    const drift = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes(DRIFT_TITLE));
+    expect(drift?.detail).toContain('환불 또는 세금 유형 변경');
+  });
+
   it('정산 기록이 없으면 아무것도 계산하지 않는다', async () => {
     expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRIFT_TITLE)]));
   });

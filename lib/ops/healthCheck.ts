@@ -746,10 +746,17 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 판정은 화면과 같은 함수(`buildFundingPayoutPreview`)로 다시 계산한 `netAmount`다. 한
    * 프로젝트씩 조회하므로 정산이 기록된 프로젝트 수만큼 도는데, 이 표는 프로젝트당 한 행이고
    * 지금 몇 건 규모다 — 수백 건이 되면 집계 쿼리 한 방으로 바꿀 자리다.
+   *
+   * **`pending`인 정산만 본다.** 이미 이체한(`paid`) 정산 뒤에 환불이 들어오면 이 항목은
+   * 끌 수단이 없어 매일 영구히 울린다 — 경보 피로로 신호가 죽는 것이 이 저장소가 반복해서
+   * 막아 온 실패 모드다. 그리고 그건 다른 문제다: 이체 전이면 "보낼 금액을 고쳐라"이고,
+   * 이체 뒤면 "과다 지급한 몫을 회수하라"다. 후자를 알리려면 회수 진행 상태를 담는 자리가
+   * 먼저 있어야 하는데 그런 컬럼이 없다. 여기서 섞지 않는다.
    */
   const recordedPayouts = await db
     .select({ projectId: fundingProjectPayouts.projectId, netAmount: fundingProjectPayouts.netAmount })
-    .from(fundingProjectPayouts);
+    .from(fundingProjectPayouts)
+    .where(eq(fundingProjectPayouts.status, 'pending'));
   const payoutDrift: string[] = [];
   for (const row of recordedPayouts) {
     const preview = await buildFundingPayoutPreview(row.projectId);
@@ -769,8 +776,11 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       detail:
         `${sample(payoutDrift)}
 ` +
-        '기록 뒤에 환불이 들어왔다는 뜻입니다. 기록값 그대로 이체하면 과다 이체가 됩니다 — ' +
-        '관리자 > 펀딩 상세의 정산 패널에서 차이를 확인하고 이체 금액을 판단해 주세요.',
+        // 원인을 단정하지 않는다 — 환불 말고 세금 유형 변경으로도 갈린다(savePayoutSection은
+        // 원천징수액이 0인 정산만 있는 개설자의 invoice→withholding 전환을 막지 않는다).
+        '기록 뒤 환불 또는 세금 유형 변경으로 계산값이 달라졌습니다. 기록값 그대로 이체하면 ' +
+        '금액이 어긋납니다 — 관리자 > 펀딩 상세의 정산 패널에서 차이를 확인하고 이체 금액을 ' +
+        '판단해 주세요.',
     });
   }
 
