@@ -142,19 +142,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 선점하고** 토스를 부르며, 토스가 실패하면 최대 12초 뒤 되돌린다(`cancel.ts`). 그 창에
      * 내려받기를 누르면 취소는 결국 실패하고 후원은 살아 있는데 이 문구를 보게 된다.
      *
-     * 상태를 한 번 더 읽어 가른다 — 환불이 실제로 끝났으면 사실을 말하고, 아니면 "처리
-     * 중"으로 답해 다시 시도하게 한다. 재조회가 실패하면 더 조심스러운 쪽(처리 중)을 쓴다.
+     * **`orders.status`를 다시 읽는 것으로는 갈리지 않는다** — 그 창 안에서는 재조회해도
+     * `refunded`다(선점이 바로 그 값을 썼다). 판정은 `cancel.ts`의 되돌림 판정과 **같은
+     * 기준**을 쓴다: `refunds`에 `status='done'` 행이 있는가. 토스 취소가 실제로 성공했을
+     * 때만 그 행이 생기므로, 선점만 된 상태와 환불이 끝난 상태가 여기서 갈린다.
+     *
+     * 재조회가 실패하면 더 조심스러운 쪽(처리 중)을 쓴다 — 살아 있는 후원에 "이미 취소됐다"고
+     * 말하는 쪽이 더 나쁘다.
      */
-    let refunded = false;
+    let refundDone = false;
     try {
       const again = await findFundingOrderByOrderNo(orderNo);
-      refunded = again ? !isLiveFundingOrderStatus(again.status) && again.status === 'refunded' : false;
+      refundDone = (again?.payments ?? []).some(
+        (p) => (p.refunds ?? []).some((r) => r.status === 'done'),
+      );
     } catch (error) {
-      console.error('[funding-download] 0행 뒤 주문 상태 재조회 실패', { orderNo: order.orderNo, error });
+      console.error('[funding-download] 0행 뒤 환불 기록 재조회 실패', { orderNo: order.orderNo, error });
     }
     return res.status(409).json({
       ok: false,
-      message: refunded
+      message: refundDone
         ? '이미 취소된 후원입니다. 내려받을 수 없습니다.'
         : '취소 처리 중입니다. 잠시 후 다시 시도해 주세요.',
     });

@@ -127,6 +127,45 @@ it('기록이 0행이면(그 사이 취소됨) 서명 주소를 내주지 않고
 });
 
 /**
+ * 0행의 문구는 **환불이 실제로 끝났는지**로 갈려야 한다. 셀프 취소는 주문을 `refunded`로
+ * 먼저 선점하고 토스를 부르며, 실패하면 최대 12초 뒤 되돌린다 — 그 창에서는 `orders.status`를
+ * 다시 읽어도 `refunded`라 갈리지 않는다. 판정 기준은 `cancel.ts`의 되돌림 판정과 같은
+ * `refunds.status = 'done'` 행의 존재다.
+ */
+it('선점만 됐고 done 환불이 없으면 "취소 처리 중"이라고 답한다', async () => {
+  updateCall(0);
+  (findFundingOrderByOrderNo as jest.Mock)
+    .mockResolvedValueOnce(paidOrder)
+    // 재조회 — 선점으로 refunded지만 토스 취소는 아직(또는 결국 실패). done 행이 없다.
+    .mockResolvedValueOnce({ ...paidOrder, status: 'refunded', payments: [{ refunds: [{ status: 'failed' }] }] });
+
+  const r = await call(ok);
+  expect(r.status).toBe(409);
+  expect(r.body.message).toBe('취소 처리 중입니다. 잠시 후 다시 시도해 주세요.');
+});
+
+it('done 환불이 있으면 "이미 취소된"이라고 답한다', async () => {
+  updateCall(0);
+  (findFundingOrderByOrderNo as jest.Mock)
+    .mockResolvedValueOnce(paidOrder)
+    .mockResolvedValueOnce({ ...paidOrder, status: 'refunded', payments: [{ refunds: [{ status: 'done' }] }] });
+
+  const r = await call(ok);
+  expect(r.status).toBe(409);
+  expect(r.body.message).toBe('이미 취소된 후원입니다. 내려받을 수 없습니다.');
+});
+
+it('재조회가 실패하면 조심스러운 쪽("처리 중")을 쓴다', async () => {
+  updateCall(0);
+  (findFundingOrderByOrderNo as jest.Mock)
+    .mockResolvedValueOnce(paidOrder)
+    .mockRejectedValueOnce(new Error('DB down'));
+
+  const r = await call(ok);
+  expect(r.body.message).toBe('취소 처리 중입니다. 잠시 후 다시 시도해 주세요.');
+});
+
+/**
  * 핵심 회귀. 이 순서가 뒤집히면 발급이 실패한 요청이 `downloaded_at`을 찍어 버린다 —
  * 후원자는 파일을 못 받았는데 셀프 취소만 잃는다.
  */
