@@ -237,6 +237,27 @@ it('delivered로 가면 delivered_at이 찍히고 되돌리면 지워진다', as
   expect(await readDeliveredAt(pledgeId)).toBeNull();
 });
 
+/**
+ * 디지털 전용 리워드의 delivered_at 정본은 **결제 확정 시각**이다(lib/funding/confirm.ts).
+ * 확정 순간 내려받기가 열리므로 그때가 전달 완료다. 예전엔 이 함수가 delivered가 아닌
+ * 모든 전이에서 무조건 NULL로 되돌려, 운영자가 발송 상태를 한 번만 눌러도 기산점이
+ * 사라졌다 — 다시 채우는 코드는 없다(확정은 이미 지났다).
+ */
+it('디지털 전용 리워드는 발송 상태를 바꿔도 기산점이 남는다', async () => {
+  // keep-singing-for-palestine의 리워드는 전부 requiresShipping: false다(md 정본).
+  const confirmedAt = new Date('2026-09-20T00:00:00Z');
+  const pledgeId = await seedPledgeRow('keep-singing-for-palestine', {
+    rewardId: 'mp3',
+    deliveredAt: confirmedAt,
+  });
+
+  for (const status of ['preparing', 'shipped', 'none']) {
+    const r = await setFulfillment({ pledgeId, status, actor: { kind: 'admin' } });
+    expect(r.ok).toBe(true);
+    expect(await readDeliveredAt(pledgeId)).toBe(Math.floor(confirmedAt.getTime() / 1000));
+  }
+});
+
 it('운송장만 고쳐 다시 저장해도 첫 전달 시각이 밀리지 않는다', async () => {
   const creatorA = await seedCreator();
   const { pledgeId } = await seedPledge({ creatorId: creatorA });
