@@ -58,7 +58,15 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   if (tooLong) return { ok: false, message: tooLong };
   const customerName = text(b.customerName, PLEDGE_TEXT_LIMITS.customerName);
   const customerPhone = text(b.customerPhone, PLEDGE_TEXT_LIMITS.customerPhone);
-  const customerEmail = typeof b.customerEmail === 'string' && isEmail(b.customerEmail.trim()) ? b.customerEmail.trim() : null;
+  /**
+   * 이메일은 **소문자로 저장한다.** 인원 집계(service.ts backerIdentitySql)가 이메일+전화를
+   * 신원 키로 쓰는데, `A@b.com`과 `a@b.com`이 다른 키가 되어 같은 사람이 둘로 세어졌다.
+   * 읽는 쪽도 LOWER로 정규화하므로 옛 데이터까지 맞지만, 새로 쓰는 값은 애초에 한 가지
+   * 표기로 두는 편이 낫다. 다른 주문 타입(booking·contracts·subscriptions)은 건드리지
+   * 않는다 — 이 정규화는 펀딩 집계를 위한 것이다.
+   */
+  const customerEmail =
+    typeof b.customerEmail === 'string' && isEmail(b.customerEmail.trim()) ? b.customerEmail.trim().toLowerCase() : null;
   if (!customerName || !customerPhone || !customerEmail) return { ok: false, message: '이름·연락처·이메일을 확인해 주세요.' };
   if (b.termsAgreed !== true) return { ok: false, message: '약관에 동의해 주세요.' };
   let shipping: PledgeShipping | undefined;

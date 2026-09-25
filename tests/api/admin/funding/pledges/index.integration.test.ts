@@ -146,8 +146,10 @@ it.each<[string | undefined, string]>([['', '빈 문자열'], ['   ', '공백만
   },
 );
 
-it('이메일이 있으면 앞뒤 공백만 정리해 그대로 쓴다', async () => {
-  const r = await call({ ...VALID_BODY, customerEmail: '  real@example.com  ' });
+// 소문자로 맞추는 이유는 온라인 경로와 같다 — 인원 집계의 신원 키가 이메일이라,
+// 대소문자만 다른 표기가 같은 사람을 둘로 센다.
+it('이메일은 앞뒤 공백을 정리하고 소문자로 저장한다', async () => {
+  const r = await call({ ...VALID_BODY, customerEmail: '  Real@Example.COM  ' });
   const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
   expect(order.rows[0]?.customer_email).toBe('real@example.com');
 });
