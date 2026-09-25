@@ -112,6 +112,20 @@
     "faq": {
       "title": "Frequently Asked Questions",
       "subtitle": "We collected common questions about using the studio."
+    },
+    "v2": {
+      "eyebrow": {
+        "releases": "Discography",
+        "studio": "Studio",
+        "why": "Why NOL",
+        "services": "Services",
+        "reviews": "Reviews",
+        "faq": "FAQ"
+      },
+      "releases": {
+        "title": "Records made at Studio NOL",
+        "viewAll": "View all work"
+      }
     }
   },
   "about": {

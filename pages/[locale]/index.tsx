@@ -2,12 +2,10 @@ import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
-import { m } from 'framer-motion';
-import { ArrowRight, Mic2, Music, Disc, Mic, Globe, Upload, GraduationCap, SlidersHorizontal, Video, ShieldCheck, Award } from '@/lib/lucide-icons';
+import { ArrowRight, Award } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
-import FeatureCard from '../../components/ui/FeatureCard';
 import SectionHeading from '../../components/ui/SectionHeading';
 import ImageHero, { HERO_SCRIM } from '../../components/common/ImageHero';
 import ResponsiveImage from '../../components/ResponsiveImage';
@@ -25,33 +23,25 @@ import ReviewSection from '../../components/ui/ReviewSection';
 import FAQSection from '../../components/ui/FAQSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getHomeData, type HomeData } from '../../data/home';
+import { getPortfolioItems } from '../../data/portfolio';
+import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
+import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import { getFaqData } from '../../data/faq';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
-import { createInViewEnterAnimation } from '../../utils/animationUtils';
 
 import type { NextPageWithLayout } from '../../types';
-
-const ICON_MAP: Record<string, React.ElementType> = {
-  Disc,
-  Mic,
-  Globe,
-  Music,
-  Upload,
-  GraduationCap,
-  SlidersHorizontal,
-  Video,
-};
 
 interface HomeProps {
   locale: Locale;
   homeData: HomeData;
   faqData: ReturnType<typeof getFaqData>;
+  releaseCovers: ReleaseCover[];
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers }) => {
   const { heroContent, homeServices, studioImages, seo, localeUsps, producerCredibility } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
@@ -60,7 +50,6 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
   const getLink = (path: string) => `/${locale}${path}`;
   // 검증된 유일 전환 채널(카카오) — 히어로 1차 CTA를 폼이 아닌 카카오 직링크로.
   const kakaoUrl = getSiteConfig(locale).contact.kakaoUrl;
-  const homeServicesMotionProps = createInViewEnterAnimation({ duration: 0.5 });
 
   return (
     <div className="overflow-visible">
@@ -85,7 +74,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         title={
           <>
             <span className="block mb-2 text-gray-100 drop-shadow-lg">{heroContent.titlePrefix}</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[var(--hero-title-accent)] to-white drop-shadow-[0_0_25px_var(--hero-title-glow)]">
+            {/* v2: 제목 일부에만 걸린 그라디언트는 사진 위에서 강조가 아니라 얼룩으로 읽혔다
+                (디자인 회의). 강조는 크기가 이미 맡고 있으니 같은 흰색으로 둔다. */}
+            <span className="text-white drop-shadow-lg">
               {heroContent.titleHighlight}
             </span>
             {heroContent.titleSuffix && (
@@ -177,39 +168,53 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         }
       />
 
+      {/* 발매작 — 히어로 바로 아래. "여기서 음반이 나온다"는 가장 강한 증거를 첫 자리에 둔다. */}
+      {releaseCovers.length > 0 && (
+        <Section variant="default">
+          <SectionHeading
+            eyebrow={t('home.v2.eyebrow.releases')}
+            index="01"
+            title={t('home.v2.releases.title')}
+          />
+          <HomeReleaseStrip
+            locale={locale}
+            covers={releaseCovers}
+            viewAllLabel={t('home.v2.releases.viewAll')}
+          />
+        </Section>
+      )}
+
       {/* 스튜디오 갤러리 섹션 */}
-      <Section variant="default">
+      <Section variant="alternate">
         <SectionHeading
-          icon={Mic2}
+          eyebrow={t('home.v2.eyebrow.studio')}
+          index="02"
           title={t('home.sections.galleryTitle')}
-          className="mb-12"
         />
         <MediaGallery images={studioImages} locale={locale} />
       </Section>
 
       {/* Locale-specific USP/trust block — ko: 신뢰·전환 보강, 그 외: 외국 뮤지션 안내 */}
       {localeUsps && (
-        <Section variant="alternate">
+        <Section variant="default">
           <SectionHeading
-            icon={locale === 'ko' ? ShieldCheck : Globe}
+            eyebrow={t('home.v2.eyebrow.why')}
+            index="03"
             title={localeUsps.title}
-            className="mb-8"
           />
-          <div className="max-w-4xl mx-auto space-y-6">
+          {/* v2: 카드 세 장 대신 번호 붙은 3단. 카드 그리드에는 스크롤 모션을 걸지 않는다
+              (여러 장이 동시에 레이어로 올라가 iOS 깜빡임을 되살린다 — 디자인 회의). */}
+          <ol className="grid gap-10 md:grid-cols-3 md:gap-8">
             {localeUsps.items.map((item: { heading: string; body: string }, index: number) => (
-              <m.div
-                key={item.heading}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="glass-card rounded-xl p-6"
-              >
-                <h3 className="text-heading-4 font-title mb-3 text-primary dark:text-primary-lighter">{item.heading}</h3>
+              <li key={item.heading} className="border-t-2 border-gray-950 dark:border-white pt-5">
+                <span aria-hidden="true" className="block text-sm font-semibold tabular-nums text-primary dark:text-primary-lighter mb-3">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <h3 className="font-title text-xl font-bold leading-snug text-gray-950 dark:text-white mb-3 break-keep">{item.heading}</h3>
                 <p className="typo-card-body text-gray-600 dark:text-gray-300">{item.body}</p>
-              </m.div>
+              </li>
             ))}
-          </div>
+          </ol>
         </Section>
       )}
 
@@ -218,7 +223,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
           방문자가 실적을 검증할 유일한 경로이고, Person entity(utils/schema/person.ts가
           Person.url을 /author로 일원화) 쪽으로 가는 가장 강한 내부링크다. */}
       {producerCredibility && (
-        <Section variant="default">
+        <Section variant="alternate">
           <div className="max-w-4xl mx-auto text-center">
             <ResponsiveImage
               src={producerCredibility.photo.src}
@@ -259,47 +264,38 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
         </Section>
       )}
 
-      {/* 서비스 소개 섹션 */}
-      <Section variant="alternate">
+      {/* 서비스 소개 섹션 — 트랙리스트 */}
+      <Section variant="default">
         <SectionHeading
-          icon={Music}
+          eyebrow={t('home.v2.eyebrow.services')}
+          index="04"
           title={t('home.sections.servicesTitle')}
-          className="mb-12"
         />
-        <m.div
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
-          {...homeServicesMotionProps}
-        >
-          {homeServices.map((service) => (
-            <FeatureCard
-              key={service.title}
-              icon={ICON_MAP[service.icon as string] || Disc}
-              title={service.title}
-              description={service.description}
-              href={getLink(service.link)}
-              variant="highlight"
-              cta={
-                <div className="inline-flex items-center typo-card-cta hover:text-primary-dark dark:hover:text-primary-lighter transition-colors duration-300">
-                  {t('home.sections.servicesCta')}
-                  <span className="ml-1">
-                    <ArrowRight size={14} aria-hidden="true" />
-                  </span>
-                </div>
-              }
-            />
-          ))}
-        </m.div>
+        <HomeServiceTracklist
+          services={homeServices.map((service) => ({
+            title: service.title,
+            description: service.description,
+            href: getLink(service.link),
+          }))}
+        />
       </Section>
 
       {/* 리뷰 섹션 */}
-      <ReviewSection variant="default" locale={locale} />
+      <ReviewSection
+        variant="alternate"
+        locale={locale}
+        eyebrow={t('home.v2.eyebrow.reviews')}
+        index="05"
+      />
 
       {/* FAQ 섹션 */}
       <FAQSection
         items={faqData}
         title={t('home.faq.title')}
         subtitle={t('home.faq.subtitle')}
-        variant="alternate"
+        variant="default"
+        eyebrow={t('home.v2.eyebrow.faq')}
+        index="06"
       />
 
       {/* 서비스 바로가기 — 6~7개 link(ko는 발매 pill 포함)가 메인 viewport에 들어오면 next/link 기본 prefetch가
@@ -318,25 +314,25 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
               {t('nav.releaseProject')}
             </ServiceLinkPill>
           )}
-          <ServiceLinkPill href={getLink('/practice-room')} tone="secondary">
+          <ServiceLinkPill href={getLink('/practice-room')} tone="primary">
             {t('nav.practiceRoom')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={getLink('/mixing-mastering')} tone="accent">
+          <ServiceLinkPill href={getLink('/mixing-mastering')} tone="primary">
             {t('nav.mixingMastering')}
           </ServiceLinkPill>
           <ServiceLinkPill href={getLink('/wedding-song')} tone="primary">
             {t('nav.weddingSong')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={getLink('/voice-acting')} tone="secondary">
+          <ServiceLinkPill href={getLink('/voice-acting')} tone="primary">
             {t('nav.voiceActing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={getLink('/lesson')} tone="accent">
+          <ServiceLinkPill href={getLink('/lesson')} tone="primary">
             {t('nav.lesson')}
           </ServiceLinkPill>
           <ServiceLinkPill href={getLink('/pricing')} tone="primary">
             {t('nav.pricing')}
           </ServiceLinkPill>
-          <ServiceLinkPill href={getLink('/stories')} tone="secondary">
+          <ServiceLinkPill href={getLink('/stories')} tone="primary">
             {t('nav.stories')}
           </ServiceLinkPill>
         </div>
@@ -370,6 +366,8 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData }) => {
 };
 
 Home.hasHero = true;
+// 디자인 v2 시제품 — lib/designEdition.ts. 10/14까지 preview에서만 검증한다(디자인 회의).
+Home.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
@@ -377,12 +375,24 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const locale = resolveLocaleParam(params?.locale);
   const homeData = getHomeData(locale);
   const faqData = getFaqData(locale);
+  // 발매작 커버 — /release-project 디스코그래피와 같은 기준(featured). 최신순 12장.
+  const releaseCovers: ReleaseCover[] = getPortfolioItems(locale)
+    .filter((item) => item.featured && item.image)
+    .sort((a, b) => (b.releaseDate || '').localeCompare(a.releaseDate || ''))
+    .slice(0, 12)
+    .map(({ id, title, image, releaseDate }) => ({
+      id,
+      title,
+      image: image as string,
+      ...(releaseDate ? { releaseDate } : {}),
+    }));
 
   return buildPageStaticProps(
     locale,
     {
       homeData,
       faqData,
+      releaseCovers,
     },
     { revalidate: 3600, i18nSections: ['home'] }
   );

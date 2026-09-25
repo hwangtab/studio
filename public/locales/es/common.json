@@ -112,6 +112,20 @@
     "faq": {
       "title": "Preguntas frecuentes",
       "subtitle": "Recopilamos preguntas comunes sobre el uso del estudio."
+    },
+    "v2": {
+      "eyebrow": {
+        "releases": "Discografía",
+        "studio": "Estudio",
+        "why": "Por qué NOL",
+        "services": "Servicios",
+        "reviews": "Reseñas",
+        "faq": "Preguntas"
+      },
+      "releases": {
+        "title": "Discos hechos en Studio NOL",
+        "viewAll": "Ver todos los trabajos"
+      }
     }
   },
   "about": {

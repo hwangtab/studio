@@ -15,9 +15,12 @@ interface ReviewSectionProps {
     className?: string;
     variant?: SectionVariant;
     locale?: Locale;
+    /** 디자인 v2 섹션 라벨·번호 — SectionHeading으로 그대로 넘긴다(v1에서는 무시). */
+    eyebrow?: React.ReactNode;
+    index?: string;
 }
 
-const ReviewSection = ({ className, variant = "default", locale = 'ko' }: ReviewSectionProps) => {
+const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow, index }: ReviewSectionProps) => {
     const reviews = getReviews(locale);
 
     const { t } = useTranslation('common', { lng: locale });
@@ -41,6 +44,8 @@ const ReviewSection = ({ className, variant = "default", locale = 'ko' }: Review
                 )}
                 subtitle={t('reviewSection.subtitle', { defaultValue: '스튜디오 놀을 거쳐간 많은 분들이 증명하는 기술력과 진정성입니다.' })}
                 className="mb-8"
+                eyebrow={eyebrow}
+                index={index}
             />
 
             {reviewCount > 0 && (

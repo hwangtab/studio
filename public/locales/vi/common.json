@@ -112,6 +112,20 @@
     "faq": {
       "title": "Câu hỏi thường gặp",
       "subtitle": "Chúng tôi tổng hợp các câu hỏi thường gặp khi sử dụng studio."
+    },
+    "v2": {
+      "eyebrow": {
+        "releases": "Đĩa nhạc",
+        "studio": "Phòng thu",
+        "why": "Vì sao chọn NOL",
+        "services": "Dịch vụ",
+        "reviews": "Đánh giá",
+        "faq": "Hỏi đáp"
+      },
+      "releases": {
+        "title": "Những đĩa nhạc làm tại Studio NOL",
+        "viewAll": "Xem tất cả tác phẩm"
+      }
     }
   },
   "about": {

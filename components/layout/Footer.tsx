@@ -5,6 +5,7 @@ import { getSiteConfig, hostingProvider, studioOperator } from '../../data/siteC
 import { type Locale } from '../../lib/i18n';
 import { Phone, Mail, MapPin } from '@/lib/lucide-icons';
 import { trackLeadEvent } from '../../utils/analytics';
+import { useDesignEdition } from '../../lib/designEdition';
 
 interface FooterProps {
   locale: Locale;
@@ -38,9 +39,19 @@ export const Footer = ({ locale }: FooterProps) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const currentYear = new Date().getFullYear();
+  const edition = useDesignEdition();
 
   return (
-    <footer className="bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title">
+    // v2: 보라→핑크→초록 전폭 그라디언트 대신 잉크 단색. 사이트에서 고채도 색이 카카오
+    // 옐로 하나만 남아야 "노란 건 카톡" 신호가 선명해진다. 포커스 링 오프셋 색은
+    // styles/globals.css의 .v2-footer 규칙이 잉크로 맞춘다(여기 7곳의 ring-offset-primary).
+    <footer
+      className={
+        edition === 'v2'
+          ? 'v2-footer bg-gray-950 border-t border-white/10 text-white p-8 font-title'
+          : 'bg-gradient-to-r from-primary via-secondary to-accent text-white p-8 font-title'
+      }
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 items-start">
           <div className="flex flex-col">

@@ -462,7 +462,13 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 설계된 화면이라 고정이 맞다. 둘은 **다른 타이포 영역**이며 서로 맞출 대상이 아니다.
 역할 클래스(`.typo-*`)는 화면 구조(카드·섹션·내비)를 지배하고, 마크다운 스케일은 본문 안에서만 산다.
 
-**`body-1`의 weight 300은 산문 기준이며, 실사용의 medium·semibold는 결함이 아니다.**
+**`body-1`의 weight 300은 v1의 산문 기준이다 — 디자인 v2는 400으로 올린다(2026-09-25 개정).**
+300을 "의도"로 확정할 때 zh·th 폴백 폰트와 Windows 렌더링 조건은 검토되지 않았다. 그 환경에서
+300 획은 더 가늘어져 계산상 AA여도 읽히는 대비가 떨어진다. 그래서 본문 토큰의 굵기를
+`var(--body-weight, 300)`으로 빼 두고, v2 스코프(`[data-edition='v2']`)만 400을 준다(§10).
+v1 페이지는 이행될 때까지 300이다. 아래 문단은 v1에 대해 여전히 유효하다.
+
+**v1에서 실사용의 medium·semibold는 결함이 아니다.**
 `font-medium`·`font-semibold`가 많이 보이는 자리는 산문이 아니라 레이블·강조·수치다. 그것들은
 각자의 역할 클래스(`.typo-card-cta`·`.typo-button`·`.typo-card-subtitle`)나 의도된 강조를 쓰고 있다.
 산문 본문에 굵기를 올려 쓰는 것만 피하면 된다.
@@ -476,3 +482,38 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 | `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
 | 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |
+
+## 10. 디자인 v2 — 페이지 단위로 이행 중
+
+2026-09-25 디자인 회의(아트·모션·성능·전환·접근성·아키텍트)에서 합의한 개편이다. 한 번에
+전역으로 뒤집지 않는다 — 공용 CTA·카드 컴포넌트가 진행 중인 전환 실험의 계측 지점이라
+거기를 바꾸면 실험이 판정 불가가 된다. 첫 적용 페이지는 홈이다.
+
+**켜는 법**: 페이지 컴포넌트에 `Page.designEdition = 'v2'`. `_app`이 `DesignEditionContext`
+(`lib/designEdition.ts`)와 wrapper의 `data-edition="v2"`를 내려보낸다. v1 페이지에는 속성조차
+붙지 않는다.
+
+**분기하는 곳은 셋뿐이다**: `SectionHeading`·`Footer`(컨텍스트), 그리고 CSS 스코프
+`[data-edition='v2']`. 그 밖의 공용 컴포넌트 파일은 v2 작업에서 건드리지 않는다.
+
+| 항목 | v1 | v2 |
+|---|---|---|
+| 섹션 제목 | 원형 아이콘 + 보라·핑크·초록 그라디언트, 가운데 | eyebrow(`.typo-eyebrow`, `<p>`, 번호 `aria-hidden`) + 잉크 대형 제목(`.typo-display-section`), 좌측 |
+| 텍스트 그라디언트 | 섹션 제목 전부 | 0곳(forced-colors에서 글자가 사라지고, 모든 제목이 외치면 강조가 없다) |
+| 브랜드색 | 보라·핑크·초록 | 보라 하나. 고채도는 카카오 옐로만 남긴다 |
+| 본문 굵기 | 300 | 400 |
+| 푸터 | 3색 전폭 그라디언트 | 잉크(`gray-950`) 단색 |
+| 스크롤 모션 | 없음(2026-05 iOS fix로 사실상 꺼짐) | 섹션 제목만 CSS `view()` 등장 — 카드 그리드 금지 |
+
+**다문자**: 대형 제목의 행간·자간은 `--display-lh`/`--display-ls` 변수로 두고 th·vi(행간 1.4)·
+zh(자간 0)에서 재정의한다. eyebrow 라벨은 i18n 키(`home.v2.eyebrow.*`)이고 대문자 변환은 CSS가 한다.
+
+**모션 규칙**: 정밀 포인터 기기 + `prefers-reduced-motion: no-preference` + `@supports`에서만 켠다.
+시작 opacity는 0이 아니라 .35다. 킬스위치 `NEXT_PUBLIC_DISABLE_MOTION=1`. iOS 26 Safari 실기기
+트레이스로 컴포지터 동작을 확인하기 전까지 모바일은 정적이다.
+
+**v1이 그대로인지 확인하는 법**: `npm run visual:golden`(빌드 HTML 전수 비교, 허용 목록 밖
+변경이 있으면 실패)과 `npm run visual:shots`(스크린샷 픽셀 비교). 사용법은 각 스크립트 머리말.
+
+**가드**: `components/ui/SectionHeading.test.tsx`가 v1/v2 분기와 v2 파일의 색 규칙(그라디언트·
+secondary·accent 금지)을 고정한다. v2 파일이 늘면 그 목록에 더한다.
