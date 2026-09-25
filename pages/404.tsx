@@ -9,7 +9,7 @@ import SEO from '../components/SEO';
 import { Section } from '../components/ui/Section';
 import { Button } from '../components/ui/Button';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
-import { getAllLocalesI18nResourcesServer } from '../lib/i18n.server';
+import { getErrorPageStaticProps } from '../lib/getStatic';
 
 const NotFoundPage: NextPage = () => {
   const router = useRouter();
@@ -120,13 +120,6 @@ const NotFoundPage: NextPage = () => {
   );
 };
 
-export const getStaticProps: GetStaticProps = async () => {
-  return {
-    props: {
-      i18nResources: getAllLocalesI18nResourcesServer(),
-    },
-    revalidate: 3600,
-  };
-};
+export const getStaticProps: GetStaticProps = async () => getErrorPageStaticProps(3600);
 
 export default NotFoundPage;

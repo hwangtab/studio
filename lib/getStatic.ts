@@ -1,7 +1,7 @@
 import type { GetServerSideProps, GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 
 import i18n, { applyI18nResources, defaultLocale, locales, type Locale } from './i18n';
-import { getLocaleI18nResourcesServer, getLocaleI18nSectionsServer } from './i18n.server';
+import { getAllLocalesI18nResourcesServer, getLocaleI18nResourcesServer, getLocaleI18nSectionsServer } from './i18n.server';
 
 const initializeServerI18n = (locale: Locale, sections?: readonly string[]) => {
   if (typeof window !== 'undefined') return;
@@ -97,4 +97,20 @@ export const withI18nServerProps = <TProps extends object>(
     const props = await result.props;
     return { props: { ...base, ...props } as TProps & { locale: Locale; i18nResources: unknown } };
   };
+};
+
+/**
+ * 404·500 페이지용 — 전 로케일 CORE 번들을 props로 싣고, **서버 i18n에도 먼저 넣는다**.
+ *
+ * 두 페이지는 경로에 로케일이 없어 buildPageStaticProps를 쓰지 않고 전 로케일 번들을
+ * 반환만 했다. 그런데 _app은 리소스를 useEffect(클라이언트)에서만 i18n에 넣으므로,
+ * 서버 렌더는 i18n 싱글턴에 **그 빌드 워커가 앞서 렌더한 페이지가 남긴 번들**이 있느냐에
+ * 달려 있었다. 앞서 ko 페이지를 렌더한 워커면 번역문이, 아니면 키가 그대로 나왔다 —
+ * 빌드마다 404 <title>이 "notFound.seoTitle"이 되기도 했다(2026-09-26, 빌드 두 번 중 한 번).
+ * getStaticProps와 렌더는 같은 프로세스에서 돌므로 여기서 넣어 두면 렌더가 받는다.
+ */
+export const getErrorPageStaticProps = (revalidate: number) => {
+  const i18nResources = getAllLocalesI18nResourcesServer();
+  if (typeof window === 'undefined') applyI18nResources(i18nResources);
+  return { props: { i18nResources }, revalidate };
 };
