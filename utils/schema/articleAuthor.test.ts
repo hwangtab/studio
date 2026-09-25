@@ -58,7 +58,7 @@ describe('스토리 author — 화면 바이라인과 같은 주체를 가리킨
     expect(author.name).toBe(studioOperator.name);
     expect(author.url).toBe(`${SITE}/ko/author`);
     expect(Array.isArray(author.award)).toBe(true);
-    expect(author.worksFor['@id']).toBe(`${SITE}/#organization`);
+    expect((author.worksFor as Node)['@id']).toBe(`${SITE}/#organization`);
   });
 
   it('외부 기고자는 단순 Person이다 — 잘못된 affiliation 신호를 만들지 않는다', () => {
