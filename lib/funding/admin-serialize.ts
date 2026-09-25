@@ -143,6 +143,30 @@ export const hasReviewMarker = (adminMemo: string | null | undefined): boolean =
   return lastWarning > lastCleared;
 };
 
+/**
+ * `clear_refund_request`가 관리자 메모에 남기는 표식 — 고객이 남긴 청약철회 의사를
+ * **운영자가 지웠다**는 기록이다. 문자열을 두 곳에 손으로 적지 않는다.
+ */
+export const REFUND_REQUEST_CLEARED_MARKER = '환불 요청 취소';
+
+/**
+ * 이 메모에 **사유 없이 지워서는 안 되는 기록**이 있는가.
+ *
+ * 세 종류다: 웹훅이 남긴 재고 경고, 그것을 닫은 해제 항목, 그리고 청약철회 취소 기록.
+ * `set_memo`는 메모 전체를 덮어쓰는 액션이라 빈 값 한 번으로 이 셋이 흔적 없이 사라졌다 —
+ * needsReview 배지가 꺼지고(운영자가 확인했다는 기록도 함께 사라진다), 고객 의사를 지운
+ * 사실도 남지 않는다.
+ */
+export const hasProtectedMemoRecord = (adminMemo: string | null | undefined): boolean => {
+  if (typeof adminMemo !== 'string') return false;
+  return adminMemo.split('\n').some((line) => {
+    const t = line.trim();
+    return isReviewWarningLine(t)
+      || isReviewClearedLine(t)
+      || new RegExp(`^\\[\\d{4}-\\d{2}-\\d{2}\\]\\s*${REFUND_REQUEST_CLEARED_MARKER}`).test(t);
+  });
+};
+
 export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
   const p = o.fundingPledge!;
   return {

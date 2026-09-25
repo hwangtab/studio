@@ -3,6 +3,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { fulfillmentStatusEnum } from '../../db/schema';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from './refundable';
+import { PRIVACY_ACTOR_ADMIN } from '../privacy/accessLog';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalReward } from './shape';
 
@@ -15,7 +16,18 @@ import { isDigitalReward } from './shape';
  * 막는 UPDATE ... WHERE), 개설자 경로가 이걸 다시 구현하면 두 벌이 갈라져 한쪽만
  * 고쳐지는 사고가 난다.
  */
-export type FulfillmentActor = { kind: 'admin' } | { kind: 'creator'; creatorId: string };
+/**
+ * 누가 바꿨는지. 관리자도 **사람으로 특정한다** — 계정이 사람별로 갈려 있고
+ * (`lib/contracts/admin-accounts.ts`) 가드가 성공에 `actor`를 실어 주는데, 예전엔 그 값을
+ * 넘기지 않아 `fulfillment_updated_by`가 전부 `'admin'`으로 남았다. 발송 기록이 누가 눌렀는지
+ * 가리키지 못하면 감사 기록으로 쓸 수 없다.
+ *
+ * `actor`가 없으면(ADMIN_ACCOUNTS를 쓰지 않는 배포·계정을 나누기 전 발급된 옛 세션) 지금처럼
+ * `'admin'`으로 남는다 — 누구인지 모르는 것이 사실이다(`PRIVACY_ACTOR_ADMIN`과 같은 판단).
+ */
+export type FulfillmentActor =
+  | { kind: 'admin'; actor?: string | null }
+  | { kind: 'creator'; creatorId: string };
 
 export type FulfillmentResult =
   | { ok: true }
@@ -155,7 +167,9 @@ export const setFulfillment = async (input: {
   // 누가 바꿨는지는 admin_memo에 적지 않는다 — admin_memo는 retention.ts가 배송지와
   // 함께 파기하는 칸이라, 거기 적으면 감사 기록이 개인정보와 같은 시점에 사라진다.
   // fulfillment_updated_by는 파기 대상이 아닌 별도 컬럼이다(db/schema.ts 주석 참조).
-  const updatedBy = actor.kind === 'admin' ? 'admin' : `creator:${actor.creatorId}`;
+  const updatedBy = actor.kind === 'admin'
+    ? (actor.actor?.trim() || PRIVACY_ACTOR_ADMIN)
+    : `creator:${actor.creatorId}`;
 
   const claim = await db.run(sql`
     UPDATE funding_pledges

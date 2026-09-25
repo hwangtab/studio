@@ -177,12 +177,23 @@ it('개설자는 자기 프로젝트의 후원을 실제로 발송 처리할 수
  * 뒤집어도 이 파일의 어떤 테스트도 못 잡는다. 그러면 관리자 변경만 기록이 비어 "누가
  * 바꿨나"가 절반만 남는다.
  */
-it('관리자 actor는 fulfillment_updated_by에 admin을 남긴다', async () => {
+it('관리자 actor에 사람이 실려 오면 그 이름을 남긴다 (L10)', async () => {
   const creatorA = await seedCreator();
   const { pledgeId } = await seedPledge({ creatorId: creatorA });
-  const result = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin' } });
+  const result = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin', actor: 'kyungha' } });
   expect(result).toEqual({ ok: true });
+  expect((await readPledgeRow(pledgeId)).fulfillment_updated_by).toBe('kyungha');
+});
+
+it('관리자 actor에 사람이 없으면 admin으로 남긴다 — 누구인지 모르는 것이 사실이다', async () => {
+  const creatorA = await seedCreator();
+  const { pledgeId } = await seedPledge({ creatorId: creatorA });
+  expect(await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'admin' } })).toEqual({ ok: true });
   expect((await readPledgeRow(pledgeId)).fulfillment_updated_by).toBe('admin');
+
+  const { pledgeId: blank } = await seedPledge({ creatorId: creatorA });
+  expect(await setFulfillment({ pledgeId: blank, status: 'shipped', actor: { kind: 'admin', actor: '  ' } })).toEqual({ ok: true });
+  expect((await readPledgeRow(blank)).fulfillment_updated_by).toBe('admin');
 });
 
 /**

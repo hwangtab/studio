@@ -36,6 +36,15 @@ export const PRIVACY_ACTOR_ADMIN = 'admin';
 export const privacyCreatorActor = (creatorId: string): string => `creator:${creatorId}`;
 
 /**
+ * **화면 열람과 CSV 내려받기는 같은 `action`으로 남긴다**(`funding_creator_shipping_export`).
+ * 1라운드에서 그렇게 정했고 유지한다 — 배송 목록 화면은 표 전체를 props로 실어 보내므로
+ * (`__NEXT_DATA__`) 노출 범위가 CSV와 같다. "본 것"과 "파일로 받은 것"을 가르면 둘 중
+ * 하나만 남기고 싶어지는데, 실제로 새는 양은 다르지 않다.
+ *
+ * 구분이 필요해지면 열거값을 추가한다(그때는 처리방침 19항의 열거도 함께 고쳐야 한다).
+ */
+
+/**
  * 「개인정보의 안전성 확보조치 기준」 제8조① 단서 — 고유식별정보를 처리하는
  * 개인정보처리시스템의 접속기록은 **2년 이상.** 일반 접속기록의 1년과 다른 값이며,
  * 이 표에는 주민등록번호 조회 기록이 섞여 있으므로 표 전체가 긴 쪽을 따른다.

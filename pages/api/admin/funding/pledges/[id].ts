@@ -4,7 +4,9 @@ import { eq, sql } from 'drizzle-orm';
 import { getDb } from '../../../../../db/client';
 import { fundingPledges, orders } from '../../../../../db/schema';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
-import { REVIEW_CLEARED_MARKER, hasReviewMarker } from '../../../../../lib/funding/admin-serialize';
+import {
+  REFUND_REQUEST_CLEARED_MARKER, REVIEW_CLEARED_MARKER, hasProtectedMemoRecord, hasReviewMarker,
+} from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { setFulfillment } from '../../../../../lib/funding/fulfillment';
@@ -53,7 +55,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         status: b.fulfillmentStatus,
         trackingCompany: typeof b.trackingCompany === 'string' ? b.trackingCompany : undefined,
         trackingNumber: typeof b.trackingNumber === 'string' ? b.trackingNumber : undefined,
-        actor: { kind: 'admin' },
+        // 사람을 특정해 넘긴다 — fulfillment_updated_by가 'admin' 하나로 뭉개지지 않게.
+        actor: { kind: 'admin', actor: auth.actor },
         now,
       });
       if (!result.ok) {
@@ -82,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!isRefundPendingStatus(order.status)) {
         return res.status(409).json({ ok: false, message: '확정 상태인 펀딩만 환불 요청을 취소할 수 있습니다.' });
       }
-      const entry = `[${kstDateString(now)}] 환불 요청 취소 — ${reason}`;
+      const entry = `[${kstDateString(now)}] ${REFUND_REQUEST_CLEARED_MARKER} — ${reason}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)
@@ -188,9 +191,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'set_memo': {
       // 주의: 메모 전체를 덮어쓰는 액션이라 웹훅 표식도 함께 지워질 수 있다. 재고 확인을
       // '닫는' 의도라면 clear_stock_review를 쓸 것 — 그쪽은 원문을 남기고 사유를 강제한다.
+      const nextMemo = typeof b.adminMemo === 'string' ? b.adminMemo : '';
+      /**
+       * **빈 값으로 지우는 것만 막는다.** 웹훅 재고 경고·그 해제 기록·청약철회 취소 기록은
+       * 사유와 함께 남긴 것이라, 빈칸 저장 한 번으로 흔적 없이 사라지면 안 된다.
+       * 내용을 고치는 저장은 그대로 둔다 — 운영자가 실제로 쓰는 경로다.
+       */
+      if (nextMemo.trim() === '' && hasProtectedMemoRecord(order.fundingPledge.adminMemo)) {
+        return res.status(409).json({
+          ok: false,
+          message: '이 메모에는 재고 확인 표식이나 청약철회 취소 기록이 있어 비울 수 없습니다. '
+            + '재고 확인을 닫으려면 clear_stock_review를 쓰세요.',
+        });
+      }
       await db
         .update(fundingPledges)
-        .set({ adminMemo: typeof b.adminMemo === 'string' ? b.adminMemo : null, updatedAt: now })
+        .set({ adminMemo: nextMemo === '' ? null : nextMemo, updatedAt: now })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }
