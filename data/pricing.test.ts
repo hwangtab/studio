@@ -406,8 +406,17 @@ describe('가격 SSOT 정합', () => {
     // 만원 표기만 보던 첫 버전은 faq.ts의 원 단위 단가를 통째로 놓쳤다.
     const AMOUNT = /(\d[\d,]{2,})\s*원|(\d+)\s*만원/g;
 
+    // 본문 인라인 콜아웃(components/inline/*.tsx)도 가격을 말한다. 2026-09-25에 이 디렉터리의
+    // InlineServiceCallout이 발매 EP·정규 하한을 옛 값으로 들고 있던 것이 발견됐다 — data/만
+    // 훑던 이 스캔의 사각지대였다.
+    const INLINE_DIR = path.join(__dirname, '..', 'components', 'inline');
+    const inlineComponents = fs
+      .readdirSync(INLINE_DIR)
+      .filter((name) => name.endsWith('.tsx') && !name.includes('.test.'))
+      .map((name) => path.join(INLINE_DIR, name));
+
     const offenders: string[] = [];
-    for (const file of walk(__dirname)) {
+    for (const file of [...walk(__dirname), ...inlineComponents]) {
       const text = fs.readFileSync(file, 'utf8');
       for (const m of text.matchAll(AMOUNT)) {
         const won = m[1] ? Number(m[1].replace(/,/g, '')) : Number(m[2]) * 10_000;
