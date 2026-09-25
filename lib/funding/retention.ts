@@ -78,6 +78,11 @@ const yearsAgo = (now: Date, years: number): Date => {
  * 건드리게 된다. 그 판단은 이 작업의 범위 밖이다 — 별도로 `orders` 전체의 보존 정책을
  * 설계해야 한다.
  *
+ * **전달 표시가 없는 후원은 여기서 파기되지 않는다** — 기산점이 `delivered_at`이다. 그 후원은
+ * 5년 파기로 결제자 이름이 지워질 때 `purgeFundingPersonalDataOfPurgedOrders`(lib/privacy/
+ * orderRetention.ts)가 같은 항목을 지운다. 두 경로 모두 결제 후 5년이 하한이다 — 리워드를
+ * 전달한 뒤에도 오배송·민원 대응에 배송지가 필요하다(운영자 결정, 2026-09-26).
+ *
  * **id로 재발급하지 않는 이유(idempotency 설계)**: 별도의 `purged_at` 컬럼을 두지 않는다.
  * 이 저장소에서 스키마를 늘리려면 마이그레이션을 생성·적용해야 하는데, 이 작업 범위에서는
  * DB 마이그레이션을 실행하지 않기로 했다. 대신 "파기할 것이 남아 있는가"(shipping* 또는

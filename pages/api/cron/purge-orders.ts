@@ -38,7 +38,7 @@ import {
   purgeExpiredSubscriptionCustomerData,
   purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
-  purgeFundingListingOfPurgedOrders,
+  purgeFundingPersonalDataOfPurgedOrders,
   purgeUnusableBillingKeyRawResponses,
   SUBSCRIPTION_DORMANCY_YEARS,
 } from '../../../lib/privacy/orderRetention';
@@ -76,10 +76,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     `법정 보존 ${ORDER_LEGAL_RETENTION_YEARS}년이 지난 주문의 고객 이름·연락처 파기`,
     purgeExpiredOrderCustomerData,
   );
-  // 위 파기의 결과를 따른다 — 이름이 지워진 후원의 명단 표시 이름·응원 메시지. 순서가 곧 조건이다.
+  // 위 파기의 결과를 따른다 — 이름이 지워진 후원의 배송지·메모·응원 메시지·표시 이름. 순서가 곧 조건이다.
   const fundingListings = await run(
-    '결제자 이름이 파기된 후원의 명단 표시 이름·응원 메시지 파기',
-    purgeFundingListingOfPurgedOrders,
+    '결제자 이름이 파기된 후원의 배송지·메모·응원 메시지·명단 표시 이름 파기',
+    purgeFundingPersonalDataOfPurgedOrders,
   );
   const failMessages = await run(
     `결제 실패 후 ${PAYMENT_FAIL_MESSAGE_RETENTION_YEARS}년이 지난 결제사 실패 사유 원문 파기`,
@@ -136,7 +136,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
   const body = {
     purgedOrderCustomers: orderCustomers ? orderCustomers.purged : null,
-    purgedFundingListings: fundingListings ? fundingListings.purged : null,
+    purgedFundingPledges: fundingListings ? fundingListings.purged : null,
     purgedPaymentFailMessages: failMessages ? failMessages.purged : null,
     endedDormantSubscriptions: dormantSubscriptions ? dormantSubscriptions.ended : null,
     purgedDormantSubscriptionCustomers: dormantSubscriptions ? dormantSubscriptions.purged : null,
