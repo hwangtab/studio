@@ -1,0 +1,161 @@
+import { eq } from 'drizzle-orm';
+
+import { getDb } from '../../db/client';
+import { FUNDING_DESIGN_PRICE } from '../../data/pricing';
+import {
+  fundingProjects,
+  fundingProjectServices,
+  type FundingProjectService,
+  type FundingProjectServiceKind,
+} from '../../db/schema';
+
+/**
+ * 펀딩 프로젝트의 스튜디오 서비스(설계 대행·발매 프로젝트 연계) — 운영자 전용.
+ * 스키마 주석: db/schema.ts fundingProjectServices.
+ *
+ * **읽기는 던지지 않는다.** 이 테이블을 읽는 곳은 관리자 심사 화면뿐이고, 서비스 칸 하나 때문에
+ * 심사·정산 화면 전체가 500이 되면 안 된다(정산 집계 실패를 다루는 방식과 같다). 대신 실패를
+ * 두 갈래로 나눠 돌려준다 — `missing_table`(마이그레이션 0036 미적용: 화면이 적용 방법을 안내)과
+ * `error`(그 밖의 DB 장애: 로그에 남기고 화면은 "불러오지 못함"). 둘을 합치면 진짜 장애가
+ * "마이그레이션을 돌리세요"로 가려져 운영자가 엉뚱한 조치를 한다.
+ *
+ * 쓰기는 테이블 부재만 `unavailable`로 바꾸고 나머지 오류는 그대로 던진다(라우트가 500).
+ */
+
+export type ProjectServiceView = {
+  kind: FundingProjectServiceKind;
+  /** 약정 설계비(공급가, 부가세 별도). */
+  designFee: number;
+  /** ISO 문자열 — getServerSideProps로 직렬화된다. null이면 미입금. */
+  designFeePaidAt: string | null;
+};
+
+export const PROJECT_SERVICE_LABELS: Record<FundingProjectServiceKind | 'none', string> = {
+  none: '직접 개설',
+  design: '펀딩 설계 대행',
+  release: '발매 프로젝트 연계',
+};
+
+export const isMissingServicesTable = (error: unknown): boolean => {
+  const texts: string[] = [];
+  let current: unknown = error;
+  // libsql은 원인을 cause로 감싸기도 한다 — 사슬을 따라가며 문구를 모은다.
+  for (let depth = 0; current && depth < 5; depth += 1) {
+    if (current instanceof Error) {
+      texts.push(current.message);
+      current = (current as Error & { cause?: unknown }).cause;
+    } else {
+      texts.push(String(current));
+      break;
+    }
+  }
+  return texts.some((t) => /no such table:?\s*`?funding_project_services`?/i.test(t));
+};
+
+const toView = (row: FundingProjectService): ProjectServiceView => ({
+  kind: row.kind,
+  designFee: row.designFee,
+  designFeePaidAt: row.designFeePaidAt ? row.designFeePaidAt.toISOString() : null,
+});
+
+export type ServiceUnavailableReason = 'missing_table' | 'error';
+
+export type LoadServiceResult =
+  | { available: true; service: ProjectServiceView | null }
+  | { available: false; reason: ServiceUnavailableReason };
+
+const unavailable = (error: unknown, where: string): { available: false; reason: ServiceUnavailableReason } => {
+  if (isMissingServicesTable(error)) return { available: false, reason: 'missing_table' };
+  console.error(`[funding] ${where} 실패`, error);
+  return { available: false, reason: 'error' };
+};
+
+export const loadProjectService = async (projectId: string): Promise<LoadServiceResult> => {
+  try {
+    const rows = await getDb()
+      .select()
+      .from(fundingProjectServices)
+      .where(eq(fundingProjectServices.projectId, projectId))
+      .limit(1);
+    return { available: true, service: rows[0] ? toView(rows[0]) : null };
+  } catch (error) {
+    return unavailable(error, 'loadProjectService');
+  }
+};
+
+export type LoadServiceMapResult =
+  | { available: true; byProjectId: Record<string, ProjectServiceView> }
+  | { available: false; reason: ServiceUnavailableReason };
+
+export const loadProjectServiceMap = async (): Promise<LoadServiceMapResult> => {
+  try {
+    const rows = await getDb().select().from(fundingProjectServices);
+    return { available: true, byProjectId: Object.fromEntries(rows.map((r) => [r.projectId, toView(r)])) };
+  } catch (error) {
+    return unavailable(error, 'loadProjectServiceMap');
+  }
+};
+
+export type ServiceWriteResult =
+  | { ok: true; service: ProjectServiceView | null }
+  | { ok: false; code: 'not_found' | 'unavailable' | 'no_service' };
+
+/**
+ * 서비스 종류를 정한다. `none`이면 행을 지운다(직접 개설로 되돌림).
+ *
+ * 이미 행이 있으면 **종류만 바꾸고 약정 설계비·입금 시각은 그대로 둔다** — 설계 대행으로
+ * 시작했다가 제작까지 맡기로 해도(design → release) 이미 약정·입금한 설계비는 같은 돈이다.
+ * 새로 만들 때만 지금의 FUNDING_DESIGN_PRICE를 약정가로 복사한다.
+ */
+export const setProjectService = async (
+  projectId: string,
+  kind: FundingProjectServiceKind | 'none',
+  now: Date,
+): Promise<ServiceWriteResult> => {
+  const db = getDb();
+  const project = await db
+    .select({ id: fundingProjects.id })
+    .from(fundingProjects)
+    .where(eq(fundingProjects.id, projectId))
+    .limit(1);
+  if (!project[0]) return { ok: false, code: 'not_found' };
+
+  try {
+    if (kind === 'none') {
+      await db.delete(fundingProjectServices).where(eq(fundingProjectServices.projectId, projectId));
+      return { ok: true, service: null };
+    }
+    const [row] = await db
+      .insert(fundingProjectServices)
+      .values({ projectId, kind, designFee: FUNDING_DESIGN_PRICE, createdAt: now, updatedAt: now })
+      .onConflictDoUpdate({
+        target: fundingProjectServices.projectId,
+        set: { kind, updatedAt: now },
+      })
+      .returning();
+    return { ok: true, service: toView(row) };
+  } catch (error) {
+    if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
+    throw error;
+  }
+};
+
+/** 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않은 프로젝트면 no_service. */
+export const setDesignFeePaid = async (
+  projectId: string,
+  paid: boolean,
+  now: Date,
+): Promise<ServiceWriteResult> => {
+  try {
+    const rows = await getDb()
+      .update(fundingProjectServices)
+      .set({ designFeePaidAt: paid ? now : null, updatedAt: now })
+      .where(eq(fundingProjectServices.projectId, projectId))
+      .returning();
+    if (!rows[0]) return { ok: false, code: 'no_service' };
+    return { ok: true, service: toView(rows[0]) };
+  } catch (error) {
+    if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
+    throw error;
+  }
+};

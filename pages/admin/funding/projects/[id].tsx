@@ -9,10 +9,12 @@ import { FundingPayoutSection, type AdminPayoutView } from '../../../../componen
 import { Button } from '../../../../components/ui/Button';
 import { Field, TextArea, TextInput } from '../../../../components/ui/Field';
 import { lightOnlyField } from '../../../../components/ui/adminFieldClass';
-import { formatPriceAmount } from '../../../../data/pricing';
+import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../../../data/pricing';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
 import { formatKstDateTimeFull } from '../../../../lib/booking/format';
+import { VAT_RATE } from '../../../../lib/booking/amounts';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
+import { loadProjectService, PROJECT_SERVICE_LABELS, type LoadServiceResult } from '../../../../lib/funding/projectServices';
 import { buildFundingPayoutPreview } from '../../../../lib/funding/payout';
 import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
@@ -66,6 +68,11 @@ interface AdminFundingProjectDetailPageProps {
    * 조회 실패 시 null이다 — 정산 계산이 죽어도 심사 화면 자체는 열려야 한다.
    */
   payout: AdminPayoutView | null;
+  /**
+   * 스튜디오 서비스(설계 대행·발매 프로젝트 연계). `project`의 형제 필드 — 별도 테이블이고
+   * (마이그레이션 0036) 운영 DB에 아직 없으면 `{ available: false }`로 화면만 "미적용"을 띄운다.
+   */
+  service: LoadServiceResult;
 }
 
 /**
@@ -147,8 +154,11 @@ export const getServerSideProps: GetServerSideProps<AdminFundingProjectDetailPag
   // 승인 전에는 후원도 정산도 있을 수 없다 — 쓸모없는 집계 질의를 돌리지 않는다.
   const payout = project.reviewStatus === 'approved' ? await loadPayoutView(id) : null;
 
+  const service = await loadProjectService(id);
+
   return {
     props: {
+      service,
       payout,
       project: {
         id: project.id,
@@ -201,7 +211,7 @@ const REVIEW_STATUS_LABELS: Record<FundingReviewStatus, string> = {
  * 운영자가 이 화면에서 바로 알아야 한다. */
 const PROJECT_STATUS_LABELS: Record<string, string> = { auto: '공개중', draft: '비공개(작성중)', closed: '종료' };
 
-export default function AdminFundingProjectDetailPage({ project, payout }: AdminFundingProjectDetailPageProps) {
+export default function AdminFundingProjectDetailPage({ project, payout, service }: AdminFundingProjectDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -318,6 +328,22 @@ export default function AdminFundingProjectDetailPage({ project, payout }: Admin
     run(
       () => patchFundingProject(project.id, { action: 'set_review_note', note: reviewNote.trim() || undefined }),
       '메모를 저장했습니다.',
+    );
+
+  const handleSetService = (kind: 'none' | 'design' | 'release') => {
+    if (kind === 'none' && service.available && service.service) {
+      if (!window.confirm('직접 개설로 되돌리면 약정 설계비·입금 기록이 지워집니다. 되돌릴까요?')) return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'set_studio_service', kind }),
+      `서비스를 "${PROJECT_SERVICE_LABELS[kind]}"(으)로 저장했습니다.`,
+    );
+  };
+
+  const handleDesignFeePaid = (paid: boolean) =>
+    run(
+      () => patchFundingProject(project.id, { action: 'set_design_fee_paid', paid }),
+      paid ? '설계비 입금을 확인으로 기록했습니다.' : '설계비 입금 확인을 취소했습니다.',
     );
 
   const handleSaveInternalNote = () =>
@@ -841,6 +867,71 @@ export default function AdminFundingProjectDetailPage({ project, payout }: Admin
                 메모 저장
               </Button>
             </div>
+          </div>
+
+          {/*
+            스튜디오 서비스 — 운영자 전용(개설자에게 보이지 않는다). 설계비는 모금 정산과 별개로
+            청구·입금된다(성공 수수료 없음). 테이블은 마이그레이션 0036이라, 운영 DB에 없으면
+            조작을 막고 적용 방법을 적는다(lib/funding/projectServices.ts).
+          */}
+          <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">
+            <h2 className="text-lg font-bold text-gray-900 mb-1">스튜디오 서비스</h2>
+            <p className="mb-3 text-sm text-gray-600">개설자에게 보이지 않습니다. 설계비는 모금 정산과 따로 청구합니다(성공 수수료 없음).</p>
+            {!service.available ? (
+              <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
+                {service.reason === 'missing_table'
+                  ? '운영 DB에 마이그레이션 0036(funding_project_services)이 아직 적용되지 않았습니다. main에서 npm run db:migrate를 실행하면 이 칸이 열립니다. 다른 기능은 영향이 없습니다.'
+                  : '서비스 정보를 불러오지 못했습니다(서버 로그 참조). 심사·정산은 그대로 쓸 수 있습니다. 잠시 뒤 새로고침해 주세요.'}
+              </p>
+            ) : (
+              <div className="flex flex-col gap-3 text-sm">
+                <div className="flex flex-wrap gap-2" role="group" aria-label="서비스 종류">
+                  {(['none', 'design', 'release'] as const).map((kind) => {
+                    const current = service.service?.kind ?? 'none';
+                    return (
+                      <Button
+                        key={kind}
+                        light
+                        variant={current === kind ? 'solid' : 'outline'}
+                        disabled={busy || current === kind}
+                        aria-pressed={current === kind}
+                        onClick={() => handleSetService(kind)}
+                      >
+                        {PROJECT_SERVICE_LABELS[kind]}
+                      </Button>
+                    );
+                  })}
+                </div>
+                {service.service ? (
+                  <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-gray-700">
+                    <dt>약정 설계비</dt>
+                    <dd>
+                      {formatPriceAmount(service.service.designFee)}원 (부가세 별도 · 청구액{' '}
+                      {formatPriceAmount(Math.round(service.service.designFee * (1 + VAT_RATE)))}원)
+                      {service.service.designFee !== FUNDING_DESIGN_PRICE && (
+                        <span className="ml-2 text-xs text-gray-500">현재 정가 {formatPriceAmount(FUNDING_DESIGN_PRICE)}원과 다름 — 지정 당시 금액</span>
+                      )}
+                    </dd>
+                    <dt>입금</dt>
+                    <dd className="flex flex-wrap items-center gap-2">
+                      {service.service.designFeePaidAt ? (
+                        <>
+                          <span className="font-medium text-green-700">확인 {formatKstDateTimeFull(service.service.designFeePaidAt)}</span>
+                          <Button light disabled={busy} onClick={() => handleDesignFeePaid(false)}>확인 취소</Button>
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-medium text-amber-700">미입금</span>
+                          <Button light disabled={busy} onClick={() => handleDesignFeePaid(true)}>입금 확인</Button>
+                        </>
+                      )}
+                    </dd>
+                  </dl>
+                ) : (
+                  <p className="text-gray-600">직접 개설한 프로젝트입니다. 설계비가 없습니다.</p>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">

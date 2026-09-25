@@ -9,6 +9,10 @@ jest.mock('../../../../lib/funding/publicStatusDecision', () => ({
   ...jest.requireActual('../../../../lib/funding/publicStatusDecision'),
   decidePublicStatus: jest.fn(),
 }));
+jest.mock('../../../../lib/funding/projectServices', () => ({
+  setProjectService: jest.fn(),
+  setDesignFeePaid: jest.fn(),
+}));
 jest.mock('../../../../lib/funding/revalidate', () => ({ revalidateFundingPaths: jest.fn() }));
 jest.mock('../../../../lib/funding/reviewEmail', () => ({
   sendReviewDecisionEmail: jest.fn(),
@@ -29,6 +33,7 @@ import { loadProjectForAdmin } from '../../../../lib/funding/adminProjects';
 import { decideProject } from '../../../../lib/funding/reviewDecision';
 import { decidePublicStatus } from '../../../../lib/funding/publicStatusDecision';
 import { revalidateFundingPaths } from '../../../../lib/funding/revalidate';
+import { setDesignFeePaid, setProjectService } from '../../../../lib/funding/projectServices';
 import {
   sendReviewDecisionEmail,
   sendReviewDecisionOperatorFallback,
@@ -452,5 +457,48 @@ describe('공개 상태(close/reopen/hide/unhide)', () => {
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'close', note: '사유' });
     expect(r.status).toBe(500);
     expect(sendPublicStatusEmail).not.toHaveBeenCalled();
+  });
+});
+
+describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () => {
+  const SERVICE = { kind: 'design', designFee: 500000, designFeePaidAt: null };
+
+  it('kind를 저장하고 결과를 돌려준다 — 심사·메일·재검증은 건드리지 않는다', async () => {
+    (setProjectService as jest.Mock).mockResolvedValue({ ok: true, service: SERVICE });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'design' });
+    expect(r.status).toBe(200);
+    expect(setProjectService).toHaveBeenCalledWith('proj-1', 'design', expect.any(Date));
+    expect(decideProject).not.toHaveBeenCalled();
+    expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
+    expect(revalidateFundingPaths).not.toHaveBeenCalled();
+  });
+
+  it('알 수 없는 kind → 400, 저장하지 않는다', async () => {
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'success_fee' });
+    expect(r.status).toBe(400);
+    expect(setProjectService).not.toHaveBeenCalled();
+  });
+
+  it('paid가 boolean이 아니면 400', async () => {
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: 'yes' });
+    expect(r.status).toBe(400);
+    expect(setDesignFeePaid).not.toHaveBeenCalled();
+  });
+
+  it.each([
+    ['not_found', 404],
+    ['unavailable', 503],
+    ['no_service', 400],
+  ])('실패 코드 %s → %i', async (code, expected) => {
+    (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: false, code });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
+    expect(r.status).toBe(expected);
+  });
+
+  it('0036 미적용이면 운영자에게 마이그레이션을 안내한다', async () => {
+    (setProjectService as jest.Mock).mockResolvedValue({ ok: false, code: 'unavailable' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'release' });
+    expect(r.status).toBe(503);
+    expect(JSON.stringify(r.body)).toMatch(/0036/);
   });
 });

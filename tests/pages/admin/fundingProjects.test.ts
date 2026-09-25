@@ -5,6 +5,11 @@ jest.mock('../../../lib/funding/adminProjects', () => ({
   loadProjectForAdmin: jest.fn(),
 }));
 jest.mock('../../../lib/funding/payout', () => ({ buildFundingPayoutPreview: jest.fn() }));
+jest.mock('../../../lib/funding/projectServices', () => ({
+  ...jest.requireActual('../../../lib/funding/projectServices'),
+  loadProjectService: jest.fn(),
+  loadProjectServiceMap: jest.fn(),
+}));
 
 import type { GetServerSidePropsContext } from 'next';
 import { getServerSideProps as getListProps } from '../../../pages/admin/funding/projects/index';
@@ -12,12 +17,15 @@ import { getServerSideProps as getDetailProps } from '../../../pages/admin/fundi
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { listProjectsForAdmin, loadProjectForAdmin, type AdminProjectDetail } from '../../../lib/funding/adminProjects';
 import { buildFundingPayoutPreview } from '../../../lib/funding/payout';
+import { loadProjectService, loadProjectServiceMap } from '../../../lib/funding/projectServices';
 
 const listContext = { query: {} } as unknown as GetServerSidePropsContext;
 const detailContext = (id: unknown) => ({ query: { id } }) as unknown as GetServerSidePropsContext;
 
 beforeEach(() => {
   jest.clearAllMocks();
+  (loadProjectService as jest.Mock).mockResolvedValue({ available: true, service: null });
+  (loadProjectServiceMap as jest.Mock).mockResolvedValue({ available: true, byProjectId: {} });
 });
 
 const baseDetail: AdminProjectDetail = {
@@ -297,5 +305,23 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     expect(result.props.payout).toBeNull();
     expect(result.props.project.id).toBe('proj-1');
     jest.restoreAllMocks();
+  });
+});
+
+describe('스튜디오 서비스 props', () => {
+  it('상세는 그 프로젝트의 서비스를 project와 나란히 싣는다', async () => {
+    const service = { available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null } };
+    (loadProjectService as jest.Mock).mockResolvedValue(service);
+    (loadProjectForAdmin as jest.Mock).mockResolvedValue(baseDetail);
+    const result = (await getDetailProps(detailContext('proj-1'))) as unknown as { props: { service: unknown } };
+    expect(loadProjectService).toHaveBeenCalledWith('proj-1');
+    expect(result.props.service).toEqual(service);
+  });
+
+  it('목록은 서비스 맵을 싣고, 조회 실패도 그대로 넘겨 화면이 판단하게 한다', async () => {
+    (listProjectsForAdmin as jest.Mock).mockResolvedValue([]);
+    (loadProjectServiceMap as jest.Mock).mockResolvedValue({ available: false, reason: 'missing_table' });
+    const result = (await getListProps(listContext)) as unknown as { props: { services: unknown } };
+    expect(result.props.services).toEqual({ available: false, reason: 'missing_table' });
   });
 });
