@@ -2,7 +2,7 @@ import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
-import { ArrowRight, Award } from '@/lib/lucide-icons';
+import { ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import SEO from '../../components/SEO';
@@ -224,42 +224,42 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           Person.url을 /author로 일원화) 쪽으로 가는 가장 강한 내부링크다. */}
       {producerCredibility && (
         <Section variant="alternate">
-          <div className="max-w-4xl mx-auto text-center">
+          {/* v2: 112px 원형 아바타 + 가운데 정렬 + 글래스 수치 카드 → 큰 사진과 이름을 섹션 제목으로,
+              수치는 굵은 선 위의 큰 숫자. 사람이 이 스튜디오의 신뢰 근거라 사진이 작을 이유가 없다. */}
+          <div className="grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16 items-center">
             <ResponsiveImage
               src={producerCredibility.photo.src}
               alt={producerCredibility.photo.alt}
-              width={112}
-              height={112}
-              sizes="112px"
-              containerClassName="w-28 h-28 mx-auto mb-4 rounded-full overflow-hidden ring-1 ring-black/10 dark:ring-white/15 shadow-md"
+              width={864}
+              height={864}
+              sizes="(max-width: 768px) 100vw, 480px"
+              containerClassName="aspect-square w-full max-w-md overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800"
               className="w-full h-full object-cover"
             />
-            <div className="inline-flex items-center gap-2 text-sm font-semibold text-primary dark:text-primary-lighter mb-2">
-              <Award size={18} aria-hidden="true" />
-              {producerCredibility.eyebrow}
+            <div>
+              <SectionHeading
+                eyebrow={producerCredibility.eyebrow}
+                index="04"
+                title={producerCredibility.name}
+                subtitle={producerCredibility.tagline}
+                className="mb-10 md:mb-10"
+              />
+              <dl className="grid grid-cols-2 gap-8 border-t-2 border-gray-950 dark:border-white pt-6 max-w-md">
+                {producerCredibility.stats.map((stat) => (
+                  <div key={stat.label} className="flex flex-col-reverse">
+                    <dt className="typo-card-meta text-gray-600 dark:text-gray-300 mt-2 break-keep">{stat.label}</dt>
+                    <dd className="font-title text-5xl md:text-6xl font-bold tabular-nums leading-none text-gray-950 dark:text-white">{stat.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              <Link
+                href={getLink('/author')}
+                className="mt-8 inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
+              >
+                {producerCredibility.profileCtaLabel}
+                <ArrowRight size={16} aria-hidden="true" />
+              </Link>
             </div>
-            <h2 className="text-heading-3 font-title mb-1">{producerCredibility.name}</h2>
-            <p className="typo-card-body text-gray-600 dark:text-gray-300 mb-8 break-keep">
-              {producerCredibility.tagline}
-            </p>
-            <div className="grid grid-cols-2 gap-4 max-w-lg mx-auto">
-              {producerCredibility.stats.map((stat) => (
-                <div
-                  key={stat.label}
-                  className="glass-card rounded-xl p-5"
-                >
-                  <div className="text-3xl font-extrabold text-primary dark:text-primary-lighter tabular-nums">{stat.value}</div>
-                  <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 break-keep">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-            <Link
-              href={getLink('/author')}
-              className="inline-flex items-center gap-1.5 mt-6 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4"
-            >
-              {producerCredibility.profileCtaLabel}
-              <ArrowRight size={16} aria-hidden="true" />
-            </Link>
           </div>
         </Section>
       )}
@@ -268,7 +268,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
       <Section variant="default">
         <SectionHeading
           eyebrow={t('home.v2.eyebrow.services')}
-          index="04"
+          index="05"
           title={t('home.sections.servicesTitle')}
         />
         <HomeServiceTracklist
@@ -285,7 +285,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         variant="alternate"
         locale={locale}
         eyebrow={t('home.v2.eyebrow.reviews')}
-        index="05"
+        index="06"
       />
 
       {/* FAQ 섹션 */}
@@ -295,7 +295,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         subtitle={t('home.faq.subtitle')}
         variant="default"
         eyebrow={t('home.v2.eyebrow.faq')}
-        index="06"
+        index="07"
       />
 
       {/* 서비스 바로가기 — 6~7개 link(ko는 발매 pill 포함)가 메인 viewport에 들어오면 next/link 기본 prefetch가
