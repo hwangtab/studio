@@ -322,6 +322,25 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid'); // 선점도 없었다
   });
 
+  /**
+   * manage 화면은 내려받기 버튼과 취소 버튼을 나란히 띄운다. 두 요청의 순서만 맞으면
+   * 파일을 받고도 전액 환불이 성립했다 — 읽기 시점 판정은 통과하고, 선점 WHERE에는
+   * fulfillment_status만 실려 있었다.
+   */
+  it('토스 셀프 취소: 읽은 뒤 내려받기가 기록되면 토스를 부르지 않고 거부한다', async () => {
+    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+
+    staleRead('UPDATE funding_pledges SET downloaded_at = unixepoch() WHERE order_id = ?', [o!.id]);
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+
+    expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
+    expect(cancelPayment).not.toHaveBeenCalled();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('paid'); // 선점도 없었다
+  });
+
   it('관리자 취소는 발송 준비 중에도 그대로 환불한다 — 가드는 셀프 취소에만 건다', async () => {
     const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();

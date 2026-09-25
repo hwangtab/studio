@@ -121,9 +121,13 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   // 셀프 취소는 "발송 준비 전"이라는 조건을 선점 WHERE에 함께 건다 — assessSelfCancel이 읽기
   // 시점에만 보므로, 판정과 선점 사이에 관리자가 발송 준비로 넘기면 환불과 발송이 둘 다
   // 성립한다(돈은 나가고 리워드도 나간다). 관리자 취소는 발송 중에도 허용해야 하므로 제외한다.
+  //
+  // 내려받기도 같은 이유로 함께 건다 — manage 화면이 내려받기 버튼과 취소 버튼을 나란히
+  // 띄우므로, 읽은 뒤 선점 전에 download.ts가 downloaded_at을 찍으면 파일은 나가고 돈도
+  // 전액 돌아간다. assessSelfCancel이 읽기 시점에 보는 두 가드를 둘 다 옮겨야 한다.
   const selfCancelGuard =
     input.requestedBy === 'customer'
-      ? sql` AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND fulfillment_status = 'none')`
+      ? sql` AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND fulfillment_status = 'none' AND downloaded_at IS NULL)`
       : sql.empty();
   const claim = await db.run(
     sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status = ${order.status}${selfCancelGuard}`,
