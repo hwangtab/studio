@@ -19,6 +19,7 @@ jest.mock('../../../lib/contracts/admin-auth', () => ({
   authenticateAdminApi: jest.fn().mockResolvedValue({ ok: true }),
 }));
 jest.mock('../../../lib/booking/gcal', () => ({
+  ...jest.requireActual('../../../lib/booking/gcal'),
   createBookingEvent: jest.fn(),
   deleteBookingEvent: jest.fn(),
 }));
@@ -99,8 +100,17 @@ it('기존 이벤트가 있으면 새로 만든 뒤 옛 이벤트를 지운다 (
   await insert({ gcal_event_id: 'ev-old', gcal_error: 'retry: 500' });
   const res = await retry();
   expect(res.status).toBe(200);
-  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old');
+  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old', 'studio');
   expect(await bookingRow()).toMatchObject({ gcal_event_id: 'ev-new', gcal_error: null });
+});
+
+it('연습실 예약은 연습실 캘린더에 만들고 옛 이벤트도 거기서 지운다 (녹음실 캘린더 오염 금지)', async () => {
+  await insert({ product_id: 'practice-room-hourly', service_type: 'practice-room', room_number: 'R02', gcal_event_id: 'ev-old' });
+  const res = await retry();
+  expect(res.status).toBe(200);
+  expect((createBookingEvent as jest.Mock).mock.calls[0][0]).toMatchObject({ calendar: 'practice-room' });
+  expect((createBookingEvent as jest.Mock).mock.calls[0][0].summary).toContain('R02');
+  expect(deleteBookingEvent).toHaveBeenCalledWith('ev-old', 'practice-room');
 });
 
 it('취소된 예약은 거절한다', async () => {

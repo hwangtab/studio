@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
 import { availabilityBlocks, bookings } from '../../../db/schema';
-import { calendarIdFor, fetchBusyRanges, type BookingCalendar, type BusyRange } from '../../../lib/booking/gcal';
+import { fetchBusyRanges, isCalendarActive, type BookingCalendar, type BusyRange } from '../../../lib/booking/gcal';
 import { daysUntilKst, kstDateTime } from '../../../lib/booking/kst';
 import { getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
 import { buildDaySlots, mergeRoomSlots, type DaySlot } from '../../../lib/booking/slots';
@@ -25,7 +25,9 @@ const freeBusyCache = new Map<string, { at: number; ranges: BusyRange[] }>();
 const getCachedBusyRanges = async (
   calendar: BookingCalendar, dateKey: string, dayStart: Date, dayEnd: Date,
 ): Promise<BusyRange[]> => {
-  const key = `${calendar}:${dateKey}`;
+  // 조회 창(dayStart~dayEnd)이 상품 영업시간에서 오므로 키에 창을 넣는다 — 날짜만 키로 쓰면
+  // 좁은 창으로 채운 항목이 넓은 창 요청에 재사용돼 창 밖 바쁨이 사라진다(fail-open).
+  const key = `${calendar}:${dateKey}:${dayStart.getTime()}-${dayEnd.getTime()}`;
   const cached = freeBusyCache.get(key);
   const now = Date.now();
   if (cached && now - cached.at < FREEBUSY_TTL_MS) return cached.ranges;
@@ -106,9 +108,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // 503이다(getCachedBusyRanges 안에서 throw). 연습실 캘린더만 env가 없으면 읽지 않는다 —
   // confirm.ts가 같은 조건으로 쓰기를 건너뛰므로 읽기도 같이 건너뛰어야 짝이 맞는다.
   const calendar: BookingCalendar = resourceKindOf(product) === 'rooms' ? 'practice-room' : 'studio';
-  const skipCalendar = calendar === 'practice-room' && !calendarIdFor('practice-room');
   let calendarBusy: BusyRange[] = [];
-  if (!skipCalendar) {
+  if (isCalendarActive(calendar)) {
     try {
       calendarBusy = await getCachedBusyRanges(calendar, date, dayStart, dayEnd);
     } catch (error) {
