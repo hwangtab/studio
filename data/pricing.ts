@@ -466,7 +466,12 @@ export const getPricingData = (locale: Locale) => {
         th: 'ระดมทุนอัลบั้มบน Studio NOL Funding ตั้งแต่วางแผนจนสร้างหน้า: การเล่าเรื่อง ออกแบบรีวอร์ด และทำหน้า',
         uz: "Studio NOL Funding'da albom crowdfunding — rejadan sahifagacha: storytelling, reward dizayni, sahifa tayyorlash."
       }),
-      // 성공 수수료는 없다(2026-09-25 운영자 결정). 모금액에서 떼는 것은 플랫폼·결제 수수료뿐.
+      /**
+       * 성공 수수료는 없다(2026-09-25 운영자 결정). **우리가** 떼는 것이 플랫폼·결제 수수료뿐이라는
+       * 뜻이고, 개설자가 받는 금액과 같지 않다 — 개인 자격 개설자는 정산에서 원천징수
+       * FUNDING_WITHHOLDING_PERCENT%를 한 번 더 뗀다(lib/funding/payout.ts). 아래 카피가 "만"을
+       * 쓰지 않는 이유다.
+       */
       note: t(locale, {
         ko: `성공 수수료 없음 · 모금액에서 플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`,
         en: `No success fee · platform fee ${FUNDING_PLATFORM_FEE_PERCENT}% and payment fee ${FUNDING_PAYMENT_FEE_PERCENT}% (VAT incl.) from funds raised`,
