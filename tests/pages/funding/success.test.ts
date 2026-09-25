@@ -153,6 +153,23 @@ describe('리다이렉트된 화면(?o=)', () => {
     const result = (await ctx({ o: '<script>' }).run()) as { props: { outcome: string } };
     expect(result.props.outcome).toBe('error');
   });
+
+  /**
+   * 확정 직후 30분 창 안에 운영자가 명단에서 내리는 일은 드물지만 있다. 값을 안 넘기면 이
+   * 화면은 무조건 "명단에 올라갑니다"로 단정한다.
+   */
+  it.each([
+    ['운영자가 내렸으면 true', new Date('2026-09-20T00:00:00Z'), true],
+    ['내리지 않았으면 false', null, false],
+  ])('명단 숨김 상태를 그대로 넘긴다 — %s', async (_label, listingHiddenAt, expected) => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(
+      order({ fundingPledge: { projectSlug: 'demo', displayNamePublic: true, publicName: null, supporterMessage: null, listingHiddenAt } }),
+    );
+    const result = (await ctx({ o: ORDER_NO }, { fnd_confirm: `${ORDER_NO}.${TOKEN}` }).run()) as {
+      props: { listing: { hiddenByOperator: boolean } };
+    };
+    expect(result.props.listing.hiddenByOperator).toBe(expected);
+  });
 });
 
 it('쿼리가 없으면 잘못된 접근', async () => {

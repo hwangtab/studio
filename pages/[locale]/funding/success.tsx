@@ -53,7 +53,14 @@ interface SuccessProps {
    * 결제 직후 한 번 더 권한다(components/funding/SupporterListingEditor.tsx). 결제자 본인만
    * 여는 화면이라(확정 쿠키의 토큰 대조) 이름·메시지를 실어도 된다.
    */
-  listing?: { customerName: string; displayNamePublic: boolean; publicName: string | null; message: string | null };
+  listing?: {
+    customerName: string; displayNamePublic: boolean; publicName: string | null; message: string | null;
+    /**
+     * 운영자가 이미 명단에서 내려 둔 경우(`listing_hidden_at`). 확정 직후 30분 창 안에 그런
+     * 일이 벌어지는 것은 드물지만, 값을 안 넘기면 이 화면은 무조건 "올라갑니다"로 단정한다.
+     */
+    hiddenByOperator: boolean;
+  };
 }
 
 /**
@@ -217,6 +224,7 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
                 initialPublic={listing.displayNamePublic}
                 initialPublicName={listing.publicName}
                 message={listing.message}
+                hiddenByOperator={listing.hiddenByOperator}
               />
             )}
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
@@ -419,6 +427,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
           displayNamePublic: order.fundingPledge.displayNamePublic,
           publicName: order.fundingPledge.publicName,
           message: order.fundingPledge.supporterMessage,
+          hiddenByOperator: order.fundingPledge.listingHiddenAt != null,
         },
       } : {}),
     },

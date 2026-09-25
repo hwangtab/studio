@@ -80,7 +80,26 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
     </>
   );
 
-  if (variant === 'success' && isPublic && !hiddenByOperator) {
+  /**
+   * **운영자가 내린 뒤에는 편집 자체를 그리지 않는다.**
+   *
+   * `/api/funding/display-name`이 이 상태의 저장을 409로 거부하므로(pages/api/funding/
+   * display-name.ts) 버튼을 남겨 두면 눌러도 실패만 한다. 예전에는 그 저장이 200으로
+   * 성공해 "명단에 올렸습니다"라는 거짓 성공을 돌려줬다 — 실제로는 `listing_hidden_at`이
+   * 남아 명단에 뜨지 않는다. 후원자가 할 수 있는 일은 문의뿐이라 그것만 말한다.
+   */
+  if (hiddenByOperator) {
+    return (
+      <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
+        <p className="text-sm text-gray-900 dark:text-white">
+          운영 기준에 따라 후원자 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
+          다시 올리기를 원하시면 문의해 주세요.
+        </p>
+      </div>
+    );
+  }
+
+  if (variant === 'success' && isPublic) {
     return (
       <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
         <p className="text-sm text-gray-900 dark:text-white">
@@ -94,12 +113,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
 
   return (
     <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-      {hiddenByOperator ? (
-        <p className="text-sm text-gray-900 dark:text-white">
-          운영 기준에 따라 후원자 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
-          다시 올리기를 원하시면 문의해 주세요.
-        </p>
-      ) : isPublic ? (
+      {isPublic ? (
         <p className="text-sm text-gray-900 dark:text-white">
           후원자 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라가 있습니다.
         </p>

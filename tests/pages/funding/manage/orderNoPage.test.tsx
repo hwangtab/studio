@@ -117,6 +117,22 @@ describe('명단 공개 설정', () => {
     expect(screen.queryByText(/올라가 있습니다/)).toBeNull();
   });
 
+  /**
+   * 서버가 이 상태의 저장을 409로 거부하므로(pages/api/funding/display-name.ts) 버튼을 남기면
+   * 눌러도 실패만 한다. 예전에는 저장이 200으로 성공해 "명단에 올렸습니다"라는 거짓 성공을
+   * 돌려줬다.
+   */
+  it.each([['공개 동의 켜짐', true], ['공개 동의 꺼짐', false]])(
+    '운영자가 내렸으면 편집 UI를 그리지 않는다 (%s)',
+    (_label, displayNamePublic) => {
+      render(<FundingManagePage {...baseProps} displayNamePublic={displayNamePublic} listingHidden paymentMethod="toss" />);
+      expect(screen.queryByRole('button', { name: '명단에 올리기' })).toBeNull();
+      expect(screen.queryByRole('button', { name: '표시 이름 저장' })).toBeNull();
+      expect(screen.queryByRole('button', { name: '명단에서 내리기' })).toBeNull();
+      expect(screen.queryByLabelText(/가린 이름/)).toBeNull();
+    },
+  );
+
   it('바꿀 수 없는 상태면 편집 칸 대신 현재 값만 보인다', () => {
     render(<FundingManagePage {...baseProps} status="refunded" canCancel={false} canEditDisplayName={false} displayNamePublic paymentMethod="toss" />);
     expect(screen.queryByRole('button', { name: '명단에서 내리기' })).toBeNull();

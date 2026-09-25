@@ -53,6 +53,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!order.fundingPledge) return res.status(404).json(NOT_FOUND);
   if (!EDITABLE_STATUSES.has(order.status))
     return res.status(409).json({ ok: false, code: 'invalid_state', message: '이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.' });
+  /**
+   * **운영자가 내린 뒤에는 저장하지 않는다.**
+   *
+   * `listing_hidden_at`은 공개 동의와 별개의 축이고 운영자만 되돌린다(`unpublish` 주석).
+   * 그런데 이 경로가 그 값을 보지 않아, 내려간 후원의 저장이 200으로 성공하며 화면이 "명단에
+   * 올렸습니다"라고 답했다 — 명단 조회(lib/funding/service.ts)는 `listing_hidden_at IS NULL`을
+   * 요구하므로 실제로는 영영 뜨지 않는다. 거짓 성공을 주지 않도록 여기서 끊는다.
+   *
+   * 내리는 방향(`displayNamePublic: false`)도 함께 끊는다 — 이미 공개되지 않는 상태라 바꿀
+   * 것이 없고, 방향에 따라 다르게 답하면 후원자가 숨김 여부를 떠볼 수 있다.
+   */
+  if (order.fundingPledge.listingHiddenAt)
+    return res.status(409).json({
+      ok: false, code: 'listing_hidden',
+      message: '운영 기준에 따라 명단에서 내려 둔 펀딩입니다. 설정을 바꿀 수 없습니다.',
+    });
 
   /**
    * 표시 이름은 **방식이 함께 왔을 때만** 바꾼다. 방식 없이 공개만 켜는 요청(이 기능 전에

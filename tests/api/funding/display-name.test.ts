@@ -170,3 +170,26 @@ describe('운영자 닉네임 알림', () => {
     expect(r.status).toBe(200);
   });
 });
+
+/**
+ * `listing_hidden_at`은 공개 동의와 별개의 축이고 운영자만 되돌린다. 이 경로가 그 값을 보지
+ * 않던 동안 저장이 200으로 성공해 화면이 "명단에 올렸습니다"라고 답했는데, 명단 조회는
+ * `listing_hidden_at IS NULL`을 요구하므로 실제로는 영영 뜨지 않았다.
+ */
+describe('운영자가 명단에서 내린 펀딩', () => {
+  const hidden = (over: Record<string, unknown> = {}) =>
+    order({ fundingPledge: { paymentMethod: 'toss', publicName: null, listingHiddenAt: new Date('2026-09-20T00:00:00Z'), ...over } });
+
+  it.each([
+    ['올리기', { displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '청취자' }],
+    ['표시 이름 저장', { displayNamePublic: true, publicNameStyle: 'masked' }],
+    ['내리기', { displayNamePublic: false }],
+  ])('%s 요청을 409로 거부하고 아무것도 저장하지 않는다', async (_label, body) => {
+    (findFundingOrderByOrderNo as jest.Mock).mockResolvedValue(hidden());
+    const r = await call({ orderNo: 'FND-1', token: 'correct-token', ...body });
+    expect(r.status).toBe(409);
+    expect(r.body).toMatchObject({ ok: false, code: 'listing_hidden' });
+    expect(update).not.toHaveBeenCalled();
+    expect(sendFundingListingNicknameAlert).not.toHaveBeenCalled();
+  });
+});
