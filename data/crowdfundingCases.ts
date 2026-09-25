@@ -41,13 +41,17 @@ export type CrowdfundingCase = {
    * portfolioId는 data/portfolio/items.ts의 id(카드의 "발매작 보기" 링크).
    * 2026-09-25 운영자 확인: 아래 넷은 기획·제작·음향을 전부 스튜디오가 했다.
    */
-  release?: { portfolioId: string };
+  release?: {
+    portfolioId: string;
+    /** 제작 과정을 쓴 스토리가 있으면 그 slug(카드의 "제작기 읽기"). content/stories/<slug>.md가 있어야 한다. */
+    storySlug?: string;
+  };
 };
 
 // 종료일 최신순.
 export const CROWDFUNDING_CASES: readonly CrowdfundingCase[] = [
   { title: '멸실 위기의 오윤 구의동 테라코타 부조, 우리가 구합시다', url: 'https://saf2026.com/funding/oh-yoon-terracotta', platform: '씨앗페', kind: '문화유산 보존', raised: 62327000, percent: 62, backers: 843, period: '2026-08', state: 'ongoing' },
-  { title: '마리코 & 유키에 《남산타워》', url: 'https://tumblbug.com/marikoandyukie', platform: '텀블벅', kind: '음반', raised: 5045000, percent: 100, backers: 53, period: '2026-08', state: 'succeeded', release: { portfolioId: 'mariko-yukie-namsan-tower' } },
+  { title: '마리코 & 유키에 《남산타워》', url: 'https://tumblbug.com/marikoandyukie', platform: '텀블벅', kind: '음반', raised: 5045000, percent: 100, backers: 53, period: '2026-08', state: 'succeeded', release: { portfolioId: 'mariko-yukie-namsan-tower', storySlug: 'mariko-yukie-namsan-tower-release' } },
   { title: '베어지기 전에 풍천리 — 청와대 앞 공연 개최 후원', url: 'https://saf2026.com/funding/pungcheonri', platform: '씨앗페', kind: '공연', raised: 7440000, percent: 148, backers: 186, period: '2026-08', state: 'succeeded' },
   { title: '아트만두의 비틀뉴스', url: 'https://tumblbug.com/artmandoo', platform: '텀블벅', kind: '기타', raised: 5555555, percent: 111, backers: 105, period: '2025-12', state: 'succeeded' },
   { title: '삼각전파사 <Dystopia 2025>', url: 'https://tumblbug.com/dystopia2025', platform: '텀블벅', kind: '음반', raised: 3001000, percent: 100, backers: 40, period: '2025-03', state: 'succeeded' },

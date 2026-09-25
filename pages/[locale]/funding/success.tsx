@@ -19,6 +19,7 @@ import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
+import SupporterListingEditor from '../../../components/funding/SupporterListingEditor';
 
 interface SuccessProps {
   /**
@@ -47,6 +48,12 @@ interface SuccessProps {
    * 2항(내려받기 뒤 청약철회 제한)을 판정할 수 있다.
    */
   downloads?: Array<{ label: string; key: string }>;
+  /**
+   * 서포터 명단 공개 권유에 쓰는 값. 후원 폼에서 공개 체크를 못 보고 지나간 사람이 많아,
+   * 결제 직후 한 번 더 권한다(components/funding/SupporterListingEditor.tsx). 결제자 본인만
+   * 여는 화면이라(확정 쿠키의 토큰 대조) 이름·메시지를 실어도 된다.
+   */
+  listing?: { customerName: string; displayNamePublic: boolean; publicName: string | null; message: string | null };
 }
 
 /**
@@ -134,7 +141,7 @@ const CONFIRM_ERROR_MESSAGES: Record<string, string> = {
 const GENERIC_ERROR = '결제를 확정하지 못했습니다.';
 const ERROR_CODE_PATTERN = /^[a-z_]{1,40}$/;
 
-export default function FundingSuccessPage({ outcome, message, statusLabel, orderNo, manageUrl, manageToken, projectSlug, emailSent, downloads }: SuccessProps) {
+export default function FundingSuccessPage({ outcome, message, statusLabel, orderNo, manageUrl, manageToken, projectSlug, emailSent, downloads, listing }: SuccessProps) {
   useEffect(() => {
     if (outcome !== 'confirmed' || !orderNo) return;
     // 결제가 확정됐으니 후원 폼에 남아 있던 이름·연락처·주소 임시 저장을 지운다
@@ -200,6 +207,17 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
                   내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).
                 </p>
               </div>
+            )}
+            {listing && orderNo && manageToken && (
+              <SupporterListingEditor
+                variant="success"
+                orderNo={orderNo}
+                token={manageToken}
+                customerName={listing.customerName}
+                initialPublic={listing.displayNamePublic}
+                initialPublicName={listing.publicName}
+                message={listing.message}
+              />
             )}
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
                 실패하면 고객이 펀딩을 스스로 취소할 방법이 아예 없었다. */}
@@ -395,6 +413,14 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
       // notificationError는 확정 메일 결과다 — null이면 발송 성공, 문자열이면 실패이거나
       // 아직 발송 전(confirm.ts의 send_pending 센티널)이다. 둘 다 "링크를 저장하세요"가 맞다.
       emailSent: order.notificationError === null,
+      ...(order.fundingPledge ? {
+        listing: {
+          customerName: order.customerName,
+          displayNamePublic: order.fundingPledge.displayNamePublic,
+          publicName: order.fundingPledge.publicName,
+          message: order.fundingPledge.supporterMessage,
+        },
+      } : {}),
     },
   };
 });

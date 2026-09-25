@@ -135,7 +135,7 @@ Full list with photos: ${siteUrl}/ko/studio-info
 - Piano: Yamaha U3 upright (acoustic recording available)
 - Rooms: fully treated acoustic space, soundproof vocal booth (STC 60+)
 
-## Pricing (KRW, VAT excluded)
+## Pricing (KRW, VAT excluded unless noted)
 
 ${renderPriceFacts()}
 
@@ -217,7 +217,7 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - Monthly subscriptions (practice room, lessons): ${SUBSCRIPTION_REFUND_POLICY_LINES.join(' ')}
 - Music Release PR: ${PRESS_REFUND_POLICY_LINES.join(' ')}
 - Payment: online checkout via Toss Payments for studio bookings, mixing & mastering orders and crowdfunding pledges (payment methods as offered in the Toss checkout); other services by bank transfer on invoice. Tax invoices (세금계산서) are issued on request.
-- All prices are VAT excluded, except the practice room hourly rate (VAT included). Full terms: ${siteUrl}/ko/terms
+- All prices are VAT excluded, except the practice room: the monthly residency (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW) is the final price with no VAT added, and the hourly rate is VAT included. Full terms: ${siteUrl}/ko/terms
 
 ## Sitemaps & Feeds
 

@@ -2,6 +2,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from './policy';
 import { computeProjectState, findReward, type FundingProject, type FundingReward } from './projects';
+import { isPublicNameStyle, resolvePublicName } from './publicName';
 
 export interface PledgeShipping { name: string; phone: string; postcode: string; address1: string; address2?: string; memo?: string }
 export interface CreatePledgePayload {
@@ -9,7 +10,13 @@ export interface CreatePledgePayload {
   /** 토스 결제위젯만 쓴다 — 무통장입금은 2026-09-11에 중단했다(lib/funding/policy.ts 참조). */
   paymentMethod: 'toss';
   customerName: string; customerPhone: string; customerEmail: string;
-  supporterMessage?: string; displayNamePublic: boolean; shipping?: PledgeShipping; termsAgreed: true;
+  supporterMessage?: string; displayNamePublic: boolean;
+  /**
+   * 명단에 실을 이름(lib/funding/publicName.ts). null·생략이면 결제자 이름. 검증기는 언제나
+   * 채워 돌려준다(공개하지 않으면 null). 선택 필드인 것은 수기 등록·테스트가 만드는 payload 때문이다.
+   */
+  publicName?: string | null;
+  shipping?: PledgeShipping; termsAgreed: true;
 }
 type Result = { ok: true; value: CreatePledgePayload; reward: FundingReward } | { ok: false; message: string };
 
@@ -92,11 +99,24 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
     };
   }
   const supporterMessage = text(b.supporterMessage, PLEDGE_TEXT_LIMITS.supporterMessage) ?? undefined;
+  /**
+   * 명단 표시 이름. 공개하지 않으면 닉네임을 적었더라도 **담지 않는다** — 쓰일 곳이 없는
+   * 개인정보다. 방식 값이 없으면(옛 클라이언트) 실명으로 읽는다. 예전 동작 그대로다.
+   */
+  const displayNamePublic = b.displayNamePublic === true;
+  let publicName: string | null = null;
+  if (displayNamePublic) {
+    const style = b.publicNameStyle ?? 'real';
+    if (!isPublicNameStyle(style)) return { ok: false, message: '명단 표시 방식을 확인해 주세요.' };
+    const resolved = resolvePublicName(style, customerName, typeof b.publicNickname === 'string' ? b.publicNickname : undefined);
+    if (!resolved.ok) return { ok: false, message: resolved.message };
+    publicName = resolved.value;
+  }
   return {
     ok: true, reward,
     value: {
       projectSlug: project.slug, rewardId: reward.id, quantity, additionalAmount, paymentMethod: b.paymentMethod,
-      customerName, customerPhone, customerEmail, supporterMessage, displayNamePublic: b.displayNamePublic === true,
+      customerName, customerPhone, customerEmail, supporterMessage, displayNamePublic, publicName,
       shipping, termsAgreed: true,
     },
   };

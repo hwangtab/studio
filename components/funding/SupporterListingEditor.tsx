@@ -1,0 +1,131 @@
+import { useState } from 'react';
+
+import { inferPublicNameChoice, previewPublicName, type PublicNameStyle } from '../../lib/funding/publicName';
+import { Button } from '../ui/Button';
+import PublicNameChoice from './PublicNameChoice';
+
+interface Props {
+  orderNo: string;
+  token: string;
+  customerName: string;
+  /** 저장된 공개 동의와 표시 이름(`funding_pledges.public_name`). */
+  initialPublic: boolean;
+  initialPublicName: string | null;
+  /** 저장된 응원 메시지. 공개 권유 문구와 미리보기에 쓴다. */
+  message: string | null;
+  /**
+   * `success` — 결제 완료 화면. 아직 공개하지 않은 사람에게 **한 번 권하는** 자리라, 공개한
+   * 뒤에는 확인 문구만 남기고 더 고치게 하지 않는다(고치는 곳은 펀딩 확인 화면이다).
+   * `manage` — 펀딩 확인 화면. 공개·표시 이름 변경·철회를 모두 한다(약관 제13조 2항).
+   */
+  variant: 'success' | 'manage';
+}
+
+/**
+ * 서포터 명단 공개 설정. 저장은 `/api/funding/display-name` 하나로 간다.
+ *
+ * 결제 완료 화면에 이 권유를 두는 이유: 후원 폼에서 공개 체크를 못 보고 지나간 사람이
+ * 많았는데, 결제 뒤에는 그걸 바로잡을 자리가 메일 속 펀딩 확인 링크뿐이었다.
+ * 누르는 것은 후원자 본인이므로 동의의 형식은 폼의 체크와 같다.
+ */
+export default function SupporterListingEditor({ orderNo, token, customerName, initialPublic, initialPublicName, message, variant }: Props) {
+  const initialChoice = inferPublicNameChoice(initialPublicName, customerName);
+  const [isPublic, setIsPublic] = useState(initialPublic);
+  const [savedName, setSavedName] = useState(initialPublicName);
+  const [style, setStyle] = useState<PublicNameStyle>(initialChoice.style);
+  const [nickname, setNickname] = useState(initialChoice.nickname);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  const hasMessage = (message ?? '').trim() !== '';
+  const savedDisplay = savedName ?? customerName;
+  const choiceChanged = previewPublicName(style, customerName, nickname) !== savedDisplay;
+
+  const save = async (nextPublic: boolean) => {
+    setBusy(true); setError(null); setNotice(null);
+    try {
+      const res = await fetch('/api/funding/display-name', {
+        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderNo, token, displayNamePublic: nextPublic,
+          // 공개할 때만 방식을 보낸다 — 내릴 때 보내면 서버가 표시 이름을 건드릴 이유가 없다.
+          ...(nextPublic ? { publicNameStyle: style, publicNickname: nickname } : {}),
+        }),
+      });
+      if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했습니다.'); return; }
+      const json = await res.json();
+      if (!res.ok) { setError(json.message ?? '명단 공개 설정을 바꾸지 못했습니다.'); return; }
+      setIsPublic(Boolean(json.displayNamePublic));
+      setSavedName(typeof json.publicName === 'string' ? json.publicName : null);
+      // 공개 명단은 상태 API 응답(s-maxage=60 · SWR 300)을 거쳐 나가므로 즉시 뜨지 않는다 —
+      // 그걸 말하지 않으면 "공개가 안 됐다"는 문의가 온다.
+      setNotice(json.displayNamePublic
+        ? '서포터 명단에 올렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
+        : '서포터 명단에서 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
+    } catch {
+      setError('네트워크 오류가 발생했습니다.');
+    } finally { setBusy(false); }
+  };
+
+  const feedback = (
+    <>
+      {error && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {notice && <p role="status" className="mt-3 text-sm text-gray-700 dark:text-gray-200">{notice}</p>}
+    </>
+  );
+
+  if (variant === 'success' && isPublic) {
+    return (
+      <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
+        <p className="text-sm text-gray-900 dark:text-white">
+          서포터 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라갑니다.
+        </p>
+        <p className="typo-card-meta mt-1">표시 이름을 바꾸거나 내리려면 펀딩 확인 페이지를 이용해 주세요.</p>
+        {feedback}
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
+      {isPublic ? (
+        <p className="text-sm text-gray-900 dark:text-white">
+          서포터 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라가 있습니다.
+        </p>
+      ) : (
+        <>
+          <p className="text-sm font-semibold text-gray-900 dark:text-white">서포터 명단에 이름을 올리시겠어요?</p>
+          <p className="typo-card-meta mt-1">
+            {hasMessage
+              ? '남겨 주신 응원 메시지는 명단에 올려야 프로젝트 페이지에 보입니다.'
+              : '프로젝트 페이지 서포터 명단에 함께한 사람으로 이름이 올라갑니다.'}
+            {' '}실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.
+          </p>
+        </>
+      )}
+
+      <PublicNameChoice
+        customerName={customerName}
+        style={style}
+        nickname={nickname}
+        onStyleChange={setStyle}
+        onNicknameChange={setNickname}
+        message={message ?? undefined}
+        disabled={busy}
+      />
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {isPublic ? (
+          <>
+            <Button type="button" size="sm" disabled={busy || !choiceChanged} onClick={() => void save(true)}>표시 이름 저장</Button>
+            <Button type="button" size="sm" variant="outline" disabled={busy} onClick={() => void save(false)}>명단에서 내리기</Button>
+          </>
+        ) : (
+          <Button type="button" size="sm" disabled={busy} onClick={() => void save(true)}>명단에 올리기</Button>
+        )}
+      </div>
+      {feedback}
+    </div>
+  );
+}

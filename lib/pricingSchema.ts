@@ -12,6 +12,8 @@ export interface PricingSchemaOffer {
   unit?: string;
   features?: string[];
   recommended?: boolean;
+  /** 오퍼 자체의 유효기간(도입가 종료일 등). 없으면 페이지 공통 +12개월. */
+  priceValidUntil?: string;
 }
 
 export interface PricingSchemaAdditionalService {
@@ -22,6 +24,8 @@ export interface PricingSchemaAdditionalService {
   priceValue?: number;
   unit?: string;
   note?: string;
+  /** 오퍼 자체의 유효기간(도입가 종료일 등). 없으면 페이지 공통 +12개월. */
+  priceValidUntil?: string;
 }
 
 export interface PricingSchemaData {
@@ -71,6 +75,7 @@ export const normalizePricingSchemaOffers = (pricingData: PricingSchemaData): Pr
     priceDisplay: service.priceDisplay,
     unit: service.unit || '',
     features: service.note ? [service.note] : [],
+    priceValidUntil: service.priceValidUntil,
   })),
 ];
 
@@ -84,7 +89,7 @@ const buildPricingOfferSchema = (
   inLanguage: context.schemaLanguage,
   priceCurrency: 'KRW',
   ...(offer.priceValue > 0 && { price: offer.priceValue }),
-  priceValidUntil: context.priceValidUntil,
+  priceValidUntil: offer.priceValidUntil ?? context.priceValidUntil,
   availability: 'https://schema.org/InStock',
   url: `${context.pricingUrl}#${offer.id}`,
   seller: {

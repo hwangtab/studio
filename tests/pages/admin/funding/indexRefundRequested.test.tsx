@@ -32,7 +32,7 @@ const ITEM: AdminPledgeItem = {
   id: 'o1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
   rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
-  trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null,
+  trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null,
   refundRequestedAt: null,
   paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,
   downloadedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),

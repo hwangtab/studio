@@ -125,7 +125,6 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
         includeSchema={true}
         webPageType="ItemPage"
         canonical={`/${locale}/studio-info`}
-        faqItems={studioFaqData}
         schema={recordingStudioSchema}
       />
       <ImageHero

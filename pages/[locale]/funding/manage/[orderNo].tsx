@@ -11,6 +11,7 @@ import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
 import { isPastFundingEnd } from '../../../../lib/funding/projectState';
 import { getFundingProjectOrFailure } from '../../../../lib/funding/repository';
 import { expireStalePledges, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
+import SupporterListingEditor from '../../../../components/funding/SupporterListingEditor';
 
 interface Props {
   orderNo: string; token: string; projectSlug: string; projectTitle: string; rewardTitle: string; quantity: number; additionalAmount: number;
@@ -25,47 +26,17 @@ interface Props {
   downloads: Array<{ label: string; key: string }>;
   /** 후원자 명단 이름 공개 동의 여부와, 지금 그것을 바꿀 수 있는지. */
   displayNamePublic: boolean; canEditDisplayName: boolean;
+  /** 명단 표시 이름 편집에 쓰는 값 — 결제자 이름, 저장된 표시 이름(`public_name`), 응원 메시지. */
+  customerName: string; publicName: string | null; supporterMessage: string | null;
 }
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
 
 export default function FundingManagePage(p: Props) {
   const [status, setStatus] = useState(p.status);
   const [refundRequested, setRefundRequested] = useState(p.refundRequested);
-  const [displayNamePublic, setDisplayNamePublic] = useState(p.displayNamePublic);
   const [busy, setBusy] = useState(false);
-  const [nameBusy, setNameBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
-
-  /**
-   * 약관 제13조 2항 — "후원 확인 페이지에서 이름 공개 동의를 철회할 수 있다". 낙관적으로
-   * 먼저 바꾸고 실패하면 되돌린다(토글은 즉각 반응해야 한다).
-   */
-  const updateDisplayName = async (next: boolean) => {
-    const previous = displayNamePublic;
-    setDisplayNamePublic(next);
-    setNameBusy(true); setError(null); setConfirmMessage(null);
-    try {
-      const res = await fetch('/api/funding/display-name', {
-        method: 'PATCH', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderNo: p.orderNo, token: p.token, displayNamePublic: next }),
-      });
-      if (!res.headers.get('content-type')?.includes('application/json')) {
-        setDisplayNamePublic(previous); setError('서버 오류가 발생했습니다.'); return;
-      }
-      const json = await res.json();
-      if (!res.ok) { setDisplayNamePublic(previous); setError(json.message ?? '이름 공개 설정을 바꾸지 못했습니다.'); return; }
-      setDisplayNamePublic(Boolean(json.displayNamePublic));
-      // 프로젝트 페이지의 공개 명단은 상태 API 응답(s-maxage=60 · SWR 300)을 통해 나가므로
-      // 여기서 즉답해도 화면에는 최대 몇 분 뒤 반영된다 — 그걸 말하지 않으면
-      // "철회가 안 됐다"는 문의가 온다.
-      setConfirmMessage(json.displayNamePublic
-        ? '서포터 명단에 이름을 공개합니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
-        : '서포터 명단에서 이름을 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
-    } catch {
-      setDisplayNamePublic(previous); setError('네트워크 오류가 발생했습니다.');
-    } finally { setNameBusy(false); }
-  };
 
   const cancel = async () => {
     const confirmText = `펀딩을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
@@ -130,24 +101,10 @@ export default function FundingManagePage(p: Props) {
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),
               ...(p.shipping ? [{ k: '배송지', v: p.shipping }] : []),
-              {
-                k: '이름 공개',
-                v: p.canEditDisplayName ? (
-                  <label className="inline-flex items-center justify-end gap-2">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 accent-primary"
-                      checked={displayNamePublic}
-                      disabled={nameBusy}
-                      aria-label="서포터 명단에 이름 공개"
-                      onChange={(e) => void updateDisplayName(e.target.checked)}
-                    />
-                    <span>{displayNamePublic ? '공개' : '비공개'}</span>
-                  </label>
-                ) : (
-                  displayNamePublic ? '공개' : '비공개'
-                ),
-              },
+              // 바꿀 수 있으면 아래 SupporterListingEditor가 상태를 보여 주고 바꾼다(약관 제13조
+              // 2항의 철회도 거기서). 여기 읽기 전용 줄을 함께 두면 저장 뒤에도 옛 값이 남는다 —
+              // 그래서 바꿀 수 없는 상태(환불 등)에서만 이 줄을 둔다.
+              ...(p.canEditDisplayName ? [] : [{ k: '이름 공개', v: p.displayNamePublic ? '공개' : '비공개' }]),
               { k: '주문번호', v: p.orderNo },
             ].map((row) => (
               <div key={row.k} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-gray-200/70 pb-3 last:border-0 last:pb-0 dark:border-gray-700/70">
@@ -156,6 +113,18 @@ export default function FundingManagePage(p: Props) {
               </div>
             ))}
           </dl>
+
+          {p.canEditDisplayName && (
+            <SupporterListingEditor
+              variant="manage"
+              orderNo={p.orderNo}
+              token={p.token}
+              customerName={p.customerName}
+              initialPublic={p.displayNamePublic}
+              initialPublicName={p.publicName}
+              message={p.supporterMessage}
+            />
+          )}
 
           {/* 디지털 리워드 내려받기. 확정 메일에도 같은 주소가 나가지만, 메일을 지우거나 못
               받는 사람이 있어 이 화면에도 둔다 — 관리 토큰으로만 열리는 자리다.
@@ -252,5 +221,8 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     // 이름이 공개돼 있거나 앞으로 공개될 수 있는 상태에서만 바꾼다
     // (pages/api/funding/display-name.ts의 EDITABLE_STATUSES와 같은 판정).
     canEditDisplayName: ['pending', 'paid', 'partially_refunded'].includes(order.status),
+    customerName: order.customerName,
+    publicName: pl.publicName ?? null,
+    supporterMessage: pl.supporterMessage ?? null,
   } };
 });

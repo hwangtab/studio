@@ -51,6 +51,15 @@ const ReleasePipelineCases = () => {
               >
                 {copy.cases.releaseLink} <ArrowRight size={14} aria-hidden="true" />
               </Link>
+              {c.release.storySlug && (
+                <Link
+                  href={`/ko/stories/${c.release.storySlug}`}
+                  prefetch={false}
+                  className="inline-flex items-center gap-1.5 text-primary dark:text-primary-lighter hover:underline underline-offset-2"
+                >
+                  {copy.cases.storyLink} <ArrowRight size={14} aria-hidden="true" />
+                </Link>
+              )}
             </div>
           </div>
         ))}

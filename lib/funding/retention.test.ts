@@ -25,6 +25,7 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
+import { PURGED_MARK } from '../privacy/orderRetention';
 import { purgeExpiredFundingPersonalData, REWARD_RETENTION_YEARS } from './retention';
 // eslint-disable-next-line import/first
 import { PRIVACY_RETENTION_TEXT } from './policy';
@@ -49,6 +50,7 @@ const addPledge = async (opts: {
   adminMemo?: string | null;
   supporterMessage?: string | null;
   fulfillmentUpdatedBy?: string | null;
+  publicName?: string | null;
 }) => {
   seq += 1;
   const orderNo = `SNB-TEST-${String(seq).padStart(6, '0')}`;
@@ -85,6 +87,8 @@ const addPledge = async (opts: {
     adminMemo: opts.adminMemo === undefined ? null : opts.adminMemo,
     supporterMessage: opts.supporterMessage === undefined ? '함께해 주셔서 고맙습니다' : opts.supporterMessage,
     fulfillmentUpdatedBy: opts.fulfillmentUpdatedBy === undefined ? null : opts.fulfillmentUpdatedBy,
+    publicName: opts.publicName ?? null,
+    displayNamePublic: opts.publicName != null,
     createdAt: opts.createdAt ? d(opts.createdAt) : d('2020-01-01'),
     updatedAt: d('2020-01-01'),
   });
@@ -246,6 +250,22 @@ describe('파기 대상 판정', () => {
     const r = await purgeExpiredFundingPersonalData(NOW);
     expect(r.purged).toBe(1);
     expect((await pledgeOf('has-message')).supporterMessage).toBeNull();
+  });
+
+  /**
+   * 명단 표시 이름(가린 이름·닉네임)은 NULL이 아니라 표식으로 덮는다. 명단은
+   * `COALESCE(public_name, customer_name)`이라, NULL로 비우면 실명을 피하려던 사람의
+   * 결제자 이름이 그 자리에 올라간다.
+   */
+  it('명단 표시 이름은 표식으로 덮고, 실명을 고른 행(NULL)은 그대로 둔다', async () => {
+    await addPledge({ id: 'nick', deliveredAt: '2024-01-01', paidAt: '2020-01-01', shippingName: null, supporterMessage: null, publicName: '청취자' });
+    await addPledge({ id: 'real', deliveredAt: '2024-01-01', paidAt: '2020-01-01', publicName: null });
+    const r = await purgeExpiredFundingPersonalData(NOW);
+    expect(r.purged).toBe(2);
+    expect((await pledgeOf('nick')).publicName).toBe(PURGED_MARK);
+    expect((await pledgeOf('real')).publicName).toBeNull();
+    // 표식은 "남은 것 없음"으로 읽힌다 — 다음 실행에 다시 걸리지 않는다.
+    expect((await purgeExpiredFundingPersonalData(NOW)).purged).toBe(0);
   });
 
   it('orders.customer_name 등 공유 테이블 컬럼은 건드리지 않는다', async () => {

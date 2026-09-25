@@ -2,6 +2,7 @@ import { and, eq, exists, gt, gte, inArray, isNotNull, isNull, lt, notExists, or
 
 import { getDb } from '../../db/client';
 import { fundingCreators, fundingPledges, fundingProjectPayouts, fundingProjects } from '../../db/schema';
+import { PURGED_MARK } from '../privacy/orderRetention';
 
 /**
  * 후원자 약관 제13조·처리방침 8항이 약속한 보관 기간 — 리워드 전달 완료 후 이 기간이
@@ -49,7 +50,8 @@ const yearsAgo = (now: Date, years: number): Date => {
  * **행은 지우지 않는다.** `funding_pledges`를 통째로 지우면 모금액·후원 통계·법정 보존
  * 대상(대금결제·재화공급 기록)까지 함께 사라진다. 지우는 것은 배송지 필드(shipping*),
  * 운영자가 자유롭게 적는 admin_memo(이름·연락처 조각이 들어갈 수 있다 — 계약서 쪽
- * title·terminationReason과 같은 이유), 그리고 supporterMessage(응원 메시지)다.
+ * title·terminationReason과 같은 이유), supporterMessage(응원 메시지), 그리고 publicName
+ * (명단 표시 이름 — 지우는 방식이 다르다, 아래 `.set()` 주석)이다.
  *
  * **supporterMessage를 지우는 이유**: 처리방침 6항(`FUNDING_COLLECTED_ITEMS`)이 이것을
  * "선택" 수집 항목으로 명시하고, 8항의 "1년 뒤 파기" 약속은 6항이 나열한 항목 전부에
@@ -97,6 +99,13 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
       shippingMemo: null,
       adminMemo: null,
       supporterMessage: null,
+      /**
+       * 명단 표시 이름(가린 이름·닉네임)은 NULL이 아니라 **표식으로 덮는다.** 명단은
+       * `COALESCE(public_name, customer_name)`을 쓰므로 NULL로 비우면 결제자 실명이 그
+       * 자리에 올라간다 — 실명을 피하려던 사람을 파기가 실명으로 공개하게 된다. 명단 조회는
+       * 이 표식을 보고 그 행을 내린다(lib/funding/service.ts). 실명을 고른 행(NULL)은 그대로 둔다.
+       */
+      publicName: sql`CASE WHEN ${fundingPledges.publicName} IS NULL THEN NULL ELSE ${PURGED_MARK} END`,
       updatedAt: now,
     })
     .where(
@@ -123,8 +132,8 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
           and(isNotNull(fundingPledges.paidAt), lt(fundingPledges.paidAt, legalBoundary)),
           and(isNull(fundingPledges.paidAt), lt(fundingPledges.createdAt, legalBoundary)),
         ),
-        // 파기할 것이 남아 있는 행만 — 이미 파기됐거나 애초에 배송지·메모·응원 메시지가
-        // 없던 행은 건너뛴다.
+        // 파기할 것이 남아 있는 행만 — 이미 파기됐거나 애초에 배송지·메모·응원 메시지·
+        // 명단 표시 이름이 없던 행은 건너뛴다.
         or(
           isNotNull(fundingPledges.shippingName),
           isNotNull(fundingPledges.shippingPhone),
@@ -134,6 +143,7 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
           isNotNull(fundingPledges.shippingMemo),
           isNotNull(fundingPledges.adminMemo),
           isNotNull(fundingPledges.supporterMessage),
+          and(isNotNull(fundingPledges.publicName), sql`${fundingPledges.publicName} <> ${PURGED_MARK}`),
         ),
       ),
     );

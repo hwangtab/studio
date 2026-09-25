@@ -1,0 +1,1 @@
+ALTER TABLE `funding_pledges` ADD `public_name` text;

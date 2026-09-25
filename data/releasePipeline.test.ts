@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { getPortfolioItems } from './portfolio';
 import { pipelineCases, recentAlbumFundingStats, releasePipelineCopy } from './releasePipeline';
 import { CROWDFUNDING_CASES } from './crowdfundingCases';
@@ -9,6 +11,13 @@ describe('발매 파이프라인 데이터 (data/releasePipeline)', () => {
     const cases = pipelineCases();
     expect(cases.length).toBeGreaterThan(0);
     for (const c of cases) expect(ids.has(c.release.portfolioId)).toBe(true);
+  });
+
+  it('사례 카드의 storySlug는 실제 스토리 파일을 가리킨다', () => {
+    for (const c of pipelineCases()) {
+      if (!c.release.storySlug) continue;
+      expect(fs.existsSync(path.join(process.cwd(), 'content/stories', `${c.release.storySlug}.md`))).toBe(true);
+    }
   });
 
   it('사례는 성공한 음반 펀딩만, 최신순이다', () => {

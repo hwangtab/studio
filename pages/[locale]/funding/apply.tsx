@@ -8,6 +8,7 @@ import { FUNDING_PAYMENT_FEE_PERCENT, FUNDING_PLATFORM_FEE_PERCENT } from '../..
 import { FUNDING_PAYOUT_BUSINESS_DAYS } from '../../../lib/funding/policy';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
+import { releasePipelineCopy } from '../../../data/releasePipeline';
 
 export default function FundingApply() {
   const router = useRouter();
@@ -68,6 +69,19 @@ export default function FundingApply() {
             <li>제출하시면 운영자가 확인하고 승인 또는 보완 요청을 메일로 알려 드립니다.</li>
           </ul>
         </div>
+
+        {/* 발매 파이프라인 3단계 — 직접 쓰기 막막한 사람을 설계 대행·발매 프로젝트로 보낸다. */}
+        <aside className="mt-8 rounded-xl border border-gray-200 dark:border-gray-700 px-5 py-4">
+          <p className="font-semibold text-gray-900 dark:text-white">{releasePipelineCopy.applyHelp.title}</p>
+          <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">{releasePipelineCopy.applyHelp.body}</p>
+          <p className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-sm font-semibold">
+            {releasePipelineCopy.applyHelp.links.map((link) => (
+              <Link key={link.href} href={link.href} prefetch={false} className="text-primary underline underline-offset-2 dark:text-primary-lighter">
+                {link.label}
+              </Link>
+            ))}
+          </p>
+        </aside>
 
         <form onSubmit={submit} className="mt-10 space-y-3">
           <label htmlFor="email" className="block font-medium">이메일 주소</label>
