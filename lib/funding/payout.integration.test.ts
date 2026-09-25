@@ -408,6 +408,23 @@ describe('recordFundingPayout', () => {
     expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'nothing_to_pay' });
   });
 
+  /**
+   * M9 — 판정이 환불 전 모금액(`grossAmount`)이던 시절에는, 부분환불 합이 모금액에 닿아
+   * 실이체액이 0인 프로젝트에 0원 정산이 **불변으로** INSERT되고 "실지급액 0원" 메일이
+   * 나갔다. 그 행은 project_id UNIQUE 탓에 영구 pending으로 "이체 대기"를 올린다.
+   */
+  it('부분환불 합이 모금액에 닿아 실이체액이 0이면 nothing_to_pay — 행도 안 생긴다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000, { status: 'partially_refunded', refund: 1_000_000 });
+
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview!.netAmount).toBeLessThanOrEqual(0);
+    expect(await recordAsAdmin(project.id, new Date())).toEqual({ ok: false, code: 'nothing_to_pay' });
+
+    const rows = await mockDb.select().from(schema.fundingProjectPayouts);
+    expect(rows).toHaveLength(0);
+  });
+
   it('없는 프로젝트는 not_found', async () => {
     expect(await recordAsAdmin('nope', new Date())).toEqual({ ok: false, code: 'not_found' });
   });
