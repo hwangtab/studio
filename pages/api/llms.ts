@@ -3,7 +3,7 @@ import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { truncateToByteLimit } from '../../lib/llms/truncate';
 import { getAllStories, getStoryAvailableLocales } from '../../lib/stories';
-import { getSiteConfig, studioOperator, thirdPartyListings, spacecloudReviews } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { locales, type Locale } from '../../lib/i18n';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
@@ -215,7 +215,6 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - Music Release PR: ${PRESS_REFUND_POLICY_LINES.join(' ')}
 - Payment: online checkout via Toss Payments for studio bookings, mixing & mastering orders and crowdfunding pledges (payment methods as offered in the Toss checkout); other services by bank transfer on invoice. Tax invoices (세금계산서) are issued on request.
 - All prices are VAT excluded. Full terms: ${siteUrl}/ko/terms
-- Third-party reviews: ${spacecloudReviews.count} reviews averaging ${spacecloudReviews.rating.toFixed(1)}/5 on Spacecloud — verify at ${thirdPartyListings.spacecloud} (checked ${spacecloudReviews.checkedOn}). We do not publish an aggregateRating from our own site's testimonials.
 
 ## Sitemaps & Feeds
 
