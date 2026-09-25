@@ -37,6 +37,7 @@ import { authenticateCreatorApi } from '../../../../lib/funding/creatorAuth';
 import { consumeRateLimit } from '../../../../lib/booking/rate-limit';
 // eslint-disable-next-line import/first
 import { sendCreatorEditedNotice } from '../../../../lib/funding/reviewEmail';
+import { kstEndOfDayIso, kstStartOfDayIso, toKstDateString } from '../../../../lib/funding/creatorDateInput';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -108,8 +109,8 @@ const VALID_BASIC = {
   summary: '한 줄 요약입니다',
   slug: 'demo-slug',
   goalAmount: 1_000_000,
-  startAt: new Date(Date.now() + 10 * 86_400_000).toISOString(),
-  endAt: new Date(Date.now() + 40 * 86_400_000).toISOString(),
+  startAt: toKstDateString(new Date(Date.now() + 10 * 86_400_000)),
+  endAt: toKstDateString(new Date(Date.now() + 40 * 86_400_000)),
   coverUrl: '/api/funding/media/cover.webp',
 };
 
@@ -353,8 +354,8 @@ describe('POST /api/funding/creator/projects/[id] (승인 뒤 저장 — 날짜 
       content: '본문',
       coverUrl: '/api/funding/media/cover.webp',
       goalAmount: 1_000_000,
-      startAt: new Date(Date.now() - 10 * 86_400_000),
-      endAt: new Date(Date.now() + 10 * 86_400_000),
+      startAt: new Date(kstStartOfDayIso(toKstDateString(new Date(Date.now() - 10 * 86_400_000)))),
+      endAt: new Date(kstEndOfDayIso(toKstDateString(new Date(Date.now() + 10 * 86_400_000)))),
       ...overrides,
     });
 

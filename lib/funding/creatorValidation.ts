@@ -1,3 +1,4 @@
+import { kstEndOfDayIso, kstStartOfDayIso } from './creatorDateInput';
 import { FUNDING_MEDIA_URL_PREFIX } from './mediaPath';
 import { slugRejectionReason } from './reservedSlugs';
 
@@ -13,6 +14,9 @@ import { slugRejectionReason } from './reservedSlugs';
  * 만들어진 데이터가 규칙 밖에 남는다.
  */
 const isOwnUploadedMedia = (value: string): boolean => value.startsWith(FUNDING_MEDIA_URL_PREFIX);
+
+/** 모금 시작일·종료일이 받는 유일한 형태 — KST 달력 날짜. 시각은 서버가 붙인다. */
+const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 
 export const CREATOR_LIMITS = {
   titleMax: 60,
@@ -157,8 +161,21 @@ export const validateBasicSection = (
   if (!coverUrl) return fail('대표 이미지를 올려 주세요.');
   if (!isOwnUploadedMedia(coverUrl)) return fail('대표 이미지를 다시 올려 주세요.');
 
-  const startAt = new Date(str(d.startAt) ?? '');
-  const endAt = new Date(str(d.endAt) ?? '');
+  /**
+   * 시작일·종료일은 **KST 달력 날짜(`YYYY-MM-DD`)로만 받고, 시각은 서버가 붙인다.**
+   *
+   * 예전엔 클라이언트가 변환해 보낸 전체 ISO 문자열을 `new Date(str)`로 그냥 파싱했다.
+   * 정상 UI 흐름은 맞게 보내고 있었지만 서버가 그것을 **신뢰만 하고 강제하지 않는** 상태라,
+   * bare `2026-10-19`가 오면 `new Date()`가 UTC 자정(= KST 09:00)으로 읽어 마감이 하루
+   * 가까이 앞당겨졌다. 아무 오류도 없이, 개설자가 고른 마지막 날이 사라지는 형태다.
+   *
+   * 형태가 어긋나면 해석을 시도하지 않고 즉시 거부한다 — 애매하게 잘못 읽는 것보다 낫다.
+   */
+  const startStr = str(d.startAt) ?? '';
+  const endStr = str(d.endAt) ?? '';
+  if (!DATE_ONLY.test(startStr) || !DATE_ONLY.test(endStr)) return fail('날짜를 확인해 주세요.');
+  const startAt = new Date(kstStartOfDayIso(startStr));
+  const endAt = new Date(kstEndOfDayIso(endStr));
   if (Number.isNaN(startAt.getTime()) || Number.isNaN(endAt.getTime())) return fail('날짜를 확인해 주세요.');
 
   const earliest = new Date(now.getTime() + CREATOR_LIMITS.leadDays * 86_400_000);

@@ -5,6 +5,16 @@ export const MAX_ADDITIONAL_AMOUNT = 5_000_000;
 export const ADDITIONAL_AMOUNT_STEP = 1000;
 
 /**
+ * 수기 등록의 실수령액 상한 — **오타 방지용이지 업무 규칙이 아니다.**
+ *
+ * 현금·계좌로 한 번에 받은 금액이 리워드 단가 × 수량 + 추가금과 정확히 안 맞을 수 있어
+ * (에누리·잔돈) 운영자가 실제 받은 액수를 직접 적을 수 있게 열어 둔 칸이다. 자릿수를
+ * 잘못 눌러 모금액이 통째로 어긋나는 것만 막는다 — "이 금액을 넘는 후원은 받지 않는다"는
+ * 뜻이 아니다. 실제로 이보다 큰 현금 후원이 들어오면 이 숫자를 올리면 된다.
+ */
+export const MAX_MANUAL_ACTUAL_AMOUNT = 50_000_000;
+
+/**
  * 후원 폼 텍스트 칸의 글자수 상한 — **서버 검증과 클라이언트 maxLength가 같은 값을 본다.**
  *
  * 예전에는 서버가 상한을 넘은 선택 필드를 조용히 버리고 201을 돌려줬고, 상세주소·배송
@@ -46,6 +56,10 @@ export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
  *
  * 관리자 목록 배지·배너(admin-serialize), 헬스체크, clear_refund_request가 모두 이
  * 하나를 본다. 셋이 갈리면 화면·메일·API가 서로 다른 사실을 말하게 된다.
+ *
+ * **2026-09-25 확인 (감사 항목 — 확인 후 기각):** 운영 DB에 이 값이 남은 행은 1건뿐이고
+ * 이미 refunded(처리 완료, 위 집합에 안 걸림)다. 쓰는 경로가 없다는 지적은 맞지만, 새
+ * 쓰기 경로를 만들 이유가 없다 — 무통장을 되살리지 않는 한 이 상태는 다시 생기지 않는다.
  */
 export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as const;
 

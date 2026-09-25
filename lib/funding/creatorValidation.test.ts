@@ -9,8 +9,8 @@ const basic = () => ({
   summary: '두 번째 앨범을 만듭니다',
   slug: 'my-second-album',
   goalAmount: 3000000,
-  startAt: '2026-10-10T00:00:00+09:00',
-  endAt: '2026-11-10T23:59:59+09:00',
+  startAt: '2026-10-10',
+  endAt: '2026-11-10',
   coverUrl: '/api/funding/media/a.webp?w=1200&h=675',
 });
 
@@ -21,19 +21,35 @@ describe('validateBasicSection', () => {
   });
 
   it('시작일이 오늘부터 3일 안이면 거부한다 — 심사 시간이 필요하다', () => {
-    const r = validateBasicSection({ ...basic(), startAt: '2026-10-02T00:00:00+09:00' }, NOW);
+    const r = validateBasicSection({ ...basic(), startAt: '2026-10-02' }, NOW);
     expect(r).toMatchObject({ ok: false });
     expect((r as { message: string }).message).toMatch(/3일/);
   });
 
   it('기간이 60일을 넘으면 거부한다', () => {
-    const r = validateBasicSection({ ...basic(), endAt: '2026-12-20T00:00:00+09:00' }, NOW);
+    const r = validateBasicSection({ ...basic(), endAt: '2026-12-20' }, NOW);
     expect(r).toMatchObject({ ok: false });
     expect((r as { message: string }).message).toMatch(/60일/);
   });
 
   it('종료가 시작보다 앞이면 거부한다', () => {
-    const r = validateBasicSection({ ...basic(), endAt: '2026-10-09T00:00:00+09:00' }, NOW);
+    const r = validateBasicSection({ ...basic(), endAt: '2026-10-09' }, NOW);
+    expect(r).toMatchObject({ ok: false });
+  });
+
+  // 서버가 KST 자정·23:59:59을 직접 붙인다 — 클라이언트가 무엇을 보내든 신뢰하지 않는다.
+  it('날짜는 KST 자정에 시작해 그날 23:59:59에 끝난다', () => {
+    const r = validateBasicSection(basic(), NOW);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.value.startAt.toISOString()).toBe('2026-10-09T15:00:00.000Z'); // 2026-10-10 00:00 KST
+    expect(r.value.endAt.toISOString()).toBe('2026-11-10T14:59:59.000Z'); // 2026-11-10 23:59:59 KST
+  });
+
+  // bare `YYYY-MM-DD`만 받는다. 전체 ISO 문자열이 오면(예전 클라이언트, 다른 호출부의
+  // 실수) 애매하게 하루 앞당겨 해석하는 대신 명확히 거부한다.
+  it('전체 ISO 문자열은 거부한다 — bare 날짜만 받는다', () => {
+    const r = validateBasicSection({ ...basic(), endAt: '2026-11-10T23:59:59+09:00' }, NOW);
     expect(r).toMatchObject({ ok: false });
   });
 

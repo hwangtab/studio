@@ -8,6 +8,7 @@ import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
+import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
 import {
   SUBSCRIPTION_DORMANCY_YEARS,
   dormancyWarningBoundary,
@@ -689,6 +690,48 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
           'content/funding/<slug>.md를 지우거나 한쪽 slug를 바꿔 주세요 — 후원이 이미 들어온 쪽의 slug는 바꾸지 마세요.',
       });
     }
+  }
+
+  /**
+   * **아직 안 보낸 리워드인데 고객 연락처가 곧 지워질 펀딩.**
+   *
+   * 두 파기가 서로 다른 것을 본다 — lib/funding/retention.ts는 delivered_at이 없으면(아직
+   * 안 보냈으면) 배송지를 지우지 않는다. lib/privacy/orderRetention.ts의
+   * purgeExpiredOrderCustomerData는 그것과 무관하게 결제 5년 뒤 orders의 고객 이름·연락처·
+   * 이메일을 지운다(펀딩만이 아니라 모든 주문 타입이 쓰는 공용 함수라 펀딩만 예외를 두면
+   * booking·contracts에 회귀 위험이 생긴다 — 그래서 그 함수는 건드리지 않는다).
+   *
+   * 둘이 만나면 "배송지는 있는데 연락할 방법이 없는" 행이 생긴다 — 보낼 수도, 환불
+   * 여부를 물어볼 수도 없다. 결제 후 5년이 다가오도록 안 보낸 리워드가 있다는 뜻이므로,
+   * 고객 정보가 지워지기 전에 사람이 판단해야 한다(지금이라도 보내거나, 환불하거나,
+   * 손으로 남겨 두거나). 90일 여유를 두는 이유는 이 점검이 하루 한 번만 돌기 때문이다.
+   */
+  const CUSTOMER_PURGE_DUE_MS = ORDER_LEGAL_RETENTION_YEARS * 365 * 24 * 60 * 60 * 1000;
+  const CUSTOMER_PURGE_WARNING_MS = 90 * 24 * 60 * 60 * 1000;
+  const undeliveredNearingPurge = await db
+    .select({ orderNo: orders.orderNo, paidAt: fundingPledges.paidAt })
+    .from(fundingPledges)
+    .innerJoin(orders, eq(orders.id, fundingPledges.orderId))
+    .where(
+      and(
+        isNull(fundingPledges.deliveredAt),
+        isNotNull(fundingPledges.paidAt),
+        inArray(orders.status, [...LIVE_FUNDING_ORDER_STATUSES]),
+        lt(fundingPledges.paidAt, new Date(now.getTime() - CUSTOMER_PURGE_DUE_MS + CUSTOMER_PURGE_WARNING_MS)),
+      ),
+    );
+
+  if (undeliveredNearingPurge.length > 0) {
+    issues.push({
+      severity: 'medium',
+      href: '/admin/funding',
+      title: `아직 발송하지 않은 채 고객 정보 파기가 다가온 펀딩 ${undeliveredNearingPurge.length}건`,
+      detail:
+        `주문번호: ${sample(undeliveredNearingPurge.map((row) => row.orderNo))}\n` +
+        `결제 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 되면 고객 이름·연락처·이메일이 지워집니다. ` +
+        '아직 리워드를 안 보낸 상태로 그 시점이 90일 안으로 다가왔습니다 — ' +
+        '지금 발송하거나, 환불하거나, 계속 보관할지 관리자 > 펀딩 상세에서 판단해 주세요.',
+    });
   }
 
   /**

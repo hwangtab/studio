@@ -343,6 +343,46 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
     expect(s.backerPersonCount).toBe(3);
   });
 
+  /**
+   * 표기 차이는 사람이 다르다는 뜻이 아니다. SQLite `=`·`||`가 대소문자를 구분해서
+   * `A@b.com`과 `a@b.com`이, 하이픈 유무만 다른 전화번호가 각각 다른 키가 됐다 —
+   * 둘 다 인원을 부풀린다. 저장된 값은 그대로 두고 집계에서만 정규화한다.
+   */
+  it('대소문자만 다른 이메일은 한 사람이다 — 옛 데이터도 포함', async () => {
+    // 저장 시점에 이미 소문자로 정규화되는 신규 건과, 대문자로 저장돼 있는 옛 건.
+    const c = await createFundingPledge(
+      payloadFor({ customerEmail: 'Mixed@Example.com', customerPhone: '010-1234-5678' }), PROJECT, reward('mail'), NOW,
+    );
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+            item_amount, vat_amount, total_amount, manage_token)
+            VALUES ('legacy-case','FND-CASE','funding','paid','김후원','010-1234-5678','MIXED@EXAMPLE.COM',4545,455,5000,'ctok')`,
+    });
+    await client.execute({
+      sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+            quantity, additional_amount, payment_method, hold_expires_at)
+            VALUES ('legacy-case-fp','legacy-case',?,'mail','감사 메일',5000,1,0,'toss',9999999999)`,
+      args: [PROJECT.slug],
+    });
+
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(2);
+    expect(s.backerPersonCount).toBe(1);
+  });
+
+  it('하이픈·공백만 다른 전화번호는 한 사람이다', async () => {
+    for (const phone of ['010-1234-5678', '01012345678', '010 1234 5678']) {
+      const c = await createFundingPledge(
+        payloadFor({ customerEmail: 'same@example.com', customerPhone: phone }), PROJECT, reward('mail'), NOW,
+      );
+      await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
+    }
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.backerCount).toBe(3);
+    expect(s.backerPersonCount).toBe(1);
+  });
+
   it('이메일이 같아도 전화가 다르면 다른 사람으로 센다', async () => {
     for (const phone of ['010-1', '010-2']) {
       const c = await createFundingPledge(

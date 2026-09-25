@@ -779,3 +779,60 @@ describe('파일과 DB의 slug 충돌', () => {
     expect(await titles()).toEqual([]);
   });
 });
+
+/**
+ * 두 파기가 서로 다른 것을 본다 — 배송지는 리워드 전달 뒤 1년(안 보냈으면 안 지움), 고객
+ * 이름·연락처·이메일은 결제 후 5년(전달 여부와 무관). 5년 넘게 못 보낸 리워드가 있으면
+ * "배송지는 있는데 연락할 방법이 없는" 행이 생긴다. 공용 파기 함수를 펀딩만을 위해 고치면
+ * booking·contracts에 회귀 위험이 있어, 대신 여기서 미리 알린다.
+ */
+describe('발송 안 된 채 고객 정보 파기가 다가오는 펀딩', () => {
+  // 소스와 같은 근사(365일/년)로 경계를 구한다 — 정확한 달력 계산이 아니라 "90일 전에
+  // 울리는 알람"이 목적이므로 윤년 오차(최대 1~2일)는 문제가 아니다.
+  const FIVE_YEARS_MS = 5 * 365 * 24 * 60 * 60 * 1000;
+  const NINETY_DAYS_MS = 90 * 24 * 60 * 60 * 1000;
+  const boundary = NOW.getTime() - FIVE_YEARS_MS + NINETY_DAYS_MS;
+
+  it('결제 후 5년까지 90일 안으로 다가왔는데 아직 발송 안 됐으면 알린다', async () => {
+    await insertOrder({ status: 'paid' });
+    await insertFundingPledge({
+      payment_method: 'toss',
+      paid_at: Math.floor((boundary - 24 * 60 * 60 * 1000) / 1000), // 경계보다 하루 더 이르다 = 이미 90일 안
+      delivered_at: null,
+    });
+    const issues = (await runHealthCheck(NOW)).issues;
+    const found = issues.find((i) => i.title.includes('고객 정보 파기가 다가온'));
+    expect(found?.severity).toBe('medium');
+    expect(found?.detail).toContain('SNB-1');
+  });
+
+  it('90일보다 여유가 있으면 알리지 않는다', async () => {
+    await insertOrder({ status: 'paid' });
+    await insertFundingPledge({
+      payment_method: 'toss',
+      paid_at: Math.floor((boundary + 24 * 60 * 60 * 1000) / 1000), // 경계보다 하루 늦다 = 아직 90일 넘게 남음
+      delivered_at: null,
+    });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining('고객 정보 파기가 다가온')]));
+  });
+
+  it('이미 발송됐으면(delivered_at 있음) 알리지 않는다', async () => {
+    await insertOrder({ status: 'paid' });
+    await insertFundingPledge({
+      payment_method: 'toss',
+      paid_at: Math.floor((boundary - 24 * 60 * 60 * 1000) / 1000),
+      delivered_at: Math.floor((boundary - 24 * 60 * 60 * 1000) / 1000),
+    });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining('고객 정보 파기가 다가온')]));
+  });
+
+  it('이미 환불됐으면(주문이 살아 있지 않으면) 알리지 않는다', async () => {
+    await insertOrder({ status: 'refunded' });
+    await insertFundingPledge({
+      payment_method: 'toss',
+      paid_at: Math.floor((boundary - 24 * 60 * 60 * 1000) / 1000),
+      delivered_at: null,
+    });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining('고객 정보 파기가 다가온')]));
+  });
+});

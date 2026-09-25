@@ -2,7 +2,6 @@ import { useEffect, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
 import { Field, TextInput } from '../../ui/Field';
-import { kstEndOfDayIso, kstStartOfDayIso } from '../../../lib/funding/creatorDateInput';
 import { CREATOR_LIMITS } from '../../../lib/funding/creatorValidation';
 import { saveBasicSection } from './api';
 import { ImageUploadField } from './ImageUploadField';
@@ -89,11 +88,10 @@ export function BasicSectionForm({ projectId, initial, earliestStartDate, readOn
       startAt,
       endAt,
     };
-    const result = await saveBasicSection(projectId, {
-      ...value,
-      startAt: startAt ? kstStartOfDayIso(startAt) : '',
-      endAt: endAt ? kstEndOfDayIso(endAt) : '',
-    });
+    // KST 자정·23:59:59 변환은 **서버가 한다**(validateBasicSection). 여기서 한 번 더 하면
+    // 두 곳에 같은 규칙이 생기고, 서버는 그 변환을 신뢰만 하게 된다 — bare 날짜가 오는
+    // 다른 경로가 생기면 조용히 하루 앞당겨 마감됐다. 화면은 고른 날짜를 그대로 보낸다.
+    const result = await saveBasicSection(projectId, value);
     if (result.ok) {
       // 저장 요청이 도는 동안(왕복 100~500ms) 슬러그 칸은 계속 활성이라, 응답이 오기
       // 전에 이어서 고친 값이 있을 수 있다. 무조건 덮어쓰면 그 값이 조용히 사라진다 —

@@ -171,5 +171,10 @@ describe('경계값 — 감사 probe 24종', () => {
       const r = ok({ ...base, customerEmail: '  a+tag@b.com ' });
       expect(r.ok && r.value.customerEmail).toBe('a+tag@b.com');
     });
+    // 인원 집계의 신원 키가 이메일이라, 대소문자만 다른 표기가 같은 사람을 둘로 센다.
+    it('이메일을 소문자로 저장한다', () => {
+      const r = ok({ ...base, customerEmail: '  Mixed@Example.COM ' });
+      expect(r.ok && r.value.customerEmail).toBe('mixed@example.com');
+    });
   });
 });

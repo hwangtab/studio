@@ -67,6 +67,12 @@ export const isManualPlaceholderRecipient = (order: { customerEmail: string }): 
  * 막으려던 수기 등록 붕괴와 글자 그대로 같은 사고다. 표식은 "신원 불명"이지 "같은 사람"이
  * 아니므로, 합칠 근거가 없을 때는 합치지 않는다.
  *
+ * **표기 차이는 읽을 때 정규화한다.** SQLite `=`·`||`는 대소문자를 구분하므로 `A@b.com`과
+ * `a@b.com`이 다른 사람으로 세어졌고, `010-1234-5678`과 `01012345678`도 마찬가지였다 —
+ * 둘 다 인원을 부풀리는 방향이다. 저장된 값 자체는 건드리지 않고(마이그레이션 없음) SQL
+ * 표현식 안에서만 소문자·구분자 제거로 맞춘다. 그래야 새로 들어오는 건과 옛 데이터가
+ * 같은 기준으로 세어진다.
+ *
  * 호출할 때마다 새 조각을 만든다(하나를 여러 쿼리에 돌려 쓰지 않는다).
  */
 export const backerIdentitySql = () => sql`CASE
@@ -76,7 +82,7 @@ export const backerIdentitySql = () => sql`CASE
     OR o.customer_email = ${PURGED_MARK}
     OR o.customer_phone = ${PURGED_MARK}
   THEN o.id
-  ELSE o.customer_email || '|' || o.customer_phone
+  ELSE LOWER(o.customer_email) || '|' || REPLACE(REPLACE(REPLACE(o.customer_phone, '-', ''), ' ', ''), '.', '')
 END`;
 
 export const generateFundingOrderNo = (now: Date, manual = false): string =>

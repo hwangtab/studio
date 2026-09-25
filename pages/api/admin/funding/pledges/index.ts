@@ -9,14 +9,19 @@ import { generateManageToken } from '../../../../../lib/booking/token';
 import { rowsAffectedOf } from '../../../../../lib/booking/confirm';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
 import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
-import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
-import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
+import { computeFundingAmounts, splitFundingAmount } from '../../../../../lib/funding/amounts';
+import { deliverConfirmedEmailsOnce } from '../../../../../lib/funding/confirm';
+import {
+  ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_MANUAL_ACTUAL_AMOUNT, MAX_QUANTITY,
+} from '../../../../../lib/funding/policy';
 import { findReward } from '../../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
 import {
   MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
-  aggregateProjectStatus, expireStalePledges, fundingStockCondition, generateFundingOrderNo,
+  aggregateProjectStatus, expireStalePledges, findFundingOrderByOrderNo, fundingStockCondition,
+  generateFundingOrderNo,
 } from '../../../../../lib/funding/service';
+import { SEND_PENDING } from '../../../../../lib/ops/notificationSentinel';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -55,6 +60,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ) {
       return res.status(400).json({ ok: false, message: '프로젝트·리워드·수량·이름을 확인해 주세요.' });
     }
+    /**
+     * 실수령액(선택) — 현금으로 실제 받은 금액이 리워드 단가 × 수량 + 추가금과 안 맞을 때
+     * (에누리·잔돈) 그 값을 그대로 쓴다. 없으면 지금처럼 리워드가에서 계산한다.
+     * 이 칸이 없을 때는 공개 모금액과 정산 grossAmount가 실수령액과 어긋났다.
+     */
+    const hasActualAmount = b.actualAmount !== undefined && b.actualAmount !== null && b.actualAmount !== '';
+    const actualAmount = Number(b.actualAmount);
+    if (
+      hasActualAmount &&
+      !(Number.isInteger(actualAmount) && actualAmount > 0 && actualAmount <= MAX_MANUAL_ACTUAL_AMOUNT)
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message: `실수령액은 1원 이상 ${MAX_MANUAL_ACTUAL_AMOUNT.toLocaleString('ko-KR')}원 이하의 정수여야 합니다.`,
+      });
+    }
     const now = new Date();
     await expireStalePledges(now);
     // 이 사전 검사는 **사람에게 이유를 알려 주기 위한 것**이고, 초과 판매를 실제로 막는 것은
@@ -67,8 +88,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: `남은 수량(${remaining})을 초과합니다.` });
       }
     }
-    const amounts = computeFundingAmounts(reward.amount, quantity, additionalAmount);
+    const amounts = hasActualAmount
+      ? splitFundingAmount(actualAmount)
+      : computeFundingAmounts(reward.amount, quantity, additionalAmount);
     const orderNo = generateFundingOrderNo(now, true);
+    // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 이메일 칸을 그대로 보내면
+    // customer_email=''인 주문이 생겨 확정 메일이 빈 주소로 나가고 실패한다. 공백만 있는
+    // 입력도 같다. 실제로 값이 있을 때만 쓰고, 아니면 플레이스홀더로 떨어뜨린다.
+    // 소문자로 맞추는 이유는 온라인 경로(lib/funding/validation.ts)와 같다 — 인원 집계의
+    // 신원 키가 이메일이라, 대소문자만 다른 표기가 같은 사람을 둘로 센다.
+    const customerEmail = String(b.customerEmail || '').trim().toLowerCase() || MANUAL_PLACEHOLDER_EMAIL;
+    const hasRealEmail = customerEmail !== MANUAL_PLACEHOLDER_EMAIL;
     const db = getDb();
     const s = (typeof b.shipping === 'object' && b.shipping) || {};
     const orderId = randomUUID().replace(/-/g, '');
@@ -91,12 +121,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         status: 'paid',
         customerName: b.customerName,
         customerPhone: String(b.customerPhone ?? MANUAL_PLACEHOLDER_PHONE),
-        // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 이메일 칸을 그대로 보내면
-        // customer_email=''인 주문이 생겨 확정 메일이 빈 주소로 나가고 실패한다. 공백만 있는
-        // 입력도 같다. 실제로 값이 있을 때만 쓰고, 아니면 플레이스홀더로 떨어뜨린다.
-        customerEmail: String(b.customerEmail || '').trim() || MANUAL_PLACEHOLDER_EMAIL,
+        customerEmail,
         ...amounts,
         manageToken: generateManageToken(),
+        // 온라인 확정과 같은 규약 — 확정 행을 쓰는 그 자리에서 센티널을 남겨야
+        // deliverConfirmedEmailsOnce가 발송권을 선점할 수 있다. 플레이스홀더면 보낼 곳이
+        // 없으므로 센티널도 남기지 않는다(남기면 헬스체크가 영영 울린다).
+        ...(hasRealEmail ? { notificationError: SEND_PENDING } : {}),
       }),
       db.run(sql`
         INSERT INTO funding_pledges (
@@ -128,6 +159,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (rowsAffectedOf(result[1]) === 0) {
       await db.update(orders).set({ status: 'failed', updatedAt: now }).where(eq(orders.id, orderId));
       return res.status(409).json({ ok: false, message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.' });
+    }
+    /**
+     * 확정 안내 메일을 **여기서 바로** 보낸다. 예전엔 등록만 하고 끝나서, 운영자가 관리자
+     * 상세에서 '메일 재발송'을 따로 눌러야 후원자가 관리 링크(셀프 취소·명단 공개 철회)를
+     * 받았다 — 그 버튼을 잊으면 후원자는 영영 못 받는다.
+     *
+     * 발송 실패가 등록을 되돌리지는 않는다: deliverConfirmedEmailsOnce는 예외를 삼켜
+     * notification_error에 사유를 남기고, 관리자 화면·헬스체크가 그 값을 읽어 재발송을
+     * 안내한다. 응답은 메일 결과와 무관하게 201이다.
+     */
+    if (hasRealEmail) {
+      const created = await findFundingOrderByOrderNo(orderNo);
+      if (created) await deliverConfirmedEmailsOnce(created);
+      else console.error('[admin-funding-pledge] 방금 만든 주문을 다시 읽지 못해 확정 메일을 보내지 못했다', { orderNo });
     }
     return res.status(201).json({ ok: true, orderNo });
   }
