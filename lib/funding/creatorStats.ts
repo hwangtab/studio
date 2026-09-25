@@ -19,10 +19,20 @@ export interface CreatorRewardSales {
 /**
  * 개설자가 보는 모금 현황 — **집계뿐이다.**
  *
- * 후원자 이름·응원 메시지·연락처·배송지는 이 타입에 **없고, 더해서도 안 된다.** 개설자
- * 약관 제8조(`pages/[locale]/funding/creator-terms.tsx`)가 "서포터의 개인정보는 스튜디오가
- * 보유하며, 개설자에게 제공하지 않습니다"라고 적고 있다. 약관이 하지 않겠다고 적은 일을
- * 코드가 하면 그 문장이 거짓말이 된다. 배송지 열람은 약관 개정과 함께 별도로 다룬다.
+ * 후원자 이름·응원 메시지·연락처·배송지는 이 타입에 **없고, 더해서도 안 된다.**
+ *
+ * 배송지가 개설자에게 아예 안 간다는 뜻은 아니다 — 개설자 약관 제8조
+ * (`pages/[locale]/funding/creator-terms.tsx`)는 배송 리워드 발송에 필요한 항목만, **모금이
+ * 마감된 뒤에** 제공한다고 적고 있고, 그 제공은 별도 화면
+ * (`pages/[locale]/funding/creator/[id]/shipping.tsx`)과 CSV 라우트가 맡는다. 그 경로에는
+ * 마감 게이트가 걸려 있고, 나가는 항목이 화이트리스트(`lib/funding/creatorShipping.ts`의
+ * `CreatorShippingRow`)로 고정돼 있으며, 열람·내려받기가 접속기록에 남는다
+ * (`funding_creator_shipping_export`).
+ *
+ * **그래서 이 집계 타입에 섞으면 안 된다.** 여기에 배송지나 연락처를 얹는 순간 그 세 겹의
+ * 통제를 전부 우회하게 된다 — 마감 전에도 나가고, 화이트리스트 밖 항목이 따라붙고,
+ * 누가 봤는지 아무 데도 안 남는다. 응원 메시지·후원자 이름은 애초에 배송에 필요한 항목이
+ * 아니라 제8조가 제공한다고 적은 범위 밖이다.
  *
  * `loadCreatorProjectStats`는 `buildPublicStatus`(공개 상세가 쓰는 바로 그 함수)를 지나면서도
  * `publicBackers`·`publicMessages`를 **스프레드하지 않고** 필요한 필드만 골라 담는다 —
