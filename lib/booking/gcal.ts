@@ -40,10 +40,12 @@ const getAccessToken = async (): Promise<string> => {
 };
 
 /**
- * 어느 캘린더에 쓰는가. 기본은 녹음실(BOOKING_GCAL_ID). 연습실은 **다른 캘린더**여야 한다 —
- * 같은 캘린더에 올리면 녹음 슬롯 조회(freeBusy)가 연습실 예약을 바쁨으로 읽어 녹음을 막는다.
- * 연습실 캘린더(PRACTICE_ROOM_GCAL_ID)는 선택이다: 없으면 연습실 예약은 캘린더에 안 올리고
- * 관리자 화면·메일로만 알린다(confirm.ts).
+ * 자원마다 캘린더 하나. 녹음실은 BOOKING_GCAL_ID, 연습실은 PRACTICE_ROOM_GCAL_ID.
+ * 두 자원은 **같은 기준**으로 돈다 — 자기 캘린더의 바쁨을 읽어 슬롯을 막고(slots.ts),
+ * 확정 예약을 자기 캘린더에 쓴다(confirm.ts). 그래서 캘린더에 손으로 넣은 일정도
+ * 웹 예약을 막는다. 두 캘린더는 반드시 달라야 한다 — 같으면 녹음 슬롯 조회가 연습실
+ * 예약을 바쁨으로 읽어 녹음을 막고 그 반대도 마찬가지다.
+ * 연습실 캘린더는 env가 없으면 읽지도 쓰지도 않는다(운영은 넣어 둔 상태).
  */
 export type BookingCalendar = 'studio' | 'practice-room';
 
@@ -61,8 +63,10 @@ const calendarId = (which: BookingCalendar = 'studio'): string => {
 export interface BusyRange { start: Date; end: Date }
 
 /** 실패는 throw — 호출부는 해당 시간대를 예약 불가로 처리한다(fail-closed, 스펙 §6). */
-export const fetchBusyRanges = async (timeMin: Date, timeMax: Date): Promise<BusyRange[]> => {
-  const id = calendarId();
+export const fetchBusyRanges = async (
+  timeMin: Date, timeMax: Date, calendar: BookingCalendar = 'studio',
+): Promise<BusyRange[]> => {
+  const id = calendarId(calendar);
   const token = await getAccessToken();
   const res = await fetch(`${CAL_API}/freeBusy`, {
     method: 'POST',

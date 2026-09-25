@@ -20,7 +20,10 @@ import * as schema from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../booking/gcal', () => ({ fetchBusyRanges: jest.fn() }));
+jest.mock('../booking/gcal', () => ({
+  fetchBusyRanges: jest.fn(),
+  calendarIdFor: (which: string) => (which === 'practice-room' ? process.env.PRACTICE_ROOM_GCAL_ID || null : 'studio-cal'),
+}));
 // 이 파일은 마이그레이션 드리프트가 아니라 나머지 점검을 검증한다. 별도로 목킹하지
 // 않으면 in-memory DB에 __drizzle_migrations 테이블이 없어 "판정 불가"가 아니라
 // "0개 적용"으로 읽혀 로컬 .env.local의 TURSO 값 유무에 따라 이 파일의 건수 assertion이
@@ -187,8 +190,33 @@ describe('운영 점검', () => {
     (fetchBusyRanges as jest.Mock).mockRejectedValue(new Error('invalid_grant'));
     const issues = (await runHealthCheck(NOW)).issues;
     expect(issues[0].severity).toBe('high');
-    expect(issues[0].title).toContain('예약 캘린더');
+    expect(issues[0].title).toContain('녹음실 예약 캘린더');
     expect(issues[0].detail).toContain('invalid_grant');
+  });
+
+  it('연습실 캘린더가 설정돼 있으면 그것도 같은 기준으로 점검한다', async () => {
+    process.env.PRACTICE_ROOM_GCAL_ID = 'rooms-cal';
+    try {
+      (fetchBusyRanges as jest.Mock).mockImplementation(async (_a: Date, _b: Date, which?: string) => {
+        if (which === 'practice-room') throw new Error('notFound');
+        return [];
+      });
+      const issues = (await runHealthCheck(NOW)).issues;
+      const rooms = issues.find((i) => i.title.includes('연습실 예약 캘린더'));
+      expect(rooms?.severity).toBe('high');
+      expect(rooms?.detail).toContain('PRACTICE_ROOM_GCAL_ID');
+      expect(issues.some((i) => i.title.includes('녹음실 예약 캘린더'))).toBe(false);
+    } finally {
+      delete process.env.PRACTICE_ROOM_GCAL_ID;
+    }
+  });
+
+  it('연습실 캘린더 env가 없으면 연습실은 점검하지 않는다', async () => {
+    delete process.env.PRACTICE_ROOM_GCAL_ID;
+    (fetchBusyRanges as jest.Mock).mockResolvedValue([]);
+    await runHealthCheck(NOW);
+    const calls = (fetchBusyRanges as jest.Mock).mock.calls.map((c) => c[2]);
+    expect(calls).toEqual(['studio']);
   });
 
   it('캘린더 등록에 실패한 확정 예약을 잡는다 (오프라인 이중예약 위험)', async () => {
