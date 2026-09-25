@@ -109,7 +109,9 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                     <td className="px-4 py-3 whitespace-nowrap text-xs">
                       {!services.available ? (
                         <span className="text-gray-400">
-                          {services.reason === 'missing_table' ? '미적용(0037)' : '불러오지 못함'}
+                          {services.reason === 'missing_table'
+                            ? '미적용(0037)'
+                            : services.reason === 'schema_mismatch' ? '스키마 불일치' : '불러오지 못함'}
                         </span>
                       ) : services.byProjectId[p.id] && services.byProjectId[p.id].kind !== 'none' ? (
                         <>

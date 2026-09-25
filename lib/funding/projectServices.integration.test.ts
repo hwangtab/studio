@@ -190,6 +190,38 @@ describe('0037이 아직 적용되지 않은 운영 DB', () => {
   });
 });
 
+/**
+ * 마이그레이션이 수동이라 0037이 손으로 일부만 적용될 수 있고, 앞으로 이 테이블에 컬럼을 더하는
+ * 마이그레이션이 배포보다 늦어도 같은 상태가 된다. 예전에는 `no such table`이 안 나므로 테이블
+ * 부재 판정이 못 잡고 `error`로 떨어져, 화면이 "잠시 뒤 새로고침해 주세요"를 띄웠다 —
+ * 새로고침으로 낫지 않는 상태에 새로고침을 시킨다. 쓰기는 그대로 던져 라우트가 500이 됐다.
+ */
+describe('부분 마이그레이션 — 테이블은 있고 컬럼이 없다', () => {
+  beforeEach(async () => {
+    await migrate();
+    await client.execute('DROP TABLE funding_project_services');
+    await client.execute('CREATE TABLE funding_project_services (project_id text PRIMARY KEY NOT NULL, kind text NOT NULL)');
+  });
+
+  it('읽기는 schema_mismatch로 좁힌다 — 새로고침을 권하지 않는다', async () => {
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const id = await seedProject();
+    expect(await loadProjectService(id)).toEqual({ available: false, reason: 'schema_mismatch' });
+    expect(await loadProjectServiceMap()).toEqual({ available: false, reason: 'schema_mismatch' });
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it('쓰기는 던지지 않고 schema_mismatch를 돌려준다', async () => {
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const id = await seedProject();
+    expect(await setProjectService(id, 'design', new Date(), ACTOR)).toEqual({ ok: false, code: 'schema_mismatch' });
+    expect(await setDesignFeePaid(id, true, new Date(), ACTOR)).toEqual({ ok: false, code: 'schema_mismatch' });
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+});
+
 describe('테이블 부재가 아닌 DB 장애', () => {
   beforeEach(() => migrate());
 

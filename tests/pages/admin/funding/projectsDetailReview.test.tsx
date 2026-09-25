@@ -289,6 +289,13 @@ describe('스튜디오 서비스', () => {
     expect(screen.queryByRole('button', { name: '펀딩 설계 대행' })).not.toBeInTheDocument();
   });
 
+  // 새로고침으로 낫지 않는 상태에 새로고침을 시키지 않는다.
+  it('부분 스키마는 마이그레이션 적용을 안내하고 새로고침을 권하지 않는다', () => {
+    render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'schema_mismatch' }} />);
+    expect(screen.getByText(/컬럼 누락/)).toBeInTheDocument();
+    expect(screen.getByText(/새로고침으로는 해결되지 않습니다/)).toBeInTheDocument();
+  });
+
   it('그 밖의 장애는 마이그레이션을 권하지 않는다 — 엉뚱한 조치를 막는다', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'error' }} />);
     expect(screen.getByText(/불러오지 못했습니다/)).toBeInTheDocument();

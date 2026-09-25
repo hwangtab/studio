@@ -883,7 +883,11 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
               <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
                 {service.reason === 'missing_table'
                   ? '운영 DB에 마이그레이션 0037(funding_project_services)이 아직 적용되지 않았습니다. main에서 npm run db:migrate를 실행하면 이 칸이 열립니다. 다른 기능은 영향이 없습니다.'
-                  : '서비스 정보를 불러오지 못했습니다(서버 로그 참조). 심사·정산은 그대로 쓸 수 있습니다. 잠시 뒤 새로고침해 주세요.'}
+                  /* 새로고침으로 낫지 않는 상태에 새로고침을 시키지 않는다 — 테이블은 있고
+                     컬럼이 없으면 마이그레이션을 적용해야 한다. */
+                  : service.reason === 'schema_mismatch'
+                    ? 'funding_project_services 테이블의 스키마가 코드보다 오래되었습니다(컬럼 누락, 서버 로그에 어느 컬럼인지 있습니다). npm run db:migrate로 마이그레이션을 적용해 주세요 — 새로고침으로는 해결되지 않습니다. 심사·정산은 그대로 쓸 수 있습니다.'
+                    : '서비스 정보를 불러오지 못했습니다(서버 로그 참조). 심사·정산은 그대로 쓸 수 있습니다. 잠시 뒤 새로고침해 주세요.'}
               </p>
             ) : (
               <div className="flex flex-col gap-3 text-sm">

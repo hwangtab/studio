@@ -36,10 +36,10 @@ export const PROJECT_SERVICE_LABELS: Record<FundingProjectServiceKind, string> =
   release: '발매 프로젝트 연계',
 };
 
-export const isMissingServicesTable = (error: unknown): boolean => {
+/** libsql은 원인을 cause로 감싸기도 한다 — 사슬을 따라가며 문구를 모은다. */
+const errorTexts = (error: unknown): string[] => {
   const texts: string[] = [];
   let current: unknown = error;
-  // libsql은 원인을 cause로 감싸기도 한다 — 사슬을 따라가며 문구를 모은다.
   for (let depth = 0; current && depth < 5; depth += 1) {
     if (current instanceof Error) {
       texts.push(current.message);
@@ -49,8 +49,33 @@ export const isMissingServicesTable = (error: unknown): boolean => {
       break;
     }
   }
-  return texts.some((t) => /no such table:?\s*`?funding_project_services`?/i.test(t));
+  return texts;
 };
+
+export const isMissingServicesTable = (error: unknown): boolean =>
+  errorTexts(error).some((t) => /no such table:?\s*`?funding_project_services`?/i.test(t));
+
+/**
+ * 테이블은 있는데 **컬럼이 없는** 부분 스키마인가.
+ *
+ * 마이그레이션이 수동이라 0037이 손으로 일부만 적용될 수 있고, 앞으로 이 테이블에 컬럼을
+ * 더하는 마이그레이션이 배포보다 늦으면 같은 상태가 된다(= 이 테이블을 따로 둔 애초의 이유가
+ * 다시 발생할 때). 그때 `no such table`은 안 나므로 테이블 부재 판정이 못 잡고, 화면이
+ * "잠시 뒤 새로고침해 주세요"를 띄웠다 — 새로고침으로 낫지 않는 상태에 새로고침을 시킨다.
+ *
+ * SQLite는 **두 가지 문구**를 쓴다: 조회·UPDATE는 `no such column: design_fee`,
+ * INSERT는 `table funding_project_services has no column named design_fee`. 둘 다 본다 —
+ * 하나만 보면 읽기는 잡히는데 쓰기가 그대로 던진다.
+ *
+ * 이 판정은 **이 테이블을 겨눈 질의가 던진 오류에만** 쓴다. 컬럼 이름만 보므로 다른 테이블의
+ * 같은 이름을 구분하지 못한다.
+ */
+const SERVICE_COLUMNS = ['project_id', 'kind', 'design_fee', 'design_fee_paid_at', 'created_at', 'updated_at'];
+export const isServicesSchemaMismatch = (error: unknown): boolean =>
+  errorTexts(error).some((t) =>
+    SERVICE_COLUMNS.some((column) =>
+      new RegExp(`no such column:?\\s*\`?(\\w+\\.)?${column}\`?`, 'i').test(t)
+      || new RegExp(`has no column named\\s+\`?${column}\`?`, 'i').test(t)));
 
 const toView = (row: FundingProjectService): ProjectServiceView => ({
   kind: row.kind,
@@ -58,7 +83,7 @@ const toView = (row: FundingProjectService): ProjectServiceView => ({
   designFeePaidAt: row.designFeePaidAt ? row.designFeePaidAt.toISOString() : null,
 });
 
-export type ServiceUnavailableReason = 'missing_table' | 'error';
+export type ServiceUnavailableReason = 'missing_table' | 'schema_mismatch' | 'error';
 
 export type LoadServiceResult =
   | { available: true; service: ProjectServiceView | null }
@@ -66,7 +91,9 @@ export type LoadServiceResult =
 
 const unavailable = (error: unknown, where: string): { available: false; reason: ServiceUnavailableReason } => {
   if (isMissingServicesTable(error)) return { available: false, reason: 'missing_table' };
+  // 부분 스키마도 로그에 남긴다 — 어느 컬럼이 없는지는 오류 본문에만 있다.
   console.error(`[funding] ${where} 실패`, error);
+  if (isServicesSchemaMismatch(error)) return { available: false, reason: 'schema_mismatch' };
   return { available: false, reason: 'error' };
 };
 
@@ -98,7 +125,19 @@ export const loadProjectServiceMap = async (): Promise<LoadServiceMapResult> => 
 
 export type ServiceWriteResult =
   | { ok: true; service: ProjectServiceView | null }
-  | { ok: false; code: 'not_found' | 'unavailable' | 'no_service' };
+  | { ok: false; code: 'not_found' | 'unavailable' | 'schema_mismatch' | 'no_service' };
+
+/**
+ * 쓰기가 던진 오류를 코드로 바꾼다. 스키마 문제는 **사람이 읽을 안내로 돌려주고**(라우트가
+ * 503), 그 밖의 오류는 그대로 던진다 — 진짜 장애가 "마이그레이션을 돌리세요"로 가려지면
+ * 운영자가 엉뚱한 조치를 한다. 어느 쪽이든 원문은 서버 로그에 남는다.
+ */
+const writeFailure = (error: unknown, where: string, projectId: string): ServiceWriteResult => {
+  if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
+  console.error(`[funding] ${where} 실패 (projectId=${projectId})`, error);
+  if (isServicesSchemaMismatch(error)) return { ok: false, code: 'schema_mismatch' };
+  throw error;
+};
 
 /**
  * 서비스 종류를 정한다.
@@ -152,8 +191,7 @@ export const setProjectService = async (
     console.warn(`[funding] 스튜디오 서비스 지정 (projectId=${projectId}, kind=${kind}, actor=${actor})`);
     return { ok: true, service: toView(row) };
   } catch (error) {
-    if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
-    throw error;
+    return writeFailure(error, 'setProjectService', projectId);
   }
 };
 
@@ -185,7 +223,6 @@ export const setDesignFeePaid = async (
     );
     return { ok: true, service: toView(rows[0]) };
   } catch (error) {
-    if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
-    throw error;
+    return writeFailure(error, 'setDesignFeePaid', projectId);
   }
 };

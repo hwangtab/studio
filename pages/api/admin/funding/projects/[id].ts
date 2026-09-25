@@ -272,22 +272,34 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    */
   if (b.action === 'set_studio_service' || b.action === 'set_design_fee_paid') {
     let result: ServiceWriteResult;
-    if (b.action === 'set_studio_service') {
-      const kind = b.kind;
-      if (kind !== 'none' && kind !== 'design' && kind !== 'release') {
-        return res.status(400).json({ ok: false, message: 'kind는 none·design·release 중 하나여야 합니다.' });
+    /**
+     * 다른 분기(심사·공개 상태·정산)와 같은 try/catch를 둔다 — 예전에는 이 블록만 없어서
+     * 라이브러리가 던지는 오류가 그대로 500이 됐고, 운영자가 보는 것은 "처리에 실패했습니다."
+     * 하나뿐이었다(서버 로그에 어느 프로젝트인지도 안 남았다).
+     */
+    try {
+      if (b.action === 'set_studio_service') {
+        const kind = b.kind;
+        if (kind !== 'none' && kind !== 'design' && kind !== 'release') {
+          return res.status(400).json({ ok: false, message: 'kind는 none·design·release 중 하나여야 합니다.' });
+        }
+        result = await setProjectService(id, kind, now, auth.actor);
+      } else {
+        if (typeof b.paid !== 'boolean') {
+          return res.status(400).json({ ok: false, message: 'paid는 true 또는 false여야 합니다.' });
+        }
+        result = await setDesignFeePaid(id, b.paid, now, auth.actor);
       }
-      result = await setProjectService(id, kind, now, auth.actor);
-    } else {
-      if (typeof b.paid !== 'boolean') {
-        return res.status(400).json({ ok: false, message: 'paid는 true 또는 false여야 합니다.' });
-      }
-      result = await setDesignFeePaid(id, b.paid, now, auth.actor);
+    } catch (error: unknown) {
+      console.error(`[funding] 스튜디오 서비스 쓰기 예외 (id=${id}, action=${b.action}):`, error);
+      return res.status(500).json({ ok: false, message: '스튜디오 서비스를 저장하지 못했습니다. 서버 로그를 확인해 주세요.' });
     }
     if (result.ok) return res.status(200).json({ ok: true, service: result.service });
     const failure: Record<typeof result.code, [number, string]> = {
       not_found: [404, '프로젝트를 찾을 수 없습니다.'],
       unavailable: [503, '운영 DB에 마이그레이션 0037(funding_project_services)이 아직 적용되지 않았습니다. npm run db:migrate 뒤 다시 시도해 주세요.'],
+      // 테이블은 있는데 컬럼이 없는 상태 — 새로고침으로는 낫지 않는다는 것을 말해야 한다.
+      schema_mismatch: [503, 'funding_project_services 테이블의 스키마가 코드보다 오래되었습니다(컬럼 누락). npm run db:migrate로 마이그레이션을 적용해야 합니다 — 새로고침으로는 해결되지 않습니다.'],
       no_service: [400, '먼저 서비스 종류(설계 대행·발매 프로젝트 연계)를 지정해 주세요.'],
     };
     const [status, message] = failure[result.code];
