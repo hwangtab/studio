@@ -2272,7 +2272,7 @@
             "Ý tưởng & định hướng album",
             "Thu âm giọng hát (Studio NOL nội bộ)",
             "Định hướng giọng hát",
-            "Tuyển dụng & phối hợp nhạc công session (guitar, bass, trống, v.v.)",
+            "Tuyển dụng & phối hợp nhạc công session (guitar, bass, trống, v.v.; thù lao nhạc công tính theo chi phí thực tế)",
             "Hòa âm (nội bộ)",
             "Mastering (nội bộ)",
             "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2284,7 +2284,7 @@
           "deliverablesExcluded": [
             "Artwork bìa (có thể kết nối designer, chi phí riêng)",
             "MV / video trực tiếp",
-            "4+ nhạc công session (báo giá riêng)",
+            "Thù lao nhạc công session (chỉ thu đúng chi phí thực tế, không phí giới thiệu)",
             "Phát hành vật lý (CD / LP)",
             "Ngân sách quảng cáo mạng xã hội"
           ],
@@ -2299,8 +2299,8 @@
               "detail": "1 bài cơ bản → mỗi bài thêm +₩300K~500K"
             },
             {
-              "label": "Số nhạc công session",
-              "detail": "Bao gồm 1~2 người → từ 3 người trở lên +₩200K/người"
+              "label": "Thù lao nhạc công session",
+              "detail": "Không bao gồm trong gói → chỉ cộng thêm chi phí thực tế của nhạc công (không phí giới thiệu)"
             },
             {
               "label": "Độ sâu phối khí",
@@ -2322,7 +2322,7 @@
             },
             {
               "question": "Mức giá này bao gồm những gì?",
-              "answer": "Thu âm vocal và mix là nền tảng, cộng thêm điều phối session, arrangement, master, phân phối và PR truyền thông khi phạm vi mở rộng. Đây không phải thuê phòng thu đơn thuần mà là chi phí đồng hành cùng bạn suốt quá trình phát hành. Tùy session và arrangement; chúng tôi sẽ báo giá tùy chỉnh sau tư vấn."
+              "answer": "Thu âm vocal và mix là nền tảng, cộng thêm điều phối session, arrangement, master, phân phối và PR truyền thông khi phạm vi mở rộng. Đây không phải thuê phòng thu đơn thuần mà là chi phí đồng hành cùng bạn suốt quá trình phát hành. Tùy session và arrangement; chúng tôi sẽ báo giá tùy chỉnh sau tư vấn. Thù lao nhạc công session không nằm trong gói; chúng tôi chỉ thu đúng khoản trả cho nhạc công, không thu phí giới thiệu."
             },
             {
               "question": "Các bạn sẽ không thay đổi bài hát của tôi mà không hỏi đúng không?",
@@ -2420,7 +2420,7 @@
             "Tuyển chọn danh sách bài & sắp xếp thứ tự",
             "Thu âm giọng hát (Studio NOL nội bộ) — tất cả bài",
             "Định hướng giọng hát",
-            "Tuyển dụng & phối hợp nhạc công session",
+            "Tuyển dụng & phối hợp nhạc công session (thù lao nhạc công tính theo chi phí thực tế)",
             "Hòa âm (nội bộ) — đồng nhất âm sắc tất cả bài",
             "Mastering (nội bộ)",
             "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2433,13 +2433,13 @@
           "deliverablesExcluded": [
             "Artwork bìa (có thể kết nối designer, chi phí riêng)",
             "MV / video trực tiếp",
-            "5+ nhạc công session (báo giá riêng)",
+            "Thù lao nhạc công session (chỉ thu đúng chi phí thực tế, không phí giới thiệu)",
             "Phát hành vật lý (CD / LP)",
             "Ngân sách quảng cáo mạng xã hội"
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "EP từ ~₩1.8M (3-5 bài)",
-          "priceRationale": "Gói trọn gói 4 bài (lên kế hoạch, thu âm, mix, master, phát hành, thông cáo) là mức sàn. Lên kế hoạch, phát hành và thông cáo là chi phí cố định không đổi theo số bài, nên EP 3 bài cũng bắt đầu từ mức sàn này; đội session, độ sâu phối khí và số vòng PR cộng thêm phía trên.",
+          "priceRationale": "Gói trọn gói 4 bài (lên kế hoạch, thu âm, mix, master, phát hành, thông cáo) là mức sàn. Lên kế hoạch, phát hành và thông cáo là chi phí cố định không đổi theo số bài, nên EP 3 bài cũng bắt đầu từ mức sàn này; độ sâu phối khí và số vòng PR cộng thêm phía trên. Thù lao nhạc công session không bao gồm và được tính theo chi phí thực tế.",
           "priceNote": "Báo giá tùy chỉnh sau tư vấn miễn phí.",
           "priceFactorsTitle": "Giá được quyết định bởi các yếu tố sau",
           "priceFactors": [
@@ -2448,8 +2448,8 @@
               "detail": "3-4 bài cơ bản → 5 bài +₩500K"
             },
             {
-              "label": "Quy mô session",
-              "detail": "Vocal + 1~2 session → thu live ban nhạc +₩1M~2M"
+              "label": "Thù lao nhạc công session",
+              "detail": "Không bao gồm trong gói → chỉ cộng thêm chi phí thực tế của nhạc công (không phí giới thiệu)"
             },
             {
               "label": "Chiến dịch single chủ lực",
@@ -2569,7 +2569,7 @@
             "Danh sách bài & thiết kế thứ tự album",
             "Thu âm giọng hát (Studio NOL nội bộ) — tất cả bài",
             "Định hướng giọng hát",
-            "Tuyển dụng & phối hợp nhạc công session",
+            "Tuyển dụng & phối hợp nhạc công session (thù lao nhạc công tính theo chi phí thực tế)",
             "Hòa âm (nội bộ) — âm sắc thống nhất toàn album",
             "Mastering (nội bộ)",
             "Phân phối nhạc số (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2586,7 +2586,7 @@
             "MV / video trực tiếp",
             "Ngân sách quảng cáo mạng xã hội",
             "Phát hành vật lý (CD / LP)",
-            "Bổ sung session lớn (báo giá riêng)"
+            "Thù lao nhạc công session (chỉ thu đúng chi phí thực tế, không phí giới thiệu)"
           ],
           "priceSectionTitle": "Khoảng giá",
           "priceRange": "Từ khoảng ₩3.4M",
@@ -2599,8 +2599,8 @@
               "detail": "8 bài cơ bản → 10 bài +₩2M / 12 bài +₩4M"
             },
             {
-              "label": "Quy mô session",
-              "detail": "Vocal + session lõi → ban nhạc đầy đủ·dàn dây·hợp xướng +₩2M~5M"
+              "label": "Thù lao nhạc công session",
+              "detail": "Không bao gồm trong gói → chỉ cộng thêm chi phí thực tế của nhạc công (không phí giới thiệu)"
             },
             {
               "label": "Độ sâu A&R",

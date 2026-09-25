@@ -2300,7 +2300,7 @@
             "Album concept & direction",
             "Vocal recording (Studio NOL in-house)",
             "Vocal direction",
-            "Session musician sourcing & coordination (guitar, bass, drums, etc.)",
+            "Session musician sourcing & coordination (guitar, bass, drums, etc. — musician fees billed at cost)",
             "Mixing (in-house)",
             "Mastering (in-house)",
             "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2312,7 +2312,7 @@
           "deliverablesExcluded": [
             "Cover artwork (can connect with designer, cost separate)",
             "Music video / live video",
-            "4+ session musicians (separate quote)",
+            "Session musician fees (passed through at actual cost, no booking fee)",
             "Physical release (CD / LP)",
             "SNS advertising budget"
           ],
@@ -2327,8 +2327,8 @@
               "detail": "1 track baseline → each additional track +₩300K–500K"
             },
             {
-              "label": "Session musicians",
-              "detail": "1–2 included → 3+ musicians +₩200K per person"
+              "label": "Session musician fees",
+              "detail": "Not included in the bundle → only the musicians' actual fees are added (no booking fee)"
             },
             {
               "label": "Arrangement depth",
@@ -2350,7 +2350,7 @@
             },
             {
               "question": "What's included at this price?",
-              "answer": "Vocal recording and mixing are the base, with session coordination, arrangement, mastering, distribution, and media PR added as scope grows. This isn't simple studio rental — it's the cost of accompanying you through the whole release process. Varies by session lineup and arrangement scope; we'll give a custom quote after consultation."
+              "answer": "Vocal recording and mixing are the base, with session coordination, arrangement, mastering, distribution, and media PR added as scope grows. This isn't simple studio rental — it's the cost of accompanying you through the whole release process. Varies by session lineup and arrangement scope; we'll give a custom quote after consultation. Session musician fees are not part of the bundle — we pass through only what the musicians are paid, with no booking fee."
             },
             {
               "question": "You won't change my song without asking, right?",
@@ -2448,7 +2448,7 @@
             "Track list curation & sequencing",
             "Vocal recording (Studio NOL in-house) — all tracks",
             "Vocal direction",
-            "Session musician sourcing & coordination",
+            "Session musician sourcing & coordination (musician fees billed at cost)",
             "Mixing (in-house) — tone-matching across all tracks",
             "Mastering (in-house)",
             "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2461,13 +2461,13 @@
           "deliverablesExcluded": [
             "Cover artwork (can connect with designer, cost separate)",
             "Music video / live video",
-            "5+ session musicians (separate quote)",
+            "Session musician fees (passed through at actual cost, no booking fee)",
             "Physical release (CD / LP)",
             "SNS advertising budget"
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "EP from ~₩1.8M (3-5 tracks)",
-          "priceRationale": "The 4-track all-in-one package (planning, recording, mixing, mastering, distribution, press) sets the floor. Planning, distribution and press are fixed costs that do not scale with track count, so a 3-track EP starts at the same floor; session lineup, arrangement depth and extra PR rounds build on top.",
+          "priceRationale": "The 4-track all-in-one package (planning, recording, mixing, mastering, distribution, press) sets the floor. Planning, distribution and press are fixed costs that do not scale with track count, so a 3-track EP starts at the same floor; arrangement depth and extra PR rounds build on top. Session musician fees are not included and are billed at actual cost.",
           "priceNote": "Custom quote after free consultation.",
           "priceFactorsTitle": "What drives the price",
           "priceFactors": [
@@ -2476,8 +2476,8 @@
               "detail": "3-4 tracks baseline → 5 tracks +₩500K"
             },
             {
-              "label": "Session scale",
-              "detail": "Vocal + 1–2 sessions → full live band tracking +₩1M–2M"
+              "label": "Session musician fees",
+              "detail": "Not included in the bundle → only the musicians' actual fees are added (no booking fee)"
             },
             {
               "label": "Lead single campaign",
@@ -2597,7 +2597,7 @@
             "Album track list & sequence design",
             "Vocal recording (Studio NOL in-house) — all tracks",
             "Vocal direction",
-            "Session musician sourcing & coordination",
+            "Session musician sourcing & coordination (musician fees billed at cost)",
             "Mixing (in-house) — unified album tone",
             "Mastering (in-house)",
             "Digital distribution (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2614,7 +2614,7 @@
             "Music video / live video",
             "SNS advertising budget",
             "Physical release (CD / LP)",
-            "Large session additions (separate quote)"
+            "Session musician fees (passed through at actual cost, no booking fee)"
           ],
           "priceSectionTitle": "Price Range",
           "priceRange": "From approx. ₩3.4M",
@@ -2627,8 +2627,8 @@
               "detail": "8 tracks baseline → 10 tracks +₩2M / 12 tracks +₩4M"
             },
             {
-              "label": "Session scale",
-              "detail": "Vocal + core sessions → full band · strings · choir +₩2M–5M"
+              "label": "Session musician fees",
+              "detail": "Not included in the bundle → only the musicians' actual fees are added (no booking fee)"
             },
             {
               "label": "A&R depth",

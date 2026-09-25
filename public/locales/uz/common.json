@@ -2272,7 +2272,7 @@
             "Albom kontseptsiyasi va yo'nalishi",
             "Vokal yozish (Studio NOL ichki)",
             "Vokal yo'naltirish",
-            "Sessiya musiqachilarini qidirish va muvofiqlashtirish (gitara, bas, baraban va h.k.)",
+            "Sessiya musiqachilarini qidirish va muvofiqlashtirish (gitara, bas, baraban va h.k.; musiqachilar haqi haqiqiy xarajat bo‘yicha)",
             "Mikslash (ichki)",
             "Mastering (ichki)",
             "Raqamli tarqatish (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2284,7 +2284,7 @@
           "deliverablesExcluded": [
             "Muqova rasmi (dizayner bilan bog'lash mumkin, narxi alohida)",
             "Musiqa videosi / jonli video",
-            "4+ sessiya musiqachisi (alohida taklif)",
+            "Sessiya musiqachilari haqi (faqat haqiqiy xarajat, vositachilik haqisiz)",
             "Jismoniy chiqarish (CD / LP)",
             "SMM reklama byudjeti"
           ],
@@ -2299,8 +2299,8 @@
               "detail": "1 trek asos → har qo‘shimcha trek +₩300K~500K"
             },
             {
-              "label": "Sessiya musiqachilari",
-              "detail": "1~2 nafar kiritilgan → 3 nafardan ortiq +₩200K/kishi"
+              "label": "Sessiya musiqachilari haqi",
+              "detail": "Paketga kirmaydi → faqat musiqachilarning haqiqiy haqi qo‘shiladi (vositachilik haqisiz)"
             },
             {
               "label": "Aranjirovka chuqurligi",
@@ -2322,7 +2322,7 @@
             },
             {
               "question": "Bu narxga qanday ishlar kiradi?",
-              "answer": "Vokal yozuvi va miks asos, ko‘lam kengaygan sari sessiya muvofiqlashtirish, aranjirovka, mastering, distribyutsiya va media PR qo‘shilib narx oshib boradi. Bu oddiy studiya ijarasi emas, butun reliz jarayoni davomida siz bilan birga bo‘lish narxi. Sessiya tarkibi va aranjirovkaga qarab o‘zgaradi; konsultatsiyadan keyin moslashtirilgan taklif beramiz."
+              "answer": "Vokal yozuvi va miks asos, ko‘lam kengaygan sari sessiya muvofiqlashtirish, aranjirovka, mastering, distribyutsiya va media PR qo‘shilib narx oshib boradi. Bu oddiy studiya ijarasi emas, butun reliz jarayoni davomida siz bilan birga bo‘lish narxi. Sessiya tarkibi va aranjirovkaga qarab o‘zgaradi; konsultatsiyadan keyin moslashtirilgan taklif beramiz. Sessiya musiqachilari haqi paketga kirmaydi — musiqachilarga to‘lanadigan summaning o‘zini olamiz, vositachilik haqisiz."
             },
             {
               "question": "So'ramasdan qo'shiqni o'zgartirmaysizlarmi?",
@@ -2420,7 +2420,7 @@
             "Trek ro'yxatini tanlash va tartib belgilash",
             "Vokal yozish (Studio NOL ichki) — barcha treklar",
             "Vokal yo'naltirish",
-            "Sessiya musiqachilarini qidirish va muvofiqlashtirish",
+            "Sessiya musiqachilarini qidirish va muvofiqlashtirish (musiqachilar haqi haqiqiy xarajat bo‘yicha)",
             "Mikslash (ichki) — barcha treklar ohang uyg'unligi",
             "Mastering (ichki)",
             "Raqamli tarqatish (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2433,13 +2433,13 @@
           "deliverablesExcluded": [
             "Muqova rasmi (dizayner bilan bog'lash mumkin, narxi alohida)",
             "Musiqa videosi / jonli video",
-            "5+ sessiya musiqachisi (alohida taklif)",
+            "Sessiya musiqachilari haqi (faqat haqiqiy xarajat, vositachilik haqisiz)",
             "Jismoniy chiqarish (CD / LP)",
             "SMM reklama byudjeti"
           ],
           "priceSectionTitle": "Narx oralig'i",
           "priceRange": "EP ~₩1.8M dan (3-5 trek)",
-          "priceRationale": "4 treklik to'liq paket (reja, yozuv, miks, mastering, tarqatish, press-reliz) quyi chegara. Reja, tarqatish va press-reliz trek soniga bog'liq bo'lmagan qat'iy xarajatlar, shuning uchun 3 treklik EP ham shu chegaradan boshlanadi; sessiya tarkibi, aranjirovka chuqurligi va PR raundlari uning ustiga qo'shiladi.",
+          "priceRationale": "4 treklik to'liq paket (reja, yozuv, miks, mastering, tarqatish, press-reliz) quyi chegara. Reja, tarqatish va press-reliz trek soniga bog'liq bo'lmagan qat'iy xarajatlar, shuning uchun 3 treklik EP ham shu chegaradan boshlanadi; aranjirovka chuqurligi va PR raundlari uning ustiga qo'shiladi. Sessiya musiqachilari haqi kirmaydi va haqiqiy xarajat bo'yicha olinadi.",
           "priceNote": "Bepul maslahatdan so'ng maxsus narx.",
           "priceFactorsTitle": "Narxni belgilovchi omillar",
           "priceFactors": [
@@ -2448,8 +2448,8 @@
               "detail": "3-4 trek asos → 5 trek +₩500K"
             },
             {
-              "label": "Sessiya hajmi",
-              "detail": "Vokal + 1~2 sessiya → jonli guruh tracking +₩1M~2M"
+              "label": "Sessiya musiqachilari haqi",
+              "detail": "Paketga kirmaydi → faqat musiqachilarning haqiqiy haqi qo‘shiladi (vositachilik haqisiz)"
             },
             {
               "label": "Bosh singl kampaniyasi",
@@ -2569,7 +2569,7 @@
             "Albom trek ro'yxati va tartib loyihalash",
             "Vokal yozish (Studio NOL ichki) — barcha treklar",
             "Vokal yo'naltirish",
-            "Sessiya musiqachilarini qidirish va muvofiqlashtirish",
+            "Sessiya musiqachilarini qidirish va muvofiqlashtirish (musiqachilar haqi haqiqiy xarajat bo‘yicha)",
             "Mikslash (ichki) — yaxlit albom ohang birligi",
             "Mastering (ichki)",
             "Raqamli tarqatish (Melon · Spotify · Apple Music · YouTube Music)",
@@ -2586,7 +2586,7 @@
             "Musiqa videosi / jonli video",
             "SMM reklama byudjeti",
             "Jismoniy chiqarish (CD / LP)",
-            "Katta sessiya qo'shimchalari (alohida taklif)"
+            "Sessiya musiqachilari haqi (faqat haqiqiy xarajat, vositachilik haqisiz)"
           ],
           "priceSectionTitle": "Narx oralig'i",
           "priceRange": "Taxminan ₩3.4M dan",
@@ -2599,8 +2599,8 @@
               "detail": "8 trek asos → 10 trek +₩2M / 12 trek +₩4M"
             },
             {
-              "label": "Sessiya hajmi",
-              "detail": "Vokal + asosiy sessiya → to‘liq guruh·simlar·xor +₩2M~5M"
+              "label": "Sessiya musiqachilari haqi",
+              "detail": "Paketga kirmaydi → faqat musiqachilarning haqiqiy haqi qo‘shiladi (vositachilik haqisiz)"
             },
             {
               "label": "A&R chuqurligi",

@@ -12,7 +12,8 @@ import type { Locale } from '../lib/i18n';
 // 쓸 것(일괄 치환 금지).
 // 반면 통합 번들(SINGLE/EP/ALBUM_BUNDLE_PRICE)과 발매 티어 하한(RELEASE_*_FROM_PRICE)이
 // 같은 값인 것은 우연이 아니라 의도다: 번들은 발매 프로젝트의 고정 구성 엔트리이고,
-// 발매 티어는 거기서 세션 편성·편곡 확장·PR 라운드를 올려 견적하는 같은 상품군이다.
+// 발매 티어는 거기서 편곡 확장·PR 라운드를 올려 견적하는 같은 상품군이다.
+// 세션 연주비는 번들에도 티어에도 들어 있지 않다 — 연주자 실비만 따로 받는다(섭외 수수료 없음).
 // 한쪽을 바꾸면 다른 쪽도 함께 움직여야 한다 (data/pricing.test.ts가 강제).
 // ─────────────────────────────────────────────────────────────────────────────
 export const RECORDING_HOURLY_PRICE = 100000;
@@ -111,7 +112,7 @@ export const RELEASE_PRESS_INTRO_ENDS_ON = '2026-12-31';
 // 발매 프로젝트 티어 시작가 — 한국어 카피 SSOT는 common.json releaseProject.tiers.*.range
 // ("약 50만원~" 등)이며, data/pricing.test.ts가 아래 상수와 만원 표기 정합을 강제한다.
 // 각 티어의 하한은 아래 통합 번들(고정 구성 정찰가)과 같은 값이다 — 번들이 발매
-// 프로젝트의 최소 구성이고, 세션 편성·편곡 확장·PR 라운드는 그 위로 견적된다.
+// 프로젝트의 최소 구성이고, 편곡 확장·PR 라운드는 그 위로 견적된다. 세션 연주비는 실비 별도.
 export const RELEASE_SINGLE_FROM_PRICE = 500000; // = SINGLE_BUNDLE_PRICE (1곡)
 export const RELEASE_EP_FROM_PRICE = 1800000; // = EP_BUNDLE_PRICE (4곡 기준 하한, 상품은 3-5곡)
 export const RELEASE_ALBUM_FROM_PRICE = 3400000; // = ALBUM_BUNDLE_PRICE (8곡 기준)
