@@ -73,7 +73,7 @@ const BASE_PROJECT = {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha' });
   (loadProjectForAdmin as jest.Mock).mockResolvedValue(BASE_PROJECT);
   (revalidateFundingPaths as jest.Mock).mockResolvedValue(null);
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue(null);
@@ -467,7 +467,7 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
     (setProjectService as jest.Mock).mockResolvedValue({ ok: true, service: SERVICE });
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'design' });
     expect(r.status).toBe(200);
-    expect(setProjectService).toHaveBeenCalledWith('proj-1', 'design', expect.any(Date));
+    expect(setProjectService).toHaveBeenCalledWith('proj-1', 'design', expect.any(Date), 'kyungha');
     expect(decideProject).not.toHaveBeenCalled();
     expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
     expect(revalidateFundingPaths).not.toHaveBeenCalled();
@@ -493,6 +493,18 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
     (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: false, code });
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
     expect(r.status).toBe(expected);
+  });
+
+  /**
+   * 55만원(공급가 50만 + 부가세)의 입금을 사람이 눈으로 확인해 기록하는 자리라, 같은 라우트의
+   * 정산·계정 변경처럼 수행자가 남아야 한다 — 통장 대사에서 그 돈이 안 보일 때 누가 무엇을
+   * 보고 눌렀는지 물을 수단이 필요하다.
+   */
+  it('입금 확인에 수행자를 함께 넘긴다', async () => {
+    (setDesignFeePaid as jest.Mock).mockResolvedValue({ ok: true, service: { ...SERVICE, designFeePaidAt: '2026-10-03T00:00:00.000Z' } });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_design_fee_paid', paid: true });
+    expect(r.status).toBe(200);
+    expect(setDesignFeePaid).toHaveBeenCalledWith('proj-1', true, expect.any(Date), 'kyungha');
   });
 
   it('0037 미적용이면 운영자에게 마이그레이션을 안내한다', async () => {

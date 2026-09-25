@@ -36,6 +36,12 @@ const migrate = async (skip: (file: string) => boolean = () => false) => {
 
 afterEach(() => client.close());
 
+/** 쓰기 감사 로그가 남기는 수행자. 서버 로그로만 남으므로 테스트 출력에서는 잠재운다. */
+const ACTOR = 'kyungha';
+let warnSpy: jest.SpyInstance;
+beforeEach(() => { warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {}); });
+afterEach(() => warnSpy.mockRestore());
+
 const seedProject = async (): Promise<string> => {
   const [creator] = await mockDb.insert(schema.fundingCreators).values({ email: `c-${crypto.randomUUID()}@example.com`, name: '개설자' }).returning();
   const [project] = await mockDb.insert(schema.fundingProjects).values({
@@ -62,48 +68,65 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
 
   it('처음 지정할 때 지금의 설계비를 약정가로 복사한다', async () => {
     const id = await seedProject();
-    const r = await setProjectService(id, 'design', new Date('2026-09-26T00:00:00Z'));
+    const r = await setProjectService(id, 'design', new Date('2026-09-26T00:00:00Z'), ACTOR);
     expect(r).toEqual({ ok: true, service: { kind: 'design', designFee: FUNDING_DESIGN_PRICE, designFeePaidAt: null } });
   });
 
   it('종류를 바꿔도 약정 설계비와 입금 시각은 그대로다', async () => {
     const id = await seedProject();
-    await setProjectService(id, 'design', new Date('2026-09-26T00:00:00Z'));
+    await setProjectService(id, 'design', new Date('2026-09-26T00:00:00Z'), ACTOR);
     // 약정 뒤 정가가 바뀐 상황을 흉내 낸다 — 기존 행의 금액은 지켜져야 한다.
     await client.execute({ sql: 'UPDATE funding_project_services SET design_fee = ? WHERE project_id = ?', args: [400000, id] });
     const paidAt = new Date('2026-09-27T01:00:00Z');
-    await setDesignFeePaid(id, true, paidAt);
+    await setDesignFeePaid(id, true, paidAt, ACTOR);
 
-    const r = await setProjectService(id, 'release', new Date('2026-09-28T00:00:00Z'));
+    const r = await setProjectService(id, 'release', new Date('2026-09-28T00:00:00Z'), ACTOR);
     expect(r).toEqual({ ok: true, service: { kind: 'release', designFee: 400000, designFeePaidAt: paidAt.toISOString() } });
   });
 
   it('입금 확인을 켜고 끈다', async () => {
     const id = await seedProject();
-    await setProjectService(id, 'design', new Date());
-    const on = await setDesignFeePaid(id, true, new Date('2026-09-27T00:00:00Z'));
+    await setProjectService(id, 'design', new Date(), ACTOR);
+    const on = await setDesignFeePaid(id, true, new Date('2026-09-27T00:00:00Z'), ACTOR);
     expect(on.ok && on.service?.designFeePaidAt).toBe('2026-09-27T00:00:00.000Z');
-    const off = await setDesignFeePaid(id, false, new Date());
+    const off = await setDesignFeePaid(id, false, new Date(), ACTOR);
     expect(off.ok && off.service?.designFeePaidAt).toBeNull();
   });
 
   it('직접 개설로 되돌리면 행이 지워진다', async () => {
     const id = await seedProject();
-    await setProjectService(id, 'design', new Date());
-    expect(await setProjectService(id, 'none', new Date())).toEqual({ ok: true, service: null });
+    await setProjectService(id, 'design', new Date(), ACTOR);
+    expect(await setProjectService(id, 'none', new Date(), ACTOR)).toEqual({ ok: true, service: null });
     expect(await loadProjectService(id)).toEqual({ available: true, service: null });
   });
 
-  it('없는 프로젝트는 not_found, 서비스 없는 프로젝트의 입금 확인은 no_service', async () => {
-    expect(await setProjectService('nope', 'design', new Date())).toEqual({ ok: false, code: 'not_found' });
+  /**
+   * 시스템 밖의 돈을 사람이 눈으로 확인해 기록하는 자리라, 수행자가 어딘가에는 남아야 한다 —
+   * 남는 것이 타임스탬프 하나뿐이면 통장 대사에서 그 돈이 안 보일 때 물을 데가 없다.
+   * 새 컬럼을 만들지 않고 개설자 계정 변경과 같은 방식(서버 로그)을 쓴다.
+   */
+  it('종류 지정과 입금 확인이 수행자를 서버 로그에 남긴다', async () => {
     const id = await seedProject();
-    expect(await setDesignFeePaid(id, true, new Date())).toEqual({ ok: false, code: 'no_service' });
+    await setProjectService(id, 'design', new Date('2026-09-26T00:00:00Z'), ACTOR);
+    await setDesignFeePaid(id, true, new Date('2026-10-03T00:00:00Z'), ACTOR);
+    await setDesignFeePaid(id, false, new Date('2026-10-04T00:00:00Z'), ACTOR);
+    const logged = warnSpy.mock.calls.map((c) => String(c[0]));
+    expect(logged).toHaveLength(3);
+    expect(logged.every((line) => line.includes(`actor=${ACTOR}`))).toBe(true);
+    expect(logged[1]).toContain('설계비 입금 확인');
+    expect(logged[2]).toContain('설계비 입금 확인 취소');
+  });
+
+  it('없는 프로젝트는 not_found, 서비스 없는 프로젝트의 입금 확인은 no_service', async () => {
+    expect(await setProjectService('nope', 'design', new Date(), ACTOR)).toEqual({ ok: false, code: 'not_found' });
+    const id = await seedProject();
+    expect(await setDesignFeePaid(id, true, new Date(), ACTOR)).toEqual({ ok: false, code: 'no_service' });
   });
 
   it('목록용 맵은 서비스가 있는 프로젝트만 싣는다', async () => {
     const a = await seedProject();
     const b = await seedProject();
-    await setProjectService(a, 'release', new Date());
+    await setProjectService(a, 'release', new Date(), ACTOR);
     const map = await loadProjectServiceMap();
     expect(map.available).toBe(true);
     if (map.available) {
@@ -124,8 +147,8 @@ describe('0037이 아직 적용되지 않은 운영 DB', () => {
 
   it('쓰기는 unavailable을 돌려준다', async () => {
     const id = await seedProject();
-    expect(await setProjectService(id, 'design', new Date())).toEqual({ ok: false, code: 'unavailable' });
-    expect(await setDesignFeePaid(id, true, new Date())).toEqual({ ok: false, code: 'unavailable' });
+    expect(await setProjectService(id, 'design', new Date(), ACTOR)).toEqual({ ok: false, code: 'unavailable' });
+    expect(await setDesignFeePaid(id, true, new Date(), ACTOR)).toEqual({ ok: false, code: 'unavailable' });
   });
 
   it('funding_projects 조회는 영향이 없다 — 별도 테이블로 둔 이유', async () => {

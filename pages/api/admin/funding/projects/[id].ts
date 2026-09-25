@@ -277,12 +277,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (kind !== 'none' && kind !== 'design' && kind !== 'release') {
         return res.status(400).json({ ok: false, message: 'kind는 none·design·release 중 하나여야 합니다.' });
       }
-      result = await setProjectService(id, kind, now);
+      result = await setProjectService(id, kind, now, auth.actor);
     } else {
       if (typeof b.paid !== 'boolean') {
         return res.status(400).json({ ok: false, message: 'paid는 true 또는 false여야 합니다.' });
       }
-      result = await setDesignFeePaid(id, b.paid, now);
+      result = await setDesignFeePaid(id, b.paid, now, auth.actor);
     }
     if (result.ok) return res.status(200).json({ ok: true, service: result.service });
     const failure: Record<typeof result.code, [number, string]> = {

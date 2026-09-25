@@ -111,6 +111,7 @@ export const setProjectService = async (
   projectId: string,
   kind: FundingProjectServiceKind | 'none',
   now: Date,
+  actor: string,
 ): Promise<ServiceWriteResult> => {
   const db = getDb();
   const project = await db
@@ -123,6 +124,7 @@ export const setProjectService = async (
   try {
     if (kind === 'none') {
       await db.delete(fundingProjectServices).where(eq(fundingProjectServices.projectId, projectId));
+      console.warn(`[funding] 스튜디오 서비스 지정 (projectId=${projectId}, kind=none, actor=${actor})`);
       return { ok: true, service: null };
     }
     const [row] = await db
@@ -133,6 +135,7 @@ export const setProjectService = async (
         set: { kind, updatedAt: now },
       })
       .returning();
+    console.warn(`[funding] 스튜디오 서비스 지정 (projectId=${projectId}, kind=${kind}, actor=${actor})`);
     return { ok: true, service: toView(row) };
   } catch (error) {
     if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
@@ -140,11 +143,20 @@ export const setProjectService = async (
   }
 };
 
-/** 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않은 프로젝트면 no_service. */
+/**
+ * 설계비 입금 확인을 켜거나 끈다. 서비스가 지정되지 않은 프로젝트면 no_service.
+ *
+ * **수행자를 서버 로그에 남긴다.** 이 자리는 시스템 밖의 돈(55만원 = 공급가 50만 + 부가세)이
+ * 통장에 들어온 것을 사람이 눈으로 확인해 기록하는 곳인데, 남는 것이 타임스탬프 하나뿐이라
+ * 나중에 통장 대사에서 그 돈이 안 보일 때 누가 무엇을 보고 눌렀는지 물을 수단이 없었다.
+ * 개설자 계정 변경과 같은 방식이다(새 컬럼 없이 서버 로그 — pages/api/admin/funding/projects/[id].ts).
+ * 정산 쪽이 쓰는 privacy_access_logs는 개인정보 복호화 기록이라 이 액션에는 맞지 않는다.
+ */
 export const setDesignFeePaid = async (
   projectId: string,
   paid: boolean,
   now: Date,
+  actor: string,
 ): Promise<ServiceWriteResult> => {
   try {
     const rows = await getDb()
@@ -153,6 +165,10 @@ export const setDesignFeePaid = async (
       .where(eq(fundingProjectServices.projectId, projectId))
       .returning();
     if (!rows[0]) return { ok: false, code: 'no_service' };
+    console.warn(
+      `[funding] 설계비 입금 ${paid ? '확인' : '확인 취소'} `
+        + `(projectId=${projectId}, designFee=${rows[0].designFee}, actor=${actor})`,
+    );
     return { ok: true, service: toView(rows[0]) };
   } catch (error) {
     if (isMissingServicesTable(error)) return { ok: false, code: 'unavailable' };
