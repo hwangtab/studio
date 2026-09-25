@@ -843,6 +843,24 @@ export const subscriptions = sqliteTable('subscriptions', {
    */
   pausedReason: text('paused_reason', { enum: subscriptionPausedReasonEnum }),
   /**
+   * 운영자 정지가 **언제 끝나는가.** `pausedReason = 'operator'`일 때만 채워진다.
+   *
+   * 이 값이 생긴 이유는 "기한 없는 정지"가 되돌릴 수 없는 종료로 끝나기 때문이다. 운영자가
+   * 세워 둔 구독은 어떤 코드도 깨우지 않아서, 3년이 지나면 `closeDormantSubscriptions`가
+   * 방치로 보고 `ended`로 닫는다 — `resumeSubscription`은 `paused`만 받으므로 그 뒤에는
+   * 되살릴 길이 없다. 날짜를 함께 받으면 그 상태가 애초에 생기지 않는다.
+   *
+   * 이 시각이 지나면 `resumeExpiredPauses`(`lib/billing/service.ts`)가 매일 도는 청구
+   * cron에서 구독을 `active`로 되돌리고 이 칸을 비운다. **비우는 것이 멱등의 근거다** —
+   * 같은 구독이 두 번 재개되지 않는다.
+   *
+   * NULL의 뜻은 둘이다: 정지가 아니거나(대부분의 행), 이 컬럼이 생기기 전에 세워진
+   * 운영자 정지다. 뒤쪽은 예전과 똑같이 방치 경보(`lib/ops/healthCheck.ts`)가 맡는다 —
+   * 새 정지에만 기한을 강제하고 옛 행을 건드리지 않는 쪽이, 운영자가 모르는 사이에
+   * 임의의 날짜가 붙어 자동 재개가 도는 것보다 안전하다.
+   */
+  pausedUntil: integer('paused_until', { mode: 'timestamp' }),
+  /**
    * 현재 유효한 카드. billing_keys가 subscriptions를 참조하므로 여기서 FK를 걸면
    * 순환 참조가 된다 — 값은 billing_keys.id이고 무결성은 서비스 계층이 지킨다.
    */
