@@ -4,7 +4,8 @@ import { getDb } from '../../db/client';
 import { bookings, orders, payments, refunds, workOrders, type Order } from '../../db/schema';
 import { refundIdempotencyKey } from './cancel';
 import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './email';
-import { calendarIdFor, createBookingEvent, type BookingCalendar } from './gcal';
+import { hasCalendarConflict } from './calendarGuard';
+import { calendarForService, calendarIdFor, createBookingEvent, type BookingCalendar } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, cancelPayment, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
@@ -83,6 +84,9 @@ const isCustomerDecline = (code: string): boolean => DECLINE_CODE_PATTERN.test(c
 
 const GENERIC_TOSS_ERROR_MESSAGE = '결제 승인 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
 const EXPIRED_MESSAGE = '결제 대기 시간이 만료된 주문입니다. 슬롯이 해제되었으니 다시 예약해 주세요.';
+const CALENDAR_CONFLICT_MESSAGE =
+  '선점 뒤 해당 시간에 다른 일정이 잡혀 결제를 진행하지 않았습니다. 결제되지 않았으니 다른 시간대로 다시 예약해 주세요.';
+const CALENDAR_UNAVAILABLE_MESSAGE = '예약 캘린더를 확인할 수 없어 결제를 진행하지 않았습니다. 잠시 후 다시 시도해 주세요.';
 const RECORDING_FAILED_MESSAGE =
   '결제는 완료되었으나 예약 확정 처리가 지연되고 있습니다. 몇 분 내 자동 확정되며, 지속되면 010-4255-7893으로 연락 주세요.';
 
@@ -464,6 +468,28 @@ export const confirmBookingPayment = async (
       createdAt: (order.createdAt as Date).toISOString(),
     });
     return { ok: false, code: 'invalid_state', message: EXPIRED_MESSAGE };
+  }
+
+  // 승인 직전 캘린더 재확인 — 선점(생성 가드)과 결제 사이 최대 15분 동안 운영자가 캘린더에
+  // 같은 시간 일정을 손으로 넣을 수 있다. 캘린더는 pending 선점을 모르므로 그 일정은 그대로
+  // 들어가고, 여기서 안 보면 같은 자원에 확정 예약 + 수동 일정이 공존한다. 아직 승인 전이라
+  // 거부는 과금 없이 끝난다. 웹훅 경로(이미 승인된 돈)는 거절하지 않는다 — 기존 정책대로
+  // 확정하고, 겹침은 캘린더에 나란히 떠서 운영자가 본다.
+  if (order.type === 'session' && !options.trustedByWebhook) {
+    const b = order.bookings[0];
+    if (b) {
+      let conflict = false;
+      try {
+        conflict = await hasCalendarConflict(calendarForService(b.serviceType), b.startAt, b.endAt, b.roomNumber);
+      } catch (error) {
+        console.error('[booking-confirm] 승인 전 캘린더 재확인 실패 — 토스를 부르지 않고 거부', { orderNo: order.orderNo, error });
+        return { ok: false, code: 'invalid_state', message: CALENDAR_UNAVAILABLE_MESSAGE };
+      }
+      if (conflict) {
+        console.error('[booking-confirm] 선점 뒤 캘린더 겹침 — 토스를 부르지 않고 거부', { orderNo: order.orderNo, room: b.roomNumber });
+        return { ok: false, code: 'invalid_state', message: CALENDAR_CONFLICT_MESSAGE };
+      }
+    }
   }
 
   const db = getDb();

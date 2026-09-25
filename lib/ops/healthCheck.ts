@@ -1,9 +1,9 @@
-import { and, eq, inArray, isNotNull, isNull, lt, ne, or, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
-import { calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
+import { calendarForService, calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { getAllFundingProjects } from '../funding/projects';
@@ -285,18 +285,23 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 하루 한 번 돌리므로 그 창에 걸릴 확률은 무시할 수준이고, 걸려도 다음 날 자동으로 사라진다 —
    * 과소보고(무증상 이중예약)보다 훨씬 안전한 방향이다.
    */
-  // 연습실 캘린더가 비활성이면 연습실 예약은 등록 대상이 아니다(confirm.ts가 건너뛴다) —
-  // 그 행을 "미등록"으로 세면 매일 꺼지지 않는 긴급 메일이 된다.
-  const gcalGap = await db
-    .select({ id: bookings.id, gcalError: bookings.gcalError, gcalEventId: bookings.gcalEventId })
+  // 캘린더가 비활성인 연습실 예약(공용도 방별도 env 없음)은 등록 대상이 아니다 — confirm.ts가
+  // 같은 판정(isCalendarActive(which, room))으로 건너뛴다. 그 행을 "미등록"으로 세면 매일
+  // 꺼지지 않는 긴급 메일이 된다. 판정은 행별 room_number로 한다 — 공용만 보면 방별 env만
+  // 있는 구성에서 실제로 쓰는 예약까지 통째로 빠진다.
+  const gcalGapRows = await db
+    .select({
+      id: bookings.id, gcalError: bookings.gcalError, gcalEventId: bookings.gcalEventId,
+      serviceType: bookings.serviceType, roomNumber: bookings.roomNumber,
+    })
     .from(bookings)
     .where(
       and(
         eq(bookings.status, 'confirmed'),
         or(isNotNull(bookings.gcalError), isNull(bookings.gcalEventId)),
-        isCalendarActive('practice-room') ? undefined : ne(bookings.serviceType, 'practice-room'),
       ),
     );
+  const gcalGap = gcalGapRows.filter((row) => isCalendarActive(calendarForService(row.serviceType), row.roomNumber));
 
   if (gcalGap.length > 0) {
     const untried = gcalGap.filter((row) => row.gcalError === null && row.gcalEventId === null);

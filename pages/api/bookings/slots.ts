@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../../db/client';
 import { availabilityBlocks, bookings } from '../../../db/schema';
-import { fetchBusyRanges, isCalendarActive, type BookingCalendar, type BusyRange } from '../../../lib/booking/gcal';
+import { calendarIdFor, fetchBusyRanges, isCalendarActive, type BookingCalendar, type BusyRange } from '../../../lib/booking/gcal';
 import { daysUntilKst, kstDateTime } from '../../../lib/booking/kst';
 import { getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
 import { buildDaySlots, mergeRoomSlots, type DaySlot } from '../../../lib/booking/slots';
@@ -27,7 +27,8 @@ const getCachedBusyRanges = async (
 ): Promise<BusyRange[]> => {
   // 조회 창(dayStart~dayEnd)이 상품 영업시간에서 오므로 키에 창을 넣는다 — 날짜만 키로 쓰면
   // 좁은 창으로 채운 항목이 넓은 창 요청에 재사용돼 창 밖 바쁨이 사라진다(fail-open).
-  const key = `${calendar}:${room ?? ''}:${dateKey}:${dayStart.getTime()}-${dayEnd.getTime()}`;
+  // 키는 해석된 캘린더 id — 방 여럿이 공용 캘린더를 볼 때 같은 freeBusy를 방 수만큼 부르지 않는다.
+  const key = `${calendarIdFor(calendar, room) ?? calendar}:${dateKey}:${dayStart.getTime()}-${dayEnd.getTime()}`;
   const cached = freeBusyCache.get(key);
   const now = Date.now();
   if (cached && now - cached.at < FREEBUSY_TTL_MS) return cached.ranges;
@@ -110,21 +111,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const calendarBusyFor = async (calendar: BookingCalendar, room: string | null): Promise<BusyRange[]> =>
     isCalendarActive(calendar, room) ? getCachedBusyRanges(calendar, date, dayStart, dayEnd, room) : [];
 
-  try {
-    // 방 자원: 방마다 자기 캘린더(방별 env, 없으면 공용)의 바쁨 + DB 바쁨으로 슬롯을 계산해
-    // 하나라도 비면 가능으로 합친다. 어느 방이 배정되는지는 결제 시점에 정한다(service.ts).
-    if (resourceKindOf(product) === 'rooms') {
-      const perRoom: DaySlot[][] = await Promise.all(
-        (product.rooms ?? []).map(async (room) => {
-          const [calendarBusy, dbBusy] = await Promise.all([calendarBusyFor('practice-room', room), dbBusyFor(room)]);
-          return buildDaySlots({ ...slotArgs, busy: [...calendarBusy, ...dbBusy] });
-        }),
-      );
-      return res.status(200).json({ ok: true, slots: mergeRoomSlots(perRoom) });
+  // 방 자원: 방마다 자기 캘린더(방별 env, 없으면 공용)의 바쁨 + DB 바쁨으로 슬롯을 계산해
+  // 하나라도 비면 가능으로 합친다. 어느 방이 배정되는지는 결제 시점에 정한다(service.ts).
+  // try는 캘린더 조회만 감싼다 — DB 오류를 "캘린더 503"으로 보고하면 운영자가 엉뚱한 곳을 본다.
+  if (resourceKindOf(product) === 'rooms') {
+    const rooms = product.rooms ?? [];
+    let calendarBusyByRoom: BusyRange[][];
+    try {
+      calendarBusyByRoom = await Promise.all(rooms.map((room) => calendarBusyFor('practice-room', room)));
+    } catch (error) {
+      console.error('[booking-slots] FreeBusy 조회 실패 — fail-closed 503', { calendar: 'practice-room', date, error });
+      return res.status(503).json({ ok: false, code: 'calendar_unavailable' });
     }
-  } catch (error) {
-    console.error('[booking-slots] FreeBusy 조회 실패 — fail-closed 503', { calendar: 'practice-room', date, error });
-    return res.status(503).json({ ok: false, code: 'calendar_unavailable' });
+    const perRoom: DaySlot[][] = await Promise.all(
+      rooms.map(async (room, i) => buildDaySlots({ ...slotArgs, busy: [...calendarBusyByRoom[i], ...(await dbBusyFor(room))] })),
+    );
+    return res.status(200).json({ ok: true, slots: mergeRoomSlots(perRoom) });
   }
 
   let calendarBusy: BusyRange[];
