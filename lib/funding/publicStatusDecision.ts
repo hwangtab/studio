@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { fundingProjects } from '../../db/schema';
+import { fundingProjectPayouts, fundingProjects } from '../../db/schema';
 import { loadProjectForAdmin } from './adminProjects';
 import { toKstDateString } from './creatorDateInput';
 
@@ -51,6 +51,22 @@ export const decidePublicStatus = async (
 
   const db = getDb();
   const lastmod = toKstDateString(now);
+
+  /**
+   * 정산이 기록된 프로젝트는 다시 열지 않는다.
+   *
+   * `close → record_payout → reopen`이 정산의 `not_closed` 게이트를 무력화한다. 다시 열린
+   * 뒤 들어온 후원은 `funding_project_payouts.project_id`가 UNIQUE라 `already_recorded`로
+   * 거절되어 **영구히 정산에서 빠진다** — 개설자가 받을 돈이 조용히 사라지는 경로다.
+   * 되돌려야 하면 정산 기록을 지우는 것이 먼저이고, 그건 운영자가 의식적으로 할 일이다.
+   */
+  if (action === 'reopen') {
+    const [payout] = await db.select({ id: fundingProjectPayouts.id }).from(fundingProjectPayouts)
+      .where(eq(fundingProjectPayouts.projectId, projectId)).limit(1);
+    if (payout) {
+      return deny('conflict', '정산이 기록된 프로젝트는 다시 열 수 없습니다. 다시 열면 이후 들어온 후원이 영구히 정산에서 빠집니다.');
+    }
+  }
 
   if (action === 'close' || action === 'reopen') {
     const fromStatus = action === 'close' ? 'auto' : 'closed';
