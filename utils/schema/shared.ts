@@ -26,9 +26,26 @@ export const MIXING_OFFER_NAMES: Record<Locale, string> = {
   ko: '믹싱 & 마스터링', en: 'Mixing & Mastering', zh: '混音与母带',
   es: 'Mezcla y Masterización', vi: 'Mixing & Mastering', th: 'มิกซ์ & มาสเตอริ่ง', uz: 'Miks & Mastering',
 };
-export const PRODUCTION_OFFER_NAMES: Record<Locale, string> = {
-  ko: '음반 기획', en: 'Album Production', zh: '唱片策划',
-  es: 'Producción de Álbum', vi: 'Sản xuất album', th: 'การผลิตอัลบั้ม', uz: 'Albom prodakshn',
+export const LESSON_OFFER_NAMES: Record<Locale, string> = {
+  ko: '1:1 프로듀싱 레슨 (미디·작곡·믹싱)', en: '1:1 Producing Lesson (MIDI, composition, mixing)',
+  zh: '1对1音乐制作课程 (MIDI·作曲·混音)', es: 'Clase 1:1 de Producción (MIDI, composición, mezcla)',
+  vi: 'Lớp sản xuất âm nhạc 1:1 (MIDI, sáng tác, mixing)', th: 'คลาสโปรดิวซ์ 1:1 (MIDI แต่งเพลง มิกซ์)',
+  uz: "1:1 prodyuserlik darsi (MIDI, kompozitsiya, miks)",
+};
+export const WEDDING_OFFER_NAMES: Record<Locale, string> = {
+  ko: '축가 완성 패키지', en: 'Wedding Song Complete Package', zh: '婚礼献唱完整套餐',
+  es: 'Paquete Completo de Canción de Boda', vi: 'Gói hoàn chỉnh bài hát cưới', th: 'แพ็กเกจเพลงงานแต่งครบชุด',
+  uz: "To'y qo'shig'i to'liq paketi",
+};
+export const VOICEOVER_OFFER_NAMES: Record<Locale, string> = {
+  ko: '성우·내레이션 녹음', en: 'Voiceover & Narration Recording', zh: '配音/旁白录音',
+  es: 'Grabación de Locución y Narración', vi: 'Thu âm lồng tiếng & dẫn chuyện', th: 'อัดเสียงพากย์/บรรยาย',
+  uz: 'Voiceover va hikoya yozuvi',
+};
+export const COVER_VIDEO_OFFER_NAMES: Record<Locale, string> = {
+  ko: '커버 영상 촬영 올인원 패키지', en: 'Cover Video All-in-One Package', zh: '翻唱视频一站式套餐',
+  es: 'Paquete Todo en Uno para Video Cover', vi: 'Gói trọn gói quay video cover', th: 'แพ็กเกจวิดีโอคัฟเวอร์ครบวงจร',
+  uz: 'Cover video uchun hammasi bir paketda',
 };
 export const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
   ko: '음악연습실 입주 프로그램', en: 'Premium Practice Room Residency', zh: '高级练习室入驻计划',

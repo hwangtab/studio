@@ -55,7 +55,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 
 Source site: ${siteUrl}
 Purpose: Comprehensive, machine-readable index of Studio NOL content for AI search engines (ChatGPT, Perplexity, Claude, Gemini) and LLM crawlers.
-Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Services: recording, mixing, mastering, practice room residency, 1:1 producing lessons (MIDI/composition/mixing — no vocal or instrument lessons), album release production with worldwide distribution and PR, wedding song & voice acting recording.
+Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Services: recording, mixing, mastering, practice room residency, 1:1 producing lessons (MIDI/composition/mixing — no vocal or instrument lessons), album release production with worldwide distribution and PR, standalone music release PR (no production required), crowdfunding campaign design, cover video packages, wedding song & voice acting recording.
 
 - Primary sitemap: ${siteUrl}/sitemap.xml
 - Short version: ${siteUrl}/llms.txt
@@ -70,7 +70,7 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 - **Phone**: ${CANONICAL_FACTS.phoneIntl} · **KakaoTalk**: open.kakao.com/me/nol
 - **Pricing (KRW, VAT excl.)**:
 ${renderPriceFacts(2)}
-- **Operating Notes**: Hourly practice room rental and band rehearsal rooms are NOT operated. Practice room is monthly residency only.
+- **Operating Notes**: Band rehearsal rooms are NOT operated. Vocal and instrument performance lessons are NOT offered (lessons are producing lessons only).
 
 `;
 

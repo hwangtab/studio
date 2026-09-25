@@ -26,7 +26,6 @@ import {
   MIXING_LEVEL2_PRICE,
   MIXING_LEVEL3_PRICE,
   PRACTICE_ROOM_MONTHLY_PRICE,
-  PRODUCTION_OFFER_PRICE,
   RECORDING_HOURLY_PRICE,
   RELEASE_ALBUM_FROM_PRICE,
   RELEASE_EP_FROM_PRICE,
@@ -134,11 +133,18 @@ describe('가격 SSOT 정합', () => {
       RECORDING_HOURLY_PRICE,
       VOCAL_PACKAGE_PRICE,
       MIXING_LEVEL1_PRICE,
-      PRODUCTION_OFFER_PRICE,
+      // 2026-09-25 — 화면 어디에도 없던 '음반 기획 350,000원'(PRODUCTION_OFFER_PRICE)을
+      // 실제 진입 상품인 싱글 발매 프로젝트(= 싱글 통합 번들)로 교체
+      SINGLE_BUNDLE_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
       // 2026-09-16 추가 — 홈 OfferCatalog가 pricing 페이지의 19개 오퍼 중 홍보·펀딩 설계를 빼고 있었다
       RELEASE_PRESS_INTRO_PRICE,
       FUNDING_DESIGN_PRICE,
+      // 2026-09-25 추가 — LP가 있는 상품인데 전역 카탈로그에 없던 넷
+      LESSON_MONTHLY_PRICE,
+      WEDDING_PACKAGE_PRICE,
+      VOICEOVER_HOURLY_PRICE,
+      COVER_VIDEO_PACKAGE_PRICE,
     ];
     expect(biz.makesOffer.map((o) => o.price)).toEqual(expected);
     expect(biz.hasOfferCatalog.itemListElement.map((o) => o.price)).toEqual(expected);
@@ -358,7 +364,6 @@ describe('가격 SSOT 정합', () => {
       RENTAL_HOURLY_PRICE,
       LESSON_MONTHLY_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
-      PRODUCTION_OFFER_PRICE,
       RELEASE_SINGLE_FROM_PRICE,
       RELEASE_EP_FROM_PRICE,
       RELEASE_ALBUM_FROM_PRICE,

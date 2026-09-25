@@ -74,8 +74,6 @@ export const FUNDING_PAYMENT_FEE_PERCENT = 3.3; // 부가세 포함
 /** 펀딩 정산 원천징수율. ARTIST_SUPPORT_WITHHOLDING_PERCENT와 값은 같지만 별도
  * 상품의 별도 상수다 — 한쪽 요율이 바뀌어도 다른 쪽이 딸려가면 안 된다. */
 export const FUNDING_WITHHOLDING_PERCENT = 3.3;
-/** schema.org '음반 기획(Album Production)' 오퍼 앵커 — 별개 오퍼(레슨·축가와 값만 동일). */
-export const PRODUCTION_OFFER_PRICE = 350000;
 /** 부가 서비스 '기획/컨설팅' 시간당 단가(service-consulting). */
 export const CONSULTING_HOURLY_PRICE = 50000;
 

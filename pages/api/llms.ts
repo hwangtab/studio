@@ -9,6 +9,7 @@ import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../../data/practiceRoomRegionLPs';
 import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_AVAILABILITY_UPDATED_ON, PRACTICE_ROOM_VACANT_ROOMS } from '../../data/practiceRoomAvailability';
 import {
+  COVER_VIDEO_PACKAGE_PRICE,
   DAY_LOCK_PRICE,
   FUNDING_DESIGN_PRICE,
   FUNDING_SUCCESS_FEE_PERCENT,
@@ -230,6 +231,12 @@ export const artistsLine = (siteUrl: string, locale: Locale): string =>
     ? `- Support Artists (monthly patronage for artists who recorded here): ${siteUrl}/ko/artists\n`
     : '';
 
+// 펀딩은 ko 전용 라우트다 — 다른 로케일의 /funding은 404라 ko 목록에만 싣는다.
+const fundingKeyPageLine = (siteUrl: string, locale: Locale): string =>
+  locale === 'ko'
+    ? `- Reward Crowdfunding (Studio NOL's own platform): ${siteUrl}/ko/funding\n`
+    : '';
+
 const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## Key Pages (${label})
 
 - Home: ${siteUrl}/${locale}
@@ -239,7 +246,8 @@ const localeKeyPages = (siteUrl: string, locale: Locale, label: string) => `## K
   - Single Release tier: ${siteUrl}/${locale}/release-project/single
   - EP Release tier: ${siteUrl}/${locale}/release-project/ep
   - Full Album Release tier: ${siteUrl}/${locale}/release-project/album
-- Cover Video Package: ${siteUrl}/${locale}/cover-video
+- Music Release PR (standalone, no production required): ${siteUrl}/${locale}/music-promotion
+${fundingKeyPageLine(siteUrl, locale)}- Cover Video Package: ${siteUrl}/${locale}/cover-video
 - Portfolio: ${siteUrl}/${locale}/portfolio
 ${artistsLine(siteUrl, locale)}- Stories & News: ${siteUrl}/${locale}/stories
 - Contact: ${siteUrl}/${locale}/contact
@@ -377,6 +385,8 @@ const ENGLISH_QUICK_FACTS = (siteUrl: string) => `
 Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul), with English-language booking and inquiry support (email / KakaoTalk). Recording sessions are run in Korean; mixing and mastering can be ordered fully remotely in English. The studio sits 5 minutes on foot from Yeonsinnae Station (Seoul Metro Line 3 / Line 6 transfer, Exit 4).
 
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 producing lessons (MIDI, composition, mixing — no vocal or instrument lessons), voice-over recording, wedding song packages, and album release production (modern A&R planning, worldwide distribution, PR pitched to international media, radio and playlist curators).
+- Music Release PR (standalone — no production required): ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW). Press release in five languages, press kit page, and outreach to Korean music outlets plus media, radio and record shops in 60 countries, with a send report. Placement is not guaranteed. Page: ${siteUrl}/en/music-promotion
+- Also offered: cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW — filming, recording, mixing, 4K edit) and crowdfunding campaign design (${krw(FUNDING_DESIGN_PRICE)} KRW + ${FUNDING_SUCCESS_FEE_PERCENT}% success fee).
 - English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). All-in-one bundles cover planning, recording, mixing, mastering, digital distribution and release PR: 1 song ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% below production line-item total); EP 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15%); album 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20%). Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
@@ -390,10 +400,10 @@ const CHINESE_QUICK_FACTS = (siteUrl: string) => `
 
 Studio NOL 是首尔的一家专业录音棚，位于恩平区延新内 (Yeonsinnae)，地铁 3 号线与 6 号线换乘站 4 号出口步行 5 分钟。网站提供简体中文页面；预约与咨询可通过 KakaoTalk 或电子邮件用英文沟通（工作室不提供中文口语沟通）。
 
-- 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐制作课程（MIDI·作曲·混音，不提供声乐课）、配音录音、婚礼献唱套餐、发行企划（A&R 策划·全球发行·面向海外媒体/电台/歌单的宣传推广）。
+- 服务范围：人声录音、混音、母带制作、月租练习室（₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金）、1 对 1 音乐制作课程（MIDI·作曲·混音，不提供声乐课）、配音录音、婚礼献唱套餐、翻唱视频套餐、发行企划（A&R 策划·全球发行·面向海外媒体/电台/歌单的宣传推广），以及可单独委托的音源发行宣传（无需在本工作室制作）。
 - 录音报价：按小时 ₩${krw(RECORDING_HOURLY_PRICE)}，1 首歌人声套餐（3 小时含专属工程师）₩${krw(VOCAL_PACKAGE_PRICE)}；一站式套餐包含策划、录音、混音、母带、数字发行登记与发行宣传：1 首 ₩${krw(SINGLE_BUNDLE_PRICE)}（较制作单项合计便宜约 9%）；EP 4 首 ₩${krw(EP_BUNDLE_PRICE)}（约 15%）；专辑 8 首 ₩${krw(ALBUM_BUNDLE_PRICE)}（约 20%）。
 - 混音／母带：每首歌 ₩${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)}，按音轨数分级，含 2 次修改。
-- 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供按小时租赁或乐队排练房。
+- 月租练习室：₩${krw(PRACTICE_ROOM_MONTHLY_PRICE)}／月，0 押金，24 小时进出，私人隔音房 STC 60+。不提供乐队排练房。
 - 婚礼献唱套餐：₩${krw(WEDDING_PACKAGE_PRICE)}（2 小时录音 + 人声调音 + 混音及母带），新手友好。
 - 在韩华人音乐人指南（中文 native）：hub 见 ${siteUrl}/zh/stories/recording-in-seoul-for-chinese-musicians，另有 3 篇 spoke 指南（练习室预约、价格、交通指引）。
 - 联系方式：KakaoTalk (open.kakao.com/me/nol)、邮件 (hello@studionol.co.kr)、电话 ${CANONICAL_FACTS.phoneIntl}，24 小时内免费报价。
