@@ -3,7 +3,7 @@ import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
-import { fetchBusyRanges } from '../booking/gcal';
+import { calendarIdFor, fetchBusyRanges, type BookingCalendar } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import {
@@ -63,20 +63,29 @@ const sample = (values: string[]): string =>
  * 멈추는데**, 그 사실은 아무 데도 기록되지 않는다(고객 화면에 회색 문구 한 줄이 전부다).
  * 다른 점검과 달리 DB에 흔적이 없어서, 여기서 직접 찔러 보는 것 말고는 알 방법이 없다.
  */
-const checkCalendar = async (now: Date): Promise<HealthIssue | null> => {
-  try {
-    await fetchBusyRanges(now, new Date(now.getTime() + 24 * 60 * 60 * 1000));
-    return null;
-  } catch (error: unknown) {
-    return {
-      severity: 'high',
-      title: '예약 캘린더를 조회할 수 없습니다 — 예약 퍼널이 멈춰 있습니다',
-      detail:
-        '고객이 날짜를 골라도 시간대가 뜨지 않습니다(전 슬롯 503). ' +
-        'BOOKING_GCAL_ID·GOOGLE_SA_EMAIL·GOOGLE_SA_PRIVATE_KEY와 캘린더 공유 설정을 확인해 주세요.\n' +
-        `사유: ${error instanceof Error ? error.message : String(error)}`,
-    };
+const CALENDARS: ReadonlyArray<{ which: BookingCalendar; label: string; env: string }> = [
+  { which: 'studio', label: '녹음실', env: 'BOOKING_GCAL_ID' },
+  { which: 'practice-room', label: '연습실', env: 'PRACTICE_ROOM_GCAL_ID' },
+];
+
+const checkCalendar = async (now: Date): Promise<HealthIssue[]> => {
+  const issues: HealthIssue[] = [];
+  for (const cal of CALENDARS) {
+    if (cal.which === 'practice-room' && !calendarIdFor('practice-room')) continue;
+    try {
+      await fetchBusyRanges(now, new Date(now.getTime() + 24 * 60 * 60 * 1000), cal.which);
+    } catch (error: unknown) {
+      issues.push({
+        severity: 'high',
+        title: `${cal.label} 예약 캘린더를 조회할 수 없습니다 — ${cal.label} 예약 퍼널이 멈춰 있습니다`,
+        detail:
+          '고객이 날짜를 골라도 시간대가 뜨지 않습니다(전 슬롯 503). ' +
+          `${cal.env}·GOOGLE_SA_EMAIL·GOOGLE_SA_PRIVATE_KEY와 캘린더 공유 설정을 확인해 주세요.\n` +
+          `사유: ${error instanceof Error ? error.message : String(error)}`,
+      });
+    }
   }
+  return issues;
 };
 
 /**
@@ -666,8 +675,7 @@ const sortBySeverity = (issues: HealthIssue[]): HealthIssue[] => {
 export const runHealthCheck = async (now: Date = new Date()): Promise<HealthReport> => {
   const issues: HealthIssue[] = [];
 
-  const calendar = await checkCalendar(now);
-  if (calendar) issues.push(calendar);
+  issues.push(...(await checkCalendar(now)));
 
   const fieldKey = checkFieldCryptoKey();
   if (fieldKey) issues.push(fieldKey);

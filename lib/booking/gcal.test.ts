@@ -66,6 +66,27 @@ describe('fetchBusyRanges', () => {
     expect(mock.mock.calls[1][0]).toBe('https://www.googleapis.com/calendar/v3/freeBusy');
   });
 
+  it("calendar='practice-room'이면 PRACTICE_ROOM_GCAL_ID로 조회한다(녹음실과 같은 기준)", async () => {
+    const ROOMS_ID = 'rooms@group.calendar.google.com';
+    process.env.PRACTICE_ROOM_GCAL_ID = ROOMS_ID;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { fetchBusyRanges } = require('./gcal') as typeof import('./gcal');
+    const freeBusyResponse = {
+      ok: true,
+      json: async () => ({ calendars: { [ROOMS_ID]: { busy: [{ start: '2026-09-01T11:00:00Z', end: '2026-09-01T12:00:00Z' }] } } }),
+    };
+    const mock = jest.fn().mockResolvedValueOnce(tokenResponse).mockResolvedValueOnce(freeBusyResponse);
+    global.fetch = mock as unknown as typeof fetch;
+    try {
+      const result = await fetchBusyRanges(new Date('2026-09-01T00:00:00Z'), new Date('2026-09-02T00:00:00Z'), 'practice-room');
+      expect(result).toEqual([{ start: new Date('2026-09-01T11:00:00Z'), end: new Date('2026-09-01T12:00:00Z') }]);
+      const body = JSON.parse((mock.mock.calls[1][1] as RequestInit).body as string);
+      expect(body.items).toEqual([{ id: ROOMS_ID }]);
+    } finally {
+      delete process.env.PRACTICE_ROOM_GCAL_ID;
+    }
+  });
+
   it('busy 배열이 정상이면 BusyRange[]를 반환한다', async () => {
     // eslint-disable-next-line @typescript-eslint/no-require-imports
     const { fetchBusyRanges } = require('./gcal') as typeof import('./gcal');
