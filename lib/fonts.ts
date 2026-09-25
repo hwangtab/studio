@@ -30,6 +30,13 @@ import localFont from 'next/font/local';
 // 없어 이 조정이 적용되지 않고 Apple SD Gothic Neo로 넘어가는데, Pretendard가 이미 그
 // metric에 맞춰 설계돼 shift가 최소. declarations로 size-adjust를 걸면 Pretendard 본체가
 // rescale돼 시각 회귀가 나므로 보수적으로 미적용.
+//
+// fallback: [] — 폴백 목록은 여기가 아니라 tailwind.config.ts의 font-* 스택과
+// styles/globals.css의 `:root [data-locale]`이 든다. next/font는 이 배열을
+// --font-pretendard 변수 **안에** 펼쳐 넣기 때문에, 여기 한글 폰트를 두면 스택에서
+// Pretendard 바로 다음 자리를 차지해 로케일 폰트(--font-locale)가 끼어들 수 없다.
+// 그래서 zh 한자가 Apple SD Gothic Neo(한국식 자형)로 그려졌다(2026-09-25).
+// 변수에는 Pretendard와 next/font가 만드는 메트릭 조정 폴백("pretendard Fallback")만 남긴다.
 export const pretendard = localFont({
   src: './fonts/pretendard-variable.woff2',
   weight: '45 920',
@@ -37,7 +44,7 @@ export const pretendard = localFont({
   display: 'swap',
   preload: false,
   variable: '--font-pretendard',
-  fallback: ['-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'system-ui', 'sans-serif'],
+  fallback: [],
 });
 
 // hero h1 전용 micro-subset (7 locale × 모든 페이지 hero title 글자만, ~30KB).
@@ -60,5 +67,7 @@ export const pretendardHero = localFont({
   display: 'swap',
   preload: true,
   variable: '--font-pretendard-hero',
-  fallback: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'Apple SD Gothic Neo', 'Malgun Gothic', 'system-ui', 'sans-serif'],
+  // 위 pretendard와 같은 이유로 비운다 — font-hero 스택(tailwind.config.ts)이
+  // var(--font-pretendard) → var(--font-locale) → 시스템 폰트를 이어서 든다.
+  fallback: [],
 });

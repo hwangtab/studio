@@ -179,7 +179,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
    * 페이지에서 공개를 다시 켜도 되살아나지 않는다. 사유는 관리자 메모에 날짜와 함께 남는다.
    */
   const handleHideListing = () => {
-    const reason = window.prompt('후원자 명단에서 내리는 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다). 표시 이름과 응원 메시지가 함께 빠집니다.');
+    const reason = window.prompt('후원자 명단에서 내리는 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다). 표시 이름과 응원 메시지가 함께 빠집니다. 프로젝트 페이지에는 캐시 때문에 최대 몇 분 뒤 반영됩니다.');
     if (reason === null) return;
     if (!reason.trim()) {
       setNotice('명단에서 내리려면 사유를 입력해야 합니다.');
@@ -195,7 +195,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
   const handleRestoreListing = () =>
     run(
       () => patchPledge(pledge.id, { action: 'restore_listing' }),
-      `운영자 숨김을 해제할까요? 후원자가 공개에 동의해 두었다면 "${pledge.publicName ?? `${pledge.customerName} (실명)`}"(으)로 명단에 다시 뜹니다.`,
+      `운영자 숨김을 해제할까요? 후원자가 공개에 동의해 두었다면 "${pledge.publicName ?? `${pledge.customerName} (실명)`}"(으)로 명단에 다시 뜹니다(프로젝트 페이지에는 캐시 때문에 최대 몇 분 뒤 반영됩니다).`,
     );
 
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한

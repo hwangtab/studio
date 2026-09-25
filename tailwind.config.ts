@@ -89,15 +89,19 @@ const config: Config = {
         // 없음. preload=false로 font-display:swap에 의한 fallback paint 우선,
         // Pretendard는 lazy 도착 후 swap. fallback은 시스템 한글 폰트(Pretendard가
         // Apple SD Gothic Neo + Inter 베이스라 swap gap 시각적으로 작음).
-        sans: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        title: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        display: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
-        logo: ['var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        // var(--font-locale): Pretendard에 없는 글자(zh 한자·th 태국문자)가 넘어갈 자리.
+        // 기본값은 -apple-system이라 ko 등은 예전 스택과 같고, zh/th만 styles/globals.css의
+        // :root:lang()에서 PingFang SC·Leelawadee 등으로 바뀐다. 이 자리가 비어 있던 동안은
+        // zh 한자가 Apple SD Gothic Neo·Malgun Gothic(한국식 자형)과 섞여 그려졌다.
+        sans: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        title: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        display: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        logo: ['var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // hero h1 전용 micro-subset. var(--font-pretendard-hero)는 lib/fonts.ts의
         // pretendardHero (Pretendard Bold 700 weight, hero 텍스트 글자만 self-host,
         // ~30KB). preload=true라 critical path에서 swap 거의 즉시. 글리프 미포함
         // 글자는 fallback 변수(전체 Pretendard Variable)로 자동 swap.
-        hero: ['var(--font-pretendard-hero)', 'var(--font-pretendard)', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
+        hero: ['var(--font-pretendard-hero)', 'var(--font-pretendard)', 'var(--font-locale)', 'BlinkMacSystemFont', 'system-ui', 'Apple SD Gothic Neo', 'Malgun Gothic', 'sans-serif'],
         // 인라인 <code>/마크다운 인라인 코드용 monospace 스택.
         // Tailwind default와 유사하되 source-code-pro 선호 추가.
         mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'Liberation Mono', 'Courier New', 'monospace'],

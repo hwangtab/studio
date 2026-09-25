@@ -95,7 +95,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
   if (hiddenByOperator) {
     return (
       <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-        <p className="text-sm text-gray-900 dark:text-white">
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
           운영 기준에 따라 후원자 명단에서 내려 두었습니다. 표시 이름·메시지는 공개되지 않습니다.
           다시 올리기를 원하시면 문의해 주세요.
         </p>
@@ -115,8 +115,8 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
   if (variant === 'success' && isPublic) {
     return (
       <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
-        <p className="text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라갑니다.
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라갑니다.
         </p>
         <p className="typo-card-meta mt-1">표시 이름을 바꾸거나 내리려면 펀딩 확인 페이지를 이용해 주세요.</p>
         {feedback}
@@ -127,8 +127,8 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
   return (
     <div className="mt-6 rounded-xl border border-gray-200 p-4 text-left dark:border-gray-700">
       {isPublic ? (
-        <p className="text-sm text-gray-900 dark:text-white">
-          후원자 명단에 <span className="font-semibold">{savedDisplay}</span>(으)로 올라가 있습니다.
+        <p className="break-keep text-sm text-gray-900 dark:text-white">
+          후원자 명단에 <span className="whitespace-nowrap"><span className="font-semibold">{savedDisplay}</span>(으)로</span> 올라가 있습니다.
         </p>
       ) : (
         <>

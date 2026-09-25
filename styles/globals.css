@@ -12,6 +12,10 @@
     --primary-rgb: 109, 40, 217;
     color-scheme: light dark;
 
+    /* Pretendard 다음 자리 — 아래 :root:lang() 블록 참고. 기본값은 예전 스택의
+       두 번째 항목과 같아 ko·en 등은 렌더가 바뀌지 않는다. */
+    --font-locale: -apple-system;
+
     /* ── Liquid Glass 재질 토큰 ─────────────────────────────────────────
        재질은 3단계: regular(기본) / clear(화려한 배경 위 소수 요소) / solid(폴백).
        컴포넌트는 tailwind.config.ts의 .glass-* 컴포넌트 클래스만 사용하고,
@@ -100,7 +104,7 @@
   body {
     /* next/font CSS variable(@font-face)는 _app.tsx에서 import될 때만 주입됨.
        body는 해당 div 밖에 있으므로 var() 의존 없이 안전한 sans-serif 스택 직접 지정. */
-    font-family: -apple-system, BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    font-family: var(--font-locale), BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
     @apply text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900;
     word-break: keep-all;
     line-height: 1.6;
@@ -143,17 +147,34 @@
     @apply text-heading-3;
   }
 
-  /* 중국어(zh): Pretendard는 한자 미포함 → Windows SimSun(명조) 폴백 방지.
-     _app.tsx wrapper div에 data-locale이 설정되므로 body가 아닌 wrapper를 직접 타깃.
-     PingFang SC(macOS/iOS) → Microsoft YaHei(Windows) → WenQuanYi(Linux) 순으로 명시. */
-  [data-locale="zh"] {
-    font-family: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', '微软雅黑', 'WenQuanYi Micro Hei', sans-serif;
-  }
+  /* 로케일 폰트 — Pretendard에 없는 글자(zh 한자·th 태국문자)가 넘어갈 자리.
 
-  /* 태국어(th): Pretendard는 태국 문자 미포함.
-     Leelawadee UI(Windows) → Noto Sans Thai → Thonburi(macOS/iOS) 순으로 지정. */
-  [data-locale="th"] {
-    font-family: 'Leelawadee UI', 'Leelawadee', 'Noto Sans Thai', Thonburi, sans-serif;
+     예전엔 wrapper의 [data-locale="zh"]{font-family} 한 줄이었는데 두 곳에서 졌다.
+     ① 같은 div의 next/font 클래스(명시도 동일, 빌드 CSS에서 더 뒤)가 이겼고
+     ② h1~h6는 font-title을 요소에 직접 선언해 상속 자체를 받지 않았다.
+     ③ 그 font-title의 var(--font-pretendard)가 next/font의 fallback 배열(한글 시스템
+        폰트)을 변수 안에 품고 있었다 — lib/fonts.ts에서 fallback을 비운 이유.
+     그래서 zh 한자는 Pretendard 다음 항목인 -apple-system → Apple SD Gothic Neo·
+     Malgun Gothic으로 떨어져, 한 문단 안에서 한국식 자형과 PingFang이 섞여 그려졌다
+     (2026-09-25 프로덕션 macOS 실측: /zh 카드 본문 Apple SD Gothic Neo 37자 · PingFang SC 15자).
+
+     지금은 폰트 스택을 통째로 갈지 않고 Pretendard 다음 자리(--font-locale)만 바꾼다.
+     라틴·숫자는 전 로케일이 Pretendard로 같고, 한자·태국문자만 여기로 온다.
+     html lang에 거는 이유: 모달 포털처럼 wrapper 밖에 렌더되는 노드도 받아야 하고,
+     로케일 전환 시 components/Layout.tsx가 document.documentElement.lang을 갱신한다.
+     Tailwind font-* 스택과 body가 var(--font-locale)을 쓰고, wrapper는 next/font 클래스를
+     이겨야 하므로 명시도를 한 단계 올린 아래 규칙이 맡는다. */
+  :root:lang(zh) {
+    /* PingFang SC(macOS/iOS) → Microsoft YaHei(Windows) → WenQuanYi(Linux).
+       Windows SimSun(명조) 폴백도 여기서 막힌다. */
+    --font-locale: 'PingFang SC', 'Noto Sans SC', 'Microsoft YaHei', '微软雅黑', 'WenQuanYi Micro Hei', -apple-system;
+  }
+  :root:lang(th) {
+    /* Leelawadee UI(Windows) → Noto Sans Thai → Thonburi(macOS/iOS) */
+    --font-locale: 'Leelawadee UI', 'Leelawadee', 'Noto Sans Thai', Thonburi, -apple-system;
+  }
+  :root [data-locale] {
+    font-family: var(--font-pretendard), var(--font-locale), BlinkMacSystemFont, system-ui, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
   }
 }
 
