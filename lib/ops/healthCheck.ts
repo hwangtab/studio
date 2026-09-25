@@ -2,10 +2,11 @@ import { and, eq, inArray, isNotNull, isNull, lt, ne, or, sql } from 'drizzle-or
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
-import { bookings, contracts, fundingPledges, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
+import { bookings, contracts, fundingPledges, fundingProjectPayouts, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
 import { calendarIdFor, fetchBusyRanges, isCalendarActive, roomCalendarEnvKey, type BookingCalendar } from '../booking/gcal';
 import { PRACTICE_ROOM_HOURLY_ROOMS } from '../booking/products';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
+import { buildFundingPayoutPreview } from '../funding/payout';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
 import { ORDER_LEGAL_RETENTION_YEARS } from '../privacy/orderRetention';
@@ -732,6 +733,44 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         `결제 후 ${ORDER_LEGAL_RETENTION_YEARS}년이 되면 고객 이름·연락처·이메일이 지워집니다. ` +
         '아직 리워드를 안 보낸 상태로 그 시점이 90일 안으로 다가왔습니다 — ' +
         '지금 발송하거나, 환불하거나, 계속 보관할지 관리자 > 펀딩 상세에서 판단해 주세요.',
+    });
+  }
+
+  /**
+   * **기록된 정산액과 지금 계산한 값이 어긋난 프로젝트.**
+   *
+   * `funding_project_payouts`는 불변이다(기록 시점의 숫자가 이체 근거다). 그런데 기록 뒤에
+   * 환불이 들어오면 실제로 나가야 할 돈이 줄어드는데, 그 차이를 보여 주는 곳이 관리자 상세
+   * 패널 하나뿐이었다 — 이체 대기 중인 정산을 기록값대로 보내면 과다 이체가 된다.
+   *
+   * 판정은 화면과 같은 함수(`buildFundingPayoutPreview`)로 다시 계산한 `netAmount`다. 한
+   * 프로젝트씩 조회하므로 정산이 기록된 프로젝트 수만큼 도는데, 이 표는 프로젝트당 한 행이고
+   * 지금 몇 건 규모다 — 수백 건이 되면 집계 쿼리 한 방으로 바꿀 자리다.
+   */
+  const recordedPayouts = await db
+    .select({ projectId: fundingProjectPayouts.projectId, netAmount: fundingProjectPayouts.netAmount })
+    .from(fundingProjectPayouts);
+  const payoutDrift: string[] = [];
+  for (const row of recordedPayouts) {
+    const preview = await buildFundingPayoutPreview(row.projectId);
+    if (!preview) continue;
+    if (preview.netAmount !== row.netAmount) {
+      payoutDrift.push(
+        `${preview.projectSlug}: 기록 ${row.netAmount.toLocaleString('ko-KR')}원 → 현재 ${preview.netAmount.toLocaleString('ko-KR')}원`,
+      );
+    }
+  }
+
+  if (payoutDrift.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/funding',
+      title: `기록된 정산액과 현재 계산값이 다른 프로젝트 ${payoutDrift.length}건`,
+      detail:
+        `${sample(payoutDrift)}
+` +
+        '기록 뒤에 환불이 들어왔다는 뜻입니다. 기록값 그대로 이체하면 과다 이체가 됩니다 — ' +
+        '관리자 > 펀딩 상세의 정산 패널에서 차이를 확인하고 이체 금액을 판단해 주세요.',
     });
   }
 

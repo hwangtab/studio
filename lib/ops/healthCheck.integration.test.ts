@@ -69,7 +69,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
+  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -834,5 +834,62 @@ describe('발송 안 된 채 고객 정보 파기가 다가오는 펀딩', () =>
       delivered_at: null,
     });
     expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining('고객 정보 파기가 다가온')]));
+  });
+});
+
+/**
+ * M10 — `funding_project_payouts`는 불변이라 기록 뒤 환불이 들어오면 실제로 나가야 할 돈이
+ * 줄어드는데, 그 차이를 보여 주는 곳이 관리자 상세 패널 하나뿐이었다. 이체 대기 중인
+ * 정산을 기록값대로 보내면 과다 이체가 된다.
+ */
+describe('기록된 정산액과 현재 계산값의 드리프트', () => {
+  const DRIFT_TITLE = '기록된 정산액과 현재 계산값이 다른';
+
+  const seedClosedProjectWithPayout = async (recordedNet: number) => {
+    await client.execute(
+      `INSERT INTO funding_creators (id, email, name, tax_type) VALUES ('crp', 'p@example.com', '개설자', 'withholding')`,
+    );
+    await client.execute(
+      `INSERT INTO funding_projects (id, slug, creator_id, title, summary, content, cover_url, goal_amount, start_at, end_at, review_status, status)
+       VALUES ('pp', 'payout-drift', 'crp', 'T', 'S', 'C', '/c.webp', 100000, unixepoch() - 100, unixepoch() - 10, 'approved', 'closed')`,
+    );
+    await insertOrder({ status: 'paid', total_amount: 1_000_000 });
+    await insertFundingPledge({ project_slug: 'payout-drift', payment_method: 'toss', entry_source: 'online', paid_at: EPOCH('2026-09-01') });
+    await client.execute(`INSERT INTO payments (id, order_id, payment_key) VALUES ('pay1', 'o1', 'pk1')`);
+    await client.execute({
+      sql: `INSERT INTO funding_project_payouts
+            (id, project_id, gross_amount, refund_amount, supply_amount, fee_amount, platform_fee_amount, payment_fee_amount,
+             share_amount, withholding_amount, net_amount, backer_count)
+            VALUES ('po1', 'pp', 1000000, 0, 909091, 100000, 50000, 50000, 900000, 0, ?, 1)`,
+      args: [recordedNet],
+    });
+  };
+
+  it('기록 뒤 환불이 들어오면 어느 프로젝트·기록값·현재값을 적어 high로 알린다', async () => {
+    await seedClosedProjectWithPayout(900_000);
+    await client.execute(
+      `INSERT INTO refunds (id, payment_id, amount, reason, requested_by, status) VALUES ('rf1', 'pay1', 500000, '고객 요청', 'customer', 'done')`,
+    );
+    const issues = (await runHealthCheck(NOW)).issues;
+    const drift = issues.find((i) => i.title.includes(DRIFT_TITLE));
+    expect(drift?.severity).toBe('high');
+    expect(drift?.detail).toContain('payout-drift');
+    expect(drift?.detail).toContain('900,000');
+  });
+
+  it('기록값과 현재 계산값이 같으면 뜨지 않는다', async () => {
+    await seedClosedProjectWithPayout(900_000);
+    // 환불이 없는 상태에서 현재 계산값을 그대로 기록값으로 맞춘다.
+    const { buildFundingPayoutPreview } = await import('../funding/payout');
+    const preview = await buildFundingPayoutPreview('pp');
+    await client.execute({
+      sql: 'UPDATE funding_project_payouts SET net_amount = ? WHERE id = ?',
+      args: [preview!.netAmount, 'po1'],
+    });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRIFT_TITLE)]));
+  });
+
+  it('정산 기록이 없으면 아무것도 계산하지 않는다', async () => {
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRIFT_TITLE)]));
   });
 });
