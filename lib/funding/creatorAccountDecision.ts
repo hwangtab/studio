@@ -153,13 +153,18 @@ export const decideCreatorAccount = async (
    * 롤백되지만, UPDATE가 **경합으로 0행**이어도 DELETE 자체는 유효한 SQL이라 성공한다 —
    * 그러면 주소는 안 바뀌었는데 개설자의 로그인 링크만 죽는다. `updated_at = epoch`까지
    * 요구해 "이 호출이 방금 쓴 그 행"일 때만 토큰을 지운다.
+   *
+   * `session_version`도 같이 올린다. 토큰만 지우면 **이미 발급된 쿠키**가 7일 더 남는다 —
+   * 탈취자가 주소 변경 전에 한 번 로그인해 뒀다면 그 쿠키로 정산 계좌와 배송 CSV에 계속
+   * 닿는다. 판본이 오르면 `authenticateCreator*`의 대조가 어긋나 그 쿠키가 즉시 죽는다.
+   * 이름 변경은 로그인 수단이 아니므로 올리지 않는다.
    */
   let batchResult;
   try {
     batchResult = await db.batch([
       db
         .update(fundingCreators)
-        .set({ email, updatedAt: now })
+        .set({ email, sessionVersion: sql`session_version + 1`, updatedAt: now })
         .where(and(eq(fundingCreators.id, creator.id), eq(fundingCreators.email, creator.email))),
       db.run(sql`
         DELETE FROM funding_creator_tokens

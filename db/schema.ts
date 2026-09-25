@@ -569,6 +569,17 @@ export const fundingCreators = sqliteTable('funding_creators', {
    * 지우지 않는다.** 그때는 이미 지급한 소득의 지급명세서 제출 의무가 근거로 남는다.
    */
   residentNumberEnc: text('resident_number_enc'),
+  /**
+   * 세션 판본 — 이미 발급된 로그인 쿠키를 끊는 수단.
+   *
+   * iron-session 쿠키는 7일 살아 있고 그 자체로는 DB를 한 번도 보지 않는다. 그래서 운영자가
+   * 탈취 신고를 받아 로그인 주소를 바꿔도(`creatorAccountDecision.ts`), 변경 전에 한 번
+   * 로그인해 둔 쿠키는 정산 계좌와 배송 CSV에 계속 닿는다. 로그인 시점의 이 값을 쿠키에
+   * 싣고 요청마다 DB 값과 대조하면, 이 숫자를 올리는 것만으로 그 쿠키가 죽는다.
+   *
+   * **이메일 변경만 올린다.** 이름 변경은 로그인 수단이 아니므로 세션을 끊을 이유가 없다.
+   */
+  sessionVersion: integer('session_version').notNull().default(1),
   lastLoginAt: integer('last_login_at', { mode: 'timestamp' }),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),

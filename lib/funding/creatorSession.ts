@@ -3,6 +3,13 @@ import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 
 
 export interface CreatorSessionData {
   creatorId?: string;
+  /**
+   * 발급 시점의 `funding_creators.session_version`. 요청마다 DB 값과 대조해, 다르면 세션을
+   * 버린다(`lib/funding/creatorAuth.ts`). 이 값이 **없는** 옛 쿠키도 무효로 본다 — 판본을
+   * 모르면 "끊어야 할 세션인지"를 판단할 수 없고, 이 컬럼을 넣은 목적이 바로 그 판단이다.
+   * 배포 직후 개설자 전원이 다시 로그인해야 하지만 인증이 매직링크라 비용이 낮다.
+   */
+  sessionVersion?: number;
 }
 
 const SESSION_DAYS = 7;
