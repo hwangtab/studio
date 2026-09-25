@@ -162,29 +162,6 @@ export const createFundingPledge = async (
   // 결제수단은 토스 하나뿐이다(무통장입금 중단, 2026-09-11) — 홀드도 한 종류다.
   const holdExpiresAt = new Date(now.getTime() + TOSS_HOLD_SECONDS * 1000);
 
-  /**
-   * 자기 홀드 해제 — 위저드에서 되돌아가 재제출한 **자기** pending 주문을 만료시킨다.
-   *
-   * **소유 증명(releaseOrderNo)이 없으면 아무것도 만료시키지 않는다.**
-   *
-   * 예전엔 조건이 `customer_email = ? AND customer_phone = ?`뿐이었다. 두 값은 요청 본문에서
-   * 오는 미검증 문자열이고(validation.ts는 형식만 본다 — 인증 코드가 없다), manageToken 같은
-   * 소유 증명은 어디에도 없었다. 그래서 피해자의 이메일·전화를 아는 제3자가 같은 프로젝트로
-   * 후원 요청 한 번만 보내면 피해자의 pending 주문이 expired가 됐다. 피해자가 결제창 인증을
-   * 마치고 success로 돌아오면 confirm이 `acceptableStatuses = ['pending']`에 걸려
-   * '이미 처리되었거나 만료된 후원입니다'로 거절하고, 풀린 한정 재고는 공격자의 INSERT가
-   * 가져간다. 돈은 안 움직이지만 결제가 실패한다.
-   *
-   * orderNo는 randomBytes(4) 8자리를 포함해 추측할 수 없고 생성 응답으로만 나가므로,
-   * 그 값을 조건에 넣는 것만으로 이 경로가 남의 주문에 닿을 수 없게 된다. 이메일·전화·
-   * 프로젝트 조건은 그대로 함께 건다(방어 깊이).
-   *
-   * 증명이 없는 요청은 자기 홀드가 자연 만료(TOSS_HOLD_SECONDS)될 때까지 기다린다 — 한정
-   * 리워드 재고가 빠듯할 때만 체감되는 비용이고, 남의 결제를 깨뜨릴 수 있는 편보다 낫다.
-   *
-   * 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
-   * (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
-   */
   const orderId = randomUUID().replace(/-/g, '');
   const pledgeId = randomUUID().replace(/-/g, '');
   const s = payload.shipping;
