@@ -236,3 +236,41 @@ it('메일 발송이 예외를 던져도 등록은 201이고 예외 메시지가
   const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
   expect(order.rows[0]?.notification_error).toBe('resend down');
 });
+
+/**
+ * 실수령액 — 현금으로 실제 받은 액수가 리워드 단가 × 수량 + 추가금과 안 맞을 수 있다
+ * (에누리·잔돈). 그 칸이 없을 때는 공개 모금액과 정산 grossAmount가 실수령액과 어긋났다.
+ */
+describe('실수령액(actualAmount)', () => {
+  it('있으면 그 값이 total_amount가 되고 item + vat === total', async () => {
+    const r = await call({ ...VALID_BODY, actualAmount: 9000 });
+    expect(r.status).toBe(201);
+    const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+    expect(Number(order.rows[0]?.total_amount)).toBe(9000);
+    expect(Number(order.rows[0]?.item_amount) + Number(order.rows[0]?.vat_amount)).toBe(9000);
+  });
+
+  it('없으면 지금처럼 리워드 단가 × 수량 + 추가금', async () => {
+    // mail 5,000원 × 2 + 추가 1,000원 = 11,000원
+    const r = await call(VALID_BODY);
+    const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+    expect(Number(order.rows[0]?.total_amount)).toBe(11000);
+  });
+
+  it.each([[0, '0원'], [-1, '음수'], [1000.5, '소수'], [50_000_001, '상한 초과']])(
+    '%s(%s)이면 400 — 주문을 만들지 않는다',
+    async (actualAmount) => {
+      const r = await call({ ...VALID_BODY, actualAmount });
+      expect(r.status).toBe(400);
+      const orders = await client.execute('SELECT COUNT(*) AS c FROM orders');
+      expect(Number(orders.rows[0].c)).toBe(0);
+    },
+  );
+
+  it('상한값 정확히는 통과한다', async () => {
+    const r = await call({ ...VALID_BODY, actualAmount: 50_000_000 });
+    expect(r.status).toBe(201);
+    const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
+    expect(Number(order.rows[0]?.total_amount)).toBe(50_000_000);
+  });
+});

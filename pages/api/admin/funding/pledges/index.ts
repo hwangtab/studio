@@ -9,9 +9,11 @@ import { generateManageToken } from '../../../../../lib/booking/token';
 import { rowsAffectedOf } from '../../../../../lib/booking/confirm';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
 import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
-import { computeFundingAmounts } from '../../../../../lib/funding/amounts';
+import { computeFundingAmounts, splitFundingAmount } from '../../../../../lib/funding/amounts';
 import { deliverConfirmedEmailsOnce } from '../../../../../lib/funding/confirm';
-import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../../../../lib/funding/policy';
+import {
+  ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_MANUAL_ACTUAL_AMOUNT, MAX_QUANTITY,
+} from '../../../../../lib/funding/policy';
 import { findReward } from '../../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
 import {
@@ -58,6 +60,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ) {
       return res.status(400).json({ ok: false, message: '프로젝트·리워드·수량·이름을 확인해 주세요.' });
     }
+    /**
+     * 실수령액(선택) — 현금으로 실제 받은 금액이 리워드 단가 × 수량 + 추가금과 안 맞을 때
+     * (에누리·잔돈) 그 값을 그대로 쓴다. 없으면 지금처럼 리워드가에서 계산한다.
+     * 이 칸이 없을 때는 공개 모금액과 정산 grossAmount가 실수령액과 어긋났다.
+     */
+    const hasActualAmount = b.actualAmount !== undefined && b.actualAmount !== null && b.actualAmount !== '';
+    const actualAmount = Number(b.actualAmount);
+    if (
+      hasActualAmount &&
+      !(Number.isInteger(actualAmount) && actualAmount > 0 && actualAmount <= MAX_MANUAL_ACTUAL_AMOUNT)
+    ) {
+      return res.status(400).json({
+        ok: false,
+        message: `실수령액은 1원 이상 ${MAX_MANUAL_ACTUAL_AMOUNT.toLocaleString('ko-KR')}원 이하의 정수여야 합니다.`,
+      });
+    }
     const now = new Date();
     await expireStalePledges(now);
     // 이 사전 검사는 **사람에게 이유를 알려 주기 위한 것**이고, 초과 판매를 실제로 막는 것은
@@ -70,7 +88,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({ ok: false, message: `남은 수량(${remaining})을 초과합니다.` });
       }
     }
-    const amounts = computeFundingAmounts(reward.amount, quantity, additionalAmount);
+    const amounts = hasActualAmount
+      ? splitFundingAmount(actualAmount)
+      : computeFundingAmounts(reward.amount, quantity, additionalAmount);
     const orderNo = generateFundingOrderNo(now, true);
     // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 이메일 칸을 그대로 보내면
     // customer_email=''인 주문이 생겨 확정 메일이 빈 주소로 나가고 실패한다. 공백만 있는

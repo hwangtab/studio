@@ -14,6 +14,7 @@ import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/funding/admin-serialize';
 import { aggregateAdminFundingTotals, listFundingOrders, type AdminFundingTotals } from '../../../lib/funding/admin-list';
 import { FULFILLMENT_LABELS } from '../../../lib/funding/fulfillmentLabels';
+import { MAX_MANUAL_ACTUAL_AMOUNT } from '../../../lib/funding/policy';
 import { formatKstDateTime } from '../../../lib/booking/format';
 import { getAllFundingProjectsAsync } from '../../../lib/funding/repository';
 import { expireStalePledges } from '../../../lib/funding/service';
@@ -129,6 +130,9 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
   const [formRewardId, setFormRewardId] = useState('');
   const [formQuantity, setFormQuantity] = useState(1);
   const [formAdditionalAmount, setFormAdditionalAmount] = useState(0);
+  // 빈 문자열이면 미입력 — 0원과 구분해야 한다(0원은 서버가 거부하는 값이고, 미입력은
+  // "리워드 단가로 계산해라"라는 뜻이다).
+  const [formActualAmount, setFormActualAmount] = useState('');
   const [formCustomerName, setFormCustomerName] = useState('');
   const [formCustomerPhone, setFormCustomerPhone] = useState('');
   const [formCustomerEmail, setFormCustomerEmail] = useState('');
@@ -151,6 +155,11 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
   };
 
   const selectedProject = projects.find((p) => p.slug === formProjectSlug);
+  const selectedReward = selectedProject?.rewards.find((r) => r.id === formRewardId);
+  /** 실수령액 칸의 placeholder — 비워 두면 이 금액으로 등록된다는 것을 그 자리에서 보여 준다. */
+  const computedAmount = selectedReward
+    ? selectedReward.amount * (Number.isFinite(formQuantity) ? formQuantity : 0) + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
+    : null;
 
   const handleCreateManual = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,6 +177,15 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       setFormError('추가 펀딩 금액은 0~5,000,000원 사이여야 합니다.');
       return;
     }
+    // 서버가 최종 판정을 하지만, 여기서도 막아 사람에게 이유를 즉시 알려 준다.
+    const actualAmount = formActualAmount.trim() === '' ? null : Number(formActualAmount);
+    if (
+      actualAmount !== null &&
+      !(Number.isInteger(actualAmount) && actualAmount > 0 && actualAmount <= MAX_MANUAL_ACTUAL_AMOUNT)
+    ) {
+      setFormError(`실수령액은 1원 이상 ${formatPriceAmount(MAX_MANUAL_ACTUAL_AMOUNT)}원 이하의 정수여야 합니다.`);
+      return;
+    }
     if (!formCustomerName.trim()) {
       setFormError('이름을 입력해 주세요.');
       return;
@@ -179,6 +197,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       rewardId: formRewardId,
       quantity: formQuantity,
       additionalAmount: formAdditionalAmount,
+      ...(actualAmount === null ? {} : { actualAmount }),
       customerName: formCustomerName.trim(),
       customerPhone: formCustomerPhone.trim() || undefined,
       customerEmail: formCustomerEmail.trim() || undefined,
@@ -195,6 +214,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     setFormRewardId('');
     setFormQuantity(1);
     setFormAdditionalAmount(0);
+    setFormActualAmount('');
     setFormCustomerName('');
     setFormCustomerPhone('');
     setFormCustomerEmail('');
@@ -382,6 +402,17 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                         step={1000}
                         value={formAdditionalAmount}
                         onChange={(e) => setFormAdditionalAmount(Number(e.target.value))}
+                        light className="text-sm"
+                      />
+                    </Field>
+                    <Field id="form-actual-amount" label="실수령액(선택, 계산값과 다르면)" className={lightOnlyField}>
+                      <TextInput
+                        type="number"
+                        min={1}
+                        max={MAX_MANUAL_ACTUAL_AMOUNT}
+                        value={formActualAmount}
+                        placeholder={computedAmount === null ? '리워드를 먼저 선택하세요' : `${formatPriceAmount(computedAmount)}원`}
+                        onChange={(e) => setFormActualAmount(e.target.value)}
                         light className="text-sm"
                       />
                     </Field>
