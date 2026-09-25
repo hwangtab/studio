@@ -59,7 +59,7 @@ describe('fetchBusyRanges', () => {
     global.fetch = mock as unknown as typeof fetch;
 
     await expect(
-      fetchBusyRanges(new Date('2026-09-01T00:00:00Z'), new Date('2026-09-02T00:00:00Z')),
+      fetchBusyRanges(new Date('2026-09-01T00:00:00Z'), new Date('2026-09-02T00:00:00Z'), 'studio'),
     ).rejects.toThrow('freeBusy 캘린더 응답 오류');
     expect(mock).toHaveBeenCalledTimes(2);
     expect(mock.mock.calls[0][0]).toBe('https://oauth2.googleapis.com/token');
@@ -103,7 +103,7 @@ describe('fetchBusyRanges', () => {
       .mockResolvedValueOnce(freeBusyResponse);
     global.fetch = mock as unknown as typeof fetch;
 
-    const result = await fetchBusyRanges(new Date('2026-09-01T00:00:00Z'), new Date('2026-09-02T00:00:00Z'));
+    const result = await fetchBusyRanges(new Date('2026-09-01T00:00:00Z'), new Date('2026-09-02T00:00:00Z'), 'studio');
     expect(result).toEqual([
       { start: new Date('2026-09-01T09:00:00Z'), end: new Date('2026-09-01T10:00:00Z') },
     ]);

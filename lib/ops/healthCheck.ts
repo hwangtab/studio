@@ -1,9 +1,9 @@
-import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNotNull, isNull, lt, ne, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
 import { bookings, contracts, fundingPledges, fundingProjects, orders, payments, refunds, subscriptionPayments, subscriptions } from '../../db/schema';
-import { calendarIdFor, fetchBusyRanges, type BookingCalendar } from '../booking/gcal';
+import { calendarIdFor, fetchBusyRanges, isCalendarActive, type BookingCalendar } from '../booking/gcal';
 import { REFUND_PENDING_ORDER_STATUSES } from '../funding/policy';
 import { getAllFundingProjects } from '../funding/projects';
 import { LIVE_FUNDING_ORDER_STATUSES } from '../funding/refundable';
@@ -275,6 +275,8 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    * 하루 한 번 돌리므로 그 창에 걸릴 확률은 무시할 수준이고, 걸려도 다음 날 자동으로 사라진다 —
    * 과소보고(무증상 이중예약)보다 훨씬 안전한 방향이다.
    */
+  // 연습실 캘린더가 비활성이면 연습실 예약은 등록 대상이 아니다(confirm.ts가 건너뛴다) —
+  // 그 행을 "미등록"으로 세면 매일 꺼지지 않는 긴급 메일이 된다.
   const gcalGap = await db
     .select({ id: bookings.id, gcalError: bookings.gcalError, gcalEventId: bookings.gcalEventId })
     .from(bookings)
@@ -282,6 +284,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
       and(
         eq(bookings.status, 'confirmed'),
         or(isNotNull(bookings.gcalError), isNull(bookings.gcalEventId)),
+        isCalendarActive('practice-room') ? undefined : ne(bookings.serviceType, 'practice-room'),
       ),
     );
 

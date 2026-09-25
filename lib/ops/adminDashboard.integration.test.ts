@@ -15,7 +15,7 @@ import * as schema from '../../db/schema';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
-jest.mock('../booking/gcal', () => ({ fetchBusyRanges: jest.fn().mockResolvedValue([]) }));
+jest.mock('../booking/gcal', () => ({ ...jest.requireActual('../booking/gcal'), fetchBusyRanges: jest.fn().mockResolvedValue([]) }));
 // 이 파일은 마이그레이션 드리프트가 아니라 나머지 issues 건수를 검증한다. 목킹하지 않으면
 // in-memory DB에 __drizzle_migrations 테이블이 없어 "0개 적용"으로 읽혀, 로컬 .env.local의
 // TURSO 값 유무에 따라 이 파일의 exact-array assertion이 흔들린다.
