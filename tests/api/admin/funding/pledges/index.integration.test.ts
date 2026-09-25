@@ -64,6 +64,12 @@ rewards:
     totalQuantity: 1
     requiresShipping: false
     estimatedDelivery: 2026-12
+  - id: box
+    title: 굿즈 박스
+    description: d
+    amount: 50000
+    requiresShipping: true
+    estimatedDelivery: 2026-12
 ---
 `, 'demo');
 
@@ -281,4 +287,31 @@ describe('실수령액(actualAmount)', () => {
     const order = await client.execute({ sql: 'SELECT * FROM orders WHERE order_no = ?', args: [r.body.orderNo] });
     expect(Number(order.rows[0]?.total_amount)).toBe(50_000_000);
   });
+});
+
+/**
+ * M4 — 수기 등록은 confirm을 타지 않는다. 기산점이 여기서 안 찍히면 setFulfillment도
+ * 디지털이면 delivered_at을 일부러 건드리지 않으므로, 운영자가 `delivered`를 눌러도
+ * 채워지지 않는다(약관 제13조의 '전달 완료 후 1년 파기'가 그 유형에만 구현되지 않는다).
+ */
+it('수기 등록된 디지털 리워드는 delivered_at이 paid_at과 같은 시각으로 찍힌다', async () => {
+  const r = await call({ ...VALID_BODY, rewardId: 'mail', quantity: 1, additionalAmount: 0 });
+  expect(r.status).toBe(201);
+  const rows = await client.execute('SELECT paid_at, delivered_at FROM funding_pledges');
+  expect(rows.rows).toHaveLength(1);
+  expect(rows.rows[0].delivered_at).not.toBeNull();
+  expect(Number(rows.rows[0].delivered_at)).toBe(Number(rows.rows[0].paid_at));
+});
+
+it('수기 등록된 배송 리워드는 delivered_at이 NULL이다 (기산점은 실제 발송 시각)', async () => {
+  const r = await call({
+    ...VALID_BODY,
+    rewardId: 'box',
+    quantity: 1,
+    additionalAmount: 0,
+    shipping: { name: '홍길동', phone: '010-1', postcode: '03000', address1: '서울', address2: '101' },
+  });
+  expect(r.status).toBe(201);
+  const rows = await client.execute('SELECT delivered_at FROM funding_pledges');
+  expect(rows.rows[0].delivered_at).toBeNull();
 });

@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { fulfillmentStatusEnum } from '../../db/schema';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from './refundable';
 import { getFundingProjectAsync } from './repository';
+import { isDigitalReward } from './shape';
 
 /**
  * 발송 상태 전환을 관리자·개설자가 함께 쓰는 서비스로 뽑은 것.
@@ -120,9 +121,7 @@ export const setFulfillment = async (input: {
    * 건에 기산점을 남기는 쪽보다 안전하다.
    */
   const project = await getFundingProjectAsync(pledge.projectSlug);
-  const isDigitalReward =
-    project?.rewards.find((r) => r.id === pledge.rewardId)?.requiresShipping === false;
-  const deliveredAt = isDigitalReward
+  const deliveredAt = isDigitalReward(project, pledge.rewardId)
     ? sql`delivered_at`
     : status === 'delivered'
       ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`

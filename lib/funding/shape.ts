@@ -62,6 +62,24 @@ export interface FundingProject {
  * 후원자에게 닿는 경로는 이 함수를 쓰지 않는다 — 확정 메일(lib/funding/email.ts)과
  * 후원 확인 페이지는 서버에서 `getFundingProject`를 직접 읽어 원본 값을 본다.
  */
+/**
+ * 디지털 전용 리워드인가 — `delivered_at`(약관 제13조의 '전달 완료 후 1년 파기' 기산점)의
+ * 정본이 확정 시각인지 발송 시각인지를 가르는 판정.
+ *
+ * 세 경로가 **같은 식**을 써야 한다: 온라인 확정(`lib/funding/confirm.ts`), 발송 상태 저장
+ * (`lib/funding/fulfillment.ts`), 수기 등록(`pages/api/admin/funding/pledges/index.ts`).
+ * 예전엔 앞의 둘이 각자 같은 식을 손으로 적고 수기 등록은 아예 없어, 수기로 등록된 디지털
+ * 후원은 기산점이 영영 생기지 않았다(운영자가 `delivered`를 눌러도 안 찍힌다 — 그 경로는
+ * 디지털이면 값을 건드리지 않는다).
+ *
+ * 프로젝트나 리워드를 못 읽으면 **false**(배송 리워드로 다룬다) — 아직 전달되지 않은 건에
+ * 기산점을 찍는 쪽이 안 찍는 쪽보다 나쁘다. 배송 중인 건의 배송지가 1년 뒤 파기 대상이 된다.
+ */
+export const isDigitalReward = (
+  project: { rewards: Array<Pick<FundingReward, 'id' | 'requiresShipping'>> } | null | undefined,
+  rewardId: string,
+): boolean => project?.rewards.find((r) => r.id === rewardId)?.requiresShipping === false;
+
 export const stripRewardDownloads = (project: FundingProject): FundingProject => ({
   ...project,
   rewards: project.rewards.map((r) => ({ ...r, downloads: [] })),

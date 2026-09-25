@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /* eslint-disable no-console */
 /**
- * 디지털 전용 후원의 파기 기산점(`funding_pledges.delivered_at`) 백필 — 1회성.
+ * 디지털 전용 후원의 파기 기산점(`funding_pledges.delivered_at`) 백필 — **멱등**이다.
+ * `delivered_at IS NULL`인 행만 고르므로 여러 번 돌려도 같은 결과이고, 기산점이 없는
+ * 행이 새로 생기면(예: 코드 수정 전에 수기 등록된 디지털 후원) 다시 돌려 복구하면 된다.
  *
  * 왜 필요한가: `delivered_at`을 채우는 코드가 오랫동안 "발송 상태를 손으로 delivered로
  * 바꾸는 경로" 하나뿐이었다(lib/funding/fulfillment.ts). 배송이 없는 리워드는 그 버튼을
@@ -9,7 +11,8 @@
  * 파기되지 않았다 — 약관 제13조와 처리방침 8항이 약속한 "전달 완료 후 1년 파기"가 그
  * 유형에만 구현돼 있지 않았다.
  *
- * 새 후원은 lib/funding/confirm.ts가 확정 시각을 기산점으로 남긴다. 이 스크립트는 그
+ * 새 후원은 lib/funding/confirm.ts(온라인 확정)와 pages/api/admin/funding/pledges/index.ts
+ * (수기 등록)가 확정·등록 시각을 기산점으로 남긴다. 이 스크립트는 그
  * 변경 **이전에** 확정된 행을 같은 규칙으로 채운다: `delivered_at = paid_at`.
  * 확정 순간 내려받기가 열리므로 그때가 전달 완료다.
  *

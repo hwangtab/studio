@@ -16,6 +16,7 @@ import {
 } from '../../../../../lib/funding/policy';
 import { findReward } from '../../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
+import { isDigitalReward } from '../../../../../lib/funding/shape';
 import {
   MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
   aggregateProjectStatus, expireStalePledges, findFundingOrderByOrderNo, fundingStockCondition,
@@ -111,6 +112,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 둘 다 확정 상태라 자동 취소 대상이 아니고, aggregateProjectStatus의 remaining은
      * Math.max로 하한이 걸려 화면엔 '품절'로만 보여 초과분이 드러나지도 않았다.
      */
+    /**
+     * 디지털 전용 리워드는 **등록 순간이 전달 완료**다 — 확정 경로(lib/funding/confirm.ts)와
+     * 같은 판정(`isDigitalReward`)에 같은 시각(`epoch(now)`, 아래 `paid_at`과 동일)을 쓴다.
+     *
+     * 이 값이 없으면 약관 제13조의 '전달 완료 후 1년 파기' 기산점이 영영 생기지 않는다.
+     * 수기 등록은 confirm을 타지 않고, `setFulfillment`는 디지털이면 delivered_at을 일부러
+     * 건드리지 않기 때문에 운영자가 `delivered`를 눌러도 채워지지 않는다.
+     */
+    const digitalDeliveredAt = isDigitalReward(project, reward.id) ? epoch(now) : null;
     const result = await db.batch([
       // orders·funding_pledges INSERT를 하나의 배치로 묶는다 — 둘 중 하나만 성공하면
       // payments 없이 paid로 남는 고아 주문이 생긴다(예약 confirm.ts의 batch 패턴).
@@ -132,12 +142,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       db.run(sql`
         INSERT INTO funding_pledges (
           id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
-          payment_method, hold_expires_at, paid_at, display_name_public, entry_source,
+          payment_method, hold_expires_at, paid_at, delivered_at, display_name_public, entry_source,
           shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
           admin_memo
         )
         SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
                ${quantity}, ${additionalAmount}, 'bank_transfer', ${epoch(now)}, ${epoch(now)},
+               ${digitalDeliveredAt},
                ${b.displayNamePublic === true ? 1 : 0}, 'manual',
                ${s.name ?? null}, ${s.phone ?? null}, ${s.postcode ?? null},
                ${s.address1 ?? null}, ${s.address2 ?? null}, ${s.memo ?? null},

@@ -5,6 +5,7 @@ import { fundingPledges, orders, payments } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from '../booking/toss';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProjectAsync } from './repository';
+import { isDigitalReward } from './shape';
 import { liveFundingOrderStatusList } from './refundable';
 import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
@@ -286,8 +287,7 @@ export const confirmFundingPledge = async (
    * 안 찍는 것보다 나쁘다(배송 중인 건의 배송지가 1년 뒤 파기 대상이 된다).
    */
   const confirmProject = await getFundingProjectAsync(order.fundingPledge.projectSlug);
-  const confirmReward = confirmProject?.rewards.find((r) => r.id === order.fundingPledge?.rewardId);
-  const digitalDeliveredAt = confirmReward?.requiresShipping === false ? now : null;
+  const digitalDeliveredAt = isDigitalReward(confirmProject, order.fundingPledge.rewardId) ? now : null;
   try {
     // payments INSERT가 맨 앞 — paymentKey unique 위반이 동시 확정의 두 번째 시도를
     // batch 전체 실패로 만든다(절반만 쓰인 상태가 남지 않는다).
