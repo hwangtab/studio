@@ -137,6 +137,8 @@ describe('가격 SSOT 정합', () => {
       // 실제 진입 상품인 싱글 발매 프로젝트(= 싱글 통합 번들)로 교체
       SINGLE_BUNDLE_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,
+      // 2026-09-25 — 시간제(#237 사이트 예약)를 알리기로 하면서 추가. VAT 포함가다
+      PRACTICE_ROOM_HOURLY_PRICE_INCL,
       // 2026-09-16 추가 — 홈 OfferCatalog가 pricing 페이지의 19개 오퍼 중 홍보·펀딩 설계를 빼고 있었다
       RELEASE_PRESS_INTRO_PRICE,
       FUNDING_DESIGN_PRICE,

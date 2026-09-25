@@ -302,7 +302,7 @@
       "subtitle": "음악의 최종 완성도를 책임지는 단계. Spotify -14 LUFS 등 플랫폼 기준에 맞춰, 이어폰·차·스피커 어디서 들어도 밸런스가 무너지지 않게 마감합니다."
     },
     "practiceRoom": {
-      "title": "음악연습실 입주",
+      "title": "음악연습실 — 월 입주 · 시간제",
       "subtitle": "월 단위로 쓰는 24시간 방음 작업실 — 만실인 달이 많아 입주 대기도 함께 받고 있습니다.",
       "subtitleVacant": "월 단위로 쓰는 24시간 방음 작업실 — 지금 {{rooms}}자리 남았습니다.",
       "detailLink": "연습실 시설·입주 혜택 자세히 보기",
@@ -576,7 +576,10 @@
       "vacancyLabel": "현재 공실",
       "vacancyValue": "{{rooms}}자리",
       "vacancyFull": "만실",
-      "asOf": "{{date}} 기준"
+      "asOf": "{{date}} 기준",
+      "hourlyLabel": "시간제 이용",
+      "hourlyValue": "{{price}} / 시간 (VAT 포함, 1시간부터)",
+      "hourlyBookLink": "1시간만 필요하면 시간제로 바로 예약하기"
     },
     "midCta": {
       "note": "만실인 달이 많아 입주 대기를 받고 있어요. 문의를 남기시면 빈 방이 나는 대로 순서대로 안내드립니다.",

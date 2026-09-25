@@ -788,6 +788,59 @@ export const getPricingData = (locale: Locale) => {
         uz: ["24/7 foydalanish, tunab qolish mumkin (alohida dush)", "Depozitsiz, xizmat haqi kiritilgan, oylik shartnoma", "1 yillik shartnomada birinchi oy 50% chegirma", "Yozuv chegirmasi kabi 8 ta rezident imtiyozi"]
       }),
     },
+    /**
+     * 시간제 — 2026-09-25 #237로 사이트 예약이 열려 여기서 알린다(그 전엔 스페이스클라우드로만
+     * 팔고 사이트에선 언급하지 않았다, #174). 가격은 소비자가 VAT 포함이라 unit에 명시한다 —
+     * 이 섹션은 페이지 공통 VAT_NOTICE를 쓰지 않는다(pricing.tsx 주석).
+     */
+    {
+      id: 'practice-room-hourly',
+      title: t(locale, {
+        ko: '음악연습실 시간제 (1시간부터·24시간)',
+        en: 'Practice Room by the Hour (from 1 hour, 24/7)',
+        zh: '音乐练习室按小时（1小时起·24小时）',
+        es: 'Sala de Práctica por Horas (desde 1 hora, 24/7)',
+        vi: 'Phòng tập theo giờ (từ 1 giờ, 24/7)',
+        th: 'ห้องซ้อมรายชั่วโมง (ตั้งแต่ 1 ชม. 24 ชม.)',
+        uz: "Mashg'ulot xonasi soatbay (1 soatdan, 24/7)"
+      }),
+      subtitle: t(locale, {
+        ko: 'STC 60+ 방음 개인실, 무인 셀프 이용',
+        en: 'STC 60+ soundproof private room, self-service',
+        zh: 'STC 60+ 隔音独立房间，无人自助使用',
+        es: 'Sala privada insonorizada STC 60+, autoservicio',
+        vi: 'Phòng riêng cách âm STC 60+, tự phục vụ',
+        th: 'ห้องส่วนตัวกันเสียง STC 60+ ใช้งานด้วยตนเอง',
+        uz: "STC 60+ shovqin izolyatsiyali shaxsiy xona, o'z-o'ziga xizmat"
+      }),
+      priceDisplay: t(locale, {
+        ko: `${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원`,
+        en: `\u20a9${formatPriceAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)}`,
+      }),
+      priceValue: PRACTICE_ROOM_HOURLY_PRICE_INCL,
+      unit: t(locale, {
+        ko: '/ 시간 (VAT 포함)', en: '/ hour (VAT incl.)', zh: '/ 小时（含增值税）', es: '/ hora (IVA incl.)',
+        vi: '/ giờ (đã gồm VAT)', th: '/ ชม. (รวม VAT)', uz: '/ soat (VAT bilan)'
+      }),
+      description: t(locale, {
+        ko: '월 입주가 아니어도 필요한 시간만 쓸 수 있습니다. 사이트에서 바로 예약·결제하면 확정 메일로 입장 안내를 받습니다.',
+        en: 'Use the room only for the hours you need, no residency required. Book and pay online; entry instructions arrive with the confirmation email.',
+        zh: '无需月租入住，只按需要的时间使用。在线预约并付款后，确认邮件中附有入场说明。',
+        es: 'Usa la sala solo las horas que necesites, sin residencia. Reserva y paga en línea; las instrucciones de acceso llegan con el correo de confirmación.',
+        vi: 'Chỉ dùng phòng trong số giờ bạn cần, không cần thuê tháng. Đặt và thanh toán trực tuyến; hướng dẫn vào phòng được gửi kèm email xác nhận.',
+        th: 'ใช้ห้องเฉพาะชั่วโมงที่ต้องการ ไม่ต้องเช่ารายเดือน จองและชำระเงินออนไลน์ ข้อมูลการเข้าห้องจะส่งไปพร้อมอีเมลยืนยัน',
+        uz: "Oylik ijarasiz, faqat kerakli soatlar uchun foydalaning. Onlayn band qiling va to'lang; kirish yo'riqnomasi tasdiqlash xati bilan keladi."
+      }),
+      features: tArray(locale, {
+        ko: ['1시간부터 최대 8시간, 24시간 언제든 예약', '당일 예약 가능 · 온라인 결제', '확정 메일로 입장 안내', '2일 전까지 취소 전액 · 전날 50% · 당일 환불 불가'],
+        en: ['1 to 8 hours, bookable around the clock', 'Same-day booking, online payment', 'Entry instructions by confirmation email', 'Full refund up to 2 days before · 50% the day before · none on the day'],
+        zh: ['1至8小时，24小时随时可预约', '可当天预约 · 在线付款', '确认邮件附入场说明', '提前2天取消全额退款 · 前一天50% · 当天不退'],
+        es: ['De 1 a 8 horas, reservable a cualquier hora', 'Reserva el mismo día, pago en línea', 'Instrucciones de acceso por correo de confirmación', 'Reembolso total hasta 2 días antes · 50% el día anterior · sin reembolso el mismo día'],
+        vi: ['Từ 1 đến 8 giờ, đặt bất kỳ lúc nào', 'Đặt trong ngày, thanh toán trực tuyến', 'Hướng dẫn vào phòng qua email xác nhận', 'Hoàn 100% trước 2 ngày · 50% hôm trước · không hoàn trong ngày'],
+        th: ['1 ถึง 8 ชั่วโมง จองได้ตลอด 24 ชม.', 'จองวันเดียวกันได้ ชำระเงินออนไลน์', 'ข้อมูลการเข้าห้องทางอีเมลยืนยัน', 'คืนเงินเต็มก่อน 2 วัน · 50% วันก่อน · วันเดียวกันไม่คืน'],
+        uz: ["1 dan 8 soatgacha, istalgan vaqtda band qilish", "Shu kunning o'zida band qilish, onlayn to'lov", "Kirish yo'riqnomasi tasdiqlash xatida", "2 kun oldin bekor qilinsa to'liq · bir kun oldin 50% · o'sha kuni qaytarilmaydi"]
+      }),
+    },
   ];
 
   return {

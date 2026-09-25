@@ -569,6 +569,7 @@ music-crowdfunding1·music-grants1·selfrecord1)도 미등재다. 그쪽은 "10/
 | 2026-09-04 | 서비스 LP 전체 | Offer priceValidUntil, WebPage dateModified | afa374b117 | 스키마만. 클릭에 직접 영향 없음 |
 | 2026-09-08 | /ko/practice-room · /ko/pricing | 연습실 "만실 대기" 문구 3곳 → "지금 입주 가능"(공실 토글, `data/practiceRoomAvailability.ts`) | 05af5b6337 | **연습실 LP 카톡 전환율 기준선이 이날 바뀐다.** 리드 감시(leadRateCheck)의 28일 기준선과 8/24~ 회복 구간 비교 시 9/8을 경계로 둘 것. 타이틀·H1 무변경이라 CTR 실험과는 무관 |
 | 2026-09-08 | llms.txt | 연습실 Availability 줄 추가 | 05af5b6337 | AI 인용 문구가 바뀜. GEO 기준선(2026-09)은 이 변경 **전** 측정값 |
+| 2026-09-25 | /ko/practice-room · /ko/pricing · llms.txt | 연습실 **시간제**(4,400원/시간, VAT 포함)를 처음 알림 — LP 핵심정보 표에 행 + ko 온라인 예약 링크, pricing에 시간제 카드(보조 CTA 온라인 예약), llms·FAQ·전역 OfferCatalog. 그 전엔 스페이스클라우드로만 팔고 사이트엔 없었다(#174) | (이 PR) | **연습실 LP 리드 기준선이 이날 또 바뀐다**(9/08·9/18에 이어 세 번째 단절). 시간제 예약은 카톡이 아니라 `micro_click_booking_entry`(cta_id `practice_room_hourly_booking`·`pricing_practice-room-hourly_booking`)로 잡히므로, 10/13 monthly1·price1 판정에서 LP 카톡 리드가 줄면 시간제로의 이동인지 먼저 볼 것 |
 
 ## 실험 결과 판정 (2026-08-14)
 

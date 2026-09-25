@@ -1,8 +1,9 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import { m } from 'framer-motion';
-import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, Gift, Info } from '@/lib/lucide-icons';
+import { Music, Shield, Star, MapPin, VolumeX, Wind, Zap, Sparkles, HelpCircle, Target, ShieldCheck, Gift, Info, ArrowRight } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
@@ -22,6 +23,7 @@ import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
 import { getPricingData } from '../../data/pricing';
+import { trackMicroEvent } from '../../utils/analytics';
 import {
   PRACTICE_ROOM_HAS_VACANCY,
   PRACTICE_ROOM_VACANT_ROOMS,
@@ -69,6 +71,10 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
   const siteConfig = React.useMemo(() => getSiteConfig(locale), [locale]);
   const practiceRoomOffer = React.useMemo(
     () => getPricingData(locale).practiceRoomOffers[0],
+    [locale]
+  );
+  const practiceRoomHourlyOffer = React.useMemo(
+    () => getPricingData(locale).practiceRoomOffers.find((offer) => offer.id === 'practice-room-hourly'),
     [locale]
   );
   const practiceRoomFaqs = React.useMemo(
@@ -231,10 +237,39 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
                     ? t('practiceRoom.factsTable.vacancyValue', { rooms: PRACTICE_ROOM_VACANT_ROOMS })
                     : t('practiceRoom.factsTable.vacancyFull'),
                 },
+                ...(practiceRoomHourlyOffer
+                  ? [
+                      {
+                        id: 'hourly',
+                        label: t('practiceRoom.factsTable.hourlyLabel'),
+                        price: t('practiceRoom.factsTable.hourlyValue', { price: practiceRoomHourlyOffer.priceDisplay }),
+                      },
+                    ]
+                  : []),
               ],
             },
           ]}
         />
+        {/* 시간제 온라인 예약은 ko 퍼널만 있다(pricing.tsx BOOKING_ENTRY와 같은 판단).
+            비-ko는 표의 가격 행까지만 보여 주고, 문의는 페이지의 기존 CTA가 받는다. */}
+        {locale === 'ko' && practiceRoomHourlyOffer && (
+          <div className="mt-6 text-center">
+            <Link
+              href="/ko/booking/practice-room"
+              prefetch={false}
+              onClick={() =>
+                trackMicroEvent('micro_click_booking_entry', {
+                  locale,
+                  component: 'PracticeRoomFactsTable',
+                  cta_id: 'practice_room_hourly_booking',
+                })
+              }
+              className="inline-flex items-center gap-2 typo-card-body font-semibold text-primary dark:text-primary-lighter hover:underline"
+            >
+              {t('practiceRoom.factsTable.hourlyBookLink')} <ArrowRight size={16} aria-hidden="true" />
+            </Link>
+          </div>
+        )}
       </Section>
 
       <QuickAnswers

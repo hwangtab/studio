@@ -302,7 +302,7 @@
       "subtitle": "La etapa que remata el disco. Ajustado a objetivos de plataforma como -14 LUFS de Spotify, para que el balance se sostenga en auriculares, en el coche o en altavoces."
     },
     "practiceRoom": {
-      "title": "Residencia en Sala de Práctica",
+      "title": "Sala de Práctica — Residencia Mensual · Por Horas",
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
       "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: disponible para mudarse ahora mismo.",
       "detailLink": "Ver instalaciones y beneficios para residentes",
@@ -576,7 +576,10 @@
       "vacancyLabel": "Disponibilidad actual",
       "vacancyValue": "Disponible ahora",
       "vacancyFull": "Completo",
-      "asOf": "Actualizado el {{date}}"
+      "asOf": "Actualizado el {{date}}",
+      "hourlyLabel": "Uso por horas",
+      "hourlyValue": "{{price}} / hora (IVA incl., desde 1 hora)",
+      "hourlyBookLink": "¿Solo necesitas una hora? Reserva por horas"
     },
     "midCta": {
       "note": "Las salas suelen estar completas, por lo que mantenemos una lista de espera. Escríbenos y te avisaremos por orden en cuanto se libere una sala.",

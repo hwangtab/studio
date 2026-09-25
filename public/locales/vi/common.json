@@ -302,7 +302,7 @@
       "subtitle": "Bước khép lại bản thu. Căn theo chuẩn nền tảng như -14 LUFS của Spotify, giữ thế cân bằng khi nghe bằng tai nghe, trong xe hay trên loa."
     },
     "practiceRoom": {
-      "title": "Thuê phòng tập theo tháng",
+      "title": "Phòng tập — Thuê theo tháng · Theo giờ",
       "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
       "subtitleVacant": "Không gian cách âm 24/7 thuê theo tháng — có thể vào ở ngay bây giờ.",
       "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân",
@@ -576,7 +576,10 @@
       "vacancyLabel": "Phòng trống hiện tại",
       "vacancyValue": "Còn phòng trống",
       "vacancyFull": "Đã kín phòng",
-      "asOf": "Cập nhật {{date}}"
+      "asOf": "Cập nhật {{date}}",
+      "hourlyLabel": "Thuê theo giờ",
+      "hourlyValue": "{{price}} / giờ (đã gồm VAT, từ 1 giờ)",
+      "hourlyBookLink": "Chỉ cần một giờ? Đặt phòng theo giờ"
     },
     "midCta": {
       "note": "Phòng thường kín chỗ nên chúng tôi nhận đăng ký chờ. Hãy liên hệ, khi có phòng trống chúng tôi sẽ báo theo thứ tự.",

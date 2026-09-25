@@ -5,6 +5,7 @@ import {
   FUNDING_DESIGN_PRICE,
   LESSON_MONTHLY_PRICE,
   MIXING_LEVEL1_PRICE,
+  PRACTICE_ROOM_HOURLY_PRICE_INCL,
   PRACTICE_ROOM_MONTHLY_PRICE,
   RECORDING_HOURLY_PRICE,
   RELEASE_PRESS_INTRO_ENDS_ON,
@@ -23,6 +24,7 @@ import {
   LESSON_OFFER_NAMES,
   MIXING_OFFER_NAMES,
   OFFER_CATALOG_NAMES,
+  PRACTICE_HOURLY_OFFER_NAMES,
   PRACTICE_OFFER_NAMES,
   RECORDING_OFFER_NAMES,
   RELEASE_PRESS_OFFER_NAMES,
@@ -83,12 +85,14 @@ export const generateDefaultSchema = (
   //
   // 가격은 전부 data/pricing.ts 상수, url은 그 가격이 화면에 보이는 페이지다.
   // 이 목록에 상품을 더하거나 빼면 data/pricing.test.ts의 기대 목록도 함께 고칠 것.
-  const offers: Array<{ name: string; price: number; path: string; validUntil?: string }> = [
+  // vatIncluded: 연습실 시간제만 소비자가(VAT 포함)로 판다 — 나머지는 전부 VAT 별도.
+  const offers: Array<{ name: string; price: number; path: string; validUntil?: string; vatIncluded?: boolean }> = [
     { name: RECORDING_OFFER_NAMES[locale], price: RECORDING_HOURLY_PRICE, path: '/pricing' },
     { name: VOCAL_PACKAGE_OFFER_NAMES[locale], price: VOCAL_PACKAGE_PRICE, path: '/pricing' },
     { name: MIXING_OFFER_NAMES[locale], price: MIXING_LEVEL1_PRICE, path: '/pricing' },
     { name: RELEASE_TIER_LABELS.single[locale], price: SINGLE_BUNDLE_PRICE, path: '/release-project/single' },
     { name: PRACTICE_OFFER_NAMES[locale], price: PRACTICE_ROOM_MONTHLY_PRICE, path: '/practice-room' },
+    { name: PRACTICE_HOURLY_OFFER_NAMES[locale], price: PRACTICE_ROOM_HOURLY_PRICE_INCL, path: '/practice-room', vatIncluded: true },
     // 홍보 도입가는 종료일이 정해져 있다 — 일반 오퍼처럼 +12개월로 주장하면 표시광고법상 허위가 된다.
     { name: RELEASE_PRESS_OFFER_NAMES[locale], price: RELEASE_PRESS_INTRO_PRICE, path: '/music-promotion', validUntil: RELEASE_PRESS_INTRO_ENDS_ON },
     { name: FUNDING_DESIGN_OFFER_NAMES[locale], price: FUNDING_DESIGN_PRICE, path: '/pricing' },
@@ -104,6 +108,17 @@ export const generateDefaultSchema = (
     priceValidUntil: offer.validUntil ?? priceValidUntil,
     url: `${siteUrl}/${locale}${offer.path}`,
     availability: 'https://schema.org/InStock',
+    ...(offer.vatIncluded
+      ? {
+          priceSpecification: {
+            '@type': 'UnitPriceSpecification',
+            price: offer.price,
+            priceCurrency: 'KRW',
+            unitCode: 'HUR',
+            valueAddedTaxIncluded: true,
+          },
+        }
+      : {}),
     itemOffered: {
       '@type': 'Service',
       name: offer.name,

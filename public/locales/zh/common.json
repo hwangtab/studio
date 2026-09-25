@@ -302,7 +302,7 @@
       "subtitle": "为作品收尾的阶段。对齐 Spotify -14 LUFS 等平台标准，无论用耳机、车载还是音箱聆听，平衡都不会崩。"
     },
     "practiceRoom": {
-      "title": "音乐练习室入住",
+      "title": "音乐练习室 — 月租入住 · 按小时",
       "subtitle": "按月租用的24小时隔音工作室——满室的月份较多，同时接受入住等候登记。",
       "subtitleVacant": "按月租用的24小时隔音工作室——现在即可入住。",
       "detailLink": "查看练习室设施与入住福利",
@@ -576,7 +576,10 @@
       "vacancyLabel": "当前空房",
       "vacancyValue": "现在可入住",
       "vacancyFull": "满房",
-      "asOf": "截至{{date}}"
+      "asOf": "截至{{date}}",
+      "hourlyLabel": "按小时使用",
+      "hourlyValue": "{{price}} / 小时（含增值税，1小时起）",
+      "hourlyBookLink": "只需一小时？直接按小时预约"
     },
     "midCta": {
       "note": "房间经常满员，我们提供候补登记。留言咨询后，一有空房即按顺序通知您。",

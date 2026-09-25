@@ -52,6 +52,10 @@ export const PRACTICE_OFFER_NAMES: Record<Locale, string> = {
   es: 'Programa de Residencia de Sala Premium', vi: 'Chương trình thuê phòng tập cao cấp',
   th: 'โปรแกรมเช่าห้องซ้อมระดับพรีเมียม', uz: "Premium mashg'ulot xonasi dasturi",
 };
+export const PRACTICE_HOURLY_OFFER_NAMES: Record<Locale, string> = {
+  ko: '음악연습실 시간제', en: 'Practice Room by the Hour', zh: '音乐练习室按小时',
+  es: 'Sala de Práctica por Horas', vi: 'Phòng tập theo giờ', th: 'ห้องซ้อมรายชั่วโมง', uz: "Mashg'ulot xonasi soatbay",
+};
 export const RELEASE_PRESS_OFFER_NAMES: Record<Locale, string> = {
   ko: '음원 발매 홍보', en: 'Release Press Campaign', zh: '音乐发行宣传',
   es: 'Campaña de Prensa', vi: 'Chiến dịch PR phát hành', th: 'แคมเปญข่าวประชาสัมพันธ์', uz: 'Reliz uchun press-kampaniya',
