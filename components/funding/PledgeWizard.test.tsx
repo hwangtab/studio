@@ -209,6 +209,50 @@ it('서포터 명단 이름 공개는 기본 해제', () => {
   expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
 });
 
+/**
+ * 메시지를 써 놓고 공개 체크를 못 보고 지나가 메시지가 아무 데도 안 뜨는 일이 잦았다
+ * (2026-09-25). 미리 체크하지는 않는다 — 선택 동의는 본인이 눌러야 한다. 대신 알려 준다.
+ */
+describe('서포터 명단', () => {
+  const renderWizard = () => render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+
+  it('메시지를 썼는데 비공개면 알리고, 버튼을 누르면 그때 공개로 바뀐다', async () => {
+    renderWizard();
+    expect(screen.queryByText(/메시지를 쓰셨지만 지금은 비공개입니다/)).toBeNull();
+    await userEvent.type(screen.getByLabelText('응원 메시지'), '응원합니다');
+    expect(screen.getByText(/메시지를 쓰셨지만 지금은 비공개입니다/)).toBeInTheDocument();
+    // 메시지를 썼다고 저절로 켜지지 않는다.
+    expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
+    await userEvent.click(screen.getByRole('button', { name: '명단에 공개하기' }));
+    expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).toBeChecked();
+    expect(screen.queryByText(/메시지를 쓰셨지만 지금은 비공개입니다/)).toBeNull();
+  });
+
+  it('공개하면 표시 이름을 고를 수 있고, 미리보기가 명단에 뜰 모습을 보여 준다', async () => {
+    renderWizard();
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '홍길동');
+    await userEvent.type(screen.getByLabelText('응원 메시지'), '끝까지 함께');
+    await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
+    expect(screen.getByLabelText(/실명 \(홍길동\)/)).toBeChecked();
+    await userEvent.click(screen.getByLabelText(/가린 이름 \(홍\*동\)/));
+    expect(screen.getByText(/이렇게 보입니다/).parentElement).toHaveTextContent('홍*동 “끝까지 함께”');
+  });
+
+  it('고른 방식과 닉네임이 서버로 나간다', async () => {
+    renderWizard();
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '홍길동');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
+    await userEvent.click(screen.getByLabelText('닉네임'));
+    await userEvent.type(screen.getByLabelText('명단에 표시할 닉네임'), '연대하는 청취자');
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    expect(body).toMatchObject({ displayNamePublic: true, publicNameStyle: 'nickname', publicNickname: '연대하는 청취자' });
+  });
+});
+
 // 상한 없이 두면 5,000,000원을 넘긴 값이 그대로 서버로 가서 400으로 튕긴다 —
 // 입력 단계에서 잘라내야 후원자가 이유 없이 실패를 본다는 느낌을 받지 않는다.
 it('추가 펀딩 금액은 blur에서 MAX_ADDITIONAL_AMOUNT로 클램프된다', async () => {

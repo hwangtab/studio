@@ -131,6 +131,23 @@ describe('경계값 — 감사 probe 24종', () => {
       const r = ok({ ...base, displayNamePublic: 'false' });
       expect(r.ok && r.value.displayNamePublic).toBe(false);
     });
+    it('공개하면 표시 방식대로 publicName을 만든다 — 방식이 없으면 실명(NULL)', () => {
+      const real = ok({ ...base });
+      expect(real.ok && real.value.publicName).toBeNull();
+      const masked = ok({ ...base, publicNameStyle: 'masked' });
+      expect(masked.ok && masked.value.publicName).toBe('김*원');
+      const nick = ok({ ...base, publicNameStyle: 'nickname', publicNickname: ' 청취자 ' });
+      expect(nick.ok && nick.value.publicName).toBe('청취자');
+    });
+    it('닉네임 방식인데 닉네임이 비었거나 방식을 모르면 거부한다', () => {
+      expect(ok({ ...base, publicNameStyle: 'nickname', publicNickname: '' })).toMatchObject({ ok: false, message: '명단에 표시할 닉네임을 입력해 주세요.' });
+      expect(ok({ ...base, publicNameStyle: 'anon' }).ok).toBe(false);
+    });
+    // 쓰일 곳이 없는 개인정보는 담지 않는다.
+    it('공개하지 않으면 닉네임을 보내도 publicName은 NULL', () => {
+      const r = ok({ ...base, displayNamePublic: false, publicNameStyle: 'nickname', publicNickname: '청취자' });
+      expect(r.ok && r.value.publicName).toBeNull();
+    });
     it('displayNamePublic: 1도 공개하지 않는다', () => {
       const r = ok({ ...base, displayNamePublic: 1 });
       expect(r.ok && r.value.displayNamePublic).toBe(false);

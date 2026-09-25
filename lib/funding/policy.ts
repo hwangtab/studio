@@ -26,6 +26,8 @@ export const PLEDGE_TEXT_LIMITS = {
   customerName: 50,
   customerPhone: 30,
   supporterMessage: 500,
+  /** 서포터 명단에 실명 대신 올릴 닉네임(lib/funding/publicName.ts). */
+  publicNickname: 20,
   shippingName: 50,
   shippingPhone: 30,
   shippingPostcode: 10,
@@ -141,7 +143,7 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-25-r2';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-25-r3';
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -176,7 +178,7 @@ export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
   '필수 — 서포터 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
-  '선택 — 응원 메시지, 서포터 명단 공개(이름·응원 메시지) 동의 여부',
+  '선택 — 응원 메시지, 서포터 명단 공개(이름·응원 메시지) 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
   '자동 생성 — 주문번호, 펀딩 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
 
@@ -185,7 +187,7 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
   '펀딩(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
   '펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
-  '서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름과 응원 메시지 표시',
+  '서포터 명단 공개에 동의한 경우 프로젝트 페이지에 이름(가린 이름이나 닉네임을 고른 경우 그 이름)과 응원 메시지 표시',
 ];
 
 /**
