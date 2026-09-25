@@ -3,6 +3,7 @@ import {
   cycleYmOf,
   daysInMonth,
   MAX_CHARGE_ATTEMPTS,
+  parseKstDate,
   periodFor,
   RETRY_OFFSETS_DAYS,
   retryAtFor,
@@ -67,5 +68,24 @@ describe('retryAtFor', () => {
     expect(retryAtFor(failedAt, 1)?.toISOString()).toBe('2026-03-06T00:00:00.000Z');
     expect(retryAtFor(failedAt, 2)?.toISOString()).toBe('2026-03-08T00:00:00.000Z');
     expect(retryAtFor(failedAt, 3)).toBeNull();
+  });
+});
+
+describe('parseKstDate', () => {
+  it("'YYYY-MM-DD'를 그날 00:00 KST로 읽는다 — new Date()의 UTC 자정 해석은 하루가 밀린다", () => {
+    expect(kst(parseKstDate('2026-10-01')!)).toBe('2026-10-01T00:00:00 KST');
+    expect(parseKstDate('2026-10-01')!.toISOString()).toBe('2026-09-30T15:00:00.000Z');
+  });
+
+  it('형식이 다르거나 없는 날짜는 null', () => {
+    expect(parseKstDate('2026-10-1')).toBeNull();
+    expect(parseKstDate('20261001')).toBeNull();
+    expect(parseKstDate('')).toBeNull();
+    expect(parseKstDate('2026-13-01')).toBeNull();
+    expect(parseKstDate('2026-02-30')).toBeNull();
+  });
+
+  it('윤년 2월 29일은 받는다', () => {
+    expect(kst(parseKstDate('2028-02-29')!)).toBe('2028-02-29T00:00:00 KST');
   });
 });

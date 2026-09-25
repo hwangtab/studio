@@ -1,8 +1,9 @@
 /**
  * 정기결제(구독) 일일 청구. 스펙 §6·§9.
  *
- * 순서: 해지 예정일이 지난 구독을 먼저 닫고(endExpiredSubscriptions) → 이번 회차에 청구할
- * 구독 목록(listDueSubscriptions)을 순회한다. 각 건은 독립적으로 try/catch한다 — 한 구독의
+ * 순서: 해지 예정일이 지난 구독을 먼저 닫고(endExpiredSubscriptions) → 정지 기한이 지난
+ * 운영자 정지를 재개하고(resumeExpiredPauses) → 이번 회차에 청구할 구독 목록
+ * (listDueSubscriptions)을 순회한다. 각 건은 독립적으로 try/catch한다 — 한 구독의
  * 실패가 나머지 구독의 청구를 막으면 안 된다(스펙 §9, cron의 존재 이유).
  *
  * **NETWORK_ERROR 대사는 chargeCycle이 한다.** cron 전용으로 두면 관리자 수동 결제·카드
@@ -25,11 +26,18 @@ import { subscriptions, type Subscription } from '../../../db/schema';
 import { isCronAuthorized } from '../../../lib/cron/auth';
 import { sendEmail } from '../../../lib/email/resend';
 import { OPERATOR_EMAIL } from '../../../lib/operatorContact';
-import { chargeCycle, claimDueSubscription, endExpiredSubscriptions, listDueSubscriptions } from '../../../lib/billing/service';
+import {
+  chargeCycle,
+  claimDueSubscription,
+  endExpiredSubscriptions,
+  listDueSubscriptions,
+  resumeExpiredPauses,
+} from '../../../lib/billing/service';
 import {
   sendSubscriptionChargedEmail,
   sendSubscriptionChargeFailedEmail,
   sendSubscriptionOperatorAlert,
+  sendSubscriptionResumedEmail,
   subscriptionManageUrl,
 } from '../../../lib/billing/email';
 import { cycleYmOf } from '../../../lib/billing/schedule';
@@ -43,6 +51,8 @@ const cardChangeHint = (paused: boolean): string =>
     : '카드 정보가 오래되었거나 한도 초과일 수 있습니다. 위 링크에서 카드를 다시 등록해 주세요.';
 
 type ChargeSummary = {
+  /** 정지 기한이 지나 자동 재개된 구독 수. */
+  resumed: number;
   due: number;
   charged: number;
   failed: number;
@@ -116,10 +126,47 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const now = new Date();
-  const summary: ChargeSummary = { due: 0, charged: 0, failed: 0, paused: 0, ended: 0, skipped: 0, errors: [] };
+  const summary: ChargeSummary = { resumed: 0, due: 0, charged: 0, failed: 0, paused: 0, ended: 0, skipped: 0, errors: [] };
 
   try {
     summary.ended = await endExpiredSubscriptions(now);
+
+    /**
+     * 정지 기한이 지난 운영자 정지를 되돌린다 — **청구 목록을 읽기 전에.**
+     *
+     * 순서가 이래도 재개된 구독이 같은 실행에서 청구되지는 않는다. `resumeExpiredPauses`가
+     * 잡는 `nextBillingAt`은 언제나 **다음 달** 정기 청구일이라(`computeNextBillingAt`)
+     * `listDueSubscriptions`의 `nextBillingAt <= now` 조건에 걸리지 않는다. 앞에 두는
+     * 이유는 재개가 실패해도 그날 청구는 정상으로 돌게 하기 위해서다.
+     */
+    const pauseExpiry = await resumeExpiredPauses(now);
+    summary.resumed = pauseExpiry.resumed.length;
+    summary.errors.push(...pauseExpiry.failed.map((f) => ({ subscriptionId: f.subscriptionId, message: `정지 기한 만료 재개 실패: ${f.message}` })));
+    for (const { subscription, nextBillingAt } of pauseExpiry.resumed) {
+      try {
+        // 고객 안내가 곧 청구 예고다(resumeExpiredPauses 주석) — 실패해도 재개를 되돌리지
+        // 않는다. 첫 청구는 다음 달이라 수습할 시간이 있고, notificationError가 관리자
+        // 화면에 뜨며 아래 예외 요약 메일로도 운영자에게 닿는다.
+        const notificationError = await sendSubscriptionResumedEmail(subscription, {
+          nextBillingAt,
+          manageUrl: subscriptionManageUrl(subscription),
+        });
+        if (notificationError) {
+          await getDb().update(subscriptions).set({ notificationError }).where(eq(subscriptions.id, subscription.id));
+          summary.errors.push({ subscriptionId: subscription.id, message: `정지 기한 만료 재개 안내 메일 실패: ${notificationError}` });
+        }
+        await sendSubscriptionOperatorAlert(
+          subscription,
+          'pause_expired',
+          `정지 기한이 지나 자동으로 재개했습니다. 다음 결제 예정일: ${nextBillingAt.toLocaleDateString('ko-KR', { timeZone: 'Asia/Seoul' })}`,
+        );
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        console.error('[cron/billing-charge] 정지 기한 만료 재개 알림 실패', { subscriptionId: subscription.id, error });
+        summary.errors.push({ subscriptionId: subscription.id, message: `정지 기한 만료 재개 알림 실패: ${message}` });
+      }
+    }
+
     const due = await listDueSubscriptions(now);
     summary.due = due.length;
 

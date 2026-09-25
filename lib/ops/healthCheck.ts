@@ -424,6 +424,15 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
    *
    * **고객 이름·연락처는 싣지 않는다.** 운영자가 갈 곳(구독 id)만 있으면 되고, 메일 본문에
    * 평문 개인정보를 늘릴 이유가 없다.
+   *
+   * ## `paused_until`이 생긴 뒤에도 이 경보를 남겨 두는 이유
+   *
+   * 이제 운영자 정지는 만료일을 필수로 받고 그날 `resumeExpiredPauses`가 되돌리므로
+   * (`lib/billing/service.ts`), 새로 만들어지는 정지가 3년 방치에 닿는 일은 사실상 없다.
+   * 그래도 남는 길이 둘이다 — 만료일 없이 세워진 **옛 행**, 그리고 자동 재개가 계속 실패해
+   * 정지가 풀리지 않는 경우(그 실패는 청구 cron 요약 메일로도 뜨지만, 메일 한 통을 놓치면
+   * 여기가 다시 유일한 방어다). 자동화가 생겼다고 마지막 방어를 걷으면 그 자동화가 멈춘
+   * 날에 예전 사고가 그대로 돌아온다.
    */
   const dormancyWarning = await db
     .select({ id: subscriptions.id, pausedReason: subscriptions.pausedReason })

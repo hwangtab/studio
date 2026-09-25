@@ -54,13 +54,17 @@ import {
   getSubscriptionWithDetails,
   issueCardChangeToken,
   listDueSubscriptions,
+  MAX_PAUSE_DAYS,
   pauseSubscription,
   reconcileSubscriptionPaymentFromToss,
+  resumeExpiredPauses,
   resumeSubscription,
 } from './service';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-03-05T00:00:00Z');
+/** 운영자 정지는 기한이 필수다 — 그 기한이 이 테스트들의 관심사가 아닐 때 쓰는 먼 날짜. */
+const PAUSE_UNTIL = { pausedUntil: new Date('2026-12-01T00:00:00Z') };
 
 let client: Client;
 
@@ -465,7 +469,7 @@ describe('정지 사유(pausedReason)', () => {
 
   it('운영자 정지는 operator가 적힌다 — 결제 실패와 같은 값을 쓰지 않는다', async () => {
     const { created } = await activated();
-    const paused = await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    const paused = await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
     expect(paused.ok).toBe(true);
     const sub = (await findSubscriptionById(created.id))!;
     expect(sub.status).toBe('paused');
@@ -474,7 +478,7 @@ describe('정지 사유(pausedReason)', () => {
 
   it('재개하면 사유를 비운다 — active 행이 옛 사유를 달고 다니면 안 된다', async () => {
     const { created } = await activated();
-    await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
     const resumed = await resumeSubscription(created.id, new Date('2026-04-02T00:00:00Z'));
     expect(resumed.ok).toBe(true);
     const sub = (await findSubscriptionById(created.id))!;
@@ -503,7 +507,7 @@ describe('정지 사유(pausedReason)', () => {
    */
   it('정지된 구독의 수동 결제가 실패해도 paused·operator가 유지된다', async () => {
     const { created } = await activated();
-    await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
 
     chargeBillingKey.mockResolvedValue(chargeFail());
     const manual = await chargeCycle(created.id, new Date('2026-04-10T00:00:00Z'), { reason: 'manual' });
@@ -516,7 +520,7 @@ describe('정지 사유(pausedReason)', () => {
 
   it('그 실패가 자동 재시도 일정을 되살리지 않는다 — cron이 그 구독을 집지 않는다', async () => {
     const { created } = await activated();
-    await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
     chargeBillingKey.mockResolvedValue(chargeFail());
     await chargeCycle(created.id, new Date('2026-04-10T00:00:00Z'), { reason: 'manual' });
 
@@ -531,7 +535,7 @@ describe('정지 사유(pausedReason)', () => {
    */
   it('정지된 구독의 수동 결제가 성공하면 active가 되고 사유를 비운다', async () => {
     const { created } = await activated();
-    await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
 
     chargeBillingKey.mockResolvedValue(chargeOk('pay_manual_ok'));
     const manual = await chargeCycle(created.id, new Date('2026-04-10T00:00:00Z'), { reason: 'manual' });
@@ -548,7 +552,7 @@ describe('정지 사유(pausedReason)', () => {
    */
   it('운영자 정지 후 재개했다가 결제 실패로 다시 정지되면 payment_failed로 바뀐다', async () => {
     const { created } = await activated();
-    await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+    await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
     await resumeSubscription(created.id, new Date('2026-04-02T00:00:00Z'));
     await exhaustRetries(created.id);
     const sub = (await findSubscriptionById(created.id))!;
@@ -668,7 +672,7 @@ describe('해지·정지·재개·만료', () => {
 
   it('일시정지는 청구를 멈추고, 재개는 nextBillingAt을 당겨 다음 cron이 바로 청구한다', async () => {
     const { created } = await activated();
-    expect((await pauseSubscription(created.id, NOW)).ok).toBe(true);
+    expect((await pauseSubscription(created.id, PAUSE_UNTIL, NOW)).ok).toBe(true);
     expect(await listDueSubscriptions(new Date('2026-05-05T00:00:00Z'))).toHaveLength(0);
 
     const resumeAt = new Date('2026-04-20T00:00:00Z');
@@ -789,7 +793,7 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
   ) => {
     const { created } = await activated();
     if (pausedReason === 'operator') {
-      await pauseSubscription(created.id, new Date('2026-04-01T00:00:00Z'));
+      await pauseSubscription(created.id, PAUSE_UNTIL, new Date('2026-04-01T00:00:00Z'));
       chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
       await chargeCycle(created.id, april, { reason: 'manual' });
     } else {
@@ -1021,5 +1025,194 @@ describe('reconcileSubscriptionPaymentFromToss — 웹훅 DONE 복구', () => {
     );
     const rows = await client.execute('SELECT status FROM orders ORDER BY created_at');
     expect(rows.rows.map((r) => r.status)).toContain('pending'); // 손대지 않았다
+  });
+});
+
+/**
+ * 운영자 정지의 만료일. 기한 없는 정지가 3년 뒤 되돌릴 수 없는 종료로 끝나던 경로를
+ * 막는 장치라, "날짜가 오면 정확히 무엇이 일어나는가"가 전부 여기서 고정된다.
+ */
+describe('정지 만료일 — pausedUntil / resumeExpiredPauses', () => {
+  const PAUSED_AT = new Date('2026-04-01T00:00:00Z');
+  const UNTIL = new Date('2026-07-01T00:00:00Z');
+
+  const pausedWithUntil = async (until: Date = UNTIL) => {
+    const { created } = await activated();
+    const result = await pauseSubscription(created.id, { pausedUntil: until }, PAUSED_AT);
+    if (!result.ok) throw new Error(`unexpected: ${result.code}`);
+    return created;
+  };
+
+  it('정지하면서 만료일을 받아 저장한다', async () => {
+    const created = await pausedWithUntil();
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedReason).toBe('operator');
+    expect(sub.pausedUntil?.toISOString()).toBe(UNTIL.toISOString());
+  });
+
+  it('지난 날짜·오늘·최대 기한을 넘는 날짜는 거부한다 — 그 자리에서 풀리거나 사실상 방치가 된다', async () => {
+    const { created } = await activated();
+    for (const until of [
+      new Date('2026-03-01T00:00:00Z'),
+      PAUSED_AT,
+      new Date(PAUSED_AT.getTime() + (MAX_PAUSE_DAYS + 1) * 24 * 60 * 60 * 1000),
+    ]) {
+      expect(await pauseSubscription(created.id, { pausedUntil: until }, PAUSED_AT)).toEqual({
+        ok: false,
+        code: 'invalid_pause_until',
+      });
+    }
+    expect((await findSubscriptionById(created.id))!.status).toBe('active');
+  });
+
+  it('만료일 전에는 아무 일도 일어나지 않는다', async () => {
+    const created = await pausedWithUntil();
+    const before = new Date('2026-06-30T23:59:59Z');
+    expect(await resumeExpiredPauses(before)).toEqual({ resumed: [], failed: [] });
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedUntil?.toISOString()).toBe(UNTIL.toISOString());
+  });
+
+  it('경계값 — 만료일 그 순간에 재개된다', async () => {
+    const created = await pausedWithUntil();
+    const result = await resumeExpiredPauses(UNTIL);
+    expect(result.resumed.map((r) => r.subscription.id)).toEqual([created.id]);
+    expect((await findSubscriptionById(created.id))!.status).toBe('active');
+  });
+
+  /**
+   * **즉시 청구하지 않는다는 것이 이 기능의 핵심 판단이다.** 관리자 재개 버튼과 달리
+   * 아무도 보고 있지 않은 자리라, nextBillingAt을 now로 당기면 살아 있는 카드가 예고 없이
+   * 긁힌다. 고객이 원래 알고 있던 다음 정기 청구일을 잡는다.
+   */
+  it('재개는 즉시 청구하지 않고 다음 정기 청구일을 잡는다', async () => {
+    const created = await pausedWithUntil();
+    const result = await resumeExpiredPauses(UNTIL);
+    const nextBillingAt = result.resumed[0].nextBillingAt;
+    // billingDay 5, 만료일이 7월 → 8월 5일 09:00 KST
+    expect(nextBillingAt.toISOString()).toBe('2026-08-05T00:00:00.000Z');
+
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.nextBillingAt?.toISOString()).toBe(nextBillingAt.toISOString());
+    expect(sub.pausedReason).toBeNull();
+    expect(sub.pausedUntil).toBeNull();
+    // 같은 cron 실행에서 청구 목록에 올라오지 않는다 — 재개가 청구 앞에 있어도 안전하다.
+    expect(await listDueSubscriptions(UNTIL)).toHaveLength(0);
+  });
+
+  it('멱등 — 두 번 돌려도 한 번만 재개된다', async () => {
+    await pausedWithUntil();
+    expect((await resumeExpiredPauses(UNTIL)).resumed).toHaveLength(1);
+    expect(await resumeExpiredPauses(UNTIL)).toEqual({ resumed: [], failed: [] });
+  });
+
+  it('한 건이 실패해도 나머지는 재개되고, 실패한 건은 상태가 그대로 남아 다음 실행이 다시 집는다', async () => {
+    const first = await pausedWithUntil();
+    // 두 번째는 카드까지 붙이지 않는다 — 이 테스트가 보는 것은 재개 루프의 실패 격리뿐이고,
+    // activated()를 두 번 부르면 같은 빌링키를 두 번 발급해 unique에 걸린다.
+    const second = await createSubscription({ ...lessonInput, customerEmail: 'b@example.com' }, PAUSED_AT);
+    if (!second.ok) throw new Error('unreachable');
+    await client.execute({
+      sql: "UPDATE subscriptions SET status = 'paused', paused_reason = 'operator', paused_until = ? WHERE id = ?",
+      args: [Math.floor(UNTIL.getTime() / 1000), second.id],
+    });
+    const update = jest.spyOn(mockDb, 'update');
+    update.mockImplementationOnce(() => {
+      throw new Error('boom');
+    });
+
+    const result = await resumeExpiredPauses(UNTIL);
+    update.mockRestore();
+
+    expect(result.failed).toHaveLength(1);
+    expect(result.resumed).toHaveLength(1);
+    const failedId = result.failed[0].subscriptionId;
+    expect([first.id, second.id]).toContain(failedId);
+    expect((await findSubscriptionById(failedId))!.status).toBe('paused');
+    // 다음 실행이 남은 하나를 집는다.
+    expect((await resumeExpiredPauses(UNTIL)).resumed.map((r) => r.subscription.id)).toEqual([failedId]);
+  });
+
+  it('만료일이 없는 옛 정지 행은 건드리지 않는다', async () => {
+    const created = await pausedWithUntil();
+    await client.execute({ sql: 'UPDATE subscriptions SET paused_until = NULL WHERE id = ?', args: [created.id] });
+    expect(await resumeExpiredPauses(new Date('2030-01-01T00:00:00Z'))).toEqual({ resumed: [], failed: [] });
+    expect((await findSubscriptionById(created.id))!.status).toBe('paused');
+  });
+
+  it('결제 실패로 세워진 정지는 기한이 없고 자동 재개 대상도 아니다 — 죽은 카드를 긁지 않는다', async () => {
+    const { created } = await activated();
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    // 최초 + 재시도 2회로 한도를 소진시켜 payment_failed 정지를 만든다.
+    await chargeCycle(created.id, new Date('2026-04-05T00:00:00Z'), { reason: 'scheduled' });
+    await chargeCycle(created.id, new Date('2026-04-06T00:00:00Z'), { reason: 'retry' });
+    await chargeCycle(created.id, new Date('2026-04-08T00:00:00Z'), { reason: 'retry' });
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedReason).toBe('payment_failed');
+    expect(sub.pausedUntil).toBeNull();
+
+    expect(await resumeExpiredPauses(new Date('2030-01-01T00:00:00Z'))).toEqual({ resumed: [], failed: [] });
+    // 기한을 억지로 심어도 사유가 다르면 재개하지 않는다.
+    await client.execute({
+      sql: 'UPDATE subscriptions SET paused_until = ? WHERE id = ?',
+      args: [Math.floor(UNTIL.getTime() / 1000), created.id],
+    });
+    expect(await resumeExpiredPauses(new Date('2030-01-01T00:00:00Z'))).toEqual({ resumed: [], failed: [] });
+  });
+
+  it('운영자 정지는 기한만 다시 적어 연장할 수 있다 — 결제 실패 정지는 덮어쓸 수 없다', async () => {
+    const created = await pausedWithUntil();
+    const later = new Date('2026-09-01T00:00:00Z');
+    const extended = await pauseSubscription(created.id, { pausedUntil: later }, new Date('2026-06-01T00:00:00Z'));
+    expect(extended.ok).toBe(true);
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedUntil?.toISOString()).toBe(later.toISOString());
+
+    await client.execute({
+      sql: "UPDATE subscriptions SET paused_reason = 'payment_failed' WHERE id = ?",
+      args: [created.id],
+    });
+    expect(
+      await pauseSubscription(created.id, { pausedUntil: later }, new Date('2026-06-01T00:00:00Z')),
+    ).toEqual({ ok: false, code: 'invalid_state' });
+  });
+
+  it('관리자 재개는 만료일을 비운다', async () => {
+    const created = await pausedWithUntil();
+    const resumed = await resumeSubscription(created.id, new Date('2026-04-20T00:00:00Z'));
+    expect(resumed.ok).toBe(true);
+    expect((await findSubscriptionById(created.id))!.pausedUntil).toBeNull();
+  });
+
+  it('해지는 만료일을 비운다 — 해지한 구독을 기한이 깨우면 안 된다', async () => {
+    const created = await pausedWithUntil();
+    const cancelled = await cancelSubscription(created.id, { requestedBy: 'admin', reason: 'x' }, new Date('2026-04-20T00:00:00Z'));
+    expect(cancelled.ok).toBe(true);
+    expect((await findSubscriptionById(created.id))!.pausedUntil).toBeNull();
+    expect(await resumeExpiredPauses(new Date('2030-01-01T00:00:00Z'))).toEqual({ resumed: [], failed: [] });
+  });
+
+  it('정지 중 수동 결제가 성공하면 만료일도 비운다 — active 행에 기한이 남으면 안 된다', async () => {
+    const created = await pausedWithUntil();
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_manual'));
+    const charged = await chargeCycle(created.id, new Date('2026-05-05T00:00:00Z'), { reason: 'manual' });
+    expect(charged.ok).toBe(true);
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('active');
+    expect(sub.pausedUntil).toBeNull();
+  });
+
+  it('정지 중 수동 결제가 실패해도 정지와 기한은 그대로다', async () => {
+    const created = await pausedWithUntil();
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    await chargeCycle(created.id, new Date('2026-05-05T00:00:00Z'), { reason: 'manual' });
+    const sub = (await findSubscriptionById(created.id))!;
+    expect(sub.status).toBe('paused');
+    expect(sub.pausedReason).toBe('operator');
+    expect(sub.pausedUntil?.toISOString()).toBe(UNTIL.toISOString());
   });
 });

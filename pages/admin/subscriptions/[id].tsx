@@ -105,6 +105,21 @@ const PAUSED_REASON_LABELS: Record<string, string> = {
   operator: '운영자가 청구를 멈춤',
 };
 
+/** 오늘부터 n일 뒤의 KST 날짜를 'YYYY-MM-DD'로 — date input의 value·min·max용. */
+const kstDateInput = (offsetDays: number): string => {
+  const kst = new Date(Date.now() + offsetDays * 24 * 60 * 60 * 1000 + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+};
+
+/**
+ * 정지 종료일 기본값 = 3개월 뒤.
+ *
+ * 운영자가 "언제까지인지 모를 때" 무엇을 넣을지에 대한 답이다. 짧게 잡아도 잃는 것이 없다 —
+ * 기한이 끝나면 다음 정기 청구일로 재개될 뿐이고, 계속 세워 둬야 하면 그때 다시 정지하면
+ * 된다. 반대로 길게 잡으면 그 구독은 그동안 아무도 보지 않는 상태로 남는다.
+ */
+const DEFAULT_PAUSE_DAYS = 90;
+
 const STATUS_CLASS: Record<string, string> = {
   pending_card: 'bg-gray-100 text-gray-700',
   active: 'bg-green-100 text-green-700',
@@ -170,8 +185,15 @@ export default function AdminSubscriptionDetailPage({
       '지금 이 구독의 이번 회차를 수동으로 결제할까요?',
     );
 
-  const handlePause = () =>
-    run(() => mutateSubscription(subscription.id, 'pause'), '이 구독의 청구를 일시정지할까요?');
+  const [pausedUntilInput, setPausedUntilInput] = useState(() => kstDateInput(DEFAULT_PAUSE_DAYS));
+
+  const handlePause = (e: React.FormEvent) => {
+    e.preventDefault();
+    return run(
+      () => mutateSubscription(subscription.id, 'pause', { pausedUntil: pausedUntilInput }),
+      `${pausedUntilInput}까지 이 구독의 청구를 멈출까요? 그날 자동으로 재개되고, 다음 정기 결제일에 청구됩니다.`,
+    );
+  };
 
   const handleResume = () =>
     run(() => mutateSubscription(subscription.id, 'resume'), '이 구독을 재개할까요? 다음 결제가 즉시 예약됩니다.');
@@ -235,7 +257,11 @@ export default function AdminSubscriptionDetailPage({
   };
 
   const canCharge = subscription.status === 'active' || subscription.status === 'past_due' || subscription.status === 'paused';
-  const canPause = subscription.status === 'active' || subscription.status === 'past_due';
+  // 이미 운영자가 세워 둔 구독은 기한만 다시 적는다 — "짧게 잡고 필요하면 늘린다"가
+  // 성립하려면 연장하는 길이 있어야 한다. 결제 실패 정지·사유 불명은 대상이 아니다
+  // (lib/billing/service.ts의 pauseSubscription 주석).
+  const canExtendPause = subscription.status === 'paused' && subscription.pausedReason === 'operator';
+  const canPause = subscription.status === 'active' || subscription.status === 'past_due' || canExtendPause;
   const canResume = subscription.status === 'paused';
   const canCancel = subscription.status === 'active' || subscription.status === 'past_due' || subscription.status === 'paused';
   const canCardChangeLink =
@@ -304,6 +330,13 @@ export default function AdminSubscriptionDetailPage({
                   {subscription.pausedReason
                     ? PAUSED_REASON_LABELS[subscription.pausedReason] ?? subscription.pausedReason
                     : '정지 사유 기록 없음'}
+                </span>
+              )}
+              {subscription.status === 'paused' && (
+                <span className="inline-flex px-3 py-1 rounded-full text-sm font-medium bg-amber-50 text-amber-800">
+                  {subscription.pausedUntil
+                    ? `${formatKstDateTimeFull(subscription.pausedUntil)}까지`
+                    : '정지 기한 없음'}
                 </span>
               )}
               <span className="text-gray-500 text-xs font-mono">{subscription.id}</span>
@@ -494,9 +527,23 @@ export default function AdminSubscriptionDetailPage({
                 </Button>
               )}
               {canPause && (
-                <Button light variant="secondary" disabled={busy} onClick={handlePause}>
-                  일시정지
-                </Button>
+                <form onSubmit={handlePause} className="flex items-end gap-2">
+                  <Field id="pausedUntil" label="정지 종료일" required className={lightOnlyField}>
+                    <TextInput
+                      light
+                      type="date"
+                      value={pausedUntilInput}
+                      min={kstDateInput(1)}
+                      max={kstDateInput(365)}
+                      onChange={(e) => setPausedUntilInput(e.target.value)}
+                      className="min-h-0 text-sm"
+                      required
+                    />
+                  </Field>
+                  <Button light type="submit" variant="secondary" disabled={busy}>
+                    {canExtendPause ? '정지 기한 변경' : '일시정지'}
+                  </Button>
+                </form>
               )}
               {canResume && (
                 <Button light disabled={busy} onClick={handleResume}>

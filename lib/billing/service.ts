@@ -5,7 +5,7 @@
  * 회차마다 orders 1건 + payments 1건을 남기는 것이 핵심 설계다(스펙 §4) — 기존 관리자
  * 목록·웹훅·환불 도구가 구독 회차를 특별 취급 없이 그대로 다룬다.
  */
-import { and, asc, desc, eq, inArray, isNull, lte, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, inArray, isNotNull, isNull, lte, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
@@ -533,6 +533,10 @@ export const chargeCycle = async (
         // 정지가 남긴 값이 그대로 있으면 카드가 죽은 구독이 운영자 정지로 읽힌다.
         // 이미 정지된 구독은 위 주석대로 원래 사유를 지킨다.
         pausedReason: wasPaused ? subscription.pausedReason : retryAt ? null : 'payment_failed',
+        // 결제 실패로 세우는 정지에는 기한이 없다 — 카드가 살아나야 풀리는 것이지 날짜가
+        // 온다고 풀릴 것이 아니다. 여기에 기한이 남으면 죽은 카드를 자동 재개가 긁는다.
+        // 이미 정지된 구독(운영자 정지에 대한 수동 결제 실패)은 원래 기한을 지킨다.
+        pausedUntil: wasPaused ? subscription.pausedUntil : null,
         nextBillingAt: retryAt ?? subscription.nextBillingAt,
         updatedAt: now,
       })
@@ -575,6 +579,7 @@ export const chargeCycle = async (
          * 행이 남아, 화면에 보이는 것과 실제가 어긋난다.
          */
         pausedReason: null,
+        pausedUntil: null,
         currentPeriodStart: period.start,
         currentPeriodEnd: period.end,
         nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
@@ -652,6 +657,9 @@ export const cancelSubscription = async (
       // 해지 후에는 어떤 경로로도 청구되지 않게 예약을 비운다(listDueSubscriptions는
       // status로도 거르지만, 두 겹으로 막는다).
       nextBillingAt: null,
+      // 정지 기한도 함께 비운다 — 해지된 구독을 resumeExpiredPauses가 깨우면 안 된다.
+      // 그쪽은 status='paused'도 함께 보지만, 여기서도 지워 두 겹으로 막는다.
+      pausedUntil: null,
       updatedAt: now,
     })
     .where(eq(subscriptions.id, id))
@@ -660,22 +668,72 @@ export const cancelSubscription = async (
 };
 
 /**
- * 관리자 일시정지 — 청구만 멈춘다(카드는 그대로).
+ * 운영자 정지의 최대 기한(일). 이보다 먼 날짜는 받지 않는다.
+ *
+ * 방치 판정이 3년(`SUBSCRIPTION_DORMANCY_YEARS`)이므로 그보다 짧기만 하면 사고는 안 나지만,
+ * 1년으로 잡은 이유는 따로 있다. 이 상품들은 월 단위 구독이라 한 해가 지나면 금액·계약·
+ * 카드가 그대로라고 볼 근거가 없다 — 그렇게 먼 날짜는 "정지"가 아니라 해지에 가깝다.
+ * 더 길게 세워 둬야 하면 기한이 올 때마다 다시 정지하면 된다(아래 연장 분기).
+ */
+export const MAX_PAUSE_DAYS = 365;
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+export type PauseResult =
+  | { ok: true; subscription: Subscription }
+  | { ok: false; code: 'not_found' | 'invalid_state' | 'invalid_pause_until' };
+
+/**
+ * 관리자 일시정지 — 청구만 멈춘다(카드는 그대로). **언제까지인지를 함께 받는다.**
  *
  * 여기서 만드는 `paused`는 **살아 있는 구독**이라 결제 실패로 세워진 것과 취급이 달라야
  * 한다. 그래서 `pausedReason: 'operator'`를 함께 적는다 — 이 값이 없으면 3년 뒤
  * `closeDormantSubscriptions`가 이 구독을 방치로 보고 `ended`로 넘기는데, `ended`는
  * `resumeSubscription`도 관리자 '결제' 버튼도 받지 않아 되돌릴 길이 없다. 값이 있으면
  * 헬스체크가 닫히기 전에 운영자에게 알린다(`lib/ops/healthCheck.ts`).
+ *
+ * ## 기한을 **필수**로 받는 이유
+ *
+ * 선택으로 두면 "기한 없는 정지"가 그대로 남고, 그 하나가 위 사고 경로 전체다. 경보는
+ * 운영자가 그날 메일을 읽어야 작동하는 방어라 3년 뒤 한 번 놓치면 끝난다. 날짜가 있으면
+ * `resumeExpiredPauses`가 사람 손 없이 되돌린다.
+ *
+ * **언제까지인지 모를 때 무엇을 넣는가** — 짧게 잡고 그때 가서 늘린다. 관리자 화면은
+ * 3개월 뒤를 기본값으로 채워 둔다. 기한이 끝나 자동 재개돼도 잃는 것은 없다(다음 청구는
+ * 그 다음 정기 청구일이고, 그 전에 다시 정지하면 청구되지 않는다). 반대로 길게 잡아 두면
+ * 그동안 이 구독은 아무도 안 보는 상태로 남는다.
+ *
+ * ## 이미 정지된 구독의 기한 연장
+ *
+ * `paused` + `operator`면 상태는 그대로 두고 기한만 새로 적는다 — 위의 "짧게 잡고 늘린다"가
+ * 성립하려면 연장하는 길이 있어야 한다. **`payment_failed`와 사유 불명(NULL)은 받지 않는다.**
+ * 그쪽은 운영자가 세운 정지가 아니라 카드가 죽은 구독이고, 여기서 `operator`로 덮으면
+ * 그 사실이 사라진 채 기한이 오면 자동 재개돼 죽은 카드를 긁는다.
  */
-export const pauseSubscription = async (id: string, now: Date): Promise<MutateResult> => {
+export const pauseSubscription = async (
+  id: string,
+  input: { pausedUntil: Date },
+  now: Date,
+): Promise<PauseResult> => {
   const db = getDb();
   const subscription = await findSubscriptionById(id);
   if (!subscription) return { ok: false, code: 'not_found' };
-  if (subscription.status !== 'active' && subscription.status !== 'past_due') return { ok: false, code: 'invalid_state' };
+
+  const extendable =
+    subscription.status === 'paused' && subscription.pausedReason === 'operator';
+  if (subscription.status !== 'active' && subscription.status !== 'past_due' && !extendable) {
+    return { ok: false, code: 'invalid_state' };
+  }
+
+  const until = input.pausedUntil;
+  if (Number.isNaN(until.getTime())) return { ok: false, code: 'invalid_pause_until' };
+  // 지난 날짜를 받으면 다음 cron이 곧바로 되돌린다 — 정지한 적 없는 것과 같아진다.
+  if (until.getTime() <= now.getTime()) return { ok: false, code: 'invalid_pause_until' };
+  if (until.getTime() > now.getTime() + MAX_PAUSE_DAYS * DAY_MS) return { ok: false, code: 'invalid_pause_until' };
+
   const [row] = await db
     .update(subscriptions)
-    .set({ status: 'paused', pausedReason: 'operator', updatedAt: now })
+    .set({ status: 'paused', pausedReason: 'operator', pausedUntil: until, updatedAt: now })
     .where(eq(subscriptions.id, id))
     .returning();
   return { ok: true, subscription: row };
@@ -696,7 +754,8 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
     // 아니다(이력을 남기는 표는 없다). 비우지 않으면 `active` 행이 옛 사유를 달고 다니고,
     // 그 구독이 뒤에 결제 실패로 세워질 때 `payment_failed`를 쓰는 자리가 한 군데뿐이라
     // 어긋난 값이 그대로 읽힌다 — 살아 있지도 않은 운영자 정지 경보가 계속 뜬다.
-    .set({ status: 'active', pausedReason: null, nextBillingAt: now, updatedAt: now })
+    // 기한도 함께 비운다 — 남겨 두면 resumeExpiredPauses가 이미 재개된 구독을 또 집는다.
+    .set({ status: 'active', pausedReason: null, pausedUntil: null, nextBillingAt: now, updatedAt: now })
     .where(eq(subscriptions.id, id))
     .returning();
   return { ok: true, subscription: row };
@@ -767,6 +826,99 @@ export const endExpiredSubscriptions = async (now: Date): Promise<number> => {
     WHERE status = 'cancelled' AND ends_at IS NOT NULL AND ends_at <= ${toEpoch(now)}
   `);
   return rowsAffectedOf(result) ?? 0;
+};
+
+/** 기한이 끝나 자동으로 재개된 구독 한 건. 호출부가 이 값으로 고객 안내 메일을 만든다. */
+export interface ResumedPause {
+  subscription: Subscription;
+  /** 재개 뒤 처음 청구되는 시각. 고객 안내에 그대로 적는다. */
+  nextBillingAt: Date;
+}
+
+export interface ResumeExpiredPausesResult {
+  resumed: ResumedPause[];
+  /** 한 건의 실패가 나머지를 막지 않는다 — 실패한 것은 다음 cron이 다시 집는다. */
+  failed: Array<{ subscriptionId: string; message: string }>;
+}
+
+/**
+ * 정지 기한이 지난 운영자 정지를 **자동으로 재개한다.** 청구 cron이 매일 부른다.
+ *
+ * ## 기한이 오면 왜 "재개"인가
+ *
+ * 후보는 셋이었다. 자동 해지는 안전하지만 **우리가 고객의 구독을 끝내는 것**이라, 운영자가
+ * "3개월 뒤까지"라고 적은 것을 "3개월 뒤에 해지"로 바꿔 읽는 셈이다 — 적은 것과 다른 일을
+ * 한다. 운영자에게 알리고 기다리는 것은 지금의 방치 경보와 같아서, 이 컬럼을 만든 이유
+ * 자체가 사라진다. 남는 것은 재개인데, 그것이 운영자가 날짜를 적으며 뜻한 바이기도 하다
+ * ("여기까지 멈춘다" = "그 뒤에는 다시 돈다").
+ *
+ * ## 재개하면서 **즉시 청구하지 않는다** — 여기가 `resumeSubscription`과 다른 점이다
+ *
+ * 운영자가 버튼을 눌러 재개할 때는 `nextBillingAt`을 now로 당겨 다음 cron이 바로 긁는다.
+ * 사람이 그 순간 화면 앞에서 내린 결정이라 결과도 그 자리에서 보인다. **여기서는 아무도
+ * 보고 있지 않다.** 날짜가 왔다는 이유만으로 살아 있는 카드를 긁으면 고객은 예고 없이
+ * 청구를 맞고, 그 사이 카드가 만료됐으면 실패 메일부터 받는다.
+ *
+ * 그래서 `computeNextBillingAt`으로 **고객이 원래 알고 있던 정기 청구일**(다음 달 billingDay)을
+ * 잡는다. 그 날짜를 적은 안내 메일이 청구보다 먼저 나가므로 예고 없는 청구가 되지 않는다
+ * (재개와 첫 청구 사이는 최소 하루, 보통 한 달이다 — `computeNextBillingAt`은 언제나 다음
+ * 달로 넘긴다). 정지 기간의 미청구분은 걷지 않는다 — `resumeSubscription`과 같은 판정이고,
+ * 밀린 달을 몰아 긁으면 고객이 예상 못 한 금액을 맞는다.
+ *
+ * ## 대상을 `operator`로 좁히는 이유
+ *
+ * 기한은 `pauseSubscription`만 쓰고 그 자리가 곧 `operator`라 사유 조건은 사실상 잉여지만,
+ * 잘못된 조합(기한이 남은 `payment_failed`)이 어떤 경로로든 생기면 **죽은 카드를 자동으로
+ * 긁게 된다.** 틀렸을 때의 대가가 한쪽으로만 크므로 두 겹으로 건다.
+ *
+ * ## 멱등
+ *
+ * 재개가 `paused_until`을 비우고, UPDATE가 `status`·`paused_until`을 다시 조건으로 건다.
+ * 같은 실행이 두 번 돌거나 운영자가 그 사이 직접 재개·해지해도 두 번 재개되지 않는다
+ * (0행이면 조용히 건너뛴다). 실패한 건은 상태가 그대로라 다음 날 cron이 다시 집는다.
+ */
+export const resumeExpiredPauses = async (now: Date): Promise<ResumeExpiredPausesResult> => {
+  const db = getDb();
+  const candidates = await db
+    .select()
+    .from(subscriptions)
+    .where(
+      and(
+        eq(subscriptions.status, 'paused'),
+        eq(subscriptions.pausedReason, 'operator'),
+        isNotNull(subscriptions.pausedUntil),
+        lte(subscriptions.pausedUntil, now),
+      ),
+    )
+    .orderBy(asc(subscriptions.pausedUntil));
+
+  const result: ResumeExpiredPausesResult = { resumed: [], failed: [] };
+
+  for (const candidate of candidates) {
+    const nextBillingAt = computeNextBillingAt(now, candidate.billingDay);
+    try {
+      const [row] = await db
+        .update(subscriptions)
+        .set({ status: 'active', pausedReason: null, pausedUntil: null, nextBillingAt, updatedAt: now })
+        .where(
+          and(
+            eq(subscriptions.id, candidate.id),
+            eq(subscriptions.status, 'paused'),
+            eq(subscriptions.pausedReason, 'operator'),
+            lte(subscriptions.pausedUntil, now),
+          ),
+        )
+        .returning();
+      if (!row) continue; // 읽은 뒤 이 순간 사이에 재개·해지가 들어왔다 — 그쪽이 맞다.
+      result.resumed.push({ subscription: row, nextBillingAt });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      console.error('[billing] 정지 기한 만료 자동 재개 실패', { subscriptionId: candidate.id, error });
+      result.failed.push({ subscriptionId: candidate.id, message });
+    }
+  }
+
+  return result;
 };
 
 // ─── cron 동시 실행 방어 / 웹훅 대사 ────────────────────────────────────────
@@ -904,8 +1056,9 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
             .update(subscriptions)
             .set({
               status: 'active',
-              // 되살리는 자리는 `active`다 — 정지 사유를 남겨 두면 안 된다.
+              // 되살리는 자리는 `active`다 — 정지 사유도 기한도 남겨 두면 안 된다.
               pausedReason: null,
+              pausedUntil: null,
               currentPeriodStart: period.start,
               currentPeriodEnd: period.end,
               nextBillingAt: computeNextBillingAt(now, subscription.billingDay),

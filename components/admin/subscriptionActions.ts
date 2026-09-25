@@ -57,7 +57,7 @@ export type SubscriptionMutation =
 export const mutateSubscription = async (
   id: string,
   action: SubscriptionMutation,
-  payload?: { reason?: string; paymentId?: string; amount?: number },
+  payload?: { reason?: string; paymentId?: string; amount?: number; pausedUntil?: string },
 ): Promise<SubscriptionActionResult & { url?: string }> => {
   try {
     const response = await fetch(`/api/admin/subscriptions/${id}`, {
