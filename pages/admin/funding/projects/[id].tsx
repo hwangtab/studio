@@ -70,7 +70,7 @@ interface AdminFundingProjectDetailPageProps {
   payout: AdminPayoutView | null;
   /**
    * 스튜디오 서비스(설계 대행·발매 프로젝트 연계). `project`의 형제 필드 — 별도 테이블이고
-   * (마이그레이션 0036) 운영 DB에 아직 없으면 `{ available: false }`로 화면만 "미적용"을 띄운다.
+   * (마이그레이션 0037) 운영 DB에 아직 없으면 `{ available: false }`로 화면만 "미적용"을 띄운다.
    */
   service: LoadServiceResult;
 }
@@ -871,7 +871,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
 
           {/*
             스튜디오 서비스 — 운영자 전용(개설자에게 보이지 않는다). 설계비는 모금 정산과 별개로
-            청구·입금된다(성공 수수료 없음). 테이블은 마이그레이션 0036이라, 운영 DB에 없으면
+            청구·입금된다(성공 수수료 없음). 테이블은 마이그레이션 0037이라, 운영 DB에 없으면
             조작을 막고 적용 방법을 적는다(lib/funding/projectServices.ts).
           */}
           <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">
@@ -880,7 +880,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
             {!service.available ? (
               <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
                 {service.reason === 'missing_table'
-                  ? '운영 DB에 마이그레이션 0036(funding_project_services)이 아직 적용되지 않았습니다. main에서 npm run db:migrate를 실행하면 이 칸이 열립니다. 다른 기능은 영향이 없습니다.'
+                  ? '운영 DB에 마이그레이션 0037(funding_project_services)이 아직 적용되지 않았습니다. main에서 npm run db:migrate를 실행하면 이 칸이 열립니다. 다른 기능은 영향이 없습니다.'
                   : '서비스 정보를 불러오지 못했습니다(서버 로그 참조). 심사·정산은 그대로 쓸 수 있습니다. 잠시 뒤 새로고침해 주세요.'}
               </p>
             ) : (

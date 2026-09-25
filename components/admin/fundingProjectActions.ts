@@ -32,7 +32,7 @@ export type FundingProjectPatchBody =
   | { action: 'approve'; slug?: string; note?: string }
   | { action: 'request_changes' | 'reject' | 'archive'; note: string }
   | { action: 'set_review_note' | 'set_internal_note'; note?: string }
-  /** 스튜디오 서비스(운영자 전용, 마이그레이션 0036). lib/funding/projectServices.ts. */
+  /** 스튜디오 서비스(운영자 전용, 마이그레이션 0037). lib/funding/projectServices.ts. */
   | { action: 'set_studio_service'; kind: 'none' | 'design' | 'release' }
   | { action: 'set_design_fee_paid'; paid: boolean }
   | { action: 'close'; note: string }

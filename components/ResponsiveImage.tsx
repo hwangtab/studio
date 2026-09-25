@@ -1,6 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
 
+import { isFundingMediaUrl } from '../lib/funding/mediaPath';
+
 const normalizeSrc = (src = '') => {
   if (!src) return '';
   if (src.startsWith('http')) return src;
@@ -60,6 +62,9 @@ const ResponsiveImage = React.memo(({
 
   if (!normalizedSrc) return null;
 
+  // 개설자 업로드 이미지는 최적화기를 건너뛴다 — 이유는 isFundingMediaUrl 주석에 있다.
+  const unoptimized = isFundingMediaUrl(normalizedSrc);
+
   const hasDimensions = typeof width === 'number' && typeof height === 'number';
   const useFill = Boolean(fill) || !hasDimensions;
   const wrapperClass = pictureClassName || containerClassName;
@@ -77,6 +82,7 @@ const ResponsiveImage = React.memo(({
             sizes={sizes}
             priority={priority}
             fill
+            unoptimized={unoptimized}
             loading={loading}
             quality={quality}
             onError={() => setFailedSrc(normalizedSrc)}
@@ -97,6 +103,7 @@ const ResponsiveImage = React.memo(({
         priority={priority}
         width={width || 300}
         height={height || 300}
+        unoptimized={unoptimized}
         loading={loading}
         quality={quality}
         onError={() => setFailedSrc(normalizedSrc)}

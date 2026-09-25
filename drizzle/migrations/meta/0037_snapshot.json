@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a68e417c-3e3a-47c8-abd9-a02364f3cd05",
-  "prevId": "9397c65c-7d03-4c7b-9024-d3754e1f1831",
+  "id": "d111dced-5c7e-4d2f-b25f-c4d5a929547d",
+  "prevId": "a68e417c-3e3a-47c8-abd9-a02364f3cd05",
   "tables": {
     "artist_payouts": {
       "name": "artist_payouts",
@@ -1493,6 +1493,74 @@
         "funding_project_payouts_project_id_funding_projects_id_fk": {
           "name": "funding_project_payouts_project_id_funding_projects_id_fk",
           "tableFrom": "funding_project_payouts",
+          "tableTo": "funding_projects",
+          "columnsFrom": [
+            "project_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "funding_project_services": {
+      "name": "funding_project_services",
+      "columns": {
+        "project_id": {
+          "name": "project_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "kind": {
+          "name": "kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "design_fee": {
+          "name": "design_fee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "design_fee_paid_at": {
+          "name": "design_fee_paid_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch())"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "funding_project_services_project_id_funding_projects_id_fk": {
+          "name": "funding_project_services_project_id_funding_projects_id_fk",
+          "tableFrom": "funding_project_services",
           "tableTo": "funding_projects",
           "columnsFrom": [
             "project_id"

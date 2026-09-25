@@ -461,6 +461,29 @@ describe('응원 메시지 공개', () => {
     expect(s.publicBackers).not.toContain(PURGED_MARK);
   });
 
+  // 운영자 숨김은 공개 동의와 별개다 — 동의가 켜져 있어도 빠진다.
+  it('운영자가 내린 후원은 공개 동의와 무관하게 명단에서 빠진다', async () => {
+    const orderNo = await paidWith({ customerEmail: 'm8@example.com', customerPhone: '010-9008', customerName: '내린사람', supporterMessage: '내려질 말' });
+    await client.execute({
+      sql: 'UPDATE funding_pledges SET listing_hidden_at=? WHERE order_id=(SELECT id FROM orders WHERE order_no=?)',
+      args: [Math.floor(NOW.getTime() / 1000), orderNo],
+    });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).not.toContain('내린사람');
+    expect(s.publicMessages.map((m) => m.message)).not.toContain('내려질 말');
+  });
+
+  // 명단은 이름을 한 문단에 이어 그린다 — 방향 재정의 문자 하나가 옆 사람의 이름까지 뒤집는다.
+  it('결제자 실명 칸의 보이지 않는 문자를 걷고, 걷고 나서 빈 이름은 뺀다', async () => {
+    await paidWith({ customerEmail: 'm9@example.com', customerPhone: '010-9009', customerName: '방향\u202E뒤집기' });
+    await paidWith({ customerEmail: 'm10@example.com', customerPhone: '010-9010', customerName: '\u200B', supporterMessage: '보이지 않는 이름' });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).toContain('방향뒤집기');
+    expect(s.publicBackers).not.toContain('\u200B');
+    expect(s.publicBackers).not.toContain('');
+    expect(s.publicMessages.map((m) => m.message)).not.toContain('보이지 않는 이름');
+  });
+
   it('공백만 남긴 메시지는 목록에 넣지 않는다', async () => {
     await paidWith({ customerEmail: 'm4@example.com', customerPhone: '010-9004', customerName: '공백', supporterMessage: '   ' });
     const s = await aggregateProjectStatus(PROJECT, NOW);

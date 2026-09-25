@@ -506,3 +506,46 @@ describe('set_memo 빈 값', () => {
     expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '[웹훅] 재고 초과 가능, 확인 필요\n메모 추가' })).status).toBe(200);
   });
 });
+
+/**
+ * 서포터 명단에서 내리기. 예전에는 이 동작이 후원자의 공개 동의를 껐고, 후원자가 펀딩 확인
+ * 페이지에서 다시 켜면 내린 닉네임이 그대로 되살아났다. 이제는 운영자 숨김을 따로 건다.
+ */
+describe('서포터 명단 숨김', () => {
+  const lastSet = () => {
+    const setMock = (mockUpdate.mock.results.at(-1)!.value as { set: jest.Mock }).set;
+    return setMock.mock.calls[0][0];
+  };
+
+  it('unpublish: 사유가 없으면 400이고 아무것도 안 바꾼다', async () => {
+    for (const body of [{ action: 'unpublish' }, { action: 'unpublish', reason: '  ' }]) {
+      expect((await call('PATCH', { id: 'order-1' }, body)).status).toBe(400);
+    }
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('unpublish: 공개 동의는 건드리지 않고 숨김 시각과 메모만 남긴다', async () => {
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'unpublish', reason: '욕설 닉네임' });
+    expect(r.status).toBe(200);
+    const set = lastSet();
+    expect(set).not.toHaveProperty('displayNamePublic');
+    expect(set.listingHiddenAt).toBeInstanceOf(Date);
+    expect(set.adminMemo).toMatch(/서포터 명단에서 내림 — 욕설 닉네임$/);
+  });
+
+  it('unpublish: 이미 내렸으면 409', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, fundingPledge: { ...BASE_ORDER.fundingPledge, listingHiddenAt: new Date() } });
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'unpublish', reason: '중복' })).status).toBe(409);
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  it('restore_listing: 숨김을 풀고 기록을 남긴다 — 내린 적이 없으면 409', async () => {
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'restore_listing' })).status).toBe(409);
+    (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, fundingPledge: { ...BASE_ORDER.fundingPledge, listingHiddenAt: new Date(), adminMemo: '이전 메모' } });
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'restore_listing' });
+    expect(r.status).toBe(200);
+    const set = lastSet();
+    expect(set.listingHiddenAt).toBeNull();
+    expect(set.adminMemo).toMatch(/^이전 메모\n\[.*\] 서포터 명단 숨김 해제$/);
+  });
+});

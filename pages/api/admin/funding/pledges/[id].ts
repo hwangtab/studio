@@ -174,16 +174,36 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
     case 'unpublish': {
       /**
-       * 공개 명단에서 내린다 — 이름과 응원 메시지가 함께 빠진다(공개 동의가 그 둘을 한
-       * 단위로 받는다). 타인의 권리를 침해하거나 프로젝트와 무관한 메시지를 내리기 위한
-       * 수단이고, 약관 제13조가 그럴 수 있다고 고지한다.
+       * 공개 명단에서 내린다 — 표시 이름과 응원 메시지가 함께 빠진다. 타인의 권리를 침해하거나
+       * 프로젝트와 무관한 이름·메시지를 내리기 위한 수단이고, 약관 제13조가 고지한다.
        *
-       * 메시지 본문은 지우지 않는다. 표시만 내리고 기록은 남겨 둔다 — 왜 내렸는지 나중에
-       * 확인할 수 있어야 하고, 후원자가 이의를 제기할 수도 있다.
+       * **공개 동의(`display_name_public`)는 건드리지 않는다.** 예전에는 이 동작이 동의를
+       * 껐는데, 그 값은 후원자가 펀딩 확인 페이지에서 다시 켤 수 있어 내린 닉네임이 토글 한
+       * 번에 되살아났다. 운영자의 판단은 `listing_hidden_at`에 따로 두고 운영자만 되돌린다.
+       *
+       * 본문은 지우지 않는다 — 왜 내렸는지 확인할 수 있어야 하고 후원자가 이의를 제기할 수도
+       * 있다. 사유는 메모에 날짜와 함께 덧붙인다(clear_download_record와 같은 방식).
        */
+      const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
+      if (!reason) return res.status(400).json({ ok: false, message: '명단에서 내리려면 사유를 입력해야 합니다.' });
+      if (order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '이미 명단에서 내린 펀딩입니다.' });
+      const entry = `[${kstDateString(now)}] 서포터 명단에서 내림 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
+      const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)
-        .set({ displayNamePublic: false, updatedAt: now })
+        .set({ listingHiddenAt: now, adminMemo: memo, updatedAt: now })
+        .where(eq(fundingPledges.id, order.fundingPledge.id));
+      return res.status(200).json({ ok: true });
+    }
+    case 'restore_listing': {
+      // 운영자가 내린 것을 되돌린다. 명단에 실제로 다시 뜨는지는 후원자의 공개 동의가 정한다 —
+      // 그 사이 후원자가 동의를 거뒀으면 되돌려도 뜨지 않는다.
+      if (!order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '명단에서 내린 적이 없는 펀딩입니다.' });
+      const entry = `[${kstDateString(now)}] 서포터 명단 숨김 해제`;
+      const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
+      await db
+        .update(fundingPledges)
+        .set({ listingHiddenAt: null, adminMemo: memo, updatedAt: now })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }

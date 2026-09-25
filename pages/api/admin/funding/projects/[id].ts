@@ -267,7 +267,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   /**
    * 스튜디오 서비스(설계 대행·발매 프로젝트 연계) 지정 — 운영자 전용, 개설자에게 보이지 않는다.
-   * 테이블은 마이그레이션 0036이다. 운영 DB에 아직 없으면 503으로 "미적용"을 알린다 — 다른
+   * 테이블은 마이그레이션 0037이다. 운영 DB에 아직 없으면 503으로 "미적용"을 알린다 — 다른
    * 쓰기(판정·메모·정산)는 이 테이블과 무관하게 계속 된다(lib/funding/projectServices.ts).
    */
   if (b.action === 'set_studio_service' || b.action === 'set_design_fee_paid') {
@@ -287,7 +287,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (result.ok) return res.status(200).json({ ok: true, service: result.service });
     const failure: Record<typeof result.code, [number, string]> = {
       not_found: [404, '프로젝트를 찾을 수 없습니다.'],
-      unavailable: [503, '운영 DB에 마이그레이션 0036(funding_project_services)이 아직 적용되지 않았습니다. npm run db:migrate 뒤 다시 시도해 주세요.'],
+      unavailable: [503, '운영 DB에 마이그레이션 0037(funding_project_services)이 아직 적용되지 않았습니다. npm run db:migrate 뒤 다시 시도해 주세요.'],
       no_service: [400, '먼저 서비스 종류(설계 대행·발매 프로젝트 연계)를 지정해 주세요.'],
     };
     const [status, message] = failure[result.code];

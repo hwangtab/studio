@@ -35,3 +35,19 @@ export function resolveFundingBlobPath(input: string | string[] | undefined): st
 
   return `${FUNDING_MEDIA_PREFIX}${name}`;
 }
+
+/**
+ * 이 주소가 개설자 업로드 이미지인가 — `next/image` 최적화를 건너뛸지 판정한다.
+ *
+ * 최적화를 타면 브라우저가 아니라 **서버**가 `/_next/image`에서 원본을 가져온다. 그 요청에는
+ * 쿠키가 실리지 않으므로, 승인 전 프로젝트의 이미지는 미디어 라우트의 접근 판정에서 404가
+ * 된다(개설자 미리보기·관리자 심사 화면이 통째로 깨진다). 최적화기에 예외를 두는 것은
+ * 접근 게이트를 우회하는 공개 경로를 하나 더 만드는 것이라 답이 아니다 — 브라우저가 직접,
+ * 쿠키를 싣고 가져오게 한다.
+ *
+ * 승인된(공개) 이미지도 같은 경로를 탄다. 업로드 시점에 이미 가로 1600px 이하 webp로
+ * 재인코딩되어 있어(`creatorUpload.ts`) 최적화기가 더 줄일 여지가 크지 않고, 판정에 따라
+ * 렌더 방식이 갈리면 승인 직후 화면이 달라지는 자리가 생긴다.
+ */
+export const isFundingMediaUrl = (src: string | undefined): boolean =>
+  typeof src === 'string' && src.startsWith(FUNDING_MEDIA_URL_PREFIX);

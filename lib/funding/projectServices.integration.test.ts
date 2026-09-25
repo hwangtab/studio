@@ -22,7 +22,7 @@ import {
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
 
-/** 마이그레이션을 순서대로 적용한다. skip에 든 파일은 건너뛴다 — "0036 미적용 운영 DB" 재현용. */
+/** 마이그레이션을 순서대로 적용한다. skip에 든 파일은 건너뛴다 — "0037 미적용 운영 DB" 재현용. */
 const migrate = async (skip: (file: string) => boolean = () => false) => {
   client = createClient({ url: ':memory:' });
   for (const file of readdirSync(MIGRATIONS).filter((f) => f.endsWith('.sql')).sort()) {
@@ -52,7 +52,7 @@ const seedProject = async (): Promise<string> => {
   return project.id;
 };
 
-describe('스튜디오 서비스 (0036 적용된 DB)', () => {
+describe('스튜디오 서비스 (0037 적용된 DB)', () => {
   beforeEach(() => migrate());
 
   it('행이 없으면 직접 개설이다', async () => {
@@ -113,8 +113,8 @@ describe('스튜디오 서비스 (0036 적용된 DB)', () => {
   });
 });
 
-describe('0036이 아직 적용되지 않은 운영 DB', () => {
-  beforeEach(() => migrate((file) => file.startsWith('0036_')));
+describe('0037이 아직 적용되지 않은 운영 DB', () => {
+  beforeEach(() => migrate((file) => file.startsWith('0037_')));
 
   it('읽기는 던지지 않고 available: false', async () => {
     const id = await seedProject();

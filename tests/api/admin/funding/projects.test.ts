@@ -495,10 +495,10 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
     expect(r.status).toBe(expected);
   });
 
-  it('0036 미적용이면 운영자에게 마이그레이션을 안내한다', async () => {
+  it('0037 미적용이면 운영자에게 마이그레이션을 안내한다', async () => {
     (setProjectService as jest.Mock).mockResolvedValue({ ok: false, code: 'unavailable' });
     const r = await call('PATCH', { id: 'proj-1' }, { action: 'set_studio_service', kind: 'release' });
     expect(r.status).toBe(503);
-    expect(JSON.stringify(r.body)).toMatch(/0036/);
+    expect(JSON.stringify(r.body)).toMatch(/0037/);
   });
 });

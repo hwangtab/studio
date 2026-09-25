@@ -9,7 +9,7 @@ const baseProps = {
   quantity: 1, additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
   canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [], lookupFailed: false,
   displayNamePublic: false, canEditDisplayName: true,
-  customerName: '홍길동', publicName: null, supporterMessage: null,
+  customerName: '홍길동', publicName: null, supporterMessage: null, listingHidden: false,
 };
 
 beforeEach(() => {
@@ -108,6 +108,13 @@ describe('명단 공개 설정', () => {
     await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
     expect(await screen.findByText('이 펀딩은 이름 공개 설정을 바꿀 수 없습니다.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '명단에서 내리기' })).toBeInTheDocument();
+  });
+
+  // 공개 동의가 켜져 있어도 운영자가 내렸으면 "올라가 있습니다"라고 말하면 안 된다.
+  it('운영자가 내렸으면 그 사실을 알린다', () => {
+    render(<FundingManagePage {...baseProps} displayNamePublic listingHidden paymentMethod="toss" />);
+    expect(screen.getByText(/서포터 명단에서 내려 두었습니다/)).toBeInTheDocument();
+    expect(screen.queryByText(/올라가 있습니다/)).toBeNull();
   });
 
   it('바꿀 수 없는 상태면 편집 칸 대신 현재 값만 보인다', () => {

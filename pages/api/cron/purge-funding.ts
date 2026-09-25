@@ -4,7 +4,8 @@
  * 펀딩 약관 제13조·처리방침 8항으로 고객에게 "리워드 전달 완료 후 1년 보관한 뒤 지체 없이
  * 파기한다"고 약속했으므로, 사람이 기억해서 지우는 방식이면 지켜지지 않는다.
  * Vercel Cron이 월 1회 호출한다(계약서 purge-contracts와 같은 주기, 시간은 겹치지 않게
- * 매월 2일 18시로 잡는다 — purge-contracts는 매월 1일 18시).
+ * 하루 뒤로 잡는다). `vercel.json`의 `0 18 2 * *`는 **UTC**라 KST로는 매월 3일 03시다
+ * (purge-contracts는 하루 앞, KST 2일 03시).
  *
  * **같은 크론이 접속기록도 정리한다(기준은 다르다).** `privacy_access_logs`는 「개인정보의
  * 안전성 확보조치 기준」 제8조①에 따라 **2년** 보관이고, 위 배송지 파기는 약관·처리방침이
@@ -16,6 +17,10 @@
  * resident_number_enc`)는 원천징수한 정산의 **지급 시각**이 기산점이고 보관 기간도 따로다
  * (`purgeExpiredResidentNumbers`). 후원자 배송지 파기와 같은 함수에 넣으면 아직 지급명세서
  * 제출·수정신고가 남은 번호가 배송지와 함께 지워진다 — 그래서 함수도 기준도 분리한다.
+ *
+ * **네 번째 단계는 개인정보 파기가 아니다.** 아무 프로젝트도 참조하지 않는 개설자 업로드
+ * 이미지를 저장소에서 지운다(`purgeOrphanFundingMedia`) — 대상이 파일이고 기준도 다르므로
+ * 함수를 따로 두고 호출만 나란히 둔다.
  *
  * 인증: Vercel Cron이 Authorization: Bearer ${CRON_SECRET} 헤더를 붙인다.
  */
@@ -29,6 +34,7 @@ import {
   RESIDENT_NUMBER_RETENTION_YEARS,
   REWARD_RETENTION_YEARS,
 } from '../../../lib/funding/retention';
+import { purgeOrphanFundingMedia } from '../../../lib/funding/mediaRetention';
 import {
   purgeExpiredPrivacyAccessLogs,
   PRIVACY_ACCESS_LOG_RETENTION_YEARS,
@@ -85,11 +91,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     purgeExpiredResidentNumbers,
   );
 
+  /**
+   * 네 번째는 개인정보 파기가 아니라 **저장소 청소**다.
+   *
+   * 아무 프로젝트도 가리키지 않는 업로드 이미지를 지운다(`purgeOrphanFundingMedia`).
+   * 기준이 다른 만큼 함수도 따로 두고, 앞의 셋과 마찬가지로 서로의 실패에 걸리지 않는다.
+   * 월 1회면 충분하다 — 고아 파일은 7일 유예를 지나야 대상이 되고, 며칠 늦게 지워지는
+   * 것에 비용이 없다.
+   */
+  const media = await run(
+    '아무 프로젝트도 참조하지 않는 개설자 업로드 이미지 정리',
+    () => purgeOrphanFundingMedia(),
+  );
+
   // 성공한 것은 건수를, 실패한 것은 null을 싣는다 — "0건 파기"와 "돌지 못함"은 다른 상태다.
   const body = {
     purged: result ? result.purged : null,
     purgedAccessLogs: accessLogs ? accessLogs.purged : null,
     purgedResidentNumbers: residentNumbers ? residentNumbers.purged : null,
+    orphanMedia: media,
   };
 
   if (failures.length > 0) {
@@ -105,6 +125,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             result ? `배송지 ${result.purged}건` : null,
             accessLogs ? `접속기록 ${accessLogs.purged}건` : null,
             residentNumbers ? `주민등록번호 ${residentNumbers.purged}건` : null,
+            media
+              ? `고아 이미지 ${media.deleted}건 삭제(${media.scanned}개 검사, 유예 ${media.skippedRecent}개, 실패 ${media.failed}건)`
+              : null,
           ]
             .filter(Boolean)
             .join(', ') || '없음'

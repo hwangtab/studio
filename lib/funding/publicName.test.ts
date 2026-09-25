@@ -6,7 +6,10 @@ describe('maskName', () => {
     ['홍길동', '홍*동'],
     ['김철', '김*'],
     ['남궁민수', '남**수'],
-    ['이', '이'],
+    // 한 글자 조각은 남길 글자가 곧 실명이라 통째로 가린다.
+    ['이', '*'],
+    ['A Kim', '* K*m'],
+    ['', ''],
     ['Jane Doe', 'J**e D*e'],
     ['  홍길동  ', '홍*동'],
   ])('%s → %s', (input, expected) => {
@@ -16,6 +19,19 @@ describe('maskName', () => {
   // 코드 유닛으로 세면 서로게이트 쌍이 반쪽으로 잘려 깨진 글자가 명단에 올라간다.
   it('서로게이트 쌍을 한 글자로 센다', () => {
     expect(maskName('𠮷野家')).toBe('𠮷*家');
+  });
+});
+
+describe('보이지 않는 문자', () => {
+  it('폭 없는 공백·방향 재정의만 있는 닉네임은 빈 값으로 거부한다', () => {
+    expect(resolvePublicName('nickname', '홍길동', '\u200B').ok).toBe(false);
+    expect(resolvePublicName('nickname', '홍길동', '\u202E\u200B ').ok).toBe(false);
+  });
+  it('섞여 있으면 걷어 내고 저장한다', () => {
+    expect(resolvePublicName('nickname', '홍길동', '청\u202E취자\u200B')).toEqual({ ok: true, value: '청취자' });
+  });
+  it('가린 이름도 결제자 이름의 보이지 않는 문자를 걷고 만든다', () => {
+    expect(maskName('홍\u200B길동')).toBe('홍*동');
   });
 });
 

@@ -173,6 +173,23 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
     return run(() => patchPledge(pledge.id, { action: 'clear_download_record', reason: reason.trim() }));
   };
 
+  /**
+   * 서포터 명단에서 내린다 / 되돌린다. 욕설·사칭 닉네임이나 무관한 메시지를 내리는 자리다
+   * (약관 제13조). 후원자의 공개 동의는 그대로 두고 운영자 숨김만 건다 — 후원자가 펀딩 확인
+   * 페이지에서 공개를 다시 켜도 되살아나지 않는다. 사유는 관리자 메모에 날짜와 함께 남는다.
+   */
+  const handleHideListing = () => {
+    const reason = window.prompt('서포터 명단에서 내리는 사유를 적어 주세요 (관리자 메모에 날짜와 함께 남습니다). 표시 이름과 응원 메시지가 함께 빠집니다.');
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('명단에서 내리려면 사유를 입력해야 합니다.');
+      return;
+    }
+    return run(() => patchPledge(pledge.id, { action: 'unpublish', reason: reason.trim() }));
+  };
+  const handleRestoreListing = () =>
+    run(() => patchPledge(pledge.id, { action: 'restore_listing' }), '운영자 숨김을 해제할까요? 서포터가 공개에 동의해 두었다면 명단에 다시 뜹니다.');
+
   // 환불 요청이 걸린 건은 발송 상태를 바꿀 수 없다(API도 409로 막는다) — 청약철회한
   // 사람에게 실물이 나가는 것을 막는 게 이 화면의 유일한 목적이다.
   //
@@ -270,7 +287,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
                 <DescriptionRow
                   label="서포터 명단"
-                  value={pledge.displayNamePublic ? `공개 · ${pledge.publicName ?? `${pledge.customerName} (실명)`}` : '비공개'}
+                  value={`${pledge.displayNamePublic ? `공개 동의 · ${pledge.publicName ?? `${pledge.customerName} (실명)`}` : '비공개'}${pledge.listingHiddenAt ? ` — 운영자가 내림(${formatKstDateTimeFull(pledge.listingHiddenAt)})` : ''}`}
                 />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />
@@ -305,6 +322,11 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
               )}
               {pledge.downloadedAt && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearDownloadRecord}>내려받기 기록 초기화</Button>
+              )}
+              {pledge.listingHiddenAt ? (
+                <Button light variant="outline" disabled={busy} onClick={handleRestoreListing}>명단 숨김 해제</Button>
+              ) : pledge.displayNamePublic && (
+                <Button light variant="outline" disabled={busy} onClick={handleHideListing}>서포터 명단에서 내리기</Button>
               )}
               <Button light variant="outline" disabled={busy} onClick={handleResendEmail}>메일 재발송</Button>
             </div>

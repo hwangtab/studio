@@ -248,15 +248,15 @@ describe('스튜디오 서비스', () => {
     confirmSpy.mockRestore();
   });
 
-  it('0036이 운영 DB에 없으면 버튼 대신 마이그레이션 안내를 띄운다', () => {
+  it('0037이 운영 DB에 없으면 버튼 대신 마이그레이션 안내를 띄운다', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'missing_table' }} />);
-    expect(screen.getByText(/마이그레이션 0036/)).toBeInTheDocument();
+    expect(screen.getByText(/마이그레이션 0037/)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '펀딩 설계 대행' })).not.toBeInTheDocument();
   });
 
   it('그 밖의 장애는 마이그레이션을 권하지 않는다 — 엉뚱한 조치를 막는다', () => {
     render(<AdminFundingProjectDetailPage project={PROJECT} payout={null} service={{ available: false, reason: 'error' }} />);
     expect(screen.getByText(/불러오지 못했습니다/)).toBeInTheDocument();
-    expect(screen.queryByText(/마이그레이션 0036/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/마이그레이션 0037/)).not.toBeInTheDocument();
   });
 });

@@ -13,7 +13,7 @@ import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransiti
 
 interface AdminFundingProjectsPageProps {
   projects: AdminProjectSummary[];
-  /** 스튜디오 서비스(마이그레이션 0036). 운영 DB에 테이블이 없으면 available: false. */
+  /** 스튜디오 서비스(마이그레이션 0037). 운영 DB에 테이블이 없으면 available: false. */
   services: LoadServiceMapResult;
 }
 
@@ -109,7 +109,7 @@ export default function AdminFundingProjectsPage({ projects, services }: AdminFu
                     <td className="px-4 py-3 whitespace-nowrap text-xs">
                       {!services.available ? (
                         <span className="text-gray-400">
-                          {services.reason === 'missing_table' ? '미적용(0036)' : '불러오지 못함'}
+                          {services.reason === 'missing_table' ? '미적용(0037)' : '불러오지 못함'}
                         </span>
                       ) : services.byProjectId[p.id] ? (
                         <>
