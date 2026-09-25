@@ -10,6 +10,7 @@ import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 import { computeProjectState, type ProjectState } from '../../../lib/funding/projects';
 import { getListableFundingProjectsAsync } from '../../../lib/funding/repository';
+import FundingPipelinePromo from '../../../components/funding/FundingPipelinePromo';
 
 interface Item {
   slug: string;
@@ -88,6 +89,7 @@ export default function FundingIndexPage({ items }: Props) {
           </div>
         )}
       </Section>
+      <FundingPipelinePromo />
     </>
   );
 }

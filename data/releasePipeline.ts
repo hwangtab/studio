@@ -60,8 +60,9 @@ export const recentAlbumFundingStats = (years = 5) => {
 };
 
 /** "펀딩으로 시작해 발매까지 간 음반" 카드 — release 필드가 있는 건만, 최신순. */
-export const pipelineCases = (): (CrowdfundingCase & { release: { portfolioId: string } })[] =>
-  CROWDFUNDING_CASES.filter((c): c is CrowdfundingCase & { release: { portfolioId: string } } => Boolean(c.release))
+type PipelineCase = CrowdfundingCase & { release: NonNullable<CrowdfundingCase['release']> };
+export const pipelineCases = (): PipelineCase[] =>
+  CROWDFUNDING_CASES.filter((c): c is PipelineCase => Boolean(c.release))
     .slice()
     .sort((a, b) => b.period.localeCompare(a.period));
 
@@ -147,7 +148,47 @@ export const releasePipelineCopy = {
     backersLabel: '후원자',
     fundingLink: '펀딩 페이지',
     releaseLink: '발매작 보기',
+    storyLink: '제작기 읽기',
     checkedOn: `${CASES_CHECKED_ON} 확인`,
+  },
+  /**
+   * /ko/funding(목록)과 /ko/funding/apply(개설 신청)에서 파이프라인으로 가는 길(설계 3단계).
+   * 펀딩 목록에 온 사람은 대개 "내 음반도 이렇게 만들 수 있나"를 궁금해하는데, 그 다음 걸음이 없었다.
+   */
+  fundingPromo: {
+    title: '내 음반도 펀딩으로 만들고 싶다면',
+    subtitle: '직접 열 수도, 기획부터 맡길 수도, 제작·홍보·유통까지 한 번에 갈 수도 있습니다.',
+    items: [
+      {
+        id: 'self',
+        title: '직접 개설',
+        body: `설계비 없이 신청합니다. 모금액에서 ${fundingFees}만 뗍니다.`,
+        href: '/ko/funding/apply',
+        label: '개설 신청',
+      },
+      {
+        id: 'design',
+        title: '펀딩 설계 대행',
+        body: `스토리·리워드·목표액·페이지를 기획부터 같이 만듭니다. 설계비 ${designFee}(부가세 별도), 성공 수수료 없음.`,
+        href: '/ko/crowdfunding-design',
+        label: '설계 대행 보기',
+      },
+      {
+        id: 'pipeline',
+        title: '발매 프로젝트',
+        body: '모금액으로 녹음·믹싱·마스터링과 매체 홍보를 하고, 협력 유통사를 연결해 발매까지 갑니다.',
+        href: '/ko/release-project',
+        label: '발매 프로젝트 보기',
+      },
+    ],
+  },
+  applyHelp: {
+    title: '혼자 쓰기 막막하다면',
+    body: `스토리·리워드·목표액을 기획부터 같이 만드는 펀딩 설계 대행(설계비 ${designFee}, 성공 수수료 없음)이 있습니다. 제작비를 모아 녹음부터 발매까지 이어 가려면 발매 프로젝트로 오세요.`,
+    links: [
+      { href: '/ko/crowdfunding-design', label: '펀딩 설계 대행' },
+      { href: '/ko/release-project', label: '발매 프로젝트' },
+    ],
   },
   consultationFirstStepDesc:
     '어떤 곡인지, 어디까지 왔는지, 제작비는 어떻게 마련할 생각인지(펀딩·지원사업·자비·아직 모름) 가볍게 보내주세요. 10분 내외.',
