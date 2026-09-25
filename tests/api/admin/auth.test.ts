@@ -11,7 +11,6 @@
  */
 
 jest.mock('../../../lib/contracts/admin-rate-limit', () => ({
-  isAdminLoginThrottled: jest.fn(),
   recordAdminLoginFailure: jest.fn(),
   resetAdminLoginRateLimit: jest.fn(),
 }));
@@ -29,7 +28,6 @@ import {
   logoutAdminSession,
 } from '../../../lib/contracts/admin-auth';
 import {
-  isAdminLoginThrottled,
   recordAdminLoginFailure,
   resetAdminLoginRateLimit,
 } from '../../../lib/contracts/admin-rate-limit';
@@ -51,8 +49,7 @@ const run = async (method: string) => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (isAdminLoginThrottled as jest.Mock).mockResolvedValue(false);
-  (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: false });
+  (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: false, globalExceeded: false });
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (logoutAdminSession as jest.Mock).mockResolvedValue(undefined);
@@ -81,15 +78,24 @@ describe('POST — 로그인', () => {
   });
 
   /**
-   * 이 IP가 이미 창 한도를 넘겼으면 비밀번호를 대조하기 전에 막는다 — 단일 IP 대입 차단.
+   * 사무실 공유 IP 회귀: 한 사람의 오타로 창 한도가 찬 IP에서도, 비밀번호를 정확히 아는
+   * 동료는 들어갈 수 있어야 한다. 대조가 한도보다 먼저 오기 때문에 성립한다.
    */
-  it('이 IP가 스로틀되면 비밀번호를 대조하지 않고 429', async () => {
-    (isAdminLoginThrottled as jest.Mock).mockResolvedValue(true);
+  it('IP 한도가 찬 곳에서도 올바른 비밀번호는 통과한다', async () => {
+    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: true, globalExceeded: true });
     const res = await run('POST');
 
-    expect(res.status).toHaveBeenCalledWith(429);
-    expect(loginAdminSession).not.toHaveBeenCalled();
+    expect(res.status).toHaveBeenCalledWith(200);
+    // 성공은 실패로 세지 않으므로 한도를 읽을 일 자체가 없다.
     expect(recordAdminLoginFailure).not.toHaveBeenCalled();
+    expect(resetAdminLoginRateLimit).toHaveBeenCalled();
+  });
+
+  it('오답이 IP 한도를 넘기면 429', async () => {
+    (loginAdminSession as jest.Mock).mockResolvedValue({ ok: false });
+    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: true, globalExceeded: false });
+    const res = await run('POST');
+    expect(res.status).toHaveBeenCalledWith(429);
   });
 
   /**
@@ -120,7 +126,7 @@ describe('POST — 로그인', () => {
   /** 오답이 전역 상한을 넘기면(IP 회전 신호) 401 대신 429. */
   it('오답이 전역 상한을 넘기면 429', async () => {
     (loginAdminSession as jest.Mock).mockResolvedValue({ ok: false });
-    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ globalExceeded: true });
+    (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: false, globalExceeded: true });
     const res = await run('POST');
     expect(res.status).toHaveBeenCalledWith(429);
   });
@@ -135,7 +141,7 @@ describe('DELETE — 로그아웃', () => {
 
   it('로그아웃에는 시도 제한을 걸지 않는다', async () => {
     await run('DELETE');
-    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
+    expect(recordAdminLoginFailure).not.toHaveBeenCalled();
   });
 });
 
@@ -156,7 +162,7 @@ describe('GET — 지금 누구로 들어와 있는가', () => {
   it('조회일 뿐이라 로그인을 시도하지도, 시도 제한을 세지도 않는다', async () => {
     await run('GET');
     expect(loginAdminSession).not.toHaveBeenCalled();
-    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
+    expect(recordAdminLoginFailure).not.toHaveBeenCalled();
   });
 });
 
