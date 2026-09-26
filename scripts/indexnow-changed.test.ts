@@ -152,9 +152,10 @@ describe('mapChangedFilesToUrls', () => {
 // exclude 목록 양쪽에서 같은 값을 보게 하는 단일 소스다. 값 자체가 두 정책을 가르는
 // 기준이므로, 파일 내용이 예상과 다르면(오타·삭제) 조용히 통과시키지 않는다.
 describe('lib/sitemap/noindexStaticRoutes.json', () => {
-  it('privacy-policy·terms를 담고 있다', () => {
+  it('privacy-policy·terms·quote를 담고 있다', () => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const noindexStaticRoutes = require('../lib/sitemap/noindexStaticRoutes.json');
-    expect(noindexStaticRoutes.sort()).toEqual(['privacy-policy', 'terms']);
+    // quote(견적 요청서, 2026-09-26)는 답에 따라 결과가 바뀌는 ko 전용 도구 페이지라 noindex다.
+    expect(noindexStaticRoutes.sort()).toEqual(['privacy-policy', 'quote', 'terms']);
   });
 });
