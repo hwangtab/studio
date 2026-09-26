@@ -278,8 +278,8 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 - **`funding_projects`에 컬럼을 더하지 않고 테이블을 따로 둔 이유는 배포 순서다.** 0020·0023
   절처럼 컬럼을 더하면 컬럼 지정 없는 `select()`가 전부 새 컬럼을 요구해, 마이그레이션 전에
   배포하면 공개 상세·결제까지 깨진다. 별도 테이블이면 미적용 DB에서도 이 칸만 "미적용(0037)"으로
-  꺼진다. 그래도 **적용은 해야 한다** — main 병합본에서 `npm run db:migrate`, 확인은
-  `SELECT name FROM sqlite_master WHERE name = 'funding_project_services';`.
+  꺼진다. 그래도 **적용은 해야 한다** — 방법은 아래 "운영 DB 마이그레이션 적용 방법" 절(Turso CLI).
+  운영 DB에는 2026-09-26에 적용을 확인했다.
 - **읽기 실패는 두 갈래다.** 테이블 부재(`missing_table`)는 마이그레이션 안내, 그 밖의 DB 장애
   (`error`)는 "불러오지 못함"으로 띄우고 서버 로그에 남긴다. 둘을 합치면 진짜 장애가
   "마이그레이션을 돌리세요"로 가려진다. 어느 쪽이든 심사·정산 화면은 열린다.
@@ -443,6 +443,34 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 판정은 **개수**를 보므로, 가운데 하나가 건너뛰어진 이 함정에서는 밀린 건수는 맞아도 이름은
 저널 뒤쪽 것을 댄다. 개수가 어긋났다면 저널의 `when`과 `__drizzle_migrations.created_at`을
 직접 대조할 것.
+
+### 운영 DB 마이그레이션 적용 방법 — Turso CLI로 한다
+
+`npm run db:migrate`는 이 맥에서 안 된다. `.env.local`에 TURSO_* 값이 없어 `url: undefined`로
+멈춘다. `vercel env pull`도 답이 아니다. Vercel의 TURSO_* 변수는 Sensitive라 **빈 값**으로
+내려온다(2026-09-26 확인). 이 맥에는 로그인된 Turso CLI가 있으니 그걸 쓴다.
+
+- CLI 위치는 `~/.turso/turso`이고 PATH에 없다. 운영 DB 이름은 **`studio-nol`**이다.
+  같은 계정에 `ggac-prod`도 있으니 이름을 헷갈리지 말 것.
+- 적용은 **main 병합본에서만** 한다(위 절의 브랜치 체크아웃 금지와 같은 이유).
+
+1. **적용 전 확인(읽기 전용).** 적용된 행 수와 최신 시각을 저널과 대조한다. 행 수가 저널보다
+   적고, 밀린 엔트리의 `when`이 모두 `max(created_at)`보다 커야 실제로 실행된다. 아니면
+   위 절의 함정이므로 적용하지 말고 재발행부터 한다.
+   ```bash
+   ~/.turso/turso db shell studio-nol "select count(*), max(created_at) from __drizzle_migrations;"
+   node -e "const e=require('./drizzle/migrations/meta/_journal.json').entries;console.log(e.length);e.slice(-3).forEach(x=>console.log(x.tag,x.when))"
+   ```
+2. **적용.** 토큰은 파일에 쓰지 않고 명령 안에서 만든다. 토큰 기본값이 **만료 없음**이라
+   `-e 1d`를 반드시 붙인다 — 빼면 쓰고 버린 토큰이 영구히 살아 남는다.
+   ```bash
+   TURSO_DATABASE_URL=$(~/.turso/turso db show studio-nol --url) \
+   TURSO_AUTH_TOKEN=$(~/.turso/turso db tokens create studio-nol -e 1d) \
+   npx drizzle-kit migrate
+   ```
+3. **확인.** 1번 조회를 다시 돌려 행 수가 저널 수와 같은지 보고, 새 테이블·컬럼은
+   `pragma table_info(<테이블>);`로 코드와 대조한다. main CI의 `Migration drift check`도
+   다음 push부터 초록이 된다.
 
 ### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
 
