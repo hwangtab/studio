@@ -24,6 +24,7 @@ import FAQSection from '../../components/ui/FAQSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getHomeData, type HomeData } from '../../data/home';
 import { getPortfolioItems } from '../../data/portfolio';
+import { albumFundingHeadline } from '../../data/releasePipeline';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import { getFaqData } from '../../data/faq';
@@ -39,9 +40,13 @@ interface HomeProps {
   homeData: HomeData;
   faqData: ReturnType<typeof getFaqData>;
   releaseCovers: ReleaseCover[];
+  /** ko 전용 히어로 실적 한 줄(펀딩은 ko 전용 상품). 다른 로케일은 null. */
+  fundingHeadline: string | null;
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers }) => {
+const HERO_SECONDARY_CLASS = "inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-black/30 border-2 border-white/40 text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-black/40 hover:border-white/60 transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20";
+
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers, fundingHeadline }) => {
   const { heroContent, homeServices, studioImages, seo, localeUsps, producerCredibility } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
@@ -50,6 +55,20 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
   const getLink = (path: string) => `/${locale}${path}`;
   // 검증된 유일 전환 채널(카카오) — 히어로 1차 CTA를 폼이 아닌 카카오 직링크로.
   const kakaoUrl = getSiteConfig(locale).contact.kakaoUrl;
+
+  const trackHeroSecondary = () => {
+    if (heroContent.cta.secondaryLink.startsWith('/release-project')) {
+      trackMicroEvent('micro_click_service', {
+        locale,
+        component: 'HomeHero',
+        // 펀딩 계산기로 가는 버튼은 따로 센다 — /release-project 전환 실험과 가르기 위해.
+        cta_id: heroContent.cta.secondaryLink.includes('#funding-goal')
+          ? 'hero_secondary_funding'
+          : 'hero_secondary_release',
+        cta_target: heroContent.cta.secondaryLink,
+      });
+    }
+  };
 
   return (
     <div className="overflow-visible">
@@ -88,9 +107,16 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           // \n 강제 개행이 있으면 브라우저가 text-wrap: balance를 포기해, 좁은 화면에서
           // 마지막 행이 감길 때 "시작하세요." 같은 고아 줄이 생긴다. 행별 block span으로
           // 나눠 각 행 안에서 balance가 동작하게 한다.
-          heroContent.subtitle.split('\n').map((line) => (
-            <span key={line} className="block">{line}</span>
-          ))
+          <>
+            {heroContent.subtitle.split('\n').map((line) => (
+              <span key={line} className="block">{line}</span>
+            ))}
+            {fundingHeadline && (
+              <span className="block mt-4 text-base md:text-lg font-semibold text-white">
+                {fundingHeadline}
+              </span>
+            )}
+          </>
         }
         backgroundImage={heroContent.backgroundImage}
         imageAlt={heroContent.imageAlt}
@@ -147,23 +173,24 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 시각적 2등). 1차를 카카오 옐로로 올리고 2차는 어두운 스크림 아웃라인으로
                 내린다. 흰 틴트(bg-white/*) 대신 bg-black/30을 쓰는 이유는 HeaderActions와
                 동일 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다. */}
-            <Link
-              href={getLink(heroContent.cta.secondaryLink)}
-              prefetch={false}
-              onClick={() => {
-                if (heroContent.cta.secondaryLink === '/release-project') {
-                  trackMicroEvent('micro_click_service', {
-                    locale,
-                    component: 'HomeHero',
-                    cta_id: 'hero_secondary_release',
-                    cta_target: heroContent.cta.secondaryLink,
-                  });
-                }
-              }}
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-black/30 border-2 border-white/40 text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-black/40 hover:border-white/60 transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
-            >
-              {heroContent.cta.secondary}
-            </Link>
+            {/* 앵커(#)가 있는 목적지는 <a>로 전체 이동한다. next/link로 가면 _app의 전환 페이드가
+                끝날 때 scrollTo(0)을 불러 앵커를 무시하고 페이지 맨 위에 떨어진다(2026-09-26 실측 —
+                /ko/release-project#funding-goal이 계산기 대신 맨 위로). 그 _app 동작은 전 페이지에
+                걸려 있어 여기서 고치지 않는다. */}
+            {heroContent.cta.secondaryLink.includes('#') ? (
+              <a href={getLink(heroContent.cta.secondaryLink)} onClick={trackHeroSecondary} className={HERO_SECONDARY_CLASS}>
+                {heroContent.cta.secondary}
+              </a>
+            ) : (
+              <Link
+                href={getLink(heroContent.cta.secondaryLink)}
+                prefetch={false}
+                onClick={trackHeroSecondary}
+                className={HERO_SECONDARY_CLASS}
+              >
+                {heroContent.cta.secondary}
+              </Link>
+            )}
           </>
         }
       />
@@ -393,6 +420,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       homeData,
       faqData,
       releaseCovers,
+      fundingHeadline: locale === 'ko' ? albumFundingHeadline() : null,
     },
     { revalidate: 3600, i18nSections: ['home'] }
   );

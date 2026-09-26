@@ -69,6 +69,15 @@ export const pipelineCases = (): PipelineCase[] =>
 /** 만원 단위 반올림 표기 — "약 N만원". */
 const manwon = (won: number) => `약 ${formatPriceAmount(Math.round(won / 10000))}만원`;
 
+/**
+ * 홈 히어로의 실적 한 줄 — 발매 페이지와 같은 통계(recentAlbumFundingStats)에서 만든다.
+ * 숫자를 홈에 따로 적으면 사례가 늘 때 두 곳이 갈라진다.
+ */
+export const albumFundingHeadline = (): string => {
+  const s = recentAlbumFundingStats();
+  return `최근 5년 직접 기획한 음반 펀딩 ${s.count}건 · 모금 중앙값 ${manwon(s.median)}`;
+};
+
 const stats = recentAlbumFundingStats();
 const designFee = formatPriceLabel(FUNDING_DESIGN_PRICE, 'ko');
 const fundingFees = `플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}% · 결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`;
