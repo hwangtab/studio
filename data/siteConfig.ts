@@ -202,6 +202,10 @@ export const getSiteConfig = (locale: Locale): SiteConfig => {
       // 옛 CID로 열면 "현재 게시가 사용 중지됨"이 뜨지만 관리 화면에 경고가 없고 리뷰 링크도 정상이다.
       // 중복 신고를 하지 말 것 — 같은 프로필이라 운영 리스팅을 건드릴 수 있다.
       googleBusinessUrl: 'https://www.google.com/maps?cid=17692560696856302422',
+      // 구글 비즈니스 프로필 '리뷰 받기'가 주는 리뷰 작성 링크(2026-09-26 aside로 운영자 프로필에서 확인).
+      // 후기 요청 메일(lib/reviews/reviewRequests.ts)이 쓴다. 네이버 스마트플레이스에는 고객에게 보낼
+      // 리뷰 작성 링크가 없어(같은 날 확인) 네이버는 naverMapUrl로 보낸다.
+      googleReviewUrl: 'https://g.page/r/CVZTKO82moj1EAI/review',
     },
     vatNotice: t(locale, {
       ko: '* 모든 가격은 VAT 별도입니다.',
