@@ -89,11 +89,33 @@
 | D4 | Wikidata 등록 초안의 Q-ID 2건이 엉뚱한 항목 | Q1852944 = 위키미디어 목록 문서(녹음실 아님), Q21925567 = serigrapher(실크스크린 작가) | `docs/proposals/wikidata-draft-2026-07-28.md:36,112` → Q746369·**Q128124**(audio engineer) |
 | D5 | 운영자 Person의 `sameAs`에 스튜디오 인스타·스레드가 섞임 | `buildOperatorPersonNode`가 `socialProfiles`를 펼친다. `article.ts:46-47` 주석("싣지 않는다")과 코드가 어긋남 | `utils/schema/person.ts:65-68`, `utils/schema/article.ts:48-51` |
 | D6 | GA4 LLM 유입 필터가 소스 **6종 정확 일치** | `claude.ai`·`chat.openai.com`·`copilot.microsoft.com`·`www.perplexity.ai` 등이 빠진다. GA4 기본 채널 "AI Assistant"도 생겼으나 소스 목록 비공개 [공식·보도] | `scripts/ga4-fetch.mjs:218-256` → 정규식 |
-| D7 | Bing Webmaster Tools 미등록 | 확인 태그·데이터 0. Bing의 **AI Performance 보고서**(Copilot 인용 수·grounding 쿼리, 2026-02 공개, 6월 Intents에 Local 추가)를 못 본다 [공식] | BWT에서 GSC 가져오기(5분) |
+| ~~D7~~ | ~~Bing Webmaster Tools 미등록~~ → **등록돼 있었다**(운영자가 이전에 등록, 저장소에 흔적이 없었을 뿐) | 2026-09-26 aside로 확인: AI Performance(베타) 메뉴 사용 가능. 기준선은 §2-1 | 할 일 없음. 월간 기준선 기록만 |
 | D8 | GEO 측정 패널에 **한국 입구 둘이 없다** | `docs/geo-visibility/`는 ChatGPT·Gemini·Perplexity 3엔진만. 네이버 AI탭·카톡 ChatGPT·구글 AI Mode는 한 번도 안 쟀다 | `docs/geo-visibility/README.md`·`queries.md` |
 
 참고로 kosmart 스튜디오 페이지 2건은 **이미 301 완료**다(`kosmart.co.kr/recording`·`/practice` → studionol.co.kr, 실측).
 kosmart 번호가 남은 곳은 D1 하나다(운영자도 받는 번호).
+
+### 2-1. AI 노출 기준선 (2026-09-26, aside로 콘솔 직접 확인)
+
+**Search Console 생성형 AI 보고서**(AI Overviews·AI Mode, 노출만, 웹 텍스트, 최근 3개월): **총 12.4만 회**, 하루
+1,000~2,000회. 설정 → AI controls → "Google 검색 생성형 AI: **포함**"(옵트아웃 아님).
+
+- 상위: `copyright-cover1` 5,846 · `songstructure1` 3,451 · `session-musician1` 2,943 · `revenue1` 2,914 ·
+  `eq1` 2,637 · `headvoice1` 2,427 · `chord-progression1` 2,000 · `vocalrange1` 1,876 · `royalty1` 1,864 ·
+  `distribution1` 1,846 — **전부 정보성 스토리**.
+- **서비스 LP는 상위 500행 합계 12.1만 중 1,642회(1.4%)**: practice-room 1,015 · voice-acting 180 · 홈 143 ·
+  /en/pricing 84 · recording 74 · mixing-mastering 45 · lesson 40 · wedding-song 31. **ko pricing·release-project·
+  music-promotion·cover-video·crowdfunding-design은 상위 500행에 없다.**
+
+**Bing AI Performance**(Microsoft Copilot과 파트너, 최근 3개월): **인용 3,900회, 인용 페이지 평균 27**. 인용된
+페이지 185개가 전부 스토리 중심이고, grounding 쿼리 상위도 "기타 설정"·"가사 잘 쓰는 법"·"마스터링 뜻"·
+"오토튠 사용법"·"국내 음원 유통사" 같은 지식형이다.
+
+**읽는 법.** 구글·Copilot 모두 AI 답변에서 우리를 꽤 쓰지만 **지식형 질문의 출처로** 쓴다. 업체를 고르는
+질문(녹음실·믹싱 의뢰·발매 대행)에서 서비스 LP가 인용되는 일은 드물다 — 9/4 제안서의 "상업 쿼리 노출 최대
+페이지 중 LP 8%"와 같은 구조가 AI 답변에서도 반복된다. 다음 회차에 볼 것은 총 노출보다 **LP 비중 1.4%가
+움직이는지**다. 스토리에서 LP로 가는 동선(StoryCTA·인라인 오퍼)이 AI 경유 방문에서도 작동하는지는 GA4 LLM
+랜딩 기준 리드(`lead-verdict`)로 본다.
 
 ---
 
@@ -131,8 +153,8 @@ kosmart 번호가 남은 곳은 D1 하나다(운영자도 받는 번호).
 | ~~P0-2~~ | ~~구글 폐업 중복 정리(D2)~~ — 해소돼 있었다. 하지 않는다 | — | — |
 | **P0-3** ✅ | **스키마 3줄(D3·D5)** — #273 | `additionalType` → `Q746369` · Person `sameAs`에서 `socialProfiles` 제거(주석과 일치시킴) | 코드 10줄 미만 + 테스트 |
 | **P0-4** ✅ | **Wikidata 초안 Q-ID 정정(D4)** — 이 문서와 같은 커밋 | Q1852944→Q746369, Q21925567→Q128124. 등록 자체는 P2 | 문서 2줄 |
-| **P0-5** | **Bing Webmaster Tools 등록(D7)** | BWT → "Google Search Console에서 가져오기" → 사이트맵 자동 이관 → AI Performance 기준선 캡처 | 5분 |
-| **P0-6** | **Search Console 두 가지 확인** | ① 생성형 AI 기능 옵트아웃 토글이 꺼져 있는지 ② 생성형 AI 실적 보고서가 열리는지·노출 기준선(노출이 적으면 보고서가 안 보일 수 있다) | 5분 |
+| **P0-5** ✅ | Bing Webmaster Tools — 이미 등록, 기준선 기록 완료(§2-1) | — | — |
+| **P0-6** ✅ | Search Console — AI controls "포함"(옵트아웃 아님), 생성형 AI 보고서 열림, 기준선 기록 완료(§2-1) | — | — |
 
 ### P1 — 2~4주: 한국 입구의 원재료와 측정
 
@@ -201,8 +223,8 @@ kosmart 번호가 남은 곳은 D1 하나다(운영자도 받는 번호).
 | LLM 세션 / 리드 | 310 / 12(28일, 9/4) — 정규식 전환 후 재측정 | GA4 | 월간 |
 | AI 경로 문의·성사 | oplog `chatgpt`·`other_ai` | `docs/oplog/quotes.csv` | 월간 |
 | 리뷰 수(네이버 방문자 / 구글 / 카카오) | 0 / 미확인 / 미확인 | 각 콘솔 | 격주 |
-| Bing AI Performance 인용 수 | 없음 → P0-5 | BWT | 월간 |
-| GSC 생성형 AI 노출 | 없음 → P0-6 | GSC | 월간 |
+| Bing AI Performance 인용 수 | 3,900회 / 인용 페이지 평균 27(3개월, 2026-09-26) | BWT | 월간 |
+| GSC 생성형 AI 노출 | 12.4만(3개월) · **서비스 LP 비중 1.4%**(2026-09-26) | GSC | 월간 |
 
 **판독 원칙.** 같은 프롬프트도 매번 답이 다르므로 한 달 숫자로 결론 내리지 않는다(README 기존 원칙). 모델 교체 같은
 플랫폼 사건은 날짜와 함께 기록해 교란 요인으로 둔다 — ChatGPT의 Reddit 인용 비율이 한 달 만에 60%→10%로
