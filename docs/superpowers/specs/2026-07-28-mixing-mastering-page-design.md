@@ -54,7 +54,7 @@ GEO/AEO 전수 감사에서 두 가지가 드러났다.
 | 마스터링 의뢰 시 마스터버스 리미터·컴프 제거, 피크 −3~−6dBFS | `content/stories/mix-prep1.md` faq |
 | 납품 3~7영업일 | `public/locales/en/common.json:259` |
 | 스트리밍 라우드니스 Spotify −14 / Apple Music −16 / YouTube −14 LUFS | `docs/wiki/entities/services.md` |
-| 모니터 Proac Tablett 50, EVE Audio SC207, ADAM A5 | `data/equipment.ts:39` |
+| 모니터 ProAc Tablette 50, EVE Audio SC207, ADAM A5 | `data/equipment.ts:39` |
 | 아웃보드 SSL Fusion, Tegeler Vari Tube, SPL Optimizer | `data/equipment.ts:35,36,38` |
 | 플러그인 UAD, Acustica, Softube, Soundtoys, iZotope | `data/equipment.ts:66-77` |
 

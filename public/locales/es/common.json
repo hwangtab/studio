@@ -125,6 +125,19 @@
       "releases": {
         "title": "Discos hechos en Studio NOL",
         "viewAll": "Ver todos los trabajos"
+      },
+      "studio": {
+        "spaceTitle": "Espacio",
+        "booth": {
+          "title": "Cabina y sala de control",
+          "body": "Voces e instrumentos en la cabina insonorizada; el ingeniero en la sala de control, al otro lado del cristal. Se ven mientras graban."
+        },
+        "acoustics": {
+          "title": "Acústica de sala",
+          "body": "El tratamiento de absorción y difusión controla la reverberación: se graba la voz y el instrumento, no la sala."
+        },
+        "gearTitle": "Equipo destacado",
+        "viewAll": "Ver todo el equipo"
       }
     }
   },

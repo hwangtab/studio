@@ -125,6 +125,19 @@
       "releases": {
         "title": "Studio NOL'da yaratilgan albomlar",
         "viewAll": "Barcha ishlarni ko'rish"
+      },
+      "studio": {
+        "spaceTitle": "Makon",
+        "booth": {
+          "title": "Kabina va boshqaruv xonasi",
+          "body": "Vokal va cholg'ular ovoz o'tkazmaydigan kabinada, muhandis esa oyna ortidagi boshqaruv xonasida — yozuv paytida bir-biringizni ko'rasiz."
+        },
+        "acoustics": {
+          "title": "Xona akustikasi",
+          "body": "Yutuvchi va tarqatuvchi ishlov aks-sadoni boshqaradi — xona emas, ovoz va cholg'u yoziladi."
+        },
+        "gearTitle": "Asosiy uskunalar",
+        "viewAll": "Barcha uskunalarni ko'rish"
       }
     }
   },

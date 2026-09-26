@@ -74,6 +74,7 @@ describe('디자인 v2 파일 색 가드', () => {
   const V2_FILES = [
     'components/home/HomeServiceTracklist.tsx',
     'components/home/HomeReleaseStrip.tsx',
+    'components/home/HomeStudioSpec.tsx',
     'pages/[locale]/index.tsx',
   ];
 

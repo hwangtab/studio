@@ -125,6 +125,19 @@
       "releases": {
         "title": "在 Studio NOL 制作的唱片",
         "viewAll": "查看全部作品"
+      },
+      "studio": {
+        "spaceTitle": "空间",
+        "booth": {
+          "title": "录音间与控制室",
+          "body": "人声和乐器在隔音录音间录制，工程师在玻璃窗另一侧的控制室，录音时彼此看得见。"
+        },
+        "acoustics": {
+          "title": "房间声学",
+          "body": "通过吸音与扩散处理控制混响，录下的是人声与乐器，而不是房间的回响。"
+        },
+        "gearTitle": "主要设备",
+        "viewAll": "查看全部设备"
       }
     }
   },

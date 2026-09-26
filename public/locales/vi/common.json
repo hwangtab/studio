@@ -125,6 +125,19 @@
       "releases": {
         "title": "Những đĩa nhạc làm tại Studio NOL",
         "viewAll": "Xem tất cả tác phẩm"
+      },
+      "studio": {
+        "spaceTitle": "Không gian",
+        "booth": {
+          "title": "Phòng thu và phòng điều khiển",
+          "body": "Giọng hát và nhạc cụ ở phòng thu cách âm, kỹ sư ở phòng điều khiển sau lớp kính — hai bên nhìn thấy nhau khi thu."
+        },
+        "acoustics": {
+          "title": "Âm học phòng",
+          "body": "Xử lý tiêu âm và khuếch tán để kiểm soát tiếng vang — thu giọng hát và nhạc cụ, không phải tiếng dội của căn phòng."
+        },
+        "gearTitle": "Thiết bị tiêu biểu",
+        "viewAll": "Xem toàn bộ thiết bị"
       }
     }
   },

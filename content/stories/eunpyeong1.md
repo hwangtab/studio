@@ -63,7 +63,7 @@ faq:
 - **마이크**: Neumann U87AI, AKG C414 XLS
 - **프리앰프**: Vintech X73i (Neve 1073 클론), API 계열
 - **컴프레서**: Tegeler Vari Comp, SPL Optimizer
-- **모니터 스피커**: ProAc Tablett 50, EVE Audio SC207
+- **모니터 스피커**: ProAc Tablette 50, EVE Audio SC207
 - **방음**: 완전 방음 부스, 흡음재 처리 완비
 
 ### 서비스

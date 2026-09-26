@@ -35,7 +35,7 @@ export const getEquipmentData = (locale: Locale) => {
     compressors: ["Tegeler Vari Tube Compressor", "Alctron Cp540v2"],
     interfaces: ["Prism Sound Lyra 2", "Arturia X8 OUT", "Behringer XR18"],
     processors: ["Solid State Logic Fusion", "Lexicon MX300"],
-    speakers: ["Proac Tablett 50", "EVE Audio SC207", "ADAM Audio A5"],
+    speakers: ["ProAc Tablette 50", "EVE Audio SC207", "ADAM Audio A5"],
     headphones: [
       "Sennheiser HD600",
       "Sony MDR-7506",
