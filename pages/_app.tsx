@@ -20,6 +20,7 @@ import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
 import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 import { isAdminRoute } from '../lib/adminRoute';
+import { routeTransitionKey, scrollAfterRouteChange } from '../lib/routeScroll';
 
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -302,9 +303,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
               <Layout hasHero={hasHero} locale={locale}>
                 {/* initial={false}: 첫 방문 시 opacity:0 스타일이 SSR에 박히는 것을 막아 FCP/LCP를 즉시 페인트.
                     페이지 전환(route change) 때만 페이드 애니메이션이 작동한다. */}
-                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { window.scrollTo({ top: 0, behavior: 'auto' }); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
+                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { scrollAfterRouteChange(); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
                   <m.div
-                    key={router.asPath.split('?')[0]}
+                    key={routeTransitionKey(router.asPath)}
                     {...routeTransitionProps}
                   >
                     <Component {...pageProps} />
