@@ -35,6 +35,7 @@ import type { NextPageWithLayout } from '../../../types';
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 // 계산기는 상호작용 절이라 초기 번들에서 뺀다(ssr 유지 — 결과 표가 SSR HTML에 남는다).
 const FundingGoalCalculator = dynamic(() => import('../../../components/release/FundingGoalCalculator'));
+const MarketPriceComparison = dynamic(() => import('../../../components/pricing/MarketPriceComparison'));
 const HubLinkCallout = dynamic(() => import('../../../components/guides/HubLinkCallout'));
 const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });
 const RelatedStoriesSection = dynamic(() => import('../../../components/ui/RelatedStoriesSection'));
@@ -164,6 +165,12 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
 
       {isKo && <ReleaseFundingPaths kakaoUrl={siteConfig.contact.kakaoUrl} />}
       {isKo && <FundingGoalCalculator kakaoUrl={siteConfig.contact.kakaoUrl} />}
+      {/* 시장 공개 요금과의 비교(ko 전용, 전략 축 A) — 가격 페이지와 같은 컴포넌트. */}
+      {isKo && (
+        <Section variant="alternate">
+          <MarketPriceComparison />
+        </Section>
+      )}
 
       {/* 발매 프로젝트 3형태 */}
       <Section variant="default">
