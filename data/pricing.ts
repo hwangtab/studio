@@ -8,7 +8,7 @@ import type { Locale } from '../lib/i18n';
 // 흩어져 있다가 한쪽만 고쳐 어긋나는 드리프트를 구조적으로 차단한다.
 // data/pricing.test.ts가 표시문자열↔값·스키마↔상수 정합을 CI에서 강제한다.
 // 주의: 350,000은 서로 다른 세 상품(레슨 월정액·축가 패키지·음반 기획 오퍼)의
-// 우연한 동일값, 500,000은 6시간 Day Lock과도 우연히 겹친다 — 반드시 상품별 상수를
+// 우연한 동일값이고, 350,000은 Day Lock 4시간과도 겹친다 — 반드시 상품별 상수를
 // 쓸 것(일괄 치환 금지).
 // 반면 통합 번들(SINGLE/EP/ALBUM_BUNDLE_PRICE)과 발매 티어 하한(RELEASE_*_FROM_PRICE)이
 // 같은 값인 것은 우연이 아니라 의도다: 번들은 발매 프로젝트의 고정 구성 엔트리이고,
@@ -18,7 +18,18 @@ import type { Locale } from '../lib/i18n';
 // ─────────────────────────────────────────────────────────────────────────────
 export const RECORDING_HOURLY_PRICE = 100000;
 export const VOCAL_PACKAGE_PRICE = 250000; // 보컬 녹음 1프로(1곡·3시간)
-export const DAY_LOCK_PRICE = 500000; // 6시간 패키지
+// Day Lock — 긴 녹음을 시간당보다 싸게 묶는 패키지(2026-09-26 운영자 결정으로 6시간 50만원에서 재편).
+// 6시간 50만원은 시간당 8.3만원으로 보컬 1곡 패키지(3시간 25만원)와 같은 단가라 할인 역할을 못 했다.
+// 시간당 요금과의 차액은 카피에 리터럴로 적지 않는다 — DAY_LOCK_SAVINGS로 계산한다.
+export const DAY_LOCK_4H_HOURS = 4;
+export const DAY_LOCK_8H_HOURS = 8;
+export const DAY_LOCK_4H_PRICE = 350000;
+export const DAY_LOCK_8H_PRICE = 650000;
+/** 같은 시간을 시간당 요금으로 예약했을 때보다 적게 드는 금액. */
+export const DAY_LOCK_SAVINGS = {
+  h4: RECORDING_HOURLY_PRICE * DAY_LOCK_4H_HOURS - DAY_LOCK_4H_PRICE,
+  h8: RECORDING_HOURLY_PRICE * DAY_LOCK_8H_HOURS - DAY_LOCK_8H_PRICE,
+} as const;
 export const MIXING_LEVEL1_PRICE = 200000;
 export const MIXING_LEVEL2_PRICE = 350000;
 export const MIXING_LEVEL3_PRICE = 500000;
@@ -266,30 +277,41 @@ export const getPricingData = (locale: Locale) => {
       }),
     },
     {
-      id: "recording-daylock",
-      title: t(locale, { ko: '6시간 패키지 (Day Lock)', en: '6-Hour Package (Day Lock)', zh: '6小时套餐 (Day Lock)', es: 'Paquete de 6 Horas', vi: 'Gói 6 giờ (Day Lock)', th: 'แพ็กเกจ 6 ชั่วโมง (Day Lock)', uz: '6 soatlik paket (Day Lock)' }),
-      subtitle: t(locale, { ko: '장시간 작업용, 약 17% 할인', en: 'Long sessions, ~17% off', zh: '长时间工作, 约17%折扣', es: 'Sesiones largas, ~17% de descuento', vi: 'Buổi dài, giảm ~17%', th: 'เซสชันยาว, ลด ~17%', uz: 'Uzoq seanslar, ~17% chegirma' }),
-      priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
-      priceValue: 500000,
-      unit: t(locale, { ko: '/ 일', en: '/ day', zh: '/ 天', es: '/ día', vi: '/ ngày', th: '/ วัน', uz: '/ kun' }),
-      description: t(locale, {
-        ko: '앨범 작업 등 장시간 녹음이 필요할 때 합리적인 선택입니다.',
-        en: 'Rational choice for album projects or long recording sessions.',
-        zh: '专辑制作等需要长时间录音时的合理选择。',
-        es: 'Elección racional para proyectos de álbumes o sesiones largas.',
-        vi: 'Lựa chọn hợp lý cho dự án album hoặc buổi thu kéo dài.',
-        th: 'ตัวเลือกที่คุ้มค่าสำหรับงานอัลบั้มหรือการอัดเสียงระยะยาว',
-        uz: 'Albom loyihalari yoki uzoq yozuv seanslari uchun oqilona tanlov.'
+      id: "recording-daylock-4h",
+      title: t(locale, { ko: `Day Lock 4시간`, en: `Day Lock · 4 Hours`, zh: `Day Lock 4小时`, es: `Day Lock · 4 horas`, vi: `Day Lock 4 giờ`, th: `Day Lock 4 ชั่วโมง`, uz: `Day Lock · 4 soat` }),
+      subtitle: t(locale, { ko: `시간당 요금보다 ${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'ko')} 적게`, en: `${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'en')} less than hourly`, zh: `比按小时计费少 ${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'zh')}`, es: `${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'es')} menos que por hora`, vi: `Ít hơn ${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'vi')} so với theo giờ`, th: `ถูกกว่ารายชั่วโมง ${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'th')}`, uz: `Soatlikdan ${formatPriceLabel(DAY_LOCK_SAVINGS.h4, 'uz')} arzon` }),
+      priceDisplay: t(locale, { ko: `${formatPriceAmount(DAY_LOCK_4H_PRICE)}원`, en: `₩${formatPriceAmount(DAY_LOCK_4H_PRICE)}`, zh: `₩${formatPriceAmount(DAY_LOCK_4H_PRICE)}`, es: `₩${formatPriceAmount(DAY_LOCK_4H_PRICE)}`, vi: `₩${formatPriceAmount(DAY_LOCK_4H_PRICE)}`, th: `₩${formatPriceAmount(DAY_LOCK_4H_PRICE)}`, uz: `₩${formatPriceAmount(DAY_LOCK_4H_PRICE)}` }),
+      priceValue: DAY_LOCK_4H_PRICE,
+      unit: t(locale, { ko: '/ 4시간', en: '/ 4 hours', zh: '/ 4小时', es: '/ 4 horas', vi: '/ 4 giờ', th: '/ 4 ชั่วโมง', uz: '/ 4 soat' }),
+      description: t(locale, { ko: `여러 테이크나 두세 곡을 한 번에 녹음할 때. 전담 엔지니어가 함께합니다.`, en: `For several takes or two to three songs in one sitting, with a dedicated engineer.`, zh: `适合一次录多条或两三首歌，专属工程师陪同。`, es: `Para varias tomas o dos o tres canciones en una sesión, con ingeniero dedicado.`, vi: `Khi thu nhiều take hoặc hai ba bài một lần, có kỹ sư chuyên trách.`, th: `สำหรับอัดหลายเทคหรือสองสามเพลงในครั้งเดียว มีวิศวกรเสียงประจำ`, uz: `Bir o'tirishda bir necha take yoki ikki-uch qo'shiq uchun, maxsus muhandis bilan.` }),
+      recommended: false,
+      features: tArray(locale, {
+        ko: [`4시간 연속 예약`, `전담 엔지니어 진행`, `테이크 선별·기본 편집 포함`, `온라인 예약·결제 가능`],
+        en: [`4 consecutive hours`, `Dedicated engineer`, `Take selection & basic editing`, `Book and pay online`],
+        zh: [`连续4小时`, `专属工程师陪同`, `含片段筛选及基本剪辑`, `可在线预约付款`],
+        es: [`4 horas seguidas`, `Ingeniero dedicado`, `Selección de tomas y edición básica`, `Reserva y pago en línea`],
+        vi: [`4 giờ liên tục`, `Kỹ sư chuyên trách`, `Chọn take & chỉnh sửa cơ bản`, `Đặt và thanh toán trực tuyến`],
+        th: [`4 ชั่วโมงต่อเนื่อง`, `วิศวกรเสียงประจำ`, `คัดเทคและตัดต่อเบื้องต้น`, `จองและชำระเงินออนไลน์`],
+        uz: [`4 soat uzluksiz`, `Maxsus muhandis`, `Take tanlash va asosiy tahrir`, `Onlayn bron va to'lov`]
       }),
+    },
+    {
+      id: "recording-daylock-8h",
+      title: t(locale, { ko: `Day Lock 8시간`, en: `Day Lock · 8 Hours`, zh: `Day Lock 8小时`, es: `Day Lock · 8 horas`, vi: `Day Lock 8 giờ`, th: `Day Lock 8 ชั่วโมง`, uz: `Day Lock · 8 soat` }),
+      subtitle: t(locale, { ko: `시간당 요금보다 ${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'ko')} 적게`, en: `${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'en')} less than hourly`, zh: `比按小时计费少 ${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'zh')}`, es: `${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'es')} menos que por hora`, vi: `Ít hơn ${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'vi')} so với theo giờ`, th: `ถูกกว่ารายชั่วโมง ${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'th')}`, uz: `Soatlikdan ${formatPriceLabel(DAY_LOCK_SAVINGS.h8, 'uz')} arzon` }),
+      priceDisplay: t(locale, { ko: `${formatPriceAmount(DAY_LOCK_8H_PRICE)}원`, en: `₩${formatPriceAmount(DAY_LOCK_8H_PRICE)}`, zh: `₩${formatPriceAmount(DAY_LOCK_8H_PRICE)}`, es: `₩${formatPriceAmount(DAY_LOCK_8H_PRICE)}`, vi: `₩${formatPriceAmount(DAY_LOCK_8H_PRICE)}`, th: `₩${formatPriceAmount(DAY_LOCK_8H_PRICE)}`, uz: `₩${formatPriceAmount(DAY_LOCK_8H_PRICE)}` }),
+      priceValue: DAY_LOCK_8H_PRICE,
+      unit: t(locale, { ko: '/ 8시간', en: '/ 8 hours', zh: '/ 8小时', es: '/ 8 horas', vi: '/ 8 giờ', th: '/ 8 ชั่วโมง', uz: '/ 8 soat' }),
+      description: t(locale, { ko: `EP·앨범·오디오북처럼 하루를 통째로 쓰는 작업에 맞습니다. 전담 엔지니어가 함께합니다.`, en: `For full-day work such as an EP, album or audiobook, with a dedicated engineer.`, zh: `适合EP、专辑、有声书等需要一整天的工作，专属工程师陪同。`, es: `Para trabajos de un día completo como un EP, álbum o audiolibro, con ingeniero dedicado.`, vi: `Cho công việc cả ngày như EP, album hoặc sách nói, có kỹ sư chuyên trách.`, th: `สำหรับงานทั้งวัน เช่น EP อัลบั้ม หรือหนังสือเสียง มีวิศวกรเสียงประจำ`, uz: `EP, albom yoki audiokitob kabi kun bo'yi ishlar uchun, maxsus muhandis bilan.` }),
       recommended: true,
       features: tArray(locale, {
-        ko: ['6시간 패키지 (약 17% 할인)', '충분한 휴식과 여유로운 작업', '식사 시간 포함', '장시간 집중이 필요한 프로젝트에 최적'],
-        en: ['6-hour package (~17% discount)', 'Relaxed work pace', 'Meal break included', 'Optimized for focus-heavy projects'],
-        zh: ['6小时套餐（约17%折扣）', '从容的工作节奏，充分休息', '含用餐时间', '适合需要长时间专注的项目'],
-        es: ['Paquete de 6 horas (~17% de descuento)', 'Ritmo de trabajo relajado con descansos suficientes', 'Pausa para comida incluida', 'Optimizado para proyectos que requieren concentración prolongada'],
-        vi: ['Gói 6 giờ (giảm ~17%)', 'Nhịp làm việc thoải mái, nghỉ ngơi đầy đủ', 'Bao gồm thời gian ăn', 'Tối ưu cho dự án cần tập trung dài'],
-        th: ['แพ็กเกจ 6 ชั่วโมง (ลด ~17%)', 'ทำงานสบาย ๆ มีเวลาพักเพียงพอ', 'รวมเวลาพักทานอาหาร', 'เหมาะกับโปรเจกต์ที่ต้องโฟกัสนาน'],
-        uz: ['6 soatlik paket (taxm. 17% chegirma)', 'Rahat ish tempi va yetarli dam olish', 'Ovqatlanish vaqti kiritilgan', 'Uzoq vaqt diqqat talab qiladigan loyihalar uchun optimal']
+        ko: [`8시간 연속 예약 (식사 시간 포함)`, `전담 엔지니어 진행`, `테이크 선별·기본 편집 포함`, `온라인 예약·결제 가능`],
+        en: [`8 consecutive hours (meal break included)`, `Dedicated engineer`, `Take selection & basic editing`, `Book and pay online`],
+        zh: [`连续8小时（含用餐时间）`, `专属工程师陪同`, `含片段筛选及基本剪辑`, `可在线预约付款`],
+        es: [`8 horas seguidas (pausa para comer incluida)`, `Ingeniero dedicado`, `Selección de tomas y edición básica`, `Reserva y pago en línea`],
+        vi: [`8 giờ liên tục (gồm giờ ăn)`, `Kỹ sư chuyên trách`, `Chọn take & chỉnh sửa cơ bản`, `Đặt và thanh toán trực tuyến`],
+        th: [`8 ชั่วโมงต่อเนื่อง (รวมเวลาพักทานอาหาร)`, `วิศวกรเสียงประจำ`, `คัดเทคและตัดต่อเบื้องต้น`, `จองและชำระเงินออนไลน์`],
+        uz: [`8 soat uzluksiz (ovqat vaqti kiritilgan)`, `Maxsus muhandis`, `Take tanlash va asosiy tahrir`, `Onlayn bron va to'lov`]
       }),
     },
   ];

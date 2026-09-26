@@ -3,6 +3,8 @@ import { CANONICAL_FACTS } from '../lib/factTokens';
 import {
   ALBUM_BUNDLE_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
+  DAY_LOCK_4H_PRICE,
+  DAY_LOCK_8H_PRICE,
   EP_BUNDLE_PRICE,
   formatPriceAmount,
   LESSON_MONTHLY_PRICE,
@@ -23,7 +25,7 @@ const faqData = {
     },
     {
       question: '녹음실 이용 요금은 얼마인가요?',
-      answer: '보컬 녹음 1프로(1곡 패키지)는 250,000원이며 3시간 기준 전담 엔지니어 진행입니다. 시간당 레코딩은 100,000원(최소 2시간, 성우·악기 추가·보정 등), 6시간 패키지(Day Lock)는 500,000원으로 장시간 앨범 작업에 적합합니다.',
+      answer: `보컬 녹음 1프로(1곡 패키지)는 250,000원이며 3시간 기준 전담 엔지니어 진행입니다. 시간당 레코딩은 100,000원(최소 2시간, 성우·악기 추가·보정 등), Day Lock은 4시간 ${formatPriceAmount(DAY_LOCK_4H_PRICE)}원, 8시간 ${formatPriceAmount(DAY_LOCK_8H_PRICE)}원으로 장시간 앨범 작업에 적합합니다.`,
     },
     {
       question: '믹싱 서비스 가격은 어떻게 되나요?',
@@ -98,7 +100,7 @@ const faqData = {
     },
     {
       question: 'How much is the recording studio fee?',
-      answer: 'Recording is 100,000 KRW per hour, with a minimum booking of 2 hours. The 6-hour package (Day Lock) is 500,000 KRW (approx. 17% discount). Professional engineering is included.',
+      answer: `Recording is 100,000 KRW per hour, with a minimum booking of 2 hours. Day Lock is ${formatPriceAmount(DAY_LOCK_4H_PRICE)} KRW for 4 hours or ${formatPriceAmount(DAY_LOCK_8H_PRICE)} KRW for 8 hours. Professional engineering is included.`,
     },
     {
       question: 'What are the mixing service prices?',
@@ -169,7 +171,7 @@ const faqData = {
     },
     {
       question: '录音室费用是多少？',
-      answer: '录音每小时 100,000 韩元，最少预订 2 小时。6 小时套餐 (Day Lock) 为 500,000 韩元（约优惠 17%）。包含专业工程服务。',
+      answer: `录音每小时 100,000 韩元，最少预订 2 小时。Day Lock 4 小时 ${formatPriceAmount(DAY_LOCK_4H_PRICE)} 韩元，8 小时 ${formatPriceAmount(DAY_LOCK_8H_PRICE)} 韩元。包含专业工程服务。`,
     },
     {
       question: '混音服务价格是多少？',
@@ -215,7 +217,7 @@ const faqData = {
     },
     {
       question: '¿Cuánto cuesta el estudio de grabación?',
-      answer: 'La grabación cuesta 100.000 KRW por hora, con un mínimo de 2 horas. El paquete de 6 horas (Day Lock) cuesta 500.000 KRW (aprox. 17% de descuento). Incluye ingeniería profesional.',
+      answer: `La grabación cuesta 100.000 KRW por hora, con un mínimo de 2 horas. Day Lock cuesta ${formatPriceAmount(DAY_LOCK_4H_PRICE)} KRW por 4 horas o ${formatPriceAmount(DAY_LOCK_8H_PRICE)} KRW por 8 horas. Incluye ingeniería profesional.`,
     },
     {
       question: '¿Cuánto cuestan los servicios de mezcla?',
@@ -261,7 +263,7 @@ const faqData = {
     },
     {
       question: 'Phí sử dụng phòng thu là bao nhiêu?',
-      answer: 'Thu âm 100.000 KRW/giờ, tối thiểu 2 giờ. Gói 6 giờ (Day Lock) là 500.000 KRW (giảm khoảng 17%). Bao gồm kỹ thuật chuyên nghiệp.',
+      answer: `Thu âm 100.000 KRW/giờ, tối thiểu 2 giờ. Day Lock là ${formatPriceAmount(DAY_LOCK_4H_PRICE)} KRW cho 4 giờ hoặc ${formatPriceAmount(DAY_LOCK_8H_PRICE)} KRW cho 8 giờ. Bao gồm kỹ thuật chuyên nghiệp.`,
     },
     {
       question: 'Giá dịch vụ mixing như thế nào?',
@@ -307,7 +309,7 @@ const faqData = {
     },
     {
       question: 'ค่าห้องอัดเท่าไหร่?',
-      answer: 'อัดเสียง 100,000 วอน/ชั่วโมง ขั้นต่ำ 2 ชั่วโมง แพ็กเกจ 6 ชั่วโมง (Day Lock) 500,000 วอน (ลดประมาณ 17%) รวมวิศวกรเสียงมืออาชีพ',
+      answer: `อัดเสียง 100,000 วอน/ชั่วโมง ขั้นต่ำ 2 ชั่วโมง Day Lock 4 ชั่วโมง ${formatPriceAmount(DAY_LOCK_4H_PRICE)} วอน หรือ 8 ชั่วโมง ${formatPriceAmount(DAY_LOCK_8H_PRICE)} วอน รวมวิศวกรเสียงมืออาชีพ`,
     },
     {
       question: 'ค่าบริการมิกซ์คิดอย่างไร?',
@@ -353,7 +355,7 @@ const faqData = {
     },
     {
       question: 'Yozuv studiyasi narxi qancha?',
-      answer: 'Yozuv 100,000 KRW/soat, minimal 2 soat. 6 soatlik paket (Day Lock) 500,000 KRW (taxm. 17% chegirma). Professional muhandislik kiritilgan.',
+      answer: `Yozuv 100,000 KRW/soat, minimal 2 soat. Day Lock 4 soat ${formatPriceAmount(DAY_LOCK_4H_PRICE)} KRW yoki 8 soat ${formatPriceAmount(DAY_LOCK_8H_PRICE)} KRW. Professional muhandislik kiritilgan.`,
     },
     {
       question: 'Miks xizmatlari narxi qanday?',

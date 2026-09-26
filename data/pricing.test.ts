@@ -12,7 +12,9 @@ import {
   ALBUM_LINE_ITEM_TOTAL,
   CONSULTING_HOURLY_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
-  DAY_LOCK_PRICE,
+  DAY_LOCK_4H_PRICE,
+  DAY_LOCK_8H_PRICE,
+  DAY_LOCK_SAVINGS,
   EP_BUNDLE_PER_SONG_PRICE,
   EP_BUNDLE_PRICE,
   EP_LINE_ITEM_TOTAL,
@@ -95,11 +97,21 @@ describe('가격 SSOT 정합', () => {
     }
   });
 
+  it('Day Lock은 같은 시간의 시간당 요금보다 싸고, 시간이 길수록 시간당 단가가 내려간다', () => {
+    // 할인 역할을 못 하면 상품이 존재할 이유가 없다 — 옛 6시간 50만원이 보컬 1프로와 같은 단가였던 문제.
+    expect(DAY_LOCK_SAVINGS.h4).toBeGreaterThan(0);
+    expect(DAY_LOCK_SAVINGS.h8).toBeGreaterThan(DAY_LOCK_SAVINGS.h4);
+    expect(DAY_LOCK_8H_PRICE / 8).toBeLessThan(DAY_LOCK_4H_PRICE / 4);
+  });
+
   it('오퍼 id ↔ SSOT 상수 매핑이 고정돼 있다 (한쪽만 고치면 실패)', () => {
     const byId = new Map(collectOffers('ko').map((o) => [o.id, o.priceValue]));
     expect(byId.get('recording-pro')).toBe(VOCAL_PACKAGE_PRICE);
     expect(byId.get('recording-hourly')).toBe(RECORDING_HOURLY_PRICE);
-    expect(byId.get('recording-daylock')).toBe(DAY_LOCK_PRICE);
+    expect(byId.get('recording-daylock-4h')).toBe(DAY_LOCK_4H_PRICE);
+    expect(byId.get('recording-daylock-8h')).toBe(DAY_LOCK_8H_PRICE);
+    // 옛 6시간 오퍼가 남아 있으면 가격표에 폐지된 상품이 뜬다(2026-09-26 재편).
+    expect(byId.has('recording-daylock')).toBe(false);
     expect(byId.get('mixing-level1')).toBe(MIXING_LEVEL1_PRICE);
     expect(byId.get('mixing-level2')).toBe(MIXING_LEVEL2_PRICE);
     expect(byId.get('mixing-level3')).toBe(MIXING_LEVEL3_PRICE);
@@ -190,10 +202,11 @@ describe('가격 SSOT 정합', () => {
       /import\s*{[^}]*\bRECORDING_HOURLY_PRICE\b[^}]*}\s*from\s*['"]\.\.\/\.\.\/data\/pricing['"]/
     );
     expect(source).toMatch(
-      /import\s*{[^}]*\bDAY_LOCK_PRICE\b[^}]*}\s*from\s*['"]\.\.\/\.\.\/data\/pricing['"]/
+      /import\s*{[^}]*\bDAY_LOCK_4H_PRICE\b[^}]*}\s*from\s*['"]\.\.\/\.\.\/data\/pricing['"]/
     );
     expect(source).toContain('price: RECORDING_HOURLY_PRICE');
-    expect(source).toContain('price: DAY_LOCK_PRICE');
+    expect(source).toContain('price: DAY_LOCK_4H_PRICE');
+    expect(source).toContain('price: DAY_LOCK_8H_PRICE');
   });
 
   it('릴리즈 티어 카피(ko common.json)가 RELEASE_* 상수의 만원 표기를 포함한다', () => {
@@ -366,7 +379,10 @@ describe('가격 SSOT 정합', () => {
     const ssot = new Set<number>([
       RECORDING_HOURLY_PRICE,
       VOCAL_PACKAGE_PRICE,
-      DAY_LOCK_PRICE,
+      DAY_LOCK_4H_PRICE,
+      DAY_LOCK_8H_PRICE,
+      DAY_LOCK_SAVINGS.h4,
+      DAY_LOCK_SAVINGS.h8,
       MIXING_LEVEL1_PRICE,
       MIXING_LEVEL2_PRICE,
       MIXING_LEVEL3_PRICE,

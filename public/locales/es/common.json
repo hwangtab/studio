@@ -1281,7 +1281,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta la grabación?",
-          "a": "La grabación vocal de una canción cuesta ₩250,000 (basado en 3 horas). El alquiler por hora es ₩100,000 (mínimo 2 horas). El paquete Day Lock de 6 horas es ₩500,000 (~17% de descuento). Todos los precios excluyen el IVA."
+          "a": "La grabación vocal de una canción cuesta ₩250,000 (basado en 3 horas). El alquiler por hora es ₩100,000 (mínimo 2 horas). Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios excluyen el IVA."
         },
         {
           "q": "¿Puedo alquilar solo la sala sin ingeniero?",
@@ -1365,7 +1365,7 @@
       "items": [
         {
           "q": "¿Cuánto cuesta el alquiler del estudio?",
-          "a": "El paquete vocal de una canción cuesta ₩250,000 (3 horas, incluye ingeniero dedicado, dirección y edición básica). Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, el Day Lock de 6 horas cuesta ₩500,000. Todos los precios excluyen el IVA."
+          "a": "El paquete vocal de una canción cuesta ₩250,000 (3 horas, incluye ingeniero dedicado, dirección y edición básica). Si solo lo necesitas por horas, son ₩100,000/hora (mínimo 2 horas); para trabajos largos de álbum, Day Lock cuesta ₩350,000 por 4 horas o ₩650,000 por 8 horas. Todos los precios excluyen el IVA."
         },
         {
           "q": "¿Está bien si es mi primera vez grabando?",
@@ -1948,7 +1948,7 @@
       "quoteItems": [
         "Uso del estudio — ₩100,000/hora (IVA no incluido), reserva mínima de 2 horas",
         "Honorario de casting — se presupuesta aparte, según el nivel del locutor, la extensión del guion y el ámbito de uso",
-        "Trabajos largos como audiolibros: Day Lock, 6 horas, ₩500,000"
+        "Trabajos largos como audiolibros: Day Lock, 4 horas ₩350,000 u 8 horas ₩650,000"
       ],
       "quoteNote": "Si traes tu propio locutor, solo pagas el uso del estudio: ₩200,000 por el mínimo de 2 horas (IVA no incluido). Envía el guion y su uso y el presupuesto de casting es gratuito.",
       "deliveryTitle": "Especificaciones de entrega",
@@ -1991,7 +1991,7 @@
         },
         {
           "q": "¿Cuál es el tiempo mínimo de reserva?",
-          "a": "Mínimo 2 horas. Para proyectos largos como audiolibros, recomendamos Day Lock (6 horas, ₩500,000)."
+          "a": "Mínimo 2 horas. Para proyectos largos como audiolibros, recomendamos Day Lock (4 horas ₩350,000, 8 horas ₩650,000)."
         },
         {
           "q": "¿Qué formatos de archivo están disponibles?",

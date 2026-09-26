@@ -37,7 +37,7 @@ describe('practice-room-hourly', () => {
 });
 
 describe('기존 세션 상품은 스튜디오 자원·영업시간 그대로', () => {
-  it.each(['recording-pro', 'recording-hourly', 'voice-acting-hourly', 'wedding-song', 'cover-video'])('%s', (id) => {
+  it.each(['recording-pro', 'recording-hourly', 'recording-daylock-4h', 'recording-daylock-8h', 'voice-acting-hourly', 'wedding-song', 'cover-video'])('%s', (id) => {
     const p = getProduct(id)!;
     expect(resourceKindOf(p)).toBe('studio');
     expect(productHours(p)).toEqual({ openHour: DEFAULT_OPEN_HOUR, closeHour: DEFAULT_CLOSE_HOUR });
