@@ -47,7 +47,10 @@ export type MicroEventName =
   | 'artist_support_start'
   // 발매 페이지 펀딩 목표액 계산기를 처음 만졌을 때 한 번. 관심 신호일 뿐 리드가 아니다 —
   // 계산 결과로 카톡을 여는 클릭은 lead_click_kakao(cta_id release_funding_consult)로 따로 잡힌다.
-  | 'micro_pipeline_calc';
+  | 'micro_pipeline_calc'
+  // 견적 요청서(/ko/quote)를 처음 만졌을 때 한 번. 관심 신호일 뿐 리드가 아니다 — 견적 결과로
+  // 카톡을 여는 클릭은 lead_click_kakao(cta_id quote_kakao, quote_code)로 따로 잡힌다.
+  | 'micro_quote_start';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
 
