@@ -44,7 +44,7 @@ export const getAuthorProfile = (locale: Locale) => ({
       en: 'Kyungha Hwang — Music Producer · Engineer | Studio NOL',
     }),
     description: t(locale, {
-      ko: '15년차 인디씬 음반 기획자·프로듀서 황경하. 70개가 넘는 발매작을 함께했고 한국대중음악상·레드어워드 수상작을 기획·제작했습니다. 서울 연신내 스튜디오 놀에서 기획·녹음·믹싱·발매·PR까지 동행합니다.',
+      ko: '15년차 인디 음반 기획자·프로듀서 황경하. 70개가 넘는 발매작을 함께했고 한국대중음악상·레드어워드 수상작을 기획·제작했습니다. 서울 연신내 스튜디오 놀에서 기획·녹음·믹싱·발매·PR까지 동행합니다.',
       en: 'Kyungha Hwang, record planner & producer with 15 years in the Korean indie scene: 70+ releases, and albums that won the Korean Music Awards and Red Awards. Runs Studio NOL in Seoul.',
     }),
     keywords: t(locale, {
@@ -73,7 +73,7 @@ export const getAuthorProfile = (locale: Locale) => ({
   }),
   intro: [
     t(locale, {
-      ko: '인디 싱어송라이터와 밴드의 발매를 15년째 함께해 왔습니다. 곡을 다듬어 멜론·스포티파이에 올리고, 세션 연주자를 연결하고, 음악 매체와 평론에 닿게 하는 일까지 — 한 곡이 인디씬에 자리 잡는 데 필요한 단계들을 처음부터 끝까지 다룹니다. 그 과정에서 여러 아티스트를 발굴했고, 뮤지션으로 자리 잡기까지의 방향 상담도 함께해 왔습니다.',
+      ko: '인디 싱어송라이터와 밴드의 발매를 15년째 함께해 왔습니다. 곡을 다듬어 멜론·스포티파이에 올리고, 세션 연주자를 연결하고, 음악 매체와 평론에 닿게 하는 일까지 — 한 곡이 리스너와 매체에 닿는 데 필요한 단계들을 처음부터 끝까지 다룹니다. 그 과정에서 여러 아티스트를 발굴했고, 뮤지션으로 자리 잡기까지의 방향 상담도 함께해 왔습니다.',
       en: 'For 15 years I have released music together with indie singer-songwriters and bands — shaping songs, getting them on Melon and Spotify, connecting session players, and reaching music press and critics.',
     }),
     t(locale, {
