@@ -239,7 +239,7 @@ const crowdfundingEvidence = (siteUrl: string): string => {
     .slice(0, 3)
     .map((c) => `${c.title} ${krw(c.raised)}원·${c.percent}% (${c.url})`)
     .join(' / ');
-  return `공개로 확인 가능한 펀딩 성공 ${CASES_SUMMARY.succeededCount}건(음반 ${CASES_SUMMARY.succeededAlbumCount}건), 누적 ${krw(CASES_SUMMARY.succeededRaised)}원·후원자 ${krw(CASES_SUMMARY.succeededBackers)}명(${CASES_CHECKED_ON} 확인) — 예: ${topAlbums}. 전체 목록: ${siteUrl}/ko/crowdfunding-design`;
+  return `공개로 확인 가능한 펀딩 성공 ${CASES_SUMMARY.succeededCount}건(음반 ${CASES_SUMMARY.succeededAlbumCount}건), 합계 ${krw(CASES_SUMMARY.succeededRaised)}원·후원자 ${krw(CASES_SUMMARY.succeededBackers)}명(${CASES_CHECKED_ON} 확인) — 예: ${topAlbums}. 전체 목록: ${siteUrl}/ko/crowdfunding-design`;
 };
 
 // 아티스트 후원 링크는 후원 가능한 아티스트가 실제로 있을 때만 안내한다.
