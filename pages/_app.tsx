@@ -21,6 +21,7 @@ import { markNavigated } from '../lib/navigationState';
 import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 import { isAdminRoute } from '../lib/adminRoute';
 import { routeTransitionKey, scrollAfterRouteChange } from '../lib/routeScroll';
+import { DesignEditionContext } from '../lib/designEdition';
 
 
 const localeLoadingMessage: Record<Locale, string> = {
@@ -44,6 +45,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   const isAdmin = isAdminRoute(router.pathname);
   // 페이지 컴포넌트의 static property에서 hasHero 값을 읽음
   const hasHero = Component.hasHero || false;
+  const designEdition = Component.designEdition ?? 'v1';
   const routeLocale = router.asPath.split('?')[0].split('/')[1];
   const detectedRouteLocale = locales.includes(routeLocale as Locale)
     ? (routeLocale as Locale)
@@ -295,7 +297,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteNavSchema) }}
         />
       </Head>
-      <div className={`${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`} data-locale={locale}>
+      {/* data-edition은 v2일 때만 붙는다 — v1 페이지의 HTML은 개편 전과 글자 하나 다르지 않아야 한다
+          (scripts/visual/golden-html.mjs가 확인). v2 전용 CSS는 전부 이 속성 아래로 스코프된다. */}
+      <div
+        className={`${pretendard.className} ${pretendard.variable} ${pretendardHero.variable}`}
+        data-locale={locale}
+        data-edition={designEdition === 'v2' ? 'v2' : undefined}
+      >
+      <DesignEditionContext.Provider value={designEdition}>
       <I18nextProvider i18n={i18n}>
         <ErrorBoundary locale={locale}>
           <LazyMotion features={domAnimation}>
@@ -327,6 +336,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           </LazyMotion>
         </ErrorBoundary>
       </I18nextProvider>
+      </DesignEditionContext.Provider>
       </div>
     </>
   );

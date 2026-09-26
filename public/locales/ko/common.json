@@ -112,6 +112,20 @@
     "faq": {
       "title": "자주 묻는 질문",
       "subtitle": "스튜디오 이용에 대해 궁금한 점들을 모았습니다."
+    },
+    "v2": {
+      "eyebrow": {
+        "releases": "디스코그래피",
+        "studio": "스튜디오",
+        "why": "이유",
+        "services": "서비스",
+        "reviews": "후기",
+        "faq": "질문"
+      },
+      "releases": {
+        "title": "스튜디오 놀에서 만든 음반들",
+        "viewAll": "전체 작업 보기"
+      }
     }
   },
   "about": {

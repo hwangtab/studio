@@ -20,6 +20,9 @@ interface FAQSectionProps {
     subtitle: string;
     className?: string;
     variant?: SectionVariant;
+    /** 디자인 v2 섹션 라벨·번호 — SectionHeading으로 그대로 넘긴다(v1에서는 무시). */
+    eyebrow?: React.ReactNode;
+    index?: string;
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({
@@ -27,7 +30,9 @@ const FAQSection: React.FC<FAQSectionProps> = ({
     title,
     subtitle,
     className,
-    variant = "alternate"
+    variant = "alternate",
+    eyebrow,
+    index: sectionIndex,
 }) => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
@@ -44,6 +49,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({
                     title={title}
                     subtitle={subtitle}
                     className="mb-12"
+                    eyebrow={eyebrow}
+                    index={sectionIndex}
                 />
 
                 <div className="space-y-4">

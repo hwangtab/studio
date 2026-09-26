@@ -11,6 +11,8 @@ export interface BaseProps {
 
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
     hasHero?: boolean;
+    /** 디자인 판. 'v2'면 개편 디자인으로 렌더한다 — lib/designEdition.ts 참고. */
+    designEdition?: 'v1' | 'v2';
 };
 
 export interface I18nPageProps {

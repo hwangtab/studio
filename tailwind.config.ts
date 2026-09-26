@@ -73,12 +73,15 @@ const config: Config = {
         'heading-4': ['1.25rem', { lineHeight: '1.4', letterSpacing: '-0.01em', fontWeight: '700' }],
         'subtitle-1': ['1.25rem', { lineHeight: '1.4', fontWeight: '500' }],
         'subtitle-2': ['1.125rem', { lineHeight: '1.4', fontWeight: '500' }],
-        'body-1': ['1rem', { lineHeight: '1.6', fontWeight: '300' }],
-        'body-1-light': ['1rem', { lineHeight: '1.6', fontWeight: '300' }],
-        'body-1-extra-light': ['1rem', { lineHeight: '1.6', fontWeight: '300' }],
+        // 본문 굵기는 --body-weight로 뺀다. v1은 변수를 정의하지 않아 300 그대로이고
+        // (docs/design-system.md §9), 디자인 v2 스코프([data-edition='v2'])만 400으로 올린다.
+        // 300 획은 zh·th 폴백 폰트와 Windows 렌더링에서 더 가늘어져 읽히는 대비가 떨어진다.
+        'body-1': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
+        'body-1-light': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
+        'body-1-extra-light': ['1rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
         'body-1-medium': ['1rem', { lineHeight: '1.6', fontWeight: '500' }],
-        'body-2': ['0.875rem', { lineHeight: '1.6', fontWeight: '300' }],
-        'caption': ['0.75rem', { lineHeight: '1.6', fontWeight: '300' }],
+        'body-2': ['0.875rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
+        'caption': ['0.75rem', { lineHeight: '1.6', fontWeight: 'var(--body-weight, 300)' }],
         'text-thin': ['1rem', { lineHeight: '1.5', fontWeight: '100' }],
         'text-extra-light': ['0.875rem', { lineHeight: '1.5', fontWeight: '200' }],
       },
@@ -275,6 +278,41 @@ const config: Config = {
           fontSize: theme('fontSize.body-1-medium[0]'),
           lineHeight: theme('fontSize.body-1-medium[1].lineHeight'),
           fontWeight: theme('fontSize.body-1-medium[1].fontWeight'),
+        },
+        // ── 디자인 v2 역할 클래스 ─────────────────────────────────────────
+        // v1 클래스를 고치지 않고 **추가**한다. 전역 h2와 스토리 마크다운 제목은
+        // v1 토큰을 그대로 쓰므로 여기서 무엇을 바꿔도 스토리 1,700여 편에 닿지 않는다.
+        //
+        // 섹션 제목 위의 작은 라벨. heading이 아니라 <p>로 쓴다(제목 구조를 흐리지 않게).
+        // uppercase는 라틴 문자에만 효과가 있고, 자간은 로케일 블록이 --eyebrow-ls로 0까지 내린다.
+        '.typo-eyebrow': {
+          fontFamily: theme('fontFamily.title'),
+          fontSize: '0.8125rem',
+          lineHeight: '1.4',
+          fontWeight: '600',
+          letterSpacing: 'var(--eyebrow-ls, 0.08em)',
+          textTransform: 'uppercase',
+          fontVariantNumeric: 'tabular-nums',
+          color: theme('colors.primary.DEFAULT'),
+          '.dark &': {
+            color: theme('colors.primary.lighter'),
+          },
+        },
+        // v2 섹션 제목. 그라디언트 대신 잉크(gray-950) 단색 — 강조는 크기와 굵기가 맡는다.
+        // 행간·자간은 변수로 두고 th·vi·zh에서 styles/globals.css가 재정의한다
+        // (1.1 행간은 태국어·베트남어의 위아래 부호를 자르고, 음수 자간은 한자를 뭉친다).
+        '.typo-display-section': {
+          fontFamily: theme('fontFamily.title'),
+          fontSize: 'clamp(2rem, 1.25rem + 3vw, 3.5rem)',
+          lineHeight: 'var(--display-lh, 1.12)',
+          letterSpacing: 'var(--display-ls, -0.03em)',
+          fontWeight: '700',
+          color: theme('colors.gray.950'),
+          overflowWrap: 'break-word',
+          hyphens: 'auto',
+          '.dark &': {
+            color: theme('colors.white'),
+          },
         },
       })
 

@@ -112,6 +112,20 @@
     "faq": {
       "title": "Ko'p so'raladigan savollar",
       "subtitle": "Studiodan foydalanish bo'yicha eng ko'p beriladigan savollarni jamladik."
+    },
+    "v2": {
+      "eyebrow": {
+        "releases": "Diskografiya",
+        "studio": "Studiya",
+        "why": "Nega NOL",
+        "services": "Xizmatlar",
+        "reviews": "Sharhlar",
+        "faq": "Savollar"
+      },
+      "releases": {
+        "title": "Studio NOL'da yaratilgan albomlar",
+        "viewAll": "Barcha ishlarni ko'rish"
+      }
     }
   },
   "about": {

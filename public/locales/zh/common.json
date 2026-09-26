@@ -112,6 +112,20 @@
     "faq": {
       "title": "常见问题",
       "subtitle": "汇总了关于使用录音室的常见疑问。"
+    },
+    "v2": {
+      "eyebrow": {
+        "releases": "作品",
+        "studio": "录音室",
+        "why": "为什么选择我们",
+        "services": "服务",
+        "reviews": "评价",
+        "faq": "问答"
+      },
+      "releases": {
+        "title": "在 Studio NOL 制作的唱片",
+        "viewAll": "查看全部作品"
+      }
     }
   },
   "about": {
