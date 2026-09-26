@@ -26,6 +26,8 @@ import { getHomeData, type HomeData } from '../../data/home';
 import { getPortfolioItems } from '../../data/portfolio';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
+import HomeStudioSpec, { type StudioGearRow } from '../../components/home/HomeStudioSpec';
+import { getEquipmentData } from '../../data/equipment';
 import { getFaqData } from '../../data/faq';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import { type Locale } from '../../lib/i18n';
@@ -39,9 +41,10 @@ interface HomeProps {
   homeData: HomeData;
   faqData: ReturnType<typeof getFaqData>;
   releaseCovers: ReleaseCover[];
+  studioGear: StudioGearRow[];
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers }) => {
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers, studioGear }) => {
   const { heroContent, homeServices, studioImages, seo, localeUsps, producerCredibility } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
@@ -197,6 +200,17 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           title={t('home.sections.galleryTitle')}
         />
         <MediaGallery images={studioImages} locale={locale} />
+        <HomeStudioSpec
+          spaceTitle={t('home.v2.studio.spaceTitle')}
+          space={[
+            { title: t('home.v2.studio.booth.title'), body: t('home.v2.studio.booth.body') },
+            { title: t('home.v2.studio.acoustics.title'), body: t('home.v2.studio.acoustics.body') },
+          ]}
+          gearTitle={t('home.v2.studio.gearTitle')}
+          gear={studioGear}
+          viewAllLabel={t('home.v2.studio.viewAll')}
+          viewAllHref={getLink('/studio-info#equipment')}
+        />
       </Section>
 
       {/* Locale-specific USP/trust block — ko: 신뢰·전환 보강, 그 외: 외국 뮤지션 안내 */}
@@ -392,12 +406,25 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       ...(releaseDate ? { releaseDate } : {}),
     }));
 
+  // 홈 스튜디오 섹션의 대표 장비 — 스튜디오 정보 페이지와 같은 data/equipment.ts에서 앞쪽 항목만.
+  // getStaticProps에서 줄여 넘긴다(장비·이미지 전체 데이터를 클라이언트 번들에 싣지 않게).
+  const { categories: gearCategories, equipment: gearList } = getEquipmentData(locale);
+  const studioGear: StudioGearRow[] = [
+    { label: gearCategories.microphones, items: gearList.microphones.slice(0, 2) },
+    { label: gearCategories.preamps, items: gearList.preamps.slice(0, 1) },
+    { label: gearCategories.compressors, items: gearList.compressors.slice(0, 1) },
+    { label: gearCategories.interfaces, items: gearList.interfaces.slice(0, 1) },
+    { label: gearCategories.processors, items: gearList.processors.slice(0, 1) },
+    { label: gearCategories.speakers, items: gearList.speakers.slice(0, 2) },
+  ];
+
   return buildPageStaticProps(
     locale,
     {
       homeData,
       faqData,
       releaseCovers,
+      studioGear,
     },
     { revalidate: 3600, i18nSections: ['home'] }
   );

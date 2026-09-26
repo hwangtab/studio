@@ -125,6 +125,19 @@
       "releases": {
         "title": "Records made at Studio NOL",
         "viewAll": "View all work"
+      },
+      "studio": {
+        "spaceTitle": "Space",
+        "booth": {
+          "title": "Booth & control room",
+          "body": "Vocals and instruments in the isolation booth, the engineer in the control room behind the glass — you see each other while recording."
+        },
+        "acoustics": {
+          "title": "Room acoustics",
+          "body": "Absorption and diffusion treatment tames the reflections, so you capture the voice and the instrument, not the room."
+        },
+        "gearTitle": "Selected gear",
+        "viewAll": "See the full equipment list"
       }
     }
   },
