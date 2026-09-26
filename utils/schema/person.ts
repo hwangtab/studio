@@ -1,5 +1,5 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 
 // 운영자 전문 분야 — Person.knowsAbout 단일 소스 (article/releaseProject/author 페이지 공유).
 export const OPERATOR_KNOWS_ABOUT: Record<'ko' | 'en', string[]> = {
@@ -62,10 +62,7 @@ export const buildOperatorPersonNode = (
 ) => {
   const config = getSiteConfig(locale);
   const organizationId = `${siteUrl}/#organization`;
-  const sameAs = [
-    ...Object.values(socialProfiles),
-    ...(studioOperator.sameAs ?? []),
-  ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
+  const sameAs = ([...(studioOperator.sameAs ?? [])] as string[]).filter((url): url is string => typeof url === 'string' && url.trim() !== '');
   const press = getOperatorPressCoverage();
   const awards = getOperatorAwards();
 

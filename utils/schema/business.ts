@@ -195,7 +195,8 @@ export const generateDefaultSchema = (
         // 두 entity로 중복 카운트하므로 단일 타입으로 통합. LocalBusiness rich result도
         // 하위 타입으로 그대로 인정됨.
         '@type': 'EntertainmentBusiness',
-        additionalType: 'https://www.wikidata.org/wiki/Q746359',
+        // Q746369 = recording studio. 예전 Q746359는 'music industry'였다(한 자리 오타, 2026-09-26 Wikidata API로 확인).
+        additionalType: 'https://www.wikidata.org/wiki/Q746369',
         '@id': studioId,
         name: 'Studio NOL',
         image: {
