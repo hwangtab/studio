@@ -47,6 +47,8 @@ export const KO_ONLY_ROUTE_RULES: readonly KoOnlyRouteRule[] = [
   { segment: 'crowdfunding-design', hasIndexPage: true, literalSiblings: [] },
   { segment: 'funding', hasIndexPage: true, literalSiblings: ['terms', 'creator-terms', 'success', 'fail', 'manage', 'creator'] },
   { segment: 'guides', hasIndexPage: false, literalSiblings: [] },
+  // 견적 요청서(2026-09-26) — 가격·카카오 상담이 ko 기준이라 ko 전용.
+  { segment: 'quote', hasIndexPage: true, literalSiblings: [] },
 ];
 
 /**

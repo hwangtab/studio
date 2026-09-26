@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { MapPin, MessageCircle, Phone } from '@/lib/lucide-icons';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
@@ -66,6 +67,17 @@ const KoreanFastContactActions = ({ locale, naverMapUrl, kakaoUrl, phone }: Kore
         전화
       </a>
     </div>
+    {/* 견적 요청서 — 무엇을 물어야 할지 모르는 분께. 카카오가 아니라 옐로 금지. */}
+    <p className="mt-3 text-sm text-gray-700 dark:text-gray-300">
+      무엇부터 물어야 할지 모르겠다면{' '}
+      <Link
+        href="/ko/quote"
+        prefetch={false}
+        className="font-semibold text-primary underline underline-offset-4 hover:text-primary-dark dark:text-primary-lighter dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 rounded"
+      >
+        견적 요청서로 예상 비용부터 보기
+      </Link>
+    </p>
   </div>
 );
 

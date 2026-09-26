@@ -22,6 +22,7 @@ describe('KO_ONLY_ROUTE_RULES ↔ 페이지 getStaticPaths 대조', () => {
     'crowdfunding-design': ['pages/[locale]/crowdfunding-design.tsx'],
     funding: ['pages/[locale]/funding/index.tsx', 'pages/[locale]/funding/[slug]/index.tsx'],
     guides: ['pages/[locale]/guides/[slug].tsx'],
+    quote: ['pages/[locale]/quote.tsx'],
   };
 
   it('규칙의 모든 세그먼트에 대응하는 페이지 파일이 존재한다', () => {
