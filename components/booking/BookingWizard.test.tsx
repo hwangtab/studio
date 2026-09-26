@@ -419,3 +419,19 @@ describe('슬롯 조회 장애 안내', () => {
     expect(calls).toBe(2);
   });
 });
+
+describe('BookingWizard 상품 미리 고르기', () => {
+  const DAYLOCK: SessionProduct = {
+    id: 'recording-daylock-8h', service: 'recording', nameKo: 'Day Lock 8시간', kind: 'package', unitAmount: 650000, sessionHours: 8,
+  };
+
+  it('initialProductId가 가리키는 상품이 처음부터 선택된다 — 가격표 Day Lock 카드에서 들어온 경우', () => {
+    render(<BookingWizard service="recording" products={[PRODUCT, DAYLOCK]} initialProductId="recording-daylock-8h" />);
+    expect(screen.getByRole('radio', { name: /Day Lock 8시간/ })).toBeChecked();
+  });
+
+  it('목록에 없는 id면 첫 상품으로 돌아간다', () => {
+    render(<BookingWizard service="recording" products={[PRODUCT, DAYLOCK]} initialProductId="nope" />);
+    expect(screen.getByRole('radio', { name: new RegExp(PRODUCT.nameKo) })).toBeChecked();
+  });
+});

@@ -1281,7 +1281,7 @@
       "items": [
         {
           "q": "Yozuv qancha turadi?",
-          "a": "Bitta qo'shiq vokal yozuvi ₩250,000 (3 soat asosida). Soatlik ijara ₩100,000 (kamida 2 soat). 6 soatlik Day Lock paketi ₩500,000 (~17% chegirma). Barcha narxlar VATsiz."
+          "a": "Bitta qo'shiq vokal yozuvi ₩250,000 (3 soat asosida). Soatlik ijara ₩100,000 (kamida 2 soat). Day Lock 4 soat uchun ₩350,000 yoki 8 soat uchun ₩650,000. Barcha narxlar VATsiz."
         },
         {
           "q": "Muhandissiz faqat xonani ijaraga olsam bo'ladimi?",
@@ -1365,7 +1365,7 @@
       "items": [
         {
           "q": "Studiya ijarasi qancha turadi?",
-          "a": "Bitta qo'shiq vokal paketi ₩250,000 (3 soat, maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan). Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun 6 soatlik Day Lock ₩500,000. Barchasi VATsiz."
+          "a": "Bitta qo'shiq vokal paketi ₩250,000 (3 soat, maxsus muhandis, rejissyorlik va asosiy tahrirlash bilan). Agar faqat soatbay kerak bo'lsa, ₩100,000/soat (kamida 2 soat); uzoq albom ishlari uchun Day Lock 4 soat ₩350,000 yoki 8 soat ₩650,000. Barchasi VATsiz."
         },
         {
           "q": "Birinchi marta yolg'iz yozsam bo'ladimi?",
@@ -1948,7 +1948,7 @@
       "quoteItems": [
         "Studiya haqi — soatiga 100 000 KRW (QQS alohida), eng kami 2 soat bron",
         "Tanlov haqi — alohida hisoblanadi. Aktyor darajasi, ssenariy hajmi va foydalanish doirasiga bog'liq.",
-        "Audiokitob kabi uzun ishlar: Day Lock 6 soat, 500 000 KRW"
+        "Audiokitob kabi uzun ishlar: Day Lock 4 soat 350 000 KRW yoki 8 soat 650 000 KRW"
       ],
       "quoteNote": "O'z aktyoringizni olib kelsangiz, faqat studiya haqini to'laysiz — eng kam 2 soat uchun 200 000 KRW (QQS alohida). Ssenariy va maqsadni yuborsangiz, tanlov narxi bepul hisoblanadi.",
       "deliveryTitle": "Topshirish spetsifikatsiyasi",
@@ -1991,7 +1991,7 @@
         },
         {
           "q": "Minimal bron vaqti qancha?",
-          "a": "Minimal 2 soat. Audio kitob kabi uzun loyihalar uchun Day Lock (6 soat, 500,000 ₩) ni tavsiya etamiz."
+          "a": "Minimal 2 soat. Audio kitob kabi uzun loyihalar uchun Day Lock (4 soat 350,000 ₩, 8 soat 650,000 ₩) ni tavsiya etamiz."
         },
         {
           "q": "Qanday fayl formatlari mavjud?",

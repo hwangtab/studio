@@ -1309,7 +1309,7 @@
       "items": [
         {
           "q": "How much does recording cost?",
-          "a": "Vocal recording for one song is ₩250,000 (based on 3 hours). Hourly rental is ₩100,000 (2-hour minimum). The 6-hour Day Lock package is ₩500,000 (~17% off). All prices exclude VAT."
+          "a": "Vocal recording for one song is ₩250,000 (based on 3 hours). Hourly rental is ₩100,000 (2-hour minimum). Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices exclude VAT."
         },
         {
           "q": "Can I rent just the room without an engineer?",
@@ -1393,7 +1393,7 @@
       "items": [
         {
           "q": "How much is studio rental?",
-          "a": "The vocal one-song package is ₩250,000 (3 hours, including a dedicated engineer, directing and basic editing). If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work the 6-hour Day Lock is ₩500,000. All prices exclude VAT."
+          "a": "The vocal one-song package is ₩250,000 (3 hours, including a dedicated engineer, directing and basic editing). If you only need it by the hour, that's ₩100,000/hour (2-hour minimum); for longer album work Day Lock is ₩350,000 for 4 hours or ₩650,000 for 8 hours. All prices exclude VAT."
         },
         {
           "q": "Is it OK if it's my first time recording?",
@@ -1976,7 +1976,7 @@
       "quoteItems": [
         "Studio time — ₩100,000/hour (excl. VAT), 2-hour minimum booking",
         "Casting fee — quoted separately, based on the actor's tier, script length, and usage scope",
-        "Long-form work such as audiobooks: Day Lock, 6 hours, ₩500,000"
+        "Long-form work such as audiobooks: Day Lock, 4 hours ₩350,000 or 8 hours ₩650,000"
       ],
       "quoteNote": "If you bring your own voice actor, you only pay for studio time — ₩200,000 for the 2-hour minimum (excl. VAT). Send the script and intended use and the casting quote is free.",
       "deliveryTitle": "Delivery specs",
@@ -2019,7 +2019,7 @@
         },
         {
           "q": "What is the minimum booking time?",
-          "a": "Minimum is 2 hours. For longer projects like audiobooks, we recommend Day Lock (6 hours, ₩500,000)."
+          "a": "Minimum is 2 hours. For longer projects like audiobooks, we recommend Day Lock (4 hours ₩350,000, 8 hours ₩650,000)."
         },
         {
           "q": "What file formats are available?",

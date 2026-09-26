@@ -9,7 +9,7 @@ describe('SESSION_PRODUCTS', () => {
     expect(productsForService('smoke-test').map((p) => p.id)).toEqual(['smoke-test']);
   });
   it('세션 4서비스의 상품이 전부 있다', () => {
-    for (const id of ['recording-pro', 'recording-hourly', 'voice-acting-hourly', 'wedding-song', 'cover-video']) {
+    for (const id of ['recording-pro', 'recording-hourly', 'recording-daylock-4h', 'recording-daylock-8h', 'voice-acting-hourly', 'wedding-song', 'cover-video']) {
       expect(getProduct(id)).toBeDefined();
     }
   });
@@ -18,6 +18,11 @@ describe('SESSION_PRODUCTS', () => {
 describe('resolveHours', () => {
   it('패키지는 요청 시간과 무관하게 고정 시간', () => {
     expect(resolveHours(getProduct('recording-pro')!, undefined)).toBe(3);
+    // Day Lock도 패키지 — 요청한 시간이 무엇이든 4·8시간으로 고정되고 금액은 정찰가 그대로다.
+    expect(resolveHours(getProduct('recording-daylock-4h')!, 2)).toBe(4);
+    expect(resolveHours(getProduct('recording-daylock-8h')!, 2)).toBe(8);
+    expect(computeAmounts(getProduct('recording-daylock-4h')!, 4).itemAmount).toBe(350000);
+    expect(computeAmounts(getProduct('recording-daylock-8h')!, 8).itemAmount).toBe(650000);
   });
   it('시간제는 min~max 밖이면 null', () => {
     const hourly = getProduct('recording-hourly')!;

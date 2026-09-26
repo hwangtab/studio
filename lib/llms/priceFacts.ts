@@ -11,7 +11,8 @@
 import {
   ALBUM_BUNDLE_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
-  DAY_LOCK_PRICE,
+  DAY_LOCK_4H_PRICE,
+  DAY_LOCK_8H_PRICE,
   EP_BUNDLE_PRICE,
   formatPriceAmount,
   FUNDING_DESIGN_PRICE,
@@ -60,7 +61,7 @@ export const PRICE_FACTS: string[] = [
   `**EP Bundle (4 songs, planning → release)**: ${krw(EP_BUNDLE_PRICE)} KRW (${krw(EP_PER_SONG_PRICE)} KRW/song, ~15% below the production line-item total). Other track counts quoted at the per-song rate.`,
   `**Album Bundle (8 songs, planning → release)**: ${krw(ALBUM_BUNDLE_PRICE)} KRW (${krw(ALBUM_PER_SONG_PRICE)} KRW/song, ~20% below the production line-item total).`,
   `**Wedding Song Complete Package**: ${krw(WEDDING_PACKAGE_PRICE)} KRW (2hr recording + vocal tuning + mixing & mastering)`,
-  `**Day Lock (6-hour package)**: ${krw(DAY_LOCK_PRICE)} KRW`,
+  `**Day Lock (fixed-hour recording package)**: 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW (dedicated engineer, bookable online)`,
   `**Cover Video All-in-One Package**: ${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW (3-hour session: filming + mixing + 4K delivery)`,
   `**1:1 Producing Lesson (MIDI/composition/mixing)**: ${krw(LESSON_MONTHLY_PRICE)} KRW/month flat rate (4 sessions, 60 min each, ${krw(LESSON_PER_SESSION_PRICE)} KRW/session)`,
   `**Mixing**: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song (tier by track count: ≤10 tracks ${krw(MIXING_LEVEL1_PRICE)} · 11–30 ${krw(MIXING_LEVEL2_PRICE)} · 31+ ${krw(MIXING_LEVEL3_PRICE)}, includes 2 revisions)`,

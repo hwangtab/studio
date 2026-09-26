@@ -51,9 +51,10 @@ import type { NextPageWithLayout } from '../../types';
 const BOOKING_ENTRY: Record<string, { href: string; kind: 'reserve' | 'order' }> = {
   'recording-pro': { href: '/ko/booking/recording', kind: 'reserve' },
   'recording-hourly': { href: '/ko/booking/recording', kind: 'reserve' },
-  // recording-daylock(데이락 6시간 50만원)은 의도적으로 제외한다 — 예약 위저드에
-  // 데이락 상품이 없어 보조 CTA를 누르면 시간제 예약으로 떨어지고 결과 금액이
-  // 60만원이 된다. 위저드에 데이락 상품이 생기기 전까지는 카카오 1차 CTA만 둔다.
+  // Day Lock은 위저드에 같은 id의 상품이 있어 ?product=로 그 상품을 미리 고른다.
+  // 쿼리가 없으면 위저드는 첫 상품(보컬 1프로)을 고르므로 결과 금액이 카드와 달라진다.
+  'recording-daylock-4h': { href: '/ko/booking/recording?product=recording-daylock-4h', kind: 'reserve' },
+  'recording-daylock-8h': { href: '/ko/booking/recording?product=recording-daylock-8h', kind: 'reserve' },
   'package-wedding': { href: '/ko/booking/wedding-song', kind: 'reserve' },
   'package-cover-video': { href: '/ko/booking/cover-video', kind: 'reserve' },
   'package-voiceover': { href: '/ko/booking/voice-acting', kind: 'reserve' },

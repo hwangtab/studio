@@ -7,7 +7,8 @@ import { getSiteConfig } from '../../data/siteConfig';
 import {
   ALBUM_BUNDLE_PRICE,
   COVER_VIDEO_PACKAGE_PRICE,
-  DAY_LOCK_PRICE,
+  DAY_LOCK_4H_PRICE,
+  DAY_LOCK_8H_PRICE,
   EP_BUNDLE_PRICE,
   formatPriceAmount,
   formatPriceLabel,
@@ -127,7 +128,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     description: '전담 엔지니어와 함께 단곡부터 앨범까지. 디렉팅·마이크 포지셔닝 포함.',
     features: [
       `보컬 1프로 ${man(VOCAL_PACKAGE_PRICE)} (3시간 기준)`,
-      `시간당 ${man(RECORDING_HOURLY_PRICE)} · 6시간 Day Lock ${man(DAY_LOCK_PRICE)}`,
+      `시간당 ${man(RECORDING_HOURLY_PRICE)} · Day Lock 4시간 ${man(DAY_LOCK_4H_PRICE)} · 8시간 ${man(DAY_LOCK_8H_PRICE)}`,
       '전담 엔지니어 디렉팅 포함',
       'Neumann U87AI 메인 마이크',
     ],

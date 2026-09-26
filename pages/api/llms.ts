@@ -10,7 +10,8 @@ import { PRACTICE_ROOM_REGION_LPS, PRACTICE_ROOM_REGION_GROUP_LABELS } from '../
 import { PRACTICE_ROOM_HAS_VACANCY, PRACTICE_ROOM_AVAILABILITY_UPDATED_ON, PRACTICE_ROOM_VACANT_ROOMS } from '../../data/practiceRoomAvailability';
 import {
   COVER_VIDEO_PACKAGE_PRICE,
-  DAY_LOCK_PRICE,
+  DAY_LOCK_4H_PRICE,
+  DAY_LOCK_8H_PRICE,
   FUNDING_DESIGN_PRICE,
   FUNDING_PAYMENT_FEE_PERCENT,
   FUNDING_PLATFORM_FEE_PERCENT,
@@ -193,7 +194,7 @@ Wedding Song Complete Package is ${krw(WEDDING_PACKAGE_PRICE)} KRW: 2-hour recor
 ### What are the recording rates?
 - 1프로 (1-song vocal package, 3 hours): ${krw(VOCAL_PACKAGE_PRICE)} KRW
 - Hourly recording (voice acting, instruments, corrections): ${krw(RECORDING_HOURLY_PRICE)} KRW/hour, minimum 2 hours
-- Day Lock (6-hour package): ${krw(DAY_LOCK_PRICE)} KRW
+- Day Lock: 4 hours ${krw(DAY_LOCK_4H_PRICE)} KRW · 8 hours ${krw(DAY_LOCK_8H_PRICE)} KRW (bookable online)
 
 ### Can I get mixing and mastering done remotely without visiting?
 Yes. Send stems via KakaoTalk, Google Drive or WeTransfer from anywhere in Korea or abroad — no studio visit needed. Mixing ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW/song by track count (two revisions included), mastering ${krw(MASTERING_SINGLE_PRICE)} KRW/song. Delivery in 3–7 business days.

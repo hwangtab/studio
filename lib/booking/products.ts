@@ -1,5 +1,9 @@
 import {
   COVER_VIDEO_PACKAGE_PRICE,
+  DAY_LOCK_4H_HOURS,
+  DAY_LOCK_4H_PRICE,
+  DAY_LOCK_8H_HOURS,
+  DAY_LOCK_8H_PRICE,
   PRACTICE_ROOM_HOURLY_PRICE_INCL,
   RECORDING_HOURLY_PRICE,
   VOCAL_PACKAGE_PRICE,
@@ -62,6 +66,9 @@ export const PRACTICE_ROOM_HOURLY_ROOMS = ['R02'] as const;
 export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   { id: 'recording-pro', service: 'recording', nameKo: '보컬 녹음 1프로', kind: 'package', unitAmount: VOCAL_PACKAGE_PRICE, sessionHours: 3 },
   { id: 'recording-hourly', service: 'recording', nameKo: '시간당 레코딩', kind: 'hourly', unitAmount: RECORDING_HOURLY_PRICE, minHours: 2, maxHours: 8 },
+  // Day Lock — 긴 녹음을 묶은 고정 시간 패키지(2026-09-26 재편). 환불 규정은 service가 recording이라 녹음과 같다.
+  { id: 'recording-daylock-4h', service: 'recording', nameKo: 'Day Lock 4시간', kind: 'package', unitAmount: DAY_LOCK_4H_PRICE, sessionHours: DAY_LOCK_4H_HOURS },
+  { id: 'recording-daylock-8h', service: 'recording', nameKo: 'Day Lock 8시간', kind: 'package', unitAmount: DAY_LOCK_8H_PRICE, sessionHours: DAY_LOCK_8H_HOURS },
   { id: 'voice-acting-hourly', service: 'voice-acting', nameKo: '성우 녹음', kind: 'hourly', unitAmount: VOICEOVER_HOURLY_PRICE, minHours: 2, maxHours: 8 },
   { id: 'wedding-song', service: 'wedding-song', nameKo: '축가 녹음 패키지', kind: 'package', unitAmount: WEDDING_PACKAGE_PRICE, sessionHours: 2 },
   { id: 'cover-video', service: 'cover-video', nameKo: '커버 영상 패키지', kind: 'package', unitAmount: COVER_VIDEO_PACKAGE_PRICE, sessionHours: 3 },
