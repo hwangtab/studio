@@ -145,8 +145,9 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
             locale={locale}
             kakaoUrl={siteConfig.contact.kakaoUrl}
             consultLabel={isKo ? releasePipelineCopy.hero.cta : t('releaseProject.hero.ctaConsult')}
-            secondaryHref={getLink('/portfolio')}
-            secondaryLabel={t('releaseProject.hero.ctaPortfolio')}
+            // ko는 1차 버튼 하나만 — 발매 자금 상담이 이 페이지의 단일 행동이다(전략 핵심 축).
+            secondaryHref={isKo ? undefined : getLink('/portfolio')}
+            secondaryLabel={isKo ? undefined : t('releaseProject.hero.ctaPortfolio')}
           />
         }
       />
