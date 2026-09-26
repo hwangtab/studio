@@ -29,11 +29,15 @@ AI 엔티티 해석의 앵커가 됩니다. 나무위키는 삭제 리스크가 
 
 ### 진술 (Statements)
 
+> 2026-09-26 정정: 초안의 Q-ID 2건이 엉뚱한 항목이었다 — Q21925567은 serigrapher(실크스크린 작가),
+> Q1852944는 위키미디어 목록 문서. Wikidata API로 확인해 Q128124(audio engineer)·Q746369(recording studio)로 바꿨다.
+> 등록 전에 모든 Q-ID를 라벨로 한 번 더 대조할 것.
+
 | 속성 | 값 | 출처 |
 |---|---|---|
 | `P31` (instance of) | Q5 (human) | — |
 | `P27` (country of citizenship) | Q884 (대한민국) | — |
-| `P106` (occupation) | Q183945 (record producer), Q21925567 (audio engineer) | 본인 사이트·Bugs 프로필 |
+| `P106` (occupation) | Q183945 (record producer), Q128124 (audio engineer) | 본인 사이트·Bugs 프로필 |
 | `P1416` / `P108` (employer/affiliation) | 스튜디오 놀 (항목 2 생성 후 연결) | studionol.co.kr |
 | `P166` (award received) | 한국대중음악상 — 선정위원 특별상, `P585`(시점) 2017 | 한국대중음악상 시상 기록, 한겨레21 |
 | `P856` (official website) | https://studionol.co.kr/ko/author | — |
@@ -109,7 +113,7 @@ AI 엔티티 해석의 앵커가 됩니다. 나무위키는 삭제 리스크가 
 
 | 속성 | 값 |
 |---|---|
-| `P31` (instance of) | Q1852944 (recording studio) |
+| `P31` (instance of) | Q746369 (recording studio) |
 | `P17` (country) | Q884 (대한민국) |
 | `P131` (위치) | 서울특별시 은평구 |
 | `P625` (좌표) | 37.614353, 126.925887 |
