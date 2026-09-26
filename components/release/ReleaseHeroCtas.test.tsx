@@ -35,4 +35,16 @@ describe('ReleaseHeroCtas', () => {
 
     expect(screen.getByRole('link', { name: 'Consult' })).toHaveAttribute('href', '/en/contact');
   });
+
+  it('2차 링크를 주지 않으면 1차 버튼 하나만 그린다 — ko 발매 LP의 단일 CTA', () => {
+    render(
+      <ReleaseHeroCtas locale="ko" kakaoUrl="https://open.kakao.com/me/nol" consultLabel="발매 자금 상담 (무료 30분)" />
+    );
+
+    expect(screen.getAllByRole('link')).toHaveLength(1);
+    expect(screen.getByRole('link', { name: '발매 자금 상담 (무료 30분)' })).toHaveAttribute(
+      'href',
+      'https://open.kakao.com/me/nol'
+    );
+  });
 });

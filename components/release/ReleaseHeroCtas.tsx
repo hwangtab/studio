@@ -7,8 +7,9 @@ interface ReleaseHeroCtasProps {
   locale: Locale;
   kakaoUrl: string;
   consultLabel: string;
-  secondaryHref: string;
-  secondaryLabel: string;
+  /** 없으면 2차 버튼을 그리지 않는다 — ko 발매 LP는 "발매 자금 상담" 하나만 둔다(2026-09-26). */
+  secondaryHref?: string;
+  secondaryLabel?: string;
   secondaryLeadingIcon?: React.ReactNode;
 }
 
@@ -63,14 +64,16 @@ const ReleaseHeroCtas = ({
         {consultLabel}
       </Link>
     )}
-    <Link
-      href={secondaryHref}
-      prefetch={false}
-      className={secondaryButtonClassName}
-    >
-      {secondaryLeadingIcon}
-      {secondaryLabel}
-    </Link>
+    {secondaryHref && secondaryLabel ? (
+      <Link
+        href={secondaryHref}
+        prefetch={false}
+        className={secondaryButtonClassName}
+      >
+        {secondaryLeadingIcon}
+        {secondaryLabel}
+      </Link>
+    ) : null}
   </>
 );
 
