@@ -43,7 +43,7 @@ export const getEquipmentData = (locale: Locale) => {
       "SHURE SRH 440",
     ],
     instruments: [
-      "Vox AC30 Guitar Amp",
+      "Bad Cat Hot Cat 30R Guitar Amp",
       "Yamaha U3 Piano",
       "Yamaha U1 Piano",
       "Gibson J-15",
@@ -108,15 +108,17 @@ export const getEquipmentData = (locale: Locale) => {
       })
     },
     {
-      src: "/images/hardware4.webp",
+      // 2026-09-26 Vox AC30 → Bad Cat Hot Cat 30R로 교체(운영자). 예전 사진(hardware4)은 스토리
+      // 공용 썸네일로 계속 쓰이므로 지우지 않고, 장비를 가리키는 이 자리만 새 사진으로 바꾼다.
+      src: "/images/hardware-badcat-hotcat30r.webp",
       alt: t(locale, {
-        ko: "VOX AC30 기타 앰프",
-        en: "VOX AC30 guitar amplifier",
-        zh: "VOX AC30 吉他音箱",
-        es: "Amplificador de guitarra VOX AC30",
-        vi: "Ampli guitar VOX AC30",
-        th: "แอมป์กีตาร์ VOX AC30",
-        uz: "VOX AC30 gitara amplifikatori",
+        ko: "Bad Cat Hot Cat 30R 기타 앰프",
+        en: "Bad Cat Hot Cat 30R guitar amplifier",
+        zh: "Bad Cat Hot Cat 30R 吉他音箱",
+        es: "Amplificador de guitarra Bad Cat Hot Cat 30R",
+        vi: "Ampli guitar Bad Cat Hot Cat 30R",
+        th: "แอมป์กีตาร์ Bad Cat Hot Cat 30R",
+        uz: "Bad Cat Hot Cat 30R gitara amplifikatori",
       })
     },
     {
