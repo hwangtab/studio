@@ -87,7 +87,7 @@ faq:
 | 마이크 | Neumann U87AI, AKG C414 XLS |
 | 프리앰프 | Vintech X73i (Neve 클론), API 계열 |
 | 컴프레서 | Tegeler Vari Comp, SPL Optimizer 등 하이엔드 하드웨어 |
-| 모니터 | ProAc Tablett 50, EVE Audio SC207 |
+| 모니터 | ProAc Tablette 50, EVE Audio SC207 |
 | 방음 | 완전 방음 부스, 흡음재 처리 완비 |
 | 운영 | 상주 전문 엔지니어 10년+ 경력 |
 | 예약 | 카카오톡 오픈채팅 (당일 답변) |

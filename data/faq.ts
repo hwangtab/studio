@@ -499,7 +499,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'Monitoring',
-          body: 'Mixes are checked across three monitor pairs — Proac Tablett 50, EVE Audio SC207, and ADAM Audio A5 — alongside SSL Fusion, Tegeler Vari Tube, and SPL Optimizer outboard.'
+          body: 'Mixes are checked across three monitor pairs — ProAc Tablette 50, EVE Audio SC207, and ADAM Audio A5 — alongside SSL Fusion, Tegeler Vari Tube, and SPL Optimizer outboard.'
         }
       ]
     }
@@ -561,7 +561,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: '监听',
-          body: '混音会在 Proac Tablett 50、EVE Audio SC207、ADAM Audio A5 三组监听音箱间交叉核对，并配合 SSL Fusion、Tegeler Vari Tube、SPL Optimizer 等外部处理设备。'
+          body: '混音会在 ProAc Tablette 50、EVE Audio SC207、ADAM Audio A5 三组监听音箱间交叉核对，并配合 SSL Fusion、Tegeler Vari Tube、SPL Optimizer 等外部处理设备。'
         }
       ]
     }
@@ -623,7 +623,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'Monitoreo',
-          body: 'Las mezclas se revisan en tres pares de monitores — Proac Tablett 50, EVE Audio SC207 y ADAM Audio A5 — junto con outboard SSL Fusion, Tegeler Vari Tube y SPL Optimizer.'
+          body: 'Las mezclas se revisan en tres pares de monitores — ProAc Tablette 50, EVE Audio SC207 y ADAM Audio A5 — junto con outboard SSL Fusion, Tegeler Vari Tube y SPL Optimizer.'
         }
       ]
     }
@@ -685,7 +685,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'Giám sát âm thanh (Monitor)',
-          body: 'Bản mix được kiểm tra qua ba cặp loa monitor — Proac Tablett 50, EVE Audio SC207 và ADAM Audio A5 — cùng với outboard SSL Fusion, Tegeler Vari Tube và SPL Optimizer.'
+          body: 'Bản mix được kiểm tra qua ba cặp loa monitor — ProAc Tablette 50, EVE Audio SC207 và ADAM Audio A5 — cùng với outboard SSL Fusion, Tegeler Vari Tube và SPL Optimizer.'
         }
       ]
     }
@@ -747,7 +747,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: 'มอนิเตอร์',
-          body: 'การมิกซ์จะถูกตรวจสอบข้ามลำโพงมอนิเตอร์ 3 คู่ — Proac Tablett 50, EVE Audio SC207 และ ADAM Audio A5 — พร้อมกับเอาต์บอร์ด SSL Fusion, Tegeler Vari Tube และ SPL Optimizer'
+          body: 'การมิกซ์จะถูกตรวจสอบข้ามลำโพงมอนิเตอร์ 3 คู่ — ProAc Tablette 50, EVE Audio SC207 และ ADAM Audio A5 — พร้อมกับเอาต์บอร์ด SSL Fusion, Tegeler Vari Tube และ SPL Optimizer'
         }
       ]
     }
@@ -809,7 +809,7 @@ const hubLocaleContentData: Record<Locale, HubLocaleContent[]> = {
         },
         {
           heading: "Monitoring",
-          body: "Mikslar uchta monitor jufti — Proac Tablett 50, EVE Audio SC207 va ADAM Audio A5 — orqali tekshiriladi, shuningdek SSL Fusion, Tegeler Vari Tube va SPL Optimizer outboard uskunalari bilan."
+          body: "Mikslar uchta monitor jufti — ProAc Tablette 50, EVE Audio SC207 va ADAM Audio A5 — orqali tekshiriladi, shuningdek SSL Fusion, Tegeler Vari Tube va SPL Optimizer outboard uskunalari bilan."
         }
       ]
     }
