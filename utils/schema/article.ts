@@ -1,5 +1,5 @@
 import { type Locale } from '../../lib/i18n';
-import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
+import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import { getSchemaLanguage } from './shared';
 import { getOperatorAwards } from './person';
 
@@ -45,10 +45,7 @@ export const generateArticleSchema = (
   const isOrganizationByline = !articleAuthor || articleAuthor === config.name;
   // 운영자 개인 권위 프로필은 Person author에만 싣는다. 스튜디오 SNS는 Organization 노드가
   // 이미 sameAs로 들고 있으므로 여기서 다시 내지 않는다(같은 @id에 중복 배열을 만들지 않기).
-  const operatorSameAs = [
-    ...Object.values(socialProfiles),
-    ...(studioOperator.sameAs ?? []),
-  ].filter((url): url is string => typeof url === 'string' && url.trim() !== '');
+  const operatorSameAs = ([...(studioOperator.sameAs ?? [])] as string[]).filter((url): url is string => typeof url === 'string' && url.trim() !== '');
   // canonical Person @id (host 기반) — release-project schema와 동일 entity로 묶어
   // AI/Google이 황경하를 단일 entity로 인식하게 함. locale 독립 ID로 다국어 alternate도 통합.
   const personId = `${siteUrl}/#person-hwang`;

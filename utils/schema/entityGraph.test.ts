@@ -5,6 +5,7 @@ import { generatePersonProfileSchema, getOperatorPersonId } from './person';
 import { generatePracticeRoomMonthlyRentSchema } from './commerce';
 import { buildFinalSchemaData, collectSchemaItems } from '../../components/seo/schemaData';
 import { LESSON_MONTHLY_PRICE } from '../../data/pricing';
+import { socialProfiles, studioOperator } from '../../data/siteConfig';
 
 // 엔티티 그래프 무결성 계약.
 //
@@ -44,6 +45,12 @@ describe('엔티티 그래프 — @id 유일성', () => {
     expect(nodes[0]['@type']).toBe('EntertainmentBusiness');
   });
 
+  it('#studio의 additionalType은 Wikidata "recording studio"(Q746369)다', () => {
+    // 예전 값 Q746359는 "music industry"였다 — 한 자리 오타가 업종 신호를 틀리게 냈다(2026-09-26).
+    const [studio] = findById(generateDefaultSchema(SITE, 'ko')['@graph'], '#studio');
+    expect(studio.additionalType).toBe('https://www.wikidata.org/wiki/Q746369');
+  });
+
   it('연습실 Service의 provider·seller는 @type 없는 순수 참조다', () => {
     const service = generatePracticeRoomMonthlyRentSchema(`${SITE}/ko/practice-room`, 'ko') as Node;
     // 2026-09-25부터 offers는 [월세, 시간제] 배열 — 둘 다 seller가 순수 참조여야 한다.
@@ -80,6 +87,16 @@ describe('엔티티 그래프 — 운영자 Person을 커머셜 페이지에서 
     expect(nodes[0].image).toEqual(
       expect.objectContaining({ '@type': 'ImageObject', url: expect.stringContaining(SITE) })
     );
+  });
+
+  it('Person.sameAs는 운영자 본인 프로필뿐이다 — 스튜디오 SNS를 섞지 않는다', () => {
+    // 스튜디오 인스타·스레드는 Organization·#studio의 sameAs다. Person에 섞으면 사람과
+    // 사업체가 같은 계정을 공유하는 것으로 읽혀 엔티티가 합쳐진다(2026-09-26 감사).
+    const [person] = findById(generateDefaultSchema(SITE, 'ko')['@graph'], '#person-hwang');
+    expect(person.sameAs).toEqual(studioOperator.sameAs);
+    for (const url of Object.values(socialProfiles).filter(Boolean)) {
+      expect(person.sameAs).not.toContain(url);
+    }
   });
 
   it('Organization·#studio 양쪽이 founder로 그 Person을 가리킨다', () => {

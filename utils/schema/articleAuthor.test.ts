@@ -1,5 +1,5 @@
 import { generateArticleSchema } from './article';
-import { getSiteConfig, studioOperator } from '../../data/siteConfig';
+import { getSiteConfig, socialProfiles, studioOperator } from '../../data/siteConfig';
 
 // 스토리 author 계약.
 //
@@ -59,6 +59,11 @@ describe('스토리 author — 화면 바이라인과 같은 주체를 가리킨
     expect(author.url).toBe(`${SITE}/ko/author`);
     expect(Array.isArray(author.award)).toBe(true);
     expect((author.worksFor as Node)['@id']).toBe(`${SITE}/#organization`);
+    // 본인 프로필만 — 스튜디오 SNS는 Organization 쪽 sameAs다.
+    expect(author.sameAs).toEqual(studioOperator.sameAs);
+    for (const url of Object.values(socialProfiles).filter(Boolean)) {
+      expect(author.sameAs).not.toContain(url);
+    }
   });
 
   it('외부 기고자는 단순 Person이다 — 잘못된 affiliation 신호를 만들지 않는다', () => {
