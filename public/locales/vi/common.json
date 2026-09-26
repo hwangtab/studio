@@ -1281,7 +1281,7 @@
       "items": [
         {
           "q": "Chi phí thu âm là bao nhiêu?",
-          "a": "Thu âm vocal một bài là ₩250,000 (cơ sở 3 giờ). Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Gói Day Lock 6 giờ là ₩500,000 (giảm ~17%). Tất cả giá chưa bao gồm VAT."
+          "a": "Thu âm vocal một bài là ₩250,000 (cơ sở 3 giờ). Thuê theo giờ là ₩100,000 (tối thiểu 2 giờ). Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá chưa bao gồm VAT."
         },
         {
           "q": "Tôi có thể thuê phòng mà không cần kỹ sư không?",
@@ -1365,7 +1365,7 @@
       "items": [
         {
           "q": "Thuê phòng thu bao nhiêu tiền?",
-          "a": "Gói vocal một bài là ₩250,000 (3 giờ, bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản). Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, gói Day Lock 6 giờ là ₩500,000. Tất cả giá chưa gồm VAT."
+          "a": "Gói vocal một bài là ₩250,000 (3 giờ, bao gồm kỹ sư chuyên trách, đạo diễn và chỉnh sửa cơ bản). Nếu chỉ cần theo giờ thì ₩100,000/giờ (tối thiểu 2 giờ); với công việc album dài, Day Lock là ₩350,000 cho 4 giờ hoặc ₩650,000 cho 8 giờ. Tất cả giá chưa gồm VAT."
         },
         {
           "q": "Lần đầu thu âm một mình có sao không?",
@@ -1948,7 +1948,7 @@
       "quoteItems": [
         "Phí phòng thu — 100.000 KRW/giờ (chưa VAT), đặt tối thiểu 2 giờ",
         "Phí casting — báo riêng, tùy hạng voice talent, độ dài kịch bản và phạm vi sử dụng",
-        "Dự án dài như audiobook: Day Lock 6 giờ, 500.000 KRW"
+        "Dự án dài như audiobook: Day Lock 4 giờ 350.000 KRW hoặc 8 giờ 650.000 KRW"
       ],
       "quoteNote": "Nếu bạn tự dẫn voice talent, bạn chỉ trả phí phòng thu — 200.000 KRW cho mức tối thiểu 2 giờ (chưa VAT). Gửi kịch bản và mục đích sử dụng, báo giá casting là miễn phí.",
       "deliveryTitle": "Thông số bàn giao",
@@ -1991,7 +1991,7 @@
         },
         {
           "q": "Thời gian đặt tối thiểu là bao lâu?",
-          "a": "Tối thiểu 2 giờ. Với dự án dài như sách nói, chúng tôi khuyên dùng Day Lock (6 giờ, 500.000₩)."
+          "a": "Tối thiểu 2 giờ. Với dự án dài như sách nói, chúng tôi khuyên dùng Day Lock (4 giờ 350.000₩, 8 giờ 650.000₩)."
         },
         {
           "q": "Có những định dạng file nào?",

@@ -7,7 +7,7 @@ import { getMixingProduct } from '../../../lib/booking/mixing-products';
 import { productsForService, type SessionProduct } from '../../../lib/booking/products';
 
 type BookingPageProps =
-  | { service: string; kind: 'session'; products: SessionProduct[] }
+  | { service: string; kind: 'session'; products: SessionProduct[]; initialProductId?: string }
   | { service: string; kind: 'mixing'; initialProductId?: string };
 
 export default function BookingPage(props: BookingPageProps) {
@@ -29,7 +29,7 @@ export default function BookingPage(props: BookingPageProps) {
         <title>{`온라인 예약 — ${props.products[0].nameKo.split(' ')[0]} | 스튜디오 놀`}</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <BookingWizard service={props.service} products={props.products} />
+      <BookingWizard service={props.service} products={props.products} initialProductId={props.initialProductId} />
     </>
   );
 }
@@ -48,5 +48,8 @@ export const getServerSideProps = withI18nServerProps<BookingPageProps>(async ({
 
   const products = productsForService(service);
   if (products.length === 0) return { notFound: true };
-  return { props: { service, kind: 'session', products } };
+  // 가격표 카드가 ?product=로 상품을 미리 고른다(예: Day Lock). 이 서비스의 상품이 아니면 무시한다.
+  const productParam = typeof query?.product === 'string' ? query.product : undefined;
+  const initialProductId = productParam && products.some((p) => p.id === productParam) ? productParam : undefined;
+  return { props: { service, kind: 'session', products, ...(initialProductId ? { initialProductId } : {}) } };
 });

@@ -25,6 +25,8 @@ const TEL_HREF = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
 interface BookingWizardProps {
   service: string;
   products: SessionProduct[];
+  /** 처음 고를 상품. 없거나 목록에 없으면 첫 상품. */
+  initialProductId?: string;
 }
 
 type Step = 1 | 2 | 3;
@@ -67,8 +69,8 @@ const formatOrderName = (nameKo: string, date: string, startHour: number): strin
   return `${nameKo} (${Number(monthStr)}/${Number(dayStr)} ${hh}:00)`;
 };
 
-export default function BookingWizard({ service, products }: BookingWizardProps) {
-  const firstProduct = products[0];
+export default function BookingWizard({ service, products, initialProductId }: BookingWizardProps) {
+  const firstProduct = products.find((p) => p.id === initialProductId) ?? products[0];
 
   const [step, setStep] = useState<Step>(1);
 
