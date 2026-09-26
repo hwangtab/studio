@@ -24,7 +24,6 @@ import FAQSection from '../../components/ui/FAQSection';
 import ContactCTA from '../../components/common/ContactCTA';
 import { getHomeData, type HomeData } from '../../data/home';
 import { getPortfolioItems } from '../../data/portfolio';
-import { albumFundingHeadline } from '../../data/releasePipeline';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import { getFaqData } from '../../data/faq';
@@ -40,11 +39,9 @@ interface HomeProps {
   homeData: HomeData;
   faqData: ReturnType<typeof getFaqData>;
   releaseCovers: ReleaseCover[];
-  /** ko 전용 히어로 실적 한 줄(펀딩은 ko 전용 상품). 다른 로케일은 null. */
-  fundingHeadline: string | null;
 }
 
-const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers, fundingHeadline }) => {
+const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers }) => {
   const { heroContent, homeServices, studioImages, seo, localeUsps, producerCredibility } = homeData;
   const { t } = useTranslation('common', { lng: locale });
 
@@ -105,16 +102,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           // \n 강제 개행이 있으면 브라우저가 text-wrap: balance를 포기해, 좁은 화면에서
           // 마지막 행이 감길 때 "시작하세요." 같은 고아 줄이 생긴다. 행별 block span으로
           // 나눠 각 행 안에서 balance가 동작하게 한다.
-          <>
-            {heroContent.subtitle.split('\n').map((line) => (
-              <span key={line} className="block">{line}</span>
-            ))}
-            {fundingHeadline && (
-              <span className="block mt-4 text-base md:text-lg font-semibold text-white">
-                {fundingHeadline}
-              </span>
-            )}
-          </>
+          heroContent.subtitle.split('\n').map((line) => (
+            <span key={line} className="block">{line}</span>
+          ))
         }
         backgroundImage={heroContent.backgroundImage}
         imageAlt={heroContent.imageAlt}
@@ -408,7 +398,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       homeData,
       faqData,
       releaseCovers,
-      fundingHeadline: locale === 'ko' ? albumFundingHeadline() : null,
     },
     { revalidate: 3600, i18nSections: ['home'] }
   );
