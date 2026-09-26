@@ -5,6 +5,7 @@ import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
 import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building } from '@/lib/lucide-icons';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
+import MarketPriceComparison from '../../components/pricing/MarketPriceComparison';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import SectionHeading from '../../components/ui/SectionHeading';
@@ -580,6 +581,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+        {/* 발매 번들 바로 아래 — 시장 공개 요금과의 비교(ko 전용). 근거는 docs/market-price-survey-2026-09.md. */}
+        {locale === 'ko' && <MarketPriceComparison />}
       </Section>
 
       <ReviewSection variant="alternate" locale={locale} />
