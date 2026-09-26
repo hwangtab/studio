@@ -67,7 +67,7 @@ type PolicyCopy = {
  * 줄면 여기부터 고칠 것 — 4항 본문이 "아래와 같이"라고 단언하므로 표가 곧 사실 주장이다.
  */
 export const SERVICE_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
-  { name: 'Resend', country: '미국', purpose: '문의 접수 알림 메일(스튜디오 앞) 발송, 예약·주문 확정·취소 안내 메일 발송, hello@ 수신 메일의 운영자 전달', items: '이름, 연락처, 이메일 주소, 문의 내용, 예약·주문 내역, hello@ 수신 메일 본문·첨부파일' },
+  { name: 'Resend', country: '미국', purpose: '문의 접수 알림 메일(스튜디오 앞) 발송, 예약·주문 확정·취소 안내 메일 발송, 이용 후 후기 요청 안내 메일 발송, hello@ 수신 메일의 운영자 전달', items: '이름, 연락처, 이메일 주소, 문의 내용, 예약·주문 내역, hello@ 수신 메일 본문·첨부파일' },
   { name: 'Vercel', country: '미국', purpose: '웹사이트·문의 접수·예약 처리 서버 호스팅', items: '문의·예약 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', country: '미국', purpose: '예약·주문 기록 데이터베이스 보관', items: '이름, 연락처, 이메일 주소, 예약 일시·상품·요청사항, 결제·환불 처리 기록' },
   { name: 'Google LLC', country: '미국', purpose: '확정된 예약의 일정 관리(구글 캘린더 이벤트 생성·삭제)', items: '이름, 연락처, 이메일 주소, 예약 일시·상품·요청사항, 주문번호' },
@@ -98,7 +98,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '개인정보 처리방침',
     subtitle: '스튜디오 놀은 문의·상담 응대와 펀딩(리워드 선주문) 처리에 필요한 최소한의 개인정보만 수집하고 안전하게 관리합니다.',
     lastUpdatedLabel: '시행일',
-    lastUpdatedValue: '2026년 9월 25일',
+    lastUpdatedValue: '2026년 9월 26일',
     sections: [
       {
         heading: '1. 수집하는 개인정보 항목',
@@ -122,7 +122,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. 개인정보 이용 목적',
-        body: '수집한 정보는 문의 답변, 예약 접수·확정·변경·취소 안내, 결제와 환불 처리, 서비스 상담 및 고객 요청 처리 목적으로만 사용합니다.',
+        body: '수집한 정보는 문의 답변, 예약 접수·확정·변경·취소 안내, 결제와 환불 처리, 서비스 상담 및 고객 요청 처리, 그리고 예약·주문하신 서비스를 이용하신 뒤 후기 작성을 부탁드리는 안내 메일 발송 목적으로만 사용합니다. 후기 안내 메일은 2026년 9월 27일 이후 접수된 예약·주문에 한해, 녹음 세션 다음 날 또는 믹싱·마스터링 납품 다음 날 예약·주문 한 건당 한 번만 보냅니다. 혜택을 조건으로 붙이지 않습니다.',
       },
       {
         heading: '3. 보유 및 이용 기간',
@@ -454,7 +454,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Privacy Policy',
     subtitle: 'Studio NOL collects only the minimum personal data required for inquiries and consultation support.',
     lastUpdatedLabel: 'Effective date',
-    lastUpdatedValue: 'September 25, 2026',
+    lastUpdatedValue: 'September 26, 2026',
     sections: [
       {
         heading: '1. Personal data we collect',
@@ -462,7 +462,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. Purpose of use',
-        body: 'Collected data is used only to answer inquiries, support bookings, provide consultation, and process customer requests.',
+        body: 'Collected data is used only to answer inquiries, support bookings, provide consultation, process customer requests, and send one email after you use a booked or ordered service asking whether you would leave a review. That email goes only for bookings and orders placed on or after September 27, 2026, once per booking or order, the day after the session or delivery, and never comes with an incentive.',
       },
       {
         heading: '3. Retention period',
@@ -570,7 +570,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: '隐私政策',
     subtitle: 'Studio NOL 仅收集处理咨询与沟通所需的最少个人信息，并进行安全管理。',
     lastUpdatedLabel: '生效日期',
-    lastUpdatedValue: '2026年9月25日',
+    lastUpdatedValue: '2026年9月26日',
     sections: [
       {
         heading: '1. 我们收集的个人信息',
@@ -578,7 +578,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. 使用目的',
-        body: '所收集的信息仅用于回复咨询、预约引导、服务说明及处理客户请求。',
+        body: '所收集的信息仅用于回复咨询、预约引导、服务说明、处理客户请求，以及在您使用所预约或订购的服务后发送一封邀请撰写评价的邮件。该邮件仅针对2026年9月27日及以后受理的预约或订单，于录音次日或交付次日每笔发送一次，不附带任何优惠条件。',
       },
       {
         heading: '3. 保存与使用期限',
@@ -662,7 +662,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Política de privacidad',
     subtitle: 'Studio NOL recopila solo los datos personales mínimos necesarios para responder consultas y brindar orientación.',
     lastUpdatedLabel: 'Fecha de entrada en vigor',
-    lastUpdatedValue: '25 de septiembre de 2026',
+    lastUpdatedValue: '26 de septiembre de 2026',
     sections: [
       {
         heading: '1. Datos personales que recopilamos',
@@ -670,7 +670,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. Finalidad del uso',
-        body: 'Los datos recopilados se usan solo para responder consultas, apoyar reservas, brindar orientación y gestionar solicitudes del cliente.',
+        body: 'Los datos recopilados se usan solo para responder consultas, apoyar reservas, brindar orientación, gestionar solicitudes del cliente y enviar un correo, después de que uses el servicio reservado o pedido, invitándote a dejar una reseña. Ese correo solo se envía para reservas y pedidos realizados a partir del 27 de septiembre de 2026, una vez por reserva o pedido, el día siguiente a la sesión o la entrega, y nunca va ligado a un beneficio.',
       },
       {
         heading: '3. Período de conservación',
@@ -786,7 +786,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Chính sách bảo mật',
     subtitle: 'Studio NOL chỉ thu thập tối thiểu thông tin cá nhân cần thiết để tiếp nhận và phản hồi tư vấn.',
     lastUpdatedLabel: 'Ngày hiệu lực',
-    lastUpdatedValue: '25 tháng 9, 2026',
+    lastUpdatedValue: '26 tháng 9, 2026',
     sections: [
       {
         heading: '1. Thông tin cá nhân được thu thập',
@@ -794,7 +794,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. Mục đích sử dụng',
-        body: 'Thông tin thu thập chỉ được dùng để phản hồi yêu cầu, hỗ trợ đặt lịch, tư vấn dịch vụ và xử lý đề nghị của khách hàng.',
+        body: 'Thông tin thu thập chỉ được dùng để phản hồi yêu cầu, hỗ trợ đặt lịch, tư vấn dịch vụ, xử lý đề nghị của khách hàng và gửi một email mời viết đánh giá sau khi bạn sử dụng dịch vụ đã đặt. Email này chỉ gửi cho các đơn đặt từ ngày 27 tháng 9 năm 2026, mỗi đơn một lần vào ngày sau buổi thu hoặc ngày giao, và không kèm bất kỳ ưu đãi nào.',
       },
       {
         heading: '3. Thời gian lưu trữ',
@@ -904,7 +904,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'นโยบายความเป็นส่วนตัว',
     subtitle: 'Studio NOL เก็บข้อมูลส่วนบุคคลเท่าที่จําเป็นสําหรับการรับและตอบคําสอบถามเท่านั้น',
     lastUpdatedLabel: 'วันที่มีผลบังคับใช้',
-    lastUpdatedValue: '25 กันยายน 2026',
+    lastUpdatedValue: '26 กันยายน 2026',
     sections: [
       {
         heading: '1. ข้อมูลส่วนบุคคลที่เราเก็บรวบรวม',
@@ -912,7 +912,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. วัตถุประสงค์ในการใช้งาน',
-        body: 'ข้อมูลที่เก็บรวบรวมจะใช้เพื่อการตอบคําถาม การช่วยเหลือการจอง การให้คําปรึกษา และการดําเนินการตามคําขอของลูกค้าเท่านั้น',
+        body: 'ข้อมูลที่เก็บรวบรวมจะใช้เพื่อการตอบคําถาม การช่วยเหลือการจอง การให้คําปรึกษา การดําเนินการตามคําขอของลูกค้า และการส่งอีเมลเชิญเขียนรีวิวหนึ่งฉบับหลังจากคุณใช้บริการที่จองหรือสั่งไว้เท่านั้น อีเมลนี้ส่งเฉพาะการจองหรือคําสั่งซื้อตั้งแต่วันที่ 27 กันยายน 2026 ครั้งเดียวต่อรายการ ในวันถัดจากเซสชันหรือวันส่งมอบ และไม่มีสิทธิประโยชน์ใดเป็นเงื่อนไข',
       },
       {
         heading: '3. ระยะเวลาการเก็บรักษา',
@@ -1008,7 +1008,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
     title: 'Maxfiylik siyosati',
     subtitle: 'Studio NOL faqat murojaatlarni qabul qilish va javob berish uchun zarur bo\'lgan eng kam shaxsiy ma\'lumotlarni yig\'adi.',
     lastUpdatedLabel: 'Kuchga kirish sanasi',
-    lastUpdatedValue: '2026-yil 25-sentabr',
+    lastUpdatedValue: '2026-yil 26-sentabr',
     sections: [
       {
         heading: '1. Yig\'iladigan shaxsiy ma\'lumotlar',
@@ -1016,7 +1016,7 @@ export const POLICY_COPY_BY_LOCALE: Record<Locale, PolicyCopy> = {
       },
       {
         heading: '2. Foydalanish maqsadi',
-        body: 'Yig\'ilgan ma\'lumotlar faqat murojaatlarga javob berish, bron qilishga ko\'maklashish, maslahat berish va mijoz so\'rovlarini bajarish uchun ishlatiladi.',
+        body: 'Yig\'ilgan ma\'lumotlar faqat murojaatlarga javob berish, bron qilishga ko\'maklashish, maslahat berish, mijoz so\'rovlarini bajarish hamda bron qilingan yoki buyurtma qilingan xizmatdan foydalanganingizdan keyin sharh yozishni so\'rab bitta xat yuborish uchun ishlatiladi. Bu xat faqat 2026-yil 27-sentabrdan keyin qabul qilingan bron va buyurtmalar uchun, har biriga bir marta, seans yoki topshirishdan keyingi kuni yuboriladi va hech qanday imtiyoz bilan bog\'lanmaydi.',
       },
       {
         heading: '3. Saqlash muddati',

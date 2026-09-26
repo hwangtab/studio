@@ -57,6 +57,8 @@ export interface ContactInfo {
   naverPlaceUrl: string;
   /** 구글 비즈니스 프로필 CID URL — JSON-LD sameAs 전용. */
   googleBusinessUrl: string;
+  /** 구글 '리뷰 받기' 리뷰 작성 링크 — 후기 요청 메일(lib/reviews/reviewRequests.ts) 전용. */
+  googleReviewUrl: string;
 }
 
 export interface SiteConfig {

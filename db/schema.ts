@@ -1,5 +1,5 @@
 import { relations, sql } from 'drizzle-orm';
-import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const contractStatusEnum = [
   'draft',
@@ -1305,3 +1305,32 @@ export const fundingProjectServices = sqliteTable('funding_project_services', {
 
 export type FundingProjectService = typeof fundingProjectServices.$inferSelect;
 export type FundingProjectServiceKind = (typeof fundingProjectServiceKindEnum)[number];
+
+/**
+ * 이용 후 후기 요청 메일의 발송 기록 — `lib/reviews/reviewRequests.ts`, `/api/cron/review-requests`.
+ *
+ * (kind, ref_id)가 곧 멱등 키다. 보내기 **전에** 이 행을 먼저 넣고(이미 있으면 건너뜀), 발송이
+ * 실패하면 행을 지워 다음 날 다시 시도한다 — 순서를 뒤집으면 크론이 겹칠 때 같은 고객에게 두 통이 간다.
+ *
+ * `order_id`로 주문의 이메일을 찾아 "같은 주소로 최근에 보냈는가"를 판정한다(연습실 단골에게
+ * 예약마다 메일이 가지 않게). 이메일 자체는 여기 복사하지 않는다 — 주문 파기(orderRetention)가
+ * 이 표까지 쫓아올 필요가 없게.
+ *
+ * 별도 테이블인 이유는 0037과 같다 — 기존 테이블에 컬럼을 더하면 컬럼 지정 없는 select()가
+ * 마이그레이션 전 배포에서 결제 경로까지 깨뜨린다. 이 표가 없으면 크론만 실패한다.
+ */
+export const reviewRequestKindEnum = ['session', 'mixing'] as const;
+export const reviewRequests = sqliteTable(
+  'review_requests',
+  {
+    kind: text('kind', { enum: reviewRequestKindEnum }).notNull(),
+    /** session이면 bookings.id, mixing이면 work_orders.id. */
+    refId: text('ref_id').notNull(),
+    orderId: text('order_id').notNull().references(() => orders.id),
+    sentAt: integer('sent_at', { mode: 'timestamp' }).notNull(),
+  },
+  (t) => [primaryKey({ columns: [t.kind, t.refId] }), index('review_requests_order_idx').on(t.orderId)],
+);
+
+export type ReviewRequest = typeof reviewRequests.$inferSelect;
+export type ReviewRequestKind = (typeof reviewRequestKindEnum)[number];

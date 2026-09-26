@@ -25,6 +25,7 @@ const siteConfig: SiteConfig = {
     naverMapUrl: 'https://naver.me/5gFZhS3X',
     naverPlaceUrl: 'https://map.naver.com/p/entry/place/1527843821',
     googleBusinessUrl: 'https://www.google.com/maps?cid=17692560696856302422',
+    googleReviewUrl: 'https://g.page/r/test/review',
   },
 };
 
