@@ -43,6 +43,8 @@ export interface ProjectDetailViewProps {
   onSelectReward?: (reward: FundingReward) => void;
   /** 공개에 동의한 후원자 명단(공개 페이지의 폴링 결과). */
   backers?: string[];
+  /** 명단에 이름이 오르지 않는 후원 건수 — BackerWall이 그만큼 "익명"을 잇는다. */
+  anonymousBackers?: number;
   /** 후원자가 남긴 응원 메시지(공개 페이지의 폴링 결과). */
   messages?: { name: string; message: string; at: number }[];
 }
@@ -65,6 +67,7 @@ export default function ProjectDetailView({
   remaining,
   onSelectReward,
   backers = [],
+  anonymousBackers = 0,
   messages = [],
 }: ProjectDetailViewProps) {
   const canPledge = interactive && state === 'live';
@@ -166,7 +169,7 @@ export default function ProjectDetailView({
               </p>
             )}
             <div className="mt-12 space-y-8">
-              <BackerWall names={backers} messages={messages} />
+              <BackerWall names={backers} anonymousCount={anonymousBackers} messages={messages} />
               <FundingTrustNotice />
             </div>
           </div>

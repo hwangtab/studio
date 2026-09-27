@@ -19,6 +19,7 @@ export interface FundingPublicStatus {
   percent: number;
   remaining: Record<string, number | null>;
   publicBackers: string[];
+  anonymousBackerCount: number;
   publicMessages: Array<{ name: string; message: string; at: number }>;
 }
 
@@ -43,6 +44,7 @@ export const buildPublicStatus = async (
     percent: Math.floor((s.raisedAmount / project.goalAmount) * 100),
     remaining: s.remaining,
     publicBackers: s.publicBackers,
+    anonymousBackerCount: s.anonymousBackerCount,
     publicMessages: s.publicMessages,
   };
 };
@@ -68,7 +70,8 @@ export const buildPublicStatusOrNull = async (
 ): Promise<FundingPublicStatus | null> => {
   try {
     const s = await buildPublicStatus(project, now);
-    return { ...s, publicBackers: [], publicMessages: [] };
+    // 익명 수도 비운다 — 이름 없이 "익명"만 먼저 그려졌다가 폴링 뒤 이름이 끼어드는 깜빡임을 막는다.
+    return { ...s, publicBackers: [], anonymousBackerCount: 0, publicMessages: [] };
   } catch {
     return null;
   }
