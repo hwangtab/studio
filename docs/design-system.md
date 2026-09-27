@@ -522,8 +522,9 @@ zh(자간 0)에서 재정의한다. eyebrow 라벨은 i18n 키(`home.v2.eyebrow.
 - v2 제목(`.v2-heading`) **바로 뒤**가 가운데 좁은 블록(`mx-auto max-w-lg`~`6xl`)이면 제목도 그 폭으로 맞춘다
   (`:has()`) — v1 본문의 좁은 체크리스트·카드 그리드 위에서 제목만 왼쪽 끝에 붙어 선이 어긋났다
 
-**v2 페이지**(2026-09-27): 홈, /release-project, /release-project/{single,ep,album}. 공용 컴포넌트 중
-v2 분기가 있는 것: SectionHeading, Footer, ReleaseProducerIntro(홈 프로듀서 섹션과 같은 문법).
+**v2 페이지**(2026-09-27): 홈, /release-project, /release-project/{single,ep,album}, /pricing, /recording,
+/mixing-mastering. 공용 컴포넌트 중 v2 분기가 있는 것: SectionHeading, Footer, ReleaseProducerIntro(홈 프로듀서
+섹션과 같은 문법), ServiceLinkPill(v2에서는 tone과 무관하게 보라). 섹션 앵커 내비의 다크 hover 초록도 v2 CSS가 보라로 바꾼다.
 
 **가드**: `components/ui/SectionHeading.test.tsx`가 v1/v2 분기와 v2 파일의 색 규칙(그라디언트·
 secondary·accent 금지)을 고정한다. v2 파일이 늘면 그 목록에 더한다.

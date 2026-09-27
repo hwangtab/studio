@@ -631,6 +631,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
 };
 
 MixingMastering.hasHero = true;
+MixingMastering.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

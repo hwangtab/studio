@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from '@/lib/lucide-icons';
 import { cn } from '../../lib/utils';
+import { useDesignEdition } from '../../lib/designEdition';
 
 /**
  * 아웃라인 서비스 링크 pill.
@@ -77,13 +78,19 @@ const ServiceLinkPill = ({
   className,
   children,
   ...rest
-}: ServiceLinkPillProps) => (
-  <Link {...rest} prefetch={prefetch} className={serviceLinkPillClass(tone, className)}>
-    {children}
-    {showArrow && (
-      <> <ArrowRight size={16} aria-hidden="true" /></>
-    )}
-  </Link>
-);
+}: ServiceLinkPillProps) => {
+  // 디자인 v2는 보라 하나만 브랜드색으로 쓴다(docs/design-system.md §10) — 핑크·초록 순환은
+  // 의미 없이 색만 늘렸다. 호출부의 tone은 v1 페이지를 위해 그대로 둔다.
+  const edition = useDesignEdition();
+  const resolvedTone: ServiceLinkTone = edition === 'v2' ? 'primary' : tone;
+  return (
+    <Link {...rest} prefetch={prefetch} className={serviceLinkPillClass(resolvedTone, className)}>
+      {children}
+      {showArrow && (
+        <> <ArrowRight size={16} aria-hidden="true" /></>
+      )}
+    </Link>
+  );
+};
 
 export default ServiceLinkPill;
