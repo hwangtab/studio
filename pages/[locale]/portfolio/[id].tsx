@@ -1,5 +1,6 @@
 import React from 'react';
-import type { NextPage, GetStaticProps, GetStaticPaths } from 'next';
+import type { GetStaticProps, GetStaticPaths } from 'next';
+import type { NextPageWithLayout } from '../../../types';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ServiceLinkPill from '../../../components/ui/ServiceLinkPill';
@@ -52,7 +53,7 @@ function getImageDimensions(imageUrl: string): { width: number; height: number }
   return { width: 1000, height: 1000 };
 }
 
-const PortfolioDetailPage: NextPage<PortfolioDetailPageProps> = ({ locale, item, categories, relatedStories }) => {
+const PortfolioDetailPage: NextPageWithLayout<PortfolioDetailPageProps> = ({ locale, item, categories, relatedStories }) => {
   const router = useRouter();
   const { t } = useTranslation('common', { lng: locale });
 
@@ -278,5 +279,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     { revalidate: 3600, i18nSections: ['portfolio', 'stories'] }
   );
 };
+
+PortfolioDetailPage.designEdition = 'v2';
 
 export default PortfolioDetailPage;

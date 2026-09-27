@@ -295,6 +295,7 @@ const StoriesCategoryPage: NextPageWithLayout<StoriesCategoryPageProps> = ({
 };
 
 StoriesCategoryPage.hasHero = true;
+StoriesCategoryPage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const paths = locales.flatMap((locale) =>

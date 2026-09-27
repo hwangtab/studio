@@ -338,6 +338,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
 };
 
 StoriesPage.hasHero = true;
+StoriesPage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

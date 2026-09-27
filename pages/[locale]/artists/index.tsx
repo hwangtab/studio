@@ -111,6 +111,7 @@ const ArtistsHub: NextPageWithLayout<ArtistsHubProps> = ({ locale, artists }) =>
 };
 
 ArtistsHub.hasHero = true;
+ArtistsHub.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [{ params: { locale: 'ko' } }],

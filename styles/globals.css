@@ -394,19 +394,28 @@ code {
    ① 히어로 h1 안의 부분 그라디언트 글자 → 흰색. 사진 위에서 강조가 아니라 얼룩으로 읽혔다(홈과 같은 판단).
       .text-transparent(0,1,0)를 이기려고 명시도를 올렸다.
    ② FeatureCard 윗단의 보라→핑크 띠 → 보라 단색. v2는 핑크(secondary)를 장식에 쓰지 않는다. */
-/* ⑤ 그라디언트 텍스트는 어디 있든 잉크(다크는 흰색) — 연습실 가격 숫자·자체 제목 컴포넌트 등.
+/* ⑤ 보라 계열 그라디언트 텍스트(from-primary…)는 어디 있든 잉크(다크는 흰색) — 연습실 가격 숫자·자체 제목 등.
+      흰색 계열(from-white — 어두운 CTA 패널 위 StoryCTA 제목)은 겨누지 않는다: 잉크로 바꾸면 어두운 면에서 사라진다.
       히어로 h1 안은 아래 ①이 명시도로 이겨 흰색을 유지한다. */
-[data-edition='v2'] .bg-clip-text.text-transparent {
+[data-edition='v2'] .bg-clip-text.text-transparent[class*="from-primary"] {
   background-image: none;
   color: #020617;
 }
-.dark [data-edition='v2'] .bg-clip-text.text-transparent {
+.dark [data-edition='v2'] .bg-clip-text.text-transparent[class*="from-primary"] {
   color: #fff;
 }
 /* ⑥ 보라→핑크 그라디언트 면(뱃지·아이콘 원) → 보라 단색. ②와 같은 판단의 다른 방향(to-br). */
 [data-edition='v2'] .bg-gradient-to-br.from-primary.to-secondary {
   background-image: none;
   background-color: #6d28d9;
+}
+/* ⑧ StoryCard 썸네일 자리 채움 면(보라→핑크) → 중립 회색. 이미지가 늦게 오거나 없을 때만 보인다. */
+[data-edition='v2'] .bg-gradient-to-br.from-primary-light.to-secondary-light {
+  background-image: none;
+  background-color: #f3f4f6;
+}
+.dark [data-edition='v2'] .bg-gradient-to-br.from-primary-light.to-secondary-light {
+  background-color: #1f2937;
 }
 /* ⑦ 보라·핑크·초록 파스텔 그라디언트 배경 패널 → 옅은 보라 단색. 알파가 붙은 3색 조합
       (from-primary/5·/10 via-secondary/… to-accent/…, from-primary/10 to-secondary/10)만 겨눈다. */
