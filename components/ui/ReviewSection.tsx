@@ -18,12 +18,23 @@ interface ReviewSectionProps {
     /** 디자인 v2 섹션 라벨·번호 — SectionHeading으로 그대로 넘긴다(v1에서는 무시). */
     eyebrow?: React.ReactNode;
     index?: string;
+    /**
+     * 이 페이지 서비스에 해당하는 후기만 보인다(data/reviews.ts의 categoryKey).
+     * 생략하면 전부. 걸러서 0건이면 섹션을 렌더하지 않는다 — 믹싱 페이지에 연습실 환기
+     * 후기가 뜨던 상태는 사람에게도 AI에게도 근거가 되지 않는다(2026-09-26 서비스 LP 감사).
+     */
+    categories?: readonly string[];
 }
 
-const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow, index }: ReviewSectionProps) => {
-    const reviews = getReviews(locale);
+const ReviewSection = ({ className, variant = "default", locale = 'ko', eyebrow, index, categories }: ReviewSectionProps) => {
+    const allReviews = getReviews(locale);
+    const reviews = categories
+        ? allReviews.filter((r) => categories.includes(r.categoryKey))
+        : allReviews;
 
     const { t } = useTranslation('common', { lng: locale });
+
+    if (reviews.length === 0) return null;
 
     // 집계 평점 — JSON-LD(business.ts aggregateRating)에는 이미 있으나 UI에는 노출되지
     // 않아 사람 방문자가 볼 수 없었음. 스키마와 동일한 값을 화면에도 표시해 신뢰 신호 강화.

@@ -20,6 +20,7 @@ import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const EngineerCredit = dynamic(() => import('../../components/service/EngineerCredit'));
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
@@ -89,7 +90,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'recording.faq.items', 6),
+    () => createTranslatedQaItems(t, 'recording.faq.items', 8),
     [t]
   );
 
@@ -389,7 +390,9 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
         </p>
       )}
 
-      <ReviewSection variant="default" locale={locale} />
+      <EngineerCredit locale={locale} variant="default" />
+
+      <ReviewSection variant="alternate" locale={locale} categories={['production', 'wedding']} />
 
       <RelatedStoriesSection
         stories={relatedStories}
@@ -442,7 +445,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return buildPageStaticProps(
     locale,
     { pricingData, relatedStories },
-    { revalidate: 86400, i18nSections: ['recording', 'stories'] }
+    { revalidate: 86400, i18nSections: ['recording', 'stories', 'engineerCredit'] }
   );
 };
 
