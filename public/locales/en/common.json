@@ -1272,6 +1272,18 @@
         {
           "q": "Is recording available on weekends and holidays?",
           "a": "Yes, we accept bookings on weekends and holidays. Contact us via KakaoTalk or phone to schedule."
+        },
+        {
+          "q": "Can I record right before the wedding?",
+          "a": "Yes. Even if you record the day before the wedding, you will have your file in time for the ceremony. Please tell us the wedding date when you book."
+        },
+        {
+          "q": "How do I receive the finished files?",
+          "a": "We email you both a WAV and an MP3 file. Give both to the venue’s sound staff so they can use whichever suits their playback system."
+        },
+        {
+          "q": "Where are you and is there parking?",
+          "a": "We are at 3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong), a 5-minute walk from Yeonsinnae Station. The building has no parking. If you drive, use the KT Eunpyeong parking lot on the same street (16 Tongil-ro 71-gil, about 2 minutes on foot, paid), or the public lot at Yeonsin Middle School Underground Public Parking (16-32 Yeonseo-ro 33-gil, open 24 hours, hourly rates), about 1 km from the studio."
         }
       ]
     },
@@ -1413,7 +1425,15 @@
         },
         {
           "q": "Where are you and is there parking?",
-          "a": "Daejo-dong, Eunpyeong-gu, Seoul — a 5-minute walk from Yeonsinnae Station. We'll share directions and parking details when your booking is confirmed."
+          "a": "We are at 3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong), a 5-minute walk from Yeonsinnae Station. The building has no parking. If you drive, use the KT Eunpyeong parking lot on the same street (16 Tongil-ro 71-gil, about 2 minutes on foot, paid), or the public lot at Yeonsin Middle School Underground Public Parking (16-32 Yeonseo-ro 33-gil, open 24 hours, hourly rates), about 1 km from the studio."
+        },
+        {
+          "q": "Who runs the recording session?",
+          "a": "The owner, Hwang Kyungha, runs it himself. The same person handles mic setup, vocal direction, take selection and editing, and the mixing and mastering that follow, so the direction does not change halfway. He planned and produced the album Gentrification, which received the Selection Committee Special Award at the 2017 Korean Music Awards."
+        },
+        {
+          "q": "Who owns the recorded files?",
+          "a": "You do. The raw recordings, edits and the final mix and master all belong to the client. The studio places no restrictions on releasing, uploading to YouTube or monetizing them."
         }
       ]
     },
@@ -1601,6 +1621,18 @@
         {
           "q": "How many revisions are included?",
           "a": "2 for mixing and 1 for mastering, as standard. Tell us the timestamp and what you'd like changed, and we'll apply it."
+        },
+        {
+          "q": "Who does the mixing?",
+          "a": "The owner, Hwang Kyungha, does it himself. One person handles everything from checking your files to delivering the mix and master and making revisions, so your requests are not lost in hand-offs. He planned and produced the album Gentrification, which received the Selection Committee Special Award at the 2017 Korean Music Awards."
+        },
+        {
+          "q": "Who owns the finished track?",
+          "a": "You do. The stems you send and the finished mix and master files all belong to the client. The studio places no restrictions on releasing or monetizing them."
+        },
+        {
+          "q": "Is there a rush option?",
+          "a": "There is no separate rush option. Delivery is 3–7 business days after we receive your files. If you have a fixed release date, tell us when you inquire and we will first confirm whether we can meet it."
         }
       ]
     },
@@ -2957,5 +2989,12 @@
       "supportersCount": "{{count}} people",
       "supportersEmpty": "Be the first subscriber."
     }
+  },
+  "engineerCredit": {
+    "title": "Who does the work",
+    "body": "Recording, mixing and mastering are done by the owner, Hwang Kyungha, in person. One person handles your project from the first consultation through vocal direction, mix and master delivery, and revisions.",
+    "award": "He planned and produced the album Gentrification (젠트리피케이션), which received the Selection Committee Special Award at the 2017 Korean Music Awards.",
+    "creditsLabel": "Selected work:",
+    "profileLink": "Full profile, awards and press →"
   }
 }

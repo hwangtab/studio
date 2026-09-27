@@ -17,6 +17,7 @@ import ServicePriceTable from '../../components/service/ServicePriceTable';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const EngineerCredit = dynamic(() => import('../../components/service/EngineerCredit'));
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
@@ -61,7 +62,7 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'weddingSong.faq.items', 6),
+    () => createTranslatedQaItems(t, 'weddingSong.faq.items', 9),
     [t]
   );
 
@@ -331,7 +332,9 @@ const WeddingSong: NextPageWithLayout<WeddingSongProps> = ({ locale, pricingData
         variant="default"
       />
 
-      <ReviewSection variant="alternate" locale={locale} />
+      <EngineerCredit locale={locale} variant="alternate" />
+
+      <ReviewSection variant="default" locale={locale} categories={['wedding']} />
 
       <HubLinkCallout
         hubSlug="wedding-song-singing"
@@ -392,7 +395,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return buildPageStaticProps(
     locale,
     { pricingData, relatedStories },
-    { revalidate: 86400, i18nSections: ['weddingSong', 'stories'] }
+    { revalidate: 86400, i18nSections: ['weddingSong', 'stories', 'engineerCredit'] }
   );
 };
 

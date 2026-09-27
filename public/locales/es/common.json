@@ -1244,6 +1244,18 @@
         {
           "q": "¿Hay grabaciones disponibles en fines de semana y festivos?",
           "a": "Sí, aceptamos reservas en fines de semana y festivos. Contáctanos por KakaoTalk o teléfono."
+        },
+        {
+          "q": "¿Puedo grabar justo antes de la boda?",
+          "a": "Sí. Aunque grabes el día antes de la boda, tendrás el archivo a tiempo para la ceremonia. Indícanos la fecha de la boda al reservar."
+        },
+        {
+          "q": "¿Cómo recibo los archivos finales?",
+          "a": "Te enviamos por correo electrónico un archivo WAV y otro MP3. Entrega ambos al técnico de sonido del lugar para que use el que mejor se adapte a su equipo."
+        },
+        {
+          "q": "¿Dónde están y hay estacionamiento?",
+          "a": "Estamos en el 3er piso, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seúl (Daejo-dong), a 5 minutos a pie de la estación Yeonsinnae. El edificio no tiene estacionamiento. Si vienes en coche, usa el estacionamiento de KT Eunpyeong en la misma calle (16 Tongil-ro 71-gil, a unos 2 minutos a pie, de pago) o el estacionamiento público subterráneo de la escuela secundaria Yeonsin (16-32 Yeonseo-ro 33-gil, abierto 24 horas, tarifa por hora), a unos 1 km del estudio."
         }
       ]
     },
@@ -1385,7 +1397,15 @@
         },
         {
           "q": "¿Dónde están y hay estacionamiento?",
-          "a": "Daejo-dong, Eunpyeong-gu, Seúl — a 5 minutos a pie de la estación Yeonsinnae. Compartiremos indicaciones y detalles de estacionamiento cuando se confirme tu reserva."
+          "a": "Estamos en el 3er piso, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seúl (Daejo-dong), a 5 minutos a pie de la estación Yeonsinnae. El edificio no tiene estacionamiento. Si vienes en coche, usa el estacionamiento de KT Eunpyeong en la misma calle (16 Tongil-ro 71-gil, a unos 2 minutos a pie, de pago) o el estacionamiento público subterráneo de la escuela secundaria Yeonsin (16-32 Yeonseo-ro 33-gil, abierto 24 horas, tarifa por hora), a unos 1 km del estudio."
+        },
+        {
+          "q": "¿Quién dirige la sesión de grabación?",
+          "a": "El propietario, Hwang Kyungha, la dirige personalmente. La misma persona se encarga de colocar los micrófonos, dirigir la voz, elegir y editar las tomas, y de la mezcla y la masterización posteriores, así que la dirección no cambia a mitad de camino. Planificó y produjo el álbum Gentrification, que recibió el Premio Especial del Comité de Selección en los Korean Music Awards 2017."
+        },
+        {
+          "q": "¿De quién son los archivos grabados?",
+          "a": "Tuyos. Las grabaciones originales, las ediciones y la mezcla y el máster finales pertenecen al cliente. El estudio no pone ninguna restricción para publicarlos, subirlos a YouTube o monetizarlos."
         }
       ]
     },
@@ -1573,6 +1593,18 @@
         {
           "q": "¿Cuántas revisiones están incluidas?",
           "a": "2 en mezcla y 1 en masterización, como estándar. Dinos el momento exacto y qué quieres cambiar, y lo aplicamos."
+        },
+        {
+          "q": "¿Quién hace la mezcla?",
+          "a": "El propietario, Hwang Kyungha, la hace personalmente. Una sola persona se encarga desde revisar tus archivos hasta entregar la mezcla y el máster y hacer las revisiones, así que tus indicaciones no se pierden por el camino. Planificó y produjo el álbum Gentrification, que recibió el Premio Especial del Comité de Selección en los Korean Music Awards 2017."
+        },
+        {
+          "q": "¿De quién es la canción terminada?",
+          "a": "Tuya. Las pistas que envías y los archivos finales de mezcla y máster pertenecen al cliente. El estudio no pone ninguna restricción para publicarlos o monetizarlos."
+        },
+        {
+          "q": "¿Hay opción urgente?",
+          "a": "No hay una opción urgente aparte. La entrega es de 3 a 7 días hábiles desde que recibimos los archivos. Si ya tienes fecha de lanzamiento, dínosla al consultar y primero te confirmamos si podemos cumplirla."
         }
       ]
     },
@@ -2929,5 +2961,12 @@
       "supportersCount": "{{count}} people",
       "supportersEmpty": "Be the first subscriber."
     }
+  },
+  "engineerCredit": {
+    "title": "Quién hace el trabajo",
+    "body": "La grabación, la mezcla y la masterización las realiza personalmente el propietario, Hwang Kyungha. Una sola persona lleva tu proyecto desde la consulta hasta la dirección vocal, la entrega de la mezcla y el máster y las revisiones.",
+    "award": "Planificó y produjo el álbum Gentrification (젠트리피케이션), que recibió el Premio Especial del Comité de Selección en los Korean Music Awards 2017.",
+    "creditsLabel": "Trabajos destacados:",
+    "profileLink": "Ver trayectoria, premios y prensa →"
   }
 }
