@@ -338,3 +338,6 @@ export default function ContractCompletePage({
     </>
   );
 }
+
+// 디자인 판 — lib/designEdition.ts
+ContractCompletePage.designEdition = 'v2';
