@@ -156,3 +156,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   }
   return { props: { projects, stats } };
 });
+
+// 디자인 판 — lib/designEdition.ts
+CreatorHome.designEdition = 'v2';

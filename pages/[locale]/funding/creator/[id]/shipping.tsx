@@ -155,3 +155,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
 
   return { props: { view, projectTitle: project.title, projectId: id } };
 });
+
+// 디자인 판 — lib/designEdition.ts
+CreatorShippingPage.designEdition = 'v2';

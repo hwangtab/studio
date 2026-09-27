@@ -48,3 +48,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
   // 공개 화면이라 내려받기 주소를 벗겨 내려보낸다(lib/funding/projects.ts 주석).
   return { props: { project: stripRewardDownloads(project), initialRewardId, remaining: status.remaining } };
 });
+
+// 디자인 판 — lib/designEdition.ts
+PledgePage.designEdition = 'v2';
