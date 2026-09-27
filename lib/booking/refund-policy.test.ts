@@ -35,19 +35,19 @@ describe('computeRefund — 기산은 KST 달력일, 계약서 시간대 분쟁(
 
 describe('연습실 시간제 환불 — 2일 전 전액 · 전날 50% · 당일 0 (2026-09-24 운영자 확정)', () => {
   const start = kstDateTime('2026-09-10', 3); // 새벽 3시 예약 — 24시간 상품이라 가능
-  const total = 4400 * 3;
+  const total = 6600 * 3; // 시간제 3시간(2026-09-27 6,600원 기준)
   const tiers = PRACTICE_ROOM_REFUND_TIERS;
   it('2일 전 100%', () => {
-    expect(computeRefund(total, start, kstDateTime('2026-09-08', 23), tiers).refundAmount).toBe(13200);
+    expect(computeRefund(total, start, kstDateTime('2026-09-08', 23), tiers).refundAmount).toBe(19800);
   });
   it('전날 50%', () => {
-    expect(computeRefund(total, start, kstDateTime('2026-09-09', 1), tiers).refundAmount).toBe(6600);
+    expect(computeRefund(total, start, kstDateTime('2026-09-09', 1), tiers).refundAmount).toBe(9900);
   });
   it('당일 0 — 새벽 예약을 같은 날 0시 넘어 취소해도 당일이다', () => {
     expect(computeRefund(total, start, kstDateTime('2026-09-10', 0), tiers).refundAmount).toBe(0);
   });
   it('녹음 세션은 같은 날짜 조건에서 다른 답(2일 전은 50%)', () => {
-    expect(computeRefund(total, start, kstDateTime('2026-09-08', 23), REFUND_TIERS).refundAmount).toBe(6600);
+    expect(computeRefund(total, start, kstDateTime('2026-09-08', 23), REFUND_TIERS).refundAmount).toBe(9900);
   });
   it('refundPolicyFor — 상품으로 표와 문구를 함께 고른다', () => {
     expect(refundPolicyFor(getProduct('practice-room-hourly')).tiers).toBe(PRACTICE_ROOM_REFUND_TIERS);

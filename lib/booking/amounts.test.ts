@@ -46,12 +46,12 @@ describe('computeAmounts', () => {
   });
 });
 
-describe('연습실 시간제 청구액 — 소비자가 4,400원(VAT 포함) × 시간', () => {
-  it('3시간이면 공급가 12,000 + VAT 1,200 = 13,200원 — 4,400×3과 정확히 같다', () => {
+describe('연습실 시간제 청구액 — 소비자가 6,600원(VAT 포함) × 시간', () => {
+  it('3시간이면 공급가 18,000 + VAT 1,800 = 19,800원 — 6,600×3과 정확히 같다', () => {
     const p = getProduct('practice-room-hourly')!;
-    expect(computeAmounts(p, 3)).toEqual({ itemAmount: 12000, vatAmount: 1200, totalAmount: 13200 });
+    expect(computeAmounts(p, 3)).toEqual({ itemAmount: 18000, vatAmount: 1800, totalAmount: 19800 });
   });
-  it('1시간은 4,400원 그대로 — 4,840원(VAT 별도 착각)이 되면 안 된다', () => {
-    expect(computeAmounts(getProduct('practice-room-hourly')!, 1).totalAmount).toBe(4400);
+  it('1시간은 6,600원 그대로 — 7,260원(VAT 별도 착각)이 되면 안 된다', () => {
+    expect(computeAmounts(getProduct('practice-room-hourly')!, 1).totalAmount).toBe(6600);
   });
 });

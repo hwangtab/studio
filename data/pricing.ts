@@ -43,13 +43,13 @@ export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
 /**
- * 음악연습실 시간제 — **소비자가 4,400원, VAT 포함.** 다른 상수는 전부 VAT 별도인데 이것만
- * 포함액이다. 값의 출처: 2026-09-24까지 스페이스클라우드에 같은 방을 4,400원(포함)에 올려
- * 두고 있어 거기에 맞췄다(운영자 "수수료가 아니라 부가세 포함이야"). 그 리스팅은 9/25에
- * 판매 중지했지만 가격은 그대로 둔다. 공급가·VAT는 lib/booking/amounts.ts의
- * splitInclusiveAmount로 갈라 쓴다 — 4,000 + 400.
+ * 음악연습실 시간제 — **소비자가 6,600원, VAT 포함.** 다른 상수는 전부 VAT 별도인데 이것만
+ * 포함액이다. 처음엔 스페이스클라우드 리스팅(9/25 판매 중지)과 같은 값(시간당 4천4백 원)으로 열었다가,
+ * 2026-09-27 운영자 결정("너무 싸다")으로 6,600원으로 올렸다. 공급가·VAT는
+ * lib/booking/amounts.ts의 splitInclusiveAmount로 갈라 쓴다 — 6,000 + 600.
+ * 월세 입주(PRACTICE_ROOM_MONTHLY_PRICE)와 같아지는 지점은 월 약 55시간이다 — 스토리가 이 숫자를 쓴다.
  */
-export const PRACTICE_ROOM_HOURLY_PRICE_INCL = 4400;
+export const PRACTICE_ROOM_HOURLY_PRICE_INCL = 6600;
 export const LESSON_MONTHLY_PRICE = 350000;
 export const PRACTICE_ROOM_MONTHLY_PRICE = 360000;
 
