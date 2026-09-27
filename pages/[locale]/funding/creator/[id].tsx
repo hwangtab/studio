@@ -483,3 +483,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+CreatorProjectEditor.designEdition = 'v2';

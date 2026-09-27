@@ -123,3 +123,6 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps = async () =>
   buildPageStaticProps(defaultLocale, {}, { i18nSections: [] });
+
+// 디자인 판 — lib/designEdition.ts
+FundingApply.designEdition = 'v2';

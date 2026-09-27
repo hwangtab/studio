@@ -126,3 +126,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
   // 개설자가 새로고침해 확인할 수 있을 만큼 짧고, 목록 조회가 DB를 때리지 않을 만큼 길다.
   return buildPageStaticProps(defaultLocale, { items }, { i18nSections: [], revalidate: 60 });
 };
+
+// 디자인 판 — lib/designEdition.ts
+FundingIndexPage.designEdition = 'v2';

@@ -230,3 +230,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     listingHidden: pl.listingHiddenAt != null,
   } };
 });
+
+// 디자인 판 — lib/designEdition.ts
+FundingManagePage.designEdition = 'v2';

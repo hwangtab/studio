@@ -155,3 +155,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     return { props: { incomplete: true, projectId: id } };
   }
 });
+
+// 디자인 판 — lib/designEdition.ts
+FundingCreatorPreviewPage.designEdition = 'v2';

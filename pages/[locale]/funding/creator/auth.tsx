@@ -127,3 +127,6 @@ export default function CreatorAuth({ token }: Props) {
     </>
   );
 }
+
+// 디자인 판 — lib/designEdition.ts
+CreatorAuth.designEdition = 'v2';

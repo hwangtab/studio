@@ -195,3 +195,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     { i18nSections: ['stories'], revalidate: 60 },
   );
 };
+
+// 디자인 판 — lib/designEdition.ts
+FundingProjectPage.designEdition = 'v2';

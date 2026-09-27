@@ -106,3 +106,6 @@ export const getServerSideProps = withI18nServerProps<Props>(async ({ params, qu
     props: { slug, code, message: (code && FAIL_MESSAGES[code]) || GENERIC_MESSAGE, orderNo },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+FundingFailPage.designEdition = 'v2';
