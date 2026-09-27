@@ -425,6 +425,7 @@ code {
       (max-w-*xl mx-auto — 체크리스트·카드 그리드)이 많아, 제목만 왼쪽 끝에 있으면 선이 어긋난다.
       제목 **바로 뒤**가 좁은 가운데 블록이면 제목도 그 폭으로 맞춘다. :has() 미지원 브라우저는
       지금처럼 왼쪽 끝 — 레이아웃이 깨지진 않는다. */
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-md) { max-width: 28rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-lg) { max-width: 32rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-xl) { max-width: 36rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-2xl) { max-width: 42rem; margin-inline: auto; }

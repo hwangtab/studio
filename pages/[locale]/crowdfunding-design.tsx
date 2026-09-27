@@ -279,5 +279,6 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
 /** 히어로가 헤더 밑까지 풀블리드로 깔린다(Layout의 hasHero 분기, layout/heroHeader.test.ts). */
 CrowdfundingDesign.hasHero = true;
+CrowdfundingDesign.designEdition = 'v2';
 
 export default CrowdfundingDesign;
