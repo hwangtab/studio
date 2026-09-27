@@ -15,6 +15,7 @@ const SingleReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems }
 );
 
 SingleReleasePage.hasHero = true;
+SingleReleasePage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

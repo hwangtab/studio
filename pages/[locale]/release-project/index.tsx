@@ -447,6 +447,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
 };
 
 ReleaseProject.hasHero = true;
+ReleaseProject.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

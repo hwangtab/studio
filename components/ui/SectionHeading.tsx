@@ -37,7 +37,7 @@ const SectionHeading = ({
   // 정렬은 좌측 고정: align prop은 v1 레이아웃 문법이라 v2에서는 받지 않는다.
   if (edition === 'v2') {
     return (
-      <div className={cn('v2-reveal text-left mb-10 md:mb-14', className)}>
+      <div className={cn('v2-heading v2-reveal text-left mb-10 md:mb-14', className)}>
         {eyebrow && (
           <p className="typo-eyebrow mb-4 flex items-center gap-3">
             {index && (
