@@ -16,7 +16,81 @@
 
 const MAX_FRAMES = 30; // 약 0.5초 — 동적 import 섹션이 늦게 붙는 경우까지
 
-export const scrollAfterRouteChange = (win: Window = window): void => {
+/**
+ * 뒤로·앞으로 가기로 돌아온 페이지는 떠날 때의 위치로 되돌린다.
+ *
+ * 이 기억이 없던 동안에는 뒤로 가기도 새 이동처럼 맨 위에 떨어졌다 — 스토리 목록을 한참 내려
+ * 글을 열고 돌아오면 목록 맨 위였다(2026-09-28 WebKit iPhone 에뮬레이션으로 재현). 브라우저의
+ * 기본 복원은 새 페이지가 마운트되기 전(mode="wait")에 일어나 짧은 문서에 잘리고, 그 뒤 이
+ * 파일의 scrollTo(0)이 덮어쓴다.
+ *
+ * 위치는 스크롤할 때마다 지금 히스토리 항목(next/router가 history.state에 넣는 key)에 적는다.
+ * 전환 중에는 적지 않는다 — popstate 직후 브라우저가 복원하는 스크롤, 옛 페이지가 빠지며
+ * 문서가 짧아져 잘리는 스크롤이 떠나는 페이지의 위치를 덮어쓰기 때문이다. 떠날 때 한 번
+ * 읽지 않고 계속 적는 이유도 같다: popstate 시점엔 이미 스크롤이 바뀌어 있을 수 있다.
+ */
+export const createScrollMemory = () => {
+  const positions = new Map<string, number>();
+  let currentKey: string | null = null;
+  let paused = false;
+  let restoreTarget: number | null = null;
+  return {
+    /** scroll 이벤트마다 */
+    record(y: number) {
+      if (!paused && currentKey) positions.set(currentKey, y);
+    },
+    /** routeChangeStart — 새 이동이든 뒤로 가기든 전환 중에는 적지 않는다 */
+    leave() {
+      paused = true;
+    },
+    /** popstate — 돌아갈 항목의 위치를 꺼내 둔다. 처음 보는 항목이면 복원하지 않는다 */
+    popped(key: string | null) {
+      paused = true;
+      restoreTarget = key ? positions.get(key) ?? null : null;
+    },
+    /** 전환이 끝나 스크롤을 맞춘 뒤(또는 첫 마운트) — 여기서부터 이 항목의 위치를 적는다 */
+    arrived(key: string | null) {
+      currentKey = key;
+      paused = false;
+    },
+    /** 전환이 취소·실패한 경우 — 떠나지 않았으니 다시 적는다 */
+    cancelled() {
+      paused = false;
+      restoreTarget = null;
+    },
+    takeRestoreTarget(): number | null {
+      const y = restoreTarget;
+      restoreTarget = null;
+      return y;
+    },
+  };
+};
+
+export const scrollMemory = createScrollMemory();
+
+/** next/router가 history.state에 넣는 항목 key. 없으면 null. */
+export const historyKey = (win: Window = window): string | null => {
+  const key = (win.history.state as { key?: unknown } | null)?.key;
+  return typeof key === 'string' ? key : null;
+};
+
+export const scrollAfterRouteChange = (win: Window = window, restoreY: number | null = null): void => {
+  if (restoreY !== null) {
+    // 새 페이지가 붙어 문서가 그 위치까지 길어질 때까지 기다린다. 끝내 짧으면 닿는 곳까지.
+    let frame = 0;
+    const attempt = () => {
+      const maxY = win.document.documentElement.scrollHeight - win.innerHeight;
+      if (maxY >= restoreY || frame >= MAX_FRAMES) {
+        win.scrollTo({ top: Math.max(0, Math.min(restoreY, maxY)), behavior: 'instant' as ScrollBehavior });
+        return;
+      }
+      frame += 1;
+      win.requestAnimationFrame(attempt);
+    };
+    attempt();
+    return;
+  }
+
   const id = decodeURIComponent(win.location.hash.slice(1));
   if (!id) {
     win.scrollTo({ top: 0, behavior: 'auto' });
