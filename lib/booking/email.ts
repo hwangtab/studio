@@ -6,6 +6,7 @@ import { formatPriceAmount } from '../../data/pricing';
 import { getSiteConfig } from '../../data/siteConfig';
 import { MIXING_REFUND_POLICY_LINES } from './refund-policy';
 import { getMixingProduct } from './mixing-products';
+import { getProduct } from './products';
 import { kstDateString } from './kst';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
@@ -137,17 +138,25 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
     ? `⚠ 입장 안내를 못 보냈습니다 — 비어 있는 값: ${guide.missing.join(', ')}. 손님에게 비밀번호를 직접 보내야 합니다.`
     : null;
 
+  // 상품명을 싣는다 — 서비스 종류만으로는 Day Lock 8시간과 시간당 8시간이 금액으로만 갈린다.
+  const productName = getProduct(booking.productId)?.nameKo ?? booking.serviceType;
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: `[예약] ${when} ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
+    subject: `[예약] ${when} ${productName}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
     text: [
       `새 예약이 결제 완료되었습니다.`,
+      `상품: ${productName}`,
       `일시: ${when} (${booking.durationHours}시간)`,
       ...(roomLine ? [roomLine] : []),
       `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
       `금액: ${formatPriceAmount(order.totalAmount)}원`,
       `요청사항: ${booking.customerNote ?? '없음'}`,
       ...(guideWarning ? ['', guideWarning] : []),
+      // 후기 요청 메일(lib/reviews/reviewRequests.ts)은 세션 다음 날 11:00에 확정·완료 예약으로 나간다.
+      // 노쇼 표시는 관리자가 손으로 하므로, 그 전에 표시해야 노쇼 고객에게 "잘 마무리되셨나요"가 가지 않는다.
+      ...(booking.serviceType !== 'practice-room'
+        ? ['', '※ 손님이 오지 않았다면 다음 날 오전 11시 전에 관리자 화면에서 노쇼로 표시해 주세요(후기 요청 메일에서 빠집니다).']
+        : []),
       `관리자: ${SITE_URL}/admin/bookings`,
     ].join('\n'),
   });

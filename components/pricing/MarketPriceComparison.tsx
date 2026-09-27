@@ -25,7 +25,13 @@ const MarketPriceComparison = () => {
       <p className="typo-card-body text-center text-gray-700 dark:text-gray-300 mb-6">
         서울 독립 스튜디오들이 공개한 요금표와 스튜디오 놀 가격을 나란히 놓았습니다.
       </p>
-      <div className="overflow-x-auto">
+      {/* 좁은 화면에서는 표가 가로로 스크롤된다 — 키보드로도 스크롤할 수 있게 포커스를 받고 이름을 단다. */}
+      <div
+        className="overflow-x-auto rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
+        tabIndex={0}
+        role="region"
+        aria-label="시장 공개 요금과 스튜디오 놀 가격 비교표 (좁은 화면에서는 옆으로 밀어 보세요)"
+      >
         <table className="w-full min-w-[640px] text-left border-collapse text-sm">
           <caption className="sr-only">항목별 시장 공개 요금과 스튜디오 놀 가격 비교</caption>
           <thead>

@@ -9,6 +9,7 @@ import { calendarForService, calendarIdFor, createBookingEvent, type BookingCale
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, cancelPayment, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
+import { getProduct } from './products';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 
 export type ConfirmOutcome =
@@ -275,9 +276,9 @@ const ensureBookingEvent = async (
     const eventId = await createBookingEvent({
       calendar,
       room: booking.roomNumber,
-      summary: `[예약] ${booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
+      summary: `[예약] ${getProduct(booking.productId)?.nameKo ?? booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
       description: [
-        `상품: ${booking.productId} (${booking.durationHours}시간)${booking.roomNumber ? ` · 방 ${booking.roomNumber}` : ''}`,
+        `상품: ${getProduct(booking.productId)?.nameKo ?? booking.productId} (${booking.durationHours}시간)${booking.roomNumber ? ` · 방 ${booking.roomNumber}` : ''}`,
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
         `주문번호: ${order.orderNo}`,
         `요청사항: ${booking.customerNote ?? '없음'}`,

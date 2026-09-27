@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const result = await runReviewRequests(new Date());
     if (result.failed.length > 0) {
-      await sendEmail({
+      const alert = await sendEmail({
         to: OPERATOR_EMAIL,
         subject: `[스튜디오 놀] 후기 요청 메일 ${result.failed.length}건 발송 실패`,
         text: [
@@ -37,11 +37,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           ...result.failed.map((f) => `- ${f.refId}: ${f.code}`),
         ].join('\n'),
       });
+      if (!alert.ok) console.error('[cron/review-requests] 운영자 실패 알림 발송도 실패');
     }
     console.log(`[cron/review-requests] sent=${result.sent} skipped=${result.skipped} failed=${result.failed.length}`);
     return res.status(200).json({ ok: true, ...result });
   } catch (error: unknown) {
     console.error('[cron/review-requests] 실패:', error);
-    return res.status(500).json({ ok: false, message: error instanceof Error ? error.message : String(error) });
+    const message = error instanceof Error ? error.message : String(error);
+    // 크론 전체가 실패해도 운영자가 알아야 한다 — 500만 남기면 후기 요청이 조용히 멈춘다.
+    const alert = await sendEmail({
+      to: OPERATOR_EMAIL,
+      subject: '[스튜디오 놀] 후기 요청 크론 실패',
+      text: [
+        '오늘 후기 요청 메일 크론이 통째로 실패해 한 통도 보내지 못했습니다.',
+        `오류: ${message}`,
+        '',
+        'review_requests 테이블이 없다는 오류면 마이그레이션 0038 적용 여부부터 보세요(CLAUDE.md "운영 DB 마이그레이션 적용 방법").',
+        '이용 후 7일 안의 건은 내일 실행에서 다시 대상이 됩니다.',
+      ].join('\n'),
+    }).catch(() => ({ ok: false }));
+    if (!alert.ok) console.error('[cron/review-requests] 운영자 알림도 실패');
+    return res.status(500).json({ ok: false, message });
   }
 }
