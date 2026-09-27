@@ -175,16 +175,20 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
           priceLabel: range(VOCAL_PACKAGE_PRICE * 2, VOCAL_PACKAGE_PRICE * 3),
           vat: 'excluded',
           basis: [
-            `곡당 보컬 녹음 1프로(${won(VOCAL_PACKAGE_PRICE)}) 기준`,
-            `3곡을 하루에 몰아 녹음하면 Day Lock 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`,
+            `곡당 보컬 녹음 1프로(${won(VOCAL_PACKAGE_PRICE)}, 3시간) 기준`,
+            `녹음이 하루 8시간 안에 끝날 분량이면 Day Lock 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`,
           ],
           bookingHref: '/ko/booking/recording',
         };
       }
+      // 상한을 약속하지 않는다 — 곡당 3시간이면 정규 8곡은 Day Lock 8시간 세 번이다.
       return {
-        priceLabel: range(DAY_LOCK_8H_PRICE, DAY_LOCK_8H_PRICE * 2),
+        priceLabel: `${won(DAY_LOCK_8H_PRICE)}부터`,
         vat: 'excluded',
-        basis: [`Day Lock 8시간(${won(DAY_LOCK_8H_PRICE)}) 1~2회 기준 — 곡 수와 테이크에 따라 달라집니다`],
+        basis: [
+          `Day Lock 8시간(${won(DAY_LOCK_8H_PRICE)}) 기준 — 곡당 3시간 안팎이라 8시간에 2~3곡씩 녹음합니다`,
+          '필요한 날수는 곡 수와 테이크에 따라 상담에서 정합니다',
+        ],
         bookingHref: '/ko/booking/recording?product=recording-daylock-8h',
       };
     case 'mixing': {

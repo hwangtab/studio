@@ -61,7 +61,8 @@ describe('견적 요청서 — 즉시 견적', () => {
     expect(estimate({ ...base, service: 'recording', scale: '1' })!.priceLabel).toBe(won(VOCAL_PACKAGE_PRICE));
     expect(estimate({ ...base, service: 'wedding' })!.priceLabel).toBe(won(WEDDING_PACKAGE_PRICE));
     expect(estimate({ ...base, service: 'mixing', scale: 'l2' })!.priceLabel).toContain(won(MIXING_LEVEL2_PRICE + MASTERING_SINGLE_PRICE));
-    expect(estimate({ ...base, service: 'recording', scale: '4+' })!.priceLabel).toContain(won(DAY_LOCK_8H_PRICE * 2));
+    // 4곡 이상은 상한을 약속하지 않는다(정규 8곡이면 8시간 세 번).
+    expect(estimate({ ...base, service: 'recording', scale: '4+' })!.priceLabel).toBe(`${won(DAY_LOCK_8H_PRICE)}부터`);
     for (const [scale, price] of [['single', SINGLE_BUNDLE_PRICE], ['ep', EP_BUNDLE_PRICE], ['album', ALBUM_BUNDLE_PRICE]] as const) {
       expect(estimate({ ...base, service: 'release', scale, fundingSource: 'self' })!.priceLabel).toBe(`${won(price)}부터`);
     }

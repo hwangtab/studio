@@ -20,6 +20,10 @@ const WANT = [
   // 조회 불가였다(10/1 믹싱 오퍼·보컬 브릿지 실험 판정이 cta_id 분해를 전제). 소급 안 됨.
   { parameterName: 'component', displayName: 'component', scope: 'EVENT' },
   { parameterName: 'cta_id', displayName: 'cta_id', scope: 'EVENT' },
+  // 2026-09-27: 견적 요청서(/ko/quote)의 lead_click_kakao가 싣는 값. 운영자가 카톡으로 받은
+  // 견적 코드(NOL-XXXXXX)를 GA4 이벤트와 짝지으려면 등록돼 있어야 한다. 소급 안 됨.
+  { parameterName: 'quote_code', displayName: 'quote_code', scope: 'EVENT' },
+  { parameterName: 'quote_service', displayName: 'quote_service', scope: 'EVENT' },
 ];
 
 async function list() {
