@@ -102,8 +102,8 @@
       "servicesCta": "Tìm hiểu thêm"
     },
     "cta": {
-      "titleLine1": "Xây dựng tên tuổi của bạn trong cộng đồng indie,",
-      "titleHighlight": "bắt đầu từ một bản phát hành.",
+      "titleLine1": "Âm nhạc của bạn,",
+      "titleHighlight": "cùng làm đến tận ngày phát hành.",
       "subtitleLine1": "Lập kế hoạch · Thu âm · Nhạc công · Mix · Phát hành · PR — Producer 15 năm kinh nghiệm đồng hành.",
       "subtitleLine2": "Tư vấn miễn phí 30 phút · Báo giá tùy chỉnh",
       "location": "Địa điểm",
@@ -2212,7 +2212,7 @@
       },
       "album": {
         "title": "Dự án phát hành Album | Studio NOL",
-        "description": "Album đầy đủ khắc tên bạn trong cảnh indie. Dự án album cùng nhà sản xuất Hwang Kyungha (15 năm) — từng làm việc với nhiều nghệ sĩ indie. A&R, buổi nghe dành cho nhà phê bình và hỗ trợ nộp hồ sơ tài trợ.",
+        "description": "Album đầy đủ, bao gồm PR đến giới phê bình và truyền thông. Dự án album cùng nhà sản xuất Hwang Kyungha (15 năm) — từng làm việc với nhiều nghệ sĩ indie. A&R, buổi nghe dành cho nhà phê bình và hỗ trợ nộp hồ sơ tài trợ.",
         "keywords": "phát hành album, âm nhạc indie Korea, nhà sản xuất âm nhạc, Studio NOL"
       }
     },
@@ -2228,7 +2228,7 @@
     "producer": {
       "sectionTitle": "Nhà sản xuất Hwang Kyungha",
       "tagline": "Nhà sản xuất & A&R với 15 năm kinh nghiệm",
-      "bodyParagraph1": "Tôi đồng hành cùng các nghệ sĩ singer-songwriter và ban nhạc indie trong việc phát hành. Trau chuốt bài hát, đưa lên Spotify và Apple Music, kết nối nhạc công session, tiếp cận báo chí và phê bình — để một bài hát có chỗ đứng trong indie scene, mọi mắt xích đều phải khớp với nhau.",
+      "bodyParagraph1": "Tôi đồng hành cùng các nghệ sĩ singer-songwriter và ban nhạc indie trong việc phát hành. Trau chuốt bài hát, đưa lên Spotify và Apple Music, kết nối nhạc công session, tiếp cận báo chí và phê bình — để một bài hát đến được với người nghe và truyền thông, mọi mắt xích đều phải khớp với nhau.",
       "bodyParagraph2": "Một bản phát hành thành công khó có thể làm một mình. Vì vậy công việc của tôi là trở thành người đồng hành đi cùng bạn đến cuối con đường.",
       "stats": [
         {
@@ -2268,7 +2268,7 @@
             "Sẵn sàng đưa bài hát lên Spotify hoặc Melon lần đầu tiên",
             "Đã có bài hát nhưng không biết bước tiếp theo",
             "Muốn bắt đầu thực tế với ngân sách rõ ràng",
-            "Đang bước vào cảnh indie lần đầu"
+            "Muốn phát hành chính thức bản nhạc đầu tiên"
           ],
           "personaNotFitNote": "Nếu bạn đã nghĩ đến quy mô EP hoặc album đầy đủ, hãy xem thêm các trang đó.",
           "focusSectionTitle": "Chúng tôi tập trung vào gì cho single của bạn",
@@ -2280,7 +2280,7 @@
             },
             {
               "title": "Định hình ấn tượng đầu tiên",
-              "desc": "Khoảnh khắc tên bạn bước vào cảnh indie. Chúng tôi cùng bạn suy nghĩ từ giai đoạn lên kế hoạch về ấn tượng bạn muốn tạo ra."
+              "desc": "Khoảnh khắc lần đầu giới thiệu tên bạn với người nghe và truyền thông. Chúng tôi cùng bạn suy nghĩ từ giai đoạn lên kế hoạch về ấn tượng bạn muốn tạo ra."
             },
             {
               "title": "Bước khởi đầu thực tế",
@@ -2288,7 +2288,7 @@
             },
             {
               "title": "Điểm tiếp xúc truyền thông đầu tiên",
-              "desc": "Khi phát hành, chúng tôi gửi thông cáo báo chí qua mạng lưới truyền thông âm nhạc đã gây dựng trong 15 năm. Ngay cả lần phát hành đầu tiên cũng có thể lọt vào tầm nhìn của cảnh indie."
+              "desc": "Chúng tôi gửi thông cáo báo chí qua mạng lưới truyền thông âm nhạc gây dựng trong 15 năm, đồng thời giới thiệu đến báo chí, radio và người tuyển chọn playlist ở nước ngoài. Ngay từ lần phát hành đầu tiên, chúng tôi kết nối bạn với truyền thông và người tuyển chọn trong và ngoài nước."
             }
           ],
           "journeySectionTitle": "Hành trình đến phát hành",
@@ -2550,14 +2550,14 @@
         "range": "Từ khoảng ₩3.4M",
         "note": "Mốc 8 bài, điều chỉnh theo phạm vi",
         "detail": {
-          "heroTitlePrefix": "Khắc tên bạn",
-          "heroTitleHighlight": "trong cảnh indie",
-          "heroTitleSuffix": "với album đầy đủ",
+          "heroTitlePrefix": "Album đầy đủ",
+          "heroTitleHighlight": "cùng làm",
+          "heroTitleSuffix": "từ đầu đến cuối",
           "heroSubtitle": "Toàn bộ thế giới của bạn trong một album — chúng tôi đi đến cùng.",
           "personaSectionTitle": "Dành cho ai",
           "personaItems": [
             "Muốn gói trọn thế giới nghệ thuật của mình vào một tác phẩm",
-            "Sẵn sàng để lại dấu ấn rõ nét trong cảnh indie",
+            "Muốn tác phẩm được giới phê bình và người nghe nhớ đến",
             "Muốn tiếp cận các nhà phê bình và truyền thông nghiêm túc",
             "Muốn dùng học bổng hoặc gây quỹ cộng đồng để cơ cấu ngân sách"
           ],
@@ -2689,7 +2689,7 @@
             },
             {
               "question": "Album đầy đủ có thể đưa tôi lên bảng xếp hạng không?",
-              "answer": "Chúng tôi không thể đảm bảo điều đó. Trong cảnh indie, giá trị của album đầy đủ nằm ở sự công nhận của nhà phê bình và vị thế trong cảnh hơn là thứ hạng trên bảng xếp hạng. Chúng ta cùng nỗ lực mở con đường đó."
+              "answer": "Chúng tôi không thể đảm bảo điều đó. Giá trị của album đầy đủ không nằm nhiều ở thứ hạng bảng xếp hạng mà ở cách giới phê bình, truyền thông đón nhận và vị trí bạn tạo dựng giữa các nhạc sĩ đồng nghiệp. Chúng tôi sẽ cùng bạn mở ra quá trình đó."
             },
             {
               "question": "Tôi đã phát hành album đầu tiên rồi. Tôi có thể cộng tác với các bạn không?",
@@ -2730,7 +2730,7 @@
           },
           "album": {
             "trackCount": "khoảng 8 bài",
-            "persona": "Ghi dấu trong làng indie",
+            "persona": "Để lại tên tuổi bằng tác phẩm",
             "keyDeliverables": "A&R · Sắp xếp thứ tự · Buổi nghe cùng giới phê bình · Đồng hành xin tài trợ"
           }
         },
@@ -2740,7 +2740,7 @@
     },
     "scope": {
       "sectionTitle": "Những gì Nhà sản xuất Mang lại",
-      "sectionSubtitle": "15 năm tạo ra những đĩa nhạc indie có ý nghĩa trong làng nhạc Hàn Quốc.",
+      "sectionSubtitle": "Nhà sản xuất 15 năm lên kế hoạch và thực hiện các đĩa nhạc indie.",
       "items": [
         "Lên ý tưởng album & định hướng A&R",
         "Thu âm giọng hát · Hòa âm · Mastering (nội bộ)",
@@ -2840,7 +2840,7 @@
       "items": [
         {
           "question": "Dự án phát hành là dịch vụ gì?",
-          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL; nhạc cụ session và kết nối phê bình·truyền thông được triển khai qua mạng lưới 15 năm trong cộng đồng indie. Single, EP và album đầy đủ có nhịp độ và ngân sách khác nhau — vui lòng xem từng trang để biết hạng mục cụ thể và cấu trúc giá. Về phân phối, chúng tôi cùng bạn chọn nhà phân phối phù hợp nhất trong số nhiều đối tác."
+          "answer": "Đây là một dự án đồng hành cùng bạn qua mọi bước của việc phát hành âm nhạc — lên kế hoạch, thu âm, kết nối nhạc công session, mixing, mastering, phân phối và PR truyền thông. Thu âm vocal, mixing và mastering được thực hiện trực tiếp tại Studio NOL; nhạc cụ session và kết nối phê bình·truyền thông được triển khai qua mạng lưới nhạc công session và truyền thông gây dựng trong 15 năm. Single, EP và album đầy đủ có nhịp độ và ngân sách khác nhau — vui lòng xem từng trang để biết hạng mục cụ thể và cấu trúc giá. Về phân phối, chúng tôi cùng bạn chọn nhà phân phối phù hợp nhất trong số nhiều đối tác."
         },
         {
           "question": "Nếu giữa dự án tôi đổi ý hoặc lịch trình bị xáo trộn thì sao?",

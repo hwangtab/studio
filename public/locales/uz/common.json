@@ -102,8 +102,8 @@
       "servicesCta": "Batafsil"
     },
     "cta": {
-      "titleLine1": "Indie sahnaida o'z nomingizni qoldiring,",
-      "titleHighlight": "chiqarish bilan boshlang.",
+      "titleLine1": "Sizning musiqangiz,",
+      "titleHighlight": "chiqarilguncha birga yaratamiz.",
       "subtitleLine1": "Rejalash · Yozuv · Musiqachilar · Miks · Tarqatish · PR — 15 yillik tajribali producer yoningizda.",
       "subtitleLine2": "30 daqiqa bepul maslahat · Tarif jadvaliga asoslangan maxsus narx",
       "location": "Manzil",
@@ -2212,7 +2212,7 @@
       },
       "album": {
         "title": "To'liq albom chiqarish loyihasi | Studio NOL",
-        "description": "Indie sahnasida ismingizni o‘yib yozadigan to‘liq albom. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Kyungha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
+        "description": "Tanqidchilar va OAVga PR bilan birga to‘liq albom. ko‘plab indie artistlar bilan ishlagan 15 yillik prodyuser Hwang Kyungha bilan to‘liq albom chiqarish loyihasi. A&R, tanqidchilar uchun tinglash uchrashuvi va grant arizalariga hamrohlik.",
         "keywords": "albom chiqarish, indie musiqa, musiqa produceri, Studio NOL"
       }
     },
@@ -2228,7 +2228,7 @@
     "producer": {
       "sectionTitle": "Prodyuser Hwang Kyungha",
       "tagline": "15 yillik tajribali musiqa prodyuseri va A&R",
-      "bodyParagraph1": "Men indie singer-songwriterlar va guruhlar bilan birga ularning reliz jarayonida ishlayman. Qo‘shiqni jilolab, Spotify va Apple Music’ga joylash, sessiya musiqachilarini ulash, OAV va tanqidga yetkazish — qo‘shiq indie sahnada o‘z o‘rnini topishi uchun bu bosqichlarning barchasi bir-biriga zich bog‘lanishi kerak.",
+      "bodyParagraph1": "Men indie singer-songwriterlar va guruhlar bilan birga ularning reliz jarayonida ishlayman. Qo‘shiqni jilolab, Spotify va Apple Music’ga joylash, sessiya musiqachilarini ulash, OAV va tanqidga yetkazish — qo‘shiq tinglovchilar va OAVga yetib borishi uchun bu bosqichlarning barchasi bir-biriga zich bog‘lanishi kerak.",
       "bodyParagraph2": "Muvaffaqiyatli relizni yolg‘iz amalga oshirish qiyin. Shu sababli mening vazifam — yo‘lning oxirigacha siz bilan birga yuradigan hamroh bo‘lishdir.",
       "stats": [
         {
@@ -2268,7 +2268,7 @@
             "Qo'shiqlarini birinchi marta Spotify yoki Melonga yuklashga tayyor",
             "Qo'shiqlari bor, lekin keyingi qadamni bilmaydi",
             "Aniq byudjet bilan realistik boshlashni xohlaydi",
-            "Indie sahnasiga birinchi qadamini tashlaydi"
+            "Birinchi trekini rasman chiqarmoqchi"
           ],
           "personaNotFitNote": "Agar EP yoki to'liq albom hajmini o'ylayotgan bo'lsangiz, u sahifalarni ham ko'ring.",
           "focusSectionTitle": "Singlingiz uchun nimaga e'tibor qaratamiz",
@@ -2280,7 +2280,7 @@
             },
             {
               "title": "Birinchi taassurotni belgilash",
-              "desc": "Ismingiz indie sahnasiga kirgan lahza. Rejalashtirish bosqichidan boshlab qanday taassurot qoldirmoqchisiz deb birga o'ylaymiz."
+              "desc": "Ismingizni tinglovchilar va OAVga ilk bor tanishtiradigan lahza. Rejalashtirish bosqichidan boshlab qanday taassurot qoldirmoqchisiz deb birga o'ylaymiz."
             },
             {
               "title": "Realistik birinchi qadam",
@@ -2288,7 +2288,7 @@
             },
             {
               "title": "Birinchi media aloqa nuqtasi",
-              "desc": "Chiqarishda 15 yillik musiqa nashrlari tarmog'i orqali press-reliz yuboramiz. Birinchi chiqarish ham indie sahnaning ko'ziga tushishi mumkin."
+              "desc": "15 yil davomida qurilgan musiqa OAV tarmog'i orqali press-reliz yuboramiz, xorijiy OAV, radio va pleylist kuratorlariga ham taklif qilamiz. Birinchi chiqarishdanoq sizni ichki va xorijiy OAV hamda kuratorlar bilan bog'laymiz."
             }
           ],
           "journeySectionTitle": "Chiqarish sayohati",
@@ -2550,14 +2550,14 @@
         "range": "Taxminan ₩3.4M dan",
         "note": "8 trek asosida, hajmga qarab moslanadi",
         "detail": {
-          "heroTitlePrefix": "Indie sahnasida",
-          "heroTitleHighlight": "ismingizni o'yib yozing",
-          "heroTitleSuffix": "to'liq albom bilan",
+          "heroTitlePrefix": "Boshidan oxirigacha",
+          "heroTitleHighlight": "birga yaratiladigan",
+          "heroTitleSuffix": "to'liq albom",
           "heroSubtitle": "Butun dunyoyingizni bir albumda — biz oxirigacha birga boramiz.",
           "personaSectionTitle": "Bu kim uchun",
           "personaItems": [
             "Butun ijodiy dunyosini bir asarga solishni xohlaydi",
-            "Indie sahnasida yorqin iz qoldirishga tayyor",
+            "Asari tanqidchilar va tinglovchilar yodida qolishini istaydi",
             "Tanqidchilar va OAV bilan jiddiy aloqa o'rnatmoqchi",
             "Grantlar yoki crowdfunding orqali byudjetni shakllantirmoqchi"
           ],
@@ -2689,7 +2689,7 @@
             },
             {
               "question": "To'liq albom meni chart ga chiqara oladimi?",
-              "answer": "Buni kafolatlay olmaymiz. Indie sahnasida to'liq albomning qiymati chart o'rinlaridan ko'ra tanqidiy tan olinish va sahnadagi mavqeda. U yo'lni birga ochishga harakat qilamiz."
+              "answer": "Buni kafolatlay olmaymiz. To'liq albomning qiymati chart o'rinlaridan ko'ra tanqidchilar va OAV bahosida hamda hamkasb musiqachilar orasida egallagan o'rnida. Bu jarayonni birga ochamiz."
             },
             {
               "question": "Birinchi albomni chiqardim. Siz bilan ishlash mumkinmi?",
@@ -2730,7 +2730,7 @@
           },
           "album": {
             "trackCount": "8 ga yaqin qoʻshiq",
-            "persona": "Indi sahnasida nom qoldirish",
+            "persona": "Asar bilan nom qoldirish",
             "keyDeliverables": "A&R · Ketma-ketlik · Tanqidchilar bilan tinglash · Grant loyihalarida hamrohlik"
           }
         },
@@ -2740,7 +2740,7 @@
     },
     "scope": {
       "sectionTitle": "Prodyuser Beradi",
-      "sectionSubtitle": "15 yil davomida Koreya indie musiqasida muhim albumlar yaratgan prodyuser.",
+      "sectionSubtitle": "15 yildan beri indie albumlarni rejalashtirib, yaratib kelayotgan prodyuser.",
       "items": [
         "Albom kontseptsiyasi va A&R yo'nalishi",
         "Vokal yozish · Mikslash · Mastering (ichki)",
@@ -2840,7 +2840,7 @@
       "items": [
         {
           "question": "Chiqarish loyihasi qanday xizmat?",
-          "answer": "Bu musiqani chiqarishning har bir bosqichida — rejalashtirish, yozib olish, session musiqachilarini biriktirish, miks, mastering, tarqatish va media PR — siz bilan birga yuradigan loyiha. Vokal yozish, miks va mastering Studio NOL ichida bajariladi; cholg‘u sessiya va tanqidchi·media aloqalari esa indi sahnada 15 yil davomida qurilgan tarmoq orqali olib boriladi. Single, EP va to‘liq albomning sur’ati va byudjeti har xil — har bir sahifada aniq tarkib va narx tuzilmasini ko‘rib chiqing. Tarqatish uchun bir nechta hamkor ichidan siz bilan birga eng mosini tanlaymiz."
+          "answer": "Bu musiqani chiqarishning har bir bosqichida — rejalashtirish, yozib olish, session musiqachilarini biriktirish, miks, mastering, tarqatish va media PR — siz bilan birga yuradigan loyiha. Vokal yozish, miks va mastering Studio NOL ichida bajariladi; cholg‘u sessiya va tanqidchi·media aloqalari esa 15 yil davomida qurilgan sessiya musiqachilari va OAV tarmog'i orqali olib boriladi. Single, EP va to‘liq albomning sur’ati va byudjeti har xil — har bir sahifada aniq tarkib va narx tuzilmasini ko‘rib chiqing. Tarqatish uchun bir nechta hamkor ichidan siz bilan birga eng mosini tanlaymiz."
         },
         {
           "question": "Loyiha davomida fikrim o‘zgarsa yoki jadval buzilsa nima bo‘ladi?",

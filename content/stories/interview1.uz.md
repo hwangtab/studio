@@ -17,9 +17,9 @@ thumbnail: /images/recording8.webp
 
 # Jai’ning yangi “Golden Hour” albomi bo‘yicha producer Park Chan-woong bilan intervyu: 25 yillik musiqiy yo‘lning “oltin vaqti” “balans” va “muloqot” orqali yakunlandi
 
-Jai’ning yangi “Golden Hour” albomi 25 yillik musiqiy yo‘lning oltin vaqtini aks ettiradi. Bir vaqtlar koreys indie sahnasining bir davrini belgilagan “Hedimama” rock guruhining yetakchisi bo‘lgan Jai, keyinchalik yakkaxon ijrochi sifatida o‘ziga xos sonic identitet yaratdi. Yetti yildan keyingi ilk yangi reliz ko‘p jihatdan alohida ahamiyatga ega. Rock va jazz, pop va soul oralig‘ida harakatlanuvchi rang-barang palitra — ammo doimo Jai’ning ovozi va lirikasiga tayanadi — fotografiyada aytiladigan “golden hour” kabi mukammal balansni yaratadi.
+Jai’ning yangi “Golden Hour” albomi 25 yillik musiqiy yo‘lning oltin vaqtini aks ettiradi. Bir vaqtlar koreys indie musiqasining bir davrini belgilagan “Hedimama” rock guruhining yetakchisi bo‘lgan Jai, keyinchalik yakkaxon ijrochi sifatida o‘ziga xos sonic identitet yaratdi. Yetti yildan keyingi ilk yangi reliz ko‘p jihatdan alohida ahamiyatga ega. Rock va jazz, pop va soul oralig‘ida harakatlanuvchi rang-barang palitra — ammo doimo Jai’ning ovozi va lirikasiga tayanadi — fotografiyada aytiladigan “golden hour” kabi mukammal balansni yaratadi.
 
-Producer Park Chan-woong bu albomni yakunlashda muhim rol o‘ynadi. U gitarchi/producer va “Monthly Mixing” musiqa nashrining noshiri bo‘lib, Koreya musiqa sahnasidagi ta’sirini muntazam kengaytirib keladi. Jai’ning original qo‘shiqlarini turli musiqiy ranglar bilan bezab, u albomning umumiy sound va yo‘nalishini shakllantirdi.
+Producer Park Chan-woong bu albomni yakunlashda muhim rol o‘ynadi. U gitarchi/producer va “Monthly Mixing” musiqa nashrining noshiri bo‘lib, Koreya musiqa olamidagi ta’sirini muntazam kengaytirib keladi. Jai’ning original qo‘shiqlarini turli musiqiy ranglar bilan bezab, u albomning umumiy sound va yo‘nalishini shakllantirdi.
 
 To‘rt qo‘shiq — “Your Date,” “Fever,” “Tonight,” va “A Late Old Story” — shunchaki tracklar ro‘yxati emas, balki yagona hissiy sayohatdir. U turli janrlar orasida yagona tonni qanday saqladi? Session musiqachilar bilan qanday sinxronlashdi? Raqamli davrda musiqa ishlab chiqarish qanday o‘zgarayapti? Biz “Golden Hour”ning musiqiy yo‘nalishini yakunlagan producer Park Chan-woong bilan uchrashib, zamonaviy musiqa ishlab chiqarish dunyosiga nazar soldik.
 
@@ -105,9 +105,9 @@ Park tirik ijroni konservativlikdan emas, balki real ijrochining energiyasi va o
 
 Alboming tracklari turli instrumentation va production uslublarini ko‘rsatadi — Park har bir trackning kayfiyatiga mos palette tanlagan. “Your Date”da programming va elektron beatlardan foydalanadi, “Fever”da esa ko‘proq tabiiy, jazz‑influenced aranjirovka. Bu xilma‑xillik albom sifatini oshirdi.
 
-### Indie sahnadagi producer roli: o‘zgarayotgan manzara
+### Indie musiqadagi producer roli: o‘zgarayotgan manzara
 
-Koreya indie sahnasida producer roli qanday o‘zgarayapti? Park DIY (Do It Yourself) trendining ko‘tarilishini tilga oldi.
+Koreya indie musiqasida producer roli qanday o‘zgarayapti? Park DIY (Do It Yourself) trendining ko‘tarilishini tilga oldi.
 
 “Menimcha, ko‘p hollarda men ham producer, ham artist bo‘lib qolaman. Qila olsang, o‘zing qilasan… Endi to‘siqlar past.”
 
@@ -177,7 +177,7 @@ Texnologiya rivojlanib, vositalar yanada ommabop bo‘lgan sayin, insoniy muloqo
 
 Park Chan-woong bilan intervyu {Golden Hour} ortidagi murakkab jarayon va zamonaviy producer roliga chuqur nazar berdi. U og‘zaki “artist avval” desa ham, amalda uning mutaxassislikka asoslangan qarorlari — kerak bo‘lganda jasur qadamlar — juda muhim edi.
 
-{Golden Hour} Parkning chuqur musiqiy bilim va produserlik mahoratisiz yaratilishi mumkin bo‘lmagan albom. Uning boy aranjirovkalari va sayqallangan soundi albomni boshqa darajaga olib chiqdi. Bu ish orqali u koreys indie sahnasidagi muhim producer sifatida mavqeini yanada mustahkamladi.
+{Golden Hour} Parkning chuqur musiqiy bilim va produserlik mahoratisiz yaratilishi mumkin bo‘lmagan albom. Uning boy aranjirovkalari va sayqallangan soundi albomni boshqa darajaga olib chiqdi. Bu ish orqali u koreys indie musiqasidagi muhim producer sifatida mavqeini yanada mustahkamladi.
 
 Uning yondashuvini alohida qiladigan narsa — texnikadan tashqari, muloqotning ahamiyatini chuqur anglashidir. U muloqotni — artist va producer o‘rtasida, hamda musiqa va tinglovchi o‘rtasida — eng muhim element deb biladi. Bu uni faqat texnik emas, balki o‘ylovchi musiqiy yaratuvchiga aylantiradi.
 

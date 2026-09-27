@@ -102,8 +102,8 @@
       "servicesCta": "Ver más"
     },
     "cta": {
-      "titleLine1": "Construye tu nombre en la escena indie,",
-      "titleHighlight": "empieza con un lanzamiento.",
+      "titleLine1": "Tu música,",
+      "titleHighlight": "la hacemos contigo hasta el lanzamiento.",
       "subtitleLine1": "Planificación · Grabación · Sesiones · Mezcla · Distribución · PR — 15 años de experiencia a tu lado.",
       "subtitleLine2": "Consulta gratuita de 30 min · Presupuesto personalizado",
       "location": "Ubicación",
@@ -2212,7 +2212,7 @@
       },
       "album": {
         "title": "Proyecto de Álbum Completo | Studio NOL",
-        "description": "Un álbum completo que graba tu nombre en la escena indie. Proyecto de álbum con el productor Hwang Kyungha (15 años), quien ha trabajado con numerosos artistas indie. A&R, sesión de escucha para críticos y acompañamiento en convocatorias.",
+        "description": "Un álbum completo con PR para crítica y medios incluido. Proyecto de álbum con el productor Hwang Kyungha (15 años), quien ha trabajado con numerosos artistas indie. A&R, sesión de escucha para críticos y acompañamiento en convocatorias.",
         "keywords": "lanzamiento álbum, música indie Korea, productor musical, Studio NOL"
       }
     },
@@ -2228,7 +2228,7 @@
     "producer": {
       "sectionTitle": "Productor Hwang Kyungha",
       "tagline": "Productor y A&R con 15 años de experiencia",
-      "bodyParagraph1": "Acompaño a cantautores y bandas indie en sus lanzamientos. Pulir la canción, subirla a Spotify y Apple Music, conectar músicos de sesión, llegar a medios y reseñas — para que una canción encuentre su lugar en la escena indie, todos estos pasos deben encajar.",
+      "bodyParagraph1": "Acompaño a cantautores y bandas indie en sus lanzamientos. Pulir la canción, subirla a Spotify y Apple Music, conectar músicos de sesión, llegar a medios y reseñas — para que una canción llegue a oyentes y medios, todos estos pasos deben encajar.",
       "bodyParagraph2": "Un lanzamiento exitoso es difícil de lograr en solitario. Por eso mi trabajo es ser el compañero que camina contigo hasta el final.",
       "stats": [
         {
@@ -2268,7 +2268,7 @@
             "Listo para subir tus canciones a Spotify o Melon por primera vez",
             "Tienes canciones pero no sabes qué sigue",
             "Quieres empezar de forma realista con un presupuesto claro",
-            "Dando tus primeros pasos en la escena indie"
+            "Quieres publicar oficialmente tu primer tema"
           ],
           "personaNotFitNote": "Si ya estás pensando en escala de EP o álbum completo, revisa esas páginas también.",
           "focusSectionTitle": "En qué nos enfocamos para tu single",
@@ -2280,7 +2280,7 @@
             },
             {
               "title": "Definir tu primera impresión",
-              "desc": "El momento en que tu nombre entra en la escena indie. Pensamos juntos desde la etapa de planificación qué impresión quieres dejar."
+              "desc": "El momento en que presentas tu nombre por primera vez a oyentes y medios. Pensamos juntos desde la planificación qué impresión quieres dejar."
             },
             {
               "title": "Un primer paso realista",
@@ -2288,7 +2288,7 @@
             },
             {
               "title": "Tu primer contacto con los medios",
-              "desc": "Al lanzar, enviamos un comunicado de prensa a través de nuestra red de 15 años de medios musicales. Incluso tu primer lanzamiento puede llegar a los ojos de la escena indie."
+              "desc": "Enviamos tu comunicado a la red de medios musicales que construimos en 15 años, y también lo presentamos a medios, radios y curadores de playlists del extranjero. Desde tu primer lanzamiento, te conectamos con la prensa y los curadores de dentro y fuera de Corea."
             }
           ],
           "journeySectionTitle": "El camino hacia el lanzamiento",
@@ -2550,14 +2550,14 @@
         "range": "Desde aprox. ₩3.4M",
         "note": "Base de 8 pistas, ajustado por alcance",
         "detail": {
-          "heroTitlePrefix": "Dejando tu huella",
-          "heroTitleHighlight": "en la escena indie",
-          "heroTitleSuffix": "con un álbum completo",
+          "heroTitlePrefix": "Un álbum completo",
+          "heroTitleHighlight": "hecho contigo",
+          "heroTitleSuffix": "de principio a fin",
           "heroSubtitle": "Tu mundo completo en un álbum — lo llevamos hasta el final.",
           "personaSectionTitle": "Para quién es esto",
           "personaItems": [
             "Quieres capturar todo tu mundo artístico en una obra",
-            "Listo para dejar una marca clara en la escena indie",
+            "Quieres que tu obra quede en la memoria de la crítica y el público",
             "Buscas llegar a críticos y medios en serio",
             "Quieres usar becas o crowdfunding para estructurar el presupuesto"
           ],
@@ -2689,7 +2689,7 @@
             },
             {
               "question": "¿Un álbum completo puede llevarme a las listas?",
-              "answer": "No podemos garantizar eso. En la escena indie, el valor de un álbum completo está en el reconocimiento crítico y la posición en la escena más que en las listas. Trabajamos juntos para abrir ese camino."
+              "answer": "No podemos garantizarlo. El valor de un álbum completo está menos en las listas que en cómo lo reciben la crítica y los medios, y en el lugar que gana entre otros músicos. Abrimos ese proceso contigo."
             },
             {
               "question": "Ya he lanzado un primer álbum. ¿Puedo seguir trabajando con ustedes?",
@@ -2730,7 +2730,7 @@
           },
           "album": {
             "trackCount": "~8 canciones",
-            "persona": "Deja tu huella en la escena indie",
+            "persona": "Deja tu nombre con tu obra",
             "keyDeliverables": "A&R · Secuenciación · Sesión de escucha con crítica · Acompañamiento en convocatorias"
           }
         },
@@ -2740,7 +2740,7 @@
     },
     "scope": {
       "sectionTitle": "Lo que Ofrece el Productor",
-      "sectionSubtitle": "15 años creando discos indie significativos en la escena musical coreana.",
+      "sectionSubtitle": "Productor que lleva 15 años planificando y creando discos indie.",
       "items": [
         "Concepto de álbum y dirección A&R",
         "Grabación vocal · Mezcla · Masterización (in-house)",
@@ -2840,7 +2840,7 @@
       "items": [
         {
           "question": "¿Qué es exactamente el proyecto de lanzamiento?",
-          "answer": "Es un proyecto que te acompaña en cada etapa del lanzamiento musical — planificación, grabación, coordinación de músicos de sesión, mezcla, masterización, distribución y PR de medios. La grabación vocal, la mezcla y la masterización se hacen internamente en Studio NOL, mientras que las sesiones instrumentales y las conexiones con críticos/medios se gestionan a través de la red de 15 años en la escena indie. Single, EP y álbum completo tienen ritmos y presupuestos distintos — consulta cada página para conocer el alcance específico y cómo se determina el precio. Para la distribución, elegimos contigo la distribuidora más adecuada entre varias asociadas."
+          "answer": "Es un proyecto que te acompaña en cada etapa del lanzamiento musical — planificación, grabación, coordinación de músicos de sesión, mezcla, masterización, distribución y PR de medios. La grabación vocal, la mezcla y la masterización se hacen internamente en Studio NOL, mientras que las sesiones instrumentales y las conexiones con críticos/medios se gestionan a través de la red de músicos de sesión y medios construida en 15 años. Single, EP y álbum completo tienen ritmos y presupuestos distintos — consulta cada página para conocer el alcance específico y cómo se determina el precio. Para la distribución, elegimos contigo la distribuidora más adecuada entre varias asociadas."
         },
         {
           "question": "¿Qué pasa si cambio de opinión o se altera el cronograma a mitad de camino?",

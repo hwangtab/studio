@@ -102,8 +102,8 @@
       "servicesCta": "Learn More"
     },
     "cta": {
-      "titleLine1": "Build your name in the indie scene,",
-      "titleHighlight": "start with a release.",
+      "titleLine1": "Your music,",
+      "titleHighlight": "made together, all the way to release.",
       "subtitleLine1": "Planning · Recording · Sessions · Mixing · Distribution · PR — a 15-year producer by your side.",
       "subtitleLine2": "30-min free consultation · Custom quote based on rate sheet",
       "location": "Location",
@@ -2240,7 +2240,7 @@
       },
       "album": {
         "title": "Full Album Release Project | Studio NOL",
-        "description": "A full album that carves your name into the indie scene. Full-album release project with 15-year producer Hwang Kyungha — who has worked with many indie artists. A&R, critics listening session, and grant application support.",
+        "description": "A full album, with critic and press PR included. Full-album release project with 15-year producer Hwang Kyungha — who has worked with many indie artists. A&R, critics listening session, and grant application support.",
         "keywords": "full album release, indie music, music producer Korea, studio NOL"
       }
     },
@@ -2256,7 +2256,7 @@
     "producer": {
       "sectionTitle": "Producer Hwang Kyungha",
       "tagline": "15-year music producer & A&R",
-      "bodyParagraph1": "I work with indie singer-songwriters and bands on their releases. From shaping the song to getting it onto Spotify and Apple Music, connecting session players, and reaching press and critics — for a song to find its place in the indie scene, all these steps have to fit together.",
+      "bodyParagraph1": "I work with indie singer-songwriters and bands on their releases. From shaping the song to getting it onto Spotify and Apple Music, connecting session players, and reaching press and critics — for a song to reach listeners and the press, all these steps have to fit together.",
       "bodyParagraph2": "A successful release is hard to pull off alone. So my job is to be the companion who walks the whole way with you.",
       "stats": [
         {
@@ -2296,7 +2296,7 @@
             "Ready to put your songs on Spotify or Melon for the first time",
             "Have songs but don't know what comes next",
             "Want to start realistically with a clear budget",
-            "Taking your first steps into the indie scene"
+            "Ready to officially release your first track"
           ],
           "personaNotFitNote": "If you're already thinking EP or full album scale, check those pages too.",
           "focusSectionTitle": "What we focus on for your single",
@@ -2308,7 +2308,7 @@
             },
             {
               "title": "Defining your first impression",
-              "desc": "The moment your name enters the indie scene. We think together from the planning stage about what impression you want to make."
+              "desc": "The moment you first introduce your name to listeners and the press. We think together from the planning stage about what impression you want to make."
             },
             {
               "title": "A realistic first step",
@@ -2316,7 +2316,7 @@
             },
             {
               "title": "Your first media touchpoint",
-              "desc": "At release, we send a press release through our 15-year network of music outlets. Even your first release can reach the indie scene's eyes."
+              "desc": "We send your press release through the music-media network we've built over 15 years, and pitch overseas outlets, radio, and playlist curators too. From your very first release, we connect you with press and curators at home and abroad."
             }
           ],
           "journeySectionTitle": "The journey to release",
@@ -2578,14 +2578,14 @@
         "range": "From approx. ₩3.4M",
         "note": "8-track baseline, adjusted by scope",
         "detail": {
-          "heroTitlePrefix": "Making your name",
-          "heroTitleHighlight": "in the indie scene",
-          "heroTitleSuffix": "with a full album",
+          "heroTitlePrefix": "A full album",
+          "heroTitleHighlight": "made together",
+          "heroTitleSuffix": "from start to finish",
           "heroSubtitle": "Your full world in one album — we see it through to the end.",
           "personaSectionTitle": "Who this is for",
           "personaItems": [
             "Want to capture your full artistic world in one work",
-            "Ready to leave a clear mark in the indie scene",
+            "Want your work remembered by critics and listeners",
             "Looking to reach critics and media in earnest",
             "Want to use grants or crowdfunding to structure the budget"
           ],
@@ -2717,7 +2717,7 @@
             },
             {
               "question": "Can a full album get me on the charts?",
-              "answer": "We can't guarantee that. In the indie scene, a full album's value is in critical recognition and scene standing more than chart rankings. We work to open that path together."
+              "answer": "We can't guarantee that. A full album's value lies less in chart rankings than in how critics and the press receive it, and the standing it earns among fellow musicians. We'll open that process together."
             },
             {
               "question": "I've already released a first album. Can I still work with you?",
@@ -2758,7 +2758,7 @@
           },
           "album": {
             "trackCount": "~8 tracks",
-            "persona": "Make your mark on the indie scene",
+            "persona": "Leave your name through your work",
             "keyDeliverables": "A&R · Sequencing · Critics’ listening session · Grant application support"
           }
         },
@@ -2768,7 +2768,7 @@
     },
     "scope": {
       "sectionTitle": "What the Producer Brings",
-      "sectionSubtitle": "15 years crafting meaningful indie records in the Korean music scene.",
+      "sectionSubtitle": "A producer who has planned and made indie records for 15 years.",
       "items": [
         "Album concept & A&R direction",
         "Vocal recording · Mixing · Mastering (in-house)",
@@ -2868,7 +2868,7 @@
       "items": [
         {
           "question": "What exactly is the release project?",
-          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and critics/media connections run through the 15-year indie scene network. Single, EP, and full album each have their own pace and budget — check each page for the specific scope and how pricing is determined. For distribution, we choose the best-fit distributor for your record with you from several partners."
+          "answer": "It's a project that walks with you through every step of releasing music — planning, recording, session musician coordination, mixing, mastering, distribution, and media PR. Vocal recording, mixing, and mastering are done in-house at Studio NOL, while instrumental sessions and critics/media connections run through the session and media network built over 15 years. Single, EP, and full album each have their own pace and budget — check each page for the specific scope and how pricing is determined. For distribution, we choose the best-fit distributor for your record with you from several partners."
         },
         {
           "question": "What if I change my mind or my schedule shifts mid-project?",
