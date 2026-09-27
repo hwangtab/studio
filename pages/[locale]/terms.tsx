@@ -1,4 +1,5 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSideProps } from 'next';
+import type { NextPageWithLayout } from '../../types';
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
@@ -52,7 +53,7 @@ const TERMS_SECTIONS: TermsSection[] = [
   },
 ];
 
-const TermsPage: NextPage<TermsPageProps> = ({ locale }) => {
+const TermsPage: NextPageWithLayout<TermsPageProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const title = '이용약관';
@@ -180,5 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { i18nResources } = getI18nStaticProps(params?.locale, []);
   return { props: { locale, i18nResources } };
 };
+
+TermsPage.designEdition = 'v2';
 
 export default TermsPage;

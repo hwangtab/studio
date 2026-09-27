@@ -1,4 +1,5 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
+import type { NextPageWithLayout } from '../../types';
 import SEO from '../../components/SEO';
 import { Section } from '../../components/ui/Section';
 import QuoteWizard from '../../components/quote/QuoteWizard';
@@ -13,7 +14,7 @@ import { defaultLocale } from '../../lib/i18n';
  * 보여 줄 본문이 없다. 예약 화면과 같은 취급이다. 사이트맵 제외는 noindexStaticRoutes.json,
  * 다른 로케일 404는 lib/koOnlyRoutes.ts가 맡는다.
  */
-const QuotePage: NextPage = () => {
+const QuotePage: NextPageWithLayout = () => {
   const siteConfig = getSiteConfig('ko');
   return (
     <>
@@ -45,5 +46,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 });
 
 export const getStaticProps: GetStaticProps = async () => buildPageStaticProps(defaultLocale, {}, { revalidate: 86400, i18nSections: [] });
+
+QuotePage.designEdition = 'v2';
 
 export default QuotePage;

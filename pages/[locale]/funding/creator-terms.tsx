@@ -1,4 +1,5 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSideProps } from 'next';
+import type { NextPageWithLayout } from '../../../types';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import { Section } from '../../../components/ui/Section';
@@ -105,7 +106,7 @@ export const FUNDING_CREATOR_TERMS_SECTIONS: CreatorTermsSection[] = [
   },
 ];
 
-const CreatorTermsPage: NextPage<CreatorTermsPageProps> = ({ locale }) => {
+const CreatorTermsPage: NextPageWithLayout<CreatorTermsPageProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig('ko');
   const title = '개설자 약관';
@@ -199,5 +200,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
   const { i18nResources } = getI18nStaticProps(params?.locale, []);
   return { props: { locale, i18nResources } };
 };
+
+CreatorTermsPage.designEdition = 'v2';
 
 export default CreatorTermsPage;
