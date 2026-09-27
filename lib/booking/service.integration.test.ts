@@ -299,6 +299,6 @@ describe('createBookingOrder — 방 자원(연습실 시간제)', () => {
     const r = await createBookingOrder(room({ startHour: 2 }), NOW);
     expect(r.ok).toBe(true);
     if (!r.ok) throw new Error('unreachable');
-    expect(r.totalAmount).toBe(4400);
+    expect(r.totalAmount).toBe(6600);
   });
 });

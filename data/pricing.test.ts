@@ -127,7 +127,7 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('package-cover-video')).toBe(COVER_VIDEO_PACKAGE_PRICE);
     expect(byId.get('package-rental')).toBe(RENTAL_HOURLY_PRICE);
     expect(byId.get('practice-room-monthly')).toBe(PRACTICE_ROOM_MONTHLY_PRICE);
-    // 시간제는 VAT 포함 소비자가가 priceValue다(다른 오퍼는 VAT 별도) — 4,400이 4,000으로 바뀌면 실패
+    // 시간제는 VAT 포함 소비자가가 priceValue다(다른 오퍼는 VAT 별도) — 6,600이 6,000으로 바뀌면 실패
     expect(byId.get('practice-room-hourly')).toBe(PRACTICE_ROOM_HOURLY_PRICE_INCL);
 
     const d = getPricingData('ko');
@@ -413,7 +413,7 @@ describe('가격 SSOT 정합', () => {
       CONSULTING_HOURLY_PRICE,
       RELEASE_PRESS_PRICE,
       RELEASE_PRESS_INTRO_PRICE,
-      // 연습실 시간제 소비자가(VAT 포함) — pricing.ts 주석의 "4,400원"이 이 값이다.
+      // 연습실 시간제 소비자가(VAT 포함) — pricing.ts 주석의 "6,600원"이 이 값이다.
       PRACTICE_ROOM_HOURLY_PRICE_INCL,
       ...ARTIST_SUPPORT_TIERS.map((t) => t.monthlyTotal),
     ]);

@@ -73,8 +73,8 @@ export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   { id: 'wedding-song', service: 'wedding-song', nameKo: '축가 녹음 패키지', kind: 'package', unitAmount: WEDDING_PACKAGE_PRICE, sessionHours: 2 },
   { id: 'cover-video', service: 'cover-video', nameKo: '커버 영상 패키지', kind: 'package', unitAmount: COVER_VIDEO_PACKAGE_PRICE, sessionHours: 3 },
   /**
-   * 음악연습실 시간제 — 24시간, 1시간부터, 무인 셀프 이용. 소비자가는 VAT 포함 4,400원이라
-   * 공급가는 splitInclusiveAmount로 갈라 4,000원(+400 VAT = 4,400 결제). 방 자원이라
+   * 음악연습실 시간제 — 24시간, 1시간부터, 무인 셀프 이용. 소비자가는 VAT 포함 6,600원이라
+   * 공급가는 splitInclusiveAmount로 갈라 6,000원(+600 VAT = 6,600 결제). 방 자원이라
    * 스튜디오 캘린더와 무관하고, 확정 메일에 입장 안내(문·방·와이파이 비밀번호)가 실린다.
    */
   {

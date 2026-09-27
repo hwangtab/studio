@@ -8,7 +8,7 @@ import { PRACTICE_ROOM_HOURLY_PRICE_INCL } from '../../data/pricing';
 /**
  * 연습실 시간제는 다른 세션 상품과 세 가지가 다르다 — 24시간, 방 자원, VAT 포함 소비자가.
  * 셋 중 하나라도 기본값으로 돌아가면 새벽 예약이 막히거나, 연습실이 녹음을 막거나,
- * 4,400원이 4,840원으로 청구된다. 여기서 고정한다.
+ * 6,600원이 7,260원으로 청구된다. 여기서 고정한다.
  */
 describe('practice-room-hourly', () => {
   const p = getProduct('practice-room-hourly')!;
@@ -29,10 +29,10 @@ describe('practice-room-hourly', () => {
     expect(PRACTICE_ROOM_HOURLY_ROOMS).toEqual(['R02']);
   });
 
-  it('소비자가 4,400원(VAT 포함)이 공급가 4,000 + VAT 400으로 갈린다', () => {
-    expect(PRACTICE_ROOM_HOURLY_PRICE_INCL).toBe(4400);
-    expect(p.unitAmount).toBe(4000);
-    expect(splitInclusiveAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)).toEqual({ itemAmount: 4000, vatAmount: 400, totalAmount: 4400 });
+  it('소비자가 6,600원(VAT 포함)이 공급가 6,000 + VAT 600으로 갈린다 (2026-09-27 4,400 → 6,600)', () => {
+    expect(PRACTICE_ROOM_HOURLY_PRICE_INCL).toBe(6600);
+    expect(p.unitAmount).toBe(6000);
+    expect(splitInclusiveAmount(PRACTICE_ROOM_HOURLY_PRICE_INCL)).toEqual({ itemAmount: 6000, vatAmount: 600, totalAmount: 6600 });
   });
 });
 
