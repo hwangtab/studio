@@ -1,7 +1,10 @@
 import {
+  formatPriceLabel,
   MASTERING_SINGLE_PRICE,
   MIXING_LEVEL1_PRICE,
   MIXING_LEVEL3_PRICE,
+  RELEASE_PRESS_INTRO_ENDS_ON,
+  RELEASE_PRESS_INTRO_PRICE,
   SINGLE_BUNDLE_PRICE,
   VOCAL_PACKAGE_PRICE,
 } from './pricing';
@@ -25,6 +28,8 @@ export type MarketRow = {
   market: { range?: [number, number]; median?: number; sample?: string; note?: string };
   /** 스튜디오 놀 단품 가격(부가세 별도). 단품이 없으면 undefined. */
   ours?: [number, number];
+  /** 단품을 범위 숫자로 말할 수 없을 때의 표기(예: 단독 홍보 상품). */
+  oursLabel?: string;
   /** 싱글 번들에 들어가는가. */
   inBundle: boolean;
 };
@@ -33,14 +38,14 @@ export const MARKET_ROWS: readonly MarketRow[] = [
   {
     id: 'recording',
     item: '보컬 녹음 1곡 (엔지니어 포함, 3~4시간)',
-    market: { range: [150000, 400000], median: 280000, sample: '서울 독립 녹음실 5곳' },
+    market: { range: [150000, 400000], median: 225000, sample: '서울 독립 녹음실 4곳' },
     ours: [VOCAL_PACKAGE_PRICE, VOCAL_PACKAGE_PRICE],
     inBundle: true,
   },
   {
     id: 'mixing',
     item: '믹싱 1곡',
-    market: { range: [200000, 700000], median: 500000, sample: '독립 스튜디오 5곳 (2곳은 마스터링 포함가)' },
+    market: { range: [200000, 700000], median: 500000, sample: '독립 스튜디오 5곳 · 트랙 수 제한 없는 가격, 2곳은 마스터링 포함' },
     ours: [MIXING_LEVEL1_PRICE, MIXING_LEVEL3_PRICE],
     inBundle: true,
   },
@@ -61,11 +66,13 @@ export const MARKET_ROWS: readonly MarketRow[] = [
     id: 'promotion',
     item: '보도자료 · 국내외 매체·라디오·플레이리스트 피칭',
     market: { note: '음악 홍보 캠페인의 공개 가격을 찾기 어려움' },
+    oursLabel: `단독 홍보 ${formatPriceLabel(RELEASE_PRESS_INTRO_PRICE, 'ko')} (${RELEASE_PRESS_INTRO_ENDS_ON}까지 초기가)`,
     inBundle: true,
   },
 ];
 
-/** 녹음·믹싱·마스터링만 따로 맡겼을 때 시장 중앙값의 합 — 유통·홍보는 뺀 값이다. */
-export const MARKET_PRODUCTION_MEDIAN_SUM = MARKET_ROWS.reduce((sum, r) => sum + (r.market.median ?? 0), 0);
-
+/*
+ * 서로 다른 업체의 중앙값을 더한 합계는 싣지 않는다 — 어느 업체에서도 청구되지 않는 금액이고,
+ * 조건(트랙 수·마스터링 포함 여부)이 번들과 달라 차이를 과장한다(2026-09-27 정정).
+ */
 export const MARKET_COMPARISON_BUNDLE_PRICE = SINGLE_BUNDLE_PRICE;

@@ -391,6 +391,9 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
+        {/* 발매 번들 카드(specialPackages의 package-*-bundle) 바로 아래 — 시장 공개 요금과의 비교(ko 전용).
+            근거는 docs/market-price-survey-2026-09.md. 이 절 부제는 축가·성우를 말하지만 번들도 여기 있다. */}
+        {locale === 'ko' && <MarketPriceComparison />}
       </Section>
 
       {/* Recording Section */}
@@ -581,8 +584,6 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
             </div>
           ))}
         </div>
-        {/* 발매 번들 바로 아래 — 시장 공개 요금과의 비교(ko 전용). 근거는 docs/market-price-survey-2026-09.md. */}
-        {locale === 'ko' && <MarketPriceComparison />}
       </Section>
 
       <ReviewSection variant="alternate" locale={locale} />

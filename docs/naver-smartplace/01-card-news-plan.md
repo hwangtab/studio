@@ -109,7 +109,7 @@ status: 운영 중
 2. **시그니처 마이크** — Neumann U87AI (50년 검증된 사운드 + 디테일 + 깊이)
 3. **아날로그 하이브리드** — SSL Fusion · Tegeler Audio · ProAc 모니터 (디지털만으론 못 만드는 따뜻함)
 4. **원스톱 프로세스** — 기획 → 튠/에딧 → 믹싱·마스터링 → 음원 발매 4단계 플로우
-5. **CTA** — 시간당 10만원부터, Day Lock 6시간 50만원, 무료 견적
+5. **CTA** — 시간당 10만원부터, Day Lock 4시간 35만원·8시간 65만원, 무료 견적
 
 #### 시리즈 3: "사는 연습실, 살 수 있는 연습실" (4장)
 
@@ -176,7 +176,7 @@ status: 운영 중
 #### 시리즈 7: "기획부터 유통까지 원스톱" (3장)
 
 1. **표지** — "녹음 + 믹싱 + 마스터링 + 음원 유통 한 곳에서"
-2. 시간당 10만원~, Day Lock 6시간 50만원 (가격 투명 공개)
+2. 시간당 10만원~, Day Lock 4시간 35만원·8시간 65만원 (가격 투명 공개)
 3. CTA — "10년 경력 엔지니어 무료 견적"
 
 ---
@@ -307,7 +307,7 @@ eunpyeong-yeonsinnae-recordingstudio-studionol-01-neumann.jpg
 | 교통 | 3·6호선 연신내역 / 6호선 불광역 7번 출구 도보 5~7분 | 동상 |
 | 음악연습실 가격 | 월 36만원~, 보증금 0원, 1년 계약 시 첫 달 50% 할인 | `pages/[locale]/practice-room.tsx` |
 | 음악연습실 시설 | STC 차음, 이중 벽체, 24시간, 샤워실, 숙식 가능, 피아노/건반, 기가비트 인터넷 | 동상 |
-| 녹음실 가격 | 시간당 10만원~, Day Lock 6시간 50만원 | `pages/[locale]/pricing.tsx` |
+| 녹음실 가격 | 시간당 10만원~, Day Lock 4시간 35만원·8시간 65만원 | `pages/[locale]/pricing.tsx` |
 | 녹음실 장비 | Neumann U87AI, SSL Fusion, Tegeler Audio, 10년 경력 엔지니어 | `pages/[locale]/studio-info.tsx` |
 | 레슨 | 주 1회 60분 월 4회 / 월 35만원 정액제 / 첫 상담 무료 | `pages/[locale]/lesson.tsx` |
 | 축가 | 35만원 (축가 완성 패키지) | `pages/[locale]/pricing.tsx` |

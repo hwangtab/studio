@@ -167,10 +167,11 @@ const QuoteWizard = ({ kakaoUrl }: QuoteWizardProps) => {
         />
       )}
 
-      <div aria-live="polite">
+      <div>
         {est ? (
           <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 sm:p-6 space-y-4">
-            <div>
+            {/* 낭독은 가격 한 줄만 — 결과 블록 전체를 live로 두면 답을 바꿀 때마다 버튼까지 다시 읽힌다. */}
+            <div aria-live="polite" aria-atomic="true">
               <p className="text-sm text-gray-600 dark:text-gray-400">예상 비용</p>
               <p className="text-3xl font-bold text-gray-900 dark:text-white">
                 {est.priceLabel}

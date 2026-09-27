@@ -1,14 +1,14 @@
-import { and, eq, gte, inArray, lte, sql } from 'drizzle-orm';
+import { and, asc, eq, gte, inArray, lt, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { bookings, orders, reviewRequests, workOrders, type ReviewRequestKind } from '../../db/schema';
 import { getSiteConfig } from '../../data/siteConfig';
 import { sendEmail } from '../email/resend';
-import { CUSTOMER_REPLY_TO } from '../operatorContact';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
 import { getProduct } from '../booking/products';
 import { getMixingProduct } from '../booking/mixing-products';
-import { kstDateString } from '../booking/kst';
+import { kstDateString, kstDateTime } from '../booking/kst';
 
 /**
  * 이용 후 후기 요청 메일 — 녹음 세션 다음 날, 믹싱·마스터링 납품 다음 날 한 번.
@@ -23,16 +23,26 @@ import { kstDateString } from '../booking/kst';
  */
 export const REVIEW_REQUEST_ELIGIBLE_FROM = new Date('2026-09-27T00:00:00+09:00');
 
-/** 끝나고 이만큼 지나야 보낸다 — "다음 날". 크론이 하루 한 번(11:00 KST) 돈다. */
-export const REVIEW_REQUEST_MIN_DELAY_MS = 12 * 60 * 60 * 1000;
 /** 이보다 오래된 이용은 보내지 않는다 — 크론이 며칠 멈췄다 돌아와도 한 달 전 손님에게 가지 않게. */
 export const REVIEW_REQUEST_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-/** 같은 이메일로 이 기간 안에 이미 보냈으면 건너뛴다(연습실 단골에게 예약마다 가지 않게). */
+/** 같은 이메일로 이 기간 안에 이미 보냈으면 건너뛴다(자주 오는 손님에게 예약마다 가지 않게). */
 export const REVIEW_REQUEST_PER_EMAIL_COOLDOWN_MS = 180 * 24 * 60 * 60 * 1000;
 /** 한 번 실행에 보내는 상한 — 밀린 게 쌓였을 때 발신 도메인 평판을 한꺼번에 깎지 않게. */
 export const REVIEW_REQUEST_BATCH_LIMIT = 20;
 
-const EXCLUDED_SERVICES = ['smoke-test'];
+/**
+ * 대상이 아닌 예약. 처리방침 2항은 "녹음 세션 다음 날 또는 믹싱·마스터링 납품 다음 날"이라고만
+ * 약속한다 — 무인 연습실 시간제(practice-room)는 그 목적에 없으므로 보내지 않는다. 연습실까지
+ * 넓히려면 처리방침을 먼저 고치고 판본을 올릴 것. smoke-test는 운영자 결제 검증용이다.
+ */
+const EXCLUDED_SERVICES = ['smoke-test', 'practice-room'];
+
+/**
+ * 발송했다고 기록을 남기고 다시 시도하지 않는 실패. 반송될 주소는 몇 번을 보내도 반송되고,
+ * 시간 초과는 실제로는 전달됐을 수 있어 재시도하면 두 통이 갈 수 있다 — 후기 요청 한 통을
+ * 잃는 편이 같은 메일을 두 번 보내는 것보다 낫다.
+ */
+const FINAL_FAILURES = new Set(['UNDELIVERABLE_ADDRESS', 'TIMEOUT']);
 
 export type ReviewCandidate = {
   kind: ReviewRequestKind;
@@ -43,24 +53,35 @@ export type ReviewCandidate = {
   /** 메일 본문에 쓰는 상품명과 날짜. */
   serviceLabel: string;
   dateLabel: string;
+  /** 세션이 끝난 시각 또는 납품 시각 — 오래된 것부터 보낸다. */
+  endedAt: Date;
 };
 
-const windowBounds = (now: Date) => ({
-  newest: new Date(now.getTime() - REVIEW_REQUEST_MIN_DELAY_MS),
-  oldest: new Date(now.getTime() - REVIEW_REQUEST_MAX_AGE_MS),
-});
+/**
+ * "다음 날" = 끝난 날(KST)이 오늘(KST)보다 앞선 것. 경과 시간(예: 12시간)으로 자르면 크론이
+ * 11:00에 돌 때 전날 23시 이후에 끝난 이용이 이틀 뒤로 밀린다.
+ */
+const windowBounds = (now: Date) => {
+  const startOfTodayKst = kstDateTime(kstDateString(now), 0);
+  return { before: startOfTodayKst, oldest: new Date(startOfTodayKst.getTime() - REVIEW_REQUEST_MAX_AGE_MS) };
+};
+
+/** 운영자 본인이 실제 상품으로 결제해 본 주문에는 보내지 않는다. */
+const OPERATOR_ADDRESSES = [OPERATOR_EMAIL, CUSTOMER_REPLY_TO].map((a) => a.toLowerCase());
 
 /** 발송 대상 — 아직 기록이 없고, 같은 주소로 최근에 보낸 적이 없는 것. */
 export const findReviewCandidates = async (now: Date): Promise<ReviewCandidate[]> => {
   const db = getDb();
-  const { newest, oldest } = windowBounds(now);
+  const { before, oldest } = windowBounds(now);
   const cooldownSince = Math.floor((now.getTime() - REVIEW_REQUEST_PER_EMAIL_COOLDOWN_MS) / 1000);
 
   // 같은 이메일로 최근 보낸 적이 있으면 제외. 이메일은 orders에서 조인해 비교한다(여기 복사하지 않음).
+  // 예약 폼이 이메일을 소문자로 바꾸지 않으므로 대소문자를 무시하고 비교한다.
   const recentlyAsked = (emailColumn: typeof orders.customerEmail) => sql`exists (
     select 1 from ${reviewRequests} rr join ${orders} o2 on o2.id = rr.order_id
-    where o2.customer_email = ${emailColumn} and rr.sent_at >= ${cooldownSince}
+    where lower(o2.customer_email) = lower(${emailColumn}) and rr.sent_at >= ${cooldownSince}
   )`;
+  const notOperator = sql`lower(${orders.customerEmail}) not in (${sql.join(OPERATOR_ADDRESSES.map((a) => sql`${a}`), sql`, `)})`;
 
   const sessionRows = await db
     .select({ booking: bookings, order: orders })
@@ -71,13 +92,15 @@ export const findReviewCandidates = async (now: Date): Promise<ReviewCandidate[]
         eq(orders.status, 'paid'),
         gte(orders.createdAt, REVIEW_REQUEST_ELIGIBLE_FROM),
         inArray(bookings.status, ['confirmed', 'completed']),
-        lte(bookings.endAt, newest),
+        lt(bookings.endAt, before),
         gte(bookings.endAt, oldest),
+        notOperator,
         sql`${bookings.serviceType} not in (${sql.join(EXCLUDED_SERVICES.map((s) => sql`${s}`), sql`, `)})`,
         sql`not exists (select 1 from ${reviewRequests} rr where rr.kind = 'session' and rr.ref_id = ${bookings.id})`,
         sql`not ${recentlyAsked(orders.customerEmail)}`,
       ),
-    );
+    )
+    .orderBy(asc(bookings.endAt));
 
   const mixingRows = await db
     .select({ work: workOrders, order: orders })
@@ -88,12 +111,14 @@ export const findReviewCandidates = async (now: Date): Promise<ReviewCandidate[]
         eq(orders.status, 'paid'),
         gte(orders.createdAt, REVIEW_REQUEST_ELIGIBLE_FROM),
         eq(workOrders.status, 'delivered'),
-        lte(workOrders.deliveredAt, newest),
+        lt(workOrders.deliveredAt, before),
         gte(workOrders.deliveredAt, oldest),
+        notOperator,
         sql`not exists (select 1 from ${reviewRequests} rr where rr.kind = 'mixing' and rr.ref_id = ${workOrders.id})`,
         sql`not ${recentlyAsked(orders.customerEmail)}`,
       ),
-    );
+    )
+    .orderBy(asc(workOrders.deliveredAt));
 
   const candidates: ReviewCandidate[] = [
     ...sessionRows.map(({ booking, order }) => ({
@@ -104,6 +129,7 @@ export const findReviewCandidates = async (now: Date): Promise<ReviewCandidate[]
       customerEmail: order.customerEmail,
       serviceLabel: getProduct(booking.productId)?.nameKo ?? '녹음 세션',
       dateLabel: kstDateString(booking.startAt),
+      endedAt: booking.endAt,
     })),
     ...mixingRows.map(({ work, order }) => ({
       kind: 'mixing' as const,
@@ -113,8 +139,9 @@ export const findReviewCandidates = async (now: Date): Promise<ReviewCandidate[]
       customerEmail: order.customerEmail,
       serviceLabel: getMixingProduct(work.productId)?.nameKo ?? '믹싱·마스터링',
       dateLabel: work.deliveredAt ? kstDateString(work.deliveredAt) : '',
+      endedAt: work.deliveredAt ?? now,
     })),
-  ];
+  ].sort((a, b) => a.endedAt.getTime() - b.endedAt.getTime());
 
   // 같은 실행 안에서도 한 주소에는 한 통만 — 세션과 믹싱이 같은 날 겹치는 손님.
   const seen = new Set<string>();
@@ -184,6 +211,9 @@ export const runReviewRequests = async (now: Date): Promise<ReviewRunResult> => 
     const r = await sendEmail({ to: c.customerEmail, replyTo: CUSTOMER_REPLY_TO, ...mail });
     if (r.ok) {
       result.sent += 1;
+    } else if (r.errorCode && FINAL_FAILURES.has(r.errorCode)) {
+      // 기록을 남겨 다시 보내지 않는다(FINAL_FAILURES 주석). 운영자 알림에는 싣는다.
+      result.failed.push({ refId: c.refId, code: r.errorCode });
     } else {
       await db
         .delete(reviewRequests)
