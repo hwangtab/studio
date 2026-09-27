@@ -1,4 +1,5 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSideProps } from 'next';
+import type { NextPageWithLayout } from '../../../types';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../../components/SEO';
 import { Section } from '../../../components/ui/Section';
@@ -56,7 +57,7 @@ export const FUNDING_TERMS_SECTIONS: FundingTermsSection[] = [
   { heading: '제16조 (준거법 및 문의처)', body: ['이 약관은 대한민국 법을 따르며, 분쟁의 관할은 민사소송법에 따릅니다.', '문의: hello@studionol.co.kr · 010-4255-7893'] },
 ];
 
-const FundingTermsPage: NextPage<FundingTermsPageProps> = ({ locale }) => {
+const FundingTermsPage: NextPageWithLayout<FundingTermsPageProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig('ko');
   const title = '펀딩 약관';
@@ -152,5 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, res }) =>
   const { i18nResources } = getI18nStaticProps(params?.locale, []);
   return { props: { locale, i18nResources } };
 };
+
+FundingTermsPage.designEdition = 'v2';
 
 export default FundingTermsPage;

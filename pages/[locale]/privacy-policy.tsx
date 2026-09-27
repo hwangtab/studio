@@ -1,4 +1,5 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
+import type { NextPageWithLayout } from '../../types';
 import { useTranslation } from 'react-i18next';
 import SEO from '../../components/SEO';
 import { Section } from '../../components/ui/Section';
@@ -11,7 +12,7 @@ interface PrivacyPolicyProps {
   locale: Locale;
 }
 
-const PrivacyPolicyPage: NextPage<PrivacyPolicyProps> = ({ locale }) => {
+const PrivacyPolicyPage: NextPageWithLayout<PrivacyPolicyProps> = ({ locale }) => {
   const { t } = useTranslation('common', { lng: locale });
   const siteConfig = getSiteConfig(locale);
   const policyCopy = POLICY_COPY_BY_LOCALE[locale] || POLICY_COPY_BY_LOCALE.ko;
@@ -91,5 +92,7 @@ export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
 export const getStaticProps: GetStaticProps = async ({ params }) =>
   buildPageStaticProps(params?.locale, {}, { revalidate: 86400, i18nSections: [] });
+
+PrivacyPolicyPage.designEdition = 'v2';
 
 export default PrivacyPolicyPage;
