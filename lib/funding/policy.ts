@@ -143,7 +143,25 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-26-r4';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-28';
+
+/**
+ * 이 판본부터 응원 메시지는 이름 공개 여부와 **따로** 간다 — 이름을 공개하지 않은 후원의 메시지도
+ * 프로젝트 페이지에 "익명"으로 올라간다(약관 제13조 2항). 이름 없는 메시지는 누구의 것인지 알 수
+ * 없어 동의 체크를 두지 않고, 메시지 칸 바로 아래에서 고지한다 — 쓰는 행위가 곧 선택이다
+ * (운영자 결정 2026-09-28: UX 우선, 동의 최소화).
+ *
+ * **옛 판본 후원은 소급하지 않는다.** 그때 문서는 "명단 공개에 동의한 경우에만 메시지 표시"를
+ * 약속했다. 판본 문자열은 `funding-terms-YYYY-MM-DD[-rN]` 형식이라 사전순 비교가 곧 날짜순이다.
+ */
+/** 이름 없이 명단·메시지에 올라갈 때의 표시. BackerWall과 상태 집계가 같은 값을 쓴다. */
+export const ANONYMOUS_LABEL = '익명';
+
+export const ANONYMOUS_MESSAGE_TERMS_FROM = 'funding-terms-2026-09-28';
+
+/** 이름을 공개하지 않은 후원의 메시지를 "익명"으로 싣는 판본인가. 판본이 없는 행(수기 등록 등)은 아니다. */
+export const showsMessageAnonymously = (termsVersion: string | null | undefined): boolean =>
+  typeof termsVersion === 'string' && termsVersion.startsWith('funding-terms-') && termsVersion >= ANONYMOUS_MESSAGE_TERMS_FROM;
 
 /**
  * 전자상거래법 제6조·시행령 제6조의 거래기록 보존 의무 — 위 PRIVACY_RETENTION_TEXT의 예외다.
@@ -178,7 +196,7 @@ export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
   '필수 — 후원자 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
-  '선택 — 응원 메시지, 후원자 명단 공개(이름·응원 메시지) 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
+  '선택 — 응원 메시지, 후원자 명단 이름 표시 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
   '자동 생성 — 주문번호, 펀딩 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
 
@@ -187,7 +205,7 @@ export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
   '펀딩(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
   '펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
-  '후원자 명단 공개에 동의한 경우 프로젝트 페이지에 이름(가린 이름이나 닉네임을 고른 경우 그 이름)과 응원 메시지 표시',
+  '프로젝트 페이지 후원자 명단에 응원 메시지 표시(이름 표시에 동의하지 않은 경우 "익명"으로), 이름 표시에 동의한 경우 이름(가린 이름이나 닉네임을 고른 경우 그 이름) 표시',
 ];
 
 /**

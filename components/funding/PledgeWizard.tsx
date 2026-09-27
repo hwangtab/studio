@@ -7,7 +7,7 @@ import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/u
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
-import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
+import { ADDITIONAL_AMOUNT_STEP, ANONYMOUS_LABEL, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
 import type { PublicNameStyle } from '../../lib/funding/publicName';
 import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
@@ -487,9 +487,11 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           떨어진 회색 한 줄이라, 메시지를 써 놓고도 체크를 못 보고 지나가 메시지가 아무 데도
           안 뜨는 일이 잦았다(2026-09-25 운영 확인).
 
-          그래도 **미리 체크해 두지 않는다.** 선택 항목 동의를 기본 체크로 받으면 적법한 동의로
-          보기 어렵다. 대신 메시지를 썼는데 공개가 꺼져 있으면 바로 아래에서 알려 주고, 누르면
-          켜지는 버튼을 둔다 — 누르는 것은 후원자 본인이다.
+          2026-09-28부터 메시지는 이름과 **따로** 간다 — 이름을 표시하지 않으면 메시지가 "익명"으로
+          올라간다(FUNDING_TERMS_VERSION 판본 이후 후원만, 약관 제13조 2항). 이름 없는 메시지는
+          누구의 것인지 알 수 없어 동의 체크를 받지 않고 칸 바로 아래에서 알린다 — 쓰는 행위가
+          곧 선택이다. 동의가 필요한 것은 **이름 표시** 하나만 남았고, 그 체크는 여전히 미리
+          켜 두지 않는다(선택 항목 동의를 기본 체크로 받으면 적법한 동의로 보기 어렵다).
 
           테두리 박스는 두르지 않는다 — 필수 약관 동의처럼 보이면 안 된다(토스 위젯의 [필수]
           체크와 나란히 셋이 비슷해 보였던 이유). 옅은 바탕의 "선택" 구획으로 구분한다.
@@ -498,7 +500,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
           <p className="text-sm font-semibold text-gray-900 dark:text-white">
             응원 메시지 · 후원자 명단 <span className="font-normal text-gray-500 dark:text-gray-400">(선택)</span>
           </p>
-          <p className={helpClass}>공개에 동의하시면 프로젝트 페이지 후원자 명단에 이름과 메시지가 올라갑니다. 실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.</p>
+          <p className={helpClass}>남겨 주신 메시지는 프로젝트 페이지 후원자 명단에 올라갑니다. 이름을 표시하지 않으면 &ldquo;{ANONYMOUS_LABEL}&rdquo;으로 보입니다.</p>
           <div className="mt-3">
             <Field id={`${uid}-msg`} label="응원 메시지">
               <TextArea rows={3} className="min-h-0" maxLength={PLEDGE_TEXT_LIMITS.supporterMessage} value={form.supporterMessage} onChange={(e) => setForm({ ...form, supporterMessage: e.target.value })} />
@@ -507,10 +509,13 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
 
           <label className="mt-4 flex cursor-pointer items-start gap-3">
             <input type="checkbox" className={radioClass} checked={form.displayNamePublic} onChange={(e) => setForm({ ...form, displayNamePublic: e.target.checked })} />
-            <span className="text-sm font-medium text-gray-900 dark:text-white">후원자 명단에 이름과 응원 메시지 공개</span>
+            <span className="text-sm font-medium text-gray-900 dark:text-white">
+              후원자 명단에 이름 표시
+              <span className="mt-0.5 block font-normal text-gray-600 dark:text-gray-300">실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.</span>
+            </span>
           </label>
 
-          {form.displayNamePublic ? (
+          {form.displayNamePublic && (
             <PublicNameChoice
               customerName={form.customerName}
               style={form.publicNameStyle}
@@ -519,14 +524,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, lock
               onNicknameChange={(publicNickname) => setForm({ ...form, publicNickname })}
               message={form.supporterMessage}
             />
-          ) : form.supporterMessage.trim() !== '' ? (
-            <div role="status" className="mt-3 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">
-              <span>메시지를 쓰셨지만 지금은 비공개입니다. 공개하지 않으면 프로젝트 페이지에 보이지 않습니다.</span>
-              <Button type="button" size="sm" variant="outline" onClick={() => setForm({ ...form, displayNamePublic: true })}>
-                명단에 공개하기
-              </Button>
-            </div>
-          ) : null}
+          )}
         </div>
       </fieldset>
 

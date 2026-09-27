@@ -206,33 +206,28 @@ it('결제하기를 누르면 서버로 termsAgreed: true가 나간다', async (
 // 실명 공개는 옵트인이어야 한다 — 기본 체크는 후원자가 모르는 사이에 이름이 명단에 올라간다.
 it('후원자 명단 이름 공개는 기본 해제', () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
+  expect(screen.getByLabelText(/후원자 명단에 이름 표시/)).not.toBeChecked();
 });
 
 /**
- * 메시지를 써 놓고 공개 체크를 못 보고 지나가 메시지가 아무 데도 안 뜨는 일이 잦았다
- * (2026-09-25). 미리 체크하지는 않는다 — 선택 동의는 본인이 눌러야 한다. 대신 알려 준다.
+ * 메시지는 이름과 따로 간다(2026-09-28) — 이름을 표시하지 않으면 "익명"으로 올라간다고
+ * 칸 바로 아래에서 알린다. 이름 표시 체크는 여전히 미리 켜지 않는다.
  */
 describe('후원자 명단', () => {
   const renderWizard = () => render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
 
-  it('메시지를 썼는데 비공개면 알리고, 버튼을 누르면 그때 공개로 바뀐다', async () => {
+  it('메시지가 익명으로 올라간다고 알리고, 메시지를 써도 이름 표시는 저절로 켜지지 않는다', async () => {
     renderWizard();
-    expect(screen.queryByText(/메시지를 쓰셨지만 지금은 비공개입니다/)).toBeNull();
+    expect(screen.getByText(/이름을 표시하지 않으면 .익명.으로 보입니다/)).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('응원 메시지'), '응원합니다');
-    expect(screen.getByText(/메시지를 쓰셨지만 지금은 비공개입니다/)).toBeInTheDocument();
-    // 메시지를 썼다고 저절로 켜지지 않는다.
-    expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
-    await userEvent.click(screen.getByRole('button', { name: '명단에 공개하기' }));
-    expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).toBeChecked();
-    expect(screen.queryByText(/메시지를 쓰셨지만 지금은 비공개입니다/)).toBeNull();
+    expect(screen.getByLabelText(/후원자 명단에 이름 표시/)).not.toBeChecked();
   });
 
   it('공개하면 표시 이름을 고를 수 있고, 미리보기가 명단에 뜰 모습을 보여 준다', async () => {
     renderWizard();
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '홍길동');
     await userEvent.type(screen.getByLabelText('응원 메시지'), '끝까지 함께');
-    await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
+    await userEvent.click(screen.getByLabelText(/후원자 명단에 이름 표시/));
     expect(screen.getByLabelText(/실명 \(홍길동\)/)).toBeChecked();
     await userEvent.click(screen.getByLabelText(/가린 이름 \(홍\*동\)/));
     expect(screen.getByText(/이렇게 보입니다/).parentElement).toHaveTextContent('홍*동 “끝까지 함께”');
@@ -243,7 +238,7 @@ describe('후원자 명단', () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '홍길동');
     await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-    await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
+    await userEvent.click(screen.getByLabelText(/후원자 명단에 이름 표시/));
     await userEvent.click(screen.getByLabelText('닉네임'));
     await userEvent.type(screen.getByLabelText('명단에 표시할 닉네임'), '연대하는 청취자');
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
@@ -459,7 +454,7 @@ describe('임시 저장', () => {
     const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
     await typeInto(additionalInput, '2000');
     await userEvent.tab();
-    await userEvent.click(screen.getByLabelText(/이름과 응원 메시지 공개/));
+    await userEvent.click(screen.getByLabelText(/후원자 명단에 이름 표시/));
     unmount();
 
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
@@ -467,7 +462,7 @@ describe('임시 저장', () => {
     expect(await screen.findByLabelText(/CD/)).toBeChecked();
     expect(screen.getByLabelText('수량')).toHaveValue(1);
     expect(screen.getByLabelText(/추가 펀딩 금액/)).toHaveValue(0);
-    expect(screen.getByLabelText(/이름과 응원 메시지 공개/)).not.toBeChecked();
+    expect(screen.getByLabelText(/후원자 명단에 이름 표시/)).not.toBeChecked();
   });
 
   /**
@@ -755,7 +750,7 @@ describe('약관 동의 찾기', () => {
     renderForm();
     const checkboxes = screen.getAllByRole('checkbox');
     expect(checkboxes).toHaveLength(1);
-    expect(checkboxes[0]).toHaveAccessibleName(/후원자 명단에 이름과 응원 메시지 공개/);
+    expect(checkboxes[0]).toHaveAccessibleName(/후원자 명단에 이름 표시/);
     expect(screen.queryByLabelText(/약관/)).toBeNull();
   });
 

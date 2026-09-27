@@ -9,7 +9,7 @@ const baseProps = {
   quantity: 1, additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
   canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [], lookupFailed: false,
   displayNamePublic: false, canEditDisplayName: true,
-  customerName: '홍길동', publicName: null, supporterMessage: null, listingHidden: false,
+  customerName: '홍길동', publicName: null, supporterMessage: null, listingHidden: false, messageShownAnonymously: false,
 };
 
 beforeEach(() => {

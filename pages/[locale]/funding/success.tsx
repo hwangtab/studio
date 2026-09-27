@@ -20,6 +20,7 @@ import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../../lib/formDraft';
 import { trackMicroEvent } from '../../../utils/analytics';
 import SupporterListingEditor from '../../../components/funding/SupporterListingEditor';
+import { showsMessageAnonymously } from '../../../lib/funding/policy';
 
 interface SuccessProps {
   /**
@@ -55,6 +56,8 @@ interface SuccessProps {
    */
   listing?: {
     customerName: string; displayNamePublic: boolean; publicName: string | null; message: string | null;
+    /** 이름을 내려도 메시지가 "익명"으로 남는 판본인가(`showsMessageAnonymously`). */
+    messageShownAnonymously: boolean;
     /**
      * 운영자가 이미 명단에서 내려 둔 경우(`listing_hidden_at`). 확정 직후 30분 창 안에 그런
      * 일이 벌어지는 것은 드물지만, 값을 안 넘기면 이 화면은 무조건 "올라갑니다"로 단정한다.
@@ -225,6 +228,7 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
                 initialPublicName={listing.publicName}
                 message={listing.message}
                 hiddenByOperator={listing.hiddenByOperator}
+                messageShownAnonymously={listing.messageShownAnonymously}
               />
             )}
             {/* 관리 링크를 화면에도 띄운다. 예전엔 이 토큰이 메일에만 실려서, 메일이
@@ -428,6 +432,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
           publicName: order.fundingPledge.publicName,
           message: order.fundingPledge.supporterMessage,
           hiddenByOperator: order.fundingPledge.listingHiddenAt != null,
+          messageShownAnonymously: showsMessageAnonymously(order.fundingPledge.termsVersion),
         },
       } : {}),
     },
