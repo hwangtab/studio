@@ -65,6 +65,7 @@ const BuyerIntentHubRoute: NextPageWithLayout<BuyerIntentHubPageProps> = ({
 );
 
 BuyerIntentHubRoute.hasHero = true;
+BuyerIntentHubRoute.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Buyer-intent hub은 한국어 콘텐츠만 큐레이션돼 있어 ko에서만 SSG한다.

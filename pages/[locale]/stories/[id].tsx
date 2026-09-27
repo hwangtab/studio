@@ -375,6 +375,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
 };
 
 StoryDetailPage.hasHero = true;
+StoryDetailPage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {

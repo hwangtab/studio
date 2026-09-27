@@ -190,4 +190,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   );
 };
 
+ArtistPage.designEdition = 'v2';
+
 export default ArtistPage;
