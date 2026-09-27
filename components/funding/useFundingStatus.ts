@@ -4,6 +4,8 @@ import { computeProjectState, type ProjectState } from '../../lib/funding/projec
 export interface FundingStatusResponse {
   state: ProjectState; goalAmount: number; endAt: string; raisedAmount: number; backerCount: number; percent: number;
   remaining: Record<string, number | null>; publicBackers: string[];
+  /** 옛 배포의 응답·캐시에는 없다 — 없으면 0으로 읽는다. */
+  anonymousBackerCount?: number;
   publicMessages: Array<{ name: string; message: string; at: number }>;
 }
 

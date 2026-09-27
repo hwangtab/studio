@@ -137,6 +137,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         remaining={data?.remaining}
         onSelectReward={setOpenReward}
         backers={data?.publicBackers ?? []}
+        anonymousBackers={data?.anonymousBackerCount ?? 0}
         messages={data?.publicMessages ?? []}
       />
 

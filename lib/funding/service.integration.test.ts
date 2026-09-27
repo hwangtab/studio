@@ -242,7 +242,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
     await expireStalePledges(NOW);
     expect((await findFundingOrderByOrderNo(stale.ok ? stale.orderNo : ''))?.status).toBe('expired');
     const s = await aggregateProjectStatus(PROJECT, NOW);
-    expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, backerPersonCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'], publicMessages: [] });
+    expect(s).toEqual({ raisedAmount: 7000, backerCount: 1, backerPersonCount: 1, remaining: { cd: 1, mail: null }, publicBackers: ['김후원'], anonymousBackerCount: 0, publicMessages: [] });
   });
 
   it('partially_refunded도 paid와 같이 센다 — 펀딩은 살아 있고 재고도 나간 상태다', async () => {
@@ -441,6 +441,21 @@ describe('응원 메시지 공개', () => {
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.publicBackers).not.toContain('비공개');
     expect(s.publicMessages.map((m) => m.message)).not.toContain('조용히 응원');
+  });
+
+  // 이름이 안 오르는 후원도 명단에서 사라지지 않는다 — 수만 "익명"으로 나간다.
+  it('명단에 이름이 안 오르는 후원(미동의·운영자 숨김)은 익명 수로 센다', async () => {
+    await paidWith({ customerEmail: 'a1@example.com', customerPhone: '010-9101', customerName: '공개함' });
+    await paidWith({ customerEmail: 'a2@example.com', customerPhone: '010-9102', customerName: '비공개1', displayNamePublic: false });
+    const hidden = await paidWith({ customerEmail: 'a3@example.com', customerPhone: '010-9103', customerName: '숨김' });
+    await client.execute({
+      sql: 'UPDATE funding_pledges SET listing_hidden_at=? WHERE order_id=(SELECT id FROM orders WHERE order_no=?)',
+      args: [Math.floor(NOW.getTime() / 1000), hidden],
+    });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.anonymousBackerCount).toBe(s.backerCount - s.publicBackers.length);
+    expect(s.anonymousBackerCount).toBeGreaterThanOrEqual(2);
+    expect(s.publicBackers).toContain('공개함');
   });
 
   it('가린 이름·닉네임을 고르면 명단에는 그 이름만 나가고 실명은 나가지 않는다', async () => {

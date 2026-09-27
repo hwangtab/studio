@@ -7,6 +7,7 @@ interface Message {
 }
 
 const PAGE = 20;
+const ANON_SHOWN = 100;
 
 const formatDate = (at: number): string => {
   const d = new Date(at * 1000);
@@ -17,8 +18,11 @@ const formatDate = (at: number): string => {
 /**
  * 후원자 명단과 응원 메시지.
  *
- * 공개에 동의한 후원자만 들어온다(서버의 `display_name_public = 1`). 동의하지 않은 후원은
- * 이름을 가리는 것이 아니라 **아예 오지 않는다** — 가린 자리조차 남기지 않는다.
+ * 이름은 공개에 동의한 후원자만 들어온다(서버의 `display_name_public = 1`). 동의하지 않은
+ * 후원은 이름이 오지 않고 **수(`anonymousCount`)만** 온다 — 그 수만큼 "익명"을 잇는다.
+ * 예전엔 자리조차 남기지 않았는데, 그러면 명단이 실제보다 훨씬 적은 사람처럼 보였다
+ * (운영자 지적, 2026-09-27). 익명은 이름 뒤에 둔다 — 섞으면 순서로 누구인지 짐작할 수 있다.
+ * 너무 길어지지 않게 `ANON_SHOWN`개까지만 잇고 나머지는 "외 익명 N명"으로 접는다.
  *
  * 메시지는 후원자가 쓴 글이다. `dangerouslySetInnerHTML`을 쓰지 않으므로 React가 텍스트
  * 노드로 이스케이프한다. 그리고 `min-w-0` + `break-words`가 필요하다 — 공백 없는 긴 문자열
@@ -31,9 +35,21 @@ const formatDate = (at: number): string => {
  * 같은 방식으로 화면에서 막는다. 이름 세 자리와 **응원 메시지 본문**에 모두 걸어야 한다:
  * 메시지 상한은 500자라 이름보다 더 높이 쌓을 수 있고, 카드를 넘어가면 위 카드의 글을 덮는다.
  */
-export default function BackerWall({ names, messages }: { names: string[]; messages: Message[] }) {
+export default function BackerWall({
+  names,
+  anonymousCount = 0,
+  messages,
+}: {
+  names: string[];
+  anonymousCount?: number;
+  messages: Message[];
+}) {
   const [shown, setShown] = useState(PAGE);
-  if (names.length === 0) return null;
+  if (names.length === 0 && anonymousCount <= 0) return null;
+
+  const anonShown = Math.min(Math.max(0, anonymousCount), ANON_SHOWN);
+  const anonRest = Math.max(0, anonymousCount - anonShown);
+  const roster = [...names, ...Array<string>(anonShown).fill('익명')];
 
   const visible = messages.slice(0, shown);
 
@@ -42,7 +58,9 @@ export default function BackerWall({ names, messages }: { names: string[]; messa
       <h2 id="backer-wall-heading" className="typo-card-subtitle text-gray-900 dark:text-white">
         함께한 후원자
       </h2>
-      <p className="typo-card-body mt-3 overflow-hidden break-words leading-7">{names.join(' · ')}</p>
+      <p className="typo-card-body mt-3 overflow-hidden break-words leading-7">{roster.join(' · ')}
+        {anonRest > 0 && ` 외 익명 ${anonRest}명`}
+      </p>
 
       {visible.length > 0 && (
         <>

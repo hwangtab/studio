@@ -24,6 +24,7 @@ const aggregate = {
   backerPersonCount: 7,
   remaining: { mp3: 5 },
   publicBackers: ['김정곤'],
+  anonymousBackerCount: 6,
   publicMessages: [{ name: '김정곤', message: '침략전쟁 반대한다!', at: 1758000000 }],
 };
 
@@ -45,6 +46,7 @@ it('상태 API가 내보내는 것과 같은 모양을 만든다', async () => {
     percent: 24,
     remaining: { mp3: 5 },
     publicBackers: ['김정곤'],
+    anonymousBackerCount: 6,
     publicMessages: [{ name: '김정곤', message: '침략전쟁 반대한다!', at: 1758000000 }],
   });
 });
@@ -79,6 +81,7 @@ it('정적 생성용 초기값에는 후원자 이름과 응원 메시지를 담
   expect(s!.raisedAmount).toBe(240000);
   expect(s!.backerCount).toBe(7);
   expect(s!.publicBackers).toEqual([]);
+  expect(s!.anonymousBackerCount).toBe(0);
   expect(s!.publicMessages).toEqual([]);
 });
 

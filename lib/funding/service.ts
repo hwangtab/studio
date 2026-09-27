@@ -285,6 +285,13 @@ export interface ProjectStatus {
   backerPersonCount: number;
   remaining: Record<string, number | null>;
   publicBackers: string[];
+  /**
+   * 명단에 이름이 오르지 않는 후원 **건수**(공개 미동의·운영자 숨김·파기). 명단이 이름 있는
+   * 사람만 세워 두면 실제보다 훨씬 적은 사람이 함께한 것처럼 보여서(운영자 지적, 2026-09-27)
+   * BackerWall이 이 수만큼 "익명"을 이어 그린다. 누구인지는 알 수 없고 수만 나간다 —
+   * 건수(backerCount)는 이미 공개되어 있으므로 새로 드러나는 정보는 없다.
+   */
+  anonymousBackerCount: number;
   publicMessages: Array<{ name: string; message: string; at: number }>;
 }
 
@@ -360,6 +367,15 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
       AND fp.listing_hidden_at IS NULL
     ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
   `);
+  // 명단 조회와 **같은 WHERE**에서 LIMIT만 뺀 수. 둘이 갈리면 익명 수가 틀린다.
+  const listable = await db.all<{ n: number | null }>(sql`
+    SELECT COUNT(*) AS n
+    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
+      AND o.customer_name <> ${PURGED_MARK}
+      AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
+      AND fp.listing_hidden_at IS NULL
+  `);
   const listed = names
     .map((n) => ({ ...n, display_name: stripInvisible(n.display_name).trim() }))
     .filter((n) => n.display_name !== '');
@@ -369,6 +385,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     backerPersonCount: Number(totals[0]?.persons ?? 0),
     remaining,
     publicBackers: listed.map((n) => n.display_name),
+    anonymousBackerCount: Math.max(0, Number(totals[0]?.backers ?? 0) - Number(listable[0]?.n ?? 0)),
     publicMessages: listed
       .map((n) => ({
         name: n.display_name,
