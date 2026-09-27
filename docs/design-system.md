@@ -517,13 +517,18 @@ zh(자간 0)에서 재정의한다. eyebrow 라벨은 i18n 키(`home.v2.eyebrow.
 
 **페이지 코드에 박힌 v1 장식은 스코프 CSS가 일괄로 걷는다**(styles/globals.css, v2 블록). 페이지를 켤 때마다
 파일을 고치지 않으려는 것이다.
-- 히어로 h1 안의 부분 그라디언트 글자(`.bg-clip-text.text-transparent`) → 흰색
-- FeatureCard 윗단의 보라→핑크 띠 → 보라 단색
+- 그라디언트 텍스트(`.bg-clip-text.text-transparent`) → 잉크(다크는 흰색). 히어로 h1 안만 흰색
+- 보라→핑크 그라디언트 면(FeatureCard 띠·뱃지·아이콘 원, `to-r`·`to-br`) → 보라 단색
+- 보라·핑크·초록 파스텔 배경 패널(`from-primary/N … secondary/N`) → 옅은 보라 단색
+- SectionHeading v2는 `titleClassName`을 받지 않는다 — v1 호출부가 넘기던 그라디언트·크기가 v2 제목을 덮었다
 - v2 제목(`.v2-heading`) **바로 뒤**가 가운데 좁은 블록(`mx-auto max-w-lg`~`6xl`)이면 제목도 그 폭으로 맞춘다
   (`:has()`) — v1 본문의 좁은 체크리스트·카드 그리드 위에서 제목만 왼쪽 끝에 붙어 선이 어긋났다
 
+**스크린샷 주의**: /practice-room처럼 `Section defer`(content-visibility: auto)를 쓰는 페이지는 전체 페이지
+캡처에서 화면 밖 섹션이 빈 면으로 찍힌다. 렌더 결함이 아니다 — 스크롤해 뷰포트 단위로 찍어 확인한다.
+
 **v2 페이지**(2026-09-27): 홈, /release-project, /release-project/{single,ep,album}, /pricing, /recording,
-/mixing-mastering. 공용 컴포넌트 중 v2 분기가 있는 것: SectionHeading, Footer, ReleaseProducerIntro(홈 프로듀서
+/mixing-mastering, /practice-room. 공용 컴포넌트 중 v2 분기가 있는 것: SectionHeading, Footer, ReleaseProducerIntro(홈 프로듀서
 섹션과 같은 문법), ServiceLinkPill(v2에서는 tone과 무관하게 보라). 섹션 앵커 내비의 다크 hover 초록도 v2 CSS가 보라로 바꾼다.
 
 **가드**: `components/ui/SectionHeading.test.tsx`가 v1/v2 분기와 v2 파일의 색 규칙(그라디언트·

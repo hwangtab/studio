@@ -535,6 +535,7 @@ const PracticeRoom: NextPageWithLayout<PracticeRoomProps> = ({
 };
 
 PracticeRoom.hasHero = true;
+PracticeRoom.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

@@ -394,6 +394,29 @@ code {
    ① 히어로 h1 안의 부분 그라디언트 글자 → 흰색. 사진 위에서 강조가 아니라 얼룩으로 읽혔다(홈과 같은 판단).
       .text-transparent(0,1,0)를 이기려고 명시도를 올렸다.
    ② FeatureCard 윗단의 보라→핑크 띠 → 보라 단색. v2는 핑크(secondary)를 장식에 쓰지 않는다. */
+/* ⑤ 그라디언트 텍스트는 어디 있든 잉크(다크는 흰색) — 연습실 가격 숫자·자체 제목 컴포넌트 등.
+      히어로 h1 안은 아래 ①이 명시도로 이겨 흰색을 유지한다. */
+[data-edition='v2'] .bg-clip-text.text-transparent {
+  background-image: none;
+  color: #020617;
+}
+.dark [data-edition='v2'] .bg-clip-text.text-transparent {
+  color: #fff;
+}
+/* ⑥ 보라→핑크 그라디언트 면(뱃지·아이콘 원) → 보라 단색. ②와 같은 판단의 다른 방향(to-br). */
+[data-edition='v2'] .bg-gradient-to-br.from-primary.to-secondary {
+  background-image: none;
+  background-color: #6d28d9;
+}
+/* ⑦ 보라·핑크·초록 파스텔 그라디언트 배경 패널 → 옅은 보라 단색. 알파가 붙은 3색 조합
+      (from-primary/5·/10 via-secondary/… to-accent/…, from-primary/10 to-secondary/10)만 겨눈다. */
+[data-edition='v2'] [class*="from-primary/"][class*="secondary/"] {
+  background-image: none;
+  background-color: rgb(109 40 217 / 0.05);
+}
+.dark [data-edition='v2'] [class*="from-primary/"][class*="secondary/"] {
+  background-color: rgb(167 139 250 / 0.08);
+}
 [data-edition='v2'] h1 .bg-clip-text.text-transparent {
   background-image: none;
   color: #fff;
