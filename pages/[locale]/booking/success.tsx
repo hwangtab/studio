@@ -144,3 +144,6 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+BookingSuccessPage.designEdition = 'v2';

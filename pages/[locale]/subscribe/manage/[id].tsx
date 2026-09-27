@@ -278,3 +278,6 @@ export const getServerSideProps = withI18nServerProps<ManageProps>(async ({ quer
     },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+SubscribeManagePage.designEdition = 'v2';

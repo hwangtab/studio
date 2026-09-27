@@ -204,3 +204,6 @@ export const getServerSideProps = withI18nServerProps<SubscribeSetupProps>(async
     },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+SubscribeSetupPage.designEdition = 'v2';
