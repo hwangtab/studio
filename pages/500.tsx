@@ -1,4 +1,5 @@
-import type { GetStaticProps, NextPage } from 'next';
+import type { GetStaticProps } from 'next';
+import type { NextPageWithLayout } from '../types';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { m } from 'framer-motion';
@@ -11,7 +12,7 @@ import { Button } from '../components/ui/Button';
 import { defaultLocale, locales, type Locale } from '../lib/i18n';
 import { getErrorPageStaticProps } from '../lib/getStatic';
 
-const ServerErrorPage: NextPage = () => {
+const ServerErrorPage: NextPageWithLayout = () => {
   const router = useRouter();
 
   const { locale } = useMemo(() => {
@@ -84,5 +85,7 @@ const ServerErrorPage: NextPage = () => {
 };
 
 export const getStaticProps: GetStaticProps = async () => getErrorPageStaticProps(3600);
+
+ServerErrorPage.designEdition = 'v2';
 
 export default ServerErrorPage;

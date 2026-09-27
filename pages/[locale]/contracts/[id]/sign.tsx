@@ -819,3 +819,6 @@ export default function ContractSignPage({
     </>
   );
 }
+
+// 디자인 판 — lib/designEdition.ts
+ContractSignPage.designEdition = 'v2';
