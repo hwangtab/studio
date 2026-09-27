@@ -1244,6 +1244,18 @@
         {
           "q": "Cuối tuần và ngày lễ có thể thu âm không?",
           "a": "Có, chúng tôi nhận đặt lịch vào cuối tuần và ngày lễ. Liên hệ qua KakaoTalk hoặc điện thoại."
+        },
+        {
+          "q": "Tôi có thể thu âm ngay trước đám cưới không?",
+          "a": "Được. Dù thu âm vào ngày trước đám cưới, bạn vẫn nhận file kịp cho buổi lễ. Hãy cho chúng tôi biết ngày cưới khi đặt lịch."
+        },
+        {
+          "q": "Tôi nhận file hoàn chỉnh bằng cách nào?",
+          "a": "Chúng tôi gửi qua email cả file WAV và MP3. Bạn hãy đưa cả hai file cho nhân viên âm thanh của địa điểm tổ chức để họ dùng loại phù hợp với thiết bị phát."
+        },
+        {
+          "q": "Studio ở đâu và có chỗ đỗ xe không?",
+          "a": "Studio ở tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong), đi bộ 5 phút từ ga Yeonsinnae. Tòa nhà không có chỗ đỗ xe. Nếu đi ô tô, bạn có thể dùng bãi đỗ KT Eunpyeong trên cùng con đường (16 Tongil-ro 71-gil, đi bộ khoảng 2 phút, có thu phí) hoặc bãi đỗ công cộng ngầm của trường THCS Yeonsin (16-32 Yeonseo-ro 33-gil, mở 24 giờ, tính theo giờ), cách studio khoảng 1 km."
         }
       ]
     },
@@ -1384,8 +1396,16 @@
           "a": "Thuê theo giờ bắt đầu từ tối thiểu 2 giờ. Chúng tôi làm theo lịch hẹn, nên nếu lịch thay đổi hãy báo trước qua KakaoTalk và chúng tôi sẽ sắp xếp."
         },
         {
-          "q": "Địa điểm ở đâu và có chỗ đậu xe không?",
-          "a": "Daejo-dong, Eunpyeong-gu, Seoul — đi bộ 5 phút từ ga Yeonsinnae. Chúng tôi sẽ gửi chỉ đường và thông tin đậu xe khi xác nhận đặt lịch."
+          "q": "Studio ở đâu và có chỗ đỗ xe không?",
+          "a": "Studio ở tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong), đi bộ 5 phút từ ga Yeonsinnae. Tòa nhà không có chỗ đỗ xe. Nếu đi ô tô, bạn có thể dùng bãi đỗ KT Eunpyeong trên cùng con đường (16 Tongil-ro 71-gil, đi bộ khoảng 2 phút, có thu phí) hoặc bãi đỗ công cộng ngầm của trường THCS Yeonsin (16-32 Yeonseo-ro 33-gil, mở 24 giờ, tính theo giờ), cách studio khoảng 1 km."
+        },
+        {
+          "q": "Ai điều khiển buổi thu âm?",
+          "a": "Chủ studio Hwang Kyungha trực tiếp thực hiện. Cùng một người lo từ đặt micro, chỉ đạo giọng hát, chọn và biên tập take cho đến mixing và mastering sau đó, nên hướng đi không bị thay đổi giữa chừng. Anh là người lên kế hoạch và sản xuất album Gentrification, album nhận Giải đặc biệt của Hội đồng tuyển chọn tại Korean Music Awards 2017."
+        },
+        {
+          "q": "Quyền đối với file thu âm thuộc về ai?",
+          "a": "Thuộc về bạn. Bản thu gốc, bản đã biên tập và bản mix, master cuối cùng đều thuộc về khách hàng. Studio không đặt bất kỳ giới hạn nào khi bạn phát hành, đăng YouTube hay kiếm tiền từ chúng."
         }
       ]
     },
@@ -1573,6 +1593,18 @@
         {
           "q": "Được sửa tối đa mấy lần?",
           "a": "Mặc định mixing 2 lần, mastering 1 lần. Cho chúng tôi biết mốc thời gian và điểm muốn sửa, chúng tôi sẽ áp dụng."
+        },
+        {
+          "q": "Ai làm mixing?",
+          "a": "Chủ studio Hwang Kyungha trực tiếp làm. Một người lo từ kiểm tra file đến giao bản mix, master và chỉnh sửa, nên yêu cầu của bạn không bị sai lệch khi truyền đạt. Anh là người lên kế hoạch và sản xuất album Gentrification, album nhận Giải đặc biệt của Hội đồng tuyển chọn tại Korean Music Awards 2017."
+        },
+        {
+          "q": "Quyền đối với bài hát hoàn chỉnh thuộc về ai?",
+          "a": "Thuộc về bạn. Các stem bạn gửi và file mix, master hoàn chỉnh đều thuộc về khách hàng. Studio không đặt giới hạn nào khi bạn phát hành hay kiếm tiền."
+        },
+        {
+          "q": "Có tùy chọn làm gấp không?",
+          "a": "Không có tùy chọn làm gấp riêng. Thời gian giao là 3–7 ngày làm việc kể từ khi nhận file. Nếu đã có ngày phát hành, hãy báo khi liên hệ để chúng tôi xác nhận trước là có kịp hay không."
         }
       ]
     },
@@ -2929,5 +2961,12 @@
       "supportersCount": "{{count}} people",
       "supportersEmpty": "Be the first subscriber."
     }
+  },
+  "engineerCredit": {
+    "title": "Ai thực hiện",
+    "body": "Thu âm, mixing và mastering do chủ studio Hwang Kyungha trực tiếp thực hiện. Một người phụ trách dự án của bạn từ lúc tư vấn, chỉ đạo giọng hát, giao bản mix và master cho đến khi chỉnh sửa.",
+    "award": "Anh là người lên kế hoạch và sản xuất album Gentrification (젠트리피케이션), album nhận Giải đặc biệt của Hội đồng tuyển chọn tại Korean Music Awards 2017.",
+    "creditsLabel": "Tác phẩm tiêu biểu:",
+    "profileLink": "Xem đầy đủ lý lịch, giải thưởng và báo chí →"
   }
 }

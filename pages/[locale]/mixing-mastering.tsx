@@ -36,6 +36,7 @@ const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const EngineerCredit = dynamic(() => import('../../components/service/EngineerCredit'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
@@ -125,7 +126,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
   );
 
   const faqItems = React.useMemo(
-    () => createTranslatedQaItems(t, 'mixingMastering.faq.items', 6),
+    () => createTranslatedQaItems(t, 'mixingMastering.faq.items', 9),
     [t]
   );
 
@@ -577,7 +578,9 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
 
       {/* 다른 서비스 페이지 전부에 있던 후기 섹션이 여기만 빠져 있었다 — 원격 의뢰는
           신뢰가 결정 요인이라 사회적 증거를 FAQ와 관련글 사이에 둔다. */}
-      <ReviewSection variant="alternate" locale={locale} />
+      <EngineerCredit locale={locale} variant="alternate" />
+
+      <ReviewSection variant="default" locale={locale} categories={['mixing']} />
 
       <RelatedStoriesSection
         stories={relatedStories}
@@ -650,7 +653,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   return buildPageStaticProps(
     locale,
     { pricingData, relatedStories, credits },
-    { revalidate: 86400, i18nSections: ['mixingMastering', 'stories'] }
+    { revalidate: 86400, i18nSections: ['mixingMastering', 'stories', 'engineerCredit'] }
   );
 };
 
