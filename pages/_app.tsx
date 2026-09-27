@@ -13,8 +13,8 @@ const DeferredAnalytics = dynamic(() => import('../components/common/DeferredAna
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
-import { useRouter } from 'next/router';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import Router, { useRouter } from 'next/router';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
@@ -23,6 +23,22 @@ import { isAdminRoute } from '../lib/adminRoute';
 import { historyKey, routeTransitionKey, scrollAfterRouteChange, scrollMemory } from '../lib/routeScroll';
 import { DesignEditionContext } from '../lib/designEdition';
 
+
+/**
+ * 뒤로·앞으로 가기로 돌아온 페이지의 스크롤을 첫 페인트 전에 되돌린다(lib/routeScroll 머리말).
+ * 페이지 전환 key마다 새로 마운트되므로 레이아웃 이펙트가 새 페이지가 붙은 바로 그 커밋에 돈다.
+ * 복원할 위치가 없으면(새 이동·첫 로드) 아무것도 하지 않는다 — 그 경우는 onExitComplete가 맡는다.
+ */
+const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
+function RestoreScrollOnMount() {
+  useIsoLayoutEffect(() => {
+    const y = scrollMemory.takeRestoreTarget();
+    if (y === null) return;
+    scrollAfterRouteChange(window, y);
+    scrollMemory.arrived(historyKey());
+  }, []);
+  return null;
+}
 
 const localeLoadingMessage: Record<Locale, string> = {
   ko: '콘텐츠를 불러오는 중입니다...',
@@ -82,7 +98,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     return () => router.events.off('routeChangeStart', markNavigated);
   }, [router.events]);
 
-  // 뒤로·앞으로 가기 스크롤 복원(lib/routeScroll의 scrollMemory). 복원 자체는 onExitComplete가 한다.
+  // 뒤로·앞으로 가기 스크롤 복원(lib/routeScroll의 scrollMemory). 복원 자체는 새 페이지의 RestoreScrollOnMount가 한다.
   // 쿼리만 바뀌는 이동은 전환 key가 같아 onExitComplete가 불리지 않으므로 여기서 기록을 다시 켠다.
   const transitionKeyRef = useRef(routeTransitionKey(router.asPath));
   useEffect(() => {
@@ -95,7 +111,11 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         scrollMemory.record(window.scrollY);
       });
     };
-    const onPopState = () => scrollMemory.popped(historyKey());
+    Router.beforePopState((state) => {
+      const key = (state as { key?: unknown }).key;
+      scrollMemory.popped(typeof key === 'string' ? key : null);
+      return true;
+    });
     const onStart = () => scrollMemory.leave();
     const onComplete = (url: string) => {
       const next = routeTransitionKey(url);
@@ -107,13 +127,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     };
     const onError = () => scrollMemory.cancelled();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('popstate', onPopState);
     router.events.on('routeChangeStart', onStart);
     router.events.on('routeChangeComplete', onComplete);
     router.events.on('routeChangeError', onError);
     return () => {
       window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('popstate', onPopState);
+      Router.beforePopState(() => true);
       router.events.off('routeChangeStart', onStart);
       router.events.off('routeChangeComplete', onComplete);
       router.events.off('routeChangeError', onError);
@@ -351,11 +370,12 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
               <Layout hasHero={hasHero} locale={locale}>
                 {/* initial={false}: 첫 방문 시 opacity:0 스타일이 SSR에 박히는 것을 막아 FCP/LCP를 즉시 페인트.
                     페이지 전환(route change) 때만 페이드 애니메이션이 작동한다. */}
-                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { scrollAfterRouteChange(window, scrollMemory.takeRestoreTarget()); scrollMemory.arrived(historyKey()); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
+                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { if (!scrollMemory.hasRestoreTarget()) { scrollAfterRouteChange(); scrollMemory.arrived(historyKey()); } document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
                   <m.div
                     key={routeTransitionKey(router.asPath)}
                     {...routeTransitionProps}
                   >
+                    <RestoreScrollOnMount />
                     <Component {...pageProps} />
                   </m.div>
                 </AnimatePresence>

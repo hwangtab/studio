@@ -19,6 +19,12 @@ const MAX_FRAMES = 30; // 약 0.5초 — 동적 import 섹션이 늦게 붙는 �
 /**
  * 뒤로·앞으로 가기로 돌아온 페이지는 떠날 때의 위치로 되돌린다.
  *
+ * 되돌리는 시점은 새 페이지가 DOM에 붙은 직후, 첫 페인트 전(_app의 useLayoutEffect)이다.
+ * onExitComplete에서 되돌리면 그때는 새 페이지가 아직 없어 문서가 짧다 — 목록이 맨 위로
+ * 한 번 칠해진 뒤 제자리로 뛰어 "크게 한 번 깜빡"였다(2026-09-28 운영자 iOS 실기기 제보,
+ * 프레임 기록으로 확인). next는 새 경로의 첫 커밋 직후 scrollTo(0,0)을 하고, 새 페이지는
+ * 그 다음 커밋(AnimatePresence exit 완료 뒤)에 붙으므로 레이아웃 이펙트가 그보다 뒤다.
+ *
  * 이 기억이 없던 동안에는 뒤로 가기도 새 이동처럼 맨 위에 떨어졌다 — 스토리 목록을 한참 내려
  * 글을 열고 돌아오면 목록 맨 위였다(2026-09-28 WebKit iPhone 에뮬레이션으로 재현). 브라우저의
  * 기본 복원은 새 페이지가 마운트되기 전(mode="wait")에 일어나 짧은 문서에 잘리고, 그 뒤 이
@@ -43,7 +49,12 @@ export const createScrollMemory = () => {
     leave() {
       paused = true;
     },
-    /** popstate — 돌아갈 항목의 위치를 꺼내 둔다. 처음 보는 항목이면 복원하지 않는다 */
+    /**
+     * 뒤로·앞으로 가기 — 돌아갈 항목의 위치를 꺼내 둔다. 처음 보는 항목이면 복원하지 않는다.
+     * window의 popstate 리스너로 받으면 안 된다: next/router가 먼저 등록한 리스너에서 전환을
+     * **동기로** 끝내 버려(데이터가 캐시에 있으면) 복원 위치를 꺼내기 전에 전환이 끝난다.
+     * _app은 router.beforePopState로 받는다 — next가 전환 직전에 부른다.
+     */
     popped(key: string | null) {
       paused = true;
       restoreTarget = key ? positions.get(key) ?? null : null;
@@ -57,6 +68,9 @@ export const createScrollMemory = () => {
     cancelled() {
       paused = false;
       restoreTarget = null;
+    },
+    hasRestoreTarget(): boolean {
+      return restoreTarget !== null;
     },
     takeRestoreTarget(): number | null {
       const y = restoreTarget;
