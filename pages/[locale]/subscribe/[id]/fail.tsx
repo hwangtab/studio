@@ -97,3 +97,6 @@ export const getServerSideProps = withI18nServerProps<FailProps>(async ({ query,
     },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+SubscribeFailPage.designEdition = 'v2';

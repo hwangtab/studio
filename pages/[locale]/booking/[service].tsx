@@ -53,3 +53,6 @@ export const getServerSideProps = withI18nServerProps<BookingPageProps>(async ({
   const initialProductId = productParam && products.some((p) => p.id === productParam) ? productParam : undefined;
   return { props: { service, kind: 'session', products, ...(initialProductId ? { initialProductId } : {}) } };
 });
+
+// 디자인 판 — lib/designEdition.ts
+BookingPage.designEdition = 'v2';

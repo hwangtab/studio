@@ -484,3 +484,6 @@ export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (co
     },
   };
 });
+
+// 디자인 판 — lib/designEdition.ts
+BookingManagePage.designEdition = 'v2';
