@@ -19,7 +19,7 @@ thumbnail: /images/recording8.webp
 
 El nuevo álbum “Golden Hour” de Jai captura el tiempo dorado de un viaje musical de 25 años. Exlíder de la banda de rock “Hedimama”, que marcó una época del indie coreano, Jai ha construido su propio color musical como solista. Su primer lanzamiento en siete años es especial en muchos sentidos. Un paladar sonoro que se mueve entre rock y jazz, pop y soul, y aun así mantiene de forma consistente la voz y la sensibilidad de Jai, logrando un equilibrio perfecto, como la “golden hour” de la que hablan los fotógrafos.
 
-La mano del productor Park Chan‑woong fue clave para completar este álbum. Guitarrista y productor, además de editor de la revista especializada “Monthly Mixing”, ha ido ampliando su influencia en la escena musical coreana. Vistió las canciones originales de Jai con distintas “ropas” musicales y definió el sonido y la dirección general del álbum.
+La mano del productor Park Chan‑woong fue clave para completar este álbum. Guitarrista y productor, además de editor de la revista especializada “Monthly Mixing”, ha ido ampliando su influencia en la música coreana. Vistió las canciones originales de Jai con distintas “ropas” musicales y definió el sonido y la dirección general del álbum.
 
 Las cuatro canciones—“Your Date”, “Fever”, “Tonight” y “A Late Old Story”—no son una simple lista de pistas, sino un viaje emocional. ¿Cómo se puede abarcar tanta variedad de géneros manteniendo un tono unificado? ¿Cómo se coordinó con los músicos de sesión? ¿Cómo está cambiando la producción musical en la era digital? Nos reunimos con Park Chan‑woong, productor que completó la dirección musical de “Golden Hour”, para asomarnos al mundo de la producción moderna.
 
@@ -105,7 +105,7 @@ Park valora la interpretación real no por conservadurismo, sino porque cree en 
 
 Las pistas del álbum muestran instrumentaciones y estilos de producción diversos, lo que indica que Park eligió paletas sonoras adecuadas al carácter de cada tema. En “Your Date” usó programación y beats electrónicos con audacia, mientras que en “Fever” buscó un arreglo más natural con influencia jazzística. Esa diversidad elevó la calidad global del álbum.
 
-### El rol del productor en la escena indie: un mapa en cambio
+### El rol del productor en la música indie: un mapa en cambio
 
 ¿Cómo cambia el rol del productor en el indie coreano? Park señaló el aumento del enfoque DIY (Do It Yourself).
 
@@ -135,7 +135,7 @@ Park publica una revista online llamada “Monthly Mixing” para compartir su e
 
 Esta respuesta muestra su deseo continuo de aprender y su actitud abierta. Dice que aprende más mientras comparte, lo que refleja humildad profesional y esfuerzo por mantenerse al día.
 
-“Monthly Mixing” cubre producción, grabación, mezcla, masterización y más. A través de ella, Park proporciona información sistemática que faltaba en la escena coreana, y al mismo tiempo fortalece su propia especialización. Creó un ciclo virtuoso entre compartir conocimiento y producir: lo que estudia y comparte vuelve a su trabajo, y esa experiencia regresa al público como contenido más rico.
+“Monthly Mixing” cubre producción, grabación, mezcla, masterización y más. A través de ella, Park proporciona información sistemática que faltaba en la música coreana, y al mismo tiempo fortalece su propia especialización. Creó un ciclo virtuoso entre compartir conocimiento y producir: lo que estudia y comparte vuelve a su trabajo, y esa experiencia regresa al público como contenido más rico.
 
 ## El rol musical de Park Chan‑woong
 
@@ -177,7 +177,7 @@ En la industria actual, donde la tecnología avanza y las herramientas son cada 
 
 La entrevista con Park Chan‑woong ofreció una mirada profunda al proceso complejo de {Golden Hour} y al rol del productor moderno. En la superficie, sostiene la filosofía de “el artista primero”, pero en la práctica destacó su juicio experto al tomar decisiones de producción audaces para lograr mayor calidad.
 
-{Golden Hour} es un álbum que no habría sido posible sin su amplio conocimiento musical y su habilidad como productor. Los arreglos ricos y el sonido refinado que añadió elevaron el álbum a otro nivel. Con este trabajo, consolidó aún más su posición como un productor clave en la escena indie coreana.
+{Golden Hour} es un álbum que no habría sido posible sin su amplio conocimiento musical y su habilidad como productor. Los arreglos ricos y el sonido refinado que añadió elevaron el álbum a otro nivel. Con este trabajo, consolidó aún más su posición como un productor clave en la música indie coreana.
 
 Lo especial de su enfoque no es solo su técnica, sino su profunda conciencia de la importancia de la comunicación. Para él, la comunicación entre artista y productor, y entre la música y el oyente, es esencial. Ese énfasis muestra que no es solo un técnico, sino un creador musical con sensibilidad.
 

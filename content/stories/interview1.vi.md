@@ -105,7 +105,7 @@ Park coi trọng biểu diễn thật không phải vì bảo thủ, mà vì tin
 
 Các track trong album có phối khí và phong cách sản xuất đa dạng, cho thấy Park chọn palette phù hợp với từng mood. Anh táo bạo dùng programming và beat điện tử trong “Your Date”, theo đuổi hòa âm tự nhiên, jazz‑influenced trong “Fever”. Sự đa dạng này nâng chất lượng tổng thể.
 
-### Vai trò của producer trong indie scene: bối cảnh thay đổi
+### Vai trò của producer trong làng nhạc indie: bối cảnh thay đổi
 
 Vai trò producer thay đổi ra sao trong indie Hàn Quốc? Park nhắc tới xu hướng DIY (Do It Yourself) đang tăng.
 
