@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { MARKET_PRODUCTION_MEDIAN_SUM, MARKET_ROWS, MARKET_SURVEY_CHECKED_ON } from './marketPriceSurvey';
+import { MARKET_ROWS, MARKET_SURVEY_CHECKED_ON } from './marketPriceSurvey';
 
 /**
  * 비교 광고의 입증 가드. 사이트에 싣는 시장 숫자는 근거 문서에 같은 숫자로 적혀 있어야 한다 —
@@ -35,9 +35,9 @@ describe('시장 가격 비교표', () => {
     }
   });
 
-  it('중앙값 합계는 녹음·믹싱·마스터링 세 항목의 합이다', () => {
-    const medians = MARKET_ROWS.filter((r) => r.market.median).map((r) => r.market.median!);
-    expect(medians).toHaveLength(3);
-    expect(MARKET_PRODUCTION_MEDIAN_SUM).toBe(medians.reduce((a, b) => a + b, 0));
+  it('표본 수 표기가 근거 문서의 표본 수와 같다 — 불명확한 업체를 뺀 뒤에도 숫자가 맞게', () => {
+    const rec = MARKET_ROWS.find((r) => r.id === 'recording')!;
+    expect(rec.market.sample).toContain('4곳');
+    expect(DOC).toContain('4곳 **150,000~400,000원, 중앙값 225,000원**');
   });
 });

@@ -43,7 +43,7 @@ faq:
       아티스트에게 적합하지만 제작 비용과 시간이 크게 늘어납니다. 처음 발매하는 인디 아티스트라면 EP(4~5곡)가 완청률과
       비용 효율 면에서 가장 균형 잡힌 선택입니다.
 inlineFallback:
-  price: recording-daylock
+  price: recording-daylock-8h
 ---
 ![EP 제작 완전 가이드 — 스튜디오 놀](/images/album1.webp)
 

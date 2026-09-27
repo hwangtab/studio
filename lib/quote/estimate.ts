@@ -203,11 +203,12 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
         };
       }
       return {
-        priceLabel: `곡당 ${range(MIXING_LEVEL1_PRICE + MASTERING_PACKAGE_PRICE, MIXING_LEVEL3_PRICE + MASTERING_PACKAGE_PRICE)}`,
+        // 하한은 4곡 이상 묶음 마스터링, 상한은 3곡 이하(곡당 싱글 마스터링) — 2~3곡도 이 범위 안에 든다.
+        priceLabel: `곡당 ${range(MIXING_LEVEL1_PRICE + MASTERING_PACKAGE_PRICE, MIXING_LEVEL3_PRICE + MASTERING_SINGLE_PRICE)}`,
         vat: 'excluded',
         basis: [
           `믹싱은 곡마다 트랙 수로 ${won(MIXING_LEVEL1_PRICE)}~${won(MIXING_LEVEL3_PRICE)}`,
-          `4곡 이상 함께 마스터링하면 곡당 ${won(MASTERING_PACKAGE_PRICE)}`,
+          `마스터링은 곡당 ${won(MASTERING_SINGLE_PRICE)}, 4곡 이상 함께 맡기면 곡당 ${won(MASTERING_PACKAGE_PRICE)}`,
         ],
         bookingHref: '/ko/booking/mixing-mastering',
       };
@@ -242,13 +243,24 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       };
     case 'voice': {
       const hours = Number(a.scale);
+      // 4·8시간은 시간당보다 Day Lock이 싸다 — 더 싼 쪽을 견적으로 내고, 예약 링크도 그 상품으로 보낸다
+      // (시간제 성우 예약으로 보내면 안내한 금액보다 비싸게 결제된다). Day Lock은 녹음 서비스 상품이다.
+      const dayLock = hours === 8 ? { price: DAY_LOCK_8H_PRICE, id: 'recording-daylock-8h' } : hours === 4 ? { price: DAY_LOCK_4H_PRICE, id: 'recording-daylock-4h' } : null;
+      if (dayLock) {
+        return {
+          priceLabel: won(dayLock.price),
+          vat: 'excluded',
+          basis: [
+            `Day Lock ${hours}시간 기준 — 시간당(${won(VOICEOVER_HOURLY_PRICE)} × ${hours}시간 = ${won(VOICEOVER_HOURLY_PRICE * hours)})보다 쌉니다`,
+            '녹음실·전담 엔지니어를 그 시간 동안 통째로 씁니다',
+          ],
+          bookingHref: `/ko/booking/recording?product=${dayLock.id}`,
+        };
+      }
       return {
         priceLabel: won(VOICEOVER_HOURLY_PRICE * hours),
         vat: 'excluded',
-        basis: [
-          `시간당 ${won(VOICEOVER_HOURLY_PRICE)} × ${hours}시간 (최소 2시간)`,
-          ...(hours >= 4 ? [`긴 녹음은 Day Lock 4시간 ${won(DAY_LOCK_4H_PRICE)} · 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`] : []),
-        ],
+        basis: [`시간당 ${won(VOICEOVER_HOURLY_PRICE)} × ${hours}시간 (최소 2시간)`],
         bookingHref: '/ko/booking/voice-acting',
       };
     }

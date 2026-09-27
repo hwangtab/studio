@@ -2,7 +2,6 @@ import React from 'react';
 import { formatPriceLabel } from '../../data/pricing';
 import {
   MARKET_COMPARISON_BUNDLE_PRICE,
-  MARKET_PRODUCTION_MEDIAN_SUM,
   MARKET_ROWS,
   MARKET_SURVEY_CHECKED_ON,
 } from '../../data/marketPriceSurvey';
@@ -55,7 +54,9 @@ const MarketPriceComparison = () => {
                     <span className="text-gray-500 dark:text-gray-400">{row.market.note}</span>
                   )}
                 </td>
-                <td className="py-3 px-4 text-gray-700 dark:text-gray-300 tabular-nums">{row.ours ? range(row.ours) : '—'}</td>
+                <td className="py-3 px-4 text-gray-700 dark:text-gray-300 tabular-nums">
+                  {row.ours ? range(row.ours) : row.oursLabel ?? '—'}
+                </td>
                 <td className="py-3 pl-4 font-semibold text-primary dark:text-primary-lighter">{row.inBundle ? '포함' : '—'}</td>
               </tr>
             ))}
@@ -63,9 +64,9 @@ const MarketPriceComparison = () => {
         </table>
       </div>
       <p className="mt-5 typo-card-body text-gray-800 dark:text-gray-200">
-        녹음·믹싱·마스터링만 따로 맡겨도 공개 요금 중앙값을 더하면 {won(MARKET_PRODUCTION_MEDIAN_SUM)}입니다. 스튜디오 놀
-        싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세를 더해 {bundleWithVat.toLocaleString('en-US')}원이고
-        기획·유통 등록·국내외 홍보까지 들어 있습니다. 번들의 믹싱은 트랙 10개 이하 기준입니다.
+        스튜디오 놀 싱글 번들은 {won(MARKET_COMPARISON_BUNDLE_PRICE)}, 부가세를 더해 {bundleWithVat.toLocaleString('en-US')}원입니다.
+        보컬 녹음 1프로·믹싱·마스터링에 기획·유통 등록·국내외 홍보까지 들어 있고, 번들의 믹싱은 트랙 10개 이하
+        기준입니다.
       </p>
       <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
         시장 가격은 {MARKET_SURVEY_CHECKED_ON}에 각 업체의 공개 요금표에서 확인한 값입니다. 업체마다 포함 범위가 다르고

@@ -89,7 +89,7 @@ describe('후기 요청 대상', () => {
     expect(await findReviewCandidates(NOW)).toEqual([]);
   });
 
-  it('끝난 지 12시간이 안 됐거나 7일이 넘은 건은 제외', async () => {
+  it('오늘(KST) 끝났거나 7일이 넘은 건은 제외', async () => {
     const o = await seedOrder();
     await seedBooking(o.id, 3);
     await seedBooking(o.id, 24 * 8);
@@ -128,6 +128,60 @@ describe('후기 요청 대상', () => {
   });
 });
 
+describe('블라인드스팟 정정 (2026-09-27)', () => {
+  it('연습실 시간제는 처리방침 목적 밖이라 보내지 않는다', async () => {
+    const o = await seedOrder();
+    await seedBooking(o.id, 20, { serviceType: 'practice-room', productId: 'practice-room-hourly' });
+    expect(await findReviewCandidates(NOW)).toEqual([]);
+  });
+
+  it('전날 밤 23:30(KST)에 끝난 세션도 다음 날 11시에 보낸다 — 경과 시간이 아니라 날짜', async () => {
+    const o = await seedOrder();
+    // NOW = 10/05 11:00 KST. 10/04 23:30 KST = NOW - 11.5시간.
+    await seedBooking(o.id, 11.5);
+    expect(await findReviewCandidates(NOW)).toHaveLength(1);
+  });
+
+  it('오늘(KST) 끝난 세션은 아직 보내지 않는다', async () => {
+    const o = await seedOrder();
+    await seedBooking(o.id, 2); // 10/05 09:00 KST
+    expect(await findReviewCandidates(NOW)).toEqual([]);
+  });
+
+  it('운영자 본인 주소로 결제한 주문은 제외', async () => {
+    const o = await seedOrder({ customerEmail: 'Hello@StudioNol.co.kr' });
+    await seedBooking(o.id, 20);
+    expect(await findReviewCandidates(NOW)).toEqual([]);
+  });
+
+  it('180일 쿨다운은 이메일 대소문자를 무시한다', async () => {
+    const first = await seedOrder({ customerEmail: 'Regular@Studio-Test.kr' });
+    const b1 = await seedBooking(first.id, 24 * 30);
+    await mockDb.insert(schema.reviewRequests).values({ kind: 'session', refId: b1.id, orderId: first.id, sentAt: new Date(NOW.getTime() - 24 * 30 * HOUR) });
+    const again = await seedOrder({ customerEmail: 'regular@studio-test.kr' });
+    await seedBooking(again.id, 20);
+    expect(await findReviewCandidates(NOW)).toEqual([]);
+  });
+
+  it('반송될 주소·시간 초과는 기록을 남겨 다시 보내지 않는다', async () => {
+    const o = await seedOrder();
+    await seedBooking(o.id, 20);
+    mockSendEmail.mockResolvedValueOnce({ ok: false, errorCode: 'TIMEOUT' });
+    expect(await runReviewRequests(NOW)).toMatchObject({ sent: 0, failed: [{ code: 'TIMEOUT' }] });
+    expect(await mockDb.select().from(schema.reviewRequests)).toHaveLength(1);
+    expect(await runReviewRequests(new Date(NOW.getTime() + 24 * HOUR))).toMatchObject({ sent: 0 });
+  });
+
+  it('오래된 것부터 보낸다 — 상한에 걸려도 7일 창을 먼저 넘길 건이 먼저 간다', async () => {
+    const a = await seedOrder();
+    const b = await seedOrder();
+    await seedBooking(a.id, 20);
+    await seedBooking(b.id, 24 * 5);
+    const c = await findReviewCandidates(NOW);
+    expect(c[0].orderId).toBe(b.id);
+  });
+});
+
 describe('발송', () => {
   it('보내고 기록한다 — 다시 돌려도 두 번 가지 않는다', async () => {
     const o = await seedOrder();
@@ -151,7 +205,7 @@ describe('발송', () => {
   it('메일에는 구글·네이버 링크가 있고 혜택이나 별점 유도는 없다', () => {
     const mail = buildReviewRequestEmail({
       kind: 'session', refId: 'r', orderId: 'o', customerName: '홍길동', customerEmail: 'a@b.kr',
-      serviceLabel: '보컬 녹음 1프로', dateLabel: '2026-10-04',
+      serviceLabel: '보컬 녹음 1프로', dateLabel: '2026-10-04', endedAt: new Date('2026-10-04T06:00:00Z'),
     });
     expect(mail.text).toContain('https://g.page/r/');
     expect(mail.text).toContain('naver.me');

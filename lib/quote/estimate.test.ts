@@ -1,10 +1,12 @@
 import {
   ALBUM_BUNDLE_PRICE,
+  DAY_LOCK_4H_PRICE,
   DAY_LOCK_8H_PRICE,
   EP_BUNDLE_PRICE,
   formatPriceLabel,
   MASTERING_SINGLE_PRICE,
   MIXING_LEVEL2_PRICE,
+  MIXING_LEVEL3_PRICE,
   SINGLE_BUNDLE_PRICE,
   VOCAL_PACKAGE_PRICE,
   WEDDING_PACKAGE_PRICE,
@@ -86,6 +88,21 @@ describe('견적 요청서 — 즉시 견적', () => {
       expect(productsForService(service).length).toBeGreaterThan(0);
       if (product) expect(getProduct(product)?.service).toBe(service);
     }
+  });
+
+  it('성우 4·8시간은 더 싼 Day Lock으로 견적하고 그 상품으로 예약시킨다', () => {
+    const four = estimate({ service: 'voice', scale: '4', timing: '2w' })!;
+    expect(four.priceLabel).toBe(won(DAY_LOCK_4H_PRICE));
+    expect(four.bookingHref).toBe('/ko/booking/recording?product=recording-daylock-4h');
+    const eight = estimate({ service: 'voice', scale: '8', timing: '2w' })!;
+    expect(eight.priceLabel).toBe(won(DAY_LOCK_8H_PRICE));
+    expect(eight.bookingHref).toBe('/ko/booking/recording?product=recording-daylock-8h');
+    expect(estimate({ service: 'voice', scale: '2', timing: '2w' })!.bookingHref).toBe('/ko/booking/voice-acting');
+  });
+
+  it('여러 곡 믹싱의 상한은 3곡 이하 마스터링 단가를 쓴다 — 2~3곡을 과소 추정하지 않게', () => {
+    const e = estimate({ service: 'mixing', scale: 'multi', readiness: 'ready', timing: '1m' })!;
+    expect(e.priceLabel).toContain(won(MIXING_LEVEL3_PRICE + MASTERING_SINGLE_PRICE));
   });
 
   it('연습실만 부가세 기준이 다르다', () => {

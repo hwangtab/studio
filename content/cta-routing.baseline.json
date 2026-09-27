@@ -1024,17 +1024,17 @@
   "ep-album1": {
    "category": "production",
    "cta": "release",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "ep-making1": {
    "category": "production",
    "cta": "release",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "ep-production1": {
    "category": "production",
    "cta": "release",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "ep-release1": {
    "category": "business",
@@ -1124,7 +1124,7 @@
   "funk-music1": {
    "category": "production",
    "cta": "lesson",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "future-bass1": {
    "category": "production",
@@ -1904,7 +1904,7 @@
   "indie-production1": {
    "category": "production",
    "cta": "release",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "indie-rock1": {
    "category": "recording",
@@ -2014,7 +2014,7 @@
   "jazz-production1": {
    "category": "production",
    "cta": "lesson",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "jazz-vocal1": {
    "category": "vocal",
@@ -2204,7 +2204,7 @@
   "latin-music1": {
    "category": "production",
    "cta": "lesson",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "lesson-keyboard-skill1": {
    "category": "production",
@@ -3139,7 +3139,7 @@
   "portfolio1": {
    "category": "vocal",
    "cta": "recording",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "posture1": {
    "category": "vocal",
@@ -6599,7 +6599,7 @@
   "rock-production1": {
    "category": "production",
    "cta": "lesson",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "rock-vocal1": {
    "category": "vocal",
@@ -7224,7 +7224,7 @@
   "track-order1": {
    "category": "production",
    "cta": "release",
-   "price": "recording-daylock"
+   "price": "recording-daylock-8h"
   },
   "transcription1": {
    "category": "production",
