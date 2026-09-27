@@ -528,7 +528,8 @@ zh(자간 0)에서 재정의한다. eyebrow 라벨은 i18n 키(`home.v2.eyebrow.
 캡처에서 화면 밖 섹션이 빈 면으로 찍힌다. 렌더 결함이 아니다 — 스크롤해 뷰포트 단위로 찍어 확인한다.
 
 **v2 페이지**(2026-09-27): 홈, /release-project, /release-project/{single,ep,album}, /pricing, /recording,
-/mixing-mastering, /practice-room. 공용 컴포넌트 중 v2 분기가 있는 것: SectionHeading, Footer, ReleaseProducerIntro(홈 프로듀서
+/mixing-mastering, /practice-room, /about, /author, /contact, /cover-video, /crowdfunding-design, /lesson,
+/music-promotion, /portfolio, /studio-info, /voice-acting, /wedding-song. 공용 컴포넌트 중 v2 분기가 있는 것: SectionHeading, Footer, ReleaseProducerIntro(홈 프로듀서
 섹션과 같은 문법), ServiceLinkPill(v2에서는 tone과 무관하게 보라). 섹션 앵커 내비의 다크 hover 초록도 v2 CSS가 보라로 바꾼다.
 
 **가드**: `components/ui/SectionHeading.test.tsx`가 v1/v2 분기와 v2 파일의 색 규칙(그라디언트·

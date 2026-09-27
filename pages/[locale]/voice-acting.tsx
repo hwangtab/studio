@@ -456,6 +456,7 @@ const VoiceActing: NextPageWithLayout<VoiceActingProps> = ({ locale, pricingData
 };
 
 VoiceActing.hasHero = true;
+VoiceActing.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

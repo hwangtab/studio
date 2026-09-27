@@ -690,5 +690,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
  * ImageHero를 쓰면서 이 선언을 빠뜨리는 것은 layout/heroHeader.test.ts가 막는다.
  */
 MusicPromotion.hasHero = true;
+MusicPromotion.designEdition = 'v2';
 
 export default MusicPromotion;

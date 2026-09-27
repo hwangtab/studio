@@ -399,6 +399,7 @@ const About: NextPageWithLayout<AboutProps> = ({ locale, servicesData, hubLocale
 };
 
 About.hasHero = true;
+About.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

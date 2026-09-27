@@ -278,6 +278,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
 };
 
 Contact.hasHero = true;
+Contact.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

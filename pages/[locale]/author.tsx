@@ -276,6 +276,7 @@ const AuthorPage: NextPageWithLayout<AuthorPageProps> = ({ locale }) => {
 };
 
 AuthorPage.hasHero = true;
+AuthorPage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

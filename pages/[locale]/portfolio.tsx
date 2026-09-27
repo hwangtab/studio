@@ -310,6 +310,7 @@ const Portfolio: NextPageWithLayout<PortfolioProps> = ({
 };
 
 Portfolio.hasHero = true;
+Portfolio.designEdition = 'v2';
 
 // i18n hook을 쓸 수 없는 getStaticProps용 포트폴리오 라벨 맵.
 const PORTFOLIO_LABELS: Record<string, string> = {
