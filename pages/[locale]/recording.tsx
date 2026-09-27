@@ -436,6 +436,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
 };
 
 Recording.hasHero = true;
+Recording.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 export const getStaticProps: GetStaticProps = async ({ params }) => {

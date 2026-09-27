@@ -409,6 +409,8 @@ code {
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-4xl) { max-width: 56rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-5xl) { max-width: 64rem; margin-inline: auto; }
 [data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-6xl) { max-width: 72rem; margin-inline: auto; }
+/* ④ 섹션 앵커 내비의 다크 hover가 초록(accent-light)이었다 — v2는 보라 짝(primary-lighter)으로. */
+.dark [data-edition='v2'] .dark\:hover\:text-accent-light:hover { color: #a78bfa; }
 [data-edition='v2'] .bg-gradient-to-r.from-primary.to-secondary {
   background-image: none;
   background-color: #6d28d9;
