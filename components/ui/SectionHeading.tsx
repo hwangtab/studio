@@ -49,7 +49,9 @@ const SectionHeading = ({
             <span>{eyebrow}</span>
           </p>
         )}
-        <Component className={cn('typo-display-section max-w-4xl', titleClassName)}>
+        {/* titleClassName은 받지 않는다 — v1 호출부가 3색 그라디언트·text-heading-2 크기를 여기로 넘겨
+            v2 제목의 크기·색을 덮어썼다(연습실 4곳). v2 제목은 한 가지 모양이다. */}
+        <Component className="typo-display-section max-w-4xl">
           {title}
         </Component>
         {subtitle && (
