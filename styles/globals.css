@@ -389,6 +389,31 @@ code {
   padding-top: 0.5em;
 }
 
+/* 디자인 v2 — 페이지 코드에 박힌 v1 장식을 스코프에서 일괄로 걷어낸다. 페이지를 v2로 켤 때마다
+   파일을 하나씩 고치지 않으려는 것이다(히어로는 모든 마케팅 페이지가 같은 모양을 쓴다).
+   ① 히어로 h1 안의 부분 그라디언트 글자 → 흰색. 사진 위에서 강조가 아니라 얼룩으로 읽혔다(홈과 같은 판단).
+      .text-transparent(0,1,0)를 이기려고 명시도를 올렸다.
+   ② FeatureCard 윗단의 보라→핑크 띠 → 보라 단색. v2는 핑크(secondary)를 장식에 쓰지 않는다. */
+[data-edition='v2'] h1 .bg-clip-text.text-transparent {
+  background-image: none;
+  color: #fff;
+}
+/* ③ v2 제목은 컨테이너 왼쪽 끝에 붙는다. 그런데 v1 페이지 본문에는 가운데 좁은 폭 블록
+      (max-w-*xl mx-auto — 체크리스트·카드 그리드)이 많아, 제목만 왼쪽 끝에 있으면 선이 어긋난다.
+      제목 **바로 뒤**가 좁은 가운데 블록이면 제목도 그 폭으로 맞춘다. :has() 미지원 브라우저는
+      지금처럼 왼쪽 끝 — 레이아웃이 깨지진 않는다. */
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-lg) { max-width: 32rem; margin-inline: auto; }
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-xl) { max-width: 36rem; margin-inline: auto; }
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-2xl) { max-width: 42rem; margin-inline: auto; }
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-3xl) { max-width: 48rem; margin-inline: auto; }
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-4xl) { max-width: 56rem; margin-inline: auto; }
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-5xl) { max-width: 64rem; margin-inline: auto; }
+[data-edition='v2'] .v2-heading:has(+ .mx-auto.max-w-6xl) { max-width: 72rem; margin-inline: auto; }
+[data-edition='v2'] .bg-gradient-to-r.from-primary.to-secondary {
+  background-image: none;
+  background-color: #6d28d9;
+}
+
 /* 디자인 v2 푸터 — 잉크 배경 위에서 링 오프셋이 보라(ring-offset-primary)로 남으면 링 둘레에
    보라 테가 뜬다. 오프셋 색만 배경과 같은 잉크로 맞춘다. @tailwind utilities 뒤에 있고
    명시도가 (0,3,0)이라 유틸리티(0,2,0)를 이긴다. */

@@ -15,6 +15,7 @@ const AlbumReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems })
 );
 
 AlbumReleasePage.hasHero = true;
+AlbumReleasePage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 

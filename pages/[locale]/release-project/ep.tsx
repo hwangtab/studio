@@ -15,6 +15,7 @@ const EpReleasePage: NextPageWithLayout<Props> = ({ locale, portfolioItems }) =>
 );
 
 EpReleasePage.hasHero = true;
+EpReleasePage.designEdition = 'v2';
 
 export const getStaticPaths: GetStaticPaths = getCommonStaticPaths;
 
