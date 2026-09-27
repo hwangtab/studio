@@ -14,13 +14,13 @@ import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceCli
 import { I18nextProvider } from 'react-i18next';
 import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
 import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 import { isAdminRoute } from '../lib/adminRoute';
-import { routeTransitionKey, scrollAfterRouteChange } from '../lib/routeScroll';
+import { historyKey, routeTransitionKey, scrollAfterRouteChange, scrollMemory } from '../lib/routeScroll';
 import { DesignEditionContext } from '../lib/designEdition';
 
 
@@ -80,6 +80,45 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
   useEffect(() => {
     router.events.on('routeChangeStart', markNavigated);
     return () => router.events.off('routeChangeStart', markNavigated);
+  }, [router.events]);
+
+  // 뒤로·앞으로 가기 스크롤 복원(lib/routeScroll의 scrollMemory). 복원 자체는 onExitComplete가 한다.
+  // 쿼리만 바뀌는 이동은 전환 key가 같아 onExitComplete가 불리지 않으므로 여기서 기록을 다시 켠다.
+  const transitionKeyRef = useRef(routeTransitionKey(router.asPath));
+  useEffect(() => {
+    scrollMemory.arrived(historyKey());
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        scrollMemory.record(window.scrollY);
+      });
+    };
+    const onPopState = () => scrollMemory.popped(historyKey());
+    const onStart = () => scrollMemory.leave();
+    const onComplete = (url: string) => {
+      const next = routeTransitionKey(url);
+      if (next === transitionKeyRef.current) {
+        scrollMemory.takeRestoreTarget();
+        scrollMemory.arrived(historyKey());
+      }
+      transitionKeyRef.current = next;
+    };
+    const onError = () => scrollMemory.cancelled();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('popstate', onPopState);
+    router.events.on('routeChangeStart', onStart);
+    router.events.on('routeChangeComplete', onComplete);
+    router.events.on('routeChangeError', onError);
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('popstate', onPopState);
+      router.events.off('routeChangeStart', onStart);
+      router.events.off('routeChangeComplete', onComplete);
+      router.events.off('routeChangeError', onError);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
   }, [router.events]);
 
   // theme-color meta는 imperative로만 관리 — React state·re-render 없음.
@@ -312,7 +351,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
               <Layout hasHero={hasHero} locale={locale}>
                 {/* initial={false}: 첫 방문 시 opacity:0 스타일이 SSR에 박히는 것을 막아 FCP/LCP를 즉시 페인트.
                     페이지 전환(route change) 때만 페이드 애니메이션이 작동한다. */}
-                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { scrollAfterRouteChange(); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
+                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { scrollAfterRouteChange(window, scrollMemory.takeRestoreTarget()); scrollMemory.arrived(historyKey()); document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
                   <m.div
                     key={routeTransitionKey(router.asPath)}
                     {...routeTransitionProps}
