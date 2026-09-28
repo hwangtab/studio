@@ -152,4 +152,4 @@ K팝·팝·R&B 가수들이 자연스럽게 고음을 넘나드는 데에는 혼
 
 ---
 
-[흉성 완전 가이드](/stories/chest-voice1) | [가성(Falsetto) 발성 가이드](/stories/falsetto1) | [벨팅 발성법 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 포지션 완전 가이드](/stories/placement1)
+[흉성 완전 가이드](/stories/chest-voice1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [벨팅 발성법 가이드](/stories/belting1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 음역대 확인 방법](/stories/vocalrange1) | [보컬 포지션 완전 가이드](/stories/placement1)

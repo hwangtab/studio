@@ -153,4 +153,4 @@ DAW 마스터 버스 미터에서
 
 ---
 
-[믹싱 최종 체크리스트 완전 가이드](/stories/mix-checklist1) | [마스터링 완전 가이드](/stories/mastering1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[믹싱 최종 체크리스트 완전 가이드](/stories/mix-checklist1) | [마스터링 완전 가이드](/stories/mastering1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [라우드니스(LUFS) 완전 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

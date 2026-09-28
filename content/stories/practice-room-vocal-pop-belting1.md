@@ -257,4 +257,4 @@ C-D-E-F-G (아래서 위로)
 
 ---
 
-[보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 모음 수정·고음 발성법 — 완전 가이드](/stories/practice-room-vocal-vowel-modification1)
+[보컬 팔세토 고급·위스퍼·팔세토 강화 — 완전 가이드](/stories/practice-room-vocal-falsetto-advanced1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 두성·헤드 보이스 발성법 — 완전 가이드](/stories/practice-room-vocal-head-voice1) | [보컬 공명·흉성·두성 배치 기법 — 완전 가이드](/stories/practice-room-vocal-resonance-chest1) | [보컬 모음 수정·고음 발성법 — 완전 가이드](/stories/practice-room-vocal-vowel-modification1)

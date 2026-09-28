@@ -122,7 +122,11 @@ const since = windowStart.toISOString().slice(0, 10);
 
 // 시각을 자정으로 못 박는다. git은 맨 날짜(`--since=2026-08-14`)를 "그날의 현재 시각"으로
 // 해석해서, 같은 스크립트가 아침에 돌 때와 저녁에 돌 때 창 경계가 하루씩 달라졌다.
-const rmLog = git(['log', `--since=${since}T00:00:00`, '--format=%h %ad', '--date=short', '--', RM]);
+// --until도 TODAY 끝으로 못 박는다 — 없으면 `--today`로 과거를 지정해도 그 뒤에 실제로
+// 쌓인 커밋(예: 오늘 새로 등재한 리다이렉트)이 조회에 섞여 들어와 창 판정이 깨진다
+// (2026-09-28에 실제로 겪음 — seo-preflight.test.ts의 과거 --today 시나리오가 미래의
+// 진짜 커밋을 주워서 "-17일 경과" 같은 값을 냈다).
+const rmLog = git(['log', `--since=${since}T00:00:00`, `--until=${TODAY}T23:59:59`, '--format=%h %ad', '--date=short', '--', RM]);
 const rmCommits = rmLog ? rmLog.split('\n').map((l) => l.trim().split(/\s+/)) : [];
 
 // diff 한 줄에서 "출발": "승자" 쌍을 뽑는다. 승자(목적지)를 같이 봐야 하는 이유는

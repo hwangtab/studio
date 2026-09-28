@@ -151,4 +151,4 @@ AI 마스터링을 두고 '이거 써도 되나요'라고 물으시는 분들이
 
 ---
 
-[마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [라우드니스(LUFS) 완전 가이드](/stories/loudness1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
