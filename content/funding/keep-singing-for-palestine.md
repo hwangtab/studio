@@ -11,7 +11,7 @@ startAt: 2026-09-14T00:00:00+09:00
 endAt: 2026-10-19T23:59:59+09:00
 status: auto
 hidden: false
-lastmod: 2026-09-27
+lastmod: 2026-09-28
 rewards:
   - id: mp3
     title: 음원 펀딩 — MP3
@@ -23,6 +23,33 @@ rewards:
     downloads:
       - label: MP3 320kbps
         key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
+  # 박치치 시/노래집 두 권. 책값 10,000원 + 배송비 3,000원을 합쳐 13,000원 단가로 받는다
+  # (리워드 금액 하나에 배송비를 따로 싣는 칸이 없다). 오픈 뒤라 id·금액은 바꾸지 않는다.
+  - id: book-baljak
+    title: 박치치 시/노래집 『발작』
+    description: |-
+      박치치의 첫 번째 시/노래집(2022). 배송비 3,000원이 포함된 금액입니다.
+      세상이 온통 의문이던 시절
+      우리는 매번 오답만을 적었습니다.
+      노래가 되기 전의 문장들과
+      시가 되기 전의 외침들을 담았습니다.
+      28편의 시와 9곡의 노래를 실었습니다.
+    amount: 13000
+    requiresShipping: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/book-baljak-20260928.webp
+  - id: book-gangdo
+    title: 박치치 시/노래집 『갱도』
+    description: |-
+      박치치의 두 번째 시/노래집(2024). 배송비 3,000원이 포함된 금액입니다.
+      걸어도 걸어도 검기만 한 우리의 길.
+      긴 절망에 지지 않을 우리가 끝내는 서로를 발견하기를.
+      먹통 같은 갱도에서 엉엉 울며 길 헤매는 모든 시들에게 이 책을 바칩니다.
+      25편의 시와 7곡의 노래를 실었습니다.
+    amount: 13000
+    requiresShipping: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/book-gangdo-20260928.webp
   - id: wav-cd
     title: 음원 펀딩 — MP3 + CD 음질, 두 가지 모두
     description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.

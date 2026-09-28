@@ -3,6 +3,14 @@
  "entries": {
   "keep-singing-for-palestine": {
    "rewards": {
+    "book-baljak": {
+     "amount": 13000,
+     "limited": false
+    },
+    "book-gangdo": {
+     "amount": 13000,
+     "limited": false
+    },
     "mp3": {
      "amount": 10000,
      "limited": false
