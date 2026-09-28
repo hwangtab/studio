@@ -49,7 +49,7 @@ For international musicians, the project side is easy to handle in English: book
 Booking, quotes, mix notes, and revision rounds are all handled in English, and our remote mixing and mastering runs fully in English from start to finish — many international clients work with us entirely by sending their tracks. For an in-person session in Seoul, let us know your needs when you book and we will make sure the session is set up smoothly.
 
 **Can I bring my own instruments?**
-Absolutely, and many visiting artists do. If you would rather travel light, we have a tuned upright piano, a stage keyboard, and a small selection of guitars on site. Let us know in advance what you plan to bring and we will set up the room accordingly.
+Absolutely, and many visiting artists do. We don't keep a piano or house instruments for guest use, so bring what you play. Let us know in advance what you plan to bring and we will set up the room accordingly.
 
 **How far in advance should I book?**
 One to two weeks is comfortable for most sessions, and lets us hold the engineer and the right room. Last-minute slots do come up — if you are already in Seoul and want to record this week, send us a message and we will tell you honestly what is open.

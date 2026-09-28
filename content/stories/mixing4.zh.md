@@ -91,7 +91,7 @@ thumbnail: /images/hardware4.webp
 
 ### 关于 Studio NOL
 
-Studio NOL 位于首尔恩平区，距连新内（Yeonsinnae）站步行 5 分钟，是一间面向独立音乐人、歌手和制作人的精品录音 · 混音工作室。R03 混音间配备 Genelec 监听链与经过声学处理的环境，帮助你对低频、混响尾音、立体声宽度做出不再靠“猜”的判断。除了这套混音课程，我们也提供专业的 [混音 · 母带服务](/pricing)，以及每周一次的 [Bulgwang Mixing Club](/stories/bulgwang-mixing-club) 线下交流聚会。
+Studio NOL 位于首尔恩平区，距连新内（Yeonsinnae）站步行 5 分钟，是一间面向独立音乐人、歌手和制作人的精品录音 · 混音工作室。我们的混音室经过专业声学处理，帮助你对低频、混响尾音、立体声宽度做出不再靠“猜”的判断。除了这套混音课程，我们也提供专业的 [混音 · 母带服务](/pricing)，以及每周一次的 [Bulgwang Mixing Club](/stories/bulgwang-mixing-club) 线下交流聚会。
 
 ### 延伸学习与实战
 

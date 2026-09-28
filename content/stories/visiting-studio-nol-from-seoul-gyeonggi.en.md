@@ -58,7 +58,7 @@ A: It helps but is not required. Studio NOL provides English support throughout 
 A: We recommend showing up 10–15 minutes early so you can settle in. If you can, avoid Seoul rush hour — roughly 8–9am and 6–7pm on weekdays — when Line 3 trains are crowded and transfers feel slower.
 
 **Q: Where can I park if I drive?**
-A: Street parking near the studio is limited and time-restricted. There are paid public lots within a short walk, but public transit is genuinely faster and less stressful for most visitors.
+A: There is no parking in the studio building. The nearest options are the paid KT Eunpyeong branch lot on the same street (about a 2-minute walk) and the 24-hour public lot under Yeonsin Middle School (about 1 km), but public transit is genuinely faster and less stressful for most visitors.
 
 **Q: Should I just take a taxi from the airport?**
 A: You can, but it is expensive — often ₩70,000 or more depending on traffic, and the ride can take longer than the train during busy hours. AREX plus Line 3 is faster, cheaper, and easier to plan.
