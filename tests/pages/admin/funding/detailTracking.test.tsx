@@ -16,7 +16,7 @@ const PLEDGE: AdminPledgeItem = {
   id: 'order-1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
   rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'shipped',
-  trackingCompany: 'CJ', trackingNumber: '123', shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null, listingHiddenAt: null,
+  trackingCompany: 'CJ', trackingNumber: '123', shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null, listingHiddenAt: null, listingHiddenName: null,
   refundRequestedAt: null,
   paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,
   downloadedAt: null, paidAt: null, holdExpiresAt: new Date().toISOString(),
@@ -233,5 +233,25 @@ describe('후원자 명단에서 내리기 버튼', () => {
     );
     fireEvent.click(screen.getByRole('button', { name: '명단 숨김 해제' }));
     expect((window.confirm as jest.Mock).mock.calls[0][0]).toContain(expected);
+  });
+
+  it('내릴 때 이름과 지금 이름이 같으면 스냅샷을 보여주지 않는다', () => {
+    render(
+      <AdminFundingDetailPage
+        pledge={{ ...PLEDGE, listingHiddenAt: '2026-09-20T00:00:00.000Z', listingHiddenName: '김후원', publicName: null }}
+        refundableAmount={30000}
+      />,
+    );
+    expect(screen.queryByText(/내릴 때 이름/)).not.toBeInTheDocument();
+  });
+
+  it('내릴 때 이름과 지금 이름이 다르면 스냅샷을 보여준다', () => {
+    render(
+      <AdminFundingDetailPage
+        pledge={{ ...PLEDGE, listingHiddenAt: '2026-09-20T00:00:00.000Z', listingHiddenName: '욕설닉네임', publicName: '바뀐닉' }}
+        refundableAmount={30000}
+      />,
+    );
+    expect(screen.getByText(/내릴 때 이름: 욕설닉네임/)).toBeInTheDocument();
   });
 });

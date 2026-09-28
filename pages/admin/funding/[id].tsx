@@ -295,7 +295,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="응원 메시지" value={pledge.supporterMessage ?? '없음'} />
                 <DescriptionRow
                   label="후원자 명단"
-                  value={`${pledge.displayNamePublic ? `공개 동의 · ${pledge.publicName ?? `${pledge.customerName} (실명)`}` : '비공개'}${pledge.listingHiddenAt ? ` — 운영자가 내림(${formatKstDateTimeFull(pledge.listingHiddenAt)})` : ''}`}
+                  value={`${pledge.displayNamePublic ? `공개 동의 · ${pledge.publicName ?? `${pledge.customerName} (실명)`}` : '비공개'}${
+                    pledge.listingHiddenAt ? ` — 운영자가 내림(${formatKstDateTimeFull(pledge.listingHiddenAt)})` : ''
+                  }${
+                    // 내릴 당시 이름과 지금 이름이 다르면 알린다 — 안 알리면 그 사이 후원자가
+                    // 표시 이름을 바꿔도 화면은 항상 지금 이름만 보여줘, 사칭·욕설 닉네임을
+                    // 이유로 내렸다는 기록이 "원래부터 이 이름이었다"로 읽힌다.
+                    pledge.listingHiddenAt
+                    && pledge.listingHiddenName !== null
+                    && pledge.listingHiddenName !== (pledge.publicName ?? pledge.customerName)
+                      ? ` (내릴 때 이름: ${pledge.listingHiddenName})`
+                      : ''
+                  }`}
                 />
                 <DescriptionRow label="환불 요청 시각" value={pledge.refundRequestedAt ? formatKstDateTimeFull(pledge.refundRequestedAt) : '없음'} />
                 <DescriptionRow label="확정 시각" value={pledge.paidAt ? formatKstDateTimeFull(pledge.paidAt) : '없음'} />

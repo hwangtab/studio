@@ -50,8 +50,10 @@ const yearsAgo = (now: Date, years: number): Date => {
  * **행은 지우지 않는다.** `funding_pledges`를 통째로 지우면 모금액·후원 통계·법정 보존
  * 대상(대금결제·재화공급 기록)까지 함께 사라진다. 지우는 것은 배송지 필드(shipping*),
  * 운영자가 자유롭게 적는 admin_memo(이름·연락처 조각이 들어갈 수 있다 — 계약서 쪽
- * title·terminationReason과 같은 이유), supporterMessage(응원 메시지), 그리고 publicName
- * (명단 표시 이름 — 지우는 방식이 다르다, 아래 `.set()` 주석)이다.
+ * title·terminationReason과 같은 이유), supporterMessage(응원 메시지), publicName
+ * (명단 표시 이름 — 지우는 방식이 다르다, 아래 `.set()` 주석), 그리고 listing_hidden_name
+ * (운영자가 명단에서 내릴 때 찍은 그 이름의 스냅샷 — publicName·customer_name의 문자
+ * 그대로의 복사본이라 같이 지운다)이다.
  *
  * **supporterMessage를 지우는 이유**: 처리방침 6항(`FUNDING_COLLECTED_ITEMS`)이 이것을
  * "선택" 수집 항목으로 명시하고, 8항의 "1년 뒤 파기" 약속은 6항이 나열한 항목 전부에
@@ -111,6 +113,14 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
        * 이 표식을 보고 그 행을 내린다(lib/funding/service.ts). 실명을 고른 행(NULL)은 그대로 둔다.
        */
       publicName: sql`CASE WHEN ${fundingPledges.publicName} IS NULL THEN NULL ELSE ${PURGED_MARK} END`,
+      /**
+       * 운영자가 명단에서 내릴 때 찍은 이름 스냅샷(`listing_hidden_at`과 짝, db/schema.ts)도
+       * `public_name`·`customer_name`의 문자 그대로의 복사본이라 같은 파기 대상이다. 안 지우면
+       * 위에서 막 표식으로 덮은 이름이 관리자 화면(`pages/admin/funding/[id].tsx`)의
+       * "내릴 때 이름: …" 안내에 원문 그대로 되살아난다 — `listing_hidden_at` 자체(시각뿐,
+       * 운영 기록)는 그대로 둔다.
+       */
+      listingHiddenName: null,
       updatedAt: now,
     })
     .where(
@@ -149,6 +159,7 @@ export const purgeExpiredFundingPersonalData = async (now: Date = new Date()): P
           isNotNull(fundingPledges.adminMemo),
           isNotNull(fundingPledges.supporterMessage),
           and(isNotNull(fundingPledges.publicName), sql`${fundingPledges.publicName} <> ${PURGED_MARK}`),
+          isNotNull(fundingPledges.listingHiddenName),
         ),
       ),
     );

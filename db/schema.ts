@@ -462,6 +462,21 @@ export const fundingPledges = sqliteTable('funding_pledges', {
    * 후원자의 개인정보가 아니라 운영 기록이라 파기 대상이 아니다.
    */
   listingHiddenAt: integer('listing_hidden_at', { mode: 'timestamp' }),
+  /**
+   * 내릴 당시 명단에 떠 있던 표시 이름의 스냅샷(`publicName ?? customerName` — 명단 조회가
+   * 쓰는 것과 같은 판정, 저장 시점 값 그대로라 명단이 실제로 내보내기 전에 거치는
+   * `stripInvisible`·`trim`은 다시 타지 않는다). `unpublish`가 `listing_hidden_at`과 함께
+   * 채우고 `restore_listing`이 함께 비운다.
+   *
+   * `public_name`·`customer_name`의 문자 그대로의 복사본이므로 두 파기 경로
+   * (retention.ts의 1년 파기, orderRetention.ts의 5년 파기) 모두 **같이 NULL로 지운다** —
+   * 안 지우면 표식으로 덮은 이름이 이 스냅샷에 원문 그대로 남아 관리자 화면에 되살아난다.
+   *
+   * 없으면 운영자가 왜 내렸는지는 남아도 "그때 뭐라고 떠 있었는지"는 사라진다 — 후원자가
+   * 그 뒤 표시 이름을 바꿔도 관리자 화면은 항상 지금 이름만 보여줘, 사칭·욕설 닉네임을
+   * 이유로 내린 기록이 "원래부터 이 이름이었다"로 읽힌다(3라운드 감사 낮음 항목).
+   */
+  listingHiddenName: text('listing_hidden_name'),
   shippingName: text('shipping_name'),
   shippingPhone: text('shipping_phone'),
   shippingPostcode: text('shipping_postcode'),

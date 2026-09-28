@@ -190,9 +190,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '이미 명단에서 내린 펀딩입니다.' });
       const entry = `[${kstDateString(now)}] ${LISTING_UNPUBLISHED_MARKER} — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
+      // 내릴 당시 실제로 떠 있던 이름을 스냅샷으로 남긴다 — 안 남기면 그 뒤 후원자가 표시
+      // 이름을 바꿔도 관리자 화면은 항상 지금 이름만 보여줘, 사칭·욕설 닉네임을 이유로
+      // 내렸다는 기록이 "원래부터 이 이름이었다"로 읽힌다.
+      const hiddenName = order.fundingPledge.publicName ?? order.customerName;
       await db
         .update(fundingPledges)
-        .set({ listingHiddenAt: now, adminMemo: memo, updatedAt: now })
+        .set({ listingHiddenAt: now, listingHiddenName: hiddenName, adminMemo: memo, updatedAt: now })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }
@@ -204,7 +208,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
       await db
         .update(fundingPledges)
-        .set({ listingHiddenAt: null, adminMemo: memo, updatedAt: now })
+        .set({ listingHiddenAt: null, listingHiddenName: null, adminMemo: memo, updatedAt: now })
         .where(eq(fundingPledges.id, order.fundingPledge.id));
       return res.status(200).json({ ok: true });
     }

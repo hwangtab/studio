@@ -39,7 +39,9 @@ export default function FundingProjectCard({ slug, title, summary, cover, goalAm
 
   // 목록에서도 모금 현황을 보여준다. 목표액만 있으면 "얼마나 모였나"를 보려고
   // 상세로 들어가야 하는데, 그 숫자가 후원을 결정하는 정보다.
-  // 상세와 같은 훅·같은 API(s-maxage=60 CDN 캐시)라 카드가 늘어도 부담이 작다.
+  // 상세와 같은 훅·같은 API(s-maxage=15 CDN 캐시)라 카드가 늘어도 부담이 작다 — 이 규모의
+  // 프로젝트 수·트래픽에서는 캐시 창을 줄여도(3라운드 감사 낮음 항목) 원본 호출이 분당
+  // 몇 건 느는 정도다.
   const { data } = useFundingStatus(slug, initialState, { status, startAt, endAt }, initialStatus);
   // 마운트 전에는 D-day를 비운다 — 서버/클라이언트 시계 차이로 인한 하이드레이션 불일치 방지.
   const days = now ? daysUntilKst(now, new Date(endAt)) : 0;

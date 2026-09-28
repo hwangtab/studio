@@ -49,6 +49,7 @@ const BASE_ORDER = {
   id: 'order-1',
   orderNo: 'FND-1',
   status: 'paid',
+  customerName: '테스트후원자',
   customerEmail: 'backer@example.com',
   totalAmount: 30000,
   payments: [{ id: 'p1', paymentKey: 'pk', refunds: [] as Array<{ amount: number; status: string }> }],
@@ -542,7 +543,19 @@ describe('후원자 명단 숨김', () => {
     const set = lastSet();
     expect(set).not.toHaveProperty('displayNamePublic');
     expect(set.listingHiddenAt).toBeInstanceOf(Date);
+    // publicName이 없으면 결제자 이름이 그때 실제로 뜬 이름이다.
+    expect(set.listingHiddenName).toBe('테스트후원자');
     expect(set.adminMemo).toMatch(/후원자 명단에서 내림 — 욕설 닉네임$/);
+  });
+
+  it('unpublish: 명단에 닉네임이 떠 있었으면 그 닉네임을 스냅샷으로 남긴다', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue({
+      ...BASE_ORDER,
+      fundingPledge: { ...BASE_ORDER.fundingPledge, publicName: '욕설닉네임' },
+    });
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'unpublish', reason: '욕설 닉네임' });
+    expect(r.status).toBe(200);
+    expect(lastSet().listingHiddenName).toBe('욕설닉네임');
   });
 
   it('unpublish: 이미 내렸으면 409', async () => {
@@ -558,6 +571,7 @@ describe('후원자 명단 숨김', () => {
     expect(r.status).toBe(200);
     const set = lastSet();
     expect(set.listingHiddenAt).toBeNull();
+    expect(set.listingHiddenName).toBeNull();
     // 숨김 중에 후원자가 동의를 거뒀으면 그 값이 유지돼야 한다 — 해제가 되살리지 않는다.
     expect(set).not.toHaveProperty('displayNamePublic');
     expect(set.adminMemo).toMatch(/^이전 메모\n\[.*\] 후원자 명단 숨김 해제$/);

@@ -15,7 +15,7 @@ import { parseFundingProject } from '../../../../lib/funding/projects';
  * 걸지 않아, 오픈을 기다리며 탭을 띄워 둔 사람에게는 `startAt`이 지나도 후원 버튼이 끝까지
  * 나타나지 않았다(새로고침해야 했다). 캠페인 오픈 순간에 가장 많은 사람이 보고 있는 화면이다.
  *
- * 상태 API는 일부러 낡은 `upcoming`을 계속 돌려준다 — 응답이 CDN에서 s-maxage=60으로
+ * 상태 API는 일부러 낡은 `upcoming`을 계속 돌려준다 — 응답이 CDN에서 s-maxage=15로
  * 캐시되는 실제 조건이다. 그래도 화면은 브라우저 시계로 열려야 한다.
  */
 const OPEN_AT = new Date('2026-10-15T12:00:00+09:00');

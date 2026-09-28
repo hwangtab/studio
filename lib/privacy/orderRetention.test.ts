@@ -255,17 +255,30 @@ describe('결제자 이름이 파기된 후원의 나머지 개인정보 파기'
 
   it('전달 표시가 없어도 배송지·메모·메시지를 지우고 표시 이름은 표식으로 덮는다', async () => {
     const id = await addPledge(await addOrder({ type: 'funding', customerName: PURGED_MARK }), {
-      fulfillmentUpdatedBy: 'admin', listingHiddenAt: d('2016-01-01'),
+      fulfillmentUpdatedBy: 'admin', listingHiddenAt: d('2016-01-01'), listingHiddenName: '욕설닉네임',
     });
     expect((await purgeFundingPersonalDataOfPurgedOrders()).purged).toBe(1);
     expect(await pledgeOf(id)).toMatchObject({
       shippingName: null, shippingPhone: null, shippingPostcode: null,
       shippingAddress1: null, shippingAddress2: null, shippingMemo: null,
       adminMemo: null, supporterMessage: null, publicName: PURGED_MARK,
+      // listing_hidden_name은 public_name의 문자 그대로의 복사본이라 같이 지운다 — 안 지우면
+      // 표식으로 덮은 이름이 관리자 화면의 "내릴 때 이름" 안내에 원문 그대로 되살아난다.
+      listingHiddenName: null,
       // 운영 기록은 후원자 개인정보가 아니라 남긴다.
       fulfillmentUpdatedBy: 'admin', listingHiddenAt: d('2016-01-01'),
     });
     expect((await purgeFundingPersonalDataOfPurgedOrders()).purged).toBe(0);
+  });
+
+  it('배송지·메모·메시지·표시 이름이 없어도 명단 숨김 스냅샷만 남아 있으면 파기 대상이다', async () => {
+    const id = await addPledge(await addOrder({ type: 'funding', customerName: PURGED_MARK }), {
+      displayNamePublic: false, publicName: null, supporterMessage: null, adminMemo: null,
+      shippingName: null, shippingPhone: null, shippingPostcode: null, shippingAddress1: null, shippingAddress2: null, shippingMemo: null,
+      listingHiddenAt: d('2016-01-01'), listingHiddenName: '옛닉네임',
+    });
+    expect((await purgeFundingPersonalDataOfPurgedOrders()).purged).toBe(1);
+    expect((await pledgeOf(id)).listingHiddenName).toBeNull();
   });
 
   // 실명을 고른 행(NULL)은 표식으로 바꾸지 않는다 — 결제자 이름 쪽이 이미 표식이다.
