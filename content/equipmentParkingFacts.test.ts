@@ -12,6 +12,7 @@ import path from 'node:path';
 const RULES: Array<[string, RegExp]> = [
   ['보유하지 않은 마이크를 비치·보유했다고 말함', /(TLM ?103|SM7B)[^.\n]{0,40}(비치되|보유하고|모두 비치)|(비치|보유)[^.\n]{0,10}(TLM ?103|SM7B)|(TLM ?103|SM7B)[^\n]{0,80}스튜디오 놀에는 모두 비치|스튜디오 놀에는 이 네 가지가 모두 비치/],
   ['없는 Genelec 모니터 체인', /Genelec (모니터 체인|监听|monitoring chain)|配备 Genelec|monitoreo Genelec|giám sát Genelec|Genelec monitoring zanjiri|ระบบมอนิเตอร์ Genelec/],
+  ['없는 자전거 보관 공간 (운영자 확인 2026-09-28)', /자전거 보관 공간이 있|자전거 보관 공간도 제공/],
   ['건물 주차가 되는 것처럼 말함', /주차 가능\(일부|일부 주차 공간 제공|자체 주차 공간은 협소|자체 주차가 협소/],
 ];
 
