@@ -52,17 +52,17 @@ If you want a deeper look at the studio side of what we do — recording, mixing
 ## FAQ
 
 **Q: Can I drop in without booking?**
-A: Sometimes, but weekends and evenings fill quickly. We strongly recommend booking at least a day ahead.
+A: No. Hourly use is booked and paid online first (same-day works if the room is free). The booking page is in Korean at [studionol.co.kr/ko/booking/practice-room](/ko/booking/practice-room); your browser's translate function handles it fine. Monthly residency starts with a visit you arrange by email or KakaoTalk.
 
 **Q: Are mics included?**
-A: Yes — every room includes a working vocal mic suitable for rehearsal. Pro-grade condenser mics are available on request for an additional fee.
+A: The practice room is for rehearsal, and we don't rent out recording-grade condenser mics there. For a proper vocal recording, book the recording studio (₩100,000/hour with an engineer, 2-hour minimum).
 
 **Q: How long is the minimum booking?**
-A: One hour is standard, though shorter blocks may be possible depending on the day.
+A: One hour minimum, up to 8 hours, at ₩6,600 per hour (VAT included) for the private practice room. Cancel 2+ days ahead for a full refund, the day before for 50%; same-day cancellations are not refunded. Monthly residency is ₩360,000 with no deposit.
 
 **Q: Can I record in the practice room?**
 A: Practice rooms are designed for rehearsal, not professional recording. For tracking sessions, see our hub guide above for the recording side of Studio NOL.
 
 ## Next steps
 
-Ready to book a room? [Contact Studio NOL in English](/en/contact) and we'll confirm your slot within a day. For the wider picture of what foreign musicians can do in Seoul, our [recording in Seoul hub guide](/en/stories/recording-in-seoul-for-foreign-musicians) ties everything together — practice, recording, and getting around the city.
+Need a room for a few hours? Book online on the [Korean booking page](/ko/booking/practice-room). Thinking about a monthly room, or have questions first? [Contact Studio NOL in English](/en/contact) and we'll reply within a day. For the wider picture of what foreign musicians can do in Seoul, our [recording in Seoul hub guide](/en/stories/recording-in-seoul-for-foreign-musicians) ties everything together — practice, recording, and getting around the city.
