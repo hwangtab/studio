@@ -9,6 +9,16 @@
       "sha256": "537fd8511302b8b74dea38961276ddc34b086fdeff808a871df7628c4cef0a26"
     }
   },
+  "sabbaha-slung": {
+    "cover": {
+      "file": "/images/funding/sabbaha-slung/cover-20260928.webp",
+      "sha256": "22715b67d7bba219e1356ce19e42672d9e476899f10be56927a094fcd4e27456"
+    },
+    "heroImage": {
+      "file": "/images/funding/sabbaha-slung/hero-20260928.webp",
+      "sha256": "0f76f31011878e61168c5be0fc733354d630b89353660741a42a3083550d7a34"
+    }
+  },
   "smoke-test": {
     "cover": {
       "file": "/images/funding/smoke-test/cover.webp",

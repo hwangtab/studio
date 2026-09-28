@@ -29,6 +29,30 @@
     }
    }
   },
+  "sabbaha-slung": {
+   "rewards": {
+    "cd": {
+     "amount": 40000,
+     "limited": false
+    },
+    "cd-live": {
+     "amount": 50000,
+     "limited": false
+    },
+    "cd-live-credit": {
+     "amount": 100000,
+     "limited": false
+    },
+    "live": {
+     "amount": 30000,
+     "limited": false
+    },
+    "patron": {
+     "amount": 300000,
+     "limited": true
+    }
+   }
+  },
   "smoke-test": {
    "rewards": {
     "thanks": {
