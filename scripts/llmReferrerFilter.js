@@ -23,6 +23,9 @@ const LLM_REFERRER_DOMAINS = [
   'perplexity',
   'claude.ai',
   'gemini.google.com',
+  // 2026-09-28 GA4 실측(28일): 도메인 없이 "gemini"로만 찍히는 출처 13세션(Gemini 앱으로 추정) —
+  // 정규식 도입 직후 PARTIAL 검색으로 AI류 출처를 전수 대조해 찾은 누락분.
+  'gemini',
   'copilot.microsoft.com',
   'copilot.com',
   'notebooklm.google.com',
@@ -30,6 +33,8 @@ const LLM_REFERRER_DOMAINS = [
   'chat.deepseek.com',
   'chat.mistral.ai',
   'meta.ai',
+  // 같은 대조에서 찾은 누락분: 바이트댄스 AI 어시스턴트(4세션).
+  'doubao.com',
 ];
 
 const escapedDomains = LLM_REFERRER_DOMAINS.map((d) => d.replace(/\./g, '\\.')).join('|');
