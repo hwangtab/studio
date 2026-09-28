@@ -19,7 +19,7 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 jest.mock('./toss', () => ({ confirmPayment: jest.fn(), fetchPayment: jest.fn(), cancelPayment: jest.fn() }));
 jest.mock('./gcal', () => ({ ...jest.requireActual('./gcal'), createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
-jest.mock('./calendarGuard', () => ({ hasCalendarConflict: jest.fn().mockResolvedValue(false) }));
+jest.mock('./calendarGuard', () => ({ hasOccupancyCalendarConflict: jest.fn().mockResolvedValue(false) }));
 jest.mock('./email', () => ({
   sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendMixingOrderConfirmedEmails: jest.fn().mockResolvedValue(null),

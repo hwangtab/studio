@@ -4,8 +4,8 @@ import { getDb } from '../../db/client';
 import { bookings, orders, payments, refunds, workOrders, type Order } from '../../db/schema';
 import { refundIdempotencyKey } from './cancel';
 import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './email';
-import { hasCalendarConflict } from './calendarGuard';
-import { calendarForService, calendarIdFor, createBookingEvent, type BookingCalendar } from './gcal';
+import { hasOccupancyCalendarConflict } from './calendarGuard';
+import { calendarIdFor, createBookingEvent, type BookingCalendar } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
 import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, cancelPayment, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from './toss';
 import { kstDateString } from './kst';
@@ -481,7 +481,7 @@ export const confirmBookingPayment = async (
     if (b) {
       let conflict = false;
       try {
-        conflict = await hasCalendarConflict(calendarForService(b.serviceType), b.startAt, b.endAt, b.roomNumber);
+        conflict = await hasOccupancyCalendarConflict(b.roomNumber, b.startAt, b.endAt);
       } catch (error) {
         console.error('[booking-confirm] 승인 전 캘린더 재확인 실패 — 토스를 부르지 않고 거부', { orderNo: order.orderNo, error });
         return { ok: false, code: 'invalid_state', message: CALENDAR_UNAVAILABLE_MESSAGE };

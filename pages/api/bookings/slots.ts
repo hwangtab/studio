@@ -5,7 +5,8 @@ import { getDb } from '../../../db/client';
 import { availabilityBlocks, bookings } from '../../../db/schema';
 import { calendarIdFor, fetchBusyRanges, isCalendarActive, type BookingCalendar, type BusyRange } from '../../../lib/booking/gcal';
 import { daysUntilKst, kstDateTime } from '../../../lib/booking/kst';
-import { getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
+import { occupancyConflictKeys, getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
+import { occupancyCalendars } from '../../../lib/booking/calendarGuard';
 import { buildDaySlots, mergeRoomSlots, type DaySlot } from '../../../lib/booking/slots';
 import { expireStaleOrders, PENDING_HOLD_SECONDS } from '../../../lib/booking/service';
 import { MAX_BOOK_DAYS, MIN_LEAD_HOURS } from '../../../lib/booking/validation';
@@ -74,17 +75,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const db = getDb();
   const pendingCutoff = new Date(now.getTime() - PENDING_HOLD_SECONDS * 1000);
 
-  /** 한 자원(녹음실=null 또는 방 번호)의 DB 바쁨 — `room_number IS ?`로 같은 자원만. */
+  /**
+   * 한 자원(녹음실=null 또는 방 번호)의 DB 바쁨. 예약은 occupancyConflictKeys로 — 녹음실과
+   * 같은 방(R02)은 녹음 예약과 서로를 막는다(service.ts 생성 가드와 같은 기준). 관리자 블록은
+   * 자원별 그대로(`room_number IS ?`).
+   */
   const dbBusyFor = async (room: string | null): Promise<BusyRange[]> => {
-    const roomCond = (col: typeof bookings.roomNumber | typeof availabilityBlocks.roomNumber) =>
-      room === null ? isNull(col) : eq(col, room);
+    const keyCond = (col: typeof bookings.roomNumber | typeof availabilityBlocks.roomNumber, key: string | null) =>
+      key === null ? isNull(col) : eq(col, key);
+    const roomCond = (col: typeof availabilityBlocks.roomNumber) => keyCond(col, room);
+    const occupancyCond = or(...occupancyConflictKeys(room).map((k) => keyCond(bookings.roomNumber, k)));
     const [busyBookings, busyBlocks] = await Promise.all([
       db
         .select({ start: bookings.startAt, end: bookings.endAt })
         .from(bookings)
         .where(
           and(
-            roomCond(bookings.roomNumber),
+            occupancyCond,
             lt(bookings.startAt, dayEnd),
             gt(bookings.endAt, dayStart),
             or(
@@ -110,6 +117,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   // confirm.ts가 같은 조건으로 쓰기를 건너뛰므로 읽기도 같이 건너뛰어야 짝이 맞는다.
   const calendarBusyFor = async (calendar: BookingCalendar, room: string | null): Promise<BusyRange[]> =>
     isCalendarActive(calendar, room) ? getCachedBusyRanges(calendar, date, dayStart, dayEnd, room) : [];
+  /** 그 자원을 점유하는 캘린더 전부의 바쁨 — R02는 녹음실 캘린더까지(calendarGuard.occupancyCalendars). */
+  const occupancyBusyFor = async (room: string | null): Promise<BusyRange[]> =>
+    (await Promise.all(occupancyCalendars(room).map(([cal, r]) => calendarBusyFor(cal, r)))).flat();
 
   // 방 자원: 방마다 자기 캘린더(방별 env, 없으면 공용)의 바쁨 + DB 바쁨으로 슬롯을 계산해
   // 하나라도 비면 가능으로 합친다. 어느 방이 배정되는지는 결제 시점에 정한다(service.ts).
@@ -118,7 +128,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const rooms = product.rooms ?? [];
     let calendarBusyByRoom: BusyRange[][];
     try {
-      calendarBusyByRoom = await Promise.all(rooms.map((room) => calendarBusyFor('practice-room', room)));
+      calendarBusyByRoom = await Promise.all(rooms.map((room) => occupancyBusyFor(room)));
     } catch (error) {
       console.error('[booking-slots] FreeBusy 조회 실패 — fail-closed 503', { calendar: 'practice-room', date, error });
       return res.status(503).json({ ok: false, code: 'calendar_unavailable' });
@@ -131,7 +141,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   let calendarBusy: BusyRange[];
   try {
-    calendarBusy = await calendarBusyFor('studio', null);
+    calendarBusy = await occupancyBusyFor(null);
   } catch (error) {
     console.error('[booking-slots] FreeBusy 조회 실패 — fail-closed 503', { calendar: 'studio', date, error });
     return res.status(503).json({ ok: false, code: 'calendar_unavailable' });
