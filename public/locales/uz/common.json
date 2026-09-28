@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Yo'nalish",
-      "description": "Studio NOL Dongmyeong qiz maktabining asosiy darvozasi yonidagi binoning 3-qavatida joylashgan. Yeonsinnae bekatidan (3 va 6-liniya, 4-chiqish) yoki Bulgwang bekatidan (6-liniya, 7-chiqish) Dongmyeong maktabi tomon piyoda 5-7 daqiqa. Birinchi qavat avtoservis, topish oson. Avtoturargoh joyi cheklanganligi sababli jamoat transportidan foydalanish tavsiya etiladi."
+      "description": "Studio NOL Dongmyeong qiz maktabining asosiy darvozasi yonidagi binoning 3-qavatida joylashgan. Yeonsinnae bekatidan (3 va 6-liniya, 4-chiqish) yoki Bulgwang bekatidan (6-liniya, 7-chiqish) Dongmyeong maktabi tomon piyoda 5-7 daqiqa. Birinchi qavat avtoservis, topish oson. Binoda avtoturargoh yo'qligi sababli jamoat transportidan foydalanish tavsiya etiladi."
     },
     "info": {
       "title": "Aloqa ma'lumotlari",
@@ -253,7 +253,7 @@
       "location": "Manzil",
       "hours": "Ish vaqti",
       "parking": "Avtoturargoh",
-      "parkingDetail": "Yaqin atrofdagi KT Eunpyeong binosida pullik parking mavjud",
+      "parkingDetail": "Binoda parking yo'q — KT Eunpyeong filialining pullik parkingi (piyoda taxminan 2 daqiqa)",
       "transport": "Jamoat transporti",
       "transportDetail": "Bulgwang (6-liniya) 7-chiqish yoki Yeonsinnae (3-liniya) 4-chiqishdan 5 daqiqa piyoda"
     },

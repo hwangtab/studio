@@ -43,7 +43,7 @@ See you this Friday at the cooler, pizza-and-beer-powered Bulgwang Mixing Club!
 
 ### About Studio NOL & the Bulgwang Mixing Club
 
-Studio NOL is a boutique recording and mixing room located a 5-minute walk from Yeonsinnae Station in northwest Seoul, serving independent musicians, vocalists, and producers since its opening. The R03 mixing room is tuned with a Genelec monitoring chain and acoustic treatment that makes it possible to trust low-end decisions that laptop rigs can only guess at. The Bulgwang Mixing Club grew out of the community we kept meeting after sessions — engineers, home-studio producers, and curious vocalists who wanted a place to open their projects, compare reference tracks, and get honest feedback without the filter of social media.
+Studio NOL is a boutique recording and mixing room located a 5-minute walk from Yeonsinnae Station in northwest Seoul, serving independent musicians, vocalists, and producers since its opening. Our mixing room is acoustically treated, which makes it possible to trust low-end decisions that laptop rigs can only guess at. The Bulgwang Mixing Club grew out of the community we kept meeting after sessions — engineers, home-studio producers, and curious vocalists who wanted a place to open their projects, compare reference tracks, and get honest feedback without the filter of social media.
 
 ### What participants get out of the Club
 

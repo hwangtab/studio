@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Cómo llegar",
-      "description": "Studio NOL está en el piso 3 del edificio junto a la entrada principal del Instituto Dongmyeong. Desde la estación Yeonsinnae (líneas 3 y 6, salida 4) o Bulgwang (línea 6, salida 7), camina unos 5-7 minutos en dirección al Instituto Dongmyeong. En la planta baja hay un taller mecánico, fácil de encontrar. Se recomienda transporte público — el estacionamiento es limitado."
+      "description": "Studio NOL está en el piso 3 del edificio junto a la entrada principal del Instituto Dongmyeong. Desde la estación Yeonsinnae (líneas 3 y 6, salida 4) o Bulgwang (línea 6, salida 7), camina unos 5-7 minutos en dirección al Instituto Dongmyeong. En la planta baja hay un taller mecánico, fácil de encontrar. Se recomienda transporte público — el edificio no tiene estacionamiento."
     },
     "info": {
       "title": "Información de contacto",
@@ -253,7 +253,7 @@
       "location": "Ubicación",
       "hours": "Horario de atención",
       "parking": "Estacionamiento",
-      "parkingDetail": "Estacionamiento pago disponible en el edificio KT Eunpyeong cercano",
+      "parkingDetail": "Sin estacionamiento en el edificio — estacionamiento de pago de KT Eunpyeong (a unos 2 min a pie)",
       "transport": "Transporte público",
       "transportDetail": "A 5 min a pie desde Bulgwang (Línea 6) Salida 7 o Yeonsinnae (Línea 3) Salida 4"
     },

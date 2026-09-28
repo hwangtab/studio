@@ -43,7 +43,7 @@ Bu juma pizza va pivo bilan yanada zo'r bo'lgan Bulgwang Mixing Clubda ko'risham
 
 ### Studio NOL va Bulgwang Mixing Club haqida
 
-Studio NOL — Seulning shimoli-gʻarbida, Yeonsinnae bekatidan 5 daqiqa piyoda masofada joylashgan butik yozib olish va miksovka studiyasi. Ochilganidan beri mustaqil musiqachilar, vokalchilar va prodyuserlarga xizmat qilib keladi. R03 miksovka xonasi Genelec monitoring zanjiri va akustik ishlov bilan sozlangan, bu sizga bass, reverb quyruqlari va stereo kenglik boʻyicha qarorlarni uyda chiqarib boʻlmaydigan aniqlik darajasida qabul qilish imkonini beradi. Bulgwang Mixing Club aynan sessiyalardan keyingi tabiiy suhbatlardan oʻsib chiqdi — muhandislar, bedroom studio prodyuserlari va qiziquvchan vokalchilar oʻz loyihalarini ochish, referens treklarni solishtirish va ijtimoiy tarmoq filtrisiz halol feedback olish uchun joy izlayotgan edi.
+Studio NOL — Seulning shimoli-gʻarbida, Yeonsinnae bekatidan 5 daqiqa piyoda masofada joylashgan butik yozib olish va miksovka studiyasi. Ochilganidan beri mustaqil musiqachilar, vokalchilar va prodyuserlarga xizmat qilib keladi. Miksovka xonamiz professional akustik ishlov bilan sozlangan, bu sizga bass, reverb quyruqlari va stereo kenglik boʻyicha qarorlarni uyda chiqarib boʻlmaydigan aniqlik darajasida qabul qilish imkonini beradi. Bulgwang Mixing Club aynan sessiyalardan keyingi tabiiy suhbatlardan oʻsib chiqdi — muhandislar, bedroom studio prodyuserlari va qiziquvchan vokalchilar oʻz loyihalarini ochish, referens treklarni solishtirish va ijtimoiy tarmoq filtrisiz halol feedback olish uchun joy izlayotgan edi.
 
 ### Ishtirokchilar nima oladi
 

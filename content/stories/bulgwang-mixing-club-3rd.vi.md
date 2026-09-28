@@ -51,7 +51,7 @@ Hẹn gặp bạn vào thứ Sáu tuần thứ tư của tháng 11 tại Bulgwan
 
 ### Giới thiệu Studio NOL và Bulgwang Mixing Club
 
-Studio NOL là studio thu âm - mix boutique nằm cách ga Yeonsinnae 5 phút đi bộ ở phía tây bắc Seoul. Kể từ khi khai trương, studio liên tục phục vụ nhạc sĩ độc lập, ca sĩ và nhà sản xuất. Phòng mix R03 được trang bị hệ thống giám sát Genelec cùng xử lý âm học chuyên nghiệp, giúp bạn đưa ra quyết định về bass, đuôi reverb và độ rộng stereo mà setup tại nhà không thể tin tưởng được. Bulgwang Mixing Club ra đời từ chính những cuộc trò chuyện sau các buổi ghi âm — kỹ sư, nhà sản xuất bedroom studio và ca sĩ tò mò muốn có một nơi để mở dự án của mình, so sánh track tham chiếu và nhận phản hồi thật lòng, không bị lọc qua mạng xã hội.
+Studio NOL là studio thu âm - mix boutique nằm cách ga Yeonsinnae 5 phút đi bộ ở phía tây bắc Seoul. Kể từ khi khai trương, studio liên tục phục vụ nhạc sĩ độc lập, ca sĩ và nhà sản xuất. Phòng mix của chúng tôi được xử lý âm học chuyên nghiệp, giúp bạn đưa ra quyết định về bass, đuôi reverb và độ rộng stereo mà setup tại nhà không thể tin tưởng được. Bulgwang Mixing Club ra đời từ chính những cuộc trò chuyện sau các buổi ghi âm — kỹ sư, nhà sản xuất bedroom studio và ca sĩ tò mò muốn có một nơi để mở dự án của mình, so sánh track tham chiếu và nhận phản hồi thật lòng, không bị lọc qua mạng xã hội.
 
 ### Người tham gia nhận được gì
 

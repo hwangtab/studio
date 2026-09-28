@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Chỉ đường",
-      "description": "Studio NOL nằm ở tầng 3 của tòa nhà ngay bên cạnh cổng chính trường THPT Dongmyeong. Từ ga Yeonsinnae (tuyến 3 & 6, cửa số 4) hoặc ga Bulgwang (tuyến 6, cửa số 7), đi bộ khoảng 5-7 phút theo hướng trường Dongmyeong. Tầng 1 là gara sửa xe, dễ nhận ra. Nên sử dụng phương tiện công cộng vì bãi đỗ xe hạn chế."
+      "description": "Studio NOL nằm ở tầng 3 của tòa nhà ngay bên cạnh cổng chính trường THPT Dongmyeong. Từ ga Yeonsinnae (tuyến 3 & 6, cửa số 4) hoặc ga Bulgwang (tuyến 6, cửa số 7), đi bộ khoảng 5-7 phút theo hướng trường Dongmyeong. Tầng 1 là gara sửa xe, dễ nhận ra. Nên sử dụng phương tiện công cộng vì tòa nhà không có chỗ đỗ xe."
     },
     "info": {
       "title": "Thông tin liên hệ",
@@ -253,7 +253,7 @@
       "location": "Địa điểm",
       "hours": "Giờ làm việc",
       "parking": "Bãi đỗ xe",
-      "parkingDetail": "Có bãi đỗ xe trả phí tại tòa nhà KT Eunpyeong gần đó",
+      "parkingDetail": "Tòa nhà không có chỗ đỗ xe — bãi đỗ trả phí KT Eunpyeong (đi bộ khoảng 2 phút)",
       "transport": "Giao thông công cộng",
       "transportDetail": "Đi bộ 5 phút từ ga Bulgwang (Line 6) cửa số 7 hoặc ga Yeonsinnae (Line 3) cửa số 4"
     },
