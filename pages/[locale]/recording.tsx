@@ -20,6 +20,7 @@ import { getRouteLastmod, formatLastmodDate } from '../../lib/pageLastmod';
 
 // Below-fold 컴포넌트 code-splitting
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const ServiceComparison = dynamic(() => import('../../components/service/ServiceComparison'));
 const EngineerCredit = dynamic(() => import('../../components/service/EngineerCredit'));
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
@@ -28,7 +29,7 @@ const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedS
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData, RECORDING_HOURLY_PRICE } from '../../data/pricing';
+import { formatPriceLabel, getPricingData, RECORDING_HOURLY_PRICE, VOCAL_PACKAGE_PRICE } from '../../data/pricing';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
 import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServiceSchema';
@@ -92,6 +93,21 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
   const faqItems = React.useMemo(
     () => createTranslatedQaItems(t, 'recording.faq.items', 8),
     [t]
+  );
+
+  // 비교 표 — 우리 열 가격은 상수에서 채운다.
+  const comparisonPriceVars = React.useMemo(
+    () => ({ vocal: formatPriceLabel(VOCAL_PACKAGE_PRICE, locale), hourly: formatPriceLabel(RECORDING_HOURLY_PRICE, locale) }),
+    [locale]
+  );
+  const comparisonRows = React.useMemo(
+    () =>
+      (t('recording.comparison.rows', { returnObjects: true }) as string[][]).map((row) =>
+        row.map((cell) =>
+          Object.entries(comparisonPriceVars).reduce((acc, [key, value]) => acc.split(`{{${key}}}`).join(value), cell)
+        )
+      ),
+    [t, comparisonPriceVars]
   );
 
   const howToSteps = React.useMemo(
@@ -374,6 +390,15 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
           <BookingEntryButton service="recording" locale={locale} />
         </div>
       </Section>
+
+      <ServiceComparison
+        title={t('recording.comparison.title')}
+        subtitle={t('recording.comparison.subtitle')}
+        columns={t('recording.comparison.columns', { returnObjects: true }) as string[]}
+        rows={comparisonRows}
+        rowHeaderLabel={t('recording.comparison.rowHeader')}
+        note={t('recording.comparison.note')}
+      />
 
       <FAQSection
         items={faqItems}

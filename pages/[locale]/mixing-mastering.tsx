@@ -36,11 +36,12 @@ const QuickAnswers = dynamic(() => import('../../components/ui/QuickAnswers'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
 const ReviewSection = dynamic(() => import('../../components/ui/ReviewSection'));
+const ServiceComparison = dynamic(() => import('../../components/service/ServiceComparison'));
 const EngineerCredit = dynamic(() => import('../../components/service/EngineerCredit'));
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
 import type { Locale } from '../../lib/i18n';
 import { getSiteConfig } from '../../data/siteConfig';
-import { getPricingData, MIXING_LEVEL1_PRICE } from '../../data/pricing';
+import { formatPriceLabel, getPricingData, MASTERING_SINGLE_PRICE, MIXING_LEVEL1_PRICE } from '../../data/pricing';
 import { buildPortfolioItems } from '../../data/portfolio/items';
 import { getServiceRelatedStories } from '../../lib/serviceRelatedStories';
 import type { StoryCardData } from '../../types/story';
@@ -66,6 +67,8 @@ interface CreditItem {
   title: string;
   artist: string;
   image: string;
+  /** 발매 음원 외부 링크(유튜브·스트리밍 모음). 포트폴리오 SSOT의 link. */
+  link: string | null;
 }
 
 interface MixingMasteringProps {
@@ -128,6 +131,21 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
   const faqItems = React.useMemo(
     () => createTranslatedQaItems(t, 'mixingMastering.faq.items', 9),
     [t]
+  );
+
+  // 비교 표 — 우리 열의 가격은 번역 파일에 숫자를 박지 않고 상수에서 채운다(가격 드리프트 가드와 같은 원칙).
+  const comparisonPriceVars = React.useMemo(
+    () => ({ mix: formatPriceLabel(MIXING_LEVEL1_PRICE, locale), master: formatPriceLabel(MASTERING_SINGLE_PRICE, locale) }),
+    [locale]
+  );
+  const comparisonRows = React.useMemo(
+    () =>
+      (t('mixingMastering.comparison.rows', { returnObjects: true }) as string[][]).map((row) =>
+        row.map((cell) =>
+          Object.entries(comparisonPriceVars).reduce((acc, [key, value]) => acc.split(`{{${key}}}`).join(value), cell)
+        )
+      ),
+    [t, comparisonPriceVars]
   );
 
   const howToSteps = React.useMemo(
@@ -528,29 +546,42 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {credits.map((credit, i) => (
-              <Link
-                key={credit.id}
-                href={`/${locale}/portfolio/${credit.id}`}
-                prefetch={false}
-                className="group"
-              >
-                <BaseCard variant="default" className="p-4 h-full">
-                  <div className="relative aspect-square rounded-xl overflow-hidden mb-4">
-                    <ResponsiveImage
-                      src={credit.image}
-                      alt={credit.title}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
-                      pictureClassName="block h-full"
-                      fill
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    />
-                  </div>
-                  <h3 className="typo-card-subtitle text-sm mb-1">{credit.title}</h3>
-                  <p className="typo-card-meta text-xs">
-                    {t(`mixingMastering.credits.items.${i}.role`)}
-                  </p>
-                </BaseCard>
-              </Link>
+              <div key={credit.id} className="flex flex-col gap-2">
+                <Link
+                  href={`/${locale}/portfolio/${credit.id}`}
+                  prefetch={false}
+                  className="group flex-1"
+                >
+                  <BaseCard variant="default" className="p-4 h-full">
+                    <div className="relative aspect-square rounded-xl overflow-hidden mb-4">
+                      <ResponsiveImage
+                        src={credit.image}
+                        alt={credit.title}
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
+                        pictureClassName="block h-full"
+                        fill
+                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                      />
+                    </div>
+                    <h3 className="typo-card-subtitle text-sm mb-1">{credit.title}</h3>
+                    <p className="typo-card-meta text-xs">
+                      {t(`mixingMastering.credits.items.${i}.role`)}
+                    </p>
+                  </BaseCard>
+                </Link>
+                {/* 발매 음원 외부 링크 — 카드 전체가 이미 링크라 안에 넣으면 a 중첩이 된다. 형제로 둔다. */}
+                {credit.link && (
+                  <a
+                    href={credit.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="self-start text-sm font-semibold text-primary dark:text-primary-lighter underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-lighter focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 rounded"
+                    aria-label={`${credit.title} ${t('mixingMastering.credits.listen')}`}
+                  >
+                    {t('mixingMastering.credits.listen')}
+                  </a>
+                )}
+              </div>
             ))}
           </div>
           <div className="mt-8 text-center">
@@ -560,6 +591,15 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           </div>
         </Section>
       )}
+
+      <ServiceComparison
+        title={t('mixingMastering.comparison.title')}
+        subtitle={t('mixingMastering.comparison.subtitle')}
+        columns={t('mixingMastering.comparison.columns', { returnObjects: true }) as string[]}
+        rows={comparisonRows}
+        rowHeaderLabel={t('mixingMastering.comparison.rowHeader')}
+        note={t('mixingMastering.comparison.note')}
+      />
 
       <FAQSection
         items={faqItems}
@@ -649,6 +689,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       title: item.title,
       artist: item.artist,
       image: item.image,
+      link: item.link ?? null,
     }));
 
   return buildPageStaticProps(

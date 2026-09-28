@@ -1419,6 +1419,50 @@
       "subtitleLine1": "Yeonsinnae'dagi Studio NOL'da, maxsus muhandis bilan,",
       "subtitleLine2": "demodan chiqarishga tayyor trekgacha hammasini yakunlang.",
       "imageAlt": "Studio NOL yozuv studiyasi so'rovi"
+    },
+    "comparison": {
+      "title": "Qayerda yozdirishni solishtiring",
+      "subtitle": "Maqsadga qarab uyda yozish yoki katta studiya ba'zan mosroq bo'ladi.",
+      "columns": [
+        "",
+        "Uyda yozish",
+        "Katta tijorat studiyasi",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Muhandis",
+          "O'zingiz",
+          "Odatda muhandis biriktiriladi",
+          "Studiya egasi Hwang Kyungha o'zi yo'naltiradi"
+        ],
+        [
+          "Muhit",
+          "Xona aks-sadosi va maishiy shovqin ta'sir qiladi",
+          "Katta xonalar va turli mikrofonlar",
+          "Vokal uchun tovush o'tkazmaydigan kabina · Neumann U87Ai"
+        ],
+        [
+          "Xarajat",
+          "Uskuna olingach qo'shimcha xarajat yo'q",
+          "Soatbay narx odatda yuqoriroq",
+          "Bitta vokal qo'shiq {{vocal}} (3 soat) · soatiga {{hourly}}"
+        ],
+        [
+          "Keyingi ishlar",
+          "Miks va masteringni alohida topish kerak",
+          "Studiyaga qarab farq qiladi",
+          "Miks, mastering, tarqatishga ro'yxatdan o'tkazish va reklama bir joyda"
+        ],
+        [
+          "Kimga mos",
+          "Tez-tez demo va g'oya eskizlarini yozadiganlar",
+          "Katta xonada birga yozishga muhtoj katta ansambllar",
+          "Chiqarish yoki tanlov uchun tayyor vokalni bir martada yozmoqchi bo'lganlar"
+        ]
+      ],
+      "note": "Shartlar muhit va studiyaga qarab farq qiladi, shuning uchun faqat umumiy tendensiyalar yozildi. Studio NOL qiymatlari shu sahifadagi narx jadvali bilan bir xil.",
+      "rowHeader": "Solishtirish bandi"
     }
   },
   "mixingMastering": {
@@ -1564,7 +1608,8 @@
         {
           "role": "Yozuv · miks"
         }
-      ]
+      ],
+      "listen": "Tinglash ↗"
     },
     "faq": {
       "title": "Miks·mastering bo'yicha ko'p so'raladigan savollar",
@@ -1619,6 +1664,56 @@
       "subtitleLine2": "Butun mamlakat yoki chet eldan fayl yuborish orqali ishlaydi.",
       "imageAlt": "Studio NOL miks buyurtmasi so'rovi",
       "order": "Onlayn buyurtma"
+    },
+    "comparison": {
+      "title": "Miksni kimga berishni solishtiring",
+      "subtitle": "Bir xil miks va mastering kim va qanday qilishiga qarab turli odamlarga mos keladi.",
+      "columns": [
+        "",
+        "AI avtomatik mastering",
+        "Platformadagi frilanser",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Kim bajaradi",
+          "Algoritm avtomatik ishlaydi",
+          "Ijrochiga qarab farq qiladi",
+          "Studiya egasi Hwang Kyungha o'zi"
+        ],
+        [
+          "Narx",
+          "Odatda eng arzon",
+          "Ijrochiga qarab farq qiladi",
+          "Miks {{mix}} dan · mastering har qo'shiqqa {{master}}"
+        ],
+        [
+          "Tuzatish",
+          "Sozlamani o'zgartirib qayta ishlanadi",
+          "Ijrochi shartlariga bog'liq",
+          "Miks 2 marta · mastering 1 marta tuzatish kiritilgan"
+        ],
+        [
+          "Muddat",
+          "Bir necha daqiqa",
+          "Ijrochiga qarab farq qiladi",
+          "Fayllar kelgach 3–7 ish kuni"
+        ],
+        [
+          "Muloqot",
+          "Yo'q",
+          "Platforma xabarlari",
+          "KakaoTalk orqali namunalarni birga tinglab yo'nalish kelishiladi"
+        ],
+        [
+          "Kimga mos",
+          "Demo yoki namuna uchun ovoz balandligini tez ko'tarmoqchi bo'lganlar",
+          "Bir necha ijrochi namunasini tinglab tanlamoqchi bo'lganlar",
+          "Chiqariladigan qo'shiqni bitta odam bilan boshidan oxirigacha tugatmoqchi bo'lganlar"
+        ]
+      ],
+      "note": "Shartlar xizmat va ijrochiga qarab farq qiladi, shuning uchun faqat umumiy tendensiyalar yozildi. Studio NOL qiymatlari shu sahifadagi narx jadvali bilan bir xil.",
+      "rowHeader": "Solishtirish bandi"
     }
   },
   "musicPromotion": {
