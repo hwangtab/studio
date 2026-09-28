@@ -63,6 +63,26 @@ export interface SessionProduct {
  */
 export const PRACTICE_ROOM_HOURLY_ROOMS = ['R02'] as const;
 
+/**
+ * **녹음실과 같은 물리적 방**인 연습실 방. R02는 레코딩룸이고, 녹음이 없는 시간에 시간제
+ * 연습실로 판다(2026-09-28 운영자: "지금 레코딩룸을 시간제 대여 하는 중, 녹음 안 할 때는 안
+ * 쓰니까"). 그래서 녹음 예약과 R02 시간제 예약은 서로를 막아야 한다 — 이 목록이 생기기 전에는
+ * 둘이 "서로 다른 자원"으로 짜여 있어 같은 시각에 둘 다 결제될 수 있었다.
+ *
+ * 겹침으로 보는 것: **예약(bookings)과 구글 캘린더 일정** — 둘 다 방을 실제로 점유한다.
+ * 관리자 블록(availability_blocks)은 자원별 그대로 둔다 — "녹음실 휴무" 블록은 엔지니어가
+ * 없다는 뜻이지 방이 찼다는 뜻이 아니라, 24시간 무인 연습실까지 닫으면 안 된다. R02를 통째로
+ * 막으려면 R02 블록과 녹음실 블록을 둘 다 건다.
+ * R05처럼 녹음실과 무관한 방을 추가할 때는 이 목록에 넣지 않는다.
+ */
+export const STUDIO_SHARED_ROOMS: readonly string[] = ['R02'];
+
+/** 이 자원(null = 녹음실)의 예약과 겹치면 안 되는 예약 자원 목록. */
+export const occupancyConflictKeys = (room: string | null): Array<string | null> => {
+  if (room === null) return [null, ...STUDIO_SHARED_ROOMS];
+  return STUDIO_SHARED_ROOMS.includes(room) ? [room, null] : [room];
+};
+
 export const SESSION_PRODUCTS: readonly SessionProduct[] = [
   { id: 'recording-pro', service: 'recording', nameKo: '보컬 녹음 1프로', kind: 'package', unitAmount: VOCAL_PACKAGE_PRICE, sessionHours: 3 },
   { id: 'recording-hourly', service: 'recording', nameKo: '시간당 레코딩', kind: 'hourly', unitAmount: RECORDING_HOURLY_PRICE, minHours: 2, maxHours: 8 },

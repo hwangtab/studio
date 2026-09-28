@@ -7,7 +7,7 @@ import { orders, type Booking, type Order, type Payment, type Refund, type WorkO
 import { computeAmounts } from './amounts';
 import { kstDateTime } from './kst';
 import { computeMixingAmounts, getMixingProduct } from './mixing-products';
-import { getProduct, resourceKindOf } from './products';
+import { getProduct, occupancyConflictKeys, resourceKindOf } from './products';
 import { generateManageToken, generateOrderNo } from './token';
 import { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS, type CreateBookingPayload, type CreateMixingOrderPayload } from './validation';
 
@@ -17,6 +17,10 @@ export { rangesOverlap } from './overlap';
 export { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS };
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
+
+/** `b.room_number`가 keys 중 하나(null = 녹음실)와 같은가 — occupancyConflictKeys와 짝. */
+const roomMatch = (keys: Array<string | null>) =>
+  sql.join(keys.map((k) => (k === null ? sql`b.room_number IS NULL` : sql`b.room_number = ${k}`)), sql` OR `);
 
 export const createBookingOrder = async (
   payload: CreateBookingPayload,
@@ -81,8 +85,9 @@ export const createBookingOrder = async (
 
   // 겹침 검사 + INSERT를 한 문장으로 — 동시 요청은 한쪽만 rowsAffected 1.
   //
-  // **자원 단위로 겹침을 본다.** `room_number IS ?`는 NULL(녹음실)끼리·같은 방끼리만 짝이
-  // 맞는다 — 연습실 예약이 녹음 예약을 막거나 그 반대가 되면 안 된다. 방 자원 상품은
+  // **자원 단위로 겹침을 본다.** 예약은 occupancyConflictKeys로 — 녹음실(NULL)과 녹음실과 같은
+  // 방(R02, products.ts STUDIO_SHARED_ROOMS)은 서로를 막고, 그 밖의 방은 자기 방끼리만 본다.
+  // 관리자 블록은 `room_number IS ?`로 자원별 그대로다(녹음실 휴무가 무인 연습실을 닫지 않게). 방 자원 상품은
   // 후보 방을 순서대로 시도해 **처음 비는 방에 배정**한다(R02 → R05 …). 전부 차면 slot_taken.
   // 녹음실 상품은 후보가 [null] 하나라 예전 동작 그대로다.
   const excluded = new Set(options.excludeRooms ?? []);
@@ -97,7 +102,7 @@ export const createBookingOrder = async (
              ${toEpoch(startAt)}, ${toEpoch(endAt)}, ${hours}, 'pending', ${payload.customerNote ?? null}
       WHERE NOT EXISTS (
         SELECT 1 FROM bookings b
-        WHERE b.room_number IS ${room}
+        WHERE (${roomMatch(occupancyConflictKeys(room))})
           AND b.start_at < ${toEpoch(endAt)} AND b.end_at > ${toEpoch(startAt)}
           AND (b.status = 'confirmed'
                OR (b.status = 'pending' AND b.created_at > unixepoch() - ${PENDING_HOLD_SECONDS}))

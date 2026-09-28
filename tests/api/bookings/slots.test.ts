@@ -84,11 +84,22 @@ describe('slots API — 캘린더 규칙', () => {
     expect((fetchBusyRanges as jest.Mock).mock.calls[0][2]).toBe('studio');
   });
 
-  it('연습실: PRACTICE_ROOM_GCAL_ID가 없으면 캘린더를 읽지 않고 DB만으로 응답한다', async () => {
-    (fetchBusyRanges as jest.Mock).mockRejectedValue(new Error('should not be called'));
+  it('연습실: PRACTICE_ROOM_GCAL_ID가 없으면 연습실 캘린더는 읽지 않는다 — R02는 녹음실 캘린더만 본다', async () => {
+    (fetchBusyRanges as jest.Mock).mockResolvedValue([]);
     const res = await call({ productId: 'practice-room-hourly', date: dateFor(), hours: '1' });
     expect(res.statusCode).toBe(200);
-    expect(fetchBusyRanges).not.toHaveBeenCalled();
+    const calendars = (fetchBusyRanges as jest.Mock).mock.calls.map((c) => c[2]);
+    expect(calendars.every((c) => c === 'studio')).toBe(true);
+  });
+
+  it('녹음실 캘린더의 일정은 R02 슬롯을 막는다 — R05가 비어 있으면 슬롯은 가능', async () => {
+    const date = dateFor();
+    (fetchBusyRanges as jest.Mock).mockImplementation(async (_a: Date, _b: Date, cal: string) =>
+      cal === 'studio' ? [{ start: new Date(`${date}T15:00:00+09:00`), end: new Date(`${date}T16:00:00+09:00`) }] : []);
+    const res = await call({ productId: 'practice-room-hourly', date, hours: '1' });
+    expect(res.statusCode).toBe(200);
+    const slots = (res.body as { slots: Array<{ startHour: number; available: boolean }> }).slots;
+    expect(slots.find((s) => s.startHour === 15)?.available).toBe(true); // R05가 남아 있다
   });
 
   it('연습실: env가 있으면 자기 캘린더를 읽고, 그 바쁨이 슬롯을 막는다', async () => {
@@ -122,7 +133,7 @@ describe('slots API — 캘린더 규칙', () => {
       room === 'R05' ? [{ start: new Date(`${date}T15:00:00+09:00`), end: new Date(`${date}T16:00:00+09:00`) }] : []);
     const res = await call({ productId: 'practice-room-hourly', date, hours: '1' });
     expect(res.statusCode).toBe(200);
-    const rooms = (fetchBusyRanges as jest.Mock).mock.calls.map((c) => c[3]).sort();
+    const rooms = (fetchBusyRanges as jest.Mock).mock.calls.filter((c) => c[2] === 'practice-room').map((c) => c[3]).sort();
     expect(rooms).toEqual(['R02', 'R05']);
     const slots = (res.body as { slots: Array<{ startHour: number; available: boolean }> }).slots;
     expect(slots.find((s) => s.startHour === 15)?.available).toBe(true);

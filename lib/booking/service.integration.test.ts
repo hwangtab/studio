@@ -271,15 +271,25 @@ describe('createBookingOrder — 방 자원(연습실 시간제)', () => {
     expect(b).toEqual({ ok: false, code: 'slot_taken' });
   });
 
-  it('연습실과 녹음실은 같은 시각에 둘 다 잡힌다 — 서로 다른 자원', async () => {
+  // R02는 레코딩룸이다(2026-09-28 운영자) — 녹음이 없는 시간에만 시간제로 판다.
+  // 예전 테스트는 "서로 다른 자원이라 둘 다 잡힌다"를 고정하고 있었다(같은 방 이중 판매).
+  it('R02 시간제가 잡힌 시각에는 녹음을 받지 않는다 — R02는 레코딩룸', async () => {
     const pr = await createBookingOrder(room(), NOW);
-    const rec = await createBookingOrder(payloadFor({ productId: 'recording-hourly', hours: 2, startHour: 14, ...other }), NOW);
     expect(pr.ok).toBe(true);
-    expect(rec.ok).toBe(true);
-    if (!rec.ok) throw new Error('unreachable');
-    expect(rec.roomNumber).toBeNull();
+    const rec = await createBookingOrder(payloadFor({ productId: 'recording-hourly', hours: 2, startHour: 14, ...other }), NOW);
+    expect(rec).toEqual({ ok: false, code: 'slot_taken' });
   });
 
+  it('녹음이 잡힌 시각에는 R02 시간제를 받지 않는다 — 반대 방향', async () => {
+    const rec = await createBookingOrder(payloadFor({ productId: 'recording-hourly', hours: 2, startHour: 14, ...other }), NOW);
+    expect(rec.ok).toBe(true);
+    const pr = await createBookingOrder(room({ startHour: 15 }), NOW);
+    expect(pr).toEqual({ ok: false, code: 'slot_taken' });
+    const later = await createBookingOrder(room({ startHour: 16, customerEmail: 'later@example.com', customerPhone: '010-1111-2222' }), NOW);
+    expect(later.ok).toBe(true); // 녹음이 끝난 16시부터는 연다
+  });
+
+  // 블록은 자원별 그대로다 — "녹음실 휴무"는 엔지니어가 없다는 뜻이라 무인 연습실까지 닫지 않는다.
   it('녹음실(NULL) 블록은 연습실을 막지 않고, R02 블록은 녹음실을 막지 않는다', async () => {
     const at = (h: number) => new Date(Date.UTC(2026, 8, 10, h - 9)); // KST h시
     await mockDb.insert(schema.availabilityBlocks).values({ startAt: at(13), endAt: at(16), roomNumber: null, memo: '녹음실 휴무' });

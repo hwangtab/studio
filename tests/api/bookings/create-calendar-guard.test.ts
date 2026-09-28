@@ -111,11 +111,22 @@ describe('POST /api/bookings — 캘린더 재확인', () => {
     expect(await bookingCount()).toBe(0);
   });
 
-  it('연습실: 캘린더 env가 없으면 읽지 않고 DB만으로 선점한다', async () => {
-    (fetchBusyRanges as jest.Mock).mockRejectedValue(new Error('should not be called'));
+  it('연습실: 연습실 캘린더 env가 없으면 그 캘린더는 읽지 않는다 — R02는 녹음실 캘린더만 본다', async () => {
+    (fetchBusyRanges as jest.Mock).mockResolvedValue([]);
     const res = await post({ productId: 'practice-room-hourly', hours: 1, date: dateFor(), startHour: 15, ...customer });
     expect(res.status).toBe(201);
-    expect(fetchBusyRanges).not.toHaveBeenCalled();
+    const calendars = (fetchBusyRanges as jest.Mock).mock.calls.map((c) => c[2]);
+    expect(calendars.every((c) => c === 'studio')).toBe(true); // R02 = 레코딩룸이라 녹음실 캘린더만
+  });
+
+  it('녹음실 캘린더의 일정은 R02를 막는다 — R02가 레코딩룸이라서(R05로 배정)', async () => {
+    const date = dateFor();
+    (fetchBusyRanges as jest.Mock).mockImplementation(async (_a: Date, _b: Date, cal: string) =>
+      cal === 'studio' ? [{ start: new Date(`${date}T15:00:00+09:00`), end: new Date(`${date}T16:00:00+09:00`) }] : []);
+    const res = await post({ productId: 'practice-room-hourly', hours: 1, date, startHour: 15, ...customer });
+    expect(res.status).toBe(201);
+    const row = (await client.execute('SELECT room_number FROM bookings')).rows[0];
+    expect(row.room_number).toBe('R05');
   });
 
   it('연습실: 방별 캘린더로 한 방만 막히면 다른 방에 배정한다', async () => {

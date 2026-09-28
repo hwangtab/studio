@@ -9,7 +9,7 @@ jest.mock('./toss', () => ({
   cancelPayment: jest.fn(),
 }));
 jest.mock('./gcal', () => ({ ...jest.requireActual('./gcal'), createBookingEvent: jest.fn().mockResolvedValue('evt1') }));
-jest.mock('./calendarGuard', () => ({ hasCalendarConflict: jest.fn().mockResolvedValue(false) }));
+jest.mock('./calendarGuard', () => ({ hasOccupancyCalendarConflict: jest.fn().mockResolvedValue(false) }));
 jest.mock('./email', () => ({
   sendBookingConfirmedEmails: jest.fn().mockResolvedValue(null),
   sendMixingOrderConfirmedEmails: jest.fn().mockResolvedValue(null),
@@ -37,7 +37,7 @@ jest.mock('../../db/client', () => {
 import { confirmBookingPayment } from './confirm';
 import { findOrderByOrderNo } from './service';
 import { cancelPayment, confirmPayment, fetchPayment } from './toss';
-import { hasCalendarConflict } from './calendarGuard';
+import { hasOccupancyCalendarConflict } from './calendarGuard';
 import { createBookingEvent } from './gcal';
 import { sendBookingConfirmedEmails } from './email';
 import { getDb } from '../../db/client';
@@ -98,24 +98,24 @@ afterEach(() => {
 
 describe('confirmBookingPayment', () => {
   describe('승인 직전 캘린더 재확인', () => {
-    afterEach(() => { (hasCalendarConflict as jest.Mock).mockReset().mockResolvedValue(false); });
+    afterEach(() => { (hasOccupancyCalendarConflict as jest.Mock).mockReset().mockResolvedValue(false); });
 
     it('선점 뒤 캘린더에 겹치는 일정이 생겼으면 토스를 부르지 않고 거부한다 (과금 없음)', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({
         bookings: [{ id: 'b1', status: 'pending', startAt: new Date(), endAt: new Date(), durationHours: 1, serviceType: 'practice-room', roomNumber: 'R02', customerNote: null }],
       }));
-      (hasCalendarConflict as jest.Mock).mockResolvedValue(true);
+      (hasOccupancyCalendarConflict as jest.Mock).mockResolvedValue(true);
       const res = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
       expect(res).toMatchObject({ ok: false, code: 'invalid_state' });
       expect((res as { message: string }).message).toContain('결제되지 않았으니');
       expect(confirmPayment).not.toHaveBeenCalled();
-      expect((hasCalendarConflict as jest.Mock).mock.calls[0][0]).toBe('practice-room');
-      expect((hasCalendarConflict as jest.Mock).mock.calls[0][3]).toBe('R02');
+      // R02는 녹음실과 같은 방이라 가드가 방 번호로 두 캘린더를 다 본다(calendarGuard.occupancyCalendars).
+      expect((hasOccupancyCalendarConflict as jest.Mock).mock.calls[0][0]).toBe('R02');
     });
 
     it('캘린더 조회가 실패해도 토스를 부르지 않는다 (fail-closed)', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
-      (hasCalendarConflict as jest.Mock).mockRejectedValue(new Error('freeBusy 조회 실패: 500'));
+      (hasOccupancyCalendarConflict as jest.Mock).mockRejectedValue(new Error('freeBusy 조회 실패: 500'));
       const res = await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 });
       expect(res).toMatchObject({ ok: false, code: 'invalid_state' });
       expect(confirmPayment).not.toHaveBeenCalled();
@@ -123,10 +123,10 @@ describe('confirmBookingPayment', () => {
 
     it('웹훅 경로(이미 승인된 돈)는 캘린더를 재확인하지 않는다', async () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(order({ status: 'failed' }));
-      (hasCalendarConflict as jest.Mock).mockResolvedValue(true);
+      (hasOccupancyCalendarConflict as jest.Mock).mockResolvedValue(true);
       (confirmPayment as jest.Mock).mockResolvedValue({ ok: false, code: 'NOT_FOUND_PAYMENT', message: 'x' });
       await confirmBookingPayment({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000 }, { trustedByWebhook: true });
-      expect(hasCalendarConflict).not.toHaveBeenCalled();
+      expect(hasOccupancyCalendarConflict).not.toHaveBeenCalled();
     });
   });
 
