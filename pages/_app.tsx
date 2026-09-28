@@ -12,33 +12,18 @@ import ErrorBoundary from '../components/ErrorBoundary';
 const DeferredAnalytics = dynamic(() => import('../components/common/DeferredAnalytics'), { ssr: false });
 import i18n, { applyI18nResources, defaultLocale, locales, loadCommonResourceClient, type Locale } from '../lib/i18n';
 import { I18nextProvider } from 'react-i18next';
-import { AnimatePresence, MotionConfig, m, LazyMotion, domAnimation } from 'framer-motion';
+import { MotionConfig, LazyMotion, domAnimation } from 'framer-motion';
 import Router, { useRouter } from 'next/router';
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { getSiteConfig } from '../data/siteConfig';
 import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
 import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 import { isAdminRoute } from '../lib/adminRoute';
-import { historyKey, routeTransitionKey, scrollAfterRouteChange, scrollMemory } from '../lib/routeScroll';
+import { hashId, historyKey, pinHashTarget, restoreScroll, routeTransitionKey, scrollMemory } from '../lib/routeScroll';
 import { DesignEditionContext } from '../lib/designEdition';
 
 
-/**
- * 뒤로·앞으로 가기로 돌아온 페이지의 스크롤을 첫 페인트 전에 되돌린다(lib/routeScroll 머리말).
- * 페이지 전환 key마다 새로 마운트되므로 레이아웃 이펙트가 새 페이지가 붙은 바로 그 커밋에 돈다.
- * 복원할 위치가 없으면(새 이동·첫 로드) 아무것도 하지 않는다 — 그 경우는 onExitComplete가 맡는다.
- */
-const useIsoLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
-function RestoreScrollOnMount() {
-  useIsoLayoutEffect(() => {
-    const y = scrollMemory.takeRestoreTarget();
-    if (y === null) return;
-    scrollAfterRouteChange(window, y);
-    scrollMemory.arrived(historyKey());
-  }, []);
-  return null;
-}
 
 const localeLoadingMessage: Record<Locale, string> = {
   ko: '콘텐츠를 불러오는 중입니다...',
@@ -74,6 +59,15 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     locale in (i18nResources as Record<string, unknown>)
   );
 
+  // 새 페이지의 사전은 그 페이지가 **렌더되기 전에** 넣는다. 아래 useEffect도 넣지만 그건 렌더 뒤라,
+  // 새 페이지가 같은 커밋에 붙으면 키("pricing.hero.title")가 그대로 칠해지고 사전이 들어와도 다시
+  // 그리지 않아 남는다. 예전엔 AnimatePresence가 새 페이지 마운트를 한 커밋 늦춰 그 사이에 이펙트가
+  // 끝나 있었다(2026-09-28, 걷어내며 드러남). addResourceBundle은 덮어쓰기라 여러 번 불러도 같다.
+  // 서버는 getStaticProps의 initializeServerI18n이 이미 넣었다 — 렌더 중 공유 인스턴스를 건드리지 않는다.
+  useMemo(() => {
+    if (typeof window !== 'undefined' && !isAdmin) applyI18nResources(i18nResources);
+  }, [i18nResources, isAdmin]);
+
   const [isLocaleReady, setIsLocaleReady] = useState(() => isAdmin || hasServerResourceForLocale || i18n.hasResourceBundle(locale, 'common'));
 
   // SSR initial을 'always'로 두는 이유: 'user'였을 때 모바일 첫 paint에서 framer-motion이
@@ -98,8 +92,9 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     return () => router.events.off('routeChangeStart', markNavigated);
   }, [router.events]);
 
-  // 뒤로·앞으로 가기 스크롤 복원(lib/routeScroll의 scrollMemory). 복원 자체는 새 페이지의 RestoreScrollOnMount가 한다.
-  // 쿼리만 바뀌는 이동은 전환 key가 같아 onExitComplete가 불리지 않으므로 여기서 기록을 다시 켠다.
+  // 전환 뒤 스크롤·포커스(lib/routeScroll 머리말). 새 이동의 맨 위와 해시 스크롤은 next가 하고,
+  // 여기서는 뒤로·앞으로 가기 복원과 해시 대상 붙들기, 새 페이지로의 포커스 이동만 한다.
+  // routeChangeComplete는 새 페이지가 커밋된 뒤, 첫 페인트 전(같은 태스크의 마이크로태스크)이다.
   const transitionKeyRef = useRef(routeTransitionKey(router.asPath));
   useEffect(() => {
     scrollMemory.arrived(historyKey());
@@ -117,11 +112,31 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
       return true;
     });
     const onStart = () => scrollMemory.leave();
+    // 같은 문서 안의 뒤로·앞으로 가기는 우리가 복원한다. 브라우저 기본 복원을 켜 두면 popstate 전에
+    // **옛 페이지**를 기억한 위치로 먼저 움직여, 새 페이지가 붙기 전 몇 프레임 옛 화면이 튄다(WebKit
+    // 프레임 기록). 문서를 떠날 때는 auto로 되돌려 새로고침·다른 사이트에서 돌아올 때의 복원은 살린다.
+    const canSetRestoration = 'scrollRestoration' in window.history;
+    const setManual = () => { if (canSetRestoration) window.history.scrollRestoration = 'manual'; };
+    const setAuto = () => { if (canSetRestoration) window.history.scrollRestoration = 'auto'; };
+    setManual();
+    window.addEventListener('pagehide', setAuto);
+    window.addEventListener('pageshow', setManual);
+    let releasePin: (() => void) | null = null;
     const onComplete = (url: string) => {
+      releasePin?.();
+      releasePin = null;
+      const restoreY = scrollMemory.takeRestoreTarget();
+      const id = hashId(url);
+      if (restoreY !== null) {
+        restoreScroll(window, restoreY);
+      } else if (id) {
+        releasePin = pinHashTarget(window, id);
+      }
+      scrollMemory.arrived(historyKey());
       const next = routeTransitionKey(url);
-      if (next === transitionKeyRef.current) {
-        scrollMemory.takeRestoreTarget();
-        scrollMemory.arrived(historyKey());
+      if (next !== transitionKeyRef.current) {
+        // 새 페이지로 바뀐 경우만 — 스크린리더가 새 본문부터 읽게. 쿼리만 바뀐 이동은 그대로 둔다.
+        document.getElementById('main-content')?.focus({ preventScroll: true });
       }
       transitionKeyRef.current = next;
     };
@@ -132,11 +147,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     router.events.on('routeChangeError', onError);
     return () => {
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('pagehide', setAuto);
+      window.removeEventListener('pageshow', setManual);
       Router.beforePopState(() => true);
       router.events.off('routeChangeStart', onStart);
       router.events.off('routeChangeComplete', onComplete);
       router.events.off('routeChangeError', onError);
       if (frame) window.cancelAnimationFrame(frame);
+      releasePin?.();
     };
   }, [router.events]);
 
@@ -304,16 +322,6 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
     );
   }
 
-  // 페이지 전환에 exit fade 없음(데스크톱 포함) — unmount 즉시 새 페이지 mount.
-  // 데스크톱의 60ms fade-out이 어두운 히어로 사이에서 흰 body 배경을 1~2 frame
-  // 노출해 white flash(번쩍임)를 유발했다. 모바일은 같은 이유로 이미 exit을 제거해
-  // 검증된 경로. AnimatePresence는 onExitComplete의 scroll reset·focus 이동을 위해 유지.
-  // hook이 아닌 일반 const라 isLocaleReady early return 이후에 위치 가능.
-  const routeTransitionProps = {
-    initial: false as const,
-    animate: { opacity: 1 },
-    transition: { duration: 0.06, ease: 'linear' as const },
-  };
 
   return (
     <>
@@ -368,17 +376,14 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
           <LazyMotion features={domAnimation}>
             <MotionConfig reducedMotion={reducedMotion}>
               <Layout hasHero={hasHero} locale={locale}>
-                {/* initial={false}: 첫 방문 시 opacity:0 스타일이 SSR에 박히는 것을 막아 FCP/LCP를 즉시 페인트.
-                    페이지 전환(route change) 때만 페이드 애니메이션이 작동한다. */}
-                <AnimatePresence mode="wait" initial={false} onExitComplete={() => { if (!scrollMemory.hasRestoreTarget()) { scrollAfterRouteChange(); scrollMemory.arrived(historyKey()); } document.getElementById('main-content')?.focus({ preventScroll: true }); }}>
-                  <m.div
-                    key={routeTransitionKey(router.asPath)}
-                    {...routeTransitionProps}
-                  >
-                    <RestoreScrollOnMount />
-                    <Component {...pageProps} />
-                  </m.div>
-                </AnimatePresence>
+                {/* 페이지 전환 애니메이션은 없다. 예전엔 AnimatePresence(mode="wait")로 감쌌는데 exit·enter
+                    애니메이션이 이미 꺼져 있었고(흰 배경 번쩍임 때문), 남은 효과는 옛 페이지를 한 커밋 더
+                    붙잡는 것뿐이었다 — next의 scrollTo(0,0)이 그 커밋에 일어나 옛 페이지가 맨 위로 한 번
+                    튀었다(lib/routeScroll 머리말). key는 쿼리·해시를 뗀 경로라 같은 페이지 안 이동은
+                    다시 마운트하지 않는다. */}
+                <div key={routeTransitionKey(router.asPath)}>
+                  <Component {...pageProps} />
+                </div>
                 {/* 3rd-party 측정 스크립트는 사용자 interaction 또는 idle 후에만 로드.
                     PSI 모바일(4× CPU throttle) 측정 윈도우(0~5초) 안에 GTM(155KB)·Analytics
                     가 발화하면 main thread block으로 측정마다 점수 50↔98 변동 발생.
