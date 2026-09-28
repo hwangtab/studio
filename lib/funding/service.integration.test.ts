@@ -436,11 +436,34 @@ describe('응원 메시지 공개', () => {
     expect(s.publicBackers).toContain('옛동의자');
   });
 
-  it('공개에 동의하지 않으면 이름도 메시지도 나가지 않는다', async () => {
-    await paidWith({ customerEmail: 'm3@example.com', customerPhone: '010-9003', customerName: '비공개', displayNamePublic: false, supporterMessage: '조용히 응원' });
+  // 옛 문서는 "공개 동의한 경우에만 메시지 표시"를 약속했다 — 소급하지 않는다.
+  it('옛 판본 후원은 공개에 동의하지 않으면 이름도 메시지도 나가지 않는다', async () => {
+    await paidWith(
+      { customerEmail: 'm3@example.com', customerPhone: '010-9003', customerName: '비공개', displayNamePublic: false, supporterMessage: '조용히 응원' },
+      'funding-terms-2026-09-26-r4'
+    );
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.publicBackers).not.toContain('비공개');
     expect(s.publicMessages.map((m) => m.message)).not.toContain('조용히 응원');
+  });
+
+  // 2026-09-28 판본부터 메시지는 이름과 따로 간다 — 이름 없이 "익명"으로.
+  it('현재 판본 후원은 이름을 공개하지 않아도 메시지가 익명으로 나간다', async () => {
+    await paidWith({ customerEmail: 'm4@example.com', customerPhone: '010-9004', customerName: '익명희망', displayNamePublic: false, supporterMessage: '이름 없이 응원' });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicBackers).not.toContain('익명희망');
+    expect(s.publicMessages.find((m) => m.message === '이름 없이 응원')?.name).toBe('익명');
+    expect(JSON.stringify(s)).not.toContain('익명희망');
+  });
+
+  it('운영자가 내린 익명 메시지는 나가지 않는다', async () => {
+    const orderNo = await paidWith({ customerEmail: 'm9@example.com', customerPhone: '010-9009', displayNamePublic: false, supporterMessage: '내릴 익명 메시지' });
+    await client.execute({
+      sql: 'UPDATE funding_pledges SET listing_hidden_at=? WHERE order_id=(SELECT id FROM orders WHERE order_no=?)',
+      args: [Math.floor(NOW.getTime() / 1000), orderNo],
+    });
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.publicMessages.map((m) => m.message)).not.toContain('내릴 익명 메시지');
   });
 
   // 이름이 안 오르는 후원도 명단에서 사라지지 않는다 — 수만 "익명"으로 나간다.

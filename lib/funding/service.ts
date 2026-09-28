@@ -8,7 +8,7 @@ import { generateManageToken } from '../booking/token';
 import { PURGED_MARK } from '../privacy/orderRetention';
 import { stripInvisible } from './publicName';
 import { computeFundingAmounts, type FundingAmounts } from './amounts';
-import { FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
+import { ANONYMOUS_LABEL, ANONYMOUS_MESSAGE_TERMS_FROM, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import { liveFundingOrderStatusList } from './refundable';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload } from './validation';
@@ -376,6 +376,20 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
       AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
       AND fp.listing_hidden_at IS NULL
   `);
+  /**
+   * 이름 없이 싣는 응원 메시지. `ANONYMOUS_MESSAGE_TERMS_FROM` 판본부터 이름 공개와 메시지 표시가
+   * 갈라졌다 — 이름을 공개하지 않은 후원도 메시지는 "익명"으로 나간다. 옛 판본 후원은 소급하지
+   * 않는다(그때 문서가 "공개 동의한 경우에만"을 약속했다). 운영자 숨김은 여기서도 똑같이 뺀다.
+   */
+  const anonymousMessageRows = await db.all<{ supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
+    SELECT fp.supporter_message, fp.paid_at, o.created_at
+    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 0
+      AND fp.terms_version LIKE 'funding-terms-%' AND fp.terms_version >= ${ANONYMOUS_MESSAGE_TERMS_FROM}
+      AND fp.supporter_message IS NOT NULL AND TRIM(fp.supporter_message) <> ''
+      AND fp.listing_hidden_at IS NULL
+    ORDER BY fp.paid_at DESC, o.created_at DESC LIMIT 100
+  `);
   const listed = names
     .map((n) => ({ ...n, display_name: stripInvisible(n.display_name).trim() }))
     .filter((n) => n.display_name !== '');
@@ -393,7 +407,16 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
         message: (n.supporter_message ?? '').trim(),
         at: Number(n.paid_at ?? n.created_at),
       }))
-      .filter((m) => m.message !== ''),
+      .concat(
+        anonymousMessageRows.map((n) => ({
+          name: ANONYMOUS_LABEL,
+          message: (n.supporter_message ?? '').trim(),
+          at: Number(n.paid_at ?? n.created_at),
+        })),
+      )
+      .filter((m) => m.message !== '')
+      .sort((a, b) => b.at - a.at)
+      .slice(0, 100),
   };
 };
 

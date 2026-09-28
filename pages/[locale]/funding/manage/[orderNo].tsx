@@ -5,7 +5,7 @@ import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
-import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from '../../../../lib/funding/policy';
+import { assessSelfCancel, CANCEL_BLOCK_MESSAGES, showsMessageAnonymously } from '../../../../lib/funding/policy';
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
 import { isPastFundingEnd } from '../../../../lib/funding/projectState';
@@ -30,6 +30,8 @@ interface Props {
   customerName: string; publicName: string | null; supporterMessage: string | null;
   /** 운영자가 명단에서 내렸는가(`listing_hidden_at`). */
   listingHidden: boolean;
+  /** 이름을 내려도 메시지가 "익명"으로 남는 판본인가(`showsMessageAnonymously`). */
+  messageShownAnonymously: boolean;
 }
 const FULFILL_LABEL: Record<string, string> = { none: '준비 전', preparing: '발송 준비 중', shipped: '발송 완료', delivered: '전달 완료' };
 
@@ -126,6 +128,7 @@ export default function FundingManagePage(p: Props) {
               initialPublicName={p.publicName}
               message={p.supporterMessage}
               hiddenByOperator={p.listingHidden}
+              messageShownAnonymously={p.messageShownAnonymously}
             />
           )}
 
@@ -228,6 +231,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     publicName: pl.publicName ?? null,
     supporterMessage: pl.supporterMessage ?? null,
     listingHidden: pl.listingHiddenAt != null,
+    messageShownAnonymously: showsMessageAnonymously(pl.termsVersion),
   } };
 });
 

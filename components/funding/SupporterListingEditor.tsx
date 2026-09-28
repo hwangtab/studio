@@ -24,6 +24,11 @@ interface Props {
    * 있습니다"라고 말하면 사실과 다르다. 후원자가 설정을 바꿔도 운영자 숨김은 풀리지 않는다.
    */
   hiddenByOperator?: boolean;
+  /**
+   * 이름을 내려도 메시지가 "익명"으로 남는 판본의 후원인가(`showsMessageAnonymously`).
+   * 옛 판본 후원은 이름을 공개해야만 메시지가 보이므로 안내 문구가 달라진다.
+   */
+  messageShownAnonymously?: boolean;
 }
 
 /**
@@ -33,7 +38,7 @@ interface Props {
  * 많았는데, 결제 뒤에는 그걸 바로잡을 자리가 메일 속 펀딩 확인 링크뿐이었다.
  * 누르는 것은 후원자 본인이므로 동의의 형식은 폼의 체크와 같다.
  */
-export default function SupporterListingEditor({ orderNo, token, customerName, initialPublic, initialPublicName, message, variant, hiddenByOperator = false }: Props) {
+export default function SupporterListingEditor({ orderNo, token, customerName, initialPublic, initialPublicName, message, variant, hiddenByOperator = false, messageShownAnonymously = false }: Props) {
   const initialChoice = inferPublicNameChoice(initialPublicName, customerName);
   const [isPublic, setIsPublic] = useState(initialPublic);
   const [savedName, setSavedName] = useState(initialPublicName);
@@ -67,7 +72,9 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
       // 그걸 말하지 않으면 "공개가 안 됐다"는 문의가 온다.
       setNotice(json.displayNamePublic
         ? '후원자 명단에 올렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
-        : '후원자 명단에서 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
+        : messageShownAnonymously && hasMessage
+          ? '명단에서 이름을 내렸습니다. 응원 메시지는 익명으로 남습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'
+          : '후원자 명단에서 내렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.');
     } catch {
       setError('네트워크 오류가 발생했습니다.');
     } finally { setBusy(false); }
@@ -135,7 +142,9 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
           <p className="text-sm font-semibold text-gray-900 dark:text-white">후원자 명단에 이름을 올리시겠어요?</p>
           <p className="typo-card-meta mt-1">
             {hasMessage
-              ? '남겨 주신 응원 메시지는 명단에 올려야 프로젝트 페이지에 보입니다.'
+              ? messageShownAnonymously
+                ? '남겨 주신 응원 메시지는 지금 “익명”으로 올라가 있습니다. 이름을 함께 올릴 수 있습니다.'
+                : '남겨 주신 응원 메시지는 명단에 올려야 프로젝트 페이지에 보입니다.'
               : '프로젝트 페이지 후원자 명단에 함께한 사람으로 이름이 올라갑니다.'}
             {' '}실명 대신 가린 이름이나 닉네임도 고를 수 있습니다.
           </p>

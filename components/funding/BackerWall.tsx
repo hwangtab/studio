@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { ANONYMOUS_LABEL } from '../../lib/funding/policy';
+
 interface Message {
   name: string;
   message: string;
@@ -49,7 +51,7 @@ export default function BackerWall({
 
   const anonShown = Math.min(Math.max(0, anonymousCount), ANON_SHOWN);
   const anonRest = Math.max(0, anonymousCount - anonShown);
-  const roster = [...names, ...Array<string>(anonShown).fill('익명')];
+  const roster = [...names, ...Array<string>(anonShown).fill(ANONYMOUS_LABEL)];
 
   const visible = messages.slice(0, shown);
 
@@ -59,7 +61,7 @@ export default function BackerWall({
         함께한 후원자
       </h2>
       <p className="typo-card-body mt-3 overflow-hidden break-words leading-7">{roster.join(' · ')}
-        {anonRest > 0 && ` 외 익명 ${anonRest}명`}
+        {anonRest > 0 && ` 외 ${ANONYMOUS_LABEL} ${anonRest}명`}
       </p>
 
       {visible.length > 0 && (
