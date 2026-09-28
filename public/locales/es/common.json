@@ -1419,6 +1419,50 @@
       "subtitleLine1": "En Studio NOL, en Yeonsinnae, con un ingeniero dedicado,",
       "subtitleLine2": "termina todo, del demo a la pista lista para publicar.",
       "imageAlt": "Consulta del estudio de grabación Studio NOL"
+    },
+    "comparison": {
+      "title": "Compara dónde grabar",
+      "subtitle": "Según tu objetivo, grabar en casa o en un estudio grande puede encajar mejor.",
+      "columns": [
+        "",
+        "Grabación en casa",
+        "Estudio comercial grande",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Ingeniero",
+          "Tú mismo",
+          "Normalmente un ingeniero asignado",
+          "El propietario, Hwang Kyungha, dirige en persona"
+        ],
+        [
+          "Sala",
+          "Afectada por reflexiones y ruido doméstico",
+          "Salas grandes y muchos micrófonos",
+          "Cabina insonorizada para voz · Neumann U87Ai"
+        ],
+        [
+          "Coste",
+          "Sin coste extra una vez tienes el equipo",
+          "Tarifa por hora normalmente más alta",
+          "Una canción de voz {{vocal}} (3 horas) · {{hourly}} por hora"
+        ],
+        [
+          "Lo que sigue",
+          "Mezcla y máster se buscan aparte",
+          "Depende del estudio",
+          "Mezcla, máster, distribución y promoción en un solo lugar"
+        ],
+        [
+          "Ideal para",
+          "Demos y bocetos frecuentes",
+          "Grandes formaciones que necesitan una sala amplia",
+          "Grabar de una vez una voz lista para lanzar o audicionar"
+        ]
+      ],
+      "note": "Las condiciones varían según el entorno y el estudio, así que solo se indican tendencias generales. Los valores de Studio NOL coinciden con la tabla de precios de esta página.",
+      "rowHeader": "Comparación"
     }
   },
   "mixingMastering": {
@@ -1564,7 +1608,8 @@
         {
           "role": "Grabación · mezcla"
         }
-      ]
+      ],
+      "listen": "Escuchar ↗"
     },
     "faq": {
       "title": "Preguntas frecuentes de mezcla y masterización",
@@ -1619,6 +1664,56 @@
       "subtitleLine2": "Funciona por transferencia de archivos desde cualquier parte de Corea o del extranjero.",
       "imageAlt": "Consulta de trabajo de mezcla de Studio NOL",
       "order": "Pedir en línea"
+    },
+    "comparison": {
+      "title": "Compara a quién encargar tu mezcla",
+      "subtitle": "La misma mezcla y masterización encaja con personas distintas según quién la hace y cómo.",
+      "columns": [
+        "",
+        "Masterización automática con IA",
+        "Freelance de marketplace",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Quién trabaja",
+          "Un algoritmo, automáticamente",
+          "Depende del freelance",
+          "El propietario, Hwang Kyungha, en persona"
+        ],
+        [
+          "Precio",
+          "Suele ser lo más barato",
+          "Depende del freelance",
+          "Mezcla desde {{mix}} · masterización {{master}} por canción"
+        ],
+        [
+          "Revisiones",
+          "Se vuelve a procesar con otros ajustes",
+          "Según las condiciones del freelance",
+          "2 revisiones de mezcla y 1 de máster incluidas"
+        ],
+        [
+          "Plazo",
+          "Minutos",
+          "Depende del freelance",
+          "3–7 días hábiles tras recibir los archivos"
+        ],
+        [
+          "Comunicación",
+          "Ninguna",
+          "Mensajes de la plataforma",
+          "Dirección acordada por KakaoTalk escuchando referencias"
+        ],
+        [
+          "Ideal para",
+          "Subir el volumen rápido en demos o referencias",
+          "Comparar muestras de varios freelance",
+          "Terminar un lanzamiento con una sola persona de principio a fin"
+        ]
+      ],
+      "note": "Las condiciones varían según el servicio y el freelance, así que solo se indican tendencias generales. Los valores de Studio NOL coinciden con la tabla de precios de esta página.",
+      "rowHeader": "Comparación"
     }
   },
   "musicPromotion": {

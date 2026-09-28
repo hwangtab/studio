@@ -1447,6 +1447,50 @@
       "subtitleLine1": "At Studio NOL in Yeonsinnae, with a dedicated engineer,",
       "subtitleLine2": "finish everything from demo to release-ready track.",
       "imageAlt": "Studio NOL recording studio inquiry"
+    },
+    "comparison": {
+      "title": "Compare where to record",
+      "subtitle": "Depending on your goal, home recording or a large studio can be the better fit.",
+      "columns": [
+        "",
+        "Home recording",
+        "Large commercial studio",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Engineer",
+          "Yourself",
+          "Usually an assigned engineer",
+          "The owner, Hwang Kyungha, directs in person"
+        ],
+        [
+          "Room",
+          "Affected by room reflections and household noise",
+          "Large live rooms and many mics",
+          "Soundproof booth built for vocals · Neumann U87Ai"
+        ],
+        [
+          "Cost",
+          "No extra cost once you own the gear",
+          "Usually a higher hourly rate",
+          "One vocal song {{vocal}} (3 hours) · {{hourly}} per hour"
+        ],
+        [
+          "What comes next",
+          "Mixing and mastering found separately",
+          "Varies by studio",
+          "Mixing, mastering, distribution and release PR in one place"
+        ],
+        [
+          "Best for",
+          "Frequent demos and idea sketches",
+          "Large ensembles needing a big room",
+          "Capturing a release- or audition-ready vocal in one go"
+        ]
+      ],
+      "note": "Conditions differ by setup and studio, so only general tendencies are listed. Studio NOL values match the price table on this page.",
+      "rowHeader": "Comparison"
     }
   },
   "mixingMastering": {
@@ -1592,7 +1636,8 @@
         {
           "role": "Recording · mixing"
         }
-      ]
+      ],
+      "listen": "Listen ↗"
     },
     "faq": {
       "title": "Mixing & Mastering FAQ",
@@ -1647,6 +1692,56 @@
       "subtitleLine2": "Works by file transfer from anywhere in Korea or abroad.",
       "imageAlt": "Studio NOL mixing inquiry",
       "order": "Order online"
+    },
+    "comparison": {
+      "title": "Compare where to send your mix",
+      "subtitle": "The same mixing and mastering suits different people depending on who does it and how.",
+      "columns": [
+        "",
+        "AI auto-mastering",
+        "Marketplace freelancer",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Who does the work",
+          "An algorithm, automatically",
+          "Varies by freelancer",
+          "The owner, Hwang Kyungha, in person"
+        ],
+        [
+          "Price",
+          "Usually the cheapest",
+          "Varies by freelancer",
+          "Mixing from {{mix}} · mastering {{master}} per song"
+        ],
+        [
+          "Revisions",
+          "Re-run with new settings",
+          "Depends on the freelancer",
+          "2 mixing + 1 mastering revision included"
+        ],
+        [
+          "Turnaround",
+          "Minutes",
+          "Varies by freelancer",
+          "3–7 business days after files arrive"
+        ],
+        [
+          "Communication",
+          "None",
+          "Platform messages",
+          "Direction set together over KakaoTalk, listening to references"
+        ],
+        [
+          "Best for",
+          "Quick loudness for demos or references",
+          "Comparing samples from several freelancers",
+          "Finishing a release with one person, start to end"
+        ]
+      ],
+      "note": "Conditions differ by AI service and freelancer, so only general tendencies are listed. Studio NOL values match the price table on this page.",
+      "rowHeader": "Comparison"
     }
   },
   "musicPromotion": {

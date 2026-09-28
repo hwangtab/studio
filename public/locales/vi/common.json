@@ -1419,6 +1419,50 @@
       "subtitleLine1": "Tại Studio NOL ở Yeonsinnae, cùng kỹ sư chuyên trách,",
       "subtitleLine2": "hoàn thiện mọi thứ từ demo đến bản sẵn sàng phát hành.",
       "imageAlt": "Tư vấn phòng thu Studio NOL"
+    },
+    "comparison": {
+      "title": "So sánh nên thu âm ở đâu",
+      "subtitle": "Tùy mục đích, thu âm tại nhà hoặc studio lớn đôi khi hợp hơn.",
+      "columns": [
+        "",
+        "Thu âm tại nhà",
+        "Studio thương mại lớn",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Kỹ sư",
+          "Tự bạn làm",
+          "Thường được phân công kỹ sư",
+          "Chủ studio Hwang Kyungha trực tiếp chỉ đạo"
+        ],
+        [
+          "Môi trường",
+          "Bị ảnh hưởng bởi tiếng vang phòng và tiếng ồn sinh hoạt",
+          "Phòng lớn và nhiều loại micro",
+          "Phòng cách âm dành cho thu giọng · Neumann U87Ai"
+        ],
+        [
+          "Chi phí",
+          "Không tốn thêm sau khi đã có thiết bị",
+          "Giá theo giờ thường cao hơn",
+          "Một bài giọng hát {{vocal}} (3 giờ) · {{hourly}} mỗi giờ"
+        ],
+        [
+          "Công việc tiếp theo",
+          "Phải tự tìm nơi mix và master",
+          "Tùy studio",
+          "Mix, master, đăng ký phát hành và quảng bá tại một nơi"
+        ],
+        [
+          "Phù hợp với",
+          "Người hay thu demo và phác thảo ý tưởng",
+          "Dàn nhạc lớn cần phòng rộng để thu cùng lúc",
+          "Người muốn thu một lần giọng hát sẵn sàng phát hành hoặc thử giọng"
+        ]
+      ],
+      "note": "Điều kiện khác nhau tùy môi trường và studio nên chỉ ghi xu hướng chung. Giá trị của Studio NOL trùng với bảng giá trên trang này.",
+      "rowHeader": "Hạng mục so sánh"
     }
   },
   "mixingMastering": {
@@ -1564,7 +1608,8 @@
         {
           "role": "Thu âm · mixing"
         }
-      ]
+      ],
+      "listen": "Nghe ↗"
     },
     "faq": {
       "title": "Câu hỏi thường gặp về mixing·mastering",
@@ -1619,6 +1664,56 @@
       "subtitleLine2": "Làm việc qua gửi file từ bất cứ đâu trong nước hay nước ngoài.",
       "imageAlt": "Tư vấn công việc mixing Studio NOL",
       "order": "Đặt hàng online"
+    },
+    "comparison": {
+      "title": "So sánh nên gửi bản mix cho ai",
+      "subtitle": "Cùng là mixing và mastering, nhưng ai làm và làm thế nào sẽ hợp với những người khác nhau.",
+      "columns": [
+        "",
+        "Mastering tự động bằng AI",
+        "Freelancer trên nền tảng",
+        "Studio NOL"
+      ],
+      "rows": [
+        [
+          "Ai thực hiện",
+          "Thuật toán xử lý tự động",
+          "Tùy người làm",
+          "Chủ studio Hwang Kyungha trực tiếp làm"
+        ],
+        [
+          "Giá",
+          "Thường rẻ nhất",
+          "Tùy người làm",
+          "Mixing từ {{mix}} · mastering {{master}} mỗi bài"
+        ],
+        [
+          "Chỉnh sửa",
+          "Đổi cài đặt rồi xử lý lại",
+          "Tùy điều kiện người làm",
+          "Bao gồm 2 lần sửa mix · 1 lần sửa master"
+        ],
+        [
+          "Thời gian",
+          "Vài phút",
+          "Tùy người làm",
+          "3–7 ngày làm việc sau khi nhận file"
+        ],
+        [
+          "Trao đổi",
+          "Không có",
+          "Tin nhắn trên nền tảng",
+          "Cùng nghe bản tham khảo và thống nhất hướng đi qua KakaoTalk"
+        ],
+        [
+          "Phù hợp với",
+          "Người muốn nhanh chóng tăng âm lượng cho demo hay bản tham khảo",
+          "Người muốn nghe mẫu của nhiều người rồi chọn",
+          "Người muốn hoàn thiện bài sắp phát hành cùng một người từ đầu đến cuối"
+        ]
+      ],
+      "note": "Điều kiện khác nhau tùy dịch vụ và người làm nên chỉ ghi xu hướng chung. Giá trị của Studio NOL trùng với bảng giá trên trang này.",
+      "rowHeader": "Hạng mục so sánh"
     }
   },
   "musicPromotion": {
