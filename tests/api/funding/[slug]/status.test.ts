@@ -73,7 +73,7 @@ it('draft 상태 → 404', async () => {
 it('정상 → 200, state·percent·publicBackers·remaining·Cache-Control·expireStalePledges 호출', async () => {
   (getFundingProject as jest.Mock).mockReturnValue(project);
   (aggregateProjectStatus as jest.Mock).mockResolvedValue({
-    raisedAmount: 999, backerCount: 3, remaining: { mail: 7 }, publicBackers: ['김', '이'],
+    raisedAmount: 999, backerCount: 3, remaining: { mail: 7 }, publicBackers: ['김', '이'], publicMessages: [],
   });
   const r = await call('demo');
   expect(r.status).toBe(200);
