@@ -112,8 +112,15 @@ export default function ProjectDetailView({
                   {STATE_LABEL[state]}
                 </span>
               )}
+              {/*
+                히어로가 첫 화면을 다 채워서 아래 모금 현황 카드는 스크롤해야 보인다(2026-09-28
+                실측: 모바일 664px 화면에 막대가 880px). 첫 화면에 "이만큼 모였다"를 싣는 자리가
+                여기다. 현황을 아직 모르면(미리보기·집계 전) 예전처럼 목표를 적는다.
+              */}
               <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
-                목표 {formatPriceAmount(project.goalAmount)}원
+                {interactive && status
+                  ? <><span className="font-semibold tabular-nums">{formatPriceAmount(status.pledgedAmount)}원</span> 모금 · {percent}%</>
+                  : <>목표 {formatPriceAmount(project.goalAmount)}원</>}
               </span>
             </span>
           </>

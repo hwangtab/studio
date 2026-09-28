@@ -73,9 +73,10 @@ describe('ProjectDetailView', () => {
         interactive
       />,
     );
-    expect(screen.getByText('450,000원')).toBeInTheDocument();
+    // 히어로 알약과 모금 현황 카드 두 곳에 같은 숫자가 뜬다.
+    expect(screen.getAllByText('450,000원')).toHaveLength(2);
     // Math.floor(450000 / 1000000 * 100) = 45
-    expect(screen.getByText(/45%/)).toBeInTheDocument();
+    expect(screen.getAllByText(/45%/)).toHaveLength(2);
   });
 
   it('목표를 초과 달성해도 100%로 자르지 않는다(서버 percent 공식과 동일)', () => {
@@ -88,7 +89,7 @@ describe('ProjectDetailView', () => {
       />,
     );
     // Math.floor(1370000 / 1000000 * 100) = 137
-    expect(screen.getByText(/137%/)).toBeInTheDocument();
+    expect(screen.getAllByText(/137%/)).toHaveLength(2);
   });
 
   // 전자상거래법상 판매자·개설자 구분 표시 (펀딩 약관 제4조). 마크다운 프로젝트는
@@ -130,5 +131,16 @@ describe('ProjectDetailView', () => {
     const wall = screen.getByRole('region', { name: '함께한 후원자' });
     // eslint-disable-next-line no-bitwise
     expect(ticker.compareDocumentPosition(wall) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  // 히어로가 첫 화면을 다 채워 모금 현황 카드는 스크롤해야 보인다 — 첫 화면의 알약에 모금액을 싣는다.
+  it('현황이 있으면 히어로 알약이 목표 대신 모금액과 달성률을 보여 준다', () => {
+    render(<ProjectDetailView project={project} state="live" status={{ pledgedAmount: 450000, backerCount: 12 }} interactive />);
+    expect(screen.getByText((_, el) => el?.tagName === 'SPAN' && el.textContent === '450,000원 모금 · 45%')).toBeInTheDocument();
+  });
+
+  it('현황을 모르면(집계 전) 히어로 알약은 예전처럼 목표를 적는다', () => {
+    render(<ProjectDetailView project={project} state="live" status={null} interactive />);
+    expect(screen.getByText('목표 1,000,000원')).toBeInTheDocument();
   });
 });
