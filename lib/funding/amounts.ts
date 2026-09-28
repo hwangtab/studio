@@ -15,3 +15,11 @@ export const splitFundingAmount = (totalAmount: number): FundingAmounts => {
 /** 리워드가는 VAT 포함가. 수량·추가 펀딩을 더한 총액을 위 규약대로 분해한다. */
 export const computeFundingAmounts = (unitAmount: number, quantity: number, additionalAmount: number): FundingAmounts =>
   splitFundingAmount(unitAmount * quantity + additionalAmount);
+
+/**
+ * 여러 리워드 줄의 총액 — Σ(단가 × 수량) + 추가 펀딩. 리워드가는 배송비까지 포함한 최종가다
+ * (배송비를 따로 받지 않는다, 2026-09-28 운영자 결정) — 여기에 배송비 항목은 없다.
+ */
+export const computeFundingAmountsForLines = (
+  lines: readonly { unitAmount: number; quantity: number }[], additionalAmount: number,
+): FundingAmounts => splitFundingAmount(lines.reduce((sum, l) => sum + l.unitAmount * l.quantity, 0) + additionalAmount);

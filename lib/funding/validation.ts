@@ -6,8 +6,16 @@ import { computeProjectState, findReward, type FundingProject, type FundingRewar
 import { isPublicNameStyle, resolvePublicName } from './publicName';
 
 export interface PledgeShipping { name: string; phone: string; postcode: string; address1: string; address2?: string; memo?: string }
+/** 담은 리워드 한 줄 — 요청이 보내는 모양. */
+export interface PledgeItemInput { rewardId: string; quantity: number }
+/** 검증을 마친 한 줄 — 리워드 정의까지 붙인다. */
+export interface ResolvedPledgeLine { reward: FundingReward; quantity: number }
+
 export interface CreatePledgePayload {
-  projectSlug: string; rewardId: string; quantity: number; additionalAmount: number;
+  projectSlug: string;
+  /** 담은 리워드들. 한 개 이상, 같은 리워드는 한 줄(수량으로 합친다). 담은 순서를 지킨다. */
+  items: PledgeItemInput[];
+  additionalAmount: number;
   /** 토스 결제위젯만 쓴다 — 무통장입금은 2026-09-11에 중단했다(lib/funding/policy.ts 참조). */
   paymentMethod: 'toss';
   customerName: string; customerPhone: string; customerEmail: string;
@@ -19,7 +27,7 @@ export interface CreatePledgePayload {
   publicName?: string | null;
   shipping?: PledgeShipping; termsAgreed: true;
 }
-type Result = { ok: true; value: CreatePledgePayload; reward: FundingReward } | { ok: false; message: string };
+type Result = { ok: true; value: CreatePledgePayload; lines: ResolvedPledgeLine[] } | { ok: false; message: string };
 
 const text = (v: unknown, max: number): string | null =>
   typeof v === 'string' && v.trim() !== '' && v.trim().length <= max ? v.trim() : null;
@@ -46,11 +54,25 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   const b = body as Record<string, unknown>;
   if (!project) return { ok: false, message: '프로젝트를 찾을 수 없습니다.' };
   if (computeProjectState(project, now) !== 'live') return { ok: false, message: '지금은 펀딩을 받지 않는 프로젝트입니다.' };
-  const reward = typeof b.rewardId === 'string' ? findReward(project, b.rewardId) : undefined;
-  if (!reward) return { ok: false, message: '리워드를 찾을 수 없습니다.' };
-  const quantity = b.quantity;
-  if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY)
-    return { ok: false, message: `수량은 1~${MAX_QUANTITY} 사이여야 합니다.` };
+  /**
+   * 담은 리워드. `items: [{ rewardId, quantity }]`가 정본이다. 한 리워드만 보내던 옛 모양
+   * (`rewardId`·`quantity`)도 받는다 — 배포 직후 옛 화면을 띄워 둔 사람의 제출이 깨지지 않게.
+   */
+  const rawItems: unknown = Array.isArray(b.items) ? b.items : typeof b.rewardId === 'string' ? [{ rewardId: b.rewardId, quantity: b.quantity }] : null;
+  if (!Array.isArray(rawItems) || rawItems.length === 0) return { ok: false, message: '리워드를 하나 이상 선택해 주세요.' };
+  if (rawItems.length > project.rewards.length) return { ok: false, message: '리워드 선택을 확인해 주세요.' };
+  const lines: ResolvedPledgeLine[] = [];
+  for (const raw of rawItems) {
+    const item = (typeof raw === 'object' && raw !== null && !Array.isArray(raw) ? raw : {}) as Record<string, unknown>;
+    const reward = typeof item.rewardId === 'string' ? findReward(project, item.rewardId) : undefined;
+    if (!reward) return { ok: false, message: '리워드를 찾을 수 없습니다.' };
+    // 같은 리워드를 두 줄로 받지 않는다 — 재고 조건이 줄마다 걸려 합산이 어긋나고, DB도 막는다.
+    if (lines.some((l) => l.reward.id === reward.id)) return { ok: false, message: '같은 리워드가 두 번 담겼습니다.' };
+    const quantity = item.quantity;
+    if (typeof quantity !== 'number' || !Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY)
+      return { ok: false, message: `수량은 1~${MAX_QUANTITY} 사이여야 합니다.` };
+    lines.push({ reward, quantity });
+  }
   const additionalAmount = b.additionalAmount ?? 0;
   if (typeof additionalAmount !== 'number' || !Number.isInteger(additionalAmount) || additionalAmount < 0
     || additionalAmount > MAX_ADDITIONAL_AMOUNT || additionalAmount % ADDITIONAL_AMOUNT_STEP !== 0)
@@ -92,7 +114,7 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   if (customerName === PURGED_MARK) return { ok: false, message: '이름을 확인해 주세요.' };
   if (b.termsAgreed !== true) return { ok: false, message: '약관에 동의해 주세요.' };
   let shipping: PledgeShipping | undefined;
-  if (reward.requiresShipping) {
+  if (lines.some((l) => l.reward.requiresShipping)) {
     // 배열은 typeof 'object'라 그대로 통과하면 인덱스 접근으로 빈 값이 된다 — 제외한다.
     const s = (typeof b.shipping === 'object' && b.shipping !== null && !Array.isArray(b.shipping) ? b.shipping : {}) as Record<string, unknown>;
     const shipTooLong = overLimitMessage([
@@ -128,9 +150,9 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
     publicName = resolved.value;
   }
   return {
-    ok: true, reward,
+    ok: true, lines,
     value: {
-      projectSlug: project.slug, rewardId: reward.id, quantity, additionalAmount, paymentMethod: b.paymentMethod,
+      projectSlug: project.slug, items: lines.map((l) => ({ rewardId: l.reward.id, quantity: l.quantity })), additionalAmount, paymentMethod: b.paymentMethod,
       customerName, customerPhone, customerEmail, supporterMessage, displayNamePublic, publicName,
       shipping, termsAgreed: true,
     },

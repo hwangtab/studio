@@ -15,11 +15,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 // eslint-disable-next-line import/first
 import handler from '../../../../pages/api/admin/funding/export';
 // eslint-disable-next-line import/first
-import { createFundingPledge } from '../../../../lib/funding/service';
+
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../../lib/funding/projects';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from '../../../../lib/funding/validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -85,7 +86,7 @@ beforeEach(async () => {
 });
 
 const seed = async (over: Partial<CreatePledgePayload>, status: string, proj = PROJECT_A) => {
-  const c = await createFundingPledge(payloadFor(over), proj, reward(proj), NOW);
+  const c = await createSingleRewardPledge(payloadFor(over), proj, reward(proj), NOW);
   if (!c.ok) throw new Error('seed 실패');
   await client.execute({ sql: 'UPDATE orders SET status=? WHERE order_no=?', args: [status, c.orderNo] });
   return c.orderNo;

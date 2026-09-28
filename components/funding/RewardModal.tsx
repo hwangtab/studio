@@ -21,6 +21,10 @@ const stockLabel = (remaining: number | null): string =>
 /**
  * 리워드 카드를 누르면 뜨는 모달. 1단계는 리워드 상세, 2단계가 후원 폼·결제다.
  *
+ * 2단계에서 **다른 리워드도 함께 담을 수 있다**(2026-09-28). 누른 리워드가 1개 담긴 채로
+ * 시작하고, 나머지는 같은 목록에서 `담기`로 더한다 — 여러 개를 원하는 사람이 결제를 두 번
+ * 하지 않게. 예전에는 누른 리워드 하나로 잠가 두었다.
+ *
  * 폼과 결제는 `/ko/funding/[slug]/pledge` 페이지와 **같은 `PledgeWizard`를 렌더한다** —
  * 약관 동의와 `terms_version` 기록이 한 벌로 유지되도록 복제하지 않는다. 카드는 여전히
  * 진짜 링크라서, JS가 죽으면 모달 없이 그 페이지로 이동한다.
@@ -132,13 +136,14 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 <li>{stockLabel(left)}</li>
                 {reward.requiresShipping && <li>배송지를 입력받습니다.</li>}
               </ul>
+              <p className="typo-card-meta mt-4">다음 화면에서 다른 리워드도 함께 담을 수 있습니다.</p>
               <button
                 type="button"
                 disabled={soldOut}
                 onClick={() => setStep('pledge')}
-                className="mt-6 inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+                className="mt-4 inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
               >
-                {soldOut ? '품절' : '이 리워드로 펀딩하기'}
+                {soldOut ? '품절' : '담고 펀딩하기'}
               </button>
             </div>
           ) : (
@@ -148,10 +153,9 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
               </h2>
               <PledgeWizard
                 project={project}
+                // 누른 리워드를 1개 담은 채로 시작한다. 다른 리워드도 같은 목록에서 더 담는다.
                 initialRewardId={reward.id}
                 remaining={remaining}
-                // 카드를 눌러 이미 고르고 들어왔다. 여기서 또 고르게 하지 않는다.
-                lockedReward
                 // 모달 본문이 자체 스크롤 컨테이너라 sticky 요약이 폼 위로 떠 겹친다.
                 stickySummary={false}
               />

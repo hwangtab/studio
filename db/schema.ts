@@ -526,12 +526,64 @@ export const fundingPledges = sqliteTable('funding_pledges', {
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 });
 
-export const fundingPledgesRelations = relations(fundingPledges, ({ one }) => ({
+export const fundingPledgesRelations = relations(fundingPledges, ({ one, many }) => ({
   order: one(orders, { fields: [fundingPledges.orderId], references: [orders.id] }),
+  items: many(fundingPledgeItems),
 }));
 
 export type FundingPledge = typeof fundingPledges.$inferSelect;
 export type NewFundingPledge = typeof fundingPledges.$inferInsert;
+
+/**
+ * 후원 한 건에 담긴 **리워드 줄**. 한 주문에 여러 리워드를 담을 수 있게 되면서 생겼다
+ * (2026-09-28, 운영자 결정 — 세트 리워드는 경우의 수가 너무 많다).
+ *
+ * `funding_pledges`는 여전히 주문당 1행이다. 배송지·발송 상태·응원 메시지·내려받기 기록처럼
+ * **주문 전체에 붙는 값**은 거기 남고, 리워드별로 갈리는 값(리워드·단가·수량)만 여기로 온다.
+ * 후원 행을 리워드마다 여러 개 만들지 않은 이유: 모금액·건수·정산·명단이 전부
+ * `orders JOIN funding_pledges`를 합산하므로 행이 늘면 조용히 곱해진다.
+ *
+ * **이 표에 줄이 없는 후원은 `funding_pledges`의 옛 단일 리워드 칸이 곧 한 줄이다**
+ * (lib/funding/pledgeLines.ts). 옛 후원을 옮겨 담지 않았고, 관리자 수기 등록도 아직 옛 칸만
+ * 쓴다. 그래서 줄을 읽는 곳은 반드시 `pledgeLines`(TS)나 `fundingPledgeLinesSql`(SQL)을
+ * 거친다 — 이 표만 보면 옛 후원이 통째로 빠진다.
+ *
+ * 새 후원은 옛 칸에도 첫 줄을 복사해 둔다(NOT NULL이라 비울 수 없다). 그 칸을 직접 읽는
+ * 코드가 다시 생기면 여러 리워드 후원의 첫 줄만 보인다.
+ *
+ * 단가·제목은 후원 시점의 스냅샷이다 — 파일이 바뀌어도 기록은 그대로다. 컬럼을 이
+ * 표에 둔 것은 배포 순서 때문이기도 하다: `funding_pledges`에 컬럼을 더하면 관계 조회가
+ * 전부 새 컬럼을 요구해 마이그레이션 전 배포가 결제 확인까지 깨뜨린다(CLAUDE.md 0020 절).
+ */
+export const fundingPledgeItems = sqliteTable(
+  'funding_pledge_items',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    /**
+     * 후원 행이 지워지면 줄도 함께 지운다. 운영 코드는 후원 행을 지우지 않는다(파기는 칸을
+     * 덮어쓸 뿐이다) — 테스트의 정리 코드가 `DELETE FROM funding_pledges`를 쓰는 것을 막지 않으려는 것.
+     */
+    pledgeId: text('pledge_id').notNull().references(() => fundingPledges.id, { onDelete: 'cascade' }),
+    /** 담은 순서. 화면·메일·CSV가 이 순서로 보여 준다. */
+    position: integer('position').notNull(),
+    rewardId: text('reward_id').notNull(),
+    rewardTitle: text('reward_title').notNull(),
+    unitAmount: integer('unit_amount').notNull(),
+    quantity: integer('quantity').notNull(),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    // 같은 리워드를 두 줄로 담지 않는다 — 수량으로 합친다(재고 조건이 줄마다 걸린다).
+    uniqueIndex('funding_pledge_items_pledge_reward_unique').on(t.pledgeId, t.rewardId),
+    index('funding_pledge_items_reward_idx').on(t.rewardId),
+  ],
+);
+
+export const fundingPledgeItemsRelations = relations(fundingPledgeItems, ({ one }) => ({
+  pledge: one(fundingPledges, { fields: [fundingPledgeItems.pledgeId], references: [fundingPledges.id] }),
+}));
+
+export type FundingPledgeItem = typeof fundingPledgeItems.$inferSelect;
 
 // ─── 펀딩 셀프 개설 (아티스트가 직접 신청·등록) ────────────────────────────────
 // 1차 스펙은 "프로젝트 정본 = content/funding/<slug>.md"였다. 그 설계는 편집자가 운영자

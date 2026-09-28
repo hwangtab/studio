@@ -2,16 +2,20 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { sql, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import type { FundingPledge, Order, Payment, Refund } from '../../db/schema';
+import type { FundingPledge, FundingPledgeItem, Order, Payment, Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
 import { PURGED_MARK } from '../privacy/orderRetention';
 import { stripInvisible } from './publicName';
-import { computeFundingAmounts, type FundingAmounts } from './amounts';
+import { computeFundingAmountsForLines, type FundingAmounts } from './amounts';
+import { pledgeLinesShortTitle } from './pledgeLines';
+import { fundingPledgeLinesSql } from './pledgeLinesSql';
+
+export { fundingPledgeLinesSql };
 import { ANONYMOUS_LABEL, ANONYMOUS_MESSAGE_TERMS_FROM, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import { liveFundingOrderStatusList } from './refundable';
 import type { FundingProject, FundingReward } from './projects';
-import type { CreatePledgePayload } from './validation';
+import type { CreatePledgePayload, ResolvedPledgeLine } from './validation';
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
@@ -91,7 +95,12 @@ export const generateFundingOrderNo = (now: Date, manual = false): string =>
 
 /** payments 각각의 done/failed 환불까지 물고 온다 — 환불 잔액 계산(refundable.ts)이 전 결제행을 봐야 한다. */
 export type FundingPaymentWithRefunds = Payment & { refunds?: Refund[] };
-export type FundingOrder = Order & { fundingPledge: FundingPledge | null; payments: FundingPaymentWithRefunds[] };
+/**
+ * `fundingPledge.items`는 리워드 줄(funding_pledge_items)이다. 비어 있으면 옛 단일 리워드 칸이
+ * 곧 한 줄이다 — 줄은 반드시 `pledgeLines(pledge)`로 읽는다(lib/funding/pledgeLines.ts).
+ */
+export type FundingPledgeWithItems = FundingPledge & { items: FundingPledgeItem[] };
+export type FundingOrder = Order & { fundingPledge: FundingPledgeWithItems | null; payments: FundingPaymentWithRefunds[] };
 
 export const findFundingOrderByOrderNo = async (orderNo: string): Promise<FundingOrder | undefined> => {
   // middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, URL에서 온
@@ -99,7 +108,7 @@ export const findFundingOrderByOrderNo = async (orderNo: string): Promise<Fundin
   // 대문자로 정규화해 비교한다. SQLite `=`는 대소문자 구분.
   const row = await getDb().query.orders.findFirst({
     where: (t, { eq }) => eq(t.orderNo, orderNo.toUpperCase()),
-    with: { fundingPledge: true, payments: { with: { refunds: true } } },
+    with: { fundingPledge: { with: { items: true } }, payments: { with: { refunds: true } } },
   });
   return row?.type === 'funding' ? (row as FundingOrder) : undefined;
 };
@@ -107,7 +116,7 @@ export const findFundingOrderByOrderNo = async (orderNo: string): Promise<Fundin
 export const findFundingOrderById = async (id: string): Promise<FundingOrder | undefined> => {
   const row = await getDb().query.orders.findFirst({
     where: (t, { eq }) => eq(t.id, id),
-    with: { fundingPledge: true, payments: { with: { refunds: true } } },
+    with: { fundingPledge: { with: { items: true } }, payments: { with: { refunds: true } } },
   });
   return row?.type === 'funding' ? (row as FundingOrder) : undefined;
 };
@@ -134,24 +143,38 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
 export const fundingStockCondition = (
   projectSlug: string, reward: Pick<FundingReward, 'id' | 'totalQuantity'>, quantity: number, now: Date,
   /**
-   * 세지 않을 주문번호. 자기 홀드 해제 UPDATE에만 쓴다 — 해제를 같은 batch에 넣으면서
-   * "해제한 뒤에도 자리가 있는가"를 물어야 하는데, 그 시점에는 아직 해제 전이라
-   * 자기 홀드가 그대로 세어진다.
+   * 세지 않을 주문번호. 두 곳에 쓴다.
+   * - 자기 홀드 해제 UPDATE — 해제를 같은 batch에 넣으면서 "해제한 뒤에도 자리가 있는가"를
+   *   물어야 하는데, 그 시점에는 아직 해제 전이라 자기 홀드가 그대로 세어진다.
+   * - 여러 줄 후원의 INSERT들 — 줄을 한 문장씩 넣으므로, 빼지 않으면 앞에서 넣은 자기 줄이
+   *   뒤 문장의 조건에 세어져 문장마다 판정이 달라진다(일부 줄만 들어간 주문이 생긴다).
    */
   excludeOrderNo?: string | null,
 ): SQL =>
   reward.totalQuantity === null
     ? sql`1 = 1`
     : sql`(
-        SELECT COALESCE(SUM(fp.quantity), 0) FROM funding_pledges fp
+        SELECT COALESCE(SUM(l.quantity), 0) FROM ${fundingPledgeLinesSql()} l
+        JOIN funding_pledges fp ON fp.id = l.pledge_id
         JOIN orders o ON o.id = fp.order_id
-        WHERE fp.project_slug = ${projectSlug} AND fp.reward_id = ${reward.id}
+        WHERE fp.project_slug = ${projectSlug} AND l.reward_id = ${reward.id}
           AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
           ${excludeOrderNo ? sql`AND o.order_no != ${excludeOrderNo}` : sql.empty()}
       ) + ${quantity} <= ${reward.totalQuantity}`;
 
+/**
+ * 담은 리워드 전부의 재고 조건. 한정 리워드마다 조건 하나씩 AND로 묶는다 — 하나라도 모자라면
+ * 주문 전체가 0행이다(일부만 담긴 주문은 만들지 않는다).
+ */
+const allLinesStockCondition = (projectSlug: string, lines: readonly ResolvedPledgeLine[], now: Date, excludeOrderNo: string | null): SQL => {
+  const conditions = lines
+    .filter((l) => l.reward.totalQuantity !== null)
+    .map((l) => fundingStockCondition(projectSlug, l.reward, l.quantity, now, excludeOrderNo));
+  return conditions.length === 0 ? sql`1 = 1` : sql.join(conditions.map((c) => sql`(${c})`), sql` AND `);
+};
+
 export const createFundingPledge = async (
-  payload: CreatePledgePayload, project: FundingProject, reward: FundingReward, now: Date,
+  payload: CreatePledgePayload, project: FundingProject, lines: readonly ResolvedPledgeLine[], now: Date,
   options: {
     /**
      * 같은 위저드 세션이 **직전에 만든 자기 주문의 주문번호**. 있으면 그 주문 하나만 만료시킨다.
@@ -163,7 +186,8 @@ export const createFundingPledge = async (
   } = {},
 ): Promise<{ ok: true; orderNo: string; manageToken: string; holdExpiresAt: Date; amounts: FundingAmounts } | { ok: false; code: 'sold_out' }> => {
   const db = getDb();
-  const amounts = computeFundingAmounts(reward.amount, payload.quantity, payload.additionalAmount);
+  if (lines.length === 0) throw new Error('createFundingPledge: 리워드 줄이 없다');
+  const amounts = computeFundingAmountsForLines(lines.map((l) => ({ unitAmount: l.reward.amount, quantity: l.quantity })), payload.additionalAmount);
   const orderNo = generateFundingOrderNo(now);
   const manageToken = generateManageToken();
   // 결제수단은 토스 하나뿐이다(무통장입금 중단, 2026-09-11) — 홀드도 한 종류다.
@@ -172,7 +196,10 @@ export const createFundingPledge = async (
   const orderId = randomUUID().replace(/-/g, '');
   const pledgeId = randomUUID().replace(/-/g, '');
   const s = payload.shipping;
-  const stockCondition = fundingStockCondition(project.slug, reward, payload.quantity, now);
+  // 새 주문 자신은 뺀다 — 줄을 한 문장씩 넣으므로, 앞 문장이 넣은 자기 줄이 뒤 문장의 조건에
+  // 세어지면 문장마다 판정이 갈린다. 빼 두면 batch 안의 모든 문장이 같은 조건을 본다.
+  const stockCondition = allLinesStockCondition(project.slug, lines, now, orderNo);
+  const first = lines[0];
   const releaseOrderNo = options.releaseOrderNo ? options.releaseOrderNo.toUpperCase() : null;
 
   /**
@@ -224,7 +251,7 @@ export const createFundingPledge = async (
         AND order_no = ${releaseOrderNo}
         AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
         AND id IN (SELECT order_id FROM funding_pledges WHERE project_slug = ${project.slug} AND payment_method != 'bank_transfer')
-        AND ${fundingStockCondition(project.slug, reward, payload.quantity, now, releaseOrderNo)}
+        AND ${allLinesStockCondition(project.slug, lines, now, releaseOrderNo)}
     `));
   }
 
@@ -238,6 +265,10 @@ export const createFundingPledge = async (
 
   // terms_agreed_at을 now로 적는 근거: validateCreatePledgePayload가 termsAgreed !== true를
   // 먼저 막으므로(lib/funding/validation.ts), 이 지점에 온 요청은 동의를 마친 요청뿐이다.
+  //
+  // 옛 단일 리워드 칸(reward_id·reward_title·unit_amount·quantity)은 NOT NULL이라 첫 줄을 복사해
+  // 채운다. 줄의 정본은 funding_pledge_items다(아래). 제목은 여러 줄이면 "첫 제목 외 N건"으로
+  // 둔다 — 누가 이 칸을 직접 읽어도 리워드가 여럿이라는 것은 보이게.
   statements.push(db.run(sql`
     INSERT INTO funding_pledges (
       id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount,
@@ -245,13 +276,22 @@ export const createFundingPledge = async (
       shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
       terms_agreed_at, terms_version
     )
-    SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
-           ${payload.quantity}, ${payload.additionalAmount}, ${payload.paymentMethod}, ${toEpoch(holdExpiresAt)},
+    SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${first.reward.id},
+           ${pledgeLinesShortTitle(lines.map((l) => ({ rewardTitle: l.reward.title })))}, ${first.reward.amount},
+           ${first.quantity}, ${payload.additionalAmount}, ${payload.paymentMethod}, ${toEpoch(holdExpiresAt)},
            ${payload.supporterMessage ?? null}, ${payload.displayNamePublic ? 1 : 0}, ${payload.publicName ?? null},
            ${s?.name ?? null}, ${s?.phone ?? null}, ${s?.postcode ?? null}, ${s?.address1 ?? null}, ${s?.address2 ?? null}, ${s?.memo ?? null},
            ${toEpoch(now)}, ${FUNDING_TERMS_VERSION}
     WHERE ${stockCondition}
   `));
+
+  lines.forEach((l, position) => {
+    statements.push(db.run(sql`
+      INSERT INTO funding_pledge_items (id, pledge_id, position, reward_id, reward_title, unit_amount, quantity)
+      SELECT ${randomUUID().replace(/-/g, '')}, ${pledgeId}, ${position}, ${l.reward.id}, ${l.reward.title}, ${l.reward.amount}, ${l.quantity}
+      WHERE ${stockCondition}
+    `));
+  });
 
   const results = await db.batch(statements as [typeof statements[number], ...typeof statements]);
 
@@ -315,11 +355,12 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
     WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()})
   `);
   const claimed = await db.all<{ reward_id: string; qty: number }>(sql`
-    SELECT fp.reward_id, SUM(fp.quantity) AS qty
-    FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
+    SELECT l.reward_id, SUM(l.quantity) AS qty
+    FROM ${fundingPledgeLinesSql()} l
+    JOIN funding_pledges fp ON fp.id = l.pledge_id JOIN orders o ON o.id = fp.order_id
     WHERE fp.project_slug = ${project.slug}
       AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
-    GROUP BY fp.reward_id
+    GROUP BY l.reward_id
   `);
   const claimedBy = new Map(claimed.map((r) => [r.reward_id, Number(r.qty)]));
   const remaining: Record<string, number | null> = {};
@@ -433,10 +474,11 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
  */
 export const aggregateRewardSales = async (projectSlug: string): Promise<Record<string, number>> => {
   const rows = await getDb().all<{ reward_id: string; qty: number }>(sql`
-    SELECT fp.reward_id, SUM(fp.quantity) AS qty
-    FROM funding_pledges fp JOIN orders o ON o.id = fp.order_id
+    SELECT l.reward_id, SUM(l.quantity) AS qty
+    FROM ${fundingPledgeLinesSql()} l
+    JOIN funding_pledges fp ON fp.id = l.pledge_id JOIN orders o ON o.id = fp.order_id
     WHERE fp.project_slug = ${projectSlug} AND o.status IN (${liveFundingOrderStatusList()})
-    GROUP BY fp.reward_id
+    GROUP BY l.reward_id
   `);
   return Object.fromEntries(rows.map((r) => [r.reward_id, Number(r.qty)]));
 };

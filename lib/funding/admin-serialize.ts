@@ -1,6 +1,7 @@
 import { isVirtualAccountMethod } from '../booking/toss';
 import { isRefundPendingStatus } from './policy';
 import type { FundingOrder } from './service';
+import { pledgeLines, pledgeLinesLabel } from './pledgeLines';
 
 export interface AdminPledgeItem {
   id: string;
@@ -12,8 +13,8 @@ export interface AdminPledgeItem {
   customerName: string;
   customerPhone: string;
   customerEmail: string;
-  rewardTitle: string;
-  quantity: number;
+  /** 담은 리워드 요약 — "『발작』 × 1, 『갱도』 × 1"(pledgeLinesLabel). 한 리워드면 "제목 × 수량". */
+  rewardLabel: string;
   additionalAmount: number;
   totalAmount: number;
   fulfillmentStatus: string;
@@ -194,8 +195,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     customerName: o.customerName,
     customerPhone: o.customerPhone,
     customerEmail: o.customerEmail,
-    rewardTitle: p.rewardTitle,
-    quantity: p.quantity,
+    rewardLabel: pledgeLinesLabel(pledgeLines(p)),
     additionalAmount: p.additionalAmount,
     totalAmount: o.totalAmount,
     fulfillmentStatus: p.fulfillmentStatus,

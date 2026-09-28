@@ -41,8 +41,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
 
   // 이메일·전화를 매번 바꾸면 고객 단위 상한을 우회할 수 있다 — 한정 재고를 잠그는 그 경로만
-  // IP 카운터로 한 번 더 막는다(한정 수량 리워드). 무제한 리워드는 세지 않는다.
-  const limitedReward = validated.reward.totalQuantity !== null;
+  // IP 카운터로 한 번 더 막는다(한정 수량 리워드). 무제한 리워드만 담았으면 세지 않는다.
+  const limitedReward = validated.lines.some((l) => l.reward.totalQuantity !== null);
   if (limitedReward) {
     if (!(await consumeRateLimit(`funding_hold:ip:${ip}`, MAX_LIMITED_TOSS_ATTEMPTS_PER_IP, TOSS_HOLD_SECONDS)))
       return res.status(429).json({ ok: false, code: 'too_many_attempts', message: TOO_MANY_ATTEMPTS_MESSAGE });
@@ -58,7 +58,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     typeof req.body?.previousOrderNo === 'string' && /^FND-(?:M-)?\d{8}-[0-9A-Fa-f]{8}$/.test(req.body.previousOrderNo)
       ? req.body.previousOrderNo
       : null;
-  const result = await createFundingPledge(validated.value, project!, validated.reward, now, {
+  const result = await createFundingPledge(validated.value, project!, validated.lines, now, {
     releaseOrderNo: previousOrderNo,
   });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });

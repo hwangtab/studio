@@ -13,11 +13,12 @@ jest.mock('../../../../lib/funding/projects', () => ({ ...jest.requireActual('..
 // eslint-disable-next-line import/first
 import { getServerSideProps } from '../../../../pages/[locale]/funding/[slug]/pledge';
 // eslint-disable-next-line import/first
-import { createFundingPledge } from '../../../../lib/funding/service';
+
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../../lib/funding/projects';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from '../../../../lib/funding/validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -78,7 +79,7 @@ afterAll(() => client.close());
 describe('funding pledge getServerSideProps', () => {
   it('?reward=가 품절 리워드면 initialRewardId를 null로 준다', async () => {
     // totalQuantity 1을 결제 확정으로 채워 품절 상태를 만든다.
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('cd'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('cd'), NOW); if (!c.ok) throw new Error();
     await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
 
     const res = resStub();

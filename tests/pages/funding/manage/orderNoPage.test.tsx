@@ -5,8 +5,8 @@ import '@testing-library/jest-dom';
 import FundingManagePage from '../../../../pages/[locale]/funding/manage/[orderNo]';
 
 const baseProps = {
-  orderNo: 'FND-1', token: 'tok', projectSlug: 'demo', projectTitle: '데모', rewardTitle: '감사 메일',
-  quantity: 1, additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
+  orderNo: 'FND-1', token: 'tok', projectSlug: 'demo', projectTitle: '데모', rewardLabel: '감사 메일 × 1',
+  additionalAmount: 0, totalAmount: 30000, status: 'paid', fulfillmentStatus: 'none', shipping: null,
   canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [], lookupFailed: false,
   displayNamePublic: false, canEditDisplayName: true,
   customerName: '홍길동', publicName: null, supporterMessage: null, listingHidden: false, messageShownAnonymously: false,

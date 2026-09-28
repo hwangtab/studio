@@ -14,6 +14,7 @@ import { subscriptionOrderName, type SubscriptionKind } from '../billing/amounts
 import { formatKstDateTime, formatKstDateTimeFull } from '../booking/format';
 import { getMixingProduct } from '../booking/mixing-products';
 import { getProduct } from '../booking/products';
+import { pledgeLines, pledgeLinesLabel } from '../funding/pledgeLines';
 
 /**
  * 토스 결제 장부 — 기간 안에 승인된 결제 전부를 서비스 구분 없이 한 표로.
@@ -98,7 +99,7 @@ export const listSalesLedgerRows = async (range: LedgerRange): Promise<SalesLedg
         with: {
           bookings: true,
           workOrders: true,
-          fundingPledge: true,
+          fundingPledge: { with: { items: true } },
           subscriptionPayment: { with: { subscription: true } },
         },
       },
@@ -163,7 +164,7 @@ const describeOrder = (order: LedgerOrder): string => {
     case 'funding': {
       const pledge = order.fundingPledge;
       if (!pledge) return '펀딩';
-      return `${pledge.projectSlug} · ${pledge.rewardTitle} × ${pledge.quantity}`;
+      return `${pledge.projectSlug} · ${pledgeLinesLabel(pledgeLines(pledge))}`;
     }
     case 'subscription': {
       const cycle = order.subscriptionPayment;

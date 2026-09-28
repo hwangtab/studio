@@ -46,13 +46,14 @@ import { createBookingOrder, createMixingOrder, findOrderByOrderNo, PENDING_HOLD
 // eslint-disable-next-line import/first
 import { confirmFundingPledge } from '../funding/confirm';
 // eslint-disable-next-line import/first
-import { createFundingPledge, findFundingOrderByOrderNo } from '../funding/service';
+import { findFundingOrderByOrderNo } from '../funding/service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../funding/projects';
 // eslint-disable-next-line import/first
 import type { CreateBookingPayload } from './validation';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from '../funding/validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -99,7 +100,7 @@ const bookingPayload = (over: Partial<CreateBookingPayload> = {}): CreateBooking
 
 /** paid 상태의 토스 펀딩 주문 하나. */
 const paidPledge = async (): Promise<{ orderNo: string }> => {
-  const c = await createFundingPledge(pledgePayload(), PROJECT, PROJECT.rewards[0], NOW);
+  const c = await createSingleRewardPledge(pledgePayload(), PROJECT, PROJECT.rewards[0], NOW);
   if (!c.ok) throw new Error('pledge 생성 실패');
   mockConfirm.mockResolvedValueOnce({
     ok: true,
@@ -210,7 +211,7 @@ describe('부분취소 2회 — 멱등 키에 취소 합계를 넣는다 (항목
   });
 
   it('DONE 이벤트의 키는 그대로 `paymentKey:status`다', async () => {
-    const c = await createFundingPledge(pledgePayload(), PROJECT, PROJECT.rewards[0], NOW);
+    const c = await createSingleRewardPledge(pledgePayload(), PROJECT, PROJECT.rewards[0], NOW);
     if (!c.ok) throw new Error();
     mockFetch.mockResolvedValueOnce({
       ok: true,
@@ -283,7 +284,7 @@ describe('토스 콘솔 취소 통지·무로그 조기 반환 (항목 4)', () =
   });
 
   it('payments 행이 없으면 무로그로 물러나지 않고 대사 단서를 남긴다', async () => {
-    const c = await createFundingPledge(pledgePayload(), PROJECT, PROJECT.rewards[0], NOW);
+    const c = await createSingleRewardPledge(pledgePayload(), PROJECT, PROJECT.rewards[0], NOW);
     if (!c.ok) throw new Error();
     await client.execute({ sql: `UPDATE orders SET status = 'paid' WHERE order_no = ?`, args: [c.orderNo] });
     mockFetch.mockResolvedValueOnce({

@@ -12,11 +12,12 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 // eslint-disable-next-line import/first
 import { aggregateAdminFundingTotals, listFundingOrders } from './admin-list';
 // eslint-disable-next-line import/first
-import { createFundingPledge } from './service';
+
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from './validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -68,11 +69,11 @@ beforeEach(async () => {
 const reward = (p: typeof PROJECT_A) => p.rewards.find((r) => r.id === 'mail')!;
 
 it('slug 필터가 DB 쪽에서 걸려 201건 잘림 이전에 정확한 건수만 돌아온다', async () => {
-  await createFundingPledge(payloadFor({ customerEmail: 'a1@example.com', customerPhone: '010-0001' }), PROJECT_A, reward(PROJECT_A), NOW);
-  await createFundingPledge(payloadFor({ customerEmail: 'a2@example.com', customerPhone: '010-0002' }), PROJECT_A, reward(PROJECT_A), NOW);
-  await createFundingPledge(payloadFor({ customerEmail: 'a3@example.com', customerPhone: '010-0003' }), PROJECT_A, reward(PROJECT_A), NOW);
-  await createFundingPledge(payloadFor({ projectSlug: 'b', customerEmail: 'b1@example.com', customerPhone: '010-0004' }), PROJECT_B, reward(PROJECT_B), NOW);
-  await createFundingPledge(payloadFor({ projectSlug: 'b', customerEmail: 'b2@example.com', customerPhone: '010-0005' }), PROJECT_B, reward(PROJECT_B), NOW);
+  await createSingleRewardPledge(payloadFor({ customerEmail: 'a1@example.com', customerPhone: '010-0001' }), PROJECT_A, reward(PROJECT_A), NOW);
+  await createSingleRewardPledge(payloadFor({ customerEmail: 'a2@example.com', customerPhone: '010-0002' }), PROJECT_A, reward(PROJECT_A), NOW);
+  await createSingleRewardPledge(payloadFor({ customerEmail: 'a3@example.com', customerPhone: '010-0003' }), PROJECT_A, reward(PROJECT_A), NOW);
+  await createSingleRewardPledge(payloadFor({ projectSlug: 'b', customerEmail: 'b1@example.com', customerPhone: '010-0004' }), PROJECT_B, reward(PROJECT_B), NOW);
+  await createSingleRewardPledge(payloadFor({ projectSlug: 'b', customerEmail: 'b2@example.com', customerPhone: '010-0005' }), PROJECT_B, reward(PROJECT_B), NOW);
 
   const all = await listFundingOrders(null);
   expect(all).toHaveLength(5);
@@ -239,7 +240,7 @@ it('pledge 없는 주문이 섞여 있어도 201건 잘림 판정이 어긋나�
     });
   }
   for (let i = 0; i < 201; i += 1) {
-    await createFundingPledge(
+    await createSingleRewardPledge(
       payloadFor({ customerEmail: `t${i}@example.com`, customerPhone: `010-9${i}` }),
       PROJECT_A, reward(PROJECT_A), now,
     );

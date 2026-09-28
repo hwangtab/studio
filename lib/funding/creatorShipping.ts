@@ -5,6 +5,8 @@ import { fundingProjects } from '../../db/schema';
 import { isRefundPendingStatus } from './policy';
 import { isPastFundingEnd } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
+import { fundingPledgeLinesSql } from './pledgeLinesSql';
+import { pledgeLines, pledgeLinesLabel } from './pledgeLines';
 
 /**
  * 이 모듈은 서버 전용이다. 클라이언트에서 import하면 `lib/funding/projects.ts`의 최상위
@@ -105,21 +107,26 @@ const loadSummary = async (projectId: string, projectSlug: string): Promise<Crea
   const totals = await db.all<SummaryTotalsRow>(sql`
     SELECT
       COUNT(*) AS backers,
-      COUNT(CASE WHEN r.requires_shipping = 1 THEN 1 END) AS shipping_required
+      -- 여러 리워드를 담은 후원은 배송 리워드가 **하나라도** 있으면 배송 대상이다(한 상자).
+      COUNT(CASE WHEN EXISTS (
+        SELECT 1 FROM ${fundingPledgeLinesSql()} l
+        JOIN funding_rewards r ON r.project_id = ${projectId} AND r.reward_id = l.reward_id
+        WHERE l.pledge_id = fp.id AND r.requires_shipping = 1
+      ) THEN 1 END) AS shipping_required
     FROM funding_pledges fp
     JOIN orders o ON o.id = fp.order_id
-    LEFT JOIN funding_rewards r ON r.project_id = ${projectId} AND r.reward_id = fp.reward_id
     WHERE fp.project_slug = ${projectSlug} AND o.status IN (${liveFundingOrderStatusList()})
   `);
   const byReward = await db.all<SummaryByRewardRow>(sql`
-    SELECT fp.reward_id AS reward_id, fp.reward_title AS reward_title,
-           SUM(fp.quantity) AS qty, MAX(COALESCE(r.requires_shipping, 0)) AS requires_shipping
-    FROM funding_pledges fp
+    SELECT l.reward_id AS reward_id, l.reward_title AS reward_title,
+           SUM(l.quantity) AS qty, MAX(COALESCE(r.requires_shipping, 0)) AS requires_shipping
+    FROM ${fundingPledgeLinesSql()} l
+    JOIN funding_pledges fp ON fp.id = l.pledge_id
     JOIN orders o ON o.id = fp.order_id
-    LEFT JOIN funding_rewards r ON r.project_id = ${projectId} AND r.reward_id = fp.reward_id
+    LEFT JOIN funding_rewards r ON r.project_id = ${projectId} AND r.reward_id = l.reward_id
     WHERE fp.project_slug = ${projectSlug} AND o.status IN (${liveFundingOrderStatusList()})
-    GROUP BY fp.reward_id, fp.reward_title
-    ORDER BY fp.reward_id ASC
+    GROUP BY l.reward_id, l.reward_title
+    ORDER BY l.reward_id ASC
   `);
   return {
     backerCount: Number(totals[0]?.backers ?? 0),
@@ -153,30 +160,43 @@ export const loadCreatorShipping = async (
   // 취소가 아닌 것(fulfillmentStatusEnum에는 애초에 '취소' 값이 없다 — 취소된 후원은
   // orders.status가 refunded로 빠지므로 첫 조건이 이미 덮는다).
   const rows = await db.all<ShippingRowRaw>(sql`
-    SELECT fp.id AS pledge_id, fp.reward_id AS reward_id, fp.reward_title AS reward_title, fp.quantity AS quantity,
+    SELECT fp.id AS pledge_id, l.reward_id AS reward_id, l.reward_title AS reward_title, l.quantity AS quantity,
            fp.shipping_name AS shipping_name, fp.shipping_phone AS shipping_phone,
            fp.shipping_postcode AS shipping_postcode, fp.shipping_address1 AS shipping_address1,
            fp.shipping_address2 AS shipping_address2, fp.shipping_memo AS shipping_memo,
            fp.fulfillment_status AS fulfillment_status,
            fp.tracking_company AS tracking_company, fp.tracking_number AS tracking_number,
            fp.refund_requested_at AS refund_requested_at, o.status AS order_status
-    FROM funding_pledges fp
+    FROM ${fundingPledgeLinesSql()} l
+    JOIN funding_pledges fp ON fp.id = l.pledge_id
     JOIN orders o ON o.id = fp.order_id
-    JOIN funding_rewards r ON r.project_id = ${project.id} AND r.reward_id = fp.reward_id
+    JOIN funding_rewards r ON r.project_id = ${project.id} AND r.reward_id = l.reward_id
     WHERE fp.project_slug = ${project.slug}
       AND o.status IN (${liveFundingOrderStatusList()})
       AND r.requires_shipping = 1
-    ORDER BY fp.created_at ASC
+    ORDER BY fp.created_at ASC, l.position ASC
   `);
+
+  /**
+   * 조회는 **줄** 단위다(배송 리워드 줄만). 한 후원에 배송 리워드가 여럿이면 한 상자로
+   * 나가므로 후원 한 행으로 묶는다 — 리워드 칸은 "제목 × 수량"을 잇고 수량은 합계.
+   * 디지털 줄은 싸지 않으니 싣지 않는다. 한 리워드짜리 후원은 예전과 똑같이 나온다.
+   */
+  const grouped = new Map<string, { first: ShippingRowRaw; lines: Array<{ rewardId: string; rewardTitle: string; unitAmount: number; quantity: number }> }>();
+  for (const r of rows) {
+    const g = grouped.get(r.pledge_id) ?? { first: r, lines: [] };
+    g.lines.push({ rewardId: r.reward_id, rewardTitle: r.reward_title, unitAmount: 0, quantity: Number(r.quantity) });
+    grouped.set(r.pledge_id, g);
+  }
 
   return {
     state: 'open',
     summary,
-    rows: rows.map((r) => ({
+    rows: [...grouped.values()].map(({ first: r, lines }) => ({
       pledgeId: r.pledge_id,
-      rewardId: r.reward_id,
-      rewardTitle: r.reward_title,
-      quantity: Number(r.quantity),
+      rewardId: lines[0].rewardId,
+      rewardTitle: lines.length === 1 ? lines[0].rewardTitle : pledgeLinesLabel(lines),
+      quantity: lines.reduce((sum, l) => sum + l.quantity, 0),
       shippingName: r.shipping_name,
       shippingPhone: r.shipping_phone,
       shippingPostcode: r.shipping_postcode,
@@ -222,6 +242,7 @@ export const loadFulfillmentGate = async (pledgeId: string, now: Date = new Date
   const db = getDb();
   const pledge = await db.query.fundingPledges.findFirst({
     where: (t, { eq: eqCol }) => eqCol(t.id, pledgeId),
+    with: { items: true },
   });
   if (!pledge) return null;
 
@@ -230,14 +251,16 @@ export const loadFulfillmentGate = async (pledgeId: string, now: Date = new Date
   });
   if (!project) return null;
 
-  const reward = await db.query.fundingRewards.findFirst({
-    where: (t, { and: andCols, eq: eqCol }) => andCols(eqCol(t.projectId, project.id), eqCol(t.rewardId, pledge.rewardId)),
+  // 담은 리워드 중 배송 리워드가 하나라도 있으면 배송 대상이다(한 상자).
+  const rewardIds = pledgeLines(pledge).map((l) => l.rewardId);
+  const rewards = await db.query.fundingRewards.findMany({
+    where: (t, { and: andCols, eq: eqCol, inArray }) => andCols(eqCol(t.projectId, project.id), inArray(t.rewardId, rewardIds)),
   });
 
   return {
     projectId: project.id,
     creatorId: project.creatorId,
     pastFundingEnd: isPastFundingEnd({ endAt: project.endAt.toISOString() }, now),
-    requiresShipping: reward?.requiresShipping === true,
+    requiresShipping: rewards.some((r) => r.requiresShipping === true),
   };
 };

@@ -255,6 +255,34 @@ describe('확정 메일의 음원 내려받기', () => {
     expect((sendEmail as jest.Mock).mock.calls.length).toBeGreaterThan(0);
   });
 
+  // 여러 리워드를 담은 후원 — 줄마다 적고, 파일은 합치되 같은 파일은 한 번만.
+  it('여러 리워드를 담았으면 줄마다 적고, 겹치는 파일은 한 번만 싣는다', async () => {
+    (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
+    const base = (order as Record<string, Record<string, unknown>>).fundingPledge;
+    const multiOrder = {
+      ...(order as Record<string, unknown>),
+      fundingPledge: {
+        ...base,
+        items: [
+          { position: 0, rewardId: 'mp3', rewardTitle: 'MP3', unitAmount: 10000, quantity: 1 },
+          { position: 1, rewardId: 'wav', rewardTitle: 'WAV', unitAmount: 30000, quantity: 2 },
+        ],
+      },
+    } as never;
+    await sendFundingConfirmedEmails(
+      multiOrder,
+      projectWith([
+        { id: 'mp3', downloads: [{ label: 'MP3 320kbps', key: 'demo/mp3.zip' }] },
+        { id: 'wav', downloads: [{ label: 'MP3 320kbps', key: 'demo/mp3.zip' }, { label: 'WAV', key: 'demo/wav.zip' }] },
+      ]),
+    );
+    const text = (sendEmail as jest.Mock).mock.calls[0][0].text as string;
+    expect(text).toContain('· MP3 × 1');
+    expect(text).toContain('· WAV × 2');
+    expect(text.match(/· MP3 320kbps/g)).toHaveLength(1);
+    expect(text).toContain('· WAV\n');
+  });
+
   it('내려받을 파일이 없는 리워드에는 내려받기 줄이 붙지 않는다', async () => {
     (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
     await sendFundingConfirmedEmails(orderFor('mp3'), projectWith([{ id: 'mp3', downloads: [] }]));
