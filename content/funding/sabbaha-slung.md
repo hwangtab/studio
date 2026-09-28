@@ -26,6 +26,7 @@ rewards:
     amount: 30000
     requiresShipping: false
     estimatedDelivery: 2027-02
+    image: /images/funding/sabbaha-slung/album-front-20260928.webp
   - id: cd
     title: CD + 친필 부적
     description: |-
