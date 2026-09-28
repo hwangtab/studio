@@ -105,24 +105,26 @@ export default function ProjectDetailView({
         title={project.title}
         subtitle={
           <>
-            {project.summary}
-            <span className="mt-6 flex flex-wrap justify-center gap-2">
+            {/*
+              알약(상태·모금액)을 요약 **위**, 제목 바로 아래에 둔다. 요약 뒤에 두면 모바일에서
+              화면 밖이거나 하단 고정 "펀딩하기" 바(FundingMobileCta) 뒤에 가려진다(2026-09-28
+              실측: iPhone 13에서 알약 하단 621px인데 고정 바가 그 위를 덮고, iPhone SE 568px
+              화면에서는 아예 밖). 첫 화면에 "이만큼 모였다"를 싣는 것이 이 알약의 일이다.
+              현황을 아직 모르면(미리보기·집계 전) 예전처럼 목표를 적는다.
+            */}
+            <span className="mb-6 flex flex-wrap justify-center gap-2">
               {STATE_LABEL[state] && (
                 <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
                   {STATE_LABEL[state]}
                 </span>
               )}
-              {/*
-                히어로가 첫 화면을 다 채워서 아래 모금 현황 카드는 스크롤해야 보인다(2026-09-28
-                실측: 모바일 664px 화면에 막대가 880px). 첫 화면에 "이만큼 모였다"를 싣는 자리가
-                여기다. 현황을 아직 모르면(미리보기·집계 전) 예전처럼 목표를 적는다.
-              */}
               <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
                 {interactive && status
                   ? <><span className="font-semibold tabular-nums">{formatPriceAmount(status.pledgedAmount)}원</span> 모금 · {percent}%</>
                   : <>목표 {formatPriceAmount(project.goalAmount)}원</>}
               </span>
             </span>
+            {project.summary}
           </>
         }
         ctaButtons={
