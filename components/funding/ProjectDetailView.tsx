@@ -47,6 +47,8 @@ export interface ProjectDetailViewProps {
   anonymousBackers?: number;
   /** 후원자가 남긴 응원 메시지(공개 페이지의 폴링 결과). */
   messages?: { name: string; message: string; at: number }[];
+  /** 메시지가 올 것을 알지만 아직 폴링 전인가 — 응원 메시지 칸 자리를 미리 잡는다. */
+  messagesPending?: boolean;
 }
 
 /**
@@ -69,6 +71,7 @@ export default function ProjectDetailView({
   backers = [],
   anonymousBackers = 0,
   messages = [],
+  messagesPending = false,
 }: ProjectDetailViewProps) {
   const canPledge = interactive && state === 'live';
   const rewardRemaining = mergeRewardRemaining(project.rewards, remaining);
@@ -151,7 +154,7 @@ export default function ProjectDetailView({
               않는다 — 래퍼에 mb를 주면 그 경우 빈 간격만 남는다.
             */}
             <div className="space-y-10">
-              <SupporterTicker messages={messages} />
+              <SupporterTicker messages={messages} pending={messagesPending} />
               <article className="prose prose-lg max-w-none dark:prose-invert">
                 <MarkdownRenderer content={project.content} locale="ko" />
               </article>

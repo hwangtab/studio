@@ -21,6 +21,12 @@ export interface FundingPublicStatus {
   publicBackers: string[];
   anonymousBackerCount: number;
   publicMessages: Array<{ name: string; message: string; at: number }>;
+  /**
+   * 공개 메시지 **개수**. 정적 HTML에는 메시지 본문을 싣지 않으므로(아래 OrNull), 화면이
+   * "메시지가 곧 온다"를 미리 알고 자리를 잡아 두는 데 쓴다 — 없으면 응원 메시지 칸이
+   * 폴링 뒤에 튀어나와 그 아래 본문 전체를 밀어낸다. 수만 나가므로 색인될 것이 없다.
+   */
+  messageCount: number;
 }
 
 /**
@@ -46,6 +52,7 @@ export const buildPublicStatus = async (
     publicBackers: s.publicBackers,
     anonymousBackerCount: s.anonymousBackerCount,
     publicMessages: s.publicMessages,
+    messageCount: s.publicMessages.length,
   };
 };
 
@@ -71,6 +78,7 @@ export const buildPublicStatusOrNull = async (
   try {
     const s = await buildPublicStatus(project, now);
     // 익명 수도 비운다 — 이름 없이 "익명"만 먼저 그려졌다가 폴링 뒤 이름이 끼어드는 깜빡임을 막는다.
+    // messageCount는 남긴다 — 응원 메시지 칸의 자리를 정적 HTML에서 미리 잡는 데 쓴다.
     return { ...s, publicBackers: [], anonymousBackerCount: 0, publicMessages: [] };
   } catch {
     return null;

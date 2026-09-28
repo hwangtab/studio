@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import ProjectDetailView from '../../../../components/funding/ProjectDetailView';
@@ -99,6 +100,22 @@ export default function FundingProjectPage({ project, initialState, initialStatu
 
   return (
     <>
+      {/*
+        상태 API를 HTML 파싱 시점에 미리 받는다. 후원자 이름·응원 메시지는 정적 HTML에 싣지
+        않고 useFundingStatus의 첫 조회가 채우는데(lib/funding/publicStatus.ts), 그 조회는
+        JS를 받아 하이드레이션한 **뒤에야** 시작해서 모바일에서 몇 초 늦게 떴다. preload한
+        응답을 훅의 fetch가 그대로 가져다 쓴다 — URL·모드(same-origin, crossOrigin
+        anonymous)가 훅과 같아야 재사용된다.
+      */}
+      <Head>
+        <link
+          rel="preload"
+          href={`/api/funding/${encodeURIComponent(project.slug)}/status`}
+          as="fetch"
+          crossOrigin="anonymous"
+          key="funding-status-preload"
+        />
+      </Head>
       <SEO
         // 제목에 구분자를 두 번 겹치지 않는다 — 프로젝트 제목이 이미 '… 후원'으로 끝나는데
         // `— 펀딩 | 스튜디오 놀`을 붙이면 `—`와 `|`가 함께 나와 검색 결과에서 지저분하다.
@@ -139,6 +156,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         backers={data?.publicBackers ?? []}
         anonymousBackers={data?.anonymousBackerCount ?? 0}
         messages={data?.publicMessages ?? []}
+        messagesPending={!statusError && (data?.publicMessages?.length ?? 0) === 0 && (data?.messageCount ?? 0) > 0}
       />
 
       {/* 위 SEO의 faqItems와 같은 배열 — 화면과 FAQPage 스키마가 같은 소스를 읽는다. */}

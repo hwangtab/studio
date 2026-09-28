@@ -126,3 +126,29 @@ it('메시지가 잘리면 더 보기가 나오고, 펼치는 동안 자동 순�
   expect(screen.getByText(/첫 번째 응원/)).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /접기/ })).toBeInTheDocument();
 });
+
+/**
+ * 메시지 본문은 폴링으로 오지만 개수는 정적 HTML에 온다. 올 것을 아는 동안 같은 높이의 틀을
+ * 그려 두어야, 메시지가 도착할 때 그 아래 본문이 밀리지 않는다(2026-09-28).
+ */
+describe('불러오는 중 자리 잡기', () => {
+  beforeEach(() => mockReducedMotion(false));
+
+  it('pending이면 메시지가 없어도 제목과 같은 높이의 틀을 그린다', () => {
+    const { container } = render(<SupporterTicker messages={[]} pending />);
+    expect(screen.getByRole('heading', { name: '응원 메시지' })).toBeInTheDocument();
+    expect(container.querySelector('section')).toHaveAttribute('aria-busy', 'true');
+    expect(container.querySelector('.h-40')).not.toBeNull();
+  });
+
+  it('pending이 아니고 메시지가 없으면 여전히 아무것도 그리지 않는다', () => {
+    const { container } = render(<SupporterTicker messages={[]} />);
+    expect(container).toBeEmptyDOMElement();
+  });
+
+  it('메시지가 오면 틀 대신 메시지를 그린다', () => {
+    render(<SupporterTicker messages={[{ name: '익명', message: '투쟁!', at: 1 }]} pending />);
+    expect(screen.getByText(/투쟁!/)).toBeInTheDocument();
+    expect(screen.queryByText('응원 메시지를 불러오는 중입니다.')).toBeNull();
+  });
+});

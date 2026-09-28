@@ -7,6 +7,8 @@ export interface FundingStatusResponse {
   /** 옛 배포의 응답·캐시에는 없다 — 없으면 0으로 읽는다. */
   anonymousBackerCount?: number;
   publicMessages: Array<{ name: string; message: string; at: number }>;
+  /** 공개 메시지 개수 — 정적 HTML에서 응원 메시지 칸 자리를 잡는 데 쓴다. 옛 캐시에는 없다. */
+  messageCount?: number;
 }
 
 /** 프로젝트 파일이 가진 시각 정보 — 브라우저 시계로 상태를 다시 판정하는 데만 쓴다. */
