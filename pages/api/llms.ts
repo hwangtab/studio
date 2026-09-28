@@ -125,7 +125,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
   - From Exit 4, walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school (1st floor: car repair shop).
 - **Bulgwang Station** (Line 3 + Line 6) — Exit 7, 7-minute walk (same direction toward Dongmyeong Girls' High School)
 - Bus Stop: "동명여고·천주교불광동성당" (right in front of the building)
-- Parking: limited on-site; nearby Daejo-dong public parking ~1-2 minute walk
+- Parking: no parking in the building. Paid lot on the same street (KT Eunpyeong, 16 Tongil-ro 71-gil, ~2 min walk); nearest public lot is Yeonsin Middle School underground public parking (16-32 Yeonseo-ro 33-gil, 24h, hourly, ~1 km). The practice rooms are empty soundproof rooms — bring your own instruments and gear.
 
 ## Equipment Highlights (for "Studio NOL gear" queries)
 
