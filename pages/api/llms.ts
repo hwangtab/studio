@@ -96,7 +96,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - **Practice Room Residency**: Premium private practice room residency program (monthly subscription). Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? `${PRACTICE_ROOM_VACANT_ROOMS} room(s) currently available for move-in` : 'fully occupied — waitlist open'}.
 - **Practice Room Hourly**: the same soundproof private room by the hour — ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour **VAT included**, from 1 hour up to 8, 24/7, same-day booking allowed. Book online at ${siteUrl}/ko/booking/practice-room (Toss checkout; door, room and Wi-Fi instructions are emailed on payment). This is the only hourly offer on this site — the recording studio is never rented without an engineer.
 - **Voice Actor Recording**: Voice actor casting and voice-over/dubbing recording (English dubbing available)
-- **Music Production Consulting & Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
+- **Music Production Lessons**: One-on-one music production lessons (MIDI, mixing, composition) with studio engineers. Vocal and instrument performance lessons are NOT offered.
 - **Cover Video All-in-One Package**: Cover video filming + vocal recording + mixing + 4K editing in one session (studio filming with lighting)
 - **Wedding Song Recording**: Complete package for a wedding ceremony song — 2-hour recording session, vocal tuning, mixing and mastering for ${krw(WEDDING_PACKAGE_PRICE)} KRW. Beginners welcome; the engineer directs the session. Dedicated page: /wedding-song
 - **Music Release PR (standalone)**: Press release written in five languages, a press kit page, derivative copy (radio intros, in-store blurbs, tip-form versions), a full-album listening video, and outreach to Korean music outlets plus media, radio and record shops in 60 countries — sold separately, no production required. ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory (list ${krw(RELEASE_PRESS_PRICE)} KRW) through ${RELEASE_PRESS_INTRO_ENDS_ON}, three releases a month. Nothing is charged until the producer has listened to the music and counted, free of charge and within three business days, how many outlets it can go to. Article placement is never promised — what is promised is the agreed send volume and a report proving it. Dedicated page: /music-promotion
@@ -125,7 +125,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
   - From Exit 4, walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school (1st floor: car repair shop).
 - **Bulgwang Station** (Line 3 + Line 6) — Exit 7, 7-minute walk (same direction toward Dongmyeong Girls' High School)
 - Bus Stop: "동명여고·천주교불광동성당" (right in front of the building)
-- Parking: limited on-site; nearby Daejo-dong public parking ~1-2 minute walk
+- Parking: no parking in the building. Paid lot on the same street (KT Eunpyeong, 16 Tongil-ro 71-gil, ~2 min walk); nearest public lot is Yeonsin Middle School underground public parking (16-32 Yeonseo-ro 33-gil, 24h, hourly, ~1 km). The practice rooms are empty soundproof rooms — bring your own instruments and gear.
 
 ## Equipment Highlights (for "Studio NOL gear" queries)
 
