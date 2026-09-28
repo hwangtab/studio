@@ -15,6 +15,14 @@ related:
 
 LLM(대형 언어 모델) 기반 서비스에서 studionol.co.kr로 유입된 트래픽 분석. 원본: [llm_referrers.csv](../ga4-raw/llm_referrers.csv), [source.csv](../ga4-raw/source.csv). GEO(Generative Engine Optimization) 전략과 직결하므로 [[concepts/seo-strategy]]와 상호참조.
 
+> **2026-09-28 필터 변경**: `scripts/ga4-fetch.mjs`의 `llm_referrers.csv` 리포트가 sessionSource
+> inListFilter 정확 일치 6종(chatgpt.com, perplexity.ai, perplexity, copilot.com,
+> gemini.google.com, notebooklm.google.com)에서 stringFilter FULL_REGEXP로 바뀌었다.
+> 정확 일치 목록은 claude.ai, chat.openai.com, copilot.microsoft.com, www.perplexity.ai 같은
+> 서브도메인·별칭을 놓치고 있었다. 정규식 소스는 `scripts/llmReferrerFilter.js` 참조.
+> **다음 스냅샷부터 잡히는 세션 수가 늘어날 수 있으니, 위 3절의 434세션·챕터별 수치를
+> 이전 수치와 직접 비교하지 말 것** — 필터 범위가 넓어진 것이지 트래픽이 는 것이 아니다.
+
 ---
 
 ## 1. LLM 소스별 세션 규모

@@ -33,6 +33,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { google } from 'googleapis';
+import { LLM_REFERRER_REGEX_SOURCE } from './llmReferrerFilter.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
@@ -216,6 +217,9 @@ async function fetchEvents(analyticsdata, propertyId) {
 }
 
 // Report 5: LLM 레퍼러별 랜딩 페이지 — ChatGPT/Perplexity 등 AI 트래픽 인용 역추적
+//
+// 2026-09-28: inListFilter 정확 일치 6종 → FULL_REGEXP. 상세 이유는
+// scripts/llmReferrerFilter.js 주석과 docs/wiki/entities/channel-llm-referrers.md 참조.
 async function fetchLlmReferrers(analyticsdata, propertyId) {
   console.log('\n[5/6] LLM referrers × landing page (90d)...');
   const rows = await runReport(analyticsdata, propertyId, {
@@ -225,15 +229,9 @@ async function fetchLlmReferrers(analyticsdata, propertyId) {
     dimensionFilter: {
       filter: {
         fieldName: 'sessionSource',
-        inListFilter: {
-          values: [
-            'chatgpt.com',
-            'perplexity.ai',
-            'perplexity',
-            'copilot.com',
-            'gemini.google.com',
-            'notebooklm.google.com',
-          ],
+        stringFilter: {
+          matchType: 'FULL_REGEXP',
+          value: LLM_REFERRER_REGEX_SOURCE,
         },
       },
     },
