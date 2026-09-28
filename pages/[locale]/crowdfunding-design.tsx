@@ -24,6 +24,8 @@ import { buildSchemaGraph, buildStudioServiceSchema } from '../../lib/studioServ
 import { generateHowToSchema } from '../../utils/schema';
 import type { NextPageWithLayout } from '../../types';
 
+// 계산기는 정적 import — 과정 절의 #funding-goal 링크가 클라이언트 이동에서 대상을 바로 찾아야 한다(발매 페이지와 같은 이유).
+import FundingGoalCalculator from '../../components/release/FundingGoalCalculator';
 const FAQSection = dynamic(() => import('../../components/ui/FAQSection'));
 const ContactCTA = dynamic(() => import('../../components/common/ContactCTA'));
 const RelatedStoriesSection = dynamic(() => import('../../components/ui/RelatedStoriesSection'));
@@ -220,6 +222,14 @@ const CrowdfundingDesign: NextPageWithLayout<Props> = ({ locale, relatedStories 
           ))}
         </ol>
       </Section>
+
+      {/* 목표액 계산기 공개(2026-09-28 운영자) — 작은 펀딩도 같은 흐름이라 "제작 없음"으로 연다. */}
+      <FundingGoalCalculator
+        kakaoUrl={siteConfig.contact.kakaoUrl}
+        defaultProduction="none"
+        component="CrowdfundingDesignCalculator"
+        variant="alternate"
+      />
 
       <Section variant="default">
         <SectionHeading title={copy.alternatives.title} />
