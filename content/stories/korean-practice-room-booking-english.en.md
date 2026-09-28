@@ -17,7 +17,7 @@ This guide walks you through what a music practice room Seoul-style actually loo
 
 A typical room is small, well sound-proofed, and ready to use the moment you walk in. Expect a digital piano or upright keyboard, a vocal mic, a basic monitor or PA, and sometimes a bass amp or guitar amp depending on the room. Sizes range from cozy one-person vocal booths to larger rooms that fit a four- or five-piece band. Most studios run from late morning until late night, with weekends being the busiest window.
 
-At Studio NOL in Yeonsinnae, our practice rooms are bilingual-friendly: staff communication works in English as well as Korean, and the rooms are acoustically treated so you can actually hear what you're playing. Some rooms have an upright piano; otherwise bring your own instrument, keyboard, speaker, and mic.
+At Studio NOL in Yeonsinnae, our practice rooms are bilingual-friendly: staff communication works in English as well as Korean, and the rooms are acoustically treated so you can actually hear what you're playing. Only one room has an upright piano and it is usually rented monthly, so plan to bring your own instrument, keyboard, speaker, and mic.
 
 ## Booking in English: step-by-step
 
