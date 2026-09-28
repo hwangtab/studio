@@ -3,6 +3,7 @@ import {
   DAY_LOCK_4H_PRICE,
   DAY_LOCK_8H_PRICE,
   EP_BUNDLE_PRICE,
+  FUNDING_DESIGN_PRICE,
   formatPriceLabel,
   MASTERING_SINGLE_PRICE,
   MIXING_LEVEL2_PRICE,
@@ -119,13 +120,20 @@ describe('견적 코드와 요약', () => {
     expect(code).toMatch(/^NOL-[A-HJ-NP-Z2-9]{6}$/);
   });
 
+  it('발매를 펀딩으로 하면 설계비까지 합친 한 견적이고, 비용은 정산 때 모금액에서 받는다', () => {
+    const e = estimate({ service: 'release', scale: 'ep', readiness: 'demo', fundingSource: 'funding', timing: '3m' })!;
+    expect(e.priceLabel).toBe(`${won(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE)}부터`);
+    expect(e.basis.join(' ')).toContain('한 견적');
+    expect(e.basis.join(' ')).toContain('모금액을 정산할 때 모금액에서');
+  });
+
   it('요약에는 답한 것과 견적만 있고 개인정보 칸은 없다', () => {
     const a: QuoteAnswers = { service: 'release', scale: 'ep', readiness: 'demo', fundingSource: 'funding', timing: '3m' };
     const s = buildQuoteSummary(a, estimate(a)!, 'NOL-ABCDEF');
     expect(s).toContain('NOL-ABCDEF');
     expect(s).toContain('EP (3~5곡)');
     expect(s).toContain('크라우드펀딩');
-    expect(s).toContain(`${won(EP_BUNDLE_PRICE)}부터`);
+    expect(s).toContain(`${won(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE)}부터`); // 펀딩이면 설계비까지 한 견적
     expect(s).not.toMatch(/이름|연락처|이메일|전화/);
   });
 });

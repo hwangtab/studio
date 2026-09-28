@@ -11,7 +11,7 @@ jest.mock('../../utils/analytics', () => ({
 // eslint-disable-next-line import/first
 import QuoteWizard from './QuoteWizard';
 // eslint-disable-next-line import/first
-import { formatPriceLabel, VOCAL_PACKAGE_PRICE, EP_BUNDLE_PRICE } from '../../data/pricing';
+import { formatPriceLabel, VOCAL_PACKAGE_PRICE, EP_BUNDLE_PRICE, FUNDING_DESIGN_PRICE } from '../../data/pricing';
 
 const KAKAO = 'https://open.kakao.com/me/nol';
 const pick = (name: RegExp | string) => fireEvent.click(screen.getByRole('radio', { name }));
@@ -59,7 +59,8 @@ describe('QuoteWizard', () => {
     pick('3개월 안');
     expect(screen.queryByRole('link', { name: /카카오톡으로 보내기/ })).not.toBeInTheDocument();
     pick('크라우드펀딩');
-    expect(screen.getByText(`${formatPriceLabel(EP_BUNDLE_PRICE, 'ko')}부터`)).toBeInTheDocument();
+    // 펀딩이면 설계비까지 합친 한 견적(2026-09-28 운영자)
+    expect(screen.getByText(`${formatPriceLabel(EP_BUNDLE_PRICE + FUNDING_DESIGN_PRICE, 'ko')}부터`)).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: '바로 예약·결제하기' })).not.toBeInTheDocument();
   });
 

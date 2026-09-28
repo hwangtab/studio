@@ -56,12 +56,12 @@ export const crowdfundingDesignCopy = {
     serviceCol: '항목',
     valueCol: '내용',
     rows: [
-      { id: 'fee', label: '설계비', value: `${designFee} (부가세 별도)` },
+      { id: 'fee', label: '설계비', value: `${designFee} (부가세 별도) · 정산 때 모금액에서` },
       { id: 'success', label: '성공 수수료', value: '없음' },
       { id: 'funding-fees', label: '모금액에서 떼는 것', value: fundingFees },
       { id: 'platform', label: '플랫폼', value: '스튜디오 놀 펀딩(이 사이트)' },
       { id: 'scope', label: '범위', value: '스토리텔링 · 리워드 설계 · 페이지 제작' },
-      { id: 'standalone', label: '단독 의뢰', value: '가능 — 제작을 맡기지 않아도 됩니다. 제작·홍보·유통까지 이어 가려면 발매 프로젝트로' },
+      { id: 'standalone', label: '단독 의뢰', value: '가능 — 제작을 맡기지 않아도 됩니다. 제작·홍보·유통까지 이어 가려면 발매 프로젝트로(설계비까지 한 견적)' },
       { id: 'record', label: '진행 실적', value: '음반 펀딩 수십 건 · 누적 약 3억원' },
       { id: 'verifiable', label: '공개로 확인 가능', value: `${casesLine} (텀블벅·씨앗페)` },
     ],
@@ -135,7 +135,7 @@ export const crowdfundingDesignCopy = {
       },
       {
         question: '비용은 어떻게 되나요?',
-        answer: `설계비 ${designFee}(부가세 별도)입니다. 성공 수수료는 받지 않습니다. 펀딩이 끝나면 모금액에서 ${fundingFees}를 뗍니다. ${withholdingNote}`,
+        answer: `설계비 ${designFee}(부가세 별도)이고, 펀딩이 끝나 모금액을 정산할 때 모금액에서 뗍니다. 성공 수수료는 받지 않습니다. 모금액에서는 ${fundingFees}도 뗍니다. 발매 프로젝트와 함께 맡기시면 설계비와 제작비를 한 견적으로 드리고, 둘 다 정산 때 모금액에서 받습니다. ${withholdingNote}`,
       },
       {
         question: '펀딩이 목표에 못 미치면 어떻게 되나요?',
