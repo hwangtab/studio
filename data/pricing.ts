@@ -87,8 +87,6 @@ export const FUNDING_PAYMENT_FEE_PERCENT = 3.3; // 부가세 포함
 /** 펀딩 정산 원천징수율. ARTIST_SUPPORT_WITHHOLDING_PERCENT와 값은 같지만 별도
  * 상품의 별도 상수다 — 한쪽 요율이 바뀌어도 다른 쪽이 딸려가면 안 된다. */
 export const FUNDING_WITHHOLDING_PERCENT = 3.3;
-/** 부가 서비스 '기획/컨설팅' 시간당 단가(service-consulting). */
-export const CONSULTING_HOURLY_PRICE = 50000;
 
 // 크라우드펀딩 설계 대행 — 발매 프로젝트와 별개로도 의뢰받는 독립 상품이라
 // llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
@@ -454,23 +452,9 @@ export const getPricingData = (locale: Locale) => {
     },
   ];
 
+  // '기획/컨설팅' 시간당 유료 항목은 2026-09-28 운영자 결정으로 뺐다 — 발매·의뢰 상담은 무료이고,
+  // 유료 컨설팅이 같은 목록에 있으면 AI와 방문자가 "발매 상담은 시간당 5만원"으로 읽는다.
   const additionalServices = [
-    {
-      id: 'service-consulting',
-      title: t(locale, { ko: '기획/컨설팅', en: 'Consulting', zh: '策划/咨询', es: 'Consultoría', vi: 'Tư vấn', th: 'ให้คำปรึกษา', uz: 'Konsalting' }),
-      priceDisplay: t(locale, { ko: '50,000원', en: '₩50,000', zh: '₩50,000', es: '₩50,000', vi: '₩50,000', th: '₩50,000', uz: '₩50,000' }),
-      priceValue: CONSULTING_HOURLY_PRICE,
-      unit: t(locale, { ko: '/ 시간', en: '/ hour', zh: '/ 小时', es: '/ hora', vi: '/ giờ', th: '/ ชั่วโมง', uz: '/ soat' }),
-      description: t(locale, {
-        ko: '프로젝트 기획, 일정 관리, 예산 수립 등 전반적인 앨범 제작 컨설팅',
-        en: 'Album production consulting including planning, scheduling, and budgeting.',
-        zh: '项目策划、日程管理、预算制定等整体专辑制作咨询',
-        es: 'Consultoría de producción de álbumes, incluyendo planificación, programación y presupuesto.',
-        vi: 'Tư vấn sản xuất album: kế hoạch, lịch trình, ngân sách.',
-        th: 'ให้คำปรึกษาการผลิตอัลบั้ม ครอบคลุมการวางแผน ตารางงาน และงบประมาณ',
-        uz: 'Albom ishlab chiqarish bo"yicha rejalash, jadval va byudjet konsaltingi.'
-      }),
-    },
     {
       id: 'service-funding',
       title: t(locale, { ko: '펀딩 설계 대행', en: 'Crowdfunding Design', zh: '众筹设计代理', es: 'Diseño de Crowdfunding', vi: 'Thiết kế crowdfunding', th: 'ออกแบบคราวด์ฟันดิง', uz: 'Crowdfunding dizayni' }),
