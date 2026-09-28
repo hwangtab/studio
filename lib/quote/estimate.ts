@@ -219,15 +219,25 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
     }
     case 'release': {
       const bundle = { single: SINGLE_BUNDLE_PRICE, ep: EP_BUNDLE_PRICE, album: ALBUM_BUNDLE_PRICE }[a.scale as 'single' | 'ep' | 'album'];
+      // 펀딩으로 가면 설계비까지 한 견적으로 낸다(2026-09-28 운영자) — 설계비·제작비 모두 정산 때 모금액에서.
+      if (a.fundingSource === 'funding') {
+        return {
+          priceLabel: `${won(bundle + FUNDING_DESIGN_PRICE)}부터`,
+          vat: 'excluded',
+          basis: [
+            `펀딩 설계비 ${won(FUNDING_DESIGN_PRICE)} + 발매 번들 ${won(bundle)}부터를 합친 한 견적 — 기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보`,
+            '설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받습니다',
+            `목표에 못 미쳐도 모인 금액으로 제작을 집행합니다. 모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료를 뗍니다`,
+            '세션 연주비는 포함되지 않고 연주자 실비만 따로 받습니다',
+          ],
+        };
+      }
       return {
         priceLabel: `${won(bundle)}부터`,
         vat: 'excluded',
         basis: [
           '기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보를 묶은 번들 기준',
           '세션 연주비는 포함되지 않고 연주자 실비만 따로 받습니다',
-          ...(a.fundingSource === 'funding'
-            ? [`펀딩으로 만들면 설계비 ${won(FUNDING_DESIGN_PRICE)}(부가세 별도)가 더해지고, 모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료를 뗍니다`]
-            : []),
         ],
       };
     }
