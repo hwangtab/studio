@@ -16,6 +16,9 @@ describe('LLM_REFERRER_REGEX', () => {
     'chat.deepseek.com',
     'chat.mistral.ai',
     'meta.ai',
+    'gemini',
+    'doubao.com',
+    'www.doubao.com',
   ])('%s는 LLM 레퍼러로 판정한다', (source) => {
     expect(LLM_REFERRER_REGEX.test(source)).toBe(true);
   });
@@ -28,6 +31,7 @@ describe('LLM_REFERRER_REGEX', () => {
     '(direct)',
     'facebook.com',
     'chatgpt.com.evil.example',
+    'gemini.example.com',
   ])('%s는 LLM 레퍼러가 아니다', (source) => {
     expect(LLM_REFERRER_REGEX.test(source)).toBe(false);
   });
