@@ -133,8 +133,8 @@ export default function ProjectDetailView({
       />
 
       {/*
-        본문(왼쪽)과 펀딩 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라 본문을
-        읽는 내내 모금 현황과 리워드가 화면에 남는다.
+        본문(왼쪽)과 리워드 패널(오른쪽)을 나란히 둔다. 패널은 데스크톱에서 sticky라 본문을
+        읽는 내내 리워드가 화면에 남는다. 모금 현황은 본문 컬럼 맨 위에 있다(아래 주석).
       */}
       <Section className="pb-28 pt-16 lg:pb-16">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
@@ -145,40 +145,13 @@ export default function ProjectDetailView({
               </p>
             )}
             {/*
-              순환 카드는 본문 컬럼 안 맨 위에 둔다 — 히어로 바로 아래이되 본문 폭이다.
-              Section 전체 폭으로 빼면 데스크톱에서 오른쪽 모금 패널이 카드 높이만큼
-              아래로 밀려, 첫 화면에서 모금액·달성률이 보이지 않는다(실측 확인).
-
-              space-y-10이 카드와 본문 사이 간격을 준다. 메시지가 없으면 SupporterTicker가
-              DOM에 아무것도 남기지 않으므로 article이 첫 자식이 되어 빈 여백조차 생기지
-              않는다 — 래퍼에 mb를 주면 그 경우 빈 간격만 남는다.
+              모금 현황은 히어로 바로 아래, 본문 컬럼 맨 위에 둔다(saf-2026과 같은 배치,
+              2026-09-28 운영자 결정). 예전엔 오른쪽 패널 맨 위였는데, <lg에서는 그 패널이
+              본문이 **다 끝난 뒤에** 쌓여 모바일 방문자는 모금액·달성률을 사실상 못 봤다.
+              데스크톱에서 스크롤 내내 보이던 것은 잃지만, 첫 화면에서 "이만큼 모였다"가
+              보이는 쪽이 후원 결정에 더 크다. 오른쪽 패널은 리워드만 남아 짧아진다.
             */}
-            <div className="space-y-10">
-              <SupporterTicker messages={messages} pending={messagesPending} />
-              <article className="prose prose-lg max-w-none dark:prose-invert">
-                <MarkdownRenderer content={project.content} locale="ko" />
-              </article>
-            </div>
-            {/*
-              전자상거래법상 판매자(스튜디오 놀)와 개설자를 구분해 표시한다(펀딩 약관
-              제4조 — "개설자가 있는 프로젝트는 그 사실과 개설자를 프로젝트 페이지에
-              함께 표시합니다"). 마크다운 프로젝트(project.creator === null, 스튜디오가
-              직접 연 것)는 아무것도 표시하지 않는다 — 지금 화면 그대로다.
-            */}
-            {project.creator && (
-              <p className="typo-card-meta mt-4 text-gray-600 dark:text-gray-300">
-                개설자 {project.creator.name} · 판매자 스튜디오 놀
-                {mailOrderSalesNumber ? ` (통신판매업 신고 ${mailOrderSalesNumber})` : ''}
-              </p>
-            )}
-            <div className="mt-12 space-y-8">
-              <BackerWall names={backers} anonymousCount={anonymousBackers} messages={messages} />
-              <FundingTrustNotice />
-            </div>
-          </div>
-
-          <aside id="rewards" className="scroll-mt-20 lg:sticky lg:top-24">
-            <div className="glass-card rounded-2xl p-5 sm:p-6">
+            <div className="glass-card mb-10 rounded-2xl p-5 sm:p-6">
               {interactive ? (
                 // 공개 페이지는 status가 아직 null이어도(마운트 직후, fetch 응답 전) 항상
                 // FundingProgress를 그린다 — 폴링 대기·실패는 그 컴포넌트가 이미
@@ -209,9 +182,42 @@ export default function ProjectDetailView({
                 </div>
               )}
             </div>
+            {/*
+              순환 카드는 모금 현황 바로 아래, 본문 폭에 둔다. Section 전체 폭으로 빼면
+              데스크톱에서 오른쪽 리워드 패널이 카드 높이만큼 아래로 밀린다.
+
+              space-y-10이 카드와 본문 사이 간격을 준다. 메시지가 없으면 SupporterTicker가
+              DOM에 아무것도 남기지 않으므로 article이 첫 자식이 되어 빈 여백조차 생기지
+              않는다 — 래퍼에 mb를 주면 그 경우 빈 간격만 남는다.
+            */}
+            <div className="space-y-10">
+              <SupporterTicker messages={messages} pending={messagesPending} />
+              <article className="prose prose-lg max-w-none dark:prose-invert">
+                <MarkdownRenderer content={project.content} locale="ko" />
+              </article>
+            </div>
+            {/*
+              전자상거래법상 판매자(스튜디오 놀)와 개설자를 구분해 표시한다(펀딩 약관
+              제4조 — "개설자가 있는 프로젝트는 그 사실과 개설자를 프로젝트 페이지에
+              함께 표시합니다"). 마크다운 프로젝트(project.creator === null, 스튜디오가
+              직접 연 것)는 아무것도 표시하지 않는다 — 지금 화면 그대로다.
+            */}
+            {project.creator && (
+              <p className="typo-card-meta mt-4 text-gray-600 dark:text-gray-300">
+                개설자 {project.creator.name} · 판매자 스튜디오 놀
+                {mailOrderSalesNumber ? ` (통신판매업 신고 ${mailOrderSalesNumber})` : ''}
+              </p>
+            )}
+            <div className="mt-12 space-y-8">
+              <BackerWall names={backers} anonymousCount={anonymousBackers} messages={messages} />
+              <FundingTrustNotice />
+            </div>
+          </div>
+
+          <aside id="rewards" className="scroll-mt-20 lg:sticky lg:top-24">
             {/* 여기에 표지 썸네일을 두지 않는다. `cover`는 프로젝트의 얼굴(행사 포스터)이지
                 리워드의 얼굴이 아니다 — 리워드 이미지는 각 리워드가 `image`로 갖는다. */}
-            <h2 className="typo-card-title mt-8 text-gray-900 dark:text-white">리워드</h2>
+            <h2 className="typo-card-title text-gray-900 dark:text-white">리워드</h2>
             <p className="typo-card-meta mt-1">펀딩 금액에 따라 돌려드릴 구성입니다.</p>
             <div className="mt-4 space-y-4">
               {project.rewards.map((r) => (
