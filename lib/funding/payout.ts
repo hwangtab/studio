@@ -11,6 +11,7 @@ import { decryptField, FieldCryptoError, type FieldCryptoErrorCode } from '../cr
 import { PRIVACY_ACTOR_ADMIN, recordPrivacyAccess } from '../privacy/accessLog';
 import { decryptPayoutAccount } from './payoutAccountCrypto';
 import { computeProjectState } from './projectState';
+import { loadProjectService } from './projectServices';
 import { liveFundingOrderStatusList } from './refundable';
 
 export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
@@ -33,6 +34,12 @@ export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
  *
  * 100만원 모금·환불 0·원천징수 개설자: platformFee 55,000 · paymentFee 33,000 →
  * feeAmount 88,000 → shareAmount 912,000 → withholdingAmount 30,096 → netAmount 881,904.
+ *
+ * **설계비·제작비 공제**(2026-09-28 운영자 결정, 개설자 약관 제6조) — 스튜디오에 설계·제작을
+ * 맡기고 정산 때 받기로 한 대금(부가세 포함)은 **원천징수까지 뺀 금액에서** 뺀다. 개설자가
+ * 스튜디오에 치르는 비용이라 수수료·원천징수의 계산 기준(shareAmount)에는 들어가지 않는다.
+ * 뺄 수 있는 한도는 그 금액까지이고, 넘는 부분은 shortfallAmount(차액 청구나 규모 조정을
+ * 개설자와 협의할 금액)로 남긴다 — 실지급액이 음수가 되는 일은 없다.
  */
 export interface FundingPayoutBreakdown {
   grossAmount: number;
@@ -45,13 +52,42 @@ export interface FundingPayoutBreakdown {
   paymentFeeAmount: number;
   shareAmount: number;
   withholdingAmount: number;
+  /** 정산금에서 뺀 설계비(부가세 포함). */
+  designFeeOffsetAmount: number;
+  /** 정산금에서 뺀 제작비(부가세 포함). */
+  productionFeeOffsetAmount: number;
+  /** 대금이 정산금을 넘어 빼지 못한 금액 — 개설자와 협의할 차액. */
+  shortfallAmount: number;
   netAmount: number;
 }
+
+/** 정산 때 받기로 한 대금(부가세 포함). 없으면 둘 다 0. */
+export interface FundingServiceCharges {
+  designFee: number;
+  productionFee: number;
+}
+
+const NO_CHARGES: FundingServiceCharges = { designFee: 0, productionFee: 0 };
+
+/** 원천징수까지 뺀 금액(available)에서 설계비 → 제작비 순으로 빼고, 넘는 부분을 차액으로 남긴다. */
+export const applyServiceCharges = (available: number, charges: FundingServiceCharges) => {
+  const room = Math.max(0, available);
+  const designFeeOffsetAmount = Math.min(charges.designFee, room);
+  const productionFeeOffsetAmount = Math.min(charges.productionFee, room - designFeeOffsetAmount);
+  const shortfallAmount = charges.designFee + charges.productionFee - designFeeOffsetAmount - productionFeeOffsetAmount;
+  return {
+    designFeeOffsetAmount,
+    productionFeeOffsetAmount,
+    shortfallAmount,
+    netAmount: room - designFeeOffsetAmount - productionFeeOffsetAmount,
+  };
+};
 
 export const computeFundingPayout = (input: {
   grossAmount: number;
   refundAmount: number;
   taxType: FundingCreatorTaxType;
+  charges?: FundingServiceCharges;
 }): FundingPayoutBreakdown => {
   const netGross = Math.max(0, input.grossAmount - input.refundAmount);
   const platformFeeAmount = Math.round((netGross * FUNDING_PLATFORM_FEE_PERCENT) / 100);
@@ -70,7 +106,7 @@ export const computeFundingPayout = (input: {
     paymentFeeAmount,
     shareAmount,
     withholdingAmount,
-    netAmount: shareAmount - withholdingAmount,
+    ...applyServiceCharges(shareAmount - withholdingAmount, input.charges ?? NO_CHARGES),
   };
 };
 
@@ -93,6 +129,7 @@ export const computeFundingPayoutForProject = (input: {
   /** grossAmount 중 수기 등록 몫. */
   manualGrossAmount: number;
   taxType: FundingCreatorTaxType;
+  charges?: FundingServiceCharges;
 }): FundingPayoutBreakdown => {
   const base = computeFundingPayout(input);
   if (input.manualGrossAmount <= 0) return base;
@@ -115,7 +152,7 @@ export const computeFundingPayoutForProject = (input: {
     feeAmount,
     shareAmount,
     withholdingAmount,
-    netAmount: shareAmount - withholdingAmount,
+    ...applyServiceCharges(shareAmount - withholdingAmount, input.charges ?? NO_CHARGES),
   };
 };
 
@@ -153,6 +190,12 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
   hasResidentNumber: boolean;
   /** 이미 기록된 정산. 있으면 그 값이 정본이고 미리보기는 참고용이다. */
   recorded: FundingProjectPayout | null;
+  /**
+   * 설계·제작 대금 기록(funding_project_services)을 읽지 못했다. 그러면 공제 없이 계산한
+   * 참고값이고, 기록은 `services_unavailable`로 거부된다 — 합의한 대금을 모른 채 전액을
+   * 불변으로 기록하면 되돌릴 경로가 없다.
+   */
+  serviceChargesUnavailable: boolean;
 }
 
 /**
@@ -213,6 +256,21 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
    */
   const assumedTaxType: FundingCreatorTaxType = taxType ?? 'withholding';
 
+  /**
+   * 정산 때 받기로 한 설계비·제작비(개설자 약관 제6조). 부가세 포함으로 뺀다 — 약정은 공급가다.
+   * 설계비를 정산 밖에서 이미 받았으면(design_fee_paid_at) 다시 빼지 않는다. 직접 개설로 되돌린
+   * 행(`none`)은 옛 약정 보존용이라 빼지 않는다.
+   */
+  const serviceResult = await loadProjectService(projectId);
+  const service = serviceResult.available ? serviceResult.service : null;
+  const withVat = (supply: number) => Math.round(supply * (1 + VAT_RATE));
+  const charges: FundingServiceCharges = service && service.kind !== 'none'
+    ? {
+      designFee: service.designFeePaidAt ? 0 : withVat(service.designFee),
+      productionFee: withVat(service.productionFee),
+    }
+    : { designFee: 0, productionFee: 0 };
+
   return {
     projectId,
     projectSlug: project.slug,
@@ -228,7 +286,8 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
     hasPayoutAccount: Boolean(creator.payoutAccountEnc?.trim()),
     hasResidentNumber: Boolean(creator.residentNumberEnc?.trim()),
     recorded,
-    ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType: assumedTaxType }),
+    serviceChargesUnavailable: !serviceResult.available,
+    ...computeFundingPayoutForProject({ grossAmount, refundAmount, manualGrossAmount, taxType: assumedTaxType, charges }),
   };
 };
 
@@ -243,7 +302,8 @@ export type RecordFundingPayoutResult =
         | 'not_closed'
         | 'no_payout_account'
         | 'no_tax_type'
-        | 'no_resident_number';
+        | 'no_resident_number'
+        | 'services_unavailable';
     }
   /**
    * 계좌 암호문을 지금 이 서버가 열지 못했다. **왜 못 열었는지를 함께 돌려준다.**
@@ -421,8 +481,10 @@ const payoutAccountReadable = async (
  *   변수에 담지도, 응답·로그·화면에 싣지도 않는다. 계좌와 마찬가지로 `cryptoCode`를 함께
  *   돌려준다: 키 문제면 값이 멀쩡하니 재등록을 요청하면 안 되고, 봉투가 아니라 값 자체가
  *   형식이 아닌 `malformed`이면 반대로 재등록이 유일한 복구 경로다.
- * - `nothing_to_pay` — **실이체액이 0 이하다**(받은 돈이 없거나, 환불이 모금액을 다 덮었다).
- *   할 일이 없다.
+ * - `nothing_to_pay` — **실이체액이 0 이하이고 뺀 대금도 없다**(받은 돈이 없거나, 환불이 모금액을
+ *   다 덮었다). 할 일이 없다. 설계·제작 대금을 빼서 0이 된 정산은 기록한다(장부에 남아야 한다).
+ * - `services_unavailable` — 설계·제작 대금 기록을 읽지 못했다(마이그레이션 0041 미적용이나 DB
+ *   장애). 합의한 공제를 모른 채 전액을 불변으로 기록하지 않는다.
  * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
  *
  * `expectedNetAmount`는 호출부(관리자 화면)가 **운영자에게 보여 주고 확인받은** 실이체액이다.
@@ -475,7 +537,13 @@ export const recordFundingPayout = async (
    * 닿아 실지급액이 0인 프로젝트에 0원 정산이 **불변으로** INSERT되고 "실지급액 0원" 메일이
    * 나가며, 그 행은 project_id UNIQUE 탓에 영구 pending으로 "이체 대기" 카운터를 올린다.
    */
-  if (preview.netAmount <= 0) return { ok: false, code: 'nothing_to_pay' };
+  if (preview.serviceChargesUnavailable) return { ok: false, code: 'services_unavailable' };
+  /**
+   * 대금을 빼서 실지급액이 0이 된 정산은 기록한다 — 모금액이 설계·제작 대금으로 전부 쓰였다는
+   * 사실(과 남은 차액)이 장부에 남아야 한다. 받은 돈 자체가 없는 경우만 할 일이 없다.
+   */
+  const offsetTotal = preview.designFeeOffsetAmount + preview.productionFeeOffsetAmount;
+  if (preview.netAmount <= 0 && offsetTotal <= 0) return { ok: false, code: 'nothing_to_pay' };
   if (preview.netAmount !== expectedNetAmount) {
     return { ok: false, code: 'amount_changed', expectedNetAmount, netAmount: preview.netAmount };
   }
@@ -493,6 +561,9 @@ export const recordFundingPayout = async (
         paymentFeeAmount: preview.paymentFeeAmount,
         shareAmount: preview.shareAmount,
         withholdingAmount: preview.withholdingAmount,
+        designFeeOffsetAmount: preview.designFeeOffsetAmount,
+        productionFeeOffsetAmount: preview.productionFeeOffsetAmount,
+        shortfallAmount: preview.shortfallAmount,
         netAmount: preview.netAmount,
         backerCount: preview.backerCount,
         status: 'pending',

@@ -781,6 +781,14 @@ export const fundingProjectPayouts = sqliteTable('funding_project_payouts', {
   shareAmount: integer('share_amount').notNull(),
   withholdingAmount: integer('withholding_amount').notNull(),
   netAmount: integer('net_amount').notNull(),
+  /**
+   * 정산금에서 뺀 설계비·제작비(부가세 포함) — 개설자 약관 제6조, lib/funding/payout.ts.
+   * 원천징수까지 뺀 금액을 넘지 않는다. 넘는 부분은 shortfallAmount(개설자와 협의할 차액)로 남는다.
+   * 마이그레이션 0041.
+   */
+  designFeeOffsetAmount: integer('design_fee_offset_amount').notNull().default(0),
+  productionFeeOffsetAmount: integer('production_fee_offset_amount').notNull().default(0),
+  shortfallAmount: integer('shortfall_amount').notNull().default(0),
   backerCount: integer('backer_count').notNull(),
   status: text('status', { enum: fundingProjectPayoutStatusEnum }).notNull().default('pending'),
   paidAt: integer('paid_at', { mode: 'timestamp' }),
@@ -1302,9 +1310,10 @@ export type NewPrivacyAccessLog = typeof privacyAccessLogs.$inferInsert;
  * 개설자 로그인·정산까지). 별도 테이블은 기존 조회가 한 번도 건드리지 않으므로, 순서가
  * 뒤집혀도 이 기능만 "미적용"으로 꺼지고 나머지는 멀쩡하다(lib/funding/projectServices.ts).
  *
- * **개설자에게 어떤 경로로도 보이지 않는다** — internal_note와 같은 원칙. 설계비는 모금 정산과
- * 별개로 청구·입금되므로(성공 수수료 없음, data/pricing.ts FUNDING_DESIGN_PRICE) 정산 계산에
- * 섞지 않는다.
+ * **이 표 자체는 개설자 화면에 실리지 않는다** — internal_note와 같은 원칙. 다만 2026-09-28
+ * 운영자 결정으로 설계비·제작비는 **정산 때 모금액에서 받으므로**(개설자 약관 제6조), 정산 기록
+ * (funding_project_payouts)의 공제 칸과 정산 메일에는 그 금액이 개설자에게 보인다.
+ * 설계비를 정산 밖에서 이미 받았으면(design_fee_paid_at) 정산에서 다시 빼지 않는다.
  */
 export const fundingProjectServiceKindEnum = ['design', 'release', 'none'] as const;
 export const fundingProjectServices = sqliteTable('funding_project_services', {
@@ -1318,6 +1327,11 @@ export const fundingProjectServices = sqliteTable('funding_project_services', {
   designFee: integer('design_fee').notNull(),
   /** 설계비 입금을 운영자가 확인한 시각. null이면 미입금. */
   designFeePaidAt: integer('design_fee_paid_at', { mode: 'timestamp' }),
+  /**
+   * 정산 때 모금액에서 받을 약정 제작비(공급가, 부가세 별도) — 발매 번들 견적처럼 개설자와 합의한
+   * 금액을 운영자가 적는다. 0이면 정산에서 뺄 제작비가 없다. 마이그레이션 0041.
+   */
+  productionFee: integer('production_fee').notNull().default(0),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
 }, (table) => ([

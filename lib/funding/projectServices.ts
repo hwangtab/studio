@@ -28,6 +28,8 @@ export type ProjectServiceView = {
   designFee: number;
   /** ISO 문자열 — getServerSideProps로 직렬화된다. null이면 미입금. */
   designFeePaidAt: string | null;
+  /** 정산 때 모금액에서 받을 약정 제작비(공급가, 부가세 별도). 0이면 없음. 마이그레이션 0041. */
+  productionFee: number;
 };
 
 export const PROJECT_SERVICE_LABELS: Record<FundingProjectServiceKind, string> = {
@@ -70,7 +72,7 @@ export const isMissingServicesTable = (error: unknown): boolean =>
  * 이 판정은 **이 테이블을 겨눈 질의가 던진 오류에만** 쓴다. 컬럼 이름만 보므로 다른 테이블의
  * 같은 이름을 구분하지 못한다.
  */
-const SERVICE_COLUMNS = ['project_id', 'kind', 'design_fee', 'design_fee_paid_at', 'created_at', 'updated_at'];
+const SERVICE_COLUMNS = ['project_id', 'kind', 'design_fee', 'design_fee_paid_at', 'production_fee', 'created_at', 'updated_at'];
 export const isServicesSchemaMismatch = (error: unknown): boolean =>
   errorTexts(error).some((t) =>
     SERVICE_COLUMNS.some((column) =>
@@ -81,6 +83,7 @@ const toView = (row: FundingProjectService): ProjectServiceView => ({
   kind: row.kind,
   designFee: row.designFee,
   designFeePaidAt: row.designFeePaidAt ? row.designFeePaidAt.toISOString() : null,
+  productionFee: row.productionFee,
 });
 
 export type ServiceUnavailableReason = 'missing_table' | 'schema_mismatch' | 'error';
@@ -263,5 +266,58 @@ export const setDesignFeePaid = async (
     return { ok: true, service: toView(rows[0]) };
   } catch (error) {
     return writeFailure(error, 'setDesignFeePaid', projectId);
+  }
+};
+
+/** 약정 제작비 상한 — 오타(0 하나 더)로 정산금을 통째로 잡아먹는 입력을 막는다. 정규 앨범 번들의 몇 배를 넘는 제작은 없다. */
+export const PRODUCTION_FEE_MAX = 100_000_000;
+
+/**
+ * 정산 때 모금액에서 받을 약정 제작비(공급가, 부가세 별도)를 적는다. 2026-09-28 운영자 결정 —
+ * 발매 프로젝트와 묶은 펀딩은 설계비·제작비를 한 견적으로 내고 둘 다 정산 때 모금액에서 받는다
+ * (개설자 약관 제6조, lib/funding/payout.ts의 공제). 모금액이 견적에 못 미쳐 규모를 조정하기로
+ * 했으면 조정된 금액을 다시 적는다 — 정산 기록 전까지는 몇 번이든 고칠 수 있고, 기록된 정산은
+ * 불변이라 그 뒤의 변경은 이미 기록된 공제를 바꾸지 않는다.
+ *
+ * 서비스가 지정되지 않았거나 직접 개설로 되돌린(`none`) 프로젝트면 no_service — 약정이 없는
+ * 프로젝트에 제작비를 적을 이유가 없다(setDesignFeePaid와 같은 방어).
+ */
+export const setProductionFee = async (
+  projectId: string,
+  productionFee: number,
+  now: Date,
+  actor: string,
+): Promise<ServiceWriteResult | { ok: false; code: 'invalid_amount' }> => {
+  if (!Number.isInteger(productionFee) || productionFee < 0 || productionFee > PRODUCTION_FEE_MAX) {
+    return { ok: false, code: 'invalid_amount' };
+  }
+  try {
+    const db = getDb();
+    const existing = await db
+      .select()
+      .from(fundingProjectServices)
+      .where(eq(fundingProjectServices.projectId, projectId))
+      .limit(1);
+    if (!existing[0] || existing[0].kind === 'none') {
+      if (existing[0]) return { ok: false, code: 'no_service' };
+      const project = await db
+        .select({ id: fundingProjects.id })
+        .from(fundingProjects)
+        .where(eq(fundingProjects.id, projectId))
+        .limit(1);
+      return { ok: false, code: project[0] ? 'no_service' : 'not_found' };
+    }
+    const rows = await db
+      .update(fundingProjectServices)
+      .set({ productionFee, updatedAt: now })
+      .where(eq(fundingProjectServices.projectId, projectId))
+      .returning();
+    if (!rows[0]) return { ok: false, code: 'no_service' };
+    console.warn(
+      `[funding] 약정 제작비 ${existing[0].productionFee} → ${productionFee} (projectId=${projectId}, actor=${actor})`,
+    );
+    return { ok: true, service: toView(rows[0]) };
+  } catch (error) {
+    return writeFailure(error, 'setProductionFee', projectId);
   }
 };

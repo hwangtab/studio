@@ -23,6 +23,9 @@ export interface AdminPayoutRecordView {
   paymentFeeAmount: number;
   shareAmount: number;
   withholdingAmount: number;
+  designFeeOffsetAmount: number;
+  productionFeeOffsetAmount: number;
+  shortfallAmount: number;
   netAmount: number;
   backerCount: number;
   status: 'pending' | 'paid';
@@ -50,6 +53,12 @@ export interface AdminPayoutView {
   feeAmount: number;
   shareAmount: number;
   withholdingAmount: number;
+  /** 정산 때 받기로 한 설계비·제작비를 뺀 금액(부가세 포함)과 빼지 못한 차액 — lib/funding/payout.ts. */
+  designFeeOffsetAmount: number;
+  productionFeeOffsetAmount: number;
+  shortfallAmount: number;
+  /** 설계·제작 대금 기록을 읽지 못했다 — 공제 없이 계산한 참고값이고 기록은 막힌다. */
+  serviceChargesUnavailable: boolean;
   netAmount: number;
   backerCount: number;
   closed: boolean;
@@ -115,6 +124,9 @@ const DRIFT_FIELDS: Array<{ key: keyof AdminPayoutRecordView & keyof AdminPayout
   { key: 'platformFeeAmount', label: '플랫폼 수수료' },
   { key: 'paymentFeeAmount', label: '결제 수수료' },
   { key: 'withholdingAmount', label: '원천징수' },
+  { key: 'designFeeOffsetAmount', label: '설계비 공제' },
+  { key: 'productionFeeOffsetAmount', label: '제작비 공제' },
+  { key: 'shortfallAmount', label: '차액' },
   { key: 'netAmount', label: '실이체액' },
   { key: 'backerCount', label: '후원 건수' },
 ];
@@ -227,6 +239,11 @@ export function FundingPayoutSection({
       '개설자가 원천징수 대상인데 주민등록번호가 등록되지 않았습니다. 지금 기록하면 세액만 떼고 지급명세서를 낼 수 없습니다 — 개설자에게 정산 정보 구획에서 등록을 요청해 주세요.',
     );
   }
+  if (payout.serviceChargesUnavailable) {
+    blockers.push(
+      '설계비·제작비 기록을 읽지 못했습니다(스튜디오 서비스 칸 참조). 합의한 공제를 모른 채 전액을 기록할 수 없습니다 — 마이그레이션 0041 적용 여부와 서버 로그를 확인해 주세요.',
+    );
+  }
   if (payout.grossAmount <= 0) blockers.push('결제된 후원이 없어 정산할 것이 없습니다.');
 
   const drift = recorded
@@ -272,7 +289,17 @@ export function FundingPayoutSection({
               value={minus(payout.withholdingAmount)}
               negative
             />
+            {/* 정산 때 받기로 한 대금(개설자 약관 제6조) — 원천징수까지 뺀 금액에서 뺀다. */}
+            <Row label="설계비 공제 (부가세 포함)" value={minus(payout.designFeeOffsetAmount)} negative />
+            <Row label="제작비 공제 (부가세 포함)" value={minus(payout.productionFeeOffsetAmount)} negative />
             <Row label="실이체액" value={won(payout.netAmount)} strong />
+            {payout.shortfallAmount > 0 && (
+              <Row
+                label="정산금으로 못 채운 대금"
+                hint="차액 청구나 규모 조정을 개설자와 상의해 정합니다"
+                value={won(payout.shortfallAmount)}
+              />
+            )}
             <Row label="확정 후원" value={`${payout.backerCount}건`} />
           </dl>
         </div>
@@ -294,7 +321,12 @@ export function FundingPayoutSection({
                 <Row label="플랫폼 수수료" value={minus(recorded.platformFeeAmount)} negative />
                 <Row label="결제 수수료" value={minus(recorded.paymentFeeAmount)} negative />
                 <Row label="원천징수" value={minus(recorded.withholdingAmount)} negative />
+                <Row label="설계비 공제" value={minus(recorded.designFeeOffsetAmount)} negative />
+                <Row label="제작비 공제" value={minus(recorded.productionFeeOffsetAmount)} negative />
                 <Row label="실이체액" value={won(recorded.netAmount)} strong />
+                {recorded.shortfallAmount > 0 && (
+                  <Row label="정산금으로 못 채운 대금" value={won(recorded.shortfallAmount)} />
+                )}
                 <Row label="확정 후원" value={`${recorded.backerCount}건`} />
               </dl>
               <p className="mt-3 text-sm">

@@ -13,6 +13,9 @@ const PAYOUT: FundingProjectPayout = {
   platformFeeAmount: 52_250,
   paymentFeeAmount: 32_300,
   shareAmount: 865_450,
+  designFeeOffsetAmount: 0,
+  productionFeeOffsetAmount: 0,
+  shortfallAmount: 0,
   withholdingAmount: 28_560,
   netAmount: 836_890,
   backerCount: 12,
@@ -43,6 +46,22 @@ describe('정산 메일 본문', () => {
     expect(text).toContain('국민은행');
     expect(text).not.toContain('123-456-789012');
     expect(text).not.toMatch(/\d{3}-\d{3}-\d{6}/);
+  });
+
+  it('정산에서 뺀 설계비·제작비와 못 채운 차액을 적는다 — 개설자 약관 제6조', () => {
+    const text = buildFundingPayoutRecordedText('앨범', {
+      ...PAYOUT, designFeeOffsetAmount: 550_000, productionFeeOffsetAmount: 331_904, shortfallAmount: 1_648_096, netAmount: 0,
+    }, null);
+    expect(text).toContain('펀딩 설계비(부가세 포함): −550,000원');
+    expect(text).toContain('제작비(부가세 포함): −331,904원');
+    expect(text).toContain('실지급액: 0원');
+    expect(text).toContain('정산금으로 충당하지 못한 대금: 1,648,096원');
+  });
+
+  it('뺀 대금이 없으면 그 줄들을 적지 않는다', () => {
+    const text = buildFundingPayoutRecordedText('앨범', PAYOUT, null);
+    expect(text).not.toContain('설계비');
+    expect(text).not.toContain('충당하지 못한');
   });
 
   it('사업자(원천징수 0)면 원천징수 줄을 적지 않는다', () => {
