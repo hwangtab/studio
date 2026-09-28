@@ -39,7 +39,7 @@ If your trip involves more than one transfer, give yourself a buffer — Korean 
 
 ## From Incheon and the airport
 
-If you are arriving from **Incheon International Airport (ICN)**, the simplest route is the **AREX (Airport Railroad Express)** into Seoul Station or Hongik University Station, then transfer to Line 3. Total travel time is typically around 90 minutes including transfers and walking. Trains run frequently and the signage is fully bilingual, so this is the route we recommend even for jet-lagged first-time visitors.
+If you are arriving from **Incheon International Airport (ICN)**, the simplest route is the **AREX (Airport Railroad Express)** into Seoul Station, then take GTX-A one stop to Yeonsinnae (or Line 1 to Jongno 3-ga and transfer to Line 3). From Hongik University Station, take Line 2 one stop to Hapjeong and transfer to Line 6. Total travel time is typically around 90 minutes including transfers and walking. Trains run frequently and the signage is fully bilingual, so this is the route we recommend even for jet-lagged first-time visitors.
 
 From **Incheon city** itself, you have options: subway via Line 1 and a transfer to Line 3, or an intercity bus into Seoul followed by a short subway leg. Travel time varies more here, so check Naver Maps or Kakao Map the morning of your session.
 
