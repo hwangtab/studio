@@ -165,8 +165,8 @@ export const purgeExpiredOrderCustomerData = async (
 
 /**
  * 결제자 이름이 파기된 후원의 **나머지 개인정보**를 파기한다 — 배송지 여섯 칸, 운영자 메모,
- * 응원 메시지, 후원자 명단 표시 이름. 후원 쪽 1년 파기(`lib/funding/retention.ts`)와 **같은
- * 항목**이다.
+ * 응원 메시지, 후원자 명단 표시 이름과 그 숨김 스냅샷. 후원 쪽 1년 파기(`lib/funding/retention.ts`)와
+ * **같은 항목**이다.
  *
  * 그 1년 파기는 `delivered_at`이 찍혀야 시작해서, 발송 상태를 한 번도 `delivered`로 바꾸지
  * 않은 후원은 배송지까지 **끝나는 날 없이** 남았다. 여기서는 기산점을 새로 만들지 않고 **위
@@ -178,8 +178,10 @@ export const purgeExpiredOrderCustomerData = async (
  * 모두 결제 후 5년이 하한이다.
  *
  * 표시 이름은 NULL이 아니라 표식으로 덮는다 — 1년 파기와 같은 이유(schema.ts의 `publicName`).
- * `fulfillment_updated_by`·`listing_hidden_at`은 후원자 개인정보가 아니라 운영 기록이라
- * 남긴다(1년 파기와 같은 판단, retention.ts 머리 주석).
+ * 숨김 스냅샷(`listing_hidden_name`)은 그 표시 이름의 문자 그대로의 복사본이라 같이 NULL로
+ * 지운다 — 안 지우면 표식으로 덮은 이름이 관리자 화면의 "내릴 때 이름" 안내에 원문 그대로
+ * 되살아난다. `fulfillment_updated_by`·`listing_hidden_at`은 후원자 개인정보가 아니라 운영
+ * 기록이라 남긴다(1년 파기와 같은 판단, retention.ts 머리 주석).
  */
 export const purgeFundingPersonalDataOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
   const result = await getDb()
@@ -194,6 +196,7 @@ export const purgeFundingPersonalDataOfPurgedOrders = async (): Promise<OrderPur
       adminMemo: null,
       supporterMessage: null,
       publicName: sql`CASE WHEN ${fundingPledges.publicName} IS NULL THEN NULL ELSE ${PURGED_MARK} END`,
+      listingHiddenName: null,
     })
     .where(
       and(
@@ -211,6 +214,7 @@ export const purgeFundingPersonalDataOfPurgedOrders = async (): Promise<OrderPur
           isNotNull(fundingPledges.adminMemo),
           isNotNull(fundingPledges.supporterMessage),
           and(isNotNull(fundingPledges.publicName), ne(fundingPledges.publicName, PURGED_MARK)),
+          isNotNull(fundingPledges.listingHiddenName),
         ),
       ),
     );

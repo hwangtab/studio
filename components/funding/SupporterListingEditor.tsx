@@ -68,7 +68,7 @@ export default function SupporterListingEditor({ orderNo, token, customerName, i
       if (!res.ok) { setError(json.message ?? '명단 공개 설정을 바꾸지 못했습니다.'); return; }
       setIsPublic(Boolean(json.displayNamePublic));
       setSavedName(typeof json.publicName === 'string' ? json.publicName : null);
-      // 공개 명단은 상태 API 응답(s-maxage=60 · SWR 300)을 거쳐 나가므로 즉시 뜨지 않는다 —
+      // 공개 명단은 상태 API 응답(s-maxage=15 · SWR 60)을 거쳐 나가므로 즉시 뜨지 않는다 —
       // 그걸 말하지 않으면 "공개가 안 됐다"는 문의가 온다.
       setNotice(json.displayNamePublic
         ? '후원자 명단에 올렸습니다. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다.'

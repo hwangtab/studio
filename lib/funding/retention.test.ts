@@ -51,6 +51,7 @@ const addPledge = async (opts: {
   supporterMessage?: string | null;
   fulfillmentUpdatedBy?: string | null;
   publicName?: string | null;
+  listingHiddenName?: string | null;
 }) => {
   seq += 1;
   const orderNo = `SNB-TEST-${String(seq).padStart(6, '0')}`;
@@ -89,6 +90,7 @@ const addPledge = async (opts: {
     fulfillmentUpdatedBy: opts.fulfillmentUpdatedBy === undefined ? null : opts.fulfillmentUpdatedBy,
     publicName: opts.publicName ?? null,
     displayNamePublic: opts.publicName != null,
+    listingHiddenName: opts.listingHiddenName ?? null,
     createdAt: opts.createdAt ? d(opts.createdAt) : d('2020-01-01'),
     updatedAt: d('2020-01-01'),
   });
@@ -266,6 +268,41 @@ describe('파기 대상 판정', () => {
     expect((await pledgeOf('real')).publicName).toBeNull();
     // 표식은 "남은 것 없음"으로 읽힌다 — 다음 실행에 다시 걸리지 않는다.
     expect((await purgeExpiredFundingPersonalData(NOW)).purged).toBe(0);
+  });
+
+  /**
+   * listing_hidden_name은 public_name·customer_name의 문자 그대로의 복사본이다 — 안 지우면
+   * 위에서 표식으로 덮은 이름이 관리자 화면의 "내릴 때 이름" 안내에 원문 그대로 되살아난다.
+   */
+  it('명단 숨김 스냅샷도 함께 지운다', async () => {
+    await addPledge({
+      id: 'hidden-snapshot',
+      deliveredAt: '2024-01-01',
+      paidAt: '2020-01-01',
+      shippingName: null,
+      supporterMessage: null,
+      publicName: '청취자',
+      listingHiddenName: '욕설닉네임',
+    });
+    const r = await purgeExpiredFundingPersonalData(NOW);
+    expect(r.purged).toBe(1);
+    expect((await pledgeOf('hidden-snapshot')).listingHiddenName).toBeNull();
+  });
+
+  it('배송지·메모·응원 메시지·표시 이름이 없어도 숨김 스냅샷만 남아 있으면 파기 대상이다', async () => {
+    await addPledge({
+      id: 'only-snapshot',
+      deliveredAt: '2024-01-01',
+      paidAt: '2020-01-01',
+      shippingName: null,
+      adminMemo: null,
+      supporterMessage: null,
+      publicName: null,
+      listingHiddenName: '옛닉네임',
+    });
+    const r = await purgeExpiredFundingPersonalData(NOW);
+    expect(r.purged).toBe(1);
+    expect((await pledgeOf('only-snapshot')).listingHiddenName).toBeNull();
   });
 
   it('orders.customer_name 등 공유 테이블 컬럼은 건드리지 않는다', async () => {

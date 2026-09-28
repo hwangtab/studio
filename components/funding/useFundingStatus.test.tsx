@@ -76,7 +76,7 @@ describe('오픈 예정(upcoming)', () => {
   });
 
   it('오픈 뒤에는 서버가 캐시된 upcoming을 돌려줘도 브라우저 시계가 live로 판정한다', async () => {
-    // 상태 API 응답은 CDN에서 s-maxage=60으로 캐시된다 — 오픈 직후 한동안 옛 판정이 온다.
+    // 상태 API 응답은 CDN에서 s-maxage=15로 캐시된다 — 오픈 직후 한동안 옛 판정이 온다.
     jest.useFakeTimers({ now: OPEN_AT.getTime() + 1000 });
     global.fetch = jest.fn().mockResolvedValue(jsonResponse({ state: 'upcoming', remaining: {}, publicBackers: [] })) as never;
     const { result } = renderHook(() => useFundingStatus('demo', 'upcoming', timing));
