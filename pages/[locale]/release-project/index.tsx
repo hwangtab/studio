@@ -32,9 +32,11 @@ import type { PortfolioItem } from '../../../types/data';
 import type { StoryCardData } from '../../../types/story';
 import type { NextPageWithLayout } from '../../../types';
 
+// 동적 import 금지 — 홈 히어로 2차 CTA가 /release-project#funding-goal로 온다. 동적이면 클라이언트
+// 이동에서 청크가 올 때까지 대상 id가 없어, 페이지 맨 위가 칠해진 뒤 계산기로 뛴다(2026-09-28 프레임 기록).
+import FundingGoalCalculator from '../../../components/release/FundingGoalCalculator';
 const ContactCTA = dynamic(() => import('../../../components/common/ContactCTA'));
 // 계산기는 상호작용 절이라 초기 번들에서 뺀다(ssr 유지 — 결과 표가 SSR HTML에 남는다).
-const FundingGoalCalculator = dynamic(() => import('../../../components/release/FundingGoalCalculator'));
 const MarketPriceComparison = dynamic(() => import('../../../components/pricing/MarketPriceComparison'));
 const HubLinkCallout = dynamic(() => import('../../../components/guides/HubLinkCallout'));
 const PortfolioDetailModal = dynamic(() => import('../../../components/PortfolioDetailModal'), { ssr: false });

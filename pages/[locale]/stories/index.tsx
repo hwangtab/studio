@@ -33,6 +33,17 @@ type StoryListItem = Pick<Story, 'slug' | 'title' | 'date' | 'categoryKey' | 'th
   summary?: string;
 };
 
+type StoryListPage = { stories: StoryListItem[]; totalItems: number; totalPages: number };
+
+/**
+ * 받아 온 목록 페이지를 (로케일·카테고리·페이지)로 기억한다. 글을 열었다 뒤로 오면 목록이 다시
+ * 마운트되는데, 예전엔 1페이지(정적 데이터)를 먼저 그린 뒤 현재 페이지를 다시 받아 와서 카드가
+ * 한 번 바뀌어 보였다 — 뒤로 가기 스크롤 복원도 그 사이의 다른 카드 위에 떨어졌다(2026-09-28
+ * 프레임 기록). 여기 있으면 첫 렌더부터 그 목록을 그리고 다시 받지 않는다. 탭 안에서만 산다.
+ */
+const listPageCache = new Map<string, StoryListPage>();
+const listPageKey = (locale: string, category: string, page: number) => `${locale}|${category}|${page}`;
+
 interface StoriesPageProps {
   locale: Locale;
   initialStories: StoryListItem[];
@@ -51,11 +62,18 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
   totalPages: initialTotalPages,
 }) => {
   const router = useRouter();
-  const [activeCategory, setActiveCategory] = useState('all');
+  // 카테고리는 URL(?category=)에 싣는다. 컴포넌트 상태에만 두면 글을 열었다 뒤로 올 때 필터가
+  // 풀려 전체 목록으로 돌아온다. 모르는 값은 전체.
+  const queryCategory = Array.isArray(router.query.category) ? router.query.category[0] : router.query.category;
+  const activeCategory = queryCategory && categoryKeys.includes(queryCategory) ? queryCategory : 'all';
   const [pageAnnouncement, setPageAnnouncement] = useState('');
-  const [stories, setStories] = useState<StoryListItem[]>(initialStories);
-  const [totalItems, setTotalItems] = useState(totalStories);
-  const [totalPages, setTotalPages] = useState(initialTotalPages);
+  listPageCache.set(listPageKey(locale, 'all', 1), { stories: initialStories, totalItems: totalStories, totalPages: initialTotalPages });
+  const [initialPage] = useState(
+    () => listPageCache.get(listPageKey(locale, activeCategory, normalizePageNumber(router.query.page, Number.MAX_SAFE_INTEGER))),
+  );
+  const [stories, setStories] = useState<StoryListItem[]>(initialPage?.stories ?? initialStories);
+  const [totalItems, setTotalItems] = useState(initialPage?.totalItems ?? totalStories);
+  const [totalPages, setTotalPages] = useState(initialPage?.totalPages ?? initialTotalPages);
   const [isLoadingStories, setIsLoadingStories] = useState(false);
   const ITEMS_PER_PAGE = 12;
   const { t } = useTranslation('common', { lng: locale });
@@ -102,17 +120,25 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
   );
 
   const handleCategoryChange = (categoryId: string) => {
-    setActiveCategory(categoryId);
     setPageAnnouncement('');
-    router.push(
-      { pathname: router.pathname, query: { locale: router.query.locale } },
-      undefined,
-      { shallow: true }
-    );
+    const query: Record<string, string> = { locale: router.query.locale as string };
+    if (categoryId !== 'all') query.category = categoryId;
+    router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
   };
 
   useEffect(() => {
     if (!router.isReady) return;
+
+    const cacheKey = listPageKey(locale, activeCategory, currentPage);
+    const cached = listPageCache.get(cacheKey);
+    if (cached) {
+      requestIdRef.current += 1; // 진행 중이던 요청의 로딩 해제·결과 반영을 무효로
+      setStories(cached.stories);
+      setTotalItems(cached.totalItems);
+      setTotalPages(cached.totalPages);
+      setIsLoadingStories(false);
+      return;
+    }
 
     const controller = new AbortController();
     const requestId = ++requestIdRef.current;
@@ -135,6 +161,8 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
           totalPages: number;
           page: number;
         };
+        listPageCache.set(cacheKey, { stories: data.stories, totalItems: data.totalItems, totalPages: data.totalPages });
+        if (requestId !== requestIdRef.current) return;
         setStories(data.stories);
         setTotalItems(data.totalItems);
         setTotalPages(data.totalPages);
@@ -157,6 +185,7 @@ const StoriesPage: NextPageWithLayout<StoriesPageProps> = ({
 
   const handlePageChange = (page: number) => {
     const query: Record<string, string | number> = { locale: router.query.locale as string };
+    if (activeCategory !== 'all') query.category = activeCategory;
     if (page > 1) query.page = page;
     router.push({ pathname: router.pathname, query }, undefined, { shallow: true });
     setPageAnnouncement(`${t('nav.stories')} — ${page} / ${totalPages}`);
