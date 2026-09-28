@@ -18,9 +18,12 @@
    보는 결과와 다르다.
 2. **매 쿼리마다 새 대화로 시작한다.** 같은 대화 안에서 이어 물으면 이전 질문의 맥락이
    다음 답변의 인용에 영향을 준다 — 20개 쿼리는 서로 독립적으로 측정돼야 한다.
-3. **기억·개인화 기능은 끈다.** ChatGPT는 설정에서 "메모리 참조"·저장된 맞춤 지침을 끄고,
-   Gemini는 계정 활동 기반 개인화를, Perplexity는 개인화 설정을 끈 상태로 실행한다.
-   목적은 "이 계정만 받는 답"이 아니라 "일반 사용자가 받을 답"을 재는 것이다.
+3. **기억·개인화 기능은 끈다.** ChatGPT는 **임시 채팅(Temporary Chat)으로 실행한다** — 설정에서
+   "메모리 참조"·저장된 맞춤 지침만 끄는 것으로는 부족했다(2회차에서 계정 닉네임을 부르는
+   문구가 남아 있었다, 아래 "2회차 부분 측정" 참조). 임시 채팅은 대화 종료 시 기록을 남기지
+   않아 개인화 잔존을 원천적으로 차단한다. Gemini는 계정 활동 기반 개인화를, Perplexity는
+   개인화 설정을 끈 상태로 실행한다. 목적은 "이 계정만 받는 답"이 아니라 "일반 사용자가
+   받을 답"을 재는 것이다.
 4. **모바일 앱이 아니라 웹 브라우저로 실행한다.** 앱은 인용 링크 표시 방식이 웹과 달라
    `cited_url`을 못 뽑는 경우가 있다. 데스크톱/모바일 웹 어느 쪽이든 좋다.
 
@@ -135,7 +138,7 @@ Gemini 유입은 90일 107세션으로 Perplexity(9세션)의 열 배다. **유�
   않는다 — 매달 같은 쿼리를 넣어야 추세 비교가 된다. 실제 답변이 특정 서비스를 새로
   다루게 되는 등 명백한 사유가 있을 때만, 바꾼 이유를 커밋 메시지에 남기고 바꾼다.
 - `template.csv` — 매달 이 파일을 복사해 `YYYY-MM.csv`로 이름 붙이고 채운다.
-  헤더: `month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,cited_section,source_content_type(table/faq/price-card/prose/other/na),position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes`
+  헤더: `month,query_id,engine,cited(yes/no),search_triggered(yes/no/unknown),cited_url,cited_section,source_content_type(table/faq/price-card/prose/other/na),position_in_answer,competitors_named,tone(positive/neutral/negative/absent),notes,facts_wrong`
 
   **2026-09-23에 칸 셋을 늘렸다.** 앞선 두 회차가 이 셋을 `notes` 자유 텍스트로 적다가
   제미나이 20행이 통째로 비어 원인 불명이 됐다(아래 "Gemini는 notes를 반드시 채운다").
@@ -148,6 +151,11 @@ Gemini 유입은 90일 107세션으로 Perplexity(9세션)의 열 배다. **유�
   - `source_content_type` — 그 블록의 형태. 표·FAQ의 숫자만 옮겨지고 산문 형용은 한 번도
     안 옮겨졌다는 관찰(memory `project_geo_citation_pattern`)을 실제 인용 데이터로
     검증하려면 이 칸이 필요하다. 인용이 없으면 `na`.
+  - `facts_wrong` — 답변이 우리에 대해 **틀린 사실**을 말했는가(전화번호·주소·가격·주차
+    가능 여부·"보컬 레슨 한다" 같은 없는 서비스 등). 틀린 문장을 그대로 옮겨 적는다.
+    틀린 게 없으면 `none`, 확인할 수 없으면 `unknown`이라고 적는다 — 비워 두지 않는다.
+    인용 여부(`cited`)와 별개로 채운다. 인용 없이도 답변이 우리를 잘못 설명할 수 있다
+    (예: L04 오추천 감시처럼 학습 데이터에 있는 옛 정보를 말하는 경우).
 
 ## 집계 방법
 
