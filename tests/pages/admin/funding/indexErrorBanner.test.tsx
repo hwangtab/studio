@@ -22,7 +22,7 @@ const TOTALS: AdminFundingTotals = {
 const item = (over: Partial<AdminPledgeItem> = {}): AdminPledgeItem => ({
   id: 'o1', orderNo: 'FND-20261015-AAAA1111', status: 'paid', paymentMethod: 'toss',
   customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
-  rewardTitle: '감사 메일', quantity: 1, totalAmount: 5000, additionalAmount: 0,
+  rewardLabel: '감사 메일 × 1', totalAmount: 5000, additionalAmount: 0,
   fulfillmentStatus: 'none', createdAt: new Date('2026-10-15T03:00:00Z').toISOString(),
   ...over,
 } as AdminPledgeItem);

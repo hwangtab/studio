@@ -503,7 +503,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                           {item.customerName}
                           <div className="text-xs text-gray-500 font-normal">{item.customerPhone}</div>
                         </td>
-                        <td className="px-4 py-3">{item.rewardTitle} × {item.quantity}</td>
+                        <td className="px-4 py-3">{item.rewardLabel}</td>
                         <td className="px-4 py-3 whitespace-nowrap">{formatPriceAmount(item.totalAmount)}원</td>
                         <td className="px-4 py-3">{FULFILLMENT_LABELS[item.fulfillmentStatus] ?? item.fulfillmentStatus}</td>
                       </tr>

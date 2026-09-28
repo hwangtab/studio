@@ -131,48 +131,77 @@ it('추가 펀딩 금액을 비우면 0으로 폴백된다', async () => {
   expect(input.value).toBe('0');
 });
 
-it('수량을 한 글자씩 타이핑해도 상한으로 튀지 않고, blur에서 클램프된다', async () => {
-  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  const input = screen.getByLabelText('수량') as HTMLInputElement;
-  await typeInto(input, '12');
-  // 타이핑 중에는 손대지 않는다 — 예전엔 `1` 뒤의 `2`에서 곧바로 10으로 튀었다.
-  expect(input.value).toBe('12');
-  await userEvent.tab();
-  expect(input.value).toBe('10');
-});
+/**
+ * 리워드는 **담는다**(2026-09-28) — 한 주문에 여러 리워드. 예전의 라디오·수량 칸은 없다.
+ */
+describe('리워드 담기', () => {
+  const fillBacker = async () => {
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  };
 
-it('수량을 비우면 1로 폴백된다', async () => {
-  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-  const input = screen.getByLabelText('수량') as HTMLInputElement;
-  await userEvent.clear(input);
-  expect(input.value).toBe('');
-  await userEvent.tab();
-  expect(input.value).toBe('1');
-});
+  it('넘겨받은 리워드가 1개 담긴 채로 시작하고, 다른 리워드는 담기 버튼으로 더한다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('1');
+    await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
+    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('1');
+    // 합계는 두 리워드의 합이다(배송비 줄은 없다 — 리워드가가 최종가).
+    expect(screen.getByText('35,000원')).toBeInTheDocument();
+  });
 
-it('remaining보다 큰 수량을 입력하면 blur에서 remaining으로 클램프된다', async () => {
-  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 3, mail: null }} />);
-  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  await typeInto(quantityInput, '10');
-  await userEvent.tab();
-  expect(quantityInput.value).toBe('3');
-});
+  it('여러 리워드를 담아 제출하면 items로 담은 순서대로 나간다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
+    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
+    await fillBacker();
+    // CD는 배송 리워드라 배송지가 필요하다.
+    await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
+    await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울');
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    expect(body.items).toEqual([{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 2 }]);
+    expect(body.rewardId).toBeUndefined();
+    expect(body.shipping).toMatchObject({ name: '김후원', address1: '서울' });
+    expect(requestPayment.mock.calls.at(-1)[0].orderName).toBe('[펀딩] 데모 · 감사 메일 외 1건');
+  });
 
-it('선택된 리워드의 remaining이 0이어도(품절) 수량이 0이 아니라 1로 바닥 고정된다', async () => {
-  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
-  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  await typeInto(quantityInput, '5');
-  await userEvent.tab();
-  expect(quantityInput.value).toBe('1');
-});
+  it('배송 리워드를 담아야 배송지를 묻는다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.queryByLabelText(/^받는 분\*$/)).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
+    expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
+  });
 
-it('리워드를 바꾸면 수량이 1로 리셋된다', async () => {
-  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  await typeInto(quantityInput, '4');
-  expect(quantityInput.value).toBe('4');
-  await userEvent.click(screen.getByLabelText(/감사 메일/));
-  expect((screen.getByLabelText('수량') as HTMLInputElement).value).toBe('1');
+  it('하나 빼기로 0이 되면 담은 목록에서 빠지고, 비면 제출할 수 없다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 빼기' }));
+    expect(screen.getByRole('button', { name: '감사 메일 담기' })).toBeInTheDocument();
+    expect(screen.getByText('아직 없습니다')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+  });
+
+  it('남은 수량까지만 늘릴 수 있다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 2, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
+    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('2');
+    expect(screen.getByRole('button', { name: 'CD 하나 더' })).toBeDisabled();
+  });
+
+  it(`무제한 리워드도 한 주문에 ${MAX_QUANTITY}개까지다`, async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    for (let i = 1; i < MAX_QUANTITY; i += 1) await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 더' }));
+    expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent(String(MAX_QUANTITY));
+    expect(screen.getByRole('button', { name: '감사 메일 하나 더' })).toBeDisabled();
+  });
+
+  it('품절 리워드는 담을 수 없다', () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 0, mail: null }} />);
+    expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
+  });
 });
 
 it('제출하면 결제수단이 toss로 나간다', async () => {
@@ -269,18 +298,15 @@ it('추가 펀딩 금액은 blur에서 MAX_ADDITIONAL_AMOUNT로 클램프된다'
  * 브라우저에서 이 Enter는 `handleNumericEnter`가 가로챈다. 그대로 두면 제약 검증
  * (step 1,000 · max 10)이 `5500`·`12`에 말풍선을 띄워 제출을 막는다.
  */
-it('숫자 칸에서 Enter로 바로 제출해도 서버에는 정규화된 수량·추가금이 나간다', async () => {
+it('추가 펀딩 칸에서 Enter로 바로 제출해도 서버에는 정규화된 추가금이 나간다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.type(screen.getByLabelText(/추가 펀딩 금액/), '{selectall}5500');
-  const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-  await userEvent.type(quantityInput, '{selectall}12{Enter}');
-  // 수량 칸은 blur 없이 Enter로 끝나 `12`가 그대로 남은 상태에서 제출됐다.
+  await userEvent.type(screen.getByLabelText(/추가 펀딩 금액/), '{selectall}5500{Enter}');
   await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
-  expect(body.quantity).toBe(MAX_QUANTITY);
+  expect(body.items).toEqual([{ rewardId: 'mail', quantity: 1 }]);
   expect(body.additionalAmount).toBe(5000);
 });
 
@@ -305,13 +331,16 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
  * 품절 리워드 초기 선택 회귀 — 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해서,
  * 후원자는 폼을 전부 채우고 제출한 **뒤에야** 409를 봤다.
  */
-it('첫 리워드가 품절이면 고를 수 있는 리워드가 선택된 채로 시작한다', () => {
+it('첫 리워드가 품절이면 고를 수 있는 리워드가 담긴 채로 시작한다', () => {
   render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
-  expect(screen.getByLabelText(/CD/)).toBeDisabled();
-  expect(screen.getByLabelText(/CD/)).not.toBeChecked();
-  expect(screen.getByLabelText(/감사 메일/)).toBeChecked();
-  // 선택된 리워드가 하단 요약에도 그대로 반영된다(품절 카드가 아니라 고를 수 있는 쪽).
-  expect(screen.getAllByText('감사 메일').length).toBeGreaterThan(0);
+  expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
+  expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('1');
+});
+
+it('넘겨받은 리워드가 품절이면 담지 않고 시작한다 — 폼을 다 채운 뒤 409를 보지 않게', () => {
+  render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
+  expect(screen.queryByLabelText('CD 수량')).toBeNull();
+  expect(screen.getByText('아직 없습니다')).toBeInTheDocument();
 });
 
 it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () => {
@@ -445,12 +474,10 @@ describe('임시 저장', () => {
 
   // 재고는 그 사이 바뀐다 — 되살린 리워드·수량·추가금이 지금도 유효하다고 보장할 수 없다.
   // 이름 공개는 체크 한 번이라 잃어도 손해가 없고, 문자열만 담는 계약을 깰 이유가 아니다.
-  it('리워드·수량·추가금·이름 공개는 복원되지 않는다', async () => {
+  it('담은 리워드·추가금·이름 공개는 복원되지 않는다', async () => {
     const { unmount } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByLabelText(/감사 메일/));
-    const quantityInput = screen.getByLabelText('수량') as HTMLInputElement;
-    await typeInto(quantityInput, '2');
-    await userEvent.tab();
+    await userEvent.click(screen.getByRole('button', { name: '감사 메일 담기' }));
+    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
     const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
     await typeInto(additionalInput, '2000');
     await userEvent.tab();
@@ -458,9 +485,9 @@ describe('임시 저장', () => {
     unmount();
 
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    // initialRewardId가 그대로 다시 주어지므로 첫 리워드(cd)로 되돌아온다 — "감사 메일" 선택은 안 남는다.
-    expect(await screen.findByLabelText(/CD/)).toBeChecked();
-    expect(screen.getByLabelText('수량')).toHaveValue(1);
+    // initialRewardId만 1개 담긴 처음 상태로 돌아온다.
+    expect(await screen.findByLabelText('CD 수량')).toHaveTextContent('1');
+    expect(screen.queryByLabelText('감사 메일 수량')).toBeNull();
     expect(screen.getByLabelText(/추가 펀딩 금액/)).toHaveValue(0);
     expect(screen.getByLabelText(/후원자 명단에 이름 표시/)).not.toBeChecked();
   });
@@ -505,30 +532,8 @@ describe('임시 저장', () => {
  * 컨테이너라, sticky 요약이 컨테이너 바닥에 붙으면서 폼 위로 떠 내용과 겹친다.
  * 둘 다 실제로 그렇게 배포됐다가 잡았다.
  */
-describe('모달에서 여는 경우 (lockedReward · stickySummary)', () => {
+describe('모달에서 여는 경우 (stickySummary)', () => {
   const remaining = { cd: 5, mail: null } as Record<string, number | null>;
-
-  it('잠그면 리워드 라디오를 보여 주지 않는다', () => {
-    render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />);
-    expect(screen.queryByRole('radio')).toBeNull();
-    const picked = screen.getByText('고르신 리워드').parentElement!;
-    expect(picked.textContent).toContain('30,000원');
-    expect(picked.textContent).toContain('CD');
-  });
-
-  it('잠그지 않으면 종전대로 고를 수 있다', () => {
-    render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
-    expect(screen.getAllByRole('radio').length).toBeGreaterThan(1);
-    expect(screen.queryByText('고르신 리워드')).toBeNull();
-  });
-
-  it('잠그면 후원자 정보가 1단계가 된다 — 빈 번호를 남기지 않는다', () => {
-    const { container } = render(
-      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
-    );
-    expect(container.textContent).toContain('후원자 정보');
-    expect(screen.queryByText('리워드', { selector: 'h2,h3' })).toBeNull();
-  });
 
   it('stickySummary=false면 요약 줄이 sticky가 아니다', () => {
     const { container } = render(
@@ -568,17 +573,6 @@ describe('단계 제목이 카드를 벗어나지 않는다', () => {
       expect(container.querySelector(`#${CSS.escape(id!)}`)).not.toBeNull();
     }
   });
-
-  it('잠긴 모달에서도 제목과 fieldset이 어긋나지 않는다', () => {
-    const { container } = render(
-      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} lockedReward />
-    );
-    expect(container.querySelectorAll('legend').length).toBe(0);
-    const labelled = [...container.querySelectorAll('fieldset[aria-labelledby]')];
-    for (const fs of labelled) {
-      expect(container.querySelector(`#${CSS.escape(fs.getAttribute('aria-labelledby')!)}`)).not.toBeNull();
-    }
-  });
 });
 
 /**
@@ -586,7 +580,7 @@ describe('단계 제목이 카드를 벗어나지 않는다', () => {
  * submit()이 두 번 불린다. `submitting` 상태는 비동기라 두 번째를 못 막고, pending 주문이
  * 두 건 생긴다. 한정 리워드면 본인이 남은 재고를 잠근 채 한 건만 결제하게 된다.
  */
-it('수량 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', async () => {
+it('추가 펀딩 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', async () => {
   const user = userEvent.setup();
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
   await user.type(screen.getByLabelText(/^이름\*$/), '김후원');
@@ -595,11 +589,11 @@ it('수량 칸에서 Enter를 연타해도 주문은 한 번만 생성된다', a
 
   // **같은 tick에** 세 번 — userEvent.keyboard는 키 사이에 await가 들어가 상태가 갱신되므로
   // 이 버그(비동기 setState를 재진입 가드로 쓴 것)를 재현하지 못한다.
-  const qty = screen.getByLabelText(/^수량$/);
+  const add = screen.getByLabelText(/추가 펀딩 금액/);
   await act(async () => {
-    fireEvent.keyDown(qty, { key: 'Enter' });
-    fireEvent.keyDown(qty, { key: 'Enter' });
-    fireEvent.keyDown(qty, { key: 'Enter' });
+    fireEvent.keyDown(add, { key: 'Enter' });
+    fireEvent.keyDown(add, { key: 'Enter' });
+    fireEvent.keyDown(add, { key: 'Enter' });
   });
 
   await waitFor(() => expect(global.fetch).toHaveBeenCalled());

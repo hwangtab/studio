@@ -12,9 +12,13 @@ import { isPastFundingEnd } from '../../../../lib/funding/projectState';
 import { getFundingProjectOrFailure } from '../../../../lib/funding/repository';
 import { expireStalePledges, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
 import SupporterListingEditor from '../../../../components/funding/SupporterListingEditor';
+import { pledgeLines, pledgeLinesLabel } from '../../../../lib/funding/pledgeLines';
+import { pledgeDownloads } from '../../../../lib/funding/shape';
 
 interface Props {
-  orderNo: string; token: string; projectSlug: string; projectTitle: string; rewardTitle: string; quantity: number; additionalAmount: number;
+  orderNo: string; token: string; projectSlug: string; projectTitle: string;
+  /** 담은 리워드 요약 — "『발작』 × 1, 『갱도』 × 1"(pledgeLinesLabel). */
+  rewardLabel: string; additionalAmount: number;
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean;
   /**
@@ -101,7 +105,7 @@ export default function FundingManagePage(p: Props) {
           <dl className="mt-5 space-y-3">
             {[
               { k: '프로젝트', v: <a href={`/ko/funding/${p.projectSlug}`} rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">{p.projectTitle}</a> },
-              { k: '리워드', v: `${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 펀딩 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
+              { k: '리워드', v: `${p.rewardLabel}${p.additionalAmount > 0 ? ` + 추가 펀딩 ${formatPriceAmount(p.additionalAmount)}원` : ''}` },
               { k: '금액', v: `${formatPriceAmount(p.totalAmount)}원 (VAT 포함)` },
               ...(status === 'paid' ? [{ k: '리워드 발송', v: FULFILL_LABEL[p.fulfillmentStatus] }] : []),
               ...(p.shipping ? [{ k: '배송지', v: p.shipping }] : []),
@@ -210,12 +214,12 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
    * 돈을 돌려받고도 리워드를 계속 받는 화면이 된다. 상태 판정은 셀프 취소와 같은 집합을
    * 쓴다(lib/funding/refundable.ts).
    */
-  const reward = project?.rewards.find((r) => r.id === pl.rewardId);
-  const downloads = isLiveFundingOrderStatus(order.status) ? reward?.downloads ?? [] : [];
+  const lines = pledgeLines(pl);
+  const downloads = isLiveFundingOrderStatus(order.status) ? pledgeDownloads(project, lines.map((l) => l.rewardId)) : [];
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
-    orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardTitle: pl.rewardTitle,
-    quantity: pl.quantity, additionalAmount: pl.additionalAmount, totalAmount: order.totalAmount, status: order.status,
+    orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardLabel: pledgeLinesLabel(lines),
+    additionalAmount: pl.additionalAmount, totalAmount: order.totalAmount, status: order.status,
     paymentMethod: pl.paymentMethod, fulfillmentStatus: pl.fulfillmentStatus, shipping,
     // 조회 실패면 취소·내려받기를 내보내지 않는다. 판정 근거가 없는 것이지 마감이 아니다.
     canCancel: lookupFailed ? false : verdict.ok,

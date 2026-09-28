@@ -15,7 +15,7 @@ import type { AdminPledgeItem } from '../../../../lib/funding/admin-serialize';
 const PLEDGE: AdminPledgeItem = {
   id: 'order-1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
-  rewardTitle: 'CD', quantity: 1, additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'shipped',
+  rewardLabel: 'CD × 1', additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'shipped',
   trackingCompany: 'CJ', trackingNumber: '123', shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null, listingHiddenAt: null, listingHiddenName: null,
   refundRequestedAt: null,
   paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,

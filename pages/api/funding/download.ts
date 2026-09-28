@@ -10,6 +10,8 @@ import { getFundingProjectOrFailure } from '../../../lib/funding/repository';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from '../../../lib/funding/refundable';
 import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
 import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
+import { pledgeLines } from '../../../lib/funding/pledgeLines';
+import { pledgeDownloads } from '../../../lib/funding/shape';
 
 /**
  * 디지털 리워드 내려받기 — **최초 접근을 기록하는** 경로.
@@ -74,10 +76,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (lookupFailed) {
     return res.status(503).json({ ok: false, message: '지금은 내려받을 수 없습니다. 잠시 후 다시 시도해 주세요.' });
   }
-  const reward = project?.rewards.find((r) => r.id === pledge.rewardId);
-  // `file`은 **이 후원자의 리워드가 주는 키**와 일치해야 한다. 목록에 없는 값을 넘겨
+  // `file`은 **이 후원자가 담은 리워드들이 주는 키**와 일치해야 한다. 목록에 없는 값을 넘겨
   // 다른 티어의 파일이나 버킷의 다른 객체에 서명을 받아 내지 못하게 한다.
-  const target = reward?.downloads.find((d) => d.key === file);
+  const target = pledgeDownloads(project, pledgeLines(pledge).map((l) => l.rewardId)).find((d) => d.key === file);
   if (!target) return res.status(404).json(NOT_FOUND);
 
   /**

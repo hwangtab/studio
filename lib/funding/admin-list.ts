@@ -39,7 +39,7 @@ export const listFundingOrders = async (slug: string | null): Promise<FundingOrd
         ),
       );
     },
-    with: { fundingPledge: true, payments: true },
+    with: { fundingPledge: { with: { items: true } }, payments: true },
     orderBy: (t, { desc }) => [desc(t.createdAt)],
     limit: 201,
   });
@@ -70,7 +70,7 @@ export const listFundingOrdersForExport = async (slug: string | null): Promise<F
           )
         : and(e(t.type, 'funding'), statusFilter);
     },
-    with: { fundingPledge: true, payments: true },
+    with: { fundingPledge: { with: { items: true } }, payments: true },
     orderBy: (t, { desc }) => [desc(t.createdAt)],
   });
   return (rows as FundingOrder[]).filter((o) => o.fundingPledge);

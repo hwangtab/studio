@@ -8,6 +8,8 @@ import { isManualPlaceholderRecipient } from './service';
 import type { CreatorProjectDetail } from './creatorProjectWrite';
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
+import { pledgeLines } from './pledgeLines';
+import { pledgeDownloads } from './shape';
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;
@@ -28,12 +30,24 @@ const paymentMethodLabel = (method: string | null | undefined): string =>
 const summaryLines = (order: FundingOrder, project: FundingProject | null): string[] => {
   const p = order.fundingPledge;
   if (!p) return [];
-  const reward = project?.rewards.find((r) => r.id === p.rewardId);
+  const lines = pledgeLines(p);
+  // 여러 리워드를 담았으면 한 줄씩 적고, 예상 전달 시기도 리워드마다 붙인다 — 음원은 이미
+  // 받았는데 책은 다음 달이라는 사실이 한 줄로 뭉개지면 안 된다.
+  const deliveryOf = (rewardId: string) => project?.rewards.find((r) => r.id === rewardId)?.estimatedDelivery;
+  const rewardLines = lines.length === 1
+    ? [
+        `리워드: ${lines[0].rewardTitle} × ${lines[0].quantity}`,
+        ...(deliveryOf(lines[0].rewardId) ? [`예상 전달 시기: ${deliveryOf(lines[0].rewardId)}`] : []),
+      ]
+    : [
+        '리워드:',
+        ...lines.map((l) => `· ${l.rewardTitle} × ${l.quantity}${deliveryOf(l.rewardId) ? ` (예상 전달 ${deliveryOf(l.rewardId)})` : ''}`),
+      ];
   return [
     `프로젝트: ${project?.title ?? p.projectSlug}`,
-    `리워드: ${p.rewardTitle} × ${p.quantity}${p.additionalAmount > 0 ? ` + 추가 펀딩 ${formatPriceAmount(p.additionalAmount)}원` : ''}`,
+    ...rewardLines,
+    ...(p.additionalAmount > 0 ? [`추가 펀딩: ${formatPriceAmount(p.additionalAmount)}원`] : []),
     `펀딩 금액: ${formatPriceAmount(order.totalAmount)}원 (VAT 포함)`,
-    ...(reward ? [`예상 전달 시기: ${reward.estimatedDelivery}`] : []),
     `주문번호: ${order.orderNo}`,
   ];
 };
@@ -109,15 +123,16 @@ const withoutUndeliverableCustomer = (
  * 받게 되는지는 메일에서 바로 보여야 한다.
  */
 const downloadLines = (order: FundingOrder, project: FundingProject | null): string[] => {
-  const rewardId = order.fundingPledge?.rewardId;
-  const reward = project?.rewards.find((r) => r.id === rewardId);
+  const pledge = order.fundingPledge;
+  if (!pledge) return [];
   // `downloads`가 없는 리워드가 들어와도 여기서 터지면 안 된다 — 이 함수는 결제 확정
   // 메일 경로 안이라, 던지면 결제는 됐는데 안내 메일이 통째로 실패한다.
-  if (!reward?.downloads?.length) return [];
+  const downloads = pledgeDownloads(project, pledgeLines(pledge).map((l) => l.rewardId));
+  if (!downloads.length) return [];
   return [
     '',
     '[음원 내려받기]',
-    ...reward.downloads.map((d) => `· ${d.label}`),
+    ...downloads.map((d) => `· ${d.label}`),
     `아래 펀딩 확인 페이지에서 받으실 수 있습니다: ${manageUrl(order)}`,
     '· 내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).',
   ];

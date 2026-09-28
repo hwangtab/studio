@@ -13,11 +13,12 @@ jest.mock('../../../../lib/funding/projects', () => ({ ...jest.requireActual('..
 // eslint-disable-next-line import/first
 import { getServerSideProps } from '../../../../pages/[locale]/funding/manage/[orderNo]';
 // eslint-disable-next-line import/first
-import { createFundingPledge, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
+import { findFundingOrderByOrderNo } from '../../../../lib/funding/service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from '../../../../lib/funding/projects';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from '../../../../lib/funding/validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -96,7 +97,7 @@ describe('funding manage getServerSideProps', () => {
   });
 
   it('토큰 불일치 → notFound', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     const res = resStub();
     const result = await getServerSideProps({
@@ -122,7 +123,7 @@ describe('funding manage getServerSideProps', () => {
   });
 
   it('정상 토큰 → props에 manageToken은 없고 쿼리 token만 echo, 상태·금액이 맞다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     const res = resStub();
     const result = await getServerSideProps({
@@ -141,7 +142,7 @@ describe('funding manage getServerSideProps', () => {
 
   // 약관 제13조 2항이 약속한 철회 UI의 입력값 — 공개 여부와 "지금 바꿀 수 있는지"가 함께 와야 한다.
   it('이름 공개 동의 여부와 편집 가능 여부를 함께 넘긴다', async () => {
-    const c = await createFundingPledge(payloadFor({ displayNamePublic: true }), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor({ displayNamePublic: true }), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     const result = await getServerSideProps({
@@ -154,7 +155,7 @@ describe('funding manage getServerSideProps', () => {
   });
 
   it('환불 완료 건은 이름 공개 설정을 바꿀 수 없다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     const o = await findFundingOrderByOrderNo(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE id=?", args: [o!.id] });
@@ -174,7 +175,7 @@ describe('funding manage getServerSideProps', () => {
  */
 describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
   it('토스가 아닌 펀딩은 canCancel=false + 문의 안내를 내려보낸다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     await client.execute({
@@ -193,7 +194,7 @@ describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
   // 토스 후원은 결제수단 때문에 막히지 않는다. canCancel 자체는 프로젝트 진행 상태(실시간
   // 기준)에 좌우되므로 단언하지 않고, **차단 사유가 offline_payment가 아니라는 것**만 본다.
   it('토스 펀딩은 결제수단 때문에 막히지 않는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
 
@@ -220,7 +221,7 @@ describe('음원 내려받기 키는 결제가 살아 있을 때만 내려간다
     } as never)) as { props: { downloads: Array<{ label: string; key: string }> } }).props;
 
   it('결제 확정 건에는 주소가 내려간다 — 리워드에 걸린 파일을 전부', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     // 상위 티어는 하위 티어가 주는 것을 포함한다. 한 줄만 내려가면 약속한 것을 덜 주게 된다.
@@ -231,7 +232,7 @@ describe('음원 내려받기 키는 결제가 살아 있을 때만 내려간다
   });
 
   it('환불된 건에는 주소를 내려보내지 않는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET status='refunded' WHERE order_no=?", args: [c.orderNo] });
@@ -239,7 +240,7 @@ describe('음원 내려받기 키는 결제가 살아 있을 때만 내려간다
   });
 
   it('결제 전(pending) 건에도 내려보내지 않는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     expect((await propsFor(c.orderNo, c.manageToken)).downloads).toEqual([]);
   });

@@ -10,14 +10,17 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { aggregateProjectStatus, createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
+import { aggregateProjectStatus, aggregateRewardSales, createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
+// eslint-disable-next-line import/first
+import { pledgeLines } from './pledgeLines';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import { FUNDING_TERMS_VERSION } from './policy';
 import { PURGED_MARK } from '../privacy/orderRetention';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from './validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -74,7 +77,7 @@ const reward = (id: string) => PROJECT.rewards.find((r) => r.id === id)!;
 
 describe('createFundingPledge', () => {
   it('주문·펀딩을 만들고 금액을 서버가 계산한다', async () => {
-    const r = await createFundingPledge(payloadFor({ additionalAmount: 1000 }), PROJECT, reward('mail'), NOW);
+    const r = await createSingleRewardPledge(payloadFor({ additionalAmount: 1000 }), PROJECT, reward('mail'), NOW);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.orderNo).toMatch(/^FND-20261015-[0-9A-F]{8}$/);
@@ -88,7 +91,7 @@ describe('createFundingPledge', () => {
   // 동의 사실이 행에 남지 않던 시절엔 분쟁이 나면 "그때 무엇에 동의했는가"를 git 이력으로
   // 손수 대조해야 했다. 후원 0건인 지금 컬럼을 넣어 두는 것이 유일한 무비용 시점이었다.
   it('약관 동의 시각과 동의한 판본을 행에 남긴다', async () => {
-    const r = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const r = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!r.ok) throw new Error();
     const pledge = (await findFundingOrderByOrderNo(r.orderNo))?.fundingPledge;
     expect(pledge?.termsAgreedAt?.getTime()).toBe(NOW.getTime());
@@ -100,8 +103,8 @@ describe('createFundingPledge', () => {
 
   it('한정 수량 1개에 두 번 펀딩하면 두 번째는 sold_out', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
-    const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'x@example.com' }), PROJECT, reward('cd'), NOW);
-    const second = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'y@example.com', customerPhone: '010-9' }), PROJECT, reward('cd'), NOW);
+    const first = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'x@example.com' }), PROJECT, reward('cd'), NOW);
+    const second = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'y@example.com', customerPhone: '010-9' }), PROJECT, reward('cd'), NOW);
     expect(first.ok).toBe(true);
     expect(second).toEqual({ ok: false, code: 'sold_out' });
   });
@@ -110,10 +113,10 @@ describe('createFundingPledge', () => {
   // 화면(aggregateProjectStatus 기준 품절)과 서버 판정이 어긋나 초과 판매가 났다.
   it('partially_refunded 펀딩도 한정 재고를 잡는다 — 다음 펀딩은 sold_out', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
-    const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p1@example.com' }), PROJECT, reward('cd'), NOW);
+    const first = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p1@example.com' }), PROJECT, reward('cd'), NOW);
     if (!first.ok) throw new Error();
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [first.orderNo] });
-    const second = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p2@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
+    const second = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'p2@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
     expect(second).toEqual({ ok: false, code: 'sold_out' });
   });
 
@@ -124,9 +127,9 @@ describe('createFundingPledge', () => {
    */
   it('품절로 졌으면 orders에도 행이 남지 않는다', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
-    const first = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'o1@example.com' }), PROJECT, reward('cd'), NOW);
+    const first = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'o1@example.com' }), PROJECT, reward('cd'), NOW);
     expect(first.ok).toBe(true);
-    const second = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'o2@example.com', customerPhone: '010-7' }), PROJECT, reward('cd'), NOW);
+    const second = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'o2@example.com', customerPhone: '010-7' }), PROJECT, reward('cd'), NOW);
     expect(second).toEqual({ ok: false, code: 'sold_out' });
 
     const rows = await client.execute('SELECT COUNT(*) AS n FROM orders');
@@ -144,10 +147,10 @@ describe('createFundingPledge', () => {
    */
   it('재취득이 품절이면 기존 홀드가 살아 있다', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
-    const mine = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), NOW);
+    const mine = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), NOW);
     if (!mine.ok) throw new Error();
     // 한정 1개짜리를 내가 잡고 있는 상태에서, 수량을 2로 올려 재제출한다 — 해제해도 자리가 없다.
-    const again = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, quantity: 2 }), PROJECT, reward('cd'), NOW, {
+    const again = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, quantity: 2 }), PROJECT, reward('cd'), NOW, {
       releaseOrderNo: mine.orderNo,
     });
     expect(again).toEqual({ ok: false, code: 'sold_out' });
@@ -156,14 +159,14 @@ describe('createFundingPledge', () => {
 
   it('홀드가 지난 pending은 재고를 잡지 않는다', async () => {
     const shipping = { name: '김후원', phone: '010', postcode: '03000', address1: '서울' };
-    await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), new Date(NOW.getTime() - 1000 * 1000));
-    const later = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'z@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
+    await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), new Date(NOW.getTime() - 1000 * 1000));
+    const later = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping, customerEmail: 'z@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
     expect(later.ok).toBe(true);
   });
 
   it('자기 주문번호를 증명으로 내면 그 pending을 만료시킨다(자기 홀드 해제)', async () => {
-    const a = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
-    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW, {
+    const a = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW, {
       releaseOrderNo: a.ok ? a.orderNo : null,
     });
     const prev = await findFundingOrderByOrderNo(a.ok ? a.orderNo : '');
@@ -179,15 +182,15 @@ describe('createFundingPledge', () => {
    * 후원입니다'로 거절당하고, 풀린 한정 재고는 공격자의 INSERT가 가져간다.
    */
   it('증명 없이 같은 이메일·전화로 보내면 남의 pending을 건드리지 못한다', async () => {
-    const victim = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
-    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); // 공격자 — 증명 없음
+    const victim = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); // 공격자 — 증명 없음
     const prev = await findFundingOrderByOrderNo(victim.ok ? victim.orderNo : '');
     expect(prev?.status).toBe('pending');
   });
 
   it('남의 주문번호를 넣어도 이메일·전화가 다르면 만료되지 않는다', async () => {
-    const victim = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
-    await createFundingPledge(
+    const victim = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createSingleRewardPledge(
       payloadFor({ customerEmail: 'attacker@example.com', customerPhone: '010-9999-9999' }),
       PROJECT, reward('mail'), NOW,
       { releaseOrderNo: victim.ok ? victim.orderNo : null },
@@ -202,9 +205,9 @@ describe('createFundingPledge', () => {
    * 피해자의 홀드까지 함께 날리는 경로가 그대로 남는다.
    */
   it('증명한 주문 하나만 만료된다 — 같은 연락처의 다른 pending은 살아 있다', async () => {
-    const victim = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
-    const mine = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
-    await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW, {
+    const victim = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const mine = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW, {
       releaseOrderNo: mine.ok ? mine.orderNo : null,
     });
     expect((await findFundingOrderByOrderNo(mine.ok ? mine.orderNo : ''))?.status).toBe('expired');
@@ -212,9 +215,9 @@ describe('createFundingPledge', () => {
   });
 
   it('다른 프로젝트에 펀딩해도 이 프로젝트의 기존 pending은 만료시키지 않는다', async () => {
-    const a = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const a = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     const otherProject = { ...PROJECT, slug: 'other' };
-    await createFundingPledge(payloadFor({ projectSlug: 'other' }), otherProject, reward('mail'), NOW, {
+    await createSingleRewardPledge(payloadFor({ projectSlug: 'other' }), otherProject, reward('mail'), NOW, {
       releaseOrderNo: a.ok ? a.orderNo : null,
     });
     const prev = await findFundingOrderByOrderNo(a.ok ? a.orderNo : '');
@@ -225,7 +228,7 @@ describe('createFundingPledge', () => {
 
 describe('findFundingOrderByOrderNo — 소문자 orderNo도 찾는다', () => {
   it('middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, 소문자로 조회해도 대문자 주문을 찾아야 한다', async () => {
-    const created = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const created = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     expect(created.ok).toBe(true);
     if (!created.ok) throw new Error('unreachable — 위 expect가 이미 걸렀다');
 
@@ -236,8 +239,8 @@ describe('findFundingOrderByOrderNo — 소문자 orderNo도 찾는다', () => {
 
 describe('expireStalePledges · aggregateProjectStatus', () => {
   it('만료 pending은 expired, 집계는 paid만 센다', async () => {
-    const stale = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), new Date(NOW.getTime() - 2000 * 1000));
-    const paid = await createFundingPledge(payloadFor({ customerEmail: 'p@example.com', customerPhone: '010-7', additionalAmount: 2000 }), PROJECT, reward('mail'), NOW);
+    const stale = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), new Date(NOW.getTime() - 2000 * 1000));
+    const paid = await createSingleRewardPledge(payloadFor({ customerEmail: 'p@example.com', customerPhone: '010-7', additionalAmount: 2000 }), PROJECT, reward('mail'), NOW);
     await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [paid.ok ? paid.orderNo : ''] });
     await expireStalePledges(NOW);
     expect((await findFundingOrderByOrderNo(stale.ok ? stale.orderNo : ''))?.status).toBe('expired');
@@ -246,7 +249,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
   });
 
   it('partially_refunded도 paid와 같이 센다 — 펀딩은 살아 있고 재고도 나간 상태다', async () => {
-    const partial = await createFundingPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
+    const partial = await createSingleRewardPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('cd'), NOW);
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [partial.ok ? partial.orderNo : ''] });
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.raisedAmount).toBe(30000);
@@ -264,7 +267,7 @@ describe('expireStalePledges · aggregateProjectStatus', () => {
 describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
   it('같은 고객(이메일+전화)이 여러 번 펀딩하면 건수만 늘고 인원은 그대로다', async () => {
     for (const email of ['dup@example.com', 'dup@example.com', 'solo@example.com']) {
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: email, customerPhone: email === 'dup@example.com' ? '010-111' : '010-222' }),
         PROJECT, reward('mail'), NOW,
       );
@@ -323,7 +326,7 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
   });
 
   it('파기된 주문이 살아 있는 후원과 섞여도 인원이 맞는다', async () => {
-    const c = await createFundingPledge(payloadFor({ customerEmail: 'live@example.com' }), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor({ customerEmail: 'live@example.com' }), PROJECT, reward('mail'), NOW);
     await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
     for (let i = 0; i < 2; i += 1) {
       await client.execute({
@@ -351,7 +354,7 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
    */
   it('대소문자만 다른 이메일은 한 사람이다 — 옛 데이터도 포함', async () => {
     // 저장 시점에 이미 소문자로 정규화되는 신규 건과, 대문자로 저장돼 있는 옛 건.
-    const c = await createFundingPledge(
+    const c = await createSingleRewardPledge(
       payloadFor({ customerEmail: 'Mixed@Example.com', customerPhone: '010-1234-5678' }), PROJECT, reward('mail'), NOW,
     );
     await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
@@ -374,7 +377,7 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
 
   it('하이픈·공백만 다른 전화번호는 한 사람이다', async () => {
     for (const phone of ['010-1234-5678', '01012345678', '010 1234 5678']) {
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: 'same@example.com', customerPhone: phone }), PROJECT, reward('mail'), NOW,
       );
       await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
@@ -386,7 +389,7 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
 
   it('이메일이 같아도 전화가 다르면 다른 사람으로 센다', async () => {
     for (const phone of ['010-1', '010-2']) {
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: 'shared@example.com', customerPhone: phone }), PROJECT, reward('mail'), NOW,
       );
       await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.ok ? c.orderNo : ''] });
@@ -404,7 +407,7 @@ describe('aggregateProjectStatus — 건수와 인원을 따로 센다', () => {
  */
 describe('응원 메시지 공개', () => {
   const paidWith = async (over: Partial<CreatePledgePayload>, termsVersion?: string) => {
-    const c = await createFundingPledge(payloadFor(over), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(over), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error('생성 실패');
     await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
     if (termsVersion) {
@@ -535,7 +538,7 @@ describe('응원 메시지 공개', () => {
  */
 describe('취소하면 공개 명단에서 내려간다', () => {
   const paidPublic = async (over: Partial<CreatePledgePayload>) => {
-    const c = await createFundingPledge(payloadFor(over), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(over), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error('생성 실패');
     await client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [c.orderNo] });
     return c.orderNo;
@@ -592,7 +595,7 @@ describe('취소하면 공개 명단에서 내려간다', () => {
   });
 
   it('결제 전(pending)에는 아직 나가지 않는다', async () => {
-    const c = await createFundingPledge(
+    const c = await createSingleRewardPledge(
       payloadFor({ customerEmail: 'c3@example.com', customerPhone: '010-7003', customerName: '대기중', supporterMessage: '아직 결제 전' }),
       PROJECT, reward('mail'), NOW,
     );
@@ -600,5 +603,66 @@ describe('취소하면 공개 명단에서 내려간다', () => {
     const s = await aggregateProjectStatus(PROJECT, NOW);
     expect(s.publicBackers).not.toContain('대기중');
     expect(s.publicMessages.map((m) => m.message)).not.toContain('아직 결제 전');
+  });
+});
+
+/**
+ * 한 주문에 여러 리워드(2026-09-28). 줄은 funding_pledge_items에 있고, 재고·판매 수량은
+ * 줄 단위로 센다. 후원 행은 여전히 주문당 하나라 건수·모금액은 곱해지지 않는다.
+ */
+describe('여러 리워드를 담은 후원', () => {
+  const multi = (items: Array<{ rewardId: string; quantity: number }>, over: Record<string, unknown> = {}) => {
+    const { rewardId: _r, quantity: _q, ...rest } = payloadFor({ customerEmail: 'm@example.com', customerPhone: '010-5555-6666' });
+    const payload = { ...rest, ...over, items, shipping: { name: '김후원', phone: '010-1', postcode: '12345', address1: '서울' } };
+    return createFundingPledge(payload, PROJECT, items.map((i) => ({ reward: reward(i.rewardId), quantity: i.quantity })), NOW);
+  };
+  const paid = async (orderNo: string) =>
+    client.execute({ sql: "UPDATE orders SET status='paid' WHERE order_no=?", args: [orderNo] });
+
+  it('줄마다 스냅샷을 남기고 총액은 줄의 합이다', async () => {
+    const c = await multi([{ rewardId: 'mail', quantity: 2 }, { rewardId: 'cd', quantity: 1 }]);
+    if (!c.ok) throw new Error('생성 실패');
+    expect(c.amounts.totalAmount).toBe(5000 * 2 + 30000);
+    const order = await findFundingOrderByOrderNo(c.orderNo);
+    expect(pledgeLines(order!.fundingPledge!)).toEqual([
+      { rewardId: 'mail', rewardTitle: '감사 메일', unitAmount: 5000, quantity: 2 },
+      { rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1 },
+    ]);
+    // 옛 칸에는 첫 줄이 복사되고, 제목은 여러 개라는 것이 보이게 적힌다.
+    expect(order!.fundingPledge!.rewardId).toBe('mail');
+    expect(order!.fundingPledge!.rewardTitle).toBe('감사 메일 외 1건');
+  });
+
+  it('한정 리워드 하나라도 모자라면 주문 전체가 들어가지 않는다 — 일부만 담긴 주문은 없다', async () => {
+    const first = await multi([{ rewardId: 'cd', quantity: 1 }]);
+    expect(first.ok).toBe(true);
+    const second = await multi([{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 1 }], { customerEmail: 'z@example.com' });
+    expect(second).toEqual({ ok: false, code: 'sold_out' });
+    const counts = await client.execute('SELECT (SELECT COUNT(*) FROM orders) AS o, (SELECT COUNT(*) FROM funding_pledges) AS p, (SELECT COUNT(*) FROM funding_pledge_items) AS i');
+    expect(counts.rows[0]).toMatchObject({ o: 1, p: 1, i: 1 });
+  });
+
+  it('남은 수량·판매 수량은 줄 단위로 세고, 건수와 모금액은 곱해지지 않는다', async () => {
+    const c = await multi([{ rewardId: 'mail', quantity: 3 }, { rewardId: 'cd', quantity: 1 }]);
+    if (!c.ok) throw new Error('생성 실패');
+    await paid(c.orderNo);
+    const s = await aggregateProjectStatus(PROJECT, NOW);
+    expect(s.remaining.cd).toBe(0);
+    expect(s.backerCount).toBe(1);
+    expect(s.raisedAmount).toBe(45000);
+    expect(await aggregateRewardSales('demo')).toEqual({ mail: 3, cd: 1 });
+  });
+
+  it('줄이 없는 옛 후원은 단일 리워드 칸이 곧 한 줄이다 — 재고 계산에서 빠지지 않는다', async () => {
+    const legacy = await createSingleRewardPledge(payloadFor({ rewardId: 'cd' }), PROJECT, reward('cd'), NOW);
+    if (!legacy.ok) throw new Error('생성 실패');
+    // 옛 코드가 만든 후원처럼 줄을 지운다.
+    await client.execute('DELETE FROM funding_pledge_items');
+    await paid(legacy.orderNo);
+    expect((await aggregateProjectStatus(PROJECT, NOW)).remaining.cd).toBe(0);
+    const again = await multi([{ rewardId: 'cd', quantity: 1 }]);
+    expect(again).toEqual({ ok: false, code: 'sold_out' });
+    const order = await findFundingOrderByOrderNo(legacy.orderNo);
+    expect(pledgeLines(order!.fundingPledge!)).toEqual([{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1 }]);
   });
 });

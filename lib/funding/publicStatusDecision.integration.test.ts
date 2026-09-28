@@ -77,7 +77,8 @@ const readProject = async (id: string) => {
   return row;
 };
 
-const PLEDGE_PAYLOAD: Omit<CreatePledgePayload, 'projectSlug' | 'rewardId'> = {
+// 검증기는 옛 단일 리워드 모양(rewardId·quantity)도 받는다 — 여기서는 그 모양으로 보낸다.
+const PLEDGE_PAYLOAD: Omit<CreatePledgePayload, 'projectSlug' | 'items'> & { quantity: number } = {
   quantity: 1,
   additionalAmount: 0,
   paymentMethod: 'toss',

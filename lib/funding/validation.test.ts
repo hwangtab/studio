@@ -34,10 +34,40 @@ const base = {
 };
 
 describe('validateCreatePledgePayload', () => {
+  // 한 주문에 여러 리워드(2026-09-28). items가 정본, 옛 rewardId·quantity도 받는다.
+  describe('items', () => {
+    const { rewardId: _r, quantity: _q, ...noLegacy } = base;
+    it('여러 리워드를 담은 순서대로 돌려준다', () => {
+      const r = validateCreatePledgePayload({ ...noLegacy, items: [{ rewardId: 'mail', quantity: 2 }, { rewardId: 'cd', quantity: 1 }],
+        shipping: { name: '김', phone: '010', postcode: '1', address1: '서울' } }, project, NOW);
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.lines.map((l) => [l.reward.id, l.quantity])).toEqual([['mail', 2], ['cd', 1]]);
+    });
+    it('같은 리워드를 두 줄로 담으면 거부한다', () => {
+      const r = validateCreatePledgePayload({ ...noLegacy, items: [{ rewardId: 'mail', quantity: 1 }, { rewardId: 'mail', quantity: 1 }] }, project, NOW);
+      expect(r).toEqual({ ok: false, message: '같은 리워드가 두 번 담겼습니다.' });
+    });
+    it('빈 목록은 거부한다', () => {
+      expect(validateCreatePledgePayload({ ...noLegacy, items: [] }, project, NOW).ok).toBe(false);
+    });
+    it('배송 리워드가 하나라도 있으면 배송지를 요구한다', () => {
+      const r = validateCreatePledgePayload({ ...noLegacy, items: [{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 1 }] }, project, NOW);
+      expect(r).toEqual({ ok: false, message: '배송지를 모두 입력해 주세요.' });
+    });
+    it('줄마다 수량 범위를 본다', () => {
+      const r = validateCreatePledgePayload({ ...noLegacy, items: [{ rewardId: 'mail', quantity: 0 }] }, project, NOW);
+      expect(r.ok).toBe(false);
+    });
+  });
+
   it('정상 입력', () => {
     const r = validateCreatePledgePayload(base, project, NOW);
     expect(r.ok).toBe(true);
-    if (r.ok) expect(r.reward.id).toBe('mail');
+    if (r.ok) {
+      expect(r.lines.map((l) => l.reward.id)).toEqual(['mail']);
+      // 옛 단일 리워드 모양도 items로 바꿔 돌려준다.
+      expect(r.value.items).toEqual([{ rewardId: 'mail', quantity: 1 }]);
+    }
   });
   it('프로젝트 없음·live 아님', () => {
     expect(validateCreatePledgePayload(base, null, NOW).ok).toBe(false);

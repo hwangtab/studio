@@ -43,7 +43,7 @@ import { cancelPayment } from '../booking/toss';
 // eslint-disable-next-line import/first
 import { sendFundingCancelledEmails } from './email';
 // eslint-disable-next-line import/first
-import { createFundingPledge, findFundingOrderByOrderNo } from './service';
+import { findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
@@ -51,7 +51,8 @@ import { isLiveFundingOrderStatus, remainingRefundable } from './refundable';
 // eslint-disable-next-line import/first
 import downloadHandler from '../../pages/api/funding/download';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from './validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -149,7 +150,7 @@ afterAll(() => client.close());
 
 describe('cancelFundingPledge', () => {
   it('토스 결제 셀프 취소 → 전액 환불·refunded', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] } });
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
@@ -161,7 +162,7 @@ describe('cancelFundingPledge', () => {
     expect(rows.rows[0]).toMatchObject({ status: 'done', amount: 5000, toss_transaction_key: 'tx' });
   });
   it('취소 메일이 실패 문자열을 돌려줘도 outcome은 ok:true이고 notificationError에 남는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] } });
     (sendFundingCancelledEmails as jest.Mock).mockResolvedValueOnce('customer:API_ERROR');
@@ -170,7 +171,7 @@ describe('cancelFundingPledge', () => {
     expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBe('customer:API_ERROR');
   });
   it('토스가 거절하면 상태를 되돌리고 failed refund를 남긴다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     (cancelPayment as jest.Mock).mockResolvedValueOnce({ ok: false, code: 'X', message: '거절' });
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
@@ -186,7 +187,7 @@ describe('cancelFundingPledge', () => {
    * 남고, 그 사람이 음원을 계속 받고, 재취소는 잔액 0이라 막힌다. 스스로 낫지 않는다.
    */
   it('토스 응답이 늦는 사이 웹훅이 환불을 기록하면 되돌리지 않는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     (cancelPayment as jest.Mock).mockImplementationOnce(async () => {
       // 취소는 성사됐고, 그 웹훅이 우리 응답보다 먼저 도착해 대사를 끝냈다.
@@ -210,7 +211,7 @@ describe('cancelFundingPledge', () => {
    * 붙들어 두면 결제된 건이 영영 refunded로 남는다. 이미 부분환불이 있던 건도 마찬가지다.
    */
   it('이미 있던 부분환불은 되돌림을 막지 않는다 — 그 사이 새로 기록된 것이 없으면 되돌린다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
     await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('rp','p1',2000,'부분','admin','done')");
@@ -222,7 +223,7 @@ describe('cancelFundingPledge', () => {
   });
 
   it('부분환불 건 — 고객은 거부, 관리자는 잔액만 환불한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET status='partially_refunded' WHERE order_no=?", args: [c.orderNo] });
     await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('r1','p1',2000,'부분','admin','done')");
@@ -246,7 +247,7 @@ describe('cancelFundingPledge', () => {
   // 환불이 payments[1]에 기록돼 있으면 payments[0]만 보는 계산은 그 환불을 통째로 놓친다 —
   // 웹훅 대사(syncFundingCancelledFromToss)가 paymentKey로 행을 골라 기록하므로 실제로 생기는 형태다.
   it('환불이 두 번째 결제 행에 기록돼 있어도 잔액은 전 행 합산으로 계산한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     const o = await findFundingOrderByOrderNo(c.orderNo);
     await client.execute({ sql: "INSERT INTO payments (id,order_id,payment_key) VALUES ('p2',?, 'pk_c2')", args: [o!.id] });
@@ -261,7 +262,7 @@ describe('cancelFundingPledge', () => {
   });
 
   it('잔액이 0이면 토스를 부르지 않고 invalid_state', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     const o = await findFundingOrderByOrderNo(c.orderNo);
     await client.execute({ sql: "INSERT INTO payments (id,order_id,payment_key) VALUES ('p2',?, 'pk_c2')", args: [o!.id] });
@@ -301,7 +302,7 @@ describe('cancelFundingPledge', () => {
   });
 
   it('마감 후 셀프 취소는 거부, 관리자는 허용', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     const after = new Date('2026-11-05T00:00:00Z');
     expect((await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: after })).ok).toBe(false);
@@ -336,7 +337,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
 
   it('토스 셀프 취소: 읽은 뒤 발송 준비가 시작되면 토스를 부르지 않고 거부한다', async () => {
     // 예전엔 assessSelfCancel이 읽기 시점만 봐서, 환불과 발송이 둘 다 성립할 수 있었다.
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     const o = await findFundingOrderByOrderNo(c.orderNo);
@@ -355,7 +356,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
    * fulfillment_status만 실려 있었다.
    */
   it('토스 셀프 취소: 읽은 뒤 내려받기가 기록되면 토스를 부르지 않고 거부한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     const o = await findFundingOrderByOrderNo(c.orderNo);
@@ -376,7 +377,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
    * 있어 창이 짧지도 않다.
    */
   it('내려받기: 읽은 뒤 주문이 환불되면 기록하지 않고 409로 답한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     const o = await findFundingOrderByOrderNo(c.orderNo);
@@ -390,7 +391,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
   });
 
   it('내려받기: 주문이 살아 있으면 기록하고 302로 보낸다 — 두 번째도 첫 시각을 지킨다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
 
@@ -405,7 +406,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
   });
 
   it('관리자 취소는 발송 준비 중에도 그대로 환불한다 — 가드는 셀프 취소에만 건다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     await client.execute("UPDATE funding_pledges SET fulfillment_status = 'shipped'");
@@ -457,7 +458,7 @@ describe('가상계좌 취소 거절 문구', () => {
   const toss = jest.requireActual('../booking/toss');
 
   const seedVirtualAccountPledge = async (orderNo: string) => {
-    const created = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const created = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     const id = created.ok ? (await findFundingOrderByOrderNo(created.orderNo))!.id : '';
     await client.execute({ sql: "UPDATE orders SET status='paid', order_no=? WHERE id=?", args: [orderNo, id] });
     await client.execute({
@@ -495,7 +496,7 @@ describe('프로젝트 조회 실패', () => {
   const repository = jest.requireMock('./repository') as typeof import('./repository');
 
   it('셀프 취소는 마감이 아니라 일시 오류로 거절한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     jest.spyOn(repository, 'getFundingProjectOrFailure').mockResolvedValueOnce({ project: null, lookupFailed: true });
@@ -509,7 +510,7 @@ describe('프로젝트 조회 실패', () => {
   });
 
   it('관리자 취소는 그대로 진행한다 — 조회 실패가 운영 복구를 막으면 안 된다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     jest.spyOn(repository, 'getFundingProjectOrFailure').mockResolvedValueOnce({ project: null, lookupFailed: true });
@@ -529,7 +530,7 @@ describe('프로젝트 조회 실패', () => {
  */
 describe('확정 메일 센티널', () => {
   it('취소 메일 성공이 센티널을 지우지 않는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET notification_error='send_pending' WHERE order_no=?", args: [c.orderNo] });
@@ -545,7 +546,7 @@ describe('확정 메일 센티널', () => {
   });
 
   it('센티널이 아닌 값은 성공하면 지운다 — 경보가 영원히 켜져 있으면 안 된다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);
     await client.execute({ sql: "UPDATE orders SET notification_error='이전 발송 실패' WHERE order_no=?", args: [c.orderNo] });

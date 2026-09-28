@@ -5,7 +5,8 @@ import { fulfillmentStatusEnum } from '../../db/schema';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from './refundable';
 import { PRIVACY_ACTOR_ADMIN } from '../privacy/accessLog';
 import { getFundingProjectAsync } from './repository';
-import { isDigitalReward } from './shape';
+import { isDigitalOrder } from './shape';
+import { pledgeLines } from './pledgeLines';
 
 /**
  * 발송 상태 전환을 관리자·개설자가 함께 쓰는 서비스로 뽑은 것.
@@ -55,7 +56,7 @@ export const setFulfillment = async (input: {
 
   const row = await db.query.fundingPledges.findFirst({
     where: (t, { eq }) => eq(t.id, pledgeId),
-    with: { order: true },
+    with: { order: true, items: true },
   });
   if (!row || !row.order) {
     return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
@@ -133,7 +134,7 @@ export const setFulfillment = async (input: {
    * 건에 기산점을 남기는 쪽보다 안전하다.
    */
   const project = await getFundingProjectAsync(pledge.projectSlug);
-  const deliveredAt = isDigitalReward(project, pledge.rewardId)
+  const deliveredAt = isDigitalOrder(project, pledgeLines(pledge).map((l) => l.rewardId))
     ? sql`delivered_at`
     : status === 'delivered'
       ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`

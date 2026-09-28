@@ -287,7 +287,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                 <DescriptionRow label="결제수단" value={PAYMENT_LABELS[pledge.paymentMethod] ?? pledge.paymentMethod} />
                 <DescriptionRow label="등록 경로" value={pledge.entrySource === 'manual' ? '수기 등록' : '온라인'} />
                 <DescriptionRow label="고객" value={`${pledge.customerName} / ${pledge.customerPhone} / ${pledge.customerEmail}`} />
-                <DescriptionRow label="리워드" value={`${pledge.rewardTitle} × ${pledge.quantity}`} />
+                <DescriptionRow label="리워드" value={pledge.rewardLabel} />
                 <DescriptionRow label="추가 펀딩 금액" value={`${formatPriceAmount(pledge.additionalAmount)}원`} />
                 <DescriptionRow label="합계" value={`${formatPriceAmount(pledge.totalAmount)}원`} />
                 <DescriptionRow label="발송 상태" value={FULFILLMENT_LABELS[pledge.fulfillmentStatus] ?? pledge.fulfillmentStatus} />

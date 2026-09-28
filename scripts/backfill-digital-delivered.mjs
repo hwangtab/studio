@@ -16,7 +16,7 @@
  * 변경 **이전에** 확정된 행을 같은 규칙으로 채운다: `delivered_at = paid_at`.
  * 확정 순간 내려받기가 열리므로 그때가 전달 완료다.
  *
- * 대상: `requiresShipping: false`인 리워드의 후원 중 `delivered_at IS NULL`이고
+ * 대상: 담은 리워드가 **전부** `requiresShipping: false`인 후원 중 `delivered_at IS NULL`이고
  * `paid_at IS NOT NULL`인 행. fulfillment_status는 **건드리지 않는다** —
  * 'delivered'로 바꾸면 assessSelfCancel이 셀프 취소를 막는다.
  *
@@ -44,33 +44,45 @@ if (!TURSO_DATABASE_URL) {
 const client = createClient({ url: TURSO_DATABASE_URL, authToken: TURSO_AUTH_TOKEN });
 
 const projects = await getAllFundingProjectsAsync();
-/** (slug, rewardId) 쌍 중 배송이 없는 것 — 이 조합의 후원만 대상이다. */
-const digital = projects.flatMap((p) =>
-  p.rewards.filter((r) => r.requiresShipping === false).map((r) => ({ slug: p.slug, rewardId: r.id })),
-);
 
-if (digital.length === 0) {
-  console.log('디지털 전용 리워드가 없습니다. 할 일 없음.');
-  process.exit(0);
-}
+/**
+ * 판정은 **후원 단위**다 — 담은 리워드 줄이 전부 디지털일 때만(lib/funding/shape.ts
+ * isDigitalOrder와 같은 규칙). 한 주문에 여러 리워드를 담게 된 뒤(마이그레이션 0042) 줄은
+ * funding_pledge_items에 있고, 줄이 없는 옛 후원은 funding_pledges의 옛 칸이 곧 한 줄이다
+ * (lib/funding/pledgeLinesSql.ts와 같은 UNION ALL 폴백). 예전처럼 `reward_id`(첫 줄 복사본)
+ * 하나로 판정하면 "음원 + 책"처럼 첫 줄만 디지털인 주문에도 기산점이 찍혀, 배송 전인
+ * 후원의 배송지가 1년 뒤 파기 대상이 된다.
+ */
+const linesSql = `(
+  SELECT i.reward_id AS reward_id FROM funding_pledge_items i WHERE i.pledge_id = fp.id
+  UNION ALL
+  SELECT fp.reward_id WHERE NOT EXISTS (SELECT 1 FROM funding_pledge_items i0 WHERE i0.pledge_id = fp.id)
+)`;
 
 let total = 0;
-for (const { slug, rewardId } of digital) {
-  const rows = await client.execute({
-    sql: `SELECT id, paid_at FROM funding_pledges
-          WHERE project_slug = ? AND reward_id = ? AND delivered_at IS NULL AND paid_at IS NOT NULL`,
-    args: [slug, rewardId],
-  });
+for (const project of projects) {
+  const digitalIds = project.rewards.filter((r) => r.requiresShipping === false).map((r) => r.id);
+  if (digitalIds.length === 0) continue;
+  const placeholders = digitalIds.map(() => '?').join(', ');
+  // "디지털이 아닌 줄이 하나도 없다" — 파일에 없는 리워드 id(삭제·개명)는 배송으로 본다.
+  const where = `fp.project_slug = ? AND fp.delivered_at IS NULL AND fp.paid_at IS NOT NULL
+          AND NOT EXISTS (SELECT 1 FROM ${linesSql} l WHERE l.reward_id NOT IN (${placeholders}))`;
+  const args = [project.slug, ...digitalIds];
+  const rows = await client.execute({ sql: `SELECT fp.id FROM funding_pledges fp WHERE ${where}`, args });
   if (rows.rows.length === 0) continue;
   total += rows.rows.length;
-  console.log(`${slug} / ${rewardId}: ${rows.rows.length}건`);
+  console.log(`${project.slug}: ${rows.rows.length}건 (디지털 전용 리워드: ${digitalIds.join(', ')})`);
   if (!APPLY) continue;
   const result = await client.execute({
     sql: `UPDATE funding_pledges SET delivered_at = paid_at, updated_at = unixepoch()
-          WHERE project_slug = ? AND reward_id = ? AND delivered_at IS NULL AND paid_at IS NOT NULL`,
-    args: [slug, rewardId],
+          WHERE id IN (SELECT fp.id FROM funding_pledges fp WHERE ${where})`,
+    args,
   });
   console.log(`  → ${Number(result.rowsAffected)}건 기록`);
+}
+
+if (total === 0 && !projects.some((p) => p.rewards.some((r) => r.requiresShipping === false))) {
+  console.log('디지털 전용 리워드가 없습니다. 할 일 없음.');
 }
 
 console.log(APPLY ? `완료: 대상 ${total}건` : `dry-run: 대상 ${total}건 (--apply 로 실행)`);

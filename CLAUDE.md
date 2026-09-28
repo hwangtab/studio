@@ -300,6 +300,25 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
   **마이그레이션 0041(`production_fee`·정산 공제 칸)은 배포보다 먼저다** — `funding_project_payouts`를 전체 컬럼으로
   읽는 조회(관리자 정산·대시보드·크론 점검)가 새 칸을 요구한다.
 
+### 한 주문에 여러 리워드 — 줄은 `pledgeLines`로만 읽는다 (마이그레이션 0042)
+
+후원 폼과 리워드 모달에서 여러 리워드를 **담는다**(2026-09-28, 세트 리워드는 경우의 수가 많아
+두지 않기로 운영자 결정). 리워드가는 배송비 포함 최종가라 담은 만큼 더할 뿐, 배송비 줄은 없다.
+
+- **`funding_pledges`는 여전히 주문당 1행**이고, 리워드 줄은 `funding_pledge_items`에 있다.
+  후원 행을 줄마다 만들지 않은 이유: 모금액·건수·정산·명단이 전부 `orders JOIN funding_pledges`를
+  합산하므로 행이 늘면 조용히 곱해진다. 배송지·발송 상태·내려받기 기록·메시지는 주문 단위다.
+- **줄이 없는 후원은 옛 단일 리워드 칸이 곧 한 줄이다.** 옛 후원을 옮겨 담지 않았고 관리자 수기
+  등록도 옛 칸만 쓴다. 그래서 줄은 TS에서 `pledgeLines(pledge)`(lib/funding/pledgeLines.ts),
+  SQL에서 `fundingPledgeLinesSql()`(lib/funding/pledgeLinesSql.ts)로만 읽는다. 새 후원은 옛 칸에도
+  첫 줄을 복사해 두므로(NOT NULL), `fp.reward_id`·`pledge.rewardId`를 직접 읽으면 에러 없이
+  **첫 리워드만** 보인다.
+- 재고는 담은 한정 리워드마다 조건을 AND로 묶어 **주문 전체가 들어가거나 전혀 안 들어간다**.
+  줄 INSERT들은 새 주문 자신을 재고 집계에서 빼고(`excludeOrderNo`) 같은 조건을 본다.
+- 셀프 취소는 주문 전체만 된다. 줄 단위 부분 환불 경로는 없다(토스 콘솔에서 금액으로).
+- **0042는 배포보다 먼저 적용한다.** 결제 확인 경로(`findFundingOrderByOrderNo`)가 관계 조회로
+  `items`를 함께 읽으므로, 표가 없으면 0020 절과 같은 이유로 결제 확인 전체가 깨진다.
+
 ### 후기 요청 메일은 처리방침이 허용한 주문에만 간다 (마이그레이션 0038)
 
 `/api/cron/review-requests`(매일 11:00 KST)가 녹음 세션 다음 날·믹싱 납품 다음 날 고객에게

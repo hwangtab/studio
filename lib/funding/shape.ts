@@ -70,6 +70,37 @@ export const isDigitalReward = (
 ): boolean => project?.rewards.find((r) => r.id === rewardId)?.requiresShipping === false;
 
 /**
+ * 후원 한 건이 **전부** 디지털 리워드인가. 여러 리워드를 담은 주문에 배송 리워드가 하나라도
+ * 있으면 배송 주문이다 — 한 상자로 보내고, 전달 완료는 그 배송이 끝날 때다. 빈 목록은
+ * false(판정 근거가 없으면 배송으로 다룬다 — 위 함수와 같은 이유).
+ */
+/**
+ * 후원 한 건이 받을 수 있는 파일 전부 — 담은 리워드들의 `downloads`를 합치고 **키로 중복을
+ * 걷는다**(MP3 티어와 WAV 티어를 함께 담으면 MP3 파일이 두 번 나온다). 담은 순서를 지킨다.
+ * 내려받기 API는 이 목록에 있는 키에만 서명한다 — 다른 후원의 파일을 받아 내지 못하게.
+ */
+export const pledgeDownloads = (
+  project: { rewards: Array<Pick<FundingReward, 'id' | 'downloads'>> } | null | undefined,
+  rewardIds: readonly string[],
+): FundingDownload[] => {
+  const seen = new Set<string>();
+  const out: FundingDownload[] = [];
+  for (const id of rewardIds) {
+    for (const d of project?.rewards.find((r) => r.id === id)?.downloads ?? []) {
+      if (seen.has(d.key)) continue;
+      seen.add(d.key);
+      out.push(d);
+    }
+  }
+  return out;
+};
+
+export const isDigitalOrder = (
+  project: { rewards: Array<Pick<FundingReward, 'id' | 'requiresShipping'>> } | null | undefined,
+  rewardIds: readonly string[],
+): boolean => rewardIds.length > 0 && rewardIds.every((id) => isDigitalReward(project, id));
+
+/**
  * 공개 화면으로 내려보낼 프로젝트에서 **내려받기 주소를 벗긴다.**
  *
  * 리워드의 `downloads`는 후원자에게만 가야 하는 값이다. 그런데 상세·후원 화면은

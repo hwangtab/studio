@@ -30,13 +30,14 @@ import { confirmPayment, fetchPayment } from '../booking/toss';
 // eslint-disable-next-line import/first
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 // eslint-disable-next-line import/first
-import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from './service';
+import { expireStalePledges, findFundingOrderByOrderNo } from './service';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 // eslint-disable-next-line import/first
 import { getFundingProjectAsync } from './repository';
 // eslint-disable-next-line import/first
-import type { CreatePledgePayload } from './validation';
+import type { LegacyPledgePayload as CreatePledgePayload } from '../../test-utils/fundingPledge';
+import { createSingleRewardPledge } from '../../test-utils/fundingPledge';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -124,7 +125,7 @@ describe('confirmFundingPledge', () => {
    * 않고 거부하는지 고정한다(그 가드를 덮던 테스트가 결제수단 제거 때 함께 지워졌다).
    */
   it('토스 결제가 아닌 펀딩에 승인 요청이 오면 주문 상태를 건드리지 않고 거부한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await client.execute({
       sql: "UPDATE funding_pledges SET payment_method='bank_transfer' WHERE order_id=(SELECT id FROM orders WHERE order_no=?)",
@@ -140,7 +141,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('금액이 맞으면 승인하고 paid·payments·paidAt을 기록한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
     const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -157,7 +158,7 @@ describe('confirmFundingPledge', () => {
    * 발송 상태를 손으로 delivered로 바꿀 실무 계기가 없기 때문이다.
    */
   it('디지털 전용 리워드는 확정 시각을 파기 기산점으로 남긴다 — fulfillment_status는 그대로', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
     await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -170,7 +171,7 @@ describe('confirmFundingPledge', () => {
 
   it('배송 리워드는 확정만으로 기산점이 생기지 않는다 — 전달은 아직이다', async () => {
     const shipping = { name: '받는', phone: '010', postcode: '03000', address1: '서울' };
-    const c = await createFundingPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), NOW);
+    const c = await createSingleRewardPledge(payloadFor({ rewardId: 'cd', shipping }), PROJECT, reward('cd'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 30000));
     await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 30000 });
@@ -179,7 +180,7 @@ describe('confirmFundingPledge', () => {
 
   it('프로젝트를 읽지 못하면 기산점을 찍지 않는다 — 배송 건에 잘못 찍는 쪽이 더 나쁘다', async () => {
     (getFundingProjectAsync as jest.Mock).mockResolvedValue(null);
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
     await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -187,7 +188,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('이미 paid여도 그 주문의 실제 paymentKey면 토스를 부르지 않고 성공(멱등) — 토큰도 돌려준다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
     await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -200,7 +201,7 @@ describe('confirmFundingPledge', () => {
   describe('확정된 펀딩의 관리 토큰은 소유 증명 없이 나오지 않는다', () => {
     /** 주문번호는 비밀이 아니다 — 확정 메일·화면·토스 영수증·fail URL에 평문으로 실린다. */
     const paidPledge = async (email: string) => {
-      const c = await createFundingPledge(payloadFor({ customerEmail: email, customerPhone: '010-3' }), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor({ customerEmail: email, customerPhone: '010-3' }), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
       await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -236,7 +237,7 @@ describe('confirmFundingPledge', () => {
     // NOT_FOUND_PAYMENT는 "이 주문의 결제가 거절됐다"가 아니라 "그런 결제가 없다"이다.
     // failed로 찍으면 제3자가 주문번호만으로 남의 후원의 복구 경로를 닫을 수 있다.
     for (const code of ['NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION']) {
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: `${code}@example.com`, customerPhone: '010-2' }), PROJECT, reward('mail'), NOW,
       );
       if (!c.ok) throw new Error();
@@ -248,7 +249,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('승인 응답이 DONE이 아니면(가상계좌 입금 대기) 확정하지 않는다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce({
       ok: true,
@@ -268,7 +269,7 @@ describe('confirmFundingPledge', () => {
 
   describe('확정 메일 미발송 센티널 (H)', () => {
     it('발송에 성공하면 센티널이 지워진다', async () => {
-      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
       await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -276,7 +277,7 @@ describe('confirmFundingPledge', () => {
     });
 
     it('메일 단계에서 프로세스가 죽어 센티널이 남으면 웹훅 재시도가 확정 메일을 다시 보낸다', async () => {
-      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
       await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -294,7 +295,7 @@ describe('confirmFundingPledge', () => {
       // SSR이 batch를 커밋해 센티널을 심고 메일(0.3~1.5초)을 보내는 동안, 같은 승인이 유발한
       // 토스 DONE 웹훅이 1~3초 안에 도착한다. 선점이 없으면 그 웹훅이 status='paid' + 센티널을
       // 보고 확정 메일을 한 통 더 보낸다.
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: 'dup@example.com', customerPhone: '010-1' }), PROJECT, reward('mail'), NOW,
       );
       if (!c.ok) throw new Error();
@@ -316,7 +317,7 @@ describe('confirmFundingPledge', () => {
     });
 
     it('센티널이 없으면 웹훅 재도착은 메일을 다시 보내지 않는다', async () => {
-      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
       await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -328,7 +329,7 @@ describe('confirmFundingPledge', () => {
     it('발송 중에는 센티널이 비어 있지 않다 (send_inflight) — 그 구간에서 죽어도 healthCheck가 잡는다', async () => {
       // 선점 값이 NULL이면 발송 구간(0.3~1.5초)에서 죽었을 때 주문은 paid인데 확정 메일 0통,
       // notificationError도 null이라 어떤 점검에도 안 걸린다(무증상 사고).
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: 'inflight@example.com', customerPhone: '010-0' }), PROJECT, reward('mail'), NOW,
       );
       if (!c.ok) throw new Error();
@@ -345,7 +346,7 @@ describe('confirmFundingPledge', () => {
     });
 
     it('선점은 원자적이다 — 두 복구가 동시에 들어와도 확정 메일은 1통', async () => {
-      const c = await createFundingPledge(
+      const c = await createSingleRewardPledge(
         payloadFor({ customerEmail: 'cas@example.com', customerPhone: '010-00' }), PROJECT, reward('mail'), NOW,
       );
       if (!c.ok) throw new Error();
@@ -366,7 +367,7 @@ describe('confirmFundingPledge', () => {
     });
 
     it('메일 함수가 예외를 던져도 confirm은 성공으로 끝나고 사유가 기록된다', async () => {
-      const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       jest.spyOn(console, 'error').mockImplementation(() => {});
       mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
@@ -380,10 +381,10 @@ describe('confirmFundingPledge', () => {
   });
 
   it('금액 불일치·홀드 만료는 토스를 부르지 않고 거부', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     expect((await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk', amount: 4999 })).ok).toBe(false);
-    const stale = await createFundingPledge(
+    const stale = await createSingleRewardPledge(
       payloadFor({ customerEmail: 's@example.com', customerPhone: '010-0' }),
       PROJECT,
       reward('mail'),
@@ -399,7 +400,7 @@ describe('confirmFundingPledge', () => {
     // 실제 경합: 토스 승인이 오가는 동안 expireStalePledges나 다른 요청의 자기 홀드 해제가
     // 이 주문을 expired로 바꾼다. UPDATE가 'pending'만 대상이면 0행인데도 성공을 반환해
     // 돈만 받고 pending도 paid도 아닌 주문이 남았다.
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockImplementationOnce(async () => {
       await client.execute({ sql: `UPDATE orders SET status = 'expired' WHERE order_no = ?`, args: [c.orderNo] });
@@ -414,7 +415,7 @@ describe('confirmFundingPledge', () => {
 
   it('expireStalePledges로 expired가 된 뒤 온 DONE 웹훅도 확정한다 — SSR 경로는 여전히 거부', async () => {
     // 실제 사고 형태: 홀드가 지나 expireStalePledges가 먼저 돌고, 그 뒤 토스 DONE 웹훅이 온다.
-    const stale = await createFundingPledge(
+    const stale = await createSingleRewardPledge(
       payloadFor({ customerEmail: 'w@example.com', customerPhone: '010-9' }),
       PROJECT, reward('mail'), new Date(NOW.getTime() - 2000 * 1000),
     );
@@ -442,7 +443,7 @@ describe('confirmFundingPledge', () => {
     // 흔적이 안 남았다. 토스 승인 왕복(수 초) 동안 expireStalePledges가 돌아 expired가 되고,
     // batch의 UPDATE는 'expired'까지 받으므로 재고를 초과한 채 확정된다 — 그런데 관리자
     // 화면엔 아무 흔적도 없었다.
-    const c = await createFundingPledge(
+    const c = await createSingleRewardPledge(
       payloadFor({ customerEmail: 'race@example.com', customerPhone: '010-3' }), PROJECT, reward('mail'), NOW,
     );
     if (!c.ok) throw new Error();
@@ -459,7 +460,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('SSR 지연 승인으로 되살린 건도 흔적을 남긴다 — 경로가 라벨로 구분된다', async () => {
-    const c = await createFundingPledge(
+    const c = await createSingleRewardPledge(
       payloadFor({ customerEmail: 'ssr@example.com', customerPhone: '010-4' }), PROJECT, reward('mail'), NOW,
     );
     if (!c.ok) throw new Error();
@@ -473,7 +474,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('정상 pending 확정에는 흔적을 남기지 않는다', async () => {
-    const c = await createFundingPledge(
+    const c = await createSingleRewardPledge(
       payloadFor({ customerEmail: 'clean@example.com', customerPhone: '010-2' }), PROJECT, reward('mail'), NOW,
     );
     if (!c.ok) throw new Error();
@@ -483,7 +484,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('웹훅 경로여도 refunded 주문은 거부한다 — 이미 결론이 난 주문', async () => {
-    const c = await createFundingPledge(payloadFor({ customerEmail: 'f@example.com', customerPhone: '010-6' }), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor({ customerEmail: 'f@example.com', customerPhone: '010-6' }), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     for (const status of ['refunded', 'partially_refunded']) {
       await client.execute({ sql: 'UPDATE orders SET status = ? WHERE order_no = ?', args: [status, c.orderNo] });
@@ -497,7 +498,7 @@ describe('confirmFundingPledge', () => {
     // NETWORK_ERROR·CONFIG_ERROR는 "토스가 거절했다"가 아니라 "물어보지도 못했다"이다.
     // 여기서 failed를 찍으면 실제로는 승인된 결제를 뒤늦게 복구하러 오는 웹훅이 막힌다.
     for (const code of ['NETWORK_ERROR', 'CONFIG_ERROR']) {
-      const c = await createFundingPledge(payloadFor({ customerEmail: `${code}@example.com`, customerPhone: '010-7' }), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor({ customerEmail: `${code}@example.com`, customerPhone: '010-7' }), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce({ ok: false, code, message: '내부 사정' });
       const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_net', amount: 5000 });
@@ -509,7 +510,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('네트워크 오류로 failed가 된 옛 주문도 웹훅이 paid로 복구한다 — SSR 경로는 거부', async () => {
-    const c = await createFundingPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor({ customerEmail: 'x@example.com', customerPhone: '010-8' }), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await client.execute({ sql: `UPDATE orders SET status = 'failed' WHERE order_no = ?`, args: [c.orderNo] });
 
@@ -527,7 +528,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('웹훅 경로의 invalid_state·amount_mismatch는 대사 단서를 로그로 남긴다', async () => {
-    const c = await createFundingPledge(payloadFor({ customerEmail: 'log@example.com', customerPhone: '010-5' }), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor({ customerEmail: 'log@example.com', customerPhone: '010-5' }), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -560,7 +561,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('ALREADY_PROCESSED_PAYMENT 재조회 성공 — paid로 기록한다', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce({ ok: false, code: 'ALREADY_PROCESSED_PAYMENT', message: '이미 처리된 결제' });
     mockFetch.mockResolvedValueOnce(approved(c.orderNo, 5000));
@@ -572,7 +573,7 @@ describe('confirmFundingPledge', () => {
   });
 
   it('ALREADY_PROCESSED_PAYMENT 재조회 결과가 불일치하면 toss_rejected, 주문은 pending 유지', async () => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce({ ok: false, code: 'ALREADY_PROCESSED_PAYMENT', message: '이미 처리된 결제' });
     // 재조회 결과의 금액이 주문과 다르다 — 검증 실패로 취급한다.
@@ -590,7 +591,7 @@ describe('confirmFundingPledge', () => {
       // INVALID_ACCOUNT_INFO는 뒤에 접미어가 붙는 변형이 있다.
       'INVALID_REJECT_CARD', 'INVALID_ACCOUNT_INFO_RESEND',
     ]) {
-      const c = await createFundingPledge(payloadFor({ customerEmail: `${code}@example.com` }), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor({ customerEmail: `${code}@example.com` }), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce({ ok: false, code, message: '카드사 거절' });
       const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -602,7 +603,7 @@ describe('confirmFundingPledge', () => {
   it('거절 계열 밖 코드는 주문을 건드리지 않는다 — 제3자가 남의 펀딩을 failed로 만들 수 없다', async () => {
     // 예전 denylist(NOT_FOUND_PAYMENT 계열만 제외)에서는 이 코드들이 전부 낙인으로 이어졌다.
     for (const code of ['INVALID_REQUEST', 'UNAUTHORIZED_KEY', 'FORBIDDEN_REQUEST', 'PROVIDER_ERROR']) {
-      const c = await createFundingPledge(payloadFor({ customerEmail: `${code}@example.com` }), PROJECT, reward('mail'), NOW);
+      const c = await createSingleRewardPledge(payloadFor({ customerEmail: `${code}@example.com` }), PROJECT, reward('mail'), NOW);
       if (!c.ok) throw new Error();
       mockConfirm.mockResolvedValueOnce({ ok: false, code, message: '내부 사정' });
       const r = await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
@@ -616,7 +617,7 @@ describe('confirmFundingPledge', () => {
 describe('syncFundingCancelledFromToss', () => {
   /** paid 상태의 펀딩 주문을 만들어 orderNo·paymentId를 돌려준다. */
   const paidOrder = async (): Promise<{ orderNo: string; paymentId: string }> => {
-    const c = await createFundingPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     mockConfirm.mockResolvedValueOnce(approved(c.orderNo, 5000));
     await confirmFundingPledge({ orderNo: c.orderNo, paymentKey: 'pk_1', amount: 5000 });
