@@ -211,10 +211,34 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
       expect(map.byProjectId[b]).toBeUndefined();
     }
   });
+
+  /**
+   * API(pages/api/admin/funding/projects/[id].ts)가 이미 kind 값을 검증하므로 이 경로로는
+   * 절대 안 온다 — 이 테스트는 그 검증을 우회하는 직접 쓰기·향후 코드 실수에 대한 마지막
+   * 방어선(마이그레이션 0040, 3라운드 감사 낮음 항목)이 실제로 걸리는지 확인한다.
+   */
+  it('DB 레벨 CHECK가 잘못된 kind 값의 직접 쓰기를 막는다', async () => {
+    const id = await seedProject();
+    // drizzle은 원인을 감싼다 — 실제 SQLite 메시지는 .cause에 있다(errorTexts()가 쫓는 것과
+    // 같은 모양, isServicesSchemaMismatch 주석 참조).
+    await expect(
+      mockDb.insert(schema.fundingProjectServices).values({
+        projectId: id,
+        kind: 'bogus' as never,
+        designFee: FUNDING_DESIGN_PRICE,
+      }),
+    ).rejects.toMatchObject({ cause: { message: expect.stringMatching(/CHECK constraint failed/i) } });
+  });
 });
 
 describe('0037이 아직 적용되지 않은 운영 DB', () => {
-  beforeEach(() => migrate((file) => file.startsWith('0037_')));
+  // 0037만 건너뛰면 안 된다 — 마이그레이션 0040(kind CHECK 추가)이 이 테이블을 재생성하며
+  // DROP TABLE부터 하므로, 0037이 없는데 0040만 적용하면 그 재현 자체가 "no such table"로
+  // 실패한다. 실제 drizzle-kit migrate도 순서대로 적용해 0037이 안 됐으면 그 뒤 어떤 것도
+  // 적용되지 않으므로, 0037 이후 전부를 건너뛰는 쪽이 실제 상태를 더 정확히 흉내 낸다. 이
+  // describe가 쓰는 함수들은 funding_projects·funding_project_services만 건드리므로
+  // 0038(review_requests)·0039(pledges 컬럼)를 건너뛰어도 이 블록의 검증엔 영향이 없다.
+  beforeEach(() => migrate((file) => file >= '0037'));
 
   it('읽기는 던지지 않고 available: false', async () => {
     const id = await seedProject();
