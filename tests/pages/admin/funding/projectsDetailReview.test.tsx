@@ -225,13 +225,27 @@ describe('스튜디오 서비스', () => {
       <AdminFundingProjectDetailPage
         project={PROJECT}
         payout={null}
-        service={{ available: true, service: { kind: 'release', designFee: 500000, designFeePaidAt: null } }}
+        service={{ available: true, service: { kind: 'release', designFee: 500000, designFeePaidAt: null, productionFee: 0 } }}
       />,
     );
     expect(screen.getByRole('button', { name: '발매 프로젝트 연계' })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByText('미입금')).toBeInTheDocument();
-    fireEvent.click(screen.getByRole('button', { name: '입금 확인' }));
+    expect(screen.getByText('미입금 — 정산 때 모금액에서 뺍니다')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: '따로 입금 확인' }));
     expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_design_fee_paid', paid: true });
+  });
+
+  it('약정 제작비를 저장한다 — 정산 때 모금액에서 뺄 금액(공급가)', () => {
+    (patchFundingProject as jest.Mock).mockResolvedValue({ ok: true });
+    render(
+      <AdminFundingProjectDetailPage
+        project={PROJECT}
+        payout={null}
+        service={{ available: true, service: { kind: 'release', designFee: 500000, designFeePaidAt: null, productionFee: 0 } }}
+      />,
+    );
+    fireEvent.change(screen.getByLabelText('약정 제작비(공급가, 부가세 별도)'), { target: { value: '1,800,000' } });
+    fireEvent.click(screen.getByRole('button', { name: '저장' }));
+    expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'set_production_fee', productionFee: 1_800_000 });
   });
 
   it('직접 개설로 되돌릴 때 확인창을 거절하면 보내지 않는다', () => {
@@ -240,7 +254,7 @@ describe('스튜디오 서비스', () => {
       <AdminFundingProjectDetailPage
         project={PROJECT}
         payout={null}
-        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null } }}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null, productionFee: 0 } }}
       />,
     );
     fireEvent.click(screen.getByRole('button', { name: '직접 개설' }));
@@ -258,7 +272,7 @@ describe('스튜디오 서비스', () => {
       <AdminFundingProjectDetailPage
         project={PROJECT}
         payout={null}
-        service={{ available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: '2026-10-03T00:00:00.000Z' } }}
+        service={{ available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: '2026-10-03T00:00:00.000Z', productionFee: 0 } }}
       />,
     );
     expect(screen.getByRole('button', { name: '직접 개설' })).toHaveAttribute('aria-pressed', 'true');
@@ -274,7 +288,7 @@ describe('스튜디오 서비스', () => {
       <AdminFundingProjectDetailPage
         project={PROJECT}
         payout={null}
-        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null } }}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: null, productionFee: 0 } }}
       />,
     );
     fireEvent.click(screen.getByRole('button', { name: '직접 개설' }));
@@ -300,7 +314,7 @@ describe('스튜디오 서비스', () => {
       <AdminFundingProjectDetailPage
         project={PROJECT}
         payout={null}
-        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: '2026-10-03T00:00:00.000Z' } }}
+        service={{ available: true, service: { kind: 'design', designFee: 500000, designFeePaidAt: '2026-10-03T00:00:00.000Z', productionFee: 0 } }}
       />,
     );
     fireEvent.click(screen.getByRole('button', { name: '확인 취소' }));

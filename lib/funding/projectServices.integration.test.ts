@@ -69,7 +69,7 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
   it('처음 지정할 때 지금의 설계비를 약정가로 복사한다', async () => {
     const id = await seedProject();
     const r = await setProjectService(id, 'design', new Date('2026-09-26T00:00:00Z'), ACTOR);
-    expect(r).toEqual({ ok: true, service: { kind: 'design', designFee: FUNDING_DESIGN_PRICE, designFeePaidAt: null } });
+    expect(r).toEqual({ ok: true, service: { kind: 'design', designFee: FUNDING_DESIGN_PRICE, designFeePaidAt: null, productionFee: 0 } });
   });
 
   it('종류를 바꿔도 약정 설계비와 입금 시각은 그대로다', async () => {
@@ -81,7 +81,7 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
     await setDesignFeePaid(id, true, paidAt, ACTOR);
 
     const r = await setProjectService(id, 'release', new Date('2026-09-28T00:00:00Z'), ACTOR);
-    expect(r).toEqual({ ok: true, service: { kind: 'release', designFee: 400000, designFeePaidAt: paidAt.toISOString() } });
+    expect(r).toEqual({ ok: true, service: { kind: 'release', designFee: 400000, designFeePaidAt: paidAt.toISOString(), productionFee: 0 } });
   });
 
   it('입금 확인을 켜고 끈다', async () => {
@@ -107,9 +107,9 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
     await setDesignFeePaid(id, true, paidAt, ACTOR);
 
     const reverted = await setProjectService(id, 'none', new Date(), ACTOR);
-    expect(reverted).toEqual({ ok: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: paidAt.toISOString() } });
+    expect(reverted).toEqual({ ok: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: paidAt.toISOString(), productionFee: 0 } });
     expect(await loadProjectService(id)).toEqual({
-      available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: paidAt.toISOString() },
+      available: true, service: { kind: 'none', designFee: 400000, designFeePaidAt: paidAt.toISOString(), productionFee: 0 },
     });
   });
 
@@ -122,7 +122,7 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
 
     await setProjectService(id, 'none', new Date(), ACTOR);
     const again = await setProjectService(id, 'design', new Date(), ACTOR);
-    expect(again).toEqual({ ok: true, service: { kind: 'design', designFee: 400000, designFeePaidAt: paidAt.toISOString() } });
+    expect(again).toEqual({ ok: true, service: { kind: 'design', designFee: 400000, designFeePaidAt: paidAt.toISOString(), productionFee: 0 } });
     expect(400000).not.toBe(FUNDING_DESIGN_PRICE);
   });
 
@@ -196,7 +196,7 @@ describe('스튜디오 서비스 (0037 적용된 DB)', () => {
     expect(await setDesignFeePaid(id, false, new Date('2026-11-20T00:00:00Z'), ACTOR)).toEqual({ ok: false, code: 'no_service' });
     // 보존된 값은 그대로다 — 거부가 아무것도 건드리지 않는다.
     expect(await loadProjectService(id)).toEqual({
-      available: true, service: { kind: 'none', designFee: FUNDING_DESIGN_PRICE, designFeePaidAt: paidAt.toISOString() },
+      available: true, service: { kind: 'none', designFee: FUNDING_DESIGN_PRICE, designFeePaidAt: paidAt.toISOString(), productionFee: 0 },
     });
   });
 

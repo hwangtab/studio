@@ -53,7 +53,17 @@ const breakdownLines = (payout: FundingProjectPayout): string[] => [
   ...(payout.withholdingAmount > 0
     ? [`원천징수: −${formatPriceAmount(payout.withholdingAmount)}원`]
     : []),
+  // 설계·제작 대금은 개설자와 합의해 정산 때 받기로 한 금액이다(개설자 약관 제6조).
+  ...(payout.designFeeOffsetAmount > 0
+    ? [`펀딩 설계비(부가세 포함): −${formatPriceAmount(payout.designFeeOffsetAmount)}원`]
+    : []),
+  ...(payout.productionFeeOffsetAmount > 0
+    ? [`제작비(부가세 포함): −${formatPriceAmount(payout.productionFeeOffsetAmount)}원`]
+    : []),
   `실지급액: ${formatPriceAmount(payout.netAmount)}원`,
+  ...(payout.shortfallAmount > 0
+    ? [`정산금으로 충당하지 못한 대금: ${formatPriceAmount(payout.shortfallAmount)}원 — 추가 청구나 제작 규모 조정은 따로 상의드립니다.`]
+    : []),
   `확정 후원: ${payout.backerCount}건`,
 ];
 

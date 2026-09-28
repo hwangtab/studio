@@ -7,7 +7,7 @@ import { fundingProjects, type FundingProjectPayout } from '../../../../../db/sc
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { getClientIp } from '../../../../../lib/contracts/client-ip';
 import { loadProjectForAdmin } from '../../../../../lib/funding/adminProjects';
-import { setDesignFeePaid, setProjectService, type ServiceWriteResult } from '../../../../../lib/funding/projectServices';
+import { setDesignFeePaid, setProductionFee, setProjectService, type ServiceWriteResult } from '../../../../../lib/funding/projectServices';
 import { decideProject, type AdminReviewAction, type DecisionResult } from '../../../../../lib/funding/reviewDecision';
 import { decidePublicStatus, type PublicStatusAction, type PublicStatusResult } from '../../../../../lib/funding/publicStatusDecision';
 import {
@@ -100,6 +100,11 @@ const PAYOUT_RECORD_ERROR: Record<
     status: 409,
     message:
       '개설자의 세금 처리 구분(개인 원천징수 / 사업자 세금계산서)이 등록되지 않았습니다. 추측해서 기록하면 실이체액이 틀리고 되돌릴 수 없으니, 개설자에게 정산 정보 저장을 요청해 주세요.',
+  },
+  services_unavailable: {
+    status: 503,
+    message:
+      '설계비·제작비 기록(funding_project_services)을 읽지 못했습니다. 합의한 공제를 모른 채 전액을 기록할 수 없습니다 — 마이그레이션 0041 적용 여부와 서버 로그를 확인해 주세요.',
   },
   no_resident_number: {
     status: 409,
@@ -270,8 +275,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 테이블은 마이그레이션 0037이다. 운영 DB에 아직 없으면 503으로 "미적용"을 알린다 — 다른
    * 쓰기(판정·메모·정산)는 이 테이블과 무관하게 계속 된다(lib/funding/projectServices.ts).
    */
-  if (b.action === 'set_studio_service' || b.action === 'set_design_fee_paid') {
-    let result: ServiceWriteResult;
+  if (b.action === 'set_studio_service' || b.action === 'set_design_fee_paid' || b.action === 'set_production_fee') {
+    let result: ServiceWriteResult | { ok: false; code: 'invalid_amount' };
     /**
      * 다른 분기(심사·공개 상태·정산)와 같은 try/catch를 둔다 — 예전에는 이 블록만 없어서
      * 라이브러리가 던지는 오류가 그대로 500이 됐고, 운영자가 보는 것은 "처리에 실패했습니다."
@@ -284,6 +289,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           return res.status(400).json({ ok: false, message: 'kind는 none·design·release 중 하나여야 합니다.' });
         }
         result = await setProjectService(id, kind, now, auth.actor);
+      } else if (b.action === 'set_production_fee') {
+        // 약정 제작비(공급가, 부가세 별도) — 정산 때 모금액에서 뺀다(lib/funding/payout.ts).
+        result = await setProductionFee(id, typeof b.productionFee === 'number' ? b.productionFee : Number.NaN, now, auth.actor);
       } else {
         if (typeof b.paid !== 'boolean') {
           return res.status(400).json({ ok: false, message: 'paid는 true 또는 false여야 합니다.' });
@@ -301,6 +309,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 테이블은 있는데 컬럼이 없는 상태 — 새로고침으로는 낫지 않는다는 것을 말해야 한다.
       schema_mismatch: [503, 'funding_project_services 테이블의 스키마가 코드보다 오래되었습니다(컬럼 누락). npm run db:migrate로 마이그레이션을 적용해야 합니다 — 새로고침으로는 해결되지 않습니다.'],
       no_service: [400, '먼저 서비스 종류(설계 대행·발매 프로젝트 연계)를 지정해 주세요.'],
+      invalid_amount: [400, '제작비는 0 이상의 원 단위 정수(공급가, 부가세 별도)로 적어 주세요.'],
     };
     const [status, message] = failure[result.code];
     return res.status(status).json({ ok: false, message });

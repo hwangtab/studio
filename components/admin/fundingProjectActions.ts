@@ -35,6 +35,7 @@ export type FundingProjectPatchBody =
   /** 스튜디오 서비스(운영자 전용, 마이그레이션 0037). lib/funding/projectServices.ts. */
   | { action: 'set_studio_service'; kind: 'none' | 'design' | 'release' }
   | { action: 'set_design_fee_paid'; paid: boolean }
+  | { action: 'set_production_fee'; productionFee: number }
   | { action: 'close'; note: string }
   | { action: 'reopen' | 'hide' | 'unhide'; note?: string }
   /**

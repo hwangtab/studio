@@ -226,7 +226,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
           vat: 'excluded',
           basis: [
             `펀딩 설계비 ${won(FUNDING_DESIGN_PRICE)} + 발매 번들 ${won(bundle)}부터를 합친 한 견적 — 기획·녹음·믹싱·마스터링·디지털 유통 등록·국내외 매체 홍보`,
-            '설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받습니다',
+            '설계비와 제작비는 펀딩이 끝나 모금액을 정산할 때 모금액에서 받습니다. 모금액이 견적에 못 미치면 차액 청구나 규모 조정을 상의해 정합니다',
             `목표에 못 미쳐도 모인 금액으로 제작을 집행합니다. 모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료를 뗍니다`,
             '세션 연주비는 포함되지 않고 연주자 실비만 따로 받습니다',
           ],

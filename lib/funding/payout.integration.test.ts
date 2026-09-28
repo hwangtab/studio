@@ -220,6 +220,58 @@ describe('buildFundingPayoutPreview', () => {
   });
 });
 
+describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 제6조)', () => {
+  const setService = (projectId: string, over: Partial<typeof schema.fundingProjectServices.$inferInsert> = {}) =>
+    mockDb.insert(schema.fundingProjectServices).values({ projectId, kind: 'release', designFee: 500_000, ...over });
+
+  it('약정 설계비·제작비(부가세 포함)를 원천징수 뒤에서 빼고 기록에 남긴다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 3_000_000);
+    await setService(project.id, { productionFee: 1_800_000 });
+
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    const base = computeFundingPayout({ grossAmount: 3_000_000, refundAmount: 0, taxType: 'withholding' });
+    expect(result.payout.withholdingAmount).toBe(base.withholdingAmount); // 원천징수 기준은 그대로
+    expect(result.payout.designFeeOffsetAmount).toBe(550_000);
+    expect(result.payout.productionFeeOffsetAmount).toBe(1_980_000);
+    expect(result.payout.shortfallAmount).toBe(0);
+    expect(result.payout.netAmount).toBe(base.netAmount - 550_000 - 1_980_000);
+  });
+
+  it('설계비를 정산 밖에서 이미 받았으면 다시 빼지 않는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    await setService(project.id, { designFeePaidAt: new Date('2026-01-10T00:00:00Z') });
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview?.designFeeOffsetAmount).toBe(0);
+  });
+
+  it('직접 개설로 되돌린 행(none)의 옛 약정은 빼지 않는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    await setService(project.id, { kind: 'none', productionFee: 1_000_000 });
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview?.designFeeOffsetAmount).toBe(0);
+    expect(preview?.productionFeeOffsetAmount).toBe(0);
+  });
+
+  it('대금이 정산금을 넘으면 실지급 0원으로도 기록한다 — 모자라는 금액은 차액으로 남는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    await setService(project.id, { productionFee: 1_800_000 });
+
+    const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
+    expect(result.ok).toBe(true);
+    if (!result.ok) return;
+    expect(result.payout.netAmount).toBe(0);
+    expect(result.payout.shortfallAmount).toBeGreaterThan(0);
+    expect(result.payout.designFeeOffsetAmount + result.payout.productionFeeOffsetAmount + result.payout.shortfallAmount)
+      .toBe(550_000 + 1_980_000);
+  });
+});
+
 describe('recordFundingPayout', () => {
   it('미리보기 숫자를 고정해 기록한다', async () => {
     const { project } = await seedProject();

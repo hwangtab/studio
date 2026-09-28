@@ -95,6 +95,10 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
       feeAmount: preview.feeAmount,
       shareAmount: preview.shareAmount,
       withholdingAmount: preview.withholdingAmount,
+      designFeeOffsetAmount: preview.designFeeOffsetAmount,
+      productionFeeOffsetAmount: preview.productionFeeOffsetAmount,
+      shortfallAmount: preview.shortfallAmount,
+      serviceChargesUnavailable: preview.serviceChargesUnavailable,
       netAmount: preview.netAmount,
       backerCount: preview.backerCount,
       closed: preview.closed,
@@ -122,6 +126,9 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
             paymentFeeAmount: r.paymentFeeAmount,
             shareAmount: r.shareAmount,
             withholdingAmount: r.withholdingAmount,
+            designFeeOffsetAmount: r.designFeeOffsetAmount,
+            productionFeeOffsetAmount: r.productionFeeOffsetAmount,
+            shortfallAmount: r.shortfallAmount,
             netAmount: r.netAmount,
             backerCount: r.backerCount,
             status: r.status,
@@ -219,6 +226,9 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
   const [warnings, setWarnings] = useState<string[]>([]);
   const [slug, setSlug] = useState(project.slug);
   const [reviewNote, setReviewNote] = useState(project.reviewNote ?? '');
+  const [productionFee, setProductionFee] = useState(
+    service.available && service.service ? String(service.service.productionFee) : '0',
+  );
   const [internalNote, setInternalNote] = useState(project.internalNote ?? '');
   const [creatorName, setCreatorName] = useState(project.creatorName);
   const [creatorEmail, setCreatorEmail] = useState(project.creatorEmail);
@@ -349,6 +359,18 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
     return run(
       () => patchFundingProject(project.id, { action: 'set_design_fee_paid', paid }),
       paid ? '설계비 입금을 확인으로 기록했습니다.' : '설계비 입금 확인을 취소했습니다.',
+    );
+  };
+
+  const handleSaveProductionFee = () => {
+    const amount = Number(productionFee.replace(/[,\s]/g, ''));
+    if (!Number.isInteger(amount) || amount < 0) {
+      setNotice('제작비는 0 이상의 원 단위 정수(공급가, 부가세 별도)로 적어 주세요.');
+      return;
+    }
+    return run(
+      () => patchFundingProject(project.id, { action: 'set_production_fee', productionFee: amount }),
+      `약정 제작비를 ${formatPriceAmount(amount)}원(부가세 별도)으로 저장했습니다. 정산 때 모금액에서 뺍니다.`,
     );
   };
 
@@ -876,13 +898,14 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
           </div>
 
           {/*
-            스튜디오 서비스 — 운영자 전용(개설자에게 보이지 않는다). 설계비는 모금 정산과 별개로
-            청구·입금된다(성공 수수료 없음). 테이블은 마이그레이션 0037이라, 운영 DB에 없으면
-            조작을 막고 적용 방법을 적는다(lib/funding/projectServices.ts).
+            스튜디오 서비스 — 운영자 전용 칸. 설계비·약정 제작비는 정산 때 모금액에서 뺀다
+            (2026-09-28 운영자 결정, 개설자 약관 제6조) — 뺀 금액은 정산 메일로 개설자에게 알려진다.
+            설계비를 정산 밖에서 이미 받았으면 입금 확인을 눌러 두면 정산에서 빼지 않는다.
+            테이블은 마이그레이션 0037·0041이라, 운영 DB에 없으면 조작을 막고 적용 방법을 적는다.
           */}
           <div className="mb-6 rounded-lg border border-gray-300 bg-gray-50 p-4">
             <h2 className="text-lg font-bold text-gray-900 mb-1">스튜디오 서비스</h2>
-            <p className="mb-3 text-sm text-gray-600">개설자에게 보이지 않습니다. 설계비는 모금 정산과 따로 청구합니다(성공 수수료 없음).</p>
+            <p className="mb-3 text-sm text-gray-600">설계비와 약정 제작비는 정산 때 모금액에서 뺍니다(부가세 포함, 성공 수수료 없음). 설계비를 따로 이미 받았으면 입금 확인을 눌러 두세요 — 정산에서 다시 빼지 않습니다.</p>
             {!service.available ? (
               <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
                 {service.reason === 'missing_table'
@@ -931,9 +954,29 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
                         </>
                       ) : (
                         <>
-                          <span className="font-medium text-amber-700">미입금</span>
-                          <Button light disabled={busy} onClick={() => handleDesignFeePaid(true)}>입금 확인</Button>
+                          <span className="font-medium text-amber-700">미입금 — 정산 때 모금액에서 뺍니다</span>
+                          <Button light disabled={busy} onClick={() => handleDesignFeePaid(true)}>따로 입금 확인</Button>
                         </>
+                      )}
+                    </dd>
+                    <dt>약정 제작비</dt>
+                    <dd className="flex flex-wrap items-center gap-2">
+                      <TextInput
+                        type="text"
+                        inputMode="numeric"
+                        aria-label="약정 제작비(공급가, 부가세 별도)"
+                        value={productionFee}
+                        onChange={(e) => setProductionFee(e.target.value)}
+                        light
+                        className="w-40 text-sm"
+                        disabled={busy}
+                      />
+                      <span className="text-gray-500">원 (부가세 별도 · 정산 때 모금액에서)</span>
+                      <Button light disabled={busy} onClick={handleSaveProductionFee}>저장</Button>
+                      {service.service.productionFee > 0 && (
+                        <span className="text-xs text-gray-500">
+                          공제액 {formatPriceAmount(Math.round(service.service.productionFee * (1 + VAT_RATE)))}원(부가세 포함)
+                        </span>
                       )}
                     </dd>
                   </dl>

@@ -226,6 +226,8 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'platformFeeAmount', 'paymentFeeAmount', 'feeAmount', 'shareAmount',
         'withholdingAmount', 'netAmount', 'backerCount', 'closed',
         'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'recorded',
+        // 설계·제작 대금 공제(개설자 약관 제6조) — 금액과 불리언뿐, 민감 정보가 아니다.
+        'designFeeOffsetAmount', 'productionFeeOffsetAmount', 'shortfallAmount', 'serviceChargesUnavailable',
       ].sort(),
     );
     expect(payout.netAmount).toBe(880_937);
