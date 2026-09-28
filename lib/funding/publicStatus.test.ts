@@ -48,6 +48,7 @@ it('상태 API가 내보내는 것과 같은 모양을 만든다', async () => {
     publicBackers: ['김정곤'],
     anonymousBackerCount: 6,
     publicMessages: [{ name: '김정곤', message: '침략전쟁 반대한다!', at: 1758000000 }],
+    messageCount: 1,
   });
 });
 
@@ -83,6 +84,8 @@ it('정적 생성용 초기값에는 후원자 이름과 응원 메시지를 담
   expect(s!.publicBackers).toEqual([]);
   expect(s!.anonymousBackerCount).toBe(0);
   expect(s!.publicMessages).toEqual([]);
+  // 본문은 비우되 개수는 남긴다 — 응원 메시지 칸의 자리를 미리 잡는 데 쓴다.
+  expect(s!.messageCount).toBe(1);
 });
 
 it('집계가 실패하면 null이다 — 빌드는 DB 없이도 성공해야 한다', async () => {

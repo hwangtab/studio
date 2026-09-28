@@ -41,7 +41,7 @@ const PlayIcon = () => (
  * 메시지는 후원자가 쓴 글이다. `dangerouslySetInnerHTML`을 쓰지 않으므로 React가 텍스트
  * 노드로 이스케이프한다. `break-keep`은 한글 단어를 중간에서 끊지 않게 한다.
  */
-export default function SupporterTicker({ messages }: { messages: Message[] }) {
+export default function SupporterTicker({ messages, pending = false }: { messages: Message[]; pending?: boolean }) {
   const uid = useId();
   const [index, setIndex] = useState(0);
   const [expanded, setExpanded] = useState(false);
@@ -85,6 +85,29 @@ export default function SupporterTicker({ messages }: { messages: Message[] }) {
     if (!el) return;
     setIsClamped(el.scrollHeight > el.clientHeight + 1);
   }, [index, messages, expanded]);
+
+  /**
+   * 메시지가 **올 것을 아는데 아직 안 온** 동안 같은 크기의 틀을 먼저 그린다.
+   *
+   * 메시지 본문은 정적 HTML에 싣지 않고 폴링으로 받는다(lib/funding/publicStatus.ts —
+   * 정치적 사안의 후원자 글이 검색에 남지 않게). 그래서 예전엔 이 칸이 몇 초 뒤에 튀어나와
+   * 그 아래 본문 전체를 밀어냈다(운영자 지적, 2026-09-28). 개수만은 정적 HTML에 오므로
+   * 그걸 보고 제목·상자 높이를 그대로 잡아 두면 글자만 나중에 채워진다.
+   */
+  if (count === 0 && pending) {
+    return (
+      <section aria-labelledby={`${uid}-label`} aria-busy="true">
+        <h2 id={`${uid}-label`} className="typo-card-title text-gray-900 dark:text-white">
+          응원 메시지
+        </h2>
+        <div className="glass-card mt-4 flex h-40 flex-col justify-center gap-3 overflow-hidden rounded-2xl p-6 md:h-44 md:p-8">
+          <div className="h-7 w-4/5 animate-pulse rounded-lg bg-gray-200/80 motion-reduce:animate-none dark:bg-gray-700/60 md:h-8" />
+          <div className="h-7 w-2/5 animate-pulse rounded-lg bg-gray-200/80 motion-reduce:animate-none dark:bg-gray-700/60 md:h-8" />
+          <span className="sr-only">응원 메시지를 불러오는 중입니다.</span>
+        </div>
+      </section>
+    );
+  }
 
   // 메시지가 없으면 자리 자체를 만들지 않는다 — 히어로 아래에 빈 상자를 두면
   // "아직 아무도 후원하지 않았다"가 첫 화면에 박힌다.
