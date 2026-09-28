@@ -51,7 +51,7 @@ howTo:
 
 백 보컬은 음악의 두께감, 공간감, 감정적 깊이를 더합니다. 메인 보컬 하나만 있는 음악과 코러스가 더해진 음악은 처음 들을 때부터 밀도가 다릅니다.
 
-백 보컬의 역사는 팝 음악의 역사와 함께합니다. 1960년대 Motown Records에서 The Funk Brothers와 코러스 팀이 만들어낸 레이어드 보컬이 Diana Ross & The Supremes의 히트곡들을 완성했습니다. Queen의 Freddie Mercury는 「Bohemian Rhapsody」(1975) 녹음에서 수십 번의 레이어를 쌓아 오케스트라에 버금가는 합창 사운드를 만들어냈는데, 당시 엔지니어 Roy Thomas Baker와 함께 한 사람이 혼자 거대한 코러스를 만드는 보컬 스태킹의 가능성을 증명했습니다. 오늘날 K팝에서 BTS의 후렴 코러스, aespa의 레이어드 보컬은 이 전통을 잇는 현대적 형태입니다.
+백 보컬의 역사는 팝 음악의 역사와 함께합니다. 1960년대 Motown Records는 세션 밴드 The Funk Brothers의 연주 위에 여러 겹의 백보컬을 쌓아 Diana Ross & The Supremes 같은 히트곡을 만들었습니다. Queen의 Freddie Mercury는 「Bohemian Rhapsody」(1975) 녹음에서 수십 번의 레이어를 쌓아 오케스트라에 버금가는 합창 사운드를 만들어냈는데, 당시 엔지니어 Roy Thomas Baker와 함께 한 사람이 혼자 거대한 코러스를 만드는 보컬 스태킹의 가능성을 증명했습니다. 오늘날 K팝에서 BTS의 후렴 코러스, aespa의 레이어드 보컬은 이 전통을 잇는 현대적 형태입니다.
 
 ---
 
