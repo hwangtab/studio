@@ -375,6 +375,8 @@ describe('가격 SSOT 정합', () => {
       [30000, '유통 대행사(DistroKid) 연 정액 "3만원대" (외부 시세)'],
       [87500, '레슨 월정액 350,000원을 월 4회로 나눈 회당 환산값'],
       [4200, '언론 기사 제목 "천 번을 들어줘야 4200원" 인용'],
+      [1000, 'PledgeWizard 추가 후원 금액의 1,000원 단위 반올림 — 가격이 아니라 입력 단위'],
+      [1000000, 'useFundingStatus 주석의 "목표 1,000,000원" 예시 — 실제 목표액이 아니라 집계 지연 설명'],
     ]);
     const ssot = new Set<number>([
       RECORDING_HOURLY_PRICE,
@@ -422,11 +424,11 @@ describe('가격 SSOT 정합', () => {
     // 들어와도 놓치지 않으려면 재귀여야 한다. pricing.ts 본체도 이제 포함한다 —
     // 상수뿐 아니라 그 상수를 설명하는 카피(파생 합계 "55만원"류)도 들고 있어서,
     // 예전 제외 규칙은 상수가 바뀌어도 카피가 안 따라오는 드리프트를 못 잡았다.
-    const walk = (dir: string): string[] =>
+    const walk = (dir: string, exts: string[] = ['.ts']): string[] =>
       fs.readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
         const full = path.join(dir, e.name);
-        if (e.isDirectory()) return walk(full);
-        if (!e.name.endsWith('.ts') || e.name.includes('.test.')) return [];
+        if (e.isDirectory()) return walk(full, exts);
+        if (!exts.some((ext) => e.name.endsWith(ext)) || e.name.includes('.test.')) return [];
         return [full];
       });
 
@@ -443,8 +445,12 @@ describe('가격 SSOT 정합', () => {
       .filter((name) => name.endsWith('.tsx') && !name.includes('.test.'))
       .map((name) => path.join(INLINE_DIR, name));
 
+    // 펀딩 화면 컴포넌트(components/funding/**)도 가격을 말한다(설계비·추가 후원 금액 안내
+    // 등). 인라인 콜아웃과 같은 사각지대라 3라운드 감사 낮음 항목으로 함께 훑는다.
+    const fundingComponents = walk(path.join(__dirname, '..', 'components', 'funding'), ['.ts', '.tsx']);
+
     const offenders: string[] = [];
-    for (const file of [...walk(__dirname), ...inlineComponents]) {
+    for (const file of [...walk(__dirname), ...inlineComponents, ...fundingComponents]) {
       const text = fs.readFileSync(file, 'utf8');
       for (const m of text.matchAll(AMOUNT)) {
         const won = m[1] ? Number(m[1].replace(/,/g, '')) : Number(m[2]) * 10_000;

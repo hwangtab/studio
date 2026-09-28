@@ -81,6 +81,6 @@ it('정상 → 200, state·percent·publicBackers·remaining·Cache-Control·exp
   expect(r.body.percent).toBe(99);
   expect(r.body.publicBackers).toEqual(['김', '이']);
   expect(r.body.remaining).toEqual({ mail: 7 });
-  expect(r.setHeader).toHaveBeenCalledWith('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
+  expect(r.setHeader).toHaveBeenCalledWith('Cache-Control', 'public, s-maxage=15, stale-while-revalidate=60');
   expect(expireStalePledges).toHaveBeenCalled();
 });

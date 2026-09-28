@@ -26,6 +26,8 @@ export interface AdminPledgeItem {
   publicName: string | null;
   /** 운영자가 명단에서 내린 시각(ISO). 공개 동의와 별개다. */
   listingHiddenAt: string | null;
+  /** 내릴 당시 명단에 떠 있던 표시 이름의 스냅샷. 지금 이름과 다르면 화면이 그 사실을 알린다. */
+  listingHiddenName: string | null;
   refundRequestedAt: string | null;
   /**
    * 내려받기를 시작한 시각. 값이 있으면 셀프 취소가 막힌다(약관 제8조 2항).
@@ -206,6 +208,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     displayNamePublic: p.displayNamePublic,
     publicName: p.publicName ?? null,
     listingHiddenAt: p.listingHiddenAt?.toISOString() ?? null,
+    listingHiddenName: p.listingHiddenName ?? null,
     refundRequestedAt: p.refundRequestedAt?.toISOString() ?? null,
     downloadedAt: p.downloadedAt?.toISOString() ?? null,
     paidAt: p.paidAt?.toISOString() ?? null,

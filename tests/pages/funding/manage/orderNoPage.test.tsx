@@ -69,7 +69,7 @@ describe('명단 공개 설정', () => {
     render(<FundingManagePage {...baseProps} displayNamePublic paymentMethod="toss" />);
     expect(screen.getByText(/후원자 명단에/)).toHaveTextContent('홍길동(으)로 올라가 있습니다');
     await userEvent.click(screen.getByRole('button', { name: '명단에서 내리기' }));
-    // 공개 명단은 상태 API 캐시(s-maxage=60 · SWR 300)를 통해 나가므로 즉시 반영되지 않는다 —
+    // 공개 명단은 상태 API 캐시(s-maxage=15 · SWR 60)를 통해 나가므로 즉시 반영되지 않는다 —
     // 그걸 말하지 않으면 "철회가 안 됐다"는 문의가 온다.
     expect(await screen.findByText(/후원자 명단에서 내렸습니다\. 프로젝트 페이지에는 최대 몇 분 뒤 반영됩니다\./)).toBeInTheDocument();
     const [url, init] = fetchMock.mock.calls[0];
