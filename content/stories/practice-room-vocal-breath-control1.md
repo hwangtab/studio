@@ -212,4 +212,4 @@ C → G → C' (전체 옥타브 미끄러짐) 한 호흡
 
 ---
 
-[보컬 무대 퍼포먼스·스테이지 연기 — 보컬 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage1) | [보컬 독학·처음 노래 배우는 연습실 가이드](/stories/practice-room-vocal-beginner1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 중음역 강화·미들 보이스 — 보컬 중음역 완성 가이드](/stories/practice-room-vocal-middle1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1)
+[보컬 무대 퍼포먼스·스테이지 연기 — 보컬 퍼포먼스 완성 가이드](/stories/practice-room-vocal-stage1) | [보컬 독학·처음 노래 배우는 연습실 가이드](/stories/practice-room-vocal-beginner1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 중음역 강화·미들 보이스 — 보컬 중음역 완성 가이드](/stories/practice-room-vocal-middle1) | [보컬 음역대 확장 완전 가이드](/stories/vocal-range-extension1)

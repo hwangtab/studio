@@ -291,4 +291,4 @@ summary: >-
 
 ---
 
-[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡 컨트롤·폐활량 훈련 — 완전 가이드](/stories/practice-room-vocal-breath-control1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡 컨트롤·폐활량 훈련 — 완전 가이드](/stories/practice-room-vocal-breath-control1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1)

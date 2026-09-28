@@ -463,7 +463,7 @@ export const PRACTICE_ROOM_RELATED_GUIDES: PracticeRoomRelatedGuide[] = [
   { slug: 'practice-room-piano-reharmonization1', title: '피아노 리하모나이제이션·화성 재창조 음악연습실' },
   { slug: 'practice-room-drum-afrobeat1', title: '드럼 아프로비트·월드 그루브 음악연습실' },
   { slug: 'practice-room-guitar-acoustic-fingerstyle1', title: '기타 어쿠스틱 핑거스타일·DADGAD 튜닝 음악연습실' },
-  { slug: 'practice-room-vocal-falsetto-technique1', title: '보컬 팔세토·성구 전환 기법 음악연습실' },
+  { slug: 'falsetto1', title: '보컬 팔세토·성구 전환 기법 음악연습실' },
   { slug: 'practice-room-bass-neck-position1', title: '베이스 넥 포지션·전체 지판 활용 음악연습실' },
   { slug: 'practice-room-drum-brushwork-jazz-waltz1', title: '드럼 재즈 왈츠·3박자 스윙 음악연습실' },
   { slug: 'practice-room-guitar-theory-modes1', title: '기타 모드 이론·7가지 교회 선법 음악연습실' },

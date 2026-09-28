@@ -160,4 +160,4 @@ Do-Re-Mi-Fa-Sol (1도씩 올려가며 반복)
 
 ---
 
-[믹스 보이스 완전 가이드](/stories/mixvoice1) | [두성 완전 가이드](/stories/head-voice1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1)
+[믹스 보이스 완전 가이드](/stories/mixvoice1) | [두성 완전 가이드](/stories/head-voice1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [복식호흡·횡격막 발성 완전 가이드](/stories/diaphragm1)

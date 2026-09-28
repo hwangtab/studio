@@ -358,4 +358,4 @@ Mariah 버전: A4-C5-Eb5-C5-Bb4-G4-A4
 
 ---
 
-[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [멜리스마·R&B 소울 보컬 가이드](/stories/practice-room-vocal-soul1)
+[보컬 아티큘레이션·발음·자음 기법 — 완전 가이드](/stories/practice-room-vocal-articulation1) | [보컬 호흡법·복식호흡·지지·버팀 기법 — 완전 가이드](/stories/practice-room-vocal-breathing1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 하모니·앙상블 합창 기법 — 완전 가이드](/stories/practice-room-vocal-harmony-ensemble1) | [보컬 K-Pop 창법·아이돌 보컬 테크닉 — 완전 가이드](/stories/practice-room-vocal-kpop-technique1) | [멜리스마·R&B 소울 보컬 가이드](/stories/practice-room-vocal-soul1)

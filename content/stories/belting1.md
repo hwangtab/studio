@@ -132,4 +132,4 @@ inlineFallback:
 
 ---
 
-[혼합 발성(Mixed Voice) 완전 가이드](/stories/mixedvoice1) | [트왕 발성 완전 가이드](/stories/twang1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/practice-room-vocal-falsetto-technique1) | [보컬 워밍업 루틴](/stories/warmup1) | [두성 발성 훈련 완전 가이드](/stories/headvoice1)
+[혼합 발성(Mixed Voice) 완전 가이드](/stories/mixedvoice1) | [트왕 발성 완전 가이드](/stories/twang1) | [고음 내는 방법 완전 가이드](/stories/highnote1) | [보컬 팔세토·성구 전환 기법 — 완전 가이드](/stories/falsetto1) | [보컬 워밍업 루틴](/stories/warmup1) | [두성 발성 훈련 완전 가이드](/stories/headvoice1)
