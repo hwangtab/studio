@@ -171,4 +171,4 @@ faq:
 
 ---
 
-[마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS·음압 완전 가이드](/stories/lufs-guide1) | [믹싱 레퍼런스 트랙 완전 가이드](/stories/mix-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [라우드니스(LUFS) 완전 가이드](/stories/loudness1) | [믹싱 레퍼런스 트랙 완전 가이드](/stories/mix-reference1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)

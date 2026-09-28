@@ -173,4 +173,4 @@ True Peak는 디지털-아날로그 변환(DAC) 과정에서 실제로 발생하
 
 ---
 
-[LUFS 완전 가이드](/stories/lufs-guide1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1)
+[라우드니스(LUFS) 완전 가이드](/stories/loudness1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 팁 완전 가이드](/stories/mastering-tips1) | [스템 마스터링 완전 가이드](/stories/stem-mastering1)

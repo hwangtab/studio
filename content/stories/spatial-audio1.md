@@ -165,4 +165,4 @@ Apple Music Atmos 납품 시 유통사(TuneCore·DistroKid 등)에서 ADM BWF �
 
 ---
 
-[마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [LUFS 완전 가이드](/stories/lufs-guide1)
+[마스터링 완전 가이드](/stories/mastering1) | [스테레오 이미징 완전 가이드](/stories/stereo-imaging1) | [모노 호환성 믹싱 완전 가이드](/stories/mono-compat1) | [라우드니스(LUFS) 완전 가이드](/stories/loudness1)

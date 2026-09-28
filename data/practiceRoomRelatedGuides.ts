@@ -182,7 +182,7 @@ export const PRACTICE_ROOM_RELATED_GUIDES: PracticeRoomRelatedGuide[] = [
   { slug: 'practice-room-musical-theater1', title: '뮤지컬 넘버·무대 노래 연습 음악연습실' },
   { slug: 'practice-room-chord-melody1', title: '코드 멜로디·솔로 기타 편곡 연습 음악연습실' },
   { slug: 'practice-room-vocal-power1', title: '보컬 파워·성량 키우기 연습 음악연습실' },
-  { slug: 'practice-room-vocal-range1', title: '음역대 확장·고음 훈련 음악연습실' },
+  { slug: 'vocal-range-extension1', title: '음역대 확장·고음 훈련 음악연습실' },
   { slug: 'practice-room-piano-classical1', title: '클래식 피아노 연습 음악연습실' },
   { slug: 'practice-room-guitar-barre1', title: '기타 바레 코드·F코드 극복 연습 음악연습실' },
   { slug: 'practice-room-piano-jazz-chord1', title: '재즈 피아노 보이싱·텐션 코드 연습 음악연습실' },

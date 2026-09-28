@@ -168,4 +168,4 @@ Mid-Side 처리로 스테레오 이미지를 조정합니다. Side 채널의 80H
 
 ---
 
-[공간 음향·바이노럴·돌비 애트모스 완전 가이드](/stories/spatial-audio1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [LUFS 완전 가이드](/stories/lufs-guide1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
+[공간 음향·바이노럴·돌비 애트모스 완전 가이드](/stories/spatial-audio1) | [마스터링 완전 가이드](/stories/mastering1) | [마스터링 전 믹스 준비 완전 가이드](/stories/mix-prep1) | [라우드니스(LUFS) 완전 가이드](/stories/loudness1) | [온라인 믹싱 의뢰 방법](/stories/onlinemix1)
