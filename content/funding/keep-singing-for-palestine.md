@@ -18,7 +18,7 @@ rewards:
     description: 앨범 13곡 전체를 MP3 320kbps로 보내 드립니다. 내려받기 주소는 결제 확정 메일과 펀딩 확인 페이지에 함께 보내 드립니다.
     amount: 10000
     requiresShipping: false
-    estimatedDelivery: 2026-09
+    estimatedDelivery: 결제 확정 즉시
     image: /images/funding/keep-singing-for-palestine/album.webp
     downloads:
       - label: MP3 320kbps
@@ -107,7 +107,7 @@ rewards:
     description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.
     amount: 30000
     requiresShipping: false
-    estimatedDelivery: 2026-09
+    estimatedDelivery: 결제 확정 즉시
     image: /images/funding/keep-singing-for-palestine/album.webp
     downloads:
       - label: MP3 320kbps
@@ -119,7 +119,7 @@ rewards:
     description: 세 가지 음질을 모두 보내 드립니다. MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)입니다.
     amount: 50000
     requiresShipping: false
-    estimatedDelivery: 2026-09
+    estimatedDelivery: 결제 확정 즉시
     image: /images/funding/keep-singing-for-palestine/album.webp
     downloads:
       - label: MP3 320kbps
@@ -133,7 +133,7 @@ rewards:
     description: MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)을 보내 드립니다.
     amount: 100000
     requiresShipping: false
-    estimatedDelivery: 2026-09
+    estimatedDelivery: 결제 확정 즉시
     image: /images/funding/keep-singing-for-palestine/album.webp
     downloads:
       - label: MP3 320kbps
