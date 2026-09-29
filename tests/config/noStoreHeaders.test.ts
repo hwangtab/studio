@@ -5,8 +5,11 @@ import { PRIVATE_NO_STORE_SOURCES } from '../../lib/analytics/privatePaths';
 
 /**
  * 결제·관리 화면이 Vercel 공유 캐시에 얹히면 다른 사람의 후원자 이름·연락처·배송지가
- * 그대로 보인다. next.config headers는 **첫 매칭이 우선**이라, no-store 규칙이 넓은 로케일
- * 캐시 규칙(`/:locale/:path*`)보다 뒤에 있으면 아무 효과가 없다 — 순서까지 함께 검사한다.
+ * 그대로 보인다. next.config headers는 매칭되는 규칙을 전부 적용하고 **같은 키는 뒤 규칙이
+ * 덮어쓴다**(next resolve-routes.js). 그래서 no-store 규칙이 넓은 로케일 캐시 규칙
+ * (`/:locale/:path*`)보다 **앞에** 있으면 아무 효과가 없다 — 순서까지 함께 검사한다.
+ * 예전 이 검사는 거꾸로("첫 매칭 우선") 강제하고 있었고, 그동안 미들웨어가 만든 리다이렉트가
+ * public, s-maxage=3600으로 나갔다(2026-09-29 운영 실측).
  *
  * jest는 .mjs를 CJS로 변환하는데 next.config.mjs가 스스로 __dirname을 선언해 충돌한다 —
  * 자식 node로 진짜 import해 값만 JSON으로 받아온다(fundingFileTracing.test.ts와 같은 방식).
@@ -45,10 +48,20 @@ describe('next.config headers — 개인정보 경로 no-store', () => {
     expect(cacheControl).toContain('no-store');
   });
 
-  it.each(PRIVATE_SOURCES)('%s 규칙은 공개 캐시 규칙보다 앞에 있다 (첫 매칭 우선)', (source) => {
+  it.each(PRIVATE_SOURCES)('%s 규칙은 공개 캐시 규칙보다 뒤에 있다 (같은 키는 뒤 규칙이 이긴다)', (source) => {
     const publicIndex = indexOf(PUBLIC_CACHE_SOURCE);
     expect(publicIndex).toBeGreaterThanOrEqual(0);
-    expect(indexOf(source)).toBeLessThan(publicIndex);
+    expect(indexOf(source)).toBeGreaterThan(publicIndex);
+  });
+
+  /** 개인 경로 규칙 뒤에서 Cache-Control을 다시 덮어쓰는 규칙이 생기면 같은 구멍이 난다. */
+  it('개인 경로 규칙 뒤에는 Cache-Control을 덮어쓰는 규칙이 없다', () => {
+    const lastPrivate = Math.max(...PRIVATE_SOURCES.map(indexOf));
+    const overriding = rules
+      .slice(lastPrivate + 1)
+      .filter((r) => r.headers.some((h) => h.key === 'Cache-Control'))
+      .map((r) => r.source);
+    expect(overriding).toEqual([]);
   });
 
   /**

@@ -249,12 +249,23 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=86400, stale-while-revalidate=43200' },
         ],
       },
-      // 계약 페이지 캐시 방어 이중화 — GSSP의 denyContractPageCaching(코드)이 유일한
-      // 방어선이었는데, Vercel 프록시가 아래 로케일 캐시 규칙을 함수 헤더보다 먼저
-      // 적용하면(next.config headers는 첫 매칭이 우선) 계약 열람 페이지가 s-maxage=3600
-      // 으로 공유 캐시에 얹힐 수 있다(미검증 리스크). 이 규칙을 로케일 캐시 규칙보다
-      // 앞에 둬 계약 경로만 먼저 매칭시킨다. denyContractPageCaching 호출은 그대로 둘 것
-      // — 코드+설정 이중 방어가 목적이라 어느 한쪽만으로 충분하다고 판단해 제거하지 말 것.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
+        ],
+      },
+      // 개인 경로 캐시 방어의 두 번째 층. 여기서부터 끝까지의 no-store 규칙은 위 로케일 캐시
+      // 규칙보다 **뒤에** 있어야 한다. next.config headers는 매칭되는 규칙을 순서대로 전부 적용하고
+      // 같은 키는 뒤 규칙이 덮어쓴다(next resolve-routes.js — `resHeaders[key] = value`). 이 규칙들이
+      // 앞에 있던 동안에는 아무 효과가 없었다 — 2026-09-29 운영 실측에서 미들웨어가 만든 308
+      // (대문자 주문번호 → 소문자, 쿼리에 관리 토큰)이 로케일 규칙의 public, s-maxage=3600으로 나갔다.
+      //
+      // 페이지 본문을 지키는 첫 번째 층은 getServerSideProps가 붙이는 no-store다(계약은
+      // denyContractPageCaching). Vercel에서는 함수가 붙인 Cache-Control이 설정 헤더를 이긴다 —
+      // 같은 날 /ko/funding/creator/auth가 함수의 `no-store`로 나가는 것을 확인했다. 이 규칙들은 함수
+      // 헤더가 없는 응답(미들웨어 리다이렉트, 실수로 정적·ISR이 된 페이지)을 막는다. 어느 한쪽만으로
+      // 충분하다고 판단해 다른 쪽을 지우지 말 것.
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/contracts/:path*',
         headers: [
@@ -263,7 +274,7 @@ const nextConfig = {
       },
       // 펀딩·예약의 결제·관리 화면도 같은 이유로 공유 캐시에 얹히면 안 된다 — URL에
       // 관리 토큰·paymentKey가 실리고, 응답 본문에 후원자 이름·연락처·주소가 들어간다.
-      // 계약 규칙과 마찬가지로 아래 로케일 캐시 규칙보다 반드시 앞에 둘 것(첫 매칭 우선).
+      // 계약 규칙과 마찬가지로 위 로케일 캐시 규칙보다 반드시 뒤에 둘 것(같은 키는 뒤 규칙이 이긴다).
       //
       // 이 source 집합의 정본은 lib/analytics/privatePaths.ts의 PRIVATE_NO_STORE_SOURCES다
       // (.mjs라 TS를 직접 import할 수 없어 문자열만 복제한다). 여기만 고치면 측정 제외
@@ -310,12 +321,6 @@ const nextConfig = {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/subscribe/:path*',
         headers: [
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
-        ],
-      },
-      {
-        source: '/:locale(ko|en|zh|es|vi|th|uz)/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' },
         ],
       },
       {
