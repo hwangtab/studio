@@ -33,6 +33,7 @@ const stockLabel = (remaining: number | null): string =>
 export default function RewardModal({ project, reward, remaining, onClose }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const bodyRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState<'detail' | 'pledge'>('detail');
 
   const isOpen = reward !== null;
@@ -41,6 +42,15 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
   useEffect(() => {
     if (reward) setStep('detail');
   }, [reward]);
+
+  /**
+   * 단계가 바뀌면 본문 스크롤을 맨 위로 되돌린다. 본문(`bodyRef`)은 두 단계가 같은 스크롤
+   * 컨테이너를 쓰므로, 상세에서 내려 둔 위치가 폼으로 그대로 넘어가 폼의 맨 위(담은 리워드)가
+   * 잘린 채 시작했다 — 후원자가 다시 위로 올려야 했다(2026-09-29 운영자 지적).
+   */
+  useEffect(() => {
+    if (bodyRef.current) bodyRef.current.scrollTop = 0;
+  }, [step, reward]);
 
   /**
    * 트랩은 모달이 열려 있는 동안 계속 켜 둔다.
@@ -113,7 +123,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
           </button>
         </div>
 
-        <div className="overflow-y-auto overscroll-contain p-5 sm:p-6">
+        <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6">
           {step === 'detail' ? (
             <div>
               {reward.image && (
@@ -138,19 +148,6 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 {reward.requiresShipping && <li>배송지를 입력받습니다.</li>}
               </ul>
               <p className="typo-card-meta mt-4">다음 화면에서 다른 리워드도 함께 담을 수 있습니다.</p>
-              <button
-                type="button"
-                disabled={soldOut}
-                onClick={() => {
-                  setStep('pledge');
-                  // 후원 폼 진입 — /pledge 페이지와 같은 이벤트. 예전엔 페이지에서만 쏴서, 대부분이
-                  // 거치는 이 모달 경로가 GA 퍼널에서 빠져 있었다.
-                  trackMicroEvent('funding_pledge_start', { component: 'funding_reward_modal', landing_slug: project.slug });
-                }}
-                className="mt-4 inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
-              >
-                {soldOut ? '품절' : '담고 펀딩하기'}
-              </button>
             </div>
           ) : (
             <>
@@ -168,6 +165,30 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
             </>
           )}
         </div>
+
+        {/*
+          상세 단계의 펀딩 버튼은 **본문 밖, 모달 바닥에 고정**한다. 본문 안에 두었을 때는 이미지
+          (책 표지는 세로로 길다)와 설명 아래로 밀려 모바일에서 화면 밖에 있었다 — iPhone 13에서
+          버튼 위쪽이 822~1,099px, 화면 높이 664px(2026-09-29 실측). 금액을 함께 적어 무엇을
+          누르는지 버튼만 보고도 알게 한다.
+        */}
+        {step === 'detail' && (
+          <div className="border-t border-gray-200 bg-gray-50 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6 dark:border-gray-700 dark:bg-gray-900">
+            <button
+              type="button"
+              disabled={soldOut}
+              onClick={() => {
+                setStep('pledge');
+                // 후원 폼 진입 — /pledge 페이지와 같은 이벤트. 예전엔 페이지에서만 쏴서, 대부분이
+                // 거치는 이 모달 경로가 GA 퍼널에서 빠져 있었다.
+                trackMicroEvent('funding_pledge_start', { component: 'funding_reward_modal', landing_slug: project.slug });
+              }}
+              className="inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
+            >
+              {soldOut ? '품절' : `${formatPriceAmount(reward.amount)}원 · 담고 펀딩하기`}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
