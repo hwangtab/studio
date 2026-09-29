@@ -178,6 +178,31 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
    * 다시 온 사람에게 예전 선택을 들이밀지 않는다.
    */
   const cartKey = `funding:lastCart:${project.slug}`;
+  /**
+   * 폼을 열어 둔 사이 한정 리워드가 팔려 나가면(상태 폴링이 `remaining`을 새로 준다) 담아 둔
+   * 수량을 **지금 남은 만큼으로 자른다**. 예전엔 화면에 그대로 남아 있다가 제출하면 서버가
+   * "남은 수량보다 많이 신청했다"로 거절했다 — 초과 판매는 없지만 폼을 다 채운 뒤에야 안다.
+   * 줄인 사실은 바로 위에서 알린다(말없이 바꾸면 합계가 왜 줄었는지 모른다).
+   */
+  const [stockNotice, setStockNotice] = useState<string | null>(null);
+  useEffect(() => {
+    const adjusted: string[] = [];
+    let changed = false;
+    const next = cart.flatMap((c) => {
+      const cap = capOf(remaining, c.rewardId);
+      if (c.quantity <= cap) return [c];
+      changed = true;
+      const title = project.rewards.find((r) => r.id === c.rewardId)?.title ?? c.rewardId;
+      adjusted.push(cap === 0 ? `${title}(품절)` : `${title}(${cap}개로)`);
+      return cap > 0 ? [{ ...c, quantity: cap }] : [];
+    });
+    if (!changed) return;
+    setCart(next);
+    setStockNotice(`남은 수량이 바뀌어 조정했습니다: ${adjusted.join(', ')}`);
+    // cart는 일부러 뺀다 — 사용자가 담을 때는 setQuantity가 이미 상한으로 자른다. 여기서는
+    // 재고(remaining)가 움직였을 때만 다시 본다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [remaining]);
   const [cartRestored, setCartRestored] = useState(false);
   useEffect(() => {
     try {
@@ -506,6 +531,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-reward`}>
         <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint={lines.length > 0 ? '담은 리워드입니다. 수량을 바꾸거나 다른 리워드를 함께 담을 수 있습니다.' : '펀딩할 리워드를 담아 주세요.'} />
+        {stockNotice && (
+          <p role="status" className="mb-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">{stockNotice}</p>
+        )}
         {cartRestored && lines.length > 0 && (
           <p role="status" className="typo-card-meta mb-3">지난번 결제를 시도할 때 담은 리워드를 다시 담아 두었습니다.</p>
         )}

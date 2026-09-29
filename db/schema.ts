@@ -570,6 +570,12 @@ export const fundingPledgeItems = sqliteTable(
     rewardTitle: text('reward_title').notNull(),
     unitAmount: integer('unit_amount').notNull(),
     quantity: integer('quantity').notNull(),
+    /**
+     * 이 줄에서 **환불한 수량**(관리자 줄 단위 부분 환불, lib/funding/lineRefund.ts). 살아 있는
+     * 수량은 `quantity − refunded_quantity`다 — 재고·판매 수량·내려받기·배송 목록은 그 값을 본다
+     * (pledgeLinesSql·pledgeLines). `quantity`는 산 수량 그대로 둔다(무엇을 샀는지는 기록이다).
+     */
+    refundedQuantity: integer('refunded_quantity').notNull().default(0),
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   },
   (t) => [

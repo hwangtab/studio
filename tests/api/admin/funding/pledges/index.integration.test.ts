@@ -139,7 +139,7 @@ it('한정 수량 리워드가 이미 소진되면 409 남은 수량 메시지',
 
   const second = await call({ ...VALID_BODY, rewardId: 'cd', quantity: 1, additionalAmount: 0 });
   expect(second.status).toBe(409);
-  expect(second.body.message).toBe('남은 수량(0)을 초과합니다.');
+  expect(second.body.message).toBe('CD의 남은 수량(0)을 초과합니다.');
 });
 
 // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 칸을 그대로 보내면 customer_email=''인
@@ -316,6 +316,41 @@ it('수기 등록된 배송 리워드는 delivered_at이 NULL이다 (기산점�
   expect(r.status).toBe(201);
   const rows = await client.execute('SELECT delivered_at FROM funding_pledges');
   expect(rows.rows[0].delivered_at).toBeNull();
+});
+
+// 현장에서 여러 리워드를 함께 산 사람을 한 건으로 적는다(2026-09-29) — 온라인과 같은 items.
+describe('수기 등록 여러 리워드', () => {
+  const { rewardId: _r, quantity: _q, ...base } = VALID_BODY;
+
+  it('줄마다 funding_pledge_items에 남고, 금액은 줄의 합 + 추가금이다', async () => {
+    const r = await call({ ...base, additionalAmount: 0, items: [{ rewardId: 'mail', quantity: 2 }, { rewardId: 'box', quantity: 1 }],
+      shipping: { name: '홍길동', address1: '서울' } });
+    expect(r.status).toBe(201);
+    const items = await client.execute('SELECT reward_id, quantity, position FROM funding_pledge_items ORDER BY position');
+    expect(items.rows.map((x) => [x.reward_id, Number(x.quantity)])).toEqual([['mail', 2], ['box', 1]]);
+    const pledge = await client.execute('SELECT reward_title, delivered_at FROM funding_pledges');
+    expect(String(pledge.rows[0].reward_title)).toContain('외 1건');
+    // 배송 리워드가 섞였으니 등록 순간이 전달 완료가 아니다.
+    expect(pledge.rows[0].delivered_at).toBeNull();
+    const order = await client.execute('SELECT total_amount FROM orders');
+    const mail = PROJECT.rewards.find((x) => x.id === 'mail')!.amount;
+    const box = PROJECT.rewards.find((x) => x.id === 'box')!.amount;
+    expect(Number(order.rows[0].total_amount)).toBe(mail * 2 + box);
+  });
+
+  it('한정 리워드 하나라도 모자라면 주문 전체가 들어가지 않는다', async () => {
+    // cd는 한정 1개 — 먼저 하나를 팔아 둔다.
+    expect((await call({ ...base, additionalAmount: 0, items: [{ rewardId: 'cd', quantity: 1 }] })).status).toBe(201);
+    const r = await call({ ...base, additionalAmount: 0, customerEmail: 'b@example.com', items: [{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 1 }] });
+    expect(r.status).toBe(409);
+    const n = await client.execute('SELECT COUNT(*) AS n FROM funding_pledge_items');
+    expect(Number(n.rows[0].n)).toBe(1);
+  });
+
+  it('같은 리워드를 두 줄로 보내면 400', async () => {
+    const r = await call({ ...base, items: [{ rewardId: 'mail', quantity: 1 }, { rewardId: 'mail', quantity: 1 }] });
+    expect(r.status).toBe(400);
+  });
 });
 
 // 관리자 폼에 배송 칸이 생겼다(2026-09-29) — 값은 온라인 경로와 같은 상한·형식으로 받는다.

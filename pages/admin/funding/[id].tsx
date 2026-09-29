@@ -114,6 +114,24 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
   const canRefund = isLiveFundingOrderStatus(pledge.status);
 
   const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
+  /**
+   * 줄 단위 일부 환불(lib/funding/lineRefund.ts) — 책만 청약철회처럼 담은 리워드 하나만
+   * 돌려준다. 사유는 후원자 메일에 그대로 들어가므로 필수다. 계좌(수기) 후원은 서버가 막는다.
+   */
+  const canRefundLine = canRefund && pledge.paymentMethod === 'toss';
+  const [lineRefundQty, setLineRefundQty] = useState<Record<string, number>>({});
+  const handleRefundLine = (line: AdminPledgeItem['lines'][number]) => {
+    const quantity = lineRefundQty[line.rewardId] ?? 1;
+    const reason = window.prompt(
+      `${line.rewardTitle} ${quantity}개, ${formatPriceAmount(line.unitAmount * quantity)}원을 환불합니다. 되돌릴 수 없습니다.\n사유를 적어 주세요(후원자 메일에 들어갑니다).`,
+    );
+    if (reason === null) return;
+    if (!reason.trim()) {
+      setNotice('일부 환불에는 사유가 필요합니다.');
+      return;
+    }
+    void run(() => patchPledge(pledge.id, { action: 'refund_line', rewardId: line.rewardId, quantity, reason: reason.trim() }));
+  };
   const handleSaveFulfillment = () =>
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
   const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
@@ -343,6 +361,39 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                 <DescriptionRow label="접수 시각" value={formatKstDateTime(pledge.createdAt)} />
               </dl>
             </div>
+
+            {canRefundLine && (
+              <div className="rounded-lg border border-gray-200 p-4">
+                <p className="text-sm font-semibold text-gray-900">리워드별 일부 환불</p>
+                <p className="mt-1 text-xs text-gray-600">담은 리워드 하나만 돌려줍니다(예: 책만 청약철회). 돌려준 수량은 재고로 돌아가고 배송 목록·내려받기에서 빠집니다.</p>
+                <ul className="mt-3 space-y-2">
+                  {pledge.lines.map((line) => {
+                    const available = line.quantity - line.refundedQuantity;
+                    return (
+                      <li key={line.rewardId} className="flex flex-wrap items-center gap-2 text-sm">
+                        <span className="min-w-0 flex-1 text-gray-800">
+                          {line.rewardTitle} × {line.quantity}{line.refundedQuantity > 0 ? ` (${line.refundedQuantity}개 환불됨)` : ''} · {formatPriceAmount(line.unitAmount)}원
+                        </span>
+                        {available > 0 && (
+                          <>
+                            <label className="sr-only" htmlFor={`refund-qty-${line.rewardId}`}>{line.rewardTitle} 환불 수량</label>
+                            <select
+                              id={`refund-qty-${line.rewardId}`}
+                              className="rounded border border-gray-300 px-2 py-1 text-sm text-gray-900"
+                              value={lineRefundQty[line.rewardId] ?? 1}
+                              onChange={(e) => setLineRefundQty({ ...lineRefundQty, [line.rewardId]: Number(e.target.value) })}
+                            >
+                              {Array.from({ length: available }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n}개</option>)}
+                            </select>
+                            <Button light variant="outline" size="sm" disabled={busy} onClick={() => handleRefundLine(line)}>이 리워드 환불</Button>
+                          </>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
 
             <div className="flex flex-wrap gap-2">
               {canRefund && (

@@ -9,6 +9,7 @@ import {
   hasProtectedMemoRecord, hasReviewMarker,
 } from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
+import { refundFundingLine } from '../../../../../lib/funding/lineRefund';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { setFulfillment } from '../../../../../lib/funding/fulfillment';
 import { isRefundPendingStatus } from '../../../../../lib/funding/policy';
@@ -46,6 +47,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         now,
       });
       return r.ok ? res.status(200).json({ ok: true, mode: r.mode }) : res.status(CANCEL_STATUS[r.code] ?? 500).json({ ok: false, message: r.message });
+    }
+    /** 줄 단위 부분 환불 — 담은 리워드 중 하나(의 일부 수량)만 돌려준다(lib/funding/lineRefund.ts). */
+    case 'refund_line': {
+      const reason = typeof b.reason === 'string' ? b.reason.trim() : '';
+      if (!reason) return res.status(400).json({ ok: false, message: '환불 사유를 적어 주세요. 후원자에게 가는 메일에 들어갑니다.' });
+      const r = await refundFundingLine({
+        orderNo: order.orderNo,
+        rewardId: typeof b.rewardId === 'string' ? b.rewardId : '',
+        quantity: typeof b.quantity === 'number' ? b.quantity : Number.NaN,
+        reason,
+      });
+      if (r.ok) return res.status(200).json({ ok: true, amount: r.amount, orderStatus: r.orderStatus });
+      const status = { not_found: 404, invalid_state: 409, invalid_quantity: 400, offline_payment: 409, toss_failed: 502, toss_unknown: 504 }[r.code];
+      return res.status(status).json({ ok: false, message: r.message });
     }
     case 'set_fulfillment': {
       // 규칙 넷(살아 있는 주문 집합·환불 요청 차단·delivered_at의 COALESCE/NULL·경합을

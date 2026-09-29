@@ -6,7 +6,7 @@ import { hasReviewMarker } from '../../../../lib/funding/admin-serialize';
 import { toCsv } from '../../../../lib/funding/csv';
 import { isRefundPendingStatus } from '../../../../lib/funding/policy';
 import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../lib/privacy/accessLog';
-import { pledgeLines, pledgeLinesLabel } from '../../../../lib/funding/pledgeLines';
+import { activePledgeLines, pledgeLines, pledgeLinesLabel } from '../../../../lib/funding/pledgeLines';
 
 /**
  * shipHold는 사람이 읽는 칸이다. refundRequestedAt만으로는 부족하다 — 주소로 정렬해
@@ -91,8 +91,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       customerEmail: o.customerEmail,
       // 여러 리워드를 담은 후원은 한 칸에 "제목 × 수량"을 쉼표로 잇고, 수량 칸은 합계다.
       // 한 리워드면 예전과 똑같이 제목·수량이 따로 나간다(기존 CSV를 받아 쓰는 손이 깨지지 않게).
-      rewardTitle: lines.length === 1 ? lines[0].rewardTitle : pledgeLinesLabel(lines),
-      quantity: lines.reduce((sum, l) => sum + l.quantity, 0),
+      // 환불이 있으면 라벨에 "(n개 환불)"이 붙고, 수량 칸은 **보낼 수량**(살아 있는 수량 합)이다.
+      rewardTitle: lines.length === 1 && lines[0].refundedQuantity === 0 ? lines[0].rewardTitle : pledgeLinesLabel(lines),
+      quantity: activePledgeLines(lines).reduce((sum, l) => sum + l.quantity, 0),
       additionalAmount: p.additionalAmount,
       totalAmount: o.totalAmount,
       shippingName: p.shippingName,

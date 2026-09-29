@@ -8,7 +8,7 @@ import { isManualPlaceholderRecipient } from './service';
 import type { CreatorProjectDetail } from './creatorProjectWrite';
 import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
-import { pledgeLines } from './pledgeLines';
+import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { pledgeDownloads } from './shape';
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
@@ -36,12 +36,12 @@ const summaryLines = (order: FundingOrder, project: FundingProject | null): stri
   const deliveryOf = (rewardId: string) => project?.rewards.find((r) => r.id === rewardId)?.estimatedDelivery;
   const rewardLines = lines.length === 1
     ? [
-        `리워드: ${lines[0].rewardTitle} × ${lines[0].quantity}`,
+        `리워드: ${lines[0].rewardTitle} × ${lines[0].quantity}${lines[0].refundedQuantity ? ` (${lines[0].refundedQuantity}개 환불)` : ''}`,
         ...(deliveryOf(lines[0].rewardId) ? [`예상 전달 시기: ${deliveryOf(lines[0].rewardId)}`] : []),
       ]
     : [
         '리워드:',
-        ...lines.map((l) => `· ${l.rewardTitle} × ${l.quantity}${deliveryOf(l.rewardId) ? ` (예상 전달 ${deliveryOf(l.rewardId)})` : ''}`),
+        ...lines.map((l) => `· ${l.rewardTitle} × ${l.quantity}${l.refundedQuantity ? ` (${l.refundedQuantity}개 환불)` : ''}${deliveryOf(l.rewardId) ? ` (예상 전달 ${deliveryOf(l.rewardId)})` : ''}`),
       ];
   return [
     `프로젝트: ${project?.title ?? p.projectSlug}`,
@@ -127,7 +127,7 @@ const downloadLines = (order: FundingOrder, project: FundingProject | null): str
   if (!pledge) return [];
   // `downloads`가 없는 리워드가 들어와도 여기서 터지면 안 된다 — 이 함수는 결제 확정
   // 메일 경로 안이라, 던지면 결제는 됐는데 안내 메일이 통째로 실패한다.
-  const downloads = pledgeDownloads(project, pledgeLines(pledge).map((l) => l.rewardId));
+  const downloads = pledgeDownloads(project, activePledgeLines(pledgeLines(pledge)).map((l) => l.rewardId));
   if (!downloads.length) return [];
   return [
     '',
@@ -188,6 +188,46 @@ export const sendFundingCancelledEmails = (order: FundingOrder, project: Funding
       to: OPERATOR_EMAIL,
       subject: `[펀딩] ${CANCEL_SUBJECT[mode]} — ${order.customerName} (${mode})`,
       text: [...summaryLines(order, project), `환불 금액: ${formatPriceAmount(refundAmount)}원`, `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`, `관리자: ${SITE_URL}/admin/funding`].join('\n'),
+    } },
+  ]));
+
+/**
+ * 줄 단위 부분 환불(lib/funding/lineRefund.ts)을 알린다. 취소 메일(`sendFundingCancelledEmails`)을
+ * 쓰지 않는 이유: 그 제목·본문은 "펀딩이 취소되었습니다"라서, 책 한 권만 돌려준 사람에게 후원
+ * 전체가 끝난 것으로 읽힌다. 나머지 리워드는 그대로 간다는 것을 먼저 말한다.
+ * `order`는 **환불을 반영한 뒤** 다시 읽은 주문이다 — 요약의 "(n개 환불)"이 이번 환불을 포함한다.
+ */
+export const sendFundingLineRefundEmails = (
+  order: FundingOrder,
+  project: FundingProject | null,
+  refund: { rewardTitle: string; quantity: number; amount: number; reason: string },
+): Promise<string | null> =>
+  send(withoutUndeliverableCustomer(order, [
+    { key: 'customer', params: {
+      to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
+      subject: `[스튜디오 놀] 펀딩 일부가 환불되었습니다${titleSuffix(project)}`,
+      text: [
+        `${order.customerName}님,`,
+        `${refund.rewardTitle} ${refund.quantity}개에 대한 ${formatPriceAmount(refund.amount)}원을 결제하신 수단으로 환불했습니다. 카드사에 따라 영업일 기준 3~5일 뒤에 반영됩니다.`,
+        '나머지 리워드는 그대로 진행됩니다.',
+        `사유: ${refund.reason}`,
+        '',
+        ...summaryLines(order, project),
+        '',
+        `펀딩 확인: ${manageUrl(order)}`,
+        PHONE,
+      ].join('\n'),
+    } },
+    { key: 'operator', params: {
+      to: OPERATOR_EMAIL,
+      subject: `[펀딩] 일부 환불 — ${order.customerName} · ${refund.rewardTitle} × ${refund.quantity}`,
+      text: [
+        ...summaryLines(order, project),
+        `환불: ${refund.rewardTitle} × ${refund.quantity} = ${formatPriceAmount(refund.amount)}원`,
+        `사유: ${refund.reason}`,
+        `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
+        `관리자: ${SITE_URL}/admin/funding`,
+      ].join('\n'),
     } },
   ]));
 

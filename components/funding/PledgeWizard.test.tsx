@@ -493,6 +493,24 @@ describe('결제를 시도한 장바구니 되살리기', () => {
   });
 });
 
+// 폼을 열어 둔 사이 한정 리워드가 팔려 나가면 담아 둔 수량을 지금 남은 만큼으로 자르고 알린다.
+describe('폼을 여는 동안 재고가 줄면', () => {
+  it('남은 수량으로 줄이고, 품절이면 빼고, 무엇을 바꿨는지 알린다', async () => {
+    const { rerender } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
+    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
+    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('3');
+
+    rerender(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 1, mail: null }} />);
+    expect(await screen.findByText('남은 수량이 바뀌어 조정했습니다: CD(1개로)')).toBeInTheDocument();
+    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('1');
+
+    rerender(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
+    expect(await screen.findByText('남은 수량이 바뀌어 조정했습니다: CD(품절)')).toBeInTheDocument();
+    expect(screen.queryByLabelText('CD 수량')).toBeNull();
+  });
+});
+
 describe('자기 홀드 해제 증명 보관', () => {
   // clear 후 입력 — "페이지가 새로 떠도" 테스트는 같은 테스트 안에서 두 번째로 마운트한
   // 인스턴스가 첫 제출의 임시 저장(lib/formDraft.ts)을 그대로 복원해 온다. 지우지 않고

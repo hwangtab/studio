@@ -129,8 +129,13 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
 
   const [showForm, setShowForm] = useState(false);
   const [formProjectSlug, setFormProjectSlug] = useState(projects[0]?.slug ?? '');
-  const [formRewardId, setFormRewardId] = useState('');
-  const [formQuantity, setFormQuantity] = useState(1);
+  /**
+   * 담은 리워드 줄. 현장에서 CD와 책을 함께 산 사람을 한 건으로 적는다 — 줄마다 따로 등록하면
+   * 후원 건수가 부풀고 한 사람이 둘로 보인다. API는 온라인과 같은 items를 받는다.
+   */
+  const [formItems, setFormItems] = useState<Array<{ rewardId: string; quantity: number }>>([{ rewardId: '', quantity: 1 }]);
+  const updateFormItem = (index: number, patch: Partial<{ rewardId: string; quantity: number }>) =>
+    setFormItems((prev) => prev.map((item, i) => (i === index ? { ...item, ...patch } : item)));
   const [formAdditionalAmount, setFormAdditionalAmount] = useState(0);
   // 빈 문자열이면 미입력 — 0원과 구분해야 한다(0원은 서버가 거부하는 값이고, 미입력은
   // "리워드 단가로 계산해라"라는 뜻이다).
@@ -163,21 +168,30 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
   };
 
   const selectedProject = projects.find((p) => p.slug === formProjectSlug);
-  const selectedReward = selectedProject?.rewards.find((r) => r.id === formRewardId);
+  const selectedLines = formItems.flatMap((item) => {
+    const reward = selectedProject?.rewards.find((r) => r.id === item.rewardId);
+    return reward ? [{ reward, quantity: item.quantity }] : [];
+  });
+  const needsShipping = selectedLines.some((l) => l.reward.requiresShipping);
   /** 실수령액 칸의 placeholder — 비워 두면 이 금액으로 등록된다는 것을 그 자리에서 보여 준다. */
-  const computedAmount = selectedReward
-    ? selectedReward.amount * (Number.isFinite(formQuantity) ? formQuantity : 0) + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
+  const computedAmount = selectedLines.length > 0
+    ? selectedLines.reduce((sum, l) => sum + l.reward.amount * (Number.isFinite(l.quantity) ? l.quantity : 0), 0)
+      + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
     : null;
 
   const handleCreateManual = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
 
-    if (!formProjectSlug || !formRewardId) {
+    if (!formProjectSlug || formItems.some((item) => !item.rewardId)) {
       setFormError('프로젝트와 리워드를 선택해 주세요.');
       return;
     }
-    if (!Number.isInteger(formQuantity) || formQuantity < 1 || formQuantity > 10) {
+    if (new Set(formItems.map((item) => item.rewardId)).size !== formItems.length) {
+      setFormError('같은 리워드를 두 줄로 넣지 말고 수량으로 합쳐 주세요.');
+      return;
+    }
+    if (formItems.some((item) => !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 10)) {
       setFormError('수량은 1~10 사이의 정수여야 합니다.');
       return;
     }
@@ -202,8 +216,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     setBusy(true);
     const result = await createManualPledge({
       projectSlug: formProjectSlug,
-      rewardId: formRewardId,
-      quantity: formQuantity,
+      items: formItems,
       additionalAmount: formAdditionalAmount,
       ...(actualAmount === null ? {} : { actualAmount }),
       customerName: formCustomerName.trim(),
@@ -212,7 +225,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       displayNamePublic: false,
       adminMemo: formMemo.trim() || undefined,
       // 배송 리워드이고 한 칸이라도 적었을 때만 보낸다 — 빈 객체를 보내면 빈 문자열 주소가 남는다.
-      ...(selectedReward?.requiresShipping && Object.values(formShip).some((v) => v.trim() !== '')
+      ...(needsShipping && Object.values(formShip).some((v) => v.trim() !== '')
         ? { shipping: Object.fromEntries(Object.entries(formShip).map(([k, v]) => [k, v.trim() || undefined])) }
         : {}),
     });
@@ -223,8 +236,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       return;
     }
     setShowForm(false);
-    setFormRewardId('');
-    setFormQuantity(1);
+    setFormItems([{ rewardId: '', quantity: 1 }]);
     setFormAdditionalAmount(0);
     setFormActualAmount('');
     setFormCustomerName('');
@@ -375,7 +387,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                     <Field id="form-project-slug" label="프로젝트" className={lightOnlyField}>
                       <Select
                         value={formProjectSlug}
-                        onChange={(e) => { setFormProjectSlug(e.target.value); setFormRewardId(''); }}
+                        onChange={(e) => { setFormProjectSlug(e.target.value); setFormItems([{ rewardId: '', quantity: 1 }]); }}
                         light className="text-sm"
                       >
                         <option value="">선택</option>
@@ -384,29 +396,43 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                         ))}
                       </Select>
                     </Field>
-                    <Field id="form-reward-id" label="리워드" className={lightOnlyField}>
-                      <Select
-                        value={formRewardId}
-                        onChange={(e) => setFormRewardId(e.target.value)}
-                        light className="text-sm"
-                        disabled={!selectedProject}
-                      >
-                        <option value="">선택</option>
-                        {(selectedProject?.rewards ?? []).map((r) => (
-                          <option key={r.id} value={r.id}>{r.title} ({formatPriceAmount(r.amount)}원)</option>
-                        ))}
-                      </Select>
-                    </Field>
-                    <Field id="form-quantity" label="수량" className={lightOnlyField}>
-                      <TextInput
-                        type="number"
-                        min={1}
-                        max={10}
-                        value={formQuantity}
-                        onChange={(e) => setFormQuantity(Number(e.target.value))}
-                        light className="text-sm"
-                      />
-                    </Field>
+                    <div className="md:col-span-2 space-y-2">
+                      {formItems.map((item, index) => (
+                        <div key={index} className="grid grid-cols-[1fr_6rem_auto] items-end gap-2">
+                          <Field id={`form-reward-id-${index}`} label={index === 0 ? '리워드' : `리워드 ${index + 1}`} className={lightOnlyField}>
+                            <Select
+                              value={item.rewardId}
+                              onChange={(e) => updateFormItem(index, { rewardId: e.target.value })}
+                              light className="text-sm"
+                              disabled={!selectedProject}
+                            >
+                              <option value="">선택</option>
+                              {(selectedProject?.rewards ?? []).map((r) => (
+                                <option key={r.id} value={r.id}>{r.title} ({formatPriceAmount(r.amount)}원)</option>
+                              ))}
+                            </Select>
+                          </Field>
+                          <Field id={`form-quantity-${index}`} label="수량" className={lightOnlyField}>
+                            <TextInput
+                              type="number"
+                              min={1}
+                              max={10}
+                              value={item.quantity}
+                              onChange={(e) => updateFormItem(index, { quantity: Number(e.target.value) })}
+                              light className="text-sm"
+                            />
+                          </Field>
+                          {formItems.length > 1 ? (
+                            <Button light type="button" variant="outline" size="sm" onClick={() => setFormItems(formItems.filter((_, i) => i !== index))}>빼기</Button>
+                          ) : <span />}
+                        </div>
+                      ))}
+                      {selectedProject && formItems.length < selectedProject.rewards.length && (
+                        <Button light type="button" variant="outline" size="sm" onClick={() => setFormItems([...formItems, { rewardId: '', quantity: 1 }])}>
+                          + 리워드 추가
+                        </Button>
+                      )}
+                    </div>
                     <Field id="form-additional-amount" label="추가 펀딩 금액(원)" className={lightOnlyField}>
                       <TextInput
                         type="number"
@@ -462,7 +488,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                       />
                     </Field>
                   </div>
-                  {selectedReward?.requiresShipping && (
+                  {needsShipping && (
                     <fieldset className="rounded-lg border border-gray-200 p-3">
                       <legend className="px-1 text-sm font-semibold text-gray-800">배송지</legend>
                       <p className="mb-3 text-xs text-gray-600">배송 리워드입니다. 현장에서 직접 건넸다면 비워 두세요 — 등록 뒤에는 이 칸을 고칠 수 없습니다.</p>

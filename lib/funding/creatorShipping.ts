@@ -6,7 +6,7 @@ import { isRefundPendingStatus } from './policy';
 import { isPastFundingEnd } from './projectState';
 import { liveFundingOrderStatusList } from './refundable';
 import { fundingPledgeLinesSql } from './pledgeLinesSql';
-import { pledgeLines, pledgeLinesLabel } from './pledgeLines';
+import { activePledgeLines, pledgeLines, pledgeLinesLabel } from './pledgeLines';
 
 /**
  * 이 모듈은 서버 전용이다. 클라이언트에서 import하면 `lib/funding/projects.ts`의 최상위
@@ -111,7 +111,7 @@ const loadSummary = async (projectId: string, projectSlug: string): Promise<Crea
       COUNT(CASE WHEN EXISTS (
         SELECT 1 FROM ${fundingPledgeLinesSql()} l
         JOIN funding_rewards r ON r.project_id = ${projectId} AND r.reward_id = l.reward_id
-        WHERE l.pledge_id = fp.id AND r.requires_shipping = 1
+        WHERE l.pledge_id = fp.id AND r.requires_shipping = 1 AND l.quantity > 0
       ) THEN 1 END) AS shipping_required
     FROM funding_pledges fp
     JOIN orders o ON o.id = fp.order_id
@@ -174,6 +174,8 @@ export const loadCreatorShipping = async (
     WHERE fp.project_slug = ${project.slug}
       AND o.status IN (${liveFundingOrderStatusList()})
       AND r.requires_shipping = 1
+      -- 줄 단위로 전부 환불된 줄은 싸지 않는다(quantity는 살아 있는 수량 — pledgeLinesSql).
+      AND l.quantity > 0
     ORDER BY fp.created_at ASC, l.position ASC
   `);
 
@@ -252,7 +254,8 @@ export const loadFulfillmentGate = async (pledgeId: string, now: Date = new Date
   if (!project) return null;
 
   // 담은 리워드 중 배송 리워드가 하나라도 있으면 배송 대상이다(한 상자).
-  const rewardIds = pledgeLines(pledge).map((l) => l.rewardId);
+  // 환불로 빠진 줄은 보지 않는다 — 배송 리워드를 전부 환불했으면 더는 배송 대상이 아니다.
+  const rewardIds = activePledgeLines(pledgeLines(pledge)).map((l) => l.rewardId);
   const rewards = await db.query.fundingRewards.findMany({
     where: (t, { and: andCols, eq: eqCol, inArray }) => andCols(eqCol(t.projectId, project.id), inArray(t.rewardId, rewardIds)),
   });

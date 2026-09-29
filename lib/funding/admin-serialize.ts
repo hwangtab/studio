@@ -15,6 +15,8 @@ export interface AdminPledgeItem {
   customerEmail: string;
   /** 담은 리워드 요약 — "『발작』 × 1, 『갱도』 × 1"(pledgeLinesLabel). 한 리워드면 "제목 × 수량". */
   rewardLabel: string;
+  /** 담은 리워드 줄 — 관리자 상세의 줄 단위 환불이 쓴다(lib/funding/lineRefund.ts). */
+  lines: Array<{ rewardId: string; rewardTitle: string; unitAmount: number; quantity: number; refundedQuantity: number }>;
   additionalAmount: number;
   totalAmount: number;
   fulfillmentStatus: string;
@@ -196,6 +198,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     customerPhone: o.customerPhone,
     customerEmail: o.customerEmail,
     rewardLabel: pledgeLinesLabel(pledgeLines(p)),
+    lines: pledgeLines(p),
     additionalAmount: p.additionalAmount,
     totalAmount: o.totalAmount,
     fulfillmentStatus: p.fulfillmentStatus,

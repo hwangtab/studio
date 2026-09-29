@@ -166,7 +166,7 @@ export const fundingStockCondition = (
  * 담은 리워드 전부의 재고 조건. 한정 리워드마다 조건 하나씩 AND로 묶는다 — 하나라도 모자라면
  * 주문 전체가 0행이다(일부만 담긴 주문은 만들지 않는다).
  */
-const allLinesStockCondition = (projectSlug: string, lines: readonly ResolvedPledgeLine[], now: Date, excludeOrderNo: string | null): SQL => {
+export const allLinesStockCondition = (projectSlug: string, lines: readonly ResolvedPledgeLine[], now: Date, excludeOrderNo: string | null): SQL => {
   const conditions = lines
     .filter((l) => l.reward.totalQuantity !== null)
     .map((l) => fundingStockCondition(projectSlug, l.reward, l.quantity, now, excludeOrderNo));
