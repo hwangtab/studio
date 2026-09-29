@@ -12,12 +12,13 @@ const PAYOUT: FundingProjectPayout = {
   feeAmount: 84_550,
   platformFeeAmount: 52_250,
   paymentFeeAmount: 32_300,
-  shareAmount: 865_450,
+  // 원천징수 개설자: 수수료 뗀 865,450 → 부가세 상당액 78,677 → 몫 786,773 → 원천징수 25,964
+  shareAmount: 786_773,
   designFeeOffsetAmount: 0,
   productionFeeOffsetAmount: 0,
   shortfallAmount: 0,
-  withholdingAmount: 28_560,
-  netAmount: 836_890,
+  withholdingAmount: 25_964,
+  netAmount: 760_809,
   backerCount: 12,
   status: 'pending',
   paidAt: null,
@@ -31,9 +32,21 @@ const ACCOUNT = { bankName: '국민은행', holder: '개설자', accountLast4: '
 describe('정산 메일 본문', () => {
   it('계산 내역을 항목별로 적는다', () => {
     const text = buildFundingPayoutRecordedText('데모 프로젝트', PAYOUT, ACCOUNT);
-    for (const expected of ['1,000,000', '50,000', '52,250', '32,300', '28,560', '836,890', '12건']) {
+    for (const expected of ['1,000,000', '50,000', '52,250', '32,300', '25,964', '760,809', '12건']) {
       expect(text).toContain(expected);
     }
+  });
+
+  it('원천징수 개설자면 부가세 상당액 줄을 적는다 — 기록 행의 나머지 칸에서 되살린 값', () => {
+    const text = buildFundingPayoutRecordedText('데모 프로젝트', PAYOUT, ACCOUNT);
+    expect(text).toContain('부가세 상당액(개인 정산, 수수료를 뗀 금액의 10/110): −78,677원');
+  });
+
+  it('사업자(부가세 상당액 0)면 그 줄을 적지 않는다', () => {
+    const text = buildFundingPayoutRecordedText('데모', {
+      ...PAYOUT, shareAmount: 865_450, withholdingAmount: 0, netAmount: 865_450,
+    }, ACCOUNT);
+    expect(text).not.toContain('부가세 상당액');
   });
 
   /**

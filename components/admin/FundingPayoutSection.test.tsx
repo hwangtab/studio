@@ -17,6 +17,7 @@ const RECORD: AdminPayoutRecordView = {
   feeAmount: 89_000,
   platformFeeAmount: 55_000,
   paymentFeeAmount: 34_000,
+  vatDeductionAmount: 0,
   shareAmount: 911_000,
   designFeeOffsetAmount: 0,
   productionFeeOffsetAmount: 0,
@@ -38,6 +39,7 @@ const VIEW: AdminPayoutView = {
   platformFeeAmount: 55_000,
   paymentFeeAmount: 34_000,
   feeAmount: 89_000,
+  vatDeductionAmount: 0,
   shareAmount: 911_000,
   withholdingAmount: 30_063,
   designFeeOffsetAmount: 0,
@@ -91,6 +93,17 @@ describe('기록된 값 패널', () => {
     expect(panel).toHaveTextContent('11/5 이체');
   });
 
+  /**
+   * 원천징수 개설자의 부가세 상당액(개설자 약관 제6조). 기록 행에는 컬럼이 없어 서버가
+   * 나머지 칸에서 되살려 싣는다 — 패널이 그 줄을 빠뜨리면 기록값의 합이 모금액과 안 맞아
+   * 운영자의 눈 검산이 깨진다.
+   */
+  it('부가세 상당액을 기록값에도 적고, 기록과 갈리면 드러낸다', () => {
+    renderSection({ ...VIEW, vatDeductionAmount: 82_909, recorded: { ...RECORD, vatDeductionAmount: 82_909 } });
+    expect(within(recordedPanel()).getByText('부가세 상당액')).toBeInTheDocument();
+    expect(recordedPanel()).toHaveTextContent('−82,909원');
+  });
+
   it('기록 전에는 기록값 자리에 그 사실만 적는다', () => {
     renderSection(VIEW);
     expect(recordedPanel()).toHaveTextContent('아직 기록하지 않았습니다.');
@@ -101,6 +114,11 @@ describe('기록된 값 패널', () => {
     const alert = screen.getByRole('alert');
     expect(alert).toHaveTextContent('환불: 기록 0 → 지금 100,000');
     expect(alert).toHaveTextContent('실이체액: 기록 880,937 → 지금 792,782');
+  });
+
+  it('식이 바뀌기 전 기록(부가세 상당액 0)과 지금 계산이 갈리면 그 항목도 드러낸다', () => {
+    renderSection({ ...VIEW, vatDeductionAmount: 82_909, recorded: RECORD });
+    expect(screen.getByRole('alert')).toHaveTextContent('부가세 상당액: 기록 0 → 지금 82,909');
   });
 });
 

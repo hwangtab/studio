@@ -27,12 +27,12 @@ const designFee = `${formatPriceAmount(FUNDING_DESIGN_PRICE)}원`;
 const fundingFees = `플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}% · 결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`;
 /**
  * **우리 수수료만 적고 끝내면 안 된다.** 개인 자격 개설자의 정산은 그 두 수수료 외에
- * 원천징수를 한 번 더 뗀다(lib/funding/payout.ts, taxType === 'withholding'). 그래서
+ * 부가세 상당액과 원천징수를 더 뗀다(lib/funding/payout.ts, taxType === 'withholding'). 그래서
  * "수수료만 뗍니다"·"뗀 금액을 정산합니다" 같은 완결성 단정은 실제 이체액과의 차액을 설명
  * 없이 만든다. 율은 상수에서 읽는다 — 문자열로 박으면 정본과 갈라진다(가격 리터럴 스캔도
  * 이 파일을 본다: data/pricing.test.ts).
  */
-const withholdingNote = `개인 자격으로 정산받으면 원천징수 ${FUNDING_WITHHOLDING_PERCENT}%가 별도로 공제됩니다.`;
+const withholdingNote = `개인 자격으로 정산받으면 세금계산서가 없어 부가세 상당액(수수료를 뗀 금액의 10/110)과 원천징수 ${FUNDING_WITHHOLDING_PERCENT}%가 별도로 공제됩니다.`;
 // "누적"은 위 '진행 실적'(수십 건·약 3억원)이 쓰는 말이라, 공개 검증분은 "합계"로 부른다 —
 // 같은 페이지에서 한 단어가 두 숫자를 가리키면 읽는 쪽은 둘 중 하나가 틀렸다고 본다.
 const casesLine = `성공 ${CASES_SUMMARY.succeededCount}건 · 합계 ${formatPriceAmount(CASES_SUMMARY.succeededRaised)}원 · 후원자 ${formatPriceAmount(CASES_SUMMARY.succeededBackers)}명`;

@@ -15,7 +15,7 @@ import { formatKstDateTimeFull } from '../../../../lib/booking/format';
 import { VAT_RATE } from '../../../../lib/booking/amounts';
 import { loadProjectForAdmin, type AdminProjectSummary } from '../../../../lib/funding/adminProjects';
 import { loadProjectService, PROJECT_SERVICE_LABELS, type LoadServiceResult } from '../../../../lib/funding/projectServices';
-import { buildFundingPayoutPreview } from '../../../../lib/funding/payout';
+import { buildFundingPayoutPreview, recordedVatDeduction } from '../../../../lib/funding/payout';
 import { computeProjectState } from '../../../../lib/funding/projectState';
 import { normalizeFundingSlug } from '../../../../lib/funding/reservedSlugs';
 import type { FundingReviewStatus } from '../../../../lib/funding/reviewTransition';
@@ -93,6 +93,7 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
       platformFeeAmount: preview.platformFeeAmount,
       paymentFeeAmount: preview.paymentFeeAmount,
       feeAmount: preview.feeAmount,
+      vatDeductionAmount: preview.vatDeductionAmount,
       shareAmount: preview.shareAmount,
       withholdingAmount: preview.withholdingAmount,
       designFeeOffsetAmount: preview.designFeeOffsetAmount,
@@ -124,6 +125,7 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
             feeAmount: r.feeAmount,
             platformFeeAmount: r.platformFeeAmount,
             paymentFeeAmount: r.paymentFeeAmount,
+            vatDeductionAmount: recordedVatDeduction(r),
             shareAmount: r.shareAmount,
             withholdingAmount: r.withholdingAmount,
             designFeeOffsetAmount: r.designFeeOffsetAmount,

@@ -4,7 +4,11 @@ jest.mock('../../../lib/funding/adminProjects', () => ({
   listProjectsForAdmin: jest.fn(),
   loadProjectForAdmin: jest.fn(),
 }));
-jest.mock('../../../lib/funding/payout', () => ({ buildFundingPayoutPreview: jest.fn() }));
+jest.mock('../../../lib/funding/payout', () => ({
+  buildFundingPayoutPreview: jest.fn(),
+  // 기록 행에서 부가세 상당액을 되살리는 순수 계산 — 목으로 바꾸면 검증할 것이 없어진다.
+  recordedVatDeduction: jest.requireActual('../../../lib/funding/payout').recordedVatDeduction,
+}));
 jest.mock('../../../lib/funding/projectServices', () => ({
   ...jest.requireActual('../../../lib/funding/projectServices'),
   loadProjectService: jest.fn(),
@@ -195,6 +199,7 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     feeAmount: 89_000,
     platformFeeAmount: 55_000,
     paymentFeeAmount: 34_000,
+    vatDeductionAmount: 0,
     shareAmount: 911_000,
     withholdingAmount: 30_063,
     netAmount: 880_937,
@@ -228,6 +233,8 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'hasPayoutAccount', 'hasTaxType', 'needsResidentNumber', 'recorded',
         // 설계·제작 대금 공제(개설자 약관 제6조) — 금액과 불리언뿐, 민감 정보가 아니다.
         'designFeeOffsetAmount', 'productionFeeOffsetAmount', 'shortfallAmount', 'serviceChargesUnavailable',
+        // 원천징수 개설자의 부가세 상당액(개설자 약관 제6조) — 금액일 뿐 민감 정보가 아니다.
+        'vatDeductionAmount',
       ].sort(),
     );
     expect(payout.netAmount).toBe(880_937);
@@ -293,6 +300,8 @@ describe('심사 상세 getServerSideProps — 정산', () => {
     };
     expect(result.props.payout.recorded.paidAt).toBe('2026-11-05T00:00:00.000Z');
     expect(result.props.payout.recorded.createdAt).toBe('2026-11-01T00:00:00.000Z');
+    // 기록 행에는 부가세 상당액 칸이 없다 — 나머지 칸에서 되살린 값을 싣는다(911,000 + 89,000 = 모금액 → 0).
+    expect(result.props.payout.recorded.vatDeductionAmount).toBe(0);
     // projectId·updatedAt은 화면이 쓰지 않으므로 담지 않는다.
     expect(result.props.payout.recorded.updatedAt).toBeUndefined();
   });

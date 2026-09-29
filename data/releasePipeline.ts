@@ -122,8 +122,8 @@ export const releasePipelineCopy = {
     designOptions: { design: '설계 대행', direct: '직접 개설' },
     otherCostLabel: '리워드 원가·기타 비용',
     otherCostHelp: 'CD·굿즈 제작, 배송, 세션·아트워크처럼 모금액으로 충당할 비용을 원 단위로 넣으세요.',
-    withholdingLabel: '개인으로 정산받음(원천징수 3.3%)',
-    withholdingHelp: '사업자로 세금계산서를 발행하면 끄세요.',
+    withholdingLabel: '개인으로 정산받음(부가세 상당액·원천징수 3.3% 공제)',
+    withholdingHelp: '사업자로 세금계산서를 발행하면 끄세요. 개인 정산은 세금계산서가 없어 수수료를 뗀 금액에서 부가세 상당액(10/110)을 빼고 원천징수합니다.',
     resultLabel: '필요한 목표액',
     rows: {
       production: '제작비 (발매 번들, 부가세 포함)',
@@ -131,6 +131,7 @@ export const releasePipelineCopy = {
       other: '리워드 원가·기타 비용',
       platformFee: `플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}%`,
       paymentFee: `결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%`,
+      vatDeduction: '부가세 상당액 (개인 정산)',
       withheld: '원천징수 3.3% (종합소득세 정산 대상)',
     },
     compare: `참고: 공개로 확인 가능한 음반 펀딩 최근 ${stats.count}건의 모금액은 ${formatPriceAmount(Math.round(stats.min / 10000))}만~${formatPriceAmount(Math.round(stats.max / 10000))}만원, 중앙값 ${manwon(stats.median)}입니다.`,
@@ -168,8 +169,8 @@ export const releasePipelineCopy = {
         id: 'self',
         title: '직접 개설',
         // "만"은 공제 항목의 전부를 말하는 완결성 단정이다. 개인 자격 개설자는 정산에서
-        // 원천징수 3.3%가 더 빠지므로(lib/funding/payout.ts, 같은 파일 calculator.rows.withheld)
-        // 사실이 아니다. data/pricing.ts의 같은 취지 카피와 같은 표기로 맞춘다.
+        // 부가세 상당액과 원천징수 3.3%가 더 빠지므로(lib/funding/payout.ts, 같은 파일
+        // calculator.rows) 사실이 아니다. data/pricing.ts의 같은 취지 카피와 같은 표기로 맞춘다.
         body: `설계비 없이 신청합니다. 성공 수수료 없음 · 모금액에서 ${fundingFees}를 뗍니다.`,
         href: '/ko/funding/apply',
         label: '개설 신청',

@@ -21,6 +21,11 @@ export interface AdminPayoutRecordView {
   feeAmount: number;
   platformFeeAmount: number;
   paymentFeeAmount: number;
+  /**
+   * 원천징수 개설자에게서 뺀 부가세 상당액. 기록 행에는 컬럼이 없어 서버가 나머지 금액 칸에서
+   * 되살려 싣는다(`recordedVatDeduction`, lib/funding/payout.ts).
+   */
+  vatDeductionAmount: number;
   shareAmount: number;
   withholdingAmount: number;
   designFeeOffsetAmount: number;
@@ -51,6 +56,8 @@ export interface AdminPayoutView {
   platformFeeAmount: number;
   paymentFeeAmount: number;
   feeAmount: number;
+  /** 원천징수 개설자의 부가세 상당액(수수료를 뗀 금액의 10/110). 사업자는 0. */
+  vatDeductionAmount: number;
   shareAmount: number;
   withholdingAmount: number;
   /** 정산 때 받기로 한 설계비·제작비를 뺀 금액(부가세 포함)과 빼지 못한 차액 — lib/funding/payout.ts. */
@@ -123,6 +130,7 @@ const DRIFT_FIELDS: Array<{ key: keyof AdminPayoutRecordView & keyof AdminPayout
   { key: 'refundAmount', label: '환불' },
   { key: 'platformFeeAmount', label: '플랫폼 수수료' },
   { key: 'paymentFeeAmount', label: '결제 수수료' },
+  { key: 'vatDeductionAmount', label: '부가세 상당액' },
   { key: 'withholdingAmount', label: '원천징수' },
   { key: 'designFeeOffsetAmount', label: '설계비 공제' },
   { key: 'productionFeeOffsetAmount', label: '제작비 공제' },
@@ -258,6 +266,8 @@ export function FundingPayoutSection({
         {FUNDING_PLATFORM_FEE_PERCENT}%(부가세 포함)와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%를 결제액(모금액 −
         환불) 기준으로 각각 떼고, 둘 다 개설자가 부담합니다. 다만 수기 등록분은 결제를 지나지 않았으므로
         결제 수수료 대상에서 빠집니다 — 그만큼 아래 결제 수수료가 {FUNDING_PAYMENT_FEE_PERCENT}%보다 적게 나옵니다.
+        원천징수 개설자는 세금계산서가 없어 수수료를 뗀 금액에서 부가세 상당액(10/110)을 빼고 원천징수합니다
+        (개설자 약관 제6조).
       </p>
 
       <div className="grid gap-4 md:grid-cols-2">
@@ -283,6 +293,12 @@ export function FundingPayoutSection({
               33,000원과 어긋난다. 요율은 구획 상단 안내문이 예외와 함께 적는다.
             */}
             <Row label="결제 수수료" value={minus(payout.paymentFeeAmount)} negative />
+            <Row
+              label="부가세 상당액 (개인 정산)"
+              hint={payout.hasTaxType ? undefined : '세금 처리 구분이 없어 원천징수로 가정한 값입니다'}
+              value={minus(payout.vatDeductionAmount)}
+              negative
+            />
             <Row
               label={`원천징수 (${FUNDING_WITHHOLDING_PERCENT}%)`}
               hint={payout.hasTaxType ? undefined : '세금 처리 구분이 없어 원천징수로 가정한 값입니다'}
@@ -320,6 +336,7 @@ export function FundingPayoutSection({
                 <Row label="환불" value={minus(recorded.refundAmount)} negative />
                 <Row label="플랫폼 수수료" value={minus(recorded.platformFeeAmount)} negative />
                 <Row label="결제 수수료" value={minus(recorded.paymentFeeAmount)} negative />
+                <Row label="부가세 상당액" value={minus(recorded.vatDeductionAmount)} negative />
                 <Row label="원천징수" value={minus(recorded.withholdingAmount)} negative />
                 <Row label="설계비 공제" value={minus(recorded.designFeeOffsetAmount)} negative />
                 <Row label="제작비 공제" value={minus(recorded.productionFeeOffsetAmount)} negative />

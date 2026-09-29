@@ -123,7 +123,12 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
     [copy.rows.other, otherCost],
     [copy.rows.platformFee, result.platformFee, true],
     [copy.rows.paymentFee, result.paymentFee, true],
-    ...(withholding ? ([[copy.rows.withheld, result.withheld, true]] as Array<[string, number, boolean]>) : []),
+    ...(withholding
+      ? ([
+        [copy.rows.vatDeduction, result.vatDeduction, true],
+        [copy.rows.withheld, result.withheld, true],
+      ] as Array<[string, number, boolean]>)
+      : []),
   ];
 
   return (

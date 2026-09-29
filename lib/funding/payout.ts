@@ -27,13 +27,25 @@ export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
  * platformFee = round(netGross × 5.5%)               ← 부가세 포함
  * paymentFee  = round(netGross × 결제 수수료 계약 요율)
  * feeAmount   = platformFee + paymentFee              ← db/schema.ts fee_amount
- * supplyAmount = round(netGross / 1.1)                ← 부가세 제외 표시값(장부용) — shareAmount 계산에는 쓰이지 않는다
- * shareAmount  = netGross − feeAmount                 ← 개설자 몫(세전)
- * withholdingAmount = 원천징수 개설자면 round(shareAmount × 3.3%), 사업자(세금계산서)면 0
+ * supplyAmount = round(netGross / 1.1)                ← 부가세 제외 표시값(장부용) — 정산액 계산에는 쓰이지 않는다
+ * afterFees    = netGross − feeAmount                 ← 수수료를 뗀 금액(부가세 포함)
+ * 사업자(세금계산서): shareAmount = afterFees,              vatDeductionAmount = 0
+ * 원천징수 개설자:    shareAmount = round(afterFees / 1.1), vatDeductionAmount = afterFees − shareAmount
+ * withholdingAmount = 원천징수 개설자면 round(shareAmount × 3.3%), 사업자면 0
  * netAmount    = shareAmount − withholdingAmount      ← 실제 이체액
+ * 불변식: shareAmount + vatDeductionAmount + feeAmount === netGross
  *
- * 100만원 모금·환불 0·원천징수 개설자: platformFee 55,000 · paymentFee 33,000 →
- * feeAmount 88,000 → shareAmount 912,000 → withholdingAmount 30,096 → netAmount 881,904.
+ * **원천징수 개설자만 부가세 상당액을 빼는 이유**(2026-09-29 수정). 판매자가 스튜디오라서
+ * 후원금 전체의 부가가치세(10/110)를 스튜디오가 낸다. 사업자 개설자는 받은 정산금(afterFees)에
+ * 대한 세금계산서를 스튜디오 앞으로 발행하므로 스튜디오가 그만큼을 매입세액으로 공제받는다.
+ * 원천징수 대상 개설자에게서는 그 세금계산서가 없다. afterFees를 그대로 보내면 그 안에 든
+ * 부가세를 스튜디오가 대신 내게 되어, 100만원 모금마다 스튜디오에 남는 금액(부가세 정산 뒤,
+ * PG 비용 전)이 사업자 개설자일 때 80,000원인데 원천징수 개설자일 때는 −2,909원이었다.
+ * 부가세 상당액을 빼면 두 유형 모두 80,000원이다(payout.test.ts가 이 등식을 고정한다).
+ *
+ * 100만원 모금·환불 0: platformFee 55,000 · paymentFee 33,000 → feeAmount 88,000 →
+ *   사업자   — shareAmount 912,000(세금계산서 대상) → netAmount 912,000
+ *   원천징수 — vatDeductionAmount 82,909 → shareAmount 829,091 → withholdingAmount 27,360 → netAmount 801,731
  *
  * **설계비·제작비 공제**(2026-09-28 운영자 결정, 개설자 약관 제6조) — 스튜디오에 설계·제작을
  * 맡기고 정산 때 받기로 한 대금(부가세 포함)은 **원천징수까지 뺀 금액에서** 뺀다. 개설자가
@@ -50,6 +62,12 @@ export interface FundingPayoutBreakdown {
   /** feeAmount의 항목별 내역 — 관리자 화면·개설자 메일이 항목별로 보여줘야 한다. */
   platformFeeAmount: number;
   paymentFeeAmount: number;
+  /**
+   * 원천징수 개설자의 정산금에서 뺀 부가가치세 상당액(수수료를 뗀 금액의 10/110). 사업자는 0.
+   * `funding_project_payouts`에는 컬럼이 없다 — 기록된 행에서는 `recordedVatDeduction`으로
+   * 되살린다(나머지 금액 칸에서 원 단위까지 정확히 유도된다).
+   */
+  vatDeductionAmount: number;
   shareAmount: number;
   withholdingAmount: number;
   /** 정산금에서 뺀 설계비(부가세 포함). */
@@ -83,6 +101,30 @@ export const applyServiceCharges = (available: number, charges: FundingServiceCh
   };
 };
 
+/**
+ * 수수료를 뗀 금액(부가세 포함)에서 개설자 몫·부가세 상당액·원천징수를 정한다. 두 정산 계산
+ * (`computeFundingPayout`, `computeFundingPayoutForProject`)이 같은 뒷부분을 쓰도록 한 곳에 둔다 —
+ * 한쪽만 고치면 수기 등록이 있는 프로젝트만 옛 식으로 정산된다.
+ */
+const splitCreatorShare = (afterFees: number, taxType: FundingCreatorTaxType, charges: FundingServiceCharges) => {
+  const shareAmount = taxType === 'withholding' ? Math.round(afterFees / (1 + VAT_RATE)) : afterFees;
+  const withholdingAmount = taxType === 'withholding' ? Math.round((shareAmount * FUNDING_WITHHOLDING_PERCENT) / 100) : 0;
+  return {
+    vatDeductionAmount: afterFees - shareAmount,
+    shareAmount,
+    withholdingAmount,
+    ...applyServiceCharges(shareAmount - withholdingAmount, charges),
+  };
+};
+
+/**
+ * 기록된 정산 행에서 부가세 상당액을 되살린다. 컬럼이 없어도 나머지 칸이 원 단위로 정해 준다
+ * (불변식 shareAmount + vatDeductionAmount + feeAmount === max(0, gross − refund)). 이 식을
+ * 도입하기 전에 기록된 행은 0이 나온다 — 그때는 빼지 않았으므로 그게 사실이다.
+ */
+export const recordedVatDeduction = (row: Pick<FundingProjectPayout, 'grossAmount' | 'refundAmount' | 'feeAmount' | 'shareAmount'>): number =>
+  Math.max(0, Math.max(0, row.grossAmount - row.refundAmount) - row.feeAmount - row.shareAmount);
+
 export const computeFundingPayout = (input: {
   grossAmount: number;
   refundAmount: number;
@@ -94,8 +136,6 @@ export const computeFundingPayout = (input: {
   const paymentFeeAmount = Math.round((netGross * FUNDING_PAYMENT_FEE_PERCENT) / 100);
   const feeAmount = platformFeeAmount + paymentFeeAmount;
   const supplyAmount = Math.round(netGross / (1 + VAT_RATE));
-  const shareAmount = netGross - feeAmount;
-  const withholdingAmount = input.taxType === 'withholding' ? Math.round((shareAmount * FUNDING_WITHHOLDING_PERCENT) / 100) : 0;
 
   return {
     grossAmount: input.grossAmount,
@@ -104,9 +144,7 @@ export const computeFundingPayout = (input: {
     feeAmount,
     platformFeeAmount,
     paymentFeeAmount,
-    shareAmount,
-    withholdingAmount,
-    ...applyServiceCharges(shareAmount - withholdingAmount, input.charges ?? NO_CHARGES),
+    ...splitCreatorShare(netGross - feeAmount, input.taxType, input.charges ?? NO_CHARGES),
   };
 };
 
@@ -142,17 +180,12 @@ export const computeFundingPayoutForProject = (input: {
     taxType: input.taxType,
   });
   const feeAmount = base.platformFeeAmount + paymentFeeAmount;
-  const shareAmount = netGross - feeAmount;
-  const withholdingAmount =
-    input.taxType === 'withholding' ? Math.round((shareAmount * FUNDING_WITHHOLDING_PERCENT) / 100) : 0;
 
   return {
     ...base,
     paymentFeeAmount,
     feeAmount,
-    shareAmount,
-    withholdingAmount,
-    ...applyServiceCharges(shareAmount - withholdingAmount, input.charges ?? NO_CHARGES),
+    ...splitCreatorShare(netGross - feeAmount, input.taxType, input.charges ?? NO_CHARGES),
   };
 };
 
