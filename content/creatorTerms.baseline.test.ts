@@ -153,6 +153,9 @@ describe('개설자 약관 판본 게이트', () => {
     // 문장까지 함께 본다 — FUNDING_WITHHOLDING_PERCENT와 FUNDING_PAYMENT_FEE_PERCENT가 둘 다
     // 3.3이라, 요율 숫자만 찾으면 원천징수 문장을 통째로 지워도 결제 수수료 문장이 통과시킨다.
     expect(feeSection).toContain(`원천징수세액 ${FUNDING_WITHHOLDING_PERCENT}%`);
+    // 원천징수 개설자의 부가세 상당액 공제(lib/funding/payout.ts splitCreatorShare) — 계산은
+    // 빼는데 약관에 이 문장이 없으면 개설자는 동의하지 않은 공제를 받는다.
+    expect(feeSection).toContain('부가가치세 상당액(110분의 10)을 먼저 빼고');
     expect(feeSection).toContain(`플랫폼 수수료는 ${FUNDING_PLATFORM_FEE_PERCENT}%`);
     expect(feeSection).toContain(`결제 수수료는 ${FUNDING_PAYMENT_FEE_PERCENT}%`);
     expect(feeSection).toContain(`영업일 ${FUNDING_PAYOUT_BUSINESS_DAYS}일`);
@@ -198,12 +201,12 @@ describe('개설자 약관 판본 게이트', () => {
     expect(feeSection).toContain('세금 처리 구분을 모두 등록해야 합니다');
   });
 
-  // 1번 지적 — payoutEmail.ts breakdownLines는 환불액·원천징수세액을 각각 금액이 0보다 클
-  // 때만 넣는다. 그 둘을 무조건 담긴다고 적으면 환불 없는 프로젝트·사업자 개설자의 메일이
+  // 1번 지적 — payoutEmail.ts breakdownLines는 환불액·부가세 상당액·원천징수세액을 각각 금액이 0보다 클
+  // 때만 넣는다. 그 셋을 무조건 담긴다고 적으면 환불 없는 프로젝트·사업자 개설자의 메일이
   // 약관과 다르다.
   it('6조가 메일 내역의 조건부 항목을 조건부로 적는다', () => {
     const feeSection = serialized.split('제6조')[1]?.split('제7조')[0] ?? '';
-    expect(feeSection).toContain('환불이나 원천징수가 있으면 그 금액도 함께 적습니다');
+    expect(feeSection).toContain('환불, 부가가치세 상당액, 원천징수가 있으면 그 금액도 함께 적습니다');
   });
 
   it('조항 본문이 한 글자만 바뀌어도 해시가 달라진다', () => {

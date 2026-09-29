@@ -212,7 +212,12 @@ describe('buildFundingPayoutPreview', () => {
     expect(preview!.platformFeeAmount).toBe(all.platformFeeAmount);
     expect(preview!.paymentFeeAmount).toBe(online.paymentFeeAmount);
     expect(preview!.feeAmount).toBe(preview!.platformFeeAmount + preview!.paymentFeeAmount);
-    expect(preview!.shareAmount).toBe(1_000_000 - preview!.feeAmount);
+    // 원천징수 개설자 — 수수료 뗀 928,500(= 1,000,000 − 55,000 − 16,500)에서 부가세 상당액을 뺀다.
+    // 수기 등록분도 스튜디오 매출이라 부가세 상당액 공제 대상이다(결제 수수료만 빠진다).
+    expect(preview!.feeAmount).toBe(71_500);
+    expect(preview!.vatDeductionAmount).toBe(84_409);
+    expect(preview!.shareAmount).toBe(844_091);
+    expect(preview!.shareAmount + preview!.vatDeductionAmount).toBe(1_000_000 - preview!.feeAmount);
   });
 
   it('없는 프로젝트는 null', async () => {
@@ -226,18 +231,19 @@ describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 
 
   it('약정 설계비·제작비(부가세 포함)를 원천징수 뒤에서 빼고 기록에 남긴다', async () => {
     const { project } = await seedProject();
-    await seedPledge(project.slug, 3_000_000);
+    await seedPledge(project.slug, 4_000_000);
     await setService(project.id, { productionFee: 1_800_000 });
 
     const result = await recordAsAdmin(project.id, new Date('2026-02-20T00:00:00Z'));
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    const base = computeFundingPayout({ grossAmount: 3_000_000, refundAmount: 0, taxType: 'withholding' });
+    const base = computeFundingPayout({ grossAmount: 4_000_000, refundAmount: 0, taxType: 'withholding' });
     expect(result.payout.withholdingAmount).toBe(base.withholdingAmount); // 원천징수 기준은 그대로
     expect(result.payout.designFeeOffsetAmount).toBe(550_000);
     expect(result.payout.productionFeeOffsetAmount).toBe(1_980_000);
     expect(result.payout.shortfallAmount).toBe(0);
-    expect(result.payout.netAmount).toBe(base.netAmount - 550_000 - 1_980_000);
+    // 이체 가능액 3,206,924(수수료 352,000 · 부가세 상당액 331,636 · 원천징수 109,440) − 2,530,000
+    expect(result.payout.netAmount).toBe(676_924);
   });
 
   it('설계비를 정산 밖에서 이미 받았으면 다시 빼지 않는다', async () => {
@@ -510,7 +516,7 @@ describe('recordFundingPayout', () => {
 
     // 운영자가 화면에서 본 숫자.
     const shown = await buildFundingPayoutPreview(project.id);
-    expect(shown!.netAmount).toBe(881_904);
+    expect(shown!.netAmount).toBe(801_731);
 
     // 확인창을 띄워 둔 사이에 환불 한 건이 done이 됐다.
     const payment = await mockDb.query.payments.findFirst({ where: (t, { eq }) => eq(t.orderId, order.id) });
@@ -523,10 +529,10 @@ describe('recordFundingPayout', () => {
     expect(result).toEqual({
       ok: false,
       code: 'amount_changed',
-      expectedNetAmount: 881_904,
+      expectedNetAmount: 801_731,
       netAmount: now.netAmount,
     });
-    expect(now.netAmount).not.toBe(881_904);
+    expect(now.netAmount).not.toBe(801_731);
     // 가장 중요한 부분 — 아무것도 굳지 않았다.
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });

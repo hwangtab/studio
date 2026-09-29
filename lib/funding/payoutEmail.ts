@@ -3,6 +3,7 @@ import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 
 import { SITE_URL } from './email';
+import { recordedVatDeduction } from './payout';
 
 import type { FundingProjectPayout } from '../../db/schema';
 import type { FundingPayoutAccountMasked } from './payoutAccount';
@@ -45,27 +46,34 @@ const accountLine = (account: FundingPayoutAccountMasked | null): string => {
  * 기록보다 늦게 나가고, 그 사이에 상수가 바뀌었으면 기록된 금액 옆에 그와 안 맞는 요율이 찍힌다.
  * 개설자가 받는 문서에 서로 안 맞는 두 숫자를 나란히 적을 수는 없다.
  */
-const breakdownLines = (payout: FundingProjectPayout): string[] => [
-  `모금액: ${formatPriceAmount(payout.grossAmount)}원`,
-  ...(payout.refundAmount > 0 ? [`환불: −${formatPriceAmount(payout.refundAmount)}원`] : []),
-  `플랫폼 수수료(부가세 포함): −${formatPriceAmount(payout.platformFeeAmount)}원`,
-  `결제 수수료: −${formatPriceAmount(payout.paymentFeeAmount)}원`,
-  ...(payout.withholdingAmount > 0
-    ? [`원천징수: −${formatPriceAmount(payout.withholdingAmount)}원`]
-    : []),
-  // 설계·제작 대금은 개설자와 합의해 정산 때 받기로 한 금액이다(개설자 약관 제6조).
-  ...(payout.designFeeOffsetAmount > 0
-    ? [`펀딩 설계비(부가세 포함): −${formatPriceAmount(payout.designFeeOffsetAmount)}원`]
-    : []),
-  ...(payout.productionFeeOffsetAmount > 0
-    ? [`제작비(부가세 포함): −${formatPriceAmount(payout.productionFeeOffsetAmount)}원`]
-    : []),
-  `실지급액: ${formatPriceAmount(payout.netAmount)}원`,
-  ...(payout.shortfallAmount > 0
-    ? [`정산금으로 충당하지 못한 대금: ${formatPriceAmount(payout.shortfallAmount)}원 — 추가 청구나 제작 규모 조정은 따로 상의드립니다.`]
-    : []),
-  `확정 후원: ${payout.backerCount}건`,
-];
+const breakdownLines = (payout: FundingProjectPayout): string[] => {
+  const vatDeduction = recordedVatDeduction(payout);
+  return [
+    `모금액: ${formatPriceAmount(payout.grossAmount)}원`,
+    ...(payout.refundAmount > 0 ? [`환불: −${formatPriceAmount(payout.refundAmount)}원`] : []),
+    `플랫폼 수수료(부가세 포함): −${formatPriceAmount(payout.platformFeeAmount)}원`,
+    `결제 수수료: −${formatPriceAmount(payout.paymentFeeAmount)}원`,
+    // 원천징수 개설자만 생긴다(개설자 약관 제6조) — 사업자는 정산금에 세금계산서를 발행한다.
+    ...(vatDeduction > 0
+      ? [`부가세 상당액(개인 정산, 수수료를 뗀 금액의 10/110): −${formatPriceAmount(vatDeduction)}원`]
+      : []),
+    ...(payout.withholdingAmount > 0
+      ? [`원천징수: −${formatPriceAmount(payout.withholdingAmount)}원`]
+      : []),
+    // 설계·제작 대금은 개설자와 합의해 정산 때 받기로 한 금액이다(개설자 약관 제6조).
+    ...(payout.designFeeOffsetAmount > 0
+      ? [`펀딩 설계비(부가세 포함): −${formatPriceAmount(payout.designFeeOffsetAmount)}원`]
+      : []),
+    ...(payout.productionFeeOffsetAmount > 0
+      ? [`제작비(부가세 포함): −${formatPriceAmount(payout.productionFeeOffsetAmount)}원`]
+      : []),
+    `실지급액: ${formatPriceAmount(payout.netAmount)}원`,
+    ...(payout.shortfallAmount > 0
+      ? [`정산금으로 충당하지 못한 대금: ${formatPriceAmount(payout.shortfallAmount)}원 — 추가 청구나 제작 규모 조정은 따로 상의드립니다.`]
+      : []),
+    `확정 후원: ${payout.backerCount}건`,
+  ];
+};
 
 export const buildFundingPayoutRecordedText = (
   projectTitle: string,

@@ -1,6 +1,6 @@
 import {
-  formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_PAYMENT_FEE_PERCENT, FUNDING_PLATFORM_FEE_PERCENT,
-  FUNDING_WITHHOLDING_PERCENT,
+  formatPriceAmount, FUNDING_DESIGN_PRICE, FUNDING_INDIVIDUAL_PAYOUT_NOTE, FUNDING_PAYMENT_FEE_PERCENT,
+  FUNDING_PLATFORM_FEE_PERCENT,
 } from './pricing';
 import { CASES_CHECKED_ON, CASES_SUMMARY } from './crowdfundingCases';
 
@@ -27,12 +27,12 @@ const designFee = `${formatPriceAmount(FUNDING_DESIGN_PRICE)}원`;
 const fundingFees = `플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}% · 결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`;
 /**
  * **우리 수수료만 적고 끝내면 안 된다.** 개인 자격 개설자의 정산은 그 두 수수료 외에
- * 원천징수를 한 번 더 뗀다(lib/funding/payout.ts, taxType === 'withholding'). 그래서
+ * 부가세 상당액과 원천징수를 더 뗀다(lib/funding/payout.ts, taxType === 'withholding'). 그래서
  * "수수료만 뗍니다"·"뗀 금액을 정산합니다" 같은 완결성 단정은 실제 이체액과의 차액을 설명
  * 없이 만든다. 율은 상수에서 읽는다 — 문자열로 박으면 정본과 갈라진다(가격 리터럴 스캔도
  * 이 파일을 본다: data/pricing.test.ts).
  */
-const withholdingNote = `개인 자격으로 정산받으면 원천징수 ${FUNDING_WITHHOLDING_PERCENT}%가 별도로 공제됩니다.`;
+const withholdingNote = FUNDING_INDIVIDUAL_PAYOUT_NOTE;
 // "누적"은 위 '진행 실적'(수십 건·약 3억원)이 쓰는 말이라, 공개 검증분은 "합계"로 부른다 —
 // 같은 페이지에서 한 단어가 두 숫자를 가리키면 읽는 쪽은 둘 중 하나가 틀렸다고 본다.
 const casesLine = `성공 ${CASES_SUMMARY.succeededCount}건 · 합계 ${formatPriceAmount(CASES_SUMMARY.succeededRaised)}원 · 후원자 ${formatPriceAmount(CASES_SUMMARY.succeededBackers)}명`;
@@ -97,7 +97,7 @@ export const crowdfundingDesignCopy = {
     subtitle: '상담에서 펀딩이 맞는 방법인지부터 함께 봅니다.',
     steps: [
       { title: '상담', body: '카카오톡으로 음반과 예산 상황을 알려 주세요. 펀딩이 맞는지, 예술지원사업이 더 맞는지도 같은 자리에서 봅니다.' },
-      { title: '기획', body: '스토리와 리워드 구성, 목표액을 정합니다. 목표액은 수수료·원천징수·리워드 원가까지 넣어 거꾸로 계산합니다 — 아래 계산기로 먼저 해 볼 수 있습니다.' },
+      { title: '기획', body: '스토리와 리워드 구성, 목표액을 정합니다. 목표액은 수수료·리워드 원가에, 개인으로 정산받으면 부가세 상당액과 원천징수까지 넣어 거꾸로 계산합니다 — 아래 계산기로 먼저 해 볼 수 있습니다.' },
       { title: '페이지 제작', body: '정한 구성대로 스튜디오 놀 펀딩 페이지를 구축합니다.' },
       { title: '펀딩 종료 후', body: `모금액에서 ${fundingFees}를 뗍니다. 성공 수수료는 없습니다. ${withholdingNote}` },
     ],

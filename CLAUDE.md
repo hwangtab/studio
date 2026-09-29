@@ -291,7 +291,7 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 - **받는 시점은 정산 때 모금액에서다**(2026-09-28 운영자 결정). 발매 프로젝트와 묶으면 설계비·제작·홍보·유통을
   **한 견적**으로 내고, 설계비와 제작비를 모두 모금액 정산 때 받는다(목표 미달이어도 모인 금액으로 집행 —
   Keep-it-All). 단계별 추가 할인은 없다. 이 약속은 `data/releasePipeline.ts`·`data/crowdfundingDesign.ts`·
-  `lib/quote/estimate.ts` 카피에 있다. 개설자 약관 제6조(판본 `funding-creator-terms-2026-09-28`)와
+  `lib/quote/estimate.ts` 카피에 있다. 개설자 약관 제6조(판본 `funding-creator-terms-2026-09-29`)와
   `payout.ts`가 이 공제를 한다: **원천징수까지 뺀 금액에서** 설계비 → 제작비 순으로 뺀다(수수료·원천징수 기준에는
   넣지 않는다 — 개설자가 스튜디오에 치르는 비용이다). 넘는 부분은 실지급 0원 + `shortfall_amount`(차액 청구나 규모
   조정을 협의할 금액)로 기록한다. 약정 제작비는 관리자 심사 화면의 "약정 제작비"(`production_fee`, 공급가)로 적고,
@@ -299,6 +299,17 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
   `services_unavailable`로 거부된다 — 합의한 공제를 모른 채 전액을 불변으로 기록하지 않는다.
   **마이그레이션 0041(`production_fee`·정산 공제 칸)은 배포보다 먼저다** — `funding_project_payouts`를 전체 컬럼으로
   읽는 조회(관리자 정산·대시보드·크론 점검)가 새 칸을 요구한다.
+
+### 원천징수 개설자의 정산은 부가세 상당액을 뺀다 (2026-09-29)
+
+판매자가 스튜디오라 후원금 전체의 부가가치세(10/110)를 스튜디오가 낸다. 사업자 개설자는 받은 정산금에
+세금계산서를 발행하므로 그만큼 매입세액으로 공제되지만, 원천징수 개설자에게서는 세금계산서가 없다. 그래서
+`computeFundingPayout`은 원천징수 개설자에 한해 수수료를 뗀 금액에서 부가세 상당액(`vatDeductionAmount`)을 빼고
+그 나머지에 3.3%를 원천징수한다. 이 식이 없던 동안은 100만원 모금마다 스튜디오에 남는 금액(부가세 정산 뒤,
+PG 비용 전)이 사업자 개설자 80,000원 대 원천징수 개설자 −2,909원이었다. 불변식은
+`shareAmount + vatDeductionAmount + feeAmount === netGross`이고, `funding_project_payouts`에는 컬럼 없이
+`recordedVatDeduction`으로 되살린다. **정산 식을 새로 만드는 도메인(공연 예매 등)도 같은 축을 써야 한다** —
+아티스트 구독 정산(`lib/artistSupport/payout.ts`)은 처음부터 공급가 기준이었다.
 
 ### 한 주문에 여러 리워드 — 줄은 `pledgeLines`로만 읽는다 (마이그레이션 0042)
 

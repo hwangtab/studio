@@ -87,13 +87,23 @@ export const FUNDING_PAYMENT_FEE_PERCENT = 3.3; // 부가세 포함
 /** 펀딩 정산 원천징수율. ARTIST_SUPPORT_WITHHOLDING_PERCENT와 값은 같지만 별도
  * 상품의 별도 상수다 — 한쪽 요율이 바뀌어도 다른 쪽이 딸려가면 안 된다. */
 export const FUNDING_WITHHOLDING_PERCENT = 3.3;
+/**
+ * 개인(원천징수) 개설자 정산에서 수수료 외에 더 빠지는 것 — 공개 카피가 공유하는 한 문장.
+ * 판매자인 스튜디오가 후원금 전체의 부가세를 내는데 개인 개설자에게서는 세금계산서가 없어,
+ * 정산에서 부가세 상당액을 빼고 원천징수한다(lib/funding/payout.ts, 개설자 약관 제6조).
+ * 2026-09-29에 이 공제가 생겼을 때 같은 뜻의 문장이 여섯 군데에 따로 적혀 있어 하나만 고쳐지는
+ * 사고가 났다 — 펀딩 설계 LP·llms처럼 이 한 문장을 그대로 싣는 곳은 이 상수를 쓴다. 정산 화면·
+ * 약관·계산기는 맥락에 맞춰 풀어 쓰므로 여기에 묶여 있지 않다(바꿀 때 함께 훑을 것).
+ */
+export const FUNDING_INDIVIDUAL_PAYOUT_NOTE = `개인 자격으로 정산받으면 세금계산서가 없어 부가세 상당액(수수료를 뗀 금액의 10/110)과 원천징수 ${FUNDING_WITHHOLDING_PERCENT}%가 별도로 공제됩니다.`;
 
 // 크라우드펀딩 설계 대행 — 발매 프로젝트와 별개로도 의뢰받는 독립 상품이라
 // llms.txt(기계가 읽는 상품 목록)와 pricing 부가 서비스가 같은 정본을 본다.
 //
 // 구조(운영자 결정 2026-09-25): 설계비 이 금액(부가세 별도) 하나. 성공 수수료는 받지 않는다.
-// 펀딩은 **스튜디오 놀 펀딩(/funding)에서만 연다** — 모금액에서 떼는 것은 자체 플랫폼의
-// FUNDING_PLATFORM_FEE_PERCENT·FUNDING_PAYMENT_FEE_PERCENT(둘 다 부가세 포함)뿐이다.
+// 펀딩은 **스튜디오 놀 펀딩(/funding)에서만 연다** — 모금액에서 떼는 수수료는 자체 플랫폼의
+// FUNDING_PLATFORM_FEE_PERCENT·FUNDING_PAYMENT_FEE_PERCENT(둘 다 부가세 포함)이고, 개인 개설자는
+// 여기에 FUNDING_INDIVIDUAL_PAYOUT_NOTE의 공제가 더해진다.
 // 그 전 구조(선불 설계비 + 성공 시 모금액 비율 수수료, 텀블벅 등 외부 플랫폼)는 폐지됐다.
 export const FUNDING_DESIGN_PRICE = 500000;
 
@@ -474,9 +484,9 @@ export const getPricingData = (locale: Locale) => {
       }),
       /**
        * 성공 수수료는 없다(2026-09-25 운영자 결정). **우리가** 떼는 것이 플랫폼·결제 수수료뿐이라는
-       * 뜻이고, 개설자가 받는 금액과 같지 않다 — 개인 자격 개설자는 정산에서 원천징수
-       * FUNDING_WITHHOLDING_PERCENT%를 한 번 더 뗀다(lib/funding/payout.ts). 아래 카피가 "만"을
-       * 쓰지 않는 이유다.
+       * 뜻이고, 개설자가 받는 금액과 같지 않다 — 개인 자격 개설자는 정산에서 부가세 상당액과
+       * 원천징수 FUNDING_WITHHOLDING_PERCENT%를 더 뗀다(FUNDING_INDIVIDUAL_PAYOUT_NOTE,
+       * lib/funding/payout.ts). 아래 카피가 "만"을 쓰지 않는 이유다.
        */
       note: t(locale, {
         ko: `성공 수수료 없음 · 모금액에서 플랫폼 수수료 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 수수료 ${FUNDING_PAYMENT_FEE_PERCENT}%(부가세 포함)`,

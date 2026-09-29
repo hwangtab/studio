@@ -27,9 +27,17 @@ describe('펀딩 목표액 역산 (lib/funding/goal)', () => {
     }
   });
 
+  it('100만원이면 개인 801,731원 · 사업자 912,000원 — 개인은 부가세 상당액을 빼고 원천징수한다', () => {
+    expect(netPayoutForGross(1_000_000, true)).toBe(801_731);
+    expect(netPayoutForGross(1_000_000, false)).toBe(912_000);
+  });
+
   it('내역이 목표액과 맞아떨어진다', () => {
-    const r = computeFundingGoal({ productionCost: 2530000, otherCost: 1500000, withholding: true });
-    expect(r.platformFee + r.paymentFee + r.withheld + r.net).toBe(r.goal);
-    expect(r.totalCost).toBe(4030000);
+    for (const withholding of [true, false]) {
+      const r = computeFundingGoal({ productionCost: 2530000, otherCost: 1500000, withholding });
+      expect(r.platformFee + r.paymentFee + r.vatDeduction + r.withheld + r.net).toBe(r.goal);
+      expect(r.totalCost).toBe(4030000);
+      if (!withholding) expect(r.vatDeduction).toBe(0);
+    }
   });
 });
