@@ -134,7 +134,8 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
         <p className="mt-2">
           정산금은 결제된 후원금에서 환불된 금액을 먼저 뺀 뒤, 거기서 플랫폼 수수료{' '}
           {FUNDING_PLATFORM_FEE_PERCENT}%와 결제 수수료 {FUNDING_PAYMENT_FEE_PERCENT}%(둘 다 부가세 포함)를
-          뺀 금액입니다. 수수료는 환불을 뺀 금액을 기준으로 계산하며, 둘 다 개설자가 부담합니다.
+          빼고, 아래 세금 처리 구분에 따라 부가세 상당액과 원천징수세액을 뺀 금액입니다(개설자 약관
+          제6조). 수수료는 환불을 뺀 금액을 기준으로 계산하며, 둘 다 개설자가 부담합니다.
         </p>
       </div>
 
@@ -177,8 +178,8 @@ export function PayoutSectionForm({ projectId, initial, readOnly, onSaved, onDir
       </Field>
       <ul className="-mt-3 list-disc space-y-1 pl-5 text-xs text-gray-600 dark:text-gray-400">
         <li>
-          개인: 세금계산서를 발행하지 않으므로 정산금에서 부가세 상당액(10/110)을 빼고, 그 금액에서
-          소득세·지방소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수한 나머지를 보내 드립니다.
+          개인: 세금계산서를 발행하지 않으므로 수수료를 뗀 금액에서 부가세 상당액(10/110)을 빼고, 남은
+          금액에서 소득세·지방소득세 {FUNDING_WITHHOLDING_PERCENT}%를 원천징수한 나머지를 보내 드립니다.
         </li>
         <li>
           사업자: 원천징수 없이 정산금 전액을 보내 드립니다. 대신 그 금액에 대한 세금계산서를
