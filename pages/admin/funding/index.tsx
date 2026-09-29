@@ -30,6 +30,8 @@ interface ProjectRewardOption {
   id: string;
   title: string;
   amount: number;
+  /** 배송 리워드면 수기 등록 폼에 배송지 칸을 연다. */
+  requiresShipping: boolean;
 }
 
 interface ProjectOption {
@@ -71,7 +73,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
     projects = (await getAllFundingProjectsAsync()).map((p) => ({
       slug: p.slug,
       title: p.title,
-      rewards: p.rewards.map((r) => ({ id: r.id, title: r.title, amount: r.amount })),
+      rewards: p.rewards.map((r) => ({ id: r.id, title: r.title, amount: r.amount, requiresShipping: r.requiresShipping })),
     }));
   } catch (error: unknown) {
     console.error('[admin/funding] Failed to load funding projects:', error);
@@ -137,6 +139,12 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
   const [formCustomerPhone, setFormCustomerPhone] = useState('');
   const [formCustomerEmail, setFormCustomerEmail] = useState('');
   const [formMemo, setFormMemo] = useState('');
+  /**
+   * 배송 리워드의 받는 곳. 예전엔 이 폼에 배송 칸이 없어(API는 받는데) 수기로 등록한 배송
+   * 후원은 주소 없이 저장됐고, 나중에 채울 경로도 없었다 — 사바하처럼 전 리워드가 실물인
+   * 프로젝트에서 공연장 현장 후원을 받으면 그대로 구멍이 된다. 현장에서 직접 건넸다면 비운다.
+   */
+  const [formShip, setFormShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [formError, setFormError] = useState<string | null>(null);
 
   // 배너는 목록에 실린 건에 대한 경고라 items에서 센다(표에서 바로 찾아 누를 수 있어야
@@ -203,6 +211,10 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       customerEmail: formCustomerEmail.trim() || undefined,
       displayNamePublic: false,
       adminMemo: formMemo.trim() || undefined,
+      // 배송 리워드이고 한 칸이라도 적었을 때만 보낸다 — 빈 객체를 보내면 빈 문자열 주소가 남는다.
+      ...(selectedReward?.requiresShipping && Object.values(formShip).some((v) => v.trim() !== '')
+        ? { shipping: Object.fromEntries(Object.entries(formShip).map(([k, v]) => [k, v.trim() || undefined])) }
+        : {}),
     });
     setBusy(false);
 
@@ -219,6 +231,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
     setFormCustomerPhone('');
     setFormCustomerEmail('');
     setFormMemo('');
+    setFormShip({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
     setNotice('수기 등록이 완료되었습니다.');
     await refresh();
   };
@@ -449,6 +462,27 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                       />
                     </Field>
                   </div>
+                  {selectedReward?.requiresShipping && (
+                    <fieldset className="rounded-lg border border-gray-200 p-3">
+                      <legend className="px-1 text-sm font-semibold text-gray-800">배송지</legend>
+                      <p className="mb-3 text-xs text-gray-600">배송 리워드입니다. 현장에서 직접 건넸다면 비워 두세요 — 등록 뒤에는 이 칸을 고칠 수 없습니다.</p>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {([
+                          ['name', '받는 분'], ['phone', '받는 분 연락처'], ['postcode', '우편번호'],
+                          ['address1', '주소'], ['address2', '상세주소'], ['memo', '배송 메모'],
+                        ] as const).map(([key, label]) => (
+                          <Field key={key} id={`form-ship-${key}`} label={label} className={lightOnlyField}>
+                            <TextInput
+                              type="text"
+                              value={formShip[key]}
+                              onChange={(e) => setFormShip({ ...formShip, [key]: e.target.value })}
+                              light className="text-sm"
+                            />
+                          </Field>
+                        ))}
+                      </div>
+                    </fieldset>
+                  )}
                   <Button light type="submit" disabled={busy}>등록</Button>
                 </form>
               )}

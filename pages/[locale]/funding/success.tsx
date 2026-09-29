@@ -162,6 +162,12 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
     // 세션에 배송지를 남겨 둘 이유가 없다.
     if (projectSlug) clearStoredDraft(draftStorageKey('funding', projectSlug));
     else clearDraftsByPrefix('studionol:funding-draft:');
+    // 결제를 시도하며 기억해 둔 장바구니도 지운다(PledgeWizard cartKey) — 결제가 끝났다.
+    try {
+      if (projectSlug) window.sessionStorage.removeItem(`funding:lastCart:${projectSlug}`);
+    } catch {
+      /* 저장소 차단 — 30분 뒤 스스로 무효가 된다. */
+    }
     // 새로고침마다 다시 세지 않는다 — 이 화면은 쿠키가 살아 있는 30분 동안 몇 번이고
     // 열릴 수 있고, 그때마다 발화하면 결제 수가 부풀려진다.
     try {

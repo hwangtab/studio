@@ -1,4 +1,4 @@
-import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
+import { assessSelfCancel, cancelBlockedMessage, CANCEL_BLOCK_MESSAGES } from './policy';
 import { isPastFundingEnd } from './projectState';
 describe('assessSelfCancel', () => {
   it('paid + 모금 중 + 발송 전이면 가능', () => {
@@ -94,5 +94,19 @@ describe('내려받기 뒤 청약철회 제한', () => {
     // 이미 환불된 건에 "내려받았다"를 이유로 대면 엉뚱한 안내가 된다.
     expect(assessSelfCancel({ ...base, orderStatus: 'refunded', downloadedAt: new Date() }))
       .toEqual({ ok: false, code: 'not_paid' });
+  });
+});
+
+// 음원을 내려받아 셀프 취소가 막혔어도, 함께 담은 실물 리워드는 받은 뒤 7일 안에 철회할 수
+// 있다(전자상거래법 제17조 2항 5호는 그 디지털 콘텐츠만 제한). 문구가 그 사실을 가리지 않게.
+describe('cancelBlockedMessage', () => {
+  it('실물을 함께 담았으면 그 리워드는 문의로 철회할 수 있다고 덧붙인다', () => {
+    const m = cancelBlockedMessage('downloaded', ['『발작』', '『갱도』']);
+    expect(m.startsWith(CANCEL_BLOCK_MESSAGES.downloaded)).toBe(true);
+    expect(m).toContain('『발작』, 『갱도』은(는) 받은 날부터 7일 안에 문의로 청약철회할 수 있습니다.');
+  });
+  it('음원만 담았거나 다른 사유면 기본 문구 그대로', () => {
+    expect(cancelBlockedMessage('downloaded', [])).toBe(CANCEL_BLOCK_MESSAGES.downloaded);
+    expect(cancelBlockedMessage('fulfilling', ['『발작』'])).toBe(CANCEL_BLOCK_MESSAGES.fulfilling);
   });
 });

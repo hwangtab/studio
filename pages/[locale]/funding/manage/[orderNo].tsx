@@ -5,7 +5,7 @@ import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
-import { assessSelfCancel, CANCEL_BLOCK_MESSAGES, showsMessageAnonymously } from '../../../../lib/funding/policy';
+import { assessSelfCancel, cancelBlockedMessage, showsMessageAnonymously } from '../../../../lib/funding/policy';
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
 import { isPastFundingEnd } from '../../../../lib/funding/projectState';
@@ -223,7 +223,10 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     paymentMethod: pl.paymentMethod, fulfillmentStatus: pl.fulfillmentStatus, shipping,
     // 조회 실패면 취소·내려받기를 내보내지 않는다. 판정 근거가 없는 것이지 마감이 아니다.
     canCancel: lookupFailed ? false : verdict.ok,
-    cancelBlockedReason: lookupFailed || verdict.ok ? null : CANCEL_BLOCK_MESSAGES[verdict.code],
+    cancelBlockedReason: lookupFailed || verdict.ok ? null : cancelBlockedMessage(
+      verdict.code,
+      lines.filter((l) => project?.rewards.find((r) => r.id === l.rewardId)?.requiresShipping).map((l) => l.rewardTitle),
+    ),
     lookupFailed,
     refundRequested: pl.refundRequestedAt !== null,
     downloads: lookupFailed ? [] : downloads,

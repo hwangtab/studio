@@ -443,6 +443,56 @@ it('결제창을 열기 전에 결제창 열기 비콘을 보낸다', async () =
   expect(JSON.parse(beacon[1].body)).toEqual({ orderNo: 'FND-1' });
 });
 
+/**
+ * 결제창은 토스로 전체 이동했다가 돌아온다. 실패·취소 뒤 다시 들어오면 담아 둔 리워드가 사라져
+ * 여러 개를 담은 사람이 다시 담아야 했다 — 결제를 시도한 장바구니를 되살린다(지금 재고로 다시 자름).
+ */
+describe('결제를 시도한 장바구니 되살리기', () => {
+  const KEY = 'funding:lastCart:demo';
+  const save = (items: Array<{ rewardId: string; quantity: number }>, at = Date.now()) =>
+    window.sessionStorage.setItem(KEY, JSON.stringify({ at, items }));
+
+  it('제출하면 담은 것을 기억한다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(JSON.parse(window.sessionStorage.getItem(KEY)!).items).toEqual([{ rewardId: 'mail', quantity: 1 }]);
+  });
+
+  it('다시 들어오면 되살리되, 지금 남은 수량으로 자른다', async () => {
+    save([{ rewardId: 'mail', quantity: 2 }, { rewardId: 'cd', quantity: 4 }]);
+    render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 3, mail: null }} />);
+    expect(await screen.findByText('지난번 결제를 시도할 때 담은 리워드를 다시 담아 두었습니다.')).toBeInTheDocument();
+    expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('2');
+    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('3');
+  });
+
+  it('그 사이 품절된 리워드는 빼고 되살린다', async () => {
+    save([{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 1 }]);
+    render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
+    expect(await screen.findByLabelText('감사 메일 수량')).toHaveTextContent('1');
+    expect(screen.queryByLabelText('CD 수량')).toBeNull();
+  });
+
+  it('카드로 고른 리워드가 지난 장바구니에 없으면 새로 고른 것이다 — 덮지 않는다', async () => {
+    save([{ rewardId: 'mail', quantity: 2 }]);
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await act(async () => {});
+    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('1');
+    expect(screen.queryByLabelText('감사 메일 수량')).toBeNull();
+  });
+
+  it('30분이 지난 기록은 쓰지 않는다', async () => {
+    save([{ rewardId: 'cd', quantity: 2 }], Date.now() - 31 * 60 * 1000);
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await act(async () => {});
+    expect(screen.queryByLabelText('CD 수량')).toBeNull();
+  });
+});
+
 describe('자기 홀드 해제 증명 보관', () => {
   // clear 후 입력 — "페이지가 새로 떠도" 테스트는 같은 테스트 안에서 두 번째로 마운트한
   // 인스턴스가 첫 제출의 임시 저장(lib/formDraft.ts)을 그대로 복원해 온다. 지우지 않고

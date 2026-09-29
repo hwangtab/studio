@@ -24,7 +24,8 @@ import PublicNameChoice from './PublicNameChoice';
  *   모듈 계약을 깨면서까지 살릴 값이 아니다. 명단 표시 방식·닉네임도 같다 — 공개 동의가
  *   복원되지 않으니 그 아래 선택만 살려 둘 이유가 없다.
  * - 담은 리워드(`cart`)·`additionalText` — 재고는 그 사이 바뀐다. 되살린 선택이
- *   지금도 유효한 재고인지 이 모듈은 알 수 없다.
+ *   지금도 유효한 재고인지 이 모듈은 알 수 없다. (결제를 **시도한** 장바구니는 따로
+ *   `cartKey`로 되살린다 — 거기서는 지금 재고로 다시 자른다.)
  */
 const DRAFT_FIELDS = [
   'customerName', 'customerPhone', 'customerEmail', 'supporterMessage',
@@ -48,6 +49,8 @@ interface Props {
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
 const EMPTY_CART_MESSAGE = '리워드를 하나 이상 담아 주세요.';
+/** 결제를 시도한 장바구니를 되살리는 기한 — 아래 cartKey 주석. */
+const LAST_CART_TTL_MS = 30 * 60 * 1000;
 
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
 const radioClass = 'mt-0.5 h-5 w-5 shrink-0 accent-primary';
@@ -164,6 +167,42 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
    * 것은 사생활 보호 모드·저장 차단 브라우저에서 접근 자체가 throw하기 때문이다.
    */
   const holdProofKey = `funding:lastOrderNo:${project.slug}`;
+  /**
+   * 마지막으로 **결제를 시도한 장바구니**. 결제창은 토스로 전체 이동했다가 돌아오므로, 실패·
+   * 취소 뒤 다시 들어오면 담아 둔 리워드가 전부 사라지고 처음 하나만 남았다 — 여러 개를 담은
+   * 사람이 다시 담아야 했다. 탭 단위(sessionStorage)로 두고 결제가 확정되면 지운다(success).
+   *
+   * 되살릴 때 **지금의 재고로 다시 자른다** — 그 사이 품절된 것은 빼고 상한을 넘으면 줄인다.
+   * 이름·주소 초안(formDraft)에서 담은 리워드를 빼 둔 이유가 "재고가 바뀐다"였는데, 여기서는
+   * 그 검사를 직접 하므로 되살려도 된다. 시간 제한(30분)은 홀드 수명의 두 배쯤 — 한참 뒤에
+   * 다시 온 사람에게 예전 선택을 들이밀지 않는다.
+   */
+  const cartKey = `funding:lastCart:${project.slug}`;
+  const [cartRestored, setCartRestored] = useState(false);
+  useEffect(() => {
+    try {
+      const raw = window.sessionStorage.getItem(cartKey);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { at?: unknown; items?: unknown };
+      if (typeof saved?.at !== 'number' || Date.now() - saved.at > LAST_CART_TTL_MS || !Array.isArray(saved.items)) return;
+      const items = saved.items as Array<{ rewardId?: unknown; quantity?: unknown }>;
+      // 카드를 눌러 들어왔는데 그 리워드가 지난 장바구니에 없으면, 새로 고른 것이다 — 덮지 않는다.
+      if (initialRewardId && !items.some((i) => i.rewardId === initialRewardId)) return;
+      const restored = items.flatMap((i) => {
+        if (typeof i.rewardId !== 'string' || !project.rewards.some((r) => r.id === i.rewardId)) return [];
+        const quantity = Math.min(capOf(remaining, i.rewardId), Math.floor(Number(i.quantity)));
+        return Number.isFinite(quantity) && quantity > 0 ? [{ rewardId: i.rewardId, quantity }] : [];
+      });
+      if (restored.length > 0) {
+        setCart(restored);
+        setCartRestored(true);
+      }
+    } catch {
+      /* 저장소가 막혔거나 값이 깨졌다 — 처음 상태로 둔다. */
+    }
+    // 마운트 시 한 번만 — remaining이 폴링으로 바뀔 때마다 되살리면 사용자가 뺀 것이 돌아온다.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartKey]);
   const [previousOrderNo, setPreviousOrderNo] = useState<string | null>(null);
 
   // 마운트 시 한 번 읽어 온다(SSR에서는 window가 없다).
@@ -324,6 +363,13 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '펀딩 신청에 실패했습니다.'); return; }
       if (typeof json.orderNo === 'string') rememberOrderNo(json.orderNo);
+      try {
+        window.sessionStorage.setItem(cartKey, JSON.stringify({
+          at: Date.now(), items: lines.map((l) => ({ rewardId: l.reward.id, quantity: l.quantity })),
+        }));
+      } catch {
+        /* 기억하지 못해도 결제는 진행된다. */
+      }
 
       /**
        * 주문을 만들자마자 **결제창을 연다.**
@@ -460,6 +506,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-reward`}>
         <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint={lines.length > 0 ? '담은 리워드입니다. 수량을 바꾸거나 다른 리워드를 함께 담을 수 있습니다.' : '펀딩할 리워드를 담아 주세요.'} />
+        {cartRestored && lines.length > 0 && (
+          <p role="status" className="typo-card-meta mb-3">지난번 결제를 시도할 때 담은 리워드를 다시 담아 두었습니다.</p>
+        )}
         {lines.length > 0 && (
           <ul className="space-y-2" aria-label="담은 리워드">
             {lines.map((l) => renderRewardRow(l.reward))}

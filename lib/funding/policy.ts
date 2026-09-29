@@ -122,6 +122,20 @@ export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true
 };
 
 /**
+ * 셀프 취소를 막은 이유 문구. 한 가지를 보탠다: **음원을 내려받아 막혔는데 실물 리워드도 함께
+ * 담은 주문**. 내려받기가 청약철회를 제한하는 것은 그 디지털 콘텐츠뿐이고(전자상거래법 제17조
+ * 2항 5호), 함께 담은 책은 받은 뒤 7일 안에 철회할 수 있다(약관 제8조). 기본 문구만 보이면
+ * 주문 전체를 못 물리는 것으로 읽힌다. 셀프 취소는 주문 전체만 되므로 실물 쪽은 문의로 받는다.
+ *
+ * `goodsTitles` — 이 주문에 담긴 배송(실물) 리워드의 제목들. 없으면 기본 문구 그대로.
+ */
+export const cancelBlockedMessage = (code: keyof typeof CANCEL_BLOCK_MESSAGES, goodsTitles: readonly string[]): string => {
+  const base = CANCEL_BLOCK_MESSAGES[code];
+  if (code !== 'downloaded' || goodsTitles.length === 0) return base;
+  return `${base} 함께 담은 ${goodsTitles.join(', ')}은(는) 받은 날부터 7일 안에 문의로 청약철회할 수 있습니다.`;
+};
+
+/**
  * 후원자가 동의한 약관·처리방침 묶음의 버전. `funding_pledges.terms_version`에 그대로 들어간다.
  *
  * 후원 폼(PledgeWizard)은 **결제하기를 누르는 행위 자체**로 동의를 받는다 — 체크박스는
