@@ -174,7 +174,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
     description: '스튜디오 놀 펀딩에 여는 음반 펀딩을 기획부터 페이지까지 맡습니다. 음반 펀딩 수십 건, 누적 약 3억원 규모를 진행해온 방식 그대로.',
     features: [
       `설계비 ${man(FUNDING_DESIGN_PRICE)} · 성공 수수료 없음`,
-      `모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료만(부가세 포함)`,
+      `모금액에서 플랫폼 ${FUNDING_PLATFORM_FEE_PERCENT}%·결제 ${FUNDING_PAYMENT_FEE_PERCENT}% 수수료(부가세 포함)`,
       '스토리텔링·리워드 구성·페이지 제작',
       '목표액 산정과 제작 예산 역산',
       '발매 제작을 맡기지 않아도 의뢰 가능',
