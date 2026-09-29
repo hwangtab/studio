@@ -862,10 +862,14 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
         결제 버튼 바 — **어디서든 바닥에 고정**(모바일 주 버튼 통일 규칙). 약관 고지는 버튼과
         떨어지면 안 되므로(아래 주석) 바 안에 함께 둔다. 모달 상세 단계의 고정 바
         (RewardModal)와 같은 모양·같은 "금액 · 동작" 문구다.
+
+        모달에서는 `bottom`을 본문 패딩만큼 음수로 둔다. sticky는 스크롤 컨테이너의 패딩 안쪽에
+        붙어서, `bottom-0`이면 바가 모달 바닥에서 패딩(20px)만큼 떠 그 틈으로 아래 입력칸이
+        비쳤다(2026-09-29 운영 캡처).
       */}
       <div
         className={layout === 'modal'
-          ? 'sticky bottom-0 z-10 -mx-5 -mb-5 border-t border-gray-200 bg-gray-50 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:-mx-6 sm:-mb-6 sm:px-6 dark:border-gray-700 dark:bg-gray-900'
+          ? 'sticky -bottom-5 z-10 -mx-5 -mb-5 border-t border-gray-200 bg-gray-50 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:-bottom-6 sm:-mx-6 sm:-mb-6 sm:px-6 dark:border-gray-700 dark:bg-gray-900'
           : 'sticky bottom-0 z-10 -mx-4 border-t border-gray-200 bg-white/95 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:mx-0 sm:rounded-t-2xl sm:border-x sm:px-6 dark:border-gray-700 dark:bg-gray-900/95'}
       >
         {allSoldOut && (
