@@ -309,7 +309,14 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
   // 재생성됐다 — markdown-to-jsx options 식별이 깨지면서 자식 트리 재마운트로 이어졌다.
   const localeAwareOverrides = React.useMemo(() => ({
     a: {
-      component: ({ children, href, ...props }: { children: React.ReactNode; href?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+      // className을 ...props에 묻어 두면 안 된다 — markdown-to-jsx는 순수 마크다운 링크에도
+      // `className: undefined`를 명시적으로 함께 넘긴다(내부 tr() 헬퍼가 항상 이 키를 채운다).
+      // 아래 세 분기가 전부 `{...props}`를 자기 className **뒤**에 펼쳤던 옛 코드에서는 이
+      // undefined가 방금 적은 text-primary 클래스를 덮어써, 모든 마크다운 링크가 본문과
+      // 같은 색으로 렌더됐다(2026-09-30 발견 — 사이트 어디서도 이 버그를 걸러내는 테스트가
+      // 없었다). className을 따로 떼어 mergeClassNames로 합치면 이 덮어쓰기가 사라진다.
+      component: ({ children, href, className, ...props }: { children: React.ReactNode; href?: string; className?: string } & React.AnchorHTMLAttributes<HTMLAnchorElement>) => {
+
         if (!isAllowedLinkHref(href)) {
           return <span className="text-gray-500 dark:text-gray-400">{children}</span>;
         }
@@ -323,7 +330,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
           return (
             <a
               href={href}
-              className="text-primary dark:text-primary-lighter hover:underline underline-offset-4"
+              className={mergeClassNames('text-primary dark:text-primary-lighter hover:underline underline-offset-4', className)}
               onClick={() =>
                 trackLeadEvent(isPhone ? 'lead_click_phone' : 'lead_click_email', {
                   locale: currentLocale,
@@ -349,13 +356,13 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
         }
         if (isExternal) {
           return (
-            <a href={finalHref} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4" target="_blank" rel="noopener noreferrer nofollow" {...props}>
+            <a href={finalHref} className={mergeClassNames('text-primary dark:text-primary-lighter hover:underline underline-offset-4', className)} target="_blank" rel="noopener noreferrer nofollow" {...props}>
               {children}
             </a>
           );
         }
         return (
-          <NextLink href={finalHref ?? '/'} className="text-primary dark:text-primary-lighter hover:underline underline-offset-4" {...props}>
+          <NextLink href={finalHref ?? '/'} className={mergeClassNames('text-primary dark:text-primary-lighter hover:underline underline-offset-4', className)} {...props}>
             {children}
           </NextLink>
         );

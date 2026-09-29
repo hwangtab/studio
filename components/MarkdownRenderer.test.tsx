@@ -33,6 +33,26 @@ describe('MarkdownRenderer link protocol filtering', () => {
     expect(screen.getByText('VB')).toBeTruthy();
   });
 
+  /**
+   * markdown-to-jsx는 마크다운 링크를 override 컴포넌트로 넘길 때도 `className: undefined`를
+   * 명시적으로 함께 보낸다(내부 tr() 헬퍼가 항상 이 키를 채운다). a 컴포넌트가 이 값을
+   * `...props`에 묻어 둔 채 자기 className **뒤**에 펼치면, 이 undefined가 text-primary를
+   * 덮어써 모든 마크다운 링크가 본문 글자와 같은 색(클릭 가능해 보이지 않는 상태)으로
+   * 렌더된다. 2026-09-30에 실제로 이 상태로 배포돼 있었다.
+   */
+  it('외부·내부·tel 링크가 본문과 같은 색으로 뭉개지지 않는다', () => {
+    render(
+      <MarkdownRenderer
+        locale="ko"
+        content={'[외부](https://example.com) [내부](/pricing) [전화](tel:010-4255-7893)'}
+      />
+    );
+
+    expect(screen.getByRole('link', { name: '외부' }).className).toContain('text-primary');
+    expect(screen.getByRole('link', { name: '내부' }).className).toContain('text-primary');
+    expect(screen.getByRole('link', { name: '전화' }).className).toContain('text-primary');
+  });
+
 });
 
 /**
