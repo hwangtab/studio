@@ -77,12 +77,8 @@ rewards:
       - label: WAV 24bit 96kHz (스튜디오 마스터)
         key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-24-96.zip
   - id: wav-hires-plus
-    # 제목·설명만 고친다(id·금액은 오픈 뒤 불변). 시/노래집 리워드가 생긴 뒤로 "세 가지 모두"가
-    # 책까지 포함하는 것처럼 읽혔다 — 음원 리워드라는 것과 책 미포함을 분명히 적는다.
-    title: 가장 든든한 음원 펀딩 — 세 가지 음질 모두
-    description: |-
-      5만 원 리워드와 같은 음원 세 가지(MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 24bit 96kHz 스튜디오 마스터)를 보내 드립니다. 더 크게 함께해 주시는 펀딩입니다.
-      박치치 시/노래집은 포함되지 않습니다. 원하시면 함께 담아 주세요.
+    title: 가장 든든한 음원 펀딩
+    description: MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)을 보내 드립니다.
     amount: 100000
     requiresShipping: false
     estimatedDelivery: 2026-09
