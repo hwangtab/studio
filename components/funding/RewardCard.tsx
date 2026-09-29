@@ -5,6 +5,8 @@ import ResponsiveImage from '../ResponsiveImage';
 import { formatPriceAmount } from '../../data/pricing';
 import { imageAspectRatio } from '../../lib/funding/imageAspect';
 import type { FundingReward } from '../../lib/funding/projects';
+import { buttonVariants } from '../ui/Button';
+import { cn } from '../../lib/utils';
 
 interface Props {
   reward: FundingReward;
@@ -79,8 +81,10 @@ export default function RewardCard({ reward, remaining, pledgeHref, canPledge, o
         className="flex h-full flex-col rounded-2xl p-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
       >
         {body}
-        <span className="mt-4 inline-flex h-11 w-full items-center justify-center rounded-xl bg-primary px-5 font-semibold text-white shadow-md transition-colors group-hover:bg-primary-dark">
-          이 리워드로 펀딩하기
+        {/* 카드 전체가 링크라 안쪽은 버튼 모양의 span이다. 공용 buttonVariants로 다른 주 버튼과
+            모양을 맞추고, 문구는 통일 규칙대로 "펀딩하기"(2026-09-29). */}
+        <span className={cn(buttonVariants({ fullWidth: true }), 'mt-4 group-hover:bg-primary-dark')}>
+          펀딩하기
         </span>
       </Link>
     </BaseCard>
