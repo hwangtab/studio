@@ -220,6 +220,18 @@ describe('가격 SSOT 정합', () => {
     expect(tiers.album.range).toContain(manwon(RELEASE_ALBUM_FROM_PRICE));
   });
 
+  // 검색 결과에 뜨는 가격이 상수와 어긋나면 클릭한 사람이 페이지에서 다른 숫자를 본다.
+  it('발매 LP seo.title·description(ko)이 RELEASE_* 하한을 말한다', () => {
+    const seo = (
+      koCommon as unknown as { releaseProject: { seo: { title: string; description: string } } }
+    ).releaseProject.seo;
+    const manwon = (n: number) => `${n / 10000}만원`;
+    expect(seo.title).toContain(manwon(RELEASE_SINGLE_FROM_PRICE));
+    for (const price of [RELEASE_SINGLE_FROM_PRICE, RELEASE_EP_FROM_PRICE, RELEASE_ALBUM_FROM_PRICE]) {
+      expect(seo.description).toContain(manwon(price));
+    }
+  });
+
   // /pricing의 h1은 SERP <title>이 약속한 단가를 그대로 받아야 한다(약속-도착지 일치).
   // 이 카피만 i18n 보간 대신 리터럴인 이유는 pages/[locale]/pricing.tsx의 주석 참조 —
   // hero h1은 LCP 폰트 subset 생성기가 스캔하는 대상이라 보간을 쓸 수 없다.

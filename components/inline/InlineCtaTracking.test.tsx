@@ -61,4 +61,12 @@ describe('inline CTA tracking', () => {
     // 리드 지표를 오염시키면 안 된다 — 서비스 페이지 클릭은 문의가 아니다.
     expect(trackLeadEvent).not.toHaveBeenCalled();
   });
+
+  it('발매 콜아웃의 서비스 링크는 검색어로 발매 LP를 부른다', () => {
+    render(<InlineServiceCallout type="release" locale="ko" />);
+
+    const link = screen.getByRole('link', { name: /앨범·음원 제작 안내/ });
+    expect(link).toHaveAttribute('href', '/ko/release-project');
+    expect(screen.queryByRole('link', { name: /서비스 자세히 보기/ })).not.toBeInTheDocument();
+  });
 });
