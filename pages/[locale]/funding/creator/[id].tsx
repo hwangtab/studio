@@ -119,7 +119,7 @@ const TAB_LABEL: Record<Tab, string> = {
 const UNSAVED_CHANGES_MESSAGE = '저장하지 않은 변경이 있습니다. 지금 나가면 그 내용이 사라집니다. 계속하시겠습니까?';
 
 export default function CreatorProjectEditor({
-  project: initial, earliestStartDate, nameLocked, payout: initialPayout, stats,
+  project: initial, earliestStartDate, nameLocked: initialNameLocked, payout: initialPayout, stats,
 }: Props) {
   const router = useRouter();
   const [project, setProject] = useState<EditorProject>(initial);
@@ -127,6 +127,11 @@ export default function CreatorProjectEditor({
   const [tab, setTab] = useState<Tab>('basic');
   const [submit, setSubmit] = useState<SaveState>(IDLE_SAVE_STATE);
   const [withdraw, setWithdraw] = useState<SaveState>(IDLE_SAVE_STATE);
+  // 로드 시점 힌트로 시작하지만 심사 신청이 성공하면 바로 잠근다. 서버(saveCreatorSection)는
+  // submitted 프로젝트가 생긴 순간부터 이름 변경을 무시하므로, 칸이 열려 있으면 같은 화면에서
+  // 고친 이름이 "저장했습니다"로 보이고 DB에는 옛 이름이 남는다. 철회 뒤에는 다른 프로젝트의
+  // 심사 상태를 이 화면이 모르므로 잠긴 채 둔다(새로고침하면 서버 판정으로 다시 열린다).
+  const [nameLocked, setNameLocked] = useState(initialNameLocked);
   const [agreedTerms, setAgreedTerms] = useState(false);
 
   // 구획별 저장 안 한 입력 여부. 네 폼이 각자 onDirtyChange로 보고한다 — 폼이 하나라도
@@ -234,6 +239,8 @@ export default function CreatorProjectEditor({
       // 않는다. 상단 안내는 "철회할 수 있다"고 말하는데 버튼이 없는 거짓 상태가 된다.
       setWithdraw(IDLE_SAVE_STATE);
       setProject((p) => ({ ...p, reviewStatus: 'submitted' }));
+      // 심사 신청은 기본 이름(이메일 로컬파트)을 거부하므로 여기 오면 서버 잠금 조건이 참이다.
+      setNameLocked(true);
     } else {
       setSubmit({ status: 'error', message: result.message });
     }
