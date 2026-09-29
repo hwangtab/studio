@@ -18,20 +18,18 @@ status: auto
 hidden: false
 lastmod: 2026-09-28
 rewards:
-  - id: live
-    title: 발매 공연 초대
-    description: |-
-      2027년 초 신촌에서 여는 발매 기념 공연에 1인 초대합니다.
-      날짜와 장소가 확정되면 메일로 알려 드립니다. 음반은 포함되지 않습니다.
-    amount: 30000
-    requiresShipping: false
-    estimatedDelivery: 2027-02
-    image: /images/funding/sabbaha-slung/album-front-20260928.webp
   - id: cd
-    title: CD + 친필 부적
+    title: CD
     description: |-
       《SLUNG》 CD 한 세트(두 장)를 보내 드립니다. 배송비가 포함된 금액입니다.
-      사바하가 한지에 붉은 먹으로 직접 쓴 부적을 한 장씩 함께 넣습니다. 인쇄물이 아니라 손으로 쓴 것이라 한 장도 같은 것이 없습니다.
+    amount: 30000
+    requiresShipping: true
+    estimatedDelivery: 2027-02
+    image: /images/funding/sabbaha-slung/mockup-20260928.webp
+  - id: cd-talisman
+    title: CD + 친필 부적
+    description: |-
+      3만원 리워드(CD, 배송비 포함)에 사바하가 한지에 붉은 먹으로 직접 쓴 부적을 한 장 함께 넣습니다. 손으로 쓰기 때문에 같은 부적은 없습니다.
     amount: 40000
     requiresShipping: true
     estimatedDelivery: 2027-02
@@ -39,7 +37,8 @@ rewards:
   - id: cd-live
     title: CD + 친필 부적 + 발매 공연 초대
     description: |-
-      4만원 리워드(CD와 친필 부적, 배송비 포함)에 발매 기념 공연 1인 초대를 더했습니다.
+      4만원 리워드(CD와 친필 부적, 배송비 포함)에 2027년 초 신촌에서 여는 발매 기념 공연 1인 초대를 더했습니다.
+      공연 날짜와 장소가 확정되면 메일로 알려 드립니다.
     amount: 50000
     requiresShipping: true
     estimatedDelivery: 2027-02
@@ -53,12 +52,11 @@ rewards:
     requiresShipping: true
     estimatedDelivery: 2027-02
     image: /images/funding/sabbaha-slung/mockup-20260928.webp
-  # 친필 명패와 뒤풀이 자리는 사람 손과 자리 수가 정해져 있어 한정으로 둔다.
+  # 뒤풀이 자리 수가 정해져 있어 한정으로 둔다.
   - id: patron
-    title: 가장 든든한 후원 — 친필 명패와 뒤풀이 자리
+    title: 가장 든든한 후원 — 공연 2인 초대와 뒤풀이 자리
     description: |-
       10만원 리워드 전부(CD·부적·속지 이름)에 더해 공연 초대를 2인으로 늘리고, 공연 뒤 뒤풀이 자리에 모십니다.
-      사바하가 후원자 이름을 한지에 붓으로 써서 명패로 만들어 CD와 함께 보내 드립니다.
     amount: 300000
     totalQuantity: 20
     requiresShipping: true
@@ -121,10 +119,10 @@ rewards:
 ![《SLUNG》 CD 완성 목업 — 짙은 붉은 바탕 위에 열린 주얼 케이스와 흰 CD, 앞표지와 트랙 목록이 적힌 뒷면이 놓여 있다](/images/funding/sabbaha-slung/mockup-20260928.webp)
 
 - **CD** — 《SLUNG》 음반입니다. 두 장이 한 케이스에 들어 있고, 배송비는 리워드 금액에 포함돼 있습니다.
-- **친필 부적** — 사바하가 한지에 붉은 먹과 붓으로 직접 씁니다. CD와 한 봉투에 넣어 보내 드립니다.
-- **발매 공연 초대** — 2027년 초 신촌에서 발매 기념 공연을 엽니다. 날짜와 장소가 정해지면 메일로 알려 드립니다.
-- **음반 속지에 이름** — CD 속지의 Special Thanks에 후원자 이름을 싣습니다.
-- **친필 명패와 뒤풀이** — 30만원 리워드(스무 분 한정)에는 이름을 붓으로 쓴 명패를 보내 드리고, 공연 뒤 뒤풀이 자리에 모십니다.
+- **친필 부적** — 4만원 리워드부터 드립니다. 사바하가 한지에 붉은 먹과 붓으로 직접 쓰고, CD와 한 봉투에 넣어 보내 드립니다.
+- **발매 공연 초대** — 5만원 리워드부터 드립니다. 2027년 초 신촌에서 발매 기념 공연을 열고, 날짜와 장소가 정해지면 메일로 알려 드립니다.
+- **음반 속지에 이름** — 10만원 리워드부터 CD 속지의 Special Thanks에 후원자 이름을 싣습니다.
+- **뒤풀이** — 30만원 리워드(스무 분 한정)는 공연 초대가 2인이고, 공연 뒤 뒤풀이 자리에 모십니다.
 
 결제는 카드나 간편결제로 하시면 되고, 회원 가입은 필요 없습니다. 결제 화면에서 응원 메시지를 남기고 후원자 명단에 이름을 올릴 수 있습니다. 공개 여부는 펀딩 확인 페이지에서 언제든 바꾸실 수 있습니다.
 
