@@ -18,6 +18,10 @@ interface StudioMoreProps {
  * "MIDI·작곡·믹싱·마스터링 1:1"). factGuards의 보컬·악기 레슨 규칙이 1인칭 맥락만
  * 검사해서 링크 라벨로는 빠져나갔다.
  *
+ * 발매 링크 라벨은 상품명("발매 프로젝트")이 아니라 검색어로 쓴다 — 구글은 링크 문구로
+ * 대상 페이지를 읽는데, 발매 LP는 상품명으로만 불려 신설 4개월간 브랜드 외 검색어 노출이
+ * 0이었다(2026-09-29, docs/diagnosis-2026-09-16-service-page-visibility.md 후속). 상품명은 note로 남긴다.
+ *
  * 렌더 텍스트 분량을 바꾸면 lib/storyContentPolicy.ts의 SHORTCODE_CHAR_ESTIMATES
  * ['studio-more']도 같이 맞출 것 — thin 판정에 직접 들어간다.
  */
@@ -29,7 +33,7 @@ const StudioMore: React.FC<StudioMoreProps> = ({ locale = 'ko' }) => {
     { href: p('/stories/mixing-complete-guide'), label: '믹싱 완전 가이드', note: '강좌 전체 로드맵' },
     { href: p('/lesson'), label: '1:1 프로듀싱 레슨', note: 'MIDI·작곡·믹싱·마스터링' },
     { href: p('/practice-room'), label: '음악연습실', note: '보컬·기타·피아노·드럼 개별 방' },
-    { href: p('/release-project'), label: '발매 프로젝트', note: '기획·유통·홍보까지 동행' },
+    { href: p('/release-project'), label: '앨범·음원 제작', note: '기획·유통·홍보까지 동행하는 발매 프로젝트' },
     { href: p('/pricing'), label: '요금·이용 안내', note: '녹음·믹싱·마스터링 플랜' },
     { href: p('/contact'), label: '찾아오는 길·문의', note: '카카오톡 상담' },
   ];
