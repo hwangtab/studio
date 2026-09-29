@@ -1,6 +1,5 @@
-import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
-import Markdown from 'markdown-to-jsx';
+import { compiler } from 'markdown-to-jsx';
 
 import { CONTRACT_MARKDOWN_OPTIONS } from './html-escape';
 
@@ -13,4 +12,5 @@ import { CONTRACT_MARKDOWN_OPTIONS } from './html-escape';
  * (CONTRACT_MARKDOWN_OPTIONS — 계약서에는 URL을 싣지 않는다).
  */
 export const renderMarkdown = (markdown: string): string =>
-  renderToStaticMarkup(createElement(Markdown, { options: CONTRACT_MARKDOWN_OPTIONS, children: markdown }));
+  // <Markdown> 컴포넌트도 내부에서 이 compiler를 부른다 — 화면과 같은 결과가 나온다.
+  renderToStaticMarkup(compiler(markdown, CONTRACT_MARKDOWN_OPTIONS));
