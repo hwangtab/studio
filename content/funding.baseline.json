@@ -32,7 +32,7 @@
   "sabbaha-slung": {
    "rewards": {
     "cd": {
-     "amount": 40000,
+     "amount": 30000,
      "limited": false
     },
     "cd-live": {
@@ -43,8 +43,8 @@
      "amount": 100000,
      "limited": false
     },
-    "live": {
-     "amount": 30000,
+    "cd-talisman": {
+     "amount": 40000,
      "limited": false
     },
     "patron": {
