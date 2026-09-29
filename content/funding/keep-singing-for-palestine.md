@@ -11,7 +11,7 @@ startAt: 2026-09-14T00:00:00+09:00
 endAt: 2026-10-19T23:59:59+09:00
 status: auto
 hidden: false
-lastmod: 2026-09-28
+lastmod: 2026-09-29
 rewards:
   - id: mp3
     title: 음원 펀딩 — MP3
@@ -54,6 +54,54 @@ rewards:
     addOn: true
     estimatedDelivery: 2026-10
     image: /images/funding/keep-singing-for-palestine/book-gangdo-20260928.webp
+  # 강정피스앤뮤직캠프 티셔츠. 옵션 칸이 없어 색×사이즈마다 리워드 하나, 남은 장수가 곧
+  # totalQuantity다. 배송비 포함 33,000원. 책 뒤에 두는 이유: 결제 화면의 "함께 담을 수
+  # 있는 리워드"는 addOn 중 파일 순서로 앞의 두 개만 보인다(PledgeWizard.tsx).
+  - id: tshirt-3rd-charcoal-2xl
+    title: 3회 강정피스앤뮤직캠프 티셔츠 — 차콜 2XL
+    description: 3회 강정피스앤뮤직캠프 티셔츠입니다. 앞면에 「전쟁을 끝내자!」 그림이 들어가 있습니다. 사진 오른쪽의 차콜, 2XL입니다. 배송비가 포함된 금액입니다.
+    amount: 33000
+    totalQuantity: 3
+    requiresShipping: true
+    addOn: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/tshirt-3rd-20260929.webp
+  - id: tshirt-3rd-red-l
+    title: 3회 강정피스앤뮤직캠프 티셔츠 — 레드 L
+    description: 3회 강정피스앤뮤직캠프 티셔츠입니다. 앞면에 「전쟁을 끝내자!」 그림이 들어가 있습니다. 사진 왼쪽의 레드, L입니다. 배송비가 포함된 금액입니다.
+    amount: 33000
+    totalQuantity: 1
+    requiresShipping: true
+    addOn: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/tshirt-3rd-20260929.webp
+  - id: tshirt-3rd-red-xl
+    title: 3회 강정피스앤뮤직캠프 티셔츠 — 레드 XL
+    description: 3회 강정피스앤뮤직캠프 티셔츠입니다. 앞면에 「전쟁을 끝내자!」 그림이 들어가 있습니다. 사진 왼쪽의 레드, XL입니다. 배송비가 포함된 금액입니다.
+    amount: 33000
+    totalQuantity: 1
+    requiresShipping: true
+    addOn: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/tshirt-3rd-20260929.webp
+  - id: tshirt-3rd-green-l
+    title: 3회 강정피스앤뮤직캠프 티셔츠 — 그린 L
+    description: 3회 강정피스앤뮤직캠프 티셔츠입니다. 앞면에 「전쟁을 끝내자!」 그림이 들어가 있습니다. 사진 가운데의 그린, L입니다. 배송비가 포함된 금액입니다.
+    amount: 33000
+    totalQuantity: 1
+    requiresShipping: true
+    addOn: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/tshirt-3rd-20260929.webp
+  - id: tshirt-2nd-mint-xl
+    title: 2회 강정피스앤뮤직캠프 티셔츠 — 민트 XL
+    description: 2회 강정피스앤뮤직캠프 티셔츠입니다. 민트색 바탕에 초록 선으로 「전쟁을 끝내자」 그림을 그렸고, 소매에 캠프 이름이 들어가 있습니다. XL입니다. 배송비가 포함된 금액입니다.
+    amount: 33000
+    totalQuantity: 1
+    requiresShipping: true
+    addOn: true
+    estimatedDelivery: 2026-10
+    image: /images/funding/keep-singing-for-palestine/tshirt-2nd-20260929.webp
   - id: wav-cd
     title: 음원 펀딩 — MP3 + CD 음질, 두 가지 모두
     description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.

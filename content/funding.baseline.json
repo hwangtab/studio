@@ -15,6 +15,26 @@
      "amount": 10000,
      "limited": false
     },
+    "tshirt-2nd-mint-xl": {
+     "amount": 33000,
+     "limited": true
+    },
+    "tshirt-3rd-charcoal-2xl": {
+     "amount": 33000,
+     "limited": true
+    },
+    "tshirt-3rd-green-l": {
+     "amount": 33000,
+     "limited": true
+    },
+    "tshirt-3rd-red-l": {
+     "amount": 33000,
+     "limited": true
+    },
+    "tshirt-3rd-red-xl": {
+     "amount": 33000,
+     "limited": true
+    },
     "wav-cd": {
      "amount": 30000,
      "limited": false
