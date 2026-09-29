@@ -30,6 +30,8 @@ interface CreateMixingOrderBody {
   customerEmail: string;
   customerNote?: string;
   refundPolicyAgreed: true;
+  /** 직전 제출로 만든 주문번호 — 서버가 이 주문만 풀어 준다(자기 홀드 해제의 소유 증명). */
+  previousOrderNo?: string;
 }
 
 interface CreateMixingOrderResponse {
@@ -90,6 +92,12 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   // 의사표시가 아니라서 매번 새로 눌러야 한다(CLAUDE.md 약관 판본 절과 같은 판단).
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  /**
+   * 직전 제출로 만든 주문번호. 다시 제출할 때 보내면 서버가 그 결제 대기 주문을 정리한다
+   * (lib/booking/service.ts — 증명 없이는 아무것도 풀지 않는다). 믹싱은 잡는 자리가 없어
+   * 증명을 잃어도 막히는 사람이 없으므로 탭 저장소에는 두지 않는다.
+   */
+  const [previousOrderNo, setPreviousOrderNo] = useState<string | null>(null);
 
   /**
    * 이름·연락처·이메일·요청사항만 새로고침·뒤로가기에도 살린다.
@@ -165,6 +173,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
         customerEmail: customerEmail.trim(),
         ...(customerNote.trim() ? { customerNote: customerNote.trim() } : {}),
         refundPolicyAgreed: true,
+        ...(previousOrderNo ? { previousOrderNo } : {}),
       };
       const res = await fetch('/api/orders/mixing', {
         method: 'POST',
@@ -184,6 +193,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
         // 주문이 만들어졌으면 곧바로 결제창을 연다. 금액은 **서버가 돌려준 값**으로 맞춘다.
         const origin = window.location.origin;
         createdOrderNo = data.orderNo;
+        setPreviousOrderNo(data.orderNo);
         await requestPayment({
           orderId: data.orderNo,
           orderName: formatOrderName(selectedProduct.nameKo, songCount),

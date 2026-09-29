@@ -6,6 +6,7 @@ import { calendarBlockedRooms } from '../../../lib/booking/calendarGuard';
 import { kstDateTime } from '../../../lib/booking/kst';
 import { getProduct } from '../../../lib/booking/products';
 import { createBookingOrder } from '../../../lib/booking/service';
+import { readPreviousOrderNo } from '../../../lib/booking/token';
 import { validateCreateBookingPayload } from '../../../lib/booking/validation';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -38,7 +39,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(503).json({ ok: false, code: 'calendar_unavailable', message: '예약 캘린더를 확인할 수 없습니다. 잠시 후 다시 시도해 주세요.' });
   }
 
-  const result = await createBookingOrder(validated.value, now, { excludeRooms });
+  const result = await createBookingOrder(validated.value, now, {
+    excludeRooms,
+    releaseOrderNo: readPreviousOrderNo(req.body),
+  });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.' });
   return res.status(201).json({
     ok: true,

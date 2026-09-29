@@ -25,8 +25,12 @@ const roomMatch = (keys: Array<string | null>) =>
 export const createBookingOrder = async (
   payload: CreateBookingPayload,
   now: Date,
-  /** 캘린더 가드가 바쁘다고 판정한 방 — 배정 후보에서 뺀다(calendarGuard.ts). */
-  options: { excludeRooms?: readonly string[] } = {},
+  options: {
+    /** 캘린더 가드가 바쁘다고 판정한 방 — 배정 후보에서 뺀다(calendarGuard.ts). */
+    excludeRooms?: readonly string[];
+    /** 위저드가 돌려보낸 직전 주문번호 — 자기 홀드 해제의 소유 증명(아래 주석). */
+    releaseOrderNo?: string | null;
+  } = {},
 ): Promise<
   | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string; roomNumber: string | null }
   | { ok: false; code: 'slot_taken' }
@@ -40,11 +44,19 @@ export const createBookingOrder = async (
   const orderNo = generateOrderNo(now);
   const manageToken = generateManageToken();
 
-  // 자가 선점 해제: BookingWizard의 "← 정보 수정"(step 4 → 3)으로 되돌아가 같은 슬롯을
-  // 재제출하면, 직전 제출로 만든 자신의 pending 주문·예약이 PENDING_HOLD_SECONDS(900초)
-  // 동안 아래 겹침 검사에 "이미 점유"로 잡힌다 — 고객이 자기 자신에게 15분간 막히고
-  // "다른 예약이 먼저 잡혔습니다"라는 오해성 409를 본다. 새 주문을 만들기 전에 같은
-  // 고객(email+phone 일치)의 기존 pending을 먼저 만료시켜 이를 막는다.
+  // 자가 선점 해제: 결제창을 닫거나 결제에 실패한 뒤 같은 슬롯을 다시 제출하면, 직전 제출로
+  // 만든 자신의 pending 주문·예약이 PENDING_HOLD_SECONDS(900초) 동안 아래 겹침 검사에
+  // "이미 점유"로 잡힌다 — 고객이 자기 자신에게 15분간 막히고 "다른 예약이 먼저
+  // 잡혔습니다"라는 오해성 409를 본다. 새 주문을 만들기 전에 그 pending을 먼저 만료시킨다.
+  //
+  // **소유 증명(releaseOrderNo)이 없으면 아무것도 만료시키지 않는다.** 예전엔 조건이
+  // `customer_email = ? AND customer_phone = ?`뿐이었다. 두 값은 요청 본문의 미검증 문자열이라,
+  // 남의 이메일·전화를 아는 사람이 예약 요청 한 번으로 그 사람의 결제 대기 주문을 만료시킬 수
+  // 있었다 — 피해자가 결제를 마치고 돌아오면 confirm이 '만료된 주문'으로 거절한다. 펀딩은 같은
+  // 구멍을 먼저 막았다(lib/funding/service.ts의 releaseOrderNo). orderNo는 뒤 8자가
+  // randomBytes(4)라 추측할 수 없고 생성 응답으로만 나가므로, 조건에 넣는 것만으로 이 경로가 남의
+  // 주문에 닿지 못한다. 이메일·전화 조건은 방어 깊이로 함께 건다. 증명이 없으면 자기 홀드가
+  // 자연 만료될 때까지 기다린다 — 남의 결제를 깨뜨릴 수 있는 편보다 낫다.
   //
   // 순서 주의: bookings를 먼저 cancelled로 바꾼다. orders를 먼저 expired로 바꾸면
   // 아래 IN 서브쿼리(status='pending'인 orders)가 비어 그 bookings가 갱신되지 않는다.
@@ -58,19 +70,22 @@ export const createBookingOrder = async (
   // 새로 만드는 것만으로 그 주문이 expired가 되어 결제가 통째로 무산되던 사고다. 자가 선점
   // 해제는 "내가 방금 만든 같은 종류의 주문"만 대상으로 한다(lib/funding/service.ts의
   // createFundingPledge가 type='funding'으로 같은 조건을 이미 걸어 둔 것과 같은 이유).
-  await db.run(sql`
-    UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
-    WHERE status = 'pending' AND order_id IN (
-      SELECT id FROM orders
-      WHERE status = 'pending' AND type = 'session'
+  const releaseOrderNo = options.releaseOrderNo ? options.releaseOrderNo.toUpperCase() : null;
+  if (releaseOrderNo) {
+    await db.run(sql`
+      UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+      WHERE status = 'pending' AND order_id IN (
+        SELECT id FROM orders
+        WHERE status = 'pending' AND type = 'session' AND order_no = ${releaseOrderNo}
+          AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+      )
+    `);
+    await db.run(sql`
+      UPDATE orders SET status = 'expired', updated_at = unixepoch()
+      WHERE status = 'pending' AND type = 'session' AND order_no = ${releaseOrderNo}
         AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-    )
-  `);
-  await db.run(sql`
-    UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE status = 'pending' AND type = 'session'
-      AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-  `);
+    `);
+  }
 
   const [order] = await db
     .insert(orders)
@@ -134,6 +149,8 @@ export const createBookingOrder = async (
 export const createMixingOrder = async (
   payload: CreateMixingOrderPayload,
   now: Date,
+  /** 위저드가 돌려보낸 직전 주문번호 — 자기 홀드 해제의 소유 증명(createBookingOrder 주석). */
+  options: { releaseOrderNo?: string | null } = {},
 ): Promise<{ ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; workOrderId: string }> => {
   const db = getDb();
   const product = getMixingProduct(payload.productId)!; // validation이 보장
@@ -145,20 +162,24 @@ export const createMixingOrder = async (
   // orders를 먼저 expired로 바꾸면 아래 IN 서브쿼리가 비어 work_orders가 갱신되지 않는다).
   //
   // type = 'mixing' 조건도 createBookingOrder와 같은 이유로 필수다 — 없으면 같은 고객이 다른
-  // 타입(세션·펀딩) 주문을 결제 중일 때 그 주문을 죽인다.
-  await db.run(sql`
-    UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
-    WHERE status = 'pending' AND order_id IN (
-      SELECT id FROM orders
-      WHERE status = 'pending' AND type = 'mixing'
+  // 타입(세션·펀딩) 주문을 결제 중일 때 그 주문을 죽인다. 소유 증명(releaseOrderNo)이 없으면
+  // 아무것도 만료시키지 않는 것도 같다 — 믹싱은 잡는 자리가 없어 증명이 없어도 막히는 사람이 없다.
+  const releaseOrderNo = options.releaseOrderNo ? options.releaseOrderNo.toUpperCase() : null;
+  if (releaseOrderNo) {
+    await db.run(sql`
+      UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
+      WHERE status = 'pending' AND order_id IN (
+        SELECT id FROM orders
+        WHERE status = 'pending' AND type = 'mixing' AND order_no = ${releaseOrderNo}
+          AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
+      )
+    `);
+    await db.run(sql`
+      UPDATE orders SET status = 'expired', updated_at = unixepoch()
+      WHERE status = 'pending' AND type = 'mixing' AND order_no = ${releaseOrderNo}
         AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-    )
-  `);
-  await db.run(sql`
-    UPDATE orders SET status = 'expired', updated_at = unixepoch()
-    WHERE status = 'pending' AND type = 'mixing'
-      AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
-  `);
+    `);
+  }
 
   const [order] = await db
     .insert(orders)

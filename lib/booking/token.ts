@@ -17,6 +17,15 @@ export const generateOrderNo = (now: Date): string => {
   return `SNB-${ymd}-${randomBytes(4).toString('hex').toUpperCase()}`;
 };
 
+/**
+ * 위저드가 돌려보낸 직전 주문번호 — 자기 결제 대기 주문을 풀 때의 소유 증명
+ * (service.ts createBookingOrder 주석). generateOrderNo의 형태가 아니면 증명이 없는 것으로 본다.
+ */
+export const readPreviousOrderNo = (body: unknown): string | null => {
+  const value = (body as { previousOrderNo?: unknown } | null | undefined)?.previousOrderNo;
+  return typeof value === 'string' && /^SNB-\d{8}-[0-9A-F]{8}$/i.test(value) ? value.toUpperCase() : null;
+};
+
 /** 길이 차이가 실행 시간에 드러나지 않게 SHA-256 고정 길이 후 비교 (lib/cron/auth.ts와 동일). */
 export const isTokenMatch = (expected: string, given: string): boolean => {
   const a = createHash('sha256').update(expected).digest();
