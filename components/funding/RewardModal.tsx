@@ -7,6 +7,7 @@ import type { FundingProject, FundingReward } from '../../lib/funding/projects';
 import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
 import { useFocusTrapDialog } from '../../utils/useFocusTrapDialog';
 import { imageAspectRatio } from '../../lib/funding/imageAspect';
+import { trackMicroEvent } from '../../utils/analytics';
 
 interface Props {
   project: FundingProject;
@@ -140,7 +141,12 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
               <button
                 type="button"
                 disabled={soldOut}
-                onClick={() => setStep('pledge')}
+                onClick={() => {
+                  setStep('pledge');
+                  // 후원 폼 진입 — /pledge 페이지와 같은 이벤트. 예전엔 페이지에서만 쏴서, 대부분이
+                  // 거치는 이 모달 경로가 GA 퍼널에서 빠져 있었다.
+                  trackMicroEvent('funding_pledge_start', { component: 'funding_reward_modal', landing_slug: project.slug });
+                }}
                 className="mt-4 inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
               >
                 {soldOut ? '품절' : '담고 펀딩하기'}

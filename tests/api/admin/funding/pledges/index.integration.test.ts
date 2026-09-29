@@ -318,6 +318,27 @@ it('수기 등록된 배송 리워드는 delivered_at이 NULL이다 (기산점�
   expect(rows.rows[0].delivered_at).toBeNull();
 });
 
+// 관리자 폼에 배송 칸이 생겼다(2026-09-29) — 값은 온라인 경로와 같은 상한·형식으로 받는다.
+describe('수기 등록 배송지', () => {
+  it('앞뒤 공백을 정리해 저장하고, 빈 칸은 NULL로 둔다', async () => {
+    const r = await call({ ...VALID_BODY, rewardId: 'box', quantity: 1, additionalAmount: 0,
+      shipping: { name: ' 홍길동 ', phone: '010-1', postcode: '03000', address1: '서울', address2: '', memo: '   ' } });
+    expect(r.status).toBe(201);
+    const rows = await client.execute('SELECT shipping_name, shipping_address2, shipping_memo FROM funding_pledges');
+    expect(rows.rows[0]).toMatchObject({ shipping_name: '홍길동', shipping_address2: null, shipping_memo: null });
+  });
+  it('상한을 넘으면 자르지 않고 400', async () => {
+    const r = await call({ ...VALID_BODY, rewardId: 'box', quantity: 1, additionalAmount: 0,
+      shipping: { name: '가'.repeat(500), address1: '서울' } });
+    expect(r.status).toBe(400);
+    expect((await client.execute('SELECT COUNT(*) AS n FROM funding_pledges')).rows[0].n).toBe(0);
+  });
+  it('문자열이 아닌 값은 400', async () => {
+    const r = await call({ ...VALID_BODY, rewardId: 'box', quantity: 1, additionalAmount: 0, shipping: { name: 123 } });
+    expect(r.status).toBe(400);
+  });
+});
+
 /**
  * L13 — 상한만 있으면 `30000`을 `3000`으로 잘못 친 오타가 그대로 공개 모금액과 정산
  * grossAmount에 들어간다. 에누리를 담는 칸이라 일치를 요구할 수는 없어 절반을 선으로 잡는다.

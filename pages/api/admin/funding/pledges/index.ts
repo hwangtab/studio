@@ -13,7 +13,7 @@ import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serial
 import { computeFundingAmounts, splitFundingAmount } from '../../../../../lib/funding/amounts';
 import { deliverConfirmedEmailsOnce } from '../../../../../lib/funding/confirm';
 import {
-  ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_MANUAL_ACTUAL_AMOUNT, MAX_QUANTITY,
+  ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_MANUAL_ACTUAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS,
 } from '../../../../../lib/funding/policy';
 import { findReward } from '../../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
@@ -127,7 +127,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const customerEmail = String(b.customerEmail || '').trim().toLowerCase() || MANUAL_PLACEHOLDER_EMAIL;
     const hasRealEmail = customerEmail !== MANUAL_PLACEHOLDER_EMAIL;
     const db = getDb();
-    const s = (typeof b.shipping === 'object' && b.shipping) || {};
+    /**
+     * 배송지. 온라인 경로와 같은 상한을 건다 — 예전엔 값을 형식 검사 없이 그대로 넣었다(관리자
+     * 폼이 배송 칸을 아예 보내지 않아 드러나지 않았다). 상한을 넘으면 자르지 않고 거부한다
+     * (lib/funding/validation.ts overLimitMessage와 같은 판단). 빈 칸은 NULL.
+     */
+    const rawShip = (typeof b.shipping === 'object' && b.shipping !== null && !Array.isArray(b.shipping) ? b.shipping : {}) as Record<string, unknown>;
+    const SHIP_LIMITS = {
+      name: PLEDGE_TEXT_LIMITS.shippingName, phone: PLEDGE_TEXT_LIMITS.shippingPhone, postcode: PLEDGE_TEXT_LIMITS.shippingPostcode,
+      address1: PLEDGE_TEXT_LIMITS.shippingAddress1, address2: PLEDGE_TEXT_LIMITS.shippingAddress2, memo: PLEDGE_TEXT_LIMITS.shippingMemo,
+    } as const;
+    const s: Partial<Record<keyof typeof SHIP_LIMITS, string>> = {};
+    for (const [key, max] of Object.entries(SHIP_LIMITS) as Array<[keyof typeof SHIP_LIMITS, number]>) {
+      const v = rawShip[key];
+      if (v === undefined || v === null) continue;
+      if (typeof v !== 'string') return res.status(400).json({ ok: false, message: '배송지 형식이 올바르지 않습니다.' });
+      const t = v.trim();
+      if (t.length > max) return res.status(400).json({ ok: false, message: `배송지 항목은 ${max}자까지 입력할 수 있습니다.` });
+      if (t) s[key] = t;
+    }
     const orderId = randomUUID().replace(/-/g, '');
     const pledgeId = randomUUID().replace(/-/g, '');
     const epoch = (d: Date) => Math.floor(d.getTime() / 1000);

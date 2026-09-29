@@ -33,6 +33,7 @@ jest.mock('../../utils/useFocusTrapDialog', () => ({
 const lastTrapState = (): boolean => focusTrapSpy.mock.calls[focusTrapSpy.mock.calls.length - 1][0];
 
 // PledgeWizard는 결제 SDK까지 끌고 들어오므로 대역으로 세우고, 결제 단계 진입만 흉내 낸다.
+jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 jest.mock('./PledgeWizard', () => ({
   __esModule: true,
   default: ({ initialRewardId, onPaymentActiveChange }: {
@@ -192,5 +193,16 @@ describe('포커스 복원 시점', () => {
 
     await user.click(screen.getByRole('button', { name: '닫기' }));
     expect(onClose).toHaveBeenCalled();
+  });
+
+  // 대부분의 후원이 이 모달을 거친다 — /pledge 페이지에서만 쏘던 시작 이벤트가 여기서도 나가야
+  // GA 퍼널이 맞는다.
+  it('폼으로 넘어갈 때 후원 시작 이벤트를 보낸다', async () => {
+    const { trackMicroEvent } = jest.requireMock('../../utils/analytics') as { trackMicroEvent: jest.Mock };
+    trackMicroEvent.mockClear();
+    const user = userEvent.setup();
+    renderModal();
+    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    expect(trackMicroEvent).toHaveBeenCalledWith('funding_pledge_start', expect.objectContaining({ component: 'funding_reward_modal' }));
   });
 });
