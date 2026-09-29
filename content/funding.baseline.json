@@ -49,6 +49,26 @@
     }
    }
   },
+  "mok-jareugi": {
+   "rewards": {
+    "mp3": {
+     "amount": 10000,
+     "limited": false
+    },
+    "wav-cd": {
+     "amount": 30000,
+     "limited": false
+    },
+    "wav-hires": {
+     "amount": 50000,
+     "limited": false
+    },
+    "wav-hires-plus": {
+     "amount": 100000,
+     "limited": false
+    }
+   }
+  },
   "sabbaha-slung": {
    "rewards": {
     "cd": {
