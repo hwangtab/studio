@@ -33,6 +33,37 @@ jest.mock('../booking/useTossPaymentWidgets', () => ({
 }));
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
 
+/**
+ * 주소는 카카오 우편번호 검색으로 넣는다(2026-09-29). 실제 서비스는 외부 스크립트 + iframe이라,
+ * 테스트에서는 embed하는 순간 곧바로 "고른 결과"를 돌려주는 가짜로 바꾼다. 결과 문자열은
+ * 실제 포맷 함수(formatKakaoAddress)를 그대로 탄다.
+ */
+const mockPostcodeBase = {
+  zonecode: '12345', roadAddress: '서울시 어딘가', jibunAddress: '서울시 어딘가 1-1',
+  userSelectedType: 'R' as const, bname: '', buildingName: '', apartment: 'N' as const,
+};
+let mockPostcodeResult = { ...mockPostcodeBase };
+let mockPostcodeFails = false;
+jest.mock('./kakaoPostcode', () => {
+  const actual = jest.requireActual('./kakaoPostcode');
+  return {
+    ...actual,
+    loadKakaoPostcode: () => (mockPostcodeFails
+      ? Promise.reject(new Error('blocked'))
+      : Promise.resolve(class {
+        constructor(private readonly opts: { oncomplete: (d: unknown) => void }) {}
+        embed() { this.opts.oncomplete(mockPostcodeResult); }
+      })),
+  };
+});
+
+/** 주소 검색을 눌러 결과를 고른다 — 우편번호·주소 칸이 채워질 때까지 기다린다. */
+const searchAddress = async (roadAddress = '서울시 어딘가') => {
+  mockPostcodeResult = { ...mockPostcodeBase, roadAddress };
+  await userEvent.click(screen.getByRole('button', { name: '주소 검색' }));
+  await waitFor(() => expect(screen.getByLabelText(/^주소\*$/)).toHaveValue(roadAddress));
+};
+
 const project = parseFundingProject(`---
 slug: demo
 title: 데모
@@ -62,6 +93,8 @@ rewards:
 afterEach(() => jest.restoreAllMocks());
 
 beforeEach(() => {
+  mockPostcodeFails = false;
+  mockPostcodeResult = { ...mockPostcodeBase };
   // 임시 저장(lib/formDraft.ts)이 sessionStorage에 쓴다 — 안 지우면 이 파일의 다른
   // 테스트가 남긴 이름·연락처·주소가 다음 테스트에서 되살아나 서로 간섭한다.
   window.sessionStorage.clear();
@@ -75,9 +108,72 @@ beforeEach(() => {
   }) as never;
 });
 
-it('배송 리워드는 배송지 입력이 보인다', async () => {
+it('배송 리워드는 배송지 입력이 보인다 — 받는 분은 기본이 후원자 본인이라 따로 묻지 않는다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+  expect(screen.getByLabelText(/^주소\*$/)).toBeInTheDocument();
+  expect(screen.queryByLabelText(/^받는 분\*$/)).toBeNull();
+  await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받습니다'));
   expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
+});
+
+describe('배송지', () => {
+  const fill = async () => {
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  };
+  const sentShipping = () => JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body).shipping;
+
+  it('주소 검색으로 우편번호·주소가 채워지고, 칸은 직접 고칠 수 없다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByLabelText(/^우편번호\*$/)).toHaveAttribute('readonly');
+    mockPostcodeResult = { ...mockPostcodeBase, bname: '역삼동', buildingName: '놀아파트', apartment: 'Y' };
+    await userEvent.click(screen.getByRole('button', { name: '주소 검색' }));
+    await waitFor(() => expect(screen.getByLabelText(/^우편번호\*$/)).toHaveValue('12345'));
+    expect(screen.getByLabelText(/^주소\*$/)).toHaveValue('서울시 어딘가 (역삼동, 놀아파트)');
+    // 고른 뒤에는 상세주소로 커서가 간다.
+    await waitFor(() => expect(screen.getByLabelText(/상세주소/)).toHaveFocus());
+  });
+
+  it('받는 분을 따로 적지 않으면 후원자 이름·연락처로 보낸다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await searchAddress();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(sentShipping()).toMatchObject({ name: '김후원', phone: '010-1111-2222', postcode: '12345', address1: '서울시 어딘가' });
+  });
+
+  it('다른 분이 받으면 그분의 이름·연락처로 보낸다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받습니다'));
+    await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '박수령');
+    await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-3333-4444');
+    await searchAddress();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+    expect(sentShipping()).toMatchObject({ name: '박수령', phone: '010-3333-4444' });
+  });
+
+  // 읽기 전용 칸은 브라우저의 required 검사에서 빠진다 — 비운 채 보내면 주문만 만들어진다.
+  it('주소를 넣지 않고 제출하면 주문을 만들지 않고 막는다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    expect(await screen.findByText('주소 검색으로 받으실 주소를 넣어 주세요.')).toBeInTheDocument();
+    expect(global.fetch).not.toHaveBeenCalled();
+  });
+
+  it('우편번호 서비스를 못 불러오면 직접 입력으로 연다', async () => {
+    mockPostcodeFails = true;
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: '주소 검색' }));
+    expect(await screen.findByText(/주소 검색을 불러오지 못했습니다/)).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '54321');
+    await userEvent.type(screen.getByLabelText(/^주소\*$/), '부산시 어딘가');
+    expect(screen.getByLabelText(/^주소\*$/)).toHaveValue('부산시 어딘가');
+  });
 });
 it('제출하면 곧바로 결제창을 연다 — 중간 화면이 없다', async () => {
   render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
@@ -156,11 +252,8 @@ describe('리워드 담기', () => {
     await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
     await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
     await fillBacker();
-    // CD는 배송 리워드라 배송지가 필요하다.
-    await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '김후원');
-    await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
-    await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
-    await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울');
+    // CD는 배송 리워드라 배송지가 필요하다. 받는 분은 후원자 본인이 기본이다.
+    await searchAddress('서울');
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
     await waitFor(() => expect(requestPayment).toHaveBeenCalled());
     const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
@@ -172,9 +265,9 @@ describe('리워드 담기', () => {
 
   it('배송 리워드를 담아야 배송지를 묻는다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.queryByLabelText(/^받는 분\*$/)).toBeNull();
+    expect(screen.queryByLabelText(/^주소\*$/)).toBeNull();
     await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
-    expect(screen.getByLabelText(/^받는 분\*$/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/^주소\*$/)).toBeInTheDocument();
   });
 
   it('하나 빼기로 0이 되면 담은 목록에서 빠지고, 비면 제출할 수 없다', async () => {
@@ -276,10 +369,7 @@ it('제출하면 결제수단이 toss로 나간다', async () => {
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
   await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
   await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
-  await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '김후원');
-  await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-1111-2222');
-  await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
-  await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
+  await searchAddress();
   await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
   await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
@@ -589,10 +679,11 @@ describe('임시 저장', () => {
     await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
     await userEvent.type(screen.getByLabelText(/^응원 메시지$/), '화이팅');
+    // 다른 분이 받는 경우라야 받는 분 두 칸이 저장된다 — 복원하면 체크도 다시 켜진다.
+    await userEvent.click(screen.getByLabelText('후원자가 아닌 다른 분이 받습니다'));
     await userEvent.type(screen.getByLabelText(/^받는 분\*$/), '박수령');
     await userEvent.type(screen.getByLabelText(/^받는 분 연락처\*$/), '010-3333-4444');
-    await userEvent.type(screen.getByLabelText(/^우편번호\*$/), '12345');
-    await userEvent.type(screen.getByLabelText(/^주소\*$/), '서울시 어딘가');
+    await searchAddress();
     await userEvent.type(screen.getByLabelText(/상세주소/), '101호');
     await userEvent.type(screen.getByLabelText(/배송 메모/), '문 앞');
     unmount();

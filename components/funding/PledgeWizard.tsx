@@ -14,6 +14,7 @@ import type { PublicNameStyle } from '../../lib/funding/publicName';
 import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, TextArea, TextInput } from '../ui/Field';
 import PublicNameChoice from './PublicNameChoice';
+import { formatKakaoAddress, loadKakaoPostcode } from './kakaoPostcode';
 
 /**
  * 임시 저장에 담는 문자열 10칸. 배송 리워드는 이름·전화·이메일 + 배송 6칸 + 응원 메시지로
@@ -49,6 +50,7 @@ interface Props {
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
 const EMPTY_CART_MESSAGE = '리워드를 하나 이상 담아 주세요.';
+const EMPTY_ADDRESS_MESSAGE = '주소 검색으로 받으실 주소를 넣어 주세요.';
 /** 결제를 시도한 장바구니를 되살리는 기한 — 아래 cartKey 주석. */
 const LAST_CART_TTL_MS = 30 * 60 * 1000;
 
@@ -147,6 +149,22 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
     publicNameStyle: 'real' as PublicNameStyle, publicNickname: '',
   });
   const [ship, setShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
+  /**
+   * 받는 분이 후원자와 다른가. 기본은 **같다** — 대부분 자기 앞으로 받는데 이름·연락처를 두 번
+   * 받던 것이 불만이었다(2026-09-29 운영자). 같으면 받는 분 칸을 숨기고 제출 때 후원자 이름·
+   * 연락처를 배송지에 채워 보낸다. 임시 저장 칸(DRAFT_FIELDS)을 늘리지 않으려고 이 값은
+   * 저장하지 않고, 복원한 초안에 받는 분이 적혀 있으면 true로 되짚는다.
+   */
+  const [shipToOther, setShipToOther] = useState(false);
+  /**
+   * 주소는 **검색으로** 넣는다 — 자기 우편번호를 외우는 사람은 없다. 우편번호·주소 칸은 검색
+   * 결과로만 채워지고(읽기 전용), 우편번호 서비스를 못 불러오면(차단·오프라인) 그때만 직접
+   * 입력으로 연다. 읽기 전용 칸은 브라우저의 required 검사에서 빠지므로 제출 때 따로 본다.
+   */
+  const [addressSearchOpen, setAddressSearchOpen] = useState(false);
+  const [addressManual, setAddressManual] = useState(false);
+  const addressEmbedRef = useRef<HTMLDivElement>(null);
+  const address2Ref = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const submittingRef = useRef(false);
@@ -284,6 +302,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
       address2: draft.shipAddress2 ?? prev.address2,
       memo: draft.shipMemo ?? prev.memo,
     }));
+    if (draft.shipName || draft.shipPhone) setShipToOther(true);
     setDraftRestored(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [draftKey]);
@@ -309,6 +328,31 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
     form.customerName, form.customerPhone, form.customerEmail, form.supporterMessage,
     ship.name, ship.phone, ship.postcode, ship.address1, ship.address2, ship.memo,
   ]);
+
+  useEffect(() => {
+    if (!addressSearchOpen) return;
+    let cancelled = false;
+    loadKakaoPostcode()
+      .then((Postcode) => {
+        const el = addressEmbedRef.current;
+        if (cancelled || !el) return;
+        el.innerHTML = '';
+        new Postcode({
+          width: '100%', height: '100%',
+          oncomplete: (data) => {
+            setShip((prev) => ({ ...prev, postcode: data.zonecode, address1: formatKakaoAddress(data) }));
+            setAddressSearchOpen(false);
+            window.setTimeout(() => address2Ref.current?.focus(), 0);
+          },
+        }).embed(el);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setAddressSearchOpen(false);
+        setAddressManual(true);
+      });
+    return () => { cancelled = true; };
+  }, [addressSearchOpen]);
 
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
   const allSoldOut = project.rewards.every((r) => isSoldOut(remaining, r.id));
@@ -347,6 +391,11 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
     setError(null);
     if (allSoldOut) { submittingRef.current = false; setError(ALL_SOLD_OUT_MESSAGE); return; }
     if (lines.length === 0) { submittingRef.current = false; setError(EMPTY_CART_MESSAGE); return; }
+    if (needsShipping && (!ship.postcode.trim() || !ship.address1.trim())) {
+      submittingRef.current = false;
+      setError(EMPTY_ADDRESS_MESSAGE);
+      return;
+    }
     /**
      * 위젯 약관도 제출 **전에** 본다.
      *
@@ -378,7 +427,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
           // 동의는 **결제하기를 누르는 행위**로 받는다(버튼 위 고지). 서버 검증과
           // terms_version 기록은 그대로라, 누른 시점의 판본이 증거로 남는다.
           termsAgreed: true,
-          shipping: needsShipping ? ship : undefined,
+          shipping: needsShipping
+            ? { ...ship, ...(shipToOther ? {} : { name: form.customerName, phone: form.customerPhone }) }
+            : undefined,
         }),
       });
       if (!res.headers.get('content-type')?.includes('application/json')) {
@@ -621,30 +672,75 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
           <div className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
             <p className="text-sm font-semibold text-gray-900 dark:text-white">배송지</p>
             <p className={helpClass}>담은 리워드에 배송 리워드가 있습니다. 한 번에 보내 드립니다.</p>
+            <label className="mt-4 flex cursor-pointer items-center gap-3">
+              <input
+                type="checkbox"
+                className={radioClass}
+                checked={shipToOther}
+                onChange={(e) => {
+                  setShipToOther(e.target.checked);
+                  if (!e.target.checked) setShip((prev) => ({ ...prev, name: '', phone: '' }));
+                }}
+              />
+              <span className="typo-card-meta text-gray-900 dark:text-white">후원자가 아닌 다른 분이 받습니다</span>
+            </label>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div>
-                <Field id={`${uid}-sname`} label="받는 분" required>
-                  <TextInput required maxLength={PLEDGE_TEXT_LIMITS.shippingName} value={ship.name} onChange={(e) => setShip({ ...ship, name: e.target.value })} />
+              {shipToOther && (
+                <>
+                  <div>
+                    <Field id={`${uid}-sname`} label="받는 분" required>
+                      <TextInput required maxLength={PLEDGE_TEXT_LIMITS.shippingName} value={ship.name} onChange={(e) => setShip({ ...ship, name: e.target.value })} />
+                    </Field>
+                  </div>
+                  <div>
+                    <Field id={`${uid}-sphone`} label="받는 분 연락처" required>
+                      <TextInput required inputMode="tel" maxLength={PLEDGE_TEXT_LIMITS.shippingPhone} value={ship.phone} onChange={(e) => setShip({ ...ship, phone: e.target.value })} />
+                    </Field>
+                  </div>
+                </>
+              )}
+              <div className="flex items-end gap-2 sm:col-span-2">
+                <Field id={`${uid}-post`} label="우편번호" required className="w-32 shrink-0">
+                  <TextInput
+                    required
+                    readOnly={!addressManual}
+                    inputMode="numeric"
+                    maxLength={PLEDGE_TEXT_LIMITS.shippingPostcode}
+                    value={ship.postcode}
+                    onClick={() => { if (!addressManual) setAddressSearchOpen(true); }}
+                    onChange={(e) => setShip({ ...ship, postcode: e.target.value })}
+                  />
                 </Field>
+                {!addressManual && (
+                  <Button type="button" variant="outline" onClick={() => setAddressSearchOpen((open) => !open)} aria-expanded={addressSearchOpen}>
+                    {addressSearchOpen ? '검색 닫기' : '주소 검색'}
+                  </Button>
+                )}
               </div>
-              <div>
-                <Field id={`${uid}-sphone`} label="받는 분 연락처" required>
-                  <TextInput required inputMode="tel" maxLength={PLEDGE_TEXT_LIMITS.shippingPhone} value={ship.phone} onChange={(e) => setShip({ ...ship, phone: e.target.value })} />
-                </Field>
-              </div>
-              <div>
-                <Field id={`${uid}-post`} label="우편번호" required>
-                  <TextInput required inputMode="numeric" maxLength={PLEDGE_TEXT_LIMITS.shippingPostcode} value={ship.postcode} onChange={(e) => setShip({ ...ship, postcode: e.target.value })} />
-                </Field>
-              </div>
-              <div>
+              {addressSearchOpen && (
+                <div className="sm:col-span-2">
+                  <div ref={addressEmbedRef} className="h-[440px] overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700" />
+                </div>
+              )}
+              {addressManual && (
+                <p className="typo-card-meta sm:col-span-2" role="status">주소 검색을 불러오지 못했습니다. 우편번호와 주소를 직접 적어 주세요.</p>
+              )}
+              <div className="sm:col-span-2">
                 <Field id={`${uid}-addr1`} label="주소" required>
-                  <TextInput required maxLength={PLEDGE_TEXT_LIMITS.shippingAddress1} value={ship.address1} onChange={(e) => setShip({ ...ship, address1: e.target.value })} />
+                  <TextInput
+                    required
+                    readOnly={!addressManual}
+                    maxLength={PLEDGE_TEXT_LIMITS.shippingAddress1}
+                    value={ship.address1}
+                    placeholder={addressManual ? undefined : '주소 검색을 눌러 찾아 주세요'}
+                    onClick={() => { if (!addressManual && !ship.address1) setAddressSearchOpen(true); }}
+                    onChange={(e) => setShip({ ...ship, address1: e.target.value })}
+                  />
                 </Field>
               </div>
               <div>
                 <Field id={`${uid}-addr2`} label="상세주소">
-                  <TextInput maxLength={PLEDGE_TEXT_LIMITS.shippingAddress2} value={ship.address2} onChange={(e) => setShip({ ...ship, address2: e.target.value })} />
+                  <TextInput ref={address2Ref} maxLength={PLEDGE_TEXT_LIMITS.shippingAddress2} value={ship.address2} onChange={(e) => setShip({ ...ship, address2: e.target.value })} />
                 </Field>
               </div>
               <div>
