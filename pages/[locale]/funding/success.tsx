@@ -21,7 +21,7 @@ import { clearDraftsByPrefix, clearStoredDraft, draftStorageKey } from '../../..
 import { trackMicroEvent } from '../../../utils/analytics';
 import SupporterListingEditor from '../../../components/funding/SupporterListingEditor';
 import { showsMessageAnonymously } from '../../../lib/funding/policy';
-import { pledgeLines } from '../../../lib/funding/pledgeLines';
+import { activePledgeLines, pledgeLines } from '../../../lib/funding/pledgeLines';
 import { pledgeDownloads } from '../../../lib/funding/shape';
 
 interface SuccessProps {
@@ -419,7 +419,7 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     };
   }
   const project = order.fundingPledge ? await getFundingProjectAsync(order.fundingPledge.projectSlug) : null;
-  const downloads = (order.fundingPledge ? pledgeDownloads(project, pledgeLines(order.fundingPledge).map((l) => l.rewardId)) : [])
+  const downloads = (order.fundingPledge ? pledgeDownloads(project, activePledgeLines(pledgeLines(order.fundingPledge)).map((l) => l.rewardId)) : [])
     .map((d) => ({ label: d.label, key: d.key }));
 
   return {

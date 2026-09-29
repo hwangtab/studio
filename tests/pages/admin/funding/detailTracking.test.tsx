@@ -15,7 +15,7 @@ import type { AdminPledgeItem } from '../../../../lib/funding/admin-serialize';
 const PLEDGE: AdminPledgeItem = {
   id: 'order-1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
-  rewardLabel: 'CD × 1', additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'shipped',
+  rewardLabel: 'CD × 1', lines: [{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1, refundedQuantity: 0 }], additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'shipped',
   trackingCompany: 'CJ', trackingNumber: '123', shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null, listingHiddenAt: null, listingHiddenName: null,
   refundRequestedAt: null,
   paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,
@@ -41,7 +41,7 @@ it('partially_refunded도 환불 버튼이 보이고, confirm에 남은 잔액�
   (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
   window.confirm = jest.fn().mockReturnValue(false);
   render(<AdminFundingDetailPage pledge={{ ...PLEDGE, status: 'partially_refunded' }} refundableAmount={18000} />);
-  fireEvent.click(screen.getByRole('button', { name: /환불/ }));
+  fireEvent.click(screen.getByRole('button', { name: '환불' }));
   expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('18,000원'));
 });
 
@@ -253,5 +253,33 @@ describe('후원자 명단에서 내리기 버튼', () => {
       />,
     );
     expect(screen.getByText(/내릴 때 이름: 욕설닉네임/)).toBeInTheDocument();
+  });
+});
+
+// 줄 단위 일부 환불(lib/funding/lineRefund.ts) — 카드 결제 건에서만 보이고, 사유를 받아 보낸다.
+describe('리워드별 일부 환불', () => {
+  const multi: AdminPledgeItem = {
+    ...PLEDGE,
+    status: 'paid',
+    paymentMethod: 'toss',
+    lines: [
+      { rewardId: 'mp3', rewardTitle: 'MP3', unitAmount: 10000, quantity: 1, refundedQuantity: 0 },
+      { rewardId: 'book', rewardTitle: '시집', unitAmount: 13000, quantity: 2, refundedQuantity: 1 },
+    ],
+  };
+
+  it('줄마다 환불 버튼을 두고, 사유와 수량을 담아 refund_line을 보낸다', async () => {
+    (patchPledge as jest.Mock).mockResolvedValue({ ok: true });
+    jest.spyOn(window, 'prompt').mockReturnValue('청약철회');
+    render(<AdminFundingDetailPage pledge={multi} refundableAmount={23000} />);
+    expect(screen.getByText(/시집 × 2 \(1개 환불됨\)/)).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole('button', { name: '이 리워드 환불' })[1]);
+    await Promise.resolve();
+    expect(patchPledge).toHaveBeenCalledWith(multi.id, { action: 'refund_line', rewardId: 'book', quantity: 1, reason: '청약철회' });
+  });
+
+  it('계좌(수기) 후원에는 보이지 않는다', () => {
+    render(<AdminFundingDetailPage pledge={{ ...multi, paymentMethod: 'bank_transfer' }} refundableAmount={23000} />);
+    expect(screen.queryByText('리워드별 일부 환불')).toBeNull();
   });
 });

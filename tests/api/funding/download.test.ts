@@ -56,7 +56,7 @@ const call = async (body: Record<string, string>, method = 'POST') => {
 
 const paidOrder = {
   id: 1, orderNo: 'FND-1', manageToken: 'correct-token', status: 'paid',
-  fundingPledge: { id: 7, projectSlug: 'demo', rewardId: 'mp3' },
+  fundingPledge: { id: 7, projectSlug: 'demo', rewardId: 'mp3', rewardTitle: 'MP3', unitAmount: 10000, quantity: 1 },
 };
 
 const projectWithTiers = {

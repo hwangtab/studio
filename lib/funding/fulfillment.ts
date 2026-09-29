@@ -6,7 +6,7 @@ import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from './refundab
 import { PRIVACY_ACTOR_ADMIN } from '../privacy/accessLog';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
-import { pledgeLines } from './pledgeLines';
+import { activePledgeLines, pledgeLines } from './pledgeLines';
 
 /**
  * 발송 상태 전환을 관리자·개설자가 함께 쓰는 서비스로 뽑은 것.
@@ -134,7 +134,7 @@ export const setFulfillment = async (input: {
    * 건에 기산점을 남기는 쪽보다 안전하다.
    */
   const project = await getFundingProjectAsync(pledge.projectSlug);
-  const deliveredAt = isDigitalOrder(project, pledgeLines(pledge).map((l) => l.rewardId))
+  const deliveredAt = isDigitalOrder(project, activePledgeLines(pledgeLines(pledge)).map((l) => l.rewardId))
     ? sql`delivered_at`
     : status === 'delivered'
       ? sql`COALESCE(delivered_at, ${Math.floor(now.getTime() / 1000)})`

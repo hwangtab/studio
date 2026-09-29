@@ -12,7 +12,7 @@ import { isPastFundingEnd } from '../../../../lib/funding/projectState';
 import { getFundingProjectOrFailure } from '../../../../lib/funding/repository';
 import { expireStalePledges, findFundingOrderByOrderNo } from '../../../../lib/funding/service';
 import SupporterListingEditor from '../../../../components/funding/SupporterListingEditor';
-import { pledgeLines, pledgeLinesLabel } from '../../../../lib/funding/pledgeLines';
+import { activePledgeLines, pledgeLines, pledgeLinesLabel } from '../../../../lib/funding/pledgeLines';
 import { pledgeDownloads } from '../../../../lib/funding/shape';
 
 interface Props {
@@ -215,7 +215,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
    * 쓴다(lib/funding/refundable.ts).
    */
   const lines = pledgeLines(pl);
-  const downloads = isLiveFundingOrderStatus(order.status) ? pledgeDownloads(project, lines.map((l) => l.rewardId)) : [];
+  const downloads = isLiveFundingOrderStatus(order.status) ? pledgeDownloads(project, activePledgeLines(lines).map((l) => l.rewardId)) : [];
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardLabel: pledgeLinesLabel(lines),
@@ -225,7 +225,7 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     canCancel: lookupFailed ? false : verdict.ok,
     cancelBlockedReason: lookupFailed || verdict.ok ? null : cancelBlockedMessage(
       verdict.code,
-      lines.filter((l) => project?.rewards.find((r) => r.id === l.rewardId)?.requiresShipping).map((l) => l.rewardTitle),
+      activePledgeLines(lines).filter((l) => project?.rewards.find((r) => r.id === l.rewardId)?.requiresShipping).map((l) => l.rewardTitle),
     ),
     lookupFailed,
     refundRequested: pl.refundRequestedAt !== null,

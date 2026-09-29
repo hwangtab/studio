@@ -31,7 +31,7 @@ const NOW = new Date('2026-10-15T03:00:00Z');
 const ITEM: AdminPledgeItem = {
   id: 'o1', orderNo: 'FND-1', projectSlug: 'demo', status: 'paid', paymentMethod: 'toss',
   entrySource: 'online', customerName: '김후원', customerPhone: '010-1111-2222', customerEmail: 'a@b.com',
-  rewardLabel: 'CD × 1', additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
+  rewardLabel: 'CD × 1', lines: [{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1, refundedQuantity: 0 }], additionalAmount: 0, totalAmount: 30000, fulfillmentStatus: 'none',
   trackingCompany: null, trackingNumber: null, shipping: null, supporterMessage: null, displayNamePublic: false, publicName: null, listingHiddenAt: null, listingHiddenName: null,
   refundRequestedAt: null,
   paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,

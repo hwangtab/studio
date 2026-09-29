@@ -1,0 +1,1 @@
+ALTER TABLE `funding_pledge_items` ADD `refunded_quantity` integer DEFAULT 0 NOT NULL;

@@ -17,30 +17,54 @@ export interface PledgeLine {
   rewardId: string;
   rewardTitle: string;
   unitAmount: number;
+  /** 산 수량. 환불해도 줄지 않는다 — 무엇을 샀는지는 기록이다. */
   quantity: number;
+  /** 줄 단위 부분 환불로 돌려준 수량(lib/funding/lineRefund.ts). 옛 칸 폴백 줄은 늘 0. */
+  refundedQuantity: number;
 }
 
-interface PledgeWithLegacyLine extends PledgeLine {
-  items?: ReadonlyArray<PledgeLine & { position: number }> | null;
+type PledgeItemLike = Omit<PledgeLine, 'refundedQuantity'> & { position: number; refundedQuantity?: number | null };
+
+interface PledgeWithLegacyLine {
+  rewardId: string;
+  rewardTitle: string;
+  unitAmount: number;
+  quantity: number;
+  items?: ReadonlyArray<PledgeItemLike> | null;
 }
 
 export const pledgeLines = (pledge: PledgeWithLegacyLine): PledgeLine[] => {
   const items = pledge.items ?? [];
   if (items.length === 0) {
-    return [{ rewardId: pledge.rewardId, rewardTitle: pledge.rewardTitle, unitAmount: pledge.unitAmount, quantity: pledge.quantity }];
+    return [{ rewardId: pledge.rewardId, rewardTitle: pledge.rewardTitle, unitAmount: pledge.unitAmount, quantity: pledge.quantity, refundedQuantity: 0 }];
   }
   return [...items]
     .sort((a, b) => a.position - b.position)
-    .map(({ rewardId, rewardTitle, unitAmount, quantity }) => ({ rewardId, rewardTitle, unitAmount, quantity }));
+    .map(({ rewardId, rewardTitle, unitAmount, quantity, refundedQuantity }) => ({
+      rewardId, rewardTitle, unitAmount, quantity, refundedQuantity: refundedQuantity ?? 0,
+    }));
 };
+
+/**
+ * **살아 있는** 줄만 — 수량은 `산 수량 − 환불 수량`, 0이 된 줄은 뺀다. 내려받기·배송·
+ * "전부 디지털인가" 판정처럼 지금 이행해야 하는 것을 묻는 자리에 쓴다. 기록을 보여 주는
+ * 자리(메일·관리자 표시)는 `pledgeLines`를 쓰고 환불을 따로 적는다.
+ */
+export const activePledgeLines = (lines: readonly PledgeLine[]): PledgeLine[] =>
+  lines.flatMap((l) => {
+    const quantity = l.quantity - l.refundedQuantity;
+    return quantity > 0 ? [{ ...l, quantity, refundedQuantity: 0 }] : [];
+  });
 
 /** 줄들의 리워드 금액 합(추가 펀딩 제외). */
 export const pledgeLinesAmount = (lines: readonly Pick<PledgeLine, 'unitAmount' | 'quantity'>[]): number =>
   lines.reduce((sum, l) => sum + l.unitAmount * l.quantity, 0);
 
 /** 한 줄 요약 — "『발작』 × 1, 『갱도』 × 1". 관리자 목록·CSV·장부처럼 칸이 하나인 자리에 쓴다. */
-export const pledgeLinesLabel = (lines: readonly Pick<PledgeLine, 'rewardTitle' | 'quantity'>[]): string =>
-  lines.map((l) => `${l.rewardTitle} × ${l.quantity}`).join(', ');
+export const pledgeLinesLabel = (lines: readonly (Pick<PledgeLine, 'rewardTitle' | 'quantity'> & { refundedQuantity?: number })[]): string =>
+  lines
+    .map((l) => `${l.rewardTitle} × ${l.quantity}${l.refundedQuantity ? ` (${l.refundedQuantity}개 환불)` : ''}`)
+    .join(', ');
 
 /**
  * 짧은 이름 — 한 줄이면 그 제목, 여러 줄이면 "첫 제목 외 N건". 결제창 주문명처럼 길이 제한이

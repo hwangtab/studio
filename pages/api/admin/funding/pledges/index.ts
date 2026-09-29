@@ -10,17 +10,19 @@ import { generateManageToken } from '../../../../../lib/booking/token';
 import { rowsAffectedOf } from '../../../../../lib/booking/confirm';
 import { listFundingOrders } from '../../../../../lib/funding/admin-list';
 import { serializePledgeForAdmin } from '../../../../../lib/funding/admin-serialize';
-import { computeFundingAmounts, splitFundingAmount } from '../../../../../lib/funding/amounts';
+import { computeFundingAmountsForLines, splitFundingAmount } from '../../../../../lib/funding/amounts';
+import { pledgeLinesShortTitle } from '../../../../../lib/funding/pledgeLines';
+import type { ResolvedPledgeLine } from '../../../../../lib/funding/validation';
 import { deliverConfirmedEmailsOnce } from '../../../../../lib/funding/confirm';
 import {
   ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_MANUAL_ACTUAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS,
 } from '../../../../../lib/funding/policy';
 import { findReward } from '../../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../../lib/funding/repository';
-import { isDigitalReward } from '../../../../../lib/funding/shape';
+import { isDigitalOrder } from '../../../../../lib/funding/shape';
 import {
   MANUAL_PLACEHOLDER_EMAIL, MANUAL_PLACEHOLDER_PHONE,
-  aggregateProjectStatus, expireStalePledges, findFundingOrderByOrderNo, fundingStockCondition,
+  aggregateProjectStatus, allLinesStockCondition, expireStalePledges, findFundingOrderByOrderNo,
   generateFundingOrderNo,
 } from '../../../../../lib/funding/service';
 import { SEND_PENDING } from '../../../../../lib/ops/notificationSentinel';
@@ -44,15 +46,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (req.method === 'POST') {
     const b = (typeof req.body === 'object' && req.body) || {};
     const project = await getFundingProjectAsync(String(b.projectSlug ?? ''));
-    const reward = project && typeof b.rewardId === 'string' ? findReward(project, b.rewardId) : undefined;
-    const quantity = Number(b.quantity ?? 1);
+    /**
+     * 담은 리워드. 온라인과 같이 `items: [{ rewardId, quantity }]`를 받고, 한 리워드만 보내던
+     * 옛 모양(`rewardId`·`quantity`)도 받는다. 현장 후원에서 CD와 책을 함께 산 사람을 한 건으로
+     * 적으려면 여러 줄이 필요하다 — 줄마다 따로 등록하면 건수가 부풀고 한 사람이 둘로 보인다.
+     */
+    const rawItems: unknown[] = Array.isArray(b.items)
+      ? b.items
+      : [{ rewardId: b.rewardId, quantity: b.quantity ?? 1 }];
+    const lines: ResolvedPledgeLine[] = [];
+    let linesValid = rawItems.length > 0 && !!project && rawItems.length <= (project?.rewards.length ?? 0);
+    for (const raw of rawItems) {
+      const item = (typeof raw === 'object' && raw !== null ? raw : {}) as Record<string, unknown>;
+      const r = project && typeof item.rewardId === 'string' ? findReward(project, item.rewardId) : undefined;
+      const q = Number(item.quantity ?? 1);
+      if (!r || !Number.isInteger(q) || q < 1 || q > MAX_QUANTITY || lines.some((l) => l.reward.id === r.id)) {
+        linesValid = false;
+        break;
+      }
+      lines.push({ reward: r, quantity: q });
+    }
     const additionalAmount = Number(b.additionalAmount ?? 0);
     if (
       !project ||
-      !reward ||
-      !Number.isInteger(quantity) ||
-      quantity < 1 ||
-      quantity > MAX_QUANTITY ||
+      !linesValid ||
       !Number.isInteger(additionalAmount) ||
       additionalAmount < 0 ||
       additionalAmount > MAX_ADDITIONAL_AMOUNT ||
@@ -94,7 +111,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 걸리고(1/10) 실무의 에누리 폭은 걸리지 않는다.
      */
     if (hasActualAmount) {
-      const expected = computeFundingAmounts(reward.amount, quantity, additionalAmount).totalAmount;
+      const expected = computeFundingAmountsForLines(lines.map((l) => ({ unitAmount: l.reward.amount, quantity: l.quantity })), additionalAmount).totalAmount;
       if (actualAmount * 2 < expected) {
         return res.status(400).json({
           ok: false,
@@ -108,16 +125,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 이 사전 검사는 **사람에게 이유를 알려 주기 위한 것**이고, 초과 판매를 실제로 막는 것은
     // 아래 INSERT에 실린 재고 조건이다(fundingStockCondition). 여기서만 검사하면 읽기와 쓰기
     // 사이에 들어온 온라인 후원과 둘 다 통과해 한정 수량을 넘긴다.
-    if (reward.totalQuantity !== null) {
+    if (lines.some((l) => l.reward.totalQuantity !== null)) {
       const status = await aggregateProjectStatus(project, now);
-      const remaining = status.remaining[reward.id];
-      if (remaining !== null && remaining !== undefined && quantity > remaining) {
-        return res.status(409).json({ ok: false, message: `남은 수량(${remaining})을 초과합니다.` });
+      for (const l of lines) {
+        const remaining = status.remaining[l.reward.id];
+        if (l.reward.totalQuantity !== null && remaining !== null && remaining !== undefined && l.quantity > remaining) {
+          return res.status(409).json({ ok: false, message: `${l.reward.title}의 남은 수량(${remaining})을 초과합니다.` });
+        }
       }
     }
     const amounts = hasActualAmount
       ? splitFundingAmount(actualAmount)
-      : computeFundingAmounts(reward.amount, quantity, additionalAmount);
+      : computeFundingAmountsForLines(lines.map((l) => ({ unitAmount: l.reward.amount, quantity: l.quantity })), additionalAmount);
     const orderNo = generateFundingOrderNo(now, true);
     // ?? 는 빈 문자열을 통과시킨다 — 관리자 폼이 비운 이메일 칸을 그대로 보내면
     // customer_email=''인 주문이 생겨 확정 메일이 빈 주소로 나가고 실패한다. 공백만 있는
@@ -164,7 +183,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 수기 등록은 confirm을 타지 않고, `setFulfillment`는 디지털이면 delivered_at을 일부러
      * 건드리지 않기 때문에 운영자가 `delivered`를 눌러도 채워지지 않는다.
      */
-    const digitalDeliveredAt = isDigitalReward(project, reward.id) ? epoch(now) : null;
+    const digitalDeliveredAt = isDigitalOrder(project, lines.map((l) => l.reward.id)) ? epoch(now) : null;
+    // 줄마다 재고 조건을 AND로, 새 주문 자신은 뺀다 — 온라인 생성(createFundingPledge)과 같은
+    // 이유로, 줄을 한 문장씩 넣으면 앞 문장이 넣은 자기 줄이 뒤 문장 판정에 세어진다.
+    const stockCondition = allLinesStockCondition(project.slug, lines, now, orderNo);
+    const first = lines[0];
     const result = await db.batch([
       // orders·funding_pledges INSERT를 하나의 배치로 묶는다 — 둘 중 하나만 성공하면
       // payments 없이 paid로 남는 고아 주문이 생긴다(예약 confirm.ts의 batch 패턴).
@@ -190,15 +213,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           shipping_name, shipping_phone, shipping_postcode, shipping_address1, shipping_address2, shipping_memo,
           admin_memo
         )
-        SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${reward.id}, ${reward.title}, ${reward.amount},
-               ${quantity}, ${additionalAmount}, 'bank_transfer', ${epoch(now)}, ${epoch(now)},
+        SELECT ${pledgeId}, ${orderId}, ${project.slug}, ${first.reward.id},
+               ${pledgeLinesShortTitle(lines.map((l) => ({ rewardTitle: l.reward.title })))}, ${first.reward.amount},
+               ${first.quantity}, ${additionalAmount}, 'bank_transfer', ${epoch(now)}, ${epoch(now)},
                ${digitalDeliveredAt},
                ${b.displayNamePublic === true ? 1 : 0}, 'manual',
                ${s.name ?? null}, ${s.phone ?? null}, ${s.postcode ?? null},
                ${s.address1 ?? null}, ${s.address2 ?? null}, ${s.memo ?? null},
                ${typeof b.adminMemo === 'string' ? b.adminMemo : null}
-        WHERE ${fundingStockCondition(project.slug, reward, quantity, now)}
+        WHERE ${stockCondition}
       `),
+      // 줄(funding_pledge_items). 옛 칸에는 첫 줄만 들어가므로 줄의 정본은 여기다.
+      ...lines.map((l, position) => db.run(sql`
+        INSERT INTO funding_pledge_items (id, pledge_id, position, reward_id, reward_title, unit_amount, quantity)
+        SELECT ${randomUUID().replace(/-/g, '')}, ${pledgeId}, ${position}, ${l.reward.id}, ${l.reward.title}, ${l.reward.amount}, ${l.quantity}
+        WHERE ${stockCondition}
+      `)),
     ]);
 
     /**

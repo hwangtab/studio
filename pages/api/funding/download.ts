@@ -10,7 +10,7 @@ import { getFundingProjectOrFailure } from '../../../lib/funding/repository';
 import { isLiveFundingOrderStatus, liveFundingOrderStatusList } from '../../../lib/funding/refundable';
 import { alertMissingDownloadObject } from '../../../lib/funding/downloadAlert';
 import { fundingDownloadObjectExists, presignFundingDownload } from '../../../lib/funding/r2';
-import { pledgeLines } from '../../../lib/funding/pledgeLines';
+import { activePledgeLines, pledgeLines } from '../../../lib/funding/pledgeLines';
 import { pledgeDownloads } from '../../../lib/funding/shape';
 
 /**
@@ -78,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
   // `file`은 **이 후원자가 담은 리워드들이 주는 키**와 일치해야 한다. 목록에 없는 값을 넘겨
   // 다른 티어의 파일이나 버킷의 다른 객체에 서명을 받아 내지 못하게 한다.
-  const target = pledgeDownloads(project, pledgeLines(pledge).map((l) => l.rewardId)).find((d) => d.key === file);
+  const target = pledgeDownloads(project, activePledgeLines(pledgeLines(pledge)).map((l) => l.rewardId)).find((d) => d.key === file);
   if (!target) return res.status(404).json(NOT_FOUND);
 
   /**

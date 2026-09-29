@@ -625,8 +625,8 @@ describe('여러 리워드를 담은 후원', () => {
     expect(c.amounts.totalAmount).toBe(5000 * 2 + 30000);
     const order = await findFundingOrderByOrderNo(c.orderNo);
     expect(pledgeLines(order!.fundingPledge!)).toEqual([
-      { rewardId: 'mail', rewardTitle: '감사 메일', unitAmount: 5000, quantity: 2 },
-      { rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1 },
+      { rewardId: 'mail', rewardTitle: '감사 메일', unitAmount: 5000, quantity: 2, refundedQuantity: 0 },
+      { rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1, refundedQuantity: 0 },
     ]);
     // 옛 칸에는 첫 줄이 복사되고, 제목은 여러 개라는 것이 보이게 적힌다.
     expect(order!.fundingPledge!.rewardId).toBe('mail');
@@ -663,6 +663,6 @@ describe('여러 리워드를 담은 후원', () => {
     const again = await multi([{ rewardId: 'cd', quantity: 1 }]);
     expect(again).toEqual({ ok: false, code: 'sold_out' });
     const order = await findFundingOrderByOrderNo(legacy.orderNo);
-    expect(pledgeLines(order!.fundingPledge!)).toEqual([{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1 }]);
+    expect(pledgeLines(order!.fundingPledge!)).toEqual([{ rewardId: 'cd', rewardTitle: 'CD', unitAmount: 30000, quantity: 1, refundedQuantity: 0 }]);
   });
 });
