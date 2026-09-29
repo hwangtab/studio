@@ -20,7 +20,7 @@ import { navLabels } from '../lib/navLabels';
 import { markNavigated } from '../lib/navigationState';
 import { isPrivateAnalyticsPath } from '../lib/analytics/privatePaths';
 import { isAdminRoute } from '../lib/adminRoute';
-import { hashId, historyKey, pinHashTarget, restoreScroll, routeTransitionKey, scrollMemory } from '../lib/routeScroll';
+import { hashId, historyKey, pinHashTarget, restoreScroll, routeTransitionKey, scrollMemory, beforePopStateForScroll } from '../lib/routeScroll';
 import { DesignEditionContext } from '../lib/designEdition';
 
 
@@ -106,11 +106,7 @@ function StudioNoriApp({ Component, pageProps }: AppPropsWithLayout) {
         scrollMemory.record(window.scrollY);
       });
     };
-    Router.beforePopState((state) => {
-      const key = (state as { key?: unknown }).key;
-      scrollMemory.popped(typeof key === 'string' ? key : null);
-      return true;
-    });
+    Router.beforePopState(beforePopStateForScroll);
     const onStart = () => scrollMemory.leave();
     // 같은 문서 안의 뒤로·앞으로 가기는 우리가 복원한다. 브라우저 기본 복원을 켜 두면 popstate 전에
     // **옛 페이지**를 기억한 위치로 먼저 움직여, 새 페이지가 붙기 전 몇 프레임 옛 화면이 튄다(WebKit

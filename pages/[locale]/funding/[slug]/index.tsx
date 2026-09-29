@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -68,7 +68,49 @@ export default function FundingProjectPage({ project, initialState, initialStatu
     setCheckoutOpen(true);
     trackMicroEvent('funding_pledge_start', { component: 'funding_cta', landing_slug: project.slug });
   }, [project.slug]);
-  const closeModal = useCallback(() => { setOpenReward(null); setCheckoutOpen(false); }, []);
+  /**
+   * **뒤로가기는 모달만 닫는다.** 예전엔 모달이 떠 있을 때 뒤로가기를 누르면 펀딩 페이지를 통째로
+   * 떠났다 — 카카오톡·인스타그램에서 들어온 안드로이드 사용자는 대화방으로 튕겨 나갔다
+   * (2026-09-29 운영 확인). 모든 "펀딩하기"가 모달을 여는 뒤로 영향이 커졌다.
+   *
+   * 열 때 **같은 주소로** 기록 한 칸을 쌓는다. 주소가 그대로라 GA 페이지뷰가 늘지 않는다.
+   * next의 `beforePopState`는 쓰지 않는다 — 콜백이 하나뿐이라 _app의 스크롤 복원을 덮는다
+   * (lib/routeScroll.ts beforePopStateForScroll). 대신 창의 popstate를 듣는다. 쌓은 칸은 기존
+   * 칸의 상태를 복사하므로(`key` 포함) 스크롤 기억도 같은 칸으로 이어진다.
+   *
+   * 닫기(✕·Esc·바깥 누르기)는 쌓은 칸이 맨 위에 있으면 `history.back()`으로 걷어 내고, 그
+   * popstate가 모달을 닫는다 — 닫고 나서 뒤로가기를 한 번 더 눌러야 페이지를 떠나는 일이 없게.
+   */
+  const historyPushedRef = useRef(false);
+  const modalOpen = openReward !== null || checkoutOpen;
+  useEffect(() => {
+    if (!modalOpen || historyPushedRef.current) return;
+    try {
+      window.history.pushState({ ...(window.history.state ?? {}), fundingModal: true }, '');
+      historyPushedRef.current = true;
+    } catch {
+      /* 기록을 못 쌓아도 모달은 뜬다 — 뒤로가기만 예전처럼 동작한다. */
+    }
+  }, [modalOpen]);
+  useEffect(() => {
+    const onPopState = (e: PopStateEvent) => {
+      if (!historyPushedRef.current || (e.state as { fundingModal?: boolean } | null)?.fundingModal) return;
+      historyPushedRef.current = false;
+      setOpenReward(null);
+      setCheckoutOpen(false);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+  const closeModal = useCallback(() => {
+    if (historyPushedRef.current && (window.history.state as { fundingModal?: boolean } | null)?.fundingModal) {
+      window.history.back();
+      return;
+    }
+    historyPushedRef.current = false;
+    setOpenReward(null);
+    setCheckoutOpen(false);
+  }, []);
   // ProjectDetailView(리워드 카드)와 같은 폴백 계산이다 — 한쪽만 고치면 카드에 보이는
   // 잔여 수량과 모달이 실제로 거는 제한이 갈린다(lib/funding/projects.ts 주석 참조).
   const remaining = useMemo(() => mergeRewardRemaining(project.rewards, data?.remaining), [data?.remaining, project.rewards]);
