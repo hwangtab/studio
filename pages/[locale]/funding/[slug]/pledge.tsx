@@ -3,6 +3,7 @@ import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 import Link from 'next/link';
 import PledgeWizard from '../../../../components/funding/PledgeWizard';
+import { useFundingStatus } from '../../../../components/funding/useFundingStatus';
 import FundingTrustNotice from '../../../../components/funding/FundingTrustNotice';
 import { computeProjectState, stripRewardDownloads, type FundingProject } from '../../../../lib/funding/projects';
 import { getFundingProjectAsync } from '../../../../lib/funding/repository';
@@ -16,6 +17,10 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
   // 제출 성공이 아니라 위저드 진입 시점에 발화한다(펀딩 퍼널 이탈 측정 목적).
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => { trackMicroEvent('funding_pledge_start', { component: 'funding_pledge', landing_slug: project.slug }); }, []);
+  // 남은 수량을 상세 페이지·모달과 같은 폴링으로 새로 받는다. 결제 실패 뒤 "다시 펀딩하기"와
+  // 새 탭 클릭이 이 페이지로 오므로, SSR 값만 쓰면 폼을 채우는 사이 팔린 리워드를 품절로
+  // 못 보여 주고 제출에서야 409로 알게 된다. PledgeWizard가 바뀐 remaining으로 담은 수량을 줄인다.
+  const { data } = useFundingStatus(project.slug, 'live', { status: project.status, startAt: project.startAt, endAt: project.endAt });
   return (
     <>
       <Head><title>{project.title} 펀딩하기 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
@@ -27,7 +32,7 @@ export default function PledgePage({ project, initialRewardId, remaining }: Prop
         </p>
         <h1 className="typo-section-title mt-3">펀딩하기</h1>
         <p className="typo-section-lead mt-3">리워드를 담고 후원자 정보를 입력하면 결제로 이어집니다.</p>
-        <div className="mt-10"><PledgeWizard project={project} initialRewardId={initialRewardId} remaining={remaining} /></div>
+        <div className="mt-10"><PledgeWizard project={project} initialRewardId={initialRewardId} remaining={data?.remaining ?? remaining} /></div>
         <div className="mt-12"><FundingTrustNotice /></div>
       </main>
     </>

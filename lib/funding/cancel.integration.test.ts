@@ -207,6 +207,26 @@ describe('cancelFundingPledge', () => {
   });
 
   /**
+   * 성공 경로의 같은 경합. 토스 응답이 늦는 사이 CANCELED 웹훅이 이 취소를 먼저 기록하면
+   * 우리는 전액을 또 적지 않는다 — 예전엔 5,000원 주문에 10,000원의 done 환불이 남았다.
+   * 취소 메일도 웹훅이 보냈으므로 다시 보내지 않는다.
+   */
+  it('토스 응답이 늦는 사이 웹훅이 먼저 기록하면 성공해도 환불을 두 번 적지 않는다', async () => {
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    (cancelPayment as jest.Mock).mockImplementationOnce(async () => {
+      await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('rw','p1',5000,'웹훅 대사','webhook','done')");
+      return { ok: true, payment: { paymentKey: 'pk_c', orderId: c.orderNo, status: 'CANCELED', totalAmount: 5000, cancels: [{ transactionKey: 'tx', cancelAmount: 5000 }] } };
+    });
+
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toEqual({ ok: true, mode: 'refunded', refundAmount: 5000 });
+    const rows = await client.execute("SELECT SUM(amount) AS total, COUNT(*) AS n FROM refunds WHERE status = 'done'");
+    expect(rows.rows[0]).toMatchObject({ total: 5000, n: 1 });
+    expect(sendFundingCancelledEmails).not.toHaveBeenCalled();
+  });
+
+  /**
    * 대조. 웹훅이 끼어들지 않았으면 예전처럼 되돌아가야 한다 — 가드가 정상 실패까지
    * 붙들어 두면 결제된 건이 영영 refunded로 남는다. 이미 부분환불이 있던 건도 마찬가지다.
    */

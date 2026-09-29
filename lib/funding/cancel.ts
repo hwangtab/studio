@@ -208,15 +208,34 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
       message: internal ? GENERIC : adminOnly ? VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE : toss.message,
     };
   }
+  /**
+   * 우리가 읽은 뒤 **그 사이 기록된 done 환불만큼 덜어 낸다.** 토스 응답이 늦는 사이 CANCELED
+   * 웹훅이 먼저 도착하면 `syncFundingCancelledFromToss`가 이 취소를 이미 적는다. 전액을 또
+   * 적으면 원장이 두 배가 되고 매출 장부의 순매출이 음수가 된다. 조건과 금액을 한 문장에
+   * 실어 웹훅의 델타 INSERT와 서로 직렬화되게 한다(lineRefund.ts와 같은 관례).
+   *
+   * 기준은 토스 `cancels` 합계가 아니라 읽은 시점의 기록 합계다 — 수기로 기록된 부분 환불은
+   * 토스 누적 취소액에 없고, 환불 행이 다른 결제 행에 붙어 있을 수 있어 주문 전체로 센다.
+   * 0행이면 웹훅이 이미 기록했고 취소 메일도 그쪽이 보냈다.
+   */
+  const doneSumBefore = order.payments.reduce(
+    (sum, p) => sum + (p.refunds ?? []).filter((r) => r.status === 'done').reduce((s, r) => s + r.amount, 0),
+    0,
+  );
+  const doneSumNow = sql`COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id IN (SELECT id FROM payments WHERE order_id = ${order.id}) AND status = 'done'), 0)`;
+  let recorded: boolean;
   try {
-    await db.insert(refunds).values({
-      paymentId: payment!.id, amount: refundAmount, reason: input.reason, requestedBy: input.requestedBy,
-      tossTransactionKey: toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null, status: 'done',
-    });
+    const inserted = await db.run(sql`
+      INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
+      SELECT lower(hex(randomblob(16))), ${payment!.id}, ${refundAmount} - (${doneSumNow} - ${doneSumBefore}),
+             ${input.reason}, ${input.requestedBy}, ${toss.payment.cancels?.[toss.payment.cancels.length - 1]?.transactionKey ?? null}, 'done'
+      WHERE ${refundAmount} > ${doneSumNow} - ${doneSumBefore}
+    `);
+    recorded = Number(inserted.rowsAffected) > 0;
   } catch (error) {
     console.error('[funding-cancel] 환불 완료, 기록 실패 — 웹훅 CANCELED 동기화가 보정', { orderNo: order.orderNo, error });
     return { ok: false, code: 'recording_failed', message: '환불은 완료되었으나 기록이 지연되고 있습니다. 010-4255-7893으로 확인 부탁드립니다.' };
   }
-  await notifyCancelled(db, order, project, 'refunded', refundAmount);
+  if (recorded) await notifyCancelled(db, order, project, 'refunded', refundAmount);
   return { ok: true, mode: 'refunded', refundAmount };
 };
