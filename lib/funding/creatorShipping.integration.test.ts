@@ -10,7 +10,7 @@ let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 // eslint-disable-next-line import/first
-import { loadCreatorShipping, type CreatorShippingRow } from './creatorShipping';
+import { loadCreatorShipping, loadFulfillmentGate, type CreatorShippingRow } from './creatorShipping';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -299,4 +299,45 @@ it('청약철회 기록이 없으면 shipHold는 빈 칸이다', async () => {
   const { creatorId, projectId } = await seedClosedProjectWithPledge({});
   const view = await loadCreatorShipping(creatorId, projectId);
   expect((view as { rows: CreatorShippingRow[] }).rows[0].shipHold).toBe('');
+});
+
+/**
+ * 반려된 행은 slug를 놓아준다(slugOccupancy.ts). 같은 slug로 다른 개설자의 프로젝트가 승인되면
+ * 후원이 slug로 묶이므로, 반려된 행을 열어 주는 순간 그 주인이 남의 캠페인 후원자 배송지를
+ * 읽는다. 반려된 행을 먼저 넣어, slug 조회에서 그 행이 먼저 나오는 상황까지 재현한다.
+ */
+describe('같은 slug를 쓰던 반려된 행', () => {
+  const seedSlugReuse = async () => {
+    const slug = `reused-${crypto.randomUUID().slice(0, 8)}`;
+    const oldOwner = await seedCreator('old-owner@example.com');
+    // 반려된 신청서 — 마감일을 일찍 적어 두면 "마감 뒤 배송지 공개" 판정이 이 날짜를 따른다.
+    const { id: rejectedId } = await seedProject(oldOwner, {
+      slug,
+      reviewStatus: 'rejected',
+      startAt: new Date(Date.now() - 3 * DAY),
+      endAt: new Date(Date.now() - 2 * DAY),
+    });
+    await seedReward(rejectedId); // 흔한 리워드 id('basic')를 미리 적어 둔 경우
+    const newOwner = await seedCreator('new-owner@example.com');
+    const { id: approvedId } = await seedProject(newOwner, { slug }); // 모금 중
+    const rewardId = await seedReward(approvedId);
+    const orderId = await seedOrder({ status: 'paid' });
+    const pledgeId = await seedPledge(orderId, slug, rewardId, {
+      shippingName: '남의후원자',
+      shippingAddress1: '남의주소',
+    });
+    return { oldOwner, rejectedId, newOwner, approvedId, pledgeId };
+  };
+
+  it('반려된 행의 주인은 배송 화면을 열 수 없다', async () => {
+    const { oldOwner, rejectedId } = await seedSlugReuse();
+    expect(await loadCreatorShipping(oldOwner, rejectedId)).toBeNull();
+  });
+
+  it('발송 게이트는 반려된 행이 아니라 승인된 프로젝트를 가리킨다', async () => {
+    const { newOwner, approvedId, pledgeId } = await seedSlugReuse();
+    const gate = await loadFulfillmentGate(pledgeId);
+    expect(gate?.projectId).toBe(approvedId);
+    expect(gate?.creatorId).toBe(newOwner);
+  });
 });

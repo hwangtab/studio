@@ -311,3 +311,60 @@ it('마크다운 프로젝트의 후원은 개설자 경로로 닿지 않는다'
   // not_found·not_live 등 다른 이유로 우연히 막힌 것과는 구분해야 한다.
   expect(result).toMatchObject({ ok: false, code: 'forbidden' });
 });
+
+/**
+ * 반려된 행은 slug를 놓아준다(slugOccupancy.ts). 같은 slug로 다른 개설자의 프로젝트가 승인되면
+ * 후원은 slug로만 프로젝트를 가리키므로, 소유 판정이 심사 상태를 안 보면 반려된 행의 주인이
+ * 남의 후원 발송 상태를 바꾼다. 반려된 행을 먼저 넣어 slug 조회에서 먼저 나오게 한다.
+ */
+describe('같은 slug를 쓰던 반려된 행', () => {
+  const insertProject = async (creatorId: string, slug: string, reviewStatus: 'approved' | 'rejected') => {
+    await mockDb.insert(schema.fundingProjects).values({
+      creatorId,
+      slug,
+      title: '제목',
+      summary: '요약',
+      content: '본'.repeat(210),
+      coverUrl: '/uploads/funding/cover.webp',
+      goalAmount: 1_000_000,
+      startAt: new Date(Date.now() - 2 * DAY),
+      endAt: new Date(Date.now() - DAY),
+      reviewStatus,
+      status: 'auto',
+    });
+  };
+
+  const seedSlugReuse = async () => {
+    const oldOwner = await seedCreator();
+    const newOwner = await seedCreator();
+    const slug = `reused-${crypto.randomUUID().slice(0, 8)}`;
+    await insertProject(oldOwner, slug, 'rejected');
+    await insertProject(newOwner, slug, 'approved');
+    const pledgeId = await seedPledgeRow(slug);
+    return { oldOwner, newOwner, pledgeId };
+  };
+
+  it('반려된 행의 주인은 그 후원을 바꿀 수 없고, 승인된 프로젝트의 주인은 바꿀 수 있다', async () => {
+    const { oldOwner, newOwner, pledgeId } = await seedSlugReuse();
+
+    const byOldOwner = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'creator', creatorId: oldOwner } });
+    expect(byOldOwner).toMatchObject({ ok: false, code: 'forbidden' });
+    expect((await readPledgeRow(pledgeId)).fulfillment_status).toBe('none');
+
+    const byNewOwner = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'creator', creatorId: newOwner } });
+    expect(byNewOwner).toEqual({ ok: true });
+  });
+
+  it('사전 검사를 지나도 UPDATE의 WHERE가 반려된 행을 소유로 세지 않는다', async () => {
+    const { oldOwner, pledgeId } = await seedSlugReuse();
+    // 사전 검사만 "반려된 행의 주인 소유"라고 답하게 고정한다 — 두 번째 방어선만 남긴다.
+    const stale = jest.spyOn(mockDb.query.fundingProjects as never, 'findFirst')
+      .mockResolvedValueOnce({ creatorId: oldOwner } as never);
+
+    const result = await setFulfillment({ pledgeId, status: 'shipped', actor: { kind: 'creator', creatorId: oldOwner } });
+
+    expect(result).toMatchObject({ ok: false, code: 'conflict' });
+    expect((await readPledgeRow(pledgeId)).fulfillment_status).toBe('none');
+    stale.mockRestore();
+  });
+});

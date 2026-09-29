@@ -82,6 +82,9 @@ const insertProject = async (fixture: ProjectFixture) => {
     startAt: fixture.startAt,
     endAt: fixture.endAt,
     status: fixture.status,
+    // 후원이 들어오는 프로젝트는 승인된 프로젝트뿐이다(승인은 되돌리지 않는 최종 상태) —
+    // 발송 게이트도 승인된 행만 소유 프로젝트로 본다(lib/funding/creatorShipping.ts).
+    reviewStatus: 'approved',
   });
 };
 
