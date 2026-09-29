@@ -9,6 +9,20 @@
       "sha256": "537fd8511302b8b74dea38961276ddc34b086fdeff808a871df7628c4cef0a26"
     }
   },
+  "mok-jareugi": {
+    "cover": {
+      "file": "/images/funding/mok-jareugi/cover-20260929.webp",
+      "sha256": "e7c6432c781fe2aba4471c3cb8958fdde3ee720981fdb93db4565b36ae297f1e"
+    },
+    "ogImage": {
+      "file": "/images/funding/mok-jareugi/og-20260929.webp",
+      "sha256": "f57b8a8285f654dfb12f395fc307a1f5017d54ec5ab4be33f978edb272877cbb"
+    },
+    "heroImage": {
+      "file": "/images/funding/mok-jareugi/hero-20260929.webp",
+      "sha256": "b83fec17bd2426515be92335cdd88b25db1ed907e5617be6d3ed839537dfa243"
+    }
+  },
   "sabbaha-slung": {
     "cover": {
       "file": "/images/funding/sabbaha-slung/cover-20260928.webp",
