@@ -25,6 +25,7 @@ import { loadCreatorProjectStats, type CreatorProjectStats } from '../../../../l
 import { CREATOR_LIMITS } from '../../../../lib/funding/creatorValidation';
 import { FUNDING_CREATOR_TERMS_VERSION } from '../../../../lib/funding/policy';
 import { withI18nServerProps } from '../../../../lib/getStatic';
+import { beforePopStateForScroll } from '../../../../lib/routeScroll';
 
 interface Props {
   project: EditorProject;
@@ -192,17 +193,19 @@ export default function CreatorProjectEditor({
   // beforePopState는 그 changeState보다 앞서 불려 이동 자체를 취소(false 반환)할 수
   // 있고, 취소하면 routeChangeStart 자체가 안 나므로 confirm이 두 번 뜨지도 않는다.
   useEffect(() => {
-    router.beforePopState(() => {
-      if (!hasUnsavedChanges) return true;
+    // 스크롤 복원 콜백(_app)을 덮지 않도록, 통과시킬 때는 그 함수를 거친다(lib/routeScroll.ts).
+    router.beforePopState((state) => {
+      if (!hasUnsavedChanges) return beforePopStateForScroll(state);
       // eslint-disable-next-line no-alert
-      if (window.confirm(UNSAVED_CHANGES_MESSAGE)) return true;
+      if (window.confirm(UNSAVED_CHANGES_MESSAGE)) return beforePopStateForScroll(state);
       // 브라우저가 이미 옮겨 둔 히스토리 엔트리를 제자리로 되돌린다 — 안 하면 주소창만
       // 목적지로 남고 화면은 편집기 그대로인 상태가 된다.
       window.history.forward();
       return false;
     });
     return () => {
-      router.beforePopState(() => true);
+      // `() => true`로 되돌리면 _app의 스크롤 복원이 사이트 전체에서 꺼진다.
+      router.beforePopState(beforePopStateForScroll);
     };
   }, [hasUnsavedChanges, router]);
 

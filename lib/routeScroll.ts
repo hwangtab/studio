@@ -70,6 +70,19 @@ export const createScrollMemory = () => {
 
 export const scrollMemory = createScrollMemory();
 
+/**
+ * `Router.beforePopState`에 거는 스크롤 복원 콜백. **next는 이 콜백을 하나만 둔다** — 뒤에서 거는
+ * 쪽이 앞의 것을 덮는다. 그래서 페이지가 자기 판정(저장 안 한 변경 경고 등)을 걸 때도 이 함수를
+ * 거쳐야 하고, 떠날 때는 `() => true`가 아니라 이 함수로 되돌려야 한다. 예전에 개설자 편집기가
+ * `() => true`로 되돌려서, 그 화면을 한 번 거치면 새로고침 전까지 사이트 전체의 뒤로가기 스크롤
+ * 복원이 꺼졌다(2026-09-29 발견).
+ */
+export const beforePopStateForScroll = (state: unknown): true => {
+  const key = (state as { key?: unknown } | null)?.key;
+  scrollMemory.popped(typeof key === 'string' ? key : null);
+  return true;
+};
+
 /** next/router가 history.state에 넣는 항목 key. 없으면 null. */
 export const historyKey = (win: Window = window): string | null => {
   const key = (win.history.state as { key?: unknown } | null)?.key;
