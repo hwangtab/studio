@@ -127,8 +127,8 @@ rewards:
 
 | 역할 | 이름 |
 |---|---|
-| 기타·보컬·퍼커션 | Sabbaha |
-| 드럼·퍼커션·서브보컬 | Mortician |
+| 기타·보컬·퍼커션·신시사이저 | The Slaughter |
+| 드럼·서브보컬·퍼커션 | The Mortician |
 | 녹음·믹싱·프로듀싱 | Zsthyger, Acme Studio |
 | 5번 트랙 〈Debt Shroud〉 기타 | Zsthyger |
 | 믹싱·마스터링 | 스튜디오 놀 |
