@@ -46,6 +46,34 @@ const openingAnchorTags = (source: string): string[] => source.match(/<a[\s\n][^
 const needsNoReferrer = (tag: string) =>
   !/href=\{(p\.)?(manageUrl|depositUrl)\}/.test(tag) && !/href=\{kakaoUrl\}/.test(tag);
 
+/**
+ * 계약 화면(서명·완료)의 URL에도 영구 서명 토큰이 실린다. `Layout`이 `isContractPage`로
+ * 껍데기를 따로 벗기므로 위 목록(PRIVATE_PAGE_ROUTES와 같아야 한다)에는 넣지 않고,
+ * 이탈 링크 규칙만 같이 건다. 완료 페이지의 "스튜디오 홈으로"가 next/link로 남아 있던 적이 있다.
+ */
+const CONTRACT_PAGE_FILES = [
+  'pages/[locale]/contracts/[id]/sign.tsx',
+  'pages/[locale]/contracts/[id]/complete.tsx',
+];
+
+describe('계약 화면의 이탈 링크', () => {
+  it.each(CONTRACT_PAGE_FILES)('%s 는 next/link를 쓰지 않는다', (file) => {
+    const source = read(file);
+    expect(source).not.toContain("from 'next/link'");
+    expect(source).not.toContain('<Link');
+  });
+
+  it.each(CONTRACT_PAGE_FILES)('%s 의 공개 목적지 앵커에는 rel="noreferrer"가 붙어 있다', (file) => {
+    for (const tag of openingAnchorTags(read(file)).filter(needsNoReferrer)) {
+      expect(tag).toContain('rel="noreferrer"');
+    }
+  });
+
+  it('완료 페이지에는 이탈용 <a href>가 있다', () => {
+    expect(openingAnchorTags(read('pages/[locale]/contracts/[id]/complete.tsx')).length).toBeGreaterThan(0);
+  });
+});
+
 describe('private 페이지의 이탈 링크', () => {
   it.each(PRIVATE_PAGE_FILES)('%s 는 next/link를 쓰지 않는다', (file) => {
     const source = read(file);

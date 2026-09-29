@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
-import Link from 'next/link';
 
 import ContractNotice from '../../../../components/contracts/ContractNotice';
 import { TextInput } from '../../../../components/ui/Field';
@@ -328,11 +327,15 @@ export default function ContractCompletePage({
             </>
           )}
 
-          <Link href={`/${locale}`} passHref>
-            <Button light size="lg" variant="outline" fullWidth>
+          {/* 문서 이동(<a href>)으로 나간다 — next/link로 클라이언트 전환을 하면 홈에서 켜진 GA가
+              뒤로가기로 돌아온 이 주소(서명 토큰이 실려 있다)를 page_view로 보낸다. 공개 목적지라
+              rel="noreferrer"도 붙인다(동일 출처 이동에는 전체 URL이 리퍼러로 간다).
+              규칙: lib/analytics/privatePaths.ts, tests/pages/privateLinkNavigation.test.ts */}
+          <Button asChild light size="lg" variant="outline" fullWidth>
+            <a href={`/${locale}`} rel="noreferrer">
               스튜디오 홈으로
-            </Button>
-          </Link>
+            </a>
+          </Button>
         </div>
       </main>
     </>

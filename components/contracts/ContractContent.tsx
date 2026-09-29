@@ -1,6 +1,8 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
 
+import { CONTRACT_MARKDOWN_OPTIONS } from '../../lib/contracts/html-escape';
+
 interface ContractContentProps {
   content: string;
   /** 서명 페이지는 본문을 크게, 관리자 상세는 작게 보여 준다. */
@@ -30,7 +32,7 @@ interface ContractContentProps {
 export default function ContractContent({ content, size = 'base' }: ContractContentProps) {
   return (
     <div className={`contract-body ${size === 'sm' ? 'contract-body--sm' : ''}`}>
-      <Markdown>{content}</Markdown>
+      <Markdown options={CONTRACT_MARKDOWN_OPTIONS}>{content}</Markdown>
 
       <style jsx global>{`
         /*

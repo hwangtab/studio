@@ -13,17 +13,13 @@ import { getDb } from '../../../../db/client';
 import {
   serializeAttachment,
   serializeClause,
-  serializeContract,
   type SerializedAttachment,
   type SerializedClause,
   type SerializedContract,
 } from '../../../../lib/contracts/serialize';
-import {
-  IDENTITY_DIGITS,
-  maskIdentityDigits,
-  maskIdentityDigitsInContent,
-} from '../../../../lib/contracts/identity';
+import { IDENTITY_DIGITS, maskIdentityDigitsInContent } from '../../../../lib/contracts/identity';
 import { getClientIp } from '../../../../lib/contracts/client-ip';
+import { CONTRACT_MARKDOWN_OPTIONS } from '../../../../lib/contracts/html-escape';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
@@ -39,10 +35,16 @@ type UnavailableReason =
   /** 재발송 등으로 이 링크가 무효가 됐다 — 계약 자체는 살아 있을 수 있다. */
   | 'superseded';
 
+/**
+ * 서명 화면이 그리는 계약 값. 행 전체(SerializedContract)를 넘기지 않는다 —
+ * getServerSideProps가 돌려주는 props는 __NEXT_DATA__로 HTML에 그대로 실린다.
+ */
+type SignPageContract = Pick<SerializedContract, 'id' | 'title' | 'customerName' | 'content'>;
+
 interface SignPageProps {
   locale: string;
   token: string;
-  contract: SerializedContract | null;
+  contract: SignPageContract | null;
   clauses: SerializedClause[];
   attachments: SerializedAttachment[];
   rulesContent: string;
@@ -90,7 +92,13 @@ export const getServerSideProps = withI18nServerProps<SignPageProps>(async (cont
 
     const status = getEffectiveStatus(contract);
 
-    if (status === 'signed') {
+    /**
+     * 서명을 마친 문서는 이용이 끝났어도(terminated) 완료 화면이 연다. 완료 화면은 이름·호실·
+     * 기간·월세만 싣고, 생년월일·주소가 든 서명본은 연락처 뒷자리를 확인한 뒤에만 내려 준다.
+     * terminated가 이 분기에 없던 동안에는 아래 서명 화면으로 떨어져, 링크만 가진 사람에게
+     * 서명자의 생년월일·주소·이메일이 확인 없이 실렸다. 이용 종료는 모든 계약의 정상 결말이다.
+     */
+    if (status === 'signed' || status === 'terminated') {
       return {
         redirect: {
           destination: `/${locale}/contracts/${id}/complete?token=${encodeURIComponent(token)}`,
@@ -99,7 +107,11 @@ export const getServerSideProps = withI18nServerProps<SignPageProps>(async (cont
       };
     }
 
-    if (status === 'expired' || status === 'cancelled' || status === 'draft') {
+    /**
+     * 서명 화면은 서명 대기(sent) 계약에만 연다. 막을 상태를 나열하지 않고 sent만 통과시켜,
+     * 상태가 새로 생겨도 서명 화면으로 떨어지지 않게 한다.
+     */
+    if (status !== 'sent') {
       // draft는 아직 발송 전이라 고객에게 링크가 노출될 일이 없다. 만료와 같이 안내한다.
       return {
         props: {
@@ -117,25 +129,25 @@ export const getServerSideProps = withI18nServerProps<SignPageProps>(async (cont
      */
     await recordContractView(contract.id, token, getClientIp(context.req));
 
-    const { contractClauses, contractAttachments, ...rest } = contract;
+    const { contractClauses, contractAttachments } = contract;
 
     return {
       props: {
         locale,
         token,
         /**
-         * 확인 값을 이 페이지에서 완전히 걷어낸다.
+         * 화면이 그리는 값만 싣는다(완료 페이지와 같은 원칙). 행을 통째로 넘기면 이메일·
+         * 열람 IP·발송 오류 같은 값까지 __NEXT_DATA__로 HTML에 실린다.
          *
-         * 본문만 가리는 것으로는 부족하다. Next.js는 이 props를 __NEXT_DATA__로 HTML에
-         * 직렬화해 넣으므로, 연락처 컬럼을 그대로 두면 페이지 소스에서 그대로 읽힌다.
-         * 같은 페이지에 답이 남아 있으면 본인 확인이 무의미하다.
+         * 연락처는 본인 확인의 정답이라 싣지 않고, 본문에 적힌 것도 가린다. 같은 페이지에
+         * 답이 남아 있으면 본인 확인이 무의미하다.
          */
-        contract: serializeContract({
-          ...rest,
+        contract: {
+          id: contract.id,
+          title: contract.title,
+          customerName: contract.customerName,
           content: maskIdentityDigitsInContent(contract.content, contract.customerPhone),
-          customerPhone: maskIdentityDigits(contract.customerPhone),
-          signToken: contract.signToken,
-        }),
+        },
         clauses: contractClauses.map(serializeClause),
         attachments: contractAttachments.map(serializeAttachment),
         rulesContent: resolveRulesContent(contractAttachments),
@@ -612,7 +624,7 @@ export default function ContractSignPage({
                   </button>
                   {showRules && (
                     <div className="px-5 py-4 prose prose-sm max-w-none prose-headings:font-bold">
-                      <Markdown>{rulesContent}</Markdown>
+                      <Markdown options={CONTRACT_MARKDOWN_OPTIONS}>{rulesContent}</Markdown>
                     </div>
                   )}
                 </div>
