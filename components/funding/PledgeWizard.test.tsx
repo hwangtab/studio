@@ -198,9 +198,66 @@ describe('리워드 담기', () => {
     expect(screen.getByRole('button', { name: '감사 메일 하나 더' })).toBeDisabled();
   });
 
-  it('품절 리워드는 담을 수 없다', () => {
+  it('품절 리워드는 한 줄 제안에 나오지 않고, 펼친 목록에서도 담을 수 없다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 0, mail: null }} />);
+    expect(screen.queryByText('CD 함께 받기')).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 함께 담기/ }));
     expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
+  });
+
+  /**
+   * 맨 위에는 담은 것만 보인다(2026-09-29 회의 결정). 카드에서 이미 고르고 온 사람에게
+   * 전체 목록을 다시 펼치면 같은 결정을 한 번 더 하게 된다. 실물(배송) 리워드만 한 줄로
+   * 제안하고 나머지는 접는다 — 디지털 티어는 서로 대체재라 권하지 않는다.
+   */
+  it('담은 리워드만 보이고, 담지 않은 실물 리워드는 한 줄 제안, 디지털 티어는 접혀 있다', async () => {
+    const withTiers = parseFundingProject(`---
+slug: demo
+title: 데모
+summary: s
+cover: /c.webp
+goalAmount: 1000
+startAt: 2026-01-01T00:00:00+09:00
+endAt: 2036-01-01T00:00:00+09:00
+rewards:
+  - id: mp3
+    title: MP3
+    description: d
+    amount: 10000
+    requiresShipping: false
+    estimatedDelivery: 2026-09
+  - id: wav
+    title: WAV
+    description: d
+    amount: 30000
+    requiresShipping: false
+    estimatedDelivery: 2026-09
+  - id: book
+    title: 시집
+    description: d
+    amount: 13000
+    requiresShipping: true
+    estimatedDelivery: 2026-10
+---
+`, 'demo');
+    render(<PledgeWizard project={withTiers} initialRewardId="mp3" remaining={{ mp3: null, wav: null, book: null }} />);
+    expect(screen.getByLabelText('MP3 수량')).toHaveTextContent('1');
+    expect(screen.getByText('시집 함께 받기')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
+
+    const toggle = screen.getByRole('button', { name: '다른 리워드 함께 담기 (2)' });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await userEvent.click(toggle);
+    expect(screen.getByRole('button', { name: 'WAV 담기' })).toBeInTheDocument();
+    // 펼치면 한 줄 제안은 목록과 겹치므로 사라진다.
+    expect(screen.queryByText('시집 함께 받기')).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: '접기' }));
+    expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
+
+    // 제안에서 담으면 담은 목록으로 올라간다.
+    await userEvent.click(screen.getByRole('button', { name: '시집 담기' }));
+    expect(screen.getByLabelText('시집 수량')).toHaveTextContent('1');
+    expect(screen.queryByText('시집 함께 받기')).toBeNull();
   });
 });
 
@@ -333,8 +390,9 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
  */
 it('첫 리워드가 품절이면 고를 수 있는 리워드가 담긴 채로 시작한다', () => {
   render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
-  expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
   expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('1');
+  // 품절 CD는 제안하지 않는다.
+  expect(screen.queryByText('CD 함께 받기')).toBeNull();
 });
 
 it('넘겨받은 리워드가 품절이면 담지 않고 시작한다 — 폼을 다 채운 뒤 409를 보지 않게', () => {
@@ -361,6 +419,20 @@ it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () =
  * 이동**하므로, 실패·뒤로가기로 돌아오면 페이지가 새로 뜨고 state가 초기화된다. 그러면
  * 본인 홀드가 15분간 한정 재고를 붙들고 본인이 "품절"을 본다.
  */
+// 만료 주문이 "결제창까지는 갔는가"를 가르는 근거 — 결제창을 열기 직전에 비콘을 보낸다.
+it('결제창을 열기 전에 결제창 열기 비콘을 보낸다', async () => {
+  render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+  await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+  await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+  await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+  await waitFor(() => expect(requestPayment).toHaveBeenCalled());
+  const calls = (global.fetch as jest.Mock).mock.calls.map((c) => String(c[0]));
+  expect(calls).toEqual(['/api/funding/pledges', '/api/payments/opened']);
+  const beacon = (global.fetch as jest.Mock).mock.calls[1];
+  expect(JSON.parse(beacon[1].body)).toEqual({ orderNo: 'FND-1' });
+});
+
 describe('자기 홀드 해제 증명 보관', () => {
   // clear 후 입력 — "페이지가 새로 떠도" 테스트는 같은 테스트 안에서 두 번째로 마운트한
   // 인스턴스가 첫 제출의 임시 저장(lib/formDraft.ts)을 그대로 복원해 온다. 지우지 않고
@@ -380,7 +452,11 @@ describe('자기 홀드 해제 증명 보관', () => {
     await waitFor(() => expect(requestPayment).toHaveBeenCalled());
   };
 
-  const lastBody = () => JSON.parse((global.fetch as jest.Mock).mock.calls.at(-1)![1].body);
+  // 마지막 **후원 생성** 요청의 본문. 결제창 열기 비콘(/api/payments/opened)도 fetch라
+  // 단순히 마지막 호출을 보면 그 비콘을 읽는다.
+  const lastBody = () => JSON.parse(
+    (global.fetch as jest.Mock).mock.calls.filter((c) => String(c[0]).includes('/api/funding/pledges')).at(-1)![1].body,
+  );
 
   beforeEach(() => window.sessionStorage.clear());
 
@@ -476,6 +552,7 @@ describe('임시 저장', () => {
   // 이름 공개는 체크 한 번이라 잃어도 손해가 없고, 문자열만 담는 계약을 깰 이유가 아니다.
   it('담은 리워드·추가금·이름 공개는 복원되지 않는다', async () => {
     const { unmount } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 함께 담기/ }));
     await userEvent.click(screen.getByRole('button', { name: '감사 메일 담기' }));
     await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
     const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;

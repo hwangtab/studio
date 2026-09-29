@@ -57,3 +57,21 @@ export const useReportPaymentFailureOnMount = (
     reportPaymentFailure(orderNo, { code, message: raw });
   }, [orderNo, code]);
 };
+
+/**
+ * 결제창을 **열기 직전**에 서버에 알린다(fire-and-forget, lib/payments/windowOpen.ts).
+ * 만료된 주문이 "결제창까지는 갔는가"를 가르는 근거다. 결제 흐름을 막지 않는다.
+ */
+export const reportPaymentWindowOpen = (orderNo: string | null | undefined): void => {
+  if (!orderNo) return;
+  try {
+    void fetch('/api/payments/opened', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ orderNo }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    /* 기록은 부가 기능이다. */
+  }
+};

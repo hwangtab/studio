@@ -16,11 +16,14 @@ import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/fundi
 import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
+import { loadPaymentWindowOpen } from '../../../lib/payments/windowOpen';
 
 interface AdminFundingDetailPageProps {
   pledge: AdminPledgeItem;
   /** 아직 환불하지 않은 금액 = totalAmount − 기록된 done 환불 합. 부분환불 건에서 totalAmount와 다르다. */
   refundableAmount: number;
+  /** 결제창을 연 기록(lib/payments/windowOpen.ts). 없으면 null — 열지 않았거나 조회 실패. */
+  paymentWindow?: { firstOpenedAt: string; lastOpenedAt: string; openCount: number; browserLabel: string } | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps> = async (context) => {
@@ -42,7 +45,11 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
   // 확인창에서 본 금액과 다른 금액이 나간다.
   const refundableAmount = remainingRefundable(order);
 
-  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount } };
+  // 결제되지 않은 건에서만 의미가 크지만, 확정 건에서도 어느 브라우저로 결제했는지 보이는 편이
+  // 문의 대응에 낫다. 조회 실패는 null로 삼킨다(best-effort 기록이다).
+  const paymentWindow = await loadPaymentWindowOpen(order.id);
+
+  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow } };
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -64,7 +71,7 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
   </div>
 );
 
-export default function AdminFundingDetailPage({ pledge, refundableAmount }: AdminFundingDetailPageProps) {
+export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null }: AdminFundingDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -319,6 +326,14 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount }: Adm
                     value={`${pledge.paymentFailCode ?? '코드 없음'} · ${formatKstDateTimeFull(pledge.paymentFailedAt)}${pledge.paymentFailMessage ? ` — ${pledge.paymentFailMessage}` : ''}`}
                   />
                 )}
+                {/* 결제창까지 갔는가 — 만료 건에서 "폼에서 떠났나, 결제창에서 떠났나"를 가른다.
+                    기록은 2026-09-29부터라 그 전 주문은 '기록 없음'이다. */}
+                <DescriptionRow
+                  label="결제창 열기"
+                  value={paymentWindow
+                    ? `${paymentWindow.openCount}회 · 마지막 ${formatKstDateTimeFull(paymentWindow.lastOpenedAt)} · ${paymentWindow.browserLabel}`
+                    : '기록 없음'}
+                />
                 {/* 값이 있으면 셀프 취소가 막혀 있다는 뜻이다 — 문의를 받았을 때 먼저 볼 자리다. */}
                 <DescriptionRow
                   label="내려받기 시작"

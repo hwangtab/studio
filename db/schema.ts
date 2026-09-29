@@ -585,6 +585,31 @@ export const fundingPledgeItemsRelations = relations(fundingPledgeItems, ({ one 
 
 export type FundingPledgeItem = typeof fundingPledgeItems.$inferSelect;
 
+/**
+ * 결제창을 **열었는가**의 기록 — 주문 하나에 한 행(여러 번 열면 횟수·마지막 시각만 늘린다).
+ *
+ * 왜 있나(2026-09-29 회의): 결제되지 않고 만료된 주문을 보면 "폼에서 떠났나, 결제창(토스·
+ * 카드사 앱)까지 갔다가 떠났나"를 가를 근거가 없었다. 실패 사유(`orders.payment_fail_*`)는
+ * 토스가 코드를 돌려준 경우에만 남고, 카카오톡 인앱 브라우저에서 카드사 앱으로 넘어갔다가
+ * 돌아오지 못한 경우처럼 아무 신호 없이 끊기면 비어 있다. 이 행이 있으면 "결제창까지는
+ * 갔다"는 뜻이다.
+ *
+ * `browser`는 요청의 User-Agent에서 서버가 **분류만** 한 값이다(kakaotalk·instagram·facebook·
+ * naver·line·mobile·desktop). 원문 UA는 저장하지 않는다 — 판단에 필요한 것은 인앱 여부뿐이다.
+ *
+ * 컬럼을 `orders`에 더하지 않고 표를 따로 둔 이유는 0037·0042와 같다(배포 순서). 기록은
+ * best-effort라 표가 없거나 쓰기가 실패해도 결제 흐름은 그대로 간다.
+ */
+export const paymentWindowOpens = sqliteTable('payment_window_opens', {
+  orderId: text('order_id').primaryKey().references(() => orders.id, { onDelete: 'cascade' }),
+  firstOpenedAt: integer('first_opened_at', { mode: 'timestamp' }).notNull(),
+  lastOpenedAt: integer('last_opened_at', { mode: 'timestamp' }).notNull(),
+  openCount: integer('open_count').notNull().default(1),
+  browser: text('browser').notNull(),
+});
+
+export type PaymentWindowOpen = typeof paymentWindowOpens.$inferSelect;
+
 // ─── 펀딩 셀프 개설 (아티스트가 직접 신청·등록) ────────────────────────────────
 // 1차 스펙은 "프로젝트 정본 = content/funding/<slug>.md"였다. 그 설계는 편집자가 운영자
 // 한 명이라는 전제 위에 서 있었고, 개설 주체가 아티스트로 바뀌면서 그 전제가 깨졌다.

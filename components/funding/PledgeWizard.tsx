@@ -1,7 +1,7 @@
 import { type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 
-import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
+import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
 import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
 import { Button } from '../ui/Button';
@@ -126,6 +126,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
     const start = initialRewardId ?? project.rewards.find((r) => !isSoldOut(remaining, r.id))?.id;
     return start && project.rewards.some((r) => r.id === start) && !isSoldOut(remaining, start) ? [{ rewardId: start, quantity: 1 }] : [];
   });
+  /** 담지 않은 리워드 목록을 펼쳤는가. 기본은 접힘 — 위 주석(맨 위에는 담은 것만). */
+  const [showAllRewards, setShowAllRewards] = useState(false);
   const quantityOf = (rewardId: string): number => cart.find((c) => c.rewardId === rewardId)?.quantity ?? 0;
   /** 0이면 빼고, 처음이면 맨 뒤에 담고, 있으면 수량만 바꾼다. 상한은 남은 수량·MAX_QUANTITY. */
   const setQuantity = (rewardId: string, next: number) => {
@@ -335,6 +337,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
        */
       const origin = window.location.origin;
       createdOrderNo = json.orderNo;
+      // 결제창을 연다는 사실을 먼저 남긴다 — 만료 주문이 "결제창까지는 갔는가"를 가르는 근거.
+      reportPaymentWindowOpen(json.orderNo);
       await requestPayment({
         orderId: json.orderNo,
         orderName: `[펀딩] ${project.title} · ${pledgeLinesShortTitle(lines.map((l) => ({ rewardTitle: l.reward.title })))}`.slice(0, 100),
@@ -395,49 +399,116 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
     void submit();
   };
 
+  const notInCart = project.rewards.filter((r) => quantityOf(r.id) === 0);
+  // 담은 것이 없으면 목록을 펼친다 — 접어 두면 무엇을 담아야 할지 보이지 않는다.
+  const listOpen = showAllRewards || lines.length === 0;
+  // 담지 않은 실물(배송) 리워드만 한 줄 제안으로. 목록을 펼쳤으면 거기 있으니 겹쳐 보이지 않는다.
+  const suggestions = lines.length > 0 && !listOpen
+    ? notInCart.filter((r) => r.requiresShipping && !isSoldOut(remaining, r.id)).slice(0, 2)
+    : [];
+
+  const renderRewardRow = (r: FundingProject['rewards'][number]) => {
+    const left = remaining[r.id];
+    const soldOut = isSoldOut(remaining, r.id);
+    const qty = quantityOf(r.id);
+    const cap = capOf(remaining, r.id);
+    return (
+      <li
+        key={r.id}
+        className={`flex items-center gap-3 rounded-xl border p-4 transition-colors ${
+          qty > 0
+            ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-light/10'
+            : 'border-gray-200 dark:border-gray-700'
+        } ${soldOut && qty === 0 ? 'opacity-50' : ''}`}
+      >
+        <span className="min-w-0 flex-1">
+          <span className="block font-bold text-gray-900 dark:text-white">{formatPriceAmount(r.amount)}원</span>
+          <span className="typo-card-meta block">{r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}{r.requiresShipping ? ' · 배송' : ''}</span>
+        </span>
+        {qty === 0 ? (
+          <Button type="button" size="sm" variant="outline" disabled={soldOut} onClick={() => setQuantity(r.id, 1)} aria-label={`${r.title} 담기`}>
+            담기
+          </Button>
+        ) : (
+          <span className="flex shrink-0 items-center gap-2">
+            <button type="button" className={stepButtonClass} onClick={() => setQuantity(r.id, qty - 1)} aria-label={`${r.title} 하나 빼기`}>−</button>
+            <output className="w-6 text-center font-bold tabular-nums text-gray-900 dark:text-white" aria-live="polite" aria-label={`${r.title} 수량`}>{qty}</output>
+            <button type="button" className={stepButtonClass} disabled={qty >= cap} onClick={() => setQuantity(r.id, qty + 1)} aria-label={`${r.title} 하나 더`}>+</button>
+          </span>
+        )}
+      </li>
+    );
+  };
+
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
       {/*
         리워드는 **담는다**(2026-09-28). 예전엔 라디오로 하나만 골랐고, 두 가지를 원하는 사람은
         결제를 두 번 해야 했다. 세트 리워드는 조합이 너무 많아 두지 않는다(운영자 결정).
         리워드가는 배송비까지 포함한 최종가라 담은 만큼 그대로 더한다 — 배송비 줄은 없다.
+
+        **맨 위에는 담은 것만 보인다**(2026-09-29 회의 결정). 카드·모달에서 이미 고르고 온
+        사람에게 리워드 전체 목록을 다시 펼치면 "방금 고른 게 빠졌나" 하고 같은 결정을 한 번
+        더 하게 되고, 모바일에서는 결제위젯이 두 화면 아래로 밀린다. 결제 완료 12건이 전부
+        리워드 1개였다 — 대다수에게 목록은 지나가야 할 장애물이다. 나머지는 접어 둔다.
+
+        예외 하나: 담지 않은 **배송 리워드**(시/노래집 같은 실물)는 한 줄 제안으로 보인다.
+        디지털 티어는 서로 대체재라(MP3 대신 WAV) 권하지 않고, 실물은 보완재라 권한다 —
+        접어 두기만 하면 책이 있다는 것 자체를 모르고 지나간다. 담은 것이 없으면(전부 뺐거나
+        품절로 시작) 목록을 펼쳐서 보여 준다.
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-reward`}>
-        <StepHeader id={`${uid}-step-reward`} n={1} title="리워드 담기" hint="여러 리워드를 함께 담을 수 있습니다." />
-        <ul className="space-y-2">
-          {project.rewards.map((r) => {
-            const left = remaining[r.id];
-            const soldOut = isSoldOut(remaining, r.id);
-            const qty = quantityOf(r.id);
-            const cap = capOf(remaining, r.id);
-            return (
-              <li
-                key={r.id}
-                className={`flex items-center gap-3 rounded-xl border p-4 transition-colors ${
-                  qty > 0
-                    ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-light/10'
-                    : 'border-gray-200 dark:border-gray-700'
-                } ${soldOut ? 'opacity-50' : ''}`}
-              >
-                <span className="min-w-0 flex-1">
-                  <span className="block font-bold text-gray-900 dark:text-white">{formatPriceAmount(r.amount)}원</span>
-                  <span className="typo-card-meta block">{r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}{r.requiresShipping ? ' · 배송' : ''}</span>
+        <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint={lines.length > 0 ? '담은 리워드입니다. 수량을 바꾸거나 다른 리워드를 함께 담을 수 있습니다.' : '펀딩할 리워드를 담아 주세요.'} />
+        {lines.length > 0 && (
+          <ul className="space-y-2" aria-label="담은 리워드">
+            {lines.map((l) => renderRewardRow(l.reward))}
+          </ul>
+        )}
+        {suggestions.length > 0 && (
+          <ul className="mt-3 space-y-2" aria-label="함께 받을 수 있는 리워드">
+            {suggestions.map((r) => (
+              <li key={r.id} className="flex items-center gap-3 rounded-xl border border-dashed border-gray-300 px-4 py-3 dark:border-gray-600">
+                <span className="min-w-0 flex-1 text-sm">
+                  <span className="block font-medium text-gray-900 dark:text-white">{r.title} 함께 받기</span>
+                  <span className="typo-card-meta block">+{formatPriceAmount(r.amount)}원 · 배송</span>
                 </span>
-                {qty === 0 ? (
-                  <Button type="button" size="sm" variant="outline" disabled={soldOut} onClick={() => setQuantity(r.id, 1)} aria-label={`${r.title} 담기`}>
-                    담기
-                  </Button>
-                ) : (
-                  <span className="flex shrink-0 items-center gap-2">
-                    <button type="button" className={stepButtonClass} onClick={() => setQuantity(r.id, qty - 1)} aria-label={`${r.title} 하나 빼기`}>−</button>
-                    <output className="w-6 text-center font-bold tabular-nums text-gray-900 dark:text-white" aria-live="polite" aria-label={`${r.title} 수량`}>{qty}</output>
-                    <button type="button" className={stepButtonClass} disabled={qty >= cap} onClick={() => setQuantity(r.id, qty + 1)} aria-label={`${r.title} 하나 더`}>+</button>
-                  </span>
-                )}
+                <Button type="button" size="sm" variant="outline" onClick={() => setQuantity(r.id, 1)} aria-label={`${r.title} 담기`}>
+                  담기
+                </Button>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        )}
+        {notInCart.length > 0 && !listOpen && (
+          <button
+            type="button"
+            onClick={() => setShowAllRewards(true)}
+            aria-expanded={false}
+            className="mt-3 inline-flex min-h-[44px] items-center text-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-primary-lighter dark:hover:text-white dark:focus-visible:ring-primary-lighter/70"
+          >
+            다른 리워드 함께 담기 ({notInCart.length})
+          </button>
+        )}
+        {notInCart.length > 0 && listOpen && (
+          <div className={lines.length > 0 ? 'mt-4' : ''}>
+            {lines.length > 0 && (
+              <div className="mb-2 flex items-center justify-between gap-3">
+                <p className="typo-card-meta">다른 리워드</p>
+                <button
+                  type="button"
+                  onClick={() => setShowAllRewards(false)}
+                  aria-expanded
+                  className="inline-flex min-h-[44px] items-center text-sm font-semibold text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-300 dark:hover:text-white dark:focus-visible:ring-primary-lighter/70"
+                >
+                  접기
+                </button>
+              </div>
+            )}
+            <ul className="space-y-2">
+              {notInCart.map((r) => renderRewardRow(r))}
+            </ul>
+          </div>
+        )}
         <div className="mt-5">
           <Field id={`${uid}-add`} label="추가 펀딩 금액" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
             <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
