@@ -6,8 +6,12 @@ summary: 10월 10일 풍천리 마을회관 앞에서 음악가 7팀이 공연�
 # /images/**는 immutable 캐시라 같은 이름에 그림만 갈면 옛 그림이 남는다.
 # cover = 대표 포스터(붉은 목) 전체를 16:9에 앉힌 것(목록 카드). 바탕은 같은 포스터를 흐리고 어둡게.
 # ogImage = pine-nut 저장소의 가로 공유 카드 그대로.
-# heroImage = pine-nut 공연 페이지 히어로(먹빛 바탕 + 그루터기)에서 글씨를 숨기고 뜬 것.
-#   원본의 톱자국 선은 화면 세로 가운데를 가로질러 흰 제목에 취소선처럼 걸리므로 뺐다.
+# heroImage = pine-nut before-cut 페이지의 실사 현지 사진(real-canopy.jpg, "산림청이 꼽은
+#   100대 명품숲 · 국내 최대 잣나무 숲 (풍천리 현지 사진)" 캡션이 달려 있던 그 사진)을 1920x1080에
+#   맞추고 modulate로 조금 어둡게·덜 채도있게 뺀 것(운영자 요청 2026-09-30 — "아무 풍천리
+#   사진 어울리는거 넣어줘"). 일러스트 대신 실사를 쓴다. 펀딩 히어로는 HERO_SCRIM_STRONG을
+#   쓰므로(ProjectDetailView.tsx) 별도 조정 없이도 흰 글씨 대비가 나온다 — 배경을 다시
+#   바꾸면 그 컴포넌트 주석대로 대비를 재측정할 것.
 # 제목은 木 대신 '목'으로 쓴다 — 히어로 제목 폰트(Pretendard 서브셋)에 한자가 없다.
 # lineup/lineup-20260930b.webp = pine-nut 공연 페이지의 출연진 프로필 사진 8장(DJ 듀오 2장 포함)을
 # sharp로 4x2 그리드에 합성한 것. 개별 이미지로 넣으면 prose 렌더링이 전체 너비로 키워 얼굴
@@ -17,7 +21,7 @@ summary: 10월 10일 풍천리 마을회관 앞에서 음악가 7팀이 공연�
 # 새겼다 — "DJ스탑원 x DJ괄"을 통째로 쓰면 한 칸에 다 안 들어간다.
 cover: /images/funding/mok-jareugi/cover-20260929.webp
 ogImage: /images/funding/mok-jareugi/og-20260929.webp
-heroImage: /images/funding/mok-jareugi/hero-20260929.webp
+heroImage: /images/funding/mok-jareugi/hero-20260930.webp
 goalAmount: 1000000
 # 마감은 공연(10/10) 2주 뒤 — saf-2026 풍천리 펀딩(8/1 공연 → 8/15 마감)과 같은 간격.
 startAt: 2026-09-29T00:00:00+09:00
