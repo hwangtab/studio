@@ -21,6 +21,16 @@ export interface FundingReward {
    * 전액 셀프 환불이 성립했다.
    */
   downloads: FundingDownload[];
+  /**
+   * 다른 리워드와 **함께 담는 추가 상품**인가(frontmatter `addOn: true`, 기본 false).
+   *
+   * 결제 화면은 담지 않은 리워드를 접어 두고, 이 표시가 있는 것만 "…함께 받기" 한 줄로
+   * 제안한다(components/funding/PledgeWizard.tsx). 처음엔 "배송 리워드면 제안"으로 추론했는데,
+   * 사바하처럼 CD → CD+부적 → … 로 올라가는 **실물 티어**에서 CD를 고른 사람에게 상위 티어를
+   * 권하는 오답이 났다(2026-09-29). 티어(서로 대체)와 추가 상품(보완)은 코드가 가릴 수 없어
+   * 파일에 적는다. DB 프로젝트(개설자 등록)는 이 칸이 없어 언제나 false — 제안이 없다.
+   */
+  addOn: boolean;
 }
 
 export interface FundingDownload {
@@ -249,6 +259,7 @@ const parseReward = (raw: unknown, index: number): FundingReward => {
     requiresShipping: bool(r.requiresShipping, `rewards[${index}].requiresShipping`, false),
     estimatedDelivery: str(r.estimatedDelivery, `rewards[${index}].estimatedDelivery`),
     image: typeof r.image === 'string' && r.image !== '' ? r.image : null,
+    addOn: bool(r.addOn, `rewards[${index}].addOn`, false),
     downloads: parseDownloads(r.downloads, `rewards[${index}].downloads`),
   };
 };

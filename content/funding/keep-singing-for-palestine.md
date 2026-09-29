@@ -36,6 +36,8 @@ rewards:
       28편의 시와 9곡의 노래를 실었습니다.
     amount: 13000
     requiresShipping: true
+    # 음원 티어와 함께 담는 추가 상품 — 결제 화면에서 "함께 받기"로 제안된다(shape.ts addOn).
+    addOn: true
     estimatedDelivery: 2026-10
     image: /images/funding/keep-singing-for-palestine/book-baljak-20260928.webp
   - id: book-gangdo
@@ -48,6 +50,8 @@ rewards:
       25편의 시와 7곡의 노래를 실었습니다.
     amount: 13000
     requiresShipping: true
+    # 음원 티어와 함께 담는 추가 상품 — 결제 화면에서 "함께 받기"로 제안된다(shape.ts addOn).
+    addOn: true
     estimatedDelivery: 2026-10
     image: /images/funding/keep-singing-for-palestine/book-gangdo-20260928.webp
   - id: wav-cd

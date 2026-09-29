@@ -48,6 +48,7 @@ rewards:
     amount: 30000
     totalQuantity: 5
     requiresShipping: true
+    addOn: true
     estimatedDelivery: 2026-12
   - id: mail
     title: 감사 메일
@@ -210,7 +211,7 @@ describe('리워드 담기', () => {
    * 전체 목록을 다시 펼치면 같은 결정을 한 번 더 하게 된다. 실물(배송) 리워드만 한 줄로
    * 제안하고 나머지는 접는다 — 디지털 티어는 서로 대체재라 권하지 않는다.
    */
-  it('담은 리워드만 보이고, 담지 않은 실물 리워드는 한 줄 제안, 디지털 티어는 접혀 있다', async () => {
+  it('담은 리워드만 보이고, 추가 상품(addOn)만 한 줄 제안, 티어는 실물이든 디지털이든 접혀 있다', async () => {
     const withTiers = parseFundingProject(`---
 slug: demo
 title: 데모
@@ -237,15 +238,24 @@ rewards:
     description: d
     amount: 13000
     requiresShipping: true
+    addOn: true
     estimatedDelivery: 2026-10
+  - id: lp
+    title: LP
+    description: d
+    amount: 40000
+    requiresShipping: true
+    estimatedDelivery: 2026-12
 ---
 `, 'demo');
-    render(<PledgeWizard project={withTiers} initialRewardId="mp3" remaining={{ mp3: null, wav: null, book: null }} />);
+    render(<PledgeWizard project={withTiers} initialRewardId="mp3" remaining={{ mp3: null, wav: null, book: null, lp: null }} />);
     expect(screen.getByLabelText('MP3 수량')).toHaveTextContent('1');
     expect(screen.getByText('시집 함께 받기')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
+    // 배송 리워드라도 addOn이 아니면(실물 티어) 권하지 않는다 — 사바하 CD 티어 오답(2026-09-29).
+    expect(screen.queryByText('LP 함께 받기')).toBeNull();
 
-    const toggle = screen.getByRole('button', { name: '다른 리워드 함께 담기 (2)' });
+    const toggle = screen.getByRole('button', { name: '다른 리워드 함께 담기 (3)' });
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(toggle);
     expect(screen.getByRole('button', { name: 'WAV 담기' })).toBeInTheDocument();

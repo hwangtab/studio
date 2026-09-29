@@ -26,7 +26,7 @@ jest.mock('../ResponsiveImage', () => ({
 
 const reward = {
   id: 'cd', title: 'CD', description: '설명', amount: 30000, totalQuantity: 10,
-  requiresShipping: false, estimatedDelivery: '2026-12', image: null as string | null, downloads: [],
+  requiresShipping: false, estimatedDelivery: '2026-12', image: null as string | null, downloads: [], addOn: false,
 };
 
 beforeEach(() => { captured.length = 0; });
