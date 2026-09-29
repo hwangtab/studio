@@ -91,7 +91,10 @@ const man = (value: number) => formatPriceLabel(value, 'ko');
 // softNote: 고단가 오퍼(레슨 월정액·발매 수백만)는 정보탐색 독자에게 진입 마찰이 크다.
 // 이미 실재하는 "첫 상담/견적 무료"를 앞세워 "등록·계약 전에 그냥 물어봐도 된다"는
 // 저마찰 진입로를 명시한다(새 무료 서비스 약속이 아니라 기존 무료 상담의 프레이밍).
-const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[]; softNote?: string }> = {
+// detailLabel: 서비스 페이지 링크 문구. 기본값 "서비스 자세히 보기"는 구글이 링크 대상을 읽는
+// 단서가 되지 못한다 — 발매 LP는 본문 링크 168곳 중 146곳이 이 문구나 "발매 프로젝트"였고,
+// 신설 4개월간 브랜드 외 검색어 노출이 0이었다(2026-09-29). 검색어로 부를 곳만 지정한다.
+const KO_CONTENT: Record<ServiceType, { title: string; description: string; features: string[]; softNote?: string; detailLabel?: string }> = {
   lesson: {
     title: '1:1 프로듀싱 레슨',
     description: '엔지니어와 함께 본인 곡을 단계별로 뜯어보며 개선합니다. 작곡·미디·믹싱 프로듀싱 멘토링.',
@@ -164,6 +167,7 @@ const KO_CONTENT: Record<ServiceType, { title: string; description: string; feat
       '아티스트 상황에 맞춘 단계별 진행',
     ],
     softNote: '혼자 발매를 준비하다 막막하면, 계약 전에 예산·일정부터 편하게 물어보세요. 첫 상담 30분은 무료입니다.',
+    detailLabel: '앨범·음원 제작 안내',
   },
   funding: {
     title: '크라우드펀딩 설계 대행',
@@ -310,7 +314,7 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
           }
           className="inline-flex items-center gap-1 text-sm font-semibold text-secondary dark:text-secondary-light hover:underline min-h-[44px] touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
         >
-          {t('stories.inline.serviceDetail', { defaultValue: '서비스 자세히 보기' })}
+          {koContent.detailLabel ?? t('stories.inline.serviceDetail', { defaultValue: '서비스 자세히 보기' })}
           <ArrowRight size={14} aria-hidden="true" />
         </Link>
       </div>
