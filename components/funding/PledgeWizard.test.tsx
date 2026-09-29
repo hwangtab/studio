@@ -6,6 +6,7 @@ import PledgeWizard from './PledgeWizard';
 import { parseFundingProject } from '../../lib/funding/projects';
 import { trackMicroEvent } from '../../utils/analytics';
 import { MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY } from '../../lib/funding/policy';
+import type { KakaoPostcodeData } from './kakaoPostcode';
 
 /**
  * 결제위젯은 폼 안에 떠 있고, 제출은 그 위젯의 `requestPayment`를 부른다. 테스트에서는
@@ -38,11 +39,11 @@ jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
  * 테스트에서는 embed하는 순간 곧바로 "고른 결과"를 돌려주는 가짜로 바꾼다. 결과 문자열은
  * 실제 포맷 함수(formatKakaoAddress)를 그대로 탄다.
  */
-const mockPostcodeBase = {
+const mockPostcodeBase: KakaoPostcodeData = {
   zonecode: '12345', roadAddress: '서울시 어딘가', jibunAddress: '서울시 어딘가 1-1',
-  userSelectedType: 'R' as const, bname: '', buildingName: '', apartment: 'N' as const,
+  userSelectedType: 'R', bname: '', buildingName: '', apartment: 'N',
 };
-let mockPostcodeResult = { ...mockPostcodeBase };
+let mockPostcodeResult: KakaoPostcodeData = { ...mockPostcodeBase };
 let mockPostcodeFails = false;
 jest.mock('./kakaoPostcode', () => {
   const actual = jest.requireActual('./kakaoPostcode');
