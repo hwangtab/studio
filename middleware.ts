@@ -85,12 +85,14 @@ function buildContentSecurityPolicy(): string {
         // 토스페이먼츠 결제위젯 v2: SDK 스크립트는 js.tosspayments.com에서, 위젯
         // UI·결제창은 *.tosspayments.com iframe에서, 승인 전 이벤트·로그 수집은
         // api/event 서브도메인으로 나간다. 간편결제 앱 연동은 pay.toss.im 프레임.
-        "script-src 'self' https://js.tosspayments.com https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com",
+        // 카카오 우편번호 서비스: 스크립트는 t1.kakaocdn.net 단독 파일, 검색 화면은
+        // postcode.map.kakao.com iframe(펀딩 배송지 주소 검색 — components/funding/kakaoPostcode.ts).
+        "script-src 'self' https://js.tosspayments.com https://www.google.com https://www.gstatic.com https://va.vercel-scripts.com https://www.googletagmanager.com https://t1.kakaocdn.net",
         "script-src-attr 'none'",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "img-src 'self' data: https:",
         "font-src 'self' data: https://fonts.gstatic.com",
-        "frame-src 'self' https://*.tosspayments.com https://toss.im https://*.toss.im https://www.google.com https://www.google.co.kr",
+        "frame-src 'self' https://*.tosspayments.com https://toss.im https://*.toss.im https://www.google.com https://www.google.co.kr https://postcode.map.kakao.com",
         "connect-src 'self' https://*.tosspayments.com https://vitals.vercel-insights.com https://va.vercel-scripts.com https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://stats.g.doubleclick.net",
         "object-src 'none'",
         "base-uri 'self'",
