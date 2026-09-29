@@ -88,7 +88,7 @@ describe('RewardModal', () => {
     expect(screen.getByText('10,000원')).toBeInTheDocument();
     expect(screen.queryByText(/펀딩 폼 대역/)).toBeNull();
 
-    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
     // 폼은 페이지와 같은 PledgeWizard이고, 고른 리워드가 그대로 넘어간다.
     expect(screen.getByText('펀딩 폼 대역 · mp3')).toBeInTheDocument();
   });
@@ -107,7 +107,7 @@ describe('RewardModal', () => {
     const onClose = jest.fn();
     renderModal(REWARD, onClose);
 
-    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     await user.keyboard('{Escape}');
@@ -128,7 +128,7 @@ describe('RewardModal', () => {
     renderModal();
     expect(lastTrapState()).toBe(true);
 
-    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     expect(lastTrapState()).toBe(true);
@@ -139,7 +139,7 @@ describe('RewardModal', () => {
     const onClose = jest.fn();
     const { rerender } = renderModal();
 
-    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
     expect(screen.getByText(/펀딩 폼 대역/)).toBeInTheDocument();
 
     const other: FundingReward = { ...REWARD, id: 'wav', title: 'WAV 16bit', amount: 30000 };
@@ -179,7 +179,7 @@ describe('포커스 복원 시점', () => {
     trigger.focus();
 
     renderModal();
-    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
     await user.click(screen.getByRole('button', { name: '결제 단계로' }));
 
     expect(document.activeElement).not.toBe(trigger);
@@ -202,7 +202,26 @@ describe('포커스 복원 시점', () => {
     trackMicroEvent.mockClear();
     const user = userEvent.setup();
     renderModal();
-    await user.click(screen.getByRole('button', { name: '담고 펀딩하기' }));
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
     expect(trackMicroEvent).toHaveBeenCalledWith('funding_pledge_start', expect.objectContaining({ component: 'funding_reward_modal' }));
+  });
+
+  // 상세에서 내려 둔 스크롤이 폼으로 넘어가 폼의 맨 위가 잘려 시작하던 것(2026-09-29).
+  it('폼으로 넘어가면 본문 스크롤을 맨 위로 되돌린다', async () => {
+    const user = userEvent.setup();
+    renderModal();
+    const body = screen.getByRole('dialog').querySelector('.overflow-y-auto') as HTMLDivElement;
+    body.scrollTop = 400;
+    await user.click(screen.getByRole('button', { name: /담고 펀딩하기/ }));
+    expect(body.scrollTop).toBe(0);
+  });
+
+  // 버튼이 본문 스크롤 밖(모달 바닥)에 있어야 이미지·설명이 길어도 화면 안에 남는다.
+  it('상세 단계의 펀딩 버튼은 본문 스크롤 영역 밖에 있고 금액을 함께 적는다', () => {
+    renderModal();
+    const btn = screen.getByRole('button', { name: /담고 펀딩하기/ });
+    const body = screen.getByRole('dialog').querySelector('.overflow-y-auto')!;
+    expect(body.contains(btn)).toBe(false);
+    expect(btn).toHaveTextContent('10,000원 · 담고 펀딩하기');
   });
 });
