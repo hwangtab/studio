@@ -69,7 +69,16 @@ export default function PublicNameChoice({ customerName, style, nickname, onStyl
       <div className="mt-3 text-sm" aria-live="polite">
         <p className="typo-card-meta">이렇게 보입니다</p>
         <p className="mt-1 break-keep text-gray-600 dark:text-gray-300">
-          <span className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">{shown || (style === 'nickname' ? '닉네임을 입력해 주세요' : '이름')}</span>
+          {shown ? (
+            <span className="whitespace-nowrap font-semibold text-gray-900 dark:text-white">{shown}</span>
+          ) : (
+            // 실제 값이 아직 없을 때 "이름"을 굵게 검게 보여주면 미리보기 결과처럼 읽힌다
+            // (2026-09-30 지적 — "이렇게 보입니다 / 이름"이 실제 표시값처럼 보였다).
+            // 옅은 색 + 안내 문구로 "아직 안 채워졌다"는 뜻을 분명히 한다.
+            <span className="font-normal text-gray-400 dark:text-gray-500">
+              {style === 'nickname' ? '닉네임을 입력해 주세요' : '이름을 입력해 주세요'}
+            </span>
+          )}
           {trimmedMessage && <span className="break-words"> “{trimmedMessage.length > 60 ? `${trimmedMessage.slice(0, 60)}…` : trimmedMessage}”</span>}
         </p>
       </div>
