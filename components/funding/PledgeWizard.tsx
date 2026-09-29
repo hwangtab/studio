@@ -42,10 +42,13 @@ interface Props {
   initialRewardId: string | null;
   remaining: Record<string, number | null>;
   /**
-   * 요약·결제 줄을 화면 아래에 붙일지. 페이지에서는 붙이는 게 맞지만 모달은 **본문 자체가
-   * 스크롤 컨테이너**라, sticky가 컨테이너 바닥에 붙으면서 폼 위로 떠 내용과 겹친다.
+   * 어디에 놓였나. 결제 버튼 바는 **어디서든 바닥에 고정**하고(모바일에서 주 버튼은 늘 하단 고정
+   * 바 — 2026-09-29 통일 규칙), 차이는 바가 가장자리에 붙는 방식뿐이다.
+   * - `page`: /pledge 페이지. 화면 가장자리까지(좌우 패딩 −4).
+   * - `modal`: 리워드 모달 본문(스크롤 컨테이너, 패딩 p-5 sm:p-6) 바닥. 모달 상세 단계의 고정
+   *   버튼 바(RewardModal)와 같은 모양이 되도록 본문 패딩만큼 끌어내린다.
    */
-  stickySummary?: boolean;
+  layout?: 'page' | 'modal';
 }
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
@@ -119,16 +122,18 @@ const capOf = (remaining: Record<string, number | null>, rewardId: string): numb
 const stepButtonClass =
   'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-300 text-lg font-bold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:text-gray-100 dark:hover:border-primary-lighter dark:hover:text-primary-lighter dark:focus-visible:ring-primary-lighter/70';
 
-export default function PledgeWizard({ project, initialRewardId, remaining, stickySummary = true }: Props) {
+export default function PledgeWizard({ project, initialRewardId, remaining, layout = 'page' }: Props) {
   const uid = useId();
   /**
    * 담은 리워드. **담은 순서**를 지킨다 — 요약·메일·관리자 화면이 이 순서로 보여 준다.
    *
-   * 시작할 때 하나를 1개 담아 둔다: 넘겨받은 리워드, 없으면 고를 수 있는 첫 리워드. 품절인
-   * 리워드는 담지 않는다 — 담긴 채 시작하면 후원자가 폼을 다 채운 뒤에야 409를 본다.
+   * 넘겨받은 리워드가 있으면 그것을 1개 담고 시작한다. 없으면(하단 바·히어로의 "펀딩하기",
+   * 리워드 없이 연 /pledge) **빈 채로** 시작해 목록을 펼쳐 보인다 — 예전엔 첫 리워드를 멋대로
+   * 담아 두어, 고른 적 없는 것이 담긴 채 시작했다. 품절인 리워드는 담지 않는다 — 담긴 채
+   * 시작하면 후원자가 폼을 다 채운 뒤에야 409를 본다.
    */
   const [cart, setCart] = useState<Array<{ rewardId: string; quantity: number }>>(() => {
-    const start = initialRewardId ?? project.rewards.find((r) => !isSoldOut(remaining, r.id))?.id;
+    const start = initialRewardId;
     return start && project.rewards.some((r) => r.id === start) && !isSoldOut(remaining, start) ? [{ rewardId: start, quantity: 1 }] : [];
   });
   /** 담지 않은 리워드 목록을 펼쳤는가. 기본은 접힘 — 위 주석(맨 위에는 담은 것만). */
@@ -594,12 +599,14 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
           </ul>
         )}
         {suggestions.length > 0 && (
-          <ul className="mt-3 space-y-2" aria-label="함께 받을 수 있는 리워드">
+          <>
+          <p className="typo-card-meta mt-4">함께 담을 수 있는 리워드</p>
+          <ul className="mt-2 space-y-2" aria-label="함께 담을 수 있는 리워드">
             {suggestions.map((r) => (
               <li key={r.id} className="flex items-center gap-3 rounded-xl border border-dashed border-gray-300 px-4 py-3 dark:border-gray-600">
                 <span className="min-w-0 flex-1 text-sm">
-                  <span className="block font-medium text-gray-900 dark:text-white">{r.title} 함께 받기</span>
-                  <span className="typo-card-meta block">+{formatPriceAmount(r.amount)}원 · 배송</span>
+                  <span className="block font-medium text-gray-900 dark:text-white">{r.title}</span>
+                  <span className="typo-card-meta block">+{formatPriceAmount(r.amount)}원{r.requiresShipping ? ' · 배송' : ''}</span>
                 </span>
                 <Button type="button" size="sm" variant="outline" onClick={() => setQuantity(r.id, 1)} aria-label={`${r.title} 담기`}>
                   담기
@@ -607,6 +614,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
               </li>
             ))}
           </ul>
+          </>
         )}
         {notInCart.length > 0 && !listOpen && (
           <button
@@ -615,7 +623,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
             aria-expanded={false}
             className="mt-3 inline-flex min-h-[44px] items-center text-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-primary-lighter dark:hover:text-white dark:focus-visible:ring-primary-lighter/70"
           >
-            다른 리워드 함께 담기 ({notInCart.length})
+            다른 리워드 보기 ({notInCart.length})
           </button>
         )}
         {notInCart.length > 0 && listOpen && (
@@ -815,10 +823,14 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
         )}
       </fieldset>
 
-      {/* 선택 내용과 합계를 제출 버튼 바로 위에 붙여 둔다 — 모바일에서 폼을 다시
-          위로 스크롤하지 않고도 무엇을 얼마에 사는지 확인할 수 있어야 한다. */}
-      <div className={`${stickySummary ? 'sticky bottom-0 z-10 -mx-4 px-4 backdrop-blur sm:mx-0 sm:px-6' : 'px-4 sm:px-6'} border-t border-gray-200 bg-white/95 pb-4 pt-4 sm:rounded-2xl sm:border dark:border-gray-700 dark:bg-gray-900/95`}>
-        <dl className="space-y-1.5">
+      {/*
+        결제 요약은 **흐름 안의 카드**로 둔다. 예전엔 요약 전체를 바닥에 붙였는데, 담은 줄이
+        늘면 그 덩어리가 화면 절반을 덮었고 모달에서는 폼 위로 떠 겹쳐 모달만 따로 끄는 설정을
+        뒀다 — 같은 폼이 진입 경로에 따라 버튼 위치가 달랐다. 이제 바닥에는 버튼 바만 둔다.
+      */}
+      <section className={cardClass} aria-labelledby={`${uid}-summary`}>
+        <h2 id={`${uid}-summary`} className="typo-card-subtitle text-gray-900 dark:text-white">결제 요약</h2>
+        <dl className="mt-3 space-y-1.5">
           {lines.length === 0 ? (
             <div className="flex items-baseline justify-between gap-4">
               <dt className="typo-card-meta">담은 리워드</dt>
@@ -844,12 +856,23 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
           </div>
         </dl>
         <p className={helpClass}>VAT 포함. 실제 청구액은 서버가 확정합니다.</p>
+      </section>
 
+      {/*
+        결제 버튼 바 — **어디서든 바닥에 고정**(모바일 주 버튼 통일 규칙). 약관 고지는 버튼과
+        떨어지면 안 되므로(아래 주석) 바 안에 함께 둔다. 모달 상세 단계의 고정 바
+        (RewardModal)와 같은 모양·같은 "금액 · 동작" 문구다.
+      */}
+      <div
+        className={layout === 'modal'
+          ? 'sticky bottom-0 z-10 -mx-5 -mb-5 border-t border-gray-200 bg-gray-50 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:-mx-6 sm:-mb-6 sm:px-6 dark:border-gray-700 dark:bg-gray-900'
+          : 'sticky bottom-0 z-10 -mx-4 border-t border-gray-200 bg-white/95 px-4 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur sm:mx-0 sm:rounded-t-2xl sm:border-x sm:px-6 dark:border-gray-700 dark:bg-gray-900/95'}
+      >
         {allSoldOut && (
-          <p role="status" className="mt-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
+          <p role="status" className="mb-3 rounded-xl border border-gray-200 p-3 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-200">{ALL_SOLD_OUT_MESSAGE}</p>
         )}
         {error && (
-          <p role="alert" className="mt-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
+          <p role="alert" className="mb-3 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
         )}
         {/*
           약관 동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다.
@@ -868,15 +891,15 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
           서버 검증(termsAgreed)과 판본 기록(funding_pledges.terms_version)은 그대로다 —
           누른 시점의 판본이 증거로 남는다.
         */}
-        <p className="mt-4 text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+        <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
           결제하기를 누르면{' '}
           <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
           <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는 것으로 봅니다.
         </p>
 
         {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. */}
-        <Button type="submit" size="lg" fullWidth className="mt-4" disabled={submitting || allSoldOut || lines.length === 0 || !paymentReady}>
-          {submitting ? '처리 중…' : '결제하기'}
+        <Button type="submit" size="lg" fullWidth className="mt-3" disabled={submitting || allSoldOut || lines.length === 0 || !paymentReady}>
+          {submitting ? '처리 중…' : lines.length === 0 ? '리워드를 담아 주세요' : `${formatPriceAmount(preview.totalAmount)}원 · 결제하기`}
         </Button>
       </div>
     </form>

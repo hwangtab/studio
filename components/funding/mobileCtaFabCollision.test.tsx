@@ -28,7 +28,7 @@ const fabRoot = () => document.querySelector('div.fixed.right-6') as HTMLElement
 
 describe('하단 고정 바 ↔ 카카오 FAB 겹침', () => {
   it('하단 바는 z-50이라 FAB(z-40)보다 위에 온다', () => {
-    const { container } = render(<FundingMobileCta visible />);
+    const { container } = render(<FundingMobileCta visible href="/ko/funding/demo/pledge" onOpen={() => {}} />);
     const bar = container.querySelector('div.fixed') as HTMLElement;
     expect(bar.className).toContain('z-50');
 
@@ -37,7 +37,7 @@ describe('하단 고정 바 ↔ 카카오 FAB 겹침', () => {
   });
 
   it('바는 데스크톱에 없다 — lg:hidden', () => {
-    const { container } = render(<FundingMobileCta visible />);
+    const { container } = render(<FundingMobileCta visible href="/ko/funding/demo/pledge" onOpen={() => {}} />);
     expect((container.querySelector('div.fixed') as HTMLElement).className).toContain('lg:hidden');
   });
 
@@ -56,7 +56,7 @@ describe('하단 고정 바 ↔ 카카오 FAB 겹침', () => {
   });
 
   it('바가 안 보이는 상태면 아무것도 렌더하지 않는다', () => {
-    const { container } = render(<FundingMobileCta visible={false} />);
+    const { container } = render(<FundingMobileCta visible={false} href="/ko/funding/demo/pledge" onOpen={() => {}} />);
     expect(container.querySelector('div.fixed')).toBeNull();
     expect(screen.queryByText('펀딩하기')).toBeNull();
   });

@@ -2,6 +2,7 @@ import MarkdownRenderer from '../MarkdownRenderer';
 import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
 import { Section } from '../ui/Section';
 import FundingProgress from './FundingProgress';
+import { Button } from '../ui/Button';
 import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
 import SupporterTicker from './SupporterTicker';
@@ -40,6 +41,11 @@ export interface ProjectDetailViewProps {
   /** 리워드별 남은 수량(공개 페이지의 폴링 결과). 없으면 파일의 총 수량을 그대로 쓴다. */
   remaining?: Record<string, number | null>;
   /** 리워드 카드 클릭 시 모달을 여는 콜백(공개 페이지 전용). `interactive`가 false면 쓰이지 않는다. */
+  /**
+   * 히어로 "펀딩하기" — 결제 화면을 바로 연다(리워드 없이 연 결제 모달). 없으면 /pledge 링크로
+   * 이동한다. 모든 "펀딩하기"가 같은 결제 화면에 닿게 하는 통일 규칙(2026-09-29).
+   */
+  onPledge?: () => void;
   onSelectReward?: (reward: FundingReward) => void;
   /** 공개에 동의한 후원자 명단(공개 페이지의 폴링 결과). */
   backers?: string[];
@@ -68,6 +74,7 @@ export default function ProjectDetailView({
   statusError = false,
   remaining,
   onSelectReward,
+  onPledge,
   backers = [],
   anonymousBackers = 0,
   messages = [],
@@ -131,12 +138,20 @@ export default function ProjectDetailView({
           canPledge ? (
             // 카카오가 아닌 목적지이므로 옐로를 쓰지 않는다(CLAUDE.md 카카오 CTA 규칙).
             // <lg에서는 FundingMobileCta가 상시 떠 있어 같은 버튼이 한 화면에 둘이 된다.
-            <a
-              href="#rewards"
-              className="hidden h-14 lg:inline-flex items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
-            >
-              펀딩하기
-            </a>
+            // 공용 Button — 모달·결제 화면·모바일 하단 바의 주 버튼과 같은 크기·모서리. 사진 위라
+            // 포커스 링만 흰색으로 바꾼다. 스크롤이 아니라 결제 화면을 연다(onPledge).
+            <Button asChild size="lg" className="hidden lg:inline-flex focus-visible:ring-white/80 focus-visible:ring-offset-black/40">
+              <a
+                href={`/ko/funding/${project.slug}/pledge`}
+                onClick={(e) => {
+                  if (!onPledge || e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+                  e.preventDefault();
+                  onPledge();
+                }}
+              >
+                펀딩하기
+              </a>
+            </Button>
           ) : null
         }
       />

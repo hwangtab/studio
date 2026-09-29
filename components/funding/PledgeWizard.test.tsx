@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 
@@ -276,7 +276,7 @@ describe('리워드 담기', () => {
     await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 빼기' }));
     expect(screen.getByRole('button', { name: '감사 메일 담기' })).toBeInTheDocument();
     expect(screen.getByText('아직 없습니다')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '리워드를 담아 주세요' })).toBeDisabled();
   });
 
   it('남은 수량까지만 늘릴 수 있다', async () => {
@@ -295,8 +295,8 @@ describe('리워드 담기', () => {
 
   it('품절 리워드는 한 줄 제안에 나오지 않고, 펼친 목록에서도 담을 수 없다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 0, mail: null }} />);
-    expect(screen.queryByText('CD 함께 받기')).toBeNull();
-    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 함께 담기/ }));
+    expect(within(screen.queryByRole('list', { name: '함께 담을 수 있는 리워드' }) ?? document.createElement('ul')).queryByText('CD')).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 보기/ }));
     expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
   });
 
@@ -344,24 +344,24 @@ rewards:
 `, 'demo');
     render(<PledgeWizard project={withTiers} initialRewardId="mp3" remaining={{ mp3: null, wav: null, book: null, lp: null }} />);
     expect(screen.getByLabelText('MP3 수량')).toHaveTextContent('1');
-    expect(screen.getByText('시집 함께 받기')).toBeInTheDocument();
+    expect(within(screen.getByRole('list', { name: '함께 담을 수 있는 리워드' })).getByText('시집')).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
     // 배송 리워드라도 addOn이 아니면(실물 티어) 권하지 않는다 — 사바하 CD 티어 오답(2026-09-29).
-    expect(screen.queryByText('LP 함께 받기')).toBeNull();
+    expect(within(screen.getByRole('list', { name: '함께 담을 수 있는 리워드' })).queryByText('LP')).toBeNull();
 
-    const toggle = screen.getByRole('button', { name: '다른 리워드 함께 담기 (3)' });
+    const toggle = screen.getByRole('button', { name: '다른 리워드 보기 (3)' });
     expect(toggle).toHaveAttribute('aria-expanded', 'false');
     await userEvent.click(toggle);
     expect(screen.getByRole('button', { name: 'WAV 담기' })).toBeInTheDocument();
     // 펼치면 한 줄 제안은 목록과 겹치므로 사라진다.
-    expect(screen.queryByText('시집 함께 받기')).toBeNull();
+    expect(screen.queryByRole('list', { name: '함께 담을 수 있는 리워드' })).toBeNull();
     await userEvent.click(screen.getByRole('button', { name: '접기' }));
     expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
 
     // 제안에서 담으면 담은 목록으로 올라간다.
     await userEvent.click(screen.getByRole('button', { name: '시집 담기' }));
     expect(screen.getByLabelText('시집 수량')).toHaveTextContent('1');
-    expect(screen.queryByText('시집 함께 받기')).toBeNull();
+    expect(screen.queryByRole('list', { name: '함께 담을 수 있는 리워드' })).toBeNull();
   });
 });
 
@@ -489,11 +489,14 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
  * 품절 리워드 초기 선택 회귀 — 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해서,
  * 후원자는 폼을 전부 채우고 제출한 **뒤에야** 409를 봤다.
  */
-it('첫 리워드가 품절이면 고를 수 있는 리워드가 담긴 채로 시작한다', () => {
-  render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
-  expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('1');
-  // 품절 CD는 제안하지 않는다.
-  expect(screen.queryByText('CD 함께 받기')).toBeNull();
+// 하단 바·히어로의 "펀딩하기"는 리워드 없이 결제 화면을 연다 — 고른 적 없는 것을 담아 두지
+// 않고, 빈 채로 목록을 펼쳐 고르게 한다(2026-09-29 통일).
+it('넘겨받은 리워드가 없으면 빈 채로 시작해 목록을 펼친다 — 품절은 담을 수 없다', () => {
+  const { container } = render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
+  expect(screen.queryByLabelText('감사 메일 수량')).toBeNull();
+  expect(screen.getByRole('button', { name: '감사 메일 담기' })).toBeEnabled();
+  expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
+  expect(container.querySelector('button[type=submit]')).toHaveTextContent('리워드를 담아 주세요');
 });
 
 it('넘겨받은 리워드가 품절이면 담지 않고 시작한다 — 폼을 다 채운 뒤 409를 보지 않게', () => {
@@ -503,8 +506,8 @@ it('넘겨받은 리워드가 품절이면 담지 않고 시작한다 — 폼을
 });
 
 it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () => {
-  render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: 0 }} />);
-  const submit = screen.getByRole('button', { name: /결제하기/ });
+  const { container } = render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: 0 }} />);
+  const submit = container.querySelector('button[type=submit]') as HTMLButtonElement;
   expect(submit).toBeDisabled();
   expect(screen.getByRole('status')).toHaveTextContent('모든 리워드가 품절되었습니다');
   // 폼 자체를 제출해도(Enter 등) 서버를 부르지 않는다.
@@ -722,7 +725,7 @@ describe('임시 저장', () => {
   // 이름 공개는 체크 한 번이라 잃어도 손해가 없고, 문자열만 담는 계약을 깰 이유가 아니다.
   it('담은 리워드·추가금·이름 공개는 복원되지 않는다', async () => {
     const { unmount } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 함께 담기/ }));
+    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 보기/ }));
     await userEvent.click(screen.getByRole('button', { name: '감사 메일 담기' }));
     await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
     const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
@@ -774,26 +777,30 @@ describe('임시 저장', () => {
 });
 
 /**
- * 리워드 카드를 눌러 연 모달은 **이미 고르고 들어온** 화면이다. 거기서 네 개를 다시
- * 보여 주면 방금 고른 것이 반영됐는지 의심하게 된다. 그리고 모달 본문은 자체 스크롤
- * 컨테이너라, sticky 요약이 컨테이너 바닥에 붙으면서 폼 위로 떠 내용과 겹친다.
- * 둘 다 실제로 그렇게 배포됐다가 잡았다.
+ * 결제 버튼 바는 **어디서든 바닥에 고정**한다(2026-09-29 통일 규칙). 예전엔 모달에서만 끄는
+ * 설정이 있어 같은 폼이 진입 경로에 따라 버튼 위치가 달랐다. 요약은 흐름 안의 카드로 두고
+ * 바에는 약관 고지와 "금액 · 결제하기"만 둔다.
  */
-describe('모달에서 여는 경우 (stickySummary)', () => {
+describe('결제 버튼 바', () => {
   const remaining = { cd: 5, mail: null } as Record<string, number | null>;
+  const bar = (container: HTMLElement) => (container.querySelector('button[type=submit]') as HTMLElement).parentElement!;
 
-  it('stickySummary=false면 요약 줄이 sticky가 아니다', () => {
-    const { container } = render(
-      <PledgeWizard project={project} initialRewardId="cd" remaining={remaining} stickySummary={false} />
-    );
-    const summary = [...container.querySelectorAll('div')].find((d) => d.textContent?.includes('예상 합계'));
-    expect(summary!.className).not.toContain('sticky');
+  it.each(['page', 'modal'] as const)('%s에서도 바닥에 고정되고, 금액과 동작을 함께 적는다', (layout) => {
+    const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} layout={layout} />);
+    expect(bar(container).className).toContain('sticky');
+    expect(bar(container).className).toContain('bottom-0');
+    expect(container.querySelector('button[type=submit]')).toHaveTextContent('30,000원 · 결제하기');
   });
 
-  it('기본값에서는 요약 줄이 sticky다 — 페이지에서는 붙는 게 맞다', () => {
+  it('약관 고지는 버튼과 같은 바 안에 있다 — 버튼만 떠서 고지를 못 보고 누르는 일이 없게', () => {
     const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
-    const summary = [...container.querySelectorAll('div')].find((d) => d.className.includes('bottom-0'));
-    expect(summary!.className).toContain('sticky');
+    expect(bar(container)).toHaveTextContent('결제하기를 누르면');
+  });
+
+  it('요약은 바가 아니라 흐름 안의 카드다', () => {
+    const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} />);
+    expect(bar(container)).not.toHaveTextContent('예상 합계');
+    expect(screen.getByRole('heading', { name: '결제 요약' })).toBeInTheDocument();
   });
 });
 

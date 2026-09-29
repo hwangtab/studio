@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import PledgeWizard from './PledgeWizard';
+import { Button } from '../ui/Button';
 import ResponsiveImage from '../ResponsiveImage';
 import { formatPriceAmount } from '../../data/pricing';
 import type { FundingProject, FundingReward } from '../../lib/funding/projects';
@@ -12,6 +13,13 @@ import { trackMicroEvent } from '../../utils/analytics';
 interface Props {
   project: FundingProject;
   reward: FundingReward | null;
+  /**
+   * 리워드 없이 **결제 화면으로 바로** 연다. 하단 고정 바·히어로의 "펀딩하기"가 쓴다 —
+   * 예전엔 그 버튼들이 리워드 목록으로 스크롤만 해서, 모바일에서는 긴 본문 끝까지 내려간 뒤
+   * 카드를 다시 골라야 했다. 모든 "펀딩하기"가 같은 결제 화면에 닿게 한다(2026-09-29 통일).
+   * 담은 것 없이 시작하므로 PledgeWizard가 리워드 목록을 펼쳐 보인다.
+   */
+  checkout?: boolean;
   remaining: Record<string, number | null>;
   onClose: () => void;
 }
@@ -30,18 +38,19 @@ const stockLabel = (remaining: number | null): string =>
  * 약관 동의와 `terms_version` 기록이 한 벌로 유지되도록 복제하지 않는다. 카드는 여전히
  * 진짜 링크라서, JS가 죽으면 모달 없이 그 페이지로 이동한다.
  */
-export default function RewardModal({ project, reward, remaining, onClose }: Props) {
+export default function RewardModal({ project, reward, checkout = false, remaining, onClose }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState<'detail' | 'pledge'>('detail');
 
-  const isOpen = reward !== null;
+  const isOpen = reward !== null || checkout;
 
-  // 리워드가 바뀌면 항상 상세부터 다시 시작한다.
+  // 리워드가 바뀌면 상세부터, 결제 화면으로 바로 연 경우는 결제부터 시작한다.
   useEffect(() => {
     if (reward) setStep('detail');
-  }, [reward]);
+    else if (checkout) setStep('pledge');
+  }, [reward, checkout]);
 
   /**
    * 단계가 바뀌면 본문 스크롤을 맨 위로 되돌린다. 본문(`bodyRef`)은 두 단계가 같은 스크롤
@@ -50,7 +59,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
    */
   useEffect(() => {
     if (bodyRef.current) bodyRef.current.scrollTop = 0;
-  }, [step, reward]);
+  }, [step, reward, checkout]);
 
   /**
    * 트랩은 모달이 열려 있는 동안 계속 켜 둔다.
@@ -90,10 +99,12 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
     return () => unlockBodyScroll();
   }, [isOpen]);
 
-  if (!reward) return null;
+  if (!isOpen) return null;
 
-  const left = remaining[reward.id] ?? reward.totalQuantity;
+  const left = reward ? remaining[reward.id] ?? reward.totalQuantity : null;
   const soldOut = left !== null && left <= 0;
+  // 리워드 없이 연 결제 화면은 상세 단계가 없다.
+  const showDetail = reward !== null && step === 'detail';
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-4">
@@ -108,7 +119,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
       >
         <div className="glass-bar sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-gray-100 px-5 py-4 dark:border-gray-700">
           <p className="typo-card-meta truncate">
-            {step === 'detail' ? '리워드' : '펀딩하기'} · {project.title}
+            {showDetail ? '리워드' : '펀딩하기'} · {project.title}
           </p>
           <button
             ref={closeButtonRef}
@@ -124,7 +135,7 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
         </div>
 
         <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6">
-          {step === 'detail' ? (
+          {showDetail && reward ? (
             <div>
               {reward.image && (
                 <ResponsiveImage
@@ -152,15 +163,15 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
           ) : (
             <>
               <h2 id="reward-modal-title" className="sr-only">
-                {reward.title} 펀딩하기
+                {reward ? `${reward.title} 펀딩하기` : `${project.title} 펀딩하기`}
               </h2>
               <PledgeWizard
                 project={project}
-                // 누른 리워드를 1개 담은 채로 시작한다. 다른 리워드도 같은 목록에서 더 담는다.
-                initialRewardId={reward.id}
+                // 누른 리워드를 1개 담은 채로 시작한다. 리워드 없이 열었으면 빈 채로 목록을 펼친다.
+                initialRewardId={reward?.id ?? null}
                 remaining={remaining}
-                // 모달 본문이 자체 스크롤 컨테이너라 sticky 요약이 폼 위로 떠 겹친다.
-                stickySummary={false}
+                // 결제 버튼 바를 모달 본문 바닥에 붙인다 — 상세 단계의 고정 바와 같은 모양.
+                layout="modal"
               />
             </>
           )}
@@ -172,10 +183,12 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
           버튼 위쪽이 822~1,099px, 화면 높이 664px(2026-09-29 실측). 금액을 함께 적어 무엇을
           누르는지 버튼만 보고도 알게 한다.
         */}
-        {step === 'detail' && (
+        {showDetail && reward && (
           <div className="border-t border-gray-200 bg-gray-50 px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-3 sm:px-6 dark:border-gray-700 dark:bg-gray-900">
-            <button
+            <Button
               type="button"
+              size="lg"
+              fullWidth
               disabled={soldOut}
               onClick={() => {
                 setStep('pledge');
@@ -183,10 +196,9 @@ export default function RewardModal({ project, reward, remaining, onClose }: Pro
                 // 거치는 이 모달 경로가 GA 퍼널에서 빠져 있었다.
                 trackMicroEvent('funding_pledge_start', { component: 'funding_reward_modal', landing_slug: project.slug });
               }}
-              className="inline-flex h-14 w-full items-center justify-center rounded-xl bg-primary px-8 text-lg font-bold text-white shadow-md transition-colors hover:bg-primary-dark disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-gray-500 dark:disabled:bg-gray-700 dark:disabled:text-gray-400"
             >
-              {soldOut ? '품절' : `${formatPriceAmount(reward.amount)}원 · 담고 펀딩하기`}
-            </button>
+              {soldOut ? '품절' : `${formatPriceAmount(reward.amount)}원 · 펀딩하기`}
+            </Button>
           </div>
         )}
       </div>

@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
+import { trackMicroEvent } from '../../../../utils/analytics';
 import ProjectDetailView from '../../../../components/funding/ProjectDetailView';
 import FundingMobileCta from '../../../../components/funding/FundingMobileCta';
 import RewardModal from '../../../../components/funding/RewardModal';
@@ -60,7 +61,14 @@ export default function FundingProjectPage({ project, initialState, initialStatu
   // 리워드 모달은 페이지에 **하나만** 둔다. 카드마다 띄우면 결제 위젯 인스턴스가 여러 벌
   // 살아 있을 수 있다.
   const [openReward, setOpenReward] = useState<FundingReward | null>(null);
-  const closeModal = useCallback(() => setOpenReward(null), []);
+  // 리워드 없이 결제 화면을 바로 연다 — 하단 바·히어로의 "펀딩하기"(RewardModal checkout).
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const openCheckout = useCallback(() => {
+    setOpenReward(null);
+    setCheckoutOpen(true);
+    trackMicroEvent('funding_pledge_start', { component: 'funding_cta', landing_slug: project.slug });
+  }, [project.slug]);
+  const closeModal = useCallback(() => { setOpenReward(null); setCheckoutOpen(false); }, []);
   // ProjectDetailView(리워드 카드)와 같은 폴백 계산이다 — 한쪽만 고치면 카드에 보이는
   // 잔여 수량과 모달이 실제로 거는 제한이 갈린다(lib/funding/projects.ts 주석 참조).
   const remaining = useMemo(() => mergeRewardRemaining(project.rewards, data?.remaining), [data?.remaining, project.rewards]);
@@ -153,6 +161,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         statusError={!!statusError}
         remaining={data?.remaining}
         onSelectReward={setOpenReward}
+        onPledge={openCheckout}
         backers={data?.publicBackers ?? []}
         anonymousBackers={data?.anonymousBackerCount ?? 0}
         messages={data?.publicMessages ?? []}
@@ -166,8 +175,8 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문입니다."
       />
 
-      <RewardModal project={project} reward={openReward} remaining={remaining} onClose={closeModal} />
-      <FundingMobileCta visible={canPledge} />
+      <RewardModal project={project} reward={openReward} checkout={checkoutOpen && !openReward} remaining={remaining} onClose={closeModal} />
+      <FundingMobileCta visible={canPledge} href={`/ko/funding/${project.slug}/pledge`} onOpen={openCheckout} />
     </>
   );
 }
