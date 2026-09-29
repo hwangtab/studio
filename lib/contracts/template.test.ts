@@ -271,3 +271,46 @@ describe('법에서 요구하는 조항', () => {
     expect(content).not.toContain('퇴실하더라도 일할 계산하지 않는다');
   });
 });
+
+/**
+ * 서명자가 주소 칸에 적은 마크다운 링크·이미지·맨 URL. escapeTableCell은 이 문법을 막지 않으므로
+ * 렌더 옵션(CONTRACT_MARKDOWN_OPTIONS)이 URL 속성을 비운다. 막히지 않으면 PDF를 만드는 서버
+ * 크롬이 서명자가 고른 주소로 요청을 보내고, 도장이 찍힌 문서에 검토하지 않은 그림이 들어간다.
+ */
+describe('서명자가 적은 링크·이미지', () => {
+  const html = renderMarkdown(
+    buildContractContent({
+      ...baseData,
+      customerAddress:
+        'AUDIT_ADDR ![](https://attacker.example/p.png) [상세](https://attacker.example/x) https://attacker.example/bare',
+    }),
+  );
+
+  it('계약서가 바깥 주소를 부르거나 가리키지 않는다', () => {
+    expect(html).not.toMatch(/\b(src|href)=/);
+    // React 19는 <img>를 보면 <link rel="preload">를 문서 앞에 끼워 넣는다.
+    expect(html).not.toContain('<link');
+  });
+
+  it('적힌 글자는 그대로 남는다', () => {
+    const cell = html.match(/<td>[^<]*AUDIT_ADDR[\s\S]*?<\/td>/)?.[0] ?? '';
+    expect(cell).toContain('상세');
+    expect(cell).toContain('https://attacker.example/bare');
+  });
+});
+
+describe('치환 패턴이 든 입력', () => {
+  /** 문자열 치환은 `$'`를 "일치한 곳 뒤 전부"로 해석한다 — 템플릿 뒷부분이 셀 안으로 끌려 들어온다. */
+  it.each(["$'", '$&', '$`', '$$'])('%s 를 적은 주소가 글자 그대로 들어간다', (pattern) => {
+    const content = buildContractContent({ ...baseData, customerAddress: `AUDIT_ADDR ${pattern} 끝` });
+    const row = content.split('\n').find((line) => line.includes('AUDIT_ADDR')) ?? '';
+
+    expect(row).toContain(`AUDIT_ADDR ${pattern} 끝`);
+    expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
+  });
+
+  it('특약에 적은 $&도 글자 그대로 들어간다', () => {
+    const content = buildContractContent({ ...baseData, specialTerms: ['AUDIT_TERM $& 끝'] });
+    expect(content).toContain('| 1 | AUDIT_TERM $& 끝 |');
+  });
+});

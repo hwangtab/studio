@@ -73,8 +73,10 @@ export const setFulfillment = async (input: {
    * 뒤집지 않는다.
    */
   if (actor.kind === 'creator') {
+    // 승인된 행만 본다 — 같은 slug를 쓰던 반려된 행의 주인은 소유자가 아니다
+    // (creatorShipping.ts loadCreatorShipping 주석).
     const project = await db.query.fundingProjects.findFirst({
-      where: (t, { eq }) => eq(t.slug, pledge.projectSlug),
+      where: (t, { and, eq }) => and(eq(t.slug, pledge.projectSlug), eq(t.reviewStatus, 'approved')),
     });
     if (!project || project.creatorId !== actor.creatorId) {
       return { ok: false, code: 'forbidden', message: '이 후원의 발송 상태를 바꿀 권한이 없습니다.' };
@@ -148,6 +150,7 @@ export const setFulfillment = async (input: {
     ? sql`AND EXISTS (
         SELECT 1 FROM funding_projects p
         WHERE p.slug = funding_pledges.project_slug AND p.creator_id = ${actor.creatorId}
+          AND p.review_status = 'approved'
       )`
     : sql``;
 

@@ -260,6 +260,23 @@ describe('폼 안의 결제위젯', () => {
     expect(screen.queryByRole('alert')).toBeNull();
   });
 
+  /** 서버는 직전 주문번호를 증명으로 받아야만 직전 결제 대기 주문을 정리한다(lib/booking/service.ts). */
+  it('결제창을 닫고 다시 누르면 직전 주문번호를 함께 보낸다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await fillAndSubmit(user);
+    await waitFor(() => expect(requestPayment).toHaveBeenCalledTimes(1));
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalledTimes(2));
+
+    const bodies = (global.fetch as jest.Mock).mock.calls
+      .filter((c) => c[0] === '/api/orders/mixing')
+      .map((c) => JSON.parse(c[1].body));
+    expect(bodies[0]).not.toHaveProperty('previousOrderNo');
+    expect(bodies[1].previousOrderNo).toBe(requestPayment.mock.calls[0][0].orderId);
+  });
+
   it('주문 생성이 실패하면 결제창을 열지 않고 이유를 말한다', async () => {
     (global.fetch as jest.Mock).mockResolvedValue({
       ok: false, status: 400, json: async () => ({ ok: false, message: '입력을 확인해 주세요.' }),

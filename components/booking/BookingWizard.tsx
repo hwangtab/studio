@@ -21,6 +21,8 @@ import { Field, Select, TextArea, TextInput } from '../ui/Field';
 // 슬롯 조회 장애 안내의 대안 경로 — 위저드는 ko 전용 화면이라 ko 오픈채팅으로 고정한다.
 const KAKAO_URL = getSiteConfig('ko').contact.kakaoUrl;
 const TEL_HREF = `tel:${CANONICAL_FACTS.phoneIntl.replace(/[^0-9+]/g, '')}`;
+/** 직전 주문번호를 두는 탭 저장소 키 — 세션 예약은 상품과 무관하게 하나를 공유한다(service.ts). */
+const HOLD_PROOF_KEY = 'booking:lastOrderNo:session';
 
 interface BookingWizardProps {
   service: string;
@@ -43,6 +45,8 @@ interface CreateBookingBody {
   customerEmail: string;
   customerNote?: string;
   refundPolicyAgreed: true;
+  /** 직전 제출로 만든 주문번호 — 서버가 이 주문만 풀어 준다(자기 홀드 해제의 소유 증명). */
+  previousOrderNo?: string;
 }
 
 interface SlotsResponse {
@@ -204,6 +208,33 @@ export default function BookingWizard({ service, products, initialProductId }: B
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   /**
+   * 직전 제출로 만든 주문번호. 다시 제출할 때 보내면 서버가 그 결제 대기 주문을 풀어, 같은
+   * 슬롯을 다시 고른 고객이 자기 홀드에 막히지 않는다(lib/booking/service.ts). 서버는 이 증명
+   * 없이는 아무것도 풀지 않는다 — 예전엔 이메일·전화만 맞으면 풀어서, 그 두 값을 아는 사람이
+   * 남의 결제를 무산시킬 수 있었다.
+   *
+   * 탭 저장소에도 둔다. 결제에 실패하면 토스가 실패 화면으로 보내 이 컴포넌트가 사라지는데,
+   * 돌아와서 같은 슬롯을 고르면 증명이 없어 15분 동안 자기 홀드에 막히기 때문이다.
+   */
+  const [previousOrderNo, setPreviousOrderNo] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      const saved = window.sessionStorage.getItem(HOLD_PROOF_KEY);
+      if (saved) setPreviousOrderNo(saved);
+    } catch {
+      /* 저장소 접근이 막힌 브라우저 — 증명 없이 진행한다(자기 홀드는 자연 만료된다). */
+    }
+  }, []);
+  const rememberOrderNo = (orderNo: string) => {
+    setPreviousOrderNo(orderNo);
+    try {
+      window.sessionStorage.setItem(HOLD_PROOF_KEY, orderNo);
+    } catch {
+      /* 위와 같다 — 기억하지 못해도 결제 자체는 진행된다. */
+    }
+  };
+
+  /**
    * 이름·연락처·이메일·요청사항만 새로고침·뒤로가기에도 살린다.
    *
    * 날짜·시간대·상품·시간은 일부러 담지 않는다 — 예약 가능 시간은 그 사이 바뀌고,
@@ -289,6 +320,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
         customerEmail: customerEmail.trim(),
         ...(customerNote.trim() ? { customerNote: customerNote.trim() } : {}),
         refundPolicyAgreed: true,
+        ...(previousOrderNo ? { previousOrderNo } : {}),
       };
       const res = await fetch('/api/bookings', {
         method: 'POST',
@@ -308,6 +340,7 @@ export default function BookingWizard({ service, products, initialProductId }: B
         // 슬롯을 잡아 둔 채로 곧바로 결제창을 연다. 금액은 **서버가 돌려준 값**으로 맞춘다.
         const origin = window.location.origin;
         createdOrderNo = data.orderNo;
+        rememberOrderNo(data.orderNo);
         await requestPayment({
           orderId: data.orderNo,
           orderName: formatOrderName(selectedProduct.nameKo, date, selectedStartHour),
@@ -340,8 +373,8 @@ export default function BookingWizard({ service, products, initialProductId }: B
       reportPaymentFailure(createdOrderNo, err);
       /**
        * 결제창을 닫은 것은 오류가 아니다. 주문은 pending으로 남고 슬롯도 잡혀 있는데,
-       * 다시 제출하면 서버가 **같은 고객의 세션 pending을 먼저 만료시키고** 새로 만든다
-       * (lib/booking/service.ts의 자가 선점 해제) — 자기 홀드에 자기가 막히지 않는다.
+       * 다시 제출하면 `previousOrderNo`가 그 홀드를 풀어 준다(lib/booking/service.ts의
+       * 자가 선점 해제) — 자기 홀드에 자기가 막히지 않는다.
        */
       const code = (err as { code?: string } | null)?.code;
       // **취소를 가장 먼저 걸러낸다.** 결제창을 닫은 것은 오류가 아니라서 아무 문구도

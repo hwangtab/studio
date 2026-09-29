@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { createMixingOrder } from '../../../lib/booking/service';
+import { readPreviousOrderNo } from '../../../lib/booking/token';
 import { validateCreateMixingOrderPayload } from '../../../lib/booking/validation';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -18,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const validated = validateCreateMixingOrderPayload(req.body, now);
   if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
 
-  const result = await createMixingOrder(validated.value, now);
+  const result = await createMixingOrder(validated.value, now, { releaseOrderNo: readPreviousOrderNo(req.body) });
   return res.status(201).json({
     ok: true,
     orderNo: result.orderNo,

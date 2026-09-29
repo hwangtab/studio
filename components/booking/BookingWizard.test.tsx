@@ -302,6 +302,46 @@ describe('폼 안의 결제위젯', () => {
     await waitFor(() => expect(requestPayment).toHaveBeenCalled());
     expect(screen.queryByRole('alert')).toBeNull();
   });
+  const bookingBodies = () =>
+    (global.fetch as jest.Mock).mock.calls
+      .filter((c) => c[0] === '/api/bookings')
+      .map((c) => JSON.parse(c[1].body));
+
+  /**
+   * 서버는 직전 주문번호를 증명으로 받아야만 자기 홀드를 풀어 준다(lib/booking/service.ts).
+   * 예전엔 이메일·전화만 맞으면 풀어서, 두 값을 아는 사람이 남의 결제를 무산시킬 수 있었다.
+   */
+  it('결제창을 닫고 다시 누르면 직전 주문번호를 함께 보낸다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('취소'), { code: 'USER_CANCEL' }));
+    const user = userEvent.setup();
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalledTimes(1));
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalledTimes(2));
+
+    const [first, second] = bookingBodies();
+    expect(first).not.toHaveProperty('previousOrderNo');
+    expect(second.previousOrderNo).toBe('SNB-20260915-TEST0001');
+  });
+
+  /** 결제에 실패하면 토스가 실패 화면으로 보내 위저드가 사라진다 — 돌아와서도 증명을 쓸 수 있어야 한다. */
+  it('실패 화면을 다녀와도 직전 주문번호를 보낸다', async () => {
+    const user = userEvent.setup();
+    const { unmount } = render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await fill(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalledTimes(1));
+    unmount();
+
+    render(<BookingWizard service="recording" products={[PRODUCT]} />);
+    await goToStep3(user);
+    await user.click(screen.getByRole('button', { name: /결제하기/ }));
+    await waitFor(() => expect(requestPayment).toHaveBeenCalledTimes(2));
+
+    expect(bookingBodies().at(-1).previousOrderNo).toBe('SNB-20260915-TEST0001');
+  });
 });
 
 /**

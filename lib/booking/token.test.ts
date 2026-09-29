@@ -1,4 +1,4 @@
-import { generateOrderNo, generateManageToken, isTokenMatch } from './token';
+import { generateOrderNo, generateManageToken, isTokenMatch, readPreviousOrderNo } from './token';
 
 describe('generateOrderNo', () => {
   it('토스 orderId 규격(영숫자·_·- , 6~64자)을 만족한다', () => {
@@ -54,5 +54,24 @@ describe('isTokenMatch', () => {
 
   it('길이가 달라도 false(내부적으로 고정 길이 해시 후 비교)', () => {
     expect(isTokenMatch('abc', 'abcdef')).toBe(false);
+  });
+});
+
+describe('readPreviousOrderNo — 자기 홀드 해제의 소유 증명', () => {
+  it('생성 형태의 주문번호를 대문자로 돌려준다(소문자로 와도 된다)', () => {
+    expect(readPreviousOrderNo({ previousOrderNo: 'SNB-20260910-0A1B2C3D' })).toBe('SNB-20260910-0A1B2C3D');
+    expect(readPreviousOrderNo({ previousOrderNo: 'snb-20260910-0a1b2c3d' })).toBe('SNB-20260910-0A1B2C3D');
+  });
+
+  it.each([
+    [undefined],
+    [null],
+    [{}],
+    [{ previousOrderNo: 123 }],
+    [{ previousOrderNo: 'FND-20260910-0A1B2C3D' }],
+    [{ previousOrderNo: 'SNB-20260910-0A1B2C3D OR 1=1' }],
+    [{ previousOrderNo: '' }],
+  ])('형태가 아니면 증명이 없는 것으로 본다: %p', (body) => {
+    expect(readPreviousOrderNo(body)).toBeNull();
   });
 });

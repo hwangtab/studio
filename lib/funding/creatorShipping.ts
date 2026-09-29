@@ -146,7 +146,14 @@ export const loadCreatorShipping = async (
   const db = getDb();
   const [project] = await db.select().from(fundingProjects)
     .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.creatorId, creatorId))).limit(1);
-  if (!project) return null;
+  /**
+   * 승인된 프로젝트만 연다(creatorStats.ts와 같은 선). 아래 조회는 후원을 **slug로** 모으는데,
+   * 반려된 행은 slug를 놓아주므로(slugOccupancy.ts) 같은 slug로 다른 개설자의 프로젝트가
+   * 승인될 수 있다. 반려된 행을 열어 주면 그 주인이 남의 캠페인 후원자 배송지를 읽는다 —
+   * 마감 판정도 반려된 행의 endAt을 따라 앞당겨진다. 후원은 승인된 프로젝트에만 들어오고
+   * 승인은 되돌리지 않는 최종 상태라(reviewTransition.ts), 이 조건이 빼는 후원은 없다.
+   */
+  if (!project || project.reviewStatus !== 'approved') return null;
 
   const summary = await loadSummary(project.id, project.slug);
 
@@ -248,8 +255,11 @@ export const loadFulfillmentGate = async (pledgeId: string, now: Date = new Date
   });
   if (!pledge) return null;
 
+  // 후원이 속한 프로젝트는 그 slug의 **승인된** 행이다. slug만으로 찾으면 같은 slug를 쓰던
+  // 반려된 행(먼저 들어가 있어 먼저 나온다)을 집어, 그 주인이 남의 후원 발송 상태를 바꾸고
+  // 진짜 개설자는 404를 받는다(loadCreatorShipping 주석).
   const project = await db.query.fundingProjects.findFirst({
-    where: (t, { eq: eqCol }) => eqCol(t.slug, pledge.projectSlug),
+    where: (t, { and: andCols, eq: eqCol }) => andCols(eqCol(t.slug, pledge.projectSlug), eqCol(t.reviewStatus, 'approved')),
   });
   if (!project) return null;
 

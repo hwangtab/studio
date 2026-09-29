@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 
 import chromium from '@sparticuz/chromium';
-import puppeteer from 'puppeteer-core';
+import puppeteer, { type Page } from 'puppeteer-core';
 
 import {
   buildContractPdfHtml,
@@ -46,6 +46,28 @@ const resolveLocalChrome = (): string => {
   );
 };
 
+/**
+ * 계약서 HTML이 불러도 되는 것은 인라인 data: 자원뿐이다 — 폰트·도장·서명이 전부 data: URL로
+ * 박혀 있다(pdf-html.ts). 그 밖의 요청은 모두 끊는다.
+ *
+ * 본문 렌더가 URL을 비우지만(CONTRACT_MARKDOWN_OPTIONS), 서버에서 도는 크롬이 바깥으로 요청을
+ * 보내는 길 자체를 여기서 한 번 더 닫는다. 서버리스 크롬은 --disable-web-security로 뜨므로
+ * 문서가 무언가를 불러 오게 두면 안 된다. 응답을 붙잡는 외부 주소 하나가 load를 30초 묶어
+ * PDF 생성을 실패시키는 일도 함께 사라진다.
+ */
+export const blockExternalRequests = async (page: Page): Promise<void> => {
+  await page.setRequestInterception(true);
+  page.on('request', (request) => {
+    if (request.isInterceptResolutionHandled()) return;
+    const url = request.url();
+    if (url.startsWith('data:') || url.startsWith('about:')) {
+      void request.continue();
+      return;
+    }
+    void request.abort();
+  });
+};
+
 export const generateContractPdf = async (
   input: Omit<BuildContractPdfInput, 'fontFaceCss' | 'sealCss'>,
 ): Promise<Buffer> => {
@@ -65,6 +87,7 @@ export const generateContractPdf = async (
 
   try {
     const page = await browser.newPage();
+    await blockExternalRequests(page);
     const html = buildContractPdfHtml({
       ...input,
       fontFaceCss: buildFontFaceCss(),

@@ -70,14 +70,16 @@ const payloadFor = (over: Partial<CreateBookingPayload> = {}): CreateBookingPayl
 });
 
 describe('createBookingOrder — 자가 선점 해제', () => {
-  it('같은 고객(email+phone)이 같은 슬롯을 재제출하면 성공하고, 직전 주문은 expired·직전 예약은 cancelled로 남는다', async () => {
+  it('직전 주문번호를 증명으로 재제출하면 성공하고, 직전 주문은 expired·직전 예약은 cancelled로 남는다', async () => {
     const first = await createBookingOrder(payloadFor(), NOW);
     expect(first.ok).toBe(true);
+    if (!first.ok) throw new Error('unreachable — 위 expect가 이미 걸렀다');
 
-    // "← 정보 수정" 후 같은 슬롯 그대로 재제출 — 자기 자신의 pending에 막히면 안 된다.
-    const second = await createBookingOrder(payloadFor(), NOW);
+    // 결제창을 닫고 같은 슬롯 그대로 재제출 — 자기 자신의 pending에 막히면 안 된다.
+    // 위저드는 직전 응답의 주문번호를 돌려보낸다(BookingWizard의 previousOrderNo).
+    const second = await createBookingOrder(payloadFor(), NOW, { releaseOrderNo: first.orderNo });
     expect(second.ok).toBe(true);
-    if (!first.ok || !second.ok) throw new Error('unreachable — 위 expect가 이미 걸렀다');
+    if (!second.ok) throw new Error('unreachable — 위 expect가 이미 걸렀다');
 
     expect(second.orderNo).not.toBe(first.orderNo);
 
@@ -103,6 +105,41 @@ describe('createBookingOrder — 자가 선점 해제', () => {
       NOW,
     );
     expect(b).toEqual({ ok: false, code: 'slot_taken' });
+  });
+
+  /**
+   * 증명 없이 이메일·전화만 맞춰 보내던 공격. 예전 해제 조건이 `customer_email = ? AND
+   * customer_phone = ?`뿐이라, 두 값을 아는 사람이 요청 한 번으로 남의 결제 대기 주문을
+   * 만료시켰다(피해자가 결제를 마치고 돌아오면 '만료된 주문'으로 거절된다).
+   */
+  it('증명 없이 같은 이메일·전화로 보내면 남의 pending을 건드리지 못한다', async () => {
+    const victim = await createBookingOrder(payloadFor(), NOW);
+    expect(victim.ok).toBe(true);
+    if (!victim.ok) throw new Error('unreachable');
+
+    // 다른 시간대로 보내 슬롯 충돌 없이 해제 경로만 탄다.
+    const attacker = await createBookingOrder(payloadFor({ startHour: 18 }), NOW);
+    expect(attacker.ok).toBe(true);
+
+    const victimOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, victim.orderNo) });
+    expect(victimOrder?.status).toBe('pending');
+    const victimBooking = await mockDb.query.bookings.findFirst({ where: eq(bookings.id, victim.bookingId) });
+    expect(victimBooking?.status).toBe('pending');
+  });
+
+  it('남의 주문번호를 대도 이메일·전화가 다르면 풀리지 않는다', async () => {
+    const victim = await createBookingOrder(payloadFor(), NOW);
+    expect(victim.ok).toBe(true);
+    if (!victim.ok) throw new Error('unreachable');
+
+    await createBookingOrder(
+      payloadFor({ startHour: 18, customerPhone: '010-9999-8888', customerEmail: 'other@example.com' }),
+      NOW,
+      { releaseOrderNo: victim.orderNo },
+    );
+
+    const victimOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, victim.orderNo) });
+    expect(victimOrder?.status).toBe('pending');
   });
 });
 
@@ -158,9 +195,9 @@ describe('createBookingOrder / createMixingOrder — 자가 선점 해제의 typ
     expect(booking?.status).toBe('pending');
   });
 
-  it('같은 타입(믹싱) 재제출은 종전대로 직전 pending을 해제한다', async () => {
+  it('같은 타입(믹싱) 재제출은 직전 주문번호를 증명으로 받아 직전 pending을 해제한다', async () => {
     const first = await createMixingOrder(mixingPayloadFor(), NOW);
-    const second = await createMixingOrder(mixingPayloadFor(), NOW);
+    const second = await createMixingOrder(mixingPayloadFor(), NOW, { releaseOrderNo: first.orderNo });
     expect(second.orderNo).not.toBe(first.orderNo);
 
     const firstOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, first.orderNo) });
@@ -170,6 +207,16 @@ describe('createBookingOrder / createMixingOrder — 자가 선점 해제의 typ
 
     const secondOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, second.orderNo) });
     expect(secondOrder?.status).toBe('pending');
+  });
+
+  it('믹싱도 증명 없이 같은 이메일·전화로 보내면 남의 pending을 건드리지 못한다', async () => {
+    const victim = await createMixingOrder(mixingPayloadFor(), NOW);
+    await createMixingOrder(mixingPayloadFor(), NOW);
+
+    const victimOrder = await mockDb.query.orders.findFirst({ where: eq(orders.orderNo, victim.orderNo) });
+    expect(victimOrder?.status).toBe('pending');
+    const victimWorkOrder = await mockDb.query.workOrders.findFirst({ where: eq(workOrders.id, victim.workOrderId) });
+    expect(victimWorkOrder?.status).toBe('pending');
   });
 });
 

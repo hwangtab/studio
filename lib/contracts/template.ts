@@ -53,8 +53,10 @@ export const buildContractContent = (data: ContractTemplateData): string => {
     '{{contractDate}}': formatDate(data.contractDate),
   };
 
+  // 치환값은 함수로 넘긴다. 문자열로 넘기면 replace가 `$'`·`$&` 같은 패턴을 해석해, 주소에
+  // `$'`를 적은 서명자가 템플릿 뒷부분(파이프·개행 포함)을 셀 안으로 끌어올 수 있다.
   for (const [placeholder, value] of Object.entries(replacements)) {
-    content = content.replaceAll(placeholder, value);
+    content = content.replaceAll(placeholder, () => value);
   }
 
   // 특약사항도 표 셀에 들어간다 — 위 필드들과 같은 escapeTableCell을 쓴다.
@@ -63,7 +65,7 @@ export const buildContractContent = (data: ContractTemplateData): string => {
   const termsRows = (data.specialTerms ?? [])
     .map((term, index) => `| ${index + 1} | ${escapeTableCell(term)} |`)
     .join('\n');
-  content = content.replace('{{specialTerms}}', termsRows || '| 1 | |\n| 2 | |\n| 3 | |');
+  content = content.replace('{{specialTerms}}', () => termsRows || '| 1 | |\n| 2 | |\n| 3 | |');
 
   return content;
 };
