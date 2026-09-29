@@ -788,7 +788,8 @@ describe('결제 버튼 바', () => {
   it.each(['page', 'modal'] as const)('%s에서도 바닥에 고정되고, 금액과 동작을 함께 적는다', (layout) => {
     const { container } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={remaining} layout={layout} />);
     expect(bar(container).className).toContain('sticky');
-    expect(bar(container).className).toContain('bottom-0');
+    // 모달은 본문 패딩만큼 끌어내려 바닥에 붙인다(sticky가 패딩 안쪽에 붙는다).
+    expect(bar(container).className).toContain(layout === 'modal' ? '-bottom-5' : 'bottom-0');
     expect(container.querySelector('button[type=submit]')).toHaveTextContent('30,000원 · 결제하기');
   });
 
