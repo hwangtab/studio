@@ -9,9 +9,9 @@ summary: 둠메탈 듀오 사바하의 두 번째 정규 앨범 《SLUNG》을 C
 cover: /images/funding/sabbaha-slung/cover-20260928.webp
 heroImage: /images/funding/sabbaha-slung/hero-20260928.webp
 goalAmount: 5000000
-# 2026-09-28 공개(오픈 예정), 결제는 9/30(수)부터. 크레딧 등재 리워드의 이름을
+# 2026-09-28 공개(오픈 예정), 2026-09-29 운영자 지시로 즉시 오픈. 크레딧 등재 리워드의 이름을
 # 부클릿 인쇄 전에 받아야 하므로 마감은 CD 입고(발매 2주 전)에서 거꾸로 잡았다.
-startAt: 2026-09-30T00:00:00+09:00
+startAt: 2026-09-29T00:00:00+09:00
 endAt: 2026-12-13T23:59:59+09:00
 # 결제가 들어오기 시작하면 리워드 id·금액·한정 여부는 바꾸지 않는다(CLAUDE.md 펀딩 절).
 status: auto
