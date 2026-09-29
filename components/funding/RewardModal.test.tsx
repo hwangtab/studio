@@ -58,6 +58,7 @@ const REWARD: FundingReward = {
   estimatedDelivery: '2026-10',
   image: null,
   downloads: [],
+  addOn: false,
 };
 
 const PROJECT = {

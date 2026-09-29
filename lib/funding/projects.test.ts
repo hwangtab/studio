@@ -112,3 +112,15 @@ describe('status·hidden 엄격 검증', () => {
       .toThrow(/rewards\[0\]\.requiresShipping은\(는\) boolean/);
   });
 });
+
+// 결제 화면의 "함께 받기" 제안은 addOn 표시가 있는 리워드만 한다(shape.ts). 티어와 추가
+// 상품은 코드가 가릴 수 없어 파일에 적는다 — 그래서 값도 다른 boolean과 같이 엄격하게 읽는다.
+describe('addOn', () => {
+  it('없으면 false, 적으면 그 값', () => {
+    expect(parseFundingProject(RAW, 'demo').rewards[0].addOn).toBe(false);
+    expect(parseFundingProject(RAW.replace('    requiresShipping: true\n', '    requiresShipping: true\n    addOn: true\n'), 'demo').rewards[0].addOn).toBe(true);
+  });
+  it('따옴표 붙은 "true"는 거부한다', () => {
+    expect(() => parseFundingProject(RAW.replace('    requiresShipping: true\n', '    requiresShipping: true\n    addOn: "true"\n'), 'demo')).toThrow(/addOn/);
+  });
+});

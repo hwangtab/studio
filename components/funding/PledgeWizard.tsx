@@ -402,9 +402,9 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
   const notInCart = project.rewards.filter((r) => quantityOf(r.id) === 0);
   // 담은 것이 없으면 목록을 펼친다 — 접어 두면 무엇을 담아야 할지 보이지 않는다.
   const listOpen = showAllRewards || lines.length === 0;
-  // 담지 않은 실물(배송) 리워드만 한 줄 제안으로. 목록을 펼쳤으면 거기 있으니 겹쳐 보이지 않는다.
+  // 담지 않은 **추가 상품**(`addOn`)만 한 줄 제안으로. 목록을 펼쳤으면 거기 있으니 겹쳐 보이지 않는다.
   const suggestions = lines.length > 0 && !listOpen
-    ? notInCart.filter((r) => r.requiresShipping && !isSoldOut(remaining, r.id)).slice(0, 2)
+    ? notInCart.filter((r) => r.addOn && !isSoldOut(remaining, r.id)).slice(0, 2)
     : [];
 
   const renderRewardRow = (r: FundingProject['rewards'][number]) => {
@@ -452,10 +452,11 @@ export default function PledgeWizard({ project, initialRewardId, remaining, stic
         더 하게 되고, 모바일에서는 결제위젯이 두 화면 아래로 밀린다. 결제 완료 12건이 전부
         리워드 1개였다 — 대다수에게 목록은 지나가야 할 장애물이다. 나머지는 접어 둔다.
 
-        예외 하나: 담지 않은 **배송 리워드**(시/노래집 같은 실물)는 한 줄 제안으로 보인다.
-        디지털 티어는 서로 대체재라(MP3 대신 WAV) 권하지 않고, 실물은 보완재라 권한다 —
-        접어 두기만 하면 책이 있다는 것 자체를 모르고 지나간다. 담은 것이 없으면(전부 뺐거나
-        품절로 시작) 목록을 펼쳐서 보여 준다.
+        예외 하나: 담지 않은 **추가 상품**(리워드 `addOn: true`, 시/노래집 같은 것)은 한 줄
+        제안으로 보인다. 티어는 서로 대체재라(MP3 대신 WAV, CD 대신 CD+부적) 권하지 않는다.
+        "배송이면 제안"으로 추론했다가 실물 티어 프로젝트에서 상위 티어를 권하는 오답이 나서
+        파일에 명시하게 했다(lib/funding/shape.ts addOn). 담은 것이 없으면(전부 뺐거나 품절로
+        시작) 목록을 펼쳐서 보여 준다.
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-reward`}>
         <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint={lines.length > 0 ? '담은 리워드입니다. 수량을 바꾸거나 다른 리워드를 함께 담을 수 있습니다.' : '펀딩할 리워드를 담아 주세요.'} />
