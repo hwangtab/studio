@@ -13,12 +13,13 @@ summary: 10월 10일 풍천리 마을회관 앞에서 음악가 7팀이 공연�
 #   쓰므로(ProjectDetailView.tsx) 별도 조정 없이도 흰 글씨 대비가 나온다 — 배경을 다시
 #   바꾸면 그 컴포넌트 주석대로 대비를 재측정할 것.
 # 제목은 木 대신 '목'으로 쓴다 — 히어로 제목 폰트(Pretendard 서브셋)에 한자가 없다.
-# lineup/lineup-20260930b.webp = pine-nut 공연 페이지의 출연진 프로필 사진 8장(DJ 듀오 2장 포함)을
-# sharp로 4x2 그리드에 합성한 것. 개별 이미지로 넣으면 prose 렌더링이 전체 너비로 키워 얼굴
-# 사진이 거대하게 늘어지므로, 합성 이미지 한 장으로 만들어 넣는다. 각 칸 하단에 이름을 직접
-# 그려 넣었다 — 사진만 늘어놓고 아래에 따로 이름 목록을 두면 어느 얼굴이 누구인지 짝이
-# 안 맞아 보인다(2026-09-30 지적). DJ 듀오는 사진이 둘이라 각자 이름(DJ스탑원·DJ괄)을 따로
-# 새겼다 — "DJ스탑원 x DJ괄"을 통째로 쓰면 한 칸에 다 안 들어간다.
+# lineup/<이름>-20260930.webp = pine-nut 출연진 프로필 사진을 사람 한 명당 파일 하나로,
+# 각자 소개 바로 위에 둔다(운영자 지시 2026-09-30 — "뮤지션 소개를 사진과 소개 따로 하면
+# 안돼, pine-nut 프로젝트가 잘 되어 있어"). 한 장으로 합쳐 아래에 이름 목록을 따로 두는
+# 방식은 한 번 시도했다가 되돌렸다 — 사진과 글이 갈라져 있으면 어느 얼굴이 누구 소개인지
+# 눈으로 맞춰야 한다. `![alt](경로 "240")`의 title 폭 힌트(MarkdownImage.tsx 참고 —
+# 인물 사진을 전체 폭으로 키우지 않으려고 이미 있는 장치)로 작게 낸다. DJ 듀오는 한
+# 소개문을 같이 쓰므로 두 사람 사진을 나란히 붙인 dj-duo-20260930.webp 한 장을 쓴다.
 cover: /images/funding/mok-jareugi/cover-20260929.webp
 ogImage: /images/funding/mok-jareugi/og-20260929.webp
 heroImage: /images/funding/mok-jareugi/hero-20260930.webp
@@ -126,15 +127,33 @@ rewards:
 
 ## 출연
 
-![「목자르기」 출연진 프로필 사진 — 위에서부터 두 줄로 양차애, DJ스탑원, DJ괄, 사바하, 달 위의 콜린스, 박지휘, 최양다음 NEXT, VAN KIDEN이 각자 이름과 함께 실려 있다](/images/funding/mok-jareugi/lineup/lineup-20260930b.webp)
+![양차애 프로필 사진](/images/funding/mok-jareugi/lineup/yangchaae-20260930.webp "112")
 
-- **양차애** — 사랑노래를 짓고 부릅니다. 잘 패배하는 사람이 되는 것이 꿈입니다.
-- **DJ스탑원 x DJ괄** — 두 사람이 번갈아 판을 올리는 b2b 세트입니다.
-- **사바하** — 2013년 솔로 프로젝트로 출발해 2023년 듀오가 된 둠드론 밴드입니다.
-- **달 위의 콜린스** — 홍대 클럽빵을 거점으로 공연해 온 팀입니다.
-- **박지휘** — 프리포크 싱어송라이터입니다.
-- **최양다음 NEXT** — 독학으로 음악을 익힌 싱어송라이터입니다.
-- **VAN KIDEN** — 랩과 싱잉을 오가는 뮤지션입니다.
+**양차애** — 사랑노래를 짓고 부릅니다. 잘 패배하는 사람이 되는 것이 꿈입니다.
+
+![DJ스탑원과 DJ괄 프로필 사진](/images/funding/mok-jareugi/lineup/dj-duo-20260930.webp "228")
+
+**DJ스탑원 x DJ괄** — 두 사람이 번갈아 판을 올리는 b2b 세트입니다.
+
+![사바하 프로필 사진](/images/funding/mok-jareugi/lineup/sabbaha-20260930.webp "112")
+
+**사바하** — 2013년 솔로 프로젝트로 출발해 2023년 듀오가 된 둠드론 밴드입니다.
+
+![달 위의 콜린스 프로필 사진](/images/funding/mok-jareugi/lineup/collins-on-the-moon-20260930.webp "112")
+
+**달 위의 콜린스** — 홍대 클럽빵을 거점으로 공연해 온 팀입니다.
+
+![박지휘 프로필 사진](/images/funding/mok-jareugi/lineup/parkjihwi-20260930.webp "112")
+
+**박지휘** — 프리포크 싱어송라이터입니다.
+
+![최양다음 NEXT 프로필 사진](/images/funding/mok-jareugi/lineup/next-20260930.webp "112")
+
+**최양다음 NEXT** — 독학으로 음악을 익힌 싱어송라이터입니다.
+
+![VAN KIDEN 프로필 사진](/images/funding/mok-jareugi/lineup/van-kiden-20260930.webp "112")
+
+**VAN KIDEN** — 랩과 싱잉을 오가는 뮤지션입니다.
 
 ## 펀딩해 주시면 보내 드리는 것 — 〈이름을 모르는 먼 곳의 그대에게〉
 
