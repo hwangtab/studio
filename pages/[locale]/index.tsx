@@ -27,6 +27,8 @@ import { getPortfolioItems } from '../../data/portfolio';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import HomeStudioSpec, { type StudioGearRow } from '../../components/home/HomeStudioSpec';
+import HomeMixCompare from '../../components/home/HomeMixCompare';
+import { getMixCompareCopy } from '../../data/mixCompare';
 import { getEquipmentData } from '../../data/equipment';
 import { getFaqData } from '../../data/faq';
 import { buildPageStaticProps, getCommonStaticPaths, resolveLocaleParam } from '../../lib/getStatic';
@@ -47,6 +49,7 @@ interface HomeProps {
 const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releaseCovers, studioGear }) => {
   const { heroContent, homeServices, studioImages, seo, localeUsps, producerCredibility } = homeData;
   const { t } = useTranslation('common', { lng: locale });
+  const mixCompareCopy = React.useMemo(() => getMixCompareCopy(locale), [locale]);
 
 
   // Helper to generate locale-aware links
@@ -192,11 +195,23 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         </Section>
       )}
 
-      {/* 스튜디오 갤러리 섹션 */}
+      {/* 믹싱 전·후 — 발매작 바로 다음에 "그 결과물이 이렇게 나온다"를 귀로 확인시킨다. 음원은 재생을 누르기
+          전에는 내려받지 않는다(components/home/HomeMixCompare.tsx). 아래 섹션들은 배경 번갈음이 이어지도록
+          variant를 한 칸씩 밀었고 번호도 하나씩 늦춰졌다. */}
       <Section variant="alternate">
         <SectionHeading
-          eyebrow={t('home.v2.eyebrow.studio')}
+          eyebrow={mixCompareCopy.eyebrow}
           index="02"
+          title={mixCompareCopy.title}
+        />
+        <HomeMixCompare locale={locale} copy={mixCompareCopy} portfolioHref={getLink('/portfolio')} />
+      </Section>
+
+      {/* 스튜디오 갤러리 섹션 */}
+      <Section variant="default">
+        <SectionHeading
+          eyebrow={t('home.v2.eyebrow.studio')}
+          index="03"
           title={t('home.sections.galleryTitle')}
         />
         <MediaGallery images={studioImages} locale={locale} />
@@ -215,10 +230,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
 
       {/* Locale-specific USP/trust block — ko: 신뢰·전환 보강, 그 외: 외국 뮤지션 안내 */}
       {localeUsps && (
-        <Section variant="default">
+        <Section variant="alternate">
           <SectionHeading
             eyebrow={t('home.v2.eyebrow.why')}
-            index="03"
+            index="04"
             title={localeUsps.title}
           />
           {/* v2: 카드 세 장 대신 번호 붙은 3단. 카드 그리드에는 스크롤 모션을 걸지 않는다
@@ -242,7 +257,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           방문자가 실적을 검증할 유일한 경로이고, Person entity(utils/schema/person.ts가
           Person.url을 /author로 일원화) 쪽으로 가는 가장 강한 내부링크다. */}
       {producerCredibility && (
-        <Section variant="alternate">
+        <Section variant="default">
           {/* v2: 112px 원형 아바타 + 가운데 정렬 + 글래스 수치 카드 → 큰 사진과 이름을 섹션 제목으로,
               수치는 굵은 선 위의 큰 숫자. 사람이 이 스튜디오의 신뢰 근거라 사진이 작을 이유가 없다. */}
           <div className="grid gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-16 items-center">
@@ -258,7 +273,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
             <div>
               <SectionHeading
                 eyebrow={producerCredibility.eyebrow}
-                index="04"
+                index="05"
                 title={producerCredibility.name}
                 subtitle={producerCredibility.tagline}
                 className="mb-10 md:mb-10"
@@ -284,10 +299,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
       )}
 
       {/* 서비스 소개 섹션 — 트랙리스트 */}
-      <Section variant="default">
+      <Section variant="alternate">
         <SectionHeading
           eyebrow={t('home.v2.eyebrow.services')}
-          index="05"
+          index="06"
           title={t('home.sections.servicesTitle')}
         />
         <HomeServiceTracklist
@@ -301,10 +316,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
 
       {/* 리뷰 섹션 */}
       <ReviewSection
-        variant="alternate"
+        variant="default"
         locale={locale}
         eyebrow={t('home.v2.eyebrow.reviews')}
-        index="06"
+        index="07"
       />
 
       {/* FAQ 섹션 */}
@@ -312,9 +327,9 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
         items={faqData}
         title={t('home.faq.title')}
         subtitle={t('home.faq.subtitle')}
-        variant="default"
+        variant="alternate"
         eyebrow={t('home.v2.eyebrow.faq')}
-        index="07"
+        index="08"
       />
 
       {/* 서비스 바로가기 — 6~7개 link(ko는 발매 pill 포함)가 메인 viewport에 들어오면 next/link 기본 prefetch가
