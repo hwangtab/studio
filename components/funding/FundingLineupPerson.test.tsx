@@ -8,12 +8,14 @@ describe('FundingLineupPerson', () => {
     expect(screen.getByAltText('양차애 프로필 사진')).toBeTruthy();
   });
 
-  it('이름을 누르면 SNS로 새 탭에서 이동한다', () => {
+  it('카드를 누르면 SNS로 새 탭에서 이동한다', () => {
     render(<FundingLineupPerson id="mok-jareugi-yangchaae" />);
     const link = screen.getByRole('link', { name: /양차애/ });
     expect(link.getAttribute('href')).toBe('https://www.instagram.com/carbabyis/');
     expect(link.getAttribute('target')).toBe('_blank');
     expect(link.getAttribute('rel')).toContain('noopener');
+    // 카드 전체가 링크다 — 소개 문구까지 같은 <a> 안에 있어야 어디를 눌러도 이동한다.
+    expect(link.textContent).toContain('사랑노래를 짓고 부릅니다');
   });
 
   it('사진이 둘인 듀오는 사진 두 장과 이름 두 개를 각자 SNS로 링크한다', () => {

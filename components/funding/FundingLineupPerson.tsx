@@ -37,8 +37,13 @@ interface LineupPerson {
  * 박스로 한 번 냈다가 다시 고쳤다).
  *
  * SNS 링크는 공연 라인업을 공지한 페이스북 게시물(2026-09-30, 운영자가 링크 전달)에 실린
- * 것만 쓴다 — 실제로 열어서 각 계정이 200으로 응답하는 것을 확인함. 카드 전체를 링크로
- * 감싸면 듀오(사람 둘, SNS 둘)를 표현할 수 없어 이름 부분만 각자 링크로 낸다.
+ * 것만 쓴다 — 실제로 열어서 각 계정이 200으로 응답하는 것을 확인함.
+ *
+ * 사람이 하나면 카드 전체를 `BaseCard`의 `href`로 링크한다(운영자 지적 2026-09-30: "이름
+ * 옆 새창 아이콘 말고 카드를 누르면 이동하는 게 낫다") — `BaseCard`가 이미 다른 펀딩 카드와
+ * 같은 hover 리프트·press 스케일을 링크에 붙여 준다. 듀오(사람 둘, SNS 둘)는 카드 하나를
+ * 한 링크로 감쌀 수 없어 그때만 이름별로 따로 링크한다(아이콘 유지 — 카드 자체가 안
+ * 눌리니 "이 글자가 링크다"를 알려줘야 한다).
  */
 const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   'mok-jareugi-yangchaae': {
@@ -108,11 +113,13 @@ export default function FundingLineupPerson({ id }: { id: string }) {
   const person = LINEUP_PEOPLE[id];
   if (!person) return null;
 
+  const cardLinkProps = !person.people && person.sns ? { href: person.sns, target: '_blank' } : {};
+
   return (
     // 나머지 펀딩 카드(RewardCard 등)와 같은 유리 재질(BaseCard variant="glass")을 쓴다.
     // 손으로 만든 bg-white/80 박스로는 스펙큘러 하이라이트·hover 리프트가 안 붙어 옆
     // 리워드 카드들과 나란히 두면 이 카드만 평평해 보였다(운영자 지적 2026-09-30).
-    <BaseCard variant="glass" className="my-3 flex items-start gap-4 p-4">
+    <BaseCard variant="glass" className="my-3 flex items-start gap-4 p-4" {...cardLinkProps}>
       <div className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20">
         <div className="absolute inset-0 overflow-hidden rounded-full">
           <ResponsiveImage
@@ -130,17 +137,15 @@ export default function FundingLineupPerson({ id }: { id: string }) {
         )}
       </div>
       <div className="min-w-0 text-lg">
-        <p>
-          {person.people ? (
-            person.people.map((p, i) => (
-              <span key={p.label}>
-                {i > 0 && <span className="text-gray-900 dark:text-white"> x </span>}
-                <NameLink {...p} />
-              </span>
-            ))
-          ) : (
-            <NameLink label={person.name ?? ''} sns={person.sns} />
-          )}
+        <p className="break-keep font-bold leading-snug text-gray-900 dark:text-white">
+          {person.people
+            ? person.people.map((p, i) => (
+                <span key={p.label}>
+                  {i > 0 && <span> x </span>}
+                  <NameLink {...p} />
+                </span>
+              ))
+            : person.name}
         </p>
         <p className="mt-1 break-keep text-sm leading-relaxed text-gray-600 dark:text-gray-300">{person.bio}</p>
       </div>
