@@ -284,7 +284,12 @@ export async function autoCancelShowApproval(
   const approved = fetched.payment;
 
   const idempotencyKey = refundIdempotencyKey(orderNo, approved.totalAmount, 'autocancel');
-  const cancelled = await toss.cancelPayment(approved.paymentKey, approved.totalAmount, `[#${idempotencyKey}] ${AUTO_CANCEL_REASON}`, orderNo);
+  const cancelled = await toss.cancelPayment({
+    paymentKey: approved.paymentKey,
+    cancelReason: `[#${idempotencyKey}] ${AUTO_CANCEL_REASON}`,
+    cancelAmount: approved.totalAmount,
+    idempotencyKey,
+  });
   if (!cancelled.ok) {
     await revertClaim();
     return { status: 'pending_retry' };

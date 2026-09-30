@@ -10,8 +10,8 @@ test('confirmPayment는 성공 응답을 멱등키로 재생한다', async () =>
 
 test('injectFault로 NETWORK_ERROR를 강제할 수 있다', async () => {
   const toss = createFakeToss();
-  toss.injectFault('cancel:TKT-1', { code: 'NETWORK_ERROR' });
-  const r = await toss.cancelPayment('pk1', 1000, '테스트', 'TKT-1');
+  toss.injectFault('cancel:pk1', { code: 'NETWORK_ERROR' });
+  const r = await toss.cancelPayment({ paymentKey: 'pk1', cancelAmount: 1000, cancelReason: '테스트' });
   expect(r.ok).toBe(false);
   if (!r.ok) expect(r.code).toBe('NETWORK_ERROR');
 });
@@ -19,7 +19,12 @@ test('injectFault로 NETWORK_ERROR를 강제할 수 있다', async () => {
 test('cancelPayment 성공 시 cancels 배열에 cancelReason이 기록된다', async () => {
   const toss = createFakeToss();
   await toss.confirmPayment({ paymentKey: 'pk2', orderId: 'TKT-2', amount: 5000 });
-  const r = await toss.cancelPayment('pk2', 5000, '[#tkt-refund:TKT-2:1] 환불', 'TKT-2');
+  const r = await toss.cancelPayment({
+    paymentKey: 'pk2',
+    cancelAmount: 5000,
+    cancelReason: '[#tkt-refund:TKT-2:1] 환불',
+    idempotencyKey: 'tkt-refund:TKT-2:1',
+  });
   expect(r.ok).toBe(true);
   if (r.ok) expect(r.payment.cancels?.[0]?.cancelReason).toBe('[#tkt-refund:TKT-2:1] 환불');
 });

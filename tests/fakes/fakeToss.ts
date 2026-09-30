@@ -7,7 +7,13 @@ interface Fault {
 
 export interface FakeToss {
   confirmPayment(args: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult>;
-  cancelPayment(paymentKey: string, cancelAmount: number, cancelReason: string, orderId?: string): Promise<TossResult>;
+  cancelPayment(input: {
+    paymentKey: string;
+    cancelReason: string;
+    cancelAmount: number;
+    idempotencyKey?: string;
+    paymentMethod?: string | null;
+  }): Promise<TossResult>;
   fetchPayment(paymentKeyOrOrderId: string): Promise<TossResult>;
   injectFault(key: string, fault: Fault): void;
   setInterceptHook(fn: () => Promise<void> | void): void;
@@ -67,8 +73,11 @@ export function createFakeToss(): FakeToss {
       confirmReplays.set(replayKey, result);
       return result;
     },
-    async cancelPayment(paymentKey, cancelAmount, cancelReason, orderId) {
-      const key = `cancel:${orderId ?? paymentKey}`;
+    async cancelPayment({ paymentKey, cancelAmount, cancelReason, idempotencyKey }) {
+      // 실제 cancelPayment는 orderId를 받지 않는다 — 장애 주입 키는 호출자가 넘긴
+      // idempotencyKey(없으면 paymentKey)로 건다. 두 실제 호출부(lineRefund.ts,
+      // shows/confirm.ts의 autoCancelShowApproval) 모두 idempotencyKey를 채워 보낸다.
+      const key = `cancel:${idempotencyKey ?? paymentKey}`;
       const fault = faults.get(key);
       await runIntercept();
       if (fault) {
