@@ -53,6 +53,8 @@ export interface MixCompareCopy {
   title: string;
   /** 발췌본을 넣는 페이지들의 소제목 — 절 제목이 아니라 그 절 안의 블록 제목이다. */
   excerptTitle: string;
+  /** 주문 마법사에서 접어 둔 채 보여 주는 한 줄 — 누르면 발췌본 플레이어가 열린다. */
+  excerptSummary: string;
   before: string;
   after: string;
   group: string;
@@ -93,6 +95,15 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => {
     vi: 'Nghe bản mix trước và sau trong 30 giây',
     th: 'ฟังก่อนและหลังมิกซ์ใน 30 วินาที',
     uz: 'Miksdan oldingi va keyingi ovozni 30 soniyada tinglang',
+  }),
+  excerptSummary: t(locale, {
+    ko: '먼저 믹싱 전·후 30초 들어 보기',
+    en: 'First, hear a 30-second before & after',
+    zh: '先听30秒混音前后对比',
+    es: 'Primero, escucha 30 segundos antes y después',
+    vi: 'Nghe thử 30 giây trước và sau khi mix',
+    th: 'ฟังก่อนและหลังมิกซ์ 30 วินาที',
+    uz: 'Avval 30 soniyalik oldin va keyin ni tinglang',
   }),
   before: t(locale, {
     ko: '믹싱 전', en: 'Before mix', zh: '混音前', es: 'Antes de la mezcla',
