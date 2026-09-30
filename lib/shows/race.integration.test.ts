@@ -1,13 +1,14 @@
-import { createTestDb } from '../../tests/helpers/showsDb';
+import { createTestDb, type ShowsTestDb } from '../../tests/helpers/showsDb';
 import { shows, showZones, showtimes, showTicketTypes } from '../../db/schema';
 
-jest.mock('../../db/client', () => ({ getDb: () => (global as any).__testDb }));
+let mockDb: ShowsTestDb;
+jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
 
 import { createShowOrder } from './service';
 import { confirmShowOrder, autoCancelShowApproval } from './confirm';
 import { createFakeToss } from '../../tests/fakes/fakeToss';
 
-async function seedTightShow(db: any, capacity: number) {
+async function seedTightShow(db: ShowsTestDb, capacity: number) {
   const showId = 'show-1';
   await db.insert(shows).values({
     id: showId,
@@ -33,7 +34,7 @@ async function seedTightShow(db: any, capacity: number) {
 describe('race: 정원 마지막 1석 경쟁', () => {
   test('정원 1석에 동시 실행된 두 주문 중 정확히 하나만 성공한다', async () => {
     const { db } = await createTestDb();
-    (global as any).__testDb = db;
+    mockDb = db;
     const { showtimeId, ticketTypeId } = await seedTightShow(db, 1);
 
     const [r1, r2] = await Promise.all([
@@ -51,7 +52,7 @@ describe('race: 정원 마지막 1석 경쟁', () => {
   test('N=5 반복 실행에도 항상 정확히 하나만 성공한다(무작위 교차 실행 근사)', async () => {
     for (let i = 0; i < 5; i++) {
       const { db } = await createTestDb();
-      (global as any).__testDb = db;
+      mockDb = db;
       const { showtimeId, ticketTypeId } = await seedTightShow(db, 1);
       const results = await Promise.all([
         createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date()),
@@ -78,7 +79,7 @@ describe('race: 결제확인 vs 자동취소', () => {
    */
   test('confirmPayment 응답 직전 자동취소가 끼어들어 먼저 완주해도, 유령발권이나 이중환불 없이 하나의 최종 상태로 수렴한다', async () => {
     const { db } = await createTestDb();
-    (global as any).__testDb = db;
+    mockDb = db;
     const { showtimeId, ticketTypeId } = await seedTightShow(db, 10);
     const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
     if (!created.ok) throw new Error('setup failed');
@@ -99,7 +100,7 @@ describe('race: 결제확인 vs 자동취소', () => {
     toss.setInterceptHook(async () => {
       if (!autoCancelRan) {
         autoCancelRan = true;
-        await autoCancelShowApproval(created.orderNo, toss);
+        await autoCancelShowApproval(created.orderNo, toss, 'pk1');
       }
     });
 
@@ -119,7 +120,7 @@ describe('race: 결제확인 vs 자동취소', () => {
     expect(thrown).toBeUndefined();
     expect(autoCancelRan).toBe(true);
 
-    const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
+    const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, created.orderNo) });
     // 두 경로가 서로 다른 최종 상태를 주장하며 충돌하지 않는다 — paid거나 refunded 둘 중
     // 하나로 수렴한다. auto_cancel_pending에 멈춰 있거나 다른 상태로 남으면 실패.
     expect(['paid', 'refunded']).toContain(order?.status);
@@ -129,17 +130,17 @@ describe('race: 결제확인 vs 자동취소', () => {
     // 깨진 것이므로 이 라운드는 그 사실도 함께 확인해 둔다.
     expect(order?.status).toBe('refunded');
 
-    const tickets = await db.query.showTickets.findMany({ where: (t: any, { eq }: any) => eq(t.orderNo, created.orderNo) });
+    const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, created.orderNo) });
     if (order?.status === 'refunded') {
       // 주문이 환불로 끝났다면 그 어떤 티켓도 issued(유령발권)로 남으면 안 된다.
-      expect(tickets.every((t: any) => t.status !== 'issued')).toBe(true);
+      expect(tickets.every((t) => t.status !== 'issued')).toBe(true);
     } else if (order?.status === 'paid') {
       // 주문이 확정으로 끝났다면 모든 티켓이 issued여야 한다 — held로 남거나 void가 되면 안 된다.
-      expect(tickets.every((t: any) => t.status === 'issued')).toBe(true);
+      expect(tickets.every((t) => t.status === 'issued')).toBe(true);
     }
 
     // payments 테이블에 이 paymentKey로 기록된 행은 정확히 하나 — 이중 기록이 없다.
-    const paymentRows = await db.query.payments.findMany({ where: (p: any, { eq }: any) => eq(p.paymentKey, 'pk1') });
+    const paymentRows = await db.query.payments.findMany({ where: (p, { eq }) => eq(p.paymentKey, 'pk1') });
     expect(paymentRows.length).toBe(1);
 
     // refunds는 자동취소가 실제로 완주했을 때만(그리고 그때만) 생기고, 항상 최대 1건이어야
@@ -163,7 +164,7 @@ describe('race: 결제확인 vs 자동취소', () => {
   test('반복 실행에도 매번 하나의 최종 상태로 수렴한다(N=5)', async () => {
     for (let i = 0; i < 5; i++) {
       const { db } = await createTestDb();
-      (global as any).__testDb = db;
+      mockDb = db;
       const { showtimeId, ticketTypeId } = await seedTightShow(db, 10);
       const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
       if (!created.ok) throw new Error('setup failed');
@@ -182,7 +183,7 @@ describe('race: 결제확인 vs 자동취소', () => {
       toss.setInterceptHook(async () => {
         if (!autoCancelRan) {
           autoCancelRan = true;
-          await autoCancelShowApproval(created.orderNo, toss);
+          await autoCancelShowApproval(created.orderNo, toss, 'pk1');
         }
       });
 
@@ -193,13 +194,13 @@ describe('race: 결제확인 vs 자동취소', () => {
       );
       expect(confirmOutcome).toEqual({ status: 'auto_cancel_conflict' });
 
-      const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
+      const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, created.orderNo) });
       expect(order?.status).toBe('refunded');
 
-      const tickets = await db.query.showTickets.findMany({ where: (t: any, { eq }: any) => eq(t.orderNo, created.orderNo) });
-      expect(tickets.every((t: any) => t.status !== 'issued')).toBe(true);
+      const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, created.orderNo) });
+      expect(tickets.every((t) => t.status !== 'issued')).toBe(true);
 
-      const paymentRows = await db.query.payments.findMany({ where: (p: any, { eq }: any) => eq(p.paymentKey, 'pk1') });
+      const paymentRows = await db.query.payments.findMany({ where: (p, { eq }) => eq(p.paymentKey, 'pk1') });
       expect(paymentRows.length).toBe(1);
     }
   });

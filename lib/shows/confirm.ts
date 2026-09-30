@@ -4,9 +4,10 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import type { Order } from '../../db/schema';
-import { refundIdempotencyKey } from '../booking/cancel';
+import { refundIdempotencyKey, remainingRefundable } from '../booking/cancel';
 import type { TossPayment } from '../booking/toss';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
+import { liveShowtimeCondition, zoneCapacityCondition, ticketTypeQuotaCondition } from './conditions';
 import { rowsAffectedOf } from './service';
 import { DECLINE_CODE_PATTERN } from './tossCodes';
 
@@ -80,7 +81,7 @@ const TOSS_UNRESOLVED_CODE = 'toss_unresolved';
 export async function confirmShowOrder(
   input: { orderNo: string; paymentKey: string; amount: number },
   opts: { trustedByWebhook: boolean },
-  toss: Pick<FakeToss, 'confirmPayment' | 'fetchPayment'>,
+  toss: Pick<FakeToss, 'confirmPayment' | 'fetchPayment' | 'cancelPayment'>,
 ): Promise<ConfirmOutcome> {
   const db = getDb();
   const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, input.orderNo) });
@@ -167,12 +168,54 @@ export async function confirmShowOrder(
     sql`, `,
   );
 
+  // Toss 승인을 이미 받은 뒤(approved)에도 이 주문이 실제로 확정될 자격이 있는지 다시
+  // 확인한다 — 상태값(acceptableStatuses)만으로는 부족하다(finding #1). 아래 네 조건을
+  // orders-UPDATE의 WHERE에 전부 건다:
+  //  ① 회차가 아직 살아 있다(취소되지 않았고 아직 시작 전) — liveShowtimeCondition.
+  //     이 함수는 db/schema.ts·conditions.ts에 이미 있었지만 지금까지 호출자가 하나도
+  //     없었다(grep으로 확인 — 정의만 되고 안 쓰이고 있었다).
+  //  ② 이 주문의 티켓 중 하나라도 이미 'held'를 벗어났으면(예: expireStaleShowOrders가
+  //     유예를 지나 void 처리한 경우) 확정하지 않는다 — "만료 처리된 뒤 뒤늦게 도착한
+  //     웹훅 확인"이 그대로 paid로 넘어가 버리는 사고(§ 재현 시나리오 3)를 막는다.
+  //  ③ 이 주문에 대해 자동 취소가 이미 완료됐으면(show_orders.auto_cancelled_at) 확정하지
+  //     않는다 — acceptableStatuses가 auto_cancel_pending을 안 받아 들이는 것과 같은 뜻을
+  //     한 겹 더 명시적으로 건다(진행 중이 아니라 "완료"까지 끝난 경우의 방어).
+  //  ④ 이 주문을 뺀 나머지의 정원·한도가 여전히 이 주문 수량만큼 남아 있다
+  //     (zoneCapacityCondition/ticketTypeQuotaCondition의 excludeOrderNo) — 생성 시점의
+  //     정원 게이트는 "홀드가 시간상 만료됐으면 세지 않는다"는 규칙이 있어(정상이다, 새
+  //     구매자에게 자리를 열어 주는 목적), 홀드가 실제로는 아직 안 지워진 주문 A와 그 뒤
+  //     생성된 주문 B가 동시에 같은 자리를 붙들고 있을 수 있다(재현 시나리오 1의 오버셀).
+  //     확정 시점에 "나를 뺀 나머지"로 다시 재는 것이 그 이중 확정을 막는 유일한 지점이다
+  //     — excludeOrderNo 매개변수는 이 재사용을 위해 이미 있었지만(정의 이후 호출자 0건)
+  //     지금까지 아무도 부르지 않고 있었다.
+  const showOrderRow = await db.query.showOrders.findFirst({ where: (so, { eq }) => eq(so.orderNo, input.orderNo) });
+  const orderTicketRows = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, input.orderNo) });
+  const now = new Date();
+  let extraGate = sql`1 = 1`;
+  if (showOrderRow && orderTicketRows.length > 0) {
+    const showtimeId = showOrderRow.showtimeId;
+    const ticketTypeId = orderTicketRows[0].ticketTypeId;
+    const quantity = orderTicketRows.length;
+    const ticketType = await db.query.showTicketTypes.findFirst({ where: (t, { eq }) => eq(t.id, ticketTypeId) });
+    extraGate = sql`
+      ${liveShowtimeCondition(showtimeId, now)}
+      AND NOT EXISTS (SELECT 1 FROM show_tickets WHERE order_no = ${input.orderNo} AND status <> 'held')
+      AND NOT EXISTS (SELECT 1 FROM show_orders WHERE order_no = ${input.orderNo} AND auto_cancelled_at IS NOT NULL)
+      ${
+        ticketType
+          ? sql`AND ${zoneCapacityCondition(showtimeId, ticketType.zoneId, quantity, now, input.orderNo)}
+                AND ${ticketTypeQuotaCondition(showtimeId, ticketTypeId, quantity, now, input.orderNo)}`
+          : sql``
+      }
+    `;
+  }
+
   let batchResults: unknown[];
   try {
     // payments INSERT가 맨 앞 — payment_key unique 위반이 동시 확정(중복 웹훅 도착, 또는
     // 이 실행과 경합하는 다른 실행)의 두 번째 시도를 batch 전체 실패로 만든다(절반만
     // 쓰인 상태가 남지 않는다). lib/booking/confirm.ts:593-663과 같은 이유·같은 위치다.
-    batchResults = await db.batch([
+    const confirmStatements = [
       db.run(sql`
         INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
         VALUES (
@@ -187,7 +230,7 @@ export async function confirmShowOrder(
       `),
       db.run(sql`
         UPDATE orders SET status = 'paid', updated_at = unixepoch()
-        WHERE id = ${order.id} AND status IN (${statusList})
+        WHERE id = ${order.id} AND status IN (${statusList}) AND ${extraGate}
       `),
       // 하위 전이(show_tickets)는 **주문이 실제로 paid가 됐을 때만** 한다(lib/booking/confirm.ts:
       // 618-636과 같은 EXISTS 가드). batch는 한 트랜잭션이라 바로 위 UPDATE의 결과를 여기서
@@ -200,7 +243,8 @@ export async function confirmShowOrder(
         WHERE order_no = ${input.orderNo} AND status = 'held'
           AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')
       `),
-    ] as [any, any, any]);
+    ];
+    batchResults = await db.batch(confirmStatements as [typeof confirmStatements[number], ...typeof confirmStatements]);
   } catch (error) {
     // 토스 승인은 이미 끝났다 — 이 실패가 "동시 확정에서 다른 쪽이 이겼다"(멱등, payment_key
     // unique 위반)인지 "진짜 DB 장애"인지는 payments에 이 paymentKey가 이미 있는지로 가른다
@@ -252,13 +296,38 @@ export async function confirmShowOrder(
     return { status: 'error', code: 'recording_failed' };
   }
 
-  // orders 전이가 0행 — 승인 왕복 사이에 이 주문이 acceptableStatuses를 벗어났다(다른 실행이
-  // 먼저 처리했거나 auto_cancel_pending으로 붙잡혔거나). booking 모듈은 이 경우 전액 자동
-  // 환불(autoCancelStaleApproval)로 이어지지만, 그 함수는 이 도메인에서 별도로 호출되는
-  // 독립 진입점(autoCancelShowApproval, 아래)이라 여기서 직접 부르지 않는다 — 두 경로가
-  // 같은 주문을 동시에 취소 시도하면 토스 취소 API가 중복 호출된다. 여기서는 "이 확인
-  // 시도는 성사되지 않았다"만 보고한다.
+  // orders 전이가 0행 — 승인 왕복 사이에 이 주문이 acceptableStatuses를 벗어났거나(다른
+  // 실행이 먼저 처리했거나 auto_cancel_pending으로 붙잡혔거나) 위 extraGate(회차 생존·
+  // 자기 티켓 held 유지·자동취소 미완료·정원)에 걸렸다. 이 시점에 토스는 이미 승인을
+  // 끝냈고, 위 payments INSERT는 (게이트와 무관하게 무조건 실행되므로) 이미 커밋됐다 —
+  // 즉 "결제는 캡처됐는데 표는 못 내주는" 상태다(finding #1, "money captured, no ticket").
+  // 조용히 sold_out만 반환하면 그 돈이 그대로 우리 쪽에 남는다 — 주문의 현재 상태를 다시
+  // 읽어 이미 다른 실행이 결론을 냈는지부터 가른다.
   if (rowsAffectedOf(batchResults[1]) === 0) {
+    const current = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.id, order.id) });
+    if (current?.status === 'paid' || current?.status === 'partially_refunded') {
+      // 다른 confirmShowOrder 실행이 이미 이 주문을 확정했다 — 재생으로 처리한다.
+      return { status: 'already_confirmed' };
+    }
+    if (current?.status === 'refunded') {
+      // auto-cancel이 이미 이 주문을 끝까지 처리했다 — 위 catch 분기의 auto_cancel_conflict와
+      // 같은 뜻으로 통일해 호출부가 "결제 확인됨"으로 오독하지 않게 한다.
+      return { status: 'auto_cancel_conflict' };
+    }
+    // 그 밖(여전히 pending/expired/failed/auto_cancel_pending)이면, 이 confirm 시도 자신이
+    // 방금 캡처한 결제를 우리가 대신 정리해야 한다 — autoCancelShowApproval과 같은 대사
+    // 경로로 즉시 돌려보낸다. 그 함수는 이미 커밋된 payments 행을 자기 배치의 idempotent
+    // INSERT(NOT EXISTS 가드, finding #4)로 그대로 재사용하고 취소·환불만 마무리한다.
+    // 이 주문이 애초에 auto_cancel_pending 등 claimable하지 않은 상태라면 그 함수는 그저
+    // not_eligible로 안전하게 끝난다(아무 것도 건드리지 않는다).
+    const reconciled = await autoCancelShowApproval(order.orderNo, toss, approved.paymentKey);
+    if (reconciled.status !== 'cancelled') {
+      console.error('[shows-confirm] 확정 게이트 실패 후 자동 대사 미완료 — 수동 확인 필요(healthCheck 대상)', {
+        orderNo: input.orderNo,
+        paymentKey: approved.paymentKey,
+        reconcileOutcome: reconciled.status,
+      });
+    }
     return { status: 'sold_out' };
   }
 
@@ -329,22 +398,33 @@ const AUTO_CANCEL_REASON = '주문 만료 후 승인 — 자동 전액 취소';
  * lib/booking/confirm.ts의 autoCancelStaleApproval을 이식하되, 호출 형태가 다르다 — booking
  * 쪽은 confirmBookingPayment 안에서 **이미 승인 응답을 손에 쥔 채로** 호출되는 내부 헬퍼라
  * 별도 소유권 보호가 필요 없다(그 승인을 부른 요청 자신이 유일한 소유자다). 이 함수는
- * 반대로 **독립된 진입점**이다(크론 등이 orderNo만 들고 부른다) — "토스는 승인했다고 하는데
- * 우리 결제 기록(`payments`)은 없는" 주문을 나중에 찾아서 돈을 돌려주는 별도 배치이므로,
- * 두 실행(크론 중복 기동, 또는 이 실행과 그 사이 뒤늦게 도착한 confirmShowOrder 웹훅 재시도)이
- * 동시에 같은 주문을 붙잡지 못하게 소유권 CAS가 필요하다. 그래서 db/schema.ts에
- * `auto_cancel_pending`을 추가해 "지금 이 실행이 취소를 처리 중"이라는 표식으로 쓴다.
+ * **독립된 진입점**으로도 쓸 수 있게 설계됐지만(크론 등이 orderNo만 들고 부르는 것도
+ * 지원한다), **paymentKey를 얻는 방법은 booking과 다르다**(finding #3) — 실제
+ * `lib/booking/toss.ts`의 `fetchPayment`는 paymentKey로만 결제를 조회한다(orderId 조회는
+ * 프로덕션 토스 API에 없다). 그래서 이 함수는:
+ *   - `knownPaymentKey`가 주어지면(confirmShowOrder의 대사 분기처럼 호출자가 이미 승인
+ *     응답에서 paymentKey를 쥐고 있는 경우) 그대로 쓰고,
+ *   - 없으면 `payments` 테이블에서 이 주문의 결제 행을 찾아 paymentKey를 얻는다(이 주문에
+ *     대해 이미 한 번이라도 승인·기록 시도가 있었던 경우).
+ *   - 어느 쪽도 없으면(토스가 승인했다는 사실 자체를 우리 DB 어디에도 기록한 적이 없는
+ *     고아 승인) 이 함수가 안전하게 할 수 있는 일이 없다 — `not_eligible`로 끝낸다. 그런
+ *     고아를 orderNo만으로 찾아내는 별도 발견 경로(예: 토스 정산 내역과 대사)는 이 플랜
+ *     범위 밖(크론·화면은 후속 PR)이다.
  *
- * 순서: ① 읽은 시점의 status로 정확히 일치하는 CAS 선점 → ② 토스 재조회(fetchPayment)로
- * paymentKey·금액 확인 → ③ 전액 취소 호출 → ④ 실패하면 선점을 원래 상태로 되돌리고
- * pending_retry(다음 크론 실행이 다시 시도할 수 있게) → ⑤ 성공하면 payments 기록(이 주문은
- * 애초에 confirmShowOrder를 거치지 않았으므로 payments 행이 아직 없다 — booking 쪽처럼
- * "이미 있는 행을 조회해 되찾는" 것이 아니라 여기서 새로 남긴다) + refunds 기록 +
- * orders→refunded + show_tickets→void + show_orders.auto_cancelled_at을 한 batch로 커밋한다.
+ * 순서: ① 읽은 시점의 status로 정확히 일치하는 CAS 선점 → ② paymentKey 확보(위) → ③ 토스
+ * 재조회(fetchPayment)로 실제 이 주문의 결제인지 검증(ALREADY_PROCESSED_PAYMENT 재조회와
+ * 같은 판정 — paymentKey·orderId·status가 전부 일치해야 한다) → ④ 이미 done으로 기록된
+ * 환불을 뺀 **잔액**만 취소(`remainingRefundable`, 이 주문에 이미 부분환불이 있었을 수
+ * 있는 경우를 대비) → ⑤ 실패하면 선점을 원래 상태로 되돌리고 pending_retry(다음 실행이
+ * 다시 시도할 수 있게) → ⑥ 성공하면 payments 기록(이미 있으면 건드리지 않는다 —
+ * finding #4, confirmShowOrder 자신의 batch가 먼저 남겼을 수 있다) + refunds 기록(역시
+ * 같은 토스 거래키로 이미 있으면 건드리지 않는다) + orders→refunded + show_tickets→void +
+ * show_orders.auto_cancelled_at을 한 batch로 커밋한다.
  */
 export async function autoCancelShowApproval(
   orderNo: string,
   toss: Pick<FakeToss, 'cancelPayment' | 'fetchPayment'>,
+  knownPaymentKey?: string,
 ): Promise<AutoCancelOutcome> {
   const db = getDb();
 
@@ -353,6 +433,15 @@ export async function autoCancelShowApproval(
 
   const claimableStatuses: ReadonlyArray<Order['status']> = ['pending', 'expired', 'failed'];
   if (!claimableStatuses.includes(order.status)) return { status: 'not_eligible' };
+
+  // paymentKey 확보 — 위 docstring 참조. 못 찾으면 여기서 더 할 수 있는 일이 없다(claim도
+  // 아직 걸지 않았으니 되돌릴 것도 없다).
+  let paymentKey = knownPaymentKey;
+  if (!paymentKey) {
+    const paymentRow = await db.query.payments.findFirst({ where: (p, { eq }) => eq(p.orderId, order.id) });
+    if (!paymentRow) return { status: 'not_eligible' };
+    paymentKey = paymentRow.paymentKey;
+  }
 
   const priorStatus = order.status;
 
@@ -376,18 +465,47 @@ export async function autoCancelShowApproval(
     }
   };
 
-  const fetched = await toss.fetchPayment(orderNo);
+  const fetched = await toss.fetchPayment(paymentKey);
   if (!fetched.ok) {
     await revertClaim();
     return { status: 'pending_retry' };
   }
   const approved = fetched.payment;
+  // 재조회 결과가 실제로 이 주문·이 paymentKey의 것인지 확인한다 — confirmShowOrder의
+  // ALREADY_PROCESSED_PAYMENT 재조회 검증과 같은 판정이다. 페이로드나 호출자 주장을
+  // 그대로 믿지 않는다.
+  if (approved.paymentKey !== paymentKey || approved.orderId !== order.orderNo || approved.status !== 'DONE') {
+    console.error('[shows-confirm] 자동 취소 재조회 검증 불일치 — 취소하지 않는다(재시도 대상)', {
+      orderNo,
+      paymentKey,
+      fetchedOrderId: approved.orderId,
+      fetchedStatus: approved.status,
+    });
+    await revertClaim();
+    return { status: 'pending_retry' };
+  }
 
-  const idempotencyKey = refundIdempotencyKey(orderNo, approved.totalAmount, 'autocancel');
+  // 이 주문에 이미(부분) 환불이 기록돼 있을 수 있으므로 approved.totalAmount를 그대로
+  // 취소하지 않고 잔액만 취소한다. claimableStatuses(pending/expired/failed)인 주문은
+  // 지금 설계상 refundShowTickets를 거친 적이 없어 실제로는 항상 잔액=totalAmount지만,
+  // 방어적으로 항상 재계산한다(booking·funding 전역에서 remainingRefundable을 쓰는 것과
+  // 같은 원칙 — "이 주문에 얼마나 남았는지"를 매번 다시 묻는다).
+  const existingPaymentRow = await db.query.payments.findFirst({ where: (p, { eq }) => eq(p.paymentKey, paymentKey!) });
+  let remaining = approved.totalAmount;
+  if (existingPaymentRow) {
+    const existingRefunds = await db.query.refunds.findMany({ where: (r, { eq }) => eq(r.paymentId, existingPaymentRow.id) });
+    remaining = remainingRefundable(order, [{ ...existingPaymentRow, refunds: existingRefunds }]);
+  }
+  if (remaining <= 0) {
+    await revertClaim();
+    return { status: 'not_eligible' };
+  }
+
+  const idempotencyKey = refundIdempotencyKey(orderNo, remaining, 'autocancel');
   const cancelled = await toss.cancelPayment({
-    paymentKey: approved.paymentKey,
+    paymentKey,
     cancelReason: `[#${idempotencyKey}] ${AUTO_CANCEL_REASON}`,
-    cancelAmount: approved.totalAmount,
+    cancelAmount: remaining,
     idempotencyKey,
   });
   if (!cancelled.ok) {
@@ -401,47 +519,55 @@ export async function autoCancelShowApproval(
   const approvedAtSec = cancelledPayment.approvedAt ? Math.floor(new Date(cancelledPayment.approvedAt).getTime() / 1000) : null;
   const nowSec = Math.floor(Date.now() / 1000);
 
+  const autoCancelStatements = [
+    // 이 주문에 대해 confirmShowOrder(또는 이전 실행)가 이미 payments 행을 남겼을 수 있다
+    // (finding #1의 대사 분기가 바로 이 경로를 탄다, finding #4). WHERE NOT EXISTS로
+    // 있으면 건드리지 않는다 — payment_key UNIQUE 위반으로 이 batch 전체가 실패해
+    // "토스 취소는 성공했는데 우리 기록만 실패한" 상태(ledger_write_failed)가 되는 것을
+    // 막는다. 스펙 §7.5 4단계와 같은 패턴.
+    db.run(sql`
+      INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
+      SELECT ${paymentId}, ${order.id}, ${cancelledPayment.paymentKey}, ${cancelledPayment.method ?? null},
+             ${approvedAtSec}, ${cancelledPayment.receipt?.url ?? null}, ${JSON.stringify(cancelledPayment)}
+      WHERE NOT EXISTS (SELECT 1 FROM payments WHERE payment_key = ${cancelledPayment.paymentKey})
+    `),
+    // payment_id는 위 INSERT가 실제로 쓴 값이 아니라 payment_key로 다시 찾은 행의 id를
+    // 쓴다 — 위 INSERT가 NOT EXISTS로 건너뛰어졌을 때도(이미 있던 행) 그 행의 진짜 id를
+    // 가리켜야 한다. 같은 토스 거래키의 환불이 이미 있으면(다른 실행이 먼저 기록) 역시
+    // 건드리지 않는다.
+    db.run(sql`
+      INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
+      SELECT lower(hex(randomblob(16))), p.id, ${remaining}, ${AUTO_CANCEL_REASON}, 'admin', ${transactionKey}, 'done'
+      FROM payments p
+      WHERE p.payment_key = ${cancelledPayment.paymentKey}
+        AND NOT EXISTS (SELECT 1 FROM refunds r WHERE r.payment_id = p.id AND r.toss_transaction_key = ${transactionKey})
+    `),
+    db.run(sql`
+      UPDATE orders SET status = 'refunded', updated_at = unixepoch()
+      WHERE id = ${order.id} AND status = 'auto_cancel_pending'
+    `),
+    db.run(sql`
+      UPDATE show_tickets SET status = 'void'
+      WHERE order_no = ${orderNo} AND status = 'held'
+    `),
+    db.run(sql`
+      UPDATE show_orders SET auto_cancelled_at = ${nowSec}
+      WHERE order_no = ${orderNo}
+    `),
+  ];
+
   try {
-    await db.batch([
-      // 이 주문은 confirmShowOrder를 거친 적이 없으므로 payments 행이 아직 없다 — 여기서
-      // 처음이자 마지막으로 남긴다(승인·취소가 함께 있었다는 사실 자체를 기록으로 남긴다).
-      db.run(sql`
-        INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
-        VALUES (
-          ${paymentId}, ${order.id}, ${cancelledPayment.paymentKey}, ${cancelledPayment.method ?? null},
-          ${approvedAtSec}, ${cancelledPayment.receipt?.url ?? null}, ${JSON.stringify(cancelledPayment)}
-        )
-      `),
-      db.run(sql`
-        INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
-        VALUES (
-          ${randomUUID().replace(/-/g, '')}, ${paymentId}, ${approved.totalAmount}, ${AUTO_CANCEL_REASON},
-          'admin', ${transactionKey}, 'done'
-        )
-      `),
-      db.run(sql`
-        UPDATE orders SET status = 'refunded', updated_at = unixepoch()
-        WHERE id = ${order.id} AND status = 'auto_cancel_pending'
-      `),
-      db.run(sql`
-        UPDATE show_tickets SET status = 'void'
-        WHERE order_no = ${orderNo} AND status = 'held'
-      `),
-      db.run(sql`
-        UPDATE show_orders SET auto_cancelled_at = ${nowSec}
-        WHERE order_no = ${orderNo}
-      `),
-    ] as [any, any, any, any, any]);
+    await db.batch(autoCancelStatements as [typeof autoCancelStatements[number], ...typeof autoCancelStatements]);
   } catch (error) {
     // 토스 취소는 이미 끝났다(돈은 돌아갔다) — 여기서 claim을 되돌리면 안 된다. 되돌리면
-    // order.status가 다시 claimableStatuses로 들어가 다음 크론 실행이 이 주문을 또 붙잡아
+    // order.status가 다시 claimableStatuses로 들어가 다음 실행이 이 주문을 또 붙잡아
     // 토스에 두 번째 취소를 요청한다(멱등키 덕분에 그 호출 자체는 안전하지만, 우리 원장에는
     // 여전히 기록이 없어 이 실패가 그대로 반복된다). 대신 영구 실패로 끝내고 사람이 보게 한다.
     console.error('[shows-confirm] 토스 취소는 성공했으나 원장 기록 실패 — 수동 대사 필요(claim을 되돌리지 않음)', {
       orderNo,
       paymentKey: cancelledPayment.paymentKey,
       transactionKey,
-      amount: approved.totalAmount,
+      amount: remaining,
       error,
     });
     return { status: 'ledger_write_failed' };

@@ -29,6 +29,37 @@ test('cancelPayment 성공 시 cancels 배열에 cancelReason이 기록된다', 
   if (r.ok) expect(r.payment.cancels?.[0]?.cancelReason).toBe('[#tkt-refund:TKT-2:1] 환불');
 });
 
+test('cancelPayment는 같은 idempotencyKey로 다시 오면 cancels를 늘리지 않고 최초 응답을 재생한다', async () => {
+  // finding #2/#4 회귀 — 실제 토스는 같은 Idempotency-Key로 다시 온 요청에 최초 응답을
+  // 그대로 재생한다(두 번째 취소가 실제로 나가지 않는다). 이 fake가 그 동작을 흉내 내지
+  // 못하면, 서로 다른 두 환불 호출이 같은 키를 잘못 만드는 버그(finding #2)가 fake 위에서는
+  // "매번 성공해서 cancels가 계속 늘어나는" 것으로만 보여 실제 과소 환불을 테스트가 잡을
+  // 수 없다.
+  const toss = createFakeToss();
+  await toss.confirmPayment({ paymentKey: 'pk4', orderId: 'TKT-4', amount: 10000 });
+  const r1 = await toss.cancelPayment({
+    paymentKey: 'pk4', cancelAmount: 10000, cancelReason: '첫 번째', idempotencyKey: 'same-key',
+  });
+  const r2 = await toss.cancelPayment({
+    paymentKey: 'pk4', cancelAmount: 10000, cancelReason: '두 번째(재생돼야 함)', idempotencyKey: 'same-key',
+  });
+  expect(r1.ok).toBe(true);
+  expect(r2).toEqual(r1); // 최초 응답 그대로
+  if (r1.ok) expect(r1.payment.cancels?.length).toBe(1); // 두 번째 호출로 cancels가 늘지 않는다
+});
+
+test('fetchPayment는 paymentKey로만 조회한다 — orderId로는 찾지 못한다(실제 토스와 동일)', async () => {
+  // finding #3 회귀 — 예전엔 이 fake가 orderId로도 찾아 줘서, 프로덕션에서는 항상
+  // NOT_FOUND인 `toss.fetchPayment(orderNo)` 호출이 테스트에서만 성공하는 착시가 있었다.
+  const toss = createFakeToss();
+  await toss.confirmPayment({ paymentKey: 'pk5', orderId: 'TKT-5', amount: 10000 });
+  const byKey = await toss.fetchPayment('pk5');
+  expect(byKey.ok).toBe(true);
+  const byOrderId = await toss.fetchPayment('TKT-5');
+  expect(byOrderId.ok).toBe(false);
+  if (!byOrderId.ok) expect(byOrderId.code).toBe('NOT_FOUND_PAYMENT');
+});
+
 test('interceptHook으로 응답 직전 개입해 경쟁을 재현한다', async () => {
   const toss = createFakeToss();
   const order: string[] = [];

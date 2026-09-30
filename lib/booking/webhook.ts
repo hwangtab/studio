@@ -8,7 +8,7 @@ import { confirmShowOrder, type ConfirmOutcome as ShowConfirmOutcome } from '../
 import { syncShowCancelsFromToss } from '../shows/refund';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { findOrderByOrderNo } from './service';
-import { confirmPayment, fetchPayment, type TossPayment } from './toss';
+import { cancelPayment, confirmPayment, fetchPayment, type TossPayment } from './toss';
 
 /**
  * 취소 합계로 주문 상태를 정한다.
@@ -298,7 +298,7 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         const outcome: ShowConfirmOutcome = await confirmShowOrder(
           { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
           { trustedByWebhook: true },
-          { confirmPayment, fetchPayment },
+          { confirmPayment, fetchPayment, cancelPayment },
         );
         if (outcome.status === 'error' && isTransientShowConfirmFailure(outcome.code)) {
           console.error('[booking-webhook] 공연 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
