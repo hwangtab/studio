@@ -3,7 +3,6 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { refundIdempotencyKey, remainingRefundable, type PaymentWithRefunds } from '../booking/cancel';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
-import { rowsAffectedOf } from './service';
 import { salesCloseAt } from './time';
 
 const SHOWTIME_CANCEL_REFUND_REASON = '공연 회차 취소 환불';
@@ -63,9 +62,21 @@ export async function cancelShowtime(
       with: { refunds: true },
     });
 
-    // 잔액 — 이미 refundShowTickets 등으로 done 기록된 환불을 뺀 금액. 0이면(부분환불이
-    // 이미 전액을 처리한 경우) 취소할 것이 없어 건너뛴다 — 토스도 우리 기록도 건드리지 않는다.
-    const remaining = remainingRefundable(order, payments);
+    // 이 함수 위 주석("체크인된 티켓은 건드리지 않는다")은 티켓 상태 정리뿐 아니라 환불
+    // 금액 계산에도 적용돼야 한다 — 이미 입장한 관객의 표 값어치는 환불 대상이 아니다.
+    // remainingRefundable(order, payments)만 쓰면 order.totalAmount 전체(체크인된 티켓 몫
+    // 포함)를 잔액으로 계산해, 관객이 이미 입장까지 마친 티켓 값을 회차 취소가 돌려주는
+    // 모순이 생긴다 — 체크인된(그리고 아직 환불/무효 처리되지 않은) 티켓들의 단가 합을
+    // 잔액에서 별도로 빼서, "돌려줄 잔액"과 "건드리지 않을 티켓"이 서로 어긋나지 않게 한다.
+    const orderTickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
+    const checkedInValue = orderTickets
+      .filter((t) => t.checkedInAt != null && t.status !== 'refunded' && t.status !== 'void')
+      .reduce((sum, t) => sum + t.unitAmount, 0);
+
+    // 잔액 — 이미 refundShowTickets 등으로 done 기록된 환불을 뺀 금액에서 체크인된 티켓
+    // 값어치를 추가로 뺀다. 0이면(부분환불이 이미 전액을 처리했거나, 남은 몫이 전부
+    // 체크인된 티켓뿐인 경우) 취소할 것이 없어 건너뛴다 — 토스도 우리 기록도 건드리지 않는다.
+    const remaining = Math.max(0, remainingRefundable(order, payments) - checkedInValue);
     if (remaining <= 0) continue;
 
     const doneRefundedOn = (p: PaymentWithRefunds): number =>
@@ -98,7 +109,13 @@ export async function cancelShowtime(
     const cancelledTotal = cancelResult.payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? remaining;
     const lastTransactionKey = cancelResult.payment.cancels?.[cancelResult.payment.cancels.length - 1]?.transactionKey ?? null;
 
-    await db.batch([
+    // 체크인된 티켓 값어치(checkedInValue)를 뺐다면 이 환불 뒤에도 "안 돌려준 돈"이 남는다
+    // — 그 몫이 있으면 부분 환불로 마감하고, 없으면(전부 다 취소됐으면) 전액 환불로 마감한다.
+    // remaining을 잔액 전부로 여겨 무조건 'refunded'로 넘기던 예전 판정은 체크인 제외분을
+    // 반영하지 않아 잘못됐다.
+    const finalOrderStatus: 'refunded' | 'partially_refunded' = checkedInValue > 0 ? 'partially_refunded' : 'refunded';
+
+    const settleStatements = [
       db.run(sql`
         INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
         SELECT lower(hex(randomblob(16))), ${payment.id},
@@ -106,10 +123,8 @@ export async function cancelShowtime(
                ${SHOWTIME_CANCEL_REFUND_REASON}, 'admin', ${lastTransactionKey}, 'done'
         WHERE ${cancelledTotal} > COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${payment.id} AND status = 'done'), 0)
       `),
-      // 이 환불이 잔액 전부를 처리하므로(remaining을 그대로 취소액으로 넣었다) 주문은 항상
-      // 'refunded'로 넘어간다 — settleRefund의 "refundAmount >= remaining → refunded"와 같은 판정.
       db.run(sql`
-        UPDATE orders SET status = 'refunded', updated_at = unixepoch()
+        UPDATE orders SET status = ${finalOrderStatus}, updated_at = unixepoch()
         WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')
       `),
       // 아직 살아 있고(held/issued) 체크인되지 않은 티켓만 무효화한다. 체크인된 티켓은 위
@@ -119,7 +134,8 @@ export async function cancelShowtime(
         UPDATE show_tickets SET status = 'void'
         WHERE order_no = ${orderNo} AND status IN ('held', 'issued') AND checked_in_at IS NULL
       `),
-    ] as [any, any, any]);
+    ];
+    await db.batch(settleStatements as [typeof settleStatements[number], ...typeof settleStatements]);
 
     refundedOrders++;
   }

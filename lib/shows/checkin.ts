@@ -20,7 +20,7 @@ export async function checkInTicket(code: string, checkedInBy: string, now: Date
   });
   if (!ticket) return { status: 'invalid' };
   if (ticket.status !== 'issued') return { status: 'invalid' };
-  if ((ticket as any).showtime.status !== 'scheduled') return { status: 'invalid' };
+  if (ticket.showtime.status !== 'scheduled') return { status: 'invalid' };
 
   if (ticket.checkedInAt != null) {
     if (nowSec - ticket.checkedInAt < DEBOUNCE_SECONDS && ticket.checkedInBy === checkedInBy) {

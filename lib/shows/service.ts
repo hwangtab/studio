@@ -18,9 +18,21 @@ export function rowsAffectedOf(result: unknown): number {
 
 const HOLD_SECONDS = 600;
 
+/**
+ * 1회 매수 상한(스펙 §11.1 `SHOW_MAX_PER_ORDER_CAP`). 공연별 세부 한도(권종별 한도, 공연별
+ * 커스텀 상한)는 이 플랜(화면 없는 도메인 코어) 범위 밖이라 아직 없다 — 여기서는 그 상한의
+ * 최댓값 하나만 걸어 0·음수·비정수·비상식적으로 큰 수량이 SQL까지 내려가는 것을 막는다.
+ */
+const SHOW_MAX_PER_ORDER_CAP = 10;
+
 export type CreateShowOrderResult =
   | { ok: true; orderNo: string }
-  | { ok: false; code: 'sold_out' | 'sales_closed' };
+  | { ok: false; code: 'sold_out' | 'sales_closed' | 'invalid_quantity' | 'ticket_type_mismatch' };
+
+/** quantity가 1~SHOW_MAX_PER_ORDER_CAP 사이의 정수인지 — SQL을 태우기 전에 거른다. */
+function isValidQuantity(quantity: number): boolean {
+  return Number.isInteger(quantity) && quantity >= 1 && quantity <= SHOW_MAX_PER_ORDER_CAP;
+}
 
 /**
  * 원자적 재고 판정 배치. lib/funding/service.ts의 createFundingPledge와 같은 패턴:
@@ -37,6 +49,8 @@ export async function createShowOrder(
   input: { showtimeId: string; ticketTypeId: string; quantity: number; buyerName: string; buyerContact: string },
   now: Date
 ): Promise<CreateShowOrderResult> {
+  if (!isValidQuantity(input.quantity)) return { ok: false, code: 'invalid_quantity' };
+
   const db = getDb();
   const orderNo = generateShowOrderNo(now, false);
   const manageToken = generateManageToken();
@@ -46,6 +60,12 @@ export async function createShowOrder(
     where: (t, { eq }) => eq(t.id, input.ticketTypeId),
   });
   if (!ticketType) return { ok: false, code: 'sold_out' };
+
+  // 티켓타입은 show 단위 정의라, 요청한 showtimeId가 실제로 이 티켓타입이 속한 show의
+  // 회차인지 확인한다 — 확인하지 않으면 다른 공연의 티켓타입 id를 실어 보내도 그대로
+  // 통과해 엉뚱한 공연의 표를 발권할 수 있다.
+  const showtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
+  if (!showtime || showtime.showId !== ticketType.showId) return { ok: false, code: 'ticket_type_mismatch' };
 
   const totalAmount = ticketType.price * input.quantity;
   // 티켓 가격은 VAT 포함 표기(아티스트 구독과 같은 관례) — lib/booking/amounts.ts의
@@ -87,10 +107,11 @@ export async function createShowOrder(
   const results = await db.batch(statements as [typeof statements[number], ...typeof statements]);
 
   if (rowsAffectedOf(results[results.length - 1]) === 0) {
-    // 어느 게이트가 막았는지 구분 — 판매창 문제인지 재고 문제인지 별도 조회로 확인.
-    const showtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
+    // 어느 게이트가 막았는지 구분 — 판매창 문제인지 재고 문제인지 별도 조회로 재확인(경합
+    // 중 상태가 바뀌었을 수 있어 위에서 읽은 showtime을 그대로 재사용하지 않는다).
+    const recheckedShowtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
     const nowSec = Math.floor(now.getTime() / 1000);
-    if (!showtime || showtime.status !== 'scheduled' || showtime.salesCloseAt <= nowSec) {
+    if (!recheckedShowtime || recheckedShowtime.status !== 'scheduled' || recheckedShowtime.salesCloseAt <= nowSec) {
       return { ok: false, code: 'sales_closed' };
     }
     return { ok: false, code: 'sold_out' };
@@ -132,12 +153,18 @@ export async function issueCompTickets(
   input: { showtimeId: string; ticketTypeId: string; quantity: number; note: string },
   now: Date
 ): Promise<CreateShowOrderResult> {
+  if (!isValidQuantity(input.quantity)) return { ok: false, code: 'invalid_quantity' };
+
   const db = getDb();
   const orderNo = generateShowOrderNo(now, true);
   const manageToken = generateManageToken();
 
   const ticketType = await db.query.showTicketTypes.findFirst({ where: (t, { eq }) => eq(t.id, input.ticketTypeId) });
   if (!ticketType) return { ok: false, code: 'sold_out' };
+
+  // createShowOrder와 같은 이유 — 티켓타입이 실제로 이 회차가 속한 show의 것인지 확인한다.
+  const showtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
+  if (!showtime || showtime.showId !== ticketType.showId) return { ok: false, code: 'ticket_type_mismatch' };
 
   // 초대권은 결제 없이 발급되지만 금액 계산 경로는 다른 주문과 동일하게 splitInclusiveAmount를
   // 거친다(itemAmount/vatAmount가 항상 이 함수의 결과값이라는 저장소 전체 관례를 유지) — 0원을
@@ -149,10 +176,16 @@ export async function issueCompTickets(
   const quotaGate = ticketTypeQuotaCondition(input.showtimeId, input.ticketTypeId, input.quantity, now);
   // comp_quota는 구역/티켓타입 정원과 별개의 한도다 — 지금까지 발급된(void가 아닌)
   // organizer_comp 티켓 수를 빼고 남은 여유가 요청 수량 이상이어야 한다.
+  //
+  // `showtime_id`로도 걸러야 한다 — show_ticket_types는 show 단위 정의라 같은 티켓타입이
+  // 여러 회차에서 재사용되는데(zoneCapacityCondition·ticketTypeQuotaCondition이 회차별로
+  // 격리하는 것과 같은 이유), 이 필터가 없으면 한 회차의 초대권 발급이 다른 회차의
+  // comp_quota를 갉아먹는다(Task 7이 잡은 것과 같은 버그 유형).
   const compGate = sql`(
     select tt.comp_quota - coalesce((
       select count(*) from show_tickets st
-      where st.ticket_type_id = tt.id and st.issued_by = 'organizer_comp' and st.status != 'void'
+      where st.ticket_type_id = tt.id and st.showtime_id = ${input.showtimeId}
+        and st.issued_by = 'organizer_comp' and st.status != 'void'
     ), 0)
     from show_ticket_types tt where tt.id = ${input.ticketTypeId}
   ) >= ${input.quantity}`;
@@ -190,9 +223,9 @@ export async function issueCompTickets(
   const results = await db.batch(statements as [typeof statements[number], ...typeof statements]);
 
   if (rowsAffectedOf(results[0]) === 0) {
-    const showtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
+    const recheckedShowtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
     const nowSec = Math.floor(now.getTime() / 1000);
-    if (!showtime || showtime.status !== 'scheduled' || showtime.salesCloseAt <= nowSec) {
+    if (!recheckedShowtime || recheckedShowtime.status !== 'scheduled' || recheckedShowtime.salesCloseAt <= nowSec) {
       return { ok: false, code: 'sales_closed' };
     }
     return { ok: false, code: 'sold_out' };

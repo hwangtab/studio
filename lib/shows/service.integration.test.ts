@@ -63,6 +63,42 @@ describe('createShowOrder', () => {
     const result = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, afterClose);
     expect(result).toEqual({ ok: false, code: 'sales_closed' });
   });
+
+  // finding(Important) 회귀 — 수량 검증이 SQL을 태우기 전에 걸려야 한다. 고치기 전에는
+  // 0·음수·비정수·과다 수량이 그대로 SQL까지 내려가(0은 "티켓 없는 결제 주문"을,
+  // 음수는 for 루프가 그냥 건너뛰어 "정원은 깎였는데 티켓은 없는" 주문을 만들 수 있었다).
+  it.each([0, -1, 1.5, 11])('수량 %s는 SQL을 타지 않고 invalid_quantity로 거부된다', async (quantity) => {
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const result = await createShowOrder({ showtimeId, ticketTypeId, quantity, buyerName: 'a', buyerContact: '010' }, new Date());
+    expect(result).toEqual({ ok: false, code: 'invalid_quantity' });
+    const orders = await db.query.orders.findMany();
+    expect(orders.length).toBe(0); // 주문 자체가 생기지 않아야 한다
+  });
+
+  it('수량 1~10(SHOW_MAX_PER_ORDER_CAP)은 정상 통과한다', async () => {
+    const { showtimeId, ticketTypeId } = await seedShow(db, { capacity: 20 });
+    const result = await createShowOrder({ showtimeId, ticketTypeId, quantity: 10, buyerName: 'a', buyerContact: '010' }, new Date());
+    expect(result.ok).toBe(true);
+  });
+
+  // finding(Important) 회귀 — 티켓타입이 실제로 그 회차가 속한 show의 것인지 확인해야 한다.
+  // 고치기 전에는 다른 show의 ticketTypeId를 그대로 실어 보내도 통과해, 엉뚱한 공연의
+  // 표를 발권할 수 있었다(정원·가격도 그 다른 show 기준으로 잘못 적용된다).
+  it('티켓타입이 다른 show의 것이면 ticket_type_mismatch로 거부된다', async () => {
+    const { showtimeId } = await seedShow(db);
+    // 별개의 show + 티켓타입을 하나 더 만든다.
+    await db.insert(shows).values({ id: 'show-2', slug: 's2', title: 't2', presenterName: 'p', performers: 'a', ageRating: '전체', runningMinutes: 60, venueName: 'v', venueAddress: 'addr', description: 'd', status: 'published' });
+    await db.insert(showZones).values({ id: 'zone-2', showId: 'show-2', code: 'A', label: 'A', capacity: 10 });
+    await db.insert(showTicketTypes).values({ id: 'type-foreign', showId: 'show-2', zoneId: 'zone-2', name: '외부', price: 5000 });
+
+    const result = await createShowOrder(
+      { showtimeId, ticketTypeId: 'type-foreign', quantity: 1, buyerName: 'a', buyerContact: '010' },
+      new Date(),
+    );
+    expect(result).toEqual({ ok: false, code: 'ticket_type_mismatch' });
+    const orders = await db.query.orders.findMany();
+    expect(orders.length).toBe(0);
+  });
 });
 
 describe('expireStaleShowOrders', () => {
