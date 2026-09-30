@@ -283,9 +283,6 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           subtitle={t('mixingMastering.mixing.subtitle')}
           className="mb-10"
         />
-        {/* 가격을 보기 전에 귀로 먼저 — 이 페이지에는 그동안 음원이 하나도 없었다. 절이 아니라 이 절 안의 블록이다
-            (절을 끼우면 아래 절들의 배경 번갈음이 전부 뒤집힌다). */}
-        <MixCompareBlock locale={locale} component="MixingMasteringMixCompare" className="mb-14 max-w-3xl mx-auto" />
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
           {mixingOffers.map((offer) => (
             <PricingCard
@@ -413,6 +410,11 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
             ]}
           />
         </div>
+
+        {/* 믹싱·마스터링 가격과 표를 다 본 뒤에 듣는 자리 — 처음에는 카드 위에 있었는데 음원이 먼저 나와 가격이
+            밀렸다(운영자 지적 2026-09-30). 절이 아니라 이 절 안의 블록이다(절을 끼우면 아래 절들의 배경
+            번갈음이 전부 뒤집힌다). */}
+        <MixCompareBlock locale={locale} component="MixingMasteringMixCompare" className="mt-16 max-w-3xl mx-auto border-t border-gray-200 dark:border-gray-800 pt-10" />
       </Section>
 
       {/* 원격 의뢰 절차 — HowTo 스키마와 동일 데이터 */}
