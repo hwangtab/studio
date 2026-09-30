@@ -40,6 +40,10 @@ describe('createShowOrder', () => {
     if (result.ok) {
       const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, result.orderNo) });
       expect(order?.status).toBe('pending');
+      // 가격 10000 × 2매 = 20000(VAT 포함) → splitInclusiveAmount(20000) = { itemAmount: 18182, vatAmount: 1818 }.
+      expect(order?.itemAmount).toBe(18182);
+      expect(order?.vatAmount).toBe(1818);
+      expect(order?.totalAmount).toBe(20000);
       const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, result.orderNo) });
       expect(tickets.length).toBe(2);
       expect(tickets.every((t) => t.status === 'held')).toBe(true);

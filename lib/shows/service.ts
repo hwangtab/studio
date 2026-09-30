@@ -1,6 +1,7 @@
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { splitInclusiveAmount } from '../booking/amounts';
 import { generateManageToken } from '../booking/token';
 import { zoneCapacityCondition, ticketTypeQuotaCondition, showtimeSalesWindowCondition } from './conditions';
 import { generateShowOrderNo, generateTicketCode } from './shape';
@@ -47,6 +48,10 @@ export async function createShowOrder(
   if (!ticketType) return { ok: false, code: 'sold_out' };
 
   const totalAmount = ticketType.price * input.quantity;
+  // 티켓 가격은 VAT 포함 표기(아티스트 구독과 같은 관례) — lib/booking/amounts.ts의
+  // splitInclusiveAmount로 공급가·VAT를 분리해 저장한다. 후속 정산 태스크가
+  // orders.itemAmount/vatAmount를 실제 분리값으로 전제한다.
+  const { itemAmount, vatAmount } = splitInclusiveAmount(totalAmount);
 
   const windowGate = showtimeSalesWindowCondition(input.showtimeId, now);
   const zoneGate = zoneCapacityCondition(input.showtimeId, ticketType.zoneId, input.quantity, now);
@@ -58,7 +63,7 @@ export async function createShowOrder(
       INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
                           item_amount, vat_amount, total_amount, manage_token)
       SELECT lower(hex(randomblob(16))), ${orderNo}, 'ticket', 'pending', ${input.buyerName}, ${input.buyerContact}, '',
-             ${totalAmount}, 0, ${totalAmount}, ${manageToken}
+             ${itemAmount}, ${vatAmount}, ${totalAmount}, ${manageToken}
       WHERE ${windowGate} AND ${zoneGate} AND ${quotaGate}
     `)
   );
