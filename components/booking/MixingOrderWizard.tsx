@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
@@ -12,6 +13,11 @@ import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingPro
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
+import { getMixCompareCopy } from '../../data/mixCompare';
+
+// 접어 둔 채로 시작하고, 여는 순간에야 코드와 음원 연결이 생긴다 — 주문 화면의 첫 로딩을 늘리지 않는다.
+const MixComparePlayer = dynamic(() => import('../audio/MixComparePlayer'), { ssr: false });
+const MIX_COMPARE_COPY = getMixCompareCopy('ko', 'excerpt');
 
 interface MixingOrderWizardProps {
   /** ?product= 쿼리를 서버에서 검증해 넘긴 값 — 없거나 유효하지 않으면 undefined(1번 상품이 기본). */
@@ -51,6 +57,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   const firstProduct = getMixingProduct(initialProductId ?? '') ?? MIXING_PRODUCTS[0];
 
   const [step, setStep] = useState<Step>(1);
+  const [mixCompareOpened, setMixCompareOpened] = useState(false);
 
   // Step 1: 상품 · 곡 수 · 튜닝
   const [selectedProductId, setSelectedProductId] = useState(firstProduct.id);
@@ -255,6 +262,28 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
           <h2 id="mixing-step1-heading" className="typo-card-subtitle text-gray-900 dark:text-white mb-3">
             1. 상품과 곡 수 선택
           </h2>
+
+          {/* 결제 직전에 결과물을 한 번 더 확인할 수 있게 — 접힌 한 줄이고, 결제 흐름을 떠나는 링크는 없다. */}
+          <details
+            className="mb-6 rounded-md border border-gray-200 dark:border-gray-700"
+            onToggle={(e) => { if (e.currentTarget.open) setMixCompareOpened(true); }}
+          >
+            <summary className="cursor-pointer select-none px-4 py-3 text-sm font-semibold text-primary dark:text-primary-lighter rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
+              {MIX_COMPARE_COPY.excerptSummary}
+            </summary>
+            <div className="px-4 pb-5 pt-2">
+              {mixCompareOpened && (
+                <MixComparePlayer
+                  locale="ko"
+                  copy={MIX_COMPARE_COPY}
+                  portfolioHref="/ko/portfolio"
+                  variant="excerpt"
+                  component="MixingOrderMixCompare"
+                  showPortfolioLink={false}
+                />
+              )}
+            </div>
+          </details>
 
           <fieldset className="mb-4">
             <legend className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">상품 선택</legend>

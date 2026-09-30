@@ -21,6 +21,8 @@ interface ReleaseDiscographySectionProps {
   variant?: 'default' | 'alternate';
   maxItems?: number;
   onSelectItem?: (id: string) => void;
+  /** 목록 아래에 붙는 하위 블록(예: 믹싱 전·후 30초 발췌). 절을 새로 끼우면 아래 절들의 배경 번갈음이 뒤집힌다. */
+  footer?: React.ReactNode;
 }
 
 const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
@@ -32,6 +34,7 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
   variant = 'default',
   maxItems = 12,
   onSelectItem,
+  footer,
 }) => {
   const visibleItems = items.slice(0, maxItems);
   if (visibleItems.length === 0) return null;
@@ -95,6 +98,7 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
           {viewAllLabel} <ArrowRight size={16} />
         </Link>
       </div>
+      {footer}
     </Section>
   );
 };

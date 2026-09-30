@@ -21,6 +21,7 @@ import { useTranslation } from 'react-i18next';
 import ResponsiveImage from '../../components/ResponsiveImage';
 import SEO from '../../components/SEO';
 import ImageHero, { HERO_SCRIM_STRONG } from '../../components/common/ImageHero';
+import MixCompareBlock from '../../components/audio/MixCompareBlock';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import SectionHeading from '../../components/ui/SectionHeading';
 import type { LucideIcon } from '@/lib/lucide-icons';
@@ -282,6 +283,9 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
           subtitle={t('mixingMastering.mixing.subtitle')}
           className="mb-10"
         />
+        {/* 가격을 보기 전에 귀로 먼저 — 이 페이지에는 그동안 음원이 하나도 없었다. 절이 아니라 이 절 안의 블록이다
+            (절을 끼우면 아래 절들의 배경 번갈음이 전부 뒤집힌다). */}
+        <MixCompareBlock locale={locale} component="MixingMasteringMixCompare" className="mb-14 max-w-3xl mx-auto" />
         <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto items-stretch">
           {mixingOffers.map((offer) => (
             <PricingCard
