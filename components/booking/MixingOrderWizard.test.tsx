@@ -369,29 +369,42 @@ describe('MixingOrderWizard 위젯 약관 가드', () => {
 });
 
 describe('MixingOrderWizard 믹싱 전·후 30초 듣기', () => {
-  it('접지 않고 처음부터 펼쳐 있다 — 재생 버튼과 30초 길이가 바로 보인다', () => {
+  it('접혀 있고, 열기 전에는 플레이어도 음원 연결도 없다', () => {
+    const created: unknown[] = [];
+    const Original = (global as unknown as { Audio?: unknown }).Audio;
+    (global as unknown as { Audio: unknown }).Audio = function FakeAudio() { created.push(this); return { addEventListener() {}, pause() {}, removeAttribute() {}, load() {} }; };
+    try {
+      render(<MixingOrderWizard />);
+      const summary = screen.getByText('먼저 믹싱 전·후 30초 들어 보기');
+      expect(summary.closest('details')).not.toHaveAttribute('open');
+      expect(created).toHaveLength(0);
+      expect(screen.queryByRole('button', { name: '재생' })).not.toBeInTheDocument();
+    } finally {
+      (global as unknown as { Audio?: unknown }).Audio = Original;
+    }
+  });
+
+  it('상품 선택 위, 1단계 제목 바로 아래에 있다', () => {
     render(<MixingOrderWizard />);
-    expect(screen.getByRole('button', { name: '재생' })).toBeInTheDocument();
+    const summary = screen.getByText('먼저 믹싱 전·후 30초 들어 보기');
+    const product = screen.getByText('상품 선택');
+    expect(summary.compareDocumentPosition(product) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('열면 30초 플레이어가 나타나고, 결제 흐름을 떠나는 포트폴리오 링크는 없다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await user.click(screen.getByText('먼저 믹싱 전·후 30초 들어 보기'));
+    expect(await screen.findByRole('button', { name: '재생' })).toBeInTheDocument();
     expect(screen.getByText('/ 0:30')).toBeInTheDocument();
-    expect(document.querySelector('details')).toBeNull();
-  });
-
-  it('상품 선택 아래, "다음" 버튼 뒤에 온다 — 상품 선택이 밀리지 않는다', () => {
-    render(<MixingOrderWizard />);
-    const next = screen.getByRole('button', { name: '다음: 주문자 정보' });
-    const play = screen.getByRole('button', { name: '재생' });
-    expect(next.compareDocumentPosition(play) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-  });
-
-  it('결제 흐름을 떠나는 포트폴리오 링크는 없다', () => {
-    render(<MixingOrderWizard />);
     expect(screen.queryByRole('link', { name: '포트폴리오 보기' })).not.toBeInTheDocument();
   });
 
   it('2단계로 넘어가면 플레이어는 사라진다 — 결제 입력 화면을 어지럽히지 않는다', async () => {
     const user = userEvent.setup();
     render(<MixingOrderWizard />);
-    await user.click(screen.getByRole('button', { name: '다음: 주문자 정보' }));
+    await user.click(screen.getByText('먼저 믹싱 전·후 30초 들어 보기'));
+    await user.click(await screen.findByRole('button', { name: '재생' }).then(() => screen.getByRole('button', { name: '다음: 주문자 정보' })));
     expect(screen.queryByRole('button', { name: '재생' })).not.toBeInTheDocument();
   });
 });
