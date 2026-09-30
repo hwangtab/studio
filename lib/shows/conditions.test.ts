@@ -100,7 +100,7 @@ describe('zoneCapacityCondition', () => {
     const result = await db.run(sql`
       insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
       select 'TKT-1', ${showtimeId}, '홍길동', '010-0000-0000'
-      where ${zoneCapacityCondition('zone-1', 1, now)}
+      where ${zoneCapacityCondition(showtimeId, 'zone-1', 1, now)}
     `);
     expect(rowsAffectedOf(result)).toBe(1);
   });
@@ -117,7 +117,7 @@ describe('zoneCapacityCondition', () => {
     const result = await db.run(sql`
       insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
       select 'TKT-1', ${showtimeId}, '홍길동', '010-0000-0000'
-      where ${zoneCapacityCondition('zone-1', 1, now)}
+      where ${zoneCapacityCondition(showtimeId, 'zone-1', 1, now)}
     `);
     expect(rowsAffectedOf(result)).toBe(0);
   });
@@ -137,9 +137,50 @@ describe('zoneCapacityCondition', () => {
     const result = await db.run(sql`
       insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
       select 'TKT-2', ${showtimeId}, '홍길동', '010-0000-0000'
-      where ${zoneCapacityCondition('zone-1', 1, now)}
+      where ${zoneCapacityCondition(showtimeId, 'zone-1', 1, now)}
     `);
     expect(rowsAffectedOf(result)).toBe(1);
+  });
+
+  it('같은 구역이라도 다른 회차의 판매분은 정원을 깎지 않는다 — 회차별 정원 격리', async () => {
+    const { db } = await createTestDb();
+    // capacity=1짜리 구역 하나를 공유하는 회차 두 개(금·토)를 만든다.
+    const showId = 'show-1';
+    const nowSec = Math.floor(Date.now() / 1000);
+    await db.insert(shows).values({
+      id: showId, slug: 's1', title: 't', presenterName: 'p', performers: 'a', ageRating: '전체',
+      runningMinutes: 60, venueName: 'v', venueAddress: 'addr', description: 'd', status: 'published',
+    });
+    await db.insert(showZones).values({ id: 'zone-1', showId, code: 'A', label: 'A구역', capacity: 1 });
+    const showtimeAId = 'showtime-fri';
+    const showtimeBId = 'showtime-sat';
+    await db.insert(showtimes).values([
+      { id: showtimeAId, showId, startsAt: nowSec + DAY * 10, salesCloseAt: nowSec + DAY * 9 },
+      { id: showtimeBId, showId, startsAt: nowSec + DAY * 11, salesCloseAt: nowSec + DAY * 10 },
+    ]);
+    await db.insert(showTicketTypes).values({ id: 'type-1', showId, zoneId: 'zone-1', name: '일반', price: 10000, quota: null });
+
+    const now = new Date();
+    // 금요일 회차(A)의 구역 정원 1을 다 채운다.
+    await issueTicket(db, 'TKT-FRI', showtimeAId, 't-fri', 'SNT1:DDDDDDDDDDDDDDDD');
+
+    // 토요일 회차(B)는 아직 아무도 안 샀다 — A가 매진이어도 B는 그대로 여유가 있어야 한다.
+    await insertOrder(db, 'TKT-SAT');
+    const result = await db.run(sql`
+      insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
+      select 'TKT-SAT', ${showtimeBId}, '홍길동', '010-0000-0000'
+      where ${zoneCapacityCondition(showtimeBId, 'zone-1', 1, now)}
+    `);
+    expect(rowsAffectedOf(result)).toBe(1);
+
+    // 반대로 A는 여전히 매진 상태여야 한다(회차별 격리가 양방향으로 성립하는지 확인).
+    await insertOrder(db, 'TKT-FRI-2');
+    const friResult = await db.run(sql`
+      insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
+      select 'TKT-FRI-2', ${showtimeAId}, '홍길동', '010-0000-0000'
+      where ${zoneCapacityCondition(showtimeAId, 'zone-1', 1, now)}
+    `);
+    expect(rowsAffectedOf(friResult)).toBe(0);
   });
 });
 
@@ -152,7 +193,7 @@ describe('ticketTypeQuotaCondition', () => {
     const result = await db.run(sql`
       insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
       select 'TKT-1', ${showtimeId}, '홍길동', '010-0000-0000'
-      where ${ticketTypeQuotaCondition('type-1', 1, now)}
+      where ${ticketTypeQuotaCondition(showtimeId, 'type-1', 1, now)}
     `);
     expect(rowsAffectedOf(result)).toBe(1);
   });
@@ -167,7 +208,7 @@ describe('ticketTypeQuotaCondition', () => {
     const result = await db.run(sql`
       insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
       select 'TKT-1', ${showtimeId}, '홍길동', '010-0000-0000'
-      where ${ticketTypeQuotaCondition('type-1', 1, now)}
+      where ${ticketTypeQuotaCondition(showtimeId, 'type-1', 1, now)}
     `);
     expect(rowsAffectedOf(result)).toBe(0);
   });
@@ -180,9 +221,47 @@ describe('ticketTypeQuotaCondition', () => {
     const result = await db.run(sql`
       insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
       select 'TKT-1', ${showtimeId}, '홍길동', '010-0000-0000'
-      where ${ticketTypeQuotaCondition('type-1', 100, now)}
+      where ${ticketTypeQuotaCondition(showtimeId, 'type-1', 100, now)}
     `);
     expect(rowsAffectedOf(result)).toBe(1);
+  });
+
+  it('같은 티켓타입이라도 다른 회차의 판매분은 쿼터를 깎지 않는다 — 회차별 쿼터 격리', async () => {
+    const { db } = await createTestDb();
+    const showId = 'show-1';
+    const nowSec = Math.floor(Date.now() / 1000);
+    await db.insert(shows).values({
+      id: showId, slug: 's1', title: 't', presenterName: 'p', performers: 'a', ageRating: '전체',
+      runningMinutes: 60, venueName: 'v', venueAddress: 'addr', description: 'd', status: 'published',
+    });
+    await db.insert(showZones).values({ id: 'zone-1', showId, code: 'A', label: 'A구역', capacity: 100 });
+    const showtimeAId = 'showtime-fri';
+    const showtimeBId = 'showtime-sat';
+    await db.insert(showtimes).values([
+      { id: showtimeAId, showId, startsAt: nowSec + DAY * 10, salesCloseAt: nowSec + DAY * 9 },
+      { id: showtimeBId, showId, startsAt: nowSec + DAY * 11, salesCloseAt: nowSec + DAY * 10 },
+    ]);
+    // quota=1인 한정 티켓타입 하나를 두 회차가 공유한다.
+    await db.insert(showTicketTypes).values({ id: 'type-1', showId, zoneId: 'zone-1', name: '한정', price: 10000, quota: 1 });
+
+    const now = new Date();
+    await issueTicket(db, 'TKT-FRI', showtimeAId, 't-fri', 'SNT1:EEEEEEEEEEEEEEEE');
+
+    await insertOrder(db, 'TKT-SAT');
+    const result = await db.run(sql`
+      insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
+      select 'TKT-SAT', ${showtimeBId}, '홍길동', '010-0000-0000'
+      where ${ticketTypeQuotaCondition(showtimeBId, 'type-1', 1, now)}
+    `);
+    expect(rowsAffectedOf(result)).toBe(1);
+
+    await insertOrder(db, 'TKT-FRI-2');
+    const friResult = await db.run(sql`
+      insert into show_orders (order_no, showtime_id, buyer_name, buyer_contact)
+      select 'TKT-FRI-2', ${showtimeAId}, '홍길동', '010-0000-0000'
+      where ${ticketTypeQuotaCondition(showtimeAId, 'type-1', 1, now)}
+    `);
+    expect(rowsAffectedOf(friResult)).toBe(0);
   });
 });
 

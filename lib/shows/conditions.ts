@@ -2,9 +2,15 @@ import { sql, type SQL } from 'drizzle-orm';
 
 /**
  * 구역 정원 게이트 — 이미 발급/보류된(만료되지 않은) 티켓 수 + 요청 수량이 정원 이하일 때만 참.
+ *
+ * `show_zones`는 show 단위고 한 show는 회차(showtime)가 여럿일 수 있는데, 정원은
+ * **회차마다 독립**이어야 한다 — 금요일 회차가 매진됐다고 토요일 회차까지 막히면 안 된다.
+ * `show_tickets`가 자기 `showtime_id`를 갖고 있으므로 두 집계 서브쿼리 모두 그 회차로 걸러야
+ * `zone_id`만으로 세는 실수(같은 구역의 다른 회차 판매분까지 정원을 갉아먹는 것)를 막는다.
+ *
  * excludeOrderNo: 자기 자신 주문(재시도 등)을 집계에서 뺀다.
  */
-export function zoneCapacityCondition(zoneId: string, quantity: number, now: Date, excludeOrderNo?: string): SQL {
+export function zoneCapacityCondition(showtimeId: string, zoneId: string, quantity: number, now: Date, excludeOrderNo?: string): SQL {
   const nowSec = Math.floor(now.getTime() / 1000);
   const excludeClause = excludeOrderNo ? sql`and st.order_no <> ${excludeOrderNo}` : sql``;
   return sql`(
@@ -13,6 +19,7 @@ export function zoneCapacityCondition(zoneId: string, quantity: number, now: Dat
       join show_ticket_types tt on tt.id = st.ticket_type_id
       join show_orders so on so.order_no = st.order_no
       where tt.zone_id = z.id
+        and st.showtime_id = ${showtimeId}
         and st.status in ('issued','refunding')
         ${excludeClause}
     ), 0) - coalesce((
@@ -20,6 +27,7 @@ export function zoneCapacityCondition(zoneId: string, quantity: number, now: Dat
       join show_ticket_types tt on tt.id = st.ticket_type_id
       join show_orders so on so.order_no = st.order_no
       where tt.zone_id = z.id
+        and st.showtime_id = ${showtimeId}
         and st.status = 'held'
         and (so.hold_expires_at is null or so.hold_expires_at > ${nowSec})
         ${excludeClause}
@@ -28,8 +36,13 @@ export function zoneCapacityCondition(zoneId: string, quantity: number, now: Dat
   ) >= ${quantity}`;
 }
 
-/** 티켓타입 한정 수량 게이트. quota가 null이면(무제한) 항상 참. */
-export function ticketTypeQuotaCondition(ticketTypeId: string, quantity: number, now: Date, excludeOrderNo?: string): SQL {
+/**
+ * 티켓타입 한정 수량 게이트. quota가 null이면(무제한) 항상 참.
+ *
+ * `show_ticket_types`도 show 단위 정의라 위 `zoneCapacityCondition`과 같은 이유로 회차별로
+ * 격리해야 한다 — `showtimeId`로 두 집계 분기(issued/refunding, held-not-expired) 모두 필터한다.
+ */
+export function ticketTypeQuotaCondition(showtimeId: string, ticketTypeId: string, quantity: number, now: Date, excludeOrderNo?: string): SQL {
   const nowSec = Math.floor(now.getTime() / 1000);
   const excludeClause = excludeOrderNo ? sql`and st.order_no <> ${excludeOrderNo}` : sql``;
   return sql`(
@@ -37,6 +50,7 @@ export function ticketTypeQuotaCondition(ticketTypeId: string, quantity: number,
       select count(*) from show_tickets st
       join show_orders so on so.order_no = st.order_no
       where st.ticket_type_id = tt.id
+        and st.showtime_id = ${showtimeId}
         and (
           st.status in ('issued','refunding')
           or (st.status = 'held' and (so.hold_expires_at is null or so.hold_expires_at > ${nowSec}))
