@@ -123,6 +123,11 @@ describe('race: 결제확인 vs 자동취소', () => {
     // 두 경로가 서로 다른 최종 상태를 주장하며 충돌하지 않는다 — paid거나 refunded 둘 중
     // 하나로 수렴한다. auto_cancel_pending에 멈춰 있거나 다른 상태로 남으면 실패.
     expect(['paid', 'refunded']).toContain(order?.status);
+    // 이 시나리오는 autoCancelShowApproval이 confirmShowOrder보다 먼저 완주하는 순서라
+    // (미리 심어 둔 payments 덕에 자동취소의 fetchPayment가 즉시 성공한다), 실제로는
+    // 항상 refunded로 수렴한다 — paid로 끝난다면 자동취소가 이겼다는 전제 자체가
+    // 깨진 것이므로 이 라운드는 그 사실도 함께 확인해 둔다.
+    expect(order?.status).toBe('refunded');
 
     const tickets = await db.query.showTickets.findMany({ where: (t: any, { eq }: any) => eq(t.orderNo, created.orderNo) });
     if (order?.status === 'refunded') {
@@ -147,18 +152,12 @@ describe('race: 결제확인 vs 자동취소', () => {
       expect(refundRows.length).toBe(0);
     }
 
-    // confirmShowOrder가 무엇을 보고했든(confirmed/already_confirmed/sold_out/error 중
-    // 하나), 그 값과 DB의 최종 상태가 서로 모순되지 않아야 한다 — "confirmed"라고 보고했는데
-    // 실제로는 refunded인 경우를 잡는다.
-    expect(confirmOutcome).toBeDefined();
-    if (confirmOutcome) {
-      if (confirmOutcome.status === 'confirmed') {
-        expect(order?.status).toBe('paid');
-      }
-      // sold_out/already_confirmed/error(recording_failed 등)는 order.status가 refunded여도
-      // 모순이 아니다 — "이 시도는 확정에 이르지 못했다"는 뜻이므로 위 paid/refunded 수렴
-      // 검증으로 충분하다.
-    }
+    // confirmShowOrder는 이 경합에서 졌다는 사실을 정직하게 보고해야 한다 — payments의
+    // payment_key UNIQUE 충돌 catch 분기가 "already_confirmed"(이미 paid, 손댈 것 없다)로
+    // 오분류하지 않고, 주문의 실제 현재 상태(refunded)를 다시 읽어 별도 코드로 구별하는지가
+    // 이 테스트의 핵심이다 — 수정 전에는 여기서 already_confirmed가 나와 호출부가 "결제
+    // 확인됨"으로 잘못 읽을 수 있었다.
+    expect(confirmOutcome).toEqual({ status: 'auto_cancel_conflict' });
   });
 
   test('반복 실행에도 매번 하나의 최종 상태로 수렴한다(N=5)', async () => {
@@ -187,19 +186,18 @@ describe('race: 결제확인 vs 자동취소', () => {
         }
       });
 
-      await expect(
-        confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss),
-      ).resolves.toBeDefined();
+      const confirmOutcome = await confirmShowOrder(
+        { orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 },
+        { trustedByWebhook: false },
+        toss,
+      );
+      expect(confirmOutcome).toEqual({ status: 'auto_cancel_conflict' });
 
       const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
-      expect(['paid', 'refunded']).toContain(order?.status);
+      expect(order?.status).toBe('refunded');
 
       const tickets = await db.query.showTickets.findMany({ where: (t: any, { eq }: any) => eq(t.orderNo, created.orderNo) });
-      if (order?.status === 'refunded') {
-        expect(tickets.every((t: any) => t.status !== 'issued')).toBe(true);
-      } else {
-        expect(tickets.every((t: any) => t.status === 'issued')).toBe(true);
-      }
+      expect(tickets.every((t: any) => t.status !== 'issued')).toBe(true);
 
       const paymentRows = await db.query.payments.findMany({ where: (p: any, { eq }: any) => eq(p.paymentKey, 'pk1') });
       expect(paymentRows.length).toBe(1);

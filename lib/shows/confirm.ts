@@ -15,6 +15,16 @@ export type ConfirmOutcome =
   | { status: 'already_confirmed' }
   | { status: 'declined'; code: string }
   | { status: 'sold_out' }
+  /**
+   * payments.payment_key UNIQUE 충돌로 batch가 실패했는데, 그 기존 행을 남긴 쪽이 이
+   * confirmShowOrder 실행이 아니라 autoCancelShowApproval이었던 경우. `already_confirmed`와
+   * 구별해야 하는 이유: `already_confirmed`는 "이 주문은 이미 paid다, 손댈 것 없다"는 뜻인데
+   * 여기서는 주문이 실제로 refunded로 끝났다 — 같은 라벨을 쓰면 호출부가 "결제 확인됨"으로
+   * 잘못 읽어 이미 환불된 주문의 티켓을 보여줄 수 있다(Task 15 race 테스트가 발견한 실제
+   * 경합 결과 — sold_out과 달리 orders UPDATE의 rowsAffected가 아니라 payments INSERT의
+   * UNIQUE 충돌로 드러나므로 별도 분기가 필요했다).
+   */
+  | { status: 'auto_cancel_conflict' }
   | { status: 'amount_mismatch' }
   | { status: 'error'; code: string };
 
@@ -208,7 +218,30 @@ export async function confirmShowOrder(
       });
     }
     if (existing) {
-      // 다른 실행이 이미 이 결제를 기록했다 — 재생으로 처리하고 다시 예외를 던지지 않는다.
+      // 다른 실행이 이미 이 paymentKey로 payments 행을 남겼다 — 하지만 그게 "진짜 재생"(다른
+      // confirmShowOrder 실행이 이겨서 주문이 paid)인지, "autoCancelShowApproval이 먼저 완주해
+      // 주문이 refunded로 끝났는데 그 행이 이 paymentKey를 선점한 것"인지는 payments 행의
+      // 존재만으로 알 수 없다 — 주문의 현재 상태를 다시 읽어야 가른다(Task 15 race 테스트가
+      // 실제로 후자를 재현해 이 구분 없이는 refunded 주문을 already_confirmed로 잘못
+      // 보고한다는 것을 확인했다).
+      let current: Order | undefined;
+      try {
+        current = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.id, order.id) });
+      } catch (statusLookupError) {
+        console.error('[shows-confirm] 경합 판정을 위한 주문 상태 재조회 실패', {
+          orderNo: input.orderNo,
+          paymentKey: approved.paymentKey,
+          error: statusLookupError,
+        });
+      }
+      if (current && current.status !== 'paid' && current.status !== 'partially_refunded') {
+        // 주문이 paid(또는 이미 그 위에서 부분환불이 시작된) 상태가 아니다 — 이 confirm
+        // 시도는 진짜 재생이 아니라 auto-cancel과의 경합에서 졌다. 호출부가 "결제
+        // 확인됨"으로 오독하지 않도록 별도 결과로 보고한다.
+        return { status: 'auto_cancel_conflict' };
+      }
+      // 주문이 paid/partially_refunded다 — 다른 confirmShowOrder 실행(또는 그 재생)이 이미
+      // 이 결제를 정상 기록했다는 뜻이다. 재생으로 처리하고 다시 예외를 던지지 않는다.
       return { status: 'already_confirmed' };
     }
     console.error('[shows-confirm] 결제 승인됨, DB 기록 실패 — 웹훅 복구 대기', {

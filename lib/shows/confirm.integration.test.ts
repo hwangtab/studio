@@ -149,21 +149,51 @@ describe('confirmShowOrder', () => {
     expect(tickets.every((t: any) => t.status === 'held')).toBe(true);
   });
 
-  it('동시 확정 경합으로 payment_key가 이미 기록돼 있으면 예외 대신 재생으로 처리된다', async () => {
+  it('동시 확정 경합으로 payment_key가 이미 기록돼 있고 주문이 paid면 예외 대신 재생으로 처리된다', async () => {
     const { db } = await createTestDb();
     (global as any).__testDb = db;
     const { showtimeId, ticketTypeId } = await seedShow(db);
     const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
     if (!created.ok) throw new Error('setup failed');
     const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
-    // 이미 다른 실행(경합에서 이긴 쪽)이 같은 paymentKey로 결제 기록을 남겨 뒀다고 가정한다 —
-    // payments.payment_key는 UNIQUE라 이 확정 시도의 INSERT는 제약 위반으로 실패해야 한다.
+    // 이미 다른 실행(경합에서 이긴 쪽)이 같은 paymentKey로 결제 기록을 남기고 주문을 paid로
+    // 전이시켜 뒀다고 가정한다 — payments.payment_key는 UNIQUE라 이 확정 시도의 INSERT는
+    // 제약 위반으로 실패해야 한다. 실제 이긴 쪽의 batch는 payments INSERT와 orders→paid
+    // 전이를 한 트랜잭션으로 커밋하므로(원자적), 이 픽스처도 두 문장을 함께 반영해야
+    // "payments 행은 있는데 주문은 아직 pending"인 있을 수 없는 부분 상태를 만들지 않는다
+    // (그런 부분 상태에서는 auto_cancel_conflict 분기가 잘못 타 이 테스트가 틀린 이유로
+    // 통과하게 된다).
     await db.run(sql`
       INSERT INTO payments (id, order_id, payment_key) VALUES ('existing-payment', ${order!.id}, 'pk1')
     `);
+    await db.run(sql`UPDATE orders SET status = 'paid' WHERE id = ${order!.id}`);
     const toss = createFakeToss();
     const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss);
     expect(outcome.status).toBe('already_confirmed');
+  });
+
+  it('payment_key가 이미 기록돼 있지만 주문이 paid가 아니면(auto-cancel이 먼저 이김) already_confirmed로 오보고하지 않는다', async () => {
+    const { db } = await createTestDb();
+    (global as any).__testDb = db;
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
+    const toss = createFakeToss();
+    // confirmShowOrder가 이 주문을 'pending'으로 이미 읽은 뒤(그래서 CONCLUDED_STATUSES
+    // 초반 판정을 통과한 뒤), toss.confirmPayment 응답 직전에 다른 실행(autoCancelShowApproval)이
+    // 이 paymentKey로 payments 행을 남기고 주문을 refunded로 끝냈다고 가정한다 — 미리 order를
+    // refunded로 세팅해 두면 CONCLUDED_STATUSES 판정에서 애초에 already_confirmed로 조기
+    // 반환돼 이 테스트가 노리는 catch 분기(payments INSERT의 UNIQUE 충돌)를 지나가 버리므로,
+    // 인터셉트 훅으로 "이미 통과한 뒤" 시점에 상태를 바꾼다.
+    toss.setInterceptHook(async () => {
+      await db.run(sql`
+        INSERT INTO payments (id, order_id, payment_key) VALUES ('existing-payment', ${order!.id}, 'pk1')
+      `);
+      await db.run(sql`UPDATE orders SET status = 'refunded' WHERE id = ${order!.id}`);
+    });
+    const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss);
+    expect(outcome.status).toBe('auto_cancel_conflict');
   });
 });
 
