@@ -35,7 +35,12 @@ export default function PublicNameChoice({ customerName, style, nickname, onStyl
   return (
     <div className="mt-3 rounded-xl bg-white/80 p-4 dark:bg-gray-900/50">
       <p id={`${uid}-label`} className="text-sm font-medium text-gray-900 dark:text-white">명단에 표시할 이름</p>
-      <div role="radiogroup" aria-labelledby={`${uid}-label`} className="mt-2 flex flex-wrap gap-2">
+      {/* flex-wrap이었을 때는 줄바꿈 지점이 이름 길이·화면 너비 조합에 따라 매번 달라졌다
+          (2줄+1줄 / 3칸 한 줄 / 칸마다 2줄로 접힘이 뒤섞여 나타났다, 2026-09-30 지적 —
+          "모바일에서 해상도에 따라 UI 요소 배열이 뒤바뀌는 증상"). grid로 바꿔 모바일은
+          항상 한 칸씩 쌓고(sm 미만), sm 이상에서만 3칸 한 줄로 — 어느 폭에서나 배열이
+          고정된다. 칸이 전체 폭을 쓰므로 "실명 (긴 이름)"도 한 줄에 들어간다. */}
+      <div role="radiogroup" aria-labelledby={`${uid}-label`} className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
         <label className={optionClass}>
           <input type="radio" name={`${uid}-style`} className="h-4 w-4 accent-primary" checked={style === 'real'} disabled={disabled} onChange={() => onStyleChange('real')} />
           실명{name ? ` (${name})` : ''}
