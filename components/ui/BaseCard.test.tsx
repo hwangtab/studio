@@ -3,9 +3,9 @@ import BaseCard from './BaseCard';
 
 // jsdom은 PointerEvent를 전역에 정의하지 않는다(실제 브라우저는 전부 지원 —
 // BaseCard가 이미 onPointerEnter/onPointerMove로 의존하고 있다). 테스트 환경에만 필요.
-const globalWithPointerEvent = globalThis as typeof globalThis & { PointerEvent?: typeof MouseEvent };
+const globalWithPointerEvent = globalThis as typeof globalThis & { PointerEvent?: typeof PointerEvent };
 if (typeof globalWithPointerEvent.PointerEvent === 'undefined') {
-  globalWithPointerEvent.PointerEvent = MouseEvent;
+  globalWithPointerEvent.PointerEvent = MouseEvent as unknown as typeof PointerEvent;
 }
 
 describe('BaseCard', () => {
