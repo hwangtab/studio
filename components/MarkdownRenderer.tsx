@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { locales, type Locale } from '../lib/i18n';
 import OnlineFallback from './story/OnlineFallback';
 import SessionChecklist from './story/SessionChecklist';
+import FundingGallery from './funding/FundingGallery';
 import FundingLineupPerson from './funding/FundingLineupPerson';
 import StudioMore from './story/StudioMore';
 import StudioServices from './story/StudioServices';
@@ -410,6 +411,7 @@ const MarkdownRenderer = ({ content, locale = 'ko', currentSlug }: MarkdownRende
       if (segment.name === 'practice-room-terms') return <PracticeRoomTerms key={index} locale={currentLocale} />;
       // 펀딩 출연진 카드. id가 없거나 모르는 값이면 컴포넌트 쪽에서 null을 반환한다.
       if (segment.name === 'funding-lineup') return segment.arg ? <FundingLineupPerson key={index} id={segment.arg} /> : null;
+      if (segment.name === 'funding-gallery') return segment.arg ? <FundingGallery key={index} id={segment.arg} /> : null;
 
       // 4종 inline directive — max 2 enforce (초과는 silent drop)
       if (isInlineDirectiveName(segment.name)) {
