@@ -365,6 +365,10 @@ code {
 .markdown-content .max-w-none > p {
   margin: 0 0 1.25em;
 }
+.markdown-content blockquote {
+  /* 렌더러의 blockquote 오버라이드도 적용되지 않아 여백이 없었다. 인용 뒤 본문이 붙지 않게 단락과 같은 간격을 준다. */
+  margin: 0 0 1.25em;
+}
 .markdown-content blockquote > p {
   margin: 0 0 0.75em;
 }
