@@ -1,4 +1,5 @@
 import ResponsiveImage from '../ResponsiveImage';
+import BaseCard from '../ui/BaseCard';
 
 interface LineupPerson {
   name: string;
@@ -19,6 +20,10 @@ interface LineupPerson {
  *
  * 데이터는 이 파일 안에 둔다 — 지금은 mok-jareugi 7명뿐이지만, 다음 펀딩 프로젝트도 같은
  * 표에 `<slug>-<사람>` 키로 추가하면 재사용된다.
+ *
+ * 카드 재질은 `BaseCard variant="glass"` — 옆 리워드 카드들과 같은 유리 재질을 써야
+ * 나란히 놓였을 때 이 카드만 평평해 보이지 않는다(운영자 지적 2026-09-30, 손으로 만든
+ * 박스로 한 번 냈다가 다시 고쳤다).
  */
 const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   'mok-jareugi-yangchaae': {
@@ -64,7 +69,10 @@ export default function FundingLineupPerson({ id }: { id: string }) {
   if (!person) return null;
 
   return (
-    <div className="my-3 flex items-start gap-4 rounded-xl bg-white/80 p-4 dark:bg-gray-900/50">
+    // 나머지 펀딩 카드(RewardCard 등)와 같은 유리 재질(BaseCard variant="glass")을 쓴다.
+    // 손으로 만든 bg-white/80 박스로는 스펙큘러 하이라이트·hover 리프트가 안 붙어 옆
+    // 리워드 카드들과 나란히 두면 이 카드만 평평해 보였다(운영자 지적 2026-09-30).
+    <BaseCard variant="glass" className="my-3 flex items-start gap-4 p-4">
       <div className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20">
         <div className="absolute inset-0 overflow-hidden rounded-full">
           <ResponsiveImage
@@ -85,6 +93,6 @@ export default function FundingLineupPerson({ id }: { id: string }) {
         <p className="break-keep text-lg font-bold leading-snug text-gray-900 dark:text-white">{person.name}</p>
         <p className="mt-1 break-keep text-sm leading-relaxed text-gray-600 dark:text-gray-300">{person.bio}</p>
       </div>
-    </div>
+    </BaseCard>
   );
 }
