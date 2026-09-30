@@ -90,28 +90,67 @@ export async function confirmShowOrder(
     sql`, `,
   );
 
-  const batchResults = await db.batch([
-    db.run(sql`
-      INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
-      VALUES (
-        ${randomUUID().replace(/-/g, '')},
-        ${order.id},
-        ${approved.paymentKey},
-        ${approved.method ?? null},
-        ${approvedAtSec},
-        ${approved.receipt?.url ?? null},
-        ${JSON.stringify(approved)}
-      )
-    `),
-    db.run(sql`
-      UPDATE orders SET status = 'paid', updated_at = unixepoch()
-      WHERE id = ${order.id} AND status IN (${statusList})
-    `),
-    db.run(sql`
-      UPDATE show_tickets SET status = 'issued'
-      WHERE order_no = ${input.orderNo} AND status = 'held'
-    `),
-  ] as [any, any, any]);
+  let batchResults: unknown[];
+  try {
+    // payments INSERT가 맨 앞 — payment_key unique 위반이 동시 확정(중복 웹훅 도착, 또는
+    // 이 실행과 경합하는 다른 실행)의 두 번째 시도를 batch 전체 실패로 만든다(절반만
+    // 쓰인 상태가 남지 않는다). lib/booking/confirm.ts:593-663과 같은 이유·같은 위치다.
+    batchResults = await db.batch([
+      db.run(sql`
+        INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
+        VALUES (
+          ${randomUUID().replace(/-/g, '')},
+          ${order.id},
+          ${approved.paymentKey},
+          ${approved.method ?? null},
+          ${approvedAtSec},
+          ${approved.receipt?.url ?? null},
+          ${JSON.stringify(approved)}
+        )
+      `),
+      db.run(sql`
+        UPDATE orders SET status = 'paid', updated_at = unixepoch()
+        WHERE id = ${order.id} AND status IN (${statusList})
+      `),
+      // 하위 전이(show_tickets)는 **주문이 실제로 paid가 됐을 때만** 한다(lib/booking/confirm.ts:
+      // 618-636과 같은 EXISTS 가드). batch는 한 트랜잭션이라 바로 위 UPDATE의 결과를 여기서
+      // 읽을 수 있다 — 이 가드가 없으면, orders 전이가 0행이 되는 경합(다른 실행이 먼저
+      // auto_cancel_pending으로 붙잡은 경우 등)에서도 이 시점의 티켓은 아직 'held'라서
+      // WHERE order_no=? AND status='held'가 그대로 매치돼 orders는 paid가 아닌데 티켓만
+      // issued로 바뀐다 — 곧 refunded될 주문의 티켓이 발권된 것처럼 보이는 유령 발권이다.
+      db.run(sql`
+        UPDATE show_tickets SET status = 'issued'
+        WHERE order_no = ${input.orderNo} AND status = 'held'
+          AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')
+      `),
+    ] as [any, any, any]);
+  } catch (error) {
+    // 토스 승인은 이미 끝났다 — 이 실패가 "동시 확정에서 다른 쪽이 이겼다"(멱등, payment_key
+    // unique 위반)인지 "진짜 DB 장애"인지는 payments에 이 paymentKey가 이미 있는지로 가른다
+    // (lib/booking/confirm.ts:638-663과 동일 판정).
+    let existing: unknown;
+    try {
+      existing = await db.query.payments.findFirst({
+        where: (t, { eq }) => eq(t.paymentKey, approved.paymentKey),
+      });
+    } catch (lookupError) {
+      console.error('[shows-confirm] 멱등 판정 조회 실패', {
+        orderNo: input.orderNo,
+        paymentKey: approved.paymentKey,
+        error: lookupError,
+      });
+    }
+    if (existing) {
+      // 다른 실행이 이미 이 결제를 기록했다 — 재생으로 처리하고 다시 예외를 던지지 않는다.
+      return { status: 'already_confirmed' };
+    }
+    console.error('[shows-confirm] 결제 승인됨, DB 기록 실패 — 웹훅 복구 대기', {
+      orderNo: input.orderNo,
+      paymentKey: approved.paymentKey,
+      error,
+    });
+    return { status: 'error', code: 'recording_failed' };
+  }
 
   // orders 전이가 0행 — 승인 왕복 사이에 이 주문이 acceptableStatuses를 벗어났다(다른 실행이
   // 먼저 처리했거나 auto_cancel_pending으로 붙잡혔거나). booking 모듈은 이 경우 전액 자동
@@ -139,6 +178,17 @@ export async function confirmShowOrder(
  *
  * `entry_number IS NULL`인 티켓만 배정 대상으로 삼는다 — 이미 번호가 있는 티켓(멱등 재생으로
  * 이 함수가 다시 불려도)을 건드리지 않아야, 재실행이 같은 회차에 중복 번호를 매기지 않는다.
+ *
+ * **티켓 한 장씩 원자적으로 배정한다** — `SELECT MAX(entry_number)`를 먼저 읽고 그 값 +1을
+ * 순서대로 UPDATE에 흘려보내면, 같은 회차의 서로 다른 두 주문이 동시에 확정될 때(고객 둘이
+ * 거의 동시에 결제하는 흔한 경우이지 예외적 경합이 아니다) 둘 다 같은 MAX를 읽어 같은 정리
+ * 번호를 배정할 수 있다. 그래서 UPDATE 자신의 서브쿼리 안에서 `MAX(entry_number)+1`을
+ * 계산한다 — 서브쿼리는 그 UPDATE가 실제로 커밋되는 순간의 값을 보므로, SQLite의 단일
+ * writer 직렬화가 두 동시 실행을 자동으로 순서대로 세워 준다(이 계획 전체에서 쓰는 "조건부
+ * INSERT/UPDATE로 원자성을 얻는다"는 패턴과 같은 원리). 티켓마다 별도 문장으로 실행해야
+ * 한 번의 UPDATE가 커밋된 뒤 다음 UPDATE의 서브쿼리가 그 값을 반영한다 — 여러 티켓을
+ * 하나의 batch(=하나의 트랜잭션)에 넣으면 그 안에서는 아직 서로의 커밋을 볼 수 없어
+ * 같은 문제가 재발한다.
  */
 async function assignEntryNumbers(orderNo: string): Promise<void> {
   const db = getDb();
@@ -147,23 +197,28 @@ async function assignEntryNumbers(orderNo: string): Promise<void> {
   if (unassigned.length === 0) return;
 
   const showtimeId = unassigned[0].showtimeId;
-  // 이 회차의 show_tickets 행은 이미 이 함수 호출 이전에 존재가 보장된다(위에서 찾은 티켓
-  // 자신이 그 행이다) — 그래서 GROUP 없는 집계 쿼리가 항상 정확히 한 행을 돌려주고,
-  // db.get(sql...)이 0행에서 던지는 함정(lib/shows/conditions.test.ts 주석 참고)에 걸리지 않는다.
-  const maxRow = (await db.get(sql`SELECT MAX(entry_number) AS m FROM show_tickets WHERE showtime_id = ${showtimeId}`)) as
-    | { m: number | null }
-    | undefined;
-  let next = (maxRow?.m ?? 0) + 1;
   for (const t of unassigned) {
-    await db.run(sql`UPDATE show_tickets SET entry_number = ${next} WHERE id = ${t.id}`);
-    next++;
+    await db.run(sql`
+      UPDATE show_tickets
+      SET entry_number = (SELECT COALESCE(MAX(entry_number), 0) + 1 FROM show_tickets WHERE showtime_id = ${showtimeId})
+      WHERE id = ${t.id} AND entry_number IS NULL
+    `);
   }
 }
 
 export type AutoCancelOutcome =
   | { status: 'cancelled' }
   | { status: 'not_eligible' }
-  | { status: 'pending_retry' };
+  | { status: 'pending_retry' }
+  /**
+   * 토스 취소는 성공했는데(돈은 이미 돌아갔다) 우리 원장 기록(payments/refunds/orders/
+   * show_tickets 전이)이 실패한 경우. `pending_retry`와 달리 **재시도해서는 안 된다** —
+   * 재시도하려면 claim을 되돌려 order.status를 claimableStatuses로 되돌려야 하는데, 그러면
+   * 다음 실행이 이 주문을 또 붙잡아 **이미 취소된 결제를 다시 취소**하려 든다(토스 멱등키가
+   * 있어 두 번째 호출 자체는 안전하지만, 우리 쪽 기록은 여전히 없다 — 문제가 재발할 뿐이다).
+   * 그래서 이 결과는 사람이 직접 봐야 하는 영구 실패다(healthCheck·수동 대사 대상).
+   */
+  | { status: 'ledger_write_failed' };
 
 /** 자동 전액 취소 사유 — refunds.reason(NOT NULL)과 토스 cancelReason에 함께 쓴다. */
 const AUTO_CANCEL_REASON = '주문 만료 후 승인 — 자동 전액 취소';
@@ -241,36 +296,51 @@ export async function autoCancelShowApproval(
   const approvedAtSec = cancelledPayment.approvedAt ? Math.floor(new Date(cancelledPayment.approvedAt).getTime() / 1000) : null;
   const nowSec = Math.floor(Date.now() / 1000);
 
-  await db.batch([
-    // 이 주문은 confirmShowOrder를 거친 적이 없으므로 payments 행이 아직 없다 — 여기서
-    // 처음이자 마지막으로 남긴다(승인·취소가 함께 있었다는 사실 자체를 기록으로 남긴다).
-    db.run(sql`
-      INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
-      VALUES (
-        ${paymentId}, ${order.id}, ${cancelledPayment.paymentKey}, ${cancelledPayment.method ?? null},
-        ${approvedAtSec}, ${cancelledPayment.receipt?.url ?? null}, ${JSON.stringify(cancelledPayment)}
-      )
-    `),
-    db.run(sql`
-      INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
-      VALUES (
-        ${randomUUID().replace(/-/g, '')}, ${paymentId}, ${approved.totalAmount}, ${AUTO_CANCEL_REASON},
-        'admin', ${transactionKey}, 'done'
-      )
-    `),
-    db.run(sql`
-      UPDATE orders SET status = 'refunded', updated_at = unixepoch()
-      WHERE id = ${order.id} AND status = 'auto_cancel_pending'
-    `),
-    db.run(sql`
-      UPDATE show_tickets SET status = 'void'
-      WHERE order_no = ${orderNo} AND status = 'held'
-    `),
-    db.run(sql`
-      UPDATE show_orders SET auto_cancelled_at = ${nowSec}
-      WHERE order_no = ${orderNo}
-    `),
-  ] as [any, any, any, any, any]);
+  try {
+    await db.batch([
+      // 이 주문은 confirmShowOrder를 거친 적이 없으므로 payments 행이 아직 없다 — 여기서
+      // 처음이자 마지막으로 남긴다(승인·취소가 함께 있었다는 사실 자체를 기록으로 남긴다).
+      db.run(sql`
+        INSERT INTO payments (id, order_id, payment_key, method, approved_at, receipt_url, raw_response)
+        VALUES (
+          ${paymentId}, ${order.id}, ${cancelledPayment.paymentKey}, ${cancelledPayment.method ?? null},
+          ${approvedAtSec}, ${cancelledPayment.receipt?.url ?? null}, ${JSON.stringify(cancelledPayment)}
+        )
+      `),
+      db.run(sql`
+        INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
+        VALUES (
+          ${randomUUID().replace(/-/g, '')}, ${paymentId}, ${approved.totalAmount}, ${AUTO_CANCEL_REASON},
+          'admin', ${transactionKey}, 'done'
+        )
+      `),
+      db.run(sql`
+        UPDATE orders SET status = 'refunded', updated_at = unixepoch()
+        WHERE id = ${order.id} AND status = 'auto_cancel_pending'
+      `),
+      db.run(sql`
+        UPDATE show_tickets SET status = 'void'
+        WHERE order_no = ${orderNo} AND status = 'held'
+      `),
+      db.run(sql`
+        UPDATE show_orders SET auto_cancelled_at = ${nowSec}
+        WHERE order_no = ${orderNo}
+      `),
+    ] as [any, any, any, any, any]);
+  } catch (error) {
+    // 토스 취소는 이미 끝났다(돈은 돌아갔다) — 여기서 claim을 되돌리면 안 된다. 되돌리면
+    // order.status가 다시 claimableStatuses로 들어가 다음 크론 실행이 이 주문을 또 붙잡아
+    // 토스에 두 번째 취소를 요청한다(멱등키 덕분에 그 호출 자체는 안전하지만, 우리 원장에는
+    // 여전히 기록이 없어 이 실패가 그대로 반복된다). 대신 영구 실패로 끝내고 사람이 보게 한다.
+    console.error('[shows-confirm] 토스 취소는 성공했으나 원장 기록 실패 — 수동 대사 필요(claim을 되돌리지 않음)', {
+      orderNo,
+      paymentKey: cancelledPayment.paymentKey,
+      transactionKey,
+      amount: approved.totalAmount,
+      error,
+    });
+    return { status: 'ledger_write_failed' };
+  }
 
   return { status: 'cancelled' };
 }
