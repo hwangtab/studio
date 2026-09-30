@@ -102,7 +102,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'scroll-mt-24 font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-6',
+          'scroll-mt-24 font-title text-3xl md:text-4xl font-bold leading-tight mt-12 mb-4',
           className
         )}
       >
@@ -116,7 +116,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'scroll-mt-24 font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-5 text-gray-900 dark:text-white',
+          'scroll-mt-24 font-title text-2xl md:text-3xl font-semibold leading-snug mt-10 mb-4 text-gray-900 dark:text-white',
           className
         )}
       >
@@ -130,7 +130,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'scroll-mt-24 text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-4 text-gray-900 dark:text-white',
+          'scroll-mt-24 text-xl md:text-2xl font-semibold leading-relaxed mt-8 mb-3 text-gray-900 dark:text-white',
           className
         )}
       >
@@ -144,7 +144,7 @@ const STATIC_OVERRIDES = {
         id={toHeadingId(children)}
         {...rest}
         className={mergeClassNames(
-          'scroll-mt-24 text-xl font-medium mt-6 mb-3 text-gray-900 dark:text-white',
+          'scroll-mt-24 text-xl font-medium mt-6 mb-2 text-gray-900 dark:text-white',
           className
         )}
       >
