@@ -82,3 +82,24 @@ describe('expireStaleShowOrders', () => {
     }
   });
 });
+
+describe('showOrders relation metadata', () => {
+  it('showOrders.tickets 관계 쿼리가 성공한다', async () => {
+    const t = await createTestDb();
+    const db = t.db;
+    testDb = db;
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const result = await createShowOrder({ showtimeId, ticketTypeId, quantity: 2, buyerName: 'test', buyerContact: '010' }, new Date());
+    expect(result.ok).toBe(true);
+    if (result.ok) {
+      // Verify that db.query.showOrders.findFirst with { with: { tickets: true } } does not throw
+      const order = await db.query.showOrders.findFirst({
+        where: (so, { eq }) => eq(so.orderNo, result.orderNo),
+        with: { tickets: true },
+      });
+      expect(order).toBeDefined();
+      expect(order?.tickets).toBeDefined();
+      expect(order?.tickets?.length).toBe(2);
+    }
+  });
+});

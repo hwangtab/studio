@@ -1602,4 +1602,5 @@ export const showTicketsRelations = relations(showTickets, ({ one }) => ({
   order: one(orders, { fields: [showTickets.orderNo], references: [orders.orderNo] }),
   showtime: one(showtimes, { fields: [showTickets.showtimeId], references: [showtimes.id] }),
   ticketType: one(showTicketTypes, { fields: [showTickets.ticketTypeId], references: [showTicketTypes.id] }),
+  showOrder: one(showOrders, { fields: [showTickets.orderNo], references: [showOrders.orderNo] }),
 }));
