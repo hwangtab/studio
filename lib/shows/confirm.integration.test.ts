@@ -60,7 +60,7 @@ describe('confirmShowOrder', () => {
     expect(second.status).toBe('already_confirmed');
   });
 
-  it('토스 확정이 NETWORK_ERROR면 실패로 낙인찍지 않는다', async () => {
+  it('토스 확정이 NETWORK_ERROR면 실패로 낙인찍지 않고 재시도 가치가 있는 코드(toss_unresolved)로 정규화한다', async () => {
     const { db } = await createTestDb();
     (global as any).__testDb = db;
     const { showtimeId, ticketTypeId } = await seedShow(db);
@@ -69,9 +69,51 @@ describe('confirmShowOrder', () => {
     const toss = createFakeToss();
     toss.injectFault(`confirm:pk1`, { code: 'NETWORK_ERROR' });
     const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: false }, toss);
-    expect(outcome.status).toBe('error');
+    expect(outcome).toEqual({ status: 'error', code: 'toss_unresolved' });
     const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
-    expect(order?.status).toBe('pending'); // failed로 바뀌지 않아야 한다
+    expect(order?.status).toBe('pending'); // failed로 바뀌지 않아야 한다 — 재시도(웹훅 500)가 다시 확인한다
+  });
+
+  it('ALREADY_PROCESSED_PAYMENT + 재조회 성공 — 정상 확정과 같은 경로로 기록한다(paid/issued)', async () => {
+    // 토스는 이미 이 결제를 승인했는데(예: 첫 confirmPayment 응답을 우리가 못 받고 재시도한
+    // 경우) 우리 DB만 뒤처진 상황을 재현한다. confirmPayment는 ALREADY_PROCESSED_PAYMENT로
+    // 거절하지만, fetchPayment는 실제 승인 사실(DONE + 우리 주문·금액과 일치)을 돌려준다.
+    const { db } = await createTestDb();
+    (global as any).__testDb = db;
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 2, buyerName: 'a', buyerContact: '010' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    const toss = createFakeToss();
+    toss.injectFault('confirm:pk1', { code: 'ALREADY_PROCESSED_PAYMENT' });
+    // 재조회가 성공하도록 fakeToss의 내부 결제 저장소에 "토스 쪽엔 이미 있는" 결제를 심어 둔다.
+    toss._payments.set('pk1', {
+      paymentKey: 'pk1', orderId: created.orderNo, status: 'DONE', totalAmount: 20000,
+      approvedAt: new Date().toISOString(), cancels: [],
+    });
+    const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 20000 }, { trustedByWebhook: true }, toss);
+    expect(outcome.status).toBe('confirmed');
+    const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
+    expect(order?.status).toBe('paid');
+    const tickets = await db.query.showTickets.findMany({ where: (t: any, { eq }: any) => eq(t.orderNo, created.orderNo) });
+    expect(tickets.every((t: any) => t.status === 'issued')).toBe(true);
+  });
+
+  it('ALREADY_PROCESSED_PAYMENT인데 재조회를 못 찾으면(불일치) 최종이 아니라 재시도 대상(toss_unresolved)으로 끝나고 주문은 건드리지 않는다', async () => {
+    const { db } = await createTestDb();
+    (global as any).__testDb = db;
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const created = await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());
+    if (!created.ok) throw new Error('setup failed');
+    const toss = createFakeToss();
+    toss.injectFault('confirm:pk1', { code: 'ALREADY_PROCESSED_PAYMENT' });
+    // fetchPayment가 아무것도 못 찾는 경우(fakeToss._payments를 비워 둔다) — "실제로 뭐가
+    // 승인됐는지조차 확인 못 한" 상태다. 최종 결론(예: declined)으로 낙인하지 않는다.
+    const outcome = await confirmShowOrder({ orderNo: created.orderNo, paymentKey: 'pk1', amount: 10000 }, { trustedByWebhook: true }, toss);
+    expect(outcome).toEqual({ status: 'error', code: 'toss_unresolved' });
+    const order = await db.query.orders.findFirst({ where: (o: any, { eq }: any) => eq(o.orderNo, created.orderNo) });
+    expect(order?.status).toBe('pending'); // 건드리지 않았다 — 재시도가 다시 판정한다
+    const tickets = await db.query.showTickets.findMany({ where: (t: any, { eq }: any) => eq(t.orderNo, created.orderNo) });
+    expect(tickets.every((t: any) => t.status === 'held')).toBe(true); // 티켓도 그대로 held
   });
 
   it('확정 거절 코드면 failed로 기록된다', async () => {

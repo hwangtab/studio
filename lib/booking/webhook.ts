@@ -209,25 +209,25 @@ const isTransientConfirmFailure = (
  * (booking/funding은 `{ok:false, code}` 유니온, shows는 `{status:'error', code}` 하나로
  * declined·sold_out·amount_mismatch 같은 최종 결론과 `error`를 status 레벨에서 이미 가른다).
  *
- * `recording_failed`만 재시도한다 — lib/shows/confirm.ts에서 이 코드가 나오는 유일한 경로는
- * batch(payments INSERT + orders 전이) 실패 후 멱등 판정(payment_key로 기존 결제 재조회)
- * 마저 실패하거나 "아직 없다"로 나온 경우다. 토스 승인은 이미 끝났는데 우리가 그 사실을
- * 기록했는지조차 모르는 상태이므로, 재시도해 다시 확인해야 한다 — booking/funding의
- * `recording_failed`와 정확히 같은 뜻이다.
+ * 재시도 대상은 두 코드뿐이다.
+ * - `recording_failed` — batch(payments INSERT + orders 전이) 실패 후 멱등 판정(payment_key로
+ *   기존 결제 재조회)마저 실패하거나 "아직 없다"로 나온 경우. 토스 승인은 이미 끝났는데 우리가
+ *   그 사실을 기록했는지조차 모르는 상태다 — booking/funding의 `recording_failed`와 같은 뜻이다.
+ * - `toss_unresolved` — lib/shows/confirm.ts의 TOSS_UNRESOLVED_CODE. confirmPayment 호출이
+ *   거절이 아닌 이유로 결론을 못 낸 경우 전부(NETWORK_ERROR·CONFIG_ERROR로 응답을 못 받은 경우,
+ *   그리고 ALREADY_PROCESSED_PAYMENT 재조회가 실패하거나 검증에 실패한 경우)가 이 코드 하나로
+ *   수렴한다 — booking의 `toss_rejected`와 같은 자리다. 예전엔 이 경로가 raw 토스 코드를
+ *   그대로 돌려줘서 여기서 재시도되지 않았는데, confirmShowOrder에 booking과 같은
+ *   ALREADY_PROCESSED_PAYMENT 재조회 분기가 없던 시절엔 그게 의도였다(재조회 없이 재시도하면
+ *   같은 코드로 무한히 실패할 뿐이었다). 그 분기가 생긴 지금은 재시도해야 한다 — 안 하면
+ *   "토스에서는 승인됐는데 우리 쪽 주문이 pending에 영원히 남는" 사고가 그대로 남는다.
  *
  * `not_found`(주문 부재)·`invalid_status`(주문이 확정 가능 상태를 벗어남)는 몇 번을 다시
  * 보내도 같은 답이 나오는 영구 상태다. `declined`·`sold_out`·`amount_mismatch`는 status
  * 자체가 `error`가 아니라 이미 최종 결론이 난 것이라 이 판정에 들어오지도 않는다.
- *
- * confirmPayment 호출 자체가 거절 패턴 밖의 코드(NETWORK_ERROR·CONFIG_ERROR 등)로 실패했을
- * 때도 `{status:'error', code: result.code}`로 떨어지는데, 이 코드는 여기서 재시도 대상에
- * 넣지 않는다 — booking의 동일 실패는 `toss_rejected`로 낙인되어 재시도되지만, 그 재시도가
- * 의미 있는 것은 confirmBookingPayment가 `ALREADY_PROCESSED_PAYMENT`를 재조회로 풀어내는
- * 경로를 갖고 있기 때문이다(lib/booking/confirm.ts:522-550). confirmShowOrder는 그 경로를
- * 아직 이식하지 않았다 — 재시도해도 같은 코드로 또 실패할 뿐인 무한 루프가 될 수 있어,
- * 이 코드까지 재시도로 넓히는 것은 lib/shows/confirm.ts에 그 재조회 경로가 생긴 뒤로 미룬다.
  */
-const isTransientShowConfirmFailure = (code: string): boolean => code === 'recording_failed';
+const isTransientShowConfirmFailure = (code: string): boolean =>
+  code === 'recording_failed' || code === 'toss_unresolved';
 
 /** unique 위반(PK 충돌 = 이미 처리한 이벤트)인지, 그 외 DB 장애인지를 가른다. */
 const isUniqueViolation = (error: unknown): boolean => {

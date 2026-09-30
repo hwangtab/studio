@@ -5,6 +5,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import type { Order } from '../../db/schema';
 import { refundIdempotencyKey } from '../booking/cancel';
+import type { TossPayment } from '../booking/toss';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import { rowsAffectedOf } from './service';
 import { DECLINE_CODE_PATTERN } from './tossCodes';
@@ -19,6 +20,33 @@ export type ConfirmOutcome =
 
 /** 이미 결론이 난 주문 — 재확인 요청은 재생(replay)으로 처리하고 다시 승인을 부르지 않는다. */
 const CONCLUDED_STATUSES: ReadonlyArray<Order['status']> = ['paid', 'partially_refunded', 'refunded'];
+
+/** 토스가 "이미 승인된 결제"에 재승인을 요청받았을 때 돌려주는 코드. 실패가 아니라 지연 신호다.
+ * lib/booking/confirm.ts·lib/funding/confirm.ts와 같은 이유로 의도적으로 복제해 둔다(두 모듈의
+ * import 그래프를 shows와 섞지 않기 위해). */
+const ALREADY_PROCESSED_CODE = 'ALREADY_PROCESSED_PAYMENT';
+
+/**
+ * `confirmPayment` 호출이 "거절이 아닌" 이유로 결론을 내지 못했을 때 공통으로 쓰는 코드.
+ *
+ * booking(`lib/booking/confirm.ts`)의 `toss_rejected`와 같은 자리다 — 이름을 다르게 지은
+ * 이유는 이 코드가 "토스가 거절했다"가 아니라 "토스에 물어봤는데 확답을 못 받았다"는 뜻이라서다
+ * (NETWORK_ERROR·CONFIG_ERROR로 응답 자체를 못 받은 경우, 그리고 ALREADY_PROCESSED_PAYMENT
+ * 재조회가 실패하거나 검증에 실패해 "그때 실제로 뭐가 승인됐는지 모르는" 경우가 전부 여기
+ * 모인다). booking이 이 전부를 한 코드로 묶는 것과 정확히 같은 이유로 여기서도 한 코드로
+ * 묶는다 — `isTransientShowConfirmFailure`(lib/booking/webhook.ts)가 이 코드 하나만 보고
+ * "재시도할 가치가 있다"고 판단하려면, 재시도로 회복 가능한 실패가 전부 이 코드로 수렴해야
+ * 한다. 흩어져 있으면(raw NETWORK_ERROR/CONFIG_ERROR/ALREADY_PROCESSED_PAYMENT 문자열을
+ * 그대로 돌려주면) 웹훅이 그중 일부만 재시도하고 나머지는 200으로 끝내 버려, "토스에서는
+ * 승인됐는데 우리 쪽엔 영원히 기록되지 않는" 상태가 남는다 — 이 계획의 전역 제약이 명시적으로
+ * 경계하는 실패 형태다.
+ *
+ * DECLINE_CODE_PATTERN에 걸리는 코드(`declined`)와 `not_found`·`invalid_status`·
+ * `amount_mismatch`·`recording_failed`는 이 코드로 묶지 않는다 — 전부 "재시도해도 같은 답이
+ * 나오는" 별개의 최종 결론이거나(전자 넷), "우리 쪽 기록 여부를 모른다"는 다른 종류의 불확실성
+ * (recording_failed, batch 실패 후 멱등 조회까지 실패한 경우)이다.
+ */
+const TOSS_UNRESOLVED_CODE = 'toss_unresolved';
 
 /**
  * 토스 결제 승인 확인 + 티켓 발급.
@@ -69,21 +97,60 @@ export async function confirmShowOrder(
   }
 
   const result = await toss.confirmPayment({ paymentKey: input.paymentKey, orderId: input.orderNo, amount: input.amount });
-  if (!result.ok) {
+
+  let approved: TossPayment;
+  if (result.ok) {
+    approved = result.payment;
+  } else if (DECLINE_CODE_PATTERN.test(result.code)) {
     // DECLINE_CODE_PATTERN(allowlist)에 걸릴 때만 failed로 낙인한다 — NETWORK_ERROR·
     // CONFIG_ERROR 같은 "물어보지도 못한" 오류는 주문 상태를 건드리지 않는다(booking과 동일
     // 원칙 — 과소 낙인은 스스로 치유되지만 과대 낙인은 아니다).
-    if (DECLINE_CODE_PATTERN.test(result.code)) {
-      await db.run(sql`
-        UPDATE orders SET status = 'failed', updated_at = unixepoch()
-        WHERE id = ${order.id} AND status = 'pending'
-      `);
-      return { status: 'declined', code: result.code };
+    await db.run(sql`
+      UPDATE orders SET status = 'failed', updated_at = unixepoch()
+      WHERE id = ${order.id} AND status = 'pending'
+    `);
+    return { status: 'declined', code: result.code };
+  } else if (result.code === ALREADY_PROCESSED_CODE) {
+    // 토스는 이미 승인된 결제의 재승인을 거절한다 — "실패"가 아니라 "우리 DB만 뒤처졌다"는
+    // 신호다(lib/booking/confirm.ts의 동일 분기와 같은 뜻). 재조회로 실제 승인 사실을 확인한
+    // 뒤 정상 승인과 같은 경로(위 if(result.ok) 분기와 합류)로 기록한다 — 별도 분기로 두지
+    // 않는다.
+    const refetched = await toss.fetchPayment(input.paymentKey);
+    if (!refetched.ok) {
+      console.error('[shows-confirm] 이미 처리된 결제의 재조회 실패 — 판정 보류(재시도 대상)', {
+        orderNo: input.orderNo,
+        paymentKey: input.paymentKey,
+        code: refetched.code,
+        message: refetched.message,
+      });
+      return { status: 'error', code: TOSS_UNRESOLVED_CODE };
     }
-    return { status: 'error', code: result.code };
+    // 페이로드가 아니라 재조회 결과만 믿는다 — 주문번호·금액·상태 셋 다 우리 주문과 맞아야 한다.
+    const payment = refetched.payment;
+    if (payment.status !== 'DONE' || payment.orderId !== order.orderNo || payment.totalAmount !== order.totalAmount) {
+      console.error('[shows-confirm] 이미 처리된 결제의 재조회 검증 불일치 — 기록하지 않는다(재시도 대상)', {
+        orderNo: input.orderNo,
+        paymentKey: input.paymentKey,
+        status: payment.status,
+        orderId: payment.orderId,
+        totalAmount: payment.totalAmount,
+      });
+      return { status: 'error', code: TOSS_UNRESOLVED_CODE };
+    }
+    approved = payment;
+  } else {
+    // NETWORK_ERROR·CONFIG_ERROR, 그리고 거절 패턴에도 ALREADY_PROCESSED_CODE에도 걸리지
+    // 않는 그 밖의 모든 코드 — "물어보지도 못했다" 계열이라 failed로 낙인하지 않고, 재시도
+    // 가치가 있는 하나의 코드로 정규화한다(위 TOSS_UNRESOLVED_CODE 주석 참조).
+    console.error('[shows-confirm] 토스 승인 실패(거절 아님) — 판정 보류(재시도 대상)', {
+      orderNo: input.orderNo,
+      paymentKey: input.paymentKey,
+      tossCode: result.code,
+      tossMessage: result.message,
+    });
+    return { status: 'error', code: TOSS_UNRESOLVED_CODE };
   }
 
-  const approved = result.payment;
   const approvedAtSec = approved.approvedAt ? Math.floor(new Date(approved.approvedAt).getTime() / 1000) : null;
   const statusList = sql.join(
     acceptableStatuses.map((s) => sql`${s}`),

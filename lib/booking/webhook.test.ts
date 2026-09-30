@@ -543,6 +543,42 @@ describe('processTossWebhook', () => {
       expect(mockDb().delete).toHaveBeenCalled(); // releaseEventKey
     });
 
+    it('confirmShowOrder가 toss_unresolved를 반환하면 멱등 키를 회수하고 500을 반환한다(재시도 유도)', async () => {
+      // toss_unresolved는 lib/shows/confirm.ts가 NETWORK_ERROR/CONFIG_ERROR·ALREADY_PROCESSED_PAYMENT
+      // 재조회 실패/검증 불일치를 전부 이 코드 하나로 정규화한 것이다 — "토스가 실제로 뭘 했는지
+      // 모른다"는 뜻이라 재시도해야 한다(토스에서는 승인됐는데 우리 쪽엔 영원히 pending으로
+      // 남는 사고를 막는다).
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: { paymentKey: 'pk_t', orderId: 'TKT-1', status: 'DONE', totalAmount: 10000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+        id: 'o', orderNo: 'TKT-1', type: 'ticket', status: 'pending', totalAmount: 10000, bookings: [], workOrders: [], payments: [],
+      });
+      (confirmShowOrder as jest.Mock).mockResolvedValue({ status: 'error', code: 'toss_unresolved' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_t', status: 'DONE' } });
+
+      expect(status).toBe(500);
+      expect(mockDb().delete).toHaveBeenCalled(); // releaseEventKey
+    });
+
+    it('confirmShowOrder가 declined를 반환하면(진짜 거절, 최종 결론) 재시도하지 않고 200을 반환한다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: { paymentKey: 'pk_t', orderId: 'TKT-1', status: 'DONE', totalAmount: 10000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+        id: 'o', orderNo: 'TKT-1', type: 'ticket', status: 'pending', totalAmount: 10000, bookings: [], workOrders: [], payments: [],
+      });
+      (confirmShowOrder as jest.Mock).mockResolvedValue({ status: 'declined', code: 'REJECT_CARD_COMPANY' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_t', status: 'DONE' } });
+
+      expect(status).toBe(200);
+      expect(mockDb().delete).not.toHaveBeenCalled();
+    });
+
     it('confirmShowOrder가 sold_out을 반환하면(최종 결론) 재시도하지 않고 200을 반환한다', async () => {
       (fetchPayment as jest.Mock).mockResolvedValueOnce({
         ok: true,
