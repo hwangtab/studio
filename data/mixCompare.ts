@@ -4,10 +4,9 @@ import { MIX_COMPARE_TAG } from './mixComparePeaks';
 /**
  * 홈의 "믹싱 전 · 후" 비교 (components/home/HomeMixCompare.tsx).
  *
- * 곡은 김동산과 블루이웃 〈물결〉(2024-12-20). 스튜디오 놀이 녹음·믹싱했고 **마스터링은 이재수**다
- * (data/portfolio/items.ts). 그래서 "믹싱 후"의 정체는 믹싱만 거친 소리가 아니라 **발매본**이고, 화면이
- * 그렇게 밝힌다 — 발매본의 음량·질감 일부는 마스터링 몫인데 그걸 전부 우리 믹싱으로 읽히게 두지 않는다.
- * 마스터링 전 믹스 파일이 생기면 scripts/build-mix-compare.mjs로 after를 바꿔 끼우고 라벨을 고친다.
+ * 곡은 김동산과 블루이웃 〈물결〉(2024-12-20). 스튜디오 놀이 녹음·믹싱했다(data/portfolio/items.ts). "믹싱 후"의
+ * 정체는 믹싱만 거친 소리가 아니라 **발매본**이라 라벨이 "믹싱 후 · 발매본"이다. 마스터링 담당은 화면에 적지 않는다
+ * (운영자 결정 2026-09-30). 마스터링 전 믹스 파일이 생기면 scripts/build-mix-compare.mjs로 after를 바꿔 끼운다.
  *
  * 음원은 두 파일의 시간·음량을 맞춰 만든 것이다(스크립트 머리 주석). 음원을 바꾸면 `--tag`를 새 날짜로 —
  * `/audio/**`도 오래 캐시되는 경로다.
@@ -79,13 +78,13 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => ({
     vi: 'Vị trí phát', th: 'ตำแหน่งการเล่น', uz: 'Ijro o‘rni',
   }),
   note: t(locale, {
-    ko: '두 음원의 음량은 같게 맞췄습니다. 발매본은 스튜디오 놀이 녹음·믹싱했고 마스터링은 이재수가 맡았습니다.',
-    en: 'Both versions play at the same volume. The released version was recorded and mixed at Studio NOL and mastered by Lee Jae-su.',
-    zh: '两个版本的音量已调为一致。发行版由 Studio NOL 录音、混音，母带处理由 Lee Jae-su 完成。',
-    es: 'Ambas versiones suenan al mismo volumen. La versión publicada se grabó y mezcló en Studio NOL y la masterizó Lee Jae-su.',
-    vi: 'Hai bản được chỉnh về cùng mức âm lượng. Bản phát hành được thu âm và mix tại Studio NOL, mastering bởi Lee Jae-su.',
-    th: 'ทั้งสองเวอร์ชันปรับระดับเสียงให้เท่ากัน เวอร์ชันวางจำหน่ายบันทึกเสียงและมิกซ์ที่ Studio NOL และมาสเตอริงโดย Lee Jae-su',
-    uz: 'Ikkala versiya bir xil balandlikda ijro etiladi. Chiqarilgan versiya Studio NOLda yozilgan va miks qilingan, mastering Lee Jae-su tomonidan bajarilgan.',
+    ko: '두 음원의 음량은 같게 맞췄습니다. 발매본은 스튜디오 놀이 녹음·믹싱했습니다.',
+    en: 'Both versions play at the same volume. The released version was recorded and mixed at Studio NOL.',
+    zh: '两个版本的音量已调为一致。发行版由 Studio NOL 录音、混音。',
+    es: 'Ambas versiones suenan al mismo volumen. La versión publicada se grabó y mezcló en Studio NOL.',
+    vi: 'Hai bản được chỉnh về cùng mức âm lượng. Bản phát hành được thu âm và mix tại Studio NOL.',
+    th: 'ทั้งสองเวอร์ชันปรับระดับเสียงให้เท่ากัน เวอร์ชันวางจำหน่ายบันทึกเสียงและมิกซ์ที่ Studio NOL',
+    uz: 'Ikkala versiya bir xil balandlikda ijro etiladi. Chiqarilgan versiya Studio NOLda yozilgan va miks qilingan.',
   }),
   download: t(locale, {
     ko: `재생하면 음원을 내려받습니다(각 약 ${MIX_COMPARE_DOWNLOAD_MB}MB).`,
