@@ -7,6 +7,7 @@ export type CheckInOutcome =
   | { status: 'already_checked_in' }
   | { status: 'invalid' };
 
+const DEBOUNCE_SECONDS = 10;
 const UNDO_WINDOW_SECONDS = 120;
 
 export async function checkInTicket(code: string, checkedInBy: string, now: Date): Promise<CheckInOutcome> {
@@ -22,12 +23,16 @@ export async function checkInTicket(code: string, checkedInBy: string, now: Date
   if ((ticket as any).showtime.status !== 'scheduled') return { status: 'invalid' };
 
   if (ticket.checkedInAt != null) {
+    if (nowSec - ticket.checkedInAt < DEBOUNCE_SECONDS && ticket.checkedInBy === checkedInBy) {
+      return { status: 'checked_in', entryNumber: ticket.entryNumber };
+    }
     return { status: 'already_checked_in' };
   }
 
   const result = await db.run(sql`
     update show_tickets set checked_in_at = ${nowSec}, checked_in_by = ${checkedInBy}
     where id = ${ticket.id} and checked_in_at is null and status = 'issued'
+      and exists (select 1 from showtimes where showtimes.id = ${ticket.showtimeId} and showtimes.status = 'scheduled')
   `);
   if (rowsAffectedOf(result) === 0) return { status: 'already_checked_in' };
   return { status: 'checked_in', entryNumber: ticket.entryNumber };

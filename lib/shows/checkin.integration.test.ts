@@ -33,13 +33,22 @@ describe('checkInTicket', () => {
     expect(outcome.status).toBe('checked_in');
   });
 
-  it('같은 티켓을 두 번 스캔하면 already_checked_in', async () => {
+  it('다른 스태프가 같은 티켓을 스캔하면 already_checked_in', async () => {
+    const { db } = await createTestDb();
+    (global as any).__testDb = db;
+    const ticket = await seedIssued(db);
+    await checkInTicket(ticket.code, 'link-1', new Date());
+    const second = await checkInTicket(ticket.code, 'link-2', new Date());
+    expect(second.status).toBe('already_checked_in');
+  });
+
+  it('같은 스태프가 10초 안에 같은 티켓을 재스캔하면(디바운스) checked_in을 유지한다', async () => {
     const { db } = await createTestDb();
     (global as any).__testDb = db;
     const ticket = await seedIssued(db);
     await checkInTicket(ticket.code, 'link-1', new Date());
     const second = await checkInTicket(ticket.code, 'link-1', new Date());
-    expect(second.status).toBe('already_checked_in');
+    expect(second.status).toBe('checked_in');
   });
 
   it('환불된 티켓은 입장 거부된다', async () => {
