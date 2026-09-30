@@ -31,14 +31,12 @@ export type MixCompareVariant = 'full' | 'excerpt';
  * 곡 세트 둘. `full`은 홈의 전체 곡(305.9초), `excerpt`는 발매·주문·믹싱 페이지의 30초 발췌(160~190초 구간,
  * 밴드와 보컬이 모두 들어간 구간 — 도입부·끝을 피했다). 발췌는 음량을 그 구간 안에서 다시 맞춘 별도 음원이다
  * (scripts/build-mix-compare.mjs --variant excerpt).
- * `downloadMb`는 화면에 적는 재생 시 받는 크기(파일 하나) — 128kbps × 길이.
  */
 export const MIX_COMPARE_SETS = {
   full: {
     sources: MIX_COMPARE_SOURCES,
     durationSeconds: MIX_COMPARE_DURATION_SECONDS,
     peaks: MIX_COMPARE_PEAKS,
-    downloadMb: '5',
   },
   excerpt: {
     sources: {
@@ -47,7 +45,6 @@ export const MIX_COMPARE_SETS = {
     },
     durationSeconds: MIX_COMPARE_EXCERPT_DURATION_SECONDS,
     peaks: MIX_COMPARE_EXCERPT_PEAKS,
-    downloadMb: '0.5',
   },
 } as const;
 
@@ -63,7 +60,6 @@ export interface MixCompareCopy {
   pause: string;
   position: string;
   note: string;
-  download: string;
   error: string;
   portfolio: string;
   switchedTo: { before: string; after: string };
@@ -74,8 +70,7 @@ const t = (
   dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string },
 ): string => dict[locale as keyof typeof dict] || dict.en || dict.ko;
 
-export const getMixCompareCopy = (locale: Locale, variant: MixCompareVariant = 'full'): MixCompareCopy => {
-  const mb = MIX_COMPARE_SETS[variant].downloadMb;
+export const getMixCompareCopy = (locale: Locale): MixCompareCopy => {
   return {
   eyebrow: t(locale, {
     ko: '믹싱 전후', en: 'Before & after', zh: '混音前后', es: 'Antes y después',
@@ -125,15 +120,6 @@ export const getMixCompareCopy = (locale: Locale, variant: MixCompareVariant = '
     vi: 'Hai bản là cùng một bản thu và được chỉnh về cùng mức âm lượng. Bài hát được thu âm và mix tại Studio NOL.',
     th: 'ทั้งสองเวอร์ชันมาจากการบันทึกเสียงเดียวกันและปรับระดับเสียงให้เท่ากัน เพลงนี้บันทึกเสียงและมิกซ์ที่ Studio NOL',
     uz: 'Ikkala versiya bir xil yozuvdan olingan va bir xil balandlikda ijro etiladi. Qoʻshiq Studio NOLda yozilgan va miks qilingan.',
-  }),
-  download: t(locale, {
-    ko: `재생하면 음원을 내려받습니다(각 약 ${mb}MB).`,
-    en: `Playing downloads the audio (about ${mb} MB each).`,
-    zh: `播放时会下载音频（每个约 ${mb}MB）。`,
-    es: `Al reproducir se descarga el audio (unos ${mb} MB cada uno).`,
-    vi: `Khi phát sẽ tải âm thanh (khoảng ${mb} MB mỗi bản).`,
-    th: `เมื่อกดเล่นจะโหลดไฟล์เสียง (ประมาณ ${mb} MB ต่อเวอร์ชัน)`,
-    uz: `Ijro etilganda audio yuklanadi (har biri taxminan ${mb} MB).`,
   }),
   error: t(locale, {
     ko: '음원을 불러오지 못했습니다. 잠시 뒤 다시 눌러 주세요.',

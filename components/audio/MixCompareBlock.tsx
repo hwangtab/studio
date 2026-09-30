@@ -18,7 +18,7 @@ interface MixCompareBlockProps {
  * 홈은 전체 곡을 자기 절로 쓴다(MixComparePlayer를 직접).
  */
 export default function MixCompareBlock({ locale, component, className, showPortfolioLink = true }: MixCompareBlockProps) {
-  const copy = React.useMemo(() => getMixCompareCopy(locale, 'excerpt'), [locale]);
+  const copy = React.useMemo(() => getMixCompareCopy(locale), [locale]);
   return (
     <div className={className ?? 'mt-14 max-w-3xl mx-auto border-t border-gray-200 dark:border-gray-800 pt-10'}>
       <h3 className="font-title text-2xl md:text-3xl font-bold leading-snug text-gray-950 dark:text-white mb-6 break-keep">
