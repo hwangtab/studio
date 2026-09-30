@@ -55,6 +55,18 @@ describe('MarkdownRenderer link protocol filtering', () => {
 
 });
 
+describe('MarkdownRenderer funding-lineup 숏코드', () => {
+  it('%%funding-lineup:id%%가 출연진 카드로 바뀐다', () => {
+    render(<MarkdownRenderer locale="ko" content={'%%funding-lineup:mok-jareugi-yangchaae%%'} />);
+    expect(screen.getByText('양차애')).toBeTruthy();
+  });
+
+  it('인자가 없으면 아무것도 렌더하지 않는다', () => {
+    const { container } = render(<MarkdownRenderer locale="ko" content={'%%funding-lineup%%'} />);
+    expect(container.querySelector('.markdown-content')?.textContent?.trim()).toBe('');
+  });
+});
+
 /**
  * ko 전용 숏코드가 다른 locale에 새지 않는지.
  *

@@ -127,33 +127,19 @@ rewards:
 
 ## 출연
 
-![양차애 프로필 사진](/images/funding/mok-jareugi/lineup/yangchaae-20260930.webp "112")
+%%funding-lineup:mok-jareugi-yangchaae%%
 
-**양차애** — 사랑노래를 짓고 부릅니다. 잘 패배하는 사람이 되는 것이 꿈입니다.
+%%funding-lineup:mok-jareugi-dj-duo%%
 
-![DJ스탑원과 DJ괄 프로필 사진](/images/funding/mok-jareugi/lineup/dj-duo-20260930.webp "228")
+%%funding-lineup:mok-jareugi-sabbaha%%
 
-**DJ스탑원 x DJ괄** — 두 사람이 번갈아 판을 올리는 b2b 세트입니다.
+%%funding-lineup:mok-jareugi-collins%%
 
-![사바하 프로필 사진](/images/funding/mok-jareugi/lineup/sabbaha-20260930.webp "112")
+%%funding-lineup:mok-jareugi-parkjihwi%%
 
-**사바하** — 2013년 솔로 프로젝트로 출발해 2023년 듀오가 된 둠드론 밴드입니다.
+%%funding-lineup:mok-jareugi-next%%
 
-![달 위의 콜린스 프로필 사진](/images/funding/mok-jareugi/lineup/collins-on-the-moon-20260930.webp "112")
-
-**달 위의 콜린스** — 홍대 클럽빵을 거점으로 공연해 온 팀입니다.
-
-![박지휘 프로필 사진](/images/funding/mok-jareugi/lineup/parkjihwi-20260930.webp "112")
-
-**박지휘** — 프리포크 싱어송라이터입니다.
-
-![최양다음 NEXT 프로필 사진](/images/funding/mok-jareugi/lineup/next-20260930.webp "112")
-
-**최양다음 NEXT** — 독학으로 음악을 익힌 싱어송라이터입니다.
-
-![VAN KIDEN 프로필 사진](/images/funding/mok-jareugi/lineup/van-kiden-20260930.webp "112")
-
-**VAN KIDEN** — 랩과 싱잉을 오가는 뮤지션입니다.
+%%funding-lineup:mok-jareugi-van-kiden%%
 
 ## 펀딩해 주시면 보내 드리는 것 — 〈이름을 모르는 먼 곳의 그대에게〉
 
