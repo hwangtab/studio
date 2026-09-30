@@ -1,5 +1,5 @@
 jest.mock('./service', () => ({ findOrderByOrderNo: jest.fn() }));
-jest.mock('./toss', () => ({ fetchPayment: jest.fn() }));
+jest.mock('./toss', () => ({ fetchPayment: jest.fn(), confirmPayment: jest.fn() }));
 jest.mock('./confirm', () => ({ confirmBookingPayment: jest.fn() }));
 jest.mock('../funding/confirm', () => ({
   confirmFundingPledge: jest.fn().mockResolvedValue({ ok: true, orderNo: 'FND-1', manageToken: 't', projectSlug: 'demo' }),
@@ -8,6 +8,8 @@ jest.mock('../funding/confirm', () => ({
 jest.mock('../billing/service', () => ({
   reconcileSubscriptionPaymentFromToss: jest.fn().mockResolvedValue(undefined),
 }));
+jest.mock('../shows/confirm', () => ({ confirmShowOrder: jest.fn() }));
+jest.mock('../shows/refund', () => ({ syncShowCancelsFromToss: jest.fn().mockResolvedValue(undefined) }));
 // getDb()가 매 호출 같은 객체를 돌려주도록 mock db를 factory 스코프에 고정한다 (confirm.test.ts·
 // cancel.test.ts와 동일 이유 — webhook.ts도 한 실행 안에서 getDb()를 여러 번 부른다:
 // webhookEvents insert → (CANCELED 분기라면) booking 선점 run → refunds insert·orders update가
@@ -30,10 +32,12 @@ jest.mock('../../db/client', () => {
 
 import { processTossWebhook } from './webhook';
 import { findOrderByOrderNo } from './service';
-import { fetchPayment } from './toss';
+import { fetchPayment, confirmPayment } from './toss';
 import { confirmBookingPayment } from './confirm';
 import { confirmFundingPledge } from '../funding/confirm';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
+import { confirmShowOrder } from '../shows/confirm';
+import { syncShowCancelsFromToss } from '../shows/refund';
 import { getDb } from '../../db/client';
 
 type MockDb = {
@@ -498,5 +502,79 @@ describe('processTossWebhook', () => {
     expect(insertedRefund).toMatchObject({ paymentId: 'p_s', amount: 396000 });
     const orderUpdate = setCallsOf(mockDb()).find((c) => c.status === 'refunded');
     expect(orderUpdate).toBeDefined();
+  });
+
+  describe('ticket 주문 라우팅', () => {
+    it('DONE 웹훅은 confirmShowOrder를 trustedByWebhook:true로 호출한다(confirmBookingPayment 아님)', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: { paymentKey: 'pk_t', orderId: 'TKT-1', status: 'DONE', totalAmount: 10000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+        id: 'o', orderNo: 'TKT-1', type: 'ticket', status: 'pending', totalAmount: 10000, bookings: [], workOrders: [], payments: [],
+      });
+      (confirmShowOrder as jest.Mock).mockResolvedValue({ status: 'confirmed' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_t', status: 'DONE' } });
+
+      expect(status).toBe(200);
+      expect(confirmShowOrder).toHaveBeenCalledWith(
+        { orderNo: 'TKT-1', paymentKey: 'pk_t', amount: 10000 },
+        { trustedByWebhook: true },
+        { confirmPayment, fetchPayment },
+      );
+      expect(confirmBookingPayment).not.toHaveBeenCalled();
+      expect(confirmFundingPledge).not.toHaveBeenCalled();
+    });
+
+    it('confirmShowOrder가 recording_failed를 반환하면 멱등 키를 회수하고 500을 반환한다(재시도 유도)', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: { paymentKey: 'pk_t', orderId: 'TKT-1', status: 'DONE', totalAmount: 10000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+        id: 'o', orderNo: 'TKT-1', type: 'ticket', status: 'pending', totalAmount: 10000, bookings: [], workOrders: [], payments: [],
+      });
+      (confirmShowOrder as jest.Mock).mockResolvedValue({ status: 'error', code: 'recording_failed' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_t', status: 'DONE' } });
+
+      expect(status).toBe(500);
+      expect(mockDb().delete).toHaveBeenCalled(); // releaseEventKey
+    });
+
+    it('confirmShowOrder가 sold_out을 반환하면(최종 결론) 재시도하지 않고 200을 반환한다', async () => {
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({
+        ok: true,
+        payment: { paymentKey: 'pk_t', orderId: 'TKT-1', status: 'DONE', totalAmount: 10000 },
+      });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+        id: 'o', orderNo: 'TKT-1', type: 'ticket', status: 'pending', totalAmount: 10000, bookings: [], workOrders: [], payments: [],
+      });
+      (confirmShowOrder as jest.Mock).mockResolvedValue({ status: 'sold_out' });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_t', status: 'DONE' } });
+
+      expect(status).toBe(200);
+      expect(mockDb().delete).not.toHaveBeenCalled();
+    });
+
+    it('CANCELED 웹훅은 syncShowCancelsFromToss를 재조회한 전체 payment 객체로 호출한다', async () => {
+      const cancelledPayment = {
+        paymentKey: 'pk_t', orderId: 'TKT-1', status: 'CANCELED', totalAmount: 10000,
+        cancels: [{ transactionKey: 'ck_t', cancelAmount: 10000 }],
+      };
+      (fetchPayment as jest.Mock).mockResolvedValueOnce({ ok: true, payment: cancelledPayment });
+      (findOrderByOrderNo as jest.Mock).mockResolvedValueOnce({
+        id: 'o', orderNo: 'TKT-1', type: 'ticket', status: 'paid', totalAmount: 10000, bookings: [], workOrders: [], payments: [],
+      });
+
+      const { status } = await processTossWebhook({ data: { paymentKey: 'pk_t', status: 'CANCELED' } });
+
+      expect(status).toBe(200);
+      expect(syncShowCancelsFromToss).toHaveBeenCalledWith('TKT-1', cancelledPayment);
+      // ticket 분기는 booking의 bookings/work_orders 선점 경로(db.run)를 타지 않는다.
+      expect(mockDb().run).not.toHaveBeenCalled();
+    });
   });
 });

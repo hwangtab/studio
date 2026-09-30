@@ -4,9 +4,11 @@ import { getDb } from '../../db/client';
 import { orders, refunds, webhookEvents, type Order, type Payment } from '../../db/schema';
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { confirmFundingPledge, syncFundingCancelledFromToss, type FundingConfirmOutcome } from '../funding/confirm';
+import { confirmShowOrder, type ConfirmOutcome as ShowConfirmOutcome } from '../shows/confirm';
+import { syncShowCancelsFromToss } from '../shows/refund';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { findOrderByOrderNo } from './service';
-import { fetchPayment, type TossPayment } from './toss';
+import { confirmPayment, fetchPayment, type TossPayment } from './toss';
 
 /**
  * 취소 합계로 주문 상태를 정한다.
@@ -201,6 +203,32 @@ const isTransientConfirmFailure = (
   code: Extract<ConfirmOutcome | FundingConfirmOutcome, { ok: false }>['code'],
 ): boolean => code === 'recording_failed' || code === 'toss_rejected';
 
+/**
+ * confirmShowOrder(shows 모듈)의 실패 중 재시도 가치가 있는 것 — 위 isTransientConfirmFailure의
+ * shows 버전. 두 함수를 하나로 합치지 않는 이유는 outcome 모양 자체가 다르기 때문이다
+ * (booking/funding은 `{ok:false, code}` 유니온, shows는 `{status:'error', code}` 하나로
+ * declined·sold_out·amount_mismatch 같은 최종 결론과 `error`를 status 레벨에서 이미 가른다).
+ *
+ * `recording_failed`만 재시도한다 — lib/shows/confirm.ts에서 이 코드가 나오는 유일한 경로는
+ * batch(payments INSERT + orders 전이) 실패 후 멱등 판정(payment_key로 기존 결제 재조회)
+ * 마저 실패하거나 "아직 없다"로 나온 경우다. 토스 승인은 이미 끝났는데 우리가 그 사실을
+ * 기록했는지조차 모르는 상태이므로, 재시도해 다시 확인해야 한다 — booking/funding의
+ * `recording_failed`와 정확히 같은 뜻이다.
+ *
+ * `not_found`(주문 부재)·`invalid_status`(주문이 확정 가능 상태를 벗어남)는 몇 번을 다시
+ * 보내도 같은 답이 나오는 영구 상태다. `declined`·`sold_out`·`amount_mismatch`는 status
+ * 자체가 `error`가 아니라 이미 최종 결론이 난 것이라 이 판정에 들어오지도 않는다.
+ *
+ * confirmPayment 호출 자체가 거절 패턴 밖의 코드(NETWORK_ERROR·CONFIG_ERROR 등)로 실패했을
+ * 때도 `{status:'error', code: result.code}`로 떨어지는데, 이 코드는 여기서 재시도 대상에
+ * 넣지 않는다 — booking의 동일 실패는 `toss_rejected`로 낙인되어 재시도되지만, 그 재시도가
+ * 의미 있는 것은 confirmBookingPayment가 `ALREADY_PROCESSED_PAYMENT`를 재조회로 풀어내는
+ * 경로를 갖고 있기 때문이다(lib/booking/confirm.ts:522-550). confirmShowOrder는 그 경로를
+ * 아직 이식하지 않았다 — 재시도해도 같은 코드로 또 실패할 뿐인 무한 루프가 될 수 있어,
+ * 이 코드까지 재시도로 넓히는 것은 lib/shows/confirm.ts에 그 재조회 경로가 생긴 뒤로 미룬다.
+ */
+const isTransientShowConfirmFailure = (code: string): boolean => code === 'recording_failed';
+
 /** unique 위반(PK 충돌 = 이미 처리한 이벤트)인지, 그 외 DB 장애인지를 가른다. */
 const isUniqueViolation = (error: unknown): boolean => {
   const message = error instanceof Error ? error.message : String(error);
@@ -264,6 +292,22 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
         // 이 함수는 실패해도 던지지 않고 로그만 남긴다(멱등 대사이지 신규 승인 확정이 아니므로
         // 재시도 유도가 없어도 다음 cron이나 다음 웹훅 재도착이 같은 경로로 다시 정리한다).
         await reconcileSubscriptionPaymentFromToss(payment);
+      } else if (orderType === 'ticket') {
+        // shows 도메인 확정 — booking/funding과 outcome 모양이 달라(status/code) 별도 분기로
+        // 둔다. toss는 이 파일이 이미 쓰는 실제 구현(confirmPayment·fetchPayment)을 그대로 주입한다.
+        const outcome: ShowConfirmOutcome = await confirmShowOrder(
+          { orderNo: payment.orderId, paymentKey, amount: payment.totalAmount },
+          { trustedByWebhook: true },
+          { confirmPayment, fetchPayment },
+        );
+        if (outcome.status === 'error' && isTransientShowConfirmFailure(outcome.code)) {
+          console.error('[booking-webhook] 공연 확정 처리 일시 실패 — 멱등 키 회수 후 재시도 유도', {
+            eventKey,
+            code: outcome.code,
+          });
+          await releaseEventKey(eventKey);
+          return { status: 500 };
+        }
       } else {
         const outcome =
           orderType === 'funding'
@@ -293,6 +337,11 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
       const orderType = order?.type ?? 'session';
       if (orderType === 'funding') {
         await syncFundingCancelledFromToss(payment);
+      } else if (orderType === 'ticket') {
+        // 티켓 전용 대사 — bookings/work_orders 선점이 아니라 show_tickets를 직접 정리한다
+        // (lib/shows/refund.ts). payment.orderId(=주문번호)만 있으면 되고, order 객체는 여기서
+        // 다시 조회하지 않는다(orderType이 이미 order?.type을 거쳐 나온 값이므로 order는 존재한다).
+        await syncShowCancelsFromToss(payment.orderId, payment);
       } else if (orderType === 'subscription') {
         // 관리자가 토스 콘솔에서 회차 하나를 취소해도 구독 자체는 유지한다(스펙 §6 관리자 절 —
         // 정지·해지는 관리자 화면의 별도 조작이지 결제 취소의 부작용이 아니다). 환불 금액만
