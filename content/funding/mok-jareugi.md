@@ -13,13 +13,14 @@ summary: 10월 10일 풍천리 마을회관 앞에서 음악가 7팀이 공연�
 #   쓰므로(ProjectDetailView.tsx) 별도 조정 없이도 흰 글씨 대비가 나온다 — 배경을 다시
 #   바꾸면 그 컴포넌트 주석대로 대비를 재측정할 것.
 # 제목은 木 대신 '목'으로 쓴다 — 히어로 제목 폰트(Pretendard 서브셋)에 한자가 없다.
-# lineup/<이름>-20260930.webp = pine-nut 출연진 프로필 사진을 사람 한 명당 파일 하나로,
-# 각자 소개 바로 위에 둔다(운영자 지시 2026-09-30 — "뮤지션 소개를 사진과 소개 따로 하면
-# 안돼, pine-nut 프로젝트가 잘 되어 있어"). 한 장으로 합쳐 아래에 이름 목록을 따로 두는
-# 방식은 한 번 시도했다가 되돌렸다 — 사진과 글이 갈라져 있으면 어느 얼굴이 누구 소개인지
-# 눈으로 맞춰야 한다. `![alt](경로 "240")`의 title 폭 힌트(MarkdownImage.tsx 참고 —
-# 인물 사진을 전체 폭으로 키우지 않으려고 이미 있는 장치)로 작게 낸다. DJ 듀오는 한
-# 소개문을 같이 쓰므로 두 사람 사진을 나란히 붙인 dj-duo-20260930.webp 한 장을 쓴다.
+# "출연" 절은 `%%funding-lineup:<id>%%` 숏코드로 사람마다 카드(원형 사진+이름+소개)를
+# 낸다(components/funding/FundingLineupPerson.tsx). 한 장의 그리드 이미지 + 아래 이름
+# 목록으로 분리했던 시도, 마크다운 title 폭 힌트로 사진만 작게 낸 시도를 차례로 거쳐
+# 되돌렸다 — raw HTML을 못 쓰는 마크다운 본문(MarkdownRenderer.tsx의
+# disableParsingRawHTML)으로는 pine-nut처럼 사진·이름·소개를 한 카드에 담을 수 없어서다
+# (운영자 지적 2026-09-30, 세 차례 반려 끝에 숏코드로 정착). 프로필 사진(DJ스탑원·DJ괄
+# 포함, 각자 한 장씩)은 그 컴포넌트가 직접 참조하며, 여기 마크다운에서는 더 이상
+# 이미지 경로를 적지 않는다.
 cover: /images/funding/mok-jareugi/cover-20260929.webp
 ogImage: /images/funding/mok-jareugi/og-20260929.webp
 heroImage: /images/funding/mok-jareugi/hero-20260930.webp
