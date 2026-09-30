@@ -28,8 +28,11 @@ import { orders } from '../../db/schema';
 
 /** 토스 실패 코드 형태. 화면·DB 양쪽에서 같은 잣대를 쓴다. */
 export const PAYMENT_FAIL_CODE_PATTERN = /^[A-Z0-9_]{1,60}$/;
-/** 주문번호 형태 — 예약(SNB)·펀딩(FND), 믹싱은 SNB-M-. 이걸 벗어나면 기록하지 않는다. */
-export const PAYMENT_ORDER_NO_PATTERN = /^(SNB|FND)-(M-)?\d{8}-[0-9A-F]{8}$/;
+/**
+ * 주문번호 형태 — 예약(SNB)·펀딩(FND)·티켓(TKT), 믹싱은 SNB-M-, 펀딩 수기는 FND-M-,
+ * 티켓 초대권은 TKT-C-. 이걸 벗어나면 기록하지 않는다.
+ */
+export const PAYMENT_ORDER_NO_PATTERN = /^(SNB|FND|TKT)-(M-|C-)?\d{8}-[0-9A-F]{8}$/;
 
 const MESSAGE_MAX = 300;
 
