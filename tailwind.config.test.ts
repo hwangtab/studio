@@ -583,6 +583,80 @@ describe('아웃라인 pill은 손으로 다시 짜지 않는다', () => {
   });
 });
 
+/**
+ * 솔리드 카드 박스도 손으로 다시 짜지 않는다.
+ *
+ * 2026-09-30: 펀딩 출연진 카드를 `rounded-xl bg-white/80 dark:bg-gray-900/50`로 손수 만들어
+ * 넣었다가, 바로 옆 리워드 카드(BaseCard variant="glass")와 나란히 두니 이 카드만 평평해
+ * 보였다("스펙큘러 하이라이트·hover 리프트가 없다") — 운영자가 두 번 지적한 뒤에야
+ * BaseCard로 바꿨다. 클래스 문자열만 봐서는 이게 카드인지 폼 안의 작은 안내 박스인지
+ * 코드가 구분할 수 없으므로, 이 조합이 나오면 일단 세우고 사람이 판단하게 한다.
+ */
+const SOLID_CARD_ROUNDED_RE = /(?<![-\w:])rounded-(lg|xl|2xl)(?![-\w])/;
+const SOLID_CARD_BG_RE = /(?<![-\w:])bg-white\/\d+(?![-\w])/;
+
+/**
+ * 가드 도입 시점에 이미 있던 것들 — 폼 안의 하위 안내 박스라 즉시 BaseCard로 바꿀
+ * 대상인지 별도 판단이 필요해 우선 등재만 한다. 새로 추가할 땐 **왜 BaseCard가 아닌지**를
+ * 적을 것 — 이유 없이 넣으면 이 가드가 무의미해진다.
+ */
+const SOLID_CARD_ALLOW: { file: string; snippet: string; reason: string }[] = [
+  {
+    file: 'components/funding/PublicNameChoice.tsx',
+    snippet: 'rounded-xl bg-white/80',
+    reason: '가드 도입 이전부터 있던 폼 내부 안내 박스(2026-09-30). BaseCard 전환 여부는 별도 검토.',
+  },
+  {
+    file: 'components/funding/BackerWall.tsx',
+    snippet: "rounded-xl border border-gray-200/80 bg-white/60",
+    reason: '가드 도입 이전부터 있던 후원 메시지 목록 항목(2026-09-30). BaseCard 전환 여부는 별도 검토.',
+  },
+];
+
+describe('솔리드 카드 박스는 손으로 다시 짜지 않는다', () => {
+  it('rounded-{lg,xl,2xl} + bg-white/N 조합은 BaseCard(variant="glass")를 쓴다', () => {
+    const offenders: string[] = [];
+
+    for (const dir of SCAN_DIRS) {
+      let files: string[] = [];
+      try {
+        files = walk(path.join(ROOT, dir));
+      } catch {
+        continue;
+      }
+      for (const file of files) {
+        const rel = path.relative(ROOT, file).split(path.sep).join('/');
+        if (!/\.tsx?$/.test(rel) || /\.test\.tsx?$/.test(rel)) continue;
+        if (LIGHT_FIXED(rel)) continue;
+        if (rel === 'components/ui/BaseCard.tsx') continue;
+
+        readFileSync(file, 'utf-8').split('\n').forEach((line, index) => {
+          const trimmed = line.trim();
+          if (isCommentLine(trimmed)) return;
+
+          const match = SOLID_CARD_BG_RE.exec(line);
+          if (!match) return;
+          const scope = scopeOf(line, match.index);
+          if (!SOLID_CARD_ROUNDED_RE.test(scope)) return;
+          if (SOLID_CARD_ALLOW.some((a) => a.file === rel && line.includes(a.snippet))) return;
+
+          offenders.push(`${rel}:${index + 1}: ${trimmed.slice(0, 120)}`);
+        });
+      }
+    }
+
+    if (offenders.length > 0) {
+      throw new Error(
+        '카드 배경을 손으로 다시 짰습니다 — components/ui/BaseCard(variant="glass")를 쓰세요.\n' +
+          '나머지 카드가 전부 쓰는 스펙큘러 포인터 하이라이트·hover 리프트가 이 조합에는 안 ' +
+          '붙어서, 다른 카드 옆에 두면 이것만 평평해 보입니다(2026-09-30에 실제로 그랬습니다).\n' +
+          '카드가 아니라 폼 안의 작은 안내 박스라면 SOLID_CARD_ALLOW에 이유와 함께 등재하세요.\n' +
+          offenders.join('\n'),
+      );
+    }
+  });
+});
+
 /* ------------------------------------------------------------------------- *
  * 포커스 링은 "있으면 통과"가 아니라 **보이면** 통과다 (정본 §5)
  * ------------------------------------------------------------------------- */
