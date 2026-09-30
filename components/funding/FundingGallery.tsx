@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import { ChevronLeft, ChevronRight, X } from '../../lib/lucide-icons';
 import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
@@ -20,11 +20,39 @@ const KSFP_DIR = '/images/funding/keep-singing-for-palestine/gallery';
  * 그림을 바꾸면 파일명(날짜)도 바꿀 것 — /images/**는 immutable 캐시다.
  */
 const GALLERIES: Record<string, GalleryPhoto[]> = {
+  // 파일 번호는 촬영 시각의 역순이다(01이 가장 늦은 밤). 낮에서 밤으로 흐르도록 뒤에서부터 센다.
   'keep-singing-for-palestine': Array.from({ length: 14 }, (_, i) => ({
-    src: `${KSFP_DIR}/${String(i + 1).padStart(2, '0')}-20260930.webp`,
+    src: `${KSFP_DIR}/${String(14 - i).padStart(2, '0')}-20260930.webp`,
     alt: `9월 19일 서십자각터 거리집회 현장 사진 ${i + 1}`,
   })),
 };
+
+/**
+ * 모자이크 배치. 사진은 전부 3:2라 크기만 다르게 앉히고 object-cover로 채운다(라이트박스는 원본 전체).
+ * 데스크톱은 6열 × 행 높이 W/9이고 [열 시작, 행 시작, 열 폭, 행 높이]를 명시한다 —
+ * 자동 배치에 맡기면 큰 타일 옆에 빈칸이 생긴다. 2×2는 3:2, 4×4는 3:2, 3×3은 3:2에 가깝다.
+ * 모바일은 4열 × 행 높이 W/6, 순서대로 흘려 넣는다(mobile 클래스).
+ */
+type Tile = { d: [number, number, number, number]; m: string };
+const SM = 'col-span-2 row-span-2';
+const BIG = 'col-span-4 row-span-4';
+const WIDE = 'col-span-4 row-span-3';
+const MOSAIC: Tile[] = [
+  { d: [1, 1, 4, 4], m: BIG },
+  { d: [5, 1, 2, 2], m: SM },
+  { d: [5, 3, 2, 2], m: SM },
+  { d: [1, 5, 2, 2], m: SM },
+  { d: [3, 5, 2, 2], m: SM },
+  { d: [5, 5, 2, 2], m: SM },
+  { d: [1, 7, 2, 2], m: SM },
+  { d: [1, 9, 2, 2], m: WIDE },
+  { d: [3, 7, 4, 4], m: BIG },
+  { d: [1, 11, 2, 2], m: SM },
+  { d: [3, 11, 2, 2], m: SM },
+  { d: [5, 11, 2, 2], m: WIDE },
+  { d: [1, 13, 3, 3], m: SM },
+  { d: [4, 13, 3, 3], m: SM },
+];
 
 const iconButtonClass =
   'flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition-colors hover:bg-white/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black';
@@ -150,27 +178,37 @@ export default function FundingGallery({ id }: { id: string }) {
 
   return (
     <>
-      <ul className="not-prose my-6 grid list-none grid-cols-2 gap-2 p-0 sm:grid-cols-3 sm:gap-3">
-        {photos.map((photo, i) => (
-          <li key={photo.src} className="m-0 p-0">
-            <button
-              type="button"
-              onClick={() => setOpenIndex(i)}
-              aria-label={`${photo.alt} 크게 보기`}
-              className="group relative block aspect-[3/2] w-full overflow-hidden rounded-xl bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:bg-gray-800 dark:focus-visible:ring-primary-lighter/70"
-            >
-              <ResponsiveImage
-                src={photo.src}
-                alt=""
-                fill
-                sizes="(min-width: 640px) 33vw, 50vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-105"
-                loading="lazy"
-              />
-            </button>
-          </li>
-        ))}
-      </ul>
+      <div className="my-6 [container-type:inline-size]">
+        <ul className="not-prose grid list-none grid-flow-dense grid-cols-4 gap-2 p-0 [grid-auto-rows:calc(100cqw/6)] sm:grid-cols-6 sm:gap-3 sm:[grid-auto-rows:calc(100cqw/9)]">
+          {photos.map((photo, i) => {
+            const tile = MOSAIC[i % MOSAIC.length];
+            const [c, r, cs, rs] = tile.d;
+            return (
+              <li
+                key={photo.src}
+                className={`m-0 p-0 ${tile.m} sm:[grid-column:var(--c)] sm:[grid-row:var(--r)]`}
+                style={{ '--c': `${c} / span ${cs}`, '--r': `${r} / span ${rs}` } as CSSProperties}
+              >
+                <button
+                  type="button"
+                  onClick={() => setOpenIndex(i)}
+                  aria-label={`${photo.alt} 크게 보기`}
+                  className="group relative block h-full w-full overflow-hidden rounded-xl bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:bg-gray-800 dark:focus-visible:ring-primary-lighter/70"
+                >
+                  <ResponsiveImage
+                    src={photo.src}
+                    alt=""
+                    fill
+                    sizes={cs >= 4 ? '(min-width: 1024px) 700px, 100vw' : '(min-width: 640px) 33vw, 50vw'}
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
       {openIndex !== null && (
         <Lightbox photos={photos} index={openIndex} onIndex={setOpenIndex} onClose={() => setOpenIndex(null)} />
       )}
