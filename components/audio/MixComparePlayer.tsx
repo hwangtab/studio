@@ -306,7 +306,6 @@ export default function MixComparePlayer({
       <div className="mt-8 border-t border-gray-200 dark:border-gray-800 pt-5 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="max-w-2xl">
           <p className="typo-card-body text-gray-600 dark:text-gray-300 break-keep">{copy.note}</p>
-          <p className="mt-2 typo-card-meta text-gray-500 dark:text-gray-400 break-keep">{copy.download}</p>
         </div>
         {showPortfolioLink && (
           <Link

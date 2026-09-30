@@ -241,17 +241,17 @@ describe('MixComparePlayer', () => {
   });
 
   describe('30초 발췌 변형 (발매·주문·믹싱 페이지)', () => {
-    const exCopy = getMixCompareCopy('ko', 'excerpt');
+    const exCopy = getMixCompareCopy('ko');
     const mountExcerpt = (props: Partial<React.ComponentProps<typeof MixComparePlayer>> = {}) =>
       render(<MixComparePlayer locale="ko" copy={exCopy} portfolioHref="/ko/portfolio" variant="excerpt" component="ReleaseMixCompare" {...props} />);
 
-    it('발췌 음원(30초)을 쓰고 길이·받는 크기 안내가 그에 맞다', () => {
+    it('발췌 음원(30초)을 쓰고 길이가 그에 맞다', () => {
       mountExcerpt();
       const srcs = FakeAudio.instances.map((a) => a.src);
       expect(srcs).toEqual([MIX_COMPARE_SETS.excerpt.sources.before, MIX_COMPARE_SETS.excerpt.sources.after]);
       expect(srcs.every((u) => u.includes('-excerpt'))).toBe(true);
       expect(screen.getByText('/ 0:30')).toBeInTheDocument();
-      expect(screen.getByText(/각 약 0\.5MB/)).toBeInTheDocument();
+      expect(screen.queryByText(/내려받/)).not.toBeInTheDocument(); // 다운로드 안내 문구는 두지 않는다(운영자 결정)
       FakeAudio.instances.forEach((a) => expect(a.loadCalls).toBe(0)); // 여전히 재생 전에는 받지 않는다
     });
 
