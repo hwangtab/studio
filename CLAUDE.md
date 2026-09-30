@@ -880,11 +880,32 @@ CI에 넣었다 — 섹션 해시가 파일 간 같으면 잡는다.
 판정에 직접 들어가서, 과대 계상하면 thin 페이지가 색인 대상으로 잘못 분류된다(실제로
 session-checklist가 실측 160자인데 420으로 잡혀 있었다).
 
+**펀딩 콘텐츠의 숏코드는 위 "세 곳" 규칙이 적용되지 않는다** — `storyContentPolicy.ts`·
+`factGuards.test.ts`는 `content/stories`만 스캔한다. `MarkdownRenderer` 배선만 하면 된다.
+
+**본문 마크다운은 raw HTML을 못 쓴다**(`disableParsingRawHTML: true` — 개설자가 펀딩 본문에
+스크립트·위장 폼을 못 심게 막는 장치). `<div>`를 넣어도 화면에 `&lt;div&gt;`로 그대로 찍힌다.
+원형 사진+이름+소개 같은 카드형 레이아웃이 필요하면 그리드 이미지 합성이나 title 폭 힌트
+(`![alt](경로 "240")`, 사진 한 장을 작게 넣을 때만 유효)로 때우지 말고 숏코드 컴포넌트를
+만들 것 — `components/funding/FundingLineupPerson.tsx`가 그 예다. 참고로 `content/**/*.md`는
+`tailwind.config.ts`의 content 스캔 대상이 아니라, 컨텐츠에만 쓰는 새 Tailwind 클래스는
+(raw HTML이 허용돼도) 컴파일이 안 돼 조용히 무효과다 — 숏코드처럼 실제 .tsx 컴포넌트로
+만들어야 클래스가 실제로 스타일을 입는다.
+
 ### 로컬 프로덕션 빌드로 화면을 확인하려면 VERCEL_ENV가 필요하다
 
 `npx next start`만 하면 미들웨어의 canonical host 강제가 걸려 studionol.co.kr로 **308**
 한다. 그대로 스크린샷을 찍으면 내 코드가 아니라 프로덕션을 보게 된다(2026-09-21에 한참
 헤맸다 — 화면이 안 바뀌는 것이 아니라 다른 사이트를 보고 있었다).
+
+**`fullPage: true` 스크린샷은 `position: sticky`·`fixed` 요소와 `loading="lazy"` 이미지를
+실제와 다르게 보여준다.** sticky/fixed 버튼이 페이지 중간 엉뚱한 자리에 뜨고, 아직 안
+트리거된 lazy 이미지는 빈 칸으로 나온다 — 둘 다 화면 버그가 아니라 촬영 아티팩트다. 실제
+스크롤(또는 전체 페이지를 미리 스크롤한 뒤 캡처)로 다시 확인할 것.
+
+**PR 자동병합 완료 ≠ 프로덕션 배포 완료.** merge 직후 curl로 확인하면 옛 배포가 그대로
+응답한다(수 분 걸림). Vercel MCP `list_deployments`로 그 커밋의 `state`가 READY인지 먼저
+본 뒤에 "여전히 안 바뀌었다"고 판단할 것.
 
 ```bash
 VERCEL_ENV=preview npx next start -p 3100
