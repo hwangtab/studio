@@ -232,7 +232,7 @@ export const orderStatusEnum = [
   'failed', // 승인 실패
   'expired', // 15분 내 미결제
 ] as const;
-export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding'] as const;
+export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
 export const refundStatusEnum = ['done', 'failed'] as const;
 export const refundRequesterEnum = ['customer', 'admin', 'webhook'] as const;
@@ -388,6 +388,7 @@ export const ordersRelations = relations(orders, ({ many, one }) => ({
   fundingPledge: one(fundingPledges, { fields: [orders.id], references: [fundingPledges.orderId] }),
   workOrders: many(workOrders),
   subscriptionPayment: one(subscriptionPayments, { fields: [orders.id], references: [subscriptionPayments.orderId] }),
+  showOrder: one(showOrders, { fields: [orders.orderNo], references: [showOrders.orderNo] }),
 }));
 export const paymentsRelations = relations(payments, ({ one, many }) => ({
   order: one(orders, { fields: [payments.orderId], references: [orders.id] }),
@@ -1454,3 +1455,142 @@ export const reviewRequests = sqliteTable(
 
 export type ReviewRequest = typeof reviewRequests.$inferSelect;
 export type ReviewRequestKind = (typeof reviewRequestKindEnum)[number];
+
+// ─── 공연·티켓 (Phase 1: 1차 스키마) ───────────────────────────────────────────
+
+export const showStatusEnum = ['draft', 'published', 'cancelled'] as const;
+export const showtimeStatusEnum = ['scheduled', 'cancelled', 'ended'] as const;
+
+export const shows = sqliteTable('shows', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  slug: text('slug').notNull().unique(),
+  title: text('title').notNull(),
+  presenterName: text('presenter_name').notNull(),
+  performers: text('performers').notNull(),
+  ageRating: text('age_rating').notNull(),
+  runningMinutes: integer('running_minutes').notNull(),
+  venueName: text('venue_name').notNull(),
+  venueAddress: text('venue_address').notNull(),
+  description: text('description').notNull(),
+  coverImage: text('cover_image'),
+  status: text('status', { enum: showStatusEnum }).notNull().default('draft'),
+  noticeKey: text('notice_key').notNull().default(sql`(lower(hex(randomblob(8))))`),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  statusCheck: check('shows_status_check', sql`${t.status} in ('draft','published','cancelled')`),
+}));
+
+export const showZones = sqliteTable('show_zones', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  showId: text('show_id').notNull().references(() => shows.id),
+  code: text('code').notNull(),
+  label: text('label').notNull(),
+  capacity: integer('capacity').notNull(),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  showCodeUnique: uniqueIndex('show_zones_show_code_unique').on(t.showId, t.code),
+  capacityCheck: check('show_zones_capacity_check', sql`${t.capacity} > 0`),
+}));
+
+export const showtimes = sqliteTable('showtimes', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  showId: text('show_id').notNull().references(() => shows.id),
+  startsAt: integer('starts_at').notNull(),
+  previousStartsAt: integer('previous_starts_at'),
+  salesCloseAt: integer('sales_close_at').notNull(),
+  status: text('status', { enum: showtimeStatusEnum }).notNull().default('scheduled'),
+  changedAt: integer('changed_at').notNull().default(sql`(unixepoch())`),
+  cancelledAt: integer('cancelled_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  statusCheck: check('showtimes_status_check', sql`${t.status} in ('scheduled','cancelled','ended')`),
+  showStartsIdx: index('showtimes_show_starts_idx').on(t.showId, t.startsAt),
+}));
+
+export const showTicketTypes = sqliteTable('show_ticket_types', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  showId: text('show_id').notNull().references(() => shows.id),
+  zoneId: text('zone_id').notNull().references(() => showZones.id),
+  name: text('name').notNull(),
+  price: integer('price').notNull(),
+  quota: integer('quota'),
+  compQuota: integer('comp_quota').notNull().default(0),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  priceCheck: check('show_ticket_types_price_check', sql`${t.price} >= 0`),
+}));
+
+export const showOrderStatusEnum = ['pending', 'paid', 'partially_refunded', 'refunded', 'expired', 'failed'] as const;
+export const showTicketStatusEnum = ['held', 'issued', 'refunding', 'refunded', 'void'] as const;
+export const showIssuedByEnum = ['customer', 'organizer_comp'] as const;
+
+export const showOrders = sqliteTable('show_orders', {
+  orderNo: text('order_no').primaryKey().references(() => orders.orderNo),
+  showtimeId: text('showtime_id').notNull().references(() => showtimes.id),
+  buyerName: text('buyer_name').notNull(),
+  buyerContact: text('buyer_contact').notNull(),
+  holdExpiresAt: integer('hold_expires_at'),
+  autoCancelledAt: integer('auto_cancelled_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  showtimeIdx: index('show_orders_showtime_idx').on(t.showtimeId),
+}));
+
+export const showTickets = sqliteTable('show_tickets', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  orderNo: text('order_no').notNull().references(() => orders.orderNo),
+  showtimeId: text('showtime_id').notNull().references(() => showtimes.id),
+  ticketTypeId: text('ticket_type_id').notNull().references(() => showTicketTypes.id),
+  code: text('code').notNull().unique(),
+  entryNumber: integer('entry_number'),
+  status: text('status', { enum: showTicketStatusEnum }).notNull().default('held'),
+  issuedBy: text('issued_by', { enum: showIssuedByEnum }).notNull().default('customer'),
+  unitAmount: integer('unit_amount').notNull(),
+  compensatedAmount: integer('compensated_amount').notNull().default(0),
+  compensatedAt: integer('compensated_at'),
+  checkedInAt: integer('checked_in_at'),
+  checkedInBy: text('checked_in_by'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  statusCheck: check('show_tickets_status_check', sql`${t.status} in ('held','issued','refunding','refunded','void')`),
+  showtimeTypeIdx: index('show_tickets_showtime_type_idx').on(t.showtimeId, t.ticketTypeId),
+  orderIdx: index('show_tickets_order_idx').on(t.orderNo),
+}));
+
+export const showScanLinks = sqliteTable('show_scan_links', {
+  id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+  showtimeId: text('showtime_id').notNull().references(() => showtimes.id),
+  tokenHash: text('token_hash').notNull().unique(),
+  label: text('label').notNull(),
+  expiresAt: integer('expires_at').notNull(),
+  revokedAt: integer('revoked_at'),
+  createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),
+}, (t) => ({
+  showtimeIdx: index('show_scan_links_showtime_idx').on(t.showtimeId),
+}));
+
+export const showsRelations = relations(shows, ({ many }) => ({
+  zones: many(showZones),
+  showtimes: many(showtimes),
+  ticketTypes: many(showTicketTypes),
+}));
+
+export const showtimesRelations = relations(showtimes, ({ one, many }) => ({
+  show: one(shows, { fields: [showtimes.showId], references: [shows.id] }),
+  orders: many(showOrders),
+  tickets: many(showTickets),
+  scanLinks: many(showScanLinks),
+}));
+
+export const showOrdersRelations = relations(showOrders, ({ one, many }) => ({
+  order: one(orders, { fields: [showOrders.orderNo], references: [orders.orderNo] }),
+  showtime: one(showtimes, { fields: [showOrders.showtimeId], references: [showtimes.id] }),
+  tickets: many(showTickets),
+}));
+
+export const showTicketsRelations = relations(showTickets, ({ one }) => ({
+  order: one(orders, { fields: [showTickets.orderNo], references: [orders.orderNo] }),
+  showtime: one(showtimes, { fields: [showTickets.showtimeId], references: [showtimes.id] }),
+  ticketType: one(showTicketTypes, { fields: [showTickets.ticketTypeId], references: [showTicketTypes.id] }),
+}));
