@@ -188,6 +188,22 @@ rewards:
 
 [국민동의청원 참여하기 — nuli.do/nohormuz2026](https://nuli.do/nohormuz2026)
 
+## 그날 노래한 사람들
+
+여섯이 거리에 섰습니다.
+
+%%funding-lineup:keep-singing-for-palestine-momo%%
+
+%%funding-lineup:keep-singing-for-palestine-lee-seoyoung%%
+
+%%funding-lineup:keep-singing-for-palestine-lee-hyeongju%%
+
+%%funding-lineup:keep-singing-for-palestine-namsu%%
+
+%%funding-lineup:keep-singing-for-palestine-imjeongdeuk%%
+
+%%funding-lineup:keep-singing-for-palestine-dj-eve%%
+
 ## 강정피스앤뮤직캠프는?
 
 2007년, 제주 서귀포시 강정마을이 해군기지 부지로 결정됐습니다. 유네스코 생물권보전지역이자 천연기념물이 사는 땅이었습니다. 9년간의 가열찬 반대투쟁과 국가폭력의 시간이 이어졌습니다. 그 시간 동안 700명 넘게 연행됐고 60명 넘게 구속됐으며, 벌금 4억 원과 구상권 34억 5천만 원이 청구됐습니다. 그렇게 2016년 기지가 준공되었지만 그 뒤로도 저항은 멈추지 않았습니다.

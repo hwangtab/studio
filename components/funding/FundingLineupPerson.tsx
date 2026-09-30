@@ -45,7 +45,7 @@ interface LineupPerson {
  * 한 링크로 감쌀 수 없어 그때만 이름별로 따로 링크한다(아이콘 유지 — 카드 자체가 안
  * 눌리니 "이 글자가 링크다"를 알려줘야 한다).
  */
-const LINEUP_PEOPLE: Record<string, LineupPerson> = {
+export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   'mok-jareugi-yangchaae': {
     name: '양차애',
     sns: 'https://www.instagram.com/carbabyis/',
@@ -93,6 +93,43 @@ const LINEUP_PEOPLE: Record<string, LineupPerson> = {
     sns: 'https://www.instagram.com/van_kiden/',
     bio: '랩과 싱잉을 오가는 뮤지션입니다.',
     photo: '/images/funding/mok-jareugi/lineup/van-kiden-20260930.webp',
+  },
+  // 9·19 집회(keep-singing-for-palestine) 출연진 — 집회 뒤 후기 개편 때 절이 통째로 빠졌다가
+  // 아카이빙을 위해 되살렸다(2026-09-30 운영자 요청). 소개는 삭제 직전 본문 그대로다.
+  'keep-singing-for-palestine-momo': {
+    name: '모모',
+    sns: 'https://www.instagram.com/momoismothermother/',
+    bio: '모모는 예진 안젤라 박과 황슬기의 재즈 듀오입니다. 즉흥과 실험을 밑천으로 삼되, 그 소리가 향하는 곳은 분쟁지역의 평범한 하루와 그 안에 깔린 긴장입니다. 앨범에 실은 〈If this can be tolerated, what can\'t be?〉는 단 한 줄의 가사를 끝없이 되풀이하며 우리의 무감각을 묻습니다.',
+    photo: '/images/funding/keep-singing-for-palestine/lineup/momo.webp',
+  },
+  'keep-singing-for-palestine-lee-seoyoung': {
+    name: '이서영',
+    sns: 'https://www.instagram.com/leesyoung.kr/',
+    bio: '이서영은 숲해설가이면서 노래를 만듭니다. 나무를 설명하는 일과 노래를 만드는 일이 그에게는 같은 일인 듯합니다. 포크에 앰비언트와 일렉트로닉을 섞고, 맑고 서늘한 음색으로 고독과 공존을 노래합니다. 앨범에 실은 〈우리〉는 대학 시절에 쓴 곡을 10년 만에 다시 꺼내 고쳐 쓴 것입니다.',
+    photo: '/images/funding/keep-singing-for-palestine/lineup/lee-seoyoung.webp',
+  },
+  'keep-singing-for-palestine-lee-hyeongju': {
+    name: '이형주',
+    bio: '이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다.',
+    photo: '/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp',
+  },
+  'keep-singing-for-palestine-namsu': {
+    name: '남수',
+    sns: 'https://www.instagram.com/namsu_ggu/',
+    bio: '남수는 인디와 포크, 블루스와 재즈를 오가며 노래하고, 〈딱따구리 책방〉이라는 문화공간을 꾸립니다. 앨범 네 번째 곡 〈안녕 (먼 곳의 그대에게)〉이 그의 노래입니다. 가사에 "나의 이름을 모르는 그대에게"라는 구절이 있는데, 앨범 제목과 같은 자리에서 나온 말처럼 들립니다. 남수는 이 곡을 두고 "멀리에 있지만 같은 마음과 소망을 품은 우리, 이름을 모르지만 서로의 안녕을 바라는 우리"라고 했습니다.',
+    photo: '/images/funding/keep-singing-for-palestine/lineup/namsu.webp',
+  },
+  'keep-singing-for-palestine-imjeongdeuk': {
+    name: '임정득',
+    sns: 'https://www.instagram.com/imjeongdeuk/',
+    bio: "임정득은 영남대학교 노래패 '예사가락'에서 음악을 시작한 민중가수입니다. 2011년 데뷔 이후 거의 매년 단독 콘서트와 음반을 발표하며, 모든 앨범을 직접 프로듀싱하고 대부분의 수록곡을 작사·작곡합니다. 밀양 송전탑 투쟁, 노동자 고공농성 현장, 세월호 유가족 농성장 등 사회운동 현장의 무대에서 활동해 왔고, 대표곡 〈소금꽃나무〉는 김진숙의 동명 책에서 영감을 받았습니다.",
+    photo: '/images/funding/keep-singing-for-palestine/lineup/imjeongdeuk.webp',
+  },
+  'keep-singing-for-palestine-dj-eve': {
+    name: 'DJ 이브',
+    sns: 'https://www.instagram.com/jinaofyves/',
+    bio: "DJ 이브(Yves)는 '저항과 소음 Noise For Protest'에서 활동합니다. 저항과 소음은 가자지구 집단학살 종식을 위해 팔레스타인 연대 단체와 DJ들이 모인 프로젝트로, 음악과 춤을 통해 집단학살 반대의 움직임을 가시화합니다. 6월 '팔레스타인을 위한 자긍심, 저항과 소음(Pride Noise for Palestine)'을 비롯해 연대 무대에 꾸준히 서 왔습니다.",
+    photo: '/images/funding/keep-singing-for-palestine/lineup/dj-eve.webp',
   },
 };
 
