@@ -108,6 +108,7 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   },
   // 9·19 집회(keep-singing-for-palestine) 출연진 — 집회 뒤 후기 개편 때 절이 통째로 빠졌다가
   // 아카이빙을 위해 되살렸다(2026-09-30 운영자 요청). 소개는 삭제 직전 본문 그대로다.
+  // SNS 링크는 운영자가 직접 준 목록(2026-09-30)을 따른다.
   'keep-singing-for-palestine-momo': {
     name: '모모',
     sns: 'https://www.instagram.com/momoismothermother/',
@@ -122,6 +123,7 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   },
   'keep-singing-for-palestine-lee-hyeongju': {
     name: '이형주',
+    sns: 'https://www.instagram.com/hyungju1218/',
     bio: '이형주는 핑거스타일 블루스에 포크와 재즈를 섞어 연주합니다. 2017년부터 새 민중음악 선곡집에 참여하며 사회적 폭력이 있는 현장을 찾아다녔고, 2019년 EP 〈아토피〉와 2023년 정규 〈우리는 서로를 간직 하려고〉를 냈습니다.',
     photo: '/images/funding/keep-singing-for-palestine/lineup/lee-hyeongju.webp',
   },
@@ -139,7 +141,8 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   },
   'keep-singing-for-palestine-dj-eve': {
     name: 'DJ 이브',
-    sns: 'https://www.instagram.com/jinaofyves/',
+    // 운영자가 준 링크(2026-09-30) — 개인 계정이 아니라 활동 프로젝트 '저항과 소음' 계정이다.
+    sns: 'https://www.instagram.com/noise_for_protest/',
     bio: "DJ 이브(Yves)는 '저항과 소음 Noise For Protest'에서 활동합니다. 저항과 소음은 가자지구 집단학살 종식을 위해 팔레스타인 연대 단체와 DJ들이 모인 프로젝트로, 음악과 춤을 통해 집단학살 반대의 움직임을 가시화합니다. 6월 '팔레스타인을 위한 자긍심, 저항과 소음(Pride Noise for Palestine)'을 비롯해 연대 무대에 꾸준히 서 왔습니다.",
     photo: '/images/funding/keep-singing-for-palestine/lineup/dj-eve.webp',
   },
