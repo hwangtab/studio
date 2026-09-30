@@ -2,6 +2,7 @@ import { randomBytes, randomUUID } from 'node:crypto';
 import { sql, type SQL } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
+import { cleanSupporterMessage } from './messageText';
 import type { FundingPledge, FundingPledgeItem, Order, Payment, Refund } from '../../db/schema';
 import { kstDateString } from '../booking/kst';
 import { generateManageToken } from '../booking/token';
@@ -445,13 +446,13 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
       .map((n) => ({
         name: n.display_name,
         // 공백만 남은 값은 메시지가 아니다.
-        message: (n.supporter_message ?? '').trim(),
+        message: cleanSupporterMessage((n.supporter_message ?? '').trim()),
         at: Number(n.paid_at ?? n.created_at),
       }))
       .concat(
         anonymousMessageRows.map((n) => ({
           name: ANONYMOUS_LABEL,
-          message: (n.supporter_message ?? '').trim(),
+          message: cleanSupporterMessage((n.supporter_message ?? '').trim()),
           at: Number(n.paid_at ?? n.created_at),
         })),
       )
