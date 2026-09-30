@@ -174,7 +174,14 @@ export default function FundingLineupPerson({ id }: { id: string }) {
         )}
       </div>
       <div className="min-w-0 text-lg">
-        <p className="break-keep font-bold leading-snug text-gray-900 dark:text-white">
+        {/* <p>가 아니라 <div>다 — 이 카드는 마크다운 본문 `.prose` 안에서 렌더되는데,
+            styles/globals.css의 `.prose p`(margin-bottom 1.5em)·`.prose p+p`(margin-top
+            1.5em)가 태그 선택자라 우리 mt-1(4px) 지정보다 특정도가 높아 그대로 덮어쓴다
+            (운영자 지적 2026-09-30: "패딩이 아주 어색해" — 실측: bio 문단 margin-top이
+            지정한 4px가 아니라 21px로 렌더됨). 이 규칙은 장문 본문 문단 간격용이라 이름·
+            소개 두 줄짜리 카드에는 맞지 않다. div는 태그가 달라 두 선택자 모두 매치되지
+            않는다. */}
+        <div className="break-keep font-bold leading-snug text-gray-900 dark:text-white">
           {person.people
             ? person.people.map((p, i) => (
                 <span key={p.label}>
@@ -183,8 +190,8 @@ export default function FundingLineupPerson({ id }: { id: string }) {
                 </span>
               ))
             : person.name}
-        </p>
-        <p className="mt-1 break-keep text-sm leading-relaxed text-gray-600 dark:text-gray-300">{person.bio}</p>
+        </div>
+        <div className="mt-1 break-keep text-sm leading-relaxed text-gray-600 dark:text-gray-300">{person.bio}</div>
       </div>
     </BaseCard>
   );
