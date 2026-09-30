@@ -40,10 +40,14 @@ describe('content/funding', () => {
  */
 describe('디지털 리워드는 금액이 오를수록 누적된다', () => {
   for (const project of getAllFundingProjects()) {
-    const digital = project.rewards.filter((r) => r.downloads.length > 0);
+    // 앨범이 둘 이상이면 앨범마다 따로 누적한다 — 다른 앨범의 파일은 서로 포함할 이유가 없다.
+    // id 접두사가 앨범 계열이다(`fish-`는 〈물고기는 물이 없으면 죽어요〉, 나머지는 첫 앨범).
+    const digitalAll = project.rewards.filter((r) => r.downloads.length > 0);
+    for (const series of [digitalAll.filter((r) => r.id.startsWith('fish-')), digitalAll.filter((r) => !r.id.startsWith('fish-'))]) {
+    const digital = series;
     if (digital.length < 2) continue;
 
-    it(`${project.slug}: 상위 티어가 하위 티어의 파일을 모두 포함한다`, () => {
+    it(`${project.slug}: 상위 티어가 하위 티어의 파일을 모두 포함한다 (${digital[0].id}…)`, () => {
       const sorted = [...digital].sort((a, b) => a.amount - b.amount);
       sorted.forEach((reward, i) => {
         for (const lower of sorted.slice(0, i)) {
@@ -75,6 +79,7 @@ describe('디지털 리워드는 금액이 오를수록 누적된다', () => {
         }
       }
     });
+    }
   }
 });
 

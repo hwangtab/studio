@@ -27,7 +27,7 @@ import { getPortfolioItems } from '../../data/portfolio';
 import HomeReleaseStrip, { type ReleaseCover } from '../../components/home/HomeReleaseStrip';
 import HomeServiceTracklist from '../../components/home/HomeServiceTracklist';
 import HomeStudioSpec, { type StudioGearRow } from '../../components/home/HomeStudioSpec';
-import HomeMixCompare from '../../components/home/HomeMixCompare';
+import MixComparePlayer from '../../components/audio/MixComparePlayer';
 import { getMixCompareCopy } from '../../data/mixCompare';
 import { getEquipmentData } from '../../data/equipment';
 import { getFaqData } from '../../data/faq';
@@ -196,7 +196,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
       )}
 
       {/* 믹싱 전·후 — 발매작 바로 다음에 "그 결과물이 이렇게 나온다"를 귀로 확인시킨다. 음원은 재생을 누르기
-          전에는 내려받지 않는다(components/home/HomeMixCompare.tsx). 아래 섹션들은 배경 번갈음이 이어지도록
+          전에는 내려받지 않는다(components/audio/MixComparePlayer.tsx). 아래 섹션들은 배경 번갈음이 이어지도록
           variant를 한 칸씩 밀었고 번호도 하나씩 늦춰졌다. */}
       <Section variant="alternate">
         <SectionHeading
@@ -204,7 +204,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
           index="02"
           title={mixCompareCopy.title}
         />
-        <HomeMixCompare locale={locale} copy={mixCompareCopy} portfolioHref={getLink('/portfolio')} />
+        <MixComparePlayer locale={locale} copy={mixCompareCopy} portfolioHref={getLink('/portfolio')} component="HomeMixCompare" />
       </Section>
 
       {/* 스튜디오 갤러리 섹션 */}

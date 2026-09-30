@@ -348,11 +348,28 @@ code {
 }
 
 
-/* 마크다운 줄바꿈 스타일 */
+/* 마크다운 줄바꿈 스타일.
+   단락 간격은 여기서 정하지 않는다 — MarkdownRenderer의 p/h2~h4 클래스가 한 벌로 정한다.
+   예전에는 여기서 `.prose p`의 margin-bottom과 `.prose p+p`의 margin-top·padding-top을 덮어써
+   단락 사이(약 2em)가 제목 아래(약 1.2em)보다 넓어졌다. 제목이 자기 본문보다 앞 단락에서
+   더 멀어 보여야 묶음이 읽히는데 거꾸로였다(운영자 지적 2026-09-30, 펀딩 본문). */
 .prose p {
-  margin-bottom: 1.5em;
   line-height: 1.7;
   position: relative;
+}
+
+/* 마크다운 본문 단락 간격. markdown-to-jsx가 `<p>`에 MarkdownRenderer의 p 오버라이드를 적용하지
+   않아(클래스 없이 렌더됨) 예전 간격은 위 `.prose p`류 규칙이 전부 냈다. 제목 아래(h2 mb-4 = 1em)보다
+   단락 사이(1.25em)가 넓어야 제목이 자기 본문에 붙어 읽힌다. 숏코드 카드·인용문·목록 안의 p는
+   건드리지 않으려고 본문 최상위 p만 겨눈다. */
+.markdown-content .max-w-none > p {
+  margin: 0 0 1.25em;
+}
+.markdown-content blockquote > p {
+  margin: 0 0 0.75em;
+}
+.markdown-content blockquote > p:last-child {
+  margin-bottom: 0;
 }
 
 .prose br {
@@ -382,12 +399,6 @@ code {
 /* 다크 모드 대응 */
 .dark .prose br {
   background: linear-gradient(90deg, transparent, rgba(75, 85, 99, 0.5), transparent);
-}
-
-/* 단락 간격 강조 */
-.prose p+p {
-  margin-top: 1.5em;
-  padding-top: 0.5em;
 }
 
 /* 디자인 v2 — 페이지 코드에 박힌 v1 장식을 스코프에서 일괄로 걷어낸다. 페이지를 v2로 켤 때마다

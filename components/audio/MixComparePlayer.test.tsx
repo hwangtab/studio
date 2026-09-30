@@ -2,8 +2,8 @@ import React from 'react';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
-import HomeMixCompare from './HomeMixCompare';
-import { getMixCompareCopy, MIX_COMPARE_SOURCES } from '../../data/mixCompare';
+import MixComparePlayer from './MixComparePlayer';
+import { getMixCompareCopy, MIX_COMPARE_SETS } from '../../data/mixCompare';
 import { trackMicroEvent } from '../../utils/analytics';
 
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn(), trackLeadEvent: jest.fn() }));
@@ -36,8 +36,8 @@ class FakeAudio {
 }
 
 const copy = getMixCompareCopy('ko');
-const before = () => FakeAudio.instances.find((a) => a.src === MIX_COMPARE_SOURCES.before)!;
-const after = () => FakeAudio.instances.find((a) => a.src === MIX_COMPARE_SOURCES.after)!;
+const before = () => FakeAudio.instances.find((a) => a.src === MIX_COMPARE_SETS.full.sources.before)!;
+const after = () => FakeAudio.instances.find((a) => a.src === MIX_COMPARE_SETS.full.sources.after)!;
 
 beforeEach(() => {
   FakeAudio.instances = [];
@@ -48,10 +48,10 @@ beforeEach(() => {
 });
 afterEach(() => jest.restoreAllMocks());
 
-const mount = () => render(<HomeMixCompare locale="ko" copy={copy} portfolioHref="/ko/portfolio" />);
+const mount = () => render(<MixComparePlayer locale="ko" copy={copy} portfolioHref="/ko/portfolio" />);
 const clickPlay = async () => { await act(async () => { fireEvent.click(screen.getByRole('button', { name: copy.play })); }); };
 
-describe('HomeMixCompare', () => {
+describe('MixComparePlayer', () => {
   it('재생을 누르기 전에는 아무것도 내려받지 않는다 — preload none, load 호출 없음', () => {
     mount();
     expect(FakeAudio.instances).toHaveLength(2);
@@ -167,5 +167,117 @@ describe('HomeMixCompare', () => {
     mount();
     await act(async () => { fireEvent.click(screen.getByRole('button', { name: copy.after })); });
     expect(screen.getByRole('status')).toHaveTextContent(copy.switchedTo.after);
+  });
+
+  describe('외부 중단·재개 — 재생기기 변경, 블루투스 해제, 통화, 미디어 키', () => {
+    it('재생 중 외부에서 멈추면 아이콘이 일시정지에서 재생으로 돌아온다', async () => {
+      mount();
+      await clickPlay();
+      expect(screen.getByRole('button', { name: copy.pause })).toBeInTheDocument();
+      before().currentTime = 41.2;
+      act(() => { before().pause(); before().emit('pause'); });
+      expect(screen.getByRole('button', { name: copy.play })).toBeInTheDocument();
+      expect(screen.getByText('0:41')).toBeInTheDocument(); // 멈춘 위치가 그대로 남는다
+    });
+
+    it('멈춘 뒤 다시 누르면 그 자리에서 이어 재생한다', async () => {
+      mount();
+      await clickPlay();
+      before().currentTime = 41.2;
+      act(() => { before().pause(); before().emit('pause'); });
+      await clickPlay();
+      expect(before().playCalls).toBe(2);
+      expect(before().currentTime).toBe(41.2);
+      expect(screen.getByRole('button', { name: copy.pause })).toBeInTheDocument();
+    });
+
+    it('외부에서 다시 재생되면(미디어 키·제어센터) 아이콘이 일시정지로 바뀐다', async () => {
+      mount();
+      await clickPlay();
+      act(() => { before().pause(); before().emit('pause'); });
+      expect(screen.getByRole('button', { name: copy.play })).toBeInTheDocument();
+      act(() => { before().paused = false; before().emit('playing'); });
+      expect(screen.getByRole('button', { name: copy.pause })).toBeInTheDocument();
+    });
+
+    it('활성이 아닌 쪽의 pause는 무시한다 — 전환 때 우리가 멈추는 반대편', async () => {
+      mount();
+      await clickPlay();
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: copy.after })); });
+      // 이전 소리(before)의 pause 이벤트가 뒤늦게 도착해도 재생 중 표시는 그대로여야 한다
+      act(() => before().emit('pause'));
+      expect(screen.getByRole('button', { name: copy.pause })).toBeInTheDocument();
+    });
+
+    it('전환한 새 소리가 외부에서 멈추면 그것도 반영한다', async () => {
+      mount();
+      await clickPlay();
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: copy.after })); });
+      act(() => { after().pause(); after().emit('pause'); });
+      expect(screen.getByRole('button', { name: copy.play })).toBeInTheDocument();
+    });
+
+    it('끝까지 재생돼 pause가 먼저 와도 ended가 처리한다 — 처음으로 돌아간다', async () => {
+      mount();
+      await clickPlay();
+      before().currentTime = 305.9;
+      (before() as unknown as { ended: boolean }).ended = true;
+      act(() => { before().emit('pause'); before().emit('ended'); });
+      expect(screen.getByRole('button', { name: copy.play })).toBeInTheDocument();
+      expect(before().currentTime).toBe(0);
+    });
+
+    it('빠른 A→B→A 전환: 첫 전환의 뒤늦은 pause가 다시 켠 소리를 끄지 않는다', async () => {
+      mount();
+      await clickPlay();
+      let resolveAfter!: () => void;
+      after().playImpl = () => new Promise<void>((res) => { resolveAfter = res; });
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: copy.after })); }); // B로(재생 시작이 지연)
+      await act(async () => { fireEvent.click(screen.getByRole('button', { name: copy.before })); }); // 곧바로 A로 복귀
+      await act(async () => { resolveAfter(); });
+      expect(before().paused).toBe(false); // A는 계속 재생 중이어야 한다
+      expect(screen.getByRole('button', { name: copy.pause })).toBeInTheDocument();
+    });
+  });
+
+  describe('30초 발췌 변형 (발매·주문·믹싱 페이지)', () => {
+    const exCopy = getMixCompareCopy('ko');
+    const mountExcerpt = (props: Partial<React.ComponentProps<typeof MixComparePlayer>> = {}) =>
+      render(<MixComparePlayer locale="ko" copy={exCopy} portfolioHref="/ko/portfolio" variant="excerpt" component="ReleaseMixCompare" {...props} />);
+
+    it('발췌 음원(30초)을 쓰고 길이가 그에 맞다', () => {
+      mountExcerpt();
+      const srcs = FakeAudio.instances.map((a) => a.src);
+      expect(srcs).toEqual([MIX_COMPARE_SETS.excerpt.sources.before, MIX_COMPARE_SETS.excerpt.sources.after]);
+      expect(srcs.every((u) => u.includes('-excerpt'))).toBe(true);
+      expect(screen.getByText('/ 0:30')).toBeInTheDocument();
+      expect(screen.queryByText(/내려받/)).not.toBeInTheDocument(); // 다운로드 안내 문구는 두지 않는다(운영자 결정)
+      FakeAudio.instances.forEach((a) => expect(a.loadCalls).toBe(0)); // 여전히 재생 전에는 받지 않는다
+    });
+
+    it('계측 component 값이 자리마다 갈린다', async () => {
+      mountExcerpt({ component: 'MixingOrderMixCompare' });
+      await clickPlay();
+      const call = (trackMicroEvent as jest.Mock).mock.calls.find((c) => c[1].cta_id === 'mix_compare_play');
+      expect(call[1].component).toBe('MixingOrderMixCompare');
+    });
+
+    it('showPortfolioLink=false면 결제 흐름을 떠나는 링크가 없다', () => {
+      mountExcerpt({ showPortfolioLink: false });
+      expect(screen.queryByRole('link', { name: exCopy.portfolio })).not.toBeInTheDocument();
+    });
+
+    it('곡명을 화면에 적지 않는다(운영자 결정)', () => {
+      const { container } = mountExcerpt();
+      expect(container.textContent).not.toMatch(/물결|Mulgyeol|김동산|블루이웃/);
+    });
+
+    it('끝까지 재생하면 처음으로 돌아간다 — 30초 길이 기준', async () => {
+      mountExcerpt();
+      await clickPlay();
+      FakeAudio.instances[0].currentTime = 29.9;
+      act(() => FakeAudio.instances[0].emit('ended'));
+      expect(screen.getByRole('button', { name: exCopy.play })).toBeInTheDocument();
+    });
   });
 });

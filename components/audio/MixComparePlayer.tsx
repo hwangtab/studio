@@ -4,16 +4,21 @@ import { ArrowRight, Pause, Play } from '@/lib/lucide-icons';
 import { Button } from '../ui/Button';
 import { cn } from '../../lib/utils';
 import { trackMicroEvent } from '../../utils/analytics';
-import { MIX_COMPARE_SOURCES, type MixCompareCopy } from '../../data/mixCompare';
-import { MIX_COMPARE_DURATION_SECONDS, MIX_COMPARE_PEAKS } from '../../data/mixComparePeaks';
+import { MIX_COMPARE_SETS, type MixCompareCopy, type MixCompareVariant } from '../../data/mixCompare';
 
 type Side = 'before' | 'after';
 const SIDES: Side[] = ['before', 'after'];
 
-interface HomeMixCompareProps {
+interface MixComparePlayerProps {
   locale: string;
   copy: MixCompareCopy;
   portfolioHref: string;
+  /** 전체 곡(홈) 또는 30초 발췌(발매·주문·믹싱 페이지). copy도 같은 variant로 만든 것을 넘긴다. */
+  variant?: MixCompareVariant;
+  /** 계측 component 값 — 어느 페이지에서 들었는지 가른다. */
+  component?: string;
+  /** 결제 화면처럼 떠나면 안 되는 자리에서는 끈다. */
+  showPortfolioLink?: boolean;
 }
 
 const formatTime = (seconds: number): string => {
@@ -39,7 +44,8 @@ const Bars = ({ values, className }: { values: readonly number[]; className: str
 );
 
 /**
- * 홈의 믹싱 전·후 비교 — 같은 곡의 두 음원을 같은 재생 위치에서 바꿔 들을 수 있다.
+ * 믹싱 전·후 비교 — 같은 곡의 두 음원을 같은 재생 위치에서 바꿔 들을 수 있다. 홈(전체 곡)과 발매·주문·
+ * 믹싱 페이지(30초 발췌)가 같은 컴포넌트를 쓴다.
  *
  * - **자동 재생·미리 내려받기 없음.** 두 `Audio`는 `preload="none"`이고 재생을 누르기 전에는 한 바이트도
  *   받지 않는다(포트폴리오 LCP 사고와 같은 이유 — components/AudioPlayer/useAudioPlayer.ts). 처음 재생하면
@@ -51,7 +57,15 @@ const Bars = ({ values, className }: { values: readonly number[]; className: str
  * - 키보드·스크린리더: 재생 위치는 투명한 `<input type="range">`가 파형 위에 겹쳐 있어 방향키·터치 드래그가
  *   기본 동작이다. 전환 결과는 `aria-live`로 읽어 준다.
  */
-export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixCompareProps) {
+export default function MixComparePlayer({
+  locale,
+  copy,
+  portfolioHref,
+  variant = 'full',
+  component = 'HomeMixCompare',
+  showPortfolioLink = true,
+}: MixComparePlayerProps) {
+  const { sources, durationSeconds, peaks } = MIX_COMPARE_SETS[variant];
   const [active, setActive] = React.useState<Side>('before');
   const [playing, setPlaying] = React.useState(false);
   const [time, setTime] = React.useState(0);
@@ -66,14 +80,14 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
   const rangeRef = React.useRef<HTMLInputElement>(null);
 
   const track = (ctaId: 'mix_compare_play' | 'mix_compare_switch', side: Side) =>
-    trackMicroEvent('micro_mix_compare', { locale, component: 'HomeMixCompare', cta_id: ctaId, side });
+    trackMicroEvent('micro_mix_compare', { locale, component, cta_id: ctaId, side });
 
   /** 진행 표시(파형 채움·슬라이더)를 초 단위 위치로 옮긴다. React state를 거치지 않는다. */
   const paint = React.useCallback((seconds: number) => {
-    const ratio = Math.min(1, Math.max(0, seconds / MIX_COMPARE_DURATION_SECONDS));
+    const ratio = Math.min(1, Math.max(0, seconds / durationSeconds));
     if (clipRef.current) clipRef.current.style.clipPath = `inset(0 ${(1 - ratio) * 100}% 0 0)`;
     if (rangeRef.current) rangeRef.current.value = String(seconds);
-  }, []);
+  }, [durationSeconds]);
 
   const stopLoop = React.useCallback(() => {
     if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
@@ -95,9 +109,26 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
     SIDES.forEach((side) => {
       const el = new Audio();
       el.preload = 'none';
-      el.src = MIX_COMPARE_SOURCES[side];
+      el.src = sources[side];
       el.addEventListener('timeupdate', () => {
         if (activeRef.current === side) setTime(el.currentTime);
+      });
+      // 아이콘은 우리 버튼이 아니라 **오디오의 실제 상태**를 따라간다. 재생기기 변경·블루투스 해제·통화·
+      // 미디어 키·다른 탭의 재생 같은 외부 중단은 버튼을 거치지 않고 `pause`만 보낸다(iOS는 홈 화면 제어센터도).
+      // 전환 때 우리가 멈추는 반대편 음원의 pause는 activeRef가 이미 바뀌어 있어 여기서 걸러진다.
+      el.addEventListener('pause', () => {
+        if (activeRef.current !== side || el.ended) return; // 끝까지 간 경우는 ended가 처리한다
+        stopLoop();
+        setPlaying(false);
+        setTime(el.currentTime);
+        paint(el.currentTime);
+      });
+      // 외부에서 다시 재생됐을 때(미디어 키·제어센터) 아이콘과 진행 표시를 되살린다.
+      el.addEventListener('playing', () => {
+        if (activeRef.current !== side) return;
+        setFailed(false);
+        setPlaying(true);
+        if (rafRef.current === null) startLoop();
       });
       el.addEventListener('ended', () => {
         if (activeRef.current !== side) return;
@@ -129,7 +160,7 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
       });
       audios.current = {};
     };
-  }, [paint, stopLoop]);
+  }, [paint, startLoop, stopLoop, sources]);
 
   /** 메타데이터가 아직 없으면 준비되는 대로 위치를 옮긴다(iOS Safari는 그 전의 currentTime 설정을 무시한다). */
   const seekWhenReady = (el: HTMLAudioElement, seconds: number) => {
@@ -189,7 +220,9 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
     if (!playing) return;
     setFailed(false);
     to.play().then(
-      () => from.pause(),
+      // 그 사이 사용자가 다시 되돌려 이 음원이 도로 활성이 됐다면 멈추지 않는다 — 빠른 A→B→A 전환에서
+      // 첫 전환의 뒤늦은 pause가 방금 다시 켠 소리를 끄던 경쟁.
+      () => { if (activeRef.current !== current) from.pause(); },
       () => {
         from.pause();
         stopLoop();
@@ -209,8 +242,6 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
 
   return (
     <div>
-      <p className="typo-card-meta text-gray-600 dark:text-gray-300 mb-5 break-keep">{copy.track}</p>
-
       <div role="group" aria-label={copy.group} className="grid grid-cols-2 gap-3 mb-6">
         {SIDES.map((side) => (
           <button
@@ -232,20 +263,20 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
       </div>
 
       <div className="relative h-28 md:h-36 rounded-md focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70 focus-within:ring-offset-2 focus-within:ring-offset-white dark:focus-within:ring-offset-gray-900">
-        <Bars values={MIX_COMPARE_PEAKS[active]} className="bg-gray-300 dark:bg-gray-700" />
+        <Bars values={peaks[active]} className="bg-gray-300 dark:bg-gray-700" />
         <div ref={clipRef} className="absolute inset-0" style={{ clipPath: 'inset(0 100% 0 0)' }}>
-          <Bars values={MIX_COMPARE_PEAKS[active]} className="bg-primary dark:bg-primary-lighter" />
+          <Bars values={peaks[active]} className="bg-primary dark:bg-primary-lighter" />
         </div>
         <input
           ref={rangeRef}
           type="range"
           min={0}
-          max={MIX_COMPARE_DURATION_SECONDS}
+          max={durationSeconds}
           step={0.5}
           defaultValue={0}
           onChange={onSeek}
           aria-label={copy.position}
-          aria-valuetext={`${formatTime(time)} / ${formatTime(MIX_COMPARE_DURATION_SECONDS)}`}
+          aria-valuetext={`${formatTime(time)} / ${formatTime(durationSeconds)}`}
           className="absolute inset-0 h-full w-full cursor-pointer opacity-0 touch-pan-y"
         />
       </div>
@@ -264,7 +295,7 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
         </Button>
         <p className="font-title text-lg font-semibold tabular-nums text-gray-950 dark:text-white">
           {formatTime(time)}
-          <span className="text-gray-500 dark:text-gray-400"> / {formatTime(MIX_COMPARE_DURATION_SECONDS)}</span>
+          <span className="text-gray-500 dark:text-gray-400"> / {formatTime(durationSeconds)}</span>
         </p>
       </div>
 
@@ -275,16 +306,17 @@ export default function HomeMixCompare({ locale, copy, portfolioHref }: HomeMixC
       <div className="mt-8 border-t border-gray-200 dark:border-gray-800 pt-5 flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
         <div className="max-w-2xl">
           <p className="typo-card-body text-gray-600 dark:text-gray-300 break-keep">{copy.note}</p>
-          <p className="mt-2 typo-card-meta text-gray-500 dark:text-gray-400 break-keep">{copy.download}</p>
         </div>
-        <Link
-          href={portfolioHref}
-          prefetch={false}
-          className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4 rounded-sm shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
-        >
-          {copy.portfolio}
-          <ArrowRight size={16} aria-hidden="true" />
-        </Link>
+        {showPortfolioLink && (
+          <Link
+            href={portfolioHref}
+            prefetch={false}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline underline-offset-4 rounded-sm shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
+          >
+            {copy.portfolio}
+            <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        )}
       </div>
     </div>
   );

@@ -51,8 +51,9 @@ export type MicroEventName =
   // 견적 요청서(/ko/quote)를 처음 만졌을 때 한 번. 관심 신호일 뿐 리드가 아니다 — 견적 결과로
   // 카톡을 여는 클릭은 lead_click_kakao(cta_id quote_kakao, quote_code)로 따로 잡힌다.
   | 'micro_quote_start'
-  // 홈의 믹싱 전·후 비교 음원. cta_id: mix_compare_play(처음 재생 한 번) · mix_compare_switch(전환, side 동반).
-  // 관심 신호일 뿐 리드가 아니다.
+  // 믹싱 전·후 비교 음원. component로 자리를 가른다: HomeMixCompare(전체 곡) · MixingMasteringMixCompare ·
+  // ReleaseMixCompare · MixingOrderMixCompare(30초 발췌). cta_id: mix_compare_play(처음 재생 한 번) ·
+  // mix_compare_switch(전환, side 동반). 관심 신호일 뿐 리드가 아니다.
   | 'micro_mix_compare';
 
 export type TrackedEventName = LeadEventName | MicroEventName;
