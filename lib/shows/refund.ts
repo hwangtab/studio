@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { refunds } from '../../db/schema';
-import { refundIdempotencyKey, remainingRefundable, type PaymentWithRefunds } from '../booking/cancel';
+import { remainingRefundable, type PaymentWithRefunds } from '../booking/cancel';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import type { TossPayment } from '../booking/toss';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
@@ -24,7 +24,12 @@ import { parseLeadingTag } from './tossCodes';
  *    "체크인 안 됨"을 걸어 두 관리자가 같은 티켓을 동시에 눌러도 한쪽만 이긴다
  *    (lineRefund.ts의 `funding_pledge_items.refunded_quantity` UPDATE와 같은 자리).
  * 2. **토스 부분 취소**: 금액 = Σ calcRefundAmount(티켓 단가, 공지 시점 요율). 멱등 키에
- *    (주문번호, 환불액)을 넣어 재시도가 replay되게 한다(`refundIdempotencyKey`).
+ *    **환불하는 티켓 id들(정렬)**을 넣는다(`ticketRefundIdempotencyKey`) — 주문번호+금액만
+ *    쓰면 같은 주문에서 단가가 같은 서로 다른 티켓 두 장을 따로따로 환불할 때 두 호출의
+ *    금액이 우연히 같아져 같은 키가 되고, 토스 멱등키 replay가 두 번째 호출에 첫 번째
+ *    취소의 응답을 그대로 돌려준다 — 우리 기록은 "티켓 두 장 환불됨(2만원)"인데 토스는
+ *    실제로 1만원만 취소한 상태가 남는다(과소 환불). 티켓 id를 키에 넣으면 서로 다른
+ *    환불 호출은 금액이 같아도 항상 다른 키가 된다.
  * 3. **기록**: 환불 행은 웹훅 동기화(`syncShowCancelsFromToss`)와 같은 **델타 INSERT**로
  *    쓴다 — 토스 응답의 누적 취소액에서 이미 기록된 합을 뺀 만큼만. 웹훅이 먼저 기록했어도
  *    이중으로 남지 않는다.
@@ -43,6 +48,17 @@ export type RefundOutcome =
   | { status: 'toss_unknown' };
 
 const REFUND_REASON = '공연 티켓 환불(§11.3 취소환불표)';
+
+/**
+ * 티켓 환불 전용 멱등 키 — `refundIdempotencyKey(orderNo, amount, prefix)`가 아니라 이 함수를
+ * 쓴다. 그 헬퍼는 (주문번호, 금액)만 보므로, 한 주문에서 단가가 같은 두 티켓을 서로 다른
+ * 시점에 따로 환불하면 두 호출의 금액이 같아 같은 키가 나온다 — 토스가 두 번째 호출을
+ * "이미 처리한 요청"으로 replay해 첫 번째 취소 응답을 그대로 돌려주고, 실제로는 그 금액만
+ * 한 번 나갔는데 우리 기록은 두 번 다 성공으로 남는다(과소 환불). 티켓 id들(정렬)을 키에
+ * 넣으면 어떤 두 환불 호출도 대상 티켓 집합이 다른 한 항상 다른 키가 된다.
+ */
+const ticketRefundIdempotencyKey = (orderNo: string, ticketIds: string[]): string =>
+  `tkt-refund:${orderNo}:${[...ticketIds].sort().join(',')}`;
 
 export async function refundShowTickets(
   input: { orderNo: string; ticketIds: string[]; noticeAt: Date },
@@ -141,7 +157,7 @@ export async function refundShowTickets(
   };
 
   // 2) 토스 부분 취소.
-  const idempotencyKey = refundIdempotencyKey(input.orderNo, totalAmount, 'tkt-refund');
+  const idempotencyKey = ticketRefundIdempotencyKey(input.orderNo, input.ticketIds);
   const cancelResult = await toss.cancelPayment({
     paymentKey: payment.paymentKey,
     cancelReason: `[#${idempotencyKey}] 공연 티켓 환불`,
@@ -185,7 +201,7 @@ export async function refundShowTickets(
   // 3) 기록 — 토스가 말한 누적 취소액 − 이미 기록된 합. 웹훅이 먼저 기록했으면 0행이다
   // (lineRefund.ts·syncFundingCancelledFromToss와 동일한 델타 INSERT).
   const cancelledTotal = cancelResult.payment.cancels?.reduce((sum, c) => sum + c.cancelAmount, 0) ?? totalAmount;
-  await db.batch([
+  const recordStatements = [
     db.run(sql`
       INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
       SELECT lower(hex(randomblob(16))), ${payment.id},
@@ -200,7 +216,8 @@ export async function refundShowTickets(
         AND id IN (${ticketIdList})
         AND status = 'refunding'
     `),
-  ] as [any, any]);
+  ];
+  await db.batch(recordStatements as [typeof recordStatements[number], ...typeof recordStatements]);
 
   // 다시 읽어 상태를 정한다 — 이 회차의 모든 티켓이 환불/무효면 전액 환불, 아니면 부분 환불.
   const remainingTickets = await db.query.showTickets.findMany({
@@ -227,9 +244,16 @@ export async function refundShowTickets(
  *
  * 티켓 상태 정리는 두 갈래로만 한다(어느 티켓이 이번 취소에 해당하는지 웹훅 페이로드만으로는
  * 알 수 없어, 알 수 있는 범위로 제한한다):
- * - **'refunding' 상태의 티켓**은 무조건 'refunded'로 넘긴다 — 이 상태는 오직
- *   `refundShowTickets`의 자기 선점으로만 생기므로, 이 결제에 대한 취소 확인이 도착했다는
- *   것 자체가 그 선점을 확정할 근거다(§7.9 NETWORK_ERROR 재확인 경로).
+ * - **'refunding' 상태의 티켓**은 이 이벤트가 실제로 정산하는 티켓 집합만 'refunded'로
+ *   넘긴다. `refundShowTickets`가 남긴 태그(`tkt-refund:<orderNo>:<ticketId1,ticketId2,…>`)에서
+ *   그 집합을 그대로 복원할 수 있다 — 태그 안에 정확히 그 환불이 겨냥한 티켓 id들이 정렬돼
+ *   들어 있기 때문이다(`ticketRefundIdempotencyKey`). 이 스코프 없이 주문의 'refunding' 전부를
+ *   쓸어 담으면, 같은 주문의 서로 다른 두 티켓을 각각 다른 시점에 환불 중일 때 한쪽 이벤트가
+ *   먼저 도착해 **아직 정산되지 않은 다른 티켓**까지 'refunded'로 확정해 버린다 — 그 뒤 그
+ *   티켓의 토스 취소가 실제로 거절되면, 실패 경로의 revertClaim이 "이미 'refunded'라
+ *   'refunding'이 아니다"로 0행을 매치해 아무 것도 되돌리지 못하고, 돈이 안 돌아간 티켓이
+ *   'refunded'로 남는다. `tkt-refund:` 태그가 아닌 경우(자동 취소·회차 취소, 또는 태그
+ *   없음)는 원래부터 주문 전체를 대상으로 하는 흐름이라 그대로 넓게 정리한다.
  * - **주문이 전액 환불로 판정될 때만** 남은 held/issued 티켓까지 함께 정리한다(held→void,
  *   issued→refunded) — 이 경우는 "어느 티켓인지 몰라 못 정한다"는 문제가 없다(전부 다다).
  *   부분 취소는 이 정리를 하지 않는다 — 관리자 콘솔에서 직접 부분 취소하면 금액은 맞아도
@@ -275,6 +299,22 @@ export async function syncShowCancelsFromToss(orderNo: string, tossPayment: Toss
   const tag = parseLeadingTag(lastCancel?.cancelReason);
   const nextStatus = cancelledTotal >= order.totalAmount ? 'refunded' : 'partially_refunded';
 
+  // `tkt-refund:` 태그면 이 이벤트가 정산하는 정확한 티켓 id 집합을 태그에서 복원한다 —
+  // 없으면(다른 태그·태그 없음) null로 두고 아래에서 주문 전체를 대상으로 한다.
+  const TICKET_REFUND_TAG_PREFIX = 'tkt-refund:';
+  let scopedTicketIds: string[] | null = null;
+  if (tag && tag.startsWith(TICKET_REFUND_TAG_PREFIX)) {
+    const rest = tag.slice(TICKET_REFUND_TAG_PREFIX.length);
+    const sepIndex = rest.indexOf(':');
+    if (sepIndex !== -1) {
+      const tagOrderNo = rest.slice(0, sepIndex);
+      const idsPart = rest.slice(sepIndex + 1);
+      if (tagOrderNo === orderNo && idsPart.length > 0) {
+        scopedTicketIds = idsPart.split(',');
+      }
+    }
+  }
+
   const inserted = await db.run(sql`
     INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
     SELECT lower(hex(randomblob(16))), ${paymentRow.id},
@@ -295,11 +335,25 @@ export async function syncShowCancelsFromToss(orderNo: string, tossPayment: Toss
   `);
 
   // 'refunding'은 오직 refundShowTickets의 자기 선점으로만 생기므로, 이 결제에 대한 취소
-  // 확인이 왔다는 것 자체가 그 선점을 확정할 근거다 — 무조건 'refunded'로 넘긴다.
-  await db.run(sql`
-    UPDATE show_tickets SET status = 'refunded'
-    WHERE order_no = ${orderNo} AND status = 'refunding'
-  `);
+  // 확인이 왔다는 것 자체가 그 선점을 확정할 근거다 — 단, scopedTicketIds가 있으면(위에서
+  // tkt-refund 태그를 복원했으면) **이 이벤트가 실제로 겨냥한 티켓만** 넘긴다. 주문의
+  // 'refunding' 전부를 쓸어 담으면, 같은 주문의 다른 티켓이 별도로 진행 중인 환불까지
+  // 이 이벤트가 가로채 확정해 버릴 수 있다(이 파일 상단 함수 설명 참조).
+  if (scopedTicketIds) {
+    const scopedIdList = sql.join(
+      scopedTicketIds.map((id) => sql`${id}`),
+      sql`, `,
+    );
+    await db.run(sql`
+      UPDATE show_tickets SET status = 'refunded'
+      WHERE order_no = ${orderNo} AND id IN (${scopedIdList}) AND status = 'refunding'
+    `);
+  } else {
+    await db.run(sql`
+      UPDATE show_tickets SET status = 'refunded'
+      WHERE order_no = ${orderNo} AND status = 'refunding'
+    `);
+  }
 
   if (nextStatus === 'refunded') {
     // 전액 취소로 판정될 때만 — 어느 티켓인지 몰라 못 정하는 문제가 없다(전부 다다).
