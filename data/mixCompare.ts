@@ -1,8 +1,17 @@
 import type { Locale } from '../lib/i18n';
-import { MIX_COMPARE_TAG } from './mixComparePeaks';
+import {
+  MIX_COMPARE_DURATION_SECONDS,
+  MIX_COMPARE_PEAKS,
+  MIX_COMPARE_TAG,
+} from './mixComparePeaks';
+import {
+  MIX_COMPARE_EXCERPT_DURATION_SECONDS,
+  MIX_COMPARE_EXCERPT_PEAKS,
+  MIX_COMPARE_EXCERPT_TAG,
+} from './mixComparePeaks.excerpt';
 
 /**
- * 홈의 "믹싱 전 · 후" 비교 (components/home/HomeMixCompare.tsx).
+ * 홈의 "믹싱 전 · 후" 비교 (components/audio/MixComparePlayer.tsx).
  *
  * 곡은 김동산과 블루이웃 〈물결〉(2024-12-20). 스튜디오 놀이 녹음·믹싱했다(data/portfolio/items.ts). "믹싱 후"의
  * 정체는 믹싱만 거친 소리가 아니라 **발매본**이라 라벨이 "믹싱 후 · 발매본"이다. 마스터링 담당은 화면에 적지 않는다
@@ -16,13 +25,39 @@ export const MIX_COMPARE_SOURCES = {
   after: `/audio/mix-compare-after-${MIX_COMPARE_TAG}.mp3`,
 } as const;
 
-/** 재생하면 내려받는 크기(파일 하나) — 화면에 "약 5MB"로 적는다. 128kbps × 305.9초. */
-export const MIX_COMPARE_DOWNLOAD_MB = 5;
+export type MixCompareVariant = 'full' | 'excerpt';
+
+/**
+ * 곡 세트 둘. `full`은 홈의 전체 곡(305.9초), `excerpt`는 발매·주문·믹싱 페이지의 30초 발췌(160~190초 구간,
+ * 밴드와 보컬이 모두 들어간 구간 — 도입부·끝을 피했다). 발췌는 음량을 그 구간 안에서 다시 맞춘 별도 음원이다
+ * (scripts/build-mix-compare.mjs --variant excerpt).
+ * `downloadMb`는 화면에 적는 재생 시 받는 크기(파일 하나) — 128kbps × 길이.
+ */
+export const MIX_COMPARE_SETS = {
+  full: {
+    sources: MIX_COMPARE_SOURCES,
+    durationSeconds: MIX_COMPARE_DURATION_SECONDS,
+    peaks: MIX_COMPARE_PEAKS,
+    downloadMb: '5',
+  },
+  excerpt: {
+    sources: {
+      before: `/audio/mix-compare-before-${MIX_COMPARE_EXCERPT_TAG}.mp3`,
+      after: `/audio/mix-compare-after-${MIX_COMPARE_EXCERPT_TAG}.mp3`,
+    },
+    durationSeconds: MIX_COMPARE_EXCERPT_DURATION_SECONDS,
+    peaks: MIX_COMPARE_EXCERPT_PEAKS,
+    downloadMb: '0.5',
+  },
+} as const;
 
 export interface MixCompareCopy {
   eyebrow: string;
   title: string;
-  track: string;
+  /** 발췌본을 넣는 페이지들의 소제목 — 절 제목이 아니라 그 절 안의 블록 제목이다. */
+  excerptTitle: string;
+  /** 주문 마법사에서 접어 둔 채 보여 주는 한 줄 — 누르면 발췌본 플레이어가 열린다. */
+  excerptSummary: string;
   before: string;
   after: string;
   group: string;
@@ -41,7 +76,9 @@ const t = (
   dict: { ko: string; en: string; zh?: string; es?: string; vi?: string; th?: string; uz?: string },
 ): string => dict[locale as keyof typeof dict] || dict.en || dict.ko;
 
-export const getMixCompareCopy = (locale: Locale): MixCompareCopy => ({
+export const getMixCompareCopy = (locale: Locale, variant: MixCompareVariant = 'full'): MixCompareCopy => {
+  const mb = MIX_COMPARE_SETS[variant].downloadMb;
+  return {
   eyebrow: t(locale, {
     ko: '믹싱 전후', en: 'Before & after', zh: '混音前后', es: 'Antes y después',
     vi: 'Trước & sau khi mix', th: 'ก่อนและหลังมิกซ์', uz: 'Miksdan oldin va keyin',
@@ -55,9 +92,23 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => ({
     th: 'ฟังเสียงก่อนและหลังมิกซ์ด้วยตัวเอง',
     uz: 'Miksdan oldingi va keyingi ovozni o‘zingiz tinglang',
   }),
-  track: t(locale, {
-    ko: '김동산과 블루이웃 〈물결〉',
-    en: 'Kim Dong-san & Blueyouth — “Mulgyeol”',
+  excerptTitle: t(locale, {
+    ko: '믹싱 전과 후, 30초만 들어 보세요',
+    en: 'Hear the mix in 30 seconds',
+    zh: '30秒听听混音前后',
+    es: 'Escucha la mezcla en 30 segundos',
+    vi: 'Nghe bản mix trước và sau trong 30 giây',
+    th: 'ฟังก่อนและหลังมิกซ์ใน 30 วินาที',
+    uz: 'Miksdan oldingi va keyingi ovozni 30 soniyada tinglang',
+  }),
+  excerptSummary: t(locale, {
+    ko: '먼저 믹싱 전·후 30초 들어 보기',
+    en: 'First, hear a 30-second before & after',
+    zh: '先听30秒混音前后对比',
+    es: 'Primero, escucha 30 segundos antes y después',
+    vi: 'Nghe thử 30 giây trước và sau khi mix',
+    th: 'ฟังก่อนและหลังมิกซ์ 30 วินาที',
+    uz: 'Avval 30 soniyalik oldin va keyin ni tinglang',
   }),
   before: t(locale, {
     ko: '믹싱 전', en: 'Before mix', zh: '混音前', es: 'Antes de la mezcla',
@@ -87,13 +138,13 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => ({
     uz: 'Ikkala versiya bir xil yozuvdan olingan va bir xil balandlikda ijro etiladi. Qoʻshiq Studio NOLda yozilgan va miks qilingan.',
   }),
   download: t(locale, {
-    ko: `재생하면 음원을 내려받습니다(각 약 ${MIX_COMPARE_DOWNLOAD_MB}MB).`,
-    en: `Playing downloads the audio (about ${MIX_COMPARE_DOWNLOAD_MB} MB each).`,
-    zh: `播放时会下载音频（每个约 ${MIX_COMPARE_DOWNLOAD_MB}MB）。`,
-    es: `Al reproducir se descarga el audio (unos ${MIX_COMPARE_DOWNLOAD_MB} MB cada uno).`,
-    vi: `Khi phát sẽ tải âm thanh (khoảng ${MIX_COMPARE_DOWNLOAD_MB} MB mỗi bản).`,
-    th: `เมื่อกดเล่นจะโหลดไฟล์เสียง (ประมาณ ${MIX_COMPARE_DOWNLOAD_MB} MB ต่อเวอร์ชัน)`,
-    uz: `Ijro etilganda audio yuklanadi (har biri taxminan ${MIX_COMPARE_DOWNLOAD_MB} MB).`,
+    ko: `재생하면 음원을 내려받습니다(각 약 ${mb}MB).`,
+    en: `Playing downloads the audio (about ${mb} MB each).`,
+    zh: `播放时会下载音频（每个约 ${mb}MB）。`,
+    es: `Al reproducir se descarga el audio (unos ${mb} MB cada uno).`,
+    vi: `Khi phát sẽ tải âm thanh (khoảng ${mb} MB mỗi bản).`,
+    th: `เมื่อกดเล่นจะโหลดไฟล์เสียง (ประมาณ ${mb} MB ต่อเวอร์ชัน)`,
+    uz: `Ijro etilganda audio yuklanadi (har biri taxminan ${mb} MB).`,
   }),
   error: t(locale, {
     ko: '음원을 불러오지 못했습니다. 잠시 뒤 다시 눌러 주세요.',
@@ -118,4 +169,5 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => ({
       vi: 'Sau khi mix', th: 'หลังมิกซ์', uz: 'Miksdan keyin',
     }),
   },
-});
+};
+};

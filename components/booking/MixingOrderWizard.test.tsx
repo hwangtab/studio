@@ -367,3 +367,29 @@ describe('MixingOrderWizard 위젯 약관 가드', () => {
     expect(screen.queryByText(/결제 서비스 이용 약관/)).toBeNull();
   });
 });
+
+describe('MixingOrderWizard 믹싱 전·후 30초 듣기', () => {
+  it('접혀 있고, 열기 전에는 음원 연결이 하나도 생기지 않는다', () => {
+    const created: unknown[] = [];
+    const Original = (global as unknown as { Audio?: unknown }).Audio;
+    (global as unknown as { Audio: unknown }).Audio = function FakeAudio() { created.push(this); return { addEventListener() {}, pause() {}, removeAttribute() {}, load() {} }; };
+    try {
+      render(<MixingOrderWizard />);
+      const summary = screen.getByText('먼저 믹싱 전·후 30초 들어 보기');
+      expect(summary.closest('details')).not.toHaveAttribute('open');
+      expect(created).toHaveLength(0);
+      expect(screen.queryByRole('button', { name: '재생' })).not.toBeInTheDocument();
+    } finally {
+      (global as unknown as { Audio?: unknown }).Audio = Original;
+    }
+  });
+
+  it('열면 30초 플레이어가 나타나고, 결제 흐름을 떠나는 포트폴리오 링크는 없다', async () => {
+    const user = userEvent.setup();
+    render(<MixingOrderWizard />);
+    await user.click(screen.getByText('먼저 믹싱 전·후 30초 들어 보기'));
+    expect(await screen.findByRole('button', { name: '재생' })).toBeInTheDocument();
+    expect(screen.getByText('/ 0:30')).toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: '포트폴리오 보기' })).not.toBeInTheDocument();
+  });
+});

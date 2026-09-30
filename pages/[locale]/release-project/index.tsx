@@ -13,6 +13,7 @@ import FAQSection from '../../../components/ui/FAQSection';
 import { Section } from '../../../components/ui/Section';
 import ReleaseConsultationSteps from '../../../components/release/ReleaseConsultationSteps';
 import ReleaseDiscographySection from '../../../components/release/ReleaseDiscographySection';
+import MixCompareBlock from '../../../components/audio/MixCompareBlock';
 import ReleaseHeroCtas from '../../../components/release/ReleaseHeroCtas';
 import ReleaseProducerIntro from '../../../components/release/ReleaseProducerIntro';
 import ReleaseReviewsSection from '../../../components/release/ReleaseReviewsSection';
@@ -319,6 +320,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
         viewAllLabel={t('releaseProject.discography.viewAll')}
         items={portfolioItems.filter((item) => item.featured)}
         onSelectItem={loadError ? undefined : openModal}
+        footer={<MixCompareBlock locale={locale} component="ReleaseMixCompare" />}
       />
 
       {/* 최근 작업 노트 spotlight — 검증된 productionNotes 3건 */}
