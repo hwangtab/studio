@@ -20,9 +20,10 @@ const KSFP_DIR = '/images/funding/keep-singing-for-palestine/gallery';
  * 그림을 바꾸면 파일명(날짜)도 바꿀 것 — /images/**는 immutable 캐시다.
  */
 const GALLERIES: Record<string, GalleryPhoto[]> = {
-  // 파일 번호는 촬영 시각의 역순이다(01이 가장 늦은 밤). 낮에서 밤으로 흐르도록 뒤에서부터 센다.
-  'keep-singing-for-palestine': Array.from({ length: 14 }, (_, i) => ({
-    src: `${KSFP_DIR}/${String(14 - i).padStart(2, '0')}-20260930.webp`,
+  // 파일 번호는 촬영 시각의 역순이다(01이 가장 늦은 밤). 낮에서 밤으로 흐르도록 뒤에서부터 세되,
+  // 첫 큰 타일은 운영자가 고른 13번 사진이라 13·14번만 맞바꿨다(2026-09-30).
+  'keep-singing-for-palestine': [13, 14, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].map((n, i) => ({
+    src: `${KSFP_DIR}/${String(n).padStart(2, '0')}-20260930.webp`,
     alt: `9월 19일 서십자각터 거리집회 현장 사진 ${i + 1}`,
   })),
 };
