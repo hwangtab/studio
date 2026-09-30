@@ -231,6 +231,15 @@ export const orderStatusEnum = [
   'refunded',
   'failed', // 승인 실패
   'expired', // 15분 내 미결제
+  /**
+   * 티켓(shows) 도메인 전용 — 승인 후 미기록 주문의 자동 전액 취소 중임을 표시하는 소유권
+   * CAS 표식(lib/shows/confirm.ts의 autoCancelShowApproval). `orders.status`에는 DB CHECK
+   * 제약이 없으므로(grep으로 확인) 값 추가에 마이그레이션이 필요 없다. 이 값이 남아 있는
+   * 주문은 "다른 실행이 지금 자동 취소를 처리 중"이라는 뜻이라 웹훅 신뢰 경로의
+   * acceptableStatuses에는 포함하지 않는다 — lib/booking/confirm.ts에는 대응하는 상태가
+   * 없다(그 모듈은 같은 함수 안에서 즉시 처리해 별도 표식이 필요 없다).
+   */
+  'auto_cancel_pending',
 ] as const;
 export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
