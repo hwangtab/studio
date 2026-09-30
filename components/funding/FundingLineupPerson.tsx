@@ -39,6 +39,14 @@ interface LineupPerson {
  * SNS 링크는 공연 라인업을 공지한 페이스북 게시물(2026-09-30, 운영자가 링크 전달)에 실린
  * 것만 쓴다 — 실제로 열어서 각 계정이 200으로 응답하는 것을 확인함.
  *
+ * 소개 문구는 인스타그램 바이오가 아니라 `~/pine-nut/website/src/lib/concert.ts`의
+ * `MOK_LINEUP`에서 그대로 가져온다 — pine-nut이 이미 각자의 웹자료(ggac.kr·indistreet.com
+ * 등, 없으면 주최 측이 받은 소개글)로 출처를 밝혀 정리해 둔 것이다. 처음 옮길 때 한 줄로
+ * 줄였다가(운영자 지적 2026-09-30: "뮤지션 소개는 최대한 풍부할수록 좋아") 원문 그대로
+ * 되살렸다 — 인스타그램 바이오 자체는 짧은 태그라인뿐이라("☭", "I was born in a car" 등)
+ * 거기서 더 가져올 내용이 없다. 다음에 라인업이 바뀌면 이 파일이 아니라 pine-nut의
+ * concert.ts를 먼저 볼 것 — 정본은 거기다.
+ *
  * 사람이 하나면 카드 전체를 `BaseCard`의 `href`로 링크한다(운영자 지적 2026-09-30: "이름
  * 옆 새창 아이콘 말고 카드를 누르면 이동하는 게 낫다") — `BaseCard`가 이미 다른 펀딩 카드와
  * 같은 hover 리프트·press 스케일을 링크에 붙여 준다. 듀오(사람 둘, SNS 둘)는 카드 하나를
@@ -59,39 +67,43 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
       // 적이 있는 계정이다 — rottenmogwa가 맞는 계정이다(2026-09-30 라인업 공지에서 재확인).
       { label: 'DJ괄', sns: 'https://www.instagram.com/rottenmogwa/' },
     ],
-    bio: '두 사람이 번갈아 판을 올리는 b2b 세트입니다.',
+    bio: '두 사람이 번갈아 판을 올리는 b2b 세트. 마을회관 앞마당에 턴테이블이 놓입니다. 노래가 멎은 자리를 비트가 이어받습니다.',
     photo: '/images/funding/mok-jareugi/lineup/dj-stopone-20260930.webp',
     photoSecondary: '/images/funding/mok-jareugi/lineup/dj-gwal-20260930.webp',
   },
   'mok-jareugi-sabbaha': {
     name: '사바하',
     sns: 'https://www.instagram.com/sabbaha_kr/',
-    bio: '2013년 솔로 프로젝트로 출발해 2023년 듀오가 된 둠드론 밴드입니다.',
+    // 출처: ggac.kr/artists/sabbaha (pine-nut concert.ts에 이미 정리돼 있던 소개).
+    bio: "2013년 솔로 프로젝트로 출발해 2023년 듀오로 자리잡은 둠드론 밴드. 리더 The Slaughter의 기타·보컬에 2025년 드러머 The Mortician이 합류해 서울·수원을 기반으로 활동합니다. 스스로 '사이비 오컬트 둠드론'이라 부릅니다. 2024년 정규 「THUNDER ROCKS」.",
     photo: '/images/funding/mok-jareugi/lineup/sabbaha-20260930.webp',
   },
   'mok-jareugi-collins': {
     name: '달 위의 콜린스',
     sns: 'https://www.instagram.com/c011ins_0n_the_m00n/',
-    bio: '홍대 클럽빵을 거점으로 공연해 온 팀입니다.',
+    // 출처: indistreet.com/ko/artists/dalwiyikolrinseu
+    bio: '홍대 클럽빵을 거점으로 공연해온 팀. 2025년 가을 두 달 사이에 싱글 「비둘기의 失樂園」·「PM 7:37」과 EP 「19.8㎡에서의 漂流記」, 앨범 「Thief 86」을 잇달아 냈습니다.',
     photo: '/images/funding/mok-jareugi/lineup/collins-on-the-moon-20260930.webp',
   },
   'mok-jareugi-parkjihwi': {
     name: '박지휘',
     sns: 'https://www.instagram.com/sickbaby109/',
-    bio: '프리포크 싱어송라이터입니다.',
+    bio: "프리포크 싱어송라이터. 일러스트레이터 2da(이다)의 그림에서 따온 'sickbaby'라는 이름으로도 불렀습니다. 로파이한 프리포크로 시작해, 근래에는 엘리엇 스미스의 새드코어에 기운 곡을 씁니다.",
     photo: '/images/funding/mok-jareugi/lineup/parkjihwi-20260930.webp',
   },
   'mok-jareugi-next': {
     name: '최양다음 NEXT',
     // 인스타그램 계정은 라인업 공지에 없었다 — 있는 페이스북 프로필로 연결한다.
     sns: 'https://www.facebook.com/profile.php?id=61571311203395',
-    bio: '독학으로 음악을 익힌 싱어송라이터입니다.',
+    // 출처: 본인이 공개한 링크트리 이력서. pine-nut이 이미 4개로 추려 둔 것을 그대로 쓴다
+    // (원문엔 더 많은 공연 이력이 있으나 다 넣으면 문장이 아니라 목록이 된다고 판단했다).
+    bio: "독학으로 음악을 익힌 싱어송라이터. 아버지 성 '최'와 어머니 성 '양'에 '다음'을 붙인 이름으로, 호주제에 맞선다는 뜻을 담아 지었습니다. 그 이름을 여러 나라 말로 씁니다 — 다음, NEXT, 次, Nächste, 翌. 세월호 10주기 추모, 수요시위, 팔레스타인 연대 집회, 5·18 기념식 같은 자리에서 노래해왔습니다.",
     photo: '/images/funding/mok-jareugi/lineup/next-20260930.webp',
   },
   'mok-jareugi-van-kiden': {
     name: 'VAN KIDEN',
     sns: 'https://www.instagram.com/van_kiden/',
-    bio: '랩과 싱잉을 오가는 뮤지션입니다.',
+    bio: '랩과 싱잉을 오가는 뮤지션. 2022년 싱글 「LIGHT」로 데뷔했습니다. 느끼는 감정을 그대로 전하고, 스스로에게 부끄럽지 않은 음악을 만들어가려 합니다.',
     photo: '/images/funding/mok-jareugi/lineup/van-kiden-20260930.webp',
   },
   // 9·19 집회(keep-singing-for-palestine) 출연진 — 집회 뒤 후기 개편 때 절이 통째로 빠졌다가
