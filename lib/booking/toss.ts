@@ -11,7 +11,7 @@ export interface TossPayment {
   method?: string;
   approvedAt?: string;
   receipt?: { url: string };
-  cancels?: Array<{ transactionKey: string; cancelAmount: number }>;
+  cancels?: Array<{ transactionKey: string; cancelAmount: number; cancelReason?: string }>;
 }
 
 export type TossResult =

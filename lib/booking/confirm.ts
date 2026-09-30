@@ -380,6 +380,14 @@ export const confirmBookingPayment = async (
   const order = await findOrderByOrderNo(input.orderNo);
   if (!order) return { ok: false, code: 'not_found', message: '주문을 찾을 수 없습니다.' };
 
+  // 이 함수는 session·mixing 전용이다 — ticket·funding·subscription은 각자의 confirm 함수가
+  // 있다(lib/shows/confirm.ts·lib/funding/confirm.ts·lib/billing/service.ts). 호출부가 잘못
+  // 라우팅해도(예: webhook.ts의 orderType 분기가 깨진 경우) 여기서 조용히 session/mixing
+  // 전용 로직(캘린더 재확인·bookings/work_orders 전이)을 다른 타입 주문에 돌리지 않는다.
+  if (order.type !== 'session' && order.type !== 'mixing') {
+    return { ok: false, code: 'invalid_state', message: '이미 처리되었거나 만료된 주문입니다.' };
+  }
+
   // success 페이지 새로고침·웹훅 중복 도착 멱등성 — 단, 소유 증명이 있을 때만이다.
   //
   // 이 분기는 manageToken을 그대로 돌려주고, success.tsx는 그 토큰으로 manage URL을 만들어
