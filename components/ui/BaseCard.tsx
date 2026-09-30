@@ -104,9 +104,23 @@ const BaseCard = React.memo(({
 
     if (href) {
         const resolvedRel = target === '_blank' ? (rel ?? 'noopener noreferrer nofollow') : rel;
+        // target="_blank"는 클릭하는 순간 새 탭이 포인터를 가져가 원래 탭에 pointerleave가
+        // 오지 않는다 — whileHover 리프트(-4px)가 클릭 뒤에도 얼어붙은 채 남는다(2026-09-30
+        // 실측: about.tsx 카카오톡·네이버 지도 카드, 목자르기 출연진 카드에서 재현. `:hover`
+        // matches true, transform: translateY(-4px) 그대로). Framer의 호버 제스처는
+        // pointerleave를 노드에서 직접 구독하므로, 합성 이벤트로 같은 신호를 보내 리프트만
+        // 즉시 되돌린다 — 스펙큘러 글로우는 CSS `:hover` 구동이라 실제 마우스가 움직여야
+        // 꺼지지만, 카드가 계속 들려 있는 것보다는 훨씬 덜 눈에 띈다.
+        const handleBlankTargetClick = (e: React.MouseEvent<HTMLElement>) => {
+            onClick?.(e);
+            const node = e.currentTarget;
+            requestAnimationFrame(() => {
+                node.dispatchEvent(new PointerEvent('pointerleave', { bubbles: true }));
+            });
+        };
         const anchorProps = {
             className: cardClassName,
-            onClick,
+            onClick: target === '_blank' ? handleBlankTargetClick : onClick,
             target,
             rel: resolvedRel,
         };
