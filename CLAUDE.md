@@ -1254,15 +1254,18 @@ atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 �
   (`middleware.ts:207`, `701233f0ac`) 업그레이드 후 반드시 `middleware.test.ts`를 확인할 것.
 - minor·major 상승: PSI 실측 없이 올리지 않는다(`optimizeCss`·Partytown 회귀 이력 참조).
 
-`npm audit`에 남아 있는 항목과 남겨둔 이유:
+`npm audit`은 **0건**이다(2026-10-01, 개발 의존성 포함). 0을 유지하는 데 알아 둘 것:
 
-| 패키지 | 경로 | 왜 안 올렸나 |
-|---|---|---|
-| `sharp` <0.35.0 | next 내부 + @vercel/og 내부 | 직접 의존은 0.35.5로 올림(2026-10-01 — libheif 권고 <0.35.4; 이전 2026-08-24 0.35.3, libvips CVE 4건 해소 — `scripts/optimizeImages.js` 회귀 검증: WebP 표본 8개 파일 크기 델타 0.0%, 해상도·`imageMetadata.json` 불변). next(`^0.34.3` 고정, 15.5.x 라인 유지 중)와 `@vercel/og@0.11.1`이 각자 옛 sharp를 물고 있어 audit엔 여전히 뜬다 — 둘 다 major 업 없인 못 바꾼다(`@vercel/og@1.0.1`은 sharp를 아예 뺐지만 별도 업그레이드 필요, 이번 범위 밖). next 경유는 이미지 최적화 API 라우트에서만, @vercel/og 경유는 OG 이미지 생성에서만 타서 우리 직접 파이프라인과 무관 |
-| `postcss` 8.4.31 | next 내부 번들 | 우리 직접 의존은 8.5.26으로 올림. next 번들본은 major 업 없이는 못 바꾼다. 빌드타임 CSS만 처리하고 입력이 우리 소스라 실위험 낮음 |
-| `js-yaml` 3.x | gray-matter | 2026-10-01에 overrides로 3.15.2로 올려 해소(gray-matter 전용 override — 새 권고가 나오면 이 한 줄을 올릴 것) |
-| `ip-address` | puppeteer-core → socks-proxy-agent | 2026-10-01에 overrides를 10.7.2로 올려 해소 |
-| `undici` 6.27 | @vercel/blob | 업스트림이 올려야 함 |
+- **`vercel` CLI는 devDependency가 아니다.** 예전에 들어 있던 CLI가 취약한 빌더 패키지(`@vercel/*`·tar·minimatch·
+  path-to-regexp 등) 25여 건을 끌고 왔고, 저장소 코드 어디서도 쓰지 않았다(`vercel env pull` 등은 운영자가 전역 CLI로
+  실행). 다시 넣지 말 것 — 필요하면 `npx vercel`. 그 CLI가 **선언 없이 끌어오던 `ts-morph`**는 `content/i18nKeys.test.ts`가
+  쓰므로 12.0.0으로 직접 선언해 뒀다(옛 설치본과 같은 버전).
+- **overrides가 막고 있는 것**: `ip-address`(10.7.2), `gray-matter`의 `js-yaml`(3.15.2), drizzle-kit이 물고 오는
+  `@esbuild-kit/core-utils`의 `esbuild`(0.25.12 — `drizzle-kit check`로 동작 확인). 새 권고가 나오면 이 값을 올린다.
+- **락파일은 CI와 같은 npm 10으로 만든다**(`npx -y npm@10 install --package-lock-only`). 로컬 npm 11로 만든 락은
+  puppeteer-core 중첩 `proxy-agent`를 걷어내 CI의 `npm ci`가 "Missing: proxy-agent@…"로 실패한다. `npx -y npm@10 ci --dry-run`으로
+  먼저 확인할 것.
+- `postcss` 8.4.31(next 번들)은 audit이 잡지 않는다. next가 올라가면 함께 정리된다.
 
 ## Deployment Notes
 
