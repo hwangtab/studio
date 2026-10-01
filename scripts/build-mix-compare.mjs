@@ -3,7 +3,7 @@
  * 홈의 "믹싱 전 · 후" 비교 음원을 만든다 (components/audio/MixComparePlayer.tsx).
  *
  *   node scripts/build-mix-compare.mjs --before <믹싱 전.mp3> --after <비교 대상.mp3> \
- *        --offset <초> --duration <초> --tag <YYYYMMDD> [--variant excerpt --start <초>]
+ *        --offset <초> --duration <초> --tag <YYYYMMDD> [--variant excerpt --start <초>] [--target-lufs -14]
  *
  * `--variant excerpt`는 곡의 일부(--start부터 --duration초)만 잘라 별도 파일·별도 데이터 파일
  * (`data/mixComparePeaks.excerpt.ts`)로 만든다. 다른 페이지(발매·주문)에 넣는 30초 발췌본이다.
@@ -23,6 +23,11 @@
  *     3~7dB, 피크 6dB). 그래서 `--loud-balance on`을 주면 큰 부분(3초 단위 상위 5%) 차이의 절반만큼 before를 더
  *     낮춘다. **기본은 끈다** — 켜서(발췌 0.75dB 더 낮춤) 만들어 들어 보니 믹싱 전이 너무 작게 들려 운영자가
  *     LUFS 맞춤으로 되돌렸다(2026-10-01). 꺼도 차이는 로그에 찍힌다.
+ *     **전체 음량을 올린다 — `--target-lufs <값>`.** 위처럼 큰 쪽을 작은 쪽에 맞춰 내리기만 하면 둘 다 마스터링 전
+ *     믹스(-20 LUFS 근처)에 갇혀 발매 음원보다 훨씬 작게 들린다(2026-10-01 운영자 지적). 맞춘 뒤 **두 파일에 같은 게인**을
+ *     더해 목표 라우드니스까지 올리고, **같은 피크 리미터**(-1.4 dBFS)를 둘 다에 건다. 리미터는 믹싱 전의 가장 높은 피크
+ *     몇 개에만 닿는다(물결 +6dB: 평균 증가 5.93dB — 명목 6dB에서 0.07dB만 깎임). 발매본 쪽은 피크가 낮아 닿지 않는다.
+ *     스트리밍 기준은 -14 LUFS다. 단순 게인만으로는 믹싱 전 피크(-1.5 dBTP) 때문에 0.5dB밖에 못 올린다.
  *  3. 같은 설정(128kbps CBR, 메타데이터 없음)으로 mp3를 만든다.
  *  4. 파형용 피크를 계산한다(같은 스케일 — 두 파형의 모양 차이가 실제 다이내믹 차이다).
  *
@@ -96,14 +101,20 @@ const extraTrim = args['loud-balance'] === 'on' ? Math.max(0, (loudBefore - loud
 const gainBefore = lufsGainBefore - extraTrim;
 console.log(`LUFS before ${lb} / after ${la} → 통합 맞춤 목표 ${target}`);
 console.log(`3초 단위 상위 5%: before ${loudBefore.toFixed(2)} / after ${loudAfter.toFixed(2)} LUFS (차이 ${(loudBefore - loudAfter).toFixed(2)} dB) → 큰 부분 보정 ${extraTrim.toFixed(2)} dB${args['loud-balance'] === 'on' ? '' : ' (끔)'}`);
-console.log(`최종 게인: before ${gainBefore.toFixed(2)} dB, after ${gainAfter.toFixed(2)} dB`);
+// 전체 음량 올리기: 맞춘 음량(target)에서 목표 라우드니스까지, 두 파일에 같은 게인 + 같은 리미터.
+const targetLufs = args['target-lufs'] === undefined ? null : Number(args['target-lufs']);
+const makeup = targetLufs === null ? 0 : targetLufs - target;
+if (targetLufs !== null && !(makeup >= 0)) { console.error('--target-lufs는 맞춘 음량보다 커야 합니다'); process.exit(2); }
+const chain = (gain) =>
+  `volume=${(gain + makeup).toFixed(3)}dB${targetLufs === null ? '' : ',alimiter=limit=0.85:attack=3:release=80:level=disabled'}`;
+console.log(`최종 게인: before ${gainBefore.toFixed(2)} dB, after ${gainAfter.toFixed(2)} dB` + (targetLufs === null ? '' : ` + 공통 ${makeup.toFixed(2)} dB (목표 ${targetLufs} LUFS, 피크 리미터 -1.4 dBFS)`));
 
 const out = {};
 for (const [name, wav, gain] of [['before', beforeWav, gainBefore], ['after', afterWav, gainAfter]]) {
   const mp3 = path.join(root, 'public/audio', `mix-compare-${name}-${fileTag}.mp3`);
-  ff(['-i', wav, '-af', `volume=${gain.toFixed(3)}dB`, '-map_metadata', '-1', '-c:a', 'libmp3lame', '-b:a', '128k', mp3]);
+  ff(['-i', wav, '-af', chain(gain), '-map_metadata', '-1', '-c:a', 'libmp3lame', '-b:a', '128k', mp3]);
   // 파형: 게인이 적용된 신호의 구간별 RMS(모노).
-  const pcm = execFileSync('ffmpeg', ['-v', 'error', '-i', wav, '-af', `volume=${gain.toFixed(3)}dB`, '-ac', '1', '-ar', '8000', '-f', 'f32le', '-'], { maxBuffer: 1 << 28 });
+  const pcm = execFileSync('ffmpeg', ['-v', 'error', '-i', wav, '-af', chain(gain), '-ac', '1', '-ar', '8000', '-f', 'f32le', '-'], { maxBuffer: 1 << 28 });
   const samples = new Float32Array(pcm.buffer, pcm.byteOffset, Math.floor(pcm.byteLength / 4));
   const per = Math.floor(samples.length / BINS);
   out[name] = Array.from({ length: BINS }, (_, b) => {
