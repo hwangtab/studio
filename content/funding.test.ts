@@ -107,3 +107,37 @@ describe('리워드 이미지', () => {
     }
   });
 });
+
+/**
+ * 강정 펀딩의 리워드 배열 기준(마크다운 frontmatter 위 주석과 같은 표).
+ * 가격 전체 정렬은 서로 다른 상품이 섞여 정신없어서, 종류로 묶고 묶음 안에서만 가격순으로 한다.
+ *   음원(첫 앨범 → 물고기 앨범, 앨범 안 금액 오름차순) → 시/노래집(출간순) → 티셔츠(최신 회차 먼저)
+ * 책이 티셔츠보다 앞이어야 결제 화면 "함께 받기"(addOn 중 앞의 두 개)가 책 두 권이 된다.
+ */
+describe('keep-singing-for-palestine 리워드 배열 기준', () => {
+  const project = getAllFundingProjects().find((p) => p.slug === 'keep-singing-for-palestine');
+  const rank = (id: string): [number, number] => {
+    if (id.startsWith('fish-')) return [0, 1];
+    if (id.startsWith('book-')) return [1, id === 'book-baljak' ? 0 : 1];
+    if (id.startsWith('tshirt-')) return [2, id.startsWith('tshirt-3rd') ? 0 : 1];
+    return [0, 0];
+  };
+
+  it('종류 묶음 → 앨범 → 금액 오름차순 순서를 지킨다', () => {
+    if (!project) return;
+    const rewards = project.rewards;
+    for (let i = 1; i < rewards.length; i++) {
+      const [a, b] = [rewards[i - 1], rewards[i]];
+      const [ra, rb] = [rank(a.id), rank(b.id)];
+      const msg = `${a.id} → ${b.id}`;
+      if (ra[0] !== rb[0]) expect([msg, ra[0] < rb[0]]).toEqual([msg, true]);
+      else if (ra[1] !== rb[1]) expect([msg, ra[1] < rb[1]]).toEqual([msg, true]);
+      else if (ra[0] === 0) expect([msg, a.amount <= b.amount]).toEqual([msg, true]); // 음원만 앨범 안에서 금액순
+    }
+  });
+
+  it('함께 받기 제안(addOn 앞 두 개)은 시/노래집이다', () => {
+    if (!project) return;
+    expect(project.rewards.filter((r) => r.addOn).slice(0, 2).map((r) => r.id)).toEqual(['book-baljak', 'book-gangdo']);
+  });
+});
