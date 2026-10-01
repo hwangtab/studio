@@ -88,6 +88,13 @@ const mergeClassNames = (base: string, extra?: string) => (extra ? `${base} ${ex
 const DangerousTagBlock = () => null;
 
 // Static overrides extracted outside to prevent re-creation
+//
+// ⚠ p·strong·em·li·blockquote 오버라이드는 **죽어 있다**(2026-10-01 실측: 렌더된 요소에 클래스가 없다).
+// markdown-to-jsx가 `className: undefined`를 props로 함께 넘기는데 이 다섯은 `{...props}`를 자기
+// className 뒤에 펼쳐 방금 적은 클래스를 지운다(a 오버라이드가 겪은 것과 같은 버그, 위 주석 참조).
+// 그래서 사이트의 실제 모양은 이 클래스들이 아니라 styles/globals.css의 `.markdown-content` 규칙이다.
+// **이 다섯을 mergeClassNames로 "고치면" 스토리 1,700편의 굵은 글씨가 보라색이 되고 인용문이 기울어지며
+// 목록 간격이 바뀐다** — 의도한 디자인이었는지 먼저 정하고 건드릴 것.
 const STATIC_OVERRIDES = {
   script: { component: DangerousTagBlock },
   iframe: { component: DangerousTagBlock },
@@ -177,14 +184,9 @@ const STATIC_OVERRIDES = {
     ),
   },
   ul: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
+    component: ({ children, className, ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <ul
-        style={{
-          listStyleType: 'disc',
-          paddingLeft: '2rem',
-          marginBottom: '1.5rem',
-          marginTop: '1rem'
-        }}
+        className={mergeClassNames('list-disc pl-8 mt-0 mb-5 [&_ul]:mt-2 [&_ul]:mb-0 [&_ol]:mt-2 [&_ol]:mb-0', className)}
         {...props}
       >
         {children}
@@ -192,14 +194,9 @@ const STATIC_OVERRIDES = {
     ),
   },
   ol: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
+    component: ({ children, className, ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <ol
-        style={{
-          listStyleType: 'decimal',
-          paddingLeft: '2rem',
-          marginBottom: '1.5rem',
-          marginTop: '1rem'
-        }}
+        className={mergeClassNames('list-decimal pl-8 mt-0 mb-5 [&_ul]:mt-2 [&_ul]:mb-0 [&_ol]:mt-2 [&_ol]:mb-0', className)}
         {...props}
       >
         {children}
