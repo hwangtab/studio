@@ -280,7 +280,7 @@ rewards:
 |---|---|---|
 | 1 | When I look at the Horizon | Project Around Surround |
 | 2 | 이 땅이 니 땅이가 | 정진석 |
-| 3 | 물결 | 김동산 |
+| 3 | 물결 | 김동산과 블루이웃 |
 | 4 | 안녕 (먼 곳의 그대에게) | 남수 |
 | 5 | TRANSITION | 까르 |
 | 6 | 별을 보러 간 사람 | 김인 |
