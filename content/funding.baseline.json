@@ -59,6 +59,14 @@
   },
   "mok-jareugi": {
    "rewards": {
+    "fish-mp3": {
+     "amount": 10000,
+     "limited": false
+    },
+    "fish-wav": {
+     "amount": 30000,
+     "limited": false
+    },
     "mp3": {
      "amount": 10000,
      "limited": false
