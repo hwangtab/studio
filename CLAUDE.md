@@ -5,7 +5,7 @@ This file provides guidance for development in the **Studio NOL** repository.
 ## Project Overview
 
 Studio NOL is a multi-language music studio website built with:
-- **Framework**: Next.js 15.5.23 (Pages Router)
+- **Framework**: Next.js 15.5.27 (Pages Router)
 - **Runtime**: React 19.2.4
 - **Styling**: Tailwind CSS with custom design system
 - **Animation**: Framer Motion
@@ -15,7 +15,7 @@ Studio NOL is a multi-language music studio website built with:
 
 ## Key Technologies
 
-- **Frontend**: Next.js 15.5.23, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
+- **Frontend**: Next.js 15.5.27, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
 - **i18n**: i18next with language detection and locale-based routing
 - **Form**: Serverless contact form via Next.js API Routes and Resend
 - **Imaging**: Sharp-based image optimization (WebP/AVIF)
@@ -1245,7 +1245,7 @@ node scripts/seo-preflight.mjs        # 최근 커밋·열린 실험·관측창�
 `next`·`react`·`react-dom`은 **캐럿 없이 정확한 버전으로 고정**한다. 특정 버그를 피하려는
 것이 아니라, 세 패키지가 함께 움직여야 하기 때문이다(`f2accd09f2` Next 15 + React 19
 atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 패치 상승은 정책 위반이
-아니다** — 실제로 `701233f0ac`에서 15.5.12 → 15.5.18로 올린 전례가 있다.
+아니다** — 실제로 `701233f0ac`에서 15.5.12 → 15.5.18로, 2026-10-01에 15.5.23 → 15.5.27로(critical RCE 권고 2건) 올린 전례가 있다.
 
 - 패치 상승(15.5.x → 15.5.y): 보안 권고가 있으면 올린다. 검증은
   `type-check` → `lint` → `test` → `build` → `middleware.test.ts` 순.
@@ -1257,10 +1257,10 @@ atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 �
 
 | 패키지 | 경로 | 왜 안 올렸나 |
 |---|---|---|
-| `sharp` <0.35.0 | next 내부 + @vercel/og 내부 | 직접 의존은 0.35.3으로 올림(2026-08-24, libvips CVE 4건 해소 — `scripts/optimizeImages.js` 회귀 검증: WebP 표본 8개 파일 크기 델타 0.0%, 해상도·`imageMetadata.json` 불변). next(`^0.34.3` 고정, 15.5.x 라인 유지 중)와 `@vercel/og@0.11.1`이 각자 옛 sharp를 물고 있어 audit엔 여전히 뜬다 — 둘 다 major 업 없인 못 바꾼다(`@vercel/og@1.0.1`은 sharp를 아예 뺐지만 별도 업그레이드 필요, 이번 범위 밖). next 경유는 이미지 최적화 API 라우트에서만, @vercel/og 경유는 OG 이미지 생성에서만 타서 우리 직접 파이프라인과 무관 |
+| `sharp` <0.35.0 | next 내부 + @vercel/og 내부 | 직접 의존은 0.35.5로 올림(2026-10-01 — libheif 권고 <0.35.4; 이전 2026-08-24 0.35.3, libvips CVE 4건 해소 — `scripts/optimizeImages.js` 회귀 검증: WebP 표본 8개 파일 크기 델타 0.0%, 해상도·`imageMetadata.json` 불변). next(`^0.34.3` 고정, 15.5.x 라인 유지 중)와 `@vercel/og@0.11.1`이 각자 옛 sharp를 물고 있어 audit엔 여전히 뜬다 — 둘 다 major 업 없인 못 바꾼다(`@vercel/og@1.0.1`은 sharp를 아예 뺐지만 별도 업그레이드 필요, 이번 범위 밖). next 경유는 이미지 최적화 API 라우트에서만, @vercel/og 경유는 OG 이미지 생성에서만 타서 우리 직접 파이프라인과 무관 |
 | `postcss` 8.4.31 | next 내부 번들 | 우리 직접 의존은 8.5.26으로 올림. next 번들본은 major 업 없이는 못 바꾼다. 빌드타임 CSS만 처리하고 입력이 우리 소스라 실위험 낮음 |
-| `js-yaml` 3.x | gray-matter | frontmatter 파싱. 입력이 우리 저장소의 .md라 외부 입력 없음 |
-| `ip-address` | puppeteer-core → socks-proxy-agent | 계약 PDF 렌더용. 프록시 경로를 쓰지 않음 |
+| `js-yaml` 3.x | gray-matter | 2026-10-01에 overrides로 3.15.2로 올려 해소(gray-matter 전용 override — 새 권고가 나오면 이 한 줄을 올릴 것) |
+| `ip-address` | puppeteer-core → socks-proxy-agent | 2026-10-01에 overrides를 10.7.2로 올려 해소 |
 | `undici` 6.27 | @vercel/blob | 업스트림이 올려야 함 |
 
 ## Deployment Notes
