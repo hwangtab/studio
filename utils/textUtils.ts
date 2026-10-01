@@ -4,7 +4,10 @@
 export const stripMarkdown = (content: string | null | undefined): string => {
   if (!content) return '';
 
+  // 파일명처럼 밑줄이 낱말 안에 들어가는 글은 본문에서 `\_`로 이스케이프해 둔다(마크다운이 이탤릭으로
+  // 읽지 않게). 아래 `_…_` 제거가 그 밑줄을 먹지 않도록 가려 두었다가 끝에서 `_`로 되돌린다.
   return content
+    .replace(/\\_/g, '\u0001')
     .replace(/!\[.*?\]\([^)]+\)/g, '')
     .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
     .replace(/#{1,6}\s+/g, '')
@@ -14,6 +17,7 @@ export const stripMarkdown = (content: string | null | undefined): string => {
     .replace(/_([^_]+)_/g, '$1')
     .replace(/```[\s\S]*?```/g, '')
     .replace(/`([^`]+)`/g, '$1')
+    .replace(/\u0001/g, '_')
     .replace(/\s+/g, ' ')
     .trim();
 };

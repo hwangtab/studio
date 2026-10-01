@@ -178,7 +178,7 @@ File → Bounce to → Disk
 ### 파일 전달
 
 - 구글 드라이브 또는 WeTransfer 업로드
-- 파일명: [아티스트명]_[곡명]_vocal.wav
+- 파일명: [아티스트명]\_[곡명]\_vocal.wav
 
 ---
 

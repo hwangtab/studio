@@ -112,7 +112,7 @@ inlineFallback:
 **완성 처리**
 - 기본 믹싱 (EQ·컴프·리버브)
 - 파일 포맷 변환 (WAV 또는 MP3 320kbps)
-- **파일명 정리**: 이름_곡명_날짜.wav
+- **파일명 정리**: 이름\_곡명\_날짜.wav
 
 ---
 
@@ -132,9 +132,9 @@ inlineFallback:
 - **MP3**: 320kbps (용량 제한 있을 때)
 
 **파일명 규칙**
-- 이름_곡명_날짜.wav
-- **예**: 홍길동_무한도전OST_20260406.wav
-- **영문 포함 시**: HongGilDong_SongTitle.wav
+- 이름\_곡명\_날짜.wav
+- **예**: 홍길동\_무한도전OST\_20260406.wav
+- **영문 포함 시**: HongGilDong\_SongTitle.wav
 
 ---
 

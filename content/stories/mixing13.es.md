@@ -56,7 +56,7 @@ Diez minutos después, me sorprendí. Sin efectos, pero la **estructura** era cl
 Sonaba más musical que mis mezclas llenas de plug‑ins. (¡Shock!)
 
 **[Tip de estudio]**:
-* **Guarda después del static mix**: guarda un “Static_Mix_Save” antes de insertar plug‑ins. Si te pierdes más tarde, tendrás un punto de referencia.
+* **Guarda después del static mix**: guarda un “Static\_Mix\_Save” antes de insertar plug‑ins. Si te pierdes más tarde, tendrás un punto de referencia.
 
 ## 4. Lo que NO debes hacer aquí
 

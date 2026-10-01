@@ -370,6 +370,11 @@ code {
 .markdown-content .max-w-none p {
   text-wrap: pretty;
 }
+/* 줄 높이는 펀딩·스토리 모두 같은 1.7. 예전에는 `.prose p`를 쓰는 펀딩만 1.7이고 스토리는 body 상속 1.6이었다. */
+.markdown-content .max-w-none p,
+.markdown-content .max-w-none li {
+  line-height: 1.7;
+}
 /* 목록 항목 사이. li 오버라이드(mb-4)가 죽어 있어 항목이 0px로 붙어 있었다(스토리 실측). */
 .markdown-content .max-w-none li {
   margin-bottom: 0.375em;

@@ -98,7 +98,7 @@ inlineFallback:
 
 - MP3 320kbps (제출용)
 - WAV 16bit/44.1kHz (원본 보관)
-- 파일명: 이름_곡명_YYYYMMDD
+- 파일명: 이름\_곡명\_YYYYMMDD
 
 ---
 

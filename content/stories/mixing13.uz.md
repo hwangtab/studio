@@ -56,7 +56,7 @@ O'n daqiqadan keyin hayratlandim. Hech qanday “chiroyli” effekt yo'q, ammo *
 Bu hatto pluginlarga to'la miksimdan ham musiqiyroq eshitildi. (Shok!)
 
 **[Studio tip]**:
-* **Static mixdan keyin saqlang**: Pluginlardan oldin “Static_Mix_Save” qilib qo'ying. Keyin yo'qolib qolsangiz, mustahkam referensga qaytishingiz mumkin.
+* **Static mixdan keyin saqlang**: Pluginlardan oldin “Static\_Mix\_Save” qilib qo'ying. Keyin yo'qolib qolsangiz, mustahkam referensga qaytishingiz mumkin.
 
 ## 4. Bu bosqichda nima QILMASLIK kerak
 

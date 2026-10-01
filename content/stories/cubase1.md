@@ -177,7 +177,7 @@ File → Export → Audio Mixdown (Ctrl+Shift+E)
 
 ### 파일 전달
 
-- **파일명**: [아티스트명]_[곡명]_vocal.wav
+- **파일명**: [아티스트명]\_[곡명]\_vocal.wav
 
 ---
 

@@ -115,7 +115,7 @@ ISRC 코드
 - 파일 재생 처음부터 끝까지 확인 (크리핑 없음)
 - 루돈 측정: -14 LUFS Integrated 근처
 - True Peak: -0.5dBTP 이하
-- 파일명: 아티스트명_곡명_Master.wav 형식
+- 파일명: 아티스트명\_곡명\_Master.wav 형식
 
 ### 메타데이터 체크
 

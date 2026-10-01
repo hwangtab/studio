@@ -130,7 +130,7 @@ faq:
 |------|------|------|
 | DAW 유틸리티 | Mono 버튼 | 간편, 무료 |
 | SPAN by Voxengo | Phase Correlation 탭 | 실시간 위상 확인 |
-| Brainworx bx_solo | M/S Solo | Mid·Side 분리 확인 |
+| Brainworx bx\_solo | M/S Solo | Mid·Side 분리 확인 |
 | 실제 스마트폰 | 블루투스로 재생 | 최종 확인 필수 |
 
 ---

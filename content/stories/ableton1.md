@@ -53,10 +53,9 @@ Ableton Live의 역사는 2001년 독일 소프트웨어 회사 Ableton이 처�
 ### 샘플레이트·버퍼 설정
 
 - Sample Rate: 44100Hz 또는 48000Hz
-
-**- Buffer Size**
-  녹음 시: 64~128 samples (레이턴시 최소화)
-  믹싱 시: 256~512 samples (CPU 효율화)
+- **Buffer Size**
+  - 녹음 시: 64~128 samples (레이턴시 최소화)
+  - 믹싱 시: 256~512 samples (CPU 효율화)
 
 ### 드라이버 타입
 
@@ -177,7 +176,7 @@ File → Export Audio/Video (Cmd+Shift+R)
 ### 파일 전달
 
 - 구글 드라이브 또는 WeTransfer 업로드
-- 파일명: [아티스트명]_[곡명]_vocal.wav
+- 파일명: [아티스트명]\_[곡명]\_vocal.wav
 
 ---
 
