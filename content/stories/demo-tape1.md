@@ -83,7 +83,7 @@ faq:
 
 - WAV 44.1kHz/24bit (마스터)
 - MP3 320kbps (제출용)
-- 파일명: 이름_곡명_날짜.wav
+- 파일명: 이름\_곡명\_날짜.wav
 
 ---
 
@@ -98,9 +98,9 @@ faq:
 
 ### 파일명 규칙
 
-이름_곡명_날짜.wav
+이름\_곡명\_날짜.wav
 
-- **예**: 홍길동_Love Story_20260406.wav
+- **예**: 홍길동\_Love Story\_20260406.wav
 
 ### 제출 방식
 
@@ -134,7 +134,7 @@ faq:
 
 **제출·배포**
 - [ ] MP3 320kbps 버전도 별도 준비
-- [ ] 파일명 형식: ArtistName_SongTitle_Year.wav
+- [ ] 파일명 형식: ArtistName\_SongTitle\_Year.wav
 - [ ] SoundCloud·구글 드라이브 공유 링크 준비
 
 ### 데모 테이프 장르별 트랙 구성

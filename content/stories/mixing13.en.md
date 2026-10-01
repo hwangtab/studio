@@ -56,7 +56,7 @@ Ten minutes later, it surprised me. No fancy effects, but the **structure** was 
 It sounded more musical than my plug‑in‑heavy mixes. (Shock!)
 
 **[Studio tip]**:
-* **Save after static mix**: Save a “Static_Mix_Save” before inserting plug‑ins. When you get lost later, you can return to a solid reference.
+* **Save after static mix**: Save a “Static\_Mix\_Save” before inserting plug‑ins. When you get lost later, you can return to a solid reference.
 
 ## 4. What NOT to do at this stage
 

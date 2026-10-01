@@ -158,7 +158,7 @@ Share → Export Song to Disk
 
 - AIFF/WAV 파일 + MR 파일 함께 전달
 - 구글 드라이브 또는 WeTransfer 업로드
-- 파일명: [아티스트명]_[곡명]_vocal.aiff
+- 파일명: [아티스트명]\_[곡명]\_vocal.aiff
 
 ---
 

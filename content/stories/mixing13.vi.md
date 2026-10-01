@@ -56,7 +56,7 @@ Mười phút sau, tôi bất ngờ. Không hiệu ứng hào nhoáng, nhưng **
 Nó nghe còn “nhạc” hơn bản mix đè plugin của tôi. (Sốc!)
 
 **[Studio tip]**:
-* **Lưu sau static mix**: Lưu một “Static_Mix_Save” trước khi chèn plugin. Khi lạc đường, bạn có thể quay về mốc vững chắc.
+* **Lưu sau static mix**: Lưu một “Static\_Mix\_Save” trước khi chèn plugin. Khi lạc đường, bạn có thể quay về mốc vững chắc.
 
 ## 4. Những điều KHÔNG nên làm ở giai đoạn này
 

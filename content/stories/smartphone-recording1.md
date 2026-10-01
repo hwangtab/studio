@@ -133,7 +133,7 @@ n-Track: 믹스다운 → WAV 24bit
 
 1. Google Drive 또는 WeTransfer 업로드
 2. 카카오톡으로 링크 전송
-3. 파일명: [이름]_[곡명]_vocal.wav
+3. 파일명: [이름]\_[곡명]\_vocal.wav
 4. MR 파일 함께 전달 (WAV 또는 MP3 320kbps)
 5. BPM·키 정보 메모 첨부
 
