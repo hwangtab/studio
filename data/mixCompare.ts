@@ -13,9 +13,10 @@ import {
 /**
  * 홈의 "믹싱 전 · 후" 비교 (components/audio/MixComparePlayer.tsx).
  *
- * 곡은 김동산과 블루이웃 〈물결〉(2024-12-20). 스튜디오 놀이 녹음·믹싱했다(data/portfolio/items.ts). "믹싱 후"의
- * 정체는 믹싱만 거친 소리가 아니라 **발매본**이라 라벨이 "믹싱 후 · 발매본"이다. 마스터링 담당은 화면에 적지 않는다
- * (운영자 결정 2026-09-30). 마스터링 전 믹스 파일이 생기면 scripts/build-mix-compare.mjs로 after를 바꿔 끼운다.
+ * 곡은 김동산과 블루이웃 〈물결〉(2024-12-20). 스튜디오 놀이 녹음·믹싱했다(data/portfolio/items.ts). 화면에는 곡명도
+ * 마스터링 담당도 "발매본"이라는 말도 적지 않는다(운영자 결정 2026-09-30·10-01) — 라벨은 그냥 "믹싱 전" / "믹싱 후"다.
+ * 다만 "믹싱 후"의 실체는 마스터링을 거친 발매본이다. 마스터링 전 믹스 파일이 생기면 scripts/build-mix-compare.mjs로
+ * after를 바꿔 끼운다.
  *
  * 음원은 두 파일의 시간·음량을 맞춰 만든 것이다(스크립트 머리 주석). 음원을 바꾸면 `--tag`를 새 날짜로 —
  * `/audio/**`도 오래 캐시되는 경로다.
@@ -110,8 +111,8 @@ export const getMixCompareCopy = (locale: Locale): MixCompareCopy => {
     vi: 'Trước khi mix', th: 'ก่อนมิกซ์', uz: 'Miksdan oldin',
   }),
   after: t(locale, {
-    ko: '믹싱 후 · 발매본', en: 'After mix · Released', zh: '混音后 · 发行版', es: 'Después de la mezcla · publicada',
-    vi: 'Sau khi mix · bản phát hành', th: 'หลังมิกซ์ · เวอร์ชันวางจำหน่าย', uz: 'Miksdan keyin · chiqarilgan versiya',
+    ko: '믹싱 후', en: 'After mix', zh: '混音后', es: 'Después de la mezcla',
+    vi: 'Sau khi mix', th: 'หลังมิกซ์', uz: 'Miksdan keyin',
   }),
   group: t(locale, {
     ko: '들어 볼 음원', en: 'Version to listen to', zh: '选择试听版本', es: 'Versión a escuchar',

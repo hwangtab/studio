@@ -16,12 +16,13 @@
  *     어긋나 있으면 "믹싱이 바뀐 것"이 아니라 "다른 구간"을 듣게 된다.
  *     offset은 이 스크립트가 재지 않는다 — 대역 통과 파형 상호상관으로 따로 재서 넘긴다
  *     (2026-09-30 물결: 1.3035초, 구간별 편차 ±1ms).
- *  2. **음량을 맞춘다 — 평균과 큰 부분의 중간 지점에서.** (a) 통합 라우드니스(LUFS)를 재서 큰 쪽을 작은 쪽에
- *     맞춰 내린다. 올리지 않는다 — 올리면 피크가 넘친다. (b) 그것만으로는 부족하다: 다이내믹이 넓은 쪽은 평균이
- *     같아도 **큰 순간이 더 크게** 들린다(2026-09-30 물결: 3초 단위 상위 5%가 1.5dB, 순간 최고는 3~7dB 더 컸다).
- *     그래서 (a) 뒤에 3초 단위 음량(EBU R128 short-term)의 상위 5% 지점 차이를 재서 **그 절반만큼 믹싱 전을 더
- *     낮춘다.** 평균과 큰 부분의 어긋남을 반씩 나눠 어느 한쪽에도 크게 유리하지 않게 한다. 이 비교가 보여주려는
- *     것은 믹싱이지 음량이 아니다 — 음량이 다르면 사람은 큰 쪽을 "더 좋다"고 듣는다.
+ *  2. **음량을 맞춘다 — 통합 라우드니스(LUFS)로.** 둘의 통합 라우드니스를 재서 큰 쪽을 작은 쪽에 맞춰 내린다.
+ *     올리지 않는다 — 올리면 피크가 넘친다. 음량이 다르면 사람은 큰 쪽을 "더 좋다"고 듣는다. 이 비교가 보여주려는
+ *     것은 믹싱이지 음량이 아니다.
+ *     **다이내믹이 넓은 쪽은 평균이 같아도 큰 순간이 더 크다**(2026-09-30 물결: 3초 단위 상위 5%가 1.5dB, 순간 최고
+ *     3~7dB, 피크 6dB). 그래서 `--loud-balance on`을 주면 큰 부분(3초 단위 상위 5%) 차이의 절반만큼 before를 더
+ *     낮춘다. **기본은 끈다** — 켜서(발췌 0.75dB 더 낮춤) 만들어 들어 보니 믹싱 전이 너무 작게 들려 운영자가
+ *     LUFS 맞춤으로 되돌렸다(2026-10-01). 꺼도 차이는 로그에 찍힌다.
  *  3. 같은 설정(128kbps CBR, 메타데이터 없음)으로 mp3를 만든다.
  *  4. 파형용 피크를 계산한다(같은 스케일 — 두 파형의 모양 차이가 실제 다이내믹 차이다).
  *
@@ -89,11 +90,12 @@ const lufsGainBefore = target - lb; // ≤ 0
 const gainAfter = target - la; // ≤ 0
 const loudBefore = shortTermP95(beforeWav, lufsGainBefore);
 const loudAfter = shortTermP95(afterWav, gainAfter);
-// 큰 부분이 얼마나 더 큰가(양수 = before가 크다). 그 절반만큼 before를 더 내린다. 반대면(after가 크면) 손대지 않는다.
-const extraTrim = Math.max(0, (loudBefore - loudAfter) / 2);
+// 큰 부분이 얼마나 더 큰가(양수 = before가 크다). --loud-balance on일 때만 그 절반만큼 before를 더 내린다.
+// 반대면(after가 크면) 손대지 않는다. 기본은 끈다 — 위 머리 주석 참조.
+const extraTrim = args['loud-balance'] === 'on' ? Math.max(0, (loudBefore - loudAfter) / 2) : 0;
 const gainBefore = lufsGainBefore - extraTrim;
 console.log(`LUFS before ${lb} / after ${la} → 통합 맞춤 목표 ${target}`);
-console.log(`3초 단위 상위 5%: before ${loudBefore.toFixed(2)} / after ${loudAfter.toFixed(2)} LUFS (차이 ${(loudBefore - loudAfter).toFixed(2)} dB) → before를 ${extraTrim.toFixed(2)} dB 더 내린다`);
+console.log(`3초 단위 상위 5%: before ${loudBefore.toFixed(2)} / after ${loudAfter.toFixed(2)} LUFS (차이 ${(loudBefore - loudAfter).toFixed(2)} dB) → 큰 부분 보정 ${extraTrim.toFixed(2)} dB${args['loud-balance'] === 'on' ? '' : ' (끔)'}`);
 console.log(`최종 게인: before ${gainBefore.toFixed(2)} dB, after ${gainAfter.toFixed(2)} dB`);
 
 const out = {};
