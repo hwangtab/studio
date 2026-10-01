@@ -26,7 +26,7 @@ Chúng tôi mời bạn đến bữa tiệc đầy kích thích dành cho nhữn
 ### 📢 Thông tin buổi gặp tuần này
 
 * Khi nào? Thứ Sáu, ngày 7/11/2025, 7:00 tối (Tối thứ Sáu là giờ mixing!)
-* Ở đâu? Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 84-3 Daejo-dong, Eunpyeong-gu)
+* Ở đâu? Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * Phí: 15,000 KRW (món soul food: gà!)
   * Người dùng Studio NOL được miễn phí như thường lệ.
 * Sức chứa: Chỉ 6 thành viên được chọn! (Nếu kín chỗ, chúng tôi sẽ thông báo trong nước mắt.)

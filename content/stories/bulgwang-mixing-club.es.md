@@ -26,7 +26,7 @@ Basta de mezclar solos y frustrarse. Vengan a compartir trucos, subir de nivel y
 ### 📢 Información del encuentro de esta semana
 
 * ¿Cuándo? Viernes 7 de noviembre de 2025, 7:00 PM (¡viernes por la noche es de mezcla!)
-* ¿Dónde? Studio NOL Bulgwang, Sala de Mezcla R03 (3F, 84-3 Daejo-dong, Eunpyeong-gu)
+* ¿Dónde? Studio NOL Bulgwang, Sala de Mezcla R03 (3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * Participación: 15.000 KRW (¡nuestro soul food: pollo!)
   * Los usuarios de Studio NOL entran gratis.
 * Cupo: Solo 6 miembros seleccionados. (Si se llena, lo avisaremos con lágrimas.)

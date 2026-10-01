@@ -34,7 +34,7 @@ Tối thứ Sáu vẫn là mixing + pizza & bia! 🎧
 ### 📢 Thông tin buổi gặp lần 3
 
 * **Khi nào?** Thứ Sáu, 28/11/2025, 7:00 tối (Tối thứ Sáu là mixing + pizza & bia!)
-* **Ở đâu?** Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 84-3 Daejo-dong, Eunpyeong-gu)
+* **Ở đâu?** Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * **Phí:** 18,000 KRW (pizza nóng + bia lạnh trọn bộ)
   * Người dùng Studio NOL được miễn phí!
 * **Sức chứa:** Tối đa 6 người, nhỏ và tập trung

@@ -34,7 +34,7 @@ Juma kechasi baribir miks + pizza & pivo! 🎧
 ### 📢 3-uchrashuv ma'lumoti
 
 * **Qachon?** 2025-yil 28-noyabr, juma, soat 19:00 (Juma kechasi = miks + pizza & pivo!)
-* **Qayerda?** Bulgwang Studio NOL, R03 miks xonasi (3-qavat, Eunpyeong-gu, Daejo-dong 84-3)
+* **Qayerda?** Bulgwang Studio NOL, R03 miks xonasi (3-qavat, Eunpyeong-gu, Tongil-ro 71-gil 2-1)
 * **To'lov:** 18,000 KRW (issiq pizza + sovuq pivo to'plami)
   * Studio NOL foydalanuvchilari bepul!
 * **Sig'im:** Maks 6 kishi, kichik va fokusli

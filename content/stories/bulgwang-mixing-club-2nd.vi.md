@@ -24,7 +24,7 @@ Từ khóa của buổi này là “chia sẻ” và “thử nghiệm”. Hãy 
 ### 📢 Thông tin buổi gặp tuần này
 
 * Khi nào? Thứ Sáu, ngày 14/11/2025, 7:00 tối (Tối thứ Sáu = mixing + pizza & bia!)
-* Ở đâu? Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 84-3 Daejo-dong, Eunpyeong-gu)
+* Ở đâu? Bulgwang Studio NOL, phòng mix R03 (Tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * Phí: 18,000 KRW (pizza nóng + bia lạnh trọn bộ)
   * Người dùng Studio NOL vẫn miễn phí!
 * Sức chứa: Tối đa 6 người, giữ không khí nhỏ và tập trung

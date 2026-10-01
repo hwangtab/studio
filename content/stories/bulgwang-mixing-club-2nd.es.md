@@ -24,7 +24,7 @@ Las palabras clave de esta sesión son “compartir” y “experimentar”. Tra
 ### 📢 Información del encuentro de esta semana
 
 * ¿Cuándo? Viernes 14 de noviembre de 2025, 7:00 PM (¡viernes por la noche = mixing + pizza y cerveza!)
-* ¿Dónde? Studio NOL Bulgwang, Sala de Mezcla R03 (3F, 84-3 Daejo-dong, Eunpyeong-gu)
+* ¿Dónde? Studio NOL Bulgwang, Sala de Mezcla R03 (3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * Participación: 18.000 KRW (pizza caliente + cerveza fría)
   * ¡Los usuarios de Studio NOL siguen entrando gratis!
 * Cupo: Máximo 6 personas, seguimos con formato reducido
