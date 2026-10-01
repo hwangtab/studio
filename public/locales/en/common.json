@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Directions",
-      "description": "Studio NOL is on the 3rd floor of the building right next to the main gate of Dongmyeong Girls' High School. From Yeonsinnae Station (Lines 3 & 6, Exit 4) or Bulgwang Station (Line 6, Exit 7), walk about 5-7 minutes toward Dongmyeong Girls' High School. The first floor of the building is a car repair shop, making it easy to find. Public transport is recommended — there is no parking in the building."
+      "description": "Studio NOL is on the 3rd floor of the building right next to the main gate of Dongmyeong Girls' High School. From Yeonsinnae Station (Lines 3 & 6, Exit 4) or Bulgwang Station (Line 6, Exit 7), walk about 5 minutes toward Dongmyeong Girls' High School. The first floor of the building is a car repair shop, making it easy to find. Public transport is recommended — there is no parking in the building."
     },
     "info": {
       "title": "Contact Information",
@@ -255,7 +255,7 @@
       "parking": "Parking",
       "parkingDetail": "No parking in the building — paid lot at KT Eunpyeong branch (about 2 min walk)",
       "transport": "Public transport",
-      "transportDetail": "5 min walk from Yeonsinnae Stn (Lines 3 & 6) Exit 4, or 7 min from Bulgwang Stn (Line 6) Exit 7"
+      "transportDetail": "5 min walk from Yeonsinnae Stn (Lines 3 & 6) Exit 4, or 5 min from Bulgwang Stn (Line 6) Exit 7"
     },
     "hours": {
       "everydayLabel": "Every day",
@@ -362,7 +362,7 @@
       "subtitle": "A 24/7 soundproof workspace rented by the month — we are often full, so waitlist requests are welcome.",
       "subtitleVacant": "A 24/7 soundproof workspace rented by the month — open for move-in right now.",
       "detailLink": "See practice room facilities and resident perks",
-      "priceNote": "Utilities included · no deposit · month-to-month"
+      "priceNote": "Utilities included · no deposit · month-to-month · VAT excluded"
     },
     "additional": {
       "title": "Additional Services",
@@ -768,8 +768,8 @@
         "eyebrow": "Market rate + benefits, converted",
         "headline": "₩360K/mo",
         "headlineCaption": "₩0 deposit · actual monthly rent",
-        "title": "Get ₩850K+/mo of value for just ₩360K/mo",
-        "subtitle": "A ₩400–500K/mo-class room plus ~₩400K+/mo in extra benefits — about ₩850K+/mo of value, included for every resident.",
+        "title": "Get ₩900K+/mo of value for just ₩360K/mo",
+        "subtitle": "A ₩400–500K/mo-class room plus ~₩450K+/mo in extra benefits — about ₩900K+/mo of value, included for every resident.",
         "note": "* Market rate based on Eunpyeong-gu rooms with equivalent spec (soundproofing, built-in HVAC, 24/7). Benefit values estimated from typical studio, PR, and consulting rates."
       },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
@@ -777,7 +777,7 @@
       "items": [
         {
           "title": "Premium Recording Studio Discount",
-          "valueBadge": "~₩60K/mo",
+          "valueBadge": "~₩100K/mo",
           "points": [
             "1 hour of recording studio use free every month (regular price: ₩100,000/hour)",
             "Capture your music with top-tier professional equipment"
@@ -1074,7 +1074,7 @@
     "inline": {
       "bookingDefault": "Ready to book or get a quick quote?",
       "bookingLabel": "KakaoTalk Consultation",
-      "bookingBody": "Send us a message on our KakaoTalk channel and we will get back to you fast. Just include the details below.",
+      "bookingBody": "Send us a message on our KakaoTalk open chat and we will get back to you fast. Just include the details below.",
       "kakaoCta": "Inquire via KakaoTalk",
       "priceLabel": "Recommended Package",
       "priceCategory": {
@@ -1329,7 +1329,7 @@
         },
         {
           "q": "Where are you, and how do I book?",
-          "a": "A 5-minute walk from Yeonsinnae Station (Daejo-dong, Eunpyeong-gu, Seoul). We work by appointment only — message our KakaoTalk channel with your date and number of songs and we'll confirm after a short chat."
+          "a": "A 5-minute walk from Yeonsinnae Station (Daejo-dong, Eunpyeong-gu, Seoul). We work by appointment only — message our KakaoTalk open chat with your date and number of songs and we'll confirm after a short chat."
         },
         {
           "q": "Do I have to arrange distribution and release on my own after recording?",
@@ -2778,7 +2778,7 @@
           "priceFactors": [
             {
               "label": "Track count",
-              "detail": "8 tracks baseline → 10 tracks +₩2M / 12 tracks +₩4M"
+              "detail": "8 tracks baseline → 10 tracks +₩850K / 12 tracks +₩1.7M"
             },
             {
               "label": "Session musician fees",

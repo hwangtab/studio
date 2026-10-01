@@ -54,7 +54,7 @@ faq:
 - **버스 정류장**: "동명여고·천주교불광동성당" 정류장 도보 1분
 - **지하철**:
   - 연신내역 4번 출구 (3호선·6호선) 도보 5분
-  - 불광역 7번 출구 (3호선·6호선) 도보 7분
+  - 불광역 7번 출구 (3호선·6호선) 도보 5분
 
 ### 대조동 안 동선 (도보 시간 추정)
 
@@ -173,7 +173,7 @@ faq:
 
 ---
 
-[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 7분](/stories/practice-room-bulgwang1) | [녹번 음악연습실 — 3호선 1정거장](/stories/practice-room-nokbeon1) | [구산 음악연습실 — 6호선 1정거장](/stories/practice-room-gusan1) | [은평구 음악연습실 — 구산·역촌·응암 가이드](/stories/practice-room-eunpyeong1)
+[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 5분](/stories/practice-room-bulgwang1) | [녹번 음악연습실 — 3호선 1정거장](/stories/practice-room-nokbeon1) | [구산 음악연습실 — 6호선 1정거장](/stories/practice-room-gusan1) | [은평구 음악연습실 — 구산·역촌·응암 가이드](/stories/practice-room-eunpyeong1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 

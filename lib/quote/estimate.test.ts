@@ -109,7 +109,7 @@ describe('견적 요청서 — 즉시 견적', () => {
 
   it('연습실만 부가세 기준이 다르다', () => {
     expect(estimate({ service: 'practice', scale: 'hourly', timing: '2w' })!.vat).toBe('included');
-    expect(estimate({ service: 'practice', scale: 'monthly', timing: '2w' })!.vat).toBe('final');
+    expect(estimate({ service: 'practice', scale: 'monthly', timing: '2w' })!.vat).toBe('excluded');
     expect(estimate({ service: 'lesson', timing: '2w' })!.vat).toBe('excluded');
   });
 });

@@ -167,7 +167,7 @@ faq:
 
 ---
 
-[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 7분](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1)
+[연신내 음악연습실 — 24시간 방음 연습실 완벽 가이드](/stories/practice-room-yeonsinnae1) | [불광 음악연습실 — 7번 출구 도보 5분](/stories/practice-room-bulgwang1) | [은평구 음악연습실 — 구산·역촌·응암 가이드](/stories/practice-room-eunpyeong1) | [고양시·일산 음악연습실 — 3호선으로 15분](/stories/practice-room-goyang1)
 
 <!-- 내부 link block — Round 4 C-H3 -->
 

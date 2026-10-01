@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Cómo llegar",
-      "description": "Studio NOL está en el piso 3 del edificio junto a la entrada principal del Instituto Dongmyeong. Desde la estación Yeonsinnae (líneas 3 y 6, salida 4) o Bulgwang (línea 6, salida 7), camina unos 5-7 minutos en dirección al Instituto Dongmyeong. En la planta baja hay un taller mecánico, fácil de encontrar. Se recomienda transporte público — el edificio no tiene estacionamiento."
+      "description": "Studio NOL está en el piso 3 del edificio junto a la entrada principal del Instituto Dongmyeong. Desde la estación Yeonsinnae (líneas 3 y 6, salida 4) o Bulgwang (línea 6, salida 7), camina unos 5 minutos en dirección al Instituto Dongmyeong. En la planta baja hay un taller mecánico, fácil de encontrar. Se recomienda transporte público — el edificio no tiene estacionamiento."
     },
     "info": {
       "title": "Información de contacto",
@@ -334,7 +334,7 @@
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
       "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: disponible para mudarse ahora mismo.",
       "detailLink": "Ver instalaciones y beneficios para residentes",
-      "priceNote": "Servicios incluidos · sin depósito · contrato mensual"
+      "priceNote": "Servicios incluidos · sin depósito · contrato mensual · IVA no incluido"
     },
     "additional": {
       "title": "Servicios adicionales",
@@ -740,8 +740,8 @@
         "eyebrow": "Mercado + beneficios, convertido",
         "headline": "₩360K/mes",
         "headlineCaption": "₩0 de depósito · alquiler mensual real",
-        "title": "Disfruta ₩850K+/mes de valor por solo ₩360K/mes",
-        "subtitle": "Una sala de nivel ₩400–500K/mes más ~₩400K+/mes en beneficios extra — unos ₩850K+/mes de valor, incluido para cada residente.",
+        "title": "Disfruta ₩900K+/mes de valor por solo ₩360K/mes",
+        "subtitle": "Una sala de nivel ₩400–500K/mes más ~₩450K+/mes en beneficios extra — unos ₩900K+/mes de valor, incluido para cada residente.",
         "note": "* Precios de mercado basados en salas de Eunpyeong-gu con especificaciones equivalentes (insonorización, climatización, 24/7). Valores estimados por tarifas de grabación, PR y consultoría."
       },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
@@ -749,7 +749,7 @@
       "items": [
         {
           "title": "Descuento en estudio de grabación premium",
-          "valueBadge": "~₩60K/mes",
+          "valueBadge": "~₩100K/mes",
           "points": [
             "1 hora de estudio de grabación gratis al mes (precio normal: ₩100,000/hora)",
             "Capta tu música con equipo profesional de gama alta"
@@ -1046,7 +1046,7 @@
     "inline": {
       "bookingDefault": "Si desea consultar o reservar de inmediato",
       "bookingLabel": "Consulta por KakaoTalk",
-      "bookingBody": "Envíenos un mensaje a nuestro canal de KakaoTalk y le responderemos rápidamente. Solo incluya la siguiente información:",
+      "bookingBody": "Envíenos un mensaje a nuestro chat abierto de KakaoTalk y le responderemos rápidamente. Solo incluya la siguiente información:",
       "kakaoCta": "Consultar por KakaoTalk",
       "priceLabel": "Paquete recomendado",
       "priceCategory": {
@@ -1301,7 +1301,7 @@
         },
         {
           "q": "¿Dónde están y cómo reservo?",
-          "a": "A 5 minutos a pie de la estación Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seúl). Trabajamos solo con cita: escríbenos por nuestro canal de KakaoTalk con tu fecha y número de canciones y confirmamos tras una breve charla."
+          "a": "A 5 minutos a pie de la estación Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seúl). Trabajamos solo con cita: escríbenos por nuestro chat abierto de KakaoTalk con tu fecha y número de canciones y confirmamos tras una breve charla."
         },
         {
           "q": "¿Tengo que gestionar la distribución y el lanzamiento por mi cuenta después de grabar?",
@@ -2750,7 +2750,7 @@
           "priceFactors": [
             {
               "label": "Número de pistas",
-              "detail": "8 pistas de base → 10 pistas +₩2M / 12 pistas +₩4M"
+              "detail": "8 pistas de base → 10 pistas +₩850K / 12 pistas +₩1.7M"
             },
             {
               "label": "Honorarios de músicos de sesión",

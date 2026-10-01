@@ -124,7 +124,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 
 - **Yeonsinnae Station** (Seoul Metro Line 3 + Line 6 transfer station) — Exit 4, 5-minute walk
   - From Exit 4, walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school (1st floor: car repair shop).
-- **Bulgwang Station** (Line 3 + Line 6) — Exit 7, 7-minute walk (same direction toward Dongmyeong Girls' High School)
+- **Bulgwang Station** (Line 3 + Line 6) — Exit 7, 5-minute walk (same direction toward Dongmyeong Girls' High School)
 - Bus Stop: "동명여고·천주교불광동성당" (right in front of the building)
 - Parking: no parking in the building. Paid lot on the same street (KT Eunpyeong, 16 Tongil-ro 71-gil, ~2 min walk); nearest public lot is Yeonsin Middle School underground public parking (16-32 Yeonseo-ro 33-gil, 24h, hourly, ~1 km). The practice rooms are empty soundproof rooms — bring your own instruments and gear.
 
@@ -149,7 +149,7 @@ The studio is reachable on foot or by subway from 21 nearby regions. Each region
 ### Walking distance (3 regions)
 - **대조동 (Daejo-dong)**: walk 0–10 min — site location
 - **연신내 (Yeonsinnae)**: 4번 출구 도보 5분
-- **불광 (Bulgwang)**: 7번 출구 도보 7분
+- **불광 (Bulgwang)**: 7번 출구 도보 5분
 
 ### Eunpyeong-gu via Line 6 / Line 3 (9 regions)
 - **녹번 (Nokbeon)**: Line 3, 1 stop, ~12 min total
@@ -210,7 +210,7 @@ Drum recording is arranged on request through a partner studio; vocals, guitar, 
 Korean (primary), English, Chinese Simplified, Spanish, Vietnamese, Thai, Uzbek.
 
 ### How do I book or get a quote?
-KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FACTS.phoneIntl}. Email: hello@studionol.co.kr. Free quote, same-day booking possible.
+KakaoTalk open chat (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FACTS.phoneIntl}. Email: hello@studionol.co.kr. Free quote, same-day booking possible.
 
 ## Cancellation & Refund Terms (verbatim from ${siteUrl}/ko/terms, Korean)
 
@@ -220,7 +220,7 @@ KakaoTalk channel (open.kakao.com/me/nol) is the fastest. Phone: ${CANONICAL_FAC
 - Monthly subscriptions (practice room, lessons): ${SUBSCRIPTION_REFUND_POLICY_LINES.join(' ')}
 - Music Release PR: ${PRESS_REFUND_POLICY_LINES.join(' ')}
 - Payment: online checkout via Toss Payments for studio bookings, mixing & mastering orders and crowdfunding pledges (payment methods as offered in the Toss checkout); other services by bank transfer on invoice. Tax invoices (세금계산서) are issued on request.
-- All prices are VAT excluded, except the practice room: the monthly residency (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW) is the final price with no VAT added, and the hourly rate is VAT included. Full terms: ${siteUrl}/ko/terms
+- All prices are VAT excluded, including the practice room monthly residency (${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW + VAT), except the practice room hourly rate, which is VAT included. Full terms: ${siteUrl}/ko/terms
 
 ## Sitemaps & Feeds
 
@@ -408,7 +408,7 @@ Studio NOL is a professional recording studio in Yeonsinnae (Eunpyeong-gu, Seoul
 - Services: vocal recording, mixing, mastering, monthly practice room residency, 1:1 producing lessons (MIDI, composition, mixing — no vocal or instrument lessons), voice-over recording, wedding song packages, and album release production (modern A&R planning, worldwide distribution, PR pitched to international media, radio and playlist curators).
 - Music Release PR (standalone — no production required): ${krw(RELEASE_PRESS_INTRO_PRICE)} KRW introductory rate through ${RELEASE_PRESS_INTRO_ENDS_ON} (list ${krw(RELEASE_PRESS_PRICE)} KRW). Press release in five languages, press kit page, and outreach to Korean music outlets plus media, radio and record shops in 60 countries, with a send report. Placement is not guaranteed. Page: ${siteUrl}/en/music-promotion
 - Also offered: cover video all-in-one package (${krw(COVER_VIDEO_PACKAGE_PRICE)} KRW — filming, recording, mixing, 4K edit) and crowdfunding campaign design on Studio NOL Funding (${krw(FUNDING_DESIGN_PRICE)} KRW design fee, no success fee; platform ${FUNDING_PLATFORM_FEE_PERCENT}% + payment ${FUNDING_PAYMENT_FEE_PERCENT}% deducted from funds raised).
-- English communication: KakaoTalk channel (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
+- English communication: KakaoTalk open chat (https://open.kakao.com/me/nol), email (hello@studionol.co.kr), or phone (${CANONICAL_FACTS.phoneIntl}). Free quote within 24 hours.
 - Recording rate: ${krw(RECORDING_HOURLY_PRICE)} KRW per hour for hourly sessions; ${krw(VOCAL_PACKAGE_PRICE)} KRW for a single-song vocal package (3 hours, dedicated engineer). All-in-one bundles cover planning, recording, mixing, mastering, digital distribution and release PR: 1 song ${krw(SINGLE_BUNDLE_PRICE)} KRW (~9% below production line-item total); EP 4 songs ${krw(EP_BUNDLE_PRICE)} KRW (~15%); album 8 songs ${krw(ALBUM_BUNDLE_PRICE)} KRW (~20%). Session musician fees are not included in any bundle; they are billed at the musicians' actual cost with no booking fee. Recording studio page (rates, booking, directions): ${siteUrl}/en/recording
 - Mixing: ${krw(MIXING_LEVEL1_PRICE)}–${krw(MIXING_LEVEL3_PRICE)} KRW per song depending on track count, with two revisions included. Mastering: ${krw(MASTERING_SINGLE_PRICE)} KRW/song (single) or ${krw(MASTERING_PACKAGE_PRICE)} KRW/song for 4+ tracks. Both can be commissioned remotely — no studio visit needed.
 - Monthly practice room residency: ${krw(PRACTICE_ROOM_MONTHLY_PRICE)} KRW/month, no deposit, 24/7 access, soundproof STC 60+ private room. Band rehearsal rooms are not operated. Hourly use: ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour VAT included, from 1 hour, 24/7, same-day booking — ${siteUrl}/ko/booking/practice-room. Availability (as of ${PRACTICE_ROOM_AVAILABILITY_UPDATED_ON}): ${PRACTICE_ROOM_HAS_VACANCY ? `${PRACTICE_ROOM_VACANT_ROOMS} room(s) currently available for move-in` : 'fully occupied — waitlist open'}.

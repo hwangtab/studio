@@ -13,7 +13,7 @@ export const PRACTICE_ROOM_REGION_LPS: PracticeRoomRegionLP[] = [
   // 도보권 — 사이트 인접
   { slug: 'practice-room-daejo1',      region: '대조동',   distance: '도보 0~10분',         group: 'walk' },
   { slug: 'practice-room-yeonsinnae1', region: '연신내',   distance: '4번 출구 도보 5분',    group: 'walk' },
-  { slug: 'practice-room-bulgwang1',   region: '불광',     distance: '7번 출구 도보 7분',    group: 'walk' },
+  { slug: 'practice-room-bulgwang1',   region: '불광',     distance: '7번 출구 도보 5분',    group: 'walk' },
 
   // 은평구 권역 — 6호선·3호선
   { slug: 'practice-room-eunpyeong1',  region: '은평구',   distance: '광역 동별 가이드',     group: 'eunpyeong' },

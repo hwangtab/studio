@@ -512,9 +512,8 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
           title={t('pricing.practiceRoom.title')}
           subtitle={t(PRACTICE_ROOM_HAS_VACANCY ? 'pricing.practiceRoom.subtitleVacant' : 'pricing.practiceRoom.subtitle', { rooms: PRACTICE_ROOM_VACANT_ROOMS })}
         />
-        {/* 연습실만 페이지 공통 VAT_NOTICE를 쓰지 않는다. 월 이용료는 표시 금액이 곧
-            납부 금액이라(대부분 계좌입금 36만원) "VAT 별도"를 덧붙이면 홍보 문구의
-            36만원과 어긋나 10% 비싸 보인다. 나머지 상품은 VAT_NOTICE 그대로. */}
+        {/* 월 이용료는 다른 상품과 같이 VAT 별도다(운영자 확정 2026-10-01). 안내는 priceNote가 맡는다.
+            시간제만 VAT 포함이며 카드 제목에 적혀 있다. */}
         <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
           {t('pricing.practiceRoom.priceNote')}
         </p>

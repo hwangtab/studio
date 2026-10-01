@@ -21,7 +21,7 @@ const faqData = {
   ko: [
     {
       question: '스튜디오 놀의 위치는 어디인가요?',
-      answer: '서울특별시 은평구 통일로71길 2-1 3층(대조동, 동명여고 바로 옆)에 위치해 있습니다. 지하철 3·6호선 연신내역 4번 출구에서 도보 5분, 6호선 불광역 7번 출구에서 도보 7분 거리입니다.',
+      answer: '서울특별시 은평구 통일로71길 2-1 3층(대조동, 동명여고 바로 옆)에 위치해 있습니다. 지하철 3·6호선 연신내역 4번 출구에서 도보 5분, 6호선 불광역 7번 출구에서 도보 5분 거리입니다.',
     },
     {
       question: '녹음실 이용 요금은 얼마인가요?',
@@ -61,7 +61,7 @@ const faqData = {
     },
     {
       question: '녹음실 예약은 어떻게 하나요?',
-      answer: `카카오톡 채널 '스튜디오 놀', 전화(${CANONICAL_FACTS.phone}), 또는 홈페이지 문의 폼을 통해 예약하실 수 있습니다. 당일 예약도 가능하며, 주말·공휴일에도 운영합니다.`,
+      answer: `카카오톡 오픈채팅, 전화(${CANONICAL_FACTS.phone}), 또는 홈페이지 문의 폼을 통해 예약하실 수 있습니다. 당일 예약도 가능하며, 주말·공휴일에도 운영합니다.`,
     },
     {
       question: '일반인도 녹음실을 이용할 수 있나요?',
@@ -69,7 +69,7 @@ const faqData = {
     },
     {
       question: '연습실은 어떻게 이용하나요?',
-      answer: `월정액 입주 프로그램(월 36만원~)이 기본입니다. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 한두 시간만 필요하면 시간제(시간당 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있습니다. 밴드 합주실은 운영하지 않습니다.`,
+      answer: `월정액 입주 프로그램(월 36만원~, 부가세 별도)이 기본입니다. 보증금 없이 24시간 출입할 수 있는 방음 개인실이고, 한두 시간만 필요하면 시간제(시간당 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)}원, 부가세 포함, 1시간부터)로 온라인 결제 후 바로 쓸 수 있습니다. 밴드 합주실은 운영하지 않습니다.`,
     },
     // 2026-09-25 — 홈 FAQ가 녹음·믹싱·연습실·축가만 답하고 있었다. ChatGPT는 홈(/ko)을 직접
     // 인용한 적이 있다(GEO 1회차 Q17·Q19). 나머지 주력 상품을 한 문항씩 둔다.
@@ -96,7 +96,7 @@ const faqData = {
   en: [
     {
       question: 'Where is Studio NOL located?',
-      answer: 'We are located at 3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong, next to Dongmyeong Girls High School). It is a 5-minute walk from Yeonsinnae Station (Lines 3 & 6, Exit 4) or a 7-minute walk from Bulgwang Station (Line 6, Exit 7).',
+      answer: 'We are located at 3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong, next to Dongmyeong Girls High School). It is a 5-minute walk from Yeonsinnae Station (Lines 3 & 6, Exit 4) or a 5-minute walk from Bulgwang Station (Line 6, Exit 7).',
     },
     {
       question: 'How much is the recording studio fee?',
@@ -136,7 +136,7 @@ const faqData = {
     },
     {
       question: 'How do I book the recording studio?',
-      answer: `You can book via KakaoTalk (channel: Studio NOL), phone (${CANONICAL_FACTS.phone}), or our website contact form. Same-day bookings are possible, and we are available on weekends and holidays.`,
+      answer: `You can book via KakaoTalk open chat, phone (${CANONICAL_FACTS.phone}), or our website contact form. Same-day bookings are possible, and we are available on weekends and holidays.`,
     },
     {
       question: 'Can non-professionals record here?',
@@ -199,7 +199,7 @@ const faqData = {
     },
     {
       question: '如何预约录音室？',
-      answer: `可通过 KakaoTalk 频道"Studio NOL"、电话 ${CANONICAL_FACTS.phone} 或网站联系表单预约。支持当天预约，周末及节假日均可使用。`,
+      answer: `可通过 KakaoTalk 开放聊天、电话 ${CANONICAL_FACTS.phone} 或网站联系表单预约。支持当天预约，周末及节假日均可使用。`,
     },
     {
       question: '普通人也可以使用录音室吗？',
@@ -213,7 +213,7 @@ const faqData = {
   es: [
     {
       question: '¿Dónde está ubicado Studio NOL?',
-      answer: 'Estamos en el 3er piso, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seúl (Daejo-dong). A 5 minutos a pie de la estación Yeonsinnae (líneas 3 y 6, salida 4) o a 7 minutos de la estación Bulgwang (línea 6, salida 7).',
+      answer: 'Estamos en el 3er piso, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seúl (Daejo-dong). A 5 minutos a pie de la estación Yeonsinnae (líneas 3 y 6, salida 4) o a 5 minutos de la estación Bulgwang (línea 6, salida 7).',
     },
     {
       question: '¿Cuánto cuesta el estudio de grabación?',
@@ -245,7 +245,7 @@ const faqData = {
     },
     {
       question: '¿Cómo reservo el estudio de grabación?',
-      answer: `Puedes reservar a través de KakaoTalk (canal: Studio NOL), por teléfono (${CANONICAL_FACTS.phone}) o el formulario de contacto en nuestra web. Las reservas el mismo día son posibles y estamos disponibles los fines de semana y festivos.`,
+      answer: `Puedes reservar a través de KakaoTalk (chat abierto), por teléfono (${CANONICAL_FACTS.phone}) o el formulario de contacto en nuestra web. Las reservas el mismo día son posibles y estamos disponibles los fines de semana y festivos.`,
     },
     {
       question: '¿Pueden grabar personas sin experiencia?',
@@ -291,7 +291,7 @@ const faqData = {
     },
     {
       question: 'Làm thế nào để đặt phòng thu?',
-      answer: `Bạn có thể đặt qua KakaoTalk (kênh: Studio NOL), điện thoại (${CANONICAL_FACTS.phone}) hoặc form liên hệ trên website. Đặt trong ngày được, và chúng tôi mở cửa cả cuối tuần và ngày lễ.`,
+      answer: `Bạn có thể đặt qua KakaoTalk (Open Chat), điện thoại (${CANONICAL_FACTS.phone}) hoặc form liên hệ trên website. Đặt trong ngày được, và chúng tôi mở cửa cả cuối tuần và ngày lễ.`,
     },
     {
       question: 'Người không chuyên có thể sử dụng phòng thu không?',
@@ -305,7 +305,7 @@ const faqData = {
   th: [
     {
       question: 'Studio NOL อยู่ที่ไหน?',
-      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong) (ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Yeonsinnae (สาย 3·6) ทางออก 4 หรือ 7 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7',
+      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong) (ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Yeonsinnae (สาย 3·6) ทางออก 4 หรือ 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7',
     },
     {
       question: 'ค่าห้องอัดเท่าไหร่?',
@@ -337,7 +337,7 @@ const faqData = {
     },
     {
       question: 'จะจองห้องอัดได้อย่างไร?',
-      answer: `จองได้ผ่าน KakaoTalk (ช่อง: Studio NOL), โทรศัพท์ (${CANONICAL_FACTS.phone}) หรือฟอร์มติดต่อบนเว็บไซต์ รับจองในวันเดียวกัน และเปิดให้บริการทั้งวันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์`,
+      answer: `จองได้ผ่าน KakaoTalk (โอเพนแชท), โทรศัพท์ (${CANONICAL_FACTS.phone}) หรือฟอร์มติดต่อบนเว็บไซต์ รับจองในวันเดียวกัน และเปิดให้บริการทั้งวันหยุดสุดสัปดาห์และวันหยุดนักขัตฤกษ์`,
     },
     {
       question: 'คนทั่วไป (บันทึกเสียงเอง) ใช้ห้องอัดได้ไหม?',
@@ -383,7 +383,7 @@ const faqData = {
     },
     {
       question: "Yozuv studiyasini qanday band qilish mumkin?",
-      answer: `KakaoTalk (kanal: Studio NOL), telefon (${CANONICAL_FACTS.phone}) yoki veb-saytdagi murojaat formasi orqali band qilishingiz mumkin. Bir kunlik band ham mumkin, dam olish va bayram kunlarida ham ishlaydi.`,
+      answer: `KakaoTalk (ochiq chat), telefon (${CANONICAL_FACTS.phone}) yoki veb-saytdagi murojaat formasi orqali band qilishingiz mumkin. Bir kunlik band ham mumkin, dam olish va bayram kunlarida ham ishlaydi.`,
     },
     {
       question: "Oddiy odamlar (mustaqil yozish) studiyadan foydalana oladimi?",
