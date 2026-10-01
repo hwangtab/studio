@@ -421,8 +421,8 @@ const homeData = {
       title: "Para Artistas Latinoamericanos en Corea",
       items: [
         {
-          heading: "FAQ para artistas latinos en Seúl",
-          body: "¿Cómo obtener visa de artista? ¿Dónde encontrar músicos coreanos para colaborar? Nuestro equipo te guía en todo el proceso: desde la visa C-4 hasta el registro en Korean Music Copyright Association (KOMCA). Paquete Single (grabación + mezcla + masterización) desde ₩500,000."
+          heading: "Grabar en Seúl siendo artista extranjero",
+          body: "Grabamos, mezclamos y masterizamos tu canción en Seúl, y te ayudamos a publicarla en las plataformas coreanas. Paquete Single (grabación + mezcla + masterización) desde ₩500,000."
         },
         {
           heading: "Producción musical para K-pop y Latin Pop",
@@ -517,8 +517,8 @@ const homeData = {
       title: "Cho Nghệ Sĩ Việt Nam Tại Hàn Quốc",
       items: [
         {
-          heading: "Hướng dẫn visa nghệ sĩ & KOMCA",
-          body: "Làm thế nào để xin visa C-4 (nghệ sĩ)? Đăng ký quyền tác giả âm nhạc tại Korean Music Copyright Association (KOMCA) ra sao? Chúng tôi đồng hành bạn từ khâu xin visa đến khi hoàn tất đăng ký quyền tác giả. Gói 1 bài (thu âm + mixing + mastering) từ ₩500,000."
+          heading: "Thu âm tại Seoul cho nghệ sĩ nước ngoài",
+          body: "Studio NOL thu âm, mixing và mastering ca khúc của bạn tại Seoul, rồi hỗ trợ phát hành lên các nền tảng nhạc Hàn Quốc. Gói 1 bài (thu âm + mixing + mastering) từ ₩500,000."
         },
         {
           heading: "Đào tạo thanh nhạc phong cách K-pop",
@@ -613,8 +613,8 @@ const homeData = {
       title: "สำหรับศิลปินไทยในเกาหลี",
       items: [
         {
-          heading: "คำแนะนำวีซ่าศิลปิน & KOMCA",
-          body: "วิธีขอวีซ่า C-4 (ศิลปิน) ทำอย่างไร? ลงทะเบียนลิขสิทธิ์เพลงที่ Korean Music Copyright Association (KOMCA) อย่างไร? ทีมงานของเราพร้อมช่วยเหลือคุณตั้งแต่ขั้นตอนขอวีซ่าจนถึงการจดทะเบียนลิขสิทธิ์เสร็จสมบูรณ์ แพ็กเกจเพลงเดี่ยว (อัด+มิกซ์+มาสเตอร์) เริ่มต้น ₩500,000"
+          heading: "บันทึกเสียงที่โซลสำหรับศิลปินต่างชาติ",
+          body: "Studio NOL บันทึกเสียง มิกซ์ และมาสเตอร์เพลงของคุณที่โซล แล้วช่วยนำเพลงขึ้นแพลตฟอร์มเพลงเกาหลี แพ็กเกจเพลงเดี่ยว (อัด+มิกซ์+มาสเตอร์) เริ่มต้น ₩500,000"
         },
         {
           heading: "การผลิตเพลงสไตล์ K-pop",
@@ -709,16 +709,16 @@ const homeData = {
       title: "Koreyada Yashayotgan Oʻzbek Sanʼatkorlari Uchun",
       items: [
         {
-          heading: "Oʻzbek va ingliz tillarida muloqot",
-          body: "Studiomizda oʻzbek va ingliz tillarida muloqot qilish mumkin. Koreya musiqa bozori bilan tanish muhandislarimiz loyihaning har bir bosqichida sizni yoʻnaltiradi — yozuvdan miks va masteringgacha tilga bogʻliq tushunmovchiliklarsiz. 1 ta qoʻshiq toʻliq paketi (yozuv + miks + mastering) ₩500,000 dan boshlanadi."
+          heading: "Bron va yozishmalar ingliz tilida",
+          body: "Bron qilish va loyiha boʻyicha yozishmalar ingliz tilida olib boriladi. 1 ta qoʻshiq toʻliq paketi (yozuv + miks + mastering) ₩500,000 dan boshlanadi."
         },
         {
-          heading: "K-pop treningi va C-4 sanʼatkor vizasi yoʻnalishi",
-          body: "K-pop trainee va xorijda tayyorgarlik koʻrayotgan sanʼatkorlar uchun Koreya bozori talablariga mos vokal yoʻnalishi va repertoire tayyorlashga yordam beramiz. Shuningdek, Korean Music Copyright Association (KOMCA) da roʻyxatdan oʻtish va C-4 sanʼatkor vizasi jarayonlari haqida amaliy maslahat beramiz."
+          heading: "K-pop treninglari uchun vokal yozuvi",
+          body: "K-pop trainee va xorijdagi sanʼatkorlar uchun vokal yozuvi jarayonida direkting (ijro yoʻnalishi) beramiz va treklaringizni Koreya bozoriga mos tayyorlaymiz."
         },
         {
           heading: "Koreya streaming platformalarida chiqarish",
-          body: "Tugallangan treklaringizni Melon, Genie, Bugs Music va Spotify Korea kabi Koreyaning asosiy musiqa platformalarida chiqarishga yordam beramiz. Koreya musiqa faoliyatingizning birinchi qadamini Studio NOL da — mahalliy bozorni biladigan va siz bilan oʻzbek tilida muloqot qila oladigan studiya bilan boshlang."
+          body: "Tugallangan treklaringizni Melon, Genie, Bugs Music va Spotify Korea kabi Koreyaning asosiy musiqa platformalarida chiqarishga yordam beramiz. Koreya musiqa faoliyatingizning birinchi qadamini Studio NOL da — mahalliy bozorni biladigan studiya bilan boshlang."
         }
       ]
     }

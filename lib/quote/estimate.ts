@@ -176,7 +176,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
           vat: 'excluded',
           basis: [
             `곡당 보컬 녹음 1프로(${won(VOCAL_PACKAGE_PRICE)}, 3시간) 기준`,
-            `녹음이 하루 8시간 안에 끝날 분량이면 Day Lock 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`,
+            `3곡이고 하루 8시간 안에 끝날 분량이면 Day Lock 8시간 ${won(DAY_LOCK_8H_PRICE)}이 더 쌉니다`,
           ],
           bookingHref: '/ko/booking/recording',
         };

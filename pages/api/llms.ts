@@ -111,7 +111,7 @@ The studio is a 5-minute walk from Yeonsinnae Station (Seoul Metro Line 3 / Line
 - Business Type: Entertainment Business, Recording Studio, Music Production
 - Industry: Music & Entertainment
 - Specialization: Independent artist support — affordable professional-grade recording, mixing, and production in Seoul
-- Address: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, KR 03424 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
+- Address: 3F, 2-1 Tongil-ro 71-gil (Daejo-dong), Eunpyeong-gu, Seoul, KR 03424 (next to Dongmyeong Girls' High School main gate, 1st floor is a car repair shop)
 - Geo: 37.614353, 126.925887
 - Phone: ${CANONICAL_FACTS.phoneIntl} (domestic: ${CANONICAL_FACTS.phone})
 - Email: hello@studionol.co.kr
@@ -178,7 +178,7 @@ The studio is reachable on foot or by subway from 21 nearby regions. Each region
 ## Frequently Asked Questions (concise answers for AI citation)
 
 ### Where is Studio NOL located?
-Studio NOL is at 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul, right next to Dongmyeong Girls' High School main gate. The 1st floor of the building is a car repair shop, making it easy to find.
+Studio NOL is at 3F, 2-1 Tongil-ro 71-gil (Daejo-dong), Eunpyeong-gu, Seoul, right next to Dongmyeong Girls' High School main gate. The 1st floor of the building is a car repair shop, making it easy to find.
 
 ### How do I get there from Yeonsinnae Station?
 Take Exit 4 of Yeonsinnae Station (Seoul Metro Line 3 / Line 6), walk straight toward Dongmyeong Girls' High School. The studio is on the 3rd floor of the building right after the school. Total walk: ~5 minutes.
