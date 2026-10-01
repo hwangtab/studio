@@ -375,6 +375,11 @@ code {
 .markdown-content .max-w-none li {
   line-height: 1.7;
 }
+/* 본문 굵은 글씨는 700보다 한 단계 더 굵게(800). Pretendard Variable이 45~920 가변 축이라 실제 굵기로
+   그려지고 글자 폭은 약 1% 늘 뿐이다(2026-10-01 ableton1 실측). 보라색·이탤릭 같은 색·모양 변화는 주지 않는다. */
+.markdown-content .max-w-none strong {
+  font-weight: 800;
+}
 /* 목록 항목 사이. li 오버라이드(mb-4)가 죽어 있어 항목이 0px로 붙어 있었다(스토리 실측). */
 .markdown-content .max-w-none li {
   margin-bottom: 0.375em;
