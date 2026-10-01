@@ -30,7 +30,11 @@ interface HomeReleaseStripProps {
  */
 const HomeReleaseStrip = ({ locale, covers, viewAllLabel }: HomeReleaseStripProps) => (
   <>
-    <div className="-mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scrollbar-hide">
+    {/* scroll-pl-4: scroll-snap-type이 있으면 브라우저가 초기 스크롤 위치를 snap
+        기준으로 잡는데, scroll-padding 없이는 그 기준이 패딩을 무시한 테두리가 되어
+        로드 직후 scrollLeft가 paddingLeft만큼(16px) 밀려 첫 카드의 왼쪽 여백이
+        사라진다(실측 확인, 2026-10-01). sm 이상은 스크롤이 꺼지므로 0으로 되돌린다. */}
+    <div className="-mx-4 px-4 sm:mx-0 sm:px-0 overflow-x-auto sm:overflow-visible snap-x snap-mandatory scroll-pl-4 sm:scroll-pl-0 scrollbar-hide">
       <ul className="grid grid-flow-col auto-cols-[42%] sm:grid-flow-row sm:auto-cols-auto sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-5">
         {covers.map((cover) => (
           <li key={cover.id} className="snap-start">
