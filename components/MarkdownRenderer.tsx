@@ -89,12 +89,11 @@ const DangerousTagBlock = () => null;
 
 // Static overrides extracted outside to prevent re-creation
 //
-// ⚠ p·strong·em·li·blockquote 오버라이드는 **죽어 있다**(2026-10-01 실측: 렌더된 요소에 클래스가 없다).
-// markdown-to-jsx가 `className: undefined`를 props로 함께 넘기는데 이 다섯은 `{...props}`를 자기
-// className 뒤에 펼쳐 방금 적은 클래스를 지운다(a 오버라이드가 겪은 것과 같은 버그, 위 주석 참조).
-// 그래서 사이트의 실제 모양은 이 클래스들이 아니라 styles/globals.css의 `.markdown-content` 규칙이다.
-// **이 다섯을 mergeClassNames로 "고치면" 스토리 1,700편의 굵은 글씨가 보라색이 되고 인용문이 기울어지며
-// 목록 간격이 바뀐다** — 의도한 디자인이었는지 먼저 정하고 건드릴 것.
+// p·strong·em·li·blockquote에는 오버라이드를 두지 않는다(2026-10-01 삭제). 예전 오버라이드는
+// markdown-to-jsx가 넘기는 `className: undefined`가 자기 클래스를 지워 삭제 시점에 이미 적용되지 않고 있었다(실측).
+// 이 다섯의 모양은 styles/globals.css의 `.markdown-content .max-w-none` 규칙이 정본이다 — 단락 간격·
+// 줄 높이·목록 간격·인용 선이 거기 있다. 여기에 클래스를 다시 붙이면 두 곳이 갈라진다.
+// (옛 의도였던 보라색 굵은 글씨·이탤릭 인용문은 v2 방향·한글 가독성과 맞지 않아 되살리지 않았다.)
 const STATIC_OVERRIDES = {
   script: { component: DangerousTagBlock },
   iframe: { component: DangerousTagBlock },
@@ -159,30 +158,6 @@ const STATIC_OVERRIDES = {
       </h4>
     ),
   },
-  p: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <p
-        className="text-body-1 leading-relaxed mb-6 mt-4 text-gray-800 dark:text-gray-200"
-        {...props}
-      >
-        {children}
-      </p>
-    ),
-  },
-  strong: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <strong className="font-bold text-primary-dark dark:text-primary-lighter" {...props}>
-        {children}
-      </strong>
-    ),
-  },
-  em: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <em className="italic" {...props}>
-        {children}
-      </em>
-    ),
-  },
   ul: {
     component: ({ children, className, ...props }: { children: React.ReactNode; className?: string } & React.HTMLAttributes<HTMLElement>) => (
       <ul
@@ -201,23 +176,6 @@ const STATIC_OVERRIDES = {
       >
         {children}
       </ol>
-    ),
-  },
-  li: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <li
-        className="text-body-1 leading-relaxed mb-4 pl-2 list-item text-gray-800 dark:text-gray-200"
-        {...props}
-      >
-        {children}
-      </li>
-    ),
-  },
-  blockquote: {
-    component: ({ children, ...props }: { children: React.ReactNode } & React.HTMLAttributes<HTMLElement>) => (
-      <blockquote className="border-l-4 border-primary-light dark:border-primary-dark pl-4 py-2 my-4 bg-gray-50 dark:bg-gray-800 italic" {...props}>
-        {children}
-      </blockquote>
     ),
   },
   img: {
