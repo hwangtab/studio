@@ -12,6 +12,9 @@ endAt: 2026-10-19T23:59:59+09:00
 status: auto
 hidden: false
 lastmod: 2026-09-30
+# 리워드는 금액 오름차순으로 적는다(같은 금액은 첫 앨범 → 물고기 앨범 순). 화면은 이 파일 순서 그대로 그린다.
+# 새 리워드도 금액 자리에 끼워 넣을 것. 책(13,000)이 티셔츠(33,000)보다 앞이어야 결제 화면의 "함께 받기" 제안이
+# 책 두 권이 된다(PledgeWizard가 addOn 중 파일 순서로 앞의 두 개를 쓴다).
 rewards:
   - id: mp3
     title: 음원 펀딩 — MP3
@@ -23,6 +26,18 @@ rewards:
     downloads:
       - label: MP3 320kbps
         key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
+  # 옴니버스 〈물고기는 물이 없으면 죽어요〉(2022, 노량진수산시장 예술해방전선). 8곡, WAV는 16bit 44.1kHz까지만
+  # 있다(24bit 마스터 없음). 오픈 뒤라 id·금액은 바꾸지 않는다.
+  - id: fish-mp3
+    title: 음원 펀딩 — 〈물고기는 물이 없으면 죽어요〉 MP3
+    description: 옴니버스 앨범 〈물고기는 물이 없으면 죽어요〉 8곡 전체를 MP3 320kbps로 보내 드립니다. 내려받기 주소는 결제 확정 메일과 펀딩 확인 페이지에 함께 보내 드립니다.
+    amount: 10000
+    requiresShipping: false
+    estimatedDelivery: 결제 확정 즉시
+    image: /images/funding/keep-singing-for-palestine/fish-album-20260930.webp
+    downloads:
+      - label: 〈물고기는 물이 없으면 죽어요〉 MP3 320kbps
+        key: kspf-2026/389164c8ee6ab6724da5bc8902d1984f/fish-mp3-320.zip
   # 박치치 시/노래집 두 권. 책값 10,000원 + 배송비 3,000원을 합쳐 13,000원 단가로 받는다
   # (리워드 금액 하나에 배송비를 따로 싣는 칸이 없다). 오픈 뒤라 id·금액은 바꾸지 않는다.
   - id: book-baljak
@@ -54,6 +69,30 @@ rewards:
     addOn: true
     estimatedDelivery: 2026-10
     image: /images/funding/keep-singing-for-palestine/book-gangdo-20260928.webp
+  - id: wav-cd
+    title: 음원 펀딩 — MP3 + CD 음질, 두 가지 모두
+    description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.
+    amount: 30000
+    requiresShipping: false
+    estimatedDelivery: 결제 확정 즉시
+    image: /images/funding/keep-singing-for-palestine/album.webp
+    downloads:
+      - label: MP3 320kbps
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
+      - label: WAV 16bit 44.1kHz (CD 음질)
+        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-16-44.zip
+  - id: fish-wav
+    title: 음원 펀딩 — 〈물고기는 물이 없으면 죽어요〉 MP3 + CD 음질
+    description: 〈물고기는 물이 없으면 죽어요〉 8곡 전체를 MP3 320kbps와 CD 음질 16bit 44.1kHz WAV, 두 가지로 모두 보내 드립니다.
+    amount: 30000
+    requiresShipping: false
+    estimatedDelivery: 결제 확정 즉시
+    image: /images/funding/keep-singing-for-palestine/fish-album-20260930.webp
+    downloads:
+      - label: 〈물고기는 물이 없으면 죽어요〉 MP3 320kbps
+        key: kspf-2026/389164c8ee6ab6724da5bc8902d1984f/fish-mp3-320.zip
+      - label: 〈물고기는 물이 없으면 죽어요〉 WAV 16bit 44.1kHz (CD 음질)
+        key: kspf-2026/389164c8ee6ab6724da5bc8902d1984f/fish-wav-16-44.zip
   # 강정피스앤뮤직캠프 티셔츠. 옵션 칸이 없어 색×사이즈마다 리워드 하나, 남은 장수가 곧
   # totalQuantity다. 배송비 포함 33,000원. 책 뒤에 두는 이유: 결제 화면의 "함께 담을 수
   # 있는 리워드"는 addOn 중 파일 순서로 앞의 두 개만 보인다(PledgeWizard.tsx).
@@ -102,18 +141,6 @@ rewards:
     addOn: true
     estimatedDelivery: 2026-10
     image: /images/funding/keep-singing-for-palestine/tshirt-2nd-20260929.webp
-  - id: wav-cd
-    title: 음원 펀딩 — MP3 + CD 음질, 두 가지 모두
-    description: MP3 320kbps와 CD 음질 16bit 44.1kHz WAV를 둘 다 보내 드립니다. 1만원 리워드를 포함합니다.
-    amount: 30000
-    requiresShipping: false
-    estimatedDelivery: 결제 확정 즉시
-    image: /images/funding/keep-singing-for-palestine/album.webp
-    downloads:
-      - label: MP3 320kbps
-        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-mp3-320.zip
-      - label: WAV 16bit 44.1kHz (CD 음질)
-        key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-16-44.zip
   - id: wav-hires
     title: 음원 펀딩 — 24bit 96kHz까지 세 가지 모두
     description: 세 가지 음질을 모두 보내 드립니다. MP3 320kbps, CD 음질 16bit 44.1kHz WAV, 그리고 스튜디오 마스터와 같은 24bit 96kHz WAV 원본(약 1.8GB)입니다.
@@ -142,30 +169,6 @@ rewards:
         key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-16-44.zip
       - label: WAV 24bit 96kHz (스튜디오 마스터)
         key: kspf-2026/41ea2fc69b54b29e438d3e3f3aa0fca9/album-wav-24-96.zip
-  # 옴니버스 〈물고기는 물이 없으면 죽어요〉(2022, 노량진수산시장 예술해방전선). 8곡, WAV는 16bit 44.1kHz까지만
-  # 있다(24bit 마스터 없음). 오픈 뒤라 id·금액은 바꾸지 않는다.
-  - id: fish-mp3
-    title: 음원 펀딩 — 〈물고기는 물이 없으면 죽어요〉 MP3
-    description: 옴니버스 앨범 〈물고기는 물이 없으면 죽어요〉 8곡 전체를 MP3 320kbps로 보내 드립니다. 내려받기 주소는 결제 확정 메일과 펀딩 확인 페이지에 함께 보내 드립니다.
-    amount: 10000
-    requiresShipping: false
-    estimatedDelivery: 결제 확정 즉시
-    image: /images/funding/keep-singing-for-palestine/fish-album-20260930.webp
-    downloads:
-      - label: 〈물고기는 물이 없으면 죽어요〉 MP3 320kbps
-        key: kspf-2026/389164c8ee6ab6724da5bc8902d1984f/fish-mp3-320.zip
-  - id: fish-wav
-    title: 음원 펀딩 — 〈물고기는 물이 없으면 죽어요〉 MP3 + CD 음질
-    description: 〈물고기는 물이 없으면 죽어요〉 8곡 전체를 MP3 320kbps와 CD 음질 16bit 44.1kHz WAV, 두 가지로 모두 보내 드립니다.
-    amount: 30000
-    requiresShipping: false
-    estimatedDelivery: 결제 확정 즉시
-    image: /images/funding/keep-singing-for-palestine/fish-album-20260930.webp
-    downloads:
-      - label: 〈물고기는 물이 없으면 죽어요〉 MP3 320kbps
-        key: kspf-2026/389164c8ee6ab6724da5bc8902d1984f/fish-mp3-320.zip
-      - label: 〈물고기는 물이 없으면 죽어요〉 WAV 16bit 44.1kHz (CD 음질)
-        key: kspf-2026/389164c8ee6ab6724da5bc8902d1984f/fish-wav-16-44.zip
 ---
 
 ## 9월 19일, 거리에서 노래했습니다
