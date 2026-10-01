@@ -7,7 +7,7 @@
  * `drum-mixing1`·`drum-recording1`처럼 연습실 글이 아닌 것은 애초에 연습실 오퍼를 받지 않아 영향이 없다.
  */
 export const UNSUPPORTED_PRACTICE_INSTRUMENT_SLUG_PATTERN =
-  /(^|[-_])(drums?|percussion|wind|saxophone|sax|trumpet|trombone|flute|clarinet|oboe|bassoon|horn|brass|tuba|harmonica|ocarina|recorder|cajon|snare|cymbal|rudiments?|ghost-notes)\d*($|[-_])/i;
+  /(^|[-_])(drums?|percussion|wind|saxophone|sax|trumpet|trombone|flute|clarinet|oboe|bassoon|horn|brass|tuba|harmonica|ocarina|cajon|snare|cymbal|rudiments?)\d*($|[-_])/i;
 
 export const isUnsupportedPracticeInstrumentSlug = (slug: string): boolean =>
   UNSUPPORTED_PRACTICE_INSTRUMENT_SLUG_PATTERN.test(slug);

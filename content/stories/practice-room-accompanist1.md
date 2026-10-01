@@ -111,4 +111,4 @@ faq:
 
 ---
 
-[음악연습실 안내](/practice-room) | [연신내 음악연습실](/stories/practice-room-yeonsinnae1) | [드럼 연습실 가이드](/stories/practice-room-drum1) | [기타 연습실 가이드](/stories/practice-room-guitar1) | [요금 안내](/pricing)
+[음악연습실 안내](/practice-room) | [연신내 음악연습실](/stories/practice-room-yeonsinnae1) | [기타 연습실 가이드](/stories/practice-room-guitar1) | [요금 안내](/pricing)
