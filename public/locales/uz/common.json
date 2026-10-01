@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Yo'nalish",
-      "description": "Studio NOL Dongmyeong qiz maktabining asosiy darvozasi yonidagi binoning 3-qavatida joylashgan. Yeonsinnae bekatidan (3 va 6-liniya, 4-chiqish) yoki Bulgwang bekatidan (6-liniya, 7-chiqish) Dongmyeong maktabi tomon piyoda 5-7 daqiqa. Birinchi qavat avtoservis, topish oson. Binoda avtoturargoh yo'qligi sababli jamoat transportidan foydalanish tavsiya etiladi."
+      "description": "Studio NOL Dongmyeong qiz maktabining asosiy darvozasi yonidagi binoning 3-qavatida joylashgan. Yeonsinnae bekatidan (3 va 6-liniya, 4-chiqish) yoki Bulgwang bekatidan (6-liniya, 7-chiqish) Dongmyeong maktabi tomon piyoda 5 daqiqa. Birinchi qavat avtoservis, topish oson. Binoda avtoturargoh yo'qligi sababli jamoat transportidan foydalanish tavsiya etiladi."
     },
     "info": {
       "title": "Aloqa ma'lumotlari",
@@ -334,7 +334,7 @@
       "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
       "subtitleVacant": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — hozir ko'chib kirish mumkin.",
       "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish",
-      "priceNote": "Kommunal to‘lovlar kiritilgan · depozitsiz · oylik shartnoma"
+      "priceNote": "Kommunal to‘lovlar kiritilgan · depozitsiz · oylik shartnoma · QQS alohida"
     },
     "additional": {
       "title": "Qo'shimcha xizmatlar",
@@ -740,8 +740,8 @@
         "eyebrow": "Bozor narxi + imtiyozlar, hisoblanganda",
         "headline": "Oyiga ₩360K",
         "headlineCaption": "Depozit 0 · haqiqiy oylik ijara",
-        "title": "Oyiga atigi ₩360K evaziga ₩850K+ qiymatdan bahramand bo'ling",
-        "subtitle": "₩400–500K darajasidagi xona, ustiga oyiga ~₩400K+ qo'shimcha imtiyozlar — hisoblanganda oyiga ₩850K+ qiymat, barcha ijarachilarga beriladi.",
+        "title": "Oyiga atigi ₩360K evaziga ₩900K+ qiymatdan bahramand bo'ling",
+        "subtitle": "₩400–500K darajasidagi xona, ustiga oyiga ~₩450K+ qo'shimcha imtiyozlar — hisoblanganda oyiga ₩900K+ qiymat, barcha ijarachilarga beriladi.",
         "note": "* Bozor narxi Eunpyeong-gu'dagi bir xil spetsifikatsiyali xonalar (tovush izolyatsiyasi, iqlim, 24/7) asosida. Imtiyoz qiymatlari yozuv, PR, konsultatsiya bozor narxlari asosida taxminiy hisoblar."
       },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
@@ -749,7 +749,7 @@
       "items": [
         {
           "title": "Premium yozuv studiyasi katta chegirma bilan",
-          "valueBadge": "Oyiga ~₩60K",
+          "valueBadge": "Oyiga ~₩100K",
           "points": [
             "Har oy yozuv studiyasidan 1 soat bepul foydalanish (oddiy narx: ₩100,000/soat)",
             "Musiqangizni eng yuqori darajadagi professional jihozlar bilan yozing"
@@ -1046,7 +1046,7 @@
     "inline": {
       "bookingDefault": "Hoziroq maslahat yoki bron olishni xohlasangiz",
       "bookingLabel": "KakaoTalk orqali maslahat",
-      "bookingBody": "KakaoTalk kanalimizga xabar yuboring — tez javob beramiz. Quyidagi ma'lumotlarni qisqacha yozing.",
+      "bookingBody": "KakaoTalk ochiq chatimizga xabar yuboring — tez javob beramiz. Quyidagi ma'lumotlarni qisqacha yozing.",
       "kakaoCta": "KakaoTalk orqali so'rov",
       "priceLabel": "Tavsiya etiladigan paket",
       "priceCategory": {
@@ -1301,7 +1301,7 @@
         },
         {
           "q": "Manzil qayerda va qanday bron qilaman?",
-          "a": "Yeonsinnae bekatidan 5 daqiqa piyoda (Daejo-dong, Eunpyeong-gu, Seul). Biz faqat oldindan kelishuv asosida ishlaymiz: KakaoTalk kanalimizga sana va qo'shiqlar sonini yozing, qisqa suhbatdan so'ng tasdiqlaymiz."
+          "a": "Yeonsinnae bekatidan 5 daqiqa piyoda (Daejo-dong, Eunpyeong-gu, Seul). Biz faqat oldindan kelishuv asosida ishlaymiz: KakaoTalk ochiq chatimizga sana va qo'shiqlar sonini yozing, qisqa suhbatdan so'ng tasdiqlaymiz."
         },
         {
           "q": "Yozuvdan keyin tarqatish va PRni o'zim hal qilishim kerakmi?",
@@ -2750,7 +2750,7 @@
           "priceFactors": [
             {
               "label": "Treklar soni",
-              "detail": "8 trek asos → 10 trek +₩2M / 12 trek +₩4M"
+              "detail": "8 trek asos → 10 trek +₩850K / 12 trek +₩1.7M"
             },
             {
               "label": "Sessiya musiqachilari haqi",

@@ -245,7 +245,7 @@
     },
     "directions": {
       "title": "Chỉ đường",
-      "description": "Studio NOL nằm ở tầng 3 của tòa nhà ngay bên cạnh cổng chính trường THPT Dongmyeong. Từ ga Yeonsinnae (tuyến 3 & 6, cửa số 4) hoặc ga Bulgwang (tuyến 6, cửa số 7), đi bộ khoảng 5-7 phút theo hướng trường Dongmyeong. Tầng 1 là gara sửa xe, dễ nhận ra. Nên sử dụng phương tiện công cộng vì tòa nhà không có chỗ đỗ xe."
+      "description": "Studio NOL nằm ở tầng 3 của tòa nhà ngay bên cạnh cổng chính trường THPT Dongmyeong. Từ ga Yeonsinnae (tuyến 3 & 6, cửa số 4) hoặc ga Bulgwang (tuyến 6, cửa số 7), đi bộ khoảng 5 phút theo hướng trường Dongmyeong. Tầng 1 là gara sửa xe, dễ nhận ra. Nên sử dụng phương tiện công cộng vì tòa nhà không có chỗ đỗ xe."
     },
     "info": {
       "title": "Thông tin liên hệ",
@@ -334,7 +334,7 @@
       "subtitle": "Không gian cách âm 24/7 thuê theo tháng — nhiều tháng kín phòng nên chúng tôi nhận cả đăng ký chờ.",
       "subtitleVacant": "Không gian cách âm 24/7 thuê theo tháng — có thể vào ở ngay bây giờ.",
       "detailLink": "Xem cơ sở vật chất và ưu đãi cho cư dân",
-      "priceNote": "Đã gồm phí quản lý · không đặt cọc · hợp đồng theo tháng"
+      "priceNote": "Đã gồm phí quản lý · không đặt cọc · hợp đồng theo tháng · chưa gồm VAT"
     },
     "additional": {
       "title": "Dịch vụ bổ sung",
@@ -740,8 +740,8 @@
         "eyebrow": "Giá thị trường + tiện ích, quy đổi",
         "headline": "360K KRW/tháng",
         "headlineCaption": "Đặt cọc 0 đồng · giá thuê thực hàng tháng",
-        "title": "Hưởng giá trị 850K KRW+/tháng chỉ với 360K KRW/tháng",
-        "subtitle": "Phòng hạng 400–500K KRW/tháng cộng ~400K KRW+/tháng tiện ích — quy đổi khoảng 850K KRW+/tháng, dành cho tất cả khách thuê.",
+        "title": "Hưởng giá trị 900K KRW+/tháng chỉ với 360K KRW/tháng",
+        "subtitle": "Phòng hạng 400–500K KRW/tháng cộng ~400K KRW+/tháng tiện ích — quy đổi khoảng 900K KRW+/tháng, dành cho tất cả khách thuê.",
         "note": "* Giá thị trường dựa trên các phòng ở Eunpyeong-gu có cùng thông số (cách âm, điều hòa, 24/7). Giá trị tiện ích ước tính từ giá thu âm, PR, tư vấn."
       },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
@@ -749,7 +749,7 @@
       "items": [
         {
           "title": "Ưu đãi phòng thu cao cấp",
-          "valueBadge": "~60K KRW/tháng",
+          "valueBadge": "~100K KRW/tháng",
           "points": [
             "Miễn phí 1 giờ phòng thu mỗi tháng (giá thường: ₩100,000/giờ)",
             "Ghi lại âm nhạc của bạn với thiết bị chuyên nghiệp hàng đầu"
@@ -1046,7 +1046,7 @@
     "inline": {
       "bookingDefault": "Nếu bạn muốn tư vấn và đặt lịch ngay",
       "bookingLabel": "Tư vấn qua KakaoTalk",
-      "bookingBody": "Nhắn tin qua kênh KakaoTalk, chúng tôi sẽ phản hồi nhanh chóng. Bạn chỉ cần ghi ngắn gọn các thông tin sau.",
+      "bookingBody": "Nhắn tin qua Open Chat KakaoTalk, chúng tôi sẽ phản hồi nhanh chóng. Bạn chỉ cần ghi ngắn gọn các thông tin sau.",
       "kakaoCta": "Liên hệ qua KakaoTalk",
       "priceLabel": "Gói khuyến nghị",
       "priceCategory": {
@@ -1301,7 +1301,7 @@
         },
         {
           "q": "Địa điểm ở đâu và đặt lịch thế nào?",
-          "a": "Đi bộ 5 phút từ ga Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seoul). Chúng tôi làm việc theo lịch hẹn: nhắn kênh KakaoTalk kèm ngày và số bài, chúng tôi xác nhận sau khi trao đổi ngắn."
+          "a": "Đi bộ 5 phút từ ga Yeonsinnae (Daejo-dong, Eunpyeong-gu, Seoul). Chúng tôi làm việc theo lịch hẹn: nhắn Open Chat KakaoTalk kèm ngày và số bài, chúng tôi xác nhận sau khi trao đổi ngắn."
         },
         {
           "q": "Thu âm xong thì tôi phải tự lo phát hành và quảng bá à?",
@@ -2750,7 +2750,7 @@
           "priceFactors": [
             {
               "label": "Số bài trong album",
-              "detail": "8 bài cơ bản → 10 bài +₩2M / 12 bài +₩4M"
+              "detail": "8 bài cơ bản → 10 bài +₩850K / 12 bài +₩1.7M"
             },
             {
               "label": "Thù lao nhạc công session",

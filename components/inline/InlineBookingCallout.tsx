@@ -60,7 +60,7 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
       </h4>
       <p className="typo-card-body text-sm text-gray-700 dark:text-gray-300 mb-4">
         {t('stories.inline.bookingBody', {
-          defaultValue: '카카오톡 채널로 메시지 주시면 빠르게 답변드립니다. 아래 내용만 간단히 적어주시면 됩니다.',
+          defaultValue: '카카오톡 오픈채팅으로 메시지 주시면 빠르게 답변드립니다. 아래 내용만 간단히 적어주시면 됩니다.',
         })}
       </p>
 

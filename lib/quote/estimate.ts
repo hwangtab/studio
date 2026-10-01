@@ -282,7 +282,7 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
       if (a.scale === 'monthly') {
         return {
           priceLabel: `월 ${won(PRACTICE_ROOM_MONTHLY_PRICE)}`,
-          vat: 'final',
+          vat: 'excluded',
           basis: ['개인 방음 연습실 월 입주, 24시간 이용 — 빈방 여부는 상담에서 확인합니다'],
         };
       }

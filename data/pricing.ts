@@ -208,17 +208,17 @@ const tArray = (locale: Locale, dict: { ko: string[]; en: string[]; zh?: string[
 
 export const getPricingData = (locale: Locale) => {
   /**
-   * 요약 표 하단용 — 표에 연습실 월세(최종가)·시간제(VAT 포함)가 같이 실리므로 "모든 가격"이라
+   * 요약 표 하단용 — 표에 연습실 시간제(VAT 포함)가 같이 실리므로 "모든 가격"이라
    * 말하면 같은 표 안에서 모순이 된다(2026-09-25 감사). 상품군 카드 하단은 vatNotice 그대로.
    */
   const summaryVatNotice = t(locale, {
-    ko: '연습실(월 이용료·시간제) 외 가격은 VAT(부가가치세) 별도입니다.',
-    en: 'All prices exclude VAT, except the practice room (monthly and hourly).',
-    zh: '除音乐练习室（月费·按小时）外，所有价格均不含增值税 (VAT)。',
-    es: 'Todos los precios excluyen el IVA, salvo la sala de práctica (mensual y por hora).',
-    vi: 'Tất cả giá chưa bao gồm VAT, trừ phòng tập (theo tháng và theo giờ).',
-    th: 'ราคาทั้งหมดไม่รวม VAT ยกเว้นห้องซ้อม (รายเดือนและรายชั่วโมง)',
-    uz: "Mashq xonasi (oylik va soatlik) bundan mustasno, barcha narxlar VATsiz.",
+    ko: '연습실 시간제(VAT 포함) 외 모든 가격은 VAT(부가가치세) 별도입니다.',
+    en: 'All prices exclude VAT, except the practice room hourly rate (VAT included).',
+    zh: '除练习室按小时收费（含增值税）外，所有价格均不含增值税 (VAT)。',
+    es: 'Todos los precios excluyen el IVA, salvo la tarifa por hora de la sala de práctica (IVA incluido).',
+    vi: 'Tất cả giá chưa bao gồm VAT, trừ giá theo giờ của phòng tập (đã gồm VAT).',
+    th: 'ราคาทั้งหมดไม่รวม VAT ยกเว้นห้องซ้อมแบบรายชั่วโมง (รวม VAT แล้ว)',
+    uz: "Mashq xonasining soatlik tarifi (QQS kiritilgan) bundan mustasno, barcha narxlar VATsiz.",
   });
   const vatNotice = t(locale, {
     ko: '모든 가격은 VAT(부가가치세) 별도입니다.',
