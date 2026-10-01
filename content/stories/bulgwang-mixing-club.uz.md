@@ -26,7 +26,7 @@ Boshni ushlab yolg'iz miks qilish yetarli. Keling, tajriba ulashaylik, birga o's
 ### 📢 Shu haftadagi uchrashuv ma'lumoti
 
 * Qachon? 2025-yil 7-noyabr, juma, soat 19:00 (Juma kechasi — miks vaqti!)
-* Qayerda? Bulgwang Studio NOL, R03 miks xonasi (3-qavat, Eunpyeong-gu, Daejo-dong 84-3)
+* Qayerda? Bulgwang Studio NOL, R03 miks xonasi (3-qavat, Eunpyeong-gu, Tongil-ro 71-gil 2-1)
 * To'lov: 15,000 KRW (bizning soul food: tovuq!)
   * Studio NOL foydalanuvchilari, albatta, bepul.
 * Sig'im: Faqat 6 nafar! (Agar to'lsa, ko'zda yosh bilan e'lon qilamiz.)

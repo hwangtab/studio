@@ -26,7 +26,7 @@ Enough mixing alone with your head in your hands. Come share know-how, level up 
 ### 📢 This week’s meetup info
 
 * When? Friday, November 7, 2025, 7:00 PM (Friday night means mixing time!)
-* Where? Bulgwang Studio NOL, R03 Mixing Room (3F, 84-3 Daejo-dong, Eunpyeong-gu)
+* Where? Bulgwang Studio NOL, R03 Mixing Room (3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * Fee: 15,000 KRW (our soul food: chicken!)
   * Studio NOL users are free, of course.
 * Capacity: Only 6 hand-picked members! (If it fills up, we’ll announce with tears in our eyes.)

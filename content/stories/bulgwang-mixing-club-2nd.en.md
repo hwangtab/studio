@@ -24,7 +24,7 @@ This session’s keywords are “sharing” and “experimenting.” Bring a rec
 ### 📢 This week’s meetup info
 
 * When? Friday, November 14, 2025, 7:00 PM (Friday night is mixing + pizza & beer!)
-* Where? Bulgwang Studio NOL, R03 Mixing Room (3F, 84-3 Daejo-dong, Eunpyeong-gu)
+* Where? Bulgwang Studio NOL, R03 Mixing Room (3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * Fee: 18,000 KRW (hot pizza + cold beer full set)
   * Studio NOL users are still free!
 * Capacity: Max 6 people, keeping it small and focused

@@ -34,7 +34,7 @@ Friday night is still mixing + pizza & beer! 🎧
 ### 📢 3rd meetup info
 
 * **When?** Friday, November 28, 2025, 7:00 PM (Friday night is mixing + pizza & beer!)
-* **Where?** Bulgwang Studio NOL, R03 Mixing Room (3F, 84-3 Daejo-dong, Eunpyeong-gu)
+* **Where?** Bulgwang Studio NOL, R03 Mixing Room (3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * **Fee:** 18,000 KRW (hot pizza + cold beer full set)
   * Studio NOL users are free!
 * **Capacity:** Max 6 people, small and focused

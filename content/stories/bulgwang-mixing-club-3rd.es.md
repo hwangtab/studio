@@ -34,7 +34,7 @@ Así que el tercer Bulgwang Mixing Club será el **viernes 28 de noviembre, 7:00
 ### 📢 Información del 3er encuentro
 
 * **¿Cuándo?** Viernes 28 de noviembre de 2025, 7:00 PM (¡viernes por la noche = mixing con pizza y cerveza!)
-* **¿Dónde?** Studio NOL Bulgwang, Sala de Mezcla R03 (3F, 84-3 Daejo-dong, Eunpyeong-gu)
+* **¿Dónde?** Studio NOL Bulgwang, Sala de Mezcla R03 (3F, 2-1 Tongil-ro 71-gil, Eunpyeong-gu)
 * **Participación:** 18.000 KRW (pizza caliente + cerveza fría)
   * ¡Los usuarios de Studio NOL entran gratis!
 * **Cupo:** Máximo 6 personas, formato reducido
