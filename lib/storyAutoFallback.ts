@@ -1,3 +1,5 @@
+import { isUnsupportedPracticeInstrumentSlug } from './practiceRoomInstrumentScope';
+
 /**
  * Phase 2 자동 fallback 매핑·inject 로직.
  *
@@ -85,6 +87,8 @@ export const matchPricingForStory = (categoryKey: string, slug: string): string 
 
 /** 슬러그를 함께 보는 서비스 매칭. 실상권 연습실 LP는 연습실 브릿지를 받는다. */
 export const matchServiceForStory = (categoryKey: string, slug: string): string | null => {
+  // 드럼·관악기 글에는 연습실 브릿지를 넣지 않는다(연습실은 드럼·관악기 불가).
+  if (isUnsupportedPracticeInstrumentSlug(slug)) return null;
   if (isPracticeRoomRegionStory(categoryKey, slug)) return 'practice';
   return matchServiceForCategory(categoryKey);
 };

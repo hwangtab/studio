@@ -29,6 +29,7 @@ import {
   stripCodeFenceWrapper,
 } from './storyFrontmatter';
 import { getStoryWordCount } from './storySeoData';
+import { isUnsupportedPracticeInstrumentSlug } from './practiceRoomInstrumentScope';
 export {
   computeThinContentStatus,
   extractAutoExpandBlock,
@@ -387,7 +388,9 @@ export const getStoryDetail = async (slug: string, locale: string = defaultLocal
     });
     const matchedReviewId = hasFrontmatterFallback
       ? (frontmatterFallback?.review ?? null)
-      : matchReviewForCategory(baseStory.categoryKey);
+      : isUnsupportedPracticeInstrumentSlug(slug)
+        ? null
+        : matchReviewForCategory(baseStory.categoryKey);
     const bookingMessage = frontmatterFallback?.booking ?? null;
     const reviewSourcedFromFrontmatter = hasFrontmatterFallback && Boolean(frontmatterFallback?.review);
     // inlineFallback 정의 시 카테고리 매핑 전체 우회 (service도 동일 규칙)

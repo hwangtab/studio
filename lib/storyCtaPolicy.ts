@@ -1,4 +1,5 @@
 import type { StoryCTAOverride } from '../types/story';
+import { isUnsupportedPracticeInstrumentSlug } from './practiceRoomInstrumentScope';
 
 interface ResolveStoryCTATypeInput {
   slug: string;
@@ -57,6 +58,8 @@ const VOCAL_LESSON_GUARD_FALLBACK: StoryCTAOverride = 'recording';
 export const resolveStoryCTAType = (input: ResolveStoryCTATypeInput): StoryCTAOverride => {
   const resolved = resolveStoryCTATypeUnguarded(input);
   if (input.categoryKey === 'vocal' && resolved === 'lesson') return VOCAL_LESSON_GUARD_FALLBACK;
+  // 사업 규칙: 연습실은 드럼·관악기를 받지 않는다. 그 주제 글은 frontmatter override로도 연습실 CTA를 받지 않는다.
+  if (resolved === 'practice' && isUnsupportedPracticeInstrumentSlug(input.slug)) return 'recording';
   return resolved;
 };
 
