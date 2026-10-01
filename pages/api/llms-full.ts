@@ -65,7 +65,7 @@ Studio NOL is a professional music production studio in Yeonsinnae, Seoul. Servi
 
 ## Quick Facts (for AI citation)
 
-- **Location**: 3rd Floor, 84-3 Daejo-dong, Eunpyeong-gu, Seoul (next to Dongmyeong Girls' High School main gate; 1st floor: car repair shop)
+- **Location**: 3F, 2-1 Tongil-ro 71-gil (Daejo-dong), Eunpyeong-gu, Seoul (next to Dongmyeong Girls' High School main gate; 1st floor: car repair shop)
 - **Subway**: Yeonsinnae Station Exit 4 (Lines 3 & 6) — 5 min walk; Bulgwang Station Exit 7 (Lines 3 & 6) — 7 min walk
 - **Phone**: ${CANONICAL_FACTS.phoneIntl} · **KakaoTalk**: open.kakao.com/me/nol
 - **Pricing (KRW, VAT excl. unless noted)**:
