@@ -365,14 +365,26 @@ code {
 .markdown-content .max-w-none > p {
   margin: 0 0 1.25em;
 }
-.markdown-content blockquote {
-  /* 렌더러의 blockquote 오버라이드도 적용되지 않아 여백이 없었다. 인용 뒤 본문이 붙지 않게 단락과 같은 간격을 준다. */
-  margin: 0 0 1.25em;
+/* 전역 `p { text-wrap: balance }`는 제목용이다. 여러 줄 본문 단락에 걸면 첫 줄들이 일부러 짧게 끊겨
+   오른쪽이 들쭉날쭉해 보인다. 본문은 고아 단어만 막는 pretty로 둔다. */
+.markdown-content .max-w-none p {
+  text-wrap: pretty;
 }
-.markdown-content blockquote > p {
+/* 목록 항목 사이. li 오버라이드(mb-4)가 죽어 있어 항목이 0px로 붙어 있었다(스토리 실측). */
+.markdown-content .max-w-none li {
+  margin-bottom: 0.375em;
+}
+.markdown-content .max-w-none blockquote {
+  /* 렌더러의 blockquote 오버라이드도 적용되지 않아 여백도 표시도 없었다(굵은 두 줄이 제목처럼 읽혔다).
+     인용 뒤 본문이 붙지 않게 단락과 같은 간격을 주고, 왼쪽 선으로 인용임을 알린다. */
+  margin: 0 0 1.25em;
+  padding-left: 1rem;
+  border-left: 3px solid rgba(var(--primary-rgb), 0.45);
+}
+.markdown-content .max-w-none blockquote > p {
   margin: 0 0 0.75em;
 }
-.markdown-content blockquote > p:last-child {
+.markdown-content .max-w-none blockquote > p:last-child {
   margin-bottom: 0;
 }
 
