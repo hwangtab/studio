@@ -2,6 +2,7 @@ import isEmail from 'validator/lib/isEmail';
 
 import { PURGED_MARK } from '../privacy/orderRetention';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from './policy';
+import { cleanSupporterMessage } from './messageText';
 import { computeProjectState, findReward, type FundingProject, type FundingReward } from './projects';
 import { isPublicNameStyle, resolvePublicName } from './publicName';
 
@@ -135,7 +136,8 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
       memo: text(s.memo, PLEDGE_TEXT_LIMITS.shippingMemo) ?? undefined,
     };
   }
-  const supporterMessage = text(b.supporterMessage, PLEDGE_TEXT_LIMITS.supporterMessage) ?? undefined;
+  const rawMessage = text(b.supporterMessage, PLEDGE_TEXT_LIMITS.supporterMessage);
+  const supporterMessage = rawMessage ? cleanSupporterMessage(rawMessage) : undefined;
   /**
    * 명단 표시 이름. 공개하지 않으면 닉네임을 적었더라도 **담지 않는다** — 쓰일 곳이 없는
    * 개인정보다. 방식 값이 없으면(옛 클라이언트) 실명으로 읽는다. 예전 동작 그대로다.
