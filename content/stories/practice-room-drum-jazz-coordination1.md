@@ -14,7 +14,7 @@ slug: practice-room-drum-jazz-coordination1
 author: 스튜디오 놀
 thumbnail: /images/room2.webp
 summary: >-
-  드럼 재즈 독립성·사지 조율 연습 가이드. 기초 연습법부터 실전 활용까지 안내합니다.
+  드럼 재즈 독립성·사지 조율 연습 가이드. 기초 연습법부터 실전 활용까지, 루틴과 녹음 점검 포인트까지 안내합니다.
 faq:
   - q: 드럼 재즈 독립성·사지 조율을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-

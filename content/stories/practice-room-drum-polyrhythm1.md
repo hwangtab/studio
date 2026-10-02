@@ -14,7 +14,7 @@ slug: practice-room-drum-polyrhythm1
 author: 스튜디오 놀
 thumbnail: /images/room6.webp
 summary: >-
-  드럼 폴리리듬·크로스리듬 완전 가이드. 기초 연습법부터 실전 활용까지 안내합니다.
+  드럼 폴리리듬·크로스리듬 완전 가이드. 기초 연습법부터 실전 활용까지, 루틴과 녹음 점검 포인트까지 안내합니다.
 faq:
   - q: 드럼 폴리리듬·크로스리듬을 처음 연습할 때 어디서부터 시작해야 하나요?
     a: >-
