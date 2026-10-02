@@ -78,6 +78,7 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
     }
     if (!operatorResult.ok) {
       console.error('[contracts/finalize] Operator notification failed:', operatorResult);
+      problems.push(`운영자 알림 메일 발송 실패 (${operatorResult.errorCode ?? 'UNKNOWN'})`);
     }
   } catch (error: unknown) {
     console.error('[contracts/finalize] Failed to send signed emails:', error);
