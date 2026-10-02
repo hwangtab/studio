@@ -4,7 +4,7 @@ import { getDb } from '../../db/client';
 import { bookings, orders, reviewRequests, workOrders, type ReviewRequestKind } from '../../db/schema';
 import { getSiteConfig } from '../../data/siteConfig';
 import { sendEmail } from '../email/resend';
-import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL, OPERATOR_INBOX } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
 import { getProduct } from '../booking/products';
 import { getMixingProduct } from '../booking/mixing-products';
@@ -67,7 +67,7 @@ const windowBounds = (now: Date) => {
 };
 
 /** 운영자 본인이 실제 상품으로 결제해 본 주문에는 보내지 않는다. */
-const OPERATOR_ADDRESSES = [OPERATOR_EMAIL, CUSTOMER_REPLY_TO].map((a) => a.toLowerCase());
+const OPERATOR_ADDRESSES = [OPERATOR_EMAIL, OPERATOR_INBOX, CUSTOMER_REPLY_TO].map((a) => a.toLowerCase());
 
 /** 발송 대상 — 아직 기록이 없고, 같은 주소로 최근에 보낸 적이 없는 것. */
 export const findReviewCandidates = async (now: Date): Promise<ReviewCandidate[]> => {

@@ -1,6 +1,6 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
-import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
+import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL, OPERATOR_INBOX } from '../operatorContact';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingListingNicknameAlert, sendFundingRefundRequestClearedEmails } from './email';
 
 const order = {
@@ -194,7 +194,7 @@ describe('고객 메일에 개인 주소를 노출하지 않는다', () => {
     await sendFundingConfirmedEmails(order, project);
     const customer = (sendEmail as jest.Mock).mock.calls[0][0];
     expect(customer.text).toContain(CUSTOMER_REPLY_TO);
-    expect(customer.text).not.toContain(OPERATOR_EMAIL);
+    expect(customer.text).not.toContain(OPERATOR_INBOX);
   });
 });
 

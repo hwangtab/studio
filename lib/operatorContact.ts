@@ -8,7 +8,15 @@
  * 기본값은 기존 동작 그대로다 — 환경변수를 설정하지 않아도 지금과 똑같이 동작한다.
  * `CONTRACT_OPERATOR_EMAIL`은 lib/contracts/email.ts가 이미 쓰던 이름이라 유지한다.
  */
-export const OPERATOR_EMAIL = process.env.CONTRACT_OPERATOR_EMAIL || 'hwangtab@gmail.com';
+export const OPERATOR_EMAIL = 'hello@studionol.co.kr';
+
+/**
+ * 운영자의 **실제 받은편지함**. 2026-10-02 운영자 결정으로 알림 수신 주소(OPERATOR_EMAIL)를 hello@로 옮겼다.
+ * hello@는 MX가 Resend 수신이라 사서함이 아니다 — pages/api/inbound/resend.ts가 이 주소로 전달한다.
+ * 그래서 전달 대상(FORWARD_TO)에 OPERATOR_EMAIL을 쓰면 자기 자신에게 되돌아오는 루프가 되고,
+ * 운영자 본인 주소 제외 판정(후기 요청)에는 두 주소를 모두 넣어야 한다.
+ */
+export const OPERATOR_INBOX = process.env.CONTRACT_OPERATOR_EMAIL || 'hwangtab@gmail.com';
 
 /**
  * 고객에게 나가는 메일의 회신 주소이자, 고객 문서에 인쇄하는 접수 주소.
