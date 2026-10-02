@@ -1,19 +1,18 @@
 ---
 title: 드럼 크래시·라이드 심벌 활용 — 드럼 심벌 완성 가이드
 date: 2026-04-09
-lastmod: 2026-07-21
+lastmod: 2026-10-01
 author: 스튜디오 놀
 category: 악기 연습
 tags:
   - 드럼 크래시 심벌
   - 드럼 라이드 심벌
-  - 드럼 심벌 음악 연습실
-  - 음악 연습실
+  - 드럼 심벌 연습
   - 드럼 심벌 독학
   - 드럼 심벌 테크닉
 thumbnail: /images/room1.webp
 summary: >-
-  드럼 크래시·라이드 심벌 활용 핵심 원리와 단계별 연습법을 정리합니다. 드럼 연습실에서 점검할 루틴, 장비 세팅, 녹음 피드백 포인트까지 확인하세요.
+  드럼 크래시·라이드 심벌 활용 핵심 원리와 단계별 연습법을 정리합니다. 연습 루틴, 장비 세팅, 녹음 피드백 포인트까지 확인하세요.
 faq:
   - q: 드럼 크래시 심벌을 음악적으로 활용하는 방법은?
     a: >-
@@ -41,11 +40,11 @@ faq:
       너무 많은 심벌은 집중력을 분산시킬 수 있으므로 필요한 것만 선택하세요.
 ---
 
-![드럼 크래시·라이드 심벌 활용 음악연습실 스튜디오 놀](/images/room1.webp)
+![드럼 크래시·라이드 심벌 활용](/images/room1.webp)
 
 ## 심벌이 드럼의 음색 팔레트를 완성합니다
 
-크래시 타이밍부터 라이드 패턴까지. 방음 개인실에서 드럼 심벌 테크닉을 탐색하세요.
+크래시 타이밍부터 라이드 패턴까지. 드럼 심벌 테크닉을 탐색하세요.
 
 드럼 심벌 훈련의 핵심:
 - **크래시 전략**: 섹션 전환·빌드업에 크래시 타이밍 최적화
@@ -99,4 +98,4 @@ faq:
 
 ---
 
-[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1) | [드럼 연습실 완벽 가이드](/stories/practice-room-drum1)
+[전자 드럼·드럼 패드 연습 — 전자 드럼 완성 가이드](/stories/practice-room-drum-electronic1) | [드럼 심벌 기법·라이드·크래쉬 활용법 — 완전 가이드](/stories/practice-room-drum-cymbal-techniques1) | [드럼 재즈 라이드·스윙 패턴 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz-ride1) | [재즈 드럼·브러쉬 연주 — 재즈 드럼 완성 가이드](/stories/practice-room-drum-jazz1)

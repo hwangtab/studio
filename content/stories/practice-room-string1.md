@@ -120,4 +120,4 @@ faq:
 
 ---
 
-[첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [바이올린 연습 — 방음 개인실에서 현악기 집중 연습](/stories/practice-room-violin1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1)
+[첼로 연습 — 낮은 현악기 방음 연습 완벽 가이드](/stories/practice-room-cello1) | [바이올린 연습 — 방음 개인실에서 현악기 집중 연습](/stories/practice-room-violin1) | [클래식 — 피아노·바이올린·첼로 클래식 연주 연습 공간 가이드](/stories/practice-room-classical1) | [통기타·어쿠스틱 기타 연습실 — 방음 개인 연습 공간 가이드](/stories/practice-room-acoustic-guitar1)

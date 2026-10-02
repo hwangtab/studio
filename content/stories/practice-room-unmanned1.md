@@ -167,4 +167,4 @@ faq:
 
 무인 연습실은 방음 등급이 시설마다 다릅니다. 스튜디오 놀은 STC 50 이상 방음 개인실에서 보컬·건반·기타 앰프 연습이 가능합니다. 드럼 풀세트 연습 공간과 합주실은 운영하지 않습니다. 이용 전 연습할 악기를 확인해 적합한 방을 배정받는 것이 좋습니다. 드럼·베이스 앰프 사용 가능 여부는 예약 시 문의하세요.
 
-[야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [직장인 — 퇴근 후 야간 연습 완벽 가이드](/stories/practice-room-office-worker1) | [연습실 창업·수익 구조 완벽 분석](/stories/practice-room-startup1) | [연습실 인수·양도 절차 가이드](/stories/practice-room-transfer1)
+[야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [직장인 — 퇴근 후 야간 연습 완벽 가이드](/stories/practice-room-office-worker1) | [연습실 창업·수익 구조 완벽 분석](/stories/practice-room-startup1) | [연습실 인수·양도 절차 가이드](/stories/practice-room-transfer1)

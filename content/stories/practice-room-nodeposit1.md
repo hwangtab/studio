@@ -114,4 +114,4 @@ faq:
 
 ---
 
-[베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [연습실 월세 입주 완전 가이드 — 장점·비용·계약 주의사항](/stories/practice-room-monthly1) | [연습실 창업 가이드 — 비용·인허가·수익 구조](/stories/practice-room-startup1) | [연습실 양도·인수 완전 가이드 — 권리금·절차](/stories/practice-room-transfer1)
+[베이스 연습실 완벽 가이드 — 베이시스트를 위한 개인 연습실 선택법](/stories/practice-room-bass1) | [기타 연습실 완벽 가이드 — 기타리스트를 위한 개인 연습실 선택법](/stories/practice-room-guitar1) | [야간 연습실 완벽 가이드 — 새벽에도 쓸 수 있는 24시간 연습실 선택법](/stories/practice-room-night1) | [연습실 월세 입주 완전 가이드 — 장점·비용·계약 주의사항](/stories/practice-room-monthly1) | [연습실 창업 가이드 — 비용·인허가·수익 구조](/stories/practice-room-startup1) | [연습실 양도·인수 완전 가이드 — 권리금·절차](/stories/practice-room-transfer1)

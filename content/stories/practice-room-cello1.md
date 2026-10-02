@@ -118,4 +118,4 @@ faq:
 
 ---
 
-[현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [바이올린 연습 — 방음 개인실에서 현악기 집중 연습](/stories/practice-room-violin1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [드럼 연습실 완벽 가이드 — 24시간 드럼 연습 공간 선택법과 방음 기준](/stories/practice-room-drum1) | [플루트 연습 — 방음 환경에서 목관악기 연습 가이드](/stories/practice-room-flute1)
+[현악기 연습실 — 바이올린·비올라·첼로 방음 연습 공간 가이드](/stories/practice-room-string1) | [바이올린 연습 — 방음 개인실에서 현악기 집중 연습](/stories/practice-room-violin1) | [카혼·타악기 연습 — 방음 퍼커션 연습 완성 가이드](/stories/practice-room-cajon1) | [플루트 연습 — 목관악기 연습 공간 선택과 단계별 가이드](/stories/practice-room-flute1)
