@@ -250,6 +250,25 @@ describe('개설자 발송 상태 저장 라우트', () => {
     expect(consumeRateLimit).toHaveBeenCalledWith(`creator_fulfillment:${CREATOR_A}`, 300, 600);
   });
 
+  it('택배사·운송장 길이 초과·제어문자는 400이고 저장하지 않는다', async () => {
+    await insertProject({
+      id: 'proj-trk', slug: 'proj-trk', creatorId: CREATOR_A, status: 'closed',
+      startAt: new Date((NOW_SEC - 30 * 86400) * 1000), endAt: new Date((NOW_SEC - 86400) * 1000),
+    });
+    await insertReward('proj-trk', 'basic', true);
+    await insertOrderAndPledge('pledge-trk', 'order-trk', 'proj-trk', 'basic');
+    mockAuth(CREATOR_A);
+    for (const body of [
+      { trackingCompany: 'x'.repeat(31) },
+      { trackingNumber: '1'.repeat(41) },
+      { trackingNumber: '12\n34' },
+    ]) {
+      const r = await call('proj-trk', { pledgeId: 'pledge-trk', fulfillmentStatus: 'shipped', ...body });
+      expect(r.status).toBe(400);
+    }
+    expect((await pledgeRow('pledge-trk')).fulfillment_status).toBe('none');
+  });
+
   it('응답에 다른 후원의 정보가 실리지 않는다', async () => {
     await insertProject({
       id: 'proj-resp', slug: 'proj-resp', creatorId: CREATOR_A, status: 'closed',

@@ -155,7 +155,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   };
 
   if (failures.length > 0) {
-    await sendEmail({
+    const alert = await sendEmail({
       to: OPERATOR_EMAIL,
       subject: `[Studio NOL] 주문·구독 개인정보 파기 실패 (${failures.length}건)`,
       text:
@@ -164,7 +164,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           .join('\n\n')}\n\n` +
         '개인정보 보호법 제21조①이 요구하는 파기이므로 확인이 필요합니다. ' +
         '표나 컬럼이 없다는 사유라면 운영 DB에 마이그레이션이 적용됐는지 먼저 확인해 주세요.',
-    }).catch(() => {});
+    }).catch((e: unknown): { ok: boolean; errorCode?: string } => ({ ok: false, errorCode: String(e) }));
+    // 알림이 안 나간 사실을 삼키면 점검 실패가 조용히 묻힌다 — 응답은 그대로 두고 로그만 남긴다.
+    if (!alert.ok) console.error('[cron/purge-orders] 운영자 실패 알림 발송 실패', alert.errorCode);
 
     return res.status(500).json({ ok: false, message: '개인정보 파기 작업에 실패했습니다.', ...body });
   }

@@ -9,7 +9,7 @@ import { setFulfillment } from '../../../../../../lib/funding/fulfillment';
 // setFulfillment의 code → HTTP. 관리자 라우트(pages/api/admin/funding/pledges/[id].ts)와
 // 같은 매핑을 쓴다 — 함수 계약은 하나이므로 매핑도 하나여야 한다.
 const FULFILLMENT_STATUS: Record<string, number> = {
-  not_found: 404, invalid_status: 400, not_live: 409, refund_requested: 409, conflict: 409, forbidden: 403,
+  not_found: 404, invalid_status: 400, not_live: 409, refund_requested: 409, conflict: 409, forbidden: 403, invalid_tracking: 400,
 };
 
 /**

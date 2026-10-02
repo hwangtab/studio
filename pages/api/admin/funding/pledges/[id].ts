@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { eq, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../../../../db/client';
 import { fundingPledges, orders } from '../../../../../db/schema';
@@ -23,8 +23,17 @@ const CANCEL_STATUS: Record<string, number> = { not_found: 404, invalid_state: 4
 // setFulfillment의 code → HTTP. forbidden(403)은 관리자 actor에서는 나오지 않지만
 // 매핑은 함수 계약 전체를 다룬다(CANCEL_STATUS와 같은 관례).
 const FULFILLMENT_STATUS: Record<string, number> = {
-  not_found: 404, invalid_status: 400, not_live: 409, refund_requested: 409, conflict: 409, forbidden: 403,
+  not_found: 404, invalid_status: 400, not_live: 409, refund_requested: 409, conflict: 409, forbidden: 403, invalid_tracking: 400,
 };
+
+const MEMO_CONFLICT_MESSAGE = '그 사이 메모가 바뀌었습니다. 새로고침해 주세요.';
+const rowsAffectedOf = (r: unknown): number => (r as { rowsAffected?: number } | undefined)?.rowsAffected ?? 0;
+/**
+ * 읽은 admin_memo가 그대로일 때만 쓴다는 조건. 웹훅이 그 사이 붙인 `[웹훅] … 재고 초과 가능`
+ * 줄이 통째 덮어쓰기·"읽은 값 + 새 줄" 쓰기에 묻혀 needsReview가 조용히 꺼지는 것을 막는다.
+ * NULL과 빈 문자열은 같은 "메모 없음"으로 본다(set_memo가 빈 값을 NULL로 저장한다).
+ */
+const memoUnchanged = (prev: string | null | undefined) => sql`COALESCE(${fundingPledges.adminMemo}, '') = ${prev ?? ''}`;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -101,12 +110,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!isRefundPendingStatus(order.status)) {
         return res.status(409).json({ ok: false, message: '확정 상태인 펀딩만 환불 요청을 취소할 수 있습니다.' });
       }
-      const entry = `[${kstDateString(now)}] ${REFUND_REQUEST_CLEARED_MARKER} — ${reason}`;
+      const entry = `[${kstDateString(now)}] ${REFUND_REQUEST_CLEARED_MARKER} — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
-      await db
+      const cleared = await db
         .update(fundingPledges)
         .set({ refundRequestedAt: null, adminMemo: memo, updatedAt: now })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+        .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(order.fundingPledge.adminMemo)));
+      if (rowsAffectedOf(cleared) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       // 메일 실패가 기록을 되돌리지는 않는다(이 저장소의 원칙: 상태 변경은 끝났으므로
       // 후속 실패는 삼키되 기록한다). notificationError는 헬스체크가 매일 읽는다.
       // 플레이스홀더 주소로는 보내지 않는다 — 반송이 발신 도메인 평판을 깎는다(cancel.ts와 같은 가드).
@@ -123,7 +133,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         mailError === null
           ? sql`UPDATE orders SET notification_error = NULL, updated_at = unixepoch() WHERE id = ${order.id}
                 AND (notification_error IS NULL OR notification_error NOT IN (${SEND_PENDING}, ${SEND_INFLIGHT}))`
-          : sql`UPDATE orders SET notification_error = ${mailError}, updated_at = unixepoch() WHERE id = ${order.id}`,
+          // 실패 분기도 센티널은 보존한다 — 덮으면 성공 분기가 지키려던 확정 메일 복구 경로가 닫힌다.
+          : sql`UPDATE orders SET notification_error = ${mailError}, updated_at = unixepoch() WHERE id = ${order.id}
+                AND (notification_error IS NULL OR notification_error NOT IN (${SEND_PENDING}, ${SEND_INFLIGHT}))`,
       );
       return res.status(200).json({ ok: true, ...(mailError ? { message: `기록은 되었으나 메일 발송에 실패했습니다: ${mailError}` } : {}) });
     }
@@ -152,10 +164,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 개행을 공백으로 접어 그 경로를 없앤다(내용은 그대로 남는다).
       const entry = `[${kstDateString(now)}] ${REVIEW_CLEARED_MARKER} — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
-      await db
+      const written = await db
         .update(fundingPledges)
         .set({ adminMemo: memo, updatedAt: now })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+        .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(order.fundingPledge.adminMemo)));
+      if (rowsAffectedOf(written) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       return res.status(200).json({ ok: true });
     }
     /**
@@ -182,10 +195,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       }
       const entry = `[${kstDateString(now)}] 내려받기 기록 초기화 — ${reason.replace(/\s*\n\s*/g, ' ')}`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
-      await db
+      const written = await db
         .update(fundingPledges)
         .set({ downloadedAt: null, adminMemo: memo, updatedAt: now })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+        .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(order.fundingPledge.adminMemo)));
+      if (rowsAffectedOf(written) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       return res.status(200).json({ ok: true });
     }
     case 'unpublish': {
@@ -209,10 +223,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 이름을 바꿔도 관리자 화면은 항상 지금 이름만 보여줘, 사칭·욕설 닉네임을 이유로
       // 내렸다는 기록이 "원래부터 이 이름이었다"로 읽힌다.
       const hiddenName = order.fundingPledge.publicName ?? order.customerName;
-      await db
+      const written = await db
         .update(fundingPledges)
         .set({ listingHiddenAt: now, listingHiddenName: hiddenName, adminMemo: memo, updatedAt: now })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+        .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(order.fundingPledge.adminMemo)));
+      if (rowsAffectedOf(written) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       return res.status(200).json({ ok: true });
     }
     case 'restore_listing': {
@@ -221,10 +236,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!order.fundingPledge.listingHiddenAt) return res.status(409).json({ ok: false, message: '명단에서 내린 적이 없는 펀딩입니다.' });
       const entry = `[${kstDateString(now)}] 후원자 명단 숨김 해제`;
       const memo = order.fundingPledge.adminMemo ? `${order.fundingPledge.adminMemo}\n${entry}` : entry;
-      await db
+      const written = await db
         .update(fundingPledges)
         .set({ listingHiddenAt: null, listingHiddenName: null, adminMemo: memo, updatedAt: now })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+        .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(order.fundingPledge.adminMemo)));
+      if (rowsAffectedOf(written) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       return res.status(200).json({ ok: true });
     }
 
@@ -232,6 +248,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 주의: 메모 전체를 덮어쓰는 액션이라 웹훅 표식도 함께 지워질 수 있다. 재고 확인을
       // '닫는' 의도라면 clear_stock_review를 쓸 것 — 그쪽은 원문을 남기고 사유를 강제한다.
       const nextMemo = typeof b.adminMemo === 'string' ? b.adminMemo : '';
+      /**
+       * 화면이 **로드한 시점의 메모**(expectedMemo)를 함께 보내야 한다. 이 액션은 textarea 전체로
+       * 덮어쓰므로, 그 사이 웹훅이 붙인 재고 경고 줄이 사라져 needsReview가 조용히 꺼진다.
+       * 화면과 API는 같은 배포라 필드가 없는 요청(옛 탭·직접 호출)은 받지 않고 새로고침을 안내한다.
+       */
+      if (typeof b.expectedMemo !== 'string') {
+        return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
+      }
+      if ((order.fundingPledge.adminMemo ?? '') !== b.expectedMemo) {
+        return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
+      }
       /**
        * **빈 값으로 지우는 것만 막는다.** 웹훅 재고 경고·그 해제 기록·청약철회 취소 기록·
        * 명단 숨김 사유는 사유와 함께 남긴 것이라, 빈칸 저장 한 번으로 흔적 없이 사라지면 안 된다.
@@ -244,10 +271,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             + '재고 확인을 닫으려면 clear_stock_review를 쓰세요.',
         });
       }
-      await db
+      const saved = await db
         .update(fundingPledges)
         .set({ adminMemo: nextMemo === '' ? null : nextMemo, updatedAt: now })
-        .where(eq(fundingPledges.id, order.fundingPledge.id));
+        .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(b.expectedMemo)));
+      if (rowsAffectedOf(saved) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       return res.status(200).json({ ok: true });
     }
     case 'resend_email': {

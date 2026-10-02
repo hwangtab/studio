@@ -134,7 +134,7 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
   };
   const handleSaveFulfillment = () =>
     run(() => patchPledge(pledge.id, { action: 'set_fulfillment', fulfillmentStatus, trackingCompany, trackingNumber }));
-  const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined }));
+  const handleSaveMemo = () => run(() => patchPledge(pledge.id, { action: 'set_memo', adminMemo: memo || undefined, expectedMemo: pledge.adminMemo ?? '' }));
   /**
    * 확인을 받는다 — 이 버튼은 상태와 무관하게 **항상** 렌더되는데 누르면 곧바로 고객에게
    * 메일이 나간다. 되돌릴 수 없는 대외 발송에 확인이 없던 유일한 자리였다.
