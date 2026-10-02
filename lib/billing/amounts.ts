@@ -33,12 +33,17 @@ export const MONTHLY_ITEM_AMOUNT: Record<Exclude<SubscriptionKind, 'artist-suppo
  * 모르는 값이면 null — 호출자가 거절해야 한다. 여기서 기본 등급으로 떨어뜨리면 후원자가
  * 고른 적 없는 금액이 청구된다.
  */
-export const subscriptionAmounts = (kind: SubscriptionKind, tierId?: string | null): OrderAmounts | null => {
+export const subscriptionAmounts = (
+  kind: SubscriptionKind,
+  tierId?: string | null,
+  /** 연습실: 계약서의 월 이용료(공급가). 주면 상수 대신 이 값으로 청구한다. */
+  contractRent?: number | null,
+): OrderAmounts | null => {
   if (kind === 'artist-support') {
     const tier = tierId ? getArtistSupportTier(tierId) : null;
     return tier ? splitInclusiveAmount(tier.monthlyTotal) : null;
   }
-  const itemAmount = MONTHLY_ITEM_AMOUNT[kind];
+  const itemAmount = kind === 'practice-room' && contractRent ? contractRent : MONTHLY_ITEM_AMOUNT[kind];
   const vatAmount = Math.round(itemAmount * VAT_RATE);
   return { itemAmount, vatAmount, totalAmount: itemAmount + vatAmount };
 };

@@ -22,7 +22,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../../db/client';
 import {
   getDownloadIdentityVerdict,
-  recordDownloadIdentityFailure,
+  reserveDownloadIdentityAttempt,
   resetDownloadIdentityAttempts,
   checkDownloadRateLimit,
 } from '../../../../lib/contracts/admin-rate-limit';
@@ -106,12 +106,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       (req.body as { identityDigits?: unknown } | undefined)?.identityDigits,
       contract.customerPhone,
     );
+    // 형식이 맞는 시도(정답이든 오답이든)는 결과를 알려 주기 전에 원자적으로 예약한다.
+    // 빈 입력·자릿수 오류(malformed)는 세지 않는다 — 세면 빈 요청으로 잠글 수 있다.
+    // 오답 뒤에 세면 동시 요청이 전부 한도 아래 판정을 받은 채 대조 결과를 얻는다.
+    const wellFormed = identity.ok || identity.reason === 'mismatch';
+    if (wellFormed) {
+      const reserved = await reserveDownloadIdentityAttempt(contract.id);
+      if (reserved !== 'ok') {
+        return res.status(429).json({
+          ok: false,
+          message:
+            reserved === 'locked'
+              ? '본인 확인에 너무 여러 번 실패했습니다. 잠시 후 다시 시도하거나 운영자에게 문의해 주세요. (010-4255-7893)'
+              : '본인 확인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.',
+        });
+      }
+    }
     if (!identity.ok) {
       // 형식이 맞는데 값이 틀린 경우(mismatch)만 대입 시도로 계수한다.
       // 빈 입력·자릿수 오류(malformed)는 세지 않는다 — 세면 빈 요청으로 잠글 수 있다.
-      if (identity.reason === 'mismatch') {
-        await recordDownloadIdentityFailure(contract.id);
-      }
       const message =
         identity.reason === 'unverifiable'
           ? '계약서의 연락처가 올바르지 않아 본인 확인을 할 수 없습니다. 운영자에게 문의해 주세요.'

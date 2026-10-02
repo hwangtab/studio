@@ -19,7 +19,7 @@ jest.mock('../../../lib/contracts/pdf-storage', () => ({
 }));
 jest.mock('../../../lib/contracts/admin-rate-limit', () => ({
   getDownloadIdentityVerdict: jest.fn().mockResolvedValue('ok'),
-  recordDownloadIdentityFailure: jest.fn().mockResolvedValue(undefined),
+  reserveDownloadIdentityAttempt: jest.fn().mockResolvedValue('ok'),
   resetDownloadIdentityAttempts: jest.fn().mockResolvedValue(undefined),
   checkDownloadRateLimit: jest.fn().mockResolvedValue(true),
 }));
@@ -29,7 +29,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDb } from '../../../db/client';
 import {
   getDownloadIdentityVerdict,
-  recordDownloadIdentityFailure,
+  reserveDownloadIdentityAttempt,
   resetDownloadIdentityAttempts,
   checkDownloadRateLimit,
 } from '../../../lib/contracts/admin-rate-limit';
@@ -87,7 +87,7 @@ const run = async (
 beforeEach(() => {
   jest.clearAllMocks();
   (getDownloadIdentityVerdict as jest.Mock).mockResolvedValue('ok');
-  (recordDownloadIdentityFailure as jest.Mock).mockResolvedValue(undefined);
+  (reserveDownloadIdentityAttempt as jest.Mock).mockResolvedValue('ok');
   (resetDownloadIdentityAttempts as jest.Mock).mockResolvedValue(undefined);
   (checkDownloadRateLimit as jest.Mock).mockResolvedValue(true);
   (loadOrRenderContractPdf as jest.Mock).mockResolvedValue(Buffer.from('%PDF-1.4 fake'));
@@ -179,29 +179,38 @@ describe('본인 확인', () => {
   /**
    * 형식이 맞는데 값이 틀린 경우(mismatch)만 실패로 계수한다.
    */
-  it('뒷자리가 실제로 틀리면(mismatch) 실패를 기록한다', async () => {
+  it('형식이 맞는 시도는 결과를 알려 주기 전에 예약한다', async () => {
     mockFound(contract());
     await run({ body: { identityDigits: '0000' } });
 
-    expect(recordDownloadIdentityFailure).toHaveBeenCalledWith('c1');
+    expect(reserveDownloadIdentityAttempt).toHaveBeenCalledWith('c1');
   });
 
   /**
    * H1 회귀: 빈 요청·형식 오류(malformed)는 계수하지 않는다. 계수하면 링크를 얻은
    * 제3자가 뒷자리를 하나도 안 맞히고 빈 요청 반복만으로 당사자를 잠글 수 있다.
    */
+  it('예약이 한도를 넘으면 정답이어도 429이고 PDF를 만들지 않는다', async () => {
+    mockFound(contract());
+    (reserveDownloadIdentityAttempt as jest.Mock).mockResolvedValue('throttled');
+    const res = await run({ body: { identityDigits: '0000' } });
+
+    expect(res.status).toHaveBeenCalledWith(429);
+    expect(loadOrRenderContractPdf).not.toHaveBeenCalled();
+  });
+
   it('빈 요청은 실패로 계수하지 않는다', async () => {
     mockFound(contract());
     await run({ body: {} });
 
-    expect(recordDownloadIdentityFailure).not.toHaveBeenCalled();
+    expect(reserveDownloadIdentityAttempt).not.toHaveBeenCalled();
   });
 
   it('자릿수가 안 맞는 입력도 계수하지 않는다', async () => {
     mockFound(contract());
     await run({ body: { identityDigits: '12' } });
 
-    expect(recordDownloadIdentityFailure).not.toHaveBeenCalled();
+    expect(reserveDownloadIdentityAttempt).not.toHaveBeenCalled();
   });
 
   /** 성공하면 창 카운터를 비운다 — 정상 이용이 예산을 갉아먹지 않게. */
@@ -218,7 +227,7 @@ describe('본인 확인', () => {
 
     const res = await run();
     expect(res.status).toHaveBeenCalledWith(429);
-    expect(recordDownloadIdentityFailure).not.toHaveBeenCalled();
+    expect(reserveDownloadIdentityAttempt).not.toHaveBeenCalled();
     expect(loadOrRenderContractPdf).not.toHaveBeenCalled();
   });
 

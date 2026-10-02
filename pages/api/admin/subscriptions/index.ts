@@ -17,12 +17,16 @@ const isNonEmptyString = (value: unknown): value is string => typeof value === '
 const CREATE_ERROR_STATUS: Record<string, number> = {
   already_exists: 409,
   contract_required: 400,
+  contract_not_found: 404,
+  contract_not_active: 409,
   invalid_billing_day: 400,
 };
 
 const CREATE_ERROR_MESSAGE: Record<string, string> = {
   already_exists: '이미 진행 중인 구독이 있습니다.',
   contract_required: '연습실 구독은 계약이 필요합니다.',
+  contract_not_found: '계약을 찾을 수 없습니다.',
+  contract_not_active: '서명이 끝났고 종료되지 않은 계약에만 구독을 만들 수 있습니다.',
   invalid_billing_day: '결제일은 1~31 사이여야 합니다.',
 };
 
