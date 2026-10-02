@@ -176,22 +176,27 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
      * 그 사람이 음원을 계속 받고, 재취소는 잔액 0이라 막힌다. 스스로 낫지 않는다.
      *
      * 선점 WHERE의 `status = 'refunded'`만으로는 내가 찍은 refunded와 웹훅이 찍은 refunded를
-     * 구분할 수 없다 — 둘이 같은 값이다. 그래서 **done 환불 건수가 그대로인지**를 함께 본다.
-     * 건수로 보는 이유: 부분 환불이 이미 있던 건도 정상적으로 되돌아가야 한다.
+     * 구분할 수 없다 — 둘이 같은 값이다. 그래서 **지금 DB의 done 환불 합계로 잔액을 다시
+     * 계산한다.** 잔액이 0이면 전액이 실제로 돌아갔으므로 refunded가 맞고 그대로 둔다. 잔액이
+     * 남으면 이 주문은 refunded가 아니다 — 되돌린다.
+     *
+     * 예전엔 "done 환불 **건수**가 읽은 때와 같은가"로 봤다. 그러면 그 사이 줄 단위 환불
+     * (lineRefund.ts)이나 토스 콘솔 부분 취소가 기록된 경우에도 되돌림이 0행이 되어, 일부만
+     * 환불된 주문이 refunded로 굳었다 — refunded는 이 함수가 다시 받지 않으므로 화면에서
+     * 복구할 길도 없다. 되돌릴 때 done 환불이 하나라도 있으면 partially_refunded로 둔다.
      */
-    const doneRefundsBefore = order.payments.reduce(
-      (n, p) => n + (p.refunds ?? []).filter((r) => r.status === 'done').length,
-      0,
-    );
+    const doneSumNowForRevert = sql`COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id IN (SELECT id FROM payments WHERE order_id = ${order.id}) AND status = 'done'), 0)`;
     try {
       const reverted = await db.run(
-        sql`UPDATE orders SET status = ${order.status}, updated_at = unixepoch()
+        sql`UPDATE orders
+            SET status = CASE WHEN ${doneSumNowForRevert} > 0 THEN 'partially_refunded' ELSE ${order.status} END,
+                updated_at = unixepoch()
             WHERE id = ${order.id} AND status = 'refunded'
-              AND (SELECT COUNT(*) FROM refunds WHERE payment_id IN (SELECT id FROM payments WHERE order_id = ${order.id}) AND status = 'done') = ${doneRefundsBefore}`,
+              AND ${doneSumNowForRevert} < total_amount`,
       );
       if (Number(reverted.rowsAffected) === 0) {
-        console.error('[funding-cancel] 선점을 되돌리지 않았다 — 그 사이 환불이 기록됐다(웹훅 대사로 추정)', {
-          orderNo: order.orderNo, doneRefundsBefore,
+        console.error('[funding-cancel] 선점을 되돌리지 않았다 — 그 사이 전액 환불이 기록됐다(웹훅 대사로 추정)', {
+          orderNo: order.orderNo,
         });
       }
     } catch (revertError) {

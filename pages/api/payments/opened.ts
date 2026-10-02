@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isAllowedContactRequestOrigin } from '../../../lib/contact/origin';
+import { getClientIp } from '../../../lib/contracts/client-ip';
 import { recordPaymentWindowOpen } from '../../../lib/payments/windowOpen';
 
 /**
@@ -18,7 +19,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (!isAllowedContactRequestOrigin(req)) return res.status(204).end();
 
   const orderNo = typeof req.body?.orderNo === 'string' ? req.body.orderNo : '';
-  const ip = String(req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() || 'unknown';
+  // x-forwarded-for는 클라이언트가 직접 넣을 수 있어, 그 값을 키로 쓰면 헤더만 바꿔 제한을 피한다.
+  const ip = getClientIp(req) ?? 'unknown';
   const allowed = await consumeRateLimit(`payopen:${ip}`, 20, 60).catch(() => true);
   if (!allowed) return res.status(204).end();
 
