@@ -45,6 +45,9 @@ export default function FundingManagePage(p: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [confirmMessage, setConfirmMessage] = useState<string | null>(null);
+  // 셀프 취소 직후에는 SSR props(downloads·canEditDisplayName)가 낡았다. 상태에서 파생해
+  // 취소된 건에는 내려받기와 명단 편집을 그리지 않는다(success.tsx의 not_live와 같은 판정).
+  const isLive = isLiveFundingOrderStatus(status);
 
   const cancel = async () => {
     const confirmText = `펀딩을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
@@ -112,7 +115,7 @@ export default function FundingManagePage(p: Props) {
               // 바꿀 수 있으면 아래 SupporterListingEditor가 상태를 보여 주고 바꾼다(약관 제13조
               // 2항의 철회도 거기서). 여기 읽기 전용 줄을 함께 두면 저장 뒤에도 옛 값이 남는다 —
               // 그래서 바꿀 수 없는 상태(환불 등)에서만 이 줄을 둔다.
-              ...(p.canEditDisplayName ? [] : [{ k: '이름 공개', v: p.displayNamePublic ? '공개' : '비공개' }]),
+              ...(p.canEditDisplayName && isLive ? [] : [{ k: '이름 공개', v: p.displayNamePublic ? '공개' : '비공개' }]),
               { k: '주문번호', v: p.orderNo },
             ].map((row) => (
               <div key={row.k} className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-gray-200/70 pb-3 last:border-0 last:pb-0 dark:border-gray-700/70">
@@ -122,7 +125,7 @@ export default function FundingManagePage(p: Props) {
             ))}
           </dl>
 
-          {p.canEditDisplayName && (
+          {p.canEditDisplayName && isLive && (
             <SupporterListingEditor
               variant="manage"
               orderNo={p.orderNo}
@@ -139,7 +142,7 @@ export default function FundingManagePage(p: Props) {
           {/* 디지털 리워드 내려받기. 확정 메일에도 같은 주소가 나가지만, 메일을 지우거나 못
               받는 사람이 있어 이 화면에도 둔다 — 관리 토큰으로만 열리는 자리다.
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
-          {p.downloads.length > 0 && (
+          {p.downloads.length > 0 && isLive && (
             <div className="mt-6 space-y-2">
               {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 메일
                   링크를 긁는 봇이 후원자의 청약철회권을 없애지 못한다. */}

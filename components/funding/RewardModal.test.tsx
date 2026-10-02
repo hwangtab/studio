@@ -34,12 +34,14 @@ const lastTrapState = (): boolean => focusTrapSpy.mock.calls[focusTrapSpy.mock.c
 
 // PledgeWizard는 결제 SDK까지 끌고 들어오므로 대역으로 세우고, 결제 단계 진입만 흉내 낸다.
 jest.mock('../../utils/analytics', () => ({ trackMicroEvent: jest.fn() }));
+const mockWizardRender = jest.fn();
 jest.mock('./PledgeWizard', () => ({
   __esModule: true,
   default: ({ initialRewardId, onPaymentActiveChange }: {
     initialRewardId: string | null;
     onPaymentActiveChange?: (active: boolean) => void;
   }) => {
+    mockWizardRender();
     return (
       <div>
         <p>펀딩 폼 대역 · {initialRewardId}</p>
@@ -149,6 +151,34 @@ describe('RewardModal', () => {
 
     expect(screen.queryByText(/펀딩 폼 대역/)).toBeNull();
     expect(screen.getByRole('heading', { name: 'WAV 16bit' })).toBeInTheDocument();
+  });
+
+  it('닫았다 다른 리워드로 다시 열 때 결제폼이 한 번도 렌더되지 않는다', async () => {
+    const user = userEvent.setup();
+    const onClose = jest.fn();
+    const { rerender } = renderModal();
+    await user.click(screen.getByRole('button', { name: /· 펀딩하기$/ }));
+    expect(screen.getByText(/펀딩 폼 대역/)).toBeInTheDocument();
+
+    rerender(<RewardModal project={PROJECT} reward={null} remaining={{ mp3: null }} onClose={onClose} />);
+    mockWizardRender.mockClear();
+    const other: FundingReward = { ...REWARD, id: 'wav', title: 'WAV 16bit', amount: 30000 };
+    rerender(<RewardModal project={PROJECT} reward={other} remaining={{ wav: null }} onClose={onClose} />);
+
+    expect(mockWizardRender).not.toHaveBeenCalled();
+    expect(screen.getByRole('heading', { name: 'WAV 16bit' })).toBeInTheDocument();
+  });
+
+  it('같은 리워드를 닫았다 다시 열어도 상세부터 시작한다', async () => {
+    const user = userEvent.setup();
+    const onClose = jest.fn();
+    const { rerender } = renderModal();
+    await user.click(screen.getByRole('button', { name: /· 펀딩하기$/ }));
+    rerender(<RewardModal project={PROJECT} reward={null} remaining={{ mp3: null }} onClose={onClose} />);
+    mockWizardRender.mockClear();
+    rerender(<RewardModal project={PROJECT} reward={REWARD} remaining={{ mp3: null }} onClose={onClose} />);
+    expect(mockWizardRender).not.toHaveBeenCalled();
+    expect(screen.queryByText(/펀딩 폼 대역/)).toBeNull();
   });
 
   it('품절이면 펀딩으로 넘어갈 수 없다', () => {

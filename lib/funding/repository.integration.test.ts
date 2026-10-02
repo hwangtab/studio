@@ -22,7 +22,13 @@ jest.mock('./projects', () => {
 });
 
 // eslint-disable-next-line import/first
-import { getAllFundingProjectsAsync, getFundingProjectAsync, getListableFundingProjectsAsync } from './repository';
+import {
+  getAllFundingProjectsAsync,
+  getFundingProjectAsync,
+  getFundingProjectForStaticProps,
+  getListableFundingProjectsAsync,
+  getListableFundingProjectsForStaticProps,
+} from './repository';
 // eslint-disable-next-line import/first
 import { parseFundingProject } from './projects';
 
@@ -111,5 +117,66 @@ describe('repository', () => {
     await expect(getFundingProjectAsync('file-only')).resolves.not.toBeNull();
     await expect(getFundingProjectAsync('missing')).resolves.toBeNull();
     await expect(getAllFundingProjectsAsync()).resolves.toHaveLength(1);
+  });
+});
+
+describe('ISR(getStaticProps) 엄격 경로', () => {
+  const saved = { url: process.env.TURSO_DATABASE_URL, token: process.env.TURSO_AUTH_TOKEN, phase: process.env.NEXT_PHASE };
+  let errSpy: jest.SpyInstance;
+  beforeEach(() => {
+    errSpy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+  });
+  afterEach(() => {
+    errSpy.mockRestore();
+    for (const [k, v] of [['TURSO_DATABASE_URL', saved.url], ['TURSO_AUTH_TOKEN', saved.token], ['NEXT_PHASE', saved.phase]] as const) {
+      if (v === undefined) delete process.env[k];
+      else process.env[k] = v;
+    }
+  });
+  const configured = () => {
+    process.env.TURSO_DATABASE_URL = 'libsql://x';
+    process.env.TURSO_AUTH_TOKEN = 't';
+    delete process.env.NEXT_PHASE;
+  };
+
+  it('DB가 설정돼 있고 조회가 던지면 throw한다(404로 굳지 않게)', async () => {
+    configured();
+    client.close();
+    await expect(getFundingProjectForStaticProps('missing')).rejects.toThrow();
+    await expect(getListableFundingProjectsForStaticProps(NOW)).rejects.toThrow();
+  });
+
+  it('진짜 부재는 throw하지 않고 null이다', async () => {
+    configured();
+    await expect(getFundingProjectForStaticProps('missing')).resolves.toBeNull();
+  });
+
+  it('md는 DB가 죽어도 읽힌다', async () => {
+    configured();
+    mockMdProjects.push(md('file-only', '파일 제목'));
+    client.close();
+    await expect(getFundingProjectForStaticProps('file-only')).resolves.not.toBeNull();
+  });
+
+  it('TURSO_* 가 없으면(빌드·CI) 파일 기준으로 폴백한다', async () => {
+    delete process.env.TURSO_DATABASE_URL;
+    delete process.env.TURSO_AUTH_TOKEN;
+    client.close();
+    await expect(getFundingProjectForStaticProps('missing')).resolves.toBeNull();
+    await expect(getListableFundingProjectsForStaticProps(NOW)).resolves.toEqual([]);
+  });
+
+  it('next build 중에는 DB가 설정돼 있어도 폴백한다', async () => {
+    configured();
+    process.env.NEXT_PHASE = 'phase-production-build';
+    client.close();
+    await expect(getListableFundingProjectsForStaticProps(NOW)).resolves.toEqual([]);
+  });
+
+  it('기존 경로는 여전히 삼킨다', async () => {
+    configured();
+    client.close();
+    await expect(getFundingProjectAsync('missing')).resolves.toBeNull();
+    await expect(getAllFundingProjectsAsync()).resolves.toEqual([]);
   });
 });

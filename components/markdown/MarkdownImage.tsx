@@ -75,7 +75,8 @@ const parseDimensionQueryHint = (src: string): { width: number; height: number }
  * 통과해 `next/image`에서 그대로 throw한다(2026-09-17 재리뷰).
  */
 const isSafeForNextImage = (src: string): boolean => {
-  if (src.startsWith('/')) return true;
+  // `//host/x`는 프로토콜 상대 주소라 외부 호스트다 — `/`로 시작해도 같은 출처가 아니다.
+  if (src.startsWith('/') && !src.startsWith('//')) return true;
   try {
     const url = new URL(src);
     // ALLOWED_REMOTE_IMAGE_HOSTS 전부가 https인 동안만 유효한 단축 검사다 — 그 목록에
@@ -105,6 +106,28 @@ export const MarkdownImage = ({
   const altText = getMarkdownImageAlt(src, alt);
   const widthHint = parseWidthHint(title);
   const useNextImage = isSafeForNextImage(src);
+
+  // 등록되지 않은 외부 이미지는 자동으로 불러오지 않는다. <img>로 그리면 방문자의 IP·UA가
+  // 본문 작성자(펀딩 개설자) 지정 서버로 간다 — 후원자 명단·응원 메시지가 있는 페이지에서다.
+  // 대신 alt를 담은 외부 링크로 내려, 방문자가 눌렀을 때만 열리게 한다.
+  // (스토리의 외부 이미지는 전부 등록 호스트(www.news-art.co.kr)라 이 분기를 타지 않는다.)
+  if (!useNextImage) {
+    const href = src.startsWith('//') ? `https:${src}` : src;
+    if (!/^https?:\/\//i.test(href)) return null;
+    return (
+      <span className="block my-6">
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer nofollow"
+          aria-label={`이미지 보기: ${altText}`}
+          className="text-primary dark:text-primary-lighter underline underline-offset-4 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary dark:focus-visible:ring-primary-lighter"
+        >
+          {altText}
+        </a>
+      </span>
+    );
+  }
   // 개설자 업로드 이미지는 최적화기를 건너뛴다 — 이유는 isFundingMediaUrl 주석에 있다.
   const unoptimized = isFundingMediaUrl(src);
 
@@ -112,28 +135,15 @@ export const MarkdownImage = ({
   if (hasDimensions) {
     return (
       <span className="block my-6" style={widthHint ? { maxWidth: `${widthHint}px` } : undefined}>
-        {useNextImage ? (
-          <Image
-            src={src}
-            alt={altText}
-            width={Number(metadata.width)}
-            height={Number(metadata.height)}
-            sizes={widthHint ? `${widthHint}px` : '(max-width: 768px) 100vw, 768px'}
-            unoptimized={unoptimized}
-            className="w-full h-auto rounded-lg shadow-md"
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element -- 등록 안 된 원격 호스트라 next/image가 렌더 중 throw한다.
-          <img
-            src={src}
-            alt={altText}
-            width={Number(metadata.width)}
-            height={Number(metadata.height)}
-            loading="lazy"
-            decoding="async"
-            className="w-full h-auto rounded-lg shadow-md"
-          />
-        )}
+        <Image
+          src={src}
+          alt={altText}
+          width={Number(metadata.width)}
+          height={Number(metadata.height)}
+          sizes={widthHint ? `${widthHint}px` : '(max-width: 768px) 100vw, 768px'}
+          unoptimized={unoptimized}
+          className="w-full h-auto rounded-lg shadow-md"
+        />
       </span>
     );
   }
@@ -141,25 +151,14 @@ export const MarkdownImage = ({
   return (
     <span className="block my-6">
       <span className="relative w-full overflow-hidden rounded-lg shadow-md block" style={{ aspectRatio: '16 / 9' }}>
-        {useNextImage ? (
-          <Image
-            src={src}
-            alt={altText}
-            fill
-            sizes="(max-width: 768px) 100vw, 768px"
-            unoptimized={unoptimized}
-            className="object-contain"
-          />
-        ) : (
-          // eslint-disable-next-line @next/next/no-img-element -- 등록 안 된 원격 호스트라 next/image가 렌더 중 throw한다.
-          <img
-            src={src}
-            alt={altText}
-            loading="lazy"
-            decoding="async"
-            className="absolute inset-0 w-full h-full object-contain"
-          />
-        )}
+        <Image
+          src={src}
+          alt={altText}
+          fill
+          sizes="(max-width: 768px) 100vw, 768px"
+          unoptimized={unoptimized}
+          className="object-contain"
+        />
       </span>
     </span>
   );

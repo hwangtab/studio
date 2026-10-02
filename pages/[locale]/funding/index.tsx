@@ -9,7 +9,7 @@ import { buildPublicStatusOrNull } from '../../../lib/funding/publicStatus';
 import { buildPageStaticProps } from '../../../lib/getStatic';
 import { defaultLocale } from '../../../lib/i18n';
 import { computeProjectState, type ProjectState } from '../../../lib/funding/projects';
-import { getListableFundingProjectsAsync } from '../../../lib/funding/repository';
+import { getListableFundingProjectsForStaticProps } from '../../../lib/funding/repository';
 import FundingPipelinePromo from '../../../components/funding/FundingPipelinePromo';
 
 interface Item {
@@ -104,7 +104,7 @@ export const getStaticPaths: GetStaticPaths = async () => ({
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
   const now = new Date();
-  const projects = await getListableFundingProjectsAsync(now);
+  const projects = await getListableFundingProjectsForStaticProps(now);
   // 모금 현황을 함께 싣는다. 예전에는 클라이언트 폴링만으로 채워서, 첫 화면에 "목표
   // 1,000,000원"만 떠 아직 0원인 것처럼 읽혔고 진행바가 뒤늦게 생기며 그 아래가 밀렸다.
   // DB가 없으면 null이 오고(빌드는 DB 없이도 성공해야 한다) 화면은 예전 동작으로 돌아간다.

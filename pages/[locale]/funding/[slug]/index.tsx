@@ -19,7 +19,7 @@ const FAQSection = dynamic(() => import('../../../../components/ui/FAQSection'))
 const SITE_URL = 'https://studionol.co.kr';
 const toAbsolute = (p: string): string => (p.startsWith('http') ? p : `${SITE_URL}${p}`);
 import { computeProjectState, getAllFundingProjects, stripRewardDownloads, type FundingProject, type FundingReward, type ProjectState } from '../../../../lib/funding/projects';
-import { getFundingProjectAsync } from '../../../../lib/funding/repository';
+import { getFundingProjectForStaticProps } from '../../../../lib/funding/repository';
 import { buildPublicStatusOrNull } from '../../../../lib/funding/publicStatus';
 // `mergeRewardRemaining`만 `shape.ts`에서 직접 가져온다 — 위 `projects.ts` 값들
 // (computeProjectState·getAllFundingProjects·stripRewardDownloads)은 정적 생성 함수
@@ -245,7 +245,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   // 캐시된다(lib/koOnlyRoutes.ts가 지키는 불변식, koOnlyRoutes.test.ts가 대조).
   // 비-ko는 언제까지나 404가 맞다(이 페이지는 애초에 ko 전용) — revalidate를 주지 않는다.
   if (params?.locale !== defaultLocale) return { notFound: true };
-  const project = await getFundingProjectAsync(String(params?.slug ?? ''));
+  const project = await getFundingProjectForStaticProps(String(params?.slug ?? ''));
   // revalidate 없는 notFound는 ISR에 영구히 캐시된다. 초안·미존재 slug는 그렇지 않다 —
   // 개설자가 승인 전에 자기 프로젝트 주소를 미리 열어 볼 수 있는데, 그때 404가 굳어 버리면
   // 나중에 승인해도 재배포 전까지 계속 404다. 승인이 배포를 기다리지 않게 하는 것이 이
