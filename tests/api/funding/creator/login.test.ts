@@ -259,3 +259,47 @@ describe('미가입 주소는 별도 캡을 쓴다', () => {
     expect(sendCreatorLoginEmail).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('주소별 일일 상한', () => {
+  it('상한에 걸린 주소는 전역 캡을 소비하지 않고 메일도 없이 같은 200을 준다', async () => {
+    const ok = await call({ email: 'a@b.com' });
+    (issueCreatorLoginToken as jest.Mock).mockClear();
+    (consumeRateLimit as jest.Mock).mockClear();
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(!key.startsWith('creator_login:email_daily:')));
+    const r = await call({ email: 'a@b.com' });
+
+    expect(r.status).toBe(200);
+    expect(r.body).toEqual(ok.body);
+    const keys = (consumeRateLimit as jest.Mock).mock.calls.map((c) => c[0] as string);
+    expect(keys).not.toContain('creator_login:global');
+    expect(issueCreatorLoginToken).not.toHaveBeenCalled();
+  });
+
+  it('상한 키는 해시이고 전역·알림 키와 다르다', async () => {
+    const keys: string[] = [];
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string) => {
+      keys.push(key);
+      return Promise.resolve(true);
+    });
+    await call({ email: 'a@b.com' });
+    const daily = keys.find((k) => k.startsWith('creator_login:email_daily:'));
+    expect(daily).toBeDefined();
+    expect(daily).not.toContain('a@b.com');
+    expect(['creator_login:global', 'creator_login:global_alert', 'creator_login:mail_failure_alert']).not.toContain(daily);
+  });
+
+  it('실제 카운터로 한 주소가 상한을 넘겨 두드려도 전역 카운터는 상한 이상 소비되지 않는다', async () => {
+    const counts = new Map<string, number>();
+    (consumeRateLimit as jest.Mock).mockImplementation((key: string, limit: number) => {
+      // 10분 창 제한은 테스트에서 풀고(시간 경과 가정), 일일·전역 카운터만 센다.
+      if (key.startsWith('creator_login:email:') || key.startsWith('creator_login:ip:')) return Promise.resolve(true);
+      const n = (counts.get(key) ?? 0) + 1;
+      counts.set(key, n);
+      return Promise.resolve(n <= limit);
+    });
+    for (let i = 0; i < 40; i += 1) await call({ email: 'a@b.com' });
+    expect(counts.get('creator_login:global')).toBe(10);
+    expect(sendCreatorLoginEmail).toHaveBeenCalledTimes(10);
+  });
+});

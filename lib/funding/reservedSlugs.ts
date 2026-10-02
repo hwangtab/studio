@@ -6,6 +6,10 @@
  * 보여 주고 그 프로젝트의 상세는 어떤 주소로도 열리지 않는다. 오류도 나지 않는다 —
  * 그냥 다른 페이지가 뜬다.
  *
+ * `pages/api/funding/` 아래 리터럴 이름도 같다. `/api/funding/media/[...path]`는 slug와 무관해
+ * 보이지만, 프로젝트를 `media`로 지으면 `/api/funding/media/status` 같은 주소를 같은 이름의
+ * 프로젝트 API가 가려 오류 없이 다른 응답이 간다.
+ *
  * 새 리터럴 라우트를 그 디렉터리에 추가하면 **여기에도 넣어야 한다.**
  * `reservedSlugs.routes.test.ts`가 디렉터리를 직접 읽어 대조한다.
  */
@@ -17,6 +21,12 @@ export const RESERVED_FUNDING_SLUGS: ReadonlySet<string> = new Set([
   'success',
   'fail',
   'manage',
+  'media',
+  // pages/api/funding/ 아래 리터럴들
+  'cancel',
+  'download',
+  'pledges',
+  'display-name',
   // `[slug]/pledge`는 하위 경로라 slug 자리를 뺏지 않지만, 프로젝트 이름이 'pledge'면
   // `/ko/funding/pledge/pledge` 같은 주소가 생겨 사람이 읽기 어렵다.
   'pledge',

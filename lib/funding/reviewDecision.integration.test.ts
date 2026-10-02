@@ -626,3 +626,58 @@ describe('경합과 전이', () => {
     expect(after.status).toBe('draft');
   });
 });
+
+describe('운영자가 본 판본', () => {
+  it('철회 → 재제출로 판본이 바뀐 뒤에는 승인·반려·보완 요청이 conflict다', async () => {
+    const creator = await seedCreator('stale@example.com');
+    const projectId = await seedProject(creator);
+    await seedReward(projectId);
+    const seen = (await readProject(projectId)).submittedAt!.toISOString();
+
+    // 운영자가 화면을 연 뒤 개설자가 재제출했다 — reviewStatus는 다시 submitted다.
+    await mockDb
+      .update(schema.fundingProjects)
+      .set({ submittedAt: new Date('2026-09-11T00:00:00Z') })
+      .where(eq(schema.fundingProjects.id, projectId));
+
+    for (const action of ['approve', 'reject', 'request_changes'] as const) {
+      const result = await decideProject(
+        projectId,
+        action,
+        { note: '사유', expectedSubmittedAt: seen },
+        new Date('2026-09-18T00:00:00Z'),
+      );
+      expect(result).toMatchObject({ ok: false, code: 'conflict' });
+    }
+    expect((await readProject(projectId)).reviewStatus).toBe('submitted');
+    for (const reward of await readRewards(projectId)) expect(reward.lockedAt).toBeNull();
+  });
+
+  it('본 판본과 같으면 승인된다', async () => {
+    const creator = await seedCreator('fresh@example.com');
+    const projectId = await seedProject(creator);
+    await seedReward(projectId);
+    const seen = (await readProject(projectId)).submittedAt!.toISOString();
+    const result = await decideProject(projectId, 'approve', { expectedSubmittedAt: seen }, new Date('2026-09-18T00:00:00Z'));
+    expect(result.ok).toBe(true);
+  });
+
+  it('읽은 뒤 판본이 바뀌면 UPDATE의 WHERE가 막는다', async () => {
+    const creator = await seedCreator('race@example.com');
+    const projectId = await seedProject(creator);
+    await seedReward(projectId);
+    const seen = (await readProject(projectId)).submittedAt!.toISOString();
+    // 로드는 옛 판본을 돌려주고, 그 직후 DB는 새 판본이 된 상황.
+    const stale = await realAdminProjects.loadProjectForAdmin(projectId);
+    mockLoadProjectForAdmin.mockImplementationOnce(async () => {
+      await mockDb
+        .update(schema.fundingProjects)
+        .set({ submittedAt: new Date('2026-09-12T00:00:00Z') })
+        .where(eq(schema.fundingProjects.id, projectId));
+      return stale;
+    });
+    const result = await decideProject(projectId, 'approve', { expectedSubmittedAt: seen }, new Date('2026-09-18T00:00:00Z'));
+    expect(result).toMatchObject({ ok: false, code: 'conflict' });
+    for (const reward of await readRewards(projectId)) expect(reward.lockedAt).toBeNull();
+  });
+});

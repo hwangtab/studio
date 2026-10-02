@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import { INLINE_DIRECTIVE_NAMES } from '../inlineDirectives';
 import { stripTrustedDirectives, TRUSTED_SHORTCODE_NAMES } from './creatorContent';
 
@@ -50,5 +53,19 @@ describe('stripTrustedDirectives', () => {
       expect(TRUSTED_SHORTCODE_NAMES).toContain(name);
     }
     expect(TRUSTED_SHORTCODE_NAMES).toContain('studio-services');
+  });
+
+  it('렌더러가 실제로 처리하는 숏코드 이름이 전부 목록에 있다', () => {
+    const src = fs.readFileSync(path.join(process.cwd(), 'components/MarkdownRenderer.tsx'), 'utf8');
+    const names = [...src.matchAll(/segment\.name === '([\w-]+)'/g)].map((m) => m[1]);
+    expect(names.length).toBeGreaterThan(7);
+    for (const name of names) {
+      expect([name, TRUSTED_SHORTCODE_NAMES.includes(name)]).toEqual([name, true]);
+    }
+  });
+
+  it('출연진·갤러리 숏코드가 든 본문은 저장 시 벗겨진다', () => {
+    const out = stripTrustedDirectives('앞\n%%funding-lineup:abc%%\n%%funding-gallery:xyz%%\n뒤');
+    expect(out).toBe('앞\n뒤');
   });
 });

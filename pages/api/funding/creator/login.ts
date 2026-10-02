@@ -27,6 +27,14 @@ const GLOBAL_DAILY_CAP = 100;
 const DAY_SECONDS = 86_400;
 
 /**
+ * **주소별** 일일 상한. 주소별 제한이 10분에 3통뿐이면 한 주소로 5.5시간만 두드려도
+ * 위 전역 캡 100통을 혼자 채워, 다른 개설자의 로그인 메일이 조용히 안 나간다. 전역 캡
+ * 앞에서 한 주소의 몫을 자른다. 키는 전역 캡·알림 키와 다르다(`creator_login:global`,
+ * `creator_login:global_alert`, `creator_login:mail_failure_alert`).
+ */
+const EMAIL_DAILY_LIMIT = 10;
+
+/**
  * **미가입 주소**의 가입 메일 캡 — 기존 개설자의 예산과 분리한다.
  *
  * 한 예산을 공유하던 동안에는, 매 요청 다른 주소를 보내는 것만으로 그날 100통을 태워
@@ -57,6 +65,9 @@ const OK = { ok: true, message: '로그인 링크를 보냈습니다. 메일함�
  */
 const emailRateLimitKey = (email: string): string =>
   `creator_login:email:${createHash('sha256').update(email).digest('hex').slice(0, 16)}`;
+
+const emailDailyRateLimitKey = (email: string): string =>
+  `creator_login:email_daily:${createHash('sha256').update(email).digest('hex').slice(0, 16)}`;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -92,6 +103,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 가입 캡을 쓰고, 그 캡이 찼으면 개설자 행조차 만들지 않는다(쓰레기 행 방지). 정상
    * 개설자는 가입 캡과 무관하게 로그인된다. 응답은 세 경로 모두 같은 200이다.
    */
+  // 주소별 일일 상한 — 전역 캡을 소비하기 전에 자른다. 응답은 같은 200이다.
+  if (!(await consumeRateLimit(emailDailyRateLimitKey(email), EMAIL_DAILY_LIMIT, DAY_SECONDS))) {
+    return res.status(200).json(OK);
+  }
+
   const registered = await isRegisteredCreatorEmail(email);
 
   if (registered) {

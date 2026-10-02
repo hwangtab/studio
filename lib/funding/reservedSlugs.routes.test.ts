@@ -18,3 +18,15 @@ it('funding 아래 리터럴 라우트가 전부 예약 목록에 있다', () =>
     expect([name, [...RESERVED_FUNDING_SLUGS]]).toEqual([name, expect.arrayContaining([name])]);
   }
 });
+
+it('api/funding 아래 리터럴 이름도 전부 예약 목록에 있다', () => {
+  const dir = path.join(process.cwd(), 'pages/api/funding');
+  const literals = fs.readdirSync(dir, { withFileTypes: true })
+    .map((e) => (e.isDirectory() ? e.name : e.name.replace(/\.tsx?$/, '')))
+    .filter((name) => !name.startsWith('[') && !name.includes('.test') && name !== 'index');
+
+  expect(literals).toContain('media');
+  for (const name of literals) {
+    expect([name, [...RESERVED_FUNDING_SLUGS]]).toEqual([name, expect.arrayContaining([name])]);
+  }
+});

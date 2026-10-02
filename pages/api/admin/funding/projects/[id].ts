@@ -319,6 +319,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const action = b.action;
     const note = typeof b.note === 'string' ? b.note : undefined;
     const slug = typeof b.slug === 'string' ? b.slug : undefined;
+    // 운영자가 화면에서 본 판본(submittedAt). 없으면 거부한다 — 화면과 API가 같이 배포되고,
+    // 빠진 채 받으면 재제출된 못 본 판본을 승인할 수 있다.
+    const expectedSubmittedAt = typeof b.expectedSubmittedAt === 'string' ? b.expectedSubmittedAt : undefined;
+    if (!expectedSubmittedAt) {
+      return res.status(400).json({ ok: false, message: '화면을 새로고침한 뒤 다시 시도해 주세요. (판본 정보 없음)' });
+    }
 
     // libSQL/SQLite가 실제로 던지는 문구("UNIQUE constraint failed: <table>.<column>")를
     // 좁혀 잡는다 — 이 저장소의 다른 곳(lib/booking/confirm.test.ts 등)도 같은 문구를 쓴다.
@@ -327,7 +333,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     let result: DecisionResult;
     try {
-      result = await decideProject(id, action, { note, slug }, now);
+      result = await decideProject(id, action, { note, slug, expectedSubmittedAt }, now);
     } catch (error: unknown) {
       if (!isSlugConflictError(error)) {
         // 이전 버전은 이 catch가 decideProject 전체(DB select 여러 번·파일 조회·db.batch)를
@@ -533,16 +539,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 다시 계산한 값과 대조만 한다. 안 실려 오면 거절한다: 이 라우트를 부르는 것은 관리자
      * 화면뿐이고, 기본값을 두면 낙관적 잠금을 우회하는 경로가 다시 생긴다.
      */
-    if (typeof b.expectedNetAmount !== 'number' || !Number.isFinite(b.expectedNetAmount)) {
+    // 실이체액만이 아니라 설계비·제작비 공제액과 차액도 받는다 — 실이체액이 0원으로 같은 채
+    // 약정 제작비만 바뀌면 운영자가 보지 않은 차액이 굳는다(payout.ts `ExpectedPayoutAmounts`).
+    // 화면과 이 라우트는 같은 배포로 나가므로 네 값 모두 필수다.
+    const expected = {
+      netAmount: b.expectedNetAmount,
+      designFeeOffsetAmount: b.expectedDesignFeeOffsetAmount,
+      productionFeeOffsetAmount: b.expectedProductionFeeOffsetAmount,
+      shortfallAmount: b.expectedShortfallAmount,
+    };
+    if (!Object.values(expected).every((v) => typeof v === 'number' && Number.isFinite(v))) {
       return res.status(400).json({
         ok: false,
-        message: '화면이 보여 준 실이체액이 요청에 실리지 않았습니다. 새로고침 후 다시 시도해 주세요.',
+        message: '화면이 보여 준 정산 금액이 요청에 실리지 않았습니다. 새로고침 후 다시 시도해 주세요.',
       });
     }
     let result: RecordFundingPayoutResult;
     try {
       // IP는 접속기록용이다 — 정산 기록은 주민등록번호를 한 번 복호화해 본다(payout.ts).
-      result = await recordFundingPayout(id, now, b.expectedNetAmount, getClientIp(req), auth.actor);
+      result = await recordFundingPayout(id, now, expected, getClientIp(req), auth.actor);
     } catch (error: unknown) {
       console.error(`[funding] recordFundingPayout 예외 (id=${id}):`, error);
       return res.status(500).json({ ok: false, message: '정산을 기록하지 못했습니다.' });
@@ -551,14 +566,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       // 금액이 갈린 경우만 두 숫자를 문구에 넣는다 — 운영자가 무엇이 얼마로 바뀌었는지 보고
       // 새로고침 뒤 다시 검산할 수 있어야 한다.
       if (result.code === 'amount_changed') {
+        // 실이체액이 같으면 공제액이나 차액만 바뀐 것이다 — 같은 두 숫자를 나란히 적으면
+        // 무엇이 바뀌었는지 알 수 없으므로 그때는 바뀐 칸을 말한다.
+        const what =
+          result.expectedNetAmount === result.netAmount
+            ? `설계비·제작비 공제액이나 차액이 바뀌었습니다(실이체액은 ${formatPriceAmount(result.netAmount)}원 그대로)`
+            : `화면은 실이체액 ${formatPriceAmount(result.expectedNetAmount)}원을 보여 줬는데 지금 다시 계산하면 ${formatPriceAmount(
+                result.netAmount,
+              )}원입니다`;
         return res.status(409).json({
           ok: false,
           code: result.code,
-          message: `그 사이에 금액이 바뀌었습니다 — 화면은 실이체액 ${formatPriceAmount(
-            result.expectedNetAmount,
-          )}원을 보여 줬는데 지금 다시 계산하면 ${formatPriceAmount(
-            result.netAmount,
-          )}원입니다. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
+          message: `그 사이에 금액이 바뀌었습니다 — ${what}. 아무것도 기록하지 않았으니 새 금액을 다시 검산한 뒤 기록해 주세요.`,
         });
       }
       if (result.code === 'payout_account_unreadable' || result.code === 'resident_number_unreadable') {

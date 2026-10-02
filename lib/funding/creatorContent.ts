@@ -7,11 +7,12 @@ import { INLINE_DIRECTIVE_NAMES } from '../inlineDirectives';
  * 목록, 후기. 개설자 글에 그대로 뜨면 읽는 쪽은 그 프로젝트에 대한 스튜디오의 보증으로
  * 읽는다. `%%price:mixing-level1%%` 한 줄이면 남의 펀딩 페이지에 우리 가격표가 뜬다.
  *
- * 화이트리스트 밖 이름은 지우지 않는다 — 렌더러가 어차피 렌더하지 않으므로 화면 결과는
+ * 렌더러가 컴포넌트로 그리는 이름은 **전부** 여기 있어야 한다(테스트가 렌더러 소스에서
+ * 이름을 읽어 대조한다). 화이트리스트 밖 이름은 지우지 않는다 — 렌더러가 어차피 렌더하지 않으므로 화면 결과는
  * 같고, 우리가 지우면 개설자가 쓴 글자가 말없이 사라진 것이 된다.
  *
  * MarkdownRenderer의 목록이 늘면 여기도 늘려야 한다. `creatorContent.test.ts`가
- * `INLINE_DIRECTIVE_NAMES`와의 일치를 고정한다.
+ * `INLINE_DIRECTIVE_NAMES`와 렌더러의 `segment.name === '...'` 전부와의 일치를 고정한다.
  */
 export const TRUSTED_SHORTCODE_NAMES: readonly string[] = [
   'online-fallback',
@@ -21,6 +22,9 @@ export const TRUSTED_SHORTCODE_NAMES: readonly string[] = [
   'online-request',
   'vocal-mix-bridge',
   'practice-room-terms',
+  // 스튜디오가 만든 출연진 카드·갤러리. 개설자 글에 뜨면 우리 보증으로 읽힌다.
+  'funding-lineup',
+  'funding-gallery',
   ...INLINE_DIRECTIVE_NAMES,
 ];
 

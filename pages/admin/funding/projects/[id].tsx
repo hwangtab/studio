@@ -307,7 +307,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined }),
+      () => patchFundingProject(project.id, { action: 'approve', slug: slug.trim() || undefined, expectedSubmittedAt: project.submittedAt ?? '' }),
       `/funding/${effectiveSlug} 주소로 승인했습니다.`,
     );
   };
@@ -320,7 +320,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim() }),
+      () => patchFundingProject(project.id, { action: 'request_changes', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }),
       '보완 요청을 보냈습니다.',
     );
   };
@@ -333,7 +333,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
       return;
     }
     if (!window.confirm('반려하면 개설자에게 반려 사실과 사유가 메일로 전달됩니다. 반려할까요?')) return;
-    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim() }), '반려 처리했습니다.');
+    return run(() => patchFundingProject(project.id, { action: 'reject', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }), '반려 처리했습니다.');
   };
 
   const handleSaveNote = () =>
@@ -462,7 +462,7 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
     ) {
       return;
     }
-    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim() }), '보관 처리했습니다.');
+    return run(() => patchFundingProject(project.id, { action: 'archive', note: reason.trim(), expectedSubmittedAt: project.submittedAt ?? '' }), '보관 처리했습니다.');
   };
 
   const handleClose = () => {
@@ -532,21 +532,35 @@ export default function AdminFundingProjectDetailPage({ project, payout, service
    *
    * 그래서 확인창이 말한 금액을 그대로 서버에 실어 보낸다. 이 페이지의 `payout`은
    * 페이지를 띄운 시점의 값이고, 서버는 기록할 때 다시 계산한다 — 그 사이에 환불이 한 건
-   * 들어오면 운영자가 승인한 금액과 다른 숫자가 불변 기록으로 굳어버린다. 서버는 둔 값이 다르면
-   * 기록 없이 409를 돌려준다(`lib/funding/payout.ts`의 `amount_changed`).
+   * 들어오면 운영자가 승인한 금액과 다른 숫자가 불변 기록으로 굳어버린다. 설계비·제작비
+   * 공제액과 차액도 함께 보낸다 — 실이체액이 0원으로 같은 채 약정 제작비만 바뀌는 경우를 잡는다.
+   * 서버는 하나라도 다르면 기록 없이 409를 돌려준다(`lib/funding/payout.ts`의 `amount_changed`).
    */
   const handleRecordPayout = () => {
     if (!payout) return;
     const expectedNetAmount = payout.netAmount;
+    const expectedCharges = {
+      expectedDesignFeeOffsetAmount: payout.designFeeOffsetAmount,
+      expectedProductionFeeOffsetAmount: payout.productionFeeOffsetAmount,
+      expectedShortfallAmount: payout.shortfallAmount,
+    };
+    // 차액은 기록과 함께 굳으므로 확인창에도 적는다 — 서버가 이 값까지 대조한다.
+    const shortfallNote =
+      payout.shortfallAmount > 0 ? ` (빼지 못한 대금 차액 ${formatPriceAmount(payout.shortfallAmount)}원)` : '';
     if (
       !window.confirm(
-        `실이체액 ${formatPriceAmount(expectedNetAmount)}원으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 화면을 띄운 뒤 환불이 들어와 금액이 바뀌었다면 기록하지 않고 바뀐 금액을 알려 드립니다. 진행할까요?`,
+        `실이체액 ${formatPriceAmount(expectedNetAmount)}원${shortfallNote}으로 정산을 기록합니다. 기록하면 그 시점 숫자가 고정되고 다시 기록할 수 없습니다. 화면을 띄운 뒤 환불이 들어와 금액이 바뀌었다면 기록하지 않고 바뀐 금액을 알려 드립니다. 진행할까요?`,
       )
     ) {
       return;
     }
     return run(
-      () => patchFundingProject(project.id, { action: 'record_payout', expectedNetAmount }),
+      () =>
+        patchFundingProject(project.id, {
+          action: 'record_payout',
+          expectedNetAmount,
+          ...expectedCharges,
+        }),
       '정산을 기록하고 개설자에게 알렸습니다.',
     );
   };
