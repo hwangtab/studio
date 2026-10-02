@@ -821,6 +821,13 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
   const subscription = await findSubscriptionById(id);
   if (!subscription) return { ok: false, code: 'not_found' };
   if (subscription.status !== 'paused') return { ok: false, code: 'invalid_state' };
+  // 이번 달 회차를 이미 결제했으면 지금 청구할 것이 없다. nextBillingAt을 now로 두면 크론이 매일
+  // 이 구독을 집는데, chargeCycle은 "이미 결제됨"으로 성공만 돌려주고 결제일을 전진시키지 않아
+  // 달이 바뀔 때까지 "결제 완료" 메일이 반복된다(2026-10-02 코드리뷰). 이 경우엔 다음 정규 결제일로 잡는다.
+  const paidThisCycle = await db.query.subscriptionPayments.findFirst({
+    where: (t, { and: all, eq: is }) =>
+      all(is(t.subscriptionId, id), is(t.cycleYm, cycleYmOf(now)), is(t.status, 'paid')),
+  });
   const [row] = await db
     .update(subscriptions)
     // 재개는 사유를 **비운다.** 이 컬럼의 뜻은 "지금 왜 정지되어 있는가"이지 정지 이력이
@@ -830,7 +837,7 @@ export const resumeSubscription = async (id: string, now: Date): Promise<MutateR
     // 기한도 함께 비운다 — 남겨 두면 resumeExpiredPauses가 이미 재개된 구독을 또 집는다.
     // 운영자가 직접 재개하면 즉시 청구되고 결제 완료 메일이 그 사실을 알린다 —
     // 자동 재개 안내 일감은 여기서 버린다.
-    .set({ status: 'active', pausedReason: null, pausedUntil: null, resumeNoticePendingAt: null, nextBillingAt: now, updatedAt: now })
+    .set({ status: 'active', pausedReason: null, pausedUntil: null, resumeNoticePendingAt: null, nextBillingAt: paidThisCycle ? computeNextBillingAt(now, subscription.billingDay) : now, updatedAt: now })
     .where(eq(subscriptions.id, id))
     .returning();
   return { ok: true, subscription: row };
