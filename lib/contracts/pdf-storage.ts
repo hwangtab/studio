@@ -13,6 +13,9 @@ export const uploadContractPdf = async (
   const blob = await put(filename, pdfBuffer, {
     access: 'private',
     contentType: 'application/pdf',
+    // 재발송이 같은 경로에 다시 올린다. 기본값(false)이면 "이미 존재"로 던지고, 호출부가 삼켜
+    // 보관본과 pdfUrl이 옛것으로 남는다(2026-10-02 리뷰).
+    allowOverwrite: true,
   });
 
   return blob.url;

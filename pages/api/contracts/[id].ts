@@ -18,6 +18,7 @@ import {
   terminateContract,
   updateDraftContract,
 } from '../../../lib/contracts/service';
+import { cancelSubscriptionsOfContract } from '../../../lib/billing/service';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { checkAction, getEffectiveStatus, type ContractAction } from '../../../lib/contracts/status';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
@@ -167,7 +168,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             message: '계약 상태가 바뀌어 종료 처리할 수 없습니다. 새로고침 후 확인해 주세요.',
           });
         }
-        return res.status(200).json({ ok: true, contract: serializeContractForAdmin(terminated) });
+        // 연결된 구독도 해지한다. 실패해도 종료는 이미 확정이라 응답으로 알려 사람이 마무리하게 한다.
+        let cancelledSubscriptions = 0;
+        let subscriptionWarning: string | undefined;
+        try {
+          cancelledSubscriptions = await cancelSubscriptionsOfContract(id, `계약 종료: ${reason.trim()}`, new Date());
+        } catch (error: unknown) {
+          console.error('[contracts] Failed to cancel subscriptions of terminated contract:', error);
+          subscriptionWarning = '계약은 종료됐지만 연결된 구독 해지에 실패했습니다. 구독 화면에서 직접 해지해 주세요.';
+        }
+        return res.status(200).json({
+          ok: true,
+          contract: serializeContractForAdmin(terminated),
+          cancelledSubscriptions,
+          ...(subscriptionWarning ? { warning: subscriptionWarning } : {}),
+        });
       }
 
       if (action === 'cancel') {

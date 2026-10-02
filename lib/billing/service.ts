@@ -106,7 +106,7 @@ export type CreateSubscriptionResult =
   | { ok: true; id: string; setupToken: string; manageToken: string }
   | {
       ok: false;
-      code: 'already_exists' | 'contract_required' | 'invalid_billing_day' | 'artist_required' | 'artist_not_open' | 'invalid_tier';
+      code: 'already_exists' | 'contract_required' | 'contract_not_found' | 'contract_not_active' | 'invalid_billing_day' | 'artist_required' | 'artist_not_open' | 'invalid_tier';
     };
 
 export const createSubscription = async (
@@ -133,6 +133,18 @@ export const createSubscription = async (
 
   const db = getDb();
 
+  // 연습실 구독의 금액·결제일은 계약서가 정한다. 상수로 청구하면 할인 계약이 정가로 청구되고,
+  // 서명 전·종료된 계약에 붙은 구독이 계속 청구된다(2026-10-02 코드리뷰).
+  let contractRent: number | null = null;
+  let billingDay = input.billingDay;
+  if (input.kind === 'practice-room' && input.contractId) {
+    const contract = await db.query.contracts.findFirst({ where: (t, { eq: is }) => is(t.id, input.contractId!) });
+    if (!contract) return { ok: false, code: 'contract_not_found' };
+    if (contract.status !== 'signed' || contract.terminatedAt) return { ok: false, code: 'contract_not_active' };
+    contractRent = contract.monthlyRent;
+    billingDay = contract.paymentDay;
+  }
+
   if (input.contractId) {
     const existing = await db.query.subscriptions.findFirst({
       where: (t, { and: all, eq: is, inArray: within }) =>
@@ -141,7 +153,7 @@ export const createSubscription = async (
     if (existing) return { ok: false, code: 'already_exists' };
   }
 
-  const amounts = subscriptionAmounts(input.kind, input.tierId);
+  const amounts = subscriptionAmounts(input.kind, input.tierId, contractRent);
   // 위 검증을 통과했으면 null이 나올 수 없다 — 나온다면 등급 목록과 검증이 어긋난 것이라 멈춘다.
   if (!amounts) return { ok: false, code: 'invalid_tier' };
   const setupToken = generateSetupToken();
@@ -159,7 +171,7 @@ export const createSubscription = async (
       itemAmount: amounts.itemAmount,
       vatAmount: amounts.vatAmount,
       totalAmount: amounts.totalAmount,
-      billingDay: input.billingDay,
+      billingDay,
       status: 'pending_card',
       setupToken,
       setupTokenExpiresAt: new Date(now.getTime() + SETUP_TOKEN_TTL_SECONDS * 1000),
@@ -680,6 +692,27 @@ export const cancelSubscription = async (
     .where(eq(subscriptions.id, id))
     .returning();
   return { ok: true, subscription: row };
+};
+
+/**
+ * 계약이 끝나면 그 계약에 붙은 진행 중 구독을 해지한다. 이미 결제한 달은 기간 끝까지 쓴다(선불).
+ * 계약만 종료하고 구독을 두면 비운 방에 매월 청구가 계속된다.
+ */
+export const cancelSubscriptionsOfContract = async (
+  contractId: string,
+  reason: string,
+  now: Date,
+): Promise<number> => {
+  const rows = await getDb().query.subscriptions.findMany({
+    where: (t, { and: all, eq: is, inArray: within }) =>
+      all(is(t.contractId, contractId), within(t.status, OCCUPYING_STATUSES)),
+  });
+  let cancelled = 0;
+  for (const row of rows) {
+    const result = await cancelSubscription(row.id, { requestedBy: 'admin', reason }, now);
+    if (result.ok) cancelled += 1;
+  }
+  return cancelled;
 };
 
 /**

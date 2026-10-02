@@ -328,6 +328,12 @@ export const markContractSent = async (
       signedAt: null,
       signTokenUsedAt: null,
       signToken: generateSignToken(),
+      // 새 링크의 열람 기록은 처음부터 센다 — 옛 링크를 메일 보안 스캐너 등이 먼저 열어 둔 기록이
+      // 감사 추적의 "최초 열람"으로 남으면 서명자의 열람이 아니게 된다.
+      firstViewedAt: null,
+      firstViewedIp: null,
+      lastViewedAt: null,
+      viewCount: 0,
       updatedAt: now,
     })
     .where(

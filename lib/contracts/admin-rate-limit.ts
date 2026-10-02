@@ -419,6 +419,49 @@ export const recordDownloadIdentityFailure = async (contractId: string): Promise
   }
 };
 
+/**
+ * 뒷자리를 **대조한 결과를 알려 주기 전에** 시도 한 번을 원자적으로 예약한다.
+ *
+ * 읽기(getDownloadIdentityVerdict)와 오답 기록(recordDownloadIdentityFailure)이 따로면, 1만 건을
+ * 동시에 보낼 때 전부 한도 아래라는 판정을 받은 채 대조 결과를 돌려받는다(2026-10-02 리뷰).
+ * 여기서는 증가와 판정이 한 문장이라 한도를 넘은 요청은 정답 여부를 알 수 없다. 성공하면
+ * resetDownloadIdentityAttempts가 두 카운터를 비우므로 정상 이용은 예산을 쓰지 않는다.
+ */
+export const reserveDownloadIdentityAttempt = async (
+  contractId: string,
+): Promise<IdentityAttemptVerdict> => {
+  const nowSeconds = Math.floor(Date.now() / 1000);
+  try {
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+    const [windowRows, totalRows] = await getDb().batch([
+      getDb()
+        .insert(rateLimits)
+        .values({
+          key: downloadIdentityWindowKey(contractId),
+          count: 1,
+          expiresAt: nowSeconds + DOWNLOAD_IDENTITY_WINDOW_SECONDS,
+        })
+        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
+        .returning(),
+      getDb()
+        .insert(rateLimits)
+        .values({
+          key: downloadIdentityTotalKey(contractId),
+          count: 1,
+          expiresAt: nowSeconds + DOWNLOAD_IDENTITY_TOTAL_WINDOW_SECONDS,
+        })
+        .onConflictDoUpdate({ target: rateLimits.key, set: { count: sql`${rateLimits.count} + 1` } })
+        .returning(),
+    ]);
+    if ((totalRows[0]?.count ?? 1) > DOWNLOAD_IDENTITY_TOTAL_LIMIT) return 'locked';
+    if ((windowRows[0]?.count ?? 1) > DOWNLOAD_IDENTITY_LIMIT) return 'throttled';
+    return 'ok';
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Download identity reservation unavailable:', error);
+    return 'ok';
+  }
+};
+
 /** 다운로드 본인 확인 성공 시 창 카운터를 지운다 — 정상 이용이 예산을 갉아먹지 않게. */
 export const resetDownloadIdentityAttempts = async (contractId: string): Promise<void> => {
   try {

@@ -67,7 +67,9 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
     console.error('[contracts/backup] Failed to write backup — 정리는 계속한다:', error);
   }
 
-  const removedBackups = await removeExpiredBackups(now);
+  // 새 백업이 써진 뒤에만 오래된 백업을 지운다. 쓰기가 계속 실패하는데 정리만 돌면 28일 뒤
+  // 백업이 하나도 남지 않는다(2026-10-02 리뷰). 고아 PDF 정리는 백업과 무관해 그대로 돈다.
+  const removedBackups = backupError ? 0 : await removeExpiredBackups(now);
   const removedOrphanPdfs = await removeOrphanPdfs(all, now);
 
   // 정리를 마친 뒤에 실패를 알린다. 호출부(크론)가 운영자에게 메일을 보낸다.
