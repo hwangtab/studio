@@ -1,4 +1,4 @@
-import { OPERATOR_EMAIL } from '../operatorContact';
+import { CUSTOMER_REPLY_TO } from '../operatorContact';
 import { sendEmail } from '../email/resend';
 import type { Contract } from '../../db/schema';
 import { buildContractEmailHtml, strong, type ContractEmailRow } from './email-template';
@@ -172,7 +172,9 @@ export const sendOperatorContractNotification = async (
   ].join('\n');
 
   return sendEmail({
-    to: OPERATOR_EMAIL,
+    // 운영자 알림은 hello@로 받는다(운영자 결정 2026-10-02). 수신 웹훅이 운영자에게 포워딩한다.
+    // OPERATOR_EMAIL을 hello@로 바꾸면 그 웹훅의 FORWARD_TO와 같아져 포워딩이 되돌아오므로 여기만 바꾼다.
+    to: CUSTOMER_REPLY_TO,
     subject: `[스튜디오 놀] ${contract.customerName}님 계약서 ${statusText}`,
     html,
     text,
