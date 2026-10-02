@@ -378,8 +378,8 @@ const recordNotificationResult = async (
 /**
  * 발송 알림 메일(고객 + 운영자).
  *
- * 고객 메일 실패만 계약에 기록한다 — 운영자 알림은 못 받아도 관리자가 화면에서 상태를
- * 볼 수 있지만, 고객이 서명 링크를 못 받으면 계약 자체가 멈추기 때문이다.
+ * 고객·운영자 메일 실패를 모두 계약에 기록한다. 고객이 서명 링크를 못 받으면 계약이 멈추고,
+ * 운영자 알림이 빠지면 서명 완료를 놓친다(서명 완료 알림도 finalize.ts에서 같이 기록한다).
  */
 export const sendContractNotifications = async (
   contract: Contract,
@@ -394,17 +394,22 @@ export const sendContractNotifications = async (
     if (!operatorResult.ok) {
       console.error('[contracts/service] Operator notification failed:', operatorResult);
     }
+    const operatorProblem = operatorResult.ok
+      ? null
+      : `운영자 알림 메일 발송 실패 (${operatorResult.errorCode ?? 'UNKNOWN'})`;
 
     if (!customerResult.ok) {
       console.error('[contracts/service] Customer email failed:', customerResult);
       await recordNotificationResult(
         contract.id,
-        `서명 요청 메일 발송 실패 (${customerResult.errorCode ?? 'UNKNOWN'})`,
+        [`서명 요청 메일 발송 실패 (${customerResult.errorCode ?? 'UNKNOWN'})`, operatorProblem]
+          .filter(Boolean)
+          .join(' / '),
       );
       return;
     }
 
-    await recordNotificationResult(contract.id, null);
+    await recordNotificationResult(contract.id, operatorProblem);
   } catch (error: unknown) {
     console.error('[contracts/service] Failed to send contract emails:', error);
     await recordNotificationResult(contract.id, '서명 요청 메일 발송 중 오류가 발생했습니다.');
