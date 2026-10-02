@@ -27,8 +27,8 @@ describe('펀딩 목표액 역산 (lib/funding/goal)', () => {
     }
   });
 
-  it('100만원이면 개인 801,731원 · 사업자 912,000원 — 개인은 부가세 상당액을 빼고 원천징수한다', () => {
-    expect(netPayoutForGross(1_000_000, true)).toBe(801_731);
+  it('100만원이면 개인 801,732원 · 사업자 912,000원 — 개인은 부가세 상당액을 빼고 원천징수한다', () => {
+    expect(netPayoutForGross(1_000_000, true)).toBe(801_732);
     expect(netPayoutForGross(1_000_000, false)).toBe(912_000);
   });
 

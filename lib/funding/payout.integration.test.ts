@@ -20,6 +20,8 @@ import {
   markFundingPayoutPaid,
   recordFundingPayout,
 } from './payout';
+// eslint-disable-next-line import/first
+import { setProductionFee } from './projectServices';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 let client: Client;
@@ -139,9 +141,16 @@ const seedPledge = async (
  * 확인창에 적는다) 그 값을 그대로 확인 금액으로 보낸다. 그 사이에 아무 일도 안 일어나면
  * 서버의 재계산과 같으므로 그대로 통과한다.
  */
+const shownAmounts = (preview: Awaited<ReturnType<typeof buildFundingPayoutPreview>>) => ({
+  netAmount: preview?.netAmount ?? 0,
+  designFeeOffsetAmount: preview?.designFeeOffsetAmount ?? 0,
+  productionFeeOffsetAmount: preview?.productionFeeOffsetAmount ?? 0,
+  shortfallAmount: preview?.shortfallAmount ?? 0,
+});
+
 const recordAsAdmin = async (projectId: string, now: Date) => {
   const preview = await buildFundingPayoutPreview(projectId);
-  return recordFundingPayout(projectId, now, preview?.netAmount ?? 0);
+  return recordFundingPayout(projectId, now, shownAmounts(preview));
 };
 
 beforeEach(async () => {
@@ -242,8 +251,8 @@ describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 
     expect(result.payout.designFeeOffsetAmount).toBe(550_000);
     expect(result.payout.productionFeeOffsetAmount).toBe(1_980_000);
     expect(result.payout.shortfallAmount).toBe(0);
-    // 이체 가능액 3,206,924(수수료 352,000 · 부가세 상당액 331,636 · 원천징수 109,440) − 2,530,000
-    expect(result.payout.netAmount).toBe(676_924);
+    // 이체 가능액 3,206,925(수수료 352,000 · 부가세 상당액 331,636 · 원천징수 109,439) − 2,530,000
+    expect(result.payout.netAmount).toBe(676_925);
   });
 
   it('설계비를 정산 밖에서 이미 받았으면 다시 빼지 않는다', async () => {
@@ -275,6 +284,35 @@ describe('recordFundingPayout — 설계비·제작비 공제 (개설자 약관 
     expect(result.payout.shortfallAmount).toBeGreaterThan(0);
     expect(result.payout.designFeeOffsetAmount + result.payout.productionFeeOffsetAmount + result.payout.shortfallAmount)
       .toBe(550_000 + 1_980_000);
+  });
+
+  /**
+   * 회귀: 낙관적 잠금이 실이체액만 대조했다. 대금이 정산금을 넘는 프로젝트는 실이체액이 늘 0원이라,
+   * 화면을 본 뒤 다른 운영자가 약정 제작비를 바꿔도 대조가 통과하고 운영자가 보지 않은 차액이
+   * 불변 행으로 굳었다.
+   */
+  it('화면을 띄운 뒤 제작비가 바뀌면 실이체액이 0원 그대로여도 기록하지 않는다 — amount_changed', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 1_000_000);
+    await setService(project.id, { productionFee: 1_800_000 });
+
+    const shown = await buildFundingPayoutPreview(project.id);
+    expect(shown!.netAmount).toBe(0);
+    expect(shown!.shortfallAmount).toBe(1_728_268);
+
+    // 확인창을 띄워 둔 사이에 다른 운영자가 약정 제작비를 올렸다(set_production_fee).
+    expect(await setProductionFee(project.id, 2_000_000, new Date('2026-02-19T00:00:00Z'), 'other')).toMatchObject({ ok: true });
+    const now = await buildFundingPayoutPreview(project.id);
+    expect(now!.netAmount).toBe(0);
+    expect(now!.shortfallAmount).not.toBe(shown!.shortfallAmount);
+
+    const result = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'), shownAmounts(shown));
+    expect(result).toEqual({ ok: false, code: 'amount_changed', expectedNetAmount: 0, netAmount: 0 });
+    expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
+
+    // 새로고침 뒤 다시 본 금액이면 기록된다.
+    const retried = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'), shownAmounts(now));
+    expect(retried.ok).toBe(true);
   });
 });
 
@@ -516,7 +554,7 @@ describe('recordFundingPayout', () => {
 
     // 운영자가 화면에서 본 숫자.
     const shown = await buildFundingPayoutPreview(project.id);
-    expect(shown!.netAmount).toBe(801_731);
+    expect(shown!.netAmount).toBe(801_732);
 
     // 확인창을 띄워 둔 사이에 환불 한 건이 done이 됐다.
     const payment = await mockDb.query.payments.findFirst({ where: (t, { eq }) => eq(t.orderId, order.id) });
@@ -524,15 +562,15 @@ describe('recordFundingPayout', () => {
       .insert(schema.refunds)
       .values({ paymentId: payment!.id, amount: 100_000, reason: '후원자 취소', requestedBy: 'customer', status: 'done' });
 
-    const result = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'), shown!.netAmount);
+    const result = await recordFundingPayout(project.id, new Date('2026-02-20T00:00:00Z'), shownAmounts(shown));
     const now = computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 100_000, taxType: 'withholding' });
     expect(result).toEqual({
       ok: false,
       code: 'amount_changed',
-      expectedNetAmount: 801_731,
+      expectedNetAmount: 801_732,
       netAmount: now.netAmount,
     });
-    expect(now.netAmount).not.toBe(801_731);
+    expect(now.netAmount).not.toBe(801_732);
     // 가장 중요한 부분 — 아무것도 굳지 않았다.
     expect(await mockDb.query.fundingProjectPayouts.findMany()).toHaveLength(0);
   });
@@ -590,7 +628,7 @@ describe('정산 기록 시의 복호화도 접속기록에 남는다', () => {
     const result = await recordFundingPayout(
       project.id,
       new Date('2026-02-20T00:00:00Z'),
-      preview?.netAmount ?? 0,
+      shownAmounts(preview),
       '203.0.113.7',
       'kyungha',
     );

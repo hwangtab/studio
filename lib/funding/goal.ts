@@ -4,6 +4,7 @@ import {
   FUNDING_WITHHOLDING_PERCENT,
 } from '../../data/pricing';
 import { VAT_RATE } from '../booking/amounts';
+import { computeBusinessIncomeWithholding } from '../withholdingTax';
 
 /**
  * 펀딩 목표액 역산 — 발매 페이지 계산기(components/release/FundingGoalCalculator)가 쓴다.
@@ -15,7 +16,7 @@ import { VAT_RATE } from '../booking/amounts';
  *
  * 정산 식(payout.ts와 같다): 결제액에서 플랫폼 수수료·결제 수수료(둘 다 부가세 포함)를
  * 각각 반올림해 뗀다. 원천징수 개설자면 남은 금액에서 부가세 상당액(10/110)을 빼고(반올림),
- * 그 몫의 3.3%를 반올림해 한 번 더 뗀다.
+ * 그 몫에서 소득세 3%와 지방소득세(소득세의 10%)를 각각 절사해 한 번 더 뗀다(lib/withholdingTax.ts).
  */
 const payoutParts = (grossAmount: number, withholding: boolean) => {
   const gross = Math.max(0, grossAmount);
@@ -23,7 +24,7 @@ const payoutParts = (grossAmount: number, withholding: boolean) => {
   const paymentFee = Math.round((gross * FUNDING_PAYMENT_FEE_PERCENT) / 100);
   const afterFees = gross - platformFee - paymentFee;
   const share = withholding ? Math.round(afterFees / (1 + VAT_RATE)) : afterFees;
-  const withheld = withholding ? Math.round((share * FUNDING_WITHHOLDING_PERCENT) / 100) : 0;
+  const withheld = withholding ? computeBusinessIncomeWithholding(share).total : 0;
   return { platformFee, paymentFee, vatDeduction: afterFees - share, withheld, net: share - withheld };
 };
 
