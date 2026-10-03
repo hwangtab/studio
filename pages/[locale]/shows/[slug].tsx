@@ -205,9 +205,9 @@ export default function ShowPage({ show }: Props) {
 
       {performers.length > 0 && (
         <Section variant="alternate" spacing="tight">
-          <div className="mx-auto max-w-5xl">
-            <h2 className="mb-6 text-center typo-section-title text-gray-900 dark:text-white">출연</h2>
-            <ShowLineup performers={performers} />
+          <div className="mx-auto max-w-2xl">
+            <h2 className="mb-6 typo-section-title text-gray-900 dark:text-white">출연</h2>
+            <ShowLineup slug={show.slug} performers={performers} />
           </div>
         </Section>
       )}

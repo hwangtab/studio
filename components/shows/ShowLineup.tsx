@@ -1,18 +1,16 @@
+import { SHOW_PERFORMER_PHOTOS } from '../../data/shows/performerPhotos';
 import type { ShowPerformer } from '../../lib/shows/content';
+import LineupCard from '../common/LineupCard';
 
-/** 출연진 카드 — 이름을 크게, 소개는 읽기 좋은 폭으로. 출연이 둘 이하면 열을 줄여 한쪽으로 몰리지 않게 한다. */
-export default function ShowLineup({ performers }: { performers: ShowPerformer[] }) {
+/** 공연 출연진 — 펀딩 상세와 같은 카드(LineupCard)를 세로로 쌓는다. */
+export default function ShowLineup({ slug, performers }: { slug: string; performers: ShowPerformer[] }) {
   if (performers.length === 0) return null;
-  const cols = performers.length === 1 ? 'max-w-md' : performers.length === 2 ? 'max-w-3xl md:grid-cols-2' : 'max-w-5xl md:grid-cols-3';
+  const photos = SHOW_PERFORMER_PHOTOS[slug] ?? {};
   return (
-    <ul className={`mx-auto grid gap-4 ${cols}`}>
+    <ul className="mx-auto max-w-2xl space-y-3">
       {performers.map((p) => (
-        <li
-          key={p.name}
-          className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-900"
-        >
-          <h3 className="typo-card-title text-gray-900 dark:text-white">{p.name}</h3>
-          {p.bio && <p className="mt-3 break-keep typo-card-body leading-7 text-gray-700 dark:text-gray-300">{p.bio}</p>}
+        <li key={p.name}>
+          <LineupCard photo={photos[p.name]} photoAlt={`${p.name} 프로필 사진`} name={p.name} bio={p.bio} />
         </li>
       ))}
     </ul>
