@@ -9,13 +9,13 @@ tags:
   - 社交
   - 聚会
 summary: >-
-  声音发烧友集合！不广洞的混音聚会 "Bulgwang Mixing Club" 开始了。一起分享混音技巧、参考曲和作品反馈，在 Studio NOL 的社区活动中交流成长。
+  声音发烧友集合！佛光洞的混音聚会 "Bulgwang Mixing Club" 开始了。一起分享混音技巧、参考曲和作品反馈，在 Studio NOL 的社区活动中交流成长。
 thumbnail: /images/recording3.webp
 robots: noindex
 ---
 ![Bulgwang Mixing Club 混音间](/images/hardware2.webp)
 
-### 🔥 声音发烧友集合！不广洞的混音地狱开张了："Bulgwang Mixing Club"！🔥
+### 🔥 声音发烧友集合！佛光洞的混音地狱开张了："Bulgwang Mixing Club"！🔥
 
 我们邀请所有为混音而活的人，加入这个热辣的派对——"Bulgwang Mixing Club"！
 不要再独自苦思混音了，来一起分享技巧、升级实力，享受过程吧。
@@ -27,7 +27,7 @@ robots: noindex
 ### 📢 本周聚会信息
 
 * 时间：2025 年 11 月 7 日（周五）晚上 7 点（周五夜当然要混音！）
-* 地点：不广 Studio NOL R03 混音间（首尔恩平区统一路71街 2-1 3层）
+* 地点：佛光 Studio NOL R03 混音间（首尔恩平区统一路71街 2-1 3层）
 * 费用：15,000 韩元（我们的灵魂食物：炸鸡！）
   * Studio NOL 用户当然免费！
 * 名额：仅限 6 名精英成员（满员会含泪公告）

@@ -300,14 +300,14 @@
       "priceCol": "Narx"
     },
     "seo": {
-      "title": "Studio NOL narxlari Â· Xona ₩360K/oy, Toʼy ₩350K, Yozuv ₩100K",
+      "title": "Studio NOL narxlari · Xona ₩360K/oy, Toʼy ₩350K, Yozuv ₩100K",
       "description": "Shaffof narxlar: oylik xona ₩360K (zakaladsiz, tunab qolish mumkin), toʼy ₩350K, yozuv ₩100K/soat yoki Day Lock paketlari. Bepul taklif.",
       "keywords": "yozuv narxlari, voiceover yozuvi narxi, studio ijarasi narxi, miks narxi, mastering narxi, Studio NOL",
       "schemaTitle": "Studio NOL xizmat narxlari"
     },
     "hero": {
       "title": "Yozuv ₩100,000/soat · Mashq xonasi ₩360,000/oy · To'y qo'shig'i ₩350,000",
-      "subtitleLine1": "Mashg‘ulot xonasining oylik to‘lovidan tashqari narxlar QQSsiz haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
+      "subtitleLine1": "Mashg‘ulot xonasining soatbay ijarasidan tashqari narxlar QQSsiz haqiqiy narxlardir. Qo‘shimcha to‘lov qo‘llaniladigan barcha holatlar quyida ko‘rsatilgan.",
       "subtitleLine2": "Quyidagi jadvalda barcha xizmat narxlari bir joyda.",
       "alt": "Studio NOL narxlari",
       "ctaKakao": "KakaoTalk orqali bepul narx oling"
@@ -335,7 +335,7 @@
       "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
       "subtitleVacant": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — hozir ko'chib kirish mumkin.",
       "detailLink": "Xona jihozlari va rezident imtiyozlarini ko'rish",
-      "priceNote": "Kommunal to‘lovlar kiritilgan · depozitsiz · oylik shartnoma · QQS alohida"
+      "priceNote": "Oylik ijara: kommunal to‘lovlar kiritilgan · depozitsiz · oylik shartnoma · QQS alohida"
     },
     "additional": {
       "title": "Qo'shimcha xizmatlar",
@@ -558,7 +558,7 @@
       "keywords": "Seul mashg'ulot xonasi, Eunpyeong mashg'ulot xonasi, Yeonsinnae mashg'ulot xonasi, STC tovush izolyatsiyali xona, studiya darajasidagi tovush izolyatsiyasi, dushli mashg'ulot xonasi, tunab qolish mumkin bo'lgan xona, oylik mashg'ulot xonasi, 24/7 mashg'ulot xonasi, shaxsiy mashg'ulot xonasi, vokal xonasi, klaviatura xonasi"
     },
     "hero": {
-      "title": "Oyiga ₩360Kʼdan Â· Eunpyeong-gu'da 24/7 tovush izolyatsiyali xona",
+      "title": "Oyiga ₩360Kʼdan · Eunpyeong-gu'da 24/7 tovush izolyatsiyali xona",
       "subtitleLine1": "Eunpyeong-gu'dagi eng qulay oylik ijara.",
       "subtitleLine2": "Zakaladsiz · Birinchi oyga 50% chegirma (1 yillik shartnoma) · Tunab qolish mumkin.",
       "subtitleLine3": "Vokal · klaviatura · yozuv — premium oylik ijara.",
@@ -742,7 +742,7 @@
         "headline": "Oyiga ₩360K",
         "headlineCaption": "Depozit 0 · haqiqiy oylik ijara",
         "title": "Oyiga atigi ₩360K evaziga ₩900K+ qiymatdan bahramand bo'ling",
-        "subtitle": "₩400–500K darajasidagi xona, ustiga oyiga ~₩450K+ qo'shimcha imtiyozlar — hisoblanganda oyiga ₩900K+ qiymat, barcha ijarachilarga beriladi.",
+        "subtitle": "Bozor narxi ~₩450K darajasidagi xona, ustiga oyiga ~₩450K+ qo'shimcha imtiyozlar — hisoblanganda oyiga ₩900K+ qiymat, barcha ijarachilarga beriladi.",
         "note": "* Bozor narxi Eunpyeong-gu'dagi bir xil spetsifikatsiyali xonalar (tovush izolyatsiyasi, iqlim, 24/7) asosida. Imtiyoz qiymatlari yozuv, PR, konsultatsiya bozor narxlari asosida taxminiy hisoblar."
       },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
@@ -1394,7 +1394,7 @@
         },
         {
           "q": "Minimal bron va bekor qilish qoidasi qanday?",
-          "a": "Soatlik ijara kamida 2 soatdan boshlanadi. Biz faqat kelishuv asosida ishlaymiz, shuning uchun jadval o'zgarsa KakaoTalk orqali oldindan xabar bering, moslashtiramiz."
+          "a": "Soatlik ijara kamida 2 soatdan boshlanadi. Biz faqat kelishuv asosida ishlaymiz. Foydalanish kunidan kamida 3 kun oldin bekor qilsangiz, pul to'liq qaytariladi; 1–2 kun oldin bekor qilinsa, 50% qaytariladi; o'sha kuni bekor qilinsa, pul qaytarilmaydi. Jadval o'zgarsa, KakaoTalk orqali oldindan xabar bering."
         },
         {
           "q": "Manzil qayerda va to'xtash joyi bormi?",
@@ -2944,7 +2944,7 @@
         },
         {
           "question": "Byudjet qisqa — faqat ayrim bosqichlarga buyurtma berish mumkinmi?",
-          "answer": "Ha. Biz to‘liq chiqarish jarayonini tavsiya qilamiz, lekin bosqichlar bo‘yicha alohida buyurtma berish ham mumkin: faqat vokal yozuv / faqat miks / faqat mastering. Qisman narxlar narxlar jadvali asosida beriladi (vokal yozuv ₩100K/soat, miks ₩200K dan va h.k.). Lekin media PR va tarqatish hamrohligi faqat to‘liq jarayon buyurtma qilingandagina qo‘shiladi."
+          "answer": "Ha. Biz to‘liq chiqarish jarayonini tavsiya qilamiz, lekin bosqichlar bo‘yicha alohida buyurtma berish ham mumkin: faqat vokal yozuv / faqat miks / faqat mastering. Qisman narxlar narxlar jadvali asosida beriladi (vokal yozuv ₩100K/soat, miks ₩200K dan va h.k.). Chiqarish PR’ini ham alohida buyurtma qilish mumkin — hatto faqat tayyor bo‘lgan musiqangiz bilan ham."
         },
         {
           "question": "Boshqa joyda yozishni boshlab qo‘yganman — yarmida qo‘shila olasizlarmi?",

@@ -171,7 +171,7 @@
     },
     "seo": {
       "keywords": "Studio NOL, proceso de producción musical, estudio de grabación, mezcla y masterización, distribución musical, planificación musical, equipo analógico",
-      "title": "Estudio de Grabación Seúl · Productor con 15 años | Studio NOL",
+      "title": "Estudio de Grabación Seúl · Productor con 15 años de experiencia | Studio NOL",
       "description": "Studio NOL en Eunpyeong-gu, Seúl: 15+ años de experiencia en discos, equipo analógico vintage, producción musical integral. Consulta gratuita por KakaoTalk."
     },
     "howToTitle": "Cómo producir música en Studio NOL",
@@ -307,7 +307,7 @@
     },
     "hero": {
       "title": "Grabación ₩100,000/h · Sala de ensayo ₩360,000/mes · Boda ₩350,000",
-      "subtitleLine1": "Salvo la tarifa mensual de la sala de ensayo, son tarifas reales con IVA no incluido. Abajo se detalla cada caso con coste adicional.",
+      "subtitleLine1": "Salvo el uso por horas de la sala de ensayo, son tarifas reales con IVA no incluido. Abajo se detalla cada caso con coste adicional.",
       "subtitleLine2": "La tabla de abajo muestra todas las tarifas de un vistazo.",
       "alt": "Precios de Studio NOL",
       "ctaKakao": "Cotización gratis por KakaoTalk"
@@ -335,7 +335,7 @@
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
       "subtitleVacant": "Un espacio insonorizado 24/7 alquilado por mes: disponible para mudarse ahora mismo.",
       "detailLink": "Ver instalaciones y beneficios para residentes",
-      "priceNote": "Servicios incluidos · sin depósito · contrato mensual · IVA no incluido"
+      "priceNote": "Residencia mensual: servicios incluidos · sin depósito · contrato mensual · IVA no incluido"
     },
     "additional": {
       "title": "Servicios adicionales",
@@ -393,7 +393,7 @@
     "hero": {
       "title": "Lecciones de producción 1:1 — Masterclass todo en uno",
       "subtitleLine1": "De la idea en tu cabeza a un tema listo para publicar.",
-      "subtitleLine2": "De MIDI y composición a grabación, mezcla y masterización: uno a uno con un productor de 15 años.",
+      "subtitleLine2": "De MIDI y composición a grabación, mezcla y masterización: uno a uno con un productor con 15 años de experiencia.",
       "subtitleLine3": "1×/semana · 60 min/sesión · 4 sesiones/mes · 350.000 KRW plano",
       "alt": "Sala de control de Studio NOL con monitores y consola de mezcla"
     },
@@ -742,7 +742,7 @@
         "headline": "₩360K/mes",
         "headlineCaption": "₩0 de depósito · alquiler mensual real",
         "title": "Disfruta ₩900K+/mes de valor por solo ₩360K/mes",
-        "subtitle": "Una sala de nivel ₩400–500K/mes más ~₩450K+/mes en beneficios extra — unos ₩900K+/mes de valor, incluido para cada residente.",
+        "subtitle": "Una sala de ~₩450K/mes a precio de mercado más ~₩450K+/mes en beneficios extra — unos ₩900K+/mes de valor, incluido para cada residente.",
         "note": "* Precios de mercado basados en salas de Eunpyeong-gu con especificaciones equivalentes (insonorización, climatización, 24/7). Valores estimados por tarifas de grabación, PR y consultoría."
       },
       "calendarLinkLabel": "kosmart.co.kr/calendar",
@@ -914,7 +914,7 @@
       "subtitle": "Studio NOL nació para apoyar la imaginación y creatividad de los músicos.",
       "quote": "\"Más que un espacio de grabación, es donde artistas e ingenieros respiran juntos para crear en colaboración.\"",
       "paragraphs": [
-        "Neumann U87AI, SSL Fusion, Vintech X73i. El equipo es de primer nivel, pero al final el sonido lo hacen las personas: un ingeniero con 15 años lo lleva de principio a fin.",
+        "Neumann U87AI, SSL Fusion, Vintech X73i. El equipo es de primer nivel, pero al final el sonido lo hacen las personas: un ingeniero con 15 años de experiencia lo lleva de principio a fin.",
         "El valor que persigue Studio NOL es centrarse en la esencia de la música más allá de la perfección técnica.",
         "Desde grabación, mezcla y masterización hasta lanzamiento y promoción, seremos un socio confiable."
       ]
@@ -1394,7 +1394,7 @@
         },
         {
           "q": "¿Cuál es la reserva mínima y la política de cancelación?",
-          "a": "El alquiler por hora comienza con un mínimo de 2 horas. Trabajamos solo con cita, así que avísanos por KakaoTalk con antelación si cambia tu horario y lo adaptaremos."
+          "a": "El alquiler por hora comienza con un mínimo de 2 horas. Trabajamos solo con cita. Si cancelas hasta 3 días antes de la sesión, el reembolso es total; 1–2 días antes, se reembolsa el 50%; las cancelaciones el mismo día no tienen reembolso. Si cambia tu horario, avísanos por KakaoTalk con antelación."
         },
         {
           "q": "¿Dónde están y hay estacionamiento?",
@@ -2944,7 +2944,7 @@
         },
         {
           "question": "Tengo un presupuesto ajustado — ¿puedo contratar solo algunas etapas?",
-          "answer": "Sí. Recomendamos el proceso de lanzamiento completo, pero también puedes contratar etapas individuales: solo grabación vocal / solo mezcla / solo masterización. Los presupuestos parciales se basan en nuestra lista de tarifas (grabación vocal ₩100K/hora, mezcla desde ₩200K, etc.). Eso sí: el PR de medios y el acompañamiento de distribución solo se incluyen con la contratación del proceso completo."
+          "answer": "Sí. Recomendamos el proceso de lanzamiento completo, pero también puedes contratar etapas individuales: solo grabación vocal / solo mezcla / solo masterización. Los presupuestos parciales se basan en nuestra lista de tarifas (grabación vocal ₩100K/hora, mezcla desde ₩200K, etc.). La promoción del lanzamiento también se puede contratar por separado, incluso solo con música que ya tengas terminada."
         },
         {
           "question": "Ya empecé a grabar en otro lado — ¿pueden unirse a mitad de camino?",

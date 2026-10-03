@@ -37,7 +37,7 @@ const faqData = {
     },
     {
       question: '연습실 입주 프로그램이 있나요?',
-      answer: '네, 월 36만 원부터 프리미엄 방음 연습실과 8가지 부가 혜택(녹음실 할인, 무료 음원 유통, 보도자료 작성 지원, 버스킹 장비 대여 등)을 제공하는 입주 프로그램이 있습니다.',
+      answer: '네, 월 36만 원(부가세 별도)부터 프리미엄 방음 연습실과 8가지 부가 혜택(녹음실 할인, 무료 음원 유통, 보도자료 작성 지원, 버스킹 장비 대여 등)을 제공하는 입주 프로그램이 있습니다.',
     },
     {
       question: '어떤 장비를 보유하고 있나요?',
@@ -112,7 +112,7 @@ const faqData = {
     },
     {
       question: 'Do you have a practice room residency program?',
-      answer: 'Yes, from 360,000 KRW/month, we offer a premium soundproof practice room and 8 benefits (studio discount, free distribution, press release support, busking gear rental, etc.).',
+      answer: 'Yes, from 360,000 KRW/month (VAT excluded), we offer a premium soundproof practice room and 8 benefits (studio discount, free distribution, press release support, busking gear rental, etc.).',
     },
     {
       question: 'What equipment do you have?',
@@ -144,7 +144,7 @@ const faqData = {
     },
     {
       question: 'How does the practice room work?',
-      answer: `It runs mainly as a monthly residency program (from 360,000 KRW/month) — a soundproof private room with 24/7 access and no deposit. For just an hour or two, hourly use is ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour (VAT included, from 1 hour), paid online. Band rehearsal rooms are not operated.`,
+      answer: `It runs mainly as a monthly residency program (from 360,000 KRW/month, VAT excluded) — a soundproof private room with 24/7 access and no deposit. For just an hour or two, hourly use is ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hour (VAT included, from 1 hour), paid online. Band rehearsal rooms are not operated.`,
     },
     {
       question: 'Can I hand off an entire release, from planning to distribution?',
@@ -167,7 +167,7 @@ const faqData = {
   zh: [
     {
       question: 'Studio NOL 位于哪里？',
-      answer: '位于首尔恩平区统一路71街 2-1 3楼。从地铁6号线佛光站7号出口或延身内站步行5分钟即到。',
+      answer: '位于首尔恩平区统一路71街 2-1 3楼。从地铁6号线佛光站7号出口或延新内站步行5分钟即到。',
     },
     {
       question: '录音室费用是多少？',
@@ -183,7 +183,7 @@ const faqData = {
     },
     {
       question: '有练习室入驻项目吗？',
-      answer: '月费 360,000 韩元起，提供高端隔音练习室及 8 项福利（录音室折扣、免费发行、新闻稿支持、街头演出设备租借等）。',
+      answer: '月费 360,000 韩元起（不含增值税），提供高端隔音练习室及 8 项福利（录音室折扣、免费发行、新闻稿支持、街头演出设备租借等）。',
     },
     {
       question: '有哪些设备？',
@@ -207,7 +207,7 @@ const faqData = {
     },
     {
       question: '练习室如何使用？',
-      answer: `练习室以月租入驻项目（36万韩元/月起）为主——无押金、24小时出入的隔音独立房间。只需一两个小时也可按小时使用（每小时 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} 韩元，含增值税，1小时起）。不提供乐队排练室。`,
+      answer: `练习室以月租入驻项目（36万韩元/月起，不含增值税）为主——无押金、24小时出入的隔音独立房间。只需一两个小时也可按小时使用（每小时 ${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} 韩元，含增值税，1小时起）。不提供乐队排练室。`,
     },
   ],
   es: [
@@ -229,7 +229,7 @@ const faqData = {
     },
     {
       question: '¿Tienen un programa de residencia para salas de práctica?',
-      answer: 'Sí, desde 360.000 KRW/mes ofrecemos una sala premium insonorizada y 8 beneficios (descuento en estudio, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
+      answer: 'Sí, desde 360.000 KRW/mes (IVA no incluido) ofrecemos una sala premium insonorizada y 8 beneficios (descuento en estudio, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
     },
     {
       question: '¿Qué equipo tienen?',
@@ -253,7 +253,7 @@ const faqData = {
     },
     {
       question: '¿Cómo funciona la sala de práctica?',
-      answer: `Funciona principalmente como un programa de residencia mensual (desde 360.000 KRW/mes): una sala privada insonorizada con acceso 24/7 y sin depósito. Para una o dos horas también hay uso por horas (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hora, IVA incluido, desde 1 hora). No operamos salas de ensayo para bandas.`,
+      answer: `Funciona principalmente como un programa de residencia mensual (desde 360.000 KRW/mes, IVA no incluido): una sala privada insonorizada con acceso 24/7 y sin depósito. Para una o dos horas también hay uso por horas (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/hora, IVA incluido, desde 1 hora). No operamos salas de ensayo para bandas.`,
     },
   ],
   vi: [
@@ -275,7 +275,7 @@ const faqData = {
     },
     {
       question: 'Có chương trình phòng tập cư trú không?',
-      answer: 'Có, từ 360.000 KRW/tháng cho phòng tập cách âm cao cấp và 8 quyền lợi (giảm giá phòng thu, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
+      answer: 'Có, từ 360.000 KRW/tháng (chưa gồm VAT) cho phòng tập cách âm cao cấp và 8 quyền lợi (giảm giá phòng thu, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
     },
     {
       question: 'Có những thiết bị nào?',
@@ -299,7 +299,7 @@ const faqData = {
     },
     {
       question: 'Phòng tập hoạt động như thế nào?',
-      answer: `Phòng tập chủ yếu hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng) — phòng riêng cách âm, ra vào 24/7, không cần đặt cọc. Nếu chỉ cần một vài giờ, có thể thuê theo giờ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/giờ, đã gồm VAT, từ 1 giờ). Không có phòng tập cho ban nhạc.`,
+      answer: `Phòng tập chủ yếu hoạt động theo chương trình cư trú hàng tháng (từ 360.000 KRW/tháng, chưa gồm VAT) — phòng riêng cách âm, ra vào 24/7, không cần đặt cọc. Nếu chỉ cần một vài giờ, có thể thuê theo giờ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/giờ, đã gồm VAT, từ 1 giờ). Không có phòng tập cho ban nhạc.`,
     },
   ],
   th: [
@@ -321,7 +321,7 @@ const faqData = {
     },
     {
       question: 'มีโปรแกรมห้องซ้อมรายเดือนหรือไม่?',
-      answer: 'เดือนละ 360,000 วอนขึ้นไป ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ส่วนลดสตูดิโอ, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
+      answer: 'เดือนละ 360,000 วอนขึ้นไป (ไม่รวม VAT) ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ส่วนลดสตูดิโอ, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
     },
     {
       question: 'มีอุปกรณ์อะไรบ้าง?',
@@ -345,7 +345,7 @@ const faqData = {
     },
     {
       question: 'ห้องซ้อมใช้งานอย่างไร?',
-      answer: `ห้องซ้อมให้บริการหลักเป็นโปรแกรมรายเดือน (เริ่มต้น 360,000 วอน/เดือน) — ห้องส่วนตัวเก็บเสียง เข้าออกได้ 24 ชั่วโมง ไม่มีเงินมัดจำ หากต้องการเพียงชั่วโมงหรือสองชั่วโมงก็ใช้แบบรายชั่วโมงได้ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} วอน/ชม. รวม VAT ตั้งแต่ 1 ชม.) ไม่มีห้องซ้อมสำหรับวงดนตรี`,
+      answer: `ห้องซ้อมให้บริการหลักเป็นโปรแกรมรายเดือน (เริ่มต้น 360,000 วอน/เดือน ไม่รวม VAT) — ห้องส่วนตัวเก็บเสียง เข้าออกได้ 24 ชั่วโมง ไม่มีเงินมัดจำ หากต้องการเพียงชั่วโมงหรือสองชั่วโมงก็ใช้แบบรายชั่วโมงได้ (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} วอน/ชม. รวม VAT ตั้งแต่ 1 ชม.) ไม่มีห้องซ้อมสำหรับวงดนตรี`,
     },
   ],
   uz: [
@@ -367,7 +367,7 @@ const faqData = {
     },
     {
       question: "Mashg'ulot xonasi rezident dasturi bormi?",
-      answer: "Ha. Oyiga 360,000 KRW dan premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
+      answer: "Ha. Oyiga 360,000 KRW dan (VAT alohida) premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
     },
     {
       question: 'Qanday uskunalar bor?',
@@ -391,7 +391,7 @@ const faqData = {
     },
     {
       question: "Mashg'ulot xonasi qanday ishlaydi?",
-      answer: `Mashgʻulot xonasi asosan oylik rezident dastur (360,000 KRW/oy dan) sifatida ishlaydi — depozitsiz, 24/7 kirish mumkin bo'lgan tovush o'tkazmaydigan shaxsiy xona. Bir-ikki soat kerak bo'lsa, soatbay foydalanish ham bor (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/soat, VAT bilan, 1 soatdan). Guruh repetitsiya xonalari yo'q.`,
+      answer: `Mashgʻulot xonasi asosan oylik rezident dastur (360,000 KRW/oy dan, VAT alohida) sifatida ishlaydi — depozitsiz, 24/7 kirish mumkin bo'lgan tovush o'tkazmaydigan shaxsiy xona. Bir-ikki soat kerak bo'lsa, soatbay foydalanish ham bor (${krw(PRACTICE_ROOM_HOURLY_PRICE_INCL)} KRW/soat, VAT bilan, 1 soatdan). Guruh repetitsiya xonalari yo'q.`,
     },
   ]
 };

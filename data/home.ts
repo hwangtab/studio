@@ -429,8 +429,8 @@ const homeData = {
           body: "Combinamos experiencias en producción de K-pop y Latin Pop. Si buscas fusionar ritmos latinos con sonido coreano, nuestro equipo puede ayudarte a crear un sonido único que conecte ambos mercados."
         },
         {
-          heading: "Testimonios de artistas hispanohablantes",
-          body: "Múltiples artistas de México, Colombia y Argentina han grabado álbumes completos en Studio NOL. Lee sus experiencias y descubre por qué Studio NOL es la elección número uno para artistas hispanohablantes en Corea."
+          heading: "Escucha nuestro trabajo antes de decidir",
+          body: "En el portafolio puedes escuchar grabaciones y mezclas hechas en Studio NOL antes de reservar. Envíanos tu canción (atendemos en inglés) y te diremos con franqueza qué podemos hacer por ella."
         }
       ]
     }
@@ -521,8 +521,8 @@ const homeData = {
           body: "Studio NOL thu âm, mixing và mastering ca khúc của bạn tại Seoul, rồi hỗ trợ phát hành lên các nền tảng nhạc Hàn Quốc. Gói 1 bài (thu âm + mixing + mastering) từ ₩500,000."
         },
         {
-          heading: "Đào tạo thanh nhạc phong cách K-pop",
-          body: "Khác với phòng thu thông thường, Studio NOL hiểu rõ yêu cầu đặc biệt của thị trường K-pop. Từ kỹ thuật thanh nhạc, biểu cảm đến phong cách trình diễn — chúng tôi giúp bạn chuẩn bị hồ sơ âm nhạc hoàn hảo cho thị trường Hàn Quốc."
+          heading: "Thu âm vocal có kỹ sư hướng dẫn",
+          body: "Mỗi buổi thu âm vocal đều có kỹ sư phụ trách trực tiếp chỉnh micro và hướng dẫn (directing) phần thể hiện, để bản thu sẵn sàng cho thị trường Hàn Quốc. Đây là dịch vụ thu âm — Studio NOL không mở lớp dạy thanh nhạc."
         },
         {
           heading: "Phân phối âm nhạc tại Hàn Quốc",
@@ -621,8 +621,8 @@ const homeData = {
           body: "Studio NOL รับบันทึกเสียง มิกซ์ และมาสเตอร์สำหรับเพลงที่มุ่งสู่ตลาดเกาหลี การกำกับเสียงร้องรวมอยู่ในทุกเซสชันบันทึกเสียง และงานมิกซ์·มาสเตอร์สามารถส่งไฟล์มาทำระยะไกลได้"
         },
         {
-          heading: "รีวิวจากศิลปินไทย",
-          body: "ศิลปินไทยหลายท่านได้บันทึกอัลบั้มเต็มที่ Studio NOL อ่านประสบการณ์ของพวกเขาและค้นพบว่าทำไม Studio NOL จึงเป็นตัวเลือกอันดับหนึ่งสำหรับศิลปินไทยในเกาหลี"
+          heading: "ฟังผลงานของเราก่อนตัดสินใจ",
+          body: "คุณฟังผลงานบันทึกเสียงและมิกซ์ที่ทำใน Studio NOL ได้ในหน้าพอร์ตโฟลิโอก่อนจอง ส่งเพลงของคุณมาคุยกับเราได้ (ติดต่อเป็นภาษาอังกฤษ) แล้วเราจะบอกตรง ๆ ว่าช่วยอะไรได้บ้าง"
         }
       ]
     }
@@ -713,7 +713,7 @@ const homeData = {
           body: "Bron qilish va loyiha boʻyicha yozishmalar ingliz tilida olib boriladi. 1 ta qoʻshiq toʻliq paketi (yozuv + miks + mastering) ₩500,000 dan boshlanadi."
         },
         {
-          heading: "K-pop treninglari uchun vokal yozuvi",
+          heading: "K-pop stajyorlari uchun vokal yozuvi",
           body: "K-pop trainee va xorijdagi sanʼatkorlar uchun vokal yozuvi jarayonida direkting (ijro yoʻnalishi) beramiz va treklaringizni Koreya bozoriga mos tayyorlaymiz."
         },
         {
