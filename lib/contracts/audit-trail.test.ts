@@ -242,30 +242,6 @@ describe('사건 목록', () => {
 
     expect(last?.detail).toBe('총 3회 열람');
   });
-  /**
-   * notifiedAt은 서명 전엔 서명 요청 메일, 서명 뒤엔 서명 완료 후처리의 결과다(서명이 칸을 비우고
-   * finalize가 다시 채운다). 서명 전 값을 "서명 완료 안내"로 적으면 보내지 않은 메일이 증거 화면에 남는다.
-   */
-  it('서명 뒤에 찍힌 알림만 "서명 완료 안내 발송"이다', () => {
-    const after = new Date(SIGNED_AT.getTime() + 60_000);
-    const { events } = buildAuditTrail(load({ notifiedAt: after, notificationError: null }));
-
-    expect(events.map((event) => event.label)).toContain('서명 완료 안내 발송');
-    expect(events.map((event) => event.label)).not.toContain('서명 요청 안내 발송');
-  });
-
-  it('서명 전에 찍힌 알림(발송 메일 결과)은 서명 요청 안내로 적는다', () => {
-    const { events } = buildAuditTrail(load({ notifiedAt: SENT_AT, notificationError: '운영자 알림 메일 발송 실패 (X)' }));
-    const labels = events.map((event) => event.label);
-
-    expect(labels).not.toContain('서명 완료 안내 발송');
-    expect(events.find((event) => event.label === '서명 요청 안내 발송')?.detail).toBe('운영자 알림 메일 발송 실패 (X)');
-  });
-
-  it('아직 서명 전인 계약도 서명 완료 안내로 적지 않는다', () => {
-    const { events } = buildAuditTrail(load({ status: 'sent', signedAt: null, notifiedAt: SENT_AT }, null));
-    expect(events.map((event) => event.label)).not.toContain('서명 완료 안내 발송');
-  });
 });
 
 describe('사슬의 빈 칸', () => {

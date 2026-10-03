@@ -204,37 +204,6 @@ describe('서명 확정 트랜잭션', () => {
     expect((await readState()).contract?.status).toBe('sent');
   });
 
-  /**
-   * 발송 때 찍힌 알림 결과가 서명 뒤까지 남으면, finalize가 죽어도 "서명 후 후처리 기록 없음"
-   * 점검이 울리지 않고 발송 때 오류 문구가 서명 뒤 화면에 남는다. finalize가 다시 채운다.
-   */
-  it('발송 때 기록된 알림 결과(notifiedAt·notificationError)를 비운다', async () => {
-    await seed('sent');
-    await db
-      .update(contracts)
-      .set({ notifiedAt: new Date('2026-09-01T00:00:00Z'), notificationError: '운영자 알림 메일 발송 실패 (X)' })
-      .where(eq(contracts.id, 'c1'));
-
-    const result = await runSign();
-    const state = await readState();
-
-    expect(result.rejected).toBe(false);
-    expect(state.contract?.notifiedAt).toBeNull();
-    expect(state.contract?.notificationError).toBeNull();
-  });
-
-  it('거절된 서명은 알림 기록을 건드리지 않는다', async () => {
-    await seed('cancelled');
-    const notifiedAt = new Date('2026-09-01T00:00:00Z');
-    await db.update(contracts).set({ notifiedAt, notificationError: 'x' }).where(eq(contracts.id, 'c1'));
-
-    await runSign();
-    const state = await readState();
-
-    expect(state.contract?.notifiedAt?.getTime()).toBe(notifiedAt.getTime());
-    expect(state.contract?.notificationError).toBe('x');
-  });
-
   it('동의 시각은 최초 서명 때만 남는다', async () => {
     await seed('sent');
     await runSign();

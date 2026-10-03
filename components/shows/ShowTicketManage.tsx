@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
+import BaseCard from '../ui/BaseCard';
 import { Button } from '../ui/Button';
 import { formatWon, SHOW_CONTACT_PHONE } from '../../lib/shows/copy';
 import { formatEntryNumber } from '../../lib/shows/format';
@@ -32,7 +33,6 @@ const ORDER_NOTICES: Record<string, string> = {
 /** 내 티켓 — QR·입장번호를 보여 주고, 환불 가능한 티켓을 골라 셀프 환불한다. */
 export default function ShowTicketManage({ order, token, qr }: Props) {
   const [selected, setSelected] = useState<string[]>([]);
-  const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<string | null>(null);
@@ -42,7 +42,6 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
     .filter((t) => selected.includes(t.id))
     .reduce((sum, t) => sum + (t.refundAmountNow ?? 0), 0);
   const toggle = (id: string) => {
-    setConfirming(false);
     setSelected((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
   };
 
@@ -63,7 +62,6 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
         window.setTimeout(() => window.location.reload(), 1800);
       } else {
         setError(data?.message ?? '환불을 처리하지 못했습니다. 문의 ' + SHOW_CONTACT_PHONE);
-        setConfirming(false);
       }
     } catch {
       setError('네트워크 오류로 환불 결과를 확인하지 못했습니다. 새로고침으로 상태를 확인해 주세요.');
@@ -99,82 +97,81 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
         입장은 <strong>비지정석 선착순</strong>입니다. 현장에서 QR을 보여 주시면 입장 번호를 안내해 드립니다.
       </p>
 
+      {/*
+        티켓 한 장 = 카드 한 장(지갑 메타포). QR이 가장 크고, 입장 번호·상태가 그 아래. 환불 선택은 카드 안의
+        체크 하나다 — 선택하면 아래 고정 줄의 버튼에 매수·금액이 바로 찍히고, 그 버튼 한 번으로 환불된다(2단계).
+        예전엔 선택 → 신청 → 확정 3단계였다(운영자 지시 2026-10-03: 동의·단계 최소화).
+      */}
       <ul className="space-y-4">
         {order.tickets.map((t, i) => {
           const qrUrl = qr[t.id];
+          const isSelected = selected.includes(t.id);
+          const statusLabel = t.checkedIn ? '입장 완료' : TICKET_STATUS_LABELS[t.status];
+          const live = !t.checkedIn && t.status === 'issued';
           return (
-            <li key={t.id} className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <p className="font-bold text-gray-900 dark:text-white">
-                  티켓 {i + 1} · {t.ticketTypeName}
-                </p>
-                <span className="rounded-full bg-gray-100 px-3 py-1 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                  {t.checkedIn ? '입장 완료' : TICKET_STATUS_LABELS[t.status]}
-                </span>
-              </div>
-              {t.entryNumber != null && (
-                <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
-                  입장 번호 <strong className="text-lg">{formatEntryNumber(t.entryNumber)}</strong>
-                </p>
-              )}
-              {qrUrl && (
-                <div className="mt-3 flex justify-center">
-                  {/* QR은 라이트 배경이 필요하다 — 다크 모드에서도 흰 바탕을 유지해 스캐너가 읽게 한다. */}
-                  <Image src={qrUrl} alt={`티켓 ${i + 1} 입장 QR`} width={220} height={220} unoptimized className="rounded-lg bg-white p-2" />
+            <li key={t.id}>
+              <BaseCard variant={isSelected ? 'glass-highlight' : 'glass'} className="p-5">
+                <div className="flex flex-wrap items-start justify-between gap-2">
+                  <div>
+                    <p className="typo-card-meta">티켓 {i + 1}</p>
+                    <p className="typo-card-subtitle text-gray-900 dark:text-white">{t.ticketTypeName}</p>
+                  </div>
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
+                      live
+                        ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-primary-lighter'
+                        : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
+                    }`}
+                  >
+                    {statusLabel}
+                  </span>
                 </div>
-              )}
-              {t.refundAmountNow != null && (
-                <label className="mt-3 flex min-h-[44px] items-center gap-3 text-sm text-gray-800 dark:text-gray-200">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(t.id)}
-                    onChange={() => toggle(t.id)}
-                    className="h-5 w-5 accent-primary"
-                  />
-                  <span>이 티켓 환불 신청 (지금 {formatWon(t.refundAmountNow)} 환불)</span>
-                </label>
-              )}
+                {qrUrl && (
+                  <div className="mt-4 flex justify-center">
+                    {/* QR은 라이트 배경이 필요하다 — 다크 모드에서도 흰 바탕을 유지해 스캐너가 읽게 한다. */}
+                    <Image src={qrUrl} alt={`티켓 ${i + 1} 입장 QR`} width={220} height={220} unoptimized className="rounded-lg bg-white p-2" />
+                  </div>
+                )}
+                {t.entryNumber != null && (
+                  <p className="mt-3 text-center text-sm text-gray-700 dark:text-gray-300">
+                    입장 번호 <strong className="text-2xl tabular-nums text-gray-900 dark:text-white">{formatEntryNumber(t.entryNumber)}</strong>
+                  </p>
+                )}
+                {t.refundAmountNow != null && (
+                  <label className="mt-4 flex min-h-[44px] items-center gap-3 border-t border-gray-200/70 pt-3 text-sm text-gray-800 dark:border-gray-700/70 dark:text-gray-200">
+                    <input type="checkbox" checked={isSelected} onChange={() => toggle(t.id)} className="h-5 w-5 accent-primary" />
+                    <span>
+                      환불 선택 <span className="text-gray-500 dark:text-gray-400">(지금 환불하면 {formatWon(t.refundAmountNow)})</span>
+                    </span>
+                  </label>
+                )}
+              </BaseCard>
             </li>
           );
         })}
       </ul>
 
-      <section aria-label="환불" className="rounded-2xl border border-gray-200 p-4 dark:border-gray-700">
-        <h2 className="mb-2 typo-card-title">취소·환불</h2>
-        <RefundPolicyList />
+      <section aria-label="환불" className="space-y-3">
         {refundable.length === 0 ? (
-          <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-gray-500 dark:text-gray-400">
             지금 환불 신청할 수 있는 티켓이 없습니다(입장 완료·환불 완료·공연 시작 후는 불가). 문의 {SHOW_CONTACT_PHONE}
           </p>
         ) : (
-          <div className="mt-4 space-y-3">
-            {selected.length === 0 ? (
-              <p className="text-sm text-gray-500 dark:text-gray-400">환불할 티켓을 위에서 선택해 주세요.</p>
-            ) : (
-              <>
-                <p className="text-sm text-gray-800 dark:text-gray-200">
-                  선택한 {selected.length}매 · 환불 예정 <strong>{formatWon(refundTotal)}</strong>
-                </p>
-                {confirming ? (
-                  <div className="flex flex-wrap gap-2">
-                    <Button type="button" onClick={submitRefund} disabled={busy}>
-                      {busy ? '처리 중…' : '환불 확정'}
-                    </Button>
-                    <Button type="button" variant="outline" onClick={() => setConfirming(false)} disabled={busy}>
-                      돌아가기
-                    </Button>
-                  </div>
-                ) : (
-                  <Button type="button" variant="outline" onClick={() => setConfirming(true)}>
-                    선택한 티켓 환불 신청
-                  </Button>
-                )}
-              </>
-            )}
-            {error && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{error}</p>}
-            {done && <p role="status" className="text-sm text-green-700 dark:text-green-400">{done}</p>}
-          </div>
+          <>
+            {/* 버튼 라벨이 곧 확인 문구다 — 매수·금액을 보고 누른다. 별도 확정 단계를 두지 않는다. */}
+            <Button type="button" fullWidth disabled={selected.length === 0 || busy} onClick={submitRefund}>
+              {busy ? '처리 중…' : selected.length === 0 ? '환불할 티켓을 위에서 선택해 주세요' : `${selected.length}매 환불하기 · ${formatWon(refundTotal)}`}
+            </Button>
+            <details className="text-xs text-gray-500 dark:text-gray-400">
+              <summary className="cursor-pointer rounded underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
+                취소·환불 규정 보기
+              </summary>
+              <RefundPolicyList className="mt-2" />
+            </details>
+          </>
         )}
+        {error && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+        {done && <p role="status" className="text-sm text-green-700 dark:text-green-400">{done}</p>}
       </section>
     </div>
   );

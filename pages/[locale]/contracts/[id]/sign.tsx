@@ -22,7 +22,6 @@ import { getClientIp } from '../../../../lib/contracts/client-ip';
 import { CONTRACT_MARKDOWN_OPTIONS } from '../../../../lib/contracts/html-escape';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { expireOverdueContracts } from '../../../../lib/contracts/service';
-import { signatureCanvasScale } from '../../../../lib/contracts/signature-canvas';
 import { getEffectiveStatus } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 import { recordContractView } from '../../../../lib/contracts/view-log';
@@ -310,11 +309,6 @@ export default function ContractSignPage({
    *
    * 표시 크기 × devicePixelRatio로 잡고 컨텍스트를 같은 배율로 확대하면, 비율은
    * 그대로면서 고해상도 화면에서도 선이 또렷하다. 이후 그리기 좌표는 CSS 픽셀이다.
-   *
-   * 배율은 devicePixelRatio를 그대로 쓰지 않고 3으로 제한한다. 브라우저를 크게 확대하면 dpr이 함께
-   * 커져(5K 화면 + 확대 300% → 6 이상) 캔버스가 서버 한도(signature-validation.ts의 한 변 4000px·
-   * 600만 픽셀)를 넘고, 서명이 "크기가 올바르지 않습니다"로 거부됐다. 3배면 어떤 화면에서도 획은
-   * 충분히 또렷하다. 그래도 넓은 캔버스가 한도를 넘지 않게 한도 안쪽으로 한 번 더 줄인다.
    */
   const setupCanvas = useCallback(() => {
     const canvas = canvasRef.current;
@@ -323,16 +317,15 @@ export default function ContractSignPage({
     const rect = canvas.getBoundingClientRect();
     if (rect.width === 0 || rect.height === 0) return;
 
-    const scale = signatureCanvasScale(window.devicePixelRatio || 1, rect.width, rect.height);
-    canvas.width = Math.round(rect.width * scale);
-    canvas.height = Math.round(rect.height * scale);
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
     // 해상도를 바꾸면 컨텍스트 상태가 초기화되므로 매번 다시 지정한다.
-    // 그리기 좌표(getCoordinates)는 CSS 픽셀이므로 컨텍스트를 같은 배율로 확대한다.
-    ctx.scale(scale, scale);
+    ctx.scale(dpr, dpr);
     ctx.lineWidth = 2.5;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
@@ -362,7 +355,7 @@ export default function ContractSignPage({
     return () => observer.disconnect();
   }, [setupCanvas, contract]);
 
-  /** 컨텍스트가 캔버스 배율(scale)로 확대돼 있으므로 좌표는 CSS 픽셀 그대로 쓴다. */
+  /** 컨텍스트가 dpr 배율로 확대돼 있으므로 좌표는 CSS 픽셀 그대로 쓴다. */
   const getCoordinates = (
     event: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>,
   ) => {
@@ -418,7 +411,7 @@ export default function ContractSignPage({
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
 
-    // 컨텍스트가 캔버스 배율로 확대돼 있어 CSS 픽셀 기준으로 지운다.
+    // 컨텍스트가 dpr 배율로 확대돼 있어 CSS 픽셀 기준으로 지운다.
     const rect = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, rect.width, rect.height);
     pointCountRef.current = 0;

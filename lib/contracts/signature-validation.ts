@@ -30,7 +30,7 @@ const MIN_BYTES = 100;
 /**
  * 서명 캔버스가 만들 수 있는 크기의 상한. 이보다 크면 캔버스에서 온 것이 아니다.
  *
- * 캔버스는 화면 폭 × 기기 픽셀비(sign.tsx, 배율은 최대 3으로 제한)라 실제로는 2천 픽셀 안쪽이다. 예전 상한 10000×10000은
+ * 캔버스는 화면 폭 × 기기 픽셀비(sign.tsx)라 실제로는 2천 픽셀 안쪽이다. 예전 상한 10000×10000은
  * 아주 작은 PNG가 그 크기를 선언해 PDF 렌더(Chromium)에서 큰 메모리를 쓰게 할 수 있었다.
  */
 const MAX_DIMENSION = 4000;
@@ -44,44 +44,37 @@ export const isSignatureDataUrl = (data: string): boolean => {
   return BASE64.test(data.slice(SIGNATURE_DATA_URL_PREFIX.length));
 };
 
-/**
- * 고객 화면(서명 API 400 응답)에 그대로 나가는 문구라 한국어로 쓴다. 고객이 할 수 있는 일은 "다시 그리기"
- * 하나라 그것을 함께 적고, 원인은 괄호로 짧게 남겨 문의가 왔을 때 어느 검사에 걸렸는지 알 수 있게 한다.
- */
-const REDRAW = '서명을 지우고 다시 그려 주세요.';
-const unreadable = (reason: string) => `서명 이미지를 읽을 수 없습니다(${reason}). ${REDRAW}`;
-
 export const validateSignatureData = (data: string): { ok: boolean; message?: string } => {
   if (!data.startsWith(SIGNATURE_DATA_URL_PREFIX)) {
-    return { ok: false, message: unreadable('PNG 형식 아님') };
+    return { ok: false, message: 'Signature must be a base64 PNG data URL' };
   }
 
   const base64 = data.slice(SIGNATURE_DATA_URL_PREFIX.length);
   if (!BASE64.test(base64)) {
-    return { ok: false, message: unreadable('허용되지 않는 문자') };
+    return { ok: false, message: 'Invalid base64 characters' };
   }
   // 표준 base64는 4자 단위로 인코딩된다. 어긋나면 디코더마다 결과가 갈린다.
   if (base64.length % 4 !== 0) {
-    return { ok: false, message: unreadable('길이 오류') };
+    return { ok: false, message: 'Invalid base64 length' };
   }
 
   const decodedLength = Buffer.byteLength(base64, 'base64');
   if (decodedLength > MAX_BYTES) {
-    return { ok: false, message: `서명 이미지가 너무 큽니다. ${REDRAW}` };
+    return { ok: false, message: 'Signature image is too large' };
   }
   if (decodedLength < MIN_BYTES) {
-    return { ok: false, message: `서명이 비어 있거나 너무 작습니다. 서명란에 다시 그려 주세요.` };
+    return { ok: false, message: 'Signature image is too small' };
   }
 
   let decoded: Buffer;
   try {
     decoded = Buffer.from(base64, 'base64');
   } catch {
-    return { ok: false, message: unreadable('해독 실패') };
+    return { ok: false, message: 'Failed to decode signature image' };
   }
 
   if (decoded.length < 8 || !decoded.subarray(0, 8).equals(PNG_MAGIC)) {
-    return { ok: false, message: unreadable('PNG 형식 아님') };
+    return { ok: false, message: 'Signature is not a valid PNG image' };
   }
 
   /**
@@ -93,10 +86,10 @@ export const validateSignatureData = (data: string): { ok: boolean; message?: st
    * 길이(4바이트, 항상 13) + 'IHDR'(4) + 폭(4) + 높이(4) + …
    */
   if (decoded.length < 33) {
-    return { ok: false, message: unreadable('PNG 머리글 없음') };
+    return { ok: false, message: 'Signature image is missing its header' };
   }
   if (decoded.readUInt32BE(8) !== 13 || decoded.subarray(12, 16).toString('ascii') !== 'IHDR') {
-    return { ok: false, message: unreadable('PNG 머리글 손상') };
+    return { ok: false, message: 'Signature image has a malformed PNG header' };
   }
 
   const width = decoded.readUInt32BE(16);
@@ -108,12 +101,12 @@ export const validateSignatureData = (data: string): { ok: boolean; message?: st
     height > MAX_DIMENSION ||
     width * height > MAX_PIXELS
   ) {
-    return { ok: false, message: `서명 이미지 크기가 올바르지 않습니다. 브라우저 확대 배율을 100%로 되돌린 뒤 ${REDRAW}` };
+    return { ok: false, message: 'Signature image has invalid dimensions' };
   }
 
   // 정상적으로 끝나지 않은 PNG는 렌더러가 거부하거나 잘린 그림을 그린다.
   if (decoded.subarray(decoded.length - 8, decoded.length - 4).toString('ascii') !== 'IEND') {
-    return { ok: false, message: unreadable('이미지가 잘림') };
+    return { ok: false, message: 'Signature image is truncated' };
   }
 
   return { ok: true };

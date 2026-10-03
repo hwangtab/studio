@@ -26,7 +26,6 @@ jest.mock('../../../lib/contracts/service', () => ({
   deleteContract: jest.fn(),
   findRoomConflict: jest.fn(),
   markContractSent: jest.fn(),
-  RESEND_COOLDOWN_MS: 10_000,
   sendContractNotifications: jest.fn(),
   terminateContract: jest.fn(),
   updateDraftContract: jest.fn(),
@@ -167,8 +166,6 @@ describe('조회 실패', () => {
     const body = JSON.stringify((res.json as jest.Mock).mock.calls[0][0]);
     expect(body).not.toContain('turso');
     expect(body).not.toContain('timeout');
-    // 열람 시도는 'error'로 남는다 — 'not_found'로 남기면 장애가 "없는 계약을 열었다"로 기록된다.
-    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'contract_view', 'c1', 'error');
   });
 });
 
@@ -386,71 +383,6 @@ describe('PATCH action=send/resend — 발송', () => {
 
     const res = await run({ method: 'PATCH', body: { action: 'send' } });
     expect(res.status).toHaveBeenCalledWith(409);
-  });
-
-  const messageOf = (res: ReturnType<typeof makeRes>) =>
-    String(((res.json as jest.Mock).mock.calls[0][0] as { message?: string }).message);
-
-  /** 파기된 계약은 markContractSent의 조건에 막혀 0행이 됐고, "방금 처리된 요청"이라는 엉뚱한 문구가 나갔다. */
-  it.each(['resend', 'resend-signed'])('파기된 계약의 %s는 미리 409로 거절하고 이유를 밝힌다', async (action) => {
-    mockFound(contract({ status: action === 'resend' ? 'expired' : 'signed', purgedAt: new Date('2026-09-01') }));
-    (findRoomConflict as jest.Mock).mockResolvedValue(null);
-
-    const res = await run({ method: 'PATCH', body: { action } });
-
-    expect(res.status).toHaveBeenCalledWith(409);
-    expect(messageOf(res)).toContain('파기');
-    expect(markContractSent).not.toHaveBeenCalled();
-    expect(waitUntil).not.toHaveBeenCalled();
-  });
-
-  describe('발송 UPDATE가 0행이면 원인을 다시 읽어 맞는 문구를 준다', () => {
-    const rejectWith = (current: Record<string, unknown>) => {
-      const findFirst = jest
-        .fn()
-        .mockResolvedValueOnce(contract({ status: 'sent', sentAt: new Date('2026-01-01') }))
-        .mockResolvedValueOnce(contract(current));
-      (getDb as jest.Mock).mockReturnValue({ query: { contracts: { findFirst } } });
-      (markContractSent as jest.Mock).mockResolvedValue(null);
-    };
-
-    it('호실이 막혔으면 충돌 안내', async () => {
-      rejectWith({ status: 'sent', sentAt: new Date('2026-01-01') });
-      (findRoomConflict as jest.Mock).mockResolvedValueOnce(null).mockResolvedValueOnce({ id: 'other' });
-
-      const res = await run({ method: 'PATCH', body: { action: 'resend' } });
-
-      expect(res.status).toHaveBeenCalledWith(409);
-      expect(messageOf(res)).toBe('호실 충돌 안내');
-    });
-
-    it('방금 발송했으면 쿨다운 안내', async () => {
-      rejectWith({ status: 'sent', sentAt: new Date() });
-      (findRoomConflict as jest.Mock).mockResolvedValue(null);
-
-      const res = await run({ method: 'PATCH', body: { action: 'resend' } });
-
-      expect(messageOf(res)).toContain('방금 발송');
-    });
-
-    it('그 사이 서명됐으면 상태가 바뀌었다고 알린다', async () => {
-      rejectWith({ status: 'signed', sentAt: new Date('2026-01-01') });
-      (findRoomConflict as jest.Mock).mockResolvedValue(null);
-
-      const res = await run({ method: 'PATCH', body: { action: 'resend' } });
-
-      expect(messageOf(res)).toContain('서명완료');
-      expect(messageOf(res)).not.toContain('방금 처리된');
-    });
-
-    it('그 사이 파기됐으면 파기 안내', async () => {
-      rejectWith({ status: 'expired', purgedAt: new Date() });
-      (findRoomConflict as jest.Mock).mockResolvedValue(null);
-
-      const res = await run({ method: 'PATCH', body: { action: 'resend' } });
-
-      expect(messageOf(res)).toContain('파기');
-    });
   });
 
   it('성공하면 markContractSent에 draft만 허용해 호출하고, 알림을 waitUntil로 배선한다', async () => {

@@ -5,6 +5,8 @@
  */
 import Head from 'next/head';
 
+import { Button } from '../../../components/ui/Button';
+
 import { getDb } from '../../../db/client';
 import { cancelPayment, confirmPayment, fetchPayment } from '../../../lib/booking/toss';
 import { withI18nServerProps } from '../../../lib/getStatic';
@@ -47,12 +49,10 @@ export default function ShowSuccessPage({ outcome, message, orderNo, manageUrl, 
             </p>
             {manageUrl && (
               <p className="mt-4">
-                <a
-                  href={manageUrl}
-                  className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-primary px-6 py-3 font-bold text-white transition-colors hover:bg-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 focus-visible:ring-offset-2 dark:focus-visible:ring-primary-lighter/70 dark:focus-visible:ring-offset-gray-900"
-                >
-                  내 티켓(QR) 열기
-                </a>
+                {/* 공용 Button — private→private 링크라 noreferrer 불필요(lib/analytics/privatePaths.ts). */}
+                <Button asChild size="lg">
+                  <a href={manageUrl}>내 티켓(QR) 열기</a>
+                </Button>
               </p>
             )}
             {manageUrl && (
