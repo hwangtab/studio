@@ -118,6 +118,8 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    * 그 폭에서만 숨긴다.
    */
   const isFundingDetail = router.pathname === '/[locale]/funding/[slug]';
+  /** 공연 상세도 하단 고정 예매 바(ShowMobileCta, lg:hidden)를 쓴다 — 펀딩 상세와 같은 처리. */
+  const isShowDetail = router.pathname === '/[locale]/shows/[slug]';
   /**
    * 계약 화면에서는 떠 있는 버튼을 전부 치운다.
    *
@@ -158,7 +160,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   const isBareLayout = isContractPage || isAdminPage || isPrivatePaymentPage;
 
   // 하단 고정 바가 없는 화면에서만 「맨 위로」와 카카오 FAB을 한 행으로 묶는다.
-  const hasFloatingRow = !isStoryDetail && !isFundingDetail && !isFundingPledge && !isBareLayout;
+  const hasFloatingRow = !isStoryDetail && !isFundingDetail && !isShowDetail && !isFundingPledge && !isBareLayout;
   /**
    * 결제 결과·후원 확인 화면에는 **브랜드 바만** 되돌린다. 내비게이션을 걷어낸 것까지는
    * 맞았는데 그 결과가 '흰 바탕에 카드 하나'라, 결제를 막 마친 사람에게 결제대행사 화면처럼
@@ -249,7 +251,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
           </div>
         ) : (
           <>
-            {!isStoryDetail && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail} />}
+            {!isStoryDetail && <KakaoFab locale={locale} suppressBelowLg={isFundingDetail || isShowDetail} />}
             <ScrollToTop locale={locale} />
           </>
         )

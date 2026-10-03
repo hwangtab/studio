@@ -152,7 +152,7 @@ export default function ShowBookingForm({ show }: Props) {
   }
 
   return (
-    <form id="book" onSubmit={submit} noValidate className="space-y-6" aria-label="티켓 예매">
+    <form id="book" onSubmit={submit} noValidate className="scroll-mt-24 space-y-6" aria-label="티켓 예매">
       <fieldset>
         <legend className="mb-2 typo-card-title">회차</legend>
         <div className="grid gap-2">
@@ -273,6 +273,7 @@ export default function ShowBookingForm({ show }: Props) {
           </section>
 
           <div>
+            <h3 className="mb-2 typo-card-title">결제 수단</h3>
             <div id={widget.methodsId} />
             <div id={widget.agreementId} />
             {widget.error && (
