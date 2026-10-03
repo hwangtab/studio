@@ -138,7 +138,7 @@ export const Footer = ({ locale }: FooterProps) => {
               )}
             </ul>
             {/* 후원·선구매·예매는 행위가 달라도 대상이 같다 — 함께 만든 아티스트다.
-                헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매가 붙으면 여기 들어간다.
+                헤더의 아티스트 그룹과 같은 분류를 쓴다. 공연 예매도 여기다.
 
                 이 블록만 ko 전용이다. 위 발매 티어와 이유가 다르다 — 여긴 결제 퍼널이라
                 한국 결제·통신판매 요건에 묶여 있다(스펙 §8·§11.2). 번역이 생겨도 이
@@ -149,6 +149,7 @@ export const Footer = ({ locale }: FooterProps) => {
                 <ul className="flex flex-col">
                   <FooterLink href={`/${locale}/artists`}>{t('nav.artists')}</FooterLink>
                   <FooterLink href={`/${locale}/funding`}>{t('nav.funding')}</FooterLink>
+                  <FooterLink href={`/${locale}/shows`}>{t('nav.shows')}</FooterLink>
                 </ul>
               </>
             )}

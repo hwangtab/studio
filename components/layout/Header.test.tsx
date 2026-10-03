@@ -132,6 +132,7 @@ describe('Header 모바일 메뉴', () => {
     });
     expect(within(nav).getByRole('link', { name: 'nav.funding' })).toHaveAttribute('href', '/ko/funding');
     expect(within(nav).getByRole('link', { name: 'nav.artists' })).toHaveAttribute('href', '/ko/artists');
+    expect(within(nav).getByRole('link', { name: 'nav.shows' })).toHaveAttribute('href', '/ko/shows');
     cleanup();
 
     render(
@@ -147,6 +148,7 @@ describe('Header 모바일 메뉴', () => {
     expect(screen.queryByRole('button', { name: 'nav.groups.artist' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'nav.funding' })).toBeNull();
     expect(screen.queryByRole('link', { name: 'nav.artists' })).toBeNull();
+    expect(screen.queryByRole('link', { name: 'nav.shows' })).toBeNull();
   });
 
   /**

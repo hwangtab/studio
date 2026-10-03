@@ -114,7 +114,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
     /**
      * 후원·선구매·예매는 행위가 제각각이라 행위로는 묶이지 않는다. 묶이는 건
      * 대상이다 — 전부 "스튜디오 놀과 함께 만든 음악의 주인공들"이 중심이다.
-     * 공연 예매가 붙으면 여기 들어간다.
+     * 공연 예매도 같은 이유로 여기 있다.
      */
     ...(locale === 'ko' ? [{
       id: 'artist',
@@ -122,6 +122,7 @@ export const Header = React.forwardRef<HTMLElement, HeaderProps>(({ locale, isSc
       items: [
         { label: t('nav.artists'), href: `/${locale}/artists` },
         { label: t('nav.funding'), href: `/${locale}/funding` },
+        { label: t('nav.shows'), href: `/${locale}/shows` },
       ]
     }] : []),
     {
