@@ -1,3 +1,4 @@
+import isEmail from 'validator/lib/isEmail';
 import { randomUUID } from 'node:crypto';
 import { eq, sql } from 'drizzle-orm';
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -143,7 +144,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 입력도 같다. 실제로 값이 있을 때만 쓰고, 아니면 플레이스홀더로 떨어뜨린다.
     // 소문자로 맞추는 이유는 온라인 경로(lib/funding/validation.ts)와 같다 — 인원 집계의
     // 신원 키가 이메일이라, 대소문자만 다른 표기가 같은 사람을 둘로 센다.
-    const customerEmail = String(b.customerEmail || '').trim().toLowerCase() || MANUAL_PLACEHOLDER_EMAIL;
+    const rawEmail = String(b.customerEmail || '').trim();
+    // 빈 칸은 플레이스홀더로 두되, 값이 있으면 후원 폼과 같은 검사(validator isEmail)를 지난다 —
+    // 잘못된 주소로 확정 메일을 시도하면 반송이 발신 도메인 평판을 깎고 센티널만 남는다.
+    if (rawEmail && !isEmail(rawEmail)) {
+      return res.status(400).json({ ok: false, message: '이메일 형식이 올바르지 않습니다.' });
+    }
+    const customerEmail = rawEmail.toLowerCase() || MANUAL_PLACEHOLDER_EMAIL;
     const hasRealEmail = customerEmail !== MANUAL_PLACEHOLDER_EMAIL;
     const db = getDb();
     /**
@@ -247,9 +254,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 센티널을 지우는 유일한 경로(재발송 버튼)에 닿을 수 없다.
      */
     if (rowsAffectedOf(result[1]) === 0) {
-      await db.update(orders).set({ status: 'failed', notificationError: null, updatedAt: now })
-        .where(eq(orders.id, orderId));
-      return res.status(409).json({ ok: false, message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.' });
+      // 되돌림 UPDATE가 던지면 pledge 없는 paid 주문과 센티널이 조용히 남는다 — 던져도 409 응답은
+      // 유지하되 로그와 warnings로 드러내 운영자가 그 주문을 찾아 정리할 수 있게 한다.
+      let warnings: string[] | undefined;
+      try {
+        await db.update(orders).set({ status: 'failed', notificationError: null, updatedAt: now })
+          .where(eq(orders.id, orderId));
+      } catch (e) {
+        console.error('[admin-funding-pledge] 재고 초과로 등록이 거절됐으나 주문을 failed로 되돌리지 못했다 — pledge 없는 paid 주문이 남았다', { orderNo, orderId, error: e });
+        warnings = [`주문 ${orderNo}을 실패 처리하지 못했습니다. 후원 내역 없이 '결제완료' 주문이 남아 있으니 확인해 주세요.`];
+      }
+      return res.status(409).json({
+        ok: false,
+        message: '방금 마감되었습니다. 남은 수량을 다시 확인해 주세요.',
+        ...(warnings ? { warnings } : {}),
+      });
     }
     /**
      * 확정 안내 메일을 **여기서 바로** 보낸다. 예전엔 등록만 하고 끝나서, 운영자가 관리자

@@ -2,9 +2,10 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { artistPayouts, orders, payments, refunds, subscriptionPayments, subscriptions, type ArtistPayout } from '../../db/schema';
-import { ARTIST_SUPPORT_SHARE_PERCENT, ARTIST_SUPPORT_WITHHOLDING_PERCENT } from '../../data/pricing';
+import { ARTIST_SUPPORT_SHARE_PERCENT } from '../../data/pricing';
 import { getSupportedArtist, SUPPORTED_ARTISTS, type SupportedArtist } from '../../data/artists';
 import { VAT_RATE } from '../booking/amounts';
+import { computeBusinessIncomeWithholding } from '../withholdingTax';
 
 /**
  * 아티스트 월 정산(스펙 §10).
@@ -13,10 +14,10 @@ import { VAT_RATE } from '../booking/amounts';
  * refund   = 그 회차들에 대한 환불 합계
  * supply   = (gross − refund) − VAT(×10/110)
  * share    = supply × 90%
- * withhold = 원천징수 아티스트면 share × 3.3%, 사업자(세금계산서)면 0
+ * withhold = 원천징수 아티스트면 소득세(share × 3%, 절사) + 지방소득세(소득세 × 10%, 절사), 사업자(세금계산서)면 0
  * net      = share − withhold  ← 실제 이체액
  *
- * 월 10,000원 1건: gross 10,000 → supply 9,091 → share 8,182 → withhold 270 → net 7,912.
+ * 월 10,000원 1건: gross 10,000 → supply 9,091 → share 8,182 → withhold 269(245 + 24) → net 7,913.
  * 이 숫자가 아티스트 페이지의 "90%(VAT 제외) 지급" 문구의 근거다. 스튜디오 몫 909에서
  * 카드수수료(3.4% = 340)가 나간다.
  */
@@ -37,7 +38,7 @@ export const computeArtistPayout = (input: {
   const netGross = Math.max(0, input.grossAmount - input.refundAmount);
   const supplyAmount = Math.round(netGross / (1 + VAT_RATE));
   const shareAmount = Math.round((supplyAmount * ARTIST_SUPPORT_SHARE_PERCENT) / 100);
-  const withholdingAmount = input.taxType === 'withholding' ? Math.round((shareAmount * ARTIST_SUPPORT_WITHHOLDING_PERCENT) / 100) : 0;
+  const withholdingAmount = input.taxType === 'withholding' ? computeBusinessIncomeWithholding(shareAmount).total : 0;
   return {
     grossAmount: input.grossAmount,
     refundAmount: input.refundAmount,

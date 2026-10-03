@@ -7,6 +7,7 @@ import { PRIVACY_ACTOR_ADMIN } from '../privacy/accessLog';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
+import { validateTrackingInput } from './trackingValidation';
 
 /**
  * 발송 상태 전환을 관리자·개설자가 함께 쓰는 서비스로 뽑은 것.
@@ -34,7 +35,7 @@ export type FulfillmentResult =
   | { ok: true }
   | {
       ok: false;
-      code: 'not_found' | 'invalid_status' | 'not_live' | 'refund_requested' | 'conflict' | 'forbidden';
+      code: 'not_found' | 'invalid_status' | 'not_live' | 'refund_requested' | 'conflict' | 'forbidden' | 'invalid_tracking';
       message: string;
     };
 
@@ -53,6 +54,10 @@ export const setFulfillment = async (input: {
   if (!(fulfillmentStatusEnum as readonly string[]).includes(status)) {
     return { ok: false, code: 'invalid_status', message: '발송 상태가 올바르지 않습니다.' };
   }
+
+  // 택배사·운송장은 관리자·개설자 두 경로가 모두 여기를 지난다 — 길이·제어문자 검증도 한 곳이다.
+  const tracking = validateTrackingInput(input);
+  if (!tracking.ok) return { ok: false, code: 'invalid_tracking', message: tracking.message };
 
   const row = await db.query.fundingPledges.findFirst({
     where: (t, { eq }) => eq(t.id, pledgeId),
@@ -112,9 +117,9 @@ export const setFulfillment = async (input: {
   // 라우트는 지금 undefined만 넘기므로(문자열이 아니면 무조건 undefined로 변환) 이 분기는
   // 영향받지 않는다 — null을 실제로 보내는 것은 개설자 경로(다음 태스크)뿐이다.
   const trackingCompany = input.trackingCompany === undefined
-    ? pledge.trackingCompany : (input.trackingCompany || null);
+    ? pledge.trackingCompany : (input.trackingCompany?.trim() || null);
   const trackingNumber = input.trackingNumber === undefined
-    ? pledge.trackingNumber : (input.trackingNumber || null);
+    ? pledge.trackingNumber : (input.trackingNumber?.trim() || null);
 
   /**
    * delivered_at은 약관 제13조가 약속한 '리워드 전달 완료 후 1년 파기'의 기산점이다.

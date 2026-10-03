@@ -1,5 +1,5 @@
 import type { IronSession } from 'iron-session';
-import { eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
 import { getDb } from '../../db/client';
@@ -96,7 +96,29 @@ export const loginCreatorSessionFromContext = async (
   await session.save();
 };
 
+/**
+ * 로그아웃은 쿠키를 지우는 데서 끝나지 않는다 — iron-session 쿠키는 서버가 끊을 수 없어,
+ * 지우기만 하면 유출된 쿠키가 만료(최대 7일)까지 살아 있다. 그래서 DB의 `session_version`을
+ * 올려 같은 판본을 든 쿠키를 전부 죽인다(`creatorAccountDecision.ts`의 이메일 변경과 같은 방식).
+ *
+ * **부작용: 이 개설자의 다른 기기 세션도 함께 끊긴다.** 판본이 계정 단위라 한 기기만 골라
+ * 끊을 수 없다.
+ *
+ * 올리는 조건에 쿠키의 판본을 건다(`session_version = <쿠키 판본>`) — 이미 무효인 옛 쿠키로
+ * 로그아웃을 눌러도 지금 로그인 중인 세션을 끊지 못한다. DB 실패는 쿠키 파기를 막지 않는다.
+ */
 export const logoutCreatorSession = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
   const session = await getCreatorSession(req, res);
+  const creatorId = readCreatorId(session);
+  const cookieVersion = readCreatorSessionVersion(session);
+  if (creatorId && cookieVersion !== null) {
+    try {
+      await getDb().update(fundingCreators)
+        .set({ sessionVersion: sql`session_version + 1` })
+        .where(and(eq(fundingCreators.id, creatorId), eq(fundingCreators.sessionVersion, cookieVersion)));
+    } catch (error) {
+      console.error('[funding] 로그아웃 세션 판본 갱신 실패', error);
+    }
+  }
   session.destroy();
 };

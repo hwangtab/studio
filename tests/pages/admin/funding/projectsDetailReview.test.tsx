@@ -135,7 +135,7 @@ describe('승인 확인창', () => {
     fireEvent.change(screen.getByDisplayValue('demo-project'), { target: { value: 'new-slug' } });
     fireEvent.click(screen.getByRole('button', { name: '승인' }));
     expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('/funding/new-slug'));
-    expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'approve', slug: 'new-slug' });
+    expect(patchFundingProject).toHaveBeenCalledWith('proj-1', { action: 'approve', slug: 'new-slug', expectedSubmittedAt: '2026-09-10T00:00:00.000Z' });
     // 판정 뒤 setSuccess 등 상태 갱신이 act 밖에서 일어나지 않도록 완료까지 기다린다.
     expect(await screen.findByText(/승인했습니다/)).toBeInTheDocument();
   });

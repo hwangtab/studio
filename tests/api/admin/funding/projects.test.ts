@@ -41,6 +41,8 @@ import {
   sendPublicStatusOperatorFallback,
 } from '../../../../lib/funding/reviewEmail';
 
+const SUBMITTED_AT = '2026-09-10T00:00:00.000Z';
+
 const call = async (method: string, query: unknown, body: unknown) => {
   const json = jest.fn();
   const status = jest.fn().mockReturnValue({ json });
@@ -84,7 +86,7 @@ beforeEach(() => {
 
 it('인증 없음 → 401', async () => {
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(401);
 });
 
@@ -106,7 +108,7 @@ it('Cache-Control: no-store', async () => {
   const res = { setHeader, status, revalidate: jest.fn() } as unknown as NextApiResponse;
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   await handler(
-    { method: 'PATCH', query: { id: 'proj-1' }, body: { action: 'approve' }, headers: {}, socket: {} } as unknown as NextApiRequest,
+    { method: 'PATCH', query: { id: 'proj-1' }, body: { action: 'approve', expectedSubmittedAt: SUBMITTED_AT }, headers: {}, socket: {} } as unknown as NextApiRequest,
     res,
   );
   expect(setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
@@ -114,7 +116,7 @@ it('Cache-Control: no-store', async () => {
 
 it('없는 id → decideProject의 not_found를 404로 옮긴다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: false, code: 'not_found', message: '프로젝트를 찾을 수 없습니다.' });
-  const r = await call('PATCH', { id: 'ghost' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'ghost' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(404);
 });
 
@@ -126,7 +128,7 @@ it('없는 id → decideProject의 not_found를 404로 옮긴다', async () => {
  */
 it('submitted가 아닌 프로젝트 판정 → 409이고 후속 쓰기(재검증·메일)가 없다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: false, code: 'conflict', message: '지금 상태에서는 그 판정을 할 수 없습니다.' });
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(409);
   expect(revalidateFundingPaths).not.toHaveBeenCalled();
   expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
@@ -135,24 +137,24 @@ it('submitted가 아닌 프로젝트 판정 → 409이고 후속 쓰기(재검�
 it('invalid_slug·duplicate_slug·incomplete·expired → 400', async () => {
   for (const code of ['invalid_slug', 'duplicate_slug', 'incomplete', 'expired'] as const) {
     (decideProject as jest.Mock).mockResolvedValue({ ok: false, code, message: '사유' });
-    const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+    const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
     expect(r.status).toBe(400);
   }
 });
 
 it('승인 성공 → 200, revalidate·메일 호출, warnings 없음', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', slug: 'demo' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT, slug: 'demo' });
   expect(r.status).toBe(200);
   expect(r.body).toEqual({ ok: true });
-  expect(decideProject).toHaveBeenCalledWith('proj-1', 'approve', { note: undefined, slug: 'demo' }, expect.any(Date));
+  expect(decideProject).toHaveBeenCalledWith('proj-1', 'approve', { note: undefined, slug: 'demo', expectedSubmittedAt: SUBMITTED_AT }, expect.any(Date));
   expect(revalidateFundingPaths).toHaveBeenCalledWith(expect.anything(), 'demo');
   expect(sendReviewDecisionEmail).toHaveBeenCalledWith(BASE_PROJECT, 'approve', null, 'demo');
 });
 
 it('보완 요청·반려는 revalidate를 부르지 않는다(승인만 공개 화면을 바꾼다)', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
-  await call('PATCH', { id: 'proj-1' }, { action: 'request_changes', note: '사진을 바꿔주세요' });
+  await call('PATCH', { id: 'proj-1' }, { action: 'request_changes', expectedSubmittedAt: SUBMITTED_AT, note: '사진을 바꿔주세요' });
   expect(revalidateFundingPaths).not.toHaveBeenCalled();
   expect(sendReviewDecisionEmail).toHaveBeenCalledWith(BASE_PROJECT, 'request_changes', '사진을 바꿔주세요', 'demo');
 });
@@ -161,7 +163,7 @@ it('보완 요청·반려는 revalidate를 부르지 않는다(승인만 공개 
 it('재검증이 실패해도 200이고 warnings에 사유가 있다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (revalidateFundingPaths as jest.Mock).mockResolvedValue('재검증 실패: /ko/funding');
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(200);
   expect(r.body.ok).toBe(true);
   expect(r.body.warnings).toContain('재검증 실패: /ko/funding');
@@ -171,7 +173,7 @@ it('재검증이 실패해도 200이고 warnings에 사유가 있다', async () 
 it('메일이 실패해도 200이고 warnings에 사유가 있다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue('creator:5xx');
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'reject', note: '사유' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'reject', expectedSubmittedAt: SUBMITTED_AT, note: '사유' });
   expect(r.status).toBe(200);
   expect(r.body.ok).toBe(true);
   expect(r.body.warnings).toContain('creator:5xx');
@@ -181,7 +183,7 @@ it('decideProject의 warnings(시작일 경과)도 응답 warnings에 합쳐진�
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo', warnings: ['시작일이 이미 지나 승인 즉시 모금이 시작됩니다.'] });
   (revalidateFundingPaths as jest.Mock).mockResolvedValue('재검증 실패: /ko/funding');
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue('creator:5xx');
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(200);
   expect(r.body.warnings).toEqual([
     '시작일이 이미 지나 승인 즉시 모금이 시작됩니다.',
@@ -193,7 +195,7 @@ it('decideProject의 warnings(시작일 경과)도 응답 warnings에 합쳐진�
 /** decideProject가 unique 제약 예외를 던지면(경합) 500이 아니라 409로 바뀐다. */
 it('decideProject가 slug unique 제약 예외를 던지면(경합) 500이 아니라 409', async () => {
   (decideProject as jest.Mock).mockRejectedValue(new Error('UNIQUE constraint failed: funding_projects.slug'));
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', slug: 'demo' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT, slug: 'demo' });
   expect(r.status).toBe(409);
   expect(r.body.ok).toBe(false);
   expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
@@ -207,7 +209,7 @@ it('decideProject가 slug unique 제약 예외를 던지면(경합) 500이 아�
  */
 it('decideProject가 slug와 무관한 예외를 던지면 500이고 "주소 중복" 메시지가 아니다', async () => {
   (decideProject as jest.Mock).mockRejectedValue(new Error('libsql: connection closed'));
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', slug: 'demo' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT, slug: 'demo' });
   expect(r.status).toBe(500);
   expect(r.body.ok).toBe(false);
   expect(r.body.message).not.toMatch(/주소를 먼저 사용/);
@@ -216,7 +218,7 @@ it('decideProject가 slug와 무관한 예외를 던지면 500이고 "주소 중
 
 it('보완 요청·반려 경로에서 예외가 나도 "주소 중복" 409가 아니라 500이다(슬러그와 무관한 경로)', async () => {
   (decideProject as jest.Mock).mockRejectedValue(new Error('unexpected failure'));
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'reject', note: '사유' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'reject', expectedSubmittedAt: SUBMITTED_AT, note: '사유' });
   expect(r.status).toBe(500);
 });
 
@@ -227,7 +229,7 @@ it('보완 요청·반려 경로에서 예외가 나도 "주소 중복" 409가 �
 it('판정 성공 뒤 프로젝트를 다시 읽지 못하면(null) 200이되 경고를 남기고 메일을 보내지 않는다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (loadProjectForAdmin as jest.Mock).mockResolvedValue(null);
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(200);
   expect(r.body.warnings).toContain('개설자 정보를 다시 읽지 못해 알림 메일을 보내지 못했습니다.');
   expect(sendReviewDecisionEmail).not.toHaveBeenCalled();
@@ -237,7 +239,7 @@ it('판정 성공 뒤 프로젝트를 다시 읽지 못하면(null) 200이되 �
 it('개설자 메일 실패 → 운영자 폴백 알림을 보낸다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue('creator:5xx');
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(200);
   expect(sendReviewDecisionOperatorFallback).toHaveBeenCalledWith(BASE_PROJECT, 'approve', 'demo', 'creator:5xx');
   expect(r.body.warnings).toContain('creator:5xx');
@@ -248,7 +250,7 @@ it('개설자 메일과 운영자 폴백이 둘 다 실패하면 두 사유가 �
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (sendReviewDecisionEmail as jest.Mock).mockResolvedValue('creator:5xx');
   (sendReviewDecisionOperatorFallback as jest.Mock).mockResolvedValue('operator:TIMEOUT');
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(200);
   expect(r.body.warnings).toContain('creator:5xx');
   expect(r.body.warnings.some((w: string) => w.includes('operator:TIMEOUT'))).toBe(true);
@@ -258,7 +260,7 @@ it('개설자 메일과 운영자 폴백이 둘 다 실패하면 두 사유가 �
 it('revalidateFundingPaths가 예외를 던져도 200이고 경고를 남긴다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (revalidateFundingPaths as jest.Mock).mockRejectedValue(new Error('boom'));
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'approve', expectedSubmittedAt: SUBMITTED_AT });
   expect(r.status).toBe(200);
   expect(r.body.ok).toBe(true);
   expect(r.body.warnings.some((w: string) => w.includes('재검증'))).toBe(true);
@@ -268,7 +270,7 @@ it('revalidateFundingPaths가 예외를 던져도 200이고 경고를 남긴다'
 it('sendReviewDecisionEmail이 예외를 던져도 200이고 경고를 남긴다', async () => {
   (decideProject as jest.Mock).mockResolvedValue({ ok: true, slug: 'demo' });
   (sendReviewDecisionEmail as jest.Mock).mockRejectedValue(new Error('boom'));
-  const r = await call('PATCH', { id: 'proj-1' }, { action: 'reject', note: '사유' });
+  const r = await call('PATCH', { id: 'proj-1' }, { action: 'reject', expectedSubmittedAt: SUBMITTED_AT, note: '사유' });
   expect(r.status).toBe(200);
   expect(r.body.ok).toBe(true);
   expect(r.body.warnings.some((w: string) => w.includes('재검증·메일 처리 중 오류'))).toBe(true);
@@ -540,4 +542,13 @@ describe('스튜디오 서비스(set_studio_service·set_design_fee_paid)', () =
     expect(spy).toHaveBeenCalled();
     spy.mockRestore();
   });
+});
+
+it('expectedSubmittedAt 없이 보낸 판정은 400이고 decideProject를 부르지 않는다', async () => {
+  (decideProject as jest.Mock).mockClear();
+  for (const body of [{ action: 'approve' }, { action: 'reject', note: '사유' }, { action: 'request_changes', note: '사유' }]) {
+    const r = await call('PATCH', { id: 'proj-1' }, body);
+    expect(r.status).toBe(400);
+  }
+  expect(decideProject).not.toHaveBeenCalled();
 });

@@ -26,6 +26,8 @@ import { parseFundingProject } from './projects';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 // eslint-disable-next-line import/first
 import { remainingRefundable } from './refundable';
+// eslint-disable-next-line import/first
+import { aggregateAdminFundingTotals } from './admin-list';
 
 const MIGRATIONS = path.join(process.cwd(), 'drizzle/migrations');
 const NOW = new Date('2026-10-15T03:00:00Z');
@@ -113,6 +115,34 @@ describe('refundFundingLine', () => {
     expect((await aggregateProjectStatus(PROJECT, NOW)).remaining.book).toBe(1);
     expect(sendFundingLineRefundEmails).toHaveBeenCalledWith(expect.anything(), expect.anything(),
       { rewardTitle: '시집', quantity: 1, amount: 13000, reason: '청약철회' });
+  });
+
+  it('같은 줄을 동시에 1개씩 두 번 돌려주면 토스 멱등 키가 서로 다르다', async () => {
+    const orderNo = await paidOrder();
+    let cancelled = 0;
+    (cancelPayment as jest.Mock).mockImplementation(async ({ cancelAmount }: { cancelAmount: number }) => {
+      cancelled += cancelAmount;
+      return { ok: true, payment: { cancels: [{ transactionKey: `tx${cancelled}`, cancelAmount: cancelled }] } };
+    });
+    const results = await Promise.all([
+      refundFundingLine({ orderNo, rewardId: 'book', quantity: 1, reason: 'a' }),
+      refundFundingLine({ orderNo, rewardId: 'book', quantity: 1, reason: 'b' }),
+    ]);
+    expect(results.every((r) => r.ok)).toBe(true);
+    const keys = (cancelPayment as jest.Mock).mock.calls.map((c) => c[0].idempotencyKey).sort();
+    expect(keys).toEqual([`line-refund:${orderNo}:book:1`, `line-refund:${orderNo}:book:2`]);
+  });
+
+  it('부분 환불한 금액만큼 공개 모금액과 관리자 확정 금액이 줄어든다 — 건수는 그대로', async () => {
+    const orderNo = await paidOrder();
+    expect((await aggregateProjectStatus(PROJECT, NOW)).raisedAmount).toBe(36000);
+    tossOk(13000);
+    await refundFundingLine({ orderNo, rewardId: 'book', quantity: 1, reason: '청약철회' });
+    const status = await aggregateProjectStatus(PROJECT, NOW);
+    expect(status.raisedAmount).toBe(36000 - 13000);
+    expect(status.backerCount).toBe(1);
+    const totals = await aggregateAdminFundingTotals('demo');
+    expect(totals).toMatchObject({ confirmedAmount: 36000 - 13000, confirmedCount: 1 });
   });
 
   it('남은 수량보다 많이는 못 돌려준다', async () => {

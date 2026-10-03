@@ -129,49 +129,41 @@ describe('MarkdownImage 치수 힌트', () => {
  * next/image에 그대로 넘기면 렌더 중 throw한다(next.config.mjs의 remotePatterns 밖).
  * 등록 안 된 호스트는 next/image 대신 평범한 <img>로 강등한다.
  */
-describe('등록 안 된 원격 호스트는 <img>로 강등', () => {
-  it('알 수 없는 절대 URL은 next/image 대신 평범한 img를 렌더한다', () => {
-    render(<MarkdownImage src="https://evil.example.com/x.jpg" alt="외부" />);
-    const img = screen.getByAltText('외부');
-    expect(img.tagName).toBe('IMG');
-    expect(img).not.toHaveAttribute('data-fill');
-    expect(img).toHaveAttribute('loading', 'lazy');
-    expect(img).toHaveAttribute('decoding', 'async');
+describe('등록 안 된 원격 호스트는 자동으로 불러오지 않는다', () => {
+  const expectBlocked = (src: string, alt: string, href: string) => {
+    const { container } = render(<MarkdownImage src={src} alt={alt} />);
+    expect(container.querySelector('img')).toBeNull();
+    const link = screen.getByRole('link', { name: `이미지 보기: ${alt}` });
+    expect(link).toHaveAttribute('href', href);
+    expect(link).toHaveAttribute('target', '_blank');
+    expect(link).toHaveAttribute('rel', 'noopener noreferrer nofollow');
+    expect(link).toHaveTextContent(alt);
+  };
+
+  it('알 수 없는 절대 URL은 img가 아니라 외부 링크로 렌더한다', () => {
+    expectBlocked('https://evil.example.com/x.jpg', '외부', 'https://evil.example.com/x.jpg');
   });
 
-  it('등록된 호스트(remotePatterns)의 절대 URL은 next/image를 그대로 쓴다', () => {
+  it('치수 힌트가 있어도 불러오지 않는다', () => {
+    expectBlocked('https://evil.example.com/x.jpg?w=800&h=600', '외부치수', 'https://evil.example.com/x.jpg?w=800&h=600');
+  });
+
+  it('프로토콜 상대 주소(//host)도 외부로 취급한다', () => {
+    expectBlocked('//evil.example.com/p.gif', '상대', 'https://evil.example.com/p.gif');
+  });
+
+  it('http://는 등록된 호스트라도 불러오지 않는다', () => {
+    expectBlocked('http://img.tumblbug.com/x.jpg', 'http텀블벅', 'http://img.tumblbug.com/x.jpg');
+  });
+
+  it('등록된 호스트의 https://는 next/image를 쓴다', () => {
     render(<MarkdownImage src="https://img.tumblbug.com/x.jpg" alt="텀블벅" />);
-    const img = screen.getByAltText('텀블벅');
-    expect(img).toHaveAttribute('data-fill', 'true');
+    expect(screen.getByAltText('텀블벅')).toHaveAttribute('data-fill', 'true');
+    expect(screen.queryByRole('link')).toBeNull();
   });
 
-  it('/로 시작하는 같은 출처 경로는 등록 목록과 무관하게 next/image를 쓴다', () => {
+  it('/로 시작하는 같은 출처 경로는 next/image를 쓴다', () => {
     render(<MarkdownImage src="/api/funding/media/x.webp" alt="같은출처" />);
-    const img = screen.getByAltText('같은출처');
-    expect(img).toHaveAttribute('data-fill', 'true');
-  });
-
-  it('알 수 없는 호스트라도 로컬 메타데이터/치수 힌트가 있으면 그 치수로 img를 렌더한다', () => {
-    render(<MarkdownImage src="https://evil.example.com/x.jpg?w=800&h=600" alt="외부치수" />);
-    const img = screen.getByAltText('외부치수');
-    expect(img.tagName).toBe('IMG');
-    expect(img).toHaveAttribute('width', '800');
-    expect(img).toHaveAttribute('height', '600');
-  });
-
-  // remotePatterns 항목은 전부 protocol: 'https'로 등록돼 있고 next/image 매칭은
-  // 프로토콜까지 본다. 호스트만 보고 통과시키면 등록된 호스트의 http:// 주소가
-  // next/image로 가서 "hostname is not configured"로 throw한다(2026-09-17 재리뷰).
-  it('등록된 호스트라도 http://면 next/image 대신 img로 강등한다', () => {
-    render(<MarkdownImage src="http://img.tumblbug.com/x.jpg" alt="http텀블벅" />);
-    const img = screen.getByAltText('http텀블벅');
-    expect(img.tagName).toBe('IMG');
-    expect(img).not.toHaveAttribute('data-fill');
-  });
-
-  it('등록된 호스트의 https://는 여전히 next/image를 쓴다', () => {
-    render(<MarkdownImage src="https://img.tumblbug.com/x.jpg" alt="https텀블벅" />);
-    const img = screen.getByAltText('https텀블벅');
-    expect(img).toHaveAttribute('data-fill', 'true');
+    expect(screen.getByAltText('같은출처')).toHaveAttribute('data-fill', 'true');
   });
 });

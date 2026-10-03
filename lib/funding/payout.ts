@@ -1,8 +1,9 @@
 import { and, eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
-import { FUNDING_PLATFORM_FEE_PERCENT, FUNDING_PAYMENT_FEE_PERCENT, FUNDING_WITHHOLDING_PERCENT } from '../../data/pricing';
+import { FUNDING_PLATFORM_FEE_PERCENT, FUNDING_PAYMENT_FEE_PERCENT } from '../../data/pricing';
 import { VAT_RATE } from '../booking/amounts';
+import { computeBusinessIncomeWithholding } from '../withholdingTax';
 import {
   fundingCreators, fundingProjectPayouts, fundingProjects,
   type FundingProjectPayout, type fundingCreatorTaxTypeEnum,
@@ -45,7 +46,7 @@ export type FundingCreatorTaxType = (typeof fundingCreatorTaxTypeEnum)[number];
  *
  * 100만원 모금·환불 0: platformFee 55,000 · paymentFee 33,000 → feeAmount 88,000 →
  *   사업자   — shareAmount 912,000(세금계산서 대상) → netAmount 912,000
- *   원천징수 — vatDeductionAmount 82,909 → shareAmount 829,091 → withholdingAmount 27,360 → netAmount 801,731
+ *   원천징수 — vatDeductionAmount 82,909 → shareAmount 829,091 → withholdingAmount 27,359(소득세 24,872 + 지방소득세 2,487) → netAmount 801,732
  *
  * **설계비·제작비 공제**(2026-09-28 운영자 결정, 개설자 약관 제6조) — 스튜디오에 설계·제작을
  * 맡기고 정산 때 받기로 한 대금(부가세 포함)은 **원천징수까지 뺀 금액에서** 뺀다. 개설자가
@@ -108,7 +109,8 @@ export const applyServiceCharges = (available: number, charges: FundingServiceCh
  */
 const splitCreatorShare = (afterFees: number, taxType: FundingCreatorTaxType, charges: FundingServiceCharges) => {
   const shareAmount = taxType === 'withholding' ? Math.round(afterFees / (1 + VAT_RATE)) : afterFees;
-  const withholdingAmount = taxType === 'withholding' ? Math.round((shareAmount * FUNDING_WITHHOLDING_PERCENT) / 100) : 0;
+  // 소득세 3%·지방소득세 10%를 각각 절사한다(lib/withholdingTax.ts) — 신고·납부하는 금액과 같아야 한다.
+  const withholdingAmount = taxType === 'withholding' ? computeBusinessIncomeWithholding(shareAmount).total : 0;
   return {
     vatDeductionAmount: afterFees - shareAmount,
     shareAmount,
@@ -236,14 +238,13 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
  *
  * **집계 기준은 공개 상세(`aggregateProjectStatus`)와 같다** — 같은
  * `LIVE_FUNDING_ORDER_STATUSES`(paid·partially_refunded) 집합, 같은
- * `orders ⋈ funding_pledges` 조인, 같은 `SUM(o.total_amount)`. 기준이 갈리면 공개 모금액과
- * 정산액이 어긋나고, 그건 개설자가 즉시 알아채는 종류의 사고다.
+ * `orders ⋈ funding_pledges` 조인. 기준이 갈리면 공개 모금액과 정산액이 어긋나고, 그건
+ * 개설자가 즉시 알아채는 종류의 사고다.
  *
- * 한 가지만 다르다: 환불을 **별도 항목으로 뺀다.** `aggregateProjectStatus`는 부분환불을
- * 차감하지 않는데(폴링 핫 경로라 payments·refunds 조인을 피한다 — 그 함수의 주석이 그렇게
- * 적고 있고, 오차가 상향이라 감수한다), 정산은 실제로 나갈 돈을 정하는 자리라 감수할 수
- * 없다. 그래서 `grossAmount`는 공개 모금액과 같은 수이고 환불은 `refundAmount`로 따로
- * 드러난다 — 두 숫자를 나란히 보여 주면 차이가 설명된다.
+ * 표시만 다르다: 공개 모금액은 부분환불 주문의 done 환불을 이미 뺀 한 숫자이고, 정산은
+ * `grossAmount`(Σ total_amount)와 `refundAmount`를 따로 드러낸다 — 실제로 나갈 돈을 정하는
+ * 자리라 차이를 나란히 보여 준다. 그래서 공개 모금액 = `grossAmount − refundAmount`다
+ * (살아 있는 주문의 done 환불이 전부 부분환불 주문에 붙어 있는 한).
  *
  * 기록(`funding_project_payouts`)이 이미 있으면 함께 돌려준다. 있으면 그 값이 정본이고
  * 미리보기는 참고용이다(기록 뒤 환불이 들어오면 둘이 갈린다 — 화면이 그 차이를 보여준다).
@@ -349,8 +350,23 @@ export type RecordFundingPayoutResult =
   | { ok: false; code: 'payout_account_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
   /** 주민등록번호 쪽 같은 일. 계좌와 **같은 구조**여야 다음 사람이 한쪽만 고치지 않는다. */
   | { ok: false; code: 'resident_number_unreadable'; cryptoCode: FieldCryptoErrorCode | 'unknown' }
-  /** 화면이 보여 준 실이체액과 지금 다시 계산한 값이 다르다. 두 금액을 함께 돌려준다. */
+  /**
+   * 화면이 보여 준 금액(실이체액·설계비/제작비 공제액·차액)과 지금 다시 계산한 값이 하나라도
+   * 다르다. 실이체액 두 값을 함께 돌려준다 — 둘이 같으면 공제액이나 차액만 바뀐 것이다.
+   */
   | { ok: false; code: 'amount_changed'; expectedNetAmount: number; netAmount: number };
+
+/**
+ * 관리자 화면이 운영자에게 보여 주고 확인받은 금액. 서버는 이 값을 기록하지 않고 다시 계산한
+ * 값과 대조만 한다. 실이체액만 대조하면, 화면을 본 뒤 다른 운영자가 약정 제작비를 바꿔도
+ * 실이체액이 0원으로 같을 때 확인하지 않은 공제액·차액이 불변 행으로 굳는다.
+ */
+export interface ExpectedPayoutAmounts {
+  netAmount: number;
+  designFeeOffsetAmount: number;
+  productionFeeOffsetAmount: number;
+  shortfallAmount: number;
+}
 
 /**
  * 저장된 주민등록번호를 **지금 이 서버가 열 수 있는가.**
@@ -518,9 +534,10 @@ const payoutAccountReadable = async (
  *   다 덮었다). 할 일이 없다. 설계·제작 대금을 빼서 0이 된 정산은 기록한다(장부에 남아야 한다).
  * - `services_unavailable` — 설계·제작 대금 기록을 읽지 못했다(마이그레이션 0041 미적용이나 DB
  *   장애). 합의한 공제를 모른 채 전액을 불변으로 기록하지 않는다.
- * - `amount_changed` — 화면이 보여 준 실이체액과 지금 계산한 값이 다르다. 아래 `expectedNetAmount` 설명 참고.
+ * - `amount_changed` — 화면이 보여 준 금액과 지금 계산한 값이 다르다. 아래 `expected` 설명 참고.
  *
- * `expectedNetAmount`는 호출부(관리자 화면)가 **운영자에게 보여 주고 확인받은** 실이체액이다.
+ * `expected`는 호출부(관리자 화면)가 **운영자에게 보여 주고 확인받은** 실이체액·설계비/제작비
+ * 공제액·차액이다(`ExpectedPayoutAmounts`).
  * 이 함수는 미리보기를 다시 돌려 그 결과를 INSERT하므로, 페이지를 띄운 순간과 버튼을
  * 누른 순간 사이에 환불이 한 건 `done`이 되면 확인창과 기록이 갈라버린다 — 마감 뒤 정산까지
  * 영업일로 여러 날을 기다렸다 기록하는 설계(`lib/funding/policy.ts`)라 흔한 경로다. 이 표는 불변이라
@@ -530,7 +547,7 @@ const payoutAccountReadable = async (
 export const recordFundingPayout = async (
   projectId: string,
   now: Date,
-  expectedNetAmount: number,
+  expected: ExpectedPayoutAmounts,
   /**
    * 이 기록을 요청한 쪽의 IP(`getClientIp`). 주민등록번호 복호화 점검이 남기는 접속기록에
    * 들어간다. 요청 밖에서 부르는 경로(테스트·스크립트)는 넘기지 않아도 되고, 그때는 IP가
@@ -577,8 +594,13 @@ export const recordFundingPayout = async (
    */
   const offsetTotal = preview.designFeeOffsetAmount + preview.productionFeeOffsetAmount;
   if (preview.netAmount <= 0 && offsetTotal <= 0) return { ok: false, code: 'nothing_to_pay' };
-  if (preview.netAmount !== expectedNetAmount) {
-    return { ok: false, code: 'amount_changed', expectedNetAmount, netAmount: preview.netAmount };
+  if (
+    preview.netAmount !== expected.netAmount ||
+    preview.designFeeOffsetAmount !== expected.designFeeOffsetAmount ||
+    preview.productionFeeOffsetAmount !== expected.productionFeeOffsetAmount ||
+    preview.shortfallAmount !== expected.shortfallAmount
+  ) {
+    return { ok: false, code: 'amount_changed', expectedNetAmount: expected.netAmount, netAmount: preview.netAmount };
   }
 
   try {

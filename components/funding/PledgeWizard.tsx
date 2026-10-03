@@ -387,6 +387,21 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
     agreedRequiredTerms,
   } = useTossPaymentWidgets(preview.totalAmount);
 
+  /**
+   * 담기·빼기·접기를 누르면 그 버튼이 사라지거나 다른 자리로 옮겨 가 키보드 포커스가 body로
+   * 빠진다(모달 안에서는 트랩 밖이 된다). 포커스가 body로 떨어졌을 때만 리워드 구획으로
+   * 옮긴다 — 다른 입력칸에 포커스가 있으면 건드리지 않는다. 첫 렌더에는 돌지 않는다.
+   */
+  const rewardsRegionRef = useRef<HTMLFieldSetElement>(null);
+  const cartSignature = `${lines.map((l) => l.reward.id).join(',')}|${showAllRewards}`;
+  const cartSignatureRef = useRef(cartSignature);
+  useEffect(() => {
+    if (cartSignatureRef.current === cartSignature) return;
+    cartSignatureRef.current = cartSignature;
+    const active = document.activeElement;
+    if (!active || active === document.body) rewardsRegionRef.current?.focus();
+  }, [cartSignature]);
+
   const submit = async () => {
     // 재진입 가드는 **ref**여야 한다. `submitting` 상태는 비동기로 갱신돼서, 같은 tick에
     // 두 번 불리면(수량 칸에서 Enter 연타·키 리피트) 둘 다 통과해 pending 주문이 두 건
@@ -523,6 +538,11 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
   const handleNumericEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
+    // 제출 버튼이 disabled인 동안(위젯이 안 떴거나 담은 것이 없음)은 Enter도 제출하지 않는다.
+    // 안 막으면 위젯이 없어 동의 상태를 못 받은 것(`agreedRequiredTerms === null`)이 "약관을
+    // 빼먹었다"로 읽혀, 후원자가 고칠 수 없는 약관 문구를 본다. 위젯이 떴는데 건드리지 않은
+    // null은 그대로 submit()이 막고 안내한다.
+    if (!paymentReady || lines.length === 0) return;
     void submit();
   };
 
@@ -585,7 +605,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
         파일에 명시하게 했다(lib/funding/shape.ts addOn). 담은 것이 없으면(전부 뺐거나 품절로
         시작) 목록을 펼쳐서 보여 준다.
       */}
-      <fieldset className={cardClass} aria-labelledby={`${uid}-step-reward`}>
+      <fieldset ref={rewardsRegionRef} tabIndex={-1} className={`${cardClass} focus:outline-none`} aria-labelledby={`${uid}-step-reward`}>
         <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint={lines.length > 0 ? '담은 리워드입니다. 수량을 바꾸거나 다른 리워드를 함께 담을 수 있습니다.' : '펀딩할 리워드를 담아 주세요.'} />
         {stockNotice && (
           <p role="status" className="mb-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">{stockNotice}</p>

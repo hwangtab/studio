@@ -58,14 +58,14 @@ describe('subscriptionOrderName', () => {
 });
 
 describe('computeArtistPayout — 스펙 §10 예시', () => {
-  it('월 10,000원 1건, 원천징수: 7,912원 실수령', () => {
+  it('월 10,000원 1건, 원천징수: 7,913원 실수령', () => {
     expect(computeArtistPayout({ grossAmount: 10000, refundAmount: 0, taxType: 'withholding' })).toEqual({
       grossAmount: 10000,
       refundAmount: 0,
       supplyAmount: 9091,
       shareAmount: 8182,
-      withholdingAmount: 270,
-      netAmount: 7912,
+      withholdingAmount: 269, // 소득세 245(8,182 × 3% 절사) + 지방소득세 24
+      netAmount: 7913,
     });
   });
 
@@ -78,7 +78,7 @@ describe('computeArtistPayout — 스펙 §10 예시', () => {
   it('환불은 총액에서 먼저 뺀다 — 환불된 돈의 90%를 지급하지 않는다', () => {
     const p = computeArtistPayout({ grossAmount: 20000, refundAmount: 10000, taxType: 'withholding' });
     expect(p.supplyAmount).toBe(9091);
-    expect(p.netAmount).toBe(7912);
+    expect(p.netAmount).toBe(7913);
   });
 
   it('환불이 총액을 넘어도 음수로 떨어지지 않는다', () => {

@@ -112,7 +112,7 @@ beforeEach(() => {
   (purgeExpiredWorkOrderCustomerNotes as jest.Mock).mockResolvedValue({ purged: 10 });
   (purgeExpiredAvailabilityBlockMemos as jest.Mock).mockResolvedValue({ purged: 11 });
   (purgeExpiredSubscriptionPaymentMessages as jest.Mock).mockResolvedValue({ purged: 12 });
-  (sendEmail as jest.Mock).mockResolvedValue(undefined);
+  (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
 });
 
 afterEach(() => jest.restoreAllMocks());
@@ -172,6 +172,15 @@ it('법정 보존 기록의 파기가 실패해도 자유기재 메모 파기는
   expect(purgeExpiredBookingCustomerNotes).toHaveBeenCalledTimes(1);
   expect(purgeExpiredAvailabilityBlockMemos).toHaveBeenCalledTimes(1);
   expect(r.body).toMatchObject({ purgedRefundReasons: null, purgedAvailabilityBlockMemos: 11 });
+});
+
+it('운영자 알림 발송이 던지거나 실패해도 응답은 500 그대로이고 console.error에 남는다', async () => {
+  const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  (purgeExpiredSubscriptionCustomerData as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+  (sendEmail as jest.Mock).mockRejectedValue(new Error('network down'));
+  const r = await call();
+  expect(r.status).toBe(500);
+  expect(errSpy).toHaveBeenCalledWith(expect.stringContaining('운영자 실패 알림 발송 실패'), expect.stringContaining('network down'));
 });
 
 it('실패 메일은 어느 파기가 왜 실패했는지 적는다', async () => {

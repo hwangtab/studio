@@ -88,7 +88,7 @@ export const listFundingOrdersForExport = async (slug: string | null): Promise<F
  * 입금 확인이 어느 쪽에도 안 잡히거나 양쪽에 잡힌다.
  */
 export interface AdminFundingTotals {
-  /** 확정(paid·partially_refunded) 후원 금액 합계. */
+  /** 확정(paid·partially_refunded) 후원 금액 합계. 부분환불 주문은 돌려준 금액을 뺀다. */
   confirmedAmount: number;
   /**
    * 확정 후원 **건수**. COUNT(*)라 같은 사람이 두 번 후원하면 2다 — '명'이 아니라 '건'이다.
@@ -132,7 +132,12 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
   const slugFilter = slug ? sql` AND fp.project_slug = ${slug}` : sql.empty();
   const rows = await db.all<TotalsRow>(sql`
     SELECT
-      COALESCE(SUM(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN o.total_amount END), 0) AS confirmed_amount,
+      -- 공개 모금액(aggregateProjectStatus)과 같은 수 — 부분환불 주문은 done 환불을 뺀다.
+      COALESCE(SUM(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN o.total_amount
+        - CASE WHEN o.status = 'partially_refunded' THEN COALESCE((
+            SELECT SUM(r.amount) FROM refunds r JOIN payments p ON p.id = r.payment_id
+            WHERE p.order_id = o.id AND r.status = 'done'
+          ), 0) ELSE 0 END END), 0) AS confirmed_amount,
       COUNT(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN 1 END) AS confirmed_count,
       COUNT(DISTINCT CASE WHEN o.status IN (${liveFundingOrderStatusList()})
         THEN ${backerIdentitySql()} END) AS confirmed_person_count,

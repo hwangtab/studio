@@ -63,6 +63,22 @@ const call = async (body: unknown, method = 'PATCH', headers: Record<string, str
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] as Record<string, unknown> };
 };
 
+/** 화면이 보내는 확인 금액 — 실이체액과 설계비·제작비 공제액·차액(payout.ts `ExpectedPayoutAmounts`). */
+const recordBody = (netAmount: number, over: Record<string, unknown> = {}) => ({
+  action: 'record_payout',
+  expectedNetAmount: netAmount,
+  expectedDesignFeeOffsetAmount: 0,
+  expectedProductionFeeOffsetAmount: 0,
+  expectedShortfallAmount: 0,
+  ...over,
+});
+const expectedAmounts = (netAmount: number) => ({
+  netAmount,
+  designFeeOffsetAmount: 0,
+  productionFeeOffsetAmount: 0,
+  shortfallAmount: 0,
+});
+
 const PAYOUT = {
   id: 'pay-1',
   projectId: 'proj-1',
@@ -109,14 +125,14 @@ afterEach(() => jest.restoreAllMocks());
 describe('record_payout', () => {
   it('인증 없으면 401이고 기록을 시도하지 않는다', async () => {
     (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: false });
-    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+    const r = await call(recordBody(PAYOUT.netAmount));
     expect(r.status).toBe(401);
     expect(recordFundingPayout).not.toHaveBeenCalled();
   });
 
   it('기록 성공 → 201, 개설자에게 메일', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
-    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+    const r = await call(recordBody(PAYOUT.netAmount));
     expect(r.status).toBe(201);
     expect(r.body).toEqual({ ok: true });
     expect(sendFundingPayoutRecordedEmail).toHaveBeenCalledWith(
@@ -141,7 +157,7 @@ describe('record_payout', () => {
     ['no_resident_number', 409],
   ])('%s → %i', async (code, expected) => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: false, code });
-    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+    const r = await call(recordBody(PAYOUT.netAmount));
     expect(r.status).toBe(expected);
     expect(r.body.code).toBe(code);
     expect(r.body.message).toEqual(expect.any(String));
@@ -150,8 +166,8 @@ describe('record_payout', () => {
 
   it('확인 금액을 그대로 recordFundingPayout에 넘긴다 — 서버가 임의로 정하지 않는다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
-    await call({ action: 'record_payout', expectedNetAmount: 777_000 });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, null, 'kyungha');
+    await call(recordBody(777_000));
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), expectedAmounts(777_000), null, 'kyungha');
   });
 
   /**
@@ -160,10 +176,10 @@ describe('record_payout', () => {
    */
   it('요청 IP를 recordFundingPayout에 함께 넘긴다 — 접속기록에 들어간다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
-    await call({ action: 'record_payout', expectedNetAmount: 777_000 }, 'PATCH', {
+    await call(recordBody(777_000), 'PATCH', {
       'x-vercel-forwarded-for': '203.0.113.7',
     });
-    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), 777_000, '203.0.113.7', 'kyungha');
+    expect(recordFundingPayout).toHaveBeenCalledWith('proj-1', expect.any(Date), expectedAmounts(777_000), '203.0.113.7', 'kyungha');
   });
 
   /**
@@ -176,6 +192,46 @@ describe('record_payout', () => {
     expect(recordFundingPayout).not.toHaveBeenCalled();
   });
 
+  /**
+   * 실이체액만 오고 공제액·차액이 빠지면 거부한다 — 실이체액이 0원으로 같은 채 약정 제작비가
+   * 바뀌는 경우를 서버가 대조할 수 없게 된다. 화면과 라우트는 같은 배포로 나간다.
+   */
+  it.each(['expectedDesignFeeOffsetAmount', 'expectedProductionFeeOffsetAmount', 'expectedShortfallAmount'])(
+    '%s가 빠지면 400 — 기록을 시도하지 않는다',
+    async (field) => {
+      const r = await call(recordBody(PAYOUT.netAmount, { [field]: undefined }));
+      expect(r.status).toBe(400);
+      expect(recordFundingPayout).not.toHaveBeenCalled();
+    },
+  );
+
+  it('공제액을 그대로 recordFundingPayout에 넘긴다', async () => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
+    await call(
+      recordBody(0, {
+        expectedDesignFeeOffsetAmount: 550_000,
+        expectedProductionFeeOffsetAmount: 251_732,
+        expectedShortfallAmount: 1_728_268,
+      }),
+    );
+    expect(recordFundingPayout).toHaveBeenCalledWith(
+      'proj-1',
+      expect.any(Date),
+      { netAmount: 0, designFeeOffsetAmount: 550_000, productionFeeOffsetAmount: 251_732, shortfallAmount: 1_728_268 },
+      null,
+      'kyungha',
+    );
+  });
+
+  it('실이체액은 같은데 공제액·차액이 바뀌었으면 409와 무엇이 바뀌었는지 말한다', async () => {
+    (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: false, code: 'amount_changed', expectedNetAmount: 0, netAmount: 0 });
+    const r = await call(recordBody(0));
+    expect(r.status).toBe(409);
+    expect(r.body.code).toBe('amount_changed');
+    expect(r.body.message).toContain('차액');
+    expect(sendFundingPayoutRecordedEmail).not.toHaveBeenCalled();
+  });
+
   it('그 사이에 금액이 바뀌면 409와 두 금액을 문구로 돌려준다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({
       ok: false,
@@ -183,7 +239,7 @@ describe('record_payout', () => {
       expectedNetAmount: 880_937,
       netAmount: 792_782,
     });
-    const r = await call({ action: 'record_payout', expectedNetAmount: 880_937 });
+    const r = await call(recordBody(880_937));
     expect(r.status).toBe(409);
     expect(r.body.code).toBe('amount_changed');
     expect(r.body.message).toContain('880,937');
@@ -195,8 +251,8 @@ describe('record_payout', () => {
     (recordFundingPayout as jest.Mock)
       .mockResolvedValueOnce({ ok: true, payout: PAYOUT })
       .mockResolvedValueOnce({ ok: false, code: 'already_recorded' });
-    expect((await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount })).status).toBe(201);
-    expect((await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount })).status).toBe(409);
+    expect((await call(recordBody(PAYOUT.netAmount))).status).toBe(201);
+    expect((await call(recordBody(PAYOUT.netAmount))).status).toBe(409);
   });
 
   /**
@@ -206,7 +262,7 @@ describe('record_payout', () => {
   it('메일이 실패해도 201 — warnings로만 알린다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     (sendFundingPayoutRecordedEmail as jest.Mock).mockResolvedValue('creator:send_failed');
-    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+    const r = await call(recordBody(PAYOUT.netAmount));
     expect(r.status).toBe(201);
     expect(r.body.warnings).toEqual(['creator:send_failed']);
     expect(sendFundingPayoutOperatorFallback).toHaveBeenCalled();
@@ -215,7 +271,7 @@ describe('record_payout', () => {
   it('메일 경로가 통째로 던져도 201 — 기록은 살아 있다', async () => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
     (loadProjectForAdmin as jest.Mock).mockRejectedValue(new Error('DB 장애'));
-    const r = await call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+    const r = await call(recordBody(PAYOUT.netAmount));
     expect(r.status).toBe(201);
     expect(r.body.warnings).toHaveLength(1);
   });
@@ -283,7 +339,7 @@ describe('mark_payout_paid', () => {
  * 재구성할 수 없다.
  */
 describe('정산 안내 메일의 계좌 복호화도 접속기록에 남는다', () => {
-  const recordCall = () => call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+  const recordCall = () => call(recordBody(PAYOUT.netAmount));
 
   beforeEach(() => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: true, payout: PAYOUT });
@@ -347,7 +403,7 @@ describe.each([
 ] as const)('%s 문구는 사유로 갈린다', (code, what) => {
   const failWith = (cryptoCode: string) => {
     (recordFundingPayout as jest.Mock).mockResolvedValue({ ok: false, code, cryptoCode });
-    return call({ action: 'record_payout', expectedNetAmount: PAYOUT.netAmount });
+    return call(recordBody(PAYOUT.netAmount));
   };
 
   it('어느 값이 안 열렸는지 말한다', async () => {

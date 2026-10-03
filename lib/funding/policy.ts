@@ -34,6 +34,9 @@ export const PLEDGE_TEXT_LIMITS = {
   shippingAddress1: 200,
   shippingAddress2: 200,
   shippingMemo: 200,
+  /** 개설자·관리자가 발송 처리에 적는 택배사·운송장(lib/funding/trackingValidation.ts). */
+  trackingCompany: 30,
+  trackingNumber: 40,
 } as const;
 export const PRIVACY_RETENTION_TEXT = '리워드 전달 완료 후 1년';
 /**

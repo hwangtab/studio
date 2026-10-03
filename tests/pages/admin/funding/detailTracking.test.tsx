@@ -101,7 +101,16 @@ it('환불 요청 취소가 덧붙인 기록이 메모 칸에 반영되고, 이�
   expect(screen.getByLabelText('관리자 메모')).toHaveValue(appended);
 
   fireEvent.click(screen.getByRole('button', { name: '메모 저장' }));
-  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'set_memo', adminMemo: appended });
+  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'set_memo', adminMemo: appended, expectedMemo: appended });
+});
+
+// expectedMemo는 textarea가 아니라 **로드한 시점의 서버 메모**다 — 서버가 낙관적 조건으로 쓴다.
+it('메모를 고쳐 저장하면 expectedMemo에는 로드한 원문이 실린다', () => {
+  (patchPledge as jest.Mock).mockReset().mockResolvedValue({ ok: true });
+  render(<AdminFundingDetailPage pledge={{ ...PLEDGE, adminMemo: '로드한 메모' }} refundableAmount={30000} />);
+  fireEvent.change(screen.getByLabelText('관리자 메모'), { target: { value: '고친 메모' } });
+  fireEvent.click(screen.getByRole('button', { name: '메모 저장' }));
+  expect(patchPledge).toHaveBeenCalledWith('order-1', { action: 'set_memo', adminMemo: '고친 메모', expectedMemo: '로드한 메모' });
 });
 
 // 서버 값이 그대로인 액션에서는 아직 저장하지 않은 입력이 지워지면 안 된다.

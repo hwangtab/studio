@@ -47,10 +47,18 @@ export default function RewardModal({ project, reward, checkout = false, remaini
   const isOpen = reward !== null || checkout;
 
   // 리워드가 바뀌면 상세부터, 결제 화면으로 바로 연 경우는 결제부터 시작한다.
-  useEffect(() => {
-    if (reward) setStep('detail');
-    else if (checkout) setStep('pledge');
-  }, [reward, checkout]);
+  // effect가 아니라 **렌더 중에** 맞춘다 — effect는 첫 렌더 뒤에 돌아서, 모달을 닫았다 다른
+  // 리워드로 다시 열 때 이전 단계('pledge')가 한 프레임 그려지며 결제폼이 마운트됐다 사라졌다.
+  const stepKey = reward ? `reward:${reward.id}` : checkout ? 'checkout' : null;
+  const [stepKeyState, setStepKeyState] = useState<string | null>(stepKey);
+  let currentStep = step;
+  if (stepKey !== stepKeyState) {
+    setStepKeyState(stepKey);
+    if (stepKey !== null) {
+      currentStep = reward ? 'detail' : 'pledge';
+      setStep(currentStep);
+    }
+  }
 
   /**
    * 단계가 바뀌면 본문 스크롤을 맨 위로 되돌린다. 본문(`bodyRef`)은 두 단계가 같은 스크롤
@@ -104,7 +112,7 @@ export default function RewardModal({ project, reward, checkout = false, remaini
   const left = reward ? remaining[reward.id] ?? reward.totalQuantity : null;
   const soldOut = left !== null && left <= 0;
   // 리워드 없이 연 결제 화면은 상세 단계가 없다.
-  const showDetail = reward !== null && step === 'detail';
+  const showDetail = reward !== null && currentStep === 'detail';
 
   return (
     <div className="fixed inset-0 z-[60] flex items-end justify-center sm:items-center sm:p-4">

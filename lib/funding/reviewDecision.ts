@@ -28,6 +28,8 @@ export type DecisionResult =
       message: string;
     };
 
+const STALE_VERSION_MESSAGE = '그 사이 개설자가 수정해 다시 제출했습니다. 새로고침해 새 판본을 확인해 주세요.';
+
 const deny = (code: Exclude<DecisionResult, { ok: true }>['code'], message: string): DecisionResult => ({
   ok: false,
   code,
@@ -48,11 +50,31 @@ const deny = (code: Exclude<DecisionResult, { ok: true }>['code'], message: stri
 export const decideProject = async (
   projectId: string,
   action: AdminReviewAction,
-  input: { note?: string; slug?: string },
+  input: { note?: string; slug?: string; expectedSubmittedAt?: string },
   now: Date = new Date(),
 ): Promise<DecisionResult> => {
   const project = await loadProjectForAdmin(projectId);
   if (!project) return deny('not_found', '프로젝트를 찾을 수 없습니다.');
+
+  /**
+   * 운영자가 **본 판본**이 지금 판본인지 확인한다. 화면을 연 뒤 개설자가 철회 → 수정 →
+   * 재제출하면 reviewStatus는 다시 'submitted'라 상태 조건만으로는 못 본 판본이 승인된다.
+   * 재제출마다 바뀌는 값은 `submittedAt`이다(withdraw가 비우고 submit이 새로 찍는다).
+   * `updatedAt`은 쓰지 않는다 — 운영자 본인의 메모 저장도 그 값을 올려, 메모만 달고 승인해도
+   * 충돌이 난다. 값이 없으면(라이브러리 호출) 검사하지 않는다 — API 라우트가 필수로 요구한다.
+   */
+  const expectedSubmittedAtMs =
+    input.expectedSubmittedAt === undefined ? undefined : new Date(input.expectedSubmittedAt).getTime();
+  if (expectedSubmittedAtMs !== undefined) {
+    const currentMs = project.submittedAt ? new Date(project.submittedAt).getTime() : null;
+    if (Number.isNaN(expectedSubmittedAtMs) || currentMs !== expectedSubmittedAtMs) {
+      return deny('conflict', STALE_VERSION_MESSAGE);
+    }
+  }
+  const versionCondition =
+    expectedSubmittedAtMs === undefined
+      ? undefined
+      : eq(fundingProjects.submittedAt, new Date(expectedSubmittedAtMs));
 
   const next = nextReviewStatus(project.reviewStatus, action);
   if (!next) return deny('conflict', '지금 상태에서는 그 판정을 할 수 없습니다.');
@@ -105,7 +127,7 @@ export const decideProject = async (
         ...(setRejectedAt ? { rejectedAt: now } : {}),
         updatedAt: now,
       })
-      .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus)));
+      .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus), versionCondition));
 
     if (Number(result.rowsAffected) === 0) {
       return deny('conflict', '그 사이 상태가 바뀌었습니다. 새로고침 후 다시 확인해 주세요.');
@@ -251,7 +273,7 @@ export const decideProject = async (
         lastmod: toKstDateString(now),
         updatedAt: now,
       })
-      .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus))),
+      .where(and(eq(fundingProjects.id, projectId), eq(fundingProjects.reviewStatus, project.reviewStatus), versionCondition)),
     db.run(sql`
       UPDATE funding_rewards SET locked_at = ${epoch}, updated_at = unixepoch()
       WHERE project_id = ${projectId} AND locked_at IS NULL

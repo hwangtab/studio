@@ -17,8 +17,8 @@ describe('설계비·제작비 공제 (개설자 약관 제6조, 2026-09-28)', (
     expect(p.designFeeOffsetAmount).toBe(550_000);
     expect(p.productionFeeOffsetAmount).toBe(1_980_000);
     expect(p.shortfallAmount).toBe(0);
-    // 이체 가능액 3,206,924 − 2,530,000
-    expect(p.netAmount).toBe(676_924);
+    // 이체 가능액 3,206,925 − 2,530,000
+    expect(p.netAmount).toBe(676_925);
   });
 
   it('대금이 정산금을 넘으면 실지급 0원, 넘는 부분은 차액으로 남긴다(음수로 가지 않는다)', () => {
@@ -26,10 +26,10 @@ describe('설계비·제작비 공제 (개설자 약관 제6조, 2026-09-28)', (
       grossAmount: 1_000_000, refundAmount: 0, taxType: 'withholding',
       charges: { designFee: 550_000, productionFee: 1_980_000 },
     });
-    // 이체 가능액 801,731 → 설계비 550,000 전부, 제작비 251,731만 빠지고 나머지는 차액
+    // 이체 가능액 801,732 → 설계비 550,000 전부, 제작비 251,732만 빠지고 나머지는 차액
     expect(p.designFeeOffsetAmount).toBe(550_000);
-    expect(p.productionFeeOffsetAmount).toBe(251_731);
-    expect(p.shortfallAmount).toBe(1_728_269);
+    expect(p.productionFeeOffsetAmount).toBe(251_732);
+    expect(p.shortfallAmount).toBe(1_728_268);
     expect(p.netAmount).toBe(0);
   });
 
@@ -42,7 +42,7 @@ describe('설계비·제작비 공제 (개설자 약관 제6조, 2026-09-28)', (
 
 describe('computeFundingPayout', () => {
   it('100만원 모금·환불 0·원천징수 개설자 — 전 항목', () => {
-    // 수수료 뗀 912,000(부가세 포함)에서 부가세 상당액 82,909를 빼 829,091, 그 3.3%인 27,360을 원천징수
+    // 수수료 뗀 912,000(부가세 포함)에서 부가세 상당액 82,909를 빼 829,091, 소득세 24,872(3% 절사)와 지방소득세 2,487(소득세의 10% 절사), 합 27,359를 원천징수
     expect(computeFundingPayout({ grossAmount: 1_000_000, refundAmount: 0, taxType: 'withholding' })).toEqual({
       grossAmount: 1_000_000,
       refundAmount: 0,
@@ -52,11 +52,11 @@ describe('computeFundingPayout', () => {
       paymentFeeAmount: 33_000,
       vatDeductionAmount: 82_909,
       shareAmount: 829_091,
-      withholdingAmount: 27_360,
+      withholdingAmount: 27_359,
       designFeeOffsetAmount: 0,
       productionFeeOffsetAmount: 0,
       shortfallAmount: 0,
-      netAmount: 801_731,
+      netAmount: 801_732,
     });
   });
 
@@ -109,16 +109,16 @@ describe('computeFundingPayout', () => {
     // netGross는 1,000,000 — 위 첫 케이스와 같은 수수료·정산액이 나와야 한다.
     expect(p.feeAmount).toBe(88_000);
     expect(p.vatDeductionAmount).toBe(82_909);
-    expect(p.netAmount).toBe(801_731);
+    expect(p.netAmount).toBe(801_732);
   });
 
-  it('300만원 원천징수 — 부가세 상당액 248,727 → 몫 2,487,273 → 원천징수 82,080 → 2,405,193', () => {
+  it('300만원 원천징수 — 부가세 상당액 248,727 → 몫 2,487,273 → 원천징수 82,079(74,618 + 7,461) → 2,405,194', () => {
     const p = computeFundingPayout({ grossAmount: 3_000_000, refundAmount: 0, taxType: 'withholding' });
     expect(p.feeAmount).toBe(264_000);
     expect(p.vatDeductionAmount).toBe(248_727);
     expect(p.shareAmount).toBe(2_487_273);
-    expect(p.withholdingAmount).toBe(82_080);
-    expect(p.netAmount).toBe(2_405_193);
+    expect(p.withholdingAmount).toBe(82_079);
+    expect(p.netAmount).toBe(2_405_194);
   });
 
   it('반올림이 음수를 만들지 않는다 — 작은 금액도 전 항목이 0 이상', () => {

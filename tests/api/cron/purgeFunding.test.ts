@@ -50,7 +50,7 @@ beforeEach(() => {
   (purgeExpiredFundingPersonalData as jest.Mock).mockResolvedValue({ purged: 3 });
   (purgeExpiredPrivacyAccessLogs as jest.Mock).mockResolvedValue({ purged: 7 });
   (purgeExpiredResidentNumbers as jest.Mock).mockResolvedValue({ purged: 2 });
-  (sendEmail as jest.Mock).mockResolvedValue(undefined);
+  (sendEmail as jest.Mock).mockResolvedValue({ ok: true });
   (purgeOrphanFundingMedia as jest.Mock).mockResolvedValue(MEDIA);
 });
 
@@ -82,6 +82,14 @@ it('주민등록번호 파기가 실패하면 500이고 운영자에게 메일�
   const r = await call();
   expect(r.status).toBe(500);
   expect(sendEmail).toHaveBeenCalledTimes(1);
+});
+
+it('운영자 알림 발송이 실패하면 응답은 그대로 500이고 console.error에 남는다', async () => {
+  (purgeExpiredResidentNumbers as jest.Mock).mockRejectedValue(new Error('DB 장애'));
+  (sendEmail as jest.Mock).mockResolvedValue({ ok: false, errorCode: 'API_ERROR' });
+  const r = await call();
+  expect(r.status).toBe(500);
+  expect(console.error).toHaveBeenCalledWith(expect.stringContaining('운영자 실패 알림 발송 실패'), 'API_ERROR');
 });
 
 it('접속기록 삭제가 실패하면 500이고 운영자에게 메일이 간다', async () => {

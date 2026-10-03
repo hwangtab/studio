@@ -132,7 +132,7 @@ describe('정산', () => {
     await paidCycle('a', 'o3', '2026-08'); // 다른 달
 
     const p = await buildArtistPayoutPreview('jai', '2026-09');
-    expect(p).toMatchObject({ subscriberCount: 2, grossAmount: 20000, refundAmount: 10000, supplyAmount: 9091, shareAmount: 8182, withholdingAmount: 270, netAmount: 7912, recorded: null });
+    expect(p).toMatchObject({ subscriberCount: 2, grossAmount: 20000, refundAmount: 10000, supplyAmount: 9091, shareAmount: 8182, withholdingAmount: 269, netAmount: 7913, recorded: null });
   });
 
   it('기록은 (아티스트, 달)당 한 번이고 지급 완료는 한 방향', async () => {
@@ -148,7 +148,7 @@ describe('정산', () => {
     expect(await markArtistPayoutPaid(id, '9/10 이체', NOW)).toBe(true);
     expect(await markArtistPayoutPaid(id, null, NOW)).toBe(false);
     const row = (await client.execute('SELECT status, memo, net_amount FROM artist_payouts')).rows[0];
-    expect(row).toMatchObject({ status: 'paid', memo: '9/10 이체', net_amount: 7912 });
+    expect(row).toMatchObject({ status: 'paid', memo: '9/10 이체', net_amount: 7913 });
   });
 
   it('없는 아티스트는 null', async () => {

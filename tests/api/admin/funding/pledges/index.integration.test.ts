@@ -210,6 +210,42 @@ it('사전 검사 뒤 재고가 소진되면 409 — 고아 주문도 남기지 
   expect(Number(cd.rows[0].c)).toBe(1);
 });
 
+// 값이 있으면 후원 폼과 같은 검사를 지난다 — 형식이 틀린 주소로 확정 메일을 시도하지 않는다.
+it('이메일 형식이 틀리면 400이고 주문을 만들지 않는다', async () => {
+  for (const customerEmail of ['not-an-email', 'a@b', 'a b@example.com']) {
+    const r = await call({ ...VALID_BODY, customerEmail });
+    expect(r.status).toBe(400);
+    expect(String(r.body.message)).toContain('이메일');
+  }
+  const count = await client.execute('SELECT COUNT(*) AS c FROM orders');
+  expect(Number(count.rows[0].c)).toBe(0);
+  expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+});
+
+it('이메일 칸을 비우면 플레이스홀더로 등록된다(형식 검사 대상이 아니다)', async () => {
+  expect((await call({ ...VALID_BODY, customerEmail: '   ' })).status).toBe(201);
+});
+
+it('재고 탈락 뒤 주문을 failed로 되돌리는 UPDATE가 던지면 409에 warnings를 싣고 로그를 남긴다', async () => {
+  await client.execute(`INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+      manage_token, item_amount, vat_amount, total_amount, created_at, updated_at)
+    VALUES ('rival','FND-RIVAL','funding','pending','경쟁자','010-2','r@example.com','tok-rival',27273,2727,30000, unixepoch(), unixepoch())`);
+  await client.execute(`INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount,
+      quantity, additional_amount, payment_method, hold_expires_at, created_at, updated_at)
+    VALUES ('rival-p','rival','demo','cd','CD',30000,1,0,'toss', unixepoch()+900, unixepoch(), unixepoch())`);
+  (aggregateProjectStatus as jest.Mock).mockResolvedValueOnce({
+    raisedAmount: 0, backerCount: 0, backerPersonCount: 0, remaining: { cd: 1, mail: null }, publicBackers: [],
+  });
+  const errSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const updateSpy = jest.spyOn(mockDb, 'update').mockImplementationOnce(() => { throw new Error('DB down'); });
+  const r = await call({ ...VALID_BODY, rewardId: 'cd', quantity: 1, additionalAmount: 0 });
+  updateSpy.mockRestore();
+  expect(r.status).toBe(409);
+  expect(r.body.warnings).toHaveLength(1);
+  expect(errSpy).toHaveBeenCalledWith(expect.stringContaining('failed로 되돌리지 못했다'), expect.anything());
+  errSpy.mockRestore();
+});
+
 /**
  * 수기 등록도 **등록 그 자리에서** 확정 메일을 보낸다. 예전엔 안 보내서, 운영자가 관리자
  * 상세의 '메일 재발송'을 따로 눌러야 후원자가 관리 링크(셀프 취소·명단 공개 철회)를 받았다.

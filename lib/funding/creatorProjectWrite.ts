@@ -1,4 +1,4 @@
-import { and, count, eq, gt, inArray } from 'drizzle-orm';
+import { and, count, eq, gt, inArray, isNull } from 'drizzle-orm';
 
 import { encryptField, FieldCryptoError } from '../crypto/fieldCrypto';
 import { getDb } from '../../db/client';
@@ -7,10 +7,10 @@ import {
   type FundingProjectRow, type FundingRewardRow,
 } from '../../db/schema';
 import { getFundingProject } from './projects';
-import { isFundingSlugTaken, isSlugConflictError } from './slugOccupancy';
+import { isFundingSlugTaken, isSlugConflictError, isUniqueConflictError } from './slugOccupancy';
 import { canCreatorEditSection, type CreatorSectionName } from './reviewTransition';
 import {
-  CREATOR_LIMITS, isDefaultCreatorName, type BasicSection, type CreatorSection, type PayoutSection,
+  CREATOR_LIMITS, isDefaultCreatorName, STORY_MIN_LENGTH, type BasicSection, type CreatorSection, type PayoutSection,
   type RewardInput, type StorySection,
 } from './creatorValidation';
 import { stripTrustedDirectives } from './creatorContent';
@@ -31,11 +31,18 @@ export type WriteResult =
   | {
       ok: false;
       code: 'not_found' | 'locked' | 'not_editable' | 'duplicate_slug' | 'too_many' | 'duplicate_reward'
-        | 'encryption_unavailable';
+        | 'encryption_unavailable' | 'story_too_short';
       message: string;
     };
 
 const deny = (code: Exclude<WriteResult, { ok: true }>['code'], message: string): WriteResult => ({ ok: false, code, message });
+
+/**
+ * `guard`가 상태를 읽은 뒤 UPDATE가 도착하기 전에 승인·제출이 끼어든 경합의 거부. 쓰기의
+ * WHERE가 0행이면 이 응답이다 — 가드의 확인은 읽는 순간의 사실이라 쓰는 순간까지 가지 않는다.
+ */
+const raced = (): WriteResult =>
+  deny('not_editable', '그 사이 프로젝트 상태가 바뀌어 저장하지 못했습니다. 새로고침 후 다시 확인해 주세요.');
 
 export interface CreatorProjectDetail {
   id: string;
@@ -210,11 +217,12 @@ export const saveBasicSection = async (creatorId: string, projectId: string, val
   const editedAt = row!.reviewStatus === 'approved' ? { creatorEditedAt: now, lastmod: toKstDateString(now) } : {};
 
   try {
-    await getDb().update(fundingProjects).set({
+    const result = await getDb().update(fundingProjects).set({
       title: value.title, summary: value.summary, slug: value.slug,
       goalAmount: value.goalAmount, startAt: value.startAt, endAt: value.endAt,
       coverUrl: value.coverUrl, updatedAt: now, ...editedAt,
-    }).where(eq(fundingProjects.id, row!.id));
+    }).where(and(eq(fundingProjects.id, row!.id), eq(fundingProjects.reviewStatus, row!.reviewStatus)));
+    if (Number(result.rowsAffected) === 0) return raced();
   } catch (error: unknown) {
     // 위 검사와 이 쓰기 사이에 같은 slug가 남에게 넘어간 경합. 부분 유니크 인덱스가 막아
     // 냈고, 데이터는 안전하다 — 메시지는 검사와 같은 것을 준다.
@@ -235,9 +243,22 @@ export const saveStorySection = async (creatorId: string, projectId: string, val
 
   // 렌더 시점이 아니라 저장 시점에 벗긴다 — 렌더 경로가 여럿(상세·미리보기·OG·llms)이라
   // 한 곳을 빠뜨리면 그 경로로만 새어 나간다. 저장된 값 자체를 깨끗하게 둔다.
-  await getDb().update(fundingProjects)
-    .set({ content: stripTrustedDirectives(value.content), updatedAt: now, ...editedAt })
-    .where(eq(fundingProjects.id, row!.id));
+  const content = stripTrustedDirectives(value.content);
+
+  // 공개 중인 프로젝트의 본문을 비우거나 한두 줄로 줄이면 공개 페이지가 그대로 텅 빈다. 제출·승인은
+  // 최소 길이를 보지만 승인 뒤 편집은 심사가 없어 이 저장이 마지막 관문이다. 초안·보완 요청의
+  // 임시 저장은 짧아도 허용한다(아직 공개가 아니다). 벗긴 뒤 길이로 본다 — 숏코드만 채워 우회 못 한다.
+  if (row!.reviewStatus === 'approved' && content.trim().length < STORY_MIN_LENGTH) {
+    return deny(
+      'story_too_short',
+      `공개된 프로젝트의 본문은 ${STORY_MIN_LENGTH}자 이상이어야 합니다. 공개 페이지가 비어 보이지 않게 막았습니다.`,
+    );
+  }
+
+  const result = await getDb().update(fundingProjects)
+    .set({ content, updatedAt: now, ...editedAt })
+    .where(and(eq(fundingProjects.id, row!.id), eq(fundingProjects.reviewStatus, row!.reviewStatus)));
+  if (Number(result.rowsAffected) === 0) return raced();
   return { ok: true };
 };
 
@@ -589,6 +610,9 @@ const lockedViolation = (existing: FundingRewardRow, next: RewardInput): string 
   return null;
 };
 
+const isRewardDuplicateError = (error: unknown): boolean =>
+  isUniqueConflictError(error, 'funding_rewards.project_id');
+
 export const upsertReward = async (
   creatorId: string,
   projectId: string,
@@ -613,17 +637,24 @@ export const upsertReward = async (
       .where(and(eq(fundingRewards.projectId, projectId), eq(fundingRewards.rewardId, value.rewardId))).limit(1);
     if (taken) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
 
-    await getDb().update(fundingRewards).set({
-      rewardId: value.rewardId,
-      title: value.title,
-      description: value.description,
-      amount: value.amount,
-      totalQuantity: value.totalQuantity,
-      requiresShipping: value.requiresShipping,
-      estimatedDelivery: value.estimatedDelivery,
-      imageUrl: value.imageUrl,
-      updatedAt: new Date(),
-    }).where(eq(fundingRewards.id, previous.id));
+    try {
+      const renamed = await getDb().update(fundingRewards).set({
+        rewardId: value.rewardId,
+        title: value.title,
+        description: value.description,
+        amount: value.amount,
+        totalQuantity: value.totalQuantity,
+        requiresShipping: value.requiresShipping,
+        estimatedDelivery: value.estimatedDelivery,
+        imageUrl: value.imageUrl,
+        updatedAt: new Date(),
+      }).where(and(eq(fundingRewards.id, previous.id), isNull(fundingRewards.lockedAt)));
+      // 가드 뒤에 승인이 리워드를 잠근 경합 — 잠긴 행은 이 UPDATE가 건드리지 않는다.
+      if (Number(renamed.rowsAffected) === 0) return raced();
+    } catch (error: unknown) {
+      if (isRewardDuplicateError(error)) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
+      throw error;
+    }
     return { ok: true };
   }
 
@@ -634,7 +665,7 @@ export const upsertReward = async (
     const violation = lockedViolation(existing, value);
     if (violation) return deny('locked', violation);
 
-    await getDb().update(fundingRewards).set({
+    const updated = await getDb().update(fundingRewards).set({
       title: value.title,
       description: value.description,
       amount: value.amount,
@@ -643,7 +674,13 @@ export const upsertReward = async (
       estimatedDelivery: value.estimatedDelivery,
       imageUrl: value.imageUrl,
       updatedAt: new Date(),
-    }).where(eq(fundingRewards.id, existing.id));
+    }).where(and(
+      eq(fundingRewards.id, existing.id),
+      // 읽을 때 안 잠겨 있던 행만 쓴다 — 그 사이 승인이 잠갔으면 0행이다. 이미 잠겨 있던 행은
+      // 위 lockedViolation이 허용한 변경(제목·설명 등)만 여기까지 온다.
+      existing.lockedAt ? undefined : isNull(fundingRewards.lockedAt),
+    ));
+    if (Number(updated.rowsAffected) === 0) return raced();
     return { ok: true };
   }
 
@@ -653,17 +690,24 @@ export const upsertReward = async (
     return deny('too_many', `리워드는 최대 ${CREATOR_LIMITS.rewardsMax}개까지 만들 수 있습니다.`);
   }
 
-  await getDb().insert(fundingRewards).values({
-    projectId,
-    rewardId: value.rewardId,
-    title: value.title,
-    description: value.description,
-    amount: value.amount,
-    totalQuantity: value.totalQuantity,
-    requiresShipping: value.requiresShipping,
-    estimatedDelivery: value.estimatedDelivery,
-    imageUrl: value.imageUrl,
-  });
+  try {
+    await getDb().insert(fundingRewards).values({
+      projectId,
+      rewardId: value.rewardId,
+      title: value.title,
+      description: value.description,
+      amount: value.amount,
+      totalQuantity: value.totalQuantity,
+      requiresShipping: value.requiresShipping,
+      estimatedDelivery: value.estimatedDelivery,
+      imageUrl: value.imageUrl,
+    });
+  } catch (error: unknown) {
+    // 더블 클릭 등으로 같은 id의 생성이 겹쳤다 — 위 선조회를 둘 다 통과하고 유니크 인덱스가
+    // 뒤쪽을 떨어뜨린 것이다. 500이 아니라 사람이 읽을 중복 오류로 돌려준다.
+    if (isRewardDuplicateError(error)) return deny('duplicate_reward', '이미 쓰고 있는 리워드 주소입니다.');
+    throw error;
+  }
   return { ok: true };
 };
 
@@ -676,6 +720,8 @@ export const deleteReward = async (creatorId: string, projectId: string, rewardI
   if (!existing) return deny('not_found', '리워드를 찾을 수 없습니다.');
   if (existing.lockedAt) return deny('locked', '공개된 리워드는 지울 수 없습니다.');
 
-  await getDb().delete(fundingRewards).where(eq(fundingRewards.id, existing.id));
+  const deleted = await getDb().delete(fundingRewards)
+    .where(and(eq(fundingRewards.id, existing.id), isNull(fundingRewards.lockedAt)));
+  if (Number(deleted.rowsAffected) === 0) return raced();
   return { ok: true };
 };

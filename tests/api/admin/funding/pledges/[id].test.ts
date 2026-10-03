@@ -9,7 +9,7 @@ jest.mock('../../../../../lib/funding/service', () => ({
 jest.mock('../../../../../lib/funding/cancel', () => ({ cancelFundingPledge: jest.fn() }));
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingCancelledEmails: jest.fn(), sendFundingConfirmedEmails: jest.fn(), sendFundingRefundRequestClearedEmails: jest.fn() }));
 jest.mock('../../../../../lib/funding/repository', () => ({ getFundingProjectAsync: jest.fn() }));
-const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue(undefined) })) }));
+const mockUpdate = jest.fn(() => ({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) })) }));
 // set_fulfillment은 가드를 WHERE에 실은 단일 UPDATE(db.run)다 — 선점에 성공한 경로가 기본값.
 const mockRun = jest.fn().mockResolvedValue({ rowsAffected: 1 });
 // setFulfillment(lib/funding/fulfillment.ts)는 pledgeId만 받아 db.query.fundingPledges로
@@ -273,7 +273,7 @@ it('clear_refund_request: 사유가 없으면 400이고 아무것도 안 바꾼�
 });
 
 it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 후원자에게 메일을 보낸다', async () => {
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested('paid', '기존 메모'));
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
@@ -289,7 +289,7 @@ it('clear_refund_request: 사유를 날짜와 함께 메모에 덧붙이고 후�
 });
 
 it('clear_refund_request: 메모가 없던 건은 항목 하나로 시작한다', async () => {
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(requested());
   (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
@@ -351,7 +351,7 @@ it('clear_stock_review: 이미 닫은 건은 409 — 두 번 닫히지 않는다
 });
 
 it('clear_stock_review: 원문을 남긴 채 확인 내용을 날짜와 함께 덧붙인다', async () => {
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
   const r = await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: '잔여 3개 확인' });
@@ -372,7 +372,7 @@ it('clear_stock_review: 원문을 남긴 채 확인 내용을 날짜와 함께 �
  */
 it('clear_stock_review: 사유에 개행이 있어도 해제가 한 줄로 접혀 배지가 꺼진다', () => {
   const original = '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요';
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(flagged(original));
   // 운영자가 웹훅 원문을 줄바꿈과 함께 인용해 붙여 넣은 입력.
@@ -393,7 +393,7 @@ it('clear_stock_review: 사유에 개행이 있어도 해제가 한 줄로 접�
 
 // 인용이 개행 없이 한 줄에 들어간 흔한 경우도 같이 못 박는다.
 it('clear_stock_review: 사유에 마커 문구를 인용해도 배지가 꺼진다', async () => {
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(flagged());
   await call('PATCH', { id: 'order-1' }, {
@@ -429,7 +429,7 @@ it('clear_download_record: 기록이 없으면 409 — 지울 것이 없다', as
 });
 
 it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께 메모에 남긴다', async () => {
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload(new Date('2026-09-20T01:00:00Z'), '기존 메모'));
 
@@ -445,7 +445,7 @@ it('clear_download_record: downloaded_at을 지우고 사유를 날짜와 함께
 });
 
 it('clear_download_record: 사유의 개행을 접어 한 줄로 남긴다 — 메모 판정이 줄 단위다', async () => {
-  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue(undefined) }));
+  const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
   mockUpdate.mockReturnValueOnce({ set } as never);
   (findFundingOrderById as jest.Mock).mockResolvedValue(withDownload());
 
@@ -472,7 +472,11 @@ it('set_fulfillment은 세션의 운영자를 fulfillment_updated_by로 싣는�
  * 해제 기록·청약철회 취소 기록·명단 숨김 사유가 사유 없이 흔적 없이 사라졌다.
  */
 describe('set_memo 빈 값', () => {
+  let current = '';
+  // 화면은 로드한 시점의 메모를 expectedMemo로 함께 보낸다.
+  const save = (adminMemo: string) => call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo, expectedMemo: current });
   const withMemo = (adminMemo: string) => {
+    current = adminMemo;
     (findFundingOrderById as jest.Mock).mockResolvedValue({
       ...BASE_ORDER,
       fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo },
@@ -481,7 +485,7 @@ describe('set_memo 빈 값', () => {
 
   it('재고 확인 표식이 있으면 비울 수 없다 — 409에 clear_stock_review를 안내한다', async () => {
     withMemo('[웹훅] 재고 초과 가능, 확인 필요');
-    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' });
+    const r = await save('');
     expect(r.status).toBe(409);
     expect(String(r.body.message)).toContain('clear_stock_review');
     expect(mockUpdate).not.toHaveBeenCalled();
@@ -489,12 +493,12 @@ describe('set_memo 빈 값', () => {
 
   it('재고 확인 해제 기록이 있어도 비울 수 없다', async () => {
     withMemo('[2026-09-20] 재고 확인 완료 — 실물 대조함');
-    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '   ' })).status).toBe(409);
+    expect((await save('   ')).status).toBe(409);
   });
 
   it('청약철회 취소 기록이 있어도 비울 수 없다', async () => {
     withMemo('[2026-09-20] 환불 요청 취소 — 고객이 전화로 철회');
-    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' })).status).toBe(409);
+    expect((await save('')).status).toBe(409);
   });
 
   /**
@@ -503,7 +507,7 @@ describe('set_memo 빈 값', () => {
    */
   it('명단 숨김 사유가 있어도 비울 수 없다', async () => {
     withMemo('[2026-09-20] 후원자 명단에서 내림 — 타인 사칭 닉네임');
-    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' });
+    const r = await save('');
     expect(r.status).toBe(409);
     expect(String(r.body.message)).toContain('명단 숨김 사유');
     expect(mockUpdate).not.toHaveBeenCalled();
@@ -511,12 +515,43 @@ describe('set_memo 빈 값', () => {
 
   it('보호할 기록이 없으면 비울 수 있다', async () => {
     withMemo('그냥 메모');
-    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '' })).status).toBe(200);
+    expect((await save('')).status).toBe(200);
   });
 
   it('표식이 있어도 내용을 고치는 저장은 통과한다', async () => {
     withMemo('[웹훅] 재고 초과 가능, 확인 필요');
-    expect((await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '[웹훅] 재고 초과 가능, 확인 필요\n메모 추가' })).status).toBe(200);
+    expect((await save('[웹훅] 재고 초과 가능, 확인 필요\n메모 추가')).status).toBe(200);
+  });
+
+  it('expectedMemo가 없으면(옛 화면) 409 — 덮어쓰지 않는다', async () => {
+    withMemo('그냥 메모');
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '새 메모' });
+    expect(r.status).toBe(409);
+    expect(String(r.body.message)).toContain('새로고침');
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  /** 화면이 메모를 로드한 뒤 웹훅이 재고 경고 줄을 붙였다 — 통째 덮어쓰면 needsReview가 조용히 꺼진다. */
+  it('로드한 뒤 메모가 바뀌었으면(expectedMemo 불일치) 409 — 쓰지 않는다', async () => {
+    withMemo('원래 메모\n[웹훅] 재고 초과 가능, 확인 필요');
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '원래 메모 수정', expectedMemo: '원래 메모' });
+    expect(r.status).toBe(409);
+    expect(String(r.body.message)).toContain('새로고침');
+    expect(mockUpdate).not.toHaveBeenCalled();
+  });
+
+  /** 읽기와 쓰기 사이 경합은 UPDATE의 WHERE(admin_memo 비교)가 0행으로 막는다. */
+  it('UPDATE가 0행이면(그 사이 바뀜) 409', async () => {
+    withMemo('그냥 메모');
+    mockUpdate.mockReturnValueOnce({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 0 }) })) } as never);
+    const r = await save('새 메모');
+    expect(r.status).toBe(409);
+  });
+
+  it('메모가 없던 건(null)은 expectedMemo 빈 문자열로 저장된다', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue({ ...BASE_ORDER, fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo: null } });
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_memo', adminMemo: '첫 메모', expectedMemo: '' });
+    expect(r.status).toBe(200);
   });
 });
 
@@ -575,5 +610,87 @@ describe('후원자 명단 숨김', () => {
     // 숨김 중에 후원자가 동의를 거뒀으면 그 값이 유지돼야 한다 — 해제가 되살리지 않는다.
     expect(set).not.toHaveProperty('displayNamePublic');
     expect(set.adminMemo).toMatch(/^이전 메모\n\[.*\] 후원자 명단 숨김 해제$/);
+  });
+});
+
+/**
+ * "읽은 값 + 새 줄"로 쓰는 액션도 읽은 admin_memo가 그대로일 때만 쓴다 — 읽기와 쓰기 사이에
+ * 웹훅이 붙인 줄을 덮지 않는다. 진 쪽은 UPDATE 0행을 받아 409다.
+ */
+describe('메모 덧붙이기 액션의 낙관적 조건', () => {
+  const zeroRows = () => mockUpdate.mockReturnValueOnce({ set: jest.fn(() => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 0 }) })) } as never);
+  const pledgeWith = (extra: Record<string, unknown>) => ({
+    ...BASE_ORDER, fundingPledge: { ...BASE_ORDER.fundingPledge, adminMemo: '[웹훅] 홀드 만료 후 승인 — 재고 초과 가능, 확인 필요', ...extra },
+  });
+
+  it('clear_stock_review: 0행이면 409', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue(pledgeWith({}));
+    zeroRows();
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_stock_review', reason: '확인' })).status).toBe(409);
+  });
+  it('clear_download_record: 0행이면 409', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue(pledgeWith({ downloadedAt: new Date() }));
+    zeroRows();
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_download_record', reason: '오기록' })).status).toBe(409);
+  });
+  it('unpublish: 0행이면 409', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue(pledgeWith({}));
+    zeroRows();
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'unpublish', reason: '사칭' })).status).toBe(409);
+  });
+  it('restore_listing: 0행이면 409', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue(pledgeWith({ listingHiddenAt: new Date() }));
+    zeroRows();
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'restore_listing' })).status).toBe(409);
+  });
+  it('clear_refund_request: 0행이면 409이고 메일을 보내지 않는다', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue(requested('paid', '기존'));
+    zeroRows();
+    expect((await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '철회' })).status).toBe(409);
+    expect(sendFundingRefundRequestClearedEmails).not.toHaveBeenCalled();
+  });
+});
+
+describe('clear_refund_request 사유 정리·센티널', () => {
+  it('사유의 개행을 공백으로 접는다 — 메모 항목은 반드시 한 줄', async () => {
+    const set = jest.fn((_values: Record<string, unknown>) => ({ where: jest.fn().mockResolvedValue({ rowsAffected: 1 }) }));
+    mockUpdate.mockReturnValueOnce({ set } as never);
+    (findFundingOrderById as jest.Mock).mockResolvedValue(requested());
+    (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue(null);
+    await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '첫 줄\n  둘째 줄' });
+    expect(set.mock.calls[0][0].adminMemo as string).toMatch(/환불 요청 취소 — 첫 줄 둘째 줄$/);
+    expect(set.mock.calls[0][0].adminMemo as string).not.toContain('\n[');
+  });
+
+  it('메일 실패 분기도 send_pending·send_inflight 센티널을 지우지 않는다', async () => {
+    (findFundingOrderById as jest.Mock).mockResolvedValue(requested());
+    (sendFundingRefundRequestClearedEmails as jest.Mock).mockResolvedValue('customer:TIMEOUT');
+    await call('PATCH', { id: 'order-1' }, { action: 'clear_refund_request', reason: '오접수' });
+    const q = mockRun.mock.calls.at(-1)![0] as { queryChunks: unknown[] };
+    const text = JSON.stringify(q.queryChunks);
+    expect(text).toContain('NOT IN');
+    expect(text).toContain('send_pending');
+    expect(text).toContain('send_inflight');
+  });
+});
+
+describe('set_fulfillment 택배사·운송장 검증', () => {
+  it('택배사 31자 → 400, DB를 건드리지 않는다', async () => {
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped', trackingCompany: 'x'.repeat(31) });
+    expect(r.status).toBe(400);
+    expect(r.body.message).toContain('택배사');
+    expect(mockRun).not.toHaveBeenCalled();
+  });
+  it('운송장 41자 → 400', async () => {
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped', trackingNumber: '1'.repeat(41) });
+    expect(r.status).toBe(400);
+  });
+  it('운송장에 개행·제어문자 → 400', async () => {
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped', trackingNumber: '123\n456' });
+    expect(r.status).toBe(400);
+  });
+  it('해외 형태(영문·하이픈·공백)와 상한 경계(40자)는 통과', async () => {
+    const r = await call('PATCH', { id: 'order-1' }, { action: 'set_fulfillment', fulfillmentStatus: 'shipped', trackingCompany: 'DHL Express', trackingNumber: 'JD-01 4600 0000'.padEnd(40, '0') });
+    expect(r.status).toBe(200);
   });
 });

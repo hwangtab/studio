@@ -21,8 +21,8 @@ import { findFundingOrderByOrderNo } from './service';
  * 1. **선점**: 줄의 `refunded_quantity`를 먼저 올린다. WHERE에 "남은 수량이 충분하다"와 "주문이
  *    살아 있다"를 실어 두 관리자가 같은 줄을 동시에 눌러도 한쪽만 이긴다. 줄이 없는 옛 후원은
  *    같은 batch에서 옛 칸을 줄로 옮겨 담은 뒤 선점한다(이후 그 후원은 줄 표를 읽는다).
- * 2. **토스 부분 취소**: 금액 = 단가 × 수량. 멱등 키에 "이 줄의 누적 환불 수량"을 넣어, 같은
- *    요청의 재시도는 한 번만 나가고 다음 환불은 새 키가 된다.
+ * 2. **토스 부분 취소**: 금액 = 단가 × 수량. 멱등 키에 "선점 직후 이 줄의 누적 환불 수량"
+ *    (UPDATE … RETURNING)을 넣어, 다음 환불과 동시에 들어온 환불은 서로 다른 키가 된다.
  * 3. **기록**: 환불 행은 웹훅 동기화(syncFundingCancelledFromToss)와 같은 **델타 INSERT**로 쓴다
  *    — 토스 응답의 누적 취소액에서 이미 기록된 합을 뺀 만큼만. 웹훅이 먼저 도착해 기록했어도
  *    이중으로 남지 않는다.
@@ -86,13 +86,29 @@ export const refundFundingLine = async (input: {
     WHERE pledge_id = ${pledge.id} AND reward_id = ${input.rewardId}
       AND quantity - refunded_quantity >= ${input.quantity}
       AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()}))
+    RETURNING refunded_quantity
   `));
   const claimed = await db.batch(statements as [typeof statements[number], ...typeof statements]);
-  if (Number(claimed[claimed.length - 1].rowsAffected) === 0) {
+  const claimResult = claimed[claimed.length - 1];
+  // RETURNING이 붙은 문장은 libsql이 rowsAffected를 0으로 돌려준다(로컬 실측) — 선점 여부는
+  // 돌려받은 행으로 판정한다.
+  if (claimResult.rows.length === 0) {
     return { ok: false, code: 'invalid_state', message: '이미 처리됐거나 남은 수량이 부족합니다. 새로고침해 주세요.' };
   }
 
-  const refundedAfter = line.refundedQuantity + input.quantity;
+  // 멱등 키의 누적 수량은 **선점 UPDATE가 돌려준 값**으로 만든다. 위에서 읽은
+  // line.refundedQuantity로 만들면 같은 줄을 동시에 누른 두 요청이 같은 키(…:1)를 받아,
+  // 선점은 둘 다 통과하는데 토스는 두 번째에 첫 응답을 재사용해 돈은 1개분만 나간다.
+  const refundedAfter = Number((claimResult.rows[0] as Record<string, unknown> | undefined)?.refunded_quantity);
+  if (!Number.isInteger(refundedAfter)) {
+    // 키를 만들 수 없으면 토스를 부르지 않는다 — 선점만 남기면 돈 없이 리워드만 줄어든다.
+    await db.run(sql`
+      UPDATE funding_pledge_items SET refunded_quantity = refunded_quantity - ${input.quantity}
+      WHERE pledge_id = ${pledge.id} AND reward_id = ${input.rewardId} AND refunded_quantity >= ${input.quantity}
+    `);
+    console.error('[funding-line-refund] 선점 결과에서 누적 환불 수량을 읽지 못했다', { orderNo: order.orderNo, rewardId: input.rewardId });
+    return { ok: false, code: 'invalid_state', message: '처리 중 오류가 발생했습니다. 새로고침 후 다시 시도해 주세요.' };
+  }
   const toss = await cancelPayment({
     paymentKey: payment.paymentKey,
     cancelReason: input.reason,

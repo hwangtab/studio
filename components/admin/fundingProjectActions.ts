@@ -17,6 +17,8 @@ export interface FundingProjectActionResult {
  * 맞췄다. 예전엔 `body: Record<string, unknown>`이라 `set_internal_note`를
  * `set_internal_not`처럼 오타 내도 컴파일이 통과하고 런타임 400으로만 드러났다.
  *
+ * - 심사 판정 넷은 `expectedSubmittedAt`(화면이 로드한 `submittedAt`)을 반드시 싣는다 —
+ *   그 사이 개설자가 재제출했으면 서버가 409로 거부한다.
  * - `approve`는 슬러그를 새로 넣을 수 있고(운영자가 개설자 입력을 고쳐 승인), 메모는
  *   선택이다(안 보내면 기존 reviewNote를 보존한다 — `reviewDecision.ts`의
  *   `approveReviewNote` 참고).
@@ -29,8 +31,8 @@ export interface FundingProjectActionResult {
  *   `close`만 서버가 빈 메모를 거부한다 — 개설자가 "왜 멈췄는지" 알아야 하기 때문이다.
  */
 export type FundingProjectPatchBody =
-  | { action: 'approve'; slug?: string; note?: string }
-  | { action: 'request_changes' | 'reject' | 'archive'; note: string }
+  | { action: 'approve'; slug?: string; note?: string; expectedSubmittedAt: string }
+  | { action: 'request_changes' | 'reject' | 'archive'; note: string; expectedSubmittedAt: string }
   | { action: 'set_review_note' | 'set_internal_note'; note?: string }
   /** 스튜디오 서비스(운영자 전용, 마이그레이션 0037). lib/funding/projectServices.ts. */
   | { action: 'set_studio_service'; kind: 'none' | 'design' | 'release' }
@@ -50,11 +52,18 @@ export type FundingProjectPatchBody =
    * `mark_payout_paid`는 pending → paid 한 방향이다. 정산 id를 보내지 않는다 —
    * 프로젝트당 하나뿐이라 서버가 찾는다.
    *
-   * `expectedNetAmount`는 확인창에 적어 운영자가 승인한 실이체액이다. 서버는 이 값을
-   * 기록하지 않고 다시 계산한 값과 대조만 한다 — 페이지를 띄운 뒤 환불이 들어오면 확인창과
-   * 기록이 갈라지므로, 다르면 409로 거부된다(`lib/funding/payout.ts`).
+   * `expected*`는 운영자가 화면에서 보고 승인한 실이체액·설계비/제작비 공제액·차액이다.
+   * 서버는 이 값을 기록하지 않고 다시 계산한 값과 대조만 한다 — 페이지를 띄운 뒤 환불이
+   * 들어오거나 약정 제작비가 바뀌면 화면과 기록이 갈라지므로, 하나라도 다르면 409로
+   * 거부된다(`lib/funding/payout.ts`).
    */
-  | { action: 'record_payout'; expectedNetAmount: number }
+  | {
+      action: 'record_payout';
+      expectedNetAmount: number;
+      expectedDesignFeeOffsetAmount: number;
+      expectedProductionFeeOffsetAmount: number;
+      expectedShortfallAmount: number;
+    }
   | { action: 'mark_payout_paid'; memo?: string };
 
 const readJson = async (r: Response): Promise<{ message?: string; warnings?: string[] }> => {

@@ -90,6 +90,8 @@ const basicSection = (overrides: Partial<Parameters<typeof saveBasicSection>[2]>
 let seedCounter = 0;
 
 /** 개설자 계정 + 초안 프로젝트 하나를 만들고, 필요하면 심사 상태를 바로 옮긴다. */
+const LONG_STORY = '고친 본문 '.repeat(60);
+
 const seedProject = async (overrides: { reviewStatus?: string } = {}) => {
   seedCounter += 1;
   const creatorId = await seedCreator(`seed-${seedCounter}@example.com`);
@@ -740,11 +742,11 @@ describe('승인 뒤 편집 (Task 5)', () => {
   it('승인된 프로젝트의 본문은 고칠 수 있고 creatorEditedAt이 찍힌다', async () => {
     const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
 
-    const result = await saveStorySection(creatorId, projectId, { content: '고친 본문' });
+    const result = await saveStorySection(creatorId, projectId, { content: LONG_STORY });
 
     expect(result).toMatchObject({ ok: true });
     const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
-    expect(row.content).toBe('고친 본문');
+    expect(row.content).toBe(LONG_STORY);
     expect(row.creatorEditedAt).not.toBeNull();
   });
 
@@ -760,7 +762,7 @@ describe('승인 뒤 편집 (Task 5)', () => {
     await mockDb.update(schema.fundingProjects).set({ lastmod: '2026-01-01' })
       .where(eq(schema.fundingProjects.id, projectId));
 
-    await saveStorySection(creatorId, projectId, { content: '고친 본문' });
+    await saveStorySection(creatorId, projectId, { content: LONG_STORY });
 
     const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
     expect(row.lastmod).toMatch(/^\d{4}-\d{2}-\d{2}$/);
@@ -1174,3 +1176,162 @@ describe('주민등록번호 — 암호화해서만 들어간다', () => {
     expect(serialized).not.toContain('v1:');
   });
 });
+
+describe('공개 중인 본문은 비울 수 없다', () => {
+  it('승인된 프로젝트의 본문을 빈 값·짧은 값·숏코드만으로 저장하면 거부되고 기존 본문이 남는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'approved' });
+    await mockDb.update(schema.fundingProjects).set({ content: LONG_STORY })
+      .where(eq(schema.fundingProjects.id, projectId));
+
+    for (const content of ['', '   \n ', '짧은 본문', `${'%%studio-services%%\n'.repeat(80)}`]) {
+      const r = await saveStorySection(creatorId, projectId, { content });
+      expect(r).toMatchObject({ ok: false, code: 'story_too_short' });
+    }
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.content).toBe(LONG_STORY);
+  });
+
+  it('초안·보완 요청 상태의 임시 저장은 짧아도 된다', async () => {
+    for (const reviewStatus of ['draft', 'changes_requested']) {
+      const { creatorId, projectId } = await seedProject({ reviewStatus });
+      expect(await saveStorySection(creatorId, projectId, { content: '' })).toMatchObject({ ok: true });
+    }
+  });
+});
+
+// 경합 재현용 Proxy가 drizzle 빌더를 그대로 감싸야 해서 any를 쓴다.
+/* eslint-disable @typescript-eslint/no-explicit-any */
+describe('가드 뒤에 상태가 바뀌는 경합', () => {
+  // 가드의 첫 SELECT가 끝난 직후, 쓰기가 나가기 전에 hook을 한 번 실행한다.
+  const withHookAfterFirstSelect = (hook: () => Promise<unknown>, afterNth = 1) => {
+    const real = mockDb;
+    let fired = false;
+    let selectCount = 0;
+    const wrap = (builder: any): any =>
+      new Proxy(builder, {
+        get(target, prop) {
+          if (prop === 'then') {
+            return (resolve: any, reject: any) =>
+              target.then(async (value: unknown) => {
+                if (!fired && selectCount === afterNth) {
+                  fired = true;
+                  await hook();
+                }
+                return value;
+              }).then(resolve, reject);
+          }
+          const v = target[prop];
+          if (typeof v !== 'function') return v;
+          return (...args: unknown[]) => {
+            const out = v.apply(target, args);
+            return out && typeof out === 'object' && 'then' in out ? wrap(out) : out;
+          };
+        },
+      });
+    mockDb = new Proxy(real, {
+      get(target, prop) {
+        if (prop === 'select') {
+          return (...a: unknown[]) => {
+            selectCount += 1;
+            const mine = selectCount;
+            const b = wrap((target as any).select(...a));
+            return mine === afterNth ? b : (target as any).select(...a);
+          };
+        }
+        const v = (target as any)[prop];
+        return typeof v === 'function' ? v.bind(target) : v;
+      },
+    });
+    return () => { mockDb = real; };
+  };
+
+  it('본문 저장 — 가드 뒤에 제출되면(상태 변경) 쓰기가 거부된다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    const restore = withHookAfterFirstSelect(() =>
+      mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+        .where(eq(schema.fundingProjects.id, projectId)));
+    const r = await saveStorySection(creatorId, projectId, { content: '경합 본문' });
+    restore();
+    expect(r).toMatchObject({ ok: false, code: 'not_editable' });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.content).toBe('');
+  });
+
+  it('기본정보 저장 — 가드 뒤에 상태가 바뀌면 거부된다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    const restore = withHookAfterFirstSelect(() =>
+      mockDb.update(schema.fundingProjects).set({ reviewStatus: 'submitted' })
+        .where(eq(schema.fundingProjects.id, projectId)));
+    const r = await saveBasicSection(creatorId, projectId, basicSection({ title: '경합 제목' }));
+    restore();
+    expect(r).toMatchObject({ ok: false, code: 'not_editable' });
+    const [row] = await mockDb.select().from(schema.fundingProjects).where(eq(schema.fundingProjects.id, projectId));
+    expect(row.title).toBe('');
+  });
+
+  it('리워드 수정 — 가드 뒤에 승인이 리워드를 잠그면 금액이 바뀌지 않는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await upsertReward(creatorId, projectId, rewardInput({ rewardId: 'cd', amount: 30_000 }));
+    const restore = withHookAfterFirstSelect(() =>
+      mockDb.update(schema.fundingRewards).set({ lockedAt: new Date() })
+        .where(eq(schema.fundingRewards.projectId, projectId)), 2);
+    const r = await upsertReward(creatorId, projectId, rewardInput({ rewardId: 'cd', amount: 99_000 }));
+    restore();
+    expect(r).toMatchObject({ ok: false, code: 'not_editable' });
+    const [row] = await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, projectId));
+    expect(row.amount).toBe(30_000);
+  });
+
+  it('리워드 삭제 — 가드 뒤에 잠기면 지워지지 않는다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await upsertReward(creatorId, projectId, rewardInput({ rewardId: 'cd' }));
+    const restore = withHookAfterFirstSelect(() =>
+      mockDb.update(schema.fundingRewards).set({ lockedAt: new Date() })
+        .where(eq(schema.fundingRewards.projectId, projectId)));
+    const r = await deleteReward(creatorId, projectId, 'cd');
+    restore();
+    expect(r).toMatchObject({ ok: false });
+    expect(await mockDb.select().from(schema.fundingRewards).where(eq(schema.fundingRewards.projectId, projectId))).toHaveLength(1);
+  });
+
+  it('같은 id의 리워드 생성이 겹치면 두 번째는 500이 아니라 duplicate_reward다', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    // 두 요청이 같은 선조회(없음)를 보고 나란히 insert한다.
+    const [a, b] = await Promise.all([
+      upsertReward(creatorId, projectId, rewardInput({ rewardId: 'dup' })),
+      upsertReward(creatorId, projectId, rewardInput({ rewardId: 'dup' })),
+    ]);
+    // 겹침 타이밍에 따라 선조회가 잡을 수도 있다 — 어느 쪽이든 던지지 않고 하나만 성공한다.
+    expect([a.ok, b.ok].filter(Boolean)).toHaveLength(1);
+    const failed = a.ok ? b : a;
+    expect(failed).toMatchObject({ ok: false, code: 'duplicate_reward' });
+  });
+
+  it('유니크 위반을 던지는 insert는 duplicate_reward로 바뀐다 (선조회 우회 재현)', async () => {
+    const { creatorId, projectId } = await seedProject({ reviewStatus: 'draft' });
+    await upsertReward(creatorId, projectId, rewardInput({ rewardId: 'dup' }));
+    // 선조회가 "없음"을 보는 순간을 재현: 첫 select(가드) 뒤에 기존 행을 지우고 insert 직전에 다시 넣는다.
+    // 가장 단순한 재현은 개명 경로 — 선조회(taken) 뒤에 같은 id가 생긴 상황.
+    await upsertReward(creatorId, projectId, rewardInput({ rewardId: 'other' }));
+    let selects = 0;
+    const real = mockDb;
+    mockDb = new Proxy(real, {
+      get(target, prop) {
+        if (prop === 'select') {
+          return (...a: unknown[]) => {
+            selects += 1;
+            // 1: guard, 2: previous, 3: taken(중복 선조회) — 3번째를 빈 결과로 속인다.
+            if (selects === 3) return { from: () => ({ where: () => ({ limit: async () => [] }) }) };
+            return (target as any).select(...a);
+          };
+        }
+        const v = (target as any)[prop];
+        return typeof v === 'function' ? v.bind(target) : v;
+      },
+    });
+    const r = await upsertReward(creatorId, projectId, rewardInput({ rewardId: 'dup' }), 'other');
+    mockDb = real;
+    expect(r).toMatchObject({ ok: false, code: 'duplicate_reward' });
+  });
+});
+/* eslint-enable @typescript-eslint/no-explicit-any */

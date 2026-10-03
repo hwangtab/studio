@@ -24,6 +24,48 @@ const safeDb = async <T>(run: () => Promise<T>, fallback: T, where: string): Pro
   }
 };
 
+/**
+ * ISR(getStaticProps) 전용 엄격 모드가 DB 오류를 삼킬지 정한다.
+ *
+ * 삼키는 것이 맞는 경우: ① `TURSO_*`가 없는 환경(CI·로컬 — 빌드는 DB 없이 성공해야 한다)
+ * ② `next build` 중(일시 오류로 배포 전체가 서면 안 된다). 그 밖의 런타임 재생성에서는
+ * 던진다 — Next ISR은 재생성이 실패하면 직전 정적 페이지를 유지하고 에러는 캐시하지 않는다.
+ * 삼켜서 null/[]로 돌려주면 정상 페이지가 notFound·빈 목록으로 60초마다 굳는다.
+ */
+const shouldSwallowDbErrors = (): boolean =>
+  !process.env.TURSO_DATABASE_URL ||
+  !process.env.TURSO_AUTH_TOKEN ||
+  process.env.NEXT_PHASE === 'phase-production-build';
+
+const strictDb = async <T>(run: () => Promise<T>, fallback: T, where: string): Promise<T> => {
+  try {
+    return await run();
+  } catch (error: unknown) {
+    if (shouldSwallowDbErrors()) {
+      console.error(`[funding] DB 조회 실패(${where}) — 파일 기준으로만 응답합니다:`, error);
+      return fallback;
+    }
+    console.error(`[funding] DB 조회 실패(${where}) — ISR 재생성을 실패시켜 직전 페이지를 유지합니다:`, error);
+    throw error;
+  }
+};
+
+/** getStaticProps 전용: 조회 실패는 throw, 진짜 부재만 null. */
+export const getFundingProjectForStaticProps = async (slug: string): Promise<FundingProject | null> => {
+  const fromFile = getFundingProject(slug);
+  if (fromFile) return fromFile;
+  return strictDb(() => getDbFundingProject(slug), null, `slug=${slug}`);
+};
+
+/** getStaticProps 전용 목록: DB 조회 실패는 throw(빌드·DB 미설정은 파일 기준). */
+export const getListableFundingProjectsForStaticProps = async (now: Date = new Date()): Promise<FundingProject[]> => {
+  const fromFile = getAllFundingProjects();
+  const seen = new Set(fromFile.map((p) => p.slug));
+  const fromDb = await strictDb(() => listDbFundingProjects(), [], 'list');
+  const all = [...fromFile, ...fromDb.filter((p) => !seen.has(p.slug))];
+  return sortListableProjects(all.filter((p) => !p.hidden && computeProjectState(p, now) !== 'draft'), now);
+};
+
 export const getFundingProjectAsync = async (slug: string): Promise<FundingProject | null> => {
   const fromFile = getFundingProject(slug);
   if (fromFile) return fromFile;

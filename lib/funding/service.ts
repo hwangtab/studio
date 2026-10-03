@@ -338,15 +338,23 @@ export interface ProjectStatus {
 
 /**
  * partially_refunded는 paid와 같이 집계한다 — 리워드 일부만 환불한 건이라 후원 자체는 살아
- * 있고, 리워드 재고도 여전히 나간 상태다. 모금액은 엄밀히는 total_amount − Σ(done 환불)이
- * 정확하지만, 그 차감은 payments/refunds 조인이 필요해 이 집계(핫 경로, 상태 API가 폴링)를
- * 무겁게 만든다. 부분환불은 드물고 오차는 하향이 아니라 상향이라, 지금은 total_amount를
- * 그대로 더한다.
+ * 있다. 건수·인원에는 그대로 세고, **모금액에서는 그 주문의 done 환불을 뺀다.** 줄 단위
+ * 환불(마이그레이션 0044)이 생긴 뒤로 부분환불은 드문 예외가 아니라 "책만 청약철회" 같은
+ * 정상 상태라, 빼지 않으면 돌려준 돈이 공개 모금액에 계속 남는다. 재고는 아래 줄 집계가
+ * 돌려준 수량을 이미 뺀다(pledgeLinesSql의 quantity).
+ *
+ * 차감은 상관 서브쿼리 하나다(refunds ⋈ payments). 이 집계는 상태 API가 폴링하는 핫 경로이고
+ * refunds.payment_id·payments.order_id에는 인덱스가 없어서, CASE로 partially_refunded 주문에만
+ * 서브쿼리를 돌린다 — paid 주문은 0으로 지나간다. 줄 환불이 done 행을 적고 상태를
+ * partially_refunded로 바꾸기까지의 짧은 창에서는 그 환불이 아직 빠지지 않는다.
  */
 export const aggregateProjectStatus = async (project: FundingProject, now: Date): Promise<ProjectStatus> => {
   const db = getDb();
   const totals = await db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
-    SELECT SUM(o.total_amount) AS raised,
+    SELECT SUM(o.total_amount - CASE WHEN o.status = 'partially_refunded' THEN COALESCE((
+             SELECT SUM(r.amount) FROM refunds r JOIN payments p ON p.id = r.payment_id
+             WHERE p.order_id = o.id AND r.status = 'done'
+           ), 0) ELSE 0 END) AS raised,
            -- 펀딩 '건수'. 인원이 아니다.
            COUNT(*) AS backers,
            -- 펀딩 '인원'. 신원 키는 backerIdentitySql — 수기 등록 플레이스홀더는 주문 단위로

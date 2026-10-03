@@ -400,6 +400,16 @@ it('후원자 명단 이름 공개는 기본 해제', () => {
  * 메시지는 이름과 따로 간다(2026-09-28) — 이름을 표시하지 않으면 "익명"으로 올라간다고
  * 칸 바로 아래에서 알린다. 이름 표시 체크는 여전히 미리 켜지 않는다.
  */
+describe('담기·빼기 뒤 포커스', () => {
+  it('눌린 버튼이 사라져 포커스가 body로 빠지면 리워드 구획으로 옮긴다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 빼기' }));
+    // 마지막 하나를 빼면 행이 사라진다 — 포커스가 body에 남아서는 안 된다.
+    expect(document.activeElement).not.toBe(document.body);
+    expect(document.activeElement?.tagName).toBe('FIELDSET');
+  });
+});
+
 describe('후원자 명단', () => {
   const renderWizard = () => render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
 
@@ -890,6 +900,17 @@ describe('폼 안의 결제위젯', () => {
     widgetReady = false;
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+  });
+
+  it('위젯이 안 떴으면 추가 펀딩 칸의 Enter도 제출하지 않고 약관 문구도 띄우지 않는다', async () => {
+    widgetReady = false;
+    widgetAgreed = null;
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.type(screen.getByLabelText(/추가 펀딩 금액/), '{selectall}5000{Enter}');
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(fetch).not.toHaveBeenCalled();
+    expect(requestPayment).not.toHaveBeenCalled();
   });
 
   it('위젯을 못 불러오면 이유와 다시 시도를 준다', async () => {

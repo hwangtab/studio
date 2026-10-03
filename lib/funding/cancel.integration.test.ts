@@ -242,6 +242,25 @@ describe('cancelFundingPledge', () => {
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('partially_refunded');
   });
 
+  /**
+   * 선점 뒤 토스가 거절하는 사이 줄 단위 환불(또는 토스 콘솔 부분 취소)이 기록된 경우. 예전엔
+   * done 환불 "건수"가 달라졌다는 이유로 되돌림이 0행이 되어, 일부만 환불된 주문이 refunded로
+   * 굳었다. 잔액이 남았으므로 partially_refunded로 돌아와야 한다.
+   */
+  it('토스가 거절하는 사이 부분 환불이 기록되면 refunded로 굳지 않고 partially_refunded로 돌아온다', async () => {
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
+    await markPaidWithToss(c.orderNo);
+    (cancelPayment as jest.Mock).mockImplementationOnce(async () => {
+      await client.execute("INSERT INTO refunds (id,payment_id,amount,reason,requested_by,status) VALUES ('rl','p1',2000,'줄 환불','admin','done')");
+      return { ok: false, code: 'NOT_CANCELABLE_AMOUNT', message: '취소 가능 금액 초과' };
+    });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: 'r', now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'toss_failed' });
+    const after = await findFundingOrderByOrderNo(c.orderNo);
+    expect(after?.status).toBe('partially_refunded');
+    expect(remainingRefundable(after!)).toBe(3000);
+  });
+
   it('부분환불 건 — 고객은 거부, 관리자는 잔액만 환불한다', async () => {
     const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW); if (!c.ok) throw new Error();
     await markPaidWithToss(c.orderNo);

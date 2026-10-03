@@ -48,14 +48,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 점검 자체가 죽으면 "이상 없음"과 구분되지 않는다 — 조용한 실패를 잡으려고 만든
      * 것이 조용히 실패하는 셈이라, 이 실패도 반드시 알린다(backup-contracts와 같은 판단).
      */
-    await sendEmail({
+    const alert = await sendEmail({
       to: OPERATOR_EMAIL,
       subject: '[Studio NOL] 운영 점검 실패',
       text:
         '운영 점검이 실행되지 못했습니다. 이상이 없어서 조용한 것이 아니라, 확인 자체를 못 한 상태입니다.\n\n' +
         `사유: ${detail}\n\n` +
         '반복되면 Turso 연결과 크론 설정을 확인해 주세요.',
-    }).catch(() => {});
+    }).catch((e: unknown): { ok: boolean; errorCode?: string } => ({ ok: false, errorCode: String(e) }));
+    // 알림이 안 나간 사실을 삼키면 점검 실패가 조용히 묻힌다 — 응답은 그대로 두고 로그만 남긴다.
+    if (!alert.ok) console.error('[cron/health-check] 운영자 실패 알림 발송 실패', alert.errorCode);
 
     return res.status(500).json({ ok: false, message: '점검에 실패했습니다.' });
   }
