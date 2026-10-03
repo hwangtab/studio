@@ -1,6 +1,5 @@
 import { ExternalLink } from '../../lib/lucide-icons';
-import ResponsiveImage from '../ResponsiveImage';
-import BaseCard from '../ui/BaseCard';
+import LineupCard from '../common/LineupCard';
 
 interface NamedLink {
   label: string;
@@ -165,49 +164,26 @@ export default function FundingLineupPerson({ id }: { id: string }) {
   const person = LINEUP_PEOPLE[id];
   if (!person) return null;
 
-  const cardLinkProps = !person.people && person.sns ? { href: person.sns, target: '_blank' } : {};
-
   return (
-    // 나머지 펀딩 카드(RewardCard 등)와 같은 유리 재질(BaseCard variant="glass")을 쓴다.
-    // 손으로 만든 bg-white/80 박스로는 스펙큘러 하이라이트·hover 리프트가 안 붙어 옆
-    // 리워드 카드들과 나란히 두면 이 카드만 평평해 보였다(운영자 지적 2026-09-30).
-    <BaseCard variant="glass" className="my-3 flex items-start gap-4 p-4" {...cardLinkProps}>
-      <div className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20">
-        <div className="absolute inset-0 overflow-hidden rounded-full">
-          <ResponsiveImage
-            src={person.photo}
-            alt={person.name ? `${person.name} 프로필 사진` : '프로필 사진'}
-            fill
-            sizes="80px"
-            className="object-cover"
-          />
-        </div>
-        {person.photoSecondary && (
-          <div className="absolute bottom-0 right-0 h-9 w-9 overflow-hidden rounded-full ring-2 ring-white dark:ring-gray-900 sm:h-11 sm:w-11">
-            <ResponsiveImage src={person.photoSecondary} alt="" fill sizes="44px" className="object-cover" />
-          </div>
-        )}
-      </div>
-      <div className="min-w-0 text-lg">
-        {/* <p>가 아니라 <div>다 — 이 카드는 마크다운 본문 `.prose` 안에서 렌더되는데,
-            styles/globals.css의 `.prose p`(margin-bottom 1.5em)·`.prose p+p`(margin-top
-            1.5em)가 태그 선택자라 우리 mt-1(4px) 지정보다 특정도가 높아 그대로 덮어쓴다
-            (운영자 지적 2026-09-30: "패딩이 아주 어색해" — 실측: bio 문단 margin-top이
-            지정한 4px가 아니라 21px로 렌더됨). 이 규칙은 장문 본문 문단 간격용이라 이름·
-            소개 두 줄짜리 카드에는 맞지 않다. div는 태그가 달라 두 선택자 모두 매치되지
-            않는다. */}
-        <div className="break-keep font-bold leading-snug text-gray-900 dark:text-white">
-          {person.people
-            ? person.people.map((p, i) => (
-                <span key={p.label}>
-                  {i > 0 && <span> x </span>}
-                  <NameLink {...p} />
-                </span>
-              ))
-            : person.name}
-        </div>
-        <div className="mt-1 break-keep text-sm leading-relaxed text-gray-600 dark:text-gray-300">{person.bio}</div>
-      </div>
-    </BaseCard>
+    // 카드 모양은 공연 상세와 공유하는 LineupCard — 사람이 하나면 카드 전체가 SNS 링크,
+    // 듀오(사람 둘, SNS 둘)는 카드 하나를 한 링크로 감쌀 수 없어 이름별로 따로 링크한다.
+    <LineupCard
+      className="my-3"
+      photo={person.photo}
+      photoSecondary={person.photoSecondary}
+      photoAlt={person.name ? `${person.name} 프로필 사진` : '프로필 사진'}
+      href={!person.people ? person.sns : undefined}
+      bio={person.bio}
+      name={
+        person.people
+          ? person.people.map((p, i) => (
+              <span key={p.label}>
+                {i > 0 && <span> x </span>}
+                <NameLink {...p} />
+              </span>
+            ))
+          : person.name
+      }
+    />
   );
 }
