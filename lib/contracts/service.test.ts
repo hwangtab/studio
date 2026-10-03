@@ -406,3 +406,42 @@ describe('개인정보가 파기된 계약은 재발송으로 되살리지 못�
     expect(result).toBeNull();
   });
 });
+
+describe('호실 점유 판정 — 표기 차이와 동시 발송', () => {
+  it('"301"과 "301호"는 같은 방으로 본다', async () => {
+    await addContract({ id: 'rs1', room: '301호', start: '2026-10-01', end: '2027-03-31', status: 'signed' });
+
+    const conflict = await findRoomConflict({
+      roomNumber: '301',
+      startDate: d('2026-11-01'),
+      endDate: d('2027-02-28'),
+    });
+    expect(conflict?.id).toBe('rs1');
+  });
+
+  it('같은 호실의 초안 둘을 동시에 발송하면 한 쪽만 발송된다', async () => {
+    await addContract({ id: 'da', room: '505', start: '2026-10-01', end: '2027-03-31', status: 'draft' });
+    await addContract({ id: 'db', room: '505호', start: '2026-12-01', end: '2027-05-31', status: 'draft', name: '이영희' });
+
+    const results = await Promise.all([
+      markContractSent('da', { allowedStatuses: ['draft'] }),
+      markContractSent('db', { allowedStatuses: ['draft'] }),
+    ]);
+
+    expect(results.filter(Boolean)).toHaveLength(1);
+    const statuses = (await mockDb.select({ id: contracts.id, status: contracts.status }).from(contracts)).filter((c) =>
+      ['da', 'db'].includes(c.id),
+    );
+    expect(statuses.filter((c) => c.status === 'sent')).toHaveLength(1);
+  });
+
+  it('기간이 겹치지 않는 발송 대기 계약은 서로 막지 않는다', async () => {
+    await addContract({ id: 'ea', room: '506', start: '2026-01-01', end: '2026-06-30', status: 'draft' });
+    await addContract({ id: 'eb', room: '506', start: '2026-09-01', end: '2027-02-28', status: 'draft', name: '박민수' });
+
+    const a = await markContractSent('ea', { allowedStatuses: ['draft'] });
+    const b = await markContractSent('eb', { allowedStatuses: ['draft'] });
+    expect(a).not.toBeNull();
+    expect(b).not.toBeNull();
+  });
+});

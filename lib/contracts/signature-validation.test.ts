@@ -65,12 +65,22 @@ describe('전자서명 이미지 검증', () => {
     expect(validateSignatureData(`data:image/png;base64,${tiny}`).ok).toBe(false);
   });
 
-  it('2MB를 넘는 이미지를 거부한다', () => {
-    const oversized = Buffer.concat([PNG_MAGIC, Buffer.alloc(2 * 1024 * 1024)]);
+  it('요청 본문 한도(1MB)에 닿는 700KB 초과 이미지를 거부한다', () => {
+    const oversized = Buffer.concat([PNG_MAGIC, Buffer.alloc(800 * 1024)]);
     const result = validateSignatureData(`data:image/png;base64,${oversized.toString('base64')}`);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toContain('2MB');
+    expect(result.message).toContain('too large');
+  });
+
+  it('작은 PNG가 거대한 크기를 선언하면 거부한다(PDF 렌더 메모리 폭주 방지)', () => {
+    expect(validateSignatureData(pngDataUrl(1024, 9000, 9000)).ok).toBe(false);
+    // 한 변은 한도 안이어도 면적이 한도를 넘으면 거부한다.
+    expect(validateSignatureData(pngDataUrl(1024, 3500, 3500)).ok).toBe(false);
+  });
+
+  it('실제 캔버스 크기(고해상도 기기)는 통과한다', () => {
+    expect(validateSignatureData(pngDataUrl(2048, 1800, 600)).ok).toBe(true);
   });
 
   /**

@@ -45,9 +45,10 @@ const parseDate = (value: string): Date | null => {
  *
  * 호실은 자유 입력이라 같은 방을 'A'·'a'·' A '로 적을 수 있다. 표기가 다르면 기간이
  * 겹치는지 확인할 때 다른 방으로 보여, 이중 배정을 막는 장치가 그대로 뚫린다.
- * 저장 전에 한 형태로 모아 둔다.
+ * 저장 전에 한 형태로 모아 둔다. "301"과 "301호"도 같은 방이다(호·호실 접미사는 뗀다).
  */
-const normalizeRoomNumber = (value: string): string => value.replace(/\s+/g, '').toUpperCase();
+export const normalizeRoomNumber = (value: string): string =>
+  value.replace(/\s+/g, '').replace(/호실?$/, '').toUpperCase();
 
 /** 계약서에 적히는 최소 이용 기간. 운영상 6개월 이상을 권하지만 강제하지는 않는다. */
 export const MIN_CONTRACT_MONTHS = 1;
@@ -104,7 +105,10 @@ const addMonths = (date: Date, months: number): Date => {
  * 문자는 모두 막는다.
  */
 const CONTROL_CHARS =
-  /[\u0000-\u001F\u007F-\u009F\u00AD\u061C\u180E\u200B-\u200F\u2028\u2029\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]/;
+  // 아래 둘째 줄은 "글자처럼 보이지만 빈칸"인 문자들이다(한글 채움 U+115F·1160·3164·FFA0, 점자 빈칸 U+2800,
+  // 결합 그래핀 결합 방지 U+034F, 크메르 고유 모음 U+17B4·17B5). 이름·주소 칸에 넣으면 눈으로는 같은데 값이
+  // 다른 문자열이 되어 동명이인 판단과 계약서 인쇄를 속인다(2026-10-02 코드리뷰).
+  /[\u0000-\u001F\u007F-\u009F\u00AD\u061C\u180E\u200B-\u200F\u2028\u2029\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB\u034F\u115F\u1160\u17B4\u17B5\u2800\u3164\uFFA0]/;
 
 export const validateCreateContractPayload = (
   payload: Record<string, unknown>,

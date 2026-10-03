@@ -20,11 +20,21 @@ const BASE64 = /^[A-Za-z0-9+/]+={0,2}$/;
 
 const PNG_MAGIC = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
 
-const MAX_BYTES = 2 * 1024 * 1024;
+/**
+ * 요청 본문 한도와 맞춘다. 서명 API는 Next 기본 bodyParser(1MB)를 쓰는데, 예전 상한 2MB는 base64로 부풀면
+ * 그 한도를 넘어 도달할 수 없는 숫자였다. 실제 서명 PNG는 수십 KB다(2026-10-02 코드리뷰).
+ */
+const MAX_BYTES = 700 * 1024;
 const MIN_BYTES = 100;
 
-/** 서명 캔버스가 만들 수 있는 크기의 상한. 이보다 크면 캔버스에서 온 것이 아니다. */
-const MAX_DIMENSION = 10000;
+/**
+ * 서명 캔버스가 만들 수 있는 크기의 상한. 이보다 크면 캔버스에서 온 것이 아니다.
+ *
+ * 캔버스는 화면 폭 × 기기 픽셀비(sign.tsx)라 실제로는 2천 픽셀 안쪽이다. 예전 상한 10000×10000은
+ * 아주 작은 PNG가 그 크기를 선언해 PDF 렌더(Chromium)에서 큰 메모리를 쓰게 할 수 있었다.
+ */
+const MAX_DIMENSION = 4000;
+const MAX_PIXELS = 6_000_000;
 
 /**
  * 인쇄 경로에서 쓰는 형태 검사. 저장 때 통과한 값이라면 여기서도 반드시 통과한다.
@@ -50,7 +60,7 @@ export const validateSignatureData = (data: string): { ok: boolean; message?: st
 
   const decodedLength = Buffer.byteLength(base64, 'base64');
   if (decodedLength > MAX_BYTES) {
-    return { ok: false, message: 'Signature image exceeds 2MB' };
+    return { ok: false, message: 'Signature image is too large' };
   }
   if (decodedLength < MIN_BYTES) {
     return { ok: false, message: 'Signature image is too small' };
@@ -84,7 +94,13 @@ export const validateSignatureData = (data: string): { ok: boolean; message?: st
 
   const width = decoded.readUInt32BE(16);
   const height = decoded.readUInt32BE(20);
-  if (width === 0 || height === 0 || width > MAX_DIMENSION || height > MAX_DIMENSION) {
+  if (
+    width === 0 ||
+    height === 0 ||
+    width > MAX_DIMENSION ||
+    height > MAX_DIMENSION ||
+    width * height > MAX_PIXELS
+  ) {
     return { ok: false, message: 'Signature image has invalid dimensions' };
   }
 

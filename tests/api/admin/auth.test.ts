@@ -11,7 +11,7 @@
  */
 
 jest.mock('../../../lib/contracts/admin-rate-limit', () => ({
-  isAdminLoginThrottled: jest.fn(),
+  reserveAdminLoginAttempt: jest.fn(),
   recordAdminLoginFailure: jest.fn(),
   resetAdminLoginRateLimit: jest.fn(),
 }));
@@ -29,7 +29,7 @@ import {
   logoutAdminSession,
 } from '../../../lib/contracts/admin-auth';
 import {
-  isAdminLoginThrottled,
+  reserveAdminLoginAttempt,
   recordAdminLoginFailure,
   resetAdminLoginRateLimit,
 } from '../../../lib/contracts/admin-rate-limit';
@@ -51,7 +51,7 @@ const run = async (method: string) => {
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (isAdminLoginThrottled as jest.Mock).mockResolvedValue(false);
+  (reserveAdminLoginAttempt as jest.Mock).mockResolvedValue(true);
   (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: false, globalExceeded: false });
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
   (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
@@ -88,7 +88,7 @@ describe('POST — 로그인', () => {
    * 아니라 **대조가 일어나지 않았다**는 사실이다.
    */
   it('잠긴 IP는 올바른 비밀번호여도 429이고, 대조 자체가 일어나지 않는다', async () => {
-    (isAdminLoginThrottled as jest.Mock).mockResolvedValue(true);
+    (reserveAdminLoginAttempt as jest.Mock).mockResolvedValue(false);
     // 맞는 비밀번호였더라도 — 이 목이 불리지 않는다는 것이 요점이다.
     (loginAdminSession as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
     const res = await run('POST');
@@ -104,7 +104,7 @@ describe('POST — 로그인', () => {
     (recordAdminLoginFailure as jest.Mock).mockResolvedValue({ subjectExceeded: true, globalExceeded: false });
     expect((await run('POST')).status).toHaveBeenCalledWith(401);
 
-    (isAdminLoginThrottled as jest.Mock).mockResolvedValue(true);
+    (reserveAdminLoginAttempt as jest.Mock).mockResolvedValue(false);
     expect((await run('POST')).status).toHaveBeenCalledWith(429);
   });
 
@@ -151,7 +151,7 @@ describe('DELETE — 로그아웃', () => {
 
   it('로그아웃에는 시도 제한을 걸지 않는다', async () => {
     await run('DELETE');
-    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
+    expect(reserveAdminLoginAttempt).not.toHaveBeenCalled();
   });
 });
 
@@ -172,7 +172,7 @@ describe('GET — 지금 누구로 들어와 있는가', () => {
   it('조회일 뿐이라 로그인을 시도하지도, 시도 제한을 보지도 않는다', async () => {
     await run('GET');
     expect(loginAdminSession).not.toHaveBeenCalled();
-    expect(isAdminLoginThrottled).not.toHaveBeenCalled();
+    expect(reserveAdminLoginAttempt).not.toHaveBeenCalled();
   });
 });
 

@@ -1,7 +1,7 @@
 import { getIronSession, IronSession, SessionOptions } from 'iron-session';
 import type { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from 'next';
 
-import { ADMIN_FALLBACK_ID, ADMIN_FALLBACK_NAME } from './admin-accounts';
+import { ADMIN_FALLBACK_ID, ADMIN_FALLBACK_NAME, resolveAdminAccounts } from './admin-accounts';
 
 export interface AdminSessionData {
   isLoggedIn?: boolean;
@@ -92,6 +92,12 @@ export const adminSessionIdentity = (
   session: IronSession<AdminSessionData>,
 ): AdminIdentity | null => {
   if (!isAdminSessionValid(session)) return null;
+  /**
+   * 계정이 목록에서 빠졌으면 이미 발급된 쿠키도 거절한다. iron-session은 서버에 상태가 없어 쿠키를 철회할 수
+   * 없고, 이게 없으면 `ADMIN_ACCOUNTS`에서 사람을 지워도 그 사람의 쿠키가 최대 24시간 계속 통한다
+   * (2026-10-02 코드리뷰). adminId가 없는 옛 세션은 위 주석대로 호환을 위해 그대로 둔다.
+   */
+  if (session.adminId && !resolveAdminAccounts().some((account) => account.id === session.adminId)) return null;
   return {
     actor: session.adminId || ADMIN_FALLBACK_ID,
     name: session.adminName || ADMIN_FALLBACK_NAME,

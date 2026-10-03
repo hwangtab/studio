@@ -50,11 +50,32 @@ interface MemoryEntry {
 
 const memoryStore = new Map<string, MemoryEntry>();
 
+/**
+ * 제한의 기준이 되는 주소. IPv6는 /64 접두사로 묶는다.
+ *
+ * IPv6 사용자는 보통 /64 하나를 통째로 받아 그 안의 주소를 마음대로 바꿀 수 있다. 주소 전체를 키로 쓰면
+ * 시도마다 새 주소를 써서 IP별 한도를 계속 새로 받는다(2026-10-02 코드리뷰). IPv4와 IPv4-매핑 주소는 그대로.
+ */
+export const normalizeIpForRateLimit = (ip: string): string => {
+  const mapped = /^::ffff:(\d{1,3}(?:\.\d{1,3}){3})$/i.exec(ip);
+  if (mapped) return mapped[1];
+  if (!ip.includes(':')) return ip;
+
+  // "::" 압축을 풀어 8개 hextet로 만든 뒤 앞 4개(/64)만 쓴다.
+  const [head, tail] = ip.split('::');
+  const headParts = head ? head.split(':') : [];
+  const tailParts = tail ? tail.split(':') : [];
+  const fill = ip.includes('::') ? Array(Math.max(0, 8 - headParts.length - tailParts.length)).fill('0') : [];
+  const full = [...headParts, ...fill, ...tailParts];
+  if (full.length !== 8) return ip; // 형식을 모르면 전체를 키로 쓴다
+  return `${full.slice(0, 4).map((h) => h.toLowerCase().replace(/^0+(?=.)/, '')).join(':')}::/64`;
+};
+
 const getSubjectKey = (req: NextApiRequest): string => {
   // 위조 가능한 헤더를 기준으로 세면 제한이 무의미하다 — 판정은 client-ip 한 곳에 둔다.
   const ip = getClientIp(req);
 
-  if (ip) return `admin_login:ip:${ip}`;
+  if (ip) return `admin_login:ip:${normalizeIpForRateLimit(ip)}`;
 
   // IP를 못 얻으면 요청 지문으로 대체한다 — 없는 것보다는 낫다.
   const fingerprint = createHash('sha256')
@@ -134,6 +155,28 @@ const bumpCounter = async (
  * 카운터는 Turso에 두어 인스턴스 간 공유하고, DB 장애 시에만 인스턴스 로컬로 폴백한다.
  */
 
+/**
+ * 비밀번호를 대조하기 **전에** 시도 한 번을 원자적으로 예약한다. 한도를 넘었으면 false — 대조하지 않는다.
+ *
+ * 읽기(isAdminLoginThrottled)와 오답 기록(recordAdminLoginFailure)이 따로면, 한 IP가 수백 건을 동시에 보낼 때
+ * 전부 "아직 한도 아래"를 읽고 대조까지 통과한다(2026-10-02 코드리뷰). 여기서는 증가와 판정이 한 문장이라
+ * 동시 요청도 LIMIT개까지만 대조에 닿는다. 성공하면 resetAdminLoginRateLimit이 지우므로 정상 로그인은
+ * 예산을 쓰지 않는다. 실패의 subject 계수는 이 예약이 이미 했다(recordAdminLoginFailure는 전역만 올린다).
+ */
+export const reserveAdminLoginAttempt = async (req: NextApiRequest): Promise<boolean> => {
+  const key = getSubjectKey(req);
+  const nowSeconds = Math.floor(Date.now() / 1000);
+
+  try {
+    await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
+    const count = await bumpCounter(key, WINDOW_SECONDS, nowSeconds);
+    return count <= LIMIT;
+  } catch (error: unknown) {
+    console.error('[admin-rate-limit] Reservation unavailable, using in-memory counter:', error);
+    return checkInMemory(key, nowSeconds);
+  }
+};
+
 /** 이 IP(subject)가 이미 창 한도를 넘겼는지 읽기만 한다 — 카운터를 올리지 않는다. */
 export const isAdminLoginThrottled = async (req: NextApiRequest): Promise<boolean> => {
   const key = getSubjectKey(req);
@@ -179,12 +222,11 @@ export interface AdminLoginFailureVerdict {
 export const recordAdminLoginFailure = async (
   req: NextApiRequest,
 ): Promise<AdminLoginFailureVerdict> => {
-  const key = getSubjectKey(req);
   const nowSeconds = Math.floor(Date.now() / 1000);
 
   try {
     await getDb().delete(rateLimits).where(lte(rateLimits.expiresAt, nowSeconds));
-    const subjectCount = await bumpCounter(key, WINDOW_SECONDS, nowSeconds);
+    // subject 카운터는 reserveAdminLoginAttempt가 대조 전에 이미 올렸다 — 여기서 또 올리면 이중 계수다.
     const globalCount = await bumpCounter(GLOBAL_KEY, GLOBAL_WINDOW_SECONDS, nowSeconds);
 
     const globalExceeded = globalCount > GLOBAL_LIMIT;
@@ -194,12 +236,11 @@ export const recordAdminLoginFailure = async (
           `${GLOBAL_WINDOW_SECONDS / 60}분 창). IP 회전 대입일 수 있다.`,
       );
     }
-    return { subjectExceeded: subjectCount > LIMIT, globalExceeded };
+    return { subjectExceeded: false, globalExceeded };
   } catch (error: unknown) {
     console.error('[admin-rate-limit] Falling back to in-memory counter:', error);
-    const subjectOk = checkInMemory(key, nowSeconds);
     const globalOk = checkInMemory(GLOBAL_KEY, nowSeconds, GLOBAL_LIMIT, GLOBAL_WINDOW_SECONDS);
-    return { subjectExceeded: !subjectOk, globalExceeded: !globalOk };
+    return { subjectExceeded: false, globalExceeded: !globalOk };
   }
 };
 
