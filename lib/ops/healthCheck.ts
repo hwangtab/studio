@@ -15,6 +15,7 @@ import {
   dormancyWarningBoundary,
   dormantActivityCondition,
 } from '../privacy/orderRetention';
+import { expireOverdueContracts } from '../contracts/service';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
 import {
@@ -237,6 +238,70 @@ export const checkFieldKeyRotationPending = async (): Promise<HealthIssue | null
  * 화면에는 캘린더·GA4 같은 외부 호출을 붙이지 않는다. 첫 화면을 열 때마다 구글을 찌르면
  * 느리고, 그쪽 장애가 관리자 화면까지 막는다. 그 둘은 하루 한 번 크론(runHealthCheck)이 본다.
  */
+/** 발송하지 않은 초안을 이 기간 넘게 두면 운영자에게 정리를 청한다(개인정보를 계속 들고 있게 되므로). */
+export const STALE_CONTRACT_DRAFT_DAYS = 90;
+/** 서명 직후 후처리(PDF·메일)가 끝나는 데 충분한 시간. 이보다 오래 notifiedAt이 비어 있으면 후처리가 죽은 것이다. */
+const SIGNED_NOTIFICATION_GRACE_MS = 30 * 60 * 1000;
+
+/**
+ * 계약 위생 점검 (2026-10-03 코드리뷰 후속).
+ *
+ * 1. 발송 후 아무도 열지 않은 계약의 만료 — expireOverdueContracts는 화면을 열 때만 도는 lazy 방식이라
+ *    목록을 아무도 안 열면 `sent`로 남아 호실을 막고 파기 대상에서도 빠진다. 매일 한 번 돌려 준다.
+ * 2. 오래된 초안 — 처리방침 ⑫는 해지·만료된 계약만 파기 대상으로 말하므로 초안은 자동 파기하지 않는다
+ *    (정책 문구를 바꾸면 약관 판본 게이트를 타는 일이라 코드로 지우지 않는다). 대신 알려서 사람이 지우게 한다.
+ * 3. 서명은 끝났는데 후처리(PDF 생성·메일)가 기록을 남기지 못한 계약 — 함수가 시간 초과로 죽으면
+ *    notificationError도 notifiedAt도 비어 있어 관리자 화면에 경고가 뜨지 않는다.
+ */
+export const checkContractHygiene = async (now: Date): Promise<HealthIssue[]> => {
+  const db = getDb();
+  const issues: HealthIssue[] = [];
+
+  await expireOverdueContracts(now);
+
+  const draftBoundary = new Date(now.getTime() - STALE_CONTRACT_DRAFT_DAYS * 24 * 60 * 60 * 1000);
+  const staleDrafts = await db
+    .select({ id: contracts.id })
+    .from(contracts)
+    .where(and(eq(contracts.status, 'draft'), lt(contracts.createdAt, draftBoundary), isNull(contracts.purgedAt)));
+  if (staleDrafts.length > 0) {
+    issues.push({
+      severity: 'medium',
+      title: `${STALE_CONTRACT_DRAFT_DAYS}일 넘게 발송하지 않은 계약 초안 ${staleDrafts.length}건`,
+      detail:
+        '초안에는 고객 이름·연락처가 들어 있고, 발송하지 않은 초안은 자동으로 파기되지 않습니다. ' +
+        '필요 없으면 관리자 계약 목록에서 삭제해 주세요.',
+      href: '/admin/contracts',
+    });
+  }
+
+  const graceBoundary = new Date(now.getTime() - SIGNED_NOTIFICATION_GRACE_MS);
+  const unnotified = await db
+    .select({ id: contracts.id })
+    .from(contracts)
+    .where(
+      and(
+        eq(contracts.status, 'signed'),
+        isNull(contracts.notifiedAt),
+        isNotNull(contracts.signedAt),
+        lt(contracts.signedAt, graceBoundary),
+        isNull(contracts.purgedAt),
+      ),
+    );
+  if (unnotified.length > 0) {
+    issues.push({
+      severity: 'high',
+      title: `서명은 끝났지만 후처리 기록이 없는 계약 ${unnotified.length}건`,
+      detail:
+        '서명 완료 메일·PDF 보관이 끝났다는 기록(notifiedAt)이 없습니다. 서명 직후 처리가 시간 초과 등으로 중단됐을 수 있습니다. ' +
+        '관리자 계약 상세에서 PDF 보관과 메일 발송 여부를 확인하고, 필요하면 "서명본 재발송"을 눌러 주세요.',
+      href: '/admin/contracts',
+    });
+  }
+
+  return issues;
+};
+
 export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   const db = getDb();
   const issues: HealthIssue[] = [];
@@ -863,6 +928,10 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
   issues.push(...leadRate.issues);
 
   issues.push(...(await collectDbIssues(now)));
+
+  // 반드시 collectDbIssues 뒤에 부른다: 이 함수가 기한 지난 발송 계약을 expired로 내리므로, 앞에 오면
+  // collectDbIssues의 "서명 기한이 지난 계약" 알림(고객이 링크를 놓쳤다는 신호)이 사라진다.
+  issues.push(...(await checkContractHygiene(now)));
 
   return { issues: sortBySeverity(issues), checkedAt: now };
 };
