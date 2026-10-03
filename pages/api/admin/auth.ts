@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import {
-  isAdminLoginThrottled,
+  reserveAdminLoginAttempt,
   recordAdminLoginFailure,
   resetAdminLoginRateLimit,
 } from '../../../lib/contracts/admin-rate-limit';
@@ -38,7 +38,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 공유 IP에서 서로를 막는 문제는 순서가 아니라 한도 숫자로 푼다
      * (admin-rate-limit.ts의 LIMIT 주석).
      */
-    if (await isAdminLoginThrottled(req)) {
+    if (!(await reserveAdminLoginAttempt(req))) {
       return res.status(429).json({
         ok: false,
         message: '로그인 시도가 너무 많습니다. 잠시 후 다시 시도해 주세요.',

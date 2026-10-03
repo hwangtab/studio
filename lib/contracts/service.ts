@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 
-import { and, eq, gte, inArray, isNull, lte, ne, or } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNull, lte, ne, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import {
@@ -16,7 +16,7 @@ import { computeExpiresAt, type ContractStatus } from './status';
 import { buildContractContent, buildRulesContent, readContractTemplate } from './template';
 import { deleteTemplateSnapshot, saveTemplateSnapshot } from './template-snapshot';
 import { buildSignUrl, generateSignToken } from './token';
-import type { CreateContractPayload } from './validation';
+import { normalizeRoomNumber, type CreateContractPayload } from './validation';
 
 /**
  * 서명 시 필수 동의를 받는 조항. 계약 생성 시 contract_clauses로 복제해 두고,
@@ -50,6 +50,9 @@ export const expireOverdueContracts = async (now: Date = new Date()): Promise<nu
   }
 };
 
+/** normalizeRoomNumber와 같은 규칙의 SQL 표현(공백·끝의 호/호실 제거, 대문자). 컬럼 쪽을 맞출 때 쓴다. */
+const ROOM_KEY_SQL = sql`replace(replace(replace(upper(${contracts.roomNumber}), ' ', ''), '호실', ''), '호', '')`;
+
 /**
  * 같은 호실을 이미 쓰고 있는 계약을 찾는다. 있으면 그 계약을 돌려준다.
  *
@@ -79,7 +82,8 @@ export const findRoomConflict = async (params: {
   excludeContractId?: string;
 }): Promise<Contract | null> => {
   const conditions = [
-    eq(contracts.roomNumber, params.roomNumber),
+    // 저장된 옛 값("302호" 같은 표기)과도 같은 방으로 비교한다 — 양쪽을 같은 규칙으로 맞춘다.
+    sql`${ROOM_KEY_SQL} = ${normalizeRoomNumber(params.roomNumber)}`,
     or(
       // 서명된 계약: 종료 처리 전까지 점유. 새 계약이 그 시작일 이후에 걸치면 충돌이다.
       and(
@@ -371,6 +375,20 @@ export const markContractSent = async (
         or(isNull(contracts.sentAt), lte(contracts.sentAt, cooldownBoundary)),
         // 개인정보가 파기된 계약(이름·본문이 표식으로 덮인)을 발송 상태로 되살리지 못하게 한다.
         isNull(contracts.purgedAt),
+        // 같은 호실을 점유한 다른 계약이 없을 때만 발송 상태로 바꾼다. 라우트가 findRoomConflict로 미리 확인해도
+        // 확인과 UPDATE 사이에 틈이 있어, 같은 호실의 초안 둘을 동시에 보내면 둘 다 통과했다. 조건을 UPDATE 안에
+        // 넣으면 SQLite가 두 문장을 직렬로 실행하므로 뒤에 온 쪽은 앞선 쪽의 sent를 보고 0행이 된다.
+        // (findRoomConflict와 같은 규칙: signed는 종료 처리 전까지, sent는 기간이 겹칠 때.)
+        sql`NOT EXISTS (
+          SELECT 1 FROM contracts c2
+          WHERE c2.id != contracts.id
+            AND replace(replace(replace(upper(c2.room_number), ' ', ''), '호실', ''), '호', '') =
+                replace(replace(replace(upper(contracts.room_number), ' ', ''), '호실', ''), '호', '')
+            AND (
+              (c2.status = 'signed' AND c2.terminated_at IS NULL AND c2.start_date <= contracts.end_date)
+              OR (c2.status = 'sent' AND c2.start_date <= contracts.end_date AND c2.end_date >= contracts.start_date)
+            )
+        )`,
       ),
     )
     .returning();

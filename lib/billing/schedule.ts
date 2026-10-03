@@ -38,6 +38,12 @@ export const cycleYmOf = (d: Date): string => {
   return `${year}-${String(month).padStart(2, '0')}`;
 };
 
+/** 'YYYY-MM' 회차의 청구 시각 = 그 달 billingDay 09:00 KST(그 달에 그 날이 없으면 말일). */
+export const billingDateOf = (cycleYm: string, billingDay: number): Date => {
+  const [year, month] = cycleYm.split('-').map(Number);
+  return fromKst(year, month, Math.min(billingDay, daysInMonth(year, month)));
+};
+
 /**
  * 다음 청구 시각 = 다음 달 billingDay 09:00 KST.
  *

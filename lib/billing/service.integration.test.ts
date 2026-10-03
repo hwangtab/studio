@@ -326,6 +326,32 @@ describe('chargeCycle — cron 청구와 재시도', () => {
     expect(sub.nextBillingAt?.toISOString()).toBe('2026-05-05T00:00:00.000Z');
   });
 
+  it('말일 청구가 실패하면 다음 달로 넘어간 재시도도 실패한 달 회차에 머문다', async () => {
+    const start = new Date('2026-08-30T00:00:00Z');
+    const created = await createSubscription({ ...lessonInput, billingDay: 30 }, start);
+    if (!created.ok) throw new Error('unreachable');
+    issueBillingKey.mockResolvedValue(issuedOk());
+    chargeBillingKey.mockResolvedValue(chargeOk());
+    const sub = (await findSubscriptionById(created.id))!;
+    await completeCardSetup(
+      { id: created.id, token: created.setupToken, authKey: 'auth_1', customerKey: sub.customerKey },
+      start,
+    );
+
+    chargeBillingKey.mockResolvedValueOnce(chargeFail());
+    const first = await chargeCycle(created.id, new Date('2026-09-30T00:00:00Z'), { reason: 'scheduled' });
+    expect(first).toMatchObject({ ok: false, status: 'past_due', cycleYm: '2026-09', attempt: 1 });
+
+    // D+1은 10/1 — 달이 바뀌었다. 예전에는 2026-10 회차의 attempt 1로 새로 시작해 9월이 건너뛰어졌다.
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_cross'));
+    const retry = await chargeCycle(created.id, new Date('2026-10-01T00:00:00Z'), { reason: 'retry' });
+    expect(retry).toMatchObject({ ok: true, status: 'active', cycleYm: '2026-09', attempt: 2 });
+
+    // 다음 청구는 9월 회차 다음인 10/30 09:00 KST — 11/30이 아니다.
+    const after = (await findSubscriptionById(created.id))!;
+    expect(after.nextBillingAt?.toISOString()).toBe('2026-10-30T00:00:00.000Z');
+  });
+
   it('NETWORK_ERROR는 orders를 failed로 확정하지 않는다 (승인됐을 수 있다 — #42 규칙)', async () => {
     const { created } = await activated();
     chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });

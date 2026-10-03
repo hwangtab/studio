@@ -144,3 +144,26 @@ describe('옛 세션 호환', () => {
     expect(adminSessionIdentity(asIron(makeSession()))).toBeNull();
   });
 });
+
+describe('계정이 목록에서 빠지면 발급된 쿠키도 거절한다', () => {
+  it('목록에 있는 계정의 세션은 통한다', () => {
+    expect(adminSessionIdentity(makeSession({ isLoggedIn: true, adminId: 'jina', adminName: '지나' }) as never)).toEqual({
+      actor: 'jina',
+      name: '지나',
+    });
+  });
+
+  it('ADMIN_ACCOUNTS에서 지운 계정의 쿠키는 아직 유효 기간이어도 null이다', () => {
+    const before = process.env.ADMIN_ACCOUNTS;
+    process.env.ADMIN_ACCOUNTS = JSON.stringify([{ id: 'kyungha', name: '황경하', password: PW_KYUNGHA }]);
+    try {
+      expect(adminSessionIdentity(makeSession({ isLoggedIn: true, adminId: 'jina', adminName: '지나' }) as never)).toBeNull();
+    } finally {
+      process.env.ADMIN_ACCOUNTS = before;
+    }
+  });
+
+  it('adminId가 없는 옛 세션은 호환을 위해 그대로 통한다', () => {
+    expect(adminSessionIdentity(makeSession({ isLoggedIn: true }) as never)?.actor).toBe('admin');
+  });
+});

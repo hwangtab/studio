@@ -24,6 +24,7 @@ import { getSupportedArtist } from '../../data/artists';
 import { rowsAffectedOf } from '../booking/confirm';
 import { subscriptionAmounts, subscriptionOrderName, type SubscriptionKind } from './amounts';
 import {
+  billingDateOf,
   computeNextBillingAt,
   cycleYmOf,
   MAX_CHARGE_ATTEMPTS,
@@ -421,7 +422,29 @@ export const chargeCycle = async (
       return { ok: true, status: 'active', cycleYm: cycleYmOf(now) };
   }
 
-  const cycleYm = cycleYmOf(now);
+  let cycleYm = cycleYmOf(now);
+  /**
+   * 말일 근처 청구가 실패하면 재시도(D+1·D+3)가 다음 달로 넘어갈 수 있다(30일 실패 → 11/2 재시도).
+   * 그때 cycleYm을 '지금의 달'로 잡으면 attempt가 1부터 다시 시작해 한도(3회)가 늘고, 성공하면 다음 달 회차를
+   * 낸 것이 되어 실패했던 달이 건너뛰어진다(2026-10-02 코드리뷰). 재시도는 실패한 회차에 머문다.
+   */
+  if (subscription.status === 'past_due') {
+    const [lastFailed] = await db
+      .select({ cycleYm: subscriptionPayments.cycleYm })
+      .from(subscriptionPayments)
+      .where(and(eq(subscriptionPayments.subscriptionId, subscriptionId), eq(subscriptionPayments.status, 'failed')))
+      .orderBy(desc(subscriptionPayments.attemptedAt))
+      .limit(1);
+    if (lastFailed && lastFailed.cycleYm < cycleYm) {
+      const paidThatCycle = await db.query.subscriptionPayments.findFirst({
+        where: (t, { and: all, eq: is }) =>
+          all(is(t.subscriptionId, subscriptionId), is(t.cycleYm, lastFailed.cycleYm), is(t.status, 'paid')),
+      });
+      if (!paidThatCycle) cycleYm = lastFailed.cycleYm;
+    }
+  }
+  // 실패했던 달을 이어서 걷는 경우 기간·다음 청구일의 기준은 지금이 아니라 그 달의 청구일이다.
+  const cycleAnchor = cycleYm === cycleYmOf(now) ? now : billingDateOf(cycleYm, subscription.billingDay);
   const prior = await db
     .select({ attempt: subscriptionPayments.attempt })
     .from(subscriptionPayments)
@@ -569,7 +592,7 @@ export const chargeCycle = async (
   }
 
   const approved = toss.payment;
-  const period = periodFor(now, subscription.billingDay);
+  const period = periodFor(cycleAnchor, subscription.billingDay);
 
   const batchResults = await db.batch([
     // payments가 맨 앞 — paymentKey unique 위반이 동시 실행(cron 중복 기동)의 두 번째를
@@ -607,7 +630,7 @@ export const chargeCycle = async (
         resumeNoticePendingAt: null,
         currentPeriodStart: period.start,
         currentPeriodEnd: period.end,
-        nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
+        nextBillingAt: computeNextBillingAt(cycleAnchor, subscription.billingDay),
         updatedAt: now,
       })
       // 진입부(위)의 cancelled/ended 검사는 **읽기 시점 한 번**이다. 승인 왕복(1~3초) 사이에

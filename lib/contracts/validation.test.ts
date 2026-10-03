@@ -259,6 +259,10 @@ describe('계약 생성 페이로드 검증', () => {
       ['제로폭 문자', '홍길​동'],
       ['ANSI 제어문자', '홍길동[31m'],
       ['줄 구분자', '홍길동 승인'],
+      ['한글 채움 문자(U+3164)', '홍길동\u3164'],
+      ['한글 채움 문자(U+115F)', '홍\u115F길동'],
+      ['점자 빈칸(U+2800)', '홍길동\u2800'],
+      ['반각 한글 채움(U+FFA0)', '홍길동\uFFA0'],
     ])('이름의 %s를 거부한다', (_label, name) => {
       expect(errorFields({ ...validPayload(), customerName: name })).toContain('customerName');
     });
