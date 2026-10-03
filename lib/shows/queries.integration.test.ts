@@ -6,7 +6,7 @@ import { shows, showZones, showtimes, showTicketTypes } from '../../db/schema';
 let testDb: ShowsTestDb;
 jest.mock('../../db/client', () => ({ getDb: () => testDb }));
 
-import { getPublicShowBySlug, getShowOrderForManage, isShowtimeOnPublishedShow } from './queries';
+import { getPublicShowBySlug, getShowOrderForManage, isShowtimeOnPublishedShow, listPublicShows } from './queries';
 import { createShowOrder } from './service';
 
 const NOW = new Date('2026-10-03T00:00:00Z');
@@ -113,5 +113,34 @@ describe('getShowOrderForManage', () => {
     const byId = Object.fromEntries(view!.tickets.map((t) => [t.id, t]));
     expect(byId[tickets[0].id].refundAmountNow).toBeNull();
     expect(byId[tickets[1].id].refundAmountNow).toBe(20000);
+  });
+});
+
+describe('listPublicShows', () => {
+  beforeEach(async () => {
+    testDb = (await createTestDb()).db;
+  });
+
+  it('draft는 목록에 없고, 앞날 회차가 있는 공개 공연은 upcoming에 들어간다', async () => {
+    await seed(testDb);
+    const list = await listPublicShows(NOW);
+    expect(list.upcoming.map((s) => s.slug)).toEqual(['live-1']);
+    expect(list.past).toEqual([]);
+
+    testDb = (await createTestDb()).db;
+    await seed(testDb, 'draft');
+    expect(await listPublicShows(NOW)).toEqual({ upcoming: [], past: [] });
+  });
+
+  it('취소된 공연과 모든 회차가 지난 공연은 past로 간다', async () => {
+    await seed(testDb, 'cancelled');
+    expect((await listPublicShows(NOW)).past.map((s) => s.slug)).toEqual(['live-1']);
+
+    testDb = (await createTestDb()).db;
+    await seed(testDb);
+    const later = new Date(NOW.getTime() + 60 * 86400 * 1000);
+    const list = await listPublicShows(later);
+    expect(list.upcoming).toEqual([]);
+    expect(list.past.map((s) => s.slug)).toEqual(['live-1']);
   });
 });

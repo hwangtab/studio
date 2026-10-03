@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { isTokenMatch } from '../booking/token';
 import {
   computeTicketTypeRemaining,
+  nextShowtimeOf,
   showtimeSaleState,
   type ShowtimeSaleState,
 } from './availability';
@@ -226,4 +227,35 @@ export async function isShowtimeOnPublishedShow(showtimeId: string): Promise<boo
   if (!st) return false;
   const show = await db.query.shows.findFirst({ where: (s, { eq }) => eq(s.id, st.showId) });
   return show?.status === 'published';
+}
+
+// ─── 목록 ───────────────────────────────────────────────────────────────────────
+
+export interface PublicShowList {
+  /** 아직 열리지 않았거나 진행 전인 공연 — 가장 가까운 회차 순. */
+  upcoming: PublicShow[];
+  /** 모든 회차가 지났거나 취소된 공연 — 최근 순. */
+  past: PublicShow[];
+}
+
+/**
+ * 공개 공연 목록. draft는 빼고, 취소된 공연은 지난 공연 쪽으로 보낸다(주소는 그대로 열린다).
+ * 회차·잔여석은 상세와 같은 getPublicShowBySlug를 거쳐 두 화면의 숫자가 갈리지 않게 한다 —
+ * 공연 수가 한 자릿수라 N+1이 문제 되지 않는다.
+ */
+export async function listPublicShows(now: Date): Promise<PublicShowList> {
+  const rows = await getDb().query.shows.findMany({
+    where: (s, { ne }) => ne(s.status, 'draft'),
+  });
+  const loaded = await Promise.all(rows.map((r) => getPublicShowBySlug(r.slug, now)));
+  const shows = loaded.filter((s): s is PublicShow => s !== null);
+  const nowSec = Math.floor(now.getTime() / 1000);
+
+  const upcoming = shows
+    .filter((s) => !s.cancelled && nextShowtimeOf(s, nowSec) !== null)
+    .sort((a, b) => nextShowtimeOf(a, nowSec)!.startsAt - nextShowtimeOf(b, nowSec)!.startsAt);
+  const past = shows
+    .filter((s) => !upcoming.includes(s))
+    .sort((a, b) => Math.max(0, ...b.showtimes.map((t) => t.startsAt)) - Math.max(0, ...a.showtimes.map((t) => t.startsAt)));
+  return { upcoming, past };
 }

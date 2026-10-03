@@ -21,9 +21,14 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     // 500을 내면 검색엔진이 "가져올 수 없음"으로 기록한다. 빈 사이트맵이 낫다.
     console.error('[shows] 사이트맵 DB 조회 실패:', error);
   }
-  const urls = entries
-    .map((e) => `  <url>\n    <loc>${escapeXml(`${SITE_URL}/ko/shows/${e.slug}`)}</loc>\n    <lastmod>${escapeXml(e.lastmod)}</lastmod>\n  </url>`)
-    .join('\n');
+  // 목록 페이지(/ko/shows)는 공개된 공연이 하나라도 있을 때만 싣는다 — 빈 목록을 색인에 내밀지 않는다.
+  const listLastmod = entries.map((e) => e.lastmod).sort().at(-1);
+  const urls = [
+    ...(listLastmod ? [`  <url>\n    <loc>${escapeXml(`${SITE_URL}/ko/shows`)}</loc>\n    <lastmod>${escapeXml(listLastmod)}</lastmod>\n  </url>`] : []),
+    ...entries.map(
+      (e) => `  <url>\n    <loc>${escapeXml(`${SITE_URL}/ko/shows/${e.slug}`)}</loc>\n    <lastmod>${escapeXml(e.lastmod)}</lastmod>\n  </url>`,
+    ),
+  ].join('\n');
   res.setHeader('Content-Type', 'application/xml; charset=utf-8');
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=86400');
   res.write(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);

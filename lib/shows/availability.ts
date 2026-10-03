@@ -55,3 +55,11 @@ export function showtimeSaleState(
   if (remainingTotal <= 0) return 'sold_out';
   return 'open';
 }
+
+/**
+ * 이 공연의 가장 가까운 앞날 회차(없으면 null). 시작 시각 오름차순 목록을 전제한다.
+ * 클라이언트 컴포넌트가 쓰므로 DB를 물지 않는 이 파일에 둔다(queries.ts에서 가져가면
+ * 서버 전용 모듈이 클라이언트 번들로 끌려와 빌드가 깨진다).
+ */
+export const nextShowtimeOf = <T extends { startsAt: number }>(show: { showtimes: T[] }, nowSec: number): T | null =>
+  show.showtimes.find((st) => st.startsAt >= nowSec) ?? null;
