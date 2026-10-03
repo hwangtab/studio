@@ -1510,6 +1510,25 @@ export const shows = sqliteTable('shows', {
   venueAddress: text('venue_address').notNull(),
   description: text('description').notNull(),
   coverImage: text('cover_image'),
+  /**
+   * 구조화 필드(0047, 2026-10-03). 그 전엔 부제를 `title`에 ` — `로, 출연자 소개를 `performers` 평문에,
+   * 식사 시각·수익 문구·현장 판매가를 `description` 뒤쪽 문단과 코드 상수에 흩어 두고 파서가 갈랐다 —
+   * 공연을 하나 더 올릴 때마다 코드를 고쳐야 했다. 전부 nullable이라 적용 전 행도 깨지지 않는다.
+   * `performers`(이름 나열, NOT NULL)는 메일·관리자·검색용으로 남고, 상세 화면은 `performers_json`을 읽는다.
+   */
+  subtitle: text('subtitle'),
+  /** JSON `[{ name, bio?, photo?, sns? }]` — lib/shows/structured.ts가 읽고 쓴다. */
+  performersJson: text('performers_json'),
+  /** 1200x630 공유 카드. 없으면 coverImage(세로 포스터)를 쓴다. */
+  ogImage: text('og_image'),
+  /** 일시 아래 한 줄. 예) "18:00 식사 · 18:30 공연 시작" */
+  scheduleNote: text('schedule_note'),
+  /** 현장 판매 안내 한 줄. 온라인 가격과 무관한 안내문구다. */
+  onSitePriceNote: text('on_site_price_note'),
+  /** JSON `string[]` — 소개 아래 짧은 안내 목록(수익 사용처 등). */
+  noticesJson: text('notices_json'),
+  /** 지도 링크. 없으면 장소명+주소로 네이버 지도 검색. */
+  mapUrl: text('map_url'),
   status: text('status', { enum: showStatusEnum }).notNull().default('draft'),
   noticeKey: text('notice_key').notNull().default(sql`(lower(hex(randomblob(8))))`),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),

@@ -7,8 +7,8 @@ import ShowMobileCta from '../../../components/shows/ShowMobileCta';
 import { Button } from '../../../components/ui/Button';
 import { Section } from '../../../components/ui/Section';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { formatWon, ON_SITE_PRICE_NOTE, SALE_STATE_LABELS, SHOW_CONTACT_PHONE } from '../../../lib/shows/copy';
-import { parseDescriptionParagraphs, parsePerformers, splitShowTitle } from '../../../lib/shows/content';
+import { formatWon, SALE_STATE_LABELS, SHOW_CONTACT_PHONE } from '../../../lib/shows/copy';
+import { descriptionParagraphs, showMapUrl } from '../../../lib/shows/structured';
 import { SHOW_SLUG_PATTERN } from '../../../lib/shows/failMessages';
 import { getPublicShowBySlug, type PublicShow } from '../../../lib/shows/queries';
 
@@ -46,7 +46,7 @@ export default function ShowPage({ show }: Props) {
     },
     ...(show.coverImage ? { image: [toAbsolute(show.coverImage)] } : {}),
     description: summarize(show.description),
-    performer: { '@type': 'PerformingGroup', name: show.performers },
+    performer: performers.map((p) => ({ '@type': 'PerformingGroup', name: p.name })),
     organizer: { '@type': 'Organization', name: show.presenterName },
     offers: show.ticketTypes.map((t) => ({
       '@type': 'Offer',
@@ -61,19 +61,18 @@ export default function ShowPage({ show }: Props) {
     })),
   }));
 
-  const { main: mainTitle, subtitle } = splitShowTitle(show.title);
-  const performers = parsePerformers(show.performers);
-  const paragraphs = parseDescriptionParagraphs(show.description);
-  // 앞의 두 문단은 소개 본문, 나머지(시간·수익·가격 안내)는 짧은 안내 목록으로 보여 준다.
-  const intro = paragraphs.slice(0, 2);
-  const notices = paragraphs.slice(2);
+  const mainTitle = show.title;
+  const subtitle = show.subtitle;
+  const performers = show.performers;
+  const intro = descriptionParagraphs(show.description);
+  const notices = show.notices;
   const bookable = !show.cancelled && show.showtimes.some((s) => s.saleState === 'open');
   const ctaLabel = bookable
     ? `티켓 예매하기${lowPrice !== null ? ` · ${formatWon(lowPrice)}` : ''}`
     : show.cancelled
       ? '취소된 공연입니다'
       : '지금은 예매할 수 없습니다';
-  const mapUrl = `https://map.naver.com/p/search/${encodeURIComponent(`${show.venueName} ${show.venueAddress}`)}`;
+  const mapUrl = showMapUrl(show);
 
   return (
     <>
@@ -81,14 +80,14 @@ export default function ShowPage({ show }: Props) {
         title={`${show.title} 티켓 예매 | 스튜디오 놀`}
         description={summarize(show.description)}
         canonical={`/ko/shows/${show.slug}`}
-        ogImage={show.coverImage ?? undefined}
+        ogImage={show.ogImage ?? show.coverImage ?? undefined}
         availableLocales={['ko']}
         includeSchema
         schema={schema}
         breadcrumbs={[
           { name: '홈', path: '/ko' },
           { name: '공연', path: '/ko/shows' },
-          { name: show.title, path: `/ko/shows/${show.slug}` },
+          { name: mainTitle, path: `/ko/shows/${show.slug}` },
         ]}
       />
 
@@ -132,6 +131,7 @@ export default function ShowPage({ show }: Props) {
                       </li>
                     ))}
                   </ul>
+                  {show.scheduleNote && <span className="mt-0.5 block text-sm font-normal text-gray-300">{show.scheduleNote}</span>}
                 </dd>
               </div>
               <div className="flex gap-4">
@@ -157,7 +157,7 @@ export default function ShowPage({ show }: Props) {
                       {t.name} {formatWon(t.price)}
                     </span>
                   ))}
-                  <span className="block text-sm font-normal text-gray-300">{ON_SITE_PRICE_NOTE}</span>
+                  {show.onSitePriceNote && <span className="block text-sm font-normal text-gray-300">{show.onSitePriceNote}</span>}
                 </dd>
               </div>
               <div className="flex gap-4">
@@ -207,7 +207,7 @@ export default function ShowPage({ show }: Props) {
         <Section variant="alternate" spacing="tight">
           <div className="mx-auto max-w-2xl">
             <h2 className="mb-6 typo-section-title text-gray-900 dark:text-white">출연</h2>
-            <ShowLineup slug={show.slug} performers={performers} />
+            <ShowLineup performers={performers} />
           </div>
         </Section>
       )}

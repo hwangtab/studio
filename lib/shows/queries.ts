@@ -10,6 +10,7 @@ import {
 } from './availability';
 import { formatShowtimeLabel } from './format';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
+import { parseNoticesJson, parsePerformersJson, type ShowPerformer } from './structured';
 
 /**
  * 고객 화면용 조회. 모든 값은 JSON 직렬화 가능(Date·undefined 없음)해서 getServerSideProps
@@ -35,14 +36,20 @@ export interface PublicShowtime {
 export interface PublicShow {
   slug: string;
   title: string;
+  subtitle: string | null;
   presenterName: string;
-  performers: string;
+  performers: ShowPerformer[];
   ageRating: string;
   runningMinutes: number;
   venueName: string;
   venueAddress: string;
   description: string;
   coverImage: string | null;
+  ogImage: string | null;
+  scheduleNote: string | null;
+  onSitePriceNote: string | null;
+  notices: string[];
+  mapUrl: string | null;
   cancelled: boolean;
   ticketTypes: PublicTicketType[];
   showtimes: PublicShowtime[];
@@ -113,14 +120,23 @@ export async function getPublicShowBySlug(slug: string, now: Date): Promise<Publ
   return {
     slug: show.slug,
     title: show.title,
+    subtitle: show.subtitle ?? null,
     presenterName: show.presenterName,
-    performers: show.performers,
+    // JSON 칸이 비어 있으면(0047 전 행) 이름 나열로 폴백 — 소개·사진 없이 이름만 나온다.
+    performers: show.performersJson
+      ? parsePerformersJson(show.performersJson)
+      : show.performers.split(',').map((n) => n.trim()).filter(Boolean).map((name) => ({ name })),
     ageRating: show.ageRating,
     runningMinutes: show.runningMinutes,
     venueName: show.venueName,
     venueAddress: show.venueAddress,
     description: show.description,
     coverImage: show.coverImage ?? null,
+    ogImage: show.ogImage ?? null,
+    scheduleNote: show.scheduleNote ?? null,
+    onSitePriceNote: show.onSitePriceNote ?? null,
+    notices: parseNoticesJson(show.noticesJson),
+    mapUrl: show.mapUrl ?? null,
     cancelled: show.status === 'cancelled',
     ticketTypes: ticketTypes.map((t) => ({
       id: t.id,

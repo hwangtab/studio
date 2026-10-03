@@ -171,7 +171,7 @@ const loadShowOrder = async (orderNo: string): Promise<LoadedShowOrder | null> =
     orderNo: order.orderNo,
     manageToken: order.manageToken,
     buyerName: so.buyerName,
-    showTitle: show.title,
+    showTitle: show.subtitle ? `${show.title} — ${show.subtitle}` : show.title,
     venueName: show.venueName,
     venueAddress: show.venueAddress,
     startsAtSec: so.showtime.startsAt,

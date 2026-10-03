@@ -5,7 +5,6 @@ import { bakkeojiShow } from '../../data/shows/bakkeoji-anneun-maeumdeul';
 import { SHOW_DEFINITIONS } from '../../data/shows';
 import { eq } from 'drizzle-orm';
 import { seedShow, ShowSeedError, validateShowDefinition, type ShowDefinition } from './seed';
-import { parsePerformers, splitShowTitle, parseDescriptionParagraphs } from './content';
 import { salesCloseAt } from './time';
 
 describe('공연 정의(bakkeoji)', () => {
@@ -27,14 +26,28 @@ describe('공연 정의(bakkeoji)', () => {
     expect(salesCloseAt(startsAt).toISOString()).toBe('2026-10-23T15:00:00.000Z');
   });
 
-  it('텍스트 규칙: 부제·출연진 3명·문단', () => {
-    expect(splitShowTitle(bakkeojiShow.title)).toEqual({ main: '베어지지 않는 마음들', subtitle: '풍천리를 위한 삼청동에서의 밤' });
-    const p = parsePerformers(bakkeojiShow.performers);
-    expect(p.map((x) => x.name)).toEqual(['자이(Jai)', '호와호(Howaho)', '솔가(Solga)']);
-    expect(p.every((x) => x.bio && x.bio.length > 10)).toBe(true);
-    const paras = parseDescriptionParagraphs(bakkeojiShow.description);
-    expect(paras.some((x) => x.startsWith('시간: PM 6시 식사'))).toBe(true);
-    expect(paras.some((x) => x.includes('뮤지션들과 공간에게'))).toBe(true);
+  it('구조화 칸: 부제·출연진 3명(사진 있음)·안내·현장가', () => {
+    expect(bakkeojiShow.subtitle).toBe('풍천리를 위한 삼청동에서의 밤');
+    expect(bakkeojiShow.title).not.toContain(' — ');
+    expect(bakkeojiShow.performers.map((x) => x.name)).toEqual(['자이(Jai)', '호와호(Howaho)', '솔가(Solga)']);
+    expect(bakkeojiShow.performers.every((x) => x.bio && x.bio.length > 10 && x.photo)).toBe(true);
+    expect(bakkeojiShow.scheduleNote).toContain('18:30');
+    expect(bakkeojiShow.notices?.some((x) => x.includes('뮤지션들과 공간에게'))).toBe(true);
+    expect(bakkeojiShow.onSitePriceNote).toContain('30,000원');
+    expect(bakkeojiShow.ogImage).toMatch(/^\/images\/shows\/.*og.*\.webp$/);
+  });
+
+  it('정의 검증이 틀을 지킨다 — title에 끼운 부제, 없는 사진, 잘못된 OG 치수를 잡는다', () => {
+    const bad: ShowDefinition = {
+      ...bakkeojiShow,
+      title: '제목 — 부제',
+      performers: [{ name: '누구', photo: '/images/shows/없는-파일.webp' }],
+      ogImage: '/images/shows/bakkeoji-poster-20261003r2.webp',
+    };
+    const errors = validateShowDefinition(bad);
+    expect(errors.some((e) => e.includes('subtitle'))).toBe(true);
+    expect(errors.some((e) => e.includes('사진 파일이 없습니다'))).toBe(true);
+    expect(errors.some((e) => e.includes('1200x630'))).toBe(true);
   });
 });
 

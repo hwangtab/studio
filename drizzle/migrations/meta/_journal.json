@@ -330,6 +330,13 @@
       "when": 1791012484133,
       "tag": "0046_contract_template_snapshots",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "6",
+      "when": 1791015477278,
+      "tag": "0047_shows_structured",
+      "breakpoints": true
     }
   ]
 }
