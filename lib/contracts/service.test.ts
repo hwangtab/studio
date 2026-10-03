@@ -297,6 +297,15 @@ describe('서명 시점 본문 완성', () => {
     expect(contract.content).not.toMatch(/\{\{\w+\}\}/);
   });
 
+  it('API로 미리 채워 보내도 생년월일·주소는 저장하지도 본문에 쓰지도 않는다', async () => {
+    const contract = await createContract({ ...base, customerBirthdate: '1985-05-05', customerAddress: '미리 적은 주소' });
+
+    expect(contract.customerBirthdate).toBeNull();
+    expect(contract.customerAddress).toBeNull();
+    expect(contract.content).not.toContain('1985-05-05');
+    expect(contract.content).not.toContain('미리 적은 주소');
+  });
+
   it('고객이 채운 값이 본문에 들어간다', async () => {
     const contract = await createContract(base);
     const signed = buildSignedContractContent(contract, details, new Date('2026-08-20T05:00:00Z'));

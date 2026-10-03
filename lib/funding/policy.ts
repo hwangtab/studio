@@ -160,7 +160,7 @@ export const cancelBlockedMessage = (code: keyof typeof CANCEL_BLOCK_MESSAGES, g
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-09-29';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-03';
 
 /**
  * 이 판본부터 응원 메시지는 이름 공개 여부와 **따로** 간다 — 이름을 공개하지 않은 후원의 메시지도

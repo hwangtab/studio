@@ -19,6 +19,7 @@ import {
   updateDraftContract,
 } from '../../../lib/contracts/service';
 import { cancelSubscriptionsOfContract } from '../../../lib/billing/service';
+import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import { checkAction, getEffectiveStatus, type ContractAction } from '../../../lib/contracts/status';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
@@ -59,6 +60,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error: unknown) {
     console.error('[API/contracts/[id]] Query failed:', error);
     return res.status(500).json({ ok: false, message: '계약을 불러오지 못했습니다.' });
+  }
+
+  if (req.method === 'GET') {
+    // 개인정보를 여는 조회라 남긴다(처리방침 19항). 기록 실패는 조회를 막지 않는다.
+    await recordAdminPrivacyAccess(req, auth.actor, 'contract_view', id, contract ? 'success' : 'not_found').catch(
+      (error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 조회는 계속됩니다', error),
+    );
   }
 
   if (!contract) {
