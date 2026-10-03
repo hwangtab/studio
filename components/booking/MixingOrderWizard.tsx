@@ -9,7 +9,14 @@ import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from './useTossPay
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
 import { CUSTOMER_DRAFT_FIELDS, MIXING_CUSTOMER_DRAFT_KEY } from '../../lib/booking/customerDraft';
-import { MIXING_PRODUCTS, computeMixingAmounts, getMixingProduct, type MixingProduct } from '../../lib/booking/mixing-products';
+import {
+  MASTERING_PACKAGE_MIN_SONGS,
+  MIXING_PRODUCTS,
+  computeMixingAmounts,
+  getMixingProduct,
+  mixingUnitAmount,
+  type MixingProduct,
+} from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
 import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
@@ -308,6 +315,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                   />
                   <span className="text-sm text-gray-800 dark:text-gray-100">
                     {p.nameKo} — 곡당 {formatPriceAmount(p.unitAmount)}원
+                    {p.combinedOf ? ` (${MASTERING_PACKAGE_MIN_SONGS}곡부터 ${formatPriceAmount(mixingUnitAmount(p, MASTERING_PACKAGE_MIN_SONGS))}원)` : ''}
                   </span>
                 </label>
               ))}

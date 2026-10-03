@@ -1,5 +1,5 @@
 import { formatPriceAmount, PRACTICE_ROOM_HOURLY_PRICE_INCL } from '../../data/pricing';
-import { MIXING_PRODUCTS } from './mixing-products';
+import { MASTERING_PACKAGE_MIN_SONGS, MIXING_PRODUCTS, mixingUnitAmount } from './mixing-products';
 import { getProduct } from './products';
 
 /**
@@ -59,7 +59,9 @@ const mixingEntry = (productId: string, detail: string): BookingHubEntry => {
     name: product.nameKo,
     price: won(product.unitAmount),
     unit: '/ 곡',
-    detail,
+    detail: product.combinedOf
+      ? `${detail} · ${MASTERING_PACKAGE_MIN_SONGS}곡부터 곡당 ${won(mixingUnitAmount(product, MASTERING_PACKAGE_MIN_SONGS))}`
+      : detail,
     href: `/ko/booking/mixing-mastering?product=${productId}`,
   };
 };
@@ -126,10 +128,14 @@ export const buildBookingHub = (): BookingHubGroup[] => {
     {
       id: 'mixing-mastering',
       title: '믹싱·마스터링 의뢰',
-      description: '날짜 예약이 아니라 파일 주문입니다. 결제 후 확인 메일에 파일 링크로 회신하면 작업을 시작합니다. 방문은 필요 없습니다.',
+      description: '날짜 예약이 아니라 파일 주문입니다. 믹싱과 마스터링을 한 번에 맡기려면 위의 \"믹싱+마스터링\"을 고르세요. 결제 후 확인 메일에 파일 링크로 회신하면 작업을 시작합니다. 방문은 필요 없습니다.',
       priceNote: '부가세 별도 · 곡당',
       href: '/ko/booking/mixing-mastering',
       entries: [
+        // 믹싱과 마스터링을 한 번에 결제 — 가격은 두 상품의 합산 그대로(번들 할인 없음).
+        mixingEntry('mixing-mastering-level1', '믹싱 2회·마스터링 1회 수정 포함'),
+        mixingEntry('mixing-mastering-level2', '믹싱 2회·마스터링 1회 수정 포함'),
+        mixingEntry('mixing-mastering-level3', '믹싱 2회·마스터링 1회 수정 포함'),
         mixingEntry('mixing-level1', '수정 2회 포함'),
         mixingEntry('mixing-level2', '수정 2회 포함'),
         mixingEntry('mixing-level3', '수정 2회 포함'),
