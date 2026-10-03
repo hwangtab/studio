@@ -264,39 +264,56 @@ export const updateDraftContract = async (
     specialTerms: data.specialTerms,
   }, template);
 
-  const [updated] = await getDb()
-    .update(contracts)
-    .set({
-      title: data.title,
-      customerName: data.customerName,
-      customerBirthdate: data.customerBirthdate,
-      customerEmail: data.customerEmail,
-      customerPhone: data.customerPhone,
-      customerAddress: data.customerAddress,
-      roomNumber: data.roomNumber,
-      roomArea: data.roomArea ?? '3m × 2m',
-      startDate: new Date(data.startDate),
-      endDate: new Date(data.endDate),
-      monthlyRent: data.monthlyRent,
-      depositAmount: data.depositAmount,
-      paymentDay: data.paymentDay ?? 1,
-      content,
-      specialTerms: data.specialTerms ? JSON.stringify(data.specialTerms) : null,
-      updatedAt: new Date(),
-    })
-    .where(and(eq(contracts.id, contractId), eq(contracts.status, 'draft')))
-    .returning();
+  const now = new Date();
+  // 계약과 서명 대기 행을 한 트랜잭션으로 고친다. 따로 실행하면 중간에 끊겼을 때 계약의 이름·이메일과
+  // 서명자 행의 값이 갈리고, 서명 API는 서명자 행 값을 해시와 PDF 서명란에 쓴다. 서명자 행 UPDATE에도
+  // "아직 초안인 계약"이라는 조건을 걸어 상태가 바뀐 계약의 서명자 행을 건드리지 않게 한다.
+  const [updatedRows] = await getDb().batch([
+    getDb()
+      .update(contracts)
+      .set({
+        title: data.title,
+        customerName: data.customerName,
+        customerBirthdate: data.customerBirthdate,
+        customerEmail: data.customerEmail,
+        customerPhone: data.customerPhone,
+        customerAddress: data.customerAddress,
+        roomNumber: data.roomNumber,
+        roomArea: data.roomArea ?? '3m × 2m',
+        startDate: new Date(data.startDate),
+        endDate: new Date(data.endDate),
+        monthlyRent: data.monthlyRent,
+        depositAmount: data.depositAmount,
+        paymentDay: data.paymentDay ?? 1,
+        content,
+        specialTerms: data.specialTerms ? JSON.stringify(data.specialTerms) : null,
+        updatedAt: now,
+      })
+      .where(and(eq(contracts.id, contractId), eq(contracts.status, 'draft')))
+      .returning(),
+    getDb()
+      .update(signatures)
+      .set({ signerName: data.customerName, signerEmail: data.customerEmail, updatedAt: now })
+      .where(
+        and(
+          eq(signatures.contractId, contractId),
+          eq(signatures.status, 'pending'),
+          inArray(
+            signatures.contractId,
+            getDb()
+              .select({ id: contracts.id })
+              .from(contracts)
+              .where(and(eq(contracts.id, contractId), eq(contracts.status, 'draft'))),
+          ),
+        ),
+      ),
+  ]);
 
+  const updated = updatedRows[0];
   if (!updated) return null;
 
   // 본문을 다시 만들었으니 사본도 그 판본으로 맞춘다.
   await saveTemplateSnapshot(contractId, template);
-
-  // 서명자 정보도 함께 따라가야 서명 페이지의 기본값이 어긋나지 않는다.
-  await getDb()
-    .update(signatures)
-    .set({ signerName: data.customerName, signerEmail: data.customerEmail, updatedAt: new Date() })
-    .where(and(eq(signatures.contractId, contractId), eq(signatures.status, 'pending')));
 
   return updated;
 };
@@ -352,6 +369,8 @@ export const markContractSent = async (
         inArray(contracts.status, [...options.allowedStatuses]),
         // 첫 발송은 sentAt이 비어 있어 그대로 통과한다.
         or(isNull(contracts.sentAt), lte(contracts.sentAt, cooldownBoundary)),
+        // 개인정보가 파기된 계약(이름·본문이 표식으로 덮인)을 발송 상태로 되살리지 못하게 한다.
+        isNull(contracts.purgedAt),
       ),
     )
     .returning();

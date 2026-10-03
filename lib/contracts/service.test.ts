@@ -34,6 +34,7 @@ import {
   buildSignedContractContent,
   createContract,
   findRoomConflict,
+  markContractSent,
   terminateContract,
 } from './service';
 
@@ -393,5 +394,15 @@ describe('서명 시점 본문 완성', () => {
     const row = signed.split('\n').find((line) => line.includes('보증금 면제 확정')) ?? '';
     expect(row).toContain('\\|');
     expect(row.replace(/\\\|/g, '').split('|').length - 1).toBe(3);
+  });
+});
+
+describe('개인정보가 파기된 계약은 재발송으로 되살리지 못한다', () => {
+  it('purgedAt이 있으면 expired여도 markContractSent가 null이다', async () => {
+    await addContract({ id: 'purged1', room: '401', start: '2024-01-01', end: '2024-12-31', status: 'expired' });
+    await mockDb.update(contracts).set({ purgedAt: new Date() }).where(eq(contracts.id, 'purged1'));
+
+    const result = await markContractSent('purged1', { allowedStatuses: ['expired'] });
+    expect(result).toBeNull();
   });
 });

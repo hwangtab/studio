@@ -223,6 +223,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     );
 
     if (contractResult.rowsAffected === 0 || signatureResult.rowsAffected === 0) {
+      // 졌다고 해서 늘 "이미 서명됨"은 아니다 — 그 사이 관리자가 취소·재발송했을 수도 있다. 실제 상태를
+      // 다시 읽어 알려야 화면이 완료 페이지가 아니라 맞는 안내로 간다(읽기 실패는 옛 문구로 폴백).
+      const latest = await getDb().query.contracts.findFirst({
+        where: (t, { eq: equals }) => equals(t.id, contract.id),
+        columns: { status: true },
+      }).catch(() => undefined);
+      if (latest && latest.status !== 'signed') {
+        return res.status(409).json({
+          ok: false,
+          message: '계약 상태가 바뀌어 서명을 처리하지 못했습니다. 운영자에게 확인해 주세요.',
+          status: latest.status,
+        });
+      }
       return res
         .status(409)
         .json({ ok: false, message: '이미 서명이 처리된 계약입니다.', status: 'signed' });

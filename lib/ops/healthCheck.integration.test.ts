@@ -942,3 +942,43 @@ describe('기록된 정산액과 현재 계산값의 드리프트', () => {
     expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRIFT_TITLE)]));
   });
 });
+
+describe('계약 위생 점검', () => {
+  const DRAFT_TITLE = '계약 초안';
+  const NOTIFY_TITLE = '후처리 기록이 없는 계약';
+
+  it('90일 넘게 발송하지 않은 초안을 알린다', async () => {
+    await insertContract({ id: 'old', status: 'draft', created_at: EPOCH('2026-05-01'), updated_at: EPOCH('2026-05-01') });
+    await insertContract({ id: 'new', status: 'draft', sign_token: 'st2', created_at: EPOCH('2026-09-01'), updated_at: EPOCH('2026-09-01') });
+
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes(DRAFT_TITLE));
+    expect(issue?.title).toContain('1건');
+  });
+
+  it('최근 초안만 있으면 알리지 않는다', async () => {
+    await insertContract({ id: 'new', status: 'draft', created_at: EPOCH('2026-09-01'), updated_at: EPOCH('2026-09-01') });
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(DRAFT_TITLE)]));
+  });
+
+  it('서명한 지 30분이 지났는데 notifiedAt이 비어 있으면 긴급으로 알린다', async () => {
+    await insertContract({ id: 's1', status: 'signed', signed_at: EPOCH('2026-09-09T00:00:00Z'), notified_at: null });
+
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes(NOTIFY_TITLE));
+    expect(issue?.severity).toBe('high');
+  });
+
+  it('후처리가 끝났거나 서명 직후(30분 이내)면 알리지 않는다', async () => {
+    await insertContract({ id: 's1', status: 'signed', signed_at: EPOCH('2026-09-09T00:00:00Z'), notified_at: EPOCH('2026-09-09T00:01:00Z') });
+    await insertContract({ id: 's2', status: 'signed', sign_token: 'st2', signed_at: EPOCH('2026-09-09T23:50:00Z'), notified_at: null });
+
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(NOTIFY_TITLE)]));
+  });
+
+  it('발송 후 만료 기한이 지난 계약을 expired로 내린다 — 화면을 열지 않아도', async () => {
+    await insertContract({ id: 'late', status: 'sent', expires_at: EPOCH('2026-09-05') });
+
+    await runHealthCheck(NOW);
+    const [row] = (await client.execute("SELECT status FROM contracts WHERE id = 'late'")).rows;
+    expect(row.status).toBe('expired');
+  });
+});
