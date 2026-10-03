@@ -119,6 +119,11 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 0039의 `listing_hidden_name`은 운영자가 명단에서 내릴 당시 실제로 떠 있던 이름의 스냅샷이다(`drizzle/migrations/0039_funding_listing_hidden_name.sql`).
 그 뒤 후원자가 표시 이름을 바꿔도 "사칭·욕설 닉네임이라 내렸다"는 기록이 원래부터 그 이름이었던 것으로 읽히지 않게 한다. 같은 이유로 배포보다 먼저다.
 
+### 공연 예매(shows)는 `lib/shows/CLAUDE.md`를 먼저 읽는다
+
+새 공연은 `data/shows/<slug>.ts` 하나 + 이미지로 올린다(코드 수정 없음, 시드 `scripts/seed-show.ts`).
+구조화 칸(0047)·ShowDetailView 합성·소문자 308에 견디는 링크 규칙·10/14 공용화 보류가 거기 있다.
+
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 
 김동산과 블루이웃 〈물결〉의 믹싱 전 / 믹싱 후를 같은 재생 위치에서 바꿔 듣는다. **네 자리**에 있다 —

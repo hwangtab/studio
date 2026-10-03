@@ -1,0 +1,63 @@
+# CLAUDE.md — 공연 예매(shows)
+
+`lib/shows/`·`components/shows/`·`pages/[locale]/shows/`·`data/shows/`를 만질 때 읽는 규칙이다.
+2026-10-03 설계 정리(데이터 틀 → 화면 틀 → 공용화) 결과를 적는다.
+
+### 새 공연 = 데이터 파일 하나 + 이미지 폴더. 코드는 손대지 않는다
+
+정본은 `data/shows/<slug>.ts`(`ShowDefinition`)이고 DB는 그 사본이다. 등록·갱신은
+`npx tsx scripts/seed-show.ts <slug>`(dry-run) → `--apply`(TURSO_* 필요, Turso 1일 토큰 — 루트 CLAUDE.md
+"운영 DB 마이그레이션 적용 방법"과 같은 방식). 멱등이라 다시 돌려도 안전하고, 새 공연은 **draft**로
+만들어지므로 관리자 `/admin/shows`에서 '공개하기'를 눌러야 열린다.
+
+- 부제·출연진(소개·사진·SNS)·OG 이미지·일정 한 줄·현장 판매가·안내 목록·지도 링크는 전부 `shows`의
+  **구조화 칸**(마이그레이션 0047)에 산다. `lib/shows/structured.ts`가 저장 형식의 유일한 주인이다 —
+  시드가 `serialize*`로 쓰고 조회(`queries.ts`)가 `parse*`로 읽는다. 깨진 JSON은 빈 값으로 읽힌다(500 방지).
+- 그 전엔 부제를 `title`에 ` — `로, 소개를 `performers` 평문에, 시간·수익·가격을 `description` 뒤 문단과
+  코드 상수에 흩어 두고 파서가 갈랐다. **공연 하나 올릴 때마다 코드를 고쳐야 했던 원인**이고, 되돌리지 말 것.
+  시드 검증이 `title`의 ` — `를 거부한다.
+- 시드가 사진·OG 파일 존재와 OG 1200×630을 검증한다. 이미지는 `public/images/shows/`에 **날짜 박힌
+  파일명**(`/images/**`는 immutable 1년 캐시 — 같은 이름으로 갈아 끼우면 옛 그림이 남는다). webp는
+  `.gitignore` 대상이라 **`git add -f`** 로 올린다(펀딩 이미지와 같다) — 빠뜨리면 로컬에선 보이고 배포에선 404다.
+- 히어로 폰트 서브셋(`scripts/generate-hero-font.mjs`)이 `data/shows/*.ts`의 `title`을 소스로 읽는다.
+  공연을 추가하면 **빌드 후 바뀐 woff2·chars.json을 함께 커밋**한다(CI `--check`가 잡는다).
+- `performers`(이름 나열, NOT NULL)는 메일·관리자·검색용으로 남는다. 상세 화면은 `performers_json`을 읽는다.
+
+### 화면은 ShowDetailView 한 벌이다 — 펀딩 상세와 같은 합성
+
+| 자리 | 쓰는 것 |
+|---|---|
+| 히어로 | 공용 `ImageHero`(포스터를 배경 + `HERO_SCRIM_STRONG`, 전경에 포스터 카드·부제·일시/장소 알약·CTA). 페이지에 `hasHero = true` |
+| 섹션 제목 | `SectionHeading`의 v2 문법(eyebrow + 번호 + 잉크 대형 제목). 맨 `<h2 class="typo-section-title">`를 쓰지 않는다 |
+| 핵심 정보 | `ShowFacts`(`BaseCard glass`, 데스크톱 sticky, `<lg`에서는 소개 **앞**) |
+| 출연진 | `LineupCard`(`components/common/`) — 펀딩 `FundingLineupPerson`과 같은 카드 |
+| 목록 카드 | `ShowCard` = `Link > BaseCard glass > ResponsiveImage`(FundingProjectCard와 같은 구조) |
+| 내 티켓 | 티켓 한 장 = `BaseCard` 한 장(QR·입장 번호·상태 배지). 환불은 선택 → 버튼 한 번(라벨에 매수·금액) |
+| 모바일 | `ShowMobileCta` — `#book`이나 `data-hide-mobile-cta` 요소가 보이면 숨는다. Layout이 공연 상세에서 카카오 FAB을 `<lg`로 숨긴다 |
+| FAQ | 공용 `FAQSection` + SEO `faqItems`. 답은 `lib/shows/faq.ts`가 코드의 실제 동작(환불표·판매 마감)에서 만든다 |
+
+v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 파일들이 들어 있다 — 새 공연
+컴포넌트를 만들면 그 목록에 더한다. 다크 짝·포커스 링·손 조립 카드 금지 가드는 `tailwind.config.test.ts`가
+본다(실제로 두 번 걸려 고쳤다).
+
+**동의는 결제하기를 누르는 행위로 받는다** — 환불 규정 체크박스를 두지 않는다(펀딩 PledgeWizard와 같은
+규칙, 운영자 지시 2026-10-03 "동의 최소화, UX 최우선"). 규정은 `<details>`로 접어 두고, 서버 검증
+(`refundPolicyAgreed`)과 기록은 그대로다. 회차·티켓 종류가 각각 하나면 라디오 대신 요약 한 줄이다.
+
+### 경로의 대문자는 미들웨어가 소문자로 308한다 — 링크에 실리는 값은 이걸 견뎌야 한다
+
+`middleware.ts`가 대문자 섞인 경로를 소문자로 보낸다. 2026-10-03 프로덕션에서 두 링크가 깨져 있었다.
+
+- `/ko/shows/manage/<orderNo>`: 주문번호는 대문자(`TKT-YYYYMMDD-XXXXXXXX`)인데 소문자로 도착한다.
+  `getShowOrderForManage`·환불 API가 **대문자로 정규화해 비교**한다(booking·funding과 같다). 빼면 티켓
+  메일의 "내 티켓" 링크가 전부 404다.
+- `/ko/shows/scan/<token>`: 토큰은 **소문자 hex**로 발급한다(`scanLink.ts`). base64url이면 소문자가
+  되는 순간 해시가 달라져 모든 스캔 링크가 401이다. 경로에 실리는 비밀값은 항상 소문자 안전 알파벳으로.
+
+### 남은 것(2026-10-03 기준)
+
+- **공용화(설계안 겹 3)는 10/14 이후**: `ShowMobileCta`↔`FundingMobileCta`, booking·funding·shows의
+  success/fail 6장을 공용 `TransactionResult`로. 10/14까지 `BaseCard`·`Button`·카카오 버튼 파일 수정
+  금지(전환 실험 교락 — 메모리 `design-v2-redesign-plan`). 새 파일을 만들고 *사용*하는 것은 괜찮다.
+- 티켓 메일 HTML 템플릿은 아직 사이트 위계 밖(플레인에 가깝다). 10/24 전 손볼 것.
+- 실결제 흐름은 브라우저에서 눌러 본 적이 없다. 공개 뒤 최소 매수로 결제·취소를 한 번 할 것.
