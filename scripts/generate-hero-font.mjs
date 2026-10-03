@@ -169,6 +169,19 @@ function collectHeroChars() {
     }
   }
 
+  // 8) 공연 제목 — `data/shows/<slug>.ts`의 최상위 title이 `/ko/shows/<slug>`의 ImageHero h1으로
+  //    나간다(2026-10-03 공연 상세를 ImageHero로 바꾸면서). 공연 정의가 정본이고 DB는 그 사본이라
+  //    여기서 읽으면 된다. 2칸 들여쓰기의 title만 — 티켓타입·출연자는 name이라 섞이지 않는다.
+  try {
+    const showsDir = path.join(ROOT, 'data', 'shows');
+    for (const f of fs.readdirSync(showsDir).filter((n) => n.endsWith('.ts') && n !== 'index.ts')) {
+      const src = fs.readFileSync(path.join(showsDir, f), 'utf8');
+      for (const m of src.matchAll(/^ {2}title:\s*(["'`])([\s\S]*?)\1/gm)) addStr(m[2]);
+    }
+  } catch (e) {
+    console.warn(`skip show titles: ${e.message}`);
+  }
+
   // 7) 안전판: 영문/숫자/기본 punctuation (h1에 흔히 섞이는 기호)
   const safety = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .,!?·:;()[]\'"&-—–%/';
   addStr(safety);

@@ -14,7 +14,6 @@ import {
   deleteContract,
   findRoomConflict,
   markContractSent,
-  RESEND_COOLDOWN_MS,
   sendContractNotifications,
   terminateContract,
   updateDraftContract,
@@ -22,45 +21,11 @@ import {
 import { cancelSubscriptionsOfContract } from '../../../lib/billing/service';
 import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
-import { checkAction, getEffectiveStatus, getStatusLabel, type ContractAction } from '../../../lib/contracts/status';
+import { checkAction, getEffectiveStatus, type ContractAction } from '../../../lib/contracts/status';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
 
 const MUTABLE_ACTIONS = ['send', 'resend', 'resend-signed', 'cancel', 'update', 'terminate'] as const;
 type MutableAction = (typeof MUTABLE_ACTIONS)[number];
-
-/**
- * 발송 UPDATE가 0행일 때 원인을 다시 읽는다. 읽기 자체가 실패하면 원인을 단정하지 않는다.
- */
-const explainSendRejection = async (id: string, action: 'send' | 'resend'): Promise<string> => {
-  const fallback = '계약 상태가 바뀌어 발송하지 못했습니다. 새로고침 후 확인해 주세요.';
-  try {
-    const current = await getDb().query.contracts.findFirst({
-      where: (contractsTable, { eq }) => eq(contractsTable.id, id),
-    });
-    if (!current) return '계약을 찾을 수 없습니다.';
-    if (current.purgedAt) {
-      return '보관 기간이 지나 개인정보가 파기된 계약은 다시 보낼 수 없습니다. 필요하면 새 계약을 만들어 주세요.';
-    }
-    const allowedStatuses = action === 'send' ? ['draft'] : ['sent', 'expired', 'cancelled'];
-    if (!allowedStatuses.includes(current.status)) {
-      return `계약 상태가 '${getStatusLabel(current.status)}'(으)로 바뀌어 발송하지 않았습니다. 새로고침 후 확인해 주세요.`;
-    }
-    if (current.sentAt && Date.now() - current.sentAt.getTime() < RESEND_COOLDOWN_MS) {
-      return '방금 발송했습니다. 같은 링크가 연달아 바뀌지 않도록 잠시 후 다시 시도해 주세요.';
-    }
-    const conflict = await findRoomConflict({
-      roomNumber: current.roomNumber,
-      startDate: current.startDate,
-      endDate: current.endDate,
-      excludeContractId: id,
-    });
-    if (conflict) return describeRoomConflict(conflict);
-    return fallback;
-  } catch (error: unknown) {
-    console.error('[API/contracts/[id]] Failed to explain send rejection:', error);
-    return fallback;
-  }
-};
 
 const isMutableAction = (value: unknown): value is MutableAction =>
   typeof value === 'string' && (MUTABLE_ACTIONS as readonly string[]).includes(value);
@@ -94,11 +59,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   } catch (error: unknown) {
     console.error('[API/contracts/[id]] Query failed:', error);
-    if (req.method === 'GET') {
-      await recordAdminPrivacyAccess(req, auth.actor, 'contract_view', id, 'error').catch((logError: unknown) =>
-        console.error('[privacy] 접속기록 호출 실패', logError),
-      );
-    }
     return res.status(500).json({ ok: false, message: '계약을 불러오지 못했습니다.' });
   }
 
@@ -144,15 +104,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(409).json({ ok: false, message: allowed.message });
     }
 
-    // 개인정보가 파기된 계약은 이름·본문·서명이 표식으로 덮여 있어 다시 보낼 문서가 없다.
-    // markContractSent도 조건으로 막지만, 거기서 0행이 되면 원인을 알 수 없는 문구가 나갔다.
-    if (contract.purgedAt && (action === 'send' || action === 'resend' || action === 'resend-signed')) {
-      return res.status(409).json({
-        ok: false,
-        message: '보관 기간이 지나 개인정보가 파기된 계약은 다시 보낼 수 없습니다. 필요하면 새 계약을 만들어 주세요.',
-      });
-    }
-
     try {
       if (action === 'update') {
         const validation = validateCreateContractPayload(req.body as Record<string, unknown>);
@@ -187,10 +138,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          * 서명 완료 메일·PDF 재발송. 상태도 토큰도 건드리지 않는다 — 확정된 문서의
          * 접근 경로가 바뀌면 고객 메일함에 남은 기존 링크가 죽는다.
          *
-         * finalizeSignedContract를 그대로 다시 부른다. 보관본(pdfUrl)이 있으면 그 PDF를 그대로
-         * 첨부하고(서명 당시 문서를 덮어쓰지 않는다), 없을 때만 새로 만들어 올리므로 "메일은
-         * 나갔는데 PDF가 없다" 같은 부분 실패도 함께 복구된다. 결과는 다시 notificationError에
-         * 기록돼 성공 여부가 화면에 드러난다.
+         * finalizeSignedContract를 그대로 다시 부른다. PDF 생성·업로드부터 다시 하므로
+         * "메일은 나갔는데 PDF가 없다" 같은 부분 실패도 함께 복구되고, 결과는 다시
+         * notificationError에 기록돼 성공 여부가 화면에 드러난다.
          */
         // 동적 import — finalize는 PDF 생성을 위해 puppeteer/chromium 체인을 끌어온다.
         // 최상위에서 부르면 이 라우트의 모든 요청이 그 무게를 지고(콜드스타트), 테스트
@@ -285,10 +235,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       if (!result) {
-        // UPDATE가 0행이었다. 조건이 여럿이라(허용 상태·쿨다운·파기·호실 점유) 원인을 다시 읽어
-        // 그에 맞는 안내를 준다 — 예전엔 전부 "방금 처리된 요청"이라, 호실이 막혀 보낼 수 없는
-        // 계약을 운영자가 몇 번이고 다시 눌렀다.
-        return res.status(409).json({ ok: false, message: await explainSendRejection(id, action) });
+        // 상태가 이미 바뀌었거나, 방금 발송해 쿨다운 중이다. 둘 다 "다시 누르지 마세요"라
+        // 같은 안내로 충분하다.
+        return res.status(409).json({
+          ok: false,
+          message: '방금 처리된 요청입니다. 잠시 후 상태를 확인해 주세요.',
+        });
       }
 
       waitUntil(sendContractNotifications(result.contract, result.signUrl));

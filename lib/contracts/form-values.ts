@@ -45,17 +45,10 @@ export const contractToFormValues = (
     values: {
       title: contract.title,
       customerName: contract.customerName,
-      /**
-       * 생년월일·주소는 **싣지 않는다.** 서명자가 서명 화면에서 직접 채우는 값이라 운영자 폼이 받지 않고,
-       * 서버도 #450부터 저장하지 않는다(createContract·updateDraftContract가 버린다). 그런데 서명본을
-       * 복제하면 이 두 칸이 숨은 폼 값으로 실려 __NEXT_DATA__(페이지 HTML)와 POST 본문에 나갔다 — 쓰지도
-       * 않을 개인정보를 화면으로 옮긴 셈이다. 옛 계약의 값에 지금은 금지된 문자가 있으면 그 숨은 값 때문에
-       * 검증이 복제를 막기도 했다.
-       */
-      customerBirthdate: '',
+      customerBirthdate: contract.customerBirthdate ?? '',
       customerEmail: contract.customerEmail,
       customerPhone: contract.customerPhone,
-      customerAddress: '',
+      customerAddress: contract.customerAddress ?? '',
       roomNumber: contract.roomNumber,
       roomArea: contract.roomArea ?? '',
       startDate: options.clearPeriod ? '' : toDateInputValue(contract.startDate),

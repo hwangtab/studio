@@ -4,6 +4,8 @@
  */
 import Head from 'next/head';
 
+import { Button } from '../../../components/ui/Button';
+
 import { getSiteConfig } from '../../../data/siteConfig';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import {
@@ -46,14 +48,9 @@ export default function ShowFailPage({ slug, code, message, orderNo }: FailProps
         <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893 · hello@studionol.co.kr</p>
         {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). ko 전용 화면이라 분기 없음. */}
         <p className="mt-6">
-          <a
-            href={kakaoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-kakao px-6 py-3 font-bold text-kakao-ink transition-colors hover:bg-kakao-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kakao-ink focus-visible:ring-offset-2 dark:focus-visible:ring-kakao"
-          >
-            카카오톡으로 문의하기
-          </a>
+          <Button asChild variant="kakao" size="lg">
+            <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">카카오톡으로 문의하기</a>
+          </Button>
         </p>
         <a href={slug ? `/ko/shows/${slug}` : '/ko'} rel="noreferrer" className="mt-4 inline-block underline">
           {slug ? '예매 페이지로 돌아가기' : '홈으로'}

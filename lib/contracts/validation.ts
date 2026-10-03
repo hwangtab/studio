@@ -50,27 +50,6 @@ const parseDate = (value: string): Date | null => {
 export const normalizeRoomNumber = (value: string): string =>
   value.replace(/\s+/g, '').replace(/호실?$/, '').toUpperCase();
 
-/**
- * 호실 **비교용** 키 — service.ts의 SQL(`ROOM_KEY_SQL`, markContractSent의 NOT EXISTS)과 글자 하나
- * 다르지 않은 규칙이다. 저장 정규화(normalizeRoomNumber)와는 일부러 다르다.
- *
- * SQL: `replace(replace(replace(upper(x), ' ', ''), '호실', ''), '호', '')`
- * - `upper`는 SQLite에서 ASCII만 대문자로 바꾼다 → 여기서도 a-z만 바꾼다(toUpperCase는 ß·ı 같은 글자도 바꾼다).
- * - 지우는 공백은 ' '(U+0020) 하나뿐이다 → \s 전부가 아니다.
- * - '호실'·'호'는 끝만이 아니라 **어디서나** 지운다 → "2호-1"은 "2-1"이 된다.
- *
- * 저장 정규화만 쓰면 "2호-1"은 그대로 남아, 컬럼 쪽 키("2-1")와 영영 같아지지 않아 충돌을 놓쳤다.
- */
-export const roomComparisonKey = (value: string): string =>
-  value
-    .replace(/[a-z]/g, (ch) => ch.toUpperCase())
-    .split(' ')
-    .join('')
-    .split('호실')
-    .join('')
-    .split('호')
-    .join('');
-
 /** 계약서에 적히는 최소 이용 기간. 운영상 6개월 이상을 권하지만 강제하지는 않는다. */
 export const MIN_CONTRACT_MONTHS = 1;
 

@@ -28,7 +28,6 @@ import {
   type SerializedSignature,
 } from '../../../../lib/contracts/serialize';
 import { formatCurrency, formatDate, formatDateTime } from '../../../../lib/contracts/format';
-import { classifyContractNotificationError } from '../../../../lib/contracts/notification-error';
 import { getStatusLabel, isActionAllowed, needsTermination } from '../../../../lib/contracts/status';
 import { resolveRulesContent } from '../../../../lib/contracts/template';
 import { buildAuditTrail, serializeAuditTrail, type SerializedAuditTrail } from '../../../../lib/contracts/audit-trail';
@@ -58,31 +57,21 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
     return { notFound: true };
   }
 
-  // 열람 기록 — 개인정보를 여는 화면이다(처리방침 19항). 기록 실패가 화면을 막지 않게 받고, 실패는 로그에 남는다.
-  // 인증을 통과한 뒤의 시도만 남긴다(없는 계약을 열려 한 것도 기록).
-  const recordView = (result: 'success' | 'not_found' | 'error') =>
-    recordAdminPrivacyAccess(context.req, auth.actor, 'contract_view', id, result).catch((error: unknown) =>
-      console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error),
-    );
-
-  /**
-   * 조회 실패와 "없음"을 가른다(API 라우트 [id].ts와 같은 판단). 예전에는 오류를 null로 뭉개
-   * Turso 타임아웃 같은 장애가 접속기록에 'not_found'로, 화면에 404로 나왔다 — 계약이 사라진 줄
-   * 알고 다시 만들 수 있는 오분류다. 실패는 'error'로 남기고 던져 500 화면을 띄운다.
-   */
-  let contract;
-  try {
-    contract = await getDb().query.contracts.findFirst({
+  const contract = await getDb().query.contracts
+    .findFirst({
       where: (contracts, { eq }) => eq(contracts.id, id),
       with: { signatures: true, contractClauses: true, contractAttachments: true },
+    })
+    .catch((error: unknown) => {
+      console.error('[admin/contracts/[id]] Failed to load contract:', error);
+      return null;
     });
-  } catch (error: unknown) {
-    console.error('[admin/contracts/[id]] Failed to load contract:', error);
-    await recordView('error');
-    throw error;
-  }
 
-  await recordView(contract ? 'success' : 'not_found');
+  // 열람 기록 — 개인정보를 여는 화면이다(처리방침 19항). 기록 실패가 화면을 막지 않게 받고, 실패는 로그에 남는다.
+  // 인증을 통과한 뒤의 시도만 남긴다(없는 계약을 열려 한 것도 기록).
+  await recordAdminPrivacyAccess(context.req, auth.actor, 'contract_view', id, contract ? 'success' : 'not_found').catch(
+    (error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error),
+  );
 
   if (!contract) {
     return { notFound: true };
@@ -145,7 +134,6 @@ export default function AdminContractDetailPage({
   const [subscriptionSetupUrl, setSubscriptionSetupUrl] = useState<string | null>(null);
 
   const customerSignature = signatures.find((s) => s.signerRole === 'customer');
-  const notificationProblem = classifyContractNotificationError(contract.notificationError);
 
   const run = async (task: () => Promise<{ ok: boolean; message?: string }>, confirmText?: string) => {
     if (confirmText && !window.confirm(confirmText)) return;
@@ -278,20 +266,7 @@ export default function AdminContractDetailPage({
 
         {/* 메일·PDF는 응답 이후에 처리돼 실패해도 화면에 흔적이 없었다. 남겨 둔 사유를
             띄워야 관리자가 재발송하거나 링크를 직접 전달할 수 있다. */}
-        {notificationProblem === 'operator_only' && (
-          // 운영자 알림만 실패했다 — 고객 메일은 나갔다. 고객 실패처럼 "재발송"을 권하면, 서명 대기
-          // 계약은 재발송 순간 고객이 이미 받은 서명 링크가 죽는다. 판정은 크론과 같은 함수다.
-          <div className="mb-4 p-4 bg-gray-50 border border-gray-200 text-gray-800 rounded-lg text-sm">
-            <strong className="block mb-1">운영자 알림 메일만 실패했습니다</strong>
-            {contract.notificationError}
-            <span className="block mt-2 text-gray-600">
-              {contract.status === 'sent'
-                ? '고객 메일은 정상 발송됐습니다. 재발송하지 마세요 — 재발송하면 고객이 받은 서명 링크가 바뀝니다.'
-                : '고객 메일은 정상 발송됐습니다. 고객에게 다시 보낼 필요는 없습니다.'}
-            </span>
-          </div>
-        )}
-        {notificationProblem === 'customer' && (
+        {contract.notificationError && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
             <strong className="block mb-1">알림 처리에 문제가 있었습니다</strong>
             {contract.notificationError}

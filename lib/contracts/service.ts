@@ -12,12 +12,11 @@ import {
 } from '../../db/schema';
 import { resetIdentityAttempts } from './admin-rate-limit';
 import { sendContractCreatedEmail, sendOperatorContractNotification } from './email';
-import { describeOperatorAlertFailure, NOTIFICATION_ERROR_SEPARATOR } from './notification-error';
 import { computeExpiresAt, type ContractStatus } from './status';
 import { buildContractContent, buildRulesContent, readContractTemplate } from './template';
 import { deleteTemplateSnapshot, saveTemplateSnapshot } from './template-snapshot';
 import { buildSignUrl, generateSignToken } from './token';
-import { roomComparisonKey, type CreateContractPayload } from './validation';
+import { normalizeRoomNumber, type CreateContractPayload } from './validation';
 
 /**
  * 서명 시 필수 동의를 받는 조항. 계약 생성 시 contract_clauses로 복제해 두고,
@@ -51,11 +50,7 @@ export const expireOverdueContracts = async (now: Date = new Date()): Promise<nu
   }
 };
 
-/**
- * 호실 비교 키의 SQL 표현(ASCII 대문자, ' ' 제거, '호실'·'호'를 어디서나 제거). 파라미터 쪽은 반드시
- * 같은 규칙의 JS 함수 roomComparisonKey로 맞춘다 — 저장 정규화(normalizeRoomNumber)는 규칙이 달라
- * "2호-1" 같은 표기가 영영 같아지지 않는다. 둘 중 하나를 바꾸면 다른 쪽도(markContractSent의 NOT EXISTS 포함).
- */
+/** normalizeRoomNumber와 같은 규칙의 SQL 표현(공백·끝의 호/호실 제거, 대문자). 컬럼 쪽을 맞출 때 쓴다. */
 const ROOM_KEY_SQL = sql`replace(replace(replace(upper(${contracts.roomNumber}), ' ', ''), '호실', ''), '호', '')`;
 
 /**
@@ -88,7 +83,7 @@ export const findRoomConflict = async (params: {
 }): Promise<Contract | null> => {
   const conditions = [
     // 저장된 옛 값("302호" 같은 표기)과도 같은 방으로 비교한다 — 양쪽을 같은 규칙으로 맞춘다.
-    sql`${ROOM_KEY_SQL} = ${roomComparisonKey(params.roomNumber)}`,
+    sql`${ROOM_KEY_SQL} = ${normalizeRoomNumber(params.roomNumber)}`,
     or(
       // 서명된 계약: 종료 처리 전까지 점유. 새 계약이 그 시작일 이후에 걸치면 충돌이다.
       and(
@@ -352,7 +347,7 @@ export interface SendContractResult {
  *
  * 이메일은 호출부가 응답을 보낸 뒤 이어서 처리하도록 분리했다.
  */
-export const RESEND_COOLDOWN_MS = 10_000;
+const RESEND_COOLDOWN_MS = 10_000;
 
 export const markContractSent = async (
   contractId: string,
@@ -458,7 +453,9 @@ export const sendContractNotifications = async (
     if (!operatorResult.ok) {
       console.error('[contracts/service] Operator notification failed:', operatorResult);
     }
-    const operatorProblem = operatorResult.ok ? null : describeOperatorAlertFailure(operatorResult.errorCode);
+    const operatorProblem = operatorResult.ok
+      ? null
+      : `운영자 알림 메일 발송 실패 (${operatorResult.errorCode ?? 'UNKNOWN'})`;
 
     if (!customerResult.ok) {
       console.error('[contracts/service] Customer email failed:', customerResult);
@@ -466,7 +463,7 @@ export const sendContractNotifications = async (
         contract.id,
         [`서명 요청 메일 발송 실패 (${customerResult.errorCode ?? 'UNKNOWN'})`, operatorProblem]
           .filter(Boolean)
-          .join(NOTIFICATION_ERROR_SEPARATOR),
+          .join(' / '),
       );
       return;
     }
