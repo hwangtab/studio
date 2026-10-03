@@ -138,8 +138,10 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     pattern:
       /C-4[^\n]{0,60}(?:visa|viza|비자|签证|วีซ่า)|(?:visa|viza|비자|签证|วีซ่า)[^\n]{0,60}C-4|(?:artist\s+visa|아티스트\s?비자|艺术家签证)|KOMCA\s+support|KOMCA[^\n]{0,30}(?:대행|등록을?\s?지원|가입\s?지원)/i,
     marker:
-      /\bwe\s+(?:help|guide|assist|support|handle|navigate)\b|저희(?:가|는)?\s?(?:도와|지원|대행)|스튜디오\s?놀(?:이|에서)?\s?(?:도와|지원|대행)|Studio\s?NOL[^\n]{0,40}(?:help|support|assist)|nuestro\s+equipo|te\s+(?:gu[ií]a|ayuda|acompa)|(?:chúng\s+tôi|studio\s+nol)[^\n]{0,40}(?:đồng\s+hành|hỗ\s+trợ|giúp)|ทีมงานของเรา|ช่วยเหลือ|(?:yordam|maslahat)\s+beramiz|我们(?:帮|协助|陪同|提供)/i,
-    allow: /않|없|미제공|대행하지|\bnot?\b|don'?t|doesn'?t|不提供|no\s+ofrecemos|không\s+cung\s+cấp|ไม่ให้บริการ/i,
+      /\bwe\s+(?:help|guide|assist|support|handle|navigate)\b|저희(?:가|는)?\s?(?:도와|지원|대행)|스튜디오\s?놀(?:이|에서)?\s?(?:도와|지원|대행)|Studio\s?NOL[^\n]{0,40}(?:help|support|assist)|nuestro\s+equipo|\bte\s+(?:gu[ií]a|ayuda|acompa)|(?:chúng\s+tôi|studio\s+nol)[^\n]{0,40}(?:đồng\s+hành|hỗ\s+trợ|giúp)|ทีมงานของเรา|ช่วยเหลือ|(?:yordam|maslahat)\s+beramiz|我们(?:帮|协助|陪同|提供)/i,
+    // 현지어 부정(vi "không hỗ trợ", th "ไม่สามารถ/ไม่ได้", uz "emas/yo‘q")도 면제 — 2026-10-03 감사:
+    // "비자는 지원하지 않는다"를 현지어로 적으면 이 룰에 걸려 정직한 부정문을 쓸 수 없었다.
+    allow: /않|없|미제공|대행하지|\bnot?\b|don'?t|doesn'?t|不提供|no\s+ofrecemos|không\s+cung\s+cấp|không\s+hỗ\s+trợ|ไม่ให้บริการ|ไม่สามารถ|ไม่ได้|\bemas\b|\byo[ʻ'’‘]?q\b/i,
   },
   {
     // 해외 결제 수단(PayPal·위챗페이·알리페이·은련) 주장. 2026-07-28 황경하 확인:
@@ -165,7 +167,7 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
       /o.zbek\s+(?:va\s+ingliz\s+)?till?(?:ida|arida)\s+muloqot|中文工作人员|中文服务|中文版本|中文发票|中文设备|中文助理|专属中文|中文客服|中文陪同|中文翻译人员|Estudio\s+en\s+Español|Studio\s+bằng\s+Tiếng\s+Việt|สตูดิโอภาษาไทย|hóa\s+đơn[^\n]{0,20}tiếng\s+Việt/i,
     // "실시간 번역 도구로 중국어 메시지를 처리한다"는 정상(실제 제공 방식)이다.
     // 막는 건 사람(工作人员·助理)을 붙여 준다는 단정뿐이므로 번역 도구 표현은 면제.
-    allow: /않|없|미제공|\bnot?\b|不提供|翻译工具|翻译软件|机器翻译/i,
+    allow: /않|없|미제공|\bnot?\b|不提供|翻译工具|翻译软件|机器翻译|\bemas\b|\byo[ʻ'’‘]?q\b/i,
   },
   {
     // 2026-08-24: 같은 zh 스토리에 "工作人员英语沟通顺畅"(직원 영어 소통 유창)이 있었다.

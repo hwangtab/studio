@@ -231,6 +231,15 @@ describe('fact guard rules self-check', () => {
       'Studio NOL is no longer operated by the Korea Smart Cooperative.',
       'The studio was operated by the Korea Smart Cooperative until 2024.',
       'Studio NOL does not offer vocal lessons; use an external vocal coach.',
+      // 비자·KOMCA·다국어 인력 — 현지어 부정문은 이 규칙이 지키려는 사실 그 자체다 (2026-10-03 감사)
+      'Chúng tôi không hỗ trợ xin visa C-4 hay đăng ký KOMCA.',
+      'ทีมงานของเราไม่สามารถช่วยเหลือเรื่องวีซ่า C-4 ได้',
+      'ทีมงานของเราไม่ได้ช่วยเหลือเรื่องวีซ่า C-4',
+      "C-4 viza bo‘yicha yordam beramiz degan xizmatimiz yo‘q.",
+      'C-4 viza boʻyicha maslahat beramiz, degan vaʼda emas — bunday xizmat koʻrsatilmaydi.',
+      // 단어 안의 "te"(gente·constante)는 1인칭 "te guía/ayuda"가 아니다
+      'La gente ayuda a otros artistas con la visa C-4 de forma informal.',
+      'Studiomizda oʻzbek tilida muloqot qilish imkoni yoʻq — yozishmalar ingliz tilida.',
     ];
 
     for (const text of fixtures) {

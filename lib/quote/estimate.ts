@@ -131,8 +131,8 @@ export type QuoteAnswers = {
   fundingSource?: string;
 };
 
-/** 가격 표기의 부가세 기준 — 연습실만 다르다(시간제 VAT 포함, 월세 최종가). */
-export type VatBasis = 'excluded' | 'included' | 'final';
+/** 가격 표기의 부가세 기준 — 연습실 시간제만 VAT 포함이고 나머지(연습실 월세·레슨 포함)는 VAT 별도. */
+export type VatBasis = 'excluded' | 'included';
 
 export type Estimate = {
   /** 한 줄 요약(예: "25만원", "50만~75만원", "180만원부터"). */
@@ -315,7 +315,6 @@ export const estimate = (a: QuoteAnswers): Estimate | null => {
 export const VAT_NOTE: Record<VatBasis, string> = {
   excluded: '부가세 별도',
   included: '부가세 포함',
-  final: '최종가 (부가세 없음)',
 };
 
 const labelOf = (choices: readonly Choice[], id?: string) => choices.find((c) => c.id === id)?.label;
