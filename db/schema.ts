@@ -1313,6 +1313,12 @@ export const privacyAccessActionEnum = [
    * 그 대상이 아니다.
    */
   'contract_pdf_download',
+  /**
+   * 관리자 공연 명단 CSV 내려받기 (pages/api/admin/shows/[id]/roster.ts).
+   * 구매자 이름·연락처가 회차 단위로 실린다. 대상은 회차 id. 컬럼은 enum 문자열이라
+   * 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'show_roster_export',
 ] as const;
 
 /**

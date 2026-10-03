@@ -61,10 +61,11 @@ const ticketRefundIdempotencyKey = (orderNo: string, ticketIds: string[]): strin
   `tkt-refund:${orderNo}:${[...ticketIds].sort().join(',')}`;
 
 export async function refundShowTickets(
-  input: { orderNo: string; ticketIds: string[]; noticeAt: Date },
+  input: { orderNo: string; ticketIds: string[]; noticeAt: Date; /** 환불을 요청한 주체 — refunds.requested_by에 남는다. 기본 admin. */ actor?: 'admin' | 'customer' },
   toss: Pick<FakeToss, 'cancelPayment'>,
 ): Promise<RefundOutcome> {
   const db = getDb();
+  const requestedBy = input.actor ?? 'admin';
 
   if (input.ticketIds.length === 0) {
     return { status: 'rejected', reason: 'no_tickets' };
@@ -184,7 +185,7 @@ export async function refundShowTickets(
         paymentId: payment.id,
         amount: totalAmount,
         reason: cancelResult.message || REFUND_REASON,
-        requestedBy: 'admin',
+        requestedBy,
         status: 'failed',
       });
     } catch (error) {
@@ -206,7 +207,7 @@ export async function refundShowTickets(
       INSERT INTO refunds (id, payment_id, amount, reason, requested_by, toss_transaction_key, status)
       SELECT lower(hex(randomblob(16))), ${payment.id},
              ${cancelledTotal} - COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${payment.id} AND status = 'done'), 0),
-             ${REFUND_REASON}, 'admin',
+             ${REFUND_REASON}, ${requestedBy},
              ${cancelResult.payment.cancels?.[cancelResult.payment.cancels.length - 1]?.transactionKey ?? null}, 'done'
       WHERE ${cancelledTotal} > COALESCE((SELECT SUM(amount) FROM refunds WHERE payment_id = ${payment.id} AND status = 'done'), 0)
     `),

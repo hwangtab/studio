@@ -7,6 +7,7 @@ import type { Order } from '../../db/schema';
 import { refundIdempotencyKey, remainingRefundable } from '../booking/cancel';
 import type { TossPayment } from '../booking/toss';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
+import { SEND_PENDING } from '../ops/notificationSentinel';
 import { liveShowtimeCondition, zoneCapacityCondition, ticketTypeQuotaCondition } from './conditions';
 import { rowsAffectedOf } from './service';
 import { DECLINE_CODE_PATTERN } from './tossCodes';
@@ -229,7 +230,7 @@ export async function confirmShowOrder(
         )
       `),
       db.run(sql`
-        UPDATE orders SET status = 'paid', updated_at = unixepoch()
+        UPDATE orders SET status = 'paid', updated_at = unixepoch(), notification_error = ${SEND_PENDING}
         WHERE id = ${order.id} AND status IN (${statusList}) AND ${extraGate}
       `),
       // 하위 전이(show_tickets)는 **주문이 실제로 paid가 됐을 때만** 한다(lib/booking/confirm.ts:

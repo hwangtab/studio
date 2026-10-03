@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { splitInclusiveAmount } from '../booking/amounts';
 import { generateManageToken } from '../booking/token';
 import { zoneCapacityCondition, ticketTypeQuotaCondition, showtimeSalesWindowCondition } from './conditions';
+import { SHOW_HOLD_SECONDS, SHOW_MAX_PER_ORDER_CAP } from './limits';
 import { generateShowOrderNo, generateTicketCode } from './shape';
 
 /**
@@ -16,14 +17,9 @@ export function rowsAffectedOf(result: unknown): number {
   return r?.rowsAffected ?? 0;
 }
 
-const HOLD_SECONDS = 600;
+const HOLD_SECONDS = SHOW_HOLD_SECONDS;
 
-/**
- * 1회 매수 상한(스펙 §11.1 `SHOW_MAX_PER_ORDER_CAP`). 공연별 세부 한도(권종별 한도, 공연별
- * 커스텀 상한)는 이 플랜(화면 없는 도메인 코어) 범위 밖이라 아직 없다 — 여기서는 그 상한의
- * 최댓값 하나만 걸어 0·음수·비정수·비상식적으로 큰 수량이 SQL까지 내려가는 것을 막는다.
- */
-const SHOW_MAX_PER_ORDER_CAP = 10;
+export { SHOW_MAX_PER_ORDER_CAP };
 
 export type CreateShowOrderResult =
   | { ok: true; orderNo: string }
@@ -46,7 +42,15 @@ function isValidQuantity(quantity: number): boolean {
  * 사후 정리가 필요 없다.
  */
 export async function createShowOrder(
-  input: { showtimeId: string; ticketTypeId: string; quantity: number; buyerName: string; buyerContact: string },
+  input: {
+    showtimeId: string;
+    ticketTypeId: string;
+    quantity: number;
+    buyerName: string;
+    buyerContact: string;
+    /** 티켓 메일 수신 주소(선택). 없으면 ''로 저장돼 메일은 나가지 않는다 — 관리 링크는 결제 완료 화면에 뜬다. */
+    buyerEmail?: string;
+  },
   now: Date
 ): Promise<CreateShowOrderResult> {
   if (!isValidQuantity(input.quantity)) return { ok: false, code: 'invalid_quantity' };
@@ -67,6 +71,7 @@ export async function createShowOrder(
   const showtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
   if (!showtime || showtime.showId !== ticketType.showId) return { ok: false, code: 'ticket_type_mismatch' };
 
+  const buyerEmail = (input.buyerEmail ?? '').trim();
   const totalAmount = ticketType.price * input.quantity;
   // 티켓 가격은 VAT 포함 표기(아티스트 구독과 같은 관례) — lib/booking/amounts.ts의
   // splitInclusiveAmount로 공급가·VAT를 분리해 저장한다. 후속 정산 태스크가
@@ -82,7 +87,7 @@ export async function createShowOrder(
     db.run(sql`
       INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
                           item_amount, vat_amount, total_amount, manage_token)
-      SELECT lower(hex(randomblob(16))), ${orderNo}, 'ticket', 'pending', ${input.buyerName}, ${input.buyerContact}, '',
+      SELECT lower(hex(randomblob(16))), ${orderNo}, 'ticket', 'pending', ${input.buyerName}, ${input.buyerContact}, ${buyerEmail},
              ${itemAmount}, ${vatAmount}, ${totalAmount}, ${manageToken}
       WHERE ${windowGate} AND ${zoneGate} AND ${quotaGate}
     `)

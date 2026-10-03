@@ -363,6 +363,30 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * 자동 취소 중에 멈춘 공연 티켓 주문. `auto_cancel_pending`은 autoCancelShowApproval이 붙잡은
+   * 소유권 표식이라(lib/shows/confirm.ts) 한 시간 넘게 남아 있으면 토스 취소 응답을 못 받고
+   * 끝난 것이다 — 결제는 승인됐는데 확정도 환불도 안 된 상태일 수 있다.
+   */
+  const stuckShowCancel = await db
+    .select({ orderNo: orders.orderNo })
+    .from(orders)
+    .where(and(
+      eq(orders.type, 'ticket'),
+      eq(orders.status, 'auto_cancel_pending'),
+      lt(orders.updatedAt, new Date(now.getTime() - 60 * 60 * 1000)),
+    ));
+  if (stuckShowCancel.length > 0) {
+    issues.push({
+      severity: 'high',
+      title: `자동 취소가 멈춘 공연 티켓 주문 ${stuckShowCancel.length}건 — 결제 상태 확인 필요`,
+      detail: [
+        `- ${sample(stuckShowCancel.map((row) => row.orderNo))}`,
+        '토스 결제 내역에서 취소 여부를 확인하고, 승인된 채라면 환불하세요.',
+      ].join('\n'),
+    });
+  }
+
+  /**
    * 해지·종료된 구독에 돈이 들어온 건 — **환불 판단이 필요한데 아무도 모르는 상태.**
    *
    * 청구 실패 → 고객 셀프 해지 → 수 시간 뒤 토스 DONE 웹훅이 도착하는 순서로 생긴다.

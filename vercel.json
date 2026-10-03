@@ -38,6 +38,10 @@
     {
       "path": "/api/cron/review-requests",
       "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/expire-show-orders",
+      "schedule": "30 18 * * *"
     }
   ]
 }
