@@ -156,6 +156,11 @@ describe('fact guard rules self-check', () => {
       ['课程涵盖K-pop声乐技巧、韩语歌词发音', 'vocal-technique-teaching-multilang'],
       ['Nuestro currículo cubre técnicas vocales de K-pop', 'vocal-technique-teaching-multilang'],
       ['heading: "K-pop trainees · C-4 artist visa · KOMCA support"\nbody: "We help you get studio-ready."', 'visa-komca-agency-claim'],
+      // 2026-10-02: 아래 넷은 data/home.ts 현지어 블록에 라이브로 떠 있던 실제 문구다(가드를 통과했었다).
+      ['body: "¿Cómo obtener visa de artista? Nuestro equipo te guía en todo el proceso: desde la visa C-4 hasta el registro en KOMCA."', 'visa-komca-agency-claim'],
+      ['body: "Làm thế nào để xin visa C-4 (nghệ sĩ)? Chúng tôi đồng hành bạn từ khâu xin visa đến khi hoàn tất đăng ký quyền tác giả."', 'visa-komca-agency-claim'],
+      ['body: "วิธีขอวีซ่า C-4 (ศิลปิน) ทำอย่างไร? ทีมงานของเรามีพร้อมช่วยเหลือคุณตั้งแต่ขั้นตอนขอวีซ่า"', 'visa-komca-agency-claim'],
+      ['body: "Studiomizda oʻzbek va ingliz tillarida muloqot qilish mumkin."', 'non-english-staff-claim'],
       ['Pay by bank transfer (local Korean banks), credit card, or PayPal.', 'foreign-payment-method-claim'],
       ['支持微信支付、支付宝、银联卡付款', 'foreign-payment-method-claim'],
       ['中文工作人员常驻，合同、会话记录全部提供中文版本', 'non-english-staff-claim'],
