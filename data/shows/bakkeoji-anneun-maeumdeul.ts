@@ -16,9 +16,9 @@ import type { ShowDefinition } from '../../lib/shows/seed';
  */
 
 export const BAKKEOJI_SLUG = 'bakkeoji-anneun-maeumdeul';
-export const BAKKEOJI_POSTER = '/images/shows/bakkeoji-poster-20261003.webp';
+export const BAKKEOJI_POSTER = '/images/shows/bakkeoji-poster-20261003r2.webp';
 /** 1200x630 공유 카드용. DB 칸이 없어 상수로만 둔다 — 상세 페이지의 og:image가 이 값을 쓴다. */
-export const BAKKEOJI_OG_IMAGE = '/images/shows/bakkeoji-og-20261003.webp';
+export const BAKKEOJI_OG_IMAGE = '/images/shows/bakkeoji-og-20261003r2.webp';
 
 const PERFORMERS = [
   '자이(Jai) — 특유의 포근하고 깊은 음색으로 일상과 삶의 미세한 결을 어루만지는 싱어송라이터. 락밴드 \'헤디마마\' 활동을 거쳐 현재는 어쿠스틱·인디·로파이·재즈 스타일을 넘나드는 솔로 아티스트로서 독보적인 음악 세계를 구축해 오고 있다.',
