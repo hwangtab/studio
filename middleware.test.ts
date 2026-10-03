@@ -272,6 +272,11 @@ describe('middleware matcher — 정적 파일 제외', () => {
     expect(matches('/pricing')).toBe(true);
   });
 
+  it('.well-known 표준 경로는 미들웨어를 타지 않는다 (security.txt·애플페이 도메인 인증)', () => {
+    expect(matches('/.well-known/security.txt')).toBe(false);
+    expect(matches('/.well-known/apple-developer-merchantid-domain-association')).toBe(false);
+  });
+
   it('hex가 아닌 루트 .txt는 제외 대상이 아니다', () => {
     expect(matches('/hello-world.txt')).toBe(true);
   });
@@ -324,6 +329,8 @@ describe('middleware /admin — 프리픽스 없이 보안 헤더만', () => {
     expect(response.headers.get('Content-Security-Policy')).toContain("default-src 'self'");
     expect(response.headers.get('Content-Security-Policy')).toContain("object-src 'none'");
     expect(response.headers.get('Permissions-Policy')).toContain('camera=()');
+    // 결제수단 목록 iframe(payment-widget)에서 애플페이가 막히지 않게.
+    expect(response.headers.get('Permissions-Policy')).toContain('"https://payment-widget.tosspayments.com"');
     expect(response.headers.get('X-Content-Type-Options')).toBe('nosniff');
   });
 

@@ -120,9 +120,12 @@ function setSecurityHeaders(response: NextResponse): NextResponse {
     // orientation 등 새 기능에서 센서가 필요하면 명시적으로 풀어주는 형태로 변경.
     response.headers.set(
         'Permissions-Policy',
-        // payment는 토스 결제위젯(애플페이 등 PaymentRequest API)을 위해 self와
-        // 토스 SDK origin에만 허용. 나머지는 사용처가 없어 전부 차단 유지.
-        'camera=(), microphone=(), geolocation=(), payment=(self "https://js.tosspayments.com"), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
+        // payment는 토스 결제위젯(애플페이 등 PaymentRequest API)을 위해 self와 토스 origin에만 허용.
+        // 결제수단 목록은 payment-widget.tosspayments.com iframe이 그린다 — 이 origin이 빠지면
+        // 그 iframe에서 결제 API가 막혀 위젯이 애플페이를 "지원 안 되는 기기"로 보고 숨길 수 있다
+        // (애플페이는 토스 계약·위젯 설정에서 켜져 있다, 2026-10-03 ui-settings 확인).
+        // 나머지는 사용처가 없어 전부 차단 유지.
+        'camera=(), microphone=(), geolocation=(), payment=(self "https://js.tosspayments.com" "https://payment-widget.tosspayments.com"), usb=(), magnetometer=(), gyroscope=(), accelerometer=()',
     );
     return response;
 }
@@ -346,6 +349,9 @@ export const config = {
         // 실패한다(2026-07-28 네이버 403으로 발견 — 그동안 제출이 무효였다).
         // 키 값은 scripts/indexnow-submit.mjs의 KEY 상수. 프로토콜상 8~128자 hex라
         // 길이 범위로 잡아 키를 교체해도 계속 통과한다.
-        '/((?!api|_next|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full.*\\.txt|[0-9a-f]{8,128}\\.txt|locales|images|icons|logo.*|audio|styles|scripts|fonts).*)',
+        //
+        // \.well-known — security.txt·애플페이 도메인 인증 파일(apple-developer-merchantid-domain-association)
+        // 같은 표준 경로. 로케일 프리픽스가 붙으면 /ko/.well-known/…로 307되어 읽히지 않는다(2026-10-03 발견).
+        '/((?!api|_next|\\.well-known|favicon\\.ico|manifest\\.json|browserconfig\\.xml|sw\\.js|robots\\.txt|sitemap.*\\.xml|llms\\.txt|llms-full.*\\.txt|[0-9a-f]{8,128}\\.txt|locales|images|icons|logo.*|audio|styles|scripts|fonts).*)',
     ],
 };
