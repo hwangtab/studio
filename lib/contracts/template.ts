@@ -26,15 +26,18 @@ export interface ContractTemplateData {
 // contractDate는 startDate/endDate와 달리 '순간'이라 이 차이가 그대로 드러났다.
 // format.ts는 Asia/Seoul을 못박고 그 사고 경위를 파일 주석에 남겨 뒀다.
 
-export const buildContractContent = (data: ContractTemplateData): string => {
-  const templatePath = path.join(
-    process.cwd(),
-    'lib',
-    'contracts',
-    'contract-template.md',
-  );
+/** 현재 계약서 템플릿 원문. 새 계약을 만들 때만 읽는다 — 이미 만든 계약은 사본(contract_template_snapshots)을 쓴다. */
+export const readContractTemplate = (): string =>
+  readFileSync(path.join(process.cwd(), 'lib', 'contracts', 'contract-template.md'), 'utf-8');
 
-  let content = readFileSync(templatePath, 'utf-8');
+/**
+ * @param template 계약 시점에 떠 둔 템플릿 사본. 생략하면 현재 파일을 읽는다(새 계약·사본이 없는 옛 계약).
+ */
+export const buildContractContent = (
+  data: ContractTemplateData,
+  template: string = readContractTemplate(),
+): string => {
+  let content = template;
 
   // 아래 값은 모두 마크다운 표의 셀 안에 들어간다. 파이프·개행까지 막지 않으면
   // 이름 한 줄로 계약서에 없던 칸과 문구를 심을 수 있다.

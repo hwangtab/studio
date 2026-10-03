@@ -15,8 +15,16 @@ import { readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 
 import * as schema from '../../db/schema';
-import { contractAttachments, contractClauses, contracts, signatures } from '../../db/schema';
+import {
+  contractAttachments,
+  contractClauses,
+  contractTemplateSnapshots,
+  contracts,
+  signatures,
+} from '../../db/schema';
 import type { ContractStatus } from './status';
+import { readContractTemplate } from './template';
+import { hashTemplate, loadTemplateSnapshot } from './template-snapshot';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
@@ -326,6 +334,52 @@ describe('서명 시점 본문 완성', () => {
     expect(signed).toContain('302');
     expect(signed).toContain('300,000');
     expect(signed).toContain('주차 1대 제공');
+  });
+
+  describe('템플릿 사본 (발송 뒤 템플릿이 바뀌어도 읽은 본문으로 서명한다)', () => {
+    it('계약을 만들면 그때의 템플릿 원문을 사본으로 남긴다', async () => {
+      const contract = await createContract(base);
+      const row = await mockDb.query.contractTemplateSnapshots.findFirst({
+        where: eq(contractTemplateSnapshots.contractId, contract.id),
+      });
+
+      expect(row?.template).toBe(readContractTemplate());
+      expect(row?.templateHash).toBe(hashTemplate(readContractTemplate()));
+    });
+
+    it('서명 본문은 현재 파일이 아니라 사본으로 완성된다', async () => {
+      const contract = await createContract(base);
+      // 발송 뒤 contract-template.md가 바뀐 상황: 사본은 옛 판본, 파일은 새 판본이다.
+      const oldTemplate = readContractTemplate().replace('{{customerName}}', '{{customerName}} [옛 판본]');
+      await mockDb
+        .update(contractTemplateSnapshots)
+        .set({ template: oldTemplate })
+        .where(eq(contractTemplateSnapshots.contractId, contract.id));
+
+      const snapshot = await loadTemplateSnapshot(contract.id);
+      const signed = buildSignedContractContent(contract, details, new Date(), snapshot);
+      const fromFile = buildSignedContractContent(contract, details, new Date());
+
+      expect(signed).toContain('[옛 판본]');
+      expect(fromFile).not.toContain('[옛 판본]');
+    });
+
+    it('사본이 없는 옛 계약은 현재 파일로 완성된다(옛 동작)', async () => {
+      const contract = await createContract(base);
+      await mockDb.delete(contractTemplateSnapshots).where(eq(contractTemplateSnapshots.contractId, contract.id));
+
+      expect(await loadTemplateSnapshot(contract.id)).toBeNull();
+      const signed = buildSignedContractContent(contract, details, new Date(), null);
+      expect(signed).toContain('1990-01-02');
+    });
+
+    it('표가 아직 없는 환경(마이그레이션 전)에서도 던지지 않고 null이다', async () => {
+      await client.execute('DROP TABLE contract_template_snapshots');
+      const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+
+      expect(await loadTemplateSnapshot('아무-계약')).toBeNull();
+      spy.mockRestore();
+    });
   });
 
   it('입력값의 표 구분자가 계약서 구조를 깨뜨리지 않는다', async () => {

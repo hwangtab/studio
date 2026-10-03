@@ -13,7 +13,8 @@ import {
 import { resetIdentityAttempts } from './admin-rate-limit';
 import { sendContractCreatedEmail, sendOperatorContractNotification } from './email';
 import { computeExpiresAt, type ContractStatus } from './status';
-import { buildContractContent, buildRulesContent } from './template';
+import { buildContractContent, buildRulesContent, readContractTemplate } from './template';
+import { deleteTemplateSnapshot, saveTemplateSnapshot } from './template-snapshot';
 import { buildSignUrl, generateSignToken } from './token';
 import type { CreateContractPayload } from './validation';
 
@@ -137,6 +138,8 @@ export const terminateContract = async (
 
 /** 계약을 draft로 생성한다. 이메일은 발송하지 않는다(발송은 별도 액션). */
 export const createContract = async (data: CreateContractPayload): Promise<Contract> => {
+  // 본문을 만든 템플릿을 한 번만 읽어 같은 판본을 본문과 사본에 쓴다(서명 때 이 사본으로 본문을 완성한다).
+  const template = readContractTemplate();
   const content = buildContractContent({
     customerName: data.customerName,
     customerBirthdate: data.customerBirthdate,
@@ -151,7 +154,7 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     paymentDay: data.paymentDay,
     contractDate: new Date().toISOString(),
     specialTerms: data.specialTerms,
-  });
+  }, template);
 
   // 첨부 문서는 계약 시점 내용을 그대로 떠서 보관한다 — 원본 파일이 바뀌어도
   // 이미 체결된 계약의 첨부는 달라지지 않아야 한다.
@@ -218,6 +221,9 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
     ),
   ]);
 
+  // 사본은 계약 생성과 별도로 저장한다 — 표가 아직 없는 환경에서 생성이 깨지면 안 된다(실패는 로그).
+  await saveTemplateSnapshot(contractId, template);
+
   const contract = await getDb().query.contracts.findFirst({
     where: eq(contracts.id, contractId),
   });
@@ -241,6 +247,7 @@ export const updateDraftContract = async (
   contractId: string,
   data: CreateContractPayload,
 ): Promise<Contract | null> => {
+  const template = readContractTemplate();
   const content = buildContractContent({
     customerName: data.customerName,
     customerBirthdate: data.customerBirthdate,
@@ -255,7 +262,7 @@ export const updateDraftContract = async (
     paymentDay: data.paymentDay,
     contractDate: new Date().toISOString(),
     specialTerms: data.specialTerms,
-  });
+  }, template);
 
   const [updated] = await getDb()
     .update(contracts)
@@ -281,6 +288,9 @@ export const updateDraftContract = async (
     .returning();
 
   if (!updated) return null;
+
+  // 본문을 다시 만들었으니 사본도 그 판본으로 맞춘다.
+  await saveTemplateSnapshot(contractId, template);
 
   // 서명자 정보도 함께 따라가야 서명 페이지의 기본값이 어긋나지 않는다.
   await getDb()
@@ -464,6 +474,7 @@ export const deleteContract = async (contractId: string): Promise<boolean> => {
     getDb().delete(contractClauses).where(eq(contractClauses.contractId, contractId)),
     getDb().delete(contractAttachments).where(eq(contractAttachments.contractId, contractId)),
   ]);
+  await deleteTemplateSnapshot(contractId);
 
   return true;
 };
@@ -484,6 +495,8 @@ export const buildSignedContractContent = (
   contract: Contract,
   details: { customerBirthdate: string; customerAddress: string },
   signedAt: Date,
+  /** 계약 시점에 떠 둔 템플릿 사본. 없으면(옛 계약·표 미적용) 현재 파일을 쓴다. */
+  template?: string | null,
 ): string => {
   let specialTerms: string[] | undefined;
   if (contract.specialTerms) {
@@ -512,5 +525,5 @@ export const buildSignedContractContent = (
     paymentDay: contract.paymentDay,
     contractDate: signedAt.toISOString(),
     specialTerms,
-  });
+  }, template ?? undefined);
 };

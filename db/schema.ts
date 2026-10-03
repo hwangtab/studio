@@ -222,6 +222,28 @@ export const contractAttachmentsRelations = relations(contractAttachments, ({ on
   }),
 }));
 
+/**
+ * 계약 본문을 만든 **템플릿 원문**의 사본.
+ *
+ * 계약 본문(contracts.content)은 만들 때 한 번 굳지만, 서명 때는 고객이 채운 생년월일·주소·계약일을
+ * 넣어 템플릿에서 다시 만든다(buildSignedContractContent). 그 사이 contract-template.md가 바뀌면
+ * 고객이 화면에서 읽은 조항과 서명에 묶이는 조항이 달라진다 — 이용수칙이 contract_attachments에 사본을
+ * 두는 것과 같은 이유다(2026-10-02 코드리뷰).
+ *
+ * contracts에 컬럼을 더하지 않고 별도 표를 둔 이유는 배포 순서다: 컬럼을 더하면 컬럼 지정 없는
+ * select()가 전부 새 컬럼을 요구해 마이그레이션 전 배포가 계약 화면 전체를 깨뜨린다(0037과 같다).
+ * 이 표가 없으면 읽기는 null을 돌려 현재 파일로 되돌아간다(옛 동작).
+ */
+export const contractTemplateSnapshots = sqliteTable('contract_template_snapshots', {
+  contractId: text('contract_id')
+    .primaryKey()
+    .references(() => contracts.id, { onDelete: 'cascade' }),
+  template: text('template').notNull(),
+  /** 템플릿 원문의 sha256(hex). 어느 판본인지 로그·감사에서 대조하는 용도. */
+  templateHash: text('template_hash').notNull(),
+  createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+});
+
 // ─── 예약·결제 (Phase 1: 세션 예약) ───────────────────────────────────────────
 
 export const orderStatusEnum = [
