@@ -26,8 +26,10 @@ jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
  * (해지 구독에 뒤늦은 승인이 도착하면 사람에게 닿아야 한다는 규칙의 회귀 테스트용.)
  */
 const sendSubscriptionOperatorAlert = jest.fn().mockResolvedValue(null);
+const sendSubscriptionCancelledEmail = jest.fn().mockResolvedValue(null);
 jest.mock('./email', () => ({
   sendSubscriptionOperatorAlert: (...args: unknown[]) => sendSubscriptionOperatorAlert(...args),
+  sendSubscriptionCancelledEmail: (...args: unknown[]) => sendSubscriptionCancelledEmail(...args),
 }));
 
 const issueBillingKey = jest.fn();
@@ -42,6 +44,7 @@ jest.mock('./toss-billing', () => ({
 // eslint-disable-next-line import/first
 import {
   cancelSubscription,
+  cancelSubscriptionsOfContract,
   chargeCycle,
   chargeIdempotencyKey,
   claimDueSubscription,
@@ -106,6 +109,8 @@ beforeEach(async () => {
   await client.execute('DELETE FROM contracts');
   sendSubscriptionOperatorAlert.mockReset();
   sendSubscriptionOperatorAlert.mockResolvedValue(null);
+  sendSubscriptionCancelledEmail.mockReset();
+  sendSubscriptionCancelledEmail.mockResolvedValue(null);
   issueBillingKey.mockReset();
   chargeBillingKey.mockReset();
   fetchPaymentByOrderId.mockReset();
@@ -128,13 +133,23 @@ const lessonInput = {
   billingDay: 5,
 };
 
-const insertContract = async (id: string): Promise<string> => {
+const insertContract = async (
+  id: string,
+  options: { monthlyRent?: number; paymentDay?: number; status?: string; terminatedAt?: number | null } = {},
+): Promise<string> => {
   await client.execute({
     sql: `INSERT INTO contracts (id, title, customer_name, customer_email, customer_phone, room_number,
-            start_date, end_date, monthly_rent, deposit_amount, payment_day, content, status, sign_token)
+            start_date, end_date, monthly_rent, deposit_amount, payment_day, content, status, sign_token, terminated_at)
           VALUES (?, '연습실 이용계약', '박연주', 'p@example.com', '010-0000-0000', 'A-1',
-            0, 0, 360000, 0, 5, '본문', 'signed', ?)`,
-    args: [id, `tok_${id}`],
+            0, 0, ?, 0, ?, '본문', ?, ?, ?)`,
+    args: [
+      id,
+      options.monthlyRent ?? 360000,
+      options.paymentDay ?? 5,
+      options.status ?? 'signed',
+      `tok_${id}`,
+      options.terminatedAt ?? null,
+    ],
   });
   return id;
 };
@@ -206,6 +221,45 @@ describe('createSubscription', () => {
   it('billingDay 범위를 벗어나면 거부', async () => {
     expect(await createSubscription({ ...lessonInput, billingDay: 0 }, NOW)).toEqual({ ok: false, code: 'invalid_billing_day' });
     expect(await createSubscription({ ...lessonInput, billingDay: 32 }, NOW)).toEqual({ ok: false, code: 'invalid_billing_day' });
+  });
+
+  it('없는 계약에는 만들지 않는다 — contract_not_found', async () => {
+    const result = await createSubscription({ ...lessonInput, kind: 'practice-room', contractId: 'missing' }, NOW);
+    expect(result).toEqual({ ok: false, code: 'contract_not_found' });
+    expect((await client.execute('SELECT id FROM subscriptions')).rows).toHaveLength(0);
+  });
+
+  it('서명 전 계약에는 만들지 않는다 — contract_not_active', async () => {
+    for (const status of ['draft', 'sent']) {
+      const contractId = await insertContract(`c_${status}`, { status });
+      const result = await createSubscription({ ...lessonInput, kind: 'practice-room', contractId }, NOW);
+      expect(result).toEqual({ ok: false, code: 'contract_not_active' });
+    }
+  });
+
+  it('종료된 계약에는 만들지 않는다 — contract_not_active', async () => {
+    const terminated = await insertContract('c_terminated', { status: 'terminated', terminatedAt: 1_770_000_000 });
+    expect(await createSubscription({ ...lessonInput, kind: 'practice-room', contractId: terminated }, NOW)).toEqual({
+      ok: false,
+      code: 'contract_not_active',
+    });
+    // 상태는 signed로 남았는데 종료 시각만 찍힌 행도 끝난 계약이다.
+    const stale = await insertContract('c_stale', { status: 'signed', terminatedAt: 1_770_000_000 });
+    expect(await createSubscription({ ...lessonInput, kind: 'practice-room', contractId: stale }, NOW)).toEqual({
+      ok: false,
+      code: 'contract_not_active',
+    });
+  });
+
+  it('금액과 결제일은 계약서가 정한다 — 입력한 결제일·상수 정가를 쓰지 않는다', async () => {
+    const contractId = await insertContract('c_discount', { monthlyRent: 300000, paymentDay: 25 });
+    const result = await createSubscription({ ...lessonInput, kind: 'practice-room', contractId, billingDay: 5 }, NOW);
+    if (!result.ok) throw new Error(`unexpected ${result.code}`);
+    const sub = (await findSubscriptionById(result.id))!;
+    expect(sub.billingDay).toBe(25);
+    expect(sub.itemAmount).toBe(300000);
+    expect(sub.vatAmount).toBe(30000);
+    expect(sub.totalAmount).toBe(330000);
   });
 });
 
@@ -1399,5 +1453,218 @@ describe('자동 재개 안내 일감 — resumeNoticePendingAt', () => {
     await cancelSubscription(created.id, { requestedBy: 'customer', reason: 'x' }, UNTIL_FAR);
     expect((await findSubscriptionById(created.id))!.resumeNoticePendingAt).toBeNull();
     expect(await listPendingResumeNotices()).toHaveLength(0);
+  });
+});
+
+/**
+ * 실패한 회차에 머무는 규칙(#448)의 범위와 두 경로(청구 성공·웹훅/대사 복구)의 일치.
+ * 2026-10-03 감사에서 확인된 회귀의 테스트다.
+ */
+describe('밀린 회차 — 상품 범위·복구 경로·정지·이미 지난 다음 청구일', () => {
+  const at = (iso: string) => new Date(iso);
+
+  /** 결제일 `billingDay`인 레슨 구독을 `start`에 시작한다(첫 결제 성공). */
+  const startedOn = async (billingDay: number, start: Date) => {
+    const created = await createSubscription({ ...lessonInput, billingDay }, start);
+    if (!created.ok) throw new Error('unreachable');
+    issueBillingKey.mockResolvedValue(issuedOk());
+    chargeBillingKey.mockResolvedValue(chargeOk());
+    const sub = (await findSubscriptionById(created.id))!;
+    await completeCardSetup({ id: created.id, token: created.setupToken, authKey: 'auth_1', customerKey: sub.customerKey }, start);
+    chargeBillingKey.mockReset();
+    return created.id;
+  };
+
+  const asArtistSupport = async (id: string) => {
+    await client.execute({
+      sql: `UPDATE subscriptions SET kind = 'artist-support', artist_slug = 'jai', tier_id = 'standard' WHERE id = ?`,
+      args: [id],
+    });
+  };
+
+  it('아티스트 후원은 회차를 지금 달로 잡는다 — 정산이 닫힌 지난달 회차를 만들지 않는다', async () => {
+    const id = await startedOn(30, at('2026-08-30T00:00:00Z'));
+    await asArtistSupport(id);
+
+    chargeBillingKey.mockResolvedValueOnce(chargeFail());
+    const first = await chargeCycle(id, at('2026-09-30T00:00:00Z'), { reason: 'scheduled' });
+    expect(first).toMatchObject({ ok: false, status: 'past_due', cycleYm: '2026-09' });
+
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_artist'));
+    const retry = await chargeCycle(id, at('2026-10-01T00:00:00Z'), { reason: 'retry' });
+    expect(retry).toMatchObject({ ok: true, status: 'active', cycleYm: '2026-10', attempt: 1 });
+    const sub = (await findSubscriptionById(id))!;
+    expect(sub.currentPeriodStart?.toISOString()).toBe('2026-10-01T00:00:00.000Z');
+    expect(sub.nextBillingAt?.toISOString()).toBe('2026-11-30T00:00:00.000Z');
+  });
+
+  /** 9/30 청구가 응답 없이 끝나 회차 failed·주문 pending, past_due(재시도 10/1)로 남은 레슨 구독. */
+  const networkErrorOnSep30 = async () => {
+    const id = await startedOn(30, at('2026-08-30T00:00:00Z'));
+    chargeBillingKey.mockResolvedValue({ ok: false, code: 'NETWORK_ERROR', message: 'timeout' });
+    await chargeCycle(id, at('2026-09-30T00:00:00Z'), { reason: 'scheduled' });
+    expect((await findSubscriptionById(id))!.status).toBe('past_due');
+    chargeBillingKey.mockReset();
+    return { id, orderNo: await orderNoForCycle(id, '2026-09') };
+  };
+
+  it('10/1 cron의 대사가 9월분 DONE을 확인하면 다음 청구는 10/30이다 — 10월분이 빠지지 않는다', async () => {
+    const { id, orderNo } = await networkErrorOnSep30();
+    fetchPaymentByOrderId.mockResolvedValue({
+      ok: true,
+      payment: { paymentKey: 'pay_sep_recovered', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+    });
+
+    const result = await chargeCycle(id, at('2026-10-01T00:00:00Z'), { reason: 'retry' });
+
+    expect(result).toMatchObject({ ok: true, status: 'active' });
+    expect(chargeBillingKey).not.toHaveBeenCalled();
+    const sub = (await findSubscriptionById(id))!;
+    expect(sub.currentPeriodStart?.toISOString()).toBe('2026-09-30T00:00:00.000Z');
+    expect(sub.currentPeriodEnd?.toISOString()).toBe('2026-10-30T00:00:00.000Z');
+    expect(sub.nextBillingAt?.toISOString()).toBe('2026-10-30T00:00:00.000Z');
+  });
+
+  it('웹훅으로 복구해도 같은 계산이다 — 경로에 따라 다음 청구일이 갈리지 않는다', async () => {
+    const { id, orderNo } = await networkErrorOnSep30();
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_sep_webhook', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      at('2026-10-02T03:00:00Z'),
+    );
+    const sub = (await findSubscriptionById(id))!;
+    expect(sub.status).toBe('active');
+    expect(sub.nextBillingAt?.toISOString()).toBe('2026-10-30T00:00:00.000Z');
+  });
+
+  it('아티스트 후원의 웹훅 복구는 지금이 기준이다(청구 경로와 같은 규칙)', async () => {
+    const { id, orderNo } = await networkErrorOnSep30();
+    await asArtistSupport(id);
+    await reconcileSubscriptionPaymentFromToss(
+      { paymentKey: 'pay_sep_artist', orderId: orderNo, status: 'DONE', totalAmount: LESSON_TOTAL },
+      at('2026-10-01T00:00:00Z'),
+    );
+    expect((await findSubscriptionById(id))!.nextBillingAt?.toISOString()).toBe('2026-11-30T00:00:00.000Z');
+  });
+
+  /** 9/30 실패 → 10/1·10/4 재시도 실패 → paused(payment_failed). */
+  const exhaustedFromSep30 = async () => {
+    const id = await startedOn(30, at('2026-08-30T00:00:00Z'));
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    await chargeCycle(id, at('2026-09-30T00:00:00Z'), { reason: 'scheduled' });
+    await chargeCycle(id, at('2026-10-01T00:00:00Z'), { reason: 'retry' });
+    const third = await chargeCycle(id, at('2026-10-04T00:00:00Z'), { reason: 'retry' });
+    expect(third).toMatchObject({ status: 'paused', cycleYm: '2026-09', attempt: 3 });
+    expect((await findSubscriptionById(id))!.pausedReason).toBe('payment_failed');
+    return id;
+  };
+
+  it('재시도 소진 정지(payment_failed)의 수동 결제도 실패한 9월 회차를 걷는다', async () => {
+    const id = await exhaustedFromSep30();
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_manual_sep'));
+    const manual = await chargeCycle(id, at('2026-10-10T00:00:00Z'), { reason: 'manual' });
+    expect(manual).toMatchObject({ ok: true, status: 'active', cycleYm: '2026-09', attempt: 4 });
+    expect((await findSubscriptionById(id))!.nextBillingAt?.toISOString()).toBe('2026-10-30T00:00:00.000Z');
+  });
+
+  it('운영자 정지의 수동 결제는 밀린 달을 걷지 않는다 — 지금 달 회차다', async () => {
+    const id = await startedOn(30, at('2026-08-30T00:00:00Z'));
+    chargeBillingKey.mockResolvedValue(chargeFail());
+    await chargeCycle(id, at('2026-09-30T00:00:00Z'), { reason: 'scheduled' });
+    await pauseSubscription(id, PAUSE_UNTIL, at('2026-09-30T05:00:00Z'));
+    expect((await findSubscriptionById(id))!.pausedReason).toBe('operator');
+
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_manual_oct'));
+    const manual = await chargeCycle(id, at('2026-10-10T00:00:00Z'), { reason: 'manual' });
+    expect(manual).toMatchObject({ ok: true, cycleYm: '2026-10', attempt: 1 });
+  });
+
+  it('앵커 기준 다음 청구일이 이미 지났으면 다음 날 또 긁지 않는다 — 10월분은 10/4에 걷는다', async () => {
+    // 결제일 1일. 9/30 청구(9월 회차) 실패 → 10/1 재시도 성공. 기간은 9/1~10/1.
+    const id = await startedOn(1, at('2026-08-01T00:00:00Z'));
+    chargeBillingKey.mockResolvedValueOnce(chargeFail());
+    await chargeCycle(id, at('2026-09-30T00:00:00Z'), { reason: 'scheduled' });
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_sep_late'));
+    const retry = await chargeCycle(id, at('2026-10-01T00:00:03Z'), { reason: 'retry' });
+    expect(retry).toMatchObject({ ok: true, cycleYm: '2026-09' });
+
+    const sub = (await findSubscriptionById(id))!;
+    expect(sub.currentPeriodStart?.toISOString()).toBe('2026-09-01T00:00:00.000Z');
+    expect(sub.currentPeriodEnd?.toISOString()).toBe('2026-10-01T00:00:00.000Z');
+    expect(sub.nextBillingAt?.toISOString()).toBe('2026-10-04T00:00:00.000Z');
+    // 10/2·10/3 cron은 이 구독을 집지 않는다.
+    expect((await listDueSubscriptions(at('2026-10-02T00:00:00Z'))).map((s) => s.id)).not.toContain(id);
+    expect((await listDueSubscriptions(at('2026-10-03T00:00:00Z'))).map((s) => s.id)).not.toContain(id);
+
+    // 10/4 cron은 10월 회차를 걷는다 — 10월이 건너뛰어지지 않는다.
+    expect((await listDueSubscriptions(at('2026-10-04T00:00:00Z'))).map((s) => s.id)).toContain(id);
+    chargeBillingKey.mockResolvedValue(chargeOk('pay_oct'));
+    const october = await chargeCycle(id, at('2026-10-04T00:00:00Z'), { reason: 'scheduled' });
+    expect(october).toMatchObject({ ok: true, cycleYm: '2026-10', attempt: 1 });
+    expect((await findSubscriptionById(id))!.nextBillingAt?.toISOString()).toBe('2026-11-01T00:00:00.000Z');
+  });
+});
+
+describe('cancelSubscriptionsOfContract — 계약 종료 시 구독 해지', () => {
+  const practiceRoomOn = async (contractId: string) => {
+    await insertContract(contractId);
+    const created = await createSubscription({ ...lessonInput, kind: 'practice-room', contractId }, NOW);
+    if (!created.ok) throw new Error('unreachable');
+    return created.id;
+  };
+
+  it('해지마다 관리자 해지와 같은 고객 메일·운영자 알림을 보낸다', async () => {
+    const id = await practiceRoomOn('c_end');
+    const result = await cancelSubscriptionsOfContract('c_end', '계약 종료: 퇴실', NOW);
+
+    expect(result).toEqual({ cancelledIds: [id], failed: [], notificationFailures: [] });
+    expect((await findSubscriptionById(id))!.status).toBe('cancelled');
+    expect(sendSubscriptionCancelledEmail).toHaveBeenCalledTimes(1);
+    expect(sendSubscriptionCancelledEmail.mock.calls[0][0]).toMatchObject({ id, status: 'cancelled' });
+    expect(sendSubscriptionCancelledEmail.mock.calls[0][1]).toEqual({ endsAt: expect.any(Date) });
+    expect(sendSubscriptionOperatorAlert).toHaveBeenCalledWith(
+      expect.objectContaining({ id }),
+      'cancelled',
+      expect.stringContaining('계약 종료: 퇴실'),
+    );
+  });
+
+  it('메일이 실패해도 해지는 유지하고, 실패를 반환값과 notificationError에 남긴다', async () => {
+    const id = await practiceRoomOn('c_mail');
+    sendSubscriptionCancelledEmail.mockResolvedValue('resend: bounce');
+    sendSubscriptionOperatorAlert.mockRejectedValue(new Error('smtp down'));
+
+    const result = await cancelSubscriptionsOfContract('c_mail', '계약 종료', NOW);
+
+    expect(result.cancelledIds).toEqual([id]);
+    expect(result.notificationFailures).toHaveLength(1);
+    expect(result.notificationFailures[0].error).toContain('bounce');
+    expect(result.notificationFailures[0].error).toContain('smtp down');
+    const sub = (await findSubscriptionById(id))!;
+    expect(sub.status).toBe('cancelled');
+    expect(sub.notificationError).toBe('resend: bounce');
+  });
+
+  it('한 건의 해지가 던져도 앞뒤로 해지된 건수·id는 사라지지 않는다', async () => {
+    const a = await practiceRoomOn('c_multi');
+    // 같은 계약에 붙은 두 번째 구독(옛 데이터) — createSubscription은 막으므로 다른 계약으로 만든 뒤 옮긴다.
+    const b = await practiceRoomOn('c_other');
+    await client.execute({ sql: `UPDATE subscriptions SET contract_id = 'c_multi' WHERE id = ?`, args: [b] });
+
+    const realUpdate = mockDb.update.bind(mockDb);
+    let calls = 0;
+    jest.spyOn(mockDb, 'update').mockImplementation(((table: Parameters<typeof realUpdate>[0]) => {
+      calls += 1;
+      if (calls === 1) throw new Error('db hiccup');
+      return realUpdate(table);
+    }) as typeof mockDb.update);
+
+    const result = await cancelSubscriptionsOfContract('c_multi', '계약 종료', NOW);
+
+    expect(result.failed).toHaveLength(1);
+    expect(result.cancelledIds).toHaveLength(1);
+    expect([a, b]).toContain(result.cancelledIds[0]);
+    expect(result.failed[0].subscriptionId).not.toBe(result.cancelledIds[0]);
+    expect((await findSubscriptionById(result.cancelledIds[0]))!.status).toBe('cancelled');
+    expect((await findSubscriptionById(result.failed[0].subscriptionId))!.status).toBe('pending_card');
   });
 });

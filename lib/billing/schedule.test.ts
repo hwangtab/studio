@@ -7,6 +7,7 @@ import {
   periodFor,
   RETRY_OFFSETS_DAYS,
   retryAtFor,
+  scheduleForPaidCycle,
 } from './schedule';
 
 /** KST 벽시계 문자열 — 검증을 UTC 오프셋 암산 없이 읽히게 한다. */
@@ -87,5 +88,68 @@ describe('parseKstDate', () => {
 
   it('윤년 2월 29일은 받는다', () => {
     expect(kst(parseKstDate('2028-02-29')!)).toBe('2028-02-29T00:00:00 KST');
+  });
+});
+
+describe('scheduleForPaidCycle', () => {
+  const at = (iso: string) => new Date(iso);
+
+  it('지금 달 회차는 지금이 기준이다', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-10', billingDay: 5, now: at('2026-10-05T00:00:00Z'), bindToCycle: true });
+    expect(kst(r.period.start)).toBe('2026-10-05T09:00:00 KST');
+    expect(kst(r.nextBillingAt)).toBe('2026-11-05T09:00:00 KST');
+  });
+
+  it('연습실·레슨의 지난달 회차는 그 달 청구일이 기준이다 — 9/30 실패분을 10/1에 걷으면 다음은 10/30', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-09', billingDay: 30, now: at('2026-10-01T00:00:00Z'), bindToCycle: true });
+    expect(kst(r.period.start)).toBe('2026-09-30T09:00:00 KST');
+    expect(kst(r.period.end)).toBe('2026-10-30T09:00:00 KST');
+    expect(kst(r.nextBillingAt)).toBe('2026-10-30T09:00:00 KST');
+  });
+
+  it('회차에 묶지 않는 상품(아티스트 후원)은 회차와 무관하게 지금이 기준이다', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-09', billingDay: 30, now: at('2026-10-01T00:00:00Z'), bindToCycle: false });
+    expect(kst(r.period.start)).toBe('2026-10-01T09:00:00 KST');
+    expect(kst(r.nextBillingAt)).toBe('2026-11-30T09:00:00 KST');
+  });
+
+  it('앵커 기준 다음 청구일이 이미 지났으면 이번 달 회차를 간격(D+3) 뒤에 걷는다 — 이틀 연속 청구도, 10월 건너뛰기도 없다', () => {
+    // 결제일 1일, 9월분을 10/1에 걷었다. 앵커 기준 다음 청구일(10/1)이 now 이하.
+    const r = scheduleForPaidCycle({ cycleYm: '2026-09', billingDay: 1, now: at('2026-10-01T00:00:00Z'), bindToCycle: true });
+    expect(kst(r.period.start)).toBe('2026-09-01T09:00:00 KST');
+    expect(kst(r.period.end)).toBe('2026-10-01T09:00:00 KST');
+    expect(kst(r.nextBillingAt)).toBe('2026-10-04T09:00:00 KST');
+    expect(cycleYmOf(r.nextBillingAt)).toBe('2026-10');
+  });
+
+  it('이번 달 청구일이 아직 오지 않았으면(여러 달 밀린 뒤) 그 날짜가 먼저다', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-07', billingDay: 20, now: at('2026-10-10T00:00:00Z'), bindToCycle: true });
+    expect(kst(r.nextBillingAt)).toBe('2026-10-20T09:00:00 KST');
+  });
+
+  it('간격이 이번 달을 넘기면 말일 청구 시각에 이번 달 회차를 걷는다 — 다음 달로 넘겨 이번 달을 건너뛰지 않는다', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-09', billingDay: 1, now: at('2026-10-30T00:00:00Z'), bindToCycle: true });
+    expect(kst(r.nextBillingAt)).toBe('2026-10-31T09:00:00 KST');
+  });
+
+  it('말일 청구 시각도 지났으면 다음 정기 청구일로 가되 간격 안이면 간격 뒤로 민다', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-09', billingDay: 1, now: at('2026-10-31T00:00:05Z'), bindToCycle: true });
+    expect(kst(r.nextBillingAt)).toBe('2026-11-03T09:00:00 KST');
+    expect(cycleYmOf(r.nextBillingAt)).toBe('2026-11');
+  });
+
+  it('cron이 09:00 몇 초 뒤에 돌아도 간격 끝 날의 09:00에 맞춘다 — 그날 cron이 놓치지 않게', () => {
+    const r = scheduleForPaidCycle({ cycleYm: '2026-09', billingDay: 1, now: at('2026-10-01T00:00:07Z'), bindToCycle: true });
+    expect(kst(r.nextBillingAt)).toBe('2026-10-04T09:00:00 KST');
+  });
+
+  it('어느 분기든 다음 청구는 now보다 뒤다', () => {
+    const now = at('2026-10-01T00:00:00Z');
+    for (const billingDay of [1, 2, 15, 28, 30, 31]) {
+      for (const cycleYm of ['2026-06', '2026-08', '2026-09', '2026-10']) {
+        const r = scheduleForPaidCycle({ cycleYm, billingDay, now, bindToCycle: true });
+        expect(r.nextBillingAt.getTime()).toBeGreaterThan(now.getTime());
+      }
+    }
   });
 });
