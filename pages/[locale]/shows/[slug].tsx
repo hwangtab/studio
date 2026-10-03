@@ -26,6 +26,8 @@ function summarize(text: string): string {
 }
 
 export default function ShowPage({ show }: Props) {
+  // schema가 출연진을 쓰므로 그보다 먼저 선언한다(뒤에 두면 렌더가 TDZ ReferenceError로 500이 된다).
+  const performers = show.performers;
   const prices = show.ticketTypes.map((t) => t.price);
   const lowPrice = prices.length ? Math.min(...prices) : null;
   const url = `${SITE_URL}/ko/shows/${show.slug}`;
@@ -63,7 +65,6 @@ export default function ShowPage({ show }: Props) {
 
   const mainTitle = show.title;
   const subtitle = show.subtitle;
-  const performers = show.performers;
   const intro = descriptionParagraphs(show.description);
   const notices = show.notices;
   const bookable = !show.cancelled && show.showtimes.some((s) => s.saleState === 'open');
