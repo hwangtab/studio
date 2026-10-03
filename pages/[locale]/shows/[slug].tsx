@@ -115,6 +115,14 @@ export default function ShowPage({ show }: Props) {
                 <dd>
                   {show.venueName}
                   <span className="block text-gray-500 dark:text-gray-400">{show.venueAddress}</span>
+                  <a
+                    href={`https://map.naver.com/p/search/${encodeURIComponent(`${show.venueName} ${show.venueAddress}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-1 inline-block rounded text-sm text-gray-700 underline underline-offset-2 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-200 dark:hover:text-primary-lighter dark:focus-visible:ring-primary-lighter/70"
+                  >
+                    네이버 지도에서 보기
+                  </a>
                 </dd>
               </div>
               <div className="flex gap-3">

@@ -44,13 +44,11 @@ export const bakkeojiShow: ShowDefinition = {
   title: '베어지지 않는 마음들 — 풍천리를 위한 삼청동에서의 밤',
   presenterName: '자이와 친구들',
   performers: PERFORMERS,
-  // TODO(확인 필요): 연령 등급은 주최 확인 전의 중립값이다.
-  ageRating: '전연령',
-  // TODO(확인 필요): 러닝타임은 식사(6시)부터 공연 종료까지를 가정한 추정값이다.
-  runningMinutes: 150,
+  ageRating: '전체 관람가',
+  // 공연 시간 약 100분(주최 확인, 2026-10-03). 식사(18:00)는 포함하지 않는다.
+  runningMinutes: 100,
   venueName: '삼청동 라플란드',
-  // TODO(확인 필요): 도로명 주소를 받으면 교체한다. 지금은 확인된 값만 넣었다.
-  venueAddress: '삼청동 라플란드',
+  venueAddress: '서울특별시 종로구 삼청로 83 가동 1층',
   description: DESCRIPTION,
   coverImage: BAKKEOJI_POSTER,
   zones: [{ code: 'GA', label: '비지정석', capacity: 50 }],
