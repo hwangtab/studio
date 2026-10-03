@@ -59,5 +59,6 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - **공용화(설계안 겹 3)는 10/14 이후**: `ShowMobileCta`↔`FundingMobileCta`, booking·funding·shows의
   success/fail 6장을 공용 `TransactionResult`로. 10/14까지 `BaseCard`·`Button`·카카오 버튼 파일 수정
   금지(전환 실험 교락 — 메모리 `design-v2-redesign-plan`). 새 파일을 만들고 *사용*하는 것은 괜찮다.
-- 티켓 메일 HTML 템플릿은 아직 사이트 위계 밖(플레인에 가깝다). 10/24 전 손볼 것.
+- 메일 3종(티켓·환불·회차 취소)은 `lib/shows/emailHtml.ts`(순수)가 HTML을 만들고 텍스트는 폴백이다(#463).
+  QR은 첨부(ticket-N.png) — cid 인라인을 발송 모듈이 지원하지 않아서다. 실발송 확인은 아직이다.
 - 실결제 흐름은 브라우저에서 눌러 본 적이 없다. 공개 뒤 최소 매수로 결제·취소를 한 번 할 것.
