@@ -49,12 +49,22 @@ export const downloadContractPdf = async (
 
 export type ContractMutation = 'send' | 'resend' | 'resend-signed' | 'cancel' | 'terminate';
 
+export interface ContractMutationResult extends ContractActionResult {
+  /**
+   * 처리는 됐지만 사람이 마무리해야 할 것이 남았다는 서버의 경고. terminate에서 연결된 구독
+   * 해지·해지 안내 메일이 실패했을 때 온다 — 버리면 비운 방에 청구가 계속되는 것을 아무도 모른다.
+   */
+  warning?: string;
+  /** terminate가 함께 해지한 구독 수. */
+  cancelledSubscriptions?: number;
+}
+
 export const mutateContract = async (
   contractId: string,
   action: ContractMutation,
   /** terminate에는 종료 사유가 필요하다 — 이 방이 왜 비었는지를 설명하는 유일한 기록이다. */
   payload?: { reason?: string },
-): Promise<ContractActionResult> => {
+): Promise<ContractMutationResult> => {
   try {
     const response = await fetch(`/api/contracts/${contractId}`, {
       method: 'PATCH',
@@ -66,7 +76,20 @@ export const mutateContract = async (
     if (!response.ok) {
       return { ok: false, message: await readMessage(response, '요청을 처리하지 못했습니다.') };
     }
-    return { ok: true };
+    let body: Record<string, unknown> = {};
+    try {
+      const parsed: unknown = await response.json();
+      if (parsed && typeof parsed === 'object') body = parsed as Record<string, unknown>;
+    } catch {
+      // 본문을 못 읽어도 처리 자체는 성공했다(2xx).
+    }
+    return {
+      ok: true,
+      ...(typeof body.warning === 'string' && body.warning !== '' ? { warning: body.warning } : {}),
+      ...(typeof body.cancelledSubscriptions === 'number'
+        ? { cancelledSubscriptions: body.cancelledSubscriptions }
+        : {}),
+    };
   } catch {
     return { ok: false, message: '네트워크 오류가 발생했습니다.' };
   }

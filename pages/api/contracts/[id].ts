@@ -227,19 +227,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           });
         }
         // 연결된 구독도 해지한다. 실패해도 종료는 이미 확정이라 응답으로 알려 사람이 마무리하게 한다.
-        let cancelledSubscriptions = 0;
-        let subscriptionWarning: string | undefined;
+        let cancelledSubscriptionIds: string[] = [];
+        const warnings: string[] = [];
         try {
-          cancelledSubscriptions = await cancelSubscriptionsOfContract(id, `계약 종료: ${reason.trim()}`, new Date());
+          const outcome = await cancelSubscriptionsOfContract(id, `계약 종료: ${reason.trim()}`, new Date());
+          cancelledSubscriptionIds = outcome.cancelledIds;
+          if (outcome.failed.length > 0) {
+            warnings.push(
+              `계약은 종료됐지만 연결된 구독 ${outcome.failed.length}건을 해지하지 못했습니다. 구독 화면에서 직접 해지해 주세요.`,
+            );
+          }
+          if (outcome.notificationFailures.length > 0) {
+            warnings.push(
+              `해지한 구독 ${outcome.notificationFailures.length}건의 해지 안내 메일·운영자 알림이 실패했습니다. 고객에게 해지 사실을 직접 알려 주세요.`,
+            );
+          }
         } catch (error: unknown) {
           console.error('[contracts] Failed to cancel subscriptions of terminated contract:', error);
-          subscriptionWarning = '계약은 종료됐지만 연결된 구독 해지에 실패했습니다. 구독 화면에서 직접 해지해 주세요.';
+          warnings.push('계약은 종료됐지만 연결된 구독 해지에 실패했습니다. 구독 화면에서 직접 해지해 주세요.');
         }
         return res.status(200).json({
           ok: true,
           contract: serializeContractForAdmin(terminated),
-          cancelledSubscriptions,
-          ...(subscriptionWarning ? { warning: subscriptionWarning } : {}),
+          cancelledSubscriptions: cancelledSubscriptionIds.length,
+          cancelledSubscriptionIds,
+          ...(warnings.length > 0 ? { warning: warnings.join(' ') } : {}),
         });
       }
 

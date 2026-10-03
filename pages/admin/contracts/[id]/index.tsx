@@ -140,6 +140,8 @@ export default function AdminContractDetailPage({
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  /** 종료는 됐지만 구독 해지·해지 안내가 실패했다는 서버 경고 — 일반 안내와 섞이지 않게 따로 띄운다. */
+  const [terminationWarning, setTerminationWarning] = useState<string | null>(null);
   const [subscriptionSetupUrl, setSubscriptionSetupUrl] = useState<string | null>(null);
 
   const customerSignature = signatures.find((s) => s.signerRole === 'customer');
@@ -183,7 +185,26 @@ export default function AdminContractDetailPage({
       return;
     }
 
-    await run(() => mutateContract(contract.id, 'terminate', { reason: reason.trim() }));
+    setBusy(true);
+    setNotice(null);
+    setTerminationWarning(null);
+    const result = await mutateContract(contract.id, 'terminate', { reason: reason.trim() });
+    setBusy(false);
+
+    if (!result.ok) {
+      setNotice(result.message ?? '요청을 처리하지 못했습니다.');
+    } else {
+      // 연결된 구독은 서버가 함께 해지한다. 몇 건이 해지됐는지 말해 줘야 운영자가 구독 화면을
+      // 다시 열어 확인할 필요가 없다.
+      const cancelled = result.cancelledSubscriptions ?? 0;
+      setNotice(
+        cancelled > 0
+          ? `이용을 종료했습니다. 연결된 구독 ${cancelled}건을 해지했습니다.`
+          : '이용을 종료했습니다.',
+      );
+      if (result.warning) setTerminationWarning(result.warning);
+    }
+    await router.replace(router.asPath, undefined, { scroll: false });
   };
 
   const handleDelete = async () => {
@@ -215,6 +236,23 @@ export default function AdminContractDetailPage({
       >
         {notice && (
           <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+        )}
+
+        {/* 계약은 종료됐지만 구독 해지나 해지 안내 메일이 실패한 경우. 그대로 두면 비운 방에
+            청구가 계속되거나 고객이 해지 사실을 모른다 — 사람이 마무리해야 하는 일이다. */}
+        {terminationWarning && (
+          <div role="alert" className="mb-4 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-lg text-sm">
+            <strong className="block mb-1">연결된 구독 처리에 문제가 있었습니다</strong>
+            {terminationWarning}
+            {subscriptionId && (
+              <Link
+                href={`/admin/subscriptions/${subscriptionId}`}
+                className="block w-fit mt-2 font-medium text-amber-800 underline rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-600"
+              >
+                구독 상세 열기
+              </Link>
+            )}
+          </div>
         )}
 
         {subscriptionSetupUrl && (

@@ -38,6 +38,13 @@ jest.mock('../../../lib/contracts/validation', () => ({
   validateCreateContractPayload: jest.fn(),
 }));
 jest.mock('@vercel/functions', () => ({ waitUntil: jest.fn() }));
+/**
+ * 종료는 연결된 구독 해지(lib/billing/service)를 부른다. mock하지 않으면 실제 서비스가 mock DB의
+ * `query.subscriptions`를 못 찾아 던지고, 성공 테스트가 사실은 실패(warning) 경로를 지나간다.
+ */
+jest.mock('../../../lib/billing/service', () => ({
+  cancelSubscriptionsOfContract: jest.fn(),
+}));
 jest.mock('../../../lib/privacy/accessLog', () => ({
   recordAdminPrivacyAccess: jest.fn().mockResolvedValue(undefined),
 }));
@@ -60,6 +67,7 @@ import {
   updateDraftContract,
 } from '../../../lib/contracts/service';
 import { validateCreateContractPayload } from '../../../lib/contracts/validation';
+import { cancelSubscriptionsOfContract } from '../../../lib/billing/service';
 
 const contract = (overrides: Record<string, unknown> = {}) => ({
   id: 'c1',
@@ -339,14 +347,56 @@ describe('PATCH action=terminate', () => {
     expect(res.status).toHaveBeenCalledWith(409);
   });
 
-  it('성공하면 사유를 trim해 서비스에 넘기고 200', async () => {
+  it('성공하면 사유를 trim해 서비스에 넘기고, 연결된 구독 해지 결과를 경고 없이 돌려준다', async () => {
     mockFound(contract({ status: 'signed' }));
     (terminateContract as jest.Mock).mockResolvedValue(contract({ status: 'terminated' }));
+    (cancelSubscriptionsOfContract as jest.Mock).mockResolvedValue({
+      cancelledIds: ['s1', 's2'],
+      failed: [],
+      notificationFailures: [],
+    });
 
     const res = await run({ method: 'PATCH', body: { action: 'terminate', reason: '  이용 종료  ' } });
 
     expect(terminateContract).toHaveBeenCalledWith('c1', { reason: '이용 종료' });
+    expect(cancelSubscriptionsOfContract).toHaveBeenCalledWith('c1', '계약 종료: 이용 종료', expect.any(Date));
     expect(res.status).toHaveBeenCalledWith(200);
+    const body = (res.json as jest.Mock).mock.calls[0][0];
+    expect(body).toMatchObject({ ok: true, cancelledSubscriptions: 2, cancelledSubscriptionIds: ['s1', 's2'] });
+    expect(body).not.toHaveProperty('warning');
+  });
+
+  it('구독 해지가 통째로 던져도 종료는 200이고, 사람이 마무리하라는 warning을 싣는다', async () => {
+    mockFound(contract({ status: 'signed' }));
+    (terminateContract as jest.Mock).mockResolvedValue(contract({ status: 'terminated' }));
+    (cancelSubscriptionsOfContract as jest.Mock).mockRejectedValue(new Error('db down'));
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    const res = await run({ method: 'PATCH', body: { action: 'terminate', reason: '이용 종료' } });
+    consoleError.mockRestore();
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const body = (res.json as jest.Mock).mock.calls[0][0];
+    expect(body).toMatchObject({ ok: true, cancelledSubscriptions: 0 });
+    expect(body.warning).toContain('구독 해지에 실패');
+  });
+
+  it('일부 해지 실패·안내 실패는 해지된 건수를 지키면서 warning으로 알린다', async () => {
+    mockFound(contract({ status: 'signed' }));
+    (terminateContract as jest.Mock).mockResolvedValue(contract({ status: 'terminated' }));
+    (cancelSubscriptionsOfContract as jest.Mock).mockResolvedValue({
+      cancelledIds: ['s1'],
+      failed: [{ subscriptionId: 's2', error: 'boom' }],
+      notificationFailures: [{ subscriptionId: 's1', error: '고객 메일: bounce' }],
+    });
+
+    const res = await run({ method: 'PATCH', body: { action: 'terminate', reason: '이용 종료' } });
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    const body = (res.json as jest.Mock).mock.calls[0][0];
+    expect(body).toMatchObject({ ok: true, cancelledSubscriptions: 1, cancelledSubscriptionIds: ['s1'] });
+    expect(body.warning).toContain('1건을 해지하지 못했습니다');
+    expect(body.warning).toContain('해지 안내 메일');
   });
 });
 

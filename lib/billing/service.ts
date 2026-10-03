@@ -24,14 +24,13 @@ import { getSupportedArtist } from '../../data/artists';
 import { rowsAffectedOf } from '../booking/confirm';
 import { subscriptionAmounts, subscriptionOrderName, type SubscriptionKind } from './amounts';
 import {
-  billingDateOf,
   computeNextBillingAt,
   cycleYmOf,
   MAX_CHARGE_ATTEMPTS,
-  periodFor,
   retryAtFor,
+  scheduleForPaidCycle,
 } from './schedule';
-import { sendSubscriptionOperatorAlert } from './email';
+import { sendSubscriptionCancelledEmail, sendSubscriptionOperatorAlert } from './email';
 import { chargeBillingKey, fetchPaymentByOrderId, issueBillingKey, type TossPayment } from './toss-billing';
 import {
   generateCustomerKey,
@@ -62,6 +61,22 @@ const OCCUPYING_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'pas
 const REACTIVATABLE_STATUSES: SubscriptionStatus[] = ['pending_card', 'active', 'past_due', 'paused'];
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
+
+/**
+ * 실패한 회차에 머물러 밀린 달을 걷는 상품 — 연습실(임대차 계약)과 레슨(월 수업료).
+ * 아티스트 후원은 넣지 않는다: 정산이 cycleYm 단위로 닫히므로 지난달 회차가 뒤늦게 들어오면
+ * 어느 정산에도 잡히지 않는다(chargeCycle의 회차 선택 주석).
+ */
+const bindsToUnpaidCycle = (kind: SubscriptionKind): boolean => kind === 'practice-room' || kind === 'lesson';
+
+/** 회차 결제를 반영할 때의 기간·다음 청구일 — 청구 성공과 웹훅·대사 복구가 같은 계산을 쓴다. */
+const paidCycleSchedule = (subscription: Subscription, cycleYm: string, now: Date) =>
+  scheduleForPaidCycle({
+    cycleYm,
+    billingDay: subscription.billingDay,
+    now,
+    bindToCycle: bindsToUnpaidCycle(subscription.kind),
+  });
 
 /**
  * 해지·종료된 구독에 승인이 뒤늦게 도착했다 — 운영자에게 **메일로** 알린다.
@@ -427,8 +442,19 @@ export const chargeCycle = async (
    * 말일 근처 청구가 실패하면 재시도(D+1·D+3)가 다음 달로 넘어갈 수 있다(30일 실패 → 11/2 재시도).
    * 그때 cycleYm을 '지금의 달'로 잡으면 attempt가 1부터 다시 시작해 한도(3회)가 늘고, 성공하면 다음 달 회차를
    * 낸 것이 되어 실패했던 달이 건너뛰어진다(2026-10-02 코드리뷰). 재시도는 실패한 회차에 머문다.
+   *
+   * 재시도 한도를 소진해 세워진 정지(`payment_failed`)도 같다 — 그 뒤의 수동 결제·카드 재등록 첫
+   * 결제가 걷는 것은 실패했던 달이다. 운영자 정지(`operator`)는 넣지 않는다: 그 정지는 "그 사이는
+   * 걷지 않는다"는 운영자 결정이고, 재개도 밀린 달을 걷지 않는다(resumeExpiredPauses).
+   *
+   * **연습실·레슨에만 적용한다**(`bindsToUnpaidCycle`). 아티스트 후원 정산(lib/artistSupport/payout.ts)은
+   * `subscriptionPayments.cycleYm`으로 그 달 몫을 모으는데, 그 달 정산을 기록한 뒤에 지난달 회차가
+   * 들어오면 어느 정산에도 잡히지 않는다. 후원은 계약상 밀린 달을 걷을 의무도 없다.
    */
-  if (subscription.status === 'past_due') {
+  const failedCycleOutstanding =
+    subscription.status === 'past_due' ||
+    (subscription.status === 'paused' && subscription.pausedReason === 'payment_failed');
+  if (bindsToUnpaidCycle(subscription.kind) && failedCycleOutstanding) {
     const [lastFailed] = await db
       .select({ cycleYm: subscriptionPayments.cycleYm })
       .from(subscriptionPayments)
@@ -443,8 +469,6 @@ export const chargeCycle = async (
       if (!paidThatCycle) cycleYm = lastFailed.cycleYm;
     }
   }
-  // 실패했던 달을 이어서 걷는 경우 기간·다음 청구일의 기준은 지금이 아니라 그 달의 청구일이다.
-  const cycleAnchor = cycleYm === cycleYmOf(now) ? now : billingDateOf(cycleYm, subscription.billingDay);
   const prior = await db
     .select({ attempt: subscriptionPayments.attempt })
     .from(subscriptionPayments)
@@ -592,7 +616,8 @@ export const chargeCycle = async (
   }
 
   const approved = toss.payment;
-  const period = periodFor(cycleAnchor, subscription.billingDay);
+  // 실패했던 달을 이어서 걷는 경우 기간·다음 청구일의 기준은 지금이 아니라 그 달의 청구일이다.
+  const { period, nextBillingAt } = paidCycleSchedule(subscription, cycleYm, now);
 
   const batchResults = await db.batch([
     // payments가 맨 앞 — paymentKey unique 위반이 동시 실행(cron 중복 기동)의 두 번째를
@@ -630,7 +655,7 @@ export const chargeCycle = async (
         resumeNoticePendingAt: null,
         currentPeriodStart: period.start,
         currentPeriodEnd: period.end,
-        nextBillingAt: computeNextBillingAt(cycleAnchor, subscription.billingDay),
+        nextBillingAt,
         updatedAt: now,
       })
       // 진입부(위)의 cancelled/ended 검사는 **읽기 시점 한 번**이다. 승인 왕복(1~3초) 사이에
@@ -717,25 +742,78 @@ export const cancelSubscription = async (
   return { ok: true, subscription: row };
 };
 
+export interface CancelSubscriptionsOfContractResult {
+  /** 이번 호출로 해지된 구독 id. 뒤에서 예외가 나도 앞서 해지된 것은 여기 남는다. */
+  cancelledIds: string[];
+  /** 해지 자체가 실패한 구독 — 아직 청구가 살아 있으니 사람이 직접 해지해야 한다. */
+  failed: Array<{ subscriptionId: string; error: string }>;
+  /** 해지는 됐지만 고객 메일·운영자 알림이 실패한 구독. 해지는 되돌리지 않는다. */
+  notificationFailures: Array<{ subscriptionId: string; error: string }>;
+}
+
+const errorText = (error: unknown): string => (error instanceof Error ? error.message : String(error));
+
 /**
  * 계약이 끝나면 그 계약에 붙은 진행 중 구독을 해지한다. 이미 결제한 달은 기간 끝까지 쓴다(선불).
  * 계약만 종료하고 구독을 두면 비운 방에 매월 청구가 계속된다.
+ *
+ * 해지마다 관리자 구독 해지(`pages/api/admin/subscriptions/[id].ts`의 cancel)와 **같은 알림**을 보낸다
+ * — 고객 해지 확인 메일(이용 가능 기한 안내)과 운영자 알림. 이 경로로 해지된 고객만 "언제까지 쓰고
+ * 이후 청구가 없다"는 말을 못 들으면, 다음 달 카드 내역을 보고서야 해지를 안다.
+ *
+ * 구독마다 따로 try한다. 루프 중간의 예외가 함수 전체를 던지면 앞서 해지된 건수·id가 사라져
+ * 호출부가 "하나도 해지 못 했다"고 안내하게 된다. 알림 실패는 해지를 되돌리지 않는다(관리자
+ * 라우트와 같은 원칙) — 고객 메일 실패는 그 구독의 notificationError에도 남긴다.
  */
 export const cancelSubscriptionsOfContract = async (
   contractId: string,
   reason: string,
   now: Date,
-): Promise<number> => {
+): Promise<CancelSubscriptionsOfContractResult> => {
   const rows = await getDb().query.subscriptions.findMany({
     where: (t, { and: all, eq: is, inArray: within }) =>
       all(is(t.contractId, contractId), within(t.status, OCCUPYING_STATUSES)),
   });
-  let cancelled = 0;
+  const result: CancelSubscriptionsOfContractResult = { cancelledIds: [], failed: [], notificationFailures: [] };
   for (const row of rows) {
-    const result = await cancelSubscription(row.id, { requestedBy: 'admin', reason }, now);
-    if (result.ok) cancelled += 1;
+    let cancelled: Subscription;
+    try {
+      const outcome = await cancelSubscription(row.id, { requestedBy: 'admin', reason }, now);
+      // 읽은 뒤 이 사이에 다른 경로가 먼저 해지·종료했다 — 이미 끝난 것이라 실패가 아니다.
+      if (!outcome.ok) continue;
+      cancelled = outcome.subscription;
+    } catch (error) {
+      console.error('[billing] 계약 종료 — 구독 해지 실패', { contractId, subscriptionId: row.id, error });
+      result.failed.push({ subscriptionId: row.id, error: errorText(error) });
+      continue;
+    }
+    result.cancelledIds.push(cancelled.id);
+
+    const problems: string[] = [];
+    try {
+      const customerError = await sendSubscriptionCancelledEmail(cancelled, { endsAt: cancelled.endsAt ?? now });
+      if (customerError) {
+        problems.push(`고객 메일: ${customerError}`);
+        await getDb()
+          .update(subscriptions)
+          .set({ notificationError: customerError })
+          .where(eq(subscriptions.id, cancelled.id));
+      }
+    } catch (error) {
+      problems.push(`고객 메일: ${errorText(error)}`);
+    }
+    try {
+      const operatorError = await sendSubscriptionOperatorAlert(cancelled, 'cancelled', `계약 종료로 해지 — 사유: ${reason}`);
+      if (operatorError) problems.push(`운영자 알림: ${operatorError}`);
+    } catch (error) {
+      problems.push(`운영자 알림: ${errorText(error)}`);
+    }
+    if (problems.length > 0) {
+      console.error('[billing] 계약 종료 — 해지 알림 실패', { contractId, subscriptionId: cancelled.id, problems });
+      result.notificationFailures.push({ subscriptionId: cancelled.id, error: problems.join(' / ') });
+    }
   }
-  return cancelled;
+  return result;
 };
 
 /**
@@ -1159,7 +1237,7 @@ export const claimDueSubscription = async (id: string, expectedNextBillingAt: Da
  * confirmBookingPayment를 재사용하지 못하는 이유: 그쪽은 bookings/work_orders라는 하위
  * 엔티티를 pending→confirmed로 미는데, 구독 회차의 하위 엔티티는 subscriptionPayments고
  * 전이 규칙(기간 전진·nextBillingAt 재계산)도 다르다. chargeCycle의 성공 batch와 같은
- * 계산(periodFor·computeNextBillingAt)을 그대로 쓴다 — 두 곳이 서로 다른 기간을 계산하면
+ * 계산(paidCycleSchedule)을 그대로 쓴다 — 두 곳이 서로 다른 기간을 계산하면
  * 구독이 웹훅으로 살아난 달과 cron이 청구한 달의 기간이 어긋난다.
  *
  * 페이로드가 아니라 **재조회된 TossPayment만** 받는다 — 호출자(webhook.ts)가 이미
@@ -1200,7 +1278,12 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
     return;
   }
 
-  const period = periodFor(now, subscription.billingDay);
+  /**
+   * 기간·다음 청구일은 **복구하는 그 회차** 기준이다 — chargeCycle의 성공 경로와 같은 함수.
+   * 9/30 청구가 응답 없이 끝나고 10/1에 DONE이 확인됐다면 반영하는 것은 9월분이고 다음 청구는
+   * 10/30이다. `now`로 계산하면 11/30이 되어 10월분이 조용히 빠진다.
+   */
+  const { period, nextBillingAt } = paidCycleSchedule(subscription, subscriptionPayment.cycleYm, now);
   /**
    * **운영자가 세워 둔 구독은 웹훅이 되살리지 않는다.**
    *
@@ -1249,7 +1332,7 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
             .set({
               currentPeriodStart: period.start,
               currentPeriodEnd: period.end,
-              nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
+              nextBillingAt,
               updatedAt: now,
             })
             // 읽은 뒤 이 순간 사이에 재개·해지가 들어왔으면 그쪽이 맞다 — 여전히 정지일 때만 쓴다.
@@ -1264,7 +1347,7 @@ export const reconcileSubscriptionPaymentFromToss = async (payment: TossPayment,
               resumeNoticePendingAt: null,
               currentPeriodStart: period.start,
               currentPeriodEnd: period.end,
-              nextBillingAt: computeNextBillingAt(now, subscription.billingDay),
+              nextBillingAt,
               updatedAt: now,
             })
             // 해지·종료된 구독은 되살리지 않는다 — 형제 항목(orders·subscriptionPayments)의
