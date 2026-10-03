@@ -158,6 +158,31 @@ it('점검 항목은 크론 메일과 같은 판정식이고 처리하러 갈 �
   expect(dash.issues).toEqual([expect.objectContaining({ severity: 'medium', href: '/admin/contracts' })]);
 });
 
+/**
+ * 계약 위생 점검(서명 기한 지남·오래된 초안·서명 후 후처리 기록 없음)은 크론에만 있어 첫 화면에 안 보였다.
+ * 화면은 같은 판정을 쓰되 만료 처리(쓰기)는 하지 않는다.
+ */
+it('계약 위생 점검도 첫 화면에 보이고, 화면을 열어도 계약을 만료로 내리지 않는다', async () => {
+  await insertContract('c1', 'sent', '2026-09-10T00:00:00Z'); // 기한 지남
+  await client.execute({
+    sql: `INSERT INTO contracts (id, title, customer_name, customer_email, customer_phone, room_number,
+            start_date, end_date, monthly_rent, deposit_amount, payment_day, content, status, sign_token, signed_at)
+          VALUES ('c2', '계약', '이서명', 'q@x.y', '010', 'A-2', 0, 0, 1, 0, 5, '본문', 'signed', 'st-c2', ?)`,
+    args: [EPOCH('2026-09-15T00:00:00Z')], // 서명 후 하루가 넘도록 후처리 기록 없음
+  });
+
+  const dash = await loadAdminDashboard(NOW);
+
+  const titles = dash.issues.map((i) => i.title);
+  expect(titles).toContain('서명 기한이 지난 계약 1건');
+  expect(titles).toContain('서명은 끝났지만 후처리 기록이 없는 계약 1건');
+  // 긴급(후처리 없음)이 먼저다.
+  expect(dash.issues[0].severity).toBe('high');
+
+  const row = await client.execute("SELECT status FROM contracts WHERE id = 'c1'");
+  expect(row.rows[0].status).toBe('sent');
+});
+
 it('소셜 토큰은 만료까지 남은 날수로 보인다', async () => {
   await client.execute({
     sql: `INSERT INTO social_tokens (platform, access_token, expires_at, updated_at) VALUES ('ig', 'x', ?, ?)`,

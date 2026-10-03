@@ -29,8 +29,9 @@ export const getServerSideProps: GetServerSideProps<NewContractPageProps> = asyn
   /**
    * ?from=<계약id> 로 들어오면 그 계약의 값을 채워 준다.
    *
-   * 같은 고객의 재계약이나 갱신을 만들 때 이름·연락처·주소·호실·금액을 다시 타이핑하는
+   * 같은 고객의 재계약이나 갱신을 만들 때 이름·연락처·호실·금액을 다시 타이핑하는
    * 것은 그 자체로 오타가 생기는 자리다. 기간만 새로 정하면 되도록 나머지를 옮겨 온다.
+   * 생년월일·주소는 옮기지 않는다 — 서명자가 서명 화면에서 채우는 값이다(form-values.ts).
    */
   const { from } = context.query;
   if (typeof from === 'string' && from.trim() !== '') {

@@ -3,7 +3,7 @@ import { and, asc, eq, gt, gte, inArray, lt, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { bookings, contracts, fundingProjects, orders, socialTokens, subscriptions, workOrders } from '../../db/schema';
 import { getProduct } from '../booking/products';
-import { collectDbIssues, type HealthIssue } from './healthCheck';
+import { collectContractHygieneIssues, collectDbIssues, sortBySeverity, type HealthIssue } from './healthCheck';
 import { countPendingArtistPayouts } from '../artistSupport/payout';
 import { countPendingFundingPayouts } from '../funding/payout';
 
@@ -11,7 +11,7 @@ import { countPendingFundingPayouts } from '../funding/payout';
  * 관리자 첫 화면의 데이터.
  *
  * 예전 첫 화면은 링크 네 개였다. 처리할 일은 각 목록을 열어야 배너로 보였고, 조용한 실패는
- * 하루 한 번 크론 메일로만 왔다. 여기서는 그 크론이 쓰는 판정식(collectDbIssues)을 그대로
+ * 하루 한 번 크론 메일로만 왔다. 여기서는 그 크론이 쓰는 판정식(collectDbIssues·collectContractHygieneIssues)을 그대로
  * 불러 "지금 손봐야 할 것"을 맨 위에 놓고, 그 아래에 "곧 닥칠 일"(이번 주 세션·착수 대기
  * 믹싱·카드 등록 대기·서명 대기)을 건수로 둔다. 판정을 두 벌로 두지 않는 것이 핵심이다 —
  * 메일과 화면이 다른 건수를 말하면 둘 다 못 믿게 된다.
@@ -75,8 +75,11 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
   const from = startOfTodayKst(now);
   const to = new Date(from.getTime() + UPCOMING_WINDOW_DAYS * DAY_MS);
 
-  const [issues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
+  const [dbIssues, contractHygieneIssues, sessions, mixingCounts, subscriptionCounts, contractRows, tokens, artistPayoutsPending, fundingReviewRows, fundingPayoutsPending] = await Promise.all([
     collectDbIssues(now),
+    // 계약 위생 점검(서명 기한 지남·오래된 초안·서명 후 후처리 기록 없음). 크론의 checkContractHygiene과
+    // 같은 판정이되 만료 처리(쓰기)는 하지 않는다 — 첫 화면을 여는 것이 DB를 바꾸면 안 된다.
+    collectContractHygieneIssues(now),
     db
       .select({
         orderId: orders.id,
@@ -117,7 +120,7 @@ export const loadAdminDashboard = async (now: Date = new Date()): Promise<AdminD
     Number(rows.find((row) => row.status === status)?.count ?? 0);
 
   return {
-    issues,
+    issues: sortBySeverity([...dbIssues, ...contractHygieneIssues]),
     upcomingSessions: sessions.map((row) => ({
       orderId: row.orderId,
       orderNo: row.orderNo,

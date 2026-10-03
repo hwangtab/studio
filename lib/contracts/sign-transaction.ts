@@ -126,6 +126,15 @@ export const buildSignStatements = (db: Database, input: SignStatementInput) => 
         customerBirthdate,
         customerAddress,
         content,
+        /**
+         * 발송 때 기록된 알림 결과(서명 요청 메일)를 비운다. 이 두 칸은 서명 뒤로는 "서명 완료
+         * 후처리(finalize)가 끝났는가"를 뜻한다 — finalize가 다시 채운다. 비우지 않으면 발송 때
+         * 찍힌 notifiedAt이 그대로 남아, 후처리가 시간 초과로 죽어도 운영 점검(checkContractHygiene의
+         * "서명 후 후처리 기록 없음")이 영영 울리지 않고, 감사 추적에 발송 시각이 "서명 완료 안내"로
+         * 찍히며, 발송 때의 오류 문구가 서명 뒤 화면에 남는다.
+         */
+        notifiedAt: null,
+        notificationError: null,
         updatedAt: now,
       })
       .where(and(eq(contracts.id, contractId), stillSignable)),

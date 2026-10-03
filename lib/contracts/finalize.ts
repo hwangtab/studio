@@ -4,7 +4,8 @@ import { getDb } from '../../db/client';
 import { contracts, type Signature } from '../../db/schema';
 import { sendContractSignedEmail, sendOperatorContractNotification } from './email';
 import { generateContractPdf } from './pdf';
-import { uploadContractPdf } from './pdf-storage';
+import { describeOperatorAlertFailure, NOTIFICATION_ERROR_SEPARATOR } from './notification-error';
+import { readStoredContractPdf, uploadContractPdf } from './pdf-storage';
 import { resolveRulesContent } from './template';
 
 /**
@@ -13,6 +14,9 @@ import { resolveRulesContent } from './template';
  * 서명 응답을 먼저 돌려준 뒤 실행되므로(waitUntil) 여기서 던진 오류는 사용자에게 보이지
  * 않는다. 따라서 각 단계를 독립적으로 감싸, PDF가 실패해도 확인 메일은 나가도록 한다.
  * PDF는 관리자 화면에서 언제든 재생성할 수 있어 유실이 치명적이지 않다.
+ *
+ * "완료 메일 재발송"도 이 함수를 다시 부른다. 그때는 보관본(pdfUrl)을 그대로 첨부하고 다시
+ * 올리지 않는다 — 서명 당시 발급한 문서가 원본이다.
  */
 export const finalizeSignedContract = async (contractId: string): Promise<void> => {
   const contract = await getDb().query.contracts.findFirst({
@@ -40,10 +44,8 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
    */
   const downloadUrl = `${process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr'}/ko/contracts/${contract.id}/complete?token=${encodeURIComponent(contract.signToken)}`;
 
-  let pdfBuffer: Buffer | undefined;
-
-  try {
-    pdfBuffer = await generateContractPdf({
+  const renderPdf = () =>
+    generateContractPdf({
       contract,
       signature: customerSignature,
       clauses: contract.contractClauses,
@@ -51,14 +53,42 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
       rulesContent: resolveRulesContent(contract.contractAttachments),
     });
 
-    const pdfUrl = await uploadContractPdf(contract.id, pdfBuffer);
+  let pdfBuffer: Buffer | undefined;
 
-    await getDb()
-      .update(contracts)
-      .set({ pdfUrl, pdfGeneratedAt: new Date(), updatedAt: new Date() })
-      .where(eq(contracts.id, contract.id));
-  } catch (error: unknown) {
-    console.error('[contracts/finalize] Failed to generate or store PDF:', error);
+  if (contract.pdfUrl) {
+    /**
+     * 보관본이 이미 있다("완료 메일 재발송"이거나 서명 직후 처리가 한 번 더 돈 경우). 서명 당시
+     * 발급한 문서를 그대로 첨부하고 **다시 올리지 않는다** — 새로 그려 같은 경로에 올리면 보관본이
+     * 재발송 시점의 렌더로 덮인다(템플릿·글꼴·렌더러가 그 사이 바뀌었으면 다른 문서가 된다).
+     */
+    pdfBuffer = (await readStoredContractPdf(contract.pdfUrl)) ?? undefined;
+    if (!pdfBuffer) {
+      // 보관본을 읽지 못했다(일시 장애일 수 있다). 메일 첨부만 새로 그리고 보관본은 그대로 둔다.
+      try {
+        pdfBuffer = await renderPdf();
+      } catch (error: unknown) {
+        console.error('[contracts/finalize] Failed to render PDF for email:', error);
+      }
+    }
+  } else {
+    // 보관본이 없다(최초 처리이거나, 업로드·기록이 실패했던 계약) — 그때만 그려서 올린다.
+    try {
+      pdfBuffer = await renderPdf();
+    } catch (error: unknown) {
+      console.error('[contracts/finalize] Failed to generate PDF:', error);
+    }
+
+    if (pdfBuffer) {
+      try {
+        const pdfUrl = await uploadContractPdf(contract.id, pdfBuffer);
+        await getDb()
+          .update(contracts)
+          .set({ pdfUrl, pdfGeneratedAt: new Date(), updatedAt: new Date() })
+          .where(eq(contracts.id, contract.id));
+      } catch (error: unknown) {
+        console.error('[contracts/finalize] Failed to store PDF:', error);
+      }
+    }
   }
 
   // 메일 결과도 계약에 남긴다. 서명은 이미 확정됐지만, 확인 메일과 PDF가 고객에게
@@ -78,7 +108,7 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
     }
     if (!operatorResult.ok) {
       console.error('[contracts/finalize] Operator notification failed:', operatorResult);
-      problems.push(`운영자 알림 메일 발송 실패 (${operatorResult.errorCode ?? 'UNKNOWN'})`);
+      problems.push(describeOperatorAlertFailure(operatorResult.errorCode));
     }
   } catch (error: unknown) {
     console.error('[contracts/finalize] Failed to send signed emails:', error);
@@ -89,7 +119,7 @@ export const finalizeSignedContract = async (contractId: string): Promise<void> 
     await getDb()
       .update(contracts)
       .set({
-        notificationError: problems.length > 0 ? problems.join(' / ') : null,
+        notificationError: problems.length > 0 ? problems.join(NOTIFICATION_ERROR_SEPARATOR) : null,
         notifiedAt: new Date(),
       })
       .where(eq(contracts.id, contract.id));
