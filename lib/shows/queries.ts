@@ -184,8 +184,13 @@ export interface ManageOrderView {
  * 관리 링크 조회. 주문 부재·토큰 불일치·티켓 주문 아님을 전부 null로 돌려준다 —
  * 어느 쪽인지 구분해 알려 주면 orderNo 존재 여부를 토큰 없이 확인하는 창구가 된다.
  */
-export async function getShowOrderForManage(orderNo: string, token: string, now: Date): Promise<ManageOrderView | null> {
+export async function getShowOrderForManage(rawOrderNo: string, token: string, now: Date): Promise<ManageOrderView | null> {
   const db = getDb();
+  // middleware.ts가 대문자 포함 경로를 소문자로 308 리다이렉트하므로, URL에서 온 orderNo는 소문자로
+  // 도착한다(generateShowOrderNo는 항상 대문자만 생성) — 대문자로 정규화해 비교한다. SQLite `=`는
+  // 대소문자 구분. booking·funding의 findXxxOrderByOrderNo와 같은 처리. 이게 없던 동안 티켓 메일의
+  // "내 티켓" 링크가 전부 404였다(2026-10-03).
+  const orderNo = rawOrderNo.toUpperCase();
   const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
   if (!order || order.type !== 'ticket' || !isTokenMatch(order.manageToken, token)) return null;
 

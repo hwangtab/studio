@@ -24,7 +24,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body))
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
-  const { orderNo, token, ticketIds } = req.body as Record<string, unknown>;
+  const { orderNo: rawOrderNo, token, ticketIds } = req.body as Record<string, unknown>;
+  // 화면은 DB 값(대문자)을 보내지만, 손으로 적은 소문자도 같은 주문이다 — 조회와 같은 정규화.
+  const orderNo = typeof rawOrderNo === 'string' ? rawOrderNo.toUpperCase() : rawOrderNo;
   if (
     typeof orderNo !== 'string' || orderNo.trim() === '' ||
     typeof token !== 'string' || token.trim() === '' ||

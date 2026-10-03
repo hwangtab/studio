@@ -94,6 +94,8 @@ describe('getShowOrderForManage', () => {
     expect(await getShowOrderForManage('TKT-20260101-AAAAAAAA', order!.manageToken, NOW)).toBeNull();
     const view = await getShowOrderForManage(r.orderNo, order!.manageToken, NOW);
     expect(view).toMatchObject({ orderNo: r.orderNo, showTitle: '라이브', buyerName: '홍길동', totalAmount: 20000 });
+    // middleware가 경로를 소문자로 308하므로 소문자 orderNo도 같은 주문이어야 한다(메일 링크가 전부 404였던 회귀).
+    expect(await getShowOrderForManage(r.orderNo.toLowerCase(), order!.manageToken, NOW)).toMatchObject({ orderNo: r.orderNo });
     // 아직 결제 전(held) — 환불 가능 금액은 없다.
     expect(view?.tickets[0].refundAmountNow).toBeNull();
   });

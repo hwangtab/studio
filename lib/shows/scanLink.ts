@@ -41,7 +41,9 @@ export const issueScanLink = async (
   const cleanLabel = label.trim().slice(0, 40);
   if (!cleanLabel) throw new Error('label_required');
 
-  const token = randomBytes(24).toString('base64url');
+  // hex(소문자)여야 한다 — 토큰이 경로에 실리는데(/ko/shows/scan/<token>) middleware.ts가 대문자 포함
+  // 경로를 소문자로 308하므로 base64url 토큰은 해시가 달라져 모든 스캔 링크가 401이 됐다(2026-10-03).
+  const token = randomBytes(24).toString('hex');
   const expiresAt = Math.floor(now.getTime() / 1000) + Math.floor(ttl * 3600);
   const [row] = await getDb()
     .insert(showScanLinks)
