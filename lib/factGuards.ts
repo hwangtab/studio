@@ -132,11 +132,14 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     // KOMCA 등록 절차를 설명하는 정보성 글(copyright1·distribution1 등)은 정상 콘텐츠이자
     // 이 사이트의 핵심 자산이다. 막아야 하는 건 "우리가 대신 처리해 준다"는 서비스 주장뿐이다.
     // 그래서 비자는 C-4 문맥에서만, KOMCA는 1인칭 지원 동사와 붙을 때만 잡는다.
+    // 2026-10-02: es/vi/th/uz 홈 문구가 이 룰을 그대로 통과해 라이브에 있었다. 패턴이 "C-4 → visa" 어순만
+    // 봤고(es "visa C-4", vi "xin visa C-4"는 역순) marker가 영어·한국어 1인칭뿐이라 현지어
+    // "우리 팀이 안내한다"를 못 잡았다. 어순을 양방향으로, 현지어 비자 단어와 1인칭 동사를 넣었다.
     pattern:
-      /C-4[^\n]{0,60}(?:visa|비자|签证)|(?:artist\s+visa|아티스트\s?비자|艺术家签证)|KOMCA\s+support|KOMCA[^\n]{0,30}(?:대행|등록을?\s?지원|가입\s?지원)/i,
+      /C-4[^\n]{0,60}(?:visa|viza|비자|签证|วีซ่า)|(?:visa|viza|비자|签证|วีซ่า)[^\n]{0,60}C-4|(?:artist\s+visa|아티스트\s?비자|艺术家签证)|KOMCA\s+support|KOMCA[^\n]{0,30}(?:대행|등록을?\s?지원|가입\s?지원)/i,
     marker:
-      /\bwe\s+(?:help|guide|assist|support|handle|navigate)\b|저희(?:가|는)?\s?(?:도와|지원|대행)|스튜디오\s?놀(?:이|에서)?\s?(?:도와|지원|대행)|Studio\s?NOL[^\n]{0,40}(?:help|support|assist)/i,
-    allow: /않|없|미제공|대행하지|\bnot?\b|don'?t|doesn'?t|不提供/i,
+      /\bwe\s+(?:help|guide|assist|support|handle|navigate)\b|저희(?:가|는)?\s?(?:도와|지원|대행)|스튜디오\s?놀(?:이|에서)?\s?(?:도와|지원|대행)|Studio\s?NOL[^\n]{0,40}(?:help|support|assist)|nuestro\s+equipo|te\s+(?:gu[ií]a|ayuda|acompa)|(?:chúng\s+tôi|studio\s+nol)[^\n]{0,40}(?:đồng\s+hành|hỗ\s+trợ|giúp)|ทีมงานของเรา|ช่วยเหลือ|(?:yordam|maslahat)\s+beramiz|我们(?:帮|协助|陪同|提供)/i,
+    allow: /않|없|미제공|대행하지|\bnot?\b|don'?t|doesn'?t|不提供|no\s+ofrecemos|không\s+cung\s+cấp|ไม่ให้บริการ/i,
   },
   {
     // 해외 결제 수단(PayPal·위챗페이·알리페이·은련) 주장. 2026-07-28 황경하 확인:
@@ -159,7 +162,7 @@ export const FACT_GUARD_RULES: FactGuardRule[] = [
     // 배정"(约一位中文助理)이 살아 있었다 — 상주 인력 명사(中文工作人员)만 잡던 패턴이
     // '어시스턴트/전담/동행' 계열을 빠뜨렸다. 인력 배정을 뜻하는 표현을 함께 막는다.
     pattern:
-      /中文工作人员|中文服务|中文版本|中文发票|中文设备|中文助理|专属中文|中文客服|中文陪同|中文翻译人员|Estudio\s+en\s+Español|Studio\s+bằng\s+Tiếng\s+Việt|สตูดิโอภาษาไทย|hóa\s+đơn[^\n]{0,20}tiếng\s+Việt/i,
+      /o.zbek\s+(?:va\s+ingliz\s+)?till?(?:ida|arida)\s+muloqot|中文工作人员|中文服务|中文版本|中文发票|中文设备|中文助理|专属中文|中文客服|中文陪同|中文翻译人员|Estudio\s+en\s+Español|Studio\s+bằng\s+Tiếng\s+Việt|สตูดิโอภาษาไทย|hóa\s+đơn[^\n]{0,20}tiếng\s+Việt/i,
     // "실시간 번역 도구로 중국어 메시지를 처리한다"는 정상(실제 제공 방식)이다.
     // 막는 건 사람(工作人员·助理)을 붙여 준다는 단정뿐이므로 번역 도구 표현은 면제.
     allow: /않|없|미제공|\bnot?\b|不提供|翻译工具|翻译软件|机器翻译/i,
