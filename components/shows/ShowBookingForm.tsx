@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
@@ -75,7 +76,6 @@ export default function ShowBookingForm({ show }: Props) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
-  const [agreed, setAgreed] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const pendingRef = useRef<PendingOrder | null>(null);
@@ -87,7 +87,6 @@ export default function ShowBookingForm({ show }: Props) {
     e.preventDefault();
     if (!canBook || !ticketType || !showtime || submitting) return;
     setError(null);
-    if (!agreed) return setError('환불 규정에 동의해 주세요.');
     if (widget.agreedRequiredTerms === false) return setError('결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.');
     setSubmitting(true);
     try {
@@ -106,7 +105,8 @@ export default function ShowBookingForm({ show }: Props) {
             buyerName: name,
             buyerContact: phone,
             buyerEmail: email,
-            refundPolicyAgreed: agreed,
+            // 동의는 결제하기를 누르는 행위로 받는다(아래 고지) — 체크박스를 두지 않는다. 서버 검증은 그대로다.
+            refundPolicyAgreed: true,
           }),
         });
         const data = (await res.json().catch(() => null)) as
@@ -153,6 +153,7 @@ export default function ShowBookingForm({ show }: Props) {
 
   return (
     <form id="book" onSubmit={submit} noValidate className="scroll-mt-24 space-y-6" aria-label="티켓 예매">
+      {showtimes.length > 1 || !isOpen ? (
       <fieldset>
         <legend className="mb-2 typo-card-title">회차</legend>
         <div className="grid gap-2">
@@ -191,9 +192,22 @@ export default function ShowBookingForm({ show }: Props) {
           </p>
         )}
       </fieldset>
+      ) : null}
+
+      {isOpen && showtimes.length === 1 && show.ticketTypes.length === 1 && ticketType && showtime && (
+        // 고를 것이 없으면 라디오 두 묶음 대신 한 줄로 알린다 — 입력 전에 읽을 것을 줄인다.
+        <p className="rounded-xl bg-gray-50 px-4 py-3 text-sm text-gray-800 dark:bg-gray-800/60 dark:text-gray-200">
+          <span className="font-semibold text-gray-900 dark:text-white">{showtime.label}</span> · {ticketType.name} {formatWon(ticketType.price)}
+          <span className="text-gray-500 dark:text-gray-400">
+            {' '}
+            · {remainingFor(ticketType.id) <= 10 ? `잔여 ${remainingFor(ticketType.id)}석` : '예매 가능'}
+          </span>
+        </p>
+      )}
 
       {isOpen && (
         <>
+          {show.ticketTypes.length > 1 ? (
           <fieldset>
             <legend className="mb-2 typo-card-title">티켓</legend>
             <div className="grid gap-2">
@@ -235,6 +249,7 @@ export default function ShowBookingForm({ show }: Props) {
               })}
             </div>
           </fieldset>
+          ) : null}
 
           <Field id="show-quantity" label="매수" hint={`1회 최대 ${SHOW_MAX_PER_ORDER_CAP}매`}>
             <Select value={qty} onChange={(e) => setQuantity(Number(e.target.value))}>
@@ -254,23 +269,9 @@ export default function ShowBookingForm({ show }: Props) {
               <TextInput value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" inputMode="tel" autoComplete="tel" placeholder="010-0000-0000" />
             </Field>
           </div>
-          <Field id="show-email" label="이메일" required hint="티켓(QR)을 이 주소로 보내 드립니다. 결제 후 화면에서도 티켓 링크를 받을 수 있습니다.">
+          <Field id="show-email" label="이메일" required hint="티켓(QR)을 이 주소로 보내 드립니다.">
             <TextInput value={email} onChange={(e) => setEmail(e.target.value)} type="email" inputMode="email" autoComplete="email" />
           </Field>
-
-          <section aria-label="환불 규정" className="rounded-xl border border-gray-200 p-4 dark:border-gray-700">
-            <h3 className="mb-2 typo-card-subtitle">취소·환불 규정</h3>
-            <RefundPolicyList />
-            <label className="mt-4 flex min-h-[44px] items-start gap-3 text-sm text-gray-800 dark:text-gray-200">
-              <input
-                type="checkbox"
-                checked={agreed}
-                onChange={(e) => setAgreed(e.target.checked)}
-                className="mt-1 h-5 w-5 accent-primary"
-              />
-              <span>위 취소·환불 규정을 확인했고 동의합니다. (필수)</span>
-            </label>
-          </section>
 
           <div>
             <h3 className="mb-2 typo-card-title">결제 수단</h3>
@@ -292,12 +293,29 @@ export default function ShowBookingForm({ show }: Props) {
             </p>
           )}
 
+          {/*
+            약관·규정 동의는 **결제하기를 누르는 행위**로 받는다 — 체크박스를 두지 않는다(펀딩 PledgeWizard와 같은
+            규칙). 화면에는 결제위젯의 [필수] 결제 서비스 약관 체크가 이미 있어, 같은 말을 하는 체크를 더 두면
+            중복으로 읽힌다. 청약철회·환불 조건은 법적으로 **고지** 의무라 한 줄로 알리고, 표는 접어 둔다.
+            서버 검증(refundPolicyAgreed)과 기록은 그대로다.
+          */}
+          <div className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+            <p>
+              결제하기를 누르면 취소·환불 규정과{' '}
+              <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는
+              것으로 봅니다. 좌석은 결제창을 여는 동안 {Math.floor(SHOW_HOLD_SECONDS / 60)}분간 보류됩니다.
+            </p>
+            <details className="mt-1">
+              <summary className="cursor-pointer rounded underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
+                취소·환불 규정 보기
+              </summary>
+              <RefundPolicyList className="mt-2" />
+            </details>
+          </div>
+
           <Button type="submit" fullWidth disabled={!canBook || !widget.ready || submitting}>
             {submitting ? '처리 중…' : `${formatWon(total)} · 결제하기`}
           </Button>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
-            결제 버튼을 누르면 좌석이 {Math.floor(SHOW_HOLD_SECONDS / 60)}분간 보류됩니다. 시간 안에 결제를 마치지 않으면 자동으로 풀립니다.
-          </p>
         </>
       )}
     </form>
