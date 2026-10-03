@@ -831,13 +831,13 @@ export const getPricingData = (locale: Locale) => {
         uz: "Yeonsinnae va Bulgwang bekatlaridan 5 daqiqa masofadagi STC 60+ shovqin izolyatsiyali mashg'ulot xonasiga oylik ijara. Depozit yo'q — faqat oylik to'lov."
       }),
       features: tArray(locale, {
-        ko: ['24시간 이용 · 숙식 가능(독립 샤워실)', '보증금 0원 · 관리비 포함 · 월 단위 계약', '1년 계약 시 첫 달 50% 할인', '입주자 녹음 할인 등 8가지 부가 혜택'],
-        en: ['24/7 access, stay overnight (private shower)', 'No deposit, maintenance included, month-to-month', '50% off the first month on a 1-year contract', '8 resident perks including recording discounts'],
-        zh: ['24小时使用·可食宿（独立淋浴间）', '免押金·含管理费·按月签约', '签约1年首月5折', '含录音折扣等8项入住福利'],
-        es: ['Acceso 24/7, se puede pernoctar (ducha privada)', 'Sin depósito, mantenimiento incluido, mes a mes', '50% de descuento el primer mes con contrato anual', '8 beneficios para residentes, incluidos descuentos de grabación'],
-        vi: ['Sử dụng 24/7, có thể ở lại (phòng tắm riêng)', 'Không đặt cọc, đã gồm phí quản lý, hợp đồng theo tháng', 'Giảm 50% tháng đầu khi ký hợp đồng 1 năm', '8 ưu đãi cho cư dân, gồm giảm giá thu âm'],
-        th: ['ใช้ได้ 24 ชม. พักค้างได้ (ห้องอาบน้ำส่วนตัว)', 'ไม่มีเงินมัดจำ รวมค่าส่วนกลาง สัญญารายเดือน', 'ลด 50% เดือนแรกเมื่อทำสัญญา 1 ปี', 'สิทธิพิเศษผู้เช่า 8 อย่าง รวมส่วนลดค่าอัดเสียง'],
-        uz: ["24/7 foydalanish, tunab qolish mumkin (alohida dush)", "Depozitsiz, xizmat haqi kiritilgan, oylik shartnoma", "1 yillik shartnomada birinchi oy 50% chegirma", "Yozuv chegirmasi kabi 8 ta rezident imtiyozi"]
+        ko: ['24시간 이용 · 숙식 가능(독립 샤워실)', '보증금 0원 · 관리비 포함 · 월 단위 계약', '1년 계약 시 첫 달 50% 할인', '매월 녹음실 1시간 무료 등 8가지 입주 혜택'],
+        en: ['24/7 access, stay overnight (private shower)', 'No deposit, maintenance included, month-to-month', '50% off the first month on a 1-year contract', '8 resident perks, including 1 free studio hour a month'],
+        zh: ['24小时使用·可食宿（独立淋浴间）', '免押金·含管理费·按月签约', '签约1年首月5折', '含每月1小时免费录音室等8项入住福利'],
+        es: ['Acceso 24/7, se puede pernoctar (ducha privada)', 'Sin depósito, mantenimiento incluido, mes a mes', '50% de descuento el primer mes con contrato anual', '8 beneficios para residentes, incluida 1 hora gratis de estudio al mes'],
+        vi: ['Sử dụng 24/7, có thể ở lại (phòng tắm riêng)', 'Không đặt cọc, đã gồm phí quản lý, hợp đồng theo tháng', 'Giảm 50% tháng đầu khi ký hợp đồng 1 năm', '8 ưu đãi cho cư dân, gồm 1 giờ phòng thu miễn phí mỗi tháng'],
+        th: ['ใช้ได้ 24 ชม. พักค้างได้ (ห้องอาบน้ำส่วนตัว)', 'ไม่มีเงินมัดจำ รวมค่าส่วนกลาง สัญญารายเดือน', 'ลด 50% เดือนแรกเมื่อทำสัญญา 1 ปี', 'สิทธิพิเศษผู้เช่า 8 อย่าง รวมใช้ห้องอัดฟรีเดือนละ 1 ชั่วโมง'],
+        uz: ["24/7 foydalanish, tunab qolish mumkin (alohida dush)", "Depozitsiz, xizmat haqi kiritilgan, oylik shartnoma", "1 yillik shartnomada birinchi oy 50% chegirma", "Har oy 1 soat bepul studiya kabi 8 ta rezident imtiyozi"]
       }),
     },
     /**

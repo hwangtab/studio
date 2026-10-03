@@ -37,7 +37,7 @@ const faqData = {
     },
     {
       question: '연습실 입주 프로그램이 있나요?',
-      answer: '네, 월 36만 원(부가세 별도)부터 프리미엄 방음 연습실과 8가지 부가 혜택(녹음실 할인, 무료 음원 유통, 보도자료 작성 지원, 버스킹 장비 대여 등)을 제공하는 입주 프로그램이 있습니다.',
+      answer: '네, 월 36만 원(부가세 별도)부터 프리미엄 방음 연습실과 8가지 부가 혜택(매월 녹음실 1시간 무료, 무료 음원 유통, 보도자료 작성 지원, 버스킹 장비 대여 등)을 제공하는 입주 프로그램이 있습니다.',
     },
     {
       question: '어떤 장비를 보유하고 있나요?',
@@ -112,7 +112,7 @@ const faqData = {
     },
     {
       question: 'Do you have a practice room residency program?',
-      answer: 'Yes, from 360,000 KRW/month (VAT excluded), we offer a premium soundproof practice room and 8 benefits (studio discount, free distribution, press release support, busking gear rental, etc.).',
+      answer: 'Yes, from 360,000 KRW/month (VAT excluded), we offer a premium soundproof practice room and 8 benefits (1 free studio hour every month, free distribution, press release support, busking gear rental, etc.).',
     },
     {
       question: 'What equipment do you have?',
@@ -183,7 +183,7 @@ const faqData = {
     },
     {
       question: '有练习室入驻项目吗？',
-      answer: '月费 360,000 韩元起（不含增值税），提供高端隔音练习室及 8 项福利（录音室折扣、免费发行、新闻稿支持、街头演出设备租借等）。',
+      answer: '月费 360,000 韩元起（不含增值税），提供高端隔音练习室及 8 项福利（每月 1 小时免费录音室、免费发行、新闻稿支持、街头演出设备租借等）。',
     },
     {
       question: '有哪些设备？',
@@ -229,7 +229,7 @@ const faqData = {
     },
     {
       question: '¿Tienen un programa de residencia para salas de práctica?',
-      answer: 'Sí, desde 360.000 KRW/mes (IVA no incluido) ofrecemos una sala premium insonorizada y 8 beneficios (descuento en estudio, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
+      answer: 'Sí, desde 360.000 KRW/mes (IVA no incluido) ofrecemos una sala premium insonorizada y 8 beneficios (1 hora gratis de estudio cada mes, distribución gratuita, apoyo con comunicados de prensa, alquiler de equipo de busking, etc.).',
     },
     {
       question: '¿Qué equipo tienen?',
@@ -259,7 +259,7 @@ const faqData = {
   vi: [
     {
       question: 'Studio NOL ở đâu?',
-      answer: 'Chúng tôi ở tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong) (ngay bên trường nữ Dongmyeong). Cách ga Bulgwang (Line 6) cửa số 7 hoặc ga Yeonsinnae khoảng 5 phút đi bộ.',
+      answer: 'Chúng tôi ở tầng 3, 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong, ngay bên trường nữ Dongmyeong). Cách ga Bulgwang (Line 6) cửa số 7 hoặc ga Yeonsinnae khoảng 5 phút đi bộ.',
     },
     {
       question: 'Phí sử dụng phòng thu là bao nhiêu?',
@@ -275,7 +275,7 @@ const faqData = {
     },
     {
       question: 'Có chương trình phòng tập cư trú không?',
-      answer: 'Có, từ 360.000 KRW/tháng (chưa gồm VAT) cho phòng tập cách âm cao cấp và 8 quyền lợi (giảm giá phòng thu, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
+      answer: 'Có, từ 360.000 KRW/tháng (chưa gồm VAT) cho phòng tập cách âm cao cấp và 8 quyền lợi (miễn phí 1 giờ phòng thu mỗi tháng, phát hành miễn phí, hỗ trợ thông cáo báo chí, thuê thiết bị busking, v.v.).',
     },
     {
       question: 'Có những thiết bị nào?',
@@ -305,7 +305,7 @@ const faqData = {
   th: [
     {
       question: 'Studio NOL อยู่ที่ไหน?',
-      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong) (ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Yeonsinnae (สาย 3·6) ทางออก 4 หรือ 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7',
+      answer: 'เราตั้งอยู่ชั้น 3 เลขที่ 2-1 Tongil-ro 71-gil, Eunpyeong-gu, Seoul (Daejo-dong ติดกับโรงเรียนหญิง Dongmyeong) เดินประมาณ 5 นาทีจากสถานี Yeonsinnae (สาย 3·6) ทางออก 4 หรือ 5 นาทีจากสถานี Bulgwang (สาย 6) ทางออก 7',
     },
     {
       question: 'ค่าห้องอัดเท่าไหร่?',
@@ -321,7 +321,7 @@ const faqData = {
     },
     {
       question: 'มีโปรแกรมห้องซ้อมรายเดือนหรือไม่?',
-      answer: 'เดือนละ 360,000 วอนขึ้นไป (ไม่รวม VAT) ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ส่วนลดสตูดิโอ, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
+      answer: 'เดือนละ 360,000 วอนขึ้นไป (ไม่รวม VAT) ได้ห้องซ้อมกันเสียงระดับพรีเมียมและสิทธิประโยชน์ 8 อย่าง (ใช้ห้องอัดฟรีเดือนละ 1 ชั่วโมง, แจกจ่ายเพลงฟรี, ช่วยเขียนข่าวประชาสัมพันธ์, เช่าอุปกรณ์บัสกิ้ง ฯลฯ)',
     },
     {
       question: 'มีอุปกรณ์อะไรบ้าง?',
@@ -367,7 +367,7 @@ const faqData = {
     },
     {
       question: "Mashg'ulot xonasi rezident dasturi bormi?",
-      answer: "Ha. Oyiga 360,000 KRW dan (VAT alohida) premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (studiyada chegirma, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
+      answer: "Ha. Oyiga 360,000 KRW dan (VAT alohida) premium ovoz izolyatsiyali mashg'ulot xonasi va 8 ta imtiyoz (har oy 1 soat bepul studiya, bepul tarqatish, press-reliz qo'llovi, busking uskunalari ijarasi va h.k.) beriladi.",
     },
     {
       question: 'Qanday uskunalar bor?',
