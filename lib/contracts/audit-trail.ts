@@ -176,7 +176,20 @@ export const buildAuditTrail = (contract: LoadedContract): AuditTrail => {
   }
 
   push('계약서 PDF 보관', contract.pdfGeneratedAt);
-  push('서명 완료 안내 발송', contract.notifiedAt, contract.notificationError ?? undefined);
+  /**
+   * notifiedAt은 한 칸을 두 시기에 쓴다 — 서명 전에는 서명 요청 메일 결과, 서명 뒤에는 서명 완료
+   * 후처리(finalize) 결과. 서명 트랜잭션이 이 칸을 비우고 finalize가 다시 채우므로 서명 시각 이후의
+   * 값만 "서명 완료 안내"다. 그 전 값(아직 서명 전이거나, 이 규칙 이전에 서명돼 finalize가 남기지
+   * 못한 계약)을 완료 안내로 적으면 보내지 않은 메일이 증거 화면에 보낸 것으로 남는다.
+   */
+  if (contract.notifiedAt) {
+    const afterSigning = contract.signedAt !== null && contract.notifiedAt.getTime() >= contract.signedAt.getTime();
+    push(
+      afterSigning ? '서명 완료 안내 발송' : '서명 요청 안내 발송',
+      contract.notifiedAt,
+      contract.notificationError ?? undefined,
+    );
+  }
   push('계약 종료 처리', contract.terminatedAt, contract.terminationReason ?? undefined);
   push('개인정보 파기', contract.purgedAt);
 

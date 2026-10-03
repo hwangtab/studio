@@ -25,6 +25,7 @@ import {
 import type { ContractStatus } from './status';
 import { readContractTemplate } from './template';
 import { hashTemplate, loadTemplateSnapshot } from './template-snapshot';
+import { roomComparisonKey } from './validation';
 
 let mockDb: ReturnType<typeof drizzle<typeof schema>>;
 jest.mock('../../db/client', () => ({ getDb: () => mockDb }));
@@ -219,6 +220,35 @@ describe('호실 점유 판정', () => {
     });
 
     expect(await terminateContract('c4', { reason: '아직 서명 전' })).toBeNull();
+  });
+});
+
+describe('호실 비교 키 — SQL과 JS가 같은 규칙', () => {
+  /**
+   * 컬럼 쪽은 SQL(ROOM_KEY_SQL)로, 파라미터 쪽은 JS로 키를 만든다. 둘이 한 글자라도 다르면 같은 방이
+   * 다른 방으로 보여 이중 임대가 통과한다. 예전엔 파라미터를 저장 정규화(끝의 호/호실만 제거)로
+   * 맞춰 "2호-1"이 컬럼 쪽 "2-1"과 영영 같아지지 않았다.
+   */
+  it.each(['2호-1', '302호', '302호실', 'b 101호', 'B101', '2호실-3호', ' 3 0 2 ', 'ä호b', '호'])(
+    'SQLite의 키와 같다: %p',
+    async (raw) => {
+      const result = await client.execute({
+        sql: "select replace(replace(replace(upper(?), ' ', ''), '호실', ''), '호', '') as k",
+        args: [raw],
+      });
+      expect(roomComparisonKey(raw)).toBe(result.rows[0].k);
+    },
+  );
+
+  it('"2호-1"로 저장된 서명 계약을 같은 표기로 다시 잡으면 충돌이다', async () => {
+    await addContract({ id: 'c1', room: '2호-1', start: '2026-09-01', end: '2027-03-01', status: 'signed' });
+    expect(await conflictFor('2호-1', '2026-12-01', '2027-06-01')).not.toBeNull();
+    expect(await conflictFor('2-1', '2026-12-01', '2027-06-01')).not.toBeNull();
+  });
+
+  it('소문자로 적어도 같은 방이다', async () => {
+    await addContract({ id: 'c1', room: 'B101', start: '2026-09-01', end: '2027-03-01', status: 'sent' });
+    expect(await conflictFor('b101', '2026-12-01', '2027-06-01')).not.toBeNull();
   });
 });
 

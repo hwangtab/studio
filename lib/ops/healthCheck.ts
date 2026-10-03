@@ -1,4 +1,4 @@
-import { and, eq, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
+import { and, eq, gte, inArray, isNotNull, isNull, lt, or, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { isNotificationSentinel } from './notificationSentinel';
@@ -16,6 +16,7 @@ import {
   dormantActivityCondition,
 } from '../privacy/orderRetention';
 import { expireOverdueContracts } from '../contracts/service';
+import { needsCustomerNotificationFollowUp } from '../contracts/notification-error';
 import { runLeadRateCheck } from './leadRateCheck';
 import { checkMigrationDrift } from './migrationDrift';
 import {
@@ -243,21 +244,54 @@ export const STALE_CONTRACT_DRAFT_DAYS = 90;
 /** 서명 직후 후처리(PDF·메일)가 끝나는 데 충분한 시간. 이보다 오래 notifiedAt이 비어 있으면 후처리가 죽은 것이다. */
 const SIGNED_NOTIFICATION_GRACE_MS = 30 * 60 * 1000;
 
+/** 기한이 지나 만료된 미서명 계약을 이 기간 동안 계속 알린다(크론의 자동 만료가 알림을 하루로 끊지 않게). */
+export const OVERDUE_UNSIGNED_ALERT_DAYS = 7;
+
 /**
- * 계약 위생 점검 (2026-10-03 코드리뷰 후속).
+ * 계약 위생 점검 (2026-10-03 코드리뷰 후속) — **읽기만 한다.** 관리자 첫 화면도 이 함수를 부른다.
  *
- * 1. 발송 후 아무도 열지 않은 계약의 만료 — expireOverdueContracts는 화면을 열 때만 도는 lazy 방식이라
- *    목록을 아무도 안 열면 `sent`로 남아 호실을 막고 파기 대상에서도 빠진다. 매일 한 번 돌려 준다.
+ * 1. 서명 기한이 지난 미서명 계약 — 고객이 링크를 놓쳤을 수 있다. 크론(checkContractHygiene)이 기한 지난
+ *    발송 건을 expired로 내리므로 `sent`만 보면 알림이 하루만 나가고 사라진다. 그래서 최근
+ *    OVERDUE_UNSIGNED_ALERT_DAYS일 안에 기한이 지나 만료된 건도 같은 알림에 넣는다. 재발송하면 sent로
+ *    돌아가 새 기한을 받고, 취소하면 cancelled가 되어 빠진다.
  * 2. 오래된 초안 — 처리방침 ⑫는 해지·만료된 계약만 파기 대상으로 말하므로 초안은 자동 파기하지 않는다
  *    (정책 문구를 바꾸면 약관 판본 게이트를 타는 일이라 코드로 지우지 않는다). 대신 알려서 사람이 지우게 한다.
  * 3. 서명은 끝났는데 후처리(PDF 생성·메일)가 기록을 남기지 못한 계약 — 함수가 시간 초과로 죽으면
- *    notificationError도 notifiedAt도 비어 있어 관리자 화면에 경고가 뜨지 않는다.
+ *    notificationError도 notifiedAt도 비어 있어 관리자 화면에 경고가 뜨지 않는다. 서명 트랜잭션이
+ *    발송 때의 notifiedAt을 비우므로(sign-transaction.ts) 이 칸은 서명 뒤엔 finalize만 채운다.
  */
-export const checkContractHygiene = async (now: Date): Promise<HealthIssue[]> => {
+export const collectContractHygieneIssues = async (now: Date): Promise<HealthIssue[]> => {
   const db = getDb();
   const issues: HealthIssue[] = [];
 
-  await expireOverdueContracts(now);
+  const overdueAlertFrom = new Date(now.getTime() - OVERDUE_UNSIGNED_ALERT_DAYS * 24 * 60 * 60 * 1000);
+  const staleUnsigned = await db
+    .select({ customerName: contracts.customerName })
+    .from(contracts)
+    .where(
+      and(
+        isNull(contracts.purgedAt),
+        lt(contracts.expiresAt, now),
+        or(
+          // 아직 만료 처리 전(크론이 돌기 전·관리자 화면만 연 경우) — 기간과 무관하게 계속 알린다.
+          eq(contracts.status, 'sent'),
+          // 자동 만료된 뒤에도 일주일은 알린다.
+          and(eq(contracts.status, 'expired'), gte(contracts.expiresAt, overdueAlertFrom)),
+        ),
+      ),
+    );
+
+  if (staleUnsigned.length > 0) {
+    issues.push({
+      severity: 'medium',
+      href: '/admin/contracts',
+      title: `서명 기한이 지난 계약 ${staleUnsigned.length}건`,
+      detail:
+        `대상: ${sample(staleUnsigned.map((row) => row.customerName))}\n` +
+        '고객이 링크를 놓쳤을 수 있습니다. 재발송하거나 계약을 취소해 주세요. ' +
+        `(기한이 지나고 ${OVERDUE_UNSIGNED_ALERT_DAYS}일 동안 알립니다.)`,
+    });
+  }
 
   const draftBoundary = new Date(now.getTime() - STALE_CONTRACT_DRAFT_DAYS * 24 * 60 * 60 * 1000);
   const staleDrafts = await db
@@ -300,6 +334,18 @@ export const checkContractHygiene = async (now: Date): Promise<HealthIssue[]> =>
   }
 
   return issues;
+};
+
+/**
+ * 크론용 — 기한 지난 발송 건을 expired로 내린 뒤(쓰기) 위의 점검을 돌린다.
+ *
+ * expireOverdueContracts는 화면을 열 때만 도는 lazy 방식이라 목록을 아무도 안 열면 `sent`로 남아 호실을
+ * 막고 파기 대상에서도 빠진다. 매일 한 번 돌려 준다. 관리자 첫 화면은 쓰기를 하지 않도록
+ * collectContractHygieneIssues만 부른다.
+ */
+export const checkContractHygiene = async (now: Date): Promise<HealthIssue[]> => {
+  await expireOverdueContracts(now);
+  return collectContractHygieneIssues(now);
 };
 
 export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
@@ -634,11 +680,24 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     });
   }
 
-  /** 계약 알림 실패 — 고객이 서명 요청이나 완료 메일을 못 받았다. */
-  const contractMailFailed = await db
-    .select({ id: contracts.id, customerName: contracts.customerName })
-    .from(contracts)
-    .where(isNotNull(contracts.notificationError));
+  /**
+   * 계약 알림 실패 — 고객이 서명 요청이나 완료 메일(PDF)을 못 받았다.
+   *
+   * 운영자 알림만 실패한 건은 세지 않는다 — 고객은 메일을 받았고, "재발송하세요"를 따르면 서명 대기
+   * 계약은 고객이 받은 링크가 죽는다. 취소·만료·파기된 계약도 할 일이 없어 뺀다. 판정은 관리자 상세
+   * 화면과 같은 함수(lib/contracts/notification-error.ts)다.
+   */
+  const contractMailFailed = (
+    await db
+      .select({
+        customerName: contracts.customerName,
+        status: contracts.status,
+        purgedAt: contracts.purgedAt,
+        notificationError: contracts.notificationError,
+      })
+      .from(contracts)
+      .where(isNotNull(contracts.notificationError))
+  ).filter(needsCustomerNotificationFollowUp);
 
   if (contractMailFailed.length > 0) {
     issues.push({
@@ -883,30 +942,10 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
     });
   }
 
-  /**
-   * 발송했는데 서명되지 않은 채 기한이 지난 계약. 고객이 링크를 놓쳤을 수 있는데,
-   * 지금은 관리자가 목록을 열어야만 보인다.
-   */
-  const staleUnsigned = await db
-    .select({ customerName: contracts.customerName })
-    .from(contracts)
-    .where(and(eq(contracts.status, 'sent'), lt(contracts.expiresAt, now)));
-
-  if (staleUnsigned.length > 0) {
-    issues.push({
-      severity: 'medium',
-      href: '/admin/contracts',
-      title: `서명 기한이 지난 계약 ${staleUnsigned.length}건`,
-      detail:
-        `대상: ${sample(staleUnsigned.map((row) => row.customerName))}\n` +
-        '고객이 링크를 놓쳤을 수 있습니다. 재발송하거나 계약을 취소해 주세요.',
-    });
-  }
-
   return sortBySeverity(issues);
 };
 
-const sortBySeverity = (issues: HealthIssue[]): HealthIssue[] => {
+export const sortBySeverity = (issues: HealthIssue[]): HealthIssue[] => {
   const order = { high: 0, medium: 1 };
   return issues.sort((a, b) => order[a.severity] - order[b.severity]);
 };
@@ -929,8 +968,8 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
 
   issues.push(...(await collectDbIssues(now)));
 
-  // 반드시 collectDbIssues 뒤에 부른다: 이 함수가 기한 지난 발송 계약을 expired로 내리므로, 앞에 오면
-  // collectDbIssues의 "서명 기한이 지난 계약" 알림(고객이 링크를 놓쳤다는 신호)이 사라진다.
+  // 기한 지난 발송 계약을 expired로 내린 뒤 점검한다. "서명 기한이 지난 계약" 알림은 만료된 건도
+  // 일주일 동안 세므로 순서에 기대지 않는다.
   issues.push(...(await checkContractHygiene(now)));
 
   return { issues: sortBySeverity(issues), checkedAt: now };

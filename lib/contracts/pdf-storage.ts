@@ -13,12 +13,29 @@ export const uploadContractPdf = async (
   const blob = await put(filename, pdfBuffer, {
     access: 'private',
     contentType: 'application/pdf',
-    // 재발송이 같은 경로에 다시 올린다. 기본값(false)이면 "이미 존재"로 던지고, 호출부가 삼켜
-    // 보관본과 pdfUrl이 옛것으로 남는다(2026-10-02 리뷰).
+    // 서명 당시 보관본을 덮어쓰지 않는 것은 호출부(finalize)가 지킨다 — pdfUrl이 이미 있으면 올리지
+    // 않는다. 그래도 덮어쓰기는 허용해 둔다: 업로드는 됐는데 pdfUrl 기록이 실패한 계약은 blob만 같은
+    // 경로에 남아 있어, 기본값(false)이면 "이미 존재"로 던지고 영영 pdfUrl이 채워지지 않는다.
     allowOverwrite: true,
   });
 
   return blob.url;
+};
+
+/**
+ * 보관된 PDF를 읽는다. 읽지 못하면(파일이 지워졌거나 일시 장애) null — 호출부가 대신 그린다.
+ */
+export const readStoredContractPdf = async (pdfUrl: string): Promise<Buffer | null> => {
+  try {
+    const stored = await get(pdfUrl, { access: 'private' });
+    if (stored?.stream) {
+      const buffer = Buffer.from(await new Response(stored.stream).arrayBuffer());
+      if (buffer.length > 0) return buffer;
+    }
+  } catch (error: unknown) {
+    console.error('[contracts/pdf-storage] Stored PDF unavailable:', error);
+  }
+  return null;
 };
 
 export type ContractWithRelations = Contract & {
@@ -43,15 +60,8 @@ export const loadOrRenderContractPdf = async (
   contract: ContractWithRelations,
 ): Promise<Buffer> => {
   if (contract.pdfUrl) {
-    try {
-      const stored = await get(contract.pdfUrl, { access: 'private' });
-      if (stored?.stream) {
-        const buffer = Buffer.from(await new Response(stored.stream).arrayBuffer());
-        if (buffer.length > 0) return buffer;
-      }
-    } catch (error: unknown) {
-      console.error('[contracts/pdf-storage] Stored PDF unavailable, re-rendering:', error);
-    }
+    const stored = await readStoredContractPdf(contract.pdfUrl);
+    if (stored) return stored;
   }
 
   const customerSignature =

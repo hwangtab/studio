@@ -57,7 +57,7 @@ describe('전자서명 이미지 검증', () => {
     const result = validateSignatureData(`data:image/png;base64,${fake}`);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toContain('PNG');
+    expect(result.message).toContain('PNG 형식 아님');
   });
 
   it('너무 작은 이미지를 거부한다', () => {
@@ -70,13 +70,29 @@ describe('전자서명 이미지 검증', () => {
     const result = validateSignatureData(`data:image/png;base64,${oversized.toString('base64')}`);
 
     expect(result.ok).toBe(false);
-    expect(result.message).toContain('too large');
+    expect(result.message).toContain('너무 큽니다');
   });
 
   it('작은 PNG가 거대한 크기를 선언하면 거부한다(PDF 렌더 메모리 폭주 방지)', () => {
     expect(validateSignatureData(pngDataUrl(1024, 9000, 9000)).ok).toBe(false);
     // 한 변은 한도 안이어도 면적이 한도를 넘으면 거부한다.
     expect(validateSignatureData(pngDataUrl(1024, 3500, 3500)).ok).toBe(false);
+  });
+
+  /** 고객 화면에 그대로 나가는 문구다(서명 API 400). 영어가 새어 나가면 안 된다. */
+  it('거부 문구는 전부 한국어이고 다시 그리라고 안내한다', () => {
+    const rejected = [
+      validateSignatureData('data:image/gif;base64,AAAA'),
+      validateSignatureData('data:image/png;base64,<script>'),
+      validateSignatureData(`data:image/png;base64,${PNG_MAGIC.toString('base64')}`),
+      validateSignatureData(pngDataUrl(1024, 9000, 9000)),
+      validateSignatureData(toDataUrl(Buffer.concat([PNG_MAGIC, Buffer.alloc(1016, 0x42)]))),
+    ];
+    for (const result of rejected) {
+      expect(result.ok).toBe(false);
+      expect(result.message).not.toMatch(/[A-Za-z]{4,}/);
+      expect(result.message).toMatch(/그려 주세요/);
+    }
   });
 
   it('실제 캔버스 크기(고해상도 기기)는 통과한다', () => {
@@ -94,7 +110,7 @@ describe('전자서명 이미지 검증', () => {
       const result = validateSignatureData(toDataUrl(magicOnly));
 
       expect(result.ok).toBe(false);
-      expect(result.message).toContain('header');
+      expect(result.message).toContain('머리글');
     });
 
     it('IEND 없이 잘린 PNG를 거부한다', () => {
@@ -102,7 +118,7 @@ describe('전자서명 이미지 검증', () => {
       const result = validateSignatureData(toDataUrl(truncated));
 
       expect(result.ok).toBe(false);
-      expect(result.message).toContain('truncated');
+      expect(result.message).toContain('잘림');
     });
 
     it('폭이나 높이가 0인 PNG를 거부한다', () => {

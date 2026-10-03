@@ -38,6 +38,8 @@ import { fetchBusyRanges } from '../booking/gcal';
 import { checkFieldCryptoKey, formatHealthReport, runHealthCheck } from './healthCheck';
 // eslint-disable-next-line import/first
 import { FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
+// eslint-disable-next-line import/first
+import { buildSignStatements } from '../contracts/sign-transaction';
 
 /**
  * 필드 암호화 키 점검이 이 파일의 다른 건수 assertion을 흔들지 않게 기본값을 깔아 둔다.
@@ -69,7 +71,7 @@ beforeAll(async () => {
 beforeEach(async () => {
   // refunds가 payments를, subscription_payments가 orders·subscriptions를 참조하므로
   // 참조하는 쪽을 먼저 지운다. refunds가 빠져 있어 테스트끼리 오염된 적이 있다.
-  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contracts', 'funding_projects', 'funding_creators']) {
+  for (const table of ['refunds', 'payments', 'bookings', 'funding_pledges', 'funding_project_payouts', 'subscription_payments', 'subscriptions', 'orders', 'contract_clauses', 'contract_attachments', 'signatures', 'contracts', 'funding_projects', 'funding_creators']) {
     await client.execute(`DELETE FROM ${table}`);
   }
   (fetchBusyRanges as jest.Mock).mockReset().mockResolvedValue([]);
@@ -354,6 +356,101 @@ describe('운영 점검', () => {
   it('기한이 남은 미서명 계약은 보고하지 않는다', async () => {
     await insertContract({ status: 'sent', expires_at: EPOCH('2026-09-30') });
     expect(await titles()).toEqual([]);
+  });
+
+  /**
+   * 크론이 같은 실행 안에서 기한 지난 sent를 expired로 내리므로, sent만 세면 알림이 하루만 나가고
+   * 다음 날부터 사라졌다. 기한이 지나고 일주일은 계속 알린다.
+   */
+  it('자동 만료된 미서명 계약도 기한 후 7일 안이면 계속 알린다', async () => {
+    await insertContract({ status: 'expired', expires_at: EPOCH('2026-09-04') }); // NOW − 6일
+    expect((await titles()).join()).toContain('서명 기한이 지난 계약 1건');
+  });
+
+  it('기한 후 7일이 지난 만료 계약은 더 알리지 않는다', async () => {
+    await insertContract({ status: 'expired', expires_at: EPOCH('2026-09-02') }); // NOW − 8일
+    expect(await titles()).toEqual([]);
+  });
+
+  it('같은 크론 실행 안에서 만료로 내린 계약도 알린다 — 다음 날에도', async () => {
+    await insertContract({ status: 'sent', expires_at: EPOCH('2026-09-09') });
+    expect((await titles()).join()).toContain('서명 기한이 지난 계약 1건');
+    // 첫 실행이 expired로 내렸다. 다음 날 크론에서도 여전히 알린다.
+    const next = await runHealthCheck(new Date('2026-09-11T00:00:00Z'));
+    expect(next.issues.map((i) => i.title).join()).toContain('서명 기한이 지난 계약 1건');
+  });
+
+  it('취소된 계약과 파기된 계약은 기한이 지났어도 알리지 않는다', async () => {
+    await insertContract({ id: 'c1', sign_token: 'st-c1', status: 'cancelled', expires_at: EPOCH('2026-09-05') });
+    await insertContract({ id: 'c2', sign_token: 'st-c2', status: 'expired', expires_at: EPOCH('2026-09-05'), purged_at: EPOCH('2026-09-06') });
+    expect(await titles()).toEqual([]);
+  });
+
+  describe('계약 알림 실패 — 고객 쪽 실패만 센다', () => {
+    it('운영자 알림만 실패한 계약은 세지 않는다 (고객 메일은 나갔다)', async () => {
+      await insertContract({ status: 'sent', notification_error: '운영자 알림 메일 발송 실패 (RATE_LIMIT)' });
+      expect(await titles()).toEqual([]);
+    });
+
+    it('고객 메일과 운영자 알림이 함께 실패했으면 센다', async () => {
+      await insertContract({
+        status: 'sent',
+        notification_error: '서명 요청 메일 발송 실패 (X) / 운영자 알림 메일 발송 실패 (Y)',
+      });
+      expect((await titles()).join()).toContain('알림이 나가지 않은 계약 1건');
+    });
+
+    it('취소·만료·파기된 계약은 세지 않는다', async () => {
+      await insertContract({ id: 'c1', sign_token: 'st-c1', status: 'cancelled', notification_error: '서명 요청 메일 발송 실패 (X)' });
+      await insertContract({ id: 'c2', sign_token: 'st-c2', status: 'expired', expires_at: EPOCH('2026-08-01'), notification_error: '서명 요청 메일 발송 실패 (X)' });
+      await insertContract({ id: 'c3', sign_token: 'st-c3', status: 'signed', purged_at: EPOCH('2026-09-01'), notification_error: 'PDF 생성 실패' });
+      expect(await titles()).toEqual([]);
+    });
+  });
+
+  /**
+   * 정상 흐름: 발송 때 notified_at이 찍히고(서명 요청 메일 결과) 서명이 그 칸을 비운 뒤 finalize가 다시
+   * 채운다. 서명이 칸을 비우지 않던 동안은 finalize가 죽어도 발송 때 값이 남아 이 점검이 영영 울리지 않았다.
+   */
+  describe('서명 후 후처리 기록 없음', () => {
+    const signAt = async (now: Date) => {
+      await insertContract({ status: 'sent', notified_at: EPOCH('2026-09-01'), expires_at: EPOCH('2026-09-30') });
+      await client.execute(
+        "INSERT INTO signatures (id, contract_id, signer_role, signer_name, signer_email, status) VALUES ('s1', 'c1', 'customer', '김고객', 'c@d.e', 'pending')",
+      );
+      const results = await mockDb.batch(
+        buildSignStatements(mockDb, {
+          contractId: 'c1',
+          signatureId: 's1',
+          signToken: 'st',
+          now,
+          signatureData: 'data:image/png;base64,AAAA',
+          ipAddress: null,
+          userAgent: 'jest',
+          contentHash: 'v3:test',
+          customerBirthdate: '1990-01-02',
+          customerAddress: '서울시',
+          content: '본문',
+        }),
+      );
+      expect(results[3].rowsAffected).toBe(1);
+    };
+
+    it('서명 뒤 finalize가 돌지 않은 계약을 잡는다', async () => {
+      await signAt(new Date(NOW.getTime() - 60 * 60 * 1000));
+      expect((await titles()).join()).toContain('서명은 끝났지만 후처리 기록이 없는 계약 1건');
+    });
+
+    it('finalize가 기록을 남겼으면 잡지 않는다', async () => {
+      await signAt(new Date(NOW.getTime() - 60 * 60 * 1000));
+      await client.execute(`UPDATE contracts SET notified_at = ${EPOCH('2026-09-09T23:01:00Z')} WHERE id = 'c1'`);
+      expect(await titles()).toEqual([]);
+    });
+
+    it('서명 직후 유예 시간 안에는 잡지 않는다 (후처리가 아직 도는 중)', async () => {
+      await signAt(new Date(NOW.getTime() - 5 * 60 * 1000));
+      expect(await titles()).toEqual([]);
+    });
   });
 
   /**

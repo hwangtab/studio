@@ -1,6 +1,7 @@
 import { del, list, put } from '@vercel/blob';
 
 import { getDb } from '../../db/client';
+import { contractTemplateSnapshots } from '../../db/schema';
 
 /**
  * 백업 보관 기간.
@@ -22,6 +23,8 @@ const ORPHAN_GRACE_HOURS = 24;
 export interface BackupResult {
   backupPath: string;
   contracts: number;
+  /** 백업에 담은 템플릿 사본 수. 표를 읽지 못했으면 null. */
+  templateSnapshots: number | null;
   removedBackups: number;
   removedOrphanPdfs: number;
 }
@@ -42,6 +45,8 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   // 안전하므로(유출 상황일 수 있다) 토큰까지 되살릴 이유가 없다.
   const sanitized = all.map(({ signToken: _signToken, ...rest }) => rest);
 
+  const templates = await loadTemplateSnapshotsForBackup();
+
   const stamp = now.toISOString().slice(0, 19).replace(/[:T]/g, '-');
 
   /**
@@ -58,7 +63,18 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   try {
     const blob = await put(
       `${BACKUP_PREFIX}${stamp}.json`,
-      JSON.stringify({ exportedAt: now.toISOString(), contracts: sanitized }, null, 2),
+      JSON.stringify(
+        {
+          exportedAt: now.toISOString(),
+          contracts: sanitized,
+          // 계약별 템플릿 사본(어느 판본으로 본문을 만들었고 서명 때 무엇으로 완성하는가). 원문은 거의 모든
+          // 계약이 같아 해시별로 한 번만 싣는다. 표를 못 읽었으면 null — 복구 때 사본 없음으로 다룬다.
+          templateSnapshots: templates?.snapshots ?? null,
+          templates: templates?.templates ?? null,
+        },
+        null,
+        2,
+      ),
       { access: 'private', contentType: 'application/json', addRandomSuffix: false },
     );
     blobPath = blob.pathname;
@@ -78,9 +94,41 @@ export const backupContracts = async (now: Date = new Date()): Promise<BackupRes
   return {
     backupPath: blobPath as string,
     contracts: all.length,
+    templateSnapshots: templates ? templates.snapshots.length : null,
     removedBackups,
     removedOrphanPdfs,
   };
+};
+
+/**
+ * contract_template_snapshots를 백업에 담을 형태로 읽는다.
+ *
+ * 이 표가 빠져 있으면 DB를 복구했을 때 서명 대기 계약의 본문이 서명 순간 **현재 파일**로 완성된다 —
+ * 고객이 읽은 조항과 서명에 묶이는 조항이 달라지는 바로 그 사고(schema.ts 주석)가 복구로 되살아난다.
+ * 템플릿 원문은 계약서 양식이라 개인정보가 아니다.
+ *
+ * 읽기 실패(표가 아직 없는 환경 등)는 백업 전체를 막지 않는다 — 계약 행이 더 중요하다. 로그에 남긴다.
+ */
+const loadTemplateSnapshotsForBackup = async (): Promise<{
+  snapshots: Array<{ contractId: string; templateHash: string; createdAt: string }>;
+  templates: Record<string, string>;
+} | null> => {
+  try {
+    const rows = await getDb().select().from(contractTemplateSnapshots);
+    const templates: Record<string, string> = {};
+    for (const row of rows) templates[row.templateHash] = row.template;
+    return {
+      snapshots: rows.map((row) => ({
+        contractId: row.contractId,
+        templateHash: row.templateHash,
+        createdAt: row.createdAt.toISOString(),
+      })),
+      templates,
+    };
+  } catch (error: unknown) {
+    console.error('[contracts/backup] Failed to read template snapshots — 계약 행만 백업한다:', error);
+    return null;
+  }
 };
 
 const removeExpiredBackups = async (now: Date): Promise<number> => {
