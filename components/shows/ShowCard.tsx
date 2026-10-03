@@ -49,6 +49,7 @@ export default function ShowCard({ show, nowSec, past = false }: Props) {
       <div className="flex flex-1 flex-col gap-1 p-5">
         <p className="typo-eyebrow">{show.presenterName} 주최</p>
         <h2 className="typo-card-title text-gray-900 dark:text-white">{show.title}</h2>
+        {show.subtitle && <p className="typo-card-meta">{show.subtitle}</p>}
         {next && <p className="typo-card-body mt-1">{next.label}</p>}
         <p className="typo-card-body">{show.venueName}</p>
         {lowPrice !== null && (

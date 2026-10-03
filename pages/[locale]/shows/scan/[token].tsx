@@ -9,7 +9,6 @@ import { getDb } from '../../../../db/client';
 import { Button } from '../../../../components/ui/Button';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { withI18nServerProps } from '../../../../lib/getStatic';
-import { splitShowTitle } from '../../../../lib/shows/content';
 import { formatShowtimeLabel } from '../../../../lib/shows/format';
 import { resolveScanAccess } from '../../../../lib/shows/scanAccess';
 
@@ -39,7 +38,7 @@ export const getServerSideProps = withI18nServerProps<ScanPageProps>(async (cont
   return {
     props: {
       token,
-      showTitle: splitShowTitle(showtime.show.title).main,
+      showTitle: showtime.show.title,
       showtimeLabel: formatShowtimeLabel(showtime.startsAt),
       linkLabel: access.label,
     },

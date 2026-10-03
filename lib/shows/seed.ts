@@ -1,10 +1,13 @@
 import { randomBytes } from 'node:crypto';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import { and, eq, inArray, sql } from 'drizzle-orm';
 import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 
 import * as schema from '../../db/schema';
 import { showTicketTypes, showtimes, shows, showZones } from '../../db/schema';
 import { validateShowSlug } from './reservedSlugs';
+import { performerNames, serializeNotices, serializePerformers, type ShowPerformer } from './structured';
 import { salesCloseAt } from './time';
 
 /**
@@ -31,18 +34,27 @@ export type ShowSeedDb = LibSQLDatabase<typeof schema>;
 
 export interface ShowDefinition {
   slug: string;
-  /** `메인 제목 — 부제` (lib/shows/content.ts). */
   title: string;
+  subtitle?: string | null;
   presenterName: string;
-  /** 한 줄에 한 명, `이름 — 소개` (lib/shows/content.ts). */
-  performers: string;
+  /** 출연진 — 이름 필수, 소개·사진·SNS 선택. 사진은 /images/shows/ 아래 경로(존재를 검증한다). */
+  performers: ShowPerformer[];
   ageRating: string;
   runningMinutes: number;
   venueName: string;
   venueAddress: string;
-  /** 빈 줄로 문단을 가른다 (lib/shows/content.ts). */
+  /** 소개 본문. 빈 줄로 문단을 가른다. 시간·수익·가격 안내는 여기 넣지 말고 아래 전용 칸에. */
   description: string;
   coverImage: string | null;
+  /** 1200x630 공유 카드. 없으면 coverImage. */
+  ogImage?: string | null;
+  /** 일시 아래 한 줄. 예) "18:00 식사 · 18:30 공연 시작" */
+  scheduleNote?: string | null;
+  /** 현장 판매 안내 한 줄. 온라인 결제와 무관한 안내문구. */
+  onSitePriceNote?: string | null;
+  /** 소개 아래 짧은 안내 목록(수익 사용처 등). */
+  notices?: string[];
+  mapUrl?: string | null;
   zones: Array<{ code: string; label: string; capacity: number }>;
   /** 절대 시각 — KST는 `new Date('2026-10-24T18:30:00+09:00')`처럼 오프셋을 명시한다. */
   showtimes: Array<{ startsAt: Date }>;
@@ -60,12 +72,35 @@ export interface ShowSeedReport {
 
 export class ShowSeedError extends Error {}
 
+/** utils/imageMetadata.json — 빌드가 만드는 치수 사전. 여기 없는 이미지는 치수 검증을 건너뛴다. */
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const imageMetadata = require('../../utils/imageMetadata.json') as Record<string, { width: number; height: number }>;
+
+/** `/images/…` 경로가 public/ 아래 실제 파일인지. 포스터·사진을 빼먹은 채 시드하면 화면에 빈 칸이 뜬다. */
+const publicFileExists = (webPath: string): boolean => existsSync(join(process.cwd(), 'public', webPath));
+
 export function validateShowDefinition(def: ShowDefinition): string[] {
   const errors: string[] = [];
   const slugError = validateShowSlug(def.slug);
   if (slugError) errors.push(slugError);
-  for (const key of ['title', 'presenterName', 'performers', 'ageRating', 'venueName', 'venueAddress', 'description'] as const) {
+  for (const key of ['title', 'presenterName', 'ageRating', 'venueName', 'venueAddress', 'description'] as const) {
     if (!def[key].trim()) errors.push(`${key}가 비어 있습니다.`);
+  }
+  if (def.title.includes(' — ')) errors.push('title에 " — "로 부제를 끼우지 말고 subtitle 칸을 쓰세요.');
+  if (def.performers.length === 0) errors.push('출연진이 하나 이상 필요합니다.');
+  const performerNameSet = new Set<string>();
+  for (const perf of def.performers) {
+    if (!perf.name.trim()) errors.push('출연자 이름이 비어 있습니다.');
+    if (performerNameSet.has(perf.name)) errors.push(`출연자 "${perf.name}"이 중복입니다.`);
+    performerNameSet.add(perf.name);
+    if (perf.photo && !publicFileExists(perf.photo)) errors.push(`출연자 "${perf.name}": 사진 파일이 없습니다(${perf.photo}).`);
+  }
+  for (const [key, value] of [['coverImage', def.coverImage], ['ogImage', def.ogImage ?? null]] as const) {
+    if (value && !publicFileExists(value)) errors.push(`${key} 파일이 없습니다(${value}).`);
+  }
+  if (def.ogImage) {
+    const size = imageMetadata[def.ogImage];
+    if (size && !(size.width === 1200 && size.height === 630)) errors.push(`ogImage는 1200x630이어야 합니다(지금 ${size.width}x${size.height}).`);
   }
   if (!Number.isInteger(def.runningMinutes) || def.runningMinutes <= 0) errors.push('runningMinutes는 양의 정수여야 합니다.');
   if (def.zones.length === 0) errors.push('구역이 하나 이상 필요합니다.');
@@ -112,14 +147,21 @@ export async function seedShow(db: ShowSeedDb, def: ShowDefinition, opts: { appl
 
   const meta = {
     title: def.title,
+    subtitle: def.subtitle ?? null,
     presenterName: def.presenterName,
-    performers: def.performers,
+    performers: performerNames(def.performers),
+    performersJson: serializePerformers(def.performers),
     ageRating: def.ageRating,
     runningMinutes: def.runningMinutes,
     venueName: def.venueName,
     venueAddress: def.venueAddress,
     description: def.description,
     coverImage: def.coverImage,
+    ogImage: def.ogImage ?? null,
+    scheduleNote: def.scheduleNote ?? null,
+    onSitePriceNote: def.onSitePriceNote ?? null,
+    noticesJson: def.notices && def.notices.length > 0 ? serializeNotices(def.notices) : null,
+    mapUrl: def.mapUrl ?? null,
   };
 
   const existing = await db.query.shows.findFirst({ where: (s, { eq: e }) => e(s.slug, def.slug) });
