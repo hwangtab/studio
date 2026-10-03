@@ -6,6 +6,7 @@ import { CUSTOMER_REPLY_TO } from '../operatorContact';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { isPurgedValue } from '../privacy/orderRetention';
 import { formatPriceAmount } from '../../data/pricing';
+import { buildShowRefundEmailHtml, buildShowTicketEmailHtml, buildShowtimeCancelledEmailHtml } from './emailHtml';
 import { formatEntryNumber, formatShowtimeLabel } from './format';
 import { ticketQrPngBase64 } from './qr';
 import { refundRateForNotice } from './refundPolicy';
@@ -50,6 +51,9 @@ export interface ShowMailData {
   manageToken: string;
   buyerName: string;
   showTitle: string;
+  /** HTML 본문용 — 부제·포스터는 텍스트 본문엔 없어도 된다(제목에 부제가 이미 들어 있다). */
+  showSubtitle?: string | null;
+  coverImage?: string | null;
   venueName: string;
   venueAddress: string;
   startsAtSec: number;
@@ -58,10 +62,25 @@ export interface ShowMailData {
 }
 
 /** 티켓 메일 본문. QR 이미지는 첨부(ticket-<순번>.png)로 나가고, 본문에는 코드·입장번호를 적는다. */
-export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: string } => {
+export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabel(d.startsAtSec);
   return {
     subject: `[스튜디오 놀] 티켓이 발권되었습니다 — ${d.showTitle} ${when}`,
+    html: buildShowTicketEmailHtml({
+      buyerName: d.buyerName,
+      showTitle: d.showSubtitle ? d.showTitle.replace(` — ${d.showSubtitle}`, '') : d.showTitle,
+      showSubtitle: d.showSubtitle ?? null,
+      posterUrl: d.coverImage ? `${SITE_URL}${d.coverImage}` : null,
+      when,
+      venueName: d.venueName,
+      venueAddress: d.venueAddress,
+      totalAmount: d.totalAmount,
+      orderNo: d.orderNo,
+      manageUrl: manageUrl(d.orderNo, d.manageToken),
+      tickets: d.tickets,
+      refundLines: buildRefundPolicyLines(),
+      contact: CUSTOMER_REPLY_TO,
+    }),
     text: [
       `${d.buyerName}님, 결제가 확인되어 티켓이 발권되었습니다.`,
       '',
@@ -89,10 +108,11 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
 export const buildShowRefundEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec'>
     & { refundedAmount: number; fullyRefunded: boolean },
-): { subject: string; text: string } => {
+): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabel(d.startsAtSec);
   return {
     subject: `[스튜디오 놀] 환불이 완료되었습니다 — ${d.showTitle}`,
+    html: buildShowRefundEmailHtml({ ...d, when, manageUrl: manageUrl(d.orderNo, d.manageToken), contact: CUSTOMER_REPLY_TO }),
     text: [
       `${d.buyerName}님, 환불이 완료되었습니다.`,
       '',
@@ -111,10 +131,11 @@ export const buildShowRefundEmail = (
 export const buildShowtimeCancelledEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'totalAmount'>
     & { refundCompleted: boolean },
-): { subject: string; text: string } => {
+): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabel(d.startsAtSec);
   return {
     subject: `[스튜디오 놀] 공연 회차가 취소되었습니다 — ${d.showTitle} ${when}`,
+    html: buildShowtimeCancelledEmailHtml({ ...d, when, manageUrl: manageUrl(d.orderNo, d.manageToken), contact: CUSTOMER_REPLY_TO }),
     text: [
       `${d.buyerName}님, 예매하신 아래 회차가 취소되었습니다.`,
       '',
@@ -172,6 +193,8 @@ const loadShowOrder = async (orderNo: string): Promise<LoadedShowOrder | null> =
     manageToken: order.manageToken,
     buyerName: so.buyerName,
     showTitle: show.subtitle ? `${show.title} — ${show.subtitle}` : show.title,
+    showSubtitle: show.subtitle ?? null,
+    coverImage: show.coverImage ?? null,
     venueName: show.venueName,
     venueAddress: show.venueAddress,
     startsAtSec: so.showtime.startsAt,
@@ -242,9 +265,9 @@ export const sendShowTicketEmail = async (
     }
   }
 
-  const { subject, text } = buildShowTicketEmail(data);
+  const { subject, text, html } = buildShowTicketEmail(data);
   const r = await sendEmail({
-    to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text,
+    to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text, html,
     ...(attachments.length ? { attachments } : {}),
   });
   const failure = r.ok ? null : `customer:${r.errorCode ?? 'API_ERROR'}`;
@@ -259,8 +282,8 @@ export const sendShowRefundEmail = async (
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };
-  const { subject, text } = buildShowRefundEmail({ ...data, ...refund });
-  const r = await sendEmail({ to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text });
+  const { subject, text, html } = buildShowRefundEmail({ ...data, ...refund });
+  const r = await sendEmail({ to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text, html });
   if (!r.ok) console.error('[shows-email] 환불 안내 발송 실패', { orderNo, code: r.errorCode });
   return { sent: r.ok };
 };
@@ -272,8 +295,8 @@ export const sendShowtimeCancelledEmail = async (
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };
-  const { subject, text } = buildShowtimeCancelledEmail({ ...data, ...opts });
-  const r = await sendEmail({ to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text });
+  const { subject, text, html } = buildShowtimeCancelledEmail({ ...data, ...opts });
+  const r = await sendEmail({ to: data.recipient, replyTo: CUSTOMER_REPLY_TO, subject, text, html });
   if (!r.ok) console.error('[shows-email] 회차 취소 안내 발송 실패', { orderNo, code: r.errorCode });
   return { sent: r.ok };
 };
