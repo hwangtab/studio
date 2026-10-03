@@ -10,6 +10,7 @@ import { buildFingerprintInput, computeContractFingerprint } from '../../../../l
 import { validateSignatureData } from '../../../../lib/contracts/signature-validation';
 import { buildSignStatements } from '../../../../lib/contracts/sign-transaction';
 import { buildSignedContractContent } from '../../../../lib/contracts/service';
+import { loadTemplateSnapshot } from '../../../../lib/contracts/template-snapshot';
 import { checkAction, getEffectiveStatus } from '../../../../lib/contracts/status';
 import { validateSignerDetails } from '../../../../lib/contracts/validation';
 
@@ -173,10 +174,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      * 고객이 채운 정보로 계약 본문을 완성한다. 서명이 붙는 대상은 이 최종본이다.
      * 계약일도 여기서 확정된다 — 초안을 만든 날이 아니라 실제로 서명한 날이다.
      */
+    // 고객이 화면에서 읽은 본문을 만든 템플릿 사본으로 완성한다. 현재 파일로 만들면 발송 뒤 템플릿이
+    // 바뀐 경우 읽은 조항과 서명에 묶이는 조항이 달라진다. 사본이 없으면(옛 계약) 현재 파일.
     const signedContent = buildSignedContractContent(
       contract,
       signerDetails.data,
       now,
+      await loadTemplateSnapshot(contract.id),
     );
 
     // 서명 시점 문서의 지문. 나중에 다시 계산해 대조하면 사후 변조를 탐지할 수 있다.
