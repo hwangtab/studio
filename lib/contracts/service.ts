@@ -140,15 +140,21 @@ export const terminateContract = async (
   return contract ?? null;
 };
 
-/** 계약을 draft로 생성한다. 이메일은 발송하지 않는다(발송은 별도 액션). */
+/**
+ * 계약을 draft로 생성한다. 이메일은 발송하지 않는다(발송은 별도 액션).
+ *
+ * 생년월일·주소는 **서명자가 서명 화면에서 직접 채운다**(buildSignedContractContent). 운영자가 알 수 없는 값이고,
+ * 관리자 화면 폼도 받지 않는다. 그런데 생성 API는 선택 입력으로 받았고, 미리 채워 두면 서명 화면이 본인확인
+ * 전에 그 값이 든 본문을 내려보냈다(2026-10-03 코드리뷰). 그래서 API로 들어와도 저장·본문에 쓰지 않는다.
+ */
 export const createContract = async (data: CreateContractPayload): Promise<Contract> => {
   // 본문을 만든 템플릿을 한 번만 읽어 같은 판본을 본문과 사본에 쓴다(서명 때 이 사본으로 본문을 완성한다).
   const template = readContractTemplate();
   const content = buildContractContent({
     customerName: data.customerName,
-    customerBirthdate: data.customerBirthdate,
+    customerBirthdate: undefined,
     customerPhone: data.customerPhone,
-    customerAddress: data.customerAddress,
+    customerAddress: undefined,
     roomNumber: data.roomNumber,
     roomArea: data.roomArea,
     startDate: data.startDate,
@@ -183,10 +189,10 @@ export const createContract = async (data: CreateContractPayload): Promise<Contr
       id: contractId,
       title: data.title,
       customerName: data.customerName,
-      customerBirthdate: data.customerBirthdate,
+      customerBirthdate: undefined,
       customerEmail: data.customerEmail,
       customerPhone: data.customerPhone,
-      customerAddress: data.customerAddress,
+      customerAddress: undefined,
       roomNumber: data.roomNumber,
       roomArea: data.roomArea ?? '3m × 2m',
       startDate: new Date(data.startDate),
@@ -254,9 +260,9 @@ export const updateDraftContract = async (
   const template = readContractTemplate();
   const content = buildContractContent({
     customerName: data.customerName,
-    customerBirthdate: data.customerBirthdate,
+    customerBirthdate: undefined,
     customerPhone: data.customerPhone,
-    customerAddress: data.customerAddress,
+    customerAddress: undefined,
     roomNumber: data.roomNumber,
     roomArea: data.roomArea,
     startDate: data.startDate,
@@ -278,10 +284,10 @@ export const updateDraftContract = async (
       .set({
         title: data.title,
         customerName: data.customerName,
-        customerBirthdate: data.customerBirthdate,
+        customerBirthdate: null,
         customerEmail: data.customerEmail,
         customerPhone: data.customerPhone,
-        customerAddress: data.customerAddress,
+        customerAddress: null,
         roomNumber: data.roomNumber,
         roomArea: data.roomArea ?? '3m × 2m',
         startDate: new Date(data.startDate),

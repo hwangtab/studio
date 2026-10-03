@@ -16,6 +16,7 @@ import { AdminShell } from '../../../../components/admin/AdminShell';
 import { Button } from '../../../../components/ui/Button';
 import { getDb } from '../../../../db/client';
 import { authenticateAdminRequest } from '../../../../lib/contracts/admin-auth';
+import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import {
   serializeAttachment,
   serializeClause,
@@ -65,6 +66,12 @@ export const getServerSideProps: GetServerSideProps<AdminContractDetailPageProps
       console.error('[admin/contracts/[id]] Failed to load contract:', error);
       return null;
     });
+
+  // 열람 기록 — 개인정보를 여는 화면이다(처리방침 19항). 기록 실패가 화면을 막지 않게 받고, 실패는 로그에 남는다.
+  // 인증을 통과한 뒤의 시도만 남긴다(없는 계약을 열려 한 것도 기록).
+  await recordAdminPrivacyAccess(context.req, auth.actor, 'contract_view', id, contract ? 'success' : 'not_found').catch(
+    (error: unknown) => console.error('[privacy] 접속기록 호출 실패 — 화면은 계속됩니다', error),
+  );
 
   if (!contract) {
     return { notFound: true };

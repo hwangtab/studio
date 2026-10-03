@@ -1336,6 +1336,13 @@ export const privacyAccessActionEnum = [
    */
   'contract_pdf_download',
   /**
+   * 관리자 계약서 상세 열람 (pages/admin/contracts/[id]/index.tsx, pages/api/contracts/[id].ts GET).
+   * 계약 상대방의 이름·연락처·생년월일·주소·서명 이미지가 화면에 나온다. 파일로 빠져나가지는 않지만
+   * 개인정보를 여는 같은 동작이라 PDF와 함께 남긴다(2026-10-03 승인, 처리방침 19항에 반영). 대상은 계약 id.
+   * 목록 화면은 남기지 않는다 — 한 줄마다 기록하면 노이즈뿐이고, 상세를 열어야 전체 개인정보가 보인다.
+   */
+  'contract_view',
+  /**
    * 관리자 공연 명단 CSV 내려받기 (pages/api/admin/shows/[id]/roster.ts).
    * 구매자 이름·연락처가 회차 단위로 실린다. 대상은 회차 id. 컬럼은 enum 문자열이라
    * 마이그레이션이 필요 없다(DB CHECK 없음).

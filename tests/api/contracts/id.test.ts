@@ -37,11 +37,15 @@ jest.mock('../../../lib/contracts/validation', () => ({
   validateCreateContractPayload: jest.fn(),
 }));
 jest.mock('@vercel/functions', () => ({ waitUntil: jest.fn() }));
+jest.mock('../../../lib/privacy/accessLog', () => ({
+  recordAdminPrivacyAccess: jest.fn().mockResolvedValue(undefined),
+}));
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { waitUntil } from '@vercel/functions';
 
 import { getDb } from '../../../db/client';
+import { recordAdminPrivacyAccess } from '../../../lib/privacy/accessLog';
 import { authenticateAdminApi } from '../../../lib/contracts/admin-auth';
 import { describeRoomConflict } from '../../../lib/contracts/conflict';
 import handler from '../../../pages/api/contracts/[id]';
@@ -107,7 +111,8 @@ const run = async (
 
 beforeEach(() => {
   jest.clearAllMocks();
-  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true });
+  (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha' });
+  (recordAdminPrivacyAccess as jest.Mock).mockClear();
 });
 
 describe('인증', () => {
@@ -184,6 +189,35 @@ describe('GET — 단건 조회', () => {
       clauses: [{ id: 'cl1' }],
       attachments: [{ id: 'a1' }],
     });
+  });
+});
+
+describe('GET — 접속기록 (개인정보를 여는 조회)', () => {
+  it('조회하면 수행자·계약 id와 함께 contract_view를 남긴다', async () => {
+    mockFound(contract());
+    await run();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'contract_view', 'c1', 'success');
+  });
+
+  it('없는 계약을 열려 한 시도도 not_found로 남긴다', async () => {
+    mockFound(null);
+    await run();
+    expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'contract_view', 'c1', 'not_found');
+  });
+
+  it('기록이 실패해도 조회는 막히지 않는다', async () => {
+    mockFound(contract());
+    (recordAdminPrivacyAccess as jest.Mock).mockRejectedValueOnce(new Error('db down'));
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const res = await run();
+    spy.mockRestore();
+    expect(res.status).toHaveBeenCalledWith(200);
+  });
+
+  it('GET이 아닌 요청(PATCH)은 열람 기록을 남기지 않는다', async () => {
+    mockFound(contract());
+    await run({ method: 'PATCH', body: [] });
+    expect(recordAdminPrivacyAccess).not.toHaveBeenCalled();
   });
 });
 

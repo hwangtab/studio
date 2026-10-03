@@ -60,6 +60,7 @@ const ACTION_LABEL: Record<string, string> = {
   artist_supporter_export: '아티스트 후원자 CSV',
   funding_creator_shipping_export: '개설자 배송 목록 CSV',
   contract_pdf_download: '계약서 PDF',
+  contract_view: '계약서 상세 열람',
   show_roster_export: '공연 명단 CSV',
 };
 
