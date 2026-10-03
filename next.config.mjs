@@ -220,12 +220,11 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
         ],
       },
-      {
-        source: '/_next/static/:path*',
-        headers: [
-          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
-        ],
-      },
+      // `/_next/static/*`에는 Cache-Control을 직접 주지 않는다. 실제 파일은 Vercel이 해시 파일에
+      // `public, max-age=31536000, immutable`을 붙이는데, 이 규칙을 두면 **없는 해시의 404 응답에도**
+      // 같은 헤더가 붙어(2026-10-03 실측: /_next/static/css/deadbeef….css → 404 + immutable) 브라우저가
+      // 그 404를 1년간 보관한다. 배포 전환 중 한 번 404를 받은 사파리는 같은 CSS 주소를 다시 묻지
+      // 않아 스타일 없는 페이지가 남는다.
       {
         source: '/fonts/:path*',
         headers: [
