@@ -2,39 +2,9 @@
 
 This file provides guidance for development in the **Studio NOL** repository.
 
-## Project Overview
-
-Studio NOL is a multi-language music studio website built with:
-- **Framework**: Next.js 15.5.27 (Pages Router)
-- **Runtime**: React 19.2.4
-- **Styling**: Tailwind CSS with custom design system
-- **Animation**: Framer Motion
-- **i18n**: react-i18next (7 languages: ko, en, zh, es, vi, th, uz)
-- **Content**: Markdown-based story system
-- **Deployment**: Vercel
-
-## Key Technologies
-
-- **Frontend**: Next.js 15.5.27, React 19.2.4, Tailwind CSS, Framer Motion, Lucide React
-- **i18n**: i18next with language detection and locale-based routing
-- **Form**: Serverless contact form via Next.js API Routes and Resend
-- **Imaging**: Sharp-based image optimization (WebP/AVIF)
-- **Audio**: Custom AudioPlayer with `useAudioPlayer` hook
-
 ## Development Commands
 
 ```bash
-# Development
-npm run dev                  # Start Next.js development server
-
-# Build & Verification
-npm run type-check           # Run TypeScript compiler check
-npm run lint                 # Run ESLint
-npm run build                # Production build (includes image optimization)
-
-# Image Optimization
-node scripts/optimizeImages.js # Manually run image optimization
-
 # SEO 분석 (자세한 규칙은 "SEO·GA4·GSC 분석 규칙" 절)
 node scripts/seo-preflight.mjs                              # 데이터 열기 전 필수 — 최근 커밋·열린 실험·관측창
 node --env-file=.env.local scripts/gsc-fetch-detail.mjs     # GSC 90일 원시 데이터
@@ -96,139 +66,18 @@ npm run indexnow:changed -- --dry-run
 따라간다. 바꿀 때 `PRACTICE_ROOM_AVAILABILITY_UPDATED_ON`도 함께 갱신할 것 — 오래되면
 `practiceRoomAvailability.test.ts`가 CI에서 실패한다.
 
-### 오픈 뒤 펀딩 프로젝트의 리워드 id·slug·금액은 바꾸지 않는다
+### 펀딩·개설자 규칙은 `lib/funding/CLAUDE.md`에 있다
 
-프로젝트·리워드의 정본은 `content/funding/<slug>.md`인데, 후원 기록은 DB에 문자열
-`project_slug`·`reward_id`로 남는다. 파일만 고치면 에러 없이 조용히 깨진다.
+`lib/funding/`·`content/funding/`·`pages/**/funding/`·`components/funding/`를 만지기 전에 그 파일을 읽을 것 (하위 CLAUDE.md는 해당 디렉터리 파일을 열 때만 자동 로드된다). 어겨도 에러가 안 나는 금지 세 가지는 여기에도 둔다:
 
-- **리워드 id 변경 → 한정 재고가 0으로 리셋된다.** `lib/funding/service.ts`의 재고 조건은
-  `fp.reward_id = <파일의 id>`로 기존 후원을 세므로, id가 바뀐 순간 그 후원들이 안 세어져
-  100개짜리 리워드가 200개 팔린다.
-- **slug 변경 → 진행 중 모금액이 공개적으로 0원이 되고**, 기존 후원자는 manage 페이지에서
-  프로젝트를 못 찾아 셀프 취소·후원 확인을 잃는다.
-- **금액 변경 →** 후원 기록이 결제 당시 단가를 스스로 저장하므로 기록은 남지만, DB의 단가와
-  상세 페이지·관리자 화면·CSV의 표시가 어긋나 환불 금액과 모금액 설명이 맞지 않게 된다.
-  가격을 바꿔야 하면 기존 리워드는 두고 **새 id로 티어를 추가**한다.
+- 오픈 뒤 펀딩 리워드 id·slug·금액은 바꾸지 않는다 — 후원 기록이 문자열로 참조한다. 가격 변경은 새 id로 티어를 추가.
+- 새 `content/funding/<slug>.md`의 slug는 승인된 DB 프로젝트의 slug와 겹치면 안 된다 — 다른 개설자의 후원자 배송지가 노출된다.
+- 마이그레이션 0037·0039·0041~0044는 배포보다 먼저 적용한다 — 결제 확인 경로가 새 표·컬럼을 함께 읽어 순서를 뒤집으면 결제 확인 전체가 깨진다.
 
-`content/funding.baseline.json` + `content/funding.baseline.test.ts`가 이 규칙을 지킨다
-(slug × 리워드 id × **단가** × 한정 여부). 2026-09-11까지 기준선이 `{ limited }`만 실어서
-`amount: 30000 → 35000`이 CI를 그냥 통과했다 — 이 절의 제목이 "금액은 바꾸지 않는다"인데
-게이트가 금액을 안 보고 있었다. 의도한 변경이면 `npm run check:funding-baseline -- --update`
-후 **같은 커밋에 왜 바뀌는지를 적을 것** — 이유 없는 갱신은 게이트를 무력화한다.
+### 마이그레이션 0022(`fulfillment_updated_by`)는 배포보다 먼저 적용한다
 
-### 펀딩 프로젝트의 정본은 둘이다 — 파일이 먼저, 그다음 DB
-
-`content/funding/<slug>.md`와 `funding_projects` 테이블이 공존한다. 읽는 입구는
-`lib/funding/repository.ts` 하나뿐이고 **같은 slug가 양쪽에 있으면 파일이 이긴다.**
-새 코드에서 `lib/funding/projects.ts`의 동기 함수(`getFundingProject` 등)를 직접 부르지 말 것 —
-그 함수들은 파일만 보므로 DB 프로젝트가 조용히 404가 된다.
-
-검증은 `lib/funding/shape.ts`의 `validateFundingProjectShape` 하나다. md 파서와 DB 변환이
-같은 함수를 지난다 — 한쪽에만 검증을 두면 다른 쪽은 `status: Draft` 오타로 초안을 공개한다.
-
-DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌드는 `TURSO_*` 없이 성공해야 한다**
-(CI·로컬). 공개 페이지는 ISR(60초)이고 상세는 `fallback: 'blocking'`이라 DB 프로젝트가 첫
-요청에 생성된다. 사이트맵은 `next-sitemap`이 파일만 싣고, DB 프로젝트는 런타임 라우트
-`/sitemap-funding.xml`이 맡는다.
-
-### 개설자가 쓴 것은 우리가 쓴 것과 다르게 다룬다
-
-펀딩 프로젝트를 아티스트가 직접 등록한다. 그래서 세 가지가 코드로 강제된다.
-
-- **본문의 신뢰 숏코드를 저장 시점에 벗긴다**(`lib/funding/creatorContent.ts`).
-  `%%price:...%%`·`%%studio-services%%`는 스튜디오가 자기 글에 쓰라고 만든 장치라, 개설자
-  글에 뜨면 읽는 쪽이 그 프로젝트에 대한 우리 보증으로 읽는다. 렌더 시점이 아니라 저장
-  시점에 벗기는 이유는 렌더 경로가 여럿이라(상세·미리보기·OG·llms) 한 곳을 빠뜨리면 그
-  경로로만 새어 나가기 때문이다.
-- **승인된 리워드는 id·금액·한정 여부를 바꿀 수 없다**(`lib/funding/creatorProjectWrite.ts`의
-  `lockedViolation`). md 시절 `content/funding.baseline.json`이 하던 일이고, 운영자에게도
-  예외가 없다. 가격을 바꿔야 하면 새 id로 티어를 추가한다.
-- **slug는 예약어를 피한다**(`lib/funding/reservedSlugs.ts`). 리터럴 라우트가 `[slug]`를
-  이기므로 프로젝트를 `apply`로 지으면 그 상세는 어떤 주소로도 안 열린다. 오류도 안 난다.
-  `pages/[locale]/funding/` 아래 리터럴 라우트를 추가하면 그 목록에도 넣어야 한다.
-
-업로드 이미지는 sharp로 다시 인코딩해 **private** Blob에 올리고 `/api/funding/media/`가
-대신 내보낸다 — 그 저장소에는 계약서 PDF가 있어 공개 업로드를 섞을 수 없다(소셜 이미지가
-이미 같은 길을 간다). 치수는 주소 쿼리(`?w=&h=`)로 실어 보낸다. `utils/imageMetadata.json`은
-저장소의 정적 이미지만 알기 때문이다.
-
-`lib/funding/projects.ts`는 `node:fs`·`gray-matter`를 물고 있고 **모듈 최상위에서
-`process.cwd()`를 실행**한다. 그래서 클라이언트 컴포넌트는 이 모듈에서 **타입만** 가져와야
-한다 — 런타임 값을 하나라도 가져가면 순수하지 않은 최상위 호출이 트리셰이킹을 버티고
-클라이언트 번들에 끌려 들어가 빌드가 깨진다(2026-09-17에 실제로 났다). 클라이언트와
-공유해야 하는 순수 함수는 `lib/funding/shape.ts`에 둔다. **`components/` 아래를 건드린
-변경은 `npm run build`까지 돌려야 이 파손이 드러난다** — 타입 검사·테스트는 통과한다.
-
-**`npx jest`도 디렉터리를 좁히지 말 것.** 포커스 링 대비·다크 짝·`transition-all` 금지 같은
-디자인 시스템 가드는 `tailwind.config.test.ts`에 있어서, `jest components/…`로 좁히면
-통째로 건너뛴다. 실제로 그렇게 CI를 두 번 빨갛게 했다.
-
-### 승인은 세 가지를 한 묶음으로 한다
-
-`lib/funding/reviewDecision.ts`의 승인은 slug 확정 · 리워드 `lockedAt` · `status` 열기를
-함께 한다. **하나라도 빠지면 조용히 잘못된다** — `lockedAt`이 없으면 승인된 리워드의 금액을
-바꿀 수 있고(잠금 가드가 전부 그 값에 달려 있다), `status`가 안 열리면 승인했는데 공개가
-안 되고, slug가 확정 안 되면 주소가 개설자 입력 그대로 남는다.
-
-리워드 잠금 UPDATE의 `WHERE`에는 프로젝트가 이미 승인으로 바뀌었다는 조건(`EXISTS`)을
-함께 건다. 경합으로 프로젝트가 안 바뀌었는데 리워드만 잠기면 "잠겼는데 공개는 안 된"
-상태가 남는다. 그 `EXISTS`에는 **`p.updated_at = <이 배치의 epoch>`까지** 넣는다 — "승인
-상태인가"만 보면 다른 운영자가 먼저 승인해 둔 경우에도 참이라, 경합을 `conflict`로
-돌려주면서 실제로는 리워드를 잠그고 커밋한다.
-
-승인은 `creator_terms_version`이 비어 있으면 거부한다(`terms_not_agreed`). 동의 기록 없이
-공개되면 "그때 이 내용에 동의했다"는 증거가 사라진다. 막다른 길은 아니다 — 보완 요청으로
-돌려보내면 재제출이 지금의 게이트를 거친다.
-
-판정 뒤에는 `revalidateFundingPaths`로 **목록과 상세 둘 다** 다시 만든다. 상세만 하면
-목록 카드가 60초 낡고, 목록만 하면 상세가 404로 남는다(상세의 `notFound`도 캐시된다).
-재검증·메일 실패는 판정을 실패시키지 않되 응답의 `warnings`로 화면에 드러낸다 — 조용히
-성공으로 보이면 운영자가 개설자에게 연락이 갔다고 착각한다.
-
-**`reviewNote`는 내부 메모가 아니다.** 개설자 화면 두 곳에 그대로 렌더된다. 보완 요청 사유,
-반려 사유, 보관 사유가 전부 이 한 칸을 쓰고 서로 덮어쓴다.
-
-**보관(`archive`)과 반려는 DB에서 같은 `rejected`다.** 새 상태 값을 만들지 않기로 했으므로
-(마이그레이션 없이 넣은 기능이다) 둘을 가르는 것은 `reviewNote`뿐이다. 나중에 "반려율"
-같은 통계를 내려는 사람은 이 사실을 먼저 알아야 한다.
-
-### 승인 뒤에 열리는 것과 잠기는 것
-
-`lib/funding/reviewTransition.ts`의 `EDITABLE_SECTIONS`가 상태별로 개설자가 고칠 수 있는
-구획(`basic`·`story`·`rewards`)을 정한다. 승인 뒤에는 **본문(story)과 기본정보(basic)만**
-열리고, 기본정보 안에서도 `basicLockedViolation`(`lib/funding/creatorProjectWrite.ts`)이
-주소(slug)·목표 금액·모금 기간을 잠근다. 리워드는 승인 뒤 구획 자체가 닫혀 **설명글까지**
-통째로 잠긴다 — 후원자가 보고 결제한 약속이라, 바뀌면 후원자 약관 제8조의 "표시·광고와
-다르게 이행"에 걸리고 판매자인 스튜디오가 3개월짜리 청약철회를 받는다.
-
-이 표는 **두 군데에 있다.** `components/funding/creator/types.ts`의 `EDITABLE_SECTIONS`가
-같은 표를 리터럴로 복제한다 — `reviewTransition.ts`는 `db/schema`를 값으로 import해
-클라이언트 번들에 DB 스키마를 끌어들이기 때문이다. `components/funding/creator/types.test.ts`가
-상태 × 구획 전수 조합을 대조하므로 한쪽만 고치면 CI가 선다.
-
-승인 뒤 편집은 **심사를 거치지 않는다.** 그래서 `saveBasicSection`·`saveStorySection`이
-저장 시점의 상태가 `approved`일 때만 `creator_edited_at`을 찍고, 운영자에게 메일을 보낸다
-(`sendCreatorEditedNotice`, 관리자 화면은 `pages/admin/funding/projects/[id].tsx`에서
-"승인 뒤 개설자가 수정했습니다"로 표시). `updated_at`으로는 알 수 없다 — 관리자 쓰기
-(`set_internal_note` 등)도 그 값을 갱신하므로 운영자가 메모만 달아도 "개설자가 고쳤다"로
-보인다.
-
-**개설자 저장 라우트(`pages/api/funding/creator/projects/[id].ts`)는 검증을 우회하는
-장치를 하나 갖고 있다.** 화면(`BasicSectionForm`)은 승인 뒤 잠긴 시작일·종료일 필드도
-매번 폼 값에 실어 함께 보내는데, `validateBasicSection`은 상태와 무관하게
-`startAt >= now + leadDays`를 요구한다. 그래서 모금이 이미 시작된(startAt이 과거인) 승인
-프로젝트를 그대로 검증하면 **항상** 400이 난다 — `basicLockedViolation`에 닿기도 전에
-막힌다. 이 라우트는 승인된 프로젝트에 한해 요청의 날짜를 검증 전에 DB의 기존 값으로
-강제 치환하고, 리드타임 검사의 기준 시각도 `now` 대신 epoch(`new Date(0)`)로 넘겨 이
-검사를 우회한다 — 치환한 값이 곧 기존 값이라 이후 `basicLockedViolation`은 항상 무위반이
-된다. 이 우회가 없으면 모금이 시작된 프로젝트는 제목 한 글자도 저장할 수 없다. 2026-09-21
-리뷰에서 재현된 회귀이고, `validateBasicSection`을 고칠 때 이 호출부의 전제(승인 프로젝트는
-검증기에 실제 `now`가 아니라 epoch가 들어온다)를 모르면 되살아난다.
-
-### 마이그레이션 0020(`fulfillment_updated_by`)은 배포보다 먼저 적용한다
-
-`db/schema.ts`의 `fundingPledges.fulfillmentUpdatedBy`(`drizzle/migrations/0020_serious_luckman.sql`,
-`ALTER TABLE funding_pledges ADD fulfillment_updated_by text`)가 이 브랜치에서 새로 생겼다.
+`db/schema.ts`의 `fundingPledges.fulfillmentUpdatedBy`(`drizzle/migrations/0022_ancient_proemial_gods.sql`,
+`ALTER TABLE funding_pledges ADD fulfillment_updated_by text`)이 추가한 컬럼이다.
 **적용 순서를 뒤집으면(배포 먼저, 마이그레이션 나중) 깨지는 범위는 개설자 배송 화면이
 아니라 후원 결제 전체다** — drizzle의 관계 조회(`with: { fundingPledge: true }`)는 해당
 테이블의 전체 컬럼을 SELECT에 실으므로, 컬럼이 없는 DB에서는 그 조회 자체가
@@ -252,10 +101,10 @@ DB 조회는 전부 실패를 삼키고 파일 기준으로 응답한다. **빌�
 마이그레이션을 CI/CD에서 자동 실행하지 않는다(`npm run db:migrate`는 운영자가 수동 실행) —
 그래서 순서를 지키는 것은 배포하는 사람의 책임이고, 그 사람이 보는 문서는 여기다.
 
-### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)도 배포보다 먼저 적용한다
+### 마이그레이션 0035(`public_name`)·0036(`listing_hidden_at`)·0039(`listing_hidden_name`)도 배포보다 먼저 적용한다
 
 `funding_pledges.public_name`(후원자 명단 표시 이름 — 가린 이름·닉네임, `lib/funding/publicName.ts`)이
-`drizzle/migrations/0035_funding_public_name.sql`로 추가됐다. 위 0020 절과 **같은 이유로** 순서를
+`drizzle/migrations/0035_funding_public_name.sql`로 추가됐다. 위 0022 절과 **같은 이유로** 순서를
 뒤집으면 후원 결제 확인 전체가 `no such column: public_name`으로 깨진다 — 관계 조회가 전체 컬럼을
 SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이그레이션 → 배포.
 
@@ -267,99 +116,8 @@ SELECT한다. 확인은 `PRAGMA table_info(funding_pledges);`, 순서는 마이�
 공개 동의(`display_name_public`)와 별개로 둔다 — 동의를 끄는 것으로 대신하면 후원자가 펀딩
 확인 페이지에서 다시 켜 내린 닉네임이 되살아난다. 0036도 같은 이유로 배포보다 먼저다.
 
-### 펀딩 설계 대행·발매 연계 표시는 별도 테이블이다 (마이그레이션 0037)
-
-스튜디오가 설계를 맡은 프로젝트(`design`, 설계비 50만원)와 발매 프로젝트에 이어진 프로젝트
-(`release`)는 `funding_project_services`(`lib/funding/projectServices.ts`)에 적는다. 운영자
-전용이다 — 관리자 심사 상세의 "스튜디오 서비스" 칸과 목록의 "서비스" 열에서만 보이고, 개설자
-조회에는 어떤 경로로도 실리지 않는다. `internal_note`에 "설계 대행"이라고 적는 방식은 쓰지 않는다
-(자유 텍스트라 목록에서 걸러 볼 수 없고 입금 여부를 담을 칸이 없다).
-
-- **`funding_projects`에 컬럼을 더하지 않고 테이블을 따로 둔 이유는 배포 순서다.** 0020·0023
-  절처럼 컬럼을 더하면 컬럼 지정 없는 `select()`가 전부 새 컬럼을 요구해, 마이그레이션 전에
-  배포하면 공개 상세·결제까지 깨진다. 별도 테이블이면 미적용 DB에서도 이 칸만 "미적용(0037)"으로
-  꺼진다. 그래도 **적용은 해야 한다** — 방법은 아래 "운영 DB 마이그레이션 적용 방법" 절(Turso CLI).
-  운영 DB에는 2026-09-26에 적용을 확인했다.
-- **읽기 실패는 두 갈래다.** 테이블 부재(`missing_table`)는 마이그레이션 안내, 그 밖의 DB 장애
-  (`error`)는 "불러오지 못함"으로 띄우고 서버 로그에 남긴다. 둘을 합치면 진짜 장애가
-  "마이그레이션을 돌리세요"로 가려진다. 어느 쪽이든 심사·정산 화면은 열린다.
-- **설계비는 약정 시점의 값을 행에 복사한다**(`design_fee`). 처음 지정할 때만 그때의
-  `FUNDING_DESIGN_PRICE`를 넣고, 종류를 `design → release`로 바꿔도 약정가·입금 시각은 그대로다.
-  정가를 나중에 바꿔도 이미 약정한 프로젝트의 청구액이 따라 움직이지 않는다.
-- **설계비는 성공 수수료가 아니다.** 요율이 아니라 약정 금액이고, 정산 때 모금액에서 뺄 뿐이다(아래).
-  직접 개설(`none`)로 되돌려도 행은 지우지 않고 옛 약정을 보존한다 — 그 행은 정산에서 빼지 않는다.
-- **받는 시점은 정산 때 모금액에서다**(2026-09-28 운영자 결정). 발매 프로젝트와 묶으면 설계비·제작·홍보·유통을
-  **한 견적**으로 내고, 설계비와 제작비를 모두 모금액 정산 때 받는다(목표 미달이어도 모인 금액으로 집행 —
-  Keep-it-All). 단계별 추가 할인은 없다. 이 약속은 `data/releasePipeline.ts`·`data/crowdfundingDesign.ts`·
-  `lib/quote/estimate.ts` 카피에 있다. 개설자 약관 제6조(판본 `funding-creator-terms-2026-09-29`)와
-  `payout.ts`가 이 공제를 한다: **원천징수까지 뺀 금액에서** 설계비 → 제작비 순으로 뺀다(수수료·원천징수 기준에는
-  넣지 않는다 — 개설자가 스튜디오에 치르는 비용이다). 넘는 부분은 실지급 0원 + `shortfall_amount`(차액 청구나 규모
-  조정을 협의할 금액)로 기록한다. 약정 제작비는 관리자 심사 화면의 "약정 제작비"(`production_fee`, 공급가)로 적고,
-  설계비를 정산 밖에서 받았으면 "따로 입금 확인"을 눌러 두면 빼지 않는다. 서비스 기록을 못 읽으면 정산 기록은
-  `services_unavailable`로 거부된다 — 합의한 공제를 모른 채 전액을 불변으로 기록하지 않는다.
-  **마이그레이션 0041(`production_fee`·정산 공제 칸)은 배포보다 먼저다** — `funding_project_payouts`를 전체 컬럼으로
-  읽는 조회(관리자 정산·대시보드·크론 점검)가 새 칸을 요구한다.
-
-### 원천징수 개설자의 정산은 부가세 상당액을 뺀다 (2026-09-29)
-
-판매자가 스튜디오라 후원금 전체의 부가가치세(10/110)를 스튜디오가 낸다. 사업자 개설자는 받은 정산금에
-세금계산서를 발행하므로 그만큼 매입세액으로 공제되지만, 원천징수 개설자에게서는 세금계산서가 없다. 그래서
-`computeFundingPayout`은 원천징수 개설자에 한해 수수료를 뗀 금액에서 부가세 상당액(`vatDeductionAmount`)을 빼고
-그 나머지에 3.3%를 원천징수한다. 이 식이 없던 동안은 100만원 모금마다 스튜디오에 남는 금액(부가세 정산 뒤,
-PG 비용 전)이 사업자 개설자 80,000원 대 원천징수 개설자 −2,909원이었다. 불변식은
-`shareAmount + vatDeductionAmount + feeAmount === netGross`이고, `funding_project_payouts`에는 컬럼 없이
-`recordedVatDeduction`으로 되살린다. **정산 식을 새로 만드는 도메인(공연 예매 등)도 같은 축을 써야 한다** —
-아티스트 구독 정산(`lib/artistSupport/payout.ts`)은 처음부터 공급가 기준이었다.
-
-### 한 주문에 여러 리워드 — 줄은 `pledgeLines`로만 읽는다 (마이그레이션 0042)
-
-후원 폼과 리워드 모달에서 여러 리워드를 **담는다**(2026-09-28, 세트 리워드는 경우의 수가 많아
-두지 않기로 운영자 결정). 리워드가는 배송비 포함 최종가라 담은 만큼 더할 뿐, 배송비 줄은 없다.
-
-- **`funding_pledges`는 여전히 주문당 1행**이고, 리워드 줄은 `funding_pledge_items`에 있다.
-  후원 행을 줄마다 만들지 않은 이유: 모금액·건수·정산·명단이 전부 `orders JOIN funding_pledges`를
-  합산하므로 행이 늘면 조용히 곱해진다. 배송지·발송 상태·내려받기 기록·메시지는 주문 단위다.
-- **줄이 없는 후원은 옛 단일 리워드 칸이 곧 한 줄이다.** 옛 후원을 옮겨 담지 않았고 관리자 수기
-  등록도 옛 칸만 쓴다. 그래서 줄은 TS에서 `pledgeLines(pledge)`(lib/funding/pledgeLines.ts),
-  SQL에서 `fundingPledgeLinesSql()`(lib/funding/pledgeLinesSql.ts)로만 읽는다. 새 후원은 옛 칸에도
-  첫 줄을 복사해 두므로(NOT NULL), `fp.reward_id`·`pledge.rewardId`를 직접 읽으면 에러 없이
-  **첫 리워드만** 보인다.
-- 재고는 담은 한정 리워드마다 조건을 AND로 묶어 **주문 전체가 들어가거나 전혀 안 들어간다**.
-  줄 INSERT들은 새 주문 자신을 재고 집계에서 빼고(`excludeOrderNo`) 같은 조건을 본다.
-- 셀프 취소는 주문 전체만 된다. **줄 단위 부분 환불은 관리자 후원 상세의 "리워드별 일부
-  환불"**(lib/funding/lineRefund.ts, 마이그레이션 0044 `refunded_quantity`). 돌려준 수량은
-  `pledgeLinesSql`의 `quantity`(살아 있는 수량)에서 빠져 재고로 돌아가고, `activePledgeLines`를
-  쓰는 내려받기·배송 목록·"전부 디지털인가" 판정에서도 빠진다. 기록은 웹훅 동기화와 같은
-  델타 INSERT라 웹훅이 먼저 와도 이중 기록이 없다. 토스가 **응답을 안 준** 실패는 선점을
-  되돌리지 않는다(취소가 됐을 수 있다). 계좌(수기) 후원은 토스 결제가 없어 다루지 않는다.
-  토스 콘솔에서 직접 부분 취소하면 금액은 웹훅이 맞추지만 **어느 리워드인지는 남지 않는다** —
-  줄 환불은 반드시 관리자 화면에서 할 것.
-- 관리자 수기 등록도 `items`로 여러 리워드를 받는다(온라인과 같은 재고 조건).
-- **0042·0044는 배포보다 먼저 적용한다.** 결제 확인 경로(`findFundingOrderByOrderNo`)가 관계 조회로
-  `items`를 함께 읽으므로, 표가 없으면 0020 절과 같은 이유로 결제 확인 전체가 깨진다.
-
-### 결제 화면은 담은 것만 먼저, 결제창 열기는 기록한다 (마이그레이션 0043)
-
-2026-09-29 회의 결정. 후원 폼 맨 위에는 **담은 리워드만** 보이고 나머지는 "다른 리워드 함께
-담기"로 접는다 — 카드·모달에서 고르고 온 사람에게 전체 목록을 다시 펼치면 같은 결정을 두 번
-하게 되고 결제위젯이 밀린다(결제 완료 12건이 전부 리워드 1개였다). 담지 않은 리워드 중
-frontmatter에 **`addOn: true`로 표시한 추가 상품만** "…함께 받기" 한 줄 제안으로 보인다.
-티어(서로 대체)와 추가 상품(보완)은 코드가 가릴 수 없다 — "배송이면 제안"으로 추론했다가
-사바하의 CD 티어에서 CD를 고른 사람에게 상위 티어를 권했다. 새 프로젝트에 시집·굿즈 같은
-곁들이 상품이 있으면 그 리워드에 `addOn: true`를 적을 것. DB(개설자) 프로젝트는 늘 false다.
-
-**펀딩 화면의 버튼 규칙(2026-09-29 통일).** 말은 셋만 쓴다 — "담기"(결제 화면 안에서 리워드를
-더함), "펀딩하기"(결제 화면으로 가는 모든 버튼: 카드·모달 상세·히어로·모바일 하단 바), "결제하기"
-(결제창을 여는 마지막 버튼). 모바일 주 버튼은 늘 **바닥 고정 바**에 "금액 · 동작"으로 둔다 —
-모달 상세("13,000원 · 펀딩하기"), 결제 화면("36,000원 · 결제하기", 모달·/pledge 공통, 약관 고지를
-같은 바에). **모든 "펀딩하기"는 같은 결제 화면에 닿는다** — 히어로·하단 바는 스크롤하지 않고
-리워드 없이 결제 모달을 연다(빈 채로 목록을 펼침). 주 버튼은 공용 `Button`(카드 안은
-`buttonVariants`)을 쓴다 — 손으로 적은 클래스는 포커스 표시가 빠졌다.
-
-`payment_window_opens`(0043)는 결제창을 열기 직전에 비콘(`/api/payments/opened`)으로 남긴다.
-만료 주문이 "폼에서 떠났나, 결제창까지 갔다가 떠났나"를 가르는 근거이고, 관리자 후원 상세의
-"결제창 열기" 줄에 보인다. 원문 User-Agent는 저장하지 않고 인앱 여부만 분류한다. 기록은
-best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이려면 적용해야 한다.
+0039의 `listing_hidden_name`은 운영자가 명단에서 내릴 당시 실제로 떠 있던 이름의 스냅샷이다(`drizzle/migrations/0039_funding_listing_hidden_name.sql`).
+그 뒤 후원자가 표시 이름을 바꿔도 "사칭·욕설 닉네임이라 내렸다"는 기록이 원래부터 그 이름이었던 것으로 읽히지 않게 한다. 같은 이유로 배포보다 먼저다.
 
 ### 믹싱 전·후 비교 음원 (`components/audio/MixComparePlayer.tsx`)
 
@@ -431,114 +189,6 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 - 적용은 "운영 DB 마이그레이션 적용 방법" 절대로. 표가 없으면 크론이 500으로 실패한다
   (조용히 0건으로 끝나지 않게 일부러 던진다).
 
-### 개설자 배송지 열람은 마감 뒤에만 열린다
-
-`lib/funding/creatorShipping.ts`의 `loadCreatorShipping`은 프로젝트 상태가 `closed`가
-아니면(`upcoming`·`live`) 개인정보를 한 줄도 내보내지 않고 집계(`summary`)만 돌려준다.
-모금 중에는 셀프 취소가 자유로워 주소가 후원마다 들어왔다 나갔다 하고, 물량 준비 단계의
-개설자에게는 집계면 충분하다 — 취소될 수도 있는 주소를 미리 보여줄 이유가 없다.
-
-발송 상태 전환은 `lib/funding/fulfillment.ts`의 `setFulfillment` **한 곳**이고, 관리자
-쓰기 라우트와 개설자 쓰기 라우트(`/api/funding/creator/projects/[id]/fulfillment`)가
-`actor.kind`(`'admin'` | `'creator'`)로만 갈라져 같은 함수를 지난다. 이 함수 안에 이유가
-적힌 규칙이 넷 있다 — 살아 있는 주문 집합(`LIVE_FUNDING_ORDER_STATUSES`, 부분환불도
-포함), 환불 요청된 후원은 발송 상태를 바꿀 수 없게 막는 것, `delivered_at`을 COALESCE로
-첫 전달 시각만 보존하고 되돌릴 때는 NULL로 비우는 기산점 규칙, 그리고 경합을 막는
-UPDATE의 WHERE(사전 검사와 별개로 존재하는 마지막 층). 이 넷을 관리자 경로와 개설자
-경로에 따로 구현하면 두 벌이 갈라져 한쪽만 고쳐지는 사고가 난다 — 그래서 이 함수를
-공유하는 것 자체가 설계다.
-
-**마크다운 프로젝트의 후원은 개설자 경로로 닿지 않는다 — 단, 그 이유는 "행이 없어서"가
-아니라 "slug가 겹치지 않아서"다.** `funding_pledges.project_slug`는 문자열이고, 개설자
-actor 분기는 그 slug로 `funding_projects`(DB 테이블)를 조회해 소유를 확인한다. 지금은
-`content/funding/*.md` 프로젝트의 slug와 같은 slug를 가진 DB 행이 없으므로 조회가 실패해
-`forbidden`이 되는 것이지, md 프로젝트라서 원천적으로 막히는 것이 아니다. 지금 운영 DB의
-후원은 전부 마크다운 프로젝트(`keep-singing-for-palestine`)의 것이고, 그 후원자들은
-"배송지는 개설자에게 제공되지 않는다"에 동의했다 — 지금의 slug 불일치가 이 격리를 만들고,
-그 동의를 소급해 뒤집지 않는다.
-
-**`content/funding/`에 새 md를 추가할 때는 승인된 DB 프로젝트와 slug가 겹치면 안 된다.**
-`lib/funding/reviewDecision.ts`의 승인 로직은 md가 이미 쓰고 있는 slug로 DB 프로젝트를
-승인하는 것만 막는다(`getFundingProject(slug)` 검사) — **반대 방향은 아무 데도 막혀 있지
-않다.** 이미 승인된 DB 프로젝트와 같은 slug로 나중에 `content/funding/<slug>.md`를 추가하면
-`lib/funding/repository.ts`의 "파일이 이긴다" 규칙 때문에 공개 상세는 그 순간부터 md가 되고,
-거기 새로 들어오는 후원의 `project_slug`도 그 slug와 같아진다 — 그러면 개설자 actor 분기의
-slug 대조가 통과해, **그 DB 프로젝트를 만든 개설자의 배송 화면·CSV에 실제로는 자기
-프로젝트가 아닌(md 쪽) 후원자의 이름·연락처·주소가 실린다.** 열람만이 아니라 발송 상태
-쓰기까지 그 개설자에게 열린다. 코드 가드는 없다 — 빌드가 `TURSO_*` 없이 성공해야 해서
-빌드 시점에 DB slug를 볼 수 없다. md를 새로 추가하기 전에 그 slug가 승인 프로젝트 목록에
-없는지 직접 확인할 것.
-
-개설자는 `delivered`로 상태를 바꿀 수 있고, `delivered_at`이 찍히는 순간이 처리방침
-8항·약관 제13조가 약속한 "리워드 전달 완료 후 1년 파기"의 기산점이 된다(`retention.ts`의
-`REWARD_RETENTION_YEARS`). 다만 전자상거래법 5년 법정 보존(`LEGAL_RETENTION_YEARS`)이
-하한을 잡는다 — 리워드 전달 후 1년이 지났어도 결제일로부터 5년이 안 지났으면 파기하지
-않는다.
-
-**전달 표시를 한 번도 안 한 후원**은 위 기산점이 생기지 않는다. 그 후원의 배송지·메모·응원
-메시지·명단 표시 이름은 5년 파기로 결제자 이름이 지워질 때 함께 지운다
-(`purgeFundingPersonalDataOfPurgedOrders`, `lib/privacy/orderRetention.ts`, `purge-orders` 크론).
-**어느 경로든 결제 후 5년 안에는 지우지 않는다** — 전달 뒤에도 오배송·민원 대응에 배송지가
-필요하다(운영자 결정, 2026-09-26). 기간을 줄이자는 제안은 이 결정을 먼저 볼 것.
-
-같은 파일이 파기 대상에서 **일부러 빼는 값**이 하나 있다: `fulfillment_updated_by`
-(발송 상태를 마지막으로 바꾼 주체, `'admin'` 또는 `'creator:<id>'`). 배송지·admin_memo·
-supporterMessage는 후원자가 준 개인정보라 파기 약속이 걸리지만, 이 컬럼은 운영자·개설자
-쪽 행위자 식별자다. 값에 `creator:<id>`가 들어 있어 "식별자니까 지우자"는 판단이 나올 수
-있는데, 그렇게 하면 "누가 발송 상태를 바꿨는지"에 대한 감사 기록이 배송지와 같은 시점에
-사라진다 — `retention.test.ts`가 이 컬럼이 파기 후에도 남는 것을 고정한다.
-
-### `review_note`와 `internal_note`는 다른 칸이다
-
-`review_note`는 **개설자에게 보인다** — 개설자 프로젝트 목록(`pages/[locale]/funding/creator/index.tsx`)과
-편집 화면(`pages/[locale]/funding/creator/[id].tsx`) 두 곳, 그리고 심사 결과 메일
-(`lib/funding/reviewEmail.ts`)이 이 값을 그대로 렌더한다. 보완 요청 사유·반려 사유·보관
-사유가 전부 이 칸을 쓰고 서로 덮어쓴다. `internal_note`(`set_internal_note` 액션,
-`db/schema.ts`의 `internalNote` 컬럼)는 운영자 전용이고 개설자 조회에 어떤 경로로도 실리지
-않는다 — `lib/funding/creatorProjectWrite.integration.test.ts`가 그것을 고정한다.
-
-### 개설자 이름 기본값은 "미설정"이다
-
-가입은 `name: email.split('@')[0]`으로 이름을 **채운다**(`lib/funding/creatorToken.ts`).
-채워져 있어 미설정을 감지할 수 없었고, 3차가 그 값을 공개 상세의 판매자 표시 옆에 그리고
-동시에 잠그면서 "개설자 hwangtab"이 영영 남는 경로가 생겼다. `isDefaultCreatorName`
-(`lib/funding/creatorValidation.ts`)이 그 값을 미설정으로 판정하고, 심사 신청·승인이 막고,
-이름 잠금도 걸리지 않는다(설정한 적 없는 값을 잠그는 것은 잠금이 아니라 사고다).
-
-### 개설자 계정은 운영자만 되돌릴 수 있다
-
-`funding_creators`에 쓰는 경로는 세 개다 — 가입(`lib/funding/creatorToken.ts`), 개설자 본인
-저장(`saveCreatorSection`), 그리고 운영자(`lib/funding/creatorAccountDecision.ts`). 앞의 둘만
-있던 동안 두 자리가 막다른 길이었다: 잘못 저장된 이름이 승인되면 본인 잠금이 영구히
-거부하는데 그 이름은 공개 상세에 판매자 표시와 함께 박히고, 개설자가 자기 이메일 접근을
-잃으면 매직링크가 유일한 인증이라 로그인 수단 자체가 사라진다.
-
-운영자 경로는 관리자 심사 상세(`pages/admin/funding/projects/[id].tsx`)에 붙어 있다.
-**개설자 본인의 이름 잠금은 그대로 둔다** — 축이 다르다. 알아 둘 것 셋:
-
-- **이름을 바꾸면 그 개설자의 승인된 프로젝트를 전부 재검증해야 한다.** 지금 보고 있는
-  하나만 하면 나머지는 최대 60초 동안 옛 이름을 보여 준다. 판정 모듈이 대상 slug를
-  전부 돌려주고 라우트가 `revalidateFundingPaths`를 그 수만큼 부른다.
-- **이메일 변경은 그 개설자의 로그인 토큰을 전부 지운다.** 토큰 DELETE는 이메일
-  UPDATE와 같은 배치에 있고 `updated_at = epoch` EXISTS를 요구한다 — 경합으로 UPDATE가
-  0행일 때 토큰만 죽는 상태를 막는다.
-- **이미 발급된 `creator_session` 쿠키는 서버가 끊을 수 없다**(iron-session, 최대 7일).
-  이메일을 바꿔도 로그인된 브라우저는 그동안 그대로 들어온다. 관리자 화면에 적혀 있다.
-
-**변경 사유는 어느 컬럼에도 저장되지 않는다.** 메일 본문과 서버 로그가 유일한 기록이다 —
-새 컬럼 없이 넣은 기능이라 그렇고, 분쟁 시 로그 보존 기간 밖이면 증거가 없다. `reviewNote`는
-프로젝트 단위 심사 메모라 여기에 쓰지 않는다.
-
-### 개설자에게 가는 메일이 실패하면 운영자가 알아야 한다
-
-`/api/funding/creator/login`의 응답은 **언제나 같다**(200, "로그인 링크를 보냈습니다").
-다르게 답하면 그 화면이 누가 개설자인지 알려 주는 조회기가 된다. 그래서 발송 실패를
-화면으로 알릴 수 없고, 대신 운영자에게 메일이 간다(`sendCreatorLoginMailFailureAlert`).
-
-알림도 레이트리밋을 탄다 — 키는 `creator_login:mail_failure_alert`이고 전역 캡 알림
-(`creator_login:global_alert`)과 **반드시 달라야 한다.** 같으면 한쪽이 다른 쪽 예산을 먹어
-둘 중 하나가 조용해진다.
-
 ### 마이그레이션은 배열 순서가 아니라 `when`으로 걸러진다 — 작은 `when`은 조용히 건너뛴다
 
 drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장 큰 행 하나만 읽고
@@ -552,6 +202,8 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
 수동으로 `npm run db:migrate`). 그래서 이 함정이 더 오래 숨는다.
 
 **`when` 오름차순이 곧 적용 순서다.** 지금 관련된 셋:
+
+(이 표는 함정을 처음 만난 사례의 기록이다. `0020_serious_luckman`은 재발행되어 지금 저널에 없고 그 컬럼은 0022에 있다.)
 
 | tag | when | 위치 |
 |---|---|---|
@@ -682,121 +334,9 @@ SDK에 하드코딩된 위젯 키 2개뿐이고 우리 키는 거기 없다.
 사이트맵 쪽(`lib/sitemap/fundingMeta.js`)도 정규식이 아니라 같은 파서(gray-matter)로 같은
 규칙을 적용한다 — 두 판정이 갈리면 앱은 404인데 사이트맵·IndexNow가 그 URL을 제출한다.
 
-### 암호화 필드 — 키를 잃으면 값도 잃는다
+### 암호화 필드는 `lib/crypto/CLAUDE.md`에 있다
 
-이 저장소에 DB 필드 단위 암호화가 생겼다(`lib/crypto/fieldCrypto.ts`, AES-256-GCM).
-지금 쓰는 곳은 `funding_creators.resident_number_enc`(원천징수 대상 개설자의 주민등록번호)
-하나다 — 주민등록번호는 저장 시 암호화가 법적 의무라 예외가 없다.
-
-- **새로 쓰는 저장 형식은 `v2:<keyId>:<iv_b64>:<tag_b64>:<ct_b64>` 한 문자열.**
-  읽기는 `v1:<iv_b64>:<tag_b64>:<ct_b64>`도 받는다 — 운영 DB에 이미 그 값이 있고, 영구히
-  읽혀야 한다. 판본 접두사는 장식이 아니라 알고리즘·키를 바꿀 때 **옛 값을 구분할 유일한
-  수단**이다. IV는 레코드마다 새로 뽑는다(GCM에서 같은 키로 IV를 재사용하면 기밀성과 인증이
-  함께 무너진다).
-- **`keyId`는 키에서 결정적으로 유도한 hex 8자**(`sha256("studionol:field-key-id:v2" ‖ key)`의
-  앞 4바이트). 32바이트 다이제스트 중 4바이트만 남기므로 **키를 지목하지 못한다** — 같은
-  keyId를 내는 키가 2^224가량 존재한다. 그래서 키 검증 수단으로 쓰지 않는다(실제 판정은
-  언제나 GCM 인증 태그가 한다). 도메인 문자열을 섞는 것은 이 값이 다른 곳의 `sha256(key)`와
-  같아지지 않게 하려는 것이다.
-- **`keyId` 덕분에 `key_mismatch`와 `auth_failed`가 갈린다.** v1에서는 "키가 바뀌었다"와
-  "값이 손상됐다"가 둘 다 `auth_failed`였다 — GCM은 두 경우를 같은 방식으로 실패한다.
-  회전 중에는 그 구분이 반드시 필요하다(어느 행이 아직 옛 키인지 알아야 이어서 돌린다).
-  v1 값은 keyId가 없으니 예전 그대로 `auth_failed`다.
-- **키는 env `FUNDING_FIELD_KEY`(base64 32바이트)이고 호출 시점에 읽는다.** 모듈 최상위에서
-  읽으면 키 없는 환경에서 import만으로 빌드가 깨진다(`TURSO_*` 없이 빌드가 되어야 한다는
-  규칙과 같은 이유). 키가 없거나 길이가 틀리면 암호화 함수는 **던진다** — 조용히 평문을
-  저장하는 경로는 없어야 한다.
-- ⚠ **키를 잃으면 저장된 값은 영영 복호화되지 않는다.** 백업도 우회로도 없다. 복구 수단은
-  개설자에게 다시 입력을 요청하는 것 하나뿐이다. 값이 이미 저장된 뒤에 키를 새로 만드는 것은
-  그 값을 버리는 것과 같다 — 복호화가 전부 실패하면 먼저 **옛 키를 되찾을 수 있는지**부터 본다.
-- **평문을 로그·화면 props·메일에 넣지 않는다.** Pages Router는 props를 `__NEXT_DATA__`로
-  페이지 HTML에 싣는다. **암호문도 담지 않는다** — 암호문이 나가면 키가 유일한 방어가 된다.
-  화면이 아는 것은 등록 여부(`residentNumberRegistered`)뿐이고, 복호화 조회는 운영자가 버튼을
-  누른 그 순간의 응답으로만 나간다(`pages/api/admin/funding/projects/[id]/resident-number.ts`).
-  조회 사실은 서버 로그에 남기되 값은 적지 않는다. `console.log`로 찍어 보고 지우는 것도
-  하지 마라 — 지우는 걸 잊으면 그대로 배포된다.
-- 키가 빠진 배포는 **DB에 흔적을 남기지 않는다.** 개설자가 번호를 실제로 입력한 저장만 계좌까지
-  통째로 거부되고(칸을 비운 채 계좌만 고치는 저장은 키 없이도 된다), **이미 번호를 등록한 개설자의
-  정산 기록이 전부 `resident_number_unreadable`로 막힌다** — 번호가 아예 없을 때의
-  `no_resident_number`와 다른 코드다. 그런데 개설자가 연락해 줄 때까지 아무도 모른다. 그래서 매일 크론 운영 점검이 키를 왕복으로 찔러 본다
-  (`checkFieldCryptoKey`, `lib/ops/healthCheck.ts`) — 보고하는 것은 "설정됨 / 없음 / 형식 이상"뿐이고
-  키 값도 암호문도 메일에 싣지 않는다.
-- **회전이 중간에 멈춘 것도 같은 크론이 잡는다**(`checkFieldKeyRotationPending`). 왕복 점검은
-  같은 키로 찔러 보는 것이라 절반만 회전된 DB에서도 통과한다 — 그대로 방치되면 결국 누군가
-  옛 키를 지운다. 그래서 **지금 키로 열리지 않는 행 수**를 따로 센다. 복호화하지 않고
-  `v2:<keyId>` 접두사만 비교하므로 크론이 평문을 만들 일이 없고, 메일에는 개수와 대상 컬럼
-  이름만 나간다. `FUNDING_FIELD_KEY_OLD`가 있으면 "회전 진행 중(남은 n건)"으로 medium,
-  없으면 "옛 키가 환경에 없음"으로 high다 — 뒤쪽은 옛 키를 되찾는 것이 먼저다.
-- **마이그레이션 0023을 먼저 적용하지 않으면 개설자 로그인까지 깨진다.** `funding_creators`를
-  컬럼 지정 없이 `select()`로 읽는 경로가 여럿이고(`lib/funding/creatorToken.ts`의 로그인 링크
-  검증, `creatorProjectWrite.ts`의 계정 조회), 그 쿼리는 새 컬럼까지 함께 요구한다. 코드가
-  먼저 배포되면 정산 화면만이 아니라 **로그인부터** 실패한다. 적용 순서는 마이그레이션 → 배포다
-  (0020 절과 같은 규칙).
-
-#### 키 회전 절차 — 순서가 틀리면 데이터를 잃는다
-
-키를 바꾸는 수단은 `scripts/rotate-field-key.mjs` 하나다(엔진은 `lib/crypto/fieldKeyRotation.ts`).
-**옛 키와 새 키가 동시에 살아 있는 구간**이 반드시 있어야 하고, 그 구간을 건너뛰면 값을 잃는다.
-
-| env | 담는 것 | 언제 |
-|---|---|---|
-| `FUNDING_FIELD_KEY` | **새 키** | 처음부터 끝까지. 회전이 끝나면 이 값 하나만 남는다 |
-| `FUNDING_FIELD_KEY_OLD` | 옛 키 | 회전이 **끝난 뒤에** 지운다 |
-
-스크립트는 `TURSO_DATABASE_URL`·`TURSO_AUTH_TOKEN`도 요구한다 — 운영 DB를 직접 고치기 때문이다.
-
-1. **새 키를 만든다** — `openssl rand -base64 32`. 아직 아무 데도 넣지 않는다.
-2. **지금 쓰는 키를 `FUNDING_FIELD_KEY_OLD`로 복사해 둔다**(Vercel env와 로컬 `.env.local` 양쪽).
-   `FUNDING_FIELD_KEY`는 아직 옛 키 그대로다 — 이 시점에 두 변수가 같은 값이다.
-3. **`FUNDING_FIELD_KEY`를 새 키로 바꾸고 배포한다.** 이때부터 **새로 저장되는 값은 새 키**로
-   잠기고(형식 v2), 이미 저장된 옛 값은 조회에서 `key_mismatch`로 막힌다 — **값은 멀쩡하다.**
-   막히는 구간을 짧게 하려면 4·5를 바로 이어서 한다.
-4. **dry-run으로 개수를 먼저 본다.** 쓰지 않는다.
-   ```bash
-   node --env-file=.env.local node_modules/.bin/tsx scripts/rotate-field-key.mjs
-   ```
-   `회전 예정 n · 건너뜀 n · 실패 n`이 나온다. 실패가 0이 아니면 그 id와 코드를 먼저 본다.
-5. **같은 명령에 `--apply`를 붙여 실제로 돌린다.** 실패한 행이 있어도 멈추지 않고 끝까지 돈 뒤
-   요약을 낸다. **다시 돌려도 안전하다** — 이미 새 키인 행은 건너뛴다.
-6. **끝났는지 두 가지로 확인한다. `실패 0`은 증거가 아니다** — 한 건도 안 돈 경우에도 그렇게
-   나오고, 무엇보다 **스크립트가 쓴 키가 프로덕션이 실제로 쓰는 키인지는 아무도 대조하지
-   않는다**(로컬 `.env.local`과 Vercel env가 갈려 있으면 로컬만 맞고 끝난다).
-   1. dry-run을 한 번 더 돌려 `회전 예정 0`이고 **`건너뜀`이 4번에서 본 대상 수와 같은 수**인지 본다.
-   2. **프로덕션 관리자 화면에서 실제로 한 건을 열어 본다.** 로컬 env와 Vercel env가 갈린 경우는
-      이것만 잡는다.
-7. **그때서야 `FUNDING_FIELD_KEY_OLD`를 지운다.** 6이 끝나기 전에 지우면
-   아직 옛 키로 잠긴 값을 열 수단이 사라진다 — 복구 경로는 개설자에게 재등록을 요청하는 것뿐이다.
-
-⚠ **`FUNDING_FIELD_KEY`를 새 키로 바꾸기 전에 옛 키를 어디에도 남기지 않은 채 덮어쓰지 마라.**
-2번이 그 사고를 막는 유일한 단계다. 그리고 **실패 목록에 남은 행의 값을 지우거나 덮어쓰지 마라** —
-`key_mismatch`는 값이 멀쩡하고 키만 다르다는 뜻이다.
-
-⚠ **두 키가 같으면 스크립트가 exit 2로 선다.** 같은 키로 돌면 모든 v2 행이 keyId가 맞아
-건너뛰어져 `회전 0 · 건너뜀 n · 실패 0`이 나오는데, 그게 **회전이 끝난 상태와 글자 하나 다르지
-않다.** 이 상태는 3번에서 Vercel env만 바꾸고 로컬 `.env.local`이 옛 키 그대로일 때 생긴다
-(이 저장소는 `vercel env pull`·blob 명령이 `.env.local`을 통째로 덮어쓴 사고 이력이 있다).
-판본 v1 값을 같은 키로 v2에 올리는 정당한 용법은 `--same-key`로만 연다 — **회전에는 쓰지 마라.**
-
-⚠ **이 배포를 되돌리면 v2 값이 옛 배포에서 `malformed`로 읽힌다.** 옛 `parseStored`는 조각 수를
-먼저 보므로 5조각을 "판본을 모른다"가 아니라 "형식이 아니다"로 분류하고, 그 화면 문구는
-"개설자에게 주민등록번호를 다시 등록해 달라고 요청해 주세요"다. **그 안내를 따르지 마라 —
-값은 멀쩡하다.** 롤백이 사고의 첫 대응이라 이 자리가 가장 위험하다.
-
-**옛 키도 새 키도 아닌 키로 잠긴 행**(`code=key_mismatch`)이 남으면 5번은 영원히 exit 1이라
-6번 조건이 성립하지 않는다. 그 행은 이 회전으로는 못 여는 값이다 — **옛 키는 오프라인으로
-보관하고**(지우지 않는다) 해당 개설자에게 재등록을 요청한 뒤, 그 행을 뺀 나머지가 전부
-건너뜀인 것을 확인하고 7번으로 간다.
-
-**배포 중에 새 저장이 끼어들어도 안전한 이유**는 둘이다.
-- **v2의 keyId.** 3번 배포 뒤에 개설자가 번호를 저장하면 그 값은 이미 새 키로 잠긴다.
-  회전 스크립트는 keyId를 보고 그 행을 **복호화조차 하지 않고 건너뛴다** — 옛 키로 열려고
-  시도해 실패하는 일이 없다.
-- **낙관적 잠금.** 스크립트가 행을 읽은 **뒤에** 개설자가 그 행을 다시 저장하면, UPDATE의
-  WHERE(`값 = 읽은 그 암호문`)가 0행을 맞춰 쓰지 않고 `code=changed`로 남긴다. 덮어썼다면
-  방금 입력한 번호가 옛 번호로 조용히 되돌아갔을 것이다. 다시 돌리면 그 행은 건너뛴다.
-
-**암호화 필드가 늘면 `ENCRYPTED_FIELD_TARGETS`(`lib/crypto/fieldKeyRotation.ts`)에 한 줄을
-더한다.** 목록에 없는 컬럼은 회전되지 않고, 그 사실은 옛 키를 지운 뒤에야 드러난다.
+`FUNDING_FIELD_KEY`를 옛 키 백업 없이 덮어쓰지 말 것 — 잃으면 저장된 값은 복호화되지 않는다. 키 회전은 `scripts/rotate-field-key.mjs`이고, 절차·순서는 그 파일에서 읽고 진행한다.
 
 ### 서비스 수치는 정본에서만 온다
 
@@ -1062,36 +602,6 @@ GSC > 상단 URL 검사창에 URL 입력 → "색인 생성 요청". 브라우�
 동시에 viewport에 들어와, 폴백 페이지의 온디맨드 생성을 무더기로 유발한다.
 `StoryCard`·`StoryCTA`와 같은 판단이며 hover/focus prefetch는 유지된다.
 
-## Architecture & Data Flow
-
-### Image Optimization System
-The project uses a custom optimization script `scripts/optimizeImages.js`:
-1. **Source**: Original images in `public/images/`
-2. **Process**: Converts JPG/PNG to WebP and AVIF (using Sharp)
-3. **Artifacts**: Generates `utils/imageMetadata.json` for dimension hints
-4. **Usage**: Use optimized formats (.webp/.avif) in content for better performance
-
-### Contact Form Logic
-- **Client**: `pages/[locale]/contact.tsx` captures user input
-- **Server**: `pages/api/contact/send-email.ts` (API route)
-- **Validation**: Honeypot and Rate Limiting implemented on server-side
-- **Delivery**: Server-side request to Resend REST API (`lib/email/resend.ts`)
-
-### Routing & i18n
-- **Path structure**: `/[locale]/[path]`
-- **Locale management**: `lib/i18n.ts` and `utils/localeUtils.ts`
-- **Dynamic Routes**: Stories are loaded from `content/stories/` based on slug and locale
-
-## Important Files & Directories
-
-- `pages/[locale]/` - Localized page components
-- `pages/api/` - Backend API routes (Serverless functions)
-- `components/` - Reusable UI components
-- `content/stories/` - Markdown files for studio news and stories
-- `lib/i18n.ts` - Internationalization configuration
-- `tailwind.config.ts` - Design system (colors, typography)
-- `next.config.mjs` - Next.js configuration
-
 ## Liquid Glass 재질 시스템 (디자인 리뉴얼)
 
 iOS 26 리퀴드 글래스 스타일 리뉴얼의 재질 레이어. **성능 예산제**로 운영한다 —
@@ -1266,9 +776,3 @@ atomic update에서 이 방식으로 전환). 따라서 **같은 minor 안의 �
   puppeteer-core 중첩 `proxy-agent`를 걷어내 CI의 `npm ci`가 "Missing: proxy-agent@…"로 실패한다. `npx -y npm@10 ci --dry-run`으로
   먼저 확인할 것.
 - `postcss` 8.4.31(next 번들)은 audit이 잡지 않는다. next가 올라가면 함께 정리된다.
-
-## Deployment Notes
-
-- **Hosting**: Vercel (Standard Next.js deployment)
-- **Environment Variables**: Configure `RESEND_API_KEY` (and optional `RESEND_FROM`) in Vercel dashboard
-- **Build**: Prebuild hook runs image optimization automatically
