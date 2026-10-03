@@ -425,8 +425,8 @@ const homeData = {
           body: "Grabamos, mezclamos y masterizamos tu canción en Seúl, y te ayudamos a publicarla en las plataformas coreanas. Paquete Single (grabación + mezcla + masterización) desde ₩500,000."
         },
         {
-          heading: "Producción musical para K-pop y Latin Pop",
-          body: "Combinamos experiencias en producción de K-pop y Latin Pop. Si buscas fusionar ritmos latinos con sonido coreano, nuestro equipo puede ayudarte a crear un sonido único que conecte ambos mercados."
+          heading: "Producción de tu canción en Seúl",
+          body: "Grabamos, mezclamos y masterizamos tu canción con un productor con 15 años de experiencia en lanzamientos de música independiente en Corea. Cuéntanos (en inglés) qué sonido buscas y te propondremos cómo lograrlo."
         },
         {
           heading: "Escucha nuestro trabajo antes de decidir",
@@ -526,7 +526,7 @@ const homeData = {
         },
         {
           heading: "Phân phối âm nhạc tại Hàn Quốc",
-          body: "Chúng tôi hỗ trợ phân phối album lên Melon, Genie, Bugs, Naver Music và các nền tảng âm nhạc hàng đầu Hàn Quốc. Bắt đầu sự nghiệp âm nhạc tại Hàn Quốc với Studio NOL."
+          body: "Chúng tôi hỗ trợ phân phối album lên Melon, Genie, Bugs, VIBE, Spotify và các nền tảng âm nhạc hàng đầu Hàn Quốc. Bắt đầu sự nghiệp âm nhạc tại Hàn Quốc với Studio NOL."
         }
       ]
     }
