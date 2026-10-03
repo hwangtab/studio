@@ -76,6 +76,9 @@ describe('디자인 v2 파일 색 가드', () => {
     'components/home/HomeReleaseStrip.tsx',
     'components/home/HomeStudioSpec.tsx',
     'pages/[locale]/index.tsx',
+    'pages/[locale]/shows/[slug].tsx',
+    'components/shows/ShowDetailView.tsx',
+    'components/shows/ShowFacts.tsx',
   ];
 
   it.each(V2_FILES)('%s에 텍스트 그라디언트·secondary·accent가 없다', (rel) => {
