@@ -191,8 +191,11 @@ export const sendBookingCancelledEmails = async (
 };
 
 /** 믹싱은 기본 2회, 마스터링은 기본 1회 — mixing-mastering 페이지 FAQ 정본과 같은 숫자다. */
-const revisionCountLabel = (serviceType: WorkOrder['serviceType']): string =>
-  serviceType === 'mastering' ? '1회' : '2회';
+const revisionCountLabel = (serviceType: WorkOrder['serviceType']): string => {
+  if (serviceType === 'mastering') return '1회';
+  if (serviceType === 'mixing-mastering') return '믹싱 2회 · 마스터링 1회';
+  return '2회';
+};
 
 /**
  * 믹싱·마스터링 주문(work_orders) 확정 메일.
