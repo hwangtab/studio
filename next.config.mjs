@@ -298,6 +298,20 @@ const nextConfig = {
           { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
         ],
       },
+      // 공연 예매 — success·fail은 토스 paymentKey·orderId, manage는 관리 토큰, scan은 입장 스캔 토큰이
+      // URL에 실린다. 공개 상세(shows/<slug>)는 CDN 캐시 대상이라 여기 넣지 않는다.
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/shows/(success|fail)',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
+      {
+        source: '/:locale(ko|en|zh|es|vi|th|uz)/shows/(manage|scan)/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'private, no-store, max-age=0, must-revalidate' },
+        ],
+      },
       {
         source: '/:locale(ko|en|zh|es|vi|th|uz)/funding/:slug/pledge',
         headers: [

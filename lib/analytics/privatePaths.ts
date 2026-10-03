@@ -30,6 +30,10 @@ const PRIVATE_ROUTE_BODIES: ReadonlyArray<readonly [body: string, hasSubPath: bo
   ['funding/creator/auth', false],
   ['booking/(success|fail)', false],
   ['booking/manage', true],
+  // 공연 예매. success·fail은 토스가 paymentKey·orderId를 붙이고, manage는 `?token=<관리 토큰>`,
+  // scan은 경로에 입장 스캔 토큰이 실린다. 공개 상세(`shows/<slug>`)는 측정 대상이라 body를 좁혀 둔다.
+  ['shows/(success|fail)', false],
+  ['shows/(manage|scan)', true],
   // 정기결제(구독). 카드 등록 링크 `?token=<setupToken>`과 관리 링크 `?token=<manageToken>`이
   // 전부 쿼리로 실린다 — manageToken은 만료도 1회성도 없고(service.ts findSubscriptionForManage)
   // 그 값 하나로 결제 이력 열람·해지·새 카드등록 토큰 발급까지 된다. 하위 경로
@@ -134,6 +138,10 @@ export const PRIVATE_PAGE_ROUTES: readonly string[] = [
   '/[locale]/booking/manage/[orderNo]',
   '/[locale]/booking/success',
   '/[locale]/booking/fail',
+  '/[locale]/shows/success',
+  '/[locale]/shows/fail',
+  '/[locale]/shows/manage/[orderNo]',
+  '/[locale]/shows/scan/[token]',
   '/[locale]/subscribe/[id]',
   '/[locale]/subscribe/[id]/success',
   '/[locale]/subscribe/[id]/fail',

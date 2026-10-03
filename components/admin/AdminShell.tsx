@@ -29,7 +29,7 @@ export interface AdminNavItem {
 
 /**
  * 상단 바의 구역. 순서는 쓰는 빈도가 아니라 업무 흐름을 따른다 —
- * 계약을 맺고(계약) → 일을 받고(예약·믹싱) → 모으고(펀딩) → 매달 청구한다(구독) → 아티스트에게 지급한다(아티스트).
+ * 계약을 맺고(계약) → 일을 받고(예약·믹싱) → 모으고(펀딩) → 공연을 올리고(공연) → 매달 청구한다(구독) → 아티스트에게 지급한다(아티스트).
  * 접속기록은 업무가 아니라 그 업무를 되돌아보는 자리라 맨 뒤다.
  */
 export const ADMIN_NAV: readonly AdminNavItem[] = [
@@ -37,6 +37,7 @@ export const ADMIN_NAV: readonly AdminNavItem[] = [
   { href: '/admin/contracts', label: '계약' },
   { href: '/admin/bookings', label: '예약·믹싱' },
   { href: '/admin/funding', label: '펀딩' },
+  { href: '/admin/shows', label: '공연' },
   { href: '/admin/subscriptions', label: '구독' },
   { href: '/admin/artists', label: '아티스트' },
   { href: '/admin/privacy-logs', label: '접속기록' },

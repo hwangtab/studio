@@ -114,6 +114,10 @@ module.exports = {
     // next-sitemap이 페이지 라우트로 보고 <url>로 실었다(2026-09-21 프로덕션 적발) —
     // 사이트맵 인덱스(robotsTxtOptions.additionalSitemaps)에서만 참조돼야 한다.
     '/sitemap-funding.xml',
+    // 공연 예매 트랜잭셔널·운영 경로(noindex)와 런타임 공연 사이트맵. 공개 상세(/shows/<slug>)는
+    // SSR 동적 라우트라 next-sitemap이 열거하지 않고 /sitemap-shows.xml이 싣는다.
+    '/*/shows/success', '/*/shows/fail', '/*/shows/manage/*', '/*/shows/scan/*',
+    '/sitemap-shows.xml',
   ],
   robotsTxtOptions: {
     // robots 스펙: UA가 자기 이름의 그룹을 찾으면 '*' 그룹을 완전히 무시한다.
@@ -141,6 +145,8 @@ module.exports = {
           '/_next/data/',
           // 펀딩 트랜잭셔널 경로 — 결제 진행 중 상태 등이라 크롤 대상이 아니다.
           '/ko/funding/success', '/ko/funding/fail', '/ko/funding/manage/', '/ko/funding/terms', '/ko/funding/*/pledge',
+          // 공연 예매 트랜잭셔널·입장 스캔 경로.
+          '/ko/shows/success', '/ko/shows/fail', '/ko/shows/manage/', '/ko/shows/scan/',
         ],
       };
       // 이 목록에 봇을 추가/누락해도 실효 차단 범위는 바뀌지 않는다 — 모든 명명
@@ -170,7 +176,7 @@ module.exports = {
         ...NAMED_BOTS.map((userAgent) => ({ userAgent, ...RULES })),
       ];
     })(),
-    additionalSitemaps: [`${SITE_URL}/sitemap-funding.xml`],
+    additionalSitemaps: [`${SITE_URL}/sitemap-funding.xml`, `${SITE_URL}/sitemap-shows.xml`],
     transformRobotsTxt: async (_config, robotsTxt) => {
       const cleaned = robotsTxt.replace(/# Host[\r\n]+Host:[^\r\n]*[\r\n]*/g, '');
       const llmsHint = `\n# LLM / AI content index\n# llms.txt: ${SITE_URL}/llms.txt\n# llms-full.txt: ${SITE_URL}/llms-full.txt\n# llms-full (locale-scoped): ${SITE_URL}/llms-full-ko.txt ${SITE_URL}/llms-full-en.txt ${SITE_URL}/llms-full-zh.txt\n`;

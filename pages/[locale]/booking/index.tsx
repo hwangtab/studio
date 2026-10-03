@@ -9,9 +9,14 @@ import SectionHeading from '../../../components/ui/SectionHeading';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { BOOKING_HUB_INQUIRY_LINKS, buildBookingHub, type BookingHubGroup } from '../../../lib/booking/hub';
+import { nextShowtimeOf } from '../../../lib/shows/availability';
+import { formatWon, SALE_STATE_LABELS } from '../../../lib/shows/copy';
+import { listPublicShows } from '../../../lib/shows/queries';
 import { trackMicroEvent } from '../../../utils/analytics';
 
-type BookingHubProps = { groups: BookingHubGroup[] };
+/** 허브에 싣는 공연 한 줄 — 상세와 같은 조회(listPublicShows)에서 필요한 값만 추린다. */
+type HubShow = { slug: string; title: string; label: string; venueName: string; lowPrice: number | null; stateLabel: string; open: boolean };
+type BookingHubProps = { groups: BookingHubGroup[]; shows: HubShow[] };
 
 const track = (ctaId: string) =>
   trackMicroEvent('micro_click_booking_entry', { locale: 'ko', component: 'BookingHub', cta_id: ctaId });
@@ -26,7 +31,7 @@ const track = (ctaId: string) =>
  * 다른 /ko/booking/* 와 같이 noindex다 — 검색 진입점이 아니라 링크를 직접 보내는 용도다.
  * 하위 예약 페이지는 이 페이지를 거치지 않고도 열린다(?product= 링크는 그대로 유효).
  */
-export default function BookingHubPage({ groups }: BookingHubProps) {
+export default function BookingHubPage({ groups, shows }: BookingHubProps) {
   const kakaoUrl = getSiteConfig('ko').contact.kakaoUrl;
 
   return (
@@ -57,11 +62,60 @@ export default function BookingHubPage({ groups }: BookingHubProps) {
         </div>
       </Section>
 
+      {shows.length > 0 && (
+        <Section id="shows" variant="alternate" spacing="tight" className="scroll-mt-24">
+          <div className="mx-auto max-w-4xl">
+            <SectionHeading
+              title="공연 티켓"
+              subtitle="스튜디오 놀이 여는 공연입니다. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드립니다."
+              as="h2"
+            />
+            <ul className="grid gap-4 md:grid-cols-2">
+              {shows.map((show) => (
+                <li key={show.slug}>
+                  <BaseCard className="flex h-full flex-col p-5">
+                    <h3 className="typo-card-title text-gray-900 dark:text-white">{show.title}</h3>
+                    <p className="mt-1 typo-card-body text-gray-700 dark:text-gray-300">
+                      {show.label} · {show.venueName}
+                    </p>
+                    <p className="mt-2 flex-1 tabular-nums">
+                      {show.lowPrice !== null && (
+                        <span className="text-xl font-bold text-gray-900 dark:text-white">{formatWon(show.lowPrice)}</span>
+                      )}{' '}
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{show.stateLabel}</span>
+                    </p>
+                    <Button asChild variant="solid" shape="block" className="mt-4">
+                      <Link
+                        href={`/ko/shows/${show.slug}`}
+                        prefetch={false}
+                        onClick={() => track(`booking_hub_show_${show.slug}`)}
+                      >
+                        {show.open ? '예매하기' : '공연 안내 보기'}
+                        <ArrowRight size={16} aria-hidden="true" />
+                      </Link>
+                    </Button>
+                  </BaseCard>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-4 text-right">
+              <Link
+                href="/ko/shows"
+                prefetch={false}
+                className="inline-flex items-center gap-1 font-semibold text-primary hover:underline dark:text-primary-lighter"
+              >
+                공연 전체 보기 <ArrowRight size={16} aria-hidden="true" />
+              </Link>
+            </p>
+          </div>
+        </Section>
+      )}
+
       {groups.map((group, index) => (
         <Section
           key={group.id}
           id={group.id}
-          variant={index % 2 === 0 ? 'alternate' : 'default'}
+          variant={(index + (shows.length > 0 ? 1 : 0)) % 2 === 0 ? 'alternate' : 'default'}
           spacing="tight"
           className="scroll-mt-24"
         >
@@ -97,7 +151,7 @@ export default function BookingHubPage({ groups }: BookingHubProps) {
         </Section>
       ))}
 
-      <Section variant={groups.length % 2 === 0 ? 'alternate' : 'default'} spacing="tight">
+      <Section variant={(groups.length + (shows.length > 0 ? 1 : 0)) % 2 === 0 ? 'alternate' : 'default'} spacing="tight">
         <div className="mx-auto max-w-4xl">
           <SectionHeading
             title="온라인 결제가 없는 의뢰"
@@ -142,8 +196,36 @@ export default function BookingHubPage({ groups }: BookingHubProps) {
 
 export const getServerSideProps = withI18nServerProps<BookingHubProps>(async ({ params }) => {
   if (params?.locale !== 'ko') return { redirect: { destination: '/ko', permanent: false } };
-  return { props: { groups: buildBookingHub() } };
+  return { props: { groups: buildBookingHub(), shows: await loadHubShows() } };
 });
+
+/**
+ * 예매할 수 있는 공연(다가오는 공연)만 싣는다. 이 랜딩은 공연 때문에 느려지거나 깨지면 안 되므로
+ * 조회가 실패하면 섹션만 빼고 나머지는 그대로 연다 — 빌드·CI에는 DB가 없다.
+ */
+async function loadHubShows(): Promise<HubShow[]> {
+  try {
+    const now = new Date();
+    const nowSec = Math.floor(now.getTime() / 1000);
+    const { upcoming } = await listPublicShows(now);
+    return upcoming.map((show) => {
+      const next = nextShowtimeOf(show, nowSec);
+      const prices = show.ticketTypes.map((t) => t.price);
+      return {
+        slug: show.slug,
+        title: show.title,
+        label: next?.label ?? '',
+        venueName: show.venueName,
+        lowPrice: prices.length ? Math.min(...prices) : null,
+        stateLabel: next ? SALE_STATE_LABELS[next.saleState] : '',
+        open: next?.saleState === 'open',
+      };
+    });
+  } catch (error) {
+    console.error('[booking-hub] 공연 조회 실패 — 공연 섹션 없이 연다:', error);
+    return [];
+  }
+}
 
 // 디자인 판 — 같은 디렉터리의 다른 예약 페이지와 맞춘다(lib/designEdition.ts).
 BookingHubPage.designEdition = 'v2';

@@ -26,6 +26,11 @@ const PRIVATE_PAGE_FILES = [
   'pages/[locale]/booking/manage/[orderNo].tsx',
   'pages/[locale]/booking/success.tsx',
   'pages/[locale]/booking/fail.tsx',
+  // 공연 예매 — success·fail은 토스 paymentKey·orderId, manage는 관리 토큰이 URL에 실린다.
+  'pages/[locale]/shows/success.tsx',
+  'pages/[locale]/shows/fail.tsx',
+  'pages/[locale]/shows/manage/[orderNo].tsx',
+  'pages/[locale]/shows/scan/[token].tsx',
   // 정기결제(구독) — 카드 등록 링크·관리 링크의 `?token=`이 URL에 실린다(PR #57·#66과 같은 유형).
   'pages/[locale]/subscribe/[id].tsx',
   'pages/[locale]/subscribe/[id]/success.tsx',

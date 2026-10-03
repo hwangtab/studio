@@ -50,6 +50,25 @@ describe('createShowOrder', () => {
     }
   });
 
+  it('buyerEmail을 주면 orders.customer_email에 저장하고, 안 주면 빈 문자열이다', async () => {
+    const { showtimeId, ticketTypeId } = await seedShow(db);
+    const withEmail = await createShowOrder(
+      { showtimeId, ticketTypeId, quantity: 1, buyerName: '홍길동', buyerContact: '010-0000-0000', buyerEmail: ' a@b.co ' },
+      new Date()
+    );
+    const without = await createShowOrder(
+      { showtimeId, ticketTypeId, quantity: 1, buyerName: '김철수', buyerContact: '010-0000-0001' },
+      new Date()
+    );
+    expect(withEmail.ok && without.ok).toBe(true);
+    if (withEmail.ok && without.ok) {
+      const a = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, withEmail.orderNo) });
+      const b = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, without.orderNo) });
+      expect(a?.customerEmail).toBe('a@b.co');
+      expect(b?.customerEmail).toBe('');
+    }
+  });
+
   it('정원 초과면 sold_out', async () => {
     const { showtimeId, ticketTypeId } = await seedShow(db, { capacity: 1 });
     await createShowOrder({ showtimeId, ticketTypeId, quantity: 1, buyerName: 'a', buyerContact: '010' }, new Date());

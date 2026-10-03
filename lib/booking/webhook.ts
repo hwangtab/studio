@@ -5,6 +5,7 @@ import { orders, refunds, webhookEvents, type Order, type Payment } from '../../
 import { reconcileSubscriptionPaymentFromToss } from '../billing/service';
 import { confirmFundingPledge, syncFundingCancelledFromToss, type FundingConfirmOutcome } from '../funding/confirm';
 import { confirmShowOrder, type ConfirmOutcome as ShowConfirmOutcome } from '../shows/confirm';
+import { sendShowTicketEmail } from '../shows/email';
 import { syncShowCancelsFromToss } from '../shows/refund';
 import { confirmBookingPayment, type ConfirmOutcome } from './confirm';
 import { findOrderByOrderNo } from './service';
@@ -307,6 +308,15 @@ export const processTossWebhook = async (payload: unknown): Promise<{ status: nu
           });
           await releaseEventKey(eventKey);
           return { status: 500 };
+        }
+        if (outcome.status === 'confirmed' || outcome.status === 'already_confirmed') {
+          // 브라우저를 닫아 success 페이지가 확정하지 못한 주문도 여기서 메일이 나간다.
+          // send_pending 선점 CAS가 있어 이미 나갔다면 {sent:false}로 끝난다(중복 발송 없음).
+          try {
+            await sendShowTicketEmail(payment.orderId);
+          } catch (error) {
+            console.error('[booking-webhook] 공연 티켓 메일 실패', { orderNo: payment.orderId, error });
+          }
         }
       } else {
         const outcome =
