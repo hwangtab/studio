@@ -31,6 +31,8 @@ describe('ShowDetailView', () => {
     expect(screen.getByText('첫 문단')).toBeTruthy();
     expect(screen.getByText('출연자')).toBeTruthy();
     expect(screen.getByRole('link', { name: '네이버 지도에서 보기' }).getAttribute('href')).toBe('https://naver.me/x');
+    expect(screen.getByTitle('장소 위치 지도')).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 2, name: '오시는 길' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '티켓 예매' })).toBeTruthy();
     expect(screen.getByText('티켓은 어떻게 받나요?')).toBeTruthy();
     // 예매 버튼은 히어로(데스크톱)·핵심 정보 패널·모바일 바 — 전부 #book 앵커다.

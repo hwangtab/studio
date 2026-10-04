@@ -13,6 +13,7 @@ import { descriptionParagraphs } from '../../lib/shows/structured';
 import ShowBookingForm from './ShowBookingForm';
 import ShowFacts from './ShowFacts';
 import ShowLineup from './ShowLineup';
+import ShowVenueMap from './ShowVenueMap';
 
 /**
  * 공연 상세 합성 — 펀딩의 ProjectDetailView에 대응한다. 히어로는 사이트 공용 ImageHero(포스터를 배경
@@ -31,6 +32,9 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
   const { label: ctaLabel, bookable } = showCtaLabel(show);
   const paragraphs = descriptionParagraphs(show.description);
   const faq = showFaqItems();
+  // 섹션 번호는 실제로 그려지는 순서대로 — 출연진이 없는 공연도 번호가 건너뛰지 않는다.
+  let sectionNo = 0;
+  const nextIndex = (): string => String(++sectionNo).padStart(2, '0');
 
   return (
     <>
@@ -93,7 +97,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
       <Section className="pb-28 pt-16 lg:pb-16">
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
-            <SectionHeading eyebrow="소개" index="01" title="공연 소개" as="h2" />
+            <SectionHeading eyebrow="소개" index={nextIndex()} title="공연 소개" as="h2" />
             <div className="space-y-5 break-keep text-base leading-8 text-gray-800 dark:text-gray-200 md:text-lg md:leading-9">
               {paragraphs.map((p) => (
                 <p key={p}>{p}</p>
@@ -112,10 +116,15 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
 
             {show.performers.length > 0 && (
               <div className="mt-16">
-                <SectionHeading eyebrow="출연" index="02" title="출연" as="h2" />
+                <SectionHeading eyebrow="출연" index={nextIndex()} title="출연" as="h2" />
                 <ShowLineup performers={show.performers} />
               </div>
             )}
+
+            <div className="mt-16">
+              <SectionHeading eyebrow="장소" index={nextIndex()} title="오시는 길" as="h2" />
+              <ShowVenueMap show={show} />
+            </div>
           </div>
 
           {/* <lg에서는 핵심 정보(일시·장소·가격·예매)가 소개보다 먼저 보여야 한다 — 펀딩 상세가 모금 현황을
@@ -129,7 +138,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
       <Section variant="alternate" id="tickets" className="scroll-mt-20">
         <SectionHeading
           eyebrow="예매"
-          index="03"
+          index={nextIndex()}
           title="티켓 예매"
           subtitle={bookable ? '온라인 예매는 공연 전날 자정에 마감됩니다. 티켓(QR)은 메일로 보내 드립니다.' : undefined}
           as="h2"
@@ -142,7 +151,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
         </div>
       </Section>
 
-      <FAQSection items={faq} title="자주 묻는 질문" subtitle="티켓 전달·입장·취소에 관해 자주 묻는 질문입니다." eyebrow="FAQ" index="04" variant="default" />
+      <FAQSection items={faq} title="자주 묻는 질문" subtitle="티켓 전달·입장·취소에 관해 자주 묻는 질문입니다." eyebrow="FAQ" index={nextIndex()} variant="default" />
 
       {/* 예매 폼이나 핵심 정보 패널의 예매 버튼이 보이는 동안은 숨는다. */}
       <MobileStickyCta href="#book" label={ctaLabel} visible={bookable} hideWhenInView={['#book', '[data-hide-mobile-cta]']} />
