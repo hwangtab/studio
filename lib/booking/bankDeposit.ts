@@ -15,7 +15,7 @@ import {
 import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails } from '../payments/bankDepositOrders';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
-import { calendarForService, deleteBookingEvent } from './gcal';
+import { calendarForService, deleteBookingEvent, renameBookingEvent } from './gcal';
 import { kstDateString } from './kst';
 import { getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
@@ -108,15 +108,40 @@ export const holdBookingOnCalendar = async (orderNo: string): Promise<void> => {
   }
 };
 
-/** 캘린더 일정을 지운다(best-effort). 실패는 gcalError로 남겨 관리자 화면이 보이게 한다. */
-const removeCalendarEvent = async (booking: BookingOrder['bookings'][number], eventId: string, context: string): Promise<void> => {
+/**
+ * 미입금 취소된 예약의 **[입금 대기] 일정을 지운다**. 성공하면 `gcal_event_id`를 비우고, 실패하면 id를 남긴 채
+ * `gcal_error`에 `waiting_delete:` 사유를 적는다 — 예약은 cancelled라 관리자 "캘린더 재등록"은 열리지 않고
+ * (확정 일정을 지울 경로가 없다), 헬스체크가 "남은 입금 대기 일정"으로 보고하며 관리자 상세의 "대기 일정 지우기"
+ * (`retryWaitingEventDelete`)로 다시 지운다. 남은 일정은 캘린더 바쁨으로 읽혀 웹 예약을 계속 막는다.
+ */
+export const removeWaitingCalendarEvent = async (
+  booking: Pick<BookingOrder['bookings'][number], 'id' | 'serviceType' | 'roomNumber'>, eventId: string,
+): Promise<boolean> => {
   try {
     await deleteBookingEvent(eventId, calendarForService(booking.serviceType), booking.roomNumber);
+    await getDb().run(sql`UPDATE bookings SET gcal_event_id = NULL, gcal_error = NULL WHERE id = ${booking.id} AND gcal_event_id = ${eventId}`);
+    return true;
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
-    console.error('[booking-bank-deposit] 캘린더 일정 삭제 실패', { bookingId: booking.id, context, detail });
-    await getDb().run(sql`UPDATE bookings SET gcal_error = ${`delete(${context}): ${detail}`} WHERE id = ${booking.id}`).catch(() => {});
+    console.error('[booking-bank-deposit] 입금 대기 일정 삭제 실패', { bookingId: booking.id, detail });
+    await getDb().run(sql`UPDATE bookings SET gcal_error = ${`${WAITING_DELETE_ERROR_PREFIX}${detail}`} WHERE id = ${booking.id}`).catch(() => {});
+    return false;
   }
+};
+
+/** `gcal_error`가 이 접두사면 "지우지 못한 입금 대기 일정"이다 — 헬스체크·관리자 화면이 확정 일정 오류와 가른다. */
+export const WAITING_DELETE_ERROR_PREFIX = 'waiting_delete: ';
+
+/** 관리자 "대기 일정 지우기" — 미입금 취소된 예약에 남은 [입금 대기] 일정을 다시 지운다. */
+export const retryWaitingEventDelete = async (orderId: string): Promise<{ ok: boolean; message?: string }> => {
+  const order = await findById(orderId);
+  const booking = order?.bookings[0];
+  if (!order || order.status !== DEPOSIT_CANCELLED || !booking?.gcalEventId) {
+    return { ok: false, message: '지울 입금 대기 일정이 없습니다.' };
+  }
+  return (await removeWaitingCalendarEvent(booking, booking.gcalEventId))
+    ? { ok: true }
+    : { ok: false, message: '캘린더 일정을 지우지 못했습니다. 잠시 뒤 다시 누르거나 구글 캘린더에서 직접 지운 뒤 다시 눌러 주세요.' };
 };
 
 const findById = async (orderId: string): Promise<BookingOrder | undefined> =>
@@ -162,9 +187,9 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
           UPDATE work_orders SET status = 'received', updated_at = unixepoch()
           WHERE order_id = ${order.id} AND status = 'pending' AND ${isPaidNow}
         `)
-      // 대기 일정 id는 비워 둔다 — 후처리가 "아직 확정 일정이 없다"로 읽고 [예약] 일정을 새로 만든다.
+      // 대기 일정 id는 그대로 둔다 — 아래에서 그 일정의 제목을 [예약]으로 바꾼다(새로 만들고 지우지 않는다).
       : db.run(sql`
-          UPDATE bookings SET status = 'confirmed', gcal_event_id = NULL, updated_at = unixepoch()
+          UPDATE bookings SET status = 'confirmed', updated_at = unixepoch()
           WHERE order_id = ${order.id} AND status = 'pending' AND ${isPaidNow}
         `),
   ]);
@@ -172,11 +197,25 @@ export const confirmBookingBankDeposit = async (input: { orderId: string; now: D
     return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다(미입금 취소된 신청은 확정할 수 없습니다). 새로고침해 주세요.' };
   }
 
+  // [입금 대기] 일정이 있으면 제목만 [예약]으로 바꾼다 — 같은 일정이 확정 일정이 된다. 실패하면 gcal_error에
+  // rename 사유를 남긴다: 확정 예약의 캘린더 오류로 보여 관리자 "캘린더 재등록"이 새 [예약] 일정을 만들고 이
+  // 일정을 지운다(그 경로가 지우는 것은 바로 이 대기 일정이라 안전하다).
+  const waitingBooking = order.bookings[0];
+  if (waitingBooking && waitingEventId) {
+    const summary = `[예약] ${getProduct(waitingBooking.productId)?.nameKo ?? waitingBooking.serviceType}${waitingBooking.roomNumber ? ` ${waitingBooking.roomNumber}` : ''} — ${order.customerName}`;
+    try {
+      await renameBookingEvent(waitingEventId, calendarForService(waitingBooking.serviceType), waitingBooking.roomNumber, summary);
+    } catch (error) {
+      const detail = error instanceof Error ? error.message : String(error);
+      console.error('[booking-bank-deposit] 입금 대기 일정 제목 변경 실패', { orderNo: order.orderNo, detail });
+      await db.run(sql`UPDATE bookings SET gcal_error = ${`rename: ${detail}`} WHERE id = ${waitingBooking.id}`).catch(() => {});
+    }
+  }
+
   const fresh = (await findById(order.id)) ?? order;
   const emailSent = await deliverPostConfirmation(fresh);
   const warnings: string[] = [];
   const booking = fresh.bookings[0];
-  if (booking && waitingEventId) await removeCalendarEvent(booking, waitingEventId, 'deposit-confirmed');
   if (booking && booking.startAt.getTime() <= input.now.getTime()) {
     warnings.push('이용 시작 시각이 이미 지난 예약입니다 — 고객과 이용 여부를 확인하고, 이용하지 못했다면 환불해 주세요.');
   }
@@ -215,7 +254,7 @@ export const cancelAwaitingBookingDeposit = async (input: { orderId: string }): 
     return { ok: false, code: 'invalid_state', message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' };
   }
   const booking = order.bookings[0];
-  if (booking?.gcalEventId) await removeCalendarEvent(booking, booking.gcalEventId, 'deposit-cancelled');
+  if (booking?.gcalEventId) await removeWaitingCalendarEvent(booking, booking.gcalEventId);
   return { ok: true };
 };
 

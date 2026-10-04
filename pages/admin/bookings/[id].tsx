@@ -438,6 +438,16 @@ export default function AdminBookingDetailPage({
         {booking.bankDeposit === 'cancelled' && (
           <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
             입금 전에 취소된 계좌 입금 신청입니다 — 늦게 입금이 들어왔다면 고객에게 돌려주거나 다시 신청받아 주세요.
+            {/* 미입금 취소 때 [입금 대기] 캘린더 일정 삭제가 실패했다 — 그 일정이 웹 예약을 막는다. */}
+            {booking.gcalError?.startsWith('waiting_delete: ') && (
+              <div className="mt-3">
+                <p className="font-semibold text-red-700">[입금 대기] 캘린더 일정이 남아 이 시간대의 웹 예약을 막고 있습니다.</p>
+                <Button type="button" variant="outline" className="mt-2" disabled={busy}
+                  onClick={() => runDeposit('delete_waiting_event', '캘린더 일정을 지우지 못했습니다.', '남은 [입금 대기] 캘린더 일정을 지울까요?')}>
+                  대기 일정 지우기
+                </Button>
+              </div>
+            )}
           </div>
         )}
 

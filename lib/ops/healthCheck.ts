@@ -730,6 +730,32 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * **지우지 못한 [입금 대기] 캘린더 일정** — 미입금 취소된 예약의 대기 일정 삭제가 실패한 건
+   * (lib/booking/bankDeposit.ts `removeWaitingCalendarEvent`가 `gcal_error`에 `waiting_delete:`를 남긴다).
+   * 그 일정은 캘린더 바쁨으로 읽혀 웹 예약을 계속 막는다. 확정 예약의 캘린더 오류(위 점검)와 섞지 않는다 —
+   * 그쪽 해소 방법("캘린더 재등록")은 이 예약에 열리지 않는다.
+   */
+  try {
+    const leftover = await db.all<{ order_no: string }>(sql`
+      SELECT o.order_no FROM bookings b JOIN orders o ON o.id = b.order_id
+      WHERE b.gcal_event_id IS NOT NULL AND b.gcal_error LIKE 'waiting_delete:%'
+    `);
+    if (leftover.length > 0) {
+      issues.push({
+        severity: 'medium',
+        href: '/admin/bookings',
+        title: `지우지 못한 [입금 대기] 캘린더 일정 ${leftover.length}건`,
+        detail:
+          `주문번호: ${sample(leftover.map((r) => r.order_no))}\n` +
+          '미입금 취소한 예약의 대기 일정이 캘린더에 남아 그 시간대의 웹 예약을 막고 있습니다. ' +
+          '관리자 > 예약 상세에서 "대기 일정 지우기"를 눌러 주세요.',
+      });
+    }
+  } catch (error) {
+    console.error('[health-check] 남은 입금 대기 일정 조회 실패', { error: error instanceof Error ? error.name : 'unknown' });
+  }
+
+  /**
    * 공연·예약·믹싱 **계좌 입금 주문의 환불 송금 대기** — 고객이 셀프 취소하며 환불 계좌를 적은 건. 환불 기록과
    * 좌석·시간대 해제는 취소 순간 끝났지만(lib/booking/cancel.ts·lib/shows/refund.ts) 돈은 운영자가 그 계좌로
    * 직접 보내야 하고, 보낸 사실은 `refund_accounts.refunded_at`("송금 완료")이 든다. 기한은 위 펀딩 점검과 같은

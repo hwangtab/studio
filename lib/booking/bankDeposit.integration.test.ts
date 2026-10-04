@@ -20,6 +20,7 @@ jest.mock('./gcal', () => ({
   ...jest.requireActual('./gcal'),
   createBookingEvent: jest.fn().mockResolvedValue('evt-confirmed'),
   deleteBookingEvent: jest.fn().mockResolvedValue(undefined),
+  renameBookingEvent: jest.fn().mockResolvedValue(undefined),
 }));
 jest.mock('./email', () => ({
   ...jest.requireActual('./email'),
@@ -35,8 +36,8 @@ jest.mock('../payments/bankDepositOrders', () => ({
 
 /* eslint-disable import/first */
 import { createBookingOrder, createMixingOrder, expireStaleOrders } from './service';
-import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, holdBookingOnCalendar } from './bankDeposit';
-import { createBookingEvent, deleteBookingEvent } from './gcal';
+import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, holdBookingOnCalendar, retryWaitingEventDelete } from './bankDeposit';
+import { createBookingEvent, deleteBookingEvent, renameBookingEvent } from './gcal';
 import { cancelBookingWithRefund } from './cancel';
 import { cancelPayment } from './toss';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from './email';
@@ -140,17 +141,44 @@ describe('예약 계좌 입금 — 입금 확인', () => {
     expect(Number((await one(`SELECT COUNT(*) AS n FROM payments`))?.n)).toBe(1);
   });
 
-  it('대기 중 [입금 대기] 캘린더 일정은 확정 일정을 만든 뒤 지운다', async () => {
+  it('확정하면 [입금 대기] 일정의 제목만 [예약]으로 바꾼다 — 새로 만들거나 지우지 않는다', async () => {
     const bank = await createBank();
     (createBookingEvent as jest.Mock).mockResolvedValueOnce('evt-waiting');
     await holdBookingOnCalendar(bank.orderNo);
     expect((createBookingEvent as jest.Mock).mock.calls[0][0].summary).toMatch(/^\[입금 대기\]/);
-    expect((await one(`SELECT gcal_event_id FROM bookings WHERE id = '${bank.bookingId}'`))?.gcal_event_id).toBe('evt-waiting');
     const order = await orderOf(bank.orderNo);
     await confirmBookingBankDeposit({ orderId: String(order!.id), now: NOW });
-    expect((createBookingEvent as jest.Mock).mock.calls[1][0].summary).toMatch(/^\[예약\]/);
-    expect(deleteBookingEvent).toHaveBeenCalledWith('evt-waiting', 'studio', null);
-    expect((await one(`SELECT gcal_event_id FROM bookings WHERE id = '${bank.bookingId}'`))?.gcal_event_id).toBe('evt-confirmed');
+    expect(renameBookingEvent).toHaveBeenCalledWith('evt-waiting', 'studio', null, expect.stringMatching(/^\[예약\]/));
+    expect(createBookingEvent).toHaveBeenCalledTimes(1);
+    expect(deleteBookingEvent).not.toHaveBeenCalled();
+    expect((await one(`SELECT gcal_event_id, gcal_error FROM bookings WHERE id = '${bank.bookingId}'`))).toMatchObject({ gcal_event_id: 'evt-waiting', gcal_error: null });
+  });
+
+  it('제목 변경이 실패하면 확정 예약의 캘린더 오류로 남긴다 — 재등록이 지우는 것은 그 대기 일정뿐이다', async () => {
+    const bank = await createBank();
+    (createBookingEvent as jest.Mock).mockResolvedValueOnce('evt-waiting');
+    await holdBookingOnCalendar(bank.orderNo);
+    (renameBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('500'));
+    await confirmBookingBankDeposit({ orderId: String((await orderOf(bank.orderNo))!.id), now: NOW });
+    const row = await one(`SELECT gcal_event_id, gcal_error FROM bookings WHERE id = '${bank.bookingId}'`);
+    expect(row?.gcal_event_id).toBe('evt-waiting');
+    expect(String(row?.gcal_error)).toMatch(/^rename: /);
+    expect(createBookingEvent).toHaveBeenCalledTimes(1); // 중복 일정을 만들지 않았다
+  });
+
+  it('미입금 취소의 대기 일정 삭제가 실패하면 id를 남기고 waiting_delete로 표시 — 관리자 재시도로 지운다', async () => {
+    const bank = await createBank();
+    (createBookingEvent as jest.Mock).mockResolvedValueOnce('evt-waiting');
+    await holdBookingOnCalendar(bank.orderNo);
+    (deleteBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('503'));
+    const id = String((await orderOf(bank.orderNo))!.id);
+    expect((await cancelAwaitingBookingDeposit({ orderId: id })).ok).toBe(true);
+    let row = await one(`SELECT gcal_event_id, gcal_error FROM bookings WHERE id = '${bank.bookingId}'`);
+    expect(row?.gcal_event_id).toBe('evt-waiting');
+    expect(String(row?.gcal_error)).toMatch(/^waiting_delete: /);
+    expect((await retryWaitingEventDelete(id)).ok).toBe(true);
+    row = await one(`SELECT gcal_event_id, gcal_error FROM bookings WHERE id = '${bank.bookingId}'`);
+    expect(row).toMatchObject({ gcal_event_id: null, gcal_error: null });
   });
 
   it('미입금 취소는 시간대를 바로 풀고, 그 뒤에는 입금 확인이 되지 않는다', async () => {

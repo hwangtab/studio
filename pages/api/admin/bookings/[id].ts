@@ -8,7 +8,7 @@ import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
-import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide } from '../../../../lib/booking/bankDeposit';
+import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide, retryWaitingEventDelete } from '../../../../lib/booking/bankDeposit';
 import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
 import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
@@ -294,6 +294,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         console.error('[API/admin/bookings/[id]] 계좌 입금 작업 실패:', { action: body.action, orderNo: order.orderNo, error });
         return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
       }
+    }
+
+    if (body.action === 'delete_waiting_event') {
+      // 미입금 취소된 예약에 남은 [입금 대기] 캘린더 일정을 다시 지운다(그 일정이 웹 예약을 막는다).
+      const r = await retryWaitingEventDelete(order.id);
+      return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
     }
 
     if (body.action === 'mark_refund_sent') {
