@@ -1,4 +1,4 @@
-import { showMapEmbedUrl, showMapQuery, descriptionParagraphs, parseNoticesJson, parsePerformersJson, performerNames, serializeNotices, serializePerformers, showMapUrl } from './structured';
+import { descriptionBlocks, showMapEmbedUrl, showMapQuery, descriptionParagraphs, parseNoticesJson, parsePerformersJson, performerNames, serializeNotices, serializePerformers, showMapUrl } from './structured';
 
 describe('shows 구조화 칸 직렬화', () => {
   it('출연진은 왕복이 되고 빈 선택값은 저장하지 않는다', () => {
@@ -41,5 +41,15 @@ describe('shows 구조화 칸 직렬화', () => {
     expect(url.startsWith('https://www.google.com/maps?q=')).toBe(true);
     expect(url).toContain('output=embed');
     expect(decodeURIComponent(url.split('q=')[1].split('&')[0])).toBe('삼청동 라플란드 서울특별시 종로구 삼청로 83');
+  });
+
+  it('소개 블록: ## 는 소제목, > 는 인용(여러 줄 유지), 나머지는 문단', () => {
+    const blocks = descriptionBlocks('첫 문단\n\n## 제목\n\n> "말"\n— 누구\n\n끝 문단');
+    expect(blocks).toEqual([
+      { type: 'p', text: '첫 문단' },
+      { type: 'h', text: '제목' },
+      { type: 'quote', text: '"말"\n— 누구' },
+      { type: 'p', text: '끝 문단' },
+    ]);
   });
 });

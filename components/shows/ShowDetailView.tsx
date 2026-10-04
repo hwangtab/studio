@@ -4,10 +4,10 @@ import { Button } from '../ui/Button';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import SectionHeading from '../ui/SectionHeading';
-import { formatWon, SHOW_CONTACT_PHONE, SHOW_HERO_IMAGE } from '../../lib/shows/copy';
+import { formatWon, SHOW_CONTACT_PHONE, SHOW_HERO_BLUR_CLASS, SHOW_HERO_IMAGE } from '../../lib/shows/copy';
 import { showFaqItems } from '../../lib/shows/faq';
 import type { PublicShow } from '../../lib/shows/queries';
-import { descriptionParagraphs } from '../../lib/shows/structured';
+import { descriptionBlocks } from '../../lib/shows/structured';
 import ShowBookingForm from './ShowBookingForm';
 import ShowFacts from './ShowFacts';
 import ShowLineup from './ShowLineup';
@@ -29,7 +29,7 @@ export const showCtaLabel = (show: PublicShow): { label: string; bookable: boole
 
 export default function ShowDetailView({ show }: { show: PublicShow }) {
   const { label: ctaLabel, bookable } = showCtaLabel(show);
-  const paragraphs = descriptionParagraphs(show.description);
+  const blocks = descriptionBlocks(show.description);
   const faq = showFaqItems();
   // 섹션 번호는 실제로 그려지는 순서대로 — 출연진이 없는 공연도 번호가 건너뛰지 않는다.
   let sectionNo = 0;
@@ -47,6 +47,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
         priority
         overlayGradient={HERO_SCRIM_STRONG}
         backgroundImage={show.coverImage ?? SHOW_HERO_IMAGE}
+        className={SHOW_HERO_BLUR_CLASS}
         imageAlt=""
         aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{show.presenterName} 주최</p>}
         title={show.title}
@@ -89,9 +90,21 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
           <div className="min-w-0">
             <SectionHeading eyebrow="소개" index={nextIndex()} title="공연 소개" as="h2" />
             <div className="space-y-5 break-keep text-base leading-8 text-gray-800 dark:text-gray-200 md:text-lg md:leading-9">
-              {paragraphs.map((p) => (
-                <p key={p}>{p}</p>
-              ))}
+              {blocks.map((b) =>
+                b.type === 'h' ? (
+                  <h3 key={b.text} className="typo-card-title !mt-12 text-gray-900 dark:text-white">
+                    {b.text}
+                  </h3>
+                ) : b.type === 'quote' ? (
+                  <blockquote key={b.text} className="border-l-4 border-primary/40 pl-5 text-gray-700 dark:border-primary-lighter/50 dark:text-gray-300">
+                    {b.text.split('\n').map((line) => (
+                      <p key={line}>{line}</p>
+                    ))}
+                  </blockquote>
+                ) : (
+                  <p key={b.text}>{b.text}</p>
+                ),
+              )}
             </div>
             {show.notices.length > 0 && (
               <ul className="mt-8 space-y-2 break-keep rounded-2xl bg-gray-50 p-5 text-sm leading-7 text-gray-700 dark:bg-gray-800/60 dark:text-gray-300 md:text-base">

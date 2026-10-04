@@ -48,6 +48,8 @@ describe('공연 정의(bakkeoji)', () => {
     expect(errors.some((e) => e.includes('subtitle'))).toBe(true);
     expect(errors.some((e) => e.includes('사진 파일이 없습니다'))).toBe(true);
     expect(errors.some((e) => e.includes('1200x630'))).toBe(true);
+    // 소개가 소제목으로 시작하면 검색 요약이 제목이 된다 — 문단으로 시작해야 한다.
+    expect(validateShowDefinition({ ...bakkeojiShow, description: '## 제목만\n\n문단' }).some((e) => e.includes('문단으로 시작'))).toBe(true);
   });
 });
 

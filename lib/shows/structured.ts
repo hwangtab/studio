@@ -62,6 +62,23 @@ export const serializeNotices = (notices: string[]): string => JSON.stringify(no
 export const descriptionParagraphs = (description: string): string[] =>
   description.split(/\n{2,}/).map((p) => p.trim()).filter(Boolean);
 
+export type DescriptionBlock =
+  | { type: 'p'; text: string }
+  | { type: 'h'; text: string }
+  | { type: 'quote'; text: string };
+
+/**
+ * 소개 본문을 블록으로 — 빈 줄로 가른 문단 중 `## `로 시작하면 소제목, `> `로 시작하면 인용이다. 소개를 풍부하게 쓰려면
+ * 소제목과 인용이 필요한데 칸은 하나(`description`)라 평문 표기를 정했다. 표기가 없는 문단은 그냥 문단이다.
+ * 첫 블록은 문단이어야 한다 — 검색 결과·OG의 한 줄 요약이 첫 문단에서 나온다(시드 검증이 본다).
+ */
+export const descriptionBlocks = (description: string): DescriptionBlock[] =>
+  descriptionParagraphs(description).map((raw): DescriptionBlock => {
+    if (raw.startsWith('## ')) return { type: 'h', text: raw.slice(3).trim() };
+    if (raw.startsWith('> ')) return { type: 'quote', text: raw.replace(/^>\s?/gm, '').trim() };
+    return { type: 'p', text: raw };
+  });
+
 /** 지도 링크 — 등록된 값이 없으면 장소명+주소로 네이버 지도 검색. */
 export const showMapUrl = (show: { mapUrl: string | null; venueName: string; venueAddress: string }): string =>
   show.mapUrl ?? `https://map.naver.com/p/search/${encodeURIComponent(`${show.venueName} ${show.venueAddress}`)}`;
