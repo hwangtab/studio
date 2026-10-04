@@ -27,6 +27,7 @@ import {
   generateFundingOrderNo,
 } from '../../../../../lib/funding/service';
 import { SEND_PENDING } from '../../../../../lib/ops/notificationSentinel';
+import { findSameNameBankDeposits } from '../../../../../lib/funding/bankTransfer';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -88,6 +89,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      */
     if (b.customerName.trim() === PURGED_MARK) {
       return res.status(400).json({ ok: false, message: '이름을 확인해 주세요.' });
+    }
+    /**
+     * **같은 이름으로 이미 들어온 계좌 입금 신청이 있으면 먼저 보여 준다.** 후원자가 폼에서 계좌 입금을
+     * 신청해 두고 입금했는데 운영자가 그 신청을 못 보고 수기 등록을 새로 만들면 같은 돈이 두 번 잡힌다
+     * (SAF2026 2026-09-08 — 다른 프로젝트 신청자의 입금이 수기 후원으로 5건 이중 등록됐다). 그래서
+     * 프로젝트와 무관하게 찾고, 운영자가 "다른 입금"이라고 확인(`acknowledgeExisting: true`)해야 등록한다.
+     * 그 신청에 입금을 이어 붙이려면 등록 대신 그 신청 상세에서 "입금 확인"을 누른다.
+     */
+    if (b.acknowledgeExisting !== true) {
+      const candidates = await findSameNameBankDeposits({ id: '', customerName: b.customerName.trim() });
+      if (candidates.length > 0) {
+        return res.status(409).json({
+          ok: false, code: 'existing_deposit_candidates',
+          message: `같은 이름으로 들어온 계좌 입금 신청이 ${candidates.length}건 있습니다. 그 신청의 입금이라면 등록하지 말고 그 신청에서 "입금 확인"을 눌러 주세요.`,
+          candidates,
+        });
+      }
     }
     /**
      * 실수령액(선택) — 현금으로 실제 받은 금액이 리워드 단가 × 수량 + 추가금과 안 맞을 때

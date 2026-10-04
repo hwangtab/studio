@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { createManualPledge } from '../../../components/admin/fundingActions';
+import { createManualPledge, type ExistingDepositCandidate } from '../../../components/admin/fundingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
@@ -161,6 +161,11 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
    */
   const [formShip, setFormShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [formError, setFormError] = useState<string | null>(null);
+  /**
+   * 같은 이름으로 이미 들어온 계좌 입금 신청 — 서버가 등록을 막고 돌려준 후보. 그 신청의 입금이면
+   * 등록하지 말고 그 신청 상세에서 "입금 확인"을 누른다. 다른 입금이면 확인 후 새로 등록한다.
+   */
+  const [existingCandidates, setExistingCandidates] = useState<ExistingDepositCandidate[]>([]);
 
   // 배너는 목록에 실린 건에 대한 경고라 items에서 센다(표에서 바로 찾아 누를 수 있어야
   // 하므로). 반대로 상단 KPI는 목록과 무관한 전건 집계여서 서버에서 내려온 totals를 쓴다.
@@ -189,9 +194,10 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
     : null;
 
-  const handleCreateManual = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateManual = async (e: React.FormEvent | null, acknowledgeExisting = false) => {
+    e?.preventDefault();
     setFormError(null);
+    if (!acknowledgeExisting) setExistingCandidates([]);
 
     if (!formProjectSlug || formItems.some((item) => !item.rewardId)) {
       setFormError('프로젝트와 리워드를 선택해 주세요.');
@@ -234,6 +240,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       customerEmail: formCustomerEmail.trim() || undefined,
       displayNamePublic: false,
       adminMemo: formMemo.trim() || undefined,
+      ...(acknowledgeExisting ? { acknowledgeExisting: true } : {}),
       // 배송 리워드이고 한 칸이라도 적었을 때만 보낸다 — 빈 객체를 보내면 빈 문자열 주소가 남는다.
       ...(needsShipping && Object.values(formShip).some((v) => v.trim() !== '')
         ? { shipping: Object.fromEntries(Object.entries(formShip).map(([k, v]) => [k, v.trim() || undefined])) }
@@ -243,8 +250,10 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
 
     if (!result.ok) {
       setFormError(result.message ?? '등록에 실패했습니다.');
+      if (result.candidates?.length) setExistingCandidates(result.candidates);
       return;
     }
+    setExistingCandidates([]);
     setShowForm(false);
     setFormItems([{ rewardId: '', quantity: 1 }]);
     setFormAdditionalAmount(0);
@@ -422,6 +431,24 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               {showForm && (
                 <form onSubmit={handleCreateManual} className="mb-6 p-4 bg-gray-50 rounded-xl space-y-3">
                   {formError && <div className="p-2 bg-red-50 text-red-700 rounded text-sm">{formError}</div>}
+                  {existingCandidates.length > 0 && (
+                    <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+                      <p className="font-semibold">같은 이름의 계좌 입금 신청</p>
+                      <ul className="mt-2 space-y-1">
+                        {existingCandidates.map((c) => (
+                          <li key={c.id}>
+                            {c.orderNo} · {STATUS_LABELS[c.status] ?? c.status} · {c.projectSlug} · {formatPriceAmount(c.totalAmount)}원 · {formatKstDateTime(c.createdAt)}
+                            {' '}
+                            <Link href={`/admin/funding/${c.id}`} className="font-semibold underline">이 신청에 입금 확인</Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <Button light type="button" variant="outline" size="sm" className="mt-3" disabled={busy}
+                        onClick={() => void handleCreateManual(null, true)}>
+                        위 신청과 다른 입금입니다 — 새로 등록
+                      </Button>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Field id="form-project-slug" label="프로젝트" className={lightOnlyField}>
                       <Select

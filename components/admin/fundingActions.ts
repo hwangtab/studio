@@ -58,7 +58,14 @@ export const fetchRefundAccount = async (
   }
 };
 
-export const createManualPledge = async (body: Record<string, unknown>): Promise<FundingActionResult> => {
+/** 수기 등록이 막힌 이유가 "같은 이름의 계좌 입금 신청이 있다"일 때 함께 오는 후보. */
+export interface ExistingDepositCandidate {
+  id: string; orderNo: string; status: string; projectSlug: string; totalAmount: number; createdAt: string;
+}
+
+export const createManualPledge = async (
+  body: Record<string, unknown>,
+): Promise<FundingActionResult & { candidates?: ExistingDepositCandidate[] }> => {
   try {
     const r = await fetch('/api/admin/funding/pledges', {
       method: 'POST',
@@ -66,7 +73,14 @@ export const createManualPledge = async (body: Record<string, unknown>): Promise
       credentials: 'same-origin',
       body: JSON.stringify(body),
     });
-    return r.ok ? { ok: true } : { ok: false, message: await readMessage(r, '등록에 실패했습니다.') };
+    if (r.ok) return { ok: true };
+    let json: { message?: string; candidates?: ExistingDepositCandidate[] } = {};
+    try { json = await r.json(); } catch { /* 본문 없음 */ }
+    return {
+      ok: false,
+      message: json.message || '등록에 실패했습니다.',
+      ...(Array.isArray(json.candidates) ? { candidates: json.candidates } : {}),
+    };
   } catch {
     return { ok: false, message: '네트워크 오류' };
   }
