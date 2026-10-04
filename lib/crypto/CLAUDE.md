@@ -5,8 +5,10 @@
 ### 암호화 필드 — 키를 잃으면 값도 잃는다
 
 이 저장소에 DB 필드 단위 암호화가 생겼다(`lib/crypto/fieldCrypto.ts`, AES-256-GCM).
-지금 쓰는 곳은 `funding_creators.resident_number_enc`(원천징수 대상 개설자의 주민등록번호)
-하나다 — 주민등록번호는 저장 시 암호화가 법적 의무라 예외가 없다.
+지금 쓰는 곳은 셋이다 — `funding_creators.resident_number_enc`(원천징수 대상 개설자의 주민등록번호,
+저장 시 암호화가 법적 의무라 예외가 없다), `funding_creators.payout_account_enc`(정산 계좌),
+`funding_refund_accounts.account_number_enc`(계좌 입금 후원자의 환불 계좌번호, 마이그레이션 0048).
+목록의 정본은 `ENCRYPTED_FIELD_TARGETS`다.
 
 - **새로 쓰는 저장 형식은 `v2:<keyId>:<iv_b64>:<tag_b64>:<ct_b64>` 한 문자열.**
   읽기는 `v1:<iv_b64>:<tag_b64>:<ct_b64>`도 받는다 — 운영 DB에 이미 그 값이 있고, 영구히

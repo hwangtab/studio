@@ -181,15 +181,26 @@ export const checkFieldKeyRotationPending = async (): Promise<HealthIssue | null
   const db = getDb();
   const counts: Array<{ label: string; count: number }> = [];
   for (const target of ENCRYPTED_FIELD_TARGETS) {
-    const [row] = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(target.table)
-      .where(
-        and(
-          isNotNull(target.valueColumn),
-          sql`substr(${target.valueColumn}, 1, ${expectedPrefix.length}) <> ${expectedPrefix}`,
-        ),
-      );
+    /**
+     * 대상 하나를 못 읽어도 나머지는 센다 — 새 암호화 표(예: 0048 funding_refund_accounts)를 담은
+     * 코드가 마이그레이션보다 먼저 배포되면 그 표가 없어 여기서 던지고, 그러면 점검 크론 전체가
+     * 멈춘다. 표가 없다는 사실은 같은 크론의 마이그레이션 드리프트 점검이 보고한다.
+     */
+    let row: { count: number } | undefined;
+    try {
+      [row] = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(target.table)
+        .where(
+          and(
+            isNotNull(target.valueColumn),
+            sql`substr(${target.valueColumn}, 1, ${expectedPrefix.length}) <> ${expectedPrefix}`,
+          ),
+        );
+    } catch (error) {
+      console.error(`[health] 회전 대기 집계 실패 — ${target.label}는 건너뛴다`, error);
+      continue;
+    }
     const count = Number(row?.count ?? 0);
     if (count > 0) counts.push({ label: target.label, count });
   }
