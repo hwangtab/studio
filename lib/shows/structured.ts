@@ -65,3 +65,24 @@ export const descriptionParagraphs = (description: string): string[] =>
 /** 지도 링크 — 등록된 값이 없으면 장소명+주소로 네이버 지도 검색. */
 export const showMapUrl = (show: { mapUrl: string | null; venueName: string; venueAddress: string }): string =>
   show.mapUrl ?? `https://map.naver.com/p/search/${encodeURIComponent(`${show.venueName} ${show.venueAddress}`)}`;
+
+/**
+ * 지도 검색어 = `장소명 + 도로명 주소(건물 안쪽 표기 제외)`. 구글 지도는 "삼청로 83 가동 1층"처럼 동·층이 붙은 주소를
+ * 못 찾아 엉뚱한 구역을 보여 준다(2026-10-04 실측: 핀 없이 경복궁 일대) — 건물 번호까지만 남겨야 핀이 찍힌다.
+ * 장소명을 함께 주면 가게 이름(+평점)으로 바로 잡힌다. 층·동 표기는 "가동 1층", "2층", "B1층", "지하 1층" 꼴을 자른다.
+ */
+export const showMapQuery = (show: { venueName: string; venueAddress: string }): string => {
+  const street = show.venueAddress
+    .replace(/\s+(?:[가-힣A-Za-z]동\s*)?(?:지하\s*|B)?\d+층.*$/i, '')
+    .replace(/\s+[가-힣A-Za-z]동\b.*$/, '')
+    .trim();
+  return `${show.venueName} ${street}`.trim();
+};
+
+/**
+ * 지도 iframe 주소 — 구글 지도의 키 없는 임베드(`?q=…&output=embed`, iframe 안에서만 열린다). 연락처 페이지는 스튜디오
+ * 한 곳의 고정 `pb=` 토큰을 쓰지만 공연장은 공연마다 달라 검색어(showMapQuery)로 찾는다. 허용 origin은
+ * middleware.ts의 CSP frame-src(www.google.com).
+ */
+export const showMapEmbedUrl = (show: { venueName: string; venueAddress: string }): string =>
+  `https://www.google.com/maps?q=${encodeURIComponent(showMapQuery(show))}&z=17&hl=ko&output=embed`;
