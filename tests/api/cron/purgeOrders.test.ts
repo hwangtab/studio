@@ -37,6 +37,7 @@ jest.mock('../../../lib/privacy/orderRetention', () => ({
   purgeExpiredAvailabilityBlockMemos: jest.fn(),
   purgeExpiredSubscriptionPaymentMessages: jest.fn(),
   purgeFundingPersonalDataOfPurgedOrders: jest.fn(),
+  purgeFundingRefundAccountsOfPurgedOrders: jest.fn(),
   ORDER_LEGAL_RETENTION_YEARS: 5,
   DISPUTE_RETENTION_YEARS: 3,
   PAYMENT_FAIL_MESSAGE_RETENTION_YEARS: 1,
@@ -62,6 +63,7 @@ import {
   purgeExpiredSubscriptionPaymentMessages,
   purgeExpiredWorkOrderCustomerNotes,
   purgeFundingPersonalDataOfPurgedOrders,
+  purgeFundingRefundAccountsOfPurgedOrders,
   purgeUnusableBillingKeyRawResponses,
 } from '../../../lib/privacy/orderRetention';
 import { sendEmail } from '../../../lib/email/resend';
@@ -81,6 +83,7 @@ const all = [
   purgeExpiredAvailabilityBlockMemos,
   purgeExpiredSubscriptionPaymentMessages,
   purgeFundingPersonalDataOfPurgedOrders,
+  purgeFundingRefundAccountsOfPurgedOrders,
 ] as unknown as jest.Mock[];
 
 const call = async () => {
@@ -101,6 +104,7 @@ beforeEach(() => {
   (closeDormantSubscriptions as jest.Mock).mockResolvedValue({ purged: 13, ended: 14 });
   (purgeExpiredOrderCustomerData as jest.Mock).mockResolvedValue({ purged: 3 });
   (purgeFundingPersonalDataOfPurgedOrders as jest.Mock).mockResolvedValue({ purged: 15 });
+  (purgeFundingRefundAccountsOfPurgedOrders as jest.Mock).mockResolvedValue({ purged: 16 });
   (purgeExpiredPaymentFailMessages as jest.Mock).mockResolvedValue({ purged: 5 });
   (purgeExpiredSubscriptionCustomerData as jest.Mock).mockResolvedValue({ purged: 2 });
   (purgeEndedSubscriptionDisplayNames as jest.Mock).mockResolvedValue({ purged: 1 });
@@ -123,13 +127,14 @@ it('인증 없으면 401이고 아무것도 지우지 않는다', async () => {
   for (const fn of all) expect(fn).not.toHaveBeenCalled();
 });
 
-it('열네 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
+it('열다섯 파기를 각각 돌리고 건수를 따로 돌려준다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
   expect(r.body).toEqual({
     ok: true,
     purgedOrderCustomers: 3,
     purgedFundingPledges: 15,
+    purgedFundingRefundAccounts: 16,
     purgedPaymentFailMessages: 5,
     endedDormantSubscriptions: 14,
     purgedDormantSubscriptionCustomers: 13,

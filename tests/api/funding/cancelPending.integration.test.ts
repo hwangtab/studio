@@ -59,7 +59,7 @@ const call = async (body: unknown) => {
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
 };
 
-/** 중단 전 DB에 남아 있을 법한 pending 무통장 행을 직접 심는다. */
+/** 입금을 기다리는 계좌 입금(bank_transfer) pending 행을 직접 심는다. */
 const insertLegacyPendingBankTransfer = async () => {
   const manageToken = generateManageToken();
   const [order] = await mockDb.insert(schema.orders).values({
@@ -92,15 +92,24 @@ beforeEach(async () => {
 afterAll(() => client.close());
 
 /**
- * 입금 전 무통장 신청의 셀프 해제(pending → expired)는 결제수단과 함께 사라졌다.
- * 남아 있는 레거시 pending 행은 홀드 만료가 스스로 정리한다 — 화면에도 그 버튼이 없다.
- * 이 경로로 들어오면 취소는 결제 확정 건만 받으므로 409다.
+ * 입금 전 계좌 입금 신청의 셀프 해제(pending → expired, "입금 전 신청 취소") — 2026-10-04 계좌 입금
+ * 재도입으로 되살렸다. 받은 돈이 없으니 환불이 아니라 신청을 닫는다(mode: withdrawn).
  */
-it('입금 전 무통장 레거시 행은 셀프 해제되지 않는다 — 홀드 만료가 정리한다', async () => {
+it('입금 전 계좌 입금 신청은 후원자가 취소할 수 있다 — pending → expired', async () => {
   const { orderNo, manageToken } = await insertLegacyPendingBankTransfer();
   const r = await call({ orderNo, token: manageToken });
+  expect(r.status).toBe(200);
+  expect(r.body).toMatchObject({ ok: true, mode: 'withdrawn', refundAmount: 0 });
+  expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('expired');
+  // 두 번째 요청은 이미 닫힌 신청이라 409.
+  expect((await call({ orderNo, token: manageToken })).status).toBe(409);
+});
+
+it('관리자가 수기 등록한 pending 계좌 건은 후원자가 닫을 수 없다', async () => {
+  const { orderNo, manageToken } = await insertLegacyPendingBankTransfer();
+  await client.execute({ sql: "UPDATE funding_pledges SET entry_source='manual' WHERE order_id=(SELECT id FROM orders WHERE order_no=?)", args: [orderNo] });
+  const r = await call({ orderNo, token: manageToken });
   expect(r.status).toBe(409);
-  expect(r.body).toMatchObject({ ok: false, code: 'invalid_state' });
   expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('pending');
 });
 
