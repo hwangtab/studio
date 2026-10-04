@@ -37,16 +37,18 @@ interface Props {
   /** 처음부터 고른 채로 시작할 리워드. 리워드 카드를 눌러 연 모달·`?reward=` 링크가 넘긴다. */
   initialRewardId: string | null;
   /**
-   * 리워드를 이미 고르고 들어온 화면에서 선택 단계를 감춘다(2026-10-04, 되돌림). 리워드
-   * 카드를 눌러 연 모달이 그런 경우다 — 방금 고른 것을 전체 목록에서 또 고르게 하면 무엇을
-   * 고른 건지 의심하게 된다(2026-09-15 #118). 고른 리워드는 읽기 전용으로 보여 주고,
-   * 바꾸려면 모달을 닫고 다른 카드를 누른다.
+   * 리워드를 이미 고르고 들어온 화면에서 선택 단계를 **접어 둔다**(2026-10-04, 되돌림).
+   * 리워드 카드를 눌러 연 모달이 그런 경우다 — 방금 고른 것을 전체 목록에서 또 고르게 하면
+   * 무엇을 고른 건지 의심하게 된다(2026-09-15 #118). 고른 리워드는 요약으로 먼저 보여 주고,
+   * "다른 리워드 보기"로 펼치면 라디오 목록이 나와 **바꿀 수 있다** — #118은 완전히 숨기고
+   * 모달을 닫고 다른 카드를 누르게 했는데, 그건 불편하다는 지적을 받아 접어 두는 쪽으로
+   * 고쳤다(목록은 있지만 기본은 닫힘).
    *
-   * 한 주문에 여러 리워드를 담는 "장바구니" 방식을 2026-09-28~10-04 사이 썼었다("두 리워드를
-   * 원하는 사람이 결제를 두 번 한다"는 추정 때문). 그런데 그 방식을 켜 둔 동안 실제 결제
-   * 완료 12건이 전부 리워드 1개였다 — 추정한 수요가 실재하지 않았다. 리워드마다 담긴 수량을
-   * 관리하는 복잡성(담기·빼기·펼치기·추가 상품 제안)이 거의 쓰이지 않는 경우를 위한 것이었다는
-   * 뜻이라, 되돌린다. 세트 리워드를 두지 않는 것도 여전히 같은 이유(운영자 결정)다.
+   * 한 주문에 여러 리워드를 **담는** "장바구니" 방식을 2026-09-28~10-04 사이 썼었다("두
+   * 리워드를 원하는 사람이 결제를 두 번 한다"는 추정 때문). 그런데 그 방식을 켜 둔 동안
+   * 실제 결제 완료 12건이 전부 리워드 1개였다 — 추정한 수요가 실재하지 않았다. 되돌린 것은
+   * "여러 개를 더하는" 메커니즘(담기·빼기·수량별 관리·추가 상품 제안)이다 — 다른 선택지를
+   * **보는 것** 자체는 남겨 둔다. 세트 리워드를 두지 않는 것은 여전히 같은 이유(운영자 결정)다.
    */
   lockedReward?: boolean;
   remaining: Record<string, number | null>;
@@ -145,6 +147,8 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
       : (project.rewards.find((r) => !isSoldOut(remaining, r.id)) ?? project.rewards[0]).id,
   );
   const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
+  /** 리워드가 잠겨 있을 때(모달에서 카드로 들어옴) 다른 리워드 목록을 펼쳤는가. */
+  const [showAllRewards, setShowAllRewards] = useState(false);
   const [quantityText, setQuantityText] = useState('1');
   const [additionalText, setAdditionalText] = useState('0');
   const [form, setForm] = useState({
@@ -526,11 +530,13 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
       {/*
         리워드는 **하나만 고른다**(2026-10-04, 되돌림 — 위 lockedReward 주석). 모달에서 카드를
-        눌러 들어왔으면 그 리워드로 잠기고(선택 단계 자체를 그리지 않는다), 그 외(하단 바·히어로의
-        "펀딩하기", 리워드 없이 연 /pledge)는 라디오로 하나를 고른다.
+        눌러 들어왔으면 그 리워드로 **시작**하지만, 다른 리워드도 볼 수 있다 — 목록은 접어 두고
+        "다른 리워드 보기"로 펼친다(2026-10-04). 완전히 숨기면(초기 되돌림에서는 그랬다) 바꾸려면
+        모달을 닫고 다른 카드를 눌러야 해서 불편하다는 지적을 받았다. 펼친 목록에서 고르면 그
+        리워드로 **바뀐다**(여러 개를 더하는 "담기"가 아니다 — 그 방식을 되돌린 이유는 위 주석).
       */}
-      <fieldset className={cardClass} aria-labelledby={lockedReward ? undefined : `${uid}-step-reward`}>
-        {lockedReward ? (
+      <fieldset className={cardClass} aria-labelledby={lockedReward && !showAllRewards ? undefined : `${uid}-step-reward`}>
+        {lockedReward && !showAllRewards ? (
           <div className="mb-5 rounded-xl border border-primary bg-primary/5 p-4 dark:border-primary-light dark:bg-primary-light/10">
             <p className="typo-card-meta">고르신 리워드</p>
             <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(reward.amount)}원</p>
@@ -545,7 +551,7 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         {selectionRestored && (
           <p role="status" className="mb-3 typo-card-meta">지난번 결제를 시도할 때 고른 리워드를 다시 담아 두었습니다.</p>
         )}
-        {!lockedReward && (
+        {(!lockedReward || showAllRewards) && (
           <div className="space-y-2">
             {project.rewards.map((r) => {
               const left = remaining[r.id];
@@ -561,6 +567,16 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
               );
             })}
           </div>
+        )}
+        {lockedReward && project.rewards.length > 1 && (
+          <button
+            type="button"
+            onClick={() => setShowAllRewards((open) => !open)}
+            aria-expanded={showAllRewards}
+            className="mt-3 inline-flex min-h-[44px] items-center text-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-primary-lighter dark:hover:text-white dark:focus-visible:ring-primary-lighter/70"
+          >
+            {showAllRewards ? '접기' : `다른 리워드 보기 (${project.rewards.length - 1})`}
+          </button>
         )}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <div>

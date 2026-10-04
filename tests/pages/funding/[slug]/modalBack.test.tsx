@@ -34,6 +34,30 @@ rewards:
 ---
 `, 'demo');
 
+const multiRewardProject = parseFundingProject(`---
+slug: demo2
+title: 데모2
+summary: s
+cover: /c.webp
+goalAmount: 1000
+startAt: 2026-01-01T00:00:00+09:00
+endAt: 2036-01-01T00:00:00+09:00
+rewards:
+  - id: mail
+    title: 감사 메일
+    description: d
+    amount: 5000
+    requiresShipping: false
+    estimatedDelivery: 2026-11
+  - id: cd
+    title: CD
+    description: d
+    amount: 30000
+    requiresShipping: true
+    estimatedDelivery: 2026-12
+---
+`, 'demo2');
+
 beforeEach(() => {
   (useFundingStatus as jest.Mock).mockReturnValue({
     data: { state: 'live', goalAmount: 1000, endAt: '2036-01-01', raisedAmount: 0, backerCount: 0, percent: 0, remaining: { mail: null }, publicBackers: [] },
@@ -81,5 +105,41 @@ describe('모달과 뒤로가기', () => {
     expect(back).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole('dialog')).toBeNull();
     back.mockRestore();
+  });
+});
+
+/**
+ * 리워드 없이 누르는 "펀딩하기"(하단 바·히어로)는 **리워드 섹션으로 스크롤**한다
+ * (2026-10-04, 되돌림) — 모달로 전체 목록을 바로 보여주던 것(2026-09-29)을 되돌린다.
+ * 리워드가 하나뿐인 프로젝트는 스크롤이 군더더기이므로(위 describe 블록, `project`가
+ * 리워드 1개) 그 하나로 곧장 모달을 연다.
+ */
+describe('리워드 없이 누르는 펀딩하기', () => {
+  beforeEach(() => {
+    (useFundingStatus as jest.Mock).mockReturnValue({
+      data: { state: 'live', goalAmount: 1000, endAt: '2036-01-01', raisedAmount: 0, backerCount: 0, percent: 0, remaining: { mail: null, cd: 5 }, publicBackers: [] },
+      error: false, state: 'live',
+    });
+  });
+
+  it('리워드가 여럿이면 모달을 열지 않고 리워드 섹션으로 스크롤한다', () => {
+    const scrollIntoView = jest.fn();
+    const original = document.getElementById.bind(document);
+    jest.spyOn(document, 'getElementById').mockImplementation((id) => {
+      if (id !== 'rewards') return original(id);
+      const el = original(id) ?? document.createElement('div');
+      el.scrollIntoView = scrollIntoView;
+      return el;
+    });
+    render(<FundingProjectPage project={multiRewardProject} initialState="live" />);
+    openFromMobileBar();
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('리워드가 하나뿐이면 그 리워드로 모달을 바로 연다', () => {
+    render(<FundingProjectPage project={project} initialState="live" />);
+    openFromMobileBar();
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
   });
 });
