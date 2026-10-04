@@ -6,7 +6,7 @@ import { generateManageToken } from '../booking/token';
 import { zoneCapacityCondition, ticketTypeQuotaCondition, showtimeSalesWindowCondition } from './conditions';
 import { SHOW_HOLD_SECONDS, SHOW_MAX_PER_ORDER_CAP } from './limits';
 import { generateShowOrderNo, generateTicketCode } from './shape';
-import { AWAITING_DEPOSIT, bankDepositBlockReason, type CheckoutPaymentMethod } from '../payments/bankDeposit';
+import { AWAITING_DEPOSIT, SHOW_BANK_DEPOSIT_SEAT_SHARE, bankDepositBlockReason, type CheckoutPaymentMethod } from '../payments/bankDeposit';
 
 /**
  * libSQL batch 결과의 rowsAffected. lib/funding/service.ts·tests/helpers/showsDb.ts와 같은
@@ -24,7 +24,24 @@ export { SHOW_MAX_PER_ORDER_CAP };
 
 export type CreateShowOrderResult =
   | { ok: true; orderNo: string }
-  | { ok: false; code: 'sold_out' | 'sales_closed' | 'invalid_quantity' | 'ticket_type_mismatch' | 'starts_too_soon' };
+  | { ok: false; code: 'sold_out' | 'sales_closed' | 'invalid_quantity' | 'ticket_type_mismatch' | 'starts_too_soon' | 'show_bank_share_full' };
+
+/**
+ * 계좌 입금 **대기 좌석 상한** 게이트 — 이 회차에서 입금 대기로 잡힌 좌석 + 요청 수량이 정원 합계 ×
+ * `SHOW_BANK_DEPOSIT_SEAT_SHARE` 이하일 때만 참. 대기는 자동으로 풀리지 않아, 상한이 없으면 입금하지 않을
+ * 신청 몇 건이 매진을 만든다. 정원 게이트와 같은 INSERT의 WHERE에 걸어 동시 신청도 넘지 못한다.
+ */
+export function showBankShareCondition(showtimeId: string, quantity: number) {
+  return sql`(
+    coalesce((
+      select count(*) from show_tickets st join orders o on o.order_no = st.order_no
+      where st.showtime_id = ${showtimeId} and st.status = 'held' and o.status = ${AWAITING_DEPOSIT}
+    ), 0) + ${quantity}
+  ) <= (
+    select cast(coalesce(sum(z.capacity), 0) * ${SHOW_BANK_DEPOSIT_SEAT_SHARE} as integer)
+    from show_zones z where z.show_id = (select show_id from showtimes where id = ${showtimeId})
+  )`;
+}
 
 /** quantity가 1~SHOW_MAX_PER_ORDER_CAP 사이의 정수인지 — SQL을 태우기 전에 거른다. */
 function isValidQuantity(quantity: number): boolean {
@@ -104,7 +121,7 @@ export async function createShowOrder(
                           item_amount, vat_amount, total_amount, manage_token)
       SELECT lower(hex(randomblob(16))), ${orderNo}, 'ticket', ${isBank ? AWAITING_DEPOSIT : 'pending'}, ${input.buyerName}, ${input.buyerContact}, ${buyerEmail},
              ${itemAmount}, ${vatAmount}, ${totalAmount}, ${manageToken}
-      WHERE ${windowGate} AND ${zoneGate} AND ${quotaGate}
+      WHERE ${windowGate} AND ${zoneGate} AND ${quotaGate} AND ${isBank ? showBankShareCondition(input.showtimeId, input.quantity) : sql`1 = 1`}
     `)
   );
   statements.push(
@@ -133,6 +150,11 @@ export async function createShowOrder(
     const nowSec = Math.floor(now.getTime() / 1000);
     if (!recheckedShowtime || recheckedShowtime.status !== 'scheduled' || recheckedShowtime.salesCloseAt <= nowSec) {
       return { ok: false, code: 'sales_closed' };
+    }
+    if (isBank) {
+      // 정원은 남았는데 대기 좌석 상한에 걸렸는지 — 그러면 카드로는 살 수 있다고 알려야 한다.
+      const [row] = (await db.all(sql`SELECT ${showBankShareCondition(input.showtimeId, input.quantity)} AS ok`)) as Array<{ ok: number }>;
+      if (!Number(row?.ok)) return { ok: false, code: 'show_bank_share_full' };
     }
     return { ok: false, code: 'sold_out' };
   }

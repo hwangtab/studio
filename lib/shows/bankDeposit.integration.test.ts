@@ -42,7 +42,7 @@ const seed = async (db: ShowsTestDb, opts: { capacity?: number; startsInSec?: nu
     id: 'show-1', slug: 's1', title: '공연', presenterName: 'p', performers: 'a',
     ageRating: '전체', runningMinutes: 60, venueName: '극장', venueAddress: 'addr', description: 'd', status: 'published',
   });
-  await db.insert(showZones).values({ id: 'zone-1', showId: 'show-1', code: 'A', label: 'A', capacity: opts.capacity ?? 2 });
+  await db.insert(showZones).values({ id: 'zone-1', showId: 'show-1', code: 'A', label: 'A', capacity: opts.capacity ?? 10 });
   const startsAt = Math.floor(Date.now() / 1000) + (opts.startsInSec ?? 20 * DAY);
   await db.insert(showtimes).values({ id: 'st-1', showId: 'show-1', startsAt, salesCloseAt: startsAt - 60 });
   await db.insert(showTicketTypes).values({ id: 'type-1', showId: 'show-1', zoneId: 'zone-1', name: '일반', price: 10000 });
@@ -88,6 +88,7 @@ describe('공연 계좌 입금 — 좌석 점유', () => {
     const so = await mockDb.query.showOrders.findFirst({ where: (s, { eq }) => eq(s.orderNo, orderNo) });
     expect(so?.holdExpiresAt).toBeNull();
     expect((await ticketsOf(orderNo)).every((t) => t.status === 'held')).toBe(true);
+    expect((await order({ quantity: 8 })).ok).toBe(true); // 남은 8석
     expect(await order({ quantity: 1 })).toEqual({ ok: false, code: 'sold_out' });
   });
 
@@ -96,7 +97,14 @@ describe('공연 계좌 입금 — 좌석 점유', () => {
     const orderNo = await bankOrder(2);
     expect(await expireStaleShowOrders(new Date(Date.now() + 5 * DAY * 1000))).toBe(0);
     expect((await orderRow(orderNo))?.status).toBe('awaiting_deposit');
-    expect(await order({ quantity: 1 })).toEqual({ ok: false, code: 'sold_out' });
+    expect((await order({ quantity: 9 })).ok).toBe(false); // 대기 2석이 여전히 잡혀 있다
+  });
+
+  it('회차의 입금 대기 좌석이 정원의 30%를 넘으면 계좌 입금만 막는다(카드는 된다)', async () => {
+    await seed(mockDb, { capacity: 10 });
+    expect((await order({ quantity: 3, paymentMethod: 'bank_transfer' })).ok).toBe(true);
+    expect(await order({ quantity: 1, paymentMethod: 'bank_transfer' })).toEqual({ ok: false, code: 'show_bank_share_full' });
+    expect((await order({ quantity: 1 })).ok).toBe(true);
   });
 
   it('회차 시작 2시간 전 이내면 계좌 입금을 받지 않는다(카드는 된다)', async () => {
@@ -138,7 +146,7 @@ describe('공연 계좌 입금 — 입금 확인·미입금 취소', () => {
     expect((await cancelAwaitingShowDeposit({ orderId: id })).ok).toBe(true);
     expect((await orderRow(orderNo))?.status).toBe('deposit_cancelled');
     expect((await ticketsOf(orderNo)).every((t) => t.status === 'void')).toBe(true);
-    expect((await order({ quantity: 2 })).ok).toBe(true);
+    expect((await order({ quantity: 10 })).ok).toBe(true); // 정원 전부가 다시 팔린다
     expect((await confirmShowBankDeposit({ orderId: id, now: new Date() })).ok).toBe(false);
     expect(await deliverShowDepositGuide(orderNo)).toBe('invalid_state');
   });
@@ -228,7 +236,7 @@ describe('공연 계좌 입금 — 리뷰 회귀', () => {
 
 describe('공연 계좌 입금 — 회차 취소', () => {
   it('입금 전 신청은 닫고, 계좌로 결제된 주문은 토스를 부르지 않고 티켓을 남겨 고객이 환불 계좌를 적게 한다(전액)', async () => {
-    await seed(mockDb, { capacity: 5 });
+    await seed(mockDb, { capacity: 10 });
     const waiting = await bankOrder(1);
     const paid = await bankOrder(2);
     await confirmShowBankDeposit({ orderId: (await orderRow(paid))!.id, now: new Date() });

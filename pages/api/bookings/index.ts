@@ -11,7 +11,7 @@ import { validateCreateBookingPayload } from '../../../lib/booking/validation';
 import { deliverBookingDepositGuide, holdBookingOnCalendar } from '../../../lib/booking/bankDeposit';
 import { getDb } from '../../../db/client';
 import { BANK_DEPOSIT_BLOCK_MESSAGES, bankDepositBlockReason, isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
-import { checkBankDepositAbuse } from '../../../lib/payments/bankDepositOrders';
+import { checkBankDepositAbuse, recordBankDepositOrigin } from '../../../lib/payments/bankDepositOrders';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 시작이 임박하면 받지 않는다 — 운영자가 입금을 확인할 시간이 없다. 화면(BookingWizard)과 같은 판정·같은 인자.
     const block = bankDepositBlockReason({ startsAt: kstDateTime(date, startHour), now });
     if (block) return res.status(409).json({ ok: false, code: block, message: BANK_DEPOSIT_BLOCK_MESSAGES[block] });
-    const abuse = await checkBankDepositAbuse(validated.value.customerEmail);
+    const abuse = await checkBankDepositAbuse(validated.value.customerEmail, ip);
     if (!abuse.ok) return res.status(abuse.status).json({ ok: false, code: abuse.code, message: abuse.message });
   }
   let excludeRooms: string[] = [];
@@ -62,11 +62,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     releaseOrderNo: readPreviousOrderNo(req.body),
     paymentMethod,
   });
-  if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.' });
+  if (!result.ok) {
+    const message = result.code === 'day_bank_quota_full'
+      ? BANK_DEPOSIT_BLOCK_MESSAGES.day_bank_quota_full
+      : '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.';
+    return res.status(409).json({ ok: false, code: result.code, message });
+  }
 
   if (paymentMethod === 'bank_transfer') {
     // 안내 메일(고객+운영자)과 운영자 캘린더의 [입금 대기] 표시. 둘 다 실패해도 신청은 성립한다 — 계좌는
     // 이동하는 안내 화면에 나오고, 실패 사유는 notification_error로 관리자 화면·헬스체크에 남는다.
+    await recordBankDepositOrigin(ip, result.orderNo);
     await deliverBookingDepositGuide(result.orderNo);
     await holdBookingOnCalendar(result.orderNo);
     const created = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, result.orderNo) });
