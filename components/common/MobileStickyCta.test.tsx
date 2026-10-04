@@ -49,5 +49,7 @@ describe('MobileStickyCta', () => {
     expect(onOpen).not.toHaveBeenCalled();
     fireEvent.click(link);
     expect(onOpen).toHaveBeenCalledTimes(1);
+    // 링크는 /pledge로 남는다 — 자바스크립트가 없을 때도 결제 페이지로 간다(2026-09-29 통일).
+    expect(link.getAttribute('href')).toBe('/pledge');
   });
 });

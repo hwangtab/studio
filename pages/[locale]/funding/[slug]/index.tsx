@@ -5,7 +5,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
 import { trackMicroEvent } from '../../../../utils/analytics';
 import ProjectDetailView from '../../../../components/funding/ProjectDetailView';
-import FundingMobileCta from '../../../../components/funding/FundingMobileCta';
+import MobileStickyCta from '../../../../components/common/MobileStickyCta';
 import RewardModal from '../../../../components/funding/RewardModal';
 import { useFundingStatus, type FundingStatusResponse } from '../../../../components/funding/useFundingStatus';
 import { buildPageStaticProps } from '../../../../lib/getStatic';
@@ -218,7 +218,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
       />
 
       <RewardModal project={project} reward={openReward} checkout={checkoutOpen && !openReward} remaining={remaining} onClose={closeModal} />
-      <FundingMobileCta visible={canPledge} href={`/ko/funding/${project.slug}/pledge`} onOpen={openCheckout} />
+      <MobileStickyCta visible={canPledge} href={`/ko/funding/${project.slug}/pledge`} label="펀딩하기" onOpen={openCheckout} />
     </>
   );
 }

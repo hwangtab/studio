@@ -114,7 +114,7 @@ export default function ProjectDetailView({
           <>
             {/*
               알약(상태·모금액)을 요약 **위**, 제목 바로 아래에 둔다. 요약 뒤에 두면 모바일에서
-              화면 밖이거나 하단 고정 "펀딩하기" 바(FundingMobileCta) 뒤에 가려진다(2026-09-28
+              화면 밖이거나 하단 고정 "펀딩하기" 바(MobileStickyCta) 뒤에 가려진다(2026-09-28
               실측: iPhone 13에서 알약 하단 621px인데 고정 바가 그 위를 덮고, iPhone SE 568px
               화면에서는 아예 밖). 첫 화면에 "이만큼 모였다"를 싣는 것이 이 알약의 일이다.
               현황을 아직 모르면(미리보기·집계 전) 예전처럼 목표를 적는다.
@@ -137,7 +137,7 @@ export default function ProjectDetailView({
         ctaButtons={
           canPledge ? (
             // 카카오가 아닌 목적지이므로 옐로를 쓰지 않는다(CLAUDE.md 카카오 CTA 규칙).
-            // <lg에서는 FundingMobileCta가 상시 떠 있어 같은 버튼이 한 화면에 둘이 된다.
+            // <lg에서는 MobileStickyCta가 상시 떠 있어 같은 버튼이 한 화면에 둘이 된다.
             // 공용 Button — 모달·결제 화면·모바일 하단 바의 주 버튼과 같은 크기·모서리. 사진 위라
             // 포커스 링만 흰색으로 바꾼다. 스크롤이 아니라 결제 화면을 연다(onPledge).
             <Button asChild size="lg" className="hidden lg:inline-flex focus-visible:ring-white/80 focus-visible:ring-offset-black/40">

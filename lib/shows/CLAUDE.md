@@ -57,7 +57,7 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 ### 남은 것(2026-10-03 기준)
 
 - **공용화(설계안 겹 3)**: `MobileStickyCta`·`StatusBadge`는 새 공용 파일로 만들어 공연이 먼저 쓴다(2026-10-04).
-  **`FundingMobileCta`를 `MobileStickyCta`로 옮기는 것은 10/14 이후**(펀딩 상세 HTML이 바뀐다 — 전환 실험 계측).
+  `FundingMobileCta`는 2026-10-04에 `MobileStickyCta`로 옮겼다(HTML 동일을 렌더 비교로 확인, 열린 실험에 펀딩 없음).
   booking·funding·shows success/fail을 공용 `TransactionResult` 한 벌로 합치는 것은 **하지 않기로 했다** — 펀딩은 유리 카드·
   여러 상태, 공연·예약은 단순해 레이아웃이 다르고, `tests/pages/privateLinkNavigation.test.ts`가 비밀 URL 페이지 **파일 안에**
   브랜드 줄과 `<a href rel="noreferrer">`가 있어야 통과하도록 짜여 있어 셸로 빼면 그 가드와 싸운다. 10/14까지 `BaseCard`·`Button`·카카오 버튼 파일 수정
