@@ -34,7 +34,10 @@ interface TermsSection {
 const TERMS_SECTIONS: TermsSection[] = [
   {
     heading: '1. 예약 성립',
-    body: '온라인 예약은 결제가 완료된 시점에 확정됩니다. 결제 전 슬롯 선점은 임시 상태이며, 정해진 시간 안에 결제가 완료되지 않으면 자동으로 해제됩니다.',
+    body:
+      '온라인 예약은 결제가 완료된 시점에 확정됩니다. 카드·간편결제의 결제 전 슬롯 선점은 임시 상태이며, 정해진 시간 안에 결제가 완료되지 않으면 자동으로 해제됩니다. ' +
+      '계좌 입금(무통장)을 고르시면 안내 화면과 메일에 적힌 계좌로 입금하신 금액을 스튜디오가 확인한 때 예약·주문이 확정되고, 확인되면 메일로 알려 드립니다. 입금하실 때 보내는 분 이름은 신청하신 분 성함으로 해 주세요. ' +
+      '입금을 기다리는 동안 그 시간대는 다른 분이 예약할 수 없게 잡아 두며, 안내한 입금 기한이 지나도 자동으로 취소하지 않습니다. 입금 전에는 예약 확인 페이지에서 신청을 취소할 수 있습니다. 이용 시작까지 2시간이 남지 않은 예약은 계좌 입금을 받지 않습니다.',
   },
   {
     heading: '2. 이용',
@@ -42,7 +45,9 @@ const TERMS_SECTIONS: TermsSection[] = [
   },
   {
     heading: '3. 취소 및 환불',
-    body: '예약 취소는 예약 확인 페이지에서 직접 진행할 수 있으며, 취소 시점에 따라 아래 환불 규정이 적용됩니다.',
+    body:
+      '예약 취소는 예약 확인 페이지에서 직접 진행할 수 있으며, 취소 시점에 따라 아래 환불 규정이 적용됩니다. ' +
+      '카드·간편결제는 결제 수단으로 환불되고, 계좌 입금으로 결제하신 경우에는 취소하실 때 적어 주신 환불 계좌(은행·계좌번호·예금주)로 접수일부터 3영업일 이내에 보내 드립니다. 환불 계좌는 정확히 적어 주세요.',
   },
   {
     heading: '4. 음원 발매 홍보',
@@ -77,7 +82,7 @@ const TermsPage: NextPageWithLayout<TermsPageProps> = ({ locale }) => {
         <div className="max-w-4xl mx-auto">
           <h1 className="typo-section-title mb-4 text-gray-900 dark:text-white">{title}</h1>
           <p className="typo-card-body text-gray-700 dark:text-gray-300 mb-2">{subtitle}</p>
-          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">시행일: 2026년 9월 15일</p>
+          <p className="typo-card-meta text-gray-500 dark:text-gray-400 mb-8">시행일: 2026년 10월 4일</p>
 
           <div className="space-y-6">
             {TERMS_SECTIONS.map((section) => (
