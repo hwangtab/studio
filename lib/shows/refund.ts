@@ -8,6 +8,7 @@ import type { TossPayment } from '../booking/toss';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
 import { rowsAffectedOf } from './service';
 import { parseLeadingTag } from './tossCodes';
+import type { ShowRefundVia } from './emailHtml';
 import { isBankDepositPayment } from '../payments/bankDeposit';
 import {
   deleteRefundAccount,
@@ -56,7 +57,7 @@ export type RefundOutcome =
    * `refundVia` — `payment`는 토스 결제 취소, `bank_account`는 계좌 입금 주문이라 운영자가 환불 계좌로 송금한다
    * (고객 요청이면 그 계좌를 이 호출이 받아 저장했다).
    */
-  | { status: 'refunded'; amount: number; orderStatus: 'partially_refunded' | 'refunded'; refundVia: 'payment' | 'bank_account' }
+  | { status: 'refunded'; amount: number; orderStatus: 'partially_refunded' | 'refunded'; refundVia: ShowRefundVia }
   /** `message`는 사유 코드 대신 그대로 보여 줄 문구(환불 계좌 형식 오류처럼 입력에 따라 달라지는 것). */
   | { status: 'rejected'; reason: string; message?: string }
   | { status: 'toss_unknown' };
@@ -237,7 +238,8 @@ export async function refundShowTickets(
     }
     // 관리자 기록은 환불 계좌 표를 건드리지 않는다 — '송금 완료'는 그 행에서 명시적으로 누를 때만(mark_refund_sent).
     const orderStatus = await settleOrderStatus(order.id, input.orderNo);
-    return { status: 'refunded', amount: totalAmount, orderStatus, refundVia: 'bank_account' };
+    // 고객 요청은 앞으로 송금(bank_account), 관리자 기록은 이미 송금한 것(bank_account_sent) — 메일 문구가 갈린다.
+    return { status: 'refunded', amount: totalAmount, orderStatus, refundVia: requestedBy === 'customer' ? 'bank_account' : 'bank_account_sent' };
   }
 
   // 2) 토스 부분 취소.

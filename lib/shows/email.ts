@@ -10,7 +10,9 @@ import {
   buildShowRefundEmailHtml,
   buildShowTicketEmailHtml,
   buildShowtimeCancelledEmailHtml,
+  showRefundHeading,
   showRefundViaSentence,
+  type ShowRefundVia,
   showtimeCancelledRefundSentence,
 } from './emailHtml';
 import { formatEntryNumber, formatShowtimeLabel } from './format';
@@ -113,14 +115,14 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
 
 export const buildShowRefundEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec'>
-    & { refundedAmount: number; fullyRefunded: boolean; refundVia?: 'payment' | 'bank_account' },
+    & { refundedAmount: number; fullyRefunded: boolean; refundVia?: ShowRefundVia },
 ): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabel(d.startsAtSec);
   return {
-    subject: `[스튜디오 놀] ${d.refundVia === 'bank_account' ? '환불 요청을 접수했습니다' : '환불이 완료되었습니다'} — ${d.showTitle}`,
+    subject: `[스튜디오 놀] ${showRefundHeading(d.refundVia)} — ${d.showTitle}`,
     html: buildShowRefundEmailHtml({ ...d, when, manageUrl: manageUrl(d.orderNo, d.manageToken), contact: CUSTOMER_REPLY_TO }),
     text: [
-      `${d.buyerName}님, 환불이 완료되었습니다.`,
+      `${d.buyerName}님, ${showRefundHeading(d.refundVia)}.`,
       '',
       `공연: ${d.showTitle} (${when})`,
       `주문번호: ${d.orderNo}`,
@@ -282,7 +284,7 @@ export const sendShowTicketEmail = async (
 /** 환불 완료 안내. 호출부: refundShowTickets가 `refunded`를 돌려준 직후(API 라우트)·syncShowCancelsFromToss. */
 export const sendShowRefundEmail = async (
   orderNo: string,
-  refund: { refundedAmount: number; fullyRefunded: boolean; refundVia?: 'payment' | 'bank_account' },
+  refund: { refundedAmount: number; fullyRefunded: boolean; refundVia?: ShowRefundVia },
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };

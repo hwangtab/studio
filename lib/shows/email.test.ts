@@ -61,3 +61,21 @@ describe('shows email 본문', () => {
     expect(resolveShowRecipient('', '010-1234-5678')).toBeNull();
   });
 });
+
+describe('환불 메일 — 계좌 입금', () => {
+  it('고객이 요청한 계좌 환불은 제목·첫 줄·HTML 모두 "환불 요청을 접수했습니다"이고 3영업일 송금을 말한다', () => {
+    const m = buildShowRefundEmail({ ...base, refundedAmount: 10000, fullyRefunded: false, refundVia: 'bank_account' });
+    expect(m.subject).toContain('환불 요청을 접수했습니다');
+    expect(m.text.split('\n')[0]).toContain('환불 요청을 접수했습니다');
+    expect(m.text).not.toContain('환불이 완료되었습니다');
+    expect(m.text).toContain('3영업일 이내');
+    expect(m.html).not.toContain('환불이 완료되었습니다');
+  });
+  it('관리자가 기록한 계좌 환불(이미 송금)은 "완료"이고 3영업일 문구가 없다', () => {
+    const m = buildShowRefundEmail({ ...base, refundedAmount: 10000, fullyRefunded: true, refundVia: 'bank_account_sent' });
+    expect(m.subject).toContain('환불이 완료되었습니다');
+    expect(m.text).not.toContain('3영업일');
+    expect(m.html).not.toContain('3영업일');
+    expect(m.text).toContain('계좌로 보내 드렸습니다');
+  });
+});
