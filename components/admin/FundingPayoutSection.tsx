@@ -277,7 +277,7 @@ export function FundingPayoutSection({
             <Row label="모금액" value={won(payout.grossAmount)} />
             <Row label="환불" value={minus(payout.refundAmount)} negative />
             <Row
-              label="수기 등록 몫"
+              label="계좌로 받은 몫(수기 등록·계좌 입금)"
               hint="결제 수수료 대상에서 빠집니다"
               value={payout.manualGrossAmount > 0 ? won(payout.manualGrossAmount) : '없음'}
             />
