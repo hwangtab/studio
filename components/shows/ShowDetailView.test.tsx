@@ -41,16 +41,18 @@ describe('ShowDetailView', () => {
     ctas.forEach((a) => expect(a.getAttribute('href')).toBe('#book'));
   });
 
-  it('포스터는 히어로 배경이 아니라 본문에서 원본 링크와 함께 보인다', () => {
+  it('포스터는 히어로 안 카드가 아니라 본문에서 원본 링크와 함께 보인다', () => {
     const { container } = render(<ShowDetailView show={show} />);
     const poster = screen.getByAltText('공연 제목 포스터');
     expect(poster).toBeTruthy();
     const link = screen.getByRole('link', { name: '공연 제목 포스터 원본 크게 보기' });
     expect(link.getAttribute('href')).toBe('/images/shows/x.webp');
     expect(link.getAttribute('target')).toBe('_blank');
-    // 히어로 배경 이미지는 공연과 무관한 고정 사진이다 — 포스터가 두 번 쓰이지 않는다.
-    const heroImgs = Array.from(container.querySelectorAll('section img')).map((i) => i.getAttribute('src') ?? '');
-    expect(heroImgs.filter((src) => src.includes('x.webp')).length).toBe(1);
+    // 히어로 안에 작은 포스터 카드는 없다 — 포스터 <img>는 히어로 배경(alt="")과 본문 포스터(alt 있음) 둘뿐이다.
+    const withAlt = Array.from(container.querySelectorAll('img')).filter((i) => (i.getAttribute('alt') ?? '') === '공연 제목 포스터');
+    expect(withAlt.length).toBe(1);
+    const hero = container.querySelector('section') as HTMLElement;
+    expect(hero.querySelector('img[alt="공연 제목 포스터"]')).toBeNull();
   });
 
   it('취소된 공연은 안내가 뜨고 예매 버튼이 없다', () => {
