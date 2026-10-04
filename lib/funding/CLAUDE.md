@@ -229,8 +229,10 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 ### 계좌 입금(무통장)은 자동 취소가 없다 — 운영자가 통장을 보고 확인한다 (마이그레이션 0048)
 
 2026-09-11에 걷어냈다가(PR #77) 2026-10-04에 되살렸다 — 은행·ATM에서 직접 보내는 노년층
-후원자를 위해서다. 계좌·기한·판정의 정본은 `lib/funding/bankAccount.ts` 하나이고 화면·메일이 거기서
-읽는다(약관·처리방침 본문에는 계좌번호를 쓰지 않는다 — "안내 화면·메일에 표시된 계좌").
+후원자를 위해서다. 계좌·안내 기한·입력 상한의 정본은 **결제 공용** `lib/payments/bankAccount.ts`이고
+(다음 단계에서 공연·예약·믹싱도 계좌 입금을 붙인다), 펀딩 고유 규칙(한정 리워드 불가·온라인 판정·열린
+신청 상한)은 `lib/funding/bankAccount.ts`다. 안내 화면은 결제 공용 `components/payments/BankDepositGuide.tsx`
+(금액·기한·이름·호칭을 props로). 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·메일에 표시된 계좌").
 
 - **한정 수량 리워드는 계좌 입금 불가.** `bankTransferBlockReason`을 서버 검증(validation.ts)과 후원
   폼(PledgeWizard)이 같은 인자로 부른다. 그래서 입금 확인 때 재고를 다시 셀 필요가 없다.
@@ -243,16 +245,23 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 - **입금 확인**(`lib/funding/bankTransfer.ts` `confirmBankDeposit`)은 pending과 **expired**(늦은 입금)를
   paid로 바꾸는 낙관적 UPDATE 한 문장에 `send_pending` 센티널을 함께 적고 `deliverConfirmedEmailsOnce`로
   확정 메일을 보낸다(수기 등록과 같은 규약). 두 번 눌러도 한 번만 전이한다.
-- **pending 계좌 입금은 모금액·건수·명단·응원 메시지에 안 들어간다** — 집계가 전부
-  `LIVE_FUNDING_ORDER_STATUSES`(paid·partially_refunded)만 센다.
+- **열린 계좌 입금 대기는 입금 확인 전에도 공개 집계에 들어간다**(운영자 결정 2026-10-04, SAF 방식) —
+  모금액·후원 건수/인원·명단·응원 메시지·개설자 판매 수량·관리자 상단 지표가 전부
+  `countedFundingPledgeSql()`(lib/funding/refundable.ts — LIVE + pending·bank_transfer·online) 하나를 본다.
+  새 집계 쿼리를 만들면 이 함수를 쓸 것. **정산·발송(CSV·개설자 배송 목록)·내려받기·환불 판정은 받은 돈만**
+  (LIVE 그대로) — 정산 미리보기는 빠진 입금 대기 건수·금액을 따로 알린다. 미입금 취소·입금 전 신청
+  취소·입금 확인·신청 생성 뒤에는 `revalidateFundingPaths`로 목록·상세를 다시 만든다(ISR에 첫 화면 숫자가
+  박힌다). 열린 입금 대기는 재고도 차지한다(새 계좌 입금은 한정 리워드를 못 받아 옛 무통장 행만 해당).
 - **온라인 계좌 입금과 관리자 수기 등록을 가른다.** 둘 다 `payment_method='bank_transfer'`이고
   `entry_source`('online'/'manual')만 다르다. `assessSelfCancel`·`canWithdrawBeforeDeposit`은
   `entrySource`를 **필수 인자**로 받고, manage SSR과 cancel.ts가 같은 함수를 쓴다(판정 테스트
   policy.test.ts와 SSR 배선 테스트 tests/pages/funding/manage/[orderNo].test.ts를 따로 둔다 — PR #77은
   배선에서 났다). 온라인 계좌 입금은 셀프 취소 시 **환불 계좌**를 받고, 수기 등록은 문의로 돌린다.
-- **환불 계좌는 별도 표 `funding_refund_accounts`**(주문당 1행)다. 계좌번호만 fieldCrypto로 암호화,
-  은행명·예금주는 평문. `funding_pledges`에 컬럼을 더하지 않은 것과 `orders`와 relation을 두지 않은
-  것은 0037 절과 같은 배포 순서 이유다. 접수는 `refund_requested_at` 선점이 이긴 요청만 계좌를 쓴다
+- **환불 계좌는 결제 공용 표 `refund_accounts`**(`lib/payments/refundAccount.ts`)다 — (`order_kind`
+  'funding'|'session'|'mixing'|'show', `order_no`) UNIQUE로 주문을 가리키고(공연은 `show_orders`에 있어
+  FK로 못 묶는다), 요청 시각(`requested_at`)·송금 완료 시각(`refunded_at`)을 남긴다. 계좌번호만
+  fieldCrypto로 암호화, 은행명·예금주는 평문. 기존 주문 표에 컬럼을 더하지 않은 것과 relation을 두지
+  않은 것은 0037 절과 같은 배포 순서 이유다. 접수는 `refund_requested_at` 선점이 이긴 요청만 계좌를 쓴다
   (같은 초의 두 번째 요청이 계좌를 덮어쓰던 것을 테스트로 잡았다). 관리자는 "계좌 보기"를 누를 때만
   복호화한 값을 받는다(`pages/api/admin/funding/pledges/[id]/refund-account.ts`, no-store, 접속기록
   `funding_refund_account_view`). 송금한 뒤 "송금 완료(환불 기록)" = 기존 `refund` 액션의 기록 경로.
