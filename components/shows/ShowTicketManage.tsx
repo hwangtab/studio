@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 
 import BaseCard from '../ui/BaseCard';
+import StatusBadge from '../ui/StatusBadge';
 import { Button } from '../ui/Button';
 import { formatWon, SHOW_CONTACT_PHONE } from '../../lib/shows/copy';
 import { formatEntryNumber } from '../../lib/shows/format';
@@ -116,15 +117,7 @@ export default function ShowTicketManage({ order, token, qr }: Props) {
                     <p className="typo-card-meta">티켓 {i + 1}</p>
                     <p className="typo-card-subtitle text-gray-900 dark:text-white">{t.ticketTypeName}</p>
                   </div>
-                  <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                      live
-                        ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-primary-lighter'
-                        : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
-                    }`}
-                  >
-                    {statusLabel}
-                  </span>
+                  <StatusBadge tone={live ? 'active' : 'neutral'}>{statusLabel}</StatusBadge>
                 </div>
                 {qrUrl && (
                   <div className="mt-4 flex justify-center">

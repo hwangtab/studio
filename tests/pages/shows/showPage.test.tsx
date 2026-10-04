@@ -6,7 +6,7 @@ import type { PublicShow } from '../../../lib/shows/queries';
 jest.mock('../../../components/SEO', () => () => null);
 jest.mock('../../../components/shows/ShowBookingForm', () => () => null);
 jest.mock('../../../components/shows/ShowLineup', () => () => null);
-jest.mock('../../../components/shows/ShowMobileCta', () => () => null);
+jest.mock('../../../components/common/MobileStickyCta', () => () => null);
 jest.mock('../../../lib/shows/queries', () => ({ getPublicShowBySlug: jest.fn() }));
 
 const show = {

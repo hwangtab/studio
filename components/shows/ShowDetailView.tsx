@@ -1,6 +1,7 @@
 import Image from 'next/image';
 
 import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
+import MobileStickyCta from '../common/MobileStickyCta';
 import { Button } from '../ui/Button';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
@@ -12,7 +13,6 @@ import { descriptionParagraphs } from '../../lib/shows/structured';
 import ShowBookingForm from './ShowBookingForm';
 import ShowFacts from './ShowFacts';
 import ShowLineup from './ShowLineup';
-import ShowMobileCta from './ShowMobileCta';
 
 /**
  * 공연 상세 합성 — 펀딩의 ProjectDetailView에 대응한다. 히어로는 사이트 공용 ImageHero(포스터를 배경
@@ -74,7 +74,7 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
         }
         ctaButtons={
           bookable ? (
-            // <lg에서는 ShowMobileCta가 상시 떠 있어 같은 버튼이 둘이 된다 — 펀딩 상세와 같은 처리.
+            // <lg에서는 MobileStickyCta가 상시 떠 있어 같은 버튼이 둘이 된다 — 펀딩 상세와 같은 처리.
             <Button asChild size="lg" className="hidden lg:inline-flex focus-visible:ring-white/80 focus-visible:ring-offset-black/40">
               <a href="#book">{ctaLabel}</a>
             </Button>
@@ -144,7 +144,8 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
 
       <FAQSection items={faq} title="자주 묻는 질문" subtitle="티켓 전달·입장·취소에 관해 자주 묻는 질문입니다." eyebrow="FAQ" index="04" variant="default" />
 
-      {bookable && <ShowMobileCta label={ctaLabel} />}
+      {/* 예매 폼이나 핵심 정보 패널의 예매 버튼이 보이는 동안은 숨는다. */}
+      <MobileStickyCta href="#book" label={ctaLabel} visible={bookable} hideWhenInView={['#book', '[data-hide-mobile-cta]']} />
     </>
   );
 }

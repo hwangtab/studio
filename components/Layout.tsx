@@ -118,7 +118,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
    * 그 폭에서만 숨긴다.
    */
   const isFundingDetail = router.pathname === '/[locale]/funding/[slug]';
-  /** 공연 상세도 하단 고정 예매 바(ShowMobileCta, lg:hidden)를 쓴다 — 펀딩 상세와 같은 처리. */
+  /** 공연 상세도 하단 고정 예매 바(MobileStickyCta, lg:hidden)를 쓴다 — 펀딩 상세와 같은 처리. */
   const isShowDetail = router.pathname === '/[locale]/shows/[slug]';
   /**
    * 계약 화면에서는 떠 있는 버튼을 전부 치운다.
