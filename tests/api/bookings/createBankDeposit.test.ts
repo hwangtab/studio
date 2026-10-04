@@ -86,26 +86,12 @@ describe('POST /api/bookings — 계좌 입금', () => {
     expect(res.status).toBe(400);
   });
 
-  it('같은 이메일(정규화)의 열린 입금 대기가 3건이면 409 — 공연·예약·믹싱 합산, +태그·대소문자로 우회 못 한다', async () => {
-    for (const [i, h] of [12, 15, 18].entries()) {
+  it('같은 이메일로 여러 건 신청해도 막지 않는다 — 계좌 입금 전용 상한은 없다(운영자 결정 2026-10-04)', async () => {
+    for (const [i, h] of [11, 12, 15, 18].entries()) {
       const ok = await call(bookingHandler, { productId: 'recording-pro', date: futureDate(10 + i), startHour: h, ...customer, paymentMethod: 'bank_transfer' });
       expect(ok.status).toBe(201);
     }
-    const res = await call(mixingHandler, {
-      productId: 'mixing-level1', songCount: 1, vocalTuning: false, ...customer, customerEmail: 'Bank+x@Example.com', paymentMethod: 'bank_transfer',
-    });
-    expect(res.status).toBe(409);
-    expect(res.body.code).toBe('too_many_open_deposits');
-    // 토스 결제는 이 상한과 무관하다.
-    const toss = await call(mixingHandler, { productId: 'mixing-level1', songCount: 1, vocalTuning: false, ...customer });
-    expect(toss.status).toBe(201);
-  });
-
-  it('이메일당 시간 상한에 걸리면 429이고 주문을 만들지 않는다', async () => {
-    (consumeRateLimit as jest.Mock).mockImplementation(async (key: string) => !key.startsWith('bank_deposit:email:'));
-    const res = await call(bookingHandler, { productId: 'recording-pro', date: futureDate(20), startHour: 14, ...customer, paymentMethod: 'bank_transfer' });
-    expect(res.status).toBe(429);
-    expect(Number((await client.execute('SELECT COUNT(*) c FROM orders')).rows[0].c)).toBe(0);
+    expect((consumeRateLimit as jest.Mock).mock.calls.some(([key]: [string]) => key.includes('email'))).toBe(false);
   });
 
   it('이용 시작 2시간 전 이내면 409 starts_too_soon(화면과 같은 판정) — 카드는 된다', async () => {

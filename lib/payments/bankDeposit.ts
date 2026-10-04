@@ -91,11 +91,6 @@ export const bankDepositDeadlineOf = (input: { createdAt: Date; startsAt: Date |
   return input.startsAt && input.startsAt.getTime() < byDays.getTime() ? input.startsAt : byDays;
 };
 
-/** 같은 이메일(정규화)로 동시에 열려 있을 수 있는 계좌 입금 대기 건수 — 공연·예약·믹싱 합산. */
-export const MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL = 3;
-/** 같은 이메일(정규화)로 한 시간에 만들 수 있는 계좌 입금 신청 수 — 신청마다 안내 메일이 나간다. */
-export const BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR = 5;
-
 /** 환불 계좌 표(`refund_accounts.order_kind`)에 적는 주문 종류. `orders.type` → 표의 값. */
 export const refundAccountKindOf = (orderType: string): 'funding' | 'session' | 'mixing' | 'show' | null => {
   if (orderType === 'ticket') return 'show';

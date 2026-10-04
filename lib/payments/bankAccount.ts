@@ -1,9 +1,9 @@
 /**
  * **계좌 입금**(무통장)의 받는 계좌·안내 기한·입력 상한 — 결제 공용 정본.
  *
- * 펀딩이 먼저 쓰고(2026-10-04), 다음 단계에서 공연 티켓·연습실/녹음 예약·믹싱 주문도 계좌 입금을
- * 붙인다. 그래서 결제 종류와 무관한 것(계좌·기한·안내 시각 표기·환불 계좌 입력 상한·남용 상한용
- * 이메일 정규화)만 여기 두고, 펀딩 고유 규칙(한정 리워드 불가 등)은 lib/funding/bankAccount.ts에 둔다.
+ * 펀딩·공연 티켓·연습실/녹음 예약·믹싱 주문이 함께 쓴다. 결제 종류와 무관한 것(계좌·기한·안내 시각
+ * 표기·환불 계좌 입력 상한)만 여기 두고, 펀딩 고유 규칙(한정 리워드 불가 등)은 lib/funding/bankAccount.ts,
+ * 공연·예약·믹싱 규칙은 lib/payments/bankDeposit.ts에 둔다.
  *
  * 화면과 메일이 모두 여기서 계좌를 읽는다. 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·
  * 메일에 표시된 계좌") — 계좌를 바꿀 때 동의 문서 판본까지 올리지 않아도 되게.
@@ -53,24 +53,3 @@ export const formatKstDeadline = (deadline: Date): string =>
  * (lib/payments/refundAccount.ts)이 같은 값을 본다. 화면이 import하므로 여기(클라이언트 안전)에 둔다.
  */
 export const REFUND_ACCOUNT_LIMITS = { bankName: 30, accountNumber: 30, accountHolder: 30 } as const;
-
-/**
- * 계좌 입금 신청의 **남용 상한에 쓰는** 이메일 정규화 — 저장값은 바꾸지 않는다.
- *
- * 소문자로 맞추고, `+태그`를 떼고, gmail·googlemail은 로컬 부분의 점을 지우고 도메인을 gmail.com으로
- * 모은다. 같은 수신함으로 가는 별칭(`a+1@`, `a.b@gmail`)을 바꿔 가며 상한을 우회하지 못하게 한다.
- */
-export const normalizeEmailForLimit = (email: string): string => {
-  const lower = email.trim().toLowerCase();
-  const at = lower.lastIndexOf('@');
-  if (at <= 0) return lower;
-  let local = lower.slice(0, at);
-  let domain = lower.slice(at + 1);
-  const plus = local.indexOf('+');
-  if (plus >= 0) local = local.slice(0, plus);
-  if (domain === 'gmail.com' || domain === 'googlemail.com') {
-    local = local.replace(/\./g, '');
-    domain = 'gmail.com';
-  }
-  return `${local}@${domain}`;
-};

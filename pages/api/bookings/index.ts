@@ -11,7 +11,6 @@ import { validateCreateBookingPayload } from '../../../lib/booking/validation';
 import { deliverBookingDepositGuide, holdBookingOnCalendar } from '../../../lib/booking/bankDeposit';
 import { getDb } from '../../../db/client';
 import { BANK_DEPOSIT_BLOCK_MESSAGES, bankDepositBlockReason, isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
-import { checkBankDepositAbuse } from '../../../lib/payments/bankDepositOrders';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -43,8 +42,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // 시작이 임박하면 받지 않는다 — 운영자가 입금을 확인할 시간이 없다. 화면(BookingWizard)과 같은 판정·같은 인자.
     const block = bankDepositBlockReason({ startsAt: kstDateTime(date, startHour), now });
     if (block) return res.status(409).json({ ok: false, code: block, message: BANK_DEPOSIT_BLOCK_MESSAGES[block] });
-    const abuse = await checkBankDepositAbuse(validated.value.customerEmail);
-    if (!abuse.ok) return res.status(abuse.status).json({ ok: false, code: abuse.code, message: abuse.message });
   }
   let excludeRooms: string[] = [];
   try {

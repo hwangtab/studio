@@ -24,7 +24,7 @@ jest.mock('./repository', () => ({
 }));
 
 /* eslint-disable import/first */
-import { cancelUnpaidBankDeposit, confirmBankDeposit, countOpenBankDeposits, deliverDepositGuide, findSameNameBankDeposits } from './bankTransfer';
+import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide, findSameNameBankDeposits } from './bankTransfer';
 import { cancelFundingPledge } from './cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingDepositGuideEmails } from './email';
 import { parseFundingProject } from './projects';
@@ -426,15 +426,6 @@ describe('리뷰 지적 — 재현', () => {
     const r = await confirmBankDeposit({ orderId: c.id, now: NOW });
     expect(r.ok).toBe(true);
     expect(r.ok && r.warnings?.[0]).toContain('추가로 보낼 몫');
-  });
-
-  it('[4] 열린 입금 대기 건수는 정규화한 이메일로 센다', async () => {
-    await createBank({ customerEmail: 'hogil@gmail.com' });
-    await createBank({ customerEmail: 'ho.gil+2@gmail.com' });
-    const closed = await createBank({ customerEmail: 'h.o.gil@googlemail.com' });
-    await cancelUnpaidBankDeposit({ id: closed.id });
-    await createBank({ customerEmail: 'other@gmail.com' });
-    expect(await countOpenBankDeposits('demo', 'hogil@gmail.com')).toBe(2);
   });
 
   it('[1] 취소 요청 뒤 내려받기가 찍힌 건을 송금 완료로 기록하면 경고한다', async () => {

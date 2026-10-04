@@ -8,7 +8,6 @@ import { createShowOrder } from '../../../lib/shows/service';
 import { validateCreateShowOrderPayload } from '../../../lib/shows/validation';
 import { deliverShowDepositGuide } from '../../../lib/shows/bankDeposit';
 import { BANK_DEPOSIT_BLOCK_MESSAGES, isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
-import { checkBankDepositAbuse } from '../../../lib/payments/bankDepositOrders';
 
 const FAILURE_MESSAGES = {
   sold_out: '선택하신 티켓의 잔여석이 부족합니다. 매수를 줄이거나 다른 티켓을 선택해 주세요.',
@@ -42,11 +41,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (rawMethod !== undefined && !isCheckoutPaymentMethod(rawMethod))
     return res.status(400).json({ ok: false, message: '결제 방법을 다시 골라 주세요.' });
   const paymentMethod = rawMethod ?? 'toss';
-  if (paymentMethod === 'bank_transfer') {
-    const abuse = await checkBankDepositAbuse(validated.value.buyerEmail);
-    if (!abuse.ok) return res.status(abuse.status).json({ ok: false, code: abuse.code, message: abuse.message });
-  }
-
   const result = await createShowOrder({ ...validated.value, paymentMethod }, new Date());
   if (!result.ok) {
     const status = result.code === 'invalid_quantity' || result.code === 'ticket_type_mismatch' ? 400 : 409;

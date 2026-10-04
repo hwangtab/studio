@@ -2,53 +2,20 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { formatPriceAmount } from '../../data/pricing';
-import { consumeRateLimit } from '../booking/rate-limit';
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL } from '../operatorContact';
 import { isPurgedValue } from '../privacy/orderRetention';
-import { BANK_ACCOUNT, formatKstDeadline, normalizeEmailForLimit } from './bankAccount';
-import {
-  AWAITING_DEPOSIT,
-  BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR,
-  DEPOSIT_CANCELLED,
-  MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL,
-} from './bankDeposit';
+import { BANK_ACCOUNT, formatKstDeadline } from './bankAccount';
+import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED } from './bankDeposit';
 import { safeDbErrorSummary } from './refundAccount';
 
 /**
- * 공연·예약·믹싱 **계좌 입금 주문**의 서버 공용 부품 — 남용 상한, 같은 이름 후보, 입금 안내 메일.
+ * 공연·예약·믹싱 **계좌 입금 주문**의 서버 공용 부품 — 같은 이름 후보, 입금 안내 메일.
  * 규칙의 근거는 lib/payments/bankDeposit.ts 머리 주석.
  */
 
 /** 이 함수들이 다루는 주문 종류(`orders.type`). 펀딩은 자기 표로 따로 센다(lib/funding/bankTransfer.ts). */
 const BANK_DEPOSIT_ORDER_TYPES = sql`('session', 'mixing', 'ticket')`;
-
-export type BankDepositAbuseVerdict = { ok: true } | { ok: false; status: 429 | 409; code: string; message: string };
-
-/**
- * 계좌 입금 신청 **남용 상한** — 신청마다 안내 메일이 나가고(제3자 주소로 메일 폭탄), 자동 취소가 없어
- * 열린 대기가 쌓이기만 한다. 펀딩과 같은 두 겹(lib/funding/CLAUDE.md "남용 상한"):
- * ① 정규화한 이메일로 시간당 `BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR`회, ② 같은 이메일의 열린 대기가
- * `MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL`건이면 막는다(공연·예약·믹싱 합산).
- */
-export const checkBankDepositAbuse = async (email: string): Promise<BankDepositAbuseVerdict> => {
-  const emailKey = normalizeEmailForLimit(email);
-  if (!(await consumeRateLimit(`bank_deposit:email:${emailKey}`, BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR, 3600))) {
-    return { ok: false, status: 429, code: 'rate_limited', message: '계좌 입금 신청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' };
-  }
-  const rows = await getDb().all<{ email: string }>(sql`
-    SELECT customer_email AS email FROM orders
-    WHERE status = ${AWAITING_DEPOSIT} AND type IN ${BANK_DEPOSIT_ORDER_TYPES}
-  `);
-  const open = rows.filter((r) => normalizeEmailForLimit(r.email) === emailKey).length;
-  if (open >= MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL) {
-    return {
-      ok: false, status: 409, code: 'too_many_open_deposits',
-      message: `이 이메일로 입금을 기다리는 신청이 이미 ${open}건 있습니다. 받으신 입금 안내 메일의 계좌로 입금해 주시거나, 안내 페이지에서 쓰지 않을 신청을 취소한 뒤 다시 신청해 주세요.`,
-    };
-  }
-  return { ok: true };
-};
 
 export interface SameNameDepositOrder {
   id: string;

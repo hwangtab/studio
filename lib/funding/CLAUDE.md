@@ -231,7 +231,7 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 2026-09-11에 걷어냈다가(PR #77) 2026-10-04에 되살렸다 — 은행·ATM에서 직접 보내는 노년층
 후원자를 위해서다. 계좌·안내 기한·입력 상한의 정본은 **결제 공용** `lib/payments/bankAccount.ts`이고
 (공연·예약·믹싱도 같은 계좌 입금을 쓴다 — 그쪽 규칙은 `lib/payments/bankDeposit.ts`), 펀딩 고유 규칙(한정 리워드
-불가·온라인 판정·열린 신청 상한)은 `lib/funding/bankAccount.ts`다. 결제 공용 부품: 안내 화면
+불가·온라인 판정)은 `lib/funding/bankAccount.ts`다. 결제 공용 부품: 안내 화면
 `components/payments/BankDepositGuide.tsx`(금액·기한·이름·호칭을 props로), 결제수단 고르기
 `components/payments/PaymentMethodChoice.tsx`, 환불 계좌 입력 `components/payments/RefundAccountFields.tsx`,
 관리자 "계좌 보기" 핸들러 `lib/payments/refundAccountView.ts`. 펀딩은 결제 행 없이 `funding_pledges.payment_method`로
@@ -280,8 +280,8 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 - **입금 확인은 한정 리워드 재고를 다시 센다**(옛 무통장 행은 한정 리워드를 담을 수 있었다) — 온라인
   생성과 같은 재고 식을 전이 UPDATE의 WHERE에 싣고, 넘치면 `sold_out`으로 사유를 돌려준다. 정산이 기록된
   프로젝트의 확정은 확인창·응답 warnings로 알리고, 이체를 마친 정산 뒤의 확정은 헬스체크가 30일 동안 보고한다.
-- **남용 상한**: 계좌 입금 신청은 정규화한 이메일(`normalizeEmailForLimit` — 소문자, `+태그` 제거, gmail 점
-  제거)로 시간당 5회, 그리고 한 프로젝트에 열린 입금 대기 3건까지(`MAX_OPEN_BANK_DEPOSITS_PER_EMAIL`).
+- **계좌 입금 전용 남용 상한은 두지 않는다**(운영자 결정 2026-10-04 — 이메일 시간당·열린 대기 건수 상한을 걷어냈다).
+  남는 것은 원래 있던 IP 단위 일반 레이트리밋뿐이다. 공연·예약·믹싱도 같다.
 - **수기 등록도 같은 이름의 계좌 입금 신청이 있으면 막는다** — `acknowledgeExisting: true` 없이는 409 + 후보.
 - **환불 계좌 경로의 DB 오류는 `safeDbErrorSummary`로만 로그한다** — drizzle 메시지에 바인딩 값(계좌번호
   암호문·예금주)이 실린다.

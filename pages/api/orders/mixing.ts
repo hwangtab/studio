@@ -8,7 +8,6 @@ import { validateCreateMixingOrderPayload } from '../../../lib/booking/validatio
 import { deliverBookingDepositGuide } from '../../../lib/booking/bankDeposit';
 import { getDb } from '../../../db/client';
 import { isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
-import { checkBankDepositAbuse } from '../../../lib/payments/bankDepositOrders';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -28,11 +27,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (rawMethod !== undefined && !isCheckoutPaymentMethod(rawMethod))
     return res.status(400).json({ ok: false, message: '결제 방법을 다시 골라 주세요.' });
   const paymentMethod = rawMethod ?? 'toss';
-  if (paymentMethod === 'bank_transfer') {
-    const abuse = await checkBankDepositAbuse(validated.value.customerEmail);
-    if (!abuse.ok) return res.status(abuse.status).json({ ok: false, code: abuse.code, message: abuse.message });
-  }
-
   const result = await createMixingOrder(validated.value, now, { releaseOrderNo: readPreviousOrderNo(req.body), paymentMethod });
   if (paymentMethod === 'bank_transfer') {
     await deliverBookingDepositGuide(result.orderNo);
