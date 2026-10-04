@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
 import PriceBreakdown from './PriceBreakdown';
-import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from './useTossPaymentWidgets';
+import { TOSS_TERMS_REQUIRED_MESSAGE } from './useTossPaymentWidgets';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
+import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
 import { CUSTOMER_DRAFT_FIELDS, MIXING_CUSTOMER_DRAFT_KEY } from '../../lib/booking/customerDraft';
@@ -159,9 +161,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
    */
   const {
     methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms,
+    agreedRequiredTerms, picker, choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
     // 마운트 지점이 2단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
-  } = useTossPaymentWidgets(amounts.totalAmount, step === 2);
+  } = usePaymentCheckout(amounts.totalAmount, step === 2);
 
   /** 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 믹싱은 잡는 시간대가 없어 막는 조건이 없다. */
   const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
@@ -493,20 +495,40 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                 계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 동의 상태가 풀린다(PledgeWizard와 같다). */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              <PaymentMethodChoice name="mixing-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="주문이 접수" />
-              <div hidden={usingBank} className="mt-3">
-                {paymentError ? (
-                  <div className="mt-2">
-                    <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                    <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-                  </div>
-                ) : (
-                  <>
-                    <div id={methodsId} />
-                    <div id={agreementId} />
-                  </>
-                )}
-              </div>
+              {picker ? (
+                <>
+                  <PaymentMethodPicker
+                    name="mixing-paymethod"
+                    value={usingBank ? 'bank_transfer' : pickerChoice}
+                    onChange={(next) => {
+                      if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                      setPayMethod('toss');
+                      setPickerChoice(next);
+                    }}
+                    applePaySupported={applePaySupported}
+                    bankBlockedMessage={null}
+                    confirmLabel="주문이 접수"
+                  />
+                  {paymentError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{paymentError}</p>}
+                </>
+              ) : (
+                <>
+                <PaymentMethodChoice name="mixing-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="주문이 접수" />
+                <div hidden={usingBank} className="mt-3">
+                  {paymentError ? (
+                    <div className="mt-2">
+                      <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                      <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+                    </div>
+                  ) : (
+                    <>
+                      <div id={methodsId} />
+                      <div id={agreementId} />
+                    </>
+                  )}
+                </div>
+                </>
+              )}
             </div>
 
             <p className="text-sm text-gray-600 dark:text-gray-300">

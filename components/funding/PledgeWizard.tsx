@@ -3,7 +3,9 @@ import Link from 'next/link';
 
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
-import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
+import { TOSS_TERMS_REQUIRED_MESSAGE } from '../booking/useTossPaymentWidgets';
+import PaymentMethodPicker from '../payments/PaymentMethodPicker';
+import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
@@ -389,15 +391,15 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   }, [bankBlocked, payMethod]);
 
   /**
-   * 결제위젯을 **폼 안에** 띄운다. 수단 목록은 위젯이 계약·노출 설정대로 그리므로 우리가
-   * 목록을 들고 있지 않는다 — 토스 쪽에서 수단이 늘거나 줄면 그대로 따라간다.
+   * 결제위젯을 **폼 안에** 띄운다(기본). 기능 플래그가 켜지면 위젯 대신 우리가 그린 결제수단
+   * 목록(PaymentMethodPicker)을 보이고 고른 수단의 결제창으로 바로 보낸다(usePaymentCheckout).
    *
    * 금액은 후원자가 수량·추가 후원금을 고칠 때마다 위젯에 알린다. 다시 그리지는 않는다.
    */
   const {
     methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms,
-  } = useTossPaymentWidgets(preview.totalAmount);
+    agreedRequiredTerms, picker, choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
+  } = usePaymentCheckout(preview.totalAmount);
 
   const submit = async () => {
     // 재진입 가드는 **ref**여야 한다. `submitting` 상태는 비동기로 갱신돼서, 같은 tick에
@@ -803,45 +805,67 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         목록과 결제 약관 동의는 **위젯이 그린다**(우리 목록을 따로 두지 않는다 — 계약된 수단이 늘면 그대로
         따라온다). 계좌 입금을 고르면 위젯을 **숨기기만 한다** — 언마운트하면 훅이 iframe을 걷었다가
         되돌아올 때 다시 그리며 동의 상태가 풀린다. 숨긴 동안 위젯 약관은 제출 조건에서 빠진다.
+
+        기능 플래그(`?pay=v2`, lib/payments/paymentPickerFlag.ts)가 켜지면 위젯 대신 결제수단 목록을 우리가
+        그린다 — 카드·계좌 입금·간편결제가 한 목록이고, 고른 수단의 결제창으로 바로 간다(위젯 약관 없음).
       */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-pay`}>
         <StepHeader
           id={`${uid}-step-pay`} n={3} title="결제수단"
           hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드립니다.' : '고르신 수단으로 바로 결제창이 열립니다.'}
         />
-        <div className="mb-4 space-y-2" role="radiogroup" aria-label="결제 방법">
-          <label className={choiceRow}>
-            <input type="radio" name={`${uid}-paymethod`} value="toss" className={radioClass}
-              checked={!usingBank} onChange={() => setPayMethod('toss')} />
-            <span className="min-w-0">
-              <span className="block font-bold text-gray-900 dark:text-white">카드·간편결제(토스)</span>
-              <span className="typo-card-meta block">결제가 끝나면 바로 확정됩니다.</span>
-            </span>
-          </label>
-          <label className={`${choiceRow} ${bankBlocked ? 'cursor-not-allowed opacity-50' : ''}`}>
-            <input type="radio" name={`${uid}-paymethod`} value="bank_transfer" className={radioClass}
-              checked={usingBank} disabled={bankBlocked !== null} onChange={() => setPayMethod('bank_transfer')} />
-            <span className="min-w-0">
-              <span className="block font-bold text-gray-900 dark:text-white">계좌로 직접 입금</span>
-              <span className="typo-card-meta block">
-                {bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 메일로 알려 드립니다.'}
+        {picker ? (
+          <>
+            <PaymentMethodPicker
+              name={`${uid}-paymethod`}
+              value={usingBank ? 'bank_transfer' : pickerChoice}
+              onChange={(next) => {
+                if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                setPayMethod('toss');
+                setPickerChoice(next);
+              }}
+              applePaySupported={applePaySupported}
+              bankBlockedMessage={bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : null}
+            />
+            {paymentError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{paymentError}</p>}
+          </>
+        ) : (
+          <>
+          <div className="mb-4 space-y-2" role="radiogroup" aria-label="결제 방법">
+            <label className={choiceRow}>
+              <input type="radio" name={`${uid}-paymethod`} value="toss" className={radioClass}
+                checked={!usingBank} onChange={() => setPayMethod('toss')} />
+              <span className="min-w-0">
+                <span className="block font-bold text-gray-900 dark:text-white">카드·간편결제(토스)</span>
+                <span className="typo-card-meta block">결제가 끝나면 바로 확정됩니다.</span>
               </span>
-            </span>
-          </label>
-        </div>
-        <div hidden={usingBank}>
-          {paymentError ? (
-            <div>
-              <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-              <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-            </div>
-          ) : (
-            <>
-              <div id={methodsId} />
-              <div id={agreementId} />
-            </>
-          )}
-        </div>
+            </label>
+            <label className={`${choiceRow} ${bankBlocked ? 'cursor-not-allowed opacity-50' : ''}`}>
+              <input type="radio" name={`${uid}-paymethod`} value="bank_transfer" className={radioClass}
+                checked={usingBank} disabled={bankBlocked !== null} onChange={() => setPayMethod('bank_transfer')} />
+              <span className="min-w-0">
+                <span className="block font-bold text-gray-900 dark:text-white">계좌로 직접 입금</span>
+                <span className="typo-card-meta block">
+                  {bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 메일로 알려 드립니다.'}
+                </span>
+              </span>
+            </label>
+          </div>
+          <div hidden={usingBank}>
+            {paymentError ? (
+              <div>
+                <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+              </div>
+            ) : (
+              <>
+                <div id={methodsId} />
+                <div id={agreementId} />
+              </>
+            )}
+          </div>
+          </>
+        )}
       </fieldset>
 
       {/*
