@@ -26,27 +26,31 @@ export const bakkeojiShow: ShowDefinition = {
   presenterName: '자이와 친구들',
   performers: [
     {
-      // 소개·링크는 펀딩 프로젝트(components/funding/FundingLineupPerson.tsx의 mok-jareugi-next)에서 그대로 가져왔다.
-      // 인스타그램 계정은 라인업 공지에 없어 있는 페이스북 프로필로 연결한다. 사진은 같은 파일을 날짜 이름으로 복사했다.
+      // 소개는 펀딩 프로젝트(components/funding/FundingLineupPerson.tsx의 mok-jareugi-next)에서 그대로 가져왔다.
+      // 사진은 같은 파일을 날짜 이름으로 복사했다. SNS는 운영자가 준 인스타그램(2026-10-04) — 펀딩 쪽은 인스타그램 계정을 못 찾아
+      // 페이스북 프로필로 연결돼 있다.
       name: '최양다음 NEXT',
       bio: "독학으로 음악을 익힌 싱어송라이터. 아버지 성 '최'와 어머니 성 '양'에 '다음'을 붙인 이름으로, 호주제에 맞선다는 뜻을 담아 지었습니다. 그 이름을 여러 나라 말로 씁니다 — 다음, NEXT, 次, Nächste, 翌. 세월호 10주기 추모, 수요시위, 팔레스타인 연대 집회, 5·18 기념식 같은 자리에서 노래해왔습니다.",
       photo: '/images/shows/bakkeoji-next-20261004.webp',
-      sns: 'https://www.facebook.com/profile.php?id=61571311203395',
+      sns: 'https://www.instagram.com/nextisnexttoyou/',
     },
     {
       name: '자이(Jai)',
       bio: "특유의 포근하고 깊은 음색으로 일상과 삶의 미세한 결을 어루만지는 싱어송라이터. 락밴드 '헤디마마' 활동을 거쳐 현재는 어쿠스틱·인디·로파이·재즈 스타일을 넘나드는 솔로 아티스트로서 독보적인 음악 세계를 구축해 오고 있다.",
       photo: '/images/shows/bakkeoji-jai-20261003.webp',
+      sns: 'https://www.instagram.com/jai.music_official/',
     },
     {
       name: '호와호(Howaho)',
       bio: '시적인 가사와 몰입감 넘치는 사운드스케이프를 엮어내는 오가닉 일렉트로닉 듀오. 다양한 매체로 국내외 무대를 유영하며, 경계 위에 선 존재들을 위한 사랑과 연대를 노래합니다.',
       photo: '/images/shows/bakkeoji-howaho-20261003.webp',
+      sns: 'https://www.instagram.com/howaho_official/',
     },
     {
       name: '솔가(Solga)',
       bio: '오랫동안 삶의 현장에서 사람과 자연, 생명의 존엄을 단단하게 노래해 온 싱어송라이터.',
       photo: '/images/shows/bakkeoji-solga-20261003.webp',
+      sns: 'https://www.instagram.com/solga/',
     },
   ],
   ageRating: '전체 관람가',

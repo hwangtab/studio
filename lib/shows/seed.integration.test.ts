@@ -31,6 +31,13 @@ describe('공연 정의(bakkeoji)', () => {
     expect(bakkeojiShow.title).not.toContain(' — ');
     expect(bakkeojiShow.performers.map((x) => x.name)).toEqual(['최양다음 NEXT', '자이(Jai)', '호와호(Howaho)', '솔가(Solga)']);
     expect(bakkeojiShow.performers.every((x) => x.bio && x.bio.length > 10 && x.photo)).toBe(true);
+    // 출연자 전원에게 인스타그램 링크가 있다(운영자가 직접 찾아 준 실제 계정).
+    expect(Object.fromEntries(bakkeojiShow.performers.map((x) => [x.name, x.sns]))).toEqual({
+      '최양다음 NEXT': 'https://www.instagram.com/nextisnexttoyou/',
+      '자이(Jai)': 'https://www.instagram.com/jai.music_official/',
+      '호와호(Howaho)': 'https://www.instagram.com/howaho_official/',
+      '솔가(Solga)': 'https://www.instagram.com/solga/',
+    });
     expect(bakkeojiShow.scheduleNote).toContain('18:30');
     expect(bakkeojiShow.notices?.some((x) => x.includes('수익'))).toBe(false); // 수익 사용처 문구는 두지 않는다(TMI)
     expect(bakkeojiShow.onSitePriceNote).toContain('30,000원');
