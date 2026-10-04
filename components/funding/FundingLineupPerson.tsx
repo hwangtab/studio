@@ -92,8 +92,9 @@ export const LINEUP_PEOPLE: Record<string, LineupPerson> = {
   },
   'mok-jareugi-next': {
     name: '최양다음 NEXT',
-    // 인스타그램 계정은 라인업 공지에 없었다 — 있는 페이스북 프로필로 연결한다.
-    sns: 'https://www.facebook.com/profile.php?id=61571311203395',
+    // 라인업 공지엔 인스타그램 계정이 없어 페이스북 프로필로 연결했었다. 운영자가 실제 인스타그램 계정을 찾아 주어
+    // 바꿨다(2026-10-04, 브라우저로 열어 'NEXT 최양다음 CHOIYANGDAEUM' 프로필 확인).
+    sns: 'https://www.instagram.com/nextisnexttoyou/',
     // 출처: 본인이 공개한 링크트리 이력서. pine-nut이 이미 4개로 추려 둔 것을 그대로 쓴다
     // (원문엔 더 많은 공연 이력이 있으나 다 넣으면 문장이 아니라 목록이 된다고 판단했다).
     bio: "독학으로 음악을 익힌 싱어송라이터. 아버지 성 '최'와 어머니 성 '양'에 '다음'을 붙인 이름으로, 호주제에 맞선다는 뜻을 담아 지었습니다. 그 이름을 여러 나라 말로 씁니다 — 다음, NEXT, 次, Nächste, 翌. 세월호 10주기 추모, 수요시위, 팔레스타인 연대 집회, 5·18 기념식 같은 자리에서 노래해왔습니다.",

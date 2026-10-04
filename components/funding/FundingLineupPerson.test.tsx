@@ -37,4 +37,11 @@ describe('FundingLineupPerson', () => {
     const { container } = render(<FundingLineupPerson id="not-a-real-id" />);
     expect(container).toBeEmptyDOMElement();
   });
+
+  it('최양다음 NEXT는 인스타그램으로 연결한다 — 페이스북이 아니다', () => {
+    render(<FundingLineupPerson id="mok-jareugi-next" />);
+    const link = screen.getByRole('link', { name: /최양다음 NEXT/ });
+    expect(link.getAttribute('href')).toBe('https://www.instagram.com/nextisnexttoyou/');
+    expect(link.getAttribute('target')).toBe('_blank');
+  });
 });
