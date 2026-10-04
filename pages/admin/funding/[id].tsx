@@ -3,7 +3,7 @@ import type { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 
-import { patchPledge, type FundingActionResult } from '../../../components/admin/fundingActions';
+import { fetchRefundAccount, patchPledge, type FundingActionResult, type RefundAccountView } from '../../../components/admin/fundingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextArea, TextInput } from '../../../components/ui/Field';
@@ -15,6 +15,9 @@ import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/fund
 import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
+import { findSameNameBankDeposits, type SameNameDepositCandidate } from '../../../lib/funding/bankTransfer';
+import { formatKstDeadline } from '../../../lib/funding/bankAccount';
+import { loadRefundAccountSummary } from '../../../lib/funding/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 import { loadPaymentWindowOpen } from '../../../lib/payments/windowOpen';
 
@@ -24,6 +27,16 @@ interface AdminFundingDetailPageProps {
   refundableAmount: number;
   /** 결제창을 연 기록(lib/payments/windowOpen.ts). 없으면 null — 열지 않았거나 조회 실패. */
   paymentWindow?: { firstOpenedAt: string; lastOpenedAt: string; openCount: number; browserLabel: string } | null;
+  /**
+   * 같은 이름의 다른 계좌 입금 신청(입금 대기·취소됨) — 이중 확인·이중 등록을 막는 후보
+   * (lib/funding/bankTransfer.ts findSameNameBankDeposits). 계좌 입금 건에서만 채운다.
+   */
+  sameNameDeposits?: SameNameDepositCandidate[];
+  /**
+   * 후원자가 취소하며 적은 환불 계좌의 **요약**(은행명·예금주만 — 계좌번호는 싣지 않는다).
+   * 계좌번호는 "계좌 보기"를 누를 때 별도 API로만 온다. 표가 없으면(0048 미적용) 'unavailable'.
+   */
+  refundAccount?: { status: 'present'; bankName: string; accountHolder: string; updatedAt: string } | { status: 'none' } | { status: 'unavailable' } | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps> = async (context) => {
@@ -49,7 +62,16 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
   // 문의 대응에 낫다. 조회 실패는 null로 삼킨다(best-effort 기록이다).
   const paymentWindow = await loadPaymentWindowOpen(order.id);
 
-  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow } };
+  const isBank = order.fundingPledge.paymentMethod === 'bank_transfer';
+  const sameNameDeposits = isBank ? await findSameNameBankDeposits(order) : [];
+  const summary = isBank && order.fundingPledge.refundRequestedAt ? await loadRefundAccountSummary(order.id) : null;
+  const refundAccount = summary === null
+    ? null
+    : summary.status === 'present'
+      ? { status: 'present' as const, bankName: summary.bankName, accountHolder: summary.accountHolder, updatedAt: summary.updatedAt.toISOString() }
+      : summary;
+
+  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow, sameNameDeposits, refundAccount } };
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -61,7 +83,7 @@ const STATUS_LABELS: Record<string, string> = {
   expired: '만료',
 };
 
-const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '무통장' };
+const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '계좌 입금' };
 const FULFILLMENT_OPTIONS = FULFILLMENT_STATUS_ORDER;
 
 const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -71,7 +93,7 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
   </div>
 );
 
-export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null }: AdminFundingDetailPageProps) {
+export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null, sameNameDeposits = [], refundAccount = null }: AdminFundingDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -107,13 +129,49 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
     const result = await task();
     setBusy(false);
     if (!result.ok) setNotice(result.message ?? '요청을 처리하지 못했습니다.');
+    else if (result.message) setNotice(result.message);
     await router.replace(router.asPath, undefined, { scroll: false });
   };
 
   // 부분환불 건도 잔액이 남아 있으면 관리자가 마저 환불할 수 있어야 한다.
   const canRefund = isLiveFundingOrderStatus(pledge.status);
+  /**
+   * 계좌 입금·수기 등록은 토스에 취소할 결제가 없다 — 이 버튼은 **송금을 마친 뒤 기록하는** 버튼이다.
+   * 이름과 확인 문구를 그에 맞춘다(누르면 돈이 나가는 줄 알고 누르면 안 된다).
+   */
+  const isBankTransfer = pledge.paymentMethod === 'bank_transfer';
+  const handleRefund = () => run(
+    () => patchPledge(pledge.id, { action: 'refund', reason: isBankTransfer ? '계좌 송금 환불' : '관리자 환불' }),
+    isBankTransfer
+      ? `${formatPriceAmount(refundableAmount)}원을 후원자 계좌로 이미 송금했나요? 이 버튼은 송금을 대신하지 않고 "환불 완료"로 기록만 합니다. 후원자에게 환불 안내 메일이 나갑니다.`
+      : `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`,
+  );
 
-  const handleRefund = () => run(() => patchPledge(pledge.id, { action: 'refund', reason: '관리자 환불' }), `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`);
+  /** 계좌 입금 — 입금 확인·미입금 취소·입금 안내 재발송(lib/funding/bankTransfer.ts). */
+  const depositActionable = pledge.onlineBankTransfer && (pledge.status === 'pending' || pledge.status === 'expired');
+  const handleConfirmDeposit = () => run(
+    () => patchPledge(pledge.id, { action: 'confirm_deposit' }),
+    `통장에 실제로 입금됐는지 먼저 확인하세요.\n\n보내는 분 ${pledge.customerName} · ${formatPriceAmount(pledge.totalAmount)}원이 들어온 것을 확인했나요? 확인하면 펀딩이 확정되고 후원자에게 확정 메일이 나갑니다.`,
+  );
+  const handleCancelUnpaid = () => run(
+    () => patchPledge(pledge.id, { action: 'cancel_unpaid' }),
+    '입금되지 않은 신청을 닫을까요? 받은 돈이 없으니 환불은 없고 후원자에게 메일도 가지 않습니다. 나중에 입금이 들어오면 이 화면에서 "입금 확인"을 누르면 됩니다.',
+  );
+  const handleResendDepositGuide = () => run(
+    () => patchPledge(pledge.id, { action: 'resend_deposit_guide' }),
+    `${pledge.customerEmail}로 계좌 입금 안내 메일을 다시 보낼까요?`,
+  );
+
+  /** 환불 계좌 — 누를 때만 가져와 이 화면 state에만 둔다. */
+  const [refundAccountView, setRefundAccountView] = useState<{ account: RefundAccountView; holderMismatch: boolean } | null>(null);
+  const handleShowRefundAccount = async () => {
+    setBusy(true);
+    setNotice(null);
+    const r = await fetchRefundAccount(pledge.id);
+    setBusy(false);
+    if (r.ok) setRefundAccountView({ account: r.account, holderMismatch: r.holderMismatch });
+    else setNotice(r.message);
+  };
   /**
    * 줄 단위 일부 환불(lib/funding/lineRefund.ts) — 책만 청약철회처럼 담은 리워드 하나만
    * 돌려준다. 사유는 후원자 메일에 그대로 들어가므로 필수다. 계좌(수기) 후원은 서버가 막는다.
@@ -268,10 +326,13 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
             <div className="mb-4 p-4 bg-orange-50 border border-orange-300 text-orange-900 rounded-lg text-sm">
               <strong className="block mb-1">후원자가 취소를 요청했습니다 — 계좌 환불 대기</strong>
               {pledge.refundRequestedAt ? `${formatKstDateTimeFull(pledge.refundRequestedAt)}에 접수되었습니다. ` : ''}
-              무통장은 자동 환불이 되지 않아 운영자가 계좌로 직접 송금해야 합니다.
+              계좌 입금은 자동 환불이 되지 않아 운영자가 계좌로 직접 송금해야 합니다.
               약관 제10조에 따라 접수일부터 3영업일 이내에 처리해 주세요.
               <span className="block mt-2">
-                <strong>이 펀딩은 발송하면 안 됩니다.</strong> 아래 “환불”로 처리하거나, 후원자가 요청을 철회했다면
+                아래 “환불 계좌”에서 계좌를 열어 송금한 뒤 “송금 완료(환불 기록)”를 눌러 주세요.
+              </span>
+              <span className="block mt-2">
+                <strong>이 펀딩은 발송하면 안 됩니다.</strong> 환불로 처리하거나, 후원자가 요청을 철회했다면
                 “환불 요청 취소”를 누른 뒤에 발송 상태를 바꿀 수 있습니다. 철회 처리에는 사유가 필요하며,
                 사유는 관리자 메모에 남고 후원자에게 확인 메일이 나갑니다.
               </span>
@@ -362,6 +423,79 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
               </dl>
             </div>
 
+            {depositActionable && (
+              <div className="rounded-lg border border-sky-300 bg-sky-50 p-4 text-sm text-sky-950">
+                <p className="font-semibold">
+                  {pledge.status === 'pending' ? '계좌 입금 대기' : '계좌 입금 신청 — 취소됨(미입금)'}
+                </p>
+                <p className="mt-1">
+                  보내는 분 <strong>{pledge.customerName}</strong> · <strong>{formatPriceAmount(pledge.totalAmount)}원</strong>
+                  {' '}· 안내한 기한 {formatKstDeadline(new Date(pledge.holdExpiresAt))}(한국시간, 자동 취소 없음)
+                </p>
+                <p className="mt-1 text-xs text-sky-900">
+                  통장에 실제로 입금됐는지 먼저 확인한 뒤 “입금 확인”을 누르세요. 취소된 신청에 늦게 들어온 입금도 여기서 확인할 수 있습니다.
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
+                  {pledge.status === 'pending' && (
+                    <>
+                      <Button light variant="outline" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
+                      <Button light variant="outline" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {sameNameDeposits.length > 0 && (
+              <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
+                <p className="font-semibold">같은 이름의 다른 계좌 입금 신청이 {sameNameDeposits.length}건 있습니다 — 이중 확인 주의</p>
+                <p className="mt-1 text-xs">통장의 입금 한 건을 두 신청에 함께 확인하지 않도록, 금액·신청 시각을 대조해 주세요.</p>
+                <ul className="mt-2 space-y-1">
+                  {sameNameDeposits.map((c) => (
+                    <li key={c.id}>
+                      <a href={`/admin/funding/${c.id}`} className="font-medium underline">{c.orderNo}</a>
+                      {' '}· {STATUS_LABELS[c.status] ?? c.status} · {c.projectSlug} · {formatPriceAmount(c.totalAmount)}원 · {formatKstDateTime(c.createdAt)}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {isBankTransfer && refundAccount && (
+              <div className="rounded-lg border border-orange-300 bg-orange-50 p-4 text-sm text-orange-950">
+                <p className="font-semibold">환불 계좌</p>
+                {refundAccount.status === 'present' && (
+                  <>
+                    <p className="mt-1">
+                      {refundAccount.bankName} · 예금주 {refundAccount.accountHolder} (접수 {formatKstDateTimeFull(refundAccount.updatedAt)})
+                    </p>
+                    {refundAccountView ? (
+                      <div className="mt-2 rounded border border-orange-200 bg-white p-3">
+                        <p>{refundAccountView.account.bankName}</p>
+                        <p className="text-lg font-bold tracking-wide">{refundAccountView.account.accountNumber}</p>
+                        <p>예금주 {refundAccountView.account.accountHolder}</p>
+                        {refundAccountView.holderMismatch && (
+                          <p className="mt-2 font-semibold text-red-700">
+                            예금주가 후원자 이름({pledge.customerName})과 다릅니다. 가족 계좌일 수 있으니 필요하면 후원자에게 확인해 주세요.
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <Button light variant="outline" size="sm" className="mt-2" disabled={busy} onClick={handleShowRefundAccount}>
+                        계좌 보기
+                      </Button>
+                    )}
+                    <p className="mt-2 text-xs">“계좌 보기”를 누른 사실은 접속기록에 남습니다.</p>
+                  </>
+                )}
+                {refundAccount.status === 'none' && <p className="mt-1">접수된 환불 계좌가 없습니다. 후원자에게 계좌를 받아 주세요.</p>}
+                {refundAccount.status === 'unavailable' && (
+                  <p className="mt-1">환불 계좌를 불러오지 못했습니다. 운영 DB에 마이그레이션 0048이 적용됐는지 확인해 주세요.</p>
+                )}
+              </div>
+            )}
+
             {canRefundLine && (
               <div className="rounded-lg border border-gray-200 p-4">
                 <p className="text-sm font-semibold text-gray-900">리워드별 일부 환불</p>
@@ -397,7 +531,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
 
             <div className="flex flex-wrap gap-2">
               {canRefund && (
-                <Button light variant="secondary" disabled={busy} onClick={handleRefund}>환불</Button>
+                <Button light variant="secondary" disabled={busy} onClick={handleRefund}>
+                  {isBankTransfer ? '송금 완료(환불 기록)' : '환불'}
+                </Button>
               )}
               {pledge.refundRequested && isLiveFundingOrderStatus(pledge.status) && (
                 <Button light variant="outline" disabled={busy} onClick={handleClearRefundRequest}>환불 요청 취소</Button>

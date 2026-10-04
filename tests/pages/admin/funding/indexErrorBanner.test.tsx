@@ -16,7 +16,7 @@ import type { AdminPledgeItem } from '../../../../lib/funding/admin-serialize';
 import type { AdminFundingTotals } from '../../../../lib/funding/admin-list';
 
 const TOTALS: AdminFundingTotals = {
-  confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+  confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0, awaitingDepositAmount: 0, awaitingDepositCount: 0,
 };
 
 const item = (over: Partial<AdminPledgeItem> = {}): AdminPledgeItem => ({
@@ -63,7 +63,7 @@ it('KPI는 화면에 그려진 목록이 아니라 서버 집계(totals)를 그�
       items={[item(), item({ id: 'o2', orderNo: 'FND-20261015-BBBB2222', status: 'partially_refunded' })]}
       totals={{
         confirmedAmount: 12_345_000, confirmedCount: 412, confirmedPersonCount: 380,
-        pendingAmount: 60_000, pendingCount: 3,
+        pendingAmount: 60_000, pendingCount: 3, awaitingDepositAmount: 0, awaitingDepositCount: 0,
       }}
       truncated
       projects={[]}
