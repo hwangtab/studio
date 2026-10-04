@@ -204,15 +204,52 @@ hover:bg-primary hover:text-white`)에서 hover 실측:
 컨테이너는 Section이 제공한다: `container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl`.
 좁은 본문이 필요하면 안쪽에 `max-w-3xl mx-auto`를 쓰고, 컨테이너를 다시 선언하지 않는다.
 
-### 반경
+### 반경 — 네 단, 역할로 정한다 (2026-10-05 개정)
 
-| 대상 | 값 |
+| 단 | 값 | 대상 |
+|---|---|---|
+| 컨트롤 | `rounded-lg` (8px) | input·select·textarea |
+| 카드급 | `rounded-xl` (12px) | 카드(BaseCard)·고르는 항목(ChoiceCard)·안내/상태 박스(Notice·Panel)·접기(Disclosure)·카드·폼 안의 버튼 |
+| 패널급 | `rounded-2xl` (16px) | 모달·결과 카드(ResultCard)·빈 상태(EmptyState)·독립 글래스 패널 |
+| 알약 | `rounded-full` | 자유 배치 CTA(히어로·스티키·FAB)·배지·칩·알약 선택지 |
+
+**`rounded-md`는 어느 역할에도 없다.** 2026-10-04 조사에서 예약·구독·연락처 흐름이 `md`,
+개설자가 `lg`, 펀딩이 `xl`, 마케팅이 `2xl`로 — 같은 사이트에 네 가지 손맛이 섞여 있었다.
+`PricingCard`의 `rounded-3xl`(동심원 24px/12px)만 예외로 남긴다.
+`components/ui/uiPatterns.baseline.test.ts`가 `rounded-md`를 기준선 대비로 막는다(늘면 실패).
+
+### 패딩 — 세 단
+
+| 단 | 값 | 대상 |
+|---|---|---|
+| compact | `p-4` | 안내/상태 박스·요약·고르는 항목 |
+| default | `p-6` | 카드 |
+| roomy | `p-6 sm:p-8` | 결과 카드·모달 본문·독립 패널 |
+
+### 테두리·선택 상태
+
+- 테두리는 한 종: `border border-gray-200 dark:border-gray-700`. `border-2`·`border-l-4`로 강조하지 않는다.
+- 강조는 `border-primary` + `ring-1 ring-primary/30`(다크 `primary-lighter`)로만.
+- **선택 상태는 틴트다**: `border-primary bg-primary/5 dark:bg-primary-lighter/10`. 채움(`bg-primary text-white`)은
+  설명 없는 짧은 라벨(세그먼트·칩·시간 슬롯)에만 쓴다. 판정은 `:has(:checked)` — JS 삼항으로 클래스를
+  바꾸지 않는다(`ChoiceCard`).
+- 눈에 보이는 라디오·체크박스의 틴트는 **`accent-primary`**. `text-primary`는 forms 플러그인이 없어
+  네이티브 입력에 아무 효과가 없다(크롬 기본 파랑이 뜬다).
+
+### 거래 화면 뼈대 — `components/ui/PageHeader.tsx`
+
+예약·주문·펀딩 결제·구독·관리·결과처럼 히어로가 없는 화면은 `PageShell` + `PageHeader`로 시작한다.
+
+| 요소 | 규칙 |
 |---|---|
-| 자유 배치 CTA(히어로·스티키·FAB·인라인 콜아웃) | `rounded-full` |
-| 카드·폼 안의 버튼 | `rounded-xl` |
-| 카드 | `rounded-xl` (PricingCard는 동심원 24px/12px) |
-| 폼 컨트롤(input·select·textarea) | `rounded-lg` |
-| 배지·칩 | `rounded-full` |
+| 폭 | `PageShell width`: `form`(max-w-2xl, 폼·관리) · `result`(max-w-lg, 결과) · `wide`(max-w-3xl, 목록·개설자) |
+| 세로 여백 | `py-12 sm:py-16` 하나. Layout이 `pt-20`을 이미 넣는다 — 더하지 않는다 |
+| `<main>` | Layout이 제공한다. 페이지가 다시 만들지 않는다(2026-10-04 조사: 전 거래 화면이 main을 겹쳐 두고 있었다) |
+| 머리 | 브랜드 줄(헤더 없는 화면만) → 뒤로 링크 → `typo-page-title` h1 → 리드 → `Stepper` |
+| 단계 | `Stepper` — "STEP 1 / 2" 텍스트 금지 |
+| 금액 | `PriceSummary` — 항목별 `dl` + 부가세 + 합계. 합계 한 줄만 쓰지 않는다 |
+| 결과 | `ResultCard` — tone 아이콘 원 + 제목 + 설명 + `Button` 행동 |
+| 1차 CTA | **반드시 `Button`**. 결과·관리 화면의 손으로 짠 `<a>`(11곳)는 1단계에서 걷는다 |
 
 ### 그리드
 
@@ -296,9 +333,45 @@ className) — 같은 리터럴에서 `border-2`를 요구하면 그 형태로 �
 (pill 클래스가 상수 파일로 옮겨가면 보이지 않으므로). 라이트 고정 화면은 다른 가드와 같게
 면제한다 — 강제하면 admin·계약 서명 화면에 `dark:` 클래스를 심게 된다.
 
+### 중간 계층 프리미티브 (2026-10-05 신설) — 손으로 짜지 않는다
+
+2026-10-04 조사의 결론: 토큰과 위 상위 프리미티브는 좋았는데, **그 사이를 채우는 요소**에 공용
+컴포넌트가 하나도 없어 흐름마다 손으로 짰다. 아래가 그 자리의 정본이다. 전부 `components/ui/`,
+규칙은 `components/ui/primitives.test.tsx`가 className으로 고정한다.
+
+| 컴포넌트 | 자리 | 핵심 규칙 |
+|---|---|---|
+| `ChoiceCard` / `ChoiceGroup` | 상품·리워드·티어·수단 고르기 | 카드 `rounded-xl p-4` / 알약 `rounded-full`. 선택은 `:has(:checked)` 틴트. 링은 **카드**에(`FOCUS_RING_WITHIN`). 입력 `accent-primary` |
+| `Checkbox` / `Radio` | 동의·옵션 한 줄 | `accent-primary h-5 w-5`, `<label>` 44px, `focus-visible` 링 |
+| `Notice` | 오류·성공·주의·정보·중립·브랜드 안내 | `rounded-xl border p-4`, tone 6종의 라이트/다크 값은 이 파일에만. error→`alert`, success→`status` |
+| `Panel` | 중립 요약·규정·"선택" 구획 | `rounded-xl`, gray-50 / gray-800/50, 패딩 세 단, `inset`(카드 안)·`outline` |
+| `Badge` | 상태·분류·짧은 라벨 | `rounded-full text-xs font-semibold`, sm `px-2 py-0.5` / md `px-2.5 py-1`, tone 8종. (옛 정본 `typo-caption`은 굵기 300이라 배지에 가늘어 폐기) |
+| `PageShell` / `PageHeader` | 거래 화면 틀·머리 | 위 "거래 화면 뼈대" |
+| `Stepper` | 단계 표시 | 완료 체크 · 현재 보라 원+링 · 예정 아웃라인. `aria-current="step"` + sr-only 요약 |
+| `PriceSummary` | 금액 요약 | 항목 `dl` + 부가세 + 합계, `formatPriceAmount`만, `tabular-nums` |
+| `ResultCard` | 결제 완료·실패·확인 중 | `glass-card rounded-2xl p-6 sm:p-8`, 아이콘 원 48/24, `typo-page-title` |
+| `Modal` | 모달 셸 | `utils/useFocusTrapDialog`(iframe 포함)·ESC·스크롤 잠금·모바일 바닥 시트. 패널은 솔리드 |
+| `EmptyState` | 빈 목록 | 점선 `rounded-2xl`, lucide 아이콘(이모지 금지) |
+| `Disclosure` | 접기 한 줄 | 네이티브 `<details>`, 마커 숨김 + chevron, summary 44px + 링 |
+
+포커스 링 문자열은 `components/ui/focusRing.ts`(`FOCUS_RING`·`FOCUS_RING_WITHIN`) 한 곳이다.
+
+**아이콘**: lucide(`@/lib/lucide-icons`)만. 크기는 카드 머리·안내 20, 인라인·배지 16, 상태 아이콘 원
+(ResultCard·EmptyState) 안 24. `text-2xl`로 크기를 주지 않는다 — lucide에는 무효라 24로 그려진다.
+이모지(🌐 📭 💬)·`✓` 글리프는 쓰지 않는다.
+
+**모션**: hover 리프트·스케일은 `Button`·`BaseCard`가 소유한다. 카드가 떠야 하면 BaseCard를 쓴다 —
+CSS `hover:-translate-y`·`hover:scale` 복제가 네 가지 다른 움직임을 만들었다.
+
+**가드** — `components/ui/uiPatterns.baseline.test.ts`. 규칙 7종(`rounded-md` · 상태 박스 손조립 · 배지
+손조립 · 입력 틴트 · 원시 h1 · 이모지 · 모션 복제)을 **파일별 기준선 대비**로 본다: 늘면 실패, 줄면
+통과, 새 파일에 생기면 실패. 기존 위반은 `ui-patterns.baseline.json`에 있고, 0단계
+(docs/design-ui-refinement-plan-2026-10.md §5)가 끝나면 비운다. 갱신은 `UPDATE_UI_PATTERN_BASELINE=1`
+이고 **올리는 갱신은 거부된다** — 정말 늘려야 하면 그 규칙의 `ALLOW`에 이유와 함께 등재한다.
+
 ### 배지
 
-`rounded-full px-2 py-0.5 typo-caption`을 기본으로 하고, 색만 의미에 따라 바꾼다.
+`components/ui/Badge.tsx`를 쓴다(위 표). `rounded-full` + 12px 600, tone·size 두 축만 고른다.
 
 ## 5. 포커스 — 접근성 필수
 
@@ -438,6 +511,10 @@ reflow가 튄다. 바꾸는 속성만 지정한다(`transition-[colors,box-shado
 4. 배경·텍스트·보더에 `dark:` 짝이 있는가?
 5. 인터랙티브 요소에 `focus-visible` 링과 44px 터치 타깃이 있는가?
 6. 새로 만든 클래스명이 실제로 `tailwind.config.ts`에 정의돼 있는가? (0절)
+7. 고르는 항목은 `ChoiceCard`, 안내·상태 박스는 `Notice`/`Panel`, 배지는 `Badge`, 거래 화면은
+   `PageShell`+`PageHeader`+`Stepper`+`PriceSummary`+`ResultCard`를 썼는가? (§4 중간 계층)
+8. 반경이 네 단(lg·xl·2xl·full) 안에 있는가? `rounded-md`를 쓰지 않았는가? (§3)
+9. 라디오·체크박스에 `accent-primary`를 줬는가? 이모지를 아이콘으로 쓰지 않았는가?
 
 ## 9. 부채 현황
 
@@ -482,6 +559,7 @@ v1 페이지는 이행될 때까지 300이다. 아래 문단은 v1에 대해 여
 | `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
 | 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |
+| 중간 계층 패턴의 기존 위반(`rounded-md` 59 · 상태 박스 손조립 · 배지 손조립 · 입력 틴트 · 원시 h1 · 이모지 · 모션 복제) | `components/ui/ui-patterns.baseline.json`에 파일별로 기록. 계획과 순서는 `docs/design-ui-refinement-plan-2026-10.md` — 0단계(~10/13) 비동결 흐름, 1단계(10/14~) Button·BaseCard·StoryCard·배지, 2단계(11/11~) 측정 중 LP |
 
 ## 10. 디자인 v2 — 페이지 단위로 이행 중
 
