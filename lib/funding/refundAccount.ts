@@ -3,6 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { fundingRefundAccounts } from '../../db/schema';
 import { decryptField, encryptField } from '../crypto/fieldCrypto';
+import { REFUND_ACCOUNT_LIMITS } from './bankAccount';
 
 /**
  * 계좌 입금 후원의 **환불 계좌**(funding_refund_accounts, 마이그레이션 0048).
@@ -21,7 +22,6 @@ export interface RefundAccountInput {
   accountHolder: string;
 }
 
-export const REFUND_ACCOUNT_LIMITS = { bankName: 30, accountNumber: 30, accountHolder: 30 } as const;
 
 /**
  * 입력 검사. 형식만 본다 — 실제로 있는 계좌인지는 송금해 봐야 안다(계좌 실명 조회 API가 없다).

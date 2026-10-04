@@ -83,3 +83,9 @@ export const BANK_TRANSFER_BLOCK_MESSAGES: Record<BankTransferBlockCode, string>
  */
 export const isOnlineBankTransfer = (pledge: { paymentMethod: string; entrySource: string }): boolean =>
   pledge.paymentMethod === 'bank_transfer' && pledge.entrySource === 'online';
+
+/**
+ * 환불 계좌 입력 칸의 글자수 상한 — 펀딩 확인 페이지의 입력 칸(maxLength)과 서버 검증
+ * (lib/funding/refundAccount.ts)이 같은 값을 본다. 화면이 import하므로 여기(클라이언트 안전)에 둔다.
+ */
+export const REFUND_ACCOUNT_LIMITS = { bankName: 30, accountNumber: 30, accountHolder: 30 } as const;
