@@ -26,10 +26,10 @@ describe('공연 정의(bakkeoji)', () => {
     expect(salesCloseAt(startsAt).toISOString()).toBe('2026-10-23T15:00:00.000Z');
   });
 
-  it('구조화 칸: 부제·출연진 3명(사진 있음)·안내·현장가', () => {
+  it('구조화 칸: 부제·출연진 4명(사진 있음, 최양다음 NEXT가 첫 번째)·안내·현장가', () => {
     expect(bakkeojiShow.subtitle).toBe('풍천리를 위한 삼청동에서의 밤');
     expect(bakkeojiShow.title).not.toContain(' — ');
-    expect(bakkeojiShow.performers.map((x) => x.name)).toEqual(['자이(Jai)', '호와호(Howaho)', '솔가(Solga)']);
+    expect(bakkeojiShow.performers.map((x) => x.name)).toEqual(['최양다음 NEXT', '자이(Jai)', '호와호(Howaho)', '솔가(Solga)']);
     expect(bakkeojiShow.performers.every((x) => x.bio && x.bio.length > 10 && x.photo)).toBe(true);
     expect(bakkeojiShow.scheduleNote).toContain('18:30');
     expect(bakkeojiShow.notices?.some((x) => x.includes('뮤지션들과 공간에게'))).toBe(true);
@@ -42,7 +42,7 @@ describe('공연 정의(bakkeoji)', () => {
       ...bakkeojiShow,
       title: '제목 — 부제',
       performers: [{ name: '누구', photo: '/images/shows/없는-파일.webp' }],
-      ogImage: '/images/shows/bakkeoji-poster-20261003r2.webp',
+      ogImage: '/images/shows/bakkeoji-poster-20261004.webp',
     };
     const errors = validateShowDefinition(bad);
     expect(errors.some((e) => e.includes('subtitle'))).toBe(true);

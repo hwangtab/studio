@@ -26,6 +26,14 @@ export const bakkeojiShow: ShowDefinition = {
   presenterName: '자이와 친구들',
   performers: [
     {
+      // 소개·링크는 펀딩 프로젝트(components/funding/FundingLineupPerson.tsx의 mok-jareugi-next)에서 그대로 가져왔다.
+      // 인스타그램 계정은 라인업 공지에 없어 있는 페이스북 프로필로 연결한다. 사진은 같은 파일을 날짜 이름으로 복사했다.
+      name: '최양다음 NEXT',
+      bio: "독학으로 음악을 익힌 싱어송라이터. 아버지 성 '최'와 어머니 성 '양'에 '다음'을 붙인 이름으로, 호주제에 맞선다는 뜻을 담아 지었습니다. 그 이름을 여러 나라 말로 씁니다 — 다음, NEXT, 次, Nächste, 翌. 세월호 10주기 추모, 수요시위, 팔레스타인 연대 집회, 5·18 기념식 같은 자리에서 노래해왔습니다.",
+      photo: '/images/shows/bakkeoji-next-20261004.webp',
+      sns: 'https://www.facebook.com/profile.php?id=61571311203395',
+    },
+    {
       name: '자이(Jai)',
       bio: "특유의 포근하고 깊은 음색으로 일상과 삶의 미세한 결을 어루만지는 싱어송라이터. 락밴드 '헤디마마' 활동을 거쳐 현재는 어쿠스틱·인디·로파이·재즈 스타일을 넘나드는 솔로 아티스트로서 독보적인 음악 세계를 구축해 오고 있다.",
       photo: '/images/shows/bakkeoji-jai-20261003.webp',
@@ -50,8 +58,8 @@ export const bakkeojiShow: ShowDefinition = {
     '홍천의 풍천리 마을을 아시나요? 지금 풍천리는 수백 년 된 푸른 숲을 허물고 양수발전소를 세우려는 계획 때문에 오랜 삶의 터전과 소중한 자연이 파괴될 위기에 놓여 있습니다. 마을과 숲을 지키기 위해 주민분들은 오랫동안 외롭고 힘겨운 싸움을 이어오고 계십니다. 마을을 지키기 위해 애쓰시는 주민분들의 목소리에 힘을 보태고, 풍천리의 이야기를 음악으로 나누며 따뜻하게 함께하는 연대의 마음을 모으고자 이번 자리를 마련했습니다.',
     "풍천리 공연은 늘 따뜻한 밥 한 끼를 나누는 마음과 함께해 왔습니다. 이번엔 삼청동 '라플란드'에서 사람을 위하는 마음과 정성이 담긴 '삼청모찬 도시락'을 준비했습니다. 정성 어린 음식과 다정한 음악으로 마음을 나누는 이 자리에 꼭 함께해 주세요. 10월 24일 라플란드에서 그 맘을 같이 나눠요.",
   ].join('\n\n'),
-  coverImage: '/images/shows/bakkeoji-poster-20261003r2.webp',
-  ogImage: '/images/shows/bakkeoji-og-20261003r2.webp',
+  coverImage: '/images/shows/bakkeoji-poster-20261004.webp',
+  ogImage: '/images/shows/bakkeoji-og-20261004.webp',
   // 18:00 식사, 18:30 공연 시작 — startsAt은 공연 시작. 판매마감은 시작 전날 24:00(KST).
   scheduleNote: '18:00 식사 · 18:30 공연 시작',
   onSitePriceNote: `현장 판매 ${won(ON_SITE_PRICE)} (1드링크 포함, 현장 잔여석이 있는 경우)`,
