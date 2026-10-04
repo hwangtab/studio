@@ -119,6 +119,27 @@ const checkCalendar = async (now: Date): Promise<HealthIssue[]> => {
  */
 const FIELD_KEY_PROBE = 'health-check';
 
+/**
+ * 토스 API 개별 연동 키 쌍이 반쪽만 있는가 — 클라이언트 키(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY`)는
+ * 있는데 시크릿(`TOSS_API_SECRET_KEY`)이 없으면 결제수단 목록 화면(`?pay=v2`)이 결제창은 열지만
+ * 승인은 전부 실패한다 — 고객은 결제창 인증까지 마치고 실패 화면을 본다(루트 CLAUDE.md "토스 키는 두 쌍이다").
+ * 값은 싣지 않는다 — 설정 여부만 본다.
+ */
+export const checkTossApiKeyPair = (): HealthIssue | null => {
+  const hasClient = Boolean(process.env.NEXT_PUBLIC_TOSS_API_CLIENT_KEY?.trim());
+  const hasSecret = Boolean(process.env.TOSS_API_SECRET_KEY?.trim());
+  if (!hasClient || hasSecret) return null;
+  return {
+    severity: 'high',
+    title: '토스 API 시크릿 키(TOSS_API_SECRET_KEY) 없음 — 새 결제 화면의 승인이 전부 실패합니다',
+    detail: [
+      '상태: NEXT_PUBLIC_TOSS_API_CLIENT_KEY 설정됨 · TOSS_API_SECRET_KEY 없음',
+      '결제수단 목록 화면(?pay=v2 또는 NEXT_PUBLIC_PAYMENT_PICKER=on)으로 연 결제는 같은 쌍의 시크릿으로만 승인됩니다.',
+      'Vercel 환경 변수에 TOSS_API_SECRET_KEY(live_sk_)를 넣거나, 넣기 전까지 새 화면을 끄세요(?pay=widget, NEXT_PUBLIC_PAYMENT_PICKER 해제).',
+    ].join('\n'),
+  };
+};
+
 export const checkFieldCryptoKey = (): HealthIssue | null => {
   try {
     if (decryptField(encryptField(FIELD_KEY_PROBE)) !== FIELD_KEY_PROBE) {
@@ -1049,6 +1070,9 @@ export const runHealthCheck = async (now: Date = new Date()): Promise<HealthRepo
 
   const fieldKey = checkFieldCryptoKey();
   if (fieldKey) issues.push(fieldKey);
+
+  const tossApiKeys = checkTossApiKeyPair();
+  if (tossApiKeys) issues.push(tossApiKeys);
 
   /**
    * 카카오 전환율 급락 — 2026-08-13~23 사고(트래픽 정상인데 전환율만 7.5%→1.1%로
