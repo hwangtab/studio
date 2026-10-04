@@ -62,7 +62,7 @@ it('환불 요청된 계좌 입금 건 — 은행명·예금주만 싣고 계좌
     sql: `INSERT INTO funding_refund_accounts (order_id, bank_name, account_number_enc, account_holder) VALUES ('o1', '국민은행', ?, '김부모')`,
     args: [enc],
   });
-  const result = (await getServerSideProps({ query: { id: 'o1' } } as never)) as { props: Record<string, unknown> };
+  const result = (await getServerSideProps({ query: { id: 'o1' } } as never)) as unknown as { props: Record<string, unknown> };
   expect(result.props.refundAccount).toMatchObject({ status: 'present', bankName: '국민은행', accountHolder: '김부모' });
   const serialized = JSON.stringify(result.props);
   expect(serialized).not.toContain('7890123');
@@ -73,7 +73,7 @@ it('같은 이름의 다른 입금 대기·취소 신청을 후보로 싣는다'
   await insertOrder('o2', 'pending');
   await insertOrder('o3', 'expired');
   await insertOrder('o4', 'pending', '다른 사람');
-  const result = (await getServerSideProps({ query: { id: 'o2' } } as never)) as { props: { sameNameDeposits: Array<{ orderNo: string }>; pledge: { awaitingDeposit: boolean } } };
+  const result = (await getServerSideProps({ query: { id: 'o2' } } as never)) as unknown as { props: { sameNameDeposits: Array<{ orderNo: string }>; pledge: { awaitingDeposit: boolean } } };
   expect(result.props.pledge.awaitingDeposit).toBe(true);
   expect(result.props.sameNameDeposits.map((c) => c.orderNo)).toEqual(['FND-o3']);
 });
