@@ -57,7 +57,9 @@ export const bakkeojiShow: ShowDefinition = {
   // 공연 시간 약 100분(주최 확인, 2026-10-03). 18:00 입장 시작 이후 대기 시간은 포함하지 않는다.
   runningMinutes: 100,
   venueName: '삼청동 라플란드',
-  venueAddress: '서울특별시 종로구 삼청로 83 가동 1층',
+  // 공연은 건물 2층에서 열린다(운영자 2026-10-04). 지도 검색은 층 표기를 떼고 건물 번호까지만 쓰므로(lib/shows/maps.ts) 영향이 없고,
+  // 장소 링크(mapLinks)는 같은 건물의 업장 페이지다.
+  venueAddress: '서울특별시 종로구 삼청로 83 가동 2층',
   // 소개 본문. 빈 줄로 문단을 가르고, `## `는 소제목, `> `는 인용이다(lib/shows/structured.ts descriptionBlocks).
   // 첫 두 문단은 주최 측이 쓴 글 그대로다. 풍천리 상황의 수치·주민 인용은 펀딩 프로젝트 페이지
   // (content/funding/mok-jareugi.md "풍천리에서 일어나고 있는 일")에 정리된 것을 그대로 옮겼다 — 새 사실을 더하지 않았다.
@@ -80,7 +82,7 @@ export const bakkeojiShow: ShowDefinition = {
   // 18:00 입장 시작, 18:30 공연 시작 — startsAt은 공연 시작. 판매마감은 시작 전날 24:00(KST).
   scheduleNote: '18:00 입장 시작 · 18:30 공연 시작',
   onSitePriceNote: `현장 판매 ${won(ON_SITE_PRICE)} (1드링크 포함, 현장 잔여석이 있는 경우)`,
-  notices: ['비지정석 선착순 입장입니다.'],
+  notices: ['공연은 건물 2층에서 열립니다.', '비지정석 선착순 입장입니다.'],
   // 제공자별 정확한 장소 주소(lib/shows/maps.ts).
   // - 카카오: 운영자가 준 장소 페이지(서울 종로구 삼청로 83 1층). 카카오에는 카테고리가 '의류판매'로 등록돼 있다(운영자 확인 —
   //   같은 업장이 공연도 하는 것) — 주소가 공연장과 같으므로 그대로 쓴다.

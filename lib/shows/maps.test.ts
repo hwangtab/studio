@@ -6,6 +6,7 @@ describe('공연장 지도 틀', () => {
   it('건물 안쪽 표기(동·층)를 떼고 건물 번호까지만 쓴다', () => {
     const street = (venueAddress: string) => showMapStreet({ venueAddress });
     expect(street('서울특별시 종로구 삼청로 83 가동 1층')).toBe('서울특별시 종로구 삼청로 83');
+    expect(street('서울특별시 종로구 삼청로 83 가동 2층')).toBe('서울특별시 종로구 삼청로 83'); // 층이 바뀌어도 같은 건물을 찾는다
     expect(street('서울 마포구 와우산로 94 2층')).toBe('서울 마포구 와우산로 94');
     expect(street('서울 마포구 와우산로 94 지하 1층')).toBe('서울 마포구 와우산로 94');
     expect(street('서울 마포구 와우산로 94 B1층')).toBe('서울 마포구 와우산로 94');
