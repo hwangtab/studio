@@ -260,3 +260,18 @@ describe('살아 있지 않은 후원(?o=)', () => {
     expect(r.props.outcome).toBe('confirmed');
   });
 });
+
+/** 결제수단 목록 화면으로 연 결제(`tosskey=api`)는 같은 쌍의 시크릿부터 쓰도록 channel을 넘긴다(lib/booking/toss.ts). */
+describe('펀딩 success — 승인 채널 배선', () => {
+  it('tosskey=api면 channel: api로 승인한다', async () => {
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: ORDER_NO, manageToken: TOKEN, projectSlug: 'demo' });
+    await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '30000', tosskey: 'api' }).run();
+    expect(confirmFundingPledge).toHaveBeenCalledWith({ orderNo: ORDER_NO, paymentKey: 'pk', amount: 30000, channel: 'api' });
+  });
+
+  it('표식이 없으면 channel 없이 승인한다', async () => {
+    (confirmFundingPledge as jest.Mock).mockResolvedValue({ ok: true, orderNo: ORDER_NO, manageToken: TOKEN, projectSlug: 'demo' });
+    await ctx({ paymentKey: 'pk', orderId: ORDER_NO, amount: '30000' }).run();
+    expect((confirmFundingPledge as jest.Mock).mock.calls[0][0].channel).toBeUndefined();
+  });
+});

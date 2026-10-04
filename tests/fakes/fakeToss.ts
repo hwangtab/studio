@@ -1,4 +1,4 @@
-import type { TossPayment, TossResult } from '../../lib/booking/toss';
+import type { TossKeyChannel, TossPayment, TossResult } from '../../lib/booking/toss';
 
 interface Fault {
   code: string;
@@ -6,7 +6,7 @@ interface Fault {
 }
 
 export interface FakeToss {
-  confirmPayment(args: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult>;
+  confirmPayment(args: { paymentKey: string; orderId: string; amount: number; channel?: TossKeyChannel }): Promise<TossResult>;
   cancelPayment(input: {
     paymentKey: string;
     cancelReason: string;

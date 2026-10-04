@@ -2,7 +2,7 @@ import { and, eq, inArray, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges, orders, payments } from '../../db/schema';
-import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from '../booking/toss';
+import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossKeyChannel, type TossPayment } from '../booking/toss';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails } from './email';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
@@ -140,7 +140,8 @@ const success = (order: FundingOrder, emailSent?: boolean): FundingConfirmOutcom
 });
 
 export const confirmFundingPledge = async (
-  input: { orderNo: string; paymentKey: string; amount: number },
+  /** channel: 결제창을 연 키 쌍(success 주소의 `tosskey`) — lib/booking/toss.ts. */
+  input: { orderNo: string; paymentKey: string; amount: number; channel?: TossKeyChannel },
   options: { trustedByWebhook?: boolean } = {},
 ): Promise<FundingConfirmOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
@@ -221,7 +222,7 @@ export const confirmFundingPledge = async (
   }
 
   const db = getDb();
-  const toss = await confirmPayment({ paymentKey: input.paymentKey, orderId: order.orderNo, amount: input.amount });
+  const toss = await confirmPayment({ paymentKey: input.paymentKey, orderId: order.orderNo, amount: input.amount, channel: input.channel });
 
   let approved: TossPayment;
   if (toss.ok) {

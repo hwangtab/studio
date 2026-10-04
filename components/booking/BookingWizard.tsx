@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
 import PriceBreakdown from './PriceBreakdown';
-import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from './useTossPaymentWidgets';
+import { TOSS_TERMS_REQUIRED_MESSAGE } from './useTossPaymentWidgets';
+import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
@@ -288,9 +290,9 @@ export default function BookingWizard({ service, products, initialProductId }: B
    */
   const {
     methodsId, agreementId, ready: paymentReady, error: paymentError, retry: retryPayment, requestPayment,
-    agreedRequiredTerms,
+    agreedRequiredTerms, picker, choice: pickerChoice, setChoice: setPickerChoice, applePaySupported,
     // 마운트 지점이 3단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
-  } = useTossPaymentWidgets(amounts.totalAmount, step === 3);
+  } = usePaymentCheckout(amounts.totalAmount, step === 3);
 
   /**
    * 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 계좌는 이용 시작 2시간 전부터 막는다(입금을 확인할 시간이
@@ -698,29 +700,52 @@ export default function BookingWizard({ service, products, initialProductId }: B
 
             {/* 결제수단 — 위에서 카드·간편결제(토스)와 계좌로 직접 입금 중 하나를 고른다. 토스 쪽 수단 목록과
                 결제 약관 동의는 **위젯이 그린다**(우리 목록을 따로 두지 않는다). 계좌를 고르면 위젯을 **숨기기만**
-                한다 — 언마운트하면 iframe이 다시 그려지며 동의 상태가 풀린다(PledgeWizard와 같다). */}
+                한다 — 언마운트하면 iframe이 다시 그려지며 동의 상태가 풀린다(PledgeWizard와 같다).
+                기능 플래그(`?pay=v2`)가 켜지면 위젯 대신 우리가 그린 결제수단 목록(PaymentMethodPicker)이다. */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              <PaymentMethodChoice
-                name="booking-paymethod"
-                value={usingBank ? 'bank_transfer' : 'toss'}
-                onChange={setPayMethod}
-                bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
-                confirmLabel="예약이 확정"
-              />
-              <div hidden={usingBank} className="mt-3">
-                {paymentError ? (
-                  <div className="mt-2">
-                    <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                    <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-                  </div>
-                ) : (
-                  <>
-                    <div id={methodsId} />
-                    <div id={agreementId} />
-                  </>
-                )}
-              </div>
+              {picker === null ? (
+                <PaymentMethodSkeleton />
+              ) : picker ? (
+                <>
+                  <PaymentMethodPicker
+                    name="booking-paymethod"
+                    value={usingBank ? 'bank_transfer' : pickerChoice}
+                    onChange={(next) => {
+                      if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                      setPayMethod('toss');
+                      setPickerChoice(next);
+                    }}
+                    applePaySupported={applePaySupported}
+                    bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
+                    confirmLabel="예약이 확정"
+                  />
+                  {paymentError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{paymentError}</p>}
+                </>
+              ) : (
+                <>
+                <PaymentMethodChoice
+                  name="booking-paymethod"
+                  value={usingBank ? 'bank_transfer' : 'toss'}
+                  onChange={setPayMethod}
+                  bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
+                  confirmLabel="예약이 확정"
+                />
+                <div hidden={usingBank} className="mt-3">
+                  {paymentError ? (
+                    <div className="mt-2">
+                      <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                      <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+                    </div>
+                  ) : (
+                    <>
+                      <div id={methodsId} />
+                      <div id={agreementId} />
+                    </>
+                  )}
+                </div>
+                </>
+              )}
             </div>
 
             {/* 예전에는 결제 화면에서 남은 시간을 세어 보여 줬다. 결제창을 열고 나면 고객은

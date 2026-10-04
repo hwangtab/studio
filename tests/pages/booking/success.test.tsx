@@ -57,3 +57,23 @@ describe('예약 완료 화면', () => {
     expect(r.props.manageUrl).toBeUndefined();
   });
 });
+
+/** 결제수단 목록 화면으로 연 결제(`tosskey=api`)는 같은 쌍의 시크릿부터 쓰도록 channel을 넘긴다(lib/booking/toss.ts). */
+describe('예약 success — 승인 채널 배선', () => {
+  const runWith = (extra: Record<string, string>) => getServerSideProps({
+    query: { paymentKey: 'pk', orderId: 'SNB-1', amount: '275000', ...extra },
+    params: { locale: 'ko' }, res: { setHeader: jest.fn() },
+  } as unknown as Ctx);
+
+  it('tosskey=api면 channel: api로 승인한다', async () => {
+    mockConfirm.mockResolvedValue({ ok: false, code: 'x', message: 'x' });
+    await runWith({ tosskey: 'api' });
+    expect(mockConfirm).toHaveBeenCalledWith({ orderNo: 'SNB-1', paymentKey: 'pk', amount: 275000, channel: 'api' });
+  });
+
+  it('표식이 없으면 channel 없이 승인한다', async () => {
+    mockConfirm.mockResolvedValue({ ok: false, code: 'x', message: 'x' });
+    await runWith({});
+    expect(mockConfirm.mock.calls[0][0].channel).toBeUndefined();
+  });
+});

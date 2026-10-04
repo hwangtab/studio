@@ -3,7 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { Field, TextInput, Select } from '../ui/Field';
-import { useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
+import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
+import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 import { formatWon, SALE_STATE_LABELS } from '../../lib/shows/copy';
 import { SHOW_HOLD_SECONDS, SHOW_MAX_PER_ORDER_CAP } from '../../lib/shows/limits';
@@ -114,7 +115,8 @@ export default function ShowBookingForm({ show }: Props) {
     };
   }, [widgetArmed]);
 
-  const widget = useTossPaymentWidgets(total, canBook && widgetArmed);
+  // 위젯(기본) 또는 우리가 그린 결제수단 목록(기능 플래그) — components/payments/usePaymentCheckout.ts.
+  const widget = usePaymentCheckout(total, canBook && widgetArmed);
 
   /**
    * 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 계좌는 회차 시작 2시간 전부터 막는다(입금을 확인하고 티켓을
@@ -350,26 +352,48 @@ export default function ShowBookingForm({ show }: Props) {
 
           <div>
             <h3 className="mb-2 typo-card-title">결제 수단</h3>
-            {/* 계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 iframe이 다시 그려지며 위젯 약관 동의가 풀린다. */}
-            <PaymentMethodChoice
-              name="show-paymethod"
-              value={usingBank ? 'bank_transfer' : 'toss'}
-              onChange={setPayMethod}
-              bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
-              confirmLabel="티켓이 발권"
-            />
-            <div hidden={usingBank} className="mt-3">
-              <div id={widget.methodsId} />
-              <div id={widget.agreementId} />
-              {widget.error && (
-                <div>
-                  <p role="alert" className="text-sm text-red-600 dark:text-red-400">{widget.error}</p>
-                  <Button type="button" variant="outline" onClick={widget.retry} className="mt-3">
-                    다시 시도
-                  </Button>
+            {widget.picker === null ? (
+              <PaymentMethodSkeleton />
+            ) : widget.picker ? (
+              <>
+                <PaymentMethodPicker
+                  name="show-paymethod"
+                  value={usingBank ? 'bank_transfer' : widget.choice}
+                  onChange={(next) => {
+                    if (next === 'bank_transfer') { setPayMethod('bank_transfer'); return; }
+                    setPayMethod('toss');
+                    widget.setChoice(next);
+                  }}
+                  applePaySupported={widget.applePaySupported}
+                  bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
+                  confirmLabel="티켓이 발권"
+                />
+                {widget.error && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{widget.error}</p>}
+              </>
+            ) : (
+              <>
+                {/* 계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 iframe이 다시 그려지며 위젯 약관 동의가 풀린다. */}
+                <PaymentMethodChoice
+                  name="show-paymethod"
+                  value={usingBank ? 'bank_transfer' : 'toss'}
+                  onChange={setPayMethod}
+                  bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
+                  confirmLabel="티켓이 발권"
+                />
+                <div hidden={usingBank} className="mt-3">
+                  <div id={widget.methodsId} />
+                  <div id={widget.agreementId} />
+                  {widget.error && (
+                    <div>
+                      <p role="alert" className="text-sm text-red-600 dark:text-red-400">{widget.error}</p>
+                      <Button type="button" variant="outline" onClick={widget.retry} className="mt-3">
+                        다시 시도
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
+              </>
+            )}
           </div>
 
           {error && (

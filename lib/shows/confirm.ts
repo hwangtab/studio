@@ -5,7 +5,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import type { Order } from '../../db/schema';
 import { refundIdempotencyKey, remainingRefundable } from '../booking/cancel';
-import type { TossPayment } from '../booking/toss';
+import type { TossKeyChannel, TossPayment } from '../booking/toss';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import { SEND_PENDING } from '../ops/notificationSentinel';
 import { liveShowtimeCondition, zoneCapacityCondition, ticketTypeQuotaCondition } from './conditions';
@@ -80,7 +80,8 @@ const TOSS_UNRESOLVED_CODE = 'toss_unresolved';
  * 돌아가므로, 그 뒤에 온 웹훅 재시도는 정상적으로 acceptableStatuses를 통과한다.
  */
 export async function confirmShowOrder(
-  input: { orderNo: string; paymentKey: string; amount: number },
+  /** channel: 결제창을 연 키 쌍(success 주소의 `tosskey`) — lib/booking/toss.ts. */
+  input: { orderNo: string; paymentKey: string; amount: number; channel?: TossKeyChannel },
   opts: { trustedByWebhook: boolean },
   toss: Pick<FakeToss, 'confirmPayment' | 'fetchPayment' | 'cancelPayment'>,
 ): Promise<ConfirmOutcome> {
@@ -108,7 +109,7 @@ export async function confirmShowOrder(
     return { status: 'amount_mismatch' };
   }
 
-  const result = await toss.confirmPayment({ paymentKey: input.paymentKey, orderId: input.orderNo, amount: input.amount });
+  const result = await toss.confirmPayment({ paymentKey: input.paymentKey, orderId: input.orderNo, amount: input.amount, channel: input.channel });
 
   let approved: TossPayment;
   if (result.ok) {

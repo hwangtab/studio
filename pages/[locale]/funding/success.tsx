@@ -13,6 +13,7 @@ import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { getClientIp } from '../../../lib/contracts/client-ip';
 import { confirmFundingPledge } from '../../../lib/funding/confirm';
+import { TOSS_KEY_CHANNEL_PARAM, tossKeyChannelFromQuery } from '../../../lib/booking/toss';
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../lib/funding/refundable';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
@@ -363,7 +364,11 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
 
   const { paymentKey, orderId, amount } = query;
   if (typeof paymentKey === 'string' && typeof orderId === 'string' && typeof amount === 'string') {
-    const result = await confirmFundingPledge({ orderNo: orderId, paymentKey, amount: Number(amount) });
+    const result = await confirmFundingPledge({
+      orderNo: orderId, paymentKey, amount: Number(amount),
+      // 우리가 그린 결제수단 목록으로 연 결제는 API 개별 연동 키 쌍으로 승인한다(lib/booking/toss.ts).
+      channel: tossKeyChannelFromQuery(query[TOSS_KEY_CHANNEL_PARAM]),
+    });
     // 성공이든 실패든 이 URL에서는 화면을 그리지 않는다 — paymentKey·orderId가 붙은 채로
     // 렌더되는 순간 측정에 적재된다(CONFIRM_ERROR_MESSAGES 주석).
     if (!result.ok) {

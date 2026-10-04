@@ -10,6 +10,7 @@ import Head from 'next/head';
 import { useEffect } from 'react';
 
 import { confirmBookingPayment } from '../../../lib/booking/confirm';
+import { TOSS_KEY_CHANNEL_PARAM, tossKeyChannelFromQuery } from '../../../lib/booking/toss';
 import { BOOKING_CUSTOMER_DRAFT_KEY, MIXING_CUSTOMER_DRAFT_KEY } from '../../../lib/booking/customerDraft';
 import { getSiteConfig } from '../../../data/siteConfig';
 import { clearStoredDraft } from '../../../lib/formDraft';
@@ -132,7 +133,11 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
   if (typeof paymentKey !== 'string' || typeof orderId !== 'string' || typeof amount !== 'string')
     return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
 
-  const result = await confirmBookingPayment({ orderNo: orderId, paymentKey, amount: Number(amount) });
+  const result = await confirmBookingPayment({
+    orderNo: orderId, paymentKey, amount: Number(amount),
+    // 우리가 그린 결제수단 목록으로 연 결제는 API 개별 연동 키 쌍으로 승인한다(lib/booking/toss.ts).
+    channel: tossKeyChannelFromQuery(query[TOSS_KEY_CHANNEL_PARAM]),
+  });
   if (!result.ok) return { props: { outcome: 'error', message: result.message } };
   return {
     props: {

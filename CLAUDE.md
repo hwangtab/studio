@@ -300,33 +300,44 @@ drizzle의 libsql 마이그레이터는 적용된 것 중 `created_at`이 가장
    `pragma table_info(<테이블>);`로 코드와 대조한다. main CI의 `Migration drift check`도
    다음 push부터 초록이 된다.
 
-### 토스 연동 키는 **위젯 키**다 — `payment()` 결제창 API를 쓸 수 없다
+### 토스 키는 두 쌍이다 — 결제창을 연 키와 같은 쌍으로 승인한다
 
-`NEXT_PUBLIC_TOSS_CLIENT_KEY`는 `live_gck_`, `TOSS_SECRET_KEY`는 `live_gsk_`로 시작하는
-**결제위젯 연동 키 쌍**이다. v2 SDK는 두 갈래인데 이 키로는 한쪽만 된다.
+같은 MID(studkol3wd)에 키 쌍 둘이 공존한다. v2 SDK는 두 갈래이고 갈래마다 요구하는 키가 다르다.
 
-| 갈래 | 요구하는 키 | 우리 상태 |
-|---|---|---|
-| `toss.widgets()` + `renderPaymentMethods` | 위젯 키(`gck`) | **이걸 쓴다** |
-| `toss.payment()` + `requestPayment` | API 개별 연동 키(`ck`) | 못 쓴다 |
+| 갈래 | 클라이언트 키 | 시크릿 키 | 쓰는 화면 |
+|---|---|---|---|
+| `toss.widgets()` + `renderPaymentMethods` | `NEXT_PUBLIC_TOSS_CLIENT_KEY`(`live_gck_`) | `TOSS_SECRET_KEY`(`live_gsk_`) | 결제위젯 — **기본값** |
+| `toss.payment()` + `requestPayment` | `NEXT_PUBLIC_TOSS_API_CLIENT_KEY`(`live_ck_`) | `TOSS_API_SECRET_KEY`(`live_sk_`) | 우리가 그린 결제수단 목록 — 기능 플래그 |
 
-SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언하고, 아니면
-`NotSupportedWidgetKeyError("결제위젯 연동키는 지원하지 않습니다.")`를 던진다. 예외는
-SDK에 하드코딩된 위젯 키 2개뿐이고 우리 키는 거기 없다.
+SDK가 `payment()` 경로에서 `isAPIIndividualKey()`를 단언한다 — 위젯 키로 부르면
+`NotSupportedWidgetKeyError`를 던진다. 결제창 개설 API(`px-payment-parameters`)는 위젯 키로도
+토큰을 내주므로 **API로만 확인하면 "된다"는 잘못된 결론이 나온다**(2026-09-15에 그렇게 배포했다가
+되돌렸다). 판정은 브라우저에서 `toss.payment()`를 실제로 불러 할 것.
 
-**API가 통과하는 것과 SDK가 통과시키는 것은 다르다.** 결제창 개설 API
-(`px-payment-parameters`)는 위젯 키로도 토큰을 내준다 — 그래서 API로만 확인하면
-"된다"는 잘못된 결론이 나온다(2026-09-15에 실제로 그렇게 배포했다가 되돌렸다).
-판정은 반드시 **브라우저에서 `toss.payment()`를 실제로 불러** 할 것.
+**승인 시크릿 고르기**(`lib/booking/toss.ts`). 승인은 결제창을 연 키와 같은 쌍이어야 한다.
+결제수단 목록으로 연 결제는 success 주소에 `tosskey=api`를 싣고(`withApiKeyChannel`), success
+페이지(booking·funding·shows)가 그 값을 `confirm*`에 `channel`로 넘겨 API 시크릿부터 쓴다. 채널을
+모르는 경로(웹훅·재조회·취소·자동 취소)는 위젯 시크릿부터 묻는다. 어느 쪽이든 응답이 키 불일치 계열
+(`UNAUTHORIZED_KEY`·`INVALID_API_KEY`·`FORBIDDEN_REQUEST`·`NOT_FOUND_PAYMENT`·`NOT_FOUND_PAYMENT_SESSION`)일
+때만 다른 쌍으로 **한 번** 더 묻는다. 이 코드들은 돈이 움직이지 않았다는 뜻이라 재시도가 이중 승인·이중
+취소를 만들지 않는다. **네트워크 오류·5xx·카드 거절은 다시 묻지 않는다** — 응답만 늦은 요청은 처리됐을 수
+있고, 토스 멱등 키는 API 키별로 묶여 다른 키로 보내면 중복 취소를 막아 주지 못한다. 결제 행에 채널을
+기록하지 않는 것은 마이그레이션 없이 넣기 위해서다 — 같은 MID라 조회·취소는 두 시크릿 모두 같은 결제를 본다
+(2026-10-04 실측: 두 시크릿 모두 위젯 결제를 조회했다).
 
-**우리 수단 목록을 따로 들지 않는다.** 펀딩 폼은 위젯을 신청 폼 **안에** 띄우고
-(`useTossPaymentWidgets`), 제출 한 번에 주문 생성 → `requestPayment`로 간다. 수단은 위젯이
-계약·노출 설정대로 그리므로 토스 쪽에서 늘거나 줄면 그대로 따라간다. 수단을 우리 코드에
-나열하면 두 목록이 갈라지고, 그때 화면과 실제가 어긋난다.
+**결제수단 목록 화면**(`components/payments/PaymentMethodPicker.tsx`, 정의 `lib/payments/paymentChoices.ts`,
+네 폼 공용 훅 `components/payments/usePaymentCheckout.ts`). 순서는 신용·체크카드 / 계좌로 직접 입금 /
+카카오페이 / 네이버페이 / 토스페이 / 페이코 / 애플페이(`window.ApplePaySession`이 결제 가능할 때만).
+간편결제는 `method: 'CARD', card: { flowMode: 'DIRECT', easyPay: '카카오페이' }`처럼 **한국어** 값으로 그
+결제창에 직행한다 — 영문 enum은 토스가 거부한다(SAF2026 실측). **토스 계좌이체(TRANSFER)는 넣지 않는다**
+— PC에서 보안 프로그램 설치 화면이 떠 결제를 막는다(운영자 결정 2026-10-04). 계좌로 내려는 사람은
+"계좌로 직접 입금"(무통장)을 쓴다. 이 화면에는 위젯 약관 UI가 없어(결제창이 자체 약관을 받는다) 훅이
+`agreedRequiredTerms: true`를 돌려주고, 폼의 위젯 약관 게이트를 타지 않는다.
 
-정말로 폼에서 직접 고르게 해야 한다면 토스에서 **API 개별 연동 키**를 새로 발급받아야 하고,
-그러면 `TOSS_SECRET_KEY`도 그 쌍의 `live_sk_`로 함께 바꿔야 한다 — 승인·조회·취소가 전부
-같은 쌍이어야 한다. 한쪽만 바꾸면 결제창은 열리는데 승인이 실패한다.
+**켜는 법**(`lib/payments/paymentPickerFlag.ts`의 `resolvePaymentPicker`가 유일한 판정). 기본값은 위젯이다.
+주소에 `?pay=v2`를 붙이면 켜지고 쿠키 `studio_pay`(30일)에 기억돼 이후 페이지에서도 유지된다. `?pay=widget`은
+끈다. env `NEXT_PUBLIC_PAYMENT_PICKER=on`이면 전체 기본값이 새 화면이다(빌드 시점 인라인 — 바꾸면 빌드가
+한 번 돈다). 위젯 경로는 그대로 남아 있다 — 걷어내는 것은 새 화면을 운영에서 확인한 뒤의 일이다.
 
 ### 약관·처리방침을 고치면 FUNDING_TERMS_VERSION을 함께 올린다
 
