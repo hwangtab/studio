@@ -52,8 +52,10 @@ export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
 /**
  * "후원자가 취소를 요청했는데 아직 돈이 안 나간" 상태로 볼 orders.status 집합.
  *
- * **지금은 새로 만들어지지 않는다.** 이 상태를 만들던 것은 무통장입금 셀프 취소뿐이었고,
- * 그 결제수단은 2026-09-11에 중단했다. 중단 전에 만들어진 행을 위해 판정·알람은 남겨 둔다.
+ * 이 상태를 만드는 것은 **계좌 입금 후원의 셀프 취소**다(환불 계좌를 받아 접수하고, 운영자가 송금한 뒤
+ * 기록한다 — lib/funding/cancel.ts). 2026-09-11~10-04 사이 계좌 입금을 걷어냈던 동안은 새로 생기지
+ * 않았고, 2026-10-04 재도입으로 다시 생긴다.
+ *
  * partially_refunded도 포함하는 이유: 잔액이 남은 건은 여전히 환불이 덜 끝난 것이라
  * 알람이 꺼지면 안 되고, 그 잔액을 정리하는 경로(관리자 환불)도 열려 있어야 한다.
  * refunded로 넘어가면 refundRequestedAt은 그대로 남지만(cancel.ts는 지우지 않는다)
@@ -62,10 +64,6 @@ export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
  *
  * 관리자 목록 배지·배너(admin-serialize), 헬스체크, clear_refund_request가 모두 이
  * 하나를 본다. 셋이 갈리면 화면·메일·API가 서로 다른 사실을 말하게 된다.
- *
- * **2026-09-25 확인 (감사 항목 — 확인 후 기각):** 운영 DB에 이 값이 남은 행은 1건뿐이고
- * 이미 refunded(처리 완료, 위 집합에 안 걸림)다. 쓰는 경로가 없다는 지적은 맞지만, 새
- * 쓰기 경로를 만들 이유가 없다 — 무통장을 되살리지 않는 한 이 상태는 다시 생기지 않는다.
  */
 export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as const;
 

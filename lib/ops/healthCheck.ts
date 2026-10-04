@@ -687,7 +687,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
-   * 무통장 후원자가 셀프 취소를 요청했는데 돈이 아직 안 나간 건. 무통장은 자동 환불
+   * 계좌 입금 후원자가 셀프 취소를 요청했는데 돈이 아직 안 나간 건. 계좌 입금은 자동 환불
    * 경로가 없어 refundRequestedAt만 찍히고 orders.status는 paid로 남으므로(설계상 옳다 —
    * 운영자가 계좌로 송금해야 한다), 아무도 안 보면 약관 제10조가 약속한 "청약철회
    * 접수일부터 3영업일 이내 환불"을 조용히 넘긴다. 그 사이 이 건은 발송 CSV에도 실린다.
@@ -722,7 +722,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
           : `계좌 환불을 기다리는 취소 요청 ${refundPending.length}건`,
       detail:
         `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
-        '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
+        '계좌 입금이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불 계좌를 열어 송금한 뒤 "송금 완료(환불 기록)"를 눌러 주세요.\n' +
         '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 관리자 CSV의 shipHold 칸과 개설자 배송 목록·CSV의 ' +
         '"발송 금지" 칸에 "발송금지"로 나오고, ' +
         '발송 상태 변경은 API에서 막힙니다.',
