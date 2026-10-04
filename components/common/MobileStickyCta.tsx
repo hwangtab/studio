@@ -17,14 +17,11 @@ interface Props {
 }
 
 /**
- * 모바일(<lg) 하단 고정 주 버튼 바 — 공연 상세(옛 ShowMobileCta)와 펀딩 상세(FundingMobileCta)가 같은 모양을
- * 쓰도록 모은 자리다. 규칙은 둘이 이미 공유하던 것이다: `z-50`(카카오 FAB `z-40` 위), `lg:hidden`,
+ * 모바일(<lg) 하단 고정 주 버튼 바 — 공연 상세(옛 ShowMobileCta)와 펀딩 상세(옛 FundingMobileCta)가 같은 모양을
+ * 쓰는 한 자리다. 규칙은 둘이 이미 공유하던 것이다: `z-50`(카카오 FAB `z-40` 위), `lg:hidden`,
  * 안전 영역 패딩, 공용 `Button`(크기·모서리·포커스 링). 진짜 링크라 스크립트가 죽어도 간다.
  * 이 바가 뜨는 페이지는 Layout이 카카오 FAB을 <lg로 숨긴다(components/Layout.tsx isShowDetail·isFundingDetail,
  * 겹침 회귀 테스트는 components/funding/mobileCtaFabCollision.test.tsx).
- *
- * FundingMobileCta는 아직 이걸로 옮기지 않았다 — 펀딩 상세 HTML이 바뀌면 진행 중인 전환 실험의
- * 계측 지점이 흔들리므로 2026-10-14 이후에 옮긴다(메모리 design-v2-redesign-plan).
  */
 export default function MobileStickyCta({ href, label, hideWhenInView = [], onOpen, visible = true }: Props) {
   const [hidden, setHidden] = useState(false);

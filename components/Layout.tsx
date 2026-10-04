@@ -111,7 +111,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
   // 겹친다. 카카오 문의는 헤더 버튼으로 계속 갈 수 있다.
   const isFundingPledge = router.pathname === '/[locale]/funding/[slug]/pledge';
   /**
-   * 전폭 하단 고정 바(FundingMobileCta)가 뜨는 건 후원 페이지가 아니라 **펀딩 상세**다.
+   * 전폭 하단 고정 바(MobileStickyCta)가 뜨는 건 후원 페이지가 아니라 **펀딩 상세**다.
    * 이 주석이 한동안 위 후원 페이지에 붙어 있었는데 사실이 아니었고(그 페이지는 바를 쓰지
    * 않는다), 그래서 정작 겹치는 상세 화면은 아무도 막지 않아 카카오 FAB이 「후원하기」
    * 버튼의 오른쪽 절반을 덮고 있었다. 바는 `lg:hidden`이라 데스크톱에는 없으므로 FAB도
@@ -236,7 +236,7 @@ const Layout = ({ children, hasHero, locale = defaultLocale }: LayoutProps) => {
         묶음으로 읽힌다.
 
         단, **전폭 하단 고정 바가 뜨는 화면은 묶지 않는다.** 스토리 상세의
-        StickyBottomCTA와 펀딩 상세의 FundingMobileCta는 화면 아래를 가로로 채우므로,
+        StickyBottomCTA와 펀딩 상세의 MobileStickyCta는 화면 아래를 가로로 채우므로,
         행을 bottom-6에 두면 「맨 위로」가 바 뒤로 숨는다. 그 두 화면은 예전처럼
         bottom-24에 홀로 띄워 바 위로 비켜서게 한다.
       */}

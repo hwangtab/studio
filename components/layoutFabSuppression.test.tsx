@@ -100,7 +100,7 @@ describe('Layout의 카카오 FAB 억제', () => {
     expect(scrollToTop()!.closest('div.fixed.bottom-24')).not.toBeNull();
   });
 
-  it('펀딩 상세에서도 행을 쓰지 않는다 — FundingMobileCta가 <lg에서 바닥을 채운다', async () => {
+  it('펀딩 상세에서도 행을 쓰지 않는다 — MobileStickyCta가 <lg에서 바닥을 채운다', async () => {
     await renderAt('/[locale]/funding/[slug]', true);
     expect(scrollToTop()!.closest('div.fixed.bottom-24')).not.toBeNull();
   });

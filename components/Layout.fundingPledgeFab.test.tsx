@@ -37,7 +37,7 @@ describe('Layout — 펀딩 후원 페이지의 전역 플로팅 버튼', () => 
     document.documentElement.className = '';
   });
 
-  it('/pledge에서는 KakaoFab·ScrollToTop을 숨긴다 (FundingMobileCta 전폭 하단 바와 겹치므로)', () => {
+  it('/pledge에서는 KakaoFab·ScrollToTop을 숨긴다 (MobileStickyCta 전폭 하단 바와 겹치므로)', () => {
     mockPathname = '/[locale]/funding/[slug]/pledge';
     const { queryByTestId } = render(<Layout><div /></Layout>);
     expect(queryByTestId('kakao-fab')).toBeNull();

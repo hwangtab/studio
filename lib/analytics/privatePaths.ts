@@ -126,7 +126,7 @@ export const PRIVATE_NO_STORE_SOURCES: readonly string[] = PRIVATE_ROUTE_BODIES.
  *
  * `/funding/[slug]/pledge`는 **일부러 뺐다.** URL에 비밀값이 없는 결제 **전** 입력 폼이라
  * 측정 대상이고, 후원자가 가격·약관을 다시 보러 나갈 수 있어야 한다(우하단 플로팅 버튼만
- * FundingMobileCta와 겹쳐 `Layout`이 이미 따로 숨긴다).
+ * MobileStickyCta와 겹쳐 `Layout`이 이미 따로 숨긴다).
  *
  * 계약 화면은 `Layout`이 `isContractPage`로 따로 판정한다 — 라이트 고정 등 규칙이 더 있다.
  */
