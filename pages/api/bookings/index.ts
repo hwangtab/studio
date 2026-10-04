@@ -64,7 +64,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (paymentMethod === 'bank_transfer') {
     // 안내 메일(고객+운영자)과 운영자 캘린더의 [입금 대기] 표시. 둘 다 실패해도 신청은 성립한다 — 계좌는
     // 이동하는 안내 화면에 나오고, 실패 사유는 notification_error로 관리자 화면·헬스체크에 남는다.
-    await deliverBookingDepositGuide(result.orderNo);
+    await deliverBookingDepositGuide(result.orderNo, { throttleCustomer: true });
     await holdBookingOnCalendar(result.orderNo);
     const created = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, result.orderNo) });
     return res.status(201).json({

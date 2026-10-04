@@ -177,7 +177,7 @@ describe('계좌 입금 신청', () => {
       ok: true, paymentMethod: 'bank_transfer',
       manageUrl: '/ko/funding/manage/FND-20261015-ABCDEF12?token=tok%2F%2Bx', totalAmount: 5000,
     });
-    expect(deliverDepositGuide).toHaveBeenCalledWith('FND-20261015-ABCDEF12');
+    expect(deliverDepositGuide).toHaveBeenCalledWith('FND-20261015-ABCDEF12', { throttleCustomer: true });
     // 입금 대기는 공개 집계에 바로 들어가므로 목록·상세를 재검증한다.
     expect(mockRevalidate).toHaveBeenCalledWith('/ko/funding/demo');
   });

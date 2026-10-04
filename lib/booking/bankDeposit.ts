@@ -13,6 +13,7 @@ import {
   bankDepositPaymentKey,
 } from '../payments/bankDeposit';
 import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails } from '../payments/bankDepositOrders';
+import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { deliverPostConfirmation, ensureBookingEvent, type BookingOrder } from './confirm';
 import { calendarForService, deleteBookingEvent, renameBookingEvent } from './gcal';
@@ -70,13 +71,18 @@ const summaryOf = (order: BookingOrder): { kindLabel: string; applicantLabel: st
  * "입금 안내 재발송"이 같은 함수를 쓴다. 입금 대기가 아니면 보내지 않는다. 예외는 삼킨다 — 신청은 이미
  * 만들어졌고 계좌는 안내 화면에도 나온다.
  */
-export const deliverBookingDepositGuide = async (orderNo: string): Promise<string | null> => {
+export const deliverBookingDepositGuide = async (
+  orderNo: string,
+  opts: { throttleCustomer?: boolean } = {},
+): Promise<string | null> => {
   const order = await findOrderByOrderNo(orderNo);
   if (!order || order.status !== AWAITING_DEPOSIT) return 'invalid_state';
   const s = summaryOf(order);
   let failure: string | null;
   try {
+    const skipCustomer = opts.throttleCustomer ? !(await allowCustomerDepositGuideMail(order.customerEmail)) : false;
     failure = await sendDepositGuideEmails({
+      skipCustomer,
       orderNo: order.orderNo, customerName: order.customerName, customerEmail: order.customerEmail,
       customerPhone: order.customerPhone, totalAmount: order.totalAmount,
       deadline: bookingDepositDeadline(order, order.bookings[0]),

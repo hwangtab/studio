@@ -72,7 +72,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    * 나오고, 실패 사유는 notification_error에 남아 관리자 "입금 안내 재발송"이 닫는다.
    */
   if (validated.value.paymentMethod === 'bank_transfer') {
-    await deliverDepositGuide(result.orderNo);
+    await deliverDepositGuide(result.orderNo, { throttleCustomer: true });
     // 계좌 입금 대기는 입금 전에도 공개 모금액·명단에 들어간다(운영자 결정, refundable.ts
     // countedFundingPledgeSql) — ISR로 박힌 목록·상세의 첫 화면을 바로 다시 만든다. 실패는 삼킨다(60초 ISR).
     await revalidateFundingPaths(res, project!.slug);

@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const paymentMethod = rawMethod ?? 'toss';
   const result = await createMixingOrder(validated.value, now, { releaseOrderNo: readPreviousOrderNo(req.body), paymentMethod });
   if (paymentMethod === 'bank_transfer') {
-    await deliverBookingDepositGuide(result.orderNo);
+    await deliverBookingDepositGuide(result.orderNo, { throttleCustomer: true });
     const created = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, result.orderNo) });
     return res.status(201).json({
       ok: true, orderNo: result.orderNo, paymentMethod: 'bank_transfer', totalAmount: result.totalAmount,

@@ -53,7 +53,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (paymentMethod === 'bank_transfer') {
     // 안내 메일(고객+운영자). 실패해도 신청은 성립한다 — 계좌는 이동하는 안내 화면(내 티켓)에 나오고 실패는
     // notification_error로 관리자 화면에 남는다.
-    await deliverShowDepositGuide(result.orderNo);
+    await deliverShowDepositGuide(result.orderNo, { throttleCustomer: true });
     return res.status(201).json({
       ok: true, orderNo: result.orderNo, totalAmount: order.totalAmount, paymentMethod: 'bank_transfer',
       manageUrl: `/ko/shows/manage/${result.orderNo}?token=${order.manageToken}`,

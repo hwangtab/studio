@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { SEND_PENDING } from '../ops/notificationSentinel';
 import { deliverConfirmedEmailsOnce } from './confirm';
 import { sendFundingDepositGuideEmails } from './email';
+import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
@@ -167,12 +168,16 @@ export const cancelUnpaidBankDeposit = async (order: Pick<FundingOrder, 'id'>): 
  * 관리자 화면이 그 값을 보고 "입금 안내 재발송"을 권한다. 예외는 삼킨다 — 신청은 이미 만들어졌고,
  * 계좌는 신청 직후 화면에도 나온다.
  */
-export const deliverDepositGuide = async (orderNo: string): Promise<string | null> => {
+export const deliverDepositGuide = async (
+  orderNo: string,
+  opts: { throttleCustomer?: boolean } = {},
+): Promise<string | null> => {
   const order = await findFundingOrderByOrderNo(orderNo);
   if (!order?.fundingPledge) return 'not_found';
   let emailError: string | null;
   try {
-    emailError = await sendFundingDepositGuideEmails(order, await getFundingProjectAsync(order.fundingPledge.projectSlug));
+    const skipCustomer = opts.throttleCustomer ? !(await allowCustomerDepositGuideMail(order.customerEmail)) : false;
+    emailError = await sendFundingDepositGuideEmails(order, await getFundingProjectAsync(order.fundingPledge.projectSlug), { skipCustomer });
   } catch (error) {
     console.error('[funding-bank-transfer] 입금 안내 메일 발송 중 예외', { orderNo, error });
     emailError = error instanceof Error ? error.message : String(error);

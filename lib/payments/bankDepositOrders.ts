@@ -68,6 +68,8 @@ export interface DepositGuideMail {
   manageUrl: string;
   /** 운영자 메일에 싣는 관리자 화면 주소. */
   adminUrl: string;
+  /** 고객 안내 메일을 보내지 않는다(같은 주소 발송 상한에 걸린 경우). 운영자 알림은 그대로 간다. */
+  skipCustomer?: boolean;
 }
 
 /**
@@ -79,7 +81,7 @@ export interface DepositGuideMail {
 export const sendDepositGuideEmails = async (m: DepositGuideMail): Promise<string | null> => {
   const failures: string[] = [];
   const deadline = `${formatKstDeadline(m.deadline)}(한국시간)`;
-  if (!isPurgedValue(m.customerEmail)) {
+  if (!m.skipCustomer && !isPurgedValue(m.customerEmail)) {
     const r = await sendEmail({
       to: m.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 계좌 입금 안내 — ${m.kindLabel}`,

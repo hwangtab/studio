@@ -13,6 +13,7 @@ import {
   bankDepositPaymentKey,
 } from '../payments/bankDeposit';
 import { recordDepositGuideResult, rowsOf, sendDepositGuideEmails } from '../payments/bankDepositOrders';
+import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 import { liveShowtimeCondition } from './conditions';
 import { assignEntryNumbers } from './confirm';
@@ -46,7 +47,10 @@ const loadTicketOrder = async (where: { id: string } | { orderNo: string }) =>
  * **입금 안내 메일**(고객 + 운영자). 신청 직후와 관리자 "입금 안내 재발송"이 같은 함수를 쓴다. 입금 대기가
  * 아니면 보내지 않는다. 결과는 `notification_error`에 남는다(예외는 삼킨다).
  */
-export const deliverShowDepositGuide = async (orderNo: string): Promise<string | null> => {
+export const deliverShowDepositGuide = async (
+  orderNo: string,
+  opts: { throttleCustomer?: boolean } = {},
+): Promise<string | null> => {
   const order = await loadTicketOrder({ orderNo });
   const so = order?.showOrder;
   if (!order || !so || order.status !== AWAITING_DEPOSIT) return 'invalid_state';
@@ -54,7 +58,10 @@ export const deliverShowDepositGuide = async (orderNo: string): Promise<string |
   const recipient = resolveShowRecipient(order.customerEmail, so.buyerContact);
   let failure: string | null;
   try {
+    const to = recipient ?? order.customerEmail;
+    const skipCustomer = opts.throttleCustomer ? !(await allowCustomerDepositGuideMail(to)) : false;
     failure = await sendDepositGuideEmails({
+      skipCustomer,
       orderNo: order.orderNo, customerName: so.buyerName, customerEmail: recipient ?? order.customerEmail,
       customerPhone: so.buyerContact, totalAmount: order.totalAmount,
       deadline: showDepositDeadline(order.createdAt.getTime() / 1000, so.showtime.startsAt),
