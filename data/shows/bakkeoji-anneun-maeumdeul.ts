@@ -77,6 +77,10 @@ export const bakkeojiShow: ShowDefinition = {
   scheduleNote: '18:00 입장 시작 · 18:30 공연 시작',
   onSitePriceNote: `현장 판매 ${won(ON_SITE_PRICE)} (1드링크 포함, 현장 잔여석이 있는 경우)`,
   notices: ['비지정석 선착순 입장입니다.'],
+  // 제공자별 정확한 장소 주소(lib/shows/maps.ts). 카카오는 운영자가 준 장소 페이지(서울 종로구 삼청로 83 1층 — 주소 확인함).
+  // 네이버는 넣지 않았다: 운영자가 준 naver.me/xSFajz3G가 경기 파주시 돌곶이길의 다른 '라플란드'로 열린다(2026-10-04 확인).
+  // 서울 삼청로 83의 네이버 장소 링크를 받으면 여기에 더한다 — 그 전까지는 검색 링크가 '라플란드 드 카페'(삼청로 83)를 찾는다.
+  mapLinks: { kakao: 'https://place.map.kakao.com/1525155012' },
   zones: [{ code: 'GA', label: '비지정석', capacity: 50 }],
   showtimes: [{ startsAt: new Date('2026-10-24T18:30:00+09:00') }],
   ticketTypes: [
