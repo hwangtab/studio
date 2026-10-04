@@ -162,9 +162,9 @@ export default function FundingSuccessPage({ outcome, message, statusLabel, orde
     // 세션에 배송지를 남겨 둘 이유가 없다.
     if (projectSlug) clearStoredDraft(draftStorageKey('funding', projectSlug));
     else clearDraftsByPrefix('studionol:funding-draft:');
-    // 결제를 시도하며 기억해 둔 장바구니도 지운다(PledgeWizard cartKey) — 결제가 끝났다.
+    // 결제를 시도하며 기억해 둔 선택도 지운다(PledgeWizard lastSelectionKey) — 결제가 끝났다.
     try {
-      if (projectSlug) window.sessionStorage.removeItem(`funding:lastCart:${projectSlug}`);
+      if (projectSlug) window.sessionStorage.removeItem(`funding:lastSelection:${projectSlug}`);
     } catch {
       /* 저장소 차단 — 30분 뒤 스스로 무효가 된다. */
     }

@@ -6,8 +6,7 @@ import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/repor
 import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from '../booking/useTossPaymentWidgets';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
-import { computeFundingAmountsForLines } from '../../lib/funding/amounts';
-import { pledgeLinesShortTitle } from '../../lib/funding/pledgeLines';
+import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, ANONYMOUS_LABEL, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
 import type { FundingProject } from '../../lib/funding/projects';
 import type { PublicNameStyle } from '../../lib/funding/publicName';
@@ -24,9 +23,9 @@ import { formatKakaoAddress, loadKakaoPostcode } from './kakaoPostcode';
  * - `displayNamePublic` — 체크 한 번뿐이라 잃어도 타이핑 손해가 없고, 문자열만 담는
  *   모듈 계약을 깨면서까지 살릴 값이 아니다. 명단 표시 방식·닉네임도 같다 — 공개 동의가
  *   복원되지 않으니 그 아래 선택만 살려 둘 이유가 없다.
- * - 담은 리워드(`cart`)·`additionalText` — 재고는 그 사이 바뀐다. 되살린 선택이
- *   지금도 유효한 재고인지 이 모듈은 알 수 없다. (결제를 **시도한** 장바구니는 따로
- *   `cartKey`로 되살린다 — 거기서는 지금 재고로 다시 자른다.)
+ * - `rewardId`·`quantityText`·`additionalText` — 재고는 그 사이 바뀐다. 되살린 선택이
+ *   지금도 유효한 재고인지 이 모듈은 알 수 없다. (결제를 **시도한** 선택은 따로
+ *   `lastRewardKey`로 되살린다 — 거기서는 지금 재고로 다시 자른다.)
  */
 const DRAFT_FIELDS = [
   'customerName', 'customerPhone', 'customerEmail', 'supporterMessage',
@@ -35,11 +34,21 @@ const DRAFT_FIELDS = [
 
 interface Props {
   project: FundingProject;
-  /**
-   * 처음부터 1개 담아 둘 리워드. 리워드 카드를 눌러 연 모달·`?reward=` 링크가 넘긴다. 담긴
-   * 채로 시작할 뿐 다른 리워드도 함께 담을 수 있다(2026-09-28 — 한 주문에 여러 리워드).
-   */
+  /** 처음부터 고른 채로 시작할 리워드. 리워드 카드를 눌러 연 모달·`?reward=` 링크가 넘긴다. */
   initialRewardId: string | null;
+  /**
+   * 리워드를 이미 고르고 들어온 화면에서 선택 단계를 감춘다(2026-10-04, 되돌림). 리워드
+   * 카드를 눌러 연 모달이 그런 경우다 — 방금 고른 것을 전체 목록에서 또 고르게 하면 무엇을
+   * 고른 건지 의심하게 된다(2026-09-15 #118). 고른 리워드는 읽기 전용으로 보여 주고,
+   * 바꾸려면 모달을 닫고 다른 카드를 누른다.
+   *
+   * 한 주문에 여러 리워드를 담는 "장바구니" 방식을 2026-09-28~10-04 사이 썼었다("두 리워드를
+   * 원하는 사람이 결제를 두 번 한다"는 추정 때문). 그런데 그 방식을 켜 둔 동안 실제 결제
+   * 완료 12건이 전부 리워드 1개였다 — 추정한 수요가 실재하지 않았다. 리워드마다 담긴 수량을
+   * 관리하는 복잡성(담기·빼기·펼치기·추가 상품 제안)이 거의 쓰이지 않는 경우를 위한 것이었다는
+   * 뜻이라, 되돌린다. 세트 리워드를 두지 않는 것도 여전히 같은 이유(운영자 결정)다.
+   */
+  lockedReward?: boolean;
   remaining: Record<string, number | null>;
   /**
    * 어디에 놓였나. 결제 버튼 바는 **어디서든 바닥에 고정**하고(모바일에서 주 버튼은 늘 하단 고정
@@ -52,12 +61,14 @@ interface Props {
 }
 const helpClass = 'typo-card-meta mt-1.5';
 const ALL_SOLD_OUT_MESSAGE = '모든 리워드가 품절되었습니다. 문의: 010-4255-7893';
-const EMPTY_CART_MESSAGE = '리워드를 하나 이상 담아 주세요.';
 const EMPTY_ADDRESS_MESSAGE = '주소 검색으로 받으실 주소를 넣어 주세요.';
-/** 결제를 시도한 장바구니를 되살리는 기한 — 아래 cartKey 주석. */
-const LAST_CART_TTL_MS = 30 * 60 * 1000;
+/** 결제를 시도한 선택을 되살리는 기한. */
+const LAST_SELECTION_TTL_MS = 30 * 60 * 1000;
 
 const cardClass = 'glass-card rounded-2xl p-5 sm:p-6';
+// 선택 가능한 행(리워드·결제수단)은 탭 타깃이 카드 전체가 되도록.
+const choiceRow =
+  'flex items-start gap-3 rounded-xl border p-4 transition-colors cursor-pointer border-gray-200 dark:border-gray-700 hover:border-primary/50 dark:hover:border-primary-light/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5 dark:has-[:checked]:border-primary-light dark:has-[:checked]:bg-primary-light/10';
 const radioClass = 'mt-0.5 h-5 w-5 shrink-0 accent-primary';
 
 /**
@@ -79,6 +90,12 @@ const radioClass = 'mt-0.5 h-5 w-5 shrink-0 accent-primary';
  * 정수, 추가금 0~MAX_ADDITIONAL_AMOUNT의 ADDITIONAL_AMOUNT_STEP 배수)와 같은 규칙이다.
  * 최종 판정은 언제나 서버다.
  */
+const clampQuantity = (raw: string, cap: number): number => {
+  const n = Math.floor(Number(raw));
+  // 빈 문자열·`-`·`.` 같은 타이핑 중간 상태는 폴백값으로 읽는다(입력 자체는 막지 않는다).
+  return Number.isFinite(n) ? Math.min(cap, Math.max(1, n)) : 1;
+};
+
 const clampAdditional = (raw: string): number => {
   const n = Number(raw);
   if (!Number.isFinite(n)) return 0;
@@ -115,39 +132,20 @@ function StepHeader({ id, n, title, hint }: { id: string; n: number; title: stri
 const isSoldOut = (remaining: Record<string, number | null>, rewardId: string): boolean =>
   (remaining[rewardId] ?? 1) <= 0;
 
-/** 이 리워드를 한 주문에 몇 개까지 담을 수 있나 — 남은 수량과 MAX_QUANTITY 중 작은 쪽. */
-const capOf = (remaining: Record<string, number | null>, rewardId: string): number =>
-  Math.max(0, Math.min(MAX_QUANTITY, remaining[rewardId] ?? MAX_QUANTITY));
-
-const stepButtonClass =
-  'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-gray-300 text-lg font-bold text-gray-800 transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-600 dark:text-gray-100 dark:hover:border-primary-lighter dark:hover:text-primary-lighter dark:focus-visible:ring-primary-lighter/70';
-
-export default function PledgeWizard({ project, initialRewardId, remaining, layout = 'page' }: Props) {
+export default function PledgeWizard({ project, initialRewardId, lockedReward = false, remaining, layout = 'page' }: Props) {
   const uid = useId();
-  /**
-   * 담은 리워드. **담은 순서**를 지킨다 — 요약·메일·관리자 화면이 이 순서로 보여 준다.
-   *
-   * 넘겨받은 리워드가 있으면 그것을 1개 담고 시작한다. 없으면(하단 바·히어로의 "펀딩하기",
-   * 리워드 없이 연 /pledge) **빈 채로** 시작해 목록을 펼쳐 보인다 — 예전엔 첫 리워드를 멋대로
-   * 담아 두어, 고른 적 없는 것이 담긴 채 시작했다. 품절인 리워드는 담지 않는다 — 담긴 채
-   * 시작하면 후원자가 폼을 다 채운 뒤에야 409를 본다.
-   */
-  const [cart, setCart] = useState<Array<{ rewardId: string; quantity: number }>>(() => {
-    const start = initialRewardId;
-    return start && project.rewards.some((r) => r.id === start) && !isSoldOut(remaining, start) ? [{ rewardId: start, quantity: 1 }] : [];
-  });
-  /** 담지 않은 리워드 목록을 펼쳤는가. 기본은 접힘 — 위 주석(맨 위에는 담은 것만). */
-  const [showAllRewards, setShowAllRewards] = useState(false);
-  const quantityOf = (rewardId: string): number => cart.find((c) => c.rewardId === rewardId)?.quantity ?? 0;
-  /** 0이면 빼고, 처음이면 맨 뒤에 담고, 있으면 수량만 바꾼다. 상한은 남은 수량·MAX_QUANTITY. */
-  const setQuantity = (rewardId: string, next: number) => {
-    const quantity = Math.min(capOf(remaining, rewardId), Math.max(0, next));
-    setCart((prev) => {
-      if (quantity === 0) return prev.filter((c) => c.rewardId !== rewardId);
-      if (prev.some((c) => c.rewardId === rewardId)) return prev.map((c) => (c.rewardId === rewardId ? { ...c, quantity } : c));
-      return [...prev, { rewardId, quantity }];
-    });
-  };
+  // 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해, 후원자가 폼을 다 채우고
+  // 제출한 뒤에야 409를 봤다. 고를 수 있는 첫 리워드를 기본값으로 둔다(전부 품절이면
+  // 첫 리워드를 그대로 두되 아래에서 제출 자체를 막는다). 넘겨받은 리워드(카드·`?reward=`)가
+  // 그 사이 품절됐어도 같은 규칙을 적용한다 — 공유된 링크로 들어온 사람이 비활성 라디오가
+  // 선택된 폼을 다 채운 뒤에야 품절을 보게 하지 않는다.
+  const [rewardId, setRewardId] = useState(
+    initialRewardId && !isSoldOut(remaining, initialRewardId)
+      ? initialRewardId
+      : (project.rewards.find((r) => !isSoldOut(remaining, r.id)) ?? project.rewards[0]).id,
+  );
+  const reward = project.rewards.find((r) => r.id === rewardId) ?? project.rewards[0];
+  const [quantityText, setQuantityText] = useState('1');
   const [additionalText, setAdditionalText] = useState('0');
   const [form, setForm] = useState({
     customerName: '', customerPhone: '', customerEmail: '', supporterMessage: '', displayNamePublic: false,
@@ -191,66 +189,69 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
    */
   const holdProofKey = `funding:lastOrderNo:${project.slug}`;
   /**
-   * 마지막으로 **결제를 시도한 장바구니**. 결제창은 토스로 전체 이동했다가 돌아오므로, 실패·
-   * 취소 뒤 다시 들어오면 담아 둔 리워드가 전부 사라지고 처음 하나만 남았다 — 여러 개를 담은
-   * 사람이 다시 담아야 했다. 탭 단위(sessionStorage)로 두고 결제가 확정되면 지운다(success).
+   * 마지막으로 **결제를 시도한 선택**. 결제창은 토스로 전체 이동했다가 돌아오므로, 실패·
+   * 취소 뒤 다시 들어오면 고른 것이 사라지고 기본값으로 되돌아갔다. 탭 단위(sessionStorage)로
+   * 두고 결제가 확정되면 지운다(success).
    *
-   * 되살릴 때 **지금의 재고로 다시 자른다** — 그 사이 품절된 것은 빼고 상한을 넘으면 줄인다.
-   * 이름·주소 초안(formDraft)에서 담은 리워드를 빼 둔 이유가 "재고가 바뀐다"였는데, 여기서는
-   * 그 검사를 직접 하므로 되살려도 된다. 시간 제한(30분)은 홀드 수명의 두 배쯤 — 한참 뒤에
-   * 다시 온 사람에게 예전 선택을 들이밀지 않는다.
+   * 되살릴 때 **지금의 재고로 다시 자른다** — 그 사이 품절된 것은 기본값으로 돌아가고
+   * 수량은 상한을 넘으면 줄인다. 이름·주소 초안(formDraft)에서 선택을 뺀 이유가 "재고가
+   * 바뀐다"였는데, 여기서는 그 검사를 직접 하므로 되살려도 된다. 시간 제한(30분)은 홀드
+   * 수명의 두 배쯤 — 한참 뒤에 다시 온 사람에게 예전 선택을 들이밀지 않는다.
+   *
+   * 리워드가 **잠겨 있으면**(모달에서 카드를 눌러 들어온 경우) 되살리지 않는다 — 그 카드가
+   * 곧 선택이라, 지난 시도와 다른 카드를 눌렀다면 그게 새 선택이다.
    */
-  const cartKey = `funding:lastCart:${project.slug}`;
+  const lastSelectionKey = `funding:lastSelection:${project.slug}`;
   /**
-   * 폼을 열어 둔 사이 한정 리워드가 팔려 나가면(상태 폴링이 `remaining`을 새로 준다) 담아 둔
+   * 폼을 열어 둔 사이 한정 리워드가 팔려 나가면(상태 폴링이 `remaining`을 새로 준다) 고른
    * 수량을 **지금 남은 만큼으로 자른다**. 예전엔 화면에 그대로 남아 있다가 제출하면 서버가
    * "남은 수량보다 많이 신청했다"로 거절했다 — 초과 판매는 없지만 폼을 다 채운 뒤에야 안다.
    * 줄인 사실은 바로 위에서 알린다(말없이 바꾸면 합계가 왜 줄었는지 모른다).
    */
   const [stockNotice, setStockNotice] = useState<string | null>(null);
   useEffect(() => {
-    const adjusted: string[] = [];
-    let changed = false;
-    const next = cart.flatMap((c) => {
-      const cap = capOf(remaining, c.rewardId);
-      if (c.quantity <= cap) return [c];
-      changed = true;
-      const title = project.rewards.find((r) => r.id === c.rewardId)?.title ?? c.rewardId;
-      adjusted.push(cap === 0 ? `${title}(품절)` : `${title}(${cap}개로)`);
-      return cap > 0 ? [{ ...c, quantity: cap }] : [];
-    });
-    if (!changed) return;
-    setCart(next);
-    setStockNotice(`남은 수량이 바뀌어 조정했습니다: ${adjusted.join(', ')}`);
-    // cart는 일부러 뺀다 — 사용자가 담을 때는 setQuantity가 이미 상한으로 자른다. 여기서는
-    // 재고(remaining)가 움직였을 때만 다시 본다.
+    if (!isSoldOut(remaining, rewardId)) {
+      const cap = Math.max(1, Math.min(MAX_QUANTITY, remaining[rewardId] ?? MAX_QUANTITY));
+      const current = Math.floor(Number(quantityText));
+      if (!Number.isFinite(current) || current <= cap) return;
+      setQuantityText(String(cap));
+      setStockNotice(`남은 수량이 바뀌어 ${cap}개로 조정했습니다.`);
+      return;
+    }
+    // 고른 리워드가 폼을 열어 둔 사이 품절됐다 — 고를 수 있는 다른 리워드로 옮긴다. 예전엔
+    // 수량 상한만 보아서(아래 1-이상 가드), 선택한 것만 품절돼도 조용히 1개로 남아 있다가
+    // 제출에서야 409를 봤다.
+    // 옮길 데가 없으면(전 리워드 품절) 아래 ALL_SOLD_OUT_MESSAGE가 이미 알리므로 더 보태지 않는다.
+    const next = project.rewards.find((r) => !isSoldOut(remaining, r.id));
+    if (next) {
+      const soldOutTitle = project.rewards.find((r) => r.id === rewardId)?.title ?? rewardId;
+      setRewardId(next.id);
+      setQuantityText('1');
+      setStockNotice(`${soldOutTitle}이 품절되어 다른 리워드로 옮겼습니다.`);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [remaining]);
-  const [cartRestored, setCartRestored] = useState(false);
+  const [selectionRestored, setSelectionRestored] = useState(false);
   useEffect(() => {
+    if (lockedReward) return;
     try {
-      const raw = window.sessionStorage.getItem(cartKey);
+      const raw = window.sessionStorage.getItem(lastSelectionKey);
       if (!raw) return;
-      const saved = JSON.parse(raw) as { at?: unknown; items?: unknown };
-      if (typeof saved?.at !== 'number' || Date.now() - saved.at > LAST_CART_TTL_MS || !Array.isArray(saved.items)) return;
-      const items = saved.items as Array<{ rewardId?: unknown; quantity?: unknown }>;
-      // 카드를 눌러 들어왔는데 그 리워드가 지난 장바구니에 없으면, 새로 고른 것이다 — 덮지 않는다.
-      if (initialRewardId && !items.some((i) => i.rewardId === initialRewardId)) return;
-      const restored = items.flatMap((i) => {
-        if (typeof i.rewardId !== 'string' || !project.rewards.some((r) => r.id === i.rewardId)) return [];
-        const quantity = Math.min(capOf(remaining, i.rewardId), Math.floor(Number(i.quantity)));
-        return Number.isFinite(quantity) && quantity > 0 ? [{ rewardId: i.rewardId, quantity }] : [];
-      });
-      if (restored.length > 0) {
-        setCart(restored);
-        setCartRestored(true);
-      }
+      const saved = JSON.parse(raw) as { at?: unknown; rewardId?: unknown; quantity?: unknown };
+      if (typeof saved?.at !== 'number' || Date.now() - saved.at > LAST_SELECTION_TTL_MS) return;
+      if (typeof saved.rewardId !== 'string' || !project.rewards.some((r) => r.id === saved.rewardId) || isSoldOut(remaining, saved.rewardId)) return;
+      const cap = Math.max(1, Math.min(MAX_QUANTITY, remaining[saved.rewardId] ?? MAX_QUANTITY));
+      const quantity = Math.min(cap, Math.floor(Number(saved.quantity)));
+      if (!Number.isFinite(quantity) || quantity < 1) return;
+      setRewardId(saved.rewardId);
+      setQuantityText(String(quantity));
+      setSelectionRestored(true);
     } catch {
       /* 저장소가 막혔거나 값이 깨졌다 — 처음 상태로 둔다. */
     }
-    // 마운트 시 한 번만 — remaining이 폴링으로 바뀔 때마다 되살리면 사용자가 뺀 것이 돌아온다.
+    // 마운트 시 한 번만 — remaining이 폴링으로 바뀔 때마다 되살리면 사용자가 바꾼 선택이 돌아온다.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartKey]);
+  }, [lastSelectionKey]);
   const [previousOrderNo, setPreviousOrderNo] = useState<string | null>(null);
 
   // 마운트 시 한 번 읽어 온다(SSR에서는 window가 없다).
@@ -361,20 +362,12 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
 
   // 전 리워드 품절 — 제출을 막고 이유를 밝힌다. 막지 않으면 무엇을 눌러도 409만 돌아온다.
   const allSoldOut = project.rewards.every((r) => isSoldOut(remaining, r.id));
+  const quantityCap = Math.max(1, Math.min(MAX_QUANTITY, remaining[reward.id] ?? MAX_QUANTITY));
   // 화면 요약·서버 전송에 쓰는 값은 언제나 정규화본이다 — 입력 칸의 문자열은 건드리지 않는다.
-  const lines = useMemo(
-    () => cart.flatMap((c) => {
-      const reward = project.rewards.find((r) => r.id === c.rewardId);
-      return reward ? [{ reward, quantity: c.quantity }] : [];
-    }),
-    [cart, project.rewards],
-  );
-  const needsShipping = lines.some((l) => l.reward.requiresShipping);
+  const quantity = clampQuantity(quantityText, quantityCap);
+  const needsShipping = reward.requiresShipping;
   const additional = clampAdditional(additionalText);
-  const preview = useMemo(
-    () => computeFundingAmountsForLines(lines.map((l) => ({ unitAmount: l.reward.amount, quantity: l.quantity })), additional),
-    [lines, additional],
-  );
+  const preview = useMemo(() => computeFundingAmounts(reward.amount, quantity, additional), [reward.amount, quantity, additional]);
 
   /**
    * 결제위젯을 **폼 안에** 띄운다. 수단 목록은 위젯이 계약·노출 설정대로 그리므로 우리가
@@ -387,21 +380,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
     agreedRequiredTerms,
   } = useTossPaymentWidgets(preview.totalAmount);
 
-  /**
-   * 담기·빼기·접기를 누르면 그 버튼이 사라지거나 다른 자리로 옮겨 가 키보드 포커스가 body로
-   * 빠진다(모달 안에서는 트랩 밖이 된다). 포커스가 body로 떨어졌을 때만 리워드 구획으로
-   * 옮긴다 — 다른 입력칸에 포커스가 있으면 건드리지 않는다. 첫 렌더에는 돌지 않는다.
-   */
-  const rewardsRegionRef = useRef<HTMLFieldSetElement>(null);
-  const cartSignature = `${lines.map((l) => l.reward.id).join(',')}|${showAllRewards}`;
-  const cartSignatureRef = useRef(cartSignature);
-  useEffect(() => {
-    if (cartSignatureRef.current === cartSignature) return;
-    cartSignatureRef.current = cartSignature;
-    const active = document.activeElement;
-    if (!active || active === document.body) rewardsRegionRef.current?.focus();
-  }, [cartSignature]);
-
   const submit = async () => {
     // 재진입 가드는 **ref**여야 한다. `submitting` 상태는 비동기로 갱신돼서, 같은 tick에
     // 두 번 불리면(수량 칸에서 Enter 연타·키 리피트) 둘 다 통과해 pending 주문이 두 건
@@ -410,7 +388,6 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
     submittingRef.current = true;
     setError(null);
     if (allSoldOut) { submittingRef.current = false; setError(ALL_SOLD_OUT_MESSAGE); return; }
-    if (lines.length === 0) { submittingRef.current = false; setError(EMPTY_CART_MESSAGE); return; }
     if (needsShipping && (!ship.postcode.trim() || !ship.address1.trim())) {
       submittingRef.current = false;
       setError(EMPTY_ADDRESS_MESSAGE);
@@ -431,6 +408,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
       return;
     }
     // 제출 직전 확정 — blur 없이 Enter로 보낸 경우에도 입력 칸이 실제 청구 값과 일치한다.
+    setQuantityText(String(quantity));
     setAdditionalText(String(additional));
     setSubmitting(true);
     // 결제창 실패를 서버에 알릴 때 쓴다 — catch에서 주문번호가 보여야 한다.
@@ -440,7 +418,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectSlug: project.slug,
-          items: lines.map((l) => ({ rewardId: l.reward.id, quantity: l.quantity })),
+          items: [{ rewardId: reward.id, quantity }],
           additionalAmount: additional, paymentMethod: 'toss',
           ...(previousOrderNo ? { previousOrderNo } : {}),
           ...form, supporterMessage: form.supporterMessage || undefined,
@@ -460,9 +438,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
       if (!res.ok) { setError(json.message ?? '펀딩 신청에 실패했습니다.'); return; }
       if (typeof json.orderNo === 'string') rememberOrderNo(json.orderNo);
       try {
-        window.sessionStorage.setItem(cartKey, JSON.stringify({
-          at: Date.now(), items: lines.map((l) => ({ rewardId: l.reward.id, quantity: l.quantity })),
-        }));
+        window.sessionStorage.setItem(lastSelectionKey, JSON.stringify({ at: Date.now(), rewardId: reward.id, quantity }));
       } catch {
         /* 기억하지 못해도 결제는 진행된다. */
       }
@@ -483,7 +459,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
       reportPaymentWindowOpen(json.orderNo);
       await requestPayment({
         orderId: json.orderNo,
-        orderName: `[펀딩] ${project.title} · ${pledgeLinesShortTitle(lines.map((l) => ({ rewardTitle: l.reward.title })))}`.slice(0, 100),
+        orderName: `[펀딩] ${project.title} · ${reward.title}`.slice(0, 100),
         customerName: form.customerName,
         customerEmail: form.customerEmail,
         amount: json.totalAmount,
@@ -540,141 +516,69 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
   const handleNumericEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key !== 'Enter') return;
     e.preventDefault();
-    // 제출 버튼이 disabled인 동안(위젯이 안 떴거나 담은 것이 없음)은 Enter도 제출하지 않는다.
-    // 안 막으면 위젯이 없어 동의 상태를 못 받은 것(`agreedRequiredTerms === null`)이 "약관을
-    // 빼먹었다"로 읽혀, 후원자가 고칠 수 없는 약관 문구를 본다. 위젯이 떴는데 건드리지 않은
-    // null은 그대로 submit()이 막고 안내한다.
-    if (!paymentReady || lines.length === 0) return;
+    // 위젯이 아직 안 떴으면 Enter도 제출하지 않는다 — 안 막으면 동의 상태를 못 받은 것이
+    // "약관을 빼먹었다"로 읽혀, 후원자가 고칠 수 없는 약관 문구를 본다.
+    if (!paymentReady) return;
     void submit();
-  };
-
-  const notInCart = project.rewards.filter((r) => quantityOf(r.id) === 0);
-  // 담은 것이 없으면 목록을 펼친다 — 접어 두면 무엇을 담아야 할지 보이지 않는다.
-  const listOpen = showAllRewards || lines.length === 0;
-  // 담지 않은 **추가 상품**(`addOn`)만 한 줄 제안으로. 목록을 펼쳤으면 거기 있으니 겹쳐 보이지 않는다.
-  const suggestions = lines.length > 0 && !listOpen
-    ? notInCart.filter((r) => r.addOn && !isSoldOut(remaining, r.id)).slice(0, 2)
-    : [];
-
-  const renderRewardRow = (r: FundingProject['rewards'][number]) => {
-    const left = remaining[r.id];
-    const soldOut = isSoldOut(remaining, r.id);
-    const qty = quantityOf(r.id);
-    const cap = capOf(remaining, r.id);
-    return (
-      <li
-        key={r.id}
-        className={`flex items-center gap-3 rounded-xl border p-4 transition-colors ${
-          qty > 0
-            ? 'border-primary bg-primary/5 dark:border-primary-light dark:bg-primary-light/10'
-            : 'border-gray-200 dark:border-gray-700'
-        } ${soldOut && qty === 0 ? 'opacity-50' : ''}`}
-      >
-        <span className="min-w-0 flex-1">
-          <span className="block font-bold text-gray-900 dark:text-white">{formatPriceAmount(r.amount)}원</span>
-          <span className="typo-card-meta block">{r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}{r.requiresShipping ? ' · 배송' : ''}</span>
-        </span>
-        {qty === 0 ? (
-          <Button type="button" size="sm" variant="outline" disabled={soldOut} onClick={() => setQuantity(r.id, 1)} aria-label={`${r.title} 담기`}>
-            담기
-          </Button>
-        ) : (
-          <span className="flex shrink-0 items-center gap-2">
-            <button type="button" className={stepButtonClass} onClick={() => setQuantity(r.id, qty - 1)} aria-label={`${r.title} 하나 빼기`}>−</button>
-            <output className="w-6 text-center font-bold tabular-nums text-gray-900 dark:text-white" aria-live="polite" aria-label={`${r.title} 수량`}>{qty}</output>
-            <button type="button" className={stepButtonClass} disabled={qty >= cap} onClick={() => setQuantity(r.id, qty + 1)} aria-label={`${r.title} 하나 더`}>+</button>
-          </span>
-        )}
-      </li>
-    );
   };
 
   return (
     <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); void submit(); }}>
       {/*
-        리워드는 **담는다**(2026-09-28). 예전엔 라디오로 하나만 골랐고, 두 가지를 원하는 사람은
-        결제를 두 번 해야 했다. 세트 리워드는 조합이 너무 많아 두지 않는다(운영자 결정).
-        리워드가는 배송비까지 포함한 최종가라 담은 만큼 그대로 더한다 — 배송비 줄은 없다.
-
-        **맨 위에는 담은 것만 보인다**(2026-09-29 회의 결정). 카드·모달에서 이미 고르고 온
-        사람에게 리워드 전체 목록을 다시 펼치면 "방금 고른 게 빠졌나" 하고 같은 결정을 한 번
-        더 하게 되고, 모바일에서는 결제위젯이 두 화면 아래로 밀린다. 결제 완료 12건이 전부
-        리워드 1개였다 — 대다수에게 목록은 지나가야 할 장애물이다. 나머지는 접어 둔다.
-
-        예외 하나: 담지 않은 **추가 상품**(리워드 `addOn: true`, 시/노래집 같은 것)은 한 줄
-        제안으로 보인다. 티어는 서로 대체재라(MP3 대신 WAV, CD 대신 CD+부적) 권하지 않는다.
-        "배송이면 제안"으로 추론했다가 실물 티어 프로젝트에서 상위 티어를 권하는 오답이 나서
-        파일에 명시하게 했다(lib/funding/shape.ts addOn). 담은 것이 없으면(전부 뺐거나 품절로
-        시작) 목록을 펼쳐서 보여 준다.
+        리워드는 **하나만 고른다**(2026-10-04, 되돌림 — 위 lockedReward 주석). 모달에서 카드를
+        눌러 들어왔으면 그 리워드로 잠기고(선택 단계 자체를 그리지 않는다), 그 외(하단 바·히어로의
+        "펀딩하기", 리워드 없이 연 /pledge)는 라디오로 하나를 고른다.
       */}
-      <fieldset ref={rewardsRegionRef} tabIndex={-1} className={`${cardClass} focus:outline-none`} aria-labelledby={`${uid}-step-reward`}>
-        <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint={lines.length > 0 ? '담은 리워드입니다. 수량을 바꾸거나 다른 리워드를 함께 담을 수 있습니다.' : '펀딩할 리워드를 담아 주세요.'} />
+      <fieldset className={cardClass} aria-labelledby={lockedReward ? undefined : `${uid}-step-reward`}>
+        {lockedReward ? (
+          <div className="mb-5 rounded-xl border border-primary bg-primary/5 p-4 dark:border-primary-light dark:bg-primary-light/10">
+            <p className="typo-card-meta">고르신 리워드</p>
+            <p className="mt-1 text-lg font-bold text-gray-900 dark:text-white">{formatPriceAmount(reward.amount)}원</p>
+            <p className="typo-card-meta">{reward.title}</p>
+          </div>
+        ) : (
+          <StepHeader id={`${uid}-step-reward`} n={1} title="리워드" hint="펀딩 금액에 따라 돌려드릴 구성입니다." />
+        )}
         {stockNotice && (
           <p role="status" className="mb-3 rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/40 dark:text-amber-200">{stockNotice}</p>
         )}
-        {cartRestored && lines.length > 0 && (
-          <p role="status" className="typo-card-meta mb-3">지난번 결제를 시도할 때 담은 리워드를 다시 담아 두었습니다.</p>
+        {selectionRestored && (
+          <p role="status" className="mb-3 typo-card-meta">지난번 결제를 시도할 때 고른 리워드를 다시 담아 두었습니다.</p>
         )}
-        {lines.length > 0 && (
-          <ul className="space-y-2" aria-label="담은 리워드">
-            {lines.map((l) => renderRewardRow(l.reward))}
-          </ul>
-        )}
-        {suggestions.length > 0 && (
-          <>
-          <p className="typo-card-meta mt-4">함께 담을 수 있는 리워드</p>
-          <ul className="mt-2 space-y-2" aria-label="함께 담을 수 있는 리워드">
-            {suggestions.map((r) => (
-              <li key={r.id} className="flex items-center gap-3 rounded-xl border border-dashed border-gray-300 px-4 py-3 dark:border-gray-600">
-                <span className="min-w-0 flex-1 text-sm">
-                  <span className="block font-medium text-gray-900 dark:text-white">{r.title}</span>
-                  <span className="typo-card-meta block">+{formatPriceAmount(r.amount)}원{r.requiresShipping ? ' · 배송' : ''}</span>
-                </span>
-                <Button type="button" size="sm" variant="outline" onClick={() => setQuantity(r.id, 1)} aria-label={`${r.title} 담기`}>
-                  담기
-                </Button>
-              </li>
-            ))}
-          </ul>
-          </>
-        )}
-        {notInCart.length > 0 && !listOpen && (
-          <button
-            type="button"
-            onClick={() => setShowAllRewards(true)}
-            aria-expanded={false}
-            className="mt-3 inline-flex min-h-[44px] items-center text-sm font-semibold text-primary transition-colors hover:text-primary-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-primary-lighter dark:hover:text-white dark:focus-visible:ring-primary-lighter/70"
-          >
-            다른 리워드 보기 ({notInCart.length})
-          </button>
-        )}
-        {notInCart.length > 0 && listOpen && (
-          <div className={lines.length > 0 ? 'mt-4' : ''}>
-            {lines.length > 0 && (
-              <div className="mb-2 flex items-center justify-between gap-3">
-                <p className="typo-card-meta">다른 리워드</p>
-                <button
-                  type="button"
-                  onClick={() => setShowAllRewards(false)}
-                  aria-expanded
-                  className="inline-flex min-h-[44px] items-center text-sm font-semibold text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-300 dark:hover:text-white dark:focus-visible:ring-primary-lighter/70"
-                >
-                  접기
-                </button>
-              </div>
-            )}
-            <ul className="space-y-2">
-              {notInCart.map((r) => renderRewardRow(r))}
-            </ul>
+        {!lockedReward && (
+          <div className="space-y-2">
+            {project.rewards.map((r) => {
+              const left = remaining[r.id];
+              const soldOut = isSoldOut(remaining, r.id);
+              return (
+                <label key={r.id} className={`${choiceRow} ${soldOut ? 'cursor-not-allowed opacity-50' : ''}`}>
+                  <input type="radio" name="reward" value={r.id} className={radioClass} checked={rewardId === r.id} disabled={soldOut} onChange={() => { setRewardId(r.id); setQuantityText('1'); }} />
+                  <span className="min-w-0">
+                    <span className="block font-bold text-gray-900 dark:text-white">{formatPriceAmount(r.amount)}원</span>
+                    <span className="typo-card-meta block">{r.title}{soldOut ? ' (품절)' : left != null ? ` · ${left}개 남음` : ''}{r.requiresShipping ? ' · 배송' : ''}</span>
+                  </span>
+                </label>
+              );
+            })}
           </div>
         )}
-        <div className="mt-5">
-          <Field id={`${uid}-add`} label="추가 펀딩 금액" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
-            <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
-              onChange={(e) => setAdditionalText(e.target.value)}
-              onKeyDown={handleNumericEnter}
-              onBlur={() => setAdditionalText(String(clampAdditional(additionalText)))} />
-          </Field>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          <div>
+            <Field id={`${uid}-qty`} label="수량" hint={`1~${quantityCap}개까지 펀딩할 수 있습니다.`}>
+              <TextInput type="number" inputMode="numeric" min={1} max={quantityCap} step={1} value={quantityText}
+                onChange={(e) => setQuantityText(e.target.value)}
+                onKeyDown={handleNumericEnter}
+                onBlur={() => setQuantityText(String(clampQuantity(quantityText, quantityCap)))} />
+            </Field>
+          </div>
+          <div>
+            <Field id={`${uid}-add`} label="추가 펀딩 금액" hint={`선택 항목입니다. 1,000원 단위로 최대 ${formatPriceAmount(MAX_ADDITIONAL_AMOUNT)}원까지 올릴 수 있습니다.`}>
+              <TextInput type="number" inputMode="numeric" min={0} max={MAX_ADDITIONAL_AMOUNT} step={ADDITIONAL_AMOUNT_STEP} value={additionalText}
+                onChange={(e) => setAdditionalText(e.target.value)}
+                onKeyDown={handleNumericEnter}
+                onBlur={() => setAdditionalText(String(clampAdditional(additionalText)))} />
+            </Field>
+          </div>
         </div>
       </fieldset>
 
@@ -701,7 +605,7 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
         {needsShipping && (
           <div className="mt-5 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
             <p className="text-sm font-semibold text-gray-900 dark:text-white">배송지</p>
-            <p className={helpClass}>담은 리워드에 배송 리워드가 있습니다. 한 번에 보내 드립니다.</p>
+            <p className={helpClass}>고르신 리워드는 배송이 있습니다.</p>
             <label className="mt-4 flex cursor-pointer items-center gap-3">
               <input
                 type="checkbox"
@@ -846,26 +750,17 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
       </fieldset>
 
       {/*
-        결제 요약은 **흐름 안의 카드**로 둔다. 예전엔 요약 전체를 바닥에 붙였는데, 담은 줄이
-        늘면 그 덩어리가 화면 절반을 덮었고 모달에서는 폼 위로 떠 겹쳐 모달만 따로 끄는 설정을
-        뒀다 — 같은 폼이 진입 경로에 따라 버튼 위치가 달랐다. 이제 바닥에는 버튼 바만 둔다.
+        결제 요약은 **흐름 안의 카드**로 둔다. 예전엔 요약 전체를 바닥에 붙였는데, 모달에서는
+        폼 위로 떠 겹쳐 모달만 따로 끄는 설정을 뒀다 — 같은 폼이 진입 경로에 따라 버튼 위치가
+        달랐다. 이제 바닥에는 버튼 바만 둔다.
       */}
       <section className={cardClass} aria-labelledby={`${uid}-summary`}>
         <h2 id={`${uid}-summary`} className="typo-card-subtitle text-gray-900 dark:text-white">결제 요약</h2>
         <dl className="mt-3 space-y-1.5">
-          {lines.length === 0 ? (
-            <div className="flex items-baseline justify-between gap-4">
-              <dt className="typo-card-meta">담은 리워드</dt>
-              <dd className="text-sm text-gray-500 dark:text-gray-400">아직 없습니다</dd>
-            </div>
-          ) : (
-            lines.map((l) => (
-              <div key={l.reward.id} className="flex items-baseline justify-between gap-4">
-                <dt className="typo-card-meta min-w-0 truncate">{l.reward.title} × {l.quantity}</dt>
-                <dd className="shrink-0 text-sm font-medium tabular-nums text-gray-900 dark:text-white">{formatPriceAmount(l.reward.amount * l.quantity)}원</dd>
-              </div>
-            ))
-          )}
+          <div className="flex items-baseline justify-between gap-4">
+            <dt className="typo-card-meta min-w-0 truncate">{reward.title} × {quantity}</dt>
+            <dd className="shrink-0 text-sm font-medium tabular-nums text-gray-900 dark:text-white">{formatPriceAmount(reward.amount * quantity)}원</dd>
+          </div>
           {additional > 0 && (
             <div className="flex items-baseline justify-between gap-4">
               <dt className="typo-card-meta">추가 펀딩</dt>
@@ -924,8 +819,8 @@ export default function PledgeWizard({ project, initialRewardId, remaining, layo
         </p>
 
         {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. */}
-        <Button type="submit" size="lg" fullWidth className="mt-3" disabled={submitting || allSoldOut || lines.length === 0 || !paymentReady}>
-          {submitting ? '처리 중…' : lines.length === 0 ? '리워드를 담아 주세요' : `${formatPriceAmount(preview.totalAmount)}원 · 결제하기`}
+        <Button type="submit" size="lg" fullWidth className="mt-3" disabled={submitting || allSoldOut || !paymentReady}>
+          {submitting ? '처리 중…' : `${formatPriceAmount(preview.totalAmount)}원 · 결제하기`}
         </Button>
       </div>
     </form>
