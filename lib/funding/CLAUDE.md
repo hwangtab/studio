@@ -230,9 +230,13 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 
 2026-09-11에 걷어냈다가(PR #77) 2026-10-04에 되살렸다 — 은행·ATM에서 직접 보내는 노년층
 후원자를 위해서다. 계좌·안내 기한·입력 상한의 정본은 **결제 공용** `lib/payments/bankAccount.ts`이고
-(다음 단계에서 공연·예약·믹싱도 계좌 입금을 붙인다), 펀딩 고유 규칙(한정 리워드 불가·온라인 판정·열린
-신청 상한)은 `lib/funding/bankAccount.ts`다. 안내 화면은 결제 공용 `components/payments/BankDepositGuide.tsx`
-(금액·기한·이름·호칭을 props로). 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·메일에 표시된 계좌").
+(공연·예약·믹싱도 같은 계좌 입금을 쓴다 — 그쪽 규칙은 `lib/payments/bankDeposit.ts`), 펀딩 고유 규칙(한정 리워드
+불가·온라인 판정·열린 신청 상한)은 `lib/funding/bankAccount.ts`다. 결제 공용 부품: 안내 화면
+`components/payments/BankDepositGuide.tsx`(금액·기한·이름·호칭을 props로), 결제수단 고르기
+`components/payments/PaymentMethodChoice.tsx`, 환불 계좌 입력 `components/payments/RefundAccountFields.tsx`,
+관리자 "계좌 보기" 핸들러 `lib/payments/refundAccountView.ts`. 펀딩은 결제 행 없이 `funding_pledges.payment_method`로
+가르고, 공연·예약·믹싱은 상태(`awaiting_deposit`)와 결제 행(`bank-deposit:` 키)으로 가른다 — 같은 판정 함수를
+섞어 쓰지 말 것. 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·메일에 표시된 계좌").
 
 - **한정 수량 리워드는 계좌 입금 불가.** `bankTransferBlockReason`을 서버 검증(validation.ts)과 후원
   폼(PledgeWizard)이 같은 인자로 부른다. 그래서 입금 확인 때 재고를 다시 셀 필요가 없다.
@@ -264,7 +268,8 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
   않은 것은 0037 절과 같은 배포 순서 이유다. 접수는 `refund_requested_at` 선점이 이긴 요청만 계좌를 쓴다
   (같은 초의 두 번째 요청이 계좌를 덮어쓰던 것을 테스트로 잡았다). 관리자는 "계좌 보기"를 누를 때만
   복호화한 값을 받는다(`pages/api/admin/funding/pledges/[id]/refund-account.ts`, no-store, 접속기록
-  `funding_refund_account_view`). 송금한 뒤 "송금 완료(환불 기록)" = 기존 `refund` 액션의 기록 경로.
+  `refund_account_view` — 결제 공용 이름. 2026-10-04 하루 동안 쓴 `funding_refund_account_view`는 이미 남은 행 때문에
+  enum에 남겨 두었다). 송금한 뒤 "송금 완료(환불 기록)" = 기존 `refund` 액션의 기록 경로.
   환불 요청 철회 처리 시 계좌를 지우고, 그 밖에는 주문 5년 파기 때 지운다(orderRetention.ts).
 - **취소(환불)를 요청하면 내려받기가 닫힌다.** 계좌 입금 셀프 취소는 송금 전까지 paid로 남으므로
   내려받기 API·확인 페이지가 `refund_requested_at`을 함께 본다(API는 기록 UPDATE의 WHERE에도). 요청 뒤

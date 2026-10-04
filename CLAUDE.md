@@ -74,6 +74,19 @@ npm run indexnow:changed -- --dry-run
 - 새 `content/funding/<slug>.md`의 slug는 승인된 DB 프로젝트의 slug와 겹치면 안 된다 — 다른 개설자의 후원자 배송지가 노출된다.
 - 마이그레이션 0037·0039·0041~0044는 배포보다 먼저 적용한다 — 결제 확인 경로가 새 표·컬럼을 함께 읽어 순서를 뒤집으면 결제 확인 전체가 깨진다. 0048(결제 공용 환불 계좌 `refund_accounts`)도 먼저 — 결제는 안 깨지지만 환불 계좌 접수·조회가 실패한다.
 
+### 계좌 입금(무통장)은 펀딩·공연·예약·믹싱 공통이다 — 자동 취소 없음, 자원은 잡는다
+
+규칙 전체는 `lib/payments/bankDeposit.ts` 머리 주석(공연·예약·믹싱)과 `lib/funding/CLAUDE.md`(펀딩).
+어겨도 에러가 안 나는 것만 여기 둔다:
+
+- 공연·예약·믹싱의 계좌 입금 대기는 `orders.status = 'awaiting_deposit'`이다(입금 전 취소는 `deposit_cancelled`).
+  토스 홀드 만료 경로는 `status = 'pending'`만 봐서 자동으로 건너뛴다 — **새 만료 경로를 만들면 `pending`만 볼 것.**
+  반대로 **새 점유 판정을 만들면 대기도 점유로 셀 것** — 예약은 `occupiedBookingSql`(lib/booking/service.ts) 하나,
+  공연은 `hold_expires_at IS NULL`인 held 티켓(좌석 집계가 이미 센다).
+- 계좌 입금으로 확정된 주문은 결제 행 키가 `bank-deposit:<주문번호>`다(`isBankDepositPayment`). **토스 API에
+  `payments.payment_key`를 넘기는 새 경로를 만들면 이 판정으로 먼저 걸러야 한다** — 걸러지지 않으면 토스가 거절하고
+  환불이 실패한다. 환불은 고객이 적은 환불 계좌(`refund_accounts`)로 운영자가 송금한다.
+
 ### 마이그레이션 0022(`fulfillment_updated_by`)는 배포보다 먼저 적용한다
 
 `db/schema.ts`의 `fundingPledges.fulfillmentUpdatedBy`(`drizzle/migrations/0022_ancient_proemial_gods.sql`,
