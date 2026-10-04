@@ -38,6 +38,8 @@ describe('공연 정의(bakkeoji)', () => {
       '호와호(Howaho)': 'https://www.instagram.com/howaho_official/',
       '솔가(Solga)': 'https://www.instagram.com/solga/',
     });
+    expect(bakkeojiShow.venueAddress).toContain('2층'); // 공연은 2층에서 열린다
+    expect(bakkeojiShow.notices).toContain('공연은 건물 2층에서 열립니다.');
     expect(bakkeojiShow.scheduleNote).toContain('18:30');
     expect(bakkeojiShow.notices?.some((x) => x.includes('수익'))).toBe(false); // 수익 사용처 문구는 두지 않는다(TMI)
     expect(bakkeojiShow.onSitePriceNote).toContain('30,000원');
