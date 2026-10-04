@@ -218,6 +218,37 @@ describe('예약 계좌 입금 — 입금 뒤 셀프 취소', () => {
   });
 });
 
+describe('예약 계좌 입금 — 리뷰 회귀', () => {
+  const ACCOUNT = { bankName: '국민은행', accountNumber: '123-456-7890123', accountHolder: '김입금' };
+  // 이용일(2026-12-10 14:00 KST) 하루 전 — 50% 티어라 고객 취소 뒤 잔액이 남는다.
+  const DAY_BEFORE = new Date('2026-12-09T03:00:00Z');
+
+  it('관리자 추가 환불이 고객의 미송금 환불 계좌를 "송금 완료"로 덮지 않는다', async () => {
+    const bank = await createBank();
+    await confirmBookingBankDeposit({ orderId: String((await orderOf(bank.orderNo))!.id), now: NOW });
+    const c = await cancelBookingWithRefund({ orderNo: bank.orderNo, requestedBy: 'customer', reason: '고객', now: DAY_BEFORE, refundAccount: ACCOUNT });
+    expect(c).toMatchObject({ ok: true, refundAmount: Math.floor(bank.totalAmount / 2) });
+    const a = await cancelBookingWithRefund({ orderNo: bank.orderNo, requestedBy: 'admin', reason: '호의 잔액', overrideAmount: 1000, now: DAY_BEFORE });
+    expect(a.ok).toBe(true);
+    expect((await one(`SELECT refunded_at FROM refund_accounts WHERE order_no = '${bank.orderNo}'`))?.refunded_at).toBeNull();
+  });
+
+  it('환불 기록(batch)이 실패하면 예약·주문·환불 계좌를 전부 되돌린다 — 계좌 입금은 메워 줄 웹훅이 없다', async () => {
+    const bank = await createBank();
+    await confirmBookingBankDeposit({ orderId: String((await orderOf(bank.orderNo))!.id), now: NOW });
+    const spy = jest.spyOn(mockDb, 'batch').mockRejectedValueOnce(new Error('db down'));
+    const r = await cancelBookingWithRefund({ orderNo: bank.orderNo, requestedBy: 'customer', reason: '고객', now: NOW, refundAccount: ACCOUNT });
+    spy.mockRestore();
+    expect(r).toMatchObject({ ok: false, code: 'temporarily_unavailable' });
+    expect((await one(`SELECT status FROM bookings WHERE id = '${bank.bookingId}'`))?.status).toBe('confirmed');
+    expect((await orderOf(bank.orderNo))?.status).toBe('paid');
+    expect(await one(`SELECT 1 AS x FROM refund_accounts WHERE order_no = '${bank.orderNo}'`)).toBeUndefined();
+    expect(Number((await one(`SELECT COUNT(*) AS n FROM refunds`))?.n)).toBe(0);
+    // 다시 누르면 된다.
+    expect((await cancelBookingWithRefund({ orderNo: bank.orderNo, requestedBy: 'customer', reason: '고객', now: NOW, refundAccount: ACCOUNT })).ok).toBe(true);
+  });
+});
+
 describe('믹싱 계좌 입금', () => {
   const mix: CreateMixingOrderPayload = {
     productId: 'mixing-level1', songCount: 1, vocalTuning: false,

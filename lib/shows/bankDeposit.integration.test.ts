@@ -193,6 +193,39 @@ describe('공연 계좌 입금 — 환불', () => {
   });
 });
 
+describe('공연 계좌 입금 — 리뷰 회귀', () => {
+  const paid = async (q: number) => {
+    const orderNo = await bankOrder(q);
+    await confirmShowBankDeposit({ orderId: (await orderRow(orderNo))!.id, now: new Date() });
+    return orderNo;
+  };
+  const refundedAt = async (orderNo: string) =>
+    ((await mockDb.all(sql`SELECT refunded_at FROM refund_accounts WHERE order_no = ${orderNo}`)) as Array<{ refunded_at: number | null }>)[0]?.refunded_at;
+
+  it('관리자 티켓 환불 기록이 고객의 미송금 환불 계좌를 "송금 완료"로 덮지 않는다', async () => {
+    await seed(mockDb);
+    const orderNo = await paid(2);
+    const t = { cancelPayment: jest.fn() };
+    const [a, b] = await ticketsOf(orderNo);
+    await refundShowTickets({ orderNo, ticketIds: [a.id], noticeAt: new Date(), actor: 'customer', refundAccount: ACCOUNT }, t);
+    await refundShowTickets({ orderNo, ticketIds: [b.id], noticeAt: new Date() }, t); // 관리자
+    expect(await refundedAt(orderNo)).toBeNull();
+  });
+
+  it('환불 기록(batch)이 실패하면 티켓을 issued로, 새 환불 계좌 행을 지운다(refunding에 남지 않는다)', async () => {
+    await seed(mockDb);
+    const orderNo = await paid(1);
+    const [tk] = await ticketsOf(orderNo);
+    const spy = jest.spyOn(mockDb, 'batch').mockRejectedValueOnce(new Error('db down'));
+    const r = await refundShowTickets({ orderNo, ticketIds: [tk.id], noticeAt: new Date(), actor: 'customer', refundAccount: ACCOUNT }, { cancelPayment: jest.fn() });
+    spy.mockRestore();
+    expect(r).toMatchObject({ status: 'rejected', reason: 'refund_account_unavailable' });
+    expect((await ticketsOf(orderNo))[0].status).toBe('issued');
+    expect(await refundedAt(orderNo)).toBeUndefined();
+    expect((await orderRow(orderNo))?.status).toBe('paid');
+  });
+});
+
 describe('공연 계좌 입금 — 회차 취소', () => {
   it('입금 전 신청은 닫고, 계좌로 결제된 주문은 토스를 부르지 않고 티켓을 남겨 고객이 환불 계좌를 적게 한다(전액)', async () => {
     await seed(mockDb, { capacity: 5 });

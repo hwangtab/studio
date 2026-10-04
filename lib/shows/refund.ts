@@ -10,8 +10,9 @@ import { rowsAffectedOf } from './service';
 import { parseLeadingTag } from './tossCodes';
 import { isBankDepositPayment } from '../payments/bankDeposit';
 import {
+  deleteRefundAccount,
   encryptRefundAccountNumber,
-  markRefundAccountRefunded,
+  loadRefundAccountSummary,
   safeDbErrorSummary,
   saveRefundAccount,
   validateRefundAccount,
@@ -201,6 +202,9 @@ export async function refundShowTickets(
   };
 
   if (bank) {
+    // 한 주문에 환불 계좌 행은 하나다(티켓을 여러 번 나눠 환불하면 마지막에 적은 계좌로 덮는다). 앞선 요청의 행이
+    // 이미 있었으면 기록 실패 때 지우지 않는다 — 그 요청의 송금처가 사라진다.
+    const hadPriorAccount = bankAccount ? (await loadRefundAccountSummary({ kind: 'show', orderNo: input.orderNo })).status === 'present' : false;
     if (bankAccount) {
       try {
         await saveRefundAccount({ kind: 'show', orderNo: input.orderNo }, { ...bankAccount, requestedAt: input.noticeAt });
@@ -221,8 +225,17 @@ export async function refundShowTickets(
         WHERE order_no = ${input.orderNo} AND id IN (${ticketIdList}) AND status = 'refunding'
       `),
     ];
-    await db.batch(bankStatements as [typeof bankStatements[number], ...typeof bankStatements]);
-    if (requestedBy === 'admin') await markRefundAccountRefunded({ kind: 'show', orderNo: input.orderNo }, input.noticeAt);
+    try {
+      await db.batch(bankStatements as [typeof bankStatements[number], ...typeof bankStatements]);
+    } catch (error) {
+      // 돈은 아직 움직이지 않았고(운영자가 나중에 송금) 메워 줄 웹훅도 없다 — 전부 되돌린다: 티켓 refunding → issued,
+      // 방금 받은 환불 계좌 행 삭제. 되돌리지 않으면 티켓이 refunding에 영원히 남아 좌석만 잡고 환불도 안 나간다.
+      console.error('[shows-refund] 계좌 입금 환불 기록 실패 — 선점·환불 계좌를 되돌린다', { orderNo: input.orderNo, error: safeDbErrorSummary(error) });
+      await revertClaim();
+      if (bankAccount && !hadPriorAccount) await deleteRefundAccount({ kind: 'show', orderNo: input.orderNo });
+      return { status: 'rejected', reason: 'refund_account_unavailable' };
+    }
+    // 관리자 기록은 환불 계좌 표를 건드리지 않는다 — '송금 완료'는 그 행에서 명시적으로 누를 때만(mark_refund_sent).
     const orderStatus = await settleOrderStatus(order.id, input.orderNo);
     return { status: 'refunded', amount: totalAmount, orderStatus, refundVia: 'bank_account' };
   }

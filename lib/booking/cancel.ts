@@ -11,8 +11,8 @@ import { findOrderByOrderNo } from './service';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from './toss';
 import { isBankDepositPayment } from '../payments/bankDeposit';
 import {
+  deleteRefundAccount,
   encryptRefundAccountNumber,
-  markRefundAccountRefunded,
   safeDbErrorSummary,
   saveRefundAccount,
   validateRefundAccount,
@@ -243,6 +243,8 @@ export const settleRefund = async (args: {
   revertClaim: (() => Promise<void>) | null;
   /** 기록 실패 로그 문구 — 세션·믹싱 구분용. */
   recordFailureLog: string;
+  /** 계좌 입금 주문의 기록이 실패했을 때 함께 되돌릴 것(방금 받은 환불 계좌 행 삭제). */
+  onBankRecordFailure?: () => Promise<void>;
 }): Promise<CancelFailure | null> => {
   const { order, payment, refundAmount, remaining, input, revertClaim } = args;
   const db = getDb();
@@ -366,6 +368,17 @@ export const settleRefund = async (args: {
         .where(eq(orders.id, order.id)),
     ]);
   } catch (error) {
+    /**
+     * **계좌 입금 주문은 돈이 아직 움직이지 않았다**(운영자가 나중에 송금한다) — 그리고 토스 경로와 달리 어긋남을
+     * 메워 줄 웹훅이 없다. 그래서 기록이 실패하면 전부 되돌린다: 선점(예약·작업 cancelled)을 원래대로, 방금 받은
+     * 환불 계좌 행은 호출부(`onBankRecordFailure`)가 지운다. 고객은 같은 버튼으로 다시 시도하면 된다.
+     */
+    if (isBankDepositPayment(payment)) {
+      console.error('[booking-cancel] 계좌 입금 환불 기록 실패 — 선점·환불 계좌를 되돌린다', { orderNo: order.orderNo, refundAmount, error: safeDbErrorSummary(error) });
+      if (revertClaim) await revertClaim();
+      if (args.onBankRecordFailure) await args.onBankRecordFailure();
+      return { ok: false, code: 'temporarily_unavailable', message: '취소를 처리하지 못했습니다. 잠시 후 다시 시도해 주세요(아직 아무것도 바뀌지 않았습니다).' };
+    }
     // 토스 취소는 이미 끝났다 — 여기서는 삼키되 기록한다(confirm.ts의 recording_failed와 동일 원칙).
     // 복구는 토스가 보내는 CANCELED 웹훅이 맡는다: 그 시점엔 대상이 이미 cancelled라 선점할 게
     // 없으므로, webhook.ts의 대사 보정(reconcileRefunds)이 토스 취소 합계와 우리 refunds 합계의
@@ -482,12 +495,12 @@ const cancelSessionBooking = async (
     order, payment, refundAmount, remaining, input,
     revertClaim: isAdditionalRefund ? null : revertSessionClaim,
     recordFailureLog: '[booking-cancel] 환불 완료, DB 기록 실패',
+    onBankRecordFailure: bankPlan.kind === 'customer_account' ? () => deleteRefundAccount({ kind: 'session', orderNo: order.orderNo }) : undefined,
   });
   if (failure) return failure;
-  // 관리자가 계좌 입금 건을 환불 기록했다 — 송금을 마쳤다는 뜻이다(접수된 환불 계좌가 있으면 송금 완료 표시).
-  if (bankPlan.kind === 'admin_record' && refundAmount > 0) {
-    await markRefundAccountRefunded({ kind: 'session', orderNo: order.orderNo }, input.now);
-  }
+  // 관리자 환불 기록은 환불 계좌 표를 **건드리지 않는다.** 그 표의 '송금 완료'(refunded_at)는 고객이 적은 계좌로
+  // 보냈다는 기록이라, 관리자가 그 행에서 명시적으로 누를 때만 찍는다(mark_refund_sent). 관리자 추가 환불로 덮으면
+  // 아직 보내지 않은 고객 환불이 '송금 완료'로 보여 영영 안 나간다.
 
   // 추가 환불은 이미 취소된 예약에 잔액만 더 돌려주는 것이라 후처리가 없다 — 지울 캘린더
   // 이벤트도(첫 취소에서 이미 지웠다), 다시 보낼 취소 메일도 없다.
@@ -612,11 +625,10 @@ const cancelMixingOrder = async (
     order, payment, refundAmount, remaining, input,
     revertClaim: isAdditionalRefund ? null : revertMixingClaim,
     recordFailureLog: '[booking-cancel] 믹싱 환불 완료, DB 기록 실패',
+    onBankRecordFailure: bankPlan.kind === 'customer_account' ? () => deleteRefundAccount({ kind: 'mixing', orderNo: order.orderNo }) : undefined,
   });
   if (failure) return failure;
-  if (bankPlan.kind === 'admin_record' && refundAmount > 0) {
-    await markRefundAccountRefunded({ kind: 'mixing', orderNo: order.orderNo }, input.now);
-  }
+  // 관리자 환불 기록은 환불 계좌 표를 건드리지 않는다(위 세션 주석).
 
   // 후처리 — 캘린더 삭제 없음(믹싱은 슬롯이 없다).
   //
