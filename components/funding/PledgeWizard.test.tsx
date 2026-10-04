@@ -947,6 +947,19 @@ describe('폼 안의 결제위젯', () => {
   });
 
   /**
+   * 신용·체크카드를 고르고 카드사를 안 고른 채 누른 경우. 옛 문구("결제 수단과 약관 동의를
+   * 확인해 주세요")로는 무엇을 하라는지 몰라 한 후원자가 30초에 네 번 다시 눌렀다(2026-09-29).
+   */
+  it('카드사를 안 고르고 누르면 카드사를 고르라고 알려 준다', async () => {
+    requestPayment.mockRejectedValueOnce(Object.assign(new Error('카드'), { code: 'NEED_CARD_PAYMENT_DETAIL' }));
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await fill();
+    await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('카드사를 먼저 골라 주세요');
+    expect(screen.getByRole('button', { name: /결제하기/ })).not.toBeDisabled();
+  });
+
+  /**
    * 위젯 약관을 빼먹은 경우.
    *
    * 예전엔 그냥 보내고 `requestPayment`가 실패하게 두고 `code === 'NEED_AGREEMENT'`로

@@ -247,7 +247,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
       if (agreedRequiredTerms !== true) {
         setSubmitError(TOSS_TERMS_REQUIRED_MESSAGE);
       } else if (code === 'NEED_CARD_PAYMENT_DETAIL') {
-        setSubmitError('결제 수단과 약관 동의를 확인해 주세요.');
+        // 신용·체크카드를 고르고 카드사를 안 고른 채 누른 경우다(이 분기는 약관 동의 뒤에만 온다).
+        // 2026-09-29 한 후원자가 옛 문구("결제 수단과 약관 동의를 확인해 주세요")를 보고 30초에 네 번 다시 눌렀다.
+        setSubmitError('카드 결제는 카드사를 먼저 골라 주세요. 결제 방법 아래에서 카드사를 선택한 뒤 다시 눌러 주세요.');
       } else {
         setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
       }
