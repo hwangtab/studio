@@ -30,9 +30,14 @@ const stockLabel = (remaining: number | null): string =>
 /**
  * 리워드 카드를 누르면 뜨는 모달. 1단계는 리워드 상세, 2단계가 후원 폼·결제다.
  *
- * 2단계에서 **다른 리워드도 함께 담을 수 있다**(2026-09-28). 누른 리워드가 1개 담긴 채로
- * 시작하고, 나머지는 같은 목록에서 `담기`로 더한다 — 여러 개를 원하는 사람이 결제를 두 번
- * 하지 않게. 예전에는 누른 리워드 하나로 잠가 두었다.
+ * 2단계는 **누른 리워드로 잠긴다**(2026-10-04, 되돌림) — 그 리워드를 읽기 전용으로 보여 주고
+ * 바꾸려면 모달을 닫고 다른 카드를 누른다. 2026-09-28~10-04 사이 "담기"로 여러 리워드를
+ * 한 주문에 더할 수 있게 열어 둔 적이 있는데, 그 기간 실제 결제 완료 12건이 전부 리워드
+ * 1개였다 — "두 리워드를 원하는 사람" 문제가 그 볼륨에서는 실재하지 않았다. 담기·빼기·목록
+ * 펼치기 같은 복잡성을 되돌린다(PledgeWizard.tsx의 lockedReward 주석).
+ *
+ * 리워드 없이 연 결제 화면(`checkout`, 하단 바·히어로의 "펀딩하기")은 잠기지 않는다 — 아직
+ * 고른 것이 없으므로 라디오로 하나를 고른다.
  *
  * 폼과 결제는 `/ko/funding/[slug]/pledge` 페이지와 **같은 `PledgeWizard`를 렌더한다** —
  * 약관 동의와 `terms_version` 기록이 한 벌로 유지되도록 복제하지 않는다. 카드는 여전히
@@ -166,7 +171,6 @@ export default function RewardModal({ project, reward, checkout = false, remaini
                 <li>{stockLabel(left)}</li>
                 {reward.requiresShipping && <li>배송지를 입력받습니다.</li>}
               </ul>
-              <p className="typo-card-meta mt-4">다음 화면에서 다른 리워드도 함께 담을 수 있습니다.</p>
             </div>
           ) : (
             <>
@@ -175,8 +179,10 @@ export default function RewardModal({ project, reward, checkout = false, remaini
               </h2>
               <PledgeWizard
                 project={project}
-                // 누른 리워드를 1개 담은 채로 시작한다. 리워드 없이 열었으면 빈 채로 목록을 펼친다.
+                // 누른 리워드로 시작한다. 리워드 없이 열었으면(checkout) 라디오로 고른다.
                 initialRewardId={reward?.id ?? null}
+                // 카드를 눌러 들어왔으면 그 리워드로 잠근다 — 리워드 없이 연 결제 화면은 잠그지 않는다.
+                lockedReward={reward !== null}
                 remaining={remaining}
                 // 결제 버튼 바를 모달 본문 바닥에 붙인다 — 상세 단계의 고정 바와 같은 모양.
                 layout="modal"

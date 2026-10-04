@@ -79,8 +79,8 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
                  strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
                  없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
                  private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-          {/* 다시 펀딩하기는 후원 폼으로 곧장 보낸다 — 폼이 방금 담았던 리워드를 되살린다
-              (PledgeWizard cartKey). 프로젝트 페이지로 보내면 카드부터 다시 골라야 했다. */}
+          {/* 다시 펀딩하기는 후원 폼으로 곧장 보낸다 — 폼이 방금 고른 리워드를 되살린다
+              (PledgeWizard lastSelectionKey). 프로젝트 페이지로 보내면 카드부터 다시 골라야 했다. */}
           <div className="mt-8 flex flex-col items-center gap-3">
             {slug && (
               <a

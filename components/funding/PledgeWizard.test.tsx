@@ -230,138 +230,67 @@ it('추가 펀딩 금액을 비우면 0으로 폴백된다', async () => {
 });
 
 /**
- * 리워드는 **담는다**(2026-09-28) — 한 주문에 여러 리워드. 예전의 라디오·수량 칸은 없다.
+ * 리워드는 **하나만 고른다**(2026-10-04, 되돌림). 라디오로 바꾸면 그 리워드로 바뀌고, 수량은
+ * 입력 칸으로 조절한다. 2026-09-28~10-04 사이 "담는" 방식을 썼는데, 그 기간 실제 결제
+ * 완료 12건이 전부 리워드 1개였다 — 담기·빼기 UI가 거의 안 쓰이는 경우를 위한 것이었다.
  */
-describe('리워드 담기', () => {
+describe('리워드 선택', () => {
   const fillBacker = async () => {
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
     await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
   };
 
-  it('넘겨받은 리워드가 1개 담긴 채로 시작하고, 다른 리워드는 담기 버튼으로 더한다', async () => {
+  it('넘겨받은 리워드가 고른 채로 시작하고, 다른 리워드를 고르면 바뀐다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('1');
-    await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
-    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('1');
-    // 합계는 두 리워드의 합이다(배송비 줄은 없다 — 리워드가가 최종가).
-    expect(screen.getByText('35,000원')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
+    await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
+    expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
+    // 합계는 바뀐 리워드 하나다(배송비 줄은 없다 — 리워드가가 최종가).
+    expect(screen.getByText('CD × 1')).toBeInTheDocument();
   });
 
-  it('여러 리워드를 담아 제출하면 items로 담은 순서대로 나간다', async () => {
+  it('제출하면 고른 리워드 하나만 items로 나간다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
-    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
+    await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
     await fillBacker();
     // CD는 배송 리워드라 배송지가 필요하다. 받는 분은 후원자 본인이 기본이다.
     await searchAddress('서울');
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
     await waitFor(() => expect(requestPayment).toHaveBeenCalled());
     const body = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
-    expect(body.items).toEqual([{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 2 }]);
+    expect(body.items).toEqual([{ rewardId: 'cd', quantity: 1 }]);
     expect(body.rewardId).toBeUndefined();
     expect(body.shipping).toMatchObject({ name: '김후원', address1: '서울' });
-    expect(requestPayment.mock.calls.at(-1)[0].orderName).toBe('[펀딩] 데모 · 감사 메일 외 1건');
+    expect(requestPayment.mock.calls.at(-1)[0].orderName).toBe('[펀딩] 데모 · CD');
   });
 
-  it('배송 리워드를 담아야 배송지를 묻는다', async () => {
+  it('배송 리워드를 고르면 배송지를 묻는다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     expect(screen.queryByLabelText(/^주소\*$/)).toBeNull();
-    await userEvent.click(screen.getByRole('button', { name: 'CD 담기' }));
+    await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
     expect(screen.getByLabelText(/^주소\*$/)).toBeInTheDocument();
-  });
-
-  it('하나 빼기로 0이 되면 담은 목록에서 빠지고, 비면 제출할 수 없다', async () => {
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 빼기' }));
-    expect(screen.getByRole('button', { name: '감사 메일 담기' })).toBeInTheDocument();
-    expect(screen.getByText('아직 없습니다')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '리워드를 담아 주세요' })).toBeDisabled();
   });
 
   it('남은 수량까지만 늘릴 수 있다', async () => {
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 2, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
-    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('2');
-    expect(screen.getByRole('button', { name: 'CD 하나 더' })).toBeDisabled();
+    const qty = screen.getByLabelText(/^수량/) as HTMLInputElement;
+    await typeInto(qty, '5');
+    await userEvent.tab();
+    expect(qty.value).toBe('2');
   });
 
   it(`무제한 리워드도 한 주문에 ${MAX_QUANTITY}개까지다`, async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    for (let i = 1; i < MAX_QUANTITY; i += 1) await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 더' }));
-    expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent(String(MAX_QUANTITY));
-    expect(screen.getByRole('button', { name: '감사 메일 하나 더' })).toBeDisabled();
+    const qty = screen.getByLabelText(/^수량/) as HTMLInputElement;
+    await typeInto(qty, String(MAX_QUANTITY + 5));
+    await userEvent.tab();
+    expect(qty.value).toBe(String(MAX_QUANTITY));
   });
 
-  it('품절 리워드는 한 줄 제안에 나오지 않고, 펼친 목록에서도 담을 수 없다', async () => {
+  it('품절 리워드는 고를 수 없다', () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 0, mail: null }} />);
-    expect(within(screen.queryByRole('list', { name: '함께 담을 수 있는 리워드' }) ?? document.createElement('ul')).queryByText('CD')).toBeNull();
-    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 보기/ }));
-    expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
-  });
-
-  /**
-   * 맨 위에는 담은 것만 보인다(2026-09-29 회의 결정). 카드에서 이미 고르고 온 사람에게
-   * 전체 목록을 다시 펼치면 같은 결정을 한 번 더 하게 된다. 실물(배송) 리워드만 한 줄로
-   * 제안하고 나머지는 접는다 — 디지털 티어는 서로 대체재라 권하지 않는다.
-   */
-  it('담은 리워드만 보이고, 추가 상품(addOn)만 한 줄 제안, 티어는 실물이든 디지털이든 접혀 있다', async () => {
-    const withTiers = parseFundingProject(`---
-slug: demo
-title: 데모
-summary: s
-cover: /c.webp
-goalAmount: 1000
-startAt: 2026-01-01T00:00:00+09:00
-endAt: 2036-01-01T00:00:00+09:00
-rewards:
-  - id: mp3
-    title: MP3
-    description: d
-    amount: 10000
-    requiresShipping: false
-    estimatedDelivery: 2026-09
-  - id: wav
-    title: WAV
-    description: d
-    amount: 30000
-    requiresShipping: false
-    estimatedDelivery: 2026-09
-  - id: book
-    title: 시집
-    description: d
-    amount: 13000
-    requiresShipping: true
-    addOn: true
-    estimatedDelivery: 2026-10
-  - id: lp
-    title: LP
-    description: d
-    amount: 40000
-    requiresShipping: true
-    estimatedDelivery: 2026-12
----
-`, 'demo');
-    render(<PledgeWizard project={withTiers} initialRewardId="mp3" remaining={{ mp3: null, wav: null, book: null, lp: null }} />);
-    expect(screen.getByLabelText('MP3 수량')).toHaveTextContent('1');
-    expect(within(screen.getByRole('list', { name: '함께 담을 수 있는 리워드' })).getByText('시집')).toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
-    // 배송 리워드라도 addOn이 아니면(실물 티어) 권하지 않는다 — 사바하 CD 티어 오답(2026-09-29).
-    expect(within(screen.getByRole('list', { name: '함께 담을 수 있는 리워드' })).queryByText('LP')).toBeNull();
-
-    const toggle = screen.getByRole('button', { name: '다른 리워드 보기 (3)' });
-    expect(toggle).toHaveAttribute('aria-expanded', 'false');
-    await userEvent.click(toggle);
-    expect(screen.getByRole('button', { name: 'WAV 담기' })).toBeInTheDocument();
-    // 펼치면 한 줄 제안은 목록과 겹치므로 사라진다.
-    expect(screen.queryByRole('list', { name: '함께 담을 수 있는 리워드' })).toBeNull();
-    await userEvent.click(screen.getByRole('button', { name: '접기' }));
-    expect(screen.queryByRole('button', { name: 'WAV 담기' })).toBeNull();
-
-    // 제안에서 담으면 담은 목록으로 올라간다.
-    await userEvent.click(screen.getByRole('button', { name: '시집 담기' }));
-    expect(screen.getByLabelText('시집 수량')).toHaveTextContent('1');
-    expect(screen.queryByRole('list', { name: '함께 담을 수 있는 리워드' })).toBeNull();
+    expect(screen.getByRole('radio', { name: /CD/ })).toBeDisabled();
   });
 });
 
@@ -400,16 +329,6 @@ it('후원자 명단 이름 공개는 기본 해제', () => {
  * 메시지는 이름과 따로 간다(2026-09-28) — 이름을 표시하지 않으면 "익명"으로 올라간다고
  * 칸 바로 아래에서 알린다. 이름 표시 체크는 여전히 미리 켜지 않는다.
  */
-describe('담기·빼기 뒤 포커스', () => {
-  it('눌린 버튼이 사라져 포커스가 body로 빠지면 리워드 구획으로 옮긴다', async () => {
-    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: '감사 메일 하나 빼기' }));
-    // 마지막 하나를 빼면 행이 사라진다 — 포커스가 body에 남아서는 안 된다.
-    expect(document.activeElement).not.toBe(document.body);
-    expect(document.activeElement?.tagName).toBe('FIELDSET');
-  });
-});
-
 describe('후원자 명단', () => {
   const renderWizard = () => render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
 
@@ -499,20 +418,18 @@ it('Enter 제출 뒤 입력 칸에는 실제로 청구될 정규화 값이 남�
  * 품절 리워드 초기 선택 회귀 — 첫 리워드가 품절이면 disabled 라디오가 선택된 채로 시작해서,
  * 후원자는 폼을 전부 채우고 제출한 **뒤에야** 409를 봤다.
  */
-// 하단 바·히어로의 "펀딩하기"는 리워드 없이 결제 화면을 연다 — 고른 적 없는 것을 담아 두지
-// 않고, 빈 채로 목록을 펼쳐 고르게 한다(2026-09-29 통일).
-it('넘겨받은 리워드가 없으면 빈 채로 시작해 목록을 펼친다 — 품절은 담을 수 없다', () => {
-  const { container } = render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
-  expect(screen.queryByLabelText('감사 메일 수량')).toBeNull();
-  expect(screen.getByRole('button', { name: '감사 메일 담기' })).toBeEnabled();
-  expect(screen.getByRole('button', { name: 'CD 담기' })).toBeDisabled();
-  expect(container.querySelector('button[type=submit]')).toHaveTextContent('리워드를 담아 주세요');
+// 하단 바·히어로의 "펀딩하기"는 리워드 없이 결제 화면을 연다 — 고를 수 있는 첫 리워드가
+// 기본으로 고른 채로 시작한다.
+it('넘겨받은 리워드가 없으면 고를 수 있는 첫 리워드가 기본으로 고른 채로 시작한다', () => {
+  render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
+  expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
+  expect(screen.getByRole('radio', { name: /CD/ })).toBeDisabled();
 });
 
-it('넘겨받은 리워드가 품절이면 담지 않고 시작한다 — 폼을 다 채운 뒤 409를 보지 않게', () => {
+it('넘겨받은 리워드가 품절이면 고를 수 있는 다른 리워드로 시작한다 — 비활성 라디오가 선택된 채로 시작하지 않는다', () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
-  expect(screen.queryByLabelText('CD 수량')).toBeNull();
-  expect(screen.getByText('아직 없습니다')).toBeInTheDocument();
+  expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
+  expect(screen.getByRole('radio', { name: /CD/ })).toBeDisabled();
 });
 
 it('전 리워드 품절이면 제출을 막고 이유를 밝힌다', async () => {
@@ -548,70 +465,75 @@ it('결제창을 열기 전에 결제창 열기 비콘을 보낸다', async () =
 });
 
 /**
- * 결제창은 토스로 전체 이동했다가 돌아온다. 실패·취소 뒤 다시 들어오면 담아 둔 리워드가 사라져
- * 여러 개를 담은 사람이 다시 담아야 했다 — 결제를 시도한 장바구니를 되살린다(지금 재고로 다시 자름).
+ * 결제창은 토스로 전체 이동했다가 돌아온다. 실패·취소 뒤 다시 들어오면 고른 리워드가 사라져
+ * 기본값으로 되돌아갔다 — 결제를 시도한 선택을 되살린다(지금 재고로 다시 자름).
  */
-describe('결제를 시도한 장바구니 되살리기', () => {
-  const KEY = 'funding:lastCart:demo';
-  const save = (items: Array<{ rewardId: string; quantity: number }>, at = Date.now()) =>
-    window.sessionStorage.setItem(KEY, JSON.stringify({ at, items }));
+describe('결제를 시도한 선택 되살리기', () => {
+  const KEY = 'funding:lastSelection:demo';
+  const save = (rewardId: string, quantity: number, at = Date.now()) =>
+    window.sessionStorage.setItem(KEY, JSON.stringify({ at, rewardId, quantity }));
 
-  it('제출하면 담은 것을 기억한다', async () => {
+  it('제출하면 고른 것을 기억한다', async () => {
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
     await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
     await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
     await userEvent.click(screen.getByRole('button', { name: /결제하기/ }));
     await waitFor(() => expect(requestPayment).toHaveBeenCalled());
-    expect(JSON.parse(window.sessionStorage.getItem(KEY)!).items).toEqual([{ rewardId: 'mail', quantity: 1 }]);
+    expect(JSON.parse(window.sessionStorage.getItem(KEY)!)).toMatchObject({ rewardId: 'mail', quantity: 1 });
   });
 
   it('다시 들어오면 되살리되, 지금 남은 수량으로 자른다', async () => {
-    save([{ rewardId: 'mail', quantity: 2 }, { rewardId: 'cd', quantity: 4 }]);
+    save('cd', 4);
     render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 3, mail: null }} />);
-    expect(await screen.findByText('지난번 결제를 시도할 때 담은 리워드를 다시 담아 두었습니다.')).toBeInTheDocument();
-    expect(screen.getByLabelText('감사 메일 수량')).toHaveTextContent('2');
-    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('3');
+    expect(await screen.findByText('지난번 결제를 시도할 때 고른 리워드를 다시 담아 두었습니다.')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
+    expect(screen.getByLabelText(/^수량/)).toHaveValue(3);
   });
 
-  it('그 사이 품절된 리워드는 빼고 되살린다', async () => {
-    save([{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 1 }]);
+  it('그 사이 품절된 리워드는 되살리지 않는다', async () => {
+    save('cd', 1);
     render(<PledgeWizard project={project} initialRewardId={null} remaining={{ cd: 0, mail: null }} />);
-    expect(await screen.findByLabelText('감사 메일 수량')).toHaveTextContent('1');
-    expect(screen.queryByLabelText('CD 수량')).toBeNull();
+    await act(async () => {});
+    expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
   });
 
-  it('카드로 고른 리워드가 지난 장바구니에 없으면 새로 고른 것이다 — 덮지 않는다', async () => {
-    save([{ rewardId: 'mail', quantity: 2 }]);
-    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+  it('리워드가 잠겨 있으면(카드로 눌러 들어온 경우) 되살리지 않는다 — 그 카드가 곧 새 선택이다', async () => {
+    save('mail', 2);
+    render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
     await act(async () => {});
-    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('1');
-    expect(screen.queryByLabelText('감사 메일 수량')).toBeNull();
+    expect(screen.getByText('CD')).toBeInTheDocument();
+    expect(screen.queryByText('감사 메일')).toBeNull();
   });
 
   it('30분이 지난 기록은 쓰지 않는다', async () => {
-    save([{ rewardId: 'cd', quantity: 2 }], Date.now() - 31 * 60 * 1000);
+    save('cd', 2, Date.now() - 31 * 60 * 1000);
     render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
     await act(async () => {});
-    expect(screen.queryByLabelText('CD 수량')).toBeNull();
+    expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
   });
 });
 
-// 폼을 열어 둔 사이 한정 리워드가 팔려 나가면 담아 둔 수량을 지금 남은 만큼으로 자르고 알린다.
+// 폼을 열어 둔 사이 한정 리워드가 팔려 나가면 수량을 지금 남은 만큼으로 자르거나, 고른
+// 것 자체가 품절되면 고를 수 있는 다른 리워드로 옮기고 무엇을 바꿨는지 알린다.
 describe('폼을 여는 동안 재고가 줄면', () => {
-  it('남은 수량으로 줄이고, 품절이면 빼고, 무엇을 바꿨는지 알린다', async () => {
+  it('남은 수량으로 줄인다', async () => {
     const { rerender } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
-    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
-    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('3');
+    const qty = screen.getByLabelText(/^수량/) as HTMLInputElement;
+    await typeInto(qty, '3');
+    await userEvent.tab();
+    expect(qty.value).toBe('3');
 
     rerender(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 1, mail: null }} />);
-    expect(await screen.findByText('남은 수량이 바뀌어 조정했습니다: CD(1개로)')).toBeInTheDocument();
-    expect(screen.getByLabelText('CD 수량')).toHaveTextContent('1');
+    expect(await screen.findByText('남은 수량이 바뀌어 1개로 조정했습니다.')).toBeInTheDocument();
+    expect(screen.getByLabelText(/^수량/)).toHaveValue(1);
+  });
 
+  it('고른 리워드가 품절되면 다른 리워드로 옮긴다', async () => {
+    const { rerender } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
     rerender(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 0, mail: null }} />);
-    expect(await screen.findByText('남은 수량이 바뀌어 조정했습니다: CD(품절)')).toBeInTheDocument();
-    expect(screen.queryByLabelText('CD 수량')).toBeNull();
+    expect(await screen.findByText('CD이 품절되어 다른 리워드로 옮겼습니다.')).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
   });
 });
 
@@ -733,11 +655,9 @@ describe('임시 저장', () => {
 
   // 재고는 그 사이 바뀐다 — 되살린 리워드·수량·추가금이 지금도 유효하다고 보장할 수 없다.
   // 이름 공개는 체크 한 번이라 잃어도 손해가 없고, 문자열만 담는 계약을 깰 이유가 아니다.
-  it('담은 리워드·추가금·이름 공개는 복원되지 않는다', async () => {
+  it('고른 리워드·수량·추가금·이름 공개는 복원되지 않는다', async () => {
     const { unmount } = render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    await userEvent.click(screen.getByRole('button', { name: /다른 리워드 보기/ }));
-    await userEvent.click(screen.getByRole('button', { name: '감사 메일 담기' }));
-    await userEvent.click(screen.getByRole('button', { name: 'CD 하나 더' }));
+    await userEvent.click(screen.getByRole('radio', { name: /감사 메일/ }));
     const additionalInput = screen.getByLabelText(/추가 펀딩 금액/) as HTMLInputElement;
     await typeInto(additionalInput, '2000');
     await userEvent.tab();
@@ -745,9 +665,9 @@ describe('임시 저장', () => {
     unmount();
 
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
-    // initialRewardId만 1개 담긴 처음 상태로 돌아온다.
-    expect(await screen.findByLabelText('CD 수량')).toHaveTextContent('1');
-    expect(screen.queryByLabelText('감사 메일 수량')).toBeNull();
+    // initialRewardId 그대로의 처음 상태로 돌아온다(sessionStorage에 쓴 적이 없으므로).
+    expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
+    expect(screen.getByLabelText(/^수량/)).toHaveValue(1);
     expect(screen.getByLabelText(/추가 펀딩 금액/)).toHaveValue(0);
     expect(screen.getByLabelText(/후원자 명단에 이름 표시/)).not.toBeChecked();
   });
