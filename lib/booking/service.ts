@@ -5,6 +5,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { orders, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
 import { computeAmounts } from './amounts';
+import { AWAITING_DEPOSIT, type CheckoutPaymentMethod } from '../payments/bankDeposit';
 import { kstDateTime } from './kst';
 import { computeMixingAmounts, getMixingProduct } from './mixing-products';
 import { getProduct, occupancyConflictKeys, resourceKindOf } from './products';
@@ -18,6 +19,23 @@ export { MIXING_PENDING_TTL_SECONDS, PENDING_HOLD_SECONDS };
 
 const toEpoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
+/**
+ * 이 예약 행(`b`)이 **시간대를 점유하는가** — 생성 가드(아래 INSERT)와 슬롯 조회(pages/api/bookings/slots.ts)가
+ * 같은 집합을 본다. 확정(confirmed), 토스 결제창의 15분 홀드(pending + 900초 이내), 그리고 **계좌 입금 대기**
+ * (pending + 주문이 `awaiting_deposit` — 기한 없이 잡는다, lib/payments/bankDeposit.ts). 셋 중 하나라도
+ * 빠뜨리면 같은 시간에 두 사람이 예약된다.
+ */
+export const occupiedBookingSql = (alias: 'b' | 'bookings' = 'b') => sql`(
+  ${sql.raw(alias)}.status = 'confirmed'
+  OR (${sql.raw(alias)}.status = 'pending' AND (
+    ${sql.raw(alias)}.created_at > unixepoch() - ${PENDING_HOLD_SECONDS}
+    OR ${sql.raw(alias)}.order_id IN (SELECT id FROM orders WHERE status = ${AWAITING_DEPOSIT})
+  ))
+)`;
+
+/** 계좌 입금 대기 주문의 id 집합 — 토스 홀드 만료가 그 하위 행(bookings·work_orders)을 건드리지 않게 뺀다. */
+const AWAITING_DEPOSIT_ORDER_IDS = sql`(SELECT id FROM orders WHERE status = ${AWAITING_DEPOSIT})`;
+
 /** `b.room_number`가 keys 중 하나(null = 녹음실)와 같은가 — occupancyConflictKeys와 짝. */
 const roomMatch = (keys: Array<string | null>) =>
   sql.join(keys.map((k) => (k === null ? sql`b.room_number IS NULL` : sql`b.room_number = ${k}`)), sql` OR `);
@@ -30,6 +48,11 @@ export const createBookingOrder = async (
     excludeRooms?: readonly string[];
     /** 위저드가 돌려보낸 직전 주문번호 — 자기 홀드 해제의 소유 증명(아래 주석). */
     releaseOrderNo?: string | null;
+    /**
+     * `bank_transfer`면 주문을 계좌 입금 대기(`awaiting_deposit`)로 만든다 — 토스 홀드가 아니라 기한 없이
+     * 시간대를 잡는다(occupiedBookingSql). 기본은 토스(`pending`, 15분 홀드).
+     */
+    paymentMethod?: CheckoutPaymentMethod;
   } = {},
 ): Promise<
   | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string; roomNumber: string | null }
@@ -95,6 +118,7 @@ export const createBookingOrder = async (
       customerEmail: payload.customerEmail,
       itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount,
       manageToken,
+      status: options.paymentMethod === 'bank_transfer' ? AWAITING_DEPOSIT : 'pending',
     })
     .returning({ id: orders.id });
 
@@ -119,8 +143,7 @@ export const createBookingOrder = async (
         SELECT 1 FROM bookings b
         WHERE (${roomMatch(occupancyConflictKeys(room))})
           AND b.start_at < ${toEpoch(endAt)} AND b.end_at > ${toEpoch(startAt)}
-          AND (b.status = 'confirmed'
-               OR (b.status = 'pending' AND b.created_at > unixepoch() - ${PENDING_HOLD_SECONDS}))
+          AND ${occupiedBookingSql('b')}
       )
       AND NOT EXISTS (
         SELECT 1 FROM availability_blocks ab
@@ -132,7 +155,7 @@ export const createBookingOrder = async (
   }
 
   if (assignedRoom === undefined) {
-    await db.run(sql`UPDATE orders SET status = 'failed' WHERE id = ${order.id} AND status = 'pending'`);
+    await db.run(sql`UPDATE orders SET status = 'failed' WHERE id = ${order.id} AND status IN ('pending', ${AWAITING_DEPOSIT})`);
     return { ok: false, code: 'slot_taken' };
   }
   return {
@@ -150,7 +173,7 @@ export const createMixingOrder = async (
   payload: CreateMixingOrderPayload,
   now: Date,
   /** 위저드가 돌려보낸 직전 주문번호 — 자기 홀드 해제의 소유 증명(createBookingOrder 주석). */
-  options: { releaseOrderNo?: string | null } = {},
+  options: { releaseOrderNo?: string | null; /** `bank_transfer`면 계좌 입금 대기로 만든다(createBookingOrder와 같다). */ paymentMethod?: CheckoutPaymentMethod } = {},
 ): Promise<{ ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; workOrderId: string }> => {
   const db = getDb();
   const product = getMixingProduct(payload.productId)!; // validation이 보장
@@ -189,6 +212,7 @@ export const createMixingOrder = async (
       customerEmail: payload.customerEmail,
       itemAmount: amounts.itemAmount, vatAmount: amounts.vatAmount, totalAmount: amounts.totalAmount,
       manageToken,
+      status: options.paymentMethod === 'bank_transfer' ? AWAITING_DEPOSIT : 'pending',
     })
     .returning({ id: orders.id });
 
@@ -234,6 +258,10 @@ export const findOrderByOrderNo = async (
  * 주문을 expired로 바꿔서, 무통장 입금 기한이 며칠인 펀딩 주문(lib/funding/service.ts의
  * expireStalePledges가 hold_expires_at으로 따로 관리한다)까지 예약 슬롯 조회 한 번에
  * 15분 만에 죽였다. 이 함수는 예약·믹싱 주문만 책임진다.
+ *
+ * **계좌 입금 대기는 만료하지 않는다**(자동 취소 없음, lib/payments/bankDeposit.ts). 주문은 `awaiting_deposit`이라
+ * 아래 orders UPDATE(`status = 'pending'`)에 애초에 걸리지 않고, 그 하위 행(bookings·work_orders는 `pending`인
+ * 채다)은 `AWAITING_DEPOSIT_ORDER_IDS`로 뺀다 — 빼지 않으면 15분 뒤 예약만 cancelled가 돼 시간대가 풀린다.
  */
 export const expireStaleOrders = async (now: Date): Promise<void> => {
   const db = getDb();
@@ -246,10 +274,12 @@ export const expireStaleOrders = async (now: Date): Promise<void> => {
     db.run(sql`
       UPDATE bookings SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
       WHERE status = 'pending' AND created_at < ${sessionCutoff}
+        AND order_id NOT IN ${AWAITING_DEPOSIT_ORDER_IDS}
     `),
     db.run(sql`
       UPDATE work_orders SET status = 'cancelled', cancelled_at = unixepoch(), updated_at = unixepoch()
       WHERE status = 'pending' AND created_at < ${mixingCutoff}
+        AND order_id NOT IN ${AWAITING_DEPOSIT_ORDER_IDS}
     `),
     db.run(sql`
       UPDATE orders SET status = 'expired', updated_at = unixepoch()

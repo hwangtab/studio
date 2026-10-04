@@ -8,6 +8,9 @@ import { cancelBookingWithRefund } from '../../../../lib/booking/cancel';
 import { sendBookingCancelledEmails, sendBookingConfirmedEmails } from '../../../../lib/booking/email';
 import { calendarForService, createBookingEvent, deleteBookingEvent, isCalendarActive } from '../../../../lib/booking/gcal';
 import { kstDateString } from '../../../../lib/booking/kst';
+import { cancelAwaitingBookingDeposit, confirmBookingBankDeposit, deliverBookingDepositGuide } from '../../../../lib/booking/bankDeposit';
+import { bankDepositStateOf, isBankDepositPayment } from '../../../../lib/payments/bankDeposit';
+import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
 const STATUS_TRANSITIONS = ['completed', 'no_show'] as const;
 type StatusTransition = (typeof STATUS_TRANSITIONS)[number];
@@ -164,7 +167,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 .filter((refund) => refund.status === 'done')
                 .reduce((sum, refund) => sum + refund.amount, 0)
             : 0;
-          notificationError = await sendBookingCancelledEmails(order, booking, refundTotal);
+          notificationError = await sendBookingCancelledEmails(
+            order, booking, refundTotal, payment && isBankDepositPayment(payment) ? 'bank_account' : 'payment',
+          );
         } else if (
           booking.status === 'confirmed' ||
           booking.status === 'completed' ||
@@ -174,7 +179,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         } else {
           return res
             .status(409)
-            .json({ ok: false, message: '결제 대기 중인 예약은 재발송할 알림이 없습니다.' });
+            .json({ ok: false, message: '결제 대기 중인 예약은 재발송할 알림이 없습니다(계좌 입금 대기는 "입금 안내 재발송"을 쓰세요).' });
         }
 
         await getDb().update(orders).set({ notificationError }).where(eq(orders.id, order.id));
@@ -262,6 +267,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
         return res.status(500).json({ ok: false, message: '캘린더 재시도에 실패했습니다.' });
       }
+    }
+
+    /**
+     * 계좌 입금(lib/booking/bankDeposit.ts) — 입금 확인 · 미입금 취소 · 입금 안내 재발송 · 환불 송금 완료.
+     * 판정은 고객 화면과 같은 bankDepositStateOf다(온라인 계좌 입금만 — 토스 결제·결제 없음은 409).
+     */
+    if (body.action === 'confirm_deposit' || body.action === 'cancel_unpaid_deposit' || body.action === 'resend_deposit_guide') {
+      if (bankDepositStateOf(order) !== 'awaiting') {
+        return res.status(409).json({ ok: false, message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' });
+      }
+      try {
+        if (body.action === 'confirm_deposit') {
+          const r = await confirmBookingBankDeposit({ orderId: order.id, now: new Date() });
+          if (!r.ok) return res.status(r.code === 'not_found' ? 404 : 409).json({ ok: false, message: r.message });
+          return res.status(200).json({ ok: true, emailSent: r.emailSent ?? null, warnings: r.warnings ?? [] });
+        }
+        if (body.action === 'cancel_unpaid_deposit') {
+          const r = await cancelAwaitingBookingDeposit({ orderId: order.id });
+          if (!r.ok) return res.status(r.code === 'not_found' ? 404 : 409).json({ ok: false, message: r.message });
+          return res.status(200).json({ ok: true });
+        }
+        const failure = await deliverBookingDepositGuide(order.orderNo);
+        return res.status(200).json({ ok: true, notificationError: failure });
+      } catch (error: unknown) {
+        console.error('[API/admin/bookings/[id]] 계좌 입금 작업 실패:', { action: body.action, orderNo: order.orderNo, error });
+        return res.status(500).json({ ok: false, message: '처리하지 못했습니다. 잠시 후 다시 시도해 주세요.' });
+      }
+    }
+
+    if (body.action === 'mark_refund_sent') {
+      // 고객이 셀프 취소로 적은 환불 계좌로 송금을 마쳤다 — 환불 기록은 취소 순간 이미 남았고(refunds done),
+      // 여기서는 송금 완료 시각만 찍는다(refund_accounts.refunded_at). 계좌 입금 주문이 아니면 할 일이 없다.
+      if (bankDepositStateOf(order) !== 'paid') {
+        return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
+      }
+      await markRefundAccountRefunded({ kind: isMixing ? 'mixing' : 'session', orderNo: order.orderNo }, new Date());
+      return res.status(200).json({ ok: true });
     }
 
     if (body.action === 'start_work' || body.action === 'deliver') {

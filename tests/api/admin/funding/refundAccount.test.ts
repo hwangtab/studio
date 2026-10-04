@@ -56,11 +56,11 @@ it('Cache-Control: no-store', async () => {
   expect((await call()).setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');
 });
 
-it('계좌를 응답으로 돌려주고 접속기록(funding_refund_account_view)을 남긴다', async () => {
+it('계좌를 응답으로 돌려주고 접속기록(refund_account_view)을 남긴다', async () => {
   const r = await call();
   expect(r.status).toBe(200);
   expect(r.body).toEqual({ ok: true, account: ACCOUNT, holderMismatch: false });
-  expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_refund_account_view', 'order-1', 'success');
+  expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'refund_account_view', 'order-1', 'success');
   // 기록 인자에 계좌번호가 섞이지 않는다.
   expect(JSON.stringify((recordAdminPrivacyAccess as jest.Mock).mock.calls)).not.toContain('7890123');
 });
@@ -76,7 +76,7 @@ it('접수된 계좌가 없으면 404 + not_found 기록', async () => {
   (loadRefundAccount as jest.Mock).mockResolvedValue(null);
   const r = await call();
   expect(r.status).toBe(404);
-  expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_refund_account_view', 'order-1', 'not_found');
+  expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'refund_account_view', 'order-1', 'not_found');
 });
 
 it('복호화 실패는 decrypt_failed로 남기고 계좌번호를 로그에 적지 않는다', async () => {
@@ -84,7 +84,7 @@ it('복호화 실패는 decrypt_failed로 남기고 계좌번호를 로그에 �
   const r = await call();
   expect(r.status).toBe(500);
   expect(r.body.code).toBe('key_mismatch');
-  expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_refund_account_view', 'order-1', 'decrypt_failed');
+  expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'refund_account_view', 'order-1', 'decrypt_failed');
   expect(JSON.stringify(errorSpy.mock.calls)).not.toContain('7890123');
 });
 

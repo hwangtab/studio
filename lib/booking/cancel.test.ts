@@ -123,7 +123,7 @@ describe('cancelBookingWithRefund', () => {
       order({ bookings: [{ id: 'b1', status: 'confirmed', startAt: SAME_DAY_LATER, endAt: SAME_DAY_LATER, durationHours: 3, serviceType: 'recording', customerNote: null, gcalEventId: null }] }),
     );
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 취소', now: NOW });
-    expect(r).toEqual({ ok: true, refundAmount: 0 });
+    expect(r).toEqual({ ok: true, refundAmount: 0, refundVia: 'payment' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect(mockDb().run).toHaveBeenCalledTimes(1); // 선점 UPDATE 1회 — revert 없음(토스를 부르지 않았으니)
     expect(mockDb().batch).toHaveBeenCalled();
@@ -138,7 +138,7 @@ describe('cancelBookingWithRefund', () => {
     (findOrderByOrderNo as jest.Mock).mockResolvedValue(order());
     (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-    expect(r).toEqual({ ok: true, refundAmount: 275000 });
+    expect(r).toEqual({ ok: true, refundAmount: 275000, refundVia: 'payment' });
     expect(cancelPayment).toHaveBeenCalledWith({
       paymentKey: 'pk', cancelReason: '고객 셀프 취소', cancelAmount: 275000,
       idempotencyKey: 'refund:SNB-1:275000', // 재시도가 최초 취소를 replay하도록 (주문번호, 환불액)으로 결정적
@@ -159,7 +159,7 @@ describe('cancelBookingWithRefund', () => {
     const r = await cancelBookingWithRefund({
       orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 50000, now: NOW,
     });
-    expect(r).toEqual({ ok: true, refundAmount: 50000 });
+    expect(r).toEqual({ ok: true, refundAmount: 50000, refundVia: 'payment' });
     expect(cancelPayment).toHaveBeenCalledWith({
       paymentKey: 'pk', cancelReason: '관리자 임의 환불', cancelAmount: 50000,
       idempotencyKey: 'refund:SNB-1:50000',
@@ -189,7 +189,7 @@ describe('cancelBookingWithRefund', () => {
     const r = await cancelBookingWithRefund({
       orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 0, now: NOW,
     });
-    expect(r).toEqual({ ok: true, refundAmount: 0 });
+    expect(r).toEqual({ ok: true, refundAmount: 0, refundVia: 'payment' });
     expect(cancelPayment).not.toHaveBeenCalled();
     expect(mockDb().batch).toHaveBeenCalled();
   });
@@ -267,7 +267,7 @@ describe('cancelBookingWithRefund', () => {
         ok: true, payment: { paymentKey: 'pk', cancels: [{ transactionKey: 'ck1', cancelAmount: 137500 }] },
       });
       const second = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-      expect(second).toEqual({ ok: true, refundAmount: 137500 });
+      expect(second).toEqual({ ok: true, refundAmount: 137500, refundVia: 'payment' });
 
       const calls = (cancelPayment as jest.Mock).mock.calls.map((c) => c[0]);
       expect(calls).toHaveLength(2);
@@ -311,7 +311,7 @@ describe('cancelBookingWithRefund', () => {
       });
       // 3일 전 취소 = 100% 티어라 계산액은 275,000이지만 잔액은 75,000뿐이다.
       const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-      expect(r).toEqual({ ok: true, refundAmount: 75000 });
+      expect(r).toEqual({ ok: true, refundAmount: 75000, refundVia: 'payment' });
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({
         cancelAmount: 75000, idempotencyKey: 'refund:SNB-1:75000',
       }));
@@ -363,7 +363,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 추가 환불', overrideAmount: 100000, now: NOW,
       });
-      expect(r).toEqual({ ok: true, refundAmount: 100000 });
+      expect(r).toEqual({ ok: true, refundAmount: 100000, refundVia: 'payment' });
       expect(db.run).not.toHaveBeenCalled(); // 선점 UPDATE도 revert도 없다
       expect(deleteBookingEvent).not.toHaveBeenCalled(); // 첫 취소에서 이미 지웠다
       expect(sendBookingCancelledEmails).not.toHaveBeenCalled(); // 없는 취소를 다시 알리지 않는다
@@ -389,7 +389,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
       });
-      expect(r).toMatchObject({ ok: true, refundAmount: 10000 });
+      expect(r).toMatchObject({ ok: true, refundAmount: 10000, refundVia: 'payment' });
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 10000 }));
     });
 
@@ -430,7 +430,7 @@ describe('cancelBookingWithRefund', () => {
     (deleteBookingEvent as jest.Mock).mockRejectedValueOnce(new Error('캘린더 이벤트 삭제 실패: 500'));
     const db = mockDb();
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-    expect(r).toEqual({ ok: true, refundAmount: 275000 });
+    expect(r).toEqual({ ok: true, refundAmount: 275000, refundVia: 'payment' });
     const gcalErrorCall = setCallsOf(db).find((c) => 'gcalError' in c);
     expect(gcalErrorCall).toBeDefined();
     expect((gcalErrorCall as { gcalError: string }).gcalError).toContain('캘린더 이벤트 삭제 실패: 500');
@@ -442,7 +442,7 @@ describe('cancelBookingWithRefund', () => {
     (sendBookingCancelledEmails as jest.Mock).mockResolvedValueOnce('customer:TIMEOUT');
     const db = mockDb();
     const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-    expect(r).toEqual({ ok: true, refundAmount: 275000 });
+    expect(r).toEqual({ ok: true, refundAmount: 275000, refundVia: 'payment' });
     const notificationErrorCall = setCallsOf(db).find((c) => 'notificationError' in c);
     expect(notificationErrorCall).toBeDefined();
     expect((notificationErrorCall as { notificationError: string }).notificationError).toBe('customer:TIMEOUT');
@@ -467,7 +467,7 @@ describe('cancelBookingWithRefund', () => {
       (findOrderByOrderNo as jest.Mock).mockResolvedValue(mixingOrder());
       (cancelPayment as jest.Mock).mockResolvedValue(cancelOk);
       const r = await cancelBookingWithRefund({ orderNo: 'SNB-1', requestedBy: 'customer', reason: '고객 셀프 취소', now: NOW });
-      expect(r).toEqual({ ok: true, refundAmount: 220000 });
+      expect(r).toEqual({ ok: true, refundAmount: 220000, refundVia: 'payment' });
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 220000 }));
       expect(sendMixingOrderCancelledEmails).toHaveBeenCalled();
       const db = mockDb();
@@ -495,7 +495,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 100000, now: NOW,
       });
-      expect(r).toEqual({ ok: true, refundAmount: 100000 });
+      expect(r).toEqual({ ok: true, refundAmount: 100000, refundVia: 'payment' });
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 100000 }));
     });
 
@@ -507,7 +507,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 220000, now: NOW,
       });
-      expect(r).toEqual({ ok: true, refundAmount: 220000 });
+      expect(r).toEqual({ ok: true, refundAmount: 220000, refundVia: 'payment' });
     });
 
     // H-4: 착수 후 부분환불로 마무리한 주문에 관리자가 잔액을 더 돌려주려는 경우. work_order는
@@ -528,7 +528,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 추가 환불', overrideAmount: 100000, now: NOW,
       });
-      expect(r).toEqual({ ok: true, refundAmount: 100000 });
+      expect(r).toEqual({ ok: true, refundAmount: 100000, refundVia: 'payment' });
       // 이미 cancelled라 선점 UPDATE를 다시 걸지 않는다.
       expect(db.run).not.toHaveBeenCalled();
       expect(orderStatusSetOf(db)).toMatchObject({ status: 'refunded' }); // 잔액 100,000을 다 환불
@@ -558,7 +558,7 @@ describe('cancelBookingWithRefund', () => {
       const r = await cancelBookingWithRefund({
         orderNo: 'SNB-1', requestedBy: 'admin', reason: '관리자 임의 환불', overrideAmount: 10000, now: NOW,
       });
-      expect(r).toMatchObject({ ok: true, refundAmount: 10000 });
+      expect(r).toMatchObject({ ok: true, refundAmount: 10000, refundVia: 'payment' });
       expect(cancelPayment).toHaveBeenCalledWith(expect.objectContaining({ cancelAmount: 10000 }));
     });
 

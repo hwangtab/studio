@@ -9,12 +9,25 @@ import { computeRefund, refundPolicyFor } from './refund-policy';
 import { getProduct } from './products';
 import { findOrderByOrderNo } from './service';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from './toss';
+import { isBankDepositPayment } from '../payments/bankDeposit';
+import {
+  encryptRefundAccountNumber,
+  markRefundAccountRefunded,
+  safeDbErrorSummary,
+  saveRefundAccount,
+  validateRefundAccount,
+  type RefundAccountKey,
+} from '../payments/refundAccount';
 
 export type CancelOutcome =
-  | { ok: true; refundAmount: number }
+  /**
+   * `refundVia` — 환불이 어디로 가는가. `payment`는 토스 결제 취소(결제 수단으로), `bank_account`는 계좌 입금
+   * 주문이라 고객이 적은 환불 계좌로 운영자가 송금한다(접수일부터 3영업일 이내). 화면·메일 문구가 갈린다.
+   */
+  | { ok: true; refundAmount: number; refundVia: 'payment' | 'bank_account' }
   | {
       ok: false;
-      code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed';
+      code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable';
       message: string;
     };
 
@@ -106,6 +119,55 @@ export type CancelInput = {
   reason: string;
   overrideAmount?: number;
   now: Date;
+  /**
+   * **계좌 입금 주문의 고객 셀프 취소에만** 쓴다 — 환불받을 은행·계좌번호·예금주(형식 검사는
+   * lib/payments/refundAccount.ts). 토스 결제가 없어 결제 수단으로 돌려줄 수 없으니 운영자가 이 계좌로 보낸다.
+   */
+  refundAccount?: unknown;
+};
+
+/**
+ * 계좌 입금 주문의 **고객 셀프 취소** 준비 — 환불할 돈이 있으면 환불 계좌를 검사·암호화해 둔다(선점 **전에**:
+ * 키가 없으면 여기서 멈춰 예약을 건드리지 않는다). 돌려줄 돈이 0원이면(당일 0% 티어) 계좌가 필요 없다.
+ * 관리자 환불은 계좌를 받지 않는다 — 운영자가 이미 송금하고 기록하는 것이다.
+ */
+type BankRefundPlan = { kind: 'none' } | { kind: 'customer_account'; bankName: string; accountHolder: string; accountNumberEnc: string } | { kind: 'admin_record' };
+
+const planBankRefund = (input: CancelInput, payment: PaymentWithRefunds, refundAmount: number): BankRefundPlan | CancelFailure => {
+  if (!isBankDepositPayment(payment)) return { kind: 'none' };
+  if (input.requestedBy === 'admin') return { kind: 'admin_record' };
+  if (refundAmount <= 0) return { kind: 'none' };
+  const account = validateRefundAccount(input.refundAccount);
+  if (!account.ok) return { ok: false, code: 'invalid_state', message: account.message };
+  try {
+    return {
+      kind: 'customer_account', bankName: account.value.bankName, accountHolder: account.value.accountHolder,
+      accountNumberEnc: encryptRefundAccountNumber(account.value.accountNumber),
+    };
+  } catch (error) {
+    // 키가 없는 배포 — 평문으로 저장하는 길은 없다. 값은 로그에 적지 않는다.
+    console.error('[booking-cancel] 환불 계좌 암호화 실패 — 접수하지 않는다', { orderNo: input.orderNo, error: error instanceof Error ? error.name : 'unknown' });
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 환불 계좌를 접수할 수 없습니다. 010-4255-7893으로 연락 주세요.' };
+  }
+};
+
+/**
+ * 선점에 이긴 뒤 환불 계좌를 저장한다. 실패하면(0048 미적용·DB 장애) 선점을 되돌리고 실패를 돌려준다 —
+ * 계좌 없이 취소만 남으면 운영자가 돈을 보낼 곳을 모른다.
+ */
+const saveCustomerRefundAccount = async (
+  key: RefundAccountKey, plan: BankRefundPlan, now: Date, revert: () => Promise<void>,
+): Promise<CancelFailure | null> => {
+  if (plan.kind !== 'customer_account') return null;
+  try {
+    await saveRefundAccount(key, { bankName: plan.bankName, accountNumberEnc: plan.accountNumberEnc, accountHolder: plan.accountHolder, requestedAt: now });
+    return null;
+  } catch (error) {
+    // 오류 객체를 통째로 찍지 않는다 — drizzle 메시지에 바인딩 값(계좌번호 암호문·예금주)이 실린다.
+    console.error('[booking-cancel] 환불 계좌 저장 실패 — 취소를 되돌린다', { orderNo: key.orderNo, error: safeDbErrorSummary(error) });
+    await revert();
+    return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+  }
 };
 
 /**
@@ -237,7 +299,12 @@ export const settleRefund = async (args: {
     }
   }
 
-  if (refundAmount > 0) {
+  /**
+   * **계좌 입금 주문은 토스를 부르지 않는다** — 결제 행의 키가 토스 키가 아니고(`bank-deposit:`), 돈은 운영자가
+   * 고객의 환불 계좌로 직접 보낸다. 환불 기록(refunds done)과 주문 상태는 아래에서 토스 경로와 똑같이 남긴다 —
+   * 고객 요청이면 그 순간 기록하고 송금 여부는 환불 계좌 표의 `refunded_at`이 따로 든다(관리자 "송금 완료").
+   */
+  if (refundAmount > 0 && !isBankDepositPayment(payment)) {
     const toss = await cancelPayment({
       paymentKey: payment.paymentKey,
       cancelReason: input.reason,
@@ -378,7 +445,23 @@ const cancelSessionBooking = async (
   if (isAdditionalRefund && refundAmount <= 0)
     return { ok: false, code: 'invalid_state', message: ZERO_REMAINDER_REFUND_MESSAGE };
 
+  const bankPlan = planBankRefund(input, payment, refundAmount);
+  if ('ok' in bankPlan) return bankPlan;
+  const refundVia = isBankDepositPayment(payment) ? 'bank_account' : 'payment';
+
   const db = getDb();
+  const revertSessionClaim = async () => {
+    try {
+      await db.run(
+        sql`UPDATE bookings SET status = 'confirmed', cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'cancelled'`,
+      );
+    } catch (revertError) {
+      console.error('[booking-cancel] 선점 revert 실패 — 수동 복구 필요', {
+        orderNo: order.orderNo,
+        error: revertError,
+      });
+    }
+  };
 
   // 원자적 선점 — 돈이 나가기 전에 이 요청만 이 예약을 쥔다. 동시 셀프 취소 2건이 둘 다 위
   // 상태 검사를 통과해도(읽기 시점엔 둘 다 confirmed), UPDATE...WHERE status='confirmed'는
@@ -391,31 +474,24 @@ const cancelSessionBooking = async (
     );
     if (Number(claim.rowsAffected) === 0)
       return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 예약입니다.' };
+    const saveFailure = await saveCustomerRefundAccount({ kind: 'session', orderNo: order.orderNo }, bankPlan, input.now, revertSessionClaim);
+    if (saveFailure) return saveFailure;
   }
 
   const failure = await settleRefund({
     order, payment, refundAmount, remaining, input,
-    revertClaim: isAdditionalRefund
-      ? null
-      : async () => {
-          try {
-            await db.run(
-              sql`UPDATE bookings SET status = 'confirmed', cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${booking.id} AND status = 'cancelled'`,
-            );
-          } catch (revertError) {
-            console.error('[booking-cancel] 선점 revert 실패 — 수동 복구 필요', {
-              orderNo: order.orderNo,
-              error: revertError,
-            });
-          }
-        },
+    revertClaim: isAdditionalRefund ? null : revertSessionClaim,
     recordFailureLog: '[booking-cancel] 환불 완료, DB 기록 실패',
   });
   if (failure) return failure;
+  // 관리자가 계좌 입금 건을 환불 기록했다 — 송금을 마쳤다는 뜻이다(접수된 환불 계좌가 있으면 송금 완료 표시).
+  if (bankPlan.kind === 'admin_record' && refundAmount > 0) {
+    await markRefundAccountRefunded({ kind: 'session', orderNo: order.orderNo }, input.now);
+  }
 
   // 추가 환불은 이미 취소된 예약에 잔액만 더 돌려주는 것이라 후처리가 없다 — 지울 캘린더
   // 이벤트도(첫 취소에서 이미 지웠다), 다시 보낼 취소 메일도 없다.
-  if (isAdditionalRefund) return { ok: true, refundAmount };
+  if (isAdditionalRefund) return { ok: true, refundAmount, refundVia };
 
   // 후처리 — 환불은 끝났으므로 실패를 삼키되 기록 (confirm.ts와 동일 원칙).
   if (booking.gcalEventId) {
@@ -435,9 +511,9 @@ const cancelSessionBooking = async (
     }
   }
 
-  await recordNotificationError(order.id, order.orderNo, await sendBookingCancelledEmails(order, booking, refundAmount));
+  await recordNotificationError(order.id, order.orderNo, await sendBookingCancelledEmails(order, booking, refundAmount, refundVia));
 
-  return { ok: true, refundAmount };
+  return { ok: true, refundAmount, refundVia };
 };
 
 /**
@@ -502,7 +578,23 @@ const cancelMixingOrder = async (
   if (isAdditionalRefund && refundAmount <= 0)
     return { ok: false, code: 'invalid_state', message: ZERO_REMAINDER_REFUND_MESSAGE };
 
+  const bankPlan = planBankRefund(input, payment, refundAmount);
+  if ('ok' in bankPlan) return bankPlan;
+  const refundVia = isBankDepositPayment(payment) ? 'bank_account' : 'payment';
+
   const db = getDb();
+  const revertMixingClaim = async () => {
+    try {
+      await db.run(
+        sql`UPDATE work_orders SET status = ${workOrder.status}, cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = 'cancelled'`,
+      );
+    } catch (revertError) {
+      console.error('[booking-cancel] 믹싱 선점 revert 실패 — 수동 복구 필요', {
+        orderNo: order.orderNo,
+        error: revertError,
+      });
+    }
+  };
 
   // 원자적 선점 — cancelSessionBooking과 같은 이유. 읽은 시점의 status로 조건을 걸어야
   // received에서 눌렀는데 그 사이 관리자가 착수 처리한 경합도 안전하게 걸러진다.
@@ -512,27 +604,19 @@ const cancelMixingOrder = async (
     );
     if (Number(claim.rowsAffected) === 0)
       return { ok: false, code: 'invalid_state', message: '이미 처리 중이거나 취소된 주문입니다.' };
+    const saveFailure = await saveCustomerRefundAccount({ kind: 'mixing', orderNo: order.orderNo }, bankPlan, input.now, revertMixingClaim);
+    if (saveFailure) return saveFailure;
   }
 
   const failure = await settleRefund({
     order, payment, refundAmount, remaining, input,
-    revertClaim: isAdditionalRefund
-      ? null
-      : async () => {
-          try {
-            await db.run(
-              sql`UPDATE work_orders SET status = ${workOrder.status}, cancelled_at = NULL, updated_at = unixepoch() WHERE id = ${workOrder.id} AND status = 'cancelled'`,
-            );
-          } catch (revertError) {
-            console.error('[booking-cancel] 믹싱 선점 revert 실패 — 수동 복구 필요', {
-              orderNo: order.orderNo,
-              error: revertError,
-            });
-          }
-        },
+    revertClaim: isAdditionalRefund ? null : revertMixingClaim,
     recordFailureLog: '[booking-cancel] 믹싱 환불 완료, DB 기록 실패',
   });
   if (failure) return failure;
+  if (bankPlan.kind === 'admin_record' && refundAmount > 0) {
+    await markRefundAccountRefunded({ kind: 'mixing', orderNo: order.orderNo }, input.now);
+  }
 
   // 후처리 — 캘린더 삭제 없음(믹싱은 슬롯이 없다).
   //
@@ -541,10 +625,10 @@ const cancelMixingOrder = async (
   // 유일한 고객 통지이고, 기존 동작을 이번 정리에서 조용히 바꾸지 않는다. 문구가 "주문이
   // 취소되었습니다"로 시작해 중복 안내처럼 읽히는 건 남은 숙제다(메일 문구 쪽에서 풀 일).
   await recordNotificationError(
-    order.id, order.orderNo, await sendMixingOrderCancelledEmails(order, workOrder, refundAmount),
+    order.id, order.orderNo, await sendMixingOrderCancelledEmails(order, workOrder, refundAmount, refundVia),
   );
 
-  return { ok: true, refundAmount };
+  return { ok: true, refundAmount, refundVia };
 };
 
 export const cancelBookingWithRefund = async (input: CancelInput): Promise<CancelOutcome> => {
