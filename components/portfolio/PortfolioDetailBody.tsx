@@ -1,5 +1,6 @@
 import React from 'react';
 import Markdown from 'markdown-to-jsx';
+import { Badge } from '../ui/Badge';
 import type { PortfolioItem } from '../../types/data';
 import type { Locale } from '../../lib/i18n';
 
@@ -101,11 +102,8 @@ const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps)
                 <dd className="typo-card-body">
                   <ul className="flex flex-wrap gap-2">
                     {credits.musicians.map((name) => (
-                      <li
-                        key={name}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm"
-                      >
-                        {name}
+                      <li key={name}>
+                        <Badge tone="neutral" size="md">{name}</Badge>
                       </li>
                     ))}
                   </ul>
@@ -120,11 +118,8 @@ const PortfolioDetailBody = ({ item, locale, labels }: PortfolioDetailBodyProps)
                 <dd className="typo-card-body">
                   <ul className="flex flex-wrap gap-2">
                     {credits.gear.map((g) => (
-                      <li
-                        key={g}
-                        className="px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full text-sm"
-                      >
-                        {g}
+                      <li key={g}>
+                        <Badge tone="neutral" size="md">{g}</Badge>
                       </li>
                     ))}
                   </ul>

@@ -1,6 +1,6 @@
 import React, { type ChangeEvent, type FormEvent } from 'react';
 import { m } from 'framer-motion';
-import { CheckCircle, Mail, MessageCircle, Phone, Send, User } from '@/lib/lucide-icons';
+import { Mail, MessageCircle, Phone, Send, User } from '@/lib/lucide-icons';
 import type { Locale } from '../../lib/i18n';
 import type { SiteConfig } from '../../types/data';
 import type { ContactFormData } from '../../utils/useContactForm';
@@ -11,6 +11,9 @@ import ContactFormErrorFallback from './ContactFormErrorFallback';
 import InputField from './InputField';
 import { Field, TextArea } from '../ui/Field';
 import { Button } from '../ui/Button';
+import { Checkbox } from '../ui/Checkbox';
+import { Notice } from '../ui/Notice';
+import { FOCUS_RING } from '../ui/focusRing';
 import type { ContactTranslate } from './contactTypes';
 
 type IconTextAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
@@ -121,7 +124,7 @@ const ContactFormCard = ({
   return (
   <m.div
     {...motionProps}
-    className="glass-card p-8 rounded-lg order-1 lg:order-2"
+    className="glass-card p-8 rounded-2xl order-1 lg:order-2"
   >
     <div>
       <h2 className="typo-card-title mb-4">{t('contact.title')}</h2>
@@ -142,26 +145,17 @@ const ContactFormCard = ({
         />
       )}
       {submitMessage && (
-        <div
-          ref={messageRef}
-          tabIndex={-1}
-          role="status"
-          aria-live="polite"
-          aria-atomic="true"
-          className={`mb-4 p-4 rounded-md flex items-center outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 ${isSubmitSuccess ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300'}`}
-        >
-          {isSubmitSuccess && <CheckCircle className="mr-2" size={18} aria-hidden="true" />}
-          {submitMessage}
+        // 포커스를 받는 래퍼는 따로 둔다 — 배너 모양은 Notice가, 스크롤·포커스 이동은 이 div가 맡는다.
+        <div ref={messageRef} tabIndex={-1} className={`mb-4 rounded-xl ${FOCUS_RING}`}>
+          <Notice tone={isSubmitSuccess ? 'success' : 'error'} role="status" aria-live="polite" aria-atomic="true">
+            {submitMessage}
+          </Notice>
         </div>
       )}
       {canRetrySubmit && !isSubmitting && (
-        <button
-          type="button"
-          onClick={onRetrySubmit}
-          className="mb-4 inline-flex items-center justify-center min-h-[44px] px-4 py-2 rounded-md border border-primary/30 text-sm font-semibold text-primary dark:text-primary-lighter hover:bg-primary/10 transition-colors touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-        >
+        <Button type="button" variant="outline" size="sm" onClick={onRetrySubmit} className="mb-4 touch-manipulation">
           {retryLabel}
-        </button>
+        </Button>
       )}
       {submitMessage && !isSubmitSuccess && (
         <ContactFormErrorFallback
@@ -173,14 +167,12 @@ const ContactFormCard = ({
         />
       )}
       {errorCount > 1 && (
-        <div role="alert" aria-live="polite" className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 rounded-md">
-          <p className="text-sm font-medium text-red-800 dark:text-red-300">
-            {t('contact.form.errorsFound', {
-              count: errorCount,
-              defaultValue: validationCopy.errorsFound,
-            })}
-          </p>
-        </div>
+        <Notice tone="error" aria-live="polite" className="mb-4">
+          {t('contact.form.errorsFound', {
+            count: errorCount,
+            defaultValue: validationCopy.errorsFound,
+          })}
+        </Notice>
       )}
       <form onSubmit={handleGatedSubmit} className="space-y-4">
         <input
@@ -262,36 +254,35 @@ const ContactFormCard = ({
           />
         </Field>
 
-        <div className="flex items-start gap-2.5">
-          <input
-            ref={consentRef}
-            type="checkbox"
-            id="privacy-consent"
-            name="privacyConsent"
-            checked={consent}
-            onChange={(e) => {
-              setConsent(e.target.checked);
-              if (e.target.checked) setConsentError(false);
-            }}
-            aria-required="true"
-            aria-invalid={consentError}
-            aria-describedby={consentError ? 'privacy-consent-error' : undefined}
-            className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 touch-manipulation"
-          />
-          <label htmlFor="privacy-consent" className="text-sm text-gray-600 dark:text-gray-400 leading-snug">
-            {t('contact.form.consentLabel', { defaultValue: '개인정보 수집·이용에 동의합니다 (필수)' })}{' '}
-            <a
-              href={privacyPolicyHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-            >
-              {t('contact.form.consentPolicyLink', { defaultValue: '개인정보 처리방침' })}
-            </a>
-          </label>
-        </div>
+        <Checkbox
+          ref={consentRef}
+          id="privacy-consent"
+          name="privacyConsent"
+          checked={consent}
+          onChange={(e) => {
+            setConsent(e.target.checked);
+            if (e.target.checked) setConsentError(false);
+          }}
+          aria-required="true"
+          aria-invalid={consentError}
+          aria-describedby={consentError ? 'privacy-consent-error' : undefined}
+          inputClassName="touch-manipulation"
+          label={
+            <>
+              {t('contact.form.consentLabel', { defaultValue: '개인정보 수집·이용에 동의합니다 (필수)' })}{' '}
+              <a
+                href={privacyPolicyHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded text-primary dark:text-primary-lighter hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+              >
+                {t('contact.form.consentPolicyLink', { defaultValue: '개인정보 처리방침' })}
+              </a>
+            </>
+          }
+        />
         {consentError && (
-          <span id="privacy-consent-error" role="alert" className="block text-xs text-red-600">
+          <span id="privacy-consent-error" role="alert" className="block text-xs text-red-600 dark:text-red-400">
             {t('contact.form.consentError', { defaultValue: '개인정보 수집·이용에 동의해 주세요.' })}
           </span>
         )}
@@ -351,9 +342,8 @@ const ContactFormCard = ({
     </div>
 
     <div className="mt-6 space-y-4">
-      <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-md">
-        <h3 className="typo-card-subtitle text-blue-800 dark:text-blue-300 mb-2">{t('contact.notice.title')}</h3>
-        <ul className="typo-card-body text-blue-700 dark:text-blue-400 space-y-1">
+      <Notice tone="info" title={t('contact.notice.title')}>
+        <ul className="space-y-1">
           {noticeItems?.map((item, i) => (
             <li key={`${item}-${i}`}>{item}</li>
           ))}
@@ -361,7 +351,7 @@ const ContactFormCard = ({
             <li>{t('contact.checkNotices')}</li>
           )}
         </ul>
-      </div>
+      </Notice>
 
       <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
         <h3 className="typo-card-subtitle text-gray-800 dark:text-gray-300 mb-2">{t('contact.notice.privacyTitle')}</h3>

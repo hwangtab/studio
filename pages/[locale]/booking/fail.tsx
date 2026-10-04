@@ -4,6 +4,9 @@ import Head from 'next/head';
 
 import { getSiteConfig } from '../../../data/siteConfig';
 import { SESSION_PRODUCTS } from '../../../lib/booking/products';
+import { Button } from '../../../components/ui/Button';
+import { PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -60,41 +63,50 @@ export default function BookingFailPage({ code, message, orderNo, service }: Fai
         <title>결제를 완료하지 못했습니다 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-lg px-4 py-24 text-center">
+      <PageShell width="result">
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
             화면인지 알 수 있어야 한다. */}
-        <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">스튜디오 놀</p>
-        <h1 className="typo-page-title">결제를 완료하지 못했습니다</h1>
-        <p className="mt-4 text-gray-600 dark:text-gray-300">{message}</p>
-        {code && <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">오류 코드: {code}</p>}
-        {orderNo && <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">주문번호: {orderNo}</p>}
-        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
-        {/* 정본 연락처를 상시 표기한다 — message가 비거나 알 수 없는 코드여도 기댈 곳이
-            화면에 있어야 한다(funding/fail.tsx와 같은 이유). */}
-        <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">문의: 010-4255-7893 · hello@studionol.co.kr</p>
-        {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). 이 페이지는
-            ko 전용(아래 getServerSideProps가 비-ko를 /ko로 리다이렉트)이라 분기가 필요 없다. */}
-        <p className="mt-6">
-          <a
-            href={kakaoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex min-h-[48px] items-center justify-center rounded-xl bg-kakao px-6 py-3 font-bold text-kakao-ink transition-colors hover:bg-kakao-dark"
-          >
-            카카오톡으로 문의하기
-          </a>
-        </p>        {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
-            1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
-               그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
-            2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
-               strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
-               없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
-               private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-        <a href={`/ko/booking/${service}`} rel="noreferrer" className="mt-4 inline-block underline">
-          {service === 'mixing-mastering' ? '주문 페이지로 돌아가기' : '예약 페이지로 돌아가기'}
-        </a>
-      </main>
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
+        <ResultCard
+          tone="error"
+          as="h1"
+          title="결제를 완료하지 못했습니다"
+          description={message}
+          actions={
+            <>
+              {/* 카카오톡 목적지 링크 — CLAUDE.md 카카오 CTA 배색 규칙(옐로 고정). 이 페이지는
+                  ko 전용(아래 getServerSideProps가 비-ko를 /ko로 리다이렉트)이라 분기가 필요 없다. */}
+              <Button asChild variant="kakao">
+                <a href={kakaoUrl} target="_blank" rel="noopener noreferrer">
+                  카카오톡으로 문의하기
+                </a>
+              </Button>
+              {/* 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+                  1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+                     그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+                  2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+                     strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+                     없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+                     private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
+              <Button asChild variant="outline">
+                <a href={`/ko/booking/${service}`} rel="noreferrer">
+                  {service === 'mixing-mastering' ? '주문 페이지로 돌아가기' : '예약 페이지로 돌아가기'}
+                </a>
+              </Button>
+            </>
+          }
+        >
+          <div className="space-y-1 text-center typo-card-meta">
+            {code && <p>오류 코드: {code}</p>}
+            {orderNo && <p>주문번호: {orderNo}</p>}
+            <p>예약은 확정되지 않았습니다 — 결제 정보가 저장되지 않았으니 안심하고 다시 시도해 주세요.</p>
+            {/* 정본 연락처를 상시 표기한다 — message가 비거나 알 수 없는 코드여도 기댈 곳이
+                화면에 있어야 한다(funding/fail.tsx와 같은 이유). */}
+            <p>문의: 010-4255-7893 · hello@studionol.co.kr</p>
+          </div>
+        </ResultCard>
+      </PageShell>
     </>
   );
 }

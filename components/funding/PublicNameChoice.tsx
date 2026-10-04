@@ -3,6 +3,7 @@ import { useId } from 'react';
 import { PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
 import { maskName, previewPublicName, type PublicNameStyle } from '../../lib/funding/publicName';
 import { TextInput } from '../ui/Field';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
 
 interface Props {
   /** 결제자 이름. 실명·가린 이름 선택지의 라벨과 미리보기에 쓴다. 비어 있으면 자리표시를 보인다. */
@@ -15,9 +16,6 @@ interface Props {
   message?: string;
   disabled?: boolean;
 }
-
-const optionClass =
-  'flex cursor-pointer items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors border-gray-200 text-gray-700 dark:border-gray-700 dark:text-gray-200 has-[:checked]:border-primary has-[:checked]:bg-primary/5 has-[:checked]:text-gray-900 dark:has-[:checked]:border-primary-light dark:has-[:checked]:bg-primary-light/10 dark:has-[:checked]:text-white has-[:disabled]:cursor-not-allowed has-[:disabled]:opacity-60';
 
 /**
  * 후원자 명단에 **어떤 이름으로** 올릴지 고르는 칸과 미리보기.
@@ -34,26 +32,35 @@ export default function PublicNameChoice({ customerName, style, nickname, onStyl
 
   return (
     <div className="mt-3 rounded-xl bg-white/80 p-4 dark:bg-gray-900/50">
-      <p id={`${uid}-label`} className="text-sm font-medium text-gray-900 dark:text-white">명단에 표시할 이름</p>
       {/* flex-wrap이었을 때는 줄바꿈 지점이 이름 길이·화면 너비 조합에 따라 매번 달라졌다
           (2줄+1줄 / 3칸 한 줄 / 칸마다 2줄로 접힘이 뒤섞여 나타났다, 2026-09-30 지적 —
           "모바일에서 해상도에 따라 UI 요소 배열이 뒤바뀌는 증상"). grid로 바꿔 모바일은
           항상 한 칸씩 쌓고(sm 미만), sm 이상에서만 3칸 한 줄로 — 어느 폭에서나 배열이
-          고정된다. 칸이 전체 폭을 쓰므로 "실명 (긴 이름)"도 한 줄에 들어간다. */}
-      <div role="radiogroup" aria-labelledby={`${uid}-label`} className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
-        <label className={optionClass}>
-          <input type="radio" name={`${uid}-style`} className="h-4 w-4 accent-primary" checked={style === 'real'} disabled={disabled} onChange={() => onStyleChange('real')} />
-          실명{name ? ` (${name})` : ''}
-        </label>
-        <label className={optionClass}>
-          <input type="radio" name={`${uid}-style`} className="h-4 w-4 accent-primary" checked={style === 'masked'} disabled={disabled} onChange={() => onStyleChange('masked')} />
-          가린 이름{name ? ` (${maskName(name)})` : ''}
-        </label>
-        <label className={optionClass}>
-          <input type="radio" name={`${uid}-style`} className="h-4 w-4 accent-primary" checked={style === 'nickname'} disabled={disabled} onChange={() => onStyleChange('nickname')} />
-          닉네임
-        </label>
-      </div>
+          고정된다(ChoiceGroup columns={3}). 칸이 전체 폭을 쓰므로 "실명 (긴 이름)"도 한 줄에
+          들어간다. 그룹 이름은 fieldset/legend가 라디오 그룹 의미를 준다. */}
+      <ChoiceGroup label="명단에 표시할 이름" columns={3}>
+        <ChoiceCard
+          name={`${uid}-style`}
+          checked={style === 'real'}
+          disabled={disabled}
+          onChange={() => onStyleChange('real')}
+          title={`실명${name ? ` (${name})` : ''}`}
+        />
+        <ChoiceCard
+          name={`${uid}-style`}
+          checked={style === 'masked'}
+          disabled={disabled}
+          onChange={() => onStyleChange('masked')}
+          title={`가린 이름${name ? ` (${maskName(name)})` : ''}`}
+        />
+        <ChoiceCard
+          name={`${uid}-style`}
+          checked={style === 'nickname'}
+          disabled={disabled}
+          onChange={() => onStyleChange('nickname')}
+          title="닉네임"
+        />
+      </ChoiceGroup>
       {style === 'nickname' && (
         <TextInput
           aria-label="명단에 표시할 닉네임"

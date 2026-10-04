@@ -9,6 +9,9 @@ import Head from 'next/head';
 import { useState } from 'react';
 
 import { withI18nServerProps } from '../../../../lib/getStatic';
+import { Button } from '../../../../components/ui/Button';
+import { Notice } from '../../../../components/ui/Notice';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
 
 interface Props { token: string | null }
 
@@ -87,31 +90,24 @@ export default function CreatorAuth({ token }: Props) {
         <title>개설자 로그인 | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-md px-4 py-16 text-center">
+      <PageShell width="result" className="text-center">
         {/* 헤더·푸터가 없는 bare 화면이라(Layout의 isPrivatePaymentPage) 상호를 본문에서
             직접 밝힌다 — 탭 제목은 화면에 안 보이고, 메일 링크로 들어온 사람이 피싱과
-            구별할 수 있어야 한다. */}
-        <p className="typo-card-meta mb-2">스튜디오 놀</p>
-        <h1 className="text-2xl font-bold">개설자 로그인</h1>
-        {token ? (
+            구별할 수 있어야 한다(tests/pages/privateLinkNavigation.test.ts가 이 전용 줄을 요구한다).
+            뒤로 링크(backHref)는 두지 않는다 — next/link라 이 화면의 이탈 규칙에 어긋난다(파일 머리 주석). */}
+        <p className="typo-card-meta">스튜디오 놀</p>
+        <PageHeader
+          align="center"
+          title="개설자 로그인"
+          lead={token ? '메일로 받은 링크입니다. 아래 버튼을 눌러 로그인해 주세요.' : '로그인 링크가 없습니다. 이메일로 다시 받아 주세요.'}
+        />
+        {token && (
           <>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">
-              메일로 받은 링크입니다. 아래 버튼을 눌러 로그인해 주세요.
-            </p>
-            <button
-              type="button"
-              onClick={login}
-              disabled={busy}
-              className="mt-8 w-full rounded-lg bg-primary px-4 py-3 font-semibold text-white disabled:opacity-60"
-            >
+            <Button type="button" size="lg" fullWidth onClick={login} disabled={busy}>
               {busy ? '로그인 중…' : '로그인하기'}
-            </button>
-            {error && <p className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
+            </Button>
+            {error && <Notice tone="error" className="mt-3 text-left">{error}</Notice>}
           </>
-        ) : (
-          <p className="mt-4 text-gray-600 dark:text-gray-400">
-            로그인 링크가 없습니다. 이메일로 다시 받아 주세요.
-          </p>
         )}
         {/* 이 페이지는 no-store·측정 제외 대상이라 next/link를 쓰지 않는다(문서 이동만
             허용 — lib/analytics/privatePaths.ts 주석 참조). 목적지는 측정 대상인 공개
@@ -123,7 +119,7 @@ export default function CreatorAuth({ token }: Props) {
         >
           펀딩 신청 페이지로
         </a>
-      </main>
+      </PageShell>
     </>
   );
 }

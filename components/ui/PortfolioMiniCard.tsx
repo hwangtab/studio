@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Music } from '@/lib/lucide-icons';
 
 import ResponsiveImage from '../ResponsiveImage';
+import { Badge } from './Badge';
 import type { PortfolioItem } from '../../types/data';
 import type { Locale } from '../../lib/i18n';
 
@@ -11,13 +12,6 @@ interface PortfolioMiniCardProps {
   locale: Locale;
 }
 
-const CATEGORY_BADGE: Record<string, string> = {
-  album: 'bg-pink-50 text-pink-700 dark:bg-pink-500/20 dark:text-pink-300',
-  ep: 'bg-fuchsia-50 text-fuchsia-700 dark:bg-fuchsia-500/20 dark:text-fuchsia-300',
-  single: 'bg-emerald-50 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-300',
-  compilation: 'bg-violet-50 text-violet-700 dark:bg-violet-500/20 dark:text-violet-300',
-  commercial: 'bg-orange-50 text-orange-700 dark:bg-orange-500/20 dark:text-orange-300',
-};
 
 /**
  * 스토리 본문 안에 인라인으로 노출하는 가벼운 portfolio 카드.
@@ -26,13 +20,13 @@ const CATEGORY_BADGE: Record<string, string> = {
  */
 const PortfolioMiniCard = ({ item, locale }: PortfolioMiniCardProps) => {
   const href = `/${locale}/portfolio/${item.id}`;
-  const badgeClass = CATEGORY_BADGE[item.category] ?? 'bg-gray-50 text-gray-700 dark:bg-gray-500/20 dark:text-gray-300';
 
   return (
     <Link
       href={href}
       prefetch={false}
-      className="group block h-full rounded-lg overflow-hidden glass-card hover:-translate-y-0.5 transition-transform duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+      // 리프트 모션은 BaseCard가 소유한다(§4) — 인라인 카드의 CSS translate 복제는 걷었다. 이미지 줌만 남긴다.
+      className="group block h-full rounded-xl overflow-hidden glass-card touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
     >
       <div className="relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-gray-900">
         <ResponsiveImage
@@ -46,9 +40,10 @@ const PortfolioMiniCard = ({ item, locale }: PortfolioMiniCardProps) => {
         />
       </div>
       <div className="p-4">
-        <span className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider mb-2 ${badgeClass}`}>
+        {/* 카테고리별 색(핑크·에메랄드…)은 다섯 분류를 외워야 뜻이 생기는 장식이라 중립 배지로 통일한다. */}
+        <Badge tone="neutral" className="mb-2 uppercase tracking-wider">
           {item.category}
-        </span>
+        </Badge>
         <h4 className="typo-card-subtitle line-clamp-2 mb-1 text-gray-900 dark:text-white">
           {item.title}
         </h4>

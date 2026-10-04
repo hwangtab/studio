@@ -224,7 +224,8 @@ describe('폼 안의 결제위젯', () => {
   it('단계가 셋으로 줄었고, 수단·약관 자리가 폼 안에 있다', async () => {
     const user = userEvent.setup();
     render(<BookingWizard service="recording" products={[PRODUCT]} />);
-    expect(screen.getByText('STEP 1 / 3')).toBeInTheDocument();
+    // 단계 표시는 Stepper — 화면의 번호 원과 함께 sr-only 요약("3단계 중 1단계: 상품·시간")을 준다.
+    expect(screen.getByText('3단계 중 1단계: 상품·시간')).toBeInTheDocument();
     await goToStep3(user);
     expect(document.getElementById('toss-methods-test')).not.toBeNull();
     expect(document.getElementById('toss-agreement-test')).not.toBeNull();

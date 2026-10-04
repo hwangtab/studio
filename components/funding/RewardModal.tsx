@@ -9,6 +9,7 @@ import { lockBodyScroll, unlockBodyScroll } from '../../utils/scrollLock';
 import { useFocusTrapDialog } from '../../utils/useFocusTrapDialog';
 import { imageAspectRatio } from '../../lib/funding/imageAspect';
 import { trackMicroEvent } from '../../utils/analytics';
+import { X } from '@/lib/lucide-icons';
 
 interface Props {
   project: FundingProject;
@@ -136,17 +137,13 @@ export default function RewardModal({ project, reward, checkout = false, remaini
           <p className="typo-card-meta truncate">
             {showDetail ? '리워드' : '펀딩하기'} · {project.title}
           </p>
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={close}
-            aria-label="닫기"
-            className="rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-300 dark:focus-visible:ring-primary-lighter/70 dark:hover:bg-gray-700"
-          >
-            <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-              <path d="M5 5l10 10M15 5L5 15" strokeLinecap="round" />
-            </svg>
-          </button>
+          {/* 닫기는 공용 Modal 셸과 같은 버튼(ghost · icon · pill · lucide X). 셸 자체를 Modal로
+              바꾸지 않은 이유는 이 모달만의 계약 때문이다 — 대화상자 이름은 본문 안 리워드 제목
+              (aria-labelledby="reward-modal-title")이고, 머리 글줄은 제목이 아니라 보조 문구이며,
+              포커스 복원 시점을 close()가 직접 쥔다(restoreOnCleanup: false). */}
+          <Button ref={closeButtonRef} type="button" variant="ghost" size="icon" shape="pill" onClick={close} aria-label="닫기">
+            <X size={20} aria-hidden="true" />
+          </Button>
         </div>
 
         <div ref={bodyRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-5 sm:p-6">

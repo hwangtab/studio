@@ -17,7 +17,11 @@ import { AlertCircle, AlertTriangle, CheckCircle2, Info, type LucideIcon } from 
  */
 export type NoticeTone = 'neutral' | 'info' | 'success' | 'warning' | 'error' | 'brand';
 
-const TONE_CLASS: Record<NoticeTone, string> = {
+/**
+ * tone 값의 정본. 구조가 Notice와 다른 상태 박스(스토리 인라인 콜아웃 `<aside>`·허브 링크 배너·
+ * 고정 문의 바)는 이 표를 가져다 쓴다 — 같은 색을 손으로 다시 적으면 다크 틴트가 또 갈라진다.
+ */
+export const NOTICE_TONE_CLASS: Record<NoticeTone, string> = {
   neutral: 'border-gray-200 bg-gray-50 text-gray-700 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-300',
   info: 'border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-200',
   success: 'border-green-200 bg-green-50 text-green-900 dark:border-green-900/50 dark:bg-green-950/40 dark:text-green-200',
@@ -54,7 +58,7 @@ export interface NoticeProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 
 export const Notice = ({ tone = 'neutral', title, icon, actions, className, children, role, ...rest }: NoticeProps) => {
   const Icon = icon === false ? null : (icon ?? TONE_ICON[tone]);
   return (
-    <div role={role ?? TONE_ROLE[tone]} className={cn('flex gap-3 rounded-xl border p-4', TONE_CLASS[tone], className)} {...rest}>
+    <div role={role ?? TONE_ROLE[tone]} className={cn('flex gap-3 rounded-xl border p-4', NOTICE_TONE_CLASS[tone], className)} {...rest}>
       {Icon && <Icon size={20} aria-hidden="true" className="mt-0.5 shrink-0" />}
       <div className="min-w-0 flex-1 text-sm leading-relaxed">
         {title && <p className="font-semibold">{title}</p>}

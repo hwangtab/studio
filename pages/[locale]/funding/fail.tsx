@@ -1,6 +1,9 @@
 import { withI18nServerProps } from '../../../lib/getStatic';
 import Head from 'next/head';
 import { useReportPaymentFailureOnMount } from '../../../utils/reportPaymentFailure';
+import { Button } from '../../../components/ui/Button';
+import { PageShell } from '../../../components/ui/PageHeader';
+import { ResultCard } from '../../../components/ui/ResultCard';
 
 /**
  * 토스 실패 코드 → 우리가 쓴 문구.
@@ -52,57 +55,53 @@ export default function FundingFailPage({ slug, code, message, orderNo }: Props)
   return (
     <>
       <Head><title>결제 실패 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
-      <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
-        <div className="glass-card rounded-2xl p-6 text-center sm:p-8">
-          {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
-              여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
-              화면인지 알 수 있어야 한다. */}
-          <p className="typo-card-meta mb-2">스튜디오 놀</p>
-          <h1 className="typo-page-title">결제가 완료되지 않았습니다</h1>
-          <p className="typo-card-body mx-auto mt-3 max-w-md">{message}</p>
-          <p className="typo-card-meta mx-auto mt-3 max-w-md">
-            결제가 이뤄지지 않았으므로 청구되지 않습니다. 15분 뒤 신청이 자동 해제되며 다시 펀딩할 수 있습니다.
-          </p>
-          {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
-              가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다. */}
-          <p className="typo-card-meta mx-auto mt-3 max-w-md">
-            문의: 010-4255-7893 · hello@studionol.co.kr
-          </p>
-          {code && <p className="typo-card-meta mx-auto mt-3 max-w-md">오류 코드: {code}</p>}
-          {orderNo && (
-            <p className="typo-card-meta mx-auto mt-1 max-w-md">주문번호: {orderNo}</p>
-          )}
-          {/* 이 URL에는 토스가 붙인 orderId(주문번호)가 실린다. 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
-              1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
-                 그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
-              2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
-                 strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
-                 없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
-                 private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
-          {/* 다시 펀딩하기는 후원 폼으로 곧장 보낸다 — 폼이 방금 고른 리워드를 되살린다
-              (PledgeWizard lastSelectionKey). 프로젝트 페이지로 보내면 카드부터 다시 골라야 했다. */}
-          <div className="mt-8 flex flex-col items-center gap-3">
-            {slug && (
-              <a
-                href={`/ko/funding/${slug}/pledge`}
-                rel="noreferrer"
-                className="inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-              >
-                담았던 리워드로 다시 펀딩하기
-              </a>
+      <PageShell width="result">
+        {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
+            여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
+            화면인지 알 수 있어야 한다. */}
+        <p className="typo-card-meta mb-4 text-center">스튜디오 놀</p>
+        <ResultCard
+          tone="error"
+          title="결제가 완료되지 않았습니다"
+          description={message}
+          actions={
+            <>
+              {/* 이 URL에는 토스가 붙인 orderId(주문번호)가 실린다. 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
+                  1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
+                     그 사이 mount된 gtag가 비밀값이 붙은 이 URL로 page_view를 보낸다.
+                  2. 공개 목적지에는 `rel="noreferrer"` — 사이트 Referrer-Policy가
+                     strict-origin-when-cross-origin이라 **동일 출처 이동에는 전체 URL**을 보낸다.
+                     없으면 도착지 gtag가 page_referrer에 토큰·paymentKey를 실어 보낸다.
+                     private→private 링크(관리·입금 안내)는 도착지도 측정 대상이 아니라 불필요. */}
+              {/* 다시 펀딩하기는 후원 폼으로 곧장 보낸다 — 폼이 방금 고른 리워드를 되살린다
+                  (PledgeWizard lastSelectionKey). 프로젝트 페이지로 보내면 카드부터 다시 골라야 했다. */}
+              {slug && (
+                <Button asChild size="lg">
+                  <a href={`/ko/funding/${slug}/pledge`} rel="noreferrer">담았던 리워드로 다시 펀딩하기</a>
+                </Button>
+              )}
+              <Button asChild size="lg" variant={slug ? 'outline' : 'solid'}>
+                <a href={slug ? `/ko/funding/${slug}` : '/ko/funding'} rel="noreferrer">프로젝트로 돌아가기</a>
+              </Button>
+            </>
+          }
+        >
+          <div className="text-center">
+            <p className="typo-card-meta mx-auto max-w-md">
+              결제가 이뤄지지 않았으므로 청구되지 않습니다. 15분 뒤 신청이 자동 해제되며 다시 펀딩할 수 있습니다.
+            </p>
+            {/* 정본 연락처를 상시 표기한다 — 예전에는 쿼리의 message가 주 안내문이라, 그 자리에
+                가짜 연락처를 넣으면 화면에 우리 번호가 하나도 없었다. */}
+            <p className="typo-card-meta mx-auto mt-3 max-w-md">
+              문의: 010-4255-7893 · hello@studionol.co.kr
+            </p>
+            {code && <p className="typo-card-meta mx-auto mt-3 max-w-md">오류 코드: {code}</p>}
+            {orderNo && (
+              <p className="typo-card-meta mx-auto mt-1 max-w-md">주문번호: {orderNo}</p>
             )}
-            <a
-              href={slug ? `/ko/funding/${slug}` : '/ko/funding'}
-              rel="noreferrer"
-              className={slug
-                ? 'inline-flex min-h-[44px] items-center text-sm font-semibold text-gray-600 underline transition-colors hover:text-gray-900 dark:text-gray-300 dark:hover:text-white'
-                : 'inline-flex h-12 items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark'}
-            >
-              프로젝트로 돌아가기
-            </a>
           </div>
-        </div>
-      </main>
+        </ResultCard>
+      </PageShell>
     </>
   );
 }

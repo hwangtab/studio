@@ -29,7 +29,7 @@ interface Props {
 export default function LineupCard({ photo, photoSecondary, photoAlt, href, name, bio, className = '' }: Props) {
   const linkProps = href ? { href, target: '_blank' } : {};
   return (
-    <BaseCard variant="glass" className={`flex items-start gap-4 p-4 ${className}`.trim()} {...linkProps}>
+    <BaseCard variant="glass" padding="compact" className={`flex items-start gap-4 ${className}`.trim()} {...linkProps}>
       {photo && (
         <div className="relative h-16 w-16 shrink-0 sm:h-20 sm:w-20">
           <div className="absolute inset-0 overflow-hidden rounded-full">

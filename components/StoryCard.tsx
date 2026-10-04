@@ -5,6 +5,7 @@ import { timeAgo } from '../utils/dateUtils';
 import { extractFirstImageUrl } from '../utils/localDataUtils';
 import { summarizeText } from '../utils/textUtils';
 import ResponsiveImage from './ResponsiveImage';
+import { Badge } from './ui/Badge';
 import type { Locale } from '../lib/i18n';
 
 import type { StoryCardData } from '../types/story';
@@ -52,7 +53,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
       <article
         itemScope
         itemType="https://schema.org/BlogPosting"
-        className="glass-card rounded-lg overflow-hidden cursor-pointer flex flex-col h-full"
+        className="glass-card rounded-xl overflow-hidden cursor-pointer flex flex-col h-full"
       >
         {story.date && <meta itemProp="datePublished" content={story.date} />}
         <link itemProp="url" href={href} />
@@ -61,7 +62,7 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
             <ResponsiveImage
               src={thumbnailUrl}
               alt={story.title}
-              className="object-cover transition-transform duration-300 hover:scale-105"
+              className="object-cover"
               sizes="(min-width: 1024px) 320px, (min-width: 640px) 260px, 100vw"
               fill={true}
               itemProp="image"
@@ -77,9 +78,9 @@ const StoryCard = React.memo(({ story, locale = 'ko', labels }: StoryCardProps) 
 
         <div className="p-4 flex flex-col flex-grow min-w-0">
           <div className="flex items-start justify-between gap-2 mb-2 flex-shrink-0 min-w-0">
-            <span className="typo-card-meta px-2 py-1 bg-primary/10 text-primary-dark rounded-full min-w-0 break-words" itemProp="articleSection">
+            <Badge tone="brand" className="min-w-0 whitespace-normal break-words" itemProp="articleSection">
               {categoryText}
-            </span>
+            </Badge>
             <time dateTime={story.date} className="typo-card-meta text-gray-500 dark:text-gray-400 flex-shrink-0" itemProp="datePublished">
               {dateText}
             </time>

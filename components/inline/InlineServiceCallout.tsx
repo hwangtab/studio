@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Megaphone, Mic, SlidersHorizontal, Speaker, Sparkles, Video } from '@/lib/lucide-icons';
+import { ArrowRight, CheckCircle2, Disc, GraduationCap, HandCoins, Heart, Megaphone, MessageCircle, Mic, SlidersHorizontal, Speaker, Sparkles, Video } from '@/lib/lucide-icons';
 import { useTranslation } from 'react-i18next';
 
 import { getSiteConfig } from '../../data/siteConfig';
@@ -33,6 +33,7 @@ import {
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
+import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
 type ServiceType = 'wedding' | 'voice' | 'lesson' | 'recording' | 'mixing' | 'practice' | 'release' | 'funding' | 'cover' | 'promotion';
 
@@ -236,7 +237,9 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
     <aside
       data-inline-callout="service"
       aria-label={categoryLabel}
-      className="my-8 rounded-xl border border-secondary/30 bg-secondary/5 p-6"
+      // 박스 색은 Notice의 brand tone 표(다크 짝 포함). secondary 틴트는 tone 표에 없어 박스는 brand로
+      // 통일하고, 가격 콜아웃과 구분되는 secondary 강조색은 아이콘·라벨·링크에만 남긴다.
+      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.brand}`}
     >
       <div className="flex items-center gap-2 mb-3">
         <div
@@ -276,8 +279,9 @@ const InlineServiceCallout = ({ type, locale }: InlineServiceCalloutProps) => {
       )}
 
       {koContent.softNote && (
-        <p className="text-sm text-secondary dark:text-secondary-light mb-4 font-medium">
-          💬 {koContent.softNote}
+        <p className="flex items-start gap-1.5 text-sm text-secondary dark:text-secondary-light mb-4 font-medium">
+          <MessageCircle size={16} className="mt-0.5 flex-shrink-0" aria-hidden="true" />
+          <span>{koContent.softNote}</span>
         </p>
       )}
 

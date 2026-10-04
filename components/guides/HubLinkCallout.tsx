@@ -4,6 +4,7 @@ import { ArrowRight, BookMarked } from '@/lib/lucide-icons';
 
 import type { Locale } from '../../lib/i18n';
 import type { BuyerIntentHubSlug } from '../../data/buyerIntentHubs';
+import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
 interface HubLinkCalloutProps {
   hubSlug: BuyerIntentHubSlug;
@@ -29,7 +30,8 @@ const HubLinkCallout: React.FC<HubLinkCalloutProps> = ({ hubSlug, locale, title,
       <Link
         href={href}
         prefetch={false}
-        className="group flex items-center gap-4 sm:gap-6 p-5 sm:p-6 rounded-xl border-2 border-primary/30 hover:border-primary bg-primary/5 hover:bg-primary/10 transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+        // 색은 Notice의 brand tone 표(다크 짝 포함). 링크 배너라 Notice로 감싸지 않고 표만 쓴다. 테두리는 한 종.
+        className={`group flex items-center gap-4 sm:gap-6 p-6 rounded-xl border ${NOTICE_TONE_CLASS.brand} hover:border-primary dark:hover:border-primary-lighter hover:bg-primary/10 dark:hover:bg-primary-lighter/15 transition-colors duration-200 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
       >
         <div className="flex-shrink-0 inline-flex items-center justify-center p-3 rounded-full bg-primary/15" aria-hidden="true">
           <BookMarked className="text-primary dark:text-primary-lighter" size={22} />

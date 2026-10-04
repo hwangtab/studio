@@ -1,7 +1,8 @@
 import Head from 'next/head';
-import Link from 'next/link';
 
 import { ShippingTable } from '../../../../../components/funding/creator/ShippingTable';
+import { PageHeader, PageShell } from '../../../../../components/ui/PageHeader';
+import { Panel } from '../../../../../components/ui/Panel';
 import { authenticateCreatorRequest } from '../../../../../lib/funding/creatorAuth';
 import { loadCreatorShipping, type CreatorShippingView } from '../../../../../lib/funding/creatorShipping';
 import { loadProjectForCreator } from '../../../../../lib/funding/creatorProjectWrite';
@@ -39,18 +40,11 @@ export default function CreatorShippingPage({ view, projectTitle, projectId }: P
         <title>배송지 | {projectTitle} | 스튜디오 놀</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
-      <main className="mx-auto max-w-4xl px-4 py-16">
-        <Link
-          href="/ko/funding/creator"
-          className="typo-caption text-gray-500 underline underline-offset-2 dark:text-gray-400"
-        >
-          ← 내 프로젝트 목록
-        </Link>
+      <PageShell width="wide">
+        <PageHeader backHref="/ko/funding/creator" backLabel="내 프로젝트 목록" title={`${projectTitle} · 배송지`} />
 
-        <h1 className="mt-4 text-2xl font-bold">{projectTitle} · 배송지</h1>
-
-        <section className="mt-8 rounded-xl border border-gray-200 p-5 dark:border-gray-700">
-          <h2 className="typo-body font-semibold">집계</h2>
+        <Panel as="section" variant="outline" padding="default">
+          <h2 className="typo-body font-semibold text-gray-900 dark:text-white">집계</h2>
           <dl className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             <div>
               <dt className="typo-caption text-gray-500 dark:text-gray-400">후원자 수</dt>
@@ -74,19 +68,19 @@ export default function CreatorShippingPage({ view, projectTitle, projectId }: P
               ))}
             </ul>
           )}
-        </section>
+        </Panel>
 
         <section className="mt-8">
           {view.state === 'before_close' ? (
-            <p className="rounded-lg bg-gray-100 p-4 typo-body text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+            <Panel className="typo-body">
               배송지는 마감 뒤에 열립니다. 모금 중에는 후원자가 자유롭게 후원을 취소할 수 있어
               주소가 그때그때 바뀔 수 있기 때문입니다.
-            </p>
+            </Panel>
           ) : (
             <ShippingTable projectId={projectId} rows={view.rows} />
           )}
         </section>
-      </main>
+      </PageShell>
     </>
   );
 }

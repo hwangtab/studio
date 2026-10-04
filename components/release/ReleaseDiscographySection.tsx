@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowRight, Disc } from '@/lib/lucide-icons';
+import BaseCard, { CARD_PADDING } from '../ui/BaseCard';
 import SectionHeading from '../ui/SectionHeading';
 import { Section } from '../ui/Section';
 import type { Locale } from '../../lib/i18n';
@@ -42,7 +43,7 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
   const getLink = (path: string) => `/${locale}${path}`;
 
   const handleCardClick = (
-    event: React.MouseEvent<HTMLAnchorElement>,
+    event: React.MouseEvent<HTMLElement>,
     itemId: string
   ) => {
     if (!onSelectItem) return;
@@ -62,12 +63,14 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
       />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
         {visibleItems.map((item) => (
-          <Link
+          // 리프트·press·포커스 링은 BaseCard가 소유한다(§4) — CSS translate 복제를 걷고 BaseCard로 바꿨다.
+          // 모달로 여는 경우의 aria-haspopup은 BaseCard가 받지 않아 함께 걷었다 — 링크 자체는 상세 페이지로
+          // 가는 실제 href라 보조기술에는 링크로 읽히는 것이 맞다(모달은 진행 향상이다).
+          <BaseCard
             key={item.id}
             href={getLink(`/portfolio/${item.id}`)}
             onClick={(event) => handleCardClick(event, item.id)}
-            className="group block glass-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-transform duration-300 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
-            aria-haspopup={onSelectItem ? 'dialog' : undefined}
+            className="group block text-left"
           >
             {item.image && (
               <div className="aspect-square overflow-hidden relative">
@@ -76,18 +79,18 @@ const ReleaseDiscographySection: React.FC<ReleaseDiscographySectionProps> = ({
                   alt={item.title}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-cover"
                 />
               </div>
             )}
-            <div className="p-5">
+            <div className={CARD_PADDING.compact}>
               <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{item.artist}</p>
               <h3 className="text-sm font-bold text-gray-900 dark:text-white group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
                 {item.title}
               </h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{item.description}</p>
             </div>
-          </Link>
+          </BaseCard>
         ))}
       </div>
       <div className="text-center mt-10">

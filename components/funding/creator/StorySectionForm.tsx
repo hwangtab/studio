@@ -1,6 +1,8 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 
 import { Button } from '../../ui/Button';
+import { TextArea } from '../../ui/Field';
+import { Notice } from '../../ui/Notice';
 import { CREATOR_LIMITS } from '../../../lib/funding/creatorValidation';
 import { saveStorySection } from './api';
 import { IDLE_SAVE_STATE, type SaveState } from './types';
@@ -125,7 +127,9 @@ export function StorySectionForm({ projectId, initial, readOnly, onSaved, onDirt
           </a>
         </div>
       </div>
-      <textarea
+      {/* 레이블 줄에 이미지 삽입·미리보기 행동이 함께 있어 Field 대신 레이블을 직접 두고
+          컨트롤만 공용 TextArea를 쓴다(반경·포커스·다크는 fieldControlClass 한 벌). */}
+      <TextArea
         ref={textareaRef}
         id={textareaId}
         value={content}
@@ -133,11 +137,9 @@ export function StorySectionForm({ projectId, initial, readOnly, onSaved, onDirt
         disabled={readOnly}
         maxLength={CREATOR_LIMITS.contentMax}
         rows={20}
-        className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 font-mono typo-body text-gray-900 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+        className="font-mono"
       />
-      {uploadError && (
-        <p role="alert" className="typo-caption text-red-600 dark:text-red-400">{uploadError}</p>
-      )}
+      {uploadError && <Notice tone="error">{uploadError}</Notice>}
       <div className="flex items-center gap-3">
         <Button type="submit" disabled={readOnly || save.status === 'saving'}>
           {save.status === 'saving' ? '저장 중…' : '스토리 저장'}

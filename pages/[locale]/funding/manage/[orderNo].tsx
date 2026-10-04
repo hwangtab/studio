@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { withI18nServerProps } from '../../../../lib/getStatic';
 import Head from 'next/head';
 import { Button } from '../../../../components/ui/Button';
+import { Badge } from '../../../../components/ui/Badge';
+import { Notice } from '../../../../components/ui/Notice';
+import { PageHeader, PageShell } from '../../../../components/ui/PageHeader';
+import { Panel } from '../../../../components/ui/Panel';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
@@ -118,33 +122,28 @@ export default function FundingManagePage(p: Props) {
   return (
     <>
       <Head><title>펀딩 확인 | 스튜디오 놀</title><meta name="robots" content="noindex, nofollow" /></Head>
-      <main className="mx-auto max-w-xl px-4 pb-24 pt-16 sm:pt-20">
+      <PageShell>
         {/* 사이트 헤더를 두르지 않는 화면이라(components/Layout.tsx의 isPrivatePaymentPage)
             여기가 브랜드를 밝히는 유일한 자리다 — 메일 링크로 들어온 사람이 어디서 온
-            화면인지 알 수 있어야 한다. */}
+            화면인지 알 수 있어야 한다(tests/pages/privateLinkNavigation.test.ts가 이 전용 줄을 요구한다).
+            뒤로 링크(backHref)는 두지 않는다 — next/link라 이 화면의 이탈 규칙(아래 privatePaths
+            주석)에 어긋난다. */}
         <p className="typo-card-meta">스튜디오 놀</p>
-        <h1 className="typo-section-title mt-1">펀딩 확인</h1>
-        <p className="typo-section-lead mt-3">펀딩 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있습니다.</p>
+        <PageHeader title="펀딩 확인" lead="펀딩 내역과 진행 상태를 확인하고, 조건이 되면 여기서 취소할 수 있습니다." />
 
-        <div className="glass-card mt-8 rounded-2xl p-6 sm:p-8">
+        <div className="glass-card rounded-2xl p-6 sm:p-8">
           <div className="flex flex-wrap items-center gap-3">
-            <span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-              status === 'paid'
-                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-violet-300'
-                : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
-            }`}>
+            <Badge tone={deposit ? 'warning' : status === 'paid' ? 'brand' : 'neutral'} size="md">
               {deposit ? '입금 대기' : (FUNDING_ORDER_STATUS_LABELS[status] ?? status)}
-            </span>
-            {refundRequested && status === 'paid' && (
-              <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">환불 요청 접수</span>
-            )}
+            </Badge>
+            {refundRequested && status === 'paid' && <Badge tone="warning" size="md">환불 요청 접수</Badge>}
           </div>
 
           {deposit && <BankDepositGuide amount={deposit.amount} deadline={deposit.deadline} customerName={deposit.customerName} applicantLabel="신청하신 분" />}
           {!deposit && p.onlineBankTransfer && status === 'expired' && (
-            <p className="mt-5 rounded-xl border border-gray-200 p-4 text-base text-gray-700 dark:border-gray-700 dark:text-gray-300">
+            <Panel variant="outline" className="mt-5 text-base">
               이 계좌 입금 신청은 취소되었습니다. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인한 뒤 펀딩을 확정해 드립니다.
-            </p>
+            </Panel>
           )}
 
           {/* 이 URL에는 관리 토큰이 실린다. 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
@@ -192,9 +191,9 @@ export default function FundingManagePage(p: Props) {
               받는 사람이 있어 이 화면에도 둔다 — 관리 토큰으로만 열리는 자리다.
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
           {refundRequested && isLive && (
-            <p className="mt-6 rounded-xl border border-gray-200 p-4 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+            <Panel variant="outline" className="mt-6 text-sm">
               취소(환불)를 요청한 펀딩이라 음원 내려받기를 닫았습니다. 요청을 거두려면 010-4255-7893으로 연락 주세요.
-            </p>
+            </Panel>
           )}
           {p.downloads.length > 0 && isLive && !refundRequested && (
             <div className="mt-6 space-y-2">
@@ -205,12 +204,9 @@ export default function FundingManagePage(p: Props) {
                   <input type="hidden" name="orderNo" value={p.orderNo} />
                   <input type="hidden" name="token" value={p.token} />
                   <input type="hidden" name="file" value={d.key} />
-                  <button
-                    type="submit"
-                    className="inline-flex min-h-[48px] w-full items-center justify-center rounded-xl bg-primary px-6 font-semibold text-white shadow-md transition-colors hover:bg-primary-dark"
-                  >
+                  <Button type="submit" fullWidth>
                     {d.label} 내려받기
-                  </button>
+                  </Button>
                 </form>
               ))}
               <p className="typo-card-meta">내려받기를 시작하면 청약철회가 제한됩니다(약관 제8조 2항).</p>
@@ -222,9 +218,9 @@ export default function FundingManagePage(p: Props) {
               취소가 불가합니다"를 보여주고 내려받기 링크까지 없앴다. 사실이 아닌 안내
               대신 다시 열어 달라고 말한다. */}
           {p.lookupFailed ? (
-            <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
-              지금은 후원 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr
-            </p>
+            <Panel variant="outline" className="mt-6">
+              <p className="typo-card-meta">지금은 후원 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr</p>
+            </Panel>
           ) : deposit ? (
             <Button className="mt-8" variant="outline" fullWidth onClick={withdraw} disabled={busy}>입금 전 신청 취소</Button>
           ) : status === 'paid' && !refundRequested && (p.canCancel
@@ -232,7 +228,7 @@ export default function FundingManagePage(p: Props) {
               <div className="mt-6">
                 {/* 계좌 입금 후원은 토스에 돌려줄 결제가 없다 — 환불받을 계좌를 먼저 받는다. */}
                 {p.refundVia === 'bank_account' && accountFormOpen && (
-                  <fieldset className="mb-4 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+                  <Panel variant="outline" className="mb-4">
                     <p className="text-base font-semibold text-gray-900 dark:text-white">환불받을 계좌</p>
                     <p className="typo-card-meta mt-1">계좌로 입금하신 펀딩이라 적어 주신 계좌로 직접 보내 드립니다. 계좌번호는 암호화해 보관합니다.</p>
                     <div className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -251,7 +247,7 @@ export default function FundingManagePage(p: Props) {
                         </Field>
                       </div>
                     </div>
-                  </fieldset>
+                  </Panel>
                 )}
                 <Button variant="outline" fullWidth onClick={cancel}
                   disabled={busy || (p.refundVia === 'bank_account' && accountFormOpen
@@ -262,13 +258,13 @@ export default function FundingManagePage(p: Props) {
                 </Button>
               </div>
             )
-            : <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>)}
-          {confirmMessage && (
-            <p role="status" className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-900/60 dark:bg-green-950/40 dark:text-green-300">{confirmMessage}</p>
-          )}
-          {error && (
-            <p role="alert" className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">{error}</p>
-          )}
+            : (
+              <Panel variant="outline" className="mt-6">
+                <p className="typo-card-meta">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>
+              </Panel>
+            ))}
+          {confirmMessage && <Notice tone="success" className="mt-4">{confirmMessage}</Notice>}
+          {error && <Notice tone="error" className="mt-4">{error}</Notice>}
         </div>
 
         {/* 전자상거래법 제13조 2항 — 계약 성립 뒤 후원자가 도달하는 문서에는 청약철회·환불 조건에
@@ -281,7 +277,7 @@ export default function FundingManagePage(p: Props) {
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- next/link 클라 전환으로 나갔다 뒤로가기를 누르면 gtag가 토큰 붙은 이 URL로 page_view를 보낸다(위 주석). 문서 이동으로 유지한다. */}
           <a href="/ko/privacy-policy" rel="noreferrer" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">개인정보 처리방침</a>
         </p>
-      </main>
+      </PageShell>
     </>
   );
 }

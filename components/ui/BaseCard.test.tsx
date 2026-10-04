@@ -54,4 +54,31 @@ describe('BaseCard', () => {
     expect(container.querySelector('a')).toBeNull();
     expect(container.querySelector('button')).toBeNull();
   });
+
+  // padding은 세 단(§3)이고 기본은 none — 소비처 className의 p-*를 조용히 덮지 않는다.
+  it.each([
+    ['none', undefined, null],
+    ['compact', 'compact', 'p-4'],
+    ['default', 'default', 'p-6'],
+    ['roomy', 'roomy', 'p-6 sm:p-8'],
+  ] as const)('padding=%s 는 정해진 클래스만 더한다', (_label, padding, expected) => {
+    const { container } = render(<BaseCard padding={padding}>내용</BaseCard>);
+    const cls = (container.firstElementChild as HTMLElement).className;
+    if (expected === null) {
+      expect(cls).not.toMatch(/(^|\s)p-\d/);
+    } else {
+      for (const token of expected.split(' ')) expect(cls.split(/\s+/)).toContain(token);
+    }
+  });
+
+  it('호출부 className의 패딩 조정이 padding prop을 이긴다(twMerge)', () => {
+    const { container } = render(
+      <BaseCard padding="default" className="pt-8">
+        내용
+      </BaseCard>
+    );
+    const cls = (container.firstElementChild as HTMLElement).className.split(/\s+/);
+    expect(cls).toContain('p-6');
+    expect(cls).toContain('pt-8');
+  });
 });

@@ -4,11 +4,12 @@ import dynamic from 'next/dynamic';
 import { AnimatePresence } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import {
-  ArrowLeft, ArrowRight, CheckCircle, Users, DollarSign,
+  ArrowLeft, ArrowRight, Check, CheckCircle, Users, DollarSign,
   Target, Calendar, ListChecks, X,
   ArrowRightLeft,
 } from '@/lib/lucide-icons';
 import SEO from '../SEO';
+import BaseCard from '../ui/BaseCard';
 import SectionHeading from '../ui/SectionHeading';
 import ImageHero from '../common/ImageHero';
 import FAQSection from '../ui/FAQSection';
@@ -246,7 +247,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
             <ul className="space-y-2.5">
               {Array.isArray(deliverablesIncluded) && deliverablesIncluded.map((item, i) => (
                 <li key={i} className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-                  <span className="text-primary dark:text-primary-lighter mt-0.5 flex-shrink-0 text-base leading-none">✓</span>
+                  <Check size={16} className="text-primary dark:text-primary-lighter mt-0.5 flex-shrink-0" aria-hidden="true" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -357,10 +358,12 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
         />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl mx-auto">
           {otherTiers.map((otherTier) => (
-            <Link
+            // 리프트는 BaseCard가 소유한다(§4) — CSS translate + transition-all 복제를 걷었다.
+            <BaseCard
               key={otherTier}
               href={getLink(`/release-project/${otherTier}`)}
-              className="group glass-card rounded-2xl p-6 hover:-translate-y-0.5 transition-all duration-200"
+              padding="default"
+              className="group"
             >
               <p className="text-xs text-primary dark:text-primary-lighter font-medium mb-1">{t(`releaseProject.tiers.${otherTier}.duration`)}</p>
               <h3 className="typo-card-subtitle text-gray-900 dark:text-white mb-2 group-hover:text-primary dark:group-hover:text-primary-lighter transition-colors">
@@ -370,7 +373,7 @@ export const TierPage: React.FC<TierPageProps> = ({ locale, tier, portfolioItems
               <span className="inline-flex items-center gap-1 text-sm text-primary dark:text-primary-lighter font-medium">
                 {t('releaseProject.tiers.detailCta')} <ArrowRight size={14} />
               </span>
-            </Link>
+            </BaseCard>
           ))}
         </div>
       </Section>

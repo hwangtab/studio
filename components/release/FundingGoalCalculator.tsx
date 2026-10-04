@@ -3,6 +3,10 @@ import { MessageCircle } from '@/lib/lucide-icons';
 import { Section } from '../ui/Section';
 import SectionHeading from '../ui/SectionHeading';
 import { Button } from '../ui/Button';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
+import { Checkbox } from '../ui/Checkbox';
+import { Field, TextInput } from '../ui/Field';
+import { Panel } from '../ui/Panel';
 import { formatPriceAmount, FUNDING_DESIGN_PRICE } from '../../data/pricing';
 import { PIPELINE_BUNDLE_PRICES, releasePipelineCopy, type ReleaseTierKey } from '../../data/releasePipeline';
 import { computeFundingGoal } from '../../lib/funding/goal';
@@ -28,7 +32,7 @@ interface FundingGoalCalculatorProps {
   variant?: 'default' | 'alternate';
 }
 
-/** 알약형 라디오 한 벌 — 제작 규모와 개설 방식이 같은 모양이다. */
+/** 알약형 라디오 한 벌 — 제작 규모와 개설 방식이 같은 모양이다. 모양은 ChoiceGroup/ChoiceCard(variant="pill")가 소유한다. */
 function PillRadios<K extends string>({ name, legend, options, value, label, onChange }: {
   name: string;
   legend: string;
@@ -38,31 +42,19 @@ function PillRadios<K extends string>({ name, legend, options, value, label, onC
   onChange: (key: K) => void;
 }) {
   return (
-    <fieldset>
-      <legend className="text-sm font-semibold text-gray-900 dark:text-white mb-3">{legend}</legend>
-      <div className="flex flex-wrap gap-2">
-        {options.map((key) => (
-          <label
-            key={key}
-            className={`cursor-pointer rounded-full border px-4 py-2 text-sm font-medium focus-within:ring-2 focus-within:ring-primary/70 dark:focus-within:ring-primary-lighter/70 ${
-              value === key
-                ? 'border-primary bg-primary/10 text-primary dark:text-primary-lighter'
-                : 'border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
-            }`}
-          >
-            <input
-              type="radio"
-              name={name}
-              value={key}
-              checked={value === key}
-              onChange={() => onChange(key)}
-              className="sr-only"
-            />
-            {label(key)}
-          </label>
-        ))}
-      </div>
-    </fieldset>
+    <ChoiceGroup label={legend} variant="pill">
+      {options.map((key) => (
+        <ChoiceCard
+          key={key}
+          variant="pill"
+          name={name}
+          value={key}
+          checked={value === key}
+          onChange={() => onChange(key)}
+          title={label(key)}
+        />
+      ))}
+    </ChoiceGroup>
   );
 }
 
@@ -152,12 +144,8 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
             label={(key) => copy.designOptions[key]}
             onChange={(key) => { setDesignKey(key); markUsed(); }}
           />
-          <div>
-            <label htmlFor="funding-goal-other" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
-              {copy.otherCostLabel}
-            </label>
-            <input
-              id="funding-goal-other"
+          <Field id="funding-goal-other" label={copy.otherCostLabel} hint={copy.otherCostHelp}>
+            <TextInput
               inputMode="numeric"
               placeholder="0"
               value={otherCostInput ? formatPriceAmount(otherCost) : ''}
@@ -165,31 +153,22 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
                 setOtherCostInput(e.target.value);
                 markUsed();
               }}
-              aria-describedby="funding-goal-other-help"
-              className="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-3 text-right text-gray-900 dark:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
+              className="text-right"
             />
-            <p id="funding-goal-other-help" className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-              {copy.otherCostHelp}
-            </p>
-          </div>
-          <div>
-            <label className="flex items-center gap-3 text-sm text-gray-900 dark:text-white cursor-pointer">
-              <input
-                type="checkbox"
-                checked={withholding}
-                onChange={(e) => {
-                  setWithholding(e.target.checked);
-                  markUsed();
-                }}
-                className="h-4 w-4 accent-primary"
-              />
-              {copy.withholdingLabel}
-            </label>
-            <p className="mt-1 ml-7 text-xs text-gray-500 dark:text-gray-400">{copy.withholdingHelp}</p>
-          </div>
+          </Field>
+          <Checkbox
+            checked={withholding}
+            onChange={(e) => {
+              setWithholding(e.target.checked);
+              markUsed();
+            }}
+            emphasis
+            label={copy.withholdingLabel}
+            hint={copy.withholdingHelp}
+          />
         </div>
 
-        <div aria-live="polite">
+        <Panel variant="inset" padding="default" aria-live="polite">
           <p className="text-sm text-gray-500 dark:text-gray-400">{copy.resultLabel}</p>
           <p className="text-3xl font-bold text-gray-900 dark:text-white mb-5">{won(result.goal)}</p>
           <dl className="space-y-2 text-sm">
@@ -204,7 +183,7 @@ const FundingGoalCalculator = ({ kakaoUrl, defaultProduction = 'ep', component =
             ))}
           </dl>
           <p className="mt-5 text-xs text-gray-500 dark:text-gray-400">{copy.compare}</p>
-        </div>
+        </Panel>
 
         <div className="md:col-span-2 flex flex-col items-center gap-3">
           <Button asChild variant="kakao" shape="pill" size="lg">

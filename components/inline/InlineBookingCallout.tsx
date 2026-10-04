@@ -6,6 +6,7 @@ import { getSiteConfig } from '../../data/siteConfig';
 import type { Locale } from '../../lib/i18n';
 import { trackLeadEvent } from '../../utils/analytics';
 import { Button } from '../ui/Button';
+import { NOTICE_TONE_CLASS } from '../ui/Notice';
 
 interface InlineBookingCalloutProps {
   /** 사용자에게 보일 짧은 안내 문구. arg 미명시 시 default 카피 사용. */
@@ -41,7 +42,8 @@ const InlineBookingCallout = ({ message, locale }: InlineBookingCalloutProps) =>
     <aside
       data-inline-callout="booking"
       aria-label={categoryLabel}
-      className="my-8 rounded-xl border-2 border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/10 p-6"
+      // 테두리는 한 종(border)이고 색은 Notice의 warning tone 표에서 온다 — border-2·amber 손조립을 걷었다(§3).
+      className={`my-8 rounded-xl border p-6 ${NOTICE_TONE_CLASS.warning}`}
     >
       <div className="flex items-center gap-2 mb-3">
         <div

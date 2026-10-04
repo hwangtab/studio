@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
-import Link from 'next/link';
 
 import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
@@ -24,6 +23,13 @@ import { clearStoredDraft, readStringDraft, writeStringDraft } from '../../lib/f
 import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
 import PaymentMethodChoice from '../payments/PaymentMethodChoice';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
+import { Checkbox } from '../ui/Checkbox';
+import { Disclosure } from '../ui/Disclosure';
+import { Notice } from '../ui/Notice';
+import { Panel } from '../ui/Panel';
+import { PageHeader, PageShell } from '../ui/PageHeader';
+import { Stepper } from '../ui/Stepper';
 import { getMixCompareCopy } from '../../data/mixCompare';
 
 // 접어 둔 채로 시작하고, 여는 순간에야 코드와 음원 연결이 생긴다 — 주문 화면의 첫 로딩을 늘리지 않는다.
@@ -64,6 +70,15 @@ interface CreateMixingOrderResponse {
   /** 계좌 입금 신청이면 입금 안내가 있는 주문 확인 페이지 주소(관리 토큰 포함). */
   manageUrl?: string;
 }
+
+const MIXING_STEPS = ['상품·곡 수', '주문자 정보'];
+
+/** 상품 묶음 — 순서는 MIXING_PRODUCTS의 serviceType 순서와 같다(라디오 순서가 곧 화면 순서). */
+const PRODUCT_GROUPS: { serviceType: MixingProduct['serviceType']; label: string; hint?: string }[] = [
+  { serviceType: 'mixing', label: '믹싱', hint: '트랙 수로 고릅니다. 부가세 별도.' },
+  { serviceType: 'mastering', label: '마스터링', hint: '믹스가 끝난 스테레오 파일을 보내 주세요.' },
+  { serviceType: 'mixing-mastering', label: '믹싱+마스터링', hint: '두 상품의 합산가 그대로입니다.' },
+];
 
 /** '믹싱 · 10트랙 이하' + 3곡 → '믹싱 · 10트랙 이하 × 3곡' */
 const formatOrderName = (nameKo: string, songCount: number): string => `${nameKo} × ${songCount}곡`;
@@ -303,12 +318,10 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
   };
 
   return (
-    <main className="mx-auto max-w-2xl px-4 py-12 sm:py-16">
-      <Link href="/ko/mixing-mastering" className="text-sm text-primary dark:text-primary-lighter hover:underline">
-        ← 서비스 소개로 돌아가기
-      </Link>
-      <h1 className="mt-3 typo-page-title">믹싱·마스터링 온라인 주문</h1>
-      <p className="mt-1 mb-8 text-sm text-gray-500 dark:text-gray-400">STEP {step} / 2</p>
+    <PageShell>
+      <PageHeader backHref="/ko/mixing-mastering" backLabel="서비스 소개로 돌아가기" title="믹싱·마스터링 온라인 주문">
+        <Stepper steps={MIXING_STEPS} current={step} />
+      </PageHeader>
 
       {step === 1 && (
         <section aria-labelledby="mixing-step1-heading">
@@ -318,55 +331,51 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
           {/* 결제 직전에 결과물을 한 번 더 확인할 수 있게 — **접힌 한 줄**이다. 펼쳐 두었더니(2026-09-30 한때)
               상품 선택 화면이 무거워져 운영자가 접는 쪽으로 되돌렸다. 결제 흐름을 떠나는 링크는 없다. */}
-          <details
-            className="mb-6 rounded-md border border-gray-200 dark:border-gray-700"
+          <Disclosure
+            className="mb-6"
+            summary={MIX_COMPARE_COPY.excerptSummary}
+            summaryClassName="text-primary dark:text-primary-lighter"
+            bodyClassName="pt-1"
             onToggle={(e) => { if (e.currentTarget.open) setMixCompareOpened(true); }}
           >
-            <summary className="cursor-pointer select-none px-4 py-3 text-sm font-semibold text-primary dark:text-primary-lighter rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
-              {MIX_COMPARE_COPY.excerptSummary}
-            </summary>
-            <div className="px-4 pb-5 pt-2">
-              {mixCompareOpened && (
-                <MixComparePlayer
-                  locale="ko"
-                  copy={MIX_COMPARE_COPY}
-                  portfolioHref="/ko/portfolio"
-                  variant="excerpt"
-                  component="MixingOrderMixCompare"
-                  showPortfolioLink={false}
-                />
-              )}
-            </div>
-          </details>
+            {mixCompareOpened && (
+              <MixComparePlayer
+                locale="ko"
+                copy={MIX_COMPARE_COPY}
+                portfolioHref="/ko/portfolio"
+                variant="excerpt"
+                component="MixingOrderMixCompare"
+                showPortfolioLink={false}
+              />
+            )}
+          </Disclosure>
 
-          <fieldset className="mb-4">
-            <legend className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">상품 선택</legend>
-            <div className="space-y-2">
-              {MIXING_PRODUCTS.map((p) => (
-                <label
-                  key={p.id}
-                  className={`flex items-center gap-2 rounded-md border p-3 cursor-pointer transition-colors ${
-                    selectedProductId === p.id
-                      ? 'border-primary bg-primary/5'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-primary/50'
-                  }`}
-                >
-                  <input
-                    type="radio"
+          {/* 여덟 상품을 한 줄 텍스트로 늘어놓던 목록을 서비스별 세 묶음으로 나눈다 — 상품명·설명·가격의
+              위계가 생기고(ChoiceCard), 믹싱만 필요한 사람이 마스터링 줄을 건너뛸 수 있다(2026-10-04 운영자 지적). */}
+          <div className="mb-4 space-y-5" role="radiogroup" aria-label="상품 선택">
+            {PRODUCT_GROUPS.map((group) => (
+              <ChoiceGroup key={group.serviceType} label={group.label} hint={group.hint}>
+                {MIXING_PRODUCTS.filter((p) => p.serviceType === group.serviceType).map((p) => (
+                  <ChoiceCard
+                    key={p.id}
                     name="product"
                     value={p.id}
                     checked={selectedProductId === p.id}
                     onChange={() => handleProductChange(p.id)}
-                    className="h-4 w-4 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
+                    title={p.nameKo}
+                    description={
+                      p.combinedOf
+                        ? `${MASTERING_PACKAGE_MIN_SONGS}곡부터 곡당 ${formatPriceAmount(mixingUnitAmount(p, MASTERING_PACKAGE_MIN_SONGS))}원`
+                        : p.serviceType === 'mastering'
+                          ? `${p.minSongs}~${p.maxSongs}곡`
+                          : undefined
+                    }
+                    trailing={`곡당 ${formatPriceAmount(p.unitAmount)}원`}
                   />
-                  <span className="text-sm text-gray-800 dark:text-gray-100">
-                    {p.nameKo} — 곡당 {formatPriceAmount(p.unitAmount)}원
-                    {p.combinedOf ? ` (${MASTERING_PACKAGE_MIN_SONGS}곡부터 ${formatPriceAmount(mixingUnitAmount(p, MASTERING_PACKAGE_MIN_SONGS))}원)` : ''}
-                  </span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
+                ))}
+              </ChoiceGroup>
+            ))}
+          </div>
 
           <div className="mb-4">
             <Field id="songCount" label="곡 수">
@@ -386,17 +395,11 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
 
           {selectedProduct.tuningEligible && (
             <div className="mb-4">
-              <label className="flex items-start gap-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={vocalTuning}
-                  onChange={(e) => setVocalTuning(e.target.checked)}
-                  className="mt-0.5 h-5 w-5 flex-shrink-0 rounded border-gray-300 dark:border-gray-600 text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70"
-                />
-                <span className="text-sm text-gray-700 dark:text-gray-200">
-                  정교한 보컬 튜닝·박자 보정 (+{formatPriceAmount(VOCAL_TUNING_ADDON_PRICE)}원/곡)
-                </span>
-              </label>
+              <Checkbox
+                checked={vocalTuning}
+                onChange={(e) => setVocalTuning(e.target.checked)}
+                label={`정교한 보컬 튜닝·박자 보정 (+${formatPriceAmount(VOCAL_TUNING_ADDON_PRICE)}원/곡)`}
+              />
             </div>
           )}
 
@@ -468,14 +471,13 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               </Field>
             </div>
 
-            <div className="rounded-md border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
-              <p className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">환불 규정</p>
-              <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+            <Panel title="환불 규정">
+              <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
                 {MIXING_REFUND_POLICY_LINES.map((line) => (
                   <li key={line}>{line}</li>
                 ))}
               </ul>
-            </div>
+            </Panel>
 
             {/*
               동의는 **결제하기를 누르는 행위 자체**로 받는다. 체크박스를 두지 않는다 —
@@ -512,17 +514,16 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                     bankBlockedMessage={null}
                     confirmLabel="주문이 접수"
                   />
-                  {paymentError && <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">{paymentError}</p>}
+                  {paymentError && <Notice tone="error" className="mt-3">{paymentError}</Notice>}
                 </>
               ) : (
                 <>
                 <PaymentMethodChoice name="mixing-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="주문이 접수" />
                 <div hidden={usingBank} className="mt-3">
                   {paymentError ? (
-                    <div className="mt-2">
-                      <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                      <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-                    </div>
+                    <Notice tone="error" actions={<Button type="button" size="sm" variant="outline" onClick={retryPayment}>다시 시도</Button>}>
+                      {paymentError}
+                    </Notice>
                   ) : (
                     <>
                       <div id={methodsId} />
@@ -540,11 +541,7 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                 : '결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.'}
             </p>
 
-            {submitError && (
-              <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-                {submitError}
-              </p>
-            )}
+            {submitError && <Notice tone="error">{submitError}</Notice>}
 
             <div className="flex gap-3">
               <Button type="button" variant="outline" onClick={() => setStep(1)}>
@@ -559,6 +556,6 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
         </section>
       )}
 
-    </main>
+    </PageShell>
   );
 }

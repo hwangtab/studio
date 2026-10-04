@@ -1,5 +1,6 @@
 import React from 'react';
 import BaseCard from './BaseCard';
+import { Badge } from './Badge';
 
 interface FeatureCardProps {
   icon?: React.ElementType<{ className?: string }>;
@@ -36,15 +37,16 @@ const FeatureCard = ({
       href={href}
       delay={delay}
       variant={baseVariant}
-      className={`p-6 h-full flex flex-col ${variant === 'highlight' ? 'pt-8' : ''} ${className}`}
+      padding="default"
+      className={`h-full flex flex-col ${variant === 'highlight' ? 'pt-8' : ''} ${className}`}
     >
       {variant === 'highlight' && (
         <span className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary" aria-hidden />
       )}
       {badge && (
-        <span className="inline-block text-xs font-semibold text-primary dark:text-primary-lighter bg-primary/10 dark:bg-primary/20 px-3 py-1 rounded-full mb-3">
+        <Badge tone="brand" size="md" className="mb-3 self-start">
           {badge}
-        </span>
+        </Badge>
       )}
       {(Icon || title) && (
         <div className="flex items-start gap-4 mb-4 min-w-0">

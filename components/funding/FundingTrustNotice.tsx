@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import { getSiteConfig, studioOperator } from '../../data/siteConfig';
 import ResponsiveImage from '../ResponsiveImage';
+import { Panel } from '../ui/Panel';
 
 export default function FundingTrustNotice() {
   const cfg = getSiteConfig('ko');
   return (
-    <div className="rounded-2xl border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50">
+    <Panel padding="default" title="판매자 정보">
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-16 shrink-0 items-center justify-center rounded-lg bg-white p-1.5 ring-1 ring-black/10 dark:ring-white/15">
           <ResponsiveImage
@@ -31,6 +32,6 @@ export default function FundingTrustNotice() {
         {' · '}
         <Link href="/ko/privacy-policy" className="underline underline-offset-2 hover:text-primary dark:hover:text-primary-lighter">개인정보 처리방침</Link>
       </p>
-    </div>
+    </Panel>
   );
 }

@@ -10,6 +10,8 @@ import ImageHero from '../../components/common/ImageHero';
 import ContactFormCard from '../../components/contact/ContactFormCard';
 import ContactInfoCard from '../../components/contact/ContactInfoCard';
 import { Section } from '../../components/ui/Section';
+import { Button } from '../../components/ui/Button';
+import { Notice } from '../../components/ui/Notice';
 import { RECORDING_HOURLY_PRICE, VOCAL_PACKAGE_PRICE, formatPriceAmount } from '../../data/pricing';
 import { trackLeadEvent } from '../../utils/analytics';
 // FAQPage 스키마(faqItems)와 가시 콘텐츠를 동일 소스로 유지하기 위한 렌더 컴포넌트.
@@ -115,11 +117,44 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
       {locale === 'en' && (
         <Section variant="default" className="pt-8 pb-0">
           <div className="container mx-auto px-4 max-w-6xl">
-            <div className="rounded-2xl border border-primary/20 bg-primary/5 dark:bg-primary/10 p-6 md:p-8">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4">
+            <Notice
+              tone="brand"
+              icon={false}
+              className="p-6 md:p-8"
+              actions={
+                <>
+                  <Button asChild variant="kakao" shape="pill" size="sm">
+                    <a
+                      href={siteConfig.contact.kakaoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() =>
+                        trackLeadEvent('lead_click_kakao', {
+                          locale,
+                          component: 'ContactPage',
+                          cta_id: 'contact_en_quickfacts_kakao',
+                        })
+                      }
+                      className="px-6 touch-manipulation"
+                    >
+                      <MessageCircle className="w-4 h-4" aria-hidden="true" />
+                      Chat on KakaoTalk
+                    </a>
+                  </Button>
+                  <Link
+                    href={`/${locale}/recording`}
+                    prefetch={false}
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px]"
+                  >
+                    Recording studio &amp; rates <ArrowRight size={16} aria-hidden="true" />
+                  </Link>
+                </>
+              }
+            >
+              <h2 className="typo-card-title text-gray-900 dark:text-white mb-4">
                 Studio NOL — an English-friendly recording studio in Seoul
               </h2>
-              <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-2.5 mb-6">
+              <ul className="grid sm:grid-cols-2 gap-x-8 gap-y-2.5 text-base">
                 {[
                   'English booking & communication (KakaoTalk / email / phone)',
                   `Vocal recording from ₩${formatPriceAmount(RECORDING_HOURLY_PRICE)}/hour · single-song package ₩${formatPriceAmount(VOCAL_PACKAGE_PRICE)} (3 hrs)`,
@@ -132,32 +167,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   </li>
                 ))}
               </ul>
-              <div className="flex flex-wrap items-center gap-3">
-                <a
-                  href={siteConfig.contact.kakaoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() =>
-                    trackLeadEvent('lead_click_kakao', {
-                      locale,
-                      component: 'ContactPage',
-                      cta_id: 'contact_en_quickfacts_kakao',
-                    })
-                  }
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-kakao px-6 py-3 text-sm font-bold text-kakao-ink hover:bg-kakao-dark transition-colors min-h-[44px] touch-manipulation"
-                >
-                  <MessageCircle className="w-4 h-4" aria-hidden="true" />
-                  Chat on KakaoTalk
-                </a>
-                <Link
-                  href={`/${locale}/recording`}
-                  prefetch={false}
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary dark:text-primary-lighter hover:underline min-h-[44px]"
-                >
-                  Recording studio &amp; rates <ArrowRight size={16} aria-hidden="true" />
-                </Link>
-              </div>
-            </div>
+            </Notice>
           </div>
         </Section>
       )}
@@ -206,7 +216,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
             <div className="container mx-auto px-4 max-w-6xl">
               <div className="grid md:grid-cols-2 gap-10">
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-5">
+                  <h2 className="typo-card-title text-gray-900 dark:text-white mb-5">
                     {t('contact.whatToExpect.title')}
                   </h2>
                   <ul className="space-y-3">
@@ -219,7 +229,7 @@ const Contact: NextPageWithLayout<ContactProps> = ({ locale }) => {
                   </ul>
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-5">FAQ</h2>
+                  <h2 className="typo-card-title text-gray-900 dark:text-white mb-5">FAQ</h2>
                   <dl className="space-y-5">
                     {faqs.map((faq, i) => (
                       <div key={i}>

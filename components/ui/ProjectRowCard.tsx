@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink, Mic2, MousePointer2 } from '@/lib/lucide-icons';
 import ResponsiveImage from '../ResponsiveImage';
+import { Badge } from './Badge';
 import { PortfolioItem } from '../../types/data';
 
 interface ProjectRowCardProps extends PortfolioItem {
@@ -22,19 +23,8 @@ const ProjectRowCard = ({
 }: ProjectRowCardProps) => {
     const isInteractive = Boolean(onClick);
 
-    // 카테고리에 따른 뱃지 색상 (Light/Dark 대응).
-    // 10px 볼드 텍스트 + 연한 50 배경 조합이라 text-*-600은 WCAG AA 미달(3.3~4.4:1).
-    // text-*-700로 통일해 4.5:1 이상 확보.
-    const getCategoryColor = (cat: string) => {
-        switch (cat) {
-            case 'album': return 'bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-500/20 dark:text-pink-400 dark:border-pink-500/30';
-            case 'ep': return 'bg-fuchsia-50 text-fuchsia-700 border-fuchsia-200 dark:bg-fuchsia-500/20 dark:text-fuchsia-400 dark:border-fuchsia-500/30';
-            case 'single': return 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-500/30';
-            case 'compilation': return 'bg-violet-50 text-violet-700 border-violet-200 dark:bg-violet-500/20 dark:text-violet-400 dark:border-violet-500/30';
-            case 'commercial': return 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-500/20 dark:text-orange-400 dark:border-orange-500/30';
-            default: return 'bg-gray-50 text-gray-700 border-gray-200 dark:bg-gray-500/20 dark:text-gray-400 dark:border-gray-500/30';
-        }
-    };
+    // 카테고리 배지는 공용 Badge(중립)다 — 카테고리별 색(핑크·에메랄드…)은 다섯 분류를 외워야
+    // 뜻이 생기는 장식이었고 PortfolioMiniCard와도 색이 달랐다(2026-10-05 1단계 통일).
 
     // iOS Safari 잔존 깜빡임 fix: framer-motion m.button + staggered fade(delay: index * 0.05) 제거.
     // 다수 카드 동시 paint와 image 디코드가 겹쳐 row 깜빡 유발. plain button + CSS만 사용.
@@ -42,7 +32,7 @@ const ProjectRowCard = ({
 
     return (
         <button
-            className="group relative bg-white dark:bg-[#1A1A1A] hover:bg-gray-50 dark:hover:bg-[#222] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 hover:border-gray-300 dark:hover:border-white/10 transition-colors duration-200 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 text-left disabled:cursor-default disabled:opacity-80"
+            className="group relative bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-[background-color,border-color] duration-200 cursor-pointer flex flex-col sm:flex-row h-full sm:h-48 shadow-sm hover:shadow-md dark:shadow-none touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900 text-left disabled:cursor-default disabled:opacity-80"
             onClick={onClick}
             type="button"
             disabled={!isInteractive}
@@ -94,13 +84,13 @@ const ProjectRowCard = ({
 
                 <div className="relative z-10">
                     <div className="flex flex-wrap gap-2 mb-3 min-w-0">
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getCategoryColor(category)} uppercase tracking-wider max-w-full break-words`}>
+                        <Badge tone="neutral" className="uppercase tracking-wider max-w-full whitespace-normal break-words">
                             {category}
-                        </span>
+                        </Badge>
                         {services.slice(0, 3).map((service, i) => (
-                            <span key={i} className="text-[10px] text-gray-500 border border-gray-200 dark:text-white/60 dark:border-white/10 px-2 py-0.5 rounded-full max-w-full break-words">
+                            <Badge key={i} tone="outline" className="max-w-full whitespace-normal break-words">
                                 {service}
-                            </span>
+                            </Badge>
                         ))}
                     </div>
 

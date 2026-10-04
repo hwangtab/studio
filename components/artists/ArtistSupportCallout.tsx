@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import HeroKakaoCta from '../common/HeroKakaoCta';
 import { Button } from '../ui/Button';
 import { Field, TextInput } from '../ui/Field';
+import { ChoiceCard, ChoiceGroup } from '../ui/Choice';
+import { Checkbox } from '../ui/Checkbox';
+import { Notice } from '../ui/Notice';
 import type { SupportedArtist } from '../../data/artists';
 import { ARTIST_SUPPORT_SHARE_PERCENT, ARTIST_SUPPORT_TIERS, formatPriceAmount, type ArtistSupportTierId } from '../../data/pricing';
 import type { Locale } from '../../lib/i18n';
@@ -139,37 +142,23 @@ const ArtistSupportCallout = ({ artist, locale, kakaoUrl, supportOpen, labels }:
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-6">
-        <fieldset>
-          <legend className="text-sm font-semibold text-gray-800 dark:text-gray-100 mb-3">{labels.tierTitle}</legend>
-          <div className="grid gap-3 sm:grid-cols-3">
-            {ARTIST_SUPPORT_TIERS.map((tier) => {
-              const selected = tier.id === tierId;
-              return (
-                <label
-                  key={tier.id}
-                  className={`cursor-pointer rounded-xl border p-4 transition-colors ${
-                    selected
-                      ? 'border-primary bg-primary/5 dark:bg-primary/10 ring-2 ring-primary/40'
-                      : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
-                  }`}
-                >
-                  <input
-                    type="radio"
-                    name={`tier-${artist.slug}`}
-                    value={tier.id}
-                    checked={selected}
-                    onChange={() => setTierId(tier.id)}
-                    className="sr-only"
-                  />
-                  <span className="block text-xs text-gray-500 dark:text-gray-400">{tier.label}</span>
-                  <span className="mt-1 block text-lg font-bold text-gray-900 dark:text-white">
-                    {labels.perMonth.replace('{{amount}}', formatPriceAmount(tier.monthlyTotal))}
-                  </span>
-                </label>
-              );
-            })}
-          </div>
-        </fieldset>
+        <ChoiceGroup label={labels.tierTitle} columns={3}>
+          {ARTIST_SUPPORT_TIERS.map((tier) => (
+            <ChoiceCard
+              key={tier.id}
+              name={`tier-${artist.slug}`}
+              value={tier.id}
+              checked={tier.id === tierId}
+              onChange={() => setTierId(tier.id)}
+              title={tier.label}
+              description={
+                <span className="text-base font-bold text-gray-900 dark:text-white">
+                  {labels.perMonth.replace('{{amount}}', formatPriceAmount(tier.monthlyTotal))}
+                </span>
+              }
+            />
+          ))}
+        </ChoiceGroup>
 
         <div className="grid gap-4 sm:grid-cols-2">
           <Field id={`support-name-${artist.slug}`} label={labels.nameLabel} required>
@@ -186,21 +175,13 @@ const ArtistSupportCallout = ({ artist, locale, kakaoUrl, supportOpen, labels }:
           </Field>
         </div>
 
-        <label className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <input
-            type="checkbox"
-            checked={displayConsent}
-            onChange={(e) => setDisplayConsent(e.target.checked)}
-            className="mt-1 h-4 w-4 rounded border-gray-300 text-primary dark:text-primary-lighter focus:ring-primary"
-          />
-          <span>{labels.consentLabel}</span>
-        </label>
+        <Checkbox
+          checked={displayConsent}
+          onChange={(e) => setDisplayConsent(e.target.checked)}
+          label={labels.consentLabel}
+        />
 
-        {error && (
-          <p role="alert" className="text-sm text-red-600 dark:text-red-400">
-            {error}
-          </p>
-        )}
+        {error && <Notice tone="error">{error}</Notice>}
 
         <div>
           <Button type="submit" disabled={busy} fullWidth>

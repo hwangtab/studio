@@ -3,6 +3,8 @@ import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
 import { Section } from '../ui/Section';
 import FundingProgress from './FundingProgress';
 import { Button } from '../ui/Button';
+import { Badge } from '../ui/Badge';
+import { Notice } from '../ui/Notice';
 import RewardCard from './RewardCard';
 import BackerWall from './BackerWall';
 import SupporterTicker from './SupporterTicker';
@@ -120,16 +122,12 @@ export default function ProjectDetailView({
               현황을 아직 모르면(미리보기·집계 전) 예전처럼 목표를 적는다.
             */}
             <span className="mb-6 flex flex-wrap justify-center gap-2">
-              {STATE_LABEL[state] && (
-                <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
-                  {STATE_LABEL[state]}
-                </span>
-              )}
-              <span className="inline-block rounded-full border border-white/40 bg-black/30 px-4 py-1.5 text-sm">
+              {STATE_LABEL[state] && <Badge tone="onImage" size="md">{STATE_LABEL[state]}</Badge>}
+              <Badge tone="onImage" size="md">
                 {interactive && status
                   ? <><span className="font-semibold tabular-nums">{formatPriceAmount(status.pledgedAmount)}원</span> 모금 · {percent}%</>
                   : <>목표 {formatPriceAmount(project.goalAmount)}원</>}
-              </span>
+              </Badge>
             </span>
             {project.summary}
           </>
@@ -164,9 +162,7 @@ export default function ProjectDetailView({
         <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12">
           <div className="min-w-0">
             {statusError && (
-              <p role="alert" className="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
-                현황을 불러오지 못했습니다. 새로고침해 주세요.
-              </p>
+              <Notice tone="error" className="mb-6">현황을 불러오지 못했습니다. 새로고침해 주세요.</Notice>
             )}
             {/*
               모금 현황은 히어로 바로 아래, 본문 컬럼 맨 위에 둔다(saf-2026과 같은 배치,
