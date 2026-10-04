@@ -302,7 +302,8 @@ describe('리워드 선택', () => {
 describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
   it('잠겨 있으면 라디오 목록 대신 고른 리워드 요약과 "다른 리워드 보기"가 보인다', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
-    expect(screen.queryByRole('radio')).toBeNull();
+    // 결제수단(토스/계좌 입금) 라디오는 따로 있으므로 리워드 라디오만 센다.
+    expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(0);
     expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
     expect(screen.getByText('CD')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '다른 리워드 보기 (1)' })).toBeInTheDocument();
@@ -321,7 +322,8 @@ describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
     await userEvent.click(screen.getByRole('button', { name: '다른 리워드 보기 (1)' }));
     await userEvent.click(screen.getByRole('button', { name: '접기' }));
-    expect(screen.queryByRole('radio')).toBeNull();
+    // 결제수단(토스/계좌 입금) 라디오는 따로 있으므로 리워드 라디오만 센다.
+    expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(0);
     expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
   });
 
@@ -350,7 +352,7 @@ rewards:
   it('잠겨 있지 않으면 토글이 없고 항상 전체 목록이 보인다', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
     expect(screen.queryByRole('button', { name: /다른 리워드 보기/ })).toBeNull();
-    expect(screen.getAllByRole('radio').length).toBe(2);
+    expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(2);
   });
 });
 
