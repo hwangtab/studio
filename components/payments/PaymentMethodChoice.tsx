@@ -38,7 +38,7 @@ export default function PaymentMethodChoice({ name, value, onChange, bankBlocked
         <span className="min-w-0">
           <span className="block font-bold text-gray-900 dark:text-white">계좌로 직접 입금</span>
           <span className="typo-card-meta block">
-            {bankBlockedMessage ?? `은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 ${confirmLabel}하고 메일로 알려 드립니다.`}
+            {bankBlockedMessage ?? `은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 ${confirmLabel}되고 메일로 알려 드립니다.`}
           </span>
         </span>
       </label>
