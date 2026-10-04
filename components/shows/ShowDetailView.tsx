@@ -1,4 +1,4 @@
-import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
+import ImageHero from '../common/ImageHero';
 import MobileStickyCta from '../common/MobileStickyCta';
 import { Button } from '../ui/Button';
 import FAQSection from '../ui/FAQSection';
@@ -45,7 +45,6 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
       <ImageHero
         locale="ko"
         priority
-        overlayGradient={HERO_SCRIM_STRONG}
         backgroundImage={show.coverImage ?? SHOW_HERO_IMAGE}
         className={SHOW_HERO_BLUR_CLASS}
         imageAlt=""

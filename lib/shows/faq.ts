@@ -9,7 +9,7 @@ export interface ShowFaqItem {
 /**
  * 공연 상세 공통 FAQ — 화면(FAQSection)과 FAQPage 스키마(SEO faqItems)가 같은 배열을 읽는다.
  * 답은 코드가 실제로 하는 일에서 온다: 환불표는 lib/shows/refundPolicy.ts, 판매 마감은 lib/shows/time.ts
- * (회차 전날 24:00 KST), 티켓 전달은 lib/shows/email.ts. 공연마다 다른 것(현장 판매가·식사)은 여기 적지
+ * (회차 전날 24:00 KST), 티켓 전달은 lib/shows/email.ts. 공연마다 다른 것(현장 판매가·입장 시각)은 여기 적지
  * 않고 공연 정의의 전용 칸이 말한다.
  */
 export const showFaqItems = (): ShowFaqItem[] => [

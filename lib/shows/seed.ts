@@ -48,7 +48,7 @@ export interface ShowDefinition {
   coverImage: string | null;
   /** 1200x630 공유 카드. 없으면 coverImage. */
   ogImage?: string | null;
-  /** 일시 아래 한 줄. 예) "18:00 식사 · 18:30 공연 시작" */
+  /** 일시 아래 한 줄. 예) "18:00 입장 시작 · 18:30 공연 시작" */
   scheduleNote?: string | null;
   /** 현장 판매 안내 한 줄. 온라인 결제와 무관한 안내문구. */
   onSitePriceNote?: string | null;
