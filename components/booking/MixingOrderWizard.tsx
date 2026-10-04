@@ -6,7 +6,7 @@ import { reportPaymentFailure } from '../../utils/reportPaymentFailure';
 
 import PriceBreakdown from './PriceBreakdown';
 import { TOSS_TERMS_REQUIRED_MESSAGE } from './useTossPaymentWidgets';
-import PaymentMethodPicker from '../payments/PaymentMethodPicker';
+import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { formatPriceAmount, VOCAL_TUNING_ADDON_PRICE } from '../../data/pricing';
@@ -496,7 +496,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
                 기능 플래그(`?pay=v2`)가 켜지면 위젯 대신 우리가 그린 결제수단 목록(PaymentMethodPicker)이다. */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              {picker ? (
+              {picker === null ? (
+                <PaymentMethodSkeleton />
+              ) : picker ? (
                 <>
                   <PaymentMethodPicker
                     name="mixing-paymethod"

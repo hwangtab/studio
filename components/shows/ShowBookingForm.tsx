@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { Field, TextInput, Select } from '../ui/Field';
-import PaymentMethodPicker from '../payments/PaymentMethodPicker';
+import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 import { formatWon, SALE_STATE_LABELS } from '../../lib/shows/copy';
@@ -352,7 +352,9 @@ export default function ShowBookingForm({ show }: Props) {
 
           <div>
             <h3 className="mb-2 typo-card-title">결제 수단</h3>
-            {widget.picker ? (
+            {widget.picker === null ? (
+              <PaymentMethodSkeleton />
+            ) : widget.picker ? (
               <>
                 <PaymentMethodPicker
                   name="show-paymethod"

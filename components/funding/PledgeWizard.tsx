@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { reportPaymentFailure, reportPaymentWindowOpen } from '../../utils/reportPaymentFailure';
 
 import { TOSS_TERMS_REQUIRED_MESSAGE } from '../booking/useTossPaymentWidgets';
-import PaymentMethodPicker from '../payments/PaymentMethodPicker';
+import PaymentMethodPicker, { PaymentMethodSkeleton } from '../payments/PaymentMethodPicker';
 import { usePaymentCheckout } from '../payments/usePaymentCheckout';
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
@@ -814,7 +814,9 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           id={`${uid}-step-pay`} n={3} title="결제수단"
           hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드립니다.' : '고르신 수단으로 바로 결제창이 열립니다.'}
         />
-        {picker ? (
+        {picker === null ? (
+          <PaymentMethodSkeleton />
+        ) : picker ? (
           <>
             <PaymentMethodPicker
               name={`${uid}-paymethod`}

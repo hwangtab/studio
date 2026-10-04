@@ -272,3 +272,51 @@ rewards:
     delete process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
   });
 });
+
+describe('ShowBookingForm — 플래그가 꺼져 있으면 실제 훅 경로로 위젯이 붙는다', () => {
+  it('목록을 그리지 않고 위젯 키로 widgets()를 붙인다', async () => {
+    window.history.replaceState({}, '', '/ko/shows/s');
+    const widgets = {
+      setAmount: jest.fn().mockResolvedValue(undefined),
+      renderPaymentMethods: jest.fn().mockResolvedValue(undefined),
+      renderAgreement: jest.fn().mockResolvedValue({ on: jest.fn() }),
+      requestPayment: jest.fn(),
+    };
+    sdkWidgets.mockReturnValue(widgets);
+    process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY = 'live_gck_test';
+    const show: PublicShow = {
+      slug: 's', title: '공연', subtitle: null, presenterName: '주최', performers: [{ name: '출연' }], ageRating: '전체', runningMinutes: 100,
+      venueName: '장소', venueAddress: '주소', description: '소개', coverImage: null, ogImage: null, scheduleNote: null, onSitePriceNote: null,
+      notices: [], mapLinks: {}, cancelled: false,
+      ticketTypes: [{ id: 'tt1', name: '사전 예매', price: 25000, zoneLabel: '비지정석' }],
+      showtimes: [{ id: 'st1', startsAt: 2000000000, label: '10.24(토) 18:30', saleState: 'open', remaining: { tt1: 30 } }],
+    };
+    try {
+      render(<ShowBookingForm show={show} />);
+      // 폼에 포커스가 들어오면 위젯을 켠다(IntersectionObserver가 없는 jsdom에서는 바로 켠다).
+      fireEvent.focusIn(screen.getByLabelText(/이름/));
+      await waitFor(() => expect(widgets.renderPaymentMethods).toHaveBeenCalled());
+      expect(loadTossPayments).toHaveBeenCalledWith('live_gck_test');
+      expect(sdkWidgets).toHaveBeenCalledWith({ customerKey: '@@ANONYMOUS' });
+      expect(screen.queryByRole('group', { name: '결제수단' })).toBeNull();
+      expect(screen.getByRole('radio', { name: /카드·간편결제/ })).toBeInTheDocument();
+    } finally {
+      delete process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY;
+    }
+  });
+});
+
+describe('판정 시점', () => {
+  it('클라이언트에서 처음 그려지면 첫 렌더부터 판정돼 빈 자리를 거치지 않는다', () => {
+    window.history.replaceState({}, '', '/ko/shows/s');
+    const show: PublicShow = {
+      slug: 's', title: '공연', subtitle: null, presenterName: '주최', performers: [{ name: '출연' }], ageRating: '전체', runningMinutes: 100,
+      venueName: '장소', venueAddress: '주소', description: '소개', coverImage: null, ogImage: null, scheduleNote: null, onSitePriceNote: null,
+      notices: [], mapLinks: {}, cancelled: false,
+      ticketTypes: [{ id: 'tt1', name: '사전 예매', price: 25000, zoneLabel: '비지정석' }],
+      showtimes: [{ id: 'st1', startsAt: 2000000000, label: '10.24(토) 18:30', saleState: 'open', remaining: { tt1: 30 } }],
+    };
+    render(<ShowBookingForm show={show} />);
+    expect(screen.queryByTestId('payment-method-skeleton')).toBeNull();
+  });
+});

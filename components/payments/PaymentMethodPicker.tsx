@@ -126,3 +126,17 @@ const hintFor = (choice: PaymentChoice | undefined, confirmLabel: string): strin
   }
   return `${choice.label} 결제창으로 바로 이동합니다. 결제가 끝나면 바로 ${confirmLabel}됩니다.`;
 };
+
+/**
+ * 판정 전(서버 렌더·하이드레이션 첫 패스) 결제수단 구획의 빈 자리. 목록·위젯 어느 쪽이 와도 크게 튀지 않게
+ * 목록 높이(줄 6개 × 56px + 안내 줄)만큼 잡아 둔다. 내용이 없으니 스크린리더에는 숨긴다.
+ */
+export function PaymentMethodSkeleton() {
+  return (
+    <div
+      aria-hidden="true"
+      data-testid="payment-method-skeleton"
+      className="min-h-[24rem] rounded-2xl border border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/40"
+    />
+  );
+}

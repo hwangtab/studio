@@ -20,26 +20,26 @@ import { PAYMENT_PICKER_COOKIE, resolvePaymentPicker } from '../../lib/payments/
  * - 목록 모드(`picker === true`): 위젯을 붙이지 않는다. `requestPayment`는 고른 수단(`choice`)의
  *   결제창을 **API 개별 연동 키**(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY`)로 연다. 위젯 약관 UI가 없으므로
  *   (결제창이 자체 약관을 받는다) `agreedRequiredTerms`는 늘 true — 폼의 위젯 약관 게이트를 타지 않는다.
- * - 판정 전(`picker === null`, 첫 렌더): 아무것도 붙이지 않는다. 쿼리·쿠키는 브라우저에서만 읽혀
- *   서버 렌더와 어긋나지 않게 마운트 뒤에 정한다.
+ * - 판정 전(`picker === null`): 서버 렌더와 하이드레이션 첫 패스뿐이다(쿼리·쿠키는 브라우저에서만 읽힌다).
+ *   폼은 이때 결제수단 구획을 같은 높이의 빈 자리(`PaymentMethodSkeleton`)로 둔다 — 옛 선택지가 한 프레임
+ *   보였다가 바뀌는 깜빡임과 레이아웃 튐을 막는다.
  */
+const noopSubscribe = () => () => {};
+
 export const usePaymentCheckout = (amount: number, enabled = true) => {
-  const [picker, setPicker] = useState<boolean | null>(null);
+  // 판정은 렌더 중에 동기로 읽는다(useSyncExternalStore). 서버 렌더·하이드레이션 첫 패스만 null이고,
+  // 클라이언트에서 처음 그려지는 화면(모달·다음 단계)은 첫 렌더부터 값이 있다 — 위젯 마운트가 한 박자도
+  // 늦어지지 않는다. 쿠키 기억은 부수 효과라 effect에서 한다.
+  const picker = useSyncExternalStore(noopSubscribe, readPaymentPicker, () => null);
   useEffect(() => {
-    let decision = { on: false, remember: null as string | null };
     try {
-      decision = resolvePaymentPicker({
-        envValue: process.env.NEXT_PUBLIC_PAYMENT_PICKER,
-        search: window.location.search,
-        cookie: document.cookie,
-      });
-      if (decision.remember) {
-        document.cookie = `${PAYMENT_PICKER_COOKIE}=${decision.remember}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
+      const { remember } = resolvePickerFromBrowser();
+      if (remember) {
+        document.cookie = `${PAYMENT_PICKER_COOKIE}=${remember}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
       }
     } catch {
-      /* 판정 실패는 기본값(위젯)으로 — 결제를 막지 않는다. */
+      /* 기억하지 못해도 이번 화면은 판정대로 돈다. */
     }
-    setPicker(decision.on);
   }, []);
 
   const widget = useTossPaymentWidgets(amount, enabled && picker === false);
@@ -86,12 +86,25 @@ export const usePaymentCheckout = (amount: number, enabled = true) => {
   return { ...widget, picker, choice, setChoice, applePaySupported };
 };
 
+const resolvePickerFromBrowser = () => resolvePaymentPicker({
+  envValue: process.env.NEXT_PUBLIC_PAYMENT_PICKER,
+  search: window.location.search,
+  cookie: document.cookie,
+});
+/** 판정 실패는 기본값(위젯)으로 — 결제를 막지 않는다. */
+const readPaymentPicker = (): boolean => {
+  try {
+    return resolvePickerFromBrowser().on;
+  } catch {
+    return false;
+  }
+};
+
 /**
  * 애플페이를 쓸 수 있는 환경인가 — SAF2026 `lib/checkout/use-apple-pay-support.ts`를 옮겼다.
  * 토스 애플페이는 PC=Safari·모바일=iOS에서만 동작하고, 정확히 그 환경에만 `window.ApplePaySession`이 있다.
  * 서버 렌더·하이드레이션은 false라 애플페이 줄은 지원 환경에서만 나중에 붙는다(어긋남 없음).
  */
-const noopSubscribe = () => () => {};
 const applePaySnapshot = (): boolean => {
   try {
     const session = (window as unknown as { ApplePaySession?: { canMakePayments?: () => boolean } }).ApplePaySession;
