@@ -100,8 +100,29 @@ export const buildShowTicketEmailHtml = (d: TicketEmailHtmlInput): string => {
   return shell({ heading: '티켓이 발권되었습니다', lead: `${d.buyerName}님, 결제가 확인되었습니다.`, body, contact: d.contact });
 };
 
+/** 환불 방법 한 줄 — 카드·간편결제는 결제 수단 취소, 계좌 입금은 적어 주신 환불 계좌로 3영업일 이내 송금. */
+export const showRefundViaSentence = (refundVia: 'payment' | 'bank_account' | undefined): string =>
+  refundVia === 'bank_account'
+    ? '계좌로 입금하신 주문이라 적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.'
+    : '카드 결제는 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.';
+
+/**
+ * 회차 취소 안내의 환불 문장. `bankNotice` — 계좌 입금 주문은 토스로 돌려줄 수 없다: 입금이 확인된 주문은
+ * 내 티켓 페이지에서 환불 계좌를 적어 달라고(`refund_account_needed`), 입금 전 신청은 입금하지 말라고(`not_deposited`).
+ */
+export const showtimeCancelledRefundSentence = (d: {
+  totalAmount: number; refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited';
+}): string => {
+  if (d.bankNotice === 'not_deposited') return '입금 전인 신청은 함께 취소되었습니다. 입금하지 않으셔도 됩니다. 이미 보내셨다면 이 메일에 회신해 주세요 — 확인해 돌려드립니다.';
+  if (d.bankNotice === 'refund_account_needed') return `계좌로 입금하신 ${formatPriceAmount(d.totalAmount)}원은 전액 돌려드립니다. 아래 "주문 내역 보기"에서 환불받을 계좌를 적어 주시면 3영업일 이내에 보내 드립니다.`;
+  return d.refundCompleted
+    ? `결제하신 ${formatPriceAmount(d.totalAmount)}원은 전액 환불 처리되었습니다. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.`
+    : '환불은 접수되어 처리 중입니다. 완료되면 다시 안내드립니다.';
+};
+
 export const buildShowRefundEmailHtml = (d: {
   buyerName: string; showTitle: string; when: string; orderNo: string; refundedAmount: number; fullyRefunded: boolean; manageUrl: string; contact: string;
+  refundVia?: 'payment' | 'bank_account';
 }): string => {
   const body = `
     <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 16px;">
@@ -109,13 +130,17 @@ export const buildShowRefundEmailHtml = (d: {
       ${row('환불 금액', `${esc(formatPriceAmount(d.refundedAmount))}원`)}
       ${row('주문번호', esc(d.orderNo))}
     </table>
-    <p style="margin:0 0 20px;font-size:14px;color:${BODY};">${d.fullyRefunded ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없습니다.' : '환불한 티켓은 입장에 사용할 수 없습니다. 남은 티켓은 그대로 사용할 수 있습니다.'}<br />카드 결제는 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.</p>
+    <p style="margin:0 0 20px;font-size:14px;color:${BODY};">${d.fullyRefunded ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없습니다.' : '환불한 티켓은 입장에 사용할 수 없습니다. 남은 티켓은 그대로 사용할 수 있습니다.'}<br />${esc(showRefundViaSentence(d.refundVia))}</p>
     <p style="margin:0;text-align:center;">${button(d.manageUrl, '주문 내역 보기')}</p>`;
-  return shell({ heading: '환불이 완료되었습니다', lead: `${d.buyerName}님, 신청하신 환불이 처리되었습니다.`, body, contact: d.contact });
+  return shell({
+    heading: d.refundVia === 'bank_account' ? '환불 요청을 접수했습니다' : '환불이 완료되었습니다',
+    lead: `${d.buyerName}님, 신청하신 환불이 처리되었습니다.`, body, contact: d.contact,
+  });
 };
 
 export const buildShowtimeCancelledEmailHtml = (d: {
   buyerName: string; showTitle: string; when: string; orderNo: string; totalAmount: number; refundCompleted: boolean; manageUrl: string; contact: string;
+  bankNotice?: 'refund_account_needed' | 'not_deposited';
 }): string => {
   const body = `
     <table role="presentation" cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse;margin:0 0 16px;">
@@ -123,7 +148,7 @@ export const buildShowtimeCancelledEmailHtml = (d: {
       ${row('취소된 회차', esc(d.when))}
       ${row('주문번호', esc(d.orderNo))}
     </table>
-    <p style="margin:0 0 20px;font-size:14px;color:${BODY};">${d.refundCompleted ? `결제하신 ${esc(formatPriceAmount(d.totalAmount))}원은 전액 환불 처리되었습니다. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.` : '환불은 접수되어 처리 중입니다. 완료되면 다시 안내드립니다.'}</p>
+    <p style="margin:0 0 20px;font-size:14px;color:${BODY};">${esc(showtimeCancelledRefundSentence(d))}</p>
     <p style="margin:0;text-align:center;">${button(d.manageUrl, '주문 내역 보기')}</p>`;
   return shell({ heading: '공연 회차가 취소되었습니다', lead: `${d.buyerName}님, 예매하신 회차가 취소되어 안내드립니다.`, body, contact: d.contact });
 };

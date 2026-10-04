@@ -4,6 +4,7 @@ import { getDb } from '../../db/client';
 import { refundIdempotencyKey, remainingRefundable, type PaymentWithRefunds } from '../booking/cancel';
 import type { FakeToss } from '../../tests/fakes/fakeToss';
 import { salesCloseAt } from './time';
+import { AWAITING_DEPOSIT, DEPOSIT_CANCELLED, isBankDepositPayment } from '../payments/bankDeposit';
 
 const SHOWTIME_CANCEL_REFUND_REASON = '공연 회차 취소 환불';
 
@@ -31,7 +32,19 @@ export async function cancelShowtime(
   showtimeId: string,
   now: Date,
   toss: Pick<FakeToss, 'cancelPayment'>
-): Promise<{ refundedOrders: number; failedOrders: string[] }> {
+): Promise<{
+  refundedOrders: number;
+  failedOrders: string[];
+  /**
+   * **계좌 입금으로 결제가 확인된 주문** — 토스로 돌려줄 수 없어 여기서 환불하지 않는다. 티켓은 issued로
+   * 남겨 두고(회차 취소라 입장은 막힌다 — checkin.ts가 scheduled 회차만 받는다), 고객이 내 티켓 페이지에서
+   * 환불 계좌를 적으면 refundShowTickets가 전액(회차 취소는 100%)으로 기록한다. 관리자가 직접 송금하고
+   * "환불"을 눌러도 된다. 안내 메일은 호출부가 bankNotice로 보낸다.
+   */
+  bankRefundOrders: string[];
+  /** 입금 전이던 계좌 입금 신청 — 여기서 함께 닫았다(deposit_cancelled, 티켓 void). 입금하지 말라고 알린다. */
+  closedDepositOrders: string[];
+}> {
   const db = getDb();
   const nowSec = Math.floor(now.getTime() / 1000);
 
@@ -39,6 +52,22 @@ export async function cancelShowtime(
     UPDATE showtimes SET status = 'cancelled', cancelled_at = ${nowSec}
     WHERE id = ${showtimeId} AND status = 'scheduled'
   `);
+
+  // 입금 전인 계좌 입금 신청은 받은 돈이 없다 — 닫고 보류 좌석을 무효로 한다(미입금 취소와 같은 전이).
+  const awaiting = (await db.all(sql`
+    SELECT DISTINCT so.order_no as orderNo FROM show_orders so
+    JOIN orders o ON o.order_no = so.order_no
+    WHERE so.showtime_id = ${showtimeId} AND o.status = ${AWAITING_DEPOSIT}
+  `)) as Array<{ orderNo: string }>;
+  const closedDepositOrders: string[] = [];
+  for (const { orderNo } of awaiting) {
+    const [claim] = await db.batch([
+      db.run(sql`UPDATE orders SET status = ${DEPOSIT_CANCELLED}, notification_error = NULL, updated_at = unixepoch() WHERE order_no = ${orderNo} AND status = ${AWAITING_DEPOSIT}`),
+      db.run(sql`UPDATE show_tickets SET status = 'void' WHERE order_no = ${orderNo} AND status = 'held'
+        AND EXISTS (SELECT 1 FROM orders WHERE order_no = ${orderNo} AND status = ${DEPOSIT_CANCELLED})`),
+    ]);
+    if (Number((claim as { rowsAffected?: number }).rowsAffected ?? 0) > 0) closedDepositOrders.push(orderNo);
+  }
 
   const rows = await db.all(sql`
     SELECT DISTINCT so.order_no as orderNo FROM show_orders so
@@ -48,6 +77,7 @@ export async function cancelShowtime(
 
   let refundedOrders = 0;
   const failedOrders: string[] = [];
+  const bankRefundOrders: string[] = [];
 
   for (const row of rows as Array<{ orderNo: string }>) {
     const orderNo = row.orderNo;
@@ -84,6 +114,10 @@ export async function cancelShowtime(
     const payment = payments.find((p) => doneRefundedOn(p) < order.totalAmount) ?? payments[payments.length - 1];
     if (!payment) {
       failedOrders.push(orderNo);
+      continue;
+    }
+    if (isBankDepositPayment(payment)) {
+      bankRefundOrders.push(orderNo);
       continue;
     }
 
@@ -140,7 +174,7 @@ export async function cancelShowtime(
     refundedOrders++;
   }
 
-  return { refundedOrders, failedOrders };
+  return { refundedOrders, failedOrders, bankRefundOrders, closedDepositOrders };
 }
 
 /**

@@ -730,6 +730,36 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * 공연·예약·믹싱 **계좌 입금 주문의 환불 송금 대기** — 고객이 셀프 취소하며 환불 계좌를 적은 건. 환불 기록과
+   * 좌석·시간대 해제는 취소 순간 끝났지만(lib/booking/cancel.ts·lib/shows/refund.ts) 돈은 운영자가 그 계좌로
+   * 직접 보내야 하고, 보낸 사실은 `refund_accounts.refunded_at`("송금 완료")이 든다. 기한은 위 펀딩 점검과 같은
+   * 48시간 알람(3영업일 전에 울린다). 표가 없으면(0048 미적용) 이 점검만 건너뛴다.
+   */
+  try {
+    const pendingTransfers = await db.all<{ order_no: string; order_kind: string; requested_at: number }>(sql`
+      SELECT order_no, order_kind, requested_at FROM refund_accounts
+      WHERE order_kind IN ('session', 'mixing', 'show') AND refunded_at IS NULL
+    `);
+    if (pendingTransfers.length > 0) {
+      const overdue = pendingTransfers.filter((r) => now.getTime() - Number(r.requested_at) * 1000 >= REFUND_DUE_MS);
+      issues.push({
+        severity: overdue.length > 0 ? 'high' : 'medium',
+        href: '/admin/bookings',
+        title:
+          overdue.length > 0
+            ? `계좌 환불 송금 기한이 임박한 공연·예약·믹싱 취소 ${overdue.length}건 (대기 ${pendingTransfers.length}건)`
+            : `계좌 환불 송금을 기다리는 공연·예약·믹싱 취소 ${pendingTransfers.length}건`,
+        detail:
+          `주문번호: ${sample((overdue.length > 0 ? overdue : pendingTransfers).map((r) => r.order_no))}\n` +
+          '계좌 입금 주문이라 돈이 자동으로 나가지 않습니다. 관리자 상세(예약·믹싱은 예약 관리, 공연은 공연 관리)에서 ' +
+          '"계좌 보기"로 환불 계좌를 열어 송금한 뒤 "송금 완료"를 눌러 주세요(약속한 기한: 접수일부터 3영업일).',
+      });
+    }
+  } catch (error) {
+    console.error('[health-check] 환불 송금 대기 조회 실패 — 이 점검만 건너뛴다', { error: error instanceof Error ? error.name : 'unknown' });
+  }
+
+  /**
    * **환불액이 결제액에 닿았는데 주문은 아직 살아 있는 건.**
    *
    * 이 상태는 저절로 생긴다. 셀프 취소가 주문을 refunded로 선점한 뒤 토스 호출이

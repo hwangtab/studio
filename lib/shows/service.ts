@@ -6,6 +6,7 @@ import { generateManageToken } from '../booking/token';
 import { zoneCapacityCondition, ticketTypeQuotaCondition, showtimeSalesWindowCondition } from './conditions';
 import { SHOW_HOLD_SECONDS, SHOW_MAX_PER_ORDER_CAP } from './limits';
 import { generateShowOrderNo, generateTicketCode } from './shape';
+import { AWAITING_DEPOSIT, bankDepositBlockReason, type CheckoutPaymentMethod } from '../payments/bankDeposit';
 
 /**
  * libSQL batch 결과의 rowsAffected. lib/funding/service.ts·tests/helpers/showsDb.ts와 같은
@@ -23,7 +24,7 @@ export { SHOW_MAX_PER_ORDER_CAP };
 
 export type CreateShowOrderResult =
   | { ok: true; orderNo: string }
-  | { ok: false; code: 'sold_out' | 'sales_closed' | 'invalid_quantity' | 'ticket_type_mismatch' };
+  | { ok: false; code: 'sold_out' | 'sales_closed' | 'invalid_quantity' | 'ticket_type_mismatch' | 'starts_too_soon' };
 
 /** quantity가 1~SHOW_MAX_PER_ORDER_CAP 사이의 정수인지 — SQL을 태우기 전에 거른다. */
 function isValidQuantity(quantity: number): boolean {
@@ -50,6 +51,13 @@ export async function createShowOrder(
     buyerContact: string;
     /** 티켓 메일 수신 주소(선택). 없으면 ''로 저장돼 메일은 나가지 않는다 — 관리 링크는 결제 완료 화면에 뜬다. */
     buyerEmail?: string;
+    /**
+     * `bank_transfer`면 **계좌 입금 대기**(`awaiting_deposit`)로 만든다 — 티켓은 `held`이고
+     * `hold_expires_at`이 NULL이라 좌석 집계(conditions.ts·queries.ts의 `hold_expires_at IS NULL OR …`)가
+     * 기한 없이 점유로 센다. 토스 홀드 만료(expireStaleShowOrders)는 `pending`만 보므로 건드리지 않는다.
+     * 기본은 토스(`pending`, 10분 홀드).
+     */
+    paymentMethod?: CheckoutPaymentMethod;
   },
   now: Date
 ): Promise<CreateShowOrderResult> {
@@ -71,6 +79,13 @@ export async function createShowOrder(
   const showtime = await db.query.showtimes.findFirst({ where: (s, { eq }) => eq(s.id, input.showtimeId) });
   if (!showtime || showtime.showId !== ticketType.showId) return { ok: false, code: 'ticket_type_mismatch' };
 
+  const isBank = input.paymentMethod === 'bank_transfer';
+  // 회차 시작이 임박하면 계좌 입금을 받지 않는다 — 운영자가 입금을 확인하고 티켓을 보낼 시간이 없다.
+  // 결제 폼(ShowBookingForm)과 같은 판정·같은 인자.
+  if (isBank && bankDepositBlockReason({ startsAt: new Date(showtime.startsAt * 1000), now })) {
+    return { ok: false, code: 'starts_too_soon' };
+  }
+
   const buyerEmail = (input.buyerEmail ?? '').trim();
   const totalAmount = ticketType.price * input.quantity;
   // 티켓 가격은 VAT 포함 표기(아티스트 구독과 같은 관례) — lib/booking/amounts.ts의
@@ -87,7 +102,7 @@ export async function createShowOrder(
     db.run(sql`
       INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
                           item_amount, vat_amount, total_amount, manage_token)
-      SELECT lower(hex(randomblob(16))), ${orderNo}, 'ticket', 'pending', ${input.buyerName}, ${input.buyerContact}, ${buyerEmail},
+      SELECT lower(hex(randomblob(16))), ${orderNo}, 'ticket', ${isBank ? AWAITING_DEPOSIT : 'pending'}, ${input.buyerName}, ${input.buyerContact}, ${buyerEmail},
              ${itemAmount}, ${vatAmount}, ${totalAmount}, ${manageToken}
       WHERE ${windowGate} AND ${zoneGate} AND ${quotaGate}
     `)
@@ -95,7 +110,7 @@ export async function createShowOrder(
   statements.push(
     db.run(sql`
       INSERT INTO show_orders (order_no, showtime_id, buyer_name, buyer_contact, hold_expires_at)
-      SELECT ${orderNo}, ${input.showtimeId}, ${input.buyerName}, ${input.buyerContact}, ${Math.floor(now.getTime() / 1000) + HOLD_SECONDS}
+      SELECT ${orderNo}, ${input.showtimeId}, ${input.buyerName}, ${input.buyerContact}, ${isBank ? null : Math.floor(now.getTime() / 1000) + HOLD_SECONDS}
       WHERE EXISTS (SELECT 1 FROM orders WHERE order_no = ${orderNo})
     `)
   );

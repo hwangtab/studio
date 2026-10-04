@@ -229,15 +229,15 @@ export const purgeFundingPersonalDataOfPurgedOrders = async (): Promise<OrderPur
  * 기준을 따로 세우지 않고 위 주문 파기(`orders.customer_name = PURGED_MARK`)를 그대로 따른다.
  * 덮어쓰지 않고 행을 지운다: 은행명·예금주만 남겨도 개인정보이고, 계좌번호 암호문을 남길 이유가 없다.
  *
- * 대상은 `orders`에 사는 주문 종류(funding·session·mixing)다. 공연(`show`)은 주문이 `show_orders`에
- * 있어 그 표의 파기를 따라야 한다 — 공연에 계좌 입금을 붙일 때 여기에 함께 더할 것(지금은 그 행이 없다).
+ * 대상은 네 종류 전부다(funding·session·mixing·show). 공연 주문도 `orders` 행을 갖고(`show_orders.order_no`가
+ * `orders.order_no`를 가리킨다) 그 행의 이름이 위 5년 파기로 표식이 되므로, 같은 기준으로 따라간다.
  *
  * 따로 둔 함수인 이유: 표가 없으면(0048 미적용) 이 하나만 실패하고 같은 크론의 나머지 파기는 돈다.
  */
 export const purgeRefundAccountsOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
   const result = await getDb().run(sql`
     DELETE FROM refund_accounts
-    WHERE order_kind IN ('funding', 'session', 'mixing')
+    WHERE order_kind IN ('funding', 'session', 'mixing', 'show')
       AND order_no IN (SELECT order_no FROM orders WHERE customer_name = ${PURGED_MARK})
   `);
   return rows(result as { rowsAffected?: number });
