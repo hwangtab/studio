@@ -68,8 +68,11 @@ export default function PaymentMethodPicker({
             <span className="flex min-w-0 flex-1 items-center justify-between gap-3">
               <ChoiceBody choice={choice} selected={selected} />
               {choice.id === 'bank_transfer' && (
-                <span className="shrink-0 text-right text-xs text-gray-500 dark:text-gray-400">
-                  {disabled ? '이용 불가' : `${BANK_ACCOUNT.bankName} · 입금 확인 후 ${confirmLabel}`}
+                // 줄 높이를 다른 줄과 맞추려고 한 줄로 둔다 — 휴대폰 폭에서는 은행 이름만(나머지는 아래 안내 줄이 말한다).
+                <span className="shrink-0 whitespace-nowrap text-right text-xs text-gray-500 dark:text-gray-400">
+                  {disabled ? '이용 불가' : (
+                    <>{BANK_ACCOUNT.bankName}<span className="hidden sm:inline"> · 입금 확인 후 {confirmLabel}</span></>
+                  )}
                 </span>
               )}
             </span>
