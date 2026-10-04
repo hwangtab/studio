@@ -700,7 +700,8 @@ export default function BookingWizard({ service, products, initialProductId }: B
 
             {/* 결제수단 — 위에서 카드·간편결제(토스)와 계좌로 직접 입금 중 하나를 고른다. 토스 쪽 수단 목록과
                 결제 약관 동의는 **위젯이 그린다**(우리 목록을 따로 두지 않는다). 계좌를 고르면 위젯을 **숨기기만**
-                한다 — 언마운트하면 iframe이 다시 그려지며 동의 상태가 풀린다(PledgeWizard와 같다). */}
+                한다 — 언마운트하면 iframe이 다시 그려지며 동의 상태가 풀린다(PledgeWizard와 같다).
+                기능 플래그(`?pay=v2`)가 켜지면 위젯 대신 우리가 그린 결제수단 목록(PaymentMethodPicker)이다. */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
               {picker ? (

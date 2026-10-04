@@ -492,7 +492,8 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
             </p>
 
             {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 토스 수단과 결제 약관 동의는 **위젯이 그린다**.
-                계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 동의 상태가 풀린다(PledgeWizard와 같다). */}
+                계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 동의 상태가 풀린다(PledgeWizard와 같다).
+                기능 플래그(`?pay=v2`)가 켜지면 위젯 대신 우리가 그린 결제수단 목록(PaymentMethodPicker)이다. */}
             <div className="pt-2">
               <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
               {picker ? (

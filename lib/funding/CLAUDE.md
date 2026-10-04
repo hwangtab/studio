@@ -233,7 +233,7 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
 (공연·예약·믹싱도 같은 계좌 입금을 쓴다 — 그쪽 규칙은 `lib/payments/bankDeposit.ts`), 펀딩 고유 규칙(한정 리워드
 불가·온라인 판정)은 `lib/funding/bankAccount.ts`다. 결제 공용 부품: 안내 화면
 `components/payments/BankDepositGuide.tsx`(금액·기한·이름·호칭을 props로), 결제수단 고르기
-`components/payments/PaymentMethodChoice.tsx`, 환불 계좌 입력 `components/payments/RefundAccountFields.tsx`,
+`components/payments/PaymentMethodChoice.tsx`(위젯 화면) · `PaymentMethodPicker.tsx`(결제수단 목록 화면 — 루트 CLAUDE.md "토스 키는 두 쌍이다"), 환불 계좌 입력 `components/payments/RefundAccountFields.tsx`,
 관리자 "계좌 보기" 핸들러 `lib/payments/refundAccountView.ts`. 펀딩은 결제 행 없이 `funding_pledges.payment_method`로
 가르고, 공연·예약·믹싱은 상태(`awaiting_deposit`)와 결제 행(`bank-deposit:` 키)으로 가른다 — 같은 판정 함수를
 섞어 쓰지 말 것. 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·메일에 표시된 계좌").
