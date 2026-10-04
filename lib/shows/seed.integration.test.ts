@@ -34,6 +34,8 @@ describe('공연 정의(bakkeoji)', () => {
     expect(bakkeojiShow.scheduleNote).toContain('18:30');
     expect(bakkeojiShow.notices?.some((x) => x.includes('수익'))).toBe(false); // 수익 사용처 문구는 두지 않는다(TMI)
     expect(bakkeojiShow.onSitePriceNote).toContain('30,000원');
+    // 제공자별 장소 주소: 카카오만 있다 — 네이버 단축 주소가 파주의 다른 '라플란드'라 검색 링크를 유지한다.
+    expect(bakkeojiShow.mapLinks).toEqual({ kakao: 'https://place.map.kakao.com/1525155012' });
     expect(bakkeojiShow.ogImage).toMatch(/^\/images\/shows\/.*og.*\.webp$/);
   });
 
