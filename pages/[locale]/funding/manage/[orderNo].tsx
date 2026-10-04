@@ -190,7 +190,12 @@ export default function FundingManagePage(p: Props) {
           {/* 디지털 리워드 내려받기. 확정 메일에도 같은 주소가 나가지만, 메일을 지우거나 못
               받는 사람이 있어 이 화면에도 둔다 — 관리 토큰으로만 열리는 자리다.
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
-          {p.downloads.length > 0 && isLive && (
+          {refundRequested && isLive && (
+            <p className="mt-6 rounded-xl border border-gray-200 p-4 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+              취소(환불)를 요청한 펀딩이라 음원 내려받기를 닫았습니다. 요청을 거두려면 010-4255-7893으로 연락 주세요.
+            </p>
+          )}
+          {p.downloads.length > 0 && isLive && !refundRequested && (
             <div className="mt-6 space-y-2">
               {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 메일
                   링크를 긁는 봇이 후원자의 청약철회권을 없애지 못한다. */}
@@ -303,7 +308,11 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
    * 쓴다(lib/funding/refundable.ts).
    */
   const lines = pledgeLines(pl);
-  const downloads = isLiveFundingOrderStatus(order.status) ? pledgeDownloads(project, activePledgeLines(lines).map((l) => l.rewardId)) : [];
+  // 취소(환불)를 요청한 건도 내려보내지 않는다 — 계좌 입금 취소는 송금 전까지 paid로 남는다
+  // (pages/api/funding/download.ts가 같은 조건으로 거부한다).
+  const downloads = isLiveFundingOrderStatus(order.status) && pl.refundRequestedAt === null
+    ? pledgeDownloads(project, activePledgeLines(lines).map((l) => l.rewardId))
+    : [];
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardLabel: pledgeLinesLabel(lines),

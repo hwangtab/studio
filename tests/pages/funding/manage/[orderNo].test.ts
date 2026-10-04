@@ -239,6 +239,17 @@ describe('SSR이 셀프 취소 판정에 결제수단·등록 경로를 넘긴�
     expect(props.deposit).not.toBeNull();
   });
 
+  it('취소(환불)를 요청한 계좌 입금 건에는 내려받기 주소를 내려보내지 않는다 — 송금 전까지 paid여도', async () => {
+    const c = await createSingleRewardPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+    const before = (await getServerSideProps({ params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub() } as never)) as { props: { downloads: unknown[] } };
+    expect(before.props.downloads.length).toBeGreaterThan(0);
+    await setPledge(c.orderNo, 'refund_requested_at = unixepoch()');
+    const after = (await getServerSideProps({ params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub() } as never)) as { props: { downloads: unknown[] } };
+    expect(after.props.downloads).toEqual([]);
+  });
+
   it('토스 결제 대기에는 계좌 안내가 없다', async () => {
     const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();

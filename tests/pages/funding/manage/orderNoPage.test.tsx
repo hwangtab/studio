@@ -301,3 +301,10 @@ describe('계좌 입금 후원의 취소 — 환불 계좌를 받는다', () => 
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ orderNo: 'FND-1', token: 'tok' });
   });
 });
+
+it('취소(환불)를 요청한 건은 내려받기 버튼을 그리지 않고 이유를 알린다', () => {
+  render(<FundingManagePage {...baseProps} paymentMethod="bank_transfer" refundRequested
+    downloads={[{ label: 'MP3', key: 'k' }]} />);
+  expect(screen.queryByRole('button', { name: /내려받기/ })).toBeNull();
+  expect(screen.getByText(/음원 내려받기를 닫았습니다/)).toBeInTheDocument();
+});

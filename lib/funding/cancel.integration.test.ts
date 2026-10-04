@@ -361,6 +361,7 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
     return {
       status: status.mock.calls[0]?.[0] as number | undefined,
       redirectedTo: redirect.mock.calls[0]?.[1] as string | undefined,
+      body: json.mock.calls[0]?.[0] as { message?: string } | undefined,
     };
   };
 
@@ -442,6 +443,38 @@ describe('읽고-쓰기 경합 — 가드를 UPDATE의 WHERE로 옮긴다', () =
     const second = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
     expect(second.redirectedTo).toBe('https://r2.example/signed');
     expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toEqual(at);
+  });
+
+  /**
+   * 계좌 입금 셀프 취소는 송금 전까지 주문을 paid로 두고 `refund_requested_at`만 찍는다. 주문 상태만
+   * 보던 내려받기 게이트는 그 뒤에도 파일을 내줬다 — 요청 뒤 내려받고 환불도 받는 조합(리뷰 2026-10-04).
+   */
+  it('내려받기: 취소(환불)를 요청한 펀딩이면 기록하지 않고 409', async () => {
+    const c = await createSingleRewardPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE id=?", args: [o!.id] });
+    await client.execute({ sql: 'UPDATE funding_pledges SET refund_requested_at = unixepoch() WHERE order_id = ?', args: [o!.id] });
+
+    const r = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+    expect(r.status).toBe(409);
+    expect(r.body?.message).toContain('취소(환불)를 요청한');
+    expect(r.redirectedTo).toBeUndefined();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toBeNull();
+  });
+
+  it('내려받기: 읽은 뒤 취소 요청이 접수되면 기록 UPDATE가 막는다', async () => {
+    const c = await createSingleRewardPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    const o = await findFundingOrderByOrderNo(c.orderNo);
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE id=?", args: [o!.id] });
+
+    staleRead('UPDATE funding_pledges SET refund_requested_at = unixepoch() WHERE order_id = ?', [o!.id]);
+    const r = await callDownload({ orderNo: c.orderNo, token: c.manageToken, file: 'demo/abc/album.zip' });
+    expect(r.status).toBe(409);
+    expect(r.body?.message).toContain('취소(환불)를 요청한');
+    expect(r.redirectedTo).toBeUndefined();
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.downloadedAt).toBeNull();
   });
 
   it('관리자 취소는 발송 준비 중에도 그대로 환불한다 — 가드는 셀프 취소에만 건다', async () => {
