@@ -243,6 +243,21 @@ describe('buildFundingPayoutPreview', () => {
     expect(preview!.paymentFeeAmount).toBe(online.paymentFeeAmount);
   });
 
+  // 운영자 결정(2026-10-04): 입금 대기 계좌 입금은 공개 모금액엔 들어가지만 정산에는 안 들어간다 —
+  // 받지 않은 돈을 개설자에게 보내면 안 된다. 미리보기는 그 몫을 따로 알린다.
+  it('입금 대기 계좌 입금은 정산에서 빼고 건수·금액을 따로 알린다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 500_000);
+    await seedPledge(project.slug, 30_000, { paymentMethod: 'bank_transfer', status: 'pending' });
+    await seedPledge(project.slug, 20_000, { paymentMethod: 'bank_transfer', status: 'pending' });
+
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview!.grossAmount).toBe(500_000);
+    expect(preview!.backerCount).toBe(1);
+    expect(preview!.awaitingDepositCount).toBe(2);
+    expect(preview!.awaitingDepositAmount).toBe(50_000);
+  });
+
   it('없는 프로젝트는 null', async () => {
     expect(await buildFundingPayoutPreview('nope')).toBeNull();
   });

@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges } from '../../db/schema';
-import { LIVE_FUNDING_ORDER_STATUSES, liveFundingOrderStatusList } from './refundable';
+import { LIVE_FUNDING_ORDER_STATUSES, countedFundingPledgeSql } from './refundable';
 import { backerIdentitySql, type FundingOrder } from './service';
 
 /**
@@ -99,7 +99,11 @@ export const listFundingOrdersForExport = async (slug: string | null): Promise<F
  * 입금 확인이 어느 쪽에도 안 잡히거나 양쪽에 잡힌다.
  */
 export interface AdminFundingTotals {
-  /** 확정(paid·partially_refunded) 후원 금액 합계. 부분환불 주문은 돌려준 금액을 뺀다. */
+  /**
+   * 모금액 — 공개 모금액과 **같은 집합**(paid·partially_refunded + 입금 대기 계좌 입금,
+   * countedFundingPledgeSql). 부분환불 주문은 돌려준 금액을 뺀다. 필드 이름은 옛 그대로(confirmed*)지만
+   * 입금 대기분을 포함한다 — 그 몫만 따로 보려면 awaitingDeposit*를 본다. 정산은 이 수가 아니다.
+   */
   confirmedAmount: number;
   /**
    * 확정 후원 **건수**. COUNT(*)라 같은 사람이 두 번 후원하면 2다 — '명'이 아니라 '건'이다.
@@ -153,14 +157,15 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
   const slugFilter = slug ? sql` AND fp.project_slug = ${slug}` : sql.empty();
   const rows = await db.all<TotalsRow>(sql`
     SELECT
-      -- 공개 모금액(aggregateProjectStatus)과 같은 수 — 부분환불 주문은 done 환불을 뺀다.
-      COALESCE(SUM(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN o.total_amount
+      -- 공개 모금액(aggregateProjectStatus)과 같은 수·같은 집합(countedFundingPledgeSql — 입금 대기 계좌
+      -- 입금 포함). 부분환불 주문은 done 환불을 뺀다.
+      COALESCE(SUM(CASE WHEN ${countedFundingPledgeSql()} THEN o.total_amount
         - CASE WHEN o.status = 'partially_refunded' THEN COALESCE((
             SELECT SUM(r.amount) FROM refunds r JOIN payments p ON p.id = r.payment_id
             WHERE p.order_id = o.id AND r.status = 'done'
           ), 0) ELSE 0 END END), 0) AS confirmed_amount,
-      COUNT(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN 1 END) AS confirmed_count,
-      COUNT(DISTINCT CASE WHEN o.status IN (${liveFundingOrderStatusList()})
+      COUNT(CASE WHEN ${countedFundingPledgeSql()} THEN 1 END) AS confirmed_count,
+      COUNT(DISTINCT CASE WHEN ${countedFundingPledgeSql()}
         THEN ${backerIdentitySql()} END) AS confirmed_person_count,
       COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method != 'bank_transfer' THEN o.total_amount END), 0) AS pending_amount,
       COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method != 'bank_transfer' THEN 1 END) AS pending_count,

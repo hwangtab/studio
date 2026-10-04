@@ -68,6 +68,9 @@ export interface AdminPayoutView {
   serviceChargesUnavailable: boolean;
   netAmount: number;
   backerCount: number;
+  /** 입금 확인 전이라 정산에서 뺀 계좌 입금 대기 — 공개 모금액에는 들어가 있다. 옛 props 호환으로 선택. */
+  awaitingDepositCount?: number;
+  awaitingDepositAmount?: number;
   closed: boolean;
   hasPayoutAccount: boolean;
   /** 세금 처리 구분이 등록돼 있는가. 구분 자체(개인/사업자)는 계좌와 함께 별도 라우트로만 나간다. */
@@ -269,6 +272,13 @@ export function FundingPayoutSection({
         원천징수 개설자는 세금계산서가 없어 수수료를 뗀 금액에서 부가세 상당액(10/110)을 빼고 원천징수합니다
         (개설자 약관 제6조).
       </p>
+
+      {(payout.awaitingDepositCount ?? 0) > 0 && (
+        <p className="mb-4 rounded-lg border border-sky-300 bg-sky-50 p-3 text-sm text-sky-950">
+          입금 대기 {payout.awaitingDepositCount}건 {won(payout.awaitingDepositAmount ?? 0)}은 입금 확인 전이라 정산에서 제외했습니다.
+          공개 모금액에는 들어가 있습니다 — 입금을 확인하면 아래 계산값이 그만큼 늘어납니다.
+        </p>
+      )}
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-lg border border-gray-300 bg-white p-4">

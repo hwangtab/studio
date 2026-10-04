@@ -67,9 +67,10 @@ rewards:
 /** cd 리워드는 배송이 필요하다 — 검증을 통과해야 홀드 카운터 분기까지 도달한다. */
 const cdBodyExtra = { rewardId: 'cd', shipping: { name: '김', phone: '010', postcode: '12345', address1: '어딘가', address2: '', memo: '' } };
 
+const mockRevalidate = jest.fn().mockResolvedValue(undefined);
 const call = async (body: unknown) => {
   const json = jest.fn(); const status = jest.fn().mockReturnValue({ json });
-  const res = { setHeader: jest.fn(), status } as unknown as NextApiResponse;
+  const res = { setHeader: jest.fn(), status, revalidate: mockRevalidate } as unknown as NextApiResponse;
   await handler({ method: 'POST', body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
 };
@@ -178,6 +179,8 @@ describe('계좌 입금 신청', () => {
       manageUrl: '/ko/funding/manage/FND-20261015-ABCDEF12?token=tok%2F%2Bx', totalAmount: 5000,
     });
     expect(deliverDepositGuide).toHaveBeenCalledWith('FND-20261015-ABCDEF12');
+    // 입금 대기는 공개 집계에 바로 들어가므로 목록·상세를 재검증한다.
+    expect(mockRevalidate).toHaveBeenCalledWith('/ko/funding/demo');
   });
 
   it('한정 수량 리워드는 400 — 주문을 만들지 않는다', async () => {

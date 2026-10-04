@@ -14,7 +14,7 @@ import { fundingPledgeLinesSql } from './pledgeLinesSql';
 
 export { fundingPledgeLinesSql };
 import { ANONYMOUS_LABEL, ANONYMOUS_MESSAGE_TERMS_FROM, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
-import { liveFundingOrderStatusList } from './refundable';
+import { countedFundingPledgeSql } from './refundable';
 import { bankDepositGuideDeadline } from '../payments/bankAccount';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload, ResolvedPledgeLine } from './validation';
@@ -132,8 +132,10 @@ export const findFundingOrderById = async (id: string): Promise<FundingOrder | u
 /**
  * 한정 리워드의 재고 조건 — `INSERT ... SELECT ... WHERE <이것>` 한 문장에 실어 쓴다.
  *
- * remaining = totalQuantity − Σ(paid ∨ partially_refunded) − Σ(pending ∧ hold 미만료).
- * 무제한(totalQuantity === null)이면 조건이 없다.
+ * remaining = totalQuantity − Σ(집계 대상 — paid ∨ partially_refunded ∨ 열린 계좌 입금 대기) − Σ(pending ∧ hold 미만료).
+ * 무제한(totalQuantity === null)이면 조건이 없다. 열린 계좌 입금 대기는 기한과 무관하게 센다 — 자동
+ * 해제가 없어 공개 집계에 들어가 있는 동안은 재고도 차지한다(countedFundingPledgeSql, refundable.ts).
+ * 새 계좌 입금은 한정 리워드를 받지 않으므로 실제로 걸리는 것은 2026-09-11 이전 무통장 행뿐이다.
  *
  * **읽고-검사-쓰기로 대체하지 말 것.** 별도 SELECT로 남은 수량을 확인한 뒤 무조건 INSERT하면
  * 그 사이에 들어온 동시 요청과 둘 다 검사를 통과해 한정 수량을 초과 판매한다. 조건을 INSERT에
@@ -160,7 +162,7 @@ export const fundingStockCondition = (
         JOIN funding_pledges fp ON fp.id = l.pledge_id
         JOIN orders o ON o.id = fp.order_id
         WHERE fp.project_slug = ${projectSlug} AND l.reward_id = ${reward.id}
-          AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+          AND (${countedFundingPledgeSql()} OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
           ${excludeOrderNo ? sql`AND o.order_no != ${excludeOrderNo}` : sql.empty()}
       ) + ${quantity} <= ${reward.totalQuantity}`;
 
@@ -362,6 +364,11 @@ export interface ProjectStatus {
  * 서브쿼리를 돌린다 — paid 주문은 0으로 지나간다. 줄 환불이 done 행을 적고 상태를
  * partially_refunded로 바꾸기까지의 짧은 창에서는 그 환불이 아직 빠지지 않는다.
  */
+/**
+ * **집계 대상은 `countedFundingPledgeSql()`이다** — 살아 있는 결제 + 입금을 기다리는 온라인 계좌 입금
+ * (운영자 결정 2026-10-04, refundable.ts 주석). 모금액·건수·인원·명단·응원 메시지가 전부 같은 집합을
+ * 본다. 정산(payout.ts)은 이 집합이 아니라 받은 돈(LIVE)만 본다.
+ */
 export const aggregateProjectStatus = async (project: FundingProject, now: Date): Promise<ProjectStatus> => {
   const db = getDb();
   const totals = await db.all<{ raised: number | null; backers: number | null; persons: number | null }>(sql`
@@ -375,14 +382,14 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
            -- 떨어뜨린다(연락처 없는 펀딩끼리 한 사람으로 뭉치면 인원이 1로 붕괴한다).
            COUNT(DISTINCT ${backerIdentitySql()}) AS persons
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()})
+    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()}
   `);
   const claimed = await db.all<{ reward_id: string; qty: number }>(sql`
     SELECT l.reward_id, SUM(l.quantity) AS qty
     FROM ${fundingPledgeLinesSql()} l
     JOIN funding_pledges fp ON fp.id = l.pledge_id JOIN orders o ON o.id = fp.order_id
     WHERE fp.project_slug = ${project.slug}
-      AND (o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
+      AND (${countedFundingPledgeSql()} OR (o.status = 'pending' AND fp.hold_expires_at > ${toEpoch(now)}))
     GROUP BY l.reward_id
   `);
   const claimedBy = new Map(claimed.map((r) => [r.reward_id, Number(r.qty)]));
@@ -425,7 +432,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
            fp.supporter_message,
            fp.paid_at, o.created_at
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
+    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 1
       AND o.customer_name <> ${PURGED_MARK}
       AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
       AND fp.listing_hidden_at IS NULL
@@ -435,7 +442,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   const listable = await db.all<{ n: number | null }>(sql`
     SELECT COUNT(*) AS n
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 1
+    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 1
       AND o.customer_name <> ${PURGED_MARK}
       AND (fp.public_name IS NULL OR fp.public_name <> ${PURGED_MARK})
       AND fp.listing_hidden_at IS NULL
@@ -448,7 +455,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
   const anonymousMessageRows = await db.all<{ supporter_message: string | null; paid_at: number | null; created_at: number }>(sql`
     SELECT fp.supporter_message, fp.paid_at, o.created_at
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE fp.project_slug = ${project.slug} AND o.status IN (${liveFundingOrderStatusList()}) AND fp.display_name_public = 0
+    WHERE fp.project_slug = ${project.slug} AND ${countedFundingPledgeSql()} AND fp.display_name_public = 0
       AND fp.terms_version LIKE 'funding-terms-%' AND fp.terms_version >= ${ANONYMOUS_MESSAGE_TERMS_FROM}
       AND fp.supporter_message IS NOT NULL AND TRIM(fp.supporter_message) <> ''
       AND fp.listing_hidden_at IS NULL
@@ -488,7 +495,7 @@ export const aggregateProjectStatus = async (project: FundingProject, now: Date)
  * 리워드별 **확정 판매 수량**. 개설자 모금 현황이 쓴다.
  *
  * 집계 대상은 `aggregateProjectStatus`의 모금액·건수와 **같은 집합**이다 — 같은
- * `orders ⋈ funding_pledges` 조인, 같은 `liveFundingOrderStatusList()`. 기준이 갈리면
+ * `orders ⋈ funding_pledges` 조인, 같은 `countedFundingPledgeSql()`(입금 대기 계좌 입금 포함). 기준이 갈리면
  * 개설자가 보는 판매 수량과 모금액이 서로 설명되지 않는다.
  *
  * 같은 함수의 `claimed`(재고 표시용)와는 **일부러 다르다.** 그쪽은 아직 결제 전인 pending
@@ -500,7 +507,7 @@ export const aggregateRewardSales = async (projectSlug: string): Promise<Record<
     SELECT l.reward_id, SUM(l.quantity) AS qty
     FROM ${fundingPledgeLinesSql()} l
     JOIN funding_pledges fp ON fp.id = l.pledge_id JOIN orders o ON o.id = fp.order_id
-    WHERE fp.project_slug = ${projectSlug} AND o.status IN (${liveFundingOrderStatusList()})
+    WHERE fp.project_slug = ${projectSlug} AND ${countedFundingPledgeSql()}
     GROUP BY l.reward_id
   `);
   return Object.fromEntries(rows.map((r) => [r.reward_id, Number(r.qty)]));

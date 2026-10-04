@@ -52,9 +52,10 @@ rewards:
 ---
 `, 'demo');
 
+const revalidate = jest.fn().mockResolvedValue(undefined);
 const call = async (body: unknown) => {
   const json = jest.fn(); const status = jest.fn().mockReturnValue({ json });
-  const res = { setHeader: jest.fn(), status } as unknown as NextApiResponse;
+  const res = { setHeader: jest.fn(), status, revalidate } as unknown as NextApiResponse;
   await handler({ method: 'POST', body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
 };
@@ -101,6 +102,8 @@ it('입금 전 계좌 입금 신청은 후원자가 취소할 수 있다 — pen
   expect(r.status).toBe(200);
   expect(r.body).toMatchObject({ ok: true, mode: 'withdrawn', refundAmount: 0 });
   expect((await findFundingOrderByOrderNo(orderNo))!.status).toBe('expired');
+  // 공개 집계에서 빠지므로 목록·상세를 재검증한다.
+  expect(revalidate).toHaveBeenCalledWith('/ko/funding/demo');
   // 두 번째 요청은 이미 닫힌 신청이라 409.
   expect((await call({ orderNo, token: manageToken })).status).toBe(409);
 });

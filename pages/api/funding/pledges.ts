@@ -10,6 +10,7 @@ import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } fr
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
 import { validateCreatePledgePayload } from '../../../lib/funding/validation';
 import { countOpenBankDeposits, deliverDepositGuide } from '../../../lib/funding/bankTransfer';
+import { revalidateFundingPaths } from '../../../lib/funding/revalidate';
 import { MAX_OPEN_BANK_DEPOSITS_PER_EMAIL } from '../../../lib/funding/bankAccount';
 import { normalizeEmailForLimit } from '../../../lib/payments/bankAccount';
 
@@ -92,6 +93,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
    */
   if (validated.value.paymentMethod === 'bank_transfer') {
     await deliverDepositGuide(result.orderNo);
+    // 계좌 입금 대기는 입금 전에도 공개 모금액·명단에 들어간다(운영자 결정, refundable.ts
+    // countedFundingPledgeSql) — ISR로 박힌 목록·상세의 첫 화면을 바로 다시 만든다. 실패는 삼킨다(60초 ISR).
+    await revalidateFundingPaths(res, project!.slug);
     return res.status(201).json({
       ok: true, orderNo: result.orderNo, paymentMethod: 'bank_transfer',
       manageUrl: `/ko/funding/manage/${result.orderNo}?token=${encodeURIComponent(result.manageToken)}`,

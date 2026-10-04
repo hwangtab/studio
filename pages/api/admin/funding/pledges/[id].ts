@@ -11,6 +11,7 @@ import {
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide } from '../../../../../lib/funding/bankTransfer';
 import { deleteRefundAccount } from '../../../../../lib/payments/refundAccount';
+import { revalidateFundingPaths } from '../../../../../lib/funding/revalidate';
 import { refundFundingLine } from '../../../../../lib/funding/lineRefund';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { setFulfillment } from '../../../../../lib/funding/fulfillment';
@@ -71,16 +72,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const code = r.code === 'not_found' ? 404 : r.code === 'project_unavailable' ? 503 : 409;
         return res.status(code).json({ ok: false, message: r.message });
       }
+      // 늦은 입금(expired → paid)은 공개 집계에 새로 들어간다 — 재검증. 실패는 판정을 뒤집지 않고 알린다.
+      const revalidateError = await revalidateFundingPaths(res, order.fundingPledge.projectSlug);
       const notes = [
         ...(r.emailSent === false ? ['입금은 확인됐으나 확정 메일 발송에 실패했습니다. "메일 재발송"을 눌러 주세요.'] : []),
         ...(r.warnings ?? []),
+        ...(revalidateError ? [`공개 페이지 ${revalidateError} — 최대 60초 뒤 반영됩니다.`] : []),
       ];
       return res.status(200).json({ ok: true, ...(notes.length ? { message: notes.join(' '), warnings: r.warnings ?? [] } : {}) });
     }
     /** 미입금 취소 — 받은 돈이 없으니 환불이 아니다. 후원자에게 메일을 보내지 않는다(bankTransfer.ts). */
     case 'cancel_unpaid': {
       const r = await cancelUnpaidBankDeposit(order);
-      return r.ok ? res.status(200).json({ ok: true }) : res.status(409).json({ ok: false, message: r.message });
+      if (!r.ok) return res.status(409).json({ ok: false, message: r.message });
+      // 입금 대기는 공개 모금액·명단에 들어가 있었다 — 닫았으니 빠진 숫자로 바로 다시 만든다.
+      const revalidateError = await revalidateFundingPaths(res, order.fundingPledge.projectSlug);
+      return res.status(200).json({ ok: true, ...(revalidateError ? { message: `취소했습니다. 공개 페이지 ${revalidateError} — 최대 60초 뒤 반영됩니다.` } : {}) });
     }
     /** 입금 안내 메일 재발송 — 입금 대기 중인 계좌 입금 신청만. 결과는 notification_error에 남는다. */
     case 'resend_deposit_guide': {

@@ -5,6 +5,7 @@ import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { isTokenMatch } from '../../../lib/booking/token';
 import { cancelFundingPledge } from '../../../lib/funding/cancel';
 import { findFundingOrderByOrderNo } from '../../../lib/funding/service';
+import { revalidateFundingPaths } from '../../../lib/funding/revalidate';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -26,5 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res
       .status(result.code === 'temporarily_unavailable' ? 503 : 409)
       .json({ ok: false, code: result.code, message: result.message });
+  // 입금 전 신청 취소는 공개 집계에서 빠진다 — 목록·상세의 첫 화면을 다시 만든다(실패는 삼킨다).
+  if (result.mode === 'withdrawn' && order.fundingPledge) await revalidateFundingPaths(res, order.fundingPledge.projectSlug);
   return res.status(200).json({ ok: true, mode: result.mode, refundAmount: result.refundAmount });
 }

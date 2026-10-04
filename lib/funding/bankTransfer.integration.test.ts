@@ -28,7 +28,8 @@ import { cancelUnpaidBankDeposit, confirmBankDeposit, countOpenBankDeposits, del
 import { cancelFundingPledge } from './cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingDepositGuideEmails } from './email';
 import { parseFundingProject } from './projects';
-import { aggregateProjectStatus, expireStalePledges, findFundingOrderByOrderNo } from './service';
+import { aggregateProjectStatus, aggregateRewardSales, expireStalePledges, findFundingOrderByOrderNo } from './service';
+import { aggregateAdminFundingTotals } from './admin-list';
 import { loadRefundAccount as loadRefundAccountByKey } from '../payments/refundAccount';
 import { purgeRefundAccountsOfPurgedOrders, PURGED_MARK } from '../privacy/orderRetention';
 import { FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
@@ -155,13 +156,43 @@ describe('계좌 입금 신청 — 자동 취소가 없다', () => {
     expect((await findFundingOrderByOrderNo(bank.orderNo))?.status).toBe('pending');
   });
 
-  it('입금 확인 전에는 모금액·건수·명단·응원 메시지에 들어가지 않는다', async () => {
-    await createBank();
+  /**
+   * 운영자 결정(2026-10-04, SAF 방식): 계좌 입금 대기는 입금 확인 전에도 공개 집계에 들어간다.
+   * 미입금 취소로 닫히면 빠진다. 정산(payout)은 받은 돈만 본다 — 아래 payout 테스트.
+   */
+  it('입금 확인 전에도 모금액·건수·인원·명단·응원 메시지에 들어가고, 미입금 취소하면 빠진다', async () => {
+    const c = await createBank();
     const status = await aggregateProjectStatus(PROJECT, NOW);
-    expect(status.raisedAmount).toBe(0);
-    expect(status.backerCount).toBe(0);
-    expect(status.publicBackers).toEqual([]);
-    expect(status.publicMessages).toEqual([]);
+    expect(status.raisedAmount).toBe(5000);
+    expect(status.backerCount).toBe(1);
+    expect(status.backerPersonCount).toBe(1);
+    expect(status.publicBackers).toEqual(['김후원']);
+    expect(status.publicMessages.map((m) => m.message)).toEqual(['응원합니다']);
+    expect(await aggregateRewardSales('demo')).toEqual({ mail: 1 });
+
+    // 기한(3일)이 한참 지나도 그대로다 — 자동 해제가 없다.
+    await expireStalePledges(new Date(NOW.getTime() + 60 * DAY));
+    expect((await aggregateProjectStatus(PROJECT, new Date(NOW.getTime() + 60 * DAY))).raisedAmount).toBe(5000);
+
+    await cancelUnpaidBankDeposit({ id: c.id });
+    const after = await aggregateProjectStatus(PROJECT, NOW);
+    expect(after.raisedAmount).toBe(0);
+    expect(after.backerCount).toBe(0);
+    expect(after.publicBackers).toEqual([]);
+    expect(after.publicMessages).toEqual([]);
+  });
+
+  it('관리자 수기 등록이 아닌 토스 결제 대기는 공개 집계에 들어가지 않는다', async () => {
+    await createBank({ paymentMethod: 'toss' });
+    expect((await aggregateProjectStatus(PROJECT, NOW)).raisedAmount).toBe(0);
+  });
+
+  it('관리자 지표(모금액·건수)도 같은 집합을 센다', async () => {
+    await createBank();
+    const totals = await aggregateAdminFundingTotals('demo');
+    expect(totals.confirmedAmount).toBe(5000);
+    expect(totals.confirmedCount).toBe(1);
+    expect(totals.awaitingDepositCount).toBe(1);
   });
 
   it('입금 안내 메일을 보내고, 실패하면 사유를 notification_error에 남긴다', async () => {

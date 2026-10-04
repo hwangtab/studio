@@ -389,11 +389,11 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               */}
               <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-2">
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">확정 금액</div>
+                  <div className="text-xs text-gray-500">모금액(입금 대기 포함)</div>
                   <div className="text-lg font-bold text-gray-900">{formatPriceAmount(totals.confirmedAmount)}원</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">확정 펀딩 건수</div>
+                  <div className="text-xs text-gray-500">펀딩 건수(입금 대기 포함)</div>
                   <div className="text-lg font-bold text-gray-900">{totals.confirmedCount}건</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
@@ -416,7 +416,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               <p className="text-xs text-gray-500 mb-6">
                 아래 목록의 표시 건수와 무관하게 {slug ? '이 프로젝트의 ' : ''}전건을 집계한 값입니다.
                 “결제 대기”는 결제창을 띄워 두고 아직 승인되지 않은 홀드입니다(15분 뒤 자동 만료).
-                “계좌 입금 대기”는 운영자가 입금을 확인하거나 취소할 때까지 남습니다(자동 만료 없음).
+                “계좌 입금 대기”는 운영자가 입금을 확인하거나 취소할 때까지 남고(자동 만료 없음), 공개 모금액·명단에 이미 들어가 있습니다. 정산에는 입금을 확인한 것만 들어갑니다.
               </p>
 
               <div className="flex flex-wrap gap-2 mb-6">

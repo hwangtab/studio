@@ -27,10 +27,11 @@ import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide } from
 import { deleteRefundAccount } from '../../../../../lib/payments/refundAccount';
 
 /** 관리자 후원 상세의 계좌 입금 조작 — 입금 확인·미입금 취소·입금 안내 재발송, 그리고 환불 요청 철회 시 계좌 삭제. */
+const revalidate = jest.fn().mockResolvedValue(undefined);
 const call = async (body: unknown) => {
   const json = jest.fn();
   const status = jest.fn().mockReturnValue({ json });
-  const res = { setHeader: jest.fn(), status } as unknown as NextApiResponse;
+  const res = { setHeader: jest.fn(), status, revalidate } as unknown as NextApiResponse;
   await handler({ method: 'PATCH', query: { id: 'order-1' }, body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
 };
@@ -99,4 +100,22 @@ it('confirm_deposit — 한정 리워드 재고가 모자라면 409와 사유', 
   const r = await call({ action: 'confirm_deposit' });
   expect(r.status).toBe(409);
   expect(r.body.message).toContain('남은 수량');
+});
+
+// 입금 대기는 공개 모금액·명단에 들어가 있다 — 닫거나 확정하면 목록·상세를 바로 다시 만든다.
+it('cancel_unpaid·confirm_deposit은 공개 목록·상세를 재검증한다', async () => {
+  (cancelUnpaidBankDeposit as jest.Mock).mockResolvedValueOnce({ ok: true });
+  await call({ action: 'cancel_unpaid' });
+  expect(revalidate).toHaveBeenCalledWith('/ko/funding');
+  expect(revalidate).toHaveBeenCalledWith('/ko/funding/demo');
+  revalidate.mockClear();
+  (confirmBankDeposit as jest.Mock).mockResolvedValueOnce({ ok: true, emailSent: true });
+  await call({ action: 'confirm_deposit' });
+  expect(revalidate).toHaveBeenCalledWith('/ko/funding/demo');
+});
+
+it('미입금 취소가 거절되면 재검증하지 않는다', async () => {
+  (cancelUnpaidBankDeposit as jest.Mock).mockResolvedValueOnce({ ok: false, code: 'invalid_state', message: 'x' });
+  await call({ action: 'cancel_unpaid' });
+  expect(revalidate).not.toHaveBeenCalled();
 });

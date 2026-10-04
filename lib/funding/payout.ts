@@ -208,10 +208,17 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
    */
   manualGrossAmount: number;
   /**
-   * 확정 후원 **건수**. `aggregateProjectStatus`의 backerCount와 같은 것을 센다(사람 수가
-   * 아니다) — 정산 기록의 숫자가 공개 페이지의 'N건 후원'과 달라 보이면 안 된다.
+   * 확정 후원 **건수** — 입금을 확인한(받은) 것만. 공개 페이지의 'N건 후원'은 입금 대기 계좌 입금까지
+   * 세므로(countedFundingPledgeSql) 그 차이는 아래 awaitingDeposit*로 보여 준다.
    */
   backerCount: number;
+  /**
+   * **입금 확인 전이라 정산에서 뺀** 계좌 입금 대기(건수·금액). 공개 모금액에는 들어가 있다(운영자 결정
+   * 2026-10-04) — 받지 않은 돈을 개설자에게 보내면 안 되므로 정산은 받은 돈만 본다. 화면이 "입금 대기
+   * N건 ○원은 확인 전이라 제외"로 알린다.
+   */
+  awaitingDepositCount: number;
+  awaitingDepositAmount: number;
   /** 모금이 끝났는가(`computeProjectState`가 'closed'). 기록 버튼의 전제다. */
   closed: boolean;
   /**
@@ -285,6 +292,13 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
    * computeFundingPayoutForProject 주석이 "근거 없는 공제"라 부르는 바로 그것이다.
    */
   const manualGrossAmount = rows.filter((r) => r.payment_method === 'bank_transfer').reduce((s, r) => s + Number(r.amount), 0);
+  // 정산에서 빠지는 입금 대기 계좌 입금 — 위 rows(받은 돈)와 겹치지 않는다.
+  const awaiting = await db.all<{ n: number | null; amount: number | null }>(sql`
+    SELECT COUNT(*) AS n, COALESCE(SUM(o.total_amount), 0) AS amount
+    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+    WHERE fp.project_slug = ${project.slug} AND o.status = 'pending'
+      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
+  `);
 
   const recorded =
     (await db.query.fundingProjectPayouts.findFirst({
@@ -322,6 +336,8 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
     taxType,
     manualGrossAmount,
     backerCount: rows.length,
+    awaitingDepositCount: Number(awaiting[0]?.n ?? 0),
+    awaitingDepositAmount: Number(awaiting[0]?.amount ?? 0),
     closed:
       computeProjectState(
         { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },
