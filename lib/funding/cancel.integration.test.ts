@@ -136,7 +136,7 @@ beforeAll(async () => {
   }
 });
 beforeEach(async () => {
-  await client.execute('DELETE FROM funding_refund_accounts');
+  await client.execute('DELETE FROM refund_accounts');
   await client.execute('DELETE FROM refunds');
   await client.execute('DELETE FROM funding_pledges');
   await client.execute('DELETE FROM payments');

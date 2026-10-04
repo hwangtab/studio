@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { FieldCryptoError, FIELD_CRYPTO_KEY_ENV } from '../../../../../../lib/crypto/fieldCrypto';
 import { authenticateAdminApi } from '../../../../../../lib/contracts/admin-auth';
-import { holderMatchesCustomer, loadRefundAccount, safeDbErrorSummary } from '../../../../../../lib/funding/refundAccount';
+import { holderMatchesCustomer, loadRefundAccount, safeDbErrorSummary } from '../../../../../../lib/payments/refundAccount';
 import { findFundingOrderById } from '../../../../../../lib/funding/service';
 import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../../../lib/privacy/accessLog';
 
@@ -50,7 +50,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await log('not_found');
       return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
     }
-    const account = await loadRefundAccount(order.id);
+    const account = await loadRefundAccount({ kind: 'funding', orderNo: order.orderNo });
     if (!account) {
       await log('not_found');
       return res.status(404).json({ ok: false, message: '접수된 환불 계좌가 없습니다.' });

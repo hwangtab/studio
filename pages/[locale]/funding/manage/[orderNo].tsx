@@ -6,8 +6,9 @@ import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
 import { assessSelfCancel, canWithdrawBeforeDeposit, cancelBlockedMessage, showsMessageAnonymously } from '../../../../lib/funding/policy';
-import { isOnlineBankTransfer, REFUND_ACCOUNT_LIMITS } from '../../../../lib/funding/bankAccount';
-import BankDepositGuide from '../../../../components/funding/BankDepositGuide';
+import { isOnlineBankTransfer } from '../../../../lib/funding/bankAccount';
+import { REFUND_ACCOUNT_LIMITS } from '../../../../lib/payments/bankAccount';
+import BankDepositGuide from '../../../../components/payments/BankDepositGuide';
 import { Field, TextInput } from '../../../../components/ui/Field';
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
@@ -139,7 +140,7 @@ export default function FundingManagePage(p: Props) {
             )}
           </div>
 
-          {deposit && <BankDepositGuide amount={deposit.amount} deadline={deposit.deadline} customerName={deposit.customerName} />}
+          {deposit && <BankDepositGuide amount={deposit.amount} deadline={deposit.deadline} customerName={deposit.customerName} applicantLabel="신청하신 분" />}
           {!deposit && p.onlineBankTransfer && status === 'expired' && (
             <p className="mt-5 rounded-xl border border-gray-200 p-4 text-base text-gray-700 dark:border-gray-700 dark:text-gray-300">
               이 계좌 입금 신청은 취소되었습니다. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인한 뒤 펀딩을 확정해 드립니다.

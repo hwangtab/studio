@@ -9,7 +9,7 @@ jest.mock('../../../../../lib/funding/bankTransfer', () => ({
   cancelUnpaidBankDeposit: jest.fn(),
   deliverDepositGuide: jest.fn(),
 }));
-jest.mock('../../../../../lib/funding/refundAccount', () => ({ deleteRefundAccount: jest.fn() }));
+jest.mock('../../../../../lib/payments/refundAccount', () => ({ deleteRefundAccount: jest.fn() }));
 jest.mock('../../../../../lib/funding/email', () => ({ sendFundingRefundRequestClearedEmails: jest.fn().mockResolvedValue(null) }));
 jest.mock('../../../../../lib/funding/repository', () => ({ getFundingProjectAsync: jest.fn() }));
 jest.mock('../../../../../db/client', () => ({
@@ -24,7 +24,7 @@ import handler from '../../../../../pages/api/admin/funding/pledges/[id]';
 import { authenticateAdminApi } from '../../../../../lib/contracts/admin-auth';
 import { findFundingOrderById } from '../../../../../lib/funding/service';
 import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide } from '../../../../../lib/funding/bankTransfer';
-import { deleteRefundAccount } from '../../../../../lib/funding/refundAccount';
+import { deleteRefundAccount } from '../../../../../lib/payments/refundAccount';
 
 /** 관리자 후원 상세의 계좌 입금 조작 — 입금 확인·미입금 취소·입금 안내 재발송, 그리고 환불 요청 철회 시 계좌 삭제. */
 const call = async (body: unknown) => {
@@ -83,7 +83,7 @@ it('환불 요청을 철회 처리하면 접수된 환불 계좌를 지운다', 
   });
   const r = await call({ action: 'clear_refund_request', reason: '후원자가 철회' });
   expect(r.status).toBe(200);
-  expect(deleteRefundAccount).toHaveBeenCalledWith('order-1');
+  expect(deleteRefundAccount).toHaveBeenCalledWith({ kind: 'funding', orderNo: 'FND-1' });
 });
 
 it('confirm_deposit — 정산이 기록된 프로젝트면 성공 응답에 경고를 싣는다', async () => {

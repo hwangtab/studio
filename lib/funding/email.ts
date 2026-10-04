@@ -10,7 +10,7 @@ import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { pledgeDownloads } from './shape';
-import { BANK_ACCOUNT, formatKstDeadline } from './bankAccount';
+import { BANK_ACCOUNT, formatKstDeadline } from '../payments/bankAccount';
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;

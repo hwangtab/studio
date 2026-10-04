@@ -2,11 +2,12 @@ import { useState } from 'react';
 
 import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
-import { BANK_ACCOUNT, formatKstDeadline } from '../../lib/funding/bankAccount';
+import { BANK_ACCOUNT, formatKstDeadline } from '../../lib/payments/bankAccount';
 
 /**
- * 계좌 입금 안내 — 펀딩 확인 페이지(`pages/[locale]/funding/manage/[orderNo].tsx`)가 입금 대기 중인
- * 계좌 입금 신청에 그린다. 신청 직후 후원 폼이 이 페이지로 보낸다.
+ * 계좌 입금 안내 — 결제 공용. 지금은 펀딩 확인 페이지(`pages/[locale]/funding/manage/[orderNo].tsx`)가
+ * 입금 대기 중인 계좌 입금 신청에 그리고, 다음 단계에서 공연·예약·믹싱 주문도 같은 컴포넌트를 쓴다.
+ * 금액·기한·이름과 "신청하신 분"/"예약하신 분" 같은 호칭은 호출부가 props로 넘긴다.
  *
  * **노년층이 은행 창구·ATM 앞에서 이 화면을 보고 옮겨 적는다**는 것이 설계의 전부다. SAF2026의
  * `BankDepositGuideView`가 쓰는 시각 위계를 그대로 옮겼다 — 계좌번호와 금액은 화면에서 가장 큰
@@ -21,11 +22,14 @@ import { BANK_ACCOUNT, formatKstDeadline } from '../../lib/funding/bankAccount';
  *
  * 금액은 URL이 아니라 서버가 다시 읽은 값이다(호출부 SSR).
  */
-export default function BankDepositGuide({ amount, deadline, customerName }: {
+export default function BankDepositGuide({ amount, deadline, customerName, applicantLabel = '신청하신 분' }: {
   amount: number;
-  /** 안내한 입금 기한(ISO) — `funding_pledges.hold_expires_at`. */
+  /** 안내한 입금 기한(ISO) — 펀딩은 `funding_pledges.hold_expires_at`. */
   deadline: string;
+  /** 보내는 분 이름으로 써 달라고 안내할 이름(주문자). */
   customerName: string;
+  /** 주문자를 부르는 말 — 펀딩 "신청하신 분", 예약 "예약하신 분", 공연 "예매하신 분" 등. */
+  applicantLabel?: string;
 }) {
   const [copied, setCopied] = useState(false);
   const [copyFailed, setCopyFailed] = useState(false);
@@ -78,7 +82,7 @@ export default function BankDepositGuide({ amount, deadline, customerName }: {
       {/* 보내는 분 이름 — 가장 눈에 띄게(2px 강조 테두리) */}
       <div className="mt-6 rounded-xl border-2 border-primary bg-primary/5 p-5 text-center dark:border-primary-light dark:bg-primary-light/10">
         <p className="text-lg font-bold text-primary sm:text-xl dark:text-violet-300">
-          입금하실 때 보내는 분 이름은 신청하신 분 성함으로 해 주세요.
+          입금하실 때 보내는 분 이름은 {applicantLabel} 성함으로 해 주세요.
         </p>
         <p className="mt-1 text-base text-gray-700 dark:text-gray-300">
           {customerName}님 성함과 금액으로 입금을 확인합니다.

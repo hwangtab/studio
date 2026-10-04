@@ -9,8 +9,8 @@ import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
 import { allLinesStockCondition, findFundingOrderById, findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { ResolvedPledgeLine } from './validation';
-import { normalizeEmailForLimit } from './bankAccount';
-import { safeDbErrorSummary } from './refundAccount';
+import { normalizeEmailForLimit } from '../payments/bankAccount';
+import { safeDbErrorSummary } from '../payments/refundAccount';
 
 /**
  * 계좌 입금(무통장) 후원의 운영 전이 — 입금 확인 · 미입금 취소 · 입금 안내 발송.

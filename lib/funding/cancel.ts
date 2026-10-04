@@ -7,7 +7,7 @@ import { sendFundingCancelledEmails } from './email';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { assessSelfCancel, canWithdrawBeforeDeposit, CANCEL_BLOCK_MESSAGES } from './policy';
 import { cancelUnpaidBankDeposit } from './bankTransfer';
-import { encryptRefundAccountNumber, safeDbErrorSummary, validateRefundAccount } from './refundAccount';
+import { encryptRefundAccountNumber, markRefundAccountRefunded, safeDbErrorSummary, saveRefundAccount, validateRefundAccount } from '../payments/refundAccount';
 import { isPastFundingEnd } from './projectState';
 import { getFundingProjectOrFailure } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
@@ -180,12 +180,10 @@ export const cancelFundingPledge = async (input: {
       }
       if (claimed > 0) {
         try {
-          await db0.run(sql`
-            INSERT INTO funding_refund_accounts (order_id, bank_name, account_number_enc, account_holder)
-            VALUES (${order.id}, ${account.value.bankName}, ${accountNumberEnc}, ${account.value.accountHolder})
-            ON CONFLICT (order_id) DO UPDATE SET
-              bank_name = excluded.bank_name, account_number_enc = excluded.account_number_enc,
-              account_holder = excluded.account_holder, updated_at = unixepoch()`);
+          await saveRefundAccount(
+            { kind: 'funding', orderNo: order.orderNo },
+            { bankName: account.value.bankName, accountNumberEnc, accountHolder: account.value.accountHolder, requestedAt: input.now },
+          );
         } catch (error) {
           // 표가 없거나(0048 미적용) DB 장애 — 계좌 없는 접수를 남기지 않게 표식을 되돌린다.
           // 오류 객체를 통째로 찍지 않는다 — drizzle 메시지에 바인딩 값(계좌번호 암호문·예금주)이 실린다.
@@ -204,6 +202,8 @@ export const cancelFundingPledge = async (input: {
       sql`UPDATE orders SET status = 'refunded', updated_at = unixepoch() WHERE id = ${order.id} AND status IN (${liveFundingOrderStatusList()})`,
     );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 펀딩입니다.' };
+    // 송금을 마쳤다는 기록 — 결제 공용 환불 계좌 표의 refunded_at(계좌가 없는 수기 건이면 아무 일도 없다).
+    await markRefundAccountRefunded({ kind: 'funding', orderNo: order.orderNo }, input.now);
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
     /**
      * 취소 요청 **뒤에** 내려받기가 찍혔으면 기록은 하되 알린다. 지금은 요청 뒤 내려받기를 막지만

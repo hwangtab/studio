@@ -29,8 +29,8 @@ import { cancelFundingPledge } from './cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingDepositGuideEmails } from './email';
 import { parseFundingProject } from './projects';
 import { aggregateProjectStatus, expireStalePledges, findFundingOrderByOrderNo } from './service';
-import { loadRefundAccount } from './refundAccount';
-import { purgeFundingRefundAccountsOfPurgedOrders, PURGED_MARK } from '../privacy/orderRetention';
+import { loadRefundAccount as loadRefundAccountByKey } from '../payments/refundAccount';
+import { purgeRefundAccountsOfPurgedOrders, PURGED_MARK } from '../privacy/orderRetention';
 import { FIELD_CRYPTO_KEY_ENV } from '../crypto/fieldCrypto';
 import { SEND_PENDING } from '../ops/notificationSentinel';
 import type { LegacyPledgePayload as CreatePledgePayload } from '../../test-utils/fundingPledge';
@@ -90,6 +90,12 @@ const createBank = async (over: Partial<CreatePledgePayload> = {}, rewardId = 'm
   return { ...c, id: order!.id };
 };
 
+/** 펀딩 주문 id로 환불 계좌를 읽는다 — 결제 공용 표는 (order_kind, order_no)로 가리킨다. */
+const loadRefundAccount = async (orderId: string) => {
+  const r = await client.execute({ sql: 'SELECT order_no FROM orders WHERE id = ?', args: [orderId] });
+  return loadRefundAccountByKey({ kind: 'funding', orderNo: String(r.rows[0].order_no) });
+};
+
 const ACCOUNT = { bankName: '국민은행', accountNumber: '123-456-7890123', accountHolder: '김후원' };
 let previousKey: string | undefined;
 
@@ -108,7 +114,7 @@ beforeEach(async () => {
   await client.execute('DELETE FROM funding_creators');
   previousKey = process.env[FIELD_CRYPTO_KEY_ENV];
   process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 5).toString('base64');
-  await client.execute('DELETE FROM funding_refund_accounts');
+  await client.execute('DELETE FROM refund_accounts');
   await client.execute('DELETE FROM refunds');
   await client.execute('DELETE FROM funding_pledge_items');
   await client.execute('DELETE FROM funding_pledges');
@@ -273,7 +279,7 @@ describe('입금 뒤 셀프 취소 — 환불 계좌 접수', () => {
     expect(o?.status).toBe('paid'); // 돈이 나가기 전까지는 paid — 운영자가 송금 뒤 기록한다
     expect(o?.fundingPledge?.refundRequestedAt).not.toBeNull();
 
-    const raw = await client.execute({ sql: 'SELECT * FROM funding_refund_accounts WHERE order_id = ?', args: [c.id] });
+    const raw = await client.execute({ sql: "SELECT * FROM refund_accounts WHERE order_kind = 'funding' AND order_no = ?", args: [c.orderNo] });
     expect(raw.rows).toHaveLength(1);
     expect(JSON.stringify(raw.rows[0])).not.toContain('7890123');
     expect(String(raw.rows[0].account_number_enc)).toMatch(/^v2:/);
@@ -302,7 +308,7 @@ describe('입금 뒤 셀프 취소 — 환불 계좌 접수', () => {
     delete process.env[FIELD_CRYPTO_KEY_ENV];
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW, refundAccount: ACCOUNT });
     expect(r).toMatchObject({ ok: false, code: 'temporarily_unavailable' });
-    expect((await client.execute('SELECT COUNT(*) AS n FROM funding_refund_accounts')).rows[0].n).toBe(0);
+    expect((await client.execute('SELECT COUNT(*) AS n FROM refund_accounts')).rows[0].n).toBe(0);
     expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.refundRequestedAt).toBeNull();
   });
 
@@ -312,14 +318,18 @@ describe('입금 뒤 셀프 취소 — 환불 계좌 접수', () => {
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: '계좌 송금 환불', now: NOW });
     expect(r).toEqual({ ok: true, mode: 'recorded', refundAmount: 5000 });
     expect((await findFundingOrderByOrderNo(c.orderNo))?.status).toBe('refunded');
+    // 결제 공용 표에 요청·송금 완료 시각이 남는다.
+    const row = (await client.execute({ sql: "SELECT requested_at, refunded_at FROM refund_accounts WHERE order_no = ?", args: [c.orderNo] })).rows[0];
+    expect(Number(row.requested_at)).toBe(Math.floor(NOW.getTime() / 1000));
+    expect(Number(row.refunded_at)).toBe(Math.floor(NOW.getTime() / 1000));
   });
 
   it('주문의 5년 파기 때 환불 계좌도 지운다', async () => {
     const c = await paidBank();
     await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW, refundAccount: ACCOUNT });
-    expect((await purgeFundingRefundAccountsOfPurgedOrders()).purged).toBe(0);
+    expect((await purgeRefundAccountsOfPurgedOrders()).purged).toBe(0);
     await client.execute({ sql: 'UPDATE orders SET customer_name = ? WHERE id = ?', args: [PURGED_MARK, c.id] });
-    expect((await purgeFundingRefundAccountsOfPurgedOrders()).purged).toBe(1);
+    expect((await purgeRefundAccountsOfPurgedOrders()).purged).toBe(1);
     expect(await loadRefundAccount(c.id)).toBeNull();
   });
 });
@@ -411,12 +421,12 @@ describe('리뷰 지적 — 재현', () => {
     const c = await createBank();
     await confirmBankDeposit({ orderId: c.id, now: NOW });
     const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
-    await client.execute('ALTER TABLE funding_refund_accounts RENAME TO funding_refund_accounts_off');
+    await client.execute('ALTER TABLE refund_accounts RENAME TO refund_accounts_off');
     try {
       const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW, refundAccount: { ...ACCOUNT, accountHolder: '홍예금주' } });
       expect(r).toMatchObject({ ok: false, code: 'temporarily_unavailable' });
     } finally {
-      await client.execute('ALTER TABLE funding_refund_accounts_off RENAME TO funding_refund_accounts');
+      await client.execute('ALTER TABLE refund_accounts_off RENAME TO refund_accounts');
     }
     const logged = JSON.stringify(spy.mock.calls);
     expect(logged).toContain('환불 계좌 저장 실패');

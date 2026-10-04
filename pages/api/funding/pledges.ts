@@ -10,7 +10,8 @@ import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } fr
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
 import { validateCreatePledgePayload } from '../../../lib/funding/validation';
 import { countOpenBankDeposits, deliverDepositGuide } from '../../../lib/funding/bankTransfer';
-import { MAX_OPEN_BANK_DEPOSITS_PER_EMAIL, normalizeEmailForLimit } from '../../../lib/funding/bankAccount';
+import { MAX_OPEN_BANK_DEPOSITS_PER_EMAIL } from '../../../lib/funding/bankAccount';
+import { normalizeEmailForLimit } from '../../../lib/payments/bankAccount';
 
 /** 시간당 IP별 후원 생성 시도 상한. 위저드 재시도·가족 단위 후원을 감안해 넉넉히 둔다. */
 const FUNDING_CREATE_LIMIT = 20;

@@ -59,7 +59,7 @@ it('환불 요청된 계좌 입금 건 — 은행명·예금주만 싣고 계좌
   await insertOrder('o1', 'paid');
   const enc = encryptField('123-456-7890123');
   await client.execute({
-    sql: `INSERT INTO funding_refund_accounts (order_id, bank_name, account_number_enc, account_holder) VALUES ('o1', '국민은행', ?, '김부모')`,
+    sql: `INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at) VALUES ('ra1', 'funding', 'FND-o1', '국민은행', ?, '김부모', 1790000000)`,
     args: [enc],
   });
   const result = (await getServerSideProps({ query: { id: 'o1' } } as never)) as unknown as { props: Record<string, unknown> };

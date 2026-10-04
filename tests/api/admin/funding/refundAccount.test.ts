@@ -1,7 +1,7 @@
 /** @jest-environment node */
 jest.mock('../../../../lib/contracts/admin-auth', () => ({ authenticateAdminApi: jest.fn() }));
-jest.mock('../../../../lib/funding/refundAccount', () => ({
-  ...jest.requireActual('../../../../lib/funding/refundAccount'),
+jest.mock('../../../../lib/payments/refundAccount', () => ({
+  ...jest.requireActual('../../../../lib/payments/refundAccount'),
   loadRefundAccount: jest.fn(),
 }));
 jest.mock('../../../../lib/funding/service', () => ({ findFundingOrderById: jest.fn() }));
@@ -10,7 +10,7 @@ jest.mock('../../../../lib/privacy/accessLog', () => ({ recordAdminPrivacyAccess
 import type { NextApiRequest, NextApiResponse } from 'next';
 import handler from '../../../../pages/api/admin/funding/pledges/[id]/refund-account';
 import { authenticateAdminApi } from '../../../../lib/contracts/admin-auth';
-import { loadRefundAccount } from '../../../../lib/funding/refundAccount';
+import { loadRefundAccount } from '../../../../lib/payments/refundAccount';
 import { findFundingOrderById } from '../../../../lib/funding/service';
 import { recordAdminPrivacyAccess } from '../../../../lib/privacy/accessLog';
 import { FieldCryptoError } from '../../../../lib/crypto/fieldCrypto';
@@ -35,7 +35,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
   (authenticateAdminApi as jest.Mock).mockResolvedValue({ ok: true, actor: 'kyungha', name: '황경하' });
-  (findFundingOrderById as jest.Mock).mockResolvedValue({ id: 'order-1', customerName: '김후원', fundingPledge: { id: 'p1' } });
+  (findFundingOrderById as jest.Mock).mockResolvedValue({ id: 'order-1', orderNo: 'FND-1', customerName: '김후원', fundingPledge: { id: 'p1' } });
   (loadRefundAccount as jest.Mock).mockResolvedValue(ACCOUNT);
   (recordAdminPrivacyAccess as jest.Mock).mockResolvedValue(undefined);
 });
@@ -86,4 +86,9 @@ it('복호화 실패는 decrypt_failed로 남기고 계좌번호를 로그에 �
   expect(r.body.code).toBe('key_mismatch');
   expect(recordAdminPrivacyAccess).toHaveBeenCalledWith(expect.anything(), 'kyungha', 'funding_refund_account_view', 'order-1', 'decrypt_failed');
   expect(JSON.stringify(errorSpy.mock.calls)).not.toContain('7890123');
+});
+
+it('결제 공용 표를 펀딩 주문 키로 읽는다', async () => {
+  await call();
+  expect(loadRefundAccount).toHaveBeenCalledWith({ kind: 'funding', orderNo: 'FND-1' });
 });

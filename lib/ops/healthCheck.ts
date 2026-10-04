@@ -182,7 +182,7 @@ export const checkFieldKeyRotationPending = async (): Promise<HealthIssue | null
   const counts: Array<{ label: string; count: number }> = [];
   for (const target of ENCRYPTED_FIELD_TARGETS) {
     /**
-     * 대상 하나를 못 읽어도 나머지는 센다 — 새 암호화 표(예: 0048 funding_refund_accounts)를 담은
+     * 대상 하나를 못 읽어도 나머지는 센다 — 새 암호화 표(예: 0048 refund_accounts)를 담은
      * 코드가 마이그레이션보다 먼저 배포되면 그 표가 없어 여기서 던지고, 그러면 점검 크론 전체가
      * 멈춘다. 표가 없다는 사실은 같은 크론의 마이그레이션 드리프트 점검이 보고한다.
      */

@@ -201,7 +201,7 @@ it('프로젝트 조회가 실패하면 마감이 아니라 일시 오류로 안
 });
 
 /**
- * 계좌 입금 안내 — 입금 대기 중인 계좌 입금 신청에 그린다(components/funding/BankDepositGuide.tsx).
+ * 계좌 입금 안내 — 입금 대기 중인 계좌 입금 신청에 그린다(components/payments/BankDepositGuide.tsx).
  * 기한이 지나도 계좌를 숨기지 않는다(자동 취소가 없다 — lib/funding/bankAccount.ts).
  */
 describe('계좌 입금 안내', () => {

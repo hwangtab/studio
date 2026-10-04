@@ -10,7 +10,7 @@ import {
 } from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
 import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide } from '../../../../../lib/funding/bankTransfer';
-import { deleteRefundAccount } from '../../../../../lib/funding/refundAccount';
+import { deleteRefundAccount } from '../../../../../lib/payments/refundAccount';
 import { refundFundingLine } from '../../../../../lib/funding/lineRefund';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { setFulfillment } from '../../../../../lib/funding/fulfillment';
@@ -152,7 +152,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (rowsAffectedOf(cleared) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
       // 계좌 입금 후원이 함께 적은 환불 계좌는 더 쓸 데가 없다 — 지금 지운다(실패는 삼킨다;
       // 남아도 주문의 5년 파기 때 함께 지워진다, lib/privacy/orderRetention.ts).
-      await deleteRefundAccount(order.id);
+      await deleteRefundAccount({ kind: 'funding', orderNo: order.orderNo });
       // 메일 실패가 기록을 되돌리지는 않는다(이 저장소의 원칙: 상태 변경은 끝났으므로
       // 후속 실패는 삼키되 기록한다). notificationError는 헬스체크가 매일 읽는다.
       // 플레이스홀더 주소로는 보내지 않는다 — 반송이 발신 도메인 평판을 깎는다(cancel.ts와 같은 가드).

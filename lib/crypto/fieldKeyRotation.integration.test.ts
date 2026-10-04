@@ -63,8 +63,10 @@ const seedRefundAccount = async (enc: string): Promise<string> => {
           VALUES (?, ?, 'funding', 'paid', '후원자', '010', 'r@example.com', ?, 9091, 909, 10000)`,
     args: [orderId, `FND-ROT-${seq}`, `tok-rot-${seq}`],
   });
-  await mockDb.insert(schema.fundingRefundAccounts).values({ orderId, bankName: '은행', accountNumberEnc: enc, accountHolder: '후원자' });
-  return orderId;
+  const [row] = await mockDb.insert(schema.refundAccounts).values({
+    orderKind: 'funding', orderNo: `FND-ROT-${seq}`, bankName: '은행', accountNumberEnc: enc, accountHolder: '후원자', requestedAt: new Date(),
+  }).returning();
+  return row.id;
 };
 
 const storedOf = async (id: string): Promise<string | null> => {
@@ -99,7 +101,7 @@ afterEach(() => {
 const SEEDERS: Record<string, (enc: string) => Promise<string>> = {
   'funding_creators.resident_number_enc': (enc) => seedCreator(enc),
   'funding_creators.payout_account_enc': (enc) => seedPayoutAccount(enc),
-  'funding_refund_accounts.account_number_enc': (enc) => seedRefundAccount(enc),
+  'refund_accounts.account_number_enc': (enc) => seedRefundAccount(enc),
 };
 
 it('모든 타깃에 seeder가 있다 — 목록에 더하고 검증을 빠뜨리면 여기서 선다', () => {

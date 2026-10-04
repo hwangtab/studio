@@ -15,7 +15,7 @@ import { fundingPledgeLinesSql } from './pledgeLinesSql';
 export { fundingPledgeLinesSql };
 import { ANONYMOUS_LABEL, ANONYMOUS_MESSAGE_TERMS_FROM, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import { liveFundingOrderStatusList } from './refundable';
-import { bankDepositGuideDeadline } from './bankAccount';
+import { bankDepositGuideDeadline } from '../payments/bankAccount';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload, ResolvedPledgeLine } from './validation';
 

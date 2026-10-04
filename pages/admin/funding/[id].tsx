@@ -16,8 +16,8 @@ import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/fundi
 import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
 import { findSameNameBankDeposits, loadProjectPayoutState, payoutWarningOf, type SameNameDepositCandidate } from '../../../lib/funding/bankTransfer';
-import { formatKstDeadline } from '../../../lib/funding/bankAccount';
-import { loadRefundAccountSummary } from '../../../lib/funding/refundAccount';
+import { formatKstDeadline } from '../../../lib/payments/bankAccount';
+import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
 import { loadPaymentWindowOpen } from '../../../lib/payments/windowOpen';
 
@@ -69,7 +69,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
 
   const isBank = order.fundingPledge.paymentMethod === 'bank_transfer';
   const sameNameDeposits = isBank ? await findSameNameBankDeposits(order) : [];
-  const summary = isBank && order.fundingPledge.refundRequestedAt ? await loadRefundAccountSummary(order.id) : null;
+  const summary = isBank && order.fundingPledge.refundRequestedAt ? await loadRefundAccountSummary({ kind: 'funding', orderNo: order.orderNo }) : null;
   const refundAccount = summary === null
     ? null
     : summary.status === 'present'

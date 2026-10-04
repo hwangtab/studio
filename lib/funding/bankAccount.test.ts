@@ -1,4 +1,5 @@
-import { bankTransferBlockReason, isOnlineBankTransfer, normalizeEmailForLimit } from './bankAccount';
+import { bankTransferBlockReason, isOnlineBankTransfer } from './bankAccount';
+import { normalizeEmailForLimit } from '../payments/bankAccount';
 
 describe('normalizeEmailForLimit — 남용 상한용 이메일 정규화', () => {
   it.each([
