@@ -414,7 +414,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       { revalidate: 3600, i18nSections: ['stories'] }
     );
   } catch (error) {
-    console.error('Story detail error:', error);
+    // 없는 slug(예: 봇이 긁어 가는 /stories/null)는 404가 정상이다. 오류 로그로 남기면 ISR이
+    // 그 404를 한 시간마다 다시 만들 때마다 찍혀 진짜 오류를 가린다(2026-10-04 로그 43건).
+    if (!(error instanceof Error && error.message.startsWith('Story file not found'))) {
+      console.error('Story detail error:', error);
+    }
     return {
       notFound: true,
       revalidate: 3600,
