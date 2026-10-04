@@ -38,14 +38,15 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
   return (
     <>
       {/*
-        히어로 배경은 공연과 무관한 고정 사진이다(SHOW_HERO_IMAGE) — 포스터는 글자가 든 이미지라 배경으로 깔면
-        어수선하고 공연마다 히어로가 달라진다. 포스터는 아래 본문(ShowPoster)에서 읽을 수 있는 크기로 보여 준다.
+        히어로 배경은 포스터다(스크림 아래 분위기) — 펀딩 목록이 진행 중 프로젝트의 커버를 배경으로 쓰는 것과 같은 수법.
+        히어로 안에 작은 포스터 카드를 또 두지 않고, 읽을 수 있는 크기의 포스터는 아래 본문(ShowPoster)에 둔다.
+        포스터가 없으면 SHOW_HERO_IMAGE로 떨어진다.
       */}
       <ImageHero
         locale="ko"
         priority
         overlayGradient={HERO_SCRIM_STRONG}
-        backgroundImage={SHOW_HERO_IMAGE}
+        backgroundImage={show.coverImage ?? SHOW_HERO_IMAGE}
         imageAlt=""
         aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{show.presenterName} 주최</p>}
         title={show.title}

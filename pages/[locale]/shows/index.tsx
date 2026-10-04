@@ -13,6 +13,13 @@ interface Props {
   nowSec: number;
 }
 
+/**
+ * 목록 히어로의 배경은 **가장 가까운 공연의 포스터**다 — 펀딩 목록이 진행 중 프로젝트의 커버를 쓰는 것과 같은 규칙.
+ * 공연이 하나도 없을 때만 고정 사진(SHOW_HERO_IMAGE)으로 떨어진다.
+ */
+const pickHeroImage = (upcoming: PublicShow[], past: PublicShow[]): string =>
+  upcoming[0]?.coverImage ?? past[0]?.coverImage ?? SHOW_HERO_IMAGE;
+
 /** 1장이면 한 칸, 2장이면 두 칸까지만 벌린다 — 3열 고정이면 한 장짜리가 왼쪽으로 몰린다(펀딩 목록과 같다). */
 const gridColumns = (count: number): string =>
   count <= 1 ? 'max-w-sm' : count === 2 ? 'max-w-3xl md:grid-cols-2' : 'max-w-6xl md:grid-cols-2 lg:grid-cols-3';
@@ -35,7 +42,7 @@ export default function ShowsIndexPage({ upcoming, past, nowSec }: Props) {
         locale="ko"
         priority
         overlayGradient={HERO_SCRIM_STRONG}
-        backgroundImage={SHOW_HERO_IMAGE}
+        backgroundImage={pickHeroImage(upcoming, past)}
         imageAlt=""
         title="공연"
         subtitle="스튜디오 놀이 여는 공연입니다. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드립니다."
