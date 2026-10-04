@@ -2,6 +2,7 @@ import Link from 'next/link';
 
 import ResponsiveImage from '../ResponsiveImage';
 import BaseCard from '../ui/BaseCard';
+import StatusBadge from '../ui/StatusBadge';
 import { nextShowtimeOf } from '../../lib/shows/availability';
 import { formatWon, SALE_STATE_LABELS } from '../../lib/shows/copy';
 import type { PublicShow } from '../../lib/shows/queries';
@@ -16,7 +17,7 @@ interface Props {
 
 /**
  * 공연 목록 카드 — 펀딩 목록 카드(FundingProjectCard)와 같은 재질·구조다: Link > BaseCard glass > 이미지 + 본문.
- * 배지는 디자인 시스템 §4(둥근 알약, 색만 의미에 따라)이고 '예매 중'만 보라 틴트다.
+ * 배지는 공용 StatusBadge('예매 중'만 보라 틴트).
  */
 export default function ShowCard({ show, nowSec, past = false }: Props) {
   const next = nextShowtimeOf(show, nowSec) ?? show.showtimes[show.showtimes.length - 1] ?? null;
@@ -39,17 +40,9 @@ export default function ShowCard({ show, nowSec, past = false }: Props) {
           <div aria-hidden="true" className="aspect-[3/4] w-full bg-gray-100 dark:bg-gray-800" />
         )}
         <div className="flex flex-1 flex-col p-6">
-          <span
-            className={`inline-flex w-fit items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-              stateKey === 'open'
-                ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-primary-lighter'
-                : stateKey === 'cancelled'
-                  ? 'bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100'
-                  : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
-            }`}
-          >
+          <StatusBadge tone={stateKey === 'open' ? 'active' : stateKey === 'cancelled' ? 'warning' : 'neutral'}>
             {SALE_STATE_LABELS[stateKey as keyof typeof SALE_STATE_LABELS]}
-          </span>
+          </StatusBadge>
           <h2 className="typo-card-title mt-3 text-gray-900 dark:text-white">{show.title}</h2>
           {show.subtitle && <p className="typo-card-meta mt-1">{show.subtitle}</p>}
           <p className="typo-card-body mt-2 flex-1">

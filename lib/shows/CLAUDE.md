@@ -33,7 +33,7 @@
 | 출연진 | `LineupCard`(`components/common/`) — 펀딩 `FundingLineupPerson`과 같은 카드 |
 | 목록 카드 | `ShowCard` = `Link > BaseCard glass > ResponsiveImage`(FundingProjectCard와 같은 구조) |
 | 내 티켓 | 티켓 한 장 = `BaseCard` 한 장(QR·입장 번호·상태 배지). 환불은 선택 → 버튼 한 번(라벨에 매수·금액) |
-| 모바일 | `ShowMobileCta` — `#book`이나 `data-hide-mobile-cta` 요소가 보이면 숨는다. Layout이 공연 상세에서 카카오 FAB을 `<lg`로 숨긴다 |
+| 모바일 | 공용 `MobileStickyCta`(`components/common/`) — `hideWhenInView={['#book', '[data-hide-mobile-cta]']}`로 폼·패널 버튼이 보이면 숨는다. Layout이 공연 상세에서 카카오 FAB을 `<lg`로 숨긴다 |
 | FAQ | 공용 `FAQSection` + SEO `faqItems`. 답은 `lib/shows/faq.ts`가 코드의 실제 동작(환불표·판매 마감)에서 만든다 |
 
 v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 파일들이 들어 있다 — 새 공연
@@ -56,8 +56,11 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 
 ### 남은 것(2026-10-03 기준)
 
-- **공용화(설계안 겹 3)는 10/14 이후**: `ShowMobileCta`↔`FundingMobileCta`, booking·funding·shows의
-  success/fail 6장을 공용 `TransactionResult`로. 10/14까지 `BaseCard`·`Button`·카카오 버튼 파일 수정
+- **공용화(설계안 겹 3)**: `MobileStickyCta`·`StatusBadge`는 새 공용 파일로 만들어 공연이 먼저 쓴다(2026-10-04).
+  **`FundingMobileCta`를 `MobileStickyCta`로 옮기는 것은 10/14 이후**(펀딩 상세 HTML이 바뀐다 — 전환 실험 계측).
+  booking·funding·shows success/fail을 공용 `TransactionResult` 한 벌로 합치는 것은 **하지 않기로 했다** — 펀딩은 유리 카드·
+  여러 상태, 공연·예약은 단순해 레이아웃이 다르고, `tests/pages/privateLinkNavigation.test.ts`가 비밀 URL 페이지 **파일 안에**
+  브랜드 줄과 `<a href rel="noreferrer">`가 있어야 통과하도록 짜여 있어 셸로 빼면 그 가드와 싸운다. 10/14까지 `BaseCard`·`Button`·카카오 버튼 파일 수정
   금지(전환 실험 교락 — 메모리 `design-v2-redesign-plan`). 새 파일을 만들고 *사용*하는 것은 괜찮다.
 - 메일 3종(티켓·환불·회차 취소)은 `lib/shows/emailHtml.ts`(순수)가 HTML을 만들고 텍스트는 폴백이다(#463).
   QR은 첨부(ticket-N.png) — cid 인라인을 발송 모듈이 지원하지 않아서다. 실발송 확인은 아직이다.

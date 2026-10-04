@@ -72,7 +72,7 @@ export default function ShowFacts({ show, ctaLabel, bookable }: Props) {
 
       <div className="mt-6">
         {bookable ? (
-          // 하단 고정 바(ShowMobileCta)가 이 버튼이 보이는 동안 숨는다 — 같은 말을 하는 버튼 둘을 피한다.
+          // 하단 고정 바(MobileStickyCta)가 이 버튼이 보이는 동안 숨는다 — 같은 말을 하는 버튼 둘을 피한다.
           <Button asChild size="lg" shape="block" fullWidth>
             <a href="#book" data-hide-mobile-cta>{ctaLabel}</a>
           </Button>
