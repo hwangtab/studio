@@ -1,0 +1,1 @@
+ALTER TABLE `shows` ADD `map_links_json` text;

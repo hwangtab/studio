@@ -7,6 +7,7 @@ import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import * as schema from '../../db/schema';
 import { showTicketTypes, showtimes, shows, showZones } from '../../db/schema';
 import { validateShowSlug } from './reservedSlugs';
+import { serializeMapLinks, validateMapLinks, type MapProviderId } from './maps';
 import { descriptionBlocks, performerNames, serializeNotices, serializePerformers, type ShowPerformer } from './structured';
 import { salesCloseAt } from './time';
 
@@ -54,7 +55,8 @@ export interface ShowDefinition {
   onSitePriceNote?: string | null;
   /** 소개 아래 짧은 안내 목록(수익 사용처 등). */
   notices?: string[];
-  mapUrl?: string | null;
+  /** 제공자별 정확한 장소 주소(https). 없으면 제공자별 검색. 예) { naver: 'https://naver.me/…', kakao: 'https://place.map.kakao.com/…' } */
+  mapLinks?: Partial<Record<MapProviderId, string>>;
   zones: Array<{ code: string; label: string; capacity: number }>;
   /** 절대 시각 — KST는 `new Date('2026-10-24T18:30:00+09:00')`처럼 오프셋을 명시한다. */
   showtimes: Array<{ startsAt: Date }>;
@@ -88,6 +90,7 @@ export function validateShowDefinition(def: ShowDefinition): string[] {
   }
   if (descriptionBlocks(def.description)[0]?.type !== 'p') errors.push('description은 문단으로 시작해야 합니다(첫 문단이 검색 결과·OG 요약이 된다).');
   if (def.title.includes(' — ')) errors.push('title에 " — "로 부제를 끼우지 말고 subtitle 칸을 쓰세요.');
+  errors.push(...validateMapLinks(def.mapLinks));
   if (def.performers.length === 0) errors.push('출연진이 하나 이상 필요합니다.');
   const performerNameSet = new Set<string>();
   for (const perf of def.performers) {
@@ -162,7 +165,7 @@ export async function seedShow(db: ShowSeedDb, def: ShowDefinition, opts: { appl
     scheduleNote: def.scheduleNote ?? null,
     onSitePriceNote: def.onSitePriceNote ?? null,
     noticesJson: def.notices && def.notices.length > 0 ? serializeNotices(def.notices) : null,
-    mapUrl: def.mapUrl ?? null,
+    mapLinksJson: serializeMapLinks(def.mapLinks),
   };
 
   const existing = await db.query.shows.findFirst({ where: (s, { eq: e }) => e(s.slug, def.slug) });

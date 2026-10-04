@@ -1,12 +1,14 @@
 import { Button } from '../ui/Button';
 import type { PublicShow } from '../../lib/shows/queries';
-import { showMapEmbedUrl, showMapUrl } from '../../lib/shows/structured';
+import { showMapEmbedUrl, showMapLinks } from '../../lib/shows/maps';
 
 /**
- * 오시는 길 — 공연장 지도(구글 임베드) + 주소 + 네이버 지도 링크. 연락처 페이지(ContactInfoCard)와 같은 방식의
- * iframe(lazy·no-referrer-when-downgrade)이고, 주소는 공연 데이터(DB)에서 온다. 공연이 바뀌어도 코드는 그대로다.
+ * 오시는 길 — 공연장 지도(구글 임베드) + 주소 + 지도 앱 길찾기 버튼들. 연락처 페이지(ContactInfoCard)와 같은 방식의
+ * iframe(lazy·no-referrer-when-downgrade)이고, 값은 공연 데이터(DB)에서 온다. 버튼은 지도 제공자 목록
+ * (lib/shows/maps.ts SHOW_MAP_PROVIDERS)을 돌아 만들므로 제공자가 늘면 코드 수정 없이 버튼이 늘어난다.
  */
-export default function ShowVenueMap({ show }: { show: Pick<PublicShow, 'venueName' | 'venueAddress' | 'mapUrl'> }) {
+export default function ShowVenueMap({ show }: { show: Pick<PublicShow, 'venueName' | 'venueAddress' | 'mapLinks'> }) {
+  const links = showMapLinks(show);
   return (
     <div>
       <p className="typo-card-subtitle text-gray-900 dark:text-white">{show.venueName}</p>
@@ -23,12 +25,14 @@ export default function ShowVenueMap({ show }: { show: Pick<PublicShow, 'venueNa
           referrerPolicy="no-referrer-when-downgrade"
         />
       </div>
-      <div className="mt-4">
-        <Button asChild variant="outline" shape="block">
-          <a href={showMapUrl({ ...show })} target="_blank" rel="noopener noreferrer">
-            네이버 지도에서 길찾기
-          </a>
-        </Button>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        {links.map((l) => (
+          <Button key={l.id} asChild variant="outline" shape="block">
+            <a href={l.url} target="_blank" rel="noopener noreferrer">
+              {l.label}에서 길찾기
+            </a>
+          </Button>
+        ))}
       </div>
     </div>
   );

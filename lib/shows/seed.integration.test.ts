@@ -32,7 +32,7 @@ describe('공연 정의(bakkeoji)', () => {
     expect(bakkeojiShow.performers.map((x) => x.name)).toEqual(['최양다음 NEXT', '자이(Jai)', '호와호(Howaho)', '솔가(Solga)']);
     expect(bakkeojiShow.performers.every((x) => x.bio && x.bio.length > 10 && x.photo)).toBe(true);
     expect(bakkeojiShow.scheduleNote).toContain('18:30');
-    expect(bakkeojiShow.notices?.some((x) => x.includes('뮤지션들과 공간에게'))).toBe(true);
+    expect(bakkeojiShow.notices?.some((x) => x.includes('수익'))).toBe(false); // 수익 사용처 문구는 두지 않는다(TMI)
     expect(bakkeojiShow.onSitePriceNote).toContain('30,000원');
     expect(bakkeojiShow.ogImage).toMatch(/^\/images\/shows\/.*og.*\.webp$/);
   });

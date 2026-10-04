@@ -16,7 +16,7 @@ const ticket = (id: string, name: string, price: number) => ({ id, name, price, 
 
 const base: PublicShow = {
   slug: 's', title: '공연', subtitle: null, presenterName: '주최', performers: [{ name: '출연' }], ageRating: '전체', runningMinutes: 100,
-  venueName: '장소', venueAddress: '주소', description: '소개', coverImage: null, ogImage: null, scheduleNote: null, onSitePriceNote: null, notices: [], mapUrl: null, cancelled: false,
+  venueName: '장소', venueAddress: '주소', description: '소개', coverImage: null, ogImage: null, scheduleNote: null, onSitePriceNote: null, notices: [], mapLinks: {}, cancelled: false,
   ticketTypes: [ticket('tt1', '사전 예매', 25000)],
   showtimes: [showtime('st1', '10.24(토) 18:30')],
 };

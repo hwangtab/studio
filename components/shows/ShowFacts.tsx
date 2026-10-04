@@ -2,7 +2,7 @@ import { Button } from '../ui/Button';
 import BaseCard from '../ui/BaseCard';
 import { formatWon, SALE_STATE_LABELS } from '../../lib/shows/copy';
 import type { PublicShow } from '../../lib/shows/queries';
-import { showMapUrl } from '../../lib/shows/structured';
+import { showMapLinks } from '../../lib/shows/maps';
 
 interface Props {
   show: PublicShow;
@@ -41,14 +41,19 @@ export default function ShowFacts({ show, ctaLabel, bookable }: Props) {
           <dd className="mt-1 font-semibold text-gray-900 dark:text-white">
             {show.venueName}
             <span className="block font-normal text-gray-600 dark:text-gray-300">{show.venueAddress}</span>
-            <a
-              href={showMapUrl(show)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-1 inline-block rounded font-normal text-gray-700 underline underline-offset-2 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-200 dark:hover:text-primary-lighter dark:focus-visible:ring-primary-lighter/70"
-            >
-              네이버 지도에서 보기
-            </a>
+            <span className="mt-1 flex flex-wrap gap-x-3 gap-y-1">
+              {showMapLinks(show).map((l) => (
+                <a
+                  key={l.id}
+                  href={l.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded font-normal text-gray-700 underline underline-offset-2 hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:text-gray-200 dark:hover:text-primary-lighter dark:focus-visible:ring-primary-lighter/70"
+                >
+                  {l.label}
+                </a>
+              ))}
+            </span>
           </dd>
         </div>
         <div>
