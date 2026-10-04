@@ -3,7 +3,7 @@
  * .abort()만 존재). toss.ts는 AbortSignal.timeout을 쓰므로 이 파일만 node 환경으로 돈다.
  * @jest-environment node
  */
-import { VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE, confirmPayment, cancelPayment, fetchPayment } from './toss';
+import { VIRTUAL_ACCOUNT_CANCEL_CUSTOMER_MESSAGE, confirmPayment, cancelPayment, fetchPayment, tossKeyChannelFromQuery, tossSecretsInOrder } from './toss';
 
 const okPayment = { paymentKey: 'pk', orderId: 'SNB-1', status: 'DONE', totalAmount: 275000 };
 
@@ -176,5 +176,90 @@ describe('가상계좌 차단', () => {
   it('결제수단을 모르면 종전대로 토스를 부른다(지연 승인 자동 취소 경로)', async () => {
     respond({ paymentKey: 'pk', orderId: 'SNB-1', status: 'CANCELED', totalAmount: 1000 });
     expect((await cancelPayment({ paymentKey: 'pk', cancelReason: 'x', cancelAmount: 1000 })).ok).toBe(true);
+  });
+});
+
+/**
+ * 두 키 쌍(결제위젯 gsk ↔ API 개별 연동 sk)이 공존한다. 승인은 결제창을 연 키와 같은 쌍이어야 하므로
+ * 채널을 알면 그쪽부터, 모르면 위젯 키부터 묻고, "이 키로는 모르는 결제"일 때만 다른 쪽으로 한 번 더 묻는다.
+ */
+describe('시크릿 선택(두 키 쌍)', () => {
+  const realFetch = global.fetch;
+  const saved = { w: process.env.TOSS_SECRET_KEY, a: process.env.TOSS_API_SECRET_KEY };
+  const authOf = (secret: string) => `Basic ${Buffer.from(`${secret}:`).toString('base64')}`;
+  const res = (ok: boolean, json: unknown) => ({ ok, json: async () => json });
+  beforeEach(() => {
+    process.env.TOSS_SECRET_KEY = 'live_gsk_widget';
+    process.env.TOSS_API_SECRET_KEY = 'live_sk_api';
+  });
+  afterEach(() => {
+    global.fetch = realFetch;
+    if (saved.w === undefined) delete process.env.TOSS_SECRET_KEY; else process.env.TOSS_SECRET_KEY = saved.w;
+    if (saved.a === undefined) delete process.env.TOSS_API_SECRET_KEY; else process.env.TOSS_API_SECRET_KEY = saved.a;
+  });
+
+  it('tossKeyChannelFromQuery는 "api"만 api로 읽는다', () => {
+    expect(tossKeyChannelFromQuery('api')).toBe('api');
+    expect(tossKeyChannelFromQuery('API')).toBeUndefined();
+    expect(tossKeyChannelFromQuery(['api'])).toBeUndefined();
+    expect(tossKeyChannelFromQuery(undefined)).toBeUndefined();
+  });
+
+  it('순서: 채널 api면 API 키 먼저, 모르면 위젯 키 먼저, 없는 키는 빠진다', () => {
+    expect(tossSecretsInOrder('api')).toEqual(['live_sk_api', 'live_gsk_widget']);
+    expect(tossSecretsInOrder()).toEqual(['live_gsk_widget', 'live_sk_api']);
+    delete process.env.TOSS_API_SECRET_KEY;
+    expect(tossSecretsInOrder('api')).toEqual(['live_gsk_widget']);
+  });
+
+  it('채널 api 승인은 API 시크릿 한 번으로 끝나고 channel은 본문에 싣지 않는다', async () => {
+    const mock = jest.fn().mockResolvedValue(res(true, okPayment));
+    global.fetch = mock as unknown as typeof fetch;
+    const result = await confirmPayment({ paymentKey: 'pk', orderId: 'SNB-1', amount: 275000, channel: 'api' });
+    expect(result.ok).toBe(true);
+    expect(mock).toHaveBeenCalledTimes(1);
+    expect(mock.mock.calls[0][1].headers.Authorization).toBe(authOf('live_sk_api'));
+    expect(JSON.parse(mock.mock.calls[0][1].body)).toEqual({ paymentKey: 'pk', orderId: 'SNB-1', amount: 275000 });
+  });
+
+  it('첫 키가 "모르는 결제"(키 불일치 계열)면 다른 쌍으로 한 번 더 묻는다', async () => {
+    const mock = jest.fn()
+      .mockResolvedValueOnce(res(false, { code: 'INVALID_API_KEY', message: '잘못된 시크릿키 연동 정보 입니다.' }))
+      .mockResolvedValueOnce(res(true, okPayment));
+    global.fetch = mock as unknown as typeof fetch;
+    const result = await confirmPayment({ paymentKey: 'pk', orderId: 'SNB-1', amount: 275000 });
+    expect(result).toEqual({ ok: true, payment: okPayment });
+    expect(mock.mock.calls.map((c) => c[1].headers.Authorization)).toEqual([authOf('live_gsk_widget'), authOf('live_sk_api')]);
+  });
+
+  it('카드 거절·네트워크 오류는 다른 키로 다시 묻지 않는다(이중 처리 방지)', async () => {
+    for (const fail of [
+      () => Promise.resolve(res(false, { code: 'REJECT_CARD_COMPANY', message: '거절' })),
+      () => Promise.reject(new Error('timeout')),
+    ]) {
+      const mock = jest.fn().mockImplementation(fail);
+      global.fetch = mock as unknown as typeof fetch;
+      const result = await cancelPayment({ paymentKey: 'pk', cancelReason: 'r', cancelAmount: 1, idempotencyKey: 'k' });
+      expect(result.ok).toBe(false);
+      expect(mock).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('둘 다 모르는 결제면 첫 키의 응답을 돌려준다', async () => {
+    const mock = jest.fn()
+      .mockResolvedValueOnce(res(false, { code: 'NOT_FOUND_PAYMENT', message: 'first' }))
+      .mockResolvedValueOnce(res(false, { code: 'UNAUTHORIZED_KEY', message: 'second' }));
+    global.fetch = mock as unknown as typeof fetch;
+    expect(await fetchPayment('pk')).toEqual({ ok: false, code: 'NOT_FOUND_PAYMENT', message: 'first' });
+  });
+
+  it('둘 다 없으면 CONFIG_ERROR', async () => {
+    delete process.env.TOSS_SECRET_KEY;
+    delete process.env.TOSS_API_SECRET_KEY;
+    const mock = jest.fn();
+    global.fetch = mock as unknown as typeof fetch;
+    const result = await fetchPayment('pk');
+    expect(result).toMatchObject({ ok: false, code: 'CONFIG_ERROR' });
+    expect(mock).not.toHaveBeenCalled();
   });
 });

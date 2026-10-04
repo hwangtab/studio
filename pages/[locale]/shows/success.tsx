@@ -8,7 +8,7 @@ import Head from 'next/head';
 import { Button } from '../../../components/ui/Button';
 
 import { getDb } from '../../../db/client';
-import { cancelPayment, confirmPayment, fetchPayment } from '../../../lib/booking/toss';
+import { TOSS_KEY_CHANNEL_PARAM, cancelPayment, confirmPayment, fetchPayment, tossKeyChannelFromQuery } from '../../../lib/booking/toss';
 import { withI18nServerProps } from '../../../lib/getStatic';
 import { confirmShowOrder } from '../../../lib/shows/confirm';
 import { sendShowTicketEmail } from '../../../lib/shows/email';
@@ -86,7 +86,8 @@ export const getServerSideProps = withI18nServerProps<SuccessProps>(async ({ que
     return { props: { outcome: 'error', message: '잘못된 접근입니다.' } };
 
   const result = await confirmShowOrder(
-    { orderNo: orderId, paymentKey, amount: amountNumber },
+    // channel: 우리가 그린 결제수단 목록으로 연 결제는 API 개별 연동 키 쌍으로 승인한다(lib/booking/toss.ts).
+    { orderNo: orderId, paymentKey, amount: amountNumber, channel: tossKeyChannelFromQuery(query[TOSS_KEY_CHANNEL_PARAM]) },
     { trustedByWebhook: false },
     { confirmPayment, fetchPayment, cancelPayment },
   );

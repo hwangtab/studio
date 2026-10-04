@@ -7,7 +7,7 @@ import { sendBookingConfirmedEmails, sendMixingOrderConfirmedEmails } from './em
 import { hasOccupancyCalendarConflict } from './calendarGuard';
 import { calendarIdFor, createBookingEvent, type BookingCalendar } from './gcal';
 import { findOrderByOrderNo, PENDING_HOLD_SECONDS } from './service';
-import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, cancelPayment, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossPayment } from './toss';
+import { VIRTUAL_ACCOUNT_CONFIRM_MESSAGE, cancelPayment, confirmPayment, fetchPayment, isVirtualAccountPayment, type TossKeyChannel, type TossPayment } from './toss';
 import { kstDateString } from './kst';
 import { getProduct } from './products';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
@@ -380,6 +380,8 @@ export const confirmBookingPayment = async (
     orderNo: string;
     paymentKey: string;
     amount: number;
+    /** 결제창을 연 키 쌍(success 주소의 `tosskey`). 승인 시크릿 순서를 정한다 — lib/booking/toss.ts. */
+    channel?: TossKeyChannel;
   },
   /**
    * 웹훅 경로 표식 — 펀딩(lib/funding/confirm.ts)과 같은 형태.
@@ -515,7 +517,7 @@ export const confirmBookingPayment = async (
   }
 
   const db = getDb();
-  const toss = await confirmPayment({ paymentKey: input.paymentKey, orderId: order.orderNo, amount: input.amount });
+  const toss = await confirmPayment({ paymentKey: input.paymentKey, orderId: order.orderNo, amount: input.amount, channel: input.channel });
 
   let approved: TossPayment;
   if (toss.ok) {

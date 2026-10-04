@@ -18,31 +18,63 @@ export type TossResult =
   | { ok: true; payment: TossPayment }
   | { ok: false; code: string; message: string };
 
-const authHeader = (): string => {
-  const secret = process.env.TOSS_SECRET_KEY;
-  if (!secret) throw new Error('TOSS_SECRET_KEY가 설정되지 않았습니다.');
-  return `Basic ${Buffer.from(`${secret}:`).toString('base64')}`;
+/**
+ * 어느 키 쌍으로 결제창을 열었나 — 승인은 **연 키와 같은 쌍의 시크릿**으로 해야 한다.
+ *
+ * - `widget`: 결제위젯 연동 키(`NEXT_PUBLIC_TOSS_CLIENT_KEY` live_gck_ ↔ `TOSS_SECRET_KEY` live_gsk_).
+ * - `api`: API 개별 연동 키(`NEXT_PUBLIC_TOSS_API_CLIENT_KEY` live_ck_ ↔ `TOSS_API_SECRET_KEY` live_sk_).
+ *   우리가 그린 결제수단 목록(PaymentMethodPicker)이 `payment().requestPayment()`로 연다.
+ *
+ * 두 쌍은 같은 MID(studkol3wd)라 조회·취소는 어느 시크릿으로도 같은 결제를 본다(2026-10-04 실측:
+ * 두 시크릿 모두 위젯 결제를 조회했다). 그래도 결제 행에 채널을 기록하지 않으므로 순서를 정하고,
+ * 키가 이 결제를 못 알아볼 때만 다른 쪽으로 한 번 더 묻는다(`KEY_MISMATCH_CODES`).
+ */
+export type TossKeyChannel = 'widget' | 'api';
+
+/** success 주소에 실어 승인 경로에 "어느 키로 열었나"를 알리는 쿼리 이름·값. 소문자(미들웨어 정규화와 무관하게 안전). */
+export const TOSS_KEY_CHANNEL_PARAM = 'tosskey';
+export const TOSS_KEY_CHANNEL_API_VALUE = 'api';
+
+/** success 주소 쿼리 → 채널. 모르는 값은 undefined(기본 순서). 위조해도 우리 시크릿 중 어느 것을 먼저 쓰는지만 바뀐다. */
+export const tossKeyChannelFromQuery = (value: unknown): TossKeyChannel | undefined =>
+  value === TOSS_KEY_CHANNEL_API_VALUE ? 'api' : undefined;
+
+/**
+ * 이 코드가 오면 "이 키로는 이 결제를 모른다/권한이 없다"는 뜻이라 돈이 움직이지 않았다 — 다른 쌍의
+ * 시크릿으로 한 번 더 물어도 안전하다. 승인은 결제 하나에 한 번만 성립하므로(토스) 재시도가 이중
+ * 승인을 만들 수 없고, 취소도 앞 요청이 거절됐으니 같은 금액이 두 번 나가지 않는다.
+ *
+ * **NETWORK_ERROR·5xx는 넣지 않는다** — 응답만 늦은 요청은 실제로 처리됐을 수 있고, 멱등 키는
+ * API 키별로 묶이므로(토스 규격) 다른 키로 다시 보내면 중복 취소를 막아 주지 못한다.
+ */
+const KEY_MISMATCH_CODES = new Set([
+  'UNAUTHORIZED_KEY', 'INVALID_API_KEY', 'FORBIDDEN_REQUEST', 'NOT_FOUND_PAYMENT', 'NOT_FOUND_PAYMENT_SESSION',
+]);
+
+/**
+ * 물어볼 시크릿 순서. 채널을 알면 그쪽이 먼저, 모르면(웹훅·재조회·취소) 위젯 키가 먼저다 —
+ * 지금까지의 결제가 전부 위젯이고 새 결제 화면은 기능 플래그 뒤에 있다.
+ * 설정되지 않은 키는 빠진다. 둘 다 없으면 빈 배열(→ CONFIG_ERROR).
+ */
+export const tossSecretsInOrder = (channel?: TossKeyChannel): string[] => {
+  const widget = process.env.TOSS_SECRET_KEY;
+  const api = process.env.TOSS_API_SECRET_KEY;
+  const ordered = channel === 'api' ? [api, widget] : [widget, api];
+  return ordered.filter((s, i, all): s is string => Boolean(s) && all.indexOf(s) === i);
 };
 
-const request = async (
+const authHeaderFor = (secret: string): string => `Basic ${Buffer.from(`${secret}:`).toString('base64')}`;
+
+const requestWith = async (
+  secret: string,
   path: string,
   init?: { method?: string; body?: unknown; idempotencyKey?: string },
 ): Promise<TossResult> => {
-  let auth: string;
-  try {
-    auth = authHeader();
-  } catch (error) {
-    return {
-      ok: false,
-      code: 'CONFIG_ERROR',
-      message: error instanceof Error ? error.message : 'TOSS_SECRET_KEY가 설정되지 않았습니다.',
-    };
-  }
   try {
     const res = await fetch(`${TOSS_API}${path}`, {
       method: init?.method ?? 'GET',
       headers: {
-        Authorization: auth,
+        Authorization: authHeaderFor(secret),
         'Content-Type': 'application/json',
         // 토스는 모든 POST API에서 Idempotency-Key 헤더를 받는다(최대 300자, 첫 요청일로부터
         // 15일 유효). 키 + API 키 + 요청 주소 + HTTP 메서드가 같으면 최초 응답을 재사용한다.
@@ -60,6 +92,22 @@ const request = async (
   } catch (error) {
     return { ok: false, code: 'NETWORK_ERROR', message: error instanceof Error ? error.message : '네트워크 오류' };
   }
+};
+
+const request = async (
+  path: string,
+  init?: { method?: string; body?: unknown; idempotencyKey?: string; channel?: TossKeyChannel },
+): Promise<TossResult> => {
+  const secrets = tossSecretsInOrder(init?.channel);
+  if (secrets.length === 0) {
+    return { ok: false, code: 'CONFIG_ERROR', message: 'TOSS_SECRET_KEY가 설정되지 않았습니다.' };
+  }
+  const first = await requestWith(secrets[0], path, init);
+  if (first.ok || secrets.length < 2 || !KEY_MISMATCH_CODES.has(first.code)) return first;
+  const second = await requestWith(secrets[1], path, init);
+  // 둘째도 "모르는 결제"면 첫 응답을 돌려준다 — 채널 순서상 그쪽이 더 정확한 사유다.
+  if (!second.ok && KEY_MISMATCH_CODES.has(second.code)) return first;
+  return second;
 };
 
 /**
@@ -109,8 +157,13 @@ export const isVirtualAccountMethod = (method: string | null | undefined): boole
 export const isVirtualAccountPayment = (payment: Pick<TossPayment, 'method' | 'status'>): boolean =>
   isVirtualAccountMethod(payment.method) || payment.status === 'WAITING_FOR_DEPOSIT';
 
-export const confirmPayment = async (input: { paymentKey: string; orderId: string; amount: number }): Promise<TossResult> => {
-  const result = await request('/payments/confirm', { method: 'POST', body: input });
+export const confirmPayment = async (input: {
+  paymentKey: string; orderId: string; amount: number;
+  /** 결제창을 연 키 쌍. success 주소의 `tosskey`에서 온다. 없으면 위젯 키부터(웹훅 등). */
+  channel?: TossKeyChannel;
+}): Promise<TossResult> => {
+  const { channel, ...body } = input;
+  const result = await request('/payments/confirm', { method: 'POST', body, channel });
   if (result.ok) {
     // 처리방침이 설명하지 않는 수단이 열렸는지 본다 — 알릴 뿐 결제는 막지 않는다.
     await checkPaymentMethod({
