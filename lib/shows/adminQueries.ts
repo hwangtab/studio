@@ -26,8 +26,14 @@ export interface AdminShowtimeStat {
   awaitingDeposit: number;
   comp: number;
   checkedIn: number;
-  /** 결제 확정 매출(환불 반영 전 단가 합 — 정산 정본이 아니라 현황 참고용). */
+  /**
+   * 결제 확정 매출(환불 반영 전 단가 합 — 정산 정본이 아니라 현황 참고용). **취소된 회차는 0이다** — 토스 결제는
+   * 회차 취소가 그 자리에서 환불해 티켓이 void가 되지만, 계좌 입금 결제는 고객이 환불 계좌를 적을 때까지 티켓이
+   * issued로 남는다. 그 돈은 매출이 아니라 돌려줄 돈이라 `refundDueAmount`로 따로 보인다.
+   */
   grossAmount: number;
+  /** 취소된 회차에서 아직 돌려주지 않은 계좌 입금 결제(issued로 남은 티켓 단가 합). 취소되지 않은 회차는 0. */
+  refundDueAmount: number;
 }
 
 export interface AdminShowListItem {
@@ -62,7 +68,8 @@ async function showtimeStats(showId?: string): Promise<Array<AdminShowtimeStat &
       (SELECT COUNT(*) FROM show_orders so JOIN orders o ON o.order_no = so.order_no WHERE so.showtime_id = st.id AND o.status = ${AWAITING_DEPOSIT}) as awaitingDeposit,
       (SELECT COUNT(*) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued' AND t.issued_by = 'organizer_comp') as comp,
       (SELECT COUNT(*) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued' AND t.checked_in_at IS NOT NULL) as checkedIn,
-      (SELECT COALESCE(SUM(t.unit_amount), 0) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued') as grossAmount
+      CASE WHEN st.status = 'cancelled' THEN 0 ELSE (SELECT COALESCE(SUM(t.unit_amount), 0) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued') END as grossAmount,
+      CASE WHEN st.status = 'cancelled' THEN (SELECT COALESCE(SUM(t.unit_amount), 0) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued' AND t.issued_by = 'customer') ELSE 0 END as refundDueAmount
     FROM showtimes st
     ${showId ? sql`WHERE st.show_id = ${showId}` : sql``}
   `)) as Array<Record<string, number | string>>;
@@ -80,6 +87,7 @@ async function showtimeStats(showId?: string): Promise<Array<AdminShowtimeStat &
     comp: Number(r.comp),
     checkedIn: Number(r.checkedIn),
     grossAmount: Number(r.grossAmount),
+    refundDueAmount: Number(r.refundDueAmount),
   }));
 }
 

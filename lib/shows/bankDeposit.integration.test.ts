@@ -28,6 +28,7 @@ import { cancelAwaitingShowDeposit, confirmShowBankDeposit, deliverShowDepositGu
 import { refundShowTickets } from './refund';
 import { cancelShowtime } from './showtimeOps';
 import { getShowOrderForManage } from './queries';
+import { loadAdminShowDetail } from './adminQueries';
 import { sendShowTicketEmail } from './email';
 import { loadRefundAccount } from '../payments/refundAccount';
 import { bankDepositPaymentKey } from '../payments/bankDeposit';
@@ -239,6 +240,10 @@ describe('공연 계좌 입금 — 회차 취소', () => {
     expect(t.cancelPayment).not.toHaveBeenCalled();
     expect((await orderRow(waiting))?.status).toBe('deposit_cancelled');
     expect((await ticketsOf(paid)).every((x) => x.status === 'issued')).toBe(true);
+    // 관리자 현황: 취소 회차의 남은 계좌 결제는 매출이 아니라 돌려줄 돈이다.
+    const stat = (await loadAdminShowDetail('show-1'))!.showtimes[0];
+    expect(stat.grossAmount).toBe(0);
+    expect(stat.refundDueAmount).toBe(20000);
 
     // 공연 1~2일 전이라도 회차 취소는 취소환불표가 아니라 100%다.
     const tickets = await ticketsOf(paid);

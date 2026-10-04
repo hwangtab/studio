@@ -730,6 +730,38 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * **취소된 공연 회차의 계좌 입금 결제 중 환불 계좌를 아직 안 받은 건.** 토스 결제는 회차 취소가 그 자리에서
+   * 환불하지만 계좌 입금은 돌려줄 계좌를 모른다 — 고객이 내 티켓에서 환불 계좌를 적어야 환불이 기록된다
+   * (lib/shows/showtimeOps.ts `bankRefundOrders`). 안내 메일 한 통 뒤에 아무도 안 보면 돈이 그대로 남는다.
+   * 경과일은 회차 취소 시각부터 센다. 3일이 지나면 high — 운영자가 전화로 계좌를 받아 송금하고 "환불"로 기록한다.
+   */
+  try {
+    const owed = await db.all<{ order_no: string; cancelled_at: number | null }>(sql`
+      SELECT DISTINCT o.order_no, s.cancelled_at FROM orders o
+      JOIN show_orders so ON so.order_no = o.order_no
+      JOIN showtimes s ON s.id = so.showtime_id
+      WHERE o.type = 'ticket' AND s.status = 'cancelled'
+        AND EXISTS (SELECT 1 FROM payments p WHERE p.order_id = o.id AND p.payment_key LIKE 'bank-deposit:%')
+        AND EXISTS (SELECT 1 FROM show_tickets t WHERE t.order_no = o.order_no AND t.status = 'issued' AND t.issued_by = 'customer')
+    `);
+    if (owed.length > 0) {
+      const days = (r: { cancelled_at: number | null }) => r.cancelled_at ? Math.floor((now.getTime() / 1000 - Number(r.cancelled_at)) / 86400) : 0;
+      const oldest = Math.max(...owed.map(days));
+      issues.push({
+        severity: oldest >= 3 ? 'high' : 'medium',
+        href: '/admin/shows',
+        title: `취소된 회차의 계좌 결제 중 환불 계좌 미접수 ${owed.length}건(최장 ${oldest}일 경과)`,
+        detail:
+          `주문번호: ${sample(owed.map((r) => r.order_no))}\n` +
+          '회차 취소 안내 메일로 내 티켓에서 환불 계좌를 적어 달라고 했지만 아직 접수되지 않았습니다. ' +
+          '고객에게 연락해 계좌를 받아 송금한 뒤 관리자 > 공연 상세에서 티켓을 "환불"로 기록해 주세요.',
+      });
+    }
+  } catch (error) {
+    console.error('[health-check] 취소 회차 계좌 결제 환불 조회 실패', { error: error instanceof Error ? error.name : 'unknown' });
+  }
+
+  /**
    * **지우지 못한 [입금 대기] 캘린더 일정** — 미입금 취소된 예약의 대기 일정 삭제가 실패한 건
    * (lib/booking/bankDeposit.ts `removeWaitingCalendarEvent`가 `gcal_error`에 `waiting_delete:`를 남긴다).
    * 그 일정은 캘린더 바쁨으로 읽혀 웹 예약을 계속 막는다. 확정 예약의 캘린더 오류(위 점검)와 섞지 않는다 —

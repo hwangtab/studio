@@ -1015,3 +1015,42 @@ describe('계약 위생 점검', () => {
     expect(row.status).toBe('expired');
   });
 });
+
+describe('계좌 입금(공연·예약·믹싱) 점검', () => {
+  beforeEach(async () => {
+    for (const t of ['refund_accounts', 'show_tickets', 'show_orders', 'show_ticket_types', 'showtimes', 'show_zones', 'shows']) {
+      await client.execute(`DELETE FROM ${t}`);
+    }
+  });
+
+  it('미입금 취소 뒤 지우지 못한 [입금 대기] 일정을 보고한다 — 확정 일정 캘린더 점검과 섞지 않는다', async () => {
+    await insertOrder({ status: 'deposit_cancelled' });
+    await insertBooking({ status: 'cancelled', gcal_event_id: 'evt-w', gcal_error: 'waiting_delete: 503' });
+    const t = await titles();
+    expect(t.some((x) => x.includes('지우지 못한 [입금 대기] 캘린더 일정 1건'))).toBe(true);
+    expect(t.some((x) => x.includes('구글 캘린더'))).toBe(false);
+  });
+
+  it('고객 환불 계좌로 송금을 기다리는 건을 보고하고, 48시간이 지나면 high', async () => {
+    await insertOrder({ status: 'refunded' });
+    await client.execute({ sql: `INSERT INTO refund_accounts (id, order_kind, order_no, bank_name, account_number_enc, account_holder, requested_at) VALUES ('ra','session','SNB-1','국민','enc','홍길동',?)`, args: [EPOCH('2026-09-07')] });
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('계좌 환불 송금'))!;
+    expect(issue.severity).toBe('high');
+    await client.execute(`UPDATE refund_accounts SET refunded_at = unixepoch()`);
+    expect((await titles()).some((x) => x.includes('계좌 환불 송금'))).toBe(false);
+  });
+
+  it('취소된 회차의 계좌 결제 중 환불 계좌 미접수 건을 경과일과 함께 보고한다', async () => {
+    await client.execute(`INSERT INTO shows (id, slug, title, presenter_name, performers, age_rating, running_minutes, venue_name, venue_address, description, status) VALUES ('s1','s','t','p','a','전체',60,'v','a','d','published')`);
+    await client.execute(`INSERT INTO show_zones (id, show_id, code, label, capacity) VALUES ('z1','s1','A','A',10)`);
+    await client.execute({ sql: `INSERT INTO showtimes (id, show_id, starts_at, sales_close_at, status, cancelled_at) VALUES ('st1','s1',?,?,'cancelled',?)`, args: [EPOCH('2026-09-20'), EPOCH('2026-09-19'), EPOCH('2026-09-05')] });
+    await client.execute(`INSERT INTO show_ticket_types (id, show_id, zone_id, name, price) VALUES ('tt1','s1','z1','일반',10000)`);
+    await insertOrder({ order_no: 'TKT-1', type: 'ticket', status: 'paid', total_amount: 10000 });
+    await client.execute(`INSERT INTO show_orders (order_no, showtime_id, buyer_name, buyer_contact) VALUES ('TKT-1','st1','홍길동','010')`);
+    await client.execute(`INSERT INTO show_tickets (id, order_no, showtime_id, ticket_type_id, code, status, unit_amount) VALUES ('t1','TKT-1','st1','tt1','C1','issued',10000)`);
+    await client.execute(`INSERT INTO payments (id, order_id, payment_key, method) VALUES ('p1','o1','bank-deposit:TKT-1','계좌 입금')`);
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes('환불 계좌 미접수'))!;
+    expect(issue.title).toContain('1건(최장 5일 경과)');
+    expect(issue.severity).toBe('high');
+  });
+});

@@ -28,7 +28,7 @@ const show = (orders: AdminOrderRow[]): AdminShowDetail => ({
   ticketTypes: [{ id: 'tt', name: '일반', price: 30000, quota: null, compQuota: 5, zoneCode: 'A' }],
   showtimes: [{
     id: 'st1', startsAt: 1790100000, label: '10/10 19:00', status: 'scheduled', salesCloseAt: 1790090000, capacity: 100, issued: 1, held: 1,
-    awaitingDeposit: 1, comp: 0, checkedIn: 0, grossAmount: 30000, orders, scanLinks: [],
+    awaitingDeposit: 1, comp: 0, checkedIn: 0, grossAmount: 30000, refundDueAmount: 0, orders, scanLinks: [],
   }],
 });
 

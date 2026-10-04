@@ -205,6 +205,7 @@ function ShowtimeSection({ show, showtime: t, busy, run, onScanUrl, onlyAwaiting
           <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">{t.label} {t.status !== 'scheduled' && <span className="text-sm font-normal text-gray-500">({t.status === 'cancelled' ? '취소됨' : '종료'})</span>}</h2>
           <p className="text-sm text-gray-600 mt-1">
             발권 {t.issued} · 결제대기 {t.held}{t.awaitingDeposit > 0 ? ` (계좌 입금 대기 ${t.awaitingDeposit}주문)` : ''} · 초대 {t.comp} · 정원 {t.capacity} · 입장 {t.checkedIn} · 판매마감 {kstTime(t.salesCloseAt)}
+            {t.refundDueAmount > 0 && <span className="ml-1 font-semibold text-red-700">· 돌려줄 계좌 입금 {t.refundDueAmount.toLocaleString('ko-KR')}원(환불 계좌 접수 대기)</span>}
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
