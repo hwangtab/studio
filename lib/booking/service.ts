@@ -5,7 +5,7 @@ import { sql } from 'drizzle-orm';
 import { getDb } from '../../db/client';
 import { orders, type Booking, type Order, type Payment, type Refund, type WorkOrder } from '../../db/schema';
 import { computeAmounts } from './amounts';
-import { AWAITING_DEPOSIT, MAX_BANK_DEPOSIT_BOOKINGS_PER_RESOURCE_DAY, type CheckoutPaymentMethod } from '../payments/bankDeposit';
+import { AWAITING_DEPOSIT, type CheckoutPaymentMethod } from '../payments/bankDeposit';
 import { kstDateTime } from './kst';
 import { computeMixingAmounts, getMixingProduct } from './mixing-products';
 import { getProduct, occupancyConflictKeys, resourceKindOf } from './products';
@@ -56,7 +56,7 @@ export const createBookingOrder = async (
   } = {},
 ): Promise<
   | { ok: true; orderNo: string; itemAmount: number; vatAmount: number; totalAmount: number; bookingId: string; roomNumber: string | null }
-  | { ok: false; code: 'slot_taken' | 'day_bank_quota_full' }
+  | { ok: false; code: 'slot_taken' }
 > => {
   const db = getDb();
   const product = getProduct(payload.productId)!; // validation이 보장
@@ -108,25 +108,6 @@ export const createBookingOrder = async (
       WHERE status = 'pending' AND type = 'session' AND order_no = ${releaseOrderNo}
         AND customer_email = ${payload.customerEmail} AND customer_phone = ${payload.customerPhone}
     `);
-  }
-
-  /**
-   * 계좌 입금 대기 **하루 상한** — 같은 공간(이 상품이 쓰는 녹음실 또는 방 묶음)·같은 날(KST)에 이미 입금 대기
-   * 예약이 `MAX_BANK_DEPOSIT_BOOKINGS_PER_RESOURCE_DAY`건이면 계좌 입금을 받지 않는다(카드는 된다). 대기는
-   * 자동으로 풀리지 않아, 입금하지 않을 신청 몇 건이 하루를 통째로 막을 수 있다. 사전 조회라 동시 신청이 한 건
-   * 넘칠 수는 있다 — 상한은 남용 억제용이고 이중 예약은 아래 겹침 가드가 막는다.
-   */
-  if (options.paymentMethod === 'bank_transfer') {
-    const dayStart = kstDateTime(payload.date, 0);
-    const dayEnd = kstDateTime(payload.date, 24);
-    const resources: Array<string | null> = resourceKindOf(product) === 'rooms' ? [...(product.rooms ?? [])] : [null];
-    const [row] = await db.all<{ n: number }>(sql`
-      SELECT COUNT(*) AS n FROM bookings b JOIN orders o ON o.id = b.order_id
-      WHERE o.status = ${AWAITING_DEPOSIT} AND b.status = 'pending'
-        AND b.start_at < ${toEpoch(dayEnd)} AND b.start_at >= ${toEpoch(dayStart)}
-        AND (${roomMatch(resources)})
-    `);
-    if (Number(row?.n ?? 0) >= MAX_BANK_DEPOSIT_BOOKINGS_PER_RESOURCE_DAY) return { ok: false, code: 'day_bank_quota_full' };
   }
 
   const [order] = await db

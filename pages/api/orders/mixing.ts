@@ -8,7 +8,7 @@ import { validateCreateMixingOrderPayload } from '../../../lib/booking/validatio
 import { deliverBookingDepositGuide } from '../../../lib/booking/bankDeposit';
 import { getDb } from '../../../db/client';
 import { isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
-import { checkBankDepositAbuse, recordBankDepositOrigin } from '../../../lib/payments/bankDepositOrders';
+import { checkBankDepositAbuse } from '../../../lib/payments/bankDepositOrders';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -29,13 +29,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '결제 방법을 다시 골라 주세요.' });
   const paymentMethod = rawMethod ?? 'toss';
   if (paymentMethod === 'bank_transfer') {
-    const abuse = await checkBankDepositAbuse(validated.value.customerEmail, ip);
+    const abuse = await checkBankDepositAbuse(validated.value.customerEmail);
     if (!abuse.ok) return res.status(abuse.status).json({ ok: false, code: abuse.code, message: abuse.message });
   }
 
   const result = await createMixingOrder(validated.value, now, { releaseOrderNo: readPreviousOrderNo(req.body), paymentMethod });
   if (paymentMethod === 'bank_transfer') {
-    await recordBankDepositOrigin(ip, result.orderNo);
     await deliverBookingDepositGuide(result.orderNo);
     const created = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, result.orderNo) });
     return res.status(201).json({

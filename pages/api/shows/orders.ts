@@ -8,7 +8,7 @@ import { createShowOrder } from '../../../lib/shows/service';
 import { validateCreateShowOrderPayload } from '../../../lib/shows/validation';
 import { deliverShowDepositGuide } from '../../../lib/shows/bankDeposit';
 import { BANK_DEPOSIT_BLOCK_MESSAGES, isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
-import { checkBankDepositAbuse, recordBankDepositOrigin } from '../../../lib/payments/bankDepositOrders';
+import { checkBankDepositAbuse } from '../../../lib/payments/bankDepositOrders';
 
 const FAILURE_MESSAGES = {
   sold_out: '선택하신 티켓의 잔여석이 부족합니다. 매수를 줄이거나 다른 티켓을 선택해 주세요.',
@@ -16,7 +16,6 @@ const FAILURE_MESSAGES = {
   invalid_quantity: '매수를 확인해 주세요.',
   ticket_type_mismatch: '선택하신 회차와 티켓 종류가 맞지 않습니다. 페이지를 새로고침해 주세요.',
   starts_too_soon: BANK_DEPOSIT_BLOCK_MESSAGES.starts_too_soon,
-  show_bank_share_full: BANK_DEPOSIT_BLOCK_MESSAGES.show_bank_share_full,
 } as const;
 
 /**
@@ -44,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: '결제 방법을 다시 골라 주세요.' });
   const paymentMethod = rawMethod ?? 'toss';
   if (paymentMethod === 'bank_transfer') {
-    const abuse = await checkBankDepositAbuse(validated.value.buyerEmail, ip);
+    const abuse = await checkBankDepositAbuse(validated.value.buyerEmail);
     if (!abuse.ok) return res.status(abuse.status).json({ ok: false, code: abuse.code, message: abuse.message });
   }
 
@@ -60,7 +59,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (paymentMethod === 'bank_transfer') {
     // 안내 메일(고객+운영자). 실패해도 신청은 성립한다 — 계좌는 이동하는 안내 화면(내 티켓)에 나오고 실패는
     // notification_error로 관리자 화면에 남는다.
-    await recordBankDepositOrigin(ip, result.orderNo);
     await deliverShowDepositGuide(result.orderNo);
     return res.status(201).json({
       ok: true, orderNo: result.orderNo, totalAmount: order.totalAmount, paymentMethod: 'bank_transfer',

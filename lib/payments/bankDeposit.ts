@@ -64,7 +64,7 @@ export const bankDepositStateOf = (order: {
  */
 export const BANK_DEPOSIT_MIN_LEAD_HOURS = 2;
 
-export type BankDepositBlockCode = 'starts_too_soon' | 'show_bank_share_full' | 'day_bank_quota_full';
+export type BankDepositBlockCode = 'starts_too_soon';
 
 /**
  * 이 주문에 계좌 입금을 받을 수 있는가 — 막히면 이유, 되면 null. `startsAt`은 공연 회차·예약 이용 시작
@@ -79,8 +79,6 @@ export const bankDepositBlockReason = (input: { startsAt: Date | null; now: Date
 
 export const BANK_DEPOSIT_BLOCK_MESSAGES: Record<BankDepositBlockCode, string> = {
   starts_too_soon: `시작까지 ${BANK_DEPOSIT_MIN_LEAD_HOURS}시간이 남지 않아 계좌 입금은 받지 않습니다. 입금을 확인할 시간이 없어서입니다. 카드·간편결제로 해 주세요.`,
-  show_bank_share_full: '이 회차는 입금을 기다리는 좌석이 많아 지금은 계좌 입금을 받지 않습니다. 카드·간편결제로 해 주세요.',
-  day_bank_quota_full: '이날은 입금을 기다리는 예약이 많아 지금은 계좌 입금을 받지 않습니다. 카드·간편결제로 해 주세요.',
 };
 
 /**
@@ -93,31 +91,8 @@ export const bankDepositDeadlineOf = (input: { createdAt: Date; startsAt: Date |
   return input.startsAt && input.startsAt.getTime() < byDays.getTime() ? input.startsAt : byDays;
 };
 
-/**
- * 같은 이메일(정규화)로 동시에 열려 있을 수 있는 계좌 입금 대기 건수 — 공연·예약·믹싱 합산.
- * 근거: 한 사람이 실수로 두세 번 누르는 것까지는 받는다(펀딩 `MAX_OPEN_BANK_DEPOSITS_PER_EMAIL`과 같은 값).
- */
+/** 같은 이메일(정규화)로 동시에 열려 있을 수 있는 계좌 입금 대기 건수 — 공연·예약·믹싱 합산. */
 export const MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL = 3;
-/**
- * 같은 IP에서 동시에 열려 있을 수 있는 계좌 입금 대기 건수 — 공연·예약·믹싱 합산. 이메일만 바꿔 가며 좌석·시간대를
- * 무기한 잡는 것을 막는다. 근거: 이메일 상한과 같은 3 — 한 집(같은 공유기)에서 가족 둘이 각각 신청해도 들어간다.
- * 공용 와이파이에서 막히는 사람은 카드·간편결제가 그대로 열려 있다.
- */
-export const MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_IP = 3;
-/** IP 상한을 세려고 남기는 출처 기록(IP 해시 + 주문번호)의 보관 일수 — 처리방침 16항과 같은 값. */
-export const BANK_DEPOSIT_ORIGIN_RETENTION_DAYS = 30;
-/**
- * 공연 회차별로 계좌 입금 **대기**가 잡을 수 있는 좌석의 비율(정원 대비). 넘으면 그 회차는 카드·간편결제만 받는다.
- * 근거: 대기는 자동으로 풀리지 않아, 상한이 없으면 입금하지 않을 신청 몇 건이 매진을 만든다. 30%면 노년층
- * 관객의 계좌 입금은 충분히 받으면서(소규모 공연 50석 기준 15석) 나머지 70%는 늘 즉시 결제로 팔린다.
- */
-export const SHOW_BANK_DEPOSIT_SEAT_SHARE = 0.3;
-/**
- * 예약 — 같은 공간(녹음실·연습실 방 묶음)·같은 날(KST)의 계좌 입금 대기 상한. 넘으면 그날은 카드·간편결제만.
- * 근거: 하루에 확정 전 대기가 두 건이면 운영자가 하루 안에 확인할 수 있는 양이고, 그보다 많으면 그날 슬롯이
- * 입금 안 할 신청으로 비어 있게 된다.
- */
-export const MAX_BANK_DEPOSIT_BOOKINGS_PER_RESOURCE_DAY = 2;
 /** 같은 이메일(정규화)로 한 시간에 만들 수 있는 계좌 입금 신청 수 — 신청마다 안내 메일이 나간다. */
 export const BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR = 5;
 

@@ -49,7 +49,7 @@ afterAll(() => {
   client.close();
 });
 beforeEach(async () => {
-  for (const t of ['rate_limits', 'work_orders', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
+  for (const t of ['work_orders', 'bookings', 'orders']) await client.execute(`DELETE FROM ${t}`);
   jest.clearAllMocks();
   (consumeRateLimit as jest.Mock).mockResolvedValue(true);
   jest.spyOn(console, 'error').mockImplementation(() => undefined);
@@ -99,38 +99,6 @@ describe('POST /api/bookings — 계좌 입금', () => {
     // 토스 결제는 이 상한과 무관하다.
     const toss = await call(mixingHandler, { productId: 'mixing-level1', songCount: 1, vocalTuning: false, ...customer });
     expect(toss.status).toBe(201);
-  });
-
-  it('같은 IP의 열린 입금 대기가 3건이면 이메일을 바꿔도 409(세 종류 합산)', async () => {
-    for (const [i, email] of ['a1@example.com', 'a2@example.com', 'a3@example.com'].entries()) {
-      const ok = await call(bookingHandler, { productId: 'recording-pro', date: futureDate(30 + i), startHour: 14, ...customer, customerEmail: email, paymentMethod: 'bank_transfer' });
-      expect(ok.status).toBe(201);
-    }
-    const res = await call(mixingHandler, { productId: 'mixing-level1', songCount: 1, vocalTuning: false, ...customer, customerEmail: 'a4@example.com', paymentMethod: 'bank_transfer' });
-    expect(res.status).toBe(409);
-    expect(res.body.code).toBe('too_many_open_deposits');
-    // 하나를 닫으면 다시 열린다 — 세는 것은 '열린' 대기다.
-    await client.execute(`UPDATE orders SET status = 'deposit_cancelled' WHERE customer_email = 'a1@example.com'`);
-    const again = await call(mixingHandler, { productId: 'mixing-level1', songCount: 1, vocalTuning: false, ...customer, customerEmail: 'a4@example.com', paymentMethod: 'bank_transfer' });
-    expect(again.status).toBe(201);
-    // IP는 해시로만 남는다.
-    const keys = (await client.execute(`SELECT key FROM rate_limits WHERE key LIKE 'bank_deposit_open:%'`)).rows.map((r) => String(r.key));
-    expect(keys.length).toBeGreaterThan(0);
-    expect(keys.some((k) => k.includes('127.0.0.1'))).toBe(false);
-  });
-
-  it('같은 공간·같은 날 입금 대기가 2건이면 그날은 계좌 입금 409(카드는 된다)', async () => {
-    const date = futureDate(40);
-    for (const [i, h] of [10, 13].entries()) {
-      const ok = await call(bookingHandler, { productId: 'recording-pro', date, startHour: h, ...customer, customerEmail: `d${i}@example.com`, paymentMethod: 'bank_transfer' });
-      expect(ok.status).toBe(201);
-    }
-    const blocked = await call(bookingHandler, { productId: 'recording-pro', date, startHour: 17, ...customer, customerEmail: 'd9@example.com', paymentMethod: 'bank_transfer' });
-    expect(blocked.status).toBe(409);
-    expect(blocked.body.code).toBe('day_bank_quota_full');
-    expect(String(blocked.body.message)).toMatch(/카드·간편결제/);
-    const card = await call(bookingHandler, { productId: 'recording-pro', date, startHour: 17, ...customer, customerEmail: 'd9@example.com' });
-    expect(card.status).toBe(201);
   });
 
   it('이메일당 시간 상한에 걸리면 429이고 주문을 만들지 않는다', async () => {

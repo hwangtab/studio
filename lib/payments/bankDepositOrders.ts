@@ -1,5 +1,3 @@
-import { createHash } from 'node:crypto';
-
 import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
@@ -14,8 +12,6 @@ import {
   BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR,
   DEPOSIT_CANCELLED,
   MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL,
-  MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_IP,
-  BANK_DEPOSIT_ORIGIN_RETENTION_DAYS,
 } from './bankDeposit';
 import { safeDbErrorSummary } from './refundAccount';
 
@@ -29,25 +25,15 @@ const BANK_DEPOSIT_ORDER_TYPES = sql`('session', 'mixing', 'ticket')`;
 
 export type BankDepositAbuseVerdict = { ok: true } | { ok: false; status: 429 | 409; code: string; message: string };
 
-/** 요청 제한 기록에 남기는 식별자는 원문이 아니라 해시다(처리방침 16항). */
-const digest = (value: string): string => createHash('sha256').update(`studionol:bank-deposit:${value}`).digest('hex').slice(0, 32);
-
-const ORIGIN_PREFIX = 'bank_deposit_open:';
-
 /**
- * 계좌 입금 신청 **남용 상한** — 자동 해제가 없어 열린 대기가 쌓이기만 하고, 그동안 좌석·시간대를 잡는다.
- * 펀딩과 같은 두 겹에 IP 한 겹을 더했다(lib/funding/CLAUDE.md "남용 상한", 2026-10-04 리뷰):
- * ① 정규화한 이메일로 시간당 `BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR`회, ② 같은 이메일의 열린 대기
- * `MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL`건, ③ 같은 IP의 열린 대기 `MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_IP`건
- * (이메일만 바꿔 가며 잡는 것을 막는다). 셋 다 공연·예약·믹싱 합산이다.
- *
- * ③은 주문에 IP 칸이 없어(칸을 더하면 배포 순서 문제가 생긴다) 요청 제한 표(`rate_limits`)에
- * `bank_deposit_open:<IP 해시>:<주문번호>` 행을 남겨 센다(`recordBankDepositOrigin`). 그 행은
- * `BANK_DEPOSIT_ORIGIN_RETENTION_DAYS`일 뒤 다른 요청 제한 기록과 같이 지워진다.
+ * 계좌 입금 신청 **남용 상한** — 신청마다 안내 메일이 나가고(제3자 주소로 메일 폭탄), 자동 취소가 없어
+ * 열린 대기가 쌓이기만 한다. 펀딩과 같은 두 겹(lib/funding/CLAUDE.md "남용 상한"):
+ * ① 정규화한 이메일로 시간당 `BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR`회, ② 같은 이메일의 열린 대기가
+ * `MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL`건이면 막는다(공연·예약·믹싱 합산).
  */
-export const checkBankDepositAbuse = async (email: string, ip: string): Promise<BankDepositAbuseVerdict> => {
+export const checkBankDepositAbuse = async (email: string): Promise<BankDepositAbuseVerdict> => {
   const emailKey = normalizeEmailForLimit(email);
-  if (!(await consumeRateLimit(`bank_deposit:email:${digest(emailKey)}`, BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR, 3600))) {
+  if (!(await consumeRateLimit(`bank_deposit:email:${emailKey}`, BANK_DEPOSIT_ORDERS_PER_EMAIL_PER_HOUR, 3600))) {
     return { ok: false, status: 429, code: 'rate_limited', message: '계좌 입금 신청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' };
   }
   const rows = await getDb().all<{ email: string }>(sql`
@@ -55,42 +41,13 @@ export const checkBankDepositAbuse = async (email: string, ip: string): Promise<
     WHERE status = ${AWAITING_DEPOSIT} AND type IN ${BANK_DEPOSIT_ORDER_TYPES}
   `);
   const open = rows.filter((r) => normalizeEmailForLimit(r.email) === emailKey).length;
-  const tooMany = (n: number) => ({
-    ok: false as const, status: 409 as const, code: 'too_many_open_deposits',
-    message: `입금을 기다리는 신청이 이미 ${n}건 있습니다. 받으신 입금 안내 메일의 계좌로 입금해 주시거나, 안내 페이지에서 쓰지 않을 신청을 취소한 뒤 다시 신청해 주세요. 카드·간편결제는 바로 할 수 있습니다.`,
-  });
-  if (open >= MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL) return tooMany(open);
-  if ((await countOpenBankDepositsFromIp(ip)) >= MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_IP) return tooMany(MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_IP);
+  if (open >= MAX_OPEN_BANK_DEPOSIT_ORDERS_PER_EMAIL) {
+    return {
+      ok: false, status: 409, code: 'too_many_open_deposits',
+      message: `이 이메일로 입금을 기다리는 신청이 이미 ${open}건 있습니다. 받으신 입금 안내 메일의 계좌로 입금해 주시거나, 안내 페이지에서 쓰지 않을 신청을 취소한 뒤 다시 신청해 주세요.`,
+    };
+  }
   return { ok: true };
-};
-
-/** 이 IP(해시)에서 만든 계좌 입금 신청 중 아직 입금 대기인 것의 수. 셀 수 없으면 0(막지 않는다). */
-export const countOpenBankDepositsFromIp = async (ip: string): Promise<number> => {
-  const prefix = `${ORIGIN_PREFIX}${digest(ip)}:`;
-  try {
-    const rows = await getDb().all<{ n: number }>(sql`
-      SELECT COUNT(*) AS n FROM rate_limits rl
-      JOIN orders o ON o.order_no = substr(rl.key, ${prefix.length + 1})
-      WHERE rl.key LIKE ${`${prefix}%`} AND rl.expires_at > unixepoch() AND o.status = ${AWAITING_DEPOSIT}
-    `);
-    return Number(rows[0]?.n ?? 0);
-  } catch (error) {
-    console.error('[bank-deposit] IP 열린 신청 집계 실패 — 막지 않는다', { error: safeDbErrorSummary(error) });
-    return 0;
-  }
-};
-
-/** 신청이 만들어진 뒤 IP(해시)를 남긴다 — 위 ③의 집계용. 실패는 삼킨다. */
-export const recordBankDepositOrigin = async (ip: string, orderNo: string): Promise<void> => {
-  try {
-    await getDb().run(sql`
-      INSERT INTO rate_limits (key, count, expires_at)
-      VALUES (${`${ORIGIN_PREFIX}${digest(ip)}:${orderNo}`}, 1, unixepoch() + ${BANK_DEPOSIT_ORIGIN_RETENTION_DAYS * 86400})
-      ON CONFLICT (key) DO NOTHING
-    `);
-  } catch (error) {
-    console.error('[bank-deposit] 신청 출처 기록 실패', { orderNo, error: safeDbErrorSummary(error) });
-  }
 };
 
 export interface SameNameDepositOrder {
