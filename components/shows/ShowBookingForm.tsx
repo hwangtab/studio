@@ -9,6 +9,8 @@ import { formatWon, SALE_STATE_LABELS } from '../../lib/shows/copy';
 import { SHOW_HOLD_SECONDS, SHOW_MAX_PER_ORDER_CAP } from '../../lib/shows/limits';
 import type { PublicShow, PublicShowtime } from '../../lib/shows/queries';
 import RefundPolicyList from './RefundPolicyList';
+import PaymentMethodChoice from '../payments/PaymentMethodChoice';
+import { BANK_DEPOSIT_BLOCK_MESSAGES, bankDepositBlockReason, type CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
 
 interface Props {
   show: PublicShow;
@@ -114,10 +116,46 @@ export default function ShowBookingForm({ show }: Props) {
 
   const widget = useTossPaymentWidgets(total, canBook && widgetArmed);
 
+  /**
+   * 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 계좌는 회차 시작 2시간 전부터 막는다(입금을 확인하고 티켓을
+   * 보낼 시간이 없다). 서버(createShowOrder)가 **같은 함수·같은 인자**(회차 시작, 지금)로 다시 판정한다.
+   */
+  const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
+  const bankBlocked = showtime ? bankDepositBlockReason({ startsAt: new Date(showtime.startsAt * 1000), now: new Date() }) : null;
+  const usingBank = payMethod === 'bank_transfer' && !bankBlocked;
+
+  const submitBankDeposit = async () => {
+    if (!ticketType || !showtime) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch('/api/shows/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          showtimeId: showtime.id, ticketTypeId: ticketType.id, quantity: qty,
+          buyerName: name, buyerContact: phone, buyerEmail: email,
+          refundPolicyAgreed: true, paymentMethod: 'bank_transfer',
+        }),
+      });
+      const data = (await res.json().catch(() => null)) as { ok?: boolean; manageUrl?: string; message?: string } | null;
+      if (res.status === 201 && data?.ok && typeof data.manageUrl === 'string') {
+        // 문서 이동 — 도착지(내 티켓)는 관리 토큰이 실린 비밀 주소다(lib/analytics/privatePaths.ts).
+        window.location.assign(data.manageUrl);
+        return;
+      }
+      setError(data?.message || '신청하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    } catch {
+      setError('네트워크 오류로 신청하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!canBook || !ticketType || !showtime || submitting) return;
     setError(null);
+    if (usingBank) return submitBankDeposit();
     if (widget.agreedRequiredTerms === false) return setError('결제수단 아래 [필수] 결제 서비스 이용 약관에도 동의해 주세요.');
     setSubmitting(true);
     try {
@@ -312,16 +350,26 @@ export default function ShowBookingForm({ show }: Props) {
 
           <div>
             <h3 className="mb-2 typo-card-title">결제 수단</h3>
-            <div id={widget.methodsId} />
-            <div id={widget.agreementId} />
-            {widget.error && (
-              <div>
-                <p role="alert" className="text-sm text-red-600 dark:text-red-400">{widget.error}</p>
-                <Button type="button" variant="outline" onClick={widget.retry} className="mt-3">
-                  다시 시도
-                </Button>
-              </div>
-            )}
+            {/* 계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 iframe이 다시 그려지며 위젯 약관 동의가 풀린다. */}
+            <PaymentMethodChoice
+              name="show-paymethod"
+              value={usingBank ? 'bank_transfer' : 'toss'}
+              onChange={setPayMethod}
+              bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
+              confirmLabel="티켓이 발권"
+            />
+            <div hidden={usingBank} className="mt-3">
+              <div id={widget.methodsId} />
+              <div id={widget.agreementId} />
+              {widget.error && (
+                <div>
+                  <p role="alert" className="text-sm text-red-600 dark:text-red-400">{widget.error}</p>
+                  <Button type="button" variant="outline" onClick={widget.retry} className="mt-3">
+                    다시 시도
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
 
           {error && (
@@ -338,9 +386,12 @@ export default function ShowBookingForm({ show }: Props) {
           */}
           <div className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
             <p>
-              결제하기를 누르면 취소·환불 규정과{' '}
+              {usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 취소·환불 규정과{' '}
               <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는
-              것으로 봅니다. 좌석은 결제창을 여는 동안 {Math.floor(SHOW_HOLD_SECONDS / 60)}분간 보류됩니다.
+              것으로 봅니다.{' '}
+              {usingBank
+                ? '좌석은 입금을 확인할 때까지 잡아 두고, 확인되면 티켓(QR)을 메일로 보내 드립니다.'
+                : `좌석은 결제창을 여는 동안 ${Math.floor(SHOW_HOLD_SECONDS / 60)}분간 보류됩니다.`}
             </p>
             <details className="mt-1">
               <summary className="cursor-pointer rounded underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70">
@@ -350,8 +401,8 @@ export default function ShowBookingForm({ show }: Props) {
             </details>
           </div>
 
-          <Button type="submit" fullWidth disabled={!canBook || !widget.ready || submitting}>
-            {submitting ? '처리 중…' : `${formatWon(total)} · 결제하기`}
+          <Button type="submit" fullWidth disabled={!canBook || (!usingBank && !widget.ready) || submitting}>
+            {submitting ? '처리 중…' : `${formatWon(total)} · ${usingBank ? '계좌 안내 받기' : '결제하기'}`}
           </Button>
         </>
       )}

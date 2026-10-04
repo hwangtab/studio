@@ -8,12 +8,14 @@ import { TOSS_TERMS_REQUIRED_MESSAGE, useTossPaymentWidgets } from './useTossPay
 import { Button } from '../ui/Button';
 import { computeAmounts } from '../../lib/booking/amounts';
 import { BOOKING_CUSTOMER_DRAFT_KEY, CUSTOMER_DRAFT_FIELDS } from '../../lib/booking/customerDraft';
-import { kstDateString } from '../../lib/booking/kst';
+import { kstDateString, kstDateTime } from '../../lib/booking/kst';
 import type { SessionProduct } from '../../lib/booking/products';
 import { refundPolicyFor } from '../../lib/booking/refund-policy';
 import type { DaySlot } from '../../lib/booking/slots';
 import { MAX_BOOK_DAYS, PENDING_HOLD_SECONDS } from '../../lib/booking/validation';
-import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import { clearStoredDraft, readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import { BANK_DEPOSIT_BLOCK_MESSAGES, bankDepositBlockReason, type CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
+import PaymentMethodChoice from '../payments/PaymentMethodChoice';
 import { CANONICAL_FACTS } from '../../lib/factTokens';
 import { getSiteConfig } from '../../data/siteConfig';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
@@ -47,6 +49,8 @@ interface CreateBookingBody {
   refundPolicyAgreed: true;
   /** 직전 제출로 만든 주문번호 — 서버가 이 주문만 풀어 준다(자기 홀드 해제의 소유 증명). */
   previousOrderNo?: string;
+  /** 'bank_transfer'면 계좌 입금 대기로 만든다(lib/payments/bankDeposit.ts). 없으면 토스. */
+  paymentMethod?: CheckoutPaymentMethod;
 }
 
 interface SlotsResponse {
@@ -64,6 +68,9 @@ interface CreateBookingResponse {
   totalAmount?: number;
   code?: string;
   message?: string;
+  /** 계좌 입금 신청이면 입금 안내가 있는 예약 확인 페이지 주소(관리 토큰 포함). */
+  manageUrl?: string;
+  paymentMethod?: CheckoutPaymentMethod;
 }
 
 /** '보컬 녹음 1프로' + '2026-09-10' + 14 → '보컬 녹음 1프로 (9/10 14:00)' */
@@ -285,10 +292,61 @@ export default function BookingWizard({ service, products, initialProductId }: B
     // 마운트 지점이 3단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
   } = useTossPaymentWidgets(amounts.totalAmount, step === 3);
 
+  /**
+   * 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 계좌는 이용 시작 2시간 전부터 막는다(입금을 확인할 시간이
+   * 없다). 서버(pages/api/bookings)가 **같은 함수·같은 인자**(시작 시각, 지금)로 다시 판정한다.
+   */
+  const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
+  const bankBlocked = selectedStartHour === null
+    ? null
+    : bankDepositBlockReason({ startsAt: kstDateTime(date, selectedStartHour), now: new Date() });
+  useEffect(() => {
+    if (bankBlocked && payMethod === 'bank_transfer') setPayMethod('toss');
+  }, [bankBlocked, payMethod]);
+  const usingBank = payMethod === 'bank_transfer' && !bankBlocked;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedStartHour === null) {
       setStep(2);
+      return;
+    }
+    if (usingBank) {
+      // 계좌 입금 — 결제창이 없다. 신청을 만들고 예약 확인 페이지(입금 안내)로 옮긴다.
+      setSubmitting(true);
+      setSubmitError(null);
+      try {
+        const res = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: selectedProduct.id, hours: effectiveHours, date, startHour: selectedStartHour,
+            customerName: customerName.trim(), customerPhone: customerPhone.trim(), customerEmail: customerEmail.trim(),
+            ...(customerNote.trim() ? { customerNote: customerNote.trim() } : {}),
+            refundPolicyAgreed: true,
+            ...(previousOrderNo ? { previousOrderNo } : {}),
+            paymentMethod: 'bank_transfer',
+          } satisfies CreateBookingBody),
+        });
+        const data: CreateBookingResponse = await res.json();
+        if (res.status === 201 && data.ok && typeof data.manageUrl === 'string') {
+          clearStoredDraft(BOOKING_CUSTOMER_DRAFT_KEY);
+          // 문서 이동 — 도착지는 관리 토큰이 실린 비밀 주소다(lib/analytics/privatePaths.ts). 금액·기한은 그 화면이 서버에서 다시 읽는다.
+          window.location.assign(data.manageUrl);
+          return;
+        }
+        if (res.status === 409 && data.code === 'slot_taken') {
+          setSlotsNotice(data.message ?? '방금 다른 예약이 먼저 잡혔습니다. 다른 시간대를 선택해 주세요.');
+          setSelectedStartHour(null);
+          setStep(2);
+          return;
+        }
+        setSubmitError(data.message ?? '예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      } catch {
+        setSubmitError('네트워크 오류로 예약 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      } finally {
+        setSubmitting(false);
+      }
       return;
     }
     /**
@@ -635,24 +693,34 @@ export default function BookingWizard({ service, products, initialProductId }: B
               서버 검증(refundPolicyAgreed)은 그대로다.
             */}
             <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-              결제하기를 누르면 위 환불 규정에 동의하는 것으로 봅니다.
+              {`${usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 위 환불 규정에 동의하는 것으로 봅니다.`}
             </p>
 
-            {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
-                계약된 수단이 늘면 그대로 따라오고, 갈라지면 화면과 실제가 어긋난다. */}
+            {/* 결제수단 — 위에서 카드·간편결제(토스)와 계좌로 직접 입금 중 하나를 고른다. 토스 쪽 수단 목록과
+                결제 약관 동의는 **위젯이 그린다**(우리 목록을 따로 두지 않는다). 계좌를 고르면 위젯을 **숨기기만**
+                한다 — 언마운트하면 iframe이 다시 그려지며 동의 상태가 풀린다(PledgeWizard와 같다). */}
             <div className="pt-2">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              {paymentError ? (
-                <div className="mt-2">
-                  <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                  <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-                </div>
-              ) : (
-                <>
-                  <div id={methodsId} />
-                  <div id={agreementId} />
-                </>
-              )}
+              <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
+              <PaymentMethodChoice
+                name="booking-paymethod"
+                value={usingBank ? 'bank_transfer' : 'toss'}
+                onChange={setPayMethod}
+                bankBlockedMessage={bankBlocked ? BANK_DEPOSIT_BLOCK_MESSAGES[bankBlocked] : null}
+                confirmLabel="예약이 확정"
+              />
+              <div hidden={usingBank} className="mt-3">
+                {paymentError ? (
+                  <div className="mt-2">
+                    <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                    <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+                  </div>
+                ) : (
+                  <>
+                    <div id={methodsId} />
+                    <div id={agreementId} />
+                  </>
+                )}
+              </div>
             </div>
 
             {/* 예전에는 결제 화면에서 남은 시간을 세어 보여 줬다. 결제창을 열고 나면 고객은
@@ -661,8 +729,13 @@ export default function BookingWizard({ service, products, initialProductId }: B
               role="status"
               className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900 dark:border-amber-900/50 dark:bg-amber-950/40 dark:text-amber-200"
             >
-              결제를 시작하면 이 시간대를 <strong>{Math.round(PENDING_HOLD_SECONDS / 60)}분간</strong> 잡아 둡니다.
-              그 안에 결제를 마치지 않으면 다시 열려 다른 분이 예약할 수 있습니다.
+              {usingBank ? (
+                <>신청하시면 입금하실 계좌를 바로 알려 드리고, <strong>입금을 확인할 때까지</strong> 이 시간대를 잡아 둡니다.
+                입금이 확인되면 예약이 확정되고 메일로 알려 드립니다.</>
+              ) : (
+                <>결제를 시작하면 이 시간대를 <strong>{Math.round(PENDING_HOLD_SECONDS / 60)}분간</strong> 잡아 둡니다.
+                그 안에 결제를 마치지 않으면 다시 열려 다른 분이 예약할 수 있습니다.</>
+              )}
             </p>
 
             {submitError && (
@@ -675,9 +748,9 @@ export default function BookingWizard({ service, products, initialProductId }: B
               <Button type="button" variant="outline" onClick={() => setStep(2)}>
                 이전
               </Button>
-              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 슬롯만 잡히고 결제창은 안 열린다. */}
-              <Button type="submit" disabled={submitting || !paymentReady} fullWidth>
-                {submitting ? '처리 중…' : '결제하기'}
+              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 슬롯만 잡히고 결제창은 안 열린다. 계좌 입금은 위젯이 필요 없다. */}
+              <Button type="submit" disabled={submitting || (!usingBank && !paymentReady)} fullWidth>
+                {submitting ? '처리 중…' : usingBank ? '계좌 안내 받기' : '결제하기'}
               </Button>
             </div>
           </form>

@@ -2,6 +2,8 @@ import { eq, sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { showTicketTypes, showZones } from '../../db/schema';
+import { AWAITING_DEPOSIT, bankDepositStateOf, type BankDepositState } from '../payments/bankDeposit';
+import { showDepositDeadline } from './bankDeposit';
 import { formatEntryNumber, formatShowtimeLabel } from './format';
 
 /**
@@ -20,6 +22,8 @@ export interface AdminShowtimeStat {
   capacity: number;
   issued: number;
   held: number;
+  /** 계좌 입금 대기 주문 수(`orders.status = 'awaiting_deposit'`) — 목록 배지용. held에는 이 주문의 티켓도 들어 있다. */
+  awaitingDeposit: number;
   comp: number;
   checkedIn: number;
   /** 결제 확정 매출(환불 반영 전 단가 합 — 정산 정본이 아니라 현황 참고용). */
@@ -55,6 +59,7 @@ async function showtimeStats(showId?: string): Promise<Array<AdminShowtimeStat &
       (SELECT COALESCE(SUM(z.capacity), 0) FROM show_zones z WHERE z.show_id = st.show_id) as capacity,
       (SELECT COUNT(*) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued') as issued,
       (SELECT COUNT(*) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'held') as held,
+      (SELECT COUNT(*) FROM show_orders so JOIN orders o ON o.order_no = so.order_no WHERE so.showtime_id = st.id AND o.status = ${AWAITING_DEPOSIT}) as awaitingDeposit,
       (SELECT COUNT(*) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued' AND t.issued_by = 'organizer_comp') as comp,
       (SELECT COUNT(*) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued' AND t.checked_in_at IS NOT NULL) as checkedIn,
       (SELECT COALESCE(SUM(t.unit_amount), 0) FROM show_tickets t WHERE t.showtime_id = st.id AND t.status = 'issued') as grossAmount
@@ -71,6 +76,7 @@ async function showtimeStats(showId?: string): Promise<Array<AdminShowtimeStat &
     capacity: Number(r.capacity),
     issued: Number(r.issued),
     held: Number(r.held),
+    awaitingDeposit: Number(r.awaitingDeposit),
     comp: Number(r.comp),
     checkedIn: Number(r.checkedIn),
     grossAmount: Number(r.grossAmount),
@@ -90,7 +96,15 @@ export interface AdminTicketRow {
 }
 
 export interface AdminOrderRow {
+  /** orders.id — 환불 계좌 조회 API가 이 값을 쓴다. */
+  orderId: string;
   orderNo: string;
+  /** 온라인 계좌 입금 주문의 단계 — 토스·초대권은 null. */
+  bankDeposit: BankDepositState | null;
+  /** 입금 안내 기한(ISO) — 입금 대기일 때만. 안내용이며 자동 취소는 없다. */
+  depositDeadline: string | null;
+  /** 고객 이름(orders.customer_name) — 환불 계좌 예금주 대조·동명 후보 조회에 쓴다. */
+  customerName: string;
   isComp: boolean;
   orderStatus: string;
   /** 초대권이면 발급 사유(note)가 들어 있다 — lib/shows/service.ts issueCompTickets가 그 칸에 적는다. */
@@ -135,7 +149,7 @@ export async function loadAdminShowDetail(showId: string): Promise<AdminShowDeta
     const [orders, scanLinks] = await Promise.all([
       db.query.showOrders.findMany({
         where: (o, { eq }) => eq(o.showtimeId, st.id),
-        with: { order: true, tickets: true },
+        with: { order: { with: { payments: true } }, tickets: true },
         orderBy: (o, { desc }) => desc(o.createdAt),
       }),
       db.query.showScanLinks.findMany({ where: (l, { eq }) => eq(l.showtimeId, st.id), orderBy: (l, { desc }) => desc(l.createdAt) }),
@@ -143,8 +157,14 @@ export async function loadAdminShowDetail(showId: string): Promise<AdminShowDeta
     showtimes.push({
       ...st,
       scanLinks: scanLinks.map((l) => ({ id: l.id, label: l.label, expiresAt: l.expiresAt, revokedAt: l.revokedAt })),
-      orders: orders.map((o) => ({
+      orders: orders.map((o) => {
+        const bankDeposit = bankDepositStateOf({ status: o.order.status, payments: o.order.payments });
+        return {
+        orderId: o.order.id,
         orderNo: o.orderNo,
+        bankDeposit,
+        depositDeadline: bankDeposit === 'awaiting' ? showDepositDeadline(o.order.createdAt.getTime() / 1000, st.startsAt).toISOString() : null,
+        customerName: o.order.customerName,
         isComp: o.buyerContact === 'comp',
         orderStatus: o.order.status,
         buyerName: o.buyerName,
@@ -162,7 +182,8 @@ export async function loadAdminShowDetail(showId: string): Promise<AdminShowDeta
           checkedInAt: t.checkedInAt,
           checkedInBy: t.checkedInBy,
         })),
-      })),
+        };
+      }),
     });
   }
 

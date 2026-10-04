@@ -79,3 +79,25 @@ it('예약이 201건을 넘으면 truncated가 켜진다', async () => {
   const r = (await getServerSideProps({ query: {} } as never)) as { props: { truncated: boolean } };
   expect(r.props.truncated).toBe(true);
 });
+
+/**
+ * 계좌 입금 대기는 자동 취소가 없어 오래 열려 있다 — `?deposit=pending`은 200건 상한과 무관하게 전부 싣고,
+ * 탭의 N은 목록 상한과 별개로 센다.
+ */
+it('?deposit=pending은 입금 대기 session·mixing만 상한 없이 싣고 건수를 센다', async () => {
+  for (let i = 0; i < 205; i += 1) await insertOrder(`p${i}`, 'session', 'awaiting_deposit');
+  await insertOrder('m1', 'mixing', 'awaiting_deposit');
+  await insertOrder('x1', 'ticket', 'awaiting_deposit');
+  await insertOrder('s1', 'session', 'deposit_cancelled');
+  await insertOrder('s2', 'session', 'paid');
+
+  const r = (await getServerSideProps({ query: { deposit: 'pending' } } as never)) as {
+    props: { bookings: unknown[]; truncated: boolean; depositPendingCount: number };
+  };
+  expect(r.props.bookings).toHaveLength(206);
+  expect(r.props.truncated).toBe(false);
+  expect(r.props.depositPendingCount).toBe(206);
+
+  const all = (await getServerSideProps({ query: {} } as never)) as { props: { depositPendingCount: number } };
+  expect(all.props.depositPendingCount).toBe(206);
+});

@@ -10,7 +10,8 @@ import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
 import { lightOnlyField } from '../../../components/ui/adminFieldClass';
 import { getDb } from '../../../db/client';
-import { orderStatusEnum } from '../../../db/schema';
+import { and, eq, inArray, sql } from 'drizzle-orm';
+import { orderStatusEnum, orders } from '../../../db/schema';
 import { authenticateAdminRequest } from '../../../lib/contracts/admin-auth';
 import { formatPriceAmount } from '../../../data/pricing';
 import {
@@ -29,6 +30,10 @@ const LIST_LIMIT = 200;
 interface AdminBookingsPageProps {
   bookings: AdminBookingListItem[];
   truncated: boolean;
+  /** `?deposit=pending` — 계좌 입금 대기 건만(기간·건수 제한 없음). */
+  depositPending?: boolean;
+  /** 계좌 입금 대기 세션·믹싱 주문 수(전 기간). */
+  depositPendingCount?: number;
   blocks: AdminBlockItem[];
   error?: string;
 }
@@ -39,12 +44,14 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
     return { redirect: { destination: '/admin/login', permanent: false } };
   }
 
+  const depositPending = context.query?.deposit === 'pending';
+
   try {
     // 목록을 여는 시점이 곧 만료를 판정할 시점이다 — 크론 없이 lazy 처리(contracts와 동일 관례).
     await expireStaleOrders(new Date());
 
     // 두 조회는 서로를 기다릴 이유가 없다 — 순차로 두면 Turso 왕복이 한 번 더 붙는다.
-    const [allOrders, allBlocks] = await Promise.all([
+    const [allOrders, allBlocks, pendingCountRow] = await Promise.all([
       getDb().query.orders.findMany({
         /**
          * **예약 목록의 모집단은 session·mixing 둘뿐이다.**
@@ -59,9 +66,15 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
          *
          * 후원·구독은 각자의 관리 화면(/admin/funding, /admin/subscriptions)이 정본이다.
          */
-        where: (ordersTable, { inArray }) => inArray(ordersTable.type, ['session', 'mixing']),
+        //
+        // `?deposit=pending`이면 계좌 입금 대기 전부(전 기간·건수 제한 없음) — 자동 취소가 없어
+        // 오래 열린 대기가 200건 상한 밖으로 밀려나면 영영 안 보인다.
+        where: depositPending
+          ? (ordersTable, { and: all, inArray: within, eq: same }) =>
+              all(within(ordersTable.type, ['session', 'mixing']), same(ordersTable.status, 'awaiting_deposit'))
+          : (ordersTable, { inArray: within }) => within(ordersTable.type, ['session', 'mixing']),
         orderBy: (ordersTable, { desc }) => [desc(ordersTable.createdAt)],
-        limit: LIST_LIMIT + 1,
+        limit: depositPending ? undefined : LIST_LIMIT + 1,
         // payments를 함께 읽는다 — 주문 상태와 결제 기록의 미정합(스펙 §10) 판정에 쓴다.
         // workOrders는 믹싱·마스터링 주문(Phase 2)의 상태·곡 수·튜닝 여부를 싣는다.
         with: { bookings: true, payments: true, workOrders: true },
@@ -69,12 +82,19 @@ export const getServerSideProps: GetServerSideProps<AdminBookingsPageProps> = as
       getDb().query.availabilityBlocks.findMany({
         orderBy: (t, { asc }) => [asc(t.startAt)],
       }),
+      getDb()
+        .select({ n: sql<number>`count(*)` })
+        .from(orders)
+        .where(and(inArray(orders.type, ['session', 'mixing']), eq(orders.status, 'awaiting_deposit')))
+        .get(),
     ]);
 
     return {
       props: {
-        bookings: allOrders.slice(0, LIST_LIMIT).map((order) => serializeBookingForAdmin(order)),
-        truncated: allOrders.length > LIST_LIMIT,
+        bookings: (depositPending ? allOrders : allOrders.slice(0, LIST_LIMIT)).map((order) => serializeBookingForAdmin(order)),
+        truncated: !depositPending && allOrders.length > LIST_LIMIT,
+        depositPending,
+        depositPendingCount: Number(pendingCountRow?.n ?? 0),
         blocks: allBlocks.map(serializeBlockForAdmin),
       },
     };
@@ -98,6 +118,8 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
   refunded: '환불완료',
   failed: '결제실패',
   expired: '만료',
+  awaiting_deposit: '계좌 입금 대기',
+  deposit_cancelled: '입금 전 취소',
 };
 
 const BOOKING_STATUS_LABELS: Record<string, string> = {
@@ -138,6 +160,8 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 export default function AdminBookingsPage({
   bookings,
   truncated,
+  depositPending = false,
+  depositPendingCount = 0,
   blocks,
   error,
 }: AdminBookingsPageProps) {
@@ -316,6 +340,16 @@ export default function AdminBookingsPage({
 
               <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6">
                 <div className="flex flex-wrap gap-2">
+                  <Link
+                    href={depositPending ? '/admin/bookings' : '/admin/bookings?deposit=pending'}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 ${
+                      depositPending
+                        ? 'bg-sky-700 text-white'
+                        : 'bg-sky-100 text-sky-900 hover:bg-sky-200'
+                    }`}
+                  >
+                    입금 대기 ({depositPendingCount})
+                  </Link>
                   {['all', ...orderStatusEnum].map((status) => (
                     <button
                       key={status}
@@ -411,6 +445,13 @@ export default function AdminBookingsPage({
                             <div className="mt-1 text-xs text-gray-500">
                               {ORDER_STATUS_LABELS[booking.orderStatus] ?? booking.orderStatus}
                             </div>
+                            {booking.bankDeposit === 'awaiting' && (
+                              <div className="mt-1">
+                                <span className="inline-flex px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">
+                                  계좌 입금 대기
+                                </span>
+                              </div>
+                            )}
                             {booking.mismatch && (
                               <div className="mt-1">
                                 <span className="inline-flex px-2 py-0.5 rounded-full bg-red-100 text-red-700 text-xs font-semibold">

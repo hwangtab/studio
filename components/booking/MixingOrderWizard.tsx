@@ -18,7 +18,9 @@ import {
   type MixingProduct,
 } from '../../lib/booking/mixing-products';
 import { MIXING_REFUND_POLICY_LINES } from '../../lib/booking/refund-policy';
-import { readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import { clearStoredDraft, readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import type { CheckoutPaymentMethod } from '../../lib/payments/bankDeposit';
+import PaymentMethodChoice from '../payments/PaymentMethodChoice';
 import { Field, Select, TextArea, TextInput } from '../ui/Field';
 import { getMixCompareCopy } from '../../data/mixCompare';
 
@@ -45,6 +47,8 @@ interface CreateMixingOrderBody {
   refundPolicyAgreed: true;
   /** 직전 제출로 만든 주문번호 — 서버가 이 주문만 풀어 준다(자기 홀드 해제의 소유 증명). */
   previousOrderNo?: string;
+  /** 'bank_transfer'면 계좌 입금 대기로 만든다(lib/payments/bankDeposit.ts). 없으면 토스. */
+  paymentMethod?: CheckoutPaymentMethod;
 }
 
 interface CreateMixingOrderResponse {
@@ -55,6 +59,8 @@ interface CreateMixingOrderResponse {
   totalAmount?: number;
   code?: string;
   message?: string;
+  /** 계좌 입금 신청이면 입금 안내가 있는 주문 확인 페이지 주소(관리 토큰 포함). */
+  manageUrl?: string;
 }
 
 /** '믹싱 · 10트랙 이하' + 3곡 → '믹싱 · 10트랙 이하 × 3곡' */
@@ -157,8 +163,44 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
     // 마운트 지점이 2단계에만 있다 — 그 전에 붙이려 하면 선택자가 비어 실패한다.
   } = useTossPaymentWidgets(amounts.totalAmount, step === 2);
 
+  /** 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 믹싱은 잡는 시간대가 없어 막는 조건이 없다. */
+  const [payMethod, setPayMethod] = useState<CheckoutPaymentMethod>('toss');
+  const usingBank = payMethod === 'bank_transfer';
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (usingBank) {
+      // 계좌 입금 — 결제창이 없다. 주문을 만들고 주문 확인 페이지(입금 안내)로 옮긴다.
+      setSubmitting(true);
+      setSubmitError(null);
+      try {
+        const res = await fetch('/api/orders/mixing', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: selectedProduct.id, songCount, vocalTuning,
+            customerName: customerName.trim(), customerPhone: customerPhone.trim(), customerEmail: customerEmail.trim(),
+            ...(customerNote.trim() ? { customerNote: customerNote.trim() } : {}),
+            refundPolicyAgreed: true,
+            ...(previousOrderNo ? { previousOrderNo } : {}),
+            paymentMethod: 'bank_transfer',
+          } satisfies CreateMixingOrderBody),
+        });
+        const data: CreateMixingOrderResponse = await res.json();
+        if (res.status === 201 && data.ok && typeof data.manageUrl === 'string') {
+          clearStoredDraft(MIXING_CUSTOMER_DRAFT_KEY);
+          // 문서 이동 — 도착지는 관리 토큰이 실린 비밀 주소다(lib/analytics/privatePaths.ts).
+          window.location.assign(data.manageUrl);
+          return;
+        }
+        setSubmitError(data.message ?? '주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      } catch {
+        setSubmitError('네트워크 오류로 주문 신청에 실패했습니다. 잠시 후 다시 시도해 주세요.');
+      } finally {
+        setSubmitting(false);
+      }
+      return;
+    }
     /**
      * 위젯이 그리는 결제 약관도 제출 **전에** 본다.
      *
@@ -444,28 +486,33 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               서버 검증(refundPolicyAgreed)은 그대로다.
             */}
             <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-              결제하기를 누르면 위 환불 규정에 동의하는 것으로 봅니다.
+              {`${usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면 위 환불 규정에 동의하는 것으로 봅니다.`}
             </p>
 
-            {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
-                계약된 수단이 늘면 그대로 따라오고, 갈라지면 화면과 실제가 어긋난다. */}
+            {/* 결제수단 — 카드·간편결제(토스) / 계좌로 직접 입금. 토스 수단과 결제 약관 동의는 **위젯이 그린다**.
+                계좌를 고르면 위젯을 **숨기기만** 한다 — 언마운트하면 동의 상태가 풀린다(PledgeWizard와 같다). */}
             <div className="pt-2">
-              <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
-              {paymentError ? (
-                <div className="mt-2">
-                  <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-                  <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-                </div>
-              ) : (
-                <>
-                  <div id={methodsId} />
-                  <div id={agreementId} />
-                </>
-              )}
+              <h3 className="mb-2 text-sm font-semibold text-gray-700 dark:text-gray-200">결제수단</h3>
+              <PaymentMethodChoice name="mixing-paymethod" value={payMethod} onChange={setPayMethod} confirmLabel="주문이 접수" />
+              <div hidden={usingBank} className="mt-3">
+                {paymentError ? (
+                  <div className="mt-2">
+                    <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+                    <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+                  </div>
+                ) : (
+                  <>
+                    <div id={methodsId} />
+                    <div id={agreementId} />
+                  </>
+                )}
+              </div>
             </div>
 
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.
+              {usingBank
+                ? '신청하시면 입금하실 계좌를 바로 알려 드립니다. 입금이 확인되면 주문이 접수되고, 확인 메일에 파일 보내는 방법을 안내해 드립니다.'
+                : '결제 후 확인 메일에 파일 보내는 방법을 안내해 드립니다.'}
             </p>
 
             {submitError && (
@@ -478,9 +525,9 @@ export default function MixingOrderWizard({ initialProductId }: MixingOrderWizar
               <Button type="button" variant="outline" onClick={() => setStep(1)}>
                 이전
               </Button>
-              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. */}
-              <Button type="submit" disabled={submitting || !paymentReady} fullWidth>
-                {submitting ? '처리 중…' : '결제하기'}
+              {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. 계좌 입금은 위젯이 필요 없다. */}
+              <Button type="submit" disabled={submitting || (!usingBank && !paymentReady)} fullWidth>
+                {submitting ? '처리 중…' : usingBank ? '계좌 안내 받기' : '결제하기'}
               </Button>
             </div>
           </form>
