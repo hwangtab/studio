@@ -2,7 +2,7 @@ import { and, eq, isNotNull } from 'drizzle-orm';
 import type { SQLiteColumn, SQLiteTable } from 'drizzle-orm/sqlite-core';
 
 import { getDb } from '../../db/client';
-import { fundingCreators } from '../../db/schema';
+import { fundingCreators, fundingRefundAccounts } from '../../db/schema';
 import { recordPrivacyAccess, type PrivacyAccessAction } from '../privacy/accessLog';
 import {
   FieldCryptoError,
@@ -77,6 +77,13 @@ export const ENCRYPTED_FIELD_TARGETS: readonly EncryptedFieldTarget[] = [
     idField: 'id',
     valueField: 'payoutAccountEnc',
   }),
+  // 계좌 입금 후원자의 환불 계좌번호(마이그레이션 0048, lib/funding/refundAccount.ts).
+  defineTarget({
+    label: 'funding_refund_accounts.account_number_enc',
+    table: fundingRefundAccounts,
+    idField: 'orderId',
+    valueField: 'accountNumberEnc',
+  }),
 ];
 
 /**
@@ -90,6 +97,8 @@ export const ENCRYPTED_FIELD_TARGETS: readonly EncryptedFieldTarget[] = [
 const ROTATION_ACCESS_ACTIONS: Record<string, PrivacyAccessAction> = {
   'funding_creators.resident_number_enc': 'funding_resident_number_decrypt_check',
   'funding_creators.payout_account_enc': 'funding_payout_account_decrypt_check',
+  // 환불 계좌는 점검용 이름을 따로 두지 않았다 — 조회와 같은 이름에 수행자(rotation-cli)가 경로를 가른다.
+  'funding_refund_accounts.account_number_enc': 'funding_refund_account_view',
 };
 
 /**

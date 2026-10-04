@@ -15,6 +15,7 @@ import { fundingPledgeLinesSql } from './pledgeLinesSql';
 export { fundingPledgeLinesSql };
 import { ANONYMOUS_LABEL, ANONYMOUS_MESSAGE_TERMS_FROM, FUNDING_TERMS_VERSION, TOSS_HOLD_SECONDS } from './policy';
 import { liveFundingOrderStatusList } from './refundable';
+import { bankDepositGuideDeadline } from './bankAccount';
 import type { FundingProject, FundingReward } from './projects';
 import type { CreatePledgePayload, ResolvedPledgeLine } from './validation';
 
@@ -191,8 +192,14 @@ export const createFundingPledge = async (
   const amounts = computeFundingAmountsForLines(lines.map((l) => ({ unitAmount: l.reward.amount, quantity: l.quantity })), payload.additionalAmount);
   const orderNo = generateFundingOrderNo(now);
   const manageToken = generateManageToken();
-  // 결제수단은 토스 하나뿐이다(무통장입금 중단, 2026-09-11) — 홀드도 한 종류다.
-  const holdExpiresAt = new Date(now.getTime() + TOSS_HOLD_SECONDS * 1000);
+  /**
+   * 토스는 15분 홀드다. 계좌 입금은 **입금 안내 기한**(3일)을 같은 칸에 적는다 — 이 값은 재고를
+   * 붙들지 않는다(계좌 입금은 한정 리워드를 받지 않는다, validation.ts)는 점과, 지나도 자동
+   * 만료되지 않는다(expireStalePledges가 계좌 입금을 건너뛴다)는 점에서 토스 홀드와 다르다.
+   */
+  const holdExpiresAt = payload.paymentMethod === 'bank_transfer'
+    ? bankDepositGuideDeadline(now)
+    : new Date(now.getTime() + TOSS_HOLD_SECONDS * 1000);
 
   const orderId = randomUUID().replace(/-/g, '');
   const pledgeId = randomUUID().replace(/-/g, '');
@@ -243,8 +250,8 @@ export const createFundingPledge = async (
      * 증명이 없는 요청은 자기 홀드가 자연 만료(TOSS_HOLD_SECONDS)될 때까지 기다린다 — 한정
      * 리워드 재고가 빠듯할 때만 체감되는 비용이고, 남의 결제를 깨뜨릴 수 있는 편보다 낫다.
      *
-     * 무통장(bank_transfer) pending은 여전히 제외한다. 새 무통장 후원은 만들어질 수 없지만
-     * (중단 전) 남아 있는 행이 이미 입금된 건일 수 있어, 재제출만으로 만료시키면 안 된다.
+     * 계좌 입금(bank_transfer) pending은 제외한다 — 이미 입금했을 수 있는 신청이라, 재제출만으로
+     * 만료시키면 안 된다(자동 취소가 없다는 원칙, lib/funding/bankAccount.ts).
      */
     statements.push(db.run(sql`
       UPDATE orders SET status = 'expired', updated_at = unixepoch()
@@ -300,12 +307,19 @@ export const createFundingPledge = async (
   return { ok: true, orderNo, manageToken, holdExpiresAt, amounts };
 };
 
-/** 홀드가 지난 pending 펀딩 주문을 expired로. 상태 API·생성·관리자 목록·confirm 진입에서 lazy 호출. */
+/**
+ * 홀드가 지난 pending 펀딩 주문을 expired로. 상태 API·생성·관리자 목록·confirm 진입에서 lazy 호출.
+ *
+ * **계좌 입금은 건너뛴다.** 그쪽 `hold_expires_at`은 입금 안내 기한일 뿐이고 자동 취소가 없다
+ * (lib/funding/bankAccount.ts의 BANK_DEPOSIT_GUIDE_DAYS 주석 — SAF2026에서 이미 입금한 사람에게
+ * "취소됨" 메일이 간 사고). 계좌 입금 신청을 닫는 길은 관리자 "미입금 취소"와 후원자의 "입금 전
+ * 신청 취소" 둘뿐이다(lib/funding/bankTransfer.ts).
+ */
 export const expireStalePledges = async (now: Date): Promise<void> => {
   await getDb().run(sql`
     UPDATE orders SET status = 'expired', updated_at = unixepoch()
     WHERE type = 'funding' AND status = 'pending'
-      AND id IN (SELECT order_id FROM funding_pledges WHERE hold_expires_at < ${toEpoch(now)})
+      AND id IN (SELECT order_id FROM funding_pledges WHERE hold_expires_at < ${toEpoch(now)} AND payment_method != 'bank_transfer')
   `);
 };
 

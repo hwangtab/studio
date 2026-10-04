@@ -67,7 +67,7 @@ describe('제목 꼬리표 · 결제수단 라벨', () => {
   it('운영자 메일의 결제수단은 한글 라벨로 나간다 — enum 원문을 보이지 않는다', async () => {
     await sendFundingConfirmedEmails(order, project);
     const operator = (sendEmail as jest.Mock).mock.calls[1][0];
-    expect(operator.text).toContain('결제수단: 무통장');
+    expect(operator.text).toContain('결제수단: 계좌 입금');
     expect(operator.text).not.toContain('bank_transfer');
 
     (sendEmail as jest.Mock).mockClear();

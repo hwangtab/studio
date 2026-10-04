@@ -9,6 +9,7 @@ import { getFundingProjectAsync } from '../../../lib/funding/repository';
 import { createFundingPledge, expireStalePledges, findFundingOrderByOrderNo } from '../../../lib/funding/service';
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
 import { validateCreatePledgePayload } from '../../../lib/funding/validation';
+import { deliverDepositGuide } from '../../../lib/funding/bankTransfer';
 
 /** 시간당 IP별 후원 생성 시도 상한. 위저드 재시도·가족 단위 후원을 감안해 넉넉히 둔다. */
 const FUNDING_CREATE_LIMIT = 20;
@@ -48,6 +49,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(429).json({ ok: false, code: 'too_many_attempts', message: TOO_MANY_ATTEMPTS_MESSAGE });
   }
 
+  /**
+   * 계좌 입금 신청은 **입력한 주소로 곧바로 메일이 나간다**(토스는 결제가 끝나야 나간다). 남의
+   * 주소를 적어 안내 메일을 퍼붓는 데 쓰이지 않게 주소당 시간 상한을 둔다. 소문자로 정규화된
+   * 주소다(validation.ts).
+   */
+  if (validated.value.paymentMethod === 'bank_transfer'
+    && !(await consumeRateLimit(`funding_bank:email:${validated.value.customerEmail}`, 5, 3600)))
+    return res.status(429).json({ ok: false, message: '같은 이메일로 계좌 입금 신청이 잦습니다. 잠시 후 다시 시도해 주세요.' });
+
   await expireStalePledges(now);
   /**
    * 위저드가 직전 응답으로 받은 자기 주문번호 — 자기 홀드 해제의 **소유 증명**이다
@@ -62,6 +72,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     releaseOrderNo: previousOrderNo,
   });
   if (!result.ok) return res.status(409).json({ ok: false, code: result.code, message: '남은 수량보다 많이 신청했거나 방금 마감되었습니다. 수량을 줄이거나 다른 리워드를 선택해 주세요.' });
+
+  /**
+   * 계좌 입금 — 결제창이 없다. 입금 안내 메일을 보내고, 후원 폼은 응답의 `manageUrl`(펀딩 확인
+   * 페이지 — 관리 토큰으로만 열리는 비밀 주소)로 이동해 계좌를 크게 보여 준다. 금액은 그 화면이
+   * 서버에서 다시 읽는다(URL에 싣지 않는다). 메일이 실패해도 신청은 유효하다 — 화면에 계좌가
+   * 나오고, 실패 사유는 notification_error에 남아 관리자 "입금 안내 재발송"이 닫는다.
+   */
+  if (validated.value.paymentMethod === 'bank_transfer') {
+    await deliverDepositGuide(result.orderNo);
+    return res.status(201).json({
+      ok: true, orderNo: result.orderNo, paymentMethod: 'bank_transfer',
+      manageUrl: `/ko/funding/manage/${result.orderNo}?token=${encodeURIComponent(result.manageToken)}`,
+      ...result.amounts,
+    });
+  }
 
   return res.status(201).json({
     ok: true, orderNo: result.orderNo, paymentMethod: 'toss',

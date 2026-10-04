@@ -136,6 +136,7 @@ beforeAll(async () => {
   }
 });
 beforeEach(async () => {
+  await client.execute('DELETE FROM funding_refund_accounts');
   await client.execute('DELETE FROM refunds');
   await client.execute('DELETE FROM funding_pledges');
   await client.execute('DELETE FROM payments');
@@ -325,13 +326,12 @@ describe('cancelFundingPledge', () => {
   });
 
   /**
-   * 무통장입금은 중단했다. 남아 있는 옛 행에서 고객이 셀프 취소를 누르면 예전에는
-   * 환불 요청이 접수돼 운영자가 손으로 송금해야 했다 — 그 수작업이 이 결제수단을
-   * 걷어낸 이유다. 이제는 접수하지 않고 문의로 돌린다.
+   * 관리자 수기 등록(entry_source='manual')은 계좌로 받았어도 화면 취소를 받지 않는다 — 문의로 돌린다.
+   * (온라인 계좌 입금의 셀프 취소는 lib/funding/bankTransfer.integration.test.ts가 덮는다.)
    */
-  it('중단 전 무통장 건의 고객 셀프 취소는 접수하지 않고 문의로 돌린다', async () => {
+  it('수기 등록(계좌) 건의 고객 셀프 취소는 접수하지 않고 문의로 돌린다', async () => {
     const c = await insertLegacyBankPledge('FND-LEGACY-3');
-    await markPaidWithToss(c.orderNo);
+    await client.execute({ sql: "UPDATE funding_pledges SET entry_source='manual' WHERE order_id=?", args: [c.id] });
     const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
     expect(r).toMatchObject({ ok: false, code: 'invalid_state' });
     expect(r.ok === false && r.message).toContain('문의');

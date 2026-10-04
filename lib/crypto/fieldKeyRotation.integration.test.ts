@@ -53,6 +53,20 @@ const seedPayoutAccount = async (enc: string): Promise<string> => {
   return creator.id;
 };
 
+/** 환불 계좌번호 암호문 자리(마이그레이션 0048). 주문 행이 먼저 있어야 한다(FK). */
+const seedRefundAccount = async (enc: string): Promise<string> => {
+  seq += 1;
+  const orderId = `rot-order-${seq}`;
+  await client.execute({
+    sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
+            manage_token, item_amount, vat_amount, total_amount)
+          VALUES (?, ?, 'funding', 'paid', '후원자', '010', 'r@example.com', ?, 9091, 909, 10000)`,
+    args: [orderId, `FND-ROT-${seq}`, `tok-rot-${seq}`],
+  });
+  await mockDb.insert(schema.fundingRefundAccounts).values({ orderId, bankName: '은행', accountNumberEnc: enc, accountHolder: '후원자' });
+  return orderId;
+};
+
 const storedOf = async (id: string): Promise<string | null> => {
   const [row] = await mockDb
     .select({ enc: schema.fundingCreators.residentNumberEnc })
@@ -85,6 +99,7 @@ afterEach(() => {
 const SEEDERS: Record<string, (enc: string) => Promise<string>> = {
   'funding_creators.resident_number_enc': (enc) => seedCreator(enc),
   'funding_creators.payout_account_enc': (enc) => seedPayoutAccount(enc),
+  'funding_refund_accounts.account_number_enc': (enc) => seedRefundAccount(enc),
 };
 
 it('모든 타깃에 seeder가 있다 — 목록에 더하고 검증을 빠뜨리면 여기서 선다', () => {

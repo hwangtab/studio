@@ -1,3 +1,4 @@
+import { isOnlineBankTransfer } from './bankAccount';
 
 export const TOSS_HOLD_SECONDS = 900;
 export const MAX_QUANTITY = 10;
@@ -72,16 +73,23 @@ export const isRefundPendingStatus = (status: string): boolean =>
   (REFUND_PENDING_ORDER_STATUSES as readonly string[]).includes(status);
 
 export type CancelEligibility =
-  | { ok: true }
+  /**
+   * `refundVia` — 돈이 어디로 돌아가는가. `card`면 토스 결제를 바로 취소하고, `bank_account`면
+   * 후원자가 적은 환불 계좌로 운영자가 송금한다(그래서 화면이 계좌 입력 칸을 먼저 연다).
+   */
+  | { ok: true; refundVia: 'card' | 'bank_account' }
   | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' | 'offline_payment' | 'downloaded' };
 
 /**
  * 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다.
  *
- * `paymentMethod`를 함께 보는 이유: 토스 결제가 아닌 후원은 취소할 결제가 없어 환불이
- * 계좌 송금이다. 그걸 안 보면 화면이 "전액 환불" 버튼을 띄우는데 눌러도 cancel.ts가
- * 거절한다 — 죽은 버튼이다. 지금 이 경우는 운영자가 계좌로 받아 수기 등록한 건과
- * 무통장입금 중단(2026-09-11) 전에 만들어진 건 둘뿐이다.
+ * `paymentMethod`와 `entrySource`를 함께 보는 이유: 결제수단이 같은 `bank_transfer`라도
+ * 둘로 갈린다.
+ * - **온라인 계좌 입금**(후원자가 폼에서 계좌 입금을 고른 건) — 셀프 취소를 받는다. 환불할
+ *   결제가 토스에 없으니 후원자가 환불 계좌를 적고, 운영자가 그 계좌로 송금한 뒤 기록한다.
+ * - **수기 등록**(운영자가 현장·계좌로 받아 적은 건) — 화면 취소를 받지 않는다. 연락처 없이
+ *   등록된 건도 많고, 받은 경로가 제각각이라 문의로 받아 처리한다.
+ * 둘을 안 가르면 한쪽에 죽은 버튼이 생긴다(PR #77이 정확히 그 사고였다).
  *
  * **필수 인자로 둔다.** 이 버그가 들어온 자리는 manage 페이지 getServerSideProps의 한
  * 줄이었고, 선택 인자면 그 줄에서 빼먹어도 컴파일도 테스트도 통과한다. 값은 두 호출부
@@ -98,6 +106,8 @@ export const assessSelfCancel = (input: {
   fundingEnded: boolean;
   fulfillmentStatus: string;
   paymentMethod: string;
+  /** `funding_pledges.entry_source` — 'online' | 'manual'. 위 주석의 이유로 필수다. */
+  entrySource: string;
   /**
    * 디지털 리워드를 처음 내려받은 시각. **필수 인자로 둔다** — 위 주석과 같은 이유다.
    * 선택 인자면 호출부에서 빼먹어도 컴파일이 통과하고, 그 순간 이 규칙이 조용히 사라진다.
@@ -105,23 +115,39 @@ export const assessSelfCancel = (input: {
   downloadedAt: Date | null;
 }): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
-  if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
+  const refundVia = input.paymentMethod === 'toss'
+    ? 'card'
+    : isOnlineBankTransfer({ paymentMethod: input.paymentMethod, entrySource: input.entrySource })
+      ? 'bank_account'
+      : null;
+  if (refundVia === null) return { ok: false, code: 'offline_payment' };
   if (input.fundingEnded) return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   // 약관 제8조 2항 — 내려받기가 시작된 뒤에는 청약철회가 제한된다(전자상거래법 제17조 2항 5호).
   // 배송 리워드의 `fulfilling`에 해당하는, 디지털 리워드의 '이미 건네준 상태'다.
   if (input.downloadedAt !== null) return { ok: false, code: 'downloaded' };
-  return { ok: true };
+  return { ok: true, refundVia };
 };
+
+/**
+ * **입금 전** 계좌 입금 신청을 후원자가 거둘 수 있는가 — 펀딩 확인 페이지의 "입금 전 신청 취소".
+ *
+ * 받은 돈이 없으니 환불이 아니라 신청을 닫는 일이다(`pending` → `expired`, 관리자 "미입금 취소"와
+ * 같은 전이 — lib/funding/bankTransfer.ts). 화면(SSR)과 서버가 이 함수를 같은 인자로 부른다.
+ * 토스 결제 대기(pending)는 여기 해당하지 않는다 — 15분 홀드가 스스로 닫는다.
+ */
+export const canWithdrawBeforeDeposit = (input: { orderStatus: string; paymentMethod: string; entrySource: string }): boolean =>
+  input.orderStatus === 'pending' && isOnlineBankTransfer({ paymentMethod: input.paymentMethod, entrySource: input.entrySource });
 
 export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true }>['code'], string> = {
   not_paid: '결제가 확정된 펀딩만 취소할 수 있습니다.',
   project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
   downloaded: '음원을 내려받은 뒤에는 청약철회가 제한됩니다(약관 제8조 2항). 문의해 주세요.',
-  // 운영자가 계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
-  // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다.
-  offline_payment: '계좌로 받은 펀딩은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
+  // 운영자가 현장·계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
+  // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다. (후원자가 폼에서
+  // 계좌 입금을 고른 건은 여기가 아니다 — 화면에서 환불 계좌를 받아 취소를 접수한다.)
+  offline_payment: '운영자가 직접 등록한 펀딩은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
 };
 
 /**

@@ -12,13 +12,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const ip = getClientIp(req) ?? 'unknown';
   if (!(await consumeRateLimit(`funding_cancel:ip:${ip}`, 10, 3600)))
     return res.status(429).json({ ok: false, message: '요청이 너무 잦습니다. 잠시 후 다시 시도해 주세요.' });
-  const { orderNo, token } = (typeof req.body === 'object' && req.body) || {};
+  const { orderNo, token, refundAccount } = (typeof req.body === 'object' && req.body) || {};
   if (typeof orderNo !== 'string' || typeof token !== 'string' || !orderNo || !token)
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
   const order = await findFundingOrderByOrderNo(orderNo);
   if (!order || !isTokenMatch(order.manageToken, token)) return res.status(404).json({ ok: false, message: '펀딩 내역을 찾을 수 없습니다.' });
 
-  const result = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 셀프 취소', now: new Date() });
+  // 계좌 입금 후원은 환불 계좌(refundAccount)를 함께 받는다 — 검증·암호화는 cancel.ts가 한다.
+  // 입금 전 신청이면 같은 요청이 "신청 취소"(withdrawn)로 끝난다.
+  const result = await cancelFundingPledge({ orderNo, requestedBy: 'customer', reason: '고객 셀프 취소', now: new Date(), refundAccount });
   // 일시 오류는 409(이미 처리됨)가 아니라 503이다 — 클라이언트가 재시도할 수 있는 상태다.
   if (!result.ok)
     return res

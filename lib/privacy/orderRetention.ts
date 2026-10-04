@@ -222,6 +222,24 @@ export const purgeFundingPersonalDataOfPurgedOrders = async (): Promise<OrderPur
 };
 
 /**
+ * 결제자 이름이 파기된 주문의 **환불 계좌**(계좌 입금 후원자가 취소하며 적은 은행·계좌번호·예금주,
+ * `funding_refund_accounts`, 마이그레이션 0048)를 지운다.
+ *
+ * 환불 계좌는 환불을 실행한 기록이라 전자상거래법상 대금 결제 기록과 같이 5년을 본다 — 그래서
+ * 기준을 따로 세우지 않고 위 주문 파기(`orders.customer_name = PURGED_MARK`)를 그대로 따른다.
+ * 덮어쓰지 않고 행을 지운다: 은행명·예금주만 남겨도 개인정보이고, 계좌번호 암호문을 남길 이유가 없다.
+ *
+ * 따로 둔 함수인 이유: 표가 없으면(0048 미적용) 이 하나만 실패하고 같은 크론의 나머지 파기는 돈다.
+ */
+export const purgeFundingRefundAccountsOfPurgedOrders = async (): Promise<OrderPurgeResult> => {
+  const result = await getDb().run(sql`
+    DELETE FROM funding_refund_accounts
+    WHERE order_id IN (SELECT id FROM orders WHERE customer_name = ${PURGED_MARK})
+  `);
+  return rows(result as { rowsAffected?: number });
+};
+
+/**
  * 보관 기간이 지난 결제 실패 사유 원문을 파기한다.
  *
  * 대상은 `orders.payment_fail_message` 하나다. 기산점은 실패 시각(`payment_failed_at`),

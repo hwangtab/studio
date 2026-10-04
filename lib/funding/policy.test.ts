@@ -1,15 +1,15 @@
-import { assessSelfCancel, cancelBlockedMessage, CANCEL_BLOCK_MESSAGES } from './policy';
+import { assessSelfCancel, cancelBlockedMessage, canWithdrawBeforeDeposit, CANCEL_BLOCK_MESSAGES } from './policy';
 import { isPastFundingEnd } from './projectState';
 describe('assessSelfCancel', () => {
   it('paid + 모금 중 + 발송 전이면 가능', () => {
-    expect(assessSelfCancel({ orderStatus: 'paid', fundingEnded: false, fulfillmentStatus: 'none', paymentMethod: 'toss', downloadedAt: null })).toEqual({ ok: true });
+    expect(assessSelfCancel({ orderStatus: 'paid', fundingEnded: false, fulfillmentStatus: 'none', paymentMethod: 'toss', entrySource: 'online', downloadedAt: null })).toEqual({ ok: true, refundVia: 'card' });
   });
   it.each([
     ['pending', false, 'none', 'not_paid'],
     ['paid', true, 'none', 'project_not_live'],
     ['paid', false, 'preparing', 'fulfilling'],
   ])('%s/마감=%s/%s → %s', (orderStatus, fundingEnded, fulfillmentStatus, code) => {
-    expect(assessSelfCancel({ orderStatus: orderStatus as string, fundingEnded: fundingEnded as boolean, fulfillmentStatus: fulfillmentStatus as string, paymentMethod: 'toss', downloadedAt: null })).toEqual({ ok: false, code });
+    expect(assessSelfCancel({ orderStatus: orderStatus as string, fundingEnded: fundingEnded as boolean, fulfillmentStatus: fulfillmentStatus as string, paymentMethod: 'toss', entrySource: 'online', downloadedAt: null })).toEqual({ ok: false, code });
   });
 });
 
@@ -22,11 +22,11 @@ describe('운영자 종료는 셀프 취소를 끊지 않는다', () => {
   const project = { status: 'closed' as const, startAt: '2026-10-01T10:00:00+09:00', endAt: '2026-10-31T23:59:59+09:00' };
   const beforeEnd = new Date('2026-10-15T00:00:00Z');
   const afterEnd = new Date('2026-11-05T00:00:00Z');
-  const pledge = { orderStatus: 'paid', fulfillmentStatus: 'none', paymentMethod: 'toss', downloadedAt: null };
+  const pledge = { orderStatus: 'paid', fulfillmentStatus: 'none', paymentMethod: 'toss', entrySource: 'online', downloadedAt: null };
 
   it('운영자 종료 + 마감일 전이면 셀프 취소가 된다', () => {
     expect(isPastFundingEnd(project, beforeEnd)).toBe(false);
-    expect(assessSelfCancel({ ...pledge, fundingEnded: isPastFundingEnd(project, beforeEnd) })).toEqual({ ok: true });
+    expect(assessSelfCancel({ ...pledge, fundingEnded: isPastFundingEnd(project, beforeEnd) })).toEqual({ ok: true, refundVia: 'card' });
   });
 
   it('마감일이 지나면 project_not_live', () => {
@@ -37,21 +37,34 @@ describe('운영자 종료는 셀프 취소를 끊지 않는다', () => {
 });
 
 /**
- * 토스 결제가 아닌 후원은 취소할 결제가 없다 — 환불이 계좌 송금이다. 판정이 이걸 안 보면
- * 화면이 "전액 환불" 버튼을 띄우는데 서버가 거절하는 죽은 버튼이 된다(실제로 그랬다).
- * 대상은 운영자가 계좌로 받아 수기 등록한 건과, 무통장입금 중단 전에 만들어진 건이다.
+ * 결제수단이 같은 `bank_transfer`라도 둘로 갈린다(PR #77의 죽은 버튼 교훈).
+ * - 온라인 계좌 입금 → 셀프 취소를 받되 환불 계좌로(`refundVia: 'bank_account'`).
+ * - 관리자 수기 등록 → 화면 취소 없음(`offline_payment`).
  */
-describe('assessSelfCancel — 결제수단', () => {
+describe('assessSelfCancel — 결제수단·등록 경로', () => {
   const live = { orderStatus: 'paid', fundingEnded: false, fulfillmentStatus: 'none' };
 
-
-  it('토스 결제는 종전대로 셀프 취소를 허용한다', () => {
-    expect(assessSelfCancel({ ...live, paymentMethod: 'toss', downloadedAt: null })).toEqual({ ok: true });
+  it('토스 결제는 카드 취소로 셀프 취소를 허용한다', () => {
+    expect(assessSelfCancel({ ...live, paymentMethod: 'toss', entrySource: 'online', downloadedAt: null })).toEqual({ ok: true, refundVia: 'card' });
   });
 
-  it('토스가 아니면 offline_payment로 막는다', () => {
-    expect(assessSelfCancel({ ...live, paymentMethod: 'bank_transfer', downloadedAt: null }))
+  it('온라인 계좌 입금은 환불 계좌로 셀프 취소를 허용한다', () => {
+    expect(assessSelfCancel({ ...live, paymentMethod: 'bank_transfer', entrySource: 'online', downloadedAt: null }))
+      .toEqual({ ok: true, refundVia: 'bank_account' });
+  });
+
+  it('관리자 수기 등록은 offline_payment로 막는다', () => {
+    expect(assessSelfCancel({ ...live, paymentMethod: 'bank_transfer', entrySource: 'manual', downloadedAt: null }))
       .toEqual({ ok: false, code: 'offline_payment' });
+  });
+
+  it('온라인 계좌 입금도 발송 준비·내려받기·마감 규칙은 같다', () => {
+    const bank = { ...live, paymentMethod: 'bank_transfer', entrySource: 'online' };
+    expect(assessSelfCancel({ ...bank, fulfillmentStatus: 'preparing', downloadedAt: null })).toEqual({ ok: false, code: 'fulfilling' });
+    expect(assessSelfCancel({ ...bank, downloadedAt: new Date() })).toEqual({ ok: false, code: 'downloaded' });
+    expect(assessSelfCancel({ ...bank, fundingEnded: true, downloadedAt: null })).toEqual({ ok: false, code: 'project_not_live' });
+    // 입금 전(pending)은 셀프 취소가 아니라 "입금 전 신청 취소"다.
+    expect(assessSelfCancel({ ...bank, orderStatus: 'pending', downloadedAt: null })).toEqual({ ok: false, code: 'not_paid' });
   });
 
   it('모든 차단 코드에 안내 문구가 있다 — 화면이 undefined를 렌더하지 않는다', () => {
@@ -74,10 +87,11 @@ describe('내려받기 뒤 청약철회 제한', () => {
     fundingEnded: false,
     fulfillmentStatus: 'none',
     paymentMethod: 'toss',
+    entrySource: 'online',
   };
 
   it('내려받기 전에는 셀프 취소가 된다', () => {
-    expect(assessSelfCancel({ ...base, downloadedAt: null })).toEqual({ ok: true });
+    expect(assessSelfCancel({ ...base, downloadedAt: null })).toEqual({ ok: true, refundVia: 'card' });
   });
 
   it('내려받기가 시작됐으면 막는다', () => {
@@ -108,5 +122,19 @@ describe('cancelBlockedMessage', () => {
   it('음원만 담았거나 다른 사유면 기본 문구 그대로', () => {
     expect(cancelBlockedMessage('downloaded', [])).toBe(CANCEL_BLOCK_MESSAGES.downloaded);
     expect(cancelBlockedMessage('fulfilling', ['『발작』'])).toBe(CANCEL_BLOCK_MESSAGES.fulfilling);
+  });
+});
+
+describe('canWithdrawBeforeDeposit — 입금 전 신청 취소', () => {
+  it('입금 대기 중인 온라인 계좌 입금만', () => {
+    expect(canWithdrawBeforeDeposit({ orderStatus: 'pending', paymentMethod: 'bank_transfer', entrySource: 'online' })).toBe(true);
+  });
+  it.each([
+    ['paid', 'bank_transfer', 'online'],
+    ['expired', 'bank_transfer', 'online'],
+    ['pending', 'toss', 'online'],
+    ['pending', 'bank_transfer', 'manual'],
+  ])('%s/%s/%s → 아님', (orderStatus, paymentMethod, entrySource) => {
+    expect(canWithdrawBeforeDeposit({ orderStatus, paymentMethod, entrySource })).toBe(false);
   });
 });

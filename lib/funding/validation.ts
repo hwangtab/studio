@@ -1,6 +1,7 @@
 import isEmail from 'validator/lib/isEmail';
 
 import { PURGED_MARK } from '../privacy/orderRetention';
+import { BANK_TRANSFER_BLOCK_MESSAGES, bankTransferBlockReason } from './bankAccount';
 import { ADDITIONAL_AMOUNT_STEP, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from './policy';
 import { cleanSupporterMessage } from './messageText';
 import { computeProjectState, findReward, type FundingProject, type FundingReward } from './projects';
@@ -17,8 +18,11 @@ export interface CreatePledgePayload {
   /** 담은 리워드들. 한 개 이상, 같은 리워드는 한 줄(수량으로 합친다). 담은 순서를 지킨다. */
   items: PledgeItemInput[];
   additionalAmount: number;
-  /** 토스 결제위젯만 쓴다 — 무통장입금은 2026-09-11에 중단했다(lib/funding/policy.ts 참조). */
-  paymentMethod: 'toss';
+  /**
+   * `toss` — 토스 결제위젯. `bank_transfer` — 계좌로 직접 입금(운영자가 통장을 보고 확인한다,
+   * lib/funding/bankAccount.ts). 계좌 입금은 한정 수량 리워드를 받지 않는다.
+   */
+  paymentMethod: 'toss' | 'bank_transfer';
   customerName: string; customerPhone: string; customerEmail: string;
   supporterMessage?: string; displayNamePublic: boolean;
   /**
@@ -78,9 +82,17 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   if (typeof additionalAmount !== 'number' || !Number.isInteger(additionalAmount) || additionalAmount < 0
     || additionalAmount > MAX_ADDITIONAL_AMOUNT || additionalAmount % ADDITIONAL_AMOUNT_STEP !== 0)
     return { ok: false, message: '추가 펀딩 금액은 1,000원 단위로 500만원까지 가능합니다.' };
-  // 무통장입금은 중단했다. 예전 클라이언트나 손으로 만든 요청이 'bank_transfer'를 보내도
-  // 여기서 끊는다 — 받아들이면 운영자가 입금을 손으로 대조해야 하는 주문이 다시 생긴다.
-  if (b.paymentMethod !== 'toss') return { ok: false, message: '결제수단을 선택해 주세요.' };
+  if (b.paymentMethod !== 'toss' && b.paymentMethod !== 'bank_transfer') return { ok: false, message: '결제수단을 선택해 주세요.' };
+  const paymentMethod: CreatePledgePayload['paymentMethod'] = b.paymentMethod;
+  /**
+   * 계좌 입금은 한정 수량 리워드를 받지 않는다. 판정은 후원 폼과 **같은 함수·같은 인자**다
+   * (bankTransferBlockReason) — 화면은 그 선택지를 막아 두므로 여기 오는 것은 옛 화면이나 손으로
+   * 만든 요청뿐이지만, 받아들이면 입금 확인 사이에 재고가 어긋난다.
+   */
+  if (paymentMethod === 'bank_transfer') {
+    const blocked = bankTransferBlockReason(lines.map((l) => l.reward));
+    if (blocked) return { ok: false, message: BANK_TRANSFER_BLOCK_MESSAGES[blocked] };
+  }
   const tooLong = overLimitMessage([
     { value: b.customerName, max: PLEDGE_TEXT_LIMITS.customerName, label: '이름은' },
     { value: b.customerPhone, max: PLEDGE_TEXT_LIMITS.customerPhone, label: '연락처는' },
@@ -154,7 +166,7 @@ export const validateCreatePledgePayload = (body: unknown, project: FundingProje
   return {
     ok: true, lines,
     value: {
-      projectSlug: project.slug, items: lines.map((l) => ({ rewardId: l.reward.id, quantity: l.quantity })), additionalAmount, paymentMethod: b.paymentMethod,
+      projectSlug: project.slug, items: lines.map((l) => ({ rewardId: l.reward.id, quantity: l.quantity })), additionalAmount, paymentMethod,
       customerName, customerPhone, customerEmail, supporterMessage, displayNamePublic, publicName,
       shipping, termsAgreed: true,
     },

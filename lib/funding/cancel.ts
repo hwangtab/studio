@@ -5,7 +5,9 @@ import { refunds } from '../../db/schema';
 import { VIRTUAL_ACCOUNT_CANCEL_ADMIN_MESSAGE, VIRTUAL_ACCOUNT_ERROR_CODE, cancelPayment } from '../booking/toss';
 import { sendFundingCancelledEmails } from './email';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
-import { assessSelfCancel, CANCEL_BLOCK_MESSAGES } from './policy';
+import { assessSelfCancel, canWithdrawBeforeDeposit, CANCEL_BLOCK_MESSAGES } from './policy';
+import { cancelUnpaidBankDeposit } from './bankTransfer';
+import { encryptRefundAccountNumber, validateRefundAccount } from './refundAccount';
 import { isPastFundingEnd } from './projectState';
 import { getFundingProjectOrFailure } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
@@ -13,7 +15,11 @@ import { findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { FundingProject } from './projects';
 
 export type FundingCancelOutcome =
-  | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded'; refundAmount: number }
+  /**
+   * `withdrawn` — 입금 전 계좌 입금 신청을 후원자가 거뒀다(받은 돈이 없어 환불이 아니다).
+   * `refund_requested` — 계좌 입금 후원의 취소를 환불 계좌와 함께 접수했다(운영자가 송금한다).
+   */
+  | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded' | 'withdrawn'; refundAmount: number }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
 const GENERIC = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
@@ -64,10 +70,25 @@ const notifyCancelled = async (
   }
 };
 
-export const cancelFundingPledge = async (input: { orderNo: string; requestedBy: 'customer' | 'admin'; reason: string; now: Date }): Promise<FundingCancelOutcome> => {
+export const cancelFundingPledge = async (input: {
+  orderNo: string; requestedBy: 'customer' | 'admin'; reason: string; now: Date;
+  /**
+   * 계좌 입금 후원의 셀프 취소에 함께 받는 환불 계좌(은행·계좌번호·예금주). 검증은 여기서 한다
+   * (validateRefundAccount) — 라우트는 받은 값을 그대로 넘긴다. 다른 경로에서는 쓰지 않는다.
+   */
+  refundAccount?: unknown;
+}): Promise<FundingCancelOutcome> => {
   const order = await findFundingOrderByOrderNo(input.orderNo);
   if (!order || !order.fundingPledge) return { ok: false, code: 'not_found', message: '펀딩 내역을 찾을 수 없습니다.' };
   const pledge = order.fundingPledge;
+  /**
+   * 입금 전 계좌 입금 신청 — 후원자가 "입금 전 신청 취소"를 눌렀다. 화면(manage SSR)과 같은
+   * 판정(canWithdrawBeforeDeposit)을 쓴다. 프로젝트 상태와 무관하다(받은 돈이 없다).
+   */
+  if (input.requestedBy === 'customer' && canWithdrawBeforeDeposit({ orderStatus: order.status, paymentMethod: pledge.paymentMethod, entrySource: pledge.entrySource })) {
+    const r = await cancelUnpaidBankDeposit(order);
+    return r.ok ? { ok: true, mode: 'withdrawn', refundAmount: 0 } : { ok: false, code: 'invalid_state', message: r.message };
+  }
   /**
    * 조회 실패와 부재를 구분한다. 예전에는 둘 다 null이라 `project ? … : 'closed'`가
    * DB가 한 번 흔들린 것을 "마감"으로 읽었고, 모금 중인 프로젝트의 후원자가 셀프 취소를
@@ -91,6 +112,7 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
       fundingEnded: project ? isPastFundingEnd(project, input.now) : true,
       fulfillmentStatus: pledge.fulfillmentStatus,
       paymentMethod: pledge.paymentMethod,
+      entrySource: pledge.entrySource,
       downloadedAt: pledge.downloadedAt ?? null,
     });
     if (!verdict.ok) return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES[verdict.code] };
@@ -113,20 +135,68 @@ export const cancelFundingPledge = async (input: { orderNo: string; requestedBy:
   }
 
   /**
-   * 무통장입금은 2026-09-11에 중단했다 — 새 무통장 후원은 만들어질 수 없다
-   * (lib/funding/validation.ts가 결제수단을 toss로 못박는다).
+   * 계좌 입금(온라인 계좌 입금·관리자 수기 등록)은 토스에 취소할 결제가 없다. 돈은 운영자가 계좌로
+   * 직접 돌려준다.
    *
-   * 그래도 이 분기를 남기는 이유: 중단 전에 만들어진 행이 DB에 남아 있고, 그 행들이
-   * 토스 취소 경로로 흘러가면 결제 기록이 없어 엉뚱하게 실패한다. 관리자 쪽 기록 경로만
-   * 남겨 두면 옛 행을 닫을 수단이 있고, 고객 셀프 취소는 명시적으로 거절한다 —
-   * 셀프 취소를 받아 두면 운영자가 손으로 송금할 환불 요청이 다시 쌓인다. 그것이
-   * 이 결제수단을 걷어낸 이유다.
+   * - **후원자**(온라인 계좌 입금만 — 수기 건은 위 assessSelfCancel이 offline_payment로 막았다):
+   *   환불 계좌를 받아 취소를 **접수**한다. 주문은 paid 그대로 두고 `refund_requested_at`을 찍는다 —
+   *   그 표식이 관리자 배너·헬스체크(3영업일 기한)·발송 금지(CSV shipHold·발송 상태 API)를 켠다.
+   * - **관리자**: 송금을 마친 뒤 누르는 "송금 완료(환불 기록)" — 주문을 refunded로 기록한다.
    */
   if (pledge.paymentMethod === 'bank_transfer') {
     if (input.requestedBy === 'customer') {
-      // 위 assessSelfCancel이 먼저 걸러내므로 여기까지 오지 않는다 — 두 판정이 갈리면
-      // 화면은 버튼을 띄우는데 서버가 거절하는 조합이 생기므로, 같은 문구로 방어만 남긴다.
-      return { ok: false, code: 'invalid_state', message: CANCEL_BLOCK_MESSAGES.offline_payment };
+      const account = validateRefundAccount(input.refundAccount);
+      if (!account.ok) return { ok: false, code: 'invalid_state', message: account.message };
+      let accountNumberEnc: string;
+      try {
+        accountNumberEnc = encryptRefundAccountNumber(account.value.accountNumber);
+      } catch (error) {
+        // 키가 없는 배포 — 평문으로 저장하는 길은 없다. 값은 로그에 적지 않는다.
+        console.error('[funding-cancel] 환불 계좌 암호화 실패 — 접수하지 않는다', { orderNo: order.orderNo, error: error instanceof Error ? error.name : 'unknown' });
+        return { ok: false, code: 'temporarily_unavailable', message: '지금은 환불 계좌를 접수할 수 없습니다. 010-4255-7893으로 연락 주세요.' };
+      }
+      const requestedAt = Math.floor(input.now.getTime() / 1000);
+      /**
+       * 접수 표식을 먼저 **선점**하고, 이긴 요청만 계좌를 쓴다. 표식 UPDATE의 WHERE가 경합 가드다 —
+       * 이미 접수됐거나, 그 사이 발송 준비·내려받기가 시작됐거나, 결제 상태가 바뀌었으면 0행(토스
+       * 경로의 선점과 같은 축). 한 batch로 묶고 "방금 이 시각으로 접수됐다"를 계좌 INSERT의 조건으로
+       * 걸면, 같은 초에 두 번 누른 두 번째 요청이 표식은 못 얻고도 그 조건을 통과해 계좌를 덮어쓴다
+       * (테스트로 재현했다). 그래서 선점 결과를 보고 나서 쓴다. 계좌 쓰기가 실패하면 표식을 되돌린다.
+       */
+      const db0 = getDb();
+      let claimed = 0;
+      try {
+        const claim = await db0.run(sql`
+          UPDATE funding_pledges
+          SET refund_requested_at = ${requestedAt}, updated_at = unixepoch()
+          WHERE id = ${pledge.id}
+            AND refund_requested_at IS NULL
+            AND fulfillment_status = 'none' AND downloaded_at IS NULL
+            AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`);
+        claimed = Number(claim.rowsAffected ?? 0);
+      } catch (error) {
+        console.error('[funding-cancel] 취소 접수 선점 실패', { orderNo: order.orderNo, error });
+        return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+      }
+      if (claimed > 0) {
+        try {
+          await db0.run(sql`
+            INSERT INTO funding_refund_accounts (order_id, bank_name, account_number_enc, account_holder)
+            VALUES (${order.id}, ${account.value.bankName}, ${accountNumberEnc}, ${account.value.accountHolder})
+            ON CONFLICT (order_id) DO UPDATE SET
+              bank_name = excluded.bank_name, account_number_enc = excluded.account_number_enc,
+              account_holder = excluded.account_holder, updated_at = unixepoch()`);
+        } catch (error) {
+          // 표가 없거나(0048 미적용) DB 장애 — 계좌 없는 접수를 남기지 않게 표식을 되돌린다.
+          console.error('[funding-cancel] 환불 계좌 저장 실패 — 접수를 되돌린다', { orderNo: order.orderNo, error });
+          await db0.run(sql`UPDATE funding_pledges SET refund_requested_at = NULL WHERE id = ${pledge.id} AND refund_requested_at = ${requestedAt}`)
+            .catch((revertError: unknown) => console.error('[funding-cancel] 접수 되돌리기 실패 — 관리자 화면에서 환불 요청 취소 필요', { orderNo: order.orderNo, error: revertError }));
+          return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
+        }
+      }
+      if (claimed === 0) return { ok: false, code: 'invalid_state', message: '이미 취소 요청이 접수되었거나 지금은 취소할 수 없는 상태입니다. 새로고침해 주세요.' };
+      await notifyCancelled(db0, order, project, 'refund_requested', refundAmount);
+      return { ok: true, mode: 'refund_requested', refundAmount };
     }
     if (refundAmount <= 0) return { ok: false, code: 'invalid_state', message: '환불할 잔액이 없습니다.' };
     const claim = await db.run(
