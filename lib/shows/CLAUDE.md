@@ -27,7 +27,8 @@
 
 | 자리 | 쓰는 것 |
 |---|---|
-| 히어로 | 공용 `ImageHero`(포스터를 배경 + `HERO_SCRIM_STRONG`, 전경에 포스터 카드·부제·일시/장소 알약·CTA). 페이지에 `hasHero = true` |
+| 히어로 | 공용 `ImageHero`(**공연과 무관한 고정 사진** `SHOW_HERO_IMAGE` + `HERO_SCRIM_STRONG`, 부제·일시/장소 알약·CTA). 페이지에 `hasHero = true`. **포스터를 배경으로 깔지 않는다** — 글자가 든 이미지라 잘리고 어수선하고 공연마다 히어로가 달라진다(2026-10-04 운영자 지적). 목록 히어로도 같은 고정 사진 |
+| 포스터 | `ShowPoster` — 본문(오른쪽 sticky 패널 맨 위, 모바일은 소개 앞)에서 읽을 수 있는 크기로, 너비에 맞춰 비율을 지키고 누르면 원본을 새 탭에서 연다. 가로·세로 포스터 모두 같은 틀 |
 | 섹션 제목 | `SectionHeading`의 v2 문법(eyebrow + 번호 + 잉크 대형 제목). 맨 `<h2 class="typo-section-title">`를 쓰지 않는다 |
 | 핵심 정보 | `ShowFacts`(`BaseCard glass`, 데스크톱 sticky, `<lg`에서는 소개 **앞**) |
 | 출연진 | `LineupCard`(`components/common/`) — 펀딩 `FundingLineupPerson`과 같은 카드 |

@@ -1,18 +1,17 @@
-import Image from 'next/image';
-
 import ImageHero, { HERO_SCRIM_STRONG } from '../common/ImageHero';
 import MobileStickyCta from '../common/MobileStickyCta';
 import { Button } from '../ui/Button';
 import FAQSection from '../ui/FAQSection';
 import { Section } from '../ui/Section';
 import SectionHeading from '../ui/SectionHeading';
-import { formatWon, SHOW_CONTACT_PHONE } from '../../lib/shows/copy';
+import { formatWon, SHOW_CONTACT_PHONE, SHOW_HERO_IMAGE } from '../../lib/shows/copy';
 import { showFaqItems } from '../../lib/shows/faq';
 import type { PublicShow } from '../../lib/shows/queries';
 import { descriptionParagraphs } from '../../lib/shows/structured';
 import ShowBookingForm from './ShowBookingForm';
 import ShowFacts from './ShowFacts';
 import ShowLineup from './ShowLineup';
+import ShowPoster from './ShowPoster';
 import ShowVenueMap from './ShowVenueMap';
 
 /**
@@ -39,26 +38,16 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
   return (
     <>
       {/*
-        포스터를 두 번 쓴다 — 배경(스크림 아래, 분위기)과 전경(작은 카드, 실제 포스터). 펀딩 목록이
-        진행 중 프로젝트의 커버를 배경으로 쓰는 것과 같은 수법이다. 글씨 자리 대비는 STRONG 스크림이
-        지킨다(ProjectDetailView 주석의 실측과 같은 근거 — 포스터가 밝은 공연이 오면 다시 잴 것).
+        히어로 배경은 공연과 무관한 고정 사진이다(SHOW_HERO_IMAGE) — 포스터는 글자가 든 이미지라 배경으로 깔면
+        어수선하고 공연마다 히어로가 달라진다. 포스터는 아래 본문(ShowPoster)에서 읽을 수 있는 크기로 보여 준다.
       */}
       <ImageHero
         locale="ko"
         priority
         overlayGradient={HERO_SCRIM_STRONG}
-        backgroundImage={show.coverImage ?? '/images/og-recording15.webp'}
+        backgroundImage={SHOW_HERO_IMAGE}
         imageAlt=""
-        aboveTitle={
-          <div className="flex flex-col items-center gap-4">
-            {show.coverImage && (
-              <div className="relative aspect-[3/4] w-36 overflow-hidden rounded-xl shadow-2xl ring-1 ring-white/20 md:w-44">
-                <Image src={show.coverImage} alt={`${show.title} 포스터`} fill priority sizes="176px" className="object-cover" />
-              </div>
-            )}
-            <p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{show.presenterName} 주최</p>
-          </div>
-        }
+        aboveTitle={<p className="text-sm font-semibold tracking-wide text-gray-200 drop-shadow">{show.presenterName} 주최</p>}
         title={show.title}
         subtitle={
           <>
@@ -128,8 +117,9 @@ export default function ShowDetailView({ show }: { show: PublicShow }) {
           </div>
 
           {/* <lg에서는 핵심 정보(일시·장소·가격·예매)가 소개보다 먼저 보여야 한다 — 펀딩 상세가 모금 현황을
-              패널에서 본문 위로 옮긴 것과 같은 이유(2026-09-28). 데스크톱은 오른쪽 sticky. */}
-          <aside className="order-first lg:order-none lg:sticky lg:top-24">
+              패널에서 본문 위로 옮긴 것과 같은 이유(2026-09-28). 포스터가 맨 위, 그 아래 핵심 정보. 데스크톱은 오른쪽 sticky. */}
+          <aside className="order-first mx-auto w-full max-w-sm space-y-6 lg:sticky lg:top-24 lg:order-none lg:mx-0 lg:max-w-none">
+            {show.coverImage && <ShowPoster src={show.coverImage} title={show.title} />}
             <ShowFacts show={show} ctaLabel={ctaLabel} bookable={bookable} />
           </aside>
         </div>
