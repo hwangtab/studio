@@ -41,6 +41,18 @@ describe('ShowDetailView', () => {
     ctas.forEach((a) => expect(a.getAttribute('href')).toBe('#book'));
   });
 
+  it('포스터는 히어로 배경이 아니라 본문에서 원본 링크와 함께 보인다', () => {
+    const { container } = render(<ShowDetailView show={show} />);
+    const poster = screen.getByAltText('공연 제목 포스터');
+    expect(poster).toBeTruthy();
+    const link = screen.getByRole('link', { name: '공연 제목 포스터 원본 크게 보기' });
+    expect(link.getAttribute('href')).toBe('/images/shows/x.webp');
+    expect(link.getAttribute('target')).toBe('_blank');
+    // 히어로 배경 이미지는 공연과 무관한 고정 사진이다 — 포스터가 두 번 쓰이지 않는다.
+    const heroImgs = Array.from(container.querySelectorAll('section img')).map((i) => i.getAttribute('src') ?? '');
+    expect(heroImgs.filter((src) => src.includes('x.webp')).length).toBe(1);
+  });
+
   it('취소된 공연은 안내가 뜨고 예매 버튼이 없다', () => {
     render(<ShowDetailView show={{ ...show, cancelled: true, showtimes: [{ ...show.showtimes[0], saleState: 'cancelled' }] }} />);
     expect(showCtaLabel({ ...show, cancelled: true })).toEqual({ label: '취소된 공연입니다', bookable: false });

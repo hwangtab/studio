@@ -4,7 +4,7 @@ import ShowCard from '../../../components/shows/ShowCard';
 import { Section } from '../../../components/ui/Section';
 import SectionHeading from '../../../components/ui/SectionHeading';
 import { withI18nServerProps } from '../../../lib/getStatic';
-import { SHOW_CONTACT_PHONE } from '../../../lib/shows/copy';
+import { SHOW_CONTACT_PHONE, SHOW_HERO_IMAGE } from '../../../lib/shows/copy';
 import { listPublicShows, type PublicShow } from '../../../lib/shows/queries';
 
 interface Props {
@@ -12,14 +12,6 @@ interface Props {
   past: PublicShow[];
   nowSec: number;
 }
-
-/**
- * 목록 히어로의 배경은 **가장 가까운 공연의 포스터**다 — 펀딩 목록이 진행 중 프로젝트의 커버를 쓰는 것과
- * 같은 규칙. 고정 이미지를 쓰면 화면과 내용이 따로 놀고 공연이 바뀔 때마다 사람이 갈아 끼워야 한다.
- */
-const FALLBACK_HERO = '/images/bulgwang-mixing-club.webp';
-const pickHeroImage = (upcoming: PublicShow[], past: PublicShow[]): string =>
-  upcoming[0]?.coverImage ?? past[0]?.coverImage ?? FALLBACK_HERO;
 
 /** 1장이면 한 칸, 2장이면 두 칸까지만 벌린다 — 3열 고정이면 한 장짜리가 왼쪽으로 몰린다(펀딩 목록과 같다). */
 const gridColumns = (count: number): string =>
@@ -43,7 +35,7 @@ export default function ShowsIndexPage({ upcoming, past, nowSec }: Props) {
         locale="ko"
         priority
         overlayGradient={HERO_SCRIM_STRONG}
-        backgroundImage={pickHeroImage(upcoming, past)}
+        backgroundImage={SHOW_HERO_IMAGE}
         imageAlt=""
         title="공연"
         subtitle="스튜디오 놀이 여는 공연입니다. 사전 예매는 온라인에서 받고, 티켓(QR)은 메일로 보내 드립니다."
