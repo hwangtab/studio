@@ -16,3 +16,12 @@ describe('BankDepositGuide (결제 공용)', () => {
     expect(screen.getByText('입금하실 때 보내는 분 이름은 예약하신 분 성함으로 해 주세요.')).toBeInTheDocument();
   });
 });
+
+it('계좌번호는 줄바꿈하지 않는다 — break-all 없이 nowrap, 좁은 폭에서는 글자를 줄인다', () => {
+  const { container } = render(<BankDepositGuide amount={1} deadline="2026-10-07T06:00:00.000Z" customerName="a" />);
+  const el = container.querySelector('[data-account-number]')!;
+  expect(el.textContent).toBe('3333-12-5480849');
+  expect(el.className).toContain('whitespace-nowrap');
+  expect(el.className).not.toContain('break-all');
+  expect(el.className).toMatch(/text-\[clamp\(/);
+});
