@@ -43,7 +43,7 @@ const ProjectRowCard = ({
                     src={image}
                     alt={`${title} — ${artist}`}
                     pictureClassName="w-full h-full"
-                    className="w-full h-full object-cover transition-transform duration-slow group-hover:scale-105 opacity-100 dark:opacity-90 dark:group-hover:opacity-100"
+                    className="w-full h-full object-cover opacity-100 dark:opacity-90 dark:group-hover:opacity-100"
                     width={200}
                     height={200}
                     // 이 이미지는 반응형으로 렌더 폭이 다르다:

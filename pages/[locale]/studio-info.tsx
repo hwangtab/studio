@@ -158,7 +158,7 @@ const Studio: NextPageWithLayout<StudioInfoProps> = ({ locale, equipmentData, hu
               <ResponsiveImage
                 src="/images/hardware2.webp"
                 alt={t('studioInfo.intro.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
+                className="w-full h-full object-cover"
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"

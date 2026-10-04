@@ -33,7 +33,7 @@ const PortfolioMiniCard = ({ item, locale }: PortfolioMiniCardProps) => {
           src={item.image}
           alt={`${item.title} — ${item.artist}`}
           pictureClassName="w-full h-full"
-          className="w-full h-full object-cover transition-transform duration-slow group-hover:scale-105"
+          className="w-full h-full object-cover"
           width={300}
           height={300}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"

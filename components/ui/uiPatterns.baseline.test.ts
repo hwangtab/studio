@@ -101,7 +101,10 @@ const elementBlocks = (src: string, tag: string): { start: number; text: string 
 };
 
 const ROUNDED_MD_RE = /(?<![-\w:])(?:[a-z-]+:)*rounded-md(?![-\w])/g;
-const TONE_BG_RE = /(?<![-\w:])(?:[a-z-]+:)*bg-(?:(?:red|green|amber|blue)-(?:50|100)|primary\/(?:5|10))(?![-\w/])/;
+// variant 없는 배경만 본다 — `hover:bg-primary/10`은 버튼 hover지 안내 박스가 아니다.
+const TONE_BG_RE = /(?<![-\w:])bg-(?:(?:red|green|amber|blue)-(?:50|100)|primary\/(?:5|10))(?![-\w/])/;
+// 고정 크기(h-fit·h-12·w-10…)가 함께 있으면 아이콘 타일이다 — 안내 박스가 아니다.
+const SIZED_TILE_RE = /(?<![-\w:])(?:h-fit|[hw]-\d+(?:\.\d+)?)(?![-\w])/;
 const PILL_SIZE_RE = /(?<![-\w:])(?:text-xs|text-\[10px\]|typo-caption)(?![-\w])/;
 const EMOJI_RE = /[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu;
 const MOTION_RE = /(?<![-\w:])(?:hover:-translate-y-[\d.]+|hover:scale-[\d[\]. ]+|group-hover:scale-[\d[\]. ]+)/g;
@@ -122,7 +125,7 @@ const RULES: Rule[] = [
     // rounded-full은 뺀다 — 아이콘 원·배지는 안내 박스가 아니다(배지는 아래 규칙이 본다).
     find: (src) =>
       lineHits(src, (l) =>
-        TONE_BG_RE.test(l) && /(?<![-\w:])(?:[a-z-]+:)*rounded-(?:md|lg|xl|2xl|3xl)(?![-\w])/.test(l) && /(?<![-\w])p[xy]?-\d/.test(l) ? 1 : 0,
+        TONE_BG_RE.test(l) && !SIZED_TILE_RE.test(l) && /(?<![-\w:])(?:[a-z-]+:)*rounded-(?:md|lg|xl|2xl|3xl)(?![-\w])/.test(l) && /(?<![-\w])p[xy]?-\d/.test(l) ? 1 : 0,
       ),
   },
   {
@@ -171,7 +174,14 @@ const RULES: Rule[] = [
 /**
  * 규칙별 허용 목록. **이유 필수.** 파일 + 줄에 포함된 문자열로 맞춘다.
  */
-const ALLOW: { rule: string; file: string; snippet: string; reason: string }[] = [];
+const ALLOW: { rule: string; file: string; snippet: string; reason: string }[] = [
+  {
+    rule: 'notice-handroll',
+    file: 'components/service/ServiceComparison.tsx',
+    snippet: "isUs ? 'bg-primary/10 dark:bg-primary/20'",
+    reason: '비교표의 "우리" 열 강조 틴트 — 안내 박스가 아니라 표 셀이다. Notice로 바꾸면 표가 깨진다.',
+  },
+];
 
 type Counts = Record<string, Record<string, number>>;
 

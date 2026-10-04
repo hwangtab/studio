@@ -364,10 +364,12 @@ className) — 같은 리터럴에서 `border-2`를 요구하면 그 형태로 �
 CSS `hover:-translate-y`·`hover:scale` 복제가 네 가지 다른 움직임을 만들었다.
 
 **가드** — `components/ui/uiPatterns.baseline.test.ts`. 규칙 7종(`rounded-md` · 상태 박스 손조립 · 배지
-손조립 · 입력 틴트 · 원시 h1 · 이모지 · 모션 복제)을 **파일별 기준선 대비**로 본다: 늘면 실패, 줄면
-통과, 새 파일에 생기면 실패. 기존 위반은 `ui-patterns.baseline.json`에 있고, 0단계
-(docs/design-ui-refinement-plan-2026-10.md §5)가 끝나면 비운다. 갱신은 `UPDATE_UI_PATTERN_BASELINE=1`
-이고 **올리는 갱신은 거부된다** — 정말 늘려야 하면 그 규칙의 `ALLOW`에 이유와 함께 등재한다.
+손조립 · 입력 틴트 · 원시 h1 · 이모지 · 모션 복제)을 **파일별 기준선 대비**로 본다. 기준선
+`ui-patterns.baseline.json`은 2026-10-05에 **전부 0**이 됐다(184건 → 0, 세 PR) — 즉 지금은 "있으면
+실패"다. 갱신은 `UPDATE_UI_PATTERN_BASELINE=1`이고 **올리는 갱신은 거부된다** — 정말 예외여야 하면
+그 규칙의 `ALLOW`에 이유와 함께 등재한다(현재 1건: 비교표 강조 열). 라이트 고정 화면(계약 서명·완료)은
+Notice에 `dark:bg-red-50` 같은 라이트 값을 `className`으로 덮어 쓴다 — Field의 `light` 옵트인과 같은
+처방이다.
 
 ### 배지
 
@@ -559,7 +561,7 @@ v1 페이지는 이행될 때까지 300이다. 아래 문단은 v1에 대해 여
 | `pages/admin/**` h1이 `text-xl`~`3xl` 혼용 | 운영자 전용 백오피스라 우선순위 낮음. 공개 페이지만 `typo-page-title`로 통일했다 |
 | 히어로 `minHeight`에 `vh`와 `svh` 혼용 | 규칙은 §3에 적어 뒀고 기존 값은 손대지 않았다 |
 | 그리드 브레이크포인트(2열 `sm:`/`md:` 반반, 4열 4종) | 카드 너비가 페이지마다 달라 일괄 통일은 보류 |
-| 중간 계층 패턴의 기존 위반(`rounded-md` 59 · 상태 박스 손조립 · 배지 손조립 · 입력 틴트 · 원시 h1 · 이모지 · 모션 복제) | `components/ui/ui-patterns.baseline.json`에 파일별로 기록. 계획과 순서는 `docs/design-ui-refinement-plan-2026-10.md` — 0단계(~10/13) 비동결 흐름, 1단계(10/14~) Button·BaseCard·StoryCard·배지, 2단계(11/11~) 측정 중 LP |
+| ~~중간 계층 패턴의 기존 위반 184건~~ | 2026-10-05 세 PR로 0건. 가드가 재발을 막는다(§4). 경위는 `docs/design-ui-refinement-plan-2026-10.md` §5-1 |
 
 ## 10. 디자인 v2 — 페이지 단위로 이행 중
 

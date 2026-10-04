@@ -37,6 +37,11 @@ import { getSiteConfig } from '../../data/siteConfig';
 import { trackLeadEvent, trackMicroEvent } from '../../utils/analytics';
 
 import type { NextPageWithLayout } from '../../types';
+import { Button } from '../../components/ui/Button';
+
+/** 히어로 CTA — Button 위에 얹는 크기만. 리프트·색 전환·포커스 링은 Button이 소유한다(design-system §4). */
+const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug shadow-lg hover:shadow-xl';
+const HERO_CTA_ON_IMAGE = `${HERO_CTA} focus-visible:ring-white/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20`;
 
 interface HomeProps {
   locale: Locale;
@@ -128,6 +133,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 채팅방(앱이 없으면 설치 유도)에 떨어지므로 /contact 폼으로 가른다.
                 옐로도 함께 내린다 — 노란 버튼 = 카카오톡 규칙은 양방향이다. */}
             {locale === 'ko' ? (
+              <Button asChild variant="kakao" shape="pill" className={HERO_CTA_ON_IMAGE}>
               <a
                 href={kakaoUrl}
                 target="_blank"
@@ -139,11 +145,12 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                     cta_id: 'hero_primary_kakao',
                   })
                 }
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-kakao text-kakao-ink font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-kakao-dark transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
               >
                 {heroContent.cta.reserve}
               </a>
+              </Button>
             ) : (
+              <Button asChild variant="solid" shape="pill" className={HERO_CTA_ON_IMAGE}>
               <Link
                 href={getLink('/contact')}
                 prefetch={false}
@@ -154,10 +161,10 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                     cta_id: 'hero_primary_contact',
                   })
                 }
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
               >
                 {heroContent.cta.reserve}
               </Link>
+              </Button>
             )}
             {/* 2차 CTA — ko는 플래그십(/release-project), 비-ko는 포트폴리오.
                 발매 허브로 갈 때만 micro_click_service를 발화한다(포트폴리오는
@@ -167,14 +174,15 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
                 시각적 2등). 1차를 카카오 옐로로 올리고 2차는 어두운 스크림 아웃라인으로
                 내린다. 흰 틴트(bg-white/*) 대신 bg-black/30을 쓰는 이유는 HeaderActions와
                 동일 — 흰 틴트는 배경을 밝혀 흰 글씨 대비를 오히려 떨어뜨린다. */}
+            <Button asChild variant="scrim" shape="pill" className={HERO_CTA}>
             <Link
               href={getLink(heroContent.cta.secondaryLink)}
               prefetch={false}
               onClick={trackHeroSecondary}
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-black/30 border-2 border-white/40 text-white [text-shadow:0_1px_2px_rgb(0_0_0/0.55)] font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-black/40 hover:border-white/60 transition-transform duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-black/20"
             >
               {heroContent.cta.secondary}
             </Link>
+            </Button>
           </>
         }
       />
@@ -267,7 +275,7 @@ const Home: NextPageWithLayout<HomeProps> = ({ locale, homeData, faqData, releas
               width={864}
               height={864}
               sizes="(max-width: 768px) 100vw, 480px"
-              containerClassName="aspect-square w-full max-w-md overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800"
+              containerClassName="aspect-square w-full max-w-md overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800"
               className="w-full h-full object-cover"
             />
             <div>

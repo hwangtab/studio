@@ -17,6 +17,11 @@ import type { StoryCardData } from '../../types/story';
 import type { PortfolioItem } from '../../types/data';
 import type { BuyerIntentHub } from '../../data/buyerIntentHubs';
 import type { getPricingData } from '../../data/pricing';
+import { Button } from '../ui/Button';
+
+/** 히어로 CTA 크기 — 리프트·색 전환·포커스 링은 Button이 소유한다(design-system §4). */
+const HERO_CTA = 'h-auto min-h-[48px] w-full sm:w-auto whitespace-normal py-4 px-10 text-base sm:text-lg font-bold leading-snug shadow-lg hover:shadow-xl';
+const HERO_CTA_ON_IMAGE = `${HERO_CTA} focus-visible:ring-white/70 dark:focus-visible:ring-white/70 focus-visible:ring-offset-black/20 dark:focus-visible:ring-offset-black/20`;
 
 const FAQSection = dynamic(() => import('../ui/FAQSection'));
 const ContactCTA = dynamic(() => import('../common/ContactCTA'));
@@ -143,21 +148,17 @@ const BuyerIntentHubPage: React.FC<BuyerIntentHubPageProps> = ({
         overlayGradient="from-black/55 via-black/30 to-black/45"
         ctaButtons={
           <>
-            <Link
-              href={`/${locale}${primaryServicePath}`}
-              prefetch={false}
-              className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-white text-primary-dark font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-gray-100 transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation"
-            >
-              {primaryServiceLabel}
-            </Link>
-            {secondaryServicePath && (
-              <Link
-                href={`/${locale}${secondaryServicePath}`}
-                prefetch={false}
-                className="inline-flex items-center justify-center w-full sm:w-auto text-center whitespace-normal leading-snug min-h-[48px] bg-primary border-2 border-primary text-white font-bold text-base sm:text-lg py-4 px-10 rounded-full hover:bg-primary-dark hover:border-primary-dark transition-colors duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 touch-manipulation"
-              >
-                {secondaryServiceLabel}
+            <Button asChild variant="secondary" shape="pill" className={`${HERO_CTA} border-transparent text-primary-dark hover:text-primary-dark`}>
+              <Link href={`/${locale}${primaryServicePath}`} prefetch={false}>
+                {primaryServiceLabel}
               </Link>
+            </Button>
+            {secondaryServicePath && (
+              <Button asChild variant="solid" shape="pill" className={HERO_CTA_ON_IMAGE}>
+                <Link href={`/${locale}${secondaryServicePath}`} prefetch={false}>
+                  {secondaryServiceLabel}
+                </Link>
+              </Button>
             )}
           </>
         }

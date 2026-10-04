@@ -498,7 +498,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
               <ResponsiveImage
                 src="/images/console.webp"
                 alt={t('mixingMastering.environment.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
+                className="w-full h-full object-cover"
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
@@ -563,7 +563,7 @@ const MixingMastering: NextPageWithLayout<MixingMasteringProps> = ({
                       <ResponsiveImage
                         src={credit.image}
                         alt={credit.title}
-                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
+                        className="w-full h-full object-cover"
                         pictureClassName="block h-full"
                         fill
                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"

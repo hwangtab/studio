@@ -38,7 +38,7 @@ const ReleaseProducerIntro = ({
             width={studioOperator.portrait.width}
             height={studioOperator.portrait.height}
             sizes="(max-width: 768px) 100vw, 480px"
-            containerClassName="aspect-square w-full max-w-md overflow-hidden rounded-md bg-gray-100 dark:bg-gray-800"
+            containerClassName="aspect-square w-full max-w-md overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800"
             className="w-full h-full object-cover"
           />
           <div>

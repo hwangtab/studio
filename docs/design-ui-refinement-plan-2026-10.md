@@ -193,6 +193,13 @@
   콜아웃·배지·아이콘·히어로 CTA 모션, 계약 서명·완료(라이트 고정, 프리미티브에 `light` 옵트인 필요),
   `shows/scan` h1, 스토리 목록 빈 상태 2곳.
 
+- **2026-10-05 PR(feat/ui-primitives-marketing)** — 운영자 허용으로 마케팅 페이지·측정 중 LP·계약 화면까지:
+  홈·발매·허브 히어로 CTA → `Button`(kakao/solid/scrim pill), 소개 이미지 hover 줌·ShowPoster·헤더 CTA
+  스케일 제거, 상태 배지(StatusBadge→Badge 별칭)·태그·플레이어 메타 칩 → `Badge`, 입금 안내·요약·
+  보증 콜아웃 → `Notice`, 스토리 빈 상태 → `EmptyState`, 목차·관련 가이드 → `Disclosure`, 연습실
+  eyebrow 알약 → `typo-eyebrow`, FAQ 비토큰 `gray-750` 정리, 계약 서명·완료는 라이트 덮어쓰기로 Notice.
+  가드 오탐 2종 보정(hover 틴트 버튼·아이콘 타일). **기준선 7종 전부 0** — 이제 "있으면 실패".
+
 ## 6. 게이트와 판정
 
 - 각 PR: `npm run type-check` → `lint` → `npx jest`(디렉터리 좁히지 않기) → `npm run build` →

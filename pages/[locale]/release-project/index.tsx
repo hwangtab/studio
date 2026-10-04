@@ -1,3 +1,4 @@
+import { Badge } from '../../../components/ui/Badge';
 import React from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import dynamic from 'next/dynamic';
@@ -303,9 +304,9 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
               key={`${item.artist}-${item.titleKey}`}
               className="glass-card rounded-xl p-5"
             >
-              <span className="inline-block text-xs font-medium text-primary dark:text-primary-lighter bg-primary/10 rounded-full px-2.5 py-0.5 mb-3">
+              <Badge tone="brand" className="mb-3">
                 {t(`releaseProject.inProgress.types.${item.typeKey}`)}
-              </span>
+              </Badge>
               <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">{item.artist}</p>
               <p className="text-sm text-gray-500 dark:text-gray-400">{t(`releaseProject.inProgress.items.${item.titleKey}`)}</p>
             </div>
@@ -344,7 +345,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                   e.preventDefault();
                   openModal(item.id);
                 }}
-                className="group block glass-card rounded-2xl overflow-hidden hover:-translate-y-1 transition-transform duration-300 flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+                className="group block glass-card rounded-2xl overflow-hidden flex flex-col text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
                 aria-haspopup={loadError ? undefined : 'dialog'}
               >
                 {item.image && (
@@ -354,7 +355,7 @@ const ReleaseProject: NextPageWithLayout<ReleaseProjectProps> = ({ locale, portf
                       alt={item.title}
                       fill
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-cover"
                     />
                   </div>
                 )}

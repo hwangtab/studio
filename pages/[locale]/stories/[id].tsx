@@ -1,3 +1,4 @@
+import { Notice } from '../../../components/ui/Notice';
 import React from 'react';
 import type { GetStaticProps, GetStaticPaths } from 'next';
 import dynamic from 'next/dynamic';
@@ -228,7 +229,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
         <div className="mb-12 flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-6">
           <Link
             href={getLink("/stories")}
-            className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           >
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.backToList')}
@@ -237,7 +238,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           <button
             type="button"
             onClick={shareStory}
-            className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400 min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
+            className="inline-flex items-center typo-card-cta hover:underline text-gray-600 dark:text-gray-400 min-h-[44px] touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900"
           >
             <Share2 className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.share')}
@@ -266,14 +267,14 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           {story.summary && (
             // 핵심 요약 리드 — meta에만 쓰이던 summary를 본문 상단에 가시 렌더.
             // AI 검색엔진(ChatGPT·Perplexity 등)이 인용하기 좋은 자기완결 요약 + 독자 UX.
-            <div className="mb-8 rounded-lg border-l-4 border-primary bg-primary/5 p-5 dark:bg-primary/10">
+            <Notice tone="brand" icon={false} className="mb-8 block">
               <p className="text-sm font-semibold text-primary dark:text-primary-lighter mb-1.5">
                 {t('stories.detail.summaryLabel', { defaultValue: '핵심 요약' })}
               </p>
               <p itemProp="description" className="typo-card-body leading-relaxed text-gray-700 dark:text-gray-200">
                 {story.summary}
               </p>
-            </div>
+            </Notice>
           )}
           <TableOfContents
             content={story.content}
@@ -364,7 +365,7 @@ const StoryDetailPage: NextPageWithLayout<StoryDetailPageProps> = ({ locale, sto
           ) : (
             <p className="typo-card-body text-gray-500 dark:text-gray-400 mb-6">{t('stories.detail.noRelated')}</p>
           )}
-          <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
+          <Link href={getLink("/stories")} className="inline-flex items-center typo-card-cta hover:underline min-h-[44px] touch-manipulation rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/70 dark:focus-visible:ring-primary-lighter/70 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900">
             <ArrowLeft className="mr-2" size={16} aria-hidden="true" />
             {t('stories.detail.viewAll')}
           </Link>

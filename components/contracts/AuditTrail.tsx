@@ -1,6 +1,7 @@
 import React from 'react';
 
 import type { SerializedAuditTrail } from '../../lib/contracts/audit-trail';
+import { Notice } from '../ui/Notice';
 
 /**
  * 감사추적 — "서명한 적 없다"는 주장에 내놓을 것들.
@@ -141,14 +142,14 @@ const AuditTrail = ({ trail }: { trail: SerializedAuditTrail }) => (
     </ol>
 
     {trail.chainGaps.length > 0 && (
-      <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 mb-4">
+      <Notice tone="warning" icon={false} className="mb-4 block dark:border-amber-200 dark:bg-amber-50 dark:text-amber-900">
         <p className="font-semibold mb-1">기록에 빈 곳이 있습니다</p>
         <ul className="list-disc pl-5 space-y-0.5">
           {trail.chainGaps.map((gap) => (
             <li key={gap}>{gap}</li>
           ))}
         </ul>
-      </div>
+      </Notice>
     )}
 
     <Fingerprint verdict={trail.fingerprint} />

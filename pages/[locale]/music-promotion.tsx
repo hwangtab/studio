@@ -1,3 +1,4 @@
+import { Notice } from '../../components/ui/Notice';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import React from 'react';
 import dynamic from 'next/dynamic';
@@ -585,8 +586,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
             제작 착수 후 청약철회 제한은 "미리 고지"해야 효력이 생기므로
             (전자상거래법 제17조 제6항), 이 링크가 그 고지의 성립 조건이다.
             떼면 환불 규정이 약관에 적혀 있어도 무효가 된다. */}
-        <div className="mx-auto mt-8 flex max-w-2xl gap-3 rounded-xl border border-primary/20 bg-primary/5 p-5">
-          <ShieldCheck className="mt-0.5 h-5 w-5 shrink-0 text-primary dark:text-primary-lighter" aria-hidden="true" />
+        <Notice tone="brand" icon={ShieldCheck} className="mx-auto mt-8 max-w-2xl">
           <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-200">
             {t('musicPromotion.payment.assurance')}
             {locale === 'ko' && (
@@ -601,7 +601,7 @@ const MusicPromotion: NextPageWithLayout<MusicPromotionProps> = ({
               </>
             )}
           </p>
-        </div>
+        </Notice>
       </Section>
 
       <FAQSection

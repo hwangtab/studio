@@ -247,7 +247,7 @@ const Recording: NextPageWithLayout<RecordingProps> = ({ locale, pricingData, re
               <ResponsiveImage
                 src="/images/recording1.webp"
                 alt={t('recording.environment.imageAlt')}
-                className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-slow"
+                className="w-full h-full object-cover"
                 pictureClassName="block h-full"
                 fill
                 sizes="(min-width: 1024px) 50vw, 100vw"
