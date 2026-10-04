@@ -358,7 +358,8 @@ export default function AdminBookingDetailPage({
 
   // 완료·노쇼·캘린더·재발송은 슬롯이 있는 세션 예약만의 개념(API도 믹싱엔 409를 준다).
   const canChangeStatus = !isMixing && booking.bookingStatus === 'confirmed';
-  const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending';
+  // 입금 전에 취소된 계좌 입금 신청은 보낼 알림이 없다(API도 409).
+  const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending' && booking.bankDeposit !== 'cancelled';
   // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
   // (pages/api/admin/bookings/[id].ts retry-gcal).
   //

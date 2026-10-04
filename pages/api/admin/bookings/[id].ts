@@ -153,6 +153,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       if (!booking) {
         return res.status(409).json({ ok: false, message: '재발송할 예약이 없습니다.' });
       }
+      // 입금 전에 닫힌 계좌 입금 신청은 받은 돈도 확정도 없었다 — "예약이 취소되었습니다·환불 0원" 메일을 보내면
+      // 없는 예약의 취소를 알리는 꼴이다(미입금 취소는 원래 메일이 없다).
+      if (bankDepositStateOf(order) === 'cancelled') {
+        return res.status(409).json({ ok: false, message: '입금 전에 취소된 신청은 재발송할 알림이 없습니다.' });
+      }
 
       try {
         let notificationError: string | null;
