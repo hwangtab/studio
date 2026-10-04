@@ -57,7 +57,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         reason: typeof b.reason === 'string' && b.reason ? b.reason : '관리자 환불',
         now,
       });
-      return r.ok ? res.status(200).json({ ok: true, mode: r.mode }) : res.status(CANCEL_STATUS[r.code] ?? 500).json({ ok: false, message: r.message });
+      return r.ok
+        ? res.status(200).json({ ok: true, mode: r.mode, ...(r.warnings?.length ? { message: r.warnings.join(' '), warnings: r.warnings } : {}) })
+        : res.status(CANCEL_STATUS[r.code] ?? 500).json({ ok: false, message: r.message });
     }
     /**
      * 계좌 입금 확인 — 운영자가 통장에서 입금을 본 뒤 누른다(lib/funding/bankTransfer.ts).
@@ -65,8 +67,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
      */
     case 'confirm_deposit': {
       const r = await confirmBankDeposit({ orderId: order.id, now });
-      if (!r.ok) return res.status(r.code === 'not_found' ? 404 : 409).json({ ok: false, message: r.message });
-      return res.status(200).json({ ok: true, ...(r.emailSent === false ? { message: '입금은 확인됐으나 확정 메일 발송에 실패했습니다. "메일 재발송"을 눌러 주세요.' } : {}) });
+      if (!r.ok) {
+        const code = r.code === 'not_found' ? 404 : r.code === 'project_unavailable' ? 503 : 409;
+        return res.status(code).json({ ok: false, message: r.message });
+      }
+      const notes = [
+        ...(r.emailSent === false ? ['입금은 확인됐으나 확정 메일 발송에 실패했습니다. "메일 재발송"을 눌러 주세요.'] : []),
+        ...(r.warnings ?? []),
+      ];
+      return res.status(200).json({ ok: true, ...(notes.length ? { message: notes.join(' '), warnings: r.warnings ?? [] } : {}) });
     }
     /** 미입금 취소 — 받은 돈이 없으니 환불이 아니다. 후원자에게 메일을 보내지 않는다(bankTransfer.ts). */
     case 'cancel_unpaid': {

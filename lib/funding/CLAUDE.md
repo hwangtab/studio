@@ -257,6 +257,20 @@ best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이�
   복호화한 값을 받는다(`pages/api/admin/funding/pledges/[id]/refund-account.ts`, no-store, 접속기록
   `funding_refund_account_view`). 송금한 뒤 "송금 완료(환불 기록)" = 기존 `refund` 액션의 기록 경로.
   환불 요청 철회 처리 시 계좌를 지우고, 그 밖에는 주문 5년 파기 때 지운다(orderRetention.ts).
+- **취소(환불)를 요청하면 내려받기가 닫힌다.** 계좌 입금 셀프 취소는 송금 전까지 paid로 남으므로
+  내려받기 API·확인 페이지가 `refund_requested_at`을 함께 본다(API는 기록 UPDATE의 WHERE에도). 요청 뒤
+  내려받기가 찍힌 옛 행은 "송금 완료(환불 기록)" 때 확인창·응답 warnings로 알린다.
+- **신청을 닫으면 `notification_error`도 비운다**(미입금 취소·입금 전 신청 취소). 닫힌 신청에 보낼 메일이
+  없는데 재발송 버튼은 둘 다 409라, 입금 안내 실패 사유가 남으면 헬스체크 경보를 끌 길이 없었다.
+  헬스체크에서 제외하는 쪽보다 이쪽이 단순하다 — 경보 판정을 상태별로 가르지 않아도 된다.
+- **입금 확인은 한정 리워드 재고를 다시 센다**(옛 무통장 행은 한정 리워드를 담을 수 있었다) — 온라인
+  생성과 같은 재고 식을 전이 UPDATE의 WHERE에 싣고, 넘치면 `sold_out`으로 사유를 돌려준다. 정산이 기록된
+  프로젝트의 확정은 확인창·응답 warnings로 알리고, 이체를 마친 정산 뒤의 확정은 헬스체크가 30일 동안 보고한다.
+- **남용 상한**: 계좌 입금 신청은 정규화한 이메일(`normalizeEmailForLimit` — 소문자, `+태그` 제거, gmail 점
+  제거)로 시간당 5회, 그리고 한 프로젝트에 열린 입금 대기 3건까지(`MAX_OPEN_BANK_DEPOSITS_PER_EMAIL`).
+- **수기 등록도 같은 이름의 계좌 입금 신청이 있으면 막는다** — `acknowledgeExisting: true` 없이는 409 + 후보.
+- **환불 계좌 경로의 DB 오류는 `safeDbErrorSummary`로만 로그한다** — drizzle 메시지에 바인딩 값(계좌번호
+  암호문·예금주)이 실린다.
 - **줄 단위 환불(lineRefund.ts)은 토스 전용** — 계좌 입금은 전액 취소만.
 - **정산**: 계좌 입금 몫도 PG를 거치지 않았으므로 결제 수수료에서 뺀다 — `payout.ts`가
   `payment_method='bank_transfer'`로 고른다(수기 등록 포함). 개설자 약관도 같은 말을 한다.

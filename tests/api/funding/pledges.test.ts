@@ -3,7 +3,10 @@ jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn(
 jest.mock('../../../lib/funding/service', () => ({
   createFundingPledge: jest.fn(), expireStalePledges: jest.fn().mockResolvedValue(undefined),
 }));
-jest.mock('../../../lib/funding/bankTransfer', () => ({ deliverDepositGuide: jest.fn().mockResolvedValue(null) }));
+jest.mock('../../../lib/funding/bankTransfer', () => ({
+  deliverDepositGuide: jest.fn().mockResolvedValue(null),
+  countOpenBankDeposits: jest.fn().mockResolvedValue(0),
+}));
 jest.mock('../../../lib/funding/projects', () => ({
   ...jest.requireActual('../../../lib/funding/projects'),
   getFundingProject: jest.fn(),
@@ -15,7 +18,7 @@ import { createFundingPledge } from '../../../lib/funding/service';
 import { getFundingProject, parseFundingProject } from '../../../lib/funding/projects';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
-import { deliverDepositGuide } from '../../../lib/funding/bankTransfer';
+import { countOpenBankDeposits, deliverDepositGuide } from '../../../lib/funding/bankTransfer';
 
 const project = parseFundingProject(`---
 slug: demo
@@ -189,6 +192,21 @@ describe('계좌 입금 신청', () => {
     expect(r.status).toBe(429);
     expect(createFundingPledge).not.toHaveBeenCalled();
     expect(consumeRateLimit).toHaveBeenCalledWith('funding_bank:email:a@b.com', 5, 3600);
+    // 이메일 상한에서 막혔으면 열린 건수 조회도 하지 않는다.
+  });
+
+  it('이메일 상한 키는 정규화한다 — +태그·gmail 점 별칭으로 우회할 수 없다', async () => {
+    await call({ ...body, paymentMethod: 'bank_transfer', customerEmail: 'Ho.Gil+x1@GoogleMail.com' });
+    expect(consumeRateLimit).toHaveBeenCalledWith('funding_bank:email:hogil@gmail.com', 5, 3600);
+    expect(countOpenBankDeposits).toHaveBeenCalledWith('demo', 'hogil@gmail.com');
+  });
+
+  it('같은 이메일로 이 프로젝트에 열린 입금 대기가 3건이면 409 — 주문을 만들지 않는다', async () => {
+    (countOpenBankDeposits as jest.Mock).mockResolvedValueOnce(3);
+    const r = await call({ ...body, paymentMethod: 'bank_transfer' });
+    expect(r.status).toBe(409);
+    expect(r.body.code).toBe('too_many_open_deposits');
+    expect(createFundingPledge).not.toHaveBeenCalled();
   });
 
   it('토스 신청은 입금 안내를 보내지 않는다', async () => {

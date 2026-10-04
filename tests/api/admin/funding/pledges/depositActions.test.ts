@@ -85,3 +85,18 @@ it('환불 요청을 철회 처리하면 접수된 환불 계좌를 지운다', 
   expect(r.status).toBe(200);
   expect(deleteRefundAccount).toHaveBeenCalledWith('order-1');
 });
+
+it('confirm_deposit — 정산이 기록된 프로젝트면 성공 응답에 경고를 싣는다', async () => {
+  (confirmBankDeposit as jest.Mock).mockResolvedValueOnce({ ok: true, emailSent: true, warnings: ['이 프로젝트는 정산을 이미 이체했습니다'] });
+  const r = await call({ action: 'confirm_deposit' });
+  expect(r.status).toBe(200);
+  expect(r.body.warnings).toEqual(['이 프로젝트는 정산을 이미 이체했습니다']);
+  expect(r.body.message).toContain('정산을 이미 이체');
+});
+
+it('confirm_deposit — 한정 리워드 재고가 모자라면 409와 사유', async () => {
+  (confirmBankDeposit as jest.Mock).mockResolvedValueOnce({ ok: false, code: 'sold_out', message: '한정 리워드(CD)의 남은 수량이 모자라' });
+  const r = await call({ action: 'confirm_deposit' });
+  expect(r.status).toBe(409);
+  expect(r.body.message).toContain('남은 수량');
+});

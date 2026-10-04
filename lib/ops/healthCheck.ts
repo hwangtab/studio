@@ -895,6 +895,38 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
+   * **이체를 마친 정산 뒤에 확정된 계좌 입금.** 위 드리프트 점검은 이체 전(`pending`) 정산만 본다 —
+   * 이체 뒤의 차이는 끌 수단이 없어서다. 그런데 계좌 입금은 자동 취소가 없어 마감·정산 뒤에도 늦은
+   * 입금이 확정될 수 있고, 그러면 개설자에게 **추가로 보낼 몫**이 생긴다(확정 화면이 경고하지만
+   * 그 경고를 놓치면 아무도 모른다). 확정 시각이 최근 30일 안인 건만 센다 — 그보다 오래된 건은 이미
+   * 한 달 내내 보고됐으므로, 영구 경보로 신호가 죽는 것을 막는다.
+   */
+  const LATE_DEPOSIT_WINDOW_S = 30 * 24 * 60 * 60;
+  const lateDeposits = await db.all<{ order_no: string; slug: string }>(sql`
+    SELECT o.order_no AS order_no, p.slug AS slug
+    FROM funding_pledges fp
+    JOIN orders o ON o.id = fp.order_id
+    JOIN funding_projects p ON p.slug = fp.project_slug
+    JOIN funding_project_payouts pp ON pp.project_id = p.id
+    WHERE pp.status = 'paid' AND pp.paid_at IS NOT NULL
+      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
+      AND fp.paid_at IS NOT NULL AND fp.paid_at > pp.paid_at
+      AND fp.paid_at > ${Math.floor(now.getTime() / 1000) - LATE_DEPOSIT_WINDOW_S}
+      AND o.status IN (${sql.join(LIVE_FUNDING_ORDER_STATUSES.map((st) => sql`${st}`), sql`, `)})
+  `);
+  if (lateDeposits.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/funding/projects',
+      title: `정산 이체 뒤에 확정된 계좌 입금 ${lateDeposits.length}건`,
+      detail:
+        `${sample(lateDeposits.map((r) => `${r.slug} · ${r.order_no}`))}\n` +
+        '정산을 이체한 뒤 늦은 계좌 입금을 확정해 모금액이 늘었습니다. 개설자에게 추가로 보낼 몫을 ' +
+        '정산 패널에서 계산해 처리해 주세요. 이 항목은 확정 후 30일 동안 보고됩니다.',
+    });
+  }
+
+  /**
    * 발송했는데 서명되지 않은 채 기한이 지난 계약. 고객이 링크를 놓쳤을 수 있는데,
    * 지금은 관리자가 목록을 열어야만 보인다.
    */

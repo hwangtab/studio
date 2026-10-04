@@ -58,6 +58,22 @@ export const encryptRefundAccountNumber = (accountNumber: string): string => enc
 export const holderMatchesCustomer = (holder: string, customerName: string): boolean =>
   holder.replace(/\s+/g, '') === customerName.replace(/\s+/g, '');
 
+/**
+ * DB 오류를 로그에 남길 **요지만** — 이름과 코드. 오류 객체를 통째로 찍지 않는다: drizzle의
+ * `Failed query: … params: …` 메시지와 `cause`에 바인딩 값이 실려, 환불 계좌 INSERT가 실패하면
+ * 계좌번호 암호문·예금주가 그대로 서버 로그에 남는다(lib/crypto/CLAUDE.md "평문·암호문을 로그에
+ * 넣지 않는다"). 메시지 본문은 버리고 SQLite 코드(예: SQLITE_ERROR)만 남긴다.
+ */
+export const safeDbErrorSummary = (error: unknown): { name: string; code?: string } => {
+  if (!(error instanceof Error)) return { name: 'unknown' };
+  const pick = (e: unknown): string | undefined => {
+    const c = (e as { code?: unknown } | null)?.code;
+    return typeof c === 'string' ? c : undefined;
+  };
+  const code = pick(error) ?? pick((error as { cause?: unknown }).cause);
+  return code ? { name: error.name, code } : { name: error.name };
+};
+
 /** 접수 여부만(복호화 없이) — 관리자 상세 SSR이 "계좌 접수됨"을 그릴 때 쓴다. 표가 없으면 null. */
 export const loadRefundAccountSummary = async (
   orderId: string,
@@ -71,7 +87,7 @@ export const loadRefundAccountSummary = async (
     return row ? { status: 'present', ...row } : { status: 'none' };
   } catch (error) {
     // 0048 미적용 등 — 화면은 열리고 이 칸만 "불러오지 못함"이다.
-    console.error('[funding-refund-account] 환불 계좌 요약 조회 실패', { orderId, error });
+    console.error('[funding-refund-account] 환불 계좌 요약 조회 실패', { orderId, error: safeDbErrorSummary(error) });
     return { status: 'unavailable' };
   }
 };
@@ -92,6 +108,6 @@ export const deleteRefundAccount = async (orderId: string): Promise<void> => {
   try {
     await getDb().run(sql`DELETE FROM funding_refund_accounts WHERE order_id = ${orderId}`);
   } catch (error) {
-    console.error('[funding-refund-account] 환불 계좌 삭제 실패 — 5년 파기 때 함께 지워진다', { orderId, error });
+    console.error('[funding-refund-account] 환불 계좌 삭제 실패 — 5년 파기 때 함께 지워진다', { orderId, error: safeDbErrorSummary(error) });
   }
 };

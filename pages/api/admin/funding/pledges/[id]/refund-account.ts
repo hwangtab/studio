@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { FieldCryptoError, FIELD_CRYPTO_KEY_ENV } from '../../../../../../lib/crypto/fieldCrypto';
 import { authenticateAdminApi } from '../../../../../../lib/contracts/admin-auth';
-import { holderMatchesCustomer, loadRefundAccount } from '../../../../../../lib/funding/refundAccount';
+import { holderMatchesCustomer, loadRefundAccount, safeDbErrorSummary } from '../../../../../../lib/funding/refundAccount';
 import { findFundingOrderById } from '../../../../../../lib/funding/service';
 import { recordAdminPrivacyAccess, type PrivacyAccessResult } from '../../../../../../lib/privacy/accessLog';
 
@@ -68,7 +68,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ ok: false, code: error.code, message: CRYPTO_ERROR_MESSAGE[error.code] });
     }
     await log('error');
-    console.error(`[funding] 환불 계좌 조회 실패 (orderId=${id}):`, error);
+    console.error(`[funding] 환불 계좌 조회 실패 (orderId=${id}):`, safeDbErrorSummary(error));
     return res.status(500).json({ ok: false, message: '환불 계좌를 읽지 못했습니다. 마이그레이션 0048이 적용됐는지 확인해 주세요.' });
   }
 }

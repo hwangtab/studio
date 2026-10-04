@@ -89,3 +89,31 @@ export const isOnlineBankTransfer = (pledge: { paymentMethod: string; entrySourc
  * (lib/funding/refundAccount.ts)이 같은 값을 본다. 화면이 import하므로 여기(클라이언트 안전)에 둔다.
  */
 export const REFUND_ACCOUNT_LIMITS = { bankName: 30, accountNumber: 30, accountHolder: 30 } as const;
+
+/**
+ * 계좌 입금 신청의 **남용 상한에 쓰는** 이메일 정규화 — 저장값은 바꾸지 않는다.
+ *
+ * 소문자로 맞추고, `+태그`를 떼고, gmail·googlemail은 로컬 부분의 점을 지우고 도메인을 gmail.com으로
+ * 모은다. 같은 수신함으로 가는 별칭(`a+1@`, `a.b@gmail`)을 바꿔 가며 상한을 우회하지 못하게 한다.
+ */
+export const normalizeEmailForLimit = (email: string): string => {
+  const lower = email.trim().toLowerCase();
+  const at = lower.lastIndexOf('@');
+  if (at <= 0) return lower;
+  let local = lower.slice(0, at);
+  let domain = lower.slice(at + 1);
+  const plus = local.indexOf('+');
+  if (plus >= 0) local = local.slice(0, plus);
+  if (domain === 'gmail.com' || domain === 'googlemail.com') {
+    local = local.replace(/\./g, '');
+    domain = 'gmail.com';
+  }
+  return `${local}@${domain}`;
+};
+
+/**
+ * 같은 이메일(정규화)로 **한 프로젝트에 동시에 열려 있을 수 있는** 계좌 입금 대기 건수. 계좌 입금은
+ * 자동 취소가 없어 열린 신청이 쌓이기만 한다 — 실수로 두세 번 누르는 것까지는 받되, 그 이상은 막고
+ * 이미 받은 안내를 쓰라고 말한다.
+ */
+export const MAX_OPEN_BANK_DEPOSITS_PER_EMAIL = 3;

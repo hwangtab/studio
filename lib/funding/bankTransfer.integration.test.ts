@@ -24,7 +24,7 @@ jest.mock('./repository', () => ({
 }));
 
 /* eslint-disable import/first */
-import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide, findSameNameBankDeposits } from './bankTransfer';
+import { cancelUnpaidBankDeposit, confirmBankDeposit, countOpenBankDeposits, deliverDepositGuide, findSameNameBankDeposits } from './bankTransfer';
 import { cancelFundingPledge } from './cancel';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingDepositGuideEmails } from './email';
 import { parseFundingProject } from './projects';
@@ -51,6 +51,13 @@ goalAmount: 100000
 startAt: 2026-10-01T10:00:00+09:00
 endAt: 2026-10-31T23:59:59+09:00
 rewards:
+  - id: cd
+    title: 한정 CD
+    description: d
+    amount: 30000
+    totalQuantity: 1
+    requiresShipping: false
+    estimatedDelivery: 2026-12
   - id: book
     title: 책
     description: d
@@ -96,6 +103,9 @@ beforeAll(async () => {
   }
 });
 beforeEach(async () => {
+  await client.execute('DELETE FROM funding_project_payouts');
+  await client.execute('DELETE FROM funding_projects');
+  await client.execute('DELETE FROM funding_creators');
   previousKey = process.env[FIELD_CRYPTO_KEY_ENV];
   process.env[FIELD_CRYPTO_KEY_ENV] = Buffer.alloc(32, 5).toString('base64');
   await client.execute('DELETE FROM funding_refund_accounts');
@@ -327,5 +337,93 @@ describe('같은 이름의 다른 계좌 입금 신청 — 이중 확인 방지 
 
     const found = await findSameNameBankDeposits({ id: a.id, customerName: '김후원' });
     expect(found.map((f) => f.orderNo).sort()).toEqual([b.orderNo, c.orderNo].sort());
+  });
+});
+
+/** 독립 리뷰(2026-10-04) 7건의 재현 테스트. */
+describe('리뷰 지적 — 재현', () => {
+  it('[2] 입금 안내 메일 실패 사유가 남은 신청을 닫으면 그 사유도 비운다(끌 수 없는 경보 방지)', async () => {
+    const c = await createBank();
+    (sendFundingDepositGuideEmails as jest.Mock).mockResolvedValueOnce('customer:down');
+    await deliverDepositGuide(c.orderNo);
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBe('customer:down');
+    await cancelUnpaidBankDeposit({ id: c.id });
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.notificationError).toBeNull();
+
+    // 후원자의 입금 전 신청 취소도 같은 전이다.
+    const d = await createBank({ customerEmail: 'd@example.com' });
+    (sendFundingDepositGuideEmails as jest.Mock).mockResolvedValueOnce('customer:down');
+    await deliverDepositGuide(d.orderNo);
+    await cancelFundingPledge({ orderNo: d.orderNo, requestedBy: 'customer', reason: 'r', now: NOW });
+    expect((await findFundingOrderByOrderNo(d.orderNo))?.notificationError).toBeNull();
+  });
+
+  it('[7] 옛 무통장 행의 한정 리워드는 확정 때 재고를 다시 센다 — 넘치면 사유와 함께 거부', async () => {
+    const legacy = await createBank({}, 'cd'); // 한정 1개 — 옛 무통장 행 모양
+    await cancelUnpaidBankDeposit({ id: legacy.id }); // 만료되어 재고에서 빠진 사이
+    const toss = await createBank({ paymentMethod: 'toss', customerEmail: 't@example.com' }, 'cd');
+    await client.execute({ sql: "UPDATE orders SET status='paid' WHERE id=?", args: [toss.id] }); // 남은 1개가 팔렸다
+    const r = await confirmBankDeposit({ orderId: legacy.id, now: NOW });
+    expect(r).toMatchObject({ ok: false, code: 'sold_out' });
+    expect(r.ok === false && r.message).toContain('한정 CD');
+    expect((await findFundingOrderByOrderNo(legacy.orderNo))?.status).toBe('expired');
+    expect(sendFundingConfirmedEmails).not.toHaveBeenCalled();
+  });
+
+  it('[7] 재고가 남아 있으면 한정 리워드 옛 행도 확정한다(자기 홀드는 세지 않는다)', async () => {
+    const legacy = await createBank({}, 'cd');
+    expect((await confirmBankDeposit({ orderId: legacy.id, now: NOW })).ok).toBe(true);
+  });
+
+  it('[3] 정산이 기록된 프로젝트의 늦은 입금 확정은 warnings로 드러낸다', async () => {
+    await client.execute("INSERT INTO funding_creators (id, email, name) VALUES ('cr1', 'c@example.com', '개설자')");
+    await client.execute(`INSERT INTO funding_projects (id, slug, creator_id, title, summary, content, cover_url, goal_amount, start_at, end_at, review_status, status)
+      VALUES ('pj1', 'demo', 'cr1', '제목', '요약', '본문', '/c.webp', 100000, 1790000000, 1790100000, 'approved', 'auto')`);
+    await client.execute(`INSERT INTO funding_project_payouts (id, project_id, gross_amount, refund_amount, supply_amount, fee_amount, share_amount, withholding_amount, net_amount, backer_count, status, paid_at)
+      VALUES ('pp1', 'pj1', 100000, 0, 90909, 8000, 92000, 3036, 88964, 3, 'paid', 1790200000)`);
+    const c = await createBank();
+    const r = await confirmBankDeposit({ orderId: c.id, now: NOW });
+    expect(r.ok).toBe(true);
+    expect(r.ok && r.warnings?.[0]).toContain('추가로 보낼 몫');
+  });
+
+  it('[4] 열린 입금 대기 건수는 정규화한 이메일로 센다', async () => {
+    await createBank({ customerEmail: 'hogil@gmail.com' });
+    await createBank({ customerEmail: 'ho.gil+2@gmail.com' });
+    const closed = await createBank({ customerEmail: 'h.o.gil@googlemail.com' });
+    await cancelUnpaidBankDeposit({ id: closed.id });
+    await createBank({ customerEmail: 'other@gmail.com' });
+    expect(await countOpenBankDeposits('demo', 'hogil@gmail.com')).toBe(2);
+  });
+
+  it('[1] 취소 요청 뒤 내려받기가 찍힌 건을 송금 완료로 기록하면 경고한다', async () => {
+    const c = await createBank();
+    await confirmBankDeposit({ orderId: c.id, now: NOW });
+    await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW, refundAccount: ACCOUNT });
+    // 가드 전에 생긴 행 모양 — 요청 시각 뒤에 내려받기가 찍혔다.
+    await client.execute({ sql: 'UPDATE funding_pledges SET downloaded_at = refund_requested_at + 60 WHERE order_id = ?', args: [c.id] });
+    const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'admin', reason: '계좌 송금 환불', now: NOW });
+    expect(r).toMatchObject({ ok: true, mode: 'recorded' });
+    expect(r.ok && r.warnings?.[0]).toContain('내려받았습니다');
+  });
+
+  it('[6] 환불 계좌 저장이 실패해도 로그에 암호문·예금주가 남지 않는다', async () => {
+    const c = await createBank();
+    await confirmBankDeposit({ orderId: c.id, now: NOW });
+    const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    await client.execute('ALTER TABLE funding_refund_accounts RENAME TO funding_refund_accounts_off');
+    try {
+      const r = await cancelFundingPledge({ orderNo: c.orderNo, requestedBy: 'customer', reason: 'r', now: NOW, refundAccount: { ...ACCOUNT, accountHolder: '홍예금주' } });
+      expect(r).toMatchObject({ ok: false, code: 'temporarily_unavailable' });
+    } finally {
+      await client.execute('ALTER TABLE funding_refund_accounts_off RENAME TO funding_refund_accounts');
+    }
+    const logged = JSON.stringify(spy.mock.calls);
+    expect(logged).toContain('환불 계좌 저장 실패');
+    expect(logged).not.toContain('v2:');
+    expect(logged).not.toContain('홍예금주');
+    expect(logged).not.toContain('국민은행');
+    // 접수 표식은 되돌렸다.
+    expect((await findFundingOrderByOrderNo(c.orderNo))?.fundingPledge?.refundRequestedAt).toBeNull();
   });
 });

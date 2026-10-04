@@ -15,7 +15,7 @@ import { serializePledgeForAdmin, type AdminPledgeItem } from '../../../lib/fund
 import { FULFILLMENT_LABELS, FULFILLMENT_STATUS_ORDER } from '../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus, remainingRefundable } from '../../../lib/funding/refundable';
 import { findFundingOrderById } from '../../../lib/funding/service';
-import { findSameNameBankDeposits, type SameNameDepositCandidate } from '../../../lib/funding/bankTransfer';
+import { findSameNameBankDeposits, loadProjectPayoutState, payoutWarningOf, type SameNameDepositCandidate } from '../../../lib/funding/bankTransfer';
 import { formatKstDeadline } from '../../../lib/funding/bankAccount';
 import { loadRefundAccountSummary } from '../../../lib/funding/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
@@ -37,6 +37,11 @@ interface AdminFundingDetailPageProps {
    * 계좌번호는 "계좌 보기"를 누를 때 별도 API로만 온다. 표가 없으면(0048 미적용) 'unavailable'.
    */
   refundAccount?: { status: 'present'; bankName: string; accountHolder: string; updatedAt: string } | { status: 'none' } | { status: 'unavailable' } | null;
+  /**
+   * 이 프로젝트에 정산이 기록돼 있으면 그 경고 문구(lib/funding/bankTransfer.ts payoutWarningOf) —
+   * 늦은 입금 확정이 기록된 정산과 어긋나게 만든다는 것을 "입금 확인" 확인창에 싣는다.
+   */
+  depositPayoutWarning?: string | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps> = async (context) => {
@@ -71,7 +76,11 @@ export const getServerSideProps: GetServerSideProps<AdminFundingDetailPageProps>
       ? { status: 'present' as const, bankName: summary.bankName, accountHolder: summary.accountHolder, updatedAt: summary.updatedAt.toISOString() }
       : summary;
 
-  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow, sameNameDeposits, refundAccount } };
+  const depositPayoutWarning = isBank && (order.status === 'pending' || order.status === 'expired')
+    ? payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug))
+    : null;
+
+  return { props: { pledge: serializePledgeForAdmin(order), refundableAmount, paymentWindow, sameNameDeposits, refundAccount, depositPayoutWarning } };
 };
 
 const STATUS_LABELS: Record<string, string> = {
@@ -93,7 +102,7 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
   </div>
 );
 
-export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null, sameNameDeposits = [], refundAccount = null }: AdminFundingDetailPageProps) {
+export default function AdminFundingDetailPage({ pledge, refundableAmount, paymentWindow = null, sameNameDeposits = [], refundAccount = null, depositPayoutWarning = null }: AdminFundingDetailPageProps) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
@@ -140,10 +149,18 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
    * 이름과 확인 문구를 그에 맞춘다(누르면 돈이 나가는 줄 알고 누르면 안 된다).
    */
   const isBankTransfer = pledge.paymentMethod === 'bank_transfer';
+  /**
+   * 취소 요청 **뒤에** 음원 내려받기가 찍혔으면 송금 전에 알린다. 지금은 요청 뒤 내려받기를 막지만
+   * (pages/api/funding/download.ts), 그 가드 전에 생긴 행이나 경합으로 남은 행을 운영자가 보고 판단해야 한다.
+   */
+  const downloadedAfterRequest = Boolean(
+    pledge.downloadedAt && pledge.refundRequestedAt && pledge.downloadedAt > pledge.refundRequestedAt,
+  );
   const handleRefund = () => run(
     () => patchPledge(pledge.id, { action: 'refund', reason: isBankTransfer ? '계좌 송금 환불' : '관리자 환불' }),
     isBankTransfer
-      ? `${formatPriceAmount(refundableAmount)}원을 후원자 계좌로 이미 송금했나요? 이 버튼은 송금을 대신하지 않고 "환불 완료"로 기록만 합니다. 후원자에게 환불 안내 메일이 나갑니다.`
+      ? `${downloadedAfterRequest ? '주의: 이 후원자는 취소를 요청한 뒤 음원을 내려받았습니다(청약철회 제한 대상일 수 있습니다).\n\n' : ''}`
+        + `${formatPriceAmount(refundableAmount)}원을 후원자 계좌로 이미 송금했나요? 이 버튼은 송금을 대신하지 않고 "환불 완료"로 기록만 합니다. 후원자에게 환불 안내 메일이 나갑니다.`
       : `이 펀딩의 남은 금액 ${formatPriceAmount(refundableAmount)}원을 환불할까요? 되돌릴 수 없습니다.`,
   );
 
@@ -151,7 +168,8 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
   const depositActionable = pledge.onlineBankTransfer && (pledge.status === 'pending' || pledge.status === 'expired');
   const handleConfirmDeposit = () => run(
     () => patchPledge(pledge.id, { action: 'confirm_deposit' }),
-    `통장에 실제로 입금됐는지 먼저 확인하세요.\n\n보내는 분 ${pledge.customerName} · ${formatPriceAmount(pledge.totalAmount)}원이 들어온 것을 확인했나요? 확인하면 펀딩이 확정되고 후원자에게 확정 메일이 나갑니다.`,
+    `통장에 실제로 입금됐는지 먼저 확인하세요.\n\n보내는 분 ${pledge.customerName} · ${formatPriceAmount(pledge.totalAmount)}원이 들어온 것을 확인했나요? 확인하면 펀딩이 확정되고 후원자에게 확정 메일이 나갑니다.`
+      + (depositPayoutWarning ? `\n\n${depositPayoutWarning}` : ''),
   );
   const handleCancelUnpaid = () => run(
     () => patchPledge(pledge.id, { action: 'cancel_unpaid' }),
@@ -432,6 +450,9 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                   보내는 분 <strong>{pledge.customerName}</strong> · <strong>{formatPriceAmount(pledge.totalAmount)}원</strong>
                   {' '}· 안내한 기한 {formatKstDeadline(new Date(pledge.holdExpiresAt))}(한국시간, 자동 취소 없음)
                 </p>
+                {depositPayoutWarning && (
+                  <p className="mt-2 rounded border border-red-300 bg-red-50 p-2 text-xs font-semibold text-red-800">{depositPayoutWarning}</p>
+                )}
                 <p className="mt-1 text-xs text-sky-900">
                   통장에 실제로 입금됐는지 먼저 확인한 뒤 “입금 확인”을 누르세요. 취소된 신청에 늦게 들어온 입금도 여기서 확인할 수 있습니다.
                 </p>
@@ -487,6 +508,11 @@ export default function AdminFundingDetailPage({ pledge, refundableAmount, payme
                       </Button>
                     )}
                     <p className="mt-2 text-xs">“계좌 보기”를 누른 사실은 접속기록에 남습니다.</p>
+                    {downloadedAfterRequest && (
+                      <p className="mt-2 font-semibold text-red-700">
+                        이 후원자는 취소를 요청한 뒤 음원을 내려받았습니다. 송금 전에 청약철회 제한(약관 제8조 2항) 여부를 판단해 주세요.
+                      </p>
+                    )}
                   </>
                 )}
                 {refundAccount.status === 'none' && <p className="mt-1">접수된 환불 계좌가 없습니다. 후원자에게 계좌를 받아 주세요.</p>}

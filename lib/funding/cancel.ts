@@ -7,7 +7,7 @@ import { sendFundingCancelledEmails } from './email';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { assessSelfCancel, canWithdrawBeforeDeposit, CANCEL_BLOCK_MESSAGES } from './policy';
 import { cancelUnpaidBankDeposit } from './bankTransfer';
-import { encryptRefundAccountNumber, validateRefundAccount } from './refundAccount';
+import { encryptRefundAccountNumber, safeDbErrorSummary, validateRefundAccount } from './refundAccount';
 import { isPastFundingEnd } from './projectState';
 import { getFundingProjectOrFailure } from './repository';
 import { liveFundingOrderStatusList, remainingRefundable } from './refundable';
@@ -19,7 +19,7 @@ export type FundingCancelOutcome =
    * `withdrawn` — 입금 전 계좌 입금 신청을 후원자가 거뒀다(받은 돈이 없어 환불이 아니다).
    * `refund_requested` — 계좌 입금 후원의 취소를 환불 계좌와 함께 접수했다(운영자가 송금한다).
    */
-  | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded' | 'withdrawn'; refundAmount: number }
+  | { ok: true; mode: 'refunded' | 'refund_requested' | 'recorded' | 'withdrawn'; refundAmount: number; warnings?: string[] }
   | { ok: false; code: 'not_found' | 'invalid_state' | 'toss_failed' | 'recording_failed' | 'temporarily_unavailable'; message: string };
 
 const GENERIC = '취소 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.';
@@ -175,7 +175,7 @@ export const cancelFundingPledge = async (input: {
             AND EXISTS (SELECT 1 FROM orders WHERE id = ${order.id} AND status = 'paid')`);
         claimed = Number(claim.rowsAffected ?? 0);
       } catch (error) {
-        console.error('[funding-cancel] 취소 접수 선점 실패', { orderNo: order.orderNo, error });
+        console.error('[funding-cancel] 취소 접수 선점 실패', { orderNo: order.orderNo, error: safeDbErrorSummary(error) });
         return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
       }
       if (claimed > 0) {
@@ -188,9 +188,10 @@ export const cancelFundingPledge = async (input: {
               account_holder = excluded.account_holder, updated_at = unixepoch()`);
         } catch (error) {
           // 표가 없거나(0048 미적용) DB 장애 — 계좌 없는 접수를 남기지 않게 표식을 되돌린다.
-          console.error('[funding-cancel] 환불 계좌 저장 실패 — 접수를 되돌린다', { orderNo: order.orderNo, error });
+          // 오류 객체를 통째로 찍지 않는다 — drizzle 메시지에 바인딩 값(계좌번호 암호문·예금주)이 실린다.
+          console.error('[funding-cancel] 환불 계좌 저장 실패 — 접수를 되돌린다', { orderNo: order.orderNo, error: safeDbErrorSummary(error) });
           await db0.run(sql`UPDATE funding_pledges SET refund_requested_at = NULL WHERE id = ${pledge.id} AND refund_requested_at = ${requestedAt}`)
-            .catch((revertError: unknown) => console.error('[funding-cancel] 접수 되돌리기 실패 — 관리자 화면에서 환불 요청 취소 필요', { orderNo: order.orderNo, error: revertError }));
+            .catch((revertError: unknown) => console.error('[funding-cancel] 접수 되돌리기 실패 — 관리자 화면에서 환불 요청 취소 필요', { orderNo: order.orderNo, error: safeDbErrorSummary(revertError) }));
           return { ok: false, code: 'temporarily_unavailable', message: '지금은 취소를 접수할 수 없습니다. 잠시 후 다시 시도해 주세요.' };
         }
       }
@@ -204,7 +205,18 @@ export const cancelFundingPledge = async (input: {
     );
     if (Number(claim.rowsAffected) === 0) return { ok: false, code: 'invalid_state', message: '이미 처리된 펀딩입니다.' };
     await notifyCancelled(db, order, project, 'recorded', refundAmount);
-    return { ok: true, mode: 'recorded', refundAmount };
+    /**
+     * 취소 요청 **뒤에** 내려받기가 찍혔으면 기록은 하되 알린다. 지금은 요청 뒤 내려받기를 막지만
+     * (pages/api/funding/download.ts의 refund_requested_at 가드), 그 전에 생긴 행이나 경합이 남긴
+     * 행을 운영자가 보고 판단해야 한다 — 화면 확인창이 먼저 알리고, 여기는 서버 쪽 한 번 더다.
+     */
+    const downloadedAfterRequest = Boolean(
+      pledge.refundRequestedAt && pledge.downloadedAt && pledge.downloadedAt.getTime() > pledge.refundRequestedAt.getTime(),
+    );
+    return {
+      ok: true, mode: 'recorded', refundAmount,
+      ...(downloadedAfterRequest ? { warnings: ['이 후원자는 취소를 요청한 뒤 음원을 내려받았습니다 — 환불 기록은 했습니다. 청약철회 제한 여부를 확인해 주세요.'] } : {}),
+    };
   }
 
   // 잔액이 0이면 토스를 아예 부르지 않는다 — 부르면 취소 금액 0(또는 초과)으로 거절되거나,

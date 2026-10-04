@@ -7,7 +7,10 @@ import { sendFundingDepositGuideEmails } from './email';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
-import { findFundingOrderById, findFundingOrderByOrderNo, type FundingOrder } from './service';
+import { allLinesStockCondition, findFundingOrderById, findFundingOrderByOrderNo, type FundingOrder } from './service';
+import type { ResolvedPledgeLine } from './validation';
+import { normalizeEmailForLimit } from './bankAccount';
+import { safeDbErrorSummary } from './refundAccount';
 
 /**
  * 계좌 입금(무통장) 후원의 운영 전이 — 입금 확인 · 미입금 취소 · 입금 안내 발송.
@@ -23,8 +26,41 @@ const rowsAffectedOf = (result: unknown): number => {
 const epoch = (d: Date): number => Math.floor(d.getTime() / 1000);
 
 export type BankDepositOutcome =
-  | { ok: true; emailSent?: boolean }
-  | { ok: false; code: 'not_found' | 'not_bank_transfer' | 'invalid_state'; message: string };
+  /** `warnings` — 확정은 됐지만 운영자가 알아야 할 것(정산이 이미 기록된 프로젝트 등). 화면에 그대로 띄운다. */
+  | { ok: true; emailSent?: boolean; warnings?: string[] }
+  | { ok: false; code: 'not_found' | 'not_bank_transfer' | 'invalid_state' | 'sold_out' | 'project_unavailable'; message: string };
+
+export type ProjectPayoutState = { status: 'pending' | 'paid'; paidAt: Date | null } | null;
+
+/**
+ * 이 프로젝트(slug)에 **정산이 기록돼 있는가.** 정산은 DB(개설자) 프로젝트에만 있다 — md 프로젝트는
+ * 늘 null. 조회 실패도 null로 삼킨다(경고용 보조 정보다).
+ *
+ * 늦은 입금을 확정하면 모금액이 늘어 기록된 정산과 어긋난다 — 이체 전(pending)이면 이체 금액을
+ * 고쳐야 하고, 이체 뒤(paid)면 개설자에게 추가로 보낼 몫이 생긴다. 확인창·확정 응답·헬스체크가 이 값을 본다.
+ */
+export const loadProjectPayoutState = async (projectSlug: string): Promise<ProjectPayoutState> => {
+  try {
+    const rows = await getDb().all<{ status: string; paid_at: number | null }>(sql`
+      SELECT pp.status, pp.paid_at FROM funding_project_payouts pp
+      JOIN funding_projects p ON p.id = pp.project_id
+      WHERE p.slug = ${projectSlug} LIMIT 1
+    `);
+    const r = rows[0];
+    if (!r) return null;
+    return { status: r.status === 'paid' ? 'paid' : 'pending', paidAt: r.paid_at ? new Date(Number(r.paid_at) * 1000) : null };
+  } catch (error) {
+    console.error('[funding-bank-transfer] 정산 기록 조회 실패', { projectSlug, error: safeDbErrorSummary(error) });
+    return null;
+  }
+};
+
+export const payoutWarningOf = (state: ProjectPayoutState): string | null =>
+  state === null
+    ? null
+    : state.status === 'paid'
+      ? '이 프로젝트는 정산을 이미 이체했습니다 — 이 입금을 확정하면 개설자에게 추가로 보낼 몫이 생깁니다. 정산 패널에서 차액을 확인해 주세요.'
+      : '이 프로젝트는 정산이 기록됐습니다 — 확정하면 개설자에게 보낼 금액이 늘어납니다. 이체 전에 정산 패널의 계산값을 다시 확인해 주세요.';
 
 /**
  * **입금 확인** — 운영자가 통장에서 입금을 확인하고 누른다. `pending`(그리고 늦은 입금을 위해
@@ -49,8 +85,24 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
     return { ok: false, code: 'not_bank_transfer', message: '계좌 입금 펀딩이 아닙니다.' };
   }
   const project = await getFundingProjectAsync(order.fundingPledge.projectSlug);
+  /**
+   * **한정 리워드 재검증.** 새 계좌 입금은 한정 리워드를 받지 않지만(bankTransferBlockReason),
+   * 2026-09-11 이전의 무통장 행은 한정 리워드를 담을 수 있었다. 그런 행을 늦게 확정하면 그 사이
+   * 팔린 재고 위로 올라간다 — 온라인 생성과 같은 재고 식(allLinesStockCondition, 자기 주문 제외)을
+   * 전이 UPDATE의 WHERE에 싣는다. 프로젝트를 못 읽으면 어느 리워드가 한정인지 모르므로 확정하지
+   * 않는다(fail-closed — 잠시 뒤 다시 누르면 된다).
+   */
+  if (!project) {
+    return { ok: false, code: 'project_unavailable', message: '프로젝트 정보를 읽지 못해 재고를 확인할 수 없습니다. 잠시 뒤 다시 눌러 주세요.' };
+  }
+  const lines = activePledgeLines(pledgeLines(order.fundingPledge));
+  const resolved: ResolvedPledgeLine[] = lines.flatMap((l) => {
+    const reward = project.rewards.find((r) => r.id === l.rewardId);
+    return reward ? [{ reward, quantity: l.quantity }] : [];
+  });
+  const stockCondition = allLinesStockCondition(project.slug, resolved, input.now, order.orderNo);
   // 프로젝트를 못 읽으면 채우지 않는다 — 배송 리워드에 잘못 찍는 것이 안 찍는 것보다 나쁘다(confirm.ts).
-  const digital = isDigitalOrder(project, activePledgeLines(pledgeLines(order.fundingPledge)).map((l) => l.rewardId));
+  const digital = isDigitalOrder(project, lines.map((l) => l.rewardId));
   const now = epoch(input.now);
   const db = getDb();
   const [claim] = await db.batch([
@@ -58,6 +110,7 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
       UPDATE orders SET status = 'paid', notification_error = ${SEND_PENDING}, updated_at = unixepoch()
       WHERE id = ${order.id} AND status IN ('pending', 'expired')
         AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND payment_method = 'bank_transfer')
+        AND ${stockCondition}
     `),
     // 위 전이가 0행이면 이것도 0행이다 — paid_at이 아직 없고 주문이 방금 paid가 된 경우만.
     db.run(sql`
@@ -68,10 +121,21 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
     `),
   ]);
   if (rowsAffectedOf(claim) === 0) {
+    // 상태는 그대로인데 0행이면 재고 조건이 막은 것이다 — 운영자에게 사유를 말한다.
+    const again = await findFundingOrderById(order.id);
+    if (again && (again.status === 'pending' || again.status === 'expired') && resolved.some((l) => l.reward.totalQuantity !== null)) {
+      const limited = resolved.filter((l) => l.reward.totalQuantity !== null).map((l) => l.reward.title).join(', ');
+      return {
+        ok: false, code: 'sold_out',
+        message: `한정 리워드(${limited})의 남은 수량이 모자라 확정할 수 없습니다. 후원자와 리워드 변경이나 환불을 협의해 주세요(받은 돈이 있으면 계좌로 돌려줘야 합니다).`,
+      };
+    }
     return { ok: false, code: 'invalid_state', message: '이미 확인됐거나 입금을 확인할 수 있는 상태가 아닙니다. 새로고침해 주세요.' };
   }
   const fresh = (await findFundingOrderById(order.id)) ?? order;
-  return { ok: true, emailSent: await deliverConfirmedEmailsOnce(fresh) };
+  const emailSent = await deliverConfirmedEmailsOnce(fresh);
+  const payoutWarning = payoutWarningOf(await loadProjectPayoutState(order.fundingPledge.projectSlug));
+  return { ok: true, emailSent, ...(payoutWarning ? { warnings: [payoutWarning] } : {}) };
 };
 
 /**
@@ -83,8 +147,13 @@ export const confirmBankDeposit = async (input: { orderId: string; now: Date }):
  * 온라인 계좌 입금만 받는다 — 토스 결제 대기는 홀드가 스스로 닫는다.
  */
 export const cancelUnpaidBankDeposit = async (order: Pick<FundingOrder, 'id'>): Promise<BankDepositOutcome> => {
+  /**
+   * `notification_error`도 함께 비운다. 입금 안내 메일이 실패해 사유가 남아 있었다면, 닫힌 신청에는
+   * 보낼 메일이 없는데 재발송 버튼(입금 안내·확정 메일)은 둘 다 409라 헬스체크 경보를 끌 길이 없다.
+   * pending 계좌 입금에는 확정 메일 센티널이 들어 있을 수 없다(센티널은 paid 전이와 같은 문장에서만 쓴다).
+   */
   const result = await getDb().run(sql`
-    UPDATE orders SET status = 'expired', updated_at = unixepoch()
+    UPDATE orders SET status = 'expired', notification_error = NULL, updated_at = unixepoch()
     WHERE id = ${order.id} AND status = 'pending'
       AND EXISTS (SELECT 1 FROM funding_pledges WHERE order_id = ${order.id} AND payment_method = 'bank_transfer' AND entry_source = 'online')
   `);
@@ -151,7 +220,22 @@ export const findSameNameBankDeposits = async (order: Pick<FundingOrder, 'id' | 
       totalAmount: Number(r.total_amount), createdAt: new Date(Number(r.created_at) * 1000).toISOString(),
     }));
   } catch (error) {
-    console.error('[funding-bank-transfer] 같은 이름 신청 조회 실패', { orderId: order.id, error });
+    // 바인딩 값에 후원자 이름이 실린다 — 요지만 남긴다.
+    console.error('[funding-bank-transfer] 같은 이름 신청 조회 실패', { orderId: order.id, error: safeDbErrorSummary(error) });
     return [];
   }
+};
+
+/**
+ * 이 프로젝트에 **입금을 기다리는**(pending) 온라인 계좌 입금 신청 중, 이메일이 정규화해서 `emailKey`와
+ * 같은 건수. 정규화(+태그·gmail 점)는 SQL로 옮기기 어려워 이 프로젝트의 열린 신청 주소만 읽어 센다 —
+ * 열린 신청은 운영자가 계속 정리하므로 많지 않다.
+ */
+export const countOpenBankDeposits = async (projectSlug: string, emailKey: string): Promise<number> => {
+  const rows = await getDb().all<{ email: string }>(sql`
+    SELECT o.customer_email AS email FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+    WHERE o.type = 'funding' AND o.status = 'pending' AND fp.project_slug = ${projectSlug}
+      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
+  `);
+  return rows.filter((r) => normalizeEmailForLimit(r.email) === emailKey).length;
 };
