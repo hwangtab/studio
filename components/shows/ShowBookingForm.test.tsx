@@ -1,12 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { act, fireEvent, render, screen } from '@testing-library/react';
 
 import type { PublicShow } from '../../lib/shows/queries';
 import ShowBookingForm from './ShowBookingForm';
 
+const mockUseToss = jest.fn((_amount: number, _enabled?: boolean) => ({
+  methodsId: 'm', agreementId: 'a', ready: true, error: null, retry: jest.fn(), requestPayment: jest.fn(), agreedRequiredTerms: null,
+}));
 jest.mock('../booking/useTossPaymentWidgets', () => ({
-  useTossPaymentWidgets: () => ({
-    methodsId: 'm', agreementId: 'a', ready: true, error: null, retry: jest.fn(), requestPayment: jest.fn(), agreedRequiredTerms: null,
-  }),
+  useTossPaymentWidgets: (amount: number, enabled?: boolean) => mockUseToss(amount, enabled),
 }));
 jest.mock('../../utils/reportPaymentFailure', () => ({ reportPaymentWindowOpen: jest.fn() }));
 
@@ -44,5 +45,47 @@ describe('ShowBookingForm — 동의·선택 최소화', () => {
       />,
     );
     expect(screen.getAllByRole('radio')).toHaveLength(4);
+  });
+});
+
+describe('ShowBookingForm — 결제 위젯 지연 로드', () => {
+  type IoCallback = (entries: Array<{ isIntersecting: boolean }>) => void;
+  let trigger: IoCallback = () => {};
+  const lastEnabled = () => mockUseToss.mock.calls[mockUseToss.mock.calls.length - 1][1];
+
+  beforeEach(() => {
+    mockUseToss.mockClear();
+    class FakeIO {
+      constructor(cb: IoCallback) {
+        trigger = cb;
+      }
+      observe() {}
+      disconnect() {}
+    }
+    (global as unknown as { IntersectionObserver: unknown }).IntersectionObserver = FakeIO;
+  });
+
+  it('폼이 화면 근처에 오기 전에는 위젯을 켜지 않고, 오면 켠다 — 한 번 켠 뒤에는 되돌리지 않는다', () => {
+    render(<ShowBookingForm show={base} />);
+    expect(lastEnabled()).toBe(false);
+    act(() => trigger([{ isIntersecting: false }]));
+    expect(lastEnabled()).toBe(false);
+    act(() => trigger([{ isIntersecting: true }]));
+    expect(lastEnabled()).toBe(true);
+    act(() => trigger([{ isIntersecting: false }]));
+    expect(lastEnabled()).toBe(true);
+  });
+
+  it('폼 안에 포커스가 들어와도 켠다(키보드 이동·앵커 점프)', () => {
+    render(<ShowBookingForm show={base} />);
+    expect(lastEnabled()).toBe(false);
+    fireEvent.focusIn(screen.getByRole('form', { name: '티켓 예매' }));
+    expect(lastEnabled()).toBe(true);
+  });
+
+  it('IntersectionObserver가 없는 환경에서는 기다리지 않고 바로 켠다', () => {
+    (global as unknown as { IntersectionObserver: unknown }).IntersectionObserver = undefined;
+    render(<ShowBookingForm show={base} />);
+    expect(lastEnabled()).toBe(true);
   });
 });
