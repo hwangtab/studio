@@ -81,7 +81,38 @@ export default function ShowBookingForm({ show }: Props) {
   const pendingRef = useRef<PendingOrder | null>(null);
 
   const canBook = isOpen && !!ticketType && total > 0;
-  const widget = useTossPaymentWidgets(total, canBook);
+
+  /**
+   * 결제 위젯은 폼이 화면 근처에 올 때까지 켜지 않는다. 공연 상세는 검색에 노출되는 공개 랜딩이라 방문자
+   * 대부분이 폼까지 가지 않는데, 예전엔 페이지를 열 때마다 토스 SDK를 받고 위젯을 그렸다(예약 마법사는 3단계에서,
+   * 펀딩은 모달을 열 때 켠다). 폼 위 한 화면 거리(rootMargin 100%)에서 미리 시작해 도달했을 땐 이미 준비돼 있고,
+   * 한 번 켠 뒤에는 되돌리지 않는다. 폼 안에 포커스가 들어와도 켠다(키보드 이동·앵커 점프 대비).
+   */
+  const formRef = useRef<HTMLFormElement>(null);
+  const [widgetArmed, setWidgetArmed] = useState(false);
+  useEffect(() => {
+    if (widgetArmed) return;
+    const form = formRef.current;
+    if (!form || typeof IntersectionObserver === 'undefined') {
+      setWidgetArmed(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setWidgetArmed(true);
+      },
+      { rootMargin: '100% 0px 100% 0px' },
+    );
+    io.observe(form);
+    const arm = () => setWidgetArmed(true);
+    form.addEventListener('focusin', arm, { once: true });
+    return () => {
+      io.disconnect();
+      form.removeEventListener('focusin', arm);
+    };
+  }, [widgetArmed]);
+
+  const widget = useTossPaymentWidgets(total, canBook && widgetArmed);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -152,7 +183,7 @@ export default function ShowBookingForm({ show }: Props) {
   }
 
   return (
-    <form id="book" onSubmit={submit} noValidate className="scroll-mt-24 space-y-6" aria-label="티켓 예매">
+    <form id="book" ref={formRef} onSubmit={submit} noValidate className="scroll-mt-24 space-y-6" aria-label="티켓 예매">
       {showtimes.length > 1 || !isOpen ? (
       <fieldset>
         <legend className="mb-2 typo-card-title">회차</legend>
