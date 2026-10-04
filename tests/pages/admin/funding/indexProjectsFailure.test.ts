@@ -17,7 +17,7 @@ beforeEach(() => {
   (authenticateAdminRequest as jest.Mock).mockResolvedValue({ ok: true });
   (listFundingOrders as jest.Mock).mockResolvedValue([]);
   (aggregateAdminFundingTotals as jest.Mock).mockResolvedValue({
-    confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+    confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0, awaitingDepositAmount: 0, awaitingDepositCount: 0,
   });
   jest.spyOn(console, 'error').mockImplementation(() => {});
 });

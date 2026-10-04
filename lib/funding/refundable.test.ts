@@ -77,7 +77,8 @@ describe('상태 리터럴이 정본 밖에 흩어져 있지 않다', () => {
   // 리터럴이 없다고 끝이 아니다 — 판정 자체가 사라졌을 수도 있다. 헬퍼를 실제로 쓰는지 본다.
   it.each(LIVE_STATUS_CONSUMERS)('%s는 헬퍼를 실제로 쓴다', (file) => {
     const src = readFileSync(path.join(process.cwd(), file), 'utf-8');
-    expect(/isLiveFundingOrderStatus|liveFundingOrderStatusList|LIVE_FUNDING_ORDER_STATUSES/.test(src)).toBe(true);
+    // countedFundingPledgeSql은 LIVE 집합을 품은 상위 집합(입금 대기 계좌 입금 포함)이라 같은 정본을 쓴다.
+    expect(/isLiveFundingOrderStatus|liveFundingOrderStatusList|LIVE_FUNDING_ORDER_STATUSES|countedFundingPledgeSql/.test(src)).toBe(true);
   });
 
   // 정규화·정규식이 실제로 표기 변형을 잡는지 — 가드 자신을 검증한다.
@@ -92,5 +93,24 @@ describe('상태 리터럴이 정본 밖에 흩어져 있지 않다', () => {
   it('다른 집합(세 원소 이상)은 잡지 않는다', () => {
     const sample = `['paid', 'partially_refunded', 'refunded']`;
     expect(normalizeSource(sample).match(TWO_ELEMENT_LIST)).toBeNull();
+  });
+});
+
+/**
+ * 공개 집계 집합 = LIVE + 입금을 기다리는 온라인 계좌 입금(운영자 결정 2026-10-04). TS 판과 SQL 판이
+ * 같은 판정이어야 화면과 집계가 갈리지 않는다.
+ */
+describe('isCountedFundingPledge — 공개 집계 대상', () => {
+  const { isCountedFundingPledge } = jest.requireActual('./refundable') as typeof import('./refundable');
+  it.each([
+    ['paid', 'toss', 'online', true],
+    ['partially_refunded', 'toss', 'online', true],
+    ['pending', 'bank_transfer', 'online', true],
+    ['pending', 'toss', 'online', false],
+    ['pending', 'bank_transfer', 'manual', false],
+    ['expired', 'bank_transfer', 'online', false],
+    ['refunded', 'bank_transfer', 'online', false],
+  ])('%s/%s/%s → %s', (status, paymentMethod, entrySource, expected) => {
+    expect(isCountedFundingPledge(status as string, { paymentMethod: paymentMethod as string, entrySource: entrySource as string })).toBe(expected);
   });
 });

@@ -1,3 +1,4 @@
+import { isOnlineBankTransfer } from './bankAccount';
 
 export const TOSS_HOLD_SECONDS = 900;
 export const MAX_QUANTITY = 10;
@@ -51,8 +52,10 @@ export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
 /**
  * "후원자가 취소를 요청했는데 아직 돈이 안 나간" 상태로 볼 orders.status 집합.
  *
- * **지금은 새로 만들어지지 않는다.** 이 상태를 만들던 것은 무통장입금 셀프 취소뿐이었고,
- * 그 결제수단은 2026-09-11에 중단했다. 중단 전에 만들어진 행을 위해 판정·알람은 남겨 둔다.
+ * 이 상태를 만드는 것은 **계좌 입금 후원의 셀프 취소**다(환불 계좌를 받아 접수하고, 운영자가 송금한 뒤
+ * 기록한다 — lib/funding/cancel.ts). 2026-09-11~10-04 사이 계좌 입금을 걷어냈던 동안은 새로 생기지
+ * 않았고, 2026-10-04 재도입으로 다시 생긴다.
+ *
  * partially_refunded도 포함하는 이유: 잔액이 남은 건은 여전히 환불이 덜 끝난 것이라
  * 알람이 꺼지면 안 되고, 그 잔액을 정리하는 경로(관리자 환불)도 열려 있어야 한다.
  * refunded로 넘어가면 refundRequestedAt은 그대로 남지만(cancel.ts는 지우지 않는다)
@@ -61,10 +64,6 @@ export const FUNDING_PAYOUT_BUSINESS_DAYS = 14;
  *
  * 관리자 목록 배지·배너(admin-serialize), 헬스체크, clear_refund_request가 모두 이
  * 하나를 본다. 셋이 갈리면 화면·메일·API가 서로 다른 사실을 말하게 된다.
- *
- * **2026-09-25 확인 (감사 항목 — 확인 후 기각):** 운영 DB에 이 값이 남은 행은 1건뿐이고
- * 이미 refunded(처리 완료, 위 집합에 안 걸림)다. 쓰는 경로가 없다는 지적은 맞지만, 새
- * 쓰기 경로를 만들 이유가 없다 — 무통장을 되살리지 않는 한 이 상태는 다시 생기지 않는다.
  */
 export const REFUND_PENDING_ORDER_STATUSES = ['paid', 'partially_refunded'] as const;
 
@@ -72,16 +71,23 @@ export const isRefundPendingStatus = (status: string): boolean =>
   (REFUND_PENDING_ORDER_STATUSES as readonly string[]).includes(status);
 
 export type CancelEligibility =
-  | { ok: true }
+  /**
+   * `refundVia` — 돈이 어디로 돌아가는가. `card`면 토스 결제를 바로 취소하고, `bank_account`면
+   * 후원자가 적은 환불 계좌로 운영자가 송금한다(그래서 화면이 계좌 입력 칸을 먼저 연다).
+   */
+  | { ok: true; refundVia: 'card' | 'bank_account' }
   | { ok: false; code: 'not_paid' | 'project_not_live' | 'fulfilling' | 'offline_payment' | 'downloaded' };
 
 /**
  * 셀프 취소 가능 판정 — 스펙 §4.7. 셀프·관리자 화면이 같은 함수를 쓴다.
  *
- * `paymentMethod`를 함께 보는 이유: 토스 결제가 아닌 후원은 취소할 결제가 없어 환불이
- * 계좌 송금이다. 그걸 안 보면 화면이 "전액 환불" 버튼을 띄우는데 눌러도 cancel.ts가
- * 거절한다 — 죽은 버튼이다. 지금 이 경우는 운영자가 계좌로 받아 수기 등록한 건과
- * 무통장입금 중단(2026-09-11) 전에 만들어진 건 둘뿐이다.
+ * `paymentMethod`와 `entrySource`를 함께 보는 이유: 결제수단이 같은 `bank_transfer`라도
+ * 둘로 갈린다.
+ * - **온라인 계좌 입금**(후원자가 폼에서 계좌 입금을 고른 건) — 셀프 취소를 받는다. 환불할
+ *   결제가 토스에 없으니 후원자가 환불 계좌를 적고, 운영자가 그 계좌로 송금한 뒤 기록한다.
+ * - **수기 등록**(운영자가 현장·계좌로 받아 적은 건) — 화면 취소를 받지 않는다. 연락처 없이
+ *   등록된 건도 많고, 받은 경로가 제각각이라 문의로 받아 처리한다.
+ * 둘을 안 가르면 한쪽에 죽은 버튼이 생긴다(PR #77이 정확히 그 사고였다).
  *
  * **필수 인자로 둔다.** 이 버그가 들어온 자리는 manage 페이지 getServerSideProps의 한
  * 줄이었고, 선택 인자면 그 줄에서 빼먹어도 컴파일도 테스트도 통과한다. 값은 두 호출부
@@ -98,6 +104,8 @@ export const assessSelfCancel = (input: {
   fundingEnded: boolean;
   fulfillmentStatus: string;
   paymentMethod: string;
+  /** `funding_pledges.entry_source` — 'online' | 'manual'. 위 주석의 이유로 필수다. */
+  entrySource: string;
   /**
    * 디지털 리워드를 처음 내려받은 시각. **필수 인자로 둔다** — 위 주석과 같은 이유다.
    * 선택 인자면 호출부에서 빼먹어도 컴파일이 통과하고, 그 순간 이 규칙이 조용히 사라진다.
@@ -105,23 +113,39 @@ export const assessSelfCancel = (input: {
   downloadedAt: Date | null;
 }): CancelEligibility => {
   if (input.orderStatus !== 'paid') return { ok: false, code: 'not_paid' };
-  if (input.paymentMethod !== 'toss') return { ok: false, code: 'offline_payment' };
+  const refundVia = input.paymentMethod === 'toss'
+    ? 'card'
+    : isOnlineBankTransfer({ paymentMethod: input.paymentMethod, entrySource: input.entrySource })
+      ? 'bank_account'
+      : null;
+  if (refundVia === null) return { ok: false, code: 'offline_payment' };
   if (input.fundingEnded) return { ok: false, code: 'project_not_live' };
   if (input.fulfillmentStatus !== 'none') return { ok: false, code: 'fulfilling' };
   // 약관 제8조 2항 — 내려받기가 시작된 뒤에는 청약철회가 제한된다(전자상거래법 제17조 2항 5호).
   // 배송 리워드의 `fulfilling`에 해당하는, 디지털 리워드의 '이미 건네준 상태'다.
   if (input.downloadedAt !== null) return { ok: false, code: 'downloaded' };
-  return { ok: true };
+  return { ok: true, refundVia };
 };
+
+/**
+ * **입금 전** 계좌 입금 신청을 후원자가 거둘 수 있는가 — 펀딩 확인 페이지의 "입금 전 신청 취소".
+ *
+ * 받은 돈이 없으니 환불이 아니라 신청을 닫는 일이다(`pending` → `expired`, 관리자 "미입금 취소"와
+ * 같은 전이 — lib/funding/bankTransfer.ts). 화면(SSR)과 서버가 이 함수를 같은 인자로 부른다.
+ * 토스 결제 대기(pending)는 여기 해당하지 않는다 — 15분 홀드가 스스로 닫는다.
+ */
+export const canWithdrawBeforeDeposit = (input: { orderStatus: string; paymentMethod: string; entrySource: string }): boolean =>
+  input.orderStatus === 'pending' && isOnlineBankTransfer({ paymentMethod: input.paymentMethod, entrySource: input.entrySource });
 
 export const CANCEL_BLOCK_MESSAGES: Record<Exclude<CancelEligibility, { ok: true }>['code'], string> = {
   not_paid: '결제가 확정된 펀딩만 취소할 수 있습니다.',
   project_not_live: '펀딩 마감 후에는 온라인 취소가 불가합니다. 청약철회는 약관에 따라 문의해 주세요.',
   fulfilling: '리워드 발송 준비가 시작되어 온라인 취소가 불가합니다. 문의해 주세요.',
   downloaded: '음원을 내려받은 뒤에는 청약철회가 제한됩니다(약관 제8조 2항). 문의해 주세요.',
-  // 운영자가 계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
-  // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다.
-  offline_payment: '계좌로 받은 펀딩은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
+  // 운영자가 현장·계좌로 받아 수기 등록한 후원 — 토스에 취소할 결제가 없어 환불도 계좌 송금이다.
+  // 화면에서 "전액 환불" 버튼을 띄우면 눌러도 실패하는 죽은 버튼이 된다. (후원자가 폼에서
+  // 계좌 입금을 고른 건은 여기가 아니다 — 화면에서 환불 계좌를 받아 취소를 접수한다.)
+  offline_payment: '운영자가 직접 등록한 펀딩은 화면에서 취소할 수 없습니다. 청약철회는 문의로 접수해 주시면 계좌로 환불해 드립니다.',
 };
 
 /**
@@ -160,7 +184,7 @@ export const cancelBlockedMessage = (code: keyof typeof CANCEL_BLOCK_MESSAGES, g
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-03';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-04';
 
 /**
  * 이 판본부터 응원 메시지는 이름 공개 여부와 **따로** 간다 — 이름을 공개하지 않은 후원의 메시지도
@@ -207,12 +231,14 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-29';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-10-04';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
   '필수 — 후원자 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
+  '계좌로 입금하는 경우 — 입금 내역에 나타나는 보내는 분 이름(입금자명)',
+  '계좌 입금 펀딩을 취소하는 경우 — 환불받을 은행, 계좌번호(암호화해 보관), 예금주',
   '선택 — 응원 메시지, 후원자 명단 이름 표시 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
   '자동 생성 — 주문번호, 펀딩 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
@@ -220,7 +246,8 @@ export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
 /** 후원 처리 목적 — 수집한 항목을 쓰는 범위. */
 export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
   '펀딩(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
-  '펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
+  '계좌 입금의 입금 확인과 계좌 입금 펀딩의 환불 송금',
+  '계좌 입금 안내·펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
   '프로젝트 페이지 후원자 명단에 응원 메시지 표시(이름 표시에 동의하지 않은 경우 "익명"으로), 이름 표시에 동의한 경우 이름(가린 이름이나 닉네임을 고른 경우 그 이름) 표시',
 ];
@@ -246,7 +273,7 @@ export type DataProcessorRow = {
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
   { name: '토스페이먼츠', country: '대한민국', purpose: '결제 승인·취소·환불 처리', items: '후원자 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
-  { name: 'Resend', country: '미국', purpose: '펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
+  { name: 'Resend', country: '미국', purpose: '계좌 입금 안내·펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
   { name: 'Vercel', country: '미국', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', country: '미국', purpose: '펀딩 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
   // 내려받기 게이트(pages/api/funding/download.ts)가 서명된 주소로 302 리디렉션을 보내므로,

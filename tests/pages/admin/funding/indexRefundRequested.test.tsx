@@ -15,7 +15,7 @@ jest.mock('../../../../lib/funding/projects', () => ({ getAllFundingProjects: je
 jest.mock('../../../../lib/funding/admin-list', () => ({
   listFundingOrders: jest.fn(),
   aggregateAdminFundingTotals: jest.fn().mockResolvedValue({
-    confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+    confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0, awaitingDepositAmount: 0, awaitingDepositCount: 0,
   }),
 }));
 jest.mock('../../../../lib/funding/service', () => ({ expireStalePledges: jest.fn() }));
@@ -37,14 +37,14 @@ const ITEM: AdminPledgeItem = {
   paymentFailCode: null, paymentFailMessage: null, paymentFailedAt: null,
   downloadedAt: null, paidAt: null, holdExpiresAt: NOW.toISOString(), createdAt: NOW.toISOString(),
   adminMemo: null, notificationError: null, hasPayment: true, mismatch: false, virtualAccountPayment: false,
-  refundRequested: false, needsReview: false,
+  refundRequested: false, needsReview: false, onlineBankTransfer: false, awaitingDeposit: false,
 };
 
 const baseProps = {
   truncated: false,
   projects: [],
   slug: null,
-  totals: { confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0 },
+  totals: { confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0, awaitingDepositAmount: 0, awaitingDepositCount: 0 },
 };
 
 beforeEach(() => {
@@ -166,7 +166,7 @@ it('getServerSideProps가 웹훅 메모가 있는 건에 needsReview: true를 �
 it('getServerSideProps가 집계 SQL 결과를 totals로 내려보낸다', async () => {
   (listFundingOrders as jest.Mock).mockResolvedValue([]);
   (aggregateAdminFundingTotals as jest.Mock).mockResolvedValue({
-    confirmedAmount: 9_000_000, confirmedCount: 401, confirmedPersonCount: 350, pendingAmount: 5000, pendingCount: 1,
+    confirmedAmount: 9_000_000, confirmedCount: 401, confirmedPersonCount: 350, pendingAmount: 5000, pendingCount: 1, awaitingDepositAmount: 0, awaitingDepositCount: 0,
   });
   const result = (await getServerSideProps({ query: { slug: 'demo' } } as unknown as GetServerSidePropsContext)) as {
     props: { totals: { confirmedCount: number } };

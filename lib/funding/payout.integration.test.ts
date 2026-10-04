@@ -91,10 +91,11 @@ const seedProject = async (
 const seedPledge = async (
   slug: string,
   amount: number,
-  opts: { entrySource?: 'online' | 'manual'; status?: 'paid' | 'partially_refunded' | 'pending' | 'refunded'; refund?: number } = {},
+  opts: { entrySource?: 'online' | 'manual'; paymentMethod?: 'toss' | 'bank_transfer'; status?: 'paid' | 'partially_refunded' | 'pending' | 'refunded'; refund?: number } = {},
 ) => {
   seq += 1;
   const entrySource = opts.entrySource ?? 'online';
+  const paymentMethod = opts.paymentMethod ?? (entrySource === 'manual' ? 'bank_transfer' : 'toss');
   const [order] = await mockDb
     .insert(schema.orders)
     .values({
@@ -117,12 +118,12 @@ const seedPledge = async (
     rewardTitle: 'MP3',
     unitAmount: amount,
     quantity: 1,
-    paymentMethod: entrySource === 'manual' ? 'bank_transfer' : 'toss',
+    paymentMethod,
     holdExpiresAt: new Date('2026-01-02T00:00:00Z'),
     paidAt: new Date('2026-01-02T00:00:00Z'),
     entrySource,
   });
-  if (entrySource === 'online') {
+  if (paymentMethod === 'toss') {
     const [payment] = await mockDb
       .insert(schema.payments)
       .values({ orderId: order.id, paymentKey: `pk-${seq}` })
@@ -227,6 +228,34 @@ describe('buildFundingPayoutPreview', () => {
     expect(preview!.vatDeductionAmount).toBe(84_409);
     expect(preview!.shareAmount).toBe(844_091);
     expect(preview!.shareAmount + preview!.vatDeductionAmount).toBe(1_000_000 - preview!.feeAmount);
+  });
+
+  // 후원자가 폼에서 고른 계좌 입금(2026-10-04)도 토스를 지나지 않았다 — 수기 등록과 같이 결제 수수료에서 뺀다.
+  it('온라인 계좌 입금 몫도 결제 수수료를 매기지 않는다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 500_000);
+    await seedPledge(project.slug, 300_000, { paymentMethod: 'bank_transfer' });
+    await seedPledge(project.slug, 200_000, { entrySource: 'manual' });
+
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview!.manualGrossAmount).toBe(500_000);
+    const online = computeFundingPayout({ grossAmount: 500_000, refundAmount: 0, taxType: 'withholding' });
+    expect(preview!.paymentFeeAmount).toBe(online.paymentFeeAmount);
+  });
+
+  // 운영자 결정(2026-10-04): 입금 대기 계좌 입금은 공개 모금액엔 들어가지만 정산에는 안 들어간다 —
+  // 받지 않은 돈을 개설자에게 보내면 안 된다. 미리보기는 그 몫을 따로 알린다.
+  it('입금 대기 계좌 입금은 정산에서 빼고 건수·금액을 따로 알린다', async () => {
+    const { project } = await seedProject();
+    await seedPledge(project.slug, 500_000);
+    await seedPledge(project.slug, 30_000, { paymentMethod: 'bank_transfer', status: 'pending' });
+    await seedPledge(project.slug, 20_000, { paymentMethod: 'bank_transfer', status: 'pending' });
+
+    const preview = await buildFundingPayoutPreview(project.id);
+    expect(preview!.grossAmount).toBe(500_000);
+    expect(preview!.backerCount).toBe(1);
+    expect(preview!.awaitingDepositCount).toBe(2);
+    expect(preview!.awaitingDepositAmount).toBe(50_000);
   });
 
   it('없는 프로젝트는 null', async () => {

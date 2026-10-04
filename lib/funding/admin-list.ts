@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { getDb } from '../../db/client';
 import { fundingPledges } from '../../db/schema';
-import { LIVE_FUNDING_ORDER_STATUSES, liveFundingOrderStatusList } from './refundable';
+import { LIVE_FUNDING_ORDER_STATUSES, countedFundingPledgeSql } from './refundable';
 import { backerIdentitySql, type FundingOrder } from './service';
 
 /**
@@ -24,19 +24,30 @@ import { backerIdentitySql, type FundingOrder } from './service';
  * 보이는 200건 미만을 전량으로 믿게 된다. 걸러내기를 201 상한 **앞**으로 옮겨 판정 모집단과
  * 상한을 일치시킨다(아래 filter는 이제 타입 좁히기 용도로만 남는다 — 버려질 행이 없다).
  */
-export const listFundingOrders = async (slug: string | null): Promise<FundingOrder[]> => {
+export const listFundingOrders = async (
+  slug: string | null,
+  /**
+   * `awaitingDeposit` — 입금을 기다리는 온라인 계좌 입금 신청만(관리자 목록의 "입금 대기" 필터).
+   * **기간·기한으로 거르지 않는다** — 계좌 입금은 자동 취소가 없어 기한이 지난 신청도 입금이
+   * 들어올 수 있고, 운영자는 그 전부를 통장과 대조해야 한다. 조건은 DB 쪽에 둔다(위 주석과 같은 이유).
+   */
+  filter: { awaitingDeposit?: boolean } = {},
+): Promise<FundingOrder[]> => {
   const db = getDb();
   const rows = await db.query.orders.findMany({
     where: (t, { eq: e, and, inArray }) => {
+      const pledgeConditions = [
+        ...(slug ? [e(fundingPledges.projectSlug, slug)] : []),
+        ...(filter.awaitingDeposit ? [e(fundingPledges.paymentMethod, 'bank_transfer'), e(fundingPledges.entrySource, 'online')] : []),
+      ];
       const pledgeOrderIds = db
         .select({ id: fundingPledges.orderId })
-        .from(fundingPledges);
+        .from(fundingPledges)
+        .where(pledgeConditions.length > 0 ? and(...pledgeConditions) : undefined);
       return and(
         e(t.type, 'funding'),
-        inArray(
-          t.id,
-          slug ? pledgeOrderIds.where(e(fundingPledges.projectSlug, slug)) : pledgeOrderIds,
-        ),
+        ...(filter.awaitingDeposit ? [e(t.status, 'pending')] : []),
+        inArray(t.id, pledgeOrderIds),
       );
     },
     with: { fundingPledge: { with: { items: true } }, payments: true },
@@ -88,7 +99,11 @@ export const listFundingOrdersForExport = async (slug: string | null): Promise<F
  * 입금 확인이 어느 쪽에도 안 잡히거나 양쪽에 잡힌다.
  */
 export interface AdminFundingTotals {
-  /** 확정(paid·partially_refunded) 후원 금액 합계. 부분환불 주문은 돌려준 금액을 뺀다. */
+  /**
+   * 모금액 — 공개 모금액과 **같은 집합**(paid·partially_refunded + 입금 대기 계좌 입금,
+   * countedFundingPledgeSql). 부분환불 주문은 돌려준 금액을 뺀다. 필드 이름은 옛 그대로(confirmed*)지만
+   * 입금 대기분을 포함한다 — 그 몫만 따로 보려면 awaitingDeposit*를 본다. 정산은 이 수가 아니다.
+   */
   confirmedAmount: number;
   /**
    * 확정 후원 **건수**. COUNT(*)라 같은 사람이 두 번 후원하면 2다 — '명'이 아니라 '건'이다.
@@ -103,6 +118,7 @@ export interface AdminFundingTotals {
   confirmedPersonCount: number;
   /**
    * **결제 대기(pending) 금액 합계** — 토스 결제창을 띄워 두고 아직 승인되지 않은 홀드다.
+   * 계좌 입금 대기는 여기 넣지 않는다(아래 awaitingDeposit*).
    *
    * 예전 조건은 `pending AND payment_method='bank_transfer'`였다. 온라인 생성은 validation이
    * 결제수단을 toss로 못박고 수기 등록은 항상 paid + bank_transfer로 들어오므로, 무통장입금을
@@ -115,6 +131,13 @@ export interface AdminFundingTotals {
   pendingAmount: number;
   /** 결제 대기 건수. 위와 같은 모집단. */
   pendingCount: number;
+  /**
+   * **입금 대기** — 후원자가 계좌 입금을 골라 신청했고 아직 입금 확인 전인 건(금액·건수).
+   * 위 결제 대기(토스 15분 홀드)와 따로 센다: 그쪽은 저절로 사라지고, 이쪽은 운영자가 통장과
+   * 대조해 확인하거나 취소해야만 사라진다. 기간으로 거르지 않는다(자동 취소가 없다).
+   */
+  awaitingDepositAmount: number;
+  awaitingDepositCount: number;
 }
 
 interface TotalsRow {
@@ -123,6 +146,8 @@ interface TotalsRow {
   confirmed_person_count: number | null;
   pending_amount: number | null;
   pending_count: number | null;
+  awaiting_deposit_amount: number | null;
+  awaiting_deposit_count: number | null;
 }
 
 export const aggregateAdminFundingTotals = async (slug: string | null): Promise<AdminFundingTotals> => {
@@ -132,17 +157,20 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
   const slugFilter = slug ? sql` AND fp.project_slug = ${slug}` : sql.empty();
   const rows = await db.all<TotalsRow>(sql`
     SELECT
-      -- 공개 모금액(aggregateProjectStatus)과 같은 수 — 부분환불 주문은 done 환불을 뺀다.
-      COALESCE(SUM(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN o.total_amount
+      -- 공개 모금액(aggregateProjectStatus)과 같은 수·같은 집합(countedFundingPledgeSql — 입금 대기 계좌
+      -- 입금 포함). 부분환불 주문은 done 환불을 뺀다.
+      COALESCE(SUM(CASE WHEN ${countedFundingPledgeSql()} THEN o.total_amount
         - CASE WHEN o.status = 'partially_refunded' THEN COALESCE((
             SELECT SUM(r.amount) FROM refunds r JOIN payments p ON p.id = r.payment_id
             WHERE p.order_id = o.id AND r.status = 'done'
           ), 0) ELSE 0 END END), 0) AS confirmed_amount,
-      COUNT(CASE WHEN o.status IN (${liveFundingOrderStatusList()}) THEN 1 END) AS confirmed_count,
-      COUNT(DISTINCT CASE WHEN o.status IN (${liveFundingOrderStatusList()})
+      COUNT(CASE WHEN ${countedFundingPledgeSql()} THEN 1 END) AS confirmed_count,
+      COUNT(DISTINCT CASE WHEN ${countedFundingPledgeSql()}
         THEN ${backerIdentitySql()} END) AS confirmed_person_count,
-      COALESCE(SUM(CASE WHEN o.status = 'pending' THEN o.total_amount END), 0) AS pending_amount,
-      COUNT(CASE WHEN o.status = 'pending' THEN 1 END) AS pending_count
+      COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method != 'bank_transfer' THEN o.total_amount END), 0) AS pending_amount,
+      COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method != 'bank_transfer' THEN 1 END) AS pending_count,
+      COALESCE(SUM(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online' THEN o.total_amount END), 0) AS awaiting_deposit_amount,
+      COUNT(CASE WHEN o.status = 'pending' AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online' THEN 1 END) AS awaiting_deposit_count
     FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
     WHERE o.type = 'funding'${slugFilter}
   `);
@@ -153,5 +181,7 @@ export const aggregateAdminFundingTotals = async (slug: string | null): Promise<
     confirmedPersonCount: Number(r?.confirmed_person_count ?? 0),
     pendingAmount: Number(r?.pending_amount ?? 0),
     pendingCount: Number(r?.pending_count ?? 0),
+    awaitingDepositAmount: Number(r?.awaiting_deposit_amount ?? 0),
+    awaitingDepositCount: Number(r?.awaiting_deposit_count ?? 0),
   };
 };

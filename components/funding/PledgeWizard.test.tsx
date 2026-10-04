@@ -302,7 +302,8 @@ describe('리워드 선택', () => {
 describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
   it('잠겨 있으면 라디오 목록 대신 고른 리워드 요약과 "다른 리워드 보기"가 보인다', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
-    expect(screen.queryByRole('radio')).toBeNull();
+    // 결제수단(토스/계좌 입금) 라디오는 따로 있으므로 리워드 라디오만 센다.
+    expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(0);
     expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
     expect(screen.getByText('CD')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '다른 리워드 보기 (1)' })).toBeInTheDocument();
@@ -321,7 +322,8 @@ describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
     await userEvent.click(screen.getByRole('button', { name: '다른 리워드 보기 (1)' }));
     await userEvent.click(screen.getByRole('button', { name: '접기' }));
-    expect(screen.queryByRole('radio')).toBeNull();
+    // 결제수단(토스/계좌 입금) 라디오는 따로 있으므로 리워드 라디오만 센다.
+    expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(0);
     expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
   });
 
@@ -350,7 +352,7 @@ rewards:
   it('잠겨 있지 않으면 토글이 없고 항상 전체 목록이 보인다', () => {
     render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
     expect(screen.queryByRole('button', { name: /다른 리워드 보기/ })).toBeNull();
-    expect(screen.getAllByRole('radio').length).toBe(2);
+    expect(document.querySelectorAll('input[type="radio"][name="reward"]').length).toBe(2);
   });
 });
 
@@ -1031,5 +1033,78 @@ describe('약관 동의 찾기', () => {
 
     // DOCUMENT_POSITION_FOLLOWING(4) — button이 notice보다 문서 순서상 뒤.
     expect(notice.compareDocumentPosition(button) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+});
+
+/**
+ * 계좌로 직접 입금(2026-10-04 재도입). 위젯 위에서 고르고, 고르면 위젯을 숨기고 마지막 버튼 말이
+ * "계좌 안내 받기"가 된다. 한정 수량 리워드는 서버와 같은 판정(bankTransferBlockReason)으로 막는다.
+ */
+describe('결제수단 — 계좌로 직접 입금', () => {
+  const originalLocation = window.location;
+  const fillBacker = async () => {
+    await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');
+    await userEvent.type(screen.getByLabelText(/^연락처\*$/), '010-1111-2222');
+    await userEvent.type(screen.getByLabelText(/^이메일\*$/), 'a@b.com');
+  };
+  beforeEach(() => {
+    widgetReady = true; widgetError = null; widgetAgreed = true;
+    requestPayment.mockClear();
+    Object.defineProperty(window, 'location', { value: { ...originalLocation, assign: jest.fn() }, writable: true });
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: true, status: 201, headers: { get: () => 'application/json' },
+      json: async () => ({ ok: true, orderNo: 'FND-B', paymentMethod: 'bank_transfer', manageUrl: '/ko/funding/manage/FND-B?token=t', totalAmount: 5000 }),
+    }) as never;
+  });
+  afterEach(() => {
+    Object.defineProperty(window, 'location', { value: originalLocation, writable: true });
+  });
+
+  it('계좌를 고르면 위젯을 숨기고 버튼이 "계좌 안내 받기"가 된다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(document.getElementById('toss-methods-test')).toBeVisible();
+    expect(screen.getByRole('button', { name: '5,000원 · 결제하기' })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    expect(document.getElementById('toss-methods-test')).not.toBeVisible();
+    expect(screen.getByRole('button', { name: '5,000원 · 계좌 안내 받기' })).toBeInTheDocument();
+    expect(screen.getByText(/계좌 안내 받기를 누르면/)).toBeInTheDocument();
+    // 카드로 돌아오면 위젯이 그대로 다시 보인다(언마운트하지 않는다).
+    await userEvent.click(screen.getByRole('radio', { name: /^카드·간편결제\(토스\)/ }));
+    expect(document.getElementById('toss-methods-test')).toBeVisible();
+  });
+
+  it('제출하면 bank_transfer로 신청하고 결제창 없이 펀딩 확인 페이지로 옮긴다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    await fillBacker();
+    await userEvent.click(screen.getByRole('button', { name: /계좌 안내 받기/ }));
+    await waitFor(() => expect(window.location.assign).toHaveBeenCalledWith('/ko/funding/manage/FND-B?token=t'));
+    const sent = JSON.parse((global.fetch as jest.Mock).mock.calls[0][1].body);
+    expect(sent.paymentMethod).toBe('bank_transfer');
+    expect(sent.items).toEqual([{ rewardId: 'mail', quantity: 1 }]);
+    expect(requestPayment).not.toHaveBeenCalled();
+  });
+
+  it('위젯이 아직 안 떴거나 위젯 약관을 안 눌렀어도 계좌 입금은 낼 수 있다', async () => {
+    widgetReady = false; widgetAgreed = null;
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByRole('button', { name: /결제하기/ })).toBeDisabled();
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    expect(screen.getByRole('button', { name: /계좌 안내 받기/ })).toBeEnabled();
+  });
+
+  it('한정 수량 리워드면 계좌 입금을 막고 이유를 한 줄로 알린다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.getByRole('radio', { name: /계좌로 직접 입금/ })).toBeDisabled();
+    expect(screen.getByText(/수량이 정해진 리워드는 카드·간편결제로만/)).toBeInTheDocument();
+  });
+
+  it('계좌를 고른 뒤 한정 리워드로 바꾸면 카드로 되돌린다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="mail" remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('radio', { name: /계좌로 직접 입금/ }));
+    await userEvent.click(screen.getByRole('radio', { name: /CD/ }));
+    expect(screen.getByRole('radio', { name: /^카드·간편결제\(토스\)/ })).toBeChecked();
+    expect(screen.getByRole('button', { name: /결제하기/ })).toBeInTheDocument();
+    expect(document.getElementById('toss-methods-test')).toBeVisible();
   });
 });

@@ -452,3 +452,47 @@ describe('파기 표식 이름', () => {
     expect(r.status).toBe(201);
   });
 });
+
+/**
+ * 같은 이름으로 이미 들어온 계좌 입금 신청이 있으면 수기 등록을 막고 후보를 돌려준다 — 그 신청의
+ * 입금을 수기 후원으로 또 등록하면 같은 돈이 두 번 잡힌다(SAF2026 2026-09-08, 리뷰 2026-10-04).
+ */
+describe('수기 등록 — 같은 이름의 계좌 입금 신청 후보', () => {
+  const seedOnlineBank = async (id: string, status: string, project = 'other-project') => {
+    await client.execute({
+      sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email, manage_token, item_amount, vat_amount, total_amount)
+            VALUES (?, ?, 'funding', ?, '김후원', '010', 'x@example.com', ?, 4545, 455, 5000)`,
+      args: [id, `FND-${id}`, status, `tok-${id}`],
+    });
+    await client.execute({
+      sql: `INSERT INTO funding_pledges (id, order_id, project_slug, reward_id, reward_title, unit_amount, quantity, additional_amount, payment_method, hold_expires_at, entry_source)
+            VALUES (?, ?, ?, 'mail', '감사 메일', 5000, 1, 0, 'bank_transfer', 9999999999, 'online')`,
+      args: [`p-${id}`, id, project],
+    });
+  };
+
+  it('다른 프로젝트라도 같은 이름의 입금 대기 신청이 있으면 409 + 후보, 주문을 만들지 않는다', async () => {
+    await seedOnlineBank('cand1', 'pending');
+    const before = Number((await client.execute("SELECT COUNT(*) AS n FROM orders WHERE order_no LIKE 'FND-M-%'")).rows[0].n);
+    const r = await call(VALID_BODY);
+    expect(r.status).toBe(409);
+    expect(r.body.code).toBe('existing_deposit_candidates');
+    expect(r.body.candidates.map((c: { orderNo: string }) => c.orderNo)).toEqual(['FND-cand1']);
+    const after = Number((await client.execute("SELECT COUNT(*) AS n FROM orders WHERE order_no LIKE 'FND-M-%'")).rows[0].n);
+    expect(after).toBe(before);
+  });
+
+  it('acknowledgeExisting: true면 확인한 것으로 보고 등록한다', async () => {
+    await seedOnlineBank('cand2', 'expired');
+    const r = await call({ ...VALID_BODY, acknowledgeExisting: true });
+    expect(r.status).toBe(201);
+  });
+
+  it('확정된 계좌 입금은 후보가 아니다', async () => {
+    await client.execute("DELETE FROM funding_pledges WHERE order_id IN ('cand1','cand2')");
+    await client.execute("DELETE FROM orders WHERE id IN ('cand1','cand2')");
+    await seedOnlineBank('cand3', 'paid');
+    const r = await call(VALID_BODY);
+    expect(r.status).toBe(201);
+  });
+});

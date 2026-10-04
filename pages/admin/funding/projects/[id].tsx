@@ -102,6 +102,8 @@ const loadPayoutView = async (projectId: string): Promise<AdminPayoutView | null
       serviceChargesUnavailable: preview.serviceChargesUnavailable,
       netAmount: preview.netAmount,
       backerCount: preview.backerCount,
+      awaitingDepositCount: preview.awaitingDepositCount,
+      awaitingDepositAmount: preview.awaitingDepositAmount,
       closed: preview.closed,
       hasPayoutAccount: preview.hasPayoutAccount,
       // 값이 아니라 있고 없음만 싣는다 — 이 props는 __NEXT_DATA__로 나간다. 이 화면이

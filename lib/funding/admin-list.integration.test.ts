@@ -144,8 +144,8 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
    * paid), 목록에 '결제대기' 행이 떠 있어도 요약 타일은 영구히 0건이라고 말했다.
    * 결제수단 필터를 빼고 **살아 있는 토스 홀드까지** 센다.
    */
-  it('결제 대기는 결제수단과 무관하게 pending 전부를 센다', async () => {
-    await seedPaid(1, 'a', 'pending', 7000); // 레거시 무통장 pending
+  it('토스 결제 대기와 계좌 입금 대기를 따로 센다 — 계좌 입금 대기는 기한과 무관하다', async () => {
+    await seedPaid(1, 'a', 'pending', 7000); // 계좌 입금 pending(온라인)
     await seedPaid(2, 'a', 'paid');
     await client.execute({
       sql: `INSERT INTO orders (id, order_no, type, status, customer_name, customer_phone, customer_email,
@@ -157,10 +157,26 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
             quantity, additional_amount, payment_method, hold_expires_at)
             VALUES ('fpt','ot','a','mail','감사 메일',5000,1,0,'toss',9999999999)`,
     });
+    // 기한이 한참 지난 계좌 입금 대기도 센다(자동 취소가 없다).
+    await seedPaid(3, 'a', 'pending', 9000);
+    await client.execute("UPDATE funding_pledges SET hold_expires_at = 1000 WHERE id = 'fpa3'");
 
     const totals = await aggregateAdminFundingTotals('a');
-    expect(totals.pendingCount).toBe(2);
-    expect(totals.pendingAmount).toBe(12_000);
+    expect(totals.pendingCount).toBe(1);
+    expect(totals.pendingAmount).toBe(5000);
+    expect(totals.awaitingDepositCount).toBe(2);
+    expect(totals.awaitingDepositAmount).toBe(16_000);
+
+    // "입금 대기" 필터는 계좌 입금 pending만 — 토스 대기·확정 건은 빠진다.
+    const awaiting = await listFundingOrders('a', { awaitingDeposit: true });
+    expect(awaiting.map((o) => o.orderNo).sort()).toEqual(['FND-a-1', 'FND-a-3']);
+  });
+
+  it('관리자 수기 등록(계좌)은 입금 대기로 세지 않는다', async () => {
+    await seedPaid(1, 'a', 'pending', 7000);
+    await client.execute("UPDATE funding_pledges SET entry_source = 'manual' WHERE id = 'fpa1'");
+    expect((await aggregateAdminFundingTotals('a')).awaitingDepositCount).toBe(0);
+    expect(await listFundingOrders('a', { awaitingDeposit: true })).toHaveLength(0);
   });
 
   /**
@@ -216,6 +232,7 @@ describe('aggregateAdminFundingTotals — 목록 상한과 무관한 전건 집�
     const totals = await aggregateAdminFundingTotals(null);
     expect(totals).toEqual({
       confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+      awaitingDepositAmount: 0, awaitingDepositCount: 0,
     });
   });
 });

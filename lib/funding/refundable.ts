@@ -53,3 +53,26 @@ export const liveFundingOrderStatusList = (): SQL =>
 /** 환불이 일어난 뒤의 orders.status — 취소 안내 메일의 대상이다. */
 export const isRefundedFundingOrderStatus = (status: string): boolean =>
   status === 'refunded' || status === 'partially_refunded';
+
+/**
+ * **공개 집계에 세는 후원** — 살아 있는 결제(LIVE_FUNDING_ORDER_STATUSES) + **입금을 기다리는 온라인
+ * 계좌 입금**(`pending` · `bank_transfer` · `entry_source='online'`).
+ *
+ * 운영자 결정(2026-10-04, SAF 방식): 계좌 입금 신청은 입금 확인 전에도 모금액·후원 건수/인원·후원자
+ * 명단·응원 메시지에 바로 반영한다. 은행에 다녀오는 며칠 동안 자기 후원이 페이지에 없으면 후원자는
+ * 신청이 안 된 줄 안다. 자동 해제가 없으므로(관리자 "미입금 취소"나 후원자의 "입금 전 신청 취소"로만
+ * 닫힌다 — 그때 expired가 되어 여기서 빠진다) 이 집합은 운영자가 관리하는 집합이다.
+ *
+ * **정산(payout.ts)·배송(CSV·개설자 배송 목록)·내려받기·환불 판정에는 쓰지 않는다** — 거기는 받은 돈만
+ * 본다(LIVE_FUNDING_ORDER_STATUSES 그대로). 받지 않은 돈을 개설자에게 보내거나 리워드를 보내면 안 된다.
+ *
+ * 공개 집계(service.ts aggregateProjectStatus·aggregateRewardSales — 개설자 통계도 이 둘을 지난다)와
+ * 관리자 상단 지표(admin-list.ts)가 이 하나를 본다. 쿼리 별칭은 `o`(orders)·`fp`(funding_pledges)여야 한다.
+ */
+export const countedFundingPledgeSql = (): SQL =>
+  sql`(o.status IN (${liveFundingOrderStatusList()}) OR (o.status = 'pending' AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'))`;
+
+/** 위 SQL과 같은 판정의 TS 판. */
+export const isCountedFundingPledge = (orderStatus: string, pledge: { paymentMethod: string; entrySource: string }): boolean =>
+  isLiveFundingOrderStatus(orderStatus)
+  || (orderStatus === 'pending' && pledge.paymentMethod === 'bank_transfer' && pledge.entrySource === 'online');

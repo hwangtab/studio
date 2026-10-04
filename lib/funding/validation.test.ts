@@ -73,11 +73,35 @@ describe('validateCreatePledgePayload', () => {
     expect(validateCreatePledgePayload(base, null, NOW).ok).toBe(false);
     expect(validateCreatePledgePayload(base, project, new Date('2026-11-05T00:00:00Z')).ok).toBe(false);
   });
-  // 무통장입금은 2026-09-11에 중단했다 — 예전 클라이언트나 손으로 만든 요청이
-  // 'bank_transfer'를 보내도 결제수단 검증에서 곧바로 걸린다(한정 수량 여부와 무관).
-  it('toss가 아닌 결제수단은 거부한다', () => {
-    const r = validateCreatePledgePayload({ ...base, rewardId: 'cd', paymentMethod: 'bank_transfer', shipping: { name: 'a', phone: '010', postcode: '1', address1: 'x' } }, project, NOW);
-    expect(r).toMatchObject({ ok: false, message: '결제수단을 선택해 주세요.' });
+  /**
+   * 계좌 입금(2026-10-04 재도입) — 한정 수량 리워드는 받지 않는다. 판정은 후원 폼과 같은
+   * bankTransferBlockReason이라, 화면이 막아 둔 선택을 손으로 만든 요청이 보내도 여기서 걸린다.
+   */
+  describe('계좌 입금', () => {
+    it('무제한 리워드는 계좌 입금을 받는다', () => {
+      const r = validateCreatePledgePayload({ ...base, paymentMethod: 'bank_transfer' }, project, NOW);
+      expect(r.ok).toBe(true);
+      if (r.ok) expect(r.value.paymentMethod).toBe('bank_transfer');
+    });
+    it('한정 수량 리워드는 계좌 입금을 거부한다', () => {
+      const r = validateCreatePledgePayload({ ...base, rewardId: 'cd', paymentMethod: 'bank_transfer', shipping: { name: 'a', phone: '010', postcode: '1', address1: 'x' } }, project, NOW);
+      expect(r).toEqual({ ok: false, message: expect.stringContaining('카드·간편결제로만') });
+    });
+    it('여러 줄 중 하나라도 한정이면 거부한다', () => {
+      const { rewardId: _r, quantity: _q, ...noLegacy } = base;
+      const r = validateCreatePledgePayload({ ...noLegacy, paymentMethod: 'bank_transfer', items: [{ rewardId: 'mail', quantity: 1 }, { rewardId: 'cd', quantity: 1 }],
+        shipping: { name: 'a', phone: '010', postcode: '1', address1: 'x' } }, project, NOW);
+      expect(r.ok).toBe(false);
+    });
+    it('같은 한정 리워드도 토스로는 받는다', () => {
+      const r = validateCreatePledgePayload({ ...base, rewardId: 'cd', shipping: { name: 'a', phone: '010', postcode: '1', address1: 'x' } }, project, NOW);
+      expect(r.ok).toBe(true);
+    });
+  });
+  it('모르는 결제수단은 거부한다', () => {
+    expect(validateCreatePledgePayload({ ...base, paymentMethod: 'virtual_account' }, project, NOW))
+      .toMatchObject({ ok: false, message: '결제수단을 선택해 주세요.' });
+    expect(validateCreatePledgePayload({ ...base, paymentMethod: undefined }, project, NOW)).toMatchObject({ ok: false });
   });
   it('배송 리워드는 배송지 필수', () => {
     expect(validateCreatePledgePayload({ ...base, rewardId: 'cd' }, project, NOW).ok).toBe(false);

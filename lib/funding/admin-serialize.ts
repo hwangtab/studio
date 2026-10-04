@@ -1,5 +1,6 @@
 import { isVirtualAccountMethod } from '../booking/toss';
 import { isRefundPendingStatus } from './policy';
+import { isOnlineBankTransfer } from './bankAccount';
 import type { FundingOrder } from './service';
 import { pledgeLines, pledgeLinesLabel } from './pledgeLines';
 
@@ -69,7 +70,7 @@ export interface AdminPledgeItem {
    */
   virtualAccountPayment: boolean;
   /**
-   * 후원자가 셀프 취소를 요청했는데 **아직 돈이 안 나간** 상태. 무통장은 자동 환불이
+   * 후원자가 셀프 취소를 요청했는데 **아직 돈이 안 나간** 상태. 계좌 입금은 자동 환불이
    * 불가능해 orders.status가 paid로 남으므로, 목록 상태 칸만 보면 정상 확정 건과
    * 구분되지 않는다. 환불이 끝나면(refunded) 꺼져야 한다 — cancel.ts는 환불 시
    * refundRequestedAt을 지우지 않으므로, 시각만 보면 첫 환불 이후 영구히 켜진다.
@@ -83,6 +84,13 @@ export interface AdminPledgeItem {
    * 경고는 경보 피로로 첫 사용 직후 죽는다.
    */
   needsReview: boolean;
+  /** 후원자가 폼에서 계좌 입금을 고른 건(수기 등록과 구분 — lib/funding/bankAccount.ts). */
+  onlineBankTransfer: boolean;
+  /**
+   * 입금을 기다리는 계좌 입금 신청(`pending`). 기한과 무관하다 — 계좌 입금은 자동 취소가 없어
+   * 기한이 지나도 이 상태로 남는다. 목록의 "입금 대기" 배지·필터가 이 값을 본다.
+   */
+  awaitingDeposit: boolean;
 }
 
 /**
@@ -229,5 +237,7 @@ export const serializePledgeForAdmin = (o: FundingOrder): AdminPledgeItem => {
     virtualAccountPayment: o.payments.some((p) => isVirtualAccountMethod(p.method)),
     refundRequested: Boolean(p.refundRequestedAt) && isRefundPendingStatus(o.status),
     needsReview: hasReviewMarker(p.adminMemo),
+    onlineBankTransfer: isOnlineBankTransfer(p),
+    awaitingDeposit: o.status === 'pending' && isOnlineBankTransfer(p),
   };
 };

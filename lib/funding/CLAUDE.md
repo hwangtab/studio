@@ -195,7 +195,8 @@ PG 비용 전)이 사업자 개설자 80,000원 대 원천징수 개설자 −2,
   `pledgeLinesSql`의 `quantity`(살아 있는 수량)에서 빠져 재고로 돌아가고, `activePledgeLines`를
   쓰는 내려받기·배송 목록·"전부 디지털인가" 판정에서도 빠진다. 기록은 웹훅 동기화와 같은
   델타 INSERT라 웹훅이 먼저 와도 이중 기록이 없다. 토스가 **응답을 안 준** 실패는 선점을
-  되돌리지 않는다(취소가 됐을 수 있다). 계좌(수기) 후원은 토스 결제가 없어 다루지 않는다.
+  되돌리지 않는다(취소가 됐을 수 있다). 계좌 입금·수기 등록 후원은 토스 결제가 없어 줄 환불이
+  없다 — **전액 취소만** 된다(아래 "계좌 입금" 절).
   토스 콘솔에서 직접 부분 취소하면 금액은 웹훅이 맞추지만 **어느 리워드인지는 남지 않는다** —
   줄 환불은 반드시 관리자 화면에서 할 것.
 - 관리자 수기 등록도 `items`로 여러 리워드를 받는다(온라인과 같은 재고 조건).
@@ -224,6 +225,70 @@ frontmatter에 **`addOn: true`로 표시한 추가 상품만** "…함께 받기
 만료 주문이 "폼에서 떠났나, 결제창까지 갔다가 떠났나"를 가르는 근거이고, 관리자 후원 상세의
 "결제창 열기" 줄에 보인다. 원문 User-Agent는 저장하지 않고 인앱 여부만 분류한다. 기록은
 best-effort라 표가 없어도 결제는 깨지지 않지만, 기록이 쌓이려면 적용해야 한다.
+
+### 계좌 입금(무통장)은 자동 취소가 없다 — 운영자가 통장을 보고 확인한다 (마이그레이션 0048)
+
+2026-09-11에 걷어냈다가(PR #77) 2026-10-04에 되살렸다 — 은행·ATM에서 직접 보내는 노년층
+후원자를 위해서다. 계좌·안내 기한·입력 상한의 정본은 **결제 공용** `lib/payments/bankAccount.ts`이고
+(다음 단계에서 공연·예약·믹싱도 계좌 입금을 붙인다), 펀딩 고유 규칙(한정 리워드 불가·온라인 판정·열린
+신청 상한)은 `lib/funding/bankAccount.ts`다. 안내 화면은 결제 공용 `components/payments/BankDepositGuide.tsx`
+(금액·기한·이름·호칭을 props로). 약관·처리방침 본문에는 계좌번호를 쓰지 않는다("안내 화면·메일에 표시된 계좌").
+
+- **한정 수량 리워드는 계좌 입금 불가.** `bankTransferBlockReason`을 서버 검증(validation.ts)과 후원
+  폼(PledgeWizard)이 같은 인자로 부른다. 그래서 입금 확인 때 재고를 다시 셀 필요가 없다.
+- **자동 취소가 없다.** `hold_expires_at`에 신청 + 3일(안내 기한)을 적지만 `expireStalePledges`와
+  토스 재제출의 자기 홀드 해제가 `bank_transfer`를 건너뛴다. 만료 메일도 없다 — SAF2026에서 중복
+  신청 중 버려진 쪽이 자동 만료되며 이미 입금한 사람에게 "취소됨"이 갔다. 신청을 닫는 길은 관리자
+  "미입금 취소"와 후원자의 "입금 전 신청 취소"(둘 다 pending → expired, 메일 없음)뿐이다. 기한이 지나도
+  안내 화면은 계좌를 계속 보여 준다. 그래서 입금 대기 건은 기한과 무관하게 쌓인다 — 관리자 목록
+  "입금 대기" 필터(`?deposit=pending`)는 기간·기한으로 거르지 않는다.
+- **입금 확인**(`lib/funding/bankTransfer.ts` `confirmBankDeposit`)은 pending과 **expired**(늦은 입금)를
+  paid로 바꾸는 낙관적 UPDATE 한 문장에 `send_pending` 센티널을 함께 적고 `deliverConfirmedEmailsOnce`로
+  확정 메일을 보낸다(수기 등록과 같은 규약). 두 번 눌러도 한 번만 전이한다.
+- **열린 계좌 입금 대기는 입금 확인 전에도 공개 집계에 들어간다**(운영자 결정 2026-10-04, SAF 방식) —
+  모금액·후원 건수/인원·명단·응원 메시지·개설자 판매 수량·관리자 상단 지표가 전부
+  `countedFundingPledgeSql()`(lib/funding/refundable.ts — LIVE + pending·bank_transfer·online) 하나를 본다.
+  새 집계 쿼리를 만들면 이 함수를 쓸 것. **정산·발송(CSV·개설자 배송 목록)·내려받기·환불 판정은 받은 돈만**
+  (LIVE 그대로) — 정산 미리보기는 빠진 입금 대기 건수·금액을 따로 알린다. 미입금 취소·입금 전 신청
+  취소·입금 확인·신청 생성 뒤에는 `revalidateFundingPaths`로 목록·상세를 다시 만든다(ISR에 첫 화면 숫자가
+  박힌다). 열린 입금 대기는 재고도 차지한다(새 계좌 입금은 한정 리워드를 못 받아 옛 무통장 행만 해당).
+- **온라인 계좌 입금과 관리자 수기 등록을 가른다.** 둘 다 `payment_method='bank_transfer'`이고
+  `entry_source`('online'/'manual')만 다르다. `assessSelfCancel`·`canWithdrawBeforeDeposit`은
+  `entrySource`를 **필수 인자**로 받고, manage SSR과 cancel.ts가 같은 함수를 쓴다(판정 테스트
+  policy.test.ts와 SSR 배선 테스트 tests/pages/funding/manage/[orderNo].test.ts를 따로 둔다 — PR #77은
+  배선에서 났다). 온라인 계좌 입금은 셀프 취소 시 **환불 계좌**를 받고, 수기 등록은 문의로 돌린다.
+- **환불 계좌는 결제 공용 표 `refund_accounts`**(`lib/payments/refundAccount.ts`)다 — (`order_kind`
+  'funding'|'session'|'mixing'|'show', `order_no`) UNIQUE로 주문을 가리키고(공연은 `show_orders`에 있어
+  FK로 못 묶는다), 요청 시각(`requested_at`)·송금 완료 시각(`refunded_at`)을 남긴다. 계좌번호만
+  fieldCrypto로 암호화, 은행명·예금주는 평문. 기존 주문 표에 컬럼을 더하지 않은 것과 relation을 두지
+  않은 것은 0037 절과 같은 배포 순서 이유다. 접수는 `refund_requested_at` 선점이 이긴 요청만 계좌를 쓴다
+  (같은 초의 두 번째 요청이 계좌를 덮어쓰던 것을 테스트로 잡았다). 관리자는 "계좌 보기"를 누를 때만
+  복호화한 값을 받는다(`pages/api/admin/funding/pledges/[id]/refund-account.ts`, no-store, 접속기록
+  `funding_refund_account_view`). 송금한 뒤 "송금 완료(환불 기록)" = 기존 `refund` 액션의 기록 경로.
+  환불 요청 철회 처리 시 계좌를 지우고, 그 밖에는 주문 5년 파기 때 지운다(orderRetention.ts).
+- **취소(환불)를 요청하면 내려받기가 닫힌다.** 계좌 입금 셀프 취소는 송금 전까지 paid로 남으므로
+  내려받기 API·확인 페이지가 `refund_requested_at`을 함께 본다(API는 기록 UPDATE의 WHERE에도). 요청 뒤
+  내려받기가 찍힌 옛 행은 "송금 완료(환불 기록)" 때 확인창·응답 warnings로 알린다.
+- **신청을 닫으면 `notification_error`도 비운다**(미입금 취소·입금 전 신청 취소). 닫힌 신청에 보낼 메일이
+  없는데 재발송 버튼은 둘 다 409라, 입금 안내 실패 사유가 남으면 헬스체크 경보를 끌 길이 없었다.
+  헬스체크에서 제외하는 쪽보다 이쪽이 단순하다 — 경보 판정을 상태별로 가르지 않아도 된다.
+- **입금 확인은 한정 리워드 재고를 다시 센다**(옛 무통장 행은 한정 리워드를 담을 수 있었다) — 온라인
+  생성과 같은 재고 식을 전이 UPDATE의 WHERE에 싣고, 넘치면 `sold_out`으로 사유를 돌려준다. 정산이 기록된
+  프로젝트의 확정은 확인창·응답 warnings로 알리고, 이체를 마친 정산 뒤의 확정은 헬스체크가 30일 동안 보고한다.
+- **남용 상한**: 계좌 입금 신청은 정규화한 이메일(`normalizeEmailForLimit` — 소문자, `+태그` 제거, gmail 점
+  제거)로 시간당 5회, 그리고 한 프로젝트에 열린 입금 대기 3건까지(`MAX_OPEN_BANK_DEPOSITS_PER_EMAIL`).
+- **수기 등록도 같은 이름의 계좌 입금 신청이 있으면 막는다** — `acknowledgeExisting: true` 없이는 409 + 후보.
+- **환불 계좌 경로의 DB 오류는 `safeDbErrorSummary`로만 로그한다** — drizzle 메시지에 바인딩 값(계좌번호
+  암호문·예금주)이 실린다.
+- **줄 단위 환불(lineRefund.ts)은 토스 전용** — 계좌 입금은 전액 취소만.
+- **정산**: 계좌 입금 몫도 PG를 거치지 않았으므로 결제 수수료에서 뺀다 — `payout.ts`가
+  `payment_method='bank_transfer'`로 고른다(수기 등록 포함). 개설자 약관도 같은 말을 한다.
+- 입금 안내 화면은 새 페이지가 아니라 **펀딩 확인 페이지**(`/ko/funding/manage/[orderNo]?token=`)다.
+  이미 비공개 경로(privatePaths·no-store·사이트맵 제외)라 새로 등록할 곳이 없고, 메일 링크·입금 전
+  취소·입금 뒤 환불 요청이 한 주소에서 이어진다. 화면 크기 위계는 SAF2026 `BankDepositGuideView`를
+  옮겼다(계좌번호·금액 text-3xl→4xl 굵게) — 줄이지 말 것.
+- **0048은 배포보다 먼저 적용한다.** 결제 확인은 이 표를 읽지 않아 안 깨지지만, 표가 없으면 계좌
+  입금 환불 접수(후원자는 "지금은 접수할 수 없습니다")·관리자 계좌 보기·5년 파기의 계좌 삭제가 실패한다.
 
 ### 개설자 배송지 열람은 마감 뒤에만 열린다
 

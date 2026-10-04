@@ -10,6 +10,7 @@ import type { FundingProject } from './projects';
 import type { FundingOrder } from './service';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { pledgeDownloads } from './shape';
+import { BANK_ACCOUNT, formatKstDeadline } from '../payments/bankAccount';
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || 'https://studionol.co.kr').replace(/\/+$/, '');
 const manageUrl = (order: FundingOrder): string => `${SITE_URL}/ko/funding/manage/${order.orderNo}?token=${order.manageToken}`;
@@ -23,7 +24,7 @@ export const PHONE = `문의: ${PHONE_NUMBER}`;
 const titleSuffix = (project: FundingProject | null): string => (project?.title ? ` — ${project.title}` : '');
 
 /** 운영자 메일용 결제수단 라벨 — 원문 enum(toss·bank_transfer)을 그대로 보이지 않는다. */
-const PAYMENT_METHOD_LABEL: Record<string, string> = { toss: '토스', bank_transfer: '무통장' };
+const PAYMENT_METHOD_LABEL: Record<string, string> = { toss: '토스', bank_transfer: '계좌 입금' };
 const paymentMethodLabel = (method: string | null | undefined): string =>
   (method && PAYMENT_METHOD_LABEL[method]) || method || '미지정';
 
@@ -166,14 +167,72 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
   ]));
 
 
+/**
+ * **계좌 입금 안내** — 후원 폼에서 "계좌로 직접 입금"을 고른 직후 후원자에게, 그리고 운영자에게.
+ *
+ * 화면(펀딩 확인 페이지의 입금 안내)과 같은 것을 담는다: 계좌·금액·보내는 분 이름·기한(한국시간)·
+ * 확인 페이지 주소. 계좌는 `BANK_ACCOUNT` 한 곳에서 읽는다.
+ *
+ * **위협하는 문구를 쓰지 않는다**("기한이 지나면 취소됩니다" 같은). 기한은 안내일 뿐이고 자동
+ * 취소가 없다(lib/funding/bankAccount.ts) — 늦게 입금해도 확인하면 확정된다. 사실이 아닌 말로
+ * 재촉하면 늦게 보낸 사람이 돈을 보내 놓고도 취소된 줄 안다.
+ *
+ * `deadline`은 `funding_pledges.hold_expires_at`(신청 때 저장한 기한)이다.
+ */
+export const sendFundingDepositGuideEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> => {
+  const deadline = order.fundingPledge?.holdExpiresAt ?? null;
+  const deadlineLine = deadline
+    ? `${formatKstDeadline(deadline)}(한국시간)까지 입금해 주시면, 확인한 뒤 메일로 알려 드립니다(영업일 1일 이내).`
+    : '입금해 주시면 확인한 뒤 메일로 알려 드립니다(영업일 1일 이내).';
+  return send(withoutUndeliverableCustomer(order, [
+    { key: 'customer', params: {
+      to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
+      subject: `[스튜디오 놀] 계좌 입금 안내${titleSuffix(project)}`,
+      text: [
+        `${order.customerName}님, 펀딩을 신청해 주셔서 고맙습니다.`,
+        '아래 계좌로 입금해 주시면 펀딩이 확정됩니다.',
+        '',
+        `은행: ${BANK_ACCOUNT.bankName}`,
+        `계좌번호: ${BANK_ACCOUNT.accountNumber}`,
+        `예금주: ${BANK_ACCOUNT.accountHolder}`,
+        `입금하실 금액: ${formatPriceAmount(order.totalAmount)}원`,
+        '',
+        `입금하실 때 보내는 분 이름은 신청하신 분 성함(${order.customerName})으로 해 주세요. 이름과 금액으로 확인합니다.`,
+        deadlineLine,
+        '',
+        ...summaryLines(order, project),
+        '',
+        `입금 안내 다시 보기·신청 취소: ${manageUrl(order)}`,
+        PHONE,
+      ].join('\n'),
+    } },
+    { key: 'operator', params: {
+      to: OPERATOR_EMAIL,
+      subject: `[펀딩] 계좌 입금 신청 ${formatPriceAmount(order.totalAmount)}원 — ${order.customerName}`,
+      text: [
+        '통장에 입금이 들어오면 관리자 화면에서 "입금 확인"을 눌러 주세요.',
+        ...summaryLines(order, project),
+        `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
+        deadline ? `안내한 기한: ${formatKstDeadline(deadline)}(한국시간) — 자동 취소 없음` : '',
+        listingLine(order),
+        `관리자: ${adminPledgeUrl(order)}`,
+      ].filter(Boolean).join('\n'),
+    } },
+  ]));
+};
+
+
 const CANCEL_SUBJECT = { refunded: '환불이 완료되었습니다', refund_requested: '취소 요청을 접수했습니다', recorded: '환불 처리 안내' } as const;
+
 /**
  * 본문 금액은 totalAmount가 아니라 **실제 환불액**이다 — 부분환불 이력이 있는 건에서 두 값은
  * 다르고, 총액을 적으면 이미 돌려준 몫까지 다시 돌려주는 것처럼 읽힌다.
  */
 const CANCEL_BODY = {
   refunded: (amount: number) => `${formatPriceAmount(amount)}원이 결제 수단으로 환불됩니다(카드사에 따라 3~7일).`,
-  refund_requested: () => '무통장 펀딩은 운영자가 확인 후 계좌로 환불합니다. 환불받을 계좌(은행·계좌번호·예금주)를 이 메일에 회신해 주세요.',
+  // 계좌 입금 후원의 셀프 취소. 환불 계좌는 펀딩 확인 페이지에서 이미 받았다 — 메일에는 계좌를
+  // 싣지 않는다(메일함에 계좌가 남는다). 기한은 약관 제10조와 같다.
+  refund_requested: (amount: number) => `취소 요청을 접수했습니다. ${formatPriceAmount(amount)}원을 적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.`,
   recorded: (amount: number) => `${formatPriceAmount(amount)}원 환불 처리가 완료되었습니다.`,
 } as const;
 

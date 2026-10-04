@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 
-import { createManualPledge } from '../../../components/admin/fundingActions';
+import { createManualPledge, type ExistingDepositCandidate } from '../../../components/admin/fundingActions';
 import { AdminShell } from '../../../components/admin/AdminShell';
 import { Button } from '../../../components/ui/Button';
 import { Field, Select, TextInput } from '../../../components/ui/Field';
@@ -23,7 +23,7 @@ const LIST_LIMIT = 200;
 
 /** 조회 자체가 실패했을 때 화면이 그릴 값 — 이 경우 전체 화면 오류라 표시되지는 않는다. */
 const EMPTY_TOTALS: AdminFundingTotals = {
-  confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0,
+  confirmedAmount: 0, confirmedCount: 0, confirmedPersonCount: 0, pendingAmount: 0, pendingCount: 0, awaitingDepositAmount: 0, awaitingDepositCount: 0,
 };
 
 interface ProjectRewardOption {
@@ -50,6 +50,11 @@ interface AdminFundingPageProps {
   truncated: boolean;
   projects: ProjectOption[];
   slug: string | null;
+  /**
+   * "입금 대기" 필터(`?deposit=pending`)가 켜져 있는가 — 입금을 기다리는 계좌 입금 신청만 본다.
+   * 기한으로 거르지 않는다(자동 취소가 없다, lib/funding/admin-list.ts).
+   */
+  awaitingDepositOnly?: boolean;
   /** 부수적 실패(프로젝트 md 파싱 등) — 배너로만 알리고 표는 그대로 보여준다. */
   error?: string;
   /** 후원 목록 조회 자체가 실패했을 때만 — 이때는 보여줄 표가 없으므로 전체 화면 오류. */
@@ -64,6 +69,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
 
   const slugParam = context.query.slug;
   const slug = typeof slugParam === 'string' && slugParam ? slugParam : null;
+  const awaitingDepositOnly = context.query.deposit === 'pending';
 
   // md 한 편이 깨져도(frontmatter 파싱 예외) 관리자 화면 전체가 500이 되면 안 된다 —
   // 후원 목록은 md와 무관하게 DB에서 온다.
@@ -84,7 +90,10 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
     await expireStalePledges(new Date());
     // 만료 처리 뒤에 집계·목록을 같은 순서로 읽는다 — 만료 전에 세면 이미 죽은 홀드가
     // 결제 대기 금액에 남는다.
-    const [totals, orders] = await Promise.all([aggregateAdminFundingTotals(slug), listFundingOrders(slug)]);
+    const [totals, orders] = await Promise.all([
+      aggregateAdminFundingTotals(slug),
+      listFundingOrders(slug, { awaitingDeposit: awaitingDepositOnly }),
+    ]);
     return {
       props: {
         items: orders.slice(0, LIST_LIMIT).map((o) => serializePledgeForAdmin(o)),
@@ -92,6 +101,7 @@ export const getServerSideProps: GetServerSideProps<AdminFundingPageProps> = asy
         truncated: orders.length > LIST_LIMIT,
         projects,
         slug,
+        awaitingDepositOnly,
         ...(projectsError ? { error: projectsError } : {}),
       },
     };
@@ -120,9 +130,9 @@ const STATUS_LABELS: Record<string, string> = {
   expired: '만료',
 };
 
-const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '무통장' };
+const PAYMENT_LABELS: Record<string, string> = { toss: '카드', bank_transfer: '계좌' };
 
-export default function AdminFundingPage({ items, totals, truncated, projects, slug, error, pledgesError }: AdminFundingPageProps) {
+export default function AdminFundingPage({ items, totals, truncated, projects, slug, awaitingDepositOnly = false, error, pledgesError }: AdminFundingPageProps) {
   const router = useRouter();
   const [notice, setNotice] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -151,6 +161,11 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
    */
   const [formShip, setFormShip] = useState({ name: '', phone: '', postcode: '', address1: '', address2: '', memo: '' });
   const [formError, setFormError] = useState<string | null>(null);
+  /**
+   * 같은 이름으로 이미 들어온 계좌 입금 신청 — 서버가 등록을 막고 돌려준 후보. 그 신청의 입금이면
+   * 등록하지 말고 그 신청 상세에서 "입금 확인"을 누른다. 다른 입금이면 확인 후 새로 등록한다.
+   */
+  const [existingCandidates, setExistingCandidates] = useState<ExistingDepositCandidate[]>([]);
 
   // 배너는 목록에 실린 건에 대한 경고라 items에서 센다(표에서 바로 찾아 누를 수 있어야
   // 하므로). 반대로 상단 KPI는 목록과 무관한 전건 집계여서 서버에서 내려온 totals를 쓴다.
@@ -179,9 +194,10 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       + (Number.isFinite(formAdditionalAmount) ? formAdditionalAmount : 0)
     : null;
 
-  const handleCreateManual = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleCreateManual = async (e: React.FormEvent | null, acknowledgeExisting = false) => {
+    e?.preventDefault();
     setFormError(null);
+    if (!acknowledgeExisting) setExistingCandidates([]);
 
     if (!formProjectSlug || formItems.some((item) => !item.rewardId)) {
       setFormError('프로젝트와 리워드를 선택해 주세요.');
@@ -224,6 +240,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
       customerEmail: formCustomerEmail.trim() || undefined,
       displayNamePublic: false,
       adminMemo: formMemo.trim() || undefined,
+      ...(acknowledgeExisting ? { acknowledgeExisting: true } : {}),
       // 배송 리워드이고 한 칸이라도 적었을 때만 보낸다 — 빈 객체를 보내면 빈 문자열 주소가 남는다.
       ...(needsShipping && Object.values(formShip).some((v) => v.trim() !== '')
         ? { shipping: Object.fromEntries(Object.entries(formShip).map(([k, v]) => [k, v.trim() || undefined])) }
@@ -233,8 +250,10 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
 
     if (!result.ok) {
       setFormError(result.message ?? '등록에 실패했습니다.');
+      if (result.candidates?.length) setExistingCandidates(result.candidates);
       return;
     }
+    setExistingCandidates([]);
     setShowForm(false);
     setFormItems([{ rewardId: '', quantity: 1 }]);
     setFormAdditionalAmount(0);
@@ -321,7 +340,31 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                 </div>
               )}
 
+              {totals.awaitingDepositCount > 0 && !awaitingDepositOnly && (
+                <div className="mb-4 p-3 bg-sky-50 border border-sky-300 text-sky-900 rounded-lg text-sm">
+                  <strong>계좌 입금을 기다리는 신청이 {totals.awaitingDepositCount}건 있습니다</strong>
+                  ({formatPriceAmount(totals.awaitingDepositAmount)}원). 통장과 대조해 입금된 건은 상세에서
+                  “입금 확인”을 눌러 주세요. 자동 취소가 없어 기한이 지나도 그대로 남습니다.{' '}
+                  <Link href={slug ? `/admin/funding?slug=${encodeURIComponent(slug)}&deposit=pending` : '/admin/funding?deposit=pending'} className="underline font-semibold">
+                    입금 대기만 보기
+                  </Link>
+                </div>
+              )}
+
               <div className="flex flex-wrap gap-2 mb-6">
+                <Link
+                  href={awaitingDepositOnly
+                    ? (slug ? `/admin/funding?slug=${encodeURIComponent(slug)}` : '/admin/funding')
+                    : (slug ? `/admin/funding?slug=${encodeURIComponent(slug)}&deposit=pending` : '/admin/funding?deposit=pending')}
+                  passHref
+                >
+                  <button
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${awaitingDepositOnly ? 'bg-sky-700 text-white' : 'bg-sky-50 text-sky-800 hover:bg-sky-100'}`}
+                    aria-pressed={awaitingDepositOnly}
+                  >
+                    입금 대기 {totals.awaitingDepositCount}건
+                  </button>
+                </Link>
                 <Link href="/admin/funding" passHref>
                   <button
                     className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${!slug ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
@@ -344,13 +387,13 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                 펀딩 '건수'와 '인원'을 나란히 둔다 — COUNT(*)는 건수이고, 같은 사람이 두 번
                 펀딩하면 2다. 예전엔 그 값을 '후원자 수 N명'으로 적어 인원을 부풀렸다.
               */}
-              <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-2">
+              <div className="grid grid-cols-2 md:grid-cols-6 gap-4 mb-2">
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">확정 금액</div>
+                  <div className="text-xs text-gray-500">모금액(입금 대기 포함)</div>
                   <div className="text-lg font-bold text-gray-900">{formatPriceAmount(totals.confirmedAmount)}원</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
-                  <div className="text-xs text-gray-500">확정 펀딩 건수</div>
+                  <div className="text-xs text-gray-500">펀딩 건수(입금 대기 포함)</div>
                   <div className="text-lg font-bold text-gray-900">{totals.confirmedCount}건</div>
                 </div>
                 <div className="p-4 bg-gray-50 rounded-xl">
@@ -365,10 +408,15 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                   <div className="text-xs text-gray-500">결제 대기 건수</div>
                   <div className="text-lg font-bold text-gray-900">{totals.pendingCount}건</div>
                 </div>
+                <div className="p-4 bg-sky-50 rounded-xl">
+                  <div className="text-xs text-sky-800">계좌 입금 대기</div>
+                  <div className="text-lg font-bold text-gray-900">{totals.awaitingDepositCount}건 · {formatPriceAmount(totals.awaitingDepositAmount)}원</div>
+                </div>
               </div>
               <p className="text-xs text-gray-500 mb-6">
                 아래 목록의 표시 건수와 무관하게 {slug ? '이 프로젝트의 ' : ''}전건을 집계한 값입니다.
                 “결제 대기”는 결제창을 띄워 두고 아직 승인되지 않은 홀드입니다(15분 뒤 자동 만료).
+                “계좌 입금 대기”는 운영자가 입금을 확인하거나 취소할 때까지 남고(자동 만료 없음), 공개 모금액·명단에 이미 들어가 있습니다. 정산에는 입금을 확인한 것만 들어갑니다.
               </p>
 
               <div className="flex flex-wrap gap-2 mb-6">
@@ -383,6 +431,24 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               {showForm && (
                 <form onSubmit={handleCreateManual} className="mb-6 p-4 bg-gray-50 rounded-xl space-y-3">
                   {formError && <div className="p-2 bg-red-50 text-red-700 rounded text-sm">{formError}</div>}
+                  {existingCandidates.length > 0 && (
+                    <div className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+                      <p className="font-semibold">같은 이름의 계좌 입금 신청</p>
+                      <ul className="mt-2 space-y-1">
+                        {existingCandidates.map((c) => (
+                          <li key={c.id}>
+                            {c.orderNo} · {STATUS_LABELS[c.status] ?? c.status} · {c.projectSlug} · {formatPriceAmount(c.totalAmount)}원 · {formatKstDateTime(c.createdAt)}
+                            {' '}
+                            <Link href={`/admin/funding/${c.id}`} className="font-semibold underline">이 신청에 입금 확인</Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <Button light type="button" variant="outline" size="sm" className="mt-3" disabled={busy}
+                        onClick={() => void handleCreateManual(null, true)}>
+                        위 신청과 다른 입금입니다 — 새로 등록
+                      </Button>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     <Field id="form-project-slug" label="프로젝트" className={lightOnlyField}>
                       <Select
@@ -547,6 +613,11 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
                               <span className="inline-flex px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 text-xs font-semibold">환불요청</span>
                             </div>
                           )}
+                          {item.awaitingDeposit && (
+                            <div className="mt-1">
+                              <span className="inline-flex px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 text-xs font-semibold">입금대기</span>
+                            </div>
+                          )}
                           {item.needsReview && (
                             <div className="mt-1">
                               <span
@@ -573,7 +644,7 @@ export default function AdminFundingPage({ items, totals, truncated, projects, s
               </div>
 
               {items.length === 0 && (
-                <div className="text-center py-12 text-gray-500">아직 접수된 펀딩이 없습니다.</div>
+                <div className="text-center py-12 text-gray-500">{awaitingDepositOnly ? '입금을 기다리는 계좌 입금 신청이 없습니다.' : '아직 접수된 펀딩이 없습니다.'}</div>
               )}
             </div>
           </div>

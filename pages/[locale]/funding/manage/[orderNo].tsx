@@ -5,7 +5,11 @@ import { Button } from '../../../../components/ui/Button';
 import { formatPriceAmount } from '../../../../data/pricing';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
-import { assessSelfCancel, cancelBlockedMessage, showsMessageAnonymously } from '../../../../lib/funding/policy';
+import { assessSelfCancel, canWithdrawBeforeDeposit, cancelBlockedMessage, showsMessageAnonymously } from '../../../../lib/funding/policy';
+import { isOnlineBankTransfer } from '../../../../lib/funding/bankAccount';
+import { REFUND_ACCOUNT_LIMITS } from '../../../../lib/payments/bankAccount';
+import BankDepositGuide from '../../../../components/payments/BankDepositGuide';
+import { Field, TextInput } from '../../../../components/ui/Field';
 import { FUNDING_ORDER_STATUS_LABELS } from '../../../../lib/funding/fulfillmentLabels';
 import { isLiveFundingOrderStatus } from '../../../../lib/funding/refundable';
 import { isPastFundingEnd } from '../../../../lib/funding/projectState';
@@ -21,6 +25,18 @@ interface Props {
   rewardLabel: string; additionalAmount: number;
   totalAmount: number; status: string; paymentMethod: string; fulfillmentStatus: string; shipping: string | null;
   canCancel: boolean; cancelBlockedReason: string | null; refundRequested: boolean;
+  /**
+   * 셀프 취소가 되면 돈이 어디로 돌아가는가(assessSelfCancel의 refundVia). `bank_account`면 취소
+   * 버튼이 먼저 환불 계좌 입력 칸을 연다. 취소할 수 없으면 null.
+   */
+  refundVia: 'card' | 'bank_account' | null;
+  /**
+   * 입금을 기다리는 계좌 입금 신청이면 안내에 쓸 값(금액·기한·이름 — 전부 서버가 다시 읽은 값).
+   * 아니면 null. 이 값이 있으면 화면은 계좌 안내를 그리고 "입금 전 신청 취소"를 둔다.
+   */
+  deposit: { amount: number; deadline: string; customerName: string } | null;
+  /** 이 후원이 온라인 계좌 입금인가 — 취소된(만료) 신청에 늦은 입금 안내를 붙일지 가른다. */
+  onlineBankTransfer: boolean;
   /**
    * 프로젝트 조회가 **실패**했는가(부재가 아니다). true면 이 화면은 취소·내려받기 판정을
    * 할 근거가 없으므로 마감이라고 말하지 않고 일시 오류로 안내한다.
@@ -49,24 +65,50 @@ export default function FundingManagePage(p: Props) {
   // 취소된 건에는 내려받기와 명단 편집을 그리지 않는다(success.tsx의 not_live와 같은 판정).
   const isLive = isLiveFundingOrderStatus(status);
 
-  const cancel = async () => {
-    const confirmText = `펀딩을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
-    if (!window.confirm(confirmText)) return;
+  // 계좌 입금 후원의 취소 — 환불 계좌를 먼저 받는다(서버가 암호화해 저장한다).
+  const [accountFormOpen, setAccountFormOpen] = useState(false);
+  const [refundAccount, setRefundAccount] = useState({ bankName: '', accountNumber: '', accountHolder: '' });
+  const [deposit, setDeposit] = useState(p.deposit);
+
+  const withdraw = async () => {
+    if (!window.confirm('입금 전 신청을 취소할까요? 이미 입금하셨다면 취소하지 말고 010-4255-7893으로 연락 주세요.')) return;
     setBusy(true); setError(null);
     try {
       const res = await fetch('/api/funding/cancel', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo: p.orderNo, token: p.token }) });
+      if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했습니다.'); return; }
+      const json = await res.json();
+      if (!res.ok) { setError(json.message ?? '취소하지 못했습니다.'); return; }
+      setDeposit(null);
+      setStatus('expired');
+      setConfirmMessage('신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.');
+    } catch { setError('네트워크 오류가 발생했습니다.'); } finally { setBusy(false); }
+  };
+
+  const cancel = async () => {
+    const viaAccount = p.refundVia === 'bank_account';
+    if (viaAccount && !accountFormOpen) { setAccountFormOpen(true); return; }
+    const confirmText = viaAccount
+      ? `펀딩을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 ${refundAccount.bankName.trim()} 계좌로 환불받을까요?`
+      : `펀딩을 취소하고 ${formatPriceAmount(p.totalAmount)}원을 환불받을까요?`;
+    if (!window.confirm(confirmText)) return;
+    setBusy(true); setError(null);
+    try {
+      const res = await fetch('/api/funding/cancel', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderNo: p.orderNo, token: p.token, ...(viaAccount ? { refundAccount } : {}) }),
+      });
       if (!res.headers.get('content-type')?.includes('application/json')) {
         setError('서버 오류가 발생했습니다.');
         return;
       }
       const json = await res.json();
       if (!res.ok) { setError(json.message ?? '취소에 실패했습니다.'); return; }
-      // `pending_released`(입금 전 무통장 신청의 셀프 해제) 분기는 그 엔드포인트와 함께
-      // 없어졌다. `refund_requested`도 지금은 만들어지지 않지만, 서버가 옛 행에 그 모드를
-      // 돌려줄 여지가 남아 있어 표시만 남긴다.
+      // 계좌 입금 후원 — 취소를 접수했고, 운영자가 적어 주신 계좌로 송금한다.
       if (json.mode === 'refund_requested') {
         setRefundRequested(true);
-        setConfirmMessage('취소 요청을 접수했습니다. 환불 계좌를 메일로 회신해 주세요.');
+        setAccountFormOpen(false);
+        setRefundAccount({ bankName: '', accountNumber: '', accountHolder: '' });
+        setConfirmMessage(`취소 요청을 접수했습니다. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드립니다.`);
       } else {
         setStatus('refunded');
         setConfirmMessage(`취소되었습니다. ${formatPriceAmount(json.refundAmount ?? p.totalAmount)}원이 환불됩니다.`);
@@ -91,12 +133,19 @@ export default function FundingManagePage(p: Props) {
                 ? 'bg-primary/10 text-primary dark:bg-primary-light/15 dark:text-violet-300'
                 : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300'
             }`}>
-              {FUNDING_ORDER_STATUS_LABELS[status] ?? status}
+              {deposit ? '입금 대기' : (FUNDING_ORDER_STATUS_LABELS[status] ?? status)}
             </span>
             {refundRequested && status === 'paid' && (
               <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300">환불 요청 접수</span>
             )}
           </div>
+
+          {deposit && <BankDepositGuide amount={deposit.amount} deadline={deposit.deadline} customerName={deposit.customerName} applicantLabel="신청하신 분" />}
+          {!deposit && p.onlineBankTransfer && status === 'expired' && (
+            <p className="mt-5 rounded-xl border border-gray-200 p-4 text-base text-gray-700 dark:border-gray-700 dark:text-gray-300">
+              이 계좌 입금 신청은 취소되었습니다. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인한 뒤 펀딩을 확정해 드립니다.
+            </p>
+          )}
 
           {/* 이 URL에는 관리 토큰이 실린다. 이탈 링크 두 가지 규칙(lib/analytics/privatePaths.ts):
               1. 문서 이동(`<a href>`) — next/link 클라 전환으로 나갔다가 뒤로가기를 누르면,
@@ -142,7 +191,12 @@ export default function FundingManagePage(p: Props) {
           {/* 디지털 리워드 내려받기. 확정 메일에도 같은 주소가 나가지만, 메일을 지우거나 못
               받는 사람이 있어 이 화면에도 둔다 — 관리 토큰으로만 열리는 자리다.
               서버가 결제 살아 있는 건에만 내려보내므로 여기서 상태를 다시 보지 않는다. */}
-          {p.downloads.length > 0 && isLive && (
+          {refundRequested && isLive && (
+            <p className="mt-6 rounded-xl border border-gray-200 p-4 text-sm text-gray-700 dark:border-gray-700 dark:text-gray-300">
+              취소(환불)를 요청한 펀딩이라 음원 내려받기를 닫았습니다. 요청을 거두려면 010-4255-7893으로 연락 주세요.
+            </p>
+          )}
+          {p.downloads.length > 0 && isLive && !refundRequested && (
             <div className="mt-6 space-y-2">
               {/* 링크가 아니라 폼이다 — 주소를 여는 것만으로는 기록이 남지 않아야, 메일
                   링크를 긁는 봇이 후원자의 청약철회권을 없애지 못한다. */}
@@ -171,8 +225,43 @@ export default function FundingManagePage(p: Props) {
             <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
               지금은 후원 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요. 문의: 010-4255-7893 · hello@studionol.co.kr
             </p>
+          ) : deposit ? (
+            <Button className="mt-8" variant="outline" fullWidth onClick={withdraw} disabled={busy}>입금 전 신청 취소</Button>
           ) : status === 'paid' && !refundRequested && (p.canCancel
-            ? <Button className="mt-6" variant="outline" fullWidth onClick={cancel} disabled={busy}>펀딩 취소 (전액 환불)</Button>
+            ? (
+              <div className="mt-6">
+                {/* 계좌 입금 후원은 토스에 돌려줄 결제가 없다 — 환불받을 계좌를 먼저 받는다. */}
+                {p.refundVia === 'bank_account' && accountFormOpen && (
+                  <fieldset className="mb-4 rounded-xl border border-gray-200 p-4 dark:border-gray-700">
+                    <p className="text-base font-semibold text-gray-900 dark:text-white">환불받을 계좌</p>
+                    <p className="typo-card-meta mt-1">계좌로 입금하신 펀딩이라 적어 주신 계좌로 직접 보내 드립니다. 계좌번호는 암호화해 보관합니다.</p>
+                    <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                      <Field id="refund-bank" label="은행" required>
+                        <TextInput required maxLength={REFUND_ACCOUNT_LIMITS.bankName} value={refundAccount.bankName}
+                          onChange={(e) => setRefundAccount({ ...refundAccount, bankName: e.target.value })} />
+                      </Field>
+                      <Field id="refund-holder" label="예금주" required>
+                        <TextInput required maxLength={REFUND_ACCOUNT_LIMITS.accountHolder} value={refundAccount.accountHolder}
+                          onChange={(e) => setRefundAccount({ ...refundAccount, accountHolder: e.target.value })} />
+                      </Field>
+                      <div className="sm:col-span-2">
+                        <Field id="refund-number" label="계좌번호" required>
+                          <TextInput required inputMode="numeric" autoComplete="off" maxLength={REFUND_ACCOUNT_LIMITS.accountNumber} value={refundAccount.accountNumber}
+                            onChange={(e) => setRefundAccount({ ...refundAccount, accountNumber: e.target.value })} />
+                        </Field>
+                      </div>
+                    </div>
+                  </fieldset>
+                )}
+                <Button variant="outline" fullWidth onClick={cancel}
+                  disabled={busy || (p.refundVia === 'bank_account' && accountFormOpen
+                    && (!refundAccount.bankName.trim() || !refundAccount.accountNumber.trim() || !refundAccount.accountHolder.trim()))}>
+                  {p.refundVia === 'bank_account'
+                    ? (accountFormOpen ? '이 계좌로 환불 요청' : '펀딩 취소 (계좌로 전액 환불)')
+                    : '펀딩 취소 (전액 환불)'}
+                </Button>
+              </div>
+            )
             : <p className="typo-card-meta mt-6 rounded-xl border border-gray-200 p-4 dark:border-gray-700">{p.cancelBlockedReason} 문의: 010-4255-7893 · hello@studionol.co.kr</p>)}
           {confirmMessage && (
             <p role="status" className="mt-4 rounded-xl border border-green-200 bg-green-50 p-4 text-sm text-green-800 dark:border-green-900/60 dark:bg-green-950/40 dark:text-green-300">{confirmMessage}</p>
@@ -211,14 +300,20 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
   // 조회 실패와 부재를 구분한다 — 실패를 마감으로 읽으면 모금 중인 후원자가 셀프 취소와
   // 내려받기를 잃는다(getFundingProjectOrFailure 주석).
   const { project, lookupFailed } = await getFundingProjectOrFailure(pl.projectSlug);
-  const verdict = assessSelfCancel({ orderStatus: order.status, fundingEnded: project ? isPastFundingEnd(project, now) : true, fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod, downloadedAt: pl.downloadedAt ?? null });
+  // 화면과 서버(lib/funding/cancel.ts)가 같은 판정을 같은 인자로 부른다 — entrySource까지 필수다.
+  const verdict = assessSelfCancel({ orderStatus: order.status, fundingEnded: project ? isPastFundingEnd(project, now) : true, fulfillmentStatus: pl.fulfillmentStatus, paymentMethod: pl.paymentMethod, entrySource: pl.entrySource, downloadedAt: pl.downloadedAt ?? null });
+  const awaitingDeposit = canWithdrawBeforeDeposit({ orderStatus: order.status, paymentMethod: pl.paymentMethod, entrySource: pl.entrySource });
   /**
    * 내려받기 주소는 **결제가 살아 있을 때만** 내려보낸다. 환불·만료된 건에 링크를 남기면
    * 돈을 돌려받고도 리워드를 계속 받는 화면이 된다. 상태 판정은 셀프 취소와 같은 집합을
    * 쓴다(lib/funding/refundable.ts).
    */
   const lines = pledgeLines(pl);
-  const downloads = isLiveFundingOrderStatus(order.status) ? pledgeDownloads(project, activePledgeLines(lines).map((l) => l.rewardId)) : [];
+  // 취소(환불)를 요청한 건도 내려보내지 않는다 — 계좌 입금 취소는 송금 전까지 paid로 남는다
+  // (pages/api/funding/download.ts가 같은 조건으로 거부한다).
+  const downloads = isLiveFundingOrderStatus(order.status) && pl.refundRequestedAt === null
+    ? pledgeDownloads(project, activePledgeLines(lines).map((l) => l.rewardId))
+    : [];
   const shipping = pl.shippingAddress1 ? `${pl.shippingName} · ${pl.shippingPhone} · (${pl.shippingPostcode}) ${pl.shippingAddress1} ${pl.shippingAddress2 ?? ''}` : null;
   return { props: {
     orderNo: order.orderNo, token, projectSlug: pl.projectSlug, projectTitle: project?.title ?? pl.projectSlug, rewardLabel: pledgeLinesLabel(lines),
@@ -226,6 +321,12 @@ export const getServerSideProps = withI18nServerProps<Props>(async (context) => 
     paymentMethod: pl.paymentMethod, fulfillmentStatus: pl.fulfillmentStatus, shipping,
     // 조회 실패면 취소·내려받기를 내보내지 않는다. 판정 근거가 없는 것이지 마감이 아니다.
     canCancel: lookupFailed ? false : verdict.ok,
+    refundVia: !lookupFailed && verdict.ok ? verdict.refundVia : null,
+    // 계좌 안내는 프로젝트 조회와 무관하다 — 계좌·금액·기한은 전부 이 주문 행에 있다.
+    deposit: awaitingDeposit
+      ? { amount: order.totalAmount, deadline: pl.holdExpiresAt.toISOString(), customerName: order.customerName }
+      : null,
+    onlineBankTransfer: isOnlineBankTransfer(pl),
     cancelBlockedReason: lookupFailed || verdict.ok ? null : cancelBlockedMessage(
       verdict.code,
       activePledgeLines(lines).filter((l) => project?.rewards.find((r) => r.id === l.rewardId)?.requiresShipping).map((l) => l.rewardTitle),

@@ -68,6 +68,9 @@ export interface AdminPayoutView {
   serviceChargesUnavailable: boolean;
   netAmount: number;
   backerCount: number;
+  /** 입금 확인 전이라 정산에서 뺀 계좌 입금 대기 — 공개 모금액에는 들어가 있다. 옛 props 호환으로 선택. */
+  awaitingDepositCount?: number;
+  awaitingDepositAmount?: number;
   closed: boolean;
   hasPayoutAccount: boolean;
   /** 세금 처리 구분이 등록돼 있는가. 구분 자체(개인/사업자)는 계좌와 함께 별도 라우트로만 나간다. */
@@ -270,6 +273,13 @@ export function FundingPayoutSection({
         (개설자 약관 제6조).
       </p>
 
+      {(payout.awaitingDepositCount ?? 0) > 0 && (
+        <p className="mb-4 rounded-lg border border-sky-300 bg-sky-50 p-3 text-sm text-sky-950">
+          입금 대기 {payout.awaitingDepositCount}건 {won(payout.awaitingDepositAmount ?? 0)}은 입금 확인 전이라 정산에서 제외했습니다.
+          공개 모금액에는 들어가 있습니다 — 입금을 확인하면 아래 계산값이 그만큼 늘어납니다.
+        </p>
+      )}
+
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-lg border border-gray-300 bg-white p-4">
           <h3 className="mb-2 text-base font-bold text-gray-900">지금 계산한 값</h3>
@@ -277,7 +287,7 @@ export function FundingPayoutSection({
             <Row label="모금액" value={won(payout.grossAmount)} />
             <Row label="환불" value={minus(payout.refundAmount)} negative />
             <Row
-              label="수기 등록 몫"
+              label="계좌로 받은 몫(수기 등록·계좌 입금)"
               hint="결제 수수료 대상에서 빠집니다"
               value={payout.manualGrossAmount > 0 ? won(payout.manualGrossAmount) : '없음'}
             />

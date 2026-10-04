@@ -151,7 +151,8 @@ export const computeFundingPayout = (input: {
 };
 
 /**
- * 수기 등록(`funding_pledges.entry_source = 'manual'`) 몫을 결제 수수료 대상에서 뺀 판.
+ * 토스를 지나지 않은 몫(수기 등록과 계좌 입금 — `payment_method = 'bank_transfer'`)을 결제 수수료
+ * 대상에서 뺀 판. 아래는 수기 등록 기준으로 적힌 설명이고, 계좌 입금도 같은 이유(결제 대행 없음)다.
  *
  * 수기 등록은 `pages/api/admin/funding/pledges/index.ts`가 orders + funding_pledges만
  * INSERT한다 — `payments` 행을 만들지 않고 `payment_method`도 'bank_transfer'다. 즉 그 돈은
@@ -201,13 +202,23 @@ export interface FundingPayoutPreview extends FundingPayoutBreakdown {
    * 가정해** 계산한 참고값이다 — 그 가정이 기록으로 남는 경로는 없다.
    */
   taxType: FundingCreatorTaxType | null;
-  /** grossAmount 중 수기 등록 몫 — 결제 수수료에서 빠진 금액이라 화면이 이유를 적을 수 있어야 한다. */
+  /**
+   * grossAmount 중 **토스를 지나지 않은 몫**(수기 등록 + 계좌 입금, payment_method='bank_transfer') —
+   * 결제 수수료에서 빠진 금액이라 화면이 이유를 적을 수 있어야 한다. 이름은 옛 그대로 둔다(화면·테스트가 읽는다).
+   */
   manualGrossAmount: number;
   /**
-   * 확정 후원 **건수**. `aggregateProjectStatus`의 backerCount와 같은 것을 센다(사람 수가
-   * 아니다) — 정산 기록의 숫자가 공개 페이지의 'N건 후원'과 달라 보이면 안 된다.
+   * 확정 후원 **건수** — 입금을 확인한(받은) 것만. 공개 페이지의 'N건 후원'은 입금 대기 계좌 입금까지
+   * 세므로(countedFundingPledgeSql) 그 차이는 아래 awaitingDeposit*로 보여 준다.
    */
   backerCount: number;
+  /**
+   * **입금 확인 전이라 정산에서 뺀** 계좌 입금 대기(건수·금액). 공개 모금액에는 들어가 있다(운영자 결정
+   * 2026-10-04) — 받지 않은 돈을 개설자에게 보내면 안 되므로 정산은 받은 돈만 본다. 화면이 "입금 대기
+   * N건 ○원은 확인 전이라 제외"로 알린다.
+   */
+  awaitingDepositCount: number;
+  awaitingDepositAmount: number;
   /** 모금이 끝났는가(`computeProjectState`가 'closed'). 기록 버튼의 전제다. */
   closed: boolean;
   /**
@@ -260,9 +271,9 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
   });
   if (!creator) return null;
 
-  const rows = await db.all<{ amount: number; entry_source: string; refunded: number }>(sql`
+  const rows = await db.all<{ amount: number; payment_method: string; refunded: number }>(sql`
     SELECT o.total_amount AS amount,
-           fp.entry_source AS entry_source,
+           fp.payment_method AS payment_method,
            COALESCE((
              SELECT SUM(r.amount) FROM refunds r
              JOIN payments p ON p.id = r.payment_id
@@ -274,7 +285,20 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
 
   const grossAmount = rows.reduce((s, r) => s + Number(r.amount), 0);
   const refundAmount = rows.reduce((s, r) => s + Number(r.refunded), 0);
-  const manualGrossAmount = rows.filter((r) => r.entry_source === 'manual').reduce((s, r) => s + Number(r.amount), 0);
+  /**
+   * 토스를 지나지 않은 몫 — `payment_method = 'bank_transfer'`. 관리자 수기 등록(늘 bank_transfer)과
+   * 후원자가 폼에서 고른 계좌 입금(2026-10-04 재도입)이 둘 다 여기다. 예전엔 `entry_source = 'manual'`로
+   * 골라서, 계좌 입금이 돌아오자 PG를 거치지 않은 돈에 결제 수수료가 붙는 길이 생겼다 — 아래
+   * computeFundingPayoutForProject 주석이 "근거 없는 공제"라 부르는 바로 그것이다.
+   */
+  const manualGrossAmount = rows.filter((r) => r.payment_method === 'bank_transfer').reduce((s, r) => s + Number(r.amount), 0);
+  // 정산에서 빠지는 입금 대기 계좌 입금 — 위 rows(받은 돈)와 겹치지 않는다.
+  const awaiting = await db.all<{ n: number | null; amount: number | null }>(sql`
+    SELECT COUNT(*) AS n, COALESCE(SUM(o.total_amount), 0) AS amount
+    FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
+    WHERE fp.project_slug = ${project.slug} AND o.status = 'pending'
+      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
+  `);
 
   const recorded =
     (await db.query.fundingProjectPayouts.findFirst({
@@ -312,6 +336,8 @@ export const buildFundingPayoutPreview = async (projectId: string): Promise<Fund
     taxType,
     manualGrossAmount,
     backerCount: rows.length,
+    awaitingDepositCount: Number(awaiting[0]?.n ?? 0),
+    awaitingDepositAmount: Number(awaiting[0]?.amount ?? 0),
     closed:
       computeProjectState(
         { status: project.status, startAt: project.startAt.toISOString(), endAt: project.endAt.toISOString() },

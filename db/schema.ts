@@ -464,7 +464,10 @@ export const fundingPledges = sqliteTable('funding_pledges', {
   quantity: integer('quantity').notNull(),
   additionalAmount: integer('additional_amount').notNull().default(0),
   paymentMethod: text('payment_method', { enum: fundingPaymentMethodEnum }).notNull(),
-  /** 결제 대기 만료. 토스 +15분, 무통장 +12시간. 지나면 재고 계산에서 빠지고 lazy로 expired 처리. */
+  /**
+   * 결제 대기 만료. 토스 +15분 — 지나면 재고 계산에서 빠지고 lazy로 expired 처리.
+   * 계좌 입금은 +3일이고 **입금 안내 기한일 뿐이다** — 자동 만료 대상이 아니다(lib/funding/bankAccount.ts).
+   */
   holdExpiresAt: integer('hold_expires_at', { mode: 'timestamp' }).notNull(),
   paidAt: integer('paid_at', { mode: 'timestamp' }),
   /**
@@ -551,7 +554,10 @@ export const fundingPledges = sqliteTable('funding_pledges', {
    *   fulfillment_status는 'none' 그대로다 — 'delivered'로 바꾸면 셀프 취소가 막힌다.
    */
   deliveredAt: integer('delivered_at', { mode: 'timestamp' }),
-  /** 무통장 후원자의 셀프 취소 요청 시각. 운영자가 계좌 환불 후 orders를 refunded로 바꾼다. */
+  /**
+   * 계좌 입금 후원자의 셀프 취소 요청 시각. 환불 계좌는 결제 공용 `refund_accounts`에 함께 접수되고,
+   * 운영자가 그 계좌로 송금한 뒤 "송금 완료(환불 기록)"로 orders를 refunded로 바꾼다.
+   */
   refundRequestedAt: integer('refund_requested_at', { mode: 'timestamp' }),
   adminMemo: text('admin_memo'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
@@ -622,6 +628,50 @@ export const fundingPledgeItemsRelations = relations(fundingPledgeItems, ({ one 
 }));
 
 export type FundingPledgeItem = typeof fundingPledgeItems.$inferSelect;
+
+/**
+ * 계좌 입금 주문의 **환불 계좌** — 결제 공용(마이그레이션 0048, lib/payments/refundAccount.ts).
+ *
+ * 계좌 입금은 토스에 취소할 결제가 없어 운영자가 이 계좌로 직접 송금한다. 펀딩이 먼저 쓰고(후원자가
+ * 펀딩 확인 페이지에서 취소를 요청할 때 적는다), 다음 단계에서 공연 티켓(show_orders)·연습실/녹음
+ * 예약·믹싱 주문(orders)도 계좌 입금을 붙이면 같은 표를 쓴다. 그래서 주문을 FK가 아니라
+ * **(`order_kind`, `order_no`)**로 가리킨다 — 공연 주문은 `orders`가 아닌 다른 표에 있다.
+ *
+ * - **계좌번호만 암호화한다**(`account_number_enc`, lib/crypto/fieldCrypto.ts 형식). 은행명·예금주는
+ *   평문이다 — 관리자 화면에서 "누구 앞으로 보내는지"를 키 없이 보여야 하고, 둘만으로는 송금할 수
+ *   없다. 암호화 컬럼이라 `ENCRYPTED_FIELD_TARGETS`(lib/crypto/fieldKeyRotation.ts)에 올라 있다.
+ * - **주문당 한 행**((order_kind, order_no) UNIQUE). 다시 적으면 덮어쓴다 — 마지막에 적은 계좌가 보낼 계좌다.
+ * - `requested_at` — 후원자가 계좌를 적고 환불을 요청한 시각, `refunded_at` — 운영자가 송금을 마치고
+ *   기록한 시각(아직이면 NULL).
+ * - **기존 주문 표에 컬럼을 더하지 않은 이유는 배포 순서다**(0037 절과 같다). 관계 조회가 전체 컬럼을
+ *   SELECT하므로, 컬럼을 더하면 마이그레이션 전 배포에서 결제 확인까지 깨진다. 별도 표는 기존 조회가
+ *   건드리지 않고, 표가 없으면 환불 계좌 접수만 실패한다. 관계(relations)도 일부러 두지 않는다.
+ * - 파기는 주문의 5년 파기를 따른다(lib/privacy/orderRetention.ts) — 환불 기록은 전자상거래법상
+ *   대금 결제 기록이다. 운영자가 환불 요청을 철회 처리하면 그 자리에서 지운다(더 쓸 데가 없다).
+ */
+export const refundAccountOrderKindEnum = ['funding', 'session', 'mixing', 'show'] as const;
+export const refundAccounts = sqliteTable(
+  'refund_accounts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => sql`lower(hex(randomblob(16)))`),
+    orderKind: text('order_kind', { enum: refundAccountOrderKindEnum }).notNull(),
+    orderNo: text('order_no').notNull(),
+    bankName: text('bank_name').notNull(),
+    accountNumberEnc: text('account_number_enc').notNull(),
+    accountHolder: text('account_holder').notNull(),
+    requestedAt: integer('requested_at', { mode: 'timestamp' }).notNull(),
+    refundedAt: integer('refunded_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('refund_accounts_order_uq').on(t.orderKind, t.orderNo),
+    check('refund_accounts_order_kind_check', sql`${t.orderKind} in ('funding', 'session', 'mixing', 'show')`),
+  ],
+);
+
+export type RefundAccountRow = typeof refundAccounts.$inferSelect;
+export type RefundAccountOrderKind = (typeof refundAccountOrderKindEnum)[number];
 
 /**
  * 결제창을 **열었는가**의 기록 — 주문 하나에 한 행(여러 번 열면 횟수·마지막 시각만 늘린다).
@@ -1299,6 +1349,14 @@ export const privacyAccessActionEnum = [
    * 사후에 "운영자가 화면에서 본 것"과 "개설자 메일함으로 나간 것"을 가릴 수 없다.
    */
   'funding_payout_account_email',
+  /**
+   * 계좌 입금 후원자가 적은 환불 계좌 조회
+   * (pages/api/admin/funding/pledges/[id]/refund-account.ts). 운영자가 송금하려고 "계좌 보기"를
+   * 누른 때다. 키 회전 CLI가 이 컬럼을 여는 일도 같은 이름으로 남긴다(수행자 `rotation-cli`가
+   * 경로를 가른다 — fieldKeyRotation.ts의 ROTATION_ACCESS_ACTIONS). 컬럼이 enum 문자열이라
+   * 마이그레이션이 필요 없다(DB CHECK 없음).
+   */
+  'funding_refund_account_view',
   /**
    * 관리자 펀딩 주문 CSV 내려받기 (pages/api/admin/funding/export.ts).
    * 25열 중 11열이 개인정보(이름·연락처·이메일·배송지 6열·응원 메시지)이고 건수 상한이

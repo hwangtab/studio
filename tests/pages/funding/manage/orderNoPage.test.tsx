@@ -10,6 +10,7 @@ const baseProps = {
   canCancel: true, cancelBlockedReason: null, refundRequested: false, downloads: [], lookupFailed: false,
   displayNamePublic: false, canEditDisplayName: true,
   customerName: '홍길동', publicName: null, supporterMessage: null, listingHidden: false, messageShownAnonymously: false,
+  refundVia: 'card' as 'card' | 'bank_account' | null, deposit: null, onlineBankTransfer: false,
 };
 
 beforeEach(() => {
@@ -197,4 +198,113 @@ it('프로젝트 조회가 실패하면 마감이 아니라 일시 오류로 안
   expect(screen.getByText(/지금은 후원 정보를 불러오지 못했습니다/)).toBeInTheDocument();
   expect(screen.queryByText(/마감/)).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: /펀딩 취소/ })).not.toBeInTheDocument();
+});
+
+/**
+ * 계좌 입금 안내 — 입금 대기 중인 계좌 입금 신청에 그린다(components/payments/BankDepositGuide.tsx).
+ * 기한이 지나도 계좌를 숨기지 않는다(자동 취소가 없다 — lib/funding/bankAccount.ts).
+ */
+describe('계좌 입금 안내', () => {
+  const pendingBank = {
+    ...baseProps, status: 'pending', canCancel: false, refundVia: null, onlineBankTransfer: true,
+    deposit: { amount: 35000, deadline: '2026-10-07T06:00:00.000Z', customerName: '홍길동' },
+  };
+
+  it('계좌번호·금액·보내는 분 안내·기한(한국시간)을 크게 보여 준다', () => {
+    render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
+    expect(screen.getByText('3333-12-5480849')).toHaveClass('text-3xl', 'font-bold');
+    expect(screen.getByText('카카오뱅크 · 황경하 / 스튜디오 놀')).toBeInTheDocument();
+    expect(screen.getByText('35,000원')).toHaveClass('text-3xl', 'font-bold');
+    expect(screen.getByText('입금하실 때 보내는 분 이름은 신청하신 분 성함으로 해 주세요.')).toBeInTheDocument();
+    // 2026-10-07T06:00Z = 한국시간 15:00
+    expect(screen.getByText(/10월 7일 오후 3:00까지\(한국시간\)/)).toBeInTheDocument();
+    expect(screen.getByText('입금이 확인되면 메일로 알려 드립니다(영업일 1일 이내).')).toBeInTheDocument();
+    expect(screen.getByText('입금 대기')).toBeInTheDocument();
+  });
+
+  it('기한이 지난 신청에도 계좌를 숨기지 않는다', () => {
+    render(<FundingManagePage {...pendingBank} deposit={{ ...pendingBank.deposit, deadline: '2020-01-01T00:00:00.000Z' }} paymentMethod="bank_transfer" />);
+    expect(screen.getByText('3333-12-5480849')).toBeInTheDocument();
+  });
+
+  it('복사에 실패하면 role=alert로 직접 적으라고 알린다', async () => {
+    Object.assign(navigator, { clipboard: { writeText: jest.fn().mockRejectedValue(new Error('denied')) } });
+    render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
+    await userEvent.click(screen.getByRole('button', { name: '계좌번호 복사하기' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('직접 적어 주세요');
+  });
+
+  it('복사에 성공하면 버튼 말이 바뀐다', async () => {
+    const writeText = jest.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText } });
+    render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
+    await userEvent.click(screen.getByRole('button', { name: '계좌번호 복사하기' }));
+    expect(writeText).toHaveBeenCalledWith('3333-12-5480849');
+    expect(await screen.findByRole('button', { name: '복사했습니다' })).toBeInTheDocument();
+  });
+
+  it('"입금 전 신청 취소" — 성공하면 계좌 안내를 거두고 환불 없음 문구', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true, headers: { get: () => 'application/json' },
+      json: async () => ({ ok: true, mode: 'withdrawn', refundAmount: 0 }),
+    });
+    global.fetch = fetchMock as never;
+    render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
+    await userEvent.click(screen.getByRole('button', { name: '입금 전 신청 취소' }));
+    expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('이미 입금하셨다면'));
+    expect(await screen.findByText(/신청을 취소했습니다/)).toBeInTheDocument();
+    expect(screen.queryByText('3333-12-5480849')).toBeNull();
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ orderNo: 'FND-1', token: 'tok' });
+  });
+
+  it('입금 대기가 아니면 계좌 안내가 없다', () => {
+    render(<FundingManagePage {...baseProps} paymentMethod="toss" />);
+    expect(screen.queryByText('3333-12-5480849')).toBeNull();
+  });
+});
+
+describe('계좌 입금 후원의 취소 — 환불 계좌를 받는다', () => {
+  const paidBank = { ...baseProps, refundVia: 'bank_account' as const, onlineBankTransfer: true };
+
+  it('첫 클릭은 계좌 입력 칸을 열고, 다 채워야 요청 버튼이 눌린다 — 계좌를 함께 보낸다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true, headers: { get: () => 'application/json' },
+      json: async () => ({ ok: true, mode: 'refund_requested', refundAmount: 30000 }),
+    });
+    global.fetch = fetchMock as never;
+    render(<FundingManagePage {...paidBank} paymentMethod="bank_transfer" />);
+    await userEvent.click(screen.getByRole('button', { name: /계좌로 전액 환불/ }));
+    expect(fetchMock).not.toHaveBeenCalled();
+    const submit = screen.getByRole('button', { name: '이 계좌로 환불 요청' });
+    expect(submit).toBeDisabled();
+    await userEvent.type(screen.getByLabelText(/은행/), '국민은행');
+    await userEvent.type(screen.getByLabelText(/예금주/), '홍길동');
+    await userEvent.type(screen.getByLabelText(/계좌번호/), '123-456-789012');
+    await userEvent.click(submit);
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({
+      orderNo: 'FND-1', token: 'tok',
+      refundAccount: { bankName: '국민은행', accountNumber: '123-456-789012', accountHolder: '홍길동' },
+    });
+    expect(await screen.findByText(/적어 주신 계좌로 접수일부터 3영업일 이내/)).toBeInTheDocument();
+    expect(screen.getByText('환불 요청 접수')).toBeInTheDocument();
+  });
+
+  it('토스 후원은 계좌 칸 없이 바로 취소한다', async () => {
+    const fetchMock = jest.fn().mockResolvedValue({
+      ok: true, headers: { get: () => 'application/json' },
+      json: async () => ({ ok: true, mode: 'refunded', refundAmount: 30000 }),
+    });
+    global.fetch = fetchMock as never;
+    render(<FundingManagePage {...baseProps} paymentMethod="toss" />);
+    await userEvent.click(screen.getByRole('button', { name: /펀딩 취소/ }));
+    expect(screen.queryByLabelText(/계좌번호/)).toBeNull();
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ orderNo: 'FND-1', token: 'tok' });
+  });
+});
+
+it('취소(환불)를 요청한 건은 내려받기 버튼을 그리지 않고 이유를 알린다', () => {
+  render(<FundingManagePage {...baseProps} paymentMethod="bank_transfer" refundRequested
+    downloads={[{ label: 'MP3', key: 'k' }]} />);
+  expect(screen.queryByRole('button', { name: /내려받기/ })).toBeNull();
+  expect(screen.getByText(/음원 내려받기를 닫았습니다/)).toBeInTheDocument();
 });

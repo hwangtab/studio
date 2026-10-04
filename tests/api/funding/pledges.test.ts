@@ -3,6 +3,10 @@ jest.mock('../../../lib/booking/rate-limit', () => ({ consumeRateLimit: jest.fn(
 jest.mock('../../../lib/funding/service', () => ({
   createFundingPledge: jest.fn(), expireStalePledges: jest.fn().mockResolvedValue(undefined),
 }));
+jest.mock('../../../lib/funding/bankTransfer', () => ({
+  deliverDepositGuide: jest.fn().mockResolvedValue(null),
+  countOpenBankDeposits: jest.fn().mockResolvedValue(0),
+}));
 jest.mock('../../../lib/funding/projects', () => ({
   ...jest.requireActual('../../../lib/funding/projects'),
   getFundingProject: jest.fn(),
@@ -14,6 +18,7 @@ import { createFundingPledge } from '../../../lib/funding/service';
 import { getFundingProject, parseFundingProject } from '../../../lib/funding/projects';
 import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { TOSS_HOLD_SECONDS } from '../../../lib/funding/policy';
+import { countOpenBankDeposits, deliverDepositGuide } from '../../../lib/funding/bankTransfer';
 
 const project = parseFundingProject(`---
 slug: demo
@@ -62,9 +67,10 @@ rewards:
 /** cd 리워드는 배송이 필요하다 — 검증을 통과해야 홀드 카운터 분기까지 도달한다. */
 const cdBodyExtra = { rewardId: 'cd', shipping: { name: '김', phone: '010', postcode: '12345', address1: '어딘가', address2: '', memo: '' } };
 
+const mockRevalidate = jest.fn().mockResolvedValue(undefined);
 const call = async (body: unknown) => {
   const json = jest.fn(); const status = jest.fn().mockReturnValue({ json });
-  const res = { setHeader: jest.fn(), status } as unknown as NextApiResponse;
+  const res = { setHeader: jest.fn(), status, revalidate: mockRevalidate } as unknown as NextApiResponse;
   await handler({ method: 'POST', body, headers: {}, socket: {} } as unknown as NextApiRequest, res);
   return { status: status.mock.calls[0][0] as number, body: json.mock.calls[0][0] };
 };
@@ -149,5 +155,68 @@ describe('속도 제한 · 홀드 상한', () => {
     expect(r.status).toBe(429);
     expect(r.body.message).toBe('한정 리워드 결제 시도가 잦습니다. 15분 뒤 다시 시도해 주세요.');
     expect(createFundingPledge).not.toHaveBeenCalled();
+  });
+});
+
+/**
+ * 계좌 입금 — 결제창이 없다. 신청을 만들고 입금 안내 메일을 보낸 뒤, 위저드가 옮겨 갈 펀딩 확인
+ * 페이지 주소(관리 토큰 포함)를 돌려준다. 금액은 그 화면이 서버에서 다시 읽는다.
+ */
+describe('계좌 입금 신청', () => {
+  beforeEach(() => {
+    (getFundingProject as jest.Mock).mockReturnValue(limitedProject);
+    (createFundingPledge as jest.Mock).mockResolvedValue({
+      ok: true, orderNo: 'FND-20261015-ABCDEF12', manageToken: 'tok/+x', holdExpiresAt: new Date('2026-10-18T03:00:00Z'),
+      amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 },
+    });
+  });
+
+  it('입금 안내 메일을 보내고 manageUrl을 돌려준다', async () => {
+    const r = await call({ ...body, paymentMethod: 'bank_transfer' });
+    expect(r.status).toBe(201);
+    expect(r.body).toMatchObject({
+      ok: true, paymentMethod: 'bank_transfer',
+      manageUrl: '/ko/funding/manage/FND-20261015-ABCDEF12?token=tok%2F%2Bx', totalAmount: 5000,
+    });
+    expect(deliverDepositGuide).toHaveBeenCalledWith('FND-20261015-ABCDEF12');
+    // 입금 대기는 공개 집계에 바로 들어가므로 목록·상세를 재검증한다.
+    expect(mockRevalidate).toHaveBeenCalledWith('/ko/funding/demo');
+  });
+
+  it('한정 수량 리워드는 400 — 주문을 만들지 않는다', async () => {
+    const r = await call({ ...body, ...cdBodyExtra, paymentMethod: 'bank_transfer' });
+    expect(r.status).toBe(400);
+    expect(createFundingPledge).not.toHaveBeenCalled();
+  });
+
+  it('같은 이메일로 잦으면 429 — 남의 주소로 안내 메일을 퍼붓지 못한다', async () => {
+    (consumeRateLimit as jest.Mock).mockImplementation(async (key: string) => !key.startsWith('funding_bank:email:'));
+    const r = await call({ ...body, paymentMethod: 'bank_transfer' });
+    expect(r.status).toBe(429);
+    expect(createFundingPledge).not.toHaveBeenCalled();
+    expect(consumeRateLimit).toHaveBeenCalledWith('funding_bank:email:a@b.com', 5, 3600);
+    // 이메일 상한에서 막혔으면 열린 건수 조회도 하지 않는다.
+  });
+
+  it('이메일 상한 키는 정규화한다 — +태그·gmail 점 별칭으로 우회할 수 없다', async () => {
+    await call({ ...body, paymentMethod: 'bank_transfer', customerEmail: 'Ho.Gil+x1@GoogleMail.com' });
+    expect(consumeRateLimit).toHaveBeenCalledWith('funding_bank:email:hogil@gmail.com', 5, 3600);
+    expect(countOpenBankDeposits).toHaveBeenCalledWith('demo', 'hogil@gmail.com');
+  });
+
+  it('같은 이메일로 이 프로젝트에 열린 입금 대기가 3건이면 409 — 주문을 만들지 않는다', async () => {
+    (countOpenBankDeposits as jest.Mock).mockResolvedValueOnce(3);
+    const r = await call({ ...body, paymentMethod: 'bank_transfer' });
+    expect(r.status).toBe(409);
+    expect(r.body.code).toBe('too_many_open_deposits');
+    expect(createFundingPledge).not.toHaveBeenCalled();
+  });
+
+  it('토스 신청은 입금 안내를 보내지 않는다', async () => {
+    (createFundingPledge as jest.Mock).mockResolvedValue({
+      ok: true, orderNo: 'FND-1', manageToken: 't', holdExpiresAt: new Date(), amounts: { itemAmount: 4545, vatAmount: 455, totalAmount: 5000 },
+    });
+    await call(body);
+    expect(deliverDepositGuide).not.toHaveBeenCalled();
   });
 });

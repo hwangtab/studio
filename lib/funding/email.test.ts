@@ -1,7 +1,7 @@
 jest.mock('../email/resend', () => ({ sendEmail: jest.fn().mockResolvedValue({ ok: true }) }));
 import { sendEmail } from '../email/resend';
 import { CUSTOMER_REPLY_TO, OPERATOR_EMAIL, OPERATOR_INBOX } from '../operatorContact';
-import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingListingNicknameAlert, sendFundingRefundRequestClearedEmails } from './email';
+import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingDepositGuideEmails, sendFundingListingNicknameAlert, sendFundingRefundRequestClearedEmails } from './email';
 
 const order = {
   id: 'o', orderNo: 'FND-20261015-ABCDEF12', type: 'funding', status: 'paid', manageToken: 'tok',
@@ -67,7 +67,7 @@ describe('제목 꼬리표 · 결제수단 라벨', () => {
   it('운영자 메일의 결제수단은 한글 라벨로 나간다 — enum 원문을 보이지 않는다', async () => {
     await sendFundingConfirmedEmails(order, project);
     const operator = (sendEmail as jest.Mock).mock.calls[1][0];
-    expect(operator.text).toContain('결제수단: 무통장');
+    expect(operator.text).toContain('결제수단: 계좌 입금');
     expect(operator.text).not.toContain('bank_transfer');
 
     (sendEmail as jest.Mock).mockClear();
@@ -323,5 +323,41 @@ describe('운영자 메일의 서포터 명단 표시', () => {
     expect(mail.text).toContain('닉네임: 연대하는 청취자');
     expect(mail.text).toContain('응원 메시지: 끝까지');
     expect(mail.text).toContain('/admin/funding/o');
+  });
+});
+
+/**
+ * 계좌 입금 안내 — 화면과 같은 것을 담는다(계좌·금액·보내는 분 이름·기한·확인 페이지). 계좌는
+ * lib/funding/bankAccount.ts 한 곳에서 읽는다. 기한은 안내일 뿐이라 위협 문구("취소됩니다")를 쓰지 않는다.
+ */
+describe('계좌 입금 안내 메일', () => {
+  it('고객 메일에 계좌·금액·입금자명 안내·기한(한국시간)·확인 페이지 주소', async () => {
+    expect(await sendFundingDepositGuideEmails(order, project)).toBeNull();
+    const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(customer.subject).toBe('[스튜디오 놀] 계좌 입금 안내 — 데모 앨범');
+    expect(customer.text).toContain('은행: 카카오뱅크');
+    expect(customer.text).toContain('계좌번호: 3333-12-5480849');
+    expect(customer.text).toContain('예금주: 황경하 / 스튜디오 놀');
+    expect(customer.text).toContain('입금하실 금액: 5,000원');
+    expect(customer.text).toContain('보내는 분 이름은 신청하신 분 성함(김후원)으로');
+    // holdExpiresAt 2026-10-15T15:00Z = 한국시간 10월 16일 오전 0시
+    expect(customer.text).toContain('10월 16일 오전 12:00(한국시간)까지');
+    expect(customer.text).toContain('영업일 1일 이내');
+    expect(customer.text).toContain('/ko/funding/manage/FND-20261015-ABCDEF12?token=tok');
+    expect(customer.text).not.toMatch(/취소됩니다|취소될|자동 취소/);
+  });
+  it('운영자 메일에는 입금 확인 안내와 관리자 링크, 자동 취소가 없다는 사실', async () => {
+    await sendFundingDepositGuideEmails(order, project);
+    const operator = (sendEmail as jest.Mock).mock.calls[1][0];
+    expect(operator.to).toBe(OPERATOR_EMAIL);
+    expect(operator.subject).toContain('계좌 입금 신청 5,000원');
+    expect(operator.text).toContain('입금 확인');
+    expect(operator.text).toContain('자동 취소 없음');
+    expect(operator.text).toContain('/admin/funding/o');
+  });
+  it('환불 요청 접수 메일에는 계좌번호를 싣지 않고 3영업일을 말한다', async () => {
+    await sendFundingCancelledEmails(order, project, 'refund_requested', 5000);
+    const customer = (sendEmail as jest.Mock).mock.calls[0][0];
+    expect(customer.text).toContain('5,000원을 적어 주신 환불 계좌로 접수일부터 3영업일 이내에');
   });
 });

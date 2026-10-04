@@ -9,6 +9,9 @@ import {
   hasProtectedMemoRecord, hasReviewMarker,
 } from '../../../../../lib/funding/admin-serialize';
 import { cancelFundingPledge } from '../../../../../lib/funding/cancel';
+import { cancelUnpaidBankDeposit, confirmBankDeposit, deliverDepositGuide } from '../../../../../lib/funding/bankTransfer';
+import { deleteRefundAccount } from '../../../../../lib/payments/refundAccount';
+import { revalidateFundingPaths } from '../../../../../lib/funding/revalidate';
 import { refundFundingLine } from '../../../../../lib/funding/lineRefund';
 import { sendFundingCancelledEmails, sendFundingConfirmedEmails, sendFundingRefundRequestClearedEmails } from '../../../../../lib/funding/email';
 import { setFulfillment } from '../../../../../lib/funding/fulfillment';
@@ -55,7 +58,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         reason: typeof b.reason === 'string' && b.reason ? b.reason : '관리자 환불',
         now,
       });
-      return r.ok ? res.status(200).json({ ok: true, mode: r.mode }) : res.status(CANCEL_STATUS[r.code] ?? 500).json({ ok: false, message: r.message });
+      return r.ok
+        ? res.status(200).json({ ok: true, mode: r.mode, ...(r.warnings?.length ? { message: r.warnings.join(' '), warnings: r.warnings } : {}) })
+        : res.status(CANCEL_STATUS[r.code] ?? 500).json({ ok: false, message: r.message });
+    }
+    /**
+     * 계좌 입금 확인 — 운영자가 통장에서 입금을 본 뒤 누른다(lib/funding/bankTransfer.ts).
+     * pending과 expired(늦은 입금)를 paid로. 두 번 눌러도 한 번만 전이하고 확정 메일도 한 번이다.
+     */
+    case 'confirm_deposit': {
+      const r = await confirmBankDeposit({ orderId: order.id, now });
+      if (!r.ok) {
+        const code = r.code === 'not_found' ? 404 : r.code === 'project_unavailable' ? 503 : 409;
+        return res.status(code).json({ ok: false, message: r.message });
+      }
+      // 늦은 입금(expired → paid)은 공개 집계에 새로 들어간다 — 재검증. 실패는 판정을 뒤집지 않고 알린다.
+      const revalidateError = await revalidateFundingPaths(res, order.fundingPledge.projectSlug);
+      const notes = [
+        ...(r.emailSent === false ? ['입금은 확인됐으나 확정 메일 발송에 실패했습니다. "메일 재발송"을 눌러 주세요.'] : []),
+        ...(r.warnings ?? []),
+        ...(revalidateError ? [`공개 페이지 ${revalidateError} — 최대 60초 뒤 반영됩니다.`] : []),
+      ];
+      return res.status(200).json({ ok: true, ...(notes.length ? { message: notes.join(' '), warnings: r.warnings ?? [] } : {}) });
+    }
+    /** 미입금 취소 — 받은 돈이 없으니 환불이 아니다. 후원자에게 메일을 보내지 않는다(bankTransfer.ts). */
+    case 'cancel_unpaid': {
+      const r = await cancelUnpaidBankDeposit(order);
+      if (!r.ok) return res.status(409).json({ ok: false, message: r.message });
+      // 입금 대기는 공개 모금액·명단에 들어가 있었다 — 닫았으니 빠진 숫자로 바로 다시 만든다.
+      const revalidateError = await revalidateFundingPaths(res, order.fundingPledge.projectSlug);
+      return res.status(200).json({ ok: true, ...(revalidateError ? { message: `취소했습니다. 공개 페이지 ${revalidateError} — 최대 60초 뒤 반영됩니다.` } : {}) });
+    }
+    /** 입금 안내 메일 재발송 — 입금 대기 중인 계좌 입금 신청만. 결과는 notification_error에 남는다. */
+    case 'resend_deposit_guide': {
+      if (order.status !== 'pending' || order.fundingPledge.paymentMethod !== 'bank_transfer') {
+        return res.status(409).json({ ok: false, message: '입금 대기 중인 계좌 입금 신청에만 입금 안내를 다시 보낼 수 있습니다.' });
+      }
+      const err = await deliverDepositGuide(order.orderNo);
+      return err ? res.status(502).json({ ok: false, message: err }) : res.status(200).json({ ok: true });
     }
     /** 줄 단위 부분 환불 — 담은 리워드 중 하나(의 일부 수량)만 돌려준다(lib/funding/lineRefund.ts). */
     case 'refund_line': {
@@ -117,6 +157,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         .set({ refundRequestedAt: null, adminMemo: memo, updatedAt: now })
         .where(and(eq(fundingPledges.id, order.fundingPledge.id), memoUnchanged(order.fundingPledge.adminMemo)));
       if (rowsAffectedOf(cleared) === 0) return res.status(409).json({ ok: false, message: MEMO_CONFLICT_MESSAGE });
+      // 계좌 입금 후원이 함께 적은 환불 계좌는 더 쓸 데가 없다 — 지금 지운다(실패는 삼킨다;
+      // 남아도 주문의 5년 파기 때 함께 지워진다, lib/privacy/orderRetention.ts).
+      await deleteRefundAccount({ kind: 'funding', orderNo: order.orderNo });
       // 메일 실패가 기록을 되돌리지는 않는다(이 저장소의 원칙: 상태 변경은 끝났으므로
       // 후속 실패는 삼키되 기록한다). notificationError는 헬스체크가 매일 읽는다.
       // 플레이스홀더 주소로는 보내지 않는다 — 반송이 발신 도메인 평판을 깎는다(cancel.ts와 같은 가드).
@@ -306,7 +349,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
          * 돌려준 몫까지 다시 돌려주는 것처럼 읽힌다(email.ts CANCEL_BODY 주석).
          *
          * 토스 건은 refunds에 done 행이 남으므로 `총액 − 잔액`이 실제로 나간 금액이다.
-         * 토스 결제가 없는 옛 무통장·수기 건은 cancel.ts가 refunds 행을 만들지 않고
+         * 토스 결제가 없는 계좌 입금·수기 건은 cancel.ts가 refunds 행을 만들지 않고
          * 'recorded'(계좌 송금 완료 안내) 모드로 **잔액 전부**를 보냈으므로 그 값을 쓴다.
          */
         const remaining = remainingRefundable(order);

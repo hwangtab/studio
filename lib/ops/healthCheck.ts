@@ -181,15 +181,26 @@ export const checkFieldKeyRotationPending = async (): Promise<HealthIssue | null
   const db = getDb();
   const counts: Array<{ label: string; count: number }> = [];
   for (const target of ENCRYPTED_FIELD_TARGETS) {
-    const [row] = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(target.table)
-      .where(
-        and(
-          isNotNull(target.valueColumn),
-          sql`substr(${target.valueColumn}, 1, ${expectedPrefix.length}) <> ${expectedPrefix}`,
-        ),
-      );
+    /**
+     * 대상 하나를 못 읽어도 나머지는 센다 — 새 암호화 표(예: 0048 refund_accounts)를 담은
+     * 코드가 마이그레이션보다 먼저 배포되면 그 표가 없어 여기서 던지고, 그러면 점검 크론 전체가
+     * 멈춘다. 표가 없다는 사실은 같은 크론의 마이그레이션 드리프트 점검이 보고한다.
+     */
+    let row: { count: number } | undefined;
+    try {
+      [row] = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(target.table)
+        .where(
+          and(
+            isNotNull(target.valueColumn),
+            sql`substr(${target.valueColumn}, 1, ${expectedPrefix.length}) <> ${expectedPrefix}`,
+          ),
+        );
+    } catch (error) {
+      console.error(`[health] 회전 대기 집계 실패 — ${target.label}는 건너뛴다`, error);
+      continue;
+    }
     const count = Number(row?.count ?? 0);
     if (count > 0) counts.push({ label: target.label, count });
   }
@@ -676,7 +687,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
   }
 
   /**
-   * 무통장 후원자가 셀프 취소를 요청했는데 돈이 아직 안 나간 건. 무통장은 자동 환불
+   * 계좌 입금 후원자가 셀프 취소를 요청했는데 돈이 아직 안 나간 건. 계좌 입금은 자동 환불
    * 경로가 없어 refundRequestedAt만 찍히고 orders.status는 paid로 남으므로(설계상 옳다 —
    * 운영자가 계좌로 송금해야 한다), 아무도 안 보면 약관 제10조가 약속한 "청약철회
    * 접수일부터 3영업일 이내 환불"을 조용히 넘긴다. 그 사이 이 건은 발송 CSV에도 실린다.
@@ -711,7 +722,7 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
           : `계좌 환불을 기다리는 취소 요청 ${refundPending.length}건`,
       detail:
         `주문번호: ${sample((overdue.length > 0 ? overdue : refundPending).map((row) => row.orderNo))}\n` +
-        '무통장이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불을 처리해 주세요.\n' +
+        '계좌 입금이라 돈이 자동으로 나가지 않습니다. 관리자 > 펀딩 상세에서 환불 계좌를 열어 송금한 뒤 "송금 완료(환불 기록)"를 눌러 주세요.\n' +
         '처리 전까지 이 펀딩은 발송 대상이 아닙니다 — 관리자 CSV의 shipHold 칸과 개설자 배송 목록·CSV의 ' +
         '"발송 금지" 칸에 "발송금지"로 나오고, ' +
         '발송 상태 변경은 API에서 막힙니다.',
@@ -880,6 +891,38 @@ export const collectDbIssues = async (now: Date): Promise<HealthIssue[]> => {
         '기록 뒤 환불 또는 세금 유형 변경으로 계산값이 달라졌습니다. 기록값 그대로 이체하면 ' +
         '금액이 어긋납니다 — 관리자 > 펀딩 상세의 정산 패널에서 차이를 확인하고 이체 금액을 ' +
         '판단해 주세요.',
+    });
+  }
+
+  /**
+   * **이체를 마친 정산 뒤에 확정된 계좌 입금.** 위 드리프트 점검은 이체 전(`pending`) 정산만 본다 —
+   * 이체 뒤의 차이는 끌 수단이 없어서다. 그런데 계좌 입금은 자동 취소가 없어 마감·정산 뒤에도 늦은
+   * 입금이 확정될 수 있고, 그러면 개설자에게 **추가로 보낼 몫**이 생긴다(확정 화면이 경고하지만
+   * 그 경고를 놓치면 아무도 모른다). 확정 시각이 최근 30일 안인 건만 센다 — 그보다 오래된 건은 이미
+   * 한 달 내내 보고됐으므로, 영구 경보로 신호가 죽는 것을 막는다.
+   */
+  const LATE_DEPOSIT_WINDOW_S = 30 * 24 * 60 * 60;
+  const lateDeposits = await db.all<{ order_no: string; slug: string }>(sql`
+    SELECT o.order_no AS order_no, p.slug AS slug
+    FROM funding_pledges fp
+    JOIN orders o ON o.id = fp.order_id
+    JOIN funding_projects p ON p.slug = fp.project_slug
+    JOIN funding_project_payouts pp ON pp.project_id = p.id
+    WHERE pp.status = 'paid' AND pp.paid_at IS NOT NULL
+      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
+      AND fp.paid_at IS NOT NULL AND fp.paid_at > pp.paid_at
+      AND fp.paid_at > ${Math.floor(now.getTime() / 1000) - LATE_DEPOSIT_WINDOW_S}
+      AND o.status IN (${sql.join(LIVE_FUNDING_ORDER_STATUSES.map((st) => sql`${st}`), sql`, `)})
+  `);
+  if (lateDeposits.length > 0) {
+    issues.push({
+      severity: 'high',
+      href: '/admin/funding/projects',
+      title: `정산 이체 뒤에 확정된 계좌 입금 ${lateDeposits.length}건`,
+      detail:
+        `${sample(lateDeposits.map((r) => `${r.slug} · ${r.order_no}`))}\n` +
+        '정산을 이체한 뒤 늦은 계좌 입금을 확정해 모금액이 늘었습니다. 개설자에게 추가로 보낼 몫을 ' +
+        '정산 패널에서 계산해 처리해 주세요. 이 항목은 확정 후 30일 동안 보고됩니다.',
     });
   }
 

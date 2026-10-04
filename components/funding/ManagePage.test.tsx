@@ -23,6 +23,7 @@ const baseProps = {
   displayNamePublic: true, canEditDisplayName: true,
   customerName: '가나', publicName: null, supporterMessage: null,
   listingHidden: false, messageShownAnonymously: false,
+  refundVia: 'card' as 'card' | 'bank_account' | null, deposit: null, onlineBankTransfer: false,
 };
 
 describe('manage 화면 — 셀프 취소 직후', () => {

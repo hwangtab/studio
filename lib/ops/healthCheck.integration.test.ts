@@ -943,6 +943,39 @@ describe('기록된 정산액과 현재 계산값의 드리프트', () => {
   });
 });
 
+/**
+ * 이체를 마친 정산 뒤에 확정된 계좌 입금 — 위 드리프트 점검은 pending 정산만 봐서 놓친다(리뷰 2026-10-04).
+ * 확정 뒤 30일 동안만 보고한다(영구 경보 방지).
+ */
+describe('정산 이체 뒤에 확정된 계좌 입금', () => {
+  const LATE_TITLE = '정산 이체 뒤에 확정된 계좌 입금';
+  const seed = async (bankPaidAt: number) => {
+    await client.execute(`INSERT INTO funding_creators (id, email, name) VALUES ('crl', 'l@example.com', '개설자')`);
+    await client.execute(
+      `INSERT INTO funding_projects (id, slug, creator_id, title, summary, content, cover_url, goal_amount, start_at, end_at, review_status, status)
+       VALUES ('pl', 'late-deposit', 'crl', 'T', 'S', 'C', '/c.webp', 100000, unixepoch() - 100, unixepoch() - 10, 'approved', 'closed')`,
+    );
+    await client.execute(
+      `INSERT INTO funding_project_payouts (id, project_id, gross_amount, refund_amount, supply_amount, fee_amount, share_amount, withholding_amount, net_amount, backer_count, status, paid_at)
+       VALUES ('pol', 'pl', 100000, 0, 90909, 8000, 92000, 0, 92000, 1, 'paid', ${EPOCH('2026-09-01')})`,
+    );
+    await insertOrder({ status: 'paid', total_amount: 30000 });
+    await insertFundingPledge({ project_slug: 'late-deposit', payment_method: 'bank_transfer', entry_source: 'online', paid_at: bankPaidAt });
+  };
+
+  it('이체 뒤(최근 30일 안)에 확정된 계좌 입금을 high로 알린다', async () => {
+    await seed(EPOCH('2026-09-07'));
+    const issue = (await runHealthCheck(NOW)).issues.find((i) => i.title.includes(LATE_TITLE));
+    expect(issue?.severity).toBe('high');
+    expect(issue?.detail).toContain('late-deposit');
+  });
+
+  it('이체 전에 확정된 건은 아니다', async () => {
+    await seed(EPOCH('2026-08-20'));
+    expect(await titles()).toEqual(expect.not.arrayContaining([expect.stringContaining(LATE_TITLE)]));
+  });
+});
+
 describe('계약 위생 점검', () => {
   const DRAFT_TITLE = '계약 초안';
   const NOTIFY_TITLE = '후처리 기록이 없는 계약';

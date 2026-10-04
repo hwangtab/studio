@@ -235,6 +235,8 @@ describe('심사 상세 getServerSideProps — 정산', () => {
         'designFeeOffsetAmount', 'productionFeeOffsetAmount', 'shortfallAmount', 'serviceChargesUnavailable',
         // 원천징수 개설자의 부가세 상당액(개설자 약관 제6조) — 금액일 뿐 민감 정보가 아니다.
         'vatDeductionAmount',
+        // 입금 확인 전이라 정산에서 뺀 계좌 입금 대기 — 건수·금액뿐.
+        'awaitingDepositCount', 'awaitingDepositAmount',
       ].sort(),
     );
     expect(payout.netAmount).toBe(880_937);
