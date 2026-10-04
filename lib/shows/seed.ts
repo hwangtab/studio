@@ -7,7 +7,7 @@ import type { LibSQLDatabase } from 'drizzle-orm/libsql';
 import * as schema from '../../db/schema';
 import { showTicketTypes, showtimes, shows, showZones } from '../../db/schema';
 import { validateShowSlug } from './reservedSlugs';
-import { performerNames, serializeNotices, serializePerformers, type ShowPerformer } from './structured';
+import { descriptionBlocks, performerNames, serializeNotices, serializePerformers, type ShowPerformer } from './structured';
 import { salesCloseAt } from './time';
 
 /**
@@ -86,6 +86,7 @@ export function validateShowDefinition(def: ShowDefinition): string[] {
   for (const key of ['title', 'presenterName', 'ageRating', 'venueName', 'venueAddress', 'description'] as const) {
     if (!def[key].trim()) errors.push(`${key}가 비어 있습니다.`);
   }
+  if (descriptionBlocks(def.description)[0]?.type !== 'p') errors.push('description은 문단으로 시작해야 합니다(첫 문단이 검색 결과·OG 요약이 된다).');
   if (def.title.includes(' — ')) errors.push('title에 " — "로 부제를 끼우지 말고 subtitle 칸을 쓰세요.');
   if (def.performers.length === 0) errors.push('출연진이 하나 이상 필요합니다.');
   const performerNameSet = new Set<string>();

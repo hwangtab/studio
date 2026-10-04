@@ -13,7 +13,7 @@ const show: PublicShow = {
   slug: 's', title: '공연 제목', subtitle: '부제', presenterName: '주최측',
   performers: [{ name: '출연자', bio: '소개', photo: null, sns: null }],
   ageRating: '전체 관람가', runningMinutes: 100, venueName: '장소', venueAddress: '주소 1',
-  description: '첫 문단\n\n둘째 문단', coverImage: '/images/shows/x.webp', ogImage: null,
+  description: '첫 문단\n\n## 소제목\n\n> "인용"\n— 누구\n\n둘째 문단', coverImage: '/images/shows/x.webp', ogImage: null,
   scheduleNote: '18:00 식사', onSitePriceNote: '현장 판매 안내', notices: ['안내 하나'], mapUrl: 'https://naver.me/x',
   cancelled: false,
   ticketTypes: [{ id: 'tt1', name: '사전 예매', price: 25000, zoneLabel: '비지정석' }],
@@ -29,6 +29,8 @@ describe('ShowDetailView', () => {
     expect(screen.getByText('현장 판매 안내')).toBeTruthy();
     expect(screen.getByText('안내 하나')).toBeTruthy();
     expect(screen.getByText('첫 문단')).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 3, name: '소제목' })).toBeTruthy();
+    expect(screen.getByText('— 누구').closest('blockquote')).not.toBeNull();
     expect(screen.getByText('출연자')).toBeTruthy();
     expect(screen.getByRole('link', { name: '네이버 지도에서 보기' }).getAttribute('href')).toBe('https://naver.me/x');
     expect(screen.getByTitle('장소 위치 지도')).toBeTruthy();
@@ -41,8 +43,9 @@ describe('ShowDetailView', () => {
     ctas.forEach((a) => expect(a.getAttribute('href')).toBe('#book'));
   });
 
-  it('포스터는 히어로 안 카드가 아니라 본문에서 원본 링크와 함께 보인다', () => {
+  it('히어로 배경은 흐림 클래스를 달고(공용 ImageHero는 그대로), 포스터는 히어로 안 카드가 아니라 본문에서 원본 링크와 함께 보인다', () => {
     const { container } = render(<ShowDetailView show={show} />);
+    expect((container.querySelector('section') as HTMLElement).className).toContain('blur-2xl');
     const poster = screen.getByAltText('공연 제목 포스터');
     expect(poster).toBeTruthy();
     const link = screen.getByRole('link', { name: '공연 제목 포스터 원본 크게 보기' });
