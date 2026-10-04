@@ -1,5 +1,5 @@
 import SEO from '../../../components/SEO';
-import ImageHero, { HERO_SCRIM_STRONG } from '../../../components/common/ImageHero';
+import ImageHero from '../../../components/common/ImageHero';
 import ShowCard from '../../../components/shows/ShowCard';
 import { Section } from '../../../components/ui/Section';
 import SectionHeading from '../../../components/ui/SectionHeading';
@@ -41,7 +41,6 @@ export default function ShowsIndexPage({ upcoming, past, nowSec }: Props) {
       <ImageHero
         locale="ko"
         priority
-        overlayGradient={HERO_SCRIM_STRONG}
         backgroundImage={pickHeroImage(upcoming, past)}
         className={SHOW_HERO_BLUR_CLASS}
         imageAlt=""
