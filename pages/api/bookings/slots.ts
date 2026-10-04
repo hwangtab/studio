@@ -8,7 +8,7 @@ import { daysUntilKst, kstDateTime } from '../../../lib/booking/kst';
 import { occupancyConflictKeys, getProduct, productHours, resolveHours, resourceKindOf } from '../../../lib/booking/products';
 import { occupancyCalendars } from '../../../lib/booking/calendarGuard';
 import { buildDaySlots, mergeRoomSlots, type DaySlot } from '../../../lib/booking/slots';
-import { expireStaleOrders, PENDING_HOLD_SECONDS } from '../../../lib/booking/service';
+import { expireStaleOrders, occupiedBookingSql } from '../../../lib/booking/service';
 import { MAX_BOOK_DAYS, MIN_LEAD_HOURS } from '../../../lib/booking/validation';
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
@@ -73,7 +73,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(400).json({ ok: false, message: `예약은 ${MAX_BOOK_DAYS}일 이내만 가능합니다.` });
 
   const db = getDb();
-  const pendingCutoff = new Date(now.getTime() - PENDING_HOLD_SECONDS * 1000);
 
   /**
    * 한 자원(녹음실=null 또는 방 번호)의 DB 바쁨. 예약은 occupancyConflictKeys로 — 녹음실과
@@ -94,10 +93,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             occupancyCond,
             lt(bookings.startAt, dayEnd),
             gt(bookings.endAt, dayStart),
-            or(
-              eq(bookings.status, 'confirmed'),
-              and(eq(bookings.status, 'pending'), gt(bookings.createdAt, pendingCutoff)),
-            ),
+            // 점유 집합은 생성 가드와 같은 정의 하나 — 확정·토스 15분 홀드·계좌 입금 대기(기한 없음).
+            occupiedBookingSql('bookings'),
           ),
         ),
       db

@@ -17,5 +17,7 @@ export const SHOW_REFUND_REJECT_MESSAGES: Record<string, string> = {
   toss_failed: '결제사에서 환불을 처리하지 못했습니다. 잠시 후 다시 시도하거나 문의해 주세요. 문의 010-4255-7893',
   comp_ticket: '초대권은 환불 대상이 아닙니다.',
   toss_unknown: '환불 결과를 아직 확인하지 못했습니다. 중복 환불은 일어나지 않으니, 잠시 뒤 새로고침해 상태를 확인해 주세요. 계속 반영되지 않으면 문의 010-4255-7893',
+  refund_account_invalid: '환불받을 은행·계좌번호·예금주를 확인해 주세요.',
+  refund_account_unavailable: '지금은 환불 계좌를 접수할 수 없습니다. 잠시 후 다시 시도하거나 문의해 주세요. 문의 010-4255-7893',
   default: '환불을 처리하지 못했습니다. 문의 010-4255-7893',
 };

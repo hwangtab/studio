@@ -1,5 +1,5 @@
 /**
- * 펀딩 **계좌 입금**의 고유 규칙 — 한정 리워드 불가, 온라인 계좌 입금 판정, 열린 신청 상한.
+ * 펀딩 **계좌 입금**의 고유 규칙 — 한정 리워드 불가, 온라인 계좌 입금 판정.
  *
  * 계좌·기한·안내 표기·입력 상한처럼 결제 종류와 무관한 것은 lib/payments/bankAccount.ts(결제 공용)에 있다.
  *
@@ -45,10 +45,3 @@ export const BANK_TRANSFER_BLOCK_MESSAGES: Record<BankTransferBlockCode, string>
  */
 export const isOnlineBankTransfer = (pledge: { paymentMethod: string; entrySource: string }): boolean =>
   pledge.paymentMethod === 'bank_transfer' && pledge.entrySource === 'online';
-
-/**
- * 같은 이메일(정규화)로 **한 프로젝트에 동시에 열려 있을 수 있는** 계좌 입금 대기 건수. 계좌 입금은
- * 자동 취소가 없어 열린 신청이 쌓이기만 한다 — 실수로 두세 번 누르는 것까지는 받되, 그 이상은 막고
- * 이미 받은 안내를 쓰라고 말한다.
- */
-export const MAX_OPEN_BANK_DEPOSITS_PER_EMAIL = 3;

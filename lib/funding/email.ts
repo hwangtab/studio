@@ -179,12 +179,16 @@ export const sendFundingConfirmedEmails = (order: FundingOrder, project: Funding
  *
  * `deadline`은 `funding_pledges.hold_expires_at`(신청 때 저장한 기한)이다.
  */
-export const sendFundingDepositGuideEmails = (order: FundingOrder, project: FundingProject | null): Promise<string | null> => {
+export const sendFundingDepositGuideEmails = (
+  order: FundingOrder,
+  project: FundingProject | null,
+  opts: { skipCustomer?: boolean } = {},
+): Promise<string | null> => {
   const deadline = order.fundingPledge?.holdExpiresAt ?? null;
   const deadlineLine = deadline
     ? `${formatKstDeadline(deadline)}(한국시간)까지 입금해 주시면, 확인한 뒤 메일로 알려 드립니다(영업일 1일 이내).`
     : '입금해 주시면 확인한 뒤 메일로 알려 드립니다(영업일 1일 이내).';
-  return send(withoutUndeliverableCustomer(order, [
+  const pairs = withoutUndeliverableCustomer(order, [
     { key: 'customer', params: {
       to: order.customerEmail, replyTo: CUSTOMER_REPLY_TO,
       subject: `[스튜디오 놀] 계좌 입금 안내${titleSuffix(project)}`,
@@ -218,7 +222,8 @@ export const sendFundingDepositGuideEmails = (order: FundingOrder, project: Fund
         `관리자: ${adminPledgeUrl(order)}`,
       ].filter(Boolean).join('\n'),
     } },
-  ]));
+  ]);
+  return send(opts.skipCustomer ? pairs.filter((p) => p.key !== 'customer') : pairs);
 };
 
 

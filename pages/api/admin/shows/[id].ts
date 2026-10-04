@@ -12,6 +12,9 @@ import { sendShowRefundEmail, sendShowtimeCancelledEmail } from '../../../../lib
 import { refundShowTickets } from '../../../../lib/shows/refund';
 import { issueCompTickets, revokeCompTicket } from '../../../../lib/shows/service';
 import { cancelShowtime, changeShowtime } from '../../../../lib/shows/showtimeOps';
+import { cancelAwaitingShowDeposit, confirmShowBankDeposit, deliverShowDepositGuide } from '../../../../lib/shows/bankDeposit';
+import { AWAITING_DEPOSIT, bankDepositStateOf } from '../../../../lib/payments/bankDeposit';
+import { markRefundAccountRefunded } from '../../../../lib/payments/refundAccount';
 
 /**
  * 관리자 공연 운영 액션 — 한 라우트에 action으로 갈린다(pages/api/admin/funding/pledges/[id].ts와 같은 형태).
@@ -32,6 +35,8 @@ const REFUND_REASON_MESSAGE: Record<string, string> = {
   ticket_not_found: '이 주문에 없는 티켓이 포함돼 있습니다.',
   checked_in: '이미 입장한 티켓은 환불할 수 없습니다.',
   not_issued: '발권된 티켓만 환불할 수 있습니다.',
+  after_showtime_start: '공연이 시작된 뒤라 환불표상 환불액이 없습니다.',
+  refund_account_unavailable: '환불 계좌 표를 읽거나 쓸 수 없습니다(마이그레이션 0048·키 확인).',
 };
 
 const sqlUpdateStatus = (showId: string, status: 'draft' | 'published', now: Date) =>
@@ -129,14 +134,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const r = await cancelShowtime(showtime.id, now, { cancelPayment });
       for (const { orderNo } of affected) {
         try {
-          await sendShowtimeCancelledEmail(orderNo, { refundCompleted: !r.failedOrders.includes(orderNo) });
+          await sendShowtimeCancelledEmail(orderNo, {
+            refundCompleted: !r.failedOrders.includes(orderNo) && !r.bankRefundOrders.includes(orderNo),
+            ...(r.bankRefundOrders.includes(orderNo) ? { bankNotice: 'refund_account_needed' as const } : {}),
+          });
         } catch (error) {
           console.error('[admin-shows] 회차 취소 안내 메일 실패', { orderNo, error });
         }
       }
+      // 입금 전이던 계좌 입금 신청 — 입금하지 말라고 알린다(받은 돈이 없어 환불 안내가 아니다).
+      for (const orderNo of r.closedDepositOrders) {
+        try {
+          await sendShowtimeCancelledEmail(orderNo, { refundCompleted: false, bankNotice: 'not_deposited' });
+        } catch (error) {
+          console.error('[admin-shows] 회차 취소 안내 메일 실패(입금 전 신청)', { orderNo, error });
+        }
+      }
       await revalidateShow(res, show.slug);
       // 일부 주문의 환불이 실패해도 회차는 이미 취소됐다 — 실패 주문을 응답에 실어 운영자가 이어서 처리한다.
-      return res.status(200).json({ ok: true, refundedOrders: r.refundedOrders, failedOrders: r.failedOrders });
+      // 계좌 입금 주문은 토스로 돌려줄 수 없어 고객이 환불 계좌를 적거나 운영자가 송금 뒤 "환불"로 기록한다.
+      return res.status(200).json({
+        ok: true, refundedOrders: r.refundedOrders, failedOrders: r.failedOrders,
+        bankRefundOrders: r.bankRefundOrders, closedDepositOrders: r.closedDepositOrders,
+      });
     }
 
     case 'change_showtime': {
@@ -161,7 +181,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const r = await refundShowTickets({ orderNo, ticketIds, noticeAt: now }, { cancelPayment });
       if (r.status === 'refunded') {
         try {
-          await sendShowRefundEmail(orderNo, { refundedAmount: r.amount, fullyRefunded: r.orderStatus === 'refunded' });
+          await sendShowRefundEmail(orderNo, { refundedAmount: r.amount, fullyRefunded: r.orderStatus === 'refunded', refundVia: r.refundVia });
         } catch (error) {
           console.error('[admin-shows] 환불 메일 실패', { orderNo, error });
         }
@@ -171,6 +191,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(504).json({ ok: false, message: '토스 응답을 받지 못했습니다. 취소가 이미 됐을 수 있으니 토스 콘솔에서 확인해 주세요.' });
       }
       return res.status(409).json({ ok: false, message: REFUND_REASON_MESSAGE[r.reason] ?? `환불할 수 없습니다(${r.reason}).` });
+    }
+
+    /**
+     * 계좌 입금(lib/shows/bankDeposit.ts) — 입금 확인(발권·티켓 메일) · 미입금 취소 · 입금 안내 재발송 ·
+     * 환불 송금 완료. 판정은 고객 화면과 같은 bankDepositStateOf.
+     */
+    case 'confirm_deposit':
+    case 'cancel_unpaid_deposit':
+    case 'resend_deposit_guide':
+    case 'mark_refund_sent': {
+      const orderNo = isNonEmptyString(b.orderNo) ? b.orderNo : '';
+      const showtimeIds = new Set(show.showtimes.map((s) => s.id));
+      const showOrder = orderNo ? await db.query.showOrders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) }) : undefined;
+      if (!showOrder || !showtimeIds.has(showOrder.showtimeId)) return res.status(404).json({ ok: false, message: '이 공연의 주문이 아닙니다.' });
+      const order = await db.query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo), with: { payments: true } });
+      if (!order) return res.status(404).json({ ok: false, message: '주문을 찾을 수 없습니다.' });
+      const state = bankDepositStateOf(order);
+      if (b.action === 'mark_refund_sent') {
+        if (state !== 'paid') return res.status(409).json({ ok: false, message: '계좌 입금 주문이 아닙니다.' });
+        await markRefundAccountRefunded({ kind: 'show', orderNo }, now);
+        return res.status(200).json({ ok: true });
+      }
+      if (order.status !== AWAITING_DEPOSIT) return res.status(409).json({ ok: false, message: '입금 대기 중인 계좌 입금 신청이 아닙니다. 새로고침해 주세요.' });
+      if (b.action === 'confirm_deposit') {
+        const r = await confirmShowBankDeposit({ orderId: order.id, now });
+        if (!r.ok) return res.status(r.code === 'not_found' ? 404 : 409).json({ ok: false, message: r.message });
+        await revalidateShow(res, show.slug);
+        return res.status(200).json({ ok: true, emailSent: r.emailSent ?? null });
+      }
+      if (b.action === 'cancel_unpaid_deposit') {
+        const r = await cancelAwaitingShowDeposit({ orderId: order.id });
+        if (!r.ok) return res.status(r.code === 'not_found' ? 404 : 409).json({ ok: false, message: r.message });
+        await revalidateShow(res, show.slug);
+        return res.status(200).json({ ok: true });
+      }
+      const failure = await deliverShowDepositGuide(orderNo);
+      return res.status(200).json({ ok: true, notificationError: failure });
     }
 
     case 'issue_scan_link': {

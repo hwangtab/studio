@@ -98,7 +98,7 @@ const ROTATION_ACCESS_ACTIONS: Record<string, PrivacyAccessAction> = {
   'funding_creators.resident_number_enc': 'funding_resident_number_decrypt_check',
   'funding_creators.payout_account_enc': 'funding_payout_account_decrypt_check',
   // 환불 계좌는 점검용 이름을 따로 두지 않았다 — 조회와 같은 이름에 수행자(rotation-cli)가 경로를 가른다.
-  'refund_accounts.account_number_enc': 'funding_refund_account_view',
+  'refund_accounts.account_number_enc': 'refund_account_view',
 };
 
 /**

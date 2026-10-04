@@ -5,6 +5,9 @@ import { consumeRateLimit } from '../../../lib/booking/rate-limit';
 import { createMixingOrder } from '../../../lib/booking/service';
 import { readPreviousOrderNo } from '../../../lib/booking/token';
 import { validateCreateMixingOrderPayload } from '../../../lib/booking/validation';
+import { deliverBookingDepositGuide } from '../../../lib/booking/bankDeposit';
+import { getDb } from '../../../db/client';
+import { isCheckoutPaymentMethod } from '../../../lib/payments/bankDeposit';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   res.setHeader('Cache-Control', 'no-store');
@@ -19,7 +22,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const validated = validateCreateMixingOrderPayload(req.body, now);
   if (!validated.ok) return res.status(400).json({ ok: false, message: validated.message });
 
-  const result = await createMixingOrder(validated.value, now, { releaseOrderNo: readPreviousOrderNo(req.body) });
+  // 결제수단 — 없으면 토스. 믹싱은 잡는 시간대가 없어 임박 차단이 없다(lib/payments/bankDeposit.ts).
+  const rawMethod = (req.body as Record<string, unknown>).paymentMethod;
+  if (rawMethod !== undefined && !isCheckoutPaymentMethod(rawMethod))
+    return res.status(400).json({ ok: false, message: '결제 방법을 다시 골라 주세요.' });
+  const paymentMethod = rawMethod ?? 'toss';
+  const result = await createMixingOrder(validated.value, now, { releaseOrderNo: readPreviousOrderNo(req.body), paymentMethod });
+  if (paymentMethod === 'bank_transfer') {
+    await deliverBookingDepositGuide(result.orderNo, { throttleCustomer: true });
+    const created = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, result.orderNo) });
+    return res.status(201).json({
+      ok: true, orderNo: result.orderNo, paymentMethod: 'bank_transfer', totalAmount: result.totalAmount,
+      manageUrl: `/ko/booking/manage/${result.orderNo}?token=${created?.manageToken ?? ''}`,
+    });
+  }
   return res.status(201).json({
     ok: true,
     orderNo: result.orderNo,

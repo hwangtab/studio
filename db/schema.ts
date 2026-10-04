@@ -262,6 +262,26 @@ export const orderStatusEnum = [
    * 없다(그 모듈은 같은 함수 안에서 즉시 처리해 별도 표식이 필요 없다).
    */
   'auto_cancel_pending',
+  /**
+   * **계좌 입금(무통장) 대기** — 공연 티켓·연습실/녹음 예약·믹싱 주문(2026-10-04). 고객이 결제 폼에서
+   * "계좌로 직접 입금"을 고르면 주문이 이 상태로 바로 만들어진다. 펀딩은 `pending` + `payment_method`
+   * 칸으로 가르지만(funding_pledges), `orders`에는 결제수단 칸이 없고 칸을 더하면 관계 조회가 전체
+   * 컬럼을 SELECT해 마이그레이션 전 배포에서 결제 확인이 깨진다 — 그래서 상태 값을 하나 더했다(위
+   * `auto_cancel_pending`과 같은 이유로 마이그레이션이 필요 없다).
+   *
+   * `pending`과 다른 값이라 **토스 홀드 만료 경로가 전부 자동으로 건너뛴다**(그 경로들은 `status =
+   * 'pending'`만 본다 — 자동 취소 없음이 이 계좌 입금의 규칙이다). 반대로 자원을 잡는 쪽(공연 좌석·예약
+   * 시간대)은 이 상태를 점유로 세야 한다 — lib/payments/bankDeposit.ts 머리 주석이 그 지점들을 적는다.
+   * 토스 확정 경로(acceptableStatuses)에는 넣지 않는다 — 이 주문은 토스 결제가 없다.
+   */
+  'awaiting_deposit',
+  /**
+   * 계좌 입금 대기를 **입금 전에 닫았다** — 관리자 "미입금 취소" 또는 고객의 "입금 전 신청 취소".
+   * 받은 돈이 없어 환불이 아니고 메일도 없다. `expired`(토스 결제 만료)와 따로 두는 이유: 관리자가 같은
+   * 이름의 입금 신청 후보를 볼 때 "계좌 입금으로 신청했다가 닫힌 건"을 골라 보여야 늦은 입금을 놓치지
+   * 않는다. 좌석·시간대는 이 상태가 되는 순간 풀린다(같은 batch에서 티켓 void·예약 cancelled).
+   */
+  'deposit_cancelled',
 ] as const;
 export const orderTypeEnum = ['session', 'mixing', 'subscription', 'funding', 'ticket'] as const;
 export const bookingStatusEnum = ['pending', 'confirmed', 'completed', 'no_show', 'cancelled'] as const;
@@ -1350,13 +1370,19 @@ export const privacyAccessActionEnum = [
    */
   'funding_payout_account_email',
   /**
-   * 계좌 입금 후원자가 적은 환불 계좌 조회
-   * (pages/api/admin/funding/pledges/[id]/refund-account.ts). 운영자가 송금하려고 "계좌 보기"를
-   * 누른 때다. 키 회전 CLI가 이 컬럼을 여는 일도 같은 이름으로 남긴다(수행자 `rotation-cli`가
-   * 경로를 가른다 — fieldKeyRotation.ts의 ROTATION_ACCESS_ACTIONS). 컬럼이 enum 문자열이라
-   * 마이그레이션이 필요 없다(DB CHECK 없음).
+   * **옛 이름** — 2026-10-04 하루 동안 펀딩 환불 계좌 조회가 이 이름으로 남았다. 지금은 아래
+   * `refund_account_view`를 쓴다. 이미 적힌 행을 접속기록 화면이 읽어야 하므로 값은 지우지 않는다.
+   * 컬럼이 enum 문자열이라 마이그레이션이 필요 없다(DB CHECK 없음).
    */
   'funding_refund_account_view',
+  /**
+   * 계좌 입금 주문의 **환불 계좌** 조회 — 결제 공용(`refund_accounts`). 펀딩·공연·예약·믹싱이 같은
+   * 이름을 쓴다(2026-10-04 공연·예약·믹싱에 계좌 입금을 붙이며 도메인 중립 이름으로 바꿨다). 대상은
+   * 주문 id(`orders.id` — 공연 주문도 `orders` 행이 있다). 위 `funding_refund_account_view`는 이미 남은
+   * 기록을 읽기 위해 값으로 남겨 둔다(새로 쓰지 않는다). 키 회전 CLI가 이 컬럼을 여는 일도 이 이름으로
+   * 남긴다(수행자 `rotation-cli`).
+   */
+  'refund_account_view',
   /**
    * 관리자 펀딩 주문 CSV 내려받기 (pages/api/admin/funding/export.ts).
    * 25열 중 11열이 개인정보(이름·연락처·이메일·배송지 6열·응원 메시지)이고 건수 상한이

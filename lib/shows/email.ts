@@ -6,7 +6,15 @@ import { CUSTOMER_REPLY_TO } from '../operatorContact';
 import { SEND_INFLIGHT, SEND_PENDING } from '../ops/notificationSentinel';
 import { isPurgedValue } from '../privacy/orderRetention';
 import { formatPriceAmount } from '../../data/pricing';
-import { buildShowRefundEmailHtml, buildShowTicketEmailHtml, buildShowtimeCancelledEmailHtml } from './emailHtml';
+import {
+  buildShowRefundEmailHtml,
+  buildShowTicketEmailHtml,
+  buildShowtimeCancelledEmailHtml,
+  showRefundHeading,
+  showRefundViaSentence,
+  type ShowRefundVia,
+  showtimeCancelledRefundSentence,
+} from './emailHtml';
 import { formatEntryNumber, formatShowtimeLabel } from './format';
 import { ticketQrPngBase64 } from './qr';
 import { refundRateForNotice } from './refundPolicy';
@@ -107,20 +115,20 @@ export const buildShowTicketEmail = (d: ShowMailData): { subject: string; text: 
 
 export const buildShowRefundEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec'>
-    & { refundedAmount: number; fullyRefunded: boolean },
+    & { refundedAmount: number; fullyRefunded: boolean; refundVia?: ShowRefundVia },
 ): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabel(d.startsAtSec);
   return {
-    subject: `[스튜디오 놀] 환불이 완료되었습니다 — ${d.showTitle}`,
+    subject: `[스튜디오 놀] ${showRefundHeading(d.refundVia)} — ${d.showTitle}`,
     html: buildShowRefundEmailHtml({ ...d, when, manageUrl: manageUrl(d.orderNo, d.manageToken), contact: CUSTOMER_REPLY_TO }),
     text: [
-      `${d.buyerName}님, 환불이 완료되었습니다.`,
+      `${d.buyerName}님, ${showRefundHeading(d.refundVia)}.`,
       '',
       `공연: ${d.showTitle} (${when})`,
       `주문번호: ${d.orderNo}`,
       `환불 금액: ${formatPriceAmount(d.refundedAmount)}원`,
       d.fullyRefunded ? '이 주문의 티켓은 모두 환불되어 입장에 사용할 수 없습니다.' : '환불한 티켓은 입장에 사용할 수 없습니다. 남은 티켓은 그대로 사용할 수 있습니다.',
-      '카드 결제는 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.',
+      showRefundViaSentence(d.refundVia),
       '',
       `주문 내역: ${manageUrl(d.orderNo, d.manageToken)}`,
       `문의: ${CUSTOMER_REPLY_TO}`,
@@ -130,7 +138,7 @@ export const buildShowRefundEmail = (
 
 export const buildShowtimeCancelledEmail = (
   d: Pick<ShowMailData, 'orderNo' | 'manageToken' | 'buyerName' | 'showTitle' | 'startsAtSec' | 'totalAmount'>
-    & { refundCompleted: boolean },
+    & { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
 ): { subject: string; text: string; html: string } => {
   const when = showDateTimeLabel(d.startsAtSec);
   return {
@@ -142,9 +150,7 @@ export const buildShowtimeCancelledEmail = (
       `공연: ${d.showTitle}`,
       `취소된 회차: ${when}`,
       `주문번호: ${d.orderNo}`,
-      d.refundCompleted
-        ? `결제하신 ${formatPriceAmount(d.totalAmount)}원은 전액 환불 처리되었습니다. 카드사에 따라 취소 반영까지 영업일 기준 며칠이 걸릴 수 있습니다.`
-        : '환불은 접수되어 처리 중입니다. 완료되면 다시 안내드립니다.',
+      showtimeCancelledRefundSentence(d),
       '',
       `주문 내역: ${manageUrl(d.orderNo, d.manageToken)}`,
       `문의: ${CUSTOMER_REPLY_TO}`,
@@ -278,7 +284,7 @@ export const sendShowTicketEmail = async (
 /** 환불 완료 안내. 호출부: refundShowTickets가 `refunded`를 돌려준 직후(API 라우트)·syncShowCancelsFromToss. */
 export const sendShowRefundEmail = async (
   orderNo: string,
-  refund: { refundedAmount: number; fullyRefunded: boolean },
+  refund: { refundedAmount: number; fullyRefunded: boolean; refundVia?: ShowRefundVia },
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };
@@ -291,7 +297,7 @@ export const sendShowRefundEmail = async (
 /** 회차 취소 안내. 호출부: cancelShowtime 뒤, 대상 주문마다(환불 실패 주문은 refundCompleted:false). */
 export const sendShowtimeCancelledEmail = async (
   orderNo: string,
-  opts: { refundCompleted: boolean },
+  opts: { refundCompleted: boolean; bankNotice?: 'refund_account_needed' | 'not_deposited' },
 ): Promise<{ sent: boolean }> => {
   const data = await loadShowOrder(orderNo).catch(() => null);
   if (!data?.recipient) return { sent: false };

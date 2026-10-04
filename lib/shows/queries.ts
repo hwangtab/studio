@@ -12,6 +12,8 @@ import { formatShowtimeLabel } from './format';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
 import { parseMapLinksJson, type MapLinkOverrides } from './maps';
 import { parseNoticesJson, parsePerformersJson, type ShowPerformer } from './structured';
+import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
+import { bankDepositDeadlineOf, bankDepositStateOf, type BankDepositState } from '../payments/bankDeposit';
 
 /**
  * 고객 화면용 조회. 모든 값은 JSON 직렬화 가능(Date·undefined 없음)해서 getServerSideProps
@@ -177,9 +179,16 @@ export interface ManageOrderView {
   showtimeLabel: string;
   showtimeStartsAt: number;
   showtimeStatus: string;
-  /** 지금 시점 환불율(0이면 환불 불가). */
+  /** 지금 시점 환불율(0이면 환불 불가). 회차가 취소됐으면 100(주최 측 취소는 취소환불표를 쓰지 않는다). */
   refundPctNow: number;
   tickets: ManageTicketView[];
+  /**
+   * 온라인 계좌 입금 주문의 단계(입금 대기·입금 전 취소·입금 확인됨), 아니면 null. 서버(환불·신청 취소 API)와
+   * 같은 bankDepositStateOf로 판정한다. `paid`면 환불 신청에 **환불 계좌**를 함께 받는다.
+   */
+  bankDeposit: BankDepositState | null;
+  /** 입금 대기일 때만 — 안내 화면(BankDepositGuide)에 그릴 금액·기한(서버가 다시 읽은 값). */
+  depositGuide: { amount: number; deadline: string; customerName: string } | null;
 }
 
 /**
@@ -210,8 +219,11 @@ export async function getShowOrderForManage(rawOrderNo: string, token: string, n
   });
 
   const startsAt = showOrder.showtime.startsAt;
-  const refundPctNow = refundRateForNotice(new Date(startsAt * 1000), now);
+  // refundShowTickets와 같은 판정 — 회차가 취소됐으면 전액(계좌 입금 주문은 이 경로로 환불 계좌를 적는다).
+  const refundPctNow = showOrder.showtime.status === 'cancelled' ? 100 : refundRateForNotice(new Date(startsAt * 1000), now);
   const refundableOrder = order.status === 'paid' || order.status === 'partially_refunded';
+  const payments = await db.query.payments.findMany({ where: (p, { eq }) => eq(p.orderId, order.id) });
+  const bankDeposit = bankDepositStateOf({ status: order.status, payments });
   return {
     orderNo: order.orderNo,
     orderStatus: order.status,
@@ -240,6 +252,14 @@ export async function getShowOrderForManage(rawOrderNo: string, token: string, n
         refundAmountNow: canRefund ? calcRefundAmount(t.unitAmount, refundPctNow) : null,
       };
     }),
+    bankDeposit,
+    depositGuide: bankDeposit === 'awaiting'
+      ? {
+          amount: order.totalAmount,
+          deadline: bankDepositDeadlineOf({ createdAt: order.createdAt, startsAt: new Date(startsAt * 1000), guideDays: BANK_DEPOSIT_GUIDE_DAYS }).toISOString(),
+          customerName: showOrder.buyerName,
+        }
+      : null,
   };
 }
 

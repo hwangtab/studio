@@ -360,7 +360,7 @@ export async function confirmShowOrder(
  * 하나의 batch(=하나의 트랜잭션)에 넣으면 그 안에서는 아직 서로의 커밋을 볼 수 없어
  * 같은 문제가 재발한다.
  */
-async function assignEntryNumbers(orderNo: string): Promise<void> {
+export async function assignEntryNumbers(orderNo: string): Promise<void> {
   const db = getDb();
   const tickets = await db.query.showTickets.findMany({ where: (t, { eq }) => eq(t.orderNo, orderNo) });
   const unassigned = tickets.filter((t) => t.entryNumber == null);

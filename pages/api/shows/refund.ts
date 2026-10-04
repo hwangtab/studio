@@ -8,6 +8,8 @@ import { getClientIp } from '../../../lib/contracts/client-ip';
 import { sendShowRefundEmail } from '../../../lib/shows/email';
 import { refundShowTickets } from '../../../lib/shows/refund';
 import { SHOW_REFUND_REJECT_MESSAGES } from '../../../lib/shows/refundMessages';
+import { cancelAwaitingShowDeposit } from '../../../lib/shows/bankDeposit';
+import { AWAITING_DEPOSIT } from '../../../lib/payments/bankDeposit';
 
 /**
  * 고객 셀프 환불 — 관리 토큰으로 인증하고 취소환불표(lib/shows/refundPolicy.ts)를 적용한다.
@@ -24,9 +26,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (typeof req.body !== 'object' || req.body === null || Array.isArray(req.body))
     return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
-  const { orderNo: rawOrderNo, token, ticketIds } = req.body as Record<string, unknown>;
+  const { orderNo: rawOrderNo, token, ticketIds, action, refundAccount } = req.body as Record<string, unknown>;
   // 화면은 DB 값(대문자)을 보내지만, 손으로 적은 소문자도 같은 주문이다 — 조회와 같은 정규화.
   const orderNo = typeof rawOrderNo === 'string' ? rawOrderNo.toUpperCase() : rawOrderNo;
+
+  /**
+   * 계좌 입금 **대기** 신청 거두기 — 돈이 오가지 않았으니 환불이 아니라 신청 취소다. 좌석을 바로 풀고 메일은
+   * 없다. 티켓을 고르지 않는 요청이라 아래 티켓 검증보다 먼저 가른다.
+   */
+  if (action === 'withdraw') {
+    if (typeof orderNo !== 'string' || orderNo.trim() === '' || typeof token !== 'string' || token.trim() === '')
+      return res.status(400).json({ ok: false, message: '요청 형식이 올바르지 않습니다.' });
+    const target = await getDb().query.orders.findFirst({ where: (o, { eq }) => eq(o.orderNo, orderNo) });
+    if (!target || target.type !== 'ticket' || !isTokenMatch(target.manageToken, token))
+      return res.status(404).json({ ok: false, message: '주문을 찾을 수 없습니다.' });
+    if (target.status !== AWAITING_DEPOSIT)
+      return res.status(409).json({ ok: false, message: '입금을 기다리는 신청이 아닙니다. 새로고침해 주세요.' });
+    const r = await cancelAwaitingShowDeposit({ orderId: target.id });
+    if (!r.ok) return res.status(409).json({ ok: false, code: r.code, message: r.message });
+    return res.status(200).json({ ok: true, withdrawn: true });
+  }
   if (
     typeof orderNo !== 'string' || orderNo.trim() === '' ||
     typeof token !== 'string' || token.trim() === '' ||
@@ -46,15 +65,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   });
   if (comp.length > 0) return res.status(409).json({ ok: false, code: 'comp_ticket', message: SHOW_REFUND_REJECT_MESSAGES.comp_ticket });
 
-  const outcome = await refundShowTickets({ orderNo, ticketIds: ids, noticeAt: new Date(), actor: 'customer' }, { cancelPayment });
+  const outcome = await refundShowTickets({ orderNo, ticketIds: ids, noticeAt: new Date(), actor: 'customer', refundAccount }, { cancelPayment });
   if (outcome.status === 'refunded') {
     // 메일 실패는 환불 결과를 바꾸지 않는다 — 화면이 결과를 이미 보여 준다.
     try {
-      await sendShowRefundEmail(orderNo, { refundedAmount: outcome.amount, fullyRefunded: outcome.orderStatus === 'refunded' });
+      await sendShowRefundEmail(orderNo, { refundedAmount: outcome.amount, fullyRefunded: outcome.orderStatus === 'refunded', refundVia: outcome.refundVia });
     } catch (error) {
       console.error('[shows-refund] 환불 메일 실패', { orderNo, error });
     }
-    return res.status(200).json({ ok: true, refundAmount: outcome.amount, orderStatus: outcome.orderStatus });
+    return res.status(200).json({ ok: true, refundAmount: outcome.amount, orderStatus: outcome.orderStatus, refundVia: outcome.refundVia });
   }
   if (outcome.status === 'toss_unknown') {
     return res.status(202).json({
@@ -63,6 +82,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message: SHOW_REFUND_REJECT_MESSAGES.toss_unknown,
     });
   }
-  const message = SHOW_REFUND_REJECT_MESSAGES[outcome.reason] ?? SHOW_REFUND_REJECT_MESSAGES.default;
+  const message = outcome.message ?? SHOW_REFUND_REJECT_MESSAGES[outcome.reason] ?? SHOW_REFUND_REJECT_MESSAGES.default;
   return res.status(409).json({ ok: false, code: outcome.reason, message });
 }

@@ -52,4 +52,5 @@ export function refundTierLines(): string[] {
 export const REFUND_POLICY_FOOTNOTES: readonly string[] = [
   '공연 시작 이후, 그리고 입장 처리된 티켓은 환불할 수 없습니다.',
   '환불 금액은 신청 시점 기준으로 계산하며 원 단위 미만은 버립니다.',
+  '계좌로 입금하신 예매는 환불을 신청하실 때 환불받을 계좌를 적어 주시면, 접수일부터 3영업일 이내에 그 계좌로 보내 드립니다. 회차가 취소되면 전액을 돌려드립니다.',
 ];

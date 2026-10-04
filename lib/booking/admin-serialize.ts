@@ -1,5 +1,7 @@
 import type { AvailabilityBlock, Booking, Order, Payment, Refund, WorkOrder } from '../../db/schema';
 import { isVirtualAccountMethod } from './toss';
+import { BANK_DEPOSIT_GUIDE_DAYS } from '../payments/bankAccount';
+import { bankDepositDeadlineOf, bankDepositStateOf, type BankDepositState } from '../payments/bankDeposit';
 import { getMixingProduct } from './mixing-products';
 import { getProduct } from './products';
 
@@ -97,10 +99,17 @@ export interface AdminBookingListItem {
    * 눌러 502를 보고 나서야 알게 된다.
    */
   virtualAccountPayment: boolean;
+  /**
+   * 온라인 **계좌 입금** 주문이면 그 단계(입금 대기·입금 전 취소·입금 확인됨), 아니면 null —
+   * 판정은 고객 화면·서버와 같은 bankDepositStateOf(lib/payments/bankDeposit.ts).
+   */
+  bankDeposit: BankDepositState | null;
+  /** 입금 대기일 때 안내한 기한(ISO) — 안내용이다(자동 취소 없음). */
+  depositDeadline: string | null;
   createdAt: string;
 }
 
-const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 'failed', 'expired']);
+const UNPAID_ORDER_STATUSES: ReadonlySet<Order['status']> = new Set(['pending', 'failed', 'expired', 'awaiting_deposit', 'deposit_cancelled']);
 
 /**
  * 예약·주문 한 건(주문+세션 또는 주문+믹싱)을 관리자 화면용으로 편다.
@@ -164,6 +173,11 @@ export const serializeBookingForAdmin = (
       (booking?.status === 'confirmed' && order.status === 'failed') ||
       (workOrder !== undefined && WORK_ORDER_RECEIVED_OR_LATER.has(workOrder.status) && order.status === 'failed'),
     virtualAccountPayment: order.payments.some((p) => isVirtualAccountMethod(p.method)),
+    bankDeposit: bankDepositStateOf(order),
+    depositDeadline:
+      order.status === 'awaiting_deposit'
+        ? bankDepositDeadlineOf({ createdAt: order.createdAt, startsAt: booking?.startAt ?? null, guideDays: BANK_DEPOSIT_GUIDE_DAYS }).toISOString()
+        : null,
     createdAt: order.createdAt.toISOString(),
   };
 };

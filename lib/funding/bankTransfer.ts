@@ -4,12 +4,12 @@ import { getDb } from '../../db/client';
 import { SEND_PENDING } from '../ops/notificationSentinel';
 import { deliverConfirmedEmailsOnce } from './confirm';
 import { sendFundingDepositGuideEmails } from './email';
+import { allowCustomerDepositGuideMail } from '../payments/depositGuideThrottle';
 import { activePledgeLines, pledgeLines } from './pledgeLines';
 import { getFundingProjectAsync } from './repository';
 import { isDigitalOrder } from './shape';
 import { allLinesStockCondition, findFundingOrderById, findFundingOrderByOrderNo, type FundingOrder } from './service';
 import type { ResolvedPledgeLine } from './validation';
-import { normalizeEmailForLimit } from '../payments/bankAccount';
 import { safeDbErrorSummary } from '../payments/refundAccount';
 
 /**
@@ -168,12 +168,16 @@ export const cancelUnpaidBankDeposit = async (order: Pick<FundingOrder, 'id'>): 
  * 관리자 화면이 그 값을 보고 "입금 안내 재발송"을 권한다. 예외는 삼킨다 — 신청은 이미 만들어졌고,
  * 계좌는 신청 직후 화면에도 나온다.
  */
-export const deliverDepositGuide = async (orderNo: string): Promise<string | null> => {
+export const deliverDepositGuide = async (
+  orderNo: string,
+  opts: { throttleCustomer?: boolean } = {},
+): Promise<string | null> => {
   const order = await findFundingOrderByOrderNo(orderNo);
   if (!order?.fundingPledge) return 'not_found';
   let emailError: string | null;
   try {
-    emailError = await sendFundingDepositGuideEmails(order, await getFundingProjectAsync(order.fundingPledge.projectSlug));
+    const skipCustomer = opts.throttleCustomer ? !(await allowCustomerDepositGuideMail(order.customerEmail)) : false;
+    emailError = await sendFundingDepositGuideEmails(order, await getFundingProjectAsync(order.fundingPledge.projectSlug), { skipCustomer });
   } catch (error) {
     console.error('[funding-bank-transfer] 입금 안내 메일 발송 중 예외', { orderNo, error });
     emailError = error instanceof Error ? error.message : String(error);
@@ -224,18 +228,4 @@ export const findSameNameBankDeposits = async (order: Pick<FundingOrder, 'id' | 
     console.error('[funding-bank-transfer] 같은 이름 신청 조회 실패', { orderId: order.id, error: safeDbErrorSummary(error) });
     return [];
   }
-};
-
-/**
- * 이 프로젝트에 **입금을 기다리는**(pending) 온라인 계좌 입금 신청 중, 이메일이 정규화해서 `emailKey`와
- * 같은 건수. 정규화(+태그·gmail 점)는 SQL로 옮기기 어려워 이 프로젝트의 열린 신청 주소만 읽어 센다 —
- * 열린 신청은 운영자가 계속 정리하므로 많지 않다.
- */
-export const countOpenBankDeposits = async (projectSlug: string, emailKey: string): Promise<number> => {
-  const rows = await getDb().all<{ email: string }>(sql`
-    SELECT o.customer_email AS email FROM orders o JOIN funding_pledges fp ON fp.order_id = o.id
-    WHERE o.type = 'funding' AND o.status = 'pending' AND fp.project_slug = ${projectSlug}
-      AND fp.payment_method = 'bank_transfer' AND fp.entry_source = 'online'
-  `);
-  return rows.filter((r) => normalizeEmailForLimit(r.email) === emailKey).length;
 };

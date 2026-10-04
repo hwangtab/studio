@@ -17,6 +17,14 @@ import { computeRefund, refundPolicyFor, REFUND_POLICY_LINES } from '../../../..
 import { findOrderByOrderNo } from '../../../../lib/booking/service';
 import { isTokenMatch } from '../../../../lib/booking/token';
 import { denyContractPageCaching } from '../../../../lib/contracts/page-cache';
+import { bookingDepositGuideProps } from '../../../../lib/booking/bankDeposit';
+import { bankDepositStateOf, type BankDepositState } from '../../../../lib/payments/bankDeposit';
+import BankDepositGuide from '../../../../components/payments/BankDepositGuide';
+import RefundAccountFields, {
+  EMPTY_REFUND_ACCOUNT,
+  isRefundAccountFilled,
+  type RefundAccountValue,
+} from '../../../../components/payments/RefundAccountFields';
 
 type BookingStatus = 'pending' | 'confirmed' | 'completed' | 'no_show' | 'cancelled';
 type WorkOrderStatus = 'pending' | 'received' | 'in_progress' | 'delivered' | 'cancelled';
@@ -25,6 +33,16 @@ interface RefundQuote {
   daysBefore: number;
   rate: number;
   refundAmount: number;
+}
+
+/**
+ * 계좌 입금 — 세션·믹싱 공통 props. `bankDeposit`은 서버(취소 API)와 같은 bankDepositStateOf로 판정한다.
+ * 입금 대기면 `depositGuide`로 계좌 안내를 그리고 "입금 전 신청 취소"를 두며, 입금이 확인된 주문의 취소는
+ * 환불 계좌를 함께 받는다(토스에 돌려줄 결제가 없다).
+ */
+interface BankDepositProps {
+  bankDeposit: BankDepositState | null;
+  depositGuide: { amount: number; deadline: string; customerName: string; applicantLabel: string } | null;
 }
 
 interface SessionManageProps {
@@ -46,6 +64,7 @@ interface SessionManageProps {
   /** 상품별 환불 규정 — 위저드·취소 계산과 같은 refundPolicyFor()에서 온다. */
   refundLines: readonly string[];
 }
+type SessionPageProps = SessionManageProps & BankDepositProps;
 
 interface MixingManageProps {
   kind: 'mixing';
@@ -62,8 +81,9 @@ interface MixingManageProps {
   canCancel: boolean;
   refundQuote: RefundQuote | null;
 }
+type MixingPageProps = MixingManageProps & BankDepositProps;
 
-type ManagePageProps = SessionManageProps | MixingManageProps;
+type ManagePageProps = SessionPageProps | MixingPageProps;
 
 const STATUS_LABELS: Record<BookingStatus, string> = {
   pending: '결제 대기',
@@ -110,15 +130,19 @@ const formatKstDateTime = (isoString: string): string => {
   return `${y}.${m}.${d} (${weekday}) ${hh}:00`;
 };
 
-/** 취소 API 호출·환불 안내·에러 처리 — 세션·믹싱 공용(pages/api/bookings/cancel.ts 인터페이스 불변). */
-function useCancelFlow(orderNo: string, token: string, refundQuote: RefundQuote | null) {
+/**
+ * 취소 API 호출·환불 안내·에러 처리 — 세션·믹싱 공용(pages/api/bookings/cancel.ts).
+ * 계좌 입금 주문(`viaAccount`)은 환불 계좌를 함께 보낸다.
+ */
+function useCancelFlow(orderNo: string, token: string, refundQuote: RefundQuote | null, viaAccount: boolean) {
   const [cancelling, setCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
   const [refundResult, setRefundResult] = useState<number | null>(null);
+  const [refundAccount, setRefundAccount] = useState<RefundAccountValue>(EMPTY_REFUND_ACCOUNT);
 
   const cancel = async (onSuccess: () => void) => {
     const confirmMessage = refundQuote
-      ? `취소하시겠습니까?\n환불 예정 금액: ${formatPriceAmount(refundQuote.refundAmount)}원\n(실제 환불 금액은 취소 처리 시점 기준으로 다시 계산됩니다)`
+      ? `취소하시겠습니까?\n환불 예정 금액: ${formatPriceAmount(refundQuote.refundAmount)}원${viaAccount && refundQuote.refundAmount > 0 ? `\n환불 계좌: ${refundAccount.bankName.trim()} ${refundAccount.accountHolder.trim()}` : ''}\n(실제 환불 금액은 취소 처리 시점 기준으로 다시 계산됩니다)`
       : '취소하시겠습니까?';
     if (!window.confirm(confirmMessage)) return;
 
@@ -129,7 +153,7 @@ function useCancelFlow(orderNo: string, token: string, refundQuote: RefundQuote 
       const response = await fetch('/api/bookings/cancel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ orderNo, token }),
+        body: JSON.stringify({ orderNo, token, ...(viaAccount ? { refundAccount } : {}) }),
       });
       const result = await response.json().catch(() => ({}));
 
@@ -148,8 +172,72 @@ function useCancelFlow(orderNo: string, token: string, refundQuote: RefundQuote 
     }
   };
 
-  return { cancelling, cancelError, refundResult, cancel };
+  return { cancelling, cancelError, refundResult, cancel, refundAccount, setRefundAccount };
 }
+
+/** 입금 전 신청 취소 — 받은 돈이 없어 환불이 아니다. 시간대·주문을 바로 풀고 메일은 가지 않는다. */
+function useWithdraw(orderNo: string, token: string) {
+  const [withdrawing, setWithdrawing] = useState(false);
+  const [withdrawError, setWithdrawError] = useState<string | null>(null);
+  const withdraw = async (onSuccess: () => void) => {
+    if (!window.confirm('입금 전 신청을 취소할까요? 이미 입금하셨다면 취소하지 말고 010-4255-7893으로 연락 주세요.')) return;
+    setWithdrawing(true);
+    setWithdrawError(null);
+    try {
+      const response = await fetch('/api/bookings/cancel', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderNo, token }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.ok) throw new Error(result.message || '취소하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+      onSuccess();
+    } catch (err: unknown) {
+      setWithdrawError(err instanceof Error ? err.message : '취소하지 못했습니다. 잠시 후 다시 시도해 주세요.');
+    } finally {
+      setWithdrawing(false);
+    }
+  };
+  return { withdrawing, withdrawError, withdraw };
+}
+
+/**
+ * 계좌 입금 대기 화면 — 계좌 안내(BankDepositGuide, 펀딩과 같은 부품)와 "입금 전 신청 취소". 취소하면
+ * 안내를 걷고 닫힌 신청 문구로 바꾼다.
+ */
+function DepositWaitingSection({ orderNo, token, guide, kindLabel }: {
+  orderNo: string; token: string; guide: NonNullable<BankDepositProps['depositGuide']>; kindLabel: string;
+}) {
+  const [closed, setClosed] = useState(false);
+  const { withdrawing, withdrawError, withdraw } = useWithdraw(orderNo, token);
+  if (closed) {
+    return (
+      <p role="status" className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-700 dark:text-gray-200">
+        신청을 취소했습니다. 받은 돈이 없어 환불할 금액은 없습니다.
+      </p>
+    );
+  }
+  return (
+    <div className="mt-2">
+      <BankDepositGuide amount={guide.amount} deadline={guide.deadline} customerName={guide.customerName} applicantLabel={guide.applicantLabel} />
+      {withdrawError && (
+        <p role="alert" className="mt-4 rounded-md bg-red-50 dark:bg-red-900/20 p-3 text-sm text-red-700 dark:text-red-300">{withdrawError}</p>
+      )}
+      <Button type="button" variant="outline" fullWidth className="mt-8" disabled={withdrawing} onClick={() => withdraw(() => setClosed(true))}>
+        {withdrawing ? '처리 중...' : `입금 전 ${kindLabel} 취소`}
+      </Button>
+    </div>
+  );
+}
+
+const DEPOSIT_CLOSED_NOTICE =
+  '이 계좌 입금 신청은 입금 전에 취소되었습니다. 이미 입금하셨다면 010-4255-7893 · hello@studionol.co.kr로 알려 주세요 — 확인해 돌려드립니다.';
+
+/** 취소 완료 문구 — 토스 결제는 결제 수단으로, 계좌 입금은 적어 주신 계좌로 3영업일 이내. */
+const refundDoneMessage = (amount: number, viaAccount: boolean): string =>
+  viaAccount
+    ? amount > 0
+      ? `취소가 완료되었습니다. 환불 금액 ${formatPriceAmount(amount)}원을 적어 주신 계좌로 접수일부터 3영업일 이내에 보내 드립니다.`
+      : '취소가 완료되었습니다. 환불 규정에 따라 돌려드릴 금액이 없습니다.'
+    : `취소가 완료되었습니다. 환불 금액: ${formatPriceAmount(amount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요됩니다)`;
 
 function PriceBox({ itemAmount, vatAmount, totalAmount }: { itemAmount: number; vatAmount: number; totalAmount: number }) {
   return (
@@ -171,13 +259,17 @@ function CancelSection({
   onCancel,
   // 상품별 규정. 세션 뷰가 refundPolicyFor()로 넘긴다. 기본값은 예전 동작(세션 규정) 보존용.
   refundLines = REFUND_POLICY_LINES,
+  account,
 }: {
   refundQuote: RefundQuote;
   cancelling: boolean;
   cancelError: string | null;
   onCancel: () => void;
   refundLines?: readonly string[];
+  /** 계좌 입금 주문 — 돌려줄 돈이 있으면 환불 계좌를 받는다(채우기 전에는 버튼이 닫힌다). */
+  account?: { value: RefundAccountValue; onChange: (next: RefundAccountValue) => void } | null;
 }) {
+  const needsAccount = Boolean(account) && refundQuote.refundAmount > 0;
   return (
     <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-6">
       <p className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -196,6 +288,12 @@ function CancelSection({
         </ul>
       </div>
 
+      {needsAccount && account && (
+        <div className="mt-4">
+          <RefundAccountFields idPrefix="booking-refund" value={account.value} onChange={account.onChange} />
+        </div>
+      )}
+
       {cancelError && (
         <p
           role="alert"
@@ -210,20 +308,21 @@ function CancelSection({
           type="button"
           variant="outline"
           className="border-red-300 text-red-600 hover:bg-red-50 hover:border-red-400 dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/20"
-          disabled={cancelling}
+          disabled={cancelling || (needsAccount && !!account && !isRefundAccountFilled(account.value))}
           onClick={onCancel}
         >
-          {cancelling ? '취소 처리 중...' : '주문 취소'}
+          {cancelling ? '취소 처리 중...' : needsAccount ? '이 계좌로 환불받고 취소' : '주문 취소'}
         </Button>
       </div>
     </div>
   );
 }
 
-function SessionManageView(props: SessionManageProps) {
-  const { orderNo, token, productName, startAt, durationHours, itemAmount, vatAmount, totalAmount, bookingStatus, canCancel, refundQuote, refundLines } = props;
+function SessionManageView(props: SessionPageProps) {
+  const { orderNo, token, productName, startAt, durationHours, itemAmount, vatAmount, totalAmount, bookingStatus, canCancel, refundQuote, refundLines, bankDeposit, depositGuide } = props;
   const [status, setStatus] = useState<BookingStatus>(bookingStatus);
-  const { cancelling, cancelError, refundResult, cancel } = useCancelFlow(orderNo, token, refundQuote);
+  const viaAccount = bankDeposit === 'paid';
+  const { cancelling, cancelError, refundResult, cancel, refundAccount, setRefundAccount } = useCancelFlow(orderNo, token, refundQuote, viaAccount);
   const showCancelSection = status === 'confirmed' && canCancel;
 
   return (
@@ -246,9 +345,11 @@ function SessionManageView(props: SessionManageProps) {
           <div className="flex items-center justify-between gap-4">
             <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
             <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
-              {STATUS_LABELS[status]}
+              {depositGuide ? '입금 대기' : STATUS_LABELS[status]}
             </span>
           </div>
+
+          {depositGuide && <DepositWaitingSection orderNo={orderNo} token={token} guide={depositGuide} kindLabel="예약 신청" />}
 
           <dl className="mt-6 space-y-3 text-sm">
             <div className="flex justify-between">
@@ -263,15 +364,14 @@ function SessionManageView(props: SessionManageProps) {
 
           <PriceBox itemAmount={itemAmount} vatAmount={vatAmount} totalAmount={totalAmount} />
 
-          {status !== 'confirmed' &&
+          {status !== 'confirmed' && !depositGuide &&
             (refundResult !== null ? (
               <div className="mt-6 rounded-md bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-800 dark:text-green-300">
-                취소가 완료되었습니다. 환불 금액: {formatPriceAmount(refundResult)}원 (결제 수단으로 환불,
-                카드사에 따라 3~5영업일 소요됩니다)
+                {refundDoneMessage(refundResult, viaAccount)}
               </div>
             ) : (
               <div className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
-                {STATUS_NOTICES[status]}
+                {bankDeposit === 'cancelled' ? DEPOSIT_CLOSED_NOTICE : STATUS_NOTICES[status]}
               </div>
             ))}
 
@@ -288,6 +388,7 @@ function SessionManageView(props: SessionManageProps) {
               cancelling={cancelling}
               cancelError={cancelError}
               onCancel={() => cancel(() => setStatus('cancelled'))}
+              account={viaAccount ? { value: refundAccount, onChange: setRefundAccount } : null}
             />
           )}
         </section>
@@ -308,10 +409,11 @@ function SessionManageView(props: SessionManageProps) {
   );
 }
 
-function MixingManageView(props: MixingManageProps) {
-  const { orderNo, token, productName, songCount, vocalTuning, itemAmount, vatAmount, totalAmount, workOrderStatus, canCancel, refundQuote } = props;
+function MixingManageView(props: MixingPageProps) {
+  const { orderNo, token, productName, songCount, vocalTuning, itemAmount, vatAmount, totalAmount, workOrderStatus, canCancel, refundQuote, bankDeposit, depositGuide } = props;
   const [status, setStatus] = useState<WorkOrderStatus>(workOrderStatus);
-  const { cancelling, cancelError, refundResult, cancel } = useCancelFlow(orderNo, token, refundQuote);
+  const viaAccount = bankDeposit === 'paid';
+  const { cancelling, cancelError, refundResult, cancel, refundAccount, setRefundAccount } = useCancelFlow(orderNo, token, refundQuote, viaAccount);
   const showCancelSection = status === 'received' && canCancel;
 
   return (
@@ -334,9 +436,11 @@ function MixingManageView(props: MixingManageProps) {
           <div className="flex items-center justify-between gap-4">
             <h2 className="typo-card-subtitle text-gray-900 dark:text-white">{productName}</h2>
             <span className="shrink-0 rounded-full bg-gray-100 dark:bg-gray-700 px-3 py-1 text-xs font-medium text-gray-700 dark:text-gray-200">
-              {WORK_ORDER_STATUS_LABELS[status]}
+              {depositGuide ? '입금 대기' : WORK_ORDER_STATUS_LABELS[status]}
             </span>
           </div>
+
+          {depositGuide && <DepositWaitingSection orderNo={orderNo} token={token} guide={depositGuide} kindLabel="주문 신청" />}
 
           <dl className="mt-6 space-y-3 text-sm">
             <div className="flex justify-between">
@@ -359,15 +463,14 @@ function MixingManageView(props: MixingManageProps) {
 
           <PriceBox itemAmount={itemAmount} vatAmount={vatAmount} totalAmount={totalAmount} />
 
-          {status !== 'received' &&
+          {status !== 'received' && !depositGuide &&
             (refundResult !== null ? (
               <div className="mt-6 rounded-md bg-green-50 dark:bg-green-900/20 p-4 text-sm text-green-800 dark:text-green-300">
-                취소가 완료되었습니다. 환불 금액: {formatPriceAmount(refundResult)}원 (결제 수단으로 환불,
-                카드사에 따라 3~5영업일 소요됩니다)
+                {refundDoneMessage(refundResult, viaAccount)}
               </div>
             ) : (
               <div className="mt-6 rounded-md bg-gray-50 dark:bg-gray-800/50 p-4 text-sm text-gray-600 dark:text-gray-300">
-                {WORK_ORDER_STATUS_NOTICES[status]}
+                {bankDeposit === 'cancelled' ? DEPOSIT_CLOSED_NOTICE : WORK_ORDER_STATUS_NOTICES[status]}
               </div>
             ))}
 
@@ -377,6 +480,7 @@ function MixingManageView(props: MixingManageProps) {
               cancelling={cancelling}
               cancelError={cancelError}
               onCancel={() => cancel(() => setStatus('cancelled'))}
+              account={viaAccount ? { value: refundAccount, onChange: setRefundAccount } : null}
             />
           )}
         </section>
@@ -425,6 +529,9 @@ export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (co
   }
 
   const now = new Date();
+  // 계좌 입금 — 취소 API(pages/api/bookings/cancel.ts)와 같은 판정. 입금 대기면 금액·기한을 서버가 다시 읽는다.
+  const bankDeposit = bankDepositStateOf(order);
+  const depositGuide = bankDeposit === 'awaiting' ? bookingDepositGuideProps(order) : null;
 
   if (order.type === 'mixing') {
     const workOrder = order.workOrders[0];
@@ -452,6 +559,8 @@ export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (co
         workOrderStatus: workOrder.status,
         canCancel,
         refundQuote,
+        bankDeposit,
+        depositGuide,
       },
     };
   }
@@ -481,6 +590,8 @@ export const getServerSideProps = withI18nServerProps<ManagePageProps>(async (co
       canCancel,
       refundQuote,
       refundLines: [...refundPolicy.lines],
+      bankDeposit,
+      depositGuide,
     },
   };
 });

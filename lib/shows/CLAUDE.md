@@ -57,6 +57,23 @@ v2 색 가드(`components/ui/SectionHeading.test.tsx`의 `V2_FILES`)에 공연 �
 - `/ko/shows/scan/<token>`: 토큰은 **소문자 hex**로 발급한다(`scanLink.ts`). base64url이면 소문자가
   되는 순간 해시가 달라져 모든 스캔 링크가 401이다. 경로에 실리는 비밀값은 항상 소문자 안전 알파벳으로.
 
+### 계좌 입금(무통장) — 좌석은 기한 없이 잡고, 자동 취소는 없다
+
+공통 규칙은 `lib/payments/bankDeposit.ts` 머리 주석, 공연 쪽 전이는 `lib/shows/bankDeposit.ts`.
+
+- 생성: `createShowOrder(paymentMethod: 'bank_transfer')` → 주문 `awaiting_deposit`, 티켓 `held`,
+  `show_orders.hold_expires_at` **NULL**. 좌석 집계(conditions.ts·queries.ts)가 `hold_expires_at IS NULL`을 점유로
+  세므로 이중 판매가 없고, `expireStaleShowOrders`는 `pending`만 보므로 만료되지 않는다. **새 좌석 집계를 만들면
+  이 NULL 보류를 점유로 셀 것.** 회차 시작 2시간 전 이내는 계좌 입금 불가(판매가 전날 자정에 닫혀 실제로는 거의 걸리지
+  않는다).
+- 입금 확인(`confirmShowBankDeposit`): 회차가 살아 있을 때만 발권(`liveShowtimeCondition`) — 취소·시작 뒤 입금은
+  돌려주고 "미입금 취소"로 닫는다. 결제 행 `bank-deposit:<주문번호>` → 정리번호 → `sendShowTicketEmail`(토스와 같은 센티널).
+- 환불: 계좌 입금 주문은 토스를 부르지 않는다(`isBankDepositPayment`). 고객은 내 티켓에서 환불 계좌를 적고, 기록·
+  티켓 refunded·좌석 해제는 그 자리에서 끝난다. 송금 여부는 `refund_accounts.refunded_at`(관리자 "송금 완료").
+  **회차가 취소된 주문은 취소환불표 대신 100%**(refund.ts·queries.ts가 같은 판정).
+- 회차 취소: 입금 전 신청은 닫고 "입금하지 마세요"(`bankNotice: 'not_deposited'`), 계좌로 결제된 주문은 토스로 못
+  돌려주므로 티켓을 남겨 두고 "내 티켓에서 환불 계좌를 적어 주세요"(`refund_account_needed`). 입장은 회차 상태가 막는다.
+
 ### 남은 것(2026-10-03 기준)
 
 - **공용화(설계안 겹 3)**: `MobileStickyCta`·`StatusBadge`는 새 공용 파일로 만들어 공연이 먼저 쓴다(2026-10-04).

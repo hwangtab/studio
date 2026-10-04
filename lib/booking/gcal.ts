@@ -159,3 +159,31 @@ export const deleteBookingEvent = async (
   }
   // 모든 후보에서 404 — 이미 지워졌거나 처음부터 없던 이벤트. 멱등하게 성공으로 본다.
 };
+
+/**
+ * 이벤트 제목만 바꾼다 — 계좌 입금 대기 예약이 확정될 때 `[입금 대기]` 일정을 `[예약]`으로 바꾼다
+ * (lib/booking/bankDeposit.ts). 새로 만들고 옛것을 지우는 방식은 삭제가 실패하면 옛 일정 id가 갈 곳이 없어져
+ * 남은 일정이 웹 예약을 계속 막고, 그 실패를 확정 예약의 오류로 적으면 관리자 "재등록"이 유효한 일정을 지운다.
+ * 후보 캘린더를 차례로 시도한다(삭제와 같은 이유). 실패는 throw.
+ */
+export const renameBookingEvent = async (
+  eventId: string, calendar: BookingCalendar, room: string | null | undefined, summary: string,
+): Promise<void> => {
+  const ids = candidateCalendarIds(calendar, room);
+  if (ids.length === 0) calendarId(calendar, room); // throw — env 없음
+  const token = await getAccessToken();
+  for (const id of ids) {
+    const res = await fetch(
+      `${CAL_API}/calendars/${encodeURIComponent(id)}/events/${encodeURIComponent(eventId)}`,
+      {
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ summary }),
+        signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+      },
+    );
+    if (res.ok) return;
+    if (res.status !== 404) throw new Error(`캘린더 이벤트 제목 변경 실패: ${res.status}`);
+  }
+  throw new Error('캘린더 이벤트 제목 변경 실패: 이벤트를 찾지 못했습니다(404)');
+};

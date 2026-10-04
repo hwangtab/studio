@@ -47,6 +47,11 @@ export default function AdminShowsPage({ shows, error }: AdminShowsPageProps) {
                 <div className="min-w-0">
                   <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900">{show.title}</h2>
                   <p className="text-xs text-gray-500 mt-1">/{show.slug}</p>
+                  {show.showtimes.reduce((n, t) => n + t.awaitingDeposit, 0) > 0 && (
+                    <span className="mt-2 inline-block rounded-full bg-sky-100 px-2.5 py-1 text-xs font-medium text-sky-900">
+                      입금 대기 {show.showtimes.reduce((n, t) => n + t.awaitingDeposit, 0)}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3">
                   <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${show.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-700'}`}>

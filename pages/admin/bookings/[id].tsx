@@ -23,10 +23,22 @@ import {
   type AdminBookingDetail,
 } from '../../../lib/booking/admin-serialize';
 import { formatKstDateTime, formatKstDateTimeFull } from '../../../lib/booking/format';
+import { formatKstDeadline } from '../../../lib/payments/bankAccount';
+import { findSameNameDepositOrders, type SameNameDepositOrder } from '../../../lib/payments/bankDepositOrders';
+import { loadRefundAccountSummary } from '../../../lib/payments/refundAccount';
 import { describeNotificationError } from '../../../lib/ops/notificationSentinel';
+
+/** 환불 계좌 요약 — 은행명·예금주만. 계좌번호는 props에 싣지 않는다("계좌 보기"가 API로 가져온다). */
+type RefundAccountSummaryProps =
+  | { status: 'present'; bankName: string; accountHolder: string; updatedAt: string; refundedAt: string | null }
+  | { status: 'none' }
+  | { status: 'unavailable' };
 
 interface AdminBookingDetailPageProps {
   booking: AdminBookingDetail;
+  /** 같은 이름의 다른 계좌 입금 신청(입금 대기·입금 전 취소). 계좌 입금 대기·취소 건에서만 채운다. */
+  sameNameDeposits?: SameNameDepositOrder[];
+  refundAccount?: RefundAccountSummaryProps | null;
 }
 
 export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps> = async (
@@ -56,11 +68,32 @@ export const getServerSideProps: GetServerSideProps<AdminBookingDetailPageProps>
     return { notFound: true };
   }
 
-  return {
-    props: {
-      booking: serializeBookingDetailForAdmin(order),
-    },
-  };
+  const booking = serializeBookingDetailForAdmin(order);
+
+  // 계좌 입금 건만 — 이름이 같은 다른 신청(이중 확인 방지)과 환불 계좌 요약(복호화 없음).
+  const sameNameDeposits =
+    booking.bankDeposit === 'awaiting' || booking.bankDeposit === 'cancelled'
+      ? await findSameNameDepositOrders({ id: order.id, customerName: order.customerName })
+      : [];
+  let refundAccount: RefundAccountSummaryProps | null = null;
+  if (booking.bankDeposit === 'paid') {
+    const summary = await loadRefundAccountSummary({
+      kind: order.type === 'mixing' ? 'mixing' : 'session',
+      orderNo: order.orderNo,
+    });
+    refundAccount =
+      summary.status === 'present'
+        ? {
+            status: 'present',
+            bankName: summary.bankName,
+            accountHolder: summary.accountHolder,
+            updatedAt: summary.updatedAt.toISOString(),
+            refundedAt: summary.refundedAt ? summary.refundedAt.toISOString() : null,
+          }
+        : summary;
+  }
+
+  return { props: { booking, sameNameDeposits, refundAccount } };
 };
 
 const ORDER_STATUS_LABELS: Record<string, string> = {
@@ -70,6 +103,8 @@ const ORDER_STATUS_LABELS: Record<string, string> = {
   refunded: '환불완료',
   failed: '결제실패',
   expired: '만료',
+  awaiting_deposit: '계좌 입금 대기',
+  deposit_cancelled: '입금 전 취소',
 };
 
 const BOOKING_STATUS_LABELS: Record<string, string> = {
@@ -123,8 +158,22 @@ const DescriptionRow = ({ label, value }: { label: string; value: React.ReactNod
   </div>
 );
 
-export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPageProps) {
+/** 공백을 무시하고 같은 이름인가 — 예금주와 고객 이름 대조용(서버 holderMatchesCustomer와 같은 취지). */
+const sameNameIgnoringSpace = (a: string, b: string) => a.replace(/\s+/g, '') === b.replace(/\s+/g, '');
+
+interface RefundAccountView {
+  bankName: string;
+  accountNumber: string;
+  accountHolder: string;
+}
+
+export default function AdminBookingDetailPage({
+  booking,
+  sameNameDeposits = [],
+  refundAccount = null,
+}: AdminBookingDetailPageProps) {
   const router = useRouter();
+  const isBankPaid = booking.bankDeposit === 'paid';
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
 
@@ -195,6 +244,82 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
       }
     });
 
+  /** 계좌 입금 작업 — 같은 POST 엔드포인트의 action만 다르다. 응답의 warnings는 화면에 드러낸다. */
+  const postDepositAction = async (action: string, fallback: string): Promise<BookingActionResult> => {
+    try {
+      const response = await fetch(`/api/admin/bookings/${booking.id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result?.ok) return { ok: false, message: result?.message || fallback };
+      const warnings: string[] = Array.isArray(result.warnings) ? result.warnings : [];
+      if (warnings.length > 0) return { ok: true, message: warnings.join(' / ') };
+      if (action === 'resend_deposit_guide' && result.notificationError) {
+        return { ok: true, message: '입금 안내 메일 발송에 실패했습니다. 고객에게 직접 연락해 주세요.' };
+      }
+      return { ok: true };
+    } catch {
+      return { ok: false, message: '네트워크 오류가 발생했습니다.' };
+    }
+  };
+
+  /** 성공이어도 message가 있으면(경고) 새로고침 뒤에도 보이도록 run과 따로 notice를 둔다. */
+  const runDeposit = async (action: string, fallback: string, confirmText: string) => {
+    if (!window.confirm(confirmText)) return;
+    setBusy(true);
+    setNotice(null);
+    const result = await postDepositAction(action, fallback);
+    setBusy(false);
+    if (result.message) setNotice(result.message);
+    await router.replace(router.asPath, undefined, { scroll: false });
+  };
+
+  const handleConfirmDeposit = () =>
+    runDeposit(
+      'confirm_deposit',
+      '입금 확인에 실패했습니다.',
+      `통장에 실제로 입금됐는지 먼저 확인하세요.\n\n${booking.customerName} · ${formatPriceAmount(booking.totalAmount)}원\n입금 확인을 누르면 결제완료로 바뀌고 고객에게 확정 메일이 나갑니다.`,
+    );
+  const handleCancelUnpaid = () =>
+    runDeposit(
+      'cancel_unpaid_deposit',
+      '미입금 취소에 실패했습니다.',
+      '받은 돈이 없는 신청을 닫습니다 — 시간대가 풀리고 고객에게 메일은 가지 않습니다.\n\n계속할까요?',
+    );
+  const handleResendDepositGuide = () =>
+    runDeposit(
+      'resend_deposit_guide',
+      '입금 안내 재발송에 실패했습니다.',
+      `${booking.customerEmail}로 계좌 입금 안내 메일을 다시 보낼까요?`,
+    );
+  const handleMarkRefundSent = () =>
+    runDeposit('mark_refund_sent', '송금 완료 기록에 실패했습니다.', '환불 계좌로 송금을 마쳤나요?');
+
+  /** 환불 계좌 — 누를 때만 가져와 이 화면 state에만 둔다(props·HTML에 싣지 않는다). */
+  const [refundAccountView, setRefundAccountView] = useState<RefundAccountView | null>(null);
+  const handleShowRefundAccount = async () => {
+    setBusy(true);
+    setNotice(null);
+    try {
+      const response = await fetch(`/api/admin/orders/${booking.id}/refund-account`, {
+        credentials: 'same-origin',
+        cache: 'no-store',
+      });
+      const result = await response.json().catch(() => ({}));
+      if (response.ok && result?.ok && result.account) {
+        setRefundAccountView(result.account as RefundAccountView);
+      } else {
+        setNotice(result?.message || '환불 계좌를 불러오지 못했습니다.');
+      }
+    } catch {
+      setNotice('네트워크 오류가 발생했습니다.');
+    }
+    setBusy(false);
+  };
+
   const handleRefund = async (e: React.FormEvent) => {
     e.preventDefault();
     setRefundError(null);
@@ -215,7 +340,9 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
     }
     if (
       !window.confirm(
-        isRemainderRefund
+        isBankPaid
+          ? `계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.\n\n${formatPriceAmount(refundAmount)}원 송금을 마쳤다면 환불로 기록할까요? 되돌릴 수 없습니다.`
+          : isRemainderRefund
           ? `${formatPriceAmount(refundAmount)}원을 추가로 환불할까요? 되돌릴 수 없습니다.`
           : `${formatPriceAmount(refundAmount)}원을 환불 처리할까요? 예약은 즉시 취소되며 되돌릴 수 없습니다.`,
       )
@@ -231,7 +358,8 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
   // 완료·노쇼·캘린더·재발송은 슬롯이 있는 세션 예약만의 개념(API도 믹싱엔 409를 준다).
   const canChangeStatus = !isMixing && booking.bookingStatus === 'confirmed';
-  const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending';
+  // 입금 전에 취소된 계좌 입금 신청은 보낼 알림이 없다(API도 409).
+  const canResend = !isMixing && booking.bookingStatus !== null && booking.bookingStatus !== 'pending' && booking.bankDeposit !== 'cancelled';
   // 취소된 예약은 캘린더에 다시 등록할 이유가 없다 — API도 같은 가드를 둔다
   // (pages/api/admin/bookings/[id].ts retry-gcal).
   //
@@ -286,6 +414,99 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
       >
         {notice && (
           <div className="mb-4 p-3 bg-blue-50 text-blue-800 rounded-lg text-sm">{notice}</div>
+        )}
+
+        {booking.bankDeposit === 'awaiting' && (
+          <div className="mb-4 rounded-lg border border-sky-300 bg-sky-50 p-4 text-sm text-sky-950">
+            <p className="font-semibold">계좌 입금 대기</p>
+            <p className="mt-1">
+              보내는 분 <strong>{booking.customerName}</strong> · <strong>{formatPriceAmount(booking.totalAmount)}원</strong>
+              {booking.depositDeadline && (
+                <> · 안내한 기한 {formatKstDeadline(new Date(booking.depositDeadline))}(한국시간, 자동 취소 없음)</>
+              )}
+            </p>
+            <p className="mt-1 text-xs text-sky-900">
+              통장에 실제로 입금됐는지 먼저 확인한 뒤 “입금 확인”을 누르세요. 이 신청은 {isMixing ? '주문' : '시간대'}을 잡아 둔 채 자동으로 취소되지 않습니다.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <Button light disabled={busy} onClick={handleConfirmDeposit}>입금 확인</Button>
+              <Button light variant="outline" disabled={busy} onClick={handleCancelUnpaid}>미입금 취소</Button>
+              <Button light variant="outline" disabled={busy} onClick={handleResendDepositGuide}>입금 안내 재발송</Button>
+            </div>
+          </div>
+        )}
+
+        {booking.bankDeposit === 'cancelled' && (
+          <div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-800">
+            입금 전에 취소된 계좌 입금 신청입니다 — 늦게 입금이 들어왔다면 고객에게 돌려주거나 다시 신청받아 주세요.
+            {/* 미입금 취소 때 [입금 대기] 캘린더 일정 삭제가 실패했다 — 그 일정이 웹 예약을 막는다. */}
+            {booking.gcalError?.startsWith('waiting_delete: ') && (
+              <div className="mt-3">
+                <p className="font-semibold text-red-700">[입금 대기] 캘린더 일정이 남아 이 시간대의 웹 예약을 막고 있습니다.</p>
+                <Button type="button" variant="outline" className="mt-2" disabled={busy}
+                  onClick={() => runDeposit('delete_waiting_event', '캘린더 일정을 지우지 못했습니다.', '남은 [입금 대기] 캘린더 일정을 지울까요?')}>
+                  대기 일정 지우기
+                </Button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {sameNameDeposits.length > 0 && (
+          <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950">
+            <p className="font-semibold">
+              같은 이름의 다른 계좌 입금 신청이 있습니다 — 통장 입금 한 건을 두 신청에 확인하지 않게 금액·시각을 대조하세요
+            </p>
+            <ul className="mt-2 space-y-1">
+              {sameNameDeposits.map((c) => (
+                <li key={c.id}>
+                  <a href={`/admin/bookings/${c.id}`} className="font-medium underline">{c.orderNo}</a>
+                  {' '}· {ORDER_STATUS_LABELS[c.status] ?? c.status} · {formatPriceAmount(c.totalAmount)}원 · {formatKstDateTime(c.createdAt)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {isBankPaid && refundAccount && (
+          <div className="mb-4 rounded-lg border border-orange-300 bg-orange-50 p-4 text-sm text-orange-950">
+            <p className="font-semibold">환불 계좌</p>
+            {refundAccount.status === 'present' && (
+              <>
+                <p className="mt-1">
+                  {refundAccount.bankName} · 예금주 {refundAccount.accountHolder} (접수 {formatKstDateTimeFull(refundAccount.updatedAt)})
+                </p>
+                {!sameNameIgnoringSpace(refundAccount.accountHolder, booking.customerName) && (
+                  <p className="mt-2 font-semibold text-red-700">
+                    예금주가 고객 이름({booking.customerName})과 다릅니다. 가족 계좌일 수 있으니 필요하면 고객에게 확인해 주세요.
+                  </p>
+                )}
+                {refundAccountView ? (
+                  <div className="mt-2 rounded border border-orange-200 bg-white p-3">
+                    <p>{refundAccountView.bankName}</p>
+                    <p className="text-lg font-bold tracking-wide">{refundAccountView.accountNumber}</p>
+                    <p>예금주 {refundAccountView.accountHolder}</p>
+                  </div>
+                ) : (
+                  <Button light variant="outline" size="sm" className="mt-2" disabled={busy} onClick={handleShowRefundAccount}>
+                    계좌 보기
+                  </Button>
+                )}
+                <p className="mt-2 text-xs">“계좌 보기”를 누른 사실은 접속기록에 남습니다.</p>
+                {refundAccount.refundedAt ? (
+                  <p className="mt-2 font-semibold">송금 완료: {formatKstDateTimeFull(refundAccount.refundedAt)}</p>
+                ) : (
+                  <Button light size="sm" className="mt-2" disabled={busy} onClick={handleMarkRefundSent}>
+                    송금 완료
+                  </Button>
+                )}
+              </>
+            )}
+            {refundAccount.status === 'none' && <p className="mt-1">접수된 환불 계좌가 없습니다.</p>}
+            {refundAccount.status === 'unavailable' && (
+              <p className="mt-1">환불 계좌를 불러오지 못했습니다(마이그레이션 0048 확인).</p>
+            )}
+          </div>
         )}
 
         {booking.virtualAccountPayment && (
@@ -483,7 +704,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
 
             {booking.payment && (
               <dl className="mt-4 pt-4 border-t border-gray-100 space-y-2 text-sm">
-                <DescriptionRow label="결제 수단" value={booking.payment.method ?? '-'} />
+                <DescriptionRow label="결제 수단" value={isBankPaid ? '계좌 입금' : (booking.payment.method ?? '-')} />
                 <DescriptionRow
                   label="승인일시"
                   value={formatKstDateTimeFull(booking.payment.approvedAt)}
@@ -577,6 +798,11 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
           {canRefund && (
             <div className="pt-6 border-t border-gray-100">
               <h2 className="text-lg font-bold text-gray-900 dark:text-gray-900 mb-1">{isRemainderRefund ? '잔액 환불' : '임의 환불'}</h2>
+              {isBankPaid && (
+                <p className="mb-2 text-sm font-semibold text-red-700">
+                  계좌 입금 건입니다 — 토스로 돌려주지 않습니다. 고객 계좌로 송금을 마친 뒤 기록하세요.
+                </p>
+              )}
               <p className="text-sm text-gray-500 mb-4">
                 {isRemainderRefund ? (
                   <>
@@ -618,7 +844,7 @@ export default function AdminBookingDetailPage({ booking }: AdminBookingDetailPa
                   />
                 </Field>
                 <Button light type="submit" variant="outline" disabled={busy}>
-                  환불 처리
+                  {isBankPaid ? '송금 완료(환불 기록)' : '환불 처리'}
                 </Button>
               </form>
             </div>

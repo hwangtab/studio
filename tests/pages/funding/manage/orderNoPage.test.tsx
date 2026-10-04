@@ -212,7 +212,8 @@ describe('계좌 입금 안내', () => {
 
   it('계좌번호·금액·보내는 분 안내·기한(한국시간)을 크게 보여 준다', () => {
     render(<FundingManagePage {...pendingBank} paymentMethod="bank_transfer" />);
-    expect(screen.getByText('3333-12-5480849')).toHaveClass('text-3xl', 'font-bold');
+    // 계좌번호는 한 줄 고정(nowrap) + 화면 폭에 맞춘 큰 글씨(BankDepositGuide 주석).
+    expect(screen.getByText('3333-12-5480849')).toHaveClass('whitespace-nowrap', 'font-bold', 'text-[clamp(1.25rem,7vw,2.25rem)]');
     expect(screen.getByText('카카오뱅크 · 황경하 / 스튜디오 놀')).toBeInTheDocument();
     expect(screen.getByText('35,000원')).toHaveClass('text-3xl', 'font-bold');
     expect(screen.getByText('입금하실 때 보내는 분 이름은 신청하신 분 성함으로 해 주세요.')).toBeInTheDocument();

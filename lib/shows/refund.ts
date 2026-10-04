@@ -8,6 +8,16 @@ import type { TossPayment } from '../booking/toss';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
 import { rowsAffectedOf } from './service';
 import { parseLeadingTag } from './tossCodes';
+import type { ShowRefundVia } from './emailHtml';
+import { isBankDepositPayment } from '../payments/bankDeposit';
+import {
+  deleteRefundAccount,
+  encryptRefundAccountNumber,
+  loadRefundAccountSummary,
+  safeDbErrorSummary,
+  saveRefundAccount,
+  validateRefundAccount,
+} from '../payments/refundAccount';
 
 /**
  * 공연 티켓 부분/전량 환불 — 관리자(또는 관리자 대행 셀프 취소 화면)가 특정 티켓들을 지정해
@@ -43,8 +53,13 @@ import { parseLeadingTag } from './tossCodes';
  */
 
 export type RefundOutcome =
-  | { status: 'refunded'; amount: number; orderStatus: 'partially_refunded' | 'refunded' }
-  | { status: 'rejected'; reason: string }
+  /**
+   * `refundVia` — `payment`는 토스 결제 취소, `bank_account`는 계좌 입금 주문이라 운영자가 환불 계좌로 송금한다
+   * (고객 요청이면 그 계좌를 이 호출이 받아 저장했다).
+   */
+  | { status: 'refunded'; amount: number; orderStatus: 'partially_refunded' | 'refunded'; refundVia: ShowRefundVia }
+  /** `message`는 사유 코드 대신 그대로 보여 줄 문구(환불 계좌 형식 오류처럼 입력에 따라 달라지는 것). */
+  | { status: 'rejected'; reason: string; message?: string }
   | { status: 'toss_unknown' };
 
 const REFUND_REASON = '공연 티켓 환불(§11.3 취소환불표)';
@@ -61,7 +76,12 @@ const ticketRefundIdempotencyKey = (orderNo: string, ticketIds: string[]): strin
   `tkt-refund:${orderNo}:${[...ticketIds].sort().join(',')}`;
 
 export async function refundShowTickets(
-  input: { orderNo: string; ticketIds: string[]; noticeAt: Date; /** 환불을 요청한 주체 — refunds.requested_by에 남는다. 기본 admin. */ actor?: 'admin' | 'customer' },
+  input: {
+    orderNo: string; ticketIds: string[]; noticeAt: Date;
+    /** 환불을 요청한 주체 — refunds.requested_by에 남는다. 기본 admin. */ actor?: 'admin' | 'customer';
+    /** 계좌 입금 주문의 **고객** 환불에만 — 환불받을 은행·계좌번호·예금주(lib/payments/refundAccount.ts). */
+    refundAccount?: unknown;
+  },
   toss: Pick<FakeToss, 'cancelPayment'>,
 ): Promise<RefundOutcome> {
   const db = getDb();
@@ -97,7 +117,10 @@ export async function refundShowTickets(
   }
 
   const showtimeStartsAt = new Date(tickets[0].showtime.startsAt * 1000);
-  const pct = refundRateForNotice(showtimeStartsAt, input.noticeAt);
+  // **회차가 취소됐으면 전액이다.** 토스 결제는 회차 취소(cancelShowtime)가 그 자리에서 전액 환불하므로 여기에
+  // 오지 않는다 — 오는 것은 계좌 입금 주문(토스로 돌려줄 수 없어 환불 계좌를 받아야 한다)과 회차 취소 때 토스
+  // 환불이 실패해 남은 주문이다. 취소환불표는 고객 사정의 취소에 쓰는 표라 주최 측 취소에 적용하지 않는다.
+  const pct = tickets[0].showtime.status === 'cancelled' ? 100 : refundRateForNotice(showtimeStartsAt, input.noticeAt);
   if (pct === 0) {
     return { status: 'rejected', reason: 'after_showtime_start' };
   }
@@ -122,6 +145,28 @@ export async function refundShowTickets(
   const remaining = remainingRefundable(order, payments);
   if (totalAmount > remaining) {
     return { status: 'rejected', reason: 'exceeds_remaining' };
+  }
+
+  /**
+   * **계좌 입금 주문**(결제 행 키가 `bank-deposit:`)은 토스를 부르지 않는다. 고객 요청이면 환불 계좌를 받아
+   * 암호화해 두고(선점 전 — 키가 없으면 여기서 멈춰 티켓을 건드리지 않는다), 선점에 이긴 뒤 저장한다.
+   * 환불 기록·티켓 refunded·주문 상태는 토스 경로와 똑같이 그 자리에서 남기고(좌석이 바로 풀린다), 송금 여부는
+   * 환불 계좌 표의 `refunded_at`이 든다(관리자 "송금 완료"). 관리자 요청은 운영자가 이미 송금하고 기록하는 것이다.
+   */
+  const bank = isBankDepositPayment(payment);
+  let bankAccount: { bankName: string; accountHolder: string; accountNumberEnc: string } | null = null;
+  if (bank && requestedBy === 'customer') {
+    const account = validateRefundAccount(input.refundAccount);
+    if (!account.ok) return { status: 'rejected', reason: 'refund_account_invalid', message: account.message };
+    try {
+      bankAccount = {
+        bankName: account.value.bankName, accountHolder: account.value.accountHolder,
+        accountNumberEnc: encryptRefundAccountNumber(account.value.accountNumber),
+      };
+    } catch (error) {
+      console.error('[shows-refund] 환불 계좌 암호화 실패 — 접수하지 않는다', { orderNo: input.orderNo, error: error instanceof Error ? error.name : 'unknown' });
+      return { status: 'rejected', reason: 'refund_account_unavailable' };
+    }
   }
 
   // 1) 선점 — lineRefund.ts의 `funding_pledge_items.refunded_quantity` UPDATE에 대응.
@@ -156,6 +201,46 @@ export async function refundShowTickets(
       });
     }
   };
+
+  if (bank) {
+    // 한 주문에 환불 계좌 행은 하나다(티켓을 여러 번 나눠 환불하면 마지막에 적은 계좌로 덮는다). 앞선 요청의 행이
+    // 이미 있었으면 기록 실패 때 지우지 않는다 — 그 요청의 송금처가 사라진다.
+    const hadPriorAccount = bankAccount ? (await loadRefundAccountSummary({ kind: 'show', orderNo: input.orderNo })).status === 'present' : false;
+    if (bankAccount) {
+      try {
+        await saveRefundAccount({ kind: 'show', orderNo: input.orderNo }, { ...bankAccount, requestedAt: input.noticeAt });
+      } catch (error) {
+        // 오류 객체를 통째로 찍지 않는다 — 바인딩 값(계좌번호 암호문·예금주)이 실린다.
+        console.error('[shows-refund] 환불 계좌 저장 실패 — 선점을 되돌린다', { orderNo: input.orderNo, error: safeDbErrorSummary(error) });
+        await revertClaim();
+        return { status: 'rejected', reason: 'refund_account_unavailable' };
+      }
+    }
+    const bankStatements = [
+      db.insert(refunds).values({
+        paymentId: payment.id, amount: totalAmount, reason: `${REFUND_REASON} — 계좌 입금(환불 계좌로 송금)`,
+        requestedBy, status: 'done',
+      }),
+      db.run(sql`
+        UPDATE show_tickets SET status = 'refunded'
+        WHERE order_no = ${input.orderNo} AND id IN (${ticketIdList}) AND status = 'refunding'
+      `),
+    ];
+    try {
+      await db.batch(bankStatements as [typeof bankStatements[number], ...typeof bankStatements]);
+    } catch (error) {
+      // 돈은 아직 움직이지 않았고(운영자가 나중에 송금) 메워 줄 웹훅도 없다 — 전부 되돌린다: 티켓 refunding → issued,
+      // 방금 받은 환불 계좌 행 삭제. 되돌리지 않으면 티켓이 refunding에 영원히 남아 좌석만 잡고 환불도 안 나간다.
+      console.error('[shows-refund] 계좌 입금 환불 기록 실패 — 선점·환불 계좌를 되돌린다', { orderNo: input.orderNo, error: safeDbErrorSummary(error) });
+      await revertClaim();
+      if (bankAccount && !hadPriorAccount) await deleteRefundAccount({ kind: 'show', orderNo: input.orderNo });
+      return { status: 'rejected', reason: 'refund_account_unavailable' };
+    }
+    // 관리자 기록은 환불 계좌 표를 건드리지 않는다 — '송금 완료'는 그 행에서 명시적으로 누를 때만(mark_refund_sent).
+    const orderStatus = await settleOrderStatus(order.id, input.orderNo);
+    // 고객 요청은 앞으로 송금(bank_account), 관리자 기록은 이미 송금한 것(bank_account_sent) — 메일 문구가 갈린다.
+    return { status: 'refunded', amount: totalAmount, orderStatus, refundVia: requestedBy === 'customer' ? 'bank_account' : 'bank_account_sent' };
+  }
 
   // 2) 토스 부분 취소.
   const idempotencyKey = ticketRefundIdempotencyKey(input.orderNo, input.ticketIds);
@@ -220,18 +305,23 @@ export async function refundShowTickets(
   ];
   await db.batch(recordStatements as [typeof recordStatements[number], ...typeof recordStatements]);
 
-  // 다시 읽어 상태를 정한다 — 이 회차의 모든 티켓이 환불/무효면 전액 환불, 아니면 부분 환불.
+  const orderStatus = await settleOrderStatus(order.id, input.orderNo);
+  return { status: 'refunded', amount: totalAmount, orderStatus, refundVia: 'payment' };
+}
+
+/** 다시 읽어 주문 상태를 정한다 — 이 주문의 모든 티켓이 환불/무효면 전액 환불, 아니면 부분 환불. */
+async function settleOrderStatus(orderId: string, orderNo: string): Promise<'refunded' | 'partially_refunded'> {
+  const db = getDb();
   const remainingTickets = await db.query.showTickets.findMany({
-    where: (t, { eq }) => eq(t.orderNo, input.orderNo),
+    where: (t, { eq }) => eq(t.orderNo, orderNo),
   });
   const allSettled = remainingTickets.every((t) => t.status === 'refunded' || t.status === 'void');
   const orderStatus: 'refunded' | 'partially_refunded' = allSettled ? 'refunded' : 'partially_refunded';
   await db.run(sql`
     UPDATE orders SET status = ${orderStatus}, updated_at = unixepoch()
-    WHERE id = ${order.id} AND status IN ('paid', 'partially_refunded')
+    WHERE id = ${orderId} AND status IN ('paid', 'partially_refunded')
   `);
-
-  return { status: 'refunded', amount: totalAmount, orderStatus };
+  return orderStatus;
 }
 
 /**

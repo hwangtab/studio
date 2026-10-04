@@ -239,7 +239,7 @@ const deliverConfirmedEmails = async (send: () => Promise<string | null>): Promi
   }
 };
 
-type BookingOrder = NonNullable<Awaited<ReturnType<typeof findOrderByOrderNo>>>;
+export type BookingOrder = NonNullable<Awaited<ReturnType<typeof findOrderByOrderNo>>>;
 
 /** 멱등 재생(새로고침·웹훅 재도착)에서 돌려주는 성공 결과 — 이번 호출이 메일을 보내지 않았으므로 emailSent는 없다. */
 const replay = (order: BookingOrder): ConfirmOutcome => ({
@@ -261,22 +261,29 @@ const recordNotification = async (orderId: string, orderNo: string, notifyError:
 /** 하위 행이 없어 후처리를 못 한 주문에 남기는 사유 — 센티널이 아니라 사람이 읽을 실패다. */
 const MISSING_ROW_NOTICE = '확정 후처리 대상 행 없음(bookings·work_orders 부재) — 수동 확인 필요';
 
-/** 캘린더 등록. 실패는 확정을 뒤집지 않고 bookings.gcalError에만 남는다. */
-const ensureBookingEvent = async (
+/**
+ * 캘린더 등록. 실패는 확정을 뒤집지 않고 bookings.gcalError에만 남는다.
+ *
+ * `label`은 일정 제목 앞머리다 — 확정은 `[예약]`, 계좌 입금 대기는 `[입금 대기]`(lib/booking/bankDeposit.ts가
+ * 신청 순간에 올려 운영자 캘린더에도 그 시간이 잡혀 보이게 한다). 대기 일정은 실패해도 gcalError를 쓰지
+ * 않는다(`recordError: false`) — 그 값이 있으면 확정 때 이 함수가 "이미 시도했다"로 읽고 확정 일정을 만들지 않는다.
+ */
+export const ensureBookingEvent = async (
   order: BookingOrder,
   booking: BookingOrder['bookings'][number],
-): Promise<void> => {
+  opts: { label?: string; recordError?: boolean } = {},
+): Promise<string | null> => {
   const db = getDb();
   // 연습실은 스튜디오 캘린더에 올리지 않는다(녹음 freeBusy를 오염시킨다 — gcal.ts).
   // 전용 캘린더가 설정돼 있을 때만 거기 올리고, 없으면 조용히 건너뛴다. 이 경우
   // gcalEventId·gcalError가 둘 다 null로 남는데, 이는 "실패"가 아니라 "대상 아님"이다.
   const calendar: BookingCalendar = booking.serviceType === 'practice-room' ? 'practice-room' : 'studio';
-  if (calendar === 'practice-room' && !calendarIdFor('practice-room', booking.roomNumber)) return;
+  if (calendar === 'practice-room' && !calendarIdFor('practice-room', booking.roomNumber)) return null;
   try {
     const eventId = await createBookingEvent({
       calendar,
       room: booking.roomNumber,
-      summary: `[예약] ${getProduct(booking.productId)?.nameKo ?? booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
+      summary: `${opts.label ?? '[예약]'} ${getProduct(booking.productId)?.nameKo ?? booking.serviceType}${booking.roomNumber ? ` ${booking.roomNumber}` : ''} — ${order.customerName}`,
       description: [
         `상품: ${getProduct(booking.productId)?.nameKo ?? booking.productId} (${booking.durationHours}시간)${booking.roomNumber ? ` · 방 ${booking.roomNumber}` : ''}`,
         `고객: ${order.customerName} / ${order.customerPhone} / ${order.customerEmail}`,
@@ -287,8 +294,13 @@ const ensureBookingEvent = async (
       end: booking.endAt,
     });
     await db.update(bookings).set({ gcalEventId: eventId }).where(eq(bookings.id, booking.id));
+    return eventId;
   } catch (error) {
     const detail = error instanceof Error ? error.message : String(error);
+    if (opts.recordError === false) {
+      console.error('[booking-confirm] 캘린더 등록 실패(기록 생략)', { orderNo: order.orderNo, bookingId: booking.id, detail });
+      return null;
+    }
     try {
       await db
         .update(bookings)
@@ -301,6 +313,7 @@ const ensureBookingEvent = async (
         error: writeError,
       });
     }
+    return null;
   }
 };
 
@@ -316,7 +329,7 @@ const ensureBookingEvent = async (
  *
  * 반환값은 ConfirmOutcome.emailSent의 의미 그대로다 — undefined는 "이번 호출이 보내지 않았다".
  */
-const deliverPostConfirmation = async (order: BookingOrder): Promise<boolean | undefined> => {
+export const deliverPostConfirmation = async (order: BookingOrder): Promise<boolean | undefined> => {
   const isMixing = order.type === 'mixing';
   const booking = order.bookings[0];
   const workOrder = order.workOrders[0];

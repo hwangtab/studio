@@ -166,8 +166,20 @@ export const sendBookingConfirmedEmails = async (order: Order, booking: Booking)
 
   return failures.length ? failures.join(', ') : null;
 };
+/**
+ * 환불 안내 한 줄. 계좌 입금 주문(`bank_account`)은 결제 수단으로 돌려줄 수 없어 고객이 적은 환불 계좌로
+ * 운영자가 보낸다 — 기한은 접수일부터 3영업일(이용약관·펀딩 약관 제10조와 같은 기준). 메일에는 계좌를
+ * 싣지 않는다(메일함에 계좌가 남는다).
+ */
+export const refundLine = (refundAmount: number, refundVia: 'payment' | 'bank_account'): string =>
+  refundVia === 'bank_account'
+    ? refundAmount > 0
+      ? `환불 금액: ${formatPriceAmount(refundAmount)}원 (적어 주신 환불 계좌로 접수일부터 3영업일 이내에 보내 드립니다. 계좌를 잘못 적으셨다면 이 메일에 회신해 주세요.)`
+      : '환불 금액: 0원 (환불 규정에 따라 돌려드릴 금액이 없습니다)'
+    : `환불 금액: ${formatPriceAmount(refundAmount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요)`;
+
 export const sendBookingCancelledEmails = async (
-  order: Order, booking: Booking, refundAmount: number,
+  order: Order, booking: Booking, refundAmount: number, refundVia: 'payment' | 'bank_account' = 'payment',
 ): Promise<string | null> => {
   const when = kstTimeLabel(booking.startAt);
   const failures: string[] = [];
@@ -176,15 +188,17 @@ export const sendBookingCancelledEmails = async (
     subject: `[스튜디오 놀] 예약이 취소되었습니다 — ${when}`,
     text: [
       `${order.customerName}님, 예약이 취소되었습니다.`,
-      `환불 금액: ${formatPriceAmount(refundAmount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요)`,
+      refundLine(refundAmount, refundVia),
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
   });
   if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: `[예약 취소] ${when} — ${order.customerName} (환불 ${formatPriceAmount(refundAmount)}원)`,
-    text: `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
+    subject: `[예약 취소] ${when} — ${order.customerName} (환불 ${formatPriceAmount(refundAmount)}원${refundVia === 'bank_account' ? ' · 계좌 송금 필요' : ''})`,
+    text: refundVia === 'bank_account' && refundAmount > 0
+      ? `주문 ${order.orderNo} 취소 — 계좌 입금 주문이라 고객이 적은 환불 계좌로 3영업일 이내에 송금하고 관리자 화면에서 "송금 완료"를 눌러 주세요. 관리자: ${SITE_URL}/admin/bookings/${order.id}`
+      : `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   return failures.length ? failures.join(', ') : null;
@@ -255,7 +269,7 @@ export const sendMixingOrderConfirmedEmails = async (order: Order, workOrder: Wo
 };
 
 export const sendMixingOrderCancelledEmails = async (
-  order: Order, workOrder: WorkOrder, refundAmount: number,
+  order: Order, workOrder: WorkOrder, refundAmount: number, refundVia: 'payment' | 'bank_account' = 'payment',
 ): Promise<string | null> => {
   const product = getMixingProduct(workOrder.productId);
   const productName = product?.nameKo ?? workOrder.serviceType;
@@ -266,15 +280,17 @@ export const sendMixingOrderCancelledEmails = async (
     subject: `[스튜디오 놀] 주문이 취소되었습니다 — ${productName}`,
     text: [
       `${order.customerName}님, 주문이 취소되었습니다.`,
-      `환불 금액: ${formatPriceAmount(refundAmount)}원 (결제 수단으로 환불, 카드사에 따라 3~5영업일 소요)`,
+      refundLine(refundAmount, refundVia),
       `주문번호: ${order.orderNo}`,
     ].join('\n'),
   });
   if (customerError) failures.push(`customer:${customerError}`);
   const operator = await sendEmail({
     to: OPERATOR_EMAIL,
-    subject: `[믹싱 주문 취소] ${productName} — ${order.customerName} (환불 ${formatPriceAmount(refundAmount)}원)`,
-    text: `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
+    subject: `[믹싱 주문 취소] ${productName} — ${order.customerName} (환불 ${formatPriceAmount(refundAmount)}원${refundVia === 'bank_account' ? ' · 계좌 송금 필요' : ''})`,
+    text: refundVia === 'bank_account' && refundAmount > 0
+      ? `주문 ${order.orderNo} 취소 — 계좌 입금 주문이라 고객이 적은 환불 계좌로 3영업일 이내에 송금하고 관리자 화면에서 "송금 완료"를 눌러 주세요. 관리자: ${SITE_URL}/admin/bookings/${order.id}`
+      : `주문 ${order.orderNo} 취소. 관리자: ${SITE_URL}/admin/bookings`,
   });
   if (!operator.ok) failures.push(`operator:${operator.errorCode}`);
   return failures.length ? failures.join(', ') : null;

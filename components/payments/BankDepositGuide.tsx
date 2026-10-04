@@ -53,13 +53,19 @@ export default function BankDepositGuide({ amount, deadline, customerName, appli
       </h2>
 
       {/* 계좌 — 가장 크게 */}
-      <div className="mt-6 rounded-xl bg-gray-100 p-6 text-center dark:bg-gray-800">
+      <div className="mt-6 rounded-xl bg-gray-100 px-3 py-6 text-center sm:p-6 dark:bg-gray-800">
         <p className="text-lg text-gray-700 dark:text-gray-300">은행 · 예금주</p>
         <p className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
           {BANK_ACCOUNT.bankName} · {BANK_ACCOUNT.accountHolder}
         </p>
         <p className="text-lg text-gray-700 dark:text-gray-300">계좌번호</p>
-        <p className="mb-4 break-all text-3xl font-bold tracking-wide text-gray-900 sm:text-4xl dark:text-white">
+        {/*
+          계좌번호는 **절대 줄바꿈하지 않는다** — 은행 창구·ATM 앞에서 옮겨 적는 숫자라 "3333-12-" / "5480849"로
+          쪼개지면 두 줄을 이어 읽다 틀린다(2026-10-04 예약 확인 카드 안 390px에서 실제로 쪼개졌다). 대신 글자 크기를
+          화면 폭에 맞춰 줄인다: 320px 폭의 가장 좁은 자리(예약 카드 안 — 페이지·카드·상자 패딩을 뺀 약 210px)에서도
+          한 줄에 들어가는 7vw, 위로는 4xl(36px)에서 멈춘다. 숫자 폭은 tabular-nums로 고정한다.
+        */}
+        <p data-account-number className="mb-4 whitespace-nowrap font-bold tabular-nums text-gray-900 text-[clamp(1.25rem,7vw,2.25rem)] dark:text-white">
           {BANK_ACCOUNT.accountNumber}
         </p>
         <Button type="button" size="lg" onClick={copy}>
