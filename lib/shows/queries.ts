@@ -10,6 +10,7 @@ import {
 } from './availability';
 import { formatShowtimeLabel } from './format';
 import { calcRefundAmount, refundRateForNotice } from './refundPolicy';
+import { parseMapLinksJson, type MapLinkOverrides } from './maps';
 import { parseNoticesJson, parsePerformersJson, type ShowPerformer } from './structured';
 
 /**
@@ -49,7 +50,8 @@ export interface PublicShow {
   scheduleNote: string | null;
   onSitePriceNote: string | null;
   notices: string[];
-  mapUrl: string | null;
+  /** 제공자별 정확한 장소 주소(없으면 비어 있고 검색 링크를 쓴다) — lib/shows/maps.ts. */
+  mapLinks: MapLinkOverrides;
   cancelled: boolean;
   ticketTypes: PublicTicketType[];
   showtimes: PublicShowtime[];
@@ -136,7 +138,7 @@ export async function getPublicShowBySlug(slug: string, now: Date): Promise<Publ
     scheduleNote: show.scheduleNote ?? null,
     onSitePriceNote: show.onSitePriceNote ?? null,
     notices: parseNoticesJson(show.noticesJson),
-    mapUrl: show.mapUrl ?? null,
+    mapLinks: parseMapLinksJson(show.mapLinksJson),
     cancelled: show.status === 'cancelled',
     ticketTypes: ticketTypes.map((t) => ({
       id: t.id,

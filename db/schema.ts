@@ -1592,8 +1592,10 @@ export const shows = sqliteTable('shows', {
   onSitePriceNote: text('on_site_price_note'),
   /** JSON `string[]` — 소개 아래 짧은 안내 목록(수익 사용처 등). */
   noticesJson: text('notices_json'),
-  /** 지도 링크. 없으면 장소명+주소로 네이버 지도 검색. */
+  /** @deprecated 0048에서 `map_links_json`으로 대체. 컬럼은 남아 있지만 아무도 읽거나 쓰지 않는다(운영 값은 전부 NULL). */
   mapUrl: text('map_url'),
+  /** JSON `{ naver?, kakao? }` — 제공자별 정확한 장소 주소(https). 없으면 제공자별 검색(lib/shows/maps.ts). */
+  mapLinksJson: text('map_links_json'),
   status: text('status', { enum: showStatusEnum }).notNull().default('draft'),
   noticeKey: text('notice_key').notNull().default(sql`(lower(hex(randomblob(8))))`),
   createdAt: integer('created_at').notNull().default(sql`(unixepoch())`),

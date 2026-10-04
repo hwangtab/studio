@@ -14,7 +14,7 @@ const show: PublicShow = {
   performers: [{ name: '출연자', bio: '소개', photo: null, sns: null }],
   ageRating: '전체 관람가', runningMinutes: 100, venueName: '장소', venueAddress: '주소 1',
   description: '첫 문단\n\n## 소제목\n\n> "인용"\n— 누구\n\n둘째 문단', coverImage: '/images/shows/x.webp', ogImage: null,
-  scheduleNote: '18:00 입장 시작', onSitePriceNote: '현장 판매 안내', notices: ['안내 하나'], mapUrl: 'https://naver.me/x',
+  scheduleNote: '18:00 입장 시작', onSitePriceNote: '현장 판매 안내', notices: ['안내 하나'], mapLinks: { naver: 'https://naver.me/x' },
   cancelled: false,
   ticketTypes: [{ id: 'tt1', name: '사전 예매', price: 25000, zoneLabel: '비지정석' }],
   showtimes: [{ id: 'st1', startsAt: 2000000000, label: '10.24(토) 18:30', saleState: 'open', remaining: { tt1: 10 } }],
@@ -32,7 +32,8 @@ describe('ShowDetailView', () => {
     expect(screen.getByRole('heading', { level: 3, name: '소제목' })).toBeTruthy();
     expect(screen.getByText('— 누구').closest('blockquote')).not.toBeNull();
     expect(screen.getByText('출연자')).toBeTruthy();
-    expect(screen.getByRole('link', { name: '네이버 지도에서 보기' }).getAttribute('href')).toBe('https://naver.me/x');
+    expect(screen.getByRole('link', { name: '네이버 지도' }).getAttribute('href')).toBe('https://naver.me/x');
+    expect(screen.getByRole('link', { name: '카카오맵' }).getAttribute('href')).toContain('map.kakao.com');
     expect(screen.getByTitle('장소 위치 지도')).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '오시는 길' })).toBeTruthy();
     expect(screen.getByRole('heading', { level: 2, name: '티켓 예매' })).toBeTruthy();

@@ -22,6 +22,7 @@
 - 히어로 폰트 서브셋(`scripts/generate-hero-font.mjs`)이 `data/shows/*.ts`의 `title`을 소스로 읽는다.
   공연을 추가하면 **빌드 후 바뀐 woff2·chars.json을 함께 커밋**한다(CI `--check`가 잡는다).
 - 소개(`description`)는 빈 줄로 가른 문단이고, `## `로 시작하면 소제목·`> `로 시작하면 인용이다(`descriptionBlocks`). **첫 문단은 평문이어야 한다**(검색 요약·OG가 첫 문단에서 나오며 시드가 검사한다). 사실(수치·인용)은 펀딩 프로젝트 페이지처럼 출처가 있는 것만 옮기고 새 사실을 더하지 않는다.
+- **공연장 지도는 제공자 목록이 만든다**(`lib/shows/maps.ts`). 길찾기 버튼(네이버 지도·카카오맵)은 `SHOW_MAP_PROVIDERS`를 돌아 만들어지므로 제공자를 늘리려면 그 목록에 한 줄만 더한다. **제공자마다 잘 먹는 검색어가 다르다**(실측 2026-10-04): 네이버·구글은 `장소명 + 도로명 주소`, **카카오맵은 도로명 주소만**(합치면 "검색 결과가 없어요"). 셋 다 "가동 1층" 같은 건물 안쪽 표기는 떼야 한다(`showMapStreet`). 검색이 다른 가게를 잡으면 공연 정의의 `mapLinks: { kakao: 'https://place.map.kakao.com/…' }`처럼 제공자별 정확한 주소(https)로 덮는다(컬럼 `map_links_json`, 마이그레이션 0049). 옛 `map_url` 컬럼은 더 쓰지 않는다. 상세의 지도 iframe은 구글 임베드(CSP frame-src에 `www.google.com`).
 - `performers`(이름 나열, NOT NULL)는 메일·관리자·검색용으로 남는다. 상세 화면은 `performers_json`을 읽는다.
 
 ### 화면은 ShowDetailView 한 벌이다 — 펀딩 상세와 같은 합성
