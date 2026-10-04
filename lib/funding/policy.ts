@@ -186,7 +186,7 @@ export const cancelBlockedMessage = (code: keyof typeof CANCEL_BLOCK_MESSAGES, g
  * 날짜만으로는 하루에 두 번 고친 것을 구분할 수 없어 게이트를 통과시킬 방법이 없어진다 —
  * r2가 실제로 그 경우였다(#63이 처리방침에 언론 홍보 3개 항을 더한 날 이 게이트가 도입됐다).
  */
-export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-03';
+export const FUNDING_TERMS_VERSION = 'funding-terms-2026-10-04';
 
 /**
  * 이 판본부터 응원 메시지는 이름 공개 여부와 **따로** 간다 — 이름을 공개하지 않은 후원의 메시지도
@@ -233,12 +233,14 @@ export const PRIVACY_LEGAL_RETENTION_TEXT =
  * `: string` 타입 주석을 명시로 둔다 — 이 값을 리터럴 타입으로 좁혀 두면 다음 개정에서
  * 판본 문자열을 갱신할 때마다 타입 에러가 난다.
  */
-export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-09-29';
+export const FUNDING_CREATOR_TERMS_VERSION: string = 'funding-creator-terms-2026-10-04';
 
 /** 후원 시 수집하는 항목 — PledgeWizard가 실제로 전송하고 funding_pledges·orders에 저장되는 필드와 1:1이다. */
 export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
   '필수 — 후원자 이름, 연락처(휴대전화), 이메일 주소',
   '배송 리워드를 선택한 경우 — 받는 분, 연락처, 우편번호, 주소, 상세주소, 배송 메모',
+  '계좌로 입금하는 경우 — 입금 내역에 나타나는 보내는 분 이름(입금자명)',
+  '계좌 입금 펀딩을 취소하는 경우 — 환불받을 은행, 계좌번호(암호화해 보관), 예금주',
   '선택 — 응원 메시지, 후원자 명단 이름 표시 동의 여부, 명단에 표시할 이름(실명 대신 가린 이름이나 닉네임을 고른 경우)',
   '자동 생성 — 주문번호, 펀딩 리워드·수량·금액, 결제수단, 결제·환불 처리 기록',
 ];
@@ -246,7 +248,8 @@ export const FUNDING_COLLECTED_ITEMS: readonly string[] = [
 /** 후원 처리 목적 — 수집한 항목을 쓰는 범위. */
 export const FUNDING_COLLECTION_PURPOSES: readonly string[] = [
   '펀딩(리워드 선주문) 계약의 성립·결제·취소·환불 처리',
-  '펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
+  '계좌 입금의 입금 확인과 계좌 입금 펀딩의 환불 송금',
+  '계좌 입금 안내·펀딩 확정·환불 안내 메일 발송과 리워드 제작·배송 진행 상황 고지',
   '배송 리워드의 발송과 배송 문의 응대',
   '프로젝트 페이지 후원자 명단에 응원 메시지 표시(이름 표시에 동의하지 않은 경우 "익명"으로), 이름 표시에 동의한 경우 이름(가린 이름이나 닉네임을 고른 경우 그 이름) 표시',
 ];
@@ -272,7 +275,7 @@ export type DataProcessorRow = {
  */
 export const FUNDING_DATA_PROCESSORS: ReadonlyArray<DataProcessorRow> = [
   { name: '토스페이먼츠', country: '대한민국', purpose: '결제 승인·취소·환불 처리', items: '후원자 이름, 이메일, 주문번호, 결제 금액·결제수단 정보' },
-  { name: 'Resend', country: '미국', purpose: '펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
+  { name: 'Resend', country: '미국', purpose: '계좌 입금 안내·펀딩 확정·취소 안내 메일 발송', items: '이메일 주소, 메일 본문에 담기는 펀딩 내역' },
   { name: 'Vercel', country: '미국', purpose: '웹사이트·주문 처리 서버 호스팅', items: '서비스 이용 과정에서 전송되는 위 항목 전부' },
   { name: 'Turso', country: '미국', purpose: '펀딩 기록 데이터베이스 보관', items: '위 수집 항목 전부' },
   // 내려받기 게이트(pages/api/funding/download.ts)가 서명된 주소로 302 리디렉션을 보내므로,
