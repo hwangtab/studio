@@ -169,40 +169,82 @@ describe('funding manage getServerSideProps', () => {
 
 /**
  * 이 한 줄(SSR이 `assessSelfCancel`에 `paymentMethod`를 넘기는 것)이 빠져서 죽은 취소
- * 버튼이 났다. 토스가 아닌 후원 — 운영자가 계좌로 받아 수기 등록한 건과 무통장입금
- * 중단(2026-09-11) 전의 건 — 은 취소할 결제가 없어 환불이 계좌 송금이다.
+ * 버튼이 났다(PR #77). 계좌 입금이 돌아오면서 `entrySource`까지 넘겨야 한다 — 같은 `bank_transfer`라도
+ * 관리자 수기 등록은 문의로, 온라인 계좌 입금은 환불 계좌를 받아 화면에서 취소한다.
  * 판정 자체는 policy.test.ts가 덮고, 여기서는 **배선**을 고정한다.
  */
-describe('SSR이 셀프 취소 판정에 결제수단을 넘긴다', () => {
-  it('토스가 아닌 펀딩은 canCancel=false + 문의 안내를 내려보낸다', async () => {
+describe('SSR이 셀프 취소 판정에 결제수단·등록 경로를 넘긴다', () => {
+  const setPledge = (orderNo: string, set: string) => client.execute({
+    sql: `UPDATE funding_pledges SET ${set} WHERE order_id=(SELECT id FROM orders WHERE order_no=?)`,
+    args: [orderNo],
+  });
+  const propsOf = async (orderNo: string, token: string) =>
+    ((await getServerSideProps({
+      params: { locale: 'ko', orderNo }, query: { token }, res: resStub(),
+    } as never)) as { props: { canCancel: boolean; cancelBlockedReason: string | null; refundVia: string | null; deposit: { amount: number; deadline: string; customerName: string } | null; onlineBankTransfer: boolean } }).props;
+
+  it('관리자 수기 등록(계좌)은 canCancel=false + 문의 안내를 내려보낸다', async () => {
     const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
-    await client.execute({
-      sql: "UPDATE funding_pledges SET payment_method='bank_transfer' WHERE order_id=(SELECT id FROM orders WHERE order_no=?)",
-      args: [c.orderNo],
-    });
+    await setPledge(c.orderNo, "payment_method='bank_transfer', entry_source='manual'");
 
-    const result = (await getServerSideProps({
-      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
-    } as never)) as { props: { canCancel: boolean; cancelBlockedReason: string | null } };
-
-    expect(result.props.canCancel).toBe(false);
-    expect(result.props.cancelBlockedReason).toContain('문의로 접수');
+    const props = await propsOf(c.orderNo, c.manageToken);
+    expect(props.canCancel).toBe(false);
+    expect(props.refundVia).toBeNull();
+    expect(props.cancelBlockedReason).toContain('문의로 접수');
   });
 
-  // 토스 후원은 결제수단 때문에 막히지 않는다. canCancel 자체는 프로젝트 진행 상태(실시간
-  // 기준)에 좌우되므로 단언하지 않고, **차단 사유가 offline_payment가 아니라는 것**만 본다.
+  // 온라인 계좌 입금은 결제수단 때문에 막히지 않는다. canCancel 자체는 프로젝트 진행 상태(실시간
+  // 기준)에 좌우되므로, 취소가 열려 있으면 환불 경로가 계좌인지를 본다.
+  it('온라인 계좌 입금은 offline_payment로 막히지 않고, 열리면 환불 계좌 경로다', async () => {
+    const c = await createSingleRewardPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    await markPaid(c.orderNo);
+
+    const props = await propsOf(c.orderNo, c.manageToken);
+    expect(props.cancelBlockedReason ?? '').not.toContain('운영자가 직접 등록');
+    if (props.canCancel) expect(props.refundVia).toBe('bank_account');
+    expect(props.onlineBankTransfer).toBe(true);
+    expect(props.deposit).toBeNull();
+  });
+
   it('토스 펀딩은 결제수단 때문에 막히지 않는다', async () => {
     const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
     if (!c.ok) throw new Error();
     await markPaid(c.orderNo);
 
-    const result = (await getServerSideProps({
-      params: { locale: 'ko', orderNo: c.orderNo }, query: { token: c.manageToken }, res: resStub(),
-    } as never)) as { props: { cancelBlockedReason: string | null } };
+    const props = await propsOf(c.orderNo, c.manageToken);
+    expect(props.cancelBlockedReason ?? '').not.toContain('운영자가 직접 등록');
+    if (props.canCancel) expect(props.refundVia).toBe('card');
+  });
 
-    expect(result.props.cancelBlockedReason ?? '').not.toContain('계좌로 받은 펀딩');
+  it('입금 대기 중인 계좌 입금은 계좌 안내 값(금액·기한·이름)을 서버 값으로 내려보낸다', async () => {
+    const c = await createSingleRewardPledge(payloadFor({ paymentMethod: 'bank_transfer', additionalAmount: 2000 }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+
+    const props = await propsOf(c.orderNo, c.manageToken);
+    expect(props.deposit).toEqual({ amount: 7000, deadline: c.holdExpiresAt.toISOString(), customerName: '김후원' });
+    // 기한은 신청 시각 + 3일이다(안내용 — 자동 취소 없음).
+    expect(new Date(props.deposit!.deadline).getTime() - NOW.getTime()).toBe(3 * 24 * 60 * 60 * 1000);
+  });
+
+  it('기한이 지나도 입금 대기면 계좌 안내를 그대로 내려보낸다 — 자동 만료가 없다', async () => {
+    const c = await createSingleRewardPledge(payloadFor({ paymentMethod: 'bank_transfer' }), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    // SSR은 진입 시 expireStalePledges를 돈다. 기한을 과거로 돌려 두어도 계좌 입금은 건너뛰어야 한다.
+    await setPledge(c.orderNo, 'hold_expires_at = 1000');
+
+    const props = await propsOf(c.orderNo, c.manageToken);
+    expect(props.deposit).not.toBeNull();
+  });
+
+  it('토스 결제 대기에는 계좌 안내가 없다', async () => {
+    const c = await createSingleRewardPledge(payloadFor(), PROJECT, reward('mail'), NOW);
+    if (!c.ok) throw new Error();
+    const props = await propsOf(c.orderNo, c.manageToken);
+    expect(props.deposit).toBeNull();
+    expect(props.onlineBankTransfer).toBe(false);
   });
 });
 

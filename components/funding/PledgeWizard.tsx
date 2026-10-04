@@ -8,9 +8,10 @@ import { Button } from '../ui/Button';
 import { formatPriceAmount } from '../../data/pricing';
 import { computeFundingAmounts } from '../../lib/funding/amounts';
 import { ADDITIONAL_AMOUNT_STEP, ANONYMOUS_LABEL, MAX_ADDITIONAL_AMOUNT, MAX_QUANTITY, PLEDGE_TEXT_LIMITS } from '../../lib/funding/policy';
+import { BANK_TRANSFER_BLOCK_MESSAGES, bankTransferBlockReason } from '../../lib/funding/bankAccount';
 import type { FundingProject } from '../../lib/funding/projects';
 import type { PublicNameStyle } from '../../lib/funding/publicName';
-import { draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
+import { clearStoredDraft, draftStorageKey, readStringDraft, writeStringDraft } from '../../lib/formDraft';
 import { Field, TextArea, TextInput } from '../ui/Field';
 import PublicNameChoice from './PublicNameChoice';
 import { formatKakaoAddress, loadKakaoPostcode } from './kakaoPostcode';
@@ -374,6 +375,20 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
   const preview = useMemo(() => computeFundingAmounts(reward.amount, quantity, additional), [reward.amount, quantity, additional]);
 
   /**
+   * 결제수단 — 카드·간편결제(토스 위젯) 또는 계좌로 직접 입금.
+   *
+   * 계좌 입금은 한정 수량 리워드에 못 쓴다. 판정은 서버 검증(lib/funding/validation.ts)과
+   * **같은 함수·같은 인자**다(bankTransferBlockReason) — 한쪽만 바뀌면 화면은 고르게 두는데 서버가
+   * 거절하는 죽은 선택지가 생긴다. 고른 뒤에 한정 리워드로 바꾸면 카드로 되돌린다(아래 effect).
+   */
+  const [payMethod, setPayMethod] = useState<'toss' | 'bank_transfer'>('toss');
+  const bankBlocked = bankTransferBlockReason([reward]);
+  const usingBank = payMethod === 'bank_transfer' && bankBlocked === null;
+  useEffect(() => {
+    if (bankBlocked && payMethod === 'bank_transfer') setPayMethod('toss');
+  }, [bankBlocked, payMethod]);
+
+  /**
    * 결제위젯을 **폼 안에** 띄운다. 수단 목록은 위젯이 계약·노출 설정대로 그리므로 우리가
    * 목록을 들고 있지 않는다 — 토스 쪽에서 수단이 늘거나 줄면 그대로 따라간다.
    *
@@ -395,6 +410,41 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
     if (needsShipping && (!ship.postcode.trim() || !ship.address1.trim())) {
       submittingRef.current = false;
       setError(EMPTY_ADDRESS_MESSAGE);
+      return;
+    }
+    if (usingBank) {
+      // 계좌 입금 — 결제창이 없다. 신청을 만들고 펀딩 확인 페이지(입금 안내)로 옮긴다.
+      setQuantityText(String(quantity));
+      setAdditionalText(String(additional));
+      setSubmitting(true);
+      try {
+        const res = await fetch('/api/funding/pledges', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            projectSlug: project.slug,
+            items: [{ rewardId: reward.id, quantity }],
+            additionalAmount: additional, paymentMethod: 'bank_transfer',
+            ...form, supporterMessage: form.supporterMessage || undefined,
+            termsAgreed: true,
+            shipping: needsShipping
+              ? { ...ship, ...(shipToOther ? {} : { name: form.customerName, phone: form.customerPhone }) }
+              : undefined,
+          }),
+        });
+        if (!res.headers.get('content-type')?.includes('application/json')) { setError('서버 오류가 발생했습니다.'); return; }
+        const json = await res.json();
+        if (!res.ok || typeof json.manageUrl !== 'string') { setError(json.message ?? '펀딩 신청에 실패했습니다.'); return; }
+        // 신청이 만들어졌으니 임시 저장은 비운다(토스는 success 화면이 비운다).
+        clearStoredDraft(draftKey);
+        // 문서 이동이다 — 도착지는 관리 토큰이 실린 비밀 주소라 클라이언트 전환·측정 대상이 아니다
+        // (lib/analytics/privatePaths.ts). 금액은 그 화면이 서버에서 다시 읽는다.
+        window.location.assign(json.manageUrl);
+      } catch {
+        setError('네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+      } finally {
+        submittingRef.current = false;
+        setSubmitting(false);
+      }
       return;
     }
     /**
@@ -521,8 +571,8 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
     if (e.key !== 'Enter') return;
     e.preventDefault();
     // 위젯이 아직 안 떴으면 Enter도 제출하지 않는다 — 안 막으면 동의 상태를 못 받은 것이
-    // "약관을 빼먹었다"로 읽혀, 후원자가 고칠 수 없는 약관 문구를 본다.
-    if (!paymentReady) return;
+    // "약관을 빼먹었다"로 읽혀, 후원자가 고칠 수 없는 약관 문구를 본다. 계좌 입금은 위젯이 필요 없다.
+    if (!paymentReady && !usingBank) return;
     void submit();
   };
 
@@ -748,21 +798,50 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
         </div>
       </fieldset>
 
-      {/* 결제수단과 결제 약관 동의는 **위젯이 그린다.** 우리 목록을 따로 두지 않는다 —
-          계약된 수단이 늘면 그대로 따라오고, 갈라지면 화면과 실제가 어긋난다. */}
+      {/*
+        결제수단 — 위에서 **카드·간편결제(토스)**와 **계좌로 직접 입금** 중 하나를 고른다. 토스 쪽 수단
+        목록과 결제 약관 동의는 **위젯이 그린다**(우리 목록을 따로 두지 않는다 — 계약된 수단이 늘면 그대로
+        따라온다). 계좌 입금을 고르면 위젯을 **숨기기만 한다** — 언마운트하면 훅이 iframe을 걷었다가
+        되돌아올 때 다시 그리며 동의 상태가 풀린다. 숨긴 동안 위젯 약관은 제출 조건에서 빠진다.
+      */}
       <fieldset className={cardClass} aria-labelledby={`${uid}-step-pay`}>
-        <StepHeader id={`${uid}-step-pay`} n={3} title="결제수단" hint="고르신 수단으로 바로 결제창이 열립니다." />
-        {paymentError ? (
-          <div>
-            <p role="alert" className="text-sm text-red-600">{paymentError}</p>
-            <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
-          </div>
-        ) : (
-          <>
-            <div id={methodsId} />
-            <div id={agreementId} />
-          </>
-        )}
+        <StepHeader
+          id={`${uid}-step-pay`} n={3} title="결제수단"
+          hint={usingBank ? '신청하시면 입금하실 계좌를 바로 알려 드립니다.' : '고르신 수단으로 바로 결제창이 열립니다.'}
+        />
+        <div className="mb-4 space-y-2" role="radiogroup" aria-label="결제 방법">
+          <label className={choiceRow}>
+            <input type="radio" name={`${uid}-paymethod`} value="toss" className={radioClass}
+              checked={!usingBank} onChange={() => setPayMethod('toss')} />
+            <span className="min-w-0">
+              <span className="block font-bold text-gray-900 dark:text-white">카드·간편결제(토스)</span>
+              <span className="typo-card-meta block">결제가 끝나면 바로 확정됩니다.</span>
+            </span>
+          </label>
+          <label className={`${choiceRow} ${bankBlocked ? 'cursor-not-allowed opacity-50' : ''}`}>
+            <input type="radio" name={`${uid}-paymethod`} value="bank_transfer" className={radioClass}
+              checked={usingBank} disabled={bankBlocked !== null} onChange={() => setPayMethod('bank_transfer')} />
+            <span className="min-w-0">
+              <span className="block font-bold text-gray-900 dark:text-white">계좌로 직접 입금</span>
+              <span className="typo-card-meta block">
+                {bankBlocked ? BANK_TRANSFER_BLOCK_MESSAGES[bankBlocked] : '은행·ATM에서 보내실 수 있습니다. 입금을 확인하면 메일로 알려 드립니다.'}
+              </span>
+            </span>
+          </label>
+        </div>
+        <div hidden={usingBank}>
+          {paymentError ? (
+            <div>
+              <p role="alert" className="text-sm text-red-600">{paymentError}</p>
+              <Button type="button" variant="outline" onClick={retryPayment} className="mt-3">다시 시도</Button>
+            </div>
+          ) : (
+            <>
+              <div id={methodsId} />
+              <div id={agreementId} />
+            </>
+          )}
+        </div>
       </fieldset>
 
       {/*
@@ -829,14 +908,15 @@ export default function PledgeWizard({ project, initialRewardId, lockedReward = 
           누른 시점의 판본이 증거로 남는다.
         */}
         <p className="text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-          결제하기를 누르면{' '}
+          {usingBank ? '계좌 안내 받기' : '결제하기'}를 누르면{' '}
           <Link href="/ko/funding/terms" target="_blank" className="underline">펀딩 약관(청약철회·환불)</Link>과{' '}
           <Link href="/ko/privacy-policy" target="_blank" className="underline">개인정보 처리방침</Link>에 동의하는 것으로 봅니다.
         </p>
 
-        {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다. */}
-        <Button type="submit" size="lg" fullWidth className="mt-3" disabled={submitting || allSoldOut || !paymentReady}>
-          {submitting ? '처리 중…' : `${formatPriceAmount(preview.totalAmount)}원 · 결제하기`}
+        {/* 위젯이 아직 안 떴으면 누를 수 없다 — 누르면 주문만 만들어지고 결제창은 안 열린다.
+            계좌 입금은 위젯이 필요 없고, 마지막 버튼 말만 "계좌 안내 받기"다(버튼 규칙의 "결제하기" 자리). */}
+        <Button type="submit" size="lg" fullWidth className="mt-3" disabled={submitting || allSoldOut || (!usingBank && !paymentReady)}>
+          {submitting ? '처리 중…' : `${formatPriceAmount(preview.totalAmount)}원 · ${usingBank ? '계좌 안내 받기' : '결제하기'}`}
         </Button>
       </div>
     </form>
