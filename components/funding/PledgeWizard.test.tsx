@@ -294,6 +294,66 @@ describe('리워드 선택', () => {
   });
 });
 
+/**
+ * 모달에서 카드를 눌러 들어오면(`lockedReward`) 그 리워드로 시작하지만, 완전히 숨기지는
+ * 않는다 — "다른 리워드 보기"로 접어 두고 펼치면 라디오로 바꿀 수 있다(2026-10-04). 고르면
+ * **바뀐다**(여러 개를 더하는 것이 아니다 — 위 '리워드 선택' 블록과 같은 단일 선택 규칙).
+ */
+describe('리워드 잠금(모달)과 다른 리워드 보기', () => {
+  it('잠겨 있으면 라디오 목록 대신 고른 리워드 요약과 "다른 리워드 보기"가 보인다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
+    expect(screen.queryByRole('radio')).toBeNull();
+    expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
+    expect(screen.getByText('CD')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '다른 리워드 보기 (1)' })).toBeInTheDocument();
+  });
+
+  it('펼치면 라디오 목록이 보이고, 고르면 그 리워드로 바뀐다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: '다른 리워드 보기 (1)' }));
+    expect(screen.getByRole('radio', { name: /CD/ })).toBeChecked();
+    await userEvent.click(screen.getByRole('radio', { name: /감사 메일/ }));
+    expect(screen.getByRole('radio', { name: /감사 메일/ })).toBeChecked();
+    expect(screen.getByText('감사 메일 × 1')).toBeInTheDocument();
+  });
+
+  it('접으면 다시 요약으로 돌아간다', async () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" lockedReward remaining={{ cd: 5, mail: null }} />);
+    await userEvent.click(screen.getByRole('button', { name: '다른 리워드 보기 (1)' }));
+    await userEvent.click(screen.getByRole('button', { name: '접기' }));
+    expect(screen.queryByRole('radio')).toBeNull();
+    expect(screen.getByText('고르신 리워드')).toBeInTheDocument();
+  });
+
+  it('리워드가 하나뿐이면 "다른 리워드 보기"를 보이지 않는다', () => {
+    const single = parseFundingProject(`---
+slug: solo
+title: 데모
+summary: s
+cover: /c.webp
+goalAmount: 1000
+startAt: 2026-01-01T00:00:00+09:00
+endAt: 2036-01-01T00:00:00+09:00
+rewards:
+  - id: only
+    title: 유일한 리워드
+    description: d
+    amount: 10000
+    requiresShipping: false
+    estimatedDelivery: 2026-11
+---
+`, 'solo');
+    render(<PledgeWizard project={single} initialRewardId="only" lockedReward remaining={{ only: 5 }} />);
+    expect(screen.queryByRole('button', { name: /다른 리워드 보기/ })).toBeNull();
+  });
+
+  it('잠겨 있지 않으면 토글이 없고 항상 전체 목록이 보인다', () => {
+    render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
+    expect(screen.queryByRole('button', { name: /다른 리워드 보기/ })).toBeNull();
+    expect(screen.getAllByRole('radio').length).toBe(2);
+  });
+});
+
 it('제출하면 결제수단이 toss로 나간다', async () => {
   render(<PledgeWizard project={project} initialRewardId="cd" remaining={{ cd: 5, mail: null }} />);
   await userEvent.type(screen.getByLabelText(/^이름\*$/), '김후원');

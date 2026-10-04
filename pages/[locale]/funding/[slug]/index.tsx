@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import SEO from '../../../../components/SEO';
-import { trackMicroEvent } from '../../../../utils/analytics';
 import ProjectDetailView from '../../../../components/funding/ProjectDetailView';
 import MobileStickyCta from '../../../../components/common/MobileStickyCta';
 import RewardModal from '../../../../components/funding/RewardModal';
@@ -61,13 +60,21 @@ export default function FundingProjectPage({ project, initialState, initialStatu
   // 리워드 모달은 페이지에 **하나만** 둔다. 카드마다 띄우면 결제 위젯 인스턴스가 여러 벌
   // 살아 있을 수 있다.
   const [openReward, setOpenReward] = useState<FundingReward | null>(null);
-  // 리워드 없이 결제 화면을 바로 연다 — 하단 바·히어로의 "펀딩하기"(RewardModal checkout).
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
-  const openCheckout = useCallback(() => {
-    setOpenReward(null);
-    setCheckoutOpen(true);
-    trackMicroEvent('funding_pledge_start', { component: 'funding_cta', landing_slug: project.slug });
-  }, [project.slug]);
+  /**
+   * 리워드 없이 누르는 "펀딩하기"(히어로·하단 바)는 **리워드 섹션으로 스크롤**한다
+   * (2026-10-04, 되돌림). 2026-09-29에 "모든 펀딩하기가 같은 결제 화면에 닿게 한다"며 리워드
+   * 없이 결제 모달(전체 목록)을 바로 여는 쪽으로 바꾼 적이 있는데, 그 전 방식(스크롤)이 더
+   * 나았다고 판단해 되돌린다 — saf-2026도 리워드가 여럿인 랜딩에서는 같은 패턴(스크롤)을 쓰고,
+   * 선택지가 하나뿐인 랜딩에서만 모달로 바로 간다(`ScrollToSectionMobileCta`). 리워드가
+   * 하나뿐인 프로젝트(예: smoke-test)는 스크롤이 군더더기이므로 그 하나로 바로 연다.
+   */
+  const scrollToRewards = useCallback(() => {
+    if (project.rewards.length === 1) {
+      setOpenReward(project.rewards[0]);
+      return;
+    }
+    document.getElementById('rewards')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [project.rewards]);
   /**
    * **뒤로가기는 모달만 닫는다.** 예전엔 모달이 떠 있을 때 뒤로가기를 누르면 펀딩 페이지를 통째로
    * 떠났다 — 카카오톡·인스타그램에서 들어온 안드로이드 사용자는 대화방으로 튕겨 나갔다
@@ -82,7 +89,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
    * popstate가 모달을 닫는다 — 닫고 나서 뒤로가기를 한 번 더 눌러야 페이지를 떠나는 일이 없게.
    */
   const historyPushedRef = useRef(false);
-  const modalOpen = openReward !== null || checkoutOpen;
+  const modalOpen = openReward !== null;
   useEffect(() => {
     if (!modalOpen || historyPushedRef.current) return;
     try {
@@ -97,7 +104,6 @@ export default function FundingProjectPage({ project, initialState, initialStatu
       if (!historyPushedRef.current || (e.state as { fundingModal?: boolean } | null)?.fundingModal) return;
       historyPushedRef.current = false;
       setOpenReward(null);
-      setCheckoutOpen(false);
     };
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
@@ -109,7 +115,6 @@ export default function FundingProjectPage({ project, initialState, initialStatu
     }
     historyPushedRef.current = false;
     setOpenReward(null);
-    setCheckoutOpen(false);
   }, []);
   // ProjectDetailView(리워드 카드)와 같은 폴백 계산이다 — 한쪽만 고치면 카드에 보이는
   // 잔여 수량과 모달이 실제로 거는 제한이 갈린다(lib/funding/projects.ts 주석 참조).
@@ -203,7 +208,7 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         statusError={!!statusError}
         remaining={data?.remaining}
         onSelectReward={setOpenReward}
-        onPledge={openCheckout}
+        onPledge={scrollToRewards}
         backers={data?.publicBackers ?? []}
         anonymousBackers={data?.anonymousBackerCount ?? 0}
         messages={data?.publicMessages ?? []}
@@ -217,8 +222,8 @@ export default function FundingProjectPage({ project, initialState, initialStatu
         subtitle="후원 결제·취소·리워드에 관해 자주 묻는 질문입니다."
       />
 
-      <RewardModal project={project} reward={openReward} checkout={checkoutOpen && !openReward} remaining={remaining} onClose={closeModal} />
-      <MobileStickyCta visible={canPledge} href={`/ko/funding/${project.slug}/pledge`} label="펀딩하기" onOpen={openCheckout} />
+      <RewardModal project={project} reward={openReward} remaining={remaining} onClose={closeModal} />
+      <MobileStickyCta visible={canPledge} href={`/ko/funding/${project.slug}/pledge`} label="펀딩하기" onOpen={scrollToRewards} />
     </>
   );
 }
