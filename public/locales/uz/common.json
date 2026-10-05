@@ -331,6 +331,10 @@
       "title": "Mastering",
       "subtitle": "Yozuvni yakunlaydigan bosqich. Spotify -14 LUFS kabi platforma me'yorlariga moslab, balans quloqchinda ham, mashinada ham, karnayda ham buzilmaydi."
     },
+    "arrangement": {
+      "title": "Kompozitsiya · Aranjirovka · Fonogramma",
+      "subtitle": "Har qo'shiq uchun qat'iy narx. Aranjirovka miks kabi trek soni bo'yicha darajalanadi (≤10 / 11–30 / 31+). Musiqachilar haqiqiy xarajat bo'yicha."
+    },
     "practiceRoom": {
       "title": "Mashg'ulot xonasi — oylik · soatbay",
       "subtitle": "24/7 shovqin izolyatsiyali ish maydoni, oylik ijaraga — ko'p oylar to'la bo'lgani uchun navbat ro'yxatini ham yuritamiz.",
@@ -2182,7 +2186,7 @@
         },
         {
           "q": "Narxi qancha?",
-          "a": "Har bir qo'shiq uchun alohida hisoblanadi. Aranjirovka hajmi, virtual cholg'ular va jonli sessiya musiqachilari nisbati, tahrir doirasi va topshiriladigan materiallarga bog'liq, shu sababli referens va demoni eshitgach bepul maslahatda belgilaymiz. Musiqachilar haqi faqat haqiqiy xarajat bo'yicha olinadi."
+          "a": "Har qo'shiq uchun qat'iy. Kompozitsiya {{composition}}; aranjirovka ≤10 trek {{small}} · 11–30 trek {{band}} · 31+ trek {{large}}; mavjud qo'shiq uchun maxsus fonogramma {{mr}} (QQSsiz, 2 ta tahrir kiritilgan). Musiqachilar haqiqiy xarajat bo'yicha."
         },
         {
           "q": "Qanday boshlash kerak?",
@@ -2234,34 +2238,34 @@
       ]
     },
     "pricing": {
-      "title": "Narx qanday belgilanadi",
-      "subtitle": "Qat'iy narxlar jadvali yo'q; har bir qo'shiq alohida hisoblanadi. Raqamni nima o'zgartiradi — shu yerda.",
-      "factorsTitle": "Narxni belgilovchi to'rt omil",
+      "title": "Narxlar",
+      "subtitle": "Har qo'shiq uchun, QQSsiz, 2 ta tahrir kiritilgan. Aranjirovka darajalari miks bilan bir xil trek soniga ega.",
+      "factorsTitle": "Narxga qo'shiladiganlar",
       "factors": [
         {
-          "label": "Aranjirovka hajmi",
-          "detail": "Pianino yoki gitara tarkibi va torli cholg'ular hamda xorli to'liq guruh ish hajmi bo'yicha bir necha barobar farq qiladi."
+          "label": "Jonli musiqachilar",
+          "detail": "Musiqachi qo'shilsa, haqi haqiqiy xarajat bo'yicha qo'shiladi, vositachilik haqisiz."
         },
         {
-          "label": "Virtual cholg'ular va jonli sessiya",
-          "detail": "Sessiya musiqachilari o'z haqini qo'shadi — haqiqiy xarajat bo'yicha, vositachilik haqisiz."
+          "label": "Yozuv, miks, mastering",
+          "detail": "Narxlar sahifasidagi narxlarda. Aranjirovka va miks bir xil trek darajalarida, shuning uchun oldindan hisoblash mumkin."
         },
         {
-          "label": "Tahrir doirasi",
-          "detail": "Tuzilish, tonallik va temp birinchi demoda belgilanadi. Undan keyingi qisman tahrirlar va to'liq qayta aranjirovka boshqacha hisoblanadi."
+          "label": "Uchinchi tahrirdan",
+          "detail": "Tuzilish, tonallik, temp va tarkib birinchi demoda belgilanadi. Undan keyingi ikki tahrir kiritilgan; to'liq qayta aranjirovka qayta hisoblanadi."
         },
         {
-          "label": "Topshiriladigan materiallar",
-          "detail": "Bitta fonogramma fayli, yoki stemlar, sessiya fayllari va yozuv, miks, masteringgacha davom etish."
+          "label": "Relizgacha",
+          "detail": "Distribyutsiya va targ'ibotga davom etsangiz, reliz loyihasi sifatida birlashtiramiz."
         }
       ],
-      "referenceTitle": "Narx haqida",
+      "referenceTitle": "Bir qarashda",
       "referenceItems": [
-        "Yozuv, miks va mastering narxlar sahifasidagi narxlarda hisoblanadi — aranjirovka bilan yoki usiz.",
-        "Torli cholg'ular yoki xorli to'liq guruh aranjirovkasi ₩500K–1,5M atrofida. Pianino yoki gitara yetakchiligidagi kichik tarkib maslahatda aytiladi.",
-        "Maslahat bepul. Eshitib, yo'nalish, jadval va narxni yozib bergach qaror qilasiz."
+        "Kompozitsiya {{composition}} · maxsus fonogramma {{mr}}",
+        "Aranjirovka ≤10 trek {{small}} · 11–30 trek {{band}} · 31+ trek {{large}}",
+        "Maslahat bepul. Referens va demo yuboring, daraja va jadvalni darhol aytamiz."
       ],
-      "cta": "Narx so'rash"
+      "cta": "Bog'lanish"
     },
     "process": {
       "title": "Jarayon",
@@ -2316,7 +2320,7 @@
         },
         {
           "q": "Nechta tahrir kiradi?",
-          "a": "Tuzilish, tonallik, temp va cholg'ular tarkibi birinchi demoda tasdiqlanadi. Undan keyin kelishilgan doiradagi qisman tahrirlar bosqichlarni sanamay sayqallanadi. Yo'nalishni o'zgartiradigan to'liq qayta aranjirovka qayta hisoblanadi. Tahrir qayerda tugab, qayta ish qayerdan boshlanishini maslahatda yozib beramiz."
+          "a": "Tuzilish, tonallik, temp va tarkib birinchi demoda tasdiqlanadi, undan keyin 2 ta tahrir kiritilgan. Yo'nalishni o'zgartiradigan to'liq qayta aranjirovka qayta hisoblanadi. Tahrir qayerda tugab, qayta ish qayerdan boshlanishini maslahatda yozib beramiz."
         },
         {
           "q": "Qancha vaqt oladi?",
@@ -2336,7 +2340,7 @@
         },
         {
           "q": "Shu jamoa yozuv va relizni ham davom ettira oladimi?",
-          "a": "Ha. Yozuv, miks va mastering e'lon qilingan narxlarda davom etadi, distribyutsiya va targ'ibotga o'tsangiz reliz loyihasi sifatida birlashtiramiz. Qo'shiqni aranjirovka qilgan odam yozuvni ham boshqaradi va miks qiladi, shuning uchun g'oya oxirigacha saqlanadi."
+          "a": "Ha. Yozuv, miks va mastering e'lon qilingan narxlarda davom etadi, distribyutsiya va targ'ibotga o'tsangiz reliz loyihasi sifatida birlashtiramiz. Aranjirovka va miks bir xil trek darajalarida, shuning uchun umumiy summani oldindan hisoblash mumkin; qo'shiqni aranjirovka qilgan odam yozuvni ham boshqaradi va miks qiladi."
         }
       ]
     },

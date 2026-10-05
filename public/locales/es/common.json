@@ -331,6 +331,10 @@
       "title": "Masterización",
       "subtitle": "La etapa que remata el disco. Ajustado a objetivos de plataforma como -14 LUFS de Spotify, para que el balance se sostenga en auriculares, en el coche o en altavoces."
     },
+    "arrangement": {
+      "title": "Composición · Arreglos · Pistas",
+      "subtitle": "Precios fijos por canción. El arreglo se escalona por número de pistas igual que la mezcla (≤10 / 11–30 / 31+). Los músicos de sesión se cobran al costo."
+    },
     "practiceRoom": {
       "title": "Sala de Práctica — Residencia Mensual · Por Horas",
       "subtitle": "Un espacio insonorizado 24/7 alquilado por mes: solemos estar llenos, así que también aceptamos lista de espera.",
@@ -2182,7 +2186,7 @@
         },
         {
           "q": "¿Cuánto cuesta?",
-          "a": "Se presupuesta por canción. Depende del tamaño del arreglo, la proporción de instrumentos virtuales y músicos de sesión, el alcance de las revisiones y los entregables, así que lo fijamos en una consulta gratuita tras escuchar tus referencias y tu demo. Los honorarios de los músicos se cobran al costo."
+          "a": "Precio fijo por canción. Composición {{composition}}; arreglo ≤10 pistas {{small}} · 11–30 pistas {{band}} · 31+ pistas {{large}}; pista a medida de una canción existente {{mr}} (sin IVA, 2 revisiones incluidas). Los músicos de sesión se cobran al costo."
         },
         {
           "q": "¿Cómo empiezo?",
@@ -2234,34 +2238,34 @@
       ]
     },
     "pricing": {
-      "title": "Así se fija el precio",
-      "subtitle": "No hay lista de precios fija; cada canción se presupuesta. Esto es lo que mueve la cifra.",
-      "factorsTitle": "Cuatro factores que deciden el presupuesto",
+      "title": "Precios",
+      "subtitle": "Por canción, sin IVA, 2 revisiones incluidas. Los niveles de arreglo siguen las mismas pistas que la mezcla.",
+      "factorsTitle": "Qué se suma al precio",
       "factors": [
         {
-          "label": "Tamaño del arreglo",
-          "detail": "Una formación de piano o guitarra y una banda completa con cuerdas y coro difieren varias veces en trabajo."
+          "label": "Músicos de sesión",
+          "detail": "Sus honorarios se añaden al costo, sin comisión."
         },
         {
-          "label": "Instrumentos virtuales vs. músicos",
-          "detail": "Los músicos de sesión añaden sus honorarios, cobrados al costo y sin comisión."
+          "label": "Grabación, mezcla, masterización",
+          "detail": "A los precios de la página de precios. Arreglo y mezcla comparten niveles por pistas, así que puedes sumarlo de antemano."
         },
         {
-          "label": "Alcance de las revisiones",
-          "detail": "Estructura, tono y tempo se fijan en el primer demo. Las revisiones parciales posteriores y un rearreglo completo se presupuestan distinto."
+          "label": "Desde la tercera revisión",
+          "detail": "Estructura, tono, tempo e instrumentación se fijan en el primer demo. Dos revisiones después están incluidas; un rearreglo completo se presupuesta de nuevo."
         },
         {
-          "label": "Entregables",
-          "detail": "Un solo archivo de pista, o stems, archivos de sesión y continuar con grabación, mezcla y masterización."
+          "label": "Hasta el lanzamiento",
+          "detail": "Si continúas con distribución y promoción, lo agrupamos como proyecto de lanzamiento."
         }
       ],
-      "referenceTitle": "Qué esperar",
+      "referenceTitle": "De un vistazo",
       "referenceItems": [
-        "Grabación, mezcla y masterización se cobran a los precios de la página de precios, con o sin arreglo.",
-        "Un arreglo de banda completa con cuerdas o coro cuesta ₩500K–1,5M. Las formaciones pequeñas de piano o guitarra se presupuestan en la consulta.",
-        "La consulta es gratuita. Decide después de que escuchemos y anotemos dirección, calendario y precio."
+        "Composición {{composition}} · pista a medida {{mr}}",
+        "Arreglo ≤10 pistas {{small}} · 11–30 pistas {{band}} · 31+ pistas {{large}}",
+        "La consulta es gratuita. Envía referencias y demo y te diremos el nivel y el calendario enseguida."
       ],
-      "cta": "Pedir presupuesto"
+      "cta": "Contactar"
     },
     "process": {
       "title": "Cómo funciona",
@@ -2316,7 +2320,7 @@
         },
         {
           "q": "¿Cuántas revisiones incluye?",
-          "a": "Estructura, tono, tempo e instrumentación se confirman en el primer demo. Después, las revisiones parciales dentro del alcance acordado se pulen sin contar rondas. Un rearreglo completo que cambia la dirección se presupuesta de nuevo. Dejamos por escrito dónde termina la revisión y dónde empieza el retrabajo."
+          "a": "Estructura, tono, tempo e instrumentación se confirman en el primer demo, y dos revisiones después están incluidas. Un rearreglo completo que cambia la dirección se presupuesta de nuevo. Dejamos por escrito dónde termina la revisión y dónde empieza el retrabajo."
         },
         {
           "q": "¿Cuánto tarda?",
@@ -2336,7 +2340,7 @@
         },
         {
           "q": "¿El mismo equipo puede seguir con grabación y lanzamiento?",
-          "a": "Sí. Grabación, mezcla y masterización siguen a los precios publicados, y si continúas con distribución y promoción lo agrupamos como proyecto de lanzamiento. Quien arregló la canción también dirige la grabación y la mezcla, así la intención llega intacta al final."
+          "a": "Sí. Grabación, mezcla y masterización siguen a los precios publicados, y si continúas con distribución y promoción lo agrupamos como proyecto de lanzamiento. Arreglo y mezcla comparten niveles por pistas, así que el total se suma de antemano, y quien arregló la canción también dirige la grabación y la mezcla."
         }
       ]
     },

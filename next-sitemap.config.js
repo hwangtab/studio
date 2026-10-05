@@ -71,7 +71,7 @@ const pageImageMap = {
   '/wedding-song': { url: '/images/og-recording3.webp', title: 'Studio NOL Wedding Song Package - ₩350K+', caption: 'Wedding vocal package at Studio NOL: pro recording, mix, and editing.' },
   '/voice-acting': { url: '/images/og-hardware3.webp', title: 'Studio NOL Voiceover Recording - ₩100K/hr', caption: 'Professional voiceover recording at Studio NOL, Yeonsinnae.' },
   '/cover-video': { url: '/images/og-recording1.webp', title: 'Studio NOL Cover Video Package - ₩350K', caption: 'Cover video filming + recording + mixing all-in-one at Studio NOL, Yeonsinnae.' },
-  '/composition-arrangement': { url: '/images/og-hardware1.webp', title: 'Studio NOL Composition & Arrangement - Quote per Song', caption: 'Composition, arrangement, backing tracks and production by producer Hwang Kyungha at Studio NOL, Yeonsinnae.' },
+  '/composition-arrangement': { url: '/images/og-hardware1.webp', title: 'Studio NOL Composition & Arrangement - from ₩500K/song', caption: 'Composition, arrangement, backing tracks and production by producer Hwang Kyungha at Studio NOL, Yeonsinnae.' },
   // Buyer-intent 가이드 허브 6종 — 이미지 소스는 data/buyerIntentHubs.ts hero.image와
   // 수동 동기(허브 추가/이미지 변경 시 여기도 갱신).
   '/guides/wedding-song-singing': { url: '/images/recording7.webp', title: 'Wedding Song Self-Singing Guide - Studio NOL', caption: 'Practice, record, and deliver your own wedding song — one-page guide by Studio NOL.' },

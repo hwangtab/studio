@@ -14,6 +14,7 @@ import {
   VOCAL_PACKAGE_PRICE,
   VOICEOVER_HOURLY_PRICE,
   WEDDING_PACKAGE_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
 } from '../../data/pricing';
 import { buildOperatorPersonNode, getOperatorPersonId } from './person';
 import {
@@ -31,6 +32,7 @@ import {
   VOCAL_PACKAGE_OFFER_NAMES,
   VOICEOVER_OFFER_NAMES,
   WEDDING_OFFER_NAMES,
+  ARRANGEMENT_OFFER_NAMES,
 } from './shared';
 import { RELEASE_TIER_LABELS } from './releaseProject';
 
@@ -101,6 +103,8 @@ export const generateDefaultSchema = (
     { name: WEDDING_OFFER_NAMES[locale], price: WEDDING_PACKAGE_PRICE, path: '/wedding-song' },
     { name: VOICEOVER_OFFER_NAMES[locale], price: VOICEOVER_HOURLY_PRICE, path: '/voice-acting' },
     { name: COVER_VIDEO_OFFER_NAMES[locale], price: COVER_VIDEO_PACKAGE_PRICE, path: '/cover-video' },
+    // 2026-10-05 — 작곡·편곡 LP 진입 가격(소편성 편곡). 작곡·풀밴드·대편성·맞춤 MR은 LP·가격 페이지 카드에 있다.
+    { name: ARRANGEMENT_OFFER_NAMES[locale], price: ARRANGEMENT_SMALL_PRICE, path: '/composition-arrangement' },
   ];
   const toOffer = (offer: (typeof offers)[number], withProvider: boolean) => ({
     '@type': 'Offer',

@@ -11,6 +11,11 @@ import {
   ALBUM_BUNDLE_PRICE,
   ALBUM_LINE_ITEM_TOTAL,
   COVER_VIDEO_PACKAGE_PRICE,
+  COMPOSITION_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+  CUSTOM_MR_PRICE,
   DAY_LOCK_4H_PRICE,
   DAY_LOCK_8H_PRICE,
   DAY_LOCK_SAVINGS,
@@ -79,6 +84,7 @@ const collectOffers = (locale: (typeof LOCALES)[number]) => {
     ...d.recordingOffers,
     ...d.mixingOffers,
     ...d.masteringOffers,
+    ...d.arrangementOffers,
     ...d.specialPackages,
     ...d.practiceRoomOffers,
     ...d.additionalServices,
@@ -116,6 +122,14 @@ describe('가격 SSOT 정합', () => {
     expect(byId.get('mixing-level3')).toBe(MIXING_LEVEL3_PRICE);
     expect(byId.get('mastering-single')).toBe(MASTERING_SINGLE_PRICE);
     expect(byId.get('mastering-package')).toBe(MASTERING_PACKAGE_PRICE);
+    // 작곡·편곡·MR (2026-10-05) — 등급은 믹싱과 같은 트랙 수, 증분은 발매 싱글 페이지의 +50~150만원
+    expect(byId.get('composition-song')).toBe(COMPOSITION_PRICE);
+    expect(byId.get('arrangement-small')).toBe(ARRANGEMENT_SMALL_PRICE);
+    expect(byId.get('arrangement-band')).toBe(ARRANGEMENT_BAND_PRICE);
+    expect(byId.get('arrangement-large')).toBe(ARRANGEMENT_LARGE_PRICE);
+    expect(byId.get('custom-mr')).toBe(CUSTOM_MR_PRICE);
+    expect(ARRANGEMENT_BAND_PRICE - ARRANGEMENT_SMALL_PRICE).toBe(500000);
+    expect(ARRANGEMENT_LARGE_PRICE - ARRANGEMENT_SMALL_PRICE).toBe(1500000);
     expect(byId.get('package-wedding')).toBe(WEDDING_PACKAGE_PRICE);
     expect(byId.get('package-single-bundle')).toBe(SINGLE_BUNDLE_PRICE);
     expect(byId.get('package-ep-bundle')).toBe(EP_BUNDLE_PRICE);
@@ -161,6 +175,8 @@ describe('가격 SSOT 정합', () => {
       WEDDING_PACKAGE_PRICE,
       VOICEOVER_HOURLY_PRICE,
       COVER_VIDEO_PACKAGE_PRICE,
+      // 2026-10-05 추가 — 작곡·편곡 LP의 진입 가격(소편성 편곡)
+      ARRANGEMENT_SMALL_PRICE,
     ];
     expect(biz.makesOffer.map((o) => o.price)).toEqual(expected);
     expect(biz.hasOfferCatalog.itemListElement.map((o) => o.price)).toEqual(expected);
@@ -352,6 +368,7 @@ describe('가격 SSOT 정합', () => {
       { route: '/wedding-song', won: WEDDING_PACKAGE_PRICE },
       { route: '/voice-acting', won: VOICEOVER_HOURLY_PRICE },
       { route: '/cover-video', won: COVER_VIDEO_PACKAGE_PRICE },
+      { route: '/composition-arrangement', won: ARRANGEMENT_SMALL_PRICE },
     ];
     // 어긋난 라우트를 한 번에 모아 보여준다 — 하나씩 터지면 여러 번 돌려야 한다.
     const offenders = expectations
@@ -404,6 +421,11 @@ describe('가격 SSOT 정합', () => {
       WEDDING_PACKAGE_PRICE,
       VOICEOVER_HOURLY_PRICE,
       COVER_VIDEO_PACKAGE_PRICE,
+      COMPOSITION_PRICE,
+      ARRANGEMENT_SMALL_PRICE,
+      ARRANGEMENT_BAND_PRICE,
+      ARRANGEMENT_LARGE_PRICE,
+      CUSTOM_MR_PRICE,
       RENTAL_HOURLY_PRICE,
       LESSON_MONTHLY_PRICE,
       PRACTICE_ROOM_MONTHLY_PRICE,

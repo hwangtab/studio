@@ -3,7 +3,7 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import ServiceLinkPill from '../../components/ui/ServiceLinkPill';
-import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building } from '@/lib/lucide-icons';
+import { Mic, SlidersHorizontal, Disc, Info, Star, PlusCircle, ArrowRight, Building, Music } from '@/lib/lucide-icons';
 import HeroKakaoCta from '../../components/common/HeroKakaoCta';
 import MarketPriceComparison from '../../components/pricing/MarketPriceComparison';
 import { useTranslation } from 'react-i18next';
@@ -90,6 +90,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     recordingOffers,
     mixingOffers,
     masteringOffers,
+    arrangementOffers,
     additionalServices,
     specialPackages,
     practiceRoomOffers
@@ -180,9 +181,10 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       { id: 'recording', title: t('pricing.recording.title'), offers: recordingOffers },
       { id: 'mixing', title: t('pricing.mixing.title'), offers: mixingOffers },
       { id: 'mastering', title: t('pricing.mastering.title'), offers: masteringOffers },
+      { id: 'arrangement', title: t('pricing.arrangement.title'), offers: arrangementOffers },
       { id: 'practice-room', title: t('pricing.practiceRoom.title'), offers: practiceRoomOffers },
     ],
-    [t, specialPackages, recordingOffers, mixingOffers, masteringOffers, practiceRoomOffers]
+    [t, specialPackages, recordingOffers, mixingOffers, masteringOffers, arrangementOffers, practiceRoomOffers]
   );
 
   // 긴 가격 페이지(특수패키지→녹음→믹싱→마스터링→부가서비스)를 바로 점프하는 앵커 목차.
@@ -191,6 +193,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
     { id: 'recording', label: t('pricing.recording.title') },
     { id: 'mixing', label: t('pricing.mixing.title') },
     { id: 'mastering', label: t('pricing.mastering.title') },
+    { id: 'arrangement', label: t('pricing.arrangement.title') },
     { id: 'practice-room', label: t('pricing.practiceRoom.title') },
     { id: 'support-services', label: t('pricing.additional.title') },
   ], [t]);
@@ -506,7 +509,39 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       {/* 음악연습실 월 입주·시간제 — <title>·h1이 선두로 약속한 단가(월 입주)의 도착지.
           시설·혜택 정본은 /practice-room이고 여기서는 계약 조건만 다룬 뒤 넘긴다. */}
-      <Section id="practice-room" variant="alternate" className="scroll-mt-32">
+      {/* 작곡·편곡·MR 제작 (2026-10-05) — /composition-arrangement LP와 같은 arrangementOffers를 그린다. */}
+      <Section id="arrangement" variant="alternate" className="scroll-mt-32">
+        <SectionHeading
+          icon={Music}
+          title={t('pricing.arrangement.title')}
+          subtitle={t('pricing.arrangement.subtitle')}
+        />
+        <p className="typo-card-meta text-center max-w-3xl mx-auto mb-6">
+          {VAT_NOTICE}
+        </p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto" role="list">
+          {arrangementOffers.map((offer, index) => (
+            <div key={offer.id} role="listitem">
+              <PricingCard
+                id={offer.id}
+                title={offer.title}
+                price={offer.priceDisplay}
+                unit={offer.unit}
+                description={offer.description}
+                features={offer.features}
+                recommended={offer.recommended}
+                delay={0.1 * (index + 1)}
+                ctaLabel={t('pricing.cta.inquiry')}
+                ctaHref={kakaoUrl}
+                trackingComponent="PricingArrangement"
+                locale={locale}
+              />
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      <Section id="practice-room" variant="default" className="scroll-mt-32">
         <SectionHeading
           icon={Building}
           title={t('pricing.practiceRoom.title')}
@@ -549,7 +584,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Additional Services Section */}
-      <Section id="support-services" variant="default" className="scroll-mt-32">
+      <Section id="support-services" variant="alternate" className="scroll-mt-32">
         <SectionHeading
           icon={PlusCircle}
           title={t('pricing.additional.title')}
@@ -603,7 +638,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
 
       {/* 관련 서비스 바로가기 — prefetch={false}: 본문 fold 내 button pill들의
           무거운 SSG JSON 자동 prefetch 방지. hover/focus 시 prefetch는 유지. */}
-      <Section variant="alternate" spacing="tight">
+      <Section variant="default" spacing="tight">
         <div className="flex flex-wrap justify-center gap-4">
           {/* 발매 프로젝트를 맨 앞에 — 통합 패키지가 기획·유통·홍보까지 포함하므로
               그 다음 행선지이고, 바로 아래 CTA가 부르는 페이지이기도 하다.
@@ -635,7 +670,7 @@ const Pricing: NextPageWithLayout<PricingProps> = ({ locale, pricingData, hubLoc
       </Section>
 
       {/* Improved CTA Section */}
-      <Section variant="default">
+      <Section variant="alternate">
         <ContactCTA
           locale={locale}
           title={t('pricing.cta.title')}

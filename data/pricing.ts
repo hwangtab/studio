@@ -42,6 +42,23 @@ export const WEDDING_PACKAGE_PRICE = 350000; // 축가/이벤트 녹음(행사�
 export const VOICEOVER_HOURLY_PRICE = 100000;
 export const COVER_VIDEO_PACKAGE_PRICE = 350000;
 export const RENTAL_HOURLY_PRICE = 100000; // 촬영 대관
+
+// 작곡·편곡·MR 제작 정가 (2026-10-05 신설). 사이트 안의 기존 숫자에서 끌어냈다:
+//   - 등급은 믹싱과 같은 **트랙 수**로 가른다(10트랙 이하 / 11~30 / 31트랙 이상) — 편곡 등급이
+//     곧 믹싱 등급이라 고객이 두 번 셀 필요가 없다.
+//   - 풀밴드 = 소편성 + 0.5M, 대편성(스트링·합창) = 소편성 + 1.5M — 발매 프로젝트 싱글 페이지가
+//     먼저 공개한 "편곡 깊이: 기본 편곡 → 풀밴드·스트링·합창 +0.5~1.5M"과 같은 증분이다.
+//   - 소편성·작곡은 싱글 번들(SINGLE_BUNDLE_PRICE)과 같은 금액 — "곡 하나의 뼈대"가
+//     "곡 하나의 완성(녹음·믹싱·마스터링·유통·홍보)"과 같은 값.
+//   - 맞춤 MR은 10트랙 이하 믹싱(MIXING_LEVEL1_PRICE)과 같은 금액. 축가 패키지(WEDDING_PACKAGE_PRICE)와
+//     합쳐도 싱글 번들 수준이라 축가 고객이 MR까지 맡길 수 있는 선.
+// 세션 연주비는 어느 등급에도 들어 있지 않다(연주자 실비만, 섭외 수수료 없음 — 2026-09-26 결정).
+// 수정은 믹싱과 같은 2회. (이 주석에 "N만원" 표기를 쓰지 않는 이유: pricing.test의 리터럴 스캔이 주석도 읽는다.)
+export const COMPOSITION_PRICE = 500000;       // 작곡: 탑라인·코드·곡 구조 + 가이드 데모
+export const ARRANGEMENT_SMALL_PRICE = 500000; // 소편성 편곡 (10트랙 이하, 가상악기)
+export const ARRANGEMENT_BAND_PRICE = 1000000; // 풀밴드 편곡 (11~30트랙)
+export const ARRANGEMENT_LARGE_PRICE = 2000000; // 대편성 편곡 (31트랙 이상, 스트링·브라스·합창)
+export const CUSTOM_MR_PRICE = 200000;         // 맞춤 MR (기존 곡 키·템포·길이 맞춤, 축가·행사·커버)
 /**
  * 음악연습실 시간제 — **소비자가 6,600원, VAT 포함.** 다른 상수는 전부 VAT 별도인데 이것만
  * 포함액이다. 처음엔 스페이스클라우드 리스팅(9/25 판매 중지)과 같은 값(시간당 4천4백 원)으로 열었다가,
@@ -458,6 +475,141 @@ export const getPricingData = (locale: Locale) => {
         vi: ['Áp dụng từ 4 bài trở lên', 'Thống nhất tone và loudness toàn album', 'Tuân thủ chuẩn nền tảng streaming', 'File âm thanh độ phân giải cao'],
         th: ['ใช้กับ 4 เพลงขึ้นไป', 'ปรับโทนและ loudness ทั้งอัลบั้มให้สม่ำเสมอ', 'ตามมาตรฐานแพลตฟอร์มสตรีมมิง', 'ไฟล์เสียงความละเอียดสูง'],
         uz: ['To"rt va undan ortiq trek uchun', 'Albom bo"ylab ton va loudness bir xil', 'Streaming platforma standartlariga mos', 'Yuqori rezolyutsiyali audio fayllar']
+      }),
+    },
+  ];
+
+  // 작곡·편곡·MR 제작 — /composition-arrangement LP와 /pricing 양쪽이 이 배열을 그린다.
+  const arrangementOffers = [
+    {
+      id: 'composition-song',
+      title: t(locale, { ko: '작곡', en: 'Composition', zh: '作曲', es: 'Composición', vi: 'Sáng tác', th: 'แต่งเพลง', uz: 'Kompozitsiya' }),
+      subtitle: t(locale, { ko: '멜로디·코드·곡 구조 + 가이드 데모', en: 'Melody, chords, structure + guide demo', zh: '旋律·和弦·曲式 + 引导demo', es: 'Melodía, acordes, estructura + demo guía', vi: 'Giai điệu, hợp âm, cấu trúc + demo hướng dẫn', th: 'ทำนอง คอร์ด โครงสร้าง + เดโมไกด์', uz: "Melodiya, akkordlar, tuzilish + yo'riqnoma demo" }),
+      priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
+      priceValue: COMPOSITION_PRICE,
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: "/ qo'shiq" }),
+      description: t(locale, {
+        ko: '가사만 있거나 흥얼거린 멜로디만 있어도 시작합니다. 멜로디(탑라인)·코드·곡 구조를 만들고 피아노·기타 가이드 데모로 드립니다.',
+        en: 'Start from lyrics alone or a hummed melody. We write the topline, chords and structure and deliver a piano or guitar guide demo.',
+        zh: '只有歌词或只有哼唱的旋律也可以开始。创作旋律（topline）、和弦与曲式，并以钢琴·吉他引导demo交付。',
+        es: 'Empieza solo con letra o una melodía tarareada. Escribimos topline, acordes y estructura y entregamos un demo guía de piano o guitarra.',
+        vi: 'Chỉ cần lời hoặc giai điệu ngân nga là bắt đầu được. Viết topline, hợp âm, cấu trúc và giao demo hướng dẫn piano hoặc guitar.',
+        th: 'มีแค่เนื้อร้องหรือทำนองที่ฮัมก็เริ่มได้ เขียนทำนอง (topline) คอร์ด โครงสร้าง และส่งเดโมไกด์เปียโนหรือกีตาร์',
+        uz: "Faqat matn yoki xirgoyi melodiya bilan boshlash mumkin. Topline, akkordlar va tuzilishni yozib, pianino yoki gitara yo'riqnoma demosini topshiramiz."
+      }),
+      features: tArray(locale, {
+        ko: ['멜로디(탑라인)·코드·곡 구조', '피아노 또는 기타 가이드 데모 포함', '수정 2회 포함', '공동 작곡 크레딧·지분은 작업 전 서면 합의'],
+        en: ['Topline, chords and song structure', 'Piano or guitar guide demo included', '2 revisions included', 'Co-writing credits and shares agreed in writing beforehand'],
+        zh: ['旋律（topline）·和弦·曲式', '含钢琴或吉他引导demo', '含2次修改', '合作作曲署名·份额开工前书面约定'],
+        es: ['Topline, acordes y estructura', 'Demo guía de piano o guitarra incluido', '2 revisiones incluidas', 'Créditos y participaciones de coautoría acordados por escrito antes'],
+        vi: ['Topline, hợp âm, cấu trúc bài', 'Kèm demo hướng dẫn piano hoặc guitar', 'Bao gồm 2 lần chỉnh sửa', 'Credit và phần đồng sáng tác thỏa thuận bằng văn bản trước'],
+        th: ['ทำนอง (topline) คอร์ด โครงสร้างเพลง', 'รวมเดโมไกด์เปียโนหรือกีตาร์', 'รวมแก้ไข 2 ครั้ง', 'เครดิตร่วมแต่งและส่วนแบ่งตกลงเป็นลายลักษณ์อักษรก่อน'],
+        uz: ["Topline, akkordlar va qo'shiq tuzilishi", "Pianino yoki gitara yo'riqnoma demosi kiritilgan", '2 ta tahrir kiritilgan', 'Hammualliflik krediti va ulushlari oldindan yozma kelishiladi']
+      }),
+    },
+    {
+      id: 'arrangement-small',
+      title: t(locale, { ko: '소편성 편곡', en: 'Small-Ensemble Arrangement', zh: '小编制编曲', es: 'Arreglo de Formación Pequeña', vi: 'Phối khí biên chế nhỏ', th: 'เรียบเรียงวงเล็ก', uz: 'Kichik tarkib aranjirovkasi' }),
+      subtitle: t(locale, { ko: '10트랙 이하 · 피아노·기타 중심', en: '≤10 tracks · piano / guitar-led', zh: '10轨以下 · 钢琴·吉他为主', es: '≤10 pistas · piano / guitarra', vi: '≤10 track · piano / guitar', th: '≤10 แทร็ก · เปียโน / กีตาร์', uz: '≤10 trek · pianino / gitara' }),
+      priceDisplay: t(locale, { ko: '500,000원', en: '₩500,000', zh: '₩500,000', es: '₩500,000', vi: '₩500,000', th: '₩500,000', uz: '₩500,000' }),
+      priceValue: ARRANGEMENT_SMALL_PRICE,
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: "/ qo'shiq" }),
+      description: t(locale, {
+        ko: '피아노·기타 중심에 리듬 파트를 더한 발매용 편곡입니다. 가상악기로 완성하고 MR과 스템을 드립니다.',
+        en: 'A release-ready arrangement led by piano or guitar with a rhythm section, finished with virtual instruments. Backing track and stems delivered.',
+        zh: '以钢琴·吉他为主、加入节奏声部的发行用编曲。用虚拟乐器完成，交付伴奏与分轨。',
+        es: 'Arreglo listo para lanzamiento, liderado por piano o guitarra con sección rítmica, terminado con instrumentos virtuales. Pista y stems incluidos.',
+        vi: 'Phối khí chuẩn phát hành với piano hoặc guitar làm chủ đạo cùng bộ nhịp, hoàn thiện bằng nhạc cụ ảo. Giao nhạc nền và stem.',
+        th: 'การเรียบเรียงพร้อมปล่อยที่นำด้วยเปียโนหรือกีตาร์พร้อมพาร์ทจังหวะ จบด้วยเครื่องดนตรีเสมือน ส่งแทร็กและ stem',
+        uz: "Pianino yoki gitara yetakchiligida ritm bo'limi qo'shilgan, virtual cholg'ular bilan yakunlangan relizga tayyor aranjirovka. Fonogramma va stemlar topshiriladi."
+      }),
+      features: tArray(locale, {
+        ko: ['10트랙 이하 · 가상악기 기준', 'MR WAV 24bit/48kHz + 악기별 스템', '수정 2회 포함', '믹싱도 같은 등급(10트랙 이하)으로 이어집니다'],
+        en: ['≤10 tracks, virtual instruments', 'Backing track WAV 24-bit/48 kHz + per-instrument stems', '2 revisions included', 'Mixing continues at the same tier (≤10 tracks)'],
+        zh: ['10轨以下 · 虚拟乐器', '伴奏 WAV 24bit/48kHz + 各乐器分轨', '含2次修改', '混音按同一等级（10轨以下）衔接'],
+        es: ['≤10 pistas, instrumentos virtuales', 'Pista WAV 24-bit/48 kHz + stems por instrumento', '2 revisiones incluidas', 'La mezcla continúa en el mismo nivel (≤10 pistas)'],
+        vi: ['≤10 track, nhạc cụ ảo', 'Nhạc nền WAV 24-bit/48 kHz + stem từng nhạc cụ', 'Bao gồm 2 lần chỉnh sửa', 'Mix tiếp nối cùng hạng (≤10 track)'],
+        th: ['≤10 แทร็ก เครื่องดนตรีเสมือน', 'แทร็ก WAV 24-bit/48 kHz + stem แยกเครื่องดนตรี', 'รวมแก้ไข 2 ครั้ง', 'มิกซ์ต่อในระดับเดียวกัน (≤10 แทร็ก)'],
+        uz: ["≤10 trek, virtual cholg'ular", 'Fonogramma WAV 24-bit/48 kHz + stemlar', '2 ta tahrir kiritilgan', 'Miks shu darajada davom etadi (≤10 trek)']
+      }),
+    },
+    {
+      id: 'arrangement-band',
+      title: t(locale, { ko: '풀밴드 편곡', en: 'Full-Band Arrangement', zh: '全乐队编曲', es: 'Arreglo de Banda Completa', vi: 'Phối khí full band', th: 'เรียบเรียงฟูลแบนด์', uz: "To'liq guruh aranjirovkasi" }),
+      subtitle: t(locale, { ko: '11~30트랙 · 드럼·베이스·기타·건반', en: '11–30 tracks · drums, bass, guitars, keys', zh: '11~30轨 · 鼓·贝斯·吉他·键盘', es: '11–30 pistas · batería, bajo, guitarras, teclados', vi: '11–30 track · trống, bass, guitar, keys', th: '11–30 แทร็ก · กลอง เบส กีตาร์ คีย์', uz: '11–30 trek · baraban, bas, gitara, klavishli' }),
+      priceDisplay: t(locale, { ko: '1,000,000원', en: '₩1,000,000', zh: '₩1,000,000', es: '₩1,000,000', vi: '₩1,000,000', th: '₩1,000,000', uz: '₩1,000,000' }),
+      priceValue: ARRANGEMENT_BAND_PRICE,
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: "/ qo'shiq" }),
+      description: t(locale, {
+        ko: '드럼·베이스·기타·건반이 모두 들어가는 밴드 편곡입니다. 가상악기로 완성하고, 실연 세션을 넣으면 연주비는 실비만 더해집니다.',
+        en: 'A band arrangement with drums, bass, guitars and keys, finished with virtual instruments. Add live session players at cost.',
+        zh: '包含鼓、贝斯、吉他、键盘的乐队编曲。用虚拟乐器完成，加入真人乐手时只按实际支出加收乐手费。',
+        es: 'Arreglo de banda con batería, bajo, guitarras y teclados, terminado con instrumentos virtuales. Músicos de sesión al costo.',
+        vi: 'Phối khí band với trống, bass, guitar, keys, hoàn thiện bằng nhạc cụ ảo. Thêm nhạc công thật chỉ tính phí thực.',
+        th: 'การเรียบเรียงวงที่มีกลอง เบส กีตาร์ คีย์ครบ จบด้วยเครื่องดนตรีเสมือน เพิ่มนักดนตรีจริงคิดตามจ่ายจริง',
+        uz: "Baraban, bas, gitara va klavishli cholg'ular bilan guruh aranjirovkasi, virtual cholg'ular bilan yakunlanadi. Jonli musiqachilar haqiqiy xarajat bo'yicha qo'shiladi."
+      }),
+      recommended: true,
+      features: tArray(locale, {
+        ko: ['11~30트랙 · 가상악기 기준', 'MR WAV 24bit/48kHz + 악기별 스템', '수정 2회 포함', '실연 세션은 연주자 실비만 (섭외 수수료 없음)'],
+        en: ['11–30 tracks, virtual instruments', 'Backing track WAV 24-bit/48 kHz + per-instrument stems', '2 revisions included', 'Live session players at cost (no booking commission)'],
+        zh: ['11~30轨 · 虚拟乐器', '伴奏 WAV 24bit/48kHz + 各乐器分轨', '含2次修改', '真人乐手按实际支出收费（无中介费）'],
+        es: ['11–30 pistas, instrumentos virtuales', 'Pista WAV 24-bit/48 kHz + stems por instrumento', '2 revisiones incluidas', 'Músicos de sesión al costo (sin comisión)'],
+        vi: ['11–30 track, nhạc cụ ảo', 'Nhạc nền WAV 24-bit/48 kHz + stem từng nhạc cụ', 'Bao gồm 2 lần chỉnh sửa', 'Nhạc công thật tính phí thực (không hoa hồng)'],
+        th: ['11–30 แทร็ก เครื่องดนตรีเสมือน', 'แทร็ก WAV 24-bit/48 kHz + stem แยกเครื่องดนตรี', 'รวมแก้ไข 2 ครั้ง', 'นักดนตรีจริงคิดตามจ่ายจริง (ไม่มีค่านายหน้า)'],
+        uz: ["11–30 trek, virtual cholg'ular", 'Fonogramma WAV 24-bit/48 kHz + stemlar', '2 ta tahrir kiritilgan', 'Jonli musiqachilar haqiqiy xarajat bo\'yicha (vositachilik haqisiz)']
+      }),
+    },
+    {
+      id: 'arrangement-large',
+      title: t(locale, { ko: '대편성 편곡', en: 'Large-Ensemble Arrangement', zh: '大编制编曲', es: 'Arreglo de Gran Formación', vi: 'Phối khí biên chế lớn', th: 'เรียบเรียงวงใหญ่', uz: 'Katta tarkib aranjirovkasi' }),
+      subtitle: t(locale, { ko: '31트랙 이상 · 스트링·브라스·합창', en: '31+ tracks · strings, brass, choir', zh: '31轨以上 · 弦乐·铜管·合唱', es: '31+ pistas · cuerdas, metales, coro', vi: '31+ track · dàn dây, kèn, hợp xướng', th: '31+ แทร็ก · เครื่องสาย เครื่องเป่า คอรัส', uz: "31+ trek · torli, puflama, xor" }),
+      priceDisplay: t(locale, { ko: '2,000,000원', en: '₩2,000,000', zh: '₩2,000,000', es: '₩2,000,000', vi: '₩2,000,000', th: '₩2,000,000', uz: '₩2,000,000' }),
+      priceValue: ARRANGEMENT_LARGE_PRICE,
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: "/ qo'shiq" }),
+      description: t(locale, {
+        ko: '밴드 위에 스트링·브라스·합창까지 얹는 오케스트레이션 편곡입니다. 악보까지 드려 실연 녹음으로 바로 이어집니다.',
+        en: 'Orchestrated arrangement adding strings, brass and choir over the band. Scores included so live recording can follow directly.',
+        zh: '在乐队之上加入弦乐、铜管、合唱的管弦编曲。附乐谱，可直接进入真人录音。',
+        es: 'Arreglo orquestado que añade cuerdas, metales y coro sobre la banda. Incluye partituras para pasar directamente a la grabación en vivo.',
+        vi: 'Phối khí dàn nhạc thêm dàn dây, kèn, hợp xướng trên nền band. Kèm tổng phổ để thu trực tiếp ngay.',
+        th: 'การเรียบเรียงออร์เคสตราเพิ่มเครื่องสาย เครื่องเป่า คอรัสบนวง แถมโน้ตเพลงเพื่อต่อการอัดจริงได้ทันที',
+        uz: "Guruh ustiga torli, puflama va xor qo'shilgan orkestr aranjirovkasi. Notalar kiritilgan, jonli yozuvga to'g'ridan-to'g'ri o'tiladi."
+      }),
+      features: tArray(locale, {
+        ko: ['31트랙 이상 · 스트링·브라스·합창 포함', 'MR WAV + 스템 + 파트 악보', '수정 2회 포함', '실연 세션은 연주자 실비만 (섭외 수수료 없음)'],
+        en: ['31+ tracks incl. strings, brass, choir', 'Backing track WAV + stems + part scores', '2 revisions included', 'Live session players at cost (no booking commission)'],
+        zh: ['31轨以上 · 含弦乐·铜管·合唱', '伴奏 WAV + 分轨 + 分谱', '含2次修改', '真人乐手按实际支出收费（无中介费）'],
+        es: ['31+ pistas incl. cuerdas, metales, coro', 'Pista WAV + stems + partituras', '2 revisiones incluidas', 'Músicos de sesión al costo (sin comisión)'],
+        vi: ['31+ track gồm dàn dây, kèn, hợp xướng', 'Nhạc nền WAV + stem + phân phổ', 'Bao gồm 2 lần chỉnh sửa', 'Nhạc công thật tính phí thực (không hoa hồng)'],
+        th: ['31+ แทร็ก รวมเครื่องสาย เครื่องเป่า คอรัส', 'แทร็ก WAV + stem + โน้ตแยกพาร์ท', 'รวมแก้ไข 2 ครั้ง', 'นักดนตรีจริงคิดตามจ่ายจริง (ไม่มีค่านายหน้า)'],
+        uz: ['31+ trek, torli, puflama, xor bilan', 'Fonogramma WAV + stemlar + partiyalar', '2 ta tahrir kiritilgan', 'Jonli musiqachilar haqiqiy xarajat bo\'yicha (vositachilik haqisiz)']
+      }),
+    },
+    {
+      id: 'custom-mr',
+      title: t(locale, { ko: '맞춤 MR 제작', en: 'Custom Backing Track', zh: '定制伴奏制作', es: 'Pista a Medida', vi: 'Nhạc nền đặt riêng', th: 'แบ็กกิ้งแทร็กสั่งทำ', uz: 'Maxsus fonogramma' }),
+      subtitle: t(locale, { ko: '기존 곡 · 축가·행사·커버', en: 'Existing song · weddings, events, covers', zh: '现有歌曲 · 婚礼·活动·翻唱', es: 'Canción existente · bodas, eventos, covers', vi: 'Bài có sẵn · đám cưới, sự kiện, cover', th: 'เพลงที่มีอยู่ · งานแต่ง อีเวนต์ คัฟเวอร์', uz: "Mavjud qo'shiq · to'y, tadbir, kover" }),
+      priceDisplay: t(locale, { ko: '200,000원', en: '₩200,000', zh: '₩200,000', es: '₩200,000', vi: '₩200,000', th: '₩200,000', uz: '₩200,000' }),
+      priceValue: CUSTOM_MR_PRICE,
+      unit: t(locale, { ko: '/ 곡', en: '/ song', zh: '/ 首', es: '/ canción', vi: '/ bài', th: '/ เพลง', uz: "/ qo'shiq" }),
+      description: t(locale, {
+        ko: '있는 곡을 원하는 키·템포·길이로 다시 만든 반주입니다. 축가·행사·커버곡용이고, 코드를 바꾸는 리하모니도 됩니다.',
+        en: 'An existing song rebuilt as a backing track in your key, tempo and length. For weddings, events and covers; reharmonisation available.',
+        zh: '把现有歌曲按您需要的调、速度、长度重做的伴奏。用于婚礼、活动、翻唱，也可重新配和声。',
+        es: 'Una canción existente rehecha como pista en tu tono, tempo y duración. Para bodas, eventos y covers; rearmonización disponible.',
+        vi: 'Bài có sẵn dựng lại thành nhạc nền theo tông, tempo và độ dài bạn cần. Cho đám cưới, sự kiện, cover; có thể phối lại hòa âm.',
+        th: 'เพลงที่มีอยู่ทำใหม่เป็นแบ็กกิ้งแทร็กในคีย์ จังหวะ และความยาวที่ต้องการ สำหรับงานแต่ง อีเวนต์ คัฟเวอร์ รีฮาร์โมไนซ์ได้',
+        uz: "Mavjud qo'shiq sizga kerakli tonallik, temp va uzunlikda fonogramma sifatida qayta quriladi. To'y, tadbir va koverlar uchun; qayta garmonizatsiya mumkin."
+      }),
+      features: tArray(locale, {
+        ko: ['키·템포·길이 맞춤 · 가상악기 기준', '4분을 넘는 곡은 상담 때 말씀해 주세요', 'MR WAV + MP3', '수정 2회 포함'],
+        en: ['Custom key, tempo and length, virtual instruments', 'Tell us first if the song runs over 4 minutes', 'Backing track WAV + MP3', '2 revisions included'],
+        zh: ['定制调·速度·长度 · 虚拟乐器', '超过4分钟的歌曲请在咨询时告知', '伴奏 WAV + MP3', '含2次修改'],
+        es: ['Tono, tempo y duración a medida, instrumentos virtuales', 'Avísanos si la canción supera los 4 minutos', 'Pista WAV + MP3', '2 revisiones incluidas'],
+        vi: ['Tùy chỉnh tông, tempo, độ dài, nhạc cụ ảo', 'Bài dài hơn 4 phút hãy báo trước', 'Nhạc nền WAV + MP3', 'Bao gồm 2 lần chỉnh sửa'],
+        th: ['ปรับคีย์ จังหวะ ความยาว เครื่องดนตรีเสมือน', 'เพลงยาวเกิน 4 นาทีแจ้งก่อน', 'แทร็ก WAV + MP3', 'รวมแก้ไข 2 ครั้ง'],
+        uz: ["Tonallik, temp va uzunlik moslanadi, virtual cholg'ular", "4 daqiqadan uzun qo'shiqni oldindan ayting", 'Fonogramma WAV + MP3', '2 ta tahrir kiritilgan']
       }),
     },
   ];
@@ -889,6 +1041,7 @@ export const getPricingData = (locale: Locale) => {
     recordingOffers,
     mixingOffers,
     masteringOffers,
+    arrangementOffers,
     additionalServices,
     specialPackages,
     practiceRoomOffers,

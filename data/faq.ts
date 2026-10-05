@@ -13,6 +13,11 @@ import {
   RELEASE_PRESS_INTRO_PRICE,
   RELEASE_PRESS_PRICE,
   SINGLE_BUNDLE_PRICE,
+  COMPOSITION_PRICE,
+  ARRANGEMENT_SMALL_PRICE,
+  ARRANGEMENT_BAND_PRICE,
+  ARRANGEMENT_LARGE_PRICE,
+  CUSTOM_MR_PRICE,
 } from './pricing';
 
 const krw = formatPriceAmount;
@@ -89,7 +94,7 @@ const faqData = {
     },
     {
       question: '작곡이나 편곡만 의뢰할 수도 있나요?',
-      answer: '네, 작곡(멜로디·코드·구조), 편곡(미디 편곡부터 풀밴드·스트링까지), 보컬용 MR 제작, 그리고 녹음·믹싱·마스터링까지 이어지는 프로듀싱을 한 단계씩 따로 맡길 수 있습니다. 가격은 편성 규모·실연 세션 여부·수정 범위·납품 형태에 따라 곡 단위로 견적하며, 레퍼런스와 데모를 보내 주시면 무료 상담에서 정해 드립니다. 세션 연주비는 연주자에게 드리는 실비만 받습니다.',
+      answer: `네, 작곡(멜로디·코드·구조), 편곡(미디 편곡부터 풀밴드·스트링까지), 보컬용 MR 제작, 그리고 녹음·믹싱·마스터링까지 이어지는 프로듀싱을 한 단계씩 따로 맡길 수 있습니다. 작곡 ${krw(COMPOSITION_PRICE)}원, 편곡은 믹싱과 같은 트랙 수 등급으로 10트랙 이하 ${krw(ARRANGEMENT_SMALL_PRICE)}원·11~30트랙 ${krw(ARRANGEMENT_BAND_PRICE)}원·31트랙 이상 ${krw(ARRANGEMENT_LARGE_PRICE)}원, 기존 곡의 맞춤 MR은 ${krw(CUSTOM_MR_PRICE)}원입니다(곡당, 부가세 별도, 수정 2회 포함). 세션 연주비는 연주자에게 드리는 실비만 받습니다.`,
     },
     {
       question: '커버 영상도 찍을 수 있나요?',
