@@ -22,6 +22,8 @@ const VALID_IDS = new Set<string>([
   ...pools.mixingOffers.map((o) => o.id),
   ...pools.masteringOffers.map((o) => o.id),
   ...pools.additionalServices.map((o) => o.id),
+  // 2026-10-05 — 작곡·편곡·MR 정가(InlinePriceCallout의 'arrangement' 풀과 같은 목록)
+  ...pools.arrangementOffers.map((o) => o.id),
   ...Object.values(buyerIntentHubs)
     .map((h) => h.pricingFallback?.id)
     .filter((id): id is string => Boolean(id)),
