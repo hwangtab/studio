@@ -311,7 +311,7 @@ export default function ContractCompletePage({
               </Button>
 
               {downloadError && (
-                <Notice tone="error" className="mt-3 dark:border-red-200 dark:bg-red-50 dark:text-red-900">
+                <Notice tone="error" light className="mt-3">
                   <span className="block">{downloadError}</span>
                   <span className="block">계약서는 메일로도 보내 드렸습니다. 급하시면 010-4255-7893으로 연락해 주세요.</span>
                 </Notice>

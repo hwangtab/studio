@@ -1,6 +1,6 @@
 {
   "note": "파일별 위반 수. 늘면 CI 실패, 줄면 통과. 줄인 뒤 UPDATE_UI_PATTERN_BASELINE=1 로 갱신(올리는 갱신은 거부된다).",
-  "updatedAt": "2026-10-04",
+  "updatedAt": "2026-10-05",
   "rules": {
     "rounded-md": {},
     "notice-handroll": {},

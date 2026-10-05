@@ -49,7 +49,7 @@ const walk = (dir: string, out: string[] = []): string[] => {
     if (entry.name === 'node_modules' || entry.name.startsWith('.')) continue;
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) walk(full, out);
-    else if (/\.tsx$/.test(entry.name)) out.push(full);
+    else if (/\.tsx?$/.test(entry.name)) out.push(full); // className 상수를 .ts로 빼도 보인다
   }
   return out;
 };
@@ -57,7 +57,7 @@ const walk = (dir: string, out: string[] = []): string[] => {
 const rel = (file: string) => path.relative(ROOT, file).split(path.sep).join('/');
 
 const isScanned = (r: string): boolean => {
-  if (/\.test\.tsx$/.test(r)) return false;
+  if (/\.test\.tsx?$/.test(r)) return false;
   if (r.startsWith('pages/admin/') || r.startsWith('components/admin/')) return false; // 운영자 백오피스는 범위 밖
   if (PRIMITIVE_FILES.has(r)) return false;
   return true;

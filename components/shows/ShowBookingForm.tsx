@@ -318,7 +318,7 @@ export default function ShowBookingForm({ show }: Props) {
           </Field>
 
           <div>
-            <h3 className="mb-2 typo-card-title">결제 수단</h3>
+            <h3 className="mb-2 typo-card-meta font-medium text-gray-700 dark:text-gray-300">결제 수단</h3>
             {widget.picker === null ? (
               <PaymentMethodSkeleton />
             ) : widget.picker ? (

@@ -142,7 +142,7 @@ const AuditTrail = ({ trail }: { trail: SerializedAuditTrail }) => (
     </ol>
 
     {trail.chainGaps.length > 0 && (
-      <Notice tone="warning" icon={false} className="mb-4 block dark:border-amber-200 dark:bg-amber-50 dark:text-amber-900">
+      <Notice tone="warning" icon={false} light className="mb-4 block">
         <p className="font-semibold mb-1">기록에 빈 곳이 있습니다</p>
         <ul className="list-disc pl-5 space-y-0.5">
           {trail.chainGaps.map((gap) => (

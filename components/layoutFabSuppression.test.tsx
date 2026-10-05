@@ -79,6 +79,11 @@ describe('Layout의 카카오 FAB 억제', () => {
     expect(kakaoFab()).toBeNull();
   });
 
+  it('예약·주문 마법사에서도 FAB을 렌더하지 않는다 — 곡 수 select 위에 겹쳤다', async () => {
+    await renderAt('/[locale]/booking/[service]', false);
+    expect(kakaoFab()).toBeNull();
+  });
+
   /**
    * 「맨 위로」와 FAB이 각자 떠 있으면 고정 영역이 세로로 두 밴드를 차지하고 본문 위에서
    * L자로 흩어져 보인다. 한 행으로 묶어 한 밴드로 줄인다 — 단, 전폭 하단 바가 뜨는
